@@ -2,7 +2,6 @@ src/addbotdialog.cpp
 src/agreementdialog.cpp
 src/autobalancedialog.cpp
 src/autojoinchanneldialog.cpp
-src/battle.cpp
 src/battlelistctrl.cpp
 src/battlelistfilter.cpp
 src/battlelisttab.cpp
@@ -21,7 +20,7 @@ src/filelister/filelistctrl.cpp
 src/filelister/filelistdialog.cpp
 src/filelister/filelistfilter.cpp
 src/globalevents.cpp
-src/groupuserdialog.cpp
+src/groupoptionspanel.cpp
 src/Helper/wxtextctrlhist.h
 src/hostbattledialog.cpp
 src/httpdownloader.cpp
@@ -32,11 +31,15 @@ src/mainoptionstab.cpp
 src/mainsingleplayertab.cpp
 src/maintorrenttab.cpp
 src/mainwindow.cpp
-src/managegroupspanel.cpp
 src/mapctrl.cpp
 src/mmoptionswrapper.cpp
 src/nicklistctrl.cpp
 src/nonportable.h
+src/replay/replayfilter.cpp
+src/replay/replaylistctrl.cpp
+src/replay/replaytab.cpp
+src/selectusersdialog.cpp
+src/selectusersdialog.h
 src/serverevents.cpp
 src/settings.cpp
 src/settings++/Defs.hpp
@@ -58,6 +61,7 @@ src/springlobbyapp.cpp
 src/springoptionstab.cpp
 src/springunitsync.cpp
 src/tasserver.cpp
+src/tdfcontainer.cpp
 src/torrentlistctrl.cpp
 src/torrentoptionspanel.cpp
 src/torrentwrapper.cpp
@@ -70,3 +74,4 @@ src/useractions.h
 src/user.cpp
 src/userlistctrl.cpp
 src/usermenu.h
+src/utils.cpp

@@ -6,15 +6,15 @@
 
 class User;
 
-//! @brief mapping from nick to user object
-typedef std::map<wxString, User*> user_map_t;
-//! @brief iterator for user map
-typedef user_map_t::iterator user_iter_t;
-typedef user_map_t::const_iterator user_const_iter_t;
-
 class UserList
 {
   public:
+      //! @brief mapping from nick to user object
+    typedef std::map<wxString, User*> user_map_t;
+    //! @brief iterator for user map
+    typedef user_map_t::iterator user_iter_t;
+    typedef user_map_t::const_iterator user_const_iter_t;
+
     UserList();
     void AddUser( User& user );
     void RemoveUser( wxString const& nick );

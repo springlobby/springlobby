@@ -1,9 +1,7 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_BATTLEOPTIONSTAB_H
 #define SPRINGLOBBY_HEADERGUARD_BATTLEOPTIONSTAB_H
 
-#include <wx/panel.h>
-
-#include "iunitsync.h"
+#include <wx/scrolwin.h>
 
 class Ui;
 class IBattle;
@@ -26,7 +24,7 @@ class wxSlider;
 
 /** \brief manipulate "standard" engine options, unit restriction list
  * \todo DOCMEMORE */
-class BattleOptionsTab : public wxPanel
+class BattleOptionsTab : public wxScrolledWindow
 {
   public:
     BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, bool singleplayer );
@@ -94,24 +92,25 @@ class BattleOptionsTab : public wxPanel
 
     bool m_sp;
 
+    enum {
+      BOPTS_END = wxID_HIGHEST,
+      BOPTS_OPTS,
+      BOPTS_SLIDE,
+
+      BOPTS_RESTRICT,
+      BOPTS_ALLOW,
+      BOPTS_CLEARRES,
+
+      BOPTS_LOADPRES,
+      BOPTS_SAVEPRES,
+      BOPTS_DELETEPRES,
+      BOPTS_SETDEFAULTPRES,
+      BOPTS_CHOSEPRES
+    };
+
     DECLARE_EVENT_TABLE()
 };
 
-enum
-{
-  BOPTS_END = wxID_HIGHEST,
-  BOPTS_OPTS,
-  BOPTS_SLIDE,
 
-  BOPTS_RESTRICT,
-  BOPTS_ALLOW,
-  BOPTS_CLEARRES,
-
-  BOPTS_LOADPRES,
-  BOPTS_SAVEPRES,
-  BOPTS_DELETEPRES,
-  BOPTS_SETDEFAULTPRES,
-  BOPTS_CHOSEPRES
-};
 
 #endif // SPRINGLOBBY_HEADERGUARD_BATTLEOPTIONSTAB_H

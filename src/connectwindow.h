@@ -6,6 +6,7 @@
 class wxPanel;
 class wxComboBox;
 class wxBoxSizer;
+class wxStdDialogButtonSizer;
 class wxButton;
 class wxTextCtrl;
 class wxStaticText;
@@ -62,7 +63,7 @@ class ConnectWindow : public wxDialog
     wxBoxSizer* m_nick_sizer;       //!< Sizer connecting nick label and input
     wxBoxSizer* m_pass_sizer;       //!< Sizer connecting password label and input
     wxBoxSizer* m_rpass_sizer;      //!< Sizer spacing the remember password setting
-    wxBoxSizer* m_buttons_sizer;    //!< Sizer connecting the ok and cancel buttons
+    wxStdDialogButtonSizer* m_buttons_sizer;    //!< Sizer connecting the ok and cancel buttons
 
     wxStaticText* m_regnick_lbl;
     wxTextCtrl* m_regnick_text;
@@ -74,14 +75,13 @@ class ConnectWindow : public wxDialog
 
     Ui& m_ui;
 
+    enum {
+      CON_SERV_SEL = wxID_HIGHEST
+    };
+
     DECLARE_EVENT_TABLE()
 };
 
-
-enum
-{
-  CON_SERV_SEL = wxID_HIGHEST
-};
 
 
 #endif // SPRINGLOBBY_HEADERGUARD_CONNECTWINDOW_H

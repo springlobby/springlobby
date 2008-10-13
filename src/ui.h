@@ -1,11 +1,6 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_UI_H
 #define SPRINGLOBBY_HEADERGUARD_UI_H
 
-#include <wx/string.h>
-#include <wx/event.h>
-#include <map>
-#include "useractions.h"
-
 class Server;
 class TASServer;
 class ConnectWindow;
@@ -19,6 +14,12 @@ class SinglePlayerBattle;
 struct BattleBot;
 class ChatPanel;
 
+//this removes the necessity to drag wx/event.h into almost every other file for a single type
+//if it's too "hackish" for someone's taste, just include that header again and remove this (koshi)
+#ifndef wxEventType
+typedef int wxEventType;
+#endif
+
 
 typedef int HostInfo;
 
@@ -26,12 +27,13 @@ typedef int AlertEventType;
 
 extern const wxEventType torrentSystemStatusUpdateEvt;
 
-#define AE_MESSAGE 1
-#define AE_HIGHLIGHT_MESSAGE 2
-#define AE_PM 4
-#define AE_ERROR 8
-#define AE_DISCONNECT 16
-#define AE_BATTLE_MESSAGE 32
+//these seem to be completely obsolete (koshi)
+//#define AE_MESSAGE 1
+//#define AE_HIGHLIGHT_MESSAGE 2
+//#define AE_PM 4
+//#define AE_ERROR 8
+//#define AE_DISCONNECT 16
+//#define AE_BATTLE_MESSAGE 32
 
 
 //! @brief UI main class
@@ -65,6 +67,8 @@ class Ui
     bool IsSpringCompatible();
 
     bool IsSpringRunning();
+
+    void WatchReplay ( wxString& filename );
 
     void StartHostedBattle();
     void StartSinglePlayerGame( SinglePlayerBattle& battle );
@@ -136,6 +140,7 @@ class Ui
     void OnSaidBattle( Battle& battle, const wxString& nick, const wxString& msg );
     void OnBattleAction( Battle& battle, const wxString& nick, const wxString& msg );
 
+    void OnSpringStarting();
     void OnSpringTerminated( bool success );
 
     void OnAcceptAgreement( const wxString& agreement );

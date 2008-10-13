@@ -1,7 +1,6 @@
 #ifndef CUSTOMLISTITEM_H_
 #define CUSTOMLISTITEM_H_
 
-#include <wx/window.h>
 #ifndef __WXMSW__
     #include <wx/listctrl.h>
     typedef wxListCtrl ListBaseType;
@@ -9,25 +8,18 @@
     #include "Helper/listctrl.h"
     typedef SL_Extern::wxGenericListCtrl ListBaseType;
 #endif
-#include <wx/string.h>
+
 #if wxUSE_TIPWINDOW
-#include <wx/tipwin.h>
+    #include <wx/tipwin.h>
 #endif
+
 #include <wx/timer.h>
-#define IDD_TIP_TIMER 666
+#define IDD_TIP_TIMER 696
+
 #include <vector>
 #include <utility>
 
 #include "useractions.h"
-
-/** global delay (ms)
- * \todo make this definable per child class
- */
-#define TOOLTIP_DELAY 1000
-#define TOOLTIP_DURATION 2000
-
-typedef std::pair<wxString,bool> colInfo;
-typedef std::vector<colInfo> colInfoVec;
 
 #if wxUSE_TIPWINDOW
 class SLTipWindow : public wxTipWindow{
@@ -45,20 +37,28 @@ class SLTipWindow : public wxTipWindow{
  * Some of the provided functionality only makes sense for single-select lists (see grouping) \n
  * Note: Tooltips are a bitch and anyone shoudl feel to revise them (koshi)
  */
-class customListCtrl : public ListBaseType
+class CustomListCtrl : public ListBaseType
 {
 protected:
     typedef UserActions::ActionType ActionType;
     //! used to display tooltips for a certain amount of time
-    wxTimer     tipTimer;
+    wxTimer m_tiptimer;
     //! always set to the currrently displayed tooltip text
-    wxString    m_tiptext;
+    wxString m_tiptext;
     #if wxUSE_TIPWINDOW
     //! some wx implementations do not support this yet
     SLTipWindow* m_tipwindow;
     SLTipWindow** controlPointer;
     #endif
     int coloumnCount;
+
+    typedef std::pair<wxString,bool> colInfo;
+    typedef std::vector<colInfo> colInfoVec;
+
+    /** global Tooltip thingies (ms)
+     */
+    static const unsigned int m_tooltip_delay    = 1000;
+    static const unsigned int m_tooltip_duration = 2000;
 
 /*** these are only meaningful in single selection lists ***/
     //! curently selected data
@@ -95,9 +95,11 @@ protected:
     virtual void SetTipWindowText( const long item_hit, const wxPoint position);
 
 public:
-	customListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pt,
+    CustomListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pt,
                     const wxSize& sz,long style, wxString name, bool highlight = true,
                     UserActions::ActionType hlaction = UserActions::ActHighlight);
+
+    virtual ~CustomListCtrl(){}
 
     void OnSelected( wxListEvent& event );
     void OnDeselected( wxListEvent& event );
@@ -119,8 +121,8 @@ public:
      */
 
     //! intermediate function to add info to m_colinfovec after calling base class function
-	void InsertColumn(long i, wxListItem item, wxString tip, bool = true);
-	//! this event is triggered when delay timer (set in mousemotion) ended
+    void InsertColumn(long i, wxListItem item, wxString tip, bool = true);
+    //! this event is triggered when delay timer (set in mousemotion) ended
     virtual void OnTimer(wxTimerEvent& event);
     //! prohibits resizin if so set in columnInfo
     void OnStartResizeCol(wxListEvent& event);

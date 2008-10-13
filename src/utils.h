@@ -2,7 +2,6 @@
 #define SPRINGLOBBY_HEADERGUARD_UTILS_H
 
 #include <wx/string.h>
-#include <wx/log.h>
 #include <sstream>
 #include <stdexcept>
 
@@ -102,6 +101,8 @@ inline wxString TowxString(std::string arg){
 }
 /** @} */
 
+template <typename T> T clamp(const T var,const T min,const T max)
+{ return ( (var < min) ? min : ( var > max ) ? max : var ); }
 
 wxString GetLibExtension();
 void InitializeLoggingTargets( bool console, bool showgui, bool logcrash, int verbosity );
@@ -157,5 +158,20 @@ class uninitialized_array
 */
 const wxChar* TooltipEnable(const wxChar* input);
 
+
+
+/**
+ * @brief Computes Levenshtein distance (edit distance) between two strings.
+ * @return the Levenshtein distance normalized by the longest string's length.
+ * @note Source: http://en.wikipedia.org/wiki/Levenshtein_distance
+ */
+double LevenshteinDistance(wxString s, wxString t);
+
+class wxArrayString;
+/**
+ * @brief Gets the closest match for s in a, using LevenshteinDistance.
+ * @param distance If not NULL, *distance is set to the edit distance from s to the return value.
+ */
+wxString GetBestMatch(const wxArrayString& a, const wxString& s, double* distance = NULL);
 
 #endif // SPRINGLOBBY_HEADERGUARD_UTILS_H

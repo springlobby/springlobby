@@ -3,6 +3,7 @@
 #include <wx/filename.h>
 #include <wx/dynlib.h>
 #include <wx/image.h>
+#include <wx/log.h>
 #include <stdexcept>
 
 #include "springunitsynclib.h"
@@ -20,7 +21,7 @@ SpringUnitSyncLib::SpringUnitSyncLib( const wxString& path ):
 
 SpringUnitSyncLib::~SpringUnitSyncLib()
 {
-  Unload();
+  if ( _IsLoaded() ) _Unload();
 }
 
 
@@ -131,6 +132,9 @@ void SpringUnitSyncLib::Load( const wxString& path )
     m_get_primary_mod_archive_list = (GetPrimaryModArchiveListPtr)_GetLibFuncPtr(_T("GetPrimaryModArchiveList"));
     m_get_primary_mod_checksum_from_name = (GetPrimaryModChecksumFromNamePtr)_GetLibFuncPtr(_T("GetPrimaryModChecksumFromName"));
 
+    m_get_mod_valid_map_count = (GetModValidMapCountPtr)_GetLibFuncPtr(_T("GetModValidMapCount"));
+    m_get_valid_map = (GetModValidMapPtr)_GetLibFuncPtr(_T("GetModValidMap"));
+
     m_get_luaai_count = (GetLuaAICountPtr)_GetLibFuncPtr(_T("GetLuaAICount"));
     m_get_luaai_name = (GetLuaAINamePtr)_GetLibFuncPtr(_T("GetLuaAIName"));
     m_get_luaai_desc = (GetLuaAIDescPtr)_GetLibFuncPtr(_T("GetLuaAIDesc"));
@@ -169,6 +173,54 @@ void SpringUnitSyncLib::Load( const wxString& path )
     m_set_spring_config_string = (SetSpringConfigStringPtr)_GetLibFuncPtr(_T("SetSpringConfigString"));
     m_set_spring_config_int = (SetSpringConfigIntPtr)_GetLibFuncPtr(_T("SetSpringConfigInt"));
 
+    /// beging lua parser calls
+
+    m_parser_close = (lpClosePtr)_GetLibFuncPtr(_T("lpClose"));
+    m_parser_open_file = (lpOpenFilePtr)_GetLibFuncPtr(_T("lpOpenFile"));
+    m_parser_open_source = (lpOpenSourcePtr)_GetLibFuncPtr(_T("lpOpenSource"));
+    m_parser_execute = (lpExecutePtr)_GetLibFuncPtr(_T("lpExecute"));
+    m_parser_error_log = (lpErrorLogPtr)_GetLibFuncPtr(_T("lpErrorLog"));
+
+    m_parser_add_table_int = (lpAddTableIntPtr)_GetLibFuncPtr(_T("lpAddTableInt"));
+    m_parser_add_table_string = (lpAddTableStrPtr)_GetLibFuncPtr(_T("lpAddTableStr"));
+    m_parser_end_table = (lpEndTablePtr)_GetLibFuncPtr(_T("lpEndTable"));
+    m_parser_add_int_key_int_value = (lpAddIntKeyIntValPtr)_GetLibFuncPtr(_T("lpAddIntKeyIntVal"));
+    m_parser_add_string_key_int_value = (lpAddStrKeyIntValPtr)_GetLibFuncPtr(_T("lpAddStrKeyIntVal"));
+    m_parser_add_int_key_bool_value = (lpAddIntKeyBoolValPtr)_GetLibFuncPtr(_T("lpAddIntKeyBoolVal"));
+    m_parser_add_string_key_bool_value = (lpAddStrKeyBoolValPtr)_GetLibFuncPtr(_T("lpAddStrKeyBoolVal"));
+    m_parser_add_int_key_float_value = (lpAddIntKeyFloatValPtr)_GetLibFuncPtr(_T("lpAddIntKeyFloatVal"));
+    m_parser_add_string_key_float_value = (lpAddStrKeyFloatValPtr)_GetLibFuncPtr(_T("lpAddStrKeyFloatVal"));
+    m_parser_add_int_key_string_value = (lpAddIntKeyStrValPtr)_GetLibFuncPtr(_T("lpAddIntKeyStrVal"));
+    m_parser_add_string_key_string_value = (lpAddStrKeyStrValPtr)_GetLibFuncPtr(_T("lpAddStrKeyStrVal"));
+
+    m_parser_root_table = (lpRootTablePtr)_GetLibFuncPtr(_T("lpRootTable"));
+    m_parser_root_table_expression = (lpRootTableExprPtr)_GetLibFuncPtr(_T("lpRootTableExpr"));
+    m_parser_sub_table_int = (lpSubTableIntPtr)_GetLibFuncPtr(_T("lpSubTableInt"));
+    m_parser_sub_table_string = (lpSubTableStrPtr)_GetLibFuncPtr(_T("lpSubTableStr"));
+    m_parser_sub_table_expression = (lpSubTableExprPtr)_GetLibFuncPtr(_T("lpSubTableExpr"));
+    m_parser_pop_table = (lpPopTablePtr)_GetLibFuncPtr(_T("lpPopTable"));
+
+    m_parser_key_int_exists = (lpGetKeyExistsIntPtr)_GetLibFuncPtr(_T("lpGetKeyExistsInt"));
+    m_parser_key_string_exists = (lpGetKeyExistsStrPtr)_GetLibFuncPtr(_T("lpGetKeyExistsStr"));
+
+    m_parser_int_key_get_type = (lpGetIntKeyTypePtr)_GetLibFuncPtr(_T("lpGetIntKeyType"));
+    m_parser_string_key_get_type = (lpGetStrKeyTypePtr)_GetLibFuncPtr(_T("lpGetStrKeyType"));
+
+    m_parser_int_key_get_list_count = (lpGetIntKeyListCountPtr)_GetLibFuncPtr(_T("lpGetIntKeyListCount"));
+    m_parser_int_key_get_list_entry = (lpGetIntKeyListEntryPtr)_GetLibFuncPtr(_T("lpGetIntKeyListEntry"));
+    m_parser_string_key_get_list_count = (lpGetStrKeyListCountPtr)_GetLibFuncPtr(_T("lpGetStrKeyListCount"));
+    m_parser_string_key_get_list_entry = (lpGetStrKeyListEntryPtr)_GetLibFuncPtr(_T("lpGetStrKeyListEntry"));
+
+    m_parser_int_key_get_int_value = (lpGetIntKeyIntValPtr)_GetLibFuncPtr(_T("lpGetIntKeyIntVal"));
+    m_parser_string_key_get_int_value = (lpGetStrKeyIntValPtr)_GetLibFuncPtr(_T("lpGetStrKeyIntVal"));
+    m_parser_int_key_get_bool_value = (lpGetIntKeyBoolValPtr)_GetLibFuncPtr(_T("lpGetIntKeyBoolVal"));
+    m_parser_string_key_get_bool_value = (lpGetStrKeyBoolValPtr)_GetLibFuncPtr(_T("lpGetStrKeyBoolVal"));
+    m_parser_int_key_get_float_value = (lpGetIntKeyFloatValPtr)_GetLibFuncPtr(_T("lpGetIntKeyFloatVal"));
+    m_parser_string_key_get_float_value = (lpGetStrKeyFloatValPtr)_GetLibFuncPtr(_T("lpGetStrKeyFloatVal"));
+    m_parser_int_key_get_string_value = (lpGetIntKeyStrValPtr)_GetLibFuncPtr(_T("lpGetIntKeyStrVal"));
+    m_parser_string_key_get_string_value = (lpGetStrKeyStrValPtr)_GetLibFuncPtr(_T("lpGetStrKeyStrVal"));
+
+
     if ( m_init ) m_init( true, 1 );
     else _Unload();
 
@@ -183,8 +235,8 @@ void SpringUnitSyncLib::Load( const wxString& path )
 
 void SpringUnitSyncLib::Unload()
 {
+  if ( !_IsLoaded() ) return;/// dont even lock anything if unloaded.
   LOCK_UNITSYNC;
-  if ( !_IsLoaded() ) return;
 
   _Unload();
 }
@@ -358,13 +410,9 @@ wxImage SpringUnitSyncLib::GetMinimap( const wxString& mapFileName )
 
   wxLogMessage( _T("Minimap: %s"), mapFileName.c_str() );
 
+  // this unitsync call returns a pointer to a static buffer
   unsigned short* colours = (unsigned short*)m_get_minimap( mapFileName.mb_str(wxConvUTF8), miplevel );
-  ///if you don't like explicit delete, feel free to make patch
-  if ( colours == 0 )
-  {
-    delete[] colours;
-    ASSERT_EXCEPTION( colours, _T("Get minimap failed") );
-  }
+  ASSERT_EXCEPTION( colours, _T("Get minimap failed") );
 
   typedef unsigned char uchar;
   wxImage minimap(width, height, false);
@@ -655,6 +703,22 @@ wxString SpringUnitSyncLib::GetLuaAIDesc( int aiIndex )
   return WX_STRINGC( m_get_luaai_desc( aiIndex ) );
 }
 
+unsigned int SpringUnitSyncLib::GetValidMapCount( const wxString& modname )
+{
+  InitLib( m_get_mod_valid_map_count );
+
+  SetCurrentMod( modname );
+  return m_get_mod_valid_map_count();
+}
+
+
+wxString SpringUnitSyncLib::GetValidMapName( unsigned int MapIndex )
+{
+  InitLib( m_get_valid_map );
+
+  return WX_STRINGC( m_get_valid_map( MapIndex ) );
+}
+
 
 int SpringUnitSyncLib::GetMapOptionCount( const wxString& name )
 {
@@ -918,4 +982,277 @@ void SpringUnitSyncLib::SetSpringConfigFloat( const wxString& key, const float v
   m_set_spring_config_float( key.mb_str( wxConvUTF8 ), value );
 }
 
+/// lua parser
 
+void SpringUnitSyncLib::CloseParser()
+{
+	InitLib( m_parser_close );
+
+	m_parser_close();
+}
+
+
+bool SpringUnitSyncLib::OpenParserFile( const wxString& filename, const wxString& filemodes, const wxString& accessModes )
+{
+	InitLib( m_parser_open_file );
+
+	return m_parser_open_file( filename.mb_str(), filemodes.mb_str(), accessModes.mb_str() );
+}
+
+bool SpringUnitSyncLib::OpenParserSource( const wxString& source, const wxString& accessModes )
+{
+	InitLib( m_parser_open_source );
+
+	return m_parser_open_source( source.mb_str(), accessModes.mb_str() );
+}
+
+bool SpringUnitSyncLib::ParserExecute()
+{
+	InitLib( m_parser_execute );
+
+	return m_parser_execute();
+}
+
+wxString SpringUnitSyncLib::ParserErrorLog()
+{
+	InitLib( m_parser_error_log );
+
+	return WX_STRINGC( m_parser_error_log() );
+}
+
+
+void SpringUnitSyncLib::ParserAddTable( int key, bool override )
+{
+	InitLib( m_parser_add_table_int );
+
+  m_parser_add_table_int( key, override );
+}
+
+void SpringUnitSyncLib::ParserAddTable( const wxString& key, bool override )
+{
+	InitLib( m_parser_add_table_string );
+
+  m_parser_add_table_string( key.mb_str(), override );
+}
+
+void SpringUnitSyncLib::ParserEndTable()
+{
+	InitLib( m_parser_end_table );
+
+	m_parser_end_table();
+}
+
+void SpringUnitSyncLib::ParserAddTableValue( int key, int val )
+{
+	InitLib( m_parser_add_int_key_int_value );
+
+	m_parser_add_int_key_int_value( key, val );
+}
+
+void SpringUnitSyncLib::ParserAddTableValue( const wxString& key, int val )
+{
+	InitLib( m_parser_add_string_key_int_value );
+
+	m_parser_add_string_key_int_value( key.mb_str(), val );
+}
+
+void SpringUnitSyncLib::ParserAddTableValue( int key, bool val )
+{
+	InitLib( m_parser_add_int_key_int_value );
+
+	m_parser_add_int_key_int_value( key, val );
+}
+
+void SpringUnitSyncLib::ParserAddTableValue( const wxString& key, bool val )
+{
+	InitLib( m_parser_add_string_key_int_value );
+
+	m_parser_add_string_key_int_value( key.mb_str(), val );
+}
+
+void SpringUnitSyncLib::ParserAddTableValue( int key, const wxString& val )
+{
+	InitLib( m_parser_add_int_key_string_value );
+
+	m_parser_add_int_key_string_value( key, val.mb_str() );
+}
+
+void SpringUnitSyncLib::ParserAddTableValue( const wxString& key, const wxString& val )
+{
+	InitLib( m_parser_add_string_key_string_value );
+
+	m_parser_add_string_key_string_value( key.mb_str(), val.mb_str() );
+}
+
+void SpringUnitSyncLib::ParserAddTableValue( int key, float val )
+{
+	InitLib( m_parser_add_int_key_float_value );
+
+	m_parser_add_int_key_float_value( key, val );
+}
+
+void SpringUnitSyncLib::ParserAddTableValue( const wxString& key, float val )
+{
+	InitLib( m_parser_add_string_key_float_value );
+
+	m_parser_add_string_key_float_value( key.mb_str(), val );
+}
+
+
+bool SpringUnitSyncLib::ParserGetRootTable()
+{
+	InitLib( m_parser_root_table );
+
+	return m_parser_root_table();
+}
+
+bool SpringUnitSyncLib::ParserGetRootTableExpression( const wxString& exp )
+{
+	InitLib( m_parser_root_table_expression );
+
+	return m_parser_root_table_expression( exp.mb_str() );
+}
+
+bool SpringUnitSyncLib::ParserGetSubTableInt( int key )
+{
+	InitLib( m_parser_sub_table_int );
+
+	return m_parser_sub_table_int( key );
+}
+
+bool SpringUnitSyncLib::ParserGetSubTableString( const wxString& key )
+{
+	InitLib( m_parser_sub_table_string );
+
+	return m_parser_sub_table_string( key.mb_str() );
+}
+
+bool SpringUnitSyncLib::ParserGetSubTableInt( const wxString& exp )
+{
+	InitLib( m_parser_sub_table_expression );
+
+	return m_parser_sub_table_expression( exp.mb_str() );
+}
+
+void SpringUnitSyncLib::ParserPopTable()
+{
+	InitLib( m_parser_pop_table );
+
+  m_parser_pop_table();
+}
+
+
+bool SpringUnitSyncLib::ParserKeyExists( int key )
+{
+	InitLib( m_parser_key_int_exists );
+
+	return m_parser_key_int_exists( key );
+}
+
+bool SpringUnitSyncLib::ParserKeyExists( const wxString& key )
+{
+	InitLib( m_parser_key_string_exists );
+
+	return m_parser_key_string_exists( key.mb_str() );
+}
+
+
+int SpringUnitSyncLib::ParserGetKeyType( int key )
+{
+	InitLib( m_parser_int_key_get_type );
+
+	return m_parser_int_key_get_type( key );
+}
+
+int SpringUnitSyncLib::ParserGetKeyType( const wxString& key )
+{
+	InitLib( m_parser_string_key_get_type );
+
+	return m_parser_string_key_get_type( key.mb_str() );
+}
+
+
+int SpringUnitSyncLib::ParserGetIntKeyListCount()
+{
+	InitLib( m_parser_int_key_get_list_count );
+
+	return m_parser_int_key_get_list_count();
+}
+
+int SpringUnitSyncLib::ParserGetIntKeyListEntry( int index )
+{
+	InitLib( m_parser_int_key_get_list_entry );
+
+	return m_parser_int_key_get_list_entry( index );
+}
+
+int SpringUnitSyncLib::ParserGetStringKeyListCount()
+{
+	InitLib( m_parser_string_key_get_list_count );
+
+	return m_parser_string_key_get_list_count();
+}
+
+int SpringUnitSyncLib::ParserGetStringKeyListEntry( int index )
+{
+	InitLib( m_parser_int_key_get_list_entry );
+
+	return m_parser_int_key_get_list_entry( index );
+}
+
+
+int SpringUnitSyncLib::GetKeyValue( int key, int defval )
+{
+	InitLib( m_parser_int_key_get_int_value );
+
+	return m_parser_int_key_get_int_value( key, defval );
+}
+
+bool SpringUnitSyncLib::GetKeyValue( int key, bool defval )
+{
+	InitLib( m_parser_int_key_get_bool_value );
+
+	return m_parser_int_key_get_bool_value( key, defval );
+}
+
+wxString SpringUnitSyncLib::GetKeyValue( int key, const wxString& defval )
+{
+	InitLib( m_parser_int_key_get_string_value );
+
+	return WX_STRINGC( m_parser_int_key_get_string_value( key, defval.mb_str() ) );
+}
+
+float SpringUnitSyncLib::GetKeyValue( int key, float defval )
+{
+	InitLib( m_parser_int_key_get_float_value );
+
+	return m_parser_int_key_get_float_value( key, defval );
+}
+
+int SpringUnitSyncLib::GetKeyValue( const wxString& key, int defval )
+{
+	InitLib( m_parser_string_key_get_int_value );
+
+	return m_parser_string_key_get_int_value( key.mb_str(), defval );
+}
+
+bool SpringUnitSyncLib::GetKeyValue( const wxString& key, bool defval )
+{
+	InitLib( m_parser_string_key_get_bool_value );
+
+	return m_parser_string_key_get_bool_value( key.mb_str(), defval );
+}
+
+wxString SpringUnitSyncLib::GetKeyValue( const wxString& key, const wxString& defval )
+{
+	InitLib( m_parser_string_key_get_string_value );
+
+	return WX_STRINGC( m_parser_string_key_get_string_value( key.mb_str(), defval.mb_str() ) );
+}
+
+float SpringUnitSyncLib::GetKeyValue( const wxString& key, float defval )
+{
+	InitLib( m_parser_string_key_get_float_value );
+
+	return m_parser_string_key_get_float_value( key.mb_str(), defval );
+}

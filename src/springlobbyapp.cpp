@@ -34,10 +34,29 @@
 #endif
 #include "updater/updater.h"
 #include "unitsyncthread.h"
+#include "replay/replaytab.h"
 
-#define TIMER_ID 101
-#define TIMER_INTERVAL 100
+const unsigned int TIMER_ID         = 101;
+const unsigned int TIMER_INTERVAL   = 100;
 
+
+#if 0
+/// testing TDF parser
+#include "tdfcontainer.h"
+#include <iostream>
+#include <fstream>
+void TestTDFParser(){
+  PDataList parsetree(new DataList);
+  Tokenizer tokenizer;
+  std::ifstream f("/home/dmytry/.spring/script.txt");
+  tokenizer.EnterStream(f);
+  parsetree->Load(tokenizer);
+  wxString result;
+  TDFWriter writer(result);
+  parsetree->Save(writer);
+  wxLogMessage(_T("Testing tdf parser: result %s "), result.c_str());
+}
+#endif
 
 IMPLEMENT_APP(SpringLobbyApp)
 
@@ -184,6 +203,9 @@ bool SpringLobbyApp::OnInit()
 
   sett().SetSettingsVersion(); /// bump settings version number
 
+
+  ui().mw().GetReplayTab().AddAllReplays();
+
     return true;
 }
 
@@ -280,6 +302,7 @@ void SpringLobbyApp::SetupUserFolders()
             }
         }
         sett().SetSpringDir(dir);
+        sett().SaveSettings();
     }
 #endif
 #endif

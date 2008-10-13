@@ -1,9 +1,8 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_FLAGIMAGES_H
 #define SPRINGLOBBY_HEADERGUARD_FLAGIMAGES_H
 
-#include <wx/string.h>
-
 class wxImageList;
+class wxString;
 
 int GetFlagIndex( const wxString& flag );
 int AddFlagImages( wxImageList& imgs );

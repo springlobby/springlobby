@@ -14,6 +14,8 @@
 #include "battlelisttab.h"
 #include "battleroomtab.h"
 #include "chatpanel.h"
+#include "mainoptionstab.h"
+#include "groupoptionspanel.h"
 
 
 UserActions& useractions()
@@ -89,11 +91,24 @@ void UserActions::Init()
 
 void UserActions::UpdateUI()
 {
-    ui().mw().GetJoinTab().GetBattleListTab().UpdateHighlights();
-    ui().mw().GetChatTab().UpdateNicklistHighlights();
+    try
+    {
+      ui().mw().GetJoinTab().GetBattleListTab().UpdateHighlights();
+    } catch(...){}
+
+    try
+    {
+      ui().mw().GetChatTab().UpdateNicklistHighlights();
+    } catch(...){}
+
     try
     {
       ui().mw().GetJoinTab().GetBattleRoomTab().UpdateHighlights();
+    } catch(...){}
+
+    try
+    {
+      ui().mw().GetOptionsTab().GetGroupOptionsPanel().Update();
     } catch(...){}
 }
 

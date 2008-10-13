@@ -2,10 +2,12 @@
 
 #include <stdexcept>
 #include <wx/tokenzr.h>
+#include <wx/log.h>
 
 #include "ibattle.h"
 #include "utils.h"
 #include "settings.h"
+#include "ui.h"
 
 IBattle::IBattle():
   m_map_loaded(false),
@@ -98,7 +100,7 @@ const UnitSyncMod& IBattle::LoadMod()
 {
   if ( !m_mod_loaded ) {
     try {
-      ASSERT_LOGIC( m_mod_exists, _T("Mod does not exist.") );
+      ASSERT_EXCEPTION( m_mod_exists, _T("Mod does not exist.") );
       m_local_mod = usync().GetMod( m_host_mod.name );
       m_mod_loaded = true;
     } catch (...) {}
@@ -174,18 +176,33 @@ unsigned int IBattle::AddBot( int ally, int posx, int posy, int handicap, const 
   return (unsigned int)(-1);/// note: that looks pretty crappy and needs to be investigated.
 }
 
+
+static wxString FixPresetName( const wxString& name )
+{
+  // look name up case-insensitively
+  const wxArrayString& presetList = sett().GetPresetList();
+  int index = presetList.Index( name, false /*case insensitive*/ );
+  if ( index == -1 ) return _T("");
+
+  // set preset to the actual name, with correct case
+  return presetList[index];
+}
+
+
 bool IBattle::LoadOptionsPreset( const wxString& name )
 {
-  if ( sett().GetPresetList().Index( name ) == -1 ) return false; ///preset not found
-  m_preset = name;
-  for ( int i = 0; i < (int)LastOption; i++)
+  wxString preset = FixPresetName(name);
+  if (preset == _T("")) return false; ///preset not found
+  m_preset = preset;
+
+  for ( int i = 0; i < (int)OptionsWrapper::LastOption; i++)
   {
-    std::map<wxString,wxString> options = sett().GetHostingPreset( name, i );
-    if ( (GameOption)i != PrivateOptions )
+    std::map<wxString,wxString> options = sett().GetHostingPreset( m_preset, i );
+    if ( (OptionsWrapper::GameOption)i != OptionsWrapper::PrivateOptions )
     {
       for ( std::map<wxString,wxString>::iterator itor = options.begin(); itor != options.end(); itor++ )
       {
-        CustomBattleOptions().setSingleOption( itor->first, itor->second, (GameOption)i );
+        CustomBattleOptions().setSingleOption( itor->first, itor->second, (OptionsWrapper::GameOption)i );
       }
     }
     else
@@ -212,7 +229,7 @@ bool IBattle::LoadOptionsPreset( const wxString& name )
 
       m_units = wxStringTokenize( options[_T("restrictions")], _T('\t') );
       SendHostInfo( HI_Restrictions );
-      Update( wxString::Format( _T("%d_restrictions"), PrivateOptions ) );
+      Update( wxString::Format( _T("%d_restrictions"), OptionsWrapper::PrivateOptions ) );
 
     }
   }
@@ -224,19 +241,21 @@ bool IBattle::LoadOptionsPreset( const wxString& name )
 
 void IBattle::SaveOptionsPreset( const wxString& name )
 {
-  m_preset = name;
-  for ( int i = 0; i < (int)LastOption; i++)
+  m_preset = FixPresetName(name);
+  if (m_preset == _T("")) m_preset = name; ///new preset
+
+  for ( int i = 0; i < (int)OptionsWrapper::LastOption; i++)
   {
-    if ( (GameOption)i != PrivateOptions )
+    if ( (OptionsWrapper::GameOption)i != OptionsWrapper::PrivateOptions )
     {
-      sett().SetHostingPreset( name, (GameOption)i, CustomBattleOptions().getOptionsMap( (GameOption)i ) );
+      sett().SetHostingPreset( m_preset, (OptionsWrapper::GameOption)i, CustomBattleOptions().getOptionsMap( (OptionsWrapper::GameOption)i ) );
     }
     else
     {
       std::map<wxString,wxString> opts;
       opts[_T("mapname")] = GetHostMapName();
       unsigned int validrectcount = 0;
-      if ( s2l (CustomBattleOptions().getSingleValue( _T("startpostype"), EngineOption ) ) == ST_Choose )
+      if ( s2l (CustomBattleOptions().getSingleValue( _T("startpostype"), OptionsWrapper::EngineOption ) ) == ST_Choose )
       {
         unsigned int boxcount = GetNumRects();
         for ( unsigned int boxnum = 0; boxnum < boxcount; boxnum++ )
@@ -263,7 +282,7 @@ void IBattle::SaveOptionsPreset( const wxString& name )
       }
       opts[_T("restrictions")] = restrictionsstring;
 
-      sett().SetHostingPreset( name, (GameOption)i, opts );
+      sett().SetHostingPreset( m_preset, (OptionsWrapper::GameOption)i, opts );
     }
   }
   sett().SaveSettings();
@@ -279,10 +298,12 @@ wxString IBattle::GetCurrentPreset()
 
 void IBattle::DeletePreset( const wxString& name )
 {
-  if ( m_preset == name ) m_preset = _T("");
-  sett().DeletePreset( name );
+  wxString preset = FixPresetName(name);
+  if ( m_preset == preset ) m_preset = _T("");
+  sett().DeletePreset( preset );
   ui().ReloadPresetList();
 }
+
 
 wxArrayString IBattle::GetPresetList()
 {

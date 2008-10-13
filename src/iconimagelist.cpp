@@ -220,17 +220,17 @@ int IconImageList::GetUserBattleStateIcon( const UserStatus& us )
 
 int IconImageList::GetRankIcon( const unsigned int& rank, const bool& showlowest )
 {
-    if ( !showlowest && rank == RANK_1 ) return ICON_RANK_NONE;
+    if ( !showlowest && rank == UserStatus::RANK_1 ) return ICON_RANK_NONE;
     switch (rank)
     {
-      case RANK_UNKNOWN: return ICON_RANK1;
-      case RANK_1: return ICON_RANK1;
-      case RANK_2: return ICON_RANK2;
-      case RANK_3: return ICON_RANK3;
-      case RANK_4: return ICON_RANK4;
-      case RANK_5: return ICON_RANK5;
-      case RANK_6: return ICON_RANK6;
-      case RANK_7: return ICON_RANK7;
+      case UserStatus::RANK_UNKNOWN: return ICON_RANK1;
+      case UserStatus::RANK_1: return ICON_RANK1;
+      case UserStatus::RANK_2: return ICON_RANK2;
+      case UserStatus::RANK_3: return ICON_RANK3;
+      case UserStatus::RANK_4: return ICON_RANK4;
+      case UserStatus::RANK_5: return ICON_RANK5;
+      case UserStatus::RANK_6: return ICON_RANK6;
+      case UserStatus::RANK_7: return ICON_RANK7;
     }
     return ICON_RANK_UNKNOWN;
 }
@@ -362,5 +362,4 @@ int IconImageList::GetReadyIcon( const bool& spectator,const bool& ready, const 
         return m_state_index_map[index];
     }
 }
-
 

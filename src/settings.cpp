@@ -17,12 +17,15 @@
 #include <wx/colour.h>
 #include <wx/cmndata.h>
 #include <wx/font.h>
+#include <wx/log.h>
+#include <wx/wfstream.h>
 
 #include "nonportable.h"
 #include "settings.h"
 #include "utils.h"
 #include "uiutils.h"
 #include "battlelistfiltervalues.h"
+#include "replay/replaylistfiltervalues.h"
 #include "iunitsync.h"
 
 const wxColor defaultHLcolor (255,0,0);
@@ -33,6 +36,10 @@ Settings& sett()
     static Settings m_sett;
     return m_sett;
 }
+
+SL_WinConf::SL_WinConf(wxFileInputStream& in)
+  : wxFileConfig(in)
+{}
 
 Settings::Settings()
 {
@@ -73,7 +80,7 @@ Settings::Settings()
       // TODO: error handling
   }
 
-  m_config = new myconf( instream );
+  m_config = new SL_WinConf( instream );
 
   #else
   //removed temporarily because it's suspected to cause a bug with userdir creation
@@ -88,11 +95,14 @@ Settings::Settings()
 
 Settings::~Settings()
 {
+  /// dizekat: fixing crashbug. Settings are saved from both OnExit and UI close.
+  /*
     m_config->Write( _T("/General/firstrun"), false );
     #if defined(__WXMSW__) && !defined(HAVE_WX26)
     SaveSettings();
     #endif
     SetCacheVersion();
+  */
     delete m_config;
 }
 
@@ -1194,12 +1204,12 @@ void Settings::SetBattleFilterValues(const BattleListFilterValues& filtervalues,
     m_config->Write( _T("/BattleFilter/lastprofile"),profile_name);
 }
 
-bool Settings::GetFilterActivState() const
+bool Settings::GetBattleFilterActivState() const
 {
     return m_config->Read( _T("/BattleFilter/Active") , 0l );
 }
 
-void Settings::SetFilterActivState(const bool state)
+void Settings::SetBattleFilterActivState(const bool state)
 {
     m_config->Write( _T("/BattleFilter/Active") , state );
 }
@@ -1211,7 +1221,7 @@ bool Settings::GetDisableSpringVersionCheck()
     return ret;
 }
 
-wxString Settings::GetLastFilterProfileName()
+wxString Settings::GetLastBattleFilterProfileName()
 {
     return  m_config->Read( _T("/BattleFilter/lastprofile"), _T("default") );
 }
@@ -1367,6 +1377,16 @@ void Settings::SetShowTooltips( bool show)
 bool Settings::GetShowTooltips()
 {
     return m_config->Read(_T("GUI/ShowTooltips"), 1l);
+}
+
+void Settings::SaveLayout( wxString& layout_name, wxString& layout )
+{
+    m_config->Write( _T("/Layout/") + layout_name, layout );
+}
+
+wxString Settings::GetLayout( wxString& layout_name )
+{
+    return  m_config->Read( _T("/Layout/") + layout_name, _T("") );
 }
 
 void Settings::SetColumnWidth( const wxString& list_name, const int coloumn_ind, const int coloumn_width )
@@ -1548,4 +1568,61 @@ void Settings::SetAutoUpdate( const bool value )
 bool Settings::GetAutoUpdate()
 {
     return m_config->Read( _T("/General/AutoUpdate"), true );
+}
+
+ReplayListFilterValues Settings::GetReplayFilterValues(const wxString& profile_name)
+{
+    ReplayListFilterValues filtervalues;
+    filtervalues.duration =         m_config->Read( _T("/ReplayFilter/")+profile_name + _T("/duration"), _T("") );
+    filtervalues.map=               m_config->Read( _T("/ReplayFilter/")+profile_name + _T("/map"), _T("") );
+    filtervalues.map_show =         m_config->Read( _T("/ReplayFilter/")+profile_name + _T("/map_show"), 0L );
+    filtervalues.filesize  =        m_config->Read( _T("/ReplayFilter/")+profile_name + _T("/filesize"), _T("") );
+    filtervalues.filesize_mode  =   m_config->Read( _T("/ReplayFilter/")+profile_name + _T("/filesize_mode"), _T(">") );
+    filtervalues.duration_mode  =   m_config->Read( _T("/ReplayFilter/")+profile_name + _T("/duration_mode"), _T(">") );
+    filtervalues.mod =              m_config->Read( _T("/ReplayFilter/")+profile_name + _T("/mod"), _T("") );
+    filtervalues.mod_show =         m_config->Read( _T("/ReplayFilter/")+profile_name + _T("/mod_show"), 0L );
+    filtervalues.player_mode =      m_config->Read( _T("/ReplayFilter/")+profile_name + _T("/player_mode"), _T("=") );
+    filtervalues.player_num  =      m_config->Read( _T("/ReplayFilter/")+profile_name + _T("/player_num"), _T("All") );
+
+    return filtervalues;
+}
+
+void Settings::SetReplayFilterValues(const ReplayListFilterValues& filtervalues, const wxString& profile_name)
+{
+    m_config->Write( _T("/ReplayFilter/")+profile_name + _T("/duration"),filtervalues.duration);
+    m_config->Write( _T("/ReplayFilter/")+profile_name + _T("/map"),filtervalues.map );
+    m_config->Write( _T("/ReplayFilter/")+profile_name + _T("/map_show"),filtervalues.map_show );
+    m_config->Write( _T("/ReplayFilter/")+profile_name + _T("/filesize"),filtervalues.filesize );
+    m_config->Write( _T("/ReplayFilter/")+profile_name + _T("/filesize_mode"),filtervalues.filesize_mode);
+    m_config->Write( _T("/ReplayFilter/")+profile_name + _T("/duration_mode"),filtervalues.duration_mode);
+    m_config->Write( _T("/ReplayFilter/")+profile_name + _T("/mod"),filtervalues.mod );
+    m_config->Write( _T("/ReplayFilter/")+profile_name + _T("/mod_show"),filtervalues.mod_show );
+    m_config->Write( _T("/ReplayFilter/")+profile_name + _T("/player_mode"),filtervalues.player_mode );
+    m_config->Write( _T("/ReplayFilter/")+profile_name + _T("/player_num"),filtervalues.player_num );
+    m_config->Write( _T("/ReplayFilter/lastprofile"),profile_name);
+}
+
+bool Settings::GetReplayFilterActivState() const
+{
+    return m_config->Read( _T("/ReplayFilter/Active") , 0l );
+}
+
+void Settings::SetReplayFilterActivState(const bool state)
+{
+    m_config->Write( _T("/ReplayFilter/Active") , state );
+}
+
+wxString Settings::GetLastReplayFilterProfileName()
+{
+    return  m_config->Read( _T("/ReplayFilter/lastprofile"), _T("default") );
+}
+
+void Settings::SetCompletionMethod( CompletionMethod method )
+{
+    m_config->Write( _T("/General/CompletionMethod"), (int)method);
+}
+
+Settings::CompletionMethod Settings::GetCompletionMethod(  ) const
+{
+    return  (CompletionMethod )m_config->Read( _T("/General/CompletionMethod"), (int)MatchExact );
 }

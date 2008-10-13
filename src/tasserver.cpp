@@ -5,6 +5,7 @@
 #include <wx/intl.h>
 #include <wx/protocol/http.h>
 #include <wx/socket.h>
+#include <wx/log.h>
 
 #include <stdexcept>
 #include <algorithm>
@@ -24,6 +25,7 @@
 #include "settings++/custom_dialogs.h"
 
 #include "settings.h"
+
 
 const int udp_reply_timeout=10;
 
@@ -115,9 +117,9 @@ myteamcolor:  Should be 32-bit signed integer in decimal form (e.g. 255 and not 
 UserStatus ConvTasclientstatus( TASClientstatus );
 UserBattleStatus ConvTasbattlestatus( TASBattleStatus );
 TASBattleStatus ConvTasbattlestatus( UserBattleStatus );
-StartType IntToStartType( int start );
-NatType IntToNatType( int nat );
-GameType IntToGameType( int gt );
+IBattle::StartType IntToStartType( int start );
+IBattle::NatType IntToNatType( int nat );
+IBattle::GameType IntToGameType( int gt );
 
 TASServer::TASServer( Ui& ui ): Server(ui), m_ui(ui), m_ser_ver(0), m_connected(false), m_online(false),
         m_buffer(_T("")), m_last_udp_ping(0), m_ping_id(10000), m_udp_private_port(16941),m_battle_id(-1),
@@ -350,14 +352,17 @@ void TASServer::Login()
 {
     wxLogDebugFunc( _T("") );
     wxString pass = GetPasswordHash( m_pass );
-    if ( m_server_lanmode ) pass = _T("Cock-a-doodle-doo");
+    wxString protocol = _T(" ") + GetProtocol();
+    if ( m_server_lanmode )
+    {
+       pass = _T("Cock-a-doodle-doo");
+       protocol = _T("");
+    }
     wxString localaddr;
     if ( m_sock ) localaddr = m_sock->GetLocalAddress();
     if ( localaddr.IsEmpty() ) localaddr = _T("*");
-    wxLogMessage( m_user + _T(" ") + pass + _T(" ") +
-        GetHostCPUSpeed() + _T(" ") + localaddr +_T(" SpringLobby 0.1") );
     SendCmd ( _T("LOGIN"), m_user + _T(" ") + pass + _T(" ") +
-        GetHostCPUSpeed() + _T(" ") + localaddr +_T(" SpringLobby 0.1") );
+        GetHostCPUSpeed() + _T(" ") + localaddr + _T(" SpringLobby ") + GetSpringLobbyVersion() + protocol );
 }
 
 void TASServer::Logout()
@@ -438,7 +443,7 @@ void TASServer::Update( int mselapsed )
               Battle *battle=GetCurrentBattle();
               if (battle)
               {
-                  if ((battle->GetNatType()==NAT_Hole_punching || (battle->GetNatType()==NAT_Fixed_source_ports) ) && !battle->GetInGame())
+                  if ((battle->GetNatType()==IBattle::NAT_Hole_punching || (battle->GetNatType()==IBattle::IBattle::NAT_Fixed_source_ports) ) && !battle->GetInGame())
                   {
                       if (battle->IsFounderMe())
                       {
@@ -849,6 +854,10 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         m_se->OnChannelMessage( channel, params );
         //CHANNELMESSAGE channame {message}
     }
+    else if ( cmd == _T("ACQUIREUSERID") )
+    {
+      SendCmd( _T("USERID"), GetProtocol() );
+    }
     else if ( cmd == _T("FORCELEAVECHANNEL") )
     {
         channel = GetWordParam( params );
@@ -1233,7 +1242,7 @@ void TASServer::JoinBattle( const int& battleid, const wxString& password )
 
         if (battle)
         {
-            if ((battle->GetNatType()==NAT_Hole_punching)||(battle->GetNatType()==NAT_Fixed_source_ports))
+            if ((battle->GetNatType()==IBattle::NAT_Hole_punching)||(battle->GetNatType()==IBattle::NAT_Fixed_source_ports))
             {
                 m_udp_private_port=sett().GetClientPort();
 
@@ -1306,7 +1315,7 @@ void TASServer::SendHostInfo( HostInfo update )
 
     //BattleOptions bo = battle.opts();
 
-    if ( ( update & ( HI_Map | HI_Locked | HI_Spectators ) ) > 0 )
+    if ( ( update & ( IBattle::HI_Map | IBattle::HI_Locked | IBattle::HI_Spectators ) ) > 0 )
     {
         // UPDATEBATTLEINFO SpectatorCount locked maphash {mapname}
         wxString cmd = wxString::Format( _T("%d %d "), battle.GetSpectators(), battle.IsLocked() );
@@ -1315,23 +1324,22 @@ void TASServer::SendHostInfo( HostInfo update )
 
         SendCmd( _T("UPDATEBATTLEINFO"), cmd );
     }
-    if ( ( update & HI_Send_All_opts ) > 0 )
+    if ( ( update & IBattle::HI_Send_All_opts ) > 0 )
     {
         wxString cmd;
 
-        wxStringTripleVec optlistMap = battle.CustomBattleOptions().getOptions( MapOption );
-        for (wxStringTripleVec::iterator it = optlistMap.begin(); it != optlistMap.end(); ++it)
+        OptionsWrapper::wxStringTripleVec optlistMap = battle.CustomBattleOptions().getOptions( OptionsWrapper::MapOption );
+        for (OptionsWrapper::wxStringTripleVec::iterator it = optlistMap.begin(); it != optlistMap.end(); ++it)
         {
-            cmd << _T("game\\mapoptions\\") << it->first + _T("=") << it->second.second << _T("\t");
+            cmd << _T("game/mapoptions/") << it->first + _T("=") << it->second.second << _T("\t");
         }
-        wxStringTripleVec optlistMod = battle.CustomBattleOptions().getOptions( ModOption );
-        for (wxStringTripleVec::iterator it = optlistMod.begin(); it != optlistMod.end(); ++it)
+        OptionsWrapper::wxStringTripleVec optlistMod = battle.CustomBattleOptions().getOptions( OptionsWrapper::ModOption );
+        for (OptionsWrapper::wxStringTripleVec::iterator it = optlistMod.begin(); it != optlistMod.end(); ++it)
         {
-            cmd << _T("game\\modoptions\\") << it->first << _T("=") << it->second.second << _T("\t");
+            cmd << _T("game/modoptions/") << it->first << _T("=") << it->second.second << _T("\t");
         }
-/// FIXME (BrainDamage#1#): change the slash type when new sprring comes out
-        wxStringTripleVec optlistEng = battle.CustomBattleOptions().getOptions( EngineOption );
-        for (wxStringTripleVec::iterator it = optlistEng.begin(); it != optlistEng.end(); ++it)
+        OptionsWrapper::wxStringTripleVec optlistEng = battle.CustomBattleOptions().getOptions( OptionsWrapper::EngineOption );
+        for (OptionsWrapper::wxStringTripleVec::iterator it = optlistEng.begin(); it != optlistEng.end(); ++it)
         {
             cmd << _T("game/") << it->first << _T("=") << it->second.second << _T("\t");
         }
@@ -1339,7 +1347,7 @@ void TASServer::SendHostInfo( HostInfo update )
         SendCmd( _T("SETSCRIPTTAGS"), cmd );
     }
 
-    if ( (update & HI_StartRects) > 0 )   // Startrects should be updated.
+    if ( (update & IBattle::HI_StartRects) > 0 )   // Startrects should be updated.
     {
 
         for ( unsigned int i = 16; i < battle.GetNumRects(); i++ )  /// FIXME (BrainDamage#1#):  remove this when not needing to connect to TASserver (because doesn't support >16 start boxes)
@@ -1374,7 +1382,7 @@ void TASServer::SendHostInfo( HostInfo update )
         }
 
     }
-    if ( (update & HI_Restrictions) > 0 )
+    if ( (update & IBattle::HI_Restrictions) > 0 )
     {
         wxArrayString units = battle.DisabledUnits();
         SendCmd( _T("ENABLEALLUNITS") );
@@ -1411,17 +1419,17 @@ void TASServer::SendHostInfo( const wxString& Tag )
     long type;
     Tag.BeforeFirst( '_' ).ToLong( &type );
     wxString key = Tag.AfterFirst( '_' );
-    if ( type == MapOption )
+    if ( type == OptionsWrapper::MapOption )
     {
-        cmd << _T("game\\mapoptions\\") << key << _T("=") << battle.CustomBattleOptions().getSingleValue( key, MapOption );
+        cmd << _T("game/mapoptions/") << key << _T("=") << battle.CustomBattleOptions().getSingleValue( key, OptionsWrapper::MapOption );
     }
-    else if ( type == ModOption )
+    else if ( type == OptionsWrapper::ModOption )
     {
-        cmd << _T("game\\modoptions\\") << key << _T("=") << battle.CustomBattleOptions().getSingleValue( key, ModOption );
+        cmd << _T("game/modoptions/") << key << _T("=") << battle.CustomBattleOptions().getSingleValue( key, OptionsWrapper::ModOption );
     }
-    else if ( type == EngineOption )
+    else if ( type == OptionsWrapper::EngineOption )
     {
-        cmd << _T("game/") << key << _T("=") << battle.CustomBattleOptions().getSingleValue( key, EngineOption );
+        cmd << _T("game/") << key << _T("=") << battle.CustomBattleOptions().getSingleValue( key, OptionsWrapper::EngineOption );
     }
     SendCmd( _T("SETSCRIPTTAGS"), cmd );
 }
@@ -1497,7 +1505,7 @@ void TASServer::StartHostedBattle()
     Battle *battle=GetCurrentBattle();
     if (battle)
     {
-        if ((battle->GetNatType()==NAT_Hole_punching || (battle->GetNatType()==NAT_Fixed_source_ports)))
+        if ((battle->GetNatType()==IBattle::NAT_Hole_punching || (battle->GetNatType()==IBattle::NAT_Fixed_source_ports)))
         {
             UdpPingTheServer();
             for (int i=0;i<5;++i)UdpPingAllClients();
@@ -1899,7 +1907,7 @@ void TASServer::UdpPingAllClients()/// used when hosting with nat holepunching. 
     std::vector<UserOrder> ordered_users;
 
 
-    for ( user_map_t::size_type i = 0; i < battle->GetNumUsers(); i++ )
+    for ( UserList::user_map_t::size_type i = 0; i < battle->GetNumUsers(); i++ )
     {
         User &user=battle->GetUser(i);
         if (&user == &(battle->GetMe()))continue;/// dont include myself (change in copypasta)
@@ -1920,7 +1928,7 @@ void TASServer::UdpPingAllClients()/// used when hosting with nat holepunching. 
         unsigned int port=user.BattleStatus().udpport;
 
         unsigned int src_port=m_udp_private_port;
-        if (battle->GetNatType()==NAT_Fixed_source_ports)
+        if (battle->GetNatType()==IBattle::NAT_Fixed_source_ports)
         {
             port=FIRST_UDP_SOURCEPORT+i;
         }
@@ -1932,6 +1940,12 @@ void TASServer::UdpPingAllClients()/// used when hosting with nat holepunching. 
             UdpPing(src_port,ip,port,_T("hai!"));
         }
     }
+}
+
+wxString TASServer::GetProtocol()
+{
+  wxString pszstring;
+  return pszstring;
 }
 
 //! @brief used to check if the NAT is done properly when hosting
@@ -1980,7 +1994,7 @@ UserStatus ConvTasclientstatus( TASClientstatus tas )
     UserStatus stat;
     stat.in_game = tas.in_game;
     stat.away = tas.away;
-    stat.rank = (RankContainer)(tas.rank + 1);
+    stat.rank = (UserStatus::RankContainer)(tas.rank + 1);
     stat.moderator = tas.moderator;
     stat.bot = tas.bot;
     return stat;
@@ -2014,52 +2028,52 @@ TASBattleStatus ConvTasbattlestatus( UserBattleStatus bs)
 }
 
 
-StartType IntToStartType( int start )
+IBattle::StartType IntToStartType( int start )
 {
     switch ( start )
     {
     case 0:
-        return ST_Fixed;
+        return IBattle::ST_Fixed;
     case 1:
-        return ST_Random;
+        return IBattle::ST_Random;
     case 2:
-        return ST_Choose;
+        return IBattle::ST_Choose;
     default:
         ASSERT_LOGIC( false, _T("invalid value") );
     };
-    return ST_Fixed;
+    return IBattle::ST_Fixed;
 }
 
 
-NatType IntToNatType( int nat )
+IBattle::NatType IntToNatType( int nat )
 {
     switch ( nat )
     {
     case 0:
-        return NAT_None;
+        return IBattle::NAT_None;
     case 1:
-        return NAT_Hole_punching;
+        return IBattle::NAT_Hole_punching;
     case 2:
-        return NAT_Fixed_source_ports;
+        return IBattle::NAT_Fixed_source_ports;
     default:
         ASSERT_LOGIC( false, _T("invalid value") );
     };
-    return NAT_None;
+    return IBattle::NAT_None;
 }
 
 
-GameType IntToGameType( int gt )
+IBattle::GameType IntToGameType( int gt )
 {
     switch ( gt )
     {
     case 0:
-        return GT_ComContinue;
+        return IBattle::GT_ComContinue;
     case 1:
-        return GT_ComEnds;
+        return IBattle::GT_ComEnds;
     case 2:
-        return GT_Lineage;
+        return IBattle::GT_Lineage;
     default:
         ASSERT_LOGIC( false, _T("invalid value") );
     };
-    return GT_ComContinue;
+    return IBattle::GT_ComContinue;
 }

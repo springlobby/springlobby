@@ -40,6 +40,10 @@
 #include "mainwindow.h"
 #include "Helper/colorbutton.h"
 
+#ifndef HAVE_WX26
+#include "auimanager.h"
+#endif
+
 BEGIN_EVENT_TABLE( ChatOptionsTab, wxPanel )
   EVT_BUTTON( ID_SELFONT, ChatOptionsTab::OnSelectFont )
   EVT_CHECKBOX( ID_SYSCOLS, ChatOptionsTab::OnUseSystemColors )
@@ -59,8 +63,12 @@ BEGIN_EVENT_TABLE( ChatOptionsTab, wxPanel )
 END_EVENT_TABLE()
 
 
-ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1 ),m_ui(ui)
+ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( parent, -1 ),m_ui(ui)
 {
+
+  #ifndef HAVE_WX26
+  GetAui().manager->AddPane( this, wxLEFT, _T("chatoptionstab") );
+  #endif
 
   wxBoxSizer* bMainSizerV;
   bMainSizerV = new wxBoxSizer( wxVERTICAL );
@@ -360,8 +368,10 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1
 
   bMainSizerV->Add( 0, 0, 1, wxEXPAND, 5 );
 
-  this->SetSizer( bMainSizerV );
-  this->Layout();
+  SetScrollRate( 3, 3 );
+
+  SetSizer( bMainSizerV );
+  Layout();
 
   if ( sett().IsPortableMode() ) sbChatLog->Disable();
 

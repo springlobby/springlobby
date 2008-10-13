@@ -175,7 +175,7 @@ void ServerEvents::OnUserQuit( const wxString& nick )
 }
 
 
-void ServerEvents::OnBattleOpened( int id, bool replay, NatType nat, const wxString& nick,
+void ServerEvents::OnBattleOpened( int id, bool replay, IBattle::NatType nat, const wxString& nick,
                        const wxString& host, int port, int maxplayers,
                        bool haspass, int rank, const wxString& maphash, const wxString& map,
                        const wxString& title, const wxString& mod )
@@ -226,8 +226,8 @@ void ServerEvents::OnJoinedBattle( int battleid, const wxString& hash )
 
   if ( !battle.IsFounderMe() )
   {
-    battle.CustomBattleOptions().loadOptions( MapOption, battle.GetHostMapName() );
-    battle.CustomBattleOptions().loadOptions( ModOption, battle.GetHostModName() );
+    battle.CustomBattleOptions().loadOptions( OptionsWrapper::MapOption, battle.GetHostMapName() );
+    battle.CustomBattleOptions().loadOptions( OptionsWrapper::ModOption, battle.GetHostModName() );
   }
 
   m_ui.OnJoinedBattle( battle );
@@ -241,8 +241,8 @@ void ServerEvents::OnHostedBattle( int battleid )
   wxLogDebugFunc( _T("") );
   Battle& battle = m_serv.GetBattle( battleid );
 
-  battle.CustomBattleOptions().loadOptions( MapOption, battle.GetHostMapName() );
-  battle.CustomBattleOptions().loadOptions( ModOption, battle.GetHostModName() );
+  battle.CustomBattleOptions().loadOptions( OptionsWrapper::MapOption, battle.GetHostMapName() );
+  battle.CustomBattleOptions().loadOptions( OptionsWrapper::ModOption, battle.GetHostModName() );
 
   wxString presetname = sett().GetModDefaultPresetName( battle.GetHostModName() );
   if ( !presetname.IsEmpty() )
@@ -250,7 +250,7 @@ void ServerEvents::OnHostedBattle( int battleid )
     battle.LoadOptionsPreset( presetname );
   }
 
-  m_serv.SendHostInfo( HI_Send_All_opts );
+  m_serv.SendHostInfo( IBattle::HI_Send_All_opts );
 
   m_ui.OnHostedBattle( battle );
 }
@@ -339,8 +339,8 @@ void ServerEvents::OnBattleInfoUpdated( int battleid, int spectators, bool locke
   if ( (oldmap != map) && (battle.UserExists( m_serv.GetMe().GetNick())) )
   {
     battle.SendMyBattleStatus();
-    battle.CustomBattleOptions().loadOptions( MapOption, map );
-    battle.Update( wxString::Format( _T("%d_mapname"), PrivateOptions ) );
+    battle.CustomBattleOptions().loadOptions( OptionsWrapper::MapOption, map );
+    battle.Update( wxString::Format( _T("%d_mapname"), OptionsWrapper::PrivateOptions ) );
   }
 
   m_ui.OnBattleInfoUpdated( battle );
@@ -352,27 +352,23 @@ void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const w
   Battle& battle = m_serv.GetBattle( battleid );
 
   wxString key = param;
-  if ( key.Left( 5 ) == _T("game/") )/// FIXME (BrainDamage#1#): change the slash type when the new spring version gets out
+  if ( key.Left( 5 ) == _T("game/") )
   {
     key = key.AfterFirst( '/' );
-    if (  battle.CustomBattleOptions().setSingleOption( key,  value, EngineOption ) )
-      battle.Update( wxString::Format(_T("%d_%s"), EngineOption, key.c_str() ) );
-  }
-  else if ( key.Left( 5 ) == _T("game\\") )
-  {
-    key = key.AfterFirst( '\\' );
-     if ( key.Left( 11 ) == _T( "mapoptions\\" ) )
+     if ( key.Left( 11 ) == _T( "mapoptions/" ) )
     {
-      key = key.AfterFirst( '\\' );
-      if (  battle.CustomBattleOptions().setSingleOption( key,  value, MapOption ) )  // m_serv.LeaveBattle( battleid ); // host has sent a bad option, leave battle
-        battle.Update( wxString::Format(_T("%d_%s"), MapOption, key.c_str() ) );
+      key = key.AfterFirst( '/' );
+      if (  battle.CustomBattleOptions().setSingleOption( key,  value, OptionsWrapper::MapOption ) )  // m_serv.LeaveBattle( battleid ); // host has sent a bad option, leave battle
+        battle.Update( wxString::Format(_T("%d_%s"), OptionsWrapper::MapOption, key.c_str() ) );
     }
-    else if ( key.Left( 11 ) == _T( "modoptions\\" ) )
+    else if ( key.Left( 11 ) == _T( "modoptions/" ) )
     {
-      key = key.AfterFirst( '\\' );
-      if (  battle.CustomBattleOptions().setSingleOption( key, value, ModOption ) )  //m_serv.LeaveBattle( battleid ); // host has sent a bad option, leave battle
-        battle.Update(  wxString::Format(_T("%d_%s"), ModOption,  key.c_str() ) );
+      key = key.AfterFirst( '/' );
+      if (  battle.CustomBattleOptions().setSingleOption( key, value, OptionsWrapper::ModOption ) );//m_serv.LeaveBattle( battleid ); // host has sent a bad option, leave battle
+        battle.Update(  wxString::Format(_T("%d_%s"), OptionsWrapper::ModOption,  key.c_str() ) );
     }
+    else if (  battle.CustomBattleOptions().setSingleOption( key,  value, OptionsWrapper::EngineOption ) )
+      battle.Update( wxString::Format(_T("%d_%s"), OptionsWrapper::EngineOption, key.c_str() ) );
   }
 }
 
@@ -401,7 +397,7 @@ void ServerEvents::OnBattleDisableUnit( int battleid, const wxString& unitname )
   wxLogDebugFunc( _T("") );
   Battle& battle = m_serv.GetBattle( battleid );
   battle.DisableUnit( unitname );
-  battle.Update( wxString::Format( _T("%d_restrictions"), PrivateOptions ) );
+  battle.Update( wxString::Format( _T("%d_restrictions"), OptionsWrapper::PrivateOptions ) );
 }
 
 
@@ -410,7 +406,7 @@ void ServerEvents::OnBattleEnableUnit( int battleid, const wxString& unitname )
   wxLogDebugFunc( _T("") );
   Battle& battle = m_serv.GetBattle( battleid );
   battle.EnableUnit( unitname );
-  battle.Update( wxString::Format( _T("%d_restrictions"), PrivateOptions ) );
+  battle.Update( wxString::Format( _T("%d_restrictions"), OptionsWrapper::PrivateOptions ) );
 }
 
 
@@ -419,7 +415,7 @@ void ServerEvents::OnBattleEnableAllUnits( int battleid )
   wxLogDebugFunc( _T("") );
   Battle& battle = m_serv.GetBattle( battleid );
   battle.EnableAllUnits();
-  battle.Update( wxString::Format( _T("%d_restrictions"), PrivateOptions ) );
+  battle.Update( wxString::Format( _T("%d_restrictions"), OptionsWrapper::PrivateOptions ) );
 }
 
 
@@ -541,7 +537,7 @@ void ServerEvents::OnBattleStartRectAdd( int battleid, int allyno, int left, int
 {
   Battle& battle = m_serv.GetBattle( battleid );
   battle.AddStartRect( allyno, left, top, right, bottom );
-  battle.Update( wxString::Format( _T("%d_mapname"), PrivateOptions ) );
+  battle.Update( wxString::Format( _T("%d_mapname"), OptionsWrapper::PrivateOptions ) );
 }
 
 
@@ -549,7 +545,7 @@ void ServerEvents::OnBattleStartRectRemove( int battleid, int allyno )
 {
   Battle& battle = m_serv.GetBattle( battleid );
   battle.RemoveStartRect( allyno );
-  battle.Update( wxString::Format( _T("%d_mapname"), PrivateOptions ) );
+  battle.Update( wxString::Format( _T("%d_mapname"), OptionsWrapper::PrivateOptions ) );
 }
 
 
@@ -628,7 +624,7 @@ void ServerEvents::OnChannelMessage( const wxString& channel, const wxString& ms
 void ServerEvents::OnHostExternalUdpPort( const unsigned int udpport )
 {
   if ( !m_serv.GetCurrentBattle() ) return;
-  if ( m_serv.GetCurrentBattle()->GetNatType() == NAT_Hole_punching || m_serv.GetCurrentBattle()->GetNatType() == NAT_Fixed_source_ports ) m_serv.GetCurrentBattle()->SetHostPort( udpport );
+  if ( m_serv.GetCurrentBattle()->GetNatType() == IBattle::NAT_Hole_punching || m_serv.GetCurrentBattle()->GetNatType() == IBattle::NAT_Fixed_source_ports ) m_serv.GetCurrentBattle()->SetHostPort( udpport );
 }
 
 
@@ -661,7 +657,7 @@ void ServerEvents::OnClientIPPort( const wxString &username, const wxString &ip,
 
     if(sett().GetShowIPAddresses())m_ui.OnBattleAction(*m_serv.GetCurrentBattle(),username,wxString::Format(_(" has ip=%s"),ip.c_str()));
 
-    if(m_serv.GetCurrentBattle()->GetNatType()!=NAT_None && (udpport==0)){
+    if(m_serv.GetCurrentBattle()->GetNatType()!=IBattle::NAT_None && (udpport==0)){
       /// todo: better warning message
       ///something.OutputLine( _T(" ** ") + who.GetNick() + _(" does not support nat traversal! ") + GetChatTypeStr() + _T("."), sett().GetChatColorJoinPart(), sett().GetChatFont() );
       m_ui.OnBattleAction(*m_serv.GetCurrentBattle(),username,_(" does not really support nat traversal"));

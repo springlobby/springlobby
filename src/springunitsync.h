@@ -4,13 +4,12 @@
 #include <map>
 
 #include "iunitsync.h"
-#include "nonportable.h"
 
-class wxImage;
-class wxDynamicLibrary;
-struct SpringMapInfo;
-struct CachedMapInfo;
 class wxCriticalSection;
+class wxDynamicLibrary;
+class wxImage;
+struct CachedMapInfo;
+struct SpringMapInfo;
 
 typedef std::map<wxString,wxString> LocalArchivesVector;
 
@@ -25,6 +24,7 @@ class SpringUnitSync : public IUnitSync
     wxArrayString GetModList();
     bool ModExists( const wxString& modname );
     bool ModExists( const wxString& modname, const wxString& hash );
+    bool ModExistsCheckHash( const wxString& hash ) const;
     UnitSyncMod GetMod( const wxString& modname );
     UnitSyncMod GetMod( int index );
     int GetModIndex( const wxString& name );
@@ -33,6 +33,7 @@ class SpringUnitSync : public IUnitSync
 
     int GetNumMaps();
     wxArrayString GetMapList();
+    wxArrayString GetModValidMapList( const wxString& modname );
     bool MapExists( const wxString& mapname );
     bool MapExists( const wxString& mapname, const wxString& hash );
 
@@ -63,13 +64,21 @@ class SpringUnitSync : public IUnitSync
     int GetNumUnits( const wxString& modname );
     wxArrayString GetUnitsList( const wxString& modname );
 
+    /// get minimap with native width x height
+    wxImage GetMinimap( const wxString& mapname );
+    /// get minimap rescaled to given width x height
     wxImage GetMinimap( const wxString& mapname, int width, int height );
+    /// get metalmap with native width x height
+    wxImage GetMetalmap( const wxString& mapname );
+    /// get metalmap rescaled to given width x height
     wxImage GetMetalmap( const wxString& mapname, int width, int height );
 
     bool ReloadUnitSyncLib();
 
     void SetSpringDataPath( const wxString& path );
     wxString GetSpringDataPath();
+
+    void GetReplayList(std::vector<wxString> &ret);
 
     bool FileExists( const wxString& name );
 
@@ -110,6 +119,8 @@ class SpringUnitSync : public IUnitSync
 
     void PopulateArchiveList();
 
+    double _GetSpringVersion();
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_SPRINGUNITSYNC_H
+

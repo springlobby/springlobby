@@ -20,6 +20,7 @@
 #include <wx/file.h>
 #include <wx/stdpaths.h>
 #include <wx/scrolbar.h>        // added for scroll bar powers
+#include <wx/log.h>
 
 #ifdef __WXMSW__
 #include <wx/msw/registry.h>
@@ -449,6 +450,9 @@ wxString SpringOptionsTab::AutoFindUnitSyncLib( const wxString& def )
     if ( IsUnitSyncLib( path + _T("unitsync") + GetLibExtension() ) ) return path + _T("unitsync") + GetLibExtension();
     if ( IsUnitSyncLib( path + _T("Spring") + wxFileName::GetPathSeparator() + _T("unitsync") + GetLibExtension() ) ) return path + _T("Spring") + wxFileName::GetPathSeparator() + _T("unitsync") + GetLibExtension();
     if ( IsUnitSyncLib( path + _T("spring") + wxFileName::GetPathSeparator() + _T("unitsync") + GetLibExtension() ) ) return path + _T("spring") + wxFileName::GetPathSeparator() + _T("unitsync") + GetLibExtension();
+    if ( IsUnitSyncLib( path + _T("libunitsync") + GetLibExtension() ) ) return path + _T("libunitsync") + GetLibExtension();
+    if ( IsUnitSyncLib( path + _T("Spring") + wxFileName::GetPathSeparator() + _T("libunitsync") + GetLibExtension() ) ) return path + _T("Spring") + wxFileName::GetPathSeparator() + _T("libunitsync") + GetLibExtension();
+    if ( IsUnitSyncLib( path + _T("spring") + wxFileName::GetPathSeparator() + _T("libunitsync") + GetLibExtension() ) ) return path + _T("spring") + wxFileName::GetPathSeparator() + _T("libunitsync") + GetLibExtension();
   }
 
   return def;

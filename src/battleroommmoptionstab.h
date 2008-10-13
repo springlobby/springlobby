@@ -12,7 +12,7 @@ const int STRING_START_ID = 6000;
 
 class wxBoxSizer;
 class wxStaticBoxSizer;
-class mmOptionsWrapper;
+class OptionsWrapper;
 class wxCheckBox;
 class wxComboBox;
 class wxCommandEvent;
@@ -44,7 +44,7 @@ class BattleroomMMOptionsTab : public wxScrolledWindow
 		~BattleroomMMOptionsTab();
 
 		void UpdateOptControls(wxString controlName);
-		void OnReloadControls(GameOption flag);
+		void OnReloadControls(OptionsWrapper::GameOption flag);
 		void Update( const wxString& Tag );
 	protected:
 		 IBattle& m_battle;
@@ -54,7 +54,7 @@ class BattleroomMMOptionsTab : public wxScrolledWindow
 		wxBoxSizer* m_mod_layout;
 		wxStaticBoxSizer* m_map_options_sizer;
 		wxBoxSizer* m_map_layout;
-		mmOptionsWrapper* m_mapmodoptions;
+		OptionsWrapper* m_mapmodoptions;
 
 		chkBoxMap m_chkbox_map;
 		comboBoxMap m_combox_map;
@@ -66,7 +66,7 @@ class BattleroomMMOptionsTab : public wxScrolledWindow
          * for all values in all option maps create a control (pointer),
          * set the controls name to the option key and add it to the appropiate map and sizer.
          */
-		void setupOptionsSizer(wxBoxSizer* optFlagSizer,GameOption optFlag);
+		void setupOptionsSizer(wxBoxSizer* optFlagSizer, OptionsWrapper::GameOption optFlag);
 
 		/** \name Event handlers
 		 * @{
