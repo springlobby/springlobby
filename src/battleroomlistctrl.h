@@ -8,7 +8,6 @@ class User;
 class Battle;
 class Ui;
 struct BattleBot;
-//class wxMenuItem;
 class wxIcon;
 
 

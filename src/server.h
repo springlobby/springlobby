@@ -8,8 +8,6 @@
 #include "battlelist.h"
 #include "inetclass.h"
 
-#define PING_TIMEOUT 30
-
 class ServerEvents;
 class Channel;
 class Ui;
@@ -22,7 +20,8 @@ class wxString;
 typedef int ServerError;
 class wxColour;
 
-#define PE_NONE 0
+//usage long gone? (koshi)
+//#define PE_NONE 0
 
 
 typedef int HostInfo;
@@ -197,6 +196,8 @@ class Server : public iNetClass
 
     Battle& _AddBattle( const int& id );
     void _RemoveBattle( const int& id );
+
+    static const unsigned int PING_TIMEOUT = 30;
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_SERVER_H

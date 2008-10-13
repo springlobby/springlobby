@@ -14,8 +14,8 @@ class Ui;
 class Server;
 
 
-#define DEFAULT_SERVER_PORT 8034
-#define DEFAULT_EXTERNAL_UDP_SOURCE_PORT 16941
+const unsigned int DEFAULT_SERVER_PORT = 8034;
+const unsigned int DEFAULT_EXTERNAL_UDP_SOURCE_PORT = 16941;
 
 
 struct BattleOptions

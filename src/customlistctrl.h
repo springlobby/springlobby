@@ -21,9 +21,6 @@
 
 #include "useractions.h"
 
-typedef std::pair<wxString,bool> colInfo;
-typedef std::vector<colInfo> colInfoVec;
-
 #if wxUSE_TIPWINDOW
 class SLTipWindow : public wxTipWindow{
     public:
@@ -54,6 +51,9 @@ protected:
     SLTipWindow** controlPointer;
     #endif
     int coloumnCount;
+
+    typedef std::pair<wxString,bool> colInfo;
+    typedef std::vector<colInfo> colInfoVec;
 
     /** global Tooltip thingies (ms)
      */

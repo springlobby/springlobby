@@ -10,6 +10,7 @@ class Server;
 class Ui;
 class ChatPanel;
 
+//! wtf is this even? commenting it makes no error (koshi)
 typedef void(*channel_msg_callback)(Channel&,User&,const wxString&);
 typedef void(*channel_cmd_callback)(Channel&);
 typedef void(*channel_whocmd_callback)(Channel&,User&);
