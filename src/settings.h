@@ -531,8 +531,8 @@ class Settings
     /**@}*/
 
     enum CompletionMethod {
-        MatchNearest,
-        MatchExact
+        MatchNearest = 1,
+        MatchExact = 2
     };
 
     void SetCompletionMethod( CompletionMethod method );

@@ -1619,10 +1619,10 @@ wxString Settings::GetLastReplayFilterProfileName()
 
 void Settings::SetCompletionMethod( CompletionMethod method )
 {
-
+    m_config->Write( _T("/General/CompletionMethod"), (int)method);
 }
 
 Settings::CompletionMethod Settings::GetCompletionMethod(  ) const
 {
-    return  (CompletionMethod )m_config->Read( _T("/General"), (int)MatchExact );
+    return  (CompletionMethod )m_config->Read( _T("/General/CompletionMethod"), (int)MatchExact );
 }
