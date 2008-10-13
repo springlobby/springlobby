@@ -6,14 +6,7 @@
 
 #include "server.h"
 
-#define FIRST_UDP_SOURCEPORT 8300
-
-//! @brief Struct used internally by the TASServer class to calculate ping roundtimes.
-struct TASPingListItem {
-  int id;
-  time_t t;
-};
-
+const unsigned int FIRST_UDP_SOURCEPORT = 8300;
 
 class Ui;
 class Socket;
@@ -140,6 +133,13 @@ class TASServer : public Server
     int TestOpenPort( unsigned int port );
 
   protected:
+
+    //! @brief Struct used internally by the TASServer class to calculate ping roundtimes.
+    struct TASPingListItem {
+      int id;
+      time_t t;
+    };
+
     Ui& m_ui;
     ServerEvents* m_se;
     double m_ser_ver;
@@ -170,6 +170,7 @@ class TASServer : public Server
 
     void ReceiveAndExecute();
     void SendCmd( const wxString& command, const wxString& param = _T("") );
+
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_TASSERVER_H
