@@ -3,15 +3,14 @@
 
 
 #include <wx/string.h>
-#include <wx/gdicmn.h>
 #include <vector>
 
-#include "iunitsync.h"
 #include "ibattle.h"
 
 class Ui;
-
+class BattleBot;
 class MainSinglePlayerTab;
+class wxColour;
 
 
 class SinglePlayerBot

@@ -10,6 +10,7 @@ class wxRadioButton;
 class wxButton;
 class wxTextCtrl;
 class wxBoxSizer;
+class wxCheckBox;
 class Ui;
 class ColorButton;
 
