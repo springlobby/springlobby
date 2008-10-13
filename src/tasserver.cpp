@@ -1328,18 +1328,18 @@ void TASServer::SendHostInfo( HostInfo update )
     {
         wxString cmd;
 
-        wxStringTripleVec optlistMap = battle.CustomBattleOptions().getOptions( MapOption );
-        for (wxStringTripleVec::iterator it = optlistMap.begin(); it != optlistMap.end(); ++it)
+        OptionsWrapper::wxStringTripleVec optlistMap = battle.CustomBattleOptions().getOptions( OptionsWrapper::MapOption );
+        for (OptionsWrapper::wxStringTripleVec::iterator it = optlistMap.begin(); it != optlistMap.end(); ++it)
         {
             cmd << _T("game/mapoptions/") << it->first + _T("=") << it->second.second << _T("\t");
         }
-        wxStringTripleVec optlistMod = battle.CustomBattleOptions().getOptions( ModOption );
-        for (wxStringTripleVec::iterator it = optlistMod.begin(); it != optlistMod.end(); ++it)
+        OptionsWrapper::wxStringTripleVec optlistMod = battle.CustomBattleOptions().getOptions( OptionsWrapper::ModOption );
+        for (OptionsWrapper::wxStringTripleVec::iterator it = optlistMod.begin(); it != optlistMod.end(); ++it)
         {
             cmd << _T("game/modoptions/") << it->first << _T("=") << it->second.second << _T("\t");
         }
-        wxStringTripleVec optlistEng = battle.CustomBattleOptions().getOptions( EngineOption );
-        for (wxStringTripleVec::iterator it = optlistEng.begin(); it != optlistEng.end(); ++it)
+        OptionsWrapper::wxStringTripleVec optlistEng = battle.CustomBattleOptions().getOptions( OptionsWrapper::EngineOption );
+        for (OptionsWrapper::wxStringTripleVec::iterator it = optlistEng.begin(); it != optlistEng.end(); ++it)
         {
             cmd << _T("game/") << it->first << _T("=") << it->second.second << _T("\t");
         }
@@ -1419,17 +1419,17 @@ void TASServer::SendHostInfo( const wxString& Tag )
     long type;
     Tag.BeforeFirst( '_' ).ToLong( &type );
     wxString key = Tag.AfterFirst( '_' );
-    if ( type == MapOption )
+    if ( type == OptionsWrapper::MapOption )
     {
-        cmd << _T("game/mapoptions/") << key << _T("=") << battle.CustomBattleOptions().getSingleValue( key, MapOption );
+        cmd << _T("game/mapoptions/") << key << _T("=") << battle.CustomBattleOptions().getSingleValue( key, OptionsWrapper::MapOption );
     }
-    else if ( type == ModOption )
+    else if ( type == OptionsWrapper::ModOption )
     {
-        cmd << _T("game/modoptions/") << key << _T("=") << battle.CustomBattleOptions().getSingleValue( key, ModOption );
+        cmd << _T("game/modoptions/") << key << _T("=") << battle.CustomBattleOptions().getSingleValue( key, OptionsWrapper::ModOption );
     }
-    else if ( type == EngineOption )
+    else if ( type == OptionsWrapper::EngineOption )
     {
-        cmd << _T("game/") << key << _T("=") << battle.CustomBattleOptions().getSingleValue( key, EngineOption );
+        cmd << _T("game/") << key << _T("=") << battle.CustomBattleOptions().getSingleValue( key, OptionsWrapper::EngineOption );
     }
     SendCmd( _T("SETSCRIPTTAGS"), cmd );
 }

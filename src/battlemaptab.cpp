@@ -130,7 +130,7 @@ BattleMapTab::~BattleMapTab()
 
 void BattleMapTab::Update()
 {
-  wxString value = m_battle.CustomBattleOptions().getSingleValue( _T("startpostype"), EngineOption);
+  wxString value = m_battle.CustomBattleOptions().getSingleValue( _T("startpostype"), OptionsWrapper::EngineOption);
   long longval;
   value.ToLong( &longval );
   m_start_radios->SetSelection( longval );
@@ -159,10 +159,10 @@ void BattleMapTab::Update( const wxString& Tag )
   long type;
   Tag.BeforeFirst( '_' ).ToLong( &type );
   wxString key = Tag.AfterFirst( '_' );
-  wxString value = m_battle.CustomBattleOptions().getSingleValue( key, (GameOption)type);
+  wxString value = m_battle.CustomBattleOptions().getSingleValue( key, (OptionsWrapper::GameOption)type);
   long longval;
   value.ToLong( &longval );
-  if ( type == EngineOption )
+  if ( type == OptionsWrapper::EngineOption )
   {
     if ( key == _T("startpostype") )
     {
@@ -170,7 +170,7 @@ void BattleMapTab::Update( const wxString& Tag )
      m_minimap->UpdateMinimap();
     }
   }
-  else if ( type == PrivateOptions )
+  else if ( type == OptionsWrapper::PrivateOptions )
   {
     if ( key == _T("mapname") )
     {
@@ -227,8 +227,8 @@ void BattleMapTab::OnMapSelect( wxCommandEvent& event )
 void BattleMapTab::OnStartTypeSelect( wxCommandEvent& event )
 {
   wxString pos = wxString::Format( _T("%d"), m_start_radios->GetSelection());
-  m_battle.CustomBattleOptions().setSingleOption( _T("startpostype"), pos, EngineOption );
-  m_battle.SendHostInfo( wxString::Format(_T("%d_startpostype"), EngineOption ) );
+  m_battle.CustomBattleOptions().setSingleOption( _T("startpostype"), pos, OptionsWrapper::EngineOption );
+  m_battle.SendHostInfo( wxString::Format(_T("%d_startpostype"), OptionsWrapper::EngineOption ) );
 }
 
 

@@ -166,7 +166,7 @@ class IBattle
 
     virtual void OnUnitSyncReloaded();
 
-    virtual mmOptionsWrapper& CustomBattleOptions() { return m_opt_wrap; }
+    virtual OptionsWrapper& CustomBattleOptions() { return m_opt_wrap; }
 
     virtual bool LoadOptionsPreset( const wxString& name );
     virtual void SaveOptionsPreset( const wxString& name );
@@ -189,7 +189,7 @@ class IBattle
 
     wxArrayString m_units;
 
-    mmOptionsWrapper m_opt_wrap;
+    OptionsWrapper m_opt_wrap;
 
     wxString m_preset;
 };

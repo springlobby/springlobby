@@ -80,7 +80,7 @@ class BattleRoomTab : public wxScrolledWindow
 
   protected:
 
-    long AddMMOptionsToList( long pos, GameOption optFlag );
+    long AddMMOptionsToList( long pos, OptionsWrapper::GameOption optFlag );
 
     Ui& m_ui;
     Battle& m_battle;

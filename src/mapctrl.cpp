@@ -218,7 +218,7 @@ void MapCtrl::_SetCursor()
 
     if ( m_battle != 0 ) {
       long longval;
-      m_battle->CustomBattleOptions().getSingleValue( _T("startpostype") , EngineOption ).ToLong( &longval );
+      m_battle->CustomBattleOptions().getSingleValue( _T("startpostype") , OptionsWrapper::EngineOption ).ToLong( &longval );
       if ( longval != IBattle::ST_Choose ) {
         SetCursor( wxCursor( wxCURSOR_ARROW ) );
         return;
@@ -539,7 +539,7 @@ void MapCtrl::DrawStartPositions( wxDC& dc )
   m_map = m_battle->LoadMap();
   RequireImages();
   long longval;
-  m_battle->CustomBattleOptions().getSingleValue( _T("startpostype") , EngineOption ).ToLong( &longval );
+  m_battle->CustomBattleOptions().getSingleValue( _T("startpostype") , OptionsWrapper::EngineOption ).ToLong( &longval );
   if ( longval == IBattle::ST_Fixed ) {
 
     wxFont f( 7, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_LIGHT );
@@ -735,7 +735,7 @@ void MapCtrl::DrawSinglePlayer( wxDC& dc )
   RequireImages();
 
   long longval;
-  m_battle->CustomBattleOptions().getSingleValue( _T("startpostype") , EngineOption ).ToLong( &longval );
+  m_battle->CustomBattleOptions().getSingleValue( _T("startpostype") , OptionsWrapper::EngineOption ).ToLong( &longval );
 
   if ( longval == IBattle::ST_Fixed ) {
     wxFont f( 7, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_LIGHT );
@@ -797,7 +797,7 @@ void MapCtrl::OnPaint( wxPaintEvent& WXUNUSED(event) )
 
     if ( m_draw_start_types ) {
       long longval;
-      m_battle->CustomBattleOptions().getSingleValue( _T("startpostype") , EngineOption ).ToLong( &longval );
+      m_battle->CustomBattleOptions().getSingleValue( _T("startpostype") , OptionsWrapper::EngineOption ).ToLong( &longval );
       if ( longval == IBattle::ST_Choose ) {
         DrawStartRects( dc );
       } else {
@@ -914,7 +914,7 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
   if ( !m_draw_start_types ) return;
 
   long longval;
-  m_battle->CustomBattleOptions().getSingleValue( _T("startpostype") , EngineOption ).ToLong( &longval );
+  m_battle->CustomBattleOptions().getSingleValue( _T("startpostype") , OptionsWrapper::EngineOption ).ToLong( &longval );
 
   if ( longval != IBattle::ST_Choose ) return;
 
@@ -1040,7 +1040,7 @@ void MapCtrl::OnLeftDown( wxMouseEvent& event )
   if ( !m_draw_start_types ) return;
 
   long longval;
-  m_battle->CustomBattleOptions().getSingleValue( _T("startpostype") , EngineOption ).ToLong( &longval );
+  m_battle->CustomBattleOptions().getSingleValue( _T("startpostype") , OptionsWrapper::EngineOption ).ToLong( &longval );
 
   if ( longval != IBattle::ST_Choose ) return;
   if ( !m_ro ) {
@@ -1139,7 +1139,7 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
     if ( m_mdown_area == m_rect_area ) {
       if ( m_mdown_area == RA_Refresh ) {
         m_ui.ReloadUnitSync();
-        m_battle->Update( wxString::Format( _T("%d_mapname"), PrivateOptions ) );
+        m_battle->Update( wxString::Format( _T("%d_mapname"), OptionsWrapper::PrivateOptions ) );
         UpdateMinimap();
       } else if ( m_mdown_area == RA_Download ) {
         m_ui.DownloadMap( m_battle->GetHostMapHash(),  m_battle->GetHostMapName() );
@@ -1154,7 +1154,7 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
   if ( !m_draw_start_types ) return;
 
   long longval;
-  m_battle->CustomBattleOptions().getSingleValue( _T("startpostype") , EngineOption ).ToLong( &longval );
+  m_battle->CustomBattleOptions().getSingleValue( _T("startpostype") , OptionsWrapper::EngineOption ).ToLong( &longval );
 
   if ( longval != IBattle::ST_Choose ) return;
 

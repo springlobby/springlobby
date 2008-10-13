@@ -295,10 +295,10 @@ void SinglePlayerTab::Update( const wxString& Tag )
   long type;
   Tag.BeforeFirst( '_' ).ToLong( &type );
   wxString key = Tag.AfterFirst( '_' );
-  wxString value = m_battle.CustomBattleOptions().getSingleValue( key, (GameOption)type);
+  wxString value = m_battle.CustomBattleOptions().getSingleValue( key, (OptionsWrapper::GameOption)type);
   long longval;
   value.ToLong( &longval );
-  if ( type == PrivateOptions )
+  if ( type == OptionsWrapper::PrivateOptions )
   {
     if ( key == _T("mapname") )
     {
