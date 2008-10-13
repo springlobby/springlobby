@@ -218,7 +218,7 @@ bool SinglePlayerTab::ValidSetup()
         return false;
   }
 
-  if ( usync().VersionSupports( GF_XYStartPos ) ) return true;
+  if ( usync().VersionSupports( IUnitSync::GF_XYStartPos ) ) return true;
 
   int numBots = 0;
   int first = -1;

@@ -28,12 +28,6 @@ typedef std::map<wxString,mmOptionList>::const_iterator optionMapListConstIter;
 typedef std::map<wxString,mmOptionInt>::const_iterator optionMapIntConstIter;
 
 
-enum MediaType
-{
-  map,
-  mod
-};
-
 struct UnitSyncMod
 {
   UnitSyncMod() : name(_T("")),hash(_T("")) { }
@@ -73,12 +67,6 @@ struct UnitSyncMap
   MapInfo info;
 };
 
-enum GameFeature {
-  GF_XYStartPos = 1,
-  USYNC_Sett_Handler = 2,
-  USYNC_GetInfoMap = 3
-};
-
 struct GameOptions
 {
   optionMapBool bool_map;
@@ -94,6 +82,18 @@ class IUnitSync
 {
   public:
     virtual ~IUnitSync() { }
+
+    enum GameFeature {
+      GF_XYStartPos = 1,
+      USYNC_Sett_Handler = 2,
+      USYNC_GetInfoMap = 3
+    };
+
+    enum MediaType
+    {
+      map,
+      mod
+    };
 
     /** @name Mods
      *@{
