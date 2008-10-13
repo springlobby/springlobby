@@ -23,7 +23,7 @@
 
 #include <wx/image.h>
 #include <wx/string.h>
-#include <wx/intl.h>
+
 #include "images/fixcolours_palette.xpm"
 
 

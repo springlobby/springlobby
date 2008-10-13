@@ -4,7 +4,6 @@
 #include "battlelist.h"
 #include "battle.h"
 
-#include <wx/string.h>
 
 BattleList::BattleList()
 {

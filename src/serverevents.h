@@ -1,7 +1,10 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_SERVEREVENTS_H
 #define SPRINGLOBBY_HEADERGUARD_SERVEREVENTS_H
 
+//almost only needed for NAtType enum def
 #include "battle.h"
+//when not nec anymore uncommnet this
+//include <map>
 
 class Ui;
 struct UserStatus;
@@ -18,6 +21,8 @@ struct MessageSpamCheck
   time_t lastmessage;
   unsigned int count;
 };
+
+class Battle;
 
 //! @brief Class that implements server event behaviour.
 class ServerEvents

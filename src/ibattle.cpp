@@ -7,6 +7,7 @@
 #include "ibattle.h"
 #include "utils.h"
 #include "settings.h"
+#include "ui.h"
 
 IBattle::IBattle():
   m_map_loaded(false),

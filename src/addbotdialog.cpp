@@ -1,6 +1,5 @@
+#include "addbotdialog.h"
 
-
-#include <wx/intl.h>
 #include <wx/sizer.h>
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
@@ -9,9 +8,7 @@
 #include <wx/statline.h>
 #include <wx/filename.h>
 #include <wx/dir.h>
-#include <stdexcept>
 
-#include "addbotdialog.h"
 #include "settings.h"
 #include "utils.h"
 #include "battle.h"

@@ -39,6 +39,7 @@
 #include "maintorrenttab.h"
 #include "torrentwrapper.h"
 #endif
+#include "user.h"
 
 
 #include "images/springlobby.xpm"
