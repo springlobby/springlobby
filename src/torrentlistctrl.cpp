@@ -4,7 +4,6 @@
 
 #include <wx/intl.h>
 #include <wx/menu.h>
-#include <wx/string.h>
 
 #include "torrentlistctrl.h"
 #include "torrentwrapper.h"

@@ -8,6 +8,7 @@
 #include <wx/textdlg.h>
 #include <wx/colordlg.h>
 #include <wx/colour.h>
+#include <wx/log.h>
 #include <stdexcept>
 #include <vector>
 

@@ -1,6 +1,7 @@
 /* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
 
 #include <stdexcept>
+#include <wx/log.h>
 
 #include "singleplayerbattle.h"
 #include "mainsingleplayertab.h"

@@ -3,6 +3,7 @@
 #include <wx/filename.h>
 #include <wx/dynlib.h>
 #include <wx/image.h>
+#include <wx/log.h>
 #include <stdexcept>
 
 #include "springunitsynclib.h"
@@ -194,30 +195,30 @@ void SpringUnitSyncLib::Load( const wxString& path )
 
     m_parser_root_table = (lpRootTablePtr)_GetLibFuncPtr(_T("lpRootTable"));
     m_parser_root_table_expression = (lpRootTableExprPtr)_GetLibFuncPtr(_T("lpRootTableExpr"));
-    m_parser_sub_table_int = (lpSubTableIntPtr)_GetLibFuncPtr(_T("lpSubTableIntPtr"));
-    m_parser_sub_table_string = (lpSubTableStrPtr)_GetLibFuncPtr(_T("lpSubTableStrPtr"));
-    m_parser_sub_table_expression = (lpSubTableExprPtr)_GetLibFuncPtr(_T("lpSubTableExprPtr"));
-    m_parser_pop_table = (lpPopTablePtr)_GetLibFuncPtr(_T("lpPopTablePtr"));
+    m_parser_sub_table_int = (lpSubTableIntPtr)_GetLibFuncPtr(_T("lpSubTableInt"));
+    m_parser_sub_table_string = (lpSubTableStrPtr)_GetLibFuncPtr(_T("lpSubTableStr"));
+    m_parser_sub_table_expression = (lpSubTableExprPtr)_GetLibFuncPtr(_T("lpSubTableExpr"));
+    m_parser_pop_table = (lpPopTablePtr)_GetLibFuncPtr(_T("lpPopTable"));
 
-    m_parser_key_int_exists = (lpGetKeyExistsIntPtr)_GetLibFuncPtr(_T("lpGetKeyExistsIntPtr"));
-    m_parser_key_string_exists = (lpGetKeyExistsStrPtr)_GetLibFuncPtr(_T("lpGetKeyExistsStrPtr"));
+    m_parser_key_int_exists = (lpGetKeyExistsIntPtr)_GetLibFuncPtr(_T("lpGetKeyExistsInt"));
+    m_parser_key_string_exists = (lpGetKeyExistsStrPtr)_GetLibFuncPtr(_T("lpGetKeyExistsStr"));
 
-    m_parser_int_key_get_type = (lpGetIntKeyTypePtr)_GetLibFuncPtr(_T("lpGetIntKeyTypePtr"));
-    m_parser_string_key_get_type = (lpGetStrKeyTypePtr)_GetLibFuncPtr(_T("lpGetStrKeyTypePtr"));
+    m_parser_int_key_get_type = (lpGetIntKeyTypePtr)_GetLibFuncPtr(_T("lpGetIntKeyType"));
+    m_parser_string_key_get_type = (lpGetStrKeyTypePtr)_GetLibFuncPtr(_T("lpGetStrKeyType"));
 
-    m_parser_int_key_get_list_count = (lpGetIntKeyListCountPtr)_GetLibFuncPtr(_T("lpGetIntKeyListCountPtr"));
-    m_parser_int_key_get_list_entry = (lpGetIntKeyListEntryPtr)_GetLibFuncPtr(_T("lpGetIntKeyListEntryPtr"));
-    m_parser_string_key_get_list_count = (lpGetStrKeyListCountPtr)_GetLibFuncPtr(_T("lpGetStrKeyListCountPtr"));
-    m_parser_string_key_get_list_entry = (lpGetStrKeyListEntryPtr)_GetLibFuncPtr(_T("lpGetStrKeyListEntryPtr"));
+    m_parser_int_key_get_list_count = (lpGetIntKeyListCountPtr)_GetLibFuncPtr(_T("lpGetIntKeyListCount"));
+    m_parser_int_key_get_list_entry = (lpGetIntKeyListEntryPtr)_GetLibFuncPtr(_T("lpGetIntKeyListEntry"));
+    m_parser_string_key_get_list_count = (lpGetStrKeyListCountPtr)_GetLibFuncPtr(_T("lpGetStrKeyListCount"));
+    m_parser_string_key_get_list_entry = (lpGetStrKeyListEntryPtr)_GetLibFuncPtr(_T("lpGetStrKeyListEntry"));
 
-    m_parser_int_key_get_int_value = (lpGetIntKeyIntValPtr)_GetLibFuncPtr(_T("lpGetIntKeyIntValPtr"));
-    m_parser_string_key_get_int_value = (lpGetStrKeyIntValPtr)_GetLibFuncPtr(_T("lpGetStrKeyIntValPtr"));
-    m_parser_int_key_get_bool_value = (lpGetIntKeyBoolValPtr)_GetLibFuncPtr(_T("lpGetIntKeyBoolValPtr"));
-    m_parser_string_key_get_bool_value = (lpGetStrKeyBoolValPtr)_GetLibFuncPtr(_T("lpGetStrKeyBoolValPtr"));
-    m_parser_int_key_get_float_value = (lpGetIntKeyFloatValPtr)_GetLibFuncPtr(_T("lpGetIntKeyFloatValPtr"));
-    m_parser_string_key_get_float_value = (lpGetStrKeyFloatValPtr)_GetLibFuncPtr(_T("lpGetStrKeyFloatValPtr"));
-    m_parser_int_key_get_string_value = (lpGetIntKeyStrValPtr)_GetLibFuncPtr(_T("lpGetIntKeyStrValPtr"));
-    m_parser_string_key_get_string_value = (lpGetStrKeyStrValPtr)_GetLibFuncPtr(_T("lpGetStrKeyStrValPtr"));
+    m_parser_int_key_get_int_value = (lpGetIntKeyIntValPtr)_GetLibFuncPtr(_T("lpGetIntKeyIntVal"));
+    m_parser_string_key_get_int_value = (lpGetStrKeyIntValPtr)_GetLibFuncPtr(_T("lpGetStrKeyIntVal"));
+    m_parser_int_key_get_bool_value = (lpGetIntKeyBoolValPtr)_GetLibFuncPtr(_T("lpGetIntKeyBoolVal"));
+    m_parser_string_key_get_bool_value = (lpGetStrKeyBoolValPtr)_GetLibFuncPtr(_T("lpGetStrKeyBoolVal"));
+    m_parser_int_key_get_float_value = (lpGetIntKeyFloatValPtr)_GetLibFuncPtr(_T("lpGetIntKeyFloatVal"));
+    m_parser_string_key_get_float_value = (lpGetStrKeyFloatValPtr)_GetLibFuncPtr(_T("lpGetStrKeyFloatVal"));
+    m_parser_int_key_get_string_value = (lpGetIntKeyStrValPtr)_GetLibFuncPtr(_T("lpGetIntKeyStrVal"));
+    m_parser_string_key_get_string_value = (lpGetStrKeyStrValPtr)_GetLibFuncPtr(_T("lpGetStrKeyStrVal"));
 
 
     if ( m_init ) m_init( true, 1 );

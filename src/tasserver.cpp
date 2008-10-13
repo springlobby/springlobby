@@ -5,6 +5,7 @@
 #include <wx/intl.h>
 #include <wx/protocol/http.h>
 #include <wx/socket.h>
+#include <wx/log.h>
 
 #include <stdexcept>
 #include <algorithm>

@@ -1,7 +1,6 @@
 #ifndef CUSTOMLISTITEM_H_
 #define CUSTOMLISTITEM_H_
 
-#include <wx/window.h>
 #ifndef __WXMSW__
     #include <wx/listctrl.h>
     typedef wxListCtrl ListBaseType;
@@ -9,12 +8,14 @@
     #include "Helper/listctrl.h"
     typedef SL_Extern::wxGenericListCtrl ListBaseType;
 #endif
-#include <wx/string.h>
+
 #if wxUSE_TIPWINDOW
-#include <wx/tipwin.h>
+    #include <wx/tipwin.h>
 #endif
+
 #include <wx/timer.h>
-#define IDD_TIP_TIMER 666
+#define IDD_TIP_TIMER 696
+
 #include <vector>
 #include <utility>
 
@@ -23,8 +24,8 @@
 /** global delay (ms)
  * \todo make this definable per child class
  */
-#define TOOLTIP_DELAY 1000
-#define TOOLTIP_DURATION 2000
+const unsigned int TOOLTIP_DELAY    = 1000;
+const unsigned int TOOLTIP_DURATION = 2000;
 
 typedef std::pair<wxString,bool> colInfo;
 typedef std::vector<colInfo> colInfoVec;

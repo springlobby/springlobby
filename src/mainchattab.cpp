@@ -9,6 +9,7 @@
 #include <wx/sizer.h>
 #include <wx/notebook.h>
 #include <wx/image.h>
+#include <wx/log.h>
 
 #ifndef HAVE_WX26
 #include "auimanager.h"

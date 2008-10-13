@@ -18,6 +18,7 @@
 #include <wx/tokenzr.h>
 #include <wx/msgdlg.h>
 #include <wx/menu.h>
+#include <wx/log.h>
 #include <wx/utils.h>
 #include <wx/event.h>
 #include <wx/app.h>

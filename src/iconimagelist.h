@@ -1,15 +1,12 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_ICONIMAGELIST_H
 #define SPRINGLOBBY_HEADERGUARD_ICONIMAGELIST_H
 
-#include <wx/colour.h>
-#include <wx/platform.h>
+
 #include <wx/imaglist.h>
-
-
 #include <map>
 
-
 class Battle;
+class wxColor;
 struct UserStatus;
 
 class IconImageList : public wxImageList

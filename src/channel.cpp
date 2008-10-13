@@ -9,6 +9,7 @@
 #include "user.h"
 #include "utils.h"
 #include <wx/regex.h>
+#include <wx/log.h>
 #include "chatpanel.h"
 
 Channel::~Channel() {

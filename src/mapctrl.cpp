@@ -7,6 +7,7 @@
 #include <wx/intl.h>
 #include <cmath>
 #include <stdexcept>
+#include <wx/log.h>
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -976,7 +977,13 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
   if ( m_maction == MA_Add ) { // We are currently adding a rect.
 
     wxRect oldr = GetStartRect( m_tmp_brect );
-    m_tmp_brect = GetBattleRect( m_mdown_x<event.GetX()?m_mdown_x:event.GetX(), m_mdown_y<event.GetY()?m_mdown_y:event.GetY(), m_mdown_x>event.GetX()?m_mdown_x:event.GetX(), m_mdown_y>event.GetY()?m_mdown_y:event.GetY(), m_tmp_brect.ally );
+
+    m_tmp_brect = GetBattleRect(m_mdown_x<event.GetX()?m_mdown_x:event.GetX(),
+                                m_mdown_y<event.GetY()?m_mdown_y:event.GetY(),
+                                m_mdown_x>event.GetX()?m_mdown_x:event.GetX(),
+                                m_mdown_y>event.GetY()?m_mdown_y:event.GetY(),
+                                m_tmp_brect.ally );
+
     wxRect newr = GetStartRect( m_tmp_brect );
     if ( newr != oldr ) RefreshRect( newr.Union( oldr ), false );
     return;

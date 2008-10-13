@@ -2,7 +2,7 @@
 #define SPRINGLOBBY_HEADERGUARD_SETTINGS_H
 
 #include <wx/string.h>
-#include <wx/colour.h>
+//#include <wx/colour.h>
 
 #define CACHE_VERSION 7
 #define SETTINGS_VERSION 2
@@ -25,19 +25,21 @@
 #include <wx/fileconf.h>
 #include "utils.h"
 #include "useractions.h"
-#include <wx/wfstream.h>
+
 
 class wxConfigBase;
 class wxFont;
 struct BattleListFilterValues;
 struct ReplayListFilterValues;
 class wxFileInputStream;
+class wxColor;
+class wxColour;
 struct wxColourData;
 
-class myconf : public wxFileConfig
+class SL_WinConf : public wxFileConfig
 {
     public:
-    myconf (const wxString& appName, const wxString& vendorName,
+    SL_WinConf (const wxString& appName, const wxString& vendorName,
                            const wxString& strLocal, const wxString& strGlobal,
                            long style,
                            const wxMBConv& conv)
@@ -49,7 +51,7 @@ class myconf : public wxFileConfig
 
     }
 
-    myconf(wxFileInputStream& in) : wxFileConfig(in) {}
+    SL_WinConf(wxFileInputStream& in);
 
 //    int Read(const wxString& key, int def)
 //    {
@@ -526,7 +528,7 @@ class Settings
 
   protected:
     #ifdef __WXMSW__
-    myconf* m_config; //!< wxConfig object to store and restore  all settings in.
+    SL_WinConf* m_config; //!< wxConfig object to store and restore  all settings in.
     #else
     wxConfigBase* m_config; //!< wxConfig object to store and restore  all settings in.
     #endif

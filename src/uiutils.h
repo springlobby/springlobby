@@ -5,7 +5,6 @@
 
 #include <wx/intl.h>
 
-class wxString;
 class wxColour;
 class wxImage;
 class wxBitmap;

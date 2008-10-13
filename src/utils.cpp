@@ -5,6 +5,7 @@
 
 #include <wx/dynlib.h>
 #include <iostream>
+#include <wx/log.h>
 
 #include "utils.h"
 #include "crashreport.h"

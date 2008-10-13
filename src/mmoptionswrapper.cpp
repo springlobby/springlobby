@@ -6,6 +6,7 @@
 
 #include <stdexcept>
 #include <wx/intl.h>
+#include <wx/log.h>
 
 mmOptionsWrapper::mmOptionsWrapper()
 {

@@ -3,11 +3,7 @@
 
 #include <wx/scrolwin.h>
 
-#include "battlelistfilter.h"
-#include "battlelist.h"
-#include "user.h"
-
-
+class User;
 class Ui;
 class Battle;
 class BattleListCtrl;

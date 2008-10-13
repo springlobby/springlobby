@@ -5,7 +5,7 @@
 #include "server.h"
 #include "settings.h"
 #include "user.h"
-
+#include <wx/log.h>
 
 template<typename T>
 static T min(T a, T b, T c)

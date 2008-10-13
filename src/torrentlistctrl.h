@@ -6,15 +6,15 @@
 #include "customlistctrl.h"
 
 #include <map>
-#include "torrentwrapper.h"
-typedef std::map<int,TorrentInfos> map_infos;
 
-
+class TorrentInfos;
 class wxMenu;
 class Battle;
 class wxListEvent;
 class wxCommandEvent;
 class Ui;
+
+typedef std::map<int,TorrentInfos> map_infos;
 
 /** \brief list all currently active (queued,lecching,seeding) torrents with their infos
  * the list is newly populated every n-seconds from Ui::OnUpdate()

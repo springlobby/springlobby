@@ -1,10 +1,10 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_UI_H
 #define SPRINGLOBBY_HEADERGUARD_UI_H
 
-#include <wx/string.h>
-#include <wx/event.h>
-#include <map>
-#include "useractions.h"
+//#include <wx/string.h>
+//#include <wx/event.h>
+//#include <map>
+//#include "useractions.h"
 
 class Server;
 class TASServer;
@@ -18,6 +18,12 @@ class Battle;
 class SinglePlayerBattle;
 struct BattleBot;
 class ChatPanel;
+
+//this removes the necessity to drag wx/event.h into almost every other file for a single type
+//if it's too "hackish" for someone's taste, just include that header again and remove this (koshi)
+#ifndef wxEventType
+typedef int wxEventType;
+#endif
 
 
 typedef int HostInfo;

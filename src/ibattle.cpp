@@ -2,10 +2,12 @@
 
 #include <stdexcept>
 #include <wx/tokenzr.h>
+#include <wx/log.h>
 
 #include "ibattle.h"
 #include "utils.h"
 #include "settings.h"
+#include "ui.h"
 
 IBattle::IBattle():
   m_map_loaded(false),

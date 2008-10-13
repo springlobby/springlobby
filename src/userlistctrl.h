@@ -2,8 +2,6 @@
 #define SPRINGLOBBY_HEADERGUARD_USERLISTCTRL_H
 
 #include "customlistctrl.h"
-#include "tasserver.h"
-
 
 //! a rather sneaky approach to resue NickList for both off/online users
 /**

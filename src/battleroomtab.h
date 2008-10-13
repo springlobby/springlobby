@@ -3,7 +3,6 @@
 
 #include <wx/scrolwin.h>
 
-#include "iunitsync.h"
 #include "mmoptionswrapper.h"
 #include <map>
 
@@ -25,6 +24,7 @@ class wxListCtrl;
 class MapCtrl;
 class ColorButton;
 class wxBitmapComboBox;
+struct UnitSyncMap;
 
 typedef std::map<wxString,long> OptionListMap;
 

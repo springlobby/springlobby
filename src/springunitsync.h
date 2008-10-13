@@ -4,7 +4,6 @@
 #include <map>
 
 #include "iunitsync.h"
-#include "nonportable.h"
 
 class wxCriticalSection;
 class wxDynamicLibrary;

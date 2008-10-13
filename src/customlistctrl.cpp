@@ -2,6 +2,7 @@
 #include "utils.h"
 #include "settings.h"
 #include <wx/colour.h>
+#include <wx/log.h>
 #include "iconimagelist.h"
 #include "settings++/custom_dialogs.h"
 

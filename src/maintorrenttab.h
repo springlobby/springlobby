@@ -5,9 +5,6 @@
 
 #include <wx/scrolwin.h>
 #include <map>
-#include "torrentwrapper.h"
-typedef std::map<int,TorrentInfos> map_infos;
-typedef map_infos::iterator map_infos_iter;
 
 class wxStaticText;
 class wxButton;
@@ -17,6 +14,9 @@ struct TorrentInfos;
 class wxBoxSizer;
 class FileListDialog;
 class ColorButton;
+
+typedef std::map<int,TorrentInfos> map_infos;
+typedef map_infos::iterator map_infos_iter;
 
 class MainTorrentTab: public wxScrolledWindow
 {

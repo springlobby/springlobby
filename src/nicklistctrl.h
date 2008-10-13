@@ -1,8 +1,6 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_NICKLISTCTRL_H
 #define SPRINGLOBBY_HEADERGUARD_NICKLISTCTRL_H
 
-//#include <wx/listctrl.h>
-#include <wx/event.h>
 #include "customlistctrl.h"
 #include "usermenu.h"
 
@@ -10,10 +8,7 @@ class User;
 class UserList;
 class Ui;
 class ChatPanel;
-//typedef SL_GENERIC::UserMenu<ChatPanel> UserMenu;
-
-
-
+class UserMenu;
 
 class NickListCtrl : public CustomListCtrl
 {

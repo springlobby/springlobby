@@ -8,6 +8,7 @@
 #include <wx/panel.h>
 #include <wx/statline.h>
 #include <wx/stattext.h>
+#include <wx/log.h>
 #include <stdexcept>
 
 #include "singleplayertab.h"

@@ -2,7 +2,6 @@
 #define SPRINGLOBBY_HEADERGUARD_SPRINGOPTIONSTAB_H
 
 #include <wx/scrolwin.h>
-#include <wx/checkbox.h>
 
 class wxStaticBoxSizer;
 class wxStaticBox;

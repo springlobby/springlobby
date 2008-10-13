@@ -3,8 +3,6 @@
 
 #include <wx/scrolwin.h>
 
-#include "iunitsync.h"
-
 class Ui;
 class Battle;
 class User;

@@ -2,8 +2,6 @@
 #define CUSTOM_MSG_BOX_H_
 
 #include <wx/msgdlg.h>
-#include <wx/defs.h>
-#include <wx/dialog.h>
 
 #define SL_MAIN_ICON 1
 #define SS_MAIN_ICON 2

@@ -17,6 +17,8 @@
 #include <wx/colour.h>
 #include <wx/cmndata.h>
 #include <wx/font.h>
+#include <wx/log.h>
+#include <wx/wfstream.h>
 
 #include "nonportable.h"
 #include "settings.h"
@@ -34,6 +36,10 @@ Settings& sett()
     static Settings m_sett;
     return m_sett;
 }
+
+SL_WinConf::SL_WinConf(wxFileInputStream& in)
+  : wxFileConfig(in)
+{}
 
 Settings::Settings()
 {
@@ -74,7 +80,7 @@ Settings::Settings()
       // TODO: error handling
   }
 
-  m_config = new myconf( instream );
+  m_config = new SL_WinConf( instream );
 
   #else
   //removed temporarily because it's suspected to cause a bug with userdir creation

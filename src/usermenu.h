@@ -6,6 +6,7 @@
 
 #define GROUP_ID 24567
 #include "ui.h"
+#include "useractions.h"
 
 namespace SL_GENERIC {
 template < class EventHandler_ >

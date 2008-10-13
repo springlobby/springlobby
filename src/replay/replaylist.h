@@ -3,7 +3,6 @@
 
 #include <map>
 #include <wx/string.h>
-#include <wx/event.h>
 #include <wx/timer.h>
 #include <wx/arrstr.h>
 #include "../battle.h"
@@ -88,8 +87,8 @@ class ReplayList : public wxEvtHandler
   protected:
 
     bool GetReplayInfos ( const wxString& ReplayPath, Replay& ret );
-    wxString GetScriptFromReplay ( const wxString& ReplayPath );
-    OfflineBattle GetBattleFromScript( const wxString& script );
+    void GetScriptFromReplay ( const wxString& ReplayPath, wxString& script );
+    void GetBattleFromScript( const wxString& script, OfflineBattle& battle );
     BattleOptions GetBattleOptsFromScript( const wxString& script_ );
 
     //! load mod/map options
@@ -111,6 +110,7 @@ class ReplayList : public wxEvtHandler
 
     std::vector<wxString> m_filenames;
     unsigned long m_last_id;
+    unsigned long m_fails;
 
     DECLARE_EVENT_TABLE()
 };

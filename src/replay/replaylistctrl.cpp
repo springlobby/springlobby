@@ -3,8 +3,10 @@
 #include <wx/intl.h>
 #include <wx/menu.h>
 #include <wx/filename.h>
+#include <wx/log.h>
 
 #include "replaylistctrl.h"
+#include "replaylist.h"
 #include "../utils.h"
 #include "../user.h"
 #include "../iconimagelist.h"
