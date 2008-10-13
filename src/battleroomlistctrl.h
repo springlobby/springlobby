@@ -8,7 +8,6 @@ class User;
 class Battle;
 class Ui;
 struct BattleBot;
-//class wxMenuItem;
 class wxIcon;
 
 
@@ -19,7 +18,7 @@ struct item_content {
 
 /** \brief display participants of battle and their info (ally,team,color,cpu...)
  * \todo DOCMEMORE */
-class BattleroomListCtrl : public customListCtrl
+class BattleroomListCtrl : public CustomListCtrl
 {
   public:
     BattleroomListCtrl( wxWindow* parent, Battle& battle, Ui& ui );
@@ -108,22 +107,23 @@ class BattleroomListCtrl : public customListCtrl
     Ui& m_ui;
     static Ui* m_ui_for_sort;
 
+    enum {
+      BRLIST_LIST = wxID_HIGHEST,
+      BRLIST_TEAM,
+      BRLIST_ALLY = BRLIST_TEAM + 1000,
+      BRLIST_COLOUR = BRLIST_ALLY + 1000,
+      BRLIST_SIDE = BRLIST_COLOUR +1000,
+      BRLIST_HANDICAP = BRLIST_SIDE +1000,
+      BRLIST_SPEC,
+      BRLIST_KICK,
+      BRLIST_RING,
+      BRLIST_ADDTOGROUP
+    };
+
     DECLARE_EVENT_TABLE();
 
 };
 
-enum
-{
-  BRLIST_LIST = wxID_HIGHEST,
-  BRLIST_TEAM,
-  BRLIST_ALLY = BRLIST_TEAM + 1000,
-  BRLIST_COLOUR = BRLIST_ALLY + 1000,
-  BRLIST_SIDE = BRLIST_COLOUR +1000,
-  BRLIST_HANDICAP = BRLIST_SIDE +1000,
-  BRLIST_SPEC,
-  BRLIST_KICK,
-  BRLIST_RING,
-  BRLIST_ADDTOGROUP
-};
+
 
 #endif // SPRINGLOBBY_HEADERGUARD_BATTLEROOMLISTCTRL_H

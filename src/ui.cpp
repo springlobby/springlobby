@@ -31,8 +31,8 @@
 #ifndef NO_TORRENT_SYSTEM
 #include "maintorrenttab.h"
 #include "torrentwrapper.h"
-#include "unitsyncthread.h"
 #endif
+#include "unitsyncthread.h"
 #include "agreementdialog.h"
 #ifdef __WXMSW__
 #include "updater/updater.h"
@@ -275,11 +275,7 @@ void Ui::StartHostedBattle()
 
 void Ui::StartSinglePlayerGame( SinglePlayerBattle& battle )
 {
-    m_ingame = true;
-#ifndef NO_TORRENT_SYSTEM
-    torrent().SetIngameStatus(m_ingame);
-#endif
-    CacheThread().Pause();
+    OnSpringStarting();
     m_spring->Run( battle );
 }
 
@@ -962,7 +958,7 @@ void Ui::OnJoinedBattle( Battle& battle )
     {
         customMessageBox(SL_MAIN_ICON, _("Your spring settings are probably not configured correctly,\nyou should take another look at your settings before trying\nto play online."), _("Spring settings error"), wxOK );
     }
-    if ( battle.GetNatType() != NAT_None )
+    if ( battle.GetNatType() != IBattle::NAT_None )
     {
         wxLogWarning( _T("joining game with NAT transversal") );
 #ifdef HAVE_WX26
@@ -1012,11 +1008,7 @@ void Ui::OnBattleStarted( Battle& battle )
             battle.SendMyBattleStatus();
             battle.GetMe().Status().in_game = true;
             battle.GetMe().SendMyUserStatus();
-            m_ingame = true;
-#ifndef NO_TORRENT_SYSTEM
-            torrent().SetIngameStatus(m_ingame);
-#endif
-            CacheThread().Pause();
+            OnSpringStarting();
             m_spring->Run( battle );
         }
     }
@@ -1044,6 +1036,16 @@ void Ui::OnBattleAction( Battle& battle, const wxString& nick, const wxString& m
         mw().GetJoinTab().GetBattleRoomTab().GetChatPanel().DidAction( nick, msg );
     }
     catch (...){}
+}
+
+void Ui::OnSpringStarting()
+{
+  m_ingame = true;
+#ifndef NO_TORRENT_SYSTEM
+  torrent().SetIngameStatus(m_ingame);
+#endif
+  CacheThread().Pause();
+
 }
 
 
@@ -1179,5 +1181,12 @@ void Ui::ReloadPresetList()
         mw().GetJoinTab().ReloadPresetList();
     }
     catch (...) {}
+}
+
+
+void Ui::WatchReplay ( wxString& filename )
+{
+    OnSpringStarting();
+    m_spring->RunReplay( filename );
 }
 

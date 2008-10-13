@@ -32,6 +32,8 @@ class Ui;
 
 class wxFocusEvent;
 class wxMouseEvent;
+class wxAuiNotebook;
+class wxImageList;
 
 enum ChatPanelType {
   CPT_Channel,
@@ -40,6 +42,12 @@ enum ChatPanelType {
   CPT_Battle
 };
 
+enum HighlightType
+{
+  highlight_say,
+  highlight_join_leave,
+  highlight_important
+};
 
 /*! @brief wxPanel that contains a chat.
  *
@@ -53,9 +61,9 @@ class ChatPanel : public wxPanel
 {
   public:
 
-    ChatPanel( wxWindow* parent, Ui& ui, Channel& chan );
-    ChatPanel( wxWindow* parent, Ui& ui, User& user );
-    ChatPanel( wxWindow* parent, Ui& ui, Server& serv );
+    ChatPanel( wxWindow* parent, Ui& ui, Channel& chan, wxImageList* imaglist );
+    ChatPanel( wxWindow* parent, Ui& ui, User& user, wxImageList* imaglist  );
+    ChatPanel( wxWindow* parent, Ui& ui, Server& serv, wxImageList* imaglist  );
     ChatPanel( wxWindow* parent, Ui& ui, Battle& battle );
     ~ChatPanel();
 
@@ -85,11 +93,14 @@ class ChatPanel : public wxPanel
     bool IsServerPanel();
     ChatPanelType GetPanelType();
 
-    void Say( const wxString& message );
+    void Say( wxString message );
     void Part();
     void FocusInputBox();
 
     wxString GetChatTypeStr();
+
+    size_t GetIconIndex() { return m_icon_index; }
+    void SetIconIndex( size_t index ) { m_icon_index = index; }
 
     User& GetMe();
     User* GetSelectedUser();
@@ -167,6 +178,7 @@ class ChatPanel : public wxPanel
   protected:
     void _SetChannel( Channel* channel );
     void OutputLine( const wxString& message, const wxColour& col, const wxFont& fon );
+    void SetIconHighlight( HighlightType highlight );
 
     bool ContainsWordToHighlight( const wxString& message );
 
@@ -192,7 +204,11 @@ class ChatPanel : public wxPanel
     wxComboBox* m_nick_filter;  //!< The filter combo.
 
     wxButton* m_say_button;     //!< The say button.
+    #ifdef HAVE_WX26
     wxNotebook* m_chat_tabs;
+    #else
+    wxAuiNotebook* m_chat_tabs;
+    #endif
     Ui& m_ui;
     Channel* m_channel;         //!< Channel object.
     Server* m_server;           //!< Server object.
@@ -202,7 +218,6 @@ class ChatPanel : public wxPanel
     ChatPanelType m_type;       //!< Channel object.
 
     wxString m_chan_pass;
-
 
     wxMenu* m_popup_menu;
     wxMenuItem* m_autorejoin;
@@ -214,7 +229,13 @@ class ChatPanel : public wxPanel
     void LogTime();
     void CreateControls( );
     void CreatePopup();
+
+    size_t m_icon_index;
+
+    wxImageList* m_imagelist;
+
     UserMenu* CreateNickListMenu();
+
 
     static const int m_groupMenu_baseID = 6798;
 	TextCompletionDatabase textcompletiondatabase;

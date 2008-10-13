@@ -2,15 +2,13 @@
 #define SPRINGLOBBY_HEADERGUARD_USERLISTCTRL_H
 
 #include "customlistctrl.h"
-#include "tasserver.h"
-
 
 //! a rather sneaky approach to resue NickList for both off/online users
 /**
     Don't ever use this for anything that needs constant updating, context menus sorting and the like.\n
     Basically don't use it outside the groupuserdialog without extreme caution.
 **/
-class UserListctrl : public customListCtrl
+class UserListctrl : public CustomListCtrl
 {
     public:
         //! nickname - country
@@ -20,7 +18,7 @@ class UserListctrl : public customListCtrl
         typedef UserDataMap::iterator UserDataMapIter;
 
     public:
-        UserListctrl( wxWindow* parent, const wxString& name = _T("usergrouplist"), bool highlight = false  );
+        UserListctrl( wxWindow* parent, const wxString& name = _T("usergrouplist"), bool highlight = false,wxWindowID id=USERLIST  );
         virtual ~UserListctrl();
 
         void AddUser( const UserData userdata );
@@ -31,6 +29,8 @@ class UserListctrl : public customListCtrl
         wxArrayString GetUserNicks( ) const;
         void SetColumnWidths();
         void OnColClick( wxListEvent& event );
+        //! delete both all items and associated data, handle with care!
+        void Clear();
 
     protected:
         UserDataMap m_userdata;
@@ -50,7 +50,7 @@ class UserListctrl : public customListCtrl
         static int wxCALLBACK ComparePlayercountryDOWN(long item1, long item2, long sortData);
 
         enum {
-            USERLIST = wxID_HIGHEST
+            USERLIST = 2312
         };
 
         struct {

@@ -2,7 +2,6 @@
 #define CHATLOG_H_INCLUDED
 
 #include <wx/string.h>
-//#include <wx/file.h> //moved to cpp in favour of forward declaration
 
 class wxFile;
 

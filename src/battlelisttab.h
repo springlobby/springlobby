@@ -1,13 +1,9 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_BATTLELISTTAB_H
 #define SPRINGLOBBY_HEADERGUARD_BATTLELISTTAB_H
 
-#include <wx/panel.h>
+#include <wx/scrolwin.h>
 
-#include "battlelistfilter.h"
-#include "battlelist.h"
-#include "user.h"
-
-
+class User;
 class Ui;
 class Battle;
 class BattleListCtrl;
@@ -24,10 +20,9 @@ class wxStaticText;
 class wxStaticLine;
 class wxCheckBox;
 class wxToggleButton;
-
 /** \brief The panel containing a BattleListCtrl and a BattleListFilter
  * \todo DOCME */
-class BattleListTab : public wxPanel
+class BattleListTab : public wxScrolledWindow
 {
   friend class BattleListFilter;
   public:
@@ -94,16 +89,16 @@ class BattleListTab : public wxPanel
 
     Battle* m_sel_battle;
 
+    enum {
+        BATTLE_JOIN = wxID_HIGHEST,
+        BATTLE_HOST,
+        BATTLE_LIST,
+        BATTLE_LIST_FILTER_BUTTON,
+        BATTLE_LIST_FILTER_ACTIV
+    };
+
     DECLARE_EVENT_TABLE();
 };
 
-enum
-{
-    BATTLE_JOIN = wxID_HIGHEST,
-    BATTLE_HOST,
-    BATTLE_LIST,
-    BATTLE_LIST_FILTER_BUTTON,
-    BATTLE_LIST_FILTER_ACTIV
-};
 
 #endif // SPRINGLOBBY_HEADERGUARD_BATTLELISTTAB_H

@@ -15,7 +15,7 @@ class wxCommandEvent;
 class FileListDialog;
 
 /** \brief list currently available torrents on tracker */
-class FileListCtrl : public customListCtrl
+class FileListCtrl : public CustomListCtrl
 {
   public:
     FileListCtrl( wxWindow* parent, FileListDialog* fld );

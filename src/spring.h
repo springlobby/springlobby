@@ -1,15 +1,15 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_SPRING_H
 #define SPRINGLOBBY_HEADERGUARD_SPRING_H
 
-#include <wx/string.h>
 #include <wx/event.h>
-#include <iostream>
 
+class wxCommandEvent;
 class SinglePlayerBattle;
 class Battle;
 class Ui;
 class SpringProcess;
 class wxSpringProcess;
+class wxString;
 
 
 class Spring: public wxEvtHandler
@@ -21,6 +21,13 @@ class Spring: public wxEvtHandler
     bool IsRunning();
     bool Run( Battle& battle );
     bool Run( SinglePlayerBattle& battle );
+
+    //! executes spring with replay as parameter
+    /*!
+     * \param filename the full path for the replayfile
+     */
+    bool RunReplay ( wxString& filename );
+
     static bool TestSpringBinary();
 
     wxString WriteScriptTxt( Battle& battle );

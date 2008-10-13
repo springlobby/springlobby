@@ -3,7 +3,10 @@
 #include "autohost.h"
 #include "battle.h"
 #include "server.h"
+#include "settings.h"
 #include "user.h"
+#include "utils.h"
+#include <wx/log.h>
 
 
 AutoHost::AutoHost( Battle& battle )
@@ -39,11 +42,11 @@ void AutoHost::OnSaidBattle( const wxString& nick, const wxString& msg )
     m_lastActionTime = currentTime;
   }
   else if (msg == _T("!balance")) {
-    m_battle.Autobalance(balance_random, false, false);
+    m_battle.Autobalance(IBattle::balance_random, false, false);
     m_lastActionTime = currentTime;
   }
   else if (msg == _T("!cbalance")) {
-    m_battle.Autobalance(balance_random, true, false);
+    m_battle.Autobalance(IBattle::balance_random, true, false);
     m_lastActionTime = currentTime;
   }
   else if (msg == _T("!help")) {
@@ -54,7 +57,7 @@ void AutoHost::OnSaidBattle( const wxString& nick, const wxString& msg )
     m_battle.DoAction( _T( "!cbalance: see !balance but tries to put clanmates together first." ) );
     m_battle.DoAction( _T( "!fixcolors: changes players duplicate colours so they are unique." ) );
     m_battle.DoAction( _T( "!fixids: makes control teams unique (disables comsharing)." ) );
-    m_battle.DoAction( _T( "!spectunsynced: sets all players with unitsynced status to be spectators." ) );
+    m_battle.DoAction( _T( "!spectunsynced: sets all players with unsynced status to be spectators." ) );
     m_battle.DoAction( _T( "!listprofiles: lists the available battle profiles." ) );
     m_battle.DoAction( _T( "!loadprofile profilename: loads an available battle profile." ) );
     m_battle.DoAction( _T( "!ring: rings players that are not ready." ) );
@@ -82,7 +85,7 @@ void AutoHost::OnSaidBattle( const wxString& nick, const wxString& msg )
     m_lastActionTime = currentTime;
   }
   else if ( msg.BeforeFirst( _T(' ') ) == _T("!loadprofile") ) {
-    wxString profilename = msg.AfterFirst(_T(' '));
+    wxString profilename = GetBestMatch( m_battle.GetPresetList(), msg.AfterFirst(_T(' ')) );
     if ( !m_battle.LoadOptionsPreset( profilename ) )
       m_battle.DoAction( _T( "Profile not found, use !listprofiles for a list of available profiles." ) );
     else m_battle.DoAction( _T("has loaded profile: ") + profilename );
@@ -96,13 +99,13 @@ void AutoHost::OnSaidBattle( const wxString& nick, const wxString& msg )
   else if ( msg == _T("!lock") ) {
     m_battle.SetIsLocked( true );
     m_battle.DoAction( _T( "has locked the battle." ) );
-    m_battle.SendHostInfo( HI_Locked );
+    m_battle.SendHostInfo( IBattle::HI_Locked );
     m_lastActionTime = currentTime;
   }
   else if ( msg == _T("!unlock") ) {
     m_battle.SetIsLocked( false );
     m_battle.DoAction( _T( "has unlocked the battle." ) );
-    m_battle.SendHostInfo( HI_Locked );
+    m_battle.SendHostInfo( IBattle::HI_Locked );
     m_lastActionTime = currentTime;
   }
   else if ( msg == _T("!fixids") ) {
@@ -141,7 +144,7 @@ void AutoHost::OnUserRemoved( User& user )
   {
     m_battle.SetIsLocked( false );
     m_battle.DoAction( _T( "has auto-unlocked the battle." ) );
-    m_battle.SendHostInfo( HI_Locked );
+    m_battle.SendHostInfo( IBattle::HI_Locked );
   }
 }
 
@@ -165,6 +168,10 @@ void AutoHost::StartBattle()
 
   m_battle.DoAction(_T("is starting game ..."));
   m_battle.GetServer().StartHostedBattle();
+
+  // todo: copied from Ui::StartHostedBattle
+  sett().SetLastHostMap( m_battle.GetHostMapName() );
+  sett().SaveSettings();
 }
 
 

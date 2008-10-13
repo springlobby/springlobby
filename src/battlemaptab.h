@@ -1,9 +1,7 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_BATTLEMAPTAB_H
 #define SPRINGLOBBY_HEADERGUARD_BATTLEMAPTAB_H
 
-#include <wx/panel.h>
-
-#include "iunitsync.h"
+#include <wx/scrolwin.h>
 
 class Ui;
 class Battle;
@@ -24,7 +22,7 @@ class wxRadioBox;
 
 /** \brief select map, draw startboxes (in sp define startpos)
  * \todo DOCMEMORE */
-class BattleMapTab : public wxPanel
+class BattleMapTab : public wxScrolledWindow
 {
   public:
     BattleMapTab( wxWindow* parent, Ui& ui, Battle& battle );
@@ -52,13 +50,13 @@ class BattleMapTab : public wxPanel
     wxRadioBox* m_start_radios;
     wxListCtrl* m_map_opts_list;
 
+    enum {
+      BMAP_MAP_SEL = wxID_HIGHEST,
+      BMAP_START_TYPE
+    };
+
     DECLARE_EVENT_TABLE()
 };
 
-enum
-{
-  BMAP_MAP_SEL = wxID_HIGHEST,
-  BMAP_START_TYPE
-};
 
 #endif // SPRINGLOBBY_HEADERGUARD_BATTLEMAPTAB_H

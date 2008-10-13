@@ -1,9 +1,6 @@
 #ifndef TEXTCOMPLETIONDATABASE_HPP
 #define TEXTCOMPLETIONDATABASE_HPP
 
-// Standard C++ Libraries
-#include <iostream>
-
 // wxWidgets
 #include <wx/hashmap.h>
 #include <wx/string.h>
@@ -23,8 +20,8 @@ class TextCompletionDatabase {
 
 		unsigned int Size();
 
-		void Insert_Mapping( wxString abbreviation, wxString mapping );
-		void Delete_Mapping( wxString abbreviation );
+		void Insert_Mapping( const wxString& abbreviation, const wxString& mapping );
+		void Delete_Mapping( const wxString& abbreviation );
 		HashMap_String_String GetMapping( wxString text );
 
 

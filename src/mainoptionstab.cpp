@@ -9,7 +9,14 @@
 #include <wx/imaglist.h>
 #include <wx/button.h>
 #include <wx/sizer.h>
+#include <wx/log.h>
+
+#ifndef HAVE_WX26
+#include "auimanager.h"
+#else
 #include <wx/listbook.h>
+#endif
+
 
 #include "mainoptionstab.h"
 #include "ui.h"
@@ -17,7 +24,7 @@
 #include "chatoptionstab.h"
 #include "settings.h"
 #include "uiutils.h"
-#include "managegroupspanel.h"
+#include "groupoptionspanel.h"
 
 #ifndef NO_TORRENT_SYSTEM
 #include "torrentoptionspanel.h"
@@ -37,10 +44,19 @@ BEGIN_EVENT_TABLE(MainOptionsTab, wxPanel)
 
 END_EVENT_TABLE()
 
-MainOptionsTab::MainOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1 ),m_ui(ui)
+/** \brief A container for the various option panels
+ * Contains a notebook holding the real option panels as pages. Handles "apply" and "restore" events for those pages,
+ * rather then those having to implement (and duplicate) this functionality. \n
+ * See SpringOptionsTab, TorrentOptionsPanel, ChatOptionsTab
+ */
+MainOptionsTab::MainOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( parent, -1 ),m_ui(ui)
 {
+    #ifdef HAVE_WX26
     m_tabs = new wxNotebook( this, OPTIONS_TABS, wxDefaultPosition, wxDefaultSize, wxLB_TOP );
-
+    #else
+    GetAui().manager->AddPane( this, wxLEFT, _T("mainoptionstab") );
+    m_tabs = new wxAuiNotebook( this, OPTIONS_TABS, wxDefaultPosition, wxDefaultSize, wxAUI_NB_TAB_SPLIT | wxAUI_NB_TAB_MOVE | wxAUI_NB_SCROLL_BUTTONS | wxAUI_NB_TOP | wxAUI_NB_TAB_EXTERNAL_MOVE );
+    #endif
     m_imagelist = new wxImageList( 12, 12 );
     m_imagelist->Add( wxIcon(spring_xpm) );
     m_imagelist->Add( *charArr2wxBitmap( torrentoptionspanel_icon_png, sizeof(torrentoptionspanel_icon_png) )  );
@@ -48,26 +64,49 @@ MainOptionsTab::MainOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1
     m_imagelist->Add( wxIcon(userchat_xpm) );
     m_imagelist->Add( wxIcon(springlobby_xpm) );
 
+    #ifdef HAVE_WX26
     m_tabs->AssignImageList( m_imagelist );
+    #endif
 
     m_spring_opts = new SpringOptionsTab( m_tabs, m_ui );
+    #ifdef HAVE_WX26
     m_tabs->AddPage( m_spring_opts, _("Spring"), true, 0 );
+    #else
+    m_tabs->AddPage( m_spring_opts, _("Spring"), true, wxIcon(spring_xpm) );
+    #endif
 
 #ifndef NO_TORRENT_SYSTEM
     m_torrent_opts = new TorrentOptionsPanel( m_tabs, m_ui );
+    #ifdef HAVE_WX26
     m_tabs->AddPage( m_torrent_opts, _("P2P"), true, 1 );
+    #else
+    m_tabs->AddPage( m_torrent_opts, _("P2P"), true, *charArr2wxBitmap( torrentoptionspanel_icon_png, sizeof(torrentoptionspanel_icon_png) ) );
+    #endif
 #endif
 
     m_chat_opts = new ChatOptionsTab( m_tabs, m_ui );
+    #ifdef HAVE_WX26
     m_tabs->AddPage( m_chat_opts, _("Chat"), true, 2 );
-
+    #else
+    m_tabs->AddPage( m_chat_opts, _("Chat"), true, wxIcon(userchat_xpm) );
+    #endif
 
     m_lobby_opts = new LobbyOptionsTab( m_tabs );
-    m_tabs->AddPage ( m_lobby_opts, _("General"), true, 4 );
 
+   #ifdef HAVE_WX26
+     m_tabs->AddPage ( m_lobby_opts, _("General"), true, 4 );
+    #else
+     m_tabs->AddPage ( m_lobby_opts, _("General"), true, wxIcon(springlobby_xpm) );
+    #endif
 
-    m_groups_opts = new ManageGroupsPanel( m_tabs );
-    m_tabs->AddPage( m_groups_opts , _("Groups"), true, 2 );
+    m_groups_opts = new GroupOptionsPanel( m_tabs );
+
+    #ifdef HAVE_WX26
+    m_tabs->AddPage( m_groups_opts, _("Groups"), true, 2 );
+    #else
+    m_tabs->AddPage ( m_groups_opts, _("Groups"), true, wxIcon(userchat_xpm) );
+    #endif
+
 
     m_restore_btn = new wxButton( this, wxID_REVERT, _("Restore") );
     m_apply_btn = new wxButton( this, wxID_APPLY, _("Apply") );
@@ -82,13 +121,22 @@ MainOptionsTab::MainOptionsTab( wxWindow* parent, Ui& ui ) : wxPanel( parent, -1
     m_main_sizer->Add( m_button_sizer, 0, wxEXPAND );
 
     SetSizer( m_main_sizer );
+    SetScrollRate( 3, 3 );
     Layout();
+    Refresh();
 }
 
 
 MainOptionsTab::~MainOptionsTab()
 {
 
+}
+
+
+GroupOptionsPanel& MainOptionsTab::GetGroupOptionsPanel()
+{
+  ASSERT_EXCEPTION(m_groups_opts != 0, _T("m_groups_opts == 0"));
+  return *m_groups_opts;
 }
 
 
@@ -118,14 +166,14 @@ void MainOptionsTab::OnRestore( wxCommandEvent& event )
 
 void MainOptionsTab::OnOpenGroupsTab()
 {
-    m_groups_opts->ReloadGroupSizer();
+    //m_groups_opts->ReloadGroupSizer();
 }
 
 void MainOptionsTab::SetSelection( const unsigned int page )
 {
     if ( page < m_tabs->GetPageCount() ){
         m_tabs->SetSelection( page );
-        m_groups_opts->ReloadGroupSizer();
+        //m_groups_opts->ReloadGroupSizer();
     }
     else
         m_tabs->SetSelection( 0 );

@@ -2,6 +2,7 @@
 #define SPRINGLOBBY_UPDATER_H_INCLUDED
 
 class ExeDownloader;
+#include <wx/string.h>
 
 class UpdaterClass
 {

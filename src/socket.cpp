@@ -3,6 +3,7 @@
 #include <wx/socket.h>
 #include <wx/thread.h>
 #include <wx/string.h>
+#include <wx/log.h>
 #include <stdexcept>
 
 #include "socket.h"

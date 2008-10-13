@@ -8,6 +8,7 @@
 #include <wx/panel.h>
 #include <wx/statline.h>
 #include <wx/stattext.h>
+#include <wx/log.h>
 #include <stdexcept>
 
 #include "singleplayertab.h"
@@ -18,6 +19,10 @@
 #include "iunitsync.h"
 #include "addbotdialog.h"
 #include "server.h"
+
+#ifndef HAVE_WX26
+#include "auimanager.h"
+#endif
 
 #include "settings++/custom_dialogs.h"
 
@@ -34,10 +39,14 @@ END_EVENT_TABLE()
 
 
 SinglePlayerTab::SinglePlayerTab(wxWindow* parent, Ui& ui, MainSinglePlayerTab& msptab):
-  wxPanel( parent, -1 ),
+  wxScrolledWindow( parent, -1 ),
   m_ui( ui ),
   m_battle( ui, msptab )
 {
+  #ifndef HAVE_WX26
+  GetAui().manager->AddPane( this, wxLEFT, _T("singleplayertab") );
+  #endif
+
   wxBoxSizer* m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
   m_minimap = new MapCtrl( this, 100, &m_battle, ui, false, false, true, true );
@@ -85,6 +94,7 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, Ui& ui, MainSinglePlayerTab& 
 
   m_main_sizer->Add( m_buttons_sizer, 0, wxEXPAND, 5 );
 
+  SetScrollRate( 3, 3 );
   this->SetSizer( m_main_sizer );
   this->Layout();
 
@@ -162,7 +172,7 @@ void SinglePlayerTab::SetMap( unsigned int index )
     } catch (...) {}
   }
   m_minimap->UpdateMinimap();
-  m_battle.SendHostInfo( HI_Map_Changed ); // reload map options
+  m_battle.SendHostInfo( IBattle::HI_Map_Changed ); // reload map options
   m_map_pick->SetSelection( index );
 }
 
@@ -180,8 +190,8 @@ void SinglePlayerTab::SetMod( unsigned int index )
     } catch (...) {}
   }
   m_minimap->UpdateMinimap();
-  m_battle.SendHostInfo( HI_Restrictions ); // Update restrictions in options.
-  m_battle.SendHostInfo( HI_Mod_Changed ); // reload mod options
+  m_battle.SendHostInfo( IBattle::HI_Restrictions ); // Update restrictions in options.
+  m_battle.SendHostInfo( IBattle::HI_Mod_Changed ); // reload mod options
   m_mod_pick->SetSelection( index );
 }
 
@@ -208,7 +218,7 @@ bool SinglePlayerTab::ValidSetup()
         return false;
   }
 
-  if ( usync().VersionSupports( GF_XYStartPos ) ) return true;
+  if ( usync().VersionSupports( IUnitSync::GF_XYStartPos ) ) return true;
 
   int numBots = 0;
   int first = -1;
@@ -285,10 +295,10 @@ void SinglePlayerTab::Update( const wxString& Tag )
   long type;
   Tag.BeforeFirst( '_' ).ToLong( &type );
   wxString key = Tag.AfterFirst( '_' );
-  wxString value = m_battle.CustomBattleOptions().getSingleValue( key, (GameOption)type);
+  wxString value = m_battle.CustomBattleOptions().getSingleValue( key, (OptionsWrapper::GameOption)type);
   long longval;
   value.ToLong( &longval );
-  if ( type == PrivateOptions )
+  if ( type == OptionsWrapper::PrivateOptions )
   {
     if ( key == _T("mapname") )
     {

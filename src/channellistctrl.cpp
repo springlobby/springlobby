@@ -9,8 +9,11 @@ BEGIN_EVENT_TABLE( ChannelListctrl, customListCtrl )
 END_EVENT_TABLE()
 
 
-ChannelListctrl::ChannelListctrl(wxWindow* parent, wxWindowID id, const wxString& name, long style, const wxPoint& pt,const wxSize& sz)
-    :customListCtrl(parent, CHANNELLIST, pt, sz, style, name, false)
+ChannelListctrl::ChannelListctrl(wxWindow* parent, wxWindowID id, const wxPoint& pt,
+                    const wxSize& sz,long style, wxString name)
+    :CustomListCtrl(parent, CHANNELLIST, wxDefaultPosition, wxDefaultSize,
+            wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("ChannelListCtrl"))
+
 {
      wxListItem col;
 

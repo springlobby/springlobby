@@ -1,5 +1,6 @@
 /* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
 
+#include <algorithm>
 #include <wx/dynlib.h>
 #include <wx/filefn.h>
 #include <wx/filename.h>
@@ -11,6 +12,7 @@
 #include <wx/string.h>
 #include <wx/file.h>
 #include <wx/tokenzr.h>
+#include <wx/log.h>
 //#include <wx/txtstrm.h>
 //#include <wx/wfstream.h>
 #include <wx/textfile.h>
@@ -44,7 +46,7 @@ SpringUnitSync::SpringUnitSync()
 SpringUnitSync::~SpringUnitSync()
 {
   CacheThread().Stop();
-  FreeUnitSyncLib();
+  //FreeUnitSyncLib();
 }
 
 
@@ -161,7 +163,7 @@ wxString SpringUnitSync::GetSpringVersion()
 }
 
 
-bool SpringUnitSync::VersionSupports( GameFeature feature )
+double SpringUnitSync::_GetSpringVersion()
 {
   wxString ver = GetSpringVersion();
   double nver = 0;
@@ -181,10 +183,16 @@ bool SpringUnitSync::VersionSupports( GameFeature feature )
     nver = nver * 100;
   }
   std::setlocale(LC_NUMERIC, old_locale);
+  return nver;
+}
+
+
+bool SpringUnitSync::VersionSupports( GameFeature feature )
+{
   switch (feature) {
-    case GF_XYStartPos: return nver >= 76.0;
-    case USYNC_Sett_Handler: return nver >= 76.0;
-    case USYNC_GetInfoMap: return nver >= 77.0;
+    case GF_XYStartPos:      return _GetSpringVersion() >= 76.0;
+    case USYNC_Sett_Handler: return _GetSpringVersion() >= 76.0;
+    case USYNC_GetInfoMap:   return susynclib()->HasGetInfoMap();
   }
   return false;
 }
@@ -227,6 +235,15 @@ bool SpringUnitSync::ModExists( const wxString& modname, const wxString& hash )
   return itor->second == hash;
 }
 
+bool SpringUnitSync::ModExistsCheckHash( const wxString& hash ) const
+{
+    LocalArchivesVector::const_iterator itor = m_mods_list.begin();
+    for ( ; itor != m_mods_list.end(); ++itor ) {
+        if ( itor->second == hash )
+            return true;
+    }
+    return false;
+}
 
 UnitSyncMod SpringUnitSync::GetMod( const wxString& modname )
 {
@@ -261,6 +278,18 @@ int SpringUnitSync::GetNumMaps()
 wxArrayString SpringUnitSync::GetMapList()
 {
   return m_map_array;
+}
+
+
+wxArrayString SpringUnitSync::GetModValidMapList( const wxString& modname )
+{
+  wxArrayString ret;
+  try
+  {
+    unsigned int mapcount = susynclib()->GetValidMapCount( modname );
+    for ( unsigned int i = 0; i < mapcount; i++ ) ret.Add( susynclib()->GetValidMapName( i ) );
+  } catch ( assert_exception& e ) {}
+  return ret;
 }
 
 
@@ -306,6 +335,8 @@ UnitSyncMap SpringUnitSync::GetMapEx( int index )
 {
   UnitSyncMap m;
 
+  if ( index < 0 ) return m;
+
   m.name = m_map_array[index];
   m.hash = m_maps_list[m.name];
 
@@ -319,7 +350,7 @@ GameOptions SpringUnitSync::GetMapOptions( const wxString& name )
 {
   wxLogDebugFunc( name );
   GameOptions ret;
- wxArrayString cache;
+  wxArrayString cache;
   try
   {
     cache = GetCacheFile( GetFileCachePath( name, _T(""), false ) + _T(".mapoptions") );
@@ -327,7 +358,7 @@ GameOptions SpringUnitSync::GetMapOptions( const wxString& name )
     for (unsigned int i = 0; i < count; ++i)
     {
       // key  type
-      wxArrayString params = wxStringTokenize( cache[i], _T("\t") );
+      wxArrayString params = wxStringTokenize( cache[i], _T("\t"), wxTOKEN_RET_EMPTY);
       wxString key = params[0];
       switch ( s2l( params[1] ) )
       {
@@ -427,12 +458,12 @@ GameOptions SpringUnitSync::GetMapOptions( const wxString& name )
          }
       }
       }
-    wxString optiontoken;
-    unsigned int entrycount = entry.GetCount();
-    for ( unsigned int pos = 0; pos < entrycount; pos++ ) optiontoken << entry[pos] << _T('\t');
-    cache.Add( optiontoken );
+      wxString optiontoken;
+      unsigned int entrycount = entry.GetCount();
+      for ( unsigned int pos = 0; pos < entrycount; pos++ ) optiontoken << entry[pos] << _T('\t');
+      cache.Add( optiontoken );
     }
-  SetCacheFile( GetFileCachePath( name, _T(""), false ) + _T(".mapoptions"), cache );
+    SetCacheFile( GetFileCachePath( name, _T(""), false ) + _T(".mapoptions"), cache );
   }
   return ret;
 }
@@ -492,7 +523,7 @@ GameOptions SpringUnitSync::GetModOptions( const wxString& name )
     for (unsigned int i = 0; i < count; ++i)
     {
       // key  type
-      wxArrayString params = wxStringTokenize( cache[i], _T('\t') );
+      wxArrayString params = wxStringTokenize( cache[i], _T('\t'), wxTOKEN_RET_EMPTY );
       wxString key = params[0];
       switch ( s2l( params[1] ) )
       {
@@ -593,12 +624,12 @@ GameOptions SpringUnitSync::GetModOptions( const wxString& name )
          }
       }
       }
-    wxString optiontoken;
-    unsigned int entrycount = entry.GetCount();
-    for ( unsigned int pos = 0; pos < entrycount; pos++ ) optiontoken << entry[pos] << _T('\t');
-    cache.Add( optiontoken );
-    }
-  SetCacheFile( GetFileCachePath( name, _T(""), true ) + _T(".modoptions"), cache );
+      wxString optiontoken;
+      unsigned int entrycount = entry.GetCount();
+      for ( unsigned int pos = 0; pos < entrycount; pos++ ) optiontoken << entry[pos] << _T('\t');
+      cache.Add( optiontoken );
+      }
+    SetCacheFile( GetFileCachePath( name, _T(""), true ) + _T(".modoptions"), cache );
   }
   return ret;
 }
@@ -778,7 +809,8 @@ wxSize MakeFit(const wxSize &original, const wxSize &bounds){
   }
 }
 
-wxImage SpringUnitSync::GetMinimap( const wxString& mapname, int width, int height )
+
+wxImage SpringUnitSync::GetMinimap( const wxString& mapname )
 {
   wxLogDebugFunc( mapname );
 
@@ -792,11 +824,6 @@ wxImage SpringUnitSync::GetMinimap( const wxString& mapname, int width, int heig
 
     img = wxImage( originalsizepath, wxBITMAP_TYPE_PNG );
     ASSERT_EXCEPTION( img.Ok(), _T("Failed to load cache image") );
-
-    MapInfo mapinfo = _GetMapInfoEx( mapname );
-
-    wxSize image_size = MakeFit(wxSize(mapinfo.width, mapinfo.height), wxSize(width, height));
-    img.Rescale( image_size.GetWidth(), image_size.GetHeight() );
   }
   catch (...)
   {
@@ -805,11 +832,6 @@ wxImage SpringUnitSync::GetMinimap( const wxString& mapname, int width, int heig
       img = susynclib()->GetMinimap( mapname );
 
       img.SaveFile( originalsizepath, wxBITMAP_TYPE_PNG );
-
-      MapInfo mapinfo = _GetMapInfoEx( mapname );
-
-      wxSize image_size = MakeFit(wxSize(mapinfo.width, mapinfo.height), wxSize(width, height));
-      img.Rescale( image_size.GetWidth(), image_size.GetHeight() );
     }
     catch (...)
     {
@@ -820,7 +842,24 @@ wxImage SpringUnitSync::GetMinimap( const wxString& mapname, int width, int heig
   return img;
 }
 
-wxImage SpringUnitSync::GetMetalmap( const wxString& mapname, int width, int height )
+
+wxImage SpringUnitSync::GetMinimap( const wxString& mapname, int width, int height )
+{
+  wxImage img = GetMinimap( mapname );
+
+  if (img.GetWidth() > 1 && img.GetHeight() > 1)
+  {
+    MapInfo mapinfo = _GetMapInfoEx( mapname );
+
+    wxSize image_size = MakeFit(wxSize(mapinfo.width, mapinfo.height), wxSize(width, height));
+    img.Rescale( image_size.GetWidth(), image_size.GetHeight() );
+  }
+
+  return img;
+}
+
+
+wxImage SpringUnitSync::GetMetalmap( const wxString& mapname )
 {
   wxLogDebugFunc( mapname );
 
@@ -834,9 +873,6 @@ wxImage SpringUnitSync::GetMetalmap( const wxString& mapname, int width, int hei
 
     img = wxImage( originalsizepath, wxBITMAP_TYPE_PNG );
     ASSERT_EXCEPTION( img.Ok(), _T("Failed to load cache image") );
-
-    wxSize image_size = MakeFit(wxSize(img.GetWidth(), img.GetHeight()), wxSize(width, height));
-    img.Rescale( image_size.GetWidth(), image_size.GetHeight() );
   }
   catch (...)
   {
@@ -845,9 +881,6 @@ wxImage SpringUnitSync::GetMetalmap( const wxString& mapname, int width, int hei
       img = susynclib()->GetMetalmap( mapname );
 
       img.SaveFile( originalsizepath, wxBITMAP_TYPE_PNG );
-
-      wxSize image_size = MakeFit(wxSize(img.GetWidth(), img.GetHeight()), wxSize(width, height));
-      img.Rescale( image_size.GetWidth(), image_size.GetHeight() );
     }
     catch (...)
     {
@@ -857,6 +890,21 @@ wxImage SpringUnitSync::GetMetalmap( const wxString& mapname, int width, int hei
 
   return img;
 }
+
+
+wxImage SpringUnitSync::GetMetalmap( const wxString& mapname, int width, int height )
+{
+  wxImage img = GetMetalmap( mapname );
+
+  if (img.GetWidth() > 1 && img.GetHeight() > 1)
+  {
+    wxSize image_size = MakeFit(wxSize(img.GetWidth(), img.GetHeight()), wxSize(width, height));
+    img.Rescale( image_size.GetWidth(), image_size.GetHeight() );
+  }
+
+  return img;
+}
+
 
 MapInfo SpringUnitSync::_GetMapInfoEx( const wxString& mapname )
 {
@@ -870,7 +918,7 @@ MapInfo SpringUnitSync::_GetMapInfoEx( const wxString& mapname )
     info.author = cache[0];
     info.tidalStrength =  s2l( cache[1] );
     info.gravity = s2l( cache[2] );
-    info.maxMetal = s2l( cache[3] );
+    info.maxMetal = s2d( cache[3] );
     info.extractorRadius = s2d( cache[4] );
     info.minWind = s2l( cache[5] );
     info.maxWind = s2l( cache[6] );
@@ -998,6 +1046,34 @@ void SpringUnitSync::SetCacheFile( const wxString& path, const wxArrayString& da
   file.Close();
 }
 
+void SpringUnitSync::GetReplayList(std::vector<wxString> &ret)
+{
+  ret.clear();
+  wxLogDebug( _T("") );
+  LOCK_UNITSYNC;
+
+  if ( !IsLoaded() ) return;
+
+  int ini = susynclib()->InitFindVFS( _T("demos/*.sdf") );
+
+  wxString FilePath ;
+  //wxArrayString ret;
+  do
+  {
+    ini = susynclib()->FindFilesVFS ( ini, FilePath );
+    wxString FileName = wxString ( FilePath, wxConvUTF8 );
+    //ret.Add ( FileName );
+    ret.push_back(FileName);
+  } while (ini != 0);
+
+    int kol = ret.size();
+
+  std::sort(ret.begin(),ret.end());
+  std::vector<wxString>::iterator i=std::unique(ret.begin(),ret.end());
+  ret.resize(i - ret.begin());
+
+  kol = ret.size();
+}
 
 bool SpringUnitSync::FileExists( const wxString& name )
 {

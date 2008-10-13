@@ -4,8 +4,7 @@
 #include "customlistctrl.h"
 
 
-
-class ChannelListctrl : public customListCtrl
+class ChannelListctrl : public CustomListCtrl
 {
     public:
         ChannelListctrl(wxWindow* parent, wxWindowID id, const wxString& name = _T("ChannelListCtrl"),

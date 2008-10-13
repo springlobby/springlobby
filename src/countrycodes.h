@@ -1,8 +1,8 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_COUNTRYCODES_H
 #define SPRINGLOBBY_HEADERGUARD_COUNTRYCODES_H
 
-#include <wx/string.h>
+class wxString;
 
-  wxString GetFlagNameFromCountryCode( const wxString& cc );
+wxString GetFlagNameFromCountryCode( const wxString& cc );
 
 #endif // SPRINGLOBBY_HEADERGUARD_COUNTRYCODES_H

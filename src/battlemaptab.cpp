@@ -31,6 +31,11 @@
 #include "server.h"
 #include "settings.h"
 
+
+#ifndef HAVE_WX26
+#include "auimanager.h"
+#endif
+
 BEGIN_EVENT_TABLE(BattleMapTab, wxPanel)
 
   EVT_CHOICE( BMAP_MAP_SEL, BattleMapTab::OnMapSelect )
@@ -40,8 +45,13 @@ END_EVENT_TABLE()
 
 
 BattleMapTab::BattleMapTab( wxWindow* parent, Ui& ui, Battle& battle ):
-  wxPanel( parent, -1 ), m_ui(ui), m_battle(battle)
+  wxScrolledWindow( parent, -1 ), m_ui(ui), m_battle(battle)
 {
+
+  #ifndef HAVE_WX26
+  GetAui().manager->AddPane( this, wxLEFT, _T("battlemaptab") );
+  #endif
+
   wxBoxSizer* m_main_sizer = new wxBoxSizer( wxHORIZONTAL );
   wxBoxSizer* m_map_sizer = new wxBoxSizer( wxVERTICAL );
 
@@ -105,18 +115,22 @@ BattleMapTab::BattleMapTab( wxWindow* parent, Ui& ui, Battle& battle ):
 
   //m_map_combo->Enable( m_battle.IsFounderMe() );
   m_start_radios->Enable( m_battle.IsFounderMe() );
-
+  SetScrollRate( 3, 3);
+  Layout();
 }
 
 
 BattleMapTab::~BattleMapTab()
 {
+  #ifndef HAVE_WX26
+  if(GetAui().manager)GetAui().manager->DetachPane( this );
+  #endif
 }
 
 
 void BattleMapTab::Update()
 {
-  wxString value = m_battle.CustomBattleOptions().getSingleValue( _T("startpostype"), EngineOption);
+  wxString value = m_battle.CustomBattleOptions().getSingleValue( _T("startpostype"), OptionsWrapper::EngineOption);
   long longval;
   value.ToLong( &longval );
   m_start_radios->SetSelection( longval );
@@ -145,10 +159,10 @@ void BattleMapTab::Update( const wxString& Tag )
   long type;
   Tag.BeforeFirst( '_' ).ToLong( &type );
   wxString key = Tag.AfterFirst( '_' );
-  wxString value = m_battle.CustomBattleOptions().getSingleValue( key, (GameOption)type);
+  wxString value = m_battle.CustomBattleOptions().getSingleValue( key, (OptionsWrapper::GameOption)type);
   long longval;
   value.ToLong( &longval );
-  if ( type == EngineOption )
+  if ( type == OptionsWrapper::EngineOption )
   {
     if ( key == _T("startpostype") )
     {
@@ -156,7 +170,7 @@ void BattleMapTab::Update( const wxString& Tag )
      m_minimap->UpdateMinimap();
     }
   }
-  else if ( type == PrivateOptions )
+  else if ( type == OptionsWrapper::PrivateOptions )
   {
     if ( key == _T("mapname") )
     {
@@ -203,9 +217,9 @@ void BattleMapTab::OnMapSelect( wxCommandEvent& event )
     UnitSyncMap map = usync().GetMapEx( index );
     m_battle.SetLocalMap( map );
 
-    m_battle.SendHostInfo( HI_Map );
+    m_battle.SendHostInfo( IBattle::HI_Map );
     for( unsigned int i=0;i<m_battle.GetNumRects();++i) if ( m_battle.GetStartRect( i ).exist ) m_battle.RemoveStartRect(i);
-    m_battle.SendHostInfo( HI_StartRects );
+    m_battle.SendHostInfo( IBattle::HI_StartRects );
   } catch (...) {}
 }
 
@@ -213,8 +227,8 @@ void BattleMapTab::OnMapSelect( wxCommandEvent& event )
 void BattleMapTab::OnStartTypeSelect( wxCommandEvent& event )
 {
   wxString pos = wxString::Format( _T("%d"), m_start_radios->GetSelection());
-  m_battle.CustomBattleOptions().setSingleOption( _T("startpostype"), pos, EngineOption );
-  m_battle.SendHostInfo( wxString::Format(_T("%d_startpostype"), EngineOption ) );
+  m_battle.CustomBattleOptions().setSingleOption( _T("startpostype"), pos, OptionsWrapper::EngineOption );
+  m_battle.SendHostInfo( wxString::Format(_T("%d_startpostype"), OptionsWrapper::EngineOption ) );
 }
 
 

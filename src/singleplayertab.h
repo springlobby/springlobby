@@ -1,8 +1,7 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_SINGLEPLAYERTAB_H
 #define SPRINGLOBBY_HEADERGUARD_SINGLEPLAYERTAB_H
 
-
-#include <wx/panel.h>
+#include <wx/scrolwin.h>
 
 #include "singleplayerbattle.h"
 
@@ -18,7 +17,7 @@ class wxChoice;
 class wxStaticText;
 class wxCommandEvent;
 
-class SinglePlayerTab: public wxPanel
+class SinglePlayerTab: public  wxScrolledWindow
 {
   public:
 
@@ -61,18 +60,16 @@ class SinglePlayerTab: public wxPanel
     wxButton* m_reset_btn;
     wxButton* m_start_btn;
 
+    enum {
+      SP_MAP_PICK = wxID_HIGHEST,
+      SP_MOD_PICK,
+      SP_BROWSE_MAP,
+      SP_ADD_BOT,
+      SP_RESET,
+      SP_START
+    };
+
   DECLARE_EVENT_TABLE()
-};
-
-
-enum
-{
-  SP_MAP_PICK = wxID_HIGHEST,
-  SP_MOD_PICK,
-  SP_BROWSE_MAP,
-  SP_ADD_BOT,
-  SP_RESET,
-  SP_START
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_SINGLEPLAYERTAB_H

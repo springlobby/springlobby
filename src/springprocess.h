@@ -3,7 +3,6 @@
 
 #include <wx/thread.h>
 #include <wx/string.h>
-#include <wx/event.h>
 #include <wx/process.h>
 
 BEGIN_DECLARE_EVENT_TYPES()
