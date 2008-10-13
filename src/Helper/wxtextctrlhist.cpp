@@ -14,6 +14,7 @@
 #include "wxtextctrlhist.h"
 #include "TextCompletionDatabase.hpp"
 #include <wx/regex.h>
+#include "../utils.h"
 
 BEGIN_EVENT_TABLE(wxTextCtrlHist, wxTextCtrl)
     EVT_TEXT_ENTER(wxID_ANY, wxTextCtrlHist::OnSendMessage)

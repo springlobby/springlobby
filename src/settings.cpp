@@ -1617,3 +1617,12 @@ wxString Settings::GetLastReplayFilterProfileName()
     return  m_config->Read( _T("/ReplayFilter/lastprofile"), _T("default") );
 }
 
+void Settings::SetCompletionMethod( CompletionMethod method )
+{
+
+}
+
+Settings::CompletionMethod Settings::GetCompletionMethod(  ) const
+{
+    return  (CompletionMethod )m_config->Read( _T("/General"), (int)MatchExact );
+}

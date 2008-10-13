@@ -523,8 +523,20 @@ class Settings
     wxString GetTorrentsFolder();
     /**@}*/
 
+    /** @name Aui
+     * @{
+     */
     void SaveLayout( wxString& layout_name, wxString& layout_string );
     wxString GetLayout( wxString& layout_name );
+    /**@}*/
+
+    enum CompletionMethod {
+        MatchNearest,
+        MatchExact
+    };
+
+    void SetCompletionMethod( CompletionMethod method );
+    CompletionMethod GetCompletionMethod(  ) const;
 
   protected:
     #ifdef __WXMSW__
