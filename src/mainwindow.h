@@ -140,31 +140,33 @@ class MainWindow : public wxFrame
     bool se_frame_active;
 
     ReplayTab* m_replay_tab;
+
+    enum {
+        MENU_SETTINGSPP,
+        MENU_ABOUT = wxID_ABOUT,
+        MENU_QUIT = wxID_EXIT,
+
+        MENU_CONNECT = wxID_HIGHEST,
+        MENU_DISCONNECT,
+        MENU_JOIN,
+        MENU_USYNC,
+        MENU_TRAC,
+        MENU_DOC,
+        MENU_CHAT,
+        MAIN_TABS,
+        MENU_VERSION,
+        MENU_START_TORRENT,
+        MENU_STOP_TORRENT,
+        MENU_AUTOJOIN_CHANNELS
+
+    };
+
     DECLARE_EVENT_TABLE()
 };
 
 //ChatPanel& servwin();
 
 // wxWidget IDs
-enum
-{
-	MENU_SETTINGSPP,
-    MENU_ABOUT = wxID_ABOUT,
-    MENU_QUIT = wxID_EXIT,
 
-    MENU_CONNECT = wxID_HIGHEST,
-    MENU_DISCONNECT,
-    MENU_JOIN,
-    MENU_USYNC,
-    MENU_TRAC,
-    MENU_DOC,
-    MENU_CHAT,
-    MAIN_TABS,
-    MENU_VERSION,
-    MENU_START_TORRENT,
-    MENU_STOP_TORRENT,
-    MENU_AUTOJOIN_CHANNELS
-
-};
 
 #endif // SPRINGLOBBY_HEADERGUARD_MAINWINDOW_H

@@ -63,12 +63,13 @@ protected:
 
     Ui& m_ui;
 
+    enum {
+        OPTIONS_TABS = wxID_HIGHEST,
+    };
+
     DECLARE_EVENT_TABLE()
 };
 
-enum
-{
-    OPTIONS_TABS = wxID_HIGHEST,
-};
+
 
 #endif // SPRINGLOBBY_HEADERGUARD_MAINOPTIONSTAB_H

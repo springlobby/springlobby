@@ -45,15 +45,15 @@
 
 BEGIN_EVENT_TABLE(BattleListTab, wxPanel)
 
-  EVT_BUTTON              ( BATTLE_JOIN              , BattleListTab::OnJoin        )
-  EVT_BUTTON              ( BATTLE_HOST              , BattleListTab::OnHost        )
-  EVT_LIST_ITEM_ACTIVATED ( BATTLE_JOIN              , BattleListTab::OnListJoin    )
-  EVT_LIST_ITEM_SELECTED  ( BLIST_LIST               , BattleListTab::OnSelect      )
-  EVT_CHECKBOX            ( BATTLE_LIST_FILTER_ACTIV , BattleListTab::OnFilterActiv )
+  EVT_BUTTON              ( BattleListTab::BATTLE_JOIN , BattleListTab::OnJoin        )
+  EVT_BUTTON              ( BattleListTab::BATTLE_HOST , BattleListTab::OnHost        )
+  EVT_LIST_ITEM_ACTIVATED ( BattleListTab::BATTLE_JOIN , BattleListTab::OnListJoin    )
+  EVT_LIST_ITEM_SELECTED  ( BattleListCtrl::BLIST_LIST  , BattleListTab::OnSelect      )
+  EVT_CHECKBOX            ( BattleListTab::BATTLE_LIST_FILTER_ACTIV, BattleListTab::OnFilterActiv )
 #if  wxUSE_TOGGLEBTN
-  EVT_TOGGLEBUTTON        ( BATTLE_LIST_FILTER_BUTTON, BattleListTab::OnFilter  )
+  EVT_TOGGLEBUTTON        ( BattleListTab::BATTLE_LIST_FILTER_BUTTON, BattleListTab::OnFilter  )
 #else
-  EVT_CHECKBOX            ( BATTLE_LIST_FILTER_BUTTON , BattleListTab::OnFilter )
+  EVT_CHECKBOX            ( BattleListTab::BATTLE_LIST_FILTER_BUTTON , BattleListTab::OnFilter )
 #endif
 
 
