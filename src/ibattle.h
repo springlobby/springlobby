@@ -3,55 +3,10 @@
 
 
 #include <wx/string.h>
-#include <list>
-#include <map>
 
 #include "iunitsync.h"
 #include "user.h"
 #include "mmoptionswrapper.h"
-#include "ui.h"
-
-#define HI_None 0
-#define HI_Map 1
-#define HI_Locked 2
-#define HI_Spectators 4
-#define HI_StartResources 8
-#define HI_MaxUnits 16
-#define HI_StartType 32
-#define HI_GameType 64
-#define HI_Options 128
-#define HI_StartRects 256
-#define HI_Restrictions 512
-#define HI_Map_Changed 1024
-#define HI_Mod_Changed 2048
-#define HI_Send_All_opts 4096
-
-
-typedef int HostInfo;
-
-typedef int StartType;
-enum {
-  ST_Fixed = 0,
-  ST_Random = 1,
-  ST_Choose = 2,
-  ST_Pick = 3
-};
-
-
-typedef int GameType;
-enum  {
-  GT_ComContinue = 0,
-  GT_ComEnds = 1,
-  GT_Lineage = 2
-};
-
-
-typedef int BattleType;
-enum {
-  BT_Unknown = 0,
-  BT_Multi = 1,
-  BT_Single = 2
-};
 
 
 struct BattleStartRect
@@ -90,6 +45,74 @@ class IBattle
 
     IBattle();
     virtual ~IBattle();
+
+    /** @name Constants
+     * @{
+     */
+    static const unsigned int HI_None           = 0;
+    static const unsigned int HI_Map            = 1;
+    static const unsigned int HI_Locked         = 2;
+    static const unsigned int HI_Spectators     = 4;
+    static const unsigned int HI_StartResources = 8;
+    static const unsigned int HI_MaxUnits = 16;
+    static const unsigned int HI_StartType = 32;
+    static const unsigned int HI_GameType = 64;
+    static const unsigned int HI_Options = 128;
+    static const unsigned int HI_StartRects = 256;
+    static const unsigned int HI_Restrictions = 512;
+    static const unsigned int HI_Map_Changed = 1024;
+    static const unsigned int HI_Mod_Changed = 2048;
+    static const unsigned int HI_Send_All_opts  = 4096;
+    /**@}*/
+
+    /** @name Enums
+     * @{
+     */
+    enum NatType {
+      NAT_None = 0,
+      NAT_Hole_punching,
+      NAT_Fixed_source_ports
+    };
+
+    enum RankLimitType {
+      rank_limit_none=0,
+      rank_limit_autospec,
+      rank_limit_autokick
+    };
+
+
+    enum BalanceType {
+      balance_random=0,
+      balance_divide
+    };
+
+    typedef int HostInfo;
+
+    typedef int StartType;
+    enum {
+      ST_Fixed = 0,
+      ST_Random = 1,
+      ST_Choose = 2,
+      ST_Pick = 3
+    };
+
+    typedef int GameType;
+    enum  {
+      GT_ComContinue = 0,
+      GT_ComEnds = 1,
+      GT_Lineage = 2
+    };
+
+
+    typedef int BattleType;
+    enum {
+      BT_Unknown = 0,
+      BT_Multi = 1,
+      BT_Single = 2
+    };
+
+
+    /**@}*/
 
     virtual void SetHostMap( const wxString& mapname, const wxString& hash );
     virtual void SetLocalMap( const UnitSyncMap& map );
@@ -143,7 +166,7 @@ class IBattle
 
     virtual void OnUnitSyncReloaded();
 
-    virtual mmOptionsWrapper& CustomBattleOptions() { return m_opt_wrap; }
+    virtual OptionsWrapper& CustomBattleOptions() { return m_opt_wrap; }
 
     virtual bool LoadOptionsPreset( const wxString& name );
     virtual void SaveOptionsPreset( const wxString& name );
@@ -166,7 +189,7 @@ class IBattle
 
     wxArrayString m_units;
 
-    mmOptionsWrapper m_opt_wrap;
+    OptionsWrapper m_opt_wrap;
 
     wxString m_preset;
 };

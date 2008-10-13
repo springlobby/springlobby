@@ -6,6 +6,7 @@
 class wxCheckBox;
 class wxBoxSizer;
 class wxStaticText;
+class wxRadioButton;
 
 
 class LobbyOptionsTab : public wxScrolledWindow
@@ -28,6 +29,11 @@ class LobbyOptionsTab : public wxScrolledWindow
         wxStaticText* m_reportstats_label;
         wxStaticText* m_updater_label;
         wxStaticText* m_show_tooltips_label;
+
+        wxStaticText* m_complete_method_label;
+        wxRadioButton* m_complete_method_old;
+        wxRadioButton* m_complete_method_new;
+
 
         wxBoxSizer* m_main_sizer;
 

@@ -7,29 +7,30 @@
 #include <utility>
 #include <wx/string.h>
 
-typedef std::pair < wxString,wxString> wxStringPair;
-typedef std::pair < wxString, wxStringPair> wxStringTriple;
-typedef std::vector<wxStringPair> wxStringPairVec;
-typedef std::vector<wxStringTriple> wxStringTripleVec;
-typedef std::map<wxString,wxString> wxStringMap;
-
 struct GameOptions;
 
-//! enum to differentiate option category easily at runtime
-enum GameOption{
-  PrivateOptions  = 3,
-  EngineOption = 2,
-	MapOption    = 1,
-	ModOption    = 0,
-	LastOption = 4
-};// should reflect: optionCategoriesCount
-
-class mmOptionsWrapper
+class OptionsWrapper
 {
 public:
+    //! public types
+    typedef std::pair < wxString,wxString> wxStringPair;
+    typedef std::pair < wxString, wxStringPair> wxStringTriple;
+    typedef std::vector<wxStringPair> wxStringPairVec;
+    typedef std::vector<wxStringTriple> wxStringTripleVec;
+    typedef std::map<wxString,wxString> wxStringMap;
+
+    //! enum to differentiate option category easily at runtime
+    enum GameOption{
+      PrivateOptions  = 3,
+      EngineOption = 2,
+        MapOption    = 1,
+        ModOption    = 0,
+        LastOption = 4
+    };// should reflect: optionCategoriesCount
+
 	//does nothing
-	mmOptionsWrapper();
-	virtual ~mmOptionsWrapper();
+	OptionsWrapper();
+	virtual ~OptionsWrapper();
 	//! just calls loadOptions(MapOption,mapname)
 	bool loadMapOptions(wxString mapname);
 	//! obsolete

@@ -4,7 +4,6 @@
 #include <wx/event.h>
 class wxCommandEvent;
 
-
 extern const wxEventType httpDownloadEvtComplete;
 extern const wxEventType httpDownloadEvtFailed;
 extern const wxEventType UnitSyncReloadRequest;

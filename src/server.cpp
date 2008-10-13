@@ -4,6 +4,7 @@
 //
 
 #include <stdexcept>
+#include <wx/log.h>
 
 #include "server.h"
 #include "socket.h"

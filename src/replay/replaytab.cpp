@@ -7,6 +7,7 @@
 #include <wx/sizer.h>
 #include <wx/checkbox.h>
 #include <wx/filename.h>
+#include <wx/log.h>
 #if wxUSE_TOGGLEBTN
     #include <wx/tglbtn.h>
 #endif
@@ -15,6 +16,7 @@
 
 #include "replaytab.h"
 #include "replaylistctrl.h"
+#include "replaylist.h"
 #include "../ui.h"
 #include "../chatpanel.h"
 #include "../utils.h"
@@ -30,7 +32,7 @@
 #include "../settings++/custom_dialogs.h"
 
 
-#define REPLAYLIST_COLOUMNCOUNT 10
+const unsigned int REPLAYLIST_COLOUMNCOUNT = 10;
 
 BEGIN_EVENT_TABLE(ReplayTab, wxPanel)
 
@@ -418,15 +420,14 @@ void ReplayTab::Deselected()
 
 void ReplayTab::ReloadList()
 {
-//    /// should be changed to use delayed load once perf testing is done
-//    wxDateTime dt = wxDateTime::UNow();
+    wxDateTime dt = wxDateTime::UNow();
     Deselect();
     m_replays->RemoveAll();
     m_replays->LoadReplays();
 
-//    long sec = (wxDateTime::UNow() - dt).GetMilliseconds().ToLong();
-//    if ( sec > 0 )
-//        customMessageBoxNoModal(SL_MAIN_ICON, wxString::Format( _T("List reloaded in %d milli seconds"),sec ) );
+    long sec = (wxDateTime::UNow() - dt).GetMilliseconds().ToLong();
+    if ( sec > 0 )
+        customMessageBoxNoModal(SL_MAIN_ICON, wxString::Format( _T("List reloaded in %d milli seconds"),sec ) );
 }
 
 void ReplayTab::OnReload( wxCommandEvent& event )

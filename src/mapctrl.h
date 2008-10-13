@@ -1,6 +1,7 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_MAPCTRL_H
 #define SPRINGLOBBY_HEADERGUARD_MAPCTRL_H
 
+#include <wx/image.h>
 #include <wx/string.h>
 
 #include "ibattle.h"
@@ -16,42 +17,6 @@ class SinglePlayerBattle;
 class Ui;
 struct UnitSyncMap;
 class BattleRoomTab;
-
-
-typedef int RectArea;
-#define RA_Main -1
-#define RA_UpLeft 0
-#define RA_UpRight 1
-#define RA_DownRight 2
-#define RA_DownLeft 3
-#define RA_UpAllyButton 4
-#define RA_DownAllyButton 5
-#define RA_Side 6
-#define RA_UpHandicapButton 7
-#define RA_DownHandicapButton 8
-#define RA_Handicap 9
-#define RA_Close 10
-#define RA_Move 11
-#define RA_Download 12
-#define RA_Refresh 13
-
-
-typedef int MouseAction;
-#define MA_None 0
-#define MA_Add 1
-#define MA_Delete 2
-#define MA_Move 3
-#define MA_ResizeUpLeft 4
-#define MA_ResizeUpRight 5
-#define MA_ResizeDownLeft 6
-#define MA_ResizeDownRight 7
-
-
-typedef int BotRectOrient;
-#define BRO_TopLeft 0
-#define BRO_BottomLeft 1
-#define BRO_TopRight 2
-#define BRO_BottomRight 3
 
 class MapCtrl : public wxPanel
 {
@@ -74,6 +39,10 @@ class MapCtrl : public wxPanel
 
    protected:
 
+    typedef int RectArea;
+    typedef int MouseAction;
+    typedef int BotRectOrient;
+
     void LoadMinimap();
     void FreeMinimap();
 
@@ -82,6 +51,8 @@ class MapCtrl : public wxPanel
 
     wxRect GetStartRect( int index );
     wxRect GetStartRect( const BattleStartRect& sr );
+    double GetStartRectMetal( int index );
+    double GetStartRectMetal( const BattleStartRect& sr );
 
     void DrawOutlinedText( wxDC& dc, const wxString& str, int x, int y, const wxColour& outline, const wxColour& font );
 
@@ -120,6 +91,7 @@ class MapCtrl : public wxPanel
 
     wxBitmap* m_minimap;
     wxBitmap* m_metalmap;
+    wxImage m_metalmap_orig;
 
     IBattle* m_battle;
     SinglePlayerBattle* m_sp_battle;

@@ -9,6 +9,7 @@
 #include <wx/string.h>
 #include <wx/intl.h>
 #include <stdexcept>
+#include <wx/log.h>
 
 #include "nicklistctrl.h"
 #include "utils.h"
@@ -21,8 +22,6 @@
 #include "chatpanel.h"
 #include "userlist.h"
 #include "usermenu.h"
-
-#define TOOLTIP_DELAY 1000
 
 
 int wxCALLBACK NickListSortCallback(long item1, long item2, long sortData);

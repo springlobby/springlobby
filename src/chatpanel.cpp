@@ -18,6 +18,7 @@
 #include <wx/tokenzr.h>
 #include <wx/msgdlg.h>
 #include <wx/menu.h>
+#include <wx/log.h>
 #include <wx/utils.h>
 #include <wx/event.h>
 #include <wx/app.h>
@@ -1765,7 +1766,7 @@ void ChatPanel::SetIconHighlight( HighlightType highlight )
           {
             if ( m_type == CPT_Channel && m_icon_index < 4 )
             {
-               m_icon_index = 6;
+               m_icon_index = 4;
                #ifdef HAVE_WX26
                m_chat_tabs->SetPageImage( i, m_icon_index );
                #else
@@ -1774,7 +1775,7 @@ void ChatPanel::SetIconHighlight( HighlightType highlight )
             }
             else if ( m_type == CPT_User && m_icon_index < 5 )
             {
-               m_icon_index = 7;
+               m_icon_index = 5;
                #ifdef HAVE_WX26
                m_chat_tabs->SetPageImage( i, m_icon_index );
                #else
@@ -1787,7 +1788,7 @@ void ChatPanel::SetIconHighlight( HighlightType highlight )
           {
             if ( m_type == CPT_Channel && m_icon_index < 8 )
             {
-               m_icon_index = 6;
+               m_icon_index = 8;
                #ifdef HAVE_WX26
                m_chat_tabs->SetPageImage( i, m_icon_index );
                #else
@@ -1796,7 +1797,7 @@ void ChatPanel::SetIconHighlight( HighlightType highlight )
             }
             else if ( m_type == CPT_User && m_icon_index < 9 )
             {
-               m_icon_index = 7;
+               m_icon_index = 9;
                #ifdef HAVE_WX26
                m_chat_tabs->SetPageImage( i, m_icon_index );
                #else

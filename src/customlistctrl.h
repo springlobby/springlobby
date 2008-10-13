@@ -1,7 +1,6 @@
 #ifndef CUSTOMLISTITEM_H_
 #define CUSTOMLISTITEM_H_
 
-#include <wx/window.h>
 #ifndef __WXMSW__
     #include <wx/listctrl.h>
     typedef wxListCtrl ListBaseType;
@@ -9,25 +8,18 @@
     #include "Helper/listctrl.h"
     typedef SL_Extern::wxGenericListCtrl ListBaseType;
 #endif
-#include <wx/string.h>
+
 #if wxUSE_TIPWINDOW
-#include <wx/tipwin.h>
+    #include <wx/tipwin.h>
 #endif
+
 #include <wx/timer.h>
-#define IDD_TIP_TIMER 666
+#define IDD_TIP_TIMER 696
+
 #include <vector>
 #include <utility>
 
 #include "useractions.h"
-
-/** global delay (ms)
- * \todo make this definable per child class
- */
-#define TOOLTIP_DELAY 1000
-#define TOOLTIP_DURATION 2000
-
-typedef std::pair<wxString,bool> colInfo;
-typedef std::vector<colInfo> colInfoVec;
 
 #if wxUSE_TIPWINDOW
 class SLTipWindow : public wxTipWindow{
@@ -59,6 +51,14 @@ protected:
     SLTipWindow** controlPointer;
     #endif
     int coloumnCount;
+
+    typedef std::pair<wxString,bool> colInfo;
+    typedef std::vector<colInfo> colInfoVec;
+
+    /** global Tooltip thingies (ms)
+     */
+    static const unsigned int m_tooltip_delay    = 1000;
+    static const unsigned int m_tooltip_duration = 2000;
 
 /*** these are only meaningful in single selection lists ***/
     //! curently selected data

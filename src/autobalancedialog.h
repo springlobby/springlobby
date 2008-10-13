@@ -2,13 +2,13 @@
 #define AUTOBALANCEDIALOG_H
 
 //(*Headers(AutoBalanceDialog)
-#include <wx/sizer.h>
-#include <wx/stattext.h>
-#include <wx/statline.h>
-#include <wx/choice.h>
-#include <wx/button.h>
 #include <wx/dialog.h>
 //*)
+
+class wxButton;
+class wxChoice;
+class wxStaticLine;
+class wxStaticText;
 
 /** \brief lets host automatically assign players to teams, optionally taking clan/rank into account
  * dialog sets balancing options in Settings handler for the calling class to use after modal display ends

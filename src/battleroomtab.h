@@ -3,7 +3,6 @@
 
 #include <wx/scrolwin.h>
 
-#include "iunitsync.h"
 #include "mmoptionswrapper.h"
 #include <map>
 
@@ -25,6 +24,7 @@ class wxListCtrl;
 class MapCtrl;
 class ColorButton;
 class wxBitmapComboBox;
+struct UnitSyncMap;
 
 typedef std::map<wxString,long> OptionListMap;
 
@@ -80,7 +80,7 @@ class BattleRoomTab : public wxScrolledWindow
 
   protected:
 
-    long AddMMOptionsToList( long pos, GameOption optFlag );
+    long AddMMOptionsToList( long pos, OptionsWrapper::GameOption optFlag );
 
     Ui& m_ui;
     Battle& m_battle;
@@ -137,25 +137,25 @@ class BattleRoomTab : public wxScrolledWindow
     wxCheckBox* m_autohost_chk;
 
     wxListCtrl* m_opts_list;
-    DECLARE_EVENT_TABLE();
-};
 
-enum
-{
-    BROOM_LEAVE = wxID_HIGHEST,
-    BROOM_IMREADY,
-    BROOM_LOCK,
-    BROOM_SPEC,
-    BROOM_TEAMSEL,
-    BROOM_ALLYSEL,
-    BROOM_COLOURSEL,
-    BROOM_SIDESEL,
-    BROOM_START,
-    BROOM_ADDBOT,
-    BROOM_BALANCE,
-    BROOM_FIXCOLOURS,
-    BROOM_PRESETSEL,
-    BROOM_AUTOHOST
+    enum {
+        BROOM_LEAVE = wxID_HIGHEST,
+        BROOM_IMREADY,
+        BROOM_LOCK,
+        BROOM_SPEC,
+        BROOM_TEAMSEL,
+        BROOM_ALLYSEL,
+        BROOM_COLOURSEL,
+        BROOM_SIDESEL,
+        BROOM_START,
+        BROOM_ADDBOT,
+        BROOM_BALANCE,
+        BROOM_FIXCOLOURS,
+        BROOM_PRESETSEL,
+        BROOM_AUTOHOST
+    };
+
+    DECLARE_EVENT_TABLE();
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_BATTLEROOMTAB_H

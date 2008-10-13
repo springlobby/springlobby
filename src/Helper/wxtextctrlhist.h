@@ -1,3 +1,5 @@
+#ifndef SL_HEADERGUARD_TEXTHISTCONROL_H
+#define SL_HEADERGUARD_TEXTHISTCONROL_H
 //copied from http://wxforum.shadonet.com/viewtopic.php?t=7924 (thanks go to Lamego)
 //modified some (textcompletion,etc)
 
@@ -20,3 +22,5 @@ class wxTextCtrlHist : public wxTextCtrl
     void OnChar(wxKeyEvent & event);
     DECLARE_EVENT_TABLE()
 };
+
+#endif //SL_HEADERGUARD_TEXTHISTCONROL_H

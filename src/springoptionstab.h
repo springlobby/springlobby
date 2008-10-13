@@ -2,7 +2,6 @@
 #define SPRINGLOBBY_HEADERGUARD_SPRINGOPTIONSTAB_H
 
 #include <wx/scrolwin.h>
-#include <wx/checkbox.h>
 
 class wxStaticBoxSizer;
 class wxStaticBox;
@@ -100,22 +99,21 @@ class SpringOptionsTab : public wxScrolledWindow
 
     Ui& m_ui;
 
-    DECLARE_EVENT_TABLE()
-};
+    enum {
+        SPRING_DIRBROWSE = wxID_HIGHEST,
+        SPRING_EXECBROWSE,
+        SPRING_SYNCBROWSE,
+        SPRING_WEBBROWSE,
+        SPRING_DEFEXE,
+        SPRING_DEFUSYNC,
+        SPRING_DEFWEB,
+        SPRING_AUTOCONF,
+        SPRING_DIRFIND,
+        SPRING_EXECFIND,
+        SPRING_SYNCFIND,
+    };
 
-enum
-{
-    SPRING_DIRBROWSE = wxID_HIGHEST,
-    SPRING_EXECBROWSE,
-    SPRING_SYNCBROWSE,
-    SPRING_WEBBROWSE,
-    SPRING_DEFEXE,
-    SPRING_DEFUSYNC,
-    SPRING_DEFWEB,
-    SPRING_AUTOCONF,
-    SPRING_DIRFIND,
-    SPRING_EXECFIND,
-    SPRING_SYNCFIND,
+    DECLARE_EVENT_TABLE()
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_SPRINGOPTIONSTAB_H

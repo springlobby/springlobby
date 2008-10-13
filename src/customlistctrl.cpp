@@ -2,6 +2,7 @@
 #include "utils.h"
 #include "settings.h"
 #include <wx/colour.h>
+#include <wx/log.h>
 #include "iconimagelist.h"
 #include "settings++/custom_dialogs.h"
 
@@ -161,7 +162,7 @@ void CustomListCtrl::OnTimer(wxTimerEvent& event)
       m_tipwindow->SetBoundingRect(wxRect(1,1,50,50));
 #endif
       m_tiptext = wxEmptyString;
-      m_tiptimer.Start(TOOLTIP_DURATION, wxTIMER_ONE_SHOT);
+      m_tiptimer.Start(m_tooltip_duration, wxTIMER_ONE_SHOT);
   }
   else
   {
@@ -222,7 +223,7 @@ void CustomListCtrl::OnMouseMotion(wxMouseEvent& event)
       try
       {
         SetTipWindowText(item_hit,m_last_mouse_pos);
-        m_tiptimer.Start(TOOLTIP_DELAY, wxTIMER_ONE_SHOT);
+        m_tiptimer.Start(m_tooltip_delay, wxTIMER_ONE_SHOT);
       }
       catch ( ... ) { wxLogWarning( _T("Exception setting tooltip") );}
     }
@@ -239,7 +240,7 @@ void CustomListCtrl::SetTipWindowText( const long item_hit, const wxPoint positi
   }
   else
   {
-    m_tiptimer.Start(TOOLTIP_DELAY, wxTIMER_ONE_SHOT);
+    m_tiptimer.Start(m_tooltip_delay, wxTIMER_ONE_SHOT);
     m_tiptext = TE(m_colinfovec[coloumn].first);
   }
 }

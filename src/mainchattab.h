@@ -2,7 +2,6 @@
 #define SPRINGLOBBY_HEADERGUARD_MAINCHATTAB_H
 
 #include <wx/scrolwin.h>
-#include <wx/string.h>
 
 class Ui;
 class ChatPanel;
@@ -14,6 +13,7 @@ class wxNotebook;
 class wxAuiNotebook;
 class wxBoxSizer;
 class wxImageList;
+class wxString;
 
 //! @brief The main chat tab.
 class MainChatTab : public wxScrolledWindow
@@ -69,12 +69,13 @@ class MainChatTab : public wxScrolledWindow
     ChatPanel* m_main_chat;
     int m_newtab_sel;
 
+    enum {
+        CHAT_TABS = wxID_HIGHEST
+    };
+
     DECLARE_EVENT_TABLE()
 };
 
-enum
-{
-    CHAT_TABS = wxID_HIGHEST
-};
+
 
 #endif // SPRINGLOBBY_HEADERGUARD_MAINCHATTAB_H

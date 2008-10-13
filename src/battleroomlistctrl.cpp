@@ -8,6 +8,7 @@
 #include <wx/textdlg.h>
 #include <wx/colordlg.h>
 #include <wx/colour.h>
+#include <wx/log.h>
 #include <stdexcept>
 #include <vector>
 
@@ -30,7 +31,6 @@
 
 #include "settings++/custom_dialogs.h"
 
-#define TOOLTIP_DELAY 1000
 
 BEGIN_EVENT_TABLE( BattleroomListCtrl,  CustomListCtrl)
 

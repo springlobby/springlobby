@@ -2,7 +2,7 @@
 #define AUTOJOINCHANNELDIALOG_H
 
 #include <wx/dialog.h>
-#include <wx/intl.h>
+#include <wx/string.h>
 class wxCommandEvent;
 class wxTextCtrl;
 class wxWindow;

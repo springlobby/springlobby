@@ -2,6 +2,7 @@
 
 #include <wx/sstream.h>
 #include <wx/protocol/http.h>
+#include <wx/log.h>
 
 #include "../utils.h"
 #include "../settings++/custom_dialogs.h"

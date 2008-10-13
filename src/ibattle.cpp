@@ -2,10 +2,12 @@
 
 #include <stdexcept>
 #include <wx/tokenzr.h>
+#include <wx/log.h>
 
 #include "ibattle.h"
 #include "utils.h"
 #include "settings.h"
+#include "ui.h"
 
 IBattle::IBattle():
   m_map_loaded(false),
@@ -193,14 +195,14 @@ bool IBattle::LoadOptionsPreset( const wxString& name )
   if (preset == _T("")) return false; ///preset not found
   m_preset = preset;
 
-  for ( int i = 0; i < (int)LastOption; i++)
+  for ( int i = 0; i < (int)OptionsWrapper::LastOption; i++)
   {
     std::map<wxString,wxString> options = sett().GetHostingPreset( m_preset, i );
-    if ( (GameOption)i != PrivateOptions )
+    if ( (OptionsWrapper::GameOption)i != OptionsWrapper::PrivateOptions )
     {
       for ( std::map<wxString,wxString>::iterator itor = options.begin(); itor != options.end(); itor++ )
       {
-        CustomBattleOptions().setSingleOption( itor->first, itor->second, (GameOption)i );
+        CustomBattleOptions().setSingleOption( itor->first, itor->second, (OptionsWrapper::GameOption)i );
       }
     }
     else
@@ -227,7 +229,7 @@ bool IBattle::LoadOptionsPreset( const wxString& name )
 
       m_units = wxStringTokenize( options[_T("restrictions")], _T('\t') );
       SendHostInfo( HI_Restrictions );
-      Update( wxString::Format( _T("%d_restrictions"), PrivateOptions ) );
+      Update( wxString::Format( _T("%d_restrictions"), OptionsWrapper::PrivateOptions ) );
 
     }
   }
@@ -242,18 +244,18 @@ void IBattle::SaveOptionsPreset( const wxString& name )
   m_preset = FixPresetName(name);
   if (m_preset == _T("")) m_preset = name; ///new preset
 
-  for ( int i = 0; i < (int)LastOption; i++)
+  for ( int i = 0; i < (int)OptionsWrapper::LastOption; i++)
   {
-    if ( (GameOption)i != PrivateOptions )
+    if ( (OptionsWrapper::GameOption)i != OptionsWrapper::PrivateOptions )
     {
-      sett().SetHostingPreset( m_preset, (GameOption)i, CustomBattleOptions().getOptionsMap( (GameOption)i ) );
+      sett().SetHostingPreset( m_preset, (OptionsWrapper::GameOption)i, CustomBattleOptions().getOptionsMap( (OptionsWrapper::GameOption)i ) );
     }
     else
     {
       std::map<wxString,wxString> opts;
       opts[_T("mapname")] = GetHostMapName();
       unsigned int validrectcount = 0;
-      if ( s2l (CustomBattleOptions().getSingleValue( _T("startpostype"), EngineOption ) ) == ST_Choose )
+      if ( s2l (CustomBattleOptions().getSingleValue( _T("startpostype"), OptionsWrapper::EngineOption ) ) == ST_Choose )
       {
         unsigned int boxcount = GetNumRects();
         for ( unsigned int boxnum = 0; boxnum < boxcount; boxnum++ )
@@ -280,7 +282,7 @@ void IBattle::SaveOptionsPreset( const wxString& name )
       }
       opts[_T("restrictions")] = restrictionsstring;
 
-      sett().SetHostingPreset( m_preset, (GameOption)i, opts );
+      sett().SetHostingPreset( m_preset, (OptionsWrapper::GameOption)i, opts );
     }
   }
   sett().SaveSettings();

@@ -3,8 +3,6 @@
 
 #include <wx/scrolwin.h>
 
-#include "iunitsync.h"
-
 class Ui;
 class Battle;
 class User;
@@ -52,13 +50,13 @@ class BattleMapTab : public wxScrolledWindow
     wxRadioBox* m_start_radios;
     wxListCtrl* m_map_opts_list;
 
+    enum {
+      BMAP_MAP_SEL = wxID_HIGHEST,
+      BMAP_START_TYPE
+    };
+
     DECLARE_EVENT_TABLE()
 };
 
-enum
-{
-  BMAP_MAP_SEL = wxID_HIGHEST,
-  BMAP_START_TYPE
-};
 
 #endif // SPRINGLOBBY_HEADERGUARD_BATTLEMAPTAB_H

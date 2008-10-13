@@ -17,6 +17,8 @@
 #include <wx/colour.h>
 #include <wx/cmndata.h>
 #include <wx/font.h>
+#include <wx/log.h>
+#include <wx/wfstream.h>
 
 #include "nonportable.h"
 #include "settings.h"
@@ -34,6 +36,10 @@ Settings& sett()
     static Settings m_sett;
     return m_sett;
 }
+
+SL_WinConf::SL_WinConf(wxFileInputStream& in)
+  : wxFileConfig(in)
+{}
 
 Settings::Settings()
 {
@@ -74,7 +80,7 @@ Settings::Settings()
       // TODO: error handling
   }
 
-  m_config = new myconf( instream );
+  m_config = new SL_WinConf( instream );
 
   #else
   //removed temporarily because it's suspected to cause a bug with userdir creation
@@ -89,11 +95,14 @@ Settings::Settings()
 
 Settings::~Settings()
 {
+  /// dizekat: fixing crashbug. Settings are saved from both OnExit and UI close.
+  /*
     m_config->Write( _T("/General/firstrun"), false );
     #if defined(__WXMSW__) && !defined(HAVE_WX26)
     SaveSettings();
     #endif
     SetCacheVersion();
+  */
     delete m_config;
 }
 
@@ -1608,3 +1617,12 @@ wxString Settings::GetLastReplayFilterProfileName()
     return  m_config->Read( _T("/ReplayFilter/lastprofile"), _T("default") );
 }
 
+void Settings::SetCompletionMethod( CompletionMethod method )
+{
+    m_config->Write( _T("/General/CompletionMethod"), (int)method);
+}
+
+Settings::CompletionMethod Settings::GetCompletionMethod(  ) const
+{
+    return  (CompletionMethod )m_config->Read( _T("/General/CompletionMethod"), (int)MatchExact );
+}

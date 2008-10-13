@@ -2,18 +2,15 @@
 //
 // Class: AgreementDialog
 //
+#include "agreementdialog.h"
 
-#include <wx/dialog.h>
 #include <wx/textctrl.h>
 #include <wx/button.h>
 #include <wx/sizer.h>
 #include <wx/stattext.h>
 #include <wx/statline.h>
-#include <wx/intl.h>
 
 #include "uiutils.h"
-
-#include "agreementdialog.h"
 
 BEGIN_EVENT_TABLE(AgreementDialog, wxDialog)
 

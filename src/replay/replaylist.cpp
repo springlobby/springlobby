@@ -6,6 +6,7 @@
 #include <wx/tokenzr.h>
 #include <wx/intl.h>
 #include <wx/filefn.h>
+#include <wx/log.h>
 
 #include "replaylist.h"
 #include <sstream>
@@ -16,7 +17,7 @@
 #include "replaytab.h"
 
 const unsigned int replay_bulk_limit = 300;
-const unsigned int replay_chunk_size = 100;
+const unsigned int replay_chunk_size = 50;
 const unsigned int timer_interval = 300; //miliseconds
 
 BEGIN_EVENT_TABLE(ReplayList,wxEvtHandler)
@@ -30,21 +31,28 @@ ReplayList::ReplayList(ReplayTab& replay_tab)
 
 void ReplayList::LoadReplays()
 {
-    if ( !usync().IsLoaded() ) return;
-
+    m_fails = 0;
+    if ( !usync().IsLoaded() ) return ;
+    m_filenames.clear();
     usync().GetReplayList(m_filenames);
     m_replays.clear();
 
     m_timer.Stop();
-    int temp = m_filenames.size();
+    size_t size = m_filenames.size();
 
-    if ( m_filenames.size() < replay_bulk_limit )
+    if ( size < replay_bulk_limit )
         LoadReplays( 0, m_filenames.size() );
     else {
         LoadReplays( 0, replay_chunk_size );
         m_current_parse_pos = replay_chunk_size;
         m_timer.Start( timer_interval, wxTIMER_CONTINUOUS );
     }
+//
+//    std::cout<< "********" << std::endl;
+//    for (int i = 0; i< m_filenames.size(); ++i)
+//        std::cout<< STD_STRING(m_filenames[i])<< '\n';
+//
+//    std::cout<< "********" << std::endl;
 
 }
 
@@ -135,7 +143,8 @@ bool ReplayList::GetReplayInfos ( const wxString& ReplayPath, Replay& ret )
     ret.MapName = FileName.BeforeLast(_T('_'));
 
     ret.id = m_last_id;
-    wxString script = GetScriptFromReplay( ReplayPath );
+    wxString script;
+    GetScriptFromReplay( ReplayPath,script );
 
     //wxLogMessage(_T("Script: %s"), script.c_str());
 
@@ -143,17 +152,15 @@ bool ReplayList::GetReplayInfos ( const wxString& ReplayPath, Replay& ret )
         return false;
 
     GetHeaderInfo( ret, ReplayPath );
-    ret.battle = GetBattleFromScript( script );
+    GetBattleFromScript( script,ret.battle  );
     ret.ModName = ret.battle.GetHostModName();
 
     m_last_id++; //sucessful parsing assumed --> increment id(index)
     return true;
 }
 
-wxString ReplayList::GetScriptFromReplay ( const wxString& ReplayPath )
+void ReplayList::GetScriptFromReplay ( const wxString& ReplayPath, wxString& script  )
 {
-    wxString script;
-
     try
     {
         wxFile replay( ReplayPath, wxFile::read );
@@ -164,24 +171,21 @@ wxString ReplayList::GetScriptFromReplay ( const wxString& ReplayPath )
         int scriptSize=0;
         replay.Read( &scriptSize, 4);
         replay.Seek( headerSize );
-
         std::string script_a(scriptSize,0);
         replay.Read( &script_a[0], scriptSize );
+        script = WX_STRING( script_a ) ;//(script_a,scriptSize);
 
-        wxString script = WX_STRING( script_a ) ;//(script_a,scriptSize);
-
-        return script;
     }
     catch (...)
     {
-        return wxEmptyString;
+        return ;
     }
-
 }
 
-OfflineBattle ReplayList::GetBattleFromScript( const wxString& script_ )
+//! (koshi) don't delete commented things please, they might be need in the future and i'm lazy
+void ReplayList::GetBattleFromScript( const wxString& script_, OfflineBattle& battle )
 {
-    OfflineBattle battle;
+
     BattleOptions opts;
     std::stringstream ss ( (const char *)script_.mb_str(wxConvUTF8) );// no need to convert wxstring-->std::string-->std::stringstream, convert directly.
     PDataList script( ParseTDF(ss) );
@@ -198,13 +202,13 @@ OfflineBattle ReplayList::GetBattleFromScript( const wxString& script_ )
         opts.mapname    = replayNode->GetString( _T("Mapname") );
         battle.SetHostMap( opts.mapname, wxEmptyString );
 
-        opts.ip         = replayNode->GetString( _T("HostIP") );
-        opts.port       = replayNode->GetInt  ( _T("HostPort"), DEFAULT_EXTERNAL_UDP_SOURCE_PORT );
+//        opts.ip         = replayNode->GetString( _T("HostIP") );
+//        opts.port       = replayNode->GetInt  ( _T("HostPort"), DEFAULT_EXTERNAL_UDP_SOURCE_PORT );
         opts.spectators = 0;
 
         int playernum = replayNode->GetInt  ( _T("NumPlayers"), 0);
-        int allynum = replayNode->GetInt  ( _T("NumAllyTeams"), 1);
-        int teamnum = replayNode->GetInt  ( _T("NumTeams"), 1);
+//        int allynum = replayNode->GetInt  ( _T("NumAllyTeams"), 1);
+//        int teamnum = replayNode->GetInt  ( _T("NumTeams"), 1);
 
         //[PLAYERX] sections
         for ( int i = 0; i < playernum ; ++i ){
@@ -231,22 +235,21 @@ OfflineBattle ReplayList::GetBattleFromScript( const wxString& script_ )
 
     }
     battle.SetBattleOptions( opts );
-    return battle;
 }
 
 void ReplayList::LoadMMOpts( const wxString& sectionname, OfflineBattle& battle, const PDataList& node )
 {
     PDataList section ( node->Find(sectionname) );
-    mmOptionsWrapper& opts = battle.CustomBattleOptions();
+    OptionsWrapper& opts = battle.CustomBattleOptions();
     for ( PNode n = section->First(); n != section->Last(); n = section->Next( n ) )
         opts.setSingleOption( n->Name(), section->GetString( n->Name() ) );
 }
 
 void ReplayList::LoadMMOpts( OfflineBattle& battle, const PDataList& node )
 {
-    mmOptionsWrapper& opts = battle.CustomBattleOptions();
+    OptionsWrapper& opts = battle.CustomBattleOptions();
     typedef std::map<wxString,wxString> optMap;
-    optMap options = opts.getOptionsMap(EngineOption);
+    optMap options = opts.getOptionsMap(OptionsWrapper::EngineOption);
     for ( optMap::const_iterator i = options.begin(); i != options.end(); ++i)
         opts.setSingleOption( i->first, node->GetString( i->first, i->second ) );
 }

@@ -107,9 +107,9 @@ bool FileListFilter::FilterTorrentData( const TorrentTable::PRow& data )
 	if ( !data->name.Upper().Contains( m_filter_name_edit->GetValue().Upper() )
 	        && !m_filter_name_expression->Matches( data->name ) )
 		return false;
-	if ( m_filter_type_choice_value == 0 && data->type != map ) return false;
+	if ( m_filter_type_choice_value == 0 && data->type != IUnitSync::map ) return false;
 
-	if ( m_filter_type_choice_value == 1 && data->type != mod ) return false;
+	if ( m_filter_type_choice_value == 1 && data->type != IUnitSync::mod ) return false;
 
 	if ( m_filter_ondisk->IsChecked() && data->HasFullFileLocal() )
 		return false;

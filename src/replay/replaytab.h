@@ -19,9 +19,7 @@ class wxToggleButton;
 class ReplayList_Iter;
 class Replay;
 class ReplayList;
-//class ReplayListFilter;
-#include "replayfilter.h"
-
+class ReplayListFilter;
 class ReplayListCtrl;
 
 class ReplayTab : public wxPanel

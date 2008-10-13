@@ -194,7 +194,6 @@
 		<Unit filename="src/crashreport.h" />
 		<Unit filename="src/customlistctrl.cpp" />
 		<Unit filename="src/customlistctrl.h" />
-		<Unit filename="src/disphelper.h" />
 		<Unit filename="src/filelister/filelistctrl.cpp" />
 		<Unit filename="src/filelister/filelistctrl.h" />
 		<Unit filename="src/filelister/filelistdialog.cpp" />

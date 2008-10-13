@@ -11,9 +11,7 @@
 #include "../utils.h"
 #include "../iconimagelist.h"
 #include "../uiutils.h"
-//#include "countrycodes.h"
 
-#define TOOLTIP_DELAY 1000
 
 BEGIN_EVENT_TABLE( FileListCtrl, CustomListCtrl )
 
@@ -173,8 +171,8 @@ int wxCALLBACK FileListCtrl::CompareTypeUP( long item1, long item2, long sortDat
     TorrentTable::PRow row1=s_parent_dialog->RowByHash(TowxString<long>(item1));
     TorrentTable::PRow row2=s_parent_dialog->RowByHash(TowxString<long>(item2));
 
-    wxString name1 = row1.ok() ? (row1->type == map ? _("Map") : _("Mod")) : _T("");
-    wxString name2 = row2.ok() ? (row2->type == map ? _("Map") : _("Mod")) : _T("");
+    wxString name1 = row1.ok() ? (row1->type == IUnitSync::map ? _("Map") : _("Mod")) : _T("");
+    wxString name2 = row2.ok() ? (row2->type == IUnitSync::map ? _("Map") : _("Mod")) : _T("");
 
     return name1.CompareTo(name2);
 }
@@ -185,8 +183,8 @@ int wxCALLBACK FileListCtrl::CompareTypeDOWN( long item1, long item2, long sortD
     TorrentTable::PRow row1=s_parent_dialog->RowByHash(TowxString<long>(item1));
     TorrentTable::PRow row2=s_parent_dialog->RowByHash(TowxString<long>(item2));
 
-    wxString name1 = row1.ok() ? (row1->type == map ? _("Map") : _("Mod")) : _T("");
-    wxString name2 = row2.ok() ? (row2->type == map ? _("Map") : _("Mod")) : _T("");
+    wxString name1 = row1.ok() ? (row1->type == IUnitSync::map ? _("Map") : _("Mod")) : _T("");
+    wxString name2 = row2.ok() ? (row2->type == IUnitSync::map ? _("Map") : _("Mod")) : _T("");
 
     return name2.CompareTo(name1);
 }
