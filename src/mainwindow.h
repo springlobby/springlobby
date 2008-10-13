@@ -34,20 +34,20 @@ typedef wxWindow wxNotebookPage;
 
 
 // Page indexes
-#define PAGE_CHAT 0
-#define PAGE_JOIN 1
-#define PAGE_SINGLE 2
-#define PAGE_OPTOS 3
+const unsigned int PAGE_CHAT    = 0;
+const unsigned int PAGE_JOIN    = 1;
+const unsigned int PAGE_SINGLE  = 2;
+const unsigned int PAGE_OPTOS   = 3;
 
-static const unsigned int OPT_PAGE_SPRING = 0;
-static const unsigned int OPT_PAGE_CHAT = 1;
+static const unsigned int OPT_PAGE_SPRING   = 0;
+static const unsigned int OPT_PAGE_CHAT     = 1;
 #ifndef NO_TORRENT_SYSTEN
-static const unsigned int OPT_PAGE_TORRENT = 2;
-static const unsigned int OPT_PAGE_GENERAL = 3;
-static const unsigned int OPT_PAGE_GROUPS = 4;
+static const unsigned int OPT_PAGE_TORRENT  = 2;
+static const unsigned int OPT_PAGE_GENERAL  = 3;
+static const unsigned int OPT_PAGE_GROUPS   = 4;
 #else
-static const unsigned int OPT_PAGE_GENERAL = 2;
-static const unsigned int OPT_PAGE_GROUPS = 3;
+static const unsigned int OPT_PAGE_GENERAL  = 2;
+static const unsigned int OPT_PAGE_GROUPS   = 3;
 #endif
 
 
