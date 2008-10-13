@@ -314,7 +314,7 @@ wxString Spring::WriteScriptTxt( Battle& battle )
 
 
   OptionsWrapper::wxStringTripleVec optlistEng = battle.CustomBattleOptions().getOptions( OptionsWrapper::EngineOption );
-  for (OptionsWrapper::wxStringTripleVec::iterator it = optlistEng.begin(); it != optlistEng.end(); ++it)
+  for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistEng.begin(); it != optlistEng.end(); ++it)
   {
     tdf.Append(it->first,it->second.second);
   }
@@ -512,7 +512,7 @@ wxString Spring::WriteScriptTxt( Battle& battle )
   tdf.EnterSection(_T("mapoptions"));
 
   OptionsWrapper::wxStringTripleVec optlistMap = battle.CustomBattleOptions().getOptions( OptionsWrapper::MapOption );
-  for (OptionsWrapper::wxStringTripleVec::iterator it = optlistMap.begin(); it != optlistMap.end(); ++it)
+  for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistMap.begin(); it != optlistMap.end(); ++it)
   {
     tdf.Append(it->first,it->second.second);
   }
@@ -523,7 +523,7 @@ wxString Spring::WriteScriptTxt( Battle& battle )
   tdf.EnterSection(_T("modoptions"));
 
   OptionsWrapper::wxStringTripleVec optlistMod = battle.CustomBattleOptions().getOptions( OptionsWrapper::ModOption );
-  for (OptionsWrapper::wxStringTripleVec::iterator it = optlistMod.begin(); it != optlistMod.end(); ++it)
+  for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistMod.begin(); it != optlistMod.end(); ++it)
   {
     tdf.Append(it->first,it->second.second);
   }
@@ -678,7 +678,7 @@ wxString Spring::WriteSPScriptTxt( SinglePlayerBattle& battle )
   tdf.Append(_T("ModHash"),int(uhash));
 
   OptionsWrapper::wxStringTripleVec optlistEng = battle.CustomBattleOptions().getOptions( OptionsWrapper::EngineOption );
-  for (OptionsWrapper::wxStringTripleVec::iterator it = optlistEng.begin(); it != optlistEng.end(); ++it)
+  for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistEng.begin(); it != optlistEng.end(); ++it)
   {
     tdf.Append(it->first, it->second.second);
   }
@@ -760,7 +760,7 @@ wxString Spring::WriteSPScriptTxt( SinglePlayerBattle& battle )
 
   tdf.EnterSection(_T("mapoptions"));
   OptionsWrapper::wxStringTripleVec optlistMap = battle.CustomBattleOptions().getOptions( OptionsWrapper::MapOption );
-  for (OptionsWrapper::wxStringTripleVec::iterator it = optlistMap.begin(); it != optlistMap.end(); ++it)
+  for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistMap.begin(); it != optlistMap.end(); ++it)
   {
     tdf.Append(it->first, it->second.second);
   }
@@ -768,7 +768,7 @@ wxString Spring::WriteSPScriptTxt( SinglePlayerBattle& battle )
 
   tdf.EnterSection(_T("modoptions"));
   OptionsWrapper::wxStringTripleVec optlistMod = battle.CustomBattleOptions().getOptions( OptionsWrapper::ModOption );
-  for (OptionsWrapper::wxStringTripleVec::iterator it = optlistMod.begin(); it != optlistMod.end(); ++it)
+  for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistMod.begin(); it != optlistMod.end(); ++it)
   {
     tdf.Append(it->first, it->second.second);
   }
