@@ -410,13 +410,9 @@ wxImage SpringUnitSyncLib::GetMinimap( const wxString& mapFileName )
 
   wxLogMessage( _T("Minimap: %s"), mapFileName.c_str() );
 
+  // this unitsync call returns a pointer to a static buffer
   unsigned short* colours = (unsigned short*)m_get_minimap( mapFileName.mb_str(wxConvUTF8), miplevel );
-  ///if you don't like explicit delete, feel free to make patch
-  if ( colours == 0 )
-  {
-    delete[] colours;
-    ASSERT_EXCEPTION( colours, _T("Get minimap failed") );
-  }
+  ASSERT_EXCEPTION( colours, _T("Get minimap failed") );
 
   typedef unsigned char uchar;
   wxImage minimap(width, height, false);

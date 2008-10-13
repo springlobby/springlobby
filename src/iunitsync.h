@@ -145,7 +145,9 @@ class IUnitSync
     virtual GameOptions GetMapOptions( const wxString& name ) = 0;
 
     virtual int GetMapIndex( const wxString& name ) = 0;
+    virtual wxImage GetMinimap( const wxString& mapname ) = 0;
     virtual wxImage GetMinimap( const wxString& mapname, int width, int height ) = 0;
+    virtual wxImage GetMetalmap( const wxString& mapname ) = 0;
     virtual wxImage GetMetalmap( const wxString& mapname, int width, int height ) = 0;
 
     virtual int GetSideCount( const wxString& modname ) = 0;

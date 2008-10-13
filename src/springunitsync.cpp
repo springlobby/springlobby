@@ -350,7 +350,7 @@ GameOptions SpringUnitSync::GetMapOptions( const wxString& name )
 {
   wxLogDebugFunc( name );
   GameOptions ret;
- wxArrayString cache;
+  wxArrayString cache;
   try
   {
     cache = GetCacheFile( GetFileCachePath( name, _T(""), false ) + _T(".mapoptions") );
@@ -458,12 +458,12 @@ GameOptions SpringUnitSync::GetMapOptions( const wxString& name )
          }
       }
       }
-    wxString optiontoken;
-    unsigned int entrycount = entry.GetCount();
-    for ( unsigned int pos = 0; pos < entrycount; pos++ ) optiontoken << entry[pos] << _T('\t');
-    cache.Add( optiontoken );
+      wxString optiontoken;
+      unsigned int entrycount = entry.GetCount();
+      for ( unsigned int pos = 0; pos < entrycount; pos++ ) optiontoken << entry[pos] << _T('\t');
+      cache.Add( optiontoken );
     }
-  SetCacheFile( GetFileCachePath( name, _T(""), false ) + _T(".mapoptions"), cache );
+    SetCacheFile( GetFileCachePath( name, _T(""), false ) + _T(".mapoptions"), cache );
   }
   return ret;
 }
@@ -624,12 +624,12 @@ GameOptions SpringUnitSync::GetModOptions( const wxString& name )
          }
       }
       }
-    wxString optiontoken;
-    unsigned int entrycount = entry.GetCount();
-    for ( unsigned int pos = 0; pos < entrycount; pos++ ) optiontoken << entry[pos] << _T('\t');
-    cache.Add( optiontoken );
-    }
-  SetCacheFile( GetFileCachePath( name, _T(""), true ) + _T(".modoptions"), cache );
+      wxString optiontoken;
+      unsigned int entrycount = entry.GetCount();
+      for ( unsigned int pos = 0; pos < entrycount; pos++ ) optiontoken << entry[pos] << _T('\t');
+      cache.Add( optiontoken );
+      }
+    SetCacheFile( GetFileCachePath( name, _T(""), true ) + _T(".modoptions"), cache );
   }
   return ret;
 }
@@ -809,7 +809,8 @@ wxSize MakeFit(const wxSize &original, const wxSize &bounds){
   }
 }
 
-wxImage SpringUnitSync::GetMinimap( const wxString& mapname, int width, int height )
+
+wxImage SpringUnitSync::GetMinimap( const wxString& mapname )
 {
   wxLogDebugFunc( mapname );
 
@@ -823,11 +824,6 @@ wxImage SpringUnitSync::GetMinimap( const wxString& mapname, int width, int heig
 
     img = wxImage( originalsizepath, wxBITMAP_TYPE_PNG );
     ASSERT_EXCEPTION( img.Ok(), _T("Failed to load cache image") );
-
-    MapInfo mapinfo = _GetMapInfoEx( mapname );
-
-    wxSize image_size = MakeFit(wxSize(mapinfo.width, mapinfo.height), wxSize(width, height));
-    img.Rescale( image_size.GetWidth(), image_size.GetHeight() );
   }
   catch (...)
   {
@@ -836,11 +832,6 @@ wxImage SpringUnitSync::GetMinimap( const wxString& mapname, int width, int heig
       img = susynclib()->GetMinimap( mapname );
 
       img.SaveFile( originalsizepath, wxBITMAP_TYPE_PNG );
-
-      MapInfo mapinfo = _GetMapInfoEx( mapname );
-
-      wxSize image_size = MakeFit(wxSize(mapinfo.width, mapinfo.height), wxSize(width, height));
-      img.Rescale( image_size.GetWidth(), image_size.GetHeight() );
     }
     catch (...)
     {
@@ -851,7 +842,24 @@ wxImage SpringUnitSync::GetMinimap( const wxString& mapname, int width, int heig
   return img;
 }
 
-wxImage SpringUnitSync::GetMetalmap( const wxString& mapname, int width, int height )
+
+wxImage SpringUnitSync::GetMinimap( const wxString& mapname, int width, int height )
+{
+  wxImage img = GetMinimap( mapname );
+
+  if (img.GetWidth() > 1 && img.GetHeight() > 1)
+  {
+    MapInfo mapinfo = _GetMapInfoEx( mapname );
+
+    wxSize image_size = MakeFit(wxSize(mapinfo.width, mapinfo.height), wxSize(width, height));
+    img.Rescale( image_size.GetWidth(), image_size.GetHeight() );
+  }
+
+  return img;
+}
+
+
+wxImage SpringUnitSync::GetMetalmap( const wxString& mapname )
 {
   wxLogDebugFunc( mapname );
 
@@ -865,9 +873,6 @@ wxImage SpringUnitSync::GetMetalmap( const wxString& mapname, int width, int hei
 
     img = wxImage( originalsizepath, wxBITMAP_TYPE_PNG );
     ASSERT_EXCEPTION( img.Ok(), _T("Failed to load cache image") );
-
-    wxSize image_size = MakeFit(wxSize(img.GetWidth(), img.GetHeight()), wxSize(width, height));
-    img.Rescale( image_size.GetWidth(), image_size.GetHeight() );
   }
   catch (...)
   {
@@ -876,9 +881,6 @@ wxImage SpringUnitSync::GetMetalmap( const wxString& mapname, int width, int hei
       img = susynclib()->GetMetalmap( mapname );
 
       img.SaveFile( originalsizepath, wxBITMAP_TYPE_PNG );
-
-      wxSize image_size = MakeFit(wxSize(img.GetWidth(), img.GetHeight()), wxSize(width, height));
-      img.Rescale( image_size.GetWidth(), image_size.GetHeight() );
     }
     catch (...)
     {
@@ -888,6 +890,21 @@ wxImage SpringUnitSync::GetMetalmap( const wxString& mapname, int width, int hei
 
   return img;
 }
+
+
+wxImage SpringUnitSync::GetMetalmap( const wxString& mapname, int width, int height )
+{
+  wxImage img = GetMetalmap( mapname );
+
+  if (img.GetWidth() > 1 && img.GetHeight() > 1)
+  {
+    wxSize image_size = MakeFit(wxSize(img.GetWidth(), img.GetHeight()), wxSize(width, height));
+    img.Rescale( image_size.GetWidth(), image_size.GetHeight() );
+  }
+
+  return img;
+}
+
 
 MapInfo SpringUnitSync::_GetMapInfoEx( const wxString& mapname )
 {
@@ -901,7 +918,7 @@ MapInfo SpringUnitSync::_GetMapInfoEx( const wxString& mapname )
     info.author = cache[0];
     info.tidalStrength =  s2l( cache[1] );
     info.gravity = s2l( cache[2] );
-    info.maxMetal = s2l( cache[3] );
+    info.maxMetal = s2d( cache[3] );
     info.extractorRadius = s2d( cache[4] );
     info.minWind = s2l( cache[5] );
     info.maxWind = s2l( cache[6] );

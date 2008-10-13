@@ -196,6 +196,44 @@ wxRect MapCtrl::GetStartRect( const BattleStartRect& sr )
 }
 
 
+double MapCtrl::GetStartRectMetal( int index )
+{
+  ASSERT_LOGIC( BattleType() != BT_Multi, _T("MapCtrl::GetMetal(): Battle type is not BT_Multi") );
+  BattleStartRect sr = m_battle->GetStartRect( index );
+  if ( !sr.IsOk() ) return 0.0;
+  return GetStartRectMetal( sr );
+}
+
+
+double MapCtrl::GetStartRectMetal( const BattleStartRect& sr )
+{
+  // todo: this really is *logic*, not rendering code, so it
+  // should go in some other layer sometime (SpringUnitSync?).
+  if (!m_metalmap_orig.IsOk()) return 0.0;
+
+  int x1,y1,x2,y2,w,h;
+
+  w = m_metalmap_orig.GetWidth();
+  h = m_metalmap_orig.GetHeight();
+  x1 = std::max(0, std::min(w, int( (sr.left * w / 200.0) + 0.5 )));
+  y1 = std::max(0, std::min(h, int( (sr.top * h / 200.0) + 0.5 )));
+  x2 = std::max(0, std::min(w, int( (sr.right * w / 200.0) + 0.5 )));
+  y2 = std::max(0, std::min(h, int( (sr.bottom * h / 200.0) + 0.5 )));
+
+  double metal = 0.0;
+  const unsigned char* metalmap = m_metalmap_orig.GetData();
+
+  for (int y = y1; y < y2; ++y) {
+    for (int x = x1; x < x2; ++x) {
+      metal += metalmap[3*(y*w+x)+1];
+    }
+  }
+
+  metal *= m_map.info.maxMetal / 255.0;
+  return metal;
+}
+
+
 int MapCtrl::GetNewRectIndex()
 {
   ASSERT_LOGIC ( m_battle, _T("getting a rectangle index not in a battle"));
@@ -348,8 +386,11 @@ void MapCtrl::LoadMinimap()
       return;
     }
     m_minimap = new wxBitmap( usync().GetMinimap( map, w, h ) );
-    if (usync().VersionSupports(IUnitSync::USYNC_GetInfoMap)) {
+    if (m_draw_start_types && usync().VersionSupports(USYNC_GetInfoMap)) {
+      // todo: optimize? (currently loads image from disk twice)
       m_metalmap = new wxBitmap( usync().GetMetalmap( map, w, h ) );
+      // singleplayer mode doesn't allow startboxes anyway
+      if (!m_sp) m_metalmap_orig = usync().GetMetalmap( map );
     }
     m_mapname = map;
     m_lastsize = wxSize( w, h );
@@ -440,14 +481,29 @@ void MapCtrl::DrawStartRect( wxDC& dc, int index, wxRect& sr, const wxColour& co
   wxBitmap bmpimg( img );
   dc.DrawBitmap( bmpimg, sr.x, sr.y, false );
 
-  int twidth, theight;
 /*  wxFont f( 12, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL|wxFONTFLAG_ANTIALIASED, wxFONTWEIGHT_LIGHT );
   dc.SetFont( f );*/
   if ( index != -1 ) {
-    dc.GetTextExtent( wxString::Format( _T("%d"), index+1), &twidth, &theight );
+    int twidth, theight, tx, ty;
+    wxString strIndex = wxString::Format( _T("%d"), index+1 );
+    dc.GetTextExtent( strIndex, &twidth, &theight );
     dc.SetTextForeground( col );
-    DrawOutlinedText( dc, wxString::Format( _T("%d"), index+1), sr.x + sr.width / 2 - twidth / 2, sr.y + sr.height / 2 - theight / 2 - 1, wxColour(50,50,50), *wxWHITE );
+    tx = sr.x + sr.width / 2 - twidth / 2;
+    ty = sr.y + sr.height / 2 - theight / 2 - 1;
+    DrawOutlinedText( dc, strIndex, tx, ty, wxColour(50,50,50), *wxWHITE );
     //dc.DrawText( wxString::Format( _T("%d"), index+1), sr.x + sr.width / 2 - twidth / 2, sr.y + sr.height / 2 - theight / 2 - 1 );
+
+    const double metal = GetStartRectMetal( index );
+    if (metal != 0.0) {
+      wxString strMetal = wxString::Format( _T("Metal: %.1f"), metal );
+      dc.GetTextExtent( strMetal, &twidth, &theight );
+      // don't cramp it in rect, but only display it if it actually fits
+      if (sr.height >= 6 * theight && sr.width > twidth) {
+        tx = sr.x + sr.width / 2 - twidth / 2;
+        ty = sr.y + sr.height / 2 + theight / 2 + theight - 1;
+        DrawOutlinedText( dc, strMetal, tx, ty, wxColour(50,50,50), *wxWHITE );
+      }
+    }
   }
 
   dc.SetPen( wxPen( col ) );
@@ -1227,7 +1283,7 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
 
 void MapCtrl::OnMouseWheel( wxMouseEvent& event )
 {
-  if (usync().VersionSupports(IUnitSync::USYNC_GetInfoMap) && m_minimap) {
+  if (m_metalmap) {
     int idx = (int) m_current_infomap;
     if (event.m_wheelRotation > 0) {
       ++idx;
