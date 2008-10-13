@@ -7,6 +7,7 @@
 #include <wx/intl.h>
 #include <cmath>
 #include <stdexcept>
+#include <wx/log.h>
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

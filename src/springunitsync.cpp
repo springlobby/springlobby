@@ -12,6 +12,7 @@
 #include <wx/string.h>
 #include <wx/file.h>
 #include <wx/tokenzr.h>
+#include <wx/log.h>
 //#include <wx/txtstrm.h>
 //#include <wx/wfstream.h>
 #include <wx/textfile.h>

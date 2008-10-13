@@ -7,6 +7,7 @@
 #include <wx/sizer.h>
 #include <wx/checkbox.h>
 #include <wx/filename.h>
+#include <wx/log.h>
 #if wxUSE_TOGGLEBTN
     #include <wx/tglbtn.h>
 #endif

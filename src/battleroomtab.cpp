@@ -16,6 +16,7 @@
 #include <wx/settings.h>
 #include <wx/colordlg.h>
 #include <wx/colour.h>
+#include <wx/log.h>
 #include <wx/bmpcbox.h>
 #include <wx/image.h>
 

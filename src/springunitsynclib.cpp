@@ -3,6 +3,7 @@
 #include <wx/filename.h>
 #include <wx/dynlib.h>
 #include <wx/image.h>
+#include <wx/log.h>
 #include <stdexcept>
 
 #include "springunitsynclib.h"

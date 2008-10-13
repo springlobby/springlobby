@@ -2,6 +2,7 @@
 
 #include <stdexcept>
 #include <wx/tokenzr.h>
+#include <wx/log.h>
 
 #include "ibattle.h"
 #include "utils.h"

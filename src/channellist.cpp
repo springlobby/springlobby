@@ -1,6 +1,7 @@
 /* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
 #include <iterator>
 #include <stdexcept>
+#include <wx/log.h>
 
 #include "channellist.h"
 #include "channel.h"

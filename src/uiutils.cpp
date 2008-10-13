@@ -6,6 +6,7 @@
 #include <wx/image.h>
 #include <wx/mstream.h>
 #include <wx/bitmap.h>
+#include <wx/log.h>
 #include <wx/image.h>
 
 #include <cmath>

@@ -6,6 +6,7 @@
 #include <wx/imaglist.h>
 #include <wx/icon.h>
 #include <stdexcept>
+#include <wx/log.h>
 
 #ifndef HAVE_WX26
 #include "auimanager.h"

@@ -9,6 +9,7 @@
 #include <wx/string.h>
 #include <wx/intl.h>
 #include <stdexcept>
+#include <wx/log.h>
 
 #include "nicklistctrl.h"
 #include "utils.h"

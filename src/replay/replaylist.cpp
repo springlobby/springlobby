@@ -6,6 +6,7 @@
 #include <wx/tokenzr.h>
 #include <wx/intl.h>
 #include <wx/filefn.h>
+#include <wx/log.h>
 
 #include "replaylist.h"
 #include <sstream>

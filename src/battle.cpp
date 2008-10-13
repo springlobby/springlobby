@@ -2,7 +2,7 @@
 //
 // Class: Battle
 //
-
+#include <wx/log.h>
 #include <stdexcept>
 
 #include "battle.h"

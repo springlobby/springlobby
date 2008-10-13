@@ -16,6 +16,7 @@
 #include <wx/settings.h>
 #include <wx/icon.h>
 #include <wx/tooltip.h>
+#include <wx/log.h>
 
 #include "connectwindow.h"
 #include "settings.h"

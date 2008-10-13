@@ -9,6 +9,7 @@
 #include <wx/imaglist.h>
 #include <wx/button.h>
 #include <wx/sizer.h>
+#include <wx/log.h>
 
 #ifndef HAVE_WX26
 #include "auimanager.h"
