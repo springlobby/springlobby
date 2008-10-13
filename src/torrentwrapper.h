@@ -9,9 +9,7 @@
 #include "libtorrent/torrent_handle.hpp"
 //#endif
 
-#include <wx/string.h>
 #include <wx/arrstr.h>
-#include <wx/event.h>
 
 #include <map>
 
@@ -27,6 +25,8 @@
 namespace libtorrent{ class session; };
 namespace libtorrent { struct torrent_handle; };
 */
+
+
 enum DownloadRequestStatus
 {
     success,

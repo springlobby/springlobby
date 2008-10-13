@@ -6,6 +6,7 @@
 #include <wx/log.h>
 
 #include "replaylistctrl.h"
+#include "replaylist.h"
 #include "../utils.h"
 #include "../user.h"
 #include "../iconimagelist.h"

@@ -16,6 +16,7 @@
 
 #include "replaytab.h"
 #include "replaylistctrl.h"
+#include "replaylist.h"
 #include "../ui.h"
 #include "../chatpanel.h"
 #include "../utils.h"
