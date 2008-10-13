@@ -349,7 +349,7 @@ void MapCtrl::LoadMinimap()
       return;
     }
     m_minimap = new wxBitmap( usync().GetMinimap( map, w, h ) );
-    if (!m_ro && usync().VersionSupports(USYNC_GetInfoMap)) {
+    if (m_draw_start_types && usync().VersionSupports(USYNC_GetInfoMap)) {
       // todo: optimize? (currently loads image from disk twice)
       m_metalmap = new wxBitmap( usync().GetMetalmap( map, w, h ) );
       // singleplayer mode doesn't allow startboxes anyway
