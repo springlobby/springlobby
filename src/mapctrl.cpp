@@ -47,6 +47,43 @@
     #define CONTAINS Inside
 #endif
 
+//typedef int RectArea;
+const int RA_Main               = -1;
+const int RA_UpLeft             = 0;
+const int RA_UpRight            = 1;
+const int RA_DownRight          = 2;
+const int RA_DownLeft           = 3;
+const int RA_UpAllyButton       = 4;
+const int RA_DownAllyButton     = 5;
+const int RA_Side               = 6;
+const int RA_UpHandicapButton   = 7;
+const int RA_DownHandicapButton = 8;
+const int RA_Handicap           = 9;
+const int RA_Close              = 10;
+const int RA_Move               = 11;
+const int RA_Download           = 12;
+const int RA_Refresh            = 13;
+
+
+//typedef int MouseAction;
+const int MA_None               = 0;
+const int MA_Add                = 1;
+const int MA_Delete             = 2;
+const int MA_Move               = 3;
+const int MA_ResizeUpLeft       = 4;
+const int MA_ResizeUpRight      = 5;
+const int MA_ResizeDownLeft     = 6;
+const int MA_ResizeDownRight    = 7;
+
+
+//typedef int BotRectOrient;
+const int BRO_TopLeft           = 0;
+const int BRO_BottomLeft        = 1;
+const int BRO_TopRight          = 2;
+const int BRO_BottomRight       = 3;
+
+
+
 BEGIN_EVENT_TABLE( MapCtrl, wxPanel )
   EVT_PAINT( MapCtrl::OnPaint )
   EVT_SIZE( MapCtrl::OnResize )
@@ -597,7 +634,7 @@ wxRect MapCtrl::GetBotRect( BattleBot& bot, bool selected )
 }
 
 
-RectArea MapCtrl::GetBotRectArea( const wxRect& botrect, int x, int y )
+MapCtrl::RectArea MapCtrl::GetBotRectArea( const wxRect& botrect, int x, int y )
 {
   x = x - botrect.x;
   y = y - botrect.y;
