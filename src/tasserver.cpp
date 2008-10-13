@@ -1907,7 +1907,7 @@ void TASServer::UdpPingAllClients()/// used when hosting with nat holepunching. 
     std::vector<UserOrder> ordered_users;
 
 
-    for ( user_map_t::size_type i = 0; i < battle->GetNumUsers(); i++ )
+    for ( UserList::user_map_t::size_type i = 0; i < battle->GetNumUsers(); i++ )
     {
         User &user=battle->GetUser(i);
         if (&user == &(battle->GetMe()))continue;/// dont include myself (change in copypasta)

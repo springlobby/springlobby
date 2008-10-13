@@ -229,7 +229,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
 
   m_splitter->SetMinimumPaneSize( 240 );
 
-  for ( user_map_t::size_type i = 0; i < battle.GetNumUsers(); i++ ) {
+  for ( UserList::user_map_t::size_type i = 0; i < battle.GetNumUsers(); i++ ) {
     m_players->AddUser( battle.GetUser( i ) );
   }
 

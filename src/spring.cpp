@@ -118,7 +118,7 @@ bool Spring::Run( Battle& battle )
 
   #ifndef NO_TORRENT_SYSTEM
   wxString CommandForAutomaticTeamSpeak = _T("SCRIPT|") + battle.GetMe().GetNick() + _T("|");
-  for ( user_map_t::size_type i = 0; i < battle.GetNumUsers(); i++ )
+  for ( UserList::user_map_t::size_type i = 0; i < battle.GetNumUsers(); i++ )
   {
     CommandForAutomaticTeamSpeak << battle.GetUser(i).GetNick() << _T("|") << u2s( battle.GetUser(i).BattleStatus().ally) << _T("|");
   }
@@ -233,7 +233,7 @@ wxString Spring::WriteScriptTxt( Battle& battle )
   wxLogMessage(_T("1 numusers: %d"),battle.GetNumUsers() );
 
   /// Fill ordered_users and sort it
-  for ( user_map_t::size_type i = 0; i < battle.GetNumUsers(); i++ ){
+  for ( UserList::user_map_t::size_type i = 0; i < battle.GetNumUsers(); i++ ){
     UserOrder tmp;
     tmp.index=i;
     tmp.order=battle.GetUser(i).BattleStatus().order;
@@ -355,7 +355,7 @@ wxString Spring::WriteScriptTxt( Battle& battle )
   tdf.Append(_T("NumAllyTeams"), NumAllys);
 
   wxLogMessage(_T("8"));
-  for ( user_map_t::size_type i = 0; i < battle.GetNumUsers(); i++ ) {
+  for ( UserList::user_map_t::size_type i = 0; i < battle.GetNumUsers(); i++ ) {
     tdf.EnterSection(_T("PLAYER")+i2s(i));
 
     tdf.Append(_T("name"),battle.GetUser( ordered_users[i].index ).GetNick());
@@ -382,7 +382,7 @@ wxString Spring::WriteScriptTxt( Battle& battle )
     int TeamLeader = -1;
 
     wxLogMessage(_T("10"));
-    for( user_map_t::size_type tlf = 0; tlf < battle.GetNumUsers(); tlf++ ) {/// change: moved check if spectator above use of TeamConv array, coz TeamConv array does not include spectators.
+    for( UserList::user_map_t::size_type tlf = 0; tlf < battle.GetNumUsers(); tlf++ ) {/// change: moved check if spectator above use of TeamConv array, coz TeamConv array does not include spectators.
 
       // Make sure player is not spectator.
       if ( battle.GetUser( ordered_users[tlf].index ).BattleStatus().spectator ) continue;
