@@ -35,8 +35,8 @@
 #include "unitsyncthread.h"
 #include "replay/replaytab.h"
 
-#define TIMER_ID 101
-#define TIMER_INTERVAL 100
+const unsigned int TIMER_ID         = 101;
+const unsigned int TIMER_INTERVAL   = 100;
 
 
 #if 0

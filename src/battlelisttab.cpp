@@ -41,7 +41,7 @@
 //#include "images/springlobby.xpm"
 //#include <wx/icon.h>
 
-#define BATTLELIST_COLOUMNCOUNT 10
+const unsigned int BATTLELIST_COLOUMNCOUNT = 10;
 
 BEGIN_EVENT_TABLE(BattleListTab, wxPanel)
 

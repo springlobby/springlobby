@@ -41,16 +41,16 @@
 #include "auimanager.h"
 #endif
 
-#define LIMIT_DGUN_INDEX 0
-#define GHOUSTED_INDEX  1
-#define DIM_MMS_INDEX 2
-#define FIXED_ALLIES_INDEX 3
-#define LOCK_SPEED_INDEX 4
-#define RANDOM_START_INDEX 4
+const unsigned int LIMIT_DGUN_INDEX     = 0;
+const unsigned int GHOUSTED_INDEX       = 1;
+const unsigned int DIM_MMS_INDEX        = 2;
+const unsigned int FIXED_ALLIES_INDEX   = 3;
+const unsigned int LOCK_SPEED_INDEX     = 4;
+const unsigned int RANDOM_START_INDEX   = 4;
 
-#define SLI_METAL_ID 	9000
-#define SLI_ENERGY_ID	9001
-#define SLI_UNITS_ID	9002
+const unsigned int SLI_METAL_ID 	= 9000;
+const unsigned int SLI_ENERGY_ID	= 9001;
+const unsigned int SLI_UNITS_ID	    = 9002;
 
 
 BEGIN_EVENT_TABLE(BattleOptionsTab, wxPanel)
