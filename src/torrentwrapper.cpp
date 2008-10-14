@@ -715,8 +715,17 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
     /// read torrent from file
     std::ifstream in( wxString( sett().GetTorrentsFolder() + row->hash + _T(".torrent") ).mb_str(), std::ios_base::binary);
     in.unsetf(std::ios_base::skipws);
-    libtorrent::entry e = libtorrent::bdecode(std::istream_iterator<char>(in), std::istream_iterator<char>());
-    libtorrent::torrent_info t_info(e); /// decode the torrent infos from the file
+    libtorrent::entry e;
+    try {
+        /// decode the torrent infos from the file
+        e = libtorrent::bdecode(std::istream_iterator<char>(in), std::istream_iterator<char>());
+    }
+    catch ( libtorrent::invalid_encoding& exc ) {
+      wxLogMessage( _T("torrent has invalid encoding") );
+      return false;
+    }
+    //decode success
+    libtorrent::torrent_info t_info (e);
 
     if ( t_info.num_files() != 1 )
     {
