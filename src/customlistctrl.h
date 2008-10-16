@@ -9,10 +9,6 @@
     typedef SL_Extern::wxGenericListCtrl ListBaseType;
 #endif
 
-#if wxUSE_TIPWINDOW
-    #include <wx/tipwin.h>
-#endif
-
 #include <wx/timer.h>
 #define IDD_TIP_TIMER 696
 
@@ -21,16 +17,7 @@
 
 #include "useractions.h"
 
-#if wxUSE_TIPWINDOW
-class SLTipWindow : public wxTipWindow{
-    public:
-        SLTipWindow(wxWindow *parent, const wxString &text)
-            :wxTipWindow(parent,text){};
-        void Cancel(wxMouseEvent& event);
-
-        DECLARE_EVENT_TABLE()
-};
-#endif
+class SLTipWindow;
 
 /** \brief Used as base class for all ListCtrls throughout SL
  * Provides generic functionality, such as column tooltips, possiblity to prohibit coloumn resizing and selection modifiers. \n

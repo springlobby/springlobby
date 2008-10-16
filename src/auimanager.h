@@ -14,6 +14,20 @@ class AuiManagerContainer
 
 AuiManagerContainer& GetAui();
 
+class SLAuiNotebook : public wxAuiNotebook
+{
+    public:
+        SLAuiNotebook();
+
+        SLAuiNotebook(wxWindow* parent,
+                      wxWindowID id = wxID_ANY,
+                      const wxPoint& pos = wxDefaultPosition,
+                      const wxSize& size = wxDefaultSize,
+                      long style = wxAUI_NB_DEFAULT_STYLE);
+
+        virtual ~SLAuiNotebook();
+};
+
 
 class SLArtProvider : public wxAuiTabArt
 {

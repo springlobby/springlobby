@@ -670,3 +670,22 @@ void SLArtProvider::SetMeasuringFont(const wxFont& font)
     m_measuring_font = font;
 }
 
+
+SLAuiNotebook::~SLAuiNotebook()
+{
+
+}
+
+
+SLAuiNotebook::SLAuiNotebook(wxWindow* parent, wxWindowID id , const wxPoint& pos , const wxSize& size , long style)
+    :wxAuiNotebook( parent, id, pos, size, style)
+{
+
+}
+
+
+SLAuiNotebook::SLAuiNotebook()
+{
+
+}
+

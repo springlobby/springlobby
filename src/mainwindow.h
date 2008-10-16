@@ -16,7 +16,7 @@ class MainSinglePlayerTab;
 class MainTorrentTab;
 #endif
 class wxBoxSizer;
-class wxAuiNotebook;
+class SLAuiNotebook;
 class wxListbook;
 class MainOptionsTab;
 class wxBitmap;
@@ -112,7 +112,7 @@ class MainWindow : public wxFrame
 
     wxBoxSizer* m_main_sizer;
     #ifndef HAVE_WX26
-    wxAuiNotebook* m_func_tabs;
+    SLAuiNotebook* m_func_tabs;
     #else
     wxListbook* m_func_tabs;
     #endif

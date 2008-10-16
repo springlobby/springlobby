@@ -5,17 +5,8 @@
 #include <wx/log.h>
 #include "iconimagelist.h"
 #include "settings++/custom_dialogs.h"
+#include "uiutils.h"
 
-#if wxUSE_TIPWINDOW
-BEGIN_EVENT_TABLE(SLTipWindow, wxTipWindow)
-  EVT_MOUSEWHEEL(SLTipWindow::Cancel)
-END_EVENT_TABLE()
-
-void SLTipWindow::Cancel(wxMouseEvent& event)
-{
-  wxTipWindow::Close();
-}
-#endif
 
 BEGIN_EVENT_TABLE(CustomListCtrl, ListBaseType)
 #if wxUSE_TIPWINDOW
