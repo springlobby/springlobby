@@ -7,6 +7,17 @@
 #include <wx/aui/dockart.h>
 #include <wx/aui/floatpane.h>
 #include "Helper/auiuitls.h"
+#include "uiutils.h"
+#include "settings++/custom_dialogs.h"
+
+const int ID_TIMER = 7872;
+
+BEGIN_EVENT_TABLE(SLAuiNotebook, wxAuiNotebook)
+#if wxUSE_TIPWINDOW
+  EVT_MOTION(SLAuiNotebook::OnMouseMotion)
+  EVT_TIMER(ID_TIMER, SLAuiNotebook::OnTimer)
+#endif
+END_EVENT_TABLE()
 
 
 AuiManagerContainer& GetAui()
@@ -678,7 +689,9 @@ SLAuiNotebook::~SLAuiNotebook()
 
 
 SLAuiNotebook::SLAuiNotebook(wxWindow* parent, wxWindowID id , const wxPoint& pos , const wxSize& size , long style)
-    :wxAuiNotebook( parent, id, pos, size, style)
+    :wxAuiNotebook( parent, id, pos, size, style),
+    m_tiptimer(this, ID_TIMER),
+  m_tiptext(_T(""))
 {
 
 }
@@ -689,3 +702,72 @@ SLAuiNotebook::SLAuiNotebook()
 
 }
 
+void SLAuiNotebook::OnTimer(wxTimerEvent& event)
+{
+#if wxUSE_TIPWINDOW
+
+  if (!m_tiptext.empty())
+  {
+      m_tipwindow = new SLTipWindow(this, m_tiptext);
+      controlPointer = &m_tipwindow;
+      m_tipwindow->SetTipWindowPtr((wxTipWindow**)controlPointer);
+#ifndef __WXMSW__
+      m_tipwindow->SetBoundingRect(wxRect(1,1,50,50));
+#endif
+      m_tiptext = wxEmptyString;
+      m_tiptimer.Start(m_tooltip_duration, wxTIMER_ONE_SHOT);
+  }
+  else
+  {
+      m_tiptext = wxEmptyString;
+      m_tiptimer.Stop();
+      if (controlPointer!= 0 && *controlPointer!= 0)
+      {
+          m_tipwindow->Close();
+          m_tipwindow = 0;
+      }
+  }
+
+#endif
+}
+
+//TODO http://www.wxwidgets.org/manuals/stable/wx_wxtipwindow.html#wxtipwindowsettipwindowptr
+// must have sth to do with crash on windows
+//if to tootips are displayed
+void SLAuiNotebook::OnMouseMotion(wxMouseEvent& event)
+{
+#if wxUSE_TIPWINDOW
+  //we don't want to display the tooltip again until mouse has moved
+  if ( m_last_mouse_pos == event.GetPosition() )
+    return;
+
+  m_last_mouse_pos = event.GetPosition();
+
+  if (event.Leaving())
+  {
+    m_tiptext = _T("");
+    if (m_tipwindow)
+    {
+      m_tipwindow->Close();
+      m_tipwindow = 0;
+    }
+    m_tiptimer.Stop();
+  }
+  else
+  {
+    if (m_tiptimer.IsRunning() == true)
+    {
+      m_tiptimer.Stop();
+    }
+
+    wxPoint position = event.GetPosition();
+
+    m_tiptext = _T("EBLNFELBLD");
+    m_tiptimer.Start(m_tooltip_delay, wxTIMER_ONE_SHOT);
+     customMessageBox(SL_MAIN_ICON, _T("IO"),_T("BLBN") );
+
+  }
+#endif
+event.Skip();
+
+}
