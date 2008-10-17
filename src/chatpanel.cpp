@@ -28,7 +28,7 @@
 #endif
 
 #ifndef HAVE_WX26
-#include "auimanager.h"
+#include "aui/auimanager.h"
 #include <wx/imaglist.h>
 #else
 #include <wx/notebook.h>

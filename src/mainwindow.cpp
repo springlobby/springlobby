@@ -13,8 +13,8 @@
 #include <wx/menu.h>
 #include <wx/dcmemory.h>
 #ifndef HAVE_WX26
-#include <wx/aui/auibook.h>
-#include "auimanager.h"
+#include "aui/auibook.h"
+#include "aui/auimanager.h"
 #else
 #include <wx/listbook.h>
 #endif

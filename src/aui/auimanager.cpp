@@ -1,4 +1,4 @@
-#include "auimanager.h"
+#include "aui/auimanager.h"
 #include <wx/dc.h>
 #include <wx/settings.h>
 #include <wx/image.h>
