@@ -16,48 +16,48 @@ class AuiManagerContainer
 AuiManagerContainer& GetAui();
 
 class SLTipWindow;
-
-class SLAuiNotebook : public wxAuiNotebook
-{
-    public:
-        SLAuiNotebook();
-
-        SLAuiNotebook(wxWindow* parent,
-                      wxWindowID id = wxID_ANY,
-                      const wxPoint& pos = wxDefaultPosition,
-                      const wxSize& size = wxDefaultSize,
-                      long style = wxAUI_NB_DEFAULT_STYLE);
-
-        virtual ~SLAuiNotebook();
-
-    protected:
-    /** Tooltip related **/
-        #if wxUSE_TIPWINDOW
-            //! some wx implementations do not support this yet
-            SLTipWindow* m_tipwindow;
-            SLTipWindow** controlPointer;
-        #endif
-
-        static const unsigned int m_tooltip_delay    = 10;
-        static const unsigned int m_tooltip_duration = 2000;
-        wxPoint m_last_mouse_pos;
-        //! starts timer, sets tooltiptext
-        virtual void OnMouseMotion(wxMouseEvent& event);
-        //! this event is triggered when delay timer (set in mousemotion) ended
-        virtual void OnTimer(wxTimerEvent& event);
-        //! used to display tooltips for a certain amount of time
-        wxTimer m_tiptimer;
-        //! always set to the currrently displayed tooltip text
-        wxString m_tiptext;
-    /********************************/
-
-//        enum {
-//            ID_TIMER = 9723
-//        };
-
-
-        DECLARE_EVENT_TABLE()
-};
+//
+//class SLAuiNotebook : public wxAuiNotebook
+//{
+//    public:
+//        SLAuiNotebook();
+//
+//        SLAuiNotebook(wxWindow* parent,
+//                      wxWindowID id = wxID_ANY,
+//                      const wxPoint& pos = wxDefaultPosition,
+//                      const wxSize& size = wxDefaultSize,
+//                      long style = wxAUI_NB_DEFAULT_STYLE);
+//
+//        virtual ~SLAuiNotebook();
+//
+//    protected:
+//    /** Tooltip related **/
+//        #if wxUSE_TIPWINDOW
+//            //! some wx implementations do not support this yet
+//            SLTipWindow* m_tipwindow;
+//            SLTipWindow** controlPointer;
+//        #endif
+//
+//        static const unsigned int m_tooltip_delay    = 10;
+//        static const unsigned int m_tooltip_duration = 2000;
+//        wxPoint m_last_mouse_pos;
+//        //! starts timer, sets tooltiptext
+//        virtual void OnMouseMotion(wxMouseEvent& event);
+//        //! this event is triggered when delay timer (set in mousemotion) ended
+//        virtual void OnTimer(wxTimerEvent& event);
+//        //! used to display tooltips for a certain amount of time
+//        wxTimer m_tiptimer;
+//        //! always set to the currrently displayed tooltip text
+//        wxString m_tiptext;
+//    /********************************/
+//
+////        enum {
+////            ID_TIMER = 9723
+////        };
+//
+//
+//        DECLARE_EVENT_TABLE()
+//};
 
 
 class SLArtProvider : public wxAuiTabArt
