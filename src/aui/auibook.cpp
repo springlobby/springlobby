@@ -2542,12 +2542,13 @@ void wxAuiTabCtrl::OnMotion(wxMouseEvent& evt)
     wxAuiTabContainerButton* button;
     if (ButtonHitTest(pos.x, pos.y, &button))
     {
-        if ( m_hover_button )
-        {
-            wxString tt = button->tooltip;
-            customMessageBox(SL_MAIN_ICON, _T("fw"), tt );
-        }
 
+        //if ( m_hover_button )
+        {
+            int * i = 0 ; *i=9;
+            //wxString tt = button->tooltip;
+            customMessageBoxNoModal(SL_MAIN_ICON, _T("fw"), _T("BJK") );
+        }
 
         if (m_hover_button && button != m_hover_button)
         {
