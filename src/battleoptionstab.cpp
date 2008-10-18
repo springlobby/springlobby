@@ -263,7 +263,7 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, b
   UpdateBattle(  wxString::Format(_T("%d_maxunits"), EngineOption ) );
   UpdateBattle(  wxString::Format(_T("%d_ghostedbuildings"), EngineOption ) );
   UpdateBattle(  wxString::Format(_T("%d_diminishingmms"), EngineOption ) );
-	UpdateBattle(  wxString::Format(_T("%d_FixedAllies"), EngineOption ) );
+	UpdateBattle(  wxString::Format(_T("%d_fixedallies"), EngineOption ) );
 
   ReloadRestrictions();
 
@@ -326,7 +326,7 @@ void BattleOptionsTab::UpdateBattle( const wxString& Tag )
     }
     else if ( key == _T("ghostedbuildings") ) m_options_checks->Check( GHOUSTED_INDEX, longval );
     else if ( key == _T("diminishingmms") ) m_options_checks->Check( DIM_MMS_INDEX, longval );
-		else if ( key == _T("FixedAllies") ) m_options_checks->Check( FIXED_ALLIES_INDEX, longval );
+		else if ( key == _T("fixedallies") ) m_options_checks->Check( FIXED_ALLIES_INDEX, longval );
   }
   else if ( type == PrivateOptions )
   {
@@ -441,9 +441,8 @@ void BattleOptionsTab::OnOptsCheck( wxCommandEvent& event )
   m_battle.CustomBattleOptions().setSingleOption( _T("diminishingmms"), i2s(m_options_checks->IsChecked( DIM_MMS_INDEX )), EngineOption );
   m_battle.SendHostInfo( wxString::Format(_T("%d_diminishingmms"), EngineOption ) );
 
-  wxString val = wxString::Format( _T("%d"), m_options_checks->IsChecked( FIXED_ALLIES_INDEX ) );
-  m_battle.CustomBattleOptions().setSingleOption( _T("FixedAllies"), val, EngineOption );
-  m_battle.SendHostInfo( wxString::Format(_T("%d_FixedAllies"), EngineOption ) );
+  m_battle.CustomBattleOptions().setSingleOption( _T("fixedallies"), i2s(m_options_checks->IsChecked( FIXED_ALLIES_INDEX )), EngineOption );
+  m_battle.SendHostInfo( wxString::Format(_T("%d_fixedallies"), EngineOption ) );
 
   if ( m_sp ) {
     if ( m_options_checks->IsChecked( RANDOM_START_INDEX ) )
