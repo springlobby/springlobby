@@ -84,8 +84,8 @@ class MapCtrl : public wxPanel
     wxRect GetStartRect( int index );
     wxRect GetStartRect( const BattleStartRect& sr );
     void Accumulate( wxImage& image );
-    double GetStartRectMetal( int index );
-    double GetStartRectMetal( const BattleStartRect& sr );
+    double GetStartRectMetalFraction( int index );
+    double GetStartRectMetalFraction( const BattleStartRect& sr );
 
     void DrawOutlinedText( wxDC& dc, const wxString& str, int x, int y, const wxColour& outline, const wxColour& font );
 

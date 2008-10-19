@@ -200,16 +200,16 @@ void MapCtrl::Accumulate( wxImage& image )
 }
 
 
-double MapCtrl::GetStartRectMetal( int index )
+double MapCtrl::GetStartRectMetalFraction( int index )
 {
   ASSERT_LOGIC( BattleType() != BT_Multi, _T("MapCtrl::GetMetal(): Battle type is not BT_Multi") );
   BattleStartRect sr = m_battle->GetStartRect( index );
   if ( !sr.IsOk() ) return 0.0;
-  return GetStartRectMetal( sr );
+  return GetStartRectMetalFraction( sr );
 }
 
 
-double MapCtrl::GetStartRectMetal( const BattleStartRect& sr )
+double MapCtrl::GetStartRectMetalFraction( const BattleStartRect& sr )
 {
   // todo: this really is *logic*, not rendering code, so it
   // should go in some other layer sometime (SpringUnitSync?).
@@ -229,10 +229,10 @@ double MapCtrl::GetStartRectMetal( const BattleStartRect& sr )
   const int righttop = ReadInt24(&metalmap[3*(y1*w+x2)]);
   const int leftbot  = ReadInt24(&metalmap[3*(y2*w+x1)]);
   const int rightbot = ReadInt24(&metalmap[3*(y2*w+x2)]);
+  // in 2d cumulative distribution total is value at bottom right corner
+  const int total    = ReadInt24(&metalmap[3*(w*h-1)]);
 
-  double metal = lefttop + rightbot - righttop - leftbot;
-  metal *= m_map.info.maxMetal / 255.0;
-  return metal;
+  return (double) (lefttop + rightbot - righttop - leftbot) / total;
 }
 
 
@@ -498,9 +498,9 @@ void MapCtrl::DrawStartRect( wxDC& dc, int index, wxRect& sr, const wxColour& co
     DrawOutlinedText( dc, strIndex, tx, ty, wxColour(50,50,50), *wxWHITE );
     //dc.DrawText( wxString::Format( _T("%d"), index+1), sr.x + sr.width / 2 - twidth / 2, sr.y + sr.height / 2 - theight / 2 - 1 );
 
-    const double metal = GetStartRectMetal( index );
+    const double metal = GetStartRectMetalFraction( index );
     if (metal != 0.0) {
-      wxString strMetal = wxString::Format( _T("Metal: %.1f"), metal );
+      wxString strMetal = wxString::Format( _("Metal: %.1f%%"), metal * 100.0 );
       dc.GetTextExtent( strMetal, &twidth, &theight );
       // don't cramp it in rect, but only display it if it actually fits
       if (sr.height >= 6 * theight && sr.width > twidth) {
