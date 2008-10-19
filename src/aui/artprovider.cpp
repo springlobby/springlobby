@@ -379,18 +379,21 @@ void SLArtProvider::DrawTab(wxDC& dc,
                           tab_width - (text_offset-tab_x) - close_button_width);
 
     // draw tab text
+    wxColor fg_color = dc.GetTextForeground( );
     if (!page.active ) {
-        wxColor fg_color = dc.GetTextForeground( );
+
+        wxColor fg_color_new = fg_color;
         if ( AreColoursSimilar( fg_color, dc.GetTextBackground() , 50 ) )
         {
-          fg_color = wxColor( ( fg_color.Red() +125 ) % 255 , ( fg_color.Green() +125 ) % 255, ( fg_color.Blue() +125 ) % 255 );
+          fg_color_new = wxColor( ( fg_color.Red() +125 ) % 255 , ( fg_color.Green() +125 ) % 255, ( fg_color.Blue() +125 ) % 255 );
         }
-        dc.SetTextForeground( wxAuiLightContrastColour(fg_color) );
+        dc.SetTextForeground( wxAuiLightContrastColour(fg_color_new) );
     }
 
     dc.DrawText(draw_text,
                 text_offset,
                 drawn_tab_yoff + (drawn_tab_height)/2 - (texty/2) - 1);
+    dc.SetTextForeground( (fg_color) );
 
     // draw close button if necessary
     if (close_button_state != wxAUI_BUTTON_STATE_HIDDEN)
