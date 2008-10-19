@@ -179,7 +179,8 @@ SET(SpringLobbySrc
 	src/filelister/filelistctrl.cpp
 	src/filelister/filelistdialog.cpp
 	src/filelister/filelistfilter.cpp
-	src/auimanager.cpp
+	src/aui/auimanager.cpp
+        src/aui/artprovider.cpp
 	src/autobalancedialog.cpp
 	src/autohost.cpp
 	src/autojoinchanneldialog.cpp

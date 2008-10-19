@@ -26,6 +26,7 @@
 #include "ui.h"
 #include "server.h"
 #include "settings.h"
+#include "aui/artprovider.h"
 
 #include "images/close.xpm"
 #include "images/server.xpm"

@@ -144,10 +144,12 @@
 		<Unit filename="src/addbotdialog.h" />
 		<Unit filename="src/agreementdialog.cpp" />
 		<Unit filename="src/agreementdialog.h" />
-		<Unit filename="src/aui/auibook.cpp" />
+		<Unit filename="src/aui/artprovider.cpp" />
+		<Unit filename="src/aui/artprovider.h" />
 		<Unit filename="src/aui/auibook.h" />
 		<Unit filename="src/aui/auimanager.cpp" />
 		<Unit filename="src/aui/auimanager.h" />
+		<Unit filename="src/aui/auiuitls.h" />
 		<Unit filename="src/autobalancedialog.cpp" />
 		<Unit filename="src/autobalancedialog.h" />
 		<Unit filename="src/autohost.cpp" />
