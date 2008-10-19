@@ -5,7 +5,10 @@
 #include <wx/arrstr.h>
 #include <vector>
 
-
+namespace SLGlobals {
+const wxString nosection_name = _T("none");
+const wxString nostyle_name = _T("none");
+};
 //! enum that lets us differentiate option types at runtime
 /*! opt_undefined will be returned/set if the type could not be determined, others respectively */
 enum OptionType {
@@ -40,14 +43,26 @@ typedef std::vector<listItem> ListItemVec;
  */
 struct mmOptionModel
 {
+    enum ControlType{
+        ct_undefined,
+        ct_someothers
+    };
+
+
 	//! sets members accordingly
-	mmOptionModel(wxString name_, wxString key_, wxString description_, OptionType type_ = opt_undefined);
+	///* this ctor sets controltype enum according to string *///
+	mmOptionModel(wxString name_, wxString key_, wxString description_, OptionType type_ = opt_undefined,
+                wxString section_ = SLGlobals::nosection_name, wxString style_ = SLGlobals::nostyle_name);
+    mmOptionModel(wxString name_, wxString key_, wxString description_, OptionType type_ = opt_undefined,
+                wxString section_ = SLGlobals::nosection_name, ControlType style_ = ct_undefined);
+
 	~mmOptionModel();
 	//! all members are set to empty strings, type to opt_undefined
 	mmOptionModel();
 
-	wxString name, key, description;
+	wxString name, key, description,section;
 	OptionType type;
+	ControlType ct_type;
 };
 
 //! Holds a bool option
@@ -55,7 +70,8 @@ struct mmOptionModel
 struct mmOptionBool : public mmOptionModel
 {
 	//! sets members accordingly
-	mmOptionBool(wxString name_, wxString key_, wxString description_, bool def_);
+	mmOptionBool(wxString name_, wxString key_, wxString description_, bool def_,
+                 wxString section_ = SLGlobals::nosection_name, wxString style_ = SLGlobals::nostyle_name);
 	//! sets wxstring member to "" and bool members to false
 	mmOptionBool();
 	bool def;
@@ -67,7 +83,8 @@ struct mmOptionBool : public mmOptionModel
 struct mmOptionFloat : public mmOptionModel
 {
 	//! sets members accordingly
-	mmOptionFloat(wxString name_, wxString key_, wxString description_, float def_, float stepping_, float min_, float max_);
+	mmOptionFloat(wxString name_, wxString key_, wxString description_, float def_, float stepping_, float min_, float max_,
+                  wxString section_ = SLGlobals::nosection_name, wxString style_ = SLGlobals::nostyle_name);
 	//! sets wxstring member to "" and float members to 0.0
 	mmOptionFloat();
 
@@ -84,7 +101,8 @@ struct mmOptionFloat : public mmOptionModel
 struct mmOptionString : public mmOptionModel
 {
 	//! sets members accordingly
-	mmOptionString(wxString name_, wxString key_, wxString description_, wxString def_, unsigned int max_len_);
+	mmOptionString(wxString name_, wxString key_, wxString description_, wxString def_, unsigned int max_len_,
+                   wxString section_ = SLGlobals::nosection_name, wxString style_ = SLGlobals::nostyle_name);
 	//! sets wxstring member to "" and max_len to 0
 	mmOptionString();
 
@@ -104,7 +122,8 @@ struct mmOptionString : public mmOptionModel
 struct mmOptionList : public mmOptionModel
 {
 	//! sets members accordingly; listitems,cbx_choices remain empty
-	mmOptionList(wxString name_, wxString key_, wxString description_, wxString def_);
+	mmOptionList(wxString name_, wxString key_, wxString description_, wxString def_,
+                 wxString section_ = SLGlobals::nosection_name, wxString style_ = SLGlobals::nostyle_name);
 	//! def, value are set to ""; listitems,cbx_choices remain empty
 	mmOptionList();
 
@@ -127,7 +146,8 @@ struct mmOptionList : public mmOptionModel
 struct mmOptionInt : public mmOptionModel
 {
 	//! sets members accordingly
-	mmOptionInt(wxString name_, wxString key_, wxString description_, int def_, int stepping_, int min_, int max_);
+	mmOptionInt(wxString name_, wxString key_, wxString description_, int def_, int stepping_, int min_, int max_,
+                wxString section_ = SLGlobals::nosection_name, wxString style_ = SLGlobals::nostyle_name);
 	//! sets wxstring member to "" and int members to 0
 	mmOptionInt();
 
