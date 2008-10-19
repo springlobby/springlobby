@@ -83,6 +83,7 @@ class MapCtrl : public wxPanel
 
     wxRect GetStartRect( int index );
     wxRect GetStartRect( const BattleStartRect& sr );
+    void Accumulate( wxImage& image );
     double GetStartRectMetal( int index );
     double GetStartRectMetal( const BattleStartRect& sr );
 
@@ -123,7 +124,7 @@ class MapCtrl : public wxPanel
 
     wxBitmap* m_minimap;
     wxBitmap* m_metalmap;
-    wxImage m_metalmap_orig;
+    wxImage m_metalmap_cumulative;
 
     IBattle* m_battle;
     SinglePlayerBattle* m_sp_battle;
