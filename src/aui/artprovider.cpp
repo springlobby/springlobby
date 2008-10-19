@@ -7,6 +7,7 @@
 #include <wx/aui/dockart.h>
 #include <wx/aui/floatpane.h>
 #include "auiuitls.h"
+#include "../uiutils.h"
 
 SLArtProvider::SLArtProvider()
 {
@@ -380,6 +381,10 @@ void SLArtProvider::DrawTab(wxDC& dc,
     // draw tab text
     if (!page.active ) {
         wxColor fg_color = dc.GetTextForeground( );
+        if ( AreColoursSimilar( fg_color, dc.GetTextBackground() , 50 ) )
+        {
+          fg_color = wxColor( ( fg_color.Red() +125 ) % 255 , ( fg_color.Green() +125 ) % 255, ( fg_color.Blue() +125 ) % 255 );
+        }
         dc.SetTextForeground( wxAuiLightContrastColour(fg_color) );
     }
 

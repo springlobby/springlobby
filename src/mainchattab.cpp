@@ -60,7 +60,7 @@ MainChatTab::MainChatTab( wxWindow* parent, Ui& ui )
   #ifdef HAVE_WX26
   m_chat_tabs = new wxNotebook( this, CHAT_TABS, wxDefaultPosition, wxDefaultSize, wxLB_TOP );
   #else
-  m_chat_tabs = new wxAuiNotebook( this, CHAT_TABS, wxDefaultPosition, wxDefaultSize, wxAUI_NB_DEFAULT_STYLE | wxAUI_NB_TOP | wxAUI_NB_TAB_EXTERNAL_MOVE );
+  m_chat_tabs = new wxAuiNotebook( this, CHAT_TABS, wxDefaultPosition, wxDefaultSize, wxAUI_NB_DEFAULT_STYLE | wxAUI_NB_TOP | wxAUI_NB_TAB_EXTERNAL_MOVE | wxAUI_NB_WINDOWLIST_BUTTON );
   m_chat_tabs ->SetArtProvider(new SLArtProvider);
   #endif
 

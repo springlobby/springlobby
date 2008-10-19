@@ -4,6 +4,7 @@
 #include <wx/string.h>
 #include <sstream>
 #include <stdexcept>
+#include <wx/log.h>
 
 /** these need to stay to not break non-autotools builds */
 #if ( !defined(HAVE_WX26) && !defined(HAVE_WX28) )
