@@ -367,35 +367,44 @@ void GetOptionCachefileEntry( const int i, wxArrayString& entry, GameOptions& re
         entry.Add( TowxString( ret.float_map[key].stepping ) );
         entry.Add( TowxString( ret.float_map[key].min ) );
         entry.Add( TowxString( ret.float_map[key].max) );
+        entry.Add( ret.float_map[key].ct_type_string );
+        entry.Add( ret.float_map[key].section );
         break;
       }
       case opt_bool:
       {
         ret.bool_map[key] = mmOptionBool(name,key,
-            susynclib()->GetOptionDesc(i),susynclib()->GetOptionBoolDef(i));
+            susynclib()->GetOptionDesc(i),susynclib()->GetOptionBoolDef(i),
+            susynclib()->GetOptionSection(i),susynclib()->GetOptionStyle(i));
         entry.Add( susynclib()->GetOptionName(i) );
         wxString descr = ret.bool_map[key].description;
         descr.Replace( _T("\n"), _T("") );
         entry.Add( descr );
         entry.Add( TowxString( ret.bool_map[key].def ) );
+        entry.Add( ret.bool_map[key].ct_type_string );
+        entry.Add( ret.bool_map[key].section );
         break;
       }
       case opt_string:
       {
         ret.string_map[key] = mmOptionString(name,key,
-            susynclib()->GetOptionDesc(i),susynclib()->GetOptionStringDef(i),susynclib()->GetOptionStringMaxLen(i));
+            susynclib()->GetOptionDesc(i),susynclib()->GetOptionStringDef(i),susynclib()->GetOptionStringMaxLen(i),
+            susynclib()->GetOptionSection(i),susynclib()->GetOptionStyle(i));
         entry.Add( ret.string_map[key].name );
         wxString descr = ret.string_map[key].description;
         descr.Replace( _T("\n"), _T("") );
         entry.Add( descr );
         entry.Add( ret.string_map[key].def );
         entry.Add( TowxString( ret.string_map[key].max_len ) );
+        entry.Add( ret.string_map[key].ct_type_string );
+        entry.Add( ret.string_map[key].section );
         break;
       }
       case opt_list:
       {
          ret.list_map[key] = mmOptionList(name,key,
-            susynclib()->GetOptionDesc(i),susynclib()->GetOptionListDef(i));
+            susynclib()->GetOptionDesc(i),susynclib()->GetOptionListDef(i),
+            susynclib()->GetOptionSection(i),susynclib()->GetOptionStyle(i));
         entry.Add( ret.list_map[key].name );
         wxString descr = ret.list_map[key].description;
         descr.Replace( _T("\n"), _T("") );
@@ -412,6 +421,8 @@ void GetOptionCachefileEntry( const int i, wxArrayString& entry, GameOptions& re
            entry.Add( susynclib()->GetOptionListItemName(i,j) );
            entry.Add( descr );
          }
+        entry.Add( ret.list_map[key].ct_type_string );
+        entry.Add( ret.list_map[key].section );
       }
       }
 }
@@ -430,23 +441,25 @@ void ParseOptionCacheFile( wxArrayString& cache, GameOptions& ret )
         // name description default_value step_size min_value max_value
         ret.float_map[key] = mmOptionFloat( params[2], key,
             params[3], (float)s2d( params[4] ), (float)s2d( params[5] ),
-            (float)s2d( params[6] ), (float)s2d( params[7] ) );
+            (float)s2d( params[6] ), (float)s2d( params[7] ), params[8],params[9] );
         break;
       case opt_bool:
         // name description default_value
         ret.bool_map[key] = mmOptionBool( params[2], key,
-            params[3], (bool)s2l( params[4] ) );
+            params[3], (bool)s2l( params[4] ), params[5],params[6] );
         break;
       case opt_string:
         // name description default_value max_lenght
         ret.string_map[key] = mmOptionString( params[2], key,
-            params[3], params[4], (unsigned int) s2l( params[5] ) );
+            params[3], params[4], (unsigned int) s2l( params[5] ), params[6],params[7] );
         break;
       case opt_list:
+         unsigned int last_item_index = ( (unsigned int)s2l(params[5]) * 3 + 6);
+         //be sure to check index alignement
          ret.list_map[key] = mmOptionList( params[2],key,
-            params[3], params[4] );
+            params[3], params[4], params[last_item_index],params[last_item_index +1] );
             //there's 3 members per item, therefor the 3 + params[5] (which is listitemcount)
-         for (unsigned int j = 6; j < ( (unsigned int)s2l(params[5]) * 3 + 6); j = j + 3)
+         for (unsigned int j = 6; j < last_item_index; j = j + 3)
          {
            ret.list_map[key].addItem( params[j], params[j+1], params[j+2] );
          }

@@ -60,9 +60,11 @@ struct mmOptionModel
 	//! all members are set to empty strings, type to opt_undefined
 	mmOptionModel();
 
-	wxString name, key, description,section;
+	wxString name, key, description;
 	OptionType type;
 	ControlType ct_type;
+	wxString section;
+	wxString ct_type_string;
 };
 
 //! Holds a bool option
