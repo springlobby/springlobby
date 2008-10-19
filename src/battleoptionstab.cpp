@@ -441,13 +441,9 @@ void BattleOptionsTab::OnOptsCheck( wxCommandEvent& event )
   m_battle.CustomBattleOptions().setSingleOption( _T("diminishingmms"), i2s(m_options_checks->IsChecked( DIM_MMS_INDEX )), OptionsWrapper::EngineOption );
   m_battle.SendHostInfo( wxString::Format(_T("%d_diminishingmms"), OptionsWrapper::EngineOption ) );
 
-  wxString val = wxString::Format( _T("%d"), m_options_checks->IsChecked( FIXED_ALLIES_INDEX ) );
-  m_battle.CustomBattleOptions().setSingleOption( _T("FixedAllies"), val, OptionsWrapper::EngineOption );
-  m_battle.SendHostInfo( wxString::Format(_T("%d_FixedAllies"), OptionsWrapper::EngineOption ) );
-/* this is remote that conflicted
-  m_battle.CustomBattleOptions().setSingleOption( _T("fixedallies"), i2s(m_options_checks->IsChecked( FIXED_ALLIES_INDEX )), EngineOption );
-  m_battle.SendHostInfo( wxString::Format(_T("%d_fixedallies"), EngineOption ) );
-*/
+  m_battle.CustomBattleOptions().setSingleOption( _T("fixedallies"), i2s(m_options_checks->IsChecked( FIXED_ALLIES_INDEX )), OptionsWrapper::EngineOption );
+  m_battle.SendHostInfo( wxString::Format(_T("%d_fixedallies"), OptionsWrapper::EngineOption ) );
+
 
   if ( m_sp ) {
     if ( m_options_checks->IsChecked( RANDOM_START_INDEX ) )

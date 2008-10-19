@@ -1,4 +1,4 @@
-#include "aui/auimanager.h"
+#include "auimanager.h"
 
 AuiManagerContainer& GetAui()
 {
