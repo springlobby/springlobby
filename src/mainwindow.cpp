@@ -14,7 +14,7 @@
 #include <wx/dcmemory.h>
 #ifndef HAVE_WX26
 #include <wx/aui/auibook.h>
-#include "auimanager.h"
+#include "aui/auimanager.h"
 #else
 #include <wx/listbook.h>
 #endif
@@ -146,7 +146,8 @@ MainWindow::MainWindow( Ui& ui ) :
 
   m_main_sizer = new wxBoxSizer( wxHORIZONTAL );
   #ifndef HAVE_WX26
-  m_func_tabs = new wxAuiNotebook(  this, MAIN_TABS, wxDefaultPosition, wxDefaultSize, wxAUI_NB_TAB_SPLIT | wxAUI_NB_TAB_MOVE | wxAUI_NB_TAB_EXTERNAL_MOVE | wxAUI_NB_SCROLL_BUTTONS | wxAUI_NB_LEFT );
+  m_func_tabs = new wxAuiNotebook(  this, MAIN_TABS, wxDefaultPosition, wxDefaultSize,
+        wxAUI_NB_WINDOWLIST_BUTTON | wxAUI_NB_TAB_SPLIT | wxAUI_NB_TAB_MOVE | wxAUI_NB_TAB_EXTERNAL_MOVE | wxAUI_NB_SCROLL_BUTTONS | wxAUI_NB_LEFT );
   #else
   m_func_tabs = new wxListbook( this, MAIN_TABS, wxDefaultPosition, wxDefaultSize, wxLB_LEFT );
   #endif
@@ -185,13 +186,13 @@ MainWindow::MainWindow( Ui& ui ) :
   m_func_tabs->AddPage( m_torrent_tab, _T(""), false, 5 );
 #endif
 #else
-  m_func_tabs->AddPage( m_chat_tab, _T(""), true, *m_chat_icon );
-  m_func_tabs->AddPage( m_join_tab, _T(""), false, *m_battle_icon );
-  m_func_tabs->AddPage( m_sp_tab, _T(""), false, *m_sp_icon );
-  m_func_tabs->AddPage( m_opts_tab, _T(""), false, *m_options_icon );
-  m_func_tabs->AddPage( m_replay_tab, _T(""), false, *m_replay_icon );
+  m_func_tabs->AddPage( m_chat_tab, _T("Chat"), true, *m_chat_icon );
+  m_func_tabs->AddPage( m_join_tab, _T("Multiplayer"), false, *m_battle_icon );
+  m_func_tabs->AddPage( m_sp_tab, _T("Singleplayer"), false, *m_sp_icon );
+  m_func_tabs->AddPage( m_opts_tab, _T("Options"), false, *m_options_icon );
+  m_func_tabs->AddPage( m_replay_tab, _T("Replays"), false, *m_replay_icon );
 #ifndef NO_TORRENT_SYSTEM
-  m_func_tabs->AddPage( m_torrent_tab, _T(""), false, *m_downloads_icon );
+  m_func_tabs->AddPage( m_torrent_tab, _T("Downloads"), false, *m_downloads_icon );
 #endif
 #endif
 

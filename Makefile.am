@@ -896,8 +896,11 @@ springlobby_SOURCES = \
 	src/Helper/colorbutton.h \
 	src/lobbyoptionstab.h \
 	src/lobbyoptionstab.cpp \
-	src/auimanager.h \
-	src/auimanager.cpp \
+	src/aui/auimanager.h \
+	src/aui/auimanager.cpp \
+	src/aui/auiutils.h \
+	src/aui/artprovider.h \
+	src/aui/artprovider.cpp \
 	src/updater/updater.h \
 	src/updater/updater.cpp \
 	src/updater/exedownloader.h \

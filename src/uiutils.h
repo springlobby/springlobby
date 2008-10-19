@@ -53,6 +53,20 @@ wxColour GetColourFromUser(wxWindow *parent, const wxColour& colInit,
 
 wxImage ReplaceChannelStatusColour( wxBitmap img, const wxColour& colour );
 
+
+#if wxUSE_TIPWINDOW
+#include <wx/tipwin.h>
+
+class SLTipWindow : public wxTipWindow{
+    public:
+        SLTipWindow(wxWindow *parent, const wxString &text)
+            :wxTipWindow(parent,text){};
+        void Cancel(wxMouseEvent& event);
+
+        DECLARE_EVENT_TABLE()
+};
+#endif
+
 #endif
 // SPRINGLOBBY_HEADERGUARD_UIUTILS_H
 

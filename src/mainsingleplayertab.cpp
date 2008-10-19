@@ -9,7 +9,7 @@
 #include <wx/log.h>
 
 #ifndef HAVE_WX26
-#include "auimanager.h"
+#include "aui/auimanager.h"
 #else
 #include <wx/listbook.h>
 #endif

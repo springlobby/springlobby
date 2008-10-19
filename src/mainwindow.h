@@ -16,7 +16,9 @@ class MainSinglePlayerTab;
 class MainTorrentTab;
 #endif
 class wxBoxSizer;
-class wxAuiNotebook;
+//namespace SL_Extern{
+    class wxAuiNotebook;
+//}
 class wxListbook;
 class MainOptionsTab;
 class wxBitmap;
