@@ -1864,15 +1864,8 @@ void TASServer::UdpPingTheServer(const wxString &message)
     if (port>0)
     {
         m_udp_private_port=port;
+        m_se->OnMyInternalUdpSourcePort( m_udp_private_port );
     }
-    else
-    {
-        wxLogWarning(_T("UdpPing returned 0 . Failed to ping, possibly because of source port=0 . Setting source port to 16941 (old default) and trying again"));
-        /// safeguard
-        m_udp_private_port=16941;
-        UdpPing(m_udp_private_port,m_addr,m_nat_helper_port,message);
-    }
-    m_se->OnMyInternalUdpSourcePort( m_udp_private_port );
 }
 
 
