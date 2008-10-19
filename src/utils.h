@@ -44,19 +44,19 @@ class assert_exception : public std::runtime_error
 #if wxUSE_DEBUGREPORT && defined(HAVE_WX28)
 #define ASSERT_LOGIC(cond,msg) if(!(cond))\
 {\
-  wxLogError(_T("logic error: %s"), wxString(msg).c_str() );\
+  wxLogError(_T("logic error ( %s:%d ): %s"), TowxString(__FILE__).c_str(),__LINE__ , wxString(msg).c_str() );\
   throw std::logic_error(std::string(wxString(msg).mb_str()));\
 }
 #else
 #define ASSERT_LOGIC(cond,msg) if(!(cond))\
 {\
-  wxLogError(_T("logic error: %s"), wxString(msg).c_str() );\
+  wxLogError(_T("logic error ( %s:%d ): %s"), TowxString(__FILE__).c_str(),__LINE__ , wxString(msg).c_str() );\
   throw std::logic_error(std::string(wxString(msg).mb_str()));\
 }
 #endif
 
 #define ASSERT_EXCEPTION(cond,msg) if(!(cond))\
-{wxLogMessage(_T("runtime assertion: %s"), wxString(msg).c_str() );throw assert_exception(std::string(wxString(msg).mb_str()));}
+{wxLogMessage(_T("runtime assertion ( %s:%d ): %s"), TowxString(__FILE__).c_str(),__LINE__ , wxString(msg).c_str() );throw assert_exception(std::string(wxString(msg).mb_str()));}
 
 
 #define CLAMP(var,min,max) ((var)=((var)<(min))?(min):((var)>(max))?(max):(var))

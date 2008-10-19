@@ -326,7 +326,7 @@ void BattleOptionsTab::UpdateBattle( const wxString& Tag )
     }
     else if ( key == _T("ghostedbuildings") ) m_options_checks->Check( GHOUSTED_INDEX, longval );
     else if ( key == _T("diminishingmms") ) m_options_checks->Check( DIM_MMS_INDEX, longval );
-		else if ( key == _T("FixedAllies") ) m_options_checks->Check( FIXED_ALLIES_INDEX, longval );
+		else if ( key == _T("fixedallies") ) m_options_checks->Check( FIXED_ALLIES_INDEX, longval );
   }
   else if ( type == OptionsWrapper::PrivateOptions )
   {
@@ -444,6 +444,10 @@ void BattleOptionsTab::OnOptsCheck( wxCommandEvent& event )
   wxString val = wxString::Format( _T("%d"), m_options_checks->IsChecked( FIXED_ALLIES_INDEX ) );
   m_battle.CustomBattleOptions().setSingleOption( _T("FixedAllies"), val, OptionsWrapper::EngineOption );
   m_battle.SendHostInfo( wxString::Format(_T("%d_FixedAllies"), OptionsWrapper::EngineOption ) );
+/* this is remote that conflicted
+  m_battle.CustomBattleOptions().setSingleOption( _T("fixedallies"), i2s(m_options_checks->IsChecked( FIXED_ALLIES_INDEX )), EngineOption );
+  m_battle.SendHostInfo( wxString::Format(_T("%d_fixedallies"), EngineOption ) );
+*/
 
   if ( m_sp ) {
     if ( m_options_checks->IsChecked( RANDOM_START_INDEX ) )
