@@ -562,58 +562,61 @@ GameOptions SpringUnitSync::GetModOptions( const wxString& name )
       wxArrayString entry;
       wxString key = susynclib()->GetOptionKey(i);
       entry.Add( key );
+      wxString name = susynclib()->GetOptionName(i);
       entry.Add( TowxString( susynclib()->GetOptionType(i) ) );
       switch (susynclib()->GetOptionType(i))
       {
       case opt_float:
       {
-        ret.float_map[key] = mmOptionFloat(susynclib()->GetOptionName(i),key,
+        ret.float_map[key] = mmOptionFloat(name,key,
             susynclib()->GetOptionDesc(i),susynclib()->GetOptionNumberDef(i), susynclib()->GetOptionNumberStep(i),
-            susynclib()->GetOptionNumberMin(i),susynclib()->GetOptionNumberMax(i));
-        entry.Add( susynclib()->GetOptionName(i) );
-        wxString descr = susynclib()->GetOptionDesc(i);
+            susynclib()->GetOptionNumberMin(i),susynclib()->GetOptionNumberMax(i),
+            susynclib()->GetOptionSection(i),susynclib()->GetOptionStyle(i));
+        entry.Add( ret.float_map[key].name );
+        wxString descr = ret.float_map[key].description;
         descr.Replace( _T("\n"), _T("") );
         entry.Add( descr );
-        entry.Add( TowxString( susynclib()->GetOptionNumberDef(i) ) );
-        entry.Add( TowxString( susynclib()->GetOptionNumberStep(i) ) );
-        entry.Add( TowxString( susynclib()->GetOptionNumberMin(i) ) );
-        entry.Add( TowxString( susynclib()->GetOptionNumberMax(i)) );
+        entry.Add( TowxString( ret.float_map[key].def ) );
+        entry.Add( TowxString( ret.float_map[key].stepping ) );
+        entry.Add( TowxString( ret.float_map[key].min ) );
+        entry.Add( TowxString( ret.float_map[key].max) );
         break;
       }
       case opt_bool:
       {
-        ret.bool_map[key] = mmOptionBool(susynclib()->GetOptionName(i),key,
+        ret.bool_map[key] = mmOptionBool(name,key,
             susynclib()->GetOptionDesc(i),susynclib()->GetOptionBoolDef(i));
         entry.Add( susynclib()->GetOptionName(i) );
-        wxString descr = susynclib()->GetOptionDesc(i);
+        wxString descr = ret.bool_map[key].description;
         descr.Replace( _T("\n"), _T("") );
         entry.Add( descr );
-        entry.Add( TowxString( susynclib()->GetOptionBoolDef(i) ) );
+        entry.Add( TowxString( ret.bool_map[key].def ) );
         break;
       }
       case opt_string:
       {
-        ret.string_map[key] = mmOptionString(susynclib()->GetOptionName(i),key,
+        ret.string_map[key] = mmOptionString(name,key,
             susynclib()->GetOptionDesc(i),susynclib()->GetOptionStringDef(i),susynclib()->GetOptionStringMaxLen(i));
-        entry.Add( susynclib()->GetOptionName(i) );
-        wxString descr = susynclib()->GetOptionDesc(i);
+        entry.Add( ret.string_map[key].name );
+        wxString descr = ret.string_map[key].description;
         descr.Replace( _T("\n"), _T("") );
         entry.Add( descr );
-        entry.Add( susynclib()->GetOptionStringDef(i) );
-        entry.Add( TowxString( susynclib()->GetOptionStringMaxLen(i) ) );
+        entry.Add( ret.string_map[key].def );
+        entry.Add( TowxString( ret.string_map[key].max_len ) );
         break;
       }
       case opt_list:
       {
-         ret.list_map[key] = mmOptionList(susynclib()->GetOptionName(i),key,
+         ret.list_map[key] = mmOptionList(name,key,
             susynclib()->GetOptionDesc(i),susynclib()->GetOptionListDef(i));
-        entry.Add( susynclib()->GetOptionName(i) );
-        wxString descr = susynclib()->GetOptionDesc(i);
+        entry.Add( ret.list_map[key].name );
+        wxString descr = ret.list_map[key].description;
         descr.Replace( _T("\n"), _T("") );
         entry.Add( descr );
-        entry.Add( susynclib()->GetOptionListDef(i) );
-        entry.Add( TowxString( susynclib()->GetOptionListCount(i) ) );
-         for (int j = 0; j < susynclib()->GetOptionListCount(i); ++j)
+        entry.Add( ret.list_map[key].def );
+        int listItemCount = susynclib()->GetOptionListCount(i);
+        entry.Add( TowxString( listItemCount ) );
+         for (int j = 0; j < listItemCount; ++j)
          {
            wxString descr = susynclib()->GetOptionListItemDesc(i,j);
            descr.Replace( _T("\n"), _T("") );
