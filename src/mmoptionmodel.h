@@ -6,9 +6,10 @@
 #include <vector>
 
 namespace SLGlobals {
-const wxString nosection_name = _T("none");
-const wxString nostyle_name = _T("none");
+    const wxString nosection_name = _T("none");
+    const wxString nostyle_name = _T("none");
 };
+
 //! enum that lets us differentiate option types at runtime
 /*! opt_undefined will be returned/set if the type could not be determined, others respectively */
 enum OptionType {
@@ -17,7 +18,8 @@ enum OptionType {
 	opt_list       = 2,
 	opt_float      = 3,
 	opt_string     = 4,
-	opt_int        = 5
+	opt_int        = 5,
+	opt_section    = 6
 };
 
 //! used to hold an item in an option list
@@ -162,4 +164,8 @@ struct mmOptionInt : public mmOptionModel
 	long min, max;
 };
 
+struct mmOptionSection : public mmOptionModel{
+    mmOptionSection (wxString name_, wxString key_, wxString description_,wxString section_ = SLGlobals::nosection_name );
+    mmOptionSection ();
+};
 #endif /*MMOPTIONMODEL_H_*/
