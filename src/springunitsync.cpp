@@ -345,7 +345,7 @@ UnitSyncMap SpringUnitSync::GetMapEx( int index )
   return m;
 }
 
-void GetCachefileEntry( const int i, wxArrayString& entry, GameOptions& ret)
+void GetOptionCachefileEntry( const int i, wxArrayString& entry, GameOptions& ret)
 {
     wxString key = susynclib()->GetOptionKey(i);
       entry.Add( key );
@@ -416,7 +416,7 @@ void GetCachefileEntry( const int i, wxArrayString& entry, GameOptions& ret)
       }
 }
 
-void ParseCacheFile( wxArrayString& cache, GameOptions& ret )
+void ParseOptionCacheFile( wxArrayString& cache, GameOptions& ret )
 {
     unsigned int count = cache.GetCount();
     for (unsigned int i = 0; i < count; ++i)
@@ -462,7 +462,7 @@ GameOptions SpringUnitSync::GetMapOptions( const wxString& name )
   try
   {
     cache = GetCacheFile( GetFileCachePath( name, _T(""), false ) + _T(".mapoptions") );
-    ParseCacheFile( cache, ret );
+    ParseOptionCacheFile( cache, ret );
   }
   catch (...)
   {
@@ -470,7 +470,7 @@ GameOptions SpringUnitSync::GetMapOptions( const wxString& name )
     for (int i = 0; i < count; ++i)
     {
       wxArrayString entry;
-      GetCachefileEntry( i, entry, ret );
+      GetOptionCachefileEntry( i, entry, ret );
       wxString optiontoken;
 
       unsigned int entrycount = entry.GetCount();
@@ -535,7 +535,7 @@ GameOptions SpringUnitSync::GetModOptions( const wxString& name )
   try
   {
     cache = GetCacheFile( GetFileCachePath( name, _T(""), true ) + _T(".modoptions") );
-    ParseCacheFile( cache, ret );
+    ParseOptionCacheFile( cache, ret );
   }
   catch (...)
   {
@@ -543,7 +543,7 @@ GameOptions SpringUnitSync::GetModOptions( const wxString& name )
     for (int i = 0; i < count; ++i)
     {
       wxArrayString entry;
-      GetCachefileEntry( i, entry, ret );
+      GetOptionCachefileEntry( i, entry, ret );
       wxString optiontoken;
 
       unsigned int entrycount = entry.GetCount();
