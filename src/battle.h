@@ -13,34 +13,14 @@
 class Ui;
 class Server;
 
-
-enum NatType {
-  NAT_None = 0,
-  NAT_Hole_punching,
-  NAT_Fixed_source_ports
-};
-
-enum BalanceType {
-  balance_random=0,
-  balance_divide
-};
-
-enum RankLimitType {
-  rank_limit_none=0,
-  rank_limit_autospec,
-  rank_limit_autokick
-};
-
-
-#define DEFAULT_SERVER_PORT 8034
-#define DEFAULT_EXTERNAL_UDP_SOURCE_PORT 16941
-
+const unsigned int DEFAULT_SERVER_PORT = 8452;
+const unsigned int DEFAULT_EXTERNAL_UDP_SOURCE_PORT = 16941;
 
 struct BattleOptions
 {
   BattleOptions() :
-    battleid(-1),islocked(false),isreplay(false),ispassworded(false),rankneeded(0),ranklimittype(rank_limit_autospec),
-    nattype(NAT_None),port(DEFAULT_SERVER_PORT),externaludpsourceport(DEFAULT_EXTERNAL_UDP_SOURCE_PORT),internaludpsourceport(DEFAULT_EXTERNAL_UDP_SOURCE_PORT),maxplayers(0),spectators(0),
+    battleid(-1),islocked(false),isreplay(false),ispassworded(false),rankneeded(0),ranklimittype(IBattle::rank_limit_autospec),
+    nattype(IBattle::NAT_None),port(DEFAULT_SERVER_PORT),externaludpsourceport(DEFAULT_EXTERNAL_UDP_SOURCE_PORT),internaludpsourceport(DEFAULT_EXTERNAL_UDP_SOURCE_PORT),maxplayers(0),spectators(0),
     guilistactiv(false) {}
 
   int battleid;
@@ -48,11 +28,11 @@ struct BattleOptions
   bool isreplay;
   bool ispassworded;
   int rankneeded;
-  RankLimitType ranklimittype;
+  IBattle::RankLimitType ranklimittype;
 
   wxString founder;
 
-  NatType nattype;
+  IBattle::NatType nattype;
   unsigned int port;
   wxString ip;
   unsigned int externaludpsourceport;

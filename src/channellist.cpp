@@ -7,7 +7,7 @@
 #include "channel.h"
 #include "utils.h"
 
-const user_map_t::size_type SEEKPOS_INVALID = user_map_t::size_type(-1);
+const UserList::user_map_t::size_type SEEKPOS_INVALID = UserList::user_map_t::size_type(-1);
 
 ChannelList::ChannelList() : m_seek(m_chans.end()), m_seekpos(SEEKPOS_INVALID)
 { }

@@ -32,7 +32,7 @@
 #include "../settings++/custom_dialogs.h"
 
 
-#define REPLAYLIST_COLOUMNCOUNT 10
+const unsigned int REPLAYLIST_COLOUMNCOUNT = 10;
 
 BEGIN_EVENT_TABLE(ReplayTab, wxPanel)
 

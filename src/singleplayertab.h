@@ -60,18 +60,16 @@ class SinglePlayerTab: public  wxScrolledWindow
     wxButton* m_reset_btn;
     wxButton* m_start_btn;
 
+    enum {
+      SP_MAP_PICK = wxID_HIGHEST,
+      SP_MOD_PICK,
+      SP_BROWSE_MAP,
+      SP_ADD_BOT,
+      SP_RESET,
+      SP_START
+    };
+
   DECLARE_EVENT_TABLE()
-};
-
-
-enum
-{
-  SP_MAP_PICK = wxID_HIGHEST,
-  SP_MOD_PICK,
-  SP_BROWSE_MAP,
-  SP_ADD_BOT,
-  SP_RESET,
-  SP_START
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_SINGLEPLAYERTAB_H

@@ -69,12 +69,13 @@ class MainChatTab : public wxScrolledWindow
     ChatPanel* m_main_chat;
     int m_newtab_sel;
 
+    enum {
+        CHAT_TABS = wxID_HIGHEST
+    };
+
     DECLARE_EVENT_TABLE()
 };
 
-enum
-{
-    CHAT_TABS = wxID_HIGHEST
-};
+
 
 #endif // SPRINGLOBBY_HEADERGUARD_MAINCHATTAB_H

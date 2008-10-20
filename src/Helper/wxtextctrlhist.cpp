@@ -14,12 +14,19 @@
 #include "wxtextctrlhist.h"
 #include "TextCompletionDatabase.hpp"
 #include <wx/regex.h>
+#include "../utils.h"
+#include "../settings.h"
 
 BEGIN_EVENT_TABLE(wxTextCtrlHist, wxTextCtrl)
     EVT_TEXT_ENTER(wxID_ANY, wxTextCtrlHist::OnSendMessage)
     EVT_KEY_DOWN(wxTextCtrlHist::OnChar)
 END_EVENT_TABLE()
 
+void GetArrayStringFromHashMap( const HashMap_String_String& hm , wxArrayString& matches )
+{
+    for ( HashMap_String_String::const_iterator it = hm.begin(); it != hm.end(); ++it )
+        matches.Add( it->second );
+}
 
 wxTextCtrlHist::wxTextCtrlHist(TextCompletionDatabase& textDb, wxWindow* parent, wxWindowID id, const wxString& value, const wxPoint& pos, const wxSize& size, long style )
     : wxTextCtrl(parent, id, value, pos, size, wxTE_PROCESS_ENTER | wxTE_PROCESS_TAB ),
@@ -107,12 +114,33 @@ void wxTextCtrlHist::OnChar(wxKeyEvent & event)
                     completed_Text.append( selection_InsertPos_End );
                     new_Cursor_Pos = selection_Begin_BeforeCurrentWord.length() + hm.begin()->second.length();
                 } else {
-                    completed_Text.append( selection_Begin_BeforeCurrentWord );
-                    completed_Text.append( currentWord );
-                    completed_Text.append( selection_InsertPos_End );
-                    new_Cursor_Pos = selection_Begin_BeforeCurrentWord.length() + currentWord.length();
-                    // We ring the System Bell, to signalise the User, that no Completion was applied.
-                    wxBell();
+                    //match nearest only makes sense when there's actually more than one match
+                    if ( hm.size() > 1 && sett().GetCompletionMethod() == Settings::MatchNearest ) {
+                        wxArrayString matches;
+                        GetArrayStringFromHashMap( hm , matches );
+                        wxString newWord = GetBestMatch( matches, currentWord );
+
+                        bool realCompletion = newWord.Length() >= currentWord.Length(); // otherwise we have actually less word than before :P
+                        if ( realCompletion )
+                            currentWord =  newWord;
+
+                        completed_Text.append( selection_Begin_BeforeCurrentWord );
+                        completed_Text.append( currentWord );
+                        completed_Text.append( selection_InsertPos_End );
+                        new_Cursor_Pos = selection_Begin_BeforeCurrentWord.length() + currentWord.length();
+
+                        // We ring the System Bell, to signalise the User, that no Completion was applied.
+                        if (!realCompletion)
+                            wxBell();
+                    }
+                    else {
+                        completed_Text.append( selection_Begin_BeforeCurrentWord );
+                        completed_Text.append( currentWord );
+                        completed_Text.append( selection_InsertPos_End );
+                        new_Cursor_Pos = selection_Begin_BeforeCurrentWord.length() + currentWord.length();
+                        // We ring the System Bell, to signalise the User, that no Completion was applied.
+                        wxBell();
+                    }
                 }
                 // Replace the old Text with our completed Text
                 // or

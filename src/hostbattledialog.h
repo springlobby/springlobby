@@ -63,14 +63,14 @@ class HostBattleDialog : public wxDialog
 
 		wxButton* m_host_btn;
 
+    enum {
+        HOST_CANCEL = wxID_HIGHEST,
+        HOST_OK,
+        CHOSE_NAT
+    };
+
     DECLARE_EVENT_TABLE()
 };
 
-enum
-{
-	HOST_CANCEL = wxID_HIGHEST,
-	HOST_OK,
-	CHOSE_NAT
-};
 
 #endif // SPRINGLOBBY_HEADERGUARD_HOSTBATTLEDIALOG_H

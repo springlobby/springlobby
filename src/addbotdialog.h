@@ -45,14 +45,16 @@ class AddBotDialog : public wxDialog
 
     wxString RefineAIName( const wxString& name );
 
+    enum
+    {
+      ADDBOT_ADD = wxID_HIGHEST,
+      ADDBOT_CANCEL,
+      ADDBOT_AI
+    };
+
     DECLARE_EVENT_TABLE()
 };
 
-enum
-{
-  ADDBOT_ADD = wxID_HIGHEST,
-  ADDBOT_CANCEL,
-  ADDBOT_AI
-};
+
 
 #endif // SPRINGLOBBY_HEADERGUARD_ADDBOTDIALOG_H

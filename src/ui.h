@@ -1,11 +1,6 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_UI_H
 #define SPRINGLOBBY_HEADERGUARD_UI_H
 
-//#include <wx/string.h>
-//#include <wx/event.h>
-//#include <map>
-//#include "useractions.h"
-
 class Server;
 class TASServer;
 class ConnectWindow;
@@ -32,12 +27,13 @@ typedef int AlertEventType;
 
 extern const wxEventType torrentSystemStatusUpdateEvt;
 
-#define AE_MESSAGE 1
-#define AE_HIGHLIGHT_MESSAGE 2
-#define AE_PM 4
-#define AE_ERROR 8
-#define AE_DISCONNECT 16
-#define AE_BATTLE_MESSAGE 32
+//these seem to be completely obsolete (koshi)
+//#define AE_MESSAGE 1
+//#define AE_HIGHLIGHT_MESSAGE 2
+//#define AE_PM 4
+//#define AE_ERROR 8
+//#define AE_DISCONNECT 16
+//#define AE_BATTLE_MESSAGE 32
 
 
 //! @brief UI main class

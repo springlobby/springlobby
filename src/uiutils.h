@@ -15,9 +15,9 @@ class wxWindow;
 #define wxDefaultBitmap wxBitmap()
 
 #ifdef __WXMSW__
-    #define DEFAULT_COLORDLG_TITLE (_("Choose color"))
+    const wxString DEFAULT_COLORDLG_TITLE = _("Choose color");
 #else
-    #define DEFAULT_COLORDLG_TITLE (_("Choose color (only first 16 will be saved)"))
+    const wxString DEFAULT_COLORDLG_TITLE = _("Choose color (only first 16 will be saved)");
 #endif
 
 

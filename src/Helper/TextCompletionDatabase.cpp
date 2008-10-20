@@ -1,6 +1,7 @@
 #include "TextCompletionDatabase.hpp"
 #include <wx/string.h>
 #include <wx/regex.h>
+
 //--------------------------------------------------------------------------------
 ///
 /// Konstruktor
