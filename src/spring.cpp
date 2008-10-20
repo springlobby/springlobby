@@ -118,7 +118,7 @@ bool Spring::Run( Battle& battle )
 
   #ifndef NO_TORRENT_SYSTEM
   wxString CommandForAutomaticTeamSpeak = _T("SCRIPT|") + battle.GetMe().GetNick() + _T("|");
-  for ( user_map_t::size_type i = 0; i < battle.GetNumUsers(); i++ )
+  for ( UserList::user_map_t::size_type i = 0; i < battle.GetNumUsers(); i++ )
   {
     CommandForAutomaticTeamSpeak << battle.GetUser(i).GetNick() << _T("|") << u2s( battle.GetUser(i).BattleStatus().ally) << _T("|");
   }
@@ -233,7 +233,7 @@ wxString Spring::WriteScriptTxt( Battle& battle )
   wxLogMessage(_T("1 numusers: %d"),battle.GetNumUsers() );
 
   /// Fill ordered_users and sort it
-  for ( user_map_t::size_type i = 0; i < battle.GetNumUsers(); i++ ){
+  for ( UserList::user_map_t::size_type i = 0; i < battle.GetNumUsers(); i++ ){
     UserOrder tmp;
     tmp.index=i;
     tmp.order=battle.GetUser(i).BattleStatus().order;
@@ -313,8 +313,8 @@ wxString Spring::WriteScriptTxt( Battle& battle )
   tdf.Append(_T("ModHash"),int(uhash));
 
 
-  wxStringTripleVec optlistEng = battle.CustomBattleOptions().getOptions( EngineOption );
-  for (wxStringTripleVec::iterator it = optlistEng.begin(); it != optlistEng.end(); ++it)
+  OptionsWrapper::wxStringTripleVec optlistEng = battle.CustomBattleOptions().getOptions( OptionsWrapper::EngineOption );
+  for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistEng.begin(); it != optlistEng.end(); ++it)
   {
     tdf.Append(it->first,it->second.second);
   }
@@ -325,7 +325,7 @@ wxString Spring::WriteScriptTxt( Battle& battle )
     tdf.Append(_T("HostIP"),battle.GetHostIp());
   }
 
-  if ( battle.IsFounderMe() && battle.GetNatType() == NAT_Hole_punching ) {
+  if ( battle.IsFounderMe() && battle.GetNatType() == IBattle::NAT_Hole_punching ) {
     tdf.Append(_T("HostPort"),battle.GetMyInternalUdpSourcePort());
   } else {
     tdf.Append(_T("HostPort"),battle.GetHostPort());
@@ -335,11 +335,11 @@ wxString Spring::WriteScriptTxt( Battle& battle )
 
   if ( !battle.IsFounderMe() )
   {
-    if ( battle.GetNatType() == NAT_Fixed_source_ports )
+    if ( battle.GetNatType() == IBattle::NAT_Fixed_source_ports )
     {
       tdf.Append(_T("SourcePort"), FIRST_UDP_SOURCEPORT + MyPlayerNum -1);
     }
-    else if ( battle.GetNatType() == NAT_Hole_punching )
+    else if ( battle.GetNatType() == IBattle::NAT_Hole_punching )
     {
       tdf.Append(_T("SourcePort"), battle.GetMyInternalUdpSourcePort());
     }
@@ -355,7 +355,7 @@ wxString Spring::WriteScriptTxt( Battle& battle )
   tdf.Append(_T("NumAllyTeams"), NumAllys);
 
   wxLogMessage(_T("8"));
-  for ( user_map_t::size_type i = 0; i < battle.GetNumUsers(); i++ ) {
+  for ( UserList::user_map_t::size_type i = 0; i < battle.GetNumUsers(); i++ ) {
     tdf.EnterSection(_T("PLAYER")+i2s(i));
 
     tdf.Append(_T("name"),battle.GetUser( ordered_users[i].index ).GetNick());
@@ -382,7 +382,7 @@ wxString Spring::WriteScriptTxt( Battle& battle )
     int TeamLeader = -1;
 
     wxLogMessage(_T("10"));
-    for( user_map_t::size_type tlf = 0; tlf < battle.GetNumUsers(); tlf++ ) {/// change: moved check if spectator above use of TeamConv array, coz TeamConv array does not include spectators.
+    for( UserList::user_map_t::size_type tlf = 0; tlf < battle.GetNumUsers(); tlf++ ) {/// change: moved check if spectator above use of TeamConv array, coz TeamConv array does not include spectators.
 
       // Make sure player is not spectator.
       if ( battle.GetUser( ordered_users[tlf].index ).BattleStatus().spectator ) continue;
@@ -467,7 +467,7 @@ wxString Spring::WriteScriptTxt( Battle& battle )
   wxLogMessage( _T("13") );
 
   long startpostype;
-  battle.CustomBattleOptions().getSingleValue( _T("startpostype"), EngineOption ).ToLong( &startpostype );
+  battle.CustomBattleOptions().getSingleValue( _T("startpostype"), OptionsWrapper::EngineOption ).ToLong( &startpostype );
   for ( int i = 0; i < NumAllys; i++ ) {
     tdf.EnterSection(_T("ALLYTEAM")+i2s(i));
 
@@ -475,7 +475,7 @@ wxString Spring::WriteScriptTxt( Battle& battle )
     //s += wxString::Format( _T("\t\tNumAllies=%d;\n"), NumInAlly );
     tdf.Append(_T("NumAllies"),NumInAlly);
 
-   if ( ( battle.GetStartRect(AllyRevConv[i]).exist ) && (startpostype == ST_Choose) ) {
+   if ( ( battle.GetStartRect(AllyRevConv[i]).exist ) && (startpostype == IBattle::ST_Choose) ) {
       BattleStartRect sr = battle.GetStartRect(AllyRevConv[i]);
       if ( sr.IsOk() )
       {
@@ -511,8 +511,8 @@ wxString Spring::WriteScriptTxt( Battle& battle )
 
   tdf.EnterSection(_T("mapoptions"));
 
-  wxStringTripleVec optlistMap = battle.CustomBattleOptions().getOptions( MapOption );
-  for (wxStringTripleVec::iterator it = optlistMap.begin(); it != optlistMap.end(); ++it)
+  OptionsWrapper::wxStringTripleVec optlistMap = battle.CustomBattleOptions().getOptions( OptionsWrapper::MapOption );
+  for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistMap.begin(); it != optlistMap.end(); ++it)
   {
     tdf.Append(it->first,it->second.second);
   }
@@ -522,8 +522,8 @@ wxString Spring::WriteScriptTxt( Battle& battle )
 
   tdf.EnterSection(_T("modoptions"));
 
-  wxStringTripleVec optlistMod = battle.CustomBattleOptions().getOptions( ModOption );
-  for (wxStringTripleVec::iterator it = optlistMod.begin(); it != optlistMod.end(); ++it)
+  OptionsWrapper::wxStringTripleVec optlistMod = battle.CustomBattleOptions().getOptions( OptionsWrapper::ModOption );
+  for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistMod.begin(); it != optlistMod.end(); ++it)
   {
     tdf.Append(it->first,it->second.second);
   }
@@ -646,7 +646,7 @@ wxString Spring::WriteSPScriptTxt( SinglePlayerBattle& battle )
   int PlayerTeam = -1;
 
   long startpostype;
-  battle.CustomBattleOptions().getSingleValue( _T("startpostype"), EngineOption ).ToLong( &startpostype );
+  battle.CustomBattleOptions().getSingleValue( _T("startpostype"), OptionsWrapper::EngineOption ).ToLong( &startpostype );
 
   wxLogMessage( _T("StartPosType=%d"), (int)startpostype );
 
@@ -677,8 +677,8 @@ wxString Spring::WriteSPScriptTxt( SinglePlayerBattle& battle )
 
   tdf.Append(_T("ModHash"),int(uhash));
 
-  wxStringTripleVec optlistEng = battle.CustomBattleOptions().getOptions( EngineOption );
-  for (wxStringTripleVec::iterator it = optlistEng.begin(); it != optlistEng.end(); ++it)
+  OptionsWrapper::wxStringTripleVec optlistEng = battle.CustomBattleOptions().getOptions( OptionsWrapper::EngineOption );
+  for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistEng.begin(); it != optlistEng.end(); ++it)
   {
     tdf.Append(it->first, it->second.second);
   }
@@ -704,13 +704,13 @@ wxString Spring::WriteSPScriptTxt( SinglePlayerBattle& battle )
 
   for ( unsigned int i = 0; i < battle.GetNumBots(); i++ ) {
     BattleBot* bot;
-    if ( startpostype == ST_Pick) bot = battle.GetBot( i );
+    if ( startpostype == IBattle::ST_Pick) bot = battle.GetBot( i );
     else bot = battle.GetBotByStartPosition( i );
     ASSERT_LOGIC( bot != 0, _T("bot == 0") );
 
     tdf.EnterSection(_T("TEAM")+i2s(i));
 
-    if ( startpostype == ST_Pick ){
+    if ( startpostype == IBattle::ST_Pick ){
       tdf.Append(_T("StartPosX"),bot->posx);
       tdf.Append(_T("StartPosZ"),bot->posy);
     }
@@ -759,16 +759,16 @@ wxString Spring::WriteSPScriptTxt( SinglePlayerBattle& battle )
   tdf.LeaveSection();
 
   tdf.EnterSection(_T("mapoptions"));
-  wxStringTripleVec optlistMap = battle.CustomBattleOptions().getOptions( MapOption );
-  for (wxStringTripleVec::iterator it = optlistMap.begin(); it != optlistMap.end(); ++it)
+  OptionsWrapper::wxStringTripleVec optlistMap = battle.CustomBattleOptions().getOptions( OptionsWrapper::MapOption );
+  for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistMap.begin(); it != optlistMap.end(); ++it)
   {
     tdf.Append(it->first, it->second.second);
   }
   tdf.LeaveSection();
 
   tdf.EnterSection(_T("modoptions"));
-  wxStringTripleVec optlistMod = battle.CustomBattleOptions().getOptions( ModOption );
-  for (wxStringTripleVec::iterator it = optlistMod.begin(); it != optlistMod.end(); ++it)
+  OptionsWrapper::wxStringTripleVec optlistMod = battle.CustomBattleOptions().getOptions( OptionsWrapper::ModOption );
+  for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistMod.begin(); it != optlistMod.end(); ++it)
   {
     tdf.Append(it->first, it->second.second);
   }

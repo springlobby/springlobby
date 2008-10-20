@@ -3,8 +3,9 @@
 
 #include <wx/msgdlg.h>
 
-#define SL_MAIN_ICON 1
-#define SS_MAIN_ICON 2
+const unsigned SL_MAIN_ICON = 1;
+const unsigned SS_MAIN_ICON = 2;
+
 
 class wxIcon;
 class wxWindow;

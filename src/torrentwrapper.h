@@ -81,14 +81,14 @@ class Row: public RefcountedContainer
         wxString hash;/// key, unitsync hash
         wxString name;/// key, unitsync name
         libtorrent::torrent_handle handle;/// key
-        MediaType type;
+        IUnitSync::MediaType type;
         wxString infohash; /// torrent sha1 infohash in b64
         //bool ondisk;
 
         FileStatus status;
         bool is_open;
         Row():
-                type(map),
+                type(IUnitSync::map),
                 status(not_stored)
         {
         }
@@ -179,7 +179,7 @@ public:
 
 private:
 
-    void CreateTorrent( const wxString& uhash, const wxString& name, MediaType type );
+    void CreateTorrent( const wxString& uhash, const wxString& name, IUnitSync::MediaType type );
     DownloadRequestStatus RequestFileByRow( const TorrentTable::PRow& row );
     bool RemoveTorrentByRow( const TorrentTable::PRow& row );
     bool JoinTorrent( const TorrentTable::PRow& row, bool IsSeed );

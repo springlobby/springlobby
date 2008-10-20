@@ -54,8 +54,25 @@ class BattleOptionsTab : public wxScrolledWindow
     wxListBox* m_restrict_list;
     wxButton* m_clear_btn;
 
+    enum {
+      BOPTS_END = wxID_HIGHEST,
+      BOPTS_OPTS,
+      BOPTS_SLIDE,
+
+      BOPTS_RESTRICT,
+      BOPTS_ALLOW,
+      BOPTS_CLEARRES,
+
+      BOPTS_LOADPRES,
+      BOPTS_SAVEPRES,
+      BOPTS_DELETEPRES,
+      BOPTS_SETDEFAULTPRES,
+      BOPTS_CHOSEPRES
+    };
+
     DECLARE_EVENT_TABLE()
 };
+
 
 enum
 {
@@ -63,5 +80,6 @@ enum
   BOPTS_ALLOW,
   BOPTS_CLEARRES
 };
+
 
 #endif // SPRINGLOBBY_HEADERGUARD_BATTLEOPTIONSTAB_H

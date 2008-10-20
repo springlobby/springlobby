@@ -175,7 +175,7 @@ void SinglePlayerTab::SetMap( unsigned int index )
     } catch (...) {}
   }
   m_minimap->UpdateMinimap();
-  m_battle.SendHostInfo( HI_Map_Changed ); // reload map options
+  m_battle.SendHostInfo( IBattle::HI_Map_Changed ); // reload map options
   m_map_pick->SetSelection( index );
 }
 
@@ -193,8 +193,8 @@ void SinglePlayerTab::SetMod( unsigned int index )
     } catch (...) {}
   }
   m_minimap->UpdateMinimap();
-  m_battle.SendHostInfo( HI_Restrictions ); // Update restrictions in options.
-  m_battle.SendHostInfo( HI_Mod_Changed ); // reload mod options
+  m_battle.SendHostInfo( IBattle::HI_Restrictions ); // Update restrictions in options.
+  m_battle.SendHostInfo( IBattle::HI_Mod_Changed ); // reload mod options
   m_mod_pick->SetSelection( index );
 }
 
@@ -221,7 +221,7 @@ bool SinglePlayerTab::ValidSetup()
         return false;
   }
 
-  if ( usync().VersionSupports( GF_XYStartPos ) ) return true;
+  if ( usync().VersionSupports( IUnitSync::GF_XYStartPos ) ) return true;
 
   int numBots = 0;
   int first = -1;
@@ -296,9 +296,9 @@ void SinglePlayerTab::OnStart( wxCommandEvent& event )
 void SinglePlayerTab::OnRandomCheck( wxCommandEvent& event )
 {
 
-    if ( m_random_check->IsChecked() ) m_battle.CustomBattleOptions().setSingleOption( _T("startpostype"), i2s(ST_Random), EngineOption );
-    else m_battle.CustomBattleOptions().setSingleOption( _T("startpostype"), i2s(ST_Pick), EngineOption );
-    m_battle.SendHostInfo( HI_StartType );
+    if ( m_random_check->IsChecked() ) m_battle.CustomBattleOptions().setSingleOption( _T("startpostype"), i2s(IBattle::ST_Random), OptionsWrapper::EngineOption );
+    else m_battle.CustomBattleOptions().setSingleOption( _T("startpostype"), i2s(IBattle::ST_Pick), OptionsWrapper::EngineOption );
+    m_battle.SendHostInfo( IBattle::HI_StartType );
 
 }
 
@@ -307,10 +307,10 @@ void SinglePlayerTab::Update( const wxString& Tag )
   long type;
   Tag.BeforeFirst( '_' ).ToLong( &type );
   wxString key = Tag.AfterFirst( '_' );
-  wxString value = m_battle.CustomBattleOptions().getSingleValue( key, (GameOption)type);
+  wxString value = m_battle.CustomBattleOptions().getSingleValue( key, (OptionsWrapper::GameOption)type);
   long longval;
   value.ToLong( &longval );
-  if ( type == PrivateOptions )
+  if ( type == OptionsWrapper::PrivateOptions )
   {
     if ( key == _T("mapname") )
     {

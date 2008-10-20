@@ -22,11 +22,11 @@
 #include "ibattle.h"
 #include "utils.h"
 #include "server.h"
+#include "mmoptionswrapper.h"
 
 #ifndef HAVE_WX26
 #include "auimanager.h"
 #endif
-
 
 
 BEGIN_EVENT_TABLE(BattleOptionsTab, wxPanel)
@@ -136,7 +136,7 @@ void BattleOptionsTab::UpdateBattle( const wxString& Tag )
   long type;
   Tag.BeforeFirst( '_' ).ToLong( &type );
   wxString key = Tag.AfterFirst( '_' );
-  if ( type == PrivateOptions )
+  if ( type == OptionsWrapper::PrivateOptions )
   {
     if ( key == _T("restrictions") ) ReloadRestrictions();
   }
@@ -247,7 +247,7 @@ void BattleOptionsTab::OnRestrict( wxCommandEvent& event )
   for ( unsigned int i = 0; i < names.Count(); i++ ) {
     Restrict( names.Item( i ) );
   }
-  if ( names.Count() > 0 ) m_battle.SendHostInfo( HI_Restrictions );
+  if ( names.Count() > 0 ) m_battle.SendHostInfo( IBattle::HI_Restrictions );
 }
 
 
@@ -266,7 +266,7 @@ void BattleOptionsTab::OnAllow( wxCommandEvent& event )
   for ( unsigned int i = 0; i < names.Count(); i++ ) {
     Allow( names.Item( i ) );
   }
-  if ( names.Count() > 0 ) m_battle.SendHostInfo( HI_Restrictions );
+  if ( names.Count() > 0 ) m_battle.SendHostInfo( IBattle::HI_Restrictions );
 
 }
 

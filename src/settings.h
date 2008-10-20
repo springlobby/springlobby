@@ -2,25 +2,25 @@
 #define SPRINGLOBBY_HEADERGUARD_SETTINGS_H
 
 #include <wx/string.h>
-//#include <wx/colour.h>
 
-#define CACHE_VERSION 7
-#define SETTINGS_VERSION 2
+const int CACHE_VERSION     = 7;
+const int SETTINGS_VERSION  = 2;
 
-#define DEFSETT_DEFAULT_SERVER "TAS Server"
-#define DEFSETT_DEFAULT_SERVER_HOST "taspringmaster.clan-sy.com"
-#define DEFSETT_DEFAULT_SERVER_PORT 8200
-#define DEFSETT_SAVE_PASSWORD false
-#define DEFSETT_MW_WIDTH 880
-#define DEFSETT_MW_HEIGHT 600
-#define DEFSETT_MW_TOP 50
-#define DEFSETT_MW_LEFT 50
-#define DEFSETT_SPRING_DIR wxGetCwd()
-#define DEFSETT_SPRING_PORT 8452
+const wxString DEFSETT_DEFAULT_SERVER = _T("TAS Server");
+const wxString DEFSETT_DEFAULT_SERVER_HOST = _T("taspringmaster.clan-sy.com");
+const int DEFSETT_DEFAULT_SERVER_PORT = 8200;
+const bool DEFSETT_SAVE_PASSWORD = false;
+const unsigned int DEFSETT_MW_WIDTH = 880;
+const unsigned int DEFSETT_MW_HEIGHT = 600;
+const unsigned int DEFSETT_MW_TOP = 50;
+const unsigned int DEFSETT_MW_LEFT = 50;
+const unsigned int DEFSETT_SPRING_PORT = 8452;
+//doing this "properly" would mean dragging in stdpaths header, doesn't seem warranted (koshi)
+#define DEFSETT_SPRING_DIR  wxGetCwd()
 
 /** Default value for config path /General/WebBrowserUseDefault.
  */
-#define DEFSETT_WEB_BROWSER_USE_DEFAULT true
+const bool DEFSETT_WEB_BROWSER_USE_DEFAULT = true;
 
 #include <wx/fileconf.h>
 #include "utils.h"
@@ -523,8 +523,20 @@ class Settings
     wxString GetTorrentsFolder();
     /**@}*/
 
+    /** @name Aui
+     * @{
+     */
     void SaveLayout( wxString& layout_name, wxString& layout_string );
     wxString GetLayout( wxString& layout_name );
+    /**@}*/
+
+    enum CompletionMethod {
+        MatchNearest = 1,
+        MatchExact = 2
+    };
+
+    void SetCompletionMethod( CompletionMethod method );
+    CompletionMethod GetCompletionMethod(  ) const;
 
   protected:
     #ifdef __WXMSW__

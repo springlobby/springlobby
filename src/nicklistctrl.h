@@ -62,13 +62,12 @@ class NickListCtrl : public CustomListCtrl
       bool direction;
     } m_sortorder[4];
 
-    DECLARE_EVENT_TABLE()
-};
+    enum {
+      NICK_LIST = 31765 //wxID_HIGHEST
+      //wxID_HIGHEST is used by BattleListCTRL. The cant be in the same Tab like BattleTab
+    };
 
-enum
-{
-  NICK_LIST = 31765 //wxID_HIGHEST
-  //wxID_HIGHEST is used by BattleListCTRL. The cant be in the same Tab like BattleTab
+    DECLARE_EVENT_TABLE()
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_NICKLISTCTRL_H

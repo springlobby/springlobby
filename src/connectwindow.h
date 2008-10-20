@@ -75,14 +75,13 @@ class ConnectWindow : public wxDialog
 
     Ui& m_ui;
 
+    enum {
+      CON_SERV_SEL = wxID_HIGHEST
+    };
+
     DECLARE_EVENT_TABLE()
 };
 
-
-enum
-{
-  CON_SERV_SEL = wxID_HIGHEST
-};
 
 
 #endif // SPRINGLOBBY_HEADERGUARD_CONNECTWINDOW_H

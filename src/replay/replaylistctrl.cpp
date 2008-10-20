@@ -13,9 +13,6 @@
 #include "../uiutils.h"
 #include "../ui.h"
 
-//#include "countrycodes.h"
-
-#define TOOLTIP_DELAY 1000
 
 BEGIN_EVENT_TABLE(ReplayListCtrl, CustomListCtrl)
 
@@ -257,7 +254,7 @@ void ReplayListCtrl::OnMouseMotion(wxMouseEvent& event)
 	wxPoint position = event.GetPosition();
 
 	try{
-		m_tiptimer.Start(TOOLTIP_DELAY, wxTIMER_ONE_SHOT);
+		m_tiptimer.Start(m_tooltip_delay, wxTIMER_ONE_SHOT);
 		int flag = wxLIST_HITTEST_ONITEM;
 		long *ptrSubItem = new long;
 #ifdef HAVE_WX28

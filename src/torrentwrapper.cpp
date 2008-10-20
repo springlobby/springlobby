@@ -628,12 +628,12 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
 
     switch (row->type)
     {
-    case map:
+    case IUnitSync::map:
     {
         torrent_name = torrent_name + _T("|MAP");
         break;
     }
-    case mod:
+    case IUnitSync::mod:
     {
         torrent_name = torrent_name + _T("|MOD");
         break;
@@ -645,7 +645,7 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
         wxString archivename;
         switch ( row->type ) /// if file is not present locally you can't seed it
         {
-        case map:
+        case IUnitSync::map:
         {
             if ( !usync().MapExists( row->name, row->hash ) ) return false;
             int index = usync().GetMapIndex( row->name );
@@ -653,7 +653,7 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
             archivename = usync().GetMapArchive( index );
             break;
         }
-        case mod:
+        case IUnitSync::mod:
         {
             if ( !usync().ModExists( row->name, row->hash ) ) return false;
             int index = usync().GetModIndex( row->name );
@@ -694,12 +694,12 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
         path = sett().GetSpringDir() + wxFileName::GetPathSeparator();
         switch (row->type)
         {
-        case map:
+        case IUnitSync::map:
         {
             path = path + _T("maps") + wxFileName::GetPathSeparator();
             break;
         }
-        case mod:
+        case IUnitSync::mod:
         {
             path = path + _T("mods") + wxFileName::GetPathSeparator();
             break;
@@ -715,8 +715,17 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
     /// read torrent from file
     std::ifstream in( wxString( sett().GetTorrentsFolder() + row->hash + _T(".torrent") ).mb_str(), std::ios_base::binary);
     in.unsetf(std::ios_base::skipws);
-    libtorrent::entry e = libtorrent::bdecode(std::istream_iterator<char>(in), std::istream_iterator<char>());
-    libtorrent::torrent_info t_info(e); /// decode the torrent infos from the file
+    libtorrent::entry e;
+    try {
+        /// decode the torrent infos from the file
+        e = libtorrent::bdecode(std::istream_iterator<char>(in), std::istream_iterator<char>());
+    }
+    catch ( libtorrent::invalid_encoding& exc ) {
+      wxLogMessage( _T("torrent has invalid encoding") );
+      return false;
+    }
+    //decode success
+    libtorrent::torrent_info t_info (e);
 
     if ( t_info.num_files() != 1 )
     {
@@ -791,7 +800,7 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
 }
 
 
-void TorrentWrapper::CreateTorrent( const wxString& hash, const wxString& name, MediaType type )
+void TorrentWrapper::CreateTorrent( const wxString& hash, const wxString& name, IUnitSync::MediaType type )
 {
     if (ingame) return;
 
@@ -803,9 +812,9 @@ void TorrentWrapper::CreateTorrent( const wxString& hash, const wxString& name, 
     wxString StringFilePath = sett().GetSpringDir() + wxFileName::GetPathSeparator();
     switch (type)
     {
-    case map:
+    case IUnitSync::map:
         StringFilePath += _T("maps") + wxFileName::GetPathSeparator();
-    case mod:
+    case IUnitSync::mod:
         StringFilePath += _T("mods") + wxFileName::GetPathSeparator();
     }
     StringFilePath += name;
@@ -832,9 +841,9 @@ void TorrentWrapper::CreateTorrent( const wxString& hash, const wxString& name, 
 
     switch (type)
     {
-    case map:
+    case IUnitSync::map:
         newtorrent.set_comment( wxString( name + _T("|MAP") ).mb_str() );
-    case mod:
+    case IUnitSync::mod:
         newtorrent.set_comment( wxString( name + _T("|MOD") ).mb_str() );
     }
 
@@ -976,12 +985,12 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
         newtorrent->name = data[2];
         if ( data[3] == _T("MAP") )
         {
-            newtorrent->type = map;
+            newtorrent->type = IUnitSync::map;
             if ( usync().MapExists( data[2], data[1] ) ) newtorrent->status = stored;
         }
         else if ( data[3] == _T("MOD") )
         {
-            newtorrent->type = mod;
+            newtorrent->type = IUnitSync::mod;
             if ( usync().ModExists( data[2], data[1] ) ) newtorrent->status = stored;
         }
 

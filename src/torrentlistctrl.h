@@ -64,14 +64,14 @@ class TorrentListCtrl : public CustomListCtrl
 
     //wxMenu* m_popup;
 
+    enum {
+        TLIST_CLICK
+    };
+
     DECLARE_EVENT_TABLE()
 };
 
-enum
-{
-    TLIST_CLICK
 
-};
 
 #endif
 

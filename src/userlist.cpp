@@ -7,7 +7,7 @@
 #include "user.h"
 #include "utils.h"
 
-const user_map_t::size_type SEEKPOS_INVALID = user_map_t::size_type(-1);
+const UserList::user_map_t::size_type SEEKPOS_INVALID = UserList::user_map_t::size_type(-1);
 
 UserList::UserList(): m_seek(m_users.end()), m_seekpos(SEEKPOS_INVALID)
 { }
@@ -48,7 +48,7 @@ bool UserList::UserExists( wxString const& nick ) const
   return m_users.find(nick) != m_users.end();
 }
 
-user_map_t::size_type UserList::GetNumUsers() const
+UserList::user_map_t::size_type UserList::GetNumUsers() const
 {
   return m_users.size();
 }

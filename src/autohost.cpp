@@ -5,67 +5,8 @@
 #include "server.h"
 #include "settings.h"
 #include "user.h"
+#include "utils.h"
 #include <wx/log.h>
-
-template<typename T>
-static T min(T a, T b, T c)
-{
-  return std::min(a, std::min(b, c));
-}
-
-
-/**
- * @brief Computes Levenshtein distance (edit distance) between two strings.
- * @return the Levenshtein distance normalized by the longest string's length.
- * @note Source: http://en.wikipedia.org/wiki/Levenshtein_distance
- */
-static double LevenshteinDistance(wxString s, wxString t)
-{
-  s.MakeLower(); // case insensitive edit distance
-  t.MakeLower();
-
-  const int m = s.length(), n = t.length(), _w = m + 1;
-  std::vector<unsigned char> _d((m + 1) * (n + 1));
-#define D(x, y) _d[(y) * _w + (x)]
-
-  for (int i = 0; i <= m; ++i) D(i,0) = i;
-  for (int j = 0; j <= n; ++j) D(0,j) = j;
-
-  for (int i = 1; i <= m; ++i) {
-    for (int j = 1; j <= n; ++j) {
-      const int cost = (s[i - 1] != t[j - 1]);
-      D(i,j) = min(D(i-1,j) + 1, // deletion
-                   D(i,j-1) + 1, // insertion
-                   D(i-1,j-1) + cost); // substitution
-    }
-  }
-  double d = (double) D(m,n) / std::max(m, n);
-  wxLogMessage( _T("LevenshteinDistance('%s', '%s') = %g"), s.c_str(), t.c_str(), d );
-  return d;
-#undef D
-}
-
-
-/**
- * @brief Gets the closest match for s in a, using LevenshteinDistance.
- * @param distance If not NULL, *distance is set to the edit distance from s to the return value.
- */
-static wxString GetBestMatch(const wxArrayString& a, const wxString& s, double* distance = NULL)
-{
-  const unsigned int count = a.GetCount();
-  double minDistance = 1.0;
-  int minDistanceIndex = -1;
-  for (unsigned int i = 0; i < count; ++i) {
-    const double distance = LevenshteinDistance(a[i], s);
-    if (distance < minDistance) {
-      minDistance = distance;
-      minDistanceIndex = i;
-    }
-  }
-  if (distance != NULL) *distance = minDistance;
-  if (minDistanceIndex == -1) return _T("");
-  return a[minDistanceIndex];
-}
 
 
 AutoHost::AutoHost( Battle& battle )
@@ -101,11 +42,11 @@ void AutoHost::OnSaidBattle( const wxString& nick, const wxString& msg )
     m_lastActionTime = currentTime;
   }
   else if (msg == _T("!balance")) {
-    m_battle.Autobalance(balance_random, false, false);
+    m_battle.Autobalance(IBattle::balance_random, false, false);
     m_lastActionTime = currentTime;
   }
   else if (msg == _T("!cbalance")) {
-    m_battle.Autobalance(balance_random, true, false);
+    m_battle.Autobalance(IBattle::balance_random, true, false);
     m_lastActionTime = currentTime;
   }
   else if (msg == _T("!help")) {
@@ -158,13 +99,13 @@ void AutoHost::OnSaidBattle( const wxString& nick, const wxString& msg )
   else if ( msg == _T("!lock") ) {
     m_battle.SetIsLocked( true );
     m_battle.DoAction( _T( "has locked the battle." ) );
-    m_battle.SendHostInfo( HI_Locked );
+    m_battle.SendHostInfo( IBattle::HI_Locked );
     m_lastActionTime = currentTime;
   }
   else if ( msg == _T("!unlock") ) {
     m_battle.SetIsLocked( false );
     m_battle.DoAction( _T( "has unlocked the battle." ) );
-    m_battle.SendHostInfo( HI_Locked );
+    m_battle.SendHostInfo( IBattle::HI_Locked );
     m_lastActionTime = currentTime;
   }
   else if ( msg == _T("!fixids") ) {
@@ -203,7 +144,7 @@ void AutoHost::OnUserRemoved( User& user )
   {
     m_battle.SetIsLocked( false );
     m_battle.DoAction( _T( "has auto-unlocked the battle." ) );
-    m_battle.SendHostInfo( HI_Locked );
+    m_battle.SendHostInfo( IBattle::HI_Locked );
   }
 }
 

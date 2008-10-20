@@ -112,7 +112,7 @@ void MainSinglePlayerTab::ReloadMapOptContrls()
 {
   try
   {
-		GetMMOptionsTab().OnReloadControls( MapOption );
+		GetMMOptionsTab().OnReloadControls( OptionsWrapper::MapOption );
   } catch(...) {}
 }
 
@@ -121,7 +121,7 @@ void MainSinglePlayerTab::ReloadModOptContrls()
 {
 	try
 	{
-		GetMMOptionsTab().OnReloadControls( ModOption );
+		GetMMOptionsTab().OnReloadControls( OptionsWrapper::ModOption );
   } catch(...) {}
 
 }
