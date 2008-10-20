@@ -260,6 +260,7 @@ SET(SpringLobbySrc
 	src/userlist.cpp
 	src/userlistctrl.cpp
 	src/utils.cpp
+	src/globalsmanager.cpp
 )
 
 SET(SettingsSrc
