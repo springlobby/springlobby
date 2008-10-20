@@ -904,7 +904,9 @@ springlobby_SOURCES = \
 	src/updater/exedownloader.cpp \
 	src/usermenu.h \
 	src/thread.cpp \
-	src/thread.h
+	src/thread.h \
+	src/globalsmanager.cpp \
+	src/globalsmanager.h \
 
 
 
@@ -962,6 +964,7 @@ springsettings_SOURCES = \
 	src/spinctld.cpp \
 	src/springunitsynclib.cpp \
 	src/springunitsynclib.h \
+	src/globalsmanager.cpp \
 	src/settings++/se_utils.cpp \
 	src/settings++/se_utils.h \
 	src/settings++/frame.cpp \

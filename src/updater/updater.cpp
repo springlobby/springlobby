@@ -4,7 +4,7 @@
 #include "exedownloader.h"
 #include "updater.h"
 #include "../settings.h"
-#include "globalsmanager.h"
+#include "../globalsmanager.h"
 
 #include <wx/stdpaths.h>
 #include <wx/filefn.h>

@@ -289,6 +289,7 @@ SET(SLSharedWithSettings
 	src/crashreport.cpp
 	src/springunitsynclib.cpp
 	src/spinctld.cpp
+	src/globalsmanager.cpp
 )
 
 # If we build for windows Systems, we also include the Resource-File containing the Manifest, Icon and other Resources.
