@@ -5,7 +5,9 @@
 
 class GlobalDestroyedError: public std::runtime_error{
   public:
-  GlobalDestroyedError(): std::runtime_error("trying to access global during or after DestroyAll"){}
+  GlobalDestroyedError(): std::runtime_error("trying to access global during or after DestroyAll"){
+
+  }
 };
 
 class IGlobalObjectHolder{

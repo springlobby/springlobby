@@ -46,7 +46,10 @@ SpringUnitSync::SpringUnitSync()
 
 SpringUnitSync::~SpringUnitSync()
 {
-  CacheThread().Stop();
+  try{
+    CacheThread().Stop();
+  }catch(GlobalDestroyedError e){
+  }
   //FreeUnitSyncLib();
 }
 
