@@ -507,7 +507,7 @@ void MainWindow::OnMenuStopTorrent( wxCommandEvent& event )
 {
   #ifndef NO_TORRENT_SYSTEM
   sett().SetTorrentSystemAutoStartMode( 2 ); /// switch operation to manual mode
-  torrent().DisconnectToP2PSystem();
+  torrent().DisconnectFromP2PSystem();
   #endif
 }
 

@@ -27,13 +27,14 @@
 #include "battlelistfiltervalues.h"
 #include "replay/replaylistfiltervalues.h"
 #include "iunitsync.h"
+#include "globalsmanager.h"
 
 const wxColor defaultHLcolor (255,0,0);
 
 
 Settings& sett()
 {
-    static Settings m_sett;
+    static GlobalObjectHolder<Settings> m_sett;
     return m_sett;
 }
 

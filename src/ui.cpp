@@ -41,11 +41,11 @@
 #include "settings++/custom_dialogs.h"
 
 #include "sdlsound.h"
-
+#include "globalsmanager.h"
 
 Ui& ui()
 {
-    static Ui m_ui;
+    static GlobalObjectHolder<Ui> m_ui;
     return m_ui;
 }
 
@@ -556,7 +556,7 @@ void Ui::OnUpdate( int mselapsed )
     {
         if ( sett().GetTorrentSystemAutoStartMode() == 1 && !torrent().IsConnectedToP2PSystem() ) torrent().ConnectToP2PSystem();
         else if ( GetServerStatus() && m_serv->IsOnline() && !torrent().IsConnectedToP2PSystem() && sett().GetTorrentSystemAutoStartMode() == 0 ) torrent().ConnectToP2PSystem();
-        if ( ( !GetServerStatus() || !m_serv->IsOnline() ) && torrent().IsConnectedToP2PSystem() && sett().GetTorrentSystemAutoStartMode() == 0 ) torrent().DisconnectToP2PSystem();
+        if ( ( !GetServerStatus() || !m_serv->IsOnline() ) && torrent().IsConnectedToP2PSystem() && sett().GetTorrentSystemAutoStartMode() == 0 ) torrent().DisconnectFromP2PSystem();
         mw().GetTorrentTab().OnUpdate();
     }
     torrent().UpdateFromTimer( mselapsed );

@@ -26,6 +26,7 @@
 #include "springunitsynclib.h"
 #include "settings++/custom_dialogs.h"
 #include "unitsyncthread.h"
+#include "globalsmanager.h"
 
 
 #define LOCK_UNITSYNC wxCriticalSectionLocker lock_criticalsection(m_lock)
@@ -33,7 +34,7 @@
 
 IUnitSync& usync()
 {
-  static SpringUnitSync m_sync;
+  static GlobalObjectHolder<SpringUnitSync> m_sync;
   return m_sync;
 }
 

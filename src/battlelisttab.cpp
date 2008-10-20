@@ -184,7 +184,7 @@ void BattleListTab::SelectBattle( Battle* battle )
   if ( m_sel_battle != 0 ) {
     m_map_text->SetLabel( RefineMapname( m_sel_battle->GetHostMapName() ) );
     m_mod_text->SetLabel( m_sel_battle->GetHostModName() );
-    m_players_text->SetLabel( wxString::Format( _T("%d / %d"), m_sel_battle->GetNumUsers() - m_sel_battle->GetSpectators(), m_sel_battle->GetMaxPlayers() ) );
+    m_players_text->SetLabel( wxString::Format( _T("%d / %d"), int(m_sel_battle->GetNumUsers()) - int(m_sel_battle->GetSpectators()), int(m_sel_battle->GetMaxPlayers() )) );
     m_spec_text->SetLabel( wxString::Format( _T("%d"), m_sel_battle->GetSpectators() ) );
     for ( unsigned int i = 0; i < m_sel_battle->GetNumUsers(); i++ ) {
       m_players->AddUser( m_sel_battle->GetUser( i ) );
@@ -225,9 +225,9 @@ void BattleListTab::AddBattle( Battle& battle ) {
   m_battle_list->SetItem( index, 4, RefineMapname( battle.GetHostMapName() ), battle.MapExists()?icons().ICON_EXISTS:icons().ICON_NEXISTS );
   m_battle_list->SetItem( index, 5, RefineModname( battle.GetHostModName() ), battle.ModExists()?icons().ICON_EXISTS:icons().ICON_NEXISTS );
   m_battle_list->SetItem( index, 6, battle.GetFounder().GetNick() );
-  m_battle_list->SetItem( index, 7, wxString::Format(_T("%d"), battle.GetSpectators()) );
-  m_battle_list->SetItem( index, 8, wxString::Format(_T("%d"), battle.GetNumUsers() - battle.GetSpectators() ) );
-  m_battle_list->SetItem( index, 9, wxString::Format(_T("%d"), battle.GetMaxPlayers()) );
+  m_battle_list->SetItem( index, 7, wxString::Format(_T("%d"), int(battle.GetSpectators())) );
+  m_battle_list->SetItem( index, 8, wxString::Format(_T("%d"), int(battle.GetNumUsers()) - int(battle.GetSpectators()) ) );
+  m_battle_list->SetItem( index, 9, wxString::Format(_T("%d"), int(battle.GetMaxPlayers())) );
 
   m_battle_list->HighlightItem( index );
   m_battle_list->SetColumnWidth( 4, wxLIST_AUTOSIZE );

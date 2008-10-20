@@ -8,13 +8,14 @@
 #include "utils.h"
 #include "settings.h"
 #include "springunitsynclib.h"
+#include "globalsmanager.h"
 
 #define LOCK_CACHE wxCriticalSectionLocker lock_criticalsection(m_lock)
 
 
 UnitSyncThread& CacheThread()
 {
-  static UnitSyncThread m_cache_thread;
+  static GlobalObjectHolder<UnitSyncThread> m_cache_thread;
   return m_cache_thread;
 }
 

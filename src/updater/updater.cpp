@@ -4,6 +4,7 @@
 #include "exedownloader.h"
 #include "updater.h"
 #include "../settings.h"
+#include "globalsmanager.h"
 
 #include <wx/stdpaths.h>
 #include <wx/filefn.h>
@@ -11,7 +12,7 @@
 
 UpdaterClass& Updater()
 {
-    static UpdaterClass m_upd;
+    static GlobalObjectHolder<UpdaterClass> m_upd;
     return m_upd;
 }
 

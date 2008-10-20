@@ -42,6 +42,7 @@
 
 #include "torrentwrapper.h"
 #include "settings++/custom_dialogs.h"
+#include "globalsmanager.h"
 
 
 bool TorrentTable::IsConsistent()
@@ -190,7 +191,7 @@ std::set<TorrentTable::PRow> TorrentTable::QueuedTorrentsByRow()
 
 TorrentWrapper& torrent()
 {
-    static TorrentWrapper m_torr_wrap;
+    static GlobalObjectHolder<TorrentWrapper> m_torr_wrap;
     return m_torr_wrap;
 }
 
@@ -280,7 +281,7 @@ TorrentWrapper::~TorrentWrapper()
     {
         wxLogError( WX_STRINGC( e.what() ) );
     }
-    DisconnectToP2PSystem();
+    DisconnectFromP2PSystem();
     delete m_torr;
     delete m_socket_class;
 }
@@ -309,7 +310,7 @@ bool TorrentWrapper::ConnectToP2PSystem( const unsigned int tracker_no )
 }
 
 
-void TorrentWrapper::DisconnectToP2PSystem()
+void TorrentWrapper::DisconnectFromP2PSystem()
 {
     if ( IsConnectedToP2PSystem() )
         m_socket_class->Disconnect();
@@ -1126,8 +1127,10 @@ void TorrentWrapper::OnDisconnected( Socket* sock )
 
     m_seed_count = 0;
     m_leech_count = 0;
-
-    sett().SetTorrentListToResume( TorrentsToResume );
+    try{
+      sett().SetTorrentListToResume( TorrentsToResume );
+    }catch(GlobalDestroyedError){
+    }
     m_started = false;
 }
 

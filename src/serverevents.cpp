@@ -19,6 +19,7 @@
 #ifndef NO_TORRENT_SYSTEM
 #include "torrentwrapper.h"
 #endif
+#include "globalsmanager.h"
 
 void ServerEvents::OnConnected( const wxString& server_name, const wxString& server_ver, bool supported, const wxString& server_spring_ver, bool lanmode )
 {
@@ -35,7 +36,10 @@ void ServerEvents::OnDisconnected()
   m_serv.SetRequiredSpring (_T(""));
   m_ui.OnDisconnected( m_serv );
   #ifndef NO_TORRENT_SYSTEM
-  if( sett().GetTorrentSystemAutoStartMode() == 0 ) torrent().DisconnectToP2PSystem();
+  try{/// settings may be already destroyed
+    if( sett().GetTorrentSystemAutoStartMode() == 0 ) torrent().DisconnectFromP2PSystem();
+  }catch(GlobalDestroyedError e){
+  }
   #endif
 }
 

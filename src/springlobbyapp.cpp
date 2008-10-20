@@ -34,6 +34,7 @@
 #include "updater/updater.h"
 #include "unitsyncthread.h"
 #include "replay/replaytab.h"
+#include "globalsmanager.h"
 
 const unsigned int TIMER_ID         = 101;
 const unsigned int TIMER_INTERVAL   = 100;
@@ -210,7 +211,8 @@ int SpringLobbyApp::OnExit()
         delete m_otadownloader ;
 
   #ifndef NO_TORRENT_SYSTEM
-  if( sett().GetTorrentSystemAutoStartMode() == 1 ) torrent().DisconnectToP2PSystem();
+  //if( sett().GetTorrentSystemAutoStartMode() == 1 )
+  torrent().DisconnectFromP2PSystem();/// Cant hurt to disconnect unconditionally.
   #endif
 
   m_timer->Stop();
@@ -218,6 +220,8 @@ int SpringLobbyApp::OnExit()
   sett().SaveSettings(); /// to make sure that cache path gets saved before destroying unitsync
 
   usync().FreeUnitSyncLib();
+
+  DestroyGlobals();
 
   return 0;
 }

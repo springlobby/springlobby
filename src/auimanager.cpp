@@ -1,7 +1,8 @@
 #include "auimanager.h"
+#include "globalsmanager.h"
 
 AuiManagerContainer& GetAui()
 {
-  static AuiManagerContainer m_aui;
+  static GlobalObjectHolder<AuiManagerContainer> m_aui;
   return m_aui;
 }

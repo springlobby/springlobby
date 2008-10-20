@@ -225,7 +225,9 @@ void CustomListCtrl::OnMouseMotion(wxMouseEvent& event)
         SetTipWindowText(item_hit,m_last_mouse_pos);
         m_tiptimer.Start(m_tooltip_delay, wxTIMER_ONE_SHOT);
       }
-      catch ( ... ) { wxLogWarning( _T("Exception setting tooltip") );}
+      catch ( ... ) {
+        wxLogWarning( _T("Exception setting tooltip") );
+      }
     }
   }
 #endif
