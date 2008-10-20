@@ -7,7 +7,6 @@
 #include <wx/intl.h>
 #include <wx/stattext.h>
 #include <wx/statbox.h>
-#include <wx/checkbox.h>
 #include <wx/button.h>
 #include <wx/sizer.h>
 #include <wx/window.h>
@@ -32,8 +31,6 @@
 
 BEGIN_EVENT_TABLE(BattleOptionsTab, wxPanel)
 
-  EVT_CHECKLISTBOX( BOPTS_OPTS, BattleOptionsTab::OnOptsCheck )
-
   EVT_BUTTON( BOPTS_RESTRICT, BattleOptionsTab::OnRestrict )
   EVT_BUTTON( BOPTS_ALLOW, BattleOptionsTab::OnAllow )
   EVT_BUTTON( BOPTS_CLEARRES, BattleOptionsTab::OnClearRestrictions )
@@ -42,8 +39,8 @@ BEGIN_EVENT_TABLE(BattleOptionsTab, wxPanel)
 END_EVENT_TABLE()
 
 
-BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, bool singleplayer ):
-  wxScrolledWindow( parent, -1 ), m_ui(ui), m_battle(battle), m_sp(singleplayer)
+BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle ):
+  wxScrolledWindow( parent, -1 ), m_ui(ui), m_battle(battle)
 {
 
   #ifndef HAVE_WX26
@@ -55,22 +52,6 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, b
 
   wxBoxSizer* m_main_options_sizer;
   m_main_options_sizer = new wxBoxSizer( wxVERTICAL );
-
-  if ( m_sp )
-  {
-    wxStaticBoxSizer* m_options_box;
-    m_options_box = new wxStaticBoxSizer( new wxStaticBox( this, -1, _("Options") ), wxVERTICAL );
-
-    //TODO these need to be tooltipped, no idea how yet
-    m_options_checks = new wxCheckListBox( this, BOPTS_OPTS );
-    m_options_checks->Append( _("Random start postisions") );
-
-    m_options_box->Add( m_options_checks, 0, wxALL|wxEXPAND, 5 );
-
-    m_main_options_sizer->Add( m_options_box, 0, wxALL|wxEXPAND, 5 );
-
-    m_main_sizer->Add( m_main_options_sizer, 0, wxEXPAND, 5 );
-  }
 
   wxStaticBoxSizer* m_restr_box;
   m_restr_box = new wxStaticBoxSizer( new wxStaticBox( this, -1, _("Unit restrictions") ), wxVERTICAL );
@@ -249,21 +230,6 @@ void BattleOptionsTab::Allow( int index)
   //////////////////////////////////////////////////////////////////////////
  //  EVENTS
 //////////////////////////////////////////////////////////////////////////
-
-
-
-
-void BattleOptionsTab::OnOptsCheck( wxCommandEvent& event )
-{
-  if ( m_sp ) {
-    if ( m_options_checks->IsChecked( 0 ) )
-      m_battle.CustomBattleOptions().setSingleOption( _T("startpostype"), i2s(ST_Random), EngineOption );
-    else
-      m_battle.CustomBattleOptions().setSingleOption( _T("startpostype"), i2s(ST_Pick), EngineOption );
-    m_battle.SendHostInfo( HI_StartType );
-  }
-
-}
 
 
 void BattleOptionsTab::OnRestrict( wxCommandEvent& event )

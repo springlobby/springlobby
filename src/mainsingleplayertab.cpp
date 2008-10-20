@@ -47,7 +47,7 @@ m_ui(ui)
 
   m_sp_tab = new SinglePlayerTab( m_tabs, m_ui, *this );
   m_tabs->AddPage( m_sp_tab, _("Game"), true, 0 );
-  m_opts_tab = new BattleOptionsTab( m_tabs, m_ui, m_sp_tab->GetBattle(), true );
+  m_opts_tab = new BattleOptionsTab( m_tabs, m_ui, m_sp_tab->GetBattle() );
   #ifdef HAVE_WX26
   m_tabs->InsertPage( 1, m_opts_tab, _("Unit Restrictions"), false, 1 );
   #else

@@ -20,7 +20,7 @@ class wxCheckListBox;
 class BattleOptionsTab : public wxScrolledWindow
 {
   public:
-    BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, bool singleplayer );
+    BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle );
     ~BattleOptionsTab();
 
     void UpdateBattle( const wxString& Tag );
@@ -38,7 +38,6 @@ class BattleOptionsTab : public wxScrolledWindow
     void OnRestrict( wxCommandEvent& event );
     void OnAllow( wxCommandEvent& event );
     void OnClearRestrictions( wxCommandEvent& event );
-    void OnOptsCheck( wxCommandEvent& event );
 
   protected:
 
@@ -47,7 +46,6 @@ class BattleOptionsTab : public wxScrolledWindow
     Ui& m_ui;
     IBattle& m_battle;
 
-    wxCheckListBox* m_options_checks;
     wxStaticText* m_aloowed_lbl;
     wxListBox* m_allowed_list;
     wxButton* m_restrict_btn;
@@ -56,16 +54,12 @@ class BattleOptionsTab : public wxScrolledWindow
     wxListBox* m_restrict_list;
     wxButton* m_clear_btn;
 
-    bool m_sp;
-
     DECLARE_EVENT_TABLE()
 };
 
 enum
 {
-  BOPTS_OPTS = wxID_HIGHEST,
-
-  BOPTS_RESTRICT,
+  BOPTS_RESTRICT = wxID_HIGHEST,
   BOPTS_ALLOW,
   BOPTS_CLEARRES
 };

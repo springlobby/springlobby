@@ -148,7 +148,7 @@ void MainJoinBattleTab::JoinBattle( Battle& battle )
 
   m_battle_tab = new BattleRoomTab( m_tabs, m_ui, battle );
   m_map_tab = new BattleMapTab( m_tabs, m_ui, battle );
-  m_opts_tab = new BattleOptionsTab( m_tabs, m_ui, battle, false );
+  m_opts_tab = new BattleOptionsTab( m_tabs, m_ui, battle );
   m_mm_opts_tab = new BattleroomMMOptionsTab( battle, m_tabs);
   #ifdef HAVE_WX26
   m_tabs->InsertPage( 1, m_battle_tab, _("Battleroom"), true, 1 );
