@@ -83,29 +83,9 @@ bool OptionsWrapper::loadOptions(GameOption modmapFlag, wxString name)
 			break;
     case EngineOption:
     {
-        opt.bool_map[_T("limitdgun")] = mmOptionBool(_("Limit D-Gun"),_T("limitdgun"),
-        _("Disables commander's D-gun when being too far away from the starting point"),false);
-        opt.bool_map[_T("fixedallies")] = mmOptionBool(_("Fixed Alliances"),_T("fixedallies"),
-        _("Disables possibility to dynamically ally/unally ingame"),true);
-        opt.bool_map[_T("ghostedbuildings")] = mmOptionBool(_("Ghosted Buildings"),_T("ghostedbuildings"),
-        _("Enemy buildings will leave a ghost image on the map after losing LoS on them"),true);
-        opt.bool_map[_T("diminishingmms")] = mmOptionBool(_("Diminishing MM"),_T("diminishingmms"),
-        _("Efficiency of MetalMakers will progressively reduce as much as you build them"),false);
         opt.int_map[_T("startpostype")] = mmOptionInt( _("Start Position Type"),_T("startpostype"),
         _("How players will select where to be spawned in the map\n0: fixed map positions\n1: random map positions\n2: chose in game\n3: chose in the lobby before starting"),
         0, 1, 0, 3);
-        opt.int_map[_T("gamemode")] = mmOptionInt( _("Game Ending condition"),_T("gamemode"),
-        _("The condition that will end the game\n0: when all units will be destroyed\n1: when the commander will be destroyed\n2: lineage mode (see option 1, but given away units will still die"),
-        0, 1, 0, 2);
-        opt.int_map[_T("startmetal")] = mmOptionInt( _("Start Metal"),_T("startmetal"),
-        _("Sets the amount of metal that players will start with"),
-        1000, 1, 0, 10000);
-        opt.int_map[_T("startenergy")] = mmOptionInt( _("Start Energy"),_T("startenergy"),
-        _("Sets the amount of energy that players will start with"),
-        1000, 1, 0, 10000);
-        opt.int_map[_T("maxunits")] = mmOptionInt( _("Max Units Allowed"),_T("maxunits"),
-        _("Sets the maximum amount of units that a player will be allowed to build"),
-        1000, 1, 0, 10000);
         break;
     }
     case PrivateOptions:

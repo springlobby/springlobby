@@ -6,7 +6,7 @@
 #include <wx/aui/framemanager.h>
 #include <wx/aui/dockart.h>
 #include <wx/aui/floatpane.h>
-#include "auiuitls.h"
+#include "auiutils.h"
 #include "../uiutils.h"
 
 SLArtProvider::SLArtProvider()

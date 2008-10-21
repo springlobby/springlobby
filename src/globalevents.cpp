@@ -4,6 +4,8 @@
 #include "updater/updater.h"
 #include <wx/intl.h>
 
+#include "globalsmanager.h"
+
 const wxEventType httpDownloadEvtComplete = wxNewEventType();
 const wxEventType httpDownloadEvtFailed = wxNewEventType();
 const wxEventType UnitSyncReloadRequest = wxNewEventType();
@@ -18,7 +20,7 @@ END_EVENT_TABLE()
 
 SL_GlobalEvtHandler& SL_GlobalEvtHandler::GetSL_GlobalEvtHandler()
 {
-    static SL_GlobalEvtHandler slGlobalEvtHandler;
+    static GlobalObjectHolder<SL_GlobalEvtHandler> slGlobalEvtHandler;
     return slGlobalEvtHandler;
 }
 

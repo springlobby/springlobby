@@ -155,7 +155,7 @@ public:
     /// gui interface
 
     bool ConnectToP2PSystem(const unsigned int tracker_no = 0);
-    void DisconnectToP2PSystem();
+    void DisconnectFromP2PSystem();
     bool IsConnectedToP2PSystem();
     bool IsFileInSystem( const wxString& hash );
     bool RemoveTorrentByHash( const wxString& hash );

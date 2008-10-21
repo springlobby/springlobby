@@ -15,6 +15,7 @@
 #ifndef HAVE_WX26
 #include <wx/aui/auibook.h>
 #include "aui/auimanager.h"
+#include "aui/artprovider.h"
 #else
 #include <wx/listbook.h>
 #endif
@@ -148,6 +149,7 @@ MainWindow::MainWindow( Ui& ui ) :
   #ifndef HAVE_WX26
   m_func_tabs = new wxAuiNotebook(  this, MAIN_TABS, wxDefaultPosition, wxDefaultSize,
         wxAUI_NB_WINDOWLIST_BUTTON | wxAUI_NB_TAB_SPLIT | wxAUI_NB_TAB_MOVE | wxAUI_NB_TAB_EXTERNAL_MOVE | wxAUI_NB_SCROLL_BUTTONS | wxAUI_NB_LEFT );
+  m_func_tabs->SetArtProvider(new SLArtProvider);
   #else
   m_func_tabs = new wxListbook( this, MAIN_TABS, wxDefaultPosition, wxDefaultSize, wxLB_LEFT );
   #endif
@@ -508,7 +510,7 @@ void MainWindow::OnMenuStopTorrent( wxCommandEvent& event )
 {
   #ifndef NO_TORRENT_SYSTEM
   sett().SetTorrentSystemAutoStartMode( 2 ); /// switch operation to manual mode
-  torrent().DisconnectToP2PSystem();
+  torrent().DisconnectFromP2PSystem();
   #endif
 }
 

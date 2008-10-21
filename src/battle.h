@@ -144,7 +144,7 @@ class CommonBattle : public UserList, public IBattle
 class Battle : public CommonBattle
 {
   public:
-    Battle( Server& serv, Ui& ui, int id );
+    Battle( Server& serv, int id );
     ~Battle();
 
     //const BattleOptions& opts() { return m_opts; }
@@ -217,6 +217,9 @@ class Battle : public CommonBattle
     void FixTeamIDs();
     void ForceUnsyncedToSpectate();
 
+    void SetAutoLockOnStart( bool value );
+    bool GetAutoLockOnStart();
+
     ///< quick hotfix for bans
     bool CheckBan(User &user);
     ///>
@@ -235,8 +238,8 @@ class Battle : public CommonBattle
     ///>
 
     Server& m_serv;
-    Ui& m_ui;
     AutoHost m_ah;
+    bool m_autolock_on_start;
 
     void RemoveUser( wxString const& user ) {}
 };

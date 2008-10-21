@@ -394,7 +394,9 @@ void ReplayTab::OnSelect( wxListEvent& event )
                 m_players->AddUser( ud );
             }
         }
-        catch ( ... ) { Deselect(); }
+        catch ( ... ) {
+          Deselect();
+        }
     }
 }
 

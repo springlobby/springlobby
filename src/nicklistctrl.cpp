@@ -68,18 +68,19 @@ NickListCtrl::NickListCtrl( wxWindow* parent, bool show_header, NickListCtrl::Us
   m_sortorder[3].col = 1;
   m_sortorder[3].direction = true;
 
+  long width = GetSize().x -( GetColumnWidth( 0 ) + GetColumnWidth( 1 ) + GetColumnWidth( 2 ) );
 #if defined(__WXMAC__)
 /// autosize is entirely broken on wxmac.
   SetColumnWidth( 0, 20 );
   SetColumnWidth( 1, 20 );
   SetColumnWidth( 2, 20 );
-  SetColumnWidth( 3, 128 );
+  SetColumnWidth( 3, width );
 #else
  /// on wxGTK it works, sort of.
   SetColumnWidth( 0, wxLIST_AUTOSIZE_USEHEADER );
   SetColumnWidth( 1, wxLIST_AUTOSIZE_USEHEADER );
   SetColumnWidth( 2, wxLIST_AUTOSIZE_USEHEADER );
-  SetColumnWidth( 3, wxLIST_AUTOSIZE_USEHEADER );
+  SetColumnWidth( 3, width );
 #endif
 
 }

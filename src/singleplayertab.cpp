@@ -8,8 +8,7 @@
 #include <wx/panel.h>
 #include <wx/statline.h>
 #include <wx/stattext.h>
-#include <wx/log.h>
-#include <stdexcept>
+#include <wx/checkbox.h>
 
 #include "singleplayertab.h"
 #include "mapctrl.h"
@@ -34,6 +33,7 @@ BEGIN_EVENT_TABLE(SinglePlayerTab, wxPanel)
   EVT_CHOICE( SP_MOD_PICK, SinglePlayerTab::OnModSelect )
   EVT_BUTTON( SP_ADD_BOT , SinglePlayerTab::OnAddBot )
   EVT_BUTTON( SP_START , SinglePlayerTab::OnStart )
+  EVT_CHECKBOX( SP_RANDOM, SinglePlayerTab::OnRandomCheck )
 
 END_EVENT_TABLE()
 
@@ -88,6 +88,9 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, Ui& ui, MainSinglePlayerTab& 
   m_buttons_sizer->Add( m_reset_btn, 0, wxALL, 5 );
 
   m_buttons_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
+
+  m_random_check = new wxCheckBox( this, SP_RANDOM, _("Random start postisions") );
+  m_buttons_sizer->Add( m_random_check, 0, wxALL, 5 );
 
   m_start_btn = new wxButton( this, SP_START, _("Start"), wxDefaultPosition, wxSize(80, CONTROL_HEIGHT), 0 );
   m_buttons_sizer->Add( m_start_btn, 0, wxALL, 5 );
@@ -289,6 +292,15 @@ void SinglePlayerTab::OnStart( wxCommandEvent& event )
   if ( ValidSetup() ) m_ui.StartSinglePlayerGame( m_battle );
 }
 
+
+void SinglePlayerTab::OnRandomCheck( wxCommandEvent& event )
+{
+
+    if ( m_random_check->IsChecked() ) m_battle.CustomBattleOptions().setSingleOption( _T("startpostype"), i2s(IBattle::ST_Random), OptionsWrapper::EngineOption );
+    else m_battle.CustomBattleOptions().setSingleOption( _T("startpostype"), i2s(IBattle::ST_Pick), OptionsWrapper::EngineOption );
+    m_battle.SendHostInfo( IBattle::HI_StartType );
+
+}
 
 void SinglePlayerTab::Update( const wxString& Tag )
 {

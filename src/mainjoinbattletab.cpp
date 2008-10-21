@@ -13,6 +13,7 @@
 
 #ifndef HAVE_WX26
 #include "aui/auimanager.h"
+#include "aui/artprovider.h"
 #else
 #include <wx/listbook.h>
 #endif
@@ -48,6 +49,8 @@ MainJoinBattleTab::MainJoinBattleTab( wxWindow* parent, Ui& ui ) :
   m_tabs = new wxNotebook( this, BATTLE_TABS, wxDefaultPosition, wxDefaultSize, wxLB_TOP );
   #else
   m_tabs = new wxAuiNotebook( this, BATTLE_TABS, wxDefaultPosition, wxDefaultSize, wxAUI_NB_TAB_SPLIT | wxAUI_NB_TAB_MOVE | wxAUI_NB_SCROLL_BUTTONS | wxAUI_NB_TOP | wxAUI_NB_TAB_EXTERNAL_MOVE );
+  m_tabs->SetArtProvider(new SLArtProvider);
+
   #endif
 
   m_imagelist = new wxImageList( 12, 12 );
@@ -148,18 +151,18 @@ void MainJoinBattleTab::JoinBattle( Battle& battle )
 
   m_battle_tab = new BattleRoomTab( m_tabs, m_ui, battle );
   m_map_tab = new BattleMapTab( m_tabs, m_ui, battle );
-  m_opts_tab = new BattleOptionsTab( m_tabs, m_ui, battle, false );
+  m_opts_tab = new BattleOptionsTab( m_tabs, m_ui, battle );
   m_mm_opts_tab = new BattleroomMMOptionsTab( battle, m_tabs);
   #ifdef HAVE_WX26
   m_tabs->InsertPage( 1, m_battle_tab, _("Battleroom"), true, 1 );
   m_tabs->InsertPage( 2, m_map_tab, _("Map"), false, 2 );
-  m_tabs->InsertPage( 3, m_opts_tab, _("Options"), false, 3 );
-  m_tabs->InsertPage( 4, m_mm_opts_tab, _("Map/Mod Options"), false, 3 );
+  m_tabs->InsertPage( 3, m_mm_opts_tab, _("Options"), false, 3 );
+  m_tabs->InsertPage( 4, m_opts_tab, _("Unit Restrictions"), false, 3 );
   #else
   m_tabs->InsertPage( 1, m_battle_tab, _("Battleroom"), true, wxIcon(battle_xpm) );
   m_tabs->InsertPage( 2, m_map_tab, _("Map"), false, wxIcon(battle_map_xpm) );
-  m_tabs->InsertPage( 3, m_opts_tab, _("Options"), false, wxIcon(battle_settings_xpm) );
-  m_tabs->InsertPage( 4, m_mm_opts_tab, _("Map/Mod Options"), false, wxIcon(battle_settings_xpm) );
+  m_tabs->InsertPage( 3, m_mm_opts_tab, _("Options"), false, wxIcon(battle_settings_xpm) );
+  m_tabs->InsertPage( 4, m_opts_tab, _("Unit Restrictions"), false, wxIcon(battle_settings_xpm) );
   #endif
   #ifdef __WXMSW__
     Refresh(); /// this is needed to avoid a weird frame overlay glitch in windows
@@ -242,7 +245,7 @@ void MainJoinBattleTab::ReloadPresetList()
   } catch(...) {}
   try
   {
-    GetOptionsTab().UpdatePresetList();
+    GetMMOptionsTab().UpdatePresetList();
   } catch(...) {}
 
 }

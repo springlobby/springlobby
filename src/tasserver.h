@@ -19,7 +19,7 @@ class wxString;
 class TASServer : public Server
 {
   public:
-    TASServer( Ui& ui );
+    TASServer();
     ~TASServer();
 
     // Overloaded functions from Server
@@ -140,7 +140,6 @@ class TASServer : public Server
       time_t t;
     };
 
-    Ui& m_ui;
     ServerEvents* m_se;
     double m_ser_ver;
 

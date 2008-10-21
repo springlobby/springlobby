@@ -41,11 +41,11 @@
 #include "settings++/custom_dialogs.h"
 
 #include "sdlsound.h"
-
+#include "globalsmanager.h"
 
 Ui& ui()
 {
-    static Ui m_ui;
+    static GlobalObjectHolder<Ui> m_ui;
     return m_ui;
 }
 
@@ -195,7 +195,7 @@ void Ui::DoConnect( const wxString& servername, const wxString& username, const 
     Disconnect();
 
     // Create new Server object
-    m_serv = new TASServer( *this );
+    m_serv = new TASServer( );
     sock = new Socket( *m_serv );
     m_serv->SetSocket( sock );
     //m_serv->SetServerEvents( &se() );
@@ -238,7 +238,7 @@ bool Ui::DoRegister( const wxString& servername, const wxString& username, const
     }
 
     // Create new Server object
-    TASServer* serv = new TASServer( *this );
+    TASServer* serv = new TASServer( );
     Socket* sock = new Socket( *serv, true );
     serv->SetSocket( sock );
 
@@ -556,7 +556,7 @@ void Ui::OnUpdate( int mselapsed )
     {
         if ( sett().GetTorrentSystemAutoStartMode() == 1 && !torrent().IsConnectedToP2PSystem() ) torrent().ConnectToP2PSystem();
         else if ( GetServerStatus() && m_serv->IsOnline() && !torrent().IsConnectedToP2PSystem() && sett().GetTorrentSystemAutoStartMode() == 0 ) torrent().ConnectToP2PSystem();
-        if ( ( !GetServerStatus() || !m_serv->IsOnline() ) && torrent().IsConnectedToP2PSystem() && sett().GetTorrentSystemAutoStartMode() == 0 ) torrent().DisconnectToP2PSystem();
+        if ( ( !GetServerStatus() || !m_serv->IsOnline() ) && torrent().IsConnectedToP2PSystem() && sett().GetTorrentSystemAutoStartMode() == 0 ) torrent().DisconnectFromP2PSystem();
         mw().GetTorrentTab().OnUpdate();
     }
     torrent().UpdateFromTimer( mselapsed );
@@ -1008,6 +1008,11 @@ void Ui::OnBattleStarted( Battle& battle )
             battle.SendMyBattleStatus();
             battle.GetMe().Status().in_game = true;
             battle.GetMe().SendMyUserStatus();
+            if( battle.IsFounderMe() && battle.GetAutoLockOnStart() )
+            {
+              battle.SetIsLocked( true );
+              battle.SendHostInfo( IBattle::HI_Locked );
+            }
             OnSpringStarting();
             m_spring->Run( battle );
         }
@@ -1060,6 +1065,16 @@ void Ui::OnSpringTerminated( bool success )
 
     m_serv->GetMe().Status().in_game = false;
     m_serv->GetMe().SendMyUserStatus();
+    try
+    {
+    Battle *battle = m_serv->GetCurrentBattle();
+    if ( !battle ) return;
+    if( battle->IsFounderMe() && battle->GetAutoLockOnStart() )
+    {
+      battle->SetIsLocked( false );
+      battle->SendHostInfo( IBattle::HI_Locked );
+    }
+    } catch ( assert_exception ){}
 }
 
 

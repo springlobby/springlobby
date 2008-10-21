@@ -8,6 +8,7 @@
 
 #include "springunitsynclib.h"
 #include "utils.h"
+#include "globalsmanager.h"
 
 #define LOCK_UNITSYNC wxCriticalSectionLocker lock_criticalsection(m_lock)
 
@@ -27,8 +28,8 @@ SpringUnitSyncLib::~SpringUnitSyncLib()
 
 SpringUnitSyncLib* susynclib()
 {
-  static SpringUnitSyncLib lib;
-  return &lib;
+  static GlobalObjectHolder<SpringUnitSyncLib> lib;
+  return &(lib.GetInstance());
 }
 
 
