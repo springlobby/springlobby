@@ -29,6 +29,7 @@
 //for cpu detection
 #include <wx/tokenzr.h>
 #include <string>
+#include <algorithm>
 #include <fstream>
 #include <wx/regex.h>
 #ifdef __WXMSW__
@@ -194,8 +195,8 @@ wxString GetSpringLobbyVersion()
 wxString GetHostCPUSpeed()
 {
 
-    int totalcpuspeed = 0;
     int cpu_count = 0;
+    int max_cpu_speed=0;
 
 #ifdef __WXMSW__
 
@@ -207,7 +208,7 @@ wxString GetHostCPUSpeed()
         long* tmp = new long;
         if ( programreg.QueryValue( _T("~MHz"), tmp ) )
         {
-            totalcpuspeed += (*tmp);
+            max_cpu_speed = std::max(max_cpu_speed,(*tmp));
             cpu_count++;
         }
 
@@ -215,51 +216,23 @@ wxString GetHostCPUSpeed()
 
 #else
 
-
     // Create an Inputstream from /proc/cpuinfo
     std::ifstream fin( "/proc/cpuinfo" );
     std::string line;
-    std::string content_str( "" );
-
     // Read from Inputstream
-
-    if ( fin )
+    while ( std::getline( fin, line ) )
     {
-        while ( std::getline( fin, line ) )
-        {
-            // std::cout << "Read from file: " << line << std::endl;
-            content_str.append( line );
-            content_str.append( "\n" );
-        }
-
-        wxString content = wxString::FromAscii( content_str.c_str() );
-
-        // Building a RegEx to match one Block of CPU Info
-        #ifdef wxHAS_REGEX_ADVANCED
-        wxRegEx regex_CPUSection( wxT( "processor.*?(cpu MHz.*?:.*?(\\d+\\.\\d+)).*?\n\n" ), wxRE_ADVANCED );
-        #else
-        wxRegEx regex_CPUSection( wxT( "processor.*?(cpu MHz.*?:.*?(\\d+\\.\\d+)).*?\n\n" ), wxRE_EXTENDED );
-        #endif
-        // Replace each Block of CPU Info with only the CPU Speed in MHz
-        regex_CPUSection.Replace( &content, _T( "\\2\n" ) );
-
-        // Tokenize the String containing all CPU Speed of the Host: e.g. 3000.0\n3000.0\n
-        wxStringTokenizer tokenlist( content, wxT( "\n" ) );
-
-        // Sum up all CPU Speeds
-
-        while ( tokenlist.HasMoreTokens() )
-        {
-            wxString token = tokenlist.GetNextToken();
-            long cpuspeed = 0;
-            token.ToLong( &cpuspeed, 10 );
-            totalcpuspeed += cpuspeed;
+        if(line.substr(0,7)=="cpu MHz"){
+          int i=7;
+          while(i<line.size()&&(line[i]<'0'||line[i]>'9')&&line[i]!='.')i++;
+          if(i<line.size()){
             cpu_count++;
+            max_cpu_speed=std::max(max_cpu_speed,atoi(line.substr(i).c_str()));
+          }
         }
     }
 #endif
-    totalcpuspeed = cpu_count > 0 ? totalcpuspeed / cpu_count : 2100;
-    return i2s(totalcpuspeed);
+    return i2s(max_cpu_speed);
 }
 
 

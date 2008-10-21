@@ -153,8 +153,8 @@ void ServerEvents::OnUserStatus( const wxString& nick, UserStatus status )
       if ( battle.GetFounder().GetNick() == user.GetNick() ) {
         if ( status.in_game != battle.GetInGame() ) {
           battle.SetInGame( status.in_game );
-          if ( status.in_game ) m_ui.OnBattleStarted( battle );
-          else m_ui.OnBattleInfoUpdated( battle );
+          if ( status.in_game ) ui().OnBattleStarted( battle );
+          else ui().OnBattleInfoUpdated( battle );
         }
       }
     }
