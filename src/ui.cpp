@@ -1008,6 +1008,11 @@ void Ui::OnBattleStarted( Battle& battle )
             battle.SendMyBattleStatus();
             battle.GetMe().Status().in_game = true;
             battle.GetMe().SendMyUserStatus();
+            if( battle.IsFounderMe() && battle.GetAutoLockOnStart() )
+            {
+              battle.SetIsLocked( true );
+              battle.SendHostInfo( IBattle::HI_Locked );
+            }
             OnSpringStarting();
             m_spring->Run( battle );
         }
@@ -1060,6 +1065,16 @@ void Ui::OnSpringTerminated( bool success )
 
     m_serv->GetMe().Status().in_game = false;
     m_serv->GetMe().SendMyUserStatus();
+    try
+    {
+    Battle *battle = m_serv->GetCurrentBattle();
+    if ( !battle ) return;
+    if( battle->IsFounderMe() && battle->GetAutoLockOnStart() )
+    {
+      battle->SetIsLocked( false );
+      battle->SendHostInfo( IBattle::HI_Locked );
+    }
+    } catch ( assert_exception ){}
 }
 
 

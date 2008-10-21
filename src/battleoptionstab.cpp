@@ -256,14 +256,14 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle, b
   this->SetSizer( m_main_sizer );
   this->Layout();
 
-  UpdateBattle(  wxString::Format(_T("%d_gamemode"), EngineOption ) );
-  UpdateBattle(  wxString::Format(_T("%d_limitdgun"), EngineOption ) );
-  UpdateBattle(  wxString::Format(_T("%d_startmetal"), EngineOption ) );
-  UpdateBattle(  wxString::Format(_T("%d_startenergy"), EngineOption ) );
-  UpdateBattle(  wxString::Format(_T("%d_maxunits"), EngineOption ) );
-  UpdateBattle(  wxString::Format(_T("%d_ghostedbuildings"), EngineOption ) );
-  UpdateBattle(  wxString::Format(_T("%d_diminishingmms"), EngineOption ) );
-	UpdateBattle(  wxString::Format(_T("%d_fixedallies"), EngineOption ) );
+  UpdateBattle(  wxString::Format(_T("%d_gamemode"), OptionsWrapper::EngineOption ) );
+  UpdateBattle(  wxString::Format(_T("%d_limitdgun"), OptionsWrapper::EngineOption ) );
+  UpdateBattle(  wxString::Format(_T("%d_startmetal"), OptionsWrapper::EngineOption ) );
+  UpdateBattle(  wxString::Format(_T("%d_startenergy"), OptionsWrapper::EngineOption ) );
+  UpdateBattle(  wxString::Format(_T("%d_maxunits"), OptionsWrapper::EngineOption ) );
+  UpdateBattle(  wxString::Format(_T("%d_ghostedbuildings"), OptionsWrapper::EngineOption ) );
+  UpdateBattle(  wxString::Format(_T("%d_diminishingmms"), OptionsWrapper::EngineOption ) );
+	UpdateBattle(  wxString::Format(_T("%d_fixedallies"), OptionsWrapper::EngineOption ) );
 
   ReloadRestrictions();
 
@@ -441,8 +441,8 @@ void BattleOptionsTab::OnOptsCheck( wxCommandEvent& event )
   m_battle.CustomBattleOptions().setSingleOption( _T("diminishingmms"), i2s(m_options_checks->IsChecked( DIM_MMS_INDEX )), OptionsWrapper::EngineOption );
   m_battle.SendHostInfo( wxString::Format(_T("%d_diminishingmms"), OptionsWrapper::EngineOption ) );
 
-  m_battle.CustomBattleOptions().setSingleOption( _T("fixedallies"), i2s(m_options_checks->IsChecked( FIXED_ALLIES_INDEX )), EngineOption );
-  m_battle.SendHostInfo( wxString::Format(_T("%d_fixedallies"), EngineOption ) );
+  m_battle.CustomBattleOptions().setSingleOption( _T("fixedallies"), i2s(m_options_checks->IsChecked( FIXED_ALLIES_INDEX )), OptionsWrapper::EngineOption );
+  m_battle.SendHostInfo( wxString::Format(_T("%d_fixedallies"), OptionsWrapper::EngineOption ) );
 
   if ( m_sp ) {
     if ( m_options_checks->IsChecked( RANDOM_START_INDEX ) )

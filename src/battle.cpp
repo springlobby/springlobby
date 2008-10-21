@@ -61,7 +61,8 @@ Battle::Battle( Server& serv, Ui& ui, int id ) :
   CommonBattle(id,false,0), //m_ingame(false),m_order(0)
   m_serv(serv),
   m_ui(ui),
-  m_ah(*this)
+  m_ah(*this),
+  m_autolock_on_start(false)
 {
 
 
@@ -541,7 +542,15 @@ bool Battle::CheckBan(User &user){
 }
 ///>
 
+void Battle::SetAutoLockOnStart( bool value )
+{
+  m_autolock_on_start = value;
+}
 
+bool Battle::GetAutoLockOnStart()
+{
+  return m_autolock_on_start;
+}
 
 
 void CommonBattle::AddStartRect( unsigned int allyno, unsigned int left, unsigned int top, unsigned int right, unsigned int bottom )

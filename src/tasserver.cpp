@@ -1451,7 +1451,7 @@ Battle* TASServer::GetCurrentBattle()
 {
     try
     {
-      ASSERT_LOGIC( m_battle_id != -1, _T("invalid m_battle_id value") );
+      ASSERT_EXCEPTION( m_battle_id != -1, _T("invalid m_battle_id value") );
       ASSERT_LOGIC( BattleExists(m_battle_id), _T("battle doesn't exists") );
     } catch (...) { return NULL; }
 
