@@ -21,7 +21,7 @@
 #include "settings.h"
 
 #ifndef HAVE_WX26
-#include "auimanager.h"
+#include "aui/auimanager.h"
 #endif
 
 const char sep = *("_");
