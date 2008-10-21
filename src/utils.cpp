@@ -38,6 +38,7 @@
 #include <wx/intl.h>
 #include "settings.h"
 #include <vector>
+#include <algorithm>
 
 wxString GetLibExtension()
 {
