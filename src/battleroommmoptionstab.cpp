@@ -88,11 +88,16 @@ BattleroomMMOptionsTab::BattleroomMMOptionsTab(  IBattle& battle, wxWindow* pare
 
   m_preset_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
 
-	m_main_sizer->Add( m_mod_options_sizer, 1, wxALL|wxEXPAND, 5 );
-	m_main_sizer->Add( m_map_options_sizer, 1, wxALL|wxEXPAND, 5 );
+    m_map_mod_container = new wxBoxSizer( wxVERTICAL );
+
+	m_map_mod_container->Add( m_mod_options_sizer, 0, wxALL|wxEXPAND, 5 );
+	m_map_mod_container->Add( m_map_options_sizer, 0, wxALL|wxEXPAND, 5 );
+	m_main_sizer->Add( m_map_mod_container, 1, wxALL|wxEXPAND, 5 );
   m_main_sizer->Add( m_preset_sizer, 0, wxALL|wxEXPAND, 5 );
 
-    SetScrollRate( 3, 3 );
+  //m_main_sizer->FitInside(this);
+
+
 	this->SetSizer( m_main_sizer );
 	this->Layout();
 
@@ -105,7 +110,7 @@ BattleroomMMOptionsTab::BattleroomMMOptionsTab(  IBattle& battle, wxWindow* pare
     m_default_btn->Disable();
   }
 
-	SetScrollbars( 10, 10, 62, 62 );
+	//SetScrollbars( 10, 10, 62, 62 );
 }
 
 BattleroomMMOptionsTab::~BattleroomMMOptionsTab()
@@ -356,13 +361,13 @@ void BattleroomMMOptionsTab::OnReloadControls(OptionsWrapper::GameOption flag)
 			m_mod_layout = new wxBoxSizer( wxVERTICAL);
 			setupOptionsSizer(m_mod_layout,OptionsWrapper::ModOption);
 			//m_mod_options_sizer->Add( m_mod_options_sizer, 1, wxEXPAND, 5 );
-			m_mod_options_sizer->Add( m_mod_layout, 0, wxEXPAND, 5 );
+			m_mod_options_sizer->Add( m_mod_layout, 1, wxALL|wxEXPAND, 5 );
 			break;
 		case OptionsWrapper::MapOption:
 			m_map_options_sizer->Remove(m_map_layout);
 			m_map_layout = new wxBoxSizer( wxVERTICAL);
 			setupOptionsSizer(m_map_layout,OptionsWrapper::MapOption);
-			m_map_options_sizer->Add( m_map_layout, 0, wxEXPAND, 5 );
+			m_map_options_sizer->Add( m_map_layout, 1, wxALL|wxEXPAND, 5 );
 			break;
         default:
             break;
@@ -370,6 +375,8 @@ void BattleroomMMOptionsTab::OnReloadControls(OptionsWrapper::GameOption flag)
 
 
 	//this->SetSizer( m_main_sizer, true );
+	m_main_sizer->FitInside(this);
+
 	this->Layout();
     SetScrollbars( 10, 10, 62, 62 );
 }

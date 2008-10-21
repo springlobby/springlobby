@@ -63,6 +63,7 @@ class BattleroomMMOptionsTab : public wxScrolledWindow
 		wxBoxSizer* m_mod_layout;
 		wxStaticBoxSizer* m_map_options_sizer;
 		wxBoxSizer* m_map_layout;
+		wxBoxSizer* m_map_mod_container;
 
     wxButton* m_load_btn;
     wxButton* m_save_btn;
