@@ -205,7 +205,7 @@ wxString GetHostCPUSpeed()
     for (int i = 0; i< 16; ++i)
     {
         wxRegKey programreg( _T("HKEY_LOCAL_MACHINE\\HARDWARE\\DESCRIPTION\\System\\CentralProcessor\\")+	wxString::Format(_T("%d"), i));
-        int tmp;
+        long tmp;
         if ( programreg.QueryValue( _T("~MHz"), &tmp ) )
         {
             if ( max_cpu_speed < tmp ) max_cpu_speed = tmp;
