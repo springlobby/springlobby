@@ -144,7 +144,7 @@ class CommonBattle : public UserList, public IBattle
 class Battle : public CommonBattle
 {
   public:
-    Battle( Server& serv, Ui& ui, int id );
+    Battle( Server& serv, int id );
     ~Battle();
 
     //const BattleOptions& opts() { return m_opts; }
@@ -238,7 +238,6 @@ class Battle : public CommonBattle
     ///>
 
     Server& m_serv;
-    Ui& m_ui;
     AutoHost m_ah;
     bool m_autolock_on_start;
 

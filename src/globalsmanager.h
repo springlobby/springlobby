@@ -10,6 +10,13 @@ class GlobalDestroyedError: public std::runtime_error{
   }
 };
 
+class GlobalRecursiveError: public std::runtime_error{
+  public:
+  GlobalRecursiveError(): std::runtime_error("trying to access global during its construction"){
+
+  }
+};
+
 class IGlobalObjectHolder{
   public:
   bool RegisterSelf();
@@ -23,15 +30,18 @@ template<class T>
 class GlobalObjectHolder: public IGlobalObjectHolder{
   T *private_ptr;
   T *public_ptr;
+  bool constructing;
   public:
   GlobalObjectHolder():
   private_ptr(NULL),
-  public_ptr(NULL)
+  public_ptr(NULL),
+  constructing(true)
   {
     if(RegisterSelf()){
       private_ptr=new T;
       public_ptr=private_ptr;
     }
+    constructing=false;
   }
   virtual void Nullify(){
     public_ptr=NULL;
@@ -42,6 +52,7 @@ class GlobalObjectHolder: public IGlobalObjectHolder{
     private_ptr=NULL;
   };
   T &GetInstance(){
+    if(constructing)throw GlobalRecursiveError();
     if(!public_ptr)throw GlobalDestroyedError();
     return *public_ptr;
   }

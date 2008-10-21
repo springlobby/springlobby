@@ -195,7 +195,7 @@ void Ui::DoConnect( const wxString& servername, const wxString& username, const 
     Disconnect();
 
     // Create new Server object
-    m_serv = new TASServer( *this );
+    m_serv = new TASServer( );
     sock = new Socket( *m_serv );
     m_serv->SetSocket( sock );
     //m_serv->SetServerEvents( &se() );
@@ -238,7 +238,7 @@ bool Ui::DoRegister( const wxString& servername, const wxString& username, const
     }
 
     // Create new Server object
-    TASServer* serv = new TASServer( *this );
+    TASServer* serv = new TASServer( );
     Socket* sock = new Socket( *serv, true );
     serv->SetSocket( sock );
 

@@ -49,7 +49,7 @@ class Server : public iNetClass
     UiServerData uidata;
 
 
-    Server( Ui& ui): battles_iter(new BattleList_Iter(&m_battles)),m_sock(0), m_ui(ui),m_keepalive(15) {  }
+    Server(): battles_iter(new BattleList_Iter(&m_battles)),m_sock(0),m_keepalive(15) {  }
     virtual ~Server( );
 
     // Server interface
@@ -174,7 +174,6 @@ class Server : public iNetClass
 
   protected:
     Socket* m_sock;
-    Ui& m_ui;
     int m_keepalive;
     wxString m_user;
     wxString m_pass;

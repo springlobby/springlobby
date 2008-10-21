@@ -121,12 +121,12 @@ IBattle::StartType IntToStartType( int start );
 IBattle::NatType IntToNatType( int nat );
 IBattle::GameType IntToGameType( int gt );
 
-TASServer::TASServer( Ui& ui ): Server(ui), m_ui(ui), m_ser_ver(0), m_connected(false), m_online(false),
+TASServer::TASServer(): m_ser_ver(0), m_connected(false), m_online(false),
         m_buffer(_T("")), m_last_udp_ping(0), m_ping_id(10000), m_udp_private_port(16941),m_battle_id(-1),
         m_do_finalize_join_battle(false),
         m_finalize_join_battle_id(-1)
 {
-    m_se = new ServerEvents( *this, ui);
+    m_se = new ServerEvents( *this );
 }
 
 TASServer::~TASServer()
@@ -275,10 +275,12 @@ void TASServer::Connect( const wxString& addr, const int port )
 
 void TASServer::Disconnect()
 {
-    try
-    {
-      ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
-    } catch (...) { return ; }
+    if(!m_sock){
+      return;
+    }
+    if(!m_connected){
+      return;
+    }
     SendCmd( _T("EXIT") ); // EXIT command for new protocol compatibility
     m_sock->Disconnect();
     m_connected = false;
