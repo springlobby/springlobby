@@ -232,7 +232,7 @@ wxString GetHostCPUSpeed()
       }
     }
 #endif
-    return i2s(max_cpu_speed);
+    return i2s( clamp( max_cpu_speed,0,max_cpu_speed ) );
 }
 
 
