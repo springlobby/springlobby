@@ -41,7 +41,7 @@
 
 wxString GetLibExtension()
 {
-  return wxDynamicLibrary::CanonicalizeName(_T(""), wxDL_MODULE);
+    return wxDynamicLibrary::CanonicalizeName(_T(""), wxDL_MODULE);
 }
 
 
@@ -50,30 +50,30 @@ wxString GetLibExtension()
 void InitializeLoggingTargets()
 
 {
-	#if wxUSE_STD_IOSTREAM
-    #if wxUSE_DEBUGREPORT && defined(HAVE_WX28) && defined(ENABLE_DEBUG_REPORT)
-      ///hidden stream logging for crash reports
-      wxLog *loggercrash = new wxLogStream( &crashreport().crashlog );
-      wxLogChain *logCrashChain = new wxLogChain( loggercrash );
-      logCrashChain->SetLogLevel( wxLOG_Trace );
-      logCrashChain->SetVerbose( true );
-    #endif
+#if wxUSE_STD_IOSTREAM
+#if wxUSE_DEBUGREPORT && defined(HAVE_WX28) && defined(ENABLE_DEBUG_REPORT)
+    ///hidden stream logging for crash reports
+    wxLog *loggercrash = new wxLogStream( &crashreport().crashlog );
+    wxLogChain *logCrashChain = new wxLogChain( loggercrash );
+    logCrashChain->SetLogLevel( wxLOG_Trace );
+    logCrashChain->SetVerbose( true );
+#endif
     ///std::cout logging
     wxLog *loggerconsole = new wxLogStream( &std::cout );
     wxLogChain *logChain = new wxLogChain( loggerconsole );
     logChain->SetLogLevel( wxLOG_Trace );
     logChain->SetVerbose( true );
-  #elif defined ( USE_LOG_WINDOW )
+#elif defined ( USE_LOG_WINDOW )
     ///gui window fallback logging if console/stream output not available
     wxLog *loggerwin = new wxLogWindow(0, _T("SpringLobby error console")  );
     wxLogChain *logChain = new wxLogChain( loggerwin );
     logChain->SetLogLevel( wxLOG_Trace );
     logChain->SetVerbose( true );
     logChain->GetOldLog()->SetLogLevel( wxLOG_Warning );
-  #else
+#else
     /// if all fails, no log is better than msg box spam :P
     new wxLogNull();
-  #endif
+#endif
 }
 
 
@@ -85,13 +85,13 @@ wxString i2s( int arg )
 
 wxString u2s( unsigned int arg )
 {
-  return TowxString(arg);
+    return TowxString(arg);
 }
 
 
 wxString f2s( float arg )
 {
-  return TowxString(arg);
+    return TowxString(arg);
 }
 
 
@@ -111,75 +111,75 @@ double s2d( const wxString& arg )
 
 wxString GetWordParam( wxString& params )
 {
-  wxString param;
+    wxString param;
 
-  param = params.BeforeFirst( ' ' );
-  if ( param.IsEmpty() )
-  {
-    param = params;
-    params = _T("");
-    return param;
-  }
-  else
-  {
-    params = params.AfterFirst( ' ' );
-    return param;
-  }
+    param = params.BeforeFirst( ' ' );
+    if ( param.IsEmpty() )
+    {
+        param = params;
+        params = _T("");
+        return param;
+    }
+    else
+    {
+        params = params.AfterFirst( ' ' );
+        return param;
+    }
 }
 
 
 wxString GetSentenceParam( wxString& params )
 {
-  wxString param;
+    wxString param;
 
-  param = params.BeforeFirst( '\t' );
-  if ( param.IsEmpty() )
-  {
-    param = params;
-    params = _T("");
-    return param;
-  }
-  else
-  {
-    params = params.AfterFirst( '\t' );
-    return param;
-  }
+    param = params.BeforeFirst( '\t' );
+    if ( param.IsEmpty() )
+    {
+        param = params;
+        params = _T("");
+        return param;
+    }
+    else
+    {
+        params = params.AfterFirst( '\t' );
+        return param;
+    }
 }
 
 
 long GetIntParam( wxString& params )
 {
-  wxString param;
-  long ret;
+    wxString param;
+    long ret;
 
-  param = params.BeforeFirst( ' ' );
-  if ( param.IsEmpty() )
-  {
-    params.ToLong( &ret );
-    params = _T("");
-  }
-  else
-  {
-    params = params.AfterFirst( ' ' );
-    param.ToLong( &ret );
-  }
-  return ret;
+    param = params.BeforeFirst( ' ' );
+    if ( param.IsEmpty() )
+    {
+        params.ToLong( &ret );
+        params = _T("");
+    }
+    else
+    {
+        params = params.AfterFirst( ' ' );
+        param.ToLong( &ret );
+    }
+    return ret;
 }
 
 
 bool GetBoolParam( wxString& params )
 {
-  return (bool)GetIntParam( params );
+    return (bool)GetIntParam( params );
 }
 
 
 wxString GetSpringLobbyVersion()
 {
-  #ifndef AUX_VERSION
-  return (WX_STRINGC(VERSION)).BeforeFirst( _T(' ') );
-  #else
-  return (WX_STRINGC(VERSION)).BeforeFirst( _T(' ') ) + _T(" AUX_VERSION");
-  #endif
+#ifndef AUX_VERSION
+    return (WX_STRINGC(VERSION)).BeforeFirst( _T(' ') );
+#else
+    return (WX_STRINGC(VERSION)).BeforeFirst( _T(' ') ) + _T(" AUX_VERSION");
+#endif
 
 }
 
@@ -222,13 +222,15 @@ wxString GetHostCPUSpeed()
     // Read from Inputstream
     while ( std::getline( fin, line ) )
     {
-        if(line.substr(0,7)=="cpu MHz"){
-          int i=7;
-          while(i<line.size()&&(line[i]<'0'||line[i]>'9')&&line[i]!='.')i++;
-          if(i<line.size()){
-            cpu_count++;
-            max_cpu_speed=std::max(max_cpu_speed,atoi(line.substr(i).c_str()));
-          }
+        if (line.substr(0,7)=="cpu MHz")
+        {
+            int i=7;
+            while (i<line.size()&&(line[i]<'0'||line[i]>'9')&&line[i]!='.')i++;
+            if (i<line.size())
+            {
+                cpu_count++;
+                max_cpu_speed=std::max(max_cpu_speed,atoi(line.substr(i).c_str()));
+            }
         }
     }
 #endif
@@ -245,12 +247,12 @@ bool IsValidNickname( const wxString& _name )
 {
     wxString name = _name;
     // The Regex Container
-	//wxRegEx regex( wxT("[:graph:]") );
-	wxRegEx regex( wxT("[ \t\r\n\v\föäüß, .:<>\\!§$%&+-]" ));
+    //wxRegEx regex( wxT("[:graph:]") );
+    wxRegEx regex( wxT("[ \t\r\n\v\föäüß, .:<>\\!§$%&+-]" ));
 
-	// We need to escape all regular Expression Characters, that have a special Meaning
+    // We need to escape all regular Expression Characters, that have a special Meaning
     name.Replace( _T("["), _T("") );
-	name.Replace( _T("]"), _T("") );
+    name.Replace( _T("]"), _T("") );
 
     return !regex.Matches( name );
 }
@@ -263,48 +265,52 @@ const wxChar* TooltipEnable(const wxChar* input)
 template<typename T>
 T min(T a, T b, T c)
 {
-  return std::min(a, std::min(b, c));
+    return std::min(a, std::min(b, c));
 }
 
 double LevenshteinDistance(wxString s, wxString t)
 {
-  s.MakeLower(); // case insensitive edit distance
-  t.MakeLower();
+    s.MakeLower(); // case insensitive edit distance
+    t.MakeLower();
 
-  const int m = s.length(), n = t.length(), _w = m + 1;
-  std::vector<unsigned char> _d((m + 1) * (n + 1));
+    const int m = s.length(), n = t.length(), _w = m + 1;
+    std::vector<unsigned char> _d((m + 1) * (n + 1));
 #define D(x, y) _d[(y) * _w + (x)]
 
-  for (int i = 0; i <= m; ++i) D(i,0) = i;
-  for (int j = 0; j <= n; ++j) D(0,j) = j;
+    for (int i = 0; i <= m; ++i) D(i,0) = i;
+    for (int j = 0; j <= n; ++j) D(0,j) = j;
 
-  for (int i = 1; i <= m; ++i) {
-    for (int j = 1; j <= n; ++j) {
-      const int cost = (s[i - 1] != t[j - 1]);
-      D(i,j) = min(D(i-1,j) + 1, // deletion
-                   D(i,j-1) + 1, // insertion
-                   D(i-1,j-1) + cost); // substitution
+    for (int i = 1; i <= m; ++i)
+    {
+        for (int j = 1; j <= n; ++j)
+        {
+            const int cost = (s[i - 1] != t[j - 1]);
+            D(i,j) = min(D(i-1,j) + 1, // deletion
+                         D(i,j-1) + 1, // insertion
+                         D(i-1,j-1) + cost); // substitution
+        }
     }
-  }
-  double d = (double) D(m,n) / std::max(m, n);
-  wxLogMessage( _T("LevenshteinDistance('%s', '%s') = %g"), s.c_str(), t.c_str(), d );
-  return d;
+    double d = (double) D(m,n) / std::max(m, n);
+    wxLogMessage( _T("LevenshteinDistance('%s', '%s') = %g"), s.c_str(), t.c_str(), d );
+    return d;
 #undef D
 }
 
 wxString GetBestMatch(const wxArrayString& a, const wxString& s, double* distance )
 {
-  const unsigned int count = a.GetCount();
-  double minDistance = 1.0;
-  int minDistanceIndex = -1;
-  for (unsigned int i = 0; i < count; ++i) {
-    const double distance = LevenshteinDistance(a[i], s);
-    if (distance < minDistance) {
-      minDistance = distance;
-      minDistanceIndex = i;
+    const unsigned int count = a.GetCount();
+    double minDistance = 1.0;
+    int minDistanceIndex = -1;
+    for (unsigned int i = 0; i < count; ++i)
+    {
+        const double distance = LevenshteinDistance(a[i], s);
+        if (distance < minDistance)
+        {
+            minDistance = distance;
+            minDistanceIndex = i;
+        }
     }
-  }
-  if (distance != NULL) *distance = minDistance;
-  if (minDistanceIndex == -1) return _T("");
-  return a[minDistanceIndex];
+    if (distance != NULL) *distance = minDistance;
+    if (minDistanceIndex == -1) return _T("");
+    return a[minDistanceIndex];
 }
