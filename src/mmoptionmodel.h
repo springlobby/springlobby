@@ -168,4 +168,6 @@ struct mmOptionSection : public mmOptionModel{
     mmOptionSection (wxString name_, wxString key_, wxString description_,wxString section_ = SLGlobals::nosection_name );
     mmOptionSection ();
 };
+
+
 #endif /*MMOPTIONMODEL_H_*/

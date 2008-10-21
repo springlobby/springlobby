@@ -9,6 +9,33 @@
 
 struct GameOptions;
 
+class wxFileConfig;
+
+class mmSectionTree {
+
+    public:
+        mmSectionTree();
+        ~mmSectionTree();
+
+        void AddSection( const mmOptionSection );
+        mmOptionSection GetSection( const wxString& key );
+
+        typedef std::vector< mmOptionSection > SectionVector;
+
+        SectionVector GetSectionVector();
+
+    protected:
+        //map key -> option
+        typedef std::map< wxString, mmOptionSection > SectionMap;
+        SectionMap m_section_map;
+        typedef wxFileConfig ConfigType;
+        ConfigType* m_tree;
+
+        void AddSection ( const wxString& path, const mmOptionSection& section );
+        wxString FindParentpath ( const wxString& parent_key );
+
+};
+
 class OptionsWrapper
 {
 public:

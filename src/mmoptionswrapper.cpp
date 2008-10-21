@@ -7,6 +7,7 @@
 #include <stdexcept>
 #include <wx/intl.h>
 #include <wx/log.h>
+#include <wx/fileconf.h>
 
 OptionsWrapper::OptionsWrapper()
 {
@@ -443,3 +444,52 @@ wxString OptionsWrapper::GetNameListOptItemKey(wxString optkey, wxString itemnam
 	// at this point retrieval failed
 	return wxEmptyString;
 }
+
+mmSectionTree::mmSectionTree()
+{
+    m_tree = new ConfigType( );
+}
+
+mmSectionTree::~mmSectionTree()
+{
+    if ( m_tree )
+        delete m_tree;
+}
+
+void mmSectionTree::AddSection ( const wxString& parentpath, const mmOptionSection& section )
+{
+    wxString fullpath = parentpath + section.key + _T("/");
+    m_tree->Write( fullpath + _T("key") ,section.key );
+}
+
+wxString mmSectionTree::FindParentpath ( const wxString& parent_key )
+{
+    long dummy;
+    wxString current;
+    bool cont = m_tree->GetFirstGroup( current, dummy );
+    while ( cont )
+    {
+        if ( current.EndsWith( parent_key ) )
+            return current;
+        cont = m_tree->GetNextGroup( current, dummy );
+    }
+    return _T("/");
+}
+
+void mmSectionTree::AddSection( const mmOptionSection section)
+{
+    m_section_map[section.key] = section;
+    if ( !section.section.IsEmpty() )
+    {
+        AddSection( _T("/"), section );
+    }
+    else {
+        AddSection( FindParentpath( section.section ), section );
+    }
+}
+
+mmSectionTree::SectionVector mmSectionTree::GetSectionVector()
+{
+
+}
+
