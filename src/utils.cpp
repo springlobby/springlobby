@@ -38,7 +38,6 @@
 #include <wx/intl.h>
 #include "settings.h"
 #include <vector>
-#include <algorithm>
 
 wxString GetLibExtension()
 {
@@ -206,10 +205,10 @@ wxString GetHostCPUSpeed()
     for (int i = 0; i< 16; ++i)
     {
         wxRegKey programreg( _T("HKEY_LOCAL_MACHINE\\HARDWARE\\DESCRIPTION\\System\\CentralProcessor\\")+	wxString::Format(_T("%d"), i));
-        long* tmp = new long;
-        if ( programreg.QueryValue( _T("~MHz"), tmp ) )
+        int tmp;
+        if ( programreg.QueryValue( _T("~MHz"), &tmp ) )
         {
-            max_cpu_speed = std::max(max_cpu_speed,(*tmp));
+            if ( max_cpu_speed < tmp ) max_cpu_speed = tmp;
             cpu_count++;
         }
 
@@ -217,22 +216,20 @@ wxString GetHostCPUSpeed()
 
 #else
 
-    // Create an Inputstream from /proc/cpuinfo
-    std::ifstream fin( "/proc/cpuinfo" );
-    std::string line;
-    // Read from Inputstream
-    while ( std::getline( fin, line ) )
+    wxTextFile file( _T("/proc/cpuinfo") );
+    if ( file.Exists() )
     {
-        if (line.substr(0,7)=="cpu MHz")
+      file.Open();
+      for ( wxString line = file.GetFirstLine(); !file.Eof(); line = file.GetNextLine() )
+      {
+        if ( line.Left(7) == _T("cpu MHz") )
         {
-            int i=7;
-            while (i<line.size()&&(line[i]<'0'||line[i]>'9')&&line[i]!='.')i++;
-            if (i<line.size())
-            {
-                cpu_count++;
-                max_cpu_speed=std::max(max_cpu_speed,atoi(line.substr(i).c_str()));
-            }
+          line = line.AfterLast( _T(' ') ).BeforeLast( _T('.') );
+          cpu_count++;
+          int tmp = s2l( line );
+          if ( max_cpu_speed < tmp ) max_cpu_speed = tmp;
         }
+      }
     }
 #endif
     return i2s(max_cpu_speed);
