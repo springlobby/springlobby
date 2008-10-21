@@ -10,6 +10,7 @@
 
 #ifndef HAVE_WX26
 #include "aui/auimanager.h"
+#include "aui/artprovider.h"
 #else
 #include <wx/listbook.h>
 #endif
@@ -35,6 +36,7 @@ m_ui(ui)
   #else
   GetAui().manager->AddPane( this, wxLEFT, _T("mainsingleplayertab") );
   m_tabs = new wxAuiNotebook( this, -1, wxDefaultPosition, wxDefaultSize, wxAUI_NB_TAB_SPLIT | wxAUI_NB_TAB_MOVE | wxAUI_NB_SCROLL_BUTTONS | wxAUI_NB_TOP | wxAUI_NB_TAB_EXTERNAL_MOVE );
+  m_tabs->SetArtProvider(new SLArtProvider);
   #endif
 
   m_imagelist = new wxImageList( 12, 12 );

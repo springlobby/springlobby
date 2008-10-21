@@ -13,6 +13,7 @@
 
 #ifndef HAVE_WX26
 #include "aui/auimanager.h"
+#include "aui/artprovider.h"
 #else
 #include <wx/listbook.h>
 #endif
@@ -48,6 +49,8 @@ MainJoinBattleTab::MainJoinBattleTab( wxWindow* parent, Ui& ui ) :
   m_tabs = new wxNotebook( this, BATTLE_TABS, wxDefaultPosition, wxDefaultSize, wxLB_TOP );
   #else
   m_tabs = new wxAuiNotebook( this, BATTLE_TABS, wxDefaultPosition, wxDefaultSize, wxAUI_NB_TAB_SPLIT | wxAUI_NB_TAB_MOVE | wxAUI_NB_SCROLL_BUTTONS | wxAUI_NB_TOP | wxAUI_NB_TAB_EXTERNAL_MOVE );
+  m_tabs->SetArtProvider(new SLArtProvider);
+
   #endif
 
   m_imagelist = new wxImageList( 12, 12 );
