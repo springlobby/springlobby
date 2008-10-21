@@ -1,5 +1,5 @@
 #include "auimanager.h"
-#include "globalsmanager.h"
+#include "../globalsmanager.h"
 
 AuiManagerContainer& GetAui()
 {
