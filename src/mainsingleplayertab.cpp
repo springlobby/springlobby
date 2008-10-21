@@ -47,17 +47,17 @@ m_ui(ui)
 
   m_sp_tab = new SinglePlayerTab( m_tabs, m_ui, *this );
   m_tabs->AddPage( m_sp_tab, _("Game"), true, 0 );
-  m_opts_tab = new BattleOptionsTab( m_tabs, m_ui, m_sp_tab->GetBattle(), true );
-  #ifdef HAVE_WX26
-  m_tabs->InsertPage( 1, m_opts_tab, _("Options"), false, 1 );
-  #else
-  m_tabs->InsertPage( 1, m_opts_tab, _("Options"), false, wxIcon(battle_settings_xpm) );
-  #endif
   m_mm_opts_tab = new BattleroomMMOptionsTab( m_sp_tab->GetBattle(), m_tabs);
   #ifdef HAVE_WX26
-  m_tabs->InsertPage( 2, m_mm_opts_tab, _("Map/Mod Options"), false, 1 );
+  m_tabs->InsertPage( 1, m_mm_opts_tab, _("Options"), false, 1 );
   #else
-  m_tabs->InsertPage( 2, m_mm_opts_tab, _("Map/Mod Options"), false, wxIcon(battle_settings_xpm) );
+  m_tabs->InsertPage( 1, m_mm_opts_tab, _("Options"), false, wxIcon(battle_settings_xpm) );
+  #endif
+  m_opts_tab = new BattleOptionsTab( m_tabs, m_ui, m_sp_tab->GetBattle() );
+  #ifdef HAVE_WX26
+  m_tabs->InsertPage( 2, m_opts_tab, _("Unit Restrictions"), false, 1 );
+  #else
+  m_tabs->InsertPage( 2, m_opts_tab, _("Unit Restrictions"), false, wxIcon(battle_settings_xpm) );
   #endif
 
   m_main_sizer->Add( m_tabs, 1, wxEXPAND );
@@ -154,7 +154,7 @@ void MainSinglePlayerTab::ReloadPresetList()
   } catch (...) {}
   try
   {
-    GetOptionsTab().UpdatePresetList();
+    GetMMOptionsTab().UpdatePresetList();
   } catch (...) {}
 }
 

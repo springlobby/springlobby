@@ -21,6 +21,7 @@ class wxSpinCtrlDbl;
 class wxTextCtrl;
 class wxSpinEvent;
 class wxStaticText;
+class wxButton;
 
 //totally ok to store pointers here, since wx takes care of gui element destruction for us
 typedef std::map<wxString,wxCheckBox*> chkBoxMap;
@@ -46,6 +47,14 @@ class BattleroomMMOptionsTab : public wxScrolledWindow
 		void UpdateOptControls(wxString controlName);
 		void OnReloadControls(OptionsWrapper::GameOption flag);
 		void Update( const wxString& Tag );
+
+    void UpdatePresetList();
+
+    void OnLoadPreset( wxCommandEvent& event );
+    void OnSavePreset( wxCommandEvent& event );
+    void OnDeletePreset( wxCommandEvent& event );
+    void OnSetModDefaultPreset( wxCommandEvent& event );
+
 	protected:
 		 IBattle& m_battle;
 
@@ -54,6 +63,13 @@ class BattleroomMMOptionsTab : public wxScrolledWindow
 		wxBoxSizer* m_mod_layout;
 		wxStaticBoxSizer* m_map_options_sizer;
 		wxBoxSizer* m_map_layout;
+
+    wxButton* m_load_btn;
+    wxButton* m_save_btn;
+    wxButton* m_delete_btn;
+    wxButton* m_default_btn;
+    wxComboBox* m_options_preset_sel;
+
 		OptionsWrapper* m_mapmodoptions;
 
 		chkBoxMap m_chkbox_map;
@@ -83,6 +99,16 @@ class BattleroomMMOptionsTab : public wxScrolledWindow
 		DECLARE_EVENT_TABLE();
 
 };
+
+enum
+{
+  BOPTS_LOADPRES =  wxID_HIGHEST,
+  BOPTS_SAVEPRES,
+  BOPTS_DELETEPRES,
+  BOPTS_SETDEFAULTPRES,
+  BOPTS_CHOSEPRES
+};
+
 
 #endif /*BATTLEROOMMMOPTIONSTAB_H_*/
 
