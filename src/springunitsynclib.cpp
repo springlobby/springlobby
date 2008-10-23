@@ -78,6 +78,7 @@ void SpringUnitSyncLib::Load( const wxString& path )
   try {
     m_init = (InitPtr)_GetLibFuncPtr(_T("Init"));
     m_uninit = (UnInitPtr)_GetLibFuncPtr(_T("UnInit"));
+    m_get_next_error = (GetNextErrorPtr)_GetLibFuncPtr(_T("GetNextError"));
 
     m_get_map_count = (GetMapCountPtr)_GetLibFuncPtr(_T("GetMapCount"));
     m_get_map_checksum = (GetMapChecksumPtr)_GetLibFuncPtr(_T("GetMapChecksum"));
@@ -265,6 +266,36 @@ void SpringUnitSyncLib::Reload()
 bool SpringUnitSyncLib::IsLoaded()
 {
   return m_loaded;
+}
+
+
+void SpringUnitSyncLib::AssertUnitsyncOk()
+{
+  InitLib( m_get_next_error );
+
+  UNITSYNC_EXCEPTION( false, WX_STRINGC( m_get_next_error() ) );
+}
+
+
+wxArrayString SpringUnitSyncLib::GetUnitsyncErrors()
+{
+  wxArrayString ret;
+  try
+  {
+    InitLib( m_get_next_error );
+  }
+  catch ( unitsync_assert &e )
+  {
+    ret.Add( WX_STRINGC( e.what() ) );
+    return ret;
+  }
+  wxString msg = WX_STRINGC( m_get_next_error() );
+  while ( !msg.IsEmpty() )
+  {
+    ret.Add( msg );
+    msg = WX_STRINGC( m_get_next_error() );
+  }
+  return ret;
 }
 
 
