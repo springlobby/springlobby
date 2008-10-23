@@ -3,6 +3,7 @@
 
 #include <wx/thread.h>
 #include <wx/string.h>
+#include <stdexcept>
 
 #include "nonportable.h"
 #include "iunitsync.h"
@@ -11,6 +12,15 @@ class wxString;
 class wxImage;
 struct SpringMapInfo;
 class wxDynamicLibrary;
+
+class unitsync_assert : public std::runtime_error
+{
+  public:
+   unitsync_assert(std::string msg) : std::runtime_error(msg) {};
+};
+
+#define UNITSYNC_EXCEPTION(cond,msg) if(!(cond))\
+{wxLogMessage(_T("unitsync runtime assertion ( %s:%d ): %s"), TowxString(__FILE__).c_str(),__LINE__ , wxString(msg).c_str() );throw unitsync_assert(std::string(wxString(msg).mb_str()));}
 
 
 struct SpringMapInfo
@@ -41,6 +51,7 @@ typedef const char* (USYNC_CALL_CONV *GetSpringVersionPtr)();
 
 typedef int (USYNC_CALL_CONV *InitPtr)(bool, int);
 typedef void (USYNC_CALL_CONV *UnInitPtr)();
+typedef const char* (USYNC_CALL_CONV *GetNextErrorPtr)();
 
 typedef int (USYNC_CALL_CONV *GetMapCountPtr)();
 typedef unsigned int (USYNC_CALL_CONV *GetMapChecksumPtr)(int);
@@ -226,6 +237,18 @@ class SpringUnitSyncLib
      * Returns true if the library is loaded.
      */
     bool IsLoaded();
+
+    /**
+     * Gets last error from unitsync library
+     * @note throws unitsync_assert in case of error
+     * @note this method should only be used after using directly an unitsync call to catch it's errors
+     */
+    void AssertUnitsyncOk();
+
+    /**
+     * Get list of errors from unitsync library in an array
+     */
+    wxArrayString GetUnitsyncErrors();
 
 
     int GetModIndex( const wxString& name );
@@ -420,7 +443,7 @@ class SpringUnitSyncLib
     wxString m_current_mod;
 
     //! Macro that checks if a function is present/loaded, unitsync is loaded, and locks it on call.
-    #define InitLib( arg ) { LOCK_UNITSYNC; ASSERT_EXCEPTION( m_loaded, _T("Unitsync not loaded.") ); ASSERT_EXCEPTION( arg, _T("Function was not in unitsync library.") ); }
+    #define InitLib( arg ) { LOCK_UNITSYNC; UNITSYNC_EXCEPTION( m_loaded, _T("Unitsync not loaded.") ); UNITSYNC_EXCEPTION( arg, _T("Function was not in unitsync library.") ); }
 
     /**
      * Loads a function pointer from unitsync.
@@ -448,6 +471,7 @@ class SpringUnitSyncLib
 
     InitPtr m_init;
     UnInitPtr m_uninit;
+    GetNextErrorPtr m_get_next_error;
 
     GetMapCountPtr m_get_map_count;
     GetMapChecksumPtr m_get_map_checksum;
