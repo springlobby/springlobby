@@ -96,6 +96,16 @@ END_EVENT_TABLE()
 const int boxsize = 8;
 const int minboxsize = 40;
 
+static inline void WriteInt24(unsigned char* p, int i) {
+	p[0] = i & 0xFF;
+	p[1] = (i >> 8) & 0xFF;
+	p[2] = (i >> 16) & 0xFF;
+}
+
+static inline int ReadInt24(const unsigned char* p) {
+	return p[0] | (p[1] << 8) | (p[2] << 16);
+}
+
 MapCtrl::MapCtrl( wxWindow* parent, int size, IBattle* battle, Ui& ui, bool readonly, bool fixed_size, bool draw_start_types, bool singleplayer ):
   wxPanel( parent, -1, wxDefaultPosition, wxSize(size, size), wxSIMPLE_BORDER|wxFULL_REPAINT_ON_RESIZE ),
   m_minimap(0),
@@ -196,41 +206,70 @@ wxRect MapCtrl::GetStartRect( const BattleStartRect& sr )
 }
 
 
-double MapCtrl::GetStartRectMetal( int index )
+void MapCtrl::Accumulate( wxImage& image )
+{
+	if (!image.IsOk()) return;
+
+	const int w = image.GetWidth();
+	const int h = image.GetHeight();
+	unsigned char* data = image.GetData();
+
+	// sum in vertical direction
+	unsigned char* p = data;
+	for (int x = 0; x < w; ++x, p += 3) {
+		WriteInt24(p, p[0] + p[1] + p[2]);
+	}
+	for (int y = 1; y < h; ++y) {
+		const unsigned char* prev = data + 3*((y-1)*w);
+		unsigned char* curr = data + 3*(y*w);
+		for (int x = 0; x < w; ++x, prev += 3, curr += 3) {
+			WriteInt24(curr, ReadInt24(prev) + curr[0] + curr[1] + curr[2]);
+		}
+	}
+
+	// sum in horizontal direction
+	for (int x = 1; x < w; ++x) {
+		for (int y = 0; y < h; ++y) {
+			p = data + 3*(y*w+x);
+			WriteInt24(p, ReadInt24(p) + ReadInt24(p - 3));
+		}
+	}
+}
+
+
+double MapCtrl::GetStartRectMetalFraction( int index )
 {
   ASSERT_LOGIC( IBattle::BattleType() != IBattle::BT_Multi, _T("MapCtrl::GetMetal(): Battle type is not BT_Multi") );
   BattleStartRect sr = m_battle->GetStartRect( index );
   if ( !sr.IsOk() ) return 0.0;
-  return GetStartRectMetal( sr );
+  return GetStartRectMetalFraction( sr );
 }
 
 
-double MapCtrl::GetStartRectMetal( const BattleStartRect& sr )
+double MapCtrl::GetStartRectMetalFraction( const BattleStartRect& sr )
 {
   // todo: this really is *logic*, not rendering code, so it
   // should go in some other layer sometime (SpringUnitSync?).
-  if (!m_metalmap_orig.IsOk()) return 0.0;
+  if (!m_metalmap_cumulative.IsOk()) return 0.0;
 
   int x1,y1,x2,y2,w,h;
 
-  w = m_metalmap_orig.GetWidth();
-  h = m_metalmap_orig.GetHeight();
-  x1 = std::max(0, std::min(w, int( (sr.left * w / 200.0) + 0.5 )));
-  y1 = std::max(0, std::min(h, int( (sr.top * h / 200.0) + 0.5 )));
-  x2 = std::max(0, std::min(w, int( (sr.right * w / 200.0) + 0.5 )));
-  y2 = std::max(0, std::min(h, int( (sr.bottom * h / 200.0) + 0.5 )));
+  w = m_metalmap_cumulative.GetWidth();
+  h = m_metalmap_cumulative.GetHeight();
+  x1 = std::max(0, std::min(w-1, int( (sr.left * w / 200.0) + 0.5 )));
+  y1 = std::max(0, std::min(h-1, int( (sr.top * h / 200.0) + 0.5 )));
+  x2 = std::max(0, std::min(w-1, int( (sr.right * w / 200.0) + 0.5 )));
+  y2 = std::max(0, std::min(h-1, int( (sr.bottom * h / 200.0) + 0.5 )));
 
-  double metal = 0.0;
-  const unsigned char* metalmap = m_metalmap_orig.GetData();
+  const unsigned char* metalmap = m_metalmap_cumulative.GetData();
+  const int lefttop  = ReadInt24(&metalmap[3*(y1*w+x1)]);
+  const int righttop = ReadInt24(&metalmap[3*(y1*w+x2)]);
+  const int leftbot  = ReadInt24(&metalmap[3*(y2*w+x1)]);
+  const int rightbot = ReadInt24(&metalmap[3*(y2*w+x2)]);
+  // in 2d cumulative distribution total is value at bottom right corner
+  const int total    = ReadInt24(&metalmap[3*(w*h-1)]);
 
-  for (int y = y1; y < y2; ++y) {
-    for (int x = x1; x < x2; ++x) {
-      metal += metalmap[3*(y*w+x)+1];
-    }
-  }
-
-  metal *= m_map.info.maxMetal / 255.0;
-  return metal;
+  return (double) (lefttop + rightbot - righttop - leftbot) / total;
 }
 
 
@@ -390,7 +429,10 @@ void MapCtrl::LoadMinimap()
       // todo: optimize? (currently loads image from disk twice)
       m_metalmap = new wxBitmap( usync().GetMetalmap( map, w, h ) );
       // singleplayer mode doesn't allow startboxes anyway
-      if (!m_sp) m_metalmap_orig = usync().GetMetalmap( map );
+      if (!m_sp) {
+        m_metalmap_cumulative = usync().GetMetalmap( map );
+		Accumulate( m_metalmap_cumulative );
+      }
     }
     m_mapname = map;
     m_lastsize = wxSize( w, h );
@@ -493,9 +535,9 @@ void MapCtrl::DrawStartRect( wxDC& dc, int index, wxRect& sr, const wxColour& co
     DrawOutlinedText( dc, strIndex, tx, ty, wxColour(50,50,50), *wxWHITE );
     //dc.DrawText( wxString::Format( _T("%d"), index+1), sr.x + sr.width / 2 - twidth / 2, sr.y + sr.height / 2 - theight / 2 - 1 );
 
-    const double metal = GetStartRectMetal( index );
+    const double metal = GetStartRectMetalFraction( index );
     if (metal != 0.0) {
-      wxString strMetal = wxString::Format( _T("Metal: %.1f"), metal );
+      wxString strMetal = wxString::Format( _("Metal: %.1f%%"), metal * 100.0 );
       dc.GetTextExtent( strMetal, &twidth, &theight );
       // don't cramp it in rect, but only display it if it actually fits
       if (sr.height >= 6 * theight && sr.width > twidth) {
