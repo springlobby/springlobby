@@ -648,9 +648,13 @@ void BattleListTab::OnResize( wxSizeEvent& event )
   if ( GetClientSize().GetHeight() < 400 )
   {
     m_main_sizer->Hide(m_info_sizer, true );
+    m_main_sizer->Hide(m_buttons_sep, true );
+    if ( m_filter_notice ) m_main_sizer->Hide( m_filter_notice, true );
   }
   else
   {
     m_main_sizer->Show(m_info_sizer, true );
+    m_main_sizer->Show(m_buttons_sep, true );
+    if ( m_filter_notice ) m_main_sizer->Show( m_filter_notice, true );
   }
 }
