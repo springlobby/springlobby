@@ -54,29 +54,18 @@ SpringUnitSync::~SpringUnitSync()
 }
 
 
-bool SpringUnitSync::LoadUnitSyncLib( const wxString& springdir, const wxString& unitsyncloc )
+bool SpringUnitSync::LoadUnitSyncLib( const wxString& unitsyncloc )
 {
-#ifndef HAVE_WX26
-  if ( !wxFileName::IsDirWritable( sett().GetSpringDir() ) )
-  {
-      customMessageBox(SL_MAIN_ICON,_("Unitsync loading was aborted because your spring data directory is not writable. Please check."),_("Unitsync Problem"),wxOK);
-      wxLogDebugFunc( _T("sprindatadir not writable") );
-      return false;
-  }
-  else
-#endif
-  {
-     wxLogDebugFunc( _T("") );
-     LOCK_UNITSYNC;
-     bool ret = _LoadUnitSyncLib( springdir, unitsyncloc );
-     if (ret)
-     {
-        PopulateArchiveList();
-        ///crashes
-        //CacheThread().Start();
-     }
-     return ret;
-  }
+   wxLogDebugFunc( _T("") );
+   LOCK_UNITSYNC;
+   bool ret = _LoadUnitSyncLib( unitsyncloc );
+   if (ret)
+   {
+      PopulateArchiveList();
+      ///crashes
+      //CacheThread().Start();
+   }
+   return ret;
 }
 
 
@@ -127,9 +116,8 @@ void SpringUnitSync::PopulateArchiveList()
 
 
 
-bool SpringUnitSync::_LoadUnitSyncLib( const wxString& springdir, const wxString& unitsyncloc )
+bool SpringUnitSync::_LoadUnitSyncLib( const wxString& unitsyncloc )
 {
-  wxSetWorkingDirectory( springdir );
   try {
     susynclib()->Load( unitsyncloc );
   } catch (...) {
@@ -979,7 +967,7 @@ MapInfo SpringUnitSync::_GetMapInfoEx( const wxString& mapname )
 bool SpringUnitSync::ReloadUnitSyncLib()
 {
   usync().FreeUnitSyncLib();
-  usync().LoadUnitSyncLib( sett().GetSpringDir(), sett().GetUnitSyncUsedLoc() );
+  usync().LoadUnitSyncLib( sett().GetUnitSyncUsedLoc() );
   return true;
 }
 

@@ -50,7 +50,7 @@ class SpringUnitSync : public IUnitSync
     wxString GetSideName( const wxString& modname, int index );
     wxImage GetSidePicture( const wxString& modname, const wxString& SideName );
 
-    bool LoadUnitSyncLib( const wxString& springdir, const wxString& unitsyncloc );
+    bool LoadUnitSyncLib( const wxString& unitsyncloc );
     void FreeUnitSyncLib();
 
     bool IsLoaded();
@@ -104,7 +104,7 @@ class SpringUnitSync : public IUnitSync
     //! write a file where each element of the array is a line
     void SetCacheFile( const wxString& path, const wxArrayString& data );
 
-    bool _LoadUnitSyncLib( const wxString& springdir, const wxString& unitsyncloc );
+    bool _LoadUnitSyncLib( const wxString& unitsyncloc );
     void _FreeUnitSyncLib();
 
     bool _ModExists( const wxString& modname );

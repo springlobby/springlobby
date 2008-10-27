@@ -157,7 +157,7 @@ class IUnitSync
     virtual int GetNumUnits( const wxString& modname ) = 0;
     virtual wxArrayString GetUnitsList( const wxString& modname ) = 0;
 
-    virtual bool LoadUnitSyncLib( const wxString& springdir, const wxString& unitsyncloc ) = 0;
+    virtual bool LoadUnitSyncLib( const wxString& unitsyncloc ) = 0;
     virtual void FreeUnitSyncLib() = 0;
 
     virtual bool IsLoaded() = 0;

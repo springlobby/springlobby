@@ -182,7 +182,3 @@ void MainOptionsTab::SetSelection( const unsigned int page )
 }
 
 
-void MainOptionsTab::ReloadSpringPathFromConfig()
-{
-  m_spring_opts->ReloadSpringPathFromConfig();
-}

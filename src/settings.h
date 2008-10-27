@@ -337,7 +337,6 @@ class Settings
      * @{
      */
     wxString GetSpringDir();
-    void   SetSpringDir( const wxString& pring_dir );
 
     bool   GetUnitSyncUseDefLoc();
     void   SetUnitSyncUseDefLoc( const bool usedefloc );

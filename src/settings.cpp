@@ -123,7 +123,6 @@ void Settings::SaveSettings()
 
   m_config->Save( outstream );
   #endif
-  if (usync().IsLoaded()) usync().SetSpringDataPath( GetSpringDir() );
 }
 
 
@@ -582,14 +581,10 @@ void Settings::SetMainWindowLeft( const int value )
 
 wxString Settings::GetSpringDir()
 {
-    if ( !IsPortableMode() ) return m_config->Read( _T("/Spring/dir"), WX_STRINGC(DEFSETT_SPRING_DIR) );
-    else return wxStandardPathsBase::Get().GetExecutablePath().BeforeLast( wxFileName::GetPathSeparator() );
-}
-
-
-void Settings::SetSpringDir( const wxString& spring_dir )
-{
-    m_config->Write( _T("/Spring/dir"), spring_dir );
+  wxString dir;
+  if ( usync().IsLoaded() ) dir = usync().GetSpringDataPath();
+  if ( dir.IsEmpty() ) dir = wxStandardPathsBase::Get().GetUserDataDir(); /// fallback
+  return dir;
 }
 
 

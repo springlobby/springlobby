@@ -1009,7 +1009,7 @@ void TASServer::HandlePong( int replyid )
 void TASServer::HandlePinglist()
 {
     std::list<TASPingListItem>::iterator it;
-    int now = time( 0 );
+    unsigned int now = time( 0 );
     while ( !m_pinglist.empty() )
     {
         if ( m_pinglist.begin()->t + PING_TIMEOUT < now )

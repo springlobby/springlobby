@@ -175,7 +175,6 @@ bool SpringLobbyApp::OnInit()
 
         customMessageBoxNoModal(SL_MAIN_ICON, _("By default SpringLobby reports some statistics.?\n"
                                                  "You can disable that on options tab --> General."),_("Notice"),wxOK );
-        ui().mw().ReloadSpringPathFromConfig();
         ui().mw().ShowConfigure();
     }
     else
@@ -248,57 +247,53 @@ void SpringLobbyApp::SetupUserFolders()
 {
 #ifdef __WXGTK__
 #ifndef HAVE_WX26
-    wxString sep = wxFileName::GetPathSeparator();
-    if ( !wxFileName::DirExists( wxFileName::GetHomeDir() + sep +_T("spring") ) )
-    {
-        wxArrayString choices;
-        choices.Add( _("Create a spring folder in the home directory (reccomended)") );
-        choices.Add( _("Create a folder in a custom path (you'll get prompted for the path)") );
-        choices.Add( _("I have already a SpringData folder, i want to browse manually for it") );
-        choices.Add( _("Do nothing (use this only if you know what you're doing)") );
+      wxString sep = wxFileName::GetPathSeparator();
+      wxString defaultdir = wxFileName::GetHomeDir() + sep +_T("spring");
 
-        int result = wxGetSingleChoiceIndex(
-                         _("Looks like you don't have yet a user SpringData folder structure\nWhat would you like to do? (leave default choice if you don't know what is this for)"),
-                         _("First time wizard"),
-                         choices );
+      wxArrayString choices;
+      choices.Add( _("Do nothing") );
+      choices.Add( _("Create a folder in a custom path (you'll get prompted for the path)") );
+      choices.Add( _("I have already a SpringData folder, i want to browse manually for it") );
 
-        wxString dir;
-        bool createdirs = true;
-        if ( result == 2 ) createdirs = false;
-        else if ( result == 3 ) return;
+      int result = wxGetSingleChoiceIndex(
+                       _("Looks like you don't have yet a user SpringData folder structure\nWhat would you like to do? (leave default choice if you don't know what is this for)"),
+                       _("First time wizard"),
+                       choices );
 
-        if ( result == 0 ) dir = wxFileName::GetHomeDir() + sep +_T("spring");
-        else if ( result == 1 || result == 2 ) dir = wxDirSelector( _("Choose a folder"), wxFileName::GetHomeDir() +  sep + _T("spring") );
+      wxString dir;
+      bool createdirs = true;
+      if ( result == 2 ) createdirs = false;
+      else if ( result == 0 ) return;
 
-        if ( createdirs )
-        {
-            if ( dir.IsEmpty() ||
-             ( !wxFileName::Mkdir( dir ) ||
-                ( !wxFileName::Mkdir( dir + sep + _T("mods") ) ||
-                  !wxFileName::Mkdir( dir + sep + _T("maps") ) ||
-                  !wxFileName::Mkdir( dir + sep + _T("base") ) ||
-                  !wxFileName::Mkdir( dir + sep + _T("demos") ) ||
-                  !wxFileName::Mkdir( dir + sep + _T("screenshots")  ) )
-                )
+      if ( result == 1 || result == 2 ) dir = wxDirSelector( _("Choose a folder"), defaultdir );
+
+      if ( createdirs )
+      {
+          if ( dir.IsEmpty() ||
+           ( !wxFileName::Mkdir( dir ) ||
+              ( !wxFileName::Mkdir( dir + sep + _T("mods") ) ||
+                !wxFileName::Mkdir( dir + sep + _T("maps") ) ||
+                !wxFileName::Mkdir( dir + sep + _T("base") ) ||
+                !wxFileName::Mkdir( dir + sep + _T("demos") ) ||
+                !wxFileName::Mkdir( dir + sep + _T("screenshots")  ) )
               )
+            )
+          {
+              if ( dir.IsEmpty() ) dir = defaultdir;
+              wxMessageBox( _("Something went wrong when creating the directories\nPlease create manually the following folders:") + wxString(_T("\n")) + dir +  _T("\n") + dir + sep + _T("mods\n") + dir + sep + _T("maps\n") + dir + sep + _T("base\n") );
+              return;
+          }
+          else
+          {
+            #ifdef __WXGTK__
+            if ( wxFileName::FileExists( _T("/usr/share/games/spring/uikeys.txt") ) ) /// this hardcoded path is a bit dumb but it's too early in the code to do proper spring path detection
             {
-                if ( dir.IsEmpty() ) dir = wxFileName::GetHomeDir() + sep + _T("spring");
-                wxMessageBox( _("Something went wrong when creating the directories\nPlease create manually the following folders:") + wxString(_T("\n")) + dir +  _T("\n") + dir + sep + _T("mods\n") + dir + sep + _T("maps\n") + dir + sep + _T("base\n") );
-                return;
+              wxCopyFile( _T("/usr/share/games/spring/uikeys.txt"), dir + sep + _T("uikeys.txt"), false );
             }
-            else
-            {
-              #ifdef __WXGTK__
-              if ( wxFileName::FileExists( _T("/usr/share/games/spring/uikeys.txt") ) ) /// this hardcoded path is a bit dumb but it's too early in the code to do proper spring path detection
-              {
-                wxCopyFile( _T("/usr/share/games/spring/uikeys.txt"), dir + sep + _T("uikeys.txt"), false );
-              }
-              #endif
-            }
-        }
-        sett().SetSpringDir(dir);
-        sett().SaveSettings();
-    }
+            #endif
+          }
+      }
+      usync().SetSpringDataPath(dir);
 #endif
 #endif
 }
