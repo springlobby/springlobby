@@ -739,24 +739,24 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
     wxString torrentfilename = WX_STRING(t_info.begin_files()->path.string()); /// get the file name in the torrent infos
     wxLogMessage( _T("requested filename: %s"), torrentfilename.c_str() );
 
-
     if ( IsSeed )
     {
-        /// improved check: dont download Whatever.sdz when you got e.g. x_Whatever.sdz or Whatever.sdz_x on disk
-        wxFileName path_as_filename(path);
-        if ( path_as_filename.GetFullName()!=torrentfilename)
+        wxFileName archive_filename(path);
+        wxFileName torrent_filename(torrentfilename);
+        if ( !( torrent_filename.GetExt() == archive_filename.GetExt() ) ) /// different extension, won't work
         {
-            wxLogMessage(_T("local file name '%s' does not match requested name '%s', not seeding"), path_as_filename.GetFullName().c_str(), torrentfilename.c_str());
-            return false; /// if the filename locally is different from the torrent's, skip it or it will download it again and various crap may happend.
+          wxLogMessage( _T("file extension locally differs, not joining torrent") );
+          return false;
         }
-        /// to be safe.
-        if (!path_as_filename.FileExists())
+        std::vector<libtorrent::file_entry> map;
+        libtorrent::file_entry foo = t_info.file_at(0);
+        map.push_back( foo );
+        map.front().path = boost::filesystem::path(STD_STRING( archive_filename.GetFullName() ) );
+        if ( !t_info.remap_files(map) )
         {
-            wxLogError(_T("the local file does not exist!"));
-            return false;
+         wxLogMessage(_T("Cannot remap filenames in the torrent, aborting seed"));
+         return false;
         }
-        path = path_as_filename.GetPath(); /// strip file name from path
-        wxLogMessage( _T("Strippped path: %s"), path.c_str() );
     }
     wxLogMessage(_T("(4) Joining torrent: add_torrent(%s,[%s],%s,[%s])"),m_tracker_urls[m_connected_tracker_index].c_str(),torrent_infohash_b64.c_str(),row->name.c_str(),path.c_str());
 
@@ -815,22 +815,23 @@ void TorrentWrapper::CreateTorrent( const wxString& hash, const wxString& name, 
     libtorrent::torrent_info newtorrent;
 
     wxString archivename;
+    wxString path;
 
     switch ( type )
     {
       case IUnitSync::map :
       {
-          if ( !usync().MapExists( name, hash ) ) return false;
+          if ( !usync().MapExists( name, hash ) ) return;
           int index = usync().GetMapIndex( name );
-          if ( index == -1 ) return false;
+          if ( index == -1 ) return;
           archivename = usync().GetMapArchive( index );
           break;
       }
       case IUnitSync::mod :
       {
-          if ( !usync().ModExists( name, hash ) ) return false;
+          if ( !usync().ModExists( name, hash ) ) return;
           int index = usync().GetModIndex( name );
-          if ( index == -1 ) return false;
+          if ( index == -1 ) return;
           archivename = usync().GetModArchive( index );
           break;
       }
@@ -856,7 +857,7 @@ void TorrentWrapper::CreateTorrent( const wxString& hash, const wxString& name, 
         newtorrent.add_tracker( STD_STRING(m_tracker_urls[i] +  _T(":DEFAULT_P2P_TRACKER_PORT/announce") ) );
     }
 
-    wxFile torrentfile( StringFilePath );
+    wxFile torrentfile( path );
     if ( !torrentfile.IsOpened() ) return;
     /// calculate the hash for all pieces
     int num = newtorrent.num_pieces();
