@@ -155,38 +155,9 @@ wxString SpringUnitSync::GetSpringVersion()
 }
 
 
-double SpringUnitSync::_GetSpringVersion()
-{
-  wxString ver = GetSpringVersion();
-  double nver = 0;
-  ver = ver.BeforeFirst('b') + ver.AfterFirst('b'); //remove the beta flag
-
-  const char* old_locale = std::setlocale(LC_NUMERIC, "C"); //temp switch to C locale for the decimal separator
-
-  if ( ver.Contains( _T("+") ) ) //remove the + (development) flag, and increase the version
-  {
-    ver = ver.BeforeFirst('+');
-    ver.ToDouble( &nver); // convert to float
-    nver = std::floor ( ( nver * 100 ) + 0.9 ); // increments version and rounds up the decimal to 0
-  }
-  else
-  {
-    ver.ToDouble( &nver); // convert to float
-    nver = nver * 100;
-  }
-  std::setlocale(LC_NUMERIC, old_locale);
-  return nver;
-}
-
-
 bool SpringUnitSync::VersionSupports( GameFeature feature )
 {
-  switch (feature) {
-    case GF_XYStartPos:      return _GetSpringVersion() >= 76.0;
-    case USYNC_Sett_Handler: return _GetSpringVersion() >= 76.0;
-    case USYNC_GetInfoMap:   return susynclib()->HasGetInfoMap();
-  }
-  return false;
+  return susynclib()->VersionSupports( feature );
 }
 
 
@@ -980,7 +951,8 @@ void SpringUnitSync::SetSpringDataPath( const wxString& path )
 
 wxString SpringUnitSync::GetSpringDataPath()
 {
-  return susynclib()->GetSpringConfigString( _T("SpringData"), sett().GetSpringDir() );
+  if ( VersionSupports( USYNC_GetDataDir ) ) return susynclib()->GetSpringDataDir();
+  else return susynclib()->GetSpringConfigString( _T("SpringData"), _T("") );
 }
 
 

@@ -79,6 +79,7 @@ void SpringUnitSyncLib::Load( const wxString& path )
     m_init = (InitPtr)_GetLibFuncPtr(_T("Init"));
     m_uninit = (UnInitPtr)_GetLibFuncPtr(_T("UnInit"));
     m_get_next_error = (GetNextErrorPtr)_GetLibFuncPtr(_T("GetNextError"));
+    m_get_writeable_data_dir = (GetWritableDataDirectoryPtr)_GetLibFuncPtr(_T("GetWritableDataDirectory"));
 
     m_get_map_count = (GetMapCountPtr)_GetLibFuncPtr(_T("GetMapCount"));
     m_get_map_checksum = (GetMapChecksumPtr)_GetLibFuncPtr(_T("GetMapChecksum"));
@@ -298,6 +299,17 @@ wxArrayString SpringUnitSyncLib::GetUnitsyncErrors()
   return ret;
 }
 
+bool SpringUnitSyncLib::VersionSupports( IUnitSync::GameFeature feature )
+{
+  switch (feature)
+  {
+    case IUnitSync::USYNC_Sett_Handler: return m_set_spring_config_string;
+    case IUnitSync::USYNC_GetInfoMap:   return m_get_infomap_size;
+    case IUnitSync::USYNC_GetDataDir:   return m_get_writeable_data_dir;
+  }
+  return false;
+}
+
 
 bool SpringUnitSyncLib::_IsLoaded()
 {
@@ -370,6 +382,14 @@ wxString SpringUnitSyncLib::GetSpringVersion()
 
   return WX_STRINGC( m_get_spring_version() );
 }
+
+wxString SpringUnitSyncLib::GetSpringDataDir()
+{
+  InitLib( m_get_writeable_data_dir );
+
+  return WX_STRINGC( m_get_writeable_data_dir() );
+}
+
 
 int SpringUnitSyncLib::GetMapCount()
 {

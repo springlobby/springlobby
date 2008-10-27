@@ -57,10 +57,11 @@ class IUnitSync
   public:
     virtual ~IUnitSync() { }
 
-    enum GameFeature {
-      GF_XYStartPos = 1,
-      USYNC_Sett_Handler = 2,
-      USYNC_GetInfoMap = 3
+    enum GameFeature
+    {
+      USYNC_Sett_Handler,
+      USYNC_GetInfoMap,
+      USYNC_GetDataDir
     };
 
     enum MediaType
