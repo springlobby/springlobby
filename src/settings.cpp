@@ -28,6 +28,7 @@
 #include "replay/replaylistfiltervalues.h"
 #include "iunitsync.h"
 #include "globalsmanager.h"
+#include "springunitsynclib.h"
 
 const wxColor defaultHLcolor (255,0,0);
 
@@ -96,15 +97,6 @@ Settings::Settings()
 
 Settings::~Settings()
 {
-  /// dizekat: fixing crashbug. Settings are saved from both OnExit and UI close.
-  /*
-    m_config->Write( _T("/General/firstrun"), false );
-    #if defined(__WXMSW__) && !defined(HAVE_WX26)
-    SaveSettings();
-    #endif
-    SetCacheVersion();
-  */
-    delete m_config;
 }
 
 //! @brief Saves the settings to file
@@ -153,7 +145,7 @@ unsigned int  Settings::GetSettingsVersion()
 wxString Settings::GetLobbyWriteDir()
 {
   wxString sep = wxFileName::GetPathSeparator();
-  wxString path = GetSpringDir() + sep + _T("lobby");
+  wxString path = GetCurrentUsedDataDir() + sep + _T("lobby");
   if ( !wxFileName::DirExists( path ) )
   {
     if ( !wxFileName::Mkdir(  path  ) ) return wxEmptyString;
@@ -579,7 +571,53 @@ void Settings::SetMainWindowLeft( const int value )
     m_config->Write( _T("/Mainwin/left"), value );
 }
 
-wxString Settings::GetSpringDir()
+// ========================================================
+
+std::map<wxString, wxString> Settings::GetSpringVersionList()
+{
+  std::map<wxString, wxString> ret;
+  wxString old_path = m_config->GetPath();
+  m_config->SetPath( _T("/Spring/Paths") );
+  wxString groupname;
+  long dummy;
+  bool groupexist = m_config->GetFirstGroup(groupname, dummy);
+  while ( groupexist )
+  {
+    wxString usync_path = m_config->Read( _T("/") + groupname + _T("/UnitSyncPath"), _T("") );
+    try
+    {
+      SpringUnitSyncLib libloader( usync_path );
+      ret[groupname] = libloader.GetSpringVersion();
+    }
+    catch(...)
+    {
+    }
+
+    groupexist = m_config->GetNextGroup(groupname, dummy);
+  }
+  m_config->SetPath( old_path );
+  return ret;
+}
+
+wxString Settings::GetCurrentUsedSpringIndex()
+{
+  return m_config->Read( _T("/Spring/CurrentIndex"), _T("") );
+}
+
+void Settings::SetUsedSpringIndex( const wxString& index )
+{
+  m_config->Write( _T("/Spring/CurrentIndex"), index );
+}
+
+
+void Settings::DeleteSpringVersionbyIndex( const wxString& index )
+{
+  m_config->DeleteGroup( _T("/Spring/Path/") + index );
+  if( GetCurrentUsedSpringIndex() == index ) SetUsedSpringIndex( _T("") );
+}
+
+
+wxString Settings::GetCurrentUsedDataDir()
 {
   wxString dir;
   if ( usync().IsLoaded() ) dir = usync().GetSpringDataPath();
@@ -588,99 +626,41 @@ wxString Settings::GetSpringDir()
 }
 
 
-bool Settings::GetUnitSyncUseDefLoc()
+wxString Settings::GetCurrentUsedSpringBinary()
 {
-    return m_config->Read( _T("/Spring/use_unitsync_def_loc"), true );
+    return GetSpringBinary( GetCurrentUsedSpringIndex() );
 }
 
 
-void Settings::SetUnitSyncUseDefLoc( const bool usedefloc )
+wxString Settings::GetCurrentUsedUnitSync()
 {
-    m_config->Write( _T("/Spring/use_unitsync_def_loc"), usedefloc );
+    return GetUnitSync( GetCurrentUsedSpringIndex() );
 }
 
 
-
-wxString Settings::GetUnitSyncLoc()
+wxString Settings::GetUnitSync( const wxString& index )
 {
-  return m_config->Read( _T("/Spring/unitsync_loc"), _T("") );
+  if ( IsPortableMode() ) return GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("unitsync") + GetLibExtension();
+  else return m_config->Read( _T("/Spring/Paths/") + index + _T("/UnitSyncPath"), _T("") );
 }
 
 
-
-void Settings::SetUnitSyncLoc( const wxString& loc )
+wxString Settings::GetSpringBinary( const wxString& index )
 {
-    m_config->Write( _T("/Spring/unitsync_loc"), loc );
+    if ( IsPortableMode() ) return GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("spring.exe");
+    else return m_config->Read( _T("/Spring/Paths/") + index + _T("/SpringBinPath"), _T("") );
 }
 
-
-
-bool Settings::GetSpringUseDefLoc()
+void Settings::SetUnitSync( const wxString& index, const wxString& path )
 {
-    return m_config->Read( _T("/Spring/use_spring_def_loc"), true );
+  m_config->Write( _T("/Spring/Paths/") + index + _T("/UnitSyncPath"), path );
 }
 
-
-
-void Settings::SetSpringUseDefLoc( const bool usedefloc )
+void Settings::SetSpringBinary( const wxString& index, const wxString& path )
 {
-    m_config->Write( _T("/Spring/use_spring_def_loc"), usedefloc );
+  m_config->Write( _T("/Spring/Paths/") + index + _T("/SpringBinPath"), path );
 }
-
-
-
-wxString Settings::GetSpringLoc()
-{
-    return m_config->Read( _T("/Spring/exec_loc"), _T("") );
-}
-
-
-
-void Settings::SetSpringLoc( const wxString& loc )
-{
-    m_config->Write( _T("/Spring/exec_loc"), loc );
-}
-
-
-wxString Settings::GetSpringUsedLoc( bool force, bool defloc )
-{
-    if ( IsPortableMode() ) return GetSpringDir() + wxFileName::GetPathSeparator() + _T("spring.exe");
-    bool df;
-    if ( force ) df = defloc;
-    else df = GetSpringUseDefLoc();
-
-    if ( df )
-    {
-        wxString tmp = GetSpringDir();
-        if ( tmp.Last() != wxFILE_SEP_PATH ) tmp += wxFILE_SEP_PATH;
-        tmp += SPRING_BIN;
-        return tmp;
-    }
-    else
-    {
-        return GetSpringLoc();
-    }
-}
-
-wxString Settings::GetUnitSyncUsedLoc( bool force, bool defloc )
-{
-    if ( IsPortableMode() ) return GetSpringDir() + wxFileName::GetPathSeparator() + _T("unitsync.dll");
-    bool df;
-    if ( force ) df = defloc;
-    else df = GetUnitSyncUseDefLoc();
-
-    if ( df )
-    {
-        wxString tmp = sett().GetSpringDir();
-        if ( tmp.Last() != wxFILE_SEP_PATH ) tmp += wxFILE_SEP_PATH;
-        tmp += _T("unitsync") + GetLibExtension();
-        return tmp;
-    }
-    else
-    {
-        return sett().GetUnitSyncLoc();
-    }
-}
+// ===================================================
 
 bool Settings::GetChatLogEnable()
 {
@@ -688,16 +668,16 @@ bool Settings::GetChatLogEnable()
     return m_config->Read( _T("/ChatLog/chatlog_enable"), true );
 }
 
+
 void Settings::SetChatLogEnable( const bool value )
 {
     m_config->Write( _T("/ChatLog/chatlog_enable"), value );
 }
 
+
 wxString Settings::GetChatLogLoc()
 {
-    wxString path;
-    if ( !IsPortableMode() ) path = m_config->Read( _T("/ChatLog/chatlog_loc"), GetLobbyWriteDir() + _T("chatlog") );
-    else path = GetLobbyWriteDir() + _T("chatlog");
+    wxString path = GetLobbyWriteDir() + _T("chatlog");
     if ( !wxFileName::DirExists( path ) )
     {
       if ( !wxFileName::Mkdir(  path  ) ) return wxEmptyString;
@@ -705,10 +685,6 @@ wxString Settings::GetChatLogLoc()
     return path;
 }
 
-void Settings::SetChatLogLoc( const wxString& loc )
-{
-    m_config->Write( _T("/ChatLog/chatlog_loc"), loc );
-}
 
 wxString Settings::GetLastHostDescription()
 {
@@ -871,7 +847,6 @@ wxArrayString Settings::GetPresetList()
 
     groupexist = m_config->GetNextGroup(groupname, dummy);
   }
-
   m_config->SetPath( old_path );
   return ret;
 }

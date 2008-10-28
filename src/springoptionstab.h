@@ -20,10 +20,6 @@ class SpringOptionsTab : public wxScrolledWindow
 
     void DoRestore();
 
-    void HandleExeloc( bool defloc );
-    void HandleUsyncloc( bool defloc );
-    void HandleWebloc( bool defloc );
-
     wxString AutoFindSpringExe( const wxString& def = _T("") );
     wxString AutoFindUnitSyncLib( const wxString& def = _T("") );
 
@@ -32,14 +28,9 @@ class SpringOptionsTab : public wxScrolledWindow
 
     void OnBrowseExec( wxCommandEvent& event );
     void OnBrowseSync( wxCommandEvent& event );
-    void OnBrowseWeb( wxCommandEvent& event );
 
     void OnApply( wxCommandEvent& event );
     void OnRestore( wxCommandEvent& event );
-
-    void OnDefaultExe( wxCommandEvent& event );
-    void OnDefaultUsync( wxCommandEvent& event );
-    void OnDefaultWeb( wxCommandEvent& event );
 
     void OnAutoConf( wxCommandEvent& event );
     void OnFindExec( wxCommandEvent& event );
@@ -49,13 +40,11 @@ class SpringOptionsTab : public wxScrolledWindow
 
     wxStaticText* m_exec_loc_text;
     wxStaticText* m_sync_loc_text;
-    wxStaticText* m_web_loc_text;
 
     wxButton* m_exec_browse_btn;
     wxButton* m_exec_find_btn;
     wxButton* m_sync_browse_btn;
     wxButton* m_sync_find_btn;
-    wxButton* m_web_browse_btn;
 
     wxButton* m_auto_btn;
 
@@ -63,26 +52,21 @@ class SpringOptionsTab : public wxScrolledWindow
     wxRadioButton* m_exec_spec_radio;
     wxRadioButton* m_sync_def_radio;
     wxRadioButton* m_sync_spec_radio;
-    wxRadioButton* m_web_def_radio;
-    wxRadioButton* m_web_spec_radio;
 
     wxTextCtrl* m_exec_edit;
     wxTextCtrl* m_sync_edit;
-    wxTextCtrl* m_web_edit;
 
     wxStaticBox* m_exec_box;
     wxStaticBox* m_sync_box;
     wxStaticBox* m_web_box;
     wxStaticBoxSizer* m_exec_box_sizer;
     wxStaticBoxSizer* m_sync_box_sizer;
-    wxStaticBoxSizer* m_web_box_sizer;
 
 
     wxBoxSizer* m_main_sizer;
     wxBoxSizer* m_aconf_sizer;
     wxBoxSizer* m_exec_loc_sizer;
     wxBoxSizer* m_sync_loc_sizer;
-    wxBoxSizer* m_web_loc_sizer;
 
     Ui& m_ui;
 

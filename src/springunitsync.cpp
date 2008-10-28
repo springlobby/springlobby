@@ -938,7 +938,7 @@ MapInfo SpringUnitSync::_GetMapInfoEx( const wxString& mapname )
 bool SpringUnitSync::ReloadUnitSyncLib()
 {
   usync().FreeUnitSyncLib();
-  usync().LoadUnitSyncLib( sett().GetUnitSyncUsedLoc() );
+  usync().LoadUnitSyncLib( sett().GetCurrentUsedUnitSync() );
   return true;
 }
 

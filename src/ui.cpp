@@ -9,7 +9,6 @@
 #include <wx/intl.h>
 #include <wx/utils.h>
 
-#include "spring.h"
 #include "ui.h"
 #include "tasserver.h"
 #include "settings.h"
@@ -574,7 +573,7 @@ void Ui::OnConnected( Server& server, const wxString& server_name, const wxStrin
 
     if ( !IsSpringCompatible () )
     {
-        if ( m_spring->TestSpringBinary() )
+        if ( usync().IsLoaded() )
         {
             wxString message = _("Your spring version");
             message += _T(" (") + usync().GetSpringVersion() + _T(") ");
@@ -599,7 +598,7 @@ void Ui::OnConnected( Server& server, const wxString& server_name, const wxStrin
 bool Ui::IsSpringCompatible( )
 {
     if ( sett().GetDisableSpringVersionCheck() ) return true;
-    if ( !m_spring->TestSpringBinary() ) return false;
+    if ( usync().IsLoaded() ) return false;
     if ( m_serv->GetRequiredSpring() == _T("*") ) return true; // Server accepts any version.
     if ( (usync().GetSpringVersion() == m_serv->GetRequiredSpring() ) && !m_serv->GetRequiredSpring().IsEmpty() ) return true;
     else return false;
@@ -954,7 +953,7 @@ void Ui::OnJoinedBattle( Battle& battle )
 {
     if ( m_main_win == 0 ) return;
     mw().GetJoinTab().JoinBattle( battle );
-    if ( !Spring::TestSpringBinary() )
+    if ( !usync().IsLoaded() )
     {
         customMessageBox(SL_MAIN_ICON, _("Your spring settings are probably not configured correctly,\nyou should take another look at your settings before trying\nto play online."), _("Spring settings error"), wxOK );
     }

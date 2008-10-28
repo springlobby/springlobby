@@ -692,7 +692,7 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
     }
     else
     {
-        path = sett().GetSpringDir() + wxFileName::GetPathSeparator();
+        path = sett().GetCurrentUsedSpringBinary() + wxFileName::GetPathSeparator();
         switch (row->type)
         {
         case IUnitSync::map:
@@ -810,27 +810,26 @@ void TorrentWrapper::CreateTorrent( const wxString& hash, const wxString& name, 
     if (ingame) return;
 
 
-    if ( sett().GetSpringDir().IsEmpty() ) return; /// no good things can happend if you don't know which folder to r/w files from
+    if ( sett().GetCurrentUsedDataDir().IsEmpty() ) return; /// no good things can happend if you don't know which folder to r/w files from
 
     libtorrent::torrent_info newtorrent;
 
     wxString archivename;
-
     switch ( type )
     {
       case IUnitSync::map :
       {
-          if ( !usync().MapExists( name, hash ) ) return false;
+          if ( !usync().MapExists( name, hash ) ) return;
           int index = usync().GetMapIndex( name );
-          if ( index == -1 ) return false;
+          if ( index == -1 ) return;
           archivename = usync().GetMapArchive( index );
           break;
       }
       case IUnitSync::mod :
       {
-          if ( !usync().ModExists( name, hash ) ) return false;
+          if ( !usync().ModExists( name, hash ) ) return;
           int index = usync().GetModIndex( name );
-          if ( index == -1 ) return false;
+          if ( index == -1 ) return;
           archivename = usync().GetModArchive( index );
           break;
       }
@@ -838,6 +837,7 @@ void TorrentWrapper::CreateTorrent( const wxString& hash, const wxString& name, 
 
     wxString archivepath = usync().GetArchivePath( archivename );
     int i = archivename.Find( archivepath );
+    wxString path;
     if (i<0)
     {
         path = archivepath + archivename;
@@ -856,7 +856,7 @@ void TorrentWrapper::CreateTorrent( const wxString& hash, const wxString& name, 
         newtorrent.add_tracker( STD_STRING(m_tracker_urls[i] +  _T(":DEFAULT_P2P_TRACKER_PORT/announce") ) );
     }
 
-    wxFile torrentfile( StringFilePath );
+    wxFile torrentfile( path );
     if ( !torrentfile.IsOpened() ) return;
     /// calculate the hash for all pieces
     int num = newtorrent.num_pieces();
@@ -882,7 +882,7 @@ void TorrentWrapper::CreateTorrent( const wxString& hash, const wxString& name, 
 
 bool TorrentWrapper::DownloadTorrentFileFromTracker( const wxString& hash )
 {
-    if ( sett().GetSpringDir().IsEmpty() ) return false; /// no good things can happend if you don't know which folder to r/w files from
+    if ( sett().GetCurrentUsedDataDir().IsEmpty() ) return false; /// no good things can happend if you don't know which folder to r/w files from
 
 #ifdef HAVE_WX26
     wxFileName filename( sett().GetTorrentsFolder() + hash + _T(".torrent") ) ;

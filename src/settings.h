@@ -336,21 +336,24 @@ class Settings
     /** @name Spring locations
      * @{
      */
-    wxString GetSpringDir();
 
-    bool   GetUnitSyncUseDefLoc();
-    void   SetUnitSyncUseDefLoc( const bool usedefloc );
-    wxString GetUnitSyncLoc();
-    void   SetUnitSyncLoc( const wxString& loc );
-    wxString GetUnitSyncUsedLoc( bool force = false, bool defloc = false );
+    std::map<wxString, wxString> GetSpringVersionList(); /// index -> version
+    wxString GetCurrentUsedSpringIndex();
+    void SetUsedSpringIndex( const wxString& index );
+    void DeleteSpringVersionbyIndex( const wxString& index );
 
-    bool   GetSpringUseDefLoc();
-    void   SetSpringUseDefLoc( const bool usedefloc );
-    wxString GetSpringLoc();
-    void   SetSpringLoc( const wxString& loc );
-    wxString GetSpringUsedLoc( bool force = false, bool defloc = false );
+    /// convenience wrappers to get current used version paths
+    wxString GetCurrentUsedDataDir();
+    wxString GetCurrentUsedUnitSync();
+    wxString GetCurrentUsedSpringBinary();
+
+    wxString GetUnitSync( const wxString& index );
+    wxString GetSpringBinary( const wxString& index );
+
+    void SetUnitSync( const wxString& index, const wxString& path );
+    void SetSpringBinary( const wxString& index, const wxString& path );
+
     /*@}*/
-
 
     /* ================================================================ */
     /** @name Chat
