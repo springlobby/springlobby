@@ -15,6 +15,14 @@ const unsigned int DEFSETT_MW_HEIGHT = 600;
 const unsigned int DEFSETT_MW_TOP = 50;
 const unsigned int DEFSETT_MW_LEFT = 50;
 const unsigned int DEFSETT_SPRING_PORT = 8452;
+
+const unsigned int SET_MODE_EXPERT = 5000;
+const unsigned int SET_MODE_SIMPLE = 5001;
+const unsigned int DEFSETT_SW_WIDTH = 770;
+const unsigned int DEFSETT_SW_HEIGHT = 580;
+const unsigned int DEFSETT_SW_TOP = 50;
+const unsigned int DEFSETT_SW_LEFT = 50;
+
 //doing this "properly" would mean dragging in stdpaths header, doesn't seem warranted (koshi)
 #define DEFSETT_SPRING_DIR  wxGetCwd()
 
@@ -355,6 +363,9 @@ class Settings
     void SetUnitSync( const wxString& index, const wxString& path );
     void SetSpringBinary( const wxString& index, const wxString& path );
 
+    wxString AutoFindSpringBin();
+    wxString AutoFindUnitSync();
+
     /*@}*/
 
     /* ================================================================ */
@@ -542,7 +553,36 @@ class Settings
     void SetCompletionMethod( CompletionMethod method );
     CompletionMethod GetCompletionMethod(  ) const;
 
+    /** @name SpringSettings
+     * @{
+     */
+    int getMode();
+    void setMode( int );
+    bool getDisableWarning();
+    void setDisableWarning( bool );
+    wxString getSimpleRes();
+    void setSimpleRes( wxString );
+    wxString getSimpleQuality();
+    void setSimpleQuality( wxString );
+    wxString getSimpleDetail();
+    void setSimpleDetail( wxString );
+
+    int    GetSettingsWindowWidth();
+    void   SetSettingsWindowWidth( const int value );
+
+    int    GetSettingsWindowHeight();
+    void   SetSettingsWindowHeight( const int value );
+
+    int    GetSettingsWindowTop();
+    void   SetSettingsWindowTop( const int value );
+
+    int    GetSettingsWindowLeft();
+    void   SetSettingsWindowLeft( const int value );
+  /**@}*/
+
   protected:
+    bool IsSpringBin( const wxString& path );
+
     #ifdef __WXMSW__
     SL_WinConf* m_config; //!< wxConfig object to store and restore  all settings in.
     #else

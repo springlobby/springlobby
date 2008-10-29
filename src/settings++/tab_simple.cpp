@@ -34,7 +34,7 @@ d     This file is part of springsettings,
 #include "Defs.hpp"
 #include "presets.h"
 #include "frame.h"
-#include "se_settings.h"
+#include "../settings.h"
 #include "../springunitsynclib.h"
 
 const wxString infoTextContent= _("These options let you roughly control Spring's rendering.\n"
@@ -83,13 +83,13 @@ void tab_simple::getSetUpResolutionCBX()
 void tab_simple::initOptSizer(wxFlexGridSizer* sizer ) {
 	sizer->Add(new wxStaticText(this, -1, renderQuality_CBX_lbl) , 0,wxTOP|wxBOTTOM,15);
 
-	renderQuality_CBX = new wxComboBox(this, ID_SIMPLE_QUAL_CBX, OptionsHandler.getSimpleQuality(), wxDefaultPosition, wxSize(220,21),
+	renderQuality_CBX = new wxComboBox(this, ID_SIMPLE_QUAL_CBX, sett().getSimpleQuality(), wxDefaultPosition, wxSize(220,21),
 			levels_vlow_To_vHigh_size,levels_vlow_To_vHigh,wxCB_DROPDOWN|wxCB_READONLY);
 	renderQuality_CBX->SetToolTip(_("Sets all quality options to predefined values according to your choice."));
 	sizer->Add(renderQuality_CBX, 0, wxTOP|wxBOTTOM, 15);
 
 	sizer->Add(new wxStaticText(this, -1,renderDetail_CBX_lbl  ), 0,wxALL);
-	renderDetail_CBX = new wxComboBox(this, ID_SIMPLE_DETAIL_CBX, OptionsHandler.getSimpleDetail(), wxDefaultPosition, wxSize(220,21),
+	renderDetail_CBX = new wxComboBox(this, ID_SIMPLE_DETAIL_CBX, sett().getSimpleDetail(), wxDefaultPosition, wxSize(220,21),
 			levels_low_To_High_size,levels_low_To_High,wxCB_DROPDOWN|wxCB_READONLY);
 	renderDetail_CBX->SetToolTip(_("Sets all detail options to predefined values according to your choice."));
 	sizer->Add(renderDetail_CBX, 0, wxBOTTOM, 15);
@@ -181,9 +181,9 @@ void tab_simple::OnButtonClick(wxCommandEvent& event)
 
 void tab_simple::saveCbxChoices()
 {
-	OptionsHandler.setSimpleDetail(renderDetail_CBX->GetValue());
-	OptionsHandler.setSimpleRes(videoMode_CBX->GetValue());
-	OptionsHandler.setSimpleQuality(renderQuality_CBX->GetValue());
+	sett().setSimpleDetail(renderDetail_CBX->GetValue());
+	sett().setSimpleRes(videoMode_CBX->GetValue());
+	sett().setSimpleQuality(renderQuality_CBX->GetValue());
 }
 
 BEGIN_EVENT_TABLE(tab_simple, abstract_panel)

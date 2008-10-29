@@ -109,13 +109,6 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindo
 
   DoRestore();
 
-  if ( sett().IsFirstRun() )
-    {
-      wxCommandEvent event;
-      OnAutoConf( event );
-      OnApply( event );
-    }
-
   if ( sett().IsPortableMode() )
   {
     m_exec_box->Disable();
@@ -138,130 +131,6 @@ void SpringOptionsTab::DoRestore()
 }
 
 
-bool SpringOptionsTab::IsSpringExe( const wxString& exe )
-{
-  if ( !wxFile::Exists( exe ) ) return false;
-#ifdef HAVE_WX28
-  if ( !wxFileName::IsFileExecutable( exe ) ) return false;
-#endif
-  return true;
-}
-
-
-bool SpringOptionsTab::IsUnitSyncLib( const wxString& lib )
-{
-  if ( !wxFile::Exists( lib ) ) return false;
-  return true;
-}
-
-
-wxString SpringOptionsTab::AutoFindSpringExe( const wxString& def )
-{
-  wxPathList pl;
-  wxStandardPathsBase& sp = wxStandardPathsBase::Get();
-
-#ifdef __WXMSW__
-  wxRegKey programreg( _T("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion") );
-  wxString tmp;
-  if ( programreg.QueryValue( _T("ProgramFilesDir"), tmp ) ) pl.Add( tmp );
-
-  pl.Add( _T("C:\\Program") );
-  pl.Add( _T("C:\\Program Files") );
-#else
-  pl.Add( _T("/usr/local/games") );
-  pl.Add( _T("/usr/local/games/bin") );
-  pl.Add( _T("/usr/local/bin") );
-  pl.Add( _T("/usr/games") );
-  pl.Add( _T("/usr/games/bin") );
-  pl.Add( _T("/usr/bin") );
-#endif
-
-  pl.Add( wxFileName::GetCwd() );
-
-#ifdef HAVE_WX28
-  pl.Add( sp.GetExecutablePath() );
-#endif
-
-  pl.Add( wxFileName::GetHomeDir() );
-  pl.Add( sp.GetUserDataDir().BeforeLast( wxFileName::GetPathSeparator() ) );
-  pl.Add( sp.GetDataDir().BeforeLast( wxFileName::GetPathSeparator() ) );
-
-#ifdef HAVE_WX28
-  pl.Add( sp.GetResourcesDir().BeforeLast( wxFileName::GetPathSeparator() ) );
-#endif
-
-  for ( size_t i = 0; i < pl.GetCount(); i++ ) {
-    wxString path = pl[i];
-    if ( path.Last() != wxFileName::GetPathSeparator() ) path += wxFileName::GetPathSeparator();
-    if ( IsSpringExe( path + SPRING_BIN ) ) return path + SPRING_BIN;
-    if ( IsSpringExe( path + _T("Spring") + wxFileName::GetPathSeparator() + SPRING_BIN ) ) return path + _T("Spring") + wxFileName::GetPathSeparator() + SPRING_BIN;
-    if ( IsSpringExe( path + _T("spring") + wxFileName::GetPathSeparator() + SPRING_BIN ) ) return path + _T("spring") + wxFileName::GetPathSeparator() + SPRING_BIN;
-  }
-
-  return def;
-}
-
-
-wxString SpringOptionsTab::AutoFindUnitSyncLib( const wxString& def )
-{
-  wxPathList pl;
-  wxStandardPathsBase& sp = wxStandardPathsBase::Get();
-
-#ifdef __WXMSW__
-  wxRegKey programreg( _T("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion") );
-  wxString tmp;
-  if ( programreg.QueryValue( _T("ProgramFilesDir"), tmp ) ) pl.Add( tmp );
-
-  pl.Add( wxGetOSDirectory() );
-  pl.Add( _T("C:\\Program") );
-  pl.Add( _T("C:\\Program Files") );
-#else
-  pl.Add( _T("/usr/local/lib64") );
-  pl.Add( _T("/usr/local/games") );
-  pl.Add( _T("/usr/local/games/lib") );
-  pl.Add( _T("/usr/local/lib") );
-  pl.Add( _T("/usr/lib64") );
-  pl.Add( _T("/usr/lib") );
-  pl.Add( _T("/usr/games") );
-  pl.Add( _T("/usr/games/lib64") );
-  pl.Add( _T("/usr/games/lib") );
-#endif
-
-  pl.Add( wxFileName::GetCwd() );
-
-#ifdef HAVE_WX28
-  pl.Add( sp.GetExecutablePath() );
-#endif
-
-  pl.Add( wxFileName::GetCwd() );
-
-#ifdef HAVE_WX28
-  pl.Add( sp.GetExecutablePath() );
-#endif
-
-  pl.Add( wxFileName::GetHomeDir() );
-  pl.Add( sp.GetUserDataDir().BeforeLast( wxFileName::GetPathSeparator() ) );
-  pl.Add( sp.GetDataDir().BeforeLast( wxFileName::GetPathSeparator() ) );
-
-#ifdef HAVE_WX28
-  pl.Add( sp.GetResourcesDir().BeforeLast( wxFileName::GetPathSeparator() ) );
-#endif
-
-  for ( size_t i = 0; i < pl.GetCount(); i++ ) {
-    wxString path = pl[i];
-    if ( path.Last() != wxFileName::GetPathSeparator() ) path += wxFileName::GetPathSeparator();
-    if ( IsUnitSyncLib( path + _T("unitsync") + GetLibExtension() ) ) return path + _T("unitsync") + GetLibExtension();
-    if ( IsUnitSyncLib( path + _T("Spring") + wxFileName::GetPathSeparator() + _T("unitsync") + GetLibExtension() ) ) return path + _T("Spring") + wxFileName::GetPathSeparator() + _T("unitsync") + GetLibExtension();
-    if ( IsUnitSyncLib( path + _T("spring") + wxFileName::GetPathSeparator() + _T("unitsync") + GetLibExtension() ) ) return path + _T("spring") + wxFileName::GetPathSeparator() + _T("unitsync") + GetLibExtension();
-    if ( IsUnitSyncLib( path + _T("libunitsync") + GetLibExtension() ) ) return path + _T("libunitsync") + GetLibExtension();
-    if ( IsUnitSyncLib( path + _T("Spring") + wxFileName::GetPathSeparator() + _T("libunitsync") + GetLibExtension() ) ) return path + _T("Spring") + wxFileName::GetPathSeparator() + _T("libunitsync") + GetLibExtension();
-    if ( IsUnitSyncLib( path + _T("spring") + wxFileName::GetPathSeparator() + _T("libunitsync") + GetLibExtension() ) ) return path + _T("spring") + wxFileName::GetPathSeparator() + _T("libunitsync") + GetLibExtension();
-  }
-
-  return def;
-}
-
-
 void SpringOptionsTab::OnAutoConf( wxCommandEvent& event )
 {
   OnFindExec( event );
@@ -271,15 +140,15 @@ void SpringOptionsTab::OnAutoConf( wxCommandEvent& event )
 
 void SpringOptionsTab::OnFindExec( wxCommandEvent& event )
 {
-  wxString found = AutoFindSpringExe( m_exec_edit->GetValue() );
-  m_exec_edit->SetValue( found );
+  wxString found = sett().AutoFindSpringBin();
+  if ( !found.IsEmpty() ) m_exec_edit->SetValue( found );
 }
 
 
 void SpringOptionsTab::OnFindSync( wxCommandEvent& event )
 {
-  wxString found = AutoFindUnitSyncLib( m_sync_edit->GetValue() );
-  m_sync_edit->SetValue( found );
+  wxString found = sett().AutoFindUnitSync();
+  if( !found.IsEmpty() ) m_sync_edit->SetValue( found );
 }
 
 void SpringOptionsTab::OnBrowseExec( wxCommandEvent& event )
@@ -302,9 +171,8 @@ void SpringOptionsTab::OnBrowseSync( wxCommandEvent& event )
 
 void SpringOptionsTab::OnApply( wxCommandEvent& event )
 {
-  sett().SetSpringBinary( _T("default"), m_exec_edit->GetValue() );
-  sett().SetUnitSync( _T("default"), m_sync_edit->GetValue() );
-  sett().SetUsedSpringIndex( _T("default") );
+  sett().SetSpringBinary( sett().GetCurrentUsedSpringIndex(), m_exec_edit->GetValue() );
+  sett().SetUnitSync( sett().GetCurrentUsedSpringIndex(), m_sync_edit->GetValue() );
 
   if ( sett().IsFirstRun() ) return;
 

@@ -36,7 +36,7 @@
 
 #include "Defs.hpp"
 #include "se_utils.h"
-#include "se_settings.h"
+#include "../settings.h"
 #include "presets.h"
 #include "../spinctld.h"
 

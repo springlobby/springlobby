@@ -29,6 +29,7 @@
 #include "iunitsync.h"
 #include "globalsmanager.h"
 #include "springunitsynclib.h"
+#include "settings++/presets.h"
 
 const wxColor defaultHLcolor (255,0,0);
 
@@ -574,6 +575,114 @@ void Settings::SetMainWindowLeft( const int value )
 
 // ========================================================
 
+
+
+wxString Settings::AutoFindSpringBin()
+{
+  wxPathList pl;
+  wxStandardPathsBase& sp = wxStandardPathsBase::Get();
+
+#ifdef __WXMSW__
+  wxRegKey programreg( _T("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion") );
+  wxString tmp;
+  if ( programreg.QueryValue( _T("ProgramFilesDir"), tmp ) ) pl.Add( tmp );
+
+  pl.Add( _T("C:\\Program") );
+  pl.Add( _T("C:\\Program Files") );
+#else
+  pl.Add( _T("/usr/local/games") );
+  pl.Add( _T("/usr/local/games/bin") );
+  pl.Add( _T("/usr/local/bin") );
+  pl.Add( _T("/usr/games") );
+  pl.Add( _T("/usr/games/bin") );
+  pl.Add( _T("/usr/bin") );
+#endif
+
+  pl.Add( wxFileName::GetCwd() );
+
+#ifdef HAVE_WX28
+  pl.Add( sp.GetExecutablePath() );
+#endif
+
+  pl.Add( wxFileName::GetHomeDir() );
+  pl.Add( sp.GetUserDataDir().BeforeLast( wxFileName::GetPathSeparator() ) );
+  pl.Add( sp.GetDataDir().BeforeLast( wxFileName::GetPathSeparator() ) );
+
+#ifdef HAVE_WX28
+  pl.Add( sp.GetResourcesDir().BeforeLast( wxFileName::GetPathSeparator() ) );
+#endif
+
+  for ( size_t i = 0; i < pl.GetCount(); i++ ) {
+    wxString path = pl[i];
+    if ( path.Last() != wxFileName::GetPathSeparator() ) path += wxFileName::GetPathSeparator();
+    if ( IsSpringBin( path + SPRING_BIN ) ) return path + SPRING_BIN;
+    if ( IsSpringBin( path + _T("Spring") + wxFileName::GetPathSeparator() + SPRING_BIN ) ) return path + _T("Spring") + wxFileName::GetPathSeparator() + SPRING_BIN;
+    if ( IsSpringBin( path + _T("spring") + wxFileName::GetPathSeparator() + SPRING_BIN ) ) return path + _T("spring") + wxFileName::GetPathSeparator() + SPRING_BIN;
+  }
+  return _T("");
+}
+
+
+wxString Settings::AutoFindUnitSync()
+{
+  wxPathList pl;
+  wxStandardPathsBase& sp = wxStandardPathsBase::Get();
+
+#ifdef __WXMSW__
+  wxRegKey programreg( _T("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion") );
+  wxString tmp;
+  if ( programreg.QueryValue( _T("ProgramFilesDir"), tmp ) ) pl.Add( tmp );
+
+  pl.Add( wxGetOSDirectory() );
+  pl.Add( _T("C:\\Program") );
+  pl.Add( _T("C:\\Program Files") );
+#else
+  pl.Add( _T("/usr/local/lib64") );
+  pl.Add( _T("/usr/local/games") );
+  pl.Add( _T("/usr/local/games/lib") );
+  pl.Add( _T("/usr/local/lib") );
+  pl.Add( _T("/usr/lib64") );
+  pl.Add( _T("/usr/lib") );
+  pl.Add( _T("/usr/games") );
+  pl.Add( _T("/usr/games/lib64") );
+  pl.Add( _T("/usr/games/lib") );
+#endif
+
+  pl.Add( wxFileName::GetCwd() );
+
+#ifdef HAVE_WX28
+  pl.Add( sp.GetExecutablePath() );
+#endif
+
+  pl.Add( wxFileName::GetCwd() );
+
+#ifdef HAVE_WX28
+  pl.Add( sp.GetExecutablePath() );
+#endif
+
+  pl.Add( wxFileName::GetHomeDir() );
+  pl.Add( sp.GetUserDataDir().BeforeLast( wxFileName::GetPathSeparator() ) );
+  pl.Add( sp.GetDataDir().BeforeLast( wxFileName::GetPathSeparator() ) );
+
+#ifdef HAVE_WX28
+  pl.Add( sp.GetResourcesDir().BeforeLast( wxFileName::GetPathSeparator() ) );
+#endif
+
+  for ( size_t i = 0; i < pl.GetCount(); i++ ) {
+    wxString path = pl[i];
+    if ( path.Last() != wxFileName::GetPathSeparator() ) path += wxFileName::GetPathSeparator();
+    if ( wxFile::Exists( path + _T("unitsync") + GetLibExtension() ) ) return path + _T("unitsync") + GetLibExtension();
+    if ( wxFile::Exists( path + _T("Spring") + wxFileName::GetPathSeparator() + _T("unitsync") + GetLibExtension() ) ) return path + _T("Spring") + wxFileName::GetPathSeparator() + _T("unitsync") + GetLibExtension();
+    if ( wxFile::Exists( path + _T("spring") + wxFileName::GetPathSeparator() + _T("unitsync") + GetLibExtension() ) ) return path + _T("spring") + wxFileName::GetPathSeparator() + _T("unitsync") + GetLibExtension();
+    if ( wxFile::Exists( path + _T("libunitsync") + GetLibExtension() ) ) return path + _T("libunitsync") + GetLibExtension();
+    if ( wxFile::Exists( path + _T("Spring") + wxFileName::GetPathSeparator() + _T("libunitsync") + GetLibExtension() ) ) return path + _T("Spring") + wxFileName::GetPathSeparator() + _T("libunitsync") + GetLibExtension();
+    if ( wxFile::Exists( path + _T("spring") + wxFileName::GetPathSeparator() + _T("libunitsync") + GetLibExtension() ) ) return path + _T("spring") + wxFileName::GetPathSeparator() + _T("libunitsync") + GetLibExtension();
+  }
+
+  return _T("");
+}
+
+
 void Settings::ConvertOldSpringDirsOptions()
 {
   SetUnitSync( _T("default"), m_config->Read( _T("/Spring/unitsync_loc"), _T("") ) );
@@ -616,7 +725,7 @@ std::map<wxString, wxString> Settings::GetSpringVersionList()
 
 wxString Settings::GetCurrentUsedSpringIndex()
 {
-  return m_config->Read( _T("/Spring/CurrentIndex"), _T("") );
+  return m_config->Read( _T("/Spring/CurrentIndex"), _T("default") );
 }
 
 void Settings::SetUsedSpringIndex( const wxString& index )
@@ -656,14 +765,14 @@ wxString Settings::GetCurrentUsedUnitSync()
 wxString Settings::GetUnitSync( const wxString& index )
 {
   if ( IsPortableMode() ) return GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("unitsync") + GetLibExtension();
-  else return m_config->Read( _T("/Spring/Paths/") + index + _T("/UnitSyncPath"), _T("") );
+  else return m_config->Read( _T("/Spring/Paths/") + index + _T("/UnitSyncPath"), AutoFindUnitSync() );
 }
 
 
 wxString Settings::GetSpringBinary( const wxString& index )
 {
     if ( IsPortableMode() ) return GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("spring.exe");
-    else return m_config->Read( _T("/Spring/Paths/") + index + _T("/SpringBinPath"), _T("") );
+    else return m_config->Read( _T("/Spring/Paths/") + index + _T("/SpringBinPath"), AutoFindSpringBin() );
 }
 
 void Settings::SetUnitSync( const wxString& index, const wxString& path )
@@ -1611,4 +1720,136 @@ void Settings::SetCompletionMethod( CompletionMethod method )
 Settings::CompletionMethod Settings::GetCompletionMethod(  ) const
 {
     return  (CompletionMethod )m_config->Read( _T("/General/CompletionMethod"), (int)MatchExact );
+}
+
+
+//////////////////////////////////////////////////////////////////////////////
+///                            SpringSettings                              ///
+//////////////////////////////////////////////////////////////////////////////
+
+
+int Settings::getMode()
+{
+	int mode;
+	m_config->Read( _T("/SpringSettings/mode"), &mode, SET_MODE_SIMPLE );
+	return mode;
+}
+
+void Settings::setMode(int mode)
+{
+	m_config->Write( _T("/SpringSettings/mode"), mode );
+}
+
+bool Settings::getDisableWarning()
+{
+	bool tmp;
+	m_config->Read( _T("/SpringSettings/disableWarning"), &tmp, false );
+	return tmp;
+}
+
+void Settings::setDisableWarning(bool disable)
+{
+	m_config->Write( _T("/SpringSettings/disableWarning"), disable);
+}
+
+
+wxString Settings::getSimpleRes()
+{
+	wxString def = vl_Resolution_Str[1];
+	m_config->Read( _T("/SpringSettings/SimpleRes"),&def);
+	return def;
+}
+void Settings::setSimpleRes(wxString res)
+{
+	m_config->Write(_T("/SpringSettings/SimpleRes"),res);
+}
+
+wxString Settings::getSimpleQuality()
+{
+	wxString def = wxT("medium");
+	m_config->Read( _T("/SpringSettings/SimpleQuality"),&def);
+	return def;
+}
+
+void Settings::setSimpleQuality(wxString qual)
+{
+	m_config->Write(_T("/SpringSettings/SimpleQuality"),qual);
+}
+
+wxString Settings::getSimpleDetail()
+{
+	wxString def = wxT("medium");
+	m_config->Read( _T("/SpringSettings/SimpleDetail"),&def);
+	return def;
+}
+
+void Settings::setSimpleDetail(wxString det)
+{
+	m_config->Write(_T("/SpringSettings/SimpleDetail"),det);
+}
+
+
+/************* SPRINGSETTINGS WINDOW POS/SIZE   ******************/
+//! @brief Get left position of MainWindow.
+int Settings::GetSettingsWindowLeft()
+{
+  return m_config->Read( _T("/Settwin/left"), DEFSETT_SW_LEFT );
+}
+
+//! @brief Set left position of SettingsWindow
+void Settings::SetSettingsWindowLeft( const int value )
+{
+  m_config->Write( _T("/Settwin/left"), value );
+}
+
+//! @brief Get height of SettingsWindow.
+int Settings::GetSettingsWindowHeight()
+{
+  return m_config->Read( _T("/Settwin/height"), DEFSETT_SW_HEIGHT );
+}
+
+
+//! @brief Set height position of SettingsWindow
+void Settings::SetSettingsWindowHeight( const int value )
+{
+  m_config->Write( _T("/Settwin/height"), value );
+}
+
+
+//! @brief Get top position of SettingsWindow.
+int Settings::GetSettingsWindowTop()
+{
+  return m_config->Read( _T("/Settwin/top"), DEFSETT_SW_TOP );
+}
+
+
+//! @brief Set top position of SettingsWindow
+void Settings::SetSettingsWindowTop( const int value )
+{
+  m_config->Write( _T("/Settwin/top"), value );
+}
+
+//! @brief Get width of MainWindow.
+int Settings::GetSettingsWindowWidth()
+{
+  return m_config->Read( _T("/Settwin/width"), DEFSETT_SW_WIDTH );
+}
+
+
+//! @brief Set width position of MainWindow
+void Settings::SetSettingsWindowWidth( const int value )
+{
+  m_config->Write( _T("/Settwin/width"), value );
+}
+
+/*********** WINDOW SIZE/POS END *****************/
+
+
+bool Settings::IsSpringBin( const wxString& path )
+{
+  if ( !wxFile::Exists( path ) ) return false;
+#ifdef HAVE_WX28
+  if ( !wxFileName::IsFileExecutable( path ) ) return false;
+#endif
+  return true;
 }

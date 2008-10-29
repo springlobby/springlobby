@@ -20,12 +20,6 @@ class SpringOptionsTab : public wxScrolledWindow
 
     void DoRestore();
 
-    wxString AutoFindSpringExe( const wxString& def = _T("") );
-    wxString AutoFindUnitSyncLib( const wxString& def = _T("") );
-
-    bool IsSpringExe( const wxString& exe );
-    bool IsUnitSyncLib( const wxString& lib );
-
     void OnBrowseExec( wxCommandEvent& event );
     void OnBrowseSync( wxCommandEvent& event );
 
