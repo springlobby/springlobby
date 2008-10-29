@@ -173,7 +173,6 @@ class IUnitSync
     virtual void GetReplayList(std::vector<wxString> &ret) = 0;
 
     virtual void SetSpringDataPath( const wxString& path ) = 0;
-    virtual wxString GetSpringDataPath() = 0;
 
     virtual bool FileExists( const wxString& name ) = 0;
 

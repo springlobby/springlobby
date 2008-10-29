@@ -967,6 +967,10 @@ springsettings_SOURCES = \
 	src/springunitsynclib.h \
 	src/settings.cpp \
 	src/settings.h \
+	src/utils.cpp \
+	src/utils.h \
+	src/uiutils.cpp \
+	src/uiutils.h \
 	src/globalsmanager.cpp \
 	src/settings++/se_utils.cpp \
 	src/settings++/se_utils.h \

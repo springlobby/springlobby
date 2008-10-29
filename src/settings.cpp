@@ -26,7 +26,6 @@
 #include "uiutils.h"
 #include "battlelistfiltervalues.h"
 #include "replay/replaylistfiltervalues.h"
-#include "iunitsync.h"
 #include "globalsmanager.h"
 #include "springunitsynclib.h"
 #include "settings++/presets.h"
@@ -744,7 +743,11 @@ void Settings::DeleteSpringVersionbyIndex( const wxString& index )
 wxString Settings::GetCurrentUsedDataDir()
 {
   wxString dir;
-  if ( usync().IsLoaded() ) dir = usync().GetSpringDataPath();
+  if ( susynclib().IsLoaded() )
+  {
+    if ( susynclib().VersionSupports( IUnitSync::USYNC_GetDataDir ) ) dir = susynclib().GetSpringDataDir();
+    else dir = susynclib().GetSpringConfigString( _T("SpringData"), _T("") );
+  }
   if ( dir.IsEmpty() ) dir = wxStandardPathsBase::Get().GetUserDataDir(); /// fallback
   return dir;
 }

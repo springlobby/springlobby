@@ -948,13 +948,6 @@ void SpringUnitSync::SetSpringDataPath( const wxString& path )
 }
 
 
-wxString SpringUnitSync::GetSpringDataPath()
-{
-  if ( VersionSupports( USYNC_GetDataDir ) ) return susynclib().GetSpringDataDir();
-  else return susynclib().GetSpringConfigString( _T("SpringData"), _T("") );
-}
-
-
 wxString SpringUnitSync::GetFileCachePath( const wxString& name, const wxString& hash, bool IsMod )
 {
   wxString ret = sett().GetCachePath();
