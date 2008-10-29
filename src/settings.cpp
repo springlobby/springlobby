@@ -710,7 +710,7 @@ std::map<wxString, wxString> Settings::GetSpringVersionList()
     wxString usync_path = m_config->Read( _T("/") + groupname + _T("/UnitSyncPath"), _T("") );
     try
     {
-      SpringUnitSyncLib libloader( usync_path );
+      SpringUnitSyncLib libloader( usync_path, false );
       ret[groupname] = libloader.GetSpringVersion();
     }
     catch(...)

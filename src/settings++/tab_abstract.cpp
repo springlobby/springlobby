@@ -114,11 +114,11 @@ bool abstract_panel::loadValuesIntoMap()
 	{
 		for (int i = 0; i< intControls_size;++i)
 		{
-			intSettings[intControls[i].key] = configHandler->GetSpringConfigInt(intControls[i].key,fromString(intControls[i].def));
+			intSettings[intControls[i].key] = configHandler.GetSpringConfigInt(intControls[i].key,fromString(intControls[i].def));
 		}
         for (int i = 0; i< floatControls_size;++i)
 		{
-			float tmp = configHandler->GetSpringConfigFloat(floatControls[i].key,fromString(floatControls[i].def));
+			float tmp = configHandler.GetSpringConfigFloat(floatControls[i].key,fromString(floatControls[i].def));
 			floatSettings[floatControls[i].key] = tmp;
 		}
 	}
@@ -540,16 +540,16 @@ bool abstract_panel::saveSettings() {
     try {
 	    for (intMap::iterator i = intSettings.begin(); i != intSettings.end();++i)
 	    {
-	        configHandler->SetSpringConfigInt(i->first,i->second);
+	        configHandler.SetSpringConfigInt(i->first,i->second);
 	    }
 //	    for (stringMap::iterator s = stringSettings.begin(); s != stringSettings.end();++s)
 //	    {
 //	    	//not used
-//	        //configHandler->SetSpringConfigString(s->first,s->second);
+//	        //configHandler.SetSpringConfigString(s->first,s->second);
 //	    }
 	    for (floatMap::iterator f = floatSettings.begin(); f != floatSettings.end();++f)
 	    {
-	        configHandler->SetSpringConfigFloat(f->first,f->second);
+	        configHandler.SetSpringConfigFloat(f->first,f->second);
 	    }
     } catch (...) {
     	customMessageBox(SS_MAIN_ICON,_("Could not save, unitsync not properly loaded"), _("SpringSettings Error"), wxOK|wxICON_HAND, 0);

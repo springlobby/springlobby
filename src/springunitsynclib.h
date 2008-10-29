@@ -204,9 +204,10 @@ class SpringUnitSyncLib
     /**
      * Constructor.
      * @param path path to the unitsync lib, if specified the lib will be loaded when created.
+     * @param DoInit specifies whenever init function should be attempted to run after successful load.
      * @see Load().
     */
-    SpringUnitSyncLib( const wxString& path = wxEmptyString );
+    SpringUnitSyncLib( const wxString& path = wxEmptyString, bool DoInit = false );
 
     /**
      * Destructor, unloads unitsync if loaded.
@@ -216,10 +217,11 @@ class SpringUnitSyncLib
     /**
      * Loads the unitsync library from path.
      * @param path ath to the unitsync lib.
+     * @param DoInit specifies whenever init function should be attempted to run after successful load.
      * @see Unload().
      * @note Throws runtime_error if load failed.
      */
-    void Load( const wxString& path );
+    void Load( const wxString& path, bool DoInit );
 
     /**
      * Unload the unitsync library. Does nothing if not loaded.
@@ -232,7 +234,7 @@ class SpringUnitSyncLib
      * @note Throws logic_error if no path has been set in constructor or in Load() call. Throws runtime_error if reloading fails.
      * @see Load().
      */
-    void Reload();
+    void Reload( bool DoInit );
 
     /**
      * Returns true if the library is loaded.
@@ -611,6 +613,6 @@ class SpringUnitSyncLib
     /*@}*/
 };
 
-SpringUnitSyncLib* susynclib();
+SpringUnitSyncLib& susynclib();
 
 #endif //SPRINGLOBBY_HEADERGUARD_SPRINGUNITSYNCLIB_H

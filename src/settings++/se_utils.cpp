@@ -17,14 +17,14 @@ int fromString(const wxString& s) {
 
 void loadUnitsync()
 {
-	//should be done in susynclib()->Load
+	//should be done in susynclib().Load
 	//wxSetWorkingDirectory(OptionsHandler.getUsyncLoc().BeforeLast('\\'));
 #ifdef __WXMSW__
 	try
 	{
 		wxCriticalSection m_lock;
 		wxCriticalSectionLocker lock_criticalsection(m_lock);
-		susynclib()->Load(_T("unitsync.dll"));
+		susynclib().Load(_T("unitsync.dll"), false);
 	}
 	catch (...)
 	{
@@ -33,7 +33,7 @@ void loadUnitsync()
         {
             wxCriticalSection m_lock;
             wxCriticalSectionLocker lock_criticalsection(m_lock);
-            susynclib()->Load(sett().GetCurrentUsedUnitSync());
+            susynclib().Load(sett().GetCurrentUsedUnitSync(), false);
         }
         catch (...)
         {

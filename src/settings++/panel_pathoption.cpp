@@ -83,7 +83,7 @@ void PathOptionPanel::UsePaths(wxCommandEvent& event)
 	sett().SetUnitSync( sett().GetCurrentUsedSpringIndex(),  usync_ctrl->GetValue() );
 	loadUnitsync();
 
-	if ( !(susynclib()->IsLoaded()) )
+	if ( !(susynclib().IsLoaded()) )
 	{
 		customMessageBox(SS_MAIN_ICON, _("SpringSettings is unable to load your unitsync library.\n"
 				"You might want to take another look at your unitsync setting.\n"
