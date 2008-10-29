@@ -703,15 +703,17 @@ void Settings::ConvertOldSpringDirsOptions()
 
 std::map<wxString, wxString> Settings::GetSpringVersionList()
 {
+  wxLogDebugFunc(_T(""));
   std::map<wxString, wxString> ret;
   wxString old_path = m_config->GetPath();
   m_config->SetPath( _T("/Spring/Paths") );
   wxString groupname;
   long dummy;
+
   bool groupexist = m_config->GetFirstGroup(groupname, dummy);
   while ( groupexist )
   {
-    wxString usync_path = m_config->Read( _T("/") + groupname + _T("/UnitSyncPath"), _T("") );
+    wxString usync_path = m_config->Read( _T("/Spring/Paths/") + groupname + _T("/UnitSyncPath"), _T("") );
     try
     {
       SpringUnitSyncLib libloader( usync_path, false );
@@ -720,7 +722,6 @@ std::map<wxString, wxString> Settings::GetSpringVersionList()
     catch(...)
     {
     }
-
     groupexist = m_config->GetNextGroup(groupname, dummy);
   }
   m_config->SetPath( old_path );
@@ -972,11 +973,11 @@ wxArrayString Settings::GetPresetList()
   m_config->SetPath( _T("/Hosting/Preset") );
   wxString groupname;
   long dummy;
+
   bool groupexist = m_config->GetFirstGroup(groupname, dummy);
   while ( groupexist )
   {
     ret.Add( groupname );
-
     groupexist = m_config->GetNextGroup(groupname, dummy);
   }
   m_config->SetPath( old_path );
