@@ -52,19 +52,19 @@ Settings::Settings()
   if (  wxFileName::FileExists( userfilepath ) || !wxFileName::FileExists( globalfilepath ) || !wxFileName::IsFileWritable( globalfilepath ) )
   {
      m_chosed_path = userfilepath;
-     m_portable_mode = false;
+     SetPortableMode( false );
   }
   else
   {
      m_chosed_path = globalfilepath; /// portable mode, use only current app paths
-     m_portable_mode = true;
+     SetPortableMode ( true );
   }
 
   // if it doesn't exist, try to create it
   if ( !wxFileName::FileExists( m_chosed_path ) )
   {
      // if directory doesn't exist, try to create it
-     if ( !m_portable_mode && !wxFileName::DirExists( wxStandardPaths::Get().GetUserDataDir() ) )
+     if ( !IsPortableMode() && !wxFileName::DirExists( wxStandardPaths::Get().GetUserDataDir() ) )
          wxFileName::Mkdir( wxStandardPaths::Get().GetUserDataDir() );
 
      wxFileOutputStream outstream( m_chosed_path );
@@ -88,7 +88,7 @@ Settings::Settings()
   //removed temporarily because it's suspected to cause a bug with userdir creation
  // m_config = new wxConfig( _T("SpringLobby"), wxEmptyString, _T(".springlobby/springlobby.conf"), _T("springlobby.global.conf"), wxCONFIG_USE_LOCAL_FILE | wxCONFIG_USE_GLOBAL_FILE  );
   m_config = new wxConfig( _T("SpringLobby"), wxEmptyString, _T(".springlobby/springlobby.conf"), _T("springlobby.global.conf") );
-  m_portable_mode = false;
+  SetPortableMode ( false );
   #endif
   if ( !m_config->Exists( _T("/Server") ) ) SetDefaultSettings();
 
@@ -122,6 +122,11 @@ void Settings::SaveSettings()
 bool Settings::IsPortableMode()
 {
   return m_portable_mode;
+}
+
+void Settings::SetPortableMode( bool mode )
+{
+  m_portable_mode = mode;
 }
 
 

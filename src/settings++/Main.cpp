@@ -69,7 +69,7 @@ bool Springsettings::OnInit()
 {
 	//initialize all loggers
     InitializeLoggingTargets();
-
+		sett().ForcePortableMode( true );
     settings_frame* frame = new settings_frame(NULL,wxID_ANY,wxT("SpringSettings"),wxDefaultPosition,
     		wxDefaultSize);
     SetTopWindow(frame);

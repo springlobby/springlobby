@@ -96,6 +96,7 @@ class Settings
     ~Settings();
 
     bool IsPortableMode();
+    void SetPortableMode( bool mode );
 
     /** Initialize all settings to default.
      */
