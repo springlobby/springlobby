@@ -317,8 +317,8 @@ void ReplayTab::OnWatch( wxCommandEvent& event )
                   wxLogMessage(_T("replay requires version: %s, switching to profile: %s"), rep.SpringVersion.c_str(), itor->first.c_str() );
                   sett().SetUsedSpringIndex( itor->first );
                   ui().ReloadUnitSync();
-                  versionfound = true;
                 }
+                versionfound = true;
               }
             }
             if ( !versionfound )
