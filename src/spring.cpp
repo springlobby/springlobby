@@ -68,7 +68,7 @@ bool Spring::RunReplay ( wxString& filename )
 
   wxLogMessage( _T("launching spring with replay: ") + filename );
 
-  wxString cmd =  _T("\"") + sett().GetCurrentUsedDataDir() + _T("\" \"") + filename + _T("\"") ;
+  wxString cmd =  _T("\"") + sett().GetCurrentUsedSpringBinary() + _T("\" \"") + filename + _T("\"") ;
   wxLogMessage( _T("cmd: %s"), cmd.c_str() );
   wxSetWorkingDirectory( sett().GetCurrentUsedDataDir() );
   if ( sett().UseOldSpringLaunchMethod() ) {
@@ -126,7 +126,7 @@ bool Spring::Run( Battle& battle )
   #endif
 
   wxString extra = battle.GetAutoHost().GetExtraCommandLineParams();
-  wxString cmd =  _T("\"") + sett().GetCurrentUsedDataDir() + _T("\" ") + extra + _T(" \"") + path +  _T("script.txt\"");
+  wxString cmd =  _T("\"") + sett().GetCurrentUsedSpringBinary() + _T("\" ") + extra + _T(" \"") + path +  _T("script.txt\"");
   wxLogMessage( _T("cmd: %s"), cmd.c_str() );
   wxSetWorkingDirectory( sett().GetCurrentUsedDataDir() );
   if ( sett().UseOldSpringLaunchMethod() ) {
@@ -171,7 +171,7 @@ bool Spring::Run( SinglePlayerBattle& battle )
     return false;
   }
 
-  wxString cmd =  _T("\"") + sett().GetCurrentUsedDataDir() + _T("\" \"") + path + _T("script.txt\"");
+  wxString cmd =  _T("\"") + sett().GetCurrentUsedSpringBinary() + _T("\" \"") + path + _T("script.txt\"");
   wxSetWorkingDirectory( sett().GetCurrentUsedDataDir() );
   if ( sett().UseOldSpringLaunchMethod() ) {
     if ( m_wx_process == 0 ) m_wx_process = new wxSpringProcess( *this );
