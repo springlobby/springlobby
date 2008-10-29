@@ -632,7 +632,6 @@ void Ui::OnDisconnected( Server& server )
         return;
     }
 
-    mw().GetJoinTab().GetBattleListTab().SetFilterActiv( false );
     mw().GetJoinTab().LeaveCurrentBattle();
     mw().GetJoinTab().GetBattleListTab().RemoveAllBattles();
 
