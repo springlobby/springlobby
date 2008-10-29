@@ -299,6 +299,13 @@ wxArrayString SpringUnitSyncLib::GetUnitsyncErrors()
   return ret;
 }
 
+bool SpringUnitSyncLib::Init()
+{
+  InitLib( m_init );
+
+  return m_init( true, 1 );
+}
+
 bool SpringUnitSyncLib::VersionSupports( IUnitSync::GameFeature feature )
 {
   switch (feature)

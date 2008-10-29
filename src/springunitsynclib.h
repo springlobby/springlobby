@@ -253,6 +253,8 @@ class SpringUnitSyncLib
      */
     wxArrayString GetUnitsyncErrors();
 
+    bool Init();
+
     bool VersionSupports( IUnitSync::GameFeature feature );
 
 

@@ -725,6 +725,7 @@ std::map<wxString, wxString> Settings::GetSpringVersionList()
     groupexist = m_config->GetNextGroup(groupname, dummy);
   }
   m_config->SetPath( old_path );
+  susynclib().Init(); /// re-init current "main" unitsync
   return ret;
 }
 

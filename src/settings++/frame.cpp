@@ -64,7 +64,7 @@ settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &
 	alreadyCalled = false;
 	parentWindow = parent;
 
-	loadUnitsync();
+	if ( !susynclib().IsLoaded() ) loadUnitsync();
 
 	notebook = new wxNotebook(this, ID_OPTIONS, wxPoint(0,0),TAB_SIZE, wxNB_TOP|wxNB_NOPAGETHEME);
 	notebook->SetFont(wxFont(8, wxSWISS, wxNORMAL,wxNORMAL, false, _T("Tahoma")));
