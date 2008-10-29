@@ -141,7 +141,8 @@ wxString se_settings::getUsyncLoc()
 {
 	wxString def;
 	def = AutoFindUnitSyncLib(def);
-	def = (se_config->Read( _T("/Spring/unitsync_loc"), def ));
+  wxString profileindex = se_config->Read( _T("/Spring/CurrentIndex"), _T("") );
+	def = (se_config->Read( _T("/Spring/Paths/") + profileindex + _T("/UnitSyncPath"), def ));
 	return def;
 }
 
