@@ -270,7 +270,6 @@ SET(SettingsSrc
 	src/settings++/helpmenufunctions.cpp
 	src/settings++/panel_pathoption.cpp
 	src/settings++/presets.cpp
-	src/settings++/se_settings.cpp
 	src/settings++/se_utils.cpp
 	src/settings++/tab_abstract.cpp
 	src/settings++/tab_audio.cpp

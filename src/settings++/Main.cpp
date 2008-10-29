@@ -79,7 +79,7 @@ bool Springsettings::OnInit()
 
 int Springsettings::OnExit()
 {
-	susynclib()->Unload();
+	susynclib().Unload();
 	return 0;
 }
 
