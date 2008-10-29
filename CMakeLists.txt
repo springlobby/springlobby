@@ -265,6 +265,7 @@ SET(SpringLobbySrc
 )
 
 SET(SettingsSrc
+	src/settings.cpp
 	src/settings++/custom_dialogs.cpp
 	src/settings++/frame.cpp
 	src/settings++/helpmenufunctions.cpp

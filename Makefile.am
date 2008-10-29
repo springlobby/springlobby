@@ -965,6 +965,8 @@ springsettings_SOURCES = \
 	src/spinctld.cpp \
 	src/springunitsynclib.cpp \
 	src/springunitsynclib.h \
+	src/settings.cpp \
+	src/settings.h \
 	src/globalsmanager.cpp \
 	src/settings++/se_utils.cpp \
 	src/settings++/se_utils.h \
