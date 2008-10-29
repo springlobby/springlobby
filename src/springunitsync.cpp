@@ -62,8 +62,7 @@ bool SpringUnitSync::LoadUnitSyncLib( const wxString& unitsyncloc )
    if (ret)
    {
       PopulateArchiveList();
-      ///crashes
-      //CacheThread().Start();
+      CacheThread().Start();
    }
    return ret;
 }

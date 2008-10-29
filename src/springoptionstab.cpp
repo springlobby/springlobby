@@ -302,6 +302,10 @@ void SpringOptionsTab::OnBrowseSync( wxCommandEvent& event )
 
 void SpringOptionsTab::OnApply( wxCommandEvent& event )
 {
+  sett().SetSpringBinary( _T("default"), m_exec_edit->GetValue() );
+  sett().SetUnitSync( _T("default"), m_sync_edit->GetValue() );
+  sett().SetUsedSpringIndex( _T("default") );
+
   if ( sett().IsFirstRun() ) return;
 
   usync().FreeUnitSyncLib();

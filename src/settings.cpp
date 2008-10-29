@@ -104,6 +104,7 @@ void Settings::SaveSettings()
 {
   m_config->Write( _T("/General/firstrun"), false );
   SetCacheVersion();
+  SetSettingsVersion();
   m_config->Flush();
   #if defined(__WXMSW__) && !defined(HAVE_WX26)
   wxFileOutputStream outstream( m_chosed_path );
@@ -572,6 +573,20 @@ void Settings::SetMainWindowLeft( const int value )
 }
 
 // ========================================================
+
+void Settings::ConvertOldSpringDirsOptions()
+{
+  SetUnitSync( _T("default"), m_config->Read( _T("/Spring/unitsync_loc"), _T("") ) );
+  SetSpringBinary( _T("default"), m_config->Read( _T("/Spring/exec_loc"), _T("") ) );
+
+  SetUsedSpringIndex( _T("default") );
+
+  m_config->DeleteEntry( _T("/Spring/unitsync_loc") );
+  m_config->DeleteEntry( _T("/Spring/use_spring_def_loc") );
+  m_config->DeleteEntry( _T("/Spring/use_unitsync_def_loc") );
+  m_config->DeleteEntry( _T("/Spring/dir") );
+  m_config->DeleteEntry( _T("/Spring/exec_loc") );
+}
 
 std::map<wxString, wxString> Settings::GetSpringVersionList()
 {

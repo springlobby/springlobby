@@ -4,7 +4,7 @@
 #include <wx/string.h>
 
 const int CACHE_VERSION     = 7;
-const int SETTINGS_VERSION  = 2;
+const int SETTINGS_VERSION  = 3;
 
 const wxString DEFSETT_DEFAULT_SERVER = _T("TAS Server");
 const wxString DEFSETT_DEFAULT_SERVER_HOST = _T("taspringmaster.clan-sy.com");
@@ -336,6 +336,8 @@ class Settings
     /** @name Spring locations
      * @{
      */
+
+    void ConvertOldSpringDirsOptions();
 
     std::map<wxString, wxString> GetSpringVersionList(); /// index -> version
     wxString GetCurrentUsedSpringIndex();

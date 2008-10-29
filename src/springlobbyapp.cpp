@@ -127,6 +127,8 @@ bool SpringLobbyApp::OnInit()
         }
     }
 
+    if ( !sett().IsFirstRun() && ( sett().GetSettingsVersion() < 3 ) ) sett().ConvertOldSpringDirsOptions();
+
     ui().ReloadUnitSync(); /// first time load of unitsync
     ui().ShowMainWindow();
 
@@ -186,8 +188,6 @@ bool SpringLobbyApp::OnInit()
 //  #ifdef __WXMSW__
 //  if ( sett().GetAutoUpdate() )Updater().CheckForUpdates();
 //  #endif
-
-  sett().SetSettingsVersion(); /// bump settings version number
 
 
   ui().mw().GetReplayTab().AddAllReplays();
