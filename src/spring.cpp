@@ -320,6 +320,7 @@ wxString Spring::WriteScriptTxt( Battle& battle )
   } else {
     tdf.Append(_T("HostPort"),battle.GetHostPort());
   }
+  tdf.Append(_T("IsHost"),battle.IsFounderMe());
 
   tdf.AppendLineBreak();
 
@@ -555,7 +556,8 @@ wxString Spring::WriteSPScriptTxt( SinglePlayerBattle& battle )
 
   tdf.Append(_T("NumPlayers"),"1");
 
-  ///TODO: investigate if this is correct.
+  tdf.Append(_T("IsHost"), battle.IsFounderMe());
+
   tdf.Append(_T("NumTeams"),battle.GetNumBots());
 
   tdf.Append(_T("NumAllyTeams"),NumAllys);
