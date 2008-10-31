@@ -339,8 +339,9 @@ wxString Spring::WriteScriptTxt( Battle& battle )
   tdf.AppendLineBreak();
 
   tdf.Append(_T("MyPlayerNum"),MyPlayerNum);
-  tdf.Append(_T("NumPlayers"),battle.GetNumUsers());
+  tdf.Append(_T("MyPlayerName"), battle.GetMe().GetNick() );
 
+  tdf.Append(_T("NumPlayers"),battle.GetNumUsers());
   tdf.Append(_T("NumTeams"), NumTeams + NumBots);
   tdf.Append(_T("NumAllyTeams"), NumAllys);
 
@@ -553,6 +554,7 @@ wxString Spring::WriteSPScriptTxt( SinglePlayerBattle& battle )
   tdf.Append(_T("HostPort"),"8452");
 
   tdf.Append(_T("MyPlayerNum"),"0");
+  tdf.Append(_T("MyPlayerName"), _T("Player") );
 
   tdf.Append(_T("NumPlayers"),"1");
 
