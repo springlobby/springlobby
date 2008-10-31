@@ -871,6 +871,11 @@ bool Settings::GetTestHostPort()
     return m_config->Read( _T("/Hosting/TestHostPort"), 0l );
 }
 
+bool Settings::GetLastAutolockStatus()
+{
+    return m_config->Read( _T("/Hosting/LastAutoLock"), true );
+}
+
 wxColour Settings::GetBattleLastColour()
 {
    return  GetColorFromStrng( m_config->Read( _T("/Hosting/MyLastColour"), _T("1 1 0") ) );
@@ -936,6 +941,11 @@ void Settings::SetLastAI( const wxString& ai )
 void Settings::SetTestHostPort( bool value )
 {
     m_config->Write( _T("/Hosting/TestHostPort"), value );
+}
+
+void Settings::SetLastAutolockStatus( bool value )
+{
+    m_config->Write( _T("/Hosting/LastAutoLock"), value );
 }
 
 void Settings::SetHostingPreset( const wxString& name, int optiontype, std::map<wxString,wxString> options )

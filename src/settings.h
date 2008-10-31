@@ -446,6 +446,7 @@ class Settings
     wxString GetLastHostMap();
     int GetLastRankLimit();
     bool GetTestHostPort();
+    bool GetLastAutolockStatus();
 
     void SetLastHostDescription( const wxString& value );
     void SetLastHostMod( const wxString& value );
@@ -456,6 +457,7 @@ class Settings
     void SetLastHostMap( const wxString& value );
     void SetLastRankLimit( int rank );
     void SetTestHostPort( bool value );
+    void SetLastAutolockStatus( bool value );
 
     void SetHostingPreset( const wxString& name, int optiontype, std::map<wxString,wxString> options );
     std::map<wxString,wxString> GetHostingPreset( const wxString& name, int optiontype );
