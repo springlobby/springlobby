@@ -334,10 +334,11 @@ void Ui::DownloadFileP2P( const wxString& hash, const wxString& name )
         //sett().SetTorrentSystemAutoStartMode( 2 ); /// switch operation to manual mode
         torrent().ConnectToP2PSystem();
     }
+
+    //we need a way to have the request happen only after connect is complete
     TorrentWrapper::DownloadRequestStatus status;
     if ( !hash.IsEmpty() ) {
          status = torrent().RequestFileByHash( hash );
-
     }
     else if ( !name.IsEmpty() )
         status = torrent().RequestFileByName( name );

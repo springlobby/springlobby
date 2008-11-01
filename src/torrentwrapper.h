@@ -152,7 +152,7 @@ public:
         file_not_found,
         torrent_join_failed,
         scheduled_in_cue,
-        table_insert_failed
+        missing_in_table
     };
 
     /// gui interface
