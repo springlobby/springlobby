@@ -309,8 +309,7 @@ void Ui::ReloadUnitSync()
 void Ui::DownloadMap( const wxString& hash, const wxString& name )
 {
 #ifndef NO_TORRENT_SYSTEM
-    if ( !hash.IsEmpty() ) torrent().RequestFileByHash( hash );
-    else if ( !name.IsEmpty() ) torrent().RequestFileByName( name );
+    DownloadFileP2P( hash, name );
 #else
     wxString url = _T("http://spring.jobjol.nl/search.php");
     OpenWebBrowser ( url );
@@ -321,11 +320,31 @@ void Ui::DownloadMap( const wxString& hash, const wxString& name )
 void Ui::DownloadMod( const wxString& hash, const wxString& name )
 {
 #ifndef NO_TORRENT_SYSTEM
-    if ( !hash.IsEmpty() ) torrent().RequestFileByHash( hash );
-    else if ( !name.IsEmpty() ) torrent().RequestFileByName( name );
+    DownloadFileP2P( hash, name );
 #else
     wxString url = _T("http://spring.jobjol.nl/search.php");
     OpenWebBrowser ( url );
+#endif
+}
+
+void Ui::DownloadFileP2P( const wxString& hash, const wxString& name )
+{
+#ifndef NO_TORRENT_SYSTEM
+    if ( !torrent().IsConnectedToP2PSystem() ){
+        //sett().SetTorrentSystemAutoStartMode( 2 ); /// switch operation to manual mode
+        torrent().ConnectToP2PSystem();
+    }
+    DownloadRequestStatus status;
+    if ( !hash.IsEmpty() ) {
+         status = torrent().RequestFileByHash( hash );
+
+    }
+    else if ( !name.IsEmpty() )
+        status = torrent().RequestFileByName( name );
+
+    if ( status != success ){
+        customMessageBoxNoModal( SL_MAIN_ICON, _(""), _("") );
+    }
 #endif
 }
 
