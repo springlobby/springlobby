@@ -26,7 +26,7 @@ namespace libtorrent{ class session; };
 namespace libtorrent { struct torrent_handle; };
 */
 
-
+namespace P2P {
 enum FileStatus
 {
     /// Dont change values. Bit arithmetics is used in TorrentTable::Row
@@ -36,6 +36,7 @@ enum FileStatus
     stored=128,/// file is on disk
     seeding=129/// file is on disk and being seeded
 };
+}
 
 struct TorrentInfos
 {
@@ -43,7 +44,7 @@ struct TorrentInfos
     wxString name;
     unsigned int downloaded;
     unsigned int uploaded;
-    FileStatus downloadstatus;
+    P2P::FileStatus downloadstatus;
     float progress;
     float inspeed;
     float outspeed;
@@ -73,26 +74,28 @@ class Row: public RefcountedContainer
         wxString infohash; /// torrent sha1 infohash in b64
         //bool ondisk;
 
-        FileStatus status;
+        P2P::FileStatus status;
         bool is_open;
         Row():
                 type(IUnitSync::map),
-                status(not_stored)
+                status(P2P::not_stored)
         {
         }
         bool HasFullFileLocal()
         {
-            return status&stored;
+            return status & P2P::stored;
         }
         void SetHasFullFileLocal(bool b=true)
         {
             if (b)
             {
-                if (!status&stored)status=stored;
+                if ( !status & P2P::stored )
+                    status=P2P::stored;
             }
             else
             {
-                if (status&stored)status=not_stored;
+                if ( status & P2P::stored )
+                    status=P2P::not_stored;
             }
         }
     };
@@ -107,7 +110,7 @@ class Row: public RefcountedContainer
     void RemoveSeedRequest(PRow row);
     void SetRowHandle(PRow row, const libtorrent::torrent_handle &handle);
     void RemoveRowHandle( PRow row );
-    void SetRowStatus( PRow row, FileStatus status );
+    void SetRowStatus( PRow row, P2P::FileStatus status );
 
     bool IsSeedRequest(PRow row);
 
