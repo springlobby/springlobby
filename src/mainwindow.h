@@ -71,6 +71,7 @@ class MainWindow : public wxFrame
     void OnMenuChat( wxCommandEvent& event );
     void OnMenuConnect( wxCommandEvent& event );
     void OnMenuDisconnect( wxCommandEvent& event );
+    void OnMenuSaveOptions( wxCommandEvent& event );
     void OnMenuQuit( wxCommandEvent& event );
     void OnMenuVersion ( wxCommandEvent& event );
     void OnUnitSyncReload( wxCommandEvent& event );
@@ -148,6 +149,7 @@ class MainWindow : public wxFrame
 
         MENU_CONNECT = wxID_HIGHEST,
         MENU_DISCONNECT,
+        MENU_SAVE_OPTIONS,
         MENU_JOIN,
         MENU_USYNC,
         MENU_TRAC,
