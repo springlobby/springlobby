@@ -120,6 +120,10 @@ public:
     virtual void OnEndResizeCol(wxListEvent& event);
     //! starts timer, sets tooltiptext
     virtual void OnMouseMotion(wxMouseEvent& event);
+    //! stop timer (before displaying popup f.e.)
+    void CancelTooltipTimer();
+    //!Override to have tooltip timer cancelled automatically
+    bool PopupMenu(wxMenu* menu, const wxPoint& pos = wxDefaultPosition);
     //! does nothing
     void noOp(wxMouseEvent& event);
     //! automatically get saved column width if already saved, otherwise use parameter and save new width
