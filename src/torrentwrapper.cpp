@@ -394,7 +394,7 @@ HashToTorrentData& TorrentWrapper::GetSystemFileList()
 ////////////////////////////////////////////////////////
 
 
-DownloadRequestStatus TorrentWrapper::RequestFileByHash( const wxString& hash )
+TorrentWrapper::DownloadRequestStatus TorrentWrapper::RequestFileByHash( const wxString& hash )
 {
     TorrentTable::PRow row=m_torrent_table.RowByHash(hash);
     if ( !row.ok() ) return file_not_found;
@@ -402,7 +402,7 @@ DownloadRequestStatus TorrentWrapper::RequestFileByHash( const wxString& hash )
 }
 
 
-DownloadRequestStatus TorrentWrapper::RequestFileByName( const wxString& name )
+TorrentWrapper::DownloadRequestStatus TorrentWrapper::RequestFileByName( const wxString& name )
 {
     TorrentTable::PRow row=m_torrent_table.RowByName(name);
     if ( !row.ok() ) return file_not_found;
@@ -498,7 +498,7 @@ void TorrentWrapper::ResumeFromList()
 ////////////////////////////////////////////////////////
 
 
-DownloadRequestStatus TorrentWrapper::RequestFileByRow( const TorrentTable::PRow& row )
+TorrentWrapper::DownloadRequestStatus TorrentWrapper::RequestFileByRow( const TorrentTable::PRow& row )
 {
     if (ingame) return paused_ingame;
     if ( !IsConnectedToP2PSystem()  ) return not_connected;

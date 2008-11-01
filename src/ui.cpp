@@ -334,7 +334,7 @@ void Ui::DownloadFileP2P( const wxString& hash, const wxString& name )
         //sett().SetTorrentSystemAutoStartMode( 2 ); /// switch operation to manual mode
         torrent().ConnectToP2PSystem();
     }
-    DownloadRequestStatus status;
+    TorrentWrapper::DownloadRequestStatus status;
     if ( !hash.IsEmpty() ) {
          status = torrent().RequestFileByHash( hash );
 
@@ -342,7 +342,7 @@ void Ui::DownloadFileP2P( const wxString& hash, const wxString& name )
     else if ( !name.IsEmpty() )
         status = torrent().RequestFileByName( name );
 
-    if ( status != success ){
+    if ( status != TorrentWrapper::success ){
         customMessageBoxNoModal( SL_MAIN_ICON, _(""), _("") );
     }
 #endif

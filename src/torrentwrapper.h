@@ -27,18 +27,6 @@ namespace libtorrent { struct torrent_handle; };
 */
 
 
-enum DownloadRequestStatus
-{
-    success,
-    not_connected,
-    paused_ingame,
-    duplicate_request,
-    file_not_found,
-    torrent_join_failed,
-    scheduled_in_cue
-};
-
-
 enum FileStatus
 {
     /// Dont change values. Bit arithmetics is used in TorrentTable::Row
@@ -151,6 +139,17 @@ public:
 
     TorrentWrapper();
     ~TorrentWrapper();
+
+    enum DownloadRequestStatus
+    {
+        success,
+        not_connected,
+        paused_ingame,
+        duplicate_request,
+        file_not_found,
+        torrent_join_failed,
+        scheduled_in_cue
+    };
 
     /// gui interface
 
