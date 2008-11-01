@@ -692,7 +692,7 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
     }
     else
     {
-        path = sett().GetSpringDir() + wxFileName::GetPathSeparator();
+        path = sett().GetCurrentUsedSpringBinary() + wxFileName::GetPathSeparator();
         switch (row->type)
         {
         case IUnitSync::map:
@@ -717,21 +717,23 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
     std::ifstream in( wxString( sett().GetTorrentsFolder() + row->hash + _T(".torrent") ).mb_str(), std::ios_base::binary);
     in.unsetf(std::ios_base::skipws);
     libtorrent::entry e;
-    try {
+    try
+    {
         /// decode the torrent infos from the file
         e = libtorrent::bdecode(std::istream_iterator<char>(in), std::istream_iterator<char>());
     }
-    catch ( libtorrent::invalid_encoding& exc ) {
-      wxLogMessage( _T("torrent has invalid encoding") );
-      return false;
+    catch ( libtorrent::invalid_encoding& exc )
+    {
+        wxLogMessage( _T("torrent has invalid encoding") );
+        return false;
     }
     //decode success
     libtorrent::torrent_info t_info (e);
 
     if ( t_info.num_files() != 1 )
     {
-      wxLogMessage( _T("torrent contains an invalid number of files") );
-      return false;
+        wxLogMessage( _T("torrent contains an invalid number of files") );
+        return false;
     }
 
     wxString torrentfilename = WX_STRING(t_info.begin_files()->path.string()); /// get the file name in the torrent infos
@@ -740,19 +742,21 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
 
     if ( IsSeed )
     {
-      /// improved check: dont download Whatever.sdz when you got e.g. x_Whatever.sdz or Whatever.sdz_x on disk
-      wxFileName path_as_filename(path);
-      if ( path_as_filename.GetFullName()!=torrentfilename){
-        wxLogMessage(_T("local file name '%s' does not match requested name '%s', not seeding"), path_as_filename.GetFullName().c_str(), torrentfilename.c_str());
-        return false; /// if the filename locally is different from the torrent's, skip it or it will download it again and various crap may happend.
-      }
-      /// to be safe.
-      if(!path_as_filename.FileExists()){
-        wxLogError(_T("the local file does not exist!"));
-        return false;
-      }
-      path = path_as_filename.GetPath(); /// strip file name from path
-      wxLogMessage( _T("Strippped path: %s"), path.c_str() );
+        /// improved check: dont download Whatever.sdz when you got e.g. x_Whatever.sdz or Whatever.sdz_x on disk
+        wxFileName path_as_filename(path);
+        if ( path_as_filename.GetFullName()!=torrentfilename)
+        {
+            wxLogMessage(_T("local file name '%s' does not match requested name '%s', not seeding"), path_as_filename.GetFullName().c_str(), torrentfilename.c_str());
+            return false; /// if the filename locally is different from the torrent's, skip it or it will download it again and various crap may happend.
+        }
+        /// to be safe.
+        if (!path_as_filename.FileExists())
+        {
+            wxLogError(_T("the local file does not exist!"));
+            return false;
+        }
+        path = path_as_filename.GetPath(); /// strip file name from path
+        wxLogMessage( _T("Strippped path: %s"), path.c_str() );
     }
     wxLogMessage(_T("(4) Joining torrent: add_torrent(%s,[%s],%s,[%s])"),m_tracker_urls[m_connected_tracker_index].c_str(),torrent_infohash_b64.c_str(),row->name.c_str(),path.c_str());
 
@@ -767,18 +771,18 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
     }
     try
     {
-      if (IsSeed)
-      {
-          if (row->handle.is_valid())
-          {
-              std::vector<bool> tmp(1,true);
-              row->handle.filter_files(tmp);
-          }
-          else
-          {
-              wxLogMessage(_T("Cant set seed not to download"));
-          }
-      }
+        if (IsSeed)
+        {
+            if (row->handle.is_valid())
+            {
+                std::vector<bool> tmp(1,true);
+                row->handle.filter_files(tmp);
+            }
+            else
+            {
+                wxLogMessage(_T("Cant set seed not to download"));
+            }
+        }
     }
     catch (std::exception& e)
     {
@@ -806,20 +810,44 @@ void TorrentWrapper::CreateTorrent( const wxString& hash, const wxString& name, 
     if (ingame) return;
 
 
-    if ( sett().GetSpringDir().IsEmpty() ) return; /// no good things can happend if you don't know which folder to r/w files from
+    if ( sett().GetCurrentUsedDataDir().IsEmpty() ) return; /// no good things can happend if you don't know which folder to r/w files from
 
     libtorrent::torrent_info newtorrent;
 
-    wxString StringFilePath = sett().GetSpringDir() + wxFileName::GetPathSeparator();
-    switch (type)
+    wxString archivename;
+    switch ( type )
     {
-    case IUnitSync::map:
-        StringFilePath += _T("maps") + wxFileName::GetPathSeparator();
-    case IUnitSync::mod:
-        StringFilePath += _T("mods") + wxFileName::GetPathSeparator();
+      case IUnitSync::map :
+      {
+          if ( !usync().MapExists( name, hash ) ) return;
+          int index = usync().GetMapIndex( name );
+          if ( index == -1 ) return;
+          archivename = usync().GetMapArchive( index );
+          break;
+      }
+      case IUnitSync::mod :
+      {
+          if ( !usync().ModExists( name, hash ) ) return;
+          int index = usync().GetModIndex( name );
+          if ( index == -1 ) return;
+          archivename = usync().GetModArchive( index );
+          break;
+      }
     }
-    StringFilePath += name;
-    boost::filesystem::path InputFilePath = complete(boost::filesystem::path( STD_STRING( StringFilePath ) ) );
+
+    wxString archivepath = usync().GetArchivePath( archivename );
+    int i = archivename.Find( archivepath );
+    wxString path;
+    if (i<0)
+    {
+        path = archivepath + archivename;
+    }
+    else
+    {
+        path = archivename;
+    }
+
+    boost::filesystem::path InputFilePath = complete(boost::filesystem::path( STD_STRING( path ) ) );
 
     newtorrent.add_file( InputFilePath.branch_path(), boost::filesystem::file_size( InputFilePath ) );
 
@@ -828,7 +856,7 @@ void TorrentWrapper::CreateTorrent( const wxString& hash, const wxString& name, 
         newtorrent.add_tracker( STD_STRING(m_tracker_urls[i] +  _T(":DEFAULT_P2P_TRACKER_PORT/announce") ) );
     }
 
-    wxFile torrentfile( StringFilePath );
+    wxFile torrentfile( path );
     if ( !torrentfile.IsOpened() ) return;
     /// calculate the hash for all pieces
     int num = newtorrent.num_pieces();
@@ -854,7 +882,7 @@ void TorrentWrapper::CreateTorrent( const wxString& hash, const wxString& name, 
 
 bool TorrentWrapper::DownloadTorrentFileFromTracker( const wxString& hash )
 {
-    if ( sett().GetSpringDir().IsEmpty() ) return false; /// no good things can happend if you don't know which folder to r/w files from
+    if ( sett().GetCurrentUsedDataDir().IsEmpty() ) return false; /// no good things can happend if you don't know which folder to r/w files from
 
 #ifdef HAVE_WX26
     wxFileName filename( sett().GetTorrentsFolder() + hash + _T(".torrent") ) ;
@@ -1127,9 +1155,12 @@ void TorrentWrapper::OnDisconnected( Socket* sock )
 
     m_seed_count = 0;
     m_leech_count = 0;
-    try{
-      sett().SetTorrentListToResume( TorrentsToResume );
-    }catch(GlobalDestroyedError){
+    try
+    {
+        sett().SetTorrentListToResume( TorrentsToResume );
+    }
+    catch (GlobalDestroyedError)
+    {
     }
     m_started = false;
 }

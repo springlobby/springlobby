@@ -96,7 +96,7 @@ void UnitSyncThread::UnitSyncThreadImpl::Init()
 void* UnitSyncThread::MapCacheThread::Entry()
 {
   /// crashes - here for test to see why
-  susynclib()->GetMapCount();
+  susynclib().GetMapCount();
   while ( !TestDestroy() )
   {
     if(!Sleep( 20000 ))break;

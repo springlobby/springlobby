@@ -66,8 +66,6 @@ class MainWindow : public wxFrame
 
     void ShowConfigure( const unsigned int page = OPT_PAGE_SPRING );
 
-    void ReloadSpringPathFromConfig();
-
     void OnMenuAbout( wxCommandEvent& event );
     void OnMenuJoin( wxCommandEvent& event );
     void OnMenuChat( wxCommandEvent& event );

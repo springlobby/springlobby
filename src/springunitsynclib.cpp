@@ -12,11 +12,11 @@
 
 #define LOCK_UNITSYNC wxCriticalSectionLocker lock_criticalsection(m_lock)
 
-SpringUnitSyncLib::SpringUnitSyncLib( const wxString& path ):
+SpringUnitSyncLib::SpringUnitSyncLib( const wxString& path, bool DoInit ):
   m_loaded(false),
   m_path(wxEmptyString)
 {
-  if ( path != wxEmptyString ) Load( path );
+  if ( path != wxEmptyString ) Load( path, DoInit );
 }
 
 
@@ -26,14 +26,14 @@ SpringUnitSyncLib::~SpringUnitSyncLib()
 }
 
 
-SpringUnitSyncLib* susynclib()
+SpringUnitSyncLib& susynclib()
 {
   static GlobalObjectHolder<SpringUnitSyncLib> lib;
-  return &(lib.GetInstance());
+  return lib.GetInstance();
 }
 
 
-void SpringUnitSyncLib::Load( const wxString& path )
+void SpringUnitSyncLib::Load( const wxString& path, bool DoInit )
 {
   LOCK_UNITSYNC;
 
@@ -79,6 +79,7 @@ void SpringUnitSyncLib::Load( const wxString& path )
     m_init = (InitPtr)_GetLibFuncPtr(_T("Init"));
     m_uninit = (UnInitPtr)_GetLibFuncPtr(_T("UnInit"));
     m_get_next_error = (GetNextErrorPtr)_GetLibFuncPtr(_T("GetNextError"));
+    m_get_writeable_data_dir = (GetWritableDataDirectoryPtr)_GetLibFuncPtr(_T("GetWritableDataDirectory"));
 
     m_get_map_count = (GetMapCountPtr)_GetLibFuncPtr(_T("GetMapCount"));
     m_get_map_checksum = (GetMapChecksumPtr)_GetLibFuncPtr(_T("GetMapChecksum"));
@@ -222,10 +223,10 @@ void SpringUnitSyncLib::Load( const wxString& path )
     m_parser_int_key_get_string_value = (lpGetIntKeyStrValPtr)_GetLibFuncPtr(_T("lpGetIntKeyStrVal"));
     m_parser_string_key_get_string_value = (lpGetStrKeyStrValPtr)_GetLibFuncPtr(_T("lpGetStrKeyStrVal"));
 
-
-    if ( m_init ) m_init( true, 1 );
-    else _Unload();
-
+    if ( DoInit )
+    {
+      if ( m_init ) m_init( true, 1 );
+    }
   }
   catch ( ... ) {
     _Unload();
@@ -257,9 +258,9 @@ void SpringUnitSyncLib::_Unload()
 }
 
 
-void SpringUnitSyncLib::Reload()
+void SpringUnitSyncLib::Reload( bool DoInit )
 {
-  Load( m_path );
+  Load( m_path, DoInit );
 }
 
 
@@ -296,6 +297,24 @@ wxArrayString SpringUnitSyncLib::GetUnitsyncErrors()
     msg = WX_STRINGC( m_get_next_error() );
   }
   return ret;
+}
+
+bool SpringUnitSyncLib::Init()
+{
+  InitLib( m_init );
+
+  return m_init( true, 1 );
+}
+
+bool SpringUnitSyncLib::VersionSupports( IUnitSync::GameFeature feature )
+{
+  switch (feature)
+  {
+    case IUnitSync::USYNC_Sett_Handler: return m_set_spring_config_string;
+    case IUnitSync::USYNC_GetInfoMap:   return m_get_infomap_size;
+    case IUnitSync::USYNC_GetDataDir:   return m_get_writeable_data_dir;
+  }
+  return false;
 }
 
 
@@ -370,6 +389,14 @@ wxString SpringUnitSyncLib::GetSpringVersion()
 
   return WX_STRINGC( m_get_spring_version() );
 }
+
+wxString SpringUnitSyncLib::GetSpringDataDir()
+{
+  InitLib( m_get_writeable_data_dir );
+
+  return WX_STRINGC( m_get_writeable_data_dir() );
+}
+
 
 int SpringUnitSyncLib::GetMapCount()
 {

@@ -52,6 +52,7 @@ typedef const char* (USYNC_CALL_CONV *GetSpringVersionPtr)();
 typedef int (USYNC_CALL_CONV *InitPtr)(bool, int);
 typedef void (USYNC_CALL_CONV *UnInitPtr)();
 typedef const char* (USYNC_CALL_CONV *GetNextErrorPtr)();
+typedef const char* (USYNC_CALL_CONV *GetWritableDataDirectoryPtr)();
 
 typedef int (USYNC_CALL_CONV *GetMapCountPtr)();
 typedef unsigned int (USYNC_CALL_CONV *GetMapChecksumPtr)(int);
@@ -203,9 +204,10 @@ class SpringUnitSyncLib
     /**
      * Constructor.
      * @param path path to the unitsync lib, if specified the lib will be loaded when created.
+     * @param DoInit specifies whenever init function should be attempted to run after successful load.
      * @see Load().
     */
-    SpringUnitSyncLib( const wxString& path = wxEmptyString );
+    SpringUnitSyncLib( const wxString& path = wxEmptyString, bool DoInit = false );
 
     /**
      * Destructor, unloads unitsync if loaded.
@@ -215,10 +217,11 @@ class SpringUnitSyncLib
     /**
      * Loads the unitsync library from path.
      * @param path ath to the unitsync lib.
+     * @param DoInit specifies whenever init function should be attempted to run after successful load.
      * @see Unload().
      * @note Throws runtime_error if load failed.
      */
-    void Load( const wxString& path );
+    void Load( const wxString& path, bool DoInit );
 
     /**
      * Unload the unitsync library. Does nothing if not loaded.
@@ -231,7 +234,7 @@ class SpringUnitSyncLib
      * @note Throws logic_error if no path has been set in constructor or in Load() call. Throws runtime_error if reloading fails.
      * @see Load().
      */
-    void Reload();
+    void Reload( bool DoInit );
 
     /**
      * Returns true if the library is loaded.
@@ -250,10 +253,16 @@ class SpringUnitSyncLib
      */
     wxArrayString GetUnitsyncErrors();
 
+    bool Init();
+
+    bool VersionSupports( IUnitSync::GameFeature feature );
+
 
     int GetModIndex( const wxString& name );
 
     wxString GetSpringVersion();
+
+    wxString GetSpringDataDir();
 
     int GetMapCount();
     wxString GetMapChecksum( int index );
@@ -273,12 +282,6 @@ class SpringUnitSyncLib
      * @note Throws assert_exception if unsuccessful.
      */
     wxImage GetMinimap( const wxString& mapFileName );
-
-    /**
-     * @brief Check whether unitsync supports GetInfoMap API.
-     * @note Only when this returns true GetMetalmap may be used.
-     */
-    bool HasGetInfoMap() const { return m_get_infomap_size != NULL; }
 
     /**
      * @brief Get metalmap.
@@ -472,6 +475,7 @@ class SpringUnitSyncLib
     InitPtr m_init;
     UnInitPtr m_uninit;
     GetNextErrorPtr m_get_next_error;
+    GetWritableDataDirectoryPtr m_get_writeable_data_dir;
 
     GetMapCountPtr m_get_map_count;
     GetMapChecksumPtr m_get_map_checksum;
@@ -611,6 +615,6 @@ class SpringUnitSyncLib
     /*@}*/
 };
 
-SpringUnitSyncLib* susynclib();
+SpringUnitSyncLib& susynclib();
 
 #endif //SPRINGLOBBY_HEADERGUARD_SPRINGUNITSYNCLIB_H

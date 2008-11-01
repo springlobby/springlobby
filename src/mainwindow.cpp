@@ -407,12 +407,6 @@ void MainWindow::ShowConfigure( const unsigned int page )
   m_opts_tab->SetSelection( page );
 }
 
-
-void MainWindow::ReloadSpringPathFromConfig()
-{
-  m_opts_tab->ReloadSpringPathFromConfig();
-}
-
 //! @brief Called when join channel menuitem is clicked
 void MainWindow::OnMenuJoin( wxCommandEvent& event )
 {
