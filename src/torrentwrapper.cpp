@@ -397,7 +397,7 @@ HashToTorrentData& TorrentWrapper::GetSystemFileList()
 TorrentWrapper::DownloadRequestStatus TorrentWrapper::RequestFileByHash( const wxString& hash )
 {
     TorrentTable::PRow row=m_torrent_table.RowByHash(hash);
-    if ( !row.ok() ) return file_not_found;
+    if ( !row.ok() ) return table_insert_failed;
     return RequestFileByRow( row );
 }
 
@@ -405,7 +405,7 @@ TorrentWrapper::DownloadRequestStatus TorrentWrapper::RequestFileByHash( const w
 TorrentWrapper::DownloadRequestStatus TorrentWrapper::RequestFileByName( const wxString& name )
 {
     TorrentTable::PRow row=m_torrent_table.RowByName(name);
-    if ( !row.ok() ) return file_not_found;
+    if ( !row.ok() ) return table_insert_failed;
     return RequestFileByRow( row );
 }
 

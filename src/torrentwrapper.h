@@ -151,7 +151,8 @@ public:
         duplicate_request,
         file_not_found,
         torrent_join_failed,
-        scheduled_in_cue
+        scheduled_in_cue,
+        table_insert_failed
     };
 
     /// gui interface
