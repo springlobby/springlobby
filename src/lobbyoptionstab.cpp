@@ -78,7 +78,7 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
     m_reportstats_sizer->Add( m_reportstats_label, 1, wxEXPAND|wxALL, 5);
     m_reportstats_sizer->Add( m_reportstats, 0, wxEXPAND|wxALL, 5);
 
-    m_main_sizer->Add( m_web_box_sizer, 0, wxEXPAND | wxALL, 2 );
+    m_main_sizer->Add( m_web_box_sizer, 0, wxEXPAND | wxALL, 15 );
     m_main_sizer->Add( m_autojoin_sizer, 0, wxALL, 15 );
     m_main_sizer->Add( m_reportstats_sizer, 0, wxALL, 15 );
 
@@ -117,7 +117,7 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
 
     m_main_sizer->Add( m_complete_method_sizer, 0, wxALL, 15 );
 
-
+    SetScrollRate( 10, 10 );
     SetSizer( m_main_sizer );
 }
 
