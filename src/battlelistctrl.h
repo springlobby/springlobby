@@ -31,6 +31,13 @@ class BattleListCtrl : public CustomListCtrl
     //void HighlightItem( long item, const wxString& name );
     void SortList();
 
+    enum {
+        BLIST_LIST = wxID_HIGHEST,
+        BLIST_DLMOD,
+        BLIST_DLMAP
+    };
+
+
   protected:
     static int wxCALLBACK CompareStatusUP(long item1, long item2, long sortData);
     static int wxCALLBACK CompareStatusDOWN(long item1, long item2, long sortData);
@@ -67,11 +74,6 @@ class BattleListCtrl : public CustomListCtrl
     DECLARE_EVENT_TABLE()
 };
 
-enum
-{
-    BLIST_LIST = wxID_HIGHEST,
-    BLIST_DLMOD,
-    BLIST_DLMAP
-};
+
 
 #endif // SPRINGLOBBY_HEADERGUARD_BATTLELISTCTRL_H

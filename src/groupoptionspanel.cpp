@@ -3,6 +3,16 @@
 
 #include <wx/textdlg.h>
 #include <wx/colour.h>
+#include <wx/textctrl.h>
+#include <wx/gdicmn.h>
+#include <wx/font.h>
+#include <wx/settings.h>
+#include <wx/sizer.h>
+#include <wx/listbox.h>
+#include <wx/checkbox.h>
+#include <wx/stattext.h>
+#include <wx/statbox.h>
+
 #include "useractions.h"
 #include "settings.h"
 #include "uiutils.h"

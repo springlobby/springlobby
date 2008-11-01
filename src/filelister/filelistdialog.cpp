@@ -83,10 +83,10 @@ void FileListDialog::UpdateList()
       if(!it->second.ok())continue;
         switch (it->second->type)
         {
-            case mod:
+            case IUnitSync::mod:
                 it->second->SetHasFullFileLocal(usync().ModExists( it->second->name, it->second->hash ));
                 break;
-            case map:
+            case IUnitSync::map:
                 it->second->SetHasFullFileLocal(usync().MapExists( it->second->name, it->second->hash ));
                 break;
             default:  it->second->SetHasFullFileLocal(false);
@@ -120,7 +120,7 @@ bool FileListDialog::AddTorrentRow(TorrentTable::PRow data)
       //setting hash as item's data means we can retrieve it later for download
       m_filelistctrl->SetItemData( index, s2l(data->hash) );
       m_filelistctrl->SetItem( index, 0, data->name );
-      m_filelistctrl->SetItem( index, 1, data->type == map ? _("Map") : _("Mod") );
+      m_filelistctrl->SetItem( index, 1, data->type == IUnitSync::map ? _("Map") : _("Mod") );
       m_filelistctrl->SetItem( index, 2, data->hash );
 
   } catch (...) { return false; }

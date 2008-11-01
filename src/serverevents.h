@@ -1,7 +1,10 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_SERVEREVENTS_H
 #define SPRINGLOBBY_HEADERGUARD_SERVEREVENTS_H
 
+//almost only needed for NAtType enum def
 #include "battle.h"
+//when not nec anymore uncommnet this
+//include <map>
 
 class Ui;
 struct UserStatus;
@@ -19,11 +22,13 @@ struct MessageSpamCheck
   unsigned int count;
 };
 
+class Battle;
+
 //! @brief Class that implements server event behaviour.
 class ServerEvents
 {
   public:
-    ServerEvents( Server& serv, Ui& ui ) : m_serv(serv),m_ui(ui) {}
+    ServerEvents( Server& serv) : m_serv(serv) {}
     ~ServerEvents() {}
 
   // Uicontrol interface
@@ -45,7 +50,7 @@ class ServerEvents
     void OnUserStatus( const wxString& nick, UserStatus status );
     void OnUserQuit( const wxString& nick );
 
-    void OnBattleOpened( int id, bool replay, NatType nat, const wxString& nick,
+    void OnBattleOpened( int id, bool replay, IBattle::NatType nat, const wxString& nick,
                          const wxString& host, int port, int maxplayers,
                          bool haspass, int rank, const wxString& maphash, const wxString& map,
                          const wxString& title, const wxString& mod );
@@ -114,7 +119,6 @@ class ServerEvents
 
   protected:
     Server& m_serv;
-    Ui& m_ui;
 
     std::map<wxString,MessageSpamCheck> m_spam_check;
 };

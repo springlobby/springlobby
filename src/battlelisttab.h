@@ -3,11 +3,7 @@
 
 #include <wx/scrolwin.h>
 
-#include "battlelistfilter.h"
-#include "battlelist.h"
-#include "user.h"
-
-
+class User;
 class Ui;
 class Battle;
 class BattleListCtrl;
@@ -24,6 +20,7 @@ class wxStaticText;
 class wxStaticLine;
 class wxCheckBox;
 class wxToggleButton;
+class wxFlexGridSizer;
 /** \brief The panel containing a BattleListCtrl and a BattleListFilter
  * \todo DOCME */
 class BattleListTab : public wxScrolledWindow
@@ -52,6 +49,7 @@ class BattleListTab : public wxScrolledWindow
     void SetFilterActiv(bool activ);
     void OnJoin( wxCommandEvent& event );
     void OnListJoin( wxListEvent& event );
+    void OnResize( wxSizeEvent& event );
 
     void DoJoin( Battle& battle );
 
@@ -80,6 +78,9 @@ class BattleListTab : public wxScrolledWindow
     wxButton* m_join_btn;
     wxBoxSizer* m_battlelist_sizer;
     wxStaticText* m_filter_notice;
+    wxFlexGridSizer* m_data_sizer;
+    wxBoxSizer* m_main_sizer;
+    wxBoxSizer* m_info_sizer;
 
     wxCheckBox* m_filter_activ;
 
@@ -93,16 +94,16 @@ class BattleListTab : public wxScrolledWindow
 
     Battle* m_sel_battle;
 
+    enum {
+        BATTLE_JOIN = wxID_HIGHEST,
+        BATTLE_HOST,
+        BATTLE_LIST,
+        BATTLE_LIST_FILTER_BUTTON,
+        BATTLE_LIST_FILTER_ACTIV
+    };
+
     DECLARE_EVENT_TABLE();
 };
 
-enum
-{
-    BATTLE_JOIN = wxID_HIGHEST,
-    BATTLE_HOST,
-    BATTLE_LIST,
-    BATTLE_LIST_FILTER_BUTTON,
-    BATTLE_LIST_FILTER_ACTIV
-};
 
 #endif // SPRINGLOBBY_HEADERGUARD_BATTLELISTTAB_H

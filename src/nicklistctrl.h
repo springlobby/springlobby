@@ -1,8 +1,6 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_NICKLISTCTRL_H
 #define SPRINGLOBBY_HEADERGUARD_NICKLISTCTRL_H
 
-//#include <wx/listctrl.h>
-#include <wx/event.h>
 #include "customlistctrl.h"
 #include "usermenu.h"
 
@@ -10,10 +8,7 @@ class User;
 class UserList;
 class Ui;
 class ChatPanel;
-//typedef SL_GENERIC::UserMenu<ChatPanel> UserMenu;
-
-
-
+class UserMenu;
 
 class NickListCtrl : public CustomListCtrl
 {
@@ -67,13 +62,12 @@ class NickListCtrl : public CustomListCtrl
       bool direction;
     } m_sortorder[4];
 
-    DECLARE_EVENT_TABLE()
-};
+    enum {
+      NICK_LIST = 31765 //wxID_HIGHEST
+      //wxID_HIGHEST is used by BattleListCTRL. The cant be in the same Tab like BattleTab
+    };
 
-enum
-{
-  NICK_LIST = 31765 //wxID_HIGHEST
-  //wxID_HIGHEST is used by BattleListCTRL. The cant be in the same Tab like BattleTab
+    DECLARE_EVENT_TABLE()
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_NICKLISTCTRL_H

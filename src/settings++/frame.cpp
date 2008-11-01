@@ -25,7 +25,7 @@
 #include <wx/icon.h>
 
 #include "frame.h"
-#include "se_settings.h"
+#include "../settings.h"
 #include "../springunitsynclib.h"
 #include "tab_render_detail.h"
 #include "tab_quality_video.h"
@@ -63,9 +63,8 @@ settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &
 {
 	alreadyCalled = false;
 	parentWindow = parent;
-	OptionsHandler.reload();
 
-	loadUnitsync();
+	if ( !susynclib().IsLoaded() ) loadUnitsync();
 
 	notebook = new wxNotebook(this, ID_OPTIONS, wxPoint(0,0),TAB_SIZE, wxNB_TOP|wxNB_NOPAGETHEME);
 	notebook->SetFont(wxFont(8, wxSWISS, wxNORMAL,wxNORMAL, false, _T("Tahoma")));
@@ -83,7 +82,7 @@ settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &
 		SetTitle(_T("SpringSettings"));
 	}
 	 SetIcon(*settingsIcon);
-	 SetSize( OptionsHandler.GetSettingsWindowLeft(), OptionsHandler.GetSettingsWindowTop(), OptionsHandler.GetSettingsWindowWidth(), OptionsHandler.GetSettingsWindowHeight() );
+	 SetSize( sett().GetSettingsWindowLeft(), sett().GetSettingsWindowTop(), sett().GetSettingsWindowWidth(), sett().GetSettingsWindowHeight() );
      Layout();
 	 Center();
 }
@@ -125,7 +124,7 @@ void settings_frame::handleExternExit()
 		}
 	}
 
-	OptionsHandler.save();
+	sett().SaveSettings();
 }
 
 void settings_frame::handleExit() {
@@ -139,7 +138,7 @@ void settings_frame::handleExit() {
         	if (simpleTab!=0)
         			simpleTab->saveCbxChoices();
         case wxNO:
-	        	OptionsHandler.save();
+	        	sett().SaveSettings();
         	    Destroy();
         	break;
 
@@ -149,14 +148,14 @@ void settings_frame::handleExit() {
     }
     else
     {
-    	OptionsHandler.save();
+    	sett().SaveSettings();
     	Destroy();
     }
 }
 
 void settings_frame::CreateGUIControls()
 {
-	switch(OptionsHandler.getMode()){
+	switch(sett().getMode()){
 					case SET_MODE_EXPERT:
 
 								qualityTab = new tab_quality_video(notebook,ID_QUALITY_VIDEO);
@@ -181,7 +180,7 @@ void settings_frame::CreateGUIControls()
 			}
 			notebook->SetSelection(0);
 
-	if (OptionsHandler.getMode()==SET_MODE_EXPERT)
+	if (sett().getMode()==SET_MODE_EXPERT)
 		SetTitle(_("SpringSettings (expert mode)"));
 	else
 		SetTitle(_("SpringSettings (simple mode)"));
@@ -199,7 +198,7 @@ void settings_frame::initMenuBar() {
 	menuFile->AppendSeparator();
 	menuFile->Append(ID_MENUITEM_QUIT, _("Quit"));
 
-	menuFile->Check(ID_MENUITEM_DISABLE_WARN,OptionsHandler.getDisableWarning());
+	menuFile->Check(ID_MENUITEM_DISABLE_WARN,sett().getDisableWarning());
 
 	menuMode = new wxMenu();
 	menuMode->AppendRadioItem(ID_MENUITEM_SIMPLE,_("Simple (few options)"));
@@ -211,7 +210,7 @@ void settings_frame::initMenuBar() {
 	menuHelp->Append(ID_MENUITEM_CREDITS, _("Credits"));
 	menuHelp->Append(ID_MENUITEM_BUGREPORT, _("Report a bug"));
 
-	switch(OptionsHandler.getMode()){
+	switch(sett().getMode()){
 	case SET_MODE_EXPERT: {
 			menuMode->Check(ID_MENUITEM_EXPERT,true);
 		}
@@ -251,8 +250,8 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 		 break;
 
 		case ID_MENUITEM_SIMPLE:
-			if (OptionsHandler.getMode()==SET_MODE_EXPERT)
-				OptionsHandler.setMode(SET_MODE_SIMPLE);
+			if (sett().getMode()==SET_MODE_EXPERT)
+				sett().setMode(SET_MODE_SIMPLE);
 
 				simpleTab = new tab_simple(this,notebook,ID_SIMPLE);
 				notebook->InsertPage(0,simpleTab,simpleTabCap);
@@ -272,18 +271,18 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 				debugTab = 0;
 
 				SetTitle(_("SpringSettings (simple mode)"));
-				if (!OptionsHandler.getDisableWarning()){
+				if (!sett().getDisableWarning()){
 					customMessageBox(SS_MAIN_ICON,expertModeWarning, _("Hint"), wxOK);
 				}
 		  break;
 
 		case ID_MENUITEM_EXPERT:
-			if (OptionsHandler.getMode()==SET_MODE_SIMPLE) {
+			if (sett().getMode()==SET_MODE_SIMPLE) {
 				switchToExpertMode();
 			}
 			break;
 		case ID_MENUITEM_DISABLE_WARN:
-			OptionsHandler.setDisableWarning(menuFile->IsChecked(ID_MENUITEM_DISABLE_WARN));
+			sett().setDisableWarning(menuFile->IsChecked(ID_MENUITEM_DISABLE_WARN));
 			break;
 
 		case ID_MENUITEM_ABOUT:
@@ -308,7 +307,7 @@ void settings_frame::resetSettings()
 
 void settings_frame::switchToExpertMode()
 {
-	OptionsHandler.setMode(SET_MODE_EXPERT);
+	sett().setMode(SET_MODE_EXPERT);
 	menuMode->Check(ID_MENUITEM_EXPERT,true);
 
 	qualityTab = new tab_quality_video(notebook,ID_QUALITY_VIDEO);
@@ -350,12 +349,12 @@ void settings_frame::OnClose(wxCloseEvent& event)
 	if ( !alreadyCalled){
 	     int x, y, w, h;
           GetSize( &w, &h );
-          OptionsHandler.SetSettingsWindowHeight( h );
-          OptionsHandler.SetSettingsWindowWidth( w );
+          sett().SetSettingsWindowHeight( h );
+          sett().SetSettingsWindowWidth( w );
           GetPosition( &x, &y );
-          OptionsHandler.SetSettingsWindowTop( y );
-          OptionsHandler.SetSettingsWindowLeft( x );
-          OptionsHandler.save();
+          sett().SetSettingsWindowTop( y );
+          sett().SetSettingsWindowLeft( x );
+          sett().SaveSettings();
 		handleExit();
 	}
 }

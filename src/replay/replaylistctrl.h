@@ -1,8 +1,6 @@
 #ifndef SPRINGLOBBY_REPLAYLISTCTRL_H_INCLUDED
 #define SPRINGLOBBY_REPLAYLISTCTRL_H_INCLUDED
 
-#include "replaylist.h"
-
 #include "../customlistctrl.h"
 
 class wxMenu;
@@ -11,6 +9,7 @@ class wxListEvent;
 class wxCommandEvent;
 class Ui;
 class ReplayList_Iter;
+class ReplayList;
 
 
 class ReplayListCtrl : public CustomListCtrl
@@ -20,6 +19,7 @@ class ReplayListCtrl : public CustomListCtrl
     ~ReplayListCtrl();
 
     void Sort();
+    void SetUnsorted();
 
     void OnListRightClick( wxListEvent& event );
     void OnDLMap( wxCommandEvent& event );

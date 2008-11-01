@@ -41,7 +41,7 @@
 #include "Helper/colorbutton.h"
 
 #ifndef HAVE_WX26
-#include "auimanager.h"
+#include "aui/auimanager.h"
 #endif
 
 BEGIN_EVENT_TABLE( ChatOptionsTab, wxPanel )
@@ -58,8 +58,6 @@ BEGIN_EVENT_TABLE( ChatOptionsTab, wxPanel )
   EVT_BUTTON( ID_CLIENT, ChatOptionsTab::OnClientSelect )
   EVT_BUTTON( ID_ERROR, ChatOptionsTab::OnErrorSelect )
   EVT_BUTTON( ID_TIMESTAMP, ChatOptionsTab::OnTimestampSelect )
-  EVT_CHECKBOX( ID_SAVELOGS, ChatOptionsTab::OnSaveLogs )
-  EVT_BUTTON( ID_BROWSE_LOGS, ChatOptionsTab::OnBrowseLog )
 END_EVENT_TABLE()
 
 
@@ -314,31 +312,10 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( p
   wxStaticBox*  sbChatLog = new wxStaticBox( this, -1, _("Chat logs") );
   sbChatLogSizer = new wxStaticBoxSizer( sbChatLog, wxVERTICAL );
 
-  m_save_logs = new wxCheckBox( this, ID_SAVELOGS, _("Save chat logs"), wxDefaultPosition, wxDefaultSize, 0 );
+  m_save_logs = new wxCheckBox( this, wxID_ANY, _("Save chat logs"), wxDefaultPosition, wxDefaultSize, 0 );
   m_save_logs->SetValue( sett().GetChatLogEnable() );
 
   sbChatLogSizer->Add( m_save_logs, 0, wxALL, 5 );
-
-  wxBoxSizer* bSaveToSizer;
-  bSaveToSizer = new wxBoxSizer( wxHORIZONTAL );
-
-  m_chat_save_label = new wxStaticText( this, wxID_ANY, _("Save to:"), wxDefaultPosition, wxDefaultSize, 0 );
-  m_chat_save_label->Wrap( -1 );
-  m_chat_save_label->Enable( sett().GetChatLogEnable() );
-
-  bSaveToSizer->Add( m_chat_save_label, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-
-  m_log_save = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-  m_log_save->Enable( sett().GetChatLogEnable() );
-
-  bSaveToSizer->Add( m_log_save, 1, wxALL, 5 );
-
-  m_browse_log = new wxButton( this, ID_BROWSE_LOGS, _("Browse..."), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
-  m_browse_log->Enable( sett().GetChatLogEnable() );
-
-  bSaveToSizer->Add( m_browse_log, 0, wxTOP|wxBOTTOM|wxRIGHT, 5 );
-
-  sbChatLogSizer->Add( bSaveToSizer, 0, wxEXPAND, 5 );
 
   bBotomSizer->Add( sbChatLogSizer, 1, wxEXPAND|wxRIGHT, 5 );
 
@@ -456,7 +433,6 @@ void ChatOptionsTab::DoRestore()
   m_chat_font = sett().GetChatFont();
   m_fontname->SetLabel( m_chat_font.GetFaceName() );
   m_save_logs->SetValue(  sett().GetChatLogEnable() );
-  m_log_save->SetValue(  sett().GetChatLogLoc() );
   m_smart_scroll->SetValue(sett().GetSmartScrollEnabled());
   m_highlight_words->SetValue( sett().GetHighlightedWords() );
   m_highlight_req->SetValue( sett().GetRequestAttOnHighlight() );
@@ -486,7 +462,6 @@ void ChatOptionsTab::OnApply( wxCommandEvent& event )
 
   //Chat Log
   sett().SetChatLogEnable( m_save_logs->GetValue());
-  sett().SetChatLogLoc( m_log_save->GetValue() );
 
   // Behavior
   sett().SetSmartScrollEnabled(m_smart_scroll->GetValue());
@@ -583,18 +558,5 @@ void ChatOptionsTab::OnErrorSelect( wxCommandEvent& event )
 void ChatOptionsTab::OnTimestampSelect( wxCommandEvent& event )
 {
   OnColorChange( m_ts_color );
-}
-
-void ChatOptionsTab::OnSaveLogs( wxCommandEvent& event )
-{
-  m_log_save->Enable( m_save_logs->GetValue() );
-  m_browse_log->Enable( m_save_logs->GetValue() );
-  m_chat_save_label->Enable( m_save_logs->GetValue() );
-}
-
-void ChatOptionsTab::OnBrowseLog( wxCommandEvent& event )
-{
-  wxDirDialog dirpic( this, _("Choose a directory"), sett().GetSpringDir(), wxDD_DEFAULT_STYLE );
-  if ( dirpic.ShowModal() == wxID_OK ) m_log_save->SetValue( dirpic.GetPath() );
 }
 

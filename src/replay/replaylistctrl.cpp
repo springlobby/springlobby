@@ -3,17 +3,16 @@
 #include <wx/intl.h>
 #include <wx/menu.h>
 #include <wx/filename.h>
+#include <wx/log.h>
 
 #include "replaylistctrl.h"
+#include "replaylist.h"
 #include "../utils.h"
 #include "../user.h"
 #include "../iconimagelist.h"
 #include "../uiutils.h"
 #include "../ui.h"
 
-//#include "countrycodes.h"
-
-#define TOOLTIP_DELAY 1000
 
 BEGIN_EVENT_TABLE(ReplayListCtrl, CustomListCtrl)
 
@@ -143,6 +142,13 @@ void ReplayListCtrl::OnDLMod( wxCommandEvent& event )
 }
 
 
+void ReplayListCtrl::SetUnsorted(){
+  wxListItem col;
+  GetColumn( m_sortorder[0].col, col );
+  col.SetImage( icons().ICON_NONE );
+  SetColumn( m_sortorder[0].col, col );
+}
+
 void ReplayListCtrl::OnColClick( wxListEvent& event )
 {
   int click_col=event.GetColumn();
@@ -248,7 +254,7 @@ void ReplayListCtrl::OnMouseMotion(wxMouseEvent& event)
 	wxPoint position = event.GetPosition();
 
 	try{
-		m_tiptimer.Start(TOOLTIP_DELAY, wxTIMER_ONE_SHOT);
+		m_tiptimer.Start(m_tooltip_delay, wxTIMER_ONE_SHOT);
 		int flag = wxLIST_HITTEST_ONITEM;
 		long *ptrSubItem = new long;
 #ifdef HAVE_WX28

@@ -115,24 +115,24 @@ bool User::ExecuteSayCommand( const wxString& cmd )
   }  else return false;
 }
 
-wxString User::GetRankName(RankContainer rank)
+wxString User::GetRankName(UserStatus::RankContainer rank)
 {
   //TODO: better interface to ranks?
       switch(rank) {
-          case RANK_UNKNOWN: return _("Newbie");
-          case RANK_1: return _("Newbie");
-          case RANK_2: return _("Beginner");
-          case RANK_3: return _("Average");
-          case RANK_4: return _("Above average");
-          case RANK_5: return _("Experienced");
-          case RANK_6: return _("Highly experienced");
-          case RANK_7: return _("Veteran");
+          case UserStatus::RANK_UNKNOWN: return _("Newbie");
+          case UserStatus::RANK_1: return _("Newbie");
+          case UserStatus::RANK_2: return _("Beginner");
+          case UserStatus::RANK_3: return _("Average");
+          case UserStatus::RANK_4: return _("Above average");
+          case UserStatus::RANK_5: return _("Experienced");
+          case UserStatus::RANK_6: return _("Highly experienced");
+          case UserStatus::RANK_7: return _("Veteran");
       }
       return _("no rank");
 }
 
 float User::GetBalanceRank(){
-  return 1.0+0.1*float(GetStatus().rank-RANK_1)/float(RANK_7-RANK_1);
+  return 1.0+0.1*float(GetStatus().rank-UserStatus::RANK_1)/float(UserStatus::RANK_7-UserStatus::RANK_1);
 }
 
 wxString User::GetClan(){

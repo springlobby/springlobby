@@ -17,6 +17,8 @@
 #include <wx/colour.h>
 #include <wx/cmndata.h>
 #include <wx/font.h>
+#include <wx/log.h>
+#include <wx/wfstream.h>
 
 #include "nonportable.h"
 #include "settings.h"
@@ -24,16 +26,22 @@
 #include "uiutils.h"
 #include "battlelistfiltervalues.h"
 #include "replay/replaylistfiltervalues.h"
-#include "iunitsync.h"
+#include "globalsmanager.h"
+#include "springunitsynclib.h"
+#include "settings++/presets.h"
 
 const wxColor defaultHLcolor (255,0,0);
 
 
 Settings& sett()
 {
-    static Settings m_sett;
+    static GlobalObjectHolder<Settings> m_sett;
     return m_sett;
 }
+
+SL_WinConf::SL_WinConf(wxFileInputStream& in)
+  : wxFileConfig(in)
+{}
 
 Settings::Settings()
 {
@@ -44,19 +52,19 @@ Settings::Settings()
   if (  wxFileName::FileExists( userfilepath ) || !wxFileName::FileExists( globalfilepath ) || !wxFileName::IsFileWritable( globalfilepath ) )
   {
      m_chosed_path = userfilepath;
-     m_portable_mode = false;
+     SetPortableMode( false );
   }
   else
   {
      m_chosed_path = globalfilepath; /// portable mode, use only current app paths
-     m_portable_mode = true;
+     SetPortableMode ( true );
   }
 
   // if it doesn't exist, try to create it
   if ( !wxFileName::FileExists( m_chosed_path ) )
   {
      // if directory doesn't exist, try to create it
-     if ( !m_portable_mode && !wxFileName::DirExists( wxStandardPaths::Get().GetUserDataDir() ) )
+     if ( !IsPortableMode() && !wxFileName::DirExists( wxStandardPaths::Get().GetUserDataDir() ) )
          wxFileName::Mkdir( wxStandardPaths::Get().GetUserDataDir() );
 
      wxFileOutputStream outstream( m_chosed_path );
@@ -74,13 +82,13 @@ Settings::Settings()
       // TODO: error handling
   }
 
-  m_config = new myconf( instream );
+  m_config = new SL_WinConf( instream );
 
   #else
   //removed temporarily because it's suspected to cause a bug with userdir creation
  // m_config = new wxConfig( _T("SpringLobby"), wxEmptyString, _T(".springlobby/springlobby.conf"), _T("springlobby.global.conf"), wxCONFIG_USE_LOCAL_FILE | wxCONFIG_USE_GLOBAL_FILE  );
   m_config = new wxConfig( _T("SpringLobby"), wxEmptyString, _T(".springlobby/springlobby.conf"), _T("springlobby.global.conf") );
-  m_portable_mode = false;
+  SetPortableMode ( false );
   #endif
   if ( !m_config->Exists( _T("/Server") ) ) SetDefaultSettings();
 
@@ -89,12 +97,6 @@ Settings::Settings()
 
 Settings::~Settings()
 {
-    m_config->Write( _T("/General/firstrun"), false );
-    #if defined(__WXMSW__) && !defined(HAVE_WX26)
-    SaveSettings();
-    #endif
-    SetCacheVersion();
-    delete m_config;
 }
 
 //! @brief Saves the settings to file
@@ -102,6 +104,7 @@ void Settings::SaveSettings()
 {
   m_config->Write( _T("/General/firstrun"), false );
   SetCacheVersion();
+  SetSettingsVersion();
   m_config->Flush();
   #if defined(__WXMSW__) && !defined(HAVE_WX26)
   wxFileOutputStream outstream( m_chosed_path );
@@ -113,13 +116,17 @@ void Settings::SaveSettings()
 
   m_config->Save( outstream );
   #endif
-  if (usync().IsLoaded()) usync().SetSpringDataPath( GetSpringDir() );
 }
 
 
 bool Settings::IsPortableMode()
 {
   return m_portable_mode;
+}
+
+void Settings::SetPortableMode( bool mode )
+{
+  m_portable_mode = mode;
 }
 
 
@@ -144,7 +151,7 @@ unsigned int  Settings::GetSettingsVersion()
 wxString Settings::GetLobbyWriteDir()
 {
   wxString sep = wxFileName::GetPathSeparator();
-  wxString path = GetSpringDir() + sep + _T("lobby");
+  wxString path = GetCurrentUsedDataDir() + sep + _T("lobby");
   if ( !wxFileName::DirExists( path ) )
   {
     if ( !wxFileName::Mkdir(  path  ) ) return wxEmptyString;
@@ -570,112 +577,224 @@ void Settings::SetMainWindowLeft( const int value )
     m_config->Write( _T("/Mainwin/left"), value );
 }
 
-wxString Settings::GetSpringDir()
+// ========================================================
+
+
+
+wxString Settings::AutoFindSpringBin()
 {
-    if ( !IsPortableMode() ) return m_config->Read( _T("/Spring/dir"), WX_STRINGC(DEFSETT_SPRING_DIR) );
-    else return wxStandardPathsBase::Get().GetExecutablePath().BeforeLast( wxFileName::GetPathSeparator() );
+  wxPathList pl;
+  wxStandardPathsBase& sp = wxStandardPathsBase::Get();
+
+#ifdef __WXMSW__
+  wxRegKey programreg( _T("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion") );
+  wxString tmp;
+  if ( programreg.QueryValue( _T("ProgramFilesDir"), tmp ) ) pl.Add( tmp );
+
+  pl.Add( _T("C:\\Program") );
+  pl.Add( _T("C:\\Program Files") );
+#else
+  pl.Add( _T("/usr/local/games") );
+  pl.Add( _T("/usr/local/games/bin") );
+  pl.Add( _T("/usr/local/bin") );
+  pl.Add( _T("/usr/games") );
+  pl.Add( _T("/usr/games/bin") );
+  pl.Add( _T("/usr/bin") );
+#endif
+
+  pl.Add( wxFileName::GetCwd() );
+
+#ifdef HAVE_WX28
+  pl.Add( sp.GetExecutablePath() );
+#endif
+
+  pl.Add( wxFileName::GetHomeDir() );
+  pl.Add( sp.GetUserDataDir().BeforeLast( wxFileName::GetPathSeparator() ) );
+  pl.Add( sp.GetDataDir().BeforeLast( wxFileName::GetPathSeparator() ) );
+
+#ifdef HAVE_WX28
+  pl.Add( sp.GetResourcesDir().BeforeLast( wxFileName::GetPathSeparator() ) );
+#endif
+
+  for ( size_t i = 0; i < pl.GetCount(); i++ ) {
+    wxString path = pl[i];
+    if ( path.Last() != wxFileName::GetPathSeparator() ) path += wxFileName::GetPathSeparator();
+    if ( IsSpringBin( path + SPRING_BIN ) ) return path + SPRING_BIN;
+    if ( IsSpringBin( path + _T("Spring") + wxFileName::GetPathSeparator() + SPRING_BIN ) ) return path + _T("Spring") + wxFileName::GetPathSeparator() + SPRING_BIN;
+    if ( IsSpringBin( path + _T("spring") + wxFileName::GetPathSeparator() + SPRING_BIN ) ) return path + _T("spring") + wxFileName::GetPathSeparator() + SPRING_BIN;
+  }
+  return _T("");
 }
 
 
-void Settings::SetSpringDir( const wxString& spring_dir )
+wxString Settings::AutoFindUnitSync()
 {
-    m_config->Write( _T("/Spring/dir"), spring_dir );
+  wxPathList pl;
+  wxStandardPathsBase& sp = wxStandardPathsBase::Get();
+
+#ifdef __WXMSW__
+  wxRegKey programreg( _T("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion") );
+  wxString tmp;
+  if ( programreg.QueryValue( _T("ProgramFilesDir"), tmp ) ) pl.Add( tmp );
+
+  pl.Add( wxGetOSDirectory() );
+  pl.Add( _T("C:\\Program") );
+  pl.Add( _T("C:\\Program Files") );
+#else
+  pl.Add( _T("/usr/local/lib64") );
+  pl.Add( _T("/usr/local/games") );
+  pl.Add( _T("/usr/local/games/lib") );
+  pl.Add( _T("/usr/local/lib") );
+  pl.Add( _T("/usr/lib64") );
+  pl.Add( _T("/usr/lib") );
+  pl.Add( _T("/usr/games") );
+  pl.Add( _T("/usr/games/lib64") );
+  pl.Add( _T("/usr/games/lib") );
+#endif
+
+  pl.Add( wxFileName::GetCwd() );
+
+#ifdef HAVE_WX28
+  pl.Add( sp.GetExecutablePath() );
+#endif
+
+  pl.Add( wxFileName::GetCwd() );
+
+#ifdef HAVE_WX28
+  pl.Add( sp.GetExecutablePath() );
+#endif
+
+  pl.Add( wxFileName::GetHomeDir() );
+  pl.Add( sp.GetUserDataDir().BeforeLast( wxFileName::GetPathSeparator() ) );
+  pl.Add( sp.GetDataDir().BeforeLast( wxFileName::GetPathSeparator() ) );
+
+#ifdef HAVE_WX28
+  pl.Add( sp.GetResourcesDir().BeforeLast( wxFileName::GetPathSeparator() ) );
+#endif
+
+  for ( size_t i = 0; i < pl.GetCount(); i++ ) {
+    wxString path = pl[i];
+    if ( path.Last() != wxFileName::GetPathSeparator() ) path += wxFileName::GetPathSeparator();
+    if ( wxFile::Exists( path + _T("unitsync") + GetLibExtension() ) ) return path + _T("unitsync") + GetLibExtension();
+    if ( wxFile::Exists( path + _T("Spring") + wxFileName::GetPathSeparator() + _T("unitsync") + GetLibExtension() ) ) return path + _T("Spring") + wxFileName::GetPathSeparator() + _T("unitsync") + GetLibExtension();
+    if ( wxFile::Exists( path + _T("spring") + wxFileName::GetPathSeparator() + _T("unitsync") + GetLibExtension() ) ) return path + _T("spring") + wxFileName::GetPathSeparator() + _T("unitsync") + GetLibExtension();
+    if ( wxFile::Exists( path + _T("libunitsync") + GetLibExtension() ) ) return path + _T("libunitsync") + GetLibExtension();
+    if ( wxFile::Exists( path + _T("Spring") + wxFileName::GetPathSeparator() + _T("libunitsync") + GetLibExtension() ) ) return path + _T("Spring") + wxFileName::GetPathSeparator() + _T("libunitsync") + GetLibExtension();
+    if ( wxFile::Exists( path + _T("spring") + wxFileName::GetPathSeparator() + _T("libunitsync") + GetLibExtension() ) ) return path + _T("spring") + wxFileName::GetPathSeparator() + _T("libunitsync") + GetLibExtension();
+  }
+
+  return _T("");
 }
 
 
-bool Settings::GetUnitSyncUseDefLoc()
+void Settings::ConvertOldSpringDirsOptions()
 {
-    return m_config->Read( _T("/Spring/use_unitsync_def_loc"), true );
+  SetUnitSync( _T("default"), m_config->Read( _T("/Spring/unitsync_loc"), _T("") ) );
+  SetSpringBinary( _T("default"), m_config->Read( _T("/Spring/exec_loc"), _T("") ) );
+
+  SetUsedSpringIndex( _T("default") );
+
+  m_config->DeleteEntry( _T("/Spring/unitsync_loc") );
+  m_config->DeleteEntry( _T("/Spring/use_spring_def_loc") );
+  m_config->DeleteEntry( _T("/Spring/use_unitsync_def_loc") );
+  m_config->DeleteEntry( _T("/Spring/dir") );
+  m_config->DeleteEntry( _T("/Spring/exec_loc") );
 }
 
-
-void Settings::SetUnitSyncUseDefLoc( const bool usedefloc )
+std::map<wxString, wxString> Settings::GetSpringVersionList()
 {
-    m_config->Write( _T("/Spring/use_unitsync_def_loc"), usedefloc );
-}
+  wxLogDebugFunc(_T(""));
+  std::map<wxString, wxString> ret;
+  wxString old_path = m_config->GetPath();
+  m_config->SetPath( _T("/Spring/Paths") );
+  wxString groupname;
+  long dummy;
 
-
-
-wxString Settings::GetUnitSyncLoc()
-{
-  return m_config->Read( _T("/Spring/unitsync_loc"), _T("") );
-}
-
-
-
-void Settings::SetUnitSyncLoc( const wxString& loc )
-{
-    m_config->Write( _T("/Spring/unitsync_loc"), loc );
-}
-
-
-
-bool Settings::GetSpringUseDefLoc()
-{
-    return m_config->Read( _T("/Spring/use_spring_def_loc"), true );
-}
-
-
-
-void Settings::SetSpringUseDefLoc( const bool usedefloc )
-{
-    m_config->Write( _T("/Spring/use_spring_def_loc"), usedefloc );
-}
-
-
-
-wxString Settings::GetSpringLoc()
-{
-    return m_config->Read( _T("/Spring/exec_loc"), _T("") );
-}
-
-
-
-void Settings::SetSpringLoc( const wxString& loc )
-{
-    m_config->Write( _T("/Spring/exec_loc"), loc );
-}
-
-
-wxString Settings::GetSpringUsedLoc( bool force, bool defloc )
-{
-    if ( IsPortableMode() ) return GetSpringDir() + wxFileName::GetPathSeparator() + _T("spring.exe");
-    bool df;
-    if ( force ) df = defloc;
-    else df = GetSpringUseDefLoc();
-
-    if ( df )
+  bool groupexist = m_config->GetFirstGroup(groupname, dummy);
+  while ( groupexist )
+  {
+    wxString usync_path = m_config->Read( _T("/Spring/Paths/") + groupname + _T("/UnitSyncPath"), _T("") );
+    try
     {
-        wxString tmp = GetSpringDir();
-        if ( tmp.Last() != wxFILE_SEP_PATH ) tmp += wxFILE_SEP_PATH;
-        tmp += SPRING_BIN;
-        return tmp;
+      SpringUnitSyncLib libloader( usync_path, false );
+      ret[groupname] = libloader.GetSpringVersion();
     }
-    else
+    catch(...)
     {
-        return GetSpringLoc();
     }
+    groupexist = m_config->GetNextGroup(groupname, dummy);
+  }
+  m_config->SetPath( old_path );
+  susynclib().Init(); /// re-init current "main" unitsync
+  return ret;
 }
 
-wxString Settings::GetUnitSyncUsedLoc( bool force, bool defloc )
+wxString Settings::GetCurrentUsedSpringIndex()
 {
-    if ( IsPortableMode() ) return GetSpringDir() + wxFileName::GetPathSeparator() + _T("unitsync.dll");
-    bool df;
-    if ( force ) df = defloc;
-    else df = GetUnitSyncUseDefLoc();
-
-    if ( df )
-    {
-        wxString tmp = sett().GetSpringDir();
-        if ( tmp.Last() != wxFILE_SEP_PATH ) tmp += wxFILE_SEP_PATH;
-        tmp += _T("unitsync") + GetLibExtension();
-        return tmp;
-    }
-    else
-    {
-        return sett().GetUnitSyncLoc();
-    }
+  return m_config->Read( _T("/Spring/CurrentIndex"), _T("default") );
 }
+
+void Settings::SetUsedSpringIndex( const wxString& index )
+{
+  m_config->Write( _T("/Spring/CurrentIndex"), index );
+}
+
+
+void Settings::DeleteSpringVersionbyIndex( const wxString& index )
+{
+  m_config->DeleteGroup( _T("/Spring/Path/") + index );
+  if( GetCurrentUsedSpringIndex() == index ) SetUsedSpringIndex( _T("") );
+}
+
+
+wxString Settings::GetCurrentUsedDataDir()
+{
+  wxString dir;
+  if ( susynclib().IsLoaded() )
+  {
+    if ( susynclib().VersionSupports( IUnitSync::USYNC_GetDataDir ) ) dir = susynclib().GetSpringDataDir();
+    else dir = susynclib().GetSpringConfigString( _T("SpringData"), _T("") );
+  }
+  if ( dir.IsEmpty() ) dir = wxStandardPathsBase::Get().GetUserDataDir(); /// fallback
+  return dir;
+}
+
+
+wxString Settings::GetCurrentUsedSpringBinary()
+{
+    return GetSpringBinary( GetCurrentUsedSpringIndex() );
+}
+
+
+wxString Settings::GetCurrentUsedUnitSync()
+{
+    return GetUnitSync( GetCurrentUsedSpringIndex() );
+}
+
+
+wxString Settings::GetUnitSync( const wxString& index )
+{
+  if ( IsPortableMode() ) return GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("unitsync") + GetLibExtension();
+  else return m_config->Read( _T("/Spring/Paths/") + index + _T("/UnitSyncPath"), AutoFindUnitSync() );
+}
+
+
+wxString Settings::GetSpringBinary( const wxString& index )
+{
+    if ( IsPortableMode() ) return GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("spring.exe");
+    else return m_config->Read( _T("/Spring/Paths/") + index + _T("/SpringBinPath"), AutoFindSpringBin() );
+}
+
+void Settings::SetUnitSync( const wxString& index, const wxString& path )
+{
+  m_config->Write( _T("/Spring/Paths/") + index + _T("/UnitSyncPath"), path );
+}
+
+void Settings::SetSpringBinary( const wxString& index, const wxString& path )
+{
+  m_config->Write( _T("/Spring/Paths/") + index + _T("/SpringBinPath"), path );
+}
+// ===================================================
 
 bool Settings::GetChatLogEnable()
 {
@@ -683,16 +802,16 @@ bool Settings::GetChatLogEnable()
     return m_config->Read( _T("/ChatLog/chatlog_enable"), true );
 }
 
+
 void Settings::SetChatLogEnable( const bool value )
 {
     m_config->Write( _T("/ChatLog/chatlog_enable"), value );
 }
 
+
 wxString Settings::GetChatLogLoc()
 {
-    wxString path;
-    if ( !IsPortableMode() ) path = m_config->Read( _T("/ChatLog/chatlog_loc"), GetLobbyWriteDir() + _T("chatlog") );
-    else path = GetLobbyWriteDir() + _T("chatlog");
+    wxString path = GetLobbyWriteDir() + _T("chatlog");
     if ( !wxFileName::DirExists( path ) )
     {
       if ( !wxFileName::Mkdir(  path  ) ) return wxEmptyString;
@@ -700,10 +819,6 @@ wxString Settings::GetChatLogLoc()
     return path;
 }
 
-void Settings::SetChatLogLoc( const wxString& loc )
-{
-    m_config->Write( _T("/ChatLog/chatlog_loc"), loc );
-}
 
 wxString Settings::GetLastHostDescription()
 {
@@ -754,6 +869,11 @@ int Settings::GetLastRankLimit()
 bool Settings::GetTestHostPort()
 {
     return m_config->Read( _T("/Hosting/TestHostPort"), 0l );
+}
+
+bool Settings::GetLastAutolockStatus()
+{
+    return m_config->Read( _T("/Hosting/LastAutoLock"), true );
 }
 
 wxColour Settings::GetBattleLastColour()
@@ -823,6 +943,11 @@ void Settings::SetTestHostPort( bool value )
     m_config->Write( _T("/Hosting/TestHostPort"), value );
 }
 
+void Settings::SetLastAutolockStatus( bool value )
+{
+    m_config->Write( _T("/Hosting/LastAutoLock"), value );
+}
+
 void Settings::SetHostingPreset( const wxString& name, int optiontype, std::map<wxString,wxString> options )
 {
     m_config->DeleteGroup( _T("/Hosting/Preset/") + name + _T("/") + TowxString( optiontype ) );
@@ -859,14 +984,13 @@ wxArrayString Settings::GetPresetList()
   m_config->SetPath( _T("/Hosting/Preset") );
   wxString groupname;
   long dummy;
+
   bool groupexist = m_config->GetFirstGroup(groupname, dummy);
   while ( groupexist )
   {
     ret.Add( groupname );
-
     groupexist = m_config->GetNextGroup(groupname, dummy);
   }
-
   m_config->SetPath( old_path );
   return ret;
 }
@@ -1608,3 +1732,144 @@ wxString Settings::GetLastReplayFilterProfileName()
     return  m_config->Read( _T("/ReplayFilter/lastprofile"), _T("default") );
 }
 
+void Settings::SetCompletionMethod( CompletionMethod method )
+{
+    m_config->Write( _T("/General/CompletionMethod"), (int)method);
+}
+
+Settings::CompletionMethod Settings::GetCompletionMethod(  ) const
+{
+    return  (CompletionMethod )m_config->Read( _T("/General/CompletionMethod"), (int)MatchExact );
+}
+
+
+//////////////////////////////////////////////////////////////////////////////
+///                            SpringSettings                              ///
+//////////////////////////////////////////////////////////////////////////////
+
+
+int Settings::getMode()
+{
+	int mode;
+	m_config->Read( _T("/SpringSettings/mode"), &mode, SET_MODE_SIMPLE );
+	return mode;
+}
+
+void Settings::setMode(int mode)
+{
+	m_config->Write( _T("/SpringSettings/mode"), mode );
+}
+
+bool Settings::getDisableWarning()
+{
+	bool tmp;
+	m_config->Read( _T("/SpringSettings/disableWarning"), &tmp, false );
+	return tmp;
+}
+
+void Settings::setDisableWarning(bool disable)
+{
+	m_config->Write( _T("/SpringSettings/disableWarning"), disable);
+}
+
+
+wxString Settings::getSimpleRes()
+{
+	wxString def = vl_Resolution_Str[1];
+	m_config->Read( _T("/SpringSettings/SimpleRes"),&def);
+	return def;
+}
+void Settings::setSimpleRes(wxString res)
+{
+	m_config->Write(_T("/SpringSettings/SimpleRes"),res);
+}
+
+wxString Settings::getSimpleQuality()
+{
+	wxString def = wxT("medium");
+	m_config->Read( _T("/SpringSettings/SimpleQuality"),&def);
+	return def;
+}
+
+void Settings::setSimpleQuality(wxString qual)
+{
+	m_config->Write(_T("/SpringSettings/SimpleQuality"),qual);
+}
+
+wxString Settings::getSimpleDetail()
+{
+	wxString def = wxT("medium");
+	m_config->Read( _T("/SpringSettings/SimpleDetail"),&def);
+	return def;
+}
+
+void Settings::setSimpleDetail(wxString det)
+{
+	m_config->Write(_T("/SpringSettings/SimpleDetail"),det);
+}
+
+
+/************* SPRINGSETTINGS WINDOW POS/SIZE   ******************/
+//! @brief Get left position of MainWindow.
+int Settings::GetSettingsWindowLeft()
+{
+  return m_config->Read( _T("/Settwin/left"), DEFSETT_SW_LEFT );
+}
+
+//! @brief Set left position of SettingsWindow
+void Settings::SetSettingsWindowLeft( const int value )
+{
+  m_config->Write( _T("/Settwin/left"), value );
+}
+
+//! @brief Get height of SettingsWindow.
+int Settings::GetSettingsWindowHeight()
+{
+  return m_config->Read( _T("/Settwin/height"), DEFSETT_SW_HEIGHT );
+}
+
+
+//! @brief Set height position of SettingsWindow
+void Settings::SetSettingsWindowHeight( const int value )
+{
+  m_config->Write( _T("/Settwin/height"), value );
+}
+
+
+//! @brief Get top position of SettingsWindow.
+int Settings::GetSettingsWindowTop()
+{
+  return m_config->Read( _T("/Settwin/top"), DEFSETT_SW_TOP );
+}
+
+
+//! @brief Set top position of SettingsWindow
+void Settings::SetSettingsWindowTop( const int value )
+{
+  m_config->Write( _T("/Settwin/top"), value );
+}
+
+//! @brief Get width of MainWindow.
+int Settings::GetSettingsWindowWidth()
+{
+  return m_config->Read( _T("/Settwin/width"), DEFSETT_SW_WIDTH );
+}
+
+
+//! @brief Set width position of MainWindow
+void Settings::SetSettingsWindowWidth( const int value )
+{
+  m_config->Write( _T("/Settwin/width"), value );
+}
+
+/*********** WINDOW SIZE/POS END *****************/
+
+
+bool Settings::IsSpringBin( const wxString& path )
+{
+  if ( !wxFile::Exists( path ) ) return false;
+#ifdef HAVE_WX28
+  if ( !wxFileName::IsFileExecutable( path ) ) return false;
+#endif
+  return true;
+}

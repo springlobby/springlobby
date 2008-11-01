@@ -2,9 +2,9 @@
 #define SPRINGLOBBY_HEADERGUARD_UTILS_H
 
 #include <wx/string.h>
-#include <wx/log.h>
 #include <sstream>
 #include <stdexcept>
+#include <wx/log.h>
 
 /** these need to stay to not break non-autotools builds */
 #if ( !defined(HAVE_WX26) && !defined(HAVE_WX28) )
@@ -44,19 +44,19 @@ class assert_exception : public std::runtime_error
 #if wxUSE_DEBUGREPORT && defined(HAVE_WX28)
 #define ASSERT_LOGIC(cond,msg) if(!(cond))\
 {\
-  wxLogError(_T("logic error: %s"), wxString(msg).c_str() );\
+  wxLogError(_T("logic error ( %s:%d ): %s"), TowxString(__FILE__).c_str(),__LINE__ , wxString(msg).c_str() );\
   throw std::logic_error(std::string(wxString(msg).mb_str()));\
 }
 #else
 #define ASSERT_LOGIC(cond,msg) if(!(cond))\
 {\
-  wxLogError(_T("logic error: %s"), wxString(msg).c_str() );\
+  wxLogError(_T("logic error ( %s:%d ): %s"), TowxString(__FILE__).c_str(),__LINE__ , wxString(msg).c_str() );\
   throw std::logic_error(std::string(wxString(msg).mb_str()));\
 }
 #endif
 
 #define ASSERT_EXCEPTION(cond,msg) if(!(cond))\
-{wxLogMessage(_T("runtime assertion: %s"), wxString(msg).c_str() );throw assert_exception(std::string(wxString(msg).mb_str()));}
+{wxLogMessage(_T("runtime assertion ( %s:%d ): %s"), TowxString(__FILE__).c_str(),__LINE__ , wxString(msg).c_str() );throw assert_exception(std::string(wxString(msg).mb_str()));}
 
 
 #define CLAMP(var,min,max) ((var)=((var)<(min))?(min):((var)>(max))?(max):(var))
@@ -102,6 +102,8 @@ inline wxString TowxString(std::string arg){
 }
 /** @} */
 
+template <typename T> T clamp(const T var,const T min,const T max)
+{ return ( (var < min) ? min : ( var > max ) ? max : var ); }
 
 wxString GetLibExtension();
 void InitializeLoggingTargets();
@@ -157,5 +159,20 @@ class uninitialized_array
 */
 const wxChar* TooltipEnable(const wxChar* input);
 
+
+
+/**
+ * @brief Computes Levenshtein distance (edit distance) between two strings.
+ * @return the Levenshtein distance normalized by the longest string's length.
+ * @note Source: http://en.wikipedia.org/wiki/Levenshtein_distance
+ */
+double LevenshteinDistance(wxString s, wxString t);
+
+class wxArrayString;
+/**
+ * @brief Gets the closest match for s in a, using LevenshteinDistance.
+ * @param distance If not NULL, *distance is set to the edit distance from s to the return value.
+ */
+wxString GetBestMatch(const wxArrayString& a, const wxString& s, double* distance = NULL);
 
 #endif // SPRINGLOBBY_HEADERGUARD_UTILS_H

@@ -1,18 +1,27 @@
 #include "lobbyoptionstab.h"
+#include "nonportable.h"
 #include <wx/sizer.h>
 #include <wx/statbox.h>
 #include <wx/intl.h>
 #include <wx/stattext.h>
 #include <wx/checkbox.h>
 #include <wx/tooltip.h>
+#include <wx/radiobut.h>
+#include <wx/textctrl.h>
+#include <wx/button.h>
+#include <wx/filedlg.h>
 
 #include "settings.h"
 //#include
 
 #ifndef HAVE_WX26
-#include "auimanager.h"
+#include "aui/auimanager.h"
 #endif
 
+BEGIN_EVENT_TABLE(LobbyOptionsTab, wxPanel)
+    EVT_BUTTON ( SPRING_WEBBROWSE, LobbyOptionsTab::OnBrowseWeb )
+    EVT_RADIOBUTTON( SPRING_DEFWEB, LobbyOptionsTab::OnDefaultWeb )
+END_EVENT_TABLE()
 
 LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
     : wxScrolledWindow( parent, -1 )
@@ -21,6 +30,40 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
     GetAui().manager->AddPane( this, wxLEFT, _T("lobbyoptionstab") );
     #endif
     m_main_sizer = new wxBoxSizer ( wxVERTICAL );
+
+/* ================================
+   * Web browser
+   */
+
+    wxStaticBox* m_web_box = new wxStaticBox( this , -1, _("Web Browser") );
+    m_web_loc_text = new wxStaticText( this, -1, _("Web Browser") );
+
+    m_web_def_radio = new wxRadioButton( this, SPRING_DEFWEB, _("Default Browser."),
+                 wxDefaultPosition, wxDefaultSize, wxRB_GROUP );
+    m_web_def_radio->SetToolTip(TE(_("Use your system-wide browser preference")));
+
+    m_web_spec_radio = new wxRadioButton( this, SPRING_DEFWEB, _("Specify:") );
+    m_web_spec_radio->SetToolTip(TE(_("Specify the web browser you want to use")));
+
+    m_web_edit = new wxTextCtrl( this, -1, sett().GetWebBrowserPath() );
+
+    m_web_browse_btn = new wxButton( this, SPRING_WEBBROWSE, _("Browse") );
+    m_web_browse_btn->SetToolTip(TE(_("Use a file dialog to find the web browser")));
+
+    if ( sett().GetWebBrowserUseDefault() ) m_web_def_radio->SetValue( true );
+    else m_web_spec_radio->SetValue( true );
+
+    m_web_loc_sizer = new wxBoxSizer( wxHORIZONTAL );
+    m_web_loc_sizer->Add( m_web_loc_text, 0, wxALL, 2 );
+    m_web_loc_sizer->Add( m_web_edit, 1, wxEXPAND );
+    m_web_loc_sizer->Add( m_web_browse_btn );
+
+    wxStaticBoxSizer* m_web_box_sizer = new wxStaticBoxSizer( m_web_box, wxVERTICAL );
+
+    m_web_box_sizer->Add( m_web_def_radio, 0, wxALL, 2 );
+    m_web_box_sizer->Add( m_web_spec_radio, 0, wxALL, 2 );
+    m_web_box_sizer->Add( m_web_loc_sizer, 0, wxEXPAND | wxALL, 2 );
+
     wxStaticBoxSizer* m_autojoin_sizer= new wxStaticBoxSizer ( wxVERTICAL, this, _("Autoconnect") );
     m_autoconnect_label = new wxStaticText ( this, -1, _("If checked, SpringLobby will automatically log on to the last used server") );
     m_autojoin = new wxCheckBox( this, -1, _("Autoconnect on lobby start"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -35,6 +78,7 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
     m_reportstats_sizer->Add( m_reportstats_label, 1, wxEXPAND|wxALL, 5);
     m_reportstats_sizer->Add( m_reportstats, 0, wxEXPAND|wxALL, 5);
 
+    m_main_sizer->Add( m_web_box_sizer, 0, wxEXPAND | wxALL, 2 );
     m_main_sizer->Add( m_autojoin_sizer, 0, wxALL, 15 );
     m_main_sizer->Add( m_reportstats_sizer, 0, wxALL, 15 );
 
@@ -60,6 +104,19 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
 
     m_main_sizer->Add( m_show_tooltips_sizer, 0, wxALL, 15 );
 
+    wxStaticBoxSizer* m_complete_method_sizer = new wxStaticBoxSizer ( wxVERTICAL, this, _("Tab completion method") );
+    m_complete_method_label = new wxStaticText ( this, -1, _("\"Match exact\" will complete a word if there is one and only one match.\n"
+        "\"Match nearest\" will select the (first) match that has closest Levenshtein distance") );
+    m_complete_method_old = new wxRadioButton( this, -1, _("Match exact"), wxDefaultPosition, wxDefaultSize, wxRB_GROUP );
+    m_complete_method_new = new wxRadioButton( this, -1, _("Match nearest"), wxDefaultPosition, wxDefaultSize );
+    m_complete_method_old->SetValue( sett().GetCompletionMethod() == Settings::MatchExact );
+    m_complete_method_new->SetValue( sett().GetCompletionMethod() == Settings::MatchNearest );
+    m_complete_method_sizer->Add( m_complete_method_label, 1, wxEXPAND|wxALL, 5);
+    m_complete_method_sizer->Add( m_complete_method_old, 0, wxEXPAND|wxALL, 5);
+    m_complete_method_sizer->Add( m_complete_method_new, 0, wxEXPAND|wxALL, 5);
+
+    m_main_sizer->Add( m_complete_method_sizer, 0, wxALL, 15 );
+
 
     SetSizer( m_main_sizer );
 }
@@ -71,6 +128,9 @@ LobbyOptionsTab::~LobbyOptionsTab()
 
 void LobbyOptionsTab::OnApply(wxCommandEvent& event)
 {
+    if ( !m_web_def_radio->GetValue() ) sett().SetWebBrowserPath( m_web_edit->GetValue() );
+    sett().SetWebBrowserUseDefault( m_web_def_radio->GetValue() );
+
     sett().SetAutoConnect( m_autojoin->IsChecked() );
     sett().SetReportStats( m_reportstats->GetValue() );
 #ifdef __WXMSW__
@@ -79,6 +139,8 @@ void LobbyOptionsTab::OnApply(wxCommandEvent& event)
     bool show = m_show_tooltips->IsChecked();
     wxToolTip::Enable(show);
     sett().SetShowTooltips(show);
+
+    sett().SetCompletionMethod( m_complete_method_new->GetValue() ? Settings::MatchNearest: Settings::MatchExact );
 }
 
 
@@ -92,5 +154,37 @@ void LobbyOptionsTab::OnRestore(wxCommandEvent& event)
     bool show = sett().GetShowTooltips();
     m_show_tooltips->SetValue(show);
     wxToolTip::Enable(show);
+
+    m_complete_method_old->SetValue( sett().GetCompletionMethod() == Settings::MatchExact );
+    m_complete_method_new->SetValue( sett().GetCompletionMethod() == Settings::MatchNearest );
+
+    HandleWebloc( sett().GetWebBrowserUseDefault() );
 }
 
+void LobbyOptionsTab::HandleWebloc( bool defloc )
+{
+  m_web_def_radio->SetValue( defloc );
+  m_web_spec_radio->SetValue( !defloc );
+  if ( defloc ) {
+    m_web_edit->Enable( false );
+    m_web_browse_btn->Enable( false );
+    //m_sync_find_btn->Enable( false );
+    m_web_edit->SetValue( _T("") );
+  } else {
+    m_web_edit->Enable( true );
+    m_web_browse_btn->Enable( true );
+    //m_sync_find_btn->Enable( true );
+    m_web_edit->SetValue( sett().GetWebBrowserPath() );
+  }
+}
+
+void LobbyOptionsTab::OnBrowseWeb( wxCommandEvent& event )
+{
+  wxFileDialog pick( this, _("Choose a web browser executable"), _T(""), _T("*"), CHOOSE_EXE );
+  if ( pick.ShowModal() == wxID_OK ) m_web_edit->SetValue( pick.GetPath() );
+}
+
+void LobbyOptionsTab::OnDefaultWeb( wxCommandEvent& event )
+{
+  HandleWebloc( m_web_def_radio->GetValue() );
+}

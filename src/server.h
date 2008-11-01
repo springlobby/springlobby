@@ -8,8 +8,6 @@
 #include "battlelist.h"
 #include "inetclass.h"
 
-#define PING_TIMEOUT 30
-
 class ServerEvents;
 class Channel;
 class Ui;
@@ -22,25 +20,10 @@ class wxString;
 typedef int ServerError;
 class wxColour;
 
-#define PE_NONE 0
-
+//usage long gone? (koshi)
+//#define PE_NONE 0
 
 typedef int HostInfo;
-
-struct UiServerData {
-  UiServerData(): panel(0) {}
-  ChatPanel* panel;
-};
-
-enum PortTestCode {
-  porttest_pass_WX26    = 0,
-  porttest_pass         = 1,
-  porttest_timeout      = 2,
-  porttest_socketNotOk  = 3,
-  porttest_socketError  = 4,
-  porttest_unreachable  = 5
-
-};
 
 
 //! @brief Abstract baseclass that is used to implement a server protocol.
@@ -49,11 +32,24 @@ class Server : public iNetClass
   public:
     friend class ServerEvents;
 
+    enum PortTestCode {
+      porttest_pass_WX26    = 0,
+      porttest_pass         = 1,
+      porttest_timeout      = 2,
+      porttest_socketNotOk  = 3,
+      porttest_socketError  = 4,
+      porttest_unreachable  = 5
+    };
+
+    struct UiServerData {
+      UiServerData(): panel(0) {}
+      ChatPanel* panel;
+    };
 
     UiServerData uidata;
 
 
-    Server( Ui& ui): battles_iter(new BattleList_Iter(&m_battles)),m_sock(0), m_ui(ui),m_keepalive(15) {  }
+    Server(): battles_iter(new BattleList_Iter(&m_battles)),m_sock(0),m_keepalive(15) {  }
     virtual ~Server( );
 
     // Server interface
@@ -178,7 +174,6 @@ class Server : public iNetClass
 
   protected:
     Socket* m_sock;
-    Ui& m_ui;
     int m_keepalive;
     wxString m_user;
     wxString m_pass;
@@ -197,6 +192,8 @@ class Server : public iNetClass
 
     Battle& _AddBattle( const int& id );
     void _RemoveBattle( const int& id );
+
+    static const unsigned int PING_TIMEOUT = 30;
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_SERVER_H

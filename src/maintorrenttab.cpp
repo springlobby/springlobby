@@ -16,7 +16,7 @@
 #include "filelister/filelistdialog.h"
 
 #ifndef HAVE_WX26
-#include "auimanager.h"
+#include "aui/auimanager.h"
 #endif
 
 BEGIN_EVENT_TABLE(MainTorrentTab,wxPanel)

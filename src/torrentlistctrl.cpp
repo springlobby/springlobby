@@ -4,20 +4,11 @@
 
 #include <wx/intl.h>
 #include <wx/menu.h>
-#include <wx/string.h>
 
 #include "torrentlistctrl.h"
 #include "torrentwrapper.h"
 #include "utils.h"
-#include "user.h"
 #include "iconimagelist.h"
-#include "battle.h"
-#include "uiutils.h"
-#include "ui.h"
-#include "server.h"
-#include "countrycodes.h"
-
-#define TOOLTIP_DELAY 1000
 
 BEGIN_EVENT_TABLE( TorrentListCtrl, CustomListCtrl )
 

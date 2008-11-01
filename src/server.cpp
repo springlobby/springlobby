@@ -4,6 +4,7 @@
 //
 
 #include <stdexcept>
+#include <wx/log.h>
 
 #include "server.h"
 #include "socket.h"
@@ -121,7 +122,7 @@ void Server::_RemoveUser( const wxString& nickname )
 Channel& Server::_AddChannel( const wxString& chan )
 {
   if ( m_channels.ChannelExists( chan ) ) return m_channels.GetChannel( chan );
-  Channel* c = new Channel( *this, m_ui );
+  Channel* c = new Channel( *this, ui() );
   c->SetName( chan );
 
   m_channels.AddChannel( *c );
@@ -140,7 +141,7 @@ void Server::_RemoveChannel( const wxString& name )
 Battle& Server::_AddBattle( const int& id )
 {
   if ( battles_iter->BattleExists( id ) ) return battles_iter->GetBattle( id );
-  Battle* b = new Battle( *this, m_ui, id );
+  Battle* b = new Battle( *this, id );
 
   m_battles.AddBattle( *b );
   return *b;

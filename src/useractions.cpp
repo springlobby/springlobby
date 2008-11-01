@@ -16,11 +16,11 @@
 #include "chatpanel.h"
 #include "mainoptionstab.h"
 #include "groupoptionspanel.h"
-
+#include "globalsmanager.h"
 
 UserActions& useractions()
 {
-    static UserActions m_useractions;
+    static GlobalObjectHolder<UserActions> m_useractions;
     return m_useractions;
 }
 

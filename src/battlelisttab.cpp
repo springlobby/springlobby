@@ -8,13 +8,14 @@
 #include <wx/button.h>
 #include <wx/sizer.h>
 #include <wx/checkbox.h>
+#include <wx/log.h>
 #include <stdexcept>
 #if wxUSE_TOGGLEBTN
 #include <wx/tglbtn.h>
 #endif
 
 #ifndef HAVE_WX26
-#include "auimanager.h"
+#include "aui/auimanager.h"
 #endif
 
 #include "battlelisttab.h"
@@ -40,20 +41,21 @@
 //#include "images/springlobby.xpm"
 //#include <wx/icon.h>
 
-#define BATTLELIST_COLOUMNCOUNT 10
+const unsigned int BATTLELIST_COLOUMNCOUNT = 10;
 
 BEGIN_EVENT_TABLE(BattleListTab, wxPanel)
 
-  EVT_BUTTON              ( BATTLE_JOIN              , BattleListTab::OnJoin        )
-  EVT_BUTTON              ( BATTLE_HOST              , BattleListTab::OnHost        )
-  EVT_LIST_ITEM_ACTIVATED ( BATTLE_JOIN              , BattleListTab::OnListJoin    )
-  EVT_LIST_ITEM_SELECTED  ( BLIST_LIST               , BattleListTab::OnSelect      )
-  EVT_CHECKBOX            ( BATTLE_LIST_FILTER_ACTIV , BattleListTab::OnFilterActiv )
+  EVT_BUTTON              ( BattleListTab::BATTLE_JOIN , BattleListTab::OnJoin        )
+  EVT_BUTTON              ( BattleListTab::BATTLE_HOST , BattleListTab::OnHost        )
+  EVT_LIST_ITEM_ACTIVATED ( BattleListTab::BATTLE_JOIN , BattleListTab::OnListJoin    )
+  EVT_LIST_ITEM_SELECTED  ( BattleListCtrl::BLIST_LIST  , BattleListTab::OnSelect      )
+  EVT_CHECKBOX            ( BattleListTab::BATTLE_LIST_FILTER_ACTIV, BattleListTab::OnFilterActiv )
 #if  wxUSE_TOGGLEBTN
-  EVT_TOGGLEBUTTON        ( BATTLE_LIST_FILTER_BUTTON, BattleListTab::OnFilter  )
+  EVT_TOGGLEBUTTON        ( BattleListTab::BATTLE_LIST_FILTER_BUTTON, BattleListTab::OnFilter  )
 #else
-  EVT_CHECKBOX            ( BATTLE_LIST_FILTER_BUTTON , BattleListTab::OnFilter )
+  EVT_CHECKBOX            ( BattleListTab::BATTLE_LIST_FILTER_BUTTON , BattleListTab::OnFilter )
 #endif
+  EVT_SIZE( BattleListTab::OnResize )
 
 
 END_EVENT_TABLE()
@@ -68,7 +70,6 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( par
   GetAui().manager->AddPane( this, wxLEFT, _T("battlelisttab") );
   #endif
 
-  wxBoxSizer* m_main_sizer;
   m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
   wxBoxSizer* m_filter_sizer;
@@ -83,13 +84,11 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( par
 
   m_main_sizer->Add( m_battlelist_sizer, 1, wxEXPAND, 5 );;
 
-  wxBoxSizer* m_info_sizer;
   m_info_sizer = new wxBoxSizer( wxHORIZONTAL );
 
   m_minimap = new MapCtrl( this, 100, 0, m_ui, true, true, false, false );
   m_info_sizer->Add( m_minimap, 0, wxALL, 5 );
 
-  wxFlexGridSizer* m_data_sizer;
   m_data_sizer = new wxFlexGridSizer( 4, 2, 0, 0 );
 
   m_map_lbl = new wxStaticText( this, wxID_ANY, _("Map:"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -183,7 +182,7 @@ void BattleListTab::SelectBattle( Battle* battle )
   if ( m_sel_battle != 0 ) {
     m_map_text->SetLabel( RefineMapname( m_sel_battle->GetHostMapName() ) );
     m_mod_text->SetLabel( m_sel_battle->GetHostModName() );
-    m_players_text->SetLabel( wxString::Format( _T("%d / %d"), m_sel_battle->GetNumUsers() - m_sel_battle->GetSpectators(), m_sel_battle->GetMaxPlayers() ) );
+    m_players_text->SetLabel( wxString::Format( _T("%d / %d"), int(m_sel_battle->GetNumUsers()) - int(m_sel_battle->GetSpectators()), int(m_sel_battle->GetMaxPlayers() )) );
     m_spec_text->SetLabel( wxString::Format( _T("%d"), m_sel_battle->GetSpectators() ) );
     for ( unsigned int i = 0; i < m_sel_battle->GetNumUsers(); i++ ) {
       m_players->AddUser( m_sel_battle->GetUser( i ) );
@@ -224,9 +223,9 @@ void BattleListTab::AddBattle( Battle& battle ) {
   m_battle_list->SetItem( index, 4, RefineMapname( battle.GetHostMapName() ), battle.MapExists()?icons().ICON_EXISTS:icons().ICON_NEXISTS );
   m_battle_list->SetItem( index, 5, RefineModname( battle.GetHostModName() ), battle.ModExists()?icons().ICON_EXISTS:icons().ICON_NEXISTS );
   m_battle_list->SetItem( index, 6, battle.GetFounder().GetNick() );
-  m_battle_list->SetItem( index, 7, wxString::Format(_T("%d"), battle.GetSpectators()) );
-  m_battle_list->SetItem( index, 8, wxString::Format(_T("%d"), battle.GetNumUsers() - battle.GetSpectators() ) );
-  m_battle_list->SetItem( index, 9, wxString::Format(_T("%d"), battle.GetMaxPlayers()) );
+  m_battle_list->SetItem( index, 7, wxString::Format(_T("%d"), int(battle.GetSpectators())) );
+  m_battle_list->SetItem( index, 8, wxString::Format(_T("%d"), int(battle.GetNumUsers()) - int(battle.GetSpectators()) ) );
+  m_battle_list->SetItem( index, 9, wxString::Format(_T("%d"), int(battle.GetMaxPlayers())) );
 
   m_battle_list->HighlightItem( index );
   m_battle_list->SetColumnWidth( 4, wxLIST_AUTOSIZE );
@@ -396,29 +395,29 @@ void BattleListTab::OnHost( wxCommandEvent& event )
     BattleOptions bo;
     bo.description = sett().GetLastHostDescription();
     bo.port = sett().GetLastHostPort();
-    bo.nattype = NatType(sett().GetLastHostNATSetting());
+    bo.nattype = IBattle::NatType(sett().GetLastHostNATSetting());
 
-    if ( bo.nattype == NAT_None && sett().GetTestHostPort() )
+    if ( bo.nattype == IBattle::NAT_None && sett().GetTestHostPort() )
     {
         switch ( m_ui.TestHostPort( bo.port ) )
         {
-            case porttest_pass : break; // success
-            case porttest_pass_WX26 :
+            case Server::porttest_pass : break; // success
+            case Server::porttest_pass_WX26 :
                 wxLogWarning(_T("hosting port %d: test aborted (wx26)"),bo.port  );
                 customMessageBoxNoModal( SL_MAIN_ICON, wxString::Format( _("Your using wxWidgets prior to version 2.8,\n "
                     "port testing is not supported.\n Hosting may or may not work."), bo.port ) );
                 sett().SetTestHostPort(false); // no need to have it checked anymore
                 break;
 
-            case porttest_unreachable :
+            case Server::porttest_unreachable :
                 wxLogWarning(_T("hosting port %d: test undetermined"),bo.port  );
                 customMessageBoxNoModal( SL_MAIN_ICON, wxString::Format( _("The server used for testing your port %d "
                     "is unreachable. \nHosting may or may not work with this setting."), bo.port ) );
                 break; //inconclusive test shouldn't hinder hosting imo (koshi)
 
-            case porttest_timeout :
-            case porttest_socketNotOk :
-            case porttest_socketError :
+            case Server::porttest_timeout :
+            case Server::porttest_socketNotOk :
+            case Server::porttest_socketError :
                 wxLogWarning(_T("hosting port %d: test unsuccessful, closing battle"),bo.port  );
                 customMessageBoxNoModal( SL_MAIN_ICON, wxString::Format( _("Battle not started because the port you selected (%d) "
                     "is unable to recieve incoming packets\n checks your router & firewall configuration again or change port "
@@ -638,4 +637,24 @@ void BattleListTab::UpdateHighlights()
 void BattleListTab::SortBattleList()
 {
   m_battle_list->SortList();
+}
+
+
+void BattleListTab::OnResize( wxSizeEvent& event )
+{
+	SetSize( event.GetSize() );
+	Layout();
+	/// window too small, hide additional infos
+  if ( GetClientSize().GetHeight() < 400 )
+  {
+    m_main_sizer->Hide(m_info_sizer, true );
+    m_main_sizer->Hide(m_buttons_sep, true );
+    if ( m_filter_notice ) m_main_sizer->Hide( m_filter_notice, true );
+  }
+  else
+  {
+    m_main_sizer->Show(m_info_sizer, true );
+    m_main_sizer->Show(m_buttons_sep, true );
+    if ( m_filter_notice ) m_main_sizer->Show( m_filter_notice, true );
+  }
 }

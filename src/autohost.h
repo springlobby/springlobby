@@ -3,10 +3,12 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_AUTOHOST_H
 #define SPRINGLOBBY_HEADERGUARD_AUTOHOST_H
 
+//including this header is only really needed for time_t ..
 #include <wx/string.h>
 
 class Battle;
 class User;
+class wxString;
 
 //! @brief Autohost logic
 class AutoHost

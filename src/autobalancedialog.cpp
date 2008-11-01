@@ -4,7 +4,11 @@
 
 //(*InternalHeaders(AutoBalanceDialog)
 #include <wx/intl.h>
-#include <wx/string.h>
+#include <wx/sizer.h>
+#include <wx/stattext.h>
+#include <wx/statline.h>
+#include <wx/choice.h>
+#include <wx/button.h>
 //*)
 
 //(*IdInit(AutoBalanceDialog)

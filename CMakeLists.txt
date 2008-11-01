@@ -179,7 +179,8 @@ SET(SpringLobbySrc
 	src/filelister/filelistctrl.cpp
 	src/filelister/filelistdialog.cpp
 	src/filelister/filelistfilter.cpp
-	src/auimanager.cpp
+	src/aui/auimanager.cpp
+        src/aui/artprovider.cpp
 	src/autobalancedialog.cpp
 	src/autohost.cpp
 	src/autojoinchanneldialog.cpp
@@ -260,6 +261,7 @@ SET(SpringLobbySrc
 	src/userlist.cpp
 	src/userlistctrl.cpp
 	src/utils.cpp
+	src/globalsmanager.cpp
 )
 
 SET(SettingsSrc
@@ -268,7 +270,6 @@ SET(SettingsSrc
 	src/settings++/helpmenufunctions.cpp
 	src/settings++/panel_pathoption.cpp
 	src/settings++/presets.cpp
-	src/settings++/se_settings.cpp
 	src/settings++/se_utils.cpp
 	src/settings++/tab_abstract.cpp
 	src/settings++/tab_audio.cpp
@@ -280,6 +281,9 @@ SET(SettingsSrc
 )
 
 SET(StandAloneSettings
+	src/settings.cpp
+	src/utils.cpp
+	src/uiutils.cpp
 	src/settings++/Main.cpp
 )
 
@@ -288,6 +292,7 @@ SET(SLSharedWithSettings
 	src/crashreport.cpp
 	src/springunitsynclib.cpp
 	src/spinctld.cpp
+	src/globalsmanager.cpp
 )
 
 # If we build for windows Systems, we also include the Resource-File containing the Manifest, Icon and other Resources.

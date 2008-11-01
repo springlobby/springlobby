@@ -12,7 +12,7 @@ const int STRING_START_ID = 6000;
 
 class wxBoxSizer;
 class wxStaticBoxSizer;
-class mmOptionsWrapper;
+class OptionsWrapper;
 class wxCheckBox;
 class wxComboBox;
 class wxCommandEvent;
@@ -21,6 +21,7 @@ class wxSpinCtrlDbl;
 class wxTextCtrl;
 class wxSpinEvent;
 class wxStaticText;
+class wxButton;
 
 //totally ok to store pointers here, since wx takes care of gui element destruction for us
 typedef std::map<wxString,wxCheckBox*> chkBoxMap;
@@ -44,8 +45,16 @@ class BattleroomMMOptionsTab : public wxScrolledWindow
 		~BattleroomMMOptionsTab();
 
 		void UpdateOptControls(wxString controlName);
-		void OnReloadControls(GameOption flag);
+		void OnReloadControls(OptionsWrapper::GameOption flag);
 		void Update( const wxString& Tag );
+
+    void UpdatePresetList();
+
+    void OnLoadPreset( wxCommandEvent& event );
+    void OnSavePreset( wxCommandEvent& event );
+    void OnDeletePreset( wxCommandEvent& event );
+    void OnSetModDefaultPreset( wxCommandEvent& event );
+
 	protected:
 		 IBattle& m_battle;
 
@@ -54,7 +63,15 @@ class BattleroomMMOptionsTab : public wxScrolledWindow
 		wxBoxSizer* m_mod_layout;
 		wxStaticBoxSizer* m_map_options_sizer;
 		wxBoxSizer* m_map_layout;
-		mmOptionsWrapper* m_mapmodoptions;
+		wxBoxSizer* m_map_mod_container;
+
+    wxButton* m_load_btn;
+    wxButton* m_save_btn;
+    wxButton* m_delete_btn;
+    wxButton* m_default_btn;
+    wxComboBox* m_options_preset_sel;
+
+		OptionsWrapper* m_mapmodoptions;
 
 		chkBoxMap m_chkbox_map;
 		comboBoxMap m_combox_map;
@@ -66,7 +83,7 @@ class BattleroomMMOptionsTab : public wxScrolledWindow
          * for all values in all option maps create a control (pointer),
          * set the controls name to the option key and add it to the appropiate map and sizer.
          */
-		void setupOptionsSizer(wxBoxSizer* optFlagSizer,GameOption optFlag);
+		void setupOptionsSizer(wxBoxSizer* optFlagSizer, OptionsWrapper::GameOption optFlag);
 
 		/** \name Event handlers
 		 * @{
@@ -83,6 +100,16 @@ class BattleroomMMOptionsTab : public wxScrolledWindow
 		DECLARE_EVENT_TABLE();
 
 };
+
+enum
+{
+  BOPTS_LOADPRES =  wxID_HIGHEST,
+  BOPTS_SAVEPRES,
+  BOPTS_DELETEPRES,
+  BOPTS_SETDEFAULTPRES,
+  BOPTS_CHOSEPRES
+};
+
 
 #endif /*BATTLEROOMMMOPTIONSTAB_H_*/
 

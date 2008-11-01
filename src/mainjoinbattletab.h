@@ -65,12 +65,12 @@ class MainJoinBattleTab : public wxScrolledWindow
     BattleroomMMOptionsTab* m_mm_opts_tab;
     Ui& m_ui;
 
+    enum {
+        BATTLE_TABS = wxID_HIGHEST
+    };
 
 };
 
-enum
-{
-    BATTLE_TABS = wxID_HIGHEST
-};
+
 
 #endif // SPRINGLOBBY_HEADERGUARD_MAINJOINBATTLETAB_H

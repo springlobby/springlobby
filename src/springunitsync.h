@@ -4,13 +4,12 @@
 #include <map>
 
 #include "iunitsync.h"
-#include "nonportable.h"
 
-class wxImage;
-class wxDynamicLibrary;
-struct SpringMapInfo;
-struct CachedMapInfo;
 class wxCriticalSection;
+class wxDynamicLibrary;
+class wxImage;
+struct CachedMapInfo;
+struct SpringMapInfo;
 
 typedef std::map<wxString,wxString> LocalArchivesVector;
 
@@ -51,7 +50,7 @@ class SpringUnitSync : public IUnitSync
     wxString GetSideName( const wxString& modname, int index );
     wxImage GetSidePicture( const wxString& modname, const wxString& SideName );
 
-    bool LoadUnitSyncLib( const wxString& springdir, const wxString& unitsyncloc );
+    bool LoadUnitSyncLib( const wxString& unitsyncloc );
     void FreeUnitSyncLib();
 
     bool IsLoaded();
@@ -65,13 +64,18 @@ class SpringUnitSync : public IUnitSync
     int GetNumUnits( const wxString& modname );
     wxArrayString GetUnitsList( const wxString& modname );
 
+    /// get minimap with native width x height
+    wxImage GetMinimap( const wxString& mapname );
+    /// get minimap rescaled to given width x height
     wxImage GetMinimap( const wxString& mapname, int width, int height );
+    /// get metalmap with native width x height
+    wxImage GetMetalmap( const wxString& mapname );
+    /// get metalmap rescaled to given width x height
     wxImage GetMetalmap( const wxString& mapname, int width, int height );
 
     bool ReloadUnitSyncLib();
 
     void SetSpringDataPath( const wxString& path );
-    wxString GetSpringDataPath();
 
     void GetReplayList(std::vector<wxString> &ret);
 
@@ -99,7 +103,7 @@ class SpringUnitSync : public IUnitSync
     //! write a file where each element of the array is a line
     void SetCacheFile( const wxString& path, const wxArrayString& data );
 
-    bool _LoadUnitSyncLib( const wxString& springdir, const wxString& unitsyncloc );
+    bool _LoadUnitSyncLib( const wxString& unitsyncloc );
     void _FreeUnitSyncLib();
 
     bool _ModExists( const wxString& modname );
