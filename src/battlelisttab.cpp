@@ -55,6 +55,7 @@ BEGIN_EVENT_TABLE(BattleListTab, wxPanel)
 #else
   EVT_CHECKBOX            ( BattleListTab::BATTLE_LIST_FILTER_BUTTON , BattleListTab::OnFilter )
 #endif
+  EVT_SIZE( BattleListTab::OnResize )
 
 
 END_EVENT_TABLE()
@@ -69,7 +70,6 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( par
   GetAui().manager->AddPane( this, wxLEFT, _T("battlelisttab") );
   #endif
 
-  wxBoxSizer* m_main_sizer;
   m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
   wxBoxSizer* m_filter_sizer;
@@ -84,13 +84,11 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( par
 
   m_main_sizer->Add( m_battlelist_sizer, 1, wxEXPAND, 5 );;
 
-  wxBoxSizer* m_info_sizer;
   m_info_sizer = new wxBoxSizer( wxHORIZONTAL );
 
   m_minimap = new MapCtrl( this, 100, 0, m_ui, true, true, false, false );
   m_info_sizer->Add( m_minimap, 0, wxALL, 5 );
 
-  wxFlexGridSizer* m_data_sizer;
   m_data_sizer = new wxFlexGridSizer( 4, 2, 0, 0 );
 
   m_map_lbl = new wxStaticText( this, wxID_ANY, _("Map:"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -575,7 +573,7 @@ void BattleListTab::DoJoin( Battle& battle )
   #ifdef NO_TORRENT_SYSTEM
       wxString downloadProc = _("Do you want me to take you to the download page?");
   #else
-      wxString downloadProc = _("Should i try to downlaod it for you?\nYou can see the progress in the \"Download Manager\" tab.");
+      wxString downloadProc = _("Should i try to download it for you?\nYou can see the progress in the \"Download Manager\" tab.");
   #endif
 
   if ( !battle.ModExists() ) {
@@ -639,4 +637,24 @@ void BattleListTab::UpdateHighlights()
 void BattleListTab::SortBattleList()
 {
   m_battle_list->SortList();
+}
+
+
+void BattleListTab::OnResize( wxSizeEvent& event )
+{
+	SetSize( event.GetSize() );
+	Layout();
+	/// window too small, hide additional infos
+  if ( GetClientSize().GetHeight() < 400 )
+  {
+    m_main_sizer->Hide(m_info_sizer, true );
+    m_main_sizer->Hide(m_buttons_sep, true );
+    if ( m_filter_notice ) m_main_sizer->Hide( m_filter_notice, true );
+  }
+  else
+  {
+    m_main_sizer->Show(m_info_sizer, true );
+    m_main_sizer->Show(m_buttons_sep, true );
+    if ( m_filter_notice ) m_main_sizer->Show( m_filter_notice, true );
+  }
 }

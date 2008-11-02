@@ -11,8 +11,7 @@ ADD_DEFINITIONS(-Wall -Wno-strict-aliasing -O2)
 # General Settings
 #----------------------------------------------------------------------------------------------------
 SET( CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS true )
-SET(CMAKE_FIND_LIBRARY_PREFIXES "")
-SET(CMAKE_FIND_LIBRARY_SUFFIXES ".lib" ".a")
+SET(CMAKE_FIND_LIBRARY_SUFFIXES ".so" ".lib" ".a")
 
 #----------------------------------------------------------------------------------------------------
 # Load needed Modules
@@ -270,7 +269,6 @@ SET(SettingsSrc
 	src/settings++/helpmenufunctions.cpp
 	src/settings++/panel_pathoption.cpp
 	src/settings++/presets.cpp
-	src/settings++/se_settings.cpp
 	src/settings++/se_utils.cpp
 	src/settings++/tab_abstract.cpp
 	src/settings++/tab_audio.cpp
@@ -282,6 +280,9 @@ SET(SettingsSrc
 )
 
 SET(StandAloneSettings
+	src/settings.cpp
+	src/utils.cpp
+	src/uiutils.cpp
 	src/settings++/Main.cpp
 )
 

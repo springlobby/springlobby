@@ -318,8 +318,6 @@
 		<Unit filename="src/settings++/panel_pathoption.h" />
 		<Unit filename="src/settings++/presets.cpp" />
 		<Unit filename="src/settings++/presets.h" />
-		<Unit filename="src/settings++/se_settings.cpp" />
-		<Unit filename="src/settings++/se_settings.h" />
 		<Unit filename="src/settings++/se_utils.cpp" />
 		<Unit filename="src/settings++/se_utils.h" />
 		<Unit filename="src/settings++/tab_abstract.cpp" />

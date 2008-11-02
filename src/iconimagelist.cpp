@@ -123,7 +123,7 @@ IconImageList::IconImageList() : wxImageList(16,16,true)
     ICON_CLOSED_FULL_GAME = Add( *charArr2wxBitmap(closed_full_game_png, sizeof(closed_full_game_png) ) );
     ICON_STARTED_GAME = Add(  *charArr2wxBitmap(ingame_png, sizeof(ingame_png) ) );
 
-    ICON_STARTED_GAME_LOCKED = Add( *charArr2wxBitmapWithBlending( ingame_png, sizeof(ingame_png), closed_game_png, sizeof(closed_game_png) ) );
+    ICON_STARTED_GAME_LOCKED = Add( *charArr2wxBitmapWithBlending( closed_game_png, sizeof(closed_game_png), ingame_png, sizeof(ingame_png) ) );
 
 
     ICON_READY_UNSYNC = Add( wxBitmap(ready_unsync_xpm) );

@@ -36,8 +36,6 @@ public:
     void SetSelection( const unsigned int page );
     GroupOptionsPanel& GetGroupOptionsPanel();
 
-    void ReloadSpringPathFromConfig();
-
 
 protected:
     wxBoxSizer* m_main_sizer;

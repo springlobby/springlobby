@@ -50,6 +50,7 @@ bool GlobalsManager::RegisterGlobal(IGlobalObjectHolder *obj){
     return false;
   }
   globals.push_back(obj);
+  return true;
 }
 
 void GlobalsManager::DestroyAll(){

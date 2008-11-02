@@ -77,6 +77,7 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU( MENU_CHAT, MainWindow::OnMenuChat )
   EVT_MENU( MENU_CONNECT, MainWindow::OnMenuConnect )
   EVT_MENU( MENU_DISCONNECT, MainWindow::OnMenuDisconnect )
+  EVT_MENU( MENU_SAVE_OPTIONS, MainWindow::OnMenuSaveOptions )
   EVT_MENU( MENU_QUIT, MainWindow::OnMenuQuit )
   EVT_MENU( MENU_USYNC, MainWindow::OnUnitSyncReload )
   EVT_MENU( MENU_TRAC, MainWindow::OnReportBug )
@@ -111,6 +112,8 @@ MainWindow::MainWindow( Ui& ui ) :
   wxMenu *menuFile = new wxMenu;
   menuFile->Append(MENU_CONNECT, _("&Connect..."));
   menuFile->Append(MENU_DISCONNECT, _("&Disconnect"));
+  menuFile->AppendSeparator();
+  menuFile->Append(MENU_SAVE_OPTIONS, _("&Save options"));
   menuFile->AppendSeparator();
   menuFile->Append(MENU_QUIT, _("&Quit"));
 
@@ -407,12 +410,6 @@ void MainWindow::ShowConfigure( const unsigned int page )
   m_opts_tab->SetSelection( page );
 }
 
-
-void MainWindow::ReloadSpringPathFromConfig()
-{
-  m_opts_tab->ReloadSpringPathFromConfig();
-}
-
 //! @brief Called when join channel menuitem is clicked
 void MainWindow::OnMenuJoin( wxCommandEvent& event )
 {
@@ -477,6 +474,11 @@ void MainWindow::OnMenuConnect( wxCommandEvent& event )
 void MainWindow::OnMenuDisconnect( wxCommandEvent& event )
 {
   m_ui.Disconnect();
+}
+
+void MainWindow::OnMenuSaveOptions( wxCommandEvent& event )
+{
+  sett().SaveSettings();
 }
 
 

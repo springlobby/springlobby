@@ -474,7 +474,10 @@ void ServerEvents::OnChannelPart( const wxString& channel, const wxString& who, 
 void ServerEvents::OnChannelTopic( const wxString& channel, const wxString& who, const wxString& message, int when )
 {
   wxLogDebugFunc( _T("") );
+  try{
   m_serv.GetChannel( channel ).SetTopic( message, who );
+  }catch(std::runtime_error &except){
+  }
 }
 
 

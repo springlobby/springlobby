@@ -3,6 +3,7 @@
 
 #include <wx/thread.h>
 #include <wx/string.h>
+#include <stdexcept>
 
 #include "nonportable.h"
 #include "iunitsync.h"
@@ -11,6 +12,15 @@ class wxString;
 class wxImage;
 struct SpringMapInfo;
 class wxDynamicLibrary;
+
+class unitsync_assert : public std::runtime_error
+{
+  public:
+   unitsync_assert(std::string msg) : std::runtime_error(msg) {};
+};
+
+#define UNITSYNC_EXCEPTION(cond,msg) if(!(cond))\
+{wxLogMessage(_T("unitsync runtime assertion ( %s:%d ): %s"), TowxString(__FILE__).c_str(),__LINE__ , wxString(msg).c_str() );throw unitsync_assert(std::string(wxString(msg).mb_str()));}
 
 
 struct SpringMapInfo
@@ -41,6 +51,8 @@ typedef const char* (USYNC_CALL_CONV *GetSpringVersionPtr)();
 
 typedef int (USYNC_CALL_CONV *InitPtr)(bool, int);
 typedef void (USYNC_CALL_CONV *UnInitPtr)();
+typedef const char* (USYNC_CALL_CONV *GetNextErrorPtr)();
+typedef const char* (USYNC_CALL_CONV *GetWritableDataDirectoryPtr)();
 
 typedef int (USYNC_CALL_CONV *GetMapCountPtr)();
 typedef unsigned int (USYNC_CALL_CONV *GetMapChecksumPtr)(int);
@@ -194,9 +206,10 @@ class SpringUnitSyncLib
     /**
      * Constructor.
      * @param path path to the unitsync lib, if specified the lib will be loaded when created.
+     * @param DoInit specifies whenever init function should be attempted to run after successful load.
      * @see Load().
     */
-    SpringUnitSyncLib( const wxString& path = wxEmptyString );
+    SpringUnitSyncLib( const wxString& path = wxEmptyString, bool DoInit = false );
 
     /**
      * Destructor, unloads unitsync if loaded.
@@ -206,10 +219,11 @@ class SpringUnitSyncLib
     /**
      * Loads the unitsync library from path.
      * @param path ath to the unitsync lib.
+     * @param DoInit specifies whenever init function should be attempted to run after successful load.
      * @see Unload().
      * @note Throws runtime_error if load failed.
      */
-    void Load( const wxString& path );
+    void Load( const wxString& path, bool DoInit );
 
     /**
      * Unload the unitsync library. Does nothing if not loaded.
@@ -222,17 +236,35 @@ class SpringUnitSyncLib
      * @note Throws logic_error if no path has been set in constructor or in Load() call. Throws runtime_error if reloading fails.
      * @see Load().
      */
-    void Reload();
+    void Reload( bool DoInit );
 
     /**
      * Returns true if the library is loaded.
      */
     bool IsLoaded();
 
+    /**
+     * Gets last error from unitsync library
+     * @note throws unitsync_assert in case of error
+     * @note this method should only be used after using directly an unitsync call to catch it's errors
+     */
+    void AssertUnitsyncOk();
+
+    /**
+     * Get list of errors from unitsync library in an array
+     */
+    wxArrayString GetUnitsyncErrors();
+
+    bool Init();
+
+    bool VersionSupports( IUnitSync::GameFeature feature );
+
 
     int GetModIndex( const wxString& name );
 
     wxString GetSpringVersion();
+
+    wxString GetSpringDataDir();
 
     int GetMapCount();
     wxString GetMapChecksum( int index );
@@ -252,12 +284,6 @@ class SpringUnitSyncLib
      * @note Throws assert_exception if unsuccessful.
      */
     wxImage GetMinimap( const wxString& mapFileName );
-
-    /**
-     * @brief Check whether unitsync supports GetInfoMap API.
-     * @note Only when this returns true GetMetalmap may be used.
-     */
-    bool HasGetInfoMap() const { return m_get_infomap_size != NULL; }
 
     /**
      * @brief Get metalmap.
@@ -424,7 +450,7 @@ class SpringUnitSyncLib
     wxString m_current_mod;
 
     //! Macro that checks if a function is present/loaded, unitsync is loaded, and locks it on call.
-    #define InitLib( arg ) { LOCK_UNITSYNC; ASSERT_EXCEPTION( m_loaded, _T("Unitsync not loaded.") ); ASSERT_EXCEPTION( arg, _T("Function was not in unitsync library.") ); }
+    #define InitLib( arg ) { LOCK_UNITSYNC; UNITSYNC_EXCEPTION( m_loaded, _T("Unitsync not loaded.") ); UNITSYNC_EXCEPTION( arg, _T("Function was not in unitsync library.") ); }
 
     /**
      * Loads a function pointer from unitsync.
@@ -452,6 +478,8 @@ class SpringUnitSyncLib
 
     InitPtr m_init;
     UnInitPtr m_uninit;
+    GetNextErrorPtr m_get_next_error;
+    GetWritableDataDirectoryPtr m_get_writeable_data_dir;
 
     GetMapCountPtr m_get_map_count;
     GetMapChecksumPtr m_get_map_checksum;
@@ -593,6 +621,6 @@ class SpringUnitSyncLib
     /*@}*/
 };
 
-SpringUnitSyncLib* susynclib();
+SpringUnitSyncLib& susynclib();
 
 #endif //SPRINGLOBBY_HEADERGUARD_SPRINGUNITSYNCLIB_H
