@@ -552,8 +552,8 @@ std::map<int,TorrentInfos> TorrentWrapper::CollectGuiInfos()
         TorrentInfos globalinfos;
         globalinfos.downloadstatus = leeching;
         globalinfos.progress = 0.0f;
-        globalinfos.downloaded = 0;
-        globalinfos.uploaded = 0;
+        globalinfos.downloaded = m_torr->status().total_download;
+        globalinfos.uploaded = m_torr->status().total_upload;
         globalinfos.outspeed = m_torr->status().upload_rate;
         globalinfos.inspeed = m_torr->status().download_rate;
         globalinfos.numcopies = 0.0f;
@@ -578,8 +578,7 @@ std::map<int,TorrentInfos> TorrentWrapper::CollectGuiInfos()
             TorrentTable::PRow row=m_torrent_table.RowByHandle(*i);
             if (!row.ok()) continue;
             CurrentTorrent.hash=row->hash;
-            if ( row->status = leeching ) CurrentTorrent.downloadstatus = leeching;
-            else CurrentTorrent.downloadstatus = seeding;
+            CurrentTorrent.downloadstatus = row->status;
 
             ret[s2l(CurrentTorrent.hash)] = CurrentTorrent;
         }
