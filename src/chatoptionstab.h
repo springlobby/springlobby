@@ -42,8 +42,6 @@ class ChatOptionsTab : public wxScrolledWindow
     void OnErrorSelect( wxCommandEvent& event );
     void OnTimestampSelect( wxCommandEvent& event );
     void OnSaveLogs( wxCommandEvent& event );
-    void OnBrowseLog( wxCommandEvent& event );
-    void OnFindLog( wxCommandEvent& event );
 
   protected:
 
@@ -62,8 +60,6 @@ class ChatOptionsTab : public wxScrolledWindow
       ID_CLIENT,
       ID_ERROR,
       ID_TIMESTAMP,
-      ID_SAVELOGS,
-      ID_BROWSE_LOGS,
       ID_HIWORDS,
       ID_PLAY_SOUNDS,
       ID_HL_REQ
@@ -135,8 +131,6 @@ class ChatOptionsTab : public wxScrolledWindow
 //     SPRING_SYNCFIND,
 //
 //     //Chat Log
-//     CHATLOG_FIND,
-//     CHATLOG_BROWSE,
 //     CHATLOG_ENABLE,
 //
 // };

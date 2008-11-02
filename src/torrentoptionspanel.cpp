@@ -3,7 +3,7 @@
 //don't ever move this include after torrentoptionspanel.h
 //you'll get a strange error, the cause of which remains in the dark
 #ifndef HAVE_WX26
-#include "auimanager.h"
+#include "aui/auimanager.h"
 #endif
 
 #include "torrentoptionspanel.h"

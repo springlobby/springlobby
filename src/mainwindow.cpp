@@ -14,7 +14,8 @@
 #include <wx/dcmemory.h>
 #ifndef HAVE_WX26
 #include <wx/aui/auibook.h>
-#include "auimanager.h"
+#include "aui/auimanager.h"
+#include "aui/artprovider.h"
 #else
 #include <wx/listbook.h>
 #endif
@@ -77,6 +78,7 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU( MENU_CHAT, MainWindow::OnMenuChat )
   EVT_MENU( MENU_CONNECT, MainWindow::OnMenuConnect )
   EVT_MENU( MENU_DISCONNECT, MainWindow::OnMenuDisconnect )
+  EVT_MENU( MENU_SAVE_OPTIONS, MainWindow::OnMenuSaveOptions )
   EVT_MENU( MENU_QUIT, MainWindow::OnMenuQuit )
   EVT_MENU( MENU_USYNC, MainWindow::OnUnitSyncReload )
   EVT_MENU( MENU_TRAC, MainWindow::OnReportBug )
@@ -112,6 +114,8 @@ MainWindow::MainWindow( Ui& ui ) :
   wxMenu *menuFile = new wxMenu;
   menuFile->Append(MENU_CONNECT, _("&Connect..."));
   menuFile->Append(MENU_DISCONNECT, _("&Disconnect"));
+  menuFile->AppendSeparator();
+  menuFile->Append(MENU_SAVE_OPTIONS, _("&Save options"));
   menuFile->AppendSeparator();
   menuFile->Append(MENU_QUIT, _("&Quit"));
 
@@ -149,7 +153,9 @@ MainWindow::MainWindow( Ui& ui ) :
 
   m_main_sizer = new wxBoxSizer( wxHORIZONTAL );
   #ifndef HAVE_WX26
-  m_func_tabs = new wxAuiNotebook(  this, MAIN_TABS, wxDefaultPosition, wxDefaultSize, wxAUI_NB_TAB_SPLIT | wxAUI_NB_TAB_MOVE | wxAUI_NB_TAB_EXTERNAL_MOVE | wxAUI_NB_SCROLL_BUTTONS | wxAUI_NB_LEFT );
+  m_func_tabs = new wxAuiNotebook(  this, MAIN_TABS, wxDefaultPosition, wxDefaultSize,
+        wxAUI_NB_WINDOWLIST_BUTTON | wxAUI_NB_TAB_SPLIT | wxAUI_NB_TAB_MOVE | wxAUI_NB_TAB_EXTERNAL_MOVE | wxAUI_NB_SCROLL_BUTTONS | wxAUI_NB_LEFT );
+  m_func_tabs->SetArtProvider(new SLArtProvider);
   #else
   m_func_tabs = new wxListbook( this, MAIN_TABS, wxDefaultPosition, wxDefaultSize, wxLB_LEFT );
   #endif
@@ -188,13 +194,13 @@ MainWindow::MainWindow( Ui& ui ) :
   m_func_tabs->AddPage( m_torrent_tab, _T(""), false, 5 );
 #endif
 #else
-  m_func_tabs->AddPage( m_chat_tab, _T(""), true, *m_chat_icon );
-  m_func_tabs->AddPage( m_join_tab, _T(""), false, *m_battle_icon );
-  m_func_tabs->AddPage( m_sp_tab, _T(""), false, *m_sp_icon );
-  m_func_tabs->AddPage( m_opts_tab, _T(""), false, *m_options_icon );
-  m_func_tabs->AddPage( m_replay_tab, _T(""), false, *m_replay_icon );
+  m_func_tabs->AddPage( m_chat_tab, _T("Chat"), true, *m_chat_icon );
+  m_func_tabs->AddPage( m_join_tab, _T("Multiplayer"), false, *m_battle_icon );
+  m_func_tabs->AddPage( m_sp_tab, _T("Singleplayer"), false, *m_sp_icon );
+  m_func_tabs->AddPage( m_opts_tab, _T("Options"), false, *m_options_icon );
+  m_func_tabs->AddPage( m_replay_tab, _T("Replays"), false, *m_replay_icon );
 #ifndef NO_TORRENT_SYSTEM
-  m_func_tabs->AddPage( m_torrent_tab, _T(""), false, *m_downloads_icon );
+  m_func_tabs->AddPage( m_torrent_tab, _T("Downloads"), false, *m_downloads_icon );
 #endif
 #endif
 
@@ -407,12 +413,6 @@ void MainWindow::ShowConfigure( const unsigned int page )
   m_opts_tab->SetSelection( page );
 }
 
-
-void MainWindow::ReloadSpringPathFromConfig()
-{
-  m_opts_tab->ReloadSpringPathFromConfig();
-}
-
 //! @brief Called when join channel menuitem is clicked
 void MainWindow::OnMenuJoin( wxCommandEvent& event )
 {
@@ -479,6 +479,11 @@ void MainWindow::OnMenuDisconnect( wxCommandEvent& event )
   m_ui.Disconnect();
 }
 
+void MainWindow::OnMenuSaveOptions( wxCommandEvent& event )
+{
+  sett().SaveSettings();
+}
+
 
 void MainWindow::OnMenuQuit( wxCommandEvent& event )
 {
@@ -510,7 +515,7 @@ void MainWindow::OnMenuStopTorrent( wxCommandEvent& event )
 {
   #ifndef NO_TORRENT_SYSTEM
   sett().SetTorrentSystemAutoStartMode( 2 ); /// switch operation to manual mode
-  torrent().DisconnectToP2PSystem();
+  torrent().DisconnectFromP2PSystem();
   #endif
 }
 

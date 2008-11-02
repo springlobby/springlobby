@@ -62,6 +62,7 @@ class BattleRoomTab : public wxScrolledWindow
     void OnColourSel( wxCommandEvent& event );
     void OnSideSel( wxCommandEvent& event );
     void OnPresetSel( wxCommandEvent& event );
+    void OnAutoLock( wxCommandEvent& event );
 
     void OnUserJoined( User& user );
     void OnUserLeft( User& user );
@@ -135,6 +136,7 @@ class BattleRoomTab : public wxScrolledWindow
     wxCheckBox* m_spec_chk;
     wxCheckBox* m_lock_chk;
     wxCheckBox* m_autohost_chk;
+    wxCheckBox* m_autolock_chk;
 
     wxListCtrl* m_opts_list;
 
@@ -152,7 +154,8 @@ class BattleRoomTab : public wxScrolledWindow
         BROOM_BALANCE,
         BROOM_FIXCOLOURS,
         BROOM_PRESETSEL,
-        BROOM_AUTOHOST
+        BROOM_AUTOHOST,
+        BROOM_AUTOLOCK
     };
 
     DECLARE_EVENT_TABLE();

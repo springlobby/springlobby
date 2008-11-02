@@ -68,18 +68,19 @@ NickListCtrl::NickListCtrl( wxWindow* parent, bool show_header, NickListCtrl::Us
   m_sortorder[3].col = 1;
   m_sortorder[3].direction = true;
 
+  long width = GetSize().x -( GetColumnWidth( 0 ) + GetColumnWidth( 1 ) + GetColumnWidth( 2 ) );
 #if defined(__WXMAC__)
 /// autosize is entirely broken on wxmac.
   SetColumnWidth( 0, 20 );
   SetColumnWidth( 1, 20 );
   SetColumnWidth( 2, 20 );
-  SetColumnWidth( 3, 128 );
+  SetColumnWidth( 3, width );
 #else
  /// on wxGTK it works, sort of.
   SetColumnWidth( 0, wxLIST_AUTOSIZE_USEHEADER );
   SetColumnWidth( 1, wxLIST_AUTOSIZE_USEHEADER );
   SetColumnWidth( 2, wxLIST_AUTOSIZE_USEHEADER );
-  SetColumnWidth( 3, wxLIST_AUTOSIZE_USEHEADER );
+  SetColumnWidth( 3, width );
 #endif
 
 }
@@ -360,40 +361,45 @@ void NickListCtrl::SetTipWindowText( const long item_hit, const wxPoint position
     }
     else
     {
-        switch (coloumn)
-        {
-        case 0: // status
-            m_tiptext = _T("This ");
-            if (user->GetStatus().bot)
-                m_tiptext << _T("bot ");
-            else if (user->GetStatus().moderator)
-                m_tiptext << _T("moderator ");
-            else
-                m_tiptext << _T("player ");
+        if (user) {
+            switch (coloumn)
+            {
+            case 0: // status
+                m_tiptext = _T("This ");
+                if (user->GetStatus().bot)
+                    m_tiptext << _T("bot ");
+                else if (user->GetStatus().moderator)
+                    m_tiptext << _T("moderator ");
+                else
+                    m_tiptext << _T("player ");
 
-            if (user->GetStatus().in_game)
-                m_tiptext <<  _T("is ingame");
-            else if (user->GetStatus().away)
-                m_tiptext <<  _T("is away");
-            else
-                m_tiptext << _T("is available");
-            break;
+                if (user->GetStatus().in_game)
+                    m_tiptext <<  _T("is ingame");
+                else if (user->GetStatus().away)
+                    m_tiptext <<  _T("is away");
+                else
+                    m_tiptext << _T("is available");
+                break;
 
-        case 1: // country
-            m_tiptext =  GetFlagNameFromCountryCode(user->GetCountry().Upper());
-            break;
+            case 1: // country
+                m_tiptext =  GetFlagNameFromCountryCode(user->GetCountry().Upper());
+                break;
 
-        case 2: // rank
-            m_tiptext = user->GetRankName(user->GetStatus().rank);
-            break;
+            case 2: // rank
+                m_tiptext = user->GetRankName(user->GetStatus().rank);
+                break;
 
-        case 3: // nickname
-            m_tiptext = user->GetNick();
-            break;
+            case 3: // nickname
+                m_tiptext = user->GetNick();
+                break;
 
-        default:
-            m_tiptext = m_colinfovec[coloumn].first;
-            break;
+            default:
+                m_tiptext = m_colinfovec[coloumn].first;
+                break;
+            }
+        }
+        else {
+            m_tiptext = _T("");
         }
     }
 }

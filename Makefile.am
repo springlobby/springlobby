@@ -131,7 +131,7 @@ libtorrent_sources = \
 	$(libt_dir)/zlib/inftrees.c \
 	$(libt_dir)/zlib/trees.c \
 	$(libt_dir)/zlib/uncompr.c \
-	$(libt_dir)/zlib/zutil.c 
+	$(libt_dir)/zlib/zutil.c
 
 libtorrent_headers = \
 	$(libt_dir)/include/libtorrent/alert.hpp \
@@ -378,7 +378,7 @@ libtorrent_headers = \
 	$(libt_dir)/zlib/trees.h \
 	$(libt_dir)/zlib/zconf.h \
 	$(libt_dir)/zlib/zlib.h \
-	$(libt_dir)/zlib/zutil.h 
+	$(libt_dir)/zlib/zutil.h
 
 
 springlobby_SOURCES = \
@@ -489,7 +489,7 @@ springlobby_SOURCES = \
 	src/nicklistctrl.cpp \
 	src/nicklistctrl.h \
 	src/replay/replaytab.h \
-	src/replay/replaytab.cpp \	
+	src/replay/replaytab.cpp \
 	src/replay/replayfilter.h \
 	src/replay/replayfilter.cpp \
 	src/replay/replaylist.cpp \
@@ -902,28 +902,33 @@ springlobby_SOURCES = \
 	src/Helper/colorbutton.h \
 	src/lobbyoptionstab.h \
 	src/lobbyoptionstab.cpp \
-	src/auimanager.h \
-	src/auimanager.cpp \
+	src/aui/auimanager.h \
+	src/aui/auimanager.cpp \
+	src/aui/auiutils.h \
+	src/aui/artprovider.h \
+	src/aui/artprovider.cpp \
 	src/updater/updater.h \
 	src/updater/updater.cpp \
 	src/updater/exedownloader.h \
 	src/updater/exedownloader.cpp \
 	src/usermenu.h \
 	src/thread.cpp \
-	src/thread.h
+	src/thread.h \
+	src/globalsmanager.cpp \
+	src/globalsmanager.h
 
 
 
-if USE_WINDRES	
-springlobby_SOURCES += \ 
+if USE_WINDRES
+springlobby_SOURCES += \
 		src/springlobby.rc \
-		src/Helper/listctrl.cpp 
+		src/Helper/listctrl.cpp
 endif
 
 if USE_LIBT_INCLUDED
-springlobby_SOURCES += \ 
+springlobby_SOURCES += \
 		$(libtorrent_headers) \
- 		$(libtorrent_sources) 
+ 		$(libtorrent_sources)
 endif
 
 # TODO keep only a single list instead of duplicating the lists below
@@ -938,10 +943,8 @@ springlobby_SOURCES += \
 	src/settings++/tab_quality_video.h \
 	src/settings++/frame.h \
 	src/settings++/tab_audio.h \
-	src/settings++/se_settings.h \
 	src/settings++/tab_debug.cpp \
 	src/settings++/tab_debug.h \
-	src/settings++/se_settings.cpp \
 	src/settings++/tab_audio.cpp \
 	src/settings++/presets.h \
 	src/settings++/presets.cpp \
@@ -959,7 +962,7 @@ springlobby_SOURCES += \
 	src/settings++/custom_dialogs.h \
 	src/settings++/custom_dialogs.cpp \
 	src/settings++/helpmenufunctions.h \
-	src/settings++/helpmenufunctions.cpp 
+	src/settings++/helpmenufunctions.cpp
 
 springsettings_SOURCES = \
 	src/crashreport.cpp \
@@ -968,6 +971,13 @@ springsettings_SOURCES = \
 	src/spinctld.cpp \
 	src/springunitsynclib.cpp \
 	src/springunitsynclib.h \
+	src/settings.cpp \
+	src/settings.h \
+	src/utils.cpp \
+	src/utils.h \
+	src/uiutils.cpp \
+	src/uiutils.h \
+	src/globalsmanager.cpp \
 	src/settings++/se_utils.cpp \
 	src/settings++/se_utils.h \
 	src/settings++/frame.cpp \
@@ -977,10 +987,8 @@ springsettings_SOURCES = \
 	src/settings++/tab_quality_video.h \
 	src/settings++/frame.h \
 	src/settings++/tab_audio.h \
-	src/settings++/se_settings.h \
 	src/settings++/tab_debug.cpp \
 	src/settings++/tab_debug.h \
-	src/settings++/se_settings.cpp \
 	src/settings++/tab_audio.cpp \
 	src/settings++/presets.h \
 	src/settings++/presets.cpp \
@@ -1006,4 +1014,3 @@ if USE_WINDRES
 springsettings_SOURCES += \
 	src/settings++/settings.rc
 endif
-

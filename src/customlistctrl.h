@@ -5,12 +5,11 @@
     #include <wx/listctrl.h>
     typedef wxListCtrl ListBaseType;
 #else
-    #include "Helper/listctrl.h"
-    typedef SL_Extern::wxGenericListCtrl ListBaseType;
-#endif
-
-#if wxUSE_TIPWINDOW
-    #include <wx/tipwin.h>
+//disabled until further fixes
+//    #include "Helper/listctrl.h"
+//    typedef SL_Extern::wxGenericListCtrl ListBaseType;
+    #include <wx/listctrl.h>
+    typedef wxListCtrl ListBaseType;
 #endif
 
 #include <wx/timer.h>
@@ -21,16 +20,7 @@
 
 #include "useractions.h"
 
-#if wxUSE_TIPWINDOW
-class SLTipWindow : public wxTipWindow{
-    public:
-        SLTipWindow(wxWindow *parent, const wxString &text)
-            :wxTipWindow(parent,text){};
-        void Cancel(wxMouseEvent& event);
-
-        DECLARE_EVENT_TABLE()
-};
-#endif
+class SLTipWindow;
 
 /** \brief Used as base class for all ListCtrls throughout SL
  * Provides generic functionality, such as column tooltips, possiblity to prohibit coloumn resizing and selection modifiers. \n
@@ -130,6 +120,10 @@ public:
     virtual void OnEndResizeCol(wxListEvent& event);
     //! starts timer, sets tooltiptext
     virtual void OnMouseMotion(wxMouseEvent& event);
+    //! stop timer (before displaying popup f.e.)
+    void CancelTooltipTimer();
+    //!Override to have tooltip timer cancelled automatically
+    bool PopupMenu(wxMenu* menu, const wxPoint& pos = wxDefaultPosition);
     //! does nothing
     void noOp(wxMouseEvent& event);
     //! automatically get saved column width if already saved, otherwise use parameter and save new width

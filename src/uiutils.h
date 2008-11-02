@@ -37,7 +37,7 @@ wxColour ColourDelta( const wxColour& colour, const int& delta );
 wxString GetColorString( const wxColour& color );
 wxColour GetColorFromStrng( const wxString color );
 
-//! apply standard alpha blending to square images
+//! apply standard alpha blending to images
 wxImage BlendImage( const wxImage& foreground, const wxImage& background );
 wxBitmap* BlendBitmaps( const wxBitmap& background, const wxBitmap& overlay, const int dim = 16 );
 //! used to load png data into a wxBitmap
@@ -52,6 +52,20 @@ wxColour GetColourFromUser(wxWindow *parent, const wxColour& colInit,
         const wxString& caption = DEFAULT_COLORDLG_TITLE, const wxString& palette = _T("Default") );
 
 wxImage ReplaceChannelStatusColour( wxBitmap img, const wxColour& colour );
+
+
+#if wxUSE_TIPWINDOW
+#include <wx/tipwin.h>
+
+class SLTipWindow : public wxTipWindow{
+    public:
+        SLTipWindow(wxWindow *parent, const wxString &text)
+            :wxTipWindow(parent,text){};
+        void Cancel(wxMouseEvent& event);
+
+        DECLARE_EVENT_TABLE()
+};
+#endif
 
 #endif
 // SPRINGLOBBY_HEADERGUARD_UIUTILS_H

@@ -9,8 +9,8 @@
 #include <wx/stattext.h>
 #include <wx/defs.h>
 #include <wx/intl.h>
+#include <wx/button.h>
 #include <map>
-#include <stdexcept>
 
 #include "utils.h"
 #include "mmoptionswrapper.h"
@@ -18,9 +18,10 @@
 #include "spinctld.h"
 #include "settings++/custom_dialogs.h"
 #include "server.h"
+#include "settings.h"
 
 #ifndef HAVE_WX26
-#include "auimanager.h"
+#include "aui/auimanager.h"
 #endif
 
 const char sep = *("_");
@@ -31,6 +32,11 @@ BEGIN_EVENT_TABLE( BattleroomMMOptionsTab,  wxPanel)
 	EVT_CHECKBOX					(wxID_ANY, BattleroomMMOptionsTab::OnChkBoxChange)
 	EVT_TEXT_ENTER					(wxID_ANY,  BattleroomMMOptionsTab::OnTextCtrlChange)
 	EVT_SPINCTRL					(wxID_ANY,  BattleroomMMOptionsTab::OnSpinCtrlChange)
+
+  EVT_BUTTON( BOPTS_LOADPRES, BattleroomMMOptionsTab::OnLoadPreset )
+  EVT_BUTTON( BOPTS_SAVEPRES, BattleroomMMOptionsTab::OnSavePreset )
+  EVT_BUTTON( BOPTS_DELETEPRES, BattleroomMMOptionsTab::OnDeletePreset )
+  EVT_BUTTON( BOPTS_SETDEFAULTPRES, BattleroomMMOptionsTab::OnSetModDefaultPreset )
 
 END_EVENT_TABLE()
 
@@ -52,14 +58,59 @@ BattleroomMMOptionsTab::BattleroomMMOptionsTab(  IBattle& battle, wxWindow* pare
 	setupOptionsSizer(m_map_layout,OptionsWrapper::MapOption);
 	m_map_options_sizer->Add( m_map_layout, 1, wxEXPAND, 5 );
 
-	m_main_sizer->Add( m_mod_options_sizer, 0, wxEXPAND, 5 );
-	m_main_sizer->Add( m_map_options_sizer, 0, wxEXPAND, 5 );
+  wxStaticBoxSizer* m_preset_sizer;
+  m_preset_sizer = new wxStaticBoxSizer( new wxStaticBox( this, -1, _("Manage Presets") ), wxHORIZONTAL );
 
-    SetScrollRate( 3, 3 );
+  m_options_preset_sel = new wxComboBox( this, BOPTS_CHOSEPRES, sett().GetModDefaultPresetName( m_battle.GetHostModName() ), wxDefaultPosition, wxDefaultSize,  sett().GetPresetList() );
+  m_options_preset_sel->SetToolTip(TE(_("Set name.")));
+
+  m_preset_sizer->Add( m_options_preset_sel, 0, wxALL, 5 );
+
+  m_load_btn = new wxButton( this, BOPTS_LOADPRES, _("Load..."), wxDefaultPosition, wxDefaultSize, 0 );
+  m_load_btn->SetToolTip( TE(_("Load a saved set of options.")) );
+
+  m_preset_sizer->Add( m_load_btn, 0, wxALL, 5 );
+
+  m_save_btn = new wxButton( this, BOPTS_SAVEPRES, _("Save..."), wxDefaultPosition, wxDefaultSize, 0 );
+  m_save_btn->SetToolTip( TE(_("Save a set of options.")) );
+
+  m_preset_sizer->Add( m_save_btn, 0, wxALL, 5 );
+
+  m_delete_btn = new wxButton( this, BOPTS_DELETEPRES, _("Delete..."), wxDefaultPosition, wxDefaultSize, 0 );
+  m_delete_btn->SetToolTip( TE(_("Delete a set of options.")) );
+
+  m_preset_sizer->Add( m_delete_btn, 0, wxALL, 5 );
+
+  m_default_btn = new wxButton( this, BOPTS_SETDEFAULTPRES, _("Set default..."), wxDefaultPosition, wxDefaultSize, 0 );
+  m_default_btn->SetToolTip( TE(_("Use the current set of options as mod's default.")) );
+
+  m_preset_sizer->Add( m_default_btn, 0, wxALL, 5 );
+
+  m_preset_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
+
+    m_map_mod_container = new wxBoxSizer( wxVERTICAL );
+
+	m_map_mod_container->Add( m_mod_options_sizer, 0, wxALL|wxEXPAND, 5 );
+	m_map_mod_container->Add( m_map_options_sizer, 0, wxALL|wxEXPAND, 5 );
+	m_main_sizer->Add( m_map_mod_container, 1, wxALL|wxEXPAND, 5 );
+  m_main_sizer->Add( m_preset_sizer, 0, wxALL|wxEXPAND, 5 );
+
+  //m_main_sizer->FitInside(this);
+
+
 	this->SetSizer( m_main_sizer );
 	this->Layout();
 
-	SetScrollbars( 10, 10, 62, 62 );
+  if ( !m_battle.IsFounderMe() )
+  {
+    m_options_preset_sel->Disable();
+    m_load_btn->Disable();
+    m_save_btn->Disable();
+    m_delete_btn->Disable();
+    m_default_btn->Disable();
+  }
+
+	//SetScrollbars( 10, 10, 62, 62 );
 }
 
 BattleroomMMOptionsTab::~BattleroomMMOptionsTab()
@@ -310,13 +361,13 @@ void BattleroomMMOptionsTab::OnReloadControls(OptionsWrapper::GameOption flag)
 			m_mod_layout = new wxBoxSizer( wxVERTICAL);
 			setupOptionsSizer(m_mod_layout,OptionsWrapper::ModOption);
 			//m_mod_options_sizer->Add( m_mod_options_sizer, 1, wxEXPAND, 5 );
-			m_mod_options_sizer->Add( m_mod_layout, 0, wxEXPAND, 5 );
+			m_mod_options_sizer->Add( m_mod_layout, 1, wxALL|wxEXPAND, 5 );
 			break;
 		case OptionsWrapper::MapOption:
 			m_map_options_sizer->Remove(m_map_layout);
 			m_map_layout = new wxBoxSizer( wxVERTICAL);
 			setupOptionsSizer(m_map_layout,OptionsWrapper::MapOption);
-			m_map_options_sizer->Add( m_map_layout, 0, wxEXPAND, 5 );
+			m_map_options_sizer->Add( m_map_layout, 1, wxALL|wxEXPAND, 5 );
 			break;
         default:
             break;
@@ -324,6 +375,64 @@ void BattleroomMMOptionsTab::OnReloadControls(OptionsWrapper::GameOption flag)
 
 
 	//this->SetSizer( m_main_sizer, true );
+	m_main_sizer->FitInside(this);
+
 	this->Layout();
     SetScrollbars( 10, 10, 62, 62 );
+}
+
+
+void BattleroomMMOptionsTab::OnLoadPreset( wxCommandEvent& event )
+{
+  wxString presetname = m_options_preset_sel->GetValue();
+  if ( presetname.IsEmpty() )
+  {
+     customMessageBoxNoModal( SL_MAIN_ICON , _("Cannot load an options set without a name\nPlease select one from the list and try again."), _("error"), wxICON_EXCLAMATION|wxOK );
+     return;
+  }
+  m_battle.LoadOptionsPreset( presetname );
+  m_battle.SendHostInfo( IBattle::HI_Send_All_opts );
+}
+
+
+void BattleroomMMOptionsTab::OnSavePreset( wxCommandEvent& event )
+{
+  wxString presetname = m_options_preset_sel->GetValue();
+  if ( presetname.IsEmpty() )
+  {
+     customMessageBoxNoModal( SL_MAIN_ICON , _("Cannot save an options set without a name\nPlease write one in the list or chose an existing to overwrite and try again."), _("error"), wxICON_EXCLAMATION|wxOK );
+     return;
+  }
+  m_battle.SaveOptionsPreset( presetname );
+}
+
+
+void BattleroomMMOptionsTab::OnDeletePreset( wxCommandEvent& event )
+{
+  wxString presetname = m_options_preset_sel->GetValue();
+  if ( presetname.IsEmpty() )
+  {
+     customMessageBoxNoModal( SL_MAIN_ICON , _("Cannot delete an options set without a name\nPlease select one from the list and try again."), _("error"), wxICON_EXCLAMATION|wxOK );
+     return;
+  }
+  m_battle.DeletePreset( presetname );
+}
+
+void BattleroomMMOptionsTab::OnSetModDefaultPreset( wxCommandEvent& event )
+{
+  wxString presetname = m_options_preset_sel->GetValue();
+  if ( presetname.IsEmpty() )
+  {
+     customMessageBoxNoModal( SL_MAIN_ICON , _("No options set is selected to set as default\nPlease select one from the list and try again."), _("error"), wxICON_EXCLAMATION|wxOK );
+     return;
+  }
+  sett().SetModDefaultPresetName( m_battle.GetHostModName(), presetname );
+}
+
+
+void BattleroomMMOptionsTab::UpdatePresetList()
+{
+    m_options_preset_sel->Clear();
+    m_options_preset_sel->Append(sett().GetPresetList());
+    m_options_preset_sel->SetStringSelection(  m_battle.GetCurrentPreset() );
 }

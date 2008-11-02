@@ -20,7 +20,7 @@
 #include "se_utils.h"
 #include "Defs.hpp"
 #include "frame.h"
-#include "se_settings.h"
+#include "../settings.h"
 #include "../nonportable.h"
 #include "../springunitsynclib.h"
 #include "se_utils.h"
@@ -43,7 +43,7 @@ PathOptionPanel::PathOptionPanel(wxWindow* parent,settings_frame* _origin) : wxP
 
 
 
-	usync_ctrl = new wxTextCtrl(this,-1,OptionsHandler.getUsyncLoc(), wxDefaultPosition,wxSize(400,-1));
+	usync_ctrl = new wxTextCtrl(this,-1, sett().GetCurrentUsedUnitSync(), wxDefaultPosition,wxSize(400,-1));
 	usync_ctrl->SetToolTip(_("unitsync.so on linux, unitsync.dll on windows"));
 
 	usync_sizer =  new wxFlexGridSizer(1,5,5);
@@ -73,18 +73,17 @@ PathOptionPanel::PathOptionPanel(wxWindow* parent,settings_frame* _origin) : wxP
 void PathOptionPanel::SetUsyncPath(wxCommandEvent& event)
 {
   wxString lib_ext = wxDynamicLibrary::CanonicalizeName(_T(""), wxDL_MODULE);
-  wxFileDialog pic( this, _("Choose an unitsync library"), OptionsHandler.getSpringDir(), _T("unitsync") + lib_ext, wxString(_T("Library")) + _T("(*") + lib_ext + _T(")|*") + lib_ext + _T("|") + wxString(_("Any File")) + _T(" (*.*)|*.*")  );
+  wxFileDialog pic( this, _("Choose an unitsync library"), sett().AutoFindSpringBin(), _T("unitsync") + lib_ext, wxString(_T("Library")) + _T("(*") + lib_ext + _T(")|*") + lib_ext + _T("|") + wxString(_("Any File")) + _T(" (*.*)|*.*")  );
 	  if ( pic.ShowModal() == wxID_OK )
 		  usync_ctrl->SetValue( pic.GetPath() );
 }
 
 void PathOptionPanel::UsePaths(wxCommandEvent& event)
 {
-	OptionsHandler.setUsyncLoc(  usync_ctrl->GetValue() );
-
+	sett().SetUnitSync( sett().GetCurrentUsedSpringIndex(),  usync_ctrl->GetValue() );
 	loadUnitsync();
 
-	if ( !(susynclib()->IsLoaded()) )
+	if ( !(susynclib().IsLoaded()) )
 	{
 		customMessageBox(SS_MAIN_ICON, _("SpringSettings is unable to load your unitsync library.\n"
 				"You might want to take another look at your unitsync setting.\n"
@@ -94,7 +93,7 @@ void PathOptionPanel::UsePaths(wxCommandEvent& event)
 	else
 	{
 		origin->buildGuiFromErrorPanel();
-		OptionsHandler.save();
+		sett().SaveSettings();
 	}
 
 }

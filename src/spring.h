@@ -28,8 +28,6 @@ class Spring: public wxEvtHandler
      */
     bool RunReplay ( wxString& filename );
 
-    static bool TestSpringBinary();
-
     wxString WriteScriptTxt( Battle& battle );
     wxString WriteSPScriptTxt( SinglePlayerBattle& battle );
     void OnTerminated( wxCommandEvent& event );

@@ -41,7 +41,7 @@
 #include "Helper/colorbutton.h"
 
 #ifndef HAVE_WX26
-#include "auimanager.h"
+#include "aui/auimanager.h"
 #endif
 
 BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
@@ -54,6 +54,7 @@ BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
   EVT_CHECKBOX( BROOM_LOCK, BattleRoomTab::OnLock )
   EVT_CHECKBOX( BROOM_SPEC, BattleRoomTab::OnImSpec )
   EVT_CHECKBOX( BROOM_AUTOHOST, BattleRoomTab::OnAutoHost )
+  EVT_CHECKBOX( BROOM_AUTOLOCK, BattleRoomTab::OnAutoLock )
   EVT_COMBOBOX( BROOM_TEAMSEL, BattleRoomTab::OnTeamSel )
   EVT_COMBOBOX( BROOM_ALLYSEL, BattleRoomTab::OnAllySel )
   EVT_BUTTON( BROOM_COLOURSEL, BattleRoomTab::OnColourSel )
@@ -90,6 +91,10 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
   m_color_sel->SetToolTip(TE(_("Select a color to identify your units in-game")));
   m_side_sel = new wxBitmapComboBox( m_player_panel, BROOM_SIDESEL, _T(""), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
   m_side_sel->SetToolTip(TE(_("Select your faction")));
+  m_spec_chk = new wxCheckBox( m_player_panel, BROOM_SPEC, _("Spectator"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
+  m_spec_chk->SetToolTip(TE(_("Spectate (watch) the battle instead of playing")));
+  m_ready_chk = new wxCheckBox( m_player_panel, BROOM_IMREADY, _("I'm ready"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
+  m_ready_chk->SetToolTip(TE(_("Click this if you are content with the battle settings.")));
 
   try {
     int count = usync().GetSideCount( m_battle.GetHostModName() );
@@ -124,6 +129,9 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
   m_start_btn->SetToolTip(TE(_("Start the battle")));
   m_addbot_btn = new wxButton( this, BROOM_ADDBOT, _("Add Bot..."), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
   m_addbot_btn->SetToolTip(TE(_("Add a computer-controlled player to the game")));
+  m_autolock_chk = new wxCheckBox( this, BROOM_AUTOLOCK, _("Autolock on start"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
+  m_autolock_chk->SetToolTip(TE(_("Automatically locks the battle when the game starts and unlock when it's finished.")));
+  m_autolock_chk->SetValue( sett().GetLastAutolockStatus() );
 
   m_fix_colours_btn = new wxButton( this, BROOM_FIXCOLOURS, _("Fix colours"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
   m_fix_colours_btn->SetToolTip(TE(_("Make player colors unique")));
@@ -133,10 +141,6 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
 
   m_lock_chk = new wxCheckBox( this, BROOM_LOCK, _("Locked"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
   m_lock_chk->SetToolTip(TE(_("Prevent additional players from joining the battle")));
-  m_spec_chk = new wxCheckBox( m_player_panel, BROOM_SPEC, _("Spectator"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
-  m_spec_chk->SetToolTip(TE(_("Spectate (watch) the battle instead of playing")));
-  m_ready_chk = new wxCheckBox( m_player_panel, BROOM_IMREADY, _("I'm ready"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
-  m_ready_chk->SetToolTip(TE(_("Click this if you are content with the battle settings.")));
   m_autohost_chk = new wxCheckBox( this, BROOM_AUTOHOST, _("Autohost"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
   m_autohost_chk->SetToolTip(TE(_("Toggle autohost mode.  This allows players to control your battle using commands like '!balance' and '!start'.")));
 
@@ -218,6 +222,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
   m_buttons_sizer->AddStretchSpacer();
   m_buttons_sizer->Add( m_addbot_btn, 0, wxEXPAND | wxALL, 2 );
   m_buttons_sizer->Add( m_autohost_chk, 0, wxEXPAND | wxALL, 2 );
+  m_buttons_sizer->Add( m_autolock_chk, 0, wxEXPAND | wxALL, 2 );
   m_buttons_sizer->Add( m_lock_chk, 0, wxEXPAND | wxALL, 2 );
   m_buttons_sizer->Add( m_fix_colours_btn, 0, wxEXPAND | wxALL, 2 );
   m_buttons_sizer->Add( m_balance_btn, 0, wxEXPAND | wxALL, 2 );
@@ -253,6 +258,9 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
 
       m_autohost_chk->Disable();
       m_autohost_chk->SetToolTip(TE(_("Only the host can toggle autohost mode.")));
+
+      m_autolock_chk->Disable();
+      m_autolock_chk->SetToolTip(TE(_("Only the host can lock the game.")));
     }
   else
     {
@@ -359,6 +367,8 @@ void BattleRoomTab::UpdateBattleInfo( const wxString& Tag )
       for ( long i = m_map_opts_index; i < m_opts_list->GetItemCount(); i++ ) m_opts_list->DeleteItem( i );
       m_battle.CustomBattleOptions().loadOptions( OptionsWrapper::MapOption, m_battle.GetHostModName() );
       AddMMOptionsToList( m_map_opts_index, OptionsWrapper::MapOption );
+
+      m_minimap->UpdateMinimap();
 
     }
     else if ( key == _T("restrictions") )
@@ -583,6 +593,12 @@ void BattleRoomTab::OnPresetSel( wxCommandEvent& event )
   if ( presetname.IsEmpty() ) return;
   m_battle.LoadOptionsPreset( presetname );
   m_battle.SendHostInfo( IBattle::HI_Send_All_opts );
+}
+
+void BattleRoomTab::OnAutoLock( wxCommandEvent& event )
+{
+  m_battle.SetAutoLockOnStart( m_autolock_chk->GetValue() );
+  sett().SetLastAutolockStatus( m_autolock_chk->GetValue() );
 }
 
 

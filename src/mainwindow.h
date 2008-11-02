@@ -16,7 +16,9 @@ class MainSinglePlayerTab;
 class MainTorrentTab;
 #endif
 class wxBoxSizer;
-class wxAuiNotebook;
+//namespace SL_Extern{
+    class wxAuiNotebook;
+//}
 class wxListbook;
 class MainOptionsTab;
 class wxBitmap;
@@ -65,13 +67,12 @@ class MainWindow : public wxFrame
 
     void ShowConfigure( const unsigned int page = OPT_PAGE_SPRING );
 
-    void ReloadSpringPathFromConfig();
-
     void OnMenuAbout( wxCommandEvent& event );
     void OnMenuJoin( wxCommandEvent& event );
     void OnMenuChat( wxCommandEvent& event );
     void OnMenuConnect( wxCommandEvent& event );
     void OnMenuDisconnect( wxCommandEvent& event );
+    void OnMenuSaveOptions( wxCommandEvent& event );
     void OnMenuQuit( wxCommandEvent& event );
     void OnMenuVersion ( wxCommandEvent& event );
     void OnUnitSyncReload( wxCommandEvent& event );
@@ -151,6 +152,7 @@ ChannelChooser* m_channel_chooser;
 
         MENU_CONNECT = wxID_HIGHEST,
         MENU_DISCONNECT,
+        MENU_SAVE_OPTIONS,
         MENU_JOIN,
         MENU_USYNC,
         MENU_TRAC,

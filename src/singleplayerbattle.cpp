@@ -104,6 +104,7 @@ void SinglePlayerBattle::SendHostInfo( HostInfo update )
   }
   if ( (update & HI_Mod_Changed) != 0 )
   {
+    for ( unsigned int num = 0; num < GetNumBots(); num++ ) RemoveBot( num ); /// remove all bots
     CustomBattleOptions().loadOptions( OptionsWrapper::ModOption, GetHostModName() );
     wxString presetname = sett().GetModDefaultPresetName( GetHostModName() );
     if ( !presetname.IsEmpty() )
@@ -112,6 +113,7 @@ void SinglePlayerBattle::SendHostInfo( HostInfo update )
       SendHostInfo( HI_Send_All_opts );
     }
     m_sptab.ReloadModOptContrls();
+    Update(  wxString::Format(_T("%d_%s"), OptionsWrapper::PrivateOptions , _T("mapname") ) );
   }
   if ( (update & HI_Send_All_opts) != 0 )
   {

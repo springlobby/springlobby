@@ -281,3 +281,14 @@ wxImage ReplaceChannelStatusColour( wxBitmap img, const wxColour& colour )
   return ret;
 
 }
+
+#if wxUSE_TIPWINDOW
+BEGIN_EVENT_TABLE(SLTipWindow, wxTipWindow)
+  EVT_MOUSEWHEEL(SLTipWindow::Cancel)
+END_EVENT_TABLE()
+
+void SLTipWindow::Cancel(wxMouseEvent& event)
+{
+  wxTipWindow::Close();
+}
+#endif

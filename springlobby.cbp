@@ -146,7 +146,12 @@
 		<Unit filename="src/addbotdialog.h" />
 		<Unit filename="src/agreementdialog.cpp" />
 		<Unit filename="src/agreementdialog.h" />
-		<Unit filename="src/auimanager.cpp" />
+		<Unit filename="src/aui/artprovider.cpp" />
+		<Unit filename="src/aui/artprovider.h" />
+		<Unit filename="src/aui/auibook.h" />
+		<Unit filename="src/aui/auimanager.cpp" />
+		<Unit filename="src/aui/auimanager.h" />
+		<Unit filename="src/aui/auiuitls.h" />
 		<Unit filename="src/autobalancedialog.cpp" />
 		<Unit filename="src/autobalancedialog.h" />
 		<Unit filename="src/autohost.cpp" />
@@ -209,6 +214,8 @@
 		<Unit filename="src/flagimages.h" />
 		<Unit filename="src/globalevents.cpp" />
 		<Unit filename="src/globalevents.h" />
+		<Unit filename="src/globalsmanager.cpp" />
+		<Unit filename="src/globalsmanager.h" />
 		<Unit filename="src/groupoptionspanel.cpp" />
 		<Unit filename="src/groupoptionspanel.h" />
 		<Unit filename="src/groupuserdialog.cpp" />
@@ -315,8 +322,6 @@
 		<Unit filename="src/settings++/panel_pathoption.h" />
 		<Unit filename="src/settings++/presets.cpp" />
 		<Unit filename="src/settings++/presets.h" />
-		<Unit filename="src/settings++/se_settings.cpp" />
-		<Unit filename="src/settings++/se_settings.h" />
 		<Unit filename="src/settings++/se_utils.cpp" />
 		<Unit filename="src/settings++/se_utils.h" />
 		<Unit filename="src/settings++/tab_abstract.cpp" />

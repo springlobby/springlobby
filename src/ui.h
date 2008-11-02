@@ -176,6 +176,9 @@ class Ui
 
     bool m_ingame;
 
+    //! does actual work, called from downloadmap/mod
+    void DownloadFileP2P( const wxString& hash, const wxString& name );
+
 };
 
 Ui& ui();
