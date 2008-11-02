@@ -117,6 +117,7 @@ void SpringUnitSync::PopulateArchiveList()
 
 bool SpringUnitSync::_LoadUnitSyncLib( const wxString& unitsyncloc )
 {
+  ActivityNoticeContainer act_notice( NULL, _("Loading unitsync"), _T("%s") );
   try {
     susynclib().Load( unitsyncloc, true );
   } catch (...) {
@@ -300,6 +301,7 @@ UnitSyncMap SpringUnitSync::GetMapEx( int index )
   if ( index < 0 ) return m;
 
   m.name = m_map_array[index];
+
   m.hash = m_maps_list[m.name];
 
   m.info = _GetMapInfoEx( m.name );
@@ -434,6 +436,7 @@ GameOptions SpringUnitSync::GetMapOptions( const wxString& name )
 UnitSyncMap SpringUnitSync::GetMapEx( const wxString& mapname )
 {
   wxLogDebugFunc( _T("") );
+  ActivityNoticeContainer act_notice( NULL, mapname );
   int i = GetMapIndex( mapname );
   ASSERT_LOGIC( i >= 0, _T("Map does not exist") );
   return GetMapEx( i );
@@ -476,6 +479,7 @@ wxString SpringUnitSync::GetMapArchive( int index )
 GameOptions SpringUnitSync::GetModOptions( const wxString& name )
 {
   wxLogDebugFunc( name );
+  ActivityNoticeContainer act_notice( NULL, name );
   GameOptions ret;
   wxArrayString cache;
   try
@@ -856,6 +860,7 @@ wxImage SpringUnitSync::GetMetalmap( const wxString& mapname )
 
 wxImage SpringUnitSync::GetMetalmap( const wxString& mapname, int width, int height )
 {
+    ActivityNoticeContainer act_notice( NULL, mapname, _T("Loading metalmap %s") );
   wxImage img = GetMetalmap( mapname );
 
   if (img.GetWidth() > 1 && img.GetHeight() > 1)
@@ -1009,6 +1014,8 @@ void SpringUnitSync::GetReplayList(std::vector<wxString> &ret)
   LOCK_UNITSYNC;
 
   if ( !IsLoaded() ) return;
+
+  ActivityNoticeContainer act_notice( 0, _("Loading replaylist"), _T("%s") );
 
   int ini = susynclib().InitFindVFS( _T("demos/*.sdf") );
 
