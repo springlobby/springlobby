@@ -63,6 +63,17 @@ getDataSubdirForType(const IUnitSync::MediaType type)
 }
 
 
+/** Get the wxFileName of a wxTorrentFile given its wxHash (where a
+ * wxHash is a wxString).
+ *
+ * This is a wxConvienceFunction. wxEnjoy!
+ */
+inline wxFileName
+torrentFileName(const wxString& hash)
+{
+    return sett().GetTorrentDir().GetPathWithSep() + hash + _T(".torrent");
+}
+
 bool TorrentTable::IsConsistent()
 {
 #ifdef TorrentTable_validate
@@ -643,7 +654,7 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
 
     wxString torrent_name=row->name;
     wxString torrent_infohash_b64=row->infohash;
-    wxString path;
+    wxFileName path;
 
     switch (row->type)
     {
@@ -687,15 +698,15 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
             /// dizekat> i'm getting archivename == /home/dmytry/.spring/maps/Whatever.sdf and getting archivepath == /home/dmytry/.spring/maps/
             /// dizekat> so i changed it to prepend path only if path isnt found here.
             wxLogMessage( _T("seeding from archive name: %s"), archivename.c_str() );
-            wxString archivepath = usync().GetArchivePath( archivename );
-            int i = archivename.Find( archivepath );
+            wxFileName archivepath(usync().GetArchivePath( archivename ));
+            int i = archivename.Find( archivepath.GetFullPath() );
             if (i<0)
             {
-                path = archivepath + archivename;
+                path = archivepath.GetPathWithSep() + archivename;
             }
             else
             {
-                path = archivename;
+                path = wxFileName(archivename);
             }
 
         }
@@ -705,14 +716,15 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
             wxLogMessage( _T("Local filepath couldn't be determined") );
             return false;
         }
-        wxLogMessage( _T("seeding from local filename: %s"), path.c_str() );
+        wxLogMessage( _T("seeding from local filename: %s"), path.GetFullPath().c_str() );
 
     }
     else			/* if(IsSeed) */
     {
-        path = sett().GetTorrentDataDir() + wxFileName::GetPathSeparator() + getDataSubdirForType(row->type);
-	if ( !wxDirExists(path) ) wxMkdir(path, 0755);
-        wxLogMessage(_T("downloading to path: =%s"), path.c_str());
+        path = sett().GetTorrentDataDir();
+	path.AppendDir( getDataSubdirForType(row->type) );
+	if ( !path.DirExists() ) path.Mkdir(0755);
+        wxLogMessage(_T("downloading to path: =%s"), path.GetFullPath().c_str());
     }
 
 
@@ -720,7 +732,7 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
     if (!DownloadTorrentFileFromTracker( row->hash )) return false;
 
     /// read torrent from file
-    std::ifstream in( wxString( sett().GetTorrentsFolder() + row->hash + _T(".torrent") ).mb_str(), std::ios_base::binary);
+    std::ifstream in( torrentFileName(row->hash).GetFullPath().mb_str(), std::ios_base::binary);
     in.unsetf(std::ios_base::skipws);
     libtorrent::entry e;
     try
@@ -749,26 +761,27 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
     if ( IsSeed )
     {
         /// improved check: dont download Whatever.sdz when you got e.g. x_Whatever.sdz or Whatever.sdz_x on disk
-        wxFileName path_as_filename(path);
-        if ( path_as_filename.GetFullName()!=torrentfilename)
+        if ( path.GetFullName() != torrentfilename)
         {
-            wxLogMessage(_T("local file name '%s' does not match requested name '%s', not seeding"), path_as_filename.GetFullName().c_str(), torrentfilename.c_str());
+            wxLogMessage(_T("local file name '%s' does not match requested name '%s', not seeding"),
+			 path.GetFullName().c_str(),
+			 torrentfilename.c_str() );
             return false; /// if the filename locally is different from the torrent's, skip it or it will download it again and various crap may happend.
         }
         /// to be safe.
-        if (!path_as_filename.FileExists())
+        if (!path.FileExists())
         {
             wxLogError(_T("the local file does not exist!"));
             return false;
         }
-        path = path_as_filename.GetPath(); /// strip file name from path
-        wxLogMessage( _T("Strippped path: %s"), path.c_str() );
+        path = path.GetPath(); /// strip file name from path
+        wxLogMessage( _T("Strippped path: %s"), path.GetFullPath().c_str() );
     }
-    wxLogMessage(_T("(4) Joining torrent: add_torrent(%s,[%s],%s,[%s])"),m_tracker_urls[m_connected_tracker_index].c_str(),torrent_infohash_b64.c_str(),row->name.c_str(),path.c_str());
+    wxLogMessage(_T("(4) Joining torrent: add_torrent(%s,[%s],%s,[%s])"),m_tracker_urls[m_connected_tracker_index].c_str(),torrent_infohash_b64.c_str(),row->name.c_str(),path.GetFullPath().c_str());
 
     try
     {
-        m_torrent_table.SetRowHandle(row, m_torr->add_torrent( t_info, boost::filesystem::path(STD_STRING(path))));
+        m_torrent_table.SetRowHandle(row, m_torr->add_torrent( t_info, boost::filesystem::path(path.GetFullPath().mb_str())));
     }
     catch (std::exception& e)
     {
@@ -890,12 +903,9 @@ bool TorrentWrapper::DownloadTorrentFileFromTracker( const wxString& hash )
 {
     if ( sett().GetCurrentUsedDataDir().IsEmpty() ) return false; /// no good things can happend if you don't know which folder to r/w files from
 
-#ifdef HAVE_WX26
-    wxFileName filename( sett().GetTorrentsFolder() + hash + _T(".torrent") ) ;
-    bool readable = filename.IsOk();
-#else
-    bool readable = wxFileName::IsFileReadable( sett().GetTorrentsFolder()+ hash + _T(".torrent") ) ;
-#endif
+    wxFileName filename( torrentFileName(hash) );
+
+    bool readable(filename.IsFileReadable());
 
     if ( readable  ) return true; ///file already present locally
 
@@ -911,7 +921,7 @@ bool TorrentWrapper::DownloadTorrentFileFromTracker( const wxString& hash )
     if (fileRequest.GetError() == wxPROTO_NOERR)
     {
 
-        wxFileOutputStream output( sett().GetTorrentsFolder() + hash + _T(".torrent") );
+        wxFileOutputStream output( filename.GetFullPath() );
         if ( output.Ok() )
         {
             stream->Read(output);

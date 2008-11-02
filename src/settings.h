@@ -40,6 +40,7 @@ class wxFont;
 struct BattleListFilterValues;
 struct ReplayListFilterValues;
 class wxFileInputStream;
+class wxFileName;
 class wxColor;
 class wxColour;
 struct wxColourData;
@@ -540,7 +541,7 @@ class Settings
 
     /** Get the path to the directory where *.torrent files are stored.
      */
-    wxString GetTorrentsFolder();
+    wxFileName GetTorrentDir();
 
 
     /** Get the path to the directory where partially-downloaded
@@ -548,7 +549,7 @@ class Settings
      *
      * @sa GetTorrentsFolder
      */
-    wxString GetTorrentDataDir();
+    wxFileName GetTorrentDataDir();
 
     /**@}*/
 

@@ -10,6 +10,7 @@
 #else
 #include <wx/config.h>
 #endif
+#include <wx/filename.h>
 #include <wx/filefn.h>
 #include <wx/intl.h>
 #include <wx/stdpaths.h>
@@ -1467,24 +1468,30 @@ wxArrayString Settings::GetTorrentListToResume()
 }
 
 
-wxString Settings::GetTorrentsFolder()
+wxFileName Settings::GetTorrentDir()
 {
-  wxString path = GetLobbyWriteDir() +_T("torrents") + wxFileName::GetPathSeparator();
-    if ( !wxFileName::DirExists( path ) )
+  wxFileName torrentDir(GetLobbyWriteDir());
+  torrentDir.AppendDir(_T("torrents"));
+
+  if ( !torrentDir.DirExists() )
   {
-    if ( !wxFileName::Mkdir(  path  ) ) return wxEmptyString;
+    if ( !torrentDir.Mkdir(0755) ) torrentDir.Clear();
   }
-  return path;
+
+  return torrentDir;
 }
 
-wxString Settings::GetTorrentDataDir()
+wxFileName Settings::GetTorrentDataDir()
 {
-  wxString path = GetLobbyWriteDir() +_T("torrentdata") + wxFileName::GetPathSeparator();
-    if ( !wxFileName::DirExists( path ) )
+  wxFileName torrentDir(GetLobbyWriteDir());
+  torrentDir.AppendDir(_T("downloads"));
+
+  if ( !torrentDir.DirExists() )
   {
-    if ( !wxFileName::Mkdir(  path  ) ) return wxEmptyString;
+    if ( !torrentDir.Mkdir(0755) ) torrentDir.Clear();
   }
-  return path;
+
+  return torrentDir;
 }
 
 wxString Settings::GetTempStorage()
