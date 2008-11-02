@@ -51,8 +51,9 @@ class MapCtrl : public wxPanel
 
     wxRect GetStartRect( int index );
     wxRect GetStartRect( const BattleStartRect& sr );
-    double GetStartRectMetal( int index );
-    double GetStartRectMetal( const BattleStartRect& sr );
+    void Accumulate( wxImage& image );
+    double GetStartRectMetalFraction( int index );
+    double GetStartRectMetalFraction( const BattleStartRect& sr );
 
     void DrawOutlinedText( wxDC& dc, const wxString& str, int x, int y, const wxColour& outline, const wxColour& font );
 
@@ -91,7 +92,7 @@ class MapCtrl : public wxPanel
 
     wxBitmap* m_minimap;
     wxBitmap* m_metalmap;
-    wxImage m_metalmap_orig;
+    wxImage m_metalmap_cumulative;
 
     IBattle* m_battle;
     SinglePlayerBattle* m_sp_battle;

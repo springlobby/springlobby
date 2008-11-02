@@ -57,10 +57,11 @@ class IUnitSync
   public:
     virtual ~IUnitSync() { }
 
-    enum GameFeature {
-      GF_XYStartPos = 1,
-      USYNC_Sett_Handler = 2,
-      USYNC_GetInfoMap = 3
+    enum GameFeature
+    {
+      USYNC_Sett_Handler,
+      USYNC_GetInfoMap,
+      USYNC_GetDataDir
     };
 
     enum MediaType
@@ -157,7 +158,7 @@ class IUnitSync
     virtual int GetNumUnits( const wxString& modname ) = 0;
     virtual wxArrayString GetUnitsList( const wxString& modname ) = 0;
 
-    virtual bool LoadUnitSyncLib( const wxString& springdir, const wxString& unitsyncloc ) = 0;
+    virtual bool LoadUnitSyncLib( const wxString& unitsyncloc ) = 0;
     virtual void FreeUnitSyncLib() = 0;
 
     virtual bool IsLoaded() = 0;
@@ -172,7 +173,6 @@ class IUnitSync
     virtual void GetReplayList(std::vector<wxString> &ret) = 0;
 
     virtual void SetSpringDataPath( const wxString& path ) = 0;
-    virtual wxString GetSpringDataPath() = 0;
 
     virtual bool FileExists( const wxString& name ) = 0;
 

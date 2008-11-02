@@ -29,6 +29,7 @@
 //for cpu detection
 #include <wx/tokenzr.h>
 #include <string>
+#include <algorithm>
 #include <fstream>
 #include <wx/regex.h>
 #ifdef __WXMSW__
@@ -40,7 +41,7 @@
 
 wxString GetLibExtension()
 {
-  return wxDynamicLibrary::CanonicalizeName(_T(""), wxDL_MODULE);
+    return wxDynamicLibrary::CanonicalizeName(_T(""), wxDL_MODULE);
 }
 
 
@@ -117,13 +118,13 @@ wxString i2s( int arg )
 
 wxString u2s( unsigned int arg )
 {
-  return TowxString(arg);
+    return TowxString(arg);
 }
 
 
 wxString f2s( float arg )
 {
-  return TowxString(arg);
+    return TowxString(arg);
 }
 
 
@@ -143,75 +144,75 @@ double s2d( const wxString& arg )
 
 wxString GetWordParam( wxString& params )
 {
-  wxString param;
+    wxString param;
 
-  param = params.BeforeFirst( ' ' );
-  if ( param.IsEmpty() )
-  {
-    param = params;
-    params = _T("");
-    return param;
-  }
-  else
-  {
-    params = params.AfterFirst( ' ' );
-    return param;
-  }
+    param = params.BeforeFirst( ' ' );
+    if ( param.IsEmpty() )
+    {
+        param = params;
+        params = _T("");
+        return param;
+    }
+    else
+    {
+        params = params.AfterFirst( ' ' );
+        return param;
+    }
 }
 
 
 wxString GetSentenceParam( wxString& params )
 {
-  wxString param;
+    wxString param;
 
-  param = params.BeforeFirst( '\t' );
-  if ( param.IsEmpty() )
-  {
-    param = params;
-    params = _T("");
-    return param;
-  }
-  else
-  {
-    params = params.AfterFirst( '\t' );
-    return param;
-  }
+    param = params.BeforeFirst( '\t' );
+    if ( param.IsEmpty() )
+    {
+        param = params;
+        params = _T("");
+        return param;
+    }
+    else
+    {
+        params = params.AfterFirst( '\t' );
+        return param;
+    }
 }
 
 
 long GetIntParam( wxString& params )
 {
-  wxString param;
-  long ret;
+    wxString param;
+    long ret;
 
-  param = params.BeforeFirst( ' ' );
-  if ( param.IsEmpty() )
-  {
-    params.ToLong( &ret );
-    params = _T("");
-  }
-  else
-  {
-    params = params.AfterFirst( ' ' );
-    param.ToLong( &ret );
-  }
-  return ret;
+    param = params.BeforeFirst( ' ' );
+    if ( param.IsEmpty() )
+    {
+        params.ToLong( &ret );
+        params = _T("");
+    }
+    else
+    {
+        params = params.AfterFirst( ' ' );
+        param.ToLong( &ret );
+    }
+    return ret;
 }
 
 
 bool GetBoolParam( wxString& params )
 {
-  return (bool)GetIntParam( params );
+    return (bool)GetIntParam( params );
 }
 
 
 wxString GetSpringLobbyVersion()
 {
-  #ifndef AUX_VERSION
-  return (WX_STRINGC(VERSION)).BeforeFirst( _T(' ') );
-  #else
-  return (WX_STRINGC(VERSION)).BeforeFirst( _T(' ') ) + _T(" AUX_VERSION");
-  #endif
+#ifndef AUX_VERSION
+    return (WX_STRINGC(VERSION)).BeforeFirst( _T(' ') );
+#else
+    return (WX_STRINGC(VERSION)).BeforeFirst( _T(' ') ) + _T(" AUX_VERSION");
+#endif
 
 }
 
@@ -227,8 +228,8 @@ wxString GetSpringLobbyVersion()
 wxString GetHostCPUSpeed()
 {
 
-    int totalcpuspeed = 0;
     int cpu_count = 0;
+    int max_cpu_speed=0;
 
 #ifdef __WXMSW__
 
@@ -237,10 +238,10 @@ wxString GetHostCPUSpeed()
     for (int i = 0; i< 16; ++i)
     {
         wxRegKey programreg( _T("HKEY_LOCAL_MACHINE\\HARDWARE\\DESCRIPTION\\System\\CentralProcessor\\")+	wxString::Format(_T("%d"), i));
-        long* tmp = new long;
-        if ( programreg.QueryValue( _T("~MHz"), tmp ) )
+        long tmp;
+        if ( programreg.QueryValue( _T("~MHz"), &tmp ) )
         {
-            totalcpuspeed += (*tmp);
+            if ( max_cpu_speed < tmp ) max_cpu_speed = tmp;
             cpu_count++;
         }
 
@@ -248,51 +249,23 @@ wxString GetHostCPUSpeed()
 
 #else
 
-
-    // Create an Inputstream from /proc/cpuinfo
-    std::ifstream fin( "/proc/cpuinfo" );
-    std::string line;
-    std::string content_str( "" );
-
-    // Read from Inputstream
-
-    if ( fin )
+    wxTextFile file( _T("/proc/cpuinfo") );
+    if ( file.Exists() )
     {
-        while ( std::getline( fin, line ) )
+      file.Open();
+      for ( wxString line = file.GetFirstLine(); !file.Eof(); line = file.GetNextLine() )
+      {
+        if ( line.Left(7) == _T("cpu MHz") )
         {
-            // std::cout << "Read from file: " << line << std::endl;
-            content_str.append( line );
-            content_str.append( "\n" );
+          line = line.AfterLast( _T(' ') ).BeforeLast( _T('.') );
+          cpu_count++;
+          int tmp = s2l( line );
+          if ( max_cpu_speed < tmp ) max_cpu_speed = tmp;
         }
-
-        wxString content = wxString::FromAscii( content_str.c_str() );
-
-        // Building a RegEx to match one Block of CPU Info
-        #ifdef wxHAS_REGEX_ADVANCED
-        wxRegEx regex_CPUSection( wxT( "processor.*?(cpu MHz.*?:.*?(\\d+\\.\\d+)).*?\n\n" ), wxRE_ADVANCED );
-        #else
-        wxRegEx regex_CPUSection( wxT( "processor.*?(cpu MHz.*?:.*?(\\d+\\.\\d+)).*?\n\n" ), wxRE_EXTENDED );
-        #endif
-        // Replace each Block of CPU Info with only the CPU Speed in MHz
-        regex_CPUSection.Replace( &content, _T( "\\2\n" ) );
-
-        // Tokenize the String containing all CPU Speed of the Host: e.g. 3000.0\n3000.0\n
-        wxStringTokenizer tokenlist( content, wxT( "\n" ) );
-
-        // Sum up all CPU Speeds
-
-        while ( tokenlist.HasMoreTokens() )
-        {
-            wxString token = tokenlist.GetNextToken();
-            long cpuspeed = 0;
-            token.ToLong( &cpuspeed, 10 );
-            totalcpuspeed += cpuspeed;
-            cpu_count++;
-        }
+      }
     }
 #endif
-    totalcpuspeed = cpu_count > 0 ? totalcpuspeed / cpu_count : 2100;
-    return i2s(totalcpuspeed);
+    return i2s( clamp( max_cpu_speed,0,max_cpu_speed ) );
 }
 
 
@@ -305,12 +278,12 @@ bool IsValidNickname( const wxString& _name )
 {
     wxString name = _name;
     // The Regex Container
-	//wxRegEx regex( wxT("[:graph:]") );
-	wxRegEx regex( wxT("[ \t\r\n\v\föäüß, .:<>\\!§$%&+-]" ));
+    //wxRegEx regex( wxT("[:graph:]") );
+    wxRegEx regex( wxT("[ \t\r\n\v\föäüß, .:<>\\!§$%&+-]" ));
 
-	// We need to escape all regular Expression Characters, that have a special Meaning
+    // We need to escape all regular Expression Characters, that have a special Meaning
     name.Replace( _T("["), _T("") );
-	name.Replace( _T("]"), _T("") );
+    name.Replace( _T("]"), _T("") );
 
     return !regex.Matches( name );
 }
@@ -323,48 +296,52 @@ const wxChar* TooltipEnable(const wxChar* input)
 template<typename T>
 T min(T a, T b, T c)
 {
-  return std::min(a, std::min(b, c));
+    return std::min(a, std::min(b, c));
 }
 
 double LevenshteinDistance(wxString s, wxString t)
 {
-  s.MakeLower(); // case insensitive edit distance
-  t.MakeLower();
+    s.MakeLower(); // case insensitive edit distance
+    t.MakeLower();
 
-  const int m = s.length(), n = t.length(), _w = m + 1;
-  std::vector<unsigned char> _d((m + 1) * (n + 1));
+    const int m = s.length(), n = t.length(), _w = m + 1;
+    std::vector<unsigned char> _d((m + 1) * (n + 1));
 #define D(x, y) _d[(y) * _w + (x)]
 
-  for (int i = 0; i <= m; ++i) D(i,0) = i;
-  for (int j = 0; j <= n; ++j) D(0,j) = j;
+    for (int i = 0; i <= m; ++i) D(i,0) = i;
+    for (int j = 0; j <= n; ++j) D(0,j) = j;
 
-  for (int i = 1; i <= m; ++i) {
-    for (int j = 1; j <= n; ++j) {
-      const int cost = (s[i - 1] != t[j - 1]);
-      D(i,j) = min(D(i-1,j) + 1, // deletion
-                   D(i,j-1) + 1, // insertion
-                   D(i-1,j-1) + cost); // substitution
+    for (int i = 1; i <= m; ++i)
+    {
+        for (int j = 1; j <= n; ++j)
+        {
+            const int cost = (s[i - 1] != t[j - 1]);
+            D(i,j) = min(D(i-1,j) + 1, // deletion
+                         D(i,j-1) + 1, // insertion
+                         D(i-1,j-1) + cost); // substitution
+        }
     }
-  }
-  double d = (double) D(m,n) / std::max(m, n);
-  wxLogMessage( _T("LevenshteinDistance('%s', '%s') = %g"), s.c_str(), t.c_str(), d );
-  return d;
+    double d = (double) D(m,n) / std::max(m, n);
+    wxLogMessage( _T("LevenshteinDistance('%s', '%s') = %g"), s.c_str(), t.c_str(), d );
+    return d;
 #undef D
 }
 
 wxString GetBestMatch(const wxArrayString& a, const wxString& s, double* distance )
 {
-  const unsigned int count = a.GetCount();
-  double minDistance = 1.0;
-  int minDistanceIndex = -1;
-  for (unsigned int i = 0; i < count; ++i) {
-    const double distance = LevenshteinDistance(a[i], s);
-    if (distance < minDistance) {
-      minDistance = distance;
-      minDistanceIndex = i;
+    const unsigned int count = a.GetCount();
+    double minDistance = 1.0;
+    int minDistanceIndex = -1;
+    for (unsigned int i = 0; i < count; ++i)
+    {
+        const double distance = LevenshteinDistance(a[i], s);
+        if (distance < minDistance)
+        {
+            minDistance = distance;
+            minDistanceIndex = i;
+        }
     }
-  }
-  if (distance != NULL) *distance = minDistance;
-  if (minDistanceIndex == -1) return _T("");
-  return a[minDistanceIndex];
+    if (distance != NULL) *distance = minDistance;
+    if (minDistanceIndex == -1) return _T("");
+    return a[minDistanceIndex];
 }

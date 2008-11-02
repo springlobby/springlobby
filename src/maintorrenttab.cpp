@@ -16,7 +16,7 @@
 #include "filelister/filelistdialog.h"
 
 #ifndef HAVE_WX26
-#include "auimanager.h"
+#include "aui/auimanager.h"
 #endif
 
 BEGIN_EVENT_TABLE(MainTorrentTab,wxPanel)
@@ -134,9 +134,9 @@ void MainTorrentTab::SetInfo(int index,  TorrentInfos& info )
   m_torrent_list->SetItem( index, 1, info.numcopies > 0 ? f2s( info.numcopies ) : wxString(_("not available")));
   m_torrent_list->SetItem( index, 2, f2s( info.downloaded*mfactor ) );
   m_torrent_list->SetItem( index, 3, f2s( info.uploaded*mfactor ) );
-  if ( info.downloadstatus  == seeding ) m_torrent_list->SetItem( index, 4, _("seeding") );
-  else if ( info.downloadstatus  == leeching ) m_torrent_list->SetItem( index, 4, _("leeching") );
-  else if ( info.downloadstatus  == queued ) m_torrent_list->SetItem( index, 4, _("queued") );
+  if ( info.downloadstatus  == P2P::seeding ) m_torrent_list->SetItem( index, 4, _("seeding") );
+  else if ( info.downloadstatus  == P2P::leeching ) m_torrent_list->SetItem( index, 4, _("leeching") );
+  else if ( info.downloadstatus  == P2P::queued ) m_torrent_list->SetItem( index, 4, _("queued") );
   m_torrent_list->SetItem( index, 5, f2s( info.progress * 100 ) );
   m_torrent_list->SetItem( index, 6, f2s( info.outspeed*kfactor ) );
   m_torrent_list->SetItem( index, 7, f2s( info.inspeed*kfactor ) );

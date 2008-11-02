@@ -28,7 +28,7 @@ class Battle;
 class ServerEvents
 {
   public:
-    ServerEvents( Server& serv, Ui& ui ) : m_serv(serv),m_ui(ui) {}
+    ServerEvents( Server& serv) : m_serv(serv) {}
     ~ServerEvents() {}
 
   // Uicontrol interface
@@ -119,7 +119,6 @@ class ServerEvents
 
   protected:
     Server& m_serv;
-    Ui& m_ui;
 
     std::map<wxString,MessageSpamCheck> m_spam_check;
 };

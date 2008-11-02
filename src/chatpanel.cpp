@@ -28,7 +28,7 @@
 #endif
 
 #ifndef HAVE_WX26
-#include "auimanager.h"
+#include "aui/auimanager.h"
 #include <wx/imaglist.h>
 #else
 #include <wx/notebook.h>
@@ -982,6 +982,7 @@ void ChatPanel::SetServer( Server* serv )
 {
 	ASSERT_LOGIC( m_type == CPT_Server, _T( "Not of type server" ) );
 	if (( serv == 0 ) && ( m_server != 0 ) ){
+	  StatusMessage( _( "Chat closed." ) );
 	  m_server->uidata.panel = 0;
 	}
 	else if ( serv != 0 ){
@@ -1008,7 +1009,11 @@ void ChatPanel::SetUser( User* usr )
 {
 	ASSERT_LOGIC( m_type == CPT_User, _T( "Not of type user" ) );
 
-	if (( usr == 0 ) && ( m_user != 0 ) ) m_user->uidata.panel = 0;
+	if (( usr == 0 ) && ( m_user != 0 ) )
+	{
+	  StatusMessage( _( "Chat closed." ) );
+	  m_user->uidata.panel = 0;
+	}
 	else if ( usr != 0 ) usr->uidata.panel = this;
 
 	m_user = usr;

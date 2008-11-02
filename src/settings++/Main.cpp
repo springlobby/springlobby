@@ -71,6 +71,9 @@ bool Springsettings::OnInit()
 	//TODO non-constant parameters
     InitializeLoggingTargets(0,0,1,1);
 
+    #ifdef __WXMSW__
+		sett().ForcePortableMode( true );
+		#endif
     settings_frame* frame = new settings_frame(NULL,wxID_ANY,wxT("SpringSettings"),wxDefaultPosition,
     		wxDefaultSize);
     SetTopWindow(frame);
@@ -80,7 +83,7 @@ bool Springsettings::OnInit()
 
 int Springsettings::OnExit()
 {
-	susynclib()->Unload();
+	susynclib().Unload();
 	return 0;
 }
 

@@ -123,6 +123,8 @@ IconImageList::IconImageList() : wxImageList(16,16,true)
     ICON_CLOSED_FULL_GAME = Add( *charArr2wxBitmap(closed_full_game_png, sizeof(closed_full_game_png) ) );
     ICON_STARTED_GAME = Add(  *charArr2wxBitmap(ingame_png, sizeof(ingame_png) ) );
 
+    ICON_STARTED_GAME_LOCKED = Add( *charArr2wxBitmapWithBlending( closed_game_png, sizeof(closed_game_png), ingame_png, sizeof(ingame_png) ) );
+
 
     ICON_READY_UNSYNC = Add( wxBitmap(ready_unsync_xpm) );
     ICON_NREADY_UNSYNC = Add( wxBitmap(nready_unsync_xpm) );
@@ -244,7 +246,9 @@ int IconImageList::GetFlagIcon( const wxString& flagname )
 
 int IconImageList::GetBattleStatusIcon( const Battle& battle ) const
 {
-    if ( battle.GetInGame() ) return ICON_STARTED_GAME;
+    if ( battle.GetInGame() ) {
+      return battle.IsLocked()?ICON_STARTED_GAME_LOCKED:ICON_STARTED_GAME;
+    }
     if ( !battle.IsLocked() )
     {
         if ( battle.IsFull() )

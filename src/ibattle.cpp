@@ -195,7 +195,7 @@ bool IBattle::LoadOptionsPreset( const wxString& name )
   if (preset == _T("")) return false; ///preset not found
   m_preset = preset;
 
-  for ( int i = 0; i < (int)OptionsWrapper::LastOption; i++)
+  for ( unsigned int i = 0; i < OptionsWrapper::LastOption; i++)
   {
     std::map<wxString,wxString> options = sett().GetHostingPreset( m_preset, i );
     if ( (OptionsWrapper::GameOption)i != OptionsWrapper::PrivateOptions )
