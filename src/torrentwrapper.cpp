@@ -552,8 +552,8 @@ std::map<int,TorrentInfos> TorrentWrapper::CollectGuiInfos()
         TorrentInfos globalinfos;
         globalinfos.downloadstatus = P2P::leeching;
         globalinfos.progress = 0.0f;
-        globalinfos.downloaded = 0;
-        globalinfos.uploaded = 0;
+        globalinfos.downloaded = m_torr->status().total_download;
+        globalinfos.uploaded = m_torr->status().total_upload;
         globalinfos.outspeed = m_torr->status().upload_rate;
         globalinfos.inspeed = m_torr->status().download_rate;
         globalinfos.numcopies = 0.0f;
@@ -567,8 +567,6 @@ std::map<int,TorrentInfos> TorrentWrapper::CollectGuiInfos()
         {
             TorrentInfos CurrentTorrent;
             CurrentTorrent.name = WX_STRING(i->name()).BeforeFirst(_T('|'));
-            if ( i->is_seed() ) CurrentTorrent.downloadstatus = P2P::seeding;
-            else CurrentTorrent.downloadstatus = P2P::leeching;
             CurrentTorrent.progress = i->status().progress;
             CurrentTorrent.downloaded = i->status().total_payload_download;
             CurrentTorrent.uploaded = i->status().total_payload_upload;
@@ -580,6 +578,7 @@ std::map<int,TorrentInfos> TorrentWrapper::CollectGuiInfos()
             TorrentTable::PRow row=m_torrent_table.RowByHandle(*i);
             if (!row.ok()) continue;
             CurrentTorrent.hash=row->hash;
+            CurrentTorrent.downloadstatus = row->status;
 
             ret[s2l(CurrentTorrent.hash)] = CurrentTorrent;
         }
@@ -692,7 +691,7 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
     }
     else
     {
-        path = sett().GetCurrentUsedSpringBinary() + wxFileName::GetPathSeparator();
+        path = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator();
         switch (row->type)
         {
         case IUnitSync::map:
@@ -739,24 +738,27 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
     wxString torrentfilename = WX_STRING(t_info.begin_files()->path.string()); /// get the file name in the torrent infos
     wxLogMessage( _T("requested filename: %s"), torrentfilename.c_str() );
 
+    wxFileName archive_filename(path);
+    wxFileName torrent_filename(torrentfilename);
 
-    if ( IsSeed )
+    if ( IsSeed && ( torrent_filename.GetFullName() != archive_filename.GetFullName() ) )
     {
-        /// improved check: dont download Whatever.sdz when you got e.g. x_Whatever.sdz or Whatever.sdz_x on disk
-        wxFileName path_as_filename(path);
-        if ( path_as_filename.GetFullName()!=torrentfilename)
+        wxLogMessage(_T("filename differs from torrent, renaming file in torrent info"));
+        if ( !( torrent_filename.GetExt() == archive_filename.GetExt() ) ) /// different extension, won't work
         {
-            wxLogMessage(_T("local file name '%s' does not match requested name '%s', not seeding"), path_as_filename.GetFullName().c_str(), torrentfilename.c_str());
-            return false; /// if the filename locally is different from the torrent's, skip it or it will download it again and various crap may happend.
+          wxLogMessage( _T("file extension locally differs, not joining torrent") );
+          return false;
         }
-        /// to be safe.
-        if (!path_as_filename.FileExists())
+        std::vector<libtorrent::file_entry> map;
+        libtorrent::file_entry foo = t_info.file_at(0);
+        map.push_back( foo );
+        map.front().path = boost::filesystem::path(STD_STRING( archive_filename.GetFullName() ) );
+        wxLogMessage(_T("New filename in torrent: %s"), archive_filename.GetFullName().c_str() );
+        if ( !t_info.remap_files(map) )
         {
-            wxLogError(_T("the local file does not exist!"));
-            return false;
+         wxLogMessage(_T("Cannot remap filenames in the torrent, aborting seed"));
+         return false;
         }
-        path = path_as_filename.GetPath(); /// strip file name from path
-        wxLogMessage( _T("Strippped path: %s"), path.c_str() );
     }
     wxLogMessage(_T("(4) Joining torrent: add_torrent(%s,[%s],%s,[%s])"),m_tracker_urls[m_connected_tracker_index].c_str(),torrent_infohash_b64.c_str(),row->name.c_str(),path.c_str());
 
@@ -815,6 +817,7 @@ void TorrentWrapper::CreateTorrent( const wxString& hash, const wxString& name, 
     libtorrent::torrent_info newtorrent;
 
     wxString archivename;
+
     switch ( type )
     {
       case IUnitSync::map :
