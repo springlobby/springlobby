@@ -815,7 +815,6 @@ void TorrentWrapper::CreateTorrent( const wxString& hash, const wxString& name, 
     libtorrent::torrent_info newtorrent;
 
     wxString archivename;
-    wxString path;
 
     switch ( type )
     {
