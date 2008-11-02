@@ -323,7 +323,7 @@ class Settings
     /*@}*/
 
     /* ================================================================ */
-    /** @name People/Group mngm related
+    /** @name People/Group management
      * @{
      */
     void SetPeopleList( const wxArrayString& friends, const wxString& group = _T("default") );
@@ -432,7 +432,7 @@ class Settings
     /* ================================================================ */
     /** @name Hosting
      *
-     * Settings to use when hosting games.  Includes "sticky" settings from the
+     * %Settings to use when hosting games.  Includes "sticky" settings from the
      * last time a game was hosted.
      *
      * @{
@@ -538,10 +538,25 @@ class Settings
     void SetTorrentListToResume( const wxArrayString& list );
     wxArrayString GetTorrentListToResume();
 
+    /** Get the path to the directory where *.torrent files are stored.
+     */
     wxString GetTorrentsFolder();
+
+
+    /** Get the path to the directory where partially-downloaded
+     * torrented files are stored.
+     *
+     * @sa GetTorrentsFolder
+     */
+    wxString GetTorrentDataDir();
+
     /**@}*/
 
     /** @name Aui
+     *
+     * Functions used to store and retrieve the current SpringLobby
+     * interface layout.
+     *
      * @{
      */
     void SaveLayout( wxString& layout_name, wxString& layout_string );

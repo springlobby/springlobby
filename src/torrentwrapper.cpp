@@ -45,6 +45,24 @@
 #include "globalsmanager.h"
 
 
+/** Get the name of the Spring data subdirectory that corresponds to a
+ * given IUnitSync::MediaType value.
+ */
+inline wxString
+getDataSubdirForType(const IUnitSync::MediaType type)
+{
+    switch ( type)
+    {
+    case IUnitSync::map:
+	return _T("maps");
+    case IUnitSync::mod:
+	return _T("mods");
+    default:
+	ASSERT_EXCEPTION(false, _T("Unhandled IUnitSync::MediaType value"));
+    }
+}
+
+
 bool TorrentTable::IsConsistent()
 {
 #ifdef TorrentTable_validate
@@ -690,22 +708,9 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
         wxLogMessage( _T("seeding from local filename: %s"), path.c_str() );
 
     }
-    else
+    else			/* if(IsSeed) */
     {
-        path = sett().GetCurrentUsedSpringBinary() + wxFileName::GetPathSeparator();
-        switch (row->type)
-        {
-        case IUnitSync::map:
-        {
-            path = path + _T("maps") + wxFileName::GetPathSeparator();
-            break;
-        }
-        case IUnitSync::mod:
-        {
-            path = path + _T("mods") + wxFileName::GetPathSeparator();
-            break;
-        }
-        }
+        path = sett().GetTorrentDataDir() + wxFileName::GetPathSeparator() + getDataSubdirForType(row->type);
         wxLogMessage(_T("downloading to path: =%s"), path.c_str());
     }
 
@@ -952,8 +957,25 @@ void TorrentWrapper::RemoveUnneededTorrents()
             ///torrent has finished download, refresh unitsync and remove file from list
             try
             {
+		/* Grab the source (temporary) filename before we remove the download. */
+		wxString sourceName( TowxString( ( it->first.save_path() / it->first.name() ).file_string() ) );
+
                 ASSERT_EXCEPTION( RemoveTorrentByRow( it->second ), _T("failed to remove torrent: ")+ it->second->hash );
 
+		/* Move file from temporary download directory to final destination. */
+		wxString targetName =
+		    sett().GetCurrentUsedDataDir()
+		    + wxFileName::GetPathSeparator() + getDataSubdirForType(it->second->type)
+		    + wxFileName::GetPathSeparator() + it->second->name;
+
+		/* Do the rename.  `false' for parameter 3 means don't
+		 * overwrite the file if it doesn't already exist.
+		 */
+		/** @todo handle wxRenameFile returning false (rename
+		 * failed, probably because the destinationfile
+		 * already exists).
+		 */
+		wxRenameFile(sourceName, targetName, false);
                 m_socket_class->Send( _T("N-|")  + it->second->hash + _T("\n") ); ///notify the system we don't need the file anymore
 
                 wxCommandEvent refreshevt(UnitSyncReloadRequest); /// request an unitsync reload

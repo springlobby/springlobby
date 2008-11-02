@@ -1477,6 +1477,15 @@ wxString Settings::GetTorrentsFolder()
   return path;
 }
 
+wxString Settings::GetTorrentDataDir()
+{
+  wxString path = GetLobbyWriteDir() +_T("torrentdata") + wxFileName::GetPathSeparator();
+    if ( !wxFileName::DirExists( path ) )
+  {
+    if ( !wxFileName::Mkdir(  path  ) ) return wxEmptyString;
+  }
+  return path;
+}
 
 wxString Settings::GetTempStorage()
 {
