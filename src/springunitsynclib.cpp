@@ -12,11 +12,11 @@
 
 #define LOCK_UNITSYNC wxCriticalSectionLocker lock_criticalsection(m_lock)
 
-SpringUnitSyncLib::SpringUnitSyncLib( const wxString& path ):
+SpringUnitSyncLib::SpringUnitSyncLib( const wxString& path, bool DoInit ):
   m_loaded(false),
   m_path(wxEmptyString)
 {
-  if ( path != wxEmptyString ) Load( path );
+  if ( path != wxEmptyString ) Load( path, DoInit );
 }
 
 
@@ -26,14 +26,14 @@ SpringUnitSyncLib::~SpringUnitSyncLib()
 }
 
 
-SpringUnitSyncLib* susynclib()
+SpringUnitSyncLib& susynclib()
 {
   static GlobalObjectHolder<SpringUnitSyncLib> lib;
-  return &(lib.GetInstance());
+  return lib.GetInstance();
 }
 
 
-void SpringUnitSyncLib::Load( const wxString& path )
+void SpringUnitSyncLib::Load( const wxString& path, bool DoInit )
 {
   LOCK_UNITSYNC;
 
@@ -223,10 +223,10 @@ void SpringUnitSyncLib::Load( const wxString& path )
     m_parser_int_key_get_string_value = (lpGetIntKeyStrValPtr)_GetLibFuncPtr(_T("lpGetIntKeyStrVal"));
     m_parser_string_key_get_string_value = (lpGetStrKeyStrValPtr)_GetLibFuncPtr(_T("lpGetStrKeyStrVal"));
 
-
-    if ( m_init ) m_init( true, 1 );
-    else _Unload();
-
+    if ( DoInit )
+    {
+      if ( m_init ) m_init( true, 1 );
+    }
   }
   catch ( ... ) {
     _Unload();
@@ -258,9 +258,9 @@ void SpringUnitSyncLib::_Unload()
 }
 
 
-void SpringUnitSyncLib::Reload()
+void SpringUnitSyncLib::Reload( bool DoInit )
 {
-  Load( m_path );
+  Load( m_path, DoInit );
 }
 
 
@@ -297,6 +297,13 @@ wxArrayString SpringUnitSyncLib::GetUnitsyncErrors()
     msg = WX_STRINGC( m_get_next_error() );
   }
   return ret;
+}
+
+bool SpringUnitSyncLib::Init()
+{
+  InitLib( m_init );
+
+  return m_init( true, 1 );
 }
 
 bool SpringUnitSyncLib::VersionSupports( IUnitSync::GameFeature feature )

@@ -164,7 +164,7 @@ void tab_quality_video::initQualitySizer(wxFlexGridSizer* sizer)
 	// i < 7 without
 	for (int i = 0; i < ctrl_qa_Boxes_size-3; i++) {
 		ctrl_qa_Boxes[i] = new wxCheckBox(this, QA_CBOX[i].id, (QA_CBOX[i].lbl));
-		//ctrl_qa_Boxes[i]->SetValue(configHandler->GetSpringConfigInt(QA_CBOX[i].key,fromString(QA_CBOX[i].def)));
+		//ctrl_qa_Boxes[i]->SetValue(configHandler.GetSpringConfigInt(QA_CBOX[i].key,fromString(QA_CBOX[i].def)));
 		ctrl_qa_Boxes[i]->SetToolTip(QA_CBOX[i].tTip[0]);
 		sizer->Add(ctrl_qa_Boxes[i], 0, wxTOP, (i == 0)? 5: 0);
 	}
@@ -183,7 +183,7 @@ void tab_quality_video::initQualitySizer(wxFlexGridSizer* sizer)
 void tab_quality_video::initAASizer(wxFlexGridSizer* sizer){
 	for (int i = 10; i < ctrl_qa_Boxes_size; i++) {
 		ctrl_qa_Boxes[i] = new wxCheckBox(this, QA_CBOX[i].id, (QA_CBOX[i].lbl));
-		//ctrl_qa_Boxes[i]->SetValue(configHandler->GetSpringConfigInt(QA_CBOX[i].key,fromString(QA_CBOX[i].def)));
+		//ctrl_qa_Boxes[i]->SetValue(configHandler.GetSpringConfigInt(QA_CBOX[i].key,fromString(QA_CBOX[i].def)));
 		ctrl_qa_Boxes[i]->SetToolTip(QA_CBOX[i].tTip[0]);
 		sizer->Add(ctrl_qa_Boxes[i], 0, wxTOP, (i == 10)? 5: 0);
 	}

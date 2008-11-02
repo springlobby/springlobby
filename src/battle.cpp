@@ -68,9 +68,8 @@ Battle::Battle( Server& serv, int id ) :
 }
 
 
-Battle::~Battle() {
-  for (user_map_t::size_type i = 0; i < GetNumUsers(); i++ )
-//    GetUser(i).SetBattle( 0 );
+Battle::~Battle()
+{
   ClearStartRects();
 }
 

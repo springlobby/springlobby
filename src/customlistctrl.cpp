@@ -169,9 +169,6 @@ void CustomListCtrl::OnTimer(wxTimerEvent& event)
 #endif
 }
 
-//TODO http://www.wxwidgets.org/manuals/stable/wx_wxtipwindow.html#wxtipwindowsettipwindowptr
-// must have sth to do with crash on windows
-//if to tootips are displayed
 void CustomListCtrl::OnMouseMotion(wxMouseEvent& event)
 {
 #if wxUSE_TIPWINDOW
@@ -193,7 +190,7 @@ void CustomListCtrl::OnMouseMotion(wxMouseEvent& event)
   }
   else
   {
-    if (m_tiptimer.IsRunning() == true)
+    if ( m_tiptimer.IsRunning() )
     {
       m_tiptimer.Stop();
     }
@@ -324,4 +321,15 @@ void CustomListCtrl::SetHighLightAction( UserActions::ActionType action )
 void CustomListCtrl::MarkDirtySort()
 {
   m_dirty_sort = true;
+}
+
+void CustomListCtrl::CancelTooltipTimer()
+{
+    m_tiptimer.Stop();
+}
+
+bool CustomListCtrl::PopupMenu(wxMenu* menu, const wxPoint& pos )
+{
+    CancelTooltipTimer();
+    return ListBaseType::PopupMenu( menu, pos );
 }

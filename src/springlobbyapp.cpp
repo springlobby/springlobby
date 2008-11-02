@@ -127,12 +127,10 @@ bool SpringLobbyApp::OnInit()
         }
     }
 
+    if ( !sett().IsFirstRun() && ( sett().GetSettingsVersion() < 3 ) ) sett().ConvertOldSpringDirsOptions();
+
     ui().ReloadUnitSync(); /// first time load of unitsync
     ui().ShowMainWindow();
-
-    if ( !sett().IsFirstRun() && sett().IsPortableMode() && usync().IsLoaded()) usync().SetSpringDataPath( sett().GetSpringDir() ); /// update spring's current working dir trough unitsync
-
-    if ( !sett().IsFirstRun() && !wxDirExists( sett().GetSpringDir() ) ) wxMkdir( sett().GetSpringDir() );
 
     if ( sett().IsFirstRun() )
     {
@@ -153,8 +151,7 @@ bool SpringLobbyApp::OnInit()
         wxString sep ( wxFileName::GetPathSeparator() );
         //! ask for downloading ota content if archive not found, start downloader in background
         wxString url= _T("ipxserver.dyndns.org/games/spring/mods/xta/base-ota-content.zip");
-        wxString destFilename = sett().GetSpringDir() + ( sett().GetSpringDir().EndsWith( sep ) ? _T("") : sep )
-                + _T("base") + sep + _T("base-ota-content.zip");
+        wxString destFilename = sett().GetCurrentUsedDataDir() + sep + _T("base") + sep + _T("base-ota-content.zip");
         bool contentExists = false;
         if ( usync().IsLoaded() )
         {
@@ -191,8 +188,6 @@ bool SpringLobbyApp::OnInit()
 //  #ifdef __WXMSW__
 //  if ( sett().GetAutoUpdate() )Updater().CheckForUpdates();
 //  #endif
-
-  sett().SetSettingsVersion(); /// bump settings version number
 
 
   ui().mw().GetReplayTab().AddAllReplays();

@@ -76,7 +76,6 @@ class SpringUnitSync : public IUnitSync
     bool ReloadUnitSyncLib();
 
     void SetSpringDataPath( const wxString& path );
-    wxString GetSpringDataPath();
 
     void GetReplayList(std::vector<wxString> &ret);
 

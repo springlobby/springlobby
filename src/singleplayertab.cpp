@@ -220,6 +220,7 @@ bool SinglePlayerTab::ValidSetup()
                 _("No Bot added"), wxYES_NO) == wxNO )
         return false;
   }
+  return true;
 }
 
 

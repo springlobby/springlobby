@@ -692,7 +692,7 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
     }
     else
     {
-        path = sett().GetSpringDir() + wxFileName::GetPathSeparator();
+        path = sett().GetCurrentUsedSpringBinary() + wxFileName::GetPathSeparator();
         switch (row->type)
         {
         case IUnitSync::map:
@@ -810,7 +810,7 @@ void TorrentWrapper::CreateTorrent( const wxString& hash, const wxString& name, 
     if (ingame) return;
 
 
-    if ( sett().GetSpringDir().IsEmpty() ) return; /// no good things can happend if you don't know which folder to r/w files from
+    if ( sett().GetCurrentUsedDataDir().IsEmpty() ) return; /// no good things can happend if you don't know which folder to r/w files from
 
     libtorrent::torrent_info newtorrent;
 
@@ -839,6 +839,7 @@ void TorrentWrapper::CreateTorrent( const wxString& hash, const wxString& name, 
 
     wxString archivepath = usync().GetArchivePath( archivename );
     int i = archivename.Find( archivepath );
+    wxString path;
     if (i<0)
     {
         path = archivepath + archivename;
@@ -883,7 +884,7 @@ void TorrentWrapper::CreateTorrent( const wxString& hash, const wxString& name, 
 
 bool TorrentWrapper::DownloadTorrentFileFromTracker( const wxString& hash )
 {
-    if ( sett().GetSpringDir().IsEmpty() ) return false; /// no good things can happend if you don't know which folder to r/w files from
+    if ( sett().GetCurrentUsedDataDir().IsEmpty() ) return false; /// no good things can happend if you don't know which folder to r/w files from
 
 #ifdef HAVE_WX26
     wxFileName filename( sett().GetTorrentsFolder() + hash + _T(".torrent") ) ;
