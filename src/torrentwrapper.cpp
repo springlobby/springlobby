@@ -123,14 +123,14 @@ void TorrentTable::RemoveRowHandle( PRow row )
     row->handle= libtorrent::torrent_handle();
 }
 
-void TorrentTable::SetRowStatus( TorrentTable::PRow row, FileStatus status )
+void TorrentTable::SetRowStatus( TorrentTable::PRow row, P2P::FileStatus status )
 {
-    if ( row->status == seeding || row->status == leeching )
+    if ( row->status == P2P::seeding || row->status == P2P::leeching )
     {
-        if ( status != seeding && status != leeching ) RemoveRowHandle( row );
+        if ( status != P2P::seeding && status != P2P::leeching ) RemoveRowHandle( row );
     }
-    if ( row->status == queued && status != queued ) queued_torrents.erase( row );
-    if ( status == queued ) queued_torrents.insert( row );
+    if ( row->status == P2P::queued && status != P2P::queued ) queued_torrents.erase( row );
+    if ( status == P2P::queued ) queued_torrents.insert( row );
     row->status = status;
 }
 
@@ -394,18 +394,18 @@ HashToTorrentData& TorrentWrapper::GetSystemFileList()
 ////////////////////////////////////////////////////////
 
 
-DownloadRequestStatus TorrentWrapper::RequestFileByHash( const wxString& hash )
+TorrentWrapper::DownloadRequestStatus TorrentWrapper::RequestFileByHash( const wxString& hash )
 {
     TorrentTable::PRow row=m_torrent_table.RowByHash(hash);
-    if ( !row.ok() ) return file_not_found;
+    if ( !row.ok() ) return missing_in_table;
     return RequestFileByRow( row );
 }
 
 
-DownloadRequestStatus TorrentWrapper::RequestFileByName( const wxString& name )
+TorrentWrapper::DownloadRequestStatus TorrentWrapper::RequestFileByName( const wxString& name )
 {
     TorrentTable::PRow row=m_torrent_table.RowByName(name);
-    if ( !row.ok() ) return file_not_found;
+    if ( !row.ok() ) return missing_in_table;
     return RequestFileByRow( row );
 }
 
@@ -498,18 +498,18 @@ void TorrentWrapper::ResumeFromList()
 ////////////////////////////////////////////////////////
 
 
-DownloadRequestStatus TorrentWrapper::RequestFileByRow( const TorrentTable::PRow& row )
+TorrentWrapper::DownloadRequestStatus TorrentWrapper::RequestFileByRow( const TorrentTable::PRow& row )
 {
     if (ingame) return paused_ingame;
     if ( !IsConnectedToP2PSystem()  ) return not_connected;
 
     if (!row.ok())return file_not_found;
 
-    if (row->status==leeching||(row->status&stored) || (row->status == queued) ) return duplicate_request;
+    if (row->status==P2P::leeching||(row->status&P2P::stored) || (row->status == P2P::queued) ) return duplicate_request;
 
     if ( m_leech_count > 4 )
     {
-        GetTorrentTable().SetRowStatus( row, queued );
+        GetTorrentTable().SetRowStatus( row, P2P::queued );
         return scheduled_in_cue;
     }
 
@@ -529,11 +529,11 @@ bool TorrentWrapper::RemoveTorrentByRow( const TorrentTable::PRow& row )
         bool filecompleted = row->handle.is_seed();
         m_torr->remove_torrent( row->handle );
 
-        if (row->status==seeding) m_seed_count--;
-        else if (row->status==leeching) m_leech_count--;
+        if (row->status==P2P::seeding) m_seed_count--;
+        else if (row->status==P2P::leeching) m_leech_count--;
 
-        if ( filecompleted ) GetTorrentTable().SetRowStatus( row, stored ); /// fix the file status and automatically remove row handle
-        else GetTorrentTable().SetRowStatus( row, not_stored );
+        if ( filecompleted ) GetTorrentTable().SetRowStatus( row, P2P::stored ); /// fix the file status and automatically remove row handle
+        else GetTorrentTable().SetRowStatus( row, P2P::not_stored );
     }
     catch (std::exception& e)
     {
@@ -550,7 +550,7 @@ std::map<int,TorrentInfos> TorrentWrapper::CollectGuiInfos()
     try
     {
         TorrentInfos globalinfos;
-        globalinfos.downloadstatus = leeching;
+        globalinfos.downloadstatus = P2P::leeching;
         globalinfos.progress = 0.0f;
         globalinfos.downloaded = m_torr->status().total_download;
         globalinfos.uploaded = m_torr->status().total_upload;
@@ -596,7 +596,7 @@ std::map<int,TorrentInfos> TorrentWrapper::CollectGuiInfos()
         TorrentInfos QueuedTorrent;
         QueuedTorrent.numcopies = -1;
         QueuedTorrent.hash = (*it)->hash;
-        QueuedTorrent.downloadstatus = queued;
+        QueuedTorrent.downloadstatus = P2P::queued;
         QueuedTorrent.name=(*it)->name;
         ret[s2l(QueuedTorrent.hash)] = QueuedTorrent;
     }
@@ -619,8 +619,8 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
 
     wxLogMessage(_T("(2) Joining torrent. IsSeed: ") + TowxString(IsSeed) + _T(" status: ") + TowxString(row->status) );
 
-    if ( IsSeed && ( row->status != stored ) ) return false;
-    if ( !IsSeed && ( row->status != queued ) && ( row->status != not_stored ) ) return false;
+    if ( IsSeed && ( row->status != P2P::stored ) ) return false;
+    if ( !IsSeed && ( row->status != P2P::queued ) && ( row->status != P2P::not_stored ) ) return false;
 
     wxString torrent_name=row->name;
     wxString torrent_infohash_b64=row->infohash;
@@ -793,12 +793,12 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
 
     if ( IsSeed )
     {
-        GetTorrentTable().SetRowStatus( row, seeding );
+        GetTorrentTable().SetRowStatus( row, P2P::seeding );
         m_seed_count++;
     }
     else
     {
-        GetTorrentTable().SetRowStatus( row, leeching );
+        GetTorrentTable().SetRowStatus( row, P2P::leeching );
         m_leech_count++;
     }
 
@@ -934,7 +934,7 @@ void TorrentWrapper::JoinRequestedTorrents()
 
         if ( m_seed_count > 9 ) break; /// too many seeds open
 
-        if ( (*it)->status != stored ) continue; /// torrent must be present locally and not seeding/leeching
+        if ( (*it)->status != P2P::stored ) continue; /// torrent must be present locally and not seeding/leeching
 
         JoinTorrent( *it, true );
 
@@ -950,7 +950,7 @@ void TorrentWrapper::RemoveUnneededTorrents()
         if ( !it->first.is_seed() ) continue;
 
 
-        if ( it->second->status == leeching ) /// if torrent was opened in leech mode but now it's seeding it means it was requested from the user but now it's completed
+        if ( it->second->status == P2P::leeching ) /// if torrent was opened in leech mode but now it's seeding it means it was requested from the user but now it's completed
         {
             ///torrent has finished download, refresh unitsync and remove file from list
             try
@@ -1018,12 +1018,12 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
         if ( data[3] == _T("MAP") )
         {
             newtorrent->type = IUnitSync::map;
-            if ( usync().MapExists( data[2], data[1] ) ) newtorrent->status = stored;
+            if ( usync().MapExists( data[2], data[1] ) ) newtorrent->status = P2P::stored;
         }
         else if ( data[3] == _T("MOD") )
         {
             newtorrent->type = IUnitSync::mod;
-            if ( usync().ModExists( data[2], data[1] ) ) newtorrent->status = stored;
+            if ( usync().ModExists( data[2], data[1] ) ) newtorrent->status = P2P::stored;
         }
 
         GetTorrentTable().InsertRow( newtorrent );

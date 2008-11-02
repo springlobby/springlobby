@@ -338,7 +338,7 @@ void ReplayTab::OnWatch( wxCommandEvent& event )
                 #ifdef NO_TORRENT_SYSTEM
                     wxString downloadProc = _("Do you want me to take you to the download page?");
                 #else
-                    wxString downloadProc = _("Should i try to downlaod it for you?\nYou can see the progress in the \"Download Manager\" tab.");
+                    wxString downloadProc = _("Should i try to download it for you?\nYou can see the progress in the \"Download Manager\" tab.");
                 #endif
 
                 OfflineBattle& battle = rep.battle;
