@@ -9,7 +9,6 @@
 #include <wx/intl.h>
 #include <wx/utils.h>
 
-#include "spring.h"
 #include "ui.h"
 #include "tasserver.h"
 #include "settings.h"
@@ -41,11 +40,11 @@
 #include "settings++/custom_dialogs.h"
 
 #include "sdlsound.h"
-
+#include "globalsmanager.h"
 
 Ui& ui()
 {
-    static Ui m_ui;
+    static GlobalObjectHolder<Ui> m_ui;
     return m_ui;
 }
 
@@ -195,7 +194,7 @@ void Ui::DoConnect( const wxString& servername, const wxString& username, const 
     Disconnect();
 
     // Create new Server object
-    m_serv = new TASServer( *this );
+    m_serv = new TASServer( );
     sock = new Socket( *m_serv );
     m_serv->SetSocket( sock );
     //m_serv->SetServerEvents( &se() );
@@ -238,7 +237,7 @@ bool Ui::DoRegister( const wxString& servername, const wxString& username, const
     }
 
     // Create new Server object
-    TASServer* serv = new TASServer( *this );
+    TASServer* serv = new TASServer( );
     Socket* sock = new Socket( *serv, true );
     serv->SetSocket( sock );
 
@@ -310,8 +309,7 @@ void Ui::ReloadUnitSync()
 void Ui::DownloadMap( const wxString& hash, const wxString& name )
 {
 #ifndef NO_TORRENT_SYSTEM
-    if ( !hash.IsEmpty() ) torrent().RequestFileByHash( hash );
-    else if ( !name.IsEmpty() ) torrent().RequestFileByName( name );
+    DownloadFileP2P( hash, name );
 #else
     wxString url = _T("http://spring.jobjol.nl/search.php");
     OpenWebBrowser ( url );
@@ -322,11 +320,37 @@ void Ui::DownloadMap( const wxString& hash, const wxString& name )
 void Ui::DownloadMod( const wxString& hash, const wxString& name )
 {
 #ifndef NO_TORRENT_SYSTEM
-    if ( !hash.IsEmpty() ) torrent().RequestFileByHash( hash );
-    else if ( !name.IsEmpty() ) torrent().RequestFileByName( name );
+    DownloadFileP2P( hash, name );
 #else
     wxString url = _T("http://spring.jobjol.nl/search.php");
     OpenWebBrowser ( url );
+#endif
+}
+
+void Ui::DownloadFileP2P( const wxString& hash, const wxString& name )
+{
+#ifndef NO_TORRENT_SYSTEM
+    if ( !torrent().IsConnectedToP2PSystem() ){
+        wxArrayString hashesToResume = sett().GetTorrentListToResume();
+        hashesToResume.Add( hash );
+        sett().SetTorrentListToResume( hashesToResume );
+        torrent().ConnectToP2PSystem();
+    }
+    else {
+
+    //we need a way to have the request happen only after connect is complete
+        TorrentWrapper::DownloadRequestStatus status;
+        if ( !hash.IsEmpty() ) {
+             status = torrent().RequestFileByHash( hash );
+        }
+        else if ( !name.IsEmpty() )
+            status = torrent().RequestFileByName( name );
+
+//!TODO: put some meaningful err msg here
+//        if ( status != TorrentWrapper::success ){
+//            customMessageBoxNoModal( SL_MAIN_ICON, _(""), _("") );
+//        }
+    }
 #endif
 }
 
@@ -556,7 +580,7 @@ void Ui::OnUpdate( int mselapsed )
     {
         if ( sett().GetTorrentSystemAutoStartMode() == 1 && !torrent().IsConnectedToP2PSystem() ) torrent().ConnectToP2PSystem();
         else if ( GetServerStatus() && m_serv->IsOnline() && !torrent().IsConnectedToP2PSystem() && sett().GetTorrentSystemAutoStartMode() == 0 ) torrent().ConnectToP2PSystem();
-        if ( ( !GetServerStatus() || !m_serv->IsOnline() ) && torrent().IsConnectedToP2PSystem() && sett().GetTorrentSystemAutoStartMode() == 0 ) torrent().DisconnectToP2PSystem();
+        if ( ( !GetServerStatus() || !m_serv->IsOnline() ) && torrent().IsConnectedToP2PSystem() && sett().GetTorrentSystemAutoStartMode() == 0 ) torrent().DisconnectFromP2PSystem();
         mw().GetTorrentTab().OnUpdate();
     }
     torrent().UpdateFromTimer( mselapsed );
@@ -571,38 +595,47 @@ void Ui::OnUpdate( int mselapsed )
 void Ui::OnConnected( Server& server, const wxString& server_name, const wxString& server_ver, bool supported )
 {
     wxLogDebugFunc( _T("") );
+    IsSpringCompatible();
 
-    if ( !IsSpringCompatible () )
-    {
-        if ( m_spring->TestSpringBinary() )
-        {
-            wxString message = _("Your spring version");
-            message += _T(" (") + usync().GetSpringVersion() + _T(") ");
-            message +=  _("is not supported by the lobby server that requires version");
-            message += _T(" (") +  m_serv->GetRequiredSpring() + _T(").\n\n");
-            message += _("Online play will be disabled.");
-            wxLogWarning ( _T("server not supports current spring version") );
-            customMessageBox (SL_MAIN_ICON, message, _("Spring error"), wxICON_EXCLAMATION|wxOK );
-        }
-        else
-        {
-            wxLogWarning( _T("can't get spring version from unitsync") );
-            customMessageBox(SL_MAIN_ICON,  _("Couldn't get your spring version from the unitsync library.\n\nOnline play will be disabled."), _("Spring error"), wxICON_EXCLAMATION|wxOK );
-        }
-    }
     if ( server.uidata.panel ) server.uidata.panel->StatusMessage( _T("Connected to ") + server_name + _T(".") );
     mw().GetJoinTab().OnConnected();
 
 }
 
 
-bool Ui::IsSpringCompatible( )
+bool Ui::IsSpringCompatible()
 {
     if ( sett().GetDisableSpringVersionCheck() ) return true;
-    if ( !m_spring->TestSpringBinary() ) return false;
-    if ( m_serv->GetRequiredSpring() == _T("*") ) return true; // Server accepts any version.
-    if ( (usync().GetSpringVersion() == m_serv->GetRequiredSpring() ) && !m_serv->GetRequiredSpring().IsEmpty() ) return true;
-    else return false;
+    wxString neededversion = m_serv->GetRequiredSpring();
+    if ( neededversion == _T("*") ) return true; // Server accepts any version.
+    else if ( neededversion.IsEmpty() ) return false;
+    std::map<wxString, wxString> versionlist = sett().GetSpringVersionList();
+    if ( versionlist.size() == 0 )
+    {
+      wxLogWarning( _T("can't get spring version from any unitsync") );
+      customMessageBoxNoModal(SL_MAIN_ICON,  _("Couldn't get your spring versions from any unitsync library.\n\nOnline play is currently disabled."), _("Spring error"), wxICON_EXCLAMATION|wxOK );
+      return false;
+    }
+    for ( std::map<wxString, wxString>::iterator itor = versionlist.begin(); itor != versionlist.end(); itor++ )
+    {
+      if ( itor->second == neededversion )
+      {
+        if ( sett().GetCurrentUsedSpringIndex() != itor->first )
+        {
+          wxLogMessage(_T("server enforce usage of version: %s, switching to profile: %s"), neededversion.c_str(), itor->first.c_str() );
+          sett().SetUsedSpringIndex( itor->first );
+          ReloadUnitSync();
+        }
+        return true;
+      }
+    }
+    wxString message = wxString::Format( _("No compatible installed spring version has been found, this server requires version: %s\n"), neededversion.c_str() );
+    message << _("Your current installed versions are:");
+    for ( std::map<wxString, wxString>::iterator itor = versionlist.begin(); itor != versionlist.end(); itor++ ) message << _T(" ") << itor->second;
+    message << _T("\n") << _("Online play is currently disabled.");
+    customMessageBoxNoModal (SL_MAIN_ICON, message, _("Spring error"), wxICON_EXCLAMATION|wxOK );
+    wxLogWarning ( _T("no spring version supported by the server found") );
+    return false; /// no compatible version found
 }
 
 
@@ -624,7 +657,6 @@ void Ui::OnDisconnected( Server& server )
         return;
     }
 
-    mw().GetJoinTab().GetBattleListTab().SetFilterActiv( false );
     mw().GetJoinTab().LeaveCurrentBattle();
     mw().GetJoinTab().GetBattleListTab().RemoveAllBattles();
 
@@ -954,11 +986,11 @@ void Ui::OnJoinedBattle( Battle& battle )
 {
     if ( m_main_win == 0 ) return;
     mw().GetJoinTab().JoinBattle( battle );
-    if ( !Spring::TestSpringBinary() )
+    if ( !usync().IsLoaded() )
     {
         customMessageBox(SL_MAIN_ICON, _("Your spring settings are probably not configured correctly,\nyou should take another look at your settings before trying\nto play online."), _("Spring settings error"), wxOK );
     }
-    if ( battle.GetNatType() != NAT_None )
+    if ( battle.GetNatType() != IBattle::NAT_None )
     {
         wxLogWarning( _T("joining game with NAT transversal") );
 #ifdef HAVE_WX26
@@ -1008,6 +1040,11 @@ void Ui::OnBattleStarted( Battle& battle )
             battle.SendMyBattleStatus();
             battle.GetMe().Status().in_game = true;
             battle.GetMe().SendMyUserStatus();
+            if( battle.IsFounderMe() && battle.GetAutoLockOnStart() )
+            {
+              battle.SetIsLocked( true );
+              battle.SendHostInfo( IBattle::HI_Locked );
+            }
             OnSpringStarting();
             m_spring->Run( battle );
         }
@@ -1060,6 +1097,16 @@ void Ui::OnSpringTerminated( bool success )
 
     m_serv->GetMe().Status().in_game = false;
     m_serv->GetMe().SendMyUserStatus();
+    try
+    {
+    Battle *battle = m_serv->GetCurrentBattle();
+    if ( !battle ) return;
+    if( battle->IsFounderMe() && battle->GetAutoLockOnStart() )
+    {
+      battle->SetIsLocked( false );
+      battle->SendHostInfo( IBattle::HI_Locked );
+    }
+    } catch ( assert_exception ){}
 }
 
 

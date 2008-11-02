@@ -6,6 +6,7 @@
 #include <wx/tokenzr.h>
 #include <wx/intl.h>
 #include <wx/filefn.h>
+#include <wx/log.h>
 
 #include "replaylist.h"
 #include <sstream>
@@ -240,16 +241,16 @@ void ReplayList::GetBattleFromScript( const wxString& script_, OfflineBattle& ba
 void ReplayList::LoadMMOpts( const wxString& sectionname, OfflineBattle& battle, const PDataList& node )
 {
     PDataList section ( node->Find(sectionname) );
-    mmOptionsWrapper& opts = battle.CustomBattleOptions();
+    OptionsWrapper& opts = battle.CustomBattleOptions();
     for ( PNode n = section->First(); n != section->Last(); n = section->Next( n ) )
         opts.setSingleOption( n->Name(), section->GetString( n->Name() ) );
 }
 
 void ReplayList::LoadMMOpts( OfflineBattle& battle, const PDataList& node )
 {
-    mmOptionsWrapper& opts = battle.CustomBattleOptions();
+    OptionsWrapper& opts = battle.CustomBattleOptions();
     typedef std::map<wxString,wxString> optMap;
-    optMap options = opts.getOptionsMap(EngineOption);
+    optMap options = opts.getOptionsMap(OptionsWrapper::EngineOption);
     for ( optMap::const_iterator i = options.begin(); i != options.end(); ++i)
         opts.setSingleOption( i->first, node->GetString( i->first, i->second ) );
 }

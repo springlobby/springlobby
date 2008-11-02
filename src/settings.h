@@ -2,42 +2,52 @@
 #define SPRINGLOBBY_HEADERGUARD_SETTINGS_H
 
 #include <wx/string.h>
-#include <wx/colour.h>
 
-#define CACHE_VERSION 7
-#define SETTINGS_VERSION 2
+const int CACHE_VERSION     = 7;
+const int SETTINGS_VERSION  = 3;
 
-#define DEFSETT_DEFAULT_SERVER "TAS Server"
-#define DEFSETT_DEFAULT_SERVER_HOST "taspringmaster.clan-sy.com"
-#define DEFSETT_DEFAULT_SERVER_PORT 8200
-#define DEFSETT_SAVE_PASSWORD false
-#define DEFSETT_MW_WIDTH 880
-#define DEFSETT_MW_HEIGHT 600
-#define DEFSETT_MW_TOP 50
-#define DEFSETT_MW_LEFT 50
-#define DEFSETT_SPRING_DIR wxGetCwd()
-#define DEFSETT_SPRING_PORT 8452
+const wxString DEFSETT_DEFAULT_SERVER = _T("TAS Server");
+const wxString DEFSETT_DEFAULT_SERVER_HOST = _T("taspringmaster.clan-sy.com");
+const int DEFSETT_DEFAULT_SERVER_PORT = 8200;
+const bool DEFSETT_SAVE_PASSWORD = false;
+const unsigned int DEFSETT_MW_WIDTH = 880;
+const unsigned int DEFSETT_MW_HEIGHT = 600;
+const unsigned int DEFSETT_MW_TOP = 50;
+const unsigned int DEFSETT_MW_LEFT = 50;
+const unsigned int DEFSETT_SPRING_PORT = 8452;
+
+const unsigned int SET_MODE_EXPERT = 5000;
+const unsigned int SET_MODE_SIMPLE = 5001;
+const unsigned int DEFSETT_SW_WIDTH = 770;
+const unsigned int DEFSETT_SW_HEIGHT = 580;
+const unsigned int DEFSETT_SW_TOP = 50;
+const unsigned int DEFSETT_SW_LEFT = 50;
+
+//doing this "properly" would mean dragging in stdpaths header, doesn't seem warranted (koshi)
+#define DEFSETT_SPRING_DIR  wxGetCwd()
 
 /** Default value for config path /General/WebBrowserUseDefault.
  */
-#define DEFSETT_WEB_BROWSER_USE_DEFAULT true
+const bool DEFSETT_WEB_BROWSER_USE_DEFAULT = true;
 
 #include <wx/fileconf.h>
 #include "utils.h"
 #include "useractions.h"
-#include <wx/wfstream.h>
+
 
 class wxConfigBase;
 class wxFont;
 struct BattleListFilterValues;
 struct ReplayListFilterValues;
 class wxFileInputStream;
+class wxColor;
+class wxColour;
 struct wxColourData;
 
-class myconf : public wxFileConfig
+class SL_WinConf : public wxFileConfig
 {
     public:
-    myconf (const wxString& appName, const wxString& vendorName,
+    SL_WinConf (const wxString& appName, const wxString& vendorName,
                            const wxString& strLocal, const wxString& strGlobal,
                            long style,
                            const wxMBConv& conv)
@@ -49,7 +59,7 @@ class myconf : public wxFileConfig
 
     }
 
-    myconf(wxFileInputStream& in) : wxFileConfig(in) {}
+    SL_WinConf(wxFileInputStream& in);
 
 //    int Read(const wxString& key, int def)
 //    {
@@ -86,6 +96,7 @@ class Settings
     ~Settings();
 
     bool IsPortableMode();
+    void SetPortableMode( bool mode );
 
     /** Initialize all settings to default.
      */
@@ -334,22 +345,29 @@ class Settings
     /** @name Spring locations
      * @{
      */
-    wxString GetSpringDir();
-    void   SetSpringDir( const wxString& pring_dir );
 
-    bool   GetUnitSyncUseDefLoc();
-    void   SetUnitSyncUseDefLoc( const bool usedefloc );
-    wxString GetUnitSyncLoc();
-    void   SetUnitSyncLoc( const wxString& loc );
-    wxString GetUnitSyncUsedLoc( bool force = false, bool defloc = false );
+    void ConvertOldSpringDirsOptions();
 
-    bool   GetSpringUseDefLoc();
-    void   SetSpringUseDefLoc( const bool usedefloc );
-    wxString GetSpringLoc();
-    void   SetSpringLoc( const wxString& loc );
-    wxString GetSpringUsedLoc( bool force = false, bool defloc = false );
+    std::map<wxString, wxString> GetSpringVersionList(); /// index -> version
+    wxString GetCurrentUsedSpringIndex();
+    void SetUsedSpringIndex( const wxString& index );
+    void DeleteSpringVersionbyIndex( const wxString& index );
+
+    /// convenience wrappers to get current used version paths
+    wxString GetCurrentUsedDataDir();
+    wxString GetCurrentUsedUnitSync();
+    wxString GetCurrentUsedSpringBinary();
+
+    wxString GetUnitSync( const wxString& index );
+    wxString GetSpringBinary( const wxString& index );
+
+    void SetUnitSync( const wxString& index, const wxString& path );
+    void SetSpringBinary( const wxString& index, const wxString& path );
+
+    wxString AutoFindSpringBin();
+    wxString AutoFindUnitSync();
+
     /*@}*/
-
 
     /* ================================================================ */
     /** @name Chat
@@ -428,6 +446,7 @@ class Settings
     wxString GetLastHostMap();
     int GetLastRankLimit();
     bool GetTestHostPort();
+    bool GetLastAutolockStatus();
 
     void SetLastHostDescription( const wxString& value );
     void SetLastHostMod( const wxString& value );
@@ -438,6 +457,7 @@ class Settings
     void SetLastHostMap( const wxString& value );
     void SetLastRankLimit( int rank );
     void SetTestHostPort( bool value );
+    void SetLastAutolockStatus( bool value );
 
     void SetHostingPreset( const wxString& name, int optiontype, std::map<wxString,wxString> options );
     std::map<wxString,wxString> GetHostingPreset( const wxString& name, int optiontype );
@@ -521,12 +541,53 @@ class Settings
     wxString GetTorrentsFolder();
     /**@}*/
 
+    /** @name Aui
+     * @{
+     */
     void SaveLayout( wxString& layout_name, wxString& layout_string );
     wxString GetLayout( wxString& layout_name );
+    /**@}*/
+
+    enum CompletionMethod {
+        MatchNearest = 1,
+        MatchExact = 2
+    };
+
+    void SetCompletionMethod( CompletionMethod method );
+    CompletionMethod GetCompletionMethod(  ) const;
+
+    /** @name SpringSettings
+     * @{
+     */
+    int getMode();
+    void setMode( int );
+    bool getDisableWarning();
+    void setDisableWarning( bool );
+    wxString getSimpleRes();
+    void setSimpleRes( wxString );
+    wxString getSimpleQuality();
+    void setSimpleQuality( wxString );
+    wxString getSimpleDetail();
+    void setSimpleDetail( wxString );
+
+    int    GetSettingsWindowWidth();
+    void   SetSettingsWindowWidth( const int value );
+
+    int    GetSettingsWindowHeight();
+    void   SetSettingsWindowHeight( const int value );
+
+    int    GetSettingsWindowTop();
+    void   SetSettingsWindowTop( const int value );
+
+    int    GetSettingsWindowLeft();
+    void   SetSettingsWindowLeft( const int value );
+  /**@}*/
 
   protected:
+    bool IsSpringBin( const wxString& path );
+
     #ifdef __WXMSW__
-    myconf* m_config; //!< wxConfig object to store and restore  all settings in.
+    SL_WinConf* m_config; //!< wxConfig object to store and restore  all settings in.
     #else
     wxConfigBase* m_config; //!< wxConfig object to store and restore  all settings in.
     #endif

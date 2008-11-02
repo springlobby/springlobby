@@ -1,6 +1,8 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_AGREEMENTDIALOG_H
 #define SPRINGLOBBY_HEADERGUARD_AGREEMENTDIALOG_H
 
+#include <wx/dialog.h>
+
 class wxTextCtrl;
 class wxStaticText;
 class wxStaticLine;
@@ -23,14 +25,13 @@ class AgreementDialog : public wxDialog
     wxButton* m_yes_btn;
     wxButton* m_no_btn;
 
+    enum {
+        AGREE_YES = wxID_HIGHEST,
+        AGREE_NO,
+    };
+
     DECLARE_EVENT_TABLE()
 
-};
-
-enum
-{
-    AGREE_YES = wxID_HIGHEST,
-    AGREE_NO,
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_AGREEMENTDIALOG_H

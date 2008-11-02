@@ -9,31 +9,6 @@
 
 class wxImage;
 
-typedef std::map<wxString,mmOptionBool> optionMapBool;
-typedef std::map<wxString,mmOptionFloat> optionMapFloat;
-typedef std::map<wxString,mmOptionString> optionMapString;
-typedef std::map<wxString,mmOptionList> optionMapList;
-typedef std::map<wxString,mmOptionInt> optionMapInt;
-
-typedef std::map<wxString,mmOptionBool>::iterator optionMapBoolIter;
-typedef std::map<wxString,mmOptionFloat>::iterator optionMapFloatIter;
-typedef std::map<wxString,mmOptionString>::iterator optionMapStringIter;
-typedef std::map<wxString,mmOptionList>::iterator optionMapListIter;
-typedef std::map<wxString,mmOptionInt>::iterator optionMapIntIter;
-
-typedef std::map<wxString,mmOptionBool>::const_iterator optionMapBoolConstIter;
-typedef std::map<wxString,mmOptionFloat>::const_iterator optionMapFloatConstIter;
-typedef std::map<wxString,mmOptionString>::const_iterator optionMapStringConstIter;
-typedef std::map<wxString,mmOptionList>::const_iterator optionMapListConstIter;
-typedef std::map<wxString,mmOptionInt>::const_iterator optionMapIntConstIter;
-
-
-enum MediaType
-{
-  map,
-  mod
-};
-
 struct UnitSyncMod
 {
   UnitSyncMod() : name(_T("")),hash(_T("")) { }
@@ -73,20 +48,7 @@ struct UnitSyncMap
   MapInfo info;
 };
 
-enum GameFeature {
-  GF_XYStartPos = 1,
-  USYNC_Sett_Handler = 2,
-  USYNC_GetInfoMap = 3
-};
-
-struct GameOptions
-{
-  optionMapBool bool_map;
-  optionMapFloat float_map;
-  optionMapString string_map;
-  optionMapList list_map;
-  optionMapInt int_map;
-};
+struct GameOptions;
 
  /** UnitSync interface definition.
  */
@@ -94,6 +56,37 @@ class IUnitSync
 {
   public:
     virtual ~IUnitSync() { }
+
+    enum GameFeature
+    {
+      USYNC_Sett_Handler,
+      USYNC_GetInfoMap,
+      USYNC_GetDataDir
+    };
+
+    enum MediaType
+    {
+      map,
+      mod
+    };
+
+    typedef std::map<wxString,mmOptionBool> OptionMapBool;
+    typedef std::map<wxString,mmOptionFloat> OptionMapFloat;
+    typedef std::map<wxString,mmOptionString> OptionMapString;
+    typedef std::map<wxString,mmOptionList> OptionMapList;
+    typedef std::map<wxString,mmOptionInt> OptionMapInt;
+
+    typedef std::map<wxString,mmOptionBool>::iterator OptionMapBoolIter;
+    typedef std::map<wxString,mmOptionFloat>::iterator OptionMapFloatIter;
+    typedef std::map<wxString,mmOptionString>::iterator OptionMapStringIter;
+    typedef std::map<wxString,mmOptionList>::iterator OptionMapListIter;
+    typedef std::map<wxString,mmOptionInt>::iterator OptionMapIntIter;
+
+    typedef std::map<wxString,mmOptionBool>::const_iterator OptionMapBoolConstIter;
+    typedef std::map<wxString,mmOptionFloat>::const_iterator OptionMapFloatConstIter;
+    typedef std::map<wxString,mmOptionString>::const_iterator OptionMapStringConstIter;
+    typedef std::map<wxString,mmOptionList>::const_iterator OptionMapListConstIter;
+    typedef std::map<wxString,mmOptionInt>::const_iterator OptionMapIntConstIter;
 
     /** @name Mods
      *@{
@@ -153,7 +146,9 @@ class IUnitSync
     virtual GameOptions GetMapOptions( const wxString& name ) = 0;
 
     virtual int GetMapIndex( const wxString& name ) = 0;
+    virtual wxImage GetMinimap( const wxString& mapname ) = 0;
     virtual wxImage GetMinimap( const wxString& mapname, int width, int height ) = 0;
+    virtual wxImage GetMetalmap( const wxString& mapname ) = 0;
     virtual wxImage GetMetalmap( const wxString& mapname, int width, int height ) = 0;
 
     virtual int GetSideCount( const wxString& modname ) = 0;
@@ -163,7 +158,7 @@ class IUnitSync
     virtual int GetNumUnits( const wxString& modname ) = 0;
     virtual wxArrayString GetUnitsList( const wxString& modname ) = 0;
 
-    virtual bool LoadUnitSyncLib( const wxString& springdir, const wxString& unitsyncloc ) = 0;
+    virtual bool LoadUnitSyncLib( const wxString& unitsyncloc ) = 0;
     virtual void FreeUnitSyncLib() = 0;
 
     virtual bool IsLoaded() = 0;
@@ -178,7 +173,6 @@ class IUnitSync
     virtual void GetReplayList(std::vector<wxString> &ret) = 0;
 
     virtual void SetSpringDataPath( const wxString& path ) = 0;
-    virtual wxString GetSpringDataPath() = 0;
 
     virtual bool FileExists( const wxString& name ) = 0;
 
@@ -186,5 +180,14 @@ class IUnitSync
 };
 
 IUnitSync& usync();
+
+struct GameOptions
+{
+  IUnitSync::OptionMapBool bool_map;
+  IUnitSync::OptionMapFloat float_map;
+  IUnitSync::OptionMapString string_map;
+  IUnitSync::OptionMapList list_map;
+  IUnitSync::OptionMapInt int_map;
+};
 
 #endif // SPRINGLOBBY_HEADERGUARD_IUNITSYNC_H

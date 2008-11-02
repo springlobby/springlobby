@@ -6,26 +6,23 @@
 
 class Server;
 
-enum RankContainer
-{
-  RANK_UNKNOWN,
-  RANK_1,
-  RANK_2,
-  RANK_3,
-  RANK_4,
-  RANK_5,
-  RANK_6,
-  RANK_7
-};
-
-
-
-#define SYNC_UNKNOWN 0
-#define SYNC_SYNCED 1
-#define SYNC_UNSYNCED 2
+const unsigned int SYNC_UNKNOWN = 0;
+const unsigned int SYNC_SYNCED = 1;
+const unsigned int SYNC_UNSYNCED = 2;
 
 //! @brief Struct used to store a client's status.
 struct UserStatus {
+    enum RankContainer {
+      RANK_UNKNOWN,
+      RANK_1,
+      RANK_2,
+      RANK_3,
+      RANK_4,
+      RANK_5,
+      RANK_6,
+      RANK_7
+    };
+
   bool in_game;
   bool away;
   RankContainer rank;
@@ -140,7 +137,7 @@ class User : public CommonUser
 
     bool ExecuteSayCommand( const wxString& cmd );
 
-    static wxString GetRankName(RankContainer rank);
+    static wxString GetRankName(UserStatus::RankContainer rank);
 
     float GetBalanceRank();
 

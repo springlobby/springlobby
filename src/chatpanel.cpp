@@ -18,6 +18,7 @@
 #include <wx/tokenzr.h>
 #include <wx/msgdlg.h>
 #include <wx/menu.h>
+#include <wx/log.h>
 #include <wx/utils.h>
 #include <wx/event.h>
 #include <wx/app.h>
@@ -27,7 +28,7 @@
 #endif
 
 #ifndef HAVE_WX26
-#include "auimanager.h"
+#include "aui/auimanager.h"
 #include <wx/imaglist.h>
 #else
 #include <wx/notebook.h>
@@ -981,6 +982,7 @@ void ChatPanel::SetServer( Server* serv )
 {
 	ASSERT_LOGIC( m_type == CPT_Server, _T( "Not of type server" ) );
 	if (( serv == 0 ) && ( m_server != 0 ) ){
+	  StatusMessage( _( "Chat closed." ) );
 	  m_server->uidata.panel = 0;
 	}
 	else if ( serv != 0 ){
@@ -1007,7 +1009,11 @@ void ChatPanel::SetUser( User* usr )
 {
 	ASSERT_LOGIC( m_type == CPT_User, _T( "Not of type user" ) );
 
-	if (( usr == 0 ) && ( m_user != 0 ) ) m_user->uidata.panel = 0;
+	if (( usr == 0 ) && ( m_user != 0 ) )
+	{
+	  StatusMessage( _( "Chat closed." ) );
+	  m_user->uidata.panel = 0;
+	}
 	else if ( usr != 0 ) usr->uidata.panel = this;
 
 	m_user = usr;
@@ -1765,7 +1771,7 @@ void ChatPanel::SetIconHighlight( HighlightType highlight )
           {
             if ( m_type == CPT_Channel && m_icon_index < 4 )
             {
-               m_icon_index = 6;
+               m_icon_index = 4;
                #ifdef HAVE_WX26
                m_chat_tabs->SetPageImage( i, m_icon_index );
                #else
@@ -1774,7 +1780,7 @@ void ChatPanel::SetIconHighlight( HighlightType highlight )
             }
             else if ( m_type == CPT_User && m_icon_index < 5 )
             {
-               m_icon_index = 7;
+               m_icon_index = 5;
                #ifdef HAVE_WX26
                m_chat_tabs->SetPageImage( i, m_icon_index );
                #else
@@ -1787,7 +1793,7 @@ void ChatPanel::SetIconHighlight( HighlightType highlight )
           {
             if ( m_type == CPT_Channel && m_icon_index < 8 )
             {
-               m_icon_index = 6;
+               m_icon_index = 8;
                #ifdef HAVE_WX26
                m_chat_tabs->SetPageImage( i, m_icon_index );
                #else
@@ -1796,7 +1802,7 @@ void ChatPanel::SetIconHighlight( HighlightType highlight )
             }
             else if ( m_type == CPT_User && m_icon_index < 9 )
             {
-               m_icon_index = 7;
+               m_icon_index = 9;
                #ifdef HAVE_WX26
                m_chat_tabs->SetPageImage( i, m_icon_index );
                #else

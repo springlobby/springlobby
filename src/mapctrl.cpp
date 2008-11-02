@@ -7,6 +7,7 @@
 #include <wx/intl.h>
 #include <cmath>
 #include <stdexcept>
+#include <wx/log.h>
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -46,6 +47,43 @@
     #define CONTAINS Inside
 #endif
 
+//typedef int RectArea;
+const int RA_Main               = -1;
+const int RA_UpLeft             = 0;
+const int RA_UpRight            = 1;
+const int RA_DownRight          = 2;
+const int RA_DownLeft           = 3;
+const int RA_UpAllyButton       = 4;
+const int RA_DownAllyButton     = 5;
+const int RA_Side               = 6;
+const int RA_UpHandicapButton   = 7;
+const int RA_DownHandicapButton = 8;
+const int RA_Handicap           = 9;
+const int RA_Close              = 10;
+const int RA_Move               = 11;
+const int RA_Download           = 12;
+const int RA_Refresh            = 13;
+
+
+//typedef int MouseAction;
+const int MA_None               = 0;
+const int MA_Add                = 1;
+const int MA_Delete             = 2;
+const int MA_Move               = 3;
+const int MA_ResizeUpLeft       = 4;
+const int MA_ResizeUpRight      = 5;
+const int MA_ResizeDownLeft     = 6;
+const int MA_ResizeDownRight    = 7;
+
+
+//typedef int BotRectOrient;
+const int BRO_TopLeft           = 0;
+const int BRO_BottomLeft        = 1;
+const int BRO_TopRight          = 2;
+const int BRO_BottomRight       = 3;
+
+
+
 BEGIN_EVENT_TABLE( MapCtrl, wxPanel )
   EVT_PAINT( MapCtrl::OnPaint )
   EVT_SIZE( MapCtrl::OnResize )
@@ -57,6 +95,16 @@ END_EVENT_TABLE()
 
 const int boxsize = 8;
 const int minboxsize = 40;
+
+static inline void WriteInt24(unsigned char* p, int i) {
+	p[0] = i & 0xFF;
+	p[1] = (i >> 8) & 0xFF;
+	p[2] = (i >> 16) & 0xFF;
+}
+
+static inline int ReadInt24(const unsigned char* p) {
+	return p[0] | (p[1] << 8) | (p[2] << 16);
+}
 
 MapCtrl::MapCtrl( wxWindow* parent, int size, IBattle* battle, Ui& ui, bool readonly, bool fixed_size, bool draw_start_types, bool singleplayer ):
   wxPanel( parent, -1, wxDefaultPosition, wxSize(size, size), wxSIMPLE_BORDER|wxFULL_REPAINT_ON_RESIZE ),
@@ -136,7 +184,7 @@ wxRect MapCtrl::GetMinimapRect()
 
 wxRect MapCtrl::GetStartRect( int index )
 {
-  ASSERT_LOGIC( BattleType() != BT_Multi, _T("MapCtrl::GetStartRect(): Battle type is not BT_Multi") );
+  ASSERT_LOGIC( IBattle::BattleType() != IBattle::BT_Multi, _T("MapCtrl::GetStartRect(): Battle type is not BT_Multi") );
   BattleStartRect sr = m_battle->GetStartRect( index );
   if ( !sr.IsOk() ) return wxRect();
   return GetStartRect( sr );
@@ -155,6 +203,73 @@ wxRect MapCtrl::GetStartRect( const BattleStartRect& sr )
   y2 = int( (mr.y + sr.bottom * mr.height / 200.0) + 0.5 );
 
   return wxRect( x1, y1, x2-x1, y2-y1 );
+}
+
+
+void MapCtrl::Accumulate( wxImage& image )
+{
+	if (!image.IsOk()) return;
+
+	const int w = image.GetWidth();
+	const int h = image.GetHeight();
+	unsigned char* data = image.GetData();
+
+	// sum in vertical direction
+	unsigned char* p = data;
+	for (int x = 0; x < w; ++x, p += 3) {
+		WriteInt24(p, p[0] + p[1] + p[2]);
+	}
+	for (int y = 1; y < h; ++y) {
+		const unsigned char* prev = data + 3*((y-1)*w);
+		unsigned char* curr = data + 3*(y*w);
+		for (int x = 0; x < w; ++x, prev += 3, curr += 3) {
+			WriteInt24(curr, ReadInt24(prev) + curr[0] + curr[1] + curr[2]);
+		}
+	}
+
+	// sum in horizontal direction
+	for (int x = 1; x < w; ++x) {
+		for (int y = 0; y < h; ++y) {
+			p = data + 3*(y*w+x);
+			WriteInt24(p, ReadInt24(p) + ReadInt24(p - 3));
+		}
+	}
+}
+
+
+double MapCtrl::GetStartRectMetalFraction( int index )
+{
+  ASSERT_LOGIC( IBattle::BattleType() != IBattle::BT_Multi, _T("MapCtrl::GetMetal(): Battle type is not BT_Multi") );
+  BattleStartRect sr = m_battle->GetStartRect( index );
+  if ( !sr.IsOk() ) return 0.0;
+  return GetStartRectMetalFraction( sr );
+}
+
+
+double MapCtrl::GetStartRectMetalFraction( const BattleStartRect& sr )
+{
+  // todo: this really is *logic*, not rendering code, so it
+  // should go in some other layer sometime (SpringUnitSync?).
+  if (!m_metalmap_cumulative.IsOk()) return 0.0;
+
+  int x1,y1,x2,y2,w,h;
+
+  w = m_metalmap_cumulative.GetWidth();
+  h = m_metalmap_cumulative.GetHeight();
+  x1 = std::max(0, std::min(w-1, int( (sr.left * w / 200.0) + 0.5 )));
+  y1 = std::max(0, std::min(h-1, int( (sr.top * h / 200.0) + 0.5 )));
+  x2 = std::max(0, std::min(w-1, int( (sr.right * w / 200.0) + 0.5 )));
+  y2 = std::max(0, std::min(h-1, int( (sr.bottom * h / 200.0) + 0.5 )));
+
+  const unsigned char* metalmap = m_metalmap_cumulative.GetData();
+  const int lefttop  = ReadInt24(&metalmap[3*(y1*w+x1)]);
+  const int righttop = ReadInt24(&metalmap[3*(y1*w+x2)]);
+  const int leftbot  = ReadInt24(&metalmap[3*(y2*w+x1)]);
+  const int rightbot = ReadInt24(&metalmap[3*(y2*w+x2)]);
+  // in 2d cumulative distribution total is value at bottom right corner
+  const int total    = ReadInt24(&metalmap[3*(w*h-1)]);
+
+  return (double) (lefttop + rightbot - righttop - leftbot) / total;
 }
 
 
@@ -217,8 +332,8 @@ void MapCtrl::_SetCursor()
 
     if ( m_battle != 0 ) {
       long longval;
-      m_battle->CustomBattleOptions().getSingleValue( _T("startpostype") , EngineOption ).ToLong( &longval );
-      if ( longval != ST_Choose ) {
+      m_battle->CustomBattleOptions().getSingleValue( _T("startpostype") , OptionsWrapper::EngineOption ).ToLong( &longval );
+      if ( longval != IBattle::ST_Choose ) {
         SetCursor( wxCursor( wxCURSOR_ARROW ) );
         return;
       } else {
@@ -310,8 +425,14 @@ void MapCtrl::LoadMinimap()
       return;
     }
     m_minimap = new wxBitmap( usync().GetMinimap( map, w, h ) );
-    if (usync().VersionSupports(USYNC_GetInfoMap)) {
+    if (m_draw_start_types && usync().VersionSupports(IUnitSync::USYNC_GetInfoMap)) {
+      // todo: optimize? (currently loads image from disk twice)
       m_metalmap = new wxBitmap( usync().GetMetalmap( map, w, h ) );
+      // singleplayer mode doesn't allow startboxes anyway
+      if (!m_sp) {
+        m_metalmap_cumulative = usync().GetMetalmap( map );
+		Accumulate( m_metalmap_cumulative );
+      }
     }
     m_mapname = map;
     m_lastsize = wxSize( w, h );
@@ -402,14 +523,29 @@ void MapCtrl::DrawStartRect( wxDC& dc, int index, wxRect& sr, const wxColour& co
   wxBitmap bmpimg( img );
   dc.DrawBitmap( bmpimg, sr.x, sr.y, false );
 
-  int twidth, theight;
 /*  wxFont f( 12, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL|wxFONTFLAG_ANTIALIASED, wxFONTWEIGHT_LIGHT );
   dc.SetFont( f );*/
   if ( index != -1 ) {
-    dc.GetTextExtent( wxString::Format( _T("%d"), index+1), &twidth, &theight );
+    int twidth, theight, tx, ty;
+    wxString strIndex = wxString::Format( _T("%d"), index+1 );
+    dc.GetTextExtent( strIndex, &twidth, &theight );
     dc.SetTextForeground( col );
-    DrawOutlinedText( dc, wxString::Format( _T("%d"), index+1), sr.x + sr.width / 2 - twidth / 2, sr.y + sr.height / 2 - theight / 2 - 1, wxColour(50,50,50), *wxWHITE );
+    tx = sr.x + sr.width / 2 - twidth / 2;
+    ty = sr.y + sr.height / 2 - theight / 2 - 1;
+    DrawOutlinedText( dc, strIndex, tx, ty, wxColour(50,50,50), *wxWHITE );
     //dc.DrawText( wxString::Format( _T("%d"), index+1), sr.x + sr.width / 2 - twidth / 2, sr.y + sr.height / 2 - theight / 2 - 1 );
+
+    const double metal = GetStartRectMetalFraction( index );
+    if (metal != 0.0) {
+      wxString strMetal = wxString::Format( _("Metal: %.1f%%"), metal * 100.0 );
+      dc.GetTextExtent( strMetal, &twidth, &theight );
+      // don't cramp it in rect, but only display it if it actually fits
+      if (sr.height >= 6 * theight && sr.width > twidth) {
+        tx = sr.x + sr.width / 2 - twidth / 2;
+        ty = sr.y + sr.height / 2 + theight / 2 + theight - 1;
+        DrawOutlinedText( dc, strMetal, tx, ty, wxColour(50,50,50), *wxWHITE );
+      }
+    }
   }
 
   dc.SetPen( wxPen( col ) );
@@ -538,8 +674,8 @@ void MapCtrl::DrawStartPositions( wxDC& dc )
   m_map = m_battle->LoadMap();
   RequireImages();
   long longval;
-  m_battle->CustomBattleOptions().getSingleValue( _T("startpostype") , EngineOption ).ToLong( &longval );
-  if ( longval == ST_Fixed ) {
+  m_battle->CustomBattleOptions().getSingleValue( _T("startpostype") , OptionsWrapper::EngineOption ).ToLong( &longval );
+  if ( longval == IBattle::ST_Fixed ) {
 
     wxFont f( 7, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_LIGHT );
     dc.SetFont( f );
@@ -596,7 +732,7 @@ wxRect MapCtrl::GetBotRect( BattleBot& bot, bool selected )
 }
 
 
-RectArea MapCtrl::GetBotRectArea( const wxRect& botrect, int x, int y )
+MapCtrl::RectArea MapCtrl::GetBotRectArea( const wxRect& botrect, int x, int y )
 {
   x = x - botrect.x;
   y = y - botrect.y;
@@ -734,9 +870,9 @@ void MapCtrl::DrawSinglePlayer( wxDC& dc )
   RequireImages();
 
   long longval;
-  m_battle->CustomBattleOptions().getSingleValue( _T("startpostype") , EngineOption ).ToLong( &longval );
+  m_battle->CustomBattleOptions().getSingleValue( _T("startpostype") , OptionsWrapper::EngineOption ).ToLong( &longval );
 
-  if ( longval == ST_Fixed ) {
+  if ( longval == IBattle::ST_Fixed ) {
     wxFont f( 7, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_LIGHT );
     dc.SetFont( f );
   }
@@ -760,7 +896,7 @@ void MapCtrl::DrawSinglePlayer( wxDC& dc )
 
     dc.DrawBitmap( *m_start_ally, x+mr.x, y+mr.y, true );
 
-    if ( longval == ST_Fixed ) {
+    if ( longval == IBattle::ST_Fixed ) {
       wxCoord w, h;
       dc.GetTextExtent( wxString::Format(_T("%d"), i+1 ), &w, &h );
       dc.DrawText( wxString::Format(_T("%d"), i+1 ), x+mr.x+(8-w/2), y+mr.y+(8-h/2) );
@@ -796,8 +932,8 @@ void MapCtrl::OnPaint( wxPaintEvent& WXUNUSED(event) )
 
     if ( m_draw_start_types ) {
       long longval;
-      m_battle->CustomBattleOptions().getSingleValue( _T("startpostype") , EngineOption ).ToLong( &longval );
-      if ( longval == ST_Choose ) {
+      m_battle->CustomBattleOptions().getSingleValue( _T("startpostype") , OptionsWrapper::EngineOption ).ToLong( &longval );
+      if ( longval == IBattle::ST_Choose ) {
         DrawStartRects( dc );
       } else {
         DrawStartPositions( dc );
@@ -913,9 +1049,9 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
   if ( !m_draw_start_types ) return;
 
   long longval;
-  m_battle->CustomBattleOptions().getSingleValue( _T("startpostype") , EngineOption ).ToLong( &longval );
+  m_battle->CustomBattleOptions().getSingleValue( _T("startpostype") , OptionsWrapper::EngineOption ).ToLong( &longval );
 
-  if ( longval != ST_Choose ) return;
+  if ( longval != IBattle::ST_Choose ) return;
 
   if ( m_maction == MA_Add ) { // We are currently adding a rect.
 
@@ -1039,9 +1175,9 @@ void MapCtrl::OnLeftDown( wxMouseEvent& event )
   if ( !m_draw_start_types ) return;
 
   long longval;
-  m_battle->CustomBattleOptions().getSingleValue( _T("startpostype") , EngineOption ).ToLong( &longval );
+  m_battle->CustomBattleOptions().getSingleValue( _T("startpostype") , OptionsWrapper::EngineOption ).ToLong( &longval );
 
-  if ( longval != ST_Choose ) return;
+  if ( longval != IBattle::ST_Choose ) return;
   if ( !m_ro ) {
     // In edit mode
     if ( m_mover_rect >= 0 ) { // We are over an existing rect.
@@ -1138,7 +1274,7 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
     if ( m_mdown_area == m_rect_area ) {
       if ( m_mdown_area == RA_Refresh ) {
         m_ui.ReloadUnitSync();
-        m_battle->Update( wxString::Format( _T("%d_mapname"), PrivateOptions ) );
+        m_battle->Update( wxString::Format( _T("%d_mapname"), OptionsWrapper::PrivateOptions ) );
         UpdateMinimap();
       } else if ( m_mdown_area == RA_Download ) {
         m_ui.DownloadMap( m_battle->GetHostMapHash(),  m_battle->GetHostMapName() );
@@ -1153,9 +1289,9 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
   if ( !m_draw_start_types ) return;
 
   long longval;
-  m_battle->CustomBattleOptions().getSingleValue( _T("startpostype") , EngineOption ).ToLong( &longval );
+  m_battle->CustomBattleOptions().getSingleValue( _T("startpostype") , OptionsWrapper::EngineOption ).ToLong( &longval );
 
-  if ( longval != ST_Choose ) return;
+  if ( longval != IBattle::ST_Choose ) return;
 
   if ( m_maction == MA_Add ) {
 
@@ -1167,19 +1303,19 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
       BattleStartRect r = GetBattleRect( m_mdown_x, m_mdown_y, m_mdown_x + minboxsize, m_mdown_y + minboxsize );
       m_battle->AddStartRect( GetNewRectIndex(), r.left, r.top, r.right, r.bottom );
     }
-    m_battle->SendHostInfo( HI_StartRects );
+    m_battle->SendHostInfo( IBattle::HI_StartRects );
     UpdateMinimap();
   } else if ( m_maction == MA_Delete ) {
 
     if ( (m_mdown_area == m_rect_area) && (m_mover_rect == m_mdown_rect) ) {
       m_battle->RemoveStartRect( m_mdown_rect );
       UpdateMinimap();
-      m_battle->SendHostInfo( HI_StartRects );
+      m_battle->SendHostInfo( IBattle::HI_StartRects );
     }
 
   } else if ( (m_maction == MA_ResizeDownRight)||(m_maction == MA_ResizeUpLeft) ) {
     m_battle->ResizeStartRect( m_mdown_rect );
-    m_battle->SendHostInfo( HI_StartRects );
+    m_battle->SendHostInfo( IBattle::HI_StartRects );
   }
 
   m_maction = MA_None;
@@ -1189,7 +1325,7 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
 
 void MapCtrl::OnMouseWheel( wxMouseEvent& event )
 {
-  if (usync().VersionSupports(USYNC_GetInfoMap) && m_minimap) {
+  if (m_metalmap) {
     int idx = (int) m_current_infomap;
     if (event.m_wheelRotation > 0) {
       ++idx;

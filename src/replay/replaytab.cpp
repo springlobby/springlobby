@@ -7,6 +7,7 @@
 #include <wx/sizer.h>
 #include <wx/checkbox.h>
 #include <wx/filename.h>
+#include <wx/log.h>
 #if wxUSE_TOGGLEBTN
     #include <wx/tglbtn.h>
 #endif
@@ -15,6 +16,7 @@
 
 #include "replaytab.h"
 #include "replaylistctrl.h"
+#include "replaylist.h"
 #include "../ui.h"
 #include "../chatpanel.h"
 #include "../utils.h"
@@ -30,7 +32,7 @@
 #include "../settings++/custom_dialogs.h"
 
 
-#define REPLAYLIST_COLOUMNCOUNT 10
+const unsigned int REPLAYLIST_COLOUMNCOUNT = 10;
 
 BEGIN_EVENT_TABLE(ReplayTab, wxPanel)
 
@@ -310,6 +312,38 @@ void ReplayTab::OnWatch( wxCommandEvent& event )
         wxLogMessage(_T("Watching replay %d "),m_sel_replay_id);
         try{
             Replay rep = m_replays->GetReplayById(m_sel_replay_id);
+
+            std::map<wxString, wxString> versionlist = sett().GetSpringVersionList();
+            if ( versionlist.size() == 0 )
+            {
+              wxLogWarning( _T("can't get spring version from any unitsync") );
+              customMessageBoxNoModal(SL_MAIN_ICON,  _("Couldn't get your spring versions from any unitsync library."), _("Spring error"), wxICON_EXCLAMATION|wxOK );
+              return;
+            }
+            bool versionfound = false;
+            for ( std::map<wxString, wxString>::iterator itor = versionlist.begin(); itor != versionlist.end(); itor++ )
+            {
+              if ( itor->second == rep.SpringVersion )
+              {
+                if ( sett().GetCurrentUsedSpringIndex() != itor->first )
+                {
+                  wxLogMessage(_T("replay requires version: %s, switching to profile: %s"), rep.SpringVersion.c_str(), itor->first.c_str() );
+                  sett().SetUsedSpringIndex( itor->first );
+                  ui().ReloadUnitSync();
+                }
+                versionfound = true;
+              }
+            }
+            if ( !versionfound )
+            {
+              wxString message = wxString::Format( _("No compatible installed spring version has been found, this replay requires version: %s\n"), rep.SpringVersion.c_str() );
+              message << _("Your current installed versions are:");
+              for ( std::map<wxString, wxString>::iterator itor = versionlist.begin(); itor != versionlist.end(); itor++ ) message << _T(" ") << itor->second;
+              customMessageBoxNoModal (SL_MAIN_ICON, message, _("Spring error"), wxICON_EXCLAMATION|wxOK );
+              wxLogWarning ( _T("no spring version supported by this replay found") );
+              return;
+            }
+
             bool watchable = rep.battle.MapExists() && rep.battle.ModExists();
             if ( watchable )
                 m_ui.WatchReplay( rep.Filename );
@@ -317,7 +351,7 @@ void ReplayTab::OnWatch( wxCommandEvent& event )
                 #ifdef NO_TORRENT_SYSTEM
                     wxString downloadProc = _("Do you want me to take you to the download page?");
                 #else
-                    wxString downloadProc = _("Should i try to downlaod it for you?\nYou can see the progress in the \"Download Manager\" tab.");
+                    wxString downloadProc = _("Should i try to download it for you?\nYou can see the progress in the \"Download Manager\" tab.");
                 #endif
 
                 OfflineBattle& battle = rep.battle;
@@ -405,7 +439,9 @@ void ReplayTab::OnSelect( wxListEvent& event )
                 m_players->AddUser( ud );
             }
         }
-        catch ( ... ) { Deselect(); }
+        catch ( ... ) {
+          Deselect();
+        }
     }
 }
 

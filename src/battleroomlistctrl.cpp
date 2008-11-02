@@ -8,6 +8,7 @@
 #include <wx/textdlg.h>
 #include <wx/colordlg.h>
 #include <wx/colour.h>
+#include <wx/log.h>
 #include <stdexcept>
 #include <vector>
 
@@ -25,12 +26,11 @@
 #include "mainwindow.h"
 
 #ifndef HAVE_WX26
-#include "auimanager.h"
+#include "aui/auimanager.h"
 #endif
 
 #include "settings++/custom_dialogs.h"
 
-#define TOOLTIP_DELAY 1000
 
 BEGIN_EVENT_TABLE( BattleroomListCtrl,  CustomListCtrl)
 

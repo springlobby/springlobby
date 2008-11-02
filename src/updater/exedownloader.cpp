@@ -10,6 +10,7 @@
 #include <wx/sstream.h>
 #include <wx/wfstream.h>
 #include <wx/app.h>
+#include <wx/log.h>
 #include <memory>
 
 #include "../settings++/custom_dialogs.h"

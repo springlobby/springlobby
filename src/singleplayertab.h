@@ -16,6 +16,7 @@ class wxStaticLine;
 class wxChoice;
 class wxStaticText;
 class wxCommandEvent;
+class wxCheckBox;
 
 class SinglePlayerTab: public  wxScrolledWindow
 {
@@ -38,6 +39,7 @@ class SinglePlayerTab: public  wxScrolledWindow
     void OnModSelect( wxCommandEvent& event );
     void OnAddBot( wxCommandEvent& event );
     void OnStart( wxCommandEvent& event );
+    void OnRandomCheck( wxCommandEvent& event );
 
     void OnUnitSyncReloaded();
 
@@ -58,20 +60,19 @@ class SinglePlayerTab: public  wxScrolledWindow
     wxButton* m_addbot_btn;
     wxStaticLine* m_buttons_sep;
     wxButton* m_reset_btn;
+    wxCheckBox* m_random_check;
     wxButton* m_start_btn;
 
-  DECLARE_EVENT_TABLE()
+    enum
+    {
+      SP_MAP_PICK = wxID_HIGHEST,
+      SP_MOD_PICK,
+      SP_BROWSE_MAP,
+      SP_ADD_BOT,
+      SP_RESET,
+      SP_START,
+      SP_RANDOM
+    };
+   DECLARE_EVENT_TABLE()
 };
-
-
-enum
-{
-  SP_MAP_PICK = wxID_HIGHEST,
-  SP_MOD_PICK,
-  SP_BROWSE_MAP,
-  SP_ADD_BOT,
-  SP_RESET,
-  SP_START
-};
-
 #endif // SPRINGLOBBY_HEADERGUARD_SINGLEPLAYERTAB_H

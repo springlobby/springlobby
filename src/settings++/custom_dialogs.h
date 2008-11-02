@@ -7,8 +7,9 @@
 #include <wx/timer.h>
 #include <wx/panel.h>
 
-#define SL_MAIN_ICON 1
-#define SS_MAIN_ICON 2
+const unsigned SL_MAIN_ICON = 1;
+const unsigned SS_MAIN_ICON = 2;
+
 
 class wxIcon;
 class wxWindow;
@@ -150,16 +151,17 @@ private:
 class ActivityNoticePanel: public wxPanel
 {
     public:
-        ActivityNoticePanel(wxWindow* parent,const wxString& file);
+        ActivityNoticePanel(wxWindow* parent,const wxString& file,const wxString& format = _("Caching file %s please wait") );
         virtual ~ActivityNoticePanel() {}
 
         void SetString(const wxString& file);
         virtual bool Show(bool show = true);
     protected:
         wxString m_filename;
+        wxString m_format;
         wxGauge* m_gauge;
         wxStaticText* m_message;
-        wxStaticText* m_format;
+//        wxStaticText* m_format;
         wxTimer m_timer;
 
         void OnTimer(wxTimerEvent& event);

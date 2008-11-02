@@ -18,6 +18,7 @@
 #include <wx/textctrl.h>
 #include <wx/statbmp.h>
 #include <wx/checkbox.h>
+#include <wx/log.h>
 
 #include "hostbattledialog.h"
 #include "settings.h"

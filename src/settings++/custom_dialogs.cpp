@@ -426,7 +426,7 @@ END_EVENT_TABLE()
 void ActivityNoticePanel::SetString(const wxString& file)
 {
     m_filename = file;
-    m_message->SetLabel(wxString::Format( , m_filename.c_str() ) );
+    m_message->SetLabel(wxString::Format( m_format, m_filename.c_str() ) );
     Layout();
 }
 
@@ -446,10 +446,10 @@ void ActivityNoticePanel::OnTimer(wxTimerEvent& event)
     m_gauge->Pulse();
 }
 
- ActivityNoticeContainer::ActivityNoticeContainer(wxWindow* parent_,const wxString& file)
+ ActivityNoticeContainer::ActivityNoticeContainer(wxWindow* parent_,const wxString& file,const wxString& format )
 {
     wxWindow* parent = ( parent_ != 0 ) ? parent_ : ( wxTheApp->GetTopWindow() ) ;
-    m_window = new ActivityNotice( parent, file);
+    m_window = new ActivityNotice( parent, file, format);
     m_window->Show(true);
 }
 

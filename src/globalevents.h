@@ -4,15 +4,20 @@
 #include <wx/event.h>
 class wxCommandEvent;
 
-
 extern const wxEventType httpDownloadEvtComplete;
 extern const wxEventType httpDownloadEvtFailed;
 extern const wxEventType UnitSyncReloadRequest;
 extern const wxEventType ExeDownloadEvt;
 
+class IGlobalObjectHolder;
+template <class T>
+class GlobalObjectHolder;
+
 class SL_GlobalEvtHandler : public wxEvtHandler
 {
 protected:
+    friend class IGlobalObjectHolder;
+    friend class GlobalObjectHolder<SL_GlobalEvtHandler>;
     SL_GlobalEvtHandler();
 
     DECLARE_EVENT_TABLE()

@@ -8,7 +8,7 @@
 #include <wx/panel.h>
 #include <wx/statline.h>
 #include <wx/stattext.h>
-#include <stdexcept>
+#include <wx/checkbox.h>
 
 #include "singleplayertab.h"
 #include "mapctrl.h"
@@ -20,7 +20,7 @@
 #include "server.h"
 
 #ifndef HAVE_WX26
-#include "auimanager.h"
+#include "aui/auimanager.h"
 #endif
 
 #include "settings++/custom_dialogs.h"
@@ -33,6 +33,7 @@ BEGIN_EVENT_TABLE(SinglePlayerTab, wxPanel)
   EVT_CHOICE( SP_MOD_PICK, SinglePlayerTab::OnModSelect )
   EVT_BUTTON( SP_ADD_BOT , SinglePlayerTab::OnAddBot )
   EVT_BUTTON( SP_START , SinglePlayerTab::OnStart )
+  EVT_CHECKBOX( SP_RANDOM, SinglePlayerTab::OnRandomCheck )
 
 END_EVENT_TABLE()
 
@@ -87,6 +88,9 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, Ui& ui, MainSinglePlayerTab& 
   m_buttons_sizer->Add( m_reset_btn, 0, wxALL, 5 );
 
   m_buttons_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
+
+  m_random_check = new wxCheckBox( this, SP_RANDOM, _("Random start postisions") );
+  m_buttons_sizer->Add( m_random_check, 0, wxALL, 5 );
 
   m_start_btn = new wxButton( this, SP_START, _("Start"), wxDefaultPosition, wxSize(80, CONTROL_HEIGHT), 0 );
   m_buttons_sizer->Add( m_start_btn, 0, wxALL, 5 );
@@ -171,7 +175,7 @@ void SinglePlayerTab::SetMap( unsigned int index )
     } catch (...) {}
   }
   m_minimap->UpdateMinimap();
-  m_battle.SendHostInfo( HI_Map_Changed ); // reload map options
+  m_battle.SendHostInfo( IBattle::HI_Map_Changed ); // reload map options
   m_map_pick->SetSelection( index );
 }
 
@@ -189,8 +193,8 @@ void SinglePlayerTab::SetMod( unsigned int index )
     } catch (...) {}
   }
   m_minimap->UpdateMinimap();
-  m_battle.SendHostInfo( HI_Restrictions ); // Update restrictions in options.
-  m_battle.SendHostInfo( HI_Mod_Changed ); // reload mod options
+  m_battle.SendHostInfo( IBattle::HI_Restrictions ); // Update restrictions in options.
+  m_battle.SendHostInfo( IBattle::HI_Mod_Changed ); // reload mod options
   m_mod_pick->SetSelection( index );
 }
 
@@ -215,33 +219,6 @@ bool SinglePlayerTab::ValidSetup()
       if ( customMessageBox(SL_MAIN_ICON, _("Continue without adding a bot first?.\n The game will be over pretty fast.\n "),
                 _("No Bot added"), wxYES_NO) == wxNO )
         return false;
-  }
-
-  if ( usync().VersionSupports( GF_XYStartPos ) ) return true;
-
-  int numBots = 0;
-  int first = -1;
-  for ( unsigned int i = 0; i < (unsigned int)m_battle.LoadMap().info.posCount; i++ ) {
-
-    BattleBot* bot = m_battle.GetBotByStartPosition( i );
-
-    if ( bot == 0 ) {
-      if ( first == -1 ) first = i;
-    } else {
-      numBots++;
-    }
-
-  }
-
-  if ( ( numBots < (int)m_battle.GetNumBots() ) || ( ( first != (int)m_battle.GetNumBots() ) && ( first != -1 ) ) ) {
-    if ( numBots < (int)m_battle.GetNumBots() ) {
-      wxLogWarning( _T("players in non canonical startpositions unsupported by this spring version") );
-      customMessageBox(SL_MAIN_ICON, _("You have bots that are not assingled to startpositions. In the current version of spring you are only allowed to use start positions positioning them freely is not allowed.\n\nThis will be fixed in next version of Spring."), _("Gamesetup error") );
-    } else {
-      wxLogWarning( _T("players in non-consegutive startpositions") );
-      customMessageBox(SL_MAIN_ICON, _("You are not using consecutive start position numbers.\n\nIn the current version of spring you are not allowed to skip any startpositions. You have to use all consecutive position.\n\nExample: if you have 2 bots + yourself you have to use start positions 1,2,3 not 1,3,4 or 2,3,4.\n\nThis will be fixed in next version of Spring."), _("Gamesetup error") );
-    }
-    return false;
   }
   return true;
 }
@@ -289,15 +266,24 @@ void SinglePlayerTab::OnStart( wxCommandEvent& event )
 }
 
 
+void SinglePlayerTab::OnRandomCheck( wxCommandEvent& event )
+{
+
+    if ( m_random_check->IsChecked() ) m_battle.CustomBattleOptions().setSingleOption( _T("startpostype"), i2s(IBattle::ST_Random), OptionsWrapper::EngineOption );
+    else m_battle.CustomBattleOptions().setSingleOption( _T("startpostype"), i2s(IBattle::ST_Pick), OptionsWrapper::EngineOption );
+    m_battle.SendHostInfo( IBattle::HI_StartType );
+
+}
+
 void SinglePlayerTab::Update( const wxString& Tag )
 {
   long type;
   Tag.BeforeFirst( '_' ).ToLong( &type );
   wxString key = Tag.AfterFirst( '_' );
-  wxString value = m_battle.CustomBattleOptions().getSingleValue( key, (GameOption)type);
+  wxString value = m_battle.CustomBattleOptions().getSingleValue( key, (OptionsWrapper::GameOption)type);
   long longval;
   value.ToLong( &longval );
-  if ( type == PrivateOptions )
+  if ( type == OptionsWrapper::PrivateOptions )
   {
     if ( key == _T("mapname") )
     {

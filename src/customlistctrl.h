@@ -1,44 +1,26 @@
 #ifndef CUSTOMLISTITEM_H_
 #define CUSTOMLISTITEM_H_
 
-#include <wx/window.h>
 #ifndef __WXMSW__
     #include <wx/listctrl.h>
     typedef wxListCtrl ListBaseType;
 #else
-    #include "Helper/listctrl.h"
-    typedef SL_Extern::wxGenericListCtrl ListBaseType;
+//disabled until further fixes
+//    #include "Helper/listctrl.h"
+//    typedef SL_Extern::wxGenericListCtrl ListBaseType;
+    #include <wx/listctrl.h>
+    typedef wxListCtrl ListBaseType;
 #endif
-#include <wx/string.h>
-#if wxUSE_TIPWINDOW
-#include <wx/tipwin.h>
-#endif
+
 #include <wx/timer.h>
-#define IDD_TIP_TIMER 666
+#define IDD_TIP_TIMER 696
+
 #include <vector>
 #include <utility>
 
 #include "useractions.h"
 
-/** global delay (ms)
- * \todo make this definable per child class
- */
-#define TOOLTIP_DELAY 1000
-#define TOOLTIP_DURATION 2000
-
-typedef std::pair<wxString,bool> colInfo;
-typedef std::vector<colInfo> colInfoVec;
-
-#if wxUSE_TIPWINDOW
-class SLTipWindow : public wxTipWindow{
-    public:
-        SLTipWindow(wxWindow *parent, const wxString &text)
-            :wxTipWindow(parent,text){};
-        void Cancel(wxMouseEvent& event);
-
-        DECLARE_EVENT_TABLE()
-};
-#endif
+class SLTipWindow;
 
 /** \brief Used as base class for all ListCtrls throughout SL
  * Provides generic functionality, such as column tooltips, possiblity to prohibit coloumn resizing and selection modifiers. \n
@@ -59,6 +41,14 @@ protected:
     SLTipWindow** controlPointer;
     #endif
     int coloumnCount;
+
+    typedef std::pair<wxString,bool> colInfo;
+    typedef std::vector<colInfo> colInfoVec;
+
+    /** global Tooltip thingies (ms)
+     */
+    static const unsigned int m_tooltip_delay    = 1000;
+    static const unsigned int m_tooltip_duration = 2000;
 
 /*** these are only meaningful in single selection lists ***/
     //! curently selected data
@@ -130,6 +120,10 @@ public:
     virtual void OnEndResizeCol(wxListEvent& event);
     //! starts timer, sets tooltiptext
     virtual void OnMouseMotion(wxMouseEvent& event);
+    //! stop timer (before displaying popup f.e.)
+    void CancelTooltipTimer();
+    //!Override to have tooltip timer cancelled automatically
+    bool PopupMenu(wxMenu* menu, const wxPoint& pos = wxDefaultPosition);
     //! does nothing
     void noOp(wxMouseEvent& event);
     //! automatically get saved column width if already saved, otherwise use parameter and save new width

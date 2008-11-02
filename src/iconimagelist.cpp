@@ -123,6 +123,8 @@ IconImageList::IconImageList() : wxImageList(16,16,true)
     ICON_CLOSED_FULL_GAME = Add( *charArr2wxBitmap(closed_full_game_png, sizeof(closed_full_game_png) ) );
     ICON_STARTED_GAME = Add(  *charArr2wxBitmap(ingame_png, sizeof(ingame_png) ) );
 
+    ICON_STARTED_GAME_LOCKED = Add( *charArr2wxBitmapWithBlending( closed_game_png, sizeof(closed_game_png), ingame_png, sizeof(ingame_png) ) );
+
 
     ICON_READY_UNSYNC = Add( wxBitmap(ready_unsync_xpm) );
     ICON_NREADY_UNSYNC = Add( wxBitmap(nready_unsync_xpm) );
@@ -220,17 +222,17 @@ int IconImageList::GetUserBattleStateIcon( const UserStatus& us )
 
 int IconImageList::GetRankIcon( const unsigned int& rank, const bool& showlowest )
 {
-    if ( !showlowest && rank == RANK_1 ) return ICON_RANK_NONE;
+    if ( !showlowest && rank == UserStatus::RANK_1 ) return ICON_RANK_NONE;
     switch (rank)
     {
-      case RANK_UNKNOWN: return ICON_RANK1;
-      case RANK_1: return ICON_RANK1;
-      case RANK_2: return ICON_RANK2;
-      case RANK_3: return ICON_RANK3;
-      case RANK_4: return ICON_RANK4;
-      case RANK_5: return ICON_RANK5;
-      case RANK_6: return ICON_RANK6;
-      case RANK_7: return ICON_RANK7;
+      case UserStatus::RANK_UNKNOWN: return ICON_RANK1;
+      case UserStatus::RANK_1: return ICON_RANK1;
+      case UserStatus::RANK_2: return ICON_RANK2;
+      case UserStatus::RANK_3: return ICON_RANK3;
+      case UserStatus::RANK_4: return ICON_RANK4;
+      case UserStatus::RANK_5: return ICON_RANK5;
+      case UserStatus::RANK_6: return ICON_RANK6;
+      case UserStatus::RANK_7: return ICON_RANK7;
     }
     return ICON_RANK_UNKNOWN;
 }
@@ -244,7 +246,9 @@ int IconImageList::GetFlagIcon( const wxString& flagname )
 
 int IconImageList::GetBattleStatusIcon( const Battle& battle ) const
 {
-    if ( battle.GetInGame() ) return ICON_STARTED_GAME;
+    if ( battle.GetInGame() ) {
+      return battle.IsLocked()?ICON_STARTED_GAME_LOCKED:ICON_STARTED_GAME;
+    }
     if ( !battle.IsLocked() )
     {
         if ( battle.IsFull() )

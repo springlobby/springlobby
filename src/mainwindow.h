@@ -16,7 +16,9 @@ class MainSinglePlayerTab;
 class MainTorrentTab;
 #endif
 class wxBoxSizer;
-class wxAuiNotebook;
+//namespace SL_Extern{
+    class wxAuiNotebook;
+//}
 class wxListbook;
 class MainOptionsTab;
 class wxBitmap;
@@ -34,20 +36,20 @@ typedef wxWindow wxNotebookPage;
 
 
 // Page indexes
-#define PAGE_CHAT 0
-#define PAGE_JOIN 1
-#define PAGE_SINGLE 2
-#define PAGE_OPTOS 3
+const unsigned int PAGE_CHAT    = 0;
+const unsigned int PAGE_JOIN    = 1;
+const unsigned int PAGE_SINGLE  = 2;
+const unsigned int PAGE_OPTOS   = 3;
 
-static const unsigned int OPT_PAGE_SPRING = 0;
-static const unsigned int OPT_PAGE_CHAT = 1;
+static const unsigned int OPT_PAGE_SPRING   = 0;
+static const unsigned int OPT_PAGE_CHAT     = 1;
 #ifndef NO_TORRENT_SYSTEN
-static const unsigned int OPT_PAGE_TORRENT = 2;
-static const unsigned int OPT_PAGE_GENERAL = 3;
-static const unsigned int OPT_PAGE_GROUPS = 4;
+static const unsigned int OPT_PAGE_TORRENT  = 2;
+static const unsigned int OPT_PAGE_GENERAL  = 3;
+static const unsigned int OPT_PAGE_GROUPS   = 4;
 #else
-static const unsigned int OPT_PAGE_GENERAL = 2;
-static const unsigned int OPT_PAGE_GROUPS = 3;
+static const unsigned int OPT_PAGE_GENERAL  = 2;
+static const unsigned int OPT_PAGE_GROUPS   = 3;
 #endif
 
 
@@ -64,13 +66,12 @@ class MainWindow : public wxFrame
 
     void ShowConfigure( const unsigned int page = OPT_PAGE_SPRING );
 
-    void ReloadSpringPathFromConfig();
-
     void OnMenuAbout( wxCommandEvent& event );
     void OnMenuJoin( wxCommandEvent& event );
     void OnMenuChat( wxCommandEvent& event );
     void OnMenuConnect( wxCommandEvent& event );
     void OnMenuDisconnect( wxCommandEvent& event );
+    void OnMenuSaveOptions( wxCommandEvent& event );
     void OnMenuQuit( wxCommandEvent& event );
     void OnMenuVersion ( wxCommandEvent& event );
     void OnUnitSyncReload( wxCommandEvent& event );
@@ -140,31 +141,34 @@ class MainWindow : public wxFrame
     bool se_frame_active;
 
     ReplayTab* m_replay_tab;
+
+    enum {
+        MENU_SETTINGSPP,
+        MENU_ABOUT = wxID_ABOUT,
+        MENU_QUIT = wxID_EXIT,
+
+        MENU_CONNECT = wxID_HIGHEST,
+        MENU_DISCONNECT,
+        MENU_SAVE_OPTIONS,
+        MENU_JOIN,
+        MENU_USYNC,
+        MENU_TRAC,
+        MENU_DOC,
+        MENU_CHAT,
+        MAIN_TABS,
+        MENU_VERSION,
+        MENU_START_TORRENT,
+        MENU_STOP_TORRENT,
+        MENU_AUTOJOIN_CHANNELS
+
+    };
+
     DECLARE_EVENT_TABLE()
 };
 
 //ChatPanel& servwin();
 
 // wxWidget IDs
-enum
-{
-	MENU_SETTINGSPP,
-    MENU_ABOUT = wxID_ABOUT,
-    MENU_QUIT = wxID_EXIT,
 
-    MENU_CONNECT = wxID_HIGHEST,
-    MENU_DISCONNECT,
-    MENU_JOIN,
-    MENU_USYNC,
-    MENU_TRAC,
-    MENU_DOC,
-    MENU_CHAT,
-    MAIN_TABS,
-    MENU_VERSION,
-    MENU_START_TORRENT,
-    MENU_STOP_TORRENT,
-    MENU_AUTOJOIN_CHANNELS
-
-};
 
 #endif // SPRINGLOBBY_HEADERGUARD_MAINWINDOW_H

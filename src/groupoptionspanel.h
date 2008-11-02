@@ -2,28 +2,16 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_GROUPOPTIONSPANEL_H
 #define SPRINGLOBBY_HEADERGUARD_GROUPOPTIONSPANEL_H
 
-#include <wx/intl.h>
-
-#include <wx/string.h>
-#include <wx/textctrl.h>
-#include <wx/gdicmn.h>
-#include <wx/font.h>
-#include <wx/colour.h>
-#include <wx/settings.h>
-#include <wx/button.h>
-#include <wx/sizer.h>
-#include <wx/listbox.h>
-#include <wx/checkbox.h>
-#include <wx/stattext.h>
-#include <wx/bitmap.h>
-#include <wx/image.h>
-#include <wx/icon.h>
-#include <wx/bmpbuttn.h>
-#include <wx/statbox.h>
 #include <wx/panel.h>
+#include <wx/string.h>
+
 
 class ColorButton;
 class GroupUserDialog;
+class wxCheckBox;
+class wxStaticText;
+class wxListBox;
+class wxButton;
 
 class GroupOptionsPanel : public wxPanel
 {

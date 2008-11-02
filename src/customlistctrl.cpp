@@ -2,19 +2,11 @@
 #include "utils.h"
 #include "settings.h"
 #include <wx/colour.h>
+#include <wx/log.h>
 #include "iconimagelist.h"
 #include "settings++/custom_dialogs.h"
+#include "uiutils.h"
 
-#if wxUSE_TIPWINDOW
-BEGIN_EVENT_TABLE(SLTipWindow, wxTipWindow)
-  EVT_MOUSEWHEEL(SLTipWindow::Cancel)
-END_EVENT_TABLE()
-
-void SLTipWindow::Cancel(wxMouseEvent& event)
-{
-  wxTipWindow::Close();
-}
-#endif
 
 BEGIN_EVENT_TABLE(CustomListCtrl, ListBaseType)
 #if wxUSE_TIPWINDOW
@@ -161,7 +153,7 @@ void CustomListCtrl::OnTimer(wxTimerEvent& event)
       m_tipwindow->SetBoundingRect(wxRect(1,1,50,50));
 #endif
       m_tiptext = wxEmptyString;
-      m_tiptimer.Start(TOOLTIP_DURATION, wxTIMER_ONE_SHOT);
+      m_tiptimer.Start(m_tooltip_duration, wxTIMER_ONE_SHOT);
   }
   else
   {
@@ -177,9 +169,6 @@ void CustomListCtrl::OnTimer(wxTimerEvent& event)
 #endif
 }
 
-//TODO http://www.wxwidgets.org/manuals/stable/wx_wxtipwindow.html#wxtipwindowsettipwindowptr
-// must have sth to do with crash on windows
-//if to tootips are displayed
 void CustomListCtrl::OnMouseMotion(wxMouseEvent& event)
 {
 #if wxUSE_TIPWINDOW
@@ -201,7 +190,7 @@ void CustomListCtrl::OnMouseMotion(wxMouseEvent& event)
   }
   else
   {
-    if (m_tiptimer.IsRunning() == true)
+    if ( m_tiptimer.IsRunning() )
     {
       m_tiptimer.Stop();
     }
@@ -222,9 +211,11 @@ void CustomListCtrl::OnMouseMotion(wxMouseEvent& event)
       try
       {
         SetTipWindowText(item_hit,m_last_mouse_pos);
-        m_tiptimer.Start(TOOLTIP_DELAY, wxTIMER_ONE_SHOT);
+        m_tiptimer.Start(m_tooltip_delay, wxTIMER_ONE_SHOT);
       }
-      catch ( ... ) { wxLogWarning( _T("Exception setting tooltip") );}
+      catch ( ... ) {
+        wxLogWarning( _T("Exception setting tooltip") );
+      }
     }
   }
 #endif
@@ -239,7 +230,7 @@ void CustomListCtrl::SetTipWindowText( const long item_hit, const wxPoint positi
   }
   else
   {
-    m_tiptimer.Start(TOOLTIP_DELAY, wxTIMER_ONE_SHOT);
+    m_tiptimer.Start(m_tooltip_delay, wxTIMER_ONE_SHOT);
     m_tiptext = TE(m_colinfovec[coloumn].first);
   }
 }
@@ -330,4 +321,15 @@ void CustomListCtrl::SetHighLightAction( UserActions::ActionType action )
 void CustomListCtrl::MarkDirtySort()
 {
   m_dirty_sort = true;
+}
+
+void CustomListCtrl::CancelTooltipTimer()
+{
+    m_tiptimer.Stop();
+}
+
+bool CustomListCtrl::PopupMenu(wxMenu* menu, const wxPoint& pos )
+{
+    CancelTooltipTimer();
+    return ListBaseType::PopupMenu( menu, pos );
 }

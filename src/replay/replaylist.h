@@ -3,7 +3,6 @@
 
 #include <map>
 #include <wx/string.h>
-#include <wx/event.h>
 #include <wx/timer.h>
 #include <wx/arrstr.h>
 #include "../battle.h"

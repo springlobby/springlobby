@@ -2,6 +2,7 @@
 #include "utils.h"
 #include <wx/intl.h>
 #include <wx/tokenzr.h>
+#include <wx/log.h>
 #include <cmath>
 
 TDFWriter::TDFWriter(wxString &s):
