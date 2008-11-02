@@ -567,8 +567,6 @@ std::map<int,TorrentInfos> TorrentWrapper::CollectGuiInfos()
         {
             TorrentInfos CurrentTorrent;
             CurrentTorrent.name = WX_STRING(i->name()).BeforeFirst(_T('|'));
-            if ( i->is_seed() ) CurrentTorrent.downloadstatus = seeding;
-            else CurrentTorrent.downloadstatus = leeching;
             CurrentTorrent.progress = i->status().progress;
             CurrentTorrent.downloaded = i->status().total_payload_download;
             CurrentTorrent.uploaded = i->status().total_payload_upload;
@@ -580,6 +578,8 @@ std::map<int,TorrentInfos> TorrentWrapper::CollectGuiInfos()
             TorrentTable::PRow row=m_torrent_table.RowByHandle(*i);
             if (!row.ok()) continue;
             CurrentTorrent.hash=row->hash;
+            if ( row->status = leeching ) CurrentTorrent.downloadstatus = leeching;
+            else CurrentTorrent.downloadstatus = seeding;
 
             ret[s2l(CurrentTorrent.hash)] = CurrentTorrent;
         }
