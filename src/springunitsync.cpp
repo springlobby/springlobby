@@ -780,6 +780,8 @@ wxImage SpringUnitSync::GetMinimap( const wxString& mapname )
 {
   wxLogDebugFunc( mapname );
 
+    ActivityNoticeContainer act_notice( NULL, mapname, _T("Loading metalmap %s") );
+
   wxString originalsizepath = GetFileCachePath( mapname, _T(""), false ) + _T(".minimap.png");
 
   wxImage img;
