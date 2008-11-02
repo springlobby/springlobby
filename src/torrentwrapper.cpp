@@ -692,7 +692,7 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
     }
     else
     {
-        path = sett().GetCurrentUsedSpringBinary() + wxFileName::GetPathSeparator();
+        path = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator();
         switch (row->type)
         {
         case IUnitSync::map:
@@ -739,10 +739,12 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
     wxString torrentfilename = WX_STRING(t_info.begin_files()->path.string()); /// get the file name in the torrent infos
     wxLogMessage( _T("requested filename: %s"), torrentfilename.c_str() );
 
-    if ( IsSeed )
+    wxFileName archive_filename(path);
+    wxFileName torrent_filename(torrentfilename);
+
+    if ( IsSeed && ( torrent_filename.GetFullName() != archive_filename.GetFullName() ) )
     {
-        wxFileName archive_filename(path);
-        wxFileName torrent_filename(torrentfilename);
+        wxLogMessage(_T("filename differs from torrent, renaming file in torrent info"));
         if ( !( torrent_filename.GetExt() == archive_filename.GetExt() ) ) /// different extension, won't work
         {
           wxLogMessage( _T("file extension locally differs, not joining torrent") );
@@ -752,6 +754,7 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
         libtorrent::file_entry foo = t_info.file_at(0);
         map.push_back( foo );
         map.front().path = boost::filesystem::path(STD_STRING( archive_filename.GetFullName() ) );
+        wxLogMessage(_T("New filename in torrent: %s"), archive_filename.GetFullName().c_str() );
         if ( !t_info.remap_files(map) )
         {
          wxLogMessage(_T("Cannot remap filenames in the torrent, aborting seed"));
