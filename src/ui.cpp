@@ -331,20 +331,25 @@ void Ui::DownloadFileP2P( const wxString& hash, const wxString& name )
 {
 #ifndef NO_TORRENT_SYSTEM
     if ( !torrent().IsConnectedToP2PSystem() ){
-        //sett().SetTorrentSystemAutoStartMode( 2 ); /// switch operation to manual mode
+        wxArrayString hashesToResume = sett().GetTorrentListToResume();
+        hashesToResume.Add( hash );
+        sett().SetTorrentListToResume( hashesToResume );
         torrent().ConnectToP2PSystem();
     }
+    else {
 
     //we need a way to have the request happen only after connect is complete
-    TorrentWrapper::DownloadRequestStatus status;
-    if ( !hash.IsEmpty() ) {
-         status = torrent().RequestFileByHash( hash );
-    }
-    else if ( !name.IsEmpty() )
-        status = torrent().RequestFileByName( name );
+        TorrentWrapper::DownloadRequestStatus status;
+        if ( !hash.IsEmpty() ) {
+             status = torrent().RequestFileByHash( hash );
+        }
+        else if ( !name.IsEmpty() )
+            status = torrent().RequestFileByName( name );
 
-    if ( status != TorrentWrapper::success ){
-        customMessageBoxNoModal( SL_MAIN_ICON, _(""), _("") );
+//!TODO: put some meaningful err msg here
+//        if ( status != TorrentWrapper::success ){
+//            customMessageBoxNoModal( SL_MAIN_ICON, _(""), _("") );
+//        }
     }
 #endif
 }
