@@ -711,6 +711,7 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
     else			/* if(IsSeed) */
     {
         path = sett().GetTorrentDataDir() + wxFileName::GetPathSeparator() + getDataSubdirForType(row->type);
+	if ( !wxDirExists(path) ) wxMkdir(path, 0755);
         wxLogMessage(_T("downloading to path: =%s"), path.c_str());
     }
 
