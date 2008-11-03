@@ -191,13 +191,13 @@ MainWindow::MainWindow( Ui& ui ) :
   m_func_tabs->AddPage( m_torrent_tab, _T(""), false, 5 );
 #endif
 #else
-  m_func_tabs->AddPage( m_chat_tab, _T("Chat"), true, *m_chat_icon );
-  m_func_tabs->AddPage( m_join_tab, _T("Multiplayer"), false, *m_battle_icon );
-  m_func_tabs->AddPage( m_sp_tab, _T("Singleplayer"), false, *m_sp_icon );
-  m_func_tabs->AddPage( m_opts_tab, _T("Options"), false, *m_options_icon );
-  m_func_tabs->AddPage( m_replay_tab, _T("Replays"), false, *m_replay_icon );
+  m_func_tabs->AddPage( m_chat_tab, _("Chat"), true, *m_chat_icon );
+  m_func_tabs->AddPage( m_join_tab, _("Multiplayer"), false, *m_battle_icon );
+  m_func_tabs->AddPage( m_sp_tab, _("Singleplayer"), false, *m_sp_icon );
+  m_func_tabs->AddPage( m_opts_tab, _("Options"), false, *m_options_icon );
+  m_func_tabs->AddPage( m_replay_tab, _("Replays"), false, *m_replay_icon );
 #ifndef NO_TORRENT_SYSTEM
-  m_func_tabs->AddPage( m_torrent_tab, _T("Downloads"), false, *m_downloads_icon );
+  m_func_tabs->AddPage( m_torrent_tab, _("Downloads"), false, *m_downloads_icon );
 #endif
 #endif
 
