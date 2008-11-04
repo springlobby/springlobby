@@ -362,6 +362,14 @@ wxImage MainChatTab::ReplaceChannelStatusColour( wxBitmap img, const wxColour& c
 
   ret.Replace( 255, 228, 0, rgbdarker1.red, rgbdarker1.green, rgbdarker1.blue );
 
+  // server icon
+
+  ret.Replace( 211, 211, 211, rgbdarker2.red, rgbdarker2.green, rgbdarker2.blue );
+
+  ret.Replace( 249, 249, 249, rgbdarker1.red, rgbdarker1.green, rgbdarker1.blue );
+
+  ret.Replace( 0, 180, 255, colour.Red(), colour.Green(), colour.Blue() );
+
 
     return ret;
 }
