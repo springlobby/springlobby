@@ -77,6 +77,7 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU( MENU_CHAT, MainWindow::OnMenuChat )
   EVT_MENU( MENU_CONNECT, MainWindow::OnMenuConnect )
   EVT_MENU( MENU_DISCONNECT, MainWindow::OnMenuDisconnect )
+  EVT_MENU( MENU_SAVE_OPTIONS, MainWindow::OnMenuSaveOptions )
   EVT_MENU( MENU_QUIT, MainWindow::OnMenuQuit )
   EVT_MENU( MENU_USYNC, MainWindow::OnUnitSyncReload )
   EVT_MENU( MENU_TRAC, MainWindow::OnReportBug )
@@ -111,6 +112,8 @@ MainWindow::MainWindow( Ui& ui ) :
   wxMenu *menuFile = new wxMenu;
   menuFile->Append(MENU_CONNECT, _("&Connect..."));
   menuFile->Append(MENU_DISCONNECT, _("&Disconnect"));
+  menuFile->AppendSeparator();
+  menuFile->Append(MENU_SAVE_OPTIONS, _("&Save options"));
   menuFile->AppendSeparator();
   menuFile->Append(MENU_QUIT, _("&Quit"));
 
@@ -188,13 +191,13 @@ MainWindow::MainWindow( Ui& ui ) :
   m_func_tabs->AddPage( m_torrent_tab, _T(""), false, 5 );
 #endif
 #else
-  m_func_tabs->AddPage( m_chat_tab, _T("Chat"), true, *m_chat_icon );
-  m_func_tabs->AddPage( m_join_tab, _T("Multiplayer"), false, *m_battle_icon );
-  m_func_tabs->AddPage( m_sp_tab, _T("Singleplayer"), false, *m_sp_icon );
-  m_func_tabs->AddPage( m_opts_tab, _T("Options"), false, *m_options_icon );
-  m_func_tabs->AddPage( m_replay_tab, _T("Replays"), false, *m_replay_icon );
+  m_func_tabs->AddPage( m_chat_tab, _("Chat"), true, *m_chat_icon );
+  m_func_tabs->AddPage( m_join_tab, _("Multiplayer"), false, *m_battle_icon );
+  m_func_tabs->AddPage( m_sp_tab, _("Singleplayer"), false, *m_sp_icon );
+  m_func_tabs->AddPage( m_opts_tab, _("Options"), false, *m_options_icon );
+  m_func_tabs->AddPage( m_replay_tab, _("Replays"), false, *m_replay_icon );
 #ifndef NO_TORRENT_SYSTEM
-  m_func_tabs->AddPage( m_torrent_tab, _T("Downloads"), false, *m_downloads_icon );
+  m_func_tabs->AddPage( m_torrent_tab, _("Downloads"), false, *m_downloads_icon );
 #endif
 #endif
 
@@ -471,6 +474,11 @@ void MainWindow::OnMenuConnect( wxCommandEvent& event )
 void MainWindow::OnMenuDisconnect( wxCommandEvent& event )
 {
   m_ui.Disconnect();
+}
+
+void MainWindow::OnMenuSaveOptions( wxCommandEvent& event )
+{
+  sett().SaveSettings();
 }
 
 

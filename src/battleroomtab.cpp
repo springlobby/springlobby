@@ -368,6 +368,8 @@ void BattleRoomTab::UpdateBattleInfo( const wxString& Tag )
       m_battle.CustomBattleOptions().loadOptions( OptionsWrapper::MapOption, m_battle.GetHostModName() );
       AddMMOptionsToList( m_map_opts_index, OptionsWrapper::MapOption );
 
+      m_minimap->UpdateMinimap();
+
     }
     else if ( key == _T("restrictions") )
     {
