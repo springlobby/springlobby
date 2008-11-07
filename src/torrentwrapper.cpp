@@ -977,7 +977,7 @@ void TorrentWrapper::RemoveUnneededTorrents()
 		wxString targetName =
 		    sett().GetCurrentUsedDataDir()
 		    + wxFileName::GetPathSeparator() + getDataSubdirForType(it->second->type)
-		    + wxFileName::GetPathSeparator() + it->second->name;
+		    + wxFileName::GetPathSeparator() + TowxString(it->first.name());
 
 		/* Do the rename.  `false' for parameter 3 means don't
 		 * overwrite the file if it doesn't already exist.
