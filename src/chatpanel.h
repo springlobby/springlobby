@@ -93,7 +93,7 @@ class ChatPanel : public wxPanel
     bool IsServerPanel();
     ChatPanelType GetPanelType();
 
-    void Say( wxString message );
+    void Say( const wxString& message );
     void Part();
     void FocusInputBox();
 
