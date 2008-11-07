@@ -48,7 +48,7 @@ class TASServer : public Server
     /// 0 if udp ping failed
     unsigned int UdpPing(unsigned int src_port, const wxString &target, unsigned int target_port, const wxString &message);
     /// specialized udp ping functions
-    void UdpPingTheServer(const wxString &message=_T("ipv4 sux!"));/// used for nat travelsal. pings the server.
+    void UdpPingTheServer( const wxString &message );/// used for nat travelsal. pings the server.
     void UdpPingAllClients();/// used when hosting with nat holepunching
 
     User& GetMe();

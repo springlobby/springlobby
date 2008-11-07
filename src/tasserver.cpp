@@ -468,7 +468,7 @@ void TASServer::Update( int mselapsed )
                         }
                         else
                         {
-                            UdpPingTheServer();
+                            UdpPingTheServer(m_user);
                         }
                     }
                     else
@@ -1552,7 +1552,7 @@ void TASServer::StartHostedBattle()
     {
         if ((battle->GetNatType()==IBattle::NAT_Hole_punching || (battle->GetNatType()==IBattle::NAT_Fixed_source_ports)))
         {
-            UdpPingTheServer();
+            UdpPingTheServer(m_user);
             for (int i=0;i<5;++i)UdpPingAllClients();
         }
     }
