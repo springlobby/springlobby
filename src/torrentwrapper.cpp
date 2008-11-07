@@ -970,25 +970,26 @@ void TorrentWrapper::RemoveUnneededTorrents()
             ///torrent has finished download, refresh unitsync and remove file from list
             try
             {
-		/* Grab the source (temporary) filename before we remove the download. */
+		/* Grab the source (temporary) and destination (final) filenames BEFORE we remove the download. */
 		wxString sourceName( TowxString( ( it->first.save_path() / it->first.name() ).file_string() ) );
-
-                ASSERT_EXCEPTION( RemoveTorrentByRow( it->second ), _T("failed to remove torrent: ")+ it->second->hash );
-
-		/* Move file from temporary download directory to final destination. */
 		wxString targetName =
 		    sett().GetCurrentUsedDataDir()
 		    + wxFileName::GetPathSeparator() + getDataSubdirForType(it->second->type)
 		    + wxFileName::GetPathSeparator() + TowxString(it->first.name());
 
-		/* Do the rename.  `false' for parameter 3 means don't
-		 * overwrite the file if it doesn't already exist.
+
+                ASSERT_EXCEPTION( RemoveTorrentByRow( it->second ), _T("failed to remove torrent: ")+ it->second->hash );
+
+		/* Move file from temporary download directory to final destination.  `false' for
+		 * parameter 3 means don't overwrite the file if it already exists.
 		 */
-		/** @todo handle wxRenameFile returning false (rename
-		 * failed, probably because the destinationfile
-		 * already exists).
-		 */
-		wxRenameFile(sourceName, targetName, false);
+		if ( ! wxRenameFile(sourceName, targetName, false) )
+		    wxLogError(wxString::Format(_T("torrent: Failed to move \"%s\" to \"%s\""),
+						sourceName.c_str(), targetName.c_str()));
+		else
+		    wxLogMessage(wxString::Format(_T("torrent: Moved \"%s\" to \"%s\""),
+						  sourceName.c_str(), targetName.c_str()));
+
                 m_socket_class->Send( _T("N-|")  + it->second->hash + _T("\n") ); ///notify the system we don't need the file anymore
 
                 wxCommandEvent refreshevt(UnitSyncReloadRequest); /// request an unitsync reload
