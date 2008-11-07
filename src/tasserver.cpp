@@ -122,7 +122,7 @@ IBattle::NatType IntToNatType( int nat );
 IBattle::GameType IntToGameType( int gt );
 
 TASServer::TASServer(): m_ser_ver(0), m_connected(false), m_online(false),
-        m_buffer(_T("")), m_last_udp_ping(0), m_ping_id(10000), m_udp_private_port(16941),m_battle_id(-1),
+        m_buffer(_T("")), m_last_udp_ping(0), m_ping_id(10000), m_udp_private_port(0),m_battle_id(-1),
         m_do_finalize_join_battle(false),
         m_finalize_join_battle_id(-1)
 {
@@ -259,8 +259,12 @@ void TASServer::Connect( const wxString& addr, const int port )
     m_addr=addr;
     try
     {
-      ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
-    } catch (...) { return ; }
+        ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
+    }
+    catch (...)
+    {
+        return ;
+    }
 
     m_sock->Connect( addr, port );
     if ( IsConnected() )
@@ -275,11 +279,13 @@ void TASServer::Connect( const wxString& addr, const int port )
 
 void TASServer::Disconnect()
 {
-    if(!m_sock){
-      return;
+    if (!m_sock)
+    {
+        return;
     }
-    if(!m_connected){
-      return;
+    if (!m_connected)
+    {
+        return;
     }
     SendCmd( _T("EXIT") ); // EXIT command for new protocol compatibility
     m_sock->Disconnect();
@@ -299,8 +305,12 @@ bool TASServer::Register( const wxString& addr, const int port, const wxString& 
 
     try
     {
-      ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
-    } catch (...) { return false ; }
+        ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
+    }
+    catch (...)
+    {
+        return false ;
+    }
     m_sock->Connect( addr, port );
     if ( !IsConnected() ) return false;
 
@@ -357,14 +367,14 @@ void TASServer::Login()
     wxString protocol = _T(" ") + GetProtocol();
     if ( m_server_lanmode )
     {
-       pass = _T("Cock-a-doodle-doo");
-       protocol = _T("");
+        pass = _T("Cock-a-doodle-doo");
+        protocol = _T("");
     }
     wxString localaddr;
     if ( m_sock ) localaddr = m_sock->GetLocalAddress();
     if ( localaddr.IsEmpty() ) localaddr = _T("*");
     SendCmd ( _T("LOGIN"), m_user + _T(" ") + pass + _T(" ") +
-        GetHostCPUSpeed() + _T(" ") + localaddr + _T(" SpringLobby ") + GetSpringLobbyVersion() + protocol );
+              GetHostCPUSpeed() + _T(" ") + localaddr + _T(" SpringLobby ") + GetSpringLobbyVersion() + protocol );
 }
 
 void TASServer::Logout()
@@ -396,8 +406,12 @@ void TASServer::Update( int mselapsed )
 {
     try
     {
-      ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
-    } catch (...) { return ; }
+        ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
+    }
+    catch (...)
+    {
+        return ;
+    }
 
     m_sock->OnTimer( mselapsed );
 
@@ -442,29 +456,29 @@ void TASServer::Update( int mselapsed )
             /// Nat travelsal "ping"
             if ( m_battle_id != -1 )
             {
-              Battle *battle=GetCurrentBattle();
-              if (battle)
-              {
-                  if ((battle->GetNatType()==IBattle::NAT_Hole_punching || (battle->GetNatType()==IBattle::IBattle::NAT_Fixed_source_ports) ) && !battle->GetInGame())
-                  {
-                      if (battle->IsFounderMe())
-                      {
-                          UdpPingTheServer(m_user);
-                          UdpPingAllClients();
-                      }
-                      else
-                      {
-                          UdpPingTheServer();
-                      }
-                  }
-                  else
-                  {
-                      /// old logging for debug
-                      //if(battle->GetNatType()!=NAT_Hole_punching)wxLogMessage( _T("pinging: current battle not using NAT_Hole_punching") );
-                      //if(battle->GetInGame())wxLogMessage( _T("pinging: current battle is in game") );
-                  }
-              }
-          }
+                Battle *battle=GetCurrentBattle();
+                if (battle)
+                {
+                    if ((battle->GetNatType()==IBattle::NAT_Hole_punching || (battle->GetNatType()==IBattle::IBattle::NAT_Fixed_source_ports) ) && !battle->GetInGame())
+                    {
+                        if (battle->IsFounderMe())
+                        {
+                            UdpPingTheServer(m_user);
+                            UdpPingAllClients();
+                        }
+                        else
+                        {
+                            UdpPingTheServer();
+                        }
+                    }
+                    else
+                    {
+                        /// old logging for debug
+                        //if(battle->GetNatType()!=NAT_Hole_punching)wxLogMessage( _T("pinging: current battle not using NAT_Hole_punching") );
+                        //if(battle->GetInGame())wxLogMessage( _T("pinging: current battle is in game") );
+                    }
+                }
+            }
         }
         HandlePinglist();
     }
@@ -507,8 +521,12 @@ void TASServer::ExecuteCommand( const wxString& in )
     if ( in.empty() ) return;
     try
     {
-    ASSERT_LOGIC( params.AfterFirst( '\n' ).IsEmpty(), _T("losing data") );
-    } catch (...) { return; }
+        ASSERT_LOGIC( params.AfterFirst( '\n' ).IsEmpty(), _T("losing data") );
+    }
+    catch (...)
+    {
+        return;
+    }
     cmd = params.BeforeFirst( ' ' );
     if ( params[0] == '#' )
     {
@@ -858,7 +876,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     }
     else if ( cmd == _T("ACQUIREUSERID") )
     {
-      SendCmd( _T("USERID"), GetProtocol() );
+        SendCmd( _T("USERID"), GetProtocol() );
     }
     else if ( cmd == _T("FORCELEAVECHANNEL") )
     {
@@ -922,12 +940,12 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     }
     else if ( cmd == _T("REDIRECT") )
     {
-      if ( m_online ) return;
-      wxString address = GetWordParam( params );
-      unsigned int port = GetIntParam( params );
-      if ( address.IsEmpty() ) return;
-      if ( port == 0 ) port = DEFSETT_DEFAULT_SERVER_PORT;
-      m_se->OnRedirect( address, port, m_user, m_pass );
+        if ( m_online ) return;
+        wxString address = GetWordParam( params );
+        unsigned int port = GetIntParam( params );
+        if ( address.IsEmpty() ) return;
+        if ( port == 0 ) port = DEFSETT_DEFAULT_SERVER_PORT;
+        m_se->OnRedirect( address, port, m_user, m_pass );
     }
     else
     {
@@ -942,8 +960,12 @@ void TASServer::SendCmd( const wxString& command, const wxString& param )
 
     try
     {
-      ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
-    } catch (...) { return ; }
+        ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
+    }
+    catch (...)
+    {
+        return ;
+    }
 
     wxString msg;
     if ( param.IsEmpty() ) msg = ( command + _T("\n"));
@@ -1221,9 +1243,6 @@ void TASServer::HostBattle( BattleOptions bo, const wxString& password )
     wxLogMessage( _T("OPENBATTLE %s"), cmd.c_str() );
     SendCmd( _T("OPENBATTLE"), cmd );
 
-
-    m_udp_private_port=bo.port;
-
     if (bo.nattype>0)UdpPingTheServer(m_user);
 
     // OPENBATTLE type natType password port maphash {map} {title} {modname}
@@ -1248,8 +1267,8 @@ void TASServer::JoinBattle( const int& battleid, const wxString& password )
             {
                 m_udp_private_port=sett().GetClientPort();
 
-                m_last_udp_ping = time(0);/// The messages received from server, and Update function run in different thread. (Which is total WTF)
-                /// Hence its important to set time now, to prevent Update()
+                m_last_udp_ping = time(0);
+                /// its important to set time now, to prevent Update()
                 /// from calling FinalizeJoinBattle() on timeout.
                 /// m_do_finalize_join_battle must be set to true after setting time, not before.
                 m_do_finalize_join_battle=true;
@@ -1305,15 +1324,23 @@ void TASServer::SendHostInfo( HostInfo update )
 
     try
     {
-      ASSERT_LOGIC( m_battle_id != -1, _T("invalid m_battle_id value") );
-      ASSERT_LOGIC( BattleExists(m_battle_id), _T("battle doesn't exists") );
-    } catch (...) { return; }
+        ASSERT_LOGIC( m_battle_id != -1, _T("invalid m_battle_id value") );
+        ASSERT_LOGIC( BattleExists(m_battle_id), _T("battle doesn't exists") );
+    }
+    catch (...)
+    {
+        return;
+    }
 
     Battle& battle = GetBattle( m_battle_id );
     try
     {
-      ASSERT_LOGIC( battle.IsFounderMe(), _T("I'm not founder") );
-    } catch (...) { return; }
+        ASSERT_LOGIC( battle.IsFounderMe(), _T("I'm not founder") );
+    }
+    catch (...)
+    {
+        return;
+    }
 
     //BattleOptions bo = battle.opts();
 
@@ -1354,8 +1381,8 @@ void TASServer::SendHostInfo( HostInfo update )
 
         for ( unsigned int i = 16; i < battle.GetNumRects(); i++ )  /// FIXME (BrainDamage#1#):  remove this when not needing to connect to TASserver (because doesn't support >16 start boxes)
         {
-           battle.RemoveStartRect( i );
-           battle.StartRectRemoved( i );
+            battle.RemoveStartRect( i );
+            battle.StartRectRemoved( i );
         }
 
         unsigned int numrects =  battle.GetNumRects();
@@ -1404,17 +1431,25 @@ void TASServer::SendHostInfo( const wxString& Tag )
 
     try
     {
-      ASSERT_LOGIC( m_battle_id != -1, _T("invalid m_battle_id value") );
-      ASSERT_LOGIC( BattleExists(m_battle_id), _T("battle doesn't exists") );
-    } catch (...) { return; }
+        ASSERT_LOGIC( m_battle_id != -1, _T("invalid m_battle_id value") );
+        ASSERT_LOGIC( BattleExists(m_battle_id), _T("battle doesn't exists") );
+    }
+    catch (...)
+    {
+        return;
+    }
 
     Battle& battle = GetBattle( m_battle_id );
 
     try
     {
-      Battle& battle = GetBattle( m_battle_id );
-      ASSERT_LOGIC( battle.IsFounderMe(), _T("I'm not founder") );
-    } catch (...) { return; }
+        Battle& battle = GetBattle( m_battle_id );
+        ASSERT_LOGIC( battle.IsFounderMe(), _T("I'm not founder") );
+    }
+    catch (...)
+    {
+        return;
+    }
 
     wxString cmd;
 
@@ -1453,9 +1488,13 @@ Battle* TASServer::GetCurrentBattle()
 {
     try
     {
-      ASSERT_EXCEPTION( m_battle_id != -1, _T("invalid m_battle_id value") );
-      ASSERT_LOGIC( BattleExists(m_battle_id), _T("battle doesn't exists") );
-    } catch (...) { return NULL; }
+        ASSERT_EXCEPTION( m_battle_id != -1, _T("invalid m_battle_id value") );
+        ASSERT_LOGIC( BattleExists(m_battle_id), _T("battle doesn't exists") );
+    }
+    catch (...)
+    {
+        return NULL;
+    }
 
     return &GetBattle( m_battle_id );
 }
@@ -1501,9 +1540,13 @@ void TASServer::StartHostedBattle()
     wxLogDebugFunc( _T("") );
     try
     {
-    ASSERT_LOGIC( m_battle_id != -1, _T("Invalid m_battle_id") );
-    ASSERT_LOGIC( BattleExists(m_battle_id), _T("battle doesn't exists") );
-    } catch (...) { return; }
+        ASSERT_LOGIC( m_battle_id != -1, _T("Invalid m_battle_id") );
+        ASSERT_LOGIC( BattleExists(m_battle_id), _T("battle doesn't exists") );
+    }
+    catch (...)
+    {
+        return;
+    }
     Battle *battle=GetCurrentBattle();
     if (battle)
     {
@@ -1523,10 +1566,14 @@ void TASServer::ForceSide( int battleid, const wxString& nick, int side )
     wxLogDebugFunc( _T("") );
     try
     {
-    ASSERT_LOGIC( m_battle_id != -1, _T("Invalid m_battle_id") );
-    ASSERT_LOGIC( BattleExists(m_battle_id), _T("battle doesn't exists") );
-    ASSERT_LOGIC( battleid == m_battle_id, _T("Not current battle") );
-    } catch (...) { return; }
+        ASSERT_LOGIC( m_battle_id != -1, _T("Invalid m_battle_id") );
+        ASSERT_LOGIC( BattleExists(m_battle_id), _T("battle doesn't exists") );
+        ASSERT_LOGIC( battleid == m_battle_id, _T("Not current battle") );
+    }
+    catch (...)
+    {
+        return;
+    }
 
     if ( nick == GetMe().GetNick() )
     {
@@ -1549,10 +1596,14 @@ void TASServer::ForceTeam( int battleid, const wxString& nick, int team )
     wxLogDebugFunc( _T("") );
     try
     {
-    ASSERT_LOGIC( m_battle_id != -1, _T("Invalid m_battle_id") );
-    ASSERT_LOGIC( BattleExists(m_battle_id), _T("battle doesn't exists") );
-    ASSERT_LOGIC( battleid == m_battle_id, _T("Not current battle") );
-    } catch (...) { return; }
+        ASSERT_LOGIC( m_battle_id != -1, _T("Invalid m_battle_id") );
+        ASSERT_LOGIC( BattleExists(m_battle_id), _T("battle doesn't exists") );
+        ASSERT_LOGIC( battleid == m_battle_id, _T("Not current battle") );
+    }
+    catch (...)
+    {
+        return;
+    }
 
     if ( !GetBattle(battleid).IsFounderMe() )
     {
@@ -1578,10 +1629,14 @@ void TASServer::ForceAlly( int battleid, const wxString& nick, int ally )
     wxLogDebugFunc( _T("") );
     try
     {
-    ASSERT_LOGIC( m_battle_id != -1, _T("Invalid m_battle_id") );
-    ASSERT_LOGIC( BattleExists(m_battle_id), _T("battle doesn't exists") );
-    ASSERT_LOGIC( battleid == m_battle_id, _T("Not current battle") );
-    } catch (...) { return; }
+        ASSERT_LOGIC( m_battle_id != -1, _T("Invalid m_battle_id") );
+        ASSERT_LOGIC( BattleExists(m_battle_id), _T("battle doesn't exists") );
+        ASSERT_LOGIC( battleid == m_battle_id, _T("Not current battle") );
+    }
+    catch (...)
+    {
+        return;
+    }
 
     if ( !GetBattle(battleid).IsFounderMe() )
     {
@@ -1607,10 +1662,14 @@ void TASServer::ForceColour( int battleid, const wxString& nick, const wxColour&
     wxLogDebugFunc( _T("") );
     try
     {
-    ASSERT_LOGIC( m_battle_id != -1, _T("Invalid m_battle_id") );
-    ASSERT_LOGIC( BattleExists(m_battle_id), _T("battle doesn't exists") );
-    ASSERT_LOGIC( battleid == m_battle_id, _T("Not current battle") );
-    } catch (...) { return; }
+        ASSERT_LOGIC( m_battle_id != -1, _T("Invalid m_battle_id") );
+        ASSERT_LOGIC( BattleExists(m_battle_id), _T("battle doesn't exists") );
+        ASSERT_LOGIC( battleid == m_battle_id, _T("Not current battle") );
+    }
+    catch (...)
+    {
+        return;
+    }
 
     if ( !GetBattle(battleid).IsFounderMe() )
     {
@@ -1641,10 +1700,14 @@ void TASServer::ForceSpectator( int battleid, const wxString& nick, bool spectat
     wxLogDebugFunc( _T("") );
     try
     {
-    ASSERT_LOGIC( m_battle_id != -1, _T("Invalid m_battle_id") );
-    ASSERT_LOGIC( BattleExists(m_battle_id), _T("battle doesn't exists") );
-    ASSERT_LOGIC( battleid == m_battle_id, _T("Not current battle") );
-    } catch (...) { return; }
+        ASSERT_LOGIC( m_battle_id != -1, _T("Invalid m_battle_id") );
+        ASSERT_LOGIC( BattleExists(m_battle_id), _T("battle doesn't exists") );
+        ASSERT_LOGIC( battleid == m_battle_id, _T("Not current battle") );
+    }
+    catch (...)
+    {
+        return;
+    }
 
     if ( !GetBattle(battleid).IsFounderMe())
     {
@@ -1685,10 +1748,14 @@ void TASServer::BattleKickPlayer( int battleid, const wxString& nick )
     wxLogDebugFunc( _T("") );
     try
     {
-    ASSERT_LOGIC( m_battle_id != -1, _T("Invalid m_battle_id") );
-    ASSERT_LOGIC( BattleExists(m_battle_id), _T("battle doesn't exists") );
-    ASSERT_LOGIC( battleid == m_battle_id, _T("Not current battle") );
-    } catch (...) { return; }
+        ASSERT_LOGIC( m_battle_id != -1, _T("Invalid m_battle_id") );
+        ASSERT_LOGIC( BattleExists(m_battle_id), _T("battle doesn't exists") );
+        ASSERT_LOGIC( battleid == m_battle_id, _T("Not current battle") );
+    }
+    catch (...)
+    {
+        return;
+    }
 
     if ( !GetBattle(battleid).IsFounderMe() )
     {
@@ -1712,10 +1779,14 @@ void TASServer::SetHandicap( int battleid, const wxString& nick, int handicap)
     wxLogDebugFunc( _T("") );
     try
     {
-    ASSERT_LOGIC( m_battle_id != -1, _T("Invalid m_battle_id") );
-    ASSERT_LOGIC( BattleExists(m_battle_id), _T("battle doesn't exists") );
-    ASSERT_LOGIC( battleid == m_battle_id, _T("Not current battle") );
-    } catch (...) { return; }
+        ASSERT_LOGIC( m_battle_id != -1, _T("Invalid m_battle_id") );
+        ASSERT_LOGIC( BattleExists(m_battle_id), _T("battle doesn't exists") );
+        ASSERT_LOGIC( battleid == m_battle_id, _T("Not current battle") );
+    }
+    catch (...)
+    {
+        return;
+    }
     if ( !GetBattle(battleid).IsFounderMe() )
     {
         DoActionBattle( battleid, _T("thinks ") + nick + _T(" should get a ") + wxString::Format( _T("%d"), handicap) + _T("% resource bonus") );
@@ -1732,10 +1803,14 @@ void TASServer::AddBot( int battleid, const wxString& nick, const wxString& owne
     wxLogDebugFunc( _T("") );
     try
     {
-    ASSERT_LOGIC( m_battle_id != -1, _T("Invalid m_battle_id") );
-    ASSERT_LOGIC( BattleExists(m_battle_id), _T("battle doesn't exists") );
-    ASSERT_LOGIC( battleid == m_battle_id, _T("Not current battle") );
-    } catch (...) { return; }
+        ASSERT_LOGIC( m_battle_id != -1, _T("Invalid m_battle_id") );
+        ASSERT_LOGIC( BattleExists(m_battle_id), _T("battle doesn't exists") );
+        ASSERT_LOGIC( battleid == m_battle_id, _T("Not current battle") );
+    }
+    catch (...)
+    {
+        return;
+    }
 
     UTASBattleStatus tasbs;
     tasbs.tasdata = ConvTasbattlestatus( status );
@@ -1754,10 +1829,14 @@ void TASServer::RemoveBot( int battleid, const wxString& nick )
     wxLogDebugFunc( _T("") );
     try
     {
-    ASSERT_LOGIC( m_battle_id != -1, _T("Invalid m_battle_id") );
-    ASSERT_LOGIC( BattleExists(m_battle_id), _T("battle doesn't exists") );
-    ASSERT_LOGIC( battleid == m_battle_id, _T("Not current battle") );
-    } catch (...) { return; }
+        ASSERT_LOGIC( m_battle_id != -1, _T("Invalid m_battle_id") );
+        ASSERT_LOGIC( BattleExists(m_battle_id), _T("battle doesn't exists") );
+        ASSERT_LOGIC( battleid == m_battle_id, _T("Not current battle") );
+    }
+    catch (...)
+    {
+        return;
+    }
 
     Battle& battle = GetBattle( battleid );
     BattleBot* bot = battle.GetBot( nick );
@@ -1779,10 +1858,14 @@ void TASServer::UpdateBot( int battleid, const wxString& nick, UserBattleStatus 
     wxLogDebugFunc( _T("") );
     try
     {
-    ASSERT_LOGIC( m_battle_id != -1, _T("Invalid m_battle_id") );
-    ASSERT_LOGIC( BattleExists(m_battle_id), _T("battle doesn't exists") );
-    ASSERT_LOGIC( battleid == m_battle_id, _T("Not current battle") );
-    } catch (...) { return; }
+        ASSERT_LOGIC( m_battle_id != -1, _T("Invalid m_battle_id") );
+        ASSERT_LOGIC( BattleExists(m_battle_id), _T("battle doesn't exists") );
+        ASSERT_LOGIC( battleid == m_battle_id, _T("Not current battle") );
+    }
+    catch (...)
+    {
+        return;
+    }
 
     UTASBattleStatus tasbs;
     tasbs.tasdata = ConvTasbattlestatus( status );
@@ -1939,8 +2022,8 @@ void TASServer::UdpPingAllClients()/// used when hosting with nat holepunching. 
 
 wxString TASServer::GetProtocol()
 {
-  wxString pszstring;
-  return pszstring;
+    wxString pszstring;
+    return pszstring;
 }
 
 //! @brief used to check if the NAT is done properly when hosting
