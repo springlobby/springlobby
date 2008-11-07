@@ -183,7 +183,7 @@ wxString AutoHost::GetExtraCommandLineParams()
     #ifndef __WXMSW__
     return _T("--minimise --quit=1000000000");
     #else
-    return _T("/minimise /quit=1000000000");
+    return _T("/minimise /quit 1000000000");
     #endif
   }
   else
