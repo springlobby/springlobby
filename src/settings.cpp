@@ -19,6 +19,9 @@
 #include <wx/font.h>
 #include <wx/log.h>
 #include <wx/wfstream.h>
+#ifdef __WXMSW__
+#include <wx/msw/registry.h>
+#endif
 
 #include "nonportable.h"
 #include "settings.h"
