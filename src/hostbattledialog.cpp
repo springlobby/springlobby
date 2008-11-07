@@ -283,4 +283,5 @@ int HostBattleDialog::GetSelectedRank()
 void HostBattleDialog::OnNatChange( wxCommandEvent& event  )
 {
   m_port_test_check->Enable( m_nat_radios->GetSelection() == 0 );
+  m_port_text->Enable( m_nat_radios->GetSelection() == 0 );
 }
