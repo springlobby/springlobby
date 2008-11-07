@@ -824,6 +824,7 @@ void ChatPanel::StatusMessage( const wxString& message )
 	} else {
 		wxFont f = m_chatlog_text->GetFont();
 		f.SetFamily( wxFONTFAMILY_MODERN );
+		if( CPT_Server == m_type ) SetIconHighlight( highlight_important );
 		OutputLine( _T( " ** Server ** " ) + message, sett().GetChatColorServer(), f );
 	}
 }
