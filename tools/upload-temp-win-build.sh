@@ -8,4 +8,6 @@ pwd
 branch=$((git branch | grep "*") | sed -e "s;*\ ;;g" -e "s;\n;;g")
 filename=sl_${branch}.exe
 scp springlobby.exe graasmilk.net:springlobby.info/temp/builds/${filename}
+ssh rg chown www-data:wwwdata /usr/local/www/springlobby.info/temp/builds/${filename}
+springlobby.info/temp/builds/${filename}
 echo "http://springlobby.info/temp/builds/${filename}"
