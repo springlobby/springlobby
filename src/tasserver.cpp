@@ -980,6 +980,12 @@ void TASServer::SendCmd( const wxString& command, const wxString& param )
 
 void TASServer::RelayCmd( const wxString& command, const wxString& param )
 {
+    if ( m_relay_host_bot.IsEmpty() )
+    {
+      wxLogWarning( _T("Trying to send relayed commands but no relay bot is set!") );
+      return;
+    }
+
     wxString msg = _T("!"); // prefix commands with !
     if ( param.IsEmpty() ) msg << command;
     else msg << command << _T(" ") << param;
