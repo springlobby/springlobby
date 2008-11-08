@@ -470,6 +470,8 @@ void BattleListTab::OnHost( wxCommandEvent& event )
 
     bo.maxplayers = sett().GetLastHostPlayerNum();
 
+    bo.isproxy = sett().GetLastHostRelayedMode();
+
     m_ui.GetServer().HostBattle( bo, sett().GetLastHostPassword() );
   }
 }
