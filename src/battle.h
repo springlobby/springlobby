@@ -19,7 +19,7 @@ const unsigned int DEFAULT_EXTERNAL_UDP_SOURCE_PORT = 16941;
 struct BattleOptions
 {
   BattleOptions() :
-    battleid(-1),islocked(false),isreplay(false),ispassworded(false),rankneeded(0),ranklimittype(IBattle::rank_limit_autospec),
+    battleid(-1),islocked(false),isreplay(false),ispassworded(false),rankneeded(0),isproxy(false),ranklimittype(IBattle::rank_limit_autospec),
     nattype(IBattle::NAT_None),port(DEFAULT_SERVER_PORT),externaludpsourceport(DEFAULT_EXTERNAL_UDP_SOURCE_PORT),internaludpsourceport(DEFAULT_EXTERNAL_UDP_SOURCE_PORT),maxplayers(0),spectators(0),
     guilistactiv(false) {}
 
@@ -28,6 +28,7 @@ struct BattleOptions
   bool isreplay;
   bool ispassworded;
   int rankneeded;
+  bool isproxy;
   IBattle::RankLimitType ranklimittype;
 
   wxString founder;
@@ -219,6 +220,9 @@ class Battle : public CommonBattle
 
     void SetAutoLockOnStart( bool value );
     bool GetAutoLockOnStart();
+
+    void SetIsProxy( bool value );
+    bool IsProxy();
 
     ///< quick hotfix for bans
     bool CheckBan(User &user);

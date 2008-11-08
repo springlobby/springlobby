@@ -550,6 +550,16 @@ bool Battle::GetAutoLockOnStart()
   return m_autolock_on_start;
 }
 
+void Battle::SetIsProxy( bool value )
+{
+  m_opts.isproxy = value;
+}
+
+bool Battle::IsProxy()
+{
+  return m_opts.isproxy;
+}
+
 
 void CommonBattle::AddStartRect( unsigned int allyno, unsigned int left, unsigned int top, unsigned int right, unsigned int bottom )
 {

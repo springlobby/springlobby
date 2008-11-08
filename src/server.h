@@ -184,6 +184,8 @@ class Server : public iNetClass
     UserList m_users;
     BattleList m_battles;
 
+    wxString m_relay_host_bot;
+
     User& _AddUser( const wxString& user );
     void _RemoveUser( const wxString& nickname );
 

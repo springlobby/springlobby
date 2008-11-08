@@ -169,6 +169,7 @@ class TASServer : public Server
 
     void ReceiveAndExecute();
     void SendCmd( const wxString& command, const wxString& param = _T("") );
+    void RelayCmd( const wxString& command, const wxString& param = _T("") );
 
 };
 
