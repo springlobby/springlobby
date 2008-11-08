@@ -8,6 +8,7 @@
 #include <wx/intl.h>
 #include <wx/log.h>
 #include <wx/fileconf.h>
+#include <wx/filename.h>
 
 OptionsWrapper::OptionsWrapper()
 {
@@ -479,7 +480,7 @@ void OptionsWrapper::ParseSectionMap( mmSectionTree& section_tree, const IUnitSy
 mmSectionTree::mmSectionTree()
     : m_tree ( 0 )
 {
-    m_tree = new ConfigType(  _T("SL-temp"), wxEmptyString, _T("/tmp/sl_tree") );
+    m_tree = new ConfigType(  _T("SL-temp"), wxEmptyString, wxFileName::CreateTempFileName( _T("springlobby-") ) );
 }
 
 mmSectionTree::~mmSectionTree()
