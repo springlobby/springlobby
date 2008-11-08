@@ -445,7 +445,7 @@ mmSectionTree::mmSectionTree()
     : m_tree ( 0 )
 {
 
-    m_tree = new ConfigType(  _T("owiscv"), wxEmptyString, _T(".owiscv.conf"), _T("owiscv") );
+    m_tree = new ConfigType(  _T("SL-temp"), wxEmptyString, _T("/tmp/sl_tree") );
 }
 
 mmSectionTree::~mmSectionTree()
@@ -455,11 +455,14 @@ mmSectionTree::~mmSectionTree()
 //        delete m_tree;
 //        m_tree = 0;
 //    }
+    #ifndef NDEBUG
+        m_tree->Flush();
+    #endif
 }
 
 void mmSectionTree::AddSection ( const wxString& parentpath, const mmOptionSection& section )
 {
-    wxString fullpath = parentpath + section.key + _T("/");
+    wxString fullpath = parentpath + _T("/") + section.key + _T("/");
     m_tree->Write( fullpath + _T("key") ,section.key );
 }
 
@@ -470,22 +473,26 @@ wxString mmSectionTree::FindParentpath ( const wxString& parent_key )
     bool cont = m_tree->GetFirstGroup( current, dummy );
     while ( cont )
     {
-        if ( current.EndsWith( parent_key ) )
+        //! \todo if possibly remove the .Lower()
+        if ( current.EndsWith( parent_key.Lower() ) )
             return current;
         cont = m_tree->GetNextGroup( current, dummy );
     }
-    return _T("/");
+    return _T("");
 }
 
 void mmSectionTree::AddSection( const mmOptionSection section)
 {
     m_section_map[section.key] = section;
-    if ( !section.section.IsEmpty() )
+    wxString name = section.section;
+    if ( section.section == SLGlobals::nosection_name )
     {
         AddSection( _T("/"), section );
     }
-    else {
-        AddSection( FindParentpath( section.section ), section );
+    else
+    {
+        wxString parent = FindParentpath( section.section );
+        AddSection( parent , section );
     }
 }
 
