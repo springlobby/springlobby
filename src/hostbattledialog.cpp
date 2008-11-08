@@ -136,7 +136,7 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent ): wxDialog( parent, -1, _(
 	//m_nat_radios->Enable( false );
   m_nat_radios->Enable( true );
 
-	m_nat_radios->SetToolTip( TE(_("NAT traversal to use. Experimental support.")) );
+	m_nat_radios->SetToolTip( TE(_("NAT traversal to use.")) );
 
 	m_pl_nat_sizer->Add( m_nat_radios, 1, wxALL|wxEXPAND, 5 );
 

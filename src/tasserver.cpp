@@ -605,6 +605,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         mod = GetSentenceParam( params );
         m_se->OnBattleOpened( id, replay, IntToNatType( nat ), nick, host, port, maxplayers,
                               haspass, rank, hash, map, title, mod );
+        if ( host == m_relay_host_bot ) JoinBattle( id, sett().GetLastHostPassword() ); // autojoin relayed host battles
     }
     else if ( cmd == _T("JOINEDBATTLE") )
     {
@@ -930,6 +931,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     }
     else if ( cmd == _T("FORCEQUITBATTLE"))
     {
+        m_relay_host_bot = _T("");
         m_se->OnKickedFromBattle();
     }
     else if ( cmd == _T("BROADCAST"))
@@ -1323,7 +1325,7 @@ void TASServer::LeaveBattle( const int& battleid )
 {
     //LEAVEBATTLE
     wxLogDebugFunc( _T("") );
-
+    m_relay_host_bot = _T("");
     SendCmd( _T("LEAVEBATTLE") );
 }
 
