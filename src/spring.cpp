@@ -108,7 +108,9 @@ bool Spring::Run( Battle& battle )
 
 
     wxFile f( path + _T("script.txt"), wxFile::write );
+    battle.DisableHostStatusInProxyMode( true );
     f.Write( WriteScriptTxt(battle) );
+    battle.DisableHostStatusInProxyMode( false );
     f.Close();
 
   } catch (...) {

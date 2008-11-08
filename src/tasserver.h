@@ -132,6 +132,8 @@ class TASServer : public Server
 
     int TestOpenPort( unsigned int port );
 
+    void SendScriptToProxy( const wxString& script );
+
   protected:
 
     //! @brief Struct used internally by the TASServer class to calculate ping roundtimes.

@@ -61,7 +61,8 @@ Battle::Battle( Server& serv, int id ) :
   CommonBattle(id,false,0), //m_ingame(false),m_order(0)
   m_serv(serv),
   m_ah(*this),
-  m_autolock_on_start(false)
+  m_autolock_on_start(false),
+  m_generating_script(false)
 {
 
 
@@ -312,7 +313,7 @@ User& Battle::GetMe() const
 
 bool Battle::IsFounderMe() const
 {
-  return (m_opts.founder == m_serv.GetMe().GetNick());
+  return ( ( m_opts.founder == m_serv.GetMe().GetNick() ) || ( m_opts.isproxy  && !m_generating_script ) );
 }
 
 int Battle::GetMyPlayerNum() const

@@ -230,6 +230,8 @@ class Battle : public CommonBattle
 
     void SetImReady( bool ready );
 
+    void DisableHostStatusInProxyMode( bool value ) { m_generating_script = value; }
+
     User& GetMe() const;
     bool IsFounderMe() const;
 
@@ -244,6 +246,7 @@ class Battle : public CommonBattle
     Server& m_serv;
     AutoHost m_ah;
     bool m_autolock_on_start;
+    bool m_generating_script;
 
     void RemoveUser( wxString const& user ) {}
 };

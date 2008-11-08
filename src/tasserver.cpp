@@ -6,6 +6,7 @@
 #include <wx/protocol/http.h>
 #include <wx/socket.h>
 #include <wx/log.h>
+#include <wx/tokenzr.h>
 
 #include <stdexcept>
 #include <algorithm>
@@ -1912,6 +1913,16 @@ void TASServer::UpdateBot( int battleid, const wxString& nick, UserBattleStatus 
     else RelayCmd( _T("UPDATEBOT"), nick + wxString::Format( _T(" %d %d"), tasbs.data, tascl.data ) );
 }
 
+void TASServer::SendScriptToProxy( const wxString& script )
+{
+  RelayCmd( _T("CLEANSCRIPT") );
+  wxStringTokenizer tkzr( script, _T("\n") );
+  while ( tkzr.HasMoreTokens() )
+  {
+      wxString line = tkzr.GetNextToken();
+      RelayCmd( _T("APPENDSCRIPTLINE"), line );
+  }
+}
 
 void TASServer::OnConnected( Socket* sock )
 {
