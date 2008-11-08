@@ -11,6 +11,12 @@ mmOptionModel::mmOptionModel(wxString name_, wxString key_, wxString description
     else
         ct_type = ct_undefined; //lobby will chooose best fit
 
+    if ( section == wxEmptyString )
+        section = SLGlobals::nosection_name;
+
+    if ( ct_type_string == wxEmptyString )
+        ct_type_string  = SLGlobals::nostyle_name;
+
 }
 
 mmOptionModel::mmOptionModel(wxString name_, wxString key_, wxString description_, OptionType type_,
