@@ -993,7 +993,7 @@ void TASServer::SendCmd( const wxString& command, const wxString& param )
     m_sock->Send( msg );
 }
 
-void TASServer::RelayCmd( const wxString& command, const wxString& param )
+void TASServer::RelayCmd(  const wxString& command, const wxString& param )
 {
     if ( m_relay_host_bot.IsEmpty() )
     {
@@ -1001,9 +1001,9 @@ void TASServer::RelayCmd( const wxString& command, const wxString& param )
       return;
     }
 
-    wxString msg = _T("!"); // prefix commands with !
-    if ( param.IsEmpty() ) msg << command;
-    else msg << command << _T(" ") << param;
+    wxString msg = _T("!"); // prefix comma,nds with !
+    if ( param.IsEmpty() ) msg << command.Lower();
+    else msg << command.Lower() << _T(" ") << param;
     SayPrivate( m_relay_host_bot, msg );
 }
 
@@ -1280,7 +1280,7 @@ void TASServer::HostBattle( BattleOptions bo, const wxString& password )
     }
     else
     {
-       SayPrivate( _T("AutoHostManager"), _T("!SPAWN") );
+       SayPrivate( _T("AutoHostManager"), _T("!spawn") );
        m_delayed_open_command = cmd;
     }
 
