@@ -24,6 +24,8 @@ class mmSectionTree {
 
         SectionVector GetSectionVector();
 
+        void Clear();
+
     protected:
         //map key -> option
         typedef std::map< wxString, mmOptionSection > SectionMap;
@@ -132,7 +134,7 @@ public:
 	GameOptions opts[optionCategoriesCount];
 
 	//! after loading sections into map, parse them into tree
-	void ParseSectionMap( mmSectionTree section_tree, IUnitSync::OptionMapSection section_ammmp );
+	void ParseSectionMap( mmSectionTree& section_tree, const IUnitSync::OptionMapSection& section_map );
 protected:
 	//! used for code clarity in setOptions()
 	bool setSingleOptionTypeSwitch(wxString key, wxString value, GameOption modmapFlag, OptionType optType);

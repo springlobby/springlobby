@@ -62,7 +62,8 @@ bool OptionsWrapper::loadOptions(GameOption modmapFlag, wxString name)
 		case MapOption:
 			try
 			{
-        opt = usync().GetMapOptions(name);
+                opt = usync().GetMapOptions(name);
+                ParseSectionMap( m_map_sections, opt.section_map );
 			}
 			catch(...)
 			{
@@ -73,7 +74,8 @@ bool OptionsWrapper::loadOptions(GameOption modmapFlag, wxString name)
 		case ModOption:
 			try
 			{
-        opt = usync().GetModOptions(name);
+                opt = usync().GetModOptions(name);
+                ParseSectionMap( m_mod_sections, opt.section_map );
 			}
 			catch(...)
 			{
@@ -431,20 +433,28 @@ wxString OptionsWrapper::GetNameListOptItemKey(wxString optkey, wxString itemnam
 	return wxEmptyString;
 }
 
-void OptionsWrapper::ParseSectionMap( mmSectionTree section_tree, IUnitSync::OptionMapSection section_ammmp )
+void OptionsWrapper::ParseSectionMap( mmSectionTree& section_tree, const IUnitSync::OptionMapSection& section_map )
 {
-
+    for ( IUnitSync::OptionMapSectionConstIter it = section_map.begin(); it != section_map.end(); ++it )
+    {
+        section_tree.AddSection( it->second );
+    }
 }
 
 mmSectionTree::mmSectionTree()
+    : m_tree ( 0 )
 {
-    m_tree = new ConfigType( );
+
+    m_tree = new ConfigType(  _T("owiscv"), wxEmptyString, _T(".owiscv.conf"), _T("owiscv") );
 }
 
 mmSectionTree::~mmSectionTree()
 {
-    if ( m_tree )
-        delete m_tree;
+    //! \todo wth does this segfault?
+//    if ( m_tree ) {
+//        delete m_tree;
+//        m_tree = 0;
+//    }
 }
 
 void mmSectionTree::AddSection ( const wxString& parentpath, const mmOptionSection& section )
@@ -484,3 +494,8 @@ mmSectionTree::SectionVector mmSectionTree::GetSectionVector()
 
 }
 
+void mmSectionTree::Clear()
+{
+    m_section_map.clear();
+    //m_tree->DeleteAll();
+}

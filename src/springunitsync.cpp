@@ -397,6 +397,7 @@ void GetOptionCachefileEntry( const int i, wxArrayString& entry, GameOptions& re
       {
         ret.section_map[key] = mmOptionSection( name, key, susynclib().GetOptionDesc(i),
             susynclib().GetOptionSection(i), susynclib().GetOptionStyle(i) );
+        wxString section = susynclib().GetOptionSection(i);
 
         entry.Add( ret.section_map[key].name );
         wxString descr = ret.section_map[key].description;
