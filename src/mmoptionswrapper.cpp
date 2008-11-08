@@ -452,27 +452,30 @@ void OptionsWrapper::ParseSectionMap( mmSectionTree& section_tree, const IUnitSy
         relation_map[it->second.key] = it->second.section;
     }
 
+    RelationMapIter rit = relation_map.begin();
     // no more items in the map means we've added them all
     while ( relation_map.size() > 0 )
     {
-        for ( RelationMapIter rit = relation_map.begin(); rit != relation_map.end(); )
+        RelationMapIter rit_next = rit; // in case we need to delete
+        ++rit_next;
+
+        if ( relation_map.find(rit->second) == relation_map.end() )
         {
-            RelationMapIter rit_next = rit; // in case we need to delete
-            ++rit_next;
-
-            if ( relation_map.find(rit->second) == relation_map.end() )
-            {
-                //either we already added this sections parent or it's a root section
-                IUnitSync::OptionMapSectionConstIter section = section_map.find(rit->first);
-                assert ( section != section_map.end() );
-                    section_tree.AddSection( section->second );
+            //either we already added this sections parent or it's a root section
+            IUnitSync::OptionMapSectionConstIter section = section_map.find(rit->first);
+            assert ( section != section_map.end() );
+                section_tree.AddSection( section->second );
 
 
-                  //we're done with this section, so remove it
-                relation_map.erase(rit);
-            }
-            rit = rit_next;
+              //we're done with this section, so remove it
+            relation_map.erase(rit);
         }
+
+        rit = rit_next;
+
+        //we've reached the end of the map, restart at beginning
+        if ( rit == relation_map.end() )
+            rit = relation_map.begin();
     }
 
 }
