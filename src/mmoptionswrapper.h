@@ -62,8 +62,7 @@ public:
 	virtual ~OptionsWrapper();
 	//! just calls loadOptions(MapOption,mapname)
 	bool loadMapOptions(wxString mapname);
-	//! obsolete
-	bool reloadMapOptions(wxString mapname);
+
 	//! load corresponding options through unitsync calls
 	/*!
 	 * the containers for corresponding flag are recreated and then gets the number of options from unitsync

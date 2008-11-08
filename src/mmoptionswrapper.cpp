@@ -34,8 +34,8 @@ void OptionsWrapper::unLoadOptions(GameOption i)
     case MapOption:
         m_map_sections.Clear();
         break;
-    case MapOption:
-        m_map_sections.Clear();
+    case ModOption:
+        m_mod_sections.Clear();
         break;
     default:
         break;
@@ -395,14 +395,6 @@ bool  OptionsWrapper::setSingleOptionTypeSwitch(wxString key, wxString value, Ga
 	}
 	//if we made it here, all is good
 	return true;
-}
-
-bool OptionsWrapper::reloadMapOptions(wxString mapname)
-{
-  GameOptions empty;
-	opts[MapOption] = empty;
-
-	return loadMapOptions(mapname);
 }
 
 wxString OptionsWrapper::GetNameListOptValue(wxString key, GameOption flag) const
