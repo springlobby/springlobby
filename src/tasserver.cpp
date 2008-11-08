@@ -580,6 +580,11 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         contry = GetWordParam( params );
         cpu = GetIntParam( params );
         m_se->OnNewUser( nick, contry, cpu );
+        if ( nick == m_relay_host_bot )
+        {
+           RelayCmd( _T("OPENBATTLE"), m_delayed_open_command ); // relay bot is deployed, send host command
+           m_delayed_open_command = _T("");
+        }
     }
     else if ( cmd == _T("CLIENTSTATUS") )
     {
@@ -634,6 +639,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     else if ( cmd == _T("BATTLECLOSED") )
     {
         id = GetIntParam( params );
+        if ( m_battle_id == id ) m_relay_host_bot = _T("");
         m_se->OnBattleClosed( id );
     }
     else if ( cmd == _T("LEFTBATTLE") )
@@ -700,12 +706,17 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     else if ( cmd == _T("SAYPRIVATE") )
     {
         nick = GetWordParam( params );
+        if ( ( ( nick == m_relay_host_bot ) || ( nick == _T("AutoHostManager") ) ) && params.StartsWith( _T("!") ) ) return; // drop the message
         m_se->OnPrivateMessage( nick, params, true );
     }
     else if ( cmd == _T("SAIDPRIVATE") )
     {
         nick = GetWordParam( params );
-        if ( ( nick == m_relay_host_bot && params.StartsWith( _T("!") ) ) ) return; // drop the message
+        if ( nick == _T("AutoHostManager") )
+        {
+          m_relay_host_bot = params;
+          return;
+        }
         m_se->OnPrivateMessage( nick, params, false );
     }
     else if ( cmd == _T("JOINBATTLE") )
@@ -1258,8 +1269,16 @@ void TASServer::HostBattle( BattleOptions bo, const wxString& password )
     cmd += bo.description + _T("\t");
     cmd += bo.modname;
     wxLogMessage( _T("OPENBATTLE %s"), cmd.c_str() );
-    if ( !bo.isproxy ) SendCmd( _T("OPENBATTLE"), cmd );
-    else RelayCmd( _T("OPENBATTLE"), cmd );
+    if ( !bo.isproxy )
+    {
+       SendCmd( _T("OPENBATTLE"), cmd );
+       m_delayed_open_command = _T("");
+    }
+    else
+    {
+       SayPrivate( _T("AutoHostManager"), _T("!SPAWN") );
+       m_delayed_open_command = cmd;
+    }
 
     if (bo.nattype>0)UdpPingTheServer(m_user);
 

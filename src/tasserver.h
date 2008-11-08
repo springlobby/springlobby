@@ -162,6 +162,7 @@ class TASServer : public Server
     wxString m_agreement;
 
     wxString m_addr;
+    wxString m_delayed_open_command;
 
     bool m_do_finalize_join_battle;
     int m_finalize_join_battle_id;
