@@ -439,6 +439,7 @@ wxString OptionsWrapper::GetNameListOptItemKey(wxString optkey, wxString itemnam
 
 void OptionsWrapper::ParseSectionMap( mmSectionTree& section_tree, const IUnitSync::OptionMapSection& section_map )
 {
+
     // map child-key <-> parent-key
     typedef std::map<wxString,wxString> RelationMap;
     typedef std::map<wxString,wxString>::iterator RelationMapIter;
@@ -458,20 +459,15 @@ void OptionsWrapper::ParseSectionMap( mmSectionTree& section_tree, const IUnitSy
             RelationMapIter rit_next = rit; // in case we need to delete
             ++rit_next;
 
-            if ( rit->second == SLGlobals::nosection_name )
+            if ( relation_map.find(rit->second) == relation_map.end() )
             {
                 //either we already added this sections parent or it's a root section
-                section_tree.AddSection( section_map[rit->first] );
+                IUnitSync::OptionMapSectionConstIter section = section_map.find(rit->first);
+                assert ( section != section_map.end() );
+                    section_tree.AddSection( section->second );
 
-                // set all children of this section to have empty parent (ONLY in relation map ofc)
-                for ( RelationMapIter iter = relation_map.begin(); iter != relation_map.end(); ++iter)
-                {
-                    if ( iter->second == rit->first ) {
-                        iter->second  = SLGlobals::nosection_name ;
-                    }
-                }
 
-                //we're done with this section, so remove it
+                  //we're done with this section, so remove it
                 relation_map.erase(rit);
             }
             rit = rit_next;
@@ -483,7 +479,6 @@ void OptionsWrapper::ParseSectionMap( mmSectionTree& section_tree, const IUnitSy
 mmSectionTree::mmSectionTree()
     : m_tree ( 0 )
 {
-
     m_tree = new ConfigType(  _T("SL-temp"), wxEmptyString, _T("/tmp/sl_tree") );
 }
 
@@ -503,21 +498,48 @@ void mmSectionTree::AddSection ( const wxString& parentpath, const mmOptionSecti
 {
     wxString fullpath = parentpath + _T("/") + section.key + _T("/");
     m_tree->Write( fullpath + _T("key") ,section.key );
+    #ifndef NDEBUG
+        m_tree->Flush();
+    #endif
+}
+
+bool mmSectionTree::FindRecursive( const wxString& parent_key, wxString& path )
+{
+    wxString current;
+    long cur_index;
+
+    //search current level first before recursing
+    bool cont = m_tree->GetFirstGroup( current, cur_index );
+    while ( cont )
+    {
+        if ( current.EndsWith( parent_key ) ) {
+            path = current;
+            return true;
+        }
+        cont = m_tree->GetNextGroup( current, cur_index );
+    }
+
+    //we need to recurse into sub-paths
+    cont = m_tree->GetFirstGroup( current, cur_index );
+    while ( cont )
+    {
+        wxString old_path = m_tree->GetPath();
+        m_tree->SetPath( old_path + _T("/") + current );
+        if ( FindRecursive( parent_key,  path ) )
+            return true;
+        m_tree->SetPath( old_path );
+        cont = m_tree->GetNextGroup( current, cur_index );
+    }
+    return false;
 }
 
 wxString mmSectionTree::FindParentpath ( const wxString& parent_key )
 {
-    long dummy;
-    wxString current;
-    bool cont = m_tree->GetFirstGroup( current, dummy );
-    while ( cont )
-    {
-        //! \todo if possibly remove the .Lower()
-        if ( current.EndsWith( parent_key.Lower() ) )
-            return current;
-        cont = m_tree->GetNextGroup( current, dummy );
-    }
-    return _T("");
+    wxString path = _T("/");
+    if ( FindRecursive( parent_key, path ) )
+        return path;
+    else
+        return _T("");
 }
 
 void mmSectionTree::AddSection( const mmOptionSection section)

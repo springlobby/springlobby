@@ -35,6 +35,7 @@ class mmSectionTree {
 
         void AddSection ( const wxString& path, const mmOptionSection& section );
         wxString FindParentpath ( const wxString& parent_key );
+        bool FindRecursive( const wxString& parent_key, wxString& path );
 
 };
 
