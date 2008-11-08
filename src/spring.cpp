@@ -224,11 +224,12 @@ struct SortingUser
     bool IsBot;
 
     // comparison function for sorting
-    bool operator<( const SortingUser b)
+    bool operator<( const SortingUser b) const
     {
         return ( ValueToSort < b.ValueToSort );
     }
 };
+
 
 wxString Spring::WriteScriptTxt( Battle& battle )
 {
