@@ -317,10 +317,12 @@ void GetOptionCachefileEntry( const int i, wxArrayString& entry, GameOptions& re
       {
       case opt_float:
       {
-        ret.float_map[key] = mmOptionFloat(name,key,
-            susynclib().GetOptionDesc(i),susynclib().GetOptionNumberDef(i), susynclib().GetOptionNumberStep(i),
-            susynclib().GetOptionNumberMin(i),susynclib().GetOptionNumberMax(i),
-            susynclib().GetOptionSection(i),susynclib().GetOptionStyle(i));
+        ret.float_map[key] = mmOptionFloat( name, key,
+            susynclib().GetOptionDesc(i), susynclib().GetOptionNumberDef(i),
+            susynclib().GetOptionNumberStep(i),
+            susynclib().GetOptionNumberMin(i), susynclib().GetOptionNumberMax(i),
+            susynclib().GetOptionSection(i), susynclib().GetOptionStyle(i) );
+
         entry.Add( ret.float_map[key].name );
         wxString descr = ret.float_map[key].description;
         descr.Replace( _T("\n"), _T("") );
@@ -329,37 +331,40 @@ void GetOptionCachefileEntry( const int i, wxArrayString& entry, GameOptions& re
         entry.Add( TowxString( ret.float_map[key].stepping ) );
         entry.Add( TowxString( ret.float_map[key].min ) );
         entry.Add( TowxString( ret.float_map[key].max) );
-        entry.Add( ret.float_map[key].ct_type_string );
         entry.Add( ret.float_map[key].section );
+        entry.Add( ret.float_map[key].ct_type_string );
         break;
       }
       case opt_bool:
       {
-        ret.bool_map[key] = mmOptionBool(name,key,
-            susynclib().GetOptionDesc(i),susynclib().GetOptionBoolDef(i),
-            susynclib().GetOptionSection(i),susynclib().GetOptionStyle(i));
+        ret.bool_map[key] = mmOptionBool( name, key,
+            susynclib().GetOptionDesc(i), susynclib().GetOptionBoolDef(i),
+            susynclib().GetOptionSection(i), susynclib().GetOptionStyle(i) );
+
         entry.Add( susynclib().GetOptionName(i) );
         wxString descr = ret.bool_map[key].description;
         descr.Replace( _T("\n"), _T("") );
         entry.Add( descr );
         entry.Add( TowxString( ret.bool_map[key].def ) );
-        entry.Add( ret.bool_map[key].ct_type_string );
         entry.Add( ret.bool_map[key].section );
+        entry.Add( ret.bool_map[key].ct_type_string );
         break;
       }
       case opt_string:
       {
-        ret.string_map[key] = mmOptionString(name,key,
-            susynclib().GetOptionDesc(i),susynclib().GetOptionStringDef(i),susynclib().GetOptionStringMaxLen(i),
-            susynclib().GetOptionSection(i),susynclib().GetOptionStyle(i));
+        ret.string_map[key] = mmOptionString( name, key,
+            susynclib().GetOptionDesc(i), susynclib().GetOptionStringDef(i),
+            susynclib().GetOptionStringMaxLen(i),
+            susynclib().GetOptionSection(i), susynclib().GetOptionStyle(i) );
+
         entry.Add( ret.string_map[key].name );
         wxString descr = ret.string_map[key].description;
         descr.Replace( _T("\n"), _T("") );
         entry.Add( descr );
         entry.Add( ret.string_map[key].def );
         entry.Add( TowxString( ret.string_map[key].max_len ) );
-        entry.Add( ret.string_map[key].ct_type_string );
         entry.Add( ret.string_map[key].section );
+        entry.Add( ret.string_map[key].ct_type_string );
         break;
       }
       case opt_list:
@@ -367,6 +372,7 @@ void GetOptionCachefileEntry( const int i, wxArrayString& entry, GameOptions& re
          ret.list_map[key] = mmOptionList(name,key,
             susynclib().GetOptionDesc(i),susynclib().GetOptionListDef(i),
             susynclib().GetOptionSection(i),susynclib().GetOptionStyle(i));
+
         entry.Add( ret.list_map[key].name );
         wxString descr = ret.list_map[key].description;
         descr.Replace( _T("\n"), _T("") );
@@ -383,8 +389,21 @@ void GetOptionCachefileEntry( const int i, wxArrayString& entry, GameOptions& re
            entry.Add( susynclib().GetOptionListItemName(i,j) );
            entry.Add( descr );
          }
-        entry.Add( ret.list_map[key].ct_type_string );
         entry.Add( ret.list_map[key].section );
+        entry.Add( ret.list_map[key].ct_type_string );
+        break;
+      }
+      case opt_section:
+      {
+        ret.section_map[key] = mmOptionSection( name, key, susynclib().GetOptionDesc(i),
+            susynclib().GetOptionSection(i), susynclib().GetOptionStyle(i) );
+
+        entry.Add( ret.section_map[key].name );
+        wxString descr = ret.section_map[key].description;
+        descr.Replace( _T("\n"), _T("") );
+        entry.Add( descr );
+        entry.Add( ret.section_map[key].section );
+        entry.Add( ret.section_map[key].ct_type_string );
       }
       }
 }
@@ -416,6 +435,7 @@ void ParseOptionCacheFile( wxArrayString& cache, GameOptions& ret )
             params[3], params[4], (unsigned int) s2l( params[5] ), params[6],params[7] );
         break;
       case opt_list:
+      {
          unsigned int last_item_index = ( (unsigned int)s2l(params[5]) * 3 + 6);
          //be sure to check index alignement
          ret.list_map[key] = mmOptionList( params[2],key,
@@ -425,6 +445,12 @@ void ParseOptionCacheFile( wxArrayString& cache, GameOptions& ret )
          {
            ret.list_map[key].addItem( params[j], params[j+1], params[j+2] );
          }
+         break;
+      }
+      case opt_section:
+        ret.section_map[key] = mmOptionSection( params[2], key,
+            params[3], params[4], params[5] );
+        break;
       }
     }
 }

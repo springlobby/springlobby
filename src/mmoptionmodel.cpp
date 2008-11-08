@@ -120,8 +120,8 @@ mmOptionInt::mmOptionInt():mmOptionModel()
 
 }
 
- mmOptionSection::mmOptionSection(wxString name_, wxString key_, wxString description_,wxString section_)
-    :mmOptionModel(name_,key_,description_,opt_section,section_,ct_undefined)
+ mmOptionSection::mmOptionSection(wxString name_, wxString key_, wxString description_,wxString section_, wxString style_ )
+    :mmOptionModel( name_, key_, description_, opt_section,section_, style_ )
 {
 
 }

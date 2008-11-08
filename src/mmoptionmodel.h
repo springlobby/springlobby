@@ -66,6 +66,7 @@ struct mmOptionModel
 	OptionType type;
 	ControlType ct_type;
 	wxString section;
+	//! control style string, as of yet undefined
 	wxString ct_type_string;
 };
 
@@ -165,7 +166,8 @@ struct mmOptionInt : public mmOptionModel
 };
 
 struct mmOptionSection : public mmOptionModel{
-    mmOptionSection (wxString name_, wxString key_, wxString description_,wxString section_ = SLGlobals::nosection_name );
+    mmOptionSection (wxString name_, wxString key_, wxString description_,
+            wxString section_ = SLGlobals::nosection_name, wxString style_ = SLGlobals::nostyle_name );
     mmOptionSection ();
 };
 
