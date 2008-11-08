@@ -28,6 +28,18 @@ void OptionsWrapper::unLoadOptions(GameOption i)
 {
   GameOptions empty;
   opts[i] = empty;
+
+  switch ( i )
+  {
+    case MapOption:
+        m_map_sections.Clear();
+        break;
+    case MapOption:
+        m_map_sections.Clear();
+        break;
+    default:
+        break;
+  }
 }
 
 OptionsWrapper::~OptionsWrapper()
@@ -504,5 +516,5 @@ mmSectionTree::SectionVector mmSectionTree::GetSectionVector()
 void mmSectionTree::Clear()
 {
     m_section_map.clear();
-    //m_tree->DeleteAll();
+    m_tree->DeleteAll();
 }
