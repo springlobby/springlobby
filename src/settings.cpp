@@ -962,7 +962,7 @@ void Settings::SetLastAutolockStatus( bool value )
 
 void Settings::SetLastHostRelayedMode( bool value )
 {
-    m_config->Write( _T("/Hosting/LastRelayedMod"), value );
+    m_config->Write( _T("/Hosting/LastRelayedMode"), value );
 }
 
 void Settings::SetHostingPreset( const wxString& name, int optiontype, std::map<wxString,wxString> options )
