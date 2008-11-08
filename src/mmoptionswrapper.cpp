@@ -495,6 +495,8 @@ mmSectionTree::~mmSectionTree()
 //    }
     #ifndef NDEBUG
         m_tree->Flush();
+    #else //no need to clutter tempfile directory if we're not debugging
+        m_tree->DeleteAll();
     #endif
 }
 
