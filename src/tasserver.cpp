@@ -610,7 +610,11 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         mod = GetSentenceParam( params );
         m_se->OnBattleOpened( id, replay, IntToNatType( nat ), nick, host, port, maxplayers,
                               haspass, rank, hash, map, title, mod );
-        if ( host == m_relay_host_bot ) JoinBattle( id, sett().GetLastHostPassword() ); // autojoin relayed host battles
+        if ( host == m_relay_host_bot )
+        {
+           GetBattle( id ).SetIsProxy( true );
+           JoinBattle( id, sett().GetLastHostPassword() ); // autojoin relayed host battles
+        }
     }
     else if ( cmd == _T("JOINEDBATTLE") )
     {
