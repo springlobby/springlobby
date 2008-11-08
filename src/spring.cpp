@@ -390,16 +390,16 @@ wxString Spring::WriteScriptTxt( Battle& battle )
     int PreviousAlly = -1;
     for ( int i = 0; i < NumTotalPlayersWithBots; i++ )
     {
-        if ( PreviousAlly == SortedByTeam[i].ValueToSort ) continue;
-        PreviousAlly = SortedByTeam[i].ValueToSort;
+        if ( PreviousAlly == SortedByAlly[i].ValueToSort ) continue;
+        PreviousAlly = SortedByAlly[i].ValueToSort;
 
-        tdf.EnterSection( _T("ALLYTEAM") + i2s( SortedByTeam[i].ValueToSort ) );
+        tdf.EnterSection( _T("ALLYTEAM") + i2s( SortedByAlly[i].ValueToSort ) );
 
         tdf.Append( _T("NumAllies"), 0 );
 
         if ( startpostype == IBattle::ST_Choose )
         {
-            BattleStartRect sr = battle.GetStartRect( SortedByTeam[i].ValueToSort );
+            BattleStartRect sr = battle.GetStartRect( SortedByAlly[i].ValueToSort );
             if ( sr.IsOk() )
             {
                 const char* old_locale = std::setlocale(LC_NUMERIC, "C");
