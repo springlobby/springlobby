@@ -439,10 +439,45 @@ wxString OptionsWrapper::GetNameListOptItemKey(wxString optkey, wxString itemnam
 
 void OptionsWrapper::ParseSectionMap( mmSectionTree& section_tree, const IUnitSync::OptionMapSection& section_map )
 {
+    // map child-key <-> parent-key
+    typedef std::map<wxString,wxString> RelationMap;
+    typedef std::map<wxString,wxString>::iterator RelationMapIter;
+    RelationMap relation_map;
+
+    //setup relation map
     for ( IUnitSync::OptionMapSectionConstIter it = section_map.begin(); it != section_map.end(); ++it )
     {
-        section_tree.AddSection( it->second );
+        relation_map[it->second.key] = it->second.section;
     }
+
+    // no more items in the map means we've added them all
+    while ( relation_map.size() > 0 )
+    {
+        for ( RelationMapIter rit = relation_map.begin(); rit != relation_map.end(); )
+        {
+            RelationMapIter rit_next = rit; // in case we need to delete
+            ++rit_next;
+
+            if ( rit->second == SLGlobals::nosection_name )
+            {
+                //either we already added this sections parent or it's a root section
+                section_tree.AddSection( section_map[rit->first] );
+
+                // set all children of this section to have empty parent (ONLY in relation map ofc)
+                for ( RelationMapIter iter = relation_map.begin(); iter != relation_map.end(); ++iter)
+                {
+                    if ( iter->second == rit->first ) {
+                        iter->second  = SLGlobals::nosection_name ;
+                    }
+                }
+
+                //we're done with this section, so remove it
+                relation_map.erase(rit);
+            }
+            rit = rit_next;
+        }
+    }
+
 }
 
 mmSectionTree::mmSectionTree()
