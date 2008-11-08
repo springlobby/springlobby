@@ -133,6 +133,11 @@ bool OptionsWrapper::keyExists(wxString key, GameOption modmapFlag, bool showErr
 		optType = opt_int;
 		exists = true;
 	}
+	else if ( opts[modmapFlag].section_map.find(key)!=  opts[modmapFlag].section_map.end())
+	{
+		optType = opt_section;
+		exists = true;
+	}
 	if (exists && showError)
 	{
 		customMessageBoxNoModal(SL_MAIN_ICON,duplicateKeyError,_T("Mod/map option error"),wxOK);
@@ -277,6 +282,7 @@ wxString OptionsWrapper::getSingleValue(wxString key, GameOption modmapFlag) con
 		case opt_list:
 			return tempOpt.list_map[key].value;
         case opt_undefined:
+        default:
             return wxEmptyString;
 		}
 	}
@@ -423,6 +429,11 @@ wxString OptionsWrapper::GetNameListOptItemKey(wxString optkey, wxString itemnam
 
 	// at this point retrieval failed
 	return wxEmptyString;
+}
+
+void OptionsWrapper::ParseSectionMap( mmSectionTree section_tree, IUnitSync::OptionMapSection section_ammmp )
+{
+
 }
 
 mmSectionTree::mmSectionTree()
