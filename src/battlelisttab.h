@@ -50,6 +50,7 @@ class BattleListTab : public wxScrolledWindow
     void OnJoin( wxCommandEvent& event );
     void OnListJoin( wxListEvent& event );
     void OnResize( wxSizeEvent& event );
+    void ShowExtendedInfos( bool show );
 
     void DoJoin( Battle& battle );
 

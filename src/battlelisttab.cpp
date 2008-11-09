@@ -639,22 +639,18 @@ void BattleListTab::SortBattleList()
   m_battle_list->SortList();
 }
 
+void BattleListTab::ShowExtendedInfos( bool show )
+{
+    const bool recursive = true;
+    m_main_sizer->Show(m_info_sizer, show, recursive );
+    m_main_sizer->Show(m_buttons_sep, show, recursive  );
+    if ( m_filter_notice ) m_main_sizer->Show( m_filter_notice, show, recursive  );
+}
 
 void BattleListTab::OnResize( wxSizeEvent& event )
 {
 	SetSize( event.GetSize() );
 	Layout();
 	/// window too small, hide additional infos
-  if ( GetClientSize().GetHeight() < 400 )
-  {
-    m_main_sizer->Hide(m_info_sizer, true );
-    m_main_sizer->Hide(m_buttons_sep, true );
-    if ( m_filter_notice ) m_main_sizer->Hide( m_filter_notice, true );
-  }
-  else
-  {
-    m_main_sizer->Show(m_info_sizer, true );
-    m_main_sizer->Show(m_buttons_sep, true );
-    if ( m_filter_notice ) m_main_sizer->Show( m_filter_notice, true );
-  }
+    ShowExtendedInfos( ( GetClientSize().GetHeight() < 400 ) );
 }
