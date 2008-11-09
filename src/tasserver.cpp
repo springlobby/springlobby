@@ -2194,7 +2194,7 @@ IBattle::StartType IntToStartType( int start )
     case 2:
         return IBattle::ST_Choose;
     default:
-        ASSERT_LOGIC( false, _T("invalid value") );
+        ASSERT_EXCEPTION( false, _T("invalid value") );
     };
     return IBattle::ST_Fixed;
 }
@@ -2211,7 +2211,7 @@ IBattle::NatType IntToNatType( int nat )
     case 2:
         return IBattle::NAT_Fixed_source_ports;
     default:
-        ASSERT_LOGIC( false, _T("invalid value") );
+        ASSERT_EXCEPTION( false, _T("invalid value") );
     };
     return IBattle::NAT_None;
 }
@@ -2228,7 +2228,7 @@ IBattle::GameType IntToGameType( int gt )
     case 2:
         return IBattle::GT_Lineage;
     default:
-        ASSERT_LOGIC( false, _T("invalid value") );
+        ASSERT_EXCEPTION( false, _T("invalid value") );
     };
     return IBattle::GT_ComContinue;
 }
