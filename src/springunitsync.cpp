@@ -309,6 +309,9 @@ UnitSyncMap SpringUnitSync::GetMapEx( int index )
 
 void GetOptionCachefileEntry( const int i, wxArrayString& entry, GameOptions& ret)
 {
+    //all section values for options are converted to lower case
+    //since usync returns the key of section type keys lower case
+    //otherwise comapring would be a real hassle
     wxString key = susynclib().GetOptionKey(i);
       entry.Add( key );
       wxString name = susynclib().GetOptionName(i);
@@ -321,7 +324,7 @@ void GetOptionCachefileEntry( const int i, wxArrayString& entry, GameOptions& re
             susynclib().GetOptionDesc(i), susynclib().GetOptionNumberDef(i),
             susynclib().GetOptionNumberStep(i),
             susynclib().GetOptionNumberMin(i), susynclib().GetOptionNumberMax(i),
-            susynclib().GetOptionSection(i), susynclib().GetOptionStyle(i) );
+            susynclib().GetOptionSection(i).Lower(), susynclib().GetOptionStyle(i) );
 
         entry.Add( ret.float_map[key].name );
         wxString descr = ret.float_map[key].description;
@@ -339,7 +342,7 @@ void GetOptionCachefileEntry( const int i, wxArrayString& entry, GameOptions& re
       {
         ret.bool_map[key] = mmOptionBool( name, key,
             susynclib().GetOptionDesc(i), susynclib().GetOptionBoolDef(i),
-            susynclib().GetOptionSection(i), susynclib().GetOptionStyle(i) );
+            susynclib().GetOptionSection(i).Lower(), susynclib().GetOptionStyle(i) );
 
         entry.Add( susynclib().GetOptionName(i) );
         wxString descr = ret.bool_map[key].description;
@@ -355,7 +358,7 @@ void GetOptionCachefileEntry( const int i, wxArrayString& entry, GameOptions& re
         ret.string_map[key] = mmOptionString( name, key,
             susynclib().GetOptionDesc(i), susynclib().GetOptionStringDef(i),
             susynclib().GetOptionStringMaxLen(i),
-            susynclib().GetOptionSection(i), susynclib().GetOptionStyle(i) );
+            susynclib().GetOptionSection(i).Lower(), susynclib().GetOptionStyle(i) );
 
         entry.Add( ret.string_map[key].name );
         wxString descr = ret.string_map[key].description;
@@ -371,7 +374,7 @@ void GetOptionCachefileEntry( const int i, wxArrayString& entry, GameOptions& re
       {
          ret.list_map[key] = mmOptionList(name,key,
             susynclib().GetOptionDesc(i),susynclib().GetOptionListDef(i),
-            susynclib().GetOptionSection(i),susynclib().GetOptionStyle(i));
+            susynclib().GetOptionSection(i).Lower(),susynclib().GetOptionStyle(i));
 
         entry.Add( ret.list_map[key].name );
         wxString descr = ret.list_map[key].description;
@@ -395,7 +398,6 @@ void GetOptionCachefileEntry( const int i, wxArrayString& entry, GameOptions& re
       }
       case opt_section:
       {
-          //adding section as lower is safe cause usync returns key values as lowercase
         ret.section_map[key] = mmOptionSection( name, key, susynclib().GetOptionDesc(i),
             susynclib().GetOptionSection(i).Lower(), susynclib().GetOptionStyle(i) );
         wxString section = susynclib().GetOptionSection(i);
