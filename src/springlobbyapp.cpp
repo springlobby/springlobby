@@ -101,16 +101,16 @@ bool SpringLobbyApp::OnInit()
     wxImage::AddHandler(new wxPNGHandler);
     wxFileSystem::AddHandler(new wxZipFSHandler);
 
-//    m_locale = new wxLocale( );
-//    m_locale->Init();
+
 //#ifdef __WXMSW__
     wxString path = wxStandardPaths::Get().GetExecutablePath().BeforeLast( wxFileName::GetPathSeparator() )
                     + wxFileName::GetPathSeparator() + _T("locale");
-//#else
-//    wxString path = wxEmptyString;
+//#else //temp disabled for debugging
+//    wxString path = wxStandardPaths::GetLocalizedResourcesDir(wxStandardPaths::ResourceCat_Messages);
 //#endif
-//    m_locale->AddCatalog( _T("springlobby") );
+
     m_translationhelper = new wxTranslationHelper( *( (wxApp*)this ), path );
+    m_translationhelper->Load();
 
 
     if ( sett().IsFirstRun() && !wxDirExists( wxStandardPaths::Get().GetUserDataDir() ) ) wxMkdir( wxStandardPaths::Get().GetUserDataDir() );
