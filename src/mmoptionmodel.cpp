@@ -123,7 +123,7 @@ mmOptionInt::mmOptionInt():mmOptionModel()
 
  mmOptionSection::mmOptionSection():mmOptionModel()
 {
-
+    key = SLGlobals::nosection_name;
 }
 
  mmOptionSection::mmOptionSection(wxString name_, wxString key_, wxString description_,wxString section_, wxString style_ )
