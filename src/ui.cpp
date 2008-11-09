@@ -1040,7 +1040,6 @@ void Ui::OnBattleStarted( Battle& battle )
             {
               wxString hostscript = m_spring->WriteScriptTxt( battle );
               m_serv->SendScriptToProxy( hostscript );
-              m_serv->RelayCmd( _T("!startgame") );
             }
             battle.GetMe().BattleStatus().ready = false;
             battle.SendMyBattleStatus();
