@@ -305,3 +305,10 @@ void SpringLobbyApp::SetupUserFolders()
 #endif
 }
 
+bool SpringLobbyApp::SelectLanguage()
+{
+    wxArrayString names;
+    wxArrayLong identifiers;
+    m_translationhelper->GetInstalledLanguages(names, identifiers);
+    return m_translationhelper->AskUserForLanguage(names, identifiers);
+}

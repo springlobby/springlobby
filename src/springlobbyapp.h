@@ -23,6 +23,7 @@ class SpringLobbyApp : public wxApp
 
     // System Events
     void OnTimer( wxTimerEvent& event );
+    bool SelectLanguage();
 
   protected:
 

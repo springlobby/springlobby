@@ -20,6 +20,7 @@
 #include <wx/listbook.h>
 #endif
 #include <wx/tooltip.h>
+#include "springlobbyapp.h"
 
 #include <stdexcept>
 
@@ -589,4 +590,6 @@ void MainWindow::OnMenuAutojoinChannels( wxCommandEvent& event )
 {
     m_autojoin_dialog = new AutojoinChannelDialog (this);
     m_autojoin_dialog->Show();
+
+    wxGetApp().SelectLanguage();
 }

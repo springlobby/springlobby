@@ -140,11 +140,13 @@ bool wxTranslationHelper::AskUserForLanguage( wxArrayString& names,
 		}
 		m_Locale = new wxLocale;
 		m_Locale->Init( identifiers[index] );
+		#ifdef __WXMSW__
 		m_Locale->AddCatalogLookupPathPrefix( m_SearchPath );
+		#endif
 		wxLogTrace( wxTraceMask(),
 			_("wxTranslationHelper: Path Prefix = \"%s\""),
 			m_SearchPath.GetData() );
-		m_Locale->AddCatalog( m_App.GetAppName());
+		m_Locale->AddCatalog( _T("springlobby") );
 		wxLogTrace( wxTraceMask(),
 			_("wxTranslationHelper: Catalog Name = \"%s\""),
 			m_App.GetAppName().GetData() );
