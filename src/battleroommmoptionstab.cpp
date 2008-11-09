@@ -129,7 +129,7 @@ void BattleroomMMOptionsTab::setupOptionsSizer( wxBoxSizer* parent_sizer, Option
     {
         wxStaticBoxSizer* section_sizer = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, it->second.name ), wxVERTICAL );
         setupOptionsSectionSizer( it->second, section_sizer, optFlag );
-        parent_sizer->Add( section_sizer, 1 , wxEXPAND | wxALL, 5 );
+        parent_sizer->Add( section_sizer, 0 , wxALL, section_sizer->GetChildren().size() > 0 ? 5 : 0 );
     }
     mmOptionSection dummy;
     setupOptionsSectionSizer( dummy, parent_sizer, optFlag );
@@ -235,10 +235,10 @@ void BattleroomMMOptionsTab::setupOptionsSectionSizer(const mmOptionSection& sec
         }
 	}
 
-	parent_sizer->Add(chkSizer,0,wxALL,5);
-	parent_sizer->Add(spinSizer,0,wxALL,5);
-	parent_sizer->Add(cbxSizer,0,wxALL,5);
-	parent_sizer->Add(textSizer,0,wxALL,5);
+	parent_sizer->Add( chkSizer, 0, wxALL, chkSizer->GetChildren().size() > 0 ? 5 : 0 );
+	parent_sizer->Add( spinSizer, 0, wxALL, spinSizer->GetChildren().size() > 0 ? 5 : 0 );
+	parent_sizer->Add( cbxSizer, 0, wxALL, cbxSizer->GetChildren().size() > 0 ? 5 : 0 );
+	parent_sizer->Add( textSizer, 0, wxALL, textSizer->GetChildren().size() > 0 ? 5 : 0 );
 
 
 }
