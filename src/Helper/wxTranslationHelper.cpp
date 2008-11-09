@@ -93,36 +93,49 @@ void wxTranslationHelper::GetInstalledLanguages( wxArrayString & names,
 	}
 	if( !wxDir::Exists( m_SearchPath ) )
 	{
-		wxLogTrace( wxTraceMask(), _T("Directory %s DOES NOT EXIST !!!"),
-			m_SearchPath.GetData() );
+		wxLogError( _T("Directory %s DOES NOT EXIST !!!"),
+                    m_SearchPath.GetData() );
 		return;
 	}
 	wxDir dir( m_SearchPath );
-	for(bool cont = dir.GetFirst(&filename,
+
 #ifdef __WXMSW__
-	wxT("*.*"),
+	wxString mask = wxT("*.*");
 #else
-	wxT("*"),
+	wxString mask = wxT("*");
 #endif
-	wxDIR_DEFAULT);
-		cont; cont = dir.GetNext( &filename) )
-	{
-		langinfo = wxLocale::FindLanguageInfo(filename);
+//	for(bool cont = dir.GetFirst(&filename, mask, wxDIR_DEFAULT);
+//            cont; cont = dir.GetNext( &filename) )
+//	{
+//		langinfo = wxLocale::FindLanguageInfo(filename);
+//		if(langinfo != NULL)
+//		{
+//			wxLogInfo( _("SEARCHING FOR %s"),
+//				wxString(dir.GetName()+wxFileName::GetPathSeparator()+
+//				filename+wxFileName::GetPathSeparator()+
+//				m_App.GetAppName()+wxT(".mo")).GetData());
+//			if(wxFileExists(dir.GetName()+wxFileName::GetPathSeparator()+
+//				filename+wxFileName::GetPathSeparator()+
+//				m_App.GetAppName()+wxT(".mo")))
+//			{
+//				names.Add(langinfo->Description);
+//				identifiers.Add(langinfo->Language);
+//			}
+//		}
+//	}
+    mask = _T("springlobby.mo");
+    wxArrayString files;
+    wxDir::GetAllFiles( m_SearchPath, &files, wxString(), wxDIR_DEFAULT );
+    for ( size_t t = 0; t < files.GetCount(); ++t )
+    {
+        wxLogInfo( files[t].GetData() );
+        langinfo = wxLocale::FindLanguageInfo( files[t] );
 		if(langinfo != NULL)
 		{
-			wxLogTrace(wxTraceMask(), _("SEARCHING FOR %s"),
-				wxString(dir.GetName()+wxFileName::GetPathSeparator()+
-				filename+wxFileName::GetPathSeparator()+
-				m_App.GetAppName()+wxT(".mo")).GetData());
-			if(wxFileExists(dir.GetName()+wxFileName::GetPathSeparator()+
-				filename+wxFileName::GetPathSeparator()+
-				m_App.GetAppName()+wxT(".mo")))
-			{
 				names.Add(langinfo->Description);
 				identifiers.Add(langinfo->Language);
-			}
-		}
-	}
+        }
+    }
 }
 
 bool wxTranslationHelper::AskUserForLanguage( wxArrayString& names,
@@ -140,16 +153,12 @@ bool wxTranslationHelper::AskUserForLanguage( wxArrayString& names,
 		}
 		m_Locale = new wxLocale;
 		m_Locale->Init( identifiers[index] );
-		#ifdef __WXMSW__
 		m_Locale->AddCatalogLookupPathPrefix( m_SearchPath );
-		#endif
-		wxLogTrace( wxTraceMask(),
-			_("wxTranslationHelper: Path Prefix = \"%s\""),
+		wxLogInfo( _("wxTranslationHelper: Path Prefix = \"%s\""),
 			m_SearchPath.GetData() );
 		m_Locale->AddCatalog( _T("springlobby") );
-		wxLogTrace( wxTraceMask(),
-			_("wxTranslationHelper: Catalog Name = \"%s\""),
-			m_App.GetAppName().GetData() );
+		wxLogInfo( _("wxTranslationHelper: Catalog Name = \"%s\""),
+			_T("springlobby") );
 		return true;
 	}
 	return false;
