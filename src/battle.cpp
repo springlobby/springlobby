@@ -517,6 +517,13 @@ bool Battle::ExecuteSayCommand( const wxString& cmd )
       //m_serv.DoActionBattle( m_opts.battleid, cmd.AfterFirst(' ') );
       return true;
     }
+    if ( cmd_name == _T("/replacehostip") )
+    {
+      wxString ip = cmd.AfterFirst(' ');
+      if ( ip.IsEmpty() ) return false;
+      m_opts.ip = ip;
+      return true;
+    }
   }
   ///>
   return false;
