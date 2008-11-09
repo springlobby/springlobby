@@ -874,6 +874,8 @@ springlobby_SOURCES = \
 	src/httpdownloader.cpp \
 	src/Helper/TextCompletionDatabase.hpp \
 	src/Helper/TextCompletionDatabase.cpp \
+	src/Helper/wxTranslationHelper.h \
+	src/Helper/wxTranslationHelper.cpp \
 	src/filelister/filelistctrl.h \
 	src/filelister/filelistdialog.h \
 	src/filelister/filelistfilter.h \
