@@ -1953,7 +1953,7 @@ void TASServer::SendScriptToProxy( const wxString& script )
       wxString line = tkzr.GetNextToken();
       RelayCmd( _T("APPENDSCRIPTLINE"), line );
   }
-  RelayCmd( _T("!startgame") );
+  RelayCmd( _T("STARTGAME") );
 }
 
 void TASServer::OnConnected( Socket* sock )
