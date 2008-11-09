@@ -652,5 +652,5 @@ void BattleListTab::OnResize( wxSizeEvent& event )
 	SetSize( event.GetSize() );
 	Layout();
 	/// window too small, hide additional infos
-    ShowExtendedInfos( ( GetClientSize().GetHeight() < 400 ) );
+    ShowExtendedInfos( ( GetClientSize().GetHeight() > 400 ) );
 }
