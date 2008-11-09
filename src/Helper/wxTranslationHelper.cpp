@@ -104,38 +104,27 @@ void wxTranslationHelper::GetInstalledLanguages( wxArrayString & names,
 #else
 	wxString mask = wxT("*");
 #endif
-//	for(bool cont = dir.GetFirst(&filename, mask, wxDIR_DEFAULT);
-//            cont; cont = dir.GetNext( &filename) )
-//	{
-//		langinfo = wxLocale::FindLanguageInfo(filename);
-//		if(langinfo != NULL)
-//		{
-//			wxLogInfo( _("SEARCHING FOR %s"),
-//				wxString(dir.GetName()+wxFileName::GetPathSeparator()+
-//				filename+wxFileName::GetPathSeparator()+
-//				m_App.GetAppName()+wxT(".mo")).GetData());
-//			if(wxFileExists(dir.GetName()+wxFileName::GetPathSeparator()+
-//				filename+wxFileName::GetPathSeparator()+
-//				m_App.GetAppName()+wxT(".mo")))
-//			{
-//				names.Add(langinfo->Description);
-//				identifiers.Add(langinfo->Language);
-//			}
-//		}
-//	}
-    mask = _T("springlobby.mo");
-    wxArrayString files;
-    wxDir::GetAllFiles( m_SearchPath, &files, wxString(), wxDIR_DEFAULT );
-    for ( size_t t = 0; t < files.GetCount(); ++t )
-    {
-        wxLogInfo( files[t].GetData() );
-        langinfo = wxLocale::FindLanguageInfo( files[t] );
+	for(bool cont = dir.GetFirst(&filename, mask, wxDIR_DEFAULT);
+            cont; cont = dir.GetNext( &filename) )
+	{
+		langinfo = wxLocale::FindLanguageInfo(filename);
 		if(langinfo != NULL)
 		{
+		    wxString mo_file = dir.GetName() +
+                            wxFileName::GetPathSeparator() +
+                            filename +
+                            wxFileName::GetPathSeparator() +
+                            _T("LC_MESSAGES") +
+                            wxFileName::GetPathSeparator() +
+                            m_App.GetAppName()+ wxT(".mo") ;
+			wxLogInfo( _("SEARCHING FOR %s"), mo_file.GetData() );
+			if( wxFileExists( mo_file ) )
+			{
 				names.Add(langinfo->Description);
 				identifiers.Add(langinfo->Language);
-        }
-    }
+			}
+		}
+	}
 }
 
 bool wxTranslationHelper::AskUserForLanguage( wxArrayString& names,
