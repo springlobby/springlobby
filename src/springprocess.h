@@ -26,6 +26,7 @@ class SpringProcess: public wxThread
   protected:
     Spring& m_sp;
     wxString m_cmd;
+    int m_exit_code;
 };
 
 class wxSpringProcess: public wxProcess
