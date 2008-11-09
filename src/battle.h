@@ -214,7 +214,7 @@ class Battle : public CommonBattle
     void SetMyAlly( int ally ) { GetMe().BattleStatus().ally = ally; SendMyBattleStatus(); }
 
 
-    void Autobalance(int balance_type=0, bool clans=true, bool strong_clans=true);
+    void Autobalance(int balance_type=0, bool clans=true, bool strong_clans=true, int allyteamsize = 0, int controlteamsize = 0 );
     void FixTeamIDs();
     void ForceUnsyncedToSpectate();
 

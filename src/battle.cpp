@@ -817,27 +817,34 @@ struct ClannersRemovalPredicate{
   }
 }*/
 
-void Battle::Autobalance(int balance_type, bool support_clans, bool strong_clans)
+void Battle::Autobalance(int balance_type, bool support_clans, bool strong_clans, int allyteamsize, int controlteamsize )
 {
-  wxLogMessage(_T("Autobalancing, type=%d, clans=%d, strong_clans=%d"),balance_type,int(support_clans),int(strong_clans));
+  wxLogMessage(_T("Autobalancing, type=%d, clans=%d, strong_clans=%d, allyteamsize=%d"),balance_type,int(support_clans),int(strong_clans), allyteamsize);
   DoAction(_T("is auto-balancing alliances ..."));
-  int tmp=GetNumRects();
   //size_t i;
   //int num_alliances;
   std::vector<Alliance>alliances;
-  int ally=0;
-  for(int i=0;i<tmp;++i){
-    BattleStartRect sr = m_rects[i];
-    if( sr.IsOk() ){
-      ally=i;
+  if( allyteamsize == 0 ) // 0 == use num start rects
+  {
+    int tmp = GetNumRects();
+    int ally=0;
+    for( int i=0;i<allyteamsize;++i){
+      BattleStartRect sr = m_rects[i];
+      if( sr.IsOk() ){
+        ally=i;
+        alliances.push_back(Alliance(ally));
+        ally++;
+      }
+    }
+    // make at least two alliances
+    while(alliances.size()<2){
       alliances.push_back(Alliance(ally));
       ally++;
     }
   }
-  /// make at least two alliances
-  while(alliances.size()<2){
-    alliances.push_back(Alliance(ally));
-    ally++;
+  else
+  {
+    for ( int i = 0; i < allyteamsize; i++ ) alliances.push_back( Alliance( i ) );
   }
 
   //for(i=0;i<alliances.size();++i)alliances[i].allynum=i;
