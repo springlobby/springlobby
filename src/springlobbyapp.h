@@ -7,6 +7,7 @@ class wxTimer;
 class wxIcon;
 class wxLocale;
 class HttpDownloader;
+class wxTranslationHelper;
 
 //! @brief SpringLobby wxApp
 class SpringLobbyApp : public wxApp
@@ -30,7 +31,7 @@ class SpringLobbyApp : public wxApp
 
     wxTimer* m_timer;
 
-    wxLocale* m_locale;
+    wxTranslationHelper* m_translationhelper;
     HttpDownloader* m_otadownloader ;
 
     DECLARE_EVENT_TABLE()

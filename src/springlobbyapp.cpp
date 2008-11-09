@@ -35,6 +35,7 @@
 #include "unitsyncthread.h"
 #include "replay/replaytab.h"
 #include "globalsmanager.h"
+#include "Helper/wxTranslationHelper.h"
 
 const unsigned int TIMER_ID         = 101;
 const unsigned int TIMER_INTERVAL   = 100;
@@ -67,9 +68,9 @@ BEGIN_EVENT_TABLE(SpringLobbyApp, wxApp)
 END_EVENT_TABLE()
 
 SpringLobbyApp::SpringLobbyApp()
+    :m_translationhelper( NULL )
 {
     m_timer = new wxTimer(this, TIMER_ID);
-    m_locale = NULL;
     m_otadownloader = NULL;
 }
 
@@ -100,13 +101,17 @@ bool SpringLobbyApp::OnInit()
     wxImage::AddHandler(new wxPNGHandler);
     wxFileSystem::AddHandler(new wxZipFSHandler);
 
-    m_locale = new wxLocale( );
-    m_locale->Init();
+//    m_locale = new wxLocale( );
+//    m_locale->Init();
 #ifdef __WXMSW__
-    wxString path = wxStandardPaths::Get().GetExecutablePath().BeforeLast( wxFileName::GetPathSeparator() );
-    m_locale->AddCatalogLookupPathPrefix(path +  wxFileName::GetPathSeparator() + _T("locale") );
+    wxString path = wxStandardPaths::Get().GetExecutablePath().BeforeLast( wxFileName::GetPathSeparator() )
+                    + wxFileName::GetPathSeparator() + _T("locale");
+#else
+    wxString path = wxEmptyString;
 #endif
-    m_locale->AddCatalog( _T("springlobby") );
+//    m_locale->AddCatalog( _T("springlobby") );
+    m_translationhelper = new wxTranslationHelper( *( (wxApp*)this ), path );
+
 
     if ( sett().IsFirstRun() && !wxDirExists( wxStandardPaths::Get().GetUserDataDir() ) ) wxMkdir( wxStandardPaths::Get().GetUserDataDir() );
 
@@ -200,6 +205,13 @@ bool SpringLobbyApp::OnInit()
 int SpringLobbyApp::OnExit()
 {
     wxLogDebugFunc( _T("") );
+
+    if(m_translationhelper)
+    {
+        wxDELETE(m_translationhelper);
+    }
+    return 0;
+
 
     if ( m_otadownloader != 0 )
         delete m_otadownloader ;
