@@ -5,7 +5,7 @@
 //      and modified to fit SL needs
 
 
-#include <wx/intl.h>
+#include <wx/string.h>
 
 class wxApp;
 class wxLocale;
@@ -26,7 +26,7 @@ public:
 	void GetInstalledLanguages(wxArrayString & names, wxArrayLong & identifiers);
 	bool AskUserForLanguage(wxArrayString & names, wxArrayLong & identifiers);
 	bool Load();
-	void Save(bool bReset = false);
+	void Save();
 
 	const wxString & GetSearchPath();
 	void SetSearchPath(wxString & value);

@@ -321,6 +321,9 @@ class Settings
     //! used to signal unset column width in Get...
     enum { columnWidthUnset };
 
+    void SetLanguageID ( const long id );
+    long GetLanguageID ( );
+
     /*@}*/
 
     /* ================================================================ */

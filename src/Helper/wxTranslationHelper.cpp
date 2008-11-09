@@ -6,6 +6,8 @@
 #include <wx/app.h>
 #include <wx/log.h>
 #include <wx/choicdlg.h>
+#include <wx/intl.h>
+#include "../settings.h"
 
 wxTranslationHelper::wxTranslationHelper(wxApp & app,
 										 const wxString & search_path,
@@ -59,27 +61,12 @@ void wxTranslationHelper::SetConfigPath(wxString & value)
 
 bool wxTranslationHelper::Load()
 {
-	wxConfigBase * config;
-	if(m_UseNativeConfig)
-	{
-		config = new wxConfig(m_App.GetAppName());
-	}
-	else
-	{
-		config = new wxFileConfig(m_App.GetAppName(), wxEmptyString, m_ConfigPath);
-	}
-	long language;
-	config->SetPath(wxT("wxTranslation"));
-	if(!config->Read(wxT("wxTranslationLanguage"),
-		&language, wxLANGUAGE_UNKNOWN))
-	{
-		language = wxLANGUAGE_UNKNOWN;
-	}
-	delete config;
+	long language = sett().GetLanguageID();
 	if(language == wxLANGUAGE_UNKNOWN)
 	{
 		return false;
 	}
+
 	wxArrayString names;
 	wxArrayLong identifiers;
 	GetInstalledLanguages(names, identifiers);
@@ -98,30 +85,9 @@ bool wxTranslationHelper::Load()
 	return false;
 }
 
-void wxTranslationHelper::Save(bool bReset)
+void wxTranslationHelper::Save()
 {
-	wxConfigBase * config;
-	if(m_UseNativeConfig)
-	{
-		config = new wxConfig(m_App.GetAppName());
-	}
-	else
-	{
-		config = new wxFileConfig(m_App.GetAppName(), wxEmptyString, m_ConfigPath);
-	}
-	long language = wxLANGUAGE_UNKNOWN;
-	if(!bReset)
-	{
-		if(m_Locale)
-		{
-			language = m_Locale->GetLanguage();
-		}
-	}
-	config->DeleteEntry(wxT("wxTranslation"));
-	config->SetPath(wxT("wxTranslation"));
-	config->Write(wxT("wxTranslationLanguage"), language);
-	config->Flush();
-	delete config;
+    sett().SetLanguageID( m_Locale->GetLanguage() );
 }
 
 void wxTranslationHelper::GetInstalledLanguages(wxArrayString & names,

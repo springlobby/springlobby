@@ -1896,3 +1896,14 @@ bool Settings::IsSpringBin( const wxString& path )
 #endif
   return true;
 }
+
+void Settings::SetLanguageID ( const long id )
+{
+    m_config->Write( _T("/General/LanguageID") , id );
+}
+
+long Settings::GetLanguageID ( )
+{
+    return m_config->Read( _T("/General/LanguageID") , wxLANGUAGE_UNKNOWN );
+}
+
