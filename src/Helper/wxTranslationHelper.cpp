@@ -3,6 +3,9 @@
 #include <wx/config.h>
 #include <wx/fileconf.h>
 #include <wx/filename.h>
+#include <wx/app.h>
+#include <wx/log.h>
+#include <wx/choicdlg.h>
 
 wxTranslationHelper::wxTranslationHelper(wxApp & app,
 										 const wxString & search_path,

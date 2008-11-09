@@ -4,12 +4,17 @@
 //note: copied from http://wxwidgets.info/?q=wxTranslation
 //      and modified to fit SL needs
 
-#include <wx/wx.h>
+
 #include <wx/intl.h>
+
+class wxApp;
+class wxLocale;
+class wxArrayString;
+class wxArrayLong;
 
 class wxTranslationHelper
 {
-	wxApp & m_App;
+	wxApp& m_App;
 	wxString m_SearchPath;
 	wxString m_ConfigPath;
 	wxLocale * m_Locale;
