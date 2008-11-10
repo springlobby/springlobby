@@ -312,6 +312,11 @@ void ChatPanel::CreateControls( )
   #ifndef NO_RICHTEXT_CHAT
   m_chatlog_text = new wxRichTextCtrl( m_chat_panel, CHAT_LOG, _T( "" ), wxDefaultPosition, wxDefaultSize,
                                        wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_AUTO_URL );
+  /* Set up text styles */
+  /** @todo Make URL color/style configurable */
+  m_chatlog_url_style = new wxRichTextAttr;
+  m_chatlog_url_style->SetTextColour(wxColour(0, 0, 0xCC));
+  m_chatlog_url_style->SetFontUnderlined(true);
 
   // Accelerators
   // copied from wxWidgets SVN revision 53442, so this can probably be removed for wx > 2.8.7
@@ -639,29 +644,29 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const 
 			bool isUrl(word.Contains(_T("://")));
 
 			if ( isUrl )
-				m_chatlog_text->BeginURL(word);
+			{
+			    m_chatlog_text->BeginStyle(*m_chatlog_url_style);
+			    m_chatlog_text->BeginURL(word);
+			}
 
 			m_chatlog_text->AppendText( word );
 
 			if ( isUrl )
 			{
-				/* The link is broken (http://www.example.com
-				 * becomes http://www.example.co) if this space
-				 * (or other string, probably) isn't appended
-				 * here.
-				 */
-				m_chatlog_text->AppendText(_T(' '));
-				m_chatlog_text->EndURL();
+			    /* The link is broken (http://www.example.com
+			     * becomes http://www.example.co) if this space
+			     * (or other string, probably) isn't appended
+			     * here.
+			     */
+			    m_chatlog_text->EndURL();
+			    m_chatlog_text->EndStyle();
+
 			}
 
-			/* Advance past the end of the current word. Note that
-			 * we compensate for the extra space in the workaround
-			 * above, to avoid extra spaces in the final output.
-			 *
-			 * Only problem is, I'm not totally sure this is doing
-			 * what it should. -- insane
+			/* Advance the start-index past the end of the
+			 * current word.
 			 */
-			st = en + ( isUrl ? 2 : 1 );
+			st = en + 1;
 		}
 	}
 	else
@@ -708,11 +713,11 @@ void ChatPanel::OnResize( wxSizeEvent& event )
 
 void ChatPanel::OnLinkEvent( wxTextUrlEvent& event )
 {
-  #ifdef NO_RICHTEXT_CHAT
-  if ( !event.GetMouseEvent().LeftDown() ) return;
-  #endif
-	wxString url = m_chatlog_text->GetRange( event.GetURLStart(), event.GetURLEnd()+1 );
-	m_ui.OpenWebBrowser( url );
+#ifdef NO_RICHTEXT_CHAT
+    if ( !event.GetMouseEvent().LeftDown() ) return;
+#endif
+        wxString url = event.GetString();
+    m_ui.OpenWebBrowser( url );
 }
 
 

@@ -19,6 +19,7 @@ class wxSplitterWindow;
 class wxTextCtrl;
 class wxTextCtrlHist;
 class wxRichTextCtrl;
+class wxRichTextAttr;
 class wxTextUrlEvent;
 class wxComboBox;
 class wxButton;
@@ -195,6 +196,7 @@ class ChatPanel : public wxPanel
 
     #ifndef NO_RICHTEXT_CHAT
     wxRichTextCtrl* m_chatlog_text; //!< The chat log textcontrol.
+    wxRichTextAttr* m_chatlog_url_style; /**< Text attribute (style) to use for URLs */
     #else
     wxTextCtrl* m_chatlog_text; //!< The chat log textcontrol.
     #endif
