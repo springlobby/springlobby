@@ -14,11 +14,12 @@
 #include <wx/statbmp.h>
 #include <wx/listctrl.h>
 #include <wx/dialog.h>
-
+#include <wx/choicdlg.h>
 
 
 #include "../images/springsettings.xpm"
 #include "../images/springlobby.xpm"
+#include "../utils.h"
 
 BEGIN_EVENT_TABLE(CustomMessageBox ,wxDialog)
   EVT_BUTTON(wxID_NO, CustomMessageBox::OnOptionsNo)
@@ -386,4 +387,30 @@ void actNotifBox( int whichIcon , const wxString& message,const wxString& captio
             s_actNotifBox->AppendMessage(message);
             s_actNotifBox->Show(true);
 		}
+}
+
+int GetSingleChoiceIndex( const wxString& message,
+                            const wxString& caption,
+                            const wxArrayString& aChoices,
+                            const int selected,
+                            wxWindow *parent ,
+                            int x ,
+                            int y ,
+                            bool centre )
+{
+    wxString *choices;
+    int n = ConvertWXArrayToC(aChoices, &choices);
+
+    wxSingleChoiceDialog dialog(parent, message, caption, n, choices);
+    dialog.SetSelection( selected );
+
+    int choice;
+    if ( dialog.ShowModal() == wxID_OK )
+        choice = dialog.GetSelection();
+    else
+        choice = -1;
+
+    delete [] choices;
+
+    return choice;
 }

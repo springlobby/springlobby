@@ -309,7 +309,8 @@ bool SpringLobbyApp::SelectLanguage()
 {
     wxArrayString names;
     wxArrayLong identifiers;
-    m_translationhelper->GetInstalledLanguages(names, identifiers);
-    m_translationhelper->AskUserForLanguage(names, identifiers);
+    int current_selection_index;
+    m_translationhelper->GetInstalledLanguages(names, identifiers, current_selection_index);
+    m_translationhelper->AskUserForLanguage(names, identifiers, current_selection_index);
     m_translationhelper->Save();
 }

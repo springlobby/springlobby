@@ -18,8 +18,13 @@ public:
 	wxTranslationHelper( wxApp & app, const wxString & search_path );
 	~wxTranslationHelper();
 	wxLocale * GetLocale();
-	void GetInstalledLanguages( wxArrayString& names, wxArrayLong& identifiers );
-	bool AskUserForLanguage( wxArrayString& names, wxArrayLong& identifiers );
+
+	/** \brief put names and ID for all found .mo files
+        \param current_selected will contain the index of currently in settings selected languageID
+                in name/identifiers array, or -1 if notfound
+    */
+	void GetInstalledLanguages( wxArrayString& names, wxArrayLong& identifiers, int& current_selected );
+	bool AskUserForLanguage( wxArrayString& names, wxArrayLong& identifiers, int selected_index );
 	bool Load();
 	void Save();
 

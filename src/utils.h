@@ -175,4 +175,7 @@ class wxArrayString;
  */
 wxString GetBestMatch(const wxArrayString& a, const wxString& s, double* distance = NULL);
 
+//! convert wxArrayString into a wxString[] which must be delete[]d by caller
+int ConvertWXArrayToC(const wxArrayString& aChoices, wxString **choices);
+
 #endif // SPRINGLOBBY_HEADERGUARD_UTILS_H

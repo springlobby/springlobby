@@ -312,3 +312,16 @@ wxString GetBestMatch(const wxArrayString& a, const wxString& s, double* distanc
     if (minDistanceIndex == -1) return _T("");
     return a[minDistanceIndex];
 }
+
+int ConvertWXArrayToC(const wxArrayString& aChoices, wxString **choices)
+{
+    int n = aChoices.GetCount();
+    *choices = new wxString[n];
+
+    for ( int i = 0; i < n; i++ )
+    {
+        (*choices)[i] = aChoices[i];
+    }
+
+    return n;
+}

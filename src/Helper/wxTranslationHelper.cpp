@@ -8,6 +8,7 @@
 #include <wx/choicdlg.h>
 #include <wx/intl.h>
 #include "../settings.h"
+#include "../settings++/custom_dialogs.h"
 
 wxTranslationHelper::wxTranslationHelper( wxApp & app,
 										 const wxString & search_path )
@@ -57,7 +58,8 @@ bool wxTranslationHelper::Load()
 
 	wxArrayString names;
 	wxArrayLong identifiers;
-	GetInstalledLanguages( names, identifiers );
+	int dummy;
+	GetInstalledLanguages( names, identifiers, dummy );
 	for(size_t i = 0; i < identifiers.Count(); i++)
 	{
 		if( identifiers[i] == language )
@@ -76,10 +78,12 @@ bool wxTranslationHelper::Load()
 void wxTranslationHelper::Save()
 {
     sett().SetLanguageID( m_Locale->GetLanguage() );
+    sett().SaveSettings();
 }
 
 void wxTranslationHelper::GetInstalledLanguages( wxArrayString & names,
-												 wxArrayLong & identifiers )
+												 wxArrayLong & identifiers,
+												 int& selected_index )
 {
 	names.Clear();
 	identifiers.Clear();
@@ -104,6 +108,8 @@ void wxTranslationHelper::GetInstalledLanguages( wxArrayString & names,
 #else
 	wxString mask = wxT("*");
 #endif
+
+    selected_index = -1;
 	for(bool cont = dir.GetFirst(&filename, mask, wxDIR_DEFAULT);
             cont; cont = dir.GetNext( &filename) )
 	{
@@ -122,18 +128,21 @@ void wxTranslationHelper::GetInstalledLanguages( wxArrayString & names,
 			{
 				names.Add(langinfo->Description);
 				identifiers.Add(langinfo->Language);
+				if ( langinfo->Language == sett().GetLanguageID() )
+                    selected_index = names.GetCount() -1;
 			}
 		}
 	}
 }
 
 bool wxTranslationHelper::AskUserForLanguage( wxArrayString& names,
-											  wxArrayLong& identifiers)
+											  wxArrayLong& identifiers,
+											  int selected_index)
 {
 	wxCHECK_MSG( names.Count() == identifiers.Count(), false,
 		_("Array of language names and identifiers should have the same size.") );
-	long index = wxGetSingleChoiceIndex( _("Select the language"),
-			_("Language"), names );
+	long index = GetSingleChoiceIndex( _("Select the language"),
+			_("Language"), names, selected_index );
 	if( index != -1 )
 	{
 		if( m_Locale )
