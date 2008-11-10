@@ -148,10 +148,8 @@
 		<Unit filename="src/agreementdialog.h" />
 		<Unit filename="src/aui/artprovider.cpp" />
 		<Unit filename="src/aui/artprovider.h" />
-		<Unit filename="src/aui/auibook.h" />
 		<Unit filename="src/aui/auimanager.cpp" />
 		<Unit filename="src/aui/auimanager.h" />
-		<Unit filename="src/aui/auiuitls.h" />
 		<Unit filename="src/autobalancedialog.cpp" />
 		<Unit filename="src/autobalancedialog.h" />
 		<Unit filename="src/autohost.cpp" />
@@ -298,9 +296,6 @@
 		<Unit filename="src/replay/replaylistfiltervalues.h" />
 		<Unit filename="src/replay/replaytab.cpp" />
 		<Unit filename="src/replay/replaytab.h" />
-		<Unit filename="src/replayfilter.h" />
-		<Unit filename="src/replaylistctrl.h" />
-		<Unit filename="src/replaytab.h" />
 		<Unit filename="src/sdlsound.cpp" />
 		<Unit filename="src/sdlsound.h" />
 		<Unit filename="src/selectusersdialog.cpp" />
