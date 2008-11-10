@@ -4,6 +4,7 @@
 #include <wx/app.h>
 
 class wxTimer;
+class wxTimerEvent;
 class wxIcon;
 class wxLocale;
 class HttpDownloader;
