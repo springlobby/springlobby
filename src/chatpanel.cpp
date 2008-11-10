@@ -267,6 +267,11 @@ ChatPanel::~ChatPanel()
         if(GetAui().manager)GetAui().manager->DetachPane( this );
         #endif
 	}
+	if ( m_chatlog_url_style )
+	{
+	    delete m_chatlog_url_style;
+	    m_chatlog_url_style = 0;
+	}
 }
 
 
