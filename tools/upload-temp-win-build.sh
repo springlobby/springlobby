@@ -12,7 +12,7 @@ else
 	filename=sl_${2}.exe
 fi
 
-scp springlobby.exe graasmilk.net:springlobby.info/temp/builds/${filename}
+scp springlobby.exe rg:/usr/local/www/springlobby.info/temp/builds/${filename}
 ssh rg chown www-data:www-data /usr/local/www/springlobby.info/temp/builds/${filename}
 
 echo "http://springlobby.info/temp/builds/${filename}"

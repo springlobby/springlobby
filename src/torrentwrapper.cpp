@@ -45,6 +45,35 @@
 #include "globalsmanager.h"
 
 
+/** Get the name of the Spring data subdirectory that corresponds to a
+ * given IUnitSync::MediaType value.
+ */
+inline wxString
+getDataSubdirForType(const IUnitSync::MediaType type)
+{
+    switch ( type)
+    {
+    case IUnitSync::map:
+	return _T("maps");
+    case IUnitSync::mod:
+	return _T("mods");
+    default:
+	ASSERT_EXCEPTION(false, _T("Unhandled IUnitSync::MediaType value"));
+    }
+}
+
+
+/** Get the wxFileName of a wxTorrentFile given its wxHash (where a
+ * wxHash is a wxString).
+ *
+ * This is a wxConvienceFunction. wxEnjoy!
+ */
+inline wxFileName
+torrentFileName(const wxString& hash)
+{
+    return sett().GetTorrentDir().GetPathWithSep() + hash + _T(".torrent");
+}
+
 bool TorrentTable::IsConsistent()
 {
 #ifdef TorrentTable_validate
@@ -624,7 +653,7 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
 
     wxString torrent_name=row->name;
     wxString torrent_infohash_b64=row->infohash;
-    wxString path;
+    wxFileName path;
 
     switch (row->type)
     {
@@ -668,15 +697,15 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
             /// dizekat> i'm getting archivename == /home/dmytry/.spring/maps/Whatever.sdf and getting archivepath == /home/dmytry/.spring/maps/
             /// dizekat> so i changed it to prepend path only if path isnt found here.
             wxLogMessage( _T("seeding from archive name: %s"), archivename.c_str() );
-            wxString archivepath = usync().GetArchivePath( archivename );
-            int i = archivename.Find( archivepath );
+            wxFileName archivepath(usync().GetArchivePath( archivename ));
+            int i = archivename.Find( archivepath.GetFullPath() );
             if (i<0)
             {
-                path = archivepath + archivename;
+                path = archivepath.GetPathWithSep() + archivename;
             }
             else
             {
-                path = archivename;
+                path = wxFileName(archivename);
             }
 
         }
@@ -686,26 +715,15 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
             wxLogMessage( _T("Local filepath couldn't be determined") );
             return false;
         }
-        wxLogMessage( _T("seeding from local filename: %s"), path.c_str() );
+        wxLogMessage( _T("seeding from local filename: %s"), path.GetFullPath().c_str() );
 
     }
-    else
+    else			/* if(IsSeed) */
     {
-        path = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator();
-        switch (row->type)
-        {
-        case IUnitSync::map:
-        {
-            path = path + _T("maps") + wxFileName::GetPathSeparator();
-            break;
-        }
-        case IUnitSync::mod:
-        {
-            path = path + _T("mods") + wxFileName::GetPathSeparator();
-            break;
-        }
-        }
-        wxLogMessage(_T("downloading to path: =%s"), path.c_str());
+        path = sett().GetTorrentDataDir();
+	path.AppendDir( getDataSubdirForType(row->type) );
+	if ( !path.DirExists() ) path.Mkdir(0755);
+        wxLogMessage(_T("downloading to path: =%s"), path.GetFullPath().c_str());
     }
 
 
@@ -713,7 +731,7 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
     if (!DownloadTorrentFileFromTracker( row->hash )) return false;
 
     /// read torrent from file
-    std::ifstream in( wxString( sett().GetTorrentsFolder() + row->hash + _T(".torrent") ).mb_str(), std::ios_base::binary);
+    std::ifstream in( torrentFileName(row->hash).GetFullPath().mb_str(), std::ios_base::binary);
     in.unsetf(std::ios_base::skipws);
     libtorrent::entry e;
     try
@@ -760,11 +778,11 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
          return false;
         }
     }
-    wxLogMessage(_T("(4) Joining torrent: add_torrent(%s,[%s],%s,[%s])"),m_tracker_urls[m_connected_tracker_index].c_str(),torrent_infohash_b64.c_str(),row->name.c_str(),path.c_str());
+    wxLogMessage(_T("(4) Joining torrent: add_torrent(%s,[%s],%s,[%s])"),m_tracker_urls[m_connected_tracker_index].c_str(),torrent_infohash_b64.c_str(),row->name.c_str(),path.GetFullPath().c_str());
 
     try
     {
-        m_torrent_table.SetRowHandle(row, m_torr->add_torrent( t_info, boost::filesystem::path(STD_STRING(path))));
+        m_torrent_table.SetRowHandle(row, m_torr->add_torrent( t_info, boost::filesystem::path(path.GetFullPath().mb_str())));
     }
     catch (std::exception& e)
     {
@@ -887,12 +905,9 @@ bool TorrentWrapper::DownloadTorrentFileFromTracker( const wxString& hash )
 {
     if ( sett().GetCurrentUsedDataDir().IsEmpty() ) return false; /// no good things can happend if you don't know which folder to r/w files from
 
-#ifdef HAVE_WX26
-    wxFileName filename( sett().GetTorrentsFolder() + hash + _T(".torrent") ) ;
-    bool readable = filename.IsOk();
-#else
-    bool readable = wxFileName::IsFileReadable( sett().GetTorrentsFolder()+ hash + _T(".torrent") ) ;
-#endif
+    wxFileName filename( torrentFileName(hash) );
+
+    bool readable(filename.IsFileReadable());
 
     if ( readable  ) return true; ///file already present locally
 
@@ -908,7 +923,7 @@ bool TorrentWrapper::DownloadTorrentFileFromTracker( const wxString& hash )
     if (fileRequest.GetError() == wxPROTO_NOERR)
     {
 
-        wxFileOutputStream output( sett().GetTorrentsFolder() + hash + _T(".torrent") );
+        wxFileOutputStream output( filename.GetFullPath() );
         if ( output.Ok() )
         {
             stream->Read(output);
@@ -955,7 +970,25 @@ void TorrentWrapper::RemoveUnneededTorrents()
             ///torrent has finished download, refresh unitsync and remove file from list
             try
             {
+		/* Grab the source (temporary) and destination (final) filenames BEFORE we remove the download. */
+		wxString sourceName( TowxString( ( it->first.save_path() / it->first.name() ).file_string() ) );
+		wxString targetName =
+		    sett().GetCurrentUsedDataDir()
+		    + wxFileName::GetPathSeparator() + getDataSubdirForType(it->second->type)
+		    + wxFileName::GetPathSeparator() + TowxString(it->first.name());
+
+
                 ASSERT_EXCEPTION( RemoveTorrentByRow( it->second ), _T("failed to remove torrent: ")+ it->second->hash );
+
+		/* Move file from temporary download directory to final destination.  `false' for
+		 * parameter 3 means don't overwrite the file if it already exists.
+		 */
+		if ( ! wxRenameFile(sourceName, targetName, false) )
+		    wxLogError(wxString::Format(_T("torrent: Failed to move \"%s\" to \"%s\""),
+						sourceName.c_str(), targetName.c_str()));
+		else
+		    wxLogMessage(wxString::Format(_T("torrent: Moved \"%s\" to \"%s\""),
+						  sourceName.c_str(), targetName.c_str()));
 
                 m_socket_class->Send( _T("N-|")  + it->second->hash + _T("\n") ); ///notify the system we don't need the file anymore
 

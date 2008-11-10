@@ -1091,7 +1091,7 @@ void Ui::OnSpringStarting()
 }
 
 
-void Ui::OnSpringTerminated( bool success )
+void Ui::OnSpringTerminated( long exit_code )
 {
     m_ingame = false;
 #ifndef NO_TORRENT_SYSTEM
