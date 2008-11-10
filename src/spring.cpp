@@ -156,7 +156,7 @@ bool Spring::Run( SinglePlayerBattle& battle )
     return false;
   }
 
-  wxString path = wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator();
+  wxString path = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator();
 
   try {
 
