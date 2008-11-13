@@ -135,7 +135,7 @@ BattleListCtrl::~BattleListCtrl()
 void BattleListCtrl::HighlightItem( long item )
 {
     //prioritize highlighting host over joined players
-    Battle b = ui().GetServer().GetBattle( GetItemData(item) );
+    const Battle& b = ui().GetServer().GetBattle( GetItemData(item) );
     wxString host = b.GetFounder().GetNick();
     HighlightItemUser( item, host );
     if ( useractions().DoActionOnUser( m_highlightAction, host ) )
@@ -148,6 +148,7 @@ void BattleListCtrl::HighlightItem( long item )
         HighlightItemUser( item, name );
         if ( useractions().DoActionOnUser( m_highlightAction, name ) )
             return;
+
     }
 }
 
