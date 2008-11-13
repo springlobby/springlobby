@@ -134,8 +134,8 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Channel& chan, wxImageList* imag
   m_type( CPT_Channel ),
   m_popup_menu( 0 ),
   m_chat_log(0),
-  m_imagelist( imaglist ),
-  m_icon_index( 2 )
+  m_icon_index( 2 ),
+  m_imagelist( imaglist )
 {
   GetAui().manager->AddPane( this, wxLEFT, _T("chatpanel-channel-") + chan.GetName() );
 	wxLogDebugFunc( _T( "wxWindow* parent, Channel& chan" ) );
@@ -168,8 +168,8 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, User& user, wxImageList* imaglis
   m_type( CPT_User ),
   m_popup_menu( 0 ),
   m_chat_log(0),
-  m_imagelist( imaglist ),
-  m_icon_index( 3 )
+  m_icon_index( 3 ),
+  m_imagelist( imaglist )
 {
   GetAui().manager->AddPane( this, wxLEFT, _T("chatpanel-pm-") + user.GetNick() );
 	CreateControls( );
@@ -195,8 +195,8 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Server& serv, wxImageList* imagl
   m_type( CPT_Server ),
   m_popup_menu( 0 ),
   m_chat_log(0),
-  m_imagelist( imaglist ),
-  m_icon_index( 1 )
+  m_icon_index( 1 ),
+  m_imagelist( imaglist )
 {
   GetAui().manager->AddPane( this, wxLEFT, _T("chatpanel-server") );
 	wxLogDebugFunc( _T( "wxWindow* parent, Server& serv" ) );
@@ -824,6 +824,7 @@ void ChatPanel::StatusMessage( const wxString& message )
 	} else {
 		wxFont f = m_chatlog_text->GetFont();
 		f.SetFamily( wxFONTFAMILY_MODERN );
+		if( CPT_Server == m_type ) SetIconHighlight( highlight_important );
 		OutputLine( _T( " ** Server ** " ) + message, sett().GetChatColorServer(), f );
 	}
 }
@@ -1054,12 +1055,13 @@ void ChatPanel::_SetChannel( Channel* channel )
 }
 
 
-void ChatPanel::Say( wxString message )
+void ChatPanel::Say( const wxString& message )
 {
 	wxLogDebugFunc( _T( "" ) );
-	message.Replace( _T("\r\n"), _T("\n") );
-	message.Replace( _T("\r"), _T("\n") );
-	wxStringTokenizer lines( message, _T( "\n" ) );
+	wxString messagecopy = message;
+	messagecopy.Replace( _T("\r\n"), _T("\n") );
+	messagecopy.Replace( _T("\r"), _T("\n") );
+	wxStringTokenizer lines( messagecopy, _T( '\n' ) );
 	if ( lines.CountTokens() > 5 ) {
 		wxMessageDialog dlg( &m_ui.mw(), wxString::Format( _( "Are you sure you want to paste %d lines?" ), lines.CountTokens() ), _( "Flood warning" ), wxYES_NO );
 		if ( dlg.ShowModal() == wxID_NO ) return;

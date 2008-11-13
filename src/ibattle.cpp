@@ -51,7 +51,7 @@ const UnitSyncMap& IBattle::LoadMap()
 
   if ( !m_map_loaded ) {
     try {
-      ASSERT_LOGIC( m_map_exists, _T("Map does not exist.") );
+      ASSERT_EXCEPTION( m_map_exists, _T("Map does not exist.") );
       m_local_map = usync().GetMapEx( m_host_map.name );
       m_map_loaded = true;
 

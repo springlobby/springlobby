@@ -309,8 +309,7 @@ void Ui::ReloadUnitSync()
 void Ui::DownloadMap( const wxString& hash, const wxString& name )
 {
 #ifndef NO_TORRENT_SYSTEM
-    if ( !hash.IsEmpty() ) torrent().RequestFileByHash( hash );
-    else if ( !name.IsEmpty() ) torrent().RequestFileByName( name );
+    DownloadFileP2P( hash, name );
 #else
     wxString url = _T("http://spring.jobjol.nl/search.php");
     OpenWebBrowser ( url );
@@ -321,11 +320,37 @@ void Ui::DownloadMap( const wxString& hash, const wxString& name )
 void Ui::DownloadMod( const wxString& hash, const wxString& name )
 {
 #ifndef NO_TORRENT_SYSTEM
-    if ( !hash.IsEmpty() ) torrent().RequestFileByHash( hash );
-    else if ( !name.IsEmpty() ) torrent().RequestFileByName( name );
+    DownloadFileP2P( hash, name );
 #else
     wxString url = _T("http://spring.jobjol.nl/search.php");
     OpenWebBrowser ( url );
+#endif
+}
+
+void Ui::DownloadFileP2P( const wxString& hash, const wxString& name )
+{
+#ifndef NO_TORRENT_SYSTEM
+    if ( !torrent().IsConnectedToP2PSystem() ){
+        wxArrayString hashesToResume = sett().GetTorrentListToResume();
+        hashesToResume.Add( hash );
+        sett().SetTorrentListToResume( hashesToResume );
+        torrent().ConnectToP2PSystem();
+    }
+    else {
+
+    //we need a way to have the request happen only after connect is complete
+        TorrentWrapper::DownloadRequestStatus status;
+        if ( !hash.IsEmpty() ) {
+             status = torrent().RequestFileByHash( hash );
+        }
+        else if ( !name.IsEmpty() )
+            status = torrent().RequestFileByName( name );
+
+//!TODO: put some meaningful err msg here
+//        if ( status != TorrentWrapper::success ){
+//            customMessageBoxNoModal( SL_MAIN_ICON, _(""), _("") );
+//        }
+    }
 #endif
 }
 
@@ -1011,6 +1036,11 @@ void Ui::OnBattleStarted( Battle& battle )
     {
         if ( &mw().GetJoinTab().GetBattleRoomTab().GetBattle() == &battle )
         {
+            if ( battle.IsProxy() )
+            {
+              wxString hostscript = m_spring->WriteScriptTxt( battle );
+              m_serv->SendScriptToProxy( hostscript );
+            }
             battle.GetMe().BattleStatus().ready = false;
             battle.SendMyBattleStatus();
             battle.GetMe().Status().in_game = true;
@@ -1061,7 +1091,7 @@ void Ui::OnSpringStarting()
 }
 
 
-void Ui::OnSpringTerminated( bool success )
+void Ui::OnSpringTerminated( long exit_code )
 {
     m_ingame = false;
 #ifndef NO_TORRENT_SYSTEM

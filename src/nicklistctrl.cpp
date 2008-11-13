@@ -361,40 +361,45 @@ void NickListCtrl::SetTipWindowText( const long item_hit, const wxPoint position
     }
     else
     {
-        switch (coloumn)
-        {
-        case 0: // status
-            m_tiptext = _T("This ");
-            if (user->GetStatus().bot)
-                m_tiptext << _T("bot ");
-            else if (user->GetStatus().moderator)
-                m_tiptext << _T("moderator ");
-            else
-                m_tiptext << _T("player ");
+        if (user) {
+            switch (coloumn)
+            {
+            case 0: // status
+                m_tiptext = _T("This ");
+                if (user->GetStatus().bot)
+                    m_tiptext << _T("bot ");
+                else if (user->GetStatus().moderator)
+                    m_tiptext << _T("moderator ");
+                else
+                    m_tiptext << _T("player ");
 
-            if (user->GetStatus().in_game)
-                m_tiptext <<  _T("is ingame");
-            else if (user->GetStatus().away)
-                m_tiptext <<  _T("is away");
-            else
-                m_tiptext << _T("is available");
-            break;
+                if (user->GetStatus().in_game)
+                    m_tiptext <<  _T("is ingame");
+                else if (user->GetStatus().away)
+                    m_tiptext <<  _T("is away");
+                else
+                    m_tiptext << _T("is available");
+                break;
 
-        case 1: // country
-            m_tiptext =  GetFlagNameFromCountryCode(user->GetCountry().Upper());
-            break;
+            case 1: // country
+                m_tiptext =  GetFlagNameFromCountryCode(user->GetCountry().Upper());
+                break;
 
-        case 2: // rank
-            m_tiptext = user->GetRankName(user->GetStatus().rank);
-            break;
+            case 2: // rank
+                m_tiptext = user->GetRankName(user->GetStatus().rank);
+                break;
 
-        case 3: // nickname
-            m_tiptext = user->GetNick();
-            break;
+            case 3: // nickname
+                m_tiptext = user->GetNick();
+                break;
 
-        default:
-            m_tiptext = m_colinfovec[coloumn].first;
-            break;
+            default:
+                m_tiptext = m_colinfovec[coloumn].first;
+                break;
+            }
+        }
+        else {
+            m_tiptext = _T("");
         }
     }
 }

@@ -141,7 +141,7 @@ class Ui
     void OnBattleAction( Battle& battle, const wxString& nick, const wxString& msg );
 
     void OnSpringStarting();
-    void OnSpringTerminated( bool success );
+    void OnSpringTerminated( long exit_code );
 
     void OnAcceptAgreement( const wxString& agreement );
 
@@ -175,6 +175,9 @@ class Ui
     bool m_checked_for_update;
 
     bool m_ingame;
+
+    //! does actual work, called from downloadmap/mod
+    void DownloadFileP2P( const wxString& hash, const wxString& name );
 
 };
 
