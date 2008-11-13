@@ -1683,7 +1683,7 @@ void ChatPanel::OnUserMenuAddToGroup( wxCommandEvent& event )
     wxString groupname = m_usermenu->GetGroupByEvtID(id);
     User* user = GetSelectedUser();
     if ( user )
-    useractions().AddUserToGroup( groupname, user->GetNick() );
+        useractions().AddUserToGroup( groupname, user->GetNick() );
 }
 
 
