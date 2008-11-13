@@ -174,6 +174,8 @@ class TASServer : public Server
     void SendCmd( const wxString& command, const wxString& param = _T("") );
     void RelayCmd( const wxString& command, const wxString& param = _T("") );
 
+    wxString m_current_chan_name_mutelist;
+
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_TASSERVER_H

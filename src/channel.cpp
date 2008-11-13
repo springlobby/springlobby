@@ -220,3 +220,18 @@ void Channel::SetPassword( const wxString& pw )
 {
   m_password = pw;
 }
+
+void Channel::AddMute( const wxString& mutee, const wxString& description )
+{
+    m_mutelist.push_back( Mute( mutee, description ) );
+}
+
+void Channel::ClearMutelist()
+{
+    m_mutelist.clear();
+}
+
+const Channel::MuteList& Channel::GetMutelist ()
+{
+    return m_mutelist;
+}

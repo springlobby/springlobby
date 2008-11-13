@@ -966,6 +966,23 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         if ( port == 0 ) port = DEFSETT_DEFAULT_SERVER_PORT;
         m_se->OnRedirect( address, port, m_user, m_pass );
     }
+    else if ( cmd == _T("MUTELISTBEGIN") )
+    {
+        m_current_chan_name_mutelist = GetWordParam( params );
+        m_se->OnMutelistBegin( m_current_chan_name_mutelist );
+
+    }
+    else if ( cmd == _T("MUTELIST") )
+    {
+        wxString mutee = GetWordParam( params );
+        wxString description = GetWordParam( params );
+        m_se->OnMutelistItem( m_current_chan_name_mutelist, mutee, description );
+    }
+    else if ( cmd == _T("MUTELISTEND") )
+    {
+        m_se->OnMutelistEnd( m_current_chan_name_mutelist );
+        m_current_chan_name_mutelist = _T("");
+    }
     else
     {
         wxLogMessage( _T("??? Cmd: %s params: %s"), cmd.c_str(), params.c_str() );

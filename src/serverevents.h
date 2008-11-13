@@ -117,6 +117,10 @@ class ServerEvents
     /// use this function to check spam from clients and autokick from the battle
     void AutoCheckCommandSpam( Battle& battle, User& nick );
 
+    void OnMutelistBegin( const wxString& channel );
+    void OnMutelistItem( const wxString& channel, const wxString& mutee, const wxString& description );
+    void OnMutelistEnd( const wxString& channel );
+
   protected:
     Server& m_serv;
 

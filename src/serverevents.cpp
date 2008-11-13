@@ -706,3 +706,18 @@ void ServerEvents::AutoCheckCommandSpam( Battle& battle, User& user )
     battle.KickPlayer( user );
   }
 }
+
+void ServerEvents::OnMutelistBegin( const wxString& channel )
+{
+    m_serv.GetChannel( channel ).ClearMutelist();
+}
+
+void ServerEvents::OnMutelistItem( const wxString& channel, const wxString& mutee, const wxString& description )
+{
+    m_serv.GetChannel( channel ).AddMute( mutee, description );
+}
+
+void ServerEvents::OnMutelistEnd( const wxString& channel )
+{
+    ui().OnShowMutelist( channel );
+}
