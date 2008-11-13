@@ -1241,19 +1241,3 @@ void Ui::WatchReplay ( wxString& filename )
     OnSpringStarting();
     m_spring->RunReplay( filename );
 }
-
-void Ui::OnShowMutelist( const wxString&  channel )
-{
-    typedef Channel::MuteList MuteList;
-    typedef MuteList::const_iterator MuteListIter;
-
-    const MuteList& mutelist = m_serv->GetChannel( channel ).GetMutelist();
-    MuteListIter it = mutelist.begin();
-    mw().GetActiveChatPanel()->ClientMessage( _("Mutelist for channel: ") + channel );
-    for ( ; it != mutelist.end(); ++it ) {
-        mw().GetActiveChatPanel()->ClientMessage( it->first + _(" reason: ") + it->second );
-    }
-    if ( mutelist.size() < 1 )
-        mw().GetActiveChatPanel()->ClientMessage( _("Not a single user muted in this channel")  );
-
-}

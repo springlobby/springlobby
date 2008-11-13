@@ -26,10 +26,6 @@ struct UiChannelData {
 class Channel : public UserList
 {
   public:
-    //! stores mutee,description
-    typedef std::pair<wxString,wxString> Mute;
-    typedef std::vector<Mute> MuteList;
-
 
     UiChannelData uidata;
 
@@ -70,11 +66,6 @@ class Channel : public UserList
     wxString GetPassword();
     void SetPassword( const wxString& pw );
 
-    void AddMute( const wxString& mutee, const wxString& description );
-    void ClearMutelist();
-
-    const MuteList& GetMutelist ();
-
   protected:
     Server& m_serv;
 
@@ -97,8 +88,6 @@ class Channel : public UserList
     void* m_userdata;
 
     wxString m_password;
-
-    MuteList m_mutelist;
 
     void AddUser( User& user );
     void RemoveUser( const wxString& nick );

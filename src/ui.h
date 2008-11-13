@@ -153,9 +153,6 @@ class Ui
     void OnMinimapCached( const wxString& mapname );
     void OnModUnitsCached( const wxString& modname );
 
-    //! triggered when recieving mutelistend from server
-    void OnShowMutelist( const wxString&  channel );
-
     bool IsThisMe(User& other);
     bool IsThisMe(User* other);
     bool IsThisMe(const wxString& other);

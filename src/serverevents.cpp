@@ -709,15 +709,20 @@ void ServerEvents::AutoCheckCommandSpam( Battle& battle, User& user )
 
 void ServerEvents::OnMutelistBegin( const wxString& channel )
 {
-    m_serv.GetChannel( channel ).ClearMutelist();
+    mutelistWindow( _("Begin mutelist for ") + channel, channel + _(" mutelist") );
 }
 
 void ServerEvents::OnMutelistItem( const wxString& channel, const wxString& mutee, const wxString& description )
 {
-    m_serv.GetChannel( channel ).AddMute( mutee, description );
+    wxString message = mutee;
+    if ( description == _T("indefinite") )
+        message << _("\t time remaining: indefinite");
+    else
+        message << wxString::Format( _("\t time remaining: %f minutes") , s2l(description)/60.0 ) ;
+    mutelistWindow( message );
 }
 
 void ServerEvents::OnMutelistEnd( const wxString& channel )
 {
-    ui().OnShowMutelist( channel );
+    mutelistWindow( _("End mutelist for ") + channel );
 }
