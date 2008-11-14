@@ -716,9 +716,9 @@ void ServerEvents::OnMutelistItem( const wxString& channel, const wxString& mute
 {
     wxString message = mutee;
     if ( description == _T("indefinite") )
-        message << _("\t time remaining: indefinite");
+        message << _(" indefinite time remaining");
     else
-        message << wxString::Format( _("\t time remaining: %f minutes") , s2l(description)/60.0 ) ;
+        message << wxString::Format( _(" %d minutes remaining") , s2l(description)/60 + 1 ) ;
     mutelistWindow( message );
 }
 
