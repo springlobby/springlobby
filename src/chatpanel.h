@@ -135,6 +135,7 @@ class ChatPanel : public wxPanel
     void OnChannelMenuSpamOn( wxCommandEvent& event );
     void OnChannelMenuSpanOff( wxCommandEvent& event );
     void OnChannelMenuSpamIsOn( wxCommandEvent& event );
+    void OnChannelMenuShowMutelist( wxCommandEvent& event );
 
     void OnServerMenuDisconnect( wxCommandEvent& event );
     void OnServerMenuReconnect( wxCommandEvent& event );
@@ -292,7 +293,9 @@ enum
     CHAT_MENU_US_MODERATOR_MUTE_120,
     CHAT_MENU_US_MODERATOR_MUTE_1440,
     CHAT_MENU_US_MODERATOR_UNMUTE,
-    CHAT_MENU_US_MODERATOR_RING
+    CHAT_MENU_US_MODERATOR_RING,
+
+    CHAT_MENU_SHOW_MUTELIST
 };
 
 

@@ -113,6 +113,7 @@ BEGIN_EVENT_TABLE( ChatPanel, wxPanel )
 	EVT_MENU( CHAT_MENU_US_MODERATOR_MUTE_1440, ChatPanel::OnUserMenuModeratorMute1440 )
 	EVT_MENU( CHAT_MENU_US_MODERATOR_UNMUTE, ChatPanel::OnUserMenuModeratorUnmute )
 	EVT_MENU( CHAT_MENU_US_MODERATOR_RING, ChatPanel::OnUserMenuModeratorRing )
+	EVT_MENU( CHAT_MENU_SHOW_MUTELIST, ChatPanel::OnChannelMenuShowMutelist )
 
 END_EVENT_TABLE()
 
@@ -396,6 +397,9 @@ void ChatPanel::CreatePopup()
 			m_popup_menu->Append( displayjoinitem );
 			displayjoinitem->Check( sett().GetDisplayJoinLeave( m_channel->GetName() ) );
 		}
+
+        wxMenuItem* mutelistitem = new wxMenuItem( m_popup_menu, CHAT_MENU_SHOW_MUTELIST, _( "Show mute list" ), wxEmptyString, wxITEM_NORMAL );
+		m_popup_menu->Append( mutelistitem );
 
 		m_popup_menu->AppendSeparator();
 		wxMenuItem* selectitem = new wxMenuItem( m_popup_menu, wxID_SELECTALL, _( "Select all" ), wxEmptyString, wxITEM_NORMAL );
@@ -1826,4 +1830,11 @@ void ChatPanel::SetIconHighlight( HighlightType highlight )
       }
     }
   }
+}
+
+void ChatPanel::OnChannelMenuShowMutelist( wxCommandEvent& event )
+{
+    if ( m_channel && ( m_type == CPT_Channel ) ) {
+       m_channel->GetServer().SendRaw( _T("MUTELIST ") + m_channel->GetName() );
+    }
 }
