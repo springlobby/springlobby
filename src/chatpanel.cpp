@@ -267,11 +267,13 @@ ChatPanel::~ChatPanel()
         if(GetAui().manager)GetAui().manager->DetachPane( this );
         #endif
 	}
+	#ifndef NO_RICHTEXT_CHAT
 	if ( m_chatlog_url_style )
 	{
 	    delete m_chatlog_url_style;
 	    m_chatlog_url_style = 0;
 	}
+	#endif
 }
 
 
@@ -320,7 +322,7 @@ void ChatPanel::CreateControls( )
   /* Set up text styles */
   /** @todo Make URL color/style configurable */
   m_chatlog_url_style = new wxRichTextAttr;
-  m_chatlog_url_style->SetTextColour(wxColour(0, 0, 0xCC));
+  m_chatlog_url_style->SetTextColour( sett().GetChatColorAction() );
   m_chatlog_url_style->SetFontUnderlined(true);
 
   // Accelerators
@@ -658,14 +660,8 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const 
 
 			if ( isUrl )
 			{
-			    /* The link is broken (http://www.example.com
-			     * becomes http://www.example.co) if this space
-			     * (or other string, probably) isn't appended
-			     * here.
-			     */
 			    m_chatlog_text->EndURL();
 			    m_chatlog_text->EndStyle();
-
 			}
 
 			/* Advance the start-index past the end of the
