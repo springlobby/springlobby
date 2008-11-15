@@ -14,9 +14,10 @@ class ChannelListctrl : public CustomListCtrl
 
         void AddChannel( const wxString& channel, unsigned int num_users, const wxString& topic);
         void ClearChannels();
+        wxString GetInfo();
+        void FilterChannel( const wxString& partial );
 
     protected:
-        //! no-op atm, so i don't get segfault because of missing data
         void Sort();
         void SetTipWindowText( const long item_hit, const wxPoint position);
 

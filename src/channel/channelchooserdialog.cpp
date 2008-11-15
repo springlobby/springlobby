@@ -8,9 +8,11 @@ ChannelChooserDialog::ChannelChooserDialog(wxWindow* parent, wxWindowID id,
             const wxSize& size )
     : wxDialog ( parent, id, title, pos, size, style )
 {
-    m_main_sizer = new wxBoxSizer( wxHORIZONTAL );
+    m_main_sizer = new wxBoxSizer( wxVERTICAL );
+
     m_chooser_panel = new ChannelChooserPanel( this, -1, _("Choose channels to join") );
     m_main_sizer->Add( m_chooser_panel, 1, wxALL | wxEXPAND, 5 );
+
     SetSizer( m_main_sizer );
 }
 

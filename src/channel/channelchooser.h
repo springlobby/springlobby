@@ -7,6 +7,8 @@
 class ChannelListctrl;
 class wxBoxSizer;
 class wxButton;
+class wxTextCtrl;
+class wxStaticText;
 
 class ChannelChooserPanel : public wxScrolledWindow
 {
@@ -19,13 +21,21 @@ class ChannelChooserPanel : public wxScrolledWindow
 
         void AddChannel( const wxString& name, int usercount, const wxString& topic = wxEmptyString );
         void ClearChannels();
+        void OnSearch( wxCommandEvent& event );
 
     protected:
         wxButton* m_join_channels;
         wxButton* m_mark_autojoin;
         wxBoxSizer* m_main_sizer;
         ChannelListctrl* m_channellist;
-    private:
+        wxTextCtrl* m_search_text;
+        wxStaticText* m_info_label;
+
+        enum {
+            ID_SEARCH_TEXT
+        };
+
+        DECLARE_EVENT_TABLE()
 };
 
 #endif // CHANNELCHOOSER_H

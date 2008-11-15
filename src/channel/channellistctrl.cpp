@@ -197,3 +197,30 @@ void ChannelListctrl::ClearChannels()
     DeleteAllItems();
     m_data.clear();
 }
+
+wxString ChannelListctrl::GetInfo()
+{
+    int displayed = GetItemCount();
+    int total = m_data.size();
+    return wxString::Format( _("Displaying %d out of %d channels"), displayed, total );
+}
+
+void ChannelListctrl::FilterChannel( const wxString& partial )
+{
+    DeleteAllItems();
+
+    for ( ChannelInfoIter it = m_data.begin(); it != m_data.end(); ++it ) {
+        const ChannelInfo& data = it->second;
+        if ( data.name.Contains( partial ) ) {
+            int index = InsertItem( GetItemCount(), data.name );
+            SetItem( index, 0, data.name );
+            SetItem( index, 1, TowxString( data.usercount ) );
+            SetItem( index, 2, data.topic );
+            SetItemData( index, (wxUIntPtr) &(it->second) );
+        }
+    }
+    //highlight
+    //HighlightItemUser( index, userdata.first );
+
+    Sort();
+}
