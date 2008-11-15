@@ -162,7 +162,8 @@ ChannelChooser* m_channel_chooser;
         MENU_VERSION,
         MENU_START_TORRENT,
         MENU_STOP_TORRENT,
-        MENU_AUTOJOIN_CHANNELS
+        MENU_AUTOJOIN_CHANNELS,
+        MENU_CHANNELCHOOSER
 
     };
 

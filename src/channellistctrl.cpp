@@ -3,14 +3,14 @@
 #include "utils.h"
 #include "ui.h"
 
-BEGIN_EVENT_TABLE( ChannelListctrl, customListCtrl )
+BEGIN_EVENT_TABLE( ChannelListctrl, CustomListCtrl )
   EVT_LIST_ITEM_ACTIVATED( CHANNELLIST, ChannelListctrl::OnActivateItem )
   EVT_LIST_COL_CLICK( CHANNELLIST, ChannelListctrl::OnColClick )
 END_EVENT_TABLE()
 
 
-ChannelListctrl::ChannelListctrl(wxWindow* parent, wxWindowID id, const wxPoint& pt,
-                    const wxSize& sz,long style, wxString name)
+ChannelListctrl::ChannelListctrl(wxWindow* parent, wxWindowID id, const wxString& name,
+                    long style, const wxPoint& pt, const wxSize& sz)
     :CustomListCtrl(parent, CHANNELLIST, wxDefaultPosition, wxDefaultSize,
             wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("ChannelListCtrl"))
 
