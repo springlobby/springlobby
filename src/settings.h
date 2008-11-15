@@ -298,17 +298,17 @@ class Settings
      void SaveCustomColors( const wxColourData& cdata, const wxString& paletteName = _T("Default") );
      wxColourData GetCustomColors( const wxString& paletteName = _T("Default") );
 
-    int    GetMainWindowWidth();
-    void   SetMainWindowWidth( const int value );
+    int    GetWindowWidth( const wxString& window );
+    void   SetWindowWidth( const wxString& window, const int value );
 
-    int    GetMainWindowHeight();
-    void   SetMainWindowHeight( const int value );
+    int    GetWindowHeight( const wxString& window );
+    void   SetWindowHeight( const wxString& window, const int value );
 
-    int    GetMainWindowTop();
-    void   SetMainWindowTop( const int value );
+    int    GetWindowTop( const wxString& window );
+    void   SetWindowTop( const wxString& window, const int value );
 
-    int    GetMainWindowLeft();
-    void   SetMainWindowLeft( const int value );
+    int    GetWindowLeft( const wxString& window );
+    void   SetWindowLeft( const wxString& window, const int value );
 
     bool UseOldSpringLaunchMethod();
     void SetOldSpringLaunchMethod( bool value );
@@ -588,17 +588,6 @@ class Settings
     wxString getSimpleDetail();
     void setSimpleDetail( wxString );
 
-    int    GetSettingsWindowWidth();
-    void   SetSettingsWindowWidth( const int value );
-
-    int    GetSettingsWindowHeight();
-    void   SetSettingsWindowHeight( const int value );
-
-    int    GetSettingsWindowTop();
-    void   SetSettingsWindowTop( const int value );
-
-    int    GetSettingsWindowLeft();
-    void   SetSettingsWindowLeft( const int value );
   /**@}*/
 
   protected:
