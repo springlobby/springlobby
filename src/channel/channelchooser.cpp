@@ -28,6 +28,7 @@ ChannelChooser::~ChannelChooser()
 void ChannelChooser::AddChannel( const wxString& name, int usercount, const wxString& topic )
 {
     m_channellist->AddChannel( name, usercount, topic );
+    Layout();
 }
 
 void ChannelChooser::ClearChannels()

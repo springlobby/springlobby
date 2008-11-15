@@ -781,7 +781,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     {
         channel = GetWordParam( params );
         units = GetIntParam( params );
-        topic = GetWordParam( params );
+        topic = GetSentenceParam( params );
         m_se->OnChannelList( channel, units, topic );
     }
     else if ( cmd == _T("ENDOFCHANNELS") )

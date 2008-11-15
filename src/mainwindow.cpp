@@ -601,8 +601,13 @@ void MainWindow::OnShowChannelChooser( wxCommandEvent& event )
     if ( m_channel_chooser && m_channel_chooser->IsShown() )
         return;
 
-    m_channel_chooser->ClearChannels();
-    ui().GetServer().RequestChannels();
+    if ( !ui().IsConnected() )
+        customMessageBox( SL_MAIN_ICON, _("You need to be connected to server to view channel list"), _("Not connected") );
+    else {
+        m_channel_chooser->ClearChannels();
+        ui().GetServer().RequestChannels();
+        m_channel_chooser->Show( true );
+    }
 }
 
 void MainWindow::OnChannelList( const wxString& channel, const int& numusers, const wxString& topic )
