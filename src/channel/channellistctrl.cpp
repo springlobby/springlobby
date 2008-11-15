@@ -15,49 +15,44 @@ ChannelListctrl::ChannelListctrl(wxWindow* parent, wxWindowID id, const wxString
             wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("ChannelListCtrl"))
 
 {
-     wxListItem col;
-
-  col.SetImage( -1 );
-  InsertColumn( 0, col, _T("Icon") );
+  wxListItem col;
 
   col.SetText( _("Channel name") );
   col.SetImage( -1 );
-  InsertColumn( 1, col, _T("Channelname") );
+  InsertColumn( 0, col, _T("Channelname") );
 
   col.SetText( _("# users") );
   col.SetImage( -1 );
-  InsertColumn( 2, col, _T("users") );
+  InsertColumn( 1, col, _T("users") );
 
   col.SetText( _("topic") );
   col.SetImage( -1 );
-  InsertColumn( 3, col, _T("topic") );
+  InsertColumn( 2, col, _T("topic") );
 
-  m_sortorder[2].col = 0;
+  m_sortorder[2].col = 2;
   m_sortorder[2].direction = false;
-  m_sortorder[0].col = 1;
+  m_sortorder[0].col = 0;
   m_sortorder[0].direction = true;
-  m_sortorder[1].col = 2;
+  m_sortorder[1].col = 1;
   m_sortorder[1].direction = true;
 
 
 #if defined(__WXMSW__)
  /// autosize is part-broken on msw.
-  SetColumnWidth( 0, 55 );
-  SetColumnWidth( 1, wxLIST_AUTOSIZE_USEHEADER );
+  SetColumnWidth( 0, wxLIST_AUTOSIZE );
+  SetColumnWidth( 1, 325 );
   SetColumnWidth( 2, wxLIST_AUTOSIZE );
-  SetColumnWidth( 3, wxLIST_AUTOSIZE );
 
 #elif defined(__WXMAC__)
 /// autosize is entirely broken on wxmac.
-  SetColumnWidth( 0, 20 );
-  SetColumnWidth( 1, 128 );
+  SetColumnWidth( 0, 120 );
+  SetColumnWidth( 1, 25 );
   SetColumnWidth( 2, 128 );
 #else
  /// on wxGTK it works, sort of.
-  SetColumnWidth( 0, 40 );
+  SetColumnWidth( 0, wxLIST_AUTOSIZE );
   SetColumnWidth( 1, wxLIST_AUTOSIZE );
   SetColumnWidth( 2, wxLIST_AUTOSIZE );
-  SetColumnWidth( 3, wxLIST_AUTOSIZE );
 #endif
 
   SetImageList( &icons(), wxIMAGE_LIST_NORMAL );
@@ -90,10 +85,10 @@ void ChannelListctrl::AddChannel(const wxString& channel, unsigned int num_users
     //todo: don't add if already in it?
 
     ChannelInfo data ( channel, num_users, topic );
-    int index = InsertItem( GetItemCount(), icons().GetHostIcon() );
-    SetItem( index, 1, channel );
-    SetItem( index, 2, TowxString(num_users) );
-    SetItem( index, 3, topic );
+    int index = InsertItem( GetItemCount(), channel );
+    SetItem( index, 0, channel );
+    SetItem( index, 1, TowxString(num_users) );
+    SetItem( index, 2, topic );
     m_data[index] = data;
     SetItemData(index, (wxUIntPtr) &m_data[index]);
     //highlight
@@ -111,8 +106,8 @@ void ChannelListctrl::Sort()
 {
     for (int i = 1; i >= 0; i--) {
     switch ( m_sortorder[ i ].col ) {
-      case 1 : SortItems( ( m_sortorder[ i ].direction )?&CompareChannelnameUP:&CompareChannelnameDOWN, 0 ); break;
-      case 2 : SortItems( ( m_sortorder[ i ].direction )?&CompareNumUsersUP:&CompareNumUsersDOWN , 0 ); break;
+      case 0 : SortItems( ( m_sortorder[ i ].direction )?&CompareChannelnameUP:&CompareChannelnameDOWN, 0 ); break;
+      case 1 : SortItems( ( m_sortorder[ i ].direction )?&CompareNumUsersUP:&CompareNumUsersDOWN , 0 ); break;
 
     }
   }
