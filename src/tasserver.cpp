@@ -547,7 +547,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     int pos, cpu, id, nat, port, maxplayers, rank, specs, units, top, left, right, bottom, ally;
     bool replay, haspass,lanmode = false;
     wxString hash;
-    wxString nick, contry, host, map, title, mod, channel, error, msg, owner, ai, supported_spring_version;
+    wxString nick, contry, host, map, title, mod, channel, error, msg, owner, ai, supported_spring_version, topic;
     //NatType ntype;
     UserStatus cstatus;
     UTASClientStatus tasstatus;
@@ -781,7 +781,8 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     {
         channel = GetWordParam( params );
         units = GetIntParam( params );
-        m_se->OnChannelList( channel, units );
+        topic = GetWordParam( params );
+        m_se->OnChannelList( channel, units, topic );
     }
     else if ( cmd == _T("ENDOFCHANNELS") )
     {

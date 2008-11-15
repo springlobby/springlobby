@@ -16,12 +16,6 @@ ChannelChooser::ChannelChooser(wxWindow* parent, wxWindowID id, const wxString& 
     m_main_sizer = new wxBoxSizer ( wxVERTICAL );
     m_channellist = new ChannelListctrl ( this, -1, _T("channellistctrl") );
 
-    for ( int i = 0; i < ui().GetServer().GetNumChannels(); ++i )
-    {
-        m_channellist->AddChannel( ui().GetServer().GetChannel(i).GetName(),
-                                   ui().GetServer().GetChannel(i).GetNumUsers() );
-    }
-    m_channellist->AddChannel( _T("sltest"), 9231 );
 
     m_main_sizer->Add ( m_channellist, 1, wxALL|wxEXPAND, 15 );
 }
@@ -29,4 +23,14 @@ ChannelChooser::ChannelChooser(wxWindow* parent, wxWindowID id, const wxString& 
 ChannelChooser::~ChannelChooser()
 {
     //dtor
+}
+
+void ChannelChooser::AddChannel( const wxString& name, int usercount, const wxString& topic )
+{
+    m_channellist->AddChannel( name, usercount, topic );
+}
+
+void ChannelChooser::ClearChannels()
+{
+    m_channellist->ClearChannels();
 }

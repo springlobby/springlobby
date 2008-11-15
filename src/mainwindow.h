@@ -86,6 +86,8 @@ class MainWindow : public wxFrame
     void OnShowChannelChooser( wxCommandEvent& event );
     void forceSettingsFrameClose();
     void OnUnitSyncReloaded();
+    void OnChannelList( const wxString& channel, const int& numusers, const wxString& topic );
+    void OnChannelListStart( );
 
 
     #ifdef HAVE_WX26
@@ -141,7 +143,7 @@ class MainWindow : public wxFrame
     AutojoinChannelDialog* m_autojoin_dialog;
     settings_frame* se_frame;
     bool se_frame_active;
-ChannelChooser* m_channel_chooser;
+    ChannelChooser* m_channel_chooser;
 
     ReplayTab* m_replay_tab;
 

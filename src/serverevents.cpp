@@ -502,9 +502,9 @@ void ServerEvents::OnPrivateMessage( const wxString& user, const wxString& messa
   }
 }
 
-void ServerEvents::OnChannelList( const wxString& channel, const int& numusers )
+void ServerEvents::OnChannelList( const wxString& channel, const int& numusers, const wxString& topic )
 {
-  ui().OnChannelList( channel, numusers );
+  ui().mw().OnChannelList( channel, numusers, topic );
 }
 
 

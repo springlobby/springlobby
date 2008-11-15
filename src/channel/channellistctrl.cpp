@@ -28,6 +28,10 @@ ChannelListctrl::ChannelListctrl(wxWindow* parent, wxWindowID id, const wxString
   col.SetImage( -1 );
   InsertColumn( 2, col, _T("users") );
 
+  col.SetText( _("topic") );
+  col.SetImage( -1 );
+  InsertColumn( 3, col, _T("topic") );
+
   m_sortorder[2].col = 0;
   m_sortorder[2].direction = false;
   m_sortorder[0].col = 1;
@@ -76,18 +80,17 @@ void ChannelListctrl::SetTipWindowText(const long item_hit, const wxPoint positi
   *
   * @todo: document this function
   */
-void ChannelListctrl::AddChannel(const wxString& channel, unsigned int num_users )
+void ChannelListctrl::AddChannel(const wxString& channel, unsigned int num_users, const wxString& topic )
 {
     SetSelectionRestorePoint();
 
     //todo: don't add if already in it?
 
-    ChannelData data;
-    data.num_users = num_users;
-    data.name = channel ;
+    ChannelInfo data ( channel, num_users, topic );
     int index = InsertItem( GetItemCount(), icons().GetHostIcon() );
     SetItem( index, 1, channel );
     SetItem( index, 2, TowxString(num_users) );
+    SetItem( index, 2, topic );
     m_data[index] = data;
     SetItemData(index, (wxUIntPtr) &m_data[index]);
     //highlight
@@ -126,7 +129,7 @@ void ChannelListctrl::HighlightItem(long item)
   */
 int wxCALLBACK ChannelListctrl::CompareNumUsersDOWN(long item1, long item2, long sortData)
 {
-    return  (*(ChannelData*) item1 ).num_users <  (*(ChannelData*) item2 ).num_users;
+    return  (*(ChannelInfo*) item1 ).usercount <  (*(ChannelInfo*) item2 ).usercount;
 }
 
 /** @brief CompareNumUsersUP
@@ -135,7 +138,7 @@ int wxCALLBACK ChannelListctrl::CompareNumUsersDOWN(long item1, long item2, long
   */
 int wxCALLBACK ChannelListctrl::CompareNumUsersUP(long item1, long item2, long sortData)
 {
-    return  (*(ChannelData*) item1 ).num_users >=  (*(ChannelData*) item2 ).num_users;
+    return  (*(ChannelInfo*) item1 ).usercount >=  (*(ChannelInfo*) item2 ).usercount;
 }
 
 /** @brief CompareChannelnameDOWN
@@ -144,7 +147,7 @@ int wxCALLBACK ChannelListctrl::CompareNumUsersUP(long item1, long item2, long s
   */
 int wxCALLBACK ChannelListctrl::CompareChannelnameDOWN(long item1, long item2, long sortData)
 {
-    return (*(ChannelData*) item1 ).name.Upper() <  (*(ChannelData*) item2 ).name.Upper();
+    return (*(ChannelInfo*) item1 ).name.Upper() <  (*(ChannelInfo*) item2 ).name.Upper();
 }
 
 /** @brief CompareChannelnameUP
@@ -153,7 +156,7 @@ int wxCALLBACK ChannelListctrl::CompareChannelnameDOWN(long item1, long item2, l
   */
 int wxCALLBACK ChannelListctrl::CompareChannelnameUP(long item1, long item2, long sortData)
 {
-    return (*(ChannelData*) item1 ).name.Upper() >=  (*(ChannelData*) item2 ).name.Upper();
+    return (*(ChannelInfo*) item1 ).name.Upper() >=  (*(ChannelInfo*) item2 ).name.Upper();
 }
 
 void ChannelListctrl::OnColClick( wxListEvent& event )
@@ -187,7 +190,12 @@ void ChannelListctrl::OnActivateItem(wxListEvent& event)
 {
   int index = event.GetIndex();
   if ( index == -1 ) return;
-  wxString chan_name = (*(ChannelData*)event.GetData() ).name;
+  wxString chan_name = (*(ChannelInfo*)event.GetData() ).name;
   ui().JoinChannel( chan_name, _T("") );
 }
 
+void ChannelListctrl::ClearChannels()
+{
+    DeleteAllItems();
+    m_data.clear();
+}

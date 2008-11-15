@@ -12,7 +12,8 @@ class ChannelListctrl : public CustomListCtrl
                     const wxSize& sz = wxDefaultSize);
         virtual ~ChannelListctrl();
 
-        void AddChannel( const wxString& channel, unsigned int num_users = 0 );
+        void AddChannel( const wxString& channel, unsigned int num_users, const wxString& topic);
+        void ClearChannels();
 
     protected:
         //! no-op atm, so i don't get segfault because of missing data
@@ -34,13 +35,21 @@ class ChannelListctrl : public CustomListCtrl
 
         };
 
-        struct ChannelData {
+        struct ChannelInfo
+        {
+            ChannelInfo()
+                : name(_T("")), usercount(0),topic(_T("")) {}
+            ChannelInfo( const wxString& name_, int usercount_, const wxString& topic_ = wxEmptyString )
+                : name(name_), usercount(usercount_),topic(topic_) {}
+
             wxString name;
-            unsigned int num_users;
-            ChannelData():name(_T("springlobby")),num_users(542){}
+            int usercount;
+            wxString topic;
         };
 
-        std::map<long, ChannelData> m_data;
+        typedef std::map<long, ChannelInfo > ChannelInfoMap;
+        typedef ChannelInfoMap::const_iterator ChannelInfoIter;
+        ChannelInfoMap m_data;
 
         struct {
           int col;

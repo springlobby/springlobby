@@ -215,6 +215,8 @@ MainWindow::MainWindow( Ui& ui ) :
 
   wxToolTip::Enable(sett().GetShowTooltips());
 
+  m_channel_chooser = new ChannelChooser( this, -1, _("Choose channels to join") );
+
 }
 
 void MainWindow::forceSettingsFrameClose()
@@ -598,6 +600,17 @@ void MainWindow::OnShowChannelChooser( wxCommandEvent& event )
 {
     if ( m_channel_chooser && m_channel_chooser->IsShown() )
         return;
-    m_channel_chooser = new ChannelChooser( this, -1, _("Choose channels to join") );
-    m_channel_chooser->Show(true);
+
+    m_channel_chooser->ClearChannels();
+    ui().GetServer().RequestChannels();
+}
+
+void MainWindow::OnChannelList( const wxString& channel, const int& numusers, const wxString& topic )
+{
+    m_channel_chooser->AddChannel( channel, numusers, topic );
+}
+
+void MainWindow::OnChannelListStart( )
+{
+    m_channel_chooser->ClearChannels();
 }
