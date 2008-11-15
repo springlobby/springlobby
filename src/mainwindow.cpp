@@ -208,8 +208,9 @@ MainWindow::MainWindow( Ui& ui ) :
 
   SetSizer( m_main_sizer );
   wxString name = _T("MAINWINDOW");
-  SetSize(  sett().GetWindowLeft( name ), sett().GetWindowTop( name ),
-            sett().GetWindowWidth( name ), sett().GetWindowHeight( name ) );
+  wxPoint pos = sett().GetWindowPos( name, wxPoint( DEFSETT_MW_LEFT, DEFSETT_MW_TOP ) );
+  wxSize size = sett().GetWindowSize( name, wxSize( DEFSETT_MW_WIDTH, DEFSETT_MW_HEIGHT ) );
+  SetSize( pos.x , pos.y, size.GetWidth(), size.GetHeight() );
   Layout();
 
   se_frame_active = false;
@@ -236,14 +237,10 @@ MainWindow::~MainWindow()
     delete manager;
   }
   #endif
-  int x, y, w, h;
+
   wxString name = _T("MAINWINDOW");
-  GetSize( &w, &h );
-  sett().SetWindowHeight( name, h );
-  sett().SetWindowWidth( name, w );
-  GetPosition( &x, &y );
-  sett().SetWindowTop( name, y );
-  sett().SetWindowLeft( name, x );
+  sett().SetWindowSize( name, GetSize() );
+  sett().SetWindowPos( name, GetPosition() );
   sett().SaveSettings();
   m_ui.Quit();
   m_ui.OnMainWindowDestruct();
