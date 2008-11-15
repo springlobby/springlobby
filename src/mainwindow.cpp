@@ -125,7 +125,7 @@ MainWindow::MainWindow( Ui& ui ) :
 
   m_menuTools = new wxMenu;
   m_menuTools->Append(MENU_JOIN, _("&Join channel..."));
-  m_menuTools->Append(MENU_CHANNELCHOOSER, _("Channel ch&ooser"));
+  m_menuTools->Append(MENU_CHANNELCHOOSER, _("Channel &list"));
   m_menuTools->Append(MENU_CHAT, _("Open private &chat..."));
   m_menuTools->Append(MENU_AUTOJOIN_CHANNELS, _("&Autojoin channels..."));
   m_menuTools->AppendSeparator();
