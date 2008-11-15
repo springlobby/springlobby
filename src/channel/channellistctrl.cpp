@@ -18,15 +18,15 @@ ChannelListctrl::ChannelListctrl(wxWindow* parent, wxWindowID id, const wxString
   wxListItem col;
 
   col.SetText( _("Channel name") );
-  col.SetImage( -1 );
+  col.SetImage( icons().ICON_EMPTY );
   InsertColumn( 0, col, _T("Channelname") );
 
   col.SetText( _("# users") );
-  col.SetImage( -1 );
+  col.SetImage( icons().ICON_EMPTY );
   InsertColumn( 1, col, _T("users") );
 
   col.SetText( _("topic") );
-  col.SetImage( -1 );
+  col.SetImage( icons().ICON_EMPTY );
   InsertColumn( 2, col, _T("topic") );
 
   m_sortorder[2].col = 2;
@@ -39,15 +39,15 @@ ChannelListctrl::ChannelListctrl(wxWindow* parent, wxWindowID id, const wxString
 
 #if defined(__WXMSW__)
  /// autosize is part-broken on msw.
-  SetColumnWidth( 0, wxLIST_AUTOSIZE );
-  SetColumnWidth( 1, 30 );
-  SetColumnWidth( 2, wxLIST_AUTOSIZE );
+  SetColumnWidth( 0, 120 );
+  SetColumnWidth( 1, 45 );
+  SetColumnWidth( 2, 300 );
 
 #elif defined(__WXMAC__)
 /// autosize is entirely broken on wxmac.
   SetColumnWidth( 0, 120 );
-  SetColumnWidth( 1, 30 );
-  SetColumnWidth( 2, 128 );
+  SetColumnWidth( 1, 45 );
+  SetColumnWidth( 2, 300 );
 #else
  /// on wxGTK it works, sort of.
   SetColumnWidth( 0, wxLIST_AUTOSIZE );
@@ -55,9 +55,6 @@ ChannelListctrl::ChannelListctrl(wxWindow* parent, wxWindowID id, const wxString
   SetColumnWidth( 2, wxLIST_AUTOSIZE );
 #endif
 
-  SetImageList( &icons(), wxIMAGE_LIST_NORMAL );
-  SetImageList( &icons(), wxIMAGE_LIST_SMALL );
-  SetImageList( &icons(), wxIMAGE_LIST_STATE );
 }
 
 ChannelListctrl::~ChannelListctrl()
@@ -89,6 +86,7 @@ void ChannelListctrl::AddChannel(const wxString& channel, unsigned int num_users
     SetItem( index, 0, channel );
     SetItem( index, 1, TowxString(num_users) );
     SetItem( index, 2, topic );
+    SetItemImage( index, icons().ICON_EMPTY );
     m_data[index] = data;
     SetItemData(index, (wxUIntPtr) &m_data[index]);
     //highlight
