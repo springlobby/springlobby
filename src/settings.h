@@ -31,6 +31,7 @@ const unsigned int DEFSETT_SW_LEFT = 50;
 const bool DEFSETT_WEB_BROWSER_USE_DEFAULT = true;
 
 #include <wx/fileconf.h>
+#include <wx/window.h>
 #include "utils.h"
 #include "useractions.h"
 
@@ -44,6 +45,8 @@ class wxFileName;
 class wxColor;
 class wxColour;
 struct wxColourData;
+class wxSize;
+class wxPoint;
 
 class SL_WinConf : public wxFileConfig
 {
@@ -309,6 +312,12 @@ class Settings
 
     int    GetWindowLeft( const wxString& window );
     void   SetWindowLeft( const wxString& window, const int value );
+
+    wxSize  GetWindowSize( const wxString& window, const wxSize& def = wxDefaultSize );
+    void    SetWindowSize( const wxString& window, const wxSize& size  );
+
+    wxPoint  GetWindowPos( const wxString& window, const wxPoint& def = wxDefaultPosition );
+    void    SetWindowPos( const wxString& window, const wxPoint& pos );
 
     bool UseOldSpringLaunchMethod();
     void SetOldSpringLaunchMethod( bool value );

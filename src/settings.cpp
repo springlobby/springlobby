@@ -581,6 +581,36 @@ void Settings::SetWindowLeft( const wxString& window, const int value )
     m_config->Write( _T("/GUI/")+ window + _T("/left"), value );
 }
 
+//some code duplication necessary to be able to simply use wx defaults
+wxSize  Settings::GetWindowSize( const wxString& window, const wxSize& def  )
+{
+    wxSize ret = def;
+    ret.SetHeight( m_config->Read( _T("/GUI/")+ window + _T("/height"), ret.GetHeight() ) );
+    ret.SetWidth( m_config->Read( _T("/GUI/")+ window + _T("/width"), ret.GetWidth() ) );
+    return ret;
+}
+
+void Settings::SetWindowSize( const wxString& window, const wxSize& size  )
+{
+    SetWindowWidth( window, size.GetWidth() );
+    SetWindowHeight( window, size.GetHeight() );
+}
+
+//some code duplication necessary to be able to simply use wx defaults
+wxPoint Settings::GetWindowPos( const wxString& window, const wxPoint& def )
+{
+    wxPoint ret = def;
+    ret.x = m_config->Read( _T("/GUI/")+ window + _T("/left"), ret.x );
+    ret.y = m_config->Read( _T("/GUI/")+ window + _T("/top"), ret.y );
+    return ret;
+}
+
+void Settings::SetWindowPos( const wxString& window, const wxPoint& pos )
+{
+    SetWindowLeft( window, pos.x );
+    SetWindowTop( window, pos.y );
+}
+
 // ========================================================
 
 
