@@ -40,18 +40,18 @@ ChannelListctrl::ChannelListctrl(wxWindow* parent, wxWindowID id, const wxString
 #if defined(__WXMSW__)
  /// autosize is part-broken on msw.
   SetColumnWidth( 0, wxLIST_AUTOSIZE );
-  SetColumnWidth( 1, 325 );
+  SetColumnWidth( 1, 30 );
   SetColumnWidth( 2, wxLIST_AUTOSIZE );
 
 #elif defined(__WXMAC__)
 /// autosize is entirely broken on wxmac.
   SetColumnWidth( 0, 120 );
-  SetColumnWidth( 1, 25 );
+  SetColumnWidth( 1, 30 );
   SetColumnWidth( 2, 128 );
 #else
  /// on wxGTK it works, sort of.
   SetColumnWidth( 0, wxLIST_AUTOSIZE );
-  SetColumnWidth( 1, wxLIST_AUTOSIZE );
+  SetColumnWidth( 1, 30 );
   SetColumnWidth( 2, wxLIST_AUTOSIZE );
 #endif
 

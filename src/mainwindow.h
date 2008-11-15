@@ -28,7 +28,7 @@ class settings_frame;
 class wxMenuItem;
 class wxMenuBar;
 class wxMenu;
-class ChannelChooser;
+class ChannelChooserDialog;
 class ReplayTab;
 class AutojoinChannelDialog;
 
@@ -143,7 +143,7 @@ class MainWindow : public wxFrame
     AutojoinChannelDialog* m_autojoin_dialog;
     settings_frame* se_frame;
     bool se_frame_active;
-    ChannelChooser* m_channel_chooser;
+    ChannelChooserDialog* m_channel_chooser;
 
     ReplayTab* m_replay_tab;
 

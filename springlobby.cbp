@@ -185,6 +185,8 @@
 		<Unit filename="src/channel/channel.h" />
 		<Unit filename="src/channel/channelchooser.cpp" />
 		<Unit filename="src/channel/channelchooser.h" />
+		<Unit filename="src/channel/channelchooserdialog.cpp" />
+		<Unit filename="src/channel/channelchooserdialog.h" />
 		<Unit filename="src/channel/channellist.cpp" />
 		<Unit filename="src/channel/channellist.h" />
 		<Unit filename="src/channel/channellistctrl.cpp" />

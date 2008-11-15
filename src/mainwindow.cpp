@@ -63,7 +63,7 @@
 
 #include "updater/updater.h"
 #include "channel/autojoinchanneldialog.h"
-#include "channel/channelchooser.h"
+#include "channel/channelchooserdialog.h"
 
 #ifdef HAVE_WX28
     #if defined(__WXMSW__)
@@ -215,7 +215,7 @@ MainWindow::MainWindow( Ui& ui ) :
 
   wxToolTip::Enable(sett().GetShowTooltips());
 
-  m_channel_chooser = new ChannelChooser( this, -1, _("Choose channels to join") );
+  m_channel_chooser = new ChannelChooserDialog( this, -1, _("Choose channels to join") );
 
 }
 

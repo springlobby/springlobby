@@ -1,19 +1,21 @@
-#ifndef CHANNELCHOOSER_H
-#define CHANNELCHOOSER_H
+#ifndef CHANNELCHOOSERPANEL_H
+#define CHANNELCHOOSERPANEL_H
 
-#include <wx/dialog.h>
+#include <wx/scrolwin.h>
 #include <vector>
 
 class ChannelListctrl;
 class wxBoxSizer;
 class wxButton;
 
-class ChannelChooser : public wxDialog
+class ChannelChooserPanel : public wxScrolledWindow
 {
     public:
-        ChannelChooser(wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos = wxDefaultPosition,
-            const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE, const wxString& name = _T("dialogBox") );
-        virtual ~ChannelChooser();
+        ChannelChooserPanel(wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos = wxDefaultPosition,
+            const wxSize& size = wxDefaultSize,
+            long style = wxHSCROLL | wxVSCROLL ,
+            const wxString& name = _T("dialogBox") );
+        virtual ~ChannelChooserPanel();
 
         void AddChannel( const wxString& name, int usercount, const wxString& topic = wxEmptyString );
         void ClearChannels();

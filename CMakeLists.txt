@@ -174,6 +174,7 @@ SET(SpringLobbySrc
 	src/updater/versionchecker.cpp
 	src/Helper/TextCompletionDatabase.cpp
 	src/channel/channelchooser.cpp
+	src/channel/channelchooserdialog.cpp
 	src/Helper/wxtextctrlhist.cpp
 	src/Helper/colorbutton.cpp
 	src/filelister/filelistctrl.cpp

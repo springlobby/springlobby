@@ -876,6 +876,8 @@ springlobby_SOURCES = \
 	src/Helper/TextCompletionDatabase.cpp \
 	src/channel/channelchooser.cpp \
 	src/channel/channelchooser.h \
+	src/channel/channelchooserdialog.cpp \
+	src/channel/channelchooserdialog.h \
         src/Helper/colorbutton.cpp \
 	src/Helper/colorbutton.h \
         src/Helper/wxtextctrlhist.cpp \
