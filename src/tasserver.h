@@ -48,7 +48,7 @@ class TASServer : public Server
     /// 0 if udp ping failed
     unsigned int UdpPing(unsigned int src_port, const wxString &target, unsigned int target_port, const wxString &message);
     /// specialized udp ping functions
-    void UdpPingTheServer(const wxString &message=_T("ipv4 sux!"));/// used for nat travelsal. pings the server.
+    void UdpPingTheServer( const wxString &message );/// used for nat travelsal. pings the server.
     void UdpPingAllClients();/// used when hosting with nat holepunching
 
     User& GetMe();
@@ -132,6 +132,8 @@ class TASServer : public Server
 
     int TestOpenPort( unsigned int port );
 
+    void SendScriptToProxy( const wxString& script );
+
   protected:
 
     //! @brief Struct used internally by the TASServer class to calculate ping roundtimes.
@@ -160,6 +162,7 @@ class TASServer : public Server
     wxString m_agreement;
 
     wxString m_addr;
+    wxString m_delayed_open_command;
 
     bool m_do_finalize_join_battle;
     int m_finalize_join_battle_id;
@@ -169,6 +172,9 @@ class TASServer : public Server
 
     void ReceiveAndExecute();
     void SendCmd( const wxString& command, const wxString& param = _T("") );
+    void RelayCmd( const wxString& command, const wxString& param = _T("") );
+
+    wxString m_current_chan_name_mutelist;
 
 };
 

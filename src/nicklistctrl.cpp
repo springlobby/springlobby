@@ -185,6 +185,7 @@ void NickListCtrl::OnActivateItem( wxListEvent& event )
   if ( index == -1 ) return;
   User* user = (User*)event.GetData();
   ui().mw().OpenPrivateChat( *user );
+  SetSelectedIndex( index );
   //FIXME why was this lfet here, what was it supposed to do?
   //m_ui.mw().OnTabsChanged( event2 );
 }
@@ -196,8 +197,11 @@ void NickListCtrl::OnShowMenu( wxContextMenuEvent& event )
   if ( m_menu != 0 )
   {
       //no need to popup the menu when there's no user selected
-      if ( GetSelectedIndex() != -1 ){
-          m_menu->EnableItems( (GetSelectedIndex()!=-1), _("JK") );
+      int selected = GetSelectedIndex();
+      if ( selected != -1 ){
+          User& user = *((User*)GetItemData( selected ));
+          wxString nick = user.GetNick();
+          m_menu->EnableItems( ( selected !=-1 ), nick );
           PopupMenu( m_menu );
       }
   }

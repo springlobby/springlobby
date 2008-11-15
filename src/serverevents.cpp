@@ -706,3 +706,23 @@ void ServerEvents::AutoCheckCommandSpam( Battle& battle, User& user )
     battle.KickPlayer( user );
   }
 }
+
+void ServerEvents::OnMutelistBegin( const wxString& channel )
+{
+    mutelistWindow( _("Begin mutelist for ") + channel, channel + _(" mutelist") );
+}
+
+void ServerEvents::OnMutelistItem( const wxString& channel, const wxString& mutee, const wxString& description )
+{
+    wxString message = mutee;
+    if ( description == _T("indefinite") )
+        message << _(" indefinite time remaining");
+    else
+        message << wxString::Format( _(" %d minutes remaining") , s2l(description)/60 + 1 ) ;
+    mutelistWindow( message );
+}
+
+void ServerEvents::OnMutelistEnd( const wxString& channel )
+{
+    mutelistWindow( _("End mutelist for ") + channel );
+}

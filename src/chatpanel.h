@@ -19,6 +19,7 @@ class wxSplitterWindow;
 class wxTextCtrl;
 class wxTextCtrlHist;
 class wxRichTextCtrl;
+class wxRichTextAttr;
 class wxTextUrlEvent;
 class wxComboBox;
 class wxButton;
@@ -93,7 +94,7 @@ class ChatPanel : public wxPanel
     bool IsServerPanel();
     ChatPanelType GetPanelType();
 
-    void Say( wxString message );
+    void Say( const wxString& message );
     void Part();
     void FocusInputBox();
 
@@ -135,6 +136,7 @@ class ChatPanel : public wxPanel
     void OnChannelMenuSpamOn( wxCommandEvent& event );
     void OnChannelMenuSpanOff( wxCommandEvent& event );
     void OnChannelMenuSpamIsOn( wxCommandEvent& event );
+    void OnChannelMenuShowMutelist( wxCommandEvent& event );
 
     void OnServerMenuDisconnect( wxCommandEvent& event );
     void OnServerMenuReconnect( wxCommandEvent& event );
@@ -195,6 +197,7 @@ class ChatPanel : public wxPanel
 
     #ifndef NO_RICHTEXT_CHAT
     wxRichTextCtrl* m_chatlog_text; //!< The chat log textcontrol.
+    wxRichTextAttr* m_chatlog_url_style; /**< Text attribute (style) to use for URLs */
     #else
     wxTextCtrl* m_chatlog_text; //!< The chat log textcontrol.
     #endif
@@ -292,7 +295,9 @@ enum
     CHAT_MENU_US_MODERATOR_MUTE_120,
     CHAT_MENU_US_MODERATOR_MUTE_1440,
     CHAT_MENU_US_MODERATOR_UNMUTE,
-    CHAT_MENU_US_MODERATOR_RING
+    CHAT_MENU_US_MODERATOR_RING,
+
+    CHAT_MENU_SHOW_MUTELIST
 };
 
 

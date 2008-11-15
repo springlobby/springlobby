@@ -10,7 +10,7 @@ DEFINE_LOCAL_EVENT_TYPE( wxEVT_SPRING_EXIT )
 
 
 SpringProcess::SpringProcess( Spring& sp ) :
-  m_sp(sp)
+  m_sp(sp),m_exit_code(0)
 {
   wxLogDebugFunc( _T("") );
 }
@@ -32,6 +32,7 @@ void SpringProcess::OnExit()
 {
   wxLogDebugFunc( _T("") );
   wxCommandEvent event( wxEVT_SPRING_EXIT, PROC_SPRING );
+  event.SetExtraLong( m_exit_code );
   m_sp.AddPendingEvent(event);
 }
 
@@ -39,7 +40,7 @@ void SpringProcess::OnExit()
 void* SpringProcess::Entry()
 {
   wxLogDebugFunc( _T("") );
-  system( m_cmd.mb_str(wxConvUTF8) );
+  m_exit_code = system( m_cmd.mb_str(wxConvUTF8) );
   wxLogMessage(_T("Spring closed."));
   return 0;
 }
@@ -59,6 +60,7 @@ wxSpringProcess::~wxSpringProcess()
 void wxSpringProcess::OnTerminate( int pid, int status )
 {
   wxCommandEvent event( wxEVT_SPRING_EXIT, PROC_SPRING );
+  event.SetExtraLong( status );
   m_sp.AddPendingEvent(event);
 }
 

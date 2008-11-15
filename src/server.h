@@ -167,6 +167,8 @@ class Server : public iNetClass
 
     virtual int TestOpenPort( unsigned int port ) = 0;
 
+    virtual void SendScriptToProxy( const wxString& script ) = 0;
+
     std::map<wxString,wxString> m_channel_pw;  /// channel name -> password, filled on channel join
 
     ///used to fill userlist in groupuserdialog
@@ -184,6 +186,8 @@ class Server : public iNetClass
     UserList m_users;
     BattleList m_battles;
 
+    wxString m_relay_host_bot;
+
     User& _AddUser( const wxString& user );
     void _RemoveUser( const wxString& nickname );
 
@@ -194,6 +198,9 @@ class Server : public iNetClass
     void _RemoveBattle( const int& id );
 
     static const unsigned int PING_TIMEOUT = 30;
+
+    virtual void SendCmd( const wxString& command, const wxString& param ) = 0;
+    virtual void RelayCmd( const wxString& command, const wxString& param ) = 0;
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_SERVER_H

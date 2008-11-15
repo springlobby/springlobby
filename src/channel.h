@@ -3,6 +3,8 @@
 
 #include "userlist.h"
 #include <set>
+#include <vector>
+#include <utility>
 #include <wx/regex.h>
 
 class Channel;
