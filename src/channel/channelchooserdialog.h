@@ -10,8 +10,7 @@ class ChannelChooserDialog : public wxDialog
 {
     public:
         ChannelChooserDialog(wxWindow* parent, wxWindowID id, const wxString& title,
-            long style = wxCAPTION | wxRESIZE_BORDER | wxCLOSE_BOX | wxMAXIMIZE_BOX | wxMINIMIZE_BOX | wxDEFAULT_DIALOG_STYLE,
-            const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize );
+            long style = wxCAPTION | wxRESIZE_BORDER | wxCLOSE_BOX | wxMAXIMIZE_BOX | wxMINIMIZE_BOX | wxDEFAULT_DIALOG_STYLE );
         virtual ~ChannelChooserDialog();
 
         void AddChannel( const wxString& name, int usercount, const wxString& topic = wxEmptyString );
