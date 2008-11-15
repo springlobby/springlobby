@@ -40,6 +40,7 @@ class wxFont;
 struct BattleListFilterValues;
 struct ReplayListFilterValues;
 class wxFileInputStream;
+class wxFileName;
 class wxColor;
 class wxColour;
 struct wxColourData;
@@ -323,7 +324,7 @@ class Settings
     /*@}*/
 
     /* ================================================================ */
-    /** @name People/Group mngm related
+    /** @name People/Group management
      * @{
      */
     void SetPeopleList( const wxArrayString& friends, const wxString& group = _T("default") );
@@ -432,7 +433,7 @@ class Settings
     /* ================================================================ */
     /** @name Hosting
      *
-     * Settings to use when hosting games.  Includes "sticky" settings from the
+     * %Settings to use when hosting games.  Includes "sticky" settings from the
      * last time a game was hosted.
      *
      * @{
@@ -447,6 +448,7 @@ class Settings
     int GetLastRankLimit();
     bool GetTestHostPort();
     bool GetLastAutolockStatus();
+    bool GetLastHostRelayedMode();
 
     void SetLastHostDescription( const wxString& value );
     void SetLastHostMod( const wxString& value );
@@ -458,6 +460,7 @@ class Settings
     void SetLastRankLimit( int rank );
     void SetTestHostPort( bool value );
     void SetLastAutolockStatus( bool value );
+    void SetLastHostRelayedMode( bool value );
 
     void SetHostingPreset( const wxString& name, int optiontype, std::map<wxString,wxString> options );
     std::map<wxString,wxString> GetHostingPreset( const wxString& name, int optiontype );
@@ -538,10 +541,25 @@ class Settings
     void SetTorrentListToResume( const wxArrayString& list );
     wxArrayString GetTorrentListToResume();
 
-    wxString GetTorrentsFolder();
+    /** Get the path to the directory where *.torrent files are stored.
+     */
+    wxFileName GetTorrentDir();
+
+
+    /** Get the path to the directory where partially-downloaded
+     * torrented files are stored.
+     *
+     * @sa GetTorrentsFolder
+     */
+    wxFileName GetTorrentDataDir();
+
     /**@}*/
 
     /** @name Aui
+     *
+     * Functions used to store and retrieve the current SpringLobby
+     * interface layout.
+     *
      * @{
      */
     void SaveLayout( wxString& layout_name, wxString& layout_string );

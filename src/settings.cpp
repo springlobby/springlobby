@@ -10,6 +10,7 @@
 #else
 #include <wx/config.h>
 #endif
+#include <wx/filename.h>
 #include <wx/filefn.h>
 #include <wx/intl.h>
 #include <wx/stdpaths.h>
@@ -19,6 +20,9 @@
 #include <wx/font.h>
 #include <wx/log.h>
 #include <wx/wfstream.h>
+#ifdef __WXMSW__
+#include <wx/msw/registry.h>
+#endif
 
 #include "nonportable.h"
 #include "settings.h"
@@ -725,7 +729,11 @@ std::map<wxString, wxString> Settings::GetSpringVersionList()
     groupexist = m_config->GetNextGroup(groupname, dummy);
   }
   m_config->SetPath( old_path );
-  susynclib().Init(); /// re-init current "main" unitsync
+  try
+  {
+    susynclib().Init(); /// re-init current "main" unitsync
+  }
+  catch(...){}
   return ret;
 }
 
@@ -876,6 +884,11 @@ bool Settings::GetLastAutolockStatus()
     return m_config->Read( _T("/Hosting/LastAutoLock"), true );
 }
 
+bool Settings::GetLastHostRelayedMode()
+{
+    return m_config->Read( _T("/Hosting/LastRelayedMode"), 0l );
+}
+
 wxColour Settings::GetBattleLastColour()
 {
    return  GetColorFromStrng( m_config->Read( _T("/Hosting/MyLastColour"), _T("1 1 0") ) );
@@ -946,6 +959,11 @@ void Settings::SetTestHostPort( bool value )
 void Settings::SetLastAutolockStatus( bool value )
 {
     m_config->Write( _T("/Hosting/LastAutoLock"), value );
+}
+
+void Settings::SetLastHostRelayedMode( bool value )
+{
+    m_config->Write( _T("/Hosting/LastRelayedMode"), value );
 }
 
 void Settings::SetHostingPreset( const wxString& name, int optiontype, std::map<wxString,wxString> options )
@@ -1467,16 +1485,31 @@ wxArrayString Settings::GetTorrentListToResume()
 }
 
 
-wxString Settings::GetTorrentsFolder()
+wxFileName Settings::GetTorrentDir()
 {
-  wxString path = GetLobbyWriteDir() +_T("torrents") + wxFileName::GetPathSeparator();
-    if ( !wxFileName::DirExists( path ) )
+  wxFileName torrentDir(GetLobbyWriteDir());
+  torrentDir.AppendDir(_T("torrents"));
+
+  if ( !torrentDir.DirExists() )
   {
-    if ( !wxFileName::Mkdir(  path  ) ) return wxEmptyString;
+    if ( !torrentDir.Mkdir(0755) ) torrentDir.Clear();
   }
-  return path;
+
+  return torrentDir;
 }
 
+wxFileName Settings::GetTorrentDataDir()
+{
+  wxFileName torrentDir(GetLobbyWriteDir());
+  torrentDir.AppendDir(_T("downloads"));
+
+  if ( !torrentDir.DirExists() )
+  {
+    if ( !torrentDir.Mkdir(0755) ) torrentDir.Clear();
+  }
+
+  return torrentDir;
+}
 
 wxString Settings::GetTempStorage()
 {

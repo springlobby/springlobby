@@ -155,5 +155,3 @@ void Server::_RemoveBattle( const int& id )
   ASSERT_LOGIC( b != 0, _T("Server::_RemoveBattle(): GetBattle returned NULL pointer"));
   delete b;
 }
-
-

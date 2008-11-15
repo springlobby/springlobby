@@ -108,7 +108,9 @@ bool Spring::Run( Battle& battle )
 
 
     wxFile f( path + _T("script.txt"), wxFile::write );
+    battle.DisableHostStatusInProxyMode( true );
     f.Write( WriteScriptTxt(battle) );
+    battle.DisableHostStatusInProxyMode( false );
     f.Close();
 
   } catch (...) {
@@ -154,7 +156,7 @@ bool Spring::Run( SinglePlayerBattle& battle )
     return false;
   }
 
-  wxString path = wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator();
+  wxString path = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator();
 
   try {
 
@@ -194,7 +196,8 @@ void Spring::OnTerminated( wxCommandEvent& event )
   m_running = false;
   m_process = 0; // NOTE I'm not sure if this should be deleted or not, according to wx docs it shouldn't.
   m_wx_process = 0;
-  m_ui.OnSpringTerminated( true );
+  long exit_code = event.GetExtraLong();
+  m_ui.OnSpringTerminated( exit_code );
 }
 
 
