@@ -223,7 +223,6 @@ SET(SpringLobbySrc
 	src/mainsingleplayertab.cpp
 	src/maintorrenttab.cpp
 	src/mainwindow.cpp
-	src/managegroupspanel.cpp
 	src/mapctrl.cpp
 	src/maplistctrl.cpp
 	src/mapselectdialog.cpp
