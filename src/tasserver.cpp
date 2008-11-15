@@ -20,7 +20,7 @@
 #include "battle.h"
 #include "serverevents.h"
 #include "socket.h"
-#include "channel.h"
+#include "channel/channel.h"
 
 /// for SL_MAIN_ICON
 #include "settings++/custom_dialogs.h"

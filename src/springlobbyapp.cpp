@@ -25,7 +25,7 @@
 #include "utils.h"
 #include "ui.h"
 #include "iunitsync.h"
-#include "channel.h"
+#include "channel/channel.h"
 #include "httpdownloader.h"
 #include "settings++/custom_dialogs.h"
 #ifndef NO_TORRENT_SYSTEM

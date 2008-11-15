@@ -34,7 +34,7 @@
 #include <wx/notebook.h>
 #endif
 
-#include "channel.h"
+#include "channel/channel.h"
 #include "chatpanel.h"
 #include "utils.h"
 #include "ui.h"

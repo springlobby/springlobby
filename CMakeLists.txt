@@ -173,7 +173,7 @@ SET(SpringLobbySrc
 	src/updater/updater.cpp
 	src/updater/versionchecker.cpp
 	src/Helper/TextCompletionDatabase.cpp
-    src/Helper/channelchooser.cpp
+	src/channel/channelchooser.cpp
 	src/Helper/wxtextctrlhist.cpp
 	src/Helper/colorbutton.cpp
 	src/filelister/filelistctrl.cpp
@@ -183,7 +183,7 @@ SET(SpringLobbySrc
         src/aui/artprovider.cpp
 	src/autobalancedialog.cpp
 	src/autohost.cpp
-	src/autojoinchanneldialog.cpp
+	src/channel/autojoinchanneldialog.cpp
 	src/addbotdialog.cpp
 	src/agreementdialog.cpp
 	src/base64.cpp
@@ -197,9 +197,9 @@ SET(SpringLobbySrc
 	src/battleroomlistctrl.cpp
 	src/battleroomtab.cpp
 	src/battleroommmoptionstab.cpp
-	src/channel.cpp
-	src/channellist.cpp
-    src/channellistctrl.cpp
+	src/channel/channel.cpp
+	src/channel/channellist.cpp
+	src/channel/channellistctrl.cpp
 	src/chatlog.cpp
 	src/chatoptionstab.cpp
 	src/chatpanel.cpp

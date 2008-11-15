@@ -62,8 +62,8 @@
 #include "settings++/custom_dialogs.h"
 
 #include "updater/updater.h"
-#include "autojoinchanneldialog.h"
-#include "Helper/channelchooser.h"
+#include "channel/autojoinchanneldialog.h"
+#include "channel/channelchooser.h"
 
 #ifdef HAVE_WX28
     #if defined(__WXMSW__)

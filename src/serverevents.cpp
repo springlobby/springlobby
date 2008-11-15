@@ -9,7 +9,7 @@
 #include "serverevents.h"
 #include "mainwindow.h"
 #include "ui.h"
-#include "channel.h"
+#include "channel/channel.h"
 #include "user.h"
 #include "utils.h"
 #include "server.h"

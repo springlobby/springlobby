@@ -448,12 +448,12 @@ springlobby_SOURCES = \
 	src/battleroomtab.h \
 	src/boost/md5.cpp \
 	src/boost/md5.hpp \
-	src/channel.cpp \
-	src/channel.h \
-	src/channellist.cpp \
-	src/channellist.h \
-	src/channellistctrl.cpp \
-	src/channellistctrl.h \
+	src/channel/channel.cpp \
+	src/channel/channel.h \
+	src/channel/channellist.cpp \
+	src/channel/channellist.h \
+	src/channel/channellistctrl.cpp \
+	src/channel/channellistctrl.h \
 	src/chatoptionstab.cpp \
 	src/chatoptionstab.h \
 	src/chatpanel.cpp \
@@ -874,8 +874,8 @@ springlobby_SOURCES = \
 	src/httpdownloader.cpp \
 	src/Helper/TextCompletionDatabase.hpp \
 	src/Helper/TextCompletionDatabase.cpp \
-	src/Helper/channelchooser.cpp \
-	src/Helper/channelchooser.h \
+	src/channel/channelchooser.cpp \
+	src/channel/channelchooser.h \
         src/Helper/colorbutton.cpp \
 	src/Helper/colorbutton.h \
         src/Helper/wxtextctrlhist.cpp \
@@ -887,19 +887,15 @@ springlobby_SOURCES = \
 	src/filelister/filelistdialog.cpp \
 	src/filelister/filelistfilter.cpp \
 	configure.ac \
-	src/autojoinchanneldialog.h \
+	src/channel/autojoinchanneldialog.h \
 	src/autopointers.h \
-	src/autojoinchanneldialog.cpp \
+	src/channel/autojoinchanneldialog.cpp \
 	src/useractions.h \
 	src/useractions.cpp \
 	src/selectusersdialog.h \
 	src/selectusersdialog.cpp \
 	src/groupoptionspanel.h \
 	src/groupoptionspanel.cpp \
-	src/Helper/wxtextctrlhist.h \
-	src/Helper/wxtextctrlhist.cpp \
-	src/Helper/colorbutton.cpp \
-	src/Helper/colorbutton.h \
 	src/lobbyoptionstab.h \
 	src/lobbyoptionstab.cpp \
 	src/aui/auimanager.h \

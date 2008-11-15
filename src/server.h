@@ -3,7 +3,7 @@
 
 #include <wx/string.h>
 
-#include "channellist.h"
+#include "channel/channellist.h"
 #include "userlist.h"
 #include "battlelist.h"
 #include "inetclass.h"
