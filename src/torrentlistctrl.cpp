@@ -30,15 +30,15 @@ TorrentListCtrl::TorrentListCtrl( wxWindow* parent, Ui& ui ):
 {
 	wxListItem col;
 
-	col.SetText( _T( "Name" ) );
+	col.SetText( _( "Name" ) );
 	col.SetImage( icons().ICON_NONE );
 	InsertColumn( 0, col, _T( "Name" ), true );
 
-	col.SetText( _T( "numcopies" ) );
+	col.SetText( _( "numcopies" ) );
 	col.SetImage( icons().ICON_NONE );
 	InsertColumn( 1, col, _T( "complete numcopies" ), true );
 
-	col.SetText( _T( "MB downloaded" ) );
+	col.SetText( _( "MB downloaded" ) );
 	col.SetImage( icons().ICON_NONE );
 	InsertColumn( 2, col, _T( "MB downloaded" ), true );
 

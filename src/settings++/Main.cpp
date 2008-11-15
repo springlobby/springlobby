@@ -24,6 +24,7 @@
 
 #include "../crashreport.h"
 //#include "../utils.h"
+#include "../settings.h"
 
 #include <iostream>
 #include <wx/msgdlg.h>
@@ -72,7 +73,7 @@ bool Springsettings::OnInit()
     InitializeLoggingTargets(0,0,1,1);
 
     #ifdef __WXMSW__
-		sett().ForcePortableMode( true );
+		sett().SetPortableMode( true );
 		#endif
     settings_frame* frame = new settings_frame(NULL,wxID_ANY,wxT("SpringSettings"),wxDefaultPosition,
     		wxDefaultSize);
