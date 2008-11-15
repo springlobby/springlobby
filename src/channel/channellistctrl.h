@@ -1,7 +1,7 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_CHANNELLISTCTRL_H
 #define SPRINGLOBBY_HEADERGUARD_CHANNELLISTCTRL_H
 
-#include "customlistctrl.h"
+#include "../customlistctrl.h"
 
 
 class ChannelListctrl : public CustomListCtrl

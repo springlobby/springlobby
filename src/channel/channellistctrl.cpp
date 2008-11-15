@@ -1,7 +1,7 @@
 #include "channellistctrl.h"
-#include "iconimagelist.h"
-#include "utils.h"
-#include "ui.h"
+#include "../iconimagelist.h"
+#include "../utils.h"
+#include "../ui.h"
 
 BEGIN_EVENT_TABLE( ChannelListctrl, CustomListCtrl )
   EVT_LIST_ITEM_ACTIVATED( CHANNELLIST, ChannelListctrl::OnActivateItem )
