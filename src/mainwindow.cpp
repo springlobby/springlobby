@@ -207,8 +207,9 @@ MainWindow::MainWindow( Ui& ui ) :
   m_main_sizer->Add( m_func_tabs, 1, wxEXPAND | wxALL, 0 );
 
   SetSizer( m_main_sizer );
-
-  SetSize( sett().GetMainWindowLeft(), sett().GetMainWindowTop(), sett().GetMainWindowWidth(), sett().GetMainWindowHeight() );
+  wxString name = _T("MAINWINDOW");
+  SetSize(  sett().GetWindowLeft( name ), sett().GetWindowTop( name ),
+            sett().GetWindowWidth( name ), sett().GetWindowHeight( name ) );
   Layout();
 
   se_frame_active = false;
@@ -236,12 +237,13 @@ MainWindow::~MainWindow()
   }
   #endif
   int x, y, w, h;
+  wxString name = _T("MAINWINDOW");
   GetSize( &w, &h );
-  sett().SetMainWindowHeight( h );
-  sett().SetMainWindowWidth( w );
+  sett().SetWindowHeight( name, h );
+  sett().SetWindowWidth( name, w );
   GetPosition( &x, &y );
-  sett().SetMainWindowTop( y );
-  sett().SetMainWindowLeft( x );
+  sett().SetWindowTop( name, y );
+  sett().SetWindowLeft( name, x );
   sett().SaveSettings();
   m_ui.Quit();
   m_ui.OnMainWindowDestruct();

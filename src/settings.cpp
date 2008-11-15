@@ -528,57 +528,57 @@ wxString Settings::GetChannelJoinName( int index )
 }
 /************* SPRINGLOBBY WINDOW POS/SIZE   ******************/
 //! @brief Get width of MainWindow.
-int Settings::GetMainWindowWidth()
+int Settings::GetWindowWidth( const wxString& window )
 {
-    return m_config->Read( _T("/Mainwin/width"), DEFSETT_MW_WIDTH );
+    return m_config->Read( _T("/GUI/")+ window + _T("/width"), DEFSETT_MW_WIDTH );
 }
 
 
 //! @brief Set width position of MainWindow
-void Settings::SetMainWindowWidth( const int value )
+void Settings::SetWindowWidth( const wxString& window, const int value )
 {
-    m_config->Write( _T("/Mainwin/width"), value );
+    m_config->Write( _T("/GUI/")+ window + _T("/width"), value );
 }
 
 
 //! @brief Get height of MainWindow.
-int Settings::GetMainWindowHeight()
+int Settings::GetWindowHeight( const wxString& window )
 {
-    return m_config->Read( _T("/Mainwin/height"), DEFSETT_MW_HEIGHT );
+    return m_config->Read( _T("/GUI/")+ window + _T("/height"), DEFSETT_MW_HEIGHT );
 }
 
 
 //! @brief Set height position of MainWindow
-void Settings::SetMainWindowHeight( const int value )
+void Settings::SetWindowHeight( const wxString& window, const int value )
 {
-    m_config->Write( _T("/Mainwin/height"), value );
+    m_config->Write( _T("/GUI/")+ window + _T("/height"), value );
 }
 
 
 //! @brief Get top position of MainWindow.
-int Settings::GetMainWindowTop()
+int Settings::GetWindowTop( const wxString& window )
 {
-    return m_config->Read( _T("/Mainwin/top"), DEFSETT_MW_TOP );
+    return m_config->Read( _T("/GUI/")+ window + _T("/top"), DEFSETT_MW_TOP );
 }
 
 
 //! @brief Set top position of MainWindow
-void Settings::SetMainWindowTop( const int value )
+void Settings::SetWindowTop( const wxString& window, const int value )
 {
-    m_config->Write( _T("/Mainwin/top"), value );
+    m_config->Write( _T("/GUI/")+ window + _T("/top"), value );
 }
 
 
 //! @brief Get left position of MainWindow.
-int Settings::GetMainWindowLeft()
+int Settings::GetWindowLeft( const wxString& window )
 {
-    return m_config->Read( _T("/Mainwin/left"), DEFSETT_MW_LEFT );
+    return m_config->Read( _T("/GUI/")+ window + _T("/left"), DEFSETT_MW_LEFT );
 }
 
 //! @brief Set left position of MainWindow
-void Settings::SetMainWindowLeft( const int value )
+void Settings::SetWindowLeft( const wxString& window, const int value )
 {
-    m_config->Write( _T("/Mainwin/left"), value );
+    m_config->Write( _T("/GUI/")+ window + _T("/left"), value );
 }
 
 // ========================================================
@@ -1841,63 +1841,6 @@ void Settings::setSimpleDetail(wxString det)
 {
 	m_config->Write(_T("/SpringSettings/SimpleDetail"),det);
 }
-
-
-/************* SPRINGSETTINGS WINDOW POS/SIZE   ******************/
-//! @brief Get left position of MainWindow.
-int Settings::GetSettingsWindowLeft()
-{
-  return m_config->Read( _T("/Settwin/left"), DEFSETT_SW_LEFT );
-}
-
-//! @brief Set left position of SettingsWindow
-void Settings::SetSettingsWindowLeft( const int value )
-{
-  m_config->Write( _T("/Settwin/left"), value );
-}
-
-//! @brief Get height of SettingsWindow.
-int Settings::GetSettingsWindowHeight()
-{
-  return m_config->Read( _T("/Settwin/height"), DEFSETT_SW_HEIGHT );
-}
-
-
-//! @brief Set height position of SettingsWindow
-void Settings::SetSettingsWindowHeight( const int value )
-{
-  m_config->Write( _T("/Settwin/height"), value );
-}
-
-
-//! @brief Get top position of SettingsWindow.
-int Settings::GetSettingsWindowTop()
-{
-  return m_config->Read( _T("/Settwin/top"), DEFSETT_SW_TOP );
-}
-
-
-//! @brief Set top position of SettingsWindow
-void Settings::SetSettingsWindowTop( const int value )
-{
-  m_config->Write( _T("/Settwin/top"), value );
-}
-
-//! @brief Get width of MainWindow.
-int Settings::GetSettingsWindowWidth()
-{
-  return m_config->Read( _T("/Settwin/width"), DEFSETT_SW_WIDTH );
-}
-
-
-//! @brief Set width position of MainWindow
-void Settings::SetSettingsWindowWidth( const int value )
-{
-  m_config->Write( _T("/Settwin/width"), value );
-}
-
-/*********** WINDOW SIZE/POS END *****************/
-
 
 bool Settings::IsSpringBin( const wxString& path )
 {

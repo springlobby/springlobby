@@ -82,7 +82,9 @@ settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &
 		SetTitle(_T("SpringSettings"));
 	}
 	 SetIcon(*settingsIcon);
-	 SetSize( sett().GetSettingsWindowLeft(), sett().GetSettingsWindowTop(), sett().GetSettingsWindowWidth(), sett().GetSettingsWindowHeight() );
+	 wxString name = _T("SETTINGSFRAME");
+	 SetSize( sett().GetWindowLeft( name ), sett().GetWindowTop( name ),
+                sett().GetWindowWidth( name ), sett().GetWindowHeight( name ) );
      Layout();
 	 Center();
 }
@@ -348,12 +350,13 @@ void settings_frame::OnClose(wxCloseEvent& event)
 {
 	if ( !alreadyCalled){
 	     int x, y, w, h;
+	     wxString name = _T("SETTINGSFRAME");
           GetSize( &w, &h );
-          sett().SetSettingsWindowHeight( h );
-          sett().SetSettingsWindowWidth( w );
+          sett().SetWindowHeight( name, h );
+          sett().SetWindowWidth( name, w );
           GetPosition( &x, &y );
-          sett().SetSettingsWindowTop( y );
-          sett().SetSettingsWindowLeft( x );
+          sett().SetWindowTop( name, y );
+          sett().SetWindowLeft( name, x );
           sett().SaveSettings();
 		handleExit();
 	}
