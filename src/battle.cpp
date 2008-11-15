@@ -61,7 +61,8 @@ Battle::Battle( Server& serv, int id ) :
   CommonBattle(id,false,0), //m_ingame(false),m_order(0)
   m_serv(serv),
   m_ah(*this),
-  m_autolock_on_start(false)
+  m_autolock_on_start(false),
+  m_generating_script(false)
 {
 
 
@@ -312,7 +313,7 @@ User& Battle::GetMe() const
 
 bool Battle::IsFounderMe() const
 {
-  return (m_opts.founder == m_serv.GetMe().GetNick());
+  return ( ( m_opts.founder == m_serv.GetMe().GetNick() ) || ( m_opts.isproxy  && !m_generating_script ) );
 }
 
 int Battle::GetMyPlayerNum() const
@@ -516,6 +517,13 @@ bool Battle::ExecuteSayCommand( const wxString& cmd )
       //m_serv.DoActionBattle( m_opts.battleid, cmd.AfterFirst(' ') );
       return true;
     }
+    if ( cmd_name == _T("/replacehostip") )
+    {
+      wxString ip = cmd.AfterFirst(' ');
+      if ( ip.IsEmpty() ) return false;
+      m_opts.ip = ip;
+      return true;
+    }
   }
   ///>
   return false;
@@ -548,6 +556,16 @@ void Battle::SetAutoLockOnStart( bool value )
 bool Battle::GetAutoLockOnStart()
 {
   return m_autolock_on_start;
+}
+
+void Battle::SetIsProxy( bool value )
+{
+  m_opts.isproxy = value;
+}
+
+bool Battle::IsProxy()
+{
+  return m_opts.isproxy;
 }
 
 
@@ -799,27 +817,34 @@ struct ClannersRemovalPredicate{
   }
 }*/
 
-void Battle::Autobalance(int balance_type, bool support_clans, bool strong_clans)
+void Battle::Autobalance(int balance_type, bool support_clans, bool strong_clans, int allyteamsize, int controlteamsize )
 {
-  wxLogMessage(_T("Autobalancing, type=%d, clans=%d, strong_clans=%d"),balance_type,int(support_clans),int(strong_clans));
+  wxLogMessage(_T("Autobalancing, type=%d, clans=%d, strong_clans=%d, allyteamsize=%d"),balance_type,int(support_clans),int(strong_clans), allyteamsize);
   DoAction(_T("is auto-balancing alliances ..."));
-  int tmp=GetNumRects();
   //size_t i;
   //int num_alliances;
   std::vector<Alliance>alliances;
-  int ally=0;
-  for(int i=0;i<tmp;++i){
-    BattleStartRect sr = m_rects[i];
-    if( sr.IsOk() ){
-      ally=i;
+  if( allyteamsize == 0 ) // 0 == use num start rects
+  {
+    int tmp = GetNumRects();
+    int ally=0;
+    for( int i=0;i<allyteamsize;++i){
+      BattleStartRect sr = m_rects[i];
+      if( sr.IsOk() ){
+        ally=i;
+        alliances.push_back(Alliance(ally));
+        ally++;
+      }
+    }
+    // make at least two alliances
+    while(alliances.size()<2){
       alliances.push_back(Alliance(ally));
       ally++;
     }
   }
-  /// make at least two alliances
-  while(alliances.size()<2){
-    alliances.push_back(Alliance(ally));
-    ally++;
+  else
+  {
+    for ( int i = 0; i < allyteamsize; i++ ) alliances.push_back( Alliance( i ) );
   }
 
   //for(i=0;i<alliances.size();++i)alliances[i].allynum=i;

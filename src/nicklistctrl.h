@@ -28,6 +28,7 @@ class NickListCtrl : public CustomListCtrl
     void UserUpdated( const int& index );
 
     int GetUserIndex( const User& user ) const;
+
     void GetSelectedUsers( UserList& users ) ;
     wxArrayString GetSelectedUserNicks( ) ;
 

@@ -1036,6 +1036,11 @@ void Ui::OnBattleStarted( Battle& battle )
     {
         if ( &mw().GetJoinTab().GetBattleRoomTab().GetBattle() == &battle )
         {
+            if ( battle.IsProxy() )
+            {
+              wxString hostscript = m_spring->WriteScriptTxt( battle );
+              m_serv->SendScriptToProxy( hostscript );
+            }
             battle.GetMe().BattleStatus().ready = false;
             battle.SendMyBattleStatus();
             battle.GetMe().Status().in_game = true;
@@ -1236,4 +1241,3 @@ void Ui::WatchReplay ( wxString& filename )
     OnSpringStarting();
     m_spring->RunReplay( filename );
 }
-

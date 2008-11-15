@@ -36,6 +36,7 @@ CustomListCtrl::CustomListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& p
   m_name(name),
   m_highlight(highlight),
   m_highlightAction(hlaction),
+  m_bg_color( GetBackgroundColour() ),
   m_dirty_sort(false)
 {
 #if wxUSE_TIPWINDOW
@@ -43,7 +44,7 @@ CustomListCtrl::CustomListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& p
     controlPointer = 0;
 #endif
     m_tiptext = _T("");
-    m_bg_color = GetItemBackgroundColour(0);
+
 
     SetImageList( &icons(), wxIMAGE_LIST_NORMAL );
     SetImageList( &icons(), wxIMAGE_LIST_SMALL );

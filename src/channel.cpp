@@ -220,3 +220,4 @@ void Channel::SetPassword( const wxString& pw )
 {
   m_password = pw;
 }
+

@@ -38,6 +38,7 @@ wxWindow* CustomMessageBoxBase::m_lobbyWindow = 0;
 static CustomMessageBox* s_nonmodbox = 0;
 static ServerMessageBox* s_serverMsgBox = 0;
 static ActNotifBox* s_actNotifBox = 0;
+static MutelistWindow* s_mutelistWindow = 0;
 
 CustomMessageBox::CustomMessageBox(wxIcon* icon ,wxWindow *parent, const wxString& message,
         const wxString& caption ,
@@ -414,3 +415,31 @@ int GetSingleChoiceIndex( const wxString& message,
 
     return choice;
 }
+
+void mutelistWindow( const wxString& message, const wxString& caption,
+        long style, const int x, const int y )
+{
+        wxWindow* parent = CustomMessageBoxBase::getLobbypointer();
+		wxIcon* icon = new wxIcon(springlobby_xpm);
+
+		if ( s_mutelistWindow != 0 && s_mutelistWindow->IsShown() )
+		{
+		    s_mutelistWindow->AppendMessage(message);
+		}
+		else
+		{
+            s_mutelistWindow = new MutelistWindow(icon,parent,wxEmptyString,caption,style,wxPoint(x,y));
+            s_mutelistWindow->AppendMessage(message);
+            s_mutelistWindow->Show(true);
+		}
+}
+
+MutelistWindow::MutelistWindow(wxIcon* icon ,wxWindow *parent, const wxString& message,
+        const wxString& caption ,
+        long style, const wxPoint& pos)
+    : ServerMessageBox( icon , parent, message, caption, style, pos)
+{}
+
+MutelistWindow::~MutelistWindow ()
+{}
+

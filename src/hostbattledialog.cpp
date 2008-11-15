@@ -115,6 +115,13 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent ): wxDialog( parent, -1, _(
 
 	m_main_sizer->Add( m_port_sizer, 0, wxEXPAND, 5 );
 
+	wxBoxSizer* m_relayed_sizer;
+	m_relayed_sizer = new wxBoxSizer( wxHORIZONTAL );
+	m_relayed_host_check = new wxCheckBox( this, wxID_ANY, _("Relay battle to an Autohost"), wxDefaultPosition, wxDefaultSize, 0 );
+  m_relayed_host_check->SetValue( sett().GetLastHostRelayedMode() );
+  m_relayed_sizer->Add(  m_relayed_host_check, 1, wxALL|wxEXPAND, 5 );
+  m_main_sizer->Add( m_relayed_sizer, 0, wxEXPAND, 5 );
+
 	wxStaticBoxSizer* m_players_box;
 	m_players_box = new wxStaticBoxSizer( new wxStaticBox( this, -1, _("Number of players") ), wxVERTICAL );
 
@@ -136,7 +143,7 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent ): wxDialog( parent, -1, _(
 	//m_nat_radios->Enable( false );
   m_nat_radios->Enable( true );
 
-	m_nat_radios->SetToolTip( TE(_("NAT traversal to use. Experimental support.")) );
+	m_nat_radios->SetToolTip( TE(_("NAT traversal to use.")) );
 
 	m_pl_nat_sizer->Add( m_nat_radios, 1, wxALL|wxEXPAND, 5 );
 
@@ -258,6 +265,7 @@ void HostBattleDialog::OnOk( wxCommandEvent& event )
   sett().SetLastHostPlayerNum( m_players_slide->GetValue() );
   sett().SetLastHostNATSetting( m_nat_radios->GetSelection() );
   sett().SetLastRankLimit( GetSelectedRank() );
+  sett().SetLastHostRelayedMode( m_relayed_host_check->GetValue() );
   sett().SaveSettings();
   EndModal( wxID_OK );
 }

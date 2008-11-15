@@ -276,8 +276,6 @@
 		<Unit filename="src/maintorrenttab.h" />
 		<Unit filename="src/mainwindow.cpp" />
 		<Unit filename="src/mainwindow.h" />
-		<Unit filename="src/managegroupspanel.cpp" />
-		<Unit filename="src/managegroupspanel.h" />
 		<Unit filename="src/mapctrl.cpp" />
 		<Unit filename="src/mapctrl.h" />
 		<Unit filename="src/mmoptionmodel.cpp" />
