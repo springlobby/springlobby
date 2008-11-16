@@ -90,6 +90,13 @@ protected:
 
     ColumnMap m_column_map;
 
+    struct SortOrderItem {
+        int col;
+        bool direction;
+    };
+    typedef std::vector<SortOrderItem> SortOrder;
+    SortOrder m_sortorder;
+
 public:
     CustomListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pt,
                     const wxSize& sz,long style, wxString name, unsigned int column_count, bool highlight = true,

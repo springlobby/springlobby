@@ -71,7 +71,6 @@ TorrentListCtrl::TorrentListCtrl( wxWindow* parent, Ui& ui ):
 	InsertColumn( 9, col, _T( "Filesize" ), true );
 
 // sortorder: name --> percent completed --> mb donwloaded
-	memset( m_sortorder, 0, sizeof( m_sortorder ) );
 
 	m_sortorder[0].col = 0;
 	m_sortorder[0].direction = true;

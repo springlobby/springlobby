@@ -10,7 +10,7 @@ END_EVENT_TABLE()
 
 UserListctrl::UserListctrl(wxWindow* parent, const wxString& name, bool highlight,wxWindowID id)
   : CustomListCtrl( parent,id,wxDefaultPosition, wxDefaultSize,
-        wxSUNKEN_BORDER | wxLC_REPORT, name, highlight )
+        wxSUNKEN_BORDER | wxLC_REPORT, name, 2, highlight )
 {
     wxListItem col;
 

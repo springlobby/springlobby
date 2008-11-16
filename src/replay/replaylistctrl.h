@@ -31,11 +31,6 @@ class ReplayListCtrl : public CustomListCtrl
   protected:
     static int wxCALLBACK CompareUniversal(long item1, long item2, long sortData);
 
-    struct SortOrder{
-      int col;
-      bool direction;
-    };
-    SortOrder m_sortorder[4];
 
     wxMenu* m_popup;
    // ReplayList_Iter& m_replaylist_iter;

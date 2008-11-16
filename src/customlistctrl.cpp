@@ -44,9 +44,11 @@ CustomListCtrl::CustomListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& p
   m_bg_color( GetBackgroundColour() ),
   m_dirty_sort(false)
 {
-    //dummy init of map, will later be replaced with loading from settings
-    for ( unsigned int i = 0; i < m_coloumnCount; ++i)
+    //dummy init , will later be replaced with loading from settings
+    for ( unsigned int i = 0; i < m_coloumnCount; ++i) {
         m_column_map[i] = i;
+        m_sortorder.push_back( SortOrderItem( ) );
+    }
 
     SetImageList( &icons(), wxIMAGE_LIST_NORMAL );
     SetImageList( &icons(), wxIMAGE_LIST_SMALL );

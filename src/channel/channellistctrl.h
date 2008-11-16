@@ -52,11 +52,6 @@ class ChannelListctrl : public CustomListCtrl
         typedef ChannelInfoMap::const_iterator ChannelInfoIter;
         ChannelInfoMap m_data;
 
-        struct {
-          int col;
-          bool direction;
-        } m_sortorder[3];
-
 
         DECLARE_EVENT_TABLE()
 };

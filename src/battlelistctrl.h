@@ -61,11 +61,6 @@ class BattleListCtrl : public CustomListCtrl
     static int wxCALLBACK CompareMaxPlayerDOWN(long item1, long item2, long sortData);
 
 
-    struct {
-      int col;
-      bool direction;
-    } m_sortorder[4];
-
     wxMenu* m_popup;
     Ui& m_ui;
     static Ui* m_ui_for_sort;

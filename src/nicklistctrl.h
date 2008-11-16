@@ -64,12 +64,8 @@ class NickListCtrl : public CustomListCtrl
     typedef DataVec::const_iterator DataCIter;
     DataVec m_data;
 
-    UserMenu* m_menu;
 
-    struct {
-      int col;
-      bool direction;
-    } m_sortorder[4];
+    UserMenu* m_menu;
 
     enum {
       NICK_LIST = 31765 //wxID_HIGHEST
