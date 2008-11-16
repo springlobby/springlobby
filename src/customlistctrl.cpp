@@ -65,6 +65,13 @@ void CustomListCtrl::InsertColumn(long i, wxListItem item, wxString tip, bool mo
     m_colinfovec.push_back(temp);
 }
 
+void CustomListCtrl::AddColumn(long i, int width, const wxString& label, const wxString& tip, bool modifiable)
+{
+    ListBaseType::InsertColumn( i, label, wxLIST_FORMAT_LEFT, width);
+    colInfo temp(tip,modifiable);
+    m_colinfovec.push_back(temp);
+}
+
 void CustomListCtrl::SetSelectionRestorePoint()
 {
   m_prev_selected = m_selected;
@@ -273,11 +280,6 @@ void CustomListCtrl::OnEndResizeCol(wxListEvent& event)
 
 bool CustomListCtrl::SetColumnWidth(int col, int width)
 {
-//#ifdef __WXMSW__ //this fixes icons disappearing in first column
-//    if ( width == wxLIST_AUTOSIZE_USEHEADER && col == 0 )
-//        width = 44;
-//#endif
-
     if ( sett().GetColumnWidth( m_name, col) != Settings::columnWidthUnset)
     {
         return ListBaseType::SetColumnWidth( col, sett().GetColumnWidth( m_name, col) );

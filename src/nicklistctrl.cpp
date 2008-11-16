@@ -45,19 +45,27 @@ NickListCtrl::NickListCtrl( wxWindow* parent, bool show_header, NickListCtrl::Us
               name, highlight ),
   m_menu(popup)
 {
+
+#if defined(__WXMAC__)
+    const int widths [4] = { 20,20,20,120 };
+#else
+    const int widths [4] = { 20,20,20,120 };
+#endif
+
   wxListItem col;
   col.SetText( _("s") );
   col.SetImage( -1 );
-  InsertColumn( 0, col, _T("Status") );
+  AddColumn( 0, widths[0], _("s"), _T("Status") );
   col.SetText( _("c") );
   col.SetImage( -1 );
-  InsertColumn( 1, col, _T("Country") );
+  AddColumn( 1, widths[1], _("c"), _T("Country") );
   col.SetText( _("r") );
   col.SetImage( -1 );
-  InsertColumn( 2, col, _T("Rank") );
+  AddColumn( 2, widths[2], _("r"), _T("Rank") );
   col.SetText( _("Nickname") );
   col.SetImage( icons().ICON_DOWN );
-  InsertColumn( 3, col, _T("Nickname") );
+  AddColumn( 3, widths[3], _("Nickname"), _T("Nickname") );
+
 
   m_sortorder[0].col = 0;
   m_sortorder[0].direction = false;
@@ -67,21 +75,6 @@ NickListCtrl::NickListCtrl( wxWindow* parent, bool show_header, NickListCtrl::Us
   m_sortorder[2].direction = true;
   m_sortorder[3].col = 1;
   m_sortorder[3].direction = true;
-
-  long width = GetSize().x -( GetColumnWidth( 0 ) + GetColumnWidth( 1 ) + GetColumnWidth( 2 ) );
-#if defined(__WXMAC__)
-/// autosize is entirely broken on wxmac.
-  SetColumnWidth( 0, 20 );
-  SetColumnWidth( 1, 20 );
-  SetColumnWidth( 2, 20 );
-  SetColumnWidth( 3, width );
-#else
- /// on wxGTK it works, sort of.
-  SetColumnWidth( 0, wxLIST_AUTOSIZE_USEHEADER );
-  SetColumnWidth( 1, wxLIST_AUTOSIZE_USEHEADER );
-  SetColumnWidth( 2, wxLIST_AUTOSIZE_USEHEADER );
-  SetColumnWidth( 3, width );
-#endif
 
 }
 
@@ -104,7 +97,7 @@ void NickListCtrl::AddUser( const User& user )
   wxLogDebugFunc(_T(""));
   assert(&user);
 
-  int index = InsertItem( GetItemCount(), icons().GetUserListStateIcon( user.GetStatus(), false, user.GetBattle() != 0 ) );
+  int index = InsertItem( GetItemCount(), wxEmptyString );
   if(index==-1){
     wxLogMessage(_T("NickListCtrl::AddUser : index==-1"));
     return;
@@ -118,6 +111,7 @@ void NickListCtrl::AddUser( const User& user )
 
   UserUpdated( index );
   SetColumnWidth( 3, wxLIST_AUTOSIZE );
+  SetColumnWidth( 0, wxLIST_AUTOSIZE );
   MarkDirtySort();
 }
 
@@ -150,7 +144,15 @@ void NickListCtrl::UserUpdated( const int& index )
 {
   User& user = *((User*)GetItemData( index ));
   const UserStatus user_st = user.GetStatus();
-  SetItemImage( index, icons().GetUserListStateIcon( user_st, false, user.GetBattle() != 0 ) );
+  wxListItem item;
+  item.SetId( index );
+  item.m_format = wxLIST_FORMAT_LEFT;
+  item.m_image = icons().GetUserListStateIcon( user_st, false, user.GetBattle() != 0 );
+  item.m_mask |= wxLIST_MASK_FORMAT | wxLIST_MASK_IMAGE;
+  item.ClearAttributes();
+  SetItem( item );
+
+  //SetItemColumnImage( index, 0, icons().GetUserListStateIcon( user_st, false, user.GetBattle() != 0 ) );
   SetItemColumnImage( index, 1, icons().GetFlagIcon( user.GetCountry() ) );
   SetItemColumnImage( index, 2, icons().GetRankIcon( user.GetStatus().rank ) );
   SetItem( index, 3, user.GetNick() );
