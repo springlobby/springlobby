@@ -24,7 +24,6 @@ src/filelister/filelistdialog.cpp
 src/filelister/filelistfilter.cpp
 src/globalevents.cpp
 src/groupoptionspanel.cpp
-src/groupuserdialog.cpp
 src/Helper/wxtextctrlhist.h
 src/hostbattledialog.cpp
 src/httpdownloader.cpp
