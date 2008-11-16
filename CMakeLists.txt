@@ -211,7 +211,6 @@ SET(SpringLobbySrc
 	src/flagimages.cpp
 	src/globalevents.cpp
 	src/groupoptionspanel.cpp
-	src/groupuserdialog.cpp
 	src/httpdownloader.cpp
 	src/hostbattledialog.cpp
 	src/ibattle.cpp
