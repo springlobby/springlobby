@@ -625,6 +625,7 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const 
     wxString firstpart = buffer.Left( urlpos );
     int beginurl = firstpart.Find( _T(' '), true );
     if ( beginurl == wxNOT_FOUND ) beginurl == 0;
+    else beginurl += 1;
 
     wxString secondpart = buffer.Mid( urlpos ); // takes the rest of the string after the url mark
     int endurl = secondpart.Find( _T(' ') );
