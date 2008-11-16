@@ -1,7 +1,7 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_NICKLISTCTRL_H
 #define SPRINGLOBBY_HEADERGUARD_NICKLISTCTRL_H
 
-#include "customlistctrl.h"
+#include "customvirtlistctrl.h"
 #include "usermenu.h"
 
 class User;
@@ -10,7 +10,7 @@ class Ui;
 class ChatPanel;
 class UserMenu;
 
-class NickListCtrl : public CustomListCtrl
+class NickListCtrl : public CustomVirtListCtrl
 {
   protected:
     typedef SL_GENERIC::UserMenu<ChatPanel> UserMenu;

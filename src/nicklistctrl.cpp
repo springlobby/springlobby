@@ -27,7 +27,7 @@
 
 int wxCALLBACK NickListSortCallback(long item1, long item2, long sortData);
 
-BEGIN_EVENT_TABLE( NickListCtrl, CustomListCtrl )
+BEGIN_EVENT_TABLE( NickListCtrl, CustomVirtListCtrl )
   EVT_LIST_ITEM_ACTIVATED( NICK_LIST, NickListCtrl::OnActivateItem )
   EVT_LIST_COL_CLICK( NICK_LIST, NickListCtrl::OnColClick )
   EVT_CONTEXT_MENU( NickListCtrl::OnShowMenu )
@@ -41,7 +41,7 @@ END_EVENT_TABLE()
 
 NickListCtrl::NickListCtrl( wxWindow* parent, bool show_header, NickListCtrl::UserMenu* popup, bool singleSelectList,
                             const wxString& name, bool highlight):
-  CustomListCtrl( parent, NICK_LIST, wxDefaultPosition, wxDefaultSize,
+  CustomVirtListCtrl( parent, NICK_LIST, wxDefaultPosition, wxDefaultSize,
               wxLC_VIRTUAL | wxSUNKEN_BORDER | wxLC_REPORT | (int)(!show_header) * wxLC_NO_HEADER | (int)(singleSelectList) * wxLC_SINGLE_SEL,
               name, highlight ),
   m_menu(popup)
@@ -126,7 +126,8 @@ void NickListCtrl::RemoveUser( const User& user )
 
   if ( index != -1 )
   {
-    DeleteItem( index );
+    //erase
+    //setitemcount
     SetColumnWidth( 3, wxLIST_AUTOSIZE );
     return;
   }
@@ -215,20 +216,6 @@ void NickListCtrl::OnColClick( wxListEvent& event )
   col.SetImage( ( m_sortorder[0].direction )?icons().ICON_UP:icons().ICON_DOWN );
   SetColumn( m_sortorder[0].col, col );
   Sort();
-}
-
-bool userCompare( const User& u1, const User& u2 )
-{
-    return true;//u1.GetNick().CmpNoCase( u2.GetNick() );
-}
-
-void NickListCtrl::Sort()
-{
-    if ( m_data.size() > 0 ) {
-        //UserCompare cmp( m_sortorder, 2 );
-        std::sort( m_data.begin(), m_data.end(), userCompare );
-        RefreshItems(0, m_data.size()-1 );
-    }
 }
 
 
@@ -405,11 +392,31 @@ void NickListCtrl::HighlightItem( long item )
 
 void NickListCtrl::SortList()
 {
-  if ( !m_dirty_sort ) return;
-  SetSelectionRestorePoint();
+//  if ( !m_dirty_sort ) return;
+//  SetSelectionRestorePoint();
+  Freeze();
   Sort();
-  RestoreSelection();
-  m_dirty_sort = false;
+  Thaw();
+//  RefreshItems(0, m_data.size()-1 );
+//  RestoreSelection();
+//  m_dirty_sort = false;
+}
+
+bool userCompare(  User u1,  User u2 )
+{
+    return true;//u1.GetNick().CmpNoCase( u2.GetNick() );
+}
+
+void NickListCtrl::Sort()
+{
+    //if ( m_dirty_sort && m_data.size() > 0 )
+    {
+        //UserCompare cmp( m_sortorder, 2 );
+        DataIter b = m_data.begin();
+        DataIter e = m_data.end();
+        std::sort( b, e, userCompare );
+
+    }
 }
 
 wxString NickListCtrl::OnGetItemText(long item, long column) const

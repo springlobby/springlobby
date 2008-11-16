@@ -155,6 +155,11 @@ User& User::operator= ( const User& other )
         //m_serv = (other.GetServer());
         m_status = other.GetStatus();
         m_battle = other.GetBattle();
+        m_nick = other.GetNick();
+        m_cpu = other.GetCpu();
+        m_country = other.GetCountry();
+        m_bstatus = other.GetBattleStatus();
+
     }
     return *this;
 }

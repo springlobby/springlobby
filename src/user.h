@@ -90,6 +90,7 @@ class CommonUser
         virtual void SetStatus( const UserStatus& status );
 
         UserBattleStatus& BattleStatus() { return m_bstatus; }
+        UserBattleStatus GetBattleStatus() const { return m_bstatus; }
         //void SetBattleStatus( const UserBattleStatus& status, bool setorder = false );/// dont use this to avoid overwriting data like ip and port, use following method.
         void UpdateBattleStatus( const UserBattleStatus& status, bool setorder = false );
 
@@ -97,6 +98,7 @@ class CommonUser
         void* GetUserData() { return m_data; }*/
 
         bool Equals( const CommonUser& other ) const { return ( m_nick == other.GetNick() ); }
+
 
     protected:
         wxString m_nick;
@@ -145,6 +147,7 @@ class User : public CommonUser
 
     wxString GetClan();
 
+    bool operator< ( const User& other ) const { return true; m_nick < other.GetNick() ; }
     User& operator= ( const User& other );
 
   protected:
