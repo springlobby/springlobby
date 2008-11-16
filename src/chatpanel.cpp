@@ -617,67 +617,36 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const 
 #endif
 
 #ifndef NO_RICHTEXT_CHAT
-	if ( message.Find(_T("://")) != wxNOT_FOUND )
+  int urlpos = message.Find(_T("://"));
+  wxString buffer = message;
+
+	while ( urlpos != wxNOT_FOUND )
 	{
-		/* start index of the current word */
-		size_t st(0);
-		/* end index of the current word */
-		size_t en(0);
+    wxString firstpart = buffer.Left( urlpos );
+    int beginurl = firstpart.Find( _T(' '), true );
+    if ( beginurl == wxNOT_FOUND ) beginurl == 0;
 
-		size_t len(message.Len());
+    wxString secondpart = buffer.Mid( urlpos ); // takes the rest of the string after the url mark
+    int endurl = secondpart.Find( _T(' ') );
+    if ( endurl == wxNOT_FOUND ) endurl == buffer.Length();
+    else endurl += urlpos;
 
-		while ( en < len && en != wxString::npos && st < len && st != wxString::npos )
-		{
-			/* Advance to the start of the next word */
-			st = message.find_first_not_of(_T(" "), st);
+    m_chatlog_text->AppendText( buffer.Left( beginurl ) ); // append the part before the url
 
-			if ( st == wxString::npos )
-				st = len;
+    wxString url = buffer.Mid( beginurl, endurl );
+    m_chatlog_text->BeginStyle( *m_chatlog_url_style );
+    m_chatlog_text->BeginURL( url );
+    m_chatlog_text->AppendText( url ); // append the url
+    m_chatlog_text->EndURL();
+    m_chatlog_text->EndStyle();
 
-			/* Output whatever we skipped */
-			/* if ( st > en ) */
-			m_chatlog_text->AppendText(message.Mid(en, st - en));
+    buffer = buffer.Mid( endurl ); // takes the rest of the string after the url end
 
-			/* Find the end of the word */
-			en = message.find(_T(' '), st);
-
-
-			if ( st == wxString::npos && en == wxString::npos )
-				break; /* Nothing more to do. */
-
-			/* Extract the word */
-			wxString word;
-			if ( en == wxString::npos )
-				word = message.Mid(st);
-			else
-				word = message.Mid(st, en - st);
-
-			bool isUrl(word.Contains(_T("://")));
-
-			if ( isUrl )
-			{
-			    m_chatlog_text->BeginStyle(*m_chatlog_url_style);
-			    m_chatlog_text->BeginURL(word);
-			}
-
-			m_chatlog_text->AppendText( word );
-
-			if ( isUrl )
-			{
-			    m_chatlog_text->EndURL();
-			    m_chatlog_text->EndStyle();
-			}
-
-			/* Advance the start-index past the end of the
-			 * current word.
-			 */
-			st = en + 1;
-		}
+    urlpos = buffer.Find(_T("://"));
 	}
-	else
-	{
-		m_chatlog_text->AppendText( message );
-	}
+
+  m_chatlog_text->AppendText( buffer );
+
 	m_chatlog_text->AppendText( _T( "\n" ) );
 
 	bool enable_autoscroll = sett().GetAlwaysAutoScrollOnFocusLost() || (m_ui.GetActiveChatPanel() == this );
@@ -937,7 +906,14 @@ void ChatPanel::SetTopic( const wxString& who, const wxString& message )
 	f.SetFamily( wxFONTFAMILY_MODERN );
   // change the image of the tab to show new events
   SetIconHighlight( highlight_say );
-	OutputLine( _T( " ** Channel topic: " ) + refined + _( "\n * Set by " ) + who, sett().GetChatColorServer(), f );
+  OutputLine( _( "** Channel topic:" ), sett().GetChatColorServer(), f );
+  wxStringTokenizer tkz( refined, _T("\n") );
+	while ( tkz.HasMoreTokens() )
+	{
+	  wxString msg = tkz.GetNextToken().Strip();
+	  OutputLine( msg, sett().GetChatColorServer(), f );
+	}
+	OutputLine( _( "** Set by " ) + who, sett().GetChatColorServer(), f );
 }
 
 
