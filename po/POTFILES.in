@@ -44,7 +44,6 @@ src/replay/replaylistctrl.cpp
 src/replay/replaytab.cpp
 src/selectusersdialog.cpp
 src/selectusersdialog.h
-src/server.cpp.orig
 src/serverevents.cpp
 src/settings.cpp
 src/settings++/Defs.hpp
