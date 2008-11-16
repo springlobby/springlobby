@@ -397,14 +397,14 @@ void NickListCtrl::SortList()
   Freeze();
   Sort();
   Thaw();
-//  RefreshItems(0, m_data.size()-1 );
+  RefreshItems(0, m_data.size()-1 );
 //  RestoreSelection();
 //  m_dirty_sort = false;
 }
 
-bool userCompare(  User u1,  User u2 )
+bool userCompare(  const User u1,  const User u2 )
 {
-    return true;//u1.GetNick().CmpNoCase( u2.GetNick() );
+    return u1.GetNick() <  u2.GetNick() ;
 }
 
 void NickListCtrl::Sort()

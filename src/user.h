@@ -118,8 +118,8 @@ class User : public CommonUser
 
     mutable UiUserData uidata;
 
-    User( Server& serv ): CommonUser( wxEmptyString,wxEmptyString,0 ), m_serv(serv), m_battle(0) {}
-    User( const wxString& nick, Server& serv ) : CommonUser( nick,wxEmptyString,0 ),m_serv(serv), m_battle(0){}
+    User( Server& serv ): CommonUser( wxString(),wxString(),0 ), m_serv(serv), m_battle(0) {}
+    User( const wxString& nick, Server& serv ) : CommonUser( nick,wxString(),0 ),m_serv(serv), m_battle(0){}
     User( const wxString& nick, const wxString& country, const int& cpu, Server& serv) :
       CommonUser( nick,country,cpu ) ,m_serv(serv), m_battle(0) {}
 
@@ -147,7 +147,7 @@ class User : public CommonUser
 
     wxString GetClan();
 
-    bool operator< ( const User& other ) const { return true; m_nick < other.GetNick() ; }
+    //bool operator< ( const User& other ) const { return m_nick < other.GetNick() ; }
     User& operator= ( const User& other );
 
   protected:
