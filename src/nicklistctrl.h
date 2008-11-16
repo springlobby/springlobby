@@ -24,8 +24,7 @@ class NickListCtrl : public CustomListCtrl
     void AddUser( const UserList& userlist );
     void RemoveUser( const User& user );
 
-    void UserUpdated( User& user );
-    void UserUpdated( const int& index );
+    void UserUpdated( const User& user );
 
     int GetUserIndex( const User& user ) const;
 
@@ -49,14 +48,14 @@ class NickListCtrl : public CustomListCtrl
     virtual int OnGetItemColumnImage(long item, long column) const;
 
   protected:
-    static int wxCALLBACK ComparePlayernameUP(long item1, long item2, long sortData);
-    static int wxCALLBACK ComparePlayernameDOWN(long item1, long item2, long sortData);
-    static int wxCALLBACK ComparePlayerstatusUP(long item1, long item2, long sortData);
-    static int wxCALLBACK ComparePlayerstatusDOWN(long item1, long item2, long sortData);
-    static int wxCALLBACK ComparePlayerrankUP(long item1, long item2, long sortData);
-    static int wxCALLBACK ComparePlayerrankDOWN(long item1, long item2, long sortData);
-    static int wxCALLBACK ComparePlayercountryUP(long item1, long item2, long sortData);
-    static int wxCALLBACK ComparePlayercountryDOWN(long item1, long item2, long sortData);
+//    static int wxCALLBACK ComparePlayernameUP(long item1, long item2, long sortData);
+//    static int wxCALLBACK ComparePlayernameDOWN(long item1, long item2, long sortData);
+//    static int wxCALLBACK ComparePlayerstatusUP(long item1, long item2, long sortData);
+//    static int wxCALLBACK ComparePlayerstatusDOWN(long item1, long item2, long sortData);
+//    static int wxCALLBACK ComparePlayerrankUP(long item1, long item2, long sortData);
+//    static int wxCALLBACK ComparePlayerrankDOWN(long item1, long item2, long sortData);
+//    static int wxCALLBACK ComparePlayercountryUP(long item1, long item2, long sortData);
+//    static int wxCALLBACK ComparePlayercountryDOWN(long item1, long item2, long sortData);
     virtual void Sort();
 
     typedef std::vector< User > DataVec;
@@ -71,6 +70,18 @@ class NickListCtrl : public CustomListCtrl
       NICK_LIST = 31765 //wxID_HIGHEST
       //wxID_HIGHEST is used by BattleListCTRL. The cant be in the same Tab like BattleTab
     };
+
+    class UserCompare {
+
+    public:
+        UserCompare( const SortOrder& sortorder, unsigned int depth );
+        bool operator() ( User& u1, User& u2 );
+
+    private:
+        unsigned int m_depth;
+        SortOrder m_sortorder;
+    };
+
 
     DECLARE_EVENT_TABLE()
 };

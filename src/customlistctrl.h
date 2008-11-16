@@ -20,8 +20,10 @@
 #include <map>
 
 #include "useractions.h"
+#include "Helper/utilclasses.h"
 
 class SLTipWindow;
+
 
 /** \brief Used as base class for all ListCtrls throughout SL
  * Provides generic functionality, such as column tooltips, possiblity to prohibit coloumn resizing and selection modifiers. \n
@@ -90,11 +92,7 @@ protected:
 
     ColumnMap m_column_map;
 
-    struct SortOrderItem {
-        int col;
-        bool direction;
-    };
-    typedef std::vector<SortOrderItem> SortOrder;
+
     SortOrder m_sortorder;
 
 public:

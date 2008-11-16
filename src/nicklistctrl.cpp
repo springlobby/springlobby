@@ -10,6 +10,7 @@
 #include <wx/intl.h>
 #include <stdexcept>
 #include <wx/log.h>
+#include <algorithm>
 
 #include "nicklistctrl.h"
 #include "utils.h"
@@ -133,48 +134,25 @@ void NickListCtrl::RemoveUser( const User& user )
 }
 
 
-void NickListCtrl::UserUpdated( User& user )
+void NickListCtrl::UserUpdated( const User& user )
 {
-  int index = GetUserIndex( user );
-  m_data[index] = user;
-  RefreshItem( index );
+    int index = GetUserIndex( user );
+    m_data[index] = user;
+    RefreshItem( index );
   //ASSERT_LOGIC( index != -1, _T("index = -1") );
 //  if(index!=-1){
 //    UserUpdated( index );
 //  }else{
 //    wxLogWarning(_T("NickListCtrl::UserUpdated error, index == -1 ."));
 //  }
+    HighlightItemUser( index, user.GetNick() );
+    MarkDirtySort();
 }
-
-
-void NickListCtrl::UserUpdated( const int& index )
-{
-//  User& user = *((User*)GetItemData( index ));
-//  const UserStatus user_st = user.GetStatus();
-//  wxListItem item;
-//  item.SetId( index );
-//  item.m_format = wxLIST_FORMAT_LEFT;
-//  item.m_image = icons().GetUserListStateIcon( user_st, false, user.GetBattle() != 0 );
-//  item.m_mask |= wxLIST_MASK_FORMAT | wxLIST_MASK_IMAGE;
-//  item.ClearAttributes();
-//  SetItem( item );
-//
-//  //SetItemColumnImage( index, 0, icons().GetUserListStateIcon( user_st, false, user.GetBattle() != 0 ) );
-//  SetItemColumnImage( index, 1, icons().GetFlagIcon( user.GetCountry() ) );
-//  SetItemColumnImage( index, 2, icons().GetRankIcon( user.GetStatus().rank ) );
-//  SetItem( index, 3, user.GetNick() );
-//  SetItemData(index, (long)&user );
-  //highlight
-//  HighlightItemUser( index, user.GetNick() );
-  MarkDirtySort();
-}
-
 
 void NickListCtrl::ClearUsers()
 {
-  while ( GetItemCount() > 0 ) {
-    DeleteItem( 0 );
-  }
+    m_data.clear();
+    SetItemCount( 0 );
 }
 
 
@@ -239,172 +217,174 @@ void NickListCtrl::OnColClick( wxListEvent& event )
   Sort();
 }
 
+bool userCompare( const User& u1, const User& u2 )
+{
+    return true;//u1.GetNick().CmpNoCase( u2.GetNick() );
+}
 
 void NickListCtrl::Sort()
 {
-//  for (int i = 3; i >= 0; i--) {
-//    switch ( m_sortorder[ i ].col ) {
-//      case 0 : SortItems( ( m_sortorder[ i ].direction )?&ComparePlayerstatusUP:&ComparePlayerstatusDOWN , 0 ); break;
-//      case 1 : SortItems( ( m_sortorder[ i ].direction )?&ComparePlayercountryUP:&ComparePlayercountryDOWN , 0 ); break;
-//      case 2 : SortItems( ( m_sortorder[ i ].direction )?&ComparePlayerrankUP:&ComparePlayerrankDOWN , 0 ); break;
-//      case 3 : SortItems( ( m_sortorder[ i ].direction )?&ComparePlayernameUP:&ComparePlayernameDOWN , 0 ); break;
-//    }
-//  }
+    if ( m_data.size() > 0 ) {
+        //UserCompare cmp( m_sortorder, 2 );
+        std::sort( m_data.begin(), m_data.end(), userCompare );
+        RefreshItems(0, m_data.size()-1 );
+    }
 }
 
 
-int wxCALLBACK NickListCtrl::ComparePlayernameUP(long item1, long item2, long sortData )
-{
-    return 0;//( m_data[item1].GetNick().CmpNoCase( m_data[item2].GetNick() );
-}
-
-
-int wxCALLBACK NickListCtrl::ComparePlayernameDOWN(long item1, long item2, long sortData )
-{
-    // inverse the order
-    return ((User*)item2)->GetNick().CmpNoCase(((User*)item1)->GetNick());
-}
-
-
-int wxCALLBACK NickListCtrl::ComparePlayerstatusUP(long item1, long item2, long sortData )
-{
-  User* user1 = (User*)item1;
-  User* user2 = (User*)item2;
-  ASSERT_LOGIC( user1 != 0, _T("user1 = 0") );
-  ASSERT_LOGIC( user2 != 0, _T("user2 = 0") );
-
-  int u1 = 0, u2 = 0;
-
-  if ( user1->GetStatus().bot )
-    u1 += 1000;
-  if ( user2->GetStatus().bot )
-    u2 += 1000;
-  if ( user1->GetStatus().moderator )
-    u1 += 100;
-  if ( user2->GetStatus().moderator )
-    u2 += 100;
-  if ( user1->GetStatus().in_game )
-    u1 += -10;
-  if ( user2->GetStatus().in_game )
-    u2 += -10;
-
-    // inverse the order
-    if ( u1 < u2 )
-        return -1;
-    if ( u1 > u2 )
-        return 1;
-
-    return 0;
-}
-
-int wxCALLBACK NickListCtrl::ComparePlayerstatusDOWN(long item1, long item2, long sortData )
-{
-  User* user1 = (User*)item1;
-  User* user2 = (User*)item2;
-  ASSERT_LOGIC( user1 != 0, _T("user1 = 0") );
-  ASSERT_LOGIC( user2 != 0, _T("user2 = 0") );
-
-  int u1 = 0, u2 = 0;
-
-  if ( user1->GetStatus().bot )
-    u1 += 1000;
-  if ( user2->GetStatus().bot )
-    u2 += 1000;
-  if ( user1->GetStatus().moderator )
-    u1 += 100;
-  if ( user2->GetStatus().moderator )
-    u2 += 100;
-  if ( user1->GetStatus().in_game )
-    u1 += -10;
-  if ( user2->GetStatus().in_game )
-    u2 += -10;
-
-
-    // inverse the order
-    if ( u1 < u2 )
-        return 1;
-    if ( u1 > u2 )
-        return -1;
-
-    return 0;
-}
-
-
-int wxCALLBACK NickListCtrl::ComparePlayerrankUP(long item1, long item2, long sortData )
-{
-    // inverse the order
-
-    if ( ((User*)item1)->GetStatus().rank < ((User*)item2)->GetStatus().rank )
-        return -1;
-    if ( ((User*)item1)->GetStatus().rank > ((User*)item2)->GetStatus().rank )
-        return 1;
-
-    return 0;
-}
-
-int wxCALLBACK NickListCtrl::ComparePlayerrankDOWN(long item1, long item2, long sortData )
-{
-    // inverse the order
-    if ( ((User*)item1)->GetStatus().rank < ((User*)item2)->GetStatus().rank )
-        return 1;
-    if ( ((User*)item1)->GetStatus().rank > ((User*)item2)->GetStatus().rank )
-        return -1;
-
-    return 0;
-}
-
-
-int wxCALLBACK NickListCtrl::ComparePlayercountryUP(long item1, long item2, long sortData )
-{
-    return ((User*)item1)->GetCountry().CmpNoCase(((User*)item2)->GetCountry());
-}
-
-int wxCALLBACK NickListCtrl::ComparePlayercountryDOWN(long item1, long item2, long sortData )
-{
-    // inverse the order
-    return ((User*)item2)->GetCountry().CmpNoCase(((User*)item1)->GetCountry());
-}
+//int wxCALLBACK NickListCtrl::ComparePlayernameUP(long item1, long item2, long sortData )
+//{
+//    return 0;//( m_data[item1].GetNick().CmpNoCase( m_data[item2].GetNick() );
+//}
+//
+//
+//int wxCALLBACK NickListCtrl::ComparePlayernameDOWN(long item1, long item2, long sortData )
+//{
+//    // inverse the order
+//    return ((User*)item2)->GetNick().CmpNoCase(((User*)item1)->GetNick());
+//}
+//
+//
+//int wxCALLBACK NickListCtrl::ComparePlayerstatusUP(long item1, long item2, long sortData )
+//{
+//  User* user1 = (User*)item1;
+//  User* user2 = (User*)item2;
+//  ASSERT_LOGIC( user1 != 0, _T("user1 = 0") );
+//  ASSERT_LOGIC( user2 != 0, _T("user2 = 0") );
+//
+//  int u1 = 0, u2 = 0;
+//
+//  if ( user1->GetStatus().bot )
+//    u1 += 1000;
+//  if ( user2->GetStatus().bot )
+//    u2 += 1000;
+//  if ( user1->GetStatus().moderator )
+//    u1 += 100;
+//  if ( user2->GetStatus().moderator )
+//    u2 += 100;
+//  if ( user1->GetStatus().in_game )
+//    u1 += -10;
+//  if ( user2->GetStatus().in_game )
+//    u2 += -10;
+//
+//    // inverse the order
+//    if ( u1 < u2 )
+//        return -1;
+//    if ( u1 > u2 )
+//        return 1;
+//
+//    return 0;
+//}
+//
+//int wxCALLBACK NickListCtrl::ComparePlayerstatusDOWN(long item1, long item2, long sortData )
+//{
+//  User* user1 = (User*)item1;
+//  User* user2 = (User*)item2;
+//  ASSERT_LOGIC( user1 != 0, _T("user1 = 0") );
+//  ASSERT_LOGIC( user2 != 0, _T("user2 = 0") );
+//
+//  int u1 = 0, u2 = 0;
+//
+//  if ( user1->GetStatus().bot )
+//    u1 += 1000;
+//  if ( user2->GetStatus().bot )
+//    u2 += 1000;
+//  if ( user1->GetStatus().moderator )
+//    u1 += 100;
+//  if ( user2->GetStatus().moderator )
+//    u2 += 100;
+//  if ( user1->GetStatus().in_game )
+//    u1 += -10;
+//  if ( user2->GetStatus().in_game )
+//    u2 += -10;
+//
+//
+//    // inverse the order
+//    if ( u1 < u2 )
+//        return 1;
+//    if ( u1 > u2 )
+//        return -1;
+//
+//    return 0;
+//}
+//
+//
+//int wxCALLBACK NickListCtrl::ComparePlayerrankUP(long item1, long item2, long sortData )
+//{
+//    // inverse the order
+//
+//    if ( ((User*)item1)->GetStatus().rank < ((User*)item2)->GetStatus().rank )
+//        return -1;
+//    if ( ((User*)item1)->GetStatus().rank > ((User*)item2)->GetStatus().rank )
+//        return 1;
+//
+//    return 0;
+//}
+//
+//int wxCALLBACK NickListCtrl::ComparePlayerrankDOWN(long item1, long item2, long sortData )
+//{
+//    // inverse the order
+//    if ( ((User*)item1)->GetStatus().rank < ((User*)item2)->GetStatus().rank )
+//        return 1;
+//    if ( ((User*)item1)->GetStatus().rank > ((User*)item2)->GetStatus().rank )
+//        return -1;
+//
+//    return 0;
+//}
+//
+//
+//int wxCALLBACK NickListCtrl::ComparePlayercountryUP(long item1, long item2, long sortData )
+//{
+//    return ((User*)item1)->GetCountry().CmpNoCase(((User*)item2)->GetCountry());
+//}
+//
+//int wxCALLBACK NickListCtrl::ComparePlayercountryDOWN(long item1, long item2, long sortData )
+//{
+//    // inverse the order
+//    return ((User*)item2)->GetCountry().CmpNoCase(((User*)item1)->GetCountry());
+//}
 
 void NickListCtrl::SetTipWindowText( const long item_hit, const wxPoint position)
 {
-    User* user = (User*) GetItemData(item_hit);
+
     int coloumn = getColoumnFromPosition(position);
-    if (coloumn > (int)m_colinfovec.size() || coloumn < 0)
+    if (coloumn > (int)m_colinfovec.size() || coloumn < 0 || item_hit < 0 || item_hit > m_data.size() )
     {
         m_tiptext = _T("");
     }
     else
     {
-        if (user) {
+        const User& user = m_data[item_hit];
+        {
             switch (coloumn)
             {
             case 0: // status
                 m_tiptext = _T("This ");
-                if (user->GetStatus().bot)
+                if (user.GetStatus().bot)
                     m_tiptext << _T("bot ");
-                else if (user->GetStatus().moderator)
+                else if (user.GetStatus().moderator)
                     m_tiptext << _T("moderator ");
                 else
                     m_tiptext << _T("player ");
 
-                if (user->GetStatus().in_game)
+                if (user.GetStatus().in_game)
                     m_tiptext <<  _T("is ingame");
-                else if (user->GetStatus().away)
+                else if (user.GetStatus().away)
                     m_tiptext <<  _T("is away");
                 else
                     m_tiptext << _T("is available");
                 break;
 
             case 1: // country
-                m_tiptext =  GetFlagNameFromCountryCode(user->GetCountry().Upper());
+                m_tiptext =  GetFlagNameFromCountryCode(user.GetCountry().Upper());
                 break;
 
             case 2: // rank
-                m_tiptext = user->GetRankName(user->GetStatus().rank);
+                m_tiptext = user.GetRankName(user.GetStatus().rank);
                 break;
 
             case 3: // nickname
-                m_tiptext = user->GetNick();
+                m_tiptext = user.GetNick();
                 break;
 
             default:
@@ -412,19 +392,14 @@ void NickListCtrl::SetTipWindowText( const long item_hit, const wxPoint position
                 break;
             }
         }
-        else {
-            m_tiptext = _T("");
-        }
     }
 }
 
 void NickListCtrl::HighlightItem( long item )
 {
-    User* u = (User*)GetItemData( item ) ;
-    if ( u != 0 ) {
-        wxString name = u->GetNick();
-        HighlightItemUser( item, name );
-    }
+    const User& u = m_data[item];
+    wxString name = u.GetNick();
+    HighlightItemUser( item, name );
 }
 
 
@@ -471,3 +446,14 @@ int NickListCtrl::OnGetItemImage(long item) const
 //  //SetItemColumnImage( index, 0, icons().GetUserListStateIcon( user_st, false, user.GetBattle() != 0 ) );
 //  SetItemColumnImage( index, 1, icons().GetFlagIcon( user.GetCountry() ) );
 //  SetItemColumnImage( index, 2, icons().GetRankIcon( user.GetStatus().rank ) );
+
+NickListCtrl::UserCompare::UserCompare( const SortOrder& sortorder, unsigned int depth )
+    : m_depth( depth ), m_sortorder( sortorder )
+{
+
+}
+
+bool NickListCtrl::UserCompare::operator() ( User& u1, User& u2 )
+{
+    return true;//u1.GetNick().CmpNoCase( u2.GetNick() );
+}
