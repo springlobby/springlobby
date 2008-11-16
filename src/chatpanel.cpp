@@ -152,7 +152,7 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Channel& chan, wxImageList* imag
 }
 
 
-ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, User& user, wxImageList* imaglist  ):
+ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, const User& user, wxImageList* imaglist  ):
   wxPanel( parent, -1 ),
   m_show_nick_list( false ),
   m_nicklist(0),
@@ -1010,13 +1010,13 @@ void ChatPanel::SetServer( Server* serv )
 }
 
 
-User* ChatPanel::GetUser()
+const User* ChatPanel::GetUser() const
 {
 	return m_user;
 }
 
 
-void ChatPanel::SetUser( User* usr )
+void ChatPanel::SetUser( const User* usr )
 {
 	ASSERT_LOGIC( m_type == CPT_User, _T( "Not of type user" ) );
 

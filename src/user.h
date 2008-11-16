@@ -96,6 +96,8 @@ class CommonUser
     /*    void SetUserData( void* userdata ) { m_data = userdata; }
         void* GetUserData() { return m_data; }*/
 
+        bool Equals( const CommonUser& other ) const { return ( m_nick == other.GetNick() ); }
+
     protected:
         wxString m_nick;
         wxString m_country;
@@ -112,7 +114,7 @@ class User : public CommonUser
 {
   public:
 
-    UiUserData uidata;
+    mutable UiUserData uidata;
 
     User( Server& serv ): CommonUser( wxEmptyString,wxEmptyString,0 ), m_serv(serv), m_battle(0) {}
     User( const wxString& nick, Server& serv ) : CommonUser( nick,wxEmptyString,0 ),m_serv(serv), m_battle(0){}
@@ -123,11 +125,11 @@ class User : public CommonUser
 
     // User interface
 
-    Server& GetServer() { return m_serv; }
+    Server& GetServer() const { return m_serv; }
 
-    void Said( const wxString& message );
-    void Say( const wxString& message );
-    void DoAction( const wxString& message );
+    void Said( const wxString& message ) const;
+    void Say( const wxString& message ) const;
+    void DoAction( const wxString& message ) const;
 
     Battle* GetBattle() const;
     void SetBattle( Battle* battle );
@@ -135,13 +137,15 @@ class User : public CommonUser
     void SendMyUserStatus();
     void SetStatus( const UserStatus& status );
 
-    bool ExecuteSayCommand( const wxString& cmd );
+    bool ExecuteSayCommand( const wxString& cmd ) const;
 
     static wxString GetRankName(UserStatus::RankContainer rank);
 
     float GetBalanceRank();
 
     wxString GetClan();
+
+    User& operator= ( const User& other );
 
   protected:
     // User variables

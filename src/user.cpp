@@ -26,18 +26,18 @@ wxString UserStatus::GetDiffString ( const UserStatus& old )
         wxEmptyString;
 }
 
-void User::Said( const wxString& message )
+void User::Said( const wxString& message ) const
 {
 }
 
 
-void User::Say( const wxString& message )
+void User::Say( const wxString& message ) const
 {
   m_serv.SayPrivate( m_nick, message );
 }
 
 
-void User::DoAction( const wxString& message )
+void User::DoAction( const wxString& message ) const
 {
   m_serv.DoActionPrivate( m_nick, message );
 }
@@ -107,7 +107,7 @@ void User::SendMyUserStatus()
 }
 
 
-bool User::ExecuteSayCommand( const wxString& cmd )
+bool User::ExecuteSayCommand( const wxString& cmd ) const
 {
   if ( cmd.BeforeFirst(' ').Lower() == _T("/me") ) {
     m_serv.DoActionPrivate( m_nick, cmd.AfterFirst(' ') );
@@ -147,4 +147,14 @@ wxString User::GetClan(){
 void CommonUser::SetStatus( const UserStatus& status )
 {
   m_status = status;
+}
+
+User& User::operator= ( const User& other )
+{
+    if( this != &other ) {
+        //m_serv = (other.GetServer());
+        m_status = other.GetStatus();
+        m_battle = other.GetBattle();
+    }
+    return *this;
 }

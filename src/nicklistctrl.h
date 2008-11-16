@@ -43,6 +43,11 @@ class NickListCtrl : public CustomListCtrl
 
     void SortList();
 
+    //these are overloaded to use list in virtual style
+    virtual wxString OnGetItemText(long item, long column) const;
+    virtual int OnGetItemImage(long item) const;
+    virtual int OnGetItemColumnImage(long item, long column) const;
+
   protected:
     static int wxCALLBACK ComparePlayernameUP(long item1, long item2, long sortData);
     static int wxCALLBACK ComparePlayernameDOWN(long item1, long item2, long sortData);
@@ -54,7 +59,10 @@ class NickListCtrl : public CustomListCtrl
     static int wxCALLBACK ComparePlayercountryDOWN(long item1, long item2, long sortData);
     virtual void Sort();
 
-    UserList* m_users;
+    typedef std::vector< User > DataVec;
+    typedef DataVec::iterator DataIter;
+    typedef DataVec::const_iterator DataCIter;
+    DataVec m_data;
 
     UserMenu* m_menu;
 
