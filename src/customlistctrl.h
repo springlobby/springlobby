@@ -17,6 +17,7 @@
 
 #include <vector>
 #include <utility>
+#include <map>
 
 #include "useractions.h"
 
@@ -38,12 +39,15 @@ protected:
     #if wxUSE_TIPWINDOW
     //! some wx implementations do not support this yet
     SLTipWindow* m_tipwindow;
-    SLTipWindow** controlPointer;
+    SLTipWindow** m_controlPointer;
     #endif
-    int coloumnCount;
+    unsigned int m_coloumnCount;
 
     typedef std::pair<wxString,bool> colInfo;
     typedef std::vector<colInfo> colInfoVec;
+
+    //! maps outward column index to internal
+    typedef std::map<unsigned int,unsigned int> ColumnMap;
 
     /** global Tooltip thingies (ms)
      */
@@ -84,9 +88,11 @@ protected:
 
     virtual void SetTipWindowText( const long item_hit, const wxPoint position);
 
+    ColumnMap m_column_map;
+
 public:
     CustomListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pt,
-                    const wxSize& sz,long style, wxString name, bool highlight = true,
+                    const wxSize& sz,long style, wxString name, unsigned int column_count, bool highlight = true,
                     UserActions::ActionType hlaction = UserActions::ActHighlight);
 
     virtual ~CustomListCtrl(){}

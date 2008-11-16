@@ -48,6 +48,8 @@ struct wxColourData;
 class wxSize;
 class wxPoint;
 
+typedef std::map<unsigned int,unsigned int> ColumnMap;
+
 class SL_WinConf : public wxFileConfig
 {
     public:
@@ -324,6 +326,9 @@ class Settings
 
     void SetShowTooltips( bool show);
     bool GetShowTooltips();
+
+    ColumnMap GetColumnMap( const wxString& name );
+    void GetColumnMap( const wxString& name, const ColumnMap& map );
 
     void SetColumnWidth( const wxString& list_name, const int coloumn_ind, const int coloumn_width );
     int GetColumnWidth( const wxString& list_name, const int coloumn );

@@ -32,6 +32,7 @@
 #include "replay/replaylistfiltervalues.h"
 #include "globalsmanager.h"
 #include "springunitsynclib.h"
+#include "customlistctrl.h"
 #include "settings++/presets.h"
 
 const wxColor defaultHLcolor (255,0,0);

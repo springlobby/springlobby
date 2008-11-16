@@ -24,10 +24,15 @@ END_EVENT_TABLE()
 
 //wxTipWindow* CustomListCtrl::m_tipwindow = 0;
 CustomListCtrl::CustomListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pt, const wxSize& sz,long style,wxString name,
-                                bool highlight, UserActions::ActionType hlaction ):
+                               unsigned int column_count, bool highlight, UserActions::ActionType hlaction ):
   ListBaseType(parent, id, pt, sz, style),
   m_tiptimer(this, IDD_TIP_TIMER),
   m_tiptext(_T("")),
+#if wxUSE_TIPWINDOW
+  m_tipwindow( 0 ),
+  m_controlPointer( 0 ),
+#endif
+  m_coloumnCount( column_count ),
   m_selected(-1),
   m_selected_index(-1),
   m_prev_selected(-1),
@@ -39,11 +44,7 @@ CustomListCtrl::CustomListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& p
   m_bg_color( GetBackgroundColour() ),
   m_dirty_sort(false)
 {
-#if wxUSE_TIPWINDOW
-    m_tipwindow = 0;
-    controlPointer = 0;
-#endif
-    m_tiptext = _T("");
+
 
 
     SetImageList( &icons(), wxIMAGE_LIST_NORMAL );
@@ -162,8 +163,8 @@ void CustomListCtrl::OnTimer(wxTimerEvent& event)
   if (!m_tiptext.empty())
   {
       m_tipwindow = new SLTipWindow(this, m_tiptext);
-      controlPointer = &m_tipwindow;
-      m_tipwindow->SetTipWindowPtr((wxTipWindow**)controlPointer);
+      m_controlPointer = &m_tipwindow;
+      m_tipwindow->SetTipWindowPtr((wxTipWindow**)m_controlPointer);
 #ifndef __WXMSW__
       m_tipwindow->SetBoundingRect(wxRect(1,1,50,50));
 #endif
@@ -174,7 +175,7 @@ void CustomListCtrl::OnTimer(wxTimerEvent& event)
   {
       m_tiptext = wxEmptyString;
       m_tiptimer.Stop();
-      if (controlPointer!= 0 && *controlPointer!= 0)
+      if (m_controlPointer!= 0 && *m_controlPointer!= 0)
       {
           m_tipwindow->Close();
           m_tipwindow = 0;
@@ -295,7 +296,7 @@ void CustomListCtrl::noOp(wxMouseEvent& event)
 {
     m_tiptext = wxEmptyString;
 //            m_tiptimer.Stop();
-//            if (controlPointer!= 0 && *controlPointer!= 0)
+//            if (m_controlPointer!= 0 && *m_controlPointer!= 0)
 //            {
 //                m_tipwindow->Close();
 //                m_tipwindow = 0;

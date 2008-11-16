@@ -30,8 +30,9 @@ END_EVENT_TABLE()
 ReplayList* ReplayListCtrl::m_replaylist_sort = 0;
 
 ReplayListCtrl::ReplayListCtrl( wxWindow* parent, ReplayList& replaylist  ):
-  CustomListCtrl(parent, RLIST_LIST, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT,
-                _T("replaylistctrl") ),
+  CustomListCtrl(parent, RLIST_LIST, wxDefaultPosition, wxDefaultSize,
+                wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT,
+                _T("replaylistctrl"), 8 ),
   m_replaylist(replaylist)
 {
 
