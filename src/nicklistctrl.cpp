@@ -393,36 +393,56 @@ void NickListCtrl::HighlightItem( long item )
 
 
 template < int N, bool dir >
-class UserCompare {
-
-public:
-    UserCompare( ) {}
-
-    bool operator() ( const User& u1, const User& u2 );
-
-private:
-    static const unsigned int col = N;
-    static const bool direction = dir;
+struct UserCompare {
+    static bool compare ( const User& u1, const User& u2 );
 };
 
 
 template < >
-class UserCompare < 0, false >
+struct UserCompare < 3, false >
 {
-public:
-    bool operator() ( const User& u1, const User& u2 )
-    {
-	return u2.GetNick() <  u1.GetNick() ;
+    static bool compare ( const User& u1, const User& u2 ) {
+        return u2.GetNick() <  u1.GetNick() ;
     }
 };
 
 template < >
-class UserCompare < 0, true >
+struct UserCompare < 3, true >
 {
-public:
-    bool operator() ( const User& u1, const User& u2 )
-    {
-	return u2.GetNick() >  u1.GetNick() ;
+    static bool compare ( const User& u1, const User& u2 ) {
+        return u2.GetNick() >  u1.GetNick() ;
+    }
+};
+
+template < >
+struct UserCompare < 2, false >
+{
+    static bool compare ( const User& u1, const User& u2 ) {
+        return u2.GetNick() <  u1.GetNick() ;
+    }
+};
+
+template < >
+struct UserCompare < 2, true >
+{
+    static bool compare ( const User& u1, const User& u2 ) {
+        return u2.GetNick() >  u1.GetNick() ;
+    }
+};
+
+template < int C0, bool B0,int C1, bool B1,int C2, bool B2 >
+struct Compare {
+    bool operator () ( const User& u1, const User& u2 ) {
+        if ( !UserCompare<C0,B0>::compare( u1, u2 ) ) {
+            if ( !UserCompare<C1,B1>::compare( u1, u2 ) ) {
+                if ( !UserCompare<C2,B2>::compare( u1, u2 ) ) {
+                    return false;
+                }
+                return true;
+            }
+            return true;
+        }
+        return true;
     }
 };
 
@@ -446,8 +466,8 @@ void NickListCtrl::Sort()
     {
         DataIter b = m_data.begin();
         DataIter e = m_data.end();
-	UserCompare< 0, false > cmp0F;
-	UserCompare< 0, true > cmp0T;
+        Compare< 3, false, 2, true, 3, false  > cmp0F;
+        Compare< 2, true, 3, false, 2, true > cmp0T;
 
         if (m_sortorder[0].direction)
             std::stable_sort( b, e, cmp0T );
