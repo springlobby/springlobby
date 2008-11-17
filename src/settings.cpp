@@ -793,7 +793,11 @@ wxString Settings::GetCurrentUsedDataDir()
     if ( susynclib().VersionSupports( IUnitSync::USYNC_GetDataDir ) ) dir = susynclib().GetSpringDataDir();
     else dir = susynclib().GetSpringConfigString( _T("SpringData"), _T("") );
   }
-  if ( dir.IsEmpty() ) dir = wxStandardPathsBase::Get().GetUserDataDir(); /// fallback
+  #ifdef __WXMSW__
+  if ( dir.IsEmpty() ) dir = wxStandardPathsBase::Get().GetExecutablePath().BeforeLast( wxFileName::GetPathSeparator() ); /// fallback
+  #else
+  if ( dir.IsEmpty() ) dir = wxFileName()::GetHomeDir() + wxFileName::GetPathSeparator() + _T(".spring"); /// fallback
+  #endif
   return dir;
 }
 
