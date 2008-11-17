@@ -391,17 +391,41 @@ void NickListCtrl::HighlightItem( long item )
     HighlightItemUser( item, name );
 }
 
-/* Koshi will want to rename these to something that make sense. ;) */
-static bool
-UserCompareUp(const User& a, const User& b )
+
+template < int N, bool dir >
+class UserCompare {
+
+public:
+    UserCompare( ) {}
+
+    bool operator() ( const User& u1, const User& u2 );
+
+private:
+    static const unsigned int col = N;
+    static const bool direction = dir;
+};
+
+
+template < >
+class UserCompare < 0, false >
 {
-  return a.GetNick() < b.GetNick();
-}
-static bool
-UserCompareDown(const User& a, const User& b )
+public:
+    bool operator() ( const User& u1, const User& u2 )
+    {
+	return u2.GetNick() <  u1.GetNick() ;
+    }
+};
+
+template < >
+class UserCompare < 0, true >
 {
-  return a.GetNick() > b.GetNick();
-}
+public:
+    bool operator() ( const User& u1, const User& u2 )
+    {
+	return u2.GetNick() >  u1.GetNick() ;
+    }
+};
+
 
 void NickListCtrl::SortList()
 {
@@ -422,11 +446,13 @@ void NickListCtrl::Sort()
     {
         DataIter b = m_data.begin();
         DataIter e = m_data.end();
+	UserCompare< 0, false > cmp0F;
+	UserCompare< 0, true > cmp0T;
 
         if (m_sortorder[0].direction)
-            std::stable_sort( b, e, UserCompareUp );
+            std::stable_sort( b, e, cmp0T );
         else
-            std::stable_sort( b, e, UserCompareDown );
+            std::stable_sort( b, e, cmp0F );
     }
 }
 
