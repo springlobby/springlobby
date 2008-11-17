@@ -71,19 +71,9 @@ class NickListCtrl : public CustomVirtListCtrl
       //wxID_HIGHEST is used by BattleListCTRL. The cant be in the same Tab like BattleTab
     };
 
-    class UserCompare {
-
-    public:
-        UserCompare( const SortOrder& sortorder, unsigned int depth );
-        bool operator() ( User& u1, User& u2 );
-
-    private:
-        unsigned int m_depth;
-        SortOrder m_sortorder;
-    };
-
 
     DECLARE_EVENT_TABLE()
 };
+
 
 #endif // SPRINGLOBBY_HEADERGUARD_NICKLISTCTRL_H

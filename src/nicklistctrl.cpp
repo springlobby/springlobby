@@ -3,6 +3,7 @@
 // Class: NickListCtrl
 //
 
+
 #include <wx/platform.h>
 #include <wx/imaglist.h>
 #include <wx/menu.h>
@@ -331,6 +332,7 @@ void NickListCtrl::OnColClick( wxListEvent& event )
 //    return ((User*)item2)->GetCountry().CmpNoCase(((User*)item1)->GetCountry());
 //}
 
+
 void NickListCtrl::SetTipWindowText( const long item_hit, const wxPoint position)
 {
 
@@ -389,6 +391,31 @@ void NickListCtrl::HighlightItem( long item )
     HighlightItemUser( item, name );
 }
 
+template < int N, bool dir >
+class UserCompare {
+
+public:
+    UserCompare( ) {}
+
+    bool operator() ( const User& u1, const User& u2 );
+
+private:
+    static const unsigned int col = N;
+    static const bool direction = dir;
+};
+
+
+template < >
+bool UserCompare<0,true>::operator() ( const User& u1, const User& u2 )
+{
+    return u1.GetNick() <  u2.GetNick() ;
+}
+
+template <>
+bool UserCompare<0,false>::operator() ( const User& u1, const User& u2 )
+{
+    return u2.GetNick() <  u1.GetNick() ;
+}
 
 void NickListCtrl::SortList()
 {
@@ -402,20 +429,21 @@ void NickListCtrl::SortList()
 //  m_dirty_sort = false;
 }
 
-bool userCompare(  const User u1,  const User u2 )
-{
-    return u1.GetNick() <  u2.GetNick() ;
-}
 
 void NickListCtrl::Sort()
 {
     //if ( m_dirty_sort && m_data.size() > 0 )
     {
-        //UserCompare cmp( m_sortorder, 2 );
+        UserCompare<0,true> cmp0T( );
+        UserCompare<0,false> cmp0F( );
+
         DataIter b = m_data.begin();
         DataIter e = m_data.end();
-        std::sort( b, e, userCompare );
-
+        bool ju = cmp0T( *b, *e );
+        if (m_sortorder[0].direction)
+            std::stable_sort( b, e, cmp0T );
+        else
+            std::stable_sort( b, e, cmp0F );
     }
 }
 
@@ -454,13 +482,4 @@ int NickListCtrl::OnGetItemImage(long item) const
 //  SetItemColumnImage( index, 1, icons().GetFlagIcon( user.GetCountry() ) );
 //  SetItemColumnImage( index, 2, icons().GetRankIcon( user.GetStatus().rank ) );
 
-NickListCtrl::UserCompare::UserCompare( const SortOrder& sortorder, unsigned int depth )
-    : m_depth( depth ), m_sortorder( sortorder )
-{
 
-}
-
-bool NickListCtrl::UserCompare::operator() ( User& u1, User& u2 )
-{
-    return true;//u1.GetNick().CmpNoCase( u2.GetNick() );
-}
