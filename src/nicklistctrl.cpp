@@ -1,4 +1,4 @@
-/* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
+/* Copyright (C) 2007, 2008 The SpringLobby Team. All rights reserved. */
 //
 // Class: NickListCtrl
 //
@@ -391,30 +391,16 @@ void NickListCtrl::HighlightItem( long item )
     HighlightItemUser( item, name );
 }
 
-template < int N, bool dir >
-class UserCompare {
-
-public:
-    UserCompare( ) {}
-
-    bool operator() ( const User& u1, const User& u2 );
-
-private:
-    static const unsigned int col = N;
-    static const bool direction = dir;
-};
-
-
-template < >
-bool UserCompare<0,true>::operator() ( const User& u1, const User& u2 )
+/* Koshi will want to rename these to something that make sense. ;) */
+static bool
+UserCompareUp(const User& a, const User& b )
 {
-    return u1.GetNick() <  u2.GetNick() ;
+  return a.GetNick() < b.GetNick();
 }
-
-template <>
-bool UserCompare<0,false>::operator() ( const User& u1, const User& u2 )
+static bool
+UserCompareDown(const User& a, const User& b )
 {
-    return u2.GetNick() <  u1.GetNick() ;
+  return a.GetNick() > b.GetNick();
 }
 
 void NickListCtrl::SortList()
@@ -434,16 +420,13 @@ void NickListCtrl::Sort()
 {
     //if ( m_dirty_sort && m_data.size() > 0 )
     {
-        UserCompare<0,true> cmp0T( );
-        UserCompare<0,false> cmp0F( );
-
         DataIter b = m_data.begin();
         DataIter e = m_data.end();
-        bool ju = cmp0T( *b, *e );
+
         if (m_sortorder[0].direction)
-            std::stable_sort( b, e, cmp0T );
+            std::stable_sort( b, e, UserCompareUp );
         else
-            std::stable_sort( b, e, cmp0F );
+            std::stable_sort( b, e, UserCompareDown );
     }
 }
 
