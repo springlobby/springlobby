@@ -219,19 +219,6 @@ void NickListCtrl::OnColClick( wxListEvent& event )
   Sort();
 }
 
-
-//int wxCALLBACK NickListCtrl::ComparePlayernameUP(long item1, long item2, long sortData )
-//{
-//    return 0;//( m_data[item1].GetNick().CmpNoCase( m_data[item2].GetNick() );
-//}
-//
-//
-//int wxCALLBACK NickListCtrl::ComparePlayernameDOWN(long item1, long item2, long sortData )
-//{
-//    // inverse the order
-//    return ((User*)item2)->GetNick().CmpNoCase(((User*)item1)->GetNick());
-//}
-//
 //
 //int wxCALLBACK NickListCtrl::ComparePlayerstatusUP(long item1, long item2, long sortData )
 //{
@@ -296,42 +283,6 @@ void NickListCtrl::OnColClick( wxListEvent& event )
 //    return 0;
 //}
 //
-//
-//int wxCALLBACK NickListCtrl::ComparePlayerrankUP(long item1, long item2, long sortData )
-//{
-//    // inverse the order
-//
-//    if ( ((User*)item1)->GetStatus().rank < ((User*)item2)->GetStatus().rank )
-//        return -1;
-//    if ( ((User*)item1)->GetStatus().rank > ((User*)item2)->GetStatus().rank )
-//        return 1;
-//
-//    return 0;
-//}
-//
-//int wxCALLBACK NickListCtrl::ComparePlayerrankDOWN(long item1, long item2, long sortData )
-//{
-//    // inverse the order
-//    if ( ((User*)item1)->GetStatus().rank < ((User*)item2)->GetStatus().rank )
-//        return 1;
-//    if ( ((User*)item1)->GetStatus().rank > ((User*)item2)->GetStatus().rank )
-//        return -1;
-//
-//    return 0;
-//}
-//
-//
-//int wxCALLBACK NickListCtrl::ComparePlayercountryUP(long item1, long item2, long sortData )
-//{
-//    return ((User*)item1)->GetCountry().CmpNoCase(((User*)item2)->GetCountry());
-//}
-//
-//int wxCALLBACK NickListCtrl::ComparePlayercountryDOWN(long item1, long item2, long sortData )
-//{
-//    // inverse the order
-//    return ((User*)item2)->GetCountry().CmpNoCase(((User*)item1)->GetCountry());
-//}
-
 
 void NickListCtrl::SetTipWindowText( const long item_hit, const wxPoint position)
 {
@@ -394,15 +345,18 @@ void NickListCtrl::HighlightItem( long item )
 
 template < int N, bool dir >
 struct UserCompare {
-    static bool compare ( const User& u1, const User& u2 );
 };
 
+template <bool dir>
+struct UserCompare<-1,dir> {
+    typedef User CompareType;
+};
 
 template < >
 struct UserCompare < 3, false >
 {
     static bool compare ( const User& u1, const User& u2 ) {
-        return u2.GetNick() <  u1.GetNick() ;
+        return u1.GetNick() <  u2.GetNick() ;
     }
 };
 
@@ -410,7 +364,9 @@ template < >
 struct UserCompare < 3, true >
 {
     static bool compare ( const User& u1, const User& u2 ) {
-        return u2.GetNick() >  u1.GetNick() ;
+        wxString n1 = u1.GetNick() ;
+        wxString n2 = u2.GetNick() ;
+        return n2.CmpNoCase(n1) < 1;
     }
 };
 
@@ -418,7 +374,7 @@ template < >
 struct UserCompare < 2, false >
 {
     static bool compare ( const User& u1, const User& u2 ) {
-        return u2.GetNick() <  u1.GetNick() ;
+            return u1.GetStatus().rank < u2.GetStatus().rank;
     }
 };
 
@@ -426,16 +382,35 @@ template < >
 struct UserCompare < 2, true >
 {
     static bool compare ( const User& u1, const User& u2 ) {
-        return u2.GetNick() >  u1.GetNick() ;
+        return u2.GetStatus().rank < u1.GetStatus().rank;
     }
 };
 
-template < int C0, bool B0,int C1, bool B1,int C2, bool B2 >
+template < >
+struct UserCompare < 1, false >
+{
+    static bool compare ( const User& u1, const User& u2 ) {
+        return u1.GetCountry() < u2.GetCountry();
+    }
+};
+
+template < >
+struct UserCompare < 1, true >
+{
+    static bool compare ( const User& u1, const User& u2 ) {
+        return u2.GetCountry() < u1.GetCountry();
+    }
+};
+
+template < template <int n, bool b > class Comparator ,int C0, bool B0,int C1, bool B1,int C2, bool B2 >
 struct Compare {
-    bool operator () ( const User& u1, const User& u2 ) {
-        if ( !UserCompare<C0,B0>::compare( u1, u2 ) ) {
-            if ( !UserCompare<C1,B1>::compare( u1, u2 ) ) {
-                if ( !UserCompare<C2,B2>::compare( u1, u2 ) ) {
+
+    typedef typename Comparator<-1,B1>::CompareType ObjType;
+
+    static bool compare ( const ObjType& u1, const ObjType& u2 ) {
+        if ( !Comparator<C0,B0>::compare( u1, u2 ) ) {
+            if ( !Comparator<C1,B1>::compare( u1, u2 ) ) {
+                if ( !Comparator<C2,B2>::compare( u1, u2 ) ) {
                     return false;
                 }
                 return true;
@@ -446,10 +421,23 @@ struct Compare {
     }
 };
 
+template < template <int n, bool b > class Comparator  >
+struct CompareSelector {
+
+    typedef typename Comparator<-1,false>::CompareType ObjType;
+    typedef bool  (*cmp)  ( const ObjType& , const ObjType&  )  ;
+
+    static cmp GetFunctor( int c1, bool b1,int c2, bool b2,int c3, bool b3 )
+    {
+
+        return  &(Compare< UserCompare, 3, true, 2, true, 1, true  >::compare);
+    }
+};
+
 
 void NickListCtrl::SortList()
 {
-//  if ( !m_dirty_sort ) return;
+  if ( !m_dirty_sort ) return;
 //  SetSelectionRestorePoint();
   Freeze();
   Sort();
@@ -466,13 +454,9 @@ void NickListCtrl::Sort()
     {
         DataIter b = m_data.begin();
         DataIter e = m_data.end();
-        Compare< 3, false, 2, true, 3, false  > cmp0F;
-        Compare< 2, true, 3, false, 2, true > cmp0T;
 
-        if (m_sortorder[0].direction)
-            std::stable_sort( b, e, cmp0T );
-        else
-            std::stable_sort( b, e, cmp0F );
+        std::sort( b, e, CompareSelector<UserCompare>::GetFunctor( 3,true,2,true,1,true ) );
+
     }
 }
 

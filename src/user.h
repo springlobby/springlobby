@@ -13,14 +13,14 @@ const unsigned int SYNC_UNSYNCED = 2;
 //! @brief Struct used to store a client's status.
 struct UserStatus {
     enum RankContainer {
-      RANK_UNKNOWN,
-      RANK_1,
-      RANK_2,
-      RANK_3,
-      RANK_4,
-      RANK_5,
-      RANK_6,
-      RANK_7
+      RANK_UNKNOWN = 0,
+      RANK_1 = 1,
+      RANK_2 = 2,
+      RANK_3 = 3,
+      RANK_4 = 4,
+      RANK_5 = 5,
+      RANK_6 = 6,
+      RANK_7 = 7
     };
 
   bool in_game;

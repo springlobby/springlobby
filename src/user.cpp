@@ -159,6 +159,8 @@ User& User::operator= ( const User& other )
         m_cpu = other.GetCpu();
         m_country = other.GetCountry();
         m_bstatus = other.GetBattleStatus();
+        uidata = other.uidata;
+
 
     }
     return *this;
