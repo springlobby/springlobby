@@ -342,26 +342,24 @@ void NickListCtrl::HighlightItem( long item )
     HighlightItemUser( item, name );
 }
 
-
-template < int N, bool dir >
-struct UserCompare {
+struct UserCompareBase {
+    typedef const User& CompareType;
 };
 
-template <bool dir>
-struct UserCompare<-1,dir> {
-    typedef User CompareType;
+template < int N, bool dir >
+struct UserCompare : public UserCompareBase {
 };
 
 template < >
-struct UserCompare < 3, false >
+struct UserCompare < 3, false > : public UserCompareBase
 {
-    static bool compare ( const User& u1, const User& u2 ) {
+    static bool compare ( CompareType u1, CompareType u2 ) {
         return u1.GetNick() <  u2.GetNick() ;
     }
 };
 
 template < >
-struct UserCompare < 3, true >
+struct UserCompare < 3, true > : public UserCompareBase
 {
     static bool compare ( const User& u1, const User& u2 ) {
         wxString n1 = u1.GetNick() ;
@@ -371,43 +369,43 @@ struct UserCompare < 3, true >
 };
 
 template < >
-struct UserCompare < 2, false >
+struct UserCompare < 2, false > : public UserCompareBase
 {
-    static bool compare ( const User& u1, const User& u2 ) {
+    static bool compare ( CompareType u1, CompareType u2 ) {
             return u1.GetStatus().rank < u2.GetStatus().rank;
     }
 };
 
 template < >
-struct UserCompare < 2, true >
+struct UserCompare < 2, true > : public UserCompareBase
 {
-    static bool compare ( const User& u1, const User& u2 ) {
+    static bool compare ( CompareType u1, CompareType u2 ) {
         return u2.GetStatus().rank < u1.GetStatus().rank;
     }
 };
 
 template < >
-struct UserCompare < 1, false >
+struct UserCompare < 1, false > : public UserCompareBase
 {
-    static bool compare ( const User& u1, const User& u2 ) {
+    static bool compare ( CompareType u1, CompareType u2 ) {
         return u1.GetCountry() < u2.GetCountry();
     }
 };
 
 template < >
-struct UserCompare < 1, true >
+struct UserCompare < 1, true > : public UserCompareBase
 {
-    static bool compare ( const User& u1, const User& u2 ) {
+    static bool compare ( CompareType u1, CompareType u2 ) {
         return u2.GetCountry() < u1.GetCountry();
     }
 };
 
 template < template <int n, bool b > class Comparator ,int C0, bool B0,int C1, bool B1,int C2, bool B2 >
-struct Compare {
+struct Compare
+{
 
-    typedef typename Comparator<-1,B1>::CompareType ObjType;
-
-    static bool compare ( const ObjType& u1, const ObjType& u2 ) {
+    typedef typename Comparator<-1,false>::CompareType ObjType;
+    static bool compare ( ObjType u1, ObjType u2 ) {
         if ( !Comparator<C0,B0>::compare( u1, u2 ) ) {
             if ( !Comparator<C1,B1>::compare( u1, u2 ) ) {
                 if ( !Comparator<C2,B2>::compare( u1, u2 ) ) {
@@ -425,7 +423,7 @@ template < template <int n, bool b > class Comparator  >
 struct CompareSelector {
 
     typedef typename Comparator<-1,false>::CompareType ObjType;
-    typedef bool  (*cmp)  ( const ObjType& , const ObjType&  )  ;
+    typedef bool  (*cmp)  ( ObjType , ObjType  )  ;
 
     static cmp GetFunctor( int c1, bool b1,int c2, bool b2,int c3, bool b3 )
     {
