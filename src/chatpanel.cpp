@@ -323,7 +323,7 @@ void ChatPanel::CreateControls( )
   /* Set up text styles */
   /** @todo Make URL color/style configurable */
   m_chatlog_url_style = new wxRichTextAttr;
-  m_chatlog_url_style->SetTextColour( sett().GetChatColorAction() );
+  m_chatlog_url_style->SetTextColour( sett().GetChatColor("URL") );
   m_chatlog_url_style->SetFontUnderlined(true);
 
   // Accelerators
