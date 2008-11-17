@@ -69,7 +69,7 @@ Settings::Settings()
   {
      // if directory doesn't exist, try to create it
      if ( !IsPortableMode() && !wxFileName::DirExists( wxStandardPaths::Get().GetUserDataDir() ) )
-         wxFileName::Mkdir( wxStandardPaths::Get().GetUserDataDir() );
+         wxFileName::Mkdir( wxStandardPaths::Get().GetUserDataDir(), 0755 );
 
      wxFileOutputStream outstream( m_chosed_path );
 
@@ -158,12 +158,12 @@ wxString Settings::GetLobbyWriteDir()
   wxString path = GetCurrentUsedDataDir() + sep + _T("lobby");
   if ( !wxFileName::DirExists( path ) )
   {
-    if ( !wxFileName::Mkdir(  path  ) ) return wxEmptyString;
+    if ( !wxFileName::Mkdir(  path, 0755  ) ) return wxEmptyString;
   }
   path += sep + _T("SpringLobby") + sep;
   if ( !wxFileName::DirExists( path ) )
   {
-    if ( !wxFileName::Mkdir(  path  ) ) return wxEmptyString;
+    if ( !wxFileName::Mkdir(  path, 0755  ) ) return wxEmptyString;
   }
   return path;
 }
@@ -240,7 +240,7 @@ wxString Settings::GetCachePath()
   wxString path = GetLobbyWriteDir() + _T("cache") + wxFileName::GetPathSeparator();
   if ( !wxFileName::DirExists( path ) )
   {
-    if ( !wxFileName::Mkdir(  path  ) ) return wxEmptyString;
+    if ( !wxFileName::Mkdir(  path, 0755  ) ) return wxEmptyString;
   }
   return path;
 }
@@ -852,7 +852,7 @@ wxString Settings::GetChatLogLoc()
     wxString path = GetLobbyWriteDir() + _T("chatlog");
     if ( !wxFileName::DirExists( path ) )
     {
-      if ( !wxFileName::Mkdir(  path  ) ) return wxEmptyString;
+      if ( !wxFileName::Mkdir(  path, 0755  ) ) return wxEmptyString;
     }
     return path;
 }
