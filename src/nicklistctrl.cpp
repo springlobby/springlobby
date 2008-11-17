@@ -361,10 +361,11 @@ struct UserCompare < 3, false > : public UserCompareBase
 template < >
 struct UserCompare < 3, true > : public UserCompareBase
 {
-    static bool compare ( const User& u1, const User& u2 ) {
+    static bool compare ( CompareType u1, CompareType u2 ) {
         wxString n1 = u1.GetNick() ;
         wxString n2 = u2.GetNick() ;
         return n2.CmpNoCase(n1) < 1;
+        //return STD_STRING( n2 ).compare( STD_STRING( n1 ) ) < 1;
     }
 };
 

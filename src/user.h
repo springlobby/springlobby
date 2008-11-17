@@ -118,8 +118,8 @@ class User : public CommonUser
 
     mutable UiUserData uidata;
 
-    User( Server& serv ): CommonUser( wxString(),wxString(),0 ), m_serv(serv), m_battle(0) {}
-    User( const wxString& nick, Server& serv ) : CommonUser( nick,wxString(),0 ),m_serv(serv), m_battle(0){}
+    User( Server& serv ): CommonUser( _T("none"),_T("unknown"),0 ), m_serv(serv), m_battle(0) {}
+    User( const wxString& nick, Server& serv ) : CommonUser( nick,_T("unknown"),0 ),m_serv(serv), m_battle(0){}
     User( const wxString& nick, const wxString& country, const int& cpu, Server& serv) :
       CommonUser( nick,country,cpu ) ,m_serv(serv), m_battle(0) {}
 
