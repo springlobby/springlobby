@@ -975,7 +975,7 @@ void TorrentWrapper::RemoveUnneededTorrents()
                 wxString basepath = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + getDataSubdirForType(it->second->type);
                 wxString targetName = basepath + wxFileName::GetPathSeparator() + TowxString(it->first.name());
 
-                if ( !wxFileName::DirExists( basepath ) ) wxFileName::wxMkDir( basepath, 0755 );
+                if ( !wxFileName::DirExists( basepath ) ) wxFileName::Mkdir( basepath, 0755 );
                 ASSERT_EXCEPTION( RemoveTorrentByRow( it->second ), _T("failed to remove torrent: ")+ it->second->hash );
 
                 /* Move file from temporary download directory to final destination.  `false' for

@@ -796,7 +796,7 @@ wxString Settings::GetCurrentUsedDataDir()
   #ifdef __WXMSW__
   if ( dir.IsEmpty() ) dir = wxStandardPathsBase::Get().GetExecutablePath().BeforeLast( wxFileName::GetPathSeparator() ); /// fallback
   #else
-  if ( dir.IsEmpty() ) dir = wxFileName()::GetHomeDir() + wxFileName::GetPathSeparator() + _T(".spring"); /// fallback
+  if ( dir.IsEmpty() ) dir = wxFileName::GetHomeDir() + wxFileName::GetPathSeparator() + _T(".spring"); /// fallback
   #endif
   return dir;
 }
