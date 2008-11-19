@@ -7,6 +7,7 @@
 #include <wx/event.h>
 #include <wx/string.h>
 #include <wx/menu.h>
+#include <wx/textctrl.h>
 
 #include "chatlog.h"
 #include "usermenu.h"
@@ -48,6 +49,14 @@ enum HighlightType
   highlight_say,
   highlight_join_leave,
   highlight_important
+};
+
+struct ChatLine
+{
+  wxString chat;
+  wxString time;
+  wxTextAttr timestyle;
+  wxTextAttr chatstyle;
 };
 
 /*! @brief wxPanel that contains a chat.
@@ -119,9 +128,7 @@ class ChatPanel : public wxPanel
     void OnLinkEvent( wxTextUrlEvent& event );
     void OnMouseDown( wxMouseEvent& event );
 
-    void OnMenuSelectAll( wxCommandEvent& event );
-    void OnMenuCopy( wxCommandEvent& event );
-    void OnChannelMenuClear ( wxCommandEvent& event );
+    void OnMenuToggleAppend( wxCommandEvent& event );
 
     void OnChannelMenuLeave( wxCommandEvent& event );
     void OnChannelMenuDisplayJoinLeave( wxCommandEvent& event );
@@ -180,6 +187,7 @@ class ChatPanel : public wxPanel
   protected:
     void _SetChannel( Channel* channel );
     void OutputLine( const wxString& message, const wxColour& col, const wxFont& fon );
+    void OutputLine( const ChatLine& line );
     void SetIconHighlight( HighlightType highlight );
 
     bool ContainsWordToHighlight( const wxString& message );
@@ -224,6 +232,7 @@ class ChatPanel : public wxPanel
 
     wxMenu* m_popup_menu;
     wxMenuItem* m_autorejoin;
+    wxMenuItem* m_append_menu;
     ChatLog* m_chat_log;
     wxMenuItem* displayjoinitem;
     typedef SL_GENERIC::UserMenu<ChatPanel> UserMenu;
@@ -243,6 +252,9 @@ class ChatPanel : public wxPanel
     static const int m_groupMenu_baseID = 6798;
 	TextCompletionDatabase textcompletiondatabase;
 
+    std::vector<ChatLine> m_buffer;
+    bool m_disable_append;
+
     DECLARE_EVENT_TABLE();
 };
 
@@ -251,6 +263,8 @@ enum
     CHAT_SEND = wxID_HIGHEST,
     CHAT_TEXT,
     CHAT_LOG,
+
+    CHAT_MENU_DISABLE_APPEND,
 
     CHAT_MENU_CH_CLEAR,
     CHAT_MENU_CH_LEAVE,
