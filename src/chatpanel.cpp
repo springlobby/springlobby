@@ -1628,7 +1628,7 @@ void ChatPanel::OnMenuToggleAppend( wxCommandEvent& event )
   if ( !m_disable_append )
   {
     for ( std::vector<ChatLine>::iterator iter = m_buffer.begin(); iter < m_buffer.end() ; iter++ ) OutputLine( *iter );
-    m_buffer.clear()
+    m_buffer.clear();
   }
 }
 
