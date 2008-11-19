@@ -1127,15 +1127,15 @@ bool Settings::GetDisplayJoinLeave( const wxString& channel  )
 }
 
 
-void Settings::SetChatHistoryLenght( unsigned int historylines )
+void Settings::SetChatHistoryLenght( int historylines )
 {
-    m_config->Write( _T("/Chat/HistoryLinesLenght/"), (int)historylines);
+    m_config->Write( _T("/Chat/HistoryLinesLenght/"), historylines);
 }
 
 
-unsigned int Settings::GetChatHistoryLenght()
+int Settings::GetChatHistoryLenght()
 {
-    return (unsigned int)m_config->Read( _T("/Chat/HistoryLinesLenght/"), 1000);
+    return m_config->Read( _T("/Chat/HistoryLinesLenght/"), 1000);
 }
 
 

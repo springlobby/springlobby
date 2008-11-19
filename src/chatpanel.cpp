@@ -593,7 +593,8 @@ void ChatPanel::OutputLine( const ChatLine& line )
   m_chatlog_text->AppendText( line.chat + _T( "\n" ) );
 
   // crop lines from history that exceeds limit
-  if ( size_t( m_chatlog_text->GetNumberOfLines() ) > sett().GetChatHistoryLenght() && sett().GetChatHistoryLenght() > 0 )
+  int maxlenght = sett().GetChatHistoryLenght();
+  if ( ( maxlenght > 0 ) && ( m_chatlog_text->GetNumberOfLines() > sett().GetChatHistoryLenght() ) )
   {
 		int end = 0;
 		for ( int i = 0; i < 20; i++ ) end += m_chatlog_text->GetLineLength( i ) + 1;
