@@ -117,8 +117,6 @@ class ChatPanel : public wxPanel
 
     bool IsOk();
 
-    void CheckLength();
-
     void OnUserDisconnected();
     void OnUserConnected();
 

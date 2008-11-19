@@ -548,15 +548,6 @@ User* ChatPanel::GetSelectedUser()
 }
 
 
-void ChatPanel::CheckLength()
-{
-	if ( size_t( m_chatlog_text->GetNumberOfLines() ) > sett().GetChatHistoryLenght() && sett().GetChatHistoryLenght() > 0 ) {
-		int end = 0;
-		for ( int i = 0; i < 20; i++ ) end += m_chatlog_text->GetLineLength( i ) + 1;
-		m_chatlog_text->Remove( 0, end );
-	}
-}
-
 User& ChatPanel::GetMe()
 {
 	return m_ui.GetServer().GetMe();
@@ -593,23 +584,23 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const 
 
 void ChatPanel::OutputLine( const ChatLine& line )
 {
-  #if  defined(__WXMSW__)
-    m_chatlog_text->Freeze();
-  #endif
+//  m_chatlog_text->Freeze();
 
   m_chatlog_text->SetDefaultStyle( line.timestyle );
   m_chatlog_text->AppendText( line.time );
 
   m_chatlog_text->SetDefaultStyle( line.chatstyle );
   m_chatlog_text->AppendText( line.chat + _T( "\n" ) );
-  CheckLength(); /// crop lines from history that exceeds limit
 
-  m_chatlog_text->ScrollLines( 10 ); /// to prevent for weird empty space appended
-  m_chatlog_text->ShowPosition( m_chatlog_text->GetLastPosition() );/// scroll to the bottom
+  // crop lines from history that exceeds limit
+  if ( size_t( m_chatlog_text->GetNumberOfLines() ) > sett().GetChatHistoryLenght() && sett().GetChatHistoryLenght() > 0 )
+  {
+		int end = 0;
+		for ( int i = 0; i < 20; i++ ) end += m_chatlog_text->GetLineLength( i ) + 1;
+		m_chatlog_text->Remove( 0, end );
+	}
 
-  #if  defined(__WXMSW__)
-    m_chatlog_text->Thaw();
-  #endif
+//  m_chatlog_text->Thaw();
 }
 
 void ChatPanel::OnResize( wxSizeEvent& event )
