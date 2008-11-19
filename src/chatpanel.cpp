@@ -584,7 +584,7 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const 
 
 void ChatPanel::OutputLine( const ChatLine& line )
 {
-//  m_chatlog_text->Freeze();
+  m_chatlog_text->Freeze();
 
   m_chatlog_text->SetDefaultStyle( line.timestyle );
   m_chatlog_text->AppendText( line.time );
@@ -601,7 +601,7 @@ void ChatPanel::OutputLine( const ChatLine& line )
 		m_chatlog_text->Remove( 0, end );
 	}
 
-//  m_chatlog_text->Thaw();
+  m_chatlog_text->Thaw();
 }
 
 void ChatPanel::OnResize( wxSizeEvent& event )
