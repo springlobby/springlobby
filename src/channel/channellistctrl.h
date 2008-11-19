@@ -1,10 +1,10 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_CHANNELLISTCTRL_H
 #define SPRINGLOBBY_HEADERGUARD_CHANNELLISTCTRL_H
 
-#include "../customlistctrl.h"
+#include "../customvirtlistctrl.h"
 
 
-class ChannelListctrl : public CustomListCtrl
+class ChannelListctrl : public CustomVirtListCtrl
 {
     public:
         ChannelListctrl(wxWindow* parent, wxWindowID id, const wxString& name = _T("ChannelListCtrl"),
@@ -16,6 +16,23 @@ class ChannelListctrl : public CustomListCtrl
         void ClearChannels();
         wxString GetInfo();
         void FilterChannel( const wxString& partial );
+
+            //these are overloaded to use list in virtual style
+        virtual wxString OnGetItemText(long item, long column) const;
+        virtual int OnGetItemImage(long item) const;
+        virtual int OnGetItemColumnImage(long item, long column) const;
+
+        struct ChannelInfo
+        {
+            ChannelInfo()
+                : name(_T("")), usercount(0),topic(_T("")) {}
+            ChannelInfo( const wxString& name_, int usercount_, const wxString& topic_ = wxEmptyString )
+                : name(name_), usercount(usercount_),topic(topic_) {}
+
+            wxString name;
+            int usercount;
+            wxString topic;
+        };
 
     protected:
         void Sort();
@@ -36,20 +53,10 @@ class ChannelListctrl : public CustomListCtrl
 
         };
 
-        struct ChannelInfo
-        {
-            ChannelInfo()
-                : name(_T("")), usercount(0),topic(_T("")) {}
-            ChannelInfo( const wxString& name_, int usercount_, const wxString& topic_ = wxEmptyString )
-                : name(name_), usercount(usercount_),topic(topic_) {}
 
-            wxString name;
-            int usercount;
-            wxString topic;
-        };
-
-        typedef std::map<long, ChannelInfo > ChannelInfoMap;
-        typedef ChannelInfoMap::const_iterator ChannelInfoIter;
+        typedef std::vector< ChannelInfo > ChannelInfoMap;
+        //typedef ChannelInfoMap::const_iterator ChannelInfoIter;
+        typedef ChannelInfoMap::iterator ChannelInfoIter;
         ChannelInfoMap m_data;
 
 

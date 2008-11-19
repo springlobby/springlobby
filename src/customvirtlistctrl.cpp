@@ -25,7 +25,7 @@ END_EVENT_TABLE()
 //wxTipWindow* CustomVirtListCtrl::m_tipwindow = 0;
 CustomVirtListCtrl::CustomVirtListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pt, const wxSize& sz,long style,wxString name,
                                unsigned int column_count, bool highlight, UserActions::ActionType hlaction ):
-  ListBaseType(parent, id, pt, sz, style),
+  ListBaseType(parent, id, pt, sz, style | wxLC_VIRTUAL),
   m_tiptimer(this, IDD_TIP_TIMER),
   m_tiptext(_T("")),
 #if wxUSE_TIPWINDOW

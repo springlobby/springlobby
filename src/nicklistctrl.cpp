@@ -24,6 +24,7 @@
 #include "chatpanel.h"
 #include "userlist.h"
 #include "usermenu.h"
+#include "Helper/sortutil.h"
 
 
 int wxCALLBACK NickListSortCallback(long item1, long item2, long sortData);
@@ -401,38 +402,6 @@ struct UserCompare < 1, true > : public UserCompareBase
     }
 };
 
-template < template <int n, bool b > class Comparator ,int C0, bool B0,int C1, bool B1,int C2, bool B2 >
-struct Compare
-{
-
-    typedef typename Comparator<-1,false>::CompareType ObjType;
-    static bool compare ( ObjType u1, ObjType u2 ) {
-        if ( !Comparator<C0,B0>::compare( u1, u2 ) ) {
-            if ( !Comparator<C1,B1>::compare( u1, u2 ) ) {
-                if ( !Comparator<C2,B2>::compare( u1, u2 ) ) {
-                    return false;
-                }
-                return true;
-            }
-            return true;
-        }
-        return true;
-    }
-};
-
-template < template <int n, bool b > class Comparator  >
-struct CompareSelector {
-
-    typedef typename Comparator<-1,false>::CompareType ObjType;
-    typedef bool  (*cmp)  ( ObjType , ObjType  )  ;
-
-    static cmp GetFunctor( int c1, bool b1,int c2, bool b2,int c3, bool b3 )
-    {
-
-        return  &(Compare< UserCompare, 3, true, 2, true, 1, true  >::compare);
-    }
-};
-
 
 void NickListCtrl::SortList()
 {
@@ -454,7 +423,7 @@ void NickListCtrl::Sort()
         DataIter b = m_data.begin();
         DataIter e = m_data.end();
 
-        std::sort( b, e, CompareSelector<UserCompare>::GetFunctor( 3,true,2,true,1,true ) );
+//        std::sort( b, e, CompareSelector<UserCompare>::GetFunctor( 3,true,2,true,1,true ) );
 
     }
 }
