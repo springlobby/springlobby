@@ -584,7 +584,9 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const 
 
 void ChatPanel::OutputLine( const ChatLine& line )
 {
+  #ifdef __WXMSW__
   m_chatlog_text->Freeze();
+  #endif
 
   m_chatlog_text->SetDefaultStyle( line.timestyle );
   m_chatlog_text->AppendText( line.time );
@@ -600,8 +602,11 @@ void ChatPanel::OutputLine( const ChatLine& line )
 		for ( int i = 0; i < 20; i++ ) end += m_chatlog_text->GetLineLength( i ) + 1;
 		m_chatlog_text->Remove( 0, end );
 	}
-
+  #ifdef __WXMSW__
+  m_chatlog_text->ScrollLines( 10 ); // to prevent for weird empty space appended
+  m_chatlog_text->ShowPosition( m_chatlog_text->GetLastPosition() );// scroll to the bottom
   m_chatlog_text->Thaw();
+  #endif
 }
 
 void ChatPanel::OnResize( wxSizeEvent& event )
