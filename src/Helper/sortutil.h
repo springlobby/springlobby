@@ -29,7 +29,8 @@ struct CompareSelector {
     static cmp GetFunctor( int c1, bool b1,int c2, bool b2,int c3, bool b3 )
     {
 
-        return  &(Compare< Comparator, 1, false, 0, true, 0, true  >::compare);
+//        return  &(Compare< Comparator, 1, false, 0, true, 0, true  >::compare);
+        return  &(Compare< Comparator, 3, false, 1, true, 1, true  >::compare);
     }
 };
 
@@ -53,6 +54,25 @@ void SLBubbleSort( ContainerType& data, bool  (*cmp)  ( ObjType , ObjType  ) )
                 swapped = true;
             }
         }
+    }
+}
+
+template< class ContainerType, class ObjType >
+void SLInsertionSort( ContainerType& data, bool  (*cmp)  ( ObjType , ObjType  ) )
+{
+    const int n = data.size();
+    for ( int i = 0; i < n; i++ )
+    {
+        ObjType v = data[i];
+        int j;
+
+        for ( j = i - 1; j >= 0; j--)
+        {
+            if ( cmp( data[j], v ) )
+                break;
+            data[j + 1] = data[j];
+        }
+        data[j + 1] = v;
     }
 
 }

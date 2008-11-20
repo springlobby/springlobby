@@ -3,7 +3,6 @@
 // Class: NickListCtrl
 //
 
-
 #include <wx/platform.h>
 #include <wx/imaglist.h>
 #include <wx/menu.h>
@@ -26,6 +25,8 @@
 #include "usermenu.h"
 #include "Helper/sortutil.h"
 
+//#define LOCKDATA wxMutexLocker(*s_dataGuard);
+#define LOCKDATA
 
 int wxCALLBACK NickListSortCallback(long item1, long item2, long sortData);
 
@@ -79,6 +80,7 @@ NickListCtrl::NickListCtrl( wxWindow* parent, bool show_header, NickListCtrl::Us
   m_sortorder[3].col = 1;
   m_sortorder[3].direction = true;
 
+    s_dataGuard = new wxMutex();
 }
 
 
@@ -100,6 +102,7 @@ void NickListCtrl::AddUser( const User& user )
 {
     wxLogDebugFunc(_T(""));
     assert(&user);
+    LOCKDATA
 
 //  int index = InsertItem( GetItemCount(), wxEmptyString );
 //  if(index==-1){
@@ -124,6 +127,7 @@ void NickListCtrl::AddUser( const User& user )
 
 void NickListCtrl::RemoveUser( const User& user )
 {
+    LOCKDATA
   int index = GetUserIndex( user );
 
   if ( index != -1 )
@@ -139,6 +143,7 @@ void NickListCtrl::RemoveUser( const User& user )
 
 void NickListCtrl::UserUpdated( const User& user )
 {
+    LOCKDATA
     int index = GetUserIndex( user );
     m_data[index] = user;
     RefreshItem( index );
@@ -154,6 +159,7 @@ void NickListCtrl::UserUpdated( const User& user )
 
 void NickListCtrl::ClearUsers()
 {
+    LOCKDATA
     m_data.clear();
     SetItemCount( 0 );
 }
@@ -407,10 +413,10 @@ void NickListCtrl::SortList()
 {
   if ( !m_dirty_sort ) return;
 //  SetSelectionRestorePoint();
-  Freeze();
-  Sort();
-  Thaw();
-  RefreshItems(0, m_data.size()-1 );
+    Freeze();
+    Sort();
+    Thaw();
+    RefreshItems(0, m_data.size()-1 );
 //  RestoreSelection();
 //  m_dirty_sort = false;
 }
@@ -418,12 +424,11 @@ void NickListCtrl::SortList()
 
 void NickListCtrl::Sort()
 {
-    //if ( m_dirty_sort && m_data.size() > 0 )
+    if ( m_dirty_sort && m_data.size() > 0 )
     {
-        DataIter b = m_data.begin();
-        DataIter e = m_data.end();
-
-//        std::sort( b, e, CompareSelector<UserCompare>::GetFunctor( 3,true,2,true,1,true ) );
+        LOCKDATA
+//        SLInsertionSort( m_data, CompareSelector<UserCompare>::GetFunctor( 3,true,2,true,1,true ) );
+        SLBubbleSort( m_data, CompareSelector<UserCompare>::GetFunctor( 3,true,2,true,1,true ) );
 
     }
 }

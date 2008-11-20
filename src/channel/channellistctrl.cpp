@@ -5,6 +5,8 @@
 #include <algorithm>
 #include "../Helper/sortutil.h"
 
+
+
 BEGIN_EVENT_TABLE( ChannelListctrl, CustomVirtListCtrl )
   EVT_LIST_ITEM_ACTIVATED( CHANNELLIST, ChannelListctrl::OnActivateItem )
   EVT_LIST_COL_CLICK( CHANNELLIST, ChannelListctrl::OnColClick )
@@ -135,7 +137,7 @@ struct ChannelCompare < 1, false > : public ChannelCompareBase
 void ChannelListctrl::Sort()
 {
 //    std::sort( m_data.begin(), m_data.end(), CompareSelector<ChannelCompare>::GetFunctor( 3,true,2,true,1,true ) );
-    SLBubbleSort( m_data, CompareSelector<ChannelCompare>::GetFunctor( 3,true,2,true,1,true ) );
+    //SLInsertionSort( m_data, CompareSelector<ChannelCompare>::GetFunctor( 3,true,2,true,1,true ) );
     RefreshItems( 0, m_data.size() );
 }
 

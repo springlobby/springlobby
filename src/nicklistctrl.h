@@ -9,6 +9,7 @@ class UserList;
 class Ui;
 class ChatPanel;
 class UserMenu;
+class wxMutex;
 
 class NickListCtrl : public CustomVirtListCtrl
 {
@@ -62,7 +63,7 @@ class NickListCtrl : public CustomVirtListCtrl
     typedef DataVec::iterator DataIter;
     typedef DataVec::const_iterator DataCIter;
     DataVec m_data;
-
+    wxMutex* s_dataGuard;
 
     UserMenu* m_menu;
 
