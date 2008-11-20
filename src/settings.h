@@ -394,8 +394,8 @@ class Settings
     void   SetChatLogLoc( const wxString& loc );
 
     //!@brief sets how many lines can stay in a chat panel before the old will start getting erased, 0 to disable
-    void SetChatHistoryLenght( unsigned int historylines );
-    unsigned int GetChatHistoryLenght();
+    void SetChatHistoryLenght( int historylines );
+    int GetChatHistoryLenght();
 
     void SetChatPMSoundNotificationEnabled( bool enabled );
     bool GetChatPMSoundNotificationEnabled();

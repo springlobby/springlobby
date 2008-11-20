@@ -9,6 +9,19 @@
 #include "../settings.h"
 #include "../springunitsynclib.h"
 
+static bool standalonemode;
+
+bool IsSettingsStandAlone()
+{
+  return standalonemode;
+}
+
+void SetSettingsStandAlone( bool value )
+{
+  standalonemode = value;
+}
+
+
 int fromString(const wxString& s) {
         long temp = 0;
         s.ToLong(&temp);
@@ -17,31 +30,16 @@ int fromString(const wxString& s) {
 
 void loadUnitsync()
 {
-	//should be done in susynclib().Load
-	//wxSetWorkingDirectory(OptionsHandler.getUsyncLoc().BeforeLast('\\'));
-#ifdef __WXMSW__
-	try
-	{
-		wxCriticalSection m_lock;
-		wxCriticalSectionLocker lock_criticalsection(m_lock);
-		susynclib().Load(_T("unitsync.dll"), false);
-	}
-	catch (...)
-	{
-#endif
-        try
-        {
-            wxCriticalSection m_lock;
-            wxCriticalSectionLocker lock_criticalsection(m_lock);
-            susynclib().Load(sett().GetCurrentUsedUnitSync(), false);
-        }
-        catch (...)
-        {
-            wxLogError( _T("springsettings: couldn't load unitsync") );
-        }
-#ifdef __WXMSW__
-	}
-#endif
+  try
+  {
+      wxCriticalSection m_lock;
+      wxCriticalSectionLocker lock_criticalsection(m_lock);
+      susynclib().Load(sett().GetCurrentUsedUnitSync(), IsSettingsStandAlone());
+  }
+  catch (...)
+  {
+      wxLogError( _T("springsettings: couldn't load unitsync") );
+  }
 }
 
 void openUrl(const wxString& url)

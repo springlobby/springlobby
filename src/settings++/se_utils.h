@@ -21,5 +21,8 @@ wxString towxString(T arg){
 }
 /** @} */
 
+bool IsSettingsStandAlone();
+void SetSettingsStandAlone( bool value );
+
 #endif /*SE_UTILS_H_*/
 
