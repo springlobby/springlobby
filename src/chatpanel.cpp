@@ -839,14 +839,14 @@ void ChatPanel::SetTopic( const wxString& who, const wxString& message )
 	f.SetFamily( wxFONTFAMILY_MODERN );
   // change the image of the tab to show new events
   SetIconHighlight( highlight_say );
-  OutputLine( _( "** Channel topic:" ), sett().GetChatColorServer(), f );
+  OutputLine( _( " ** Channel topic:" ), sett().GetChatColorServer(), f );
   wxStringTokenizer tkz( refined, _T("\n") );
 	while ( tkz.HasMoreTokens() )
 	{
 	  wxString msg = tkz.GetNextToken().Strip();
-	  OutputLine( msg, sett().GetChatColorServer(), f );
+	  OutputLine( _T(" ") + msg, sett().GetChatColorServer(), f );
 	}
-	OutputLine( _( "** Set by " ) + who, sett().GetChatColorServer(), f );
+	OutputLine( _( " ** Set by " ) + who, sett().GetChatColorServer(), f );
 }
 
 
