@@ -227,7 +227,7 @@ void ServerEvents::OnJoinedBattle( int battleid, const wxString& hash )
   UserBattleStatus& bs = m_serv.GetMe().BattleStatus();
   bs.spectator = false;
 
-  if ( !battle.IsFounderMe() )
+  if ( !battle.IsFounderMe() || battle.IsProxy() )
   {
     battle.CustomBattleOptions().loadOptions( OptionsWrapper::MapOption, battle.GetHostMapName() );
     battle.CustomBattleOptions().loadOptions( OptionsWrapper::ModOption, battle.GetHostModName() );
