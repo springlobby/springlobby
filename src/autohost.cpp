@@ -41,12 +41,14 @@ void AutoHost::OnSaidBattle( const wxString& nick, const wxString& msg )
     StartBattle();
     m_lastActionTime = currentTime;
   }
-  else if (msg == _T("!balance")) {
-    m_battle.Autobalance(IBattle::balance_random, false, false);
+  else if ( msg.StartsWith( _T("!balance") ) ) {
+    unsigned int num = s2l( msg.AfterFirst( _T(' ') ) );
+    m_battle.Autobalance(IBattle::balance_random, false, false, num);
     m_lastActionTime = currentTime;
   }
-  else if (msg == _T("!cbalance")) {
-    m_battle.Autobalance(IBattle::balance_random, true, false);
+  else if ( msg.StartsWith( _T("!cbalance") ) ) {
+    unsigned int num = s2l( msg.AfterFirst( _T(' ') ) );
+    m_battle.Autobalance(IBattle::balance_random, true, false, num);
     m_lastActionTime = currentTime;
   }
   else if (msg == _T("!help")) {

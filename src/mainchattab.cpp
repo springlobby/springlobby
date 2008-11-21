@@ -20,7 +20,7 @@
 #include "mainchattab.h"
 #include "utils.h"
 #include "mainwindow.h"
-#include "channel.h"
+#include "channel/channel.h"
 #include "user.h"
 #include "chatpanel.h"
 #include "ui.h"

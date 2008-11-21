@@ -25,9 +25,10 @@
 #include "utils.h"
 #include "ui.h"
 #include "iunitsync.h"
-#include "channel.h"
+#include "channel/channel.h"
 #include "httpdownloader.h"
 #include "settings++/custom_dialogs.h"
+#include "settings++/se_utils.h"
 #ifndef NO_TORRENT_SYSTEM
 #include "torrentwrapper.h"
 #endif
@@ -108,6 +109,8 @@ bool SpringLobbyApp::OnInit()
 #endif
     m_locale->AddCatalog( _T("springlobby") );
 
+    SetSettingsStandAlone( false );
+
     if ( sett().IsFirstRun() && !wxDirExists( wxStandardPaths::Get().GetUserDataDir() ) ) wxMkdir( wxStandardPaths::Get().GetUserDataDir() );
 
     if ( (sett().GetCacheVersion() < CACHE_VERSION) && !sett().IsFirstRun() )
@@ -152,15 +155,7 @@ bool SpringLobbyApp::OnInit()
         //! ask for downloading ota content if archive not found, start downloader in background
         wxString url= _T("ipxserver.dyndns.org/games/spring/mods/xta/base-ota-content.zip");
         wxString destFilename = sett().GetCurrentUsedDataDir() + sep + _T("base") + sep + _T("base-ota-content.zip");
-        bool contentExists = false;
-        if ( usync().IsLoaded() )
-        {
-            contentExists = usync().FileExists(_T("base/otacontent.sdz")) && usync().FileExists(_T("base/tacontent_v2.sdz")) && usync().FileExists(_T("base/tatextures_v062.sdz"));
-        }
-        else
-        {
-            contentExists = wxFile::Exists(destFilename);
-        }
+        bool contentExists = usync().FileExists(_T("base/otacontent.sdz")) && usync().FileExists(_T("base/tacontent_v2.sdz")) && usync().FileExists(_T("base/tatextures_v062.sdz"));
 
         if ( !contentExists &&
                 customMessageBox(SL_MAIN_ICON, _("Do you want to download OTA content?\n"
@@ -265,12 +260,12 @@ void SpringLobbyApp::SetupUserFolders()
       if ( createdirs )
       {
           if ( dir.IsEmpty() ||
-           ( !wxFileName::Mkdir( dir ) ||
-              ( !wxFileName::Mkdir( dir + sep + _T("mods") ) ||
-                !wxFileName::Mkdir( dir + sep + _T("maps") ) ||
-                !wxFileName::Mkdir( dir + sep + _T("base") ) ||
-                !wxFileName::Mkdir( dir + sep + _T("demos") ) ||
-                !wxFileName::Mkdir( dir + sep + _T("screenshots")  ) )
+           ( !wxFileName::Mkdir( dir, 0775 ) ||
+              ( !wxFileName::Mkdir( dir + sep + _T("mods"), 0775 ) ||
+                !wxFileName::Mkdir( dir + sep + _T("maps"), 0775 ) ||
+                !wxFileName::Mkdir( dir + sep + _T("base"), 0775 ) ||
+                !wxFileName::Mkdir( dir + sep + _T("demos"), 0775 ) ||
+                !wxFileName::Mkdir( dir + sep + _T("screenshots"), 0775  ) )
               )
             )
           {

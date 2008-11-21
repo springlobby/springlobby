@@ -1,8 +1,10 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_CHANNEL_H
 #define SPRINGLOBBY_HEADERGUARD_CHANNEL_H
 
-#include "userlist.h"
+#include "../userlist.h"
 #include <set>
+#include <vector>
+#include <utility>
 #include <wx/regex.h>
 
 class Channel;

@@ -9,7 +9,7 @@
 #include "server.h"
 #include "socket.h"
 #include "battle.h"
-#include "channel.h"
+#include "channel/channel.h"
 #include "user.h"
 #include "utils.h"
 #include "chatpanel.h"
@@ -155,5 +155,3 @@ void Server::_RemoveBattle( const int& id )
   ASSERT_LOGIC( b != 0, _T("Server::_RemoveBattle(): GetBattle returned NULL pointer"));
   delete b;
 }
-
-

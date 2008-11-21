@@ -67,29 +67,127 @@ bool Spring::RunReplay ( wxString& filename )
         return false;
     }
 
-    wxLogMessage( _T("launching spring with replay: ") + filename );
+  wxLogMessage( _T("launching spring with replay: ") + filename );
 
-    wxString cmd =  _T("\"") + sett().GetCurrentUsedSpringBinary() + _T("\" \"") + filename + _T("\"") ;
-    wxLogMessage( _T("cmd: %s"), cmd.c_str() );
-    wxSetWorkingDirectory( sett().GetCurrentUsedDataDir() );
-    if ( sett().UseOldSpringLaunchMethod() )
-    {
-        if ( m_wx_process == 0 ) m_wx_process = new wxSpringProcess( *this );
-        if ( wxExecute( cmd , wxEXEC_ASYNC, m_wx_process ) == 0 ) return false;
+  wxString cmd =  _T("\"") + sett().GetCurrentUsedSpringBinary() + _T("\" \"") + filename + _T("\"") ;
+  wxLogMessage( _T("cmd: %s"), cmd.c_str() );
+  wxSetWorkingDirectory( sett().GetCurrentUsedDataDir() );
+  if ( sett().UseOldSpringLaunchMethod() ) {
+    if ( m_wx_process == 0 ) m_wx_process = new wxSpringProcess( *this );
+    if ( wxExecute( cmd , wxEXEC_ASYNC, m_wx_process ) == 0 ) return false;
+  } else {
+    if ( m_process == 0 ) m_process = new SpringProcess( *this );
+    wxLogMessage( _T("m_process->Create();") );
+    m_process->Create();
+    wxLogMessage( _T("m_process->SetCommand( cmd );") );
+    m_process->SetCommand( cmd );
+    wxLogMessage( _T("m_process->Run();") );
+    m_process->Run();
+  }
+  m_running = true;
+  wxLogMessage( _T("Done running = true") );
+  return true;
+}
+
+bool Spring::Run( Battle& battle )
+{
+  if ( m_running ) {
+    wxLogError( _T("Spring already running!") );
+    return false;
+  }
+
+  wxString path = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator();
+
+  wxLogMessage( _T("Path to script: %sscript.txt"), path.c_str() );
+
+  try {
+
+    if ( !wxFile::Access( path +  _T("script.txt"), wxFile::write ) ) {
+      wxLogError( _T("Access denied to script.txt.") );
     }
-    else
-    {
-        if ( m_process == 0 ) m_process = new SpringProcess( *this );
-        wxLogMessage( _T("m_process->Create();") );
-        m_process->Create();
-        wxLogMessage( _T("m_process->SetCommand( cmd );") );
-        m_process->SetCommand( cmd );
-        wxLogMessage( _T("m_process->Run();") );
-        m_process->Run();
+
+
+
+    wxFile f( path + _T("script.txt"), wxFile::write );
+    battle.DisableHostStatusInProxyMode( true );
+    f.Write( WriteScriptTxt(battle) );
+    battle.DisableHostStatusInProxyMode( false );
+    f.Close();
+
+  } catch (...) {
+    wxLogError( _T("Couldn't write script.txt") );
+    return false;
+  }
+
+  #ifndef NO_TORRENT_SYSTEM
+  wxString CommandForAutomaticTeamSpeak = _T("SCRIPT|") + battle.GetMe().GetNick() + _T("|");
+  for ( UserList::user_map_t::size_type i = 0; i < battle.GetNumUsers(); i++ )
+  {
+    CommandForAutomaticTeamSpeak << battle.GetUser(i).GetNick() << _T("|") << u2s( battle.GetUser(i).BattleStatus().ally) << _T("|");
+  }
+  torrent().SendMessageToCoordinator(CommandForAutomaticTeamSpeak);
+  #endif
+
+  wxString extra = battle.GetAutoHost().GetExtraCommandLineParams();
+  wxString cmd =  _T("\"") + sett().GetCurrentUsedSpringBinary() + _T("\" ") + extra + _T(" \"") + path +  _T("script.txt\"");
+  wxLogMessage( _T("cmd: %s"), cmd.c_str() );
+  wxSetWorkingDirectory( sett().GetCurrentUsedDataDir() );
+  if ( sett().UseOldSpringLaunchMethod() ) {
+    if ( m_wx_process == 0 ) m_wx_process = new wxSpringProcess( *this );
+    if ( wxExecute( cmd , wxEXEC_ASYNC, m_wx_process ) == 0 ) return false;
+  } else {
+    if ( m_process == 0 ) m_process = new SpringProcess( *this );
+    wxLogMessage( _T("m_process->Create();") );
+    m_process->Create();
+    wxLogMessage( _T("m_process->SetCommand( cmd );") );
+    m_process->SetCommand( cmd );
+    wxLogMessage( _T("m_process->Run();") );
+    m_process->Run();
+  }
+  m_running = true;
+  wxLogMessage( _T("Done running = true") );
+  return true;
+}
+
+
+bool Spring::Run( SinglePlayerBattle& battle )
+{
+  if ( m_running ) {
+    wxLogError( _T("Spring already running!") );
+    return false;
+  }
+
+  wxString path = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator();
+
+  try {
+
+    if ( !wxFile::Access( path + _T("script.txt"), wxFile::write ) ) {
+      wxLogError( _T("Access denied to script.txt.") );
     }
-    m_running = true;
-    wxLogMessage( _T("Done running = true") );
-    return true;
+
+    wxFile f( path + _T("script.txt"), wxFile::write );
+    f.Write( WriteSPScriptTxt(battle) );
+    f.Close();
+
+  } catch (...) {
+    wxLogError( _T("Couldn't write script.txt") );
+    return false;
+  }
+
+  wxString cmd =  _T("\"") + sett().GetCurrentUsedSpringBinary() + _T("\" \"") + path + _T("script.txt\"");
+  wxSetWorkingDirectory( sett().GetCurrentUsedDataDir() );
+  if ( sett().UseOldSpringLaunchMethod() ) {
+    if ( m_wx_process == 0 ) m_wx_process = new wxSpringProcess( *this );
+    if ( wxExecute( cmd , wxEXEC_ASYNC, m_wx_process ) == 0 ) return false;
+  } else {
+    if ( m_process == 0 ) m_process = new SpringProcess( *this );
+    m_process->Create();
+    m_process->SetCommand( cmd );
+    m_process->Run();
+  }
+
+  m_running = true;
+  return true;
 }
 
 bool Spring::Run( Battle& battle )
@@ -230,7 +328,6 @@ struct SortingUser
     }
 };
 
-
 wxString Spring::WriteScriptTxt( Battle& battle )
 {
     wxLogMessage(_T("0 WriteScriptTxt called "));
@@ -274,7 +371,8 @@ wxString Spring::WriteScriptTxt( Battle& battle )
     tdf.Append(_T("Mapname"), battle.GetHostMapName());
     tdf.Append(_T("GameType"), usync().GetModArchive(usync().GetModIndex(battle.GetHostModName())));
 
-    tdf.Append( _T("ModHash"), s2l( battle.LoadMod().hash ) );
+    tdf.Append( _T("ModHash"), s2l( (unsigned int)battle.LoadMod().hash ) );
+    tdf.Append(_T("MapHash"), s2l( (unsigned int)battle.LoadMap().hash ));
 
     OptionsWrapper::wxStringTripleVec optlistEng = battle.CustomBattleOptions().getOptions( OptionsWrapper::EngineOption );
     for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistEng.begin(); it != optlistEng.end(); ++it)

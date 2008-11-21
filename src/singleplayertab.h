@@ -40,6 +40,7 @@ class SinglePlayerTab: public  wxScrolledWindow
     void OnAddBot( wxCommandEvent& event );
     void OnStart( wxCommandEvent& event );
     void OnRandomCheck( wxCommandEvent& event );
+    void OnReset( wxCommandEvent& event );
 
     void OnUnitSyncReloaded();
 

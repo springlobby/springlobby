@@ -62,7 +62,8 @@
 #include "settings++/custom_dialogs.h"
 
 #include "updater/updater.h"
-#include "autojoinchanneldialog.h"
+#include "channel/autojoinchanneldialog.h"
+#include "channel/channelchooserdialog.h"
 
 #ifdef HAVE_WX28
     #if defined(__WXMSW__)
@@ -89,6 +90,7 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU( MENU_STOP_TORRENT, MainWindow::OnMenuStopTorrent )
 //  EVT_MENU( MENU_SHOW_TOOLTIPS, MainWindow::OnShowToolTips )
   EVT_MENU( MENU_AUTOJOIN_CHANNELS, MainWindow::OnMenuAutojoinChannels )
+  EVT_MENU( MENU_CHANNELCHOOSER, MainWindow::OnShowChannelChooser )
   EVT_MENU_OPEN( MainWindow::OnMenuOpen )
   #ifdef HAVE_WX26
   EVT_LISTBOOK_PAGE_CHANGED( MAIN_TABS, MainWindow::OnTabsChanged )
@@ -101,7 +103,7 @@ END_EVENT_TABLE()
 
 MainWindow::MainWindow( Ui& ui ) :
   wxFrame( (wxFrame*)0, -1, _("SpringLobby"), wxPoint(50, 50), wxSize(450, 340) ),
-  m_ui(ui),m_autojoin_dialog(NULL)
+  m_ui(ui),m_autojoin_dialog(NULL),m_channel_chooser(NULL)
 {
   SetIcon( wxIcon(springlobby_xpm) );
 
@@ -123,6 +125,7 @@ MainWindow::MainWindow( Ui& ui ) :
 
   m_menuTools = new wxMenu;
   m_menuTools->Append(MENU_JOIN, _("&Join channel..."));
+  m_menuTools->Append(MENU_CHANNELCHOOSER, _("Channel &list"));
   m_menuTools->Append(MENU_CHAT, _("Open private &chat..."));
   m_menuTools->Append(MENU_AUTOJOIN_CHANNELS, _("&Autojoin channels..."));
   m_menuTools->AppendSeparator();
@@ -204,13 +207,17 @@ MainWindow::MainWindow( Ui& ui ) :
   m_main_sizer->Add( m_func_tabs, 1, wxEXPAND | wxALL, 0 );
 
   SetSizer( m_main_sizer );
-
-  SetSize( sett().GetMainWindowLeft(), sett().GetMainWindowTop(), sett().GetMainWindowWidth(), sett().GetMainWindowHeight() );
+  wxString name = _T("MAINWINDOW");
+  wxPoint pos = sett().GetWindowPos( name, wxPoint( DEFSETT_MW_LEFT, DEFSETT_MW_TOP ) );
+  wxSize size = sett().GetWindowSize( name, wxSize( DEFSETT_MW_WIDTH, DEFSETT_MW_HEIGHT ) );
+  SetSize( pos.x , pos.y, size.GetWidth(), size.GetHeight() );
   Layout();
 
   se_frame_active = false;
 
   wxToolTip::Enable(sett().GetShowTooltips());
+
+  m_channel_chooser = new ChannelChooserDialog( this, -1, _("Choose channels to join") );
 
 }
 
@@ -230,13 +237,10 @@ MainWindow::~MainWindow()
     delete manager;
   }
   #endif
-  int x, y, w, h;
-  GetSize( &w, &h );
-  sett().SetMainWindowHeight( h );
-  sett().SetMainWindowWidth( w );
-  GetPosition( &x, &y );
-  sett().SetMainWindowTop( y );
-  sett().SetMainWindowLeft( x );
+
+  wxString name = _T("MAINWINDOW");
+  sett().SetWindowSize( name, GetSize() );
+  sett().SetWindowPos( name, GetPosition() );
   sett().SaveSettings();
   m_ui.Quit();
   m_ui.OnMainWindowDestruct();
@@ -589,4 +593,28 @@ void MainWindow::OnMenuAutojoinChannels( wxCommandEvent& event )
 {
     m_autojoin_dialog = new AutojoinChannelDialog (this);
     m_autojoin_dialog->Show();
+}
+
+void MainWindow::OnShowChannelChooser( wxCommandEvent& event )
+{
+    if ( m_channel_chooser && m_channel_chooser->IsShown() )
+        return;
+
+    if ( !ui().IsConnected() )
+        customMessageBox( SL_MAIN_ICON, _("You need to be connected to server to view channel list"), _("Not connected") );
+    else {
+        m_channel_chooser->ClearChannels();
+        ui().GetServer().RequestChannels();
+        m_channel_chooser->Show( true );
+    }
+}
+
+void MainWindow::OnChannelList( const wxString& channel, const int& numusers, const wxString& topic )
+{
+    m_channel_chooser->AddChannel( channel, numusers, topic );
+}
+
+void MainWindow::OnChannelListStart( )
+{
+    m_channel_chooser->ClearChannels();
 }
