@@ -28,6 +28,7 @@
 #include "channel/channel.h"
 #include "httpdownloader.h"
 #include "settings++/custom_dialogs.h"
+#include "settings++/se_utils.h"
 #ifndef NO_TORRENT_SYSTEM
 #include "torrentwrapper.h"
 #endif
@@ -107,6 +108,8 @@ bool SpringLobbyApp::OnInit()
     m_locale->AddCatalogLookupPathPrefix(path +  wxFileName::GetPathSeparator() + _T("locale") );
 #endif
     m_locale->AddCatalog( _T("springlobby") );
+
+    SetSettingsStandAlone( false );
 
     if ( sett().IsFirstRun() && !wxDirExists( wxStandardPaths::Get().GetUserDataDir() ) ) wxMkdir( wxStandardPaths::Get().GetUserDataDir() );
 

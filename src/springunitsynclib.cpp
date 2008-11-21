@@ -42,7 +42,7 @@ void SpringUnitSyncLib::Load( const wxString& path, bool DoInit )
   m_path = path;
 
   // Load the library.
-  wxLogMessage( _T("Loading from: %s"), path.c_str());
+  wxLogMessage( _T("Loading from: %s init: %d"), path.c_str(), DoInit);
 
   // Check if library exists
   if ( !wxFileName::FileExists( path ) ) {
