@@ -1,15 +1,20 @@
 #ifndef SPRINGLOBBY_SORTUTIL_H_INCLUDED
 #define SPRINGLOBBY_SORTUTIL_H_INCLUDED
 
+template < class T>
+struct CompareBase {
+    typedef T CompareType;
+};
+
 template < template <int n, bool b > class Comparator ,int C0, bool B0,int C1, bool B1,int C2, bool B2 >
 struct Compare
 {
 
     typedef typename Comparator<-1,false>::CompareType ObjType;
     static bool compare ( ObjType u1, ObjType u2 ) {
-        if ( !Comparator<C0,B0>::compare( u1, u2 ) ) {
-            if ( !Comparator<C1,B1>::compare( u1, u2 ) ) {
-                if ( !Comparator<C2,B2>::compare( u1, u2 ) ) {
+        if ( Comparator<C0,B0>::compare( u1, u2 ) ) {
+            if ( Comparator<C1,B1>::compare( u1, u2 ) ) {
+                if ( Comparator<C2,B2>::compare( u1, u2 ) ) {
                     return false;
                 }
                 return true;
@@ -17,6 +22,17 @@ struct Compare
             return true;
         }
         return true;
+    }
+
+    bool operator () ( ObjType u1, ObjType u2 ) const {
+        if ( Comparator<C0,B0>::compare( u1, u2 ) )
+            return true;
+        if ( Comparator<C1,B1>::compare( u1, u2 ) )
+            return true;
+        if ( Comparator<C2,B2>::compare( u1, u2 ) )
+            return true;
+
+        return false;
     }
 };
 
@@ -75,6 +91,27 @@ void SLInsertionSort( ContainerType& data, bool  (*cmp)  ( ObjType , ObjType  ) 
         data[j + 1] = v;
     }
 
+}
+
+template< class ContainerType, class Comparator >
+void SLInsertionSort( ContainerType& data, Comparator& cmp )
+{
+    typedef typename Comparator::ObjType ObjType;
+
+    const int n = data.size();
+    for ( int i = 0; i < n; i++ )
+    {
+        ObjType v = data[i];
+        int j;
+
+        for ( j = i - 1; j >= 0; j--)
+        {
+            if ( cmp( data[j], v ) )
+                break;
+            data[j + 1] = data[j];
+        }
+        data[j + 1] = v;
+    }
 }
 
 #endif // SPRINGLOBBY_SORTUTIL_H_INCLUDED

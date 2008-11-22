@@ -349,43 +349,30 @@ void NickListCtrl::HighlightItem( long item )
     HighlightItemUser( item, name );
 }
 
-struct UserCompareBase {
-    typedef const User& CompareType;
-};
+
+typedef CompareBase<const User&>  UserCompareBase;
 
 template < int N, bool dir >
 struct UserCompare : public UserCompareBase {
+};
+
+template < int N >
+struct UserCompare<N,true> : public UserCompareBase {
+    static bool compare ( CompareType u1, CompareType u2 ) {
+        return UserCompare<N,false>::compare( u2, u1);
+    }
 };
 
 template < >
 struct UserCompare < 3, false > : public UserCompareBase
 {
     static bool compare ( CompareType u1, CompareType u2 ) {
-        return u1.GetNick() <  u2.GetNick() ;
-    }
-};
-
-template < >
-struct UserCompare < 3, true > : public UserCompareBase
-{
-    static bool compare ( CompareType u1, CompareType u2 ) {
-        wxString n1 = u1.GetNick() ;
-        wxString n2 = u2.GetNick() ;
-        return n2.CmpNoCase(n1) < 1;
-        //return STD_STRING( n2 ).compare( STD_STRING( n1 ) ) < 1;
+        return ( u2.GetNick().CmpNoCase( u1.GetNick() ) < 1 );
     }
 };
 
 template < >
 struct UserCompare < 2, false > : public UserCompareBase
-{
-    static bool compare ( CompareType u1, CompareType u2 ) {
-            return u1.GetStatus().rank < u2.GetStatus().rank;
-    }
-};
-
-template < >
-struct UserCompare < 2, true > : public UserCompareBase
 {
     static bool compare ( CompareType u1, CompareType u2 ) {
         return u2.GetStatus().rank < u1.GetStatus().rank;
@@ -394,14 +381,6 @@ struct UserCompare < 2, true > : public UserCompareBase
 
 template < >
 struct UserCompare < 1, false > : public UserCompareBase
-{
-    static bool compare ( CompareType u1, CompareType u2 ) {
-        return u1.GetCountry() < u2.GetCountry();
-    }
-};
-
-template < >
-struct UserCompare < 1, true > : public UserCompareBase
 {
     static bool compare ( CompareType u1, CompareType u2 ) {
         return u2.GetCountry() < u1.GetCountry();
@@ -427,8 +406,11 @@ void NickListCtrl::Sort()
     if ( m_dirty_sort && m_data.size() > 0 )
     {
         LOCKDATA
-//        SLInsertionSort( m_data, CompareSelector<UserCompare>::GetFunctor( 3,true,2,true,1,true ) );
-        SLBubbleSort( m_data, CompareSelector<UserCompare>::GetFunctor( 3,true,2,true,1,true ) );
+
+//        SLBubbleSort( m_data, CompareSelector<UserCompare>::GetFunctor( 3,true,2,true,1,true ) );
+        Compare< UserCompare, 3, true, 2, true, 1, true  > cmpo;
+        //SLInsertionSort( m_data, cmpo );
+        std::stable_sort( m_data.begin(), m_data.end(), cmpo );
 
     }
 }
@@ -464,8 +446,3 @@ int NickListCtrl::OnGetItemImage(long item) const
 {
     return -1;
 }
-//  //SetItemColumnImage( index, 0, icons().GetUserListStateIcon( user_st, false, user.GetBattle() != 0 ) );
-//  SetItemColumnImage( index, 1, icons().GetFlagIcon( user.GetCountry() ) );
-//  SetItemColumnImage( index, 2, icons().GetRankIcon( user.GetStatus().rank ) );
-
-
