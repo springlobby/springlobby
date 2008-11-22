@@ -917,6 +917,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     }
     else if ( cmd == _T("DENIED") )
     {
+        if ( m_online ) return;
         msg = GetSentenceParam( params );
         m_se->OnServerMessage( msg );
         Disconnect();
