@@ -379,46 +379,66 @@ void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const w
 void ServerEvents::OnBattleInfoUpdated( int battleid )
 {
   wxLogDebugFunc( _T("") );
-  Battle& battle = m_serv.GetBattle( battleid );
-  ui().OnBattleInfoUpdated( battle );
+  try
+  {
+    Battle& battle = m_serv.GetBattle( battleid );
+    ui().OnBattleInfoUpdated( battle );
+  }
+  catch ( assert_exception ) {}
 }
 
 
 void ServerEvents::OnBattleClosed( int battleid )
 {
   wxLogDebugFunc( _T("") );
-  Battle& battle = m_serv.GetBattle( battleid );
+  try
+  {
+    Battle& battle = m_serv.GetBattle( battleid );
 
-  ui().OnBattleClosed( battle );
+    ui().OnBattleClosed( battle );
 
-  m_serv._RemoveBattle( battleid );
+    m_serv._RemoveBattle( battleid );
+  }
+  catch ( assert_exception ) {}
 }
 
 
 void ServerEvents::OnBattleDisableUnit( int battleid, const wxString& unitname )
 {
   wxLogDebugFunc( _T("") );
-  Battle& battle = m_serv.GetBattle( battleid );
-  battle.DisableUnit( unitname );
-  battle.Update( wxString::Format( _T("%d_restrictions"), OptionsWrapper::PrivateOptions ) );
+  try
+  {
+    Battle& battle = m_serv.GetBattle( battleid );
+    battle.DisableUnit( unitname );
+    battle.Update( wxString::Format( _T("%d_restrictions"), OptionsWrapper::PrivateOptions ) );
+  }
+  catch ( assert_exception ) {}
 }
 
 
 void ServerEvents::OnBattleEnableUnit( int battleid, const wxString& unitname )
 {
   wxLogDebugFunc( _T("") );
-  Battle& battle = m_serv.GetBattle( battleid );
-  battle.EnableUnit( unitname );
-  battle.Update( wxString::Format( _T("%d_restrictions"), OptionsWrapper::PrivateOptions ) );
+  try
+  {
+    Battle& battle = m_serv.GetBattle( battleid );
+    battle.EnableUnit( unitname );
+    battle.Update( wxString::Format( _T("%d_restrictions"), OptionsWrapper::PrivateOptions ) );
+  }
+  catch ( assert_exception ) {}
 }
 
 
 void ServerEvents::OnBattleEnableAllUnits( int battleid )
 {
   wxLogDebugFunc( _T("") );
-  Battle& battle = m_serv.GetBattle( battleid );
-  battle.EnableAllUnits();
-  battle.Update( wxString::Format( _T("%d_restrictions"), OptionsWrapper::PrivateOptions ) );
+  try
+  {
+    Battle& battle = m_serv.GetBattle( battleid );
+    battle.EnableAllUnits();
+    battle.Update( wxString::Format( _T("%d_restrictions"), OptionsWrapper::PrivateOptions ) );
+  }
+  catch ( assert_exception ) {}
 }
 
 
