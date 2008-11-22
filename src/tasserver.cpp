@@ -1310,10 +1310,24 @@ void TASServer::HostBattle( BattleOptions bo, const wxString& password )
     {
        if ( m_relay_host_manager_list.GetCount() > 0 )
        {
-          unsigned int choice = rand() % m_relay_host_manager_list.GetCount();
-          m_relay_host_manager = m_relay_host_manager_list[choice];
-          SayPrivate( m_relay_host_manager, _T("!spawn") );
-          m_delayed_open_command = cmd;
+          unsigned int begin = rand() % m_relay_host_manager_list.GetCount();
+          bool doloop = true;
+          unsigned int choice = begin;
+          while ( doloop )
+          {
+            m_relay_host_manager = m_relay_host_manager_list[choice];
+            if ( UserExists( m_relay_host_manager ) )
+            {
+              SayPrivate( m_relay_host_manager, _T("!spawn") );
+              m_delayed_open_command = cmd;
+              doloop = false;
+            }
+            else
+            {
+              choice++;
+              if ( choice == begin ) doloop = false;
+            }
+          }
        }
     }
 
