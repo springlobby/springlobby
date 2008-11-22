@@ -648,6 +648,7 @@ void ServerEvents::OnBattleStartRectAdd( int battleid, int allyno, int left, int
     {
         Battle& battle = m_serv.GetBattle( battleid );
         battle.AddStartRect( allyno, left, top, right, bottom );
+        battle.StartRectAdded( allyno );
         battle.Update( wxString::Format( _T("%d_mapname"), OptionsWrapper::PrivateOptions ) );
     }
     catch (assert_exception) {}
@@ -660,6 +661,7 @@ void ServerEvents::OnBattleStartRectRemove( int battleid, int allyno )
     {
         Battle& battle = m_serv.GetBattle( battleid );
         battle.RemoveStartRect( allyno );
+        battle.StartRectRemoved( allyno );
         battle.Update( wxString::Format( _T("%d_mapname"), OptionsWrapper::PrivateOptions ) );
     }
     catch (assert_exception) {}
