@@ -801,6 +801,12 @@ void ChatPanel::OnChannelJoin( User& who )
 void ChatPanel::Parted( User& who, const wxString& message )
 {
 	if ( m_type == CPT_Channel ) {
+		if ( m_channel == 0 ) return;
+		if ( &who == &m_channel->GetMe() ) {
+			m_channel->uidata.panel = 0;
+			SetChannel( 0 );
+			return;
+		}
 		if ( sett().GetDisplayJoinLeave( m_channel->GetName() ) ) {
       // change the image of the tab to show new events
       SetIconHighlight( highlight_join_leave );
@@ -808,11 +814,6 @@ void ChatPanel::Parted( User& who, const wxString& message )
     }
 		if ( m_show_nick_list && ( m_nicklist != 0 ) ) m_nicklist->RemoveUser( who );
 
-		if ( m_channel == 0 ) return;
-		if ( &who == &m_channel->GetMe() ) {
-			m_channel->uidata.panel = 0;
-			SetChannel( 0 );
-		}
 	} else if ( m_type == CPT_Battle ) {
 		if ( sett().GetDisplayJoinLeave( _T( "game/battle" ) ) )  { OutputLine( _T( " ** " ) + who.GetNick() + _( " left the " ) + GetChatTypeStr() + _T( "( " ) + message + _T( " )." ), sett().GetChatColorJoinPart(), sett().GetChatFont() ); }
 	}
