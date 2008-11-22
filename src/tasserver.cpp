@@ -638,6 +638,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     else if ( cmd == _T("REMOVEUSER") )
     {
         nick = GetWordParam( params );
+        if ( nick == m_user ) return; // to prevent peet doing nasty stuff to you, watch your back!
         m_se->OnUserQuit( nick );
     }
     else if ( cmd == _T("BATTLECLOSED") )
