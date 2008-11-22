@@ -6,15 +6,32 @@ struct CompareBase {
     typedef T CompareType;
 };
 
-template < template <int n, bool b > class Comparator ,int C0, bool B0,int C1, bool B1,int C2, bool B2 >
-struct Compare
-{
+template < class CompareImp >
+struct CompareInterface {
 
+    typedef CompareImp ImpType;
+
+    template < class ObjType >
+    bool operator() ( ObjType o1, ObjType o2 ) {
+        return asImp()( o1,o2 );
+    }
+
+    ImpType& asImp(){
+        return static_cast<ImpType>(*this);
+    }
+
+};
+
+template < template <int n, bool b > class Comparator ,int C0, bool B0,int C1, bool B1,int C2, bool B2 >
+struct Compare :
+    public CompareInterface < Compare <Comparator ,C0, B0,C1, B1,C2, B2 > >
+{
+    typedef bool test;
     typedef typename Comparator<-1,false>::CompareType ObjType;
     static bool compare ( ObjType u1, ObjType u2 ) {
-        if ( Comparator<C0,B0>::compare( u1, u2 ) ) {
-            if ( Comparator<C1,B1>::compare( u1, u2 ) ) {
-                if ( Comparator<C2,B2>::compare( u1, u2 ) ) {
+        if ( !Comparator<C0,B0>::compare( u1, u2 ) ) {
+            if ( !Comparator<C1,B1>::compare( u1, u2 ) ) {
+                if ( !Comparator<C2,B2>::compare( u1, u2 ) ) {
                     return false;
                 }
                 return true;
@@ -25,14 +42,16 @@ struct Compare
     }
 
     bool operator () ( ObjType u1, ObjType u2 ) const {
-        if ( Comparator<C0,B0>::compare( u1, u2 ) )
+        if ( !Comparator<C0,B0>::compare( u1, u2 ) ) {
+            if ( !Comparator<C1,B1>::compare( u1, u2 ) ) {
+                if ( !Comparator<C2,B2>::compare( u1, u2 ) ) {
+                    return false;
+                }
+                return true;
+            }
             return true;
-        if ( Comparator<C1,B1>::compare( u1, u2 ) )
-            return true;
-        if ( Comparator<C2,B2>::compare( u1, u2 ) )
-            return true;
-
-        return false;
+        }
+        return true;
     }
 };
 
