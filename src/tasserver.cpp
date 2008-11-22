@@ -691,6 +691,15 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         channel = GetWordParam( params );
         nick = GetWordParam( params );
         pos = GetIntParam( params );
+        if ( channel == _T("autohost") )
+        {
+          m_relay_host_manager_list.Clear();
+          wxStringTokenizer tkr( params, _T("\n") );
+          while( tkr.HasMoreTokens() )
+          {
+            m_relay_host_manager_list.Add( tkr.GetNextToken() );
+          }
+        }
         m_se->OnChannelTopic( channel, nick, params, pos/1000 );
     }
     else if ( cmd == _T("SAIDEX") )
@@ -710,15 +719,16 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     else if ( cmd == _T("SAYPRIVATE") )
     {
         nick = GetWordParam( params );
-        if ( ( ( nick == m_relay_host_bot ) || ( nick == _T("AutoHostManager") ) ) && params.StartsWith( _T("!") ) ) return; // drop the message
+        if ( ( ( nick == m_relay_host_bot ) || ( nick == m_relay_host_manager ) ) && params.StartsWith( _T("!") ) ) return; // drop the message
         m_se->OnPrivateMessage( nick, params, true );
     }
     else if ( cmd == _T("SAIDPRIVATE") )
     {
         nick = GetWordParam( params );
-        if ( nick == _T("AutoHostManager") )
+        if ( nick == m_relay_host_manager )
         {
           m_relay_host_bot = params;
+          m_relay_host_manager = _T("");
           return;
         }
         m_se->OnPrivateMessage( nick, params, false );
@@ -1298,8 +1308,13 @@ void TASServer::HostBattle( BattleOptions bo, const wxString& password )
     }
     else
     {
-       SayPrivate( _T("AutoHostManager"), _T("!spawn") );
-       m_delayed_open_command = cmd;
+       if ( m_relay_host_manager_list.GetCount() > 0 )
+       {
+          unsigned int choice = rand() % m_relay_host_manager_list.GetCount();
+          m_relay_host_manager = m_relay_host_manager_list[choice];
+          SayPrivate( m_relay_host_manager, _T("!spawn") );
+          m_delayed_open_command = cmd;
+       }
     }
 
     if (bo.nattype>0)UdpPingTheServer(m_user);
