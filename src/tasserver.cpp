@@ -728,7 +728,14 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         nick = GetWordParam( params );
         if ( nick == m_relay_host_manager )
         {
-          m_relay_host_bot = params;
+          if ( params.StartsWith( _T("\001") ) ) // error code
+          {
+            m_se->OnServerMessageBox( params.AfterFirst( _T(' ') ) );
+          }
+          else
+          {
+            m_relay_host_bot = params;
+          }
           m_relay_host_manager = _T("");
           return;
         }
