@@ -51,6 +51,7 @@ class BattleRoomTab : public wxScrolledWindow
     void OnStart( wxCommandEvent& event );
     void OnLeave( wxCommandEvent& event );
     void OnBalance( wxCommandEvent& event );
+    void OnFixTeams( wxCommandEvent& event );
     void OnFixColours( wxCommandEvent& event );
     void OnAddBot( wxCommandEvent& event );
     void OnImReady( wxCommandEvent& event );
@@ -130,6 +131,7 @@ class BattleRoomTab : public wxScrolledWindow
     wxButton* m_addbot_btn;
     wxButton* m_fix_colours_btn;
     wxButton* m_balance_btn;
+    wxButton* m_fix_team_btn;
 
 
     wxCheckBox* m_ready_chk;
@@ -152,6 +154,7 @@ class BattleRoomTab : public wxScrolledWindow
         BROOM_START,
         BROOM_ADDBOT,
         BROOM_BALANCE,
+        BROOM_FIXID,
         BROOM_FIXCOLOURS,
         BROOM_PRESETSEL,
         BROOM_AUTOHOST,

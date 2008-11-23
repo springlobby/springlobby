@@ -63,6 +63,7 @@ BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
     EVT_COMBOBOX( BROOM_PRESETSEL, BattleRoomTab::OnPresetSel )
 
     EVT_BUTTON ( BROOM_BALANCE, BattleRoomTab::OnBalance )
+    EVT_BUTTON ( BROOM_FIXID, BattleRoomTab::OnFixTeams )
     EVT_BUTTON ( BROOM_FIXCOLOURS, BattleRoomTab::OnFixColours )
 
 END_EVENT_TABLE()
@@ -140,6 +141,9 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
 
     m_balance_btn = new wxButton( this, BROOM_BALANCE, _("Balance"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
     m_balance_btn->SetToolTip(TE(_("Automatically balance players into two or more alliances")));
+
+    m_fix_team_btn = new wxButton( this, BROOM_FIXID, _("Fix Teams"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
+    m_fix_team_btn->SetToolTip(TE(_("Automatically balance players into control teams, by default none shares control")));
 
     m_lock_chk = new wxCheckBox( this, BROOM_LOCK, _("Locked"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
     m_lock_chk->SetToolTip(TE(_("Prevent additional players from joining the battle")));
@@ -226,6 +230,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
     m_buttons_sizer->Add( m_autohost_chk, 0, wxEXPAND | wxALL, 2 );
     m_buttons_sizer->Add( m_autolock_chk, 0, wxEXPAND | wxALL, 2 );
     m_buttons_sizer->Add( m_lock_chk, 0, wxEXPAND | wxALL, 2 );
+    m_buttons_sizer->Add( m_fix_team_btn, 0, wxEXPAND | wxALL, 2 );
     m_buttons_sizer->Add( m_fix_colours_btn, 0, wxEXPAND | wxALL, 2 );
     m_buttons_sizer->Add( m_balance_btn, 0, wxEXPAND | wxALL, 2 );
     m_buttons_sizer->Add( m_start_btn, 0, wxEXPAND | wxALL, 2 );
@@ -249,9 +254,11 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
         m_start_btn->Disable();
         m_start_btn->SetToolTip(TE(_("Only the host can start the battle.")));
 
-
         m_balance_btn->Disable();
         m_balance_btn->SetToolTip(TE(_("Only the host can balance alliances.")));
+
+        m_fix_team_btn->Disable();
+        m_fix_team_btn->SetToolTip(TE(_("Only the host can fix team")));
 
         m_fix_colours_btn->Disable();
         m_fix_colours_btn->SetToolTip(TE(_("Only the host can fix player colours.")));
@@ -490,19 +497,43 @@ void BattleRoomTab::OnLeave( wxCommandEvent& event )
 
 void BattleRoomTab::OnBalance( wxCommandEvent& event )
 {
-    wxLogMessage(_T(""));
-    if (!IsHosted()) /// if not hosted, say !cbalance . Works with autohosts, and human hosts knows what it mean.
-    {
-        m_battle.Say(_T("!cbalance"));
-        return;
-    }
-    AutoBalanceDialog dlg( this );
+    AutoBalanceDialog::BalanceOptions defaultval;
+    defaultval.type = (IBattle::BalanceType)sett().GetBalanceMethod();
+    defaultval.respectclans = sett().GetBalanceClans();
+    defaultval.strongclans = sett().GetBalanceStrongClans();
+    defaultval.groupingsize = sett().GetBalanceGrouping();
+    AutoBalanceDialog dlg( this, defaultval );
     if ( dlg.ShowModal() == wxID_OK )
     {
-        m_battle.Autobalance( (IBattle::BalanceType)sett().GetBalanceMethod(), sett().GetBalanceClans(), sett().GetBalanceStrongClans() );
+        AutoBalanceDialog::BalanceOptions balance = dlg.GetResult();
+        sett().SetBalanceMethod( balance.type );
+        sett().SetBalanceClans( balance.respectclans );
+        sett().SetBalanceStrongClans( balance.strongclans );
+        sett().SetBalanceGrouping( balance.groupingsize );
+        m_battle.Autobalance( balance.type, balance.respectclans, balance.strongclans, balance.groupingsize );
     }
-    /// balance players.
 }
+
+
+void BattleRoomTab::OnFixTeams( wxCommandEvent& event )
+{
+    AutoBalanceDialog::BalanceOptions defaultval;
+    defaultval.type = (IBattle::BalanceType)sett().GetFixIDMethod();
+    defaultval.respectclans = sett().GetFixIDClans();
+    defaultval.strongclans = sett().GetFixIDStrongClans();
+    defaultval.groupingsize = sett().GetFixIDGrouping();
+    AutoBalanceDialog dlg( this, defaultval );
+    if ( dlg.ShowModal() == wxID_OK )
+    {
+        AutoBalanceDialog::BalanceOptions balance = dlg.GetResult();
+        sett().SetFixIDMethod( balance.type );
+        sett().SetFixIDClans( balance.respectclans );
+        sett().SetFixIDStrongClans( balance.strongclans );
+        sett().SetFixIDGrouping( balance.groupingsize );
+        m_battle.FixTeamIDs( balance.type, balance.respectclans, balance.strongclans, balance.groupingsize );
+    }
+}
+
 
 void BattleRoomTab::OnFixColours( wxCommandEvent& event )
 {
