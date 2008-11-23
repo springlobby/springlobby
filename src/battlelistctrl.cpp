@@ -546,21 +546,17 @@ void BattleListCtrl::SetTipWindowText( const long item_hit, const wxPoint positi
             m_tiptext = battle.GetFounder().GetNick();
             break;
         case 7: // specs
-            m_tiptext = _T("Spectators:\n");
-            for (unsigned int i = battle.GetNumUsers()-1; i > battle.GetNumUsers() - battle.GetSpectators()-1;--i)
+            m_tiptext = _("Spectators:");
+            for (unsigned int i = 0; i < battle.GetNumUsers(); ++i )
             {
-                if (i < battle.GetNumUsers()-1)
-                    m_tiptext << _T("\n");
-                m_tiptext << battle.GetUser(i).GetNick() ;
+                if ( battle.GetUser(i).BattleStatus().spectator ) m_tiptext << _T("\n") << battle.GetUser(i).GetNick();
             }
             break;
         case 8: // player
-            m_tiptext = _T("Active Players:\n");
-            for (unsigned int i = 0; i < battle.GetNumUsers()-battle.GetSpectators();++i)
+            m_tiptext = _("Active Players:");
+            for ( unsigned int i = 0; i < battle.GetNumUsers(); ++i )
             {
-                if ( i> 0)
-                    m_tiptext << _T("\n");
-                m_tiptext << battle.GetUser(i).GetNick();
+                if ( !battle.GetUser(i).BattleStatus().spectator ) m_tiptext << _T("\n") << battle.GetUser(i).GetNick();
             }
             break;
         case 9: //may player
