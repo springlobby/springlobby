@@ -365,14 +365,14 @@ void Battle::OnUserAdded( User& user )
     user.BattleStatus().ready = false;
     user.BattleStatus().sync = SYNC_UNKNOWN;
 
-    if ( user.BattleStatus().spectator )
-    {
-       m_opts.spectators++;
-       if ( IsFounderMe() ) SendHostInfo( HI_Spectators );
-    }
-
     if ( IsFounderMe() )
     {
+      if ( user.BattleStatus().spectator )
+      {
+        m_opts.spectators++;
+        SendHostInfo( HI_Spectators );
+      }
+
         if ( CheckBan( user ) ) return;
 
         if ( ( m_opts.rankneeded > 1 ) && ( user.GetStatus().rank < m_opts.rankneeded ))
@@ -412,24 +412,21 @@ void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
         ui().OnBattleAction( *this, wxString(_T(" ")) , ( _T("Warning: user ") + user.GetNick() + _T(" got bonus ") ) << status.handicap );
     }
 
-    if ( status.spectator != previousspectatorstatus )
-    {
-        if ( status.spectator )
-        {
-            m_opts.spectators++;
-            if ( IsFounderMe() ) SendHostInfo( HI_Spectators );
-        }
-        else
-        {
-            m_opts.spectators--;
-            if ( IsFounderMe() ) SendHostInfo( HI_Spectators );
-        }
-
-    }
-
     if ( IsFounderMe() )
     {
-
+        if ( status.spectator != previousspectatorstatus )
+        {
+            if ( status.spectator )
+            {
+                m_opts.spectators++;
+                SendHostInfo( HI_Spectators );
+            }
+            else
+            {
+                m_opts.spectators--;
+                SendHostInfo( HI_Spectators );
+            }
+        }
         if ( ( m_opts.rankneeded > 1 ) && ( user.GetStatus().rank < m_opts.rankneeded ))
         {
             switch ( m_opts.ranklimittype )
@@ -456,10 +453,10 @@ void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 
 void Battle::OnUserRemoved( User& user )
 {
-    if ( user.BattleStatus().spectator )
+    if ( IsFounderMe() && user.BattleStatus().spectator )
     {
       m_opts.spectators--;
-      if ( IsFounderMe() ) SendHostInfo( HI_Spectators );
+      SendHostInfo( HI_Spectators );
     }
     user.SetBattle( 0 );
     UserList::RemoveUser( user.GetNick() );
