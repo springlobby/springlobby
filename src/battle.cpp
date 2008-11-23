@@ -360,45 +360,42 @@ void Battle::OnUserAdded( User& user )
     //bs.spectator=true;
     //bs.order = m_order++;
     //user.UpdateBattleStatus( bs, true );
-    user.BattleStatus().order=m_order++;
-    user.BattleStatus().spectator=true;
-    user.BattleStatus().ready=false;
-    user.BattleStatus().sync=SYNC_UNKNOWN;
+    user.BattleStatus().order = m_order++;
+    user.BattleStatus().spectator = false;
+    user.BattleStatus().ready = false;
+    user.BattleStatus().sync = SYNC_UNKNOWN;
 
-
-    if (IsFounderMe())
+    if ( user.BattleStatus().spectator )
     {
+       m_opts.spectators++;
+       if ( IsFounderMe() ) SendHostInfo( HI_Spectators );
+    }
 
-        if ( user.BattleStatus().spectator )
+    if ( IsFounderMe() )
+    {
+        if ( CheckBan( user ) ) return;
+
+        if ( ( m_opts.rankneeded > 1 ) && ( user.GetStatus().rank < m_opts.rankneeded ))
         {
-           m_opts.spectators++;
-           SendHostInfo( HI_Spectators );
-        }
-
-        if (CheckBan(user))
-            return;
-
-        if (m_opts.rankneeded>1 && user.GetStatus().rank<m_opts.rankneeded)
-        {
-            switch (m_opts.ranklimittype)
+            switch ( m_opts.ranklimittype )
             {
             case rank_limit_none:
                 break;
             case rank_limit_autospec:
-                if (!user.BattleStatus().spectator)
+                if ( !user.BattleStatus().spectator )
                 {
-                    DoAction(_T("Rank limit autospec: ")+user.GetNick());
-                    ForceSpectator(user,true);
+                    DoAction( _T("Rank limit autospec: ") + user.GetNick() );
+                    ForceSpectator( user, true );
                 }
                 break;
             case rank_limit_autokick:
-                DoAction(_T("Rank limit autokick: ")+user.GetNick());
-                BattleKickPlayer(user);
+                DoAction( _T("Rank limit autokick: ") + user.GetNick() );
+                BattleKickPlayer( user );
                 return;
             }
         }
 
-        m_ah.OnUserAdded(user);
+        m_ah.OnUserAdded( user );
     }
     // any code here may be skipped if the user was autokicked
 }
@@ -410,45 +407,45 @@ void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 
     user.UpdateBattleStatus( status );
 
-    if (status.handicap!=0)
+    if ( status.handicap != 0 )
     {
-        ui().OnBattleAction(*this,wxString(_T(" ")),(_T("Warning: user ")+user.GetNick()+_T(" got bonus "))<< status.handicap);
+        ui().OnBattleAction( *this, wxString(_T(" ")) , ( _T("Warning: user ") + user.GetNick() + _T(" got bonus ") ) << status.handicap );
     }
 
-    if (IsFounderMe())
+    if ( status.spectator != previousspectatorstatus )
     {
-
-        if ( status.spectator != previousspectatorstatus )
+        if ( status.spectator )
         {
-            if ( status.spectator )
-            {
-                m_opts.spectators++;
-                SendHostInfo(HI_Spectators);
-            }
-            else
-            {
-                m_opts.spectators--;
-                SendHostInfo(HI_Spectators);
-            }
-
+            m_opts.spectators++;
+            if ( IsFounderMe() ) SendHostInfo( HI_Spectators );
+        }
+        else
+        {
+            m_opts.spectators--;
+            if ( IsFounderMe() ) SendHostInfo( HI_Spectators );
         }
 
-        if (m_opts.rankneeded>1 && user.GetStatus().rank<m_opts.rankneeded)
+    }
+
+    if ( IsFounderMe() )
+    {
+
+        if ( ( m_opts.rankneeded > 1 ) && ( user.GetStatus().rank < m_opts.rankneeded ))
         {
-            switch (m_opts.ranklimittype)
+            switch ( m_opts.ranklimittype )
             {
             case rank_limit_none:
                 break;
             case rank_limit_autospec:
-                if (!user.BattleStatus().spectator)
+                if ( !user.BattleStatus().spectator )
                 {
-                    DoAction(_T("Rank limit autospec: ")+user.GetNick());
-                    ForceSpectator(user,true);
+                    DoAction( _T("Rank limit autospec: ") + user.GetNick() );
+                    ForceSpectator( user, true );
                 }
                 break;
             case rank_limit_autokick:
-                DoAction(_T("Rank limit autokick: ")+user.GetNick());
-                BattleKickPlayer(user);
+                DoAction( _T("Rank limit autokick: ") + user.GetNick() );
+                BattleKickPlayer( user );
                 break;
             }
         }
@@ -459,10 +456,10 @@ void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 
 void Battle::OnUserRemoved( User& user )
 {
-    if (IsFounderMe())
+    if ( user.BattleStatus().spectator )
     {
-      if ( user.BattleStatus().spectator ) m_opts.spectators--;
-      SendHostInfo( HI_Spectators );
+      m_opts.spectators--;
+      if ( IsFounderMe() ) SendHostInfo( HI_Spectators );
     }
     user.SetBattle( 0 );
     UserList::RemoveUser( user.GetNick() );
