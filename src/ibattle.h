@@ -101,8 +101,7 @@ public:
 
     typedef int HostInfo;
 
-    typedef int StartType;
-    enum
+    enum StartType
     {
         ST_Fixed = 0,
         ST_Random = 1,
@@ -110,8 +109,7 @@ public:
         ST_Pick = 3
     };
 
-    typedef int GameType;
-    enum
+    enum GameType
     {
         GT_ComContinue = 0,
         GT_ComEnds = 1,
@@ -119,8 +117,7 @@ public:
     };
 
 
-    typedef int BattleType;
-    enum
+    enum BattleType
     {
         BT_Unknown = 0,
         BT_Multi = 1,

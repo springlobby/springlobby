@@ -1077,7 +1077,17 @@ void Battle::FixTeamIDs( BalanceType balance_type, bool support_clans, bool stro
     std::vector<ControlTeam> teams;
 
     if ( controlteamsize == 0 ) controlteamsize = GetNumUsers(); // 0 == use num players, will use comshare only if no available team slots
-    CLAMP( controlteamsize, 0, 16 ); // clamp to 16 (max spring supports)
+    IBattle::StartType position_type = (IBattle::StartType)s2l( CustomBattleOptions().getSingleValue( _T("startpostype"), OptionsWrapper::EngineOption ) );
+    if ( ( position_type == ST_Fixed ) || ( position_type == ST_Random ) ) // if fixed start pos type or random, use max teams = start pos count
+    {
+      try
+      {
+        controlteamsize = std::min( controlteamsize, LoadMap().info.posCount );
+      }
+      catch( assert_exception ) {}
+    }
+    controlteamsize = std::min( controlteamsize, 16 ); // clamp to 16 (max spring supports)
+
     for ( int i = 0; i < controlteamsize; i++ ) teams.push_back( ControlTeam( i ) );
 
     //for(i=0;i<alliances.size();++i)alliances[i].allynum=i;
