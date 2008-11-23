@@ -1070,7 +1070,7 @@ void Battle::Autobalance( BalanceType balance_type, bool support_clans, bool str
 
 void Battle::FixTeamIDs( BalanceType balance_type, bool support_clans, bool strong_clans, int controlteamsize )
 {
-    wxLogMessage(_T("Autobalancing teams, type=%d, clans=%d, strong_clans=%d, allyteamsize=%d"),balance_type, support_clans, strong_clans, controlteamsize);
+    wxLogMessage(_T("Autobalancing teams, type=%d, clans=%d, strong_clans=%d, controlteamsize=%d"),balance_type, support_clans, strong_clans, controlteamsize);
     DoAction(_T("is auto-balancing control teams ..."));
     //size_t i;
     //int num_alliances;
@@ -1115,7 +1115,7 @@ void Battle::FixTeamIDs( BalanceType balance_type, bool support_clans, bool stro
     std::map<wxString, ControlTeam> clan_teams;
     if ( support_clans )
     {
-        for ( size_t i=0; i < players_sorted.size(); ++i )
+        for ( size_t i = 0; i < players_sorted.size(); ++i )
         {
             wxString clan = players_sorted[i]->GetClan();
             if ( !clan.empty() )
@@ -1127,19 +1127,19 @@ void Battle::FixTeamIDs( BalanceType balance_type, bool support_clans, bool stro
 
     if ( balance_type != balance_random ) std::sort( players_sorted.begin(), players_sorted.end(), PlayerRankCompareFunction );
 
-    if (support_clans )
+    if ( support_clans )
     {
         std::map<wxString, ControlTeam>::iterator clan_it = clan_teams.begin();
         while ( clan_it != clan_teams.end() )
         {
-            ControlTeam &clan=(*clan_it).second;
+            ControlTeam &clan = (*clan_it).second;
             /// if clan is too small (only 1 clan member in battle) or too big, dont count it as clan
             if ( ( clan.players.size() < 2 ) || ( !strong_clans && ( clan.players.size() >  ( ( players_sorted.size() + teams.size() -1 ) / teams.size() ) ) ) )
             {
                 wxLogMessage(_T("removing clan %s"),(*clan_it).first.c_str());
                 std::map<wxString, ControlTeam>::iterator next = clan_it;
                 ++next;
-                clan_teams.erase(clan_it);
+                clan_teams.erase( clan_it );
                 clan_it = next;
                 continue;
             }
