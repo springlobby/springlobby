@@ -222,7 +222,7 @@ void Battle::FixColours( )
     std::vector<int> palette_use(palette.size(),0);
     user_map_t::size_type max_fix_users=std::min( GetNumUsers(),palette.size());
 
-    wxColour my_col=GetMe().BattleStatus().colour;/// Never changes color of founder (me) :-)
+    wxColour my_col=GetMe().BattleStatus().colour;// Never changes color of founder (me) :-)
     int my_diff=0;
     int my_col_i=GetClosestFixColour(my_col,palette_use,my_diff);
     palette_use[my_col_i]++;
@@ -255,7 +255,7 @@ void Battle::OnRequestBattleStatus()
     bs.ally = lowest;
     bs.spectator = false;
     bs.colour = sett().GetBattleLastColour();
-    /// theres some highly annoying bug with color changes on player join/leave.
+    // theres some highly annoying bug with color changes on player join/leave.
     if ( !bs.colour.IsColourOk() ) bs.colour = GetFreeColour(&m_serv.GetMe());
 
     SendMyBattleStatus();
@@ -501,7 +501,7 @@ bool Battle::ExecuteSayCommand( const wxString& cmd )
         m_serv.DoActionBattle( m_opts.battleid, cmd.AfterFirst(' ') );
         return true;
     }
-    ///< quick hotfix for bans
+    //< quick hotfix for bans
     if (IsFounderMe())
     {
         if ( cmd_name == _T("/ban") )
@@ -571,7 +571,7 @@ bool Battle::ExecuteSayCommand( const wxString& cmd )
             return true;
         }
     }
-    ///>
+    //>
     return false;
 }
 ///< quick hotfix for bans
@@ -923,19 +923,19 @@ struct ClannersRemovalPredicate{
   }
 }*/
 
-void Battle::Autobalance( BalanceType balance_type, bool support_clans, bool strong_clans, int allyteamsize )
+void Battle::Autobalance( BalanceType balance_type, bool support_clans, bool strong_clans, int numallyteams )
 {
-    wxLogMessage(_T("Autobalancing alliances, type=%d, clans=%d, strong_clans=%d, allyteamsize=%d"),balance_type, support_clans,strong_clans, allyteamsize);
+    wxLogMessage(_T("Autobalancing alliances, type=%d, clans=%d, strong_clans=%d, numallyteams=%d"),balance_type, support_clans,strong_clans, numallyteams);
     DoAction(_T("is auto-balancing alliances ..."));
     //size_t i;
     //int num_alliances;
-    CLAMP( allyteamsize, 0, 16 ); // 16 max ally teams currently supported by spring
+    CLAMP( numallyteams, 0, 16 ); // 16 max ally teams currently supported by spring
     std::vector<Alliance>alliances;
-    if ( allyteamsize == 0 ) // 0 == use num start rects
+    if ( numallyteams == 0 ) // 0 == use num start rects
     {
         int tmp = GetNumRects();
         int ally = 0;
-        for ( int i = 0; i < allyteamsize; ++i )
+        for ( int i = 0; i < numallyteams; ++i )
         {
             BattleStartRect sr = m_rects[i];
             if ( sr.IsOk() )
@@ -954,7 +954,7 @@ void Battle::Autobalance( BalanceType balance_type, bool support_clans, bool str
     }
     else
     {
-        for ( int i = 0; i < allyteamsize; i++ ) alliances.push_back( Alliance( i ) );
+        for ( int i = 0; i < numallyteams; i++ ) alliances.push_back( Alliance( i ) );
     }
 
     //for(i=0;i<alliances.size();++i)alliances[i].allynum=i;
@@ -1000,7 +1000,7 @@ void Battle::Autobalance( BalanceType balance_type, bool support_clans, bool str
         while ( clan_it != clan_alliances.end() )
         {
             Alliance &clan = (*clan_it).second;
-            /// if clan is too small (only 1 clan member in battle) or too big, dont count it as clan
+            // if clan is too small (only 1 clan member in battle) or too big, dont count it as clan
             if ( ( clan.players.size() < 2 ) || ( !strong_clans && ( clan.players.size() > ( ( players_sorted.size() + alliances.size() -1 ) / alliances.size() ) ) ) )
             {
                 wxLogMessage( _T("removing clan %s"), (*clan_it).first.c_str() );
@@ -1027,21 +1027,21 @@ void Battle::Autobalance( BalanceType balance_type, bool support_clans, bool str
 
     for ( size_t i = 0; i < players_sorted.size(); ++i )
     {
-        /// skip clanners, those have been added already.
+        // skip clanners, those have been added already.
         if ( clan_alliances.count( players_sorted[i]->GetClan() ) > 0 )
         {
             wxLogMessage( _T("clanner already added, nick=%s"), players_sorted[i]->GetNick().c_str() );
             continue;
         }
 
-        /// find alliances with lowest ranksum
-        /// insert current user into random one out of them
-        /// since performance doesnt matter here, i simply sort alliances,
-        /// then find how many alliances in beginning have lowest ranksum
-        /// note that balance player ranks range from 1 to 1.1 now
-        /// i.e. them are quasi equal
-        /// so we're essentially adding to alliance with smallest number of players,
-        /// the one with smallest ranksum.
+        // find alliances with lowest ranksum
+        // insert current user into random one out of them
+        // since performance doesnt matter here, i simply sort alliances,
+        // then find how many alliances in beginning have lowest ranksum
+        // note that balance player ranks range from 1 to 1.1 now
+        // i.e. them are quasi equal
+        // so we're essentially adding to alliance with smallest number of players,
+        // the one with smallest ranksum.
 
         std::sort( alliances.begin(), alliances.end() );
         float lowestrank = alliances[0].ranksum;
@@ -1068,29 +1068,59 @@ void Battle::Autobalance( BalanceType balance_type, bool support_clans, bool str
     }
 }
 
-void Battle::FixTeamIDs( BalanceType balance_type, bool support_clans, bool strong_clans, int controlteamsize )
+void Battle::FixTeamIDs( BalanceType balance_type, bool support_clans, bool strong_clans, int numcontrolteams )
 {
-    wxLogMessage(_T("Autobalancing teams, type=%d, clans=%d, strong_clans=%d, controlteamsize=%d"),balance_type, support_clans, strong_clans, controlteamsize);
-    DoAction(_T("is auto-balancing control teams ..."));
+    wxLogMessage(_T("Autobalancing teams, type=%d, clans=%d, strong_clans=%d, numcontrolteams=%d"),balance_type, support_clans, strong_clans, numcontrolteams);
     //size_t i;
     //int num_alliances;
     std::vector<ControlTeam> teams;
 
-    if ( controlteamsize == 0 ) controlteamsize = GetNumUsers(); // 0 == use num players, will use comshare only if no available team slots
+    if ( numcontrolteams == 0 ) numcontrolteams = GetNumUsers(); // 0 == use num players, will use comshare only if no available team slots
     IBattle::StartType position_type = (IBattle::StartType)s2l( CustomBattleOptions().getSingleValue( _T("startpostype"), OptionsWrapper::EngineOption ) );
     if ( ( position_type == ST_Fixed ) || ( position_type == ST_Random ) ) // if fixed start pos type or random, use max teams = start pos count
     {
       try
       {
-        controlteamsize = std::min( controlteamsize, LoadMap().info.posCount );
+        numcontrolteams = std::min( numcontrolteams, LoadMap().info.posCount );
       }
       catch( assert_exception ) {}
     }
-    controlteamsize = std::min( controlteamsize, 16 ); // clamp to 16 (max spring supports)
+    numcontrolteams = std::min( numcontrolteams, 16 ); // clamp to 16 (max spring supports)
 
-    for ( int i = 0; i < controlteamsize; i++ ) teams.push_back( ControlTeam( i ) );
-
-    //for(i=0;i<alliances.size();++i)alliances[i].allynum=i;
+    if ( numcontrolteams >= ( GetNumUsers() - GetSpectators() ) ) // autobalance behaves weird when trying to put one player per team and i CBA to fix it, so i'll reuse the old code :P
+    {
+      DoAction(_T("is making control teams unique..."));
+      // apparently tasserver doesnt like when i fix/force ids of everyone.
+      std::set<int> allteams;
+      size_t numusers = GetNumUsers();
+      for( size_t i = 0; i < numusers; ++i )
+      {
+        User &user = GetUser(i);
+        if( !user.BattleStatus().spectator ) allteams.insert( user.BattleStatus().team );
+      }
+      std::set<int> teams;
+      int t = 0;
+      for( size_t i = 0; i < GetNumUsers(); ++i )
+      {
+        User &user = GetUser(i);
+        if( !user.BattleStatus().spectator )
+        {
+          if( teams.count( user.BattleStatus().team ) )
+          {
+            while( allteams.count(t) || teams.count( t ) ) t++;
+            ForceTeam( GetUser(i), t );
+            teams.insert( t );
+          }
+          else
+          {
+            teams.insert( user.BattleStatus().team );
+          }
+        }
+      }
+      return;
+    }
+    DoAction(_T("is auto-balancing control teams ..."));
+    for ( int i = 0; i < numcontrolteams; i++ ) teams.push_back( ControlTeam( i ) );
 
     wxLogMessage(_T("number of teams: %u"), teams.size() );
 
@@ -1133,7 +1163,7 @@ void Battle::FixTeamIDs( BalanceType balance_type, bool support_clans, bool stro
         while ( clan_it != clan_teams.end() )
         {
             ControlTeam &clan = (*clan_it).second;
-            /// if clan is too small (only 1 clan member in battle) or too big, dont count it as clan
+            // if clan is too small (only 1 clan member in battle) or too big, dont count it as clan
             if ( ( clan.players.size() < 2 ) || ( !strong_clans && ( clan.players.size() >  ( ( players_sorted.size() + teams.size() -1 ) / teams.size() ) ) ) )
             {
                 wxLogMessage(_T("removing clan %s"),(*clan_it).first.c_str());
@@ -1160,21 +1190,21 @@ void Battle::FixTeamIDs( BalanceType balance_type, bool support_clans, bool stro
 
     for (size_t i = 0; i < players_sorted.size(); ++i )
     {
-        /// skip clanners, those have been added already.
+        // skip clanners, those have been added already.
         if ( clan_teams.count( players_sorted[i]->GetClan() ) > 0 )
         {
             wxLogMessage( _T("clanner already added, nick=%s"),players_sorted[i]->GetNick().c_str() );
             continue;
         }
 
-        /// find teams with lowest ranksum
-        /// insert current user into random one out of them
-        /// since performance doesnt matter here, i simply sort teams,
-        /// then find how many teams in beginning have lowest ranksum
-        /// note that balance player ranks range from 1 to 1.1 now
-        /// i.e. them are quasi equal
-        /// so we're essentially adding to teams with smallest number of players,
-        /// the one with smallest ranksum.
+        // find teams with lowest ranksum
+        // insert current user into random one out of them
+        // since performance doesnt matter here, i simply sort teams,
+        // then find how many teams in beginning have lowest ranksum
+        // note that balance player ranks range from 1 to 1.1 now
+        // i.e. them are quasi equal
+        // so we're essentially adding to teams with smallest number of players,
+        // the one with smallest ranksum.
 
         std::sort( teams.begin(), teams.end() );
         float lowestrank = teams[0].ranksum;
