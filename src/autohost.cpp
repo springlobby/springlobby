@@ -110,9 +110,14 @@ void AutoHost::OnSaidBattle( const wxString& nick, const wxString& msg )
     m_battle.SendHostInfo( IBattle::HI_Locked );
     m_lastActionTime = currentTime;
   }
-  else if ( msg == _T("!fixids") ) {
-    m_battle.FixTeamIDs();
-    m_battle.DoAction( _T( "is making control teams unique." ) );
+  else if ( msg.StartsWith( _T("!fixids") ) ) {
+    unsigned int num = s2l( msg.AfterFirst( _T(' ') ) );
+    m_battle.FixTeamIDs( IBattle::balance_divide, false, false, num );
+    m_lastActionTime = currentTime;
+  }
+  else if ( msg.StartsWith( _T("!cfixids") ) ) {
+    unsigned int num = s2l( msg.AfterFirst( _T(' ') ) );
+    m_battle.FixTeamIDs( IBattle::balance_divide, true, true, num );
     m_lastActionTime = currentTime;
   }
   else if ( msg == _T("!spectunsynced") ) {
