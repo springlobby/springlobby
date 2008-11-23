@@ -369,7 +369,11 @@ void Battle::OnUserAdded( User& user )
     if (IsFounderMe())
     {
 
-        m_opts.spectators+=user.BattleStatus().spectator?1:0;
+        if ( user.BattleStatus().spectator )
+        {
+           m_opts.spectators++;
+           SendHostInfo( HI_Spectators );
+        }
 
         if (CheckBan(user))
             return;
@@ -457,7 +461,8 @@ void Battle::OnUserRemoved( User& user )
 {
     if (IsFounderMe())
     {
-        m_opts.spectators-=user.BattleStatus().spectator?1:0;
+      if ( user.BattleStatus().spectator ) m_opts.spectators--;
+      SendHostInfo( HI_Spectators );
     }
     user.SetBattle( 0 );
     UserList::RemoveUser( user.GetNick() );
