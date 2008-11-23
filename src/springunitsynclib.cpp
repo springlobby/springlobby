@@ -516,6 +516,37 @@ wxImage SpringUnitSyncLib::GetMetalmap( const wxString& mapFileName )
 }
 
 
+wxImage SpringUnitSyncLib::GetHeightmap( const wxString& mapFileName )
+{
+  InitLib( m_get_infomap_size ); // assume GetInfoMap is available too
+
+  wxLogMessage( _T("Heightmap: %s"), mapFileName.c_str() );
+
+  int width = 0, height = 0, retval;
+
+  retval = m_get_infomap_size(mapFileName.mb_str(wxConvUTF8), "height", &width, &height);
+  ASSERT_EXCEPTION( retval != 0 && width * height != 0, _T("Get heightmap size failed") );
+
+  typedef unsigned char uchar;
+  typedef unsigned short ushort;
+  wxImage heightmap(width, height, false);
+  uninitialized_array<ushort> grayscale(width * height);
+  uchar* true_colours = heightmap.GetData();
+
+  retval = m_get_infomap(mapFileName.mb_str(wxConvUTF8), "height", grayscale, 2 /*byte per pixel*/);
+  ASSERT_EXCEPTION( retval != 0, _T("Get heightmap failed") );
+
+  for ( int i = 0; i < width*height; i++ ) {
+  	const int value = grayscale[i] >> 8;
+    true_colours[(i*3)  ] = value;
+    true_colours[(i*3)+1] = value;
+    true_colours[(i*3)+2] = value;
+  }
+
+  return heightmap;
+}
+
+
 int SpringUnitSyncLib::GetPrimaryModChecksum( int index )
 {
   InitLib( m_get_mod_checksum );

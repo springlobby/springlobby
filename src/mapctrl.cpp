@@ -110,6 +110,7 @@ MapCtrl::MapCtrl( wxWindow* parent, int size, IBattle* battle, Ui& ui, bool read
   wxPanel( parent, -1, wxDefaultPosition, wxSize(size, size), wxSIMPLE_BORDER|wxFULL_REPAINT_ON_RESIZE ),
   m_minimap(0),
   m_metalmap(0),
+  m_heightmap(0),
   m_battle(battle),
   m_ui(ui),
   m_mapname(_T("")),
@@ -428,6 +429,7 @@ void MapCtrl::LoadMinimap()
     if (m_draw_start_types && usync().VersionSupports(IUnitSync::USYNC_GetInfoMap)) {
       // todo: optimize? (currently loads image from disk twice)
       m_metalmap = new wxBitmap( usync().GetMetalmap( map, w, h ) );
+      m_heightmap = new wxBitmap( usync().GetHeightmap( map, w, h ) );
       // singleplayer mode doesn't allow startboxes anyway
       if (!m_sp) {
         m_metalmap_cumulative = usync().GetMetalmap( map );
@@ -451,6 +453,8 @@ void MapCtrl::FreeMinimap()
   m_minimap = 0;
   delete m_metalmap;
   m_metalmap = 0;
+  delete m_heightmap;
+  m_heightmap = 0;
   m_mapname = _T("");
 }
 
@@ -643,6 +647,7 @@ void MapCtrl::DrawBackground( wxDC& dc )
     switch (m_current_infomap) {
       case IM_Minimap: img = m_minimap; break;
       case IM_Metalmap: img = m_metalmap; break;
+      case IM_Heightmap: img = m_heightmap; break;
       default:
         ASSERT_LOGIC( false, _T("missing InfoMap IM_* enumeration constant in switch") );
         break;
