@@ -11,37 +11,47 @@
 
 struct BattleStartRect
 {
-  BattleStartRect() { toadd = false; todelete = false; exist = false; toresize = false; }
-  bool toadd;
-  bool todelete;
-  bool toresize;
-  bool exist;
+    BattleStartRect()
+    {
+        toadd = false;
+        todelete = false;
+        exist = false;
+        toresize = false;
+    }
+    bool toadd;
+    bool todelete;
+    bool toresize;
+    bool exist;
 
-  bool IsOk() { return exist && !todelete; }
+    bool IsOk()
+    {
+        return exist && !todelete;
+    }
 
-  int ally;
-  int top;
-  int left;
-  int right;
-  int bottom;
+    int ally;
+    int top;
+    int left;
+    int right;
+    int bottom;
 };
 
 
-struct BattleBot {
-  UserBattleStatus bs;
-  int posx;
-  int posy;
-  int handicap;
-  wxString name;
-  wxString owner;
-  wxString aidll;
+struct BattleBot
+{
+    UserBattleStatus bs;
+    int posx;
+    int posy;
+    int handicap;
+    wxString name;
+    wxString owner;
+    wxString aidll;
 
 };
 
 
 class IBattle
 {
-  public:
+public:
 
     IBattle();
     virtual ~IBattle();
@@ -68,47 +78,53 @@ class IBattle
     /** @name Enums
      * @{
      */
-    enum NatType {
-      NAT_None = 0,
-      NAT_Hole_punching,
-      NAT_Fixed_source_ports
+    enum NatType
+    {
+        NAT_None = 0,
+        NAT_Hole_punching,
+        NAT_Fixed_source_ports
     };
 
-    enum RankLimitType {
-      rank_limit_none=0,
-      rank_limit_autospec,
-      rank_limit_autokick
+    enum RankLimitType
+    {
+        rank_limit_none = 0,
+        rank_limit_autospec,
+        rank_limit_autokick
     };
 
 
-    enum BalanceType {
-      balance_random=0,
-      balance_divide
+    enum BalanceType
+    {
+        balance_divide,
+        balance_random
     };
 
     typedef int HostInfo;
 
     typedef int StartType;
-    enum {
-      ST_Fixed = 0,
-      ST_Random = 1,
-      ST_Choose = 2,
-      ST_Pick = 3
+    enum
+    {
+        ST_Fixed = 0,
+        ST_Random = 1,
+        ST_Choose = 2,
+        ST_Pick = 3
     };
 
     typedef int GameType;
-    enum  {
-      GT_ComContinue = 0,
-      GT_ComEnds = 1,
-      GT_Lineage = 2
+    enum
+    {
+        GT_ComContinue = 0,
+        GT_ComEnds = 1,
+        GT_Lineage = 2
     };
 
 
     typedef int BattleType;
-    enum {
-      BT_Unknown = 0,
-      BT_Multi = 1,
-      BT_Single = 2
+    enum
+    {
+        BT_Unknown = 0,
+        BT_Multi = 1,
+        BT_Single = 2
     };
 
 
@@ -131,7 +147,11 @@ class IBattle
 
     virtual wxColour GetFreeColour( User *for_whom ) const = 0;
 
-    virtual BattleStartRect GetStartRect( unsigned int allyno ) { BattleStartRect foo; return foo; };
+    virtual BattleStartRect GetStartRect( unsigned int allyno )
+    {
+        BattleStartRect foo;
+        return foo;
+    };
     virtual void AddStartRect( unsigned int allyno, unsigned int left, unsigned int top, unsigned int right, unsigned int bottom ) {};
     virtual void RemoveStartRect( unsigned int allyno ) {};
     virtual void ResizeStartRect( unsigned int allyno ) {};
@@ -139,7 +159,10 @@ class IBattle
     virtual void StartRectResized( unsigned int allyno ) {};
     virtual void StartRectAdded( unsigned int allyno ) {};
     virtual void ClearStartRects(){};
-    virtual unsigned int GetNumRects() { return 0; };
+    virtual unsigned int GetNumRects()
+    {
+        return 0;
+    };
 
     virtual int GetMyAlly() = 0;
     virtual void SetMyAlly( int ally ) = 0;
@@ -149,15 +172,24 @@ class IBattle
     virtual void SendHostInfo( HostInfo update ) = 0;
     virtual void SendHostInfo( const wxString& Tag ) = 0;
 
-    virtual BattleBot* GetBotByStartPosition( unsigned int startpos ) { return 0; };
+    virtual BattleBot* GetBotByStartPosition( unsigned int startpos )
+    {
+        return 0;
+    };
     virtual BattleBot* GetBot( unsigned int index ) const  = 0;
-    virtual BattleBot* GetBot( const wxString& name ) const { return 0; };
+    virtual BattleBot* GetBot( const wxString& name ) const
+    {
+        return 0;
+    };
     virtual unsigned int GetNumBots() const = 0;
     virtual unsigned int AddBot( int ally, int posx, int posy, int handicap, const wxString& aidll );
     virtual void RemoveBot( unsigned int index ) {};
 
     virtual void GetFreePosition( int& x, int& y ) {}
-    virtual int GetFreeAlly() { return 0; }
+    virtual int GetFreeAlly()
+    {
+        return 0;
+    }
 
     virtual void DisableUnit( const wxString& unitname );
     virtual void EnableUnit( const wxString& unitname );
@@ -166,7 +198,10 @@ class IBattle
 
     virtual void OnUnitSyncReloaded();
 
-    virtual OptionsWrapper& CustomBattleOptions() { return m_opt_wrap; }
+    virtual OptionsWrapper& CustomBattleOptions()
+    {
+        return m_opt_wrap;
+    }
 
     virtual bool LoadOptionsPreset( const wxString& name );
     virtual void SaveOptionsPreset( const wxString& name );
@@ -176,7 +211,7 @@ class IBattle
 
     virtual void Update ( const wxString& Tag ) =0;
 
-  protected:
+protected:
 
     bool m_map_loaded;
     bool m_mod_loaded;
