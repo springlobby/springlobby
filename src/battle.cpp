@@ -840,6 +840,13 @@ bool PlayerRankCompareFunction( User *a, User *b ) // should never operate on nu
     return ( a->GetBalanceRank() > b->GetBalanceRank() );
 }
 
+bool PlayerTeamCompareFunction( User *a, User *b ) // should never operate on nulls. Hence, ASSERT_LOGIC is appropriate here.
+{
+    ASSERT_LOGIC( a, _T("fail in Autobalance, NULL player") );
+    ASSERT_LOGIC( b, _T("fail in Autobalance, NULL player") );
+    return ( a->BattleStatus().team > b->BattleStatus().team );
+}
+
 struct Alliance
 {
     std::vector<User *>players;
@@ -963,17 +970,30 @@ void Battle::Autobalance( BalanceType balance_type, bool support_clans, bool str
     std::vector<User*> players_sorted;
     players_sorted.reserve( GetNumUsers() );
 
-    int player_team_counter = 0;
-
     for ( size_t i = 0; i < GetNumUsers(); ++i )
     {
-        if ( !GetUser( i ).BattleStatus().spectator )
+        User usr = GetUser( i );
+        if ( !usr.BattleStatus().spectator )
         {
-            players_sorted.push_back( &GetUser( i ) );
-            // -- server fail? it doesnt work right.
-            //ForceTeam(GetUser(i),player_team_counter);
-            player_team_counter++;
+            players_sorted.push_back( &usr );
         }
+    }
+
+    std::sort( players_sorted.begin(), players_sorted.end(), PlayerTeamCompareFunction ); // sort by team to remove duplicates
+    int previousteam = -1;
+    std::vector<User*>::iterator it = players_sorted.begin();
+    while( it != players_sorted.end() ) // remove duplicate teams
+    { // TODO (BrainDamage#1#): correct "balance" rank so it takes account of removed users
+      std::vector<User*>::iterator next = it;
+      ++next;
+      User usr = **it;
+      if ( usr.BattleStatus().team == previousteam )
+      {
+        previousteam = usr.BattleStatus().team;
+        players_sorted.erase( it );
+      }
+      else previousteam = usr.BattleStatus().team;
+      it=next;
     }
 
     shuffle( players_sorted );
@@ -1054,15 +1074,19 @@ void Battle::Autobalance( BalanceType balance_type, bool support_clans, bool str
         alliances[my_random( rnd_k )].AddPlayer( players_sorted[i] );
     }
 
-
+    int totalplayers = GetNumUsers();
     for ( size_t i = 0; i < alliances.size(); ++i )
     {
         for ( size_t j = 0; j < alliances[i].players.size(); ++j )
         {
             ASSERT_LOGIC( alliances[i].players[j], _T("fail in Autobalance, NULL player") );
-            wxString msg = wxString::Format( _T("setting player %s to alliance %d"), alliances[i].players[j]->GetNick().c_str(), i );
-            wxLogMessage(_T("%s"), msg.c_str() );
-            ForceAlly( *alliances[i].players[j], alliances[i].allynum );
+            int balanceteam = alliances[i].players[j]->BattleStatus().team;
+            wxLogMessage( _T("setting team %d to alliance %d"), balanceteam, i );
+            for ( size_t h = 0; h < totalplayers; h++ ) // change ally num of all players in the team
+            {
+              User usr = GetUser( h );
+              if ( usr.BattleStatus().team == balanceteam ) ForceAlly( usr, alliances[i].allynum );
+            }
         }
     }
 }
