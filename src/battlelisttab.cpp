@@ -64,7 +64,6 @@ END_EVENT_TABLE()
 
 
 BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( parent, -1 ),
-  m_filter_notice(0),
   m_ui(ui),
   m_sel_battle(0)
 {
@@ -366,7 +365,6 @@ void BattleListTab::SetFilterActiv( bool activ )
   m_filter->SetActiv( activ );
   m_filter_activ->SetValue( activ );
   sett().SetBattleFilterActivState( activ );
-  ShowFilterNotice( activ );
   m_battle_list->MarkDirtySort();
 }
 
@@ -509,7 +507,6 @@ void BattleListTab::OnFilterActiv( wxCommandEvent& event )
   }
   m_filter->SetActiv( active );
   sett().SetBattleFilterActivState( active );
-  ShowFilterNotice( active );
 }
 
 
@@ -526,24 +523,6 @@ void BattleListTab::OnJoin( wxCommandEvent& event )
 
 }
 
-void BattleListTab::ShowFilterNotice( const bool show )
-{
-    if ( show ) {
-        m_filter_notice = new wxStaticText( this, -1, _("Battle filter is active") );
-        m_battlelist_sizer->Add ( m_filter_notice, 0, wxALIGN_CENTER_HORIZONTAL | wxTOP | wxBOTTOM, 5 );
-        m_battlelist_sizer->Layout();
-
-    }
-    else {
-        if ( m_filter_notice ) {
-            m_battlelist_sizer->Detach( m_filter_notice );
-            delete m_filter_notice;
-            m_filter_notice = 0;
-            m_battlelist_sizer->Layout();
-            //m_ma
-        }
-    }
-}
 
 void BattleListTab::OnListJoin( wxListEvent& event )
 {
@@ -655,7 +634,6 @@ void BattleListTab::ShowExtendedInfos( bool show )
     const bool recursive = true;
     m_main_sizer->Show(m_info_sizer, show, recursive );
     m_main_sizer->Show(m_buttons_sep, show, recursive  );
-    if ( m_filter_notice ) m_main_sizer->Show( m_filter_notice, show, recursive  );
     m_info_show->SetValue( show );
     Layout();
 }
