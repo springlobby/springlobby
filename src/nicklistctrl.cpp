@@ -133,7 +133,8 @@ void NickListCtrl::RemoveUser( const User& user )
   if ( index != -1 )
   {
     //erase
-    //setitemcount
+    m_data.erase( m_data.begin() + index );
+    SetItemCount( m_data.size() );
     SetColumnWidth( 3, wxLIST_AUTOSIZE );
     return;
   }
