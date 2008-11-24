@@ -25,8 +25,8 @@
 #include "usermenu.h"
 #include "Helper/sortutil.h"
 
-//#define LOCKDATA wxMutexLocker(*s_dataGuard);
-#define LOCKDATA
+#define LOCKDATA wxMutexLocker lock(*s_dataGuard);
+//#define LOCKDATA
 
 int wxCALLBACK NickListSortCallback(long item1, long item2, long sortData);
 
@@ -89,14 +89,14 @@ NickListCtrl::~NickListCtrl()
 
 }
 
-void NickListCtrl::AddUser( const UserList& userlist )
-{
-    m_data.reserve( userlist.GetNumUsers() );
-    for ( unsigned int i = 0; i < userlist.GetNumUsers(); ++i)
-    {
-        AddUser( userlist.GetUser( i ) );
-    }
-}
+//void NickListCtrl::AddUser( const UserList& userlist )
+//{
+//    m_data.reserve( userlist.GetNumUsers() );
+//    for ( unsigned int i = 0; i < userlist.GetNumUsers(); ++i)
+//    {
+//        AddUser( userlist.GetUser( i ) );
+//    }
+//}
 
 void NickListCtrl::AddUser( const User& user )
 {
@@ -110,7 +110,7 @@ void NickListCtrl::AddUser( const User& user )
 //    return;
 //  }
 
-    m_data.push_back( user );
+    m_data.push_back( &user );
     SetItemCount( m_data.size() );
     RefreshItem( m_data.size() );
 
@@ -145,16 +145,15 @@ void NickListCtrl::UserUpdated( const User& user )
 {
     LOCKDATA
     int index = GetUserIndex( user );
-    m_data[index] = user;
-    RefreshItem( index );
-  //ASSERT_LOGIC( index != -1, _T("index = -1") );
-//  if(index!=-1){
-//    UserUpdated( index );
-//  }else{
-//    wxLogWarning(_T("NickListCtrl::UserUpdated error, index == -1 ."));
-//  }
-    HighlightItemUser( index, user.GetNick() );
-    MarkDirtySort();
+    if ( index != -1 ) {
+        m_data[index] = &user;
+        HighlightItemUser( index, user.GetNick() );
+        MarkDirtySort();
+        RefreshItem( index );
+    }
+    else {
+        wxLogWarning(_T("NickListCtrl::UserUpdated error, index == -1 ."));
+    }
 }
 
 void NickListCtrl::ClearUsers()
@@ -169,7 +168,7 @@ int NickListCtrl::GetUserIndex( const User& user )const
 {
     DataCIter it = m_data.begin();
     for ( int i = 0; it != m_data.end(); ++it, ++i ) {
-        if ( user.Equals( *it ) ) return i;
+        if ( *it != 0 && user.Equals( *(*it) ) ) return i;
     }
     wxLogError( _T("didn't find the user.") );
     return -1;
@@ -182,8 +181,10 @@ void NickListCtrl::OnActivateItem( wxListEvent& event )
   if ( index == -1 )
     return;
 
-  const User& user = m_data[index];
-  ui().mw().OpenPrivateChat( user );
+  const User* user = m_data[index];
+  if ( user ) {
+    ui().mw().OpenPrivateChat( *user );
+  }
   SetSelectedIndex( index );
 }
 
@@ -195,8 +196,8 @@ void NickListCtrl::OnShowMenu( wxContextMenuEvent& event )
   {
       //no need to popup the menu when there's no user selected
       int selected = GetSelectedIndex();
-      if ( selected != -1 ){
-          const User& user = m_data[selected];
+      if ( selected != -1 && m_data[selected] ){
+          const User& user = *m_data[selected];
           wxString nick = user.GetNick();
           m_menu->EnableItems( ( selected !=-1 ), nick );
           PopupMenu( m_menu );
@@ -295,13 +296,13 @@ void NickListCtrl::SetTipWindowText( const long item_hit, const wxPoint position
 {
 
     int coloumn = getColoumnFromPosition(position);
-    if (coloumn > (int)m_colinfovec.size() || coloumn < 0 || item_hit < 0 || item_hit > m_data.size() )
+    if (coloumn > (int)m_colinfovec.size() || coloumn < 0 || item_hit < 0 || item_hit > m_data.size() || m_data[item_hit]==NULL )
     {
         m_tiptext = _T("");
     }
     else
     {
-        const User& user = m_data[item_hit];
+        const User& user = *m_data[item_hit];
         {
             switch (coloumn)
             {
@@ -344,13 +345,15 @@ void NickListCtrl::SetTipWindowText( const long item_hit, const wxPoint position
 
 void NickListCtrl::HighlightItem( long item )
 {
-    const User& u = m_data[item];
-    wxString name = u.GetNick();
-    HighlightItemUser( item, name );
+    if ( m_data[item] ) {
+        const User& u = *m_data[item];
+        wxString name = u.GetNick();
+        HighlightItemUser( item, name );
+    }
 }
 
 
-typedef CompareBase<const User&>  UserCompareBase;
+typedef CompareBase<const User*>  UserCompareBase;
 
 template < int N, bool dir >
 struct UserCompare : public UserCompareBase {
@@ -368,10 +371,10 @@ template < >
 struct UserCompare < 3, false > : public UserCompareBase
 {
     static bool compare ( CompareType u1, CompareType u2 ) {
-        return ( u2.GetNick().CmpNoCase( u1.GetNick() ) < 1 );
+        return ( u2->GetNick().CmpNoCase( u1->GetNick() ) < 1 );
     }
     bool operator() ( CompareType u1, CompareType u2 ) const {
-        return ( u2.GetNick().CmpNoCase( u1.GetNick() ) < 1 );
+        return ( u2 && u1 && u2->GetNick().CmpNoCase( u1->GetNick() ) < 1 );
     }
 };
 
@@ -379,10 +382,10 @@ template < >
 struct UserCompare < 2, false > : public UserCompareBase
 {
     static bool compare ( CompareType u1, CompareType u2 ) {
-        return u2.GetStatus().rank < u1.GetStatus().rank;
+        return u2->GetStatus().rank < u1->GetStatus().rank;
     }
     bool operator() ( CompareType u1, CompareType u2 ) const {
-        return u2.GetStatus().rank < u1.GetStatus().rank;
+        return u2 && u1 && u2->GetStatus().rank < u1->GetStatus().rank;
     }
 };
 
@@ -390,10 +393,10 @@ template < >
 struct UserCompare < 1, false > : public UserCompareBase
 {
     static bool compare ( CompareType u1, CompareType u2 ) {
-        return u2.GetCountry() < u1.GetCountry();
+        return u2->GetCountry() < u1->GetCountry();
     }
     bool operator() ( CompareType u1, CompareType u2 ) const {
-        return u2.GetCountry() < u1.GetCountry();
+        return u2 && u1 && u2->GetCountry() < u1->GetCountry();
     }
 };
 
@@ -419,11 +422,11 @@ void NickListCtrl::Sort()
 
 //        SLBubbleSort( m_data, CompareSelector<UserCompare>::GetFunctor( 3,true,2,true,1,true ) );
         Compare< UserCompare, 3, false, 2, false, 1, false  > cmpo;
-//        SLInsertionSort( m_data, cmpo );
-        SLInsertionSort( m_data, CompareSelector<UserCompare>::GetFunctor( 3,true,2,true,1,true ) );
-//        std::stable_sort( m_data.begin(), m_data.end(), cmpo );
-        //std::sort( m_data.begin(), m_data.end(), CompareSelector<UserCompare>::GetFunctor( 3,true,2,true,1,true ) );
-       // std::sort( m_data.begin(), m_data.end(), cmpo );
+        SLInsertionSort( m_data, cmpo );
+ //       SLInsertionSort( m_data, CompareSelector<UserCompare>::GetFunctor( 3,true,2,true,1,true ) );
+//       std::stable_sort( m_data.begin(), m_data.end(), cmpo );
+       //std::sort( m_data.begin(), m_data.end(), CompareSelector<UserCompare>::GetFunctor( 3,true,2,true,1,true ) );
+//        std::sort( m_data.begin(), m_data.end(), cmpo );
 
     }
 }
@@ -436,23 +439,26 @@ wxString NickListCtrl::OnGetItemText(long item, long column) const
         case 2:
         default: return wxEmptyString;
 
-        case 3: return m_data[item].GetNick();
+        case 3: return ( m_data[item] ? m_data[item]->GetNick() : wxString() );
     }
 }
 
 int NickListCtrl::OnGetItemColumnImage(long item, long column) const
 {
-    const User& user = m_data[item];
-    const UserStatus& user_st = user.GetStatus();
-    switch ( column ) {
-        case 0: return icons().GetUserListStateIcon( user_st, false, user.GetBattle() != 0 );
-        case 1: return icons().GetFlagIcon( user.GetCountry() );
-        case 2: return icons().GetRankIcon( user.GetStatus().rank );
+    if ( m_data[item] ) {
+        const User& user = *m_data[item];
+        const UserStatus& user_st = user.GetStatus();
+        switch ( column ) {
+            case 0: return icons().GetUserListStateIcon( user_st, false, user.GetBattle() != 0 );
+            case 1: return icons().GetFlagIcon( user.GetCountry() );
+            case 2: return icons().GetRankIcon( user.GetStatus().rank );
 
-        case 3:
-        default: return -1;
+            case 3:
+            default: return -1;
 
+        }
     }
+    return -1;
 }
 
 int NickListCtrl::OnGetItemImage(long item) const

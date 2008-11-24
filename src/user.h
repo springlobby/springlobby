@@ -148,7 +148,7 @@ class User : public CommonUser
     wxString GetClan();
 
     //bool operator< ( const User& other ) const { return m_nick < other.GetNick() ; }
-    User& operator= ( const User& other );
+    //User& operator= ( const User& other );
 
   protected:
     // User variables

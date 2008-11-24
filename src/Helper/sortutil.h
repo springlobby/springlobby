@@ -45,9 +45,13 @@ struct Compare :
     }
 
     bool operator () ( ObjType u1, ObjType u2 ) const {
-        if ( !Comparator<C0,B0>::compare( u1, u2 ) ) {
-            if ( !Comparator<C1,B1>::compare( u1, u2 ) ) {
-                if ( !Comparator<C2,B2>::compare( u1, u2 ) ) {
+        assert( u1 && u2 );
+        Comparator<C0,B0> c1;
+        if ( !c1( u1, u2 ) ) {
+            Comparator<C1,B1> c2;
+            if ( !c2( u1, u2 ) ) {
+                Comparator<C2,B2> c3;
+                if ( !c3( u1, u2 ) ) {
                     return false;
                 }
                 return true;

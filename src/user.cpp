@@ -149,21 +149,21 @@ void CommonUser::SetStatus( const UserStatus& status )
   m_status = status;
 }
 
-User& User::operator= ( const User& other )
-{
-    if( this != &other ) {
-        //m_serv = (other.GetServer());
-        m_status = other.GetStatus();
-        m_battle = other.GetBattle();
-        m_nick = other.GetNick();
-        m_cpu = other.GetCpu();
-        m_country = other.GetCountry();
-        m_bstatus = other.GetBattleStatus();
-        uidata = other.uidata;
-
-
-    }
-    return *this;
-}
+//User& User::operator= ( const User& other )
+//{
+//    if( this != &other ) {
+//        //m_serv = (other.GetServer());
+//        m_status = other.GetStatus();
+//        m_battle = other.GetBattle();
+//        m_nick = other.GetNick();
+//        m_cpu = other.GetCpu();
+//        m_country = other.GetCountry();
+//        m_bstatus = other.GetBattleStatus();
+//        uidata = other.uidata;
+//
+//
+//    }
+//    return *this;
+//}
 
 

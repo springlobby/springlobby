@@ -22,7 +22,7 @@ class NickListCtrl : public CustomVirtListCtrl
     ~NickListCtrl();
 
     virtual void AddUser( const User& user );
-    void AddUser( const UserList& userlist );
+ //   void AddUser( const UserList& userlist );
     void RemoveUser( const User& user );
 
     void UserUpdated( const User& user );
@@ -59,7 +59,7 @@ class NickListCtrl : public CustomVirtListCtrl
 //    static int wxCALLBACK ComparePlayercountryDOWN(long item1, long item2, long sortData);
     virtual void Sort();
 
-    typedef std::vector< User > DataVec;
+    typedef std::vector< const User* > DataVec;
     typedef DataVec::iterator DataIter;
     typedef DataVec::const_iterator DataCIter;
     DataVec m_data;
