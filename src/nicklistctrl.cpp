@@ -361,12 +361,16 @@ struct UserCompare<N,true> : public UserCompareBase {
     static bool compare ( CompareType u1, CompareType u2 ) {
         return UserCompare<N,false>::compare( u2, u1);
     }
+
 };
 
 template < >
 struct UserCompare < 3, false > : public UserCompareBase
 {
     static bool compare ( CompareType u1, CompareType u2 ) {
+        return ( u2.GetNick().CmpNoCase( u1.GetNick() ) < 1 );
+    }
+    bool operator() ( CompareType u1, CompareType u2 ) const {
         return ( u2.GetNick().CmpNoCase( u1.GetNick() ) < 1 );
     }
 };
@@ -377,12 +381,18 @@ struct UserCompare < 2, false > : public UserCompareBase
     static bool compare ( CompareType u1, CompareType u2 ) {
         return u2.GetStatus().rank < u1.GetStatus().rank;
     }
+    bool operator() ( CompareType u1, CompareType u2 ) const {
+        return u2.GetStatus().rank < u1.GetStatus().rank;
+    }
 };
 
 template < >
 struct UserCompare < 1, false > : public UserCompareBase
 {
     static bool compare ( CompareType u1, CompareType u2 ) {
+        return u2.GetCountry() < u1.GetCountry();
+    }
+    bool operator() ( CompareType u1, CompareType u2 ) const {
         return u2.GetCountry() < u1.GetCountry();
     }
 };
@@ -408,9 +418,12 @@ void NickListCtrl::Sort()
         LOCKDATA
 
 //        SLBubbleSort( m_data, CompareSelector<UserCompare>::GetFunctor( 3,true,2,true,1,true ) );
-        Compare< UserCompare, 3, true, 2, true, 1, true  > cmpo;
-        //SLInsertionSort( m_data, cmpo );
-        std::stable_sort( m_data.begin(), m_data.end(), cmpo );
+        Compare< UserCompare, 3, false, 2, false, 1, false  > cmpo;
+//        SLInsertionSort( m_data, cmpo );
+        SLInsertionSort( m_data, CompareSelector<UserCompare>::GetFunctor( 3,true,2,true,1,true ) );
+//        std::stable_sort( m_data.begin(), m_data.end(), cmpo );
+        //std::sort( m_data.begin(), m_data.end(), CompareSelector<UserCompare>::GetFunctor( 3,true,2,true,1,true ) );
+       // std::sort( m_data.begin(), m_data.end(), cmpo );
 
     }
 }

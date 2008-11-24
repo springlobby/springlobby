@@ -29,9 +29,12 @@ struct Compare :
     typedef bool test;
     typedef typename Comparator<-1,false>::CompareType ObjType;
     static bool compare ( ObjType u1, ObjType u2 ) {
-        if ( !Comparator<C0,B0>::compare( u1, u2 ) ) {
-            if ( !Comparator<C1,B1>::compare( u1, u2 ) ) {
-                if ( !Comparator<C2,B2>::compare( u1, u2 ) ) {
+        Comparator<C0,B0> c1;
+        if ( !c1( u1, u2 ) ) {
+            Comparator<C1,B1> c2;
+            if ( !c2( u1, u2 ) ) {
+                Comparator<C2,B2> c3;
+                if ( !c3( u1, u2 ) ) {
                     return false;
                 }
                 return true;
@@ -65,8 +68,13 @@ struct CompareSelector {
     {
 
 //        return  &(Compare< Comparator, 1, false, 0, true, 0, true  >::compare);
-        return  &(Compare< Comparator, 3, false, 1, true, 1, true  >::compare);
+        return  &(Compare< Comparator, 3, false, 2, false, 1, false  >::compare);
     }
+
+//    static CompareInterface GetObject ( int c1, bool b1,int c2, bool b2,int c3, bool b3 )
+//    {
+//
+//    }
 };
 
 template< class ContainerType, class ObjType >
