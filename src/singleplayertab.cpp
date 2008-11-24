@@ -242,6 +242,11 @@ void SinglePlayerTab::OnModSelect( wxCommandEvent& event )
 
 void SinglePlayerTab::OnAddBot( wxCommandEvent& event )
 {
+  if ( m_battle.GetNumBots() > 15 )
+  {
+    customMessageBoxNoModal( SL_MAIN_ICON, _("Spring only supports up to 16 different teams"), _("Num players error"), wxICON_EXCLAMATION );
+    return;
+  }
   AddBotDialog dlg( this, m_battle, true );
   if ( dlg.ShowModal() == wxID_OK ) {
     int x = 0, y = 0, handicap = 0;

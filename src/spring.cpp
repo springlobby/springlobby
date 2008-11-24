@@ -300,11 +300,10 @@ wxString Spring::WriteScriptTxt( Battle& battle )
   tdf.Append(_T("GameType"),usync().GetModArchive(usync().GetModIndex(battle.GetHostModName())));
 
 
-  unsigned long uhash;
-  battle.LoadMod().hash.ToULong(&uhash);
 
-  tdf.Append(_T("ModHash"),int(uhash));
 
+  tdf.Append(_T("ModHash"), battle.LoadMod().hash);;
+  tdf.Append(_T("MapHash"), battle.LoadMap().hash);
 
   OptionsWrapper::wxStringTripleVec optlistEng = battle.CustomBattleOptions().getOptions( OptionsWrapper::EngineOption );
   for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistEng.begin(); it != optlistEng.end(); ++it)
@@ -514,10 +513,9 @@ wxString Spring::WriteSPScriptTxt( SinglePlayerBattle& battle )
   int NumAllys = 0;
   int PlayerTeam = -1;
 
-  long startpostype;
-  battle.CustomBattleOptions().getSingleValue( _T("startpostype"), OptionsWrapper::EngineOption ).ToLong( &startpostype );
+  IBattle::StartType startpostype = (IBattle::StartType)s2l( battle.CustomBattleOptions().getSingleValue( _T("startpostype"), OptionsWrapper::EngineOption ) );
 
-  wxLogMessage( _T("StartPosType=%d"), (int)startpostype );
+  wxLogMessage( _T("StartPosType = %d"), startpostype );
 
 
   for ( unsigned int i = 0; i < battle.GetNumBots(); i++ ) {

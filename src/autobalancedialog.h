@@ -3,12 +3,14 @@
 
 //(*Headers(AutoBalanceDialog)
 #include <wx/dialog.h>
+#include "ibattle.h"
 //*)
 
 class wxButton;
 class wxChoice;
 class wxStaticLine;
 class wxStaticText;
+
 
 /** \brief lets host automatically assign players to teams, optionally taking clan/rank into account
  * dialog sets balancing options in Settings handler for the calling class to use after modal display ends
@@ -17,8 +19,18 @@ class AutoBalanceDialog: public wxDialog
 {
 	public:
 
-		AutoBalanceDialog(wxWindow* parent);
+    struct BalanceOptions
+    {
+      IBattle::BalanceType type;
+      bool respectclans;
+      bool strongclans;
+      int groupingsize;
+    };
+
+		AutoBalanceDialog(wxWindow* parent, const BalanceOptions& defaultval );
 		virtual ~AutoBalanceDialog();
+
+    BalanceOptions GetResult();
 
 		//(*Declarations(AutoBalanceDialog)
 		wxButton* m_ok_button;
@@ -28,6 +40,8 @@ class AutoBalanceDialog: public wxDialog
 		wxChoice* m_clans_choice;
 		wxStaticText* m_method_label;
 		wxButton* m_cancel_button;
+		wxStaticText* StaticText2;
+		wxChoice* m_group_choice;
 		//*)
 
 	protected:
@@ -36,7 +50,9 @@ class AutoBalanceDialog: public wxDialog
 		static const long ID_STATICTEXT1;
 		static const long ID_METHOD;
 		static const long ID_STATICTEXT2;
+		static const long ID_STATICTEXT3;
 		static const long ID_CHOICE1;
+		static const long ID_CHOICE2;
 		static const long ID_STATICLINE1;
 		static const long ID_CANCEL;
 		static const long ID_OK;

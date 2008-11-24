@@ -150,6 +150,8 @@ class IUnitSync
     virtual wxImage GetMinimap( const wxString& mapname, int width, int height ) = 0;
     virtual wxImage GetMetalmap( const wxString& mapname ) = 0;
     virtual wxImage GetMetalmap( const wxString& mapname, int width, int height ) = 0;
+    virtual wxImage GetHeightmap( const wxString& mapname ) = 0;
+    virtual wxImage GetHeightmap( const wxString& mapname, int width, int height ) = 0;
 
     virtual int GetSideCount( const wxString& modname ) = 0;
     virtual wxString GetSideName( const wxString& modname, int index ) = 0;
