@@ -25,10 +25,6 @@
 #include "usermenu.h"
 #include "Helper/sortutil.h"
 
-//#define LOCKDATA wxMutexLocker lock(*s_dataGuard);
-#define LOCKDATA
-
-int wxCALLBACK NickListSortCallback(long item1, long item2, long sortData);
 
 BEGIN_EVENT_TABLE( NickListCtrl, CustomVirtListCtrl )
   EVT_LIST_ITEM_ACTIVATED( NICK_LIST, NickListCtrl::OnActivateItem )
@@ -102,7 +98,6 @@ void NickListCtrl::AddUser( const User& user )
 {
     wxLogDebugFunc(_T(""));
     assert(&user);
-    LOCKDATA
 
 //  int index = InsertItem( GetItemCount(), wxEmptyString );
 //  if(index==-1){
@@ -127,7 +122,6 @@ void NickListCtrl::AddUser( const User& user )
 
 void NickListCtrl::RemoveUser( const User& user )
 {
-    LOCKDATA
   int index = GetUserIndex( user );
 
   if ( index != -1 )
@@ -144,7 +138,6 @@ void NickListCtrl::RemoveUser( const User& user )
 
 void NickListCtrl::UserUpdated( const User& user )
 {
-    LOCKDATA
     int index = GetUserIndex( user );
     if ( index != -1 ) {
         m_data[index] = &user;
@@ -159,7 +152,6 @@ void NickListCtrl::UserUpdated( const User& user )
 
 void NickListCtrl::ClearUsers()
 {
-    LOCKDATA
     m_data.clear();
     SetItemCount( 0 );
 }
@@ -374,9 +366,7 @@ struct UserCompare < 3, false > : public UserCompareBase
     static int compare ( CompareType u1, CompareType u2 ) {
         return u2->GetNick().CmpNoCase( u1->GetNick() ) ;
     }
-    bool operator() ( CompareType u1, CompareType u2 ) const {
-        return (  u2->GetNick().CmpNoCase( u1->GetNick() ) < 0 );
-    }
+
 };
 
 template < >
@@ -385,19 +375,13 @@ struct UserCompare < 2, false > : public UserCompareBase
     static int compare ( CompareType u1, CompareType u2 ) {
         return compareSimple( u2->GetStatus().rank, u1->GetStatus().rank );
     }
-    bool operator() ( CompareType u1, CompareType u2 ) const {
-        return u2->GetStatus().rank < u1->GetStatus().rank;
-    }
 };
 
 template < >
 struct UserCompare < 1, false > : public UserCompareBase
 {
-    static bool compare ( CompareType u1, CompareType u2 ) {
+    static int compare ( CompareType u1, CompareType u2 ) {
         return u2->GetCountry().CmpNoCase( u1->GetCountry() );
-    }
-    bool operator() ( CompareType u1, CompareType u2 ) const {
-        return u2->GetCountry() < u1->GetCountry();
     }
 };
 
@@ -419,13 +403,12 @@ void NickListCtrl::Sort()
 {
     if ( m_dirty_sort && m_data.size() > 0 )
     {
-        LOCKDATA
 
 //        SLBubbleSort( m_data, CompareSelector<UserCompare>::GetFunctor( 3,true,2,true,1,true ) );
-        Compare< UserCompare, 3, false, 2, false, 1, false  > cmpo;
+        //Compare< UserCompare, 3, false, 2, false, 1, false  > cmpo;
   //      SLInsertionSort( m_data, cmpo );
-//       SLInsertionSort( m_data, CompareSelector<UserCompare>::GetFunctor( 3,true,2,true,1,true ) );
-       std::stable_sort( m_data.begin(), m_data.end(), cmpo );
+       SLInsertionSort( m_data, CompareSelector<UserCompare>::GetFunctor( 3,true,2,true,1,true ) );
+       //std::stable_sort( m_data.begin(), m_data.end(), cmpo );
 //       std::stable_sort( m_data.begin(), m_data.end(), CompareSelector<UserCompare>::GetFunctor( 3,true,2,true,1,true ) );
        //std::sort( m_data.begin(), m_data.end(), CompareSelector<UserCompare>::GetFunctor( 3,true,2,true,1,true ) );
 //        std::sort( m_data.begin(), m_data.end(), cmpo );

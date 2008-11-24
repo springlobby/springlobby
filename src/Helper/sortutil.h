@@ -13,26 +13,12 @@ struct CompareBase {
             return 1;
         return 0;
     }
-
-//    template <>
-//    inline static int compareSimple( const wxString& o1, const wxString& o2 ) {
-//        if ( o1 < o2 )
-//            return -1;
-//        else if ( o1 > o2 )
-//            return 1;
-//        return 0;
-//    }
 };
 
 template < class CompareImp >
 struct CompareInterface {
 
     typedef CompareImp ImpType;
-
-    template < class ObjType >
-    bool operator() ( ObjType o1, ObjType o2 ) {
-        return asImp()( o1,o2 );
-    }
 
     inline ImpType& asImp(){
         return static_cast<ImpType>(*this);
@@ -48,43 +34,21 @@ struct Compare :
     typedef typename Comparator<-1,false>::CompareType ObjType;
     static bool compare ( ObjType u1, ObjType u2 ) {
         assert( u1 && u2 );
-        Comparator<C0,B0> c1;
-        int res = c1.compare( u1, u2 );
+
+        int res = Comparator<C0,B0>::compare( u1, u2 );
         if ( res != 0 )
             return res < 0;
 
-        Comparator<C1,B1> c2;
-        res = c2.compare( u1, u2 );
+        res = Comparator<C1,B1>::compare( u1, u2 );
         if ( res != 0 )
             return res < 0;
 
-        Comparator<C2,B2> c3;
-        res = c3.compare( u1, u2 );
-        if ( res != 0 )
-            return res < 0;
-
-        return false;
-
-    }
-
-    bool operator () ( ObjType u1, ObjType u2 ) const {
-        assert( u1 && u2 );
-        Comparator<C0,B0> c1;
-        int res = c1.compare( u1, u2 );
-        if ( res != 0 )
-            return res < 0;
-
-        Comparator<C1,B1> c2;
-        res = c2.compare( u1, u2 );
-        if ( res != 0 )
-            return res < 0;
-
-        Comparator<C2,B2> c3;
-        res = c3.compare( u1, u2 );
+        res = Comparator<C2,B2>::compare( u1, u2 );
         if ( res != 0 )
             return res < 0;
 
         return false;
+
     }
 };
 
@@ -144,27 +108,6 @@ void SLInsertionSort( ContainerType& data, bool  (*cmp)  ( ObjType , ObjType  ) 
         data[j + 1] = v;
     }
 
-}
-
-template< class ContainerType, class Comparator >
-void SLInsertionSort( ContainerType& data, Comparator& cmp )
-{
-    typedef typename Comparator::ObjType ObjType;
-
-    const int n = data.size();
-    for ( int i = 0; i < n; i++ )
-    {
-        ObjType v = data[i];
-        int j;
-
-        for ( j = i - 1; j >= 0; j--)
-        {
-            if ( cmp( data[j], v ) )
-                break;
-            data[j + 1] = data[j];
-        }
-        data[j + 1] = v;
-    }
 }
 
 #endif // SPRINGLOBBY_SORTUTIL_H_INCLUDED
