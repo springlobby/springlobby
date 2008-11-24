@@ -25,6 +25,7 @@ class MapCtrl;
 class ColorButton;
 class wxBitmapComboBox;
 struct UnitSyncMap;
+class wxToggleButton;
 
 typedef std::map<wxString,long> OptionListMap;
 
@@ -64,6 +65,7 @@ class BattleRoomTab : public wxScrolledWindow
     void OnSideSel( wxCommandEvent& event );
     void OnPresetSel( wxCommandEvent& event );
     void OnAutoLock( wxCommandEvent& event );
+    void OnLockBalance( wxCommandEvent& event );
 
     void OnUserJoined( User& user );
     void OnUserLeft( User& user );
@@ -136,9 +138,17 @@ class BattleRoomTab : public wxScrolledWindow
 
     wxCheckBox* m_ready_chk;
     wxCheckBox* m_spec_chk;
+    #if wxUSE_TOGGLEBTN
+    wxToggleButton* m_lock_chk;
+    wxToggleButton* m_autohost_chk;
+    wxToggleButton* m_autolock_chk;
+    wxToggleButton* m_lock_balance_chk;
+    #else
     wxCheckBox* m_lock_chk;
     wxCheckBox* m_autohost_chk;
     wxCheckBox* m_autolock_chk;
+    wxCheckBox* m_lock_balance_chk;
+    #endif
 
     wxListCtrl* m_opts_list;
 
@@ -146,6 +156,7 @@ class BattleRoomTab : public wxScrolledWindow
         BROOM_LEAVE = wxID_HIGHEST,
         BROOM_IMREADY,
         BROOM_LOCK,
+        BROOM_LOCK_BALANCE,
         BROOM_SPEC,
         BROOM_TEAMSEL,
         BROOM_ALLYSEL,

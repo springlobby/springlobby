@@ -404,6 +404,8 @@ void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 {
 
     bool previousspectatorstatus = user.BattleStatus().spectator;
+    int previousteam = user.BattleStatus().team;
+    int previousally = user.BattleStatus().ally;
 
     user.UpdateBattleStatus( status );
 
@@ -426,6 +428,11 @@ void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
                 m_opts.spectators--;
                 SendHostInfo( HI_Spectators );
             }
+        }
+        if ( m_opts.lockexternalbalancechanges )
+        {
+          if ( previousteam != user.BattleStatus().team ) ForceTeam( user, previousteam );
+          if ( previousally != user.BattleStatus().ally ) ForceAlly( user, previousally );
         }
         if ( ( m_opts.rankneeded > 1 ) && ( user.GetStatus().rank < m_opts.rankneeded ))
         {
@@ -617,6 +624,17 @@ bool Battle::IsProxy()
     return m_opts.isproxy;
 }
 
+void Battle::SetLockExternalBalanceChanges( bool value )
+{
+    if ( value ) DoAction( _T("has locked player balance changes") );
+    else DoAction( _T("has unlocked player balance changes") );
+    m_opts.lockexternalbalancechanges = value;
+}
+
+bool Battle::GetLockExternalBalanceChanges()
+{
+    return m_opts.lockexternalbalancechanges;
+}
 
 void CommonBattle::AddStartRect( unsigned int allyno, unsigned int left, unsigned int top, unsigned int right, unsigned int bottom )
 {
@@ -794,7 +812,14 @@ void Battle::ForceSide( User& user, int side )
 
 void Battle::ForceTeam( User& user, int team )
 {
-    m_serv.ForceTeam( m_opts.battleid, user.GetNick(), team );
+  if ( IsFounderMe() )
+  {
+    UserBattleStatus status = user.BattleStatus();
+    status.team = team;
+    user.UpdateBattleStatus( status ); // update locally first so locking status changes won't revert host's
+    ui().OnUserBattleStatus( *this, user );
+  }
+  m_serv.ForceTeam( m_opts.battleid, user.GetNick(), team );
 }
 
 
@@ -806,7 +831,14 @@ void Battle::ForceAlly( User& user, int ally )
     }
     else
     {
-        m_serv.ForceAlly( m_opts.battleid, user.GetNick(), ally );
+      if ( IsFounderMe() )
+      {
+        UserBattleStatus status = user.BattleStatus();
+        status.ally = ally;
+        user.UpdateBattleStatus( status ); // update locally first so locking status changes won't revert host's
+        ui().OnUserBattleStatus( *this, user );
+      }
+      m_serv.ForceAlly( m_opts.battleid, user.GetNick(), ally );
     }
 }
 

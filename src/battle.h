@@ -29,6 +29,7 @@ struct BattleOptions
   bool ispassworded;
   int rankneeded;
   bool isproxy;
+  bool lockexternalbalancechanges;
   IBattle::RankLimitType ranklimittype;
 
   wxString founder;
@@ -223,6 +224,9 @@ class Battle : public CommonBattle
 
     void SetIsProxy( bool value );
     bool IsProxy();
+
+    void SetLockExternalBalanceChanges( bool value );
+    bool GetLockExternalBalanceChanges();
 
     ///< quick hotfix for bans
     bool CheckBan(User &user);
