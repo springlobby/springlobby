@@ -67,17 +67,18 @@ BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
     EVT_TOGGLEBUTTON( BROOM_AUTOHOST, BattleRoomTab::OnAutoHost )
     EVT_TOGGLEBUTTON( BROOM_AUTOLOCK, BattleRoomTab::OnAutoLock )
     EVT_TOGGLEBUTTON( BROOM_LOCK, BattleRoomTab::OnLock )
-    EVT_TOGGLEBUTTON( BROOM_LOCK_BALANCE, BattleRoomTab::OnLockBalance )
     #else
     EVT_CHECKBOX( BROOM_AUTOHOST, BattleRoomTab::OnAutoHost )
     EVT_CHECKBOX( BROOM_AUTOLOCK, BattleRoomTab::OnAutoLock )
     EVT_CHECKBOX( BROOM_LOCK, BattleRoomTab::OnLock )
-    EVT_CHECKBOX( BROOM_LOCK_BALANCE, BattleRoomTab::OnLockBalance )
     #endif
 
-    EVT_BUTTON ( BROOM_BALANCE, BattleRoomTab::OnBalance )
-    EVT_BUTTON ( BROOM_FIXID, BattleRoomTab::OnFixTeams )
-    EVT_BUTTON ( BROOM_FIXCOLOURS, BattleRoomTab::OnFixColours )
+    EVT_BUTTON( BROOM_MANAGE_MENU, BattleRoomTab::OnShowManagePlayersMenu )
+
+    EVT_MENU( BROOM_LOCK_BALANCE, BattleRoomTab::OnLockBalance )
+    EVT_MENU ( BROOM_BALANCE, BattleRoomTab::OnBalance )
+    EVT_MENU ( BROOM_FIXID, BattleRoomTab::OnFixTeams )
+    EVT_MENU ( BROOM_FIXCOLOURS, BattleRoomTab::OnFixColours )
 
 END_EVENT_TABLE()
 
@@ -143,6 +144,10 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
     m_leave_btn->SetToolTip(TE(_("Leave the battle and return to the battle list")));
     m_start_btn = new wxButton( this, BROOM_START, _("Start"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
     m_start_btn->SetToolTip(TE(_("Start the battle")));
+
+    m_manage_players_btn = new wxButton( this, BROOM_MANAGE_MENU, _("Player Management"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
+    m_manage_players_btn->SetToolTip(TE(_("Various functions to make team games simplers to setup")));
+
     m_addbot_btn = new wxButton( this, BROOM_ADDBOT, _("Add Bot..."), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
     m_addbot_btn->SetToolTip(TE(_("Add a computer-controlled player to the game")));
     #if wxUSE_TOGGLEBTN
@@ -152,15 +157,6 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
     #endif
     m_autolock_chk->SetToolTip(TE(_("Automatically locks the battle when the game starts and unlock when it's finished.")));
     m_autolock_chk->SetValue( sett().GetLastAutolockStatus() );
-
-    m_fix_colours_btn = new wxButton( this, BROOM_FIXCOLOURS, _("Fix colours"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
-    m_fix_colours_btn->SetToolTip(TE(_("Make player colors unique")));
-
-    m_balance_btn = new wxButton( this, BROOM_BALANCE, _("Balance"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
-    m_balance_btn->SetToolTip(TE(_("Automatically balance players into two or more alliances")));
-
-    m_fix_team_btn = new wxButton( this, BROOM_FIXID, _("Fix Teams"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
-    m_fix_team_btn->SetToolTip(TE(_("Automatically balance players into control teams, by default none shares control")));
 
     #if wxUSE_TOGGLEBTN
     m_lock_chk = new wxToggleButton( this, BROOM_LOCK , _("Locked"), wxDefaultPosition , wxSize( -1,CONTROL_HEIGHT ), 0 );
@@ -175,12 +171,20 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
     #endif
     m_autohost_chk->SetToolTip(TE(_("Toggle autohost mode.  This allows players to control your battle using commands like '!balance' and '!start'.")));
 
-    #if wxUSE_TOGGLEBTN
-    m_lock_balance_chk = new wxToggleButton( this, BROOM_LOCK_BALANCE , _("Lock Balance"), wxDefaultPosition , wxSize( -1,CONTROL_HEIGHT ), 0 );
-    #else
-    m_lock_balance_chk = new wxCheckBox( this, BROOM_LOCK_BALANCE, _("Lock Balance"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
-    #endif
-    m_lock_balance_chk->SetToolTip(TE(_("When activated, prevents anyone but the host to change team and ally")));
+    m_manage_users_mnu = new wxMenu();
+
+    m_lock_balance_mnu = new wxMenuItem( m_manage_users_mnu, BROOM_LOCK_BALANCE, _( "Lock Balance" ), _("When activated, prevents anyone but the host to change team and ally"), wxITEM_CHECK );
+    m_manage_users_mnu->Append( m_lock_balance_mnu );
+    m_lock_balance_mnu->Check( false );
+
+    wxMenuItem* m_balance_mnu = new wxMenuItem( m_manage_users_mnu, BROOM_BALANCE, _( "Balance alliances" ), _("Automatically balance players into two or more alliances") );
+    m_manage_users_mnu->Append( m_balance_mnu );
+
+    wxMenuItem* m_fix_colours_mnu = new wxMenuItem( m_manage_users_mnu, BROOM_FIXCOLOURS, _( "Fix colours" ), _("Make player colors unique") );
+    m_manage_users_mnu->Append( m_fix_colours_mnu );
+
+    wxMenuItem* m_fix_team_mnu = new wxMenuItem( m_manage_users_mnu, BROOM_FIXID, _( "Balance teams" ), _("Automatically balance players into control teams, by default none shares control") );
+    m_manage_users_mnu->Append( m_fix_team_mnu );
 
     m_options_preset_sel = new wxComboBox( this, BROOM_PRESETSEL, sett().GetModDefaultPresetName( m_battle.GetHostModName() ), wxDefaultPosition, wxDefaultSize,  sett().GetPresetList(), wxCB_READONLY );
     m_options_preset_sel->SetToolTip(TE(_("Load battle preset")));
@@ -260,11 +264,8 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
     m_buttons_sizer->Add( m_addbot_btn, 0, wxEXPAND | wxALL, 2 );
     m_buttons_sizer->Add( m_autohost_chk, 0, wxEXPAND | wxALL, 2 );
     m_buttons_sizer->Add( m_autolock_chk, 0, wxEXPAND | wxALL, 2 );
-    m_buttons_sizer->Add( m_lock_balance_chk, 0, wxEXPAND | wxALL, 2 );
     m_buttons_sizer->Add( m_lock_chk, 0, wxEXPAND | wxALL, 2 );
-    m_buttons_sizer->Add( m_fix_team_btn, 0, wxEXPAND | wxALL, 2 );
-    m_buttons_sizer->Add( m_fix_colours_btn, 0, wxEXPAND | wxALL, 2 );
-    m_buttons_sizer->Add( m_balance_btn, 0, wxEXPAND | wxALL, 2 );
+    m_buttons_sizer->Add( m_manage_players_btn, 0, wxEXPAND | wxALL, 2 );
     m_buttons_sizer->Add( m_start_btn, 0, wxEXPAND | wxALL, 2 );
 
     m_main_sizer->Add( m_top_sizer, 1, wxEXPAND );
@@ -286,14 +287,8 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
         m_start_btn->Disable();
         m_start_btn->SetToolTip(TE(_("Only the host can start the battle.")));
 
-        m_balance_btn->Disable();
-        m_balance_btn->SetToolTip(TE(_("Only the host can balance alliances.")));
-
-        m_fix_team_btn->Disable();
-        m_fix_team_btn->SetToolTip(TE(_("Only the host can fix team")));
-
-        m_fix_colours_btn->Disable();
-        m_fix_colours_btn->SetToolTip(TE(_("Only the host can fix player colours.")));
+        m_manage_players_btn->Disable();
+        m_manage_players_btn->SetToolTip(TE(_("Only the host can use those functions.")));
 
         m_lock_chk->Disable();
         m_lock_chk->SetToolTip(TE(_("Only the host can lock the game.")));
@@ -697,8 +692,13 @@ void BattleRoomTab::OnAutoLock( wxCommandEvent& event )
 
 void BattleRoomTab::OnLockBalance( wxCommandEvent& event )
 {
-  bool locked = m_lock_balance_chk->GetValue();
+  bool locked = m_lock_balance_mnu->IsChecked();
   m_battle.SetLockExternalBalanceChanges( locked );
+}
+
+void BattleRoomTab::OnShowManagePlayersMenu( wxCommandEvent& event )
+{
+  PopupMenu( m_manage_users_mnu );
 }
 
 void BattleRoomTab::OnUserJoined( User& user )
