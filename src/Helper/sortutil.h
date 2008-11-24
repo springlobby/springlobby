@@ -4,6 +4,24 @@
 template < class T>
 struct CompareBase {
     typedef T CompareType;
+
+    template < typename Type >
+    inline static int compareSimple( Type o1, Type o2 ) {
+        if ( o1 < o2 )
+            return -1;
+        else if ( o1 > o2 )
+            return 1;
+        return 0;
+    }
+
+//    template <>
+//    inline static int compareSimple( const wxString& o1, const wxString& o2 ) {
+//        if ( o1 < o2 )
+//            return -1;
+//        else if ( o1 > o2 )
+//            return 1;
+//        return 0;
+//    }
 };
 
 template < class CompareImp >
@@ -16,7 +34,7 @@ struct CompareInterface {
         return asImp()( o1,o2 );
     }
 
-    ImpType& asImp(){
+    inline ImpType& asImp(){
         return static_cast<ImpType>(*this);
     }
 
@@ -29,36 +47,44 @@ struct Compare :
     typedef bool test;
     typedef typename Comparator<-1,false>::CompareType ObjType;
     static bool compare ( ObjType u1, ObjType u2 ) {
+        assert( u1 && u2 );
         Comparator<C0,B0> c1;
-        if ( !c1( u1, u2 ) ) {
-            Comparator<C1,B1> c2;
-            if ( !c2( u1, u2 ) ) {
-                Comparator<C2,B2> c3;
-                if ( !c3( u1, u2 ) ) {
-                    return false;
-                }
-                return true;
-            }
-            return true;
-        }
-        return true;
+        int res = c1.compare( u1, u2 );
+        if ( res != 0 )
+            return res < 0;
+
+        Comparator<C1,B1> c2;
+        res = c2.compare( u1, u2 );
+        if ( res != 0 )
+            return res < 0;
+
+        Comparator<C2,B2> c3;
+        res = c3.compare( u1, u2 );
+        if ( res != 0 )
+            return res < 0;
+
+        return false;
+
     }
 
     bool operator () ( ObjType u1, ObjType u2 ) const {
         assert( u1 && u2 );
         Comparator<C0,B0> c1;
-        if ( !c1( u1, u2 ) ) {
-            Comparator<C1,B1> c2;
-            if ( !c2( u1, u2 ) ) {
-                Comparator<C2,B2> c3;
-                if ( !c3( u1, u2 ) ) {
-                    return false;
-                }
-                return true;
-            }
-            return true;
-        }
-        return true;
+        int res = c1.compare( u1, u2 );
+        if ( res != 0 )
+            return res < 0;
+
+        Comparator<C1,B1> c2;
+        res = c2.compare( u1, u2 );
+        if ( res != 0 )
+            return res < 0;
+
+        Comparator<C2,B2> c3;
+        res = c3.compare( u1, u2 );
+        if ( res != 0 )
+            return res < 0;
+
+        return false;
     }
 };
 
@@ -72,13 +98,9 @@ struct CompareSelector {
     {
 
 //        return  &(Compare< Comparator, 1, false, 0, true, 0, true  >::compare);
-        return  &(Compare< Comparator, 3, false, 2, false, 1, false  >::compare);
+        return  &(Compare< Comparator, 1, true, 2, true, 3, true  >::compare);
     }
 
-//    static CompareInterface GetObject ( int c1, bool b1,int c2, bool b2,int c3, bool b3 )
-//    {
-//
-//    }
 };
 
 template< class ContainerType, class ObjType >
