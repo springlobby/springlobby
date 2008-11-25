@@ -68,13 +68,13 @@ NickListCtrl::NickListCtrl( wxWindow* parent, bool show_header, NickListCtrl::Us
 
 
   m_sortorder[0].col = 0;
-  m_sortorder[0].direction = false;
+  m_sortorder[0].direction = -1;
   m_sortorder[1].col = 3;
-  m_sortorder[1].direction = true;
+  m_sortorder[1].direction = 1;
   m_sortorder[2].col = 2;
-  m_sortorder[2].direction = true;
+  m_sortorder[2].direction = 1;
   m_sortorder[3].col = 1;
-  m_sortorder[3].direction = true;
+  m_sortorder[3].direction = 1;
 
     s_dataGuard = new wxMutex();
 }
@@ -211,7 +211,7 @@ void NickListCtrl::OnColClick( wxListEvent& event )
   if (i > 3) { i = 3; }
   for ( ; i > 0; i--) { m_sortorder[i] = m_sortorder[i-1]; }
   m_sortorder[0].col = event.GetColumn();
-  m_sortorder[0].direction = !m_sortorder[0].direction;
+  m_sortorder[0].direction *= -1;
 
 
   GetColumn( m_sortorder[0].col, col );
@@ -350,8 +350,8 @@ typedef CompareBase<const User*>  UserCompareBase;
 
 template < int N >
 struct UserCompare : public UserCompareBase {
-    static int compare ( CompareType u1, CompareType u2, bool dir ) {
-        assert(0);//this case should never be actually be called, but is necessary to be defined at compile time
+    static int compare ( CompareType u1, CompareType u2, int dir ) {
+        //assert(0);//this case should never be actually be called, but is necessary to be defined at compile time
         return 0;
     }
 };
@@ -360,7 +360,7 @@ struct UserCompare : public UserCompareBase {
 template < >
 struct UserCompare < 3 > : public UserCompareBase
 {
-    static int compare ( CompareType u1, CompareType u2, bool dir ) {
+    static int compare ( CompareType u1, CompareType u2, int dir ) {
         return dir * u2->GetNick().CmpNoCase( u1->GetNick() ) ;
     }
 
@@ -369,7 +369,7 @@ struct UserCompare < 3 > : public UserCompareBase
 template < >
 struct UserCompare < 2 > : public UserCompareBase
 {
-    static int compare ( CompareType u1, CompareType u2, bool dir ) {
+    static int compare ( CompareType u1, CompareType u2, int dir ) {
         return dir * compareSimple( u2->GetStatus().rank, u1->GetStatus().rank );
     }
 };
@@ -377,7 +377,7 @@ struct UserCompare < 2 > : public UserCompareBase
 template < >
 struct UserCompare < 1 > : public UserCompareBase
 {
-    static int compare ( CompareType u1, CompareType u2, bool dir ) {
+    static int compare ( CompareType u1, CompareType u2, int dir ) {
         return dir * u2->GetCountry().CmpNoCase( u1->GetCountry() );
     }
 };
@@ -390,25 +390,21 @@ void NickListCtrl::SortList()
     Freeze();
     Sort();
     Thaw();
-    RefreshItems(0, m_data.size()-1 );
-//  RestoreSelection();
-//  m_dirty_sort = false;
+
 }
 
 
 void NickListCtrl::Sort()
 {
-    if ( m_dirty_sort && m_data.size() > 0 )
+    if ( m_data.size() > 0 )
     {
 
-//        SLBubbleSort( m_data, CompareSelector<UserCompare>::GetFunctor( 3,true,2,true,1,true ) );
-        //Compare< UserCompare, 3, false, 2, false, 1, false  > cmpo;
-  //      SLInsertionSort( m_data, cmpo );
-       SLInsertionSort( m_data, CompareSelector<UserCompare>::GetFunctor( 3,2,1 ), 1, 1, 1 );
-       //std::stable_sort( m_data.begin(), m_data.end(), cmpo );
-//       std::stable_sort( m_data.begin(), m_data.end(), CompareSelector<UserCompare>::GetFunctor( 3,true,2,true,1,true ) );
-       //std::sort( m_data.begin(), m_data.end(), CompareSelector<UserCompare>::GetFunctor( 3,true,2,true,1,true ) );
-//        std::sort( m_data.begin(), m_data.end(), cmpo );
+       SLInsertionSort( m_data, CompareSelector<UserCompare>::
+                                GetFunctor( m_sortorder[0].col,m_sortorder[1].col,m_sortorder[2].col )
+            , m_sortorder[0].direction, m_sortorder[1].direction, m_sortorder[2].direction );
+
+        RefreshItems(0, m_data.size()-1 );
+        m_dirty_sort = false;
 
     }
 }

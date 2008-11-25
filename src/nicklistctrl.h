@@ -49,14 +49,6 @@ class NickListCtrl : public CustomVirtListCtrl
     virtual int OnGetItemColumnImage(long item, long column) const;
 
   protected:
-//    static int wxCALLBACK ComparePlayernameUP(long item1, long item2, long sortData);
-//    static int wxCALLBACK ComparePlayernameDOWN(long item1, long item2, long sortData);
-//    static int wxCALLBACK ComparePlayerstatusUP(long item1, long item2, long sortData);
-//    static int wxCALLBACK ComparePlayerstatusDOWN(long item1, long item2, long sortData);
-//    static int wxCALLBACK ComparePlayerrankUP(long item1, long item2, long sortData);
-//    static int wxCALLBACK ComparePlayerrankDOWN(long item1, long item2, long sortData);
-//    static int wxCALLBACK ComparePlayercountryUP(long item1, long item2, long sortData);
-//    static int wxCALLBACK ComparePlayercountryDOWN(long item1, long item2, long sortData);
     virtual void Sort();
 
     typedef std::vector< const User* > DataVec;

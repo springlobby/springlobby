@@ -33,24 +33,40 @@ struct Compare :
     typedef bool test;
     typedef typename Comparator<-1>::CompareType ObjType;
     static bool compare ( ObjType u1, ObjType u2, int dir1, int dir2, int dir3 ) {
-        assert( u1 && u2 );
 
         int res = Comparator<C0>::compare( u1, u2, dir1 );
         if ( res != 0 )
             return res < 0;
 
-        res = Comparator<C1>::compare( u1, u2, dir1 );
-        if ( res != 0 )
-            return res < 0;
+        if ( dir2 != 0 ) {
+            res = Comparator<C1>::compare( u1, u2, dir2 );
+            if ( res != 0 )
+                return res < 0;
 
-        res = Comparator<C2>::compare( u1, u2, dir1 );
-        if ( res != 0 )
-            return res < 0;
+            if ( dir3 != 0 ) {
+                res = Comparator<C2>::compare( u1, u2, dir3 );
+                if ( res != 0 )
+                    return res < 0;
+            }
+        }
 
         return false;
 
     }
 };
+
+#define LOOKUPTABLE CASE(0) \
+            CASE(1) \
+            CASE(2)\
+            CASE(3)\
+            CASE(4)\
+            CASE(5)\
+            CASE(7)\
+            CASE(8)\
+            CASE(9)\
+            CASE(10)
+
+#define DEFAULT_FUNCTOR &(Compare< Comparator, 1, 1, 1 >::compare)
 
 template < template <int n > class Comparator  >
 struct CompareSelector {
@@ -63,23 +79,10 @@ struct CompareSelector {
 
         #define CASE(i) case i: return GetFunctor<i>(c1,c2);
         switch ( c3 ) {
-            CASE(1)
-            CASE(2)
-            CASE(3)
-            CASE(4)
-            CASE(5)
-            CASE(7)
-            CASE(8)
-            CASE(9)
-            CASE(10)
-            CASE(11)
-            CASE(12)
-            CASE(13)
-            CASE(14)
-            CASE(15)
+            LOOKUPTABLE
         }
         #undef CASE
-        return  &(Compare< Comparator, 1, 2, 3 >::compare);
+        return DEFAULT_FUNCTOR;
 
     }
 
@@ -88,48 +91,22 @@ struct CompareSelector {
     {
         #define CASE(i) case i: return GetFunctor<i,C3>(c1);
         switch ( c2 ) {
-            CASE(1)
-            CASE(2)
-            CASE(3)
-            CASE(4)
-            CASE(5)
-            CASE(7)
-            CASE(8)
-            CASE(9)
-            CASE(10)
-            CASE(11)
-            CASE(12)
-            CASE(13)
-            CASE(14)
-            CASE(15)
+            LOOKUPTABLE
         }
         #undef CASE
-        return  &(Compare< Comparator, 1, 2, 3 >::compare);
+        return  DEFAULT_FUNCTOR;
     }
     template < int C2, int C3 >
     static cmp GetFunctor( int c1 )
     {
         #define CASE(i) case i: return &(Compare<Comparator,i,C2,C3>::compare);
         switch ( c1 ) {
-            CASE(1)
-            CASE(2)
-            CASE(3)
-            CASE(4)
-            CASE(5)
-            CASE(7)
-            CASE(8)
-            CASE(9)
-            CASE(10)
-            CASE(11)
-            CASE(12)
-            CASE(13)
-            CASE(14)
-            CASE(15)
+            LOOKUPTABLE
         }
         #undef CASE
-        return  &(Compare< Comparator, 1, 2, 3 >::compare);
+        return  DEFAULT_FUNCTOR;
     }
-
+    #undef LOOKUPTABLE
 
 };
 

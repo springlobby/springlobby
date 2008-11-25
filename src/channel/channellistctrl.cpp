@@ -51,11 +51,11 @@ ChannelListctrl::ChannelListctrl(wxWindow* parent, wxWindowID id, const wxString
   AddColumn( 2, -1, _T("topic"), _T("topic") );
 
   m_sortorder[2].col = 2;
-  m_sortorder[2].direction = false;
+  m_sortorder[2].direction = -1;
   m_sortorder[0].col = 0;
-  m_sortorder[0].direction = true;
+  m_sortorder[0].direction = 1;
   m_sortorder[1].col = 1;
-  m_sortorder[1].direction = true;
+  m_sortorder[1].direction = 1;
 
 }
 
@@ -82,63 +82,54 @@ void ChannelListctrl::AddChannel(const wxString& channel, unsigned int num_users
     ChannelInfo data ( channel, num_users, topic );
     m_data.push_back( data );
     SetItemCount( m_data.size() );
-    RefreshItem( m_data.size() );
+    RefreshItem( m_data.size() - 1);
     SetColumnWidth( 0, wxLIST_AUTOSIZE );
-    Sort();
+    //Sort();
     //RestoreSelection();
 }
 
-struct ChannelCompareBase {
-    typedef const ChannelListctrl::ChannelInfo& CompareType;
-};
-
-template < int N, bool dir >
-struct ChannelCompare : public ChannelCompareBase {
-};
+typedef CompareBase<const ChannelListctrl::ChannelInfo&>  ChannelCompareBase;
 
 template < int N >
-struct ChannelCompare<N,true> : public ChannelCompareBase {
-    static bool compare ( CompareType u1, CompareType u2 ) {
-        return ChannelCompare<N,false>::compare( u2, u1);
+struct ChannelCompare : public ChannelCompareBase {
+    static int compare ( CompareType u1, CompareType u2, int dir ) {
+        assert(0);//this case should never be actually be called, but is necessary to be defined at compile time
+        return 0;
+    }
+};
+
+
+template < >
+struct ChannelCompare < 0 > : public ChannelCompareBase
+{
+    static bool compare ( CompareType u1, CompareType u2, int dir ) {
+        wxString n1 = u1.name;
+        wxString n2 = u2.name;
+        return dir * n1.CmpNoCase( n2 );
     }
 };
 
 template < >
-struct ChannelCompare < 0, false > : public ChannelCompareBase
+struct ChannelCompare < 1 > : public ChannelCompareBase
 {
-    static bool compare ( CompareType u1, CompareType u2 ) {
-        wxString n1 = u1.name;
-        wxString n2 = u2.name;
-        return n1 < n2;
+    static bool compare ( CompareType u1, CompareType u2, int dir ) {
+        return dir * compareSimple( u1.usercount, u2.usercount ) ;
     }
 };
-//template < >
-//struct ChannelCompare < 0, true > : public ChannelCompareBase
-//{
-//    static bool compare ( CompareType u1, CompareType u2 ) {
-//        return u2.name <  u1.name ;
-//    }
-//};
+
 template < >
-struct ChannelCompare < 1, false > : public ChannelCompareBase
+struct ChannelCompare < 2 > : public ChannelCompareBase
 {
-    static bool compare ( CompareType u1, CompareType u2 ) {
-        return u1.usercount <  u2.usercount ;
+    static bool compare ( CompareType u1, CompareType u2, int dir ) {
+        return dir * u1.topic.CmpNoCase( u2.topic );
     }
 };
-//template < >
-//struct ChannelCompare < 1, true > : public ChannelCompareBase
-//{
-//    static bool compare ( CompareType u1, CompareType u2 ) {
-//        return u2.usercount <  u1.usercount ;
-//    }
-//};
 
 void ChannelListctrl::Sort()
 {
-//    std::sort( m_data.begin(), m_data.end(), CompareSelector<ChannelCompare>::GetFunctor( 3,true,2,true,1,true ) );
-    //SLInsertionSort( m_data, CompareSelector<ChannelCompare>::GetFunctor( 3,true,2,true,1,true ) );
-    RefreshItems( 0, m_data.size() );
+
+    SLInsertionSort( m_data, CompareSelector<ChannelCompare>::GetFunctor( 1,0,2 ), 1,1, 1 );
+    RefreshItems( 0, m_data.size() -1 );
 }
 
 void ChannelListctrl::OnColClick( wxListEvent& event )
@@ -154,7 +145,7 @@ void ChannelListctrl::OnColClick( wxListEvent& event )
   if (i > 2) { i = 2; }
   for ( ; i > 0; i--) { m_sortorder[i] = m_sortorder[i-1]; }
   m_sortorder[0].col = event.GetColumn();
-  m_sortorder[0].direction = !m_sortorder[0].direction;
+  m_sortorder[0].direction *= -1;
 
 
   GetColumn( m_sortorder[0].col, col );
@@ -207,10 +198,7 @@ void ChannelListctrl::FilterChannel( const wxString& partial )
 
     Sort();
 }
-//SetItem( index, 0, channel );
-//    SetItem( index, 1, TowxString(num_users) );
-//    SetItem( index, 2, topic );
-//    SetItemImage( index, icons().ICON_EMPTY );
+
 
 int ChannelListctrl::OnGetItemColumnImage(long item, long column) const
 {

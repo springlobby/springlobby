@@ -5,7 +5,7 @@
 
 struct SortOrderItem {
     int col;
-    bool direction;
+    int direction;
 };
 typedef std::map<int,SortOrderItem> SortOrder;
 
