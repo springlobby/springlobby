@@ -25,6 +25,42 @@
 #include "usermenu.h"
 #include "Helper/sortutil.h"
 
+typedef CompareBase<const User*>  UserCompareBase;
+
+template < int N >
+struct UserCompare : public UserCompareBase {
+    static int compare ( CompareType u1, CompareType u2, int dir ) {
+        //assert(0);//this case should never be actually be called, but is necessary to be defined at compile time
+        return 0;
+    }
+};
+
+
+template < >
+struct UserCompare < 3 > : public UserCompareBase
+{
+    static int compare ( CompareType u1, CompareType u2, int dir ) {
+        return dir * u2->GetNick().CmpNoCase( u1->GetNick() ) ;
+    }
+
+};
+
+template < >
+struct UserCompare < 2 > : public UserCompareBase
+{
+    static int compare ( CompareType u1, CompareType u2, int dir ) {
+        return dir * compareSimple( u2->GetStatus().rank, u1->GetStatus().rank );
+    }
+};
+
+template < >
+struct UserCompare < 1 > : public UserCompareBase
+{
+    static int compare ( CompareType u1, CompareType u2, int dir ) {
+        return dir * u2->GetCountry().CmpNoCase( u1->GetCountry() );
+    }
+};
+
 
 BEGIN_EVENT_TABLE( NickListCtrl, CustomVirtListCtrl )
   EVT_LIST_ITEM_ACTIVATED( NICK_LIST, NickListCtrl::OnActivateItem )
@@ -76,7 +112,9 @@ NickListCtrl::NickListCtrl( wxWindow* parent, bool show_header, NickListCtrl::Us
   m_sortorder[3].col = 1;
   m_sortorder[3].direction = 1;
 
-    s_dataGuard = new wxMutex();
+    m_compare_func = CompareSelector<UserCompare>::
+                                GetFunctor( m_sortorder[0].col,m_sortorder[1].col,m_sortorder[2].col );
+
 }
 
 
@@ -217,6 +255,10 @@ void NickListCtrl::OnColClick( wxListEvent& event )
   GetColumn( m_sortorder[0].col, col );
   col.SetImage( ( m_sortorder[0].direction )?icons().ICON_UP:icons().ICON_DOWN );
   SetColumn( m_sortorder[0].col, col );
+
+  m_compare_func = CompareSelector<UserCompare>::
+                                GetFunctor( m_sortorder[0].col,m_sortorder[1].col,m_sortorder[2].col );
+
   Sort();
 }
 
@@ -345,44 +387,6 @@ void NickListCtrl::HighlightItem( long item )
     }
 }
 
-
-typedef CompareBase<const User*>  UserCompareBase;
-
-template < int N >
-struct UserCompare : public UserCompareBase {
-    static int compare ( CompareType u1, CompareType u2, int dir ) {
-        //assert(0);//this case should never be actually be called, but is necessary to be defined at compile time
-        return 0;
-    }
-};
-
-
-template < >
-struct UserCompare < 3 > : public UserCompareBase
-{
-    static int compare ( CompareType u1, CompareType u2, int dir ) {
-        return dir * u2->GetNick().CmpNoCase( u1->GetNick() ) ;
-    }
-
-};
-
-template < >
-struct UserCompare < 2 > : public UserCompareBase
-{
-    static int compare ( CompareType u1, CompareType u2, int dir ) {
-        return dir * compareSimple( u2->GetStatus().rank, u1->GetStatus().rank );
-    }
-};
-
-template < >
-struct UserCompare < 1 > : public UserCompareBase
-{
-    static int compare ( CompareType u1, CompareType u2, int dir ) {
-        return dir * u2->GetCountry().CmpNoCase( u1->GetCountry() );
-    }
-};
-
-
 void NickListCtrl::SortList()
 {
   if ( !m_dirty_sort ) return;
@@ -399,8 +403,7 @@ void NickListCtrl::Sort()
     if ( m_data.size() > 0 )
     {
 
-       SLInsertionSort( m_data, CompareSelector<UserCompare>::
-                                GetFunctor( m_sortorder[0].col,m_sortorder[1].col,m_sortorder[2].col )
+       SLInsertionSort( m_data, m_compare_func
             , m_sortorder[0].direction, m_sortorder[1].direction, m_sortorder[2].direction );
 
         RefreshItems(0, m_data.size()-1 );

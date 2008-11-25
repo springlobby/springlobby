@@ -55,7 +55,10 @@ class NickListCtrl : public CustomVirtListCtrl
     typedef DataVec::iterator DataIter;
     typedef DataVec::const_iterator DataCIter;
     DataVec m_data;
-    wxMutex* s_dataGuard;
+
+    typedef bool  (*CompareFunc)  ( const User*, const User*, int, int, int  )  ;
+
+    CompareFunc m_compare_func;
 
     UserMenu* m_menu;
 
