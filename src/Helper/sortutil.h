@@ -61,8 +61,36 @@ struct CompareSelector {
     static cmp GetFunctor( int c1, bool b1,int c2, bool b2,int c3, bool b3 )
     {
 
-//        return  &(Compare< Comparator, 1, false, 0, true, 0, true  >::compare);
+////        return  &(Compare< Comparator, 1, false, 0, true, 0, true  >::compare);
+//        #define CASE_T(i) case i: return Get2<i,true>(c2,b2,c3,b3);
+//        if ( b1 ) {
+//            switch ( c1 ) {
+////                case 1: return Get2<1,true>( c2, b2, c3, b3 );
+//                CASE_T(1)
+//                CASE_T(2)
+//                CASE_T(3)
+//                CASE_T(4)
+//                CASE_T(5)
+//                CASE_T(7)
+//                CASE_T(8)
+//                CASE_T(9)
+//                CASE_T(10)
+//                CASE_T(11)
+//                CASE_T(12)
+//                CASE_T(13)
+//                CASE_T(14)
+//                CASE_T(15)
+//            }
+//        }
+//        #undef CASE_T(i)
         return  &(Compare< Comparator, 1, true, 2, true, 3, true  >::compare);
+
+    }
+
+    template < int C1, bool B1 >
+    static cmp Get2( int c2, bool b2,int c3, bool b3 )
+    {
+        return  &(Compare< Comparator, C1, B1, 2, true, 3, true  >::compare);
     }
 
 };
