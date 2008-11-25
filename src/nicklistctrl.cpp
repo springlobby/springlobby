@@ -348,40 +348,37 @@ void NickListCtrl::HighlightItem( long item )
 
 typedef CompareBase<const User*>  UserCompareBase;
 
-template < int N, bool dir >
-struct UserCompare : public UserCompareBase {
-};
-
 template < int N >
-struct UserCompare<N,true> : public UserCompareBase {
-    static int compare ( CompareType u1, CompareType u2 ) {
-        return UserCompare<N,false>::compare( u2, u1);
+struct UserCompare : public UserCompareBase {
+    static int compare ( CompareType u1, CompareType u2, bool dir ) {
+        assert(0);//this case should never be actually be called, but is necessary to be defined at compile time
+        return 0;
+    }
+};
+
+
+template < >
+struct UserCompare < 3 > : public UserCompareBase
+{
+    static int compare ( CompareType u1, CompareType u2, bool dir ) {
+        return dir * u2->GetNick().CmpNoCase( u1->GetNick() ) ;
     }
 
 };
 
 template < >
-struct UserCompare < 3, false > : public UserCompareBase
+struct UserCompare < 2 > : public UserCompareBase
 {
-    static int compare ( CompareType u1, CompareType u2 ) {
-        return u2->GetNick().CmpNoCase( u1->GetNick() ) ;
-    }
-
-};
-
-template < >
-struct UserCompare < 2, false > : public UserCompareBase
-{
-    static int compare ( CompareType u1, CompareType u2 ) {
-        return compareSimple( u2->GetStatus().rank, u1->GetStatus().rank );
+    static int compare ( CompareType u1, CompareType u2, bool dir ) {
+        return dir * compareSimple( u2->GetStatus().rank, u1->GetStatus().rank );
     }
 };
 
 template < >
-struct UserCompare < 1, false > : public UserCompareBase
+struct UserCompare < 1 > : public UserCompareBase
 {
-    static int compare ( CompareType u1, CompareType u2 ) {
-        return u2->GetCountry().CmpNoCase( u1->GetCountry() );
+    static int compare ( CompareType u1, CompareType u2, bool dir ) {
+        return dir * u2->GetCountry().CmpNoCase( u1->GetCountry() );
     }
 };
 
@@ -407,7 +404,7 @@ void NickListCtrl::Sort()
 //        SLBubbleSort( m_data, CompareSelector<UserCompare>::GetFunctor( 3,true,2,true,1,true ) );
         //Compare< UserCompare, 3, false, 2, false, 1, false  > cmpo;
   //      SLInsertionSort( m_data, cmpo );
-       SLInsertionSort( m_data, CompareSelector<UserCompare>::GetFunctor( 3,true,2,true,1,true ) );
+       SLInsertionSort( m_data, CompareSelector<UserCompare>::GetFunctor( 3,2,1 ), 1, 1, 1 );
        //std::stable_sort( m_data.begin(), m_data.end(), cmpo );
 //       std::stable_sort( m_data.begin(), m_data.end(), CompareSelector<UserCompare>::GetFunctor( 3,true,2,true,1,true ) );
        //std::sort( m_data.begin(), m_data.end(), CompareSelector<UserCompare>::GetFunctor( 3,true,2,true,1,true ) );

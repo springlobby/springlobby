@@ -26,24 +26,24 @@ struct CompareInterface {
 
 };
 
-template < template <int n, bool b > class Comparator ,int C0, bool B0,int C1, bool B1,int C2, bool B2 >
+template < template <int n > class Comparator, int C0, int C1, int C2 >
 struct Compare :
-    public CompareInterface < Compare <Comparator ,C0, B0,C1, B1,C2, B2 > >
+    public CompareInterface < Compare <Comparator ,C0, C1, C2 > >
 {
     typedef bool test;
-    typedef typename Comparator<-1,false>::CompareType ObjType;
-    static bool compare ( ObjType u1, ObjType u2 ) {
+    typedef typename Comparator<-1>::CompareType ObjType;
+    static bool compare ( ObjType u1, ObjType u2, int dir1, int dir2, int dir3 ) {
         assert( u1 && u2 );
 
-        int res = Comparator<C0,B0>::compare( u1, u2 );
+        int res = Comparator<C0>::compare( u1, u2, dir1 );
         if ( res != 0 )
             return res < 0;
 
-        res = Comparator<C1,B1>::compare( u1, u2 );
+        res = Comparator<C1>::compare( u1, u2, dir1 );
         if ( res != 0 )
             return res < 0;
 
-        res = Comparator<C2,B2>::compare( u1, u2 );
+        res = Comparator<C2>::compare( u1, u2, dir1 );
         if ( res != 0 )
             return res < 0;
 
@@ -52,46 +52,84 @@ struct Compare :
     }
 };
 
-template < template <int n, bool b > class Comparator  >
+template < template <int n > class Comparator  >
 struct CompareSelector {
 
-    typedef typename Comparator<-1,false>::CompareType ObjType;
-    typedef bool  (*cmp)  ( ObjType , ObjType  )  ;
+    typedef typename Comparator<-1>::CompareType ObjType;
+    typedef bool  (*cmp)  ( ObjType , ObjType, int, int, int  )  ;
 
-    static cmp GetFunctor( int c1, bool b1,int c2, bool b2,int c3, bool b3 )
+    static cmp GetFunctor( int c1, int c2, int c3 )
     {
 
-////        return  &(Compare< Comparator, 1, false, 0, true, 0, true  >::compare);
-//        #define CASE_T(i) case i: return Get2<i,true>(c2,b2,c3,b3);
-//        if ( b1 ) {
-//            switch ( c1 ) {
-////                case 1: return Get2<1,true>( c2, b2, c3, b3 );
-//                CASE_T(1)
-//                CASE_T(2)
-//                CASE_T(3)
-//                CASE_T(4)
-//                CASE_T(5)
-//                CASE_T(7)
-//                CASE_T(8)
-//                CASE_T(9)
-//                CASE_T(10)
-//                CASE_T(11)
-//                CASE_T(12)
-//                CASE_T(13)
-//                CASE_T(14)
-//                CASE_T(15)
-//            }
-//        }
-//        #undef CASE_T(i)
-        return  &(Compare< Comparator, 1, true, 2, true, 3, true  >::compare);
+        #define CASE(i) case i: return GetFunctor<i>(c1,c2);
+        switch ( c3 ) {
+            CASE(1)
+            CASE(2)
+            CASE(3)
+            CASE(4)
+            CASE(5)
+            CASE(7)
+            CASE(8)
+            CASE(9)
+            CASE(10)
+            CASE(11)
+            CASE(12)
+            CASE(13)
+            CASE(14)
+            CASE(15)
+        }
+        #undef CASE
+        return  &(Compare< Comparator, 1, 2, 3 >::compare);
 
     }
 
-    template < int C1, bool B1 >
-    static cmp Get2( int c2, bool b2,int c3, bool b3 )
+    template < int C3 >
+    static cmp GetFunctor( int c1, int c2 )
     {
-        return  &(Compare< Comparator, C1, B1, 2, true, 3, true  >::compare);
+        #define CASE(i) case i: return GetFunctor<i,C3>(c1);
+        switch ( c2 ) {
+            CASE(1)
+            CASE(2)
+            CASE(3)
+            CASE(4)
+            CASE(5)
+            CASE(7)
+            CASE(8)
+            CASE(9)
+            CASE(10)
+            CASE(11)
+            CASE(12)
+            CASE(13)
+            CASE(14)
+            CASE(15)
+        }
+        #undef CASE
+        return  &(Compare< Comparator, 1, 2, 3 >::compare);
     }
+    template < int C2, int C3 >
+    static cmp GetFunctor( int c1 )
+    {
+        #define CASE(i) case i: return &(Compare<Comparator,i,C2,C3>::compare);
+        switch ( c1 ) {
+            CASE(1)
+            CASE(2)
+            CASE(3)
+            CASE(4)
+            CASE(5)
+            CASE(7)
+            CASE(8)
+            CASE(9)
+            CASE(10)
+            CASE(11)
+            CASE(12)
+            CASE(13)
+            CASE(14)
+            CASE(15)
+        }
+        #undef CASE
+        return  &(Compare< Comparator, 1, 2, 3 >::compare);
+    }
+
 
 };
 
@@ -119,7 +157,7 @@ void SLBubbleSort( ContainerType& data, bool  (*cmp)  ( ObjType , ObjType  ) )
 }
 
 template< class ContainerType, class ObjType >
-void SLInsertionSort( ContainerType& data, bool  (*cmp)  ( ObjType , ObjType  ) )
+void SLInsertionSort( ContainerType& data, bool  (*cmp)  ( ObjType , ObjType, int, int, int  ), int dir1, int dir2, int dir3  )
 {
     const int n = data.size();
     for ( int i = 0; i < n; i++ )
@@ -129,7 +167,7 @@ void SLInsertionSort( ContainerType& data, bool  (*cmp)  ( ObjType , ObjType  ) 
 
         for ( j = i - 1; j >= 0; j--)
         {
-            if ( cmp( data[j], v ) )
+            if ( cmp( data[j], v, dir1, dir2, dir3  ) )
                 break;
             data[j + 1] = data[j];
         }
