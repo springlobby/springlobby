@@ -153,4 +153,27 @@ void SLInsertionSort( ContainerType& data, bool  (*cmp)  ( ObjType , ObjType, in
 
 }
 
+#include "Helper/utilclasses.h"
+
+
+template< class ContainerType, class ObjType >
+void SLInsertionSort( ContainerType& data, bool  (*cmp)  ( ObjType , ObjType,  SortOrder&  ),  SortOrder& order  )
+{
+    const int n = data.size();
+    for ( int i = 0; i < n; i++ )
+    {
+        ObjType v = data[i];
+        int j;
+
+        for ( j = i - 1; j >= 0; j--)
+        {
+            if ( cmp( data[j], v, order  ) )
+                break;
+            data[j + 1] = data[j];
+        }
+        data[j + 1] = v;
+    }
+
+}
+
 #endif // SPRINGLOBBY_SORTUTIL_H_INCLUDED

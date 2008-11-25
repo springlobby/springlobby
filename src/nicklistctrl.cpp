@@ -61,6 +61,44 @@ struct UserCompare < 1 > : public UserCompareBase
     }
 };
 
+template < typename Type >
+int compareSimple( Type o1, Type o2 ) {
+    if ( o1 < o2 )
+        return -1;
+    else if ( o1 > o2 )
+        return 1;
+    return 0;
+}
+
+int CompareOneCrit( const User* u1, const User* u2, int col, int dir )
+{
+    switch ( col ) {
+        case 1: return dir * u2->GetCountry().CmpNoCase( u1->GetCountry() );
+        case 2: return dir * compareSimple( u2->GetStatus().rank, u1->GetStatus().rank );
+        case 3: return dir * u2->GetNick().CmpNoCase( u1->GetNick() ) ;
+        default: return 0;
+    }
+}
+
+bool CompareUsers( const User* u1, const User* u2, SortOrder& order)
+{
+    int res = CompareOneCrit( u1, u2, order[0].col, order[0].direction );
+    if ( res != 0 )
+        return res < 0;
+
+    if ( order[1].direction != 0 ) {
+        res = CompareOneCrit( u1, u2, order[1].col, order[1].direction );
+        if ( res != 0 )
+            return res < 0;
+
+        if ( order[2].direction != 0 ) {
+            res = CompareOneCrit( u1, u2, order[2].col, order[2].direction );
+            if ( res != 0 )
+                return res < 0;
+        }
+    }
+    return false;
+}
 
 BEGIN_EVENT_TABLE( NickListCtrl, CustomVirtListCtrl )
   EVT_LIST_ITEM_ACTIVATED( NICK_LIST, NickListCtrl::OnActivateItem )
@@ -112,8 +150,7 @@ NickListCtrl::NickListCtrl( wxWindow* parent, bool show_header, NickListCtrl::Us
   m_sortorder[3].col = 1;
   m_sortorder[3].direction = 1;
 
-    m_compare_func = CompareSelector<UserCompare>::
-                                GetFunctor( m_sortorder[0].col,m_sortorder[1].col,m_sortorder[2].col );
+    m_compare_func = &CompareUsers;
 
 }
 
@@ -256,8 +293,8 @@ void NickListCtrl::OnColClick( wxListEvent& event )
   col.SetImage( ( m_sortorder[0].direction )?icons().ICON_UP:icons().ICON_DOWN );
   SetColumn( m_sortorder[0].col, col );
 
-  m_compare_func = CompareSelector<UserCompare>::
-                                GetFunctor( m_sortorder[0].col,m_sortorder[1].col,m_sortorder[2].col );
+//  m_compare_func = CompareSelector<UserCompare>::
+//                                GetFunctor( m_sortorder[0].col,m_sortorder[1].col,m_sortorder[2].col );
 
   Sort();
 }
@@ -404,7 +441,7 @@ void NickListCtrl::Sort()
     {
 
        SLInsertionSort( m_data, m_compare_func
-            , m_sortorder[0].direction, m_sortorder[1].direction, m_sortorder[2].direction );
+            , m_sortorder );
 
         RefreshItems(0, m_data.size()-1 );
         m_dirty_sort = false;

@@ -56,7 +56,7 @@ class NickListCtrl : public CustomVirtListCtrl
     typedef DataVec::const_iterator DataCIter;
     DataVec m_data;
 
-    typedef bool  (*CompareFunc)  ( const User*, const User*, int, int, int  )  ;
+    typedef bool  (*CompareFunc)  ( const User*, const User*,  SortOrder&  )  ;
 
     CompareFunc m_compare_func;
 
