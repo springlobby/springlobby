@@ -302,9 +302,9 @@ int NickListCtrl::OnGetItemColumnImage(long item, long column) const
         const User& user = *m_data[item];
         const UserStatus& user_st = user.GetStatus();
         switch ( column ) {
-            case 0: return icons().GetUserListStateIcon( user_st, false, user.GetBattle() != 0 );
-            case 1: return icons().GetFlagIcon( user.GetCountry() );
-            case 2: return icons().GetRankIcon( user.GetStatus().rank );
+            case 0: return user.GetStatusIconIndex();
+            case 1: return user.GetFlagIconIndex();
+            case 2: return user.GetRankIconIndex();
 
             case 3:
             default: return -1;
@@ -322,6 +322,7 @@ int NickListCtrl::OnGetItemImage(long item) const
 int NickListCtrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir )
 {
     switch ( col ) {
+        case 0: return dir * CompareUserStatus( u1, u2 );
         case 1: return dir * u2->GetCountry().CmpNoCase( u1->GetCountry() );
         case 2: return dir * compareSimple( u2->GetStatus().rank, u1->GetStatus().rank );
         case 3: return dir * u2->GetNick().CmpNoCase( u1->GetNick() ) ;
@@ -329,33 +330,32 @@ int NickListCtrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir )
     }
 }
 
-//int wxCALLBACK NickListCtrl::ComparePlayerstatusUP(long item1, long item2, long sortData )
-//{
-//  User* user1 = (User*)item1;
-//  User* user2 = (User*)item2;
-//  ASSERT_LOGIC( user1 != 0, _T("user1 = 0") );
-//  ASSERT_LOGIC( user2 != 0, _T("user2 = 0") );
-//
-//  int u1 = 0, u2 = 0;
-//
-//  if ( user1->GetStatus().bot )
-//    u1 += 1000;
-//  if ( user2->GetStatus().bot )
-//    u2 += 1000;
-//  if ( user1->GetStatus().moderator )
-//    u1 += 100;
-//  if ( user2->GetStatus().moderator )
-//    u2 += 100;
-//  if ( user1->GetStatus().in_game )
-//    u1 += -10;
-//  if ( user2->GetStatus().in_game )
-//    u2 += -10;
-//
-//    // inverse the order
-//    if ( u1 < u2 )
-//        return -1;
-//    if ( u1 > u2 )
-//        return 1;
-//
-//    return 0;
-//}
+int NickListCtrl::CompareUserStatus( DataType user1, DataType user2 )
+{
+
+  ASSERT_LOGIC( user1 != 0, _T("user1 = 0") );
+  ASSERT_LOGIC( user2 != 0, _T("user2 = 0") );
+
+  int u1 = 0, u2 = 0;
+
+  if ( user1->GetStatus().bot )
+    u1 += 1000;
+  if ( user2->GetStatus().bot )
+    u2 += 1000;
+  if ( user1->GetStatus().moderator )
+    u1 += 100;
+  if ( user2->GetStatus().moderator )
+    u2 += 100;
+  if ( user1->GetStatus().in_game )
+    u1 += -10;
+  if ( user2->GetStatus().in_game )
+    u2 += -10;
+
+    // inverse the order
+    if ( u1 < u2 )
+        return -1;
+    if ( u1 > u2 )
+        return 1;
+
+    return 0;
+}

@@ -76,10 +76,10 @@ class CommonUser
            : m_nick(nick), m_country(country), m_cpu(cpu)  {};
 
         wxString GetNick() const { return m_nick; }
-        void SetNick( const wxString& nick ) { m_nick = nick; }
+        virtual void SetNick( const wxString& nick ) { m_nick = nick; }
 
         wxString GetCountry() const { return m_country; }
-        void SetCountry( const wxString& country ) { m_country = country; }
+        virtual void SetCountry( const wxString& country ) { m_country = country; }
 
         int GetCpu() const { return m_cpu; }
         void SetCpu( const int& cpu ) { m_cpu = cpu; }
@@ -118,10 +118,9 @@ class User : public CommonUser
 
     mutable UiUserData uidata;
 
-    User( Server& serv ): CommonUser( _T("none"),_T("unknown"),0 ), m_serv(serv), m_battle(0) {}
-    User( const wxString& nick, Server& serv ) : CommonUser( nick,_T("unknown"),0 ),m_serv(serv), m_battle(0){}
-    User( const wxString& nick, const wxString& country, const int& cpu, Server& serv) :
-      CommonUser( nick,country,cpu ) ,m_serv(serv), m_battle(0) {}
+    User( Server& serv );
+    User( const wxString& nick, Server& serv );
+    User( const wxString& nick, const wxString& country, const int& cpu, Server& serv);
 
     virtual ~User();
 
@@ -138,6 +137,7 @@ class User : public CommonUser
 
     void SendMyUserStatus();
     void SetStatus( const UserStatus& status );
+    void SetCountry( const wxString& country );
 
     bool ExecuteSayCommand( const wxString& cmd ) const;
 
@@ -147,6 +147,9 @@ class User : public CommonUser
 
     wxString GetClan();
 
+    int GetFlagIconIndex() const { return m_flagicon_idx; }
+    int GetRankIconIndex() const { return m_rankicon_idx; }
+    int GetStatusIconIndex() const { return m_statusicon_idx; }
     //bool operator< ( const User& other ) const { return m_nick < other.GetNick() ; }
     //User& operator= ( const User& other );
 
@@ -155,6 +158,9 @@ class User : public CommonUser
 
     Server& m_serv;
     Battle* m_battle;
+    int m_flagicon_idx;
+    int m_rankicon_idx;
+    int m_statusicon_idx;
 };
 
 class OfflineUser : public CommonUser

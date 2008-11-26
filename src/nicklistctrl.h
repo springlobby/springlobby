@@ -58,6 +58,8 @@ class NickListCtrl : public CustomVirtListCtrl
 
     //! passed as callback to generic ItemComparator, returns -1,0,1 as per defined ordering
     static int CompareOneCrit( DataType u1, DataType u2, int col, int dir ) ;
+    //! utils func for comparing user status, so the CompareOneCrit doesn't get too crowded
+    static int CompareUserStatus( DataType u1, DataType u2 );
     //! required per base clase
     virtual void Sort( );
 

@@ -8,9 +8,37 @@
 #include "server.h"
 #include "utils.h"
 #include "chatpanel.h"
+#include "iconimagelist.h"
 
 #include <wx/string.h>
 #include <wx/intl.h>
+
+User::User( Server& serv )
+    : CommonUser( _T("none"),_T("unknown"),0 ),
+    m_serv(serv),
+    m_battle(0),
+    m_flagicon_idx( icons().GetFlagIcon( _T("unknown") ) ),
+    m_rankicon_idx( icons().GetRankIcon( 0 ) ),
+    m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) )
+{}
+
+User::User( const wxString& nick, Server& serv )
+    : CommonUser( nick,_T("unknown"),0 ),
+    m_serv(serv),
+    m_battle(0),
+    m_flagicon_idx( icons().GetFlagIcon( _T("unknown") ) ),
+    m_rankicon_idx( icons().GetRankIcon( 0 ) ),
+    m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) )
+{}
+
+User::User( const wxString& nick, const wxString& country, const int& cpu, Server& serv)
+    : CommonUser( nick,country,cpu ),
+    m_serv(serv),
+    m_battle(0),
+    m_flagicon_idx( icons().GetFlagIcon( country ) ),
+    m_rankicon_idx( icons().GetRankIcon( 0 ) ),
+    m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) )
+{}
 
 User::~User(){
   if(uidata.panel)uidata.panel->SetUser( 0 );
@@ -65,7 +93,16 @@ void User::SetStatus( const UserStatus& status )
     }
   }
 
+  m_statusicon_idx = icons().GetUserListStateIcon( m_status, false, m_battle != 0 );
+  m_rankicon_idx =  icons().GetRankIcon( m_status.rank );
 }
+
+void User::SetCountry( const wxString& country )
+{
+    m_country = country;
+    m_flagicon_idx =  icons().GetFlagIcon( country );
+}
+
 /*
 void User::SetBattleStatus( const UserBattleStatus& status, bool setorder )
 {
@@ -98,6 +135,7 @@ void CommonUser::UpdateBattleStatus( const UserBattleStatus& status, bool setord
   if(status.udpport!=0)m_bstatus.udpport=status.udpport;/// 12
 
   //if ( !setorder ) m_bstatus.order = order;
+
 }
 
 
@@ -147,6 +185,7 @@ wxString User::GetClan(){
 void CommonUser::SetStatus( const UserStatus& status )
 {
   m_status = status;
+
 }
 
 //User& User::operator= ( const User& other )
