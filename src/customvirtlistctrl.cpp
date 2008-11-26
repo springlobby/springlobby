@@ -335,3 +335,35 @@ bool CustomVirtListCtrl::PopupMenu(wxMenu* menu, const wxPoint& pos )
     CancelTooltipTimer();
     return ListBaseType::PopupMenu( menu, pos );
 }
+
+//template < class ObjType >
+//bool CustomVirtListCtrl::CompareItems( ObjType u1, ObjType u2, SortOrder& order)
+//{
+//    int res = CompareOneCrit( u1, u2, order[0].col, order[0].direction );
+//    if ( res != 0 )
+//        return res < 0;
+//
+//    if ( order[1].direction != 0 ) {
+//        res = CompareOneCrit( u1, u2, order[1].col, order[1].direction );
+//        if ( res != 0 )
+//            return res < 0;
+//
+//        if ( order[2].direction != 0 ) {
+//            res = CompareOneCrit( u1, u2, order[2].col, order[2].direction );
+//            if ( res != 0 )
+//                return res < 0;
+//        }
+//    }
+//    return false;
+//}
+
+void CustomVirtListCtrl::SortList( bool force )
+{
+  if ( !m_dirty_sort && !force ) return;
+//  SetSelectionRestorePoint();
+    Freeze();
+    Sort();
+    Thaw();
+    m_dirty_sort = false;
+
+}

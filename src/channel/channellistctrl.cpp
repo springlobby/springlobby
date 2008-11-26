@@ -88,47 +88,47 @@ void ChannelListctrl::AddChannel(const wxString& channel, unsigned int num_users
     //RestoreSelection();
 }
 
-typedef CompareBase<const ChannelListctrl::ChannelInfo&>  ChannelCompareBase;
-
-template < int N >
-struct ChannelCompare : public ChannelCompareBase {
-    static int compare ( CompareType u1, CompareType u2, int dir ) {
-        assert(0);//this case should never be actually be called, but is necessary to be defined at compile time
-        return 0;
-    }
-};
-
-
-template < >
-struct ChannelCompare < 0 > : public ChannelCompareBase
-{
-    static bool compare ( CompareType u1, CompareType u2, int dir ) {
-        wxString n1 = u1.name;
-        wxString n2 = u2.name;
-        return dir * n1.CmpNoCase( n2 );
-    }
-};
-
-template < >
-struct ChannelCompare < 1 > : public ChannelCompareBase
-{
-    static bool compare ( CompareType u1, CompareType u2, int dir ) {
-        return dir * compareSimple( u1.usercount, u2.usercount ) ;
-    }
-};
-
-template < >
-struct ChannelCompare < 2 > : public ChannelCompareBase
-{
-    static bool compare ( CompareType u1, CompareType u2, int dir ) {
-        return dir * u1.topic.CmpNoCase( u2.topic );
-    }
-};
+//typedef CompareBase<const ChannelListctrl::ChannelInfo&>  ChannelCompareBase;
+//
+//template < int N >
+//struct ChannelCompare : public ChannelCompareBase {
+//    static int compare ( CompareType u1, CompareType u2, int dir ) {
+//        assert(0);//this case should never be actually be called, but is necessary to be defined at compile time
+//        return 0;
+//    }
+//};
+//
+//
+//template < >
+//struct ChannelCompare < 0 > : public ChannelCompareBase
+//{
+//    static bool compare ( CompareType u1, CompareType u2, int dir ) {
+//        wxString n1 = u1.name;
+//        wxString n2 = u2.name;
+//        return dir * n1.CmpNoCase( n2 );
+//    }
+//};
+//
+//template < >
+//struct ChannelCompare < 1 > : public ChannelCompareBase
+//{
+//    static bool compare ( CompareType u1, CompareType u2, int dir ) {
+//        return dir * compareSimple( u1.usercount, u2.usercount ) ;
+//    }
+//};
+//
+//template < >
+//struct ChannelCompare < 2 > : public ChannelCompareBase
+//{
+//    static bool compare ( CompareType u1, CompareType u2, int dir ) {
+//        return dir * u1.topic.CmpNoCase( u2.topic );
+//    }
+//};
 
 void ChannelListctrl::Sort()
 {
 
-    SLInsertionSort( m_data, CompareSelector<ChannelCompare>::GetFunctor( 1,0,2 ), 1,1, 1 );
+//    SLInsertionSort( m_data, CompareSelector<ChannelCompare>::GetFunctor( 1,0,2 ), 1,1, 1 );
     RefreshItems( 0, m_data.size() -1 );
 }
 

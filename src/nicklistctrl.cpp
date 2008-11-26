@@ -25,80 +25,7 @@
 #include "usermenu.h"
 #include "Helper/sortutil.h"
 
-typedef CompareBase<const User*>  UserCompareBase;
 
-template < int N >
-struct UserCompare : public UserCompareBase {
-    static int compare ( CompareType u1, CompareType u2, int dir ) {
-        //assert(0);//this case should never be actually be called, but is necessary to be defined at compile time
-        return 0;
-    }
-};
-
-
-template < >
-struct UserCompare < 3 > : public UserCompareBase
-{
-    static int compare ( CompareType u1, CompareType u2, int dir ) {
-        return dir * u2->GetNick().CmpNoCase( u1->GetNick() ) ;
-    }
-
-};
-
-template < >
-struct UserCompare < 2 > : public UserCompareBase
-{
-    static int compare ( CompareType u1, CompareType u2, int dir ) {
-        return dir * compareSimple( u2->GetStatus().rank, u1->GetStatus().rank );
-    }
-};
-
-template < >
-struct UserCompare < 1 > : public UserCompareBase
-{
-    static int compare ( CompareType u1, CompareType u2, int dir ) {
-        return dir * u2->GetCountry().CmpNoCase( u1->GetCountry() );
-    }
-};
-
-template < typename Type >
-int compareSimple( Type o1, Type o2 ) {
-    if ( o1 < o2 )
-        return -1;
-    else if ( o1 > o2 )
-        return 1;
-    return 0;
-}
-
-int CompareOneCrit( const User* u1, const User* u2, int col, int dir )
-{
-    switch ( col ) {
-        case 1: return dir * u2->GetCountry().CmpNoCase( u1->GetCountry() );
-        case 2: return dir * compareSimple( u2->GetStatus().rank, u1->GetStatus().rank );
-        case 3: return dir * u2->GetNick().CmpNoCase( u1->GetNick() ) ;
-        default: return 0;
-    }
-}
-
-bool CompareUsers( const User* u1, const User* u2, SortOrder& order)
-{
-    int res = CompareOneCrit( u1, u2, order[0].col, order[0].direction );
-    if ( res != 0 )
-        return res < 0;
-
-    if ( order[1].direction != 0 ) {
-        res = CompareOneCrit( u1, u2, order[1].col, order[1].direction );
-        if ( res != 0 )
-            return res < 0;
-
-        if ( order[2].direction != 0 ) {
-            res = CompareOneCrit( u1, u2, order[2].col, order[2].direction );
-            if ( res != 0 )
-                return res < 0;
-        }
-    }
-    return false;
-}
 
 BEGIN_EVENT_TABLE( NickListCtrl, CustomVirtListCtrl )
   EVT_LIST_ITEM_ACTIVATED( NICK_LIST, NickListCtrl::OnActivateItem )
@@ -117,7 +44,8 @@ NickListCtrl::NickListCtrl( wxWindow* parent, bool show_header, NickListCtrl::Us
   CustomVirtListCtrl( parent, NICK_LIST, wxDefaultPosition, wxDefaultSize,
               wxLC_VIRTUAL | wxSUNKEN_BORDER | wxLC_REPORT | (int)(!show_header) * wxLC_NO_HEADER | (int)(singleSelectList) * wxLC_SINGLE_SEL,
               name, highlight ),
-  m_menu(popup)
+  m_menu(popup),
+  m_comparator(m_sortorder, &CompareOneCrit)
 {
 
 #if defined(__WXMAC__)
@@ -150,7 +78,6 @@ NickListCtrl::NickListCtrl( wxWindow* parent, bool show_header, NickListCtrl::Us
   m_sortorder[3].col = 1;
   m_sortorder[3].direction = 1;
 
-    m_compare_func = &CompareUsers;
 
 }
 
@@ -424,28 +351,13 @@ void NickListCtrl::HighlightItem( long item )
     }
 }
 
-void NickListCtrl::SortList()
-{
-  if ( !m_dirty_sort ) return;
-//  SetSelectionRestorePoint();
-    Freeze();
-    Sort();
-    Thaw();
-
-}
-
 
 void NickListCtrl::Sort()
 {
     if ( m_data.size() > 0 )
     {
-
-       SLInsertionSort( m_data, m_compare_func
-            , m_sortorder );
-
+        SLInsertionSort( m_data, m_comparator );
         RefreshItems(0, m_data.size()-1 );
-        m_dirty_sort = false;
-
     }
 }
 
@@ -482,4 +394,15 @@ int NickListCtrl::OnGetItemColumnImage(long item, long column) const
 int NickListCtrl::OnGetItemImage(long item) const
 {
     return -1;
+}
+
+template < class ObjType >
+int NickListCtrl::CompareOneCrit( ObjType u1, ObjType u2, int col, int dir )
+{
+    switch ( col ) {
+        case 1: return dir * u2->GetCountry().CmpNoCase( u1->GetCountry() );
+        case 2: return dir * compareSimple( u2->GetStatus().rank, u1->GetStatus().rank );
+        case 3: return dir * u2->GetNick().CmpNoCase( u1->GetNick() ) ;
+        default: return 0;
+    }
 }

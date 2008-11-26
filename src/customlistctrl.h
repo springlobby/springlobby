@@ -92,7 +92,11 @@ protected:
 
     ColumnMap m_column_map;
 
-
+    struct SortOrderItem {
+        int col;
+        int direction;
+    };
+    typedef std::map<int,SortOrderItem> SortOrder;
     SortOrder m_sortorder;
 
 public:

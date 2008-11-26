@@ -41,7 +41,6 @@ class NickListCtrl : public CustomVirtListCtrl
 
     void HighlightItem( long item );
 
-    void SortList();
 
     //these are overloaded to use list in virtual style
     virtual wxString OnGetItemText(long item, long column) const;
@@ -49,16 +48,18 @@ class NickListCtrl : public CustomVirtListCtrl
     virtual int OnGetItemColumnImage(long item, long column) const;
 
   protected:
-    virtual void Sort();
 
-    typedef std::vector< const User* > DataVec;
+    typedef const User* DataType;
+    typedef std::vector< DataType > DataVec;
     typedef DataVec::iterator DataIter;
     typedef DataVec::const_iterator DataCIter;
     DataVec m_data;
+    CompareItems<DataType> m_comparator;
 
-    typedef bool  (*CompareFunc)  ( const User*, const User*,  SortOrder&  )  ;
+    template < class ObjType >
+    static int CompareOneCrit( ObjType u1, ObjType u2, int col, int dir ) ;
 
-    CompareFunc m_compare_func;
+    virtual void Sort( );
 
     UserMenu* m_menu;
 

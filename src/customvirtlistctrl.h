@@ -21,6 +21,7 @@
 
 #include "useractions.h"
 #include "Helper/utilclasses.h"
+#include "isortedlist.h"
 
 class SLTipWindow;
 
@@ -89,8 +90,68 @@ protected:
 
     ColumnMap m_column_map;
 
-
+    /** @name Sort functionality
+     *
+     * @{
+     */
+    struct SortOrderItem {
+        int col;
+        int direction;
+    };
+    typedef std::map<int,SortOrderItem> SortOrder;
     SortOrder m_sortorder;
+
+    template < class ObjImp >
+    struct CompareItems
+    {
+        typedef ObjImp ObjType;
+        SortOrder& m_order;
+        typedef int (*CmpFunc)  ( ObjType u1, ObjType u2, int, int );
+        CmpFunc m_cmp_func;
+
+        CompareItems( SortOrder& order,CmpFunc func)
+            :m_order(order),m_cmp_func(func) {}
+
+        bool operator () ( ObjType u1, ObjType u2 )
+        {
+            int res = m_cmp_func( u1, u2, m_order[0].col, m_order[0].direction );
+            if ( res != 0 )
+                return res < 0;
+
+            if ( m_order[1].direction != 0 ) {
+                res = m_cmp_func( u1, u2, m_order[1].col, m_order[1].direction );
+                if ( res != 0 )
+                    return res < 0;
+
+                if ( m_order[2].direction != 0 ) {
+                    res = m_cmp_func( u1, u2, m_order[2].col, m_order[2].direction );
+                    if ( res != 0 )
+                        return res < 0;
+                }
+            }
+            return false;
+        }
+    };
+
+
+
+    template < class ObjType >
+    static int CompareOneCrit( ObjType u1, ObjType u2, int col, int dir );
+
+    template < typename Type >
+    static inline int compareSimple( Type o1, Type o2 ) {
+        if ( o1 < o2 )
+            return -1;
+        else if ( o1 > o2 )
+            return 1;
+        return 0;
+    }
+
+    virtual void Sort( ) = 0;
+public:
+    void SortList( bool force = false );
+    /** @}
+     */
 
 public:
     CustomVirtListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pt,
