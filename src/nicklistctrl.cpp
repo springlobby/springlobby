@@ -44,8 +44,8 @@ NickListCtrl::NickListCtrl( wxWindow* parent, bool show_header, NickListCtrl::Us
   CustomVirtListCtrl( parent, NICK_LIST, wxDefaultPosition, wxDefaultSize,
               wxLC_VIRTUAL | wxSUNKEN_BORDER | wxLC_REPORT | (int)(!show_header) * wxLC_NO_HEADER | (int)(singleSelectList) * wxLC_SINGLE_SEL,
               name, highlight ),
-  m_menu(popup),
-  m_comparator(m_sortorder, &CompareOneCrit)
+  m_comparator(m_sortorder, &CompareOneCrit),
+  m_menu(popup)
 {
 
 #if defined(__WXMAC__)
@@ -81,20 +81,10 @@ NickListCtrl::NickListCtrl( wxWindow* parent, bool show_header, NickListCtrl::Us
 
 }
 
-
 NickListCtrl::~NickListCtrl()
 {
 
 }
-
-//void NickListCtrl::AddUser( const UserList& userlist )
-//{
-//    m_data.reserve( userlist.GetNumUsers() );
-//    for ( unsigned int i = 0; i < userlist.GetNumUsers(); ++i)
-//    {
-//        AddUser( userlist.GetUser( i ) );
-//    }
-//}
 
 void NickListCtrl::AddUser( const User& user )
 {
@@ -220,76 +210,9 @@ void NickListCtrl::OnColClick( wxListEvent& event )
   col.SetImage( ( m_sortorder[0].direction )?icons().ICON_UP:icons().ICON_DOWN );
   SetColumn( m_sortorder[0].col, col );
 
-//  m_compare_func = CompareSelector<UserCompare>::
-//                                GetFunctor( m_sortorder[0].col,m_sortorder[1].col,m_sortorder[2].col );
-
   Sort();
 }
 
-//
-//int wxCALLBACK NickListCtrl::ComparePlayerstatusUP(long item1, long item2, long sortData )
-//{
-//  User* user1 = (User*)item1;
-//  User* user2 = (User*)item2;
-//  ASSERT_LOGIC( user1 != 0, _T("user1 = 0") );
-//  ASSERT_LOGIC( user2 != 0, _T("user2 = 0") );
-//
-//  int u1 = 0, u2 = 0;
-//
-//  if ( user1->GetStatus().bot )
-//    u1 += 1000;
-//  if ( user2->GetStatus().bot )
-//    u2 += 1000;
-//  if ( user1->GetStatus().moderator )
-//    u1 += 100;
-//  if ( user2->GetStatus().moderator )
-//    u2 += 100;
-//  if ( user1->GetStatus().in_game )
-//    u1 += -10;
-//  if ( user2->GetStatus().in_game )
-//    u2 += -10;
-//
-//    // inverse the order
-//    if ( u1 < u2 )
-//        return -1;
-//    if ( u1 > u2 )
-//        return 1;
-//
-//    return 0;
-//}
-//
-//int wxCALLBACK NickListCtrl::ComparePlayerstatusDOWN(long item1, long item2, long sortData )
-//{
-//  User* user1 = (User*)item1;
-//  User* user2 = (User*)item2;
-//  ASSERT_LOGIC( user1 != 0, _T("user1 = 0") );
-//  ASSERT_LOGIC( user2 != 0, _T("user2 = 0") );
-//
-//  int u1 = 0, u2 = 0;
-//
-//  if ( user1->GetStatus().bot )
-//    u1 += 1000;
-//  if ( user2->GetStatus().bot )
-//    u2 += 1000;
-//  if ( user1->GetStatus().moderator )
-//    u1 += 100;
-//  if ( user2->GetStatus().moderator )
-//    u2 += 100;
-//  if ( user1->GetStatus().in_game )
-//    u1 += -10;
-//  if ( user2->GetStatus().in_game )
-//    u2 += -10;
-//
-//
-//    // inverse the order
-//    if ( u1 < u2 )
-//        return 1;
-//    if ( u1 > u2 )
-//        return -1;
-//
-//    return 0;
-//}
-//
 
 void NickListCtrl::SetTipWindowText( const long item_hit, const wxPoint position)
 {
@@ -396,8 +319,7 @@ int NickListCtrl::OnGetItemImage(long item) const
     return -1;
 }
 
-template < class ObjType >
-int NickListCtrl::CompareOneCrit( ObjType u1, ObjType u2, int col, int dir )
+int NickListCtrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir )
 {
     switch ( col ) {
         case 1: return dir * u2->GetCountry().CmpNoCase( u1->GetCountry() );
@@ -406,3 +328,34 @@ int NickListCtrl::CompareOneCrit( ObjType u1, ObjType u2, int col, int dir )
         default: return 0;
     }
 }
+
+//int wxCALLBACK NickListCtrl::ComparePlayerstatusUP(long item1, long item2, long sortData )
+//{
+//  User* user1 = (User*)item1;
+//  User* user2 = (User*)item2;
+//  ASSERT_LOGIC( user1 != 0, _T("user1 = 0") );
+//  ASSERT_LOGIC( user2 != 0, _T("user2 = 0") );
+//
+//  int u1 = 0, u2 = 0;
+//
+//  if ( user1->GetStatus().bot )
+//    u1 += 1000;
+//  if ( user2->GetStatus().bot )
+//    u2 += 1000;
+//  if ( user1->GetStatus().moderator )
+//    u1 += 100;
+//  if ( user2->GetStatus().moderator )
+//    u2 += 100;
+//  if ( user1->GetStatus().in_game )
+//    u1 += -10;
+//  if ( user2->GetStatus().in_game )
+//    u2 += -10;
+//
+//    // inverse the order
+//    if ( u1 < u2 )
+//        return -1;
+//    if ( u1 > u2 )
+//        return 1;
+//
+//    return 0;
+//}

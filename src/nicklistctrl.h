@@ -9,7 +9,6 @@ class UserList;
 class Ui;
 class ChatPanel;
 class UserMenu;
-class wxMutex;
 
 class NickListCtrl : public CustomVirtListCtrl
 {
@@ -22,7 +21,6 @@ class NickListCtrl : public CustomVirtListCtrl
     ~NickListCtrl();
 
     virtual void AddUser( const User& user );
- //   void AddUser( const UserList& userlist );
     void RemoveUser( const User& user );
 
     void UserUpdated( const User& user );
@@ -53,12 +51,14 @@ class NickListCtrl : public CustomVirtListCtrl
     typedef std::vector< DataType > DataVec;
     typedef DataVec::iterator DataIter;
     typedef DataVec::const_iterator DataCIter;
+    //! user pointers we're operating on/displaying
     DataVec m_data;
-    CompareItems<DataType> m_comparator;
+    //! the Comparator object passed to the SLInsertionSort function
+    ItemComparator<DataType> m_comparator;
 
-    template < class ObjType >
-    static int CompareOneCrit( ObjType u1, ObjType u2, int col, int dir ) ;
-
+    //! passed as callback to generic ItemComparator, returns -1,0,1 as per defined ordering
+    static int CompareOneCrit( DataType u1, DataType u2, int col, int dir ) ;
+    //! required per base clase
     virtual void Sort( );
 
     UserMenu* m_menu;

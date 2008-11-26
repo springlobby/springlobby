@@ -51,6 +51,10 @@ CustomVirtListCtrl::CustomVirtListCtrl(wxWindow* parent, wxWindowID id, const wx
     SetImageList( &icons(), wxIMAGE_LIST_NORMAL );
     SetImageList( &icons(), wxIMAGE_LIST_SMALL );
     SetImageList( &icons(), wxIMAGE_LIST_STATE );
+
+    //make sure we have at least one (empty) sort criteria
+    m_sortorder[0].direction = 0;
+    m_sortorder[0].col = 0;
 }
 
 void CustomVirtListCtrl::InsertColumn(long i, wxListItem item, wxString tip, bool modifiable)
@@ -335,27 +339,6 @@ bool CustomVirtListCtrl::PopupMenu(wxMenu* menu, const wxPoint& pos )
     CancelTooltipTimer();
     return ListBaseType::PopupMenu( menu, pos );
 }
-
-//template < class ObjType >
-//bool CustomVirtListCtrl::CompareItems( ObjType u1, ObjType u2, SortOrder& order)
-//{
-//    int res = CompareOneCrit( u1, u2, order[0].col, order[0].direction );
-//    if ( res != 0 )
-//        return res < 0;
-//
-//    if ( order[1].direction != 0 ) {
-//        res = CompareOneCrit( u1, u2, order[1].col, order[1].direction );
-//        if ( res != 0 )
-//            return res < 0;
-//
-//        if ( order[2].direction != 0 ) {
-//            res = CompareOneCrit( u1, u2, order[2].col, order[2].direction );
-//            if ( res != 0 )
-//                return res < 0;
-//        }
-//    }
-//    return false;
-//}
 
 void CustomVirtListCtrl::SortList( bool force )
 {

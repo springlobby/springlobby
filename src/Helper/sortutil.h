@@ -2,8 +2,8 @@
 #define SPRINGLOBBY_SORTUTIL_H_INCLUDED
 
 
-template< class ContainerType, class ObjType >
-void SLBubbleSort( ContainerType& data, bool  (*cmp)  ( ObjType , ObjType  ) )
+template< class ContainerType, class Comparator >
+void SLBubbleSort( ContainerType& data, const Comparator& cmp )
 {
     const int n = data.size();
     int j = 0;
@@ -11,12 +11,12 @@ void SLBubbleSort( ContainerType& data, bool  (*cmp)  ( ObjType , ObjType  ) )
     while ( swapped )
     {
         j++;
-        unsigned int swaps = 0;
+        swapped = false;
         for ( int i = 0; i < n - j; ++i )
         {
             if ( cmp ( data[i], data[i+1] ) )
             {
-                ObjType tmp = data[i+1];
+                typename Comparator::ObjType tmp = data[i+1];
                 data[i+1] = data[i];
                 data[i] = tmp;
                 swapped = true;
@@ -25,30 +25,10 @@ void SLBubbleSort( ContainerType& data, bool  (*cmp)  ( ObjType , ObjType  ) )
     }
 }
 
-template< class ContainerType, class ObjType >
-void SLInsertionSort( ContainerType& data, bool  (*cmp)  ( ObjType , ObjType, int, int, int  ), int dir1, int dir2, int dir3  )
-{
-    const int n = data.size();
-    for ( int i = 0; i < n; i++ )
-    {
-        ObjType v = data[i];
-        int j;
-
-        for ( j = i - 1; j >= 0; j--)
-        {
-            if ( cmp( data[j], v, dir1, dir2, dir3  ) )
-                break;
-            data[j + 1] = data[j];
-        }
-        data[j + 1] = v;
-    }
-
-}
-
 class SortOrder;
 
 template< class ContainerType, class Comparator >
-void SLInsertionSort( ContainerType& data, Comparator& cmp )
+void SLInsertionSort( ContainerType& data, const Comparator& cmp )
 {
     const int n = data.size();
     for ( int i = 0; i < n; i++ )

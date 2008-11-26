@@ -94,36 +94,51 @@ protected:
      *
      * @{
      */
+
+     //! set direction to +1 for down, -1 for up
     struct SortOrderItem {
         int col;
         int direction;
     };
+    //! map sort priority <--> ( column, direction )
     typedef std::map<int,SortOrderItem> SortOrder;
     SortOrder m_sortorder;
 
+    /** generic comparator that gets it's real functionality
+     * in derived classes via comapre callbakc func that
+     * performs the actual comparison of two items **/
     template < class ObjImp >
-    struct CompareItems
+    struct ItemComparator
     {
         typedef ObjImp ObjType;
         SortOrder& m_order;
         typedef int (*CmpFunc)  ( ObjType u1, ObjType u2, int, int );
         CmpFunc m_cmp_func;
+        const unsigned int m_num_criteria;
 
-        CompareItems( SortOrder& order,CmpFunc func)
-            :m_order(order),m_cmp_func(func) {}
+        /** \param order SortOrder map that defines which columns should be sorted in what directions
+         * \param func the comparison callback func. Should return -1,0,1 for less,equal,greater
+         * \param num_criteria set to 1,2 to limit sub-ordering
+         * \todo make order const reference to eliminate assumption about existence of entries
+         */
+        ItemComparator( SortOrder& order,CmpFunc func, const unsigned int num_criteria = 3 )
+            :m_order(order),
+            m_cmp_func(func),
+            m_num_criteria(num_criteria)
+        {}
 
-        bool operator () ( ObjType u1, ObjType u2 )
+        bool operator () ( ObjType u1, ObjType u2 ) const
         {
             int res = m_cmp_func( u1, u2, m_order[0].col, m_order[0].direction );
             if ( res != 0 )
                 return res < 0;
 
-            if ( m_order[1].direction != 0 ) {
+            if ( m_num_criteria > 1 ) {
                 res = m_cmp_func( u1, u2, m_order[1].col, m_order[1].direction );
                 if ( res != 0 )
                     return res < 0;
 
-                if ( m_order[2].direction != 0 ) {
+                if ( m_num_criteria > 2 ) {
                     res = m_cmp_func( u1, u2, m_order[2].col, m_order[2].direction );
                     if ( res != 0 )
                         return res < 0;
@@ -133,11 +148,7 @@ protected:
         }
     };
 
-
-
-    template < class ObjType >
-    static int CompareOneCrit( ObjType u1, ObjType u2, int col, int dir );
-
+    //! compare func usable for types with well-defined ordering (and implemented ops <,>)
     template < typename Type >
     static inline int compareSimple( Type o1, Type o2 ) {
         if ( o1 < o2 )
@@ -147,8 +158,11 @@ protected:
         return 0;
     }
 
+    //! must be implemented in derived classes, should call the actual sorting on data and refreshitems
     virtual void Sort( ) = 0;
 public:
+    /** only sorts if data is marked dirty, or force is true
+     * calls Freeze(), Sort(), Thaw() */
     void SortList( bool force = false );
     /** @}
      */
@@ -221,6 +235,16 @@ public:
 
     //! marks the items in the control to be sorted
     void MarkDirtySort();
+
+     /** @name overloaded wxFunctions
+      * these are used to display items in virtual lists
+      * @{
+     */
+    virtual wxString OnGetItemText(long item, long column) const = 0;
+    virtual int OnGetItemImage(long item) const = 0;
+    virtual int OnGetItemColumnImage(long item, long column) const = 0;
+    /** @}
+     */
 
     DECLARE_EVENT_TABLE()
 };
