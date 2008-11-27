@@ -16,7 +16,8 @@ END_EVENT_TABLE()
 ChannelListctrl::ChannelListctrl(wxWindow* parent, wxWindowID id, const wxString& name,
                     long style, const wxPoint& pt, const wxSize& sz)
     :CustomVirtListCtrl(parent, CHANNELLIST, wxDefaultPosition, wxDefaultSize,
-            wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("ChannelListCtrl"), 3)
+            wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("ChannelListCtrl"), 3),
+    m_comparator(m_sortorder, &CompareOneCrit)
 
 {
   wxListItem col;
@@ -51,7 +52,7 @@ ChannelListctrl::ChannelListctrl(wxWindow* parent, wxWindowID id, const wxString
   AddColumn( 2, -1, _T("topic"), _T("topic") );
 
   m_sortorder[2].col = 2;
-  m_sortorder[2].direction = -1;
+  m_sortorder[2].direction = 1;
   m_sortorder[0].col = 0;
   m_sortorder[0].direction = 1;
   m_sortorder[1].col = 1;
@@ -81,55 +82,29 @@ void ChannelListctrl::AddChannel(const wxString& channel, unsigned int num_users
 
     ChannelInfo data ( channel, num_users, topic );
     m_data.push_back( data );
-    SetItemCount( m_data.size() );
-    RefreshItem( m_data.size() - 1);
+    m_visible_idxs[m_data.size() -1] = ( m_data.size() -1 );
+    SetItemCount( m_visible_idxs.size() );
+
+    RefreshItem( m_visible_idxs.size() - 1);
     SetColumnWidth( 0, wxLIST_AUTOSIZE );
     //Sort();
     //RestoreSelection();
 }
 
-//typedef CompareBase<const ChannelListctrl::ChannelInfo&>  ChannelCompareBase;
-//
-//template < int N >
-//struct ChannelCompare : public ChannelCompareBase {
-//    static int compare ( CompareType u1, CompareType u2, int dir ) {
-//        assert(0);//this case should never be actually be called, but is necessary to be defined at compile time
-//        return 0;
-//    }
-//};
-//
-//
-//template < >
-//struct ChannelCompare < 0 > : public ChannelCompareBase
-//{
-//    static bool compare ( CompareType u1, CompareType u2, int dir ) {
-//        wxString n1 = u1.name;
-//        wxString n2 = u2.name;
-//        return dir * n1.CmpNoCase( n2 );
-//    }
-//};
-//
-//template < >
-//struct ChannelCompare < 1 > : public ChannelCompareBase
-//{
-//    static bool compare ( CompareType u1, CompareType u2, int dir ) {
-//        return dir * compareSimple( u1.usercount, u2.usercount ) ;
-//    }
-//};
-//
-//template < >
-//struct ChannelCompare < 2 > : public ChannelCompareBase
-//{
-//    static bool compare ( CompareType u1, CompareType u2, int dir ) {
-//        return dir * u1.topic.CmpNoCase( u2.topic );
-//    }
-//};
+int ChannelListctrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir )
+{
+    switch ( col ) {
+        case 0: return dir * u1.name.CmpNoCase( u2.name );
+        case 1: return dir * compareSimple( u1.usercount, u2.usercount );
+        case 2: return dir * u1.topic.CmpNoCase( u2.topic );
+        default: return 0;
+    }
+}
 
 void ChannelListctrl::Sort()
 {
-
-//    SLInsertionSort( m_data, CompareSelector<ChannelCompare>::GetFunctor( 1,0,2 ), 1,1, 1 );
-    RefreshItems( 0, m_data.size() -1 );
+    SLInsertionSort( m_data, m_comparator );
+    RefreshItems( 0, m_visible_idxs.size() -1 );
 }
 
 void ChannelListctrl::OnColClick( wxListEvent& event )
@@ -163,13 +138,14 @@ void ChannelListctrl::OnActivateItem(wxListEvent& event)
 {
   int index = event.GetIndex();
   if ( index == -1 ) return;
-  wxString chan_name = m_data[index].name;
+  wxString chan_name = m_data[ m_visible_idxs[index] ].name;
   ui().JoinChannel( chan_name, _T("") );
 }
 
 void ChannelListctrl::ClearChannels()
 {
     m_data.clear();
+    m_visible_idxs.clear();
     SetItemCount( 0 );
 }
 
@@ -182,7 +158,17 @@ wxString ChannelListctrl::GetInfo()
 
 void ChannelListctrl::FilterChannel( const wxString& partial )
 {
-
+    m_visible_idxs.clear();
+    int idx = 0;
+    for ( int i = 0; i < m_data.size() ; ++i ) {
+        const ChannelInfo& data = m_data[i];
+        if ( data.name.Contains( partial ) ) {
+            m_visible_idxs[idx] = i;
+            idx++;
+        }
+    }
+    SetItemCount( m_visible_idxs.size() );
+    RefreshItems( 0, m_visible_idxs.size() -1 );
 //    for ( ChannelInfoIter it = m_data.begin(); it != m_data.end(); ++it ) {
 //        const ChannelInfo& data = it->second;
 //        if ( data.name.Contains( partial ) ) {
@@ -193,10 +179,10 @@ void ChannelListctrl::FilterChannel( const wxString& partial )
 //            SetItemData( index, (wxUIntPtr) &(it->second) );
 //        }
 //    }
-    //highlight
+    //highlight spring
     //HighlightItemUser( index, userdata.first );
 
-    Sort();
+
 }
 
 
@@ -212,10 +198,13 @@ int ChannelListctrl::OnGetItemImage(long item) const
 
 wxString ChannelListctrl::OnGetItemText(long item, long column) const
 {
+    int idx = m_visible_idxs.find(item)->second;
+    const DataType& chan = m_data[ idx ];
+
     switch ( column ) {
-        case 0: return m_data[item].name;
-        case 1: return TowxString( m_data[item].usercount );
-        case 2: return m_data[item].topic;
+        case 0: return chan.name;
+        case 1: return TowxString( chan.usercount );
+        case 2: return chan.topic;
         default: return wxEmptyString;
     }
 }
