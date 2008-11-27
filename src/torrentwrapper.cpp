@@ -54,11 +54,11 @@ getDataSubdirForType(const IUnitSync::MediaType type)
     switch ( type)
     {
     case IUnitSync::map:
-	return _T("maps");
+        return _T("maps");
     case IUnitSync::mod:
-	return _T("mods");
+        return _T("mods");
     default:
-	ASSERT_EXCEPTION(false, _T("Unhandled IUnitSync::MediaType value"));
+        ASSERT_EXCEPTION(false, _T("Unhandled IUnitSync::MediaType value"));
     }
 }
 
@@ -721,8 +721,8 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
     else			/* if(IsSeed) */
     {
         path = sett().GetTorrentDataDir();
-	path.AppendDir( getDataSubdirForType(row->type) );
-	if ( !path.DirExists() ) path.Mkdir(0755);
+        path.AppendDir( getDataSubdirForType(row->type) );
+        if ( !path.DirExists() ) path.Mkdir(0755);
         wxLogMessage(_T("downloading to path: =%s"), path.GetFullPath().c_str());
     }
 
@@ -764,8 +764,8 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
         wxLogMessage(_T("filename differs from torrent, renaming file in torrent info"));
         if ( !( torrent_filename.GetExt() == archive_filename.GetExt() ) ) /// different extension, won't work
         {
-          wxLogMessage( _T("file extension locally differs, not joining torrent") );
-          return false;
+            wxLogMessage( _T("file extension locally differs, not joining torrent") );
+            return false;
         }
         std::vector<libtorrent::file_entry> map;
         libtorrent::file_entry foo = t_info.file_at(0);
@@ -774,8 +774,8 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
         wxLogMessage(_T("New filename in torrent: %s"), archive_filename.GetFullName().c_str() );
         if ( !t_info.remap_files(map) )
         {
-         wxLogMessage(_T("Cannot remap filenames in the torrent, aborting seed"));
-         return false;
+            wxLogMessage(_T("Cannot remap filenames in the torrent, aborting seed"));
+            return false;
         }
     }
     wxLogMessage(_T("(4) Joining torrent: add_torrent(%s,[%s],%s,[%s])"),m_tracker_urls[m_connected_tracker_index].c_str(),torrent_infohash_b64.c_str(),row->name.c_str(),path.GetFullPath().c_str());
@@ -838,22 +838,22 @@ void TorrentWrapper::CreateTorrent( const wxString& hash, const wxString& name, 
 
     switch ( type )
     {
-      case IUnitSync::map :
-      {
-          if ( !usync().MapExists( name, hash ) ) return;
-          int index = usync().GetMapIndex( name );
-          if ( index == -1 ) return;
-          archivename = usync().GetMapArchive( index );
-          break;
-      }
-      case IUnitSync::mod :
-      {
-          if ( !usync().ModExists( name, hash ) ) return;
-          int index = usync().GetModIndex( name );
-          if ( index == -1 ) return;
-          archivename = usync().GetModArchive( index );
-          break;
-      }
+    case IUnitSync::map :
+    {
+        if ( !usync().MapExists( name, hash ) ) return;
+        int index = usync().GetMapIndex( name );
+        if ( index == -1 ) return;
+        archivename = usync().GetMapArchive( index );
+        break;
+    }
+    case IUnitSync::mod :
+    {
+        if ( !usync().ModExists( name, hash ) ) return;
+        int index = usync().GetModIndex( name );
+        if ( index == -1 ) return;
+        archivename = usync().GetModArchive( index );
+        break;
+    }
     }
 
     wxString archivepath = usync().GetArchivePath( archivename );
@@ -970,25 +970,19 @@ void TorrentWrapper::RemoveUnneededTorrents()
             ///torrent has finished download, refresh unitsync and remove file from list
             try
             {
-		/* Grab the source (temporary) and destination (final) filenames BEFORE we remove the download. */
-		wxString sourceName( TowxString( ( it->first.save_path() / it->first.name() ).file_string() ) );
-		wxString targetName =
-		    sett().GetCurrentUsedDataDir()
-		    + wxFileName::GetPathSeparator() + getDataSubdirForType(it->second->type)
-		    + wxFileName::GetPathSeparator() + TowxString(it->first.name());
+                /* Grab the source (temporary) and destination (final) filenames BEFORE we remove the download. */
+                wxString sourceName( TowxString( ( it->first.save_path() / it->first.name() ).file_string() ) );
+                wxString basepath = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + getDataSubdirForType(it->second->type);
+                wxString targetName = basepath + wxFileName::GetPathSeparator() + TowxString(it->first.name());
 
-
+                if ( !wxFileName::DirExists( basepath ) ) wxFileName::Mkdir( basepath, 0755 );
                 ASSERT_EXCEPTION( RemoveTorrentByRow( it->second ), _T("failed to remove torrent: ")+ it->second->hash );
 
-		/* Move file from temporary download directory to final destination.  `false' for
-		 * parameter 3 means don't overwrite the file if it already exists.
-		 */
-		if ( ! wxRenameFile(sourceName, targetName, false) )
-		    wxLogError(wxString::Format(_T("torrent: Failed to move \"%s\" to \"%s\""),
-						sourceName.c_str(), targetName.c_str()));
-		else
-		    wxLogMessage(wxString::Format(_T("torrent: Moved \"%s\" to \"%s\""),
-						  sourceName.c_str(), targetName.c_str()));
+                /* Move file from temporary download directory to final destination.  `false' for
+                 * parameter 3 means don't overwrite the file if it already exists.
+                 */
+                if ( ! wxRenameFile(sourceName, targetName, false) ) wxLogError(wxString::Format(_T("torrent: Failed to move \"%s\" to \"%s\""), sourceName.c_str(), targetName.c_str()));
+                else wxLogMessage(wxString::Format(_T("torrent: Moved \"%s\" to \"%s\""), sourceName.c_str(), targetName.c_str()));
 
                 m_socket_class->Send( _T("N-|")  + it->second->hash + _T("\n") ); ///notify the system we don't need the file anymore
 

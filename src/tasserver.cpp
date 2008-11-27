@@ -638,6 +638,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     else if ( cmd == _T("REMOVEUSER") )
     {
         nick = GetWordParam( params );
+        if ( nick == m_user ) return; // to prevent peet doing nasty stuff to you, watch your back!
         m_se->OnUserQuit( nick );
     }
     else if ( cmd == _T("BATTLECLOSED") )
@@ -691,6 +692,15 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         channel = GetWordParam( params );
         nick = GetWordParam( params );
         pos = GetIntParam( params );
+        if ( channel == _T("autohost") )
+        {
+          m_relay_host_manager_list.Clear();
+          wxStringTokenizer tkr( params, _T("\n") );
+          while( tkr.HasMoreTokens() )
+          {
+            m_relay_host_manager_list.Add( tkr.GetNextToken() );
+          }
+        }
         m_se->OnChannelTopic( channel, nick, params, pos/1000 );
     }
     else if ( cmd == _T("SAIDEX") )
@@ -710,15 +720,23 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     else if ( cmd == _T("SAYPRIVATE") )
     {
         nick = GetWordParam( params );
-        if ( ( ( nick == m_relay_host_bot ) || ( nick == _T("AutoHostManager") ) ) && params.StartsWith( _T("!") ) ) return; // drop the message
+        if ( ( ( nick == m_relay_host_bot ) || ( nick == m_relay_host_manager ) ) && params.StartsWith( _T("!") ) ) return; // drop the message
         m_se->OnPrivateMessage( nick, params, true );
     }
     else if ( cmd == _T("SAIDPRIVATE") )
     {
         nick = GetWordParam( params );
-        if ( nick == _T("AutoHostManager") )
+        if ( nick == m_relay_host_manager )
         {
-          m_relay_host_bot = params;
+          if ( params.StartsWith( _T("\001") ) ) // error code
+          {
+            m_se->OnServerMessageBox( params.AfterFirst( _T(' ') ) );
+          }
+          else
+          {
+            m_relay_host_bot = params;
+          }
+          m_relay_host_manager = _T("");
           return;
         }
         m_se->OnPrivateMessage( nick, params, false );
@@ -907,6 +925,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     }
     else if ( cmd == _T("DENIED") )
     {
+        if ( m_online ) return;
         msg = GetSentenceParam( params );
         m_se->OnServerMessage( msg );
         Disconnect();
@@ -1298,8 +1317,35 @@ void TASServer::HostBattle( BattleOptions bo, const wxString& password )
     }
     else
     {
-       SayPrivate( _T("AutoHostManager"), _T("!spawn") );
-       m_delayed_open_command = cmd;
+       unsigned int numbots = m_relay_host_manager_list.GetCount();
+       if ( numbots > 0 )
+       {
+          unsigned int begin;
+          if ( numbots == 1 ) begin = 0;
+          else begin = rand() % ( numbots -1 );
+          bool doloop = true;
+          unsigned int choice = begin;
+          while ( doloop )
+          {
+            m_relay_host_manager = m_relay_host_manager_list[choice];
+            if ( UserExists( m_relay_host_manager ) )
+            {
+              SayPrivate( m_relay_host_manager, _T("!spawn") );
+              m_delayed_open_command = cmd;
+              doloop = false;
+            }
+            else
+            {
+              if ( numbots == 1 ) doloop = false;
+              else
+              {
+                 choice++;
+                 choice = rand() % ( numbots -1 );
+                 if ( choice == begin ) doloop = false;
+              }
+            }
+          }
+       }
     }
 
     if (bo.nattype>0)UdpPingTheServer(m_user);

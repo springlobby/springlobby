@@ -92,6 +92,7 @@ class MapCtrl : public wxPanel
 
     wxBitmap* m_minimap;
     wxBitmap* m_metalmap;
+    wxBitmap* m_heightmap;
     wxImage m_metalmap_cumulative;
 
     IBattle* m_battle;
@@ -141,6 +142,7 @@ class MapCtrl : public wxPanel
     enum InfoMap {
       IM_Minimap,  // must be first one
       IM_Metalmap, // entries must be consecutively numbered (without gaps)
+      IM_Heightmap,
       IM_Count,    // must be last one
     };
 
