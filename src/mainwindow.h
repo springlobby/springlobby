@@ -28,6 +28,7 @@ class settings_frame;
 class wxMenuItem;
 class wxMenuBar;
 class wxMenu;
+class ChannelChooserDialog;
 class ReplayTab;
 class AutojoinChannelDialog;
 
@@ -82,8 +83,11 @@ class MainWindow : public wxFrame
     void OnReportBug( wxCommandEvent& event );
     void OnShowDocs( wxCommandEvent& event );
     void OnShowSettingsPP( wxCommandEvent& event );
+    void OnShowChannelChooser( wxCommandEvent& event );
     void forceSettingsFrameClose();
     void OnUnitSyncReloaded();
+    void OnChannelList( const wxString& channel, const int& numusers, const wxString& topic );
+    void OnChannelListStart( );
 
 
     #ifdef HAVE_WX26
@@ -139,6 +143,7 @@ class MainWindow : public wxFrame
     AutojoinChannelDialog* m_autojoin_dialog;
     settings_frame* se_frame;
     bool se_frame_active;
+    ChannelChooserDialog* m_channel_chooser;
 
     ReplayTab* m_replay_tab;
 
@@ -159,7 +164,8 @@ class MainWindow : public wxFrame
         MENU_VERSION,
         MENU_START_TORRENT,
         MENU_STOP_TORRENT,
-        MENU_AUTOJOIN_CHANNELS
+        MENU_AUTOJOIN_CHANNELS,
+        MENU_CHANNELCHOOSER
 
     };
 

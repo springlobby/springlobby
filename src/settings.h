@@ -31,6 +31,7 @@ const unsigned int DEFSETT_SW_LEFT = 50;
 const bool DEFSETT_WEB_BROWSER_USE_DEFAULT = true;
 
 #include <wx/fileconf.h>
+#include <wx/window.h>
 #include "utils.h"
 #include "useractions.h"
 
@@ -40,9 +41,12 @@ class wxFont;
 struct BattleListFilterValues;
 struct ReplayListFilterValues;
 class wxFileInputStream;
+class wxFileName;
 class wxColor;
 class wxColour;
 struct wxColourData;
+class wxSize;
+class wxPoint;
 
 class SL_WinConf : public wxFileConfig
 {
@@ -297,17 +301,23 @@ class Settings
      void SaveCustomColors( const wxColourData& cdata, const wxString& paletteName = _T("Default") );
      wxColourData GetCustomColors( const wxString& paletteName = _T("Default") );
 
-    int    GetMainWindowWidth();
-    void   SetMainWindowWidth( const int value );
+    int    GetWindowWidth( const wxString& window );
+    void   SetWindowWidth( const wxString& window, const int value );
 
-    int    GetMainWindowHeight();
-    void   SetMainWindowHeight( const int value );
+    int    GetWindowHeight( const wxString& window );
+    void   SetWindowHeight( const wxString& window, const int value );
 
-    int    GetMainWindowTop();
-    void   SetMainWindowTop( const int value );
+    int    GetWindowTop( const wxString& window );
+    void   SetWindowTop( const wxString& window, const int value );
 
-    int    GetMainWindowLeft();
-    void   SetMainWindowLeft( const int value );
+    int    GetWindowLeft( const wxString& window );
+    void   SetWindowLeft( const wxString& window, const int value );
+
+    wxSize  GetWindowSize( const wxString& window, const wxSize& def = wxDefaultSize );
+    void    SetWindowSize( const wxString& window, const wxSize& size  );
+
+    wxPoint  GetWindowPos( const wxString& window, const wxPoint& def = wxDefaultPosition );
+    void    SetWindowPos( const wxString& window, const wxPoint& pos );
 
     bool UseOldSpringLaunchMethod();
     void SetOldSpringLaunchMethod( bool value );
@@ -323,7 +333,7 @@ class Settings
     /*@}*/
 
     /* ================================================================ */
-    /** @name People/Group mngm related
+    /** @name People/Group management
      * @{
      */
     void SetPeopleList( const wxArrayString& friends, const wxString& group = _T("default") );
@@ -379,8 +389,8 @@ class Settings
     void   SetChatLogLoc( const wxString& loc );
 
     //!@brief sets how many lines can stay in a chat panel before the old will start getting erased, 0 to disable
-    void SetChatHistoryLenght( unsigned int historylines );
-    unsigned int GetChatHistoryLenght();
+    void SetChatHistoryLenght( int historylines );
+    int GetChatHistoryLenght();
 
     void SetChatPMSoundNotificationEnabled( bool enabled );
     bool GetChatPMSoundNotificationEnabled();
@@ -432,7 +442,7 @@ class Settings
     /* ================================================================ */
     /** @name Hosting
      *
-     * Settings to use when hosting games.  Includes "sticky" settings from the
+     * %Settings to use when hosting games.  Includes "sticky" settings from the
      * last time a game was hosted.
      *
      * @{
@@ -447,6 +457,7 @@ class Settings
     int GetLastRankLimit();
     bool GetTestHostPort();
     bool GetLastAutolockStatus();
+    bool GetLastHostRelayedMode();
 
     void SetLastHostDescription( const wxString& value );
     void SetLastHostMod( const wxString& value );
@@ -458,6 +469,7 @@ class Settings
     void SetLastRankLimit( int rank );
     void SetTestHostPort( bool value );
     void SetLastAutolockStatus( bool value );
+    void SetLastHostRelayedMode( bool value );
 
     void SetHostingPreset( const wxString& name, int optiontype, std::map<wxString,wxString> options );
     std::map<wxString,wxString> GetHostingPreset( const wxString& name, int optiontype );
@@ -487,7 +499,20 @@ class Settings
     void SetBalanceStrongClans(bool value);
     bool GetBalanceStrongClans();
 
+    void SetBalanceGrouping( int value );
+    int GetBalanceGrouping();
 
+    void SetFixIDMethod(int value);
+    int GetFixIDMethod();
+
+    void SetFixIDClans(bool value);
+    bool GetFixIDClans();
+
+    void SetFixIDStrongClans(bool value);
+    bool GetFixIDStrongClans();
+
+    void SetFixIDGrouping( int value );
+    int GetFixIDGrouping();
 
     /** @name Battle filters
      * @{
@@ -538,10 +563,25 @@ class Settings
     void SetTorrentListToResume( const wxArrayString& list );
     wxArrayString GetTorrentListToResume();
 
-    wxString GetTorrentsFolder();
+    /** Get the path to the directory where *.torrent files are stored.
+     */
+    wxFileName GetTorrentDir();
+
+
+    /** Get the path to the directory where partially-downloaded
+     * torrented files are stored.
+     *
+     * @sa GetTorrentsFolder
+     */
+    wxFileName GetTorrentDataDir();
+
     /**@}*/
 
     /** @name Aui
+     *
+     * Functions used to store and retrieve the current SpringLobby
+     * interface layout.
+     *
      * @{
      */
     void SaveLayout( wxString& layout_name, wxString& layout_string );
@@ -570,17 +610,6 @@ class Settings
     wxString getSimpleDetail();
     void setSimpleDetail( wxString );
 
-    int    GetSettingsWindowWidth();
-    void   SetSettingsWindowWidth( const int value );
-
-    int    GetSettingsWindowHeight();
-    void   SetSettingsWindowHeight( const int value );
-
-    int    GetSettingsWindowTop();
-    void   SetSettingsWindowTop( const int value );
-
-    int    GetSettingsWindowLeft();
-    void   SetSettingsWindowLeft( const int value );
   /**@}*/
 
   protected:

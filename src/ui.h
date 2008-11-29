@@ -141,7 +141,7 @@ class Ui
     void OnBattleAction( Battle& battle, const wxString& nick, const wxString& msg );
 
     void OnSpringStarting();
-    void OnSpringTerminated( bool success );
+    void OnSpringTerminated( long exit_code );
 
     void OnAcceptAgreement( const wxString& agreement );
 

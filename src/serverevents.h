@@ -86,7 +86,7 @@ class ServerEvents
     void OnChannelPart( const wxString& channel, const wxString& who, const wxString& message );
     void OnChannelTopic( const wxString& channel, const wxString& who, const wxString& message, int when );
     void OnChannelAction( const wxString& channel, const wxString& who, const wxString& action );
-    void OnChannelList( const wxString& channel, const int& numusers );
+    void OnChannelList( const wxString& channel, const int& numusers, const wxString& topic );
     void OnUserJoinChannel( const wxString& channel, const wxString& who );
 
     void OnPrivateMessage( const wxString& user, const wxString& message, bool fromme = false );
@@ -116,6 +116,10 @@ class ServerEvents
 
     /// use this function to check spam from clients and autokick from the battle
     void AutoCheckCommandSpam( Battle& battle, User& nick );
+
+    void OnMutelistBegin( const wxString& channel );
+    void OnMutelistItem( const wxString& channel, const wxString& mutee, const wxString& description );
+    void OnMutelistEnd( const wxString& channel );
 
   protected:
     Server& m_serv;

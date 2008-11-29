@@ -741,33 +741,7 @@ wxSize MakeFit(const wxSize &original, const wxSize &bounds){
 wxImage SpringUnitSync::GetMinimap( const wxString& mapname )
 {
   wxLogDebugFunc( mapname );
-
-  wxString originalsizepath = GetFileCachePath( mapname, _T(""), false ) + _T(".minimap.png");
-
-  wxImage img;
-
-  try
-  {
-    ASSERT_EXCEPTION( wxFileExists( originalsizepath ), _T("File cached image does not exist") );
-
-    img = wxImage( originalsizepath, wxBITMAP_TYPE_PNG );
-    ASSERT_EXCEPTION( img.Ok(), _T("Failed to load cache image") );
-  }
-  catch (...)
-  {
-    try
-    {
-      img = susynclib().GetMinimap( mapname );
-
-      img.SaveFile( originalsizepath, wxBITMAP_TYPE_PNG );
-    }
-    catch (...)
-    {
-      img = wxImage( 1, 1 );
-    }
-  }
-
-  return img;
+  return _GetMapImage( mapname, _T(".minimap.png"), &SpringUnitSyncLib::GetMinimap );
 }
 
 
@@ -775,6 +749,8 @@ wxImage SpringUnitSync::GetMinimap( const wxString& mapname, int width, int heig
 {
   wxImage img = GetMinimap( mapname );
 
+  // special resizing code because minimap is always square,
+  // and we need to resize it to the correct aspect ratio.
   if (img.GetWidth() > 1 && img.GetHeight() > 1)
   {
     MapInfo mapinfo = _GetMapInfoEx( mapname );
@@ -790,8 +766,32 @@ wxImage SpringUnitSync::GetMinimap( const wxString& mapname, int width, int heig
 wxImage SpringUnitSync::GetMetalmap( const wxString& mapname )
 {
   wxLogDebugFunc( mapname );
+  return _GetMapImage( mapname, _T(".metalmap.png"), &SpringUnitSyncLib::GetMetalmap );
+}
 
-  wxString originalsizepath = GetFileCachePath( mapname, _T(""), false ) + _T(".metalmap.png");
+
+wxImage SpringUnitSync::GetMetalmap( const wxString& mapname, int width, int height )
+{
+  return _GetScaledMapImage( mapname, &SpringUnitSync::GetMetalmap, width, height );
+}
+
+
+wxImage SpringUnitSync::GetHeightmap( const wxString& mapname )
+{
+  wxLogDebugFunc( mapname );
+  return _GetMapImage( mapname, _T(".heightmap.png"), &SpringUnitSyncLib::GetHeightmap );
+}
+
+
+wxImage SpringUnitSync::GetHeightmap( const wxString& mapname, int width, int height )
+{
+  return _GetScaledMapImage( mapname, &SpringUnitSync::GetHeightmap, width, height );
+}
+
+
+wxImage SpringUnitSync::_GetMapImage( const wxString& mapname, const wxString& imagename, wxImage (SpringUnitSyncLib::*loadMethod)(const wxString& mapname) )
+{
+  wxString originalsizepath = GetFileCachePath( mapname, _T(""), false ) + imagename;
 
   wxImage img;
 
@@ -806,7 +806,7 @@ wxImage SpringUnitSync::GetMetalmap( const wxString& mapname )
   {
     try
     {
-      img = susynclib().GetMetalmap( mapname );
+      img = (susynclib().*loadMethod)( mapname );
 
       img.SaveFile( originalsizepath, wxBITMAP_TYPE_PNG );
     }
@@ -820,9 +820,9 @@ wxImage SpringUnitSync::GetMetalmap( const wxString& mapname )
 }
 
 
-wxImage SpringUnitSync::GetMetalmap( const wxString& mapname, int width, int height )
+wxImage SpringUnitSync::_GetScaledMapImage( const wxString& mapname, wxImage (SpringUnitSync::*loadMethod)(const wxString& mapname), int width, int height )
 {
-  wxImage img = GetMetalmap( mapname );
+  wxImage img = (this->*loadMethod) ( mapname );
 
   if (img.GetWidth() > 1 && img.GetHeight() > 1)
   {

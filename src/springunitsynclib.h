@@ -291,6 +291,12 @@ class SpringUnitSyncLib
      */
     wxImage GetMetalmap( const wxString& mapFileName );
 
+    /**
+     * @brief Get heightmap.
+     * @note Throws assert_exception if unsuccesful.
+     */
+    wxImage GetHeightmap( const wxString& mapFileName );
+
     int GetPrimaryModChecksum( int index );
     int GetPrimaryModIndex( const wxString& modName );
     wxString GetPrimaryModName( int index );

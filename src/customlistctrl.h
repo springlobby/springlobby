@@ -77,7 +77,7 @@ protected:
     //! which action should be considered?
     ActionType m_highlightAction;
 
-    wxColor m_bg_color;
+    const wxColor m_bg_color;
 
     //! list should be sorted
     bool m_dirty_sort;

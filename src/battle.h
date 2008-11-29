@@ -19,7 +19,7 @@ const unsigned int DEFAULT_EXTERNAL_UDP_SOURCE_PORT = 16941;
 struct BattleOptions
 {
   BattleOptions() :
-    battleid(-1),islocked(false),isreplay(false),ispassworded(false),rankneeded(0),ranklimittype(IBattle::rank_limit_autospec),
+    battleid(-1),islocked(false),isreplay(false),ispassworded(false),rankneeded(0),isproxy(false),lockexternalbalancechanges(false),ranklimittype(IBattle::rank_limit_autospec),
     nattype(IBattle::NAT_None),port(DEFAULT_SERVER_PORT),externaludpsourceport(DEFAULT_EXTERNAL_UDP_SOURCE_PORT),internaludpsourceport(DEFAULT_EXTERNAL_UDP_SOURCE_PORT),maxplayers(0),spectators(0),
     guilistactiv(false) {}
 
@@ -28,6 +28,8 @@ struct BattleOptions
   bool isreplay;
   bool ispassworded;
   int rankneeded;
+  bool isproxy;
+  bool lockexternalbalancechanges;
   IBattle::RankLimitType ranklimittype;
 
   wxString founder;
@@ -213,18 +215,26 @@ class Battle : public CommonBattle
     void SetMyAlly( int ally ) { GetMe().BattleStatus().ally = ally; SendMyBattleStatus(); }
 
 
-    void Autobalance(int balance_type=0, bool clans=true, bool strong_clans=true);
-    void FixTeamIDs();
+    void Autobalance( BalanceType balance_type = balance_divide, bool clans = true, bool strong_clans = true, int allyteamsize = 0 );
+    void FixTeamIDs( BalanceType balance_type = balance_divide, bool clans = true, bool strong_clans = true, int controlteamsize = 0 );
     void ForceUnsyncedToSpectate();
 
     void SetAutoLockOnStart( bool value );
     bool GetAutoLockOnStart();
+
+    void SetIsProxy( bool value );
+    bool IsProxy();
+
+    void SetLockExternalBalanceChanges( bool value );
+    bool GetLockExternalBalanceChanges();
 
     ///< quick hotfix for bans
     bool CheckBan(User &user);
     ///>
 
     void SetImReady( bool ready );
+
+    void DisableHostStatusInProxyMode( bool value ) { m_generating_script = value; }
 
     User& GetMe() const;
     bool IsFounderMe() const;
@@ -240,6 +250,7 @@ class Battle : public CommonBattle
     Server& m_serv;
     AutoHost m_ah;
     bool m_autolock_on_start;
+    bool m_generating_script;
 
     void RemoveUser( wxString const& user ) {}
 };

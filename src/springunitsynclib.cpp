@@ -42,7 +42,7 @@ void SpringUnitSyncLib::Load( const wxString& path, bool DoInit )
   m_path = path;
 
   // Load the library.
-  wxLogMessage( _T("Loading from: %s"), path.c_str());
+  wxLogMessage( _T("Loading from: %s init: %d"), path.c_str(), DoInit);
 
   // Check if library exists
   if ( !wxFileName::FileExists( path ) ) {
@@ -515,6 +515,72 @@ wxImage SpringUnitSyncLib::GetMetalmap( const wxString& mapFileName )
   }
 
   return metalmap;
+}
+
+
+wxImage SpringUnitSyncLib::GetHeightmap( const wxString& mapFileName )
+{
+  InitLib( m_get_infomap_size ); // assume GetInfoMap is available too
+
+  wxLogMessage( _T("Heightmap: %s"), mapFileName.c_str() );
+
+  int width = 0, height = 0, retval;
+
+  retval = m_get_infomap_size(mapFileName.mb_str(wxConvUTF8), "height", &width, &height);
+  ASSERT_EXCEPTION( retval != 0 && width * height != 0, _T("Get heightmap size failed") );
+
+  typedef unsigned char uchar;
+  typedef unsigned short ushort;
+  wxImage heightmap(width, height, false);
+  uninitialized_array<ushort> grayscale(width * height);
+  uchar* true_colours = heightmap.GetData();
+
+  retval = m_get_infomap(mapFileName.mb_str(wxConvUTF8), "height", grayscale, 2 /*byte per pixel*/);
+  ASSERT_EXCEPTION( retval != 0, _T("Get heightmap failed") );
+
+  // the height is mapped to this "palette" of colors
+  // the colors are linearly interpolated
+
+  const uchar points[][3] = {
+  	{   0,   0,   0 },
+  	{   0,   0, 255 },
+  	{   0, 255, 255 },
+  	{   0, 255,   0 },
+  	{ 255, 255,   0 },
+  	{ 255,   0,   0 },
+  };
+  const int numPoints = sizeof(points) / sizeof(points[0]);
+
+  // find range of values present in the height data returned by unitsync
+  int min = 65536;
+  int max = 0;
+
+  for ( int i = 0; i < width*height; i++ ) {
+    if (grayscale[i] < min) min = grayscale[i];
+    if (grayscale[i] > max) max = grayscale[i];
+  }
+
+  // prevent division by zero -- heightmap wouldn't contain any information anyway
+  if (min == max)
+    return wxImage( 1, 1 );
+
+  // perform the mapping from 16 bit grayscale to 24 bit true colour
+  const double range = max - min + 1;
+  for ( int i = 0; i < width*height; i++ ) {
+    const double value = (grayscale[i] - min) / (range / (numPoints - 1));
+    const int idx1 = int(value);
+    const int idx2 = idx1 + 1;
+    const int t = int(256.0 * (value - floor(value)));
+
+    //assert(idx1 >= 0 && idx1 < numPoints-1);
+    //assert(idx2 >= 1 && idx2 < numPoints);
+    //assert(t >= 0 && t <= 255);
+
+    for ( int j = 0; j < 3; ++j)
+      true_colours[(i*3)+j] = (points[idx1][j] * (255 - t) + points[idx2][j] * t) / 255;
+  }
+
+  return heightmap;
 }
 
 

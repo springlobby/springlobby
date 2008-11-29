@@ -52,8 +52,10 @@ BEGIN_EVENT_TABLE(BattleListTab, wxPanel)
   EVT_CHECKBOX            ( BattleListTab::BATTLE_LIST_FILTER_ACTIV, BattleListTab::OnFilterActiv )
 #if  wxUSE_TOGGLEBTN
   EVT_TOGGLEBUTTON        ( BattleListTab::BATTLE_LIST_FILTER_BUTTON, BattleListTab::OnFilter  )
+  EVT_TOGGLEBUTTON        ( BattleListTab::BATTLE_LIST_INFO_BUTTON, BattleListTab::OnInfoShow  )
 #else
   EVT_CHECKBOX            ( BattleListTab::BATTLE_LIST_FILTER_BUTTON , BattleListTab::OnFilter )
+  EVT_CHECKBOX            ( BattleListTab::BATTLE_LIST_INFO_BUTTON, BattleListTab::OnOnInfoShow )
 #endif
   EVT_SIZE( BattleListTab::OnResize )
 
@@ -62,7 +64,6 @@ END_EVENT_TABLE()
 
 
 BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( parent, -1 ),
-  m_filter_notice(0),
   m_ui(ui),
   m_sel_battle(0)
 {
@@ -140,6 +141,13 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( par
 	m_filter_show = new wxCheckBox( this, BATTLE_LIST_FILTER_BUTTON , _(" Filter "), wxDefaultPosition , wxSize( -1,28 ), 0 );
 #endif
   m_buttons_sizer->Add( m_filter_show, 0, 0, 5 );
+
+  #if  wxUSE_TOGGLEBTN
+	m_info_show = new wxToggleButton( this, BATTLE_LIST_INFO_BUTTON , _(" Battle infos "), wxDefaultPosition , wxSize( -1,28 ), 0 );
+#else
+	m_info_show = new wxCheckBox( this, BATTLE_LIST_INFO_BUTTON, _(" Battle infos "), wxDefaultPosition , wxSize( -1,28 ), 0 );
+#endif
+  m_buttons_sizer->Add( m_info_show , 0, 0, 5 );
 
   m_filter_activ = new wxCheckBox( this, BATTLE_LIST_FILTER_ACTIV , _("Activated"), wxDefaultPosition, wxDefaultSize, 0 );
   m_buttons_sizer->Add( m_filter_activ, 0, wxALL, 5 );
@@ -357,7 +365,6 @@ void BattleListTab::SetFilterActiv( bool activ )
   m_filter->SetActiv( activ );
   m_filter_activ->SetValue( activ );
   sett().SetBattleFilterActivState( activ );
-  ShowFilterNotice( activ );
   m_battle_list->MarkDirtySort();
 }
 
@@ -470,6 +477,8 @@ void BattleListTab::OnHost( wxCommandEvent& event )
 
     bo.maxplayers = sett().GetLastHostPlayerNum();
 
+    bo.isproxy = sett().GetLastHostRelayedMode();
+
     m_ui.GetServer().HostBattle( bo, sett().GetLastHostPassword() );
   }
 }
@@ -498,7 +507,6 @@ void BattleListTab::OnFilterActiv( wxCommandEvent& event )
   }
   m_filter->SetActiv( active );
   sett().SetBattleFilterActivState( active );
-  ShowFilterNotice( active );
 }
 
 
@@ -515,24 +523,6 @@ void BattleListTab::OnJoin( wxCommandEvent& event )
 
 }
 
-void BattleListTab::ShowFilterNotice( const bool show )
-{
-    if ( show ) {
-        m_filter_notice = new wxStaticText( this, -1, _("Battle filter is active") );
-        m_battlelist_sizer->Add ( m_filter_notice, 0, wxALIGN_CENTER_HORIZONTAL | wxTOP | wxBOTTOM, 5 );
-        m_battlelist_sizer->Layout();
-
-    }
-    else {
-        if ( m_filter_notice ) {
-            m_battlelist_sizer->Detach( m_filter_notice );
-            delete m_filter_notice;
-            m_filter_notice = 0;
-            m_battlelist_sizer->Layout();
-            //m_ma
-        }
-    }
-}
 
 void BattleListTab::OnListJoin( wxListEvent& event )
 {
@@ -639,22 +629,24 @@ void BattleListTab::SortBattleList()
   m_battle_list->SortList();
 }
 
+void BattleListTab::ShowExtendedInfos( bool show )
+{
+    const bool recursive = true;
+    m_main_sizer->Show(m_info_sizer, show, recursive );
+    m_main_sizer->Show(m_buttons_sep, show, recursive  );
+    m_info_show->SetValue( show );
+    Layout();
+}
+
+void BattleListTab::OnInfoShow( wxCommandEvent& event )
+{
+    ShowExtendedInfos( m_info_show->GetValue() );
+}
 
 void BattleListTab::OnResize( wxSizeEvent& event )
 {
 	SetSize( event.GetSize() );
 	Layout();
 	/// window too small, hide additional infos
-  if ( GetClientSize().GetHeight() < 400 )
-  {
-    m_main_sizer->Hide(m_info_sizer, true );
-    m_main_sizer->Hide(m_buttons_sep, true );
-    if ( m_filter_notice ) m_main_sizer->Hide( m_filter_notice, true );
-  }
-  else
-  {
-    m_main_sizer->Show(m_info_sizer, true );
-    m_main_sizer->Show(m_buttons_sep, true );
-    if ( m_filter_notice ) m_main_sizer->Show( m_filter_notice, true );
-  }
+    ShowExtendedInfos( ( GetClientSize().GetHeight() > 400 ) );
 }

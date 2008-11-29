@@ -173,8 +173,10 @@ SET(SpringLobbySrc
 	src/updater/updater.cpp
 	src/updater/versionchecker.cpp
 	src/Helper/TextCompletionDatabase.cpp
-  src/Helper/colorbutton.cpp
-  src/Helper/wxtextctrlhist.cpp
+	src/channel/channelchooser.cpp
+	src/channel/channelchooserdialog.cpp
+	src/Helper/wxtextctrlhist.cpp
+	src/Helper/colorbutton.cpp
 	src/filelister/filelistctrl.cpp
 	src/filelister/filelistdialog.cpp
 	src/filelister/filelistfilter.cpp
@@ -182,7 +184,7 @@ SET(SpringLobbySrc
         src/aui/artprovider.cpp
 	src/autobalancedialog.cpp
 	src/autohost.cpp
-	src/autojoinchanneldialog.cpp
+	src/channel/autojoinchanneldialog.cpp
 	src/addbotdialog.cpp
 	src/agreementdialog.cpp
 	src/base64.cpp
@@ -196,8 +198,9 @@ SET(SpringLobbySrc
 	src/battleroomlistctrl.cpp
 	src/battleroomtab.cpp
 	src/battleroommmoptionstab.cpp
-	src/channel.cpp
-	src/channellist.cpp
+	src/channel/channel.cpp
+	src/channel/channellist.cpp
+	src/channel/channellistctrl.cpp
 	src/chatlog.cpp
 	src/chatoptionstab.cpp
 	src/chatpanel.cpp
@@ -208,7 +211,6 @@ SET(SpringLobbySrc
 	src/flagimages.cpp
 	src/globalevents.cpp
 	src/groupoptionspanel.cpp
-	src/groupuserdialog.cpp
 	src/httpdownloader.cpp
 	src/hostbattledialog.cpp
 	src/ibattle.cpp
@@ -220,7 +222,6 @@ SET(SpringLobbySrc
 	src/mainsingleplayertab.cpp
 	src/maintorrenttab.cpp
 	src/mainwindow.cpp
-	src/managegroupspanel.cpp
 	src/mapctrl.cpp
 	src/maplistctrl.cpp
 	src/mapselectdialog.cpp
