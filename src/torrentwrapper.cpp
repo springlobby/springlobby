@@ -19,6 +19,7 @@
 #include <libtorrent/file_pool.hpp>
 #include <libtorrent/torrent_info.hpp>
 #include <libtorrent/file.hpp>
+#include <libtorrent/create_torrent.hpp>
 
 #include <libtorrent/extensions/metadata_transfer.hpp>
 #include <libtorrent/extensions/ut_pex.hpp>
@@ -579,12 +580,13 @@ std::map<int,TorrentInfos> TorrentWrapper::CollectGuiInfos()
     try
     {
         TorrentInfos globalinfos;
+        libtorrent::session_status s = m_torr->status();
         globalinfos.downloadstatus = P2P::leeching;
         globalinfos.progress = 0.0f;
-        globalinfos.downloaded = m_torr->status().total_download;
-        globalinfos.uploaded = m_torr->status().total_upload;
-        globalinfos.outspeed = m_torr->status().upload_rate;
-        globalinfos.inspeed = m_torr->status().download_rate;
+        globalinfos.downloaded = s.total_download;
+        globalinfos.uploaded = s.total_upload;
+        globalinfos.outspeed = s.upload_rate;
+        globalinfos.inspeed = s.download_rate;
         globalinfos.numcopies = 0.0f;
         globalinfos.filesize = 0;
         ret[0] = globalinfos;
@@ -595,13 +597,14 @@ std::map<int,TorrentInfos> TorrentWrapper::CollectGuiInfos()
         for ( std::vector<libtorrent::torrent_handle>::iterator i = TorrentList.begin(); i != TorrentList.end(); i++)
         {
             TorrentInfos CurrentTorrent;
+            libtorrent::torrent_status s = i->status();
             CurrentTorrent.name = WX_STRING(i->name()).BeforeFirst(_T('|'));
-            CurrentTorrent.progress = i->status().progress;
-            CurrentTorrent.downloaded = i->status().total_payload_download;
-            CurrentTorrent.uploaded = i->status().total_payload_upload;
-            CurrentTorrent.inspeed = i->status().download_payload_rate;;
-            CurrentTorrent.outspeed = i->status().upload_payload_rate;;
-            CurrentTorrent.numcopies = i->status().distributed_copies;
+            CurrentTorrent.progress = s.progress;
+            CurrentTorrent.downloaded = s.total_payload_download;
+            CurrentTorrent.uploaded = s.total_payload_upload;
+            CurrentTorrent.inspeed = s.download_payload_rate;
+            CurrentTorrent.outspeed = s.upload_payload_rate;
+            CurrentTorrent.numcopies = s.distributed_copies;
             CurrentTorrent.filesize = i->get_torrent_info().total_size();
 
             TorrentTable::PRow row=m_torrent_table.RowByHandle(*i);
@@ -721,8 +724,8 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
     else			/* if(IsSeed) */
     {
         path = sett().GetTorrentDataDir();
-	path.AppendDir( getDataSubdirForType(row->type) );
-	if ( !path.DirExists() ) path.Mkdir(0755);
+    path.AppendDir( getDataSubdirForType(row->type) );
+    if ( !path.DirExists() ) path.Mkdir(0755);
         wxLogMessage(_T("downloading to path: =%s"), path.GetFullPath().c_str());
     }
 
@@ -730,30 +733,25 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
     wxLogMessage(_T("(3) Joining torrent: downloading info file"));
     if (!DownloadTorrentFileFromTracker( row->hash )) return false;
 
-    /// read torrent from file
-    std::ifstream in( torrentFileName(row->hash).GetFullPath().mb_str(), std::ios_base::binary);
-    in.unsetf(std::ios_base::skipws);
-    libtorrent::entry e;
+    libtorrent::add_torrent_params p;
     try
     {
-        /// decode the torrent infos from the file
-        e = libtorrent::bdecode(std::istream_iterator<char>(in), std::istream_iterator<char>());
+        // the torrent_info is stored in an intrusive_ptr
+        p.ti = new libtorrent::torrent_info(boost::filesystem::path(torrentFileName(row->hash).GetFullPath().mb_str()));
     }
-    catch ( libtorrent::invalid_encoding& exc )
+    catch ( std::exception& exc )
     {
         wxLogMessage( _T("torrent has invalid encoding") );
         return false;
     }
-    //decode success
-    libtorrent::torrent_info t_info (e);
 
-    if ( t_info.num_files() != 1 )
+    if ( p.ti->num_files() != 1 )
     {
         wxLogMessage( _T("torrent contains an invalid number of files") );
         return false;
     }
 
-    wxString torrentfilename = WX_STRING(t_info.begin_files()->path.string()); /// get the file name in the torrent infos
+    wxString torrentfilename = WX_STRING(p.ti->file_at(0).path.string()); /// get the file name in the torrent infos
     wxLogMessage( _T("requested filename: %s"), torrentfilename.c_str() );
 
     wxFileName archive_filename(path);
@@ -767,22 +765,15 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
           wxLogMessage( _T("file extension locally differs, not joining torrent") );
           return false;
         }
-        std::vector<libtorrent::file_entry> map;
-        libtorrent::file_entry foo = t_info.file_at(0);
-        map.push_back( foo );
-        map.front().path = boost::filesystem::path(STD_STRING( archive_filename.GetFullName() ) );
-        wxLogMessage(_T("New filename in torrent: %s"), archive_filename.GetFullName().c_str() );
-        if ( !t_info.remap_files(map) )
-        {
-         wxLogMessage(_T("Cannot remap filenames in the torrent, aborting seed"));
-         return false;
-        }
+        wxLogMessage(_T("New filename in torrent: %s"), archive_filename.GetFullName().c_str());
+        p.ti->files().rename_file(0, std::string(archive_filename.GetFullName().mb_str()));
     }
     wxLogMessage(_T("(4) Joining torrent: add_torrent(%s,[%s],%s,[%s])"),m_tracker_urls[m_connected_tracker_index].c_str(),torrent_infohash_b64.c_str(),row->name.c_str(),path.GetFullPath().c_str());
 
     try
     {
-        m_torrent_table.SetRowHandle(row, m_torr->add_torrent( t_info, boost::filesystem::path(path.GetFullPath().mb_str())));
+        p.save_path = path.GetFullPath().mb_str();
+        m_torrent_table.SetRowHandle(row, m_torr->add_torrent(p));
     }
     catch (std::exception& e)
     {
@@ -795,8 +786,8 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
         {
             if (row->handle.is_valid())
             {
-                std::vector<bool> tmp(1,true);
-                row->handle.filter_files(tmp);
+                // there's only one file in the torrent, set its priority to 0
+                row->handle.file_priority(0, 0);
             }
             else
             {
@@ -832,7 +823,7 @@ void TorrentWrapper::CreateTorrent( const wxString& hash, const wxString& name, 
 
     if ( sett().GetCurrentUsedDataDir().IsEmpty() ) return; /// no good things can happend if you don't know which folder to r/w files from
 
-    libtorrent::torrent_info newtorrent;
+    libtorrent::file_storage files;
 
     wxString archivename;
 
@@ -870,24 +861,17 @@ void TorrentWrapper::CreateTorrent( const wxString& hash, const wxString& name, 
 
     boost::filesystem::path InputFilePath = complete(boost::filesystem::path( STD_STRING( path ) ) );
 
-    newtorrent.add_file( InputFilePath.branch_path(), boost::filesystem::file_size( InputFilePath ) );
+    files.add_file( InputFilePath.branch_path(), boost::filesystem::file_size( InputFilePath ) );
+
+    libtorrent::create_torrent newtorrent(files);
 
     for ( unsigned int i = 0; i < m_tracker_urls.GetCount(); i++ )
     {
         newtorrent.add_tracker( STD_STRING(m_tracker_urls[i] +  _T(":DEFAULT_P2P_TRACKER_PORT/announce") ) );
     }
 
-    wxFile torrentfile( path );
-    if ( !torrentfile.IsOpened() ) return;
     /// calculate the hash for all pieces
-    int num = newtorrent.num_pieces();
-    std::vector<char> buf(newtorrent.piece_size(0));
-    for ( int i = 0; i < num; ++i)
-    {
-        torrentfile.Read(&buf[0], newtorrent.piece_size(i));
-        libtorrent::hasher h(&buf[0], newtorrent.piece_size(i));
-        newtorrent.set_hash(i, h.final());
-    }
+    set_piece_hashes(newtorrent, InputFilePath.branch_path());
 
     switch (type)
     {
@@ -897,7 +881,9 @@ void TorrentWrapper::CreateTorrent( const wxString& hash, const wxString& name, 
         newtorrent.set_comment( wxString( name + _T("|MOD") ).mb_str() );
     }
 
-    newtorrent.create_torrent(); /// creates the torrent and publishes on the tracker
+    libtorrent::entry e = newtorrent.generate();
+    // TODO: e needs to be encoded and saved to a .torrent file
+    // or added to m_torr
 }
 
 
