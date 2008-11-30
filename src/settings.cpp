@@ -69,7 +69,7 @@ Settings::Settings()
   {
      // if directory doesn't exist, try to create it
      if ( !IsPortableMode() && !wxFileName::DirExists( wxStandardPaths::Get().GetUserDataDir() ) )
-         wxFileName::Mkdir( wxStandardPaths::Get().GetUserDataDir() );
+         wxFileName::Mkdir( wxStandardPaths::Get().GetUserDataDir(), 0755 );
 
      wxFileOutputStream outstream( m_chosed_path );
 
@@ -158,12 +158,12 @@ wxString Settings::GetLobbyWriteDir()
   wxString path = GetCurrentUsedDataDir() + sep + _T("lobby");
   if ( !wxFileName::DirExists( path ) )
   {
-    if ( !wxFileName::Mkdir(  path  ) ) return wxEmptyString;
+    if ( !wxFileName::Mkdir(  path, 0755  ) ) return wxEmptyString;
   }
   path += sep + _T("SpringLobby") + sep;
   if ( !wxFileName::DirExists( path ) )
   {
-    if ( !wxFileName::Mkdir(  path  ) ) return wxEmptyString;
+    if ( !wxFileName::Mkdir(  path, 0755  ) ) return wxEmptyString;
   }
   return path;
 }
@@ -240,7 +240,7 @@ wxString Settings::GetCachePath()
   wxString path = GetLobbyWriteDir() + _T("cache") + wxFileName::GetPathSeparator();
   if ( !wxFileName::DirExists( path ) )
   {
-    if ( !wxFileName::Mkdir(  path  ) ) return wxEmptyString;
+    if ( !wxFileName::Mkdir(  path, 0755  ) ) return wxEmptyString;
   }
   return path;
 }
@@ -793,7 +793,11 @@ wxString Settings::GetCurrentUsedDataDir()
     if ( susynclib().VersionSupports( IUnitSync::USYNC_GetDataDir ) ) dir = susynclib().GetSpringDataDir();
     else dir = susynclib().GetSpringConfigString( _T("SpringData"), _T("") );
   }
-  if ( dir.IsEmpty() ) dir = wxStandardPathsBase::Get().GetUserDataDir(); /// fallback
+  #ifdef __WXMSW__
+  if ( dir.IsEmpty() ) dir = wxStandardPathsBase::Get().GetExecutablePath().BeforeLast( wxFileName::GetPathSeparator() ); /// fallback
+  #else
+  if ( dir.IsEmpty() ) dir = wxFileName::GetHomeDir() + wxFileName::GetPathSeparator() + _T(".spring"); /// fallback
+  #endif
   return dir;
 }
 
@@ -852,7 +856,7 @@ wxString Settings::GetChatLogLoc()
     wxString path = GetLobbyWriteDir() + _T("chatlog");
     if ( !wxFileName::DirExists( path ) )
     {
-      if ( !wxFileName::Mkdir(  path  ) ) return wxEmptyString;
+      if ( !wxFileName::Mkdir(  path, 0755  ) ) return wxEmptyString;
     }
     return path;
 }
@@ -1102,9 +1106,57 @@ void Settings::SetBalanceStrongClans(bool value)
 
 bool Settings::GetBalanceStrongClans()
 {
-    return m_config->Read( _T("/Hosting/BalanceStrongClans"), 0l);
+    return m_config->Read( _T("/Hosting/BalanceStrongClans"), 0l );
 }
 
+void Settings::SetBalanceGrouping( int value )
+{
+    m_config->Write( _T("/Hosting/BalanceGroupingSize"), value );
+}
+
+int Settings::GetBalanceGrouping()
+{
+    return m_config->Read( _T("/Hosting/BalanceGroupingSize"), 0l );
+}
+
+
+void Settings::SetFixIDMethod(int value)
+{
+    m_config->Write( _T("/Hosting/FixIDMethod"), value );
+}
+int Settings::GetFixIDMethod()
+{
+    return m_config->Read( _T("/Hosting/FixIDMethod"), 1l);
+}
+
+void Settings::SetFixIDClans(bool value)
+{
+    m_config->Write( _T("/Hosting/FixIDClans"), value );
+}
+bool Settings::GetFixIDClans()
+{
+    return m_config->Read( _T("/Hosting/FixIDClans"), true);
+}
+
+void Settings::SetFixIDStrongClans(bool value)
+{
+    m_config->Write( _T("/Hosting/FixIDStrongClans"), value );
+}
+
+bool Settings::GetFixIDStrongClans()
+{
+    return m_config->Read( _T("/Hosting/FixIDStrongClans"), 0l );
+}
+
+void Settings::SetFixIDGrouping( int value )
+{
+    m_config->Write( _T("/Hosting/FixIDGroupingSize"), value );
+}
+
+int Settings::GetFixIDGrouping()
+{
+    return m_config->Read( _T("/Hosting/FixIDGroupingSize"), 0l );
+}
 
 
 wxString Settings::GetLastAI()
@@ -1123,15 +1175,15 @@ bool Settings::GetDisplayJoinLeave( const wxString& channel  )
 }
 
 
-void Settings::SetChatHistoryLenght( unsigned int historylines )
+void Settings::SetChatHistoryLenght( int historylines )
 {
-    m_config->Write( _T("/Chat/HistoryLinesLenght/"), (int)historylines);
+    m_config->Write( _T("/Chat/HistoryLinesLenght/"), historylines);
 }
 
 
-unsigned int Settings::GetChatHistoryLenght()
+int Settings::GetChatHistoryLenght()
 {
-    return (unsigned int)m_config->Read( _T("/Chat/HistoryLinesLenght/"), 1000);
+    return m_config->Read( _T("/Chat/HistoryLinesLenght/"), 1000);
 }
 
 

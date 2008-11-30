@@ -2,6 +2,7 @@
 #define SPRINGLOBBY_HEADERGUARD_SERVER_H
 
 #include <wx/string.h>
+#include <wx/arrstr.h>
 
 #include "channel/channellist.h"
 #include "userlist.h"
@@ -187,6 +188,9 @@ class Server : public iNetClass
     BattleList m_battles;
 
     wxString m_relay_host_bot;
+    wxString m_relay_host_manager;
+
+    wxArrayString m_relay_host_manager_list;
 
     User& _AddUser( const wxString& user );
     void _RemoveUser( const wxString& nickname );
