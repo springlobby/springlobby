@@ -719,63 +719,54 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
             return false;
         }
         wxLogMessage( _T("seeding from local filename: %s"), path.GetFullPath().c_str() );
-
     }
     else			/* if(IsSeed) */
     {
         path = sett().GetTorrentDataDir();
         path.AppendDir( getDataSubdirForType(row->type) );
         if ( !path.DirExists() ) path.Mkdir(0755);
-	  wxLogMessage(_T("downloading to path: =%s"), path.GetFullPath().c_str());
- }
+            wxLogMessage(_T("downloading to path: =%s"), path.GetFullPath().c_str());
+    }
 
 
- wxLogMessage(_T("(3) Joining torrent: downloading info file"));
- if (!DownloadTorrentFileFromTracker( row->hash )) return false;
+    wxLogMessage(_T("(3) Joining torrent: downloading info file"));
+    if (!DownloadTorrentFileFromTracker( row->hash )) return false;
 
- libtorrent::add_torrent_params p;
- try
- {
-	  // the torrent_info is stored in an intrusive_ptr
-	  p.ti = new libtorrent::torrent_info(boost::filesystem::path(torrentFileName(row->hash).GetFullPath().mb_str()));
- }
- catch ( std::exception& exc )
- {
-	  wxLogMessage( _T("torrent has invalid encoding") );
-	  return false;
- }
+    libtorrent::add_torrent_params p;
+    try
+    {
+        // the torrent_info is stored in an intrusive_ptr
+        p.ti = new libtorrent::torrent_info(boost::filesystem::path(torrentFileName(row->hash).GetFullPath().mb_str()));
+    }
+    catch ( std::exception& exc )
+    {
+        wxLogMessage( _T("torrent has invalid encoding") );
+        return false;
+    }
 
- if ( p.ti->num_files() != 1 )
- {
-	  wxLogMessage( _T("torrent contains an invalid number of files") );
-	  return false;
- }
+    if ( p.ti->num_files() != 1 )
+    {
+        wxLogMessage( _T("torrent contains an invalid number of files") );
+        return false;
+    }
 
- wxString torrentfilename = WX_STRING(p.ti->file_at(0).path.string()); /// get the file name in the torrent infos
- wxLogMessage( _T("requested filename: %s"), torrentfilename.c_str() );
+    wxString torrentfilename = WX_STRING(p.ti->file_at(0).path.string()); /// get the file name in the torrent infos
+    wxLogMessage( _T("requested filename: %s"), torrentfilename.c_str() );
 
- wxFileName archive_filename(path);
- wxFileName torrent_filename(torrentfilename);
+    wxFileName archive_filename(path);
+    wxFileName torrent_filename(torrentfilename);
 
- if ( IsSeed && ( torrent_filename.GetFullName() != archive_filename.GetFullName() ) )
- {
-	  wxLogMessage(_T("filename differs from torrent, renaming file in torrent info"));
-	  if ( !( torrent_filename.GetExt() == archive_filename.GetExt() ) ) /// different extension, won't work
-	  {
-			wxLogMessage( _T("file extension locally differs, not joining torrent") );
-			return false;
-	  }
-	  std::vector<libtorrent::file_entry> map;
-	  libtorrent::file_entry foo = t_info.file_at(0);
-	  map.push_back( foo );
-	  map.front().path = boost::filesystem::path(STD_STRING( archive_filename.GetFullName() ) );
-	  wxLogMessage(_T("New filename in torrent: %s"), archive_filename.GetFullName().c_str() );
-	  if ( !t_info.remap_files(map) )
-	  {
-			wxLogMessage(_T("Cannot remap filenames in the torrent, aborting seed"));
-			return false;
-	  }
- }
+    if ( IsSeed && ( torrent_filename.GetFullName() != archive_filename.GetFullName() ) )
+    {
+        wxLogMessage(_T("filename differs from torrent, renaming file in torrent info"));
+        if ( !( torrent_filename.GetExt() == archive_filename.GetExt() ) ) /// different extension, won't work
+        {
+           wxLogMessage( _T("file extension locally differs, not joining torrent") );
+           return false;
+        }
+        wxLogMessage(_T("New filename in torrent: %s"), archive_filename.GetFullName().c_str());
+        p.ti->files().rename_file(0, std::string(archive_filename.GetFullName().mb_str()));
+    }
     wxLogMessage(_T("(4) Joining torrent: add_torrent(%s,[%s],%s,[%s])"),m_tracker_urls[m_connected_tracker_index].c_str(),torrent_infohash_b64.c_str(),row->name.c_str(),path.GetFullPath().c_str());
 
     try
@@ -785,10 +776,10 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
     }
     catch (std::exception& e)
     {
-        wxLogError(_T("%s"),WX_STRINGC( e.what()).c_str()); /// TODO (BrainDamage#1#): add message to user on failure
-        return false;
+       wxLogError(_T("%s"),WX_STRINGC( e.what()).c_str()); /// TODO (BrainDamage#1#): add message to user on failure
+       return false;
     }
-    try
+     try
     {
         if (IsSeed)
         {
