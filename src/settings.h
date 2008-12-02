@@ -504,7 +504,20 @@ class Settings
     void SetBalanceStrongClans(bool value);
     bool GetBalanceStrongClans();
 
+    void SetBalanceGrouping( int value );
+    int GetBalanceGrouping();
 
+    void SetFixIDMethod(int value);
+    int GetFixIDMethod();
+
+    void SetFixIDClans(bool value);
+    bool GetFixIDClans();
+
+    void SetFixIDStrongClans(bool value);
+    bool GetFixIDStrongClans();
+
+    void SetFixIDGrouping( int value );
+    int GetFixIDGrouping();
 
     /** @name Battle filters
      * @{

@@ -46,7 +46,6 @@ class BattleListTab : public wxScrolledWindow
     void OnFilter( wxCommandEvent& event );
     void OnInfoShow( wxCommandEvent& event );
     void OnFilterActiv( wxCommandEvent& event );
-    void ShowFilterNotice( const bool show );
     void SetFilterActiv(bool activ);
     void OnJoin( wxCommandEvent& event );
     void OnListJoin( wxListEvent& event );
@@ -79,7 +78,6 @@ class BattleListTab : public wxScrolledWindow
     wxButton* m_host_btn;
     wxButton* m_join_btn;
     wxBoxSizer* m_battlelist_sizer;
-    wxStaticText* m_filter_notice;
     wxFlexGridSizer* m_data_sizer;
     wxBoxSizer* m_main_sizer;
     wxBoxSizer* m_info_sizer;

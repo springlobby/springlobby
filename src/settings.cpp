@@ -1107,9 +1107,57 @@ void Settings::SetBalanceStrongClans(bool value)
 
 bool Settings::GetBalanceStrongClans()
 {
-    return m_config->Read( _T("/Hosting/BalanceStrongClans"), 0l);
+    return m_config->Read( _T("/Hosting/BalanceStrongClans"), 0l );
 }
 
+void Settings::SetBalanceGrouping( int value )
+{
+    m_config->Write( _T("/Hosting/BalanceGroupingSize"), value );
+}
+
+int Settings::GetBalanceGrouping()
+{
+    return m_config->Read( _T("/Hosting/BalanceGroupingSize"), 0l );
+}
+
+
+void Settings::SetFixIDMethod(int value)
+{
+    m_config->Write( _T("/Hosting/FixIDMethod"), value );
+}
+int Settings::GetFixIDMethod()
+{
+    return m_config->Read( _T("/Hosting/FixIDMethod"), 1l);
+}
+
+void Settings::SetFixIDClans(bool value)
+{
+    m_config->Write( _T("/Hosting/FixIDClans"), value );
+}
+bool Settings::GetFixIDClans()
+{
+    return m_config->Read( _T("/Hosting/FixIDClans"), true);
+}
+
+void Settings::SetFixIDStrongClans(bool value)
+{
+    m_config->Write( _T("/Hosting/FixIDStrongClans"), value );
+}
+
+bool Settings::GetFixIDStrongClans()
+{
+    return m_config->Read( _T("/Hosting/FixIDStrongClans"), 0l );
+}
+
+void Settings::SetFixIDGrouping( int value )
+{
+    m_config->Write( _T("/Hosting/FixIDGroupingSize"), value );
+}
+
+int Settings::GetFixIDGrouping()
+{
+    return m_config->Read( _T("/Hosting/FixIDGroupingSize"), 0l );
+}
 
 
 wxString Settings::GetLastAI()

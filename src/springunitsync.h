@@ -10,6 +10,7 @@ class wxDynamicLibrary;
 class wxImage;
 struct CachedMapInfo;
 struct SpringMapInfo;
+class SpringUnitSyncLib;
 
 typedef std::map<wxString,wxString> LocalArchivesVector;
 
@@ -72,6 +73,10 @@ class SpringUnitSync : public IUnitSync
     wxImage GetMetalmap( const wxString& mapname );
     /// get metalmap rescaled to given width x height
     wxImage GetMetalmap( const wxString& mapname, int width, int height );
+    /// get heightmap with native width x height
+    wxImage GetHeightmap( const wxString& mapname );
+    /// get heightmap rescaled to given width x height
+    wxImage GetHeightmap( const wxString& mapname, int width, int height );
 
     bool ReloadUnitSyncLib();
 
@@ -119,6 +124,9 @@ class SpringUnitSync : public IUnitSync
     void PopulateArchiveList();
 
     double _GetSpringVersion();
+
+    wxImage _GetMapImage( const wxString& mapname, const wxString& imagename, wxImage (SpringUnitSyncLib::*loadMethod)(const wxString& mapname) );
+    wxImage _GetScaledMapImage( const wxString& mapname, wxImage (SpringUnitSync::*loadMethod)(const wxString& mapname), int width, int height );
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_SPRINGUNITSYNC_H
