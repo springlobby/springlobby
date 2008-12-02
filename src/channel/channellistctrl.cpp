@@ -20,44 +20,24 @@ ChannelListctrl::ChannelListctrl(wxWindow* parent, wxWindowID id, const wxString
     m_comparator(m_sortorder, &CompareOneCrit)
 
 {
-  wxListItem col;
-  #if defined(__WXMSW__)
- /// autosize is part-broken on msw.
-  SetColumnWidth( 0, 120 );
-  SetColumnWidth( 1, 45 );
-  SetColumnWidth( 2, 300 );
-
+#if defined(__WXMSW__)
+    const int widths [3] = { wxLIST_AUTOSIZE, wxLIST_AUTOSIZE, wxLIST_AUTOSIZE };
 #elif defined(__WXMAC__)
-/// autosize is entirely broken on wxmac.
-  SetColumnWidth( 0, 120 );
-  SetColumnWidth( 1, 45 );
-  SetColumnWidth( 2, 300 );
+    const int widths [3] = { wxLIST_AUTOSIZE, wxLIST_AUTOSIZE, wxLIST_AUTOSIZE };
 #else
- /// on wxGTK it works, sort of.
-  SetColumnWidth( 0, wxLIST_AUTOSIZE );
-  SetColumnWidth( 1, 30 );
-  SetColumnWidth( 2, wxLIST_AUTOSIZE );
+    const int widths [3] = { wxLIST_AUTOSIZE, wxLIST_AUTOSIZE, wxLIST_AUTOSIZE };
 #endif
 
-  col.SetText( _("Channel name") );
-  col.SetImage( icons().ICON_EMPTY );
-  AddColumn( 0, -1, _("Channel"), _T("Channelname") );
+    AddColumn( 0, widths[0], _("Channel"), _T("Channelname") );
+    AddColumn( 1, widths[1], _("# users"), _T("users") );
+    AddColumn( 2, widths[2], _T("topic"), _T("topic") );
 
-  col.SetText( _("# users") );
-  col.SetImage( icons().ICON_EMPTY );
-  AddColumn( 1, -1, _("# users"), _T("users") );
-
-  col.SetText( _("topic") );
-  col.SetImage( icons().ICON_EMPTY );
-  AddColumn( 2, -1, _T("topic"), _T("topic") );
-
-  m_sortorder[2].col = 2;
-  m_sortorder[2].direction = 1;
-  m_sortorder[0].col = 0;
-  m_sortorder[0].direction = 1;
-  m_sortorder[1].col = 1;
-  m_sortorder[1].direction = 1;
-
+    m_sortorder[2].col = 2;
+    m_sortorder[2].direction = 1;
+    m_sortorder[0].col = 0;
+    m_sortorder[0].direction = 1;
+    m_sortorder[1].col = 1;
+    m_sortorder[1].direction = 1;
 }
 
 ChannelListctrl::~ChannelListctrl()
@@ -109,25 +89,25 @@ void ChannelListctrl::Sort()
 
 void ChannelListctrl::OnColClick( wxListEvent& event )
 {
-  if ( event.GetColumn() == -1 ) return;
-  wxListItem col;
-  GetColumn( m_sortorder[0].col, col );
-  col.SetImage( -1 );
-  SetColumn( m_sortorder[0].col, col );
+    if ( event.GetColumn() == -1 ) return;
+    wxListItem col;
+    GetColumn( m_sortorder[0].col, col );
+    col.SetImage( -1 );
+    SetColumn( m_sortorder[0].col, col );
 
-  int i;
-  for ( i = 0; m_sortorder[i].col != event.GetColumn() && i < 3; ++i ) {}
-  if (i > 2) { i = 2; }
-  for ( ; i > 0; i--) { m_sortorder[i] = m_sortorder[i-1]; }
-  m_sortorder[0].col = event.GetColumn();
-  m_sortorder[0].direction *= -1;
+    int i;
+    for ( i = 0; m_sortorder[i].col != event.GetColumn() && i < 3; ++i ) {}
+    if (i > 2) { i = 2; }
+    for ( ; i > 0; i--) { m_sortorder[i] = m_sortorder[i-1]; }
+    m_sortorder[0].col = event.GetColumn();
+    m_sortorder[0].direction *= -1;
 
 
-  GetColumn( m_sortorder[0].col, col );
-  col.SetImage( ( m_sortorder[0].direction )?icons().ICON_UP:icons().ICON_DOWN );
-  SetColumn( m_sortorder[0].col, col );
+    GetColumn( m_sortorder[0].col, col );
+    col.SetImage( ( m_sortorder[0].direction )?icons().ICON_UP:icons().ICON_DOWN );
+    SetColumn( m_sortorder[0].col, col );
 
-  Sort();
+    Sort();
 }
 
 /** @brief OnActivateItem
@@ -136,10 +116,10 @@ void ChannelListctrl::OnColClick( wxListEvent& event )
   */
 void ChannelListctrl::OnActivateItem(wxListEvent& event)
 {
-  int index = event.GetIndex();
-  if ( index == -1 ) return;
-  wxString chan_name = m_data[ m_visible_idxs[index] ].name;
-  ui().JoinChannel( chan_name, _T("") );
+    int index = event.GetIndex();
+    if ( index == -1 ) return;
+    wxString chan_name = m_data[ m_visible_idxs[index] ].name;
+    ui().JoinChannel( chan_name, _T("") );
 }
 
 void ChannelListctrl::ClearChannels()
@@ -159,8 +139,8 @@ wxString ChannelListctrl::GetInfo()
 void ChannelListctrl::FilterChannel( const wxString& partial )
 {
     m_visible_idxs.clear();
-    int idx = 0;
-    for ( int i = 0; i < m_data.size() ; ++i ) {
+    unsigned int idx = 0;
+    for ( unsigned int i = 0; i < m_data.size() ; ++i ) {
         const ChannelInfo& data = m_data[i];
         if ( data.name.Contains( partial ) ) {
             m_visible_idxs[idx] = i;
@@ -169,20 +149,6 @@ void ChannelListctrl::FilterChannel( const wxString& partial )
     }
     SetItemCount( m_visible_idxs.size() );
     RefreshItems( 0, m_visible_idxs.size() -1 );
-//    for ( ChannelInfoIter it = m_data.begin(); it != m_data.end(); ++it ) {
-//        const ChannelInfo& data = it->second;
-//        if ( data.name.Contains( partial ) ) {
-//            int index = InsertItem( GetItemCount(), data.name );
-//            SetItem( index, 0, data.name );
-//            SetItem( index, 1, TowxString( data.usercount ) );
-//            SetItem( index, 2, data.topic );
-//            SetItemData( index, (wxUIntPtr) &(it->second) );
-//        }
-//    }
-    //highlight spring
-    //HighlightItemUser( index, userdata.first );
-
-
 }
 
 
