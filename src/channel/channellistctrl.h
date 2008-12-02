@@ -58,11 +58,6 @@ class ChannelListctrl : public CustomVirtListCtrl
         typedef ChannelInfoMap::iterator ChannelInfoIter;
         ChannelInfoMap m_data;
 
-        //! list indexes of not-filtered items
-        typedef std::map<int,int> VisibilityMap;
-        typedef VisibilityMap::iterator VisibilityMapIter;
-        VisibilityMap m_visible_idxs;
-
         //! the Comparator object passed to the SLInsertionSort function
         ItemComparator<DataType> m_comparator;
 

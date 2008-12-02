@@ -80,15 +80,15 @@ void CustomVirtListCtrl::AddColumn(long i, int width, const wxString& label, con
 
 void CustomVirtListCtrl::SetSelectionRestorePoint()
 {
-  m_prev_selected_index = m_selected_index;
+    m_prev_selected_index = m_selected_index;
 }
 
 void CustomVirtListCtrl::RestoreSelection()
 {
-//  if ( m_prev_selected_index> -1)
-//  {
-//    SetItemState( GetIndexFromData( m_prev_selected ), wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED );
-//  }
+    if ( m_prev_selected_index> -1)
+    {
+        SetItemState( m_prev_selected_index, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED );
+    }
 }
 
 void CustomVirtListCtrl::ResetSelection()
@@ -105,7 +105,8 @@ void CustomVirtListCtrl::OnSelected( wxListEvent& event )
 
 void CustomVirtListCtrl::OnDeselected( wxListEvent& event )
 {
-  //if ( m_selected == (int)GetItemData( event.GetIndex() ) ) m_selected = m_selected_index = -1;
+    if ( m_selected_index == event.GetIndex() )
+        m_selected_index = -1;
 }
 
 
@@ -342,11 +343,15 @@ bool CustomVirtListCtrl::PopupMenu(wxMenu* menu, const wxPoint& pos )
 
 void CustomVirtListCtrl::SortList( bool force )
 {
-  if ( !m_dirty_sort && !force ) return;
-//  SetSelectionRestorePoint();
+    if ( !m_dirty_sort && !force )
+        return;
+
+    SetSelectionRestorePoint();
     Freeze();
     Sort();
     Thaw();
     m_dirty_sort = false;
-
+    RestoreSelection();
+    long topItemIndex = GetTopItem();
+    RefreshItems( topItemIndex, topItemIndex + GetCountPerPage() );
 }

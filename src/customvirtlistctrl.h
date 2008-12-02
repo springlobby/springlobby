@@ -70,6 +70,17 @@ protected:
     //! primarily used to get coulumn index in mousevents (from cur. mouse pos)
     int getColoumnFromPosition(wxPoint pos);
 
+    typedef std::map<int,int> VisibilityMap;
+    typedef VisibilityMap::iterator VisibilityMapIter;
+    /** \brief list indexes of not-filtered items
+     * use like this: when adding items set identity mapping \n
+         m_visible_idxs[m_data.size() -1] = ( m_data.size() -1 ); \n
+       when filtering clear the map, iterate thru data and only set mapping for matching items in data \n
+       when acessing data (getColoumText etc.) always access data's index thru this map
+     **/
+    VisibilityMap m_visible_idxs;
+
+
     wxPoint m_last_mouse_pos;
 
     //! used as label for saving column widths

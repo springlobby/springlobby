@@ -58,8 +58,6 @@ void ChannelListctrl::SetTipWindowText(const long item_hit, const wxPoint positi
   */
 void ChannelListctrl::AddChannel(const wxString& channel, unsigned int num_users, const wxString& topic )
 {
-    //SetSelectionRestorePoint();
-
     ChannelInfo data ( channel, num_users, topic );
     m_data.push_back( data );
     m_visible_idxs[m_data.size() -1] = ( m_data.size() -1 );
@@ -67,8 +65,6 @@ void ChannelListctrl::AddChannel(const wxString& channel, unsigned int num_users
 
     RefreshItem( m_visible_idxs.size() - 1);
     SetColumnWidth( 0, wxLIST_AUTOSIZE );
-    //Sort();
-    //RestoreSelection();
 }
 
 int ChannelListctrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir )
@@ -84,7 +80,6 @@ int ChannelListctrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir 
 void ChannelListctrl::Sort()
 {
     SLInsertionSort( m_data, m_comparator );
-    RefreshItems( 0, m_visible_idxs.size() -1 );
 }
 
 void ChannelListctrl::OnColClick( wxListEvent& event )
@@ -106,8 +101,8 @@ void ChannelListctrl::OnColClick( wxListEvent& event )
     GetColumn( m_sortorder[0].col, col );
     col.SetImage( ( m_sortorder[0].direction )?icons().ICON_UP:icons().ICON_DOWN );
     SetColumn( m_sortorder[0].col, col );
-
-    Sort();
+    MarkDirtySort();
+    SortList();
 }
 
 /** @brief OnActivateItem
@@ -119,6 +114,7 @@ void ChannelListctrl::OnActivateItem(wxListEvent& event)
     int index = event.GetIndex();
     if ( index == -1 ) return;
     wxString chan_name = m_data[ m_visible_idxs[index] ].name;
+    SetSelectedIndex( index );
     ui().JoinChannel( chan_name, _T("") );
 }
 

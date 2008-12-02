@@ -300,7 +300,6 @@ int NickListCtrl::OnGetItemColumnImage(long item, long column) const
 {
     if ( m_data[item] ) {
         const User& user = *m_data[item];
-        const UserStatus& user_st = user.GetStatus();
         switch ( column ) {
             case 0: return user.GetStatusIconIndex();
             case 1: return user.GetFlagIconIndex();
@@ -308,7 +307,6 @@ int NickListCtrl::OnGetItemColumnImage(long item, long column) const
 
             case 3:
             default: return -1;
-
         }
     }
     return -1;
