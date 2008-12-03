@@ -91,7 +91,11 @@ void ChannelListctrl::Sort()
 {
     DataType selected_data = m_data[ m_visible_idxs[ GetSelectedIndex() ] ];
     SLInsertionSort( m_data, m_comparator );
-    SetItemState( GetIndexFromData( selected_data ), wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED );
+    FilterChannel( m_last_filter_value );
+    int new_idx = GetIndexFromData( selected_data );
+    SetSelectedIndex( new_idx );
+    SetItemState( new_idx, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED );
+
 }
 
 void ChannelListctrl::OnColClick( wxListEvent& event )
@@ -154,8 +158,10 @@ void ChannelListctrl::FilterChannel( const wxString& partial )
             idx++;
         }
     }
+    SelectNone();
+    m_last_filter_value = partial;
     SetItemCount( m_visible_idxs.size() );
-    RefreshItems( 0, m_visible_idxs.size() -1 );
+    RefreshVisibleItems( );
 }
 
 

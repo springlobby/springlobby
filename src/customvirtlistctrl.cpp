@@ -146,6 +146,11 @@ void CustomVirtListCtrl::SetSelectedIndex(const long newindex)
     m_selected_index = newindex;
 }
 
+void CustomVirtListCtrl::RefreshVisibleItems()
+{
+    long topItemIndex = GetTopItem();
+    RefreshItems( topItemIndex, topItemIndex + GetCountPerPage() );
+}
 
 void CustomVirtListCtrl::OnTimer(wxTimerEvent& event)
 {
@@ -350,6 +355,5 @@ void CustomVirtListCtrl::SortList( bool force )
     Sort();
     Thaw();
     m_dirty_sort = false;
-    long topItemIndex = GetTopItem();
-    RefreshItems( topItemIndex, topItemIndex + GetCountPerPage() );
+    RefreshVisibleItems();
 }

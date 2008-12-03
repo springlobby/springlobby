@@ -230,7 +230,7 @@ public:
     void HighlightItemUser( long item, const wxString& name );
     void UpdateHighlights();
     void SetHighLightAction( UserActions::ActionType action );
-
+    void RefreshVisibleItems();
 
     /** @name Multi Selection methods
      * using these funcs in a single selection list is meaingless at best, harmful in the worst case
