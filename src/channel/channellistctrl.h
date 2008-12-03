@@ -38,11 +38,6 @@ class ChannelListctrl : public CustomVirtListCtrl
         void Sort();
         void SetTipWindowText( const long item_hit, const wxPoint position);
 
-        static int wxCALLBACK CompareChannelnameUP(long item1, long item2, long sortData);
-        static int wxCALLBACK CompareChannelnameDOWN(long item1, long item2, long sortData);
-        static int wxCALLBACK CompareNumUsersUP(long item1, long item2, long sortData);
-        static int wxCALLBACK CompareNumUsersDOWN(long item1, long item2, long sortData);
-
         void OnColClick( wxListEvent& event );
         void OnActivateItem( wxListEvent& event );
 
@@ -56,7 +51,10 @@ class ChannelListctrl : public CustomVirtListCtrl
         typedef ChannelInfo DataType;
         typedef std::vector< DataType > ChannelInfoMap;
         typedef ChannelInfoMap::iterator ChannelInfoIter;
+        typedef ChannelInfoMap::const_iterator ChannelInfoCIter;
         ChannelInfoMap m_data;
+
+        int GetIndexFromData( const DataType& data );
 
         //! the Comparator object passed to the SLInsertionSort function
         ItemComparator<DataType> m_comparator;

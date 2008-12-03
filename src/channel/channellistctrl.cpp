@@ -77,9 +77,21 @@ int ChannelListctrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir 
     }
 }
 
+int ChannelListctrl::GetIndexFromData( const DataType& data )
+{
+    ChannelInfoCIter it = m_data.begin();
+    for ( int i = 0; it != m_data.end(); ++it , ++i) {
+        if ( it->name == data.name )
+            return i;
+    }
+    return -1;
+}
+
 void ChannelListctrl::Sort()
 {
+    DataType selected_data = m_data[ m_visible_idxs[ GetSelectedIndex() ] ];
     SLInsertionSort( m_data, m_comparator );
+    SetItemState( GetIndexFromData( selected_data ), wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED );
 }
 
 void ChannelListctrl::OnColClick( wxListEvent& event )
@@ -114,7 +126,6 @@ void ChannelListctrl::OnActivateItem(wxListEvent& event)
     int index = event.GetIndex();
     if ( index == -1 ) return;
     wxString chan_name = m_data[ m_visible_idxs[index] ].name;
-    SetSelectedIndex( index );
     ui().JoinChannel( chan_name, _T("") );
 }
 

@@ -44,7 +44,6 @@ void SLInsertionSort( ContainerType& data, const Comparator& cmp )
         }
         data[j + 1] = v;
     }
-
 }
 
 #endif // SPRINGLOBBY_SORTUTIL_H_INCLUDED

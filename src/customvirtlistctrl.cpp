@@ -346,12 +346,10 @@ void CustomVirtListCtrl::SortList( bool force )
     if ( !m_dirty_sort && !force )
         return;
 
-    SetSelectionRestorePoint();
     Freeze();
     Sort();
     Thaw();
     m_dirty_sort = false;
-    RestoreSelection();
     long topItemIndex = GetTopItem();
     RefreshItems( topItemIndex, topItemIndex + GetCountPerPage() );
 }

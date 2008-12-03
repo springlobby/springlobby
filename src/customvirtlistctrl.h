@@ -70,6 +70,7 @@ protected:
     //! primarily used to get coulumn index in mousevents (from cur. mouse pos)
     int getColoumnFromPosition(wxPoint pos);
 
+    //! map: index in visible list <--> index in data vector
     typedef std::map<int,int> VisibilityMap;
     typedef VisibilityMap::iterator VisibilityMapIter;
     /** \brief list indexes of not-filtered items
