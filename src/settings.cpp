@@ -1444,7 +1444,7 @@ wxString Settings::GetLastBattleFilterProfileName()
 
 unsigned int Settings::GetTorrentPort()
 {
-    return  (unsigned int)m_config->Read( _T("/Torrent/Port"), GetLastHostPort() );
+    return  (unsigned int)m_config->Read( _T("/Torrent/Port"), DEFSETT_SPRING_PORT + 1 );
 }
 
 
