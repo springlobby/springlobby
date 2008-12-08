@@ -536,8 +536,13 @@ void TASServer::ExecuteCommand( const wxString& in )
     }
     else
         params = params.AfterFirst( ' ' );
-
-    ExecuteCommand( cmd, params, replyid );
+    try
+    {
+        ExecuteCommand( cmd, params, replyid );
+    }
+    catch ( ... ) // catch everything so the app doesn't crash, may made odd beahviours but it's better than crashing randomly
+    {
+    }
 }
 
 
