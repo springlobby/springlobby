@@ -146,10 +146,8 @@
 		<Unit filename="src/agreementdialog.h" />
 		<Unit filename="src/aui/artprovider.cpp" />
 		<Unit filename="src/aui/artprovider.h" />
-		<Unit filename="src/aui/auibook.h" />
 		<Unit filename="src/aui/auimanager.cpp" />
 		<Unit filename="src/aui/auimanager.h" />
-		<Unit filename="src/aui/auiuitls.h" />
 		<Unit filename="src/autobalancedialog.cpp" />
 		<Unit filename="src/autobalancedialog.h" />
 		<Unit filename="src/autohost.cpp" />
@@ -228,7 +226,6 @@
 		<Unit filename="src/ibattle.h" />
 		<Unit filename="src/iconimagelist.cpp" />
 		<Unit filename="src/iconimagelist.h" />
-		<Unit filename="src/images/SpringLobby.ico" />
 		<Unit filename="src/images/battle.xpm" />
 		<Unit filename="src/images/battle_list.xpm" />
 		<Unit filename="src/images/battle_map.xpm" />
