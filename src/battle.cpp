@@ -1016,7 +1016,7 @@ void Battle::Autobalance( BalanceType balance_type, bool support_clans, bool str
     {
         dedupe_teams[(*it)->BattleStatus().team] = *it;
     }
-    players_sorted.empty();
+    players_sorted.clear();
     players_sorted.reserve( dedupe_teams.size() );
     for ( std::map<int, User*>::iterator it = dedupe_teams.begin(); it != dedupe_teams.end(); it++ )
     {
