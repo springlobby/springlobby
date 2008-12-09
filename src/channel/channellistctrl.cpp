@@ -47,11 +47,6 @@ ChannelListctrl::~ChannelListctrl()
 
 void ChannelListctrl::HighlightItem( long item ){}
 
-void ChannelListctrl::SetTipWindowText(const long item_hit, const wxPoint position)
-{
-
-}
-
 /** @brief AddChannel
   *
   * @todo: document this function
@@ -185,6 +180,31 @@ wxString ChannelListctrl::OnGetItemText(long item, long column) const
         case 1: return TowxString( chan.usercount );
         case 2: return chan.topic;
         default: return wxEmptyString;
+    }
+}
+
+void ChannelListctrl::SetTipWindowText(const long item_hit, const wxPoint position)
+{
+    int coloumn = getColoumnFromPosition(position);
+    if (coloumn > (int)m_colinfovec.size() || coloumn < 0 || item_hit < 0 || item_hit > m_data.size() )
+    {
+        m_tiptext = _T("");
+    }
+    else
+    {
+        const DataType& channel = m_data[item_hit];
+        {
+            switch (coloumn)
+            {
+            case 2: // status
+                m_tiptext = channel.topic;
+                break;
+
+            default:
+                m_tiptext = _T("");
+                break;
+            }
+        }
     }
 }
 
