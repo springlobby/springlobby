@@ -3,8 +3,19 @@
 
 #include "../customvirtlistctrl.h"
 
+struct ChannelInfo
+{
+    ChannelInfo()
+        : name(_T("")), usercount(0),topic(_T("")) {}
+    ChannelInfo( const wxString& name_, int usercount_, const wxString& topic_ = wxEmptyString )
+        : name(name_), usercount(usercount_),topic(topic_) {}
 
-class ChannelListctrl : public CustomVirtListCtrl
+    wxString name;
+    int usercount;
+    wxString topic;
+};
+
+class ChannelListctrl : public CustomVirtListCtrl<ChannelInfo>
 {
     public:
         ChannelListctrl(wxWindow* parent, wxWindowID id, const wxString& name = _T("ChannelListCtrl"),
@@ -17,22 +28,11 @@ class ChannelListctrl : public CustomVirtListCtrl
         wxString GetInfo();
         void FilterChannel( const wxString& partial );
 
-            //these are overloaded to use list in virtual style
+        //these are overloaded to use list in virtual style
         virtual wxString OnGetItemText(long item, long column) const;
         virtual int OnGetItemImage(long item) const;
         virtual int OnGetItemColumnImage(long item, long column) const;
 
-        struct ChannelInfo
-        {
-            ChannelInfo()
-                : name(_T("")), usercount(0),topic(_T("")) {}
-            ChannelInfo( const wxString& name_, int usercount_, const wxString& topic_ = wxEmptyString )
-                : name(name_), usercount(usercount_),topic(topic_) {}
-
-            wxString name;
-            int usercount;
-            wxString topic;
-        };
 
     protected:
         void Sort();
@@ -47,17 +47,6 @@ class ChannelListctrl : public CustomVirtListCtrl
           CHANNELLIST = wxID_HIGHEST
 
         };
-
-        typedef ChannelInfo DataType;
-        typedef std::vector< DataType > ChannelInfoMap;
-        typedef ChannelInfoMap::iterator ChannelInfoIter;
-        typedef ChannelInfoMap::const_iterator ChannelInfoCIter;
-        ChannelInfoMap m_data;
-
-        int GetIndexFromData( const DataType& data );
-
-        //! the Comparator object passed to the SLInsertionSort function
-        ItemComparator<DataType> m_comparator;
 
         //! passed as callback to generic ItemComparator, returns -1,0,1 as per defined ordering
         static int CompareOneCrit( DataType u1, DataType u2, int col, int dir ) ;

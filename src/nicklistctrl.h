@@ -10,7 +10,7 @@ class Ui;
 class ChatPanel;
 class UserMenu;
 
-class NickListCtrl : public CustomVirtListCtrl
+class NickListCtrl : public CustomVirtListCtrl<const User*>
 {
   protected:
     typedef SL_GENERIC::UserMenu<ChatPanel> UserMenu;
@@ -47,14 +47,7 @@ class NickListCtrl : public CustomVirtListCtrl
 
   protected:
 
-    typedef const User* DataType;
-    typedef std::vector< DataType > DataVec;
-    typedef DataVec::iterator DataIter;
-    typedef DataVec::const_iterator DataCIter;
-    //! user pointers we're operating on/displaying
-    DataVec m_data;
-    //! the Comparator object passed to the SLInsertionSort function
-    ItemComparator<DataType> m_comparator;
+
 
     //! passed as callback to generic ItemComparator, returns -1,0,1 as per defined ordering
     static int CompareOneCrit( DataType u1, DataType u2, int col, int dir ) ;
@@ -62,6 +55,8 @@ class NickListCtrl : public CustomVirtListCtrl
     static int CompareUserStatus( DataType u1, DataType u2 );
     //! required per base clase
     virtual void Sort( );
+    void SaveSelection(){}
+    int GetIndexFromData( const DataType& data ){}
 
     UserMenu* m_menu;
 

@@ -7,7 +7,7 @@
 
 
 
-BEGIN_EVENT_TABLE( ChannelListctrl, CustomVirtListCtrl )
+BEGIN_EVENT_TABLE( ChannelListctrl, CustomVirtListCtrl<ChannelInfo> )
   EVT_LIST_ITEM_ACTIVATED( CHANNELLIST, ChannelListctrl::OnActivateItem )
   EVT_LIST_COL_CLICK( CHANNELLIST, ChannelListctrl::OnColClick )
 END_EVENT_TABLE()
@@ -15,10 +15,8 @@ END_EVENT_TABLE()
 
 ChannelListctrl::ChannelListctrl(wxWindow* parent, wxWindowID id, const wxString& name,
                     long style, const wxPoint& pt, const wxSize& sz)
-    :CustomVirtListCtrl(parent, CHANNELLIST, wxDefaultPosition, wxDefaultSize,
-            wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("ChannelListCtrl"), 3),
-    m_comparator(m_sortorder, &CompareOneCrit)
-
+    :CustomVirtListCtrl<ChannelInfo>(parent, CHANNELLIST, wxDefaultPosition, wxDefaultSize,
+            wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("ChannelListCtrl"), 3, &CompareOneCrit)
 {
 #if defined(__WXMSW__)
     const int widths [3] = { wxLIST_AUTOSIZE, wxLIST_AUTOSIZE, wxLIST_AUTOSIZE };
@@ -70,16 +68,6 @@ int ChannelListctrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir 
         case 2: return dir * u1.topic.CmpNoCase( u2.topic );
         default: return 0;
     }
-}
-
-int ChannelListctrl::GetIndexFromData( const DataType& data )
-{
-    ChannelInfoCIter it = m_data.begin();
-    for ( int i = 0; it != m_data.end(); ++it , ++i) {
-        if ( it->name == data.name )
-            return i;
-    }
-    return -1;
 }
 
 void ChannelListctrl::Sort()

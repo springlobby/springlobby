@@ -1,4 +1,4 @@
-#include "customvirtlistctrl.h"
+
 #include "utils.h"
 #include "settings.h"
 #include <wx/colour.h>
@@ -8,9 +8,9 @@
 #include "uiutils.h"
 
 
-BEGIN_EVENT_TABLE(CustomVirtListCtrl, ListBaseType)
+BEGIN_EVENT_TABLE_TEMPLATE1(CustomVirtListCtrl, ListBaseType, T)
 #if wxUSE_TIPWINDOW
-  EVT_MOTION(CustomVirtListCtrl::OnMouseMotion)
+  EVT_MOTION(CustomVirtListCtrl<T>::OnMouseMotion)
   EVT_TIMER(IDD_TIP_TIMER, CustomVirtListCtrl::OnTimer)
 #endif
   EVT_LIST_COL_BEGIN_DRAG(wxID_ANY, CustomVirtListCtrl::OnStartResizeCol)
@@ -22,9 +22,9 @@ BEGIN_EVENT_TABLE(CustomVirtListCtrl, ListBaseType)
 END_EVENT_TABLE()
 
 
-//wxTipWindow* CustomVirtListCtrl::m_tipwindow = 0;
-CustomVirtListCtrl::CustomVirtListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pt, const wxSize& sz,long style,wxString name,
-                               unsigned int column_count, bool highlight, UserActions::ActionType hlaction ):
+template < class T >
+CustomVirtListCtrl<T>::CustomVirtListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pt, const wxSize& sz,long style,wxString name,
+                               unsigned int column_count, CompareFunction func, bool highlight, UserActions::ActionType hlaction ):
   ListBaseType(parent, id, pt, sz, style | wxLC_VIRTUAL),
   m_tiptimer(this, IDD_TIP_TIMER),
   m_tiptext(_T("")),
@@ -40,7 +40,8 @@ CustomVirtListCtrl::CustomVirtListCtrl(wxWindow* parent, wxWindowID id, const wx
   m_highlight(highlight),
   m_highlightAction(hlaction),
   m_bg_color( GetBackgroundColour() ),
-  m_dirty_sort(false)
+  m_dirty_sort(false),
+  m_comparator( m_sortorder, func )
 {
     //dummy init , will later be replaced with loading from settings
     for ( unsigned int i = 0; i < m_coloumnCount; ++i) {
@@ -57,7 +58,8 @@ CustomVirtListCtrl::CustomVirtListCtrl(wxWindow* parent, wxWindowID id, const wx
     m_sortorder[0].col = 0;
 }
 
-void CustomVirtListCtrl::InsertColumn(long i, wxListItem item, wxString tip, bool modifiable)
+template < class T >
+void CustomVirtListCtrl<T>::InsertColumn(long i, wxListItem item, wxString tip, bool modifiable)
 {
 //#ifdef __WXMSW__ //this fixes header text misalignement
 //    item.m_mask = wxLIST_MASK_FORMAT | wxLIST_MASK_TEXT;
@@ -71,51 +73,80 @@ void CustomVirtListCtrl::InsertColumn(long i, wxListItem item, wxString tip, boo
     m_colinfovec.push_back(temp);
 }
 
-void CustomVirtListCtrl::AddColumn(long i, int width, const wxString& label, const wxString& tip, bool modifiable)
+template < class T >
+void CustomVirtListCtrl<T>::AddColumn(long i, int width, const wxString& label, const wxString& tip, bool modifiable)
 {
     ListBaseType::InsertColumn( i, label, wxLIST_FORMAT_LEFT, width);
     colInfo temp(tip,modifiable);
     m_colinfovec.push_back(temp);
 }
 
-//void CustomVirtListCtrl::SetSelectionRestorePoint()
-//{
-//    m_prev_selected_index = m_selected_index;
-//}
-
-void CustomVirtListCtrl::RestoreSelection()
+template < class T >
+int CustomVirtListCtrl<T>::GetIndexFromData( const DataType& data )
 {
-    if ( m_prev_selected_index> -1)
+    DataCIter it = m_data.begin();
+    for ( int i = 0; it != m_data.end(); ++it , ++i) {
+        if ( it->name == data.name )
+            return i;
+    }
+    return -1;
+}
+
+template < class T >
+void CustomVirtListCtrl<T>::SaveSelection()
+{
+    ResetSelection();
+
+    long item = -1;
+    while ( true )
     {
-        SetItemState( m_prev_selected_index, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED );
+        item = GetNextItem(item, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+        if ( item == -1 )
+            break;
+        m_selected_data.push_back( &m_data[item] );
+    }
+
+}
+
+template < class T >
+void CustomVirtListCtrl<T>::RestoreSelection()
+{
+    while ( m_selected_data.size() > 0 )
+    {
+        SelectedDataType data = m_selected_data.pop_back();
+        int idx = GetIndexFromData( *data );
+        SetItemState( idx, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED );
     }
 }
 
-void CustomVirtListCtrl::ResetSelection()
+template < class T >
+void CustomVirtListCtrl<T>::ResetSelection()
 {
-    m_prev_selected_index = m_selected_index = -1;
+    m_selected_data.clear();
 }
 
-void CustomVirtListCtrl::OnSelected( wxListEvent& event )
+template < class T >
+void CustomVirtListCtrl<T>::OnSelected( wxListEvent& event )
 {
   m_selected_index = event.GetIndex();
   event.Skip();
 }
 
-
-void CustomVirtListCtrl::OnDeselected( wxListEvent& event )
+template < class T >
+void CustomVirtListCtrl<T>::OnDeselected( wxListEvent& event )
 {
     if ( m_selected_index == event.GetIndex() )
         m_selected_index = -1;
 }
 
-
-long CustomVirtListCtrl::GetSelectedIndex()
+template < class T >
+long CustomVirtListCtrl<T>::GetSelectedIndex()
 {
   return m_selected_index ;
 }
 
-void CustomVirtListCtrl::SelectAll()
+template < class T >
+void CustomVirtListCtrl<T>::SelectAll()
 {
   for (long i = 0; i < GetItemCount() ; i++ )
   {
@@ -123,15 +154,16 @@ void CustomVirtListCtrl::SelectAll()
   }
 }
 
-void CustomVirtListCtrl::SelectNone()
+template < class T >
+void CustomVirtListCtrl<T>::SelectNone()
 {
   for (long i = 0; i < GetItemCount() ; i++ )
   {
     SetItemState( i, wxLIST_STATE_DONTCARE, -1 );
   }
 }
-
-void CustomVirtListCtrl::SelectInverse()
+template < class T >
+void CustomVirtListCtrl<T>::SelectInverse()
 {
   for (long i = 0; i < GetItemCount() ; i++ )
   {
@@ -141,18 +173,21 @@ void CustomVirtListCtrl::SelectInverse()
   }
 }
 
-void CustomVirtListCtrl::SetSelectedIndex(const long newindex)
+template < class T >
+void CustomVirtListCtrl<T>::SetSelectedIndex(const long newindex)
 {
     m_selected_index = newindex;
 }
 
-void CustomVirtListCtrl::RefreshVisibleItems()
+template < class T >
+void CustomVirtListCtrl<T>::RefreshVisibleItems()
 {
     long topItemIndex = GetTopItem();
     RefreshItems( topItemIndex, topItemIndex + GetCountPerPage() );
 }
 
-void CustomVirtListCtrl::OnTimer(wxTimerEvent& event)
+template < class T >
+void CustomVirtListCtrl<T>::OnTimer(wxTimerEvent& event)
 {
 #if wxUSE_TIPWINDOW
 
@@ -181,7 +216,8 @@ void CustomVirtListCtrl::OnTimer(wxTimerEvent& event)
 #endif
 }
 
-void CustomVirtListCtrl::OnMouseMotion(wxMouseEvent& event)
+template < class T >
+void CustomVirtListCtrl<T>::OnMouseMotion(wxMouseEvent& event)
 {
 #if wxUSE_TIPWINDOW
   //we don't want to display the tooltip again until mouse has moved
@@ -233,7 +269,8 @@ void CustomVirtListCtrl::OnMouseMotion(wxMouseEvent& event)
 #endif
 }
 
-void CustomVirtListCtrl::SetTipWindowText( const long item_hit, const wxPoint position)
+template < class T >
+void CustomVirtListCtrl<T>::SetTipWindowText( const long item_hit, const wxPoint position)
 {
   int coloumn = getColoumnFromPosition(position);
   if (coloumn >= int(m_colinfovec.size()) || coloumn < 0)
@@ -247,7 +284,8 @@ void CustomVirtListCtrl::SetTipWindowText( const long item_hit, const wxPoint po
   }
 }
 
-int CustomVirtListCtrl::getColoumnFromPosition(wxPoint pos)
+template < class T >
+int CustomVirtListCtrl<T>::getColoumnFromPosition(wxPoint pos)
 {
     int x_pos = 0;
     for (int i = 0; i < int(m_colinfovec.size());++i)
@@ -259,13 +297,15 @@ int CustomVirtListCtrl::getColoumnFromPosition(wxPoint pos)
     return -1;
 }
 
-void CustomVirtListCtrl::OnStartResizeCol(wxListEvent& event)
+template < class T >
+void CustomVirtListCtrl<T>::OnStartResizeCol(wxListEvent& event)
 {
     if (!m_colinfovec[event.GetColumn()].second)
         event.Veto();
 }
 
-void CustomVirtListCtrl::OnEndResizeCol(wxListEvent& event)
+template < class T >
+void CustomVirtListCtrl<T>::OnEndResizeCol(wxListEvent& event)
 {
     int column = event.GetColumn();
     int new_size = GetColumnWidth( column );
@@ -275,7 +315,8 @@ void CustomVirtListCtrl::OnEndResizeCol(wxListEvent& event)
     event.Skip();
 }
 
-bool CustomVirtListCtrl::SetColumnWidth(int col, int width)
+template < class T >
+bool CustomVirtListCtrl<T>::SetColumnWidth(int col, int width)
 {
     if ( sett().GetColumnWidth( m_name, col) != Settings::columnWidthUnset)
     {
@@ -288,7 +329,8 @@ bool CustomVirtListCtrl::SetColumnWidth(int col, int width)
     }
 }
 
-void CustomVirtListCtrl::noOp(wxMouseEvent& event)
+template < class T >
+void CustomVirtListCtrl<T>::noOp(wxMouseEvent& event)
 {
     m_tiptext = wxEmptyString;
 //            m_tiptimer.Stop();
@@ -300,7 +342,8 @@ void CustomVirtListCtrl::noOp(wxMouseEvent& event)
     event.Skip();
 }
 
-void CustomVirtListCtrl::UpdateHighlights()
+template < class T >
+void CustomVirtListCtrl<T>::UpdateHighlights()
 {
   Freeze();
   try {
@@ -315,7 +358,8 @@ void CustomVirtListCtrl::UpdateHighlights()
   Thaw();
 }
 
-void CustomVirtListCtrl::HighlightItemUser( long item, const wxString& name )
+template < class T >
+void CustomVirtListCtrl<T>::HighlightItemUser( long item, const wxString& name )
 {
    if ( m_highlight && useractions().DoActionOnUser( m_highlightAction, name ) ) {
         wxColor c = sett().GetGroupHLColor( useractions().GetGroupOfUser( name ) );
@@ -325,28 +369,33 @@ void CustomVirtListCtrl::HighlightItemUser( long item, const wxString& name )
     SetItemBackgroundColour( item, m_bg_color );
 }
 
-void CustomVirtListCtrl::SetHighLightAction( UserActions::ActionType action )
+template < class T >
+void CustomVirtListCtrl<T>::SetHighLightAction( UserActions::ActionType action )
 {
     m_highlightAction = action;
 }
 
-void CustomVirtListCtrl::MarkDirtySort()
+template < class T >
+void CustomVirtListCtrl<T>::MarkDirtySort()
 {
   m_dirty_sort = true;
 }
 
-void CustomVirtListCtrl::CancelTooltipTimer()
+template < class T >
+void CustomVirtListCtrl<T>::CancelTooltipTimer()
 {
     m_tiptimer.Stop();
 }
 
-bool CustomVirtListCtrl::PopupMenu(wxMenu* menu, const wxPoint& pos )
+template < class T >
+bool CustomVirtListCtrl<T>::PopupMenu(wxMenu* menu, const wxPoint& pos )
 {
     CancelTooltipTimer();
     return ListBaseType::PopupMenu( menu, pos );
 }
 
-void CustomVirtListCtrl::SortList( bool force )
+template < class T >
+void CustomVirtListCtrl<T>::SortList( bool force )
 {
     if ( !m_dirty_sort && !force )
         return;

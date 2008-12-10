@@ -27,7 +27,7 @@
 
 
 
-BEGIN_EVENT_TABLE( NickListCtrl, CustomVirtListCtrl )
+BEGIN_EVENT_TABLE( NickListCtrl, CustomVirtListCtrl<const User*> )
   EVT_LIST_ITEM_ACTIVATED( NICK_LIST, NickListCtrl::OnActivateItem )
   EVT_LIST_COL_CLICK( NICK_LIST, NickListCtrl::OnColClick )
   EVT_CONTEXT_MENU( NickListCtrl::OnShowMenu )
@@ -41,10 +41,9 @@ END_EVENT_TABLE()
 
 NickListCtrl::NickListCtrl( wxWindow* parent, bool show_header, NickListCtrl::UserMenu* popup, bool singleSelectList,
                             const wxString& name, bool highlight):
-  CustomVirtListCtrl( parent, NICK_LIST, wxDefaultPosition, wxDefaultSize,
+  CustomVirtListCtrl<const User*>( parent, NICK_LIST, wxDefaultPosition, wxDefaultSize,
               wxLC_VIRTUAL | wxSUNKEN_BORDER | wxLC_REPORT | (int)(!show_header) * wxLC_NO_HEADER | (int)(singleSelectList) * wxLC_SINGLE_SEL,
-              name, highlight ),
-  m_comparator(m_sortorder, &CompareOneCrit),
+              name, 4, &CompareOneCrit, highlight ),
   m_menu(popup)
 {
 

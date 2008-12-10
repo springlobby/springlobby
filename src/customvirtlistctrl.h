@@ -31,7 +31,9 @@ class SLTipWindow;
  * Provides generic functionality, such as column tooltips, possiblity to prohibit coloumn resizing and selection modifiers. \n
  * Some of the provided functionality only makes sense for single-select lists (see grouping) \n
  * Note: Tooltips are a bitch and anyone shoudl feel to revise them (koshi)
+ * \tparam the type of stored data
  */
+template < class DataImp >
 class CustomVirtListCtrl : public ListBaseType
 {
 protected:
@@ -161,6 +163,8 @@ protected:
         }
     };
 
+    typedef typename ItemComparator<DataImp>::CmpFunc CompareFunction;
+
     //! compare func usable for types with well-defined ordering (and implemented ops <,>)
     template < typename Type >
     static inline int compareSimple( Type o1, Type o2 ) {
@@ -182,7 +186,7 @@ public:
 
 public:
     CustomVirtListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pt,
-                    const wxSize& sz,long style, wxString name, unsigned int column_count, bool highlight = true,
+                    const wxSize& sz,long style, wxString name, unsigned int column_count, CompareFunction func, bool highlight = true,
                     UserActions::ActionType hlaction = UserActions::ActHighlight);
 
     virtual ~CustomVirtListCtrl(){}
@@ -202,7 +206,7 @@ public:
     /** @name Single Selection methods
      * call this before example before sorting, inserting, etc
      */
-    virtual void SaveSelection() = 0;
+    void SaveSelection();
     void ResetSelection();
     //! and this afterwards
     void RestoreSelection();
@@ -263,8 +267,26 @@ public:
     /** @}
      */
 
+protected:
+    typedef DataImp DataType;
+    typedef std::vector< DataImp > DataVector;
+    typedef typename DataVector::iterator DataIter;
+    typedef typename DataVector::const_iterator DataCIter;
+    DataVector m_data;
+
+    typedef const DataType* SelectedDataType;
+    typedef std::vector< SelectedDataType > SelectedDataVector;
+    SelectedDataVector m_selected_data;
+
+    int GetIndexFromData( const DataType& data );
+
+    //! the Comparator object passed to the SLInsertionSort function
+    ItemComparator<DataType> m_comparator;
+
+public:
     DECLARE_EVENT_TABLE()
 };
 
+#include "customvirtlistctrl.cpp"
 
 #endif /*CUSTOMLISTITEM_H_*/
