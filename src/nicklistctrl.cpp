@@ -90,21 +90,9 @@ void NickListCtrl::AddUser( const User& user )
     wxLogDebugFunc(_T(""));
     assert(&user);
 
-//  int index = InsertItem( GetItemCount(), wxEmptyString );
-//  if(index==-1){
-//    wxLogMessage(_T("NickListCtrl::AddUser : index==-1"));
-//    return;
-//  }
-
     m_data.push_back( &user );
     SetItemCount( m_data.size() );
     RefreshItem( m_data.size() );
-
-//  try
-//  {
-//  ASSERT_LOGIC( index != -1, _T("index = -1") );
-//  } catch (...) { return; }
-
 
     SetColumnWidth( 3, wxLIST_AUTOSIZE );
     SetColumnWidth( 0, wxLIST_AUTOSIZE );
@@ -117,7 +105,6 @@ void NickListCtrl::RemoveUser( const User& user )
 
   if ( index != -1 )
   {
-    //erase
     m_data.erase( m_data.begin() + index );
     SetItemCount( m_data.size() );
     SetColumnWidth( 3, wxLIST_AUTOSIZE );
