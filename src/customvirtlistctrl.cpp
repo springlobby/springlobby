@@ -81,16 +81,7 @@ void CustomVirtListCtrl<T>::AddColumn(long i, int width, const wxString& label, 
     m_colinfovec.push_back(temp);
 }
 
-template < class T >
-int CustomVirtListCtrl<T>::GetIndexFromData( const DataType& data )
-{
-    DataCIter it = m_data.begin();
-    for ( int i = 0; it != m_data.end(); ++it , ++i) {
-        if ( it->name == data.name )
-            return i;
-    }
-    return -1;
-}
+
 
 template < class T >
 void CustomVirtListCtrl<T>::SaveSelection()
@@ -103,7 +94,7 @@ void CustomVirtListCtrl<T>::SaveSelection()
         item = GetNextItem(item, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
         if ( item == -1 )
             break;
-        m_selected_data.push_back( &m_data[item] );
+        m_selected_data.push_back( m_data[item] );
     }
 
 }
@@ -113,8 +104,9 @@ void CustomVirtListCtrl<T>::RestoreSelection()
 {
     while ( m_selected_data.size() > 0 )
     {
-        SelectedDataType data = m_selected_data.pop_back();
-        int idx = GetIndexFromData( *data );
+        SelectedDataType data = m_selected_data.back();
+        m_selected_data.pop_back();
+        int idx = GetIndexFromData( data );
         SetItemState( idx, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED );
     }
 }

@@ -55,7 +55,7 @@ class NickListCtrl : public CustomVirtListCtrl<const User*>
     static int CompareUserStatus( DataType u1, DataType u2 );
     //! required per base clase
     virtual void Sort( );
-    void SaveSelection(){}
+
     int GetIndexFromData( const DataType& data ){}
 
     UserMenu* m_menu;

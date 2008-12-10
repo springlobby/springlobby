@@ -70,15 +70,22 @@ int ChannelListctrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir 
     }
 }
 
+int ChannelListctrl::GetIndexFromData( const DataType& data )
+{
+    DataCIter it = m_data.begin();
+    for ( int i = 0; it != m_data.end(); ++it , ++i) {
+        if ( it->name == data.name )
+            return i;
+    }
+    return -1;
+}
+
 void ChannelListctrl::Sort()
 {
-    DataType selected_data = m_data[ m_visible_idxs[ GetSelectedIndex() ] ];
+    SaveSelection();
     SLInsertionSort( m_data, m_comparator );
     FilterChannel( m_last_filter_value );
-    int new_idx = GetIndexFromData( selected_data );
-    SetSelectedIndex( new_idx );
-    SetItemState( new_idx, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED );
-
+    RestoreSelection();
 }
 
 void ChannelListctrl::OnColClick( wxListEvent& event )

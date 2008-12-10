@@ -203,7 +203,7 @@ public:
     /** @}
      */
 
-    /** @name Single Selection methods
+    /** @name Multi Selection methods
      * call this before example before sorting, inserting, etc
      */
     void SaveSelection();
@@ -274,11 +274,11 @@ protected:
     typedef typename DataVector::const_iterator DataCIter;
     DataVector m_data;
 
-    typedef const DataType* SelectedDataType;
+    typedef DataType SelectedDataType;
     typedef std::vector< SelectedDataType > SelectedDataVector;
     SelectedDataVector m_selected_data;
 
-    int GetIndexFromData( const DataType& data );
+    virtual int GetIndexFromData( const DataType& data ) = 0;
 
     //! the Comparator object passed to the SLInsertionSort function
     ItemComparator<DataType> m_comparator;
