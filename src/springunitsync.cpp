@@ -608,7 +608,6 @@ int SpringUnitSync::GetSideCount( const wxString& modname )
   }
   catch (...)
   {
-    susynclib().AddAllArchives( GetModArchive( susynclib().GetModIndex( modname )  ) );
     cache.Add( TowxString( susynclib().GetSideCount( modname ) ) );
     SetCacheFile( GetFileCachePath( modname, _T(""), true ) + _T(".sidecount"), cache );
   }
