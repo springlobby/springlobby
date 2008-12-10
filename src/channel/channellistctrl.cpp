@@ -125,9 +125,8 @@ void ChannelListctrl::OnActivateItem(wxListEvent& event)
 
 void ChannelListctrl::ClearChannels()
 {
-    m_data.clear();
     m_visible_idxs.clear();
-    SetItemCount( 0 );
+    Clear();
 }
 
 wxString ChannelListctrl::GetInfo()

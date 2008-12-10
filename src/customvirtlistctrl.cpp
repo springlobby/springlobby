@@ -398,3 +398,13 @@ void CustomVirtListCtrl<T>::SortList( bool force )
     m_dirty_sort = false;
     RefreshVisibleItems();
 }
+
+template < class T >
+void CustomVirtListCtrl<T>::Clear()
+{
+    m_data.clear();
+    SetItemCount( 0 );
+    ResetSelection();
+    RefreshVisibleItems();
+}
+

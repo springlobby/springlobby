@@ -101,17 +101,16 @@ void NickListCtrl::AddUser( const User& user )
 
 void NickListCtrl::RemoveUser( const User& user )
 {
-  int index = GetIndexFromData( &user );
+    int index = GetIndexFromData( &user );
 
-  if ( index != -1 )
-  {
-    m_data.erase( m_data.begin() + index );
-    SetItemCount( m_data.size() );
-    SetColumnWidth( 3, wxLIST_AUTOSIZE );
-    RefreshVisibleItems( );
-    return;
-  }
-  wxLogError( _T("Didn't find the user to remove.") );
+    if ( index != -1 ) {
+        m_data.erase( m_data.begin() + index );
+        SetItemCount( m_data.size() );
+        SetColumnWidth( 3, wxLIST_AUTOSIZE );
+        RefreshVisibleItems( );
+        return;
+    }
+    wxLogError( _T("Didn't find the user to remove.") );
 }
 
 

@@ -267,6 +267,9 @@ public:
     /** @}
      */
 
+     //! delete all data, selections, and whatnot
+     virtual void Clear();
+
 protected:
     typedef DataImp DataType;
     typedef std::vector< DataImp > DataVector;

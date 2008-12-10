@@ -204,67 +204,29 @@ void BattleListTab::SelectBattle( Battle* battle )
 }
 
 void BattleListTab::AddBattle( Battle& battle ) {
-  if ( m_filter->GetActiv() && !m_filter->FilterBattle( battle ) ) {
+    if ( m_filter->GetActiv() && !m_filter->FilterBattle( battle ) ) {
     return;
-  }
-  int index = m_battle_list->InsertItem( m_battle_list->GetItemCount(), icons().GetBattleStatusIcon( battle ) );
-  try
-  {
-    ASSERT_LOGIC( index != -1, _T("index = -1") );
-  } catch (...) { return; }
-  m_battle_list->SetItemData(index, (long)battle.GetBattleId() );
-  battle.SetGUIListActiv( true );
+    }
 
-  try
-  {
-    ASSERT_LOGIC( index != -1, _T("index = -1") );
-  } catch (...) { return; }
-  //wxListItem item;
-  //item.SetId( index );
-
- // ASSERT_LOGIC( m_battle_list->GetItem( item ), _T("!GetItem") );
-
-  m_battle_list->SetItemImage( index, icons().GetBattleStatusIcon( battle ) );
-  m_battle_list->SetItemColumnImage( index, 2, icons().GetRankIcon( battle.GetRankNeeded(), false ) );
-  m_battle_list->SetItemColumnImage( index, 1, icons().GetFlagIcon( battle.GetFounder().GetCountry() ) );
-  m_battle_list->SetItem( index, 3, battle.GetDescription() );
-  m_battle_list->SetItem( index, 4, RefineMapname( battle.GetHostMapName() ), battle.MapExists()?icons().ICON_EXISTS:icons().ICON_NEXISTS );
-  m_battle_list->SetItem( index, 5, RefineModname( battle.GetHostModName() ), battle.ModExists()?icons().ICON_EXISTS:icons().ICON_NEXISTS );
-  m_battle_list->SetItem( index, 6, battle.GetFounder().GetNick() );
-  m_battle_list->SetItem( index, 7, wxString::Format(_T("%d"), int(battle.GetSpectators())) );
-  m_battle_list->SetItem( index, 8, wxString::Format(_T("%d"), int(battle.GetNumUsers()) - int(battle.GetSpectators()) ) );
-  m_battle_list->SetItem( index, 9, wxString::Format(_T("%d"), int(battle.GetMaxPlayers())) );
-
-  m_battle_list->HighlightItem( index );
-  m_battle_list->SetColumnWidth( 4, wxLIST_AUTOSIZE );
-  m_battle_list->SetColumnWidth( 5, wxLIST_AUTOSIZE );
-  m_battle_list->SetColumnWidth( 6, wxLIST_AUTOSIZE );
-
-  m_battle_list->MarkDirtySort();
+    m_battle_list->AddBattle( battle );
+    battle.SetGUIListActiv( true );
 }
 
 
 void BattleListTab::RemoveBattle( Battle& battle ) {
 
-  if ( &battle == m_sel_battle )
-  {
-      m_battle_list->ResetSelection();
-      SelectBattle( 0 );
-  }
-  for (int i = 0; i < m_battle_list->GetItemCount() ; i++ ) {
-    if ( battle.GetBattleId() == (int)m_battle_list->GetItemData( i ) ) {
-      m_battle_list->DeleteItem( i );
-      break;
+    if ( &battle == m_sel_battle ) {
+        m_battle_list->ResetSelection();
+        SelectBattle( 0 );
     }
-  }
 
-  battle.SetGUIListActiv( false );
+    m_battle_list->RemoveBattle( battle );
 
-  m_battle_list->SetColumnWidth( 4, wxLIST_AUTOSIZE );
-  m_battle_list->SetColumnWidth( 5, wxLIST_AUTOSIZE );
-  m_battle_list->SetColumnWidth( 6, wxLIST_AUTOSIZE );
+    battle.SetGUIListActiv( false );
 
-
+    m_battle_list->SetColumnWidth( 4, wxLIST_AUTOSIZE );
+    m_battle_list->SetColumnWidth( 5, wxLIST_AUTOSIZE );
+    m_battle_list->SetColumnWidth( 6, wxLIST_AUTOSIZE );
 }
 
 
@@ -276,53 +238,21 @@ void BattleListTab::UserUpdate( User& user )
 
 void BattleListTab::UpdateBattle( Battle& battle )
 {
-  if ( !battle.GetGUIListActiv() ) {
-    AddBattle( battle );
-    return;
-  }
-
-  if ( m_filter->GetActiv() && !m_filter->FilterBattle( battle ) ) {
-    RemoveBattle( battle );
-    return;
-  }
-
-  int index = -1;
-  for (int i = 0; i < m_battle_list->GetItemCount() ; i++ ) {
-    if ( battle.GetBattleId() == (int)m_battle_list->GetItemData( i ) ) {
-      index = i;
-      break;
+    if ( !battle.GetGUIListActiv() ) {
+        AddBattle( battle );
+        return;
     }
-  }
 
-  try
-  {
-    ASSERT_LOGIC( index != -1, _T("index = -1") );
-  } catch (...) { return; }
+    if ( m_filter->GetActiv() && !m_filter->FilterBattle( battle ) ) {
+        RemoveBattle( battle );
+        return;
+    }
 
-  //wxListItem item;
-  //item.SetId( index );
+    m_battle_list->UpdateBattle( battle );
 
-  //ASSERT_LOGIC( m_battle_list->GetItem( item ), _T("!GetItem") );
+    if ( &battle == m_sel_battle )
+        SelectBattle( m_sel_battle );
 
-  //Battle& battle = m_ui.GetServer().battles_iter.GetBattle( m_battle_list->GetItemData( index ) );
-
-  m_battle_list->SetItemImage( index, icons().GetBattleStatusIcon( battle ) );
-  m_battle_list->SetItemColumnImage( index, 2, icons().GetRankIcon( battle.GetRankNeeded(), false ) );
-  m_battle_list->SetItemColumnImage( index, 1, icons().GetFlagIcon( battle.GetFounder().GetCountry() ) );
-  m_battle_list->SetItem( index, 3, battle.GetDescription() );
-  m_battle_list->SetItem( index, 4, RefineMapname( battle.GetHostMapName() ), battle.MapExists()?icons().ICON_EXISTS:icons().ICON_NEXISTS );
-  m_battle_list->SetItem( index, 5, RefineModname( battle.GetHostModName() ), battle.ModExists()?icons().ICON_EXISTS:icons().ICON_NEXISTS );
-  m_battle_list->SetItem( index, 6, battle.GetFounder().GetNick() );
-  m_battle_list->SetItem( index, 7, wxString::Format(_T("%d"), battle.GetSpectators()) );
-  m_battle_list->SetItem( index, 8, wxString::Format(_T("%d"), battle.GetNumUsers() - battle.GetSpectators() ) );
-  m_battle_list->SetItem( index, 9, wxString::Format(_T("%d"), battle.GetMaxPlayers()) );
-
-  //highlight
-  m_battle_list->HighlightItem( index );
-
-  if ( &battle == m_sel_battle ) SelectBattle( m_sel_battle );
-  m_battle_list->SetColumnWidth( 5, wxLIST_AUTOSIZE );
-  m_battle_list->MarkDirtySort();
 }
 
 
@@ -334,7 +264,7 @@ void BattleListTab::RemoveAllBattles() {
     if (temp_battle != 0)
         temp_battle->SetGUIListActiv( false );
   }
-  m_battle_list->DeleteAllItems();
+  m_battle_list->Clear();
 }
 
 

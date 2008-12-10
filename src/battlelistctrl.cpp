@@ -134,17 +134,52 @@ BattleListCtrl::~BattleListCtrl()
 
 wxString BattleListCtrl::OnGetItemText(long item, long column) const
 {
+    if ( m_data[item] == NULL )
+        return wxEmptyString;
 
+    const Battle& battle= *m_data[item];
+    const BattleOptions& opts = battle.GetBattleOptions();
+
+    switch ( column ) {
+        case 0:
+        case 1:
+        case 2:
+        default: return wxEmptyString;
+
+        case 3: return ( opts.description );
+        case 4: return ( opts.mapname );
+        case 5: return ( opts.modname );
+        case 6: return ( opts.founder );
+        case 7: return ( wxString::Format(_T("%d"), int(battle.GetSpectators())) );
+        case 8: return ( wxString::Format(_T("%d"), int(battle.GetNumUsers()) - int(battle.GetSpectators()) ) );
+        case 9: return ( wxString::Format(_T("%d"), int(battle.GetMaxPlayers())) );
+    }
 }
 
 int BattleListCtrl::OnGetItemImage(long item) const
 {
+    if ( m_data[item] == NULL )
+        return -1;
 
+    return icons().GetBattleStatusIcon( *m_data[item] );
 }
 
 int BattleListCtrl::OnGetItemColumnImage(long item, long column) const
 {
+    if ( m_data[item] == NULL )
+        return -1;
 
+    const Battle& battle= *m_data[item];
+
+    switch ( column ) {
+        default: return -1;
+
+        case 0: return icons().GetBattleStatusIcon( battle );
+        case 1: return icons().GetFlagIcon( battle.GetFounder().GetCountry() );
+        case 2: return icons().GetRankIcon( battle.GetRankNeeded(), false );
+        case 4: return battle.MapExists() ? icons().ICON_EXISTS : icons().ICON_NEXISTS;
+        case 5: return battle.ModExists() ? icons().ICON_EXISTS : icons().ICON_NEXISTS;
+    }
 }
 
 void BattleListCtrl::AddBattle( const Battle& battle )
@@ -154,18 +189,28 @@ void BattleListCtrl::AddBattle( const Battle& battle )
     m_data.push_back( &battle );
     SetItemCount( m_data.size() );
     RefreshItem( m_data.size() );
-
+    HighlightItem( m_data.size() );
     MarkDirtySort();
 }
 
-void RemoveBattle( const Battle& battle )
+void BattleListCtrl::RemoveBattle( const Battle& battle )
 {
 
 }
 
-void UpdateBattle( const Battle& battle )
+void BattleListCtrl::UpdateBattle( const Battle& battle )
 {
+    int index = GetIndexFromData( &battle );
 
+    if ( index != -1 ) {
+        m_data.erase( m_data.begin() + index );
+        SetItemCount( m_data.size() );
+
+        RefreshVisibleItems( );
+        return;
+    }
+    HighlightItem( index );
+    MarkDirtySort();
 }
 
 void BattleListCtrl::HighlightItem( long item )

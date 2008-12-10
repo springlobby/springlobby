@@ -127,6 +127,8 @@ class CommonBattle : public UserList, public IBattle
 
         bool IsFull() const { return GetMaxPlayers() == ( GetNumUsers() - GetSpectators() ); }
 
+        const BattleOptions& GetBattleOptions() const { return m_opts; }
+
 
     protected:
 
