@@ -70,7 +70,7 @@ int ChannelListctrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir 
     }
 }
 
-int ChannelListctrl::GetIndexFromData( const DataType& data )
+int ChannelListctrl::GetIndexFromData( const DataType& data ) const
 {
     DataCIter it = m_data.begin();
     for ( int i = 0; it != m_data.end(); ++it , ++i) {

@@ -25,8 +25,6 @@ class NickListCtrl : public CustomVirtListCtrl<const User*>
 
     void UserUpdated( const User& user );
 
-    int GetUserIndex( const User& user ) const;
-
     void GetSelectedUsers( UserList& users ) ;
     wxArrayString GetSelectedUserNicks( ) ;
 
@@ -39,7 +37,6 @@ class NickListCtrl : public CustomVirtListCtrl<const User*>
 
     void HighlightItem( long item );
 
-
     //these are overloaded to use list in virtual style
     virtual wxString OnGetItemText(long item, long column) const;
     virtual int OnGetItemImage(long item) const;
@@ -48,13 +45,13 @@ class NickListCtrl : public CustomVirtListCtrl<const User*>
   protected:
 
     //! passed as callback to generic ItemComparator, returns -1,0,1 as per defined ordering
-    static int CompareOneCrit( DataType u1, DataType u2, int col, int dir ) ;
+    static int CompareOneCrit( DataType u1, DataType u2, int col, int dir );
     //! utils func for comparing user status, so the CompareOneCrit doesn't get too crowded
     static int CompareUserStatus( DataType u1, DataType u2 );
     //! required per base clase
     virtual void Sort( );
 
-    int GetIndexFromData( const DataType& data );
+    int GetIndexFromData( const DataType& data ) const;
 
     UserMenu* m_menu;
 

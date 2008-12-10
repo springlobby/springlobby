@@ -101,7 +101,7 @@ void NickListCtrl::AddUser( const User& user )
 
 void NickListCtrl::RemoveUser( const User& user )
 {
-  int index = GetUserIndex( user );
+  int index = GetIndexFromData( &user );
 
   if ( index != -1 )
   {
@@ -117,7 +117,7 @@ void NickListCtrl::RemoveUser( const User& user )
 
 void NickListCtrl::UserUpdated( const User& user )
 {
-    int index = GetUserIndex( user );
+    int index = GetIndexFromData( &user );
     if ( index != -1 ) {
         m_data[index] = &user;
         HighlightItemUser( index, user.GetNick() );
@@ -134,18 +134,6 @@ void NickListCtrl::ClearUsers()
     m_data.clear();
     SetItemCount( 0 );
 }
-
-
-int NickListCtrl::GetUserIndex( const User& user )const
-{
-    DataCIter it = m_data.begin();
-    for ( int i = 0; it != m_data.end(); ++it, ++i ) {
-        if ( *it != 0 && user.Equals( *(*it) ) ) return i;
-    }
-    wxLogError( _T("didn't find the user.") );
-    return -1;
-}
-
 
 void NickListCtrl::OnActivateItem( wxListEvent& event )
 {
@@ -261,13 +249,14 @@ void NickListCtrl::HighlightItem( long item )
     }
 }
 
-int NickListCtrl::GetIndexFromData( const DataType& data )
+int NickListCtrl::GetIndexFromData( const DataType& data ) const
 {
     DataCIter it = m_data.begin();
-    for ( int i = 0; it != m_data.end(); ++it , ++i) {
-        if ( (*it)->Equals( *data ) )
+    for ( int i = 0; it != m_data.end(); ++it, ++i ) {
+        if ( *it != 0 && data->Equals( *(*it) ) )
             return i;
     }
+    wxLogError( _T("didn't find the user.") );
     return -1;
 }
 

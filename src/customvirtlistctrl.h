@@ -278,7 +278,7 @@ protected:
     typedef std::vector< SelectedDataType > SelectedDataVector;
     SelectedDataVector m_selected_data;
 
-    virtual int GetIndexFromData( const DataType& data ) = 0;
+    virtual int GetIndexFromData( const DataType& data ) const = 0;
 
     //! the Comparator object passed to the SLInsertionSort function
     ItemComparator<DataType> m_comparator;

@@ -20,7 +20,7 @@
 #include "aui/auimanager.h"
 #endif
 
-BEGIN_EVENT_TABLE(BattleListCtrl, CustomListCtrl)
+BEGIN_EVENT_TABLE(BattleListCtrl, CustomVirtListCtrl<const Battle *>)
 
   EVT_LIST_ITEM_RIGHT_CLICK( BLIST_LIST, BattleListCtrl::OnListRightClick )
   EVT_LIST_COL_CLICK       ( BLIST_LIST, BattleListCtrl::OnColClick )
@@ -36,8 +36,8 @@ END_EVENT_TABLE()
 Ui* BattleListCtrl::m_ui_for_sort = 0;
 
 BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui ):
-  CustomListCtrl(parent, BLIST_LIST, wxDefaultPosition, wxDefaultSize,
-            wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("BattleListCtrl"), 10),
+  CustomVirtListCtrl<const Battle *>(parent, BLIST_LIST, wxDefaultPosition, wxDefaultSize,
+            wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("BattleListCtrl"), 10, &CompareOneCrit),
   m_ui(ui)
 {
 
@@ -132,6 +132,42 @@ BattleListCtrl::~BattleListCtrl()
   delete m_popup;
 }
 
+wxString BattleListCtrl::OnGetItemText(long item, long column) const
+{
+
+}
+
+int BattleListCtrl::OnGetItemImage(long item) const
+{
+
+}
+
+int BattleListCtrl::OnGetItemColumnImage(long item, long column) const
+{
+
+}
+
+void BattleListCtrl::AddBattle( const Battle& battle )
+{
+    assert(&battle);
+
+    m_data.push_back( &battle );
+    SetItemCount( m_data.size() );
+    RefreshItem( m_data.size() );
+
+    MarkDirtySort();
+}
+
+void RemoveBattle( const Battle& battle )
+{
+
+}
+
+void UpdateBattle( const Battle& battle )
+{
+
+}
+
 void BattleListCtrl::HighlightItem( long item )
 {
     //prioritize highlighting host over joined players
@@ -160,21 +196,21 @@ void BattleListCtrl::OnListRightClick( wxListEvent& event )
 
 void BattleListCtrl::OnDLMap( wxCommandEvent& event )
 {
-  if ( m_selected != -1 ) {
-    if ( m_ui.GetServer().battles_iter->BattleExists(m_selected) ) {
-      m_ui.DownloadMap( m_ui.GetServer().battles_iter->GetBattle(m_selected).GetHostMapHash(), m_ui.GetServer().battles_iter->GetBattle(m_selected).GetHostMapName() );
-    }
-  }
+//  if ( m_selected != -1 ) {
+//    if ( m_ui.GetServer().battles_iter->BattleExists(m_selected) ) {
+//      m_ui.DownloadMap( m_ui.GetServer().battles_iter->GetBattle(m_selected).GetHostMapHash(), m_ui.GetServer().battles_iter->GetBattle(m_selected).GetHostMapName() );
+//    }
+//  }
 }
 
 
 void BattleListCtrl::OnDLMod( wxCommandEvent& event )
 {
-  if ( m_selected != -1 ) {
-    if ( m_ui.GetServer().battles_iter->BattleExists(m_selected) ) {
-      m_ui.DownloadMod( m_ui.GetServer().battles_iter->GetBattle(m_selected).GetHostModHash(), m_ui.GetServer().battles_iter->GetBattle(m_selected).GetHostModName() );
-    }
-  }
+//  if ( m_selected != -1 ) {
+//    if ( m_ui.GetServer().battles_iter->BattleExists(m_selected) ) {
+//      m_ui.DownloadMod( m_ui.GetServer().battles_iter->GetBattle(m_selected).GetHostModHash(), m_ui.GetServer().battles_iter->GetBattle(m_selected).GetHostModName() );
+//    }
+//  }
 }
 
 
@@ -568,12 +604,12 @@ void BattleListCtrl::SetTipWindowText( const long item_hit, const wxPoint positi
     }
 }
 
-void BattleListCtrl::SortList()
+int BattleListCtrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir )
 {
-  if ( !m_dirty_sort ) return;
-  SetSelectionRestorePoint();
-  Sort();
-  //this does nothing if selection was reset
-  RestoreSelection( );
-  m_dirty_sort = false;
+
+}
+
+int BattleListCtrl::GetIndexFromData( const DataType& data ) const
+{
+
 }
