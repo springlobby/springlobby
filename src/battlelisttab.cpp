@@ -224,9 +224,6 @@ void BattleListTab::RemoveBattle( Battle& battle ) {
 
     battle.SetGUIListActiv( false );
 
-    m_battle_list->SetColumnWidth( 4, wxLIST_AUTOSIZE );
-    m_battle_list->SetColumnWidth( 5, wxLIST_AUTOSIZE );
-    m_battle_list->SetColumnWidth( 6, wxLIST_AUTOSIZE );
 }
 
 
@@ -274,7 +271,7 @@ void BattleListTab::UpdateList() {
 //    return;
 //  }
 
-  int prev_selection = m_battle_list->GetSelectedIndex();
+//  int prev_selection = m_battle_list->GetSelectedIndex();
 
   m_ui.GetServer().battles_iter->IteratorBegin();
   while (! m_ui.GetServer().battles_iter->EOL() ) {
@@ -283,10 +280,10 @@ void BattleListTab::UpdateList() {
     UpdateBattle(*b);
   }
 
-  if (prev_selection > -1 )
-  {
-    m_battle_list->SetItemState( prev_selection, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED );
-  }
+//  if (prev_selection > -1 )
+//  {
+//    m_battle_list->SetItemState( prev_selection, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED );
+//  }
 }
 
 

@@ -53,31 +53,19 @@ NickListCtrl::NickListCtrl( wxWindow* parent, bool show_header, NickListCtrl::Us
     const int widths [4] = { 20,20,20,120 };
 #endif
 
-  wxListItem col;
-  col.SetText( _("s") );
-  col.SetImage( -1 );
-  AddColumn( 0, widths[0], _("s"), _T("Status") );
-  col.SetText( _("c") );
-  col.SetImage( -1 );
-  AddColumn( 1, widths[1], _("c"), _T("Country") );
-  col.SetText( _("r") );
-  col.SetImage( -1 );
-  AddColumn( 2, widths[2], _("r"), _T("Rank") );
-  col.SetText( _("Nickname") );
-  col.SetImage( icons().ICON_DOWN );
-  AddColumn( 3, widths[3], _("Nickname"), _T("Nickname") );
+    AddColumn( 0, widths[0], _("s"), _T("Status") );
+    AddColumn( 1, widths[1], _("c"), _T("Country") );
+    AddColumn( 2, widths[2], _("r"), _T("Rank") );
+    AddColumn( 3, widths[3], _("Nickname"), _T("Nickname") );
 
-
-  m_sortorder[0].col = 0;
-  m_sortorder[0].direction = -1;
-  m_sortorder[1].col = 3;
-  m_sortorder[1].direction = 1;
-  m_sortorder[2].col = 2;
-  m_sortorder[2].direction = 1;
-  m_sortorder[3].col = 1;
-  m_sortorder[3].direction = 1;
-
-
+    m_sortorder[0].col = 0;
+    m_sortorder[0].direction = -1;
+    m_sortorder[1].col = 3;
+    m_sortorder[1].direction = 1;
+    m_sortorder[2].col = 2;
+    m_sortorder[2].direction = 1;
+    m_sortorder[3].col = 1;
+    m_sortorder[3].direction = 1;
 }
 
 NickListCtrl::~NickListCtrl()
@@ -130,8 +118,7 @@ void NickListCtrl::UserUpdated( const User& user )
 
 void NickListCtrl::ClearUsers()
 {
-    m_data.clear();
-    SetItemCount( 0 );
+    Clear();
 }
 
 void NickListCtrl::OnActivateItem( wxListEvent& event )

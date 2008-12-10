@@ -41,95 +41,49 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui ):
   m_ui(ui)
 {
 
-  #ifndef HAVE_WX26
-  GetAui().manager->AddPane( this, wxLEFT, _T("battlelistctrl") );
-  #endif
+#ifndef HAVE_WX26
+    GetAui().manager->AddPane( this, wxLEFT, _T("battlelistctrl") );
+#endif
 
-  wxListItem col;
-
-  col.SetText( _T("s") );
-  col.SetImage( icons().ICON_NONE );
-  InsertColumn( 0, col, _T("Status") );
-
-  col.SetText( _T("c") );
-  col.SetImage( icons().ICON_NONE );
-  InsertColumn( 1, col, _T("Country") );
-
-  col.SetText( _T("r") );
-  col.SetImage(  icons().ICON_NONE);
-  InsertColumn( 2, col, _T("Minimum rank to join") );
-
-  col.SetText( _("Description") );
-  col.SetImage( icons().ICON_NONE );
-  InsertColumn( 3, col, _T("Game description") );
-
-  col.SetText( _("Map") );
-  col.SetImage( icons().ICON_NONE );
-  InsertColumn( 4, col, _T("Mapname") );
-
-  col.SetText( _("Mod") );
-  col.SetImage( icons().ICON_NONE );
-  InsertColumn( 5, col, _T("Modname") );
-
-  col.SetText( _("Host") );
-  col.SetImage( icons().ICON_NONE);
-  InsertColumn( 6, col, _T("Name of the Host") );
-
-  col.SetText( _("a") );
-  col.SetImage( icons().ICON_NONE );
-  InsertColumn( 7, col, _T("Number of Spectators") );
-
-  col.SetText( _("p") );
-  col.SetImage( icons().ICON_NONE );
-  InsertColumn( 8, col, _T("Number of Players joined") );
-
-  col.SetText( _("m") );
-  col.SetImage(  icons().ICON_NONE);
-  InsertColumn( 9, col, _T("Maximum number of Players that can join") );
-
-  m_sortorder[0].col = 0;
-  m_sortorder[0].direction = true;
-  m_sortorder[1].col = 5;
-  m_sortorder[1].direction = true;
-  m_sortorder[2].col = 9;
-  m_sortorder[2].direction = true;
-  m_sortorder[3].col = 4;
-  m_sortorder[3].direction = true;
-  Sort( );
+    const int hd = wxLIST_AUTOSIZE_USEHEADER;
 
 #if defined(__WXMAC__)
 /// on mac, autosize does not work at all
-  SetColumnWidth( 0, 20 );
-  SetColumnWidth( 1, 20 );
-  SetColumnWidth( 2, 20 );
-
-  SetColumnWidth( 7, 28 ); // alittle more than before for dual digets
-  SetColumnWidth( 8, 28 );
-  SetColumnWidth( 9, 28 );
+    const int widths[10] = {20,20,20,170,140,130,110,28,28,28};
 #else
-  SetColumnWidth( 0, wxLIST_AUTOSIZE_USEHEADER );
-  SetColumnWidth( 1, wxLIST_AUTOSIZE_USEHEADER );
-  SetColumnWidth( 2, wxLIST_AUTOSIZE_USEHEADER );
-
-  SetColumnWidth( 7, wxLIST_AUTOSIZE_USEHEADER );
-  SetColumnWidth( 8, wxLIST_AUTOSIZE_USEHEADER );
-  SetColumnWidth( 9, wxLIST_AUTOSIZE_USEHEADER );
+    const int widths[10] = {hd,hd,hd,170,140,130,110,hd,hd,hd};
 #endif
-  SetColumnWidth( 3, 170 );
-  SetColumnWidth( 4, 140 );
-  SetColumnWidth( 5, 130 );
-  SetColumnWidth( 6, 110 );
 
-  m_popup = new wxMenu( _T("") );
-  // &m enables shortcout "alt + m" and underlines m
-  m_popup->Append( BLIST_DLMAP, _("Download &map") );
-  m_popup->Append( BLIST_DLMOD, _("Download m&od") );
+    AddColumn( 0, widths[0], _T("s"), _T("Status") );
+    AddColumn( 1, widths[1], _T("c"), _T("Country") );
+    AddColumn( 2, widths[2], _T("r"), _T("Minimum rank to join") );
+    AddColumn( 3, widths[3], _("Description"), _T("Game description") );
+    AddColumn( 4, widths[4], _("Map"), _T("Mapname") );
+    AddColumn( 5, widths[5], _("Mod"), _T("Modname") );
+    AddColumn( 6, widths[6], _("Host"), _T("Name of the Host") );
+    AddColumn( 7, widths[7], _("a"), _T("Number of Spectators") );
+    AddColumn( 8, widths[8], _("p"), _T("Number of Players joined") );
+    AddColumn( 9, widths[9], _("m"), _T("Maximum number of Players that can join") );
+
+    m_sortorder[0].col = 0;
+    m_sortorder[0].direction = true;
+    m_sortorder[1].col = 5;
+    m_sortorder[1].direction = true;
+    m_sortorder[2].col = 9;
+    m_sortorder[2].direction = true;
+    m_sortorder[3].col = 4;
+    m_sortorder[3].direction = true;
+
+    m_popup = new wxMenu( _T("") );
+    // &m enables shortcout "alt + m" and underlines m
+    m_popup->Append( BLIST_DLMAP, _("Download &map") );
+    m_popup->Append( BLIST_DLMOD, _("Download m&od") );
 }
 
 
 BattleListCtrl::~BattleListCtrl()
 {
-  delete m_popup;
+    delete m_popup;
 }
 
 wxString BattleListCtrl::OnGetItemText(long item, long column) const
@@ -195,7 +149,15 @@ void BattleListCtrl::AddBattle( const Battle& battle )
 
 void BattleListCtrl::RemoveBattle( const Battle& battle )
 {
+    int index = GetIndexFromData( &battle );
 
+    if ( index != -1 ) {
+        m_data.erase( m_data.begin() + index );
+        SetItemCount( m_data.size() );
+        RefreshVisibleItems( );
+        return;
+    }
+    wxLogError( _T("Didn't find the battle to remove.") );
 }
 
 void BattleListCtrl::UpdateBattle( const Battle& battle )
@@ -235,7 +197,7 @@ void BattleListCtrl::HighlightItem( long item )
 
 void BattleListCtrl::OnListRightClick( wxListEvent& event )
 {
-  PopupMenu( m_popup );
+    PopupMenu( m_popup );
 }
 
 
@@ -280,29 +242,29 @@ void BattleListCtrl::OnColClick( wxListEvent& event )
   col.SetImage( ( m_sortorder[0].direction )?icons().ICON_UP:icons().ICON_DOWN );
   SetColumn( m_sortorder[0].col, col );
 
-  Sort();
+  SortList( true );
 }
 
 
 void BattleListCtrl::Sort()
 {
-  bool changed = false;
-  BattleListCtrl::m_ui_for_sort = &m_ui;
-  if (!m_ui_for_sort || !m_ui_for_sort->GetServerStatus()  ) return;
-  for (int i = 3; i >= 0; i--) {
-    switch ( m_sortorder[ i ].col ) {
-      case 0 : changed = SortItems( ( m_sortorder[ i ].direction )?&CompareStatusUP:&CompareStatusDOWN , 0 ); break;
-      case 1 : changed = SortItems( ( m_sortorder[ i ].direction )?&CompareCountryUP:&CompareCountryDOWN , 0 ); break;
-      case 2 : changed = SortItems( ( m_sortorder[ i ].direction )?&CompareRankUP:&CompareRankDOWN , 0 ); break;
-      case 3 : changed = SortItems( ( m_sortorder[ i ].direction )?&CompareDescriptionUP:&CompareDescriptionDOWN , 0 ); break;
-      case 4 : changed = SortItems( ( m_sortorder[ i ].direction )?&CompareMapUP:&CompareMapDOWN , 0 ); break;
-      case 5 : changed = SortItems( ( m_sortorder[ i ].direction )?&CompareModUP:&CompareModDOWN , 0 ); break;
-      case 6 : changed = SortItems( ( m_sortorder[ i ].direction )?&CompareHostUP:&CompareHostDOWN , 0 ); break;
-      case 7 : changed = SortItems( ( m_sortorder[ i ].direction )?&CompareSpectatorsUP:&CompareSpectatorsDOWN , 0 ); break;
-      case 8 : changed = SortItems( ( m_sortorder[ i ].direction )?&ComparePlayerUP:&ComparePlayerDOWN , 0 ); break;
-      case 9 : changed = SortItems( ( m_sortorder[ i ].direction )?&CompareMaxPlayerUP:&CompareMaxPlayerDOWN , 0 ); break;
-    }
-  }
+//  bool changed = false;
+//  BattleListCtrl::m_ui_for_sort = &m_ui;
+//  if (!m_ui_for_sort || !m_ui_for_sort->GetServerStatus()  ) return;
+//  for (int i = 3; i >= 0; i--) {
+//    switch ( m_sortorder[ i ].col ) {
+//      case 0 : changed = SortItems( ( m_sortorder[ i ].direction )?&CompareStatusUP:&CompareStatusDOWN , 0 ); break;
+//      case 1 : changed = SortItems( ( m_sortorder[ i ].direction )?&CompareCountryUP:&CompareCountryDOWN , 0 ); break;
+//      case 2 : changed = SortItems( ( m_sortorder[ i ].direction )?&CompareRankUP:&CompareRankDOWN , 0 ); break;
+//      case 3 : changed = SortItems( ( m_sortorder[ i ].direction )?&CompareDescriptionUP:&CompareDescriptionDOWN , 0 ); break;
+//      case 4 : changed = SortItems( ( m_sortorder[ i ].direction )?&CompareMapUP:&CompareMapDOWN , 0 ); break;
+//      case 5 : changed = SortItems( ( m_sortorder[ i ].direction )?&CompareModUP:&CompareModDOWN , 0 ); break;
+//      case 6 : changed = SortItems( ( m_sortorder[ i ].direction )?&CompareHostUP:&CompareHostDOWN , 0 ); break;
+//      case 7 : changed = SortItems( ( m_sortorder[ i ].direction )?&CompareSpectatorsUP:&CompareSpectatorsDOWN , 0 ); break;
+//      case 8 : changed = SortItems( ( m_sortorder[ i ].direction )?&ComparePlayerUP:&ComparePlayerDOWN , 0 ); break;
+//      case 9 : changed = SortItems( ( m_sortorder[ i ].direction )?&CompareMaxPlayerUP:&CompareMaxPlayerDOWN , 0 ); break;
+//    }
+//  }
 }
 
 
@@ -600,8 +562,13 @@ int wxCALLBACK BattleListCtrl::CompareMaxPlayerDOWN(long item1, long item2, long
 void BattleListCtrl::SetTipWindowText( const long item_hit, const wxPoint position)
 {
     long item = GetItemData(item_hit);
-    Ui* ui = m_ui_for_sort;
-    const Battle& battle = ui->GetServer().battles_iter->GetBattle(item);
+    if ( m_data[item] == NULL ) {
+        m_tiptext = _T("");
+        return;
+    }
+
+    const Battle& battle= *m_data[item];
+
     int coloumn = getColoumnFromPosition(position);
     switch (coloumn)
     {
@@ -651,10 +618,10 @@ void BattleListCtrl::SetTipWindowText( const long item_hit, const wxPoint positi
 
 int BattleListCtrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir )
 {
-
+    return 0;
 }
 
 int BattleListCtrl::GetIndexFromData( const DataType& data ) const
 {
-
+    return -1;
 }
