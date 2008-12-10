@@ -47,8 +47,6 @@ class NickListCtrl : public CustomVirtListCtrl<const User*>
 
   protected:
 
-
-
     //! passed as callback to generic ItemComparator, returns -1,0,1 as per defined ordering
     static int CompareOneCrit( DataType u1, DataType u2, int col, int dir ) ;
     //! utils func for comparing user status, so the CompareOneCrit doesn't get too crowded
@@ -56,7 +54,7 @@ class NickListCtrl : public CustomVirtListCtrl<const User*>
     //! required per base clase
     virtual void Sort( );
 
-    int GetIndexFromData( const DataType& data ){}
+    int GetIndexFromData( const DataType& data );
 
     UserMenu* m_menu;
 

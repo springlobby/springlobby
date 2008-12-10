@@ -210,7 +210,7 @@ void NickListCtrl::OnColClick( wxListEvent& event )
   col.SetImage( ( m_sortorder[0].direction )?icons().ICON_UP:icons().ICON_DOWN );
   SetColumn( m_sortorder[0].col, col );
 
-  Sort();
+  SortList( true );
 }
 
 
@@ -274,13 +274,23 @@ void NickListCtrl::HighlightItem( long item )
     }
 }
 
+int NickListCtrl::GetIndexFromData( const DataType& data )
+{
+    DataCIter it = m_data.begin();
+    for ( int i = 0; it != m_data.end(); ++it , ++i) {
+        if ( (*it)->Equals( *data ) )
+            return i;
+    }
+    return -1;
+}
 
 void NickListCtrl::Sort()
 {
     if ( m_data.size() > 0 )
     {
+        SaveSelection();
         SLInsertionSort( m_data, m_comparator );
-        RefreshVisibleItems( );
+        RestoreSelection();
     }
 }
 
