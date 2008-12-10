@@ -122,6 +122,7 @@ void NickListCtrl::RemoveUser( const User& user )
     m_data.erase( m_data.begin() + index );
     SetItemCount( m_data.size() );
     SetColumnWidth( 3, wxLIST_AUTOSIZE );
+    RefreshVisibleItems( );
     return;
   }
   wxLogError( _T("Didn't find the user to remove.") );
@@ -280,7 +281,7 @@ void NickListCtrl::Sort()
     if ( m_data.size() > 0 )
     {
         SLInsertionSort( m_data, m_comparator );
-        RefreshItems(0, m_data.size()-1 );
+        RefreshVisibleItems( );
     }
 }
 

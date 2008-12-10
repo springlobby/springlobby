@@ -78,10 +78,10 @@ void CustomVirtListCtrl::AddColumn(long i, int width, const wxString& label, con
     m_colinfovec.push_back(temp);
 }
 
-void CustomVirtListCtrl::SetSelectionRestorePoint()
-{
-    m_prev_selected_index = m_selected_index;
-}
+//void CustomVirtListCtrl::SetSelectionRestorePoint()
+//{
+//    m_prev_selected_index = m_selected_index;
+//}
 
 void CustomVirtListCtrl::RestoreSelection()
 {

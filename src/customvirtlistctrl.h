@@ -16,6 +16,7 @@
 #define IDD_TIP_TIMER 696
 
 #include <vector>
+
 #include <utility>
 #include <map>
 
@@ -189,15 +190,19 @@ public:
     void OnSelected( wxListEvent& event );
     void OnDeselected( wxListEvent& event );
     /** @name Single Selection methods
-     * using these funcs in a multi selection list is meaingless at best, harmful in the worst case
+     * using these funcs in a multi selection list is meaningless at best, harmful in the worst case
      * \todo insert debug asserts to catch that
      * @{
      */
     long GetSelectedIndex();
     void SetSelectedIndex(const long newindex);
+    /** @}
+     */
 
-    //! call this before example before sorting, inserting, etc
-    void SetSelectionRestorePoint();
+    /** @name Single Selection methods
+     * call this before example before sorting, inserting, etc
+     */
+    virtual void SaveSelection() = 0;
     void ResetSelection();
     //! and this afterwards
     void RestoreSelection();
