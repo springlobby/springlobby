@@ -144,7 +144,7 @@ void UnitSyncThread::UnitSyncThreadImpl::Stop()
 
 bool UnitSyncThread::UnitSyncThreadImpl::TestDestroy()
 {
-  return m_stop_thread;
+  return Thread::TestDestroy() || m_stop_thread;
 }
 
 
