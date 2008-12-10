@@ -34,7 +34,7 @@ void loadUnitsync()
   {
       wxCriticalSection m_lock;
       wxCriticalSectionLocker lock_criticalsection(m_lock);
-      susynclib().Load(sett().GetCurrentUsedUnitSync(), IsSettingsStandAlone());
+      susynclib().Load(sett().GetCurrentUsedUnitSync());
   }
   catch (...)
   {
