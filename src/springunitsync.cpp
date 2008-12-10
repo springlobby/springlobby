@@ -70,8 +70,8 @@ bool SpringUnitSync::LoadUnitSyncLib( const wxString& unitsyncloc )
 
 void SpringUnitSync::PopulateArchiveList()
 {
-  m_maps_list.empty();
-  m_mods_list.empty();
+  m_maps_list.clear();
+  m_mods_list.clear();
   m_mod_array.Empty();
   m_map_array.Empty();
 
