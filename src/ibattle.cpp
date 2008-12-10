@@ -121,14 +121,14 @@ wxString IBattle::GetHostModHash() const
 }
 
 
-bool IBattle::MapExists()
+bool IBattle::MapExists() const
 {
   return m_map_exists;
   //return usync().MapExists( m_map_name, m_map.hash );
 }
 
 
-bool IBattle::ModExists()
+bool IBattle::ModExists() const
 {
   return m_mod_exists;
   //return usync().ModExists( m_mod_name );

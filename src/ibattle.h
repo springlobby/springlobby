@@ -139,8 +139,8 @@ public:
     virtual wxString GetHostModName() const;
     virtual wxString GetHostModHash() const;
 
-    virtual bool MapExists();
-    virtual bool ModExists();
+    virtual bool MapExists() const;
+    virtual bool ModExists() const;
 
     virtual wxColour GetFreeColour( User *for_whom ) const = 0;
 
