@@ -28,33 +28,48 @@ class Thread: public wxThread
 };
 
 
-/// Abstraction of a piece of work to be done by WorkerThread
-/// Inherit this class to define concrete work items
+/** @brief Abstraction of a piece of work to be done by WorkerThread
+    Inherit this class to define concrete work items. */
 class WorkItem
 {
   public:
+
+    /** @brief Construct a new WorkItem
+        @param priority    Priority of item, highest is run first
+        @param toBeDeleted Should this item be deleted after it has run? */
     WorkItem(int priority = 0, bool toBeDeleted = true)
       : priority(priority), toBeDeleted(toBeDeleted), cancel(false) {}
+
+    /** @brief Destrtuctor */
     virtual ~WorkItem() {}
 
+    /** @brief Implement this in derived class to do the work */
     virtual void Run() = 0;
 
+    /** @brief Cancels this WorkItem
+        It will be discarded as soon as the WorkerThread gets around to it. */
     void Cancel() { cancel = true; }
+
+    /** @brief Is this work cancelled? */
     bool IsCancelled() const { return cancel; }
 
     const int priority;     ///< Priority of item, highest is run first
     const bool toBeDeleted; ///< Should this item be deleted after it has run?
 
   private:
-    volatile bool cancel;
+    volatile bool cancel;   ///< Cancelled?
 };
 
 
-/// Priority queue of work items
+/** @brief Priority queue of work items */
 class WorkItemQueue
 {
   public:
+    /** @brief Push more work onto the queue */
     void Push(WorkItem* item);
+
+    /** @brief Pop one work item from the queue
+        @return A work item or NULL when the queue is empty */
     WorkItem* Pop();
 
   private:
@@ -69,12 +84,13 @@ class WorkItemQueue
 };
 
 
+/** @brief Thread which processes WorkItems in it's WorkItemQueue */
 class WorkerThread : public Thread
 {
   public:
-    /// adds a new WorkItem to the queue
+    /** @brief Adds a new WorkItem to the queue */
     void DoWork(WorkItem* item);
-    /// overrides wxThread::Entry
+    /** @brief Overrides wxThread::Entry, thread entry point */
     void* Entry();
 
   private:
