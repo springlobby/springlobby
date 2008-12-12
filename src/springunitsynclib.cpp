@@ -45,7 +45,8 @@ void SpringUnitSyncLib::Load( const wxString& path, bool DoInit, const wxString&
   wxLogMessage( _T("Loading from: %s init: %d"), path.c_str(), DoInit);
 
   // Check if library exists
-  if ( !wxFileName::FileExists( path ) ) {
+  if ( !wxFileName::FileExists( path ) )
+  {
     wxLogError( _T("File not found: %s"), path.c_str() );
     ASSERT_EXCEPTION( false, _T("Failed to load Unitsync lib.") );
   }
@@ -239,7 +240,8 @@ void SpringUnitSyncLib::Load( const wxString& path, bool DoInit, const wxString&
       if ( m_init ) m_init( true, 1 );
     }
   }
-  catch ( ... ) {
+  catch ( ... )
+  {
     _Unload();
     ASSERT_EXCEPTION( false, _T("Failed to load Unitsync lib.") );
   }
