@@ -161,6 +161,9 @@ void SpringUnitSyncLib::Load( const wxString& path, bool DoInit )
     m_get_option_list_item_name = (GetOptionListItemNamePtr)_GetLibFuncPtr(_T("GetOptionListItemName"));
     m_get_option_list_item_desc = (GetOptionListItemDescPtr)_GetLibFuncPtr(_T("GetOptionListItemDesc"));
 
+    m_set_spring_config_file_path = (SetSpringConfigFilePtr)_GetLibFuncPtr(_T("SetSpringConfigFile"));
+    m_get_spring_config_file_path = (GetSpringConfigFilePtr)_GetLibFuncPtr(_T("GetSpringConfigFile"));
+
     m_open_archive = (OpenArchivePtr)_GetLibFuncPtr(_T("OpenArchive"));
     m_close_archive = (CloseArchivePtr)_GetLibFuncPtr(_T("CloseArchive"));
     m_find_Files_archive = (FindFilesArchivePtr)_GetLibFuncPtr(_T("FindFilesArchive"));
@@ -176,7 +179,7 @@ void SpringUnitSyncLib::Load( const wxString& path, bool DoInit )
     m_set_spring_config_string = (SetSpringConfigStringPtr)_GetLibFuncPtr(_T("SetSpringConfigString"));
     m_set_spring_config_int = (SetSpringConfigIntPtr)_GetLibFuncPtr(_T("SetSpringConfigInt"));
 
-    /// beging lua parser calls
+    // begin lua parser calls
 
     m_parser_close = (lpClosePtr)_GetLibFuncPtr(_T("lpClose"));
     m_parser_open_file = (lpOpenFilePtr)_GetLibFuncPtr(_T("lpOpenFile"));

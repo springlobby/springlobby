@@ -85,6 +85,9 @@ typedef int (USYNC_CALL_CONV *FileSizeVFSPtr)(int);
 typedef int (USYNC_CALL_CONV *ReadFileVFSPtr)(int, void*, int);
 typedef void (USYNC_CALL_CONV *CloseFileVFSPtr)(int);
 
+typedef void (USYNC_CALL_CONV *SetSpringConfigFilePtr)(const char*);
+typedef bool (USYNC_CALL_CONV *GetSpringConfigFilePtr)();
+
 typedef int (USYNC_CALL_CONV *GetSpringConfigIntPtr)(const char*, int );
 typedef const char* (USYNC_CALL_CONV *GetSpringConfigStringPtr)(const char*, const char* );
 typedef float (USYNC_CALL_CONV *GetSpringConfigFloatPtr)(const char*, float );
@@ -564,6 +567,8 @@ class SpringUnitSyncLib
     ReadArchiveFilePtr m_read_archive_file;
     CloseArchiveFilePtr m_close_archive_file;
     SizeArchiveFilePtr m_size_archive_file;
+    SetSpringConfigFilePtr m_set_spring_config_file_path;
+    GetSpringConfigFilePtr m_get_spring_config_file_path;
     SetSpringConfigFloatPtr m_set_spring_config_float;
     GetSpringConfigFloatPtr m_get_spring_config_float;
     GetSpringConfigIntPtr m_get_spring_config_int;
@@ -571,7 +576,7 @@ class SpringUnitSyncLib
     SetSpringConfigStringPtr m_set_spring_config_string;
     SetSpringConfigIntPtr m_set_spring_config_int;
 
-    /// lua parser section
+    // lua parser section
 
     lpClosePtr m_parser_close;
     lpOpenFilePtr m_parser_open_file;
