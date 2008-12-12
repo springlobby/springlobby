@@ -33,6 +33,8 @@ class Spring: public wxEvtHandler
     void OnTerminated( wxCommandEvent& event );
 
   protected:
+		bool LaunchSpring( const wxString& params );
+
     Ui& m_ui;
     SpringProcess* m_process;
     wxSpringProcess* m_wx_process;

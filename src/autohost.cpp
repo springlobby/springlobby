@@ -20,6 +20,10 @@ void AutoHost::SetEnabled( const bool enabled )
   m_enabled = enabled;
 }
 
+bool AutoHost::GetEnabled()
+{
+	return m_enabled;
+}
 
 void AutoHost::OnSaidBattle( const wxString& nick, const wxString& msg )
 {
@@ -183,20 +187,4 @@ void AutoHost::StartBattle()
   // todo: copied from Ui::StartHostedBattle
   sett().SetLastHostMap( m_battle.GetHostMapName() );
   sett().SaveSettings();
-}
-
-
-wxString AutoHost::GetExtraCommandLineParams()
-{
-  if (m_enabled) {
-    // -m, --minimise          Start minimised
-    // -q [T], --quit=[T]      Quit immediately on game over or after T seconds
-    #ifndef __WXMSW__
-    return _T("--minimise --quit=1000000000");
-    #else
-    return _T("/minimise /quit 1000000000");
-    #endif
-  }
-  else
-    return wxEmptyString;
 }

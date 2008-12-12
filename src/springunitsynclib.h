@@ -86,7 +86,7 @@ typedef int (USYNC_CALL_CONV *ReadFileVFSPtr)(int, void*, int);
 typedef void (USYNC_CALL_CONV *CloseFileVFSPtr)(int);
 
 typedef void (USYNC_CALL_CONV *SetSpringConfigFilePtr)(const char*);
-typedef bool (USYNC_CALL_CONV *GetSpringConfigFilePtr)();
+typedef const char * (USYNC_CALL_CONV *GetSpringConfigFilePtr)();
 
 typedef int (USYNC_CALL_CONV *GetSpringConfigIntPtr)(const char*, int );
 typedef const char* (USYNC_CALL_CONV *GetSpringConfigStringPtr)(const char*, const char* );
@@ -210,7 +210,7 @@ class SpringUnitSyncLib
      * @param DoInit specifies whenever init function should be attempted to run after successful load.
      * @see Load().
     */
-    SpringUnitSyncLib( const wxString& path = wxEmptyString, bool DoInit = false );
+    SpringUnitSyncLib( const wxString& path = wxEmptyString, bool DoInit = false, const wxString& ForceConfigFilePath = _T("") );
 
     /**
      * Destructor, unloads unitsync if loaded.
@@ -221,10 +221,11 @@ class SpringUnitSyncLib
      * Loads the unitsync library from path.
      * @param path ath to the unitsync lib.
      * @param DoInit specifies whenever init function should be attempted to run after successful load.
+     * @param ForceConfigFilePath if set forces unitsync to use pointed config file, if empty leaves to spring's default
      * @see Unload().
      * @note Throws runtime_error if load failed.
      */
-    void Load( const wxString& path, bool DoInit );
+    void Load( const wxString& path, bool DoInit, const wxString& ForceConfigFilePath );
 
     /**
      * Unload the unitsync library. Does nothing if not loaded.
@@ -266,6 +267,7 @@ class SpringUnitSyncLib
     wxString GetSpringVersion();
 
     wxString GetSpringDataDir();
+    wxString GetConfigFilePath();
 
     int GetMapCount();
     wxString GetMapChecksum( int index );
