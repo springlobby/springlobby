@@ -19,13 +19,12 @@
 	UNITSYNC_EXCEPTION( arg, _T("Function was not in unitsync library.") );
 
 
-SpringUnitSyncLib::SpringUnitSyncLib( const wxString& path ):
+SpringUnitSyncLib::SpringUnitSyncLib():
   m_loaded(false),
   m_path(wxEmptyString),
   m_init(NULL),
   m_uninit(NULL)
 {
-  if ( path != wxEmptyString ) Load( path );
 }
 
 
@@ -48,13 +47,6 @@ void SpringUnitSyncLib::Load( const wxString& path )
 
   _Load( path );
   _Init();
-}
-
-
-void SpringUnitSyncLib::_Init()
-{
-  if (_IsLoaded() && m_init != NULL)
-    m_init( true, 1 );
 }
 
 
@@ -250,10 +242,18 @@ void SpringUnitSyncLib::_Load( const wxString& path )
     m_loaded = true;
   }
   catch ( ... ) {
+    // don't uninit unitsync in _Unload -- it hasn't been init'ed yet
     m_uninit = NULL;
     _Unload();
     ASSERT_EXCEPTION( false, _T("Failed to load Unitsync lib.") );
   }
+}
+
+
+void SpringUnitSyncLib::_Init()
+{
+  if ( _IsLoaded() && m_init != NULL )
+    m_init( true, 1 );
 }
 
 
@@ -309,7 +309,7 @@ wxArrayString SpringUnitSyncLib::GetUnitsyncErrors()
   {
     InitLib( m_get_next_error );
 
-	wxString msg = WX_STRINGC( m_get_next_error() );
+    wxString msg = WX_STRINGC( m_get_next_error() );
     while ( !msg.IsEmpty() )
     {
       ret.Add( msg );
@@ -327,6 +327,8 @@ wxArrayString SpringUnitSyncLib::GetUnitsyncErrors()
 
 bool SpringUnitSyncLib::VersionSupports( IUnitSync::GameFeature feature )
 {
+  LOCK_UNITSYNC;
+
   switch (feature)
   {
     case IUnitSync::USYNC_Sett_Handler: return m_set_spring_config_string;
@@ -382,7 +384,7 @@ void SpringUnitSyncLib::_SetCurrentMod( const wxString& modname )
 {
   if ( m_current_mod != modname ) {
     wxLogDebugFunc( _T("") );
-    m_init( true, 1 );
+    _Init();
     m_add_all_archives( m_get_mod_archive( m_get_mod_index( modname.mb_str( wxConvUTF8 ) ) ) );
     m_current_mod = modname;
   }
@@ -416,8 +418,7 @@ std::map<wxString, wxString> SpringUnitSyncLib::GetSpringVersionList(const std::
   try
   {
     _Load( old_path ); /// re-init current "main" unitsync
-    if ( m_init )
-      m_init( true, 1 );
+    _Init();
   }
   catch(...){}
   return ret;
@@ -896,6 +897,7 @@ int SpringUnitSyncLib::GetMapOptionCount( const wxString& name )
 {
   InitLib( m_get_map_option_count );
   ASSERT_EXCEPTION( !name.IsEmpty(), _T("passing void mapname to unitsync") );
+
   return m_get_map_option_count( name.mb_str( wxConvUTF8 ) );
 }
 
@@ -904,6 +906,7 @@ int SpringUnitSyncLib::GetModOptionCount( const wxString& name )
 {
   InitLib( m_get_Mod_option_count );
   ASSERT_EXCEPTION( !name.IsEmpty(), _T("passing void modname to unitsync") );
+
   _SetCurrentMod( name );
   return m_get_Mod_option_count();
 }
