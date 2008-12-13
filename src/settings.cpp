@@ -33,7 +33,6 @@
 #include "globalsmanager.h"
 #include "springunitsynclib.h"
 #include "settings++/presets.h"
-#include "unitsyncthread.h"
 
 const wxColor defaultHLcolor (255,0,0);
 
@@ -744,7 +743,7 @@ std::map<wxString, wxString> Settings::GetSpringVersionList()
   m_config->SetPath( _T("/Spring/Paths") );
   wxString groupname;
   long dummy;
-  CacheThread().Pause(); // pause caching thread
+  //CacheThread().Pause(); // pause caching thread
   bool groupexist = m_config->GetFirstGroup(groupname, dummy);
   while ( groupexist )
   {
@@ -765,7 +764,7 @@ std::map<wxString, wxString> Settings::GetSpringVersionList()
     susynclib().Init(); // re-init current "main" unitsync
   }
   catch(...){}
-  CacheThread().Resume(); // resume caching thread
+  //CacheThread().Resume(); // resume caching thread
   return ret;
 }
 
