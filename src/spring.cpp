@@ -248,8 +248,8 @@ wxString Spring::WriteScriptTxt( Battle& battle )
     tdf.Append(_T("Mapname"), battle.GetHostMapName());
     tdf.Append(_T("GameType"), usync().GetModArchive(usync().GetModIndex(battle.GetHostModName())));
 
-    tdf.Append( _T("ModHash"), (unsigned int)s2l( battle.LoadMod().hash ) );
-    tdf.Append( _T("MapHash"), (unsigned int)s2l( battle.LoadMap().hash ));
+    tdf.Append( _T("ModHash"), battle.LoadMod().hash );
+    tdf.Append( _T("MapHash"), battle.LoadMap().hash );
 
     OptionsWrapper::wxStringTripleVec optlistEng = battle.CustomBattleOptions().getOptions( OptionsWrapper::EngineOption );
     for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistEng.begin(); it != optlistEng.end(); ++it)
