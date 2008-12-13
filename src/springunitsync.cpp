@@ -450,8 +450,6 @@ wxString SpringUnitSync::GetModArchive( int index )
 {
   wxLogDebugFunc( _T("") );
 
-  LOCK_UNITSYNC;
-
   return susynclib().GetPrimaryModArchive( index );
 }
 
@@ -459,8 +457,6 @@ wxString SpringUnitSync::GetModArchive( int index )
 wxString SpringUnitSync::GetMapArchive( int index )
 {
   wxLogDebugFunc( _T("") );
-
-  LOCK_UNITSYNC;
 
   int count = susynclib().GetMapArchiveCount( index );
 
@@ -1001,7 +997,6 @@ void SpringUnitSync::GetReplayList(std::vector<wxString> &ret)
 {
   ret.clear();
   wxLogDebug( _T("") );
-  LOCK_UNITSYNC;
 
   if ( !IsLoaded() ) return;
 
