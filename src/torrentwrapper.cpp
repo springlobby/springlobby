@@ -19,8 +19,9 @@
 #include <libtorrent/file_pool.hpp>
 #include <libtorrent/torrent_info.hpp>
 #include <libtorrent/file.hpp>
-#include <libtorrent/create_torrent.hpp>
-
+#if LIBTORRENT_VERSION_MINOR >= 14
+	#include <libtorrent/create_torrent.hpp>
+#endif
 #include <libtorrent/extensions/metadata_transfer.hpp>
 #include <libtorrent/extensions/ut_pex.hpp>
 
@@ -732,25 +733,55 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
     wxLogMessage(_T("(3) Joining torrent: downloading info file"));
     if (!DownloadTorrentFileFromTracker( row->hash )) return false;
 
-    libtorrent::add_torrent_params p;
-    try
-    {
-        // the torrent_info is stored in an intrusive_ptr
-        p.ti = new libtorrent::torrent_info(boost::filesystem::path(torrentFileName(row->hash).GetFullPath().mb_str()));
-    }
-    catch ( std::exception& exc )
-    {
-        wxLogMessage( _T("torrent has invalid encoding") );
-        return false;
-    }
+		#if LIBTORRENT_VERSION_MINOR < 14
+			// read torrent from file
+			std::ifstream in( torrentFileName(row->hash).GetFullPath().mb_str(), std::ios_base::binary);
+			in.unsetf(std::ios_base::skipws);
+			libtorrent::entry e;
+			try
+			{
+					// decode the torrent infos from the file
+					e = libtorrent::bdecode(std::istream_iterator<char>(in), std::istream_iterator<char>());
 
-    if ( p.ti->num_files() != 1 )
-    {
-        wxLogMessage( _T("torrent contains an invalid number of files") );
-        return false;
-    }
+			}
+			catch ( std::exception& exc )
+			{
+					wxLogMessage( _T("torrent has invalid encoding") );
+					return false;
+			}
 
-    wxString torrentfilename = WX_STRING(p.ti->file_at(0).path.string()); // get the file name in the torrent infos
+			libtorrent::torrent_info torrent_info (e);
+			libtorrent::torrent_info* t_info = &torrent_info;
+
+    #else
+			libtorrent::add_torrent_params p;
+
+			try
+			{
+					// the torrent_info is stored in an intrusive_ptr
+					p.ti = new libtorrent::torrent_info(boost::filesystem::path(torrentFileName(row->hash).GetFullPath().mb_str()));
+
+			}
+			catch ( std::exception& exc )
+			{
+					wxLogMessage( _T("torrent has invalid encoding") );
+					return false;
+			}
+			//decode success
+
+			boost::intrusive_ptr<libtorrent::torrent_info> t_info = p.ti;
+    #endif
+
+
+
+		if ( t_info->num_files() != 1 )
+		{
+				wxLogMessage( _T("torrent contains an invalid number of files") );
+				return false;
+		}
+
+		wxString torrentfilename = WX_STRING( t_info->file_at(0).path.string() ); // get the file name in the torrent infos
+
     wxLogMessage( _T("requested filename: %s"), torrentfilename.c_str() );
 
     wxFileName archive_filename(path);
@@ -765,7 +796,7 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
            return false;
         }
         wxLogMessage(_T("New filename in torrent: %s"), archive_filename.GetFullName().c_str());
-        p.ti->files().rename_file(0, std::string(archive_filename.GetFullName().mb_str()));
+        t_info->files().rename_file(0, std::string(archive_filename.GetFullName().mb_str()));
     }
     wxLogMessage(_T("(4) Joining torrent: add_torrent(%s,[%s],%s,[%s])"),m_tracker_urls[m_connected_tracker_index].c_str(),torrent_infohash_b64.c_str(),row->name.c_str(),path.GetFullPath().c_str());
 
