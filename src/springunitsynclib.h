@@ -209,10 +209,8 @@ class SpringUnitSyncLib
 
     /**
      * Constructor.
-     * @param path path to the unitsync lib, if specified the lib will be loaded when created.
-     * @see Load().
-    */
-    SpringUnitSyncLib( const wxString& path = wxEmptyString );
+     */
+    SpringUnitSyncLib();
 
     /**
      * Destructor, unloads unitsync if loaded.
