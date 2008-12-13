@@ -41,19 +41,23 @@ IUnitSync& usync()
 
 SpringUnitSync::SpringUnitSync()
 {
+  m_cache_thread.Create();
+  m_cache_thread.SetPriority( WXTHREAD_MIN_PRIORITY );
+  m_cache_thread.Run();
 }
 
 
 SpringUnitSync::~SpringUnitSync()
 {
-  //FreeUnitSyncLib();
+  m_cache_thread.Wait();
+  FreeUnitSyncLib();
 }
 
 
 bool SpringUnitSync::LoadUnitSyncLib( const wxString& unitsyncloc )
 {
-   wxLogDebugFunc( _T("") );
    LOCK_UNITSYNC;
+   wxLogDebugFunc( _T("") );
    bool ret = _LoadUnitSyncLib( unitsyncloc );
    if (ret)
    {
@@ -123,6 +127,7 @@ bool SpringUnitSync::_LoadUnitSyncLib( const wxString& unitsyncloc )
 
 void SpringUnitSync::FreeUnitSyncLib()
 {
+  LOCK_UNITSYNC;
   wxLogDebugFunc( _T("") );
   susynclib().Unload();
 }
@@ -928,9 +933,7 @@ MapInfo SpringUnitSync::_GetMapInfoEx( const wxString& mapname )
 
 bool SpringUnitSync::ReloadUnitSyncLib()
 {
-  usync().FreeUnitSyncLib();
-  usync().LoadUnitSyncLib( sett().GetCurrentUsedUnitSync() );
-  return true;
+  return LoadUnitSyncLib( sett().GetCurrentUsedUnitSync() );
 }
 
 
@@ -1037,4 +1040,47 @@ wxString SpringUnitSync::GetArchivePath( const wxString& name )
   wxLogDebugFunc( name );
 
   return susynclib().GetArchivePath( name );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////// Unitsync prefetch/background thread code
+
+void SpringUnitSync::CacheMap( const wxString& mapname )
+{
+  LOCK_UNITSYNC;
+  wxLogDebugFunc( mapname );
+
+  // this must be 100% thread safe calls only,
+  // it's the worker function of the cache thread.
+
+  // none of the functions called here may
+  // acquire the unitsync lock.
+
+  if (!_IsLoaded()) return;
+
+  GetMinimap( mapname  );
+  GetHeightmap( mapname  );
+  GetMetalmap( mapname  );
+}
+
+
+namespace
+{
+  class CacheMapWorkItem : public WorkItem
+  {
+    public:
+      CacheMapWorkItem( const wxString& mapname ) : mapname(mapname) {}
+      void Run() {
+        usync().CacheMap( mapname );
+      }
+    protected:
+      wxString mapname;
+  };
+};
+
+
+void SpringUnitSync::PrefetchMap( const wxString& mapname )
+{
+  wxLogDebugFunc( mapname );
+  m_cache_thread.DoWork( new CacheMapWorkItem( mapname ) );
 }

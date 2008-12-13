@@ -179,6 +179,9 @@ class IUnitSync
     virtual bool FileExists( const wxString& name ) = 0;
 
     virtual wxString GetArchivePath( const wxString& name ) = 0;
+
+    virtual void CacheMap( const wxString& mapname ) = 0;
+    virtual void PrefetchMap( const wxString& mapname ) = 0;
 };
 
 IUnitSync& usync();

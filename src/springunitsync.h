@@ -4,6 +4,7 @@
 #include <map>
 
 #include "iunitsync.h"
+#include "thread.h"
 
 class wxCriticalSection;
 class wxDynamicLibrary;
@@ -88,6 +89,11 @@ class SpringUnitSync : public IUnitSync
 
     wxString GetArchivePath( const wxString& name );
 
+    /// loads and discards a maps minimap, metalmap and heightmap
+    void CacheMap( const wxString& mapname );
+    /// schedule a map for prefetching
+    void PrefetchMap( const wxString& mapname );
+
   private:
 
     LocalArchivesVector m_maps_list; /// maphash -> mapname
@@ -96,9 +102,7 @@ class SpringUnitSync : public IUnitSync
     wxArrayString m_mod_array;
 
     mutable wxCriticalSection m_lock;
-
-
-//    void* _GetLibFuncPtr( const wxString& name );
+    WorkerThread m_cache_thread;
 
     //! this function returns only the cache path without the file extension, the extension itself would be added in the function as needed
     wxString GetFileCachePath( const wxString& name, const wxString& hash, bool IsMod );
