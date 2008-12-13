@@ -378,9 +378,8 @@ void SpringUnitSyncLib::_ConvertSpringMapInfo( const SpringMapInfo& in, MapInfo&
 void SpringUnitSyncLib::SetCurrentMod( const wxString& modname )
 {
   wxLogDebugFunc( _T("") );
-  if ( m_current_mod != modname ) {
-    m_uninit();
-    m_init( true, 1 );
+  if ( m_current_mod != modname )
+  {
     AddAllArchives( GetPrimaryModArchive( GetModIndex( modname ) ) );
     m_current_mod = modname;
   }
