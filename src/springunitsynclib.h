@@ -195,7 +195,13 @@ typedef const char* (USYNC_CALL_CONV *lpGetStrKeyStrValPtr)(const char* key, con
 
 /**
  * Primitive class handeling the unitsync library.
- * This class is thread safe but may block execution in case two threads use it at the same time.
+ *
+ * This class is - in a limited way - thread safe but may block execution
+ * in case two threads use it at the same time.  The thread safety ensures
+ * there can never be multiple threads executing unitsync functions at the
+ * same time.  However, many unitsync functions use (hidden) global state,
+ * so often there is a need for running multiple unitsync methods while
+ * holding a single lock continuously.
  */
 class SpringUnitSyncLib
 {
@@ -215,7 +221,7 @@ class SpringUnitSyncLib
 
     /**
      * Loads the unitsync library from path.
-     * @param path ath to the unitsync lib.
+     * @param path path to the unitsync lib.
      * @see Unload().
      * @note Throws runtime_error if load failed.
      */
@@ -226,13 +232,6 @@ class SpringUnitSyncLib
      * @see Load().
      */
     void Unload();
-
-    /**
-     * Reloads the unitsync library.
-     * @note Throws logic_error if no path has been set in constructor or in Load() call. Throws runtime_error if reloading fails.
-     * @see Load().
-     */
-    void Reload();
 
     /**
      * Returns true if the library is loaded.
@@ -250,8 +249,6 @@ class SpringUnitSyncLib
      * Get list of errors from unitsync library in an array
      */
     wxArrayString GetUnitsyncErrors();
-
-    bool Init();
 
     bool VersionSupports( IUnitSync::GameFeature feature );
 
@@ -451,7 +448,7 @@ class SpringUnitSyncLib
     wxDynamicLibrary* m_libhandle;
 
     //! Critical section controlling access to unitsync functions.
-    wxCriticalSection m_lock;
+    mutable wxCriticalSection m_lock;
 
     //! Path to unitsync.
     wxString m_path;
@@ -470,6 +467,11 @@ class SpringUnitSyncLib
      * @see Load()
      */
     void _Load( const wxString& path );
+
+    /**
+     * Initializes unitsync.
+     */
+    void _Init();
 
     /**
      * Internal Unload() function.

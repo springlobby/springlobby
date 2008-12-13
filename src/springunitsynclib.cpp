@@ -21,7 +21,9 @@
 
 SpringUnitSyncLib::SpringUnitSyncLib( const wxString& path ):
   m_loaded(false),
-  m_path(wxEmptyString)
+  m_path(wxEmptyString),
+  m_init(NULL),
+  m_uninit(NULL)
 {
   if ( path != wxEmptyString ) Load( path );
 }
@@ -29,9 +31,7 @@ SpringUnitSyncLib::SpringUnitSyncLib( const wxString& path ):
 
 SpringUnitSyncLib::~SpringUnitSyncLib()
 {
-  LOCK_UNITSYNC;
-
-  if ( _IsLoaded() ) _Unload();
+  Unload();
 }
 
 
@@ -47,14 +47,21 @@ void SpringUnitSyncLib::Load( const wxString& path )
   LOCK_UNITSYNC;
 
   _Load( path );
+  _Init();
+}
 
-  if ( m_init )
+
+void SpringUnitSyncLib::_Init()
+{
+  if (_IsLoaded() && m_init != NULL)
     m_init( true, 1 );
 }
 
 
 void SpringUnitSyncLib::_Load( const wxString& path )
 {
+  if ( _IsLoaded() && path == m_path ) return;
+
   _Unload();
 
   m_path = path;
@@ -243,6 +250,7 @@ void SpringUnitSyncLib::_Load( const wxString& path )
     m_loaded = true;
   }
   catch ( ... ) {
+    m_uninit = NULL;
     _Unload();
     ASSERT_EXCEPTION( false, _T("Failed to load Unitsync lib.") );
   }
@@ -260,21 +268,17 @@ void SpringUnitSyncLib::Unload()
 
 void SpringUnitSyncLib::_Unload()
 {
-  if ( !_IsLoaded() ) return;
-
   // as soon as we enter m_uninit unitsync technically isn't loaded anymore.
   m_loaded = false;
 
-  m_uninit();
+  if (m_uninit)
+    m_uninit();
 
   delete m_libhandle;
-  m_libhandle = 0;
-}
+  m_libhandle = NULL;
 
-
-void SpringUnitSyncLib::Reload()
-{
-  Load( m_path );
+  m_init = NULL;
+  m_uninit = NULL;
 }
 
 
@@ -320,13 +324,6 @@ wxArrayString SpringUnitSyncLib::GetUnitsyncErrors()
   }
 }
 
-
-bool SpringUnitSyncLib::Init()
-{
-  InitLib( m_init );
-
-  return m_init( true, 1 );
-}
 
 bool SpringUnitSyncLib::VersionSupports( IUnitSync::GameFeature feature )
 {
@@ -401,7 +398,6 @@ int SpringUnitSyncLib::GetModIndex( const wxString& name )
 std::map<wxString, wxString> SpringUnitSyncLib::GetSpringVersionList(const std::map<wxString, wxString>& usync_paths)
 {
   LOCK_UNITSYNC;
-
   wxLogDebugFunc(_T(""));
 
   std::map<wxString, wxString> ret;
