@@ -2,7 +2,7 @@
 
 #include "filelistdialog.h"
 #include "filelistctrl.h"
-#include "../springunitsync.h"
+#include "../iunitsync.h"
 #include "../utils.h"
 #include <wx/sizer.h>
 #include <wx/stattext.h>
