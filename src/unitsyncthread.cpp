@@ -1,6 +1,7 @@
 /* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
 
 
+/*
 #include <wx/image.h>
 
 #include "unitsyncthread.h"
@@ -108,7 +109,6 @@ void* UnitSyncThread::MapCacheThread::Entry()
 
 void* UnitSyncThread::ModCacheThread::Entry()
 {
-/*
   while ( !TestDestroy() )
   {
     if(!Sleep( 67000 ))break;
@@ -132,7 +132,6 @@ void* UnitSyncThread::ModCacheThread::Entry()
       m_current_index++;
     }
   }
-*/
   return 0;
 }
 
@@ -158,3 +157,4 @@ void UnitSyncThread::UnitSyncThreadImpl::SetCurrentIndex( unsigned int index )
 {
   m_current_index = index;
 }
+*/

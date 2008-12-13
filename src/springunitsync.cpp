@@ -46,10 +46,6 @@ SpringUnitSync::SpringUnitSync()
 
 SpringUnitSync::~SpringUnitSync()
 {
-  try{
-    CacheThread().Stop();
-  }catch(GlobalDestroyedError e){
-  }
   //FreeUnitSyncLib();
 }
 
@@ -62,7 +58,6 @@ bool SpringUnitSync::LoadUnitSyncLib( const wxString& unitsyncloc )
    if (ret)
    {
       PopulateArchiveList();
-      CacheThread().Start();
    }
    return ret;
 }
@@ -122,7 +117,6 @@ bool SpringUnitSync::_LoadUnitSyncLib( const wxString& unitsyncloc )
   } catch (...) {
     return false;
   }
-  CacheThread().Resume();
   return true;
 }
 
@@ -130,7 +124,6 @@ bool SpringUnitSync::_LoadUnitSyncLib( const wxString& unitsyncloc )
 void SpringUnitSync::FreeUnitSyncLib()
 {
   wxLogDebugFunc( _T("") );
-  CacheThread().Pause();
   susynclib().Unload();
 }
 

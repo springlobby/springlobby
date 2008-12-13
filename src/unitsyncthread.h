@@ -1,6 +1,7 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_UNITSYNCTHREAD_H
 #define SPRINGLOBBY_HEADERGUARD_UNITSYNCTHREAD_H
 
+/*
 #include "thread.h"
 
 
@@ -60,5 +61,6 @@ class UnitSyncThread
 };
 
 UnitSyncThread& CacheThread();
+*/
 
 #endif // SPRINGLOBBY_HEADERGUARD_UNITSYNCTHREAD_H

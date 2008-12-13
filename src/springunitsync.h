@@ -95,7 +95,7 @@ class SpringUnitSync : public IUnitSync
     wxArrayString m_map_array;
     wxArrayString m_mod_array;
 
-    wxCriticalSection m_lock;
+    mutable wxCriticalSection m_lock;
 
 
 //    void* _GetLibFuncPtr( const wxString& name );
