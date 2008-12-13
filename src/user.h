@@ -35,7 +35,7 @@ struct UserStatus {
 struct UserBattleStatus
 {
   /// when adding something to this struct, also modify User::UpdateBattleStatus()
-  /// total 11 members here
+  // total 11 members here
   int order;
   int team;
   int ally;
@@ -46,10 +46,16 @@ struct UserBattleStatus
   int sync;
   bool spectator;
   bool ready;
-  /// for nat holepunching
+	int posx; // for startpos = 4
+	int posy; // for startpos = 4
+	// bot-only stuff
+	wxString owner;
+	wxString ailib;
+  // for nat holepunching
   wxString ip;
   unsigned int udpport;
-  UserBattleStatus(): team(0),ally(0),colour(wxColour(0,0,0)),color_index(-1),handicap(0),side(0),sync(SYNC_UNKNOWN),spectator(true),ready(false),udpport(0) {}
+  bool IsBot() { return !ailib.IsEmpty(); }
+  UserBattleStatus(): team(0),ally(0),colour(wxColour(0,0,0)),color_index(-1),handicap(0),side(0),sync(SYNC_UNKNOWN),spectator(true),ready(false),udpport(0), posx(-1), posy(-1) {}
   bool operator == ( const UserBattleStatus& s )
   {
     return ( ( team == s.team ) && ( colour == s.colour ) && ( handicap == s.handicap ) && ( side == s.side ) && ( sync == s.sync ) && ( spectator == s.spectator ) && ( ready == s.ready ) );

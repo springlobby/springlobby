@@ -211,9 +211,6 @@ class Battle : public CommonBattle
     void OnUserBattleStatusUpdated( User &user, UserBattleStatus status );
     void OnUserRemoved( User& user );
 
-    int GetMyAlly() { return GetMe().BattleStatus().ally; }
-    void SetMyAlly( int ally ) { GetMe().BattleStatus().ally = ally; SendMyBattleStatus(); }
-
 
     void Autobalance( BalanceType balance_type = balance_divide, bool clans = true, bool strong_clans = true, int allyteamsize = 0 );
     void FixTeamIDs( BalanceType balance_type = balance_divide, bool clans = true, bool strong_clans = true, int controlteamsize = 0 );
