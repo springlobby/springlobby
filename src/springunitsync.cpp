@@ -82,6 +82,7 @@ void SpringUnitSync::PopulateArchiveList()
     {
      name = susynclib().GetMapName( i );
      hash = susynclib().GetMapChecksum( i );
+     //PrefetchMap( name ); // DEBUG
     } catch (...) { continue; }
     try
     {
