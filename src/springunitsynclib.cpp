@@ -21,6 +21,7 @@
 
 SpringUnitSyncLib::SpringUnitSyncLib():
   m_loaded(false),
+  m_libhandle(NULL),
   m_path(wxEmptyString),
   m_init(NULL),
   m_uninit(NULL)

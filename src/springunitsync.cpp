@@ -1056,7 +1056,7 @@ void SpringUnitSync::CacheMap( const wxString& mapname )
   // none of the functions called here may
   // acquire the unitsync lock.
 
-  if (!_IsLoaded()) return;
+  if (!IsLoaded()) return;
 
   GetMinimap( mapname  );
   GetHeightmap( mapname  );
