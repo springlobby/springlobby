@@ -224,6 +224,7 @@ wxString Spring::WriteScriptTxt( Battle& battle )
     else
     {
         tdf.Append( _T("HostIP"), battle.GetHostIp() );
+        tdf.Append( _T("HostPort"), battle.GetHostPort() );
         if ( battle.GetNatType() == IBattle::NAT_Hole_punching ) tdf.Append( _T("SourcePort"), battle.GetMyInternalUdpSourcePort() );
     }
     tdf.Append( _T("IsHost"), battle.IsFounderMe() );
