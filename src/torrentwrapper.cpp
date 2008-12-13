@@ -796,7 +796,7 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
            return false;
         }
         wxLogMessage(_T("New filename in torrent: %s"), archive_filename.GetFullName().c_str());
-        #if LIBTORRENT_MINOR_VERSION < 14
+        #if LIBTORRENT_VERSION_MINOR < 14
 					std::vector<libtorrent::file_entry> map;
 					libtorrent::file_entry foo = t_info->file_at(0);
 					map.push_back( foo );
@@ -815,7 +815,7 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
 
     try
     {
-				#if LIBTORRENT_MINOR_VERSION < 14
+				#if LIBTORRENT_VERSION_MINOR < 14
 					m_torrent_table.SetRowHandle(row, m_torr->add_torrent( t_info, boost::filesystem::path(path.GetFullPath().mb_str())));
 				#else
 					p.save_path = path.GetFullPath().mb_str();
@@ -834,7 +834,7 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
         {
             if (row->handle.is_valid())
             {
-								#if LIBTORRENT_MINOR_VERSION < 14
+								#if LIBTORRENT_VERSION_MINOR < 14
 									std::vector<bool> tmp(1,true);
 									row->handle.filter_files(tmp);
 								#else
@@ -876,7 +876,7 @@ void TorrentWrapper::CreateTorrent( const wxString& hash, const wxString& name, 
 
     if ( sett().GetCurrentUsedDataDir().IsEmpty() ) return; // no good things can happend if you don't know which folder to r/w files from
 
-	# if LIBTORRENT_MINOR_VERSION >= 14
+	# if LIBTORRENT_VERSION_MINOR >= 14
 
     libtorrent::file_storage files;
 
