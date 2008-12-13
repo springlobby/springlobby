@@ -214,208 +214,200 @@ wxString Spring::WriteScriptTxt( Battle& battle )
     // Start generating the script.
     tdf.EnterSection( _T("GAME") );
 
-    if ( battle.IsFounderMe() )
-    {
-        tdf.Append( _T("HostIP"), _T("localhost") );
-        if ( battle.GetNatType() == IBattle::NAT_Hole_punching ) tdf.Append( _T("HostPort"), battle.GetMyInternalUdpSourcePort() );
-        else tdf.Append(_T("HostPort"), battle.GetHostPort() );
+			if ( battle.IsFounderMe() )
+			{
+					tdf.Append( _T("HostIP"), _T("localhost") );
+					if ( battle.GetNatType() == IBattle::NAT_Hole_punching ) tdf.Append( _T("HostPort"), battle.GetMyInternalUdpSourcePort() );
+					else tdf.Append(_T("HostPort"), battle.GetHostPort() );
 
-    }
-    else
-    {
-        tdf.Append( _T("HostIP"), battle.GetHostIp() );
-        tdf.Append( _T("HostPort"), battle.GetHostPort() );
-        if ( battle.GetNatType() == IBattle::NAT_Hole_punching ) tdf.Append( _T("SourcePort"), battle.GetMyInternalUdpSourcePort() );
-    }
-    tdf.Append( _T("IsHost"), battle.IsFounderMe() );
+			}
+			else
+			{
+					tdf.Append( _T("HostIP"), battle.GetHostIp() );
+					tdf.Append( _T("HostPort"), battle.GetHostPort() );
+					if ( battle.GetNatType() == IBattle::NAT_Hole_punching ) tdf.Append( _T("SourcePort"), battle.GetMyInternalUdpSourcePort() );
+			}
+			tdf.Append( _T("IsHost"), battle.IsFounderMe() );
 
-		tdf.Append(_T("ModHash"), battle.LoadMod().hash);
-		tdf.Append(_T("MapHash"), battle.LoadMap().hash);
+			tdf.Append(_T("ModHash"), battle.LoadMod().hash);
+			tdf.Append(_T("MapHash"), battle.LoadMap().hash);
 
-    tdf.AppendLineBreak();
+			tdf.AppendLineBreak();
 
-    tdf.Append(_T("MyPlayerName"), battle.GetMe().GetNick() );
+			tdf.Append(_T("MyPlayerName"), battle.GetMe().GetNick() );
 
-    if ( !battle.IsFounderMe() )
-    {
-        tdf.LeaveSection();
-        return ret;
-    }
+			if ( !battle.IsFounderMe() )
+			{
+					tdf.LeaveSection();
+					return ret;
+			}
 
-    /**********************************************************************************
-                                  Host-only section
-    **********************************************************************************/
+			/**********************************************************************************
+																		Host-only section
+			**********************************************************************************/
 
-    OptionsWrapper::wxStringTripleVec optlistEng = battle.CustomBattleOptions().getOptions( OptionsWrapper::EngineOption );
-    for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistEng.begin(); it != optlistEng.end(); ++it)
-    {
-        tdf.Append(it->first,it->second.second);
-    }
+			OptionsWrapper::wxStringTripleVec optlistEng = battle.CustomBattleOptions().getOptions( OptionsWrapper::EngineOption );
+			for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistEng.begin(); it != optlistEng.end(); ++it)
+			{
+					tdf.Append(it->first,it->second.second);
+			}
 
-    tdf.AppendLineBreak();
+			tdf.AppendLineBreak();
 
-    unsigned int NumPlayers = battle.GetNumUsers();
-    unsigned int NumBots = battle.GetNumBots();
+			unsigned int NumPlayers = battle.GetNumUsers();
+			unsigned int NumBots = battle.GetNumBots();
 
-    std::vector<SortingUser> SortedByTeam;
-    std::vector<SortingUser> SortedByAlly;
+			std::vector<SortingUser> SortedByTeam;
+			std::vector<SortingUser> SortedByAlly;
 
-    for ( unsigned int i = 0; i < NumPlayers; i++ )
-    {
-        SortingUser UserTeamSort;
-        SortingUser UserAllySort;
+			for ( unsigned int i = 0; i < NumPlayers; i++ )
+			{
+					SortingUser UserTeamSort;
+					SortingUser UserAllySort;
 
-        UserTeamSort.ValueToSort = battle.GetUser( i ).BattleStatus().team;
-        UserAllySort.ValueToSort = battle.GetUser( i ).BattleStatus().ally;
+					UserTeamSort.ValueToSort = battle.GetUser( i ).BattleStatus().team;
+					UserAllySort.ValueToSort = battle.GetUser( i ).BattleStatus().ally;
 
-        UserTeamSort.OriginalIndex = i;
-        UserAllySort.OriginalIndex = i;
+					UserTeamSort.OriginalIndex = i;
+					UserAllySort.OriginalIndex = i;
 
-        UserTeamSort.IsBot = false;
-        UserAllySort.IsBot = false;
+					UserTeamSort.IsBot = false;
+					UserAllySort.IsBot = false;
 
-        SortedByTeam.push_back( UserTeamSort );
-        SortedByAlly.push_back( UserAllySort );
-    }
+					SortedByTeam.push_back( UserTeamSort );
+					SortedByAlly.push_back( UserAllySort );
+			}
 
-    for ( unsigned int i = 0; i < NumBots; i++ )
-    {
-        SortingUser UserTeamSort;
-        SortingUser UserAllySort;
+			for ( unsigned int i = 0; i < NumBots; i++ )
+			{
+					SortingUser UserTeamSort;
+					SortingUser UserAllySort;
 
-        UserTeamSort.ValueToSort = battle.GetBot( i )->bs.team;
-        UserAllySort.ValueToSort = battle.GetBot( i )->bs.ally;
+					UserTeamSort.ValueToSort = battle.GetBot( i )->bs.team;
+					UserAllySort.ValueToSort = battle.GetBot( i )->bs.ally;
 
-        UserTeamSort.OriginalIndex = i;
-        UserAllySort.OriginalIndex = i;
+					UserTeamSort.OriginalIndex = i;
+					UserAllySort.OriginalIndex = i;
 
-        UserTeamSort.IsBot = true;
-        UserAllySort.IsBot = true;
+					UserTeamSort.IsBot = true;
+					UserAllySort.IsBot = true;
 
-        SortedByTeam.push_back( UserTeamSort );
-        SortedByAlly.push_back( UserAllySort );
-    }
+					SortedByTeam.push_back( UserTeamSort );
+					SortedByAlly.push_back( UserAllySort );
+			}
 
-    std::sort( SortedByTeam.begin(), SortedByTeam.end() );
-    std::sort( SortedByAlly.begin(), SortedByAlly.end() );
+			std::sort( SortedByTeam.begin(), SortedByTeam.end() );
+			std::sort( SortedByAlly.begin(), SortedByAlly.end() );
 
-    unsigned int NumTotalPlayersWithBots = SortedByTeam.size();
+			unsigned int NumTotalPlayersWithBots = SortedByTeam.size();
 
-    for ( unsigned int i = 0; i < NumPlayers; i++ )
-    {
-        tdf.EnterSection( _T("PLAYER") + i2s( i ) );
+			for ( unsigned int i = 0; i < NumPlayers; i++ )
+			{
+					tdf.EnterSection( _T("PLAYER") + i2s( i ) );
+						tdf.Append( _T("name"), battle.GetUser( i ).GetNick() );
 
-        tdf.Append( _T("name"), battle.GetUser( i ).GetNick() );
+						tdf.Append( _T("countryCode"),battle.GetUser( i ).GetCountry().Lower());
+						tdf.Append( _T("Spectator"), battle.GetUser( i ).BattleStatus().spectator );
 
-        tdf.Append( _T("countryCode"),battle.GetUser( i ).GetCountry().Lower());
-        tdf.Append( _T("Spectator"), battle.GetUser( i ).BattleStatus().spectator );
+						if ( !(battle.GetUser( i ).BattleStatus().spectator) )
+						{
+								tdf.Append( _T("team"), battle.GetUser( i ).BattleStatus().team );
+						}
+					tdf.LeaveSection();
+			}
 
-        if ( !(battle.GetUser( i ).BattleStatus().spectator) )
-        {
-            tdf.Append( _T("team"), battle.GetUser( i ).BattleStatus().team );
-        }
-        tdf.LeaveSection();
-    }
+			tdf.AppendLineBreak();
 
-    tdf.AppendLineBreak();
+			int PreviousTeam = -1;
+			for ( int i = 0; i < NumTotalPlayersWithBots; i++ )
+			{
+					if ( PreviousTeam == SortedByTeam[i].ValueToSort ) continue; // skip duplicates
+					PreviousTeam = SortedByTeam[i].ValueToSort;
 
-    int PreviousTeam = -1;
-    for ( int i = 0; i < NumTotalPlayersWithBots; i++ )
-    {
-        if ( PreviousTeam == SortedByTeam[i].ValueToSort ) continue; // skip duplicates
-        PreviousTeam = SortedByTeam[i].ValueToSort;
+					tdf.EnterSection( _T("TEAM") + i2s( SortedByTeam[i].ValueToSort ) );
+						UserBattleStatus status;
+						if ( SortedByTeam[i].IsBot )
+						{
+								BattleBot usr = *battle.GetBot( SortedByTeam[i].OriginalIndex );
+								status = usr.bs;
+								tdf.Append( _T("AIDLL"), usr.aidll );
+								tdf.Append( _T("TeamLeader"), battle.GetUser( usr.owner ).BattleStatus().team ); // bot owner is the team leader
+						}
+						else
+						{
+								User usr = battle.GetUser( SortedByTeam[i].OriginalIndex );
+								tdf.Append( _T("TeamLeader"), SortedByTeam[i].OriginalIndex );
+						}
 
-        tdf.EnterSection( _T("TEAM") + i2s( SortedByTeam[i].ValueToSort ) );
+						tdf.Append( _T("AllyTeam"), status.ally );
 
-        UserBattleStatus status;
-        if ( SortedByTeam[i].IsBot )
-        {
-            BattleBot usr = *battle.GetBot( SortedByTeam[i].OriginalIndex );
-            status = usr.bs;
-            tdf.Append( _T("AIDLL"), usr.aidll );
-            tdf.Append( _T("TeamLeader"), battle.GetUser( usr.owner ).BattleStatus().team ); // bot owner is the team leader
-        }
-        else
-        {
-            User usr = battle.GetUser( SortedByTeam[i].OriginalIndex );
-            tdf.Append( _T("TeamLeader"), SortedByTeam[i].OriginalIndex );
-        }
+						wxString colourstring =
+								TowxString( status.colour.Red()/255.0 ) + _T(' ') +
+								TowxString( status.colour.Green()/255.0 ) + _T(' ') +
+								TowxString( status.colour.Blue()/255.0 );
+						tdf.Append( _T("RGBColor"), colourstring);
 
-        tdf.Append( _T("AllyTeam"), status.ally );
+						tdf.Append( _T("Side"), usync().GetSideName( battle.GetHostModName(), status.side ) );
+						tdf.Append( _T("Handicap"), status.handicap );
+					tdf.LeaveSection();
+			}
 
-        wxString colourstring =
-            TowxString( status.colour.Red()/255.0 ) + _T(' ') +
-            TowxString( status.colour.Green()/255.0 ) + _T(' ') +
-            TowxString( status.colour.Blue()/255.0 );
-        tdf.Append( _T("RGBColor"), colourstring);
+			long startpostype;
+			battle.CustomBattleOptions().getSingleValue( _T("startpostype"), OptionsWrapper::EngineOption ).ToLong( &startpostype );
 
-        tdf.Append( _T("Side"), usync().GetSideName( battle.GetHostModName(), status.side ) );
-        tdf.Append( _T("Handicap"), status.handicap );
+			int PreviousAlly = -1;
+			for ( int i = 0; i < NumTotalPlayersWithBots; i++ )
+			{
+					if ( PreviousAlly == SortedByAlly[i].ValueToSort ) continue;
+					PreviousAlly = SortedByAlly[i].ValueToSort;
 
-        tdf.LeaveSection();
-    }
+					tdf.EnterSection( _T("ALLYTEAM") + i2s( SortedByAlly[i].ValueToSort ) );
+						tdf.Append( _T("NumAllies"), 0 );
 
-    long startpostype;
-    battle.CustomBattleOptions().getSingleValue( _T("startpostype"), OptionsWrapper::EngineOption ).ToLong( &startpostype );
+						if ( startpostype == IBattle::ST_Choose )
+						{
+								BattleStartRect sr = battle.GetStartRect( SortedByAlly[i].ValueToSort );
+								if ( sr.IsOk() )
+								{
+										const char* old_locale = std::setlocale(LC_NUMERIC, "C");
 
-    int PreviousAlly = -1;
-    for ( int i = 0; i < NumTotalPlayersWithBots; i++ )
-    {
-        if ( PreviousAlly == SortedByAlly[i].ValueToSort ) continue;
-        PreviousAlly = SortedByAlly[i].ValueToSort;
+										tdf.Append( _T("StartRectLeft"), wxString::Format( _T("%.3f"), sr.left / 200.0 ) );
+										tdf.Append( _T("StartRectTop"), wxString::Format( _T("%.3f"), sr.top / 200.0 ) );
+										tdf.Append( _T("StartRectRight"), wxString::Format( _T("%.3f"), sr.right / 200.0 ) );
+										tdf.Append( _T("StartRectBottom"), wxString::Format( _T("%.3f"), sr.bottom / 200.0 ) );
 
-        tdf.EnterSection( _T("ALLYTEAM") + i2s( SortedByAlly[i].ValueToSort ) );
+										std::setlocale(LC_NUMERIC, old_locale);
+								}
+						}
+					tdf.LeaveSection();
+			}
 
-        tdf.Append( _T("NumAllies"), 0 );
+			wxArrayString units = battle.DisabledUnits();
+			tdf.Append( _T("NumRestrictions"), units.GetCount());
+			tdf.EnterSection( _T("RESTRICT") );
+				for ( unsigned int i = 0; i < units.GetCount(); i++)
+				{
+						tdf.Append(_T("Unit") + i2s( i ), units[i].c_str() );
+						tdf.Append(_T("Limit") + i2s(i), _T("0") );
+				}
+			tdf.LeaveSection();
 
-        if ( startpostype == IBattle::ST_Choose )
-        {
-            BattleStartRect sr = battle.GetStartRect( SortedByAlly[i].ValueToSort );
-            if ( sr.IsOk() )
-            {
-                const char* old_locale = std::setlocale(LC_NUMERIC, "C");
-
-                tdf.Append( _T("StartRectLeft"), wxString::Format( _T("%.3f"), sr.left / 200.0 ) );
-                tdf.Append( _T("StartRectTop"), wxString::Format( _T("%.3f"), sr.top / 200.0 ) );
-                tdf.Append( _T("StartRectRight"), wxString::Format( _T("%.3f"), sr.right / 200.0 ) );
-                tdf.Append( _T("StartRectBottom"), wxString::Format( _T("%.3f"), sr.bottom / 200.0 ) );
-
-                std::setlocale(LC_NUMERIC, old_locale);
-            }
-        }
-
-        tdf.LeaveSection();
-    }
-
-    wxArrayString units = battle.DisabledUnits();
-
-    tdf.Append( _T("NumRestrictions"), units.GetCount());
-    tdf.EnterSection( _T("RESTRICT") );
-    for ( unsigned int i = 0; i < units.GetCount(); i++)
-    {
-        tdf.Append(_T("Unit") + i2s( i ), units[i].c_str() );
-        tdf.Append(_T("Limit") + i2s(i), _T("0") );
-    }
-    tdf.LeaveSection();
-
-    tdf.EnterSection( _T("mapoptions") );
-
-    OptionsWrapper::wxStringTripleVec optlistMap = battle.CustomBattleOptions().getOptions( OptionsWrapper::MapOption );
-    for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistMap.begin(); it != optlistMap.end(); ++it)
-    {
-        tdf.Append(it->first,it->second.second);
-    }
-    tdf.LeaveSection();
+			tdf.EnterSection( _T("mapoptions") );
+				OptionsWrapper::wxStringTripleVec optlistMap = battle.CustomBattleOptions().getOptions( OptionsWrapper::MapOption );
+				for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistMap.begin(); it != optlistMap.end(); ++it)
+				{
+						tdf.Append(it->first,it->second.second);
+				}
+			tdf.LeaveSection();
 
 
-    tdf.EnterSection(_T("modoptions"));
-
-    OptionsWrapper::wxStringTripleVec optlistMod = battle.CustomBattleOptions().getOptions( OptionsWrapper::ModOption );
-    for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistMod.begin(); it != optlistMod.end(); ++it)
-    {
-        tdf.Append(it->first,it->second.second);
-    }
-    tdf.LeaveSection();
+			tdf.EnterSection(_T("modoptions"));
+				OptionsWrapper::wxStringTripleVec optlistMod = battle.CustomBattleOptions().getOptions( OptionsWrapper::ModOption );
+				for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistMod.begin(); it != optlistMod.end(); ++it)
+				{
+						tdf.Append(it->first,it->second.second);
+				}
+			tdf.LeaveSection();
 
 
     tdf.LeaveSection();
@@ -440,7 +432,6 @@ wxString Spring::WriteSPScriptTxt( SinglePlayerBattle& battle )
     wxLogMessage( _T("StartPosType=%d"), (int)startpostype );
 
 
-
     for ( unsigned int i = 0; i < battle.GetNumBots(); i++ )
     {
         BattleBot* bot;
@@ -460,104 +451,99 @@ wxString Spring::WriteSPScriptTxt( SinglePlayerBattle& battle )
     //s  = wxString::Format( _T("[GAME]\n{\n") );
     tdf.EnterSection(_T("GAME"));
 
-    tdf.Append(_T("Mapname"),battle.GetHostMapName());
+			tdf.Append(_T("Mapname"),battle.GetHostMapName());
 
-    tdf.Append(_T("GameType"),usync().GetModArchive(usync().GetModIndex(battle.GetHostModName())));
+			tdf.Append(_T("GameType"),usync().GetModArchive(usync().GetModIndex(battle.GetHostModName())));
 
-    unsigned long uhash;
-    battle.LoadMod().hash.ToULong(&uhash);
+			unsigned long uhash;
+			battle.LoadMod().hash.ToULong(&uhash);
 
-    tdf.Append(_T("ModHash"),int(uhash));
+			tdf.Append(_T("ModHash"),int(uhash));
 
-    OptionsWrapper::wxStringTripleVec optlistEng = battle.CustomBattleOptions().getOptions( OptionsWrapper::EngineOption );
-    for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistEng.begin(); it != optlistEng.end(); ++it)
-    {
-        tdf.Append(it->first, it->second.second);
-    }
+			OptionsWrapper::wxStringTripleVec optlistEng = battle.CustomBattleOptions().getOptions( OptionsWrapper::EngineOption );
+			for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistEng.begin(); it != optlistEng.end(); ++it)
+			{
+					tdf.Append(it->first, it->second.second);
+			}
 
-    tdf.Append(_T("HostIP"),"localhost");
+			tdf.Append(_T("HostIP"),"localhost");
+			tdf.Append(_T("HostPort"),"8452");
+			tdf.Append(_T("MyPlayerName"), _T("Player") );
+			tdf.Append(_T("IsHost"), battle.IsFounderMe());
 
-    tdf.Append(_T("HostPort"),"8452");
+			tdf.EnterSection(_T("PLAYER0"));
+				tdf.Append(_T("name"),"Player");
+				tdf.Append(_T("Spectator"),"0");
+				tdf.Append(_T("team"),PlayerTeam);
+			tdf.LeaveSection();
 
-    tdf.Append(_T("MyPlayerName"), _T("Player") );
+			for ( unsigned int i = 0; i < battle.GetNumBots(); i++ )
+			{
+					BattleBot* bot;
+					if ( startpostype == IBattle::ST_Pick) bot = battle.GetBot( i );
+					else bot = battle.GetBotByStartPosition( i );
+					ASSERT_LOGIC( bot != 0, _T("bot == 0") );
 
-    tdf.Append(_T("IsHost"), battle.IsFounderMe());
+					tdf.EnterSection(_T("TEAM")+i2s(i));
+						if ( startpostype == IBattle::ST_Pick )
+						{
+								tdf.Append(_T("StartPosX"),bot->posx);
+								tdf.Append(_T("StartPosZ"),bot->posy);
+						}
 
-    tdf.EnterSection(_T("PLAYER0"));
-    tdf.Append(_T("name"),"Player");
-    tdf.Append(_T("Spectator"),"0");
-    tdf.Append(_T("team"),PlayerTeam);
-    tdf.LeaveSection();
+						tdf.Append(_T("TeamLeader"),"0");
+						tdf.Append(_T("AllyTeam"),AllyConv[bot->bs.ally]);
 
-    for ( unsigned int i = 0; i < battle.GetNumBots(); i++ )
-    {
-        BattleBot* bot;
-        if ( startpostype == IBattle::ST_Pick) bot = battle.GetBot( i );
-        else bot = battle.GetBotByStartPosition( i );
-        ASSERT_LOGIC( bot != 0, _T("bot == 0") );
+						wxString colourstring =
+								TowxString( bot->bs.colour.Red()/255.0f ) + _T(' ') +
+								TowxString( bot->bs.colour.Green()/255.0f ) + _T(' ') +
+								TowxString( bot->bs.colour.Blue()/255.0f );
+						tdf.Append(_T("RGBColor"), colourstring);
 
-        tdf.EnterSection(_T("TEAM")+i2s(i));
+						tdf.Append(_T("Side"),usync().GetSideName(battle.GetHostModName(), bot->bs.side));
 
-        if ( startpostype == IBattle::ST_Pick )
-        {
-            tdf.Append(_T("StartPosX"),bot->posx);
-            tdf.Append(_T("StartPosZ"),bot->posy);
-        }
+						tdf.Append(_T("Handicap"),bot->bs.handicap);
 
-        tdf.Append(_T("TeamLeader"),"0");
-        tdf.Append(_T("AllyTeam"),AllyConv[bot->bs.ally]);
+						if ( bot->aidll != _T("") )
+						{
+								wxString ai = bot->aidll;
+								tdf.Append(_T("AIDLL"),ai);
+						}
+					tdf.LeaveSection();
+			}
 
-        wxString colourstring =
-            TowxString( bot->bs.colour.Red()/255.0f ) + _T(' ') +
-            TowxString( bot->bs.colour.Green()/255.0f ) + _T(' ') +
-            TowxString( bot->bs.colour.Blue()/255.0f );
-        tdf.Append(_T("RGBColor"), colourstring);
+			for ( int i = 0; i < NumAllys; i++ )
+			{
+					tdf.EnterSection(_T("ALLYTEAM")+i2s(i));
+					tdf.Append(_T("NumAllies"),"0");
+					tdf.LeaveSection();
+			}
+			wxArrayString units = battle.DisabledUnits();
+			tdf.Append(_T("NumRestrictions"),units.GetCount());
 
-        tdf.Append(_T("Side"),usync().GetSideName(battle.GetHostModName(), bot->bs.side));
+			tdf.EnterSection(_T("RESTRICT"));
+				for ( unsigned int i = 0; i < units.GetCount(); i++)
+				{
+						tdf.Append(_T("Unit")+i2s(i),units[i].c_str());
+						tdf.Append(_T("Limit")+i2s(i),_T("0"));
+				}
+			tdf.LeaveSection();
 
-        tdf.Append(_T("Handicap"),bot->bs.handicap);
+			tdf.EnterSection(_T("mapoptions"));
+				OptionsWrapper::wxStringTripleVec optlistMap = battle.CustomBattleOptions().getOptions( OptionsWrapper::MapOption );
+				for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistMap.begin(); it != optlistMap.end(); ++it)
+				{
+						tdf.Append(it->first, it->second.second);
+				}
+			tdf.LeaveSection();
 
-        if ( bot->aidll != _T("") )
-        {
-            wxString ai = bot->aidll;
-            tdf.Append(_T("AIDLL"),ai);
-        }
-        tdf.LeaveSection();
-    }
-
-    for ( int i = 0; i < NumAllys; i++ )
-    {
-        tdf.EnterSection(_T("ALLYTEAM")+i2s(i));
-        tdf.Append(_T("NumAllies"),"0");
-        tdf.LeaveSection();
-    }
-    wxArrayString units = battle.DisabledUnits();
-    tdf.Append(_T("NumRestrictions"),units.GetCount());
-
-    tdf.EnterSection(_T("RESTRICT"));
-
-    for ( unsigned int i = 0; i < units.GetCount(); i++)
-    {
-        tdf.Append(_T("Unit")+i2s(i),units[i].c_str());
-        tdf.Append(_T("Limit")+i2s(i),_T("0"));
-    }
-    tdf.LeaveSection();
-
-    tdf.EnterSection(_T("mapoptions"));
-    OptionsWrapper::wxStringTripleVec optlistMap = battle.CustomBattleOptions().getOptions( OptionsWrapper::MapOption );
-    for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistMap.begin(); it != optlistMap.end(); ++it)
-    {
-        tdf.Append(it->first, it->second.second);
-    }
-    tdf.LeaveSection();
-
-    tdf.EnterSection(_T("modoptions"));
-    OptionsWrapper::wxStringTripleVec optlistMod = battle.CustomBattleOptions().getOptions( OptionsWrapper::ModOption );
-    for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistMod.begin(); it != optlistMod.end(); ++it)
-    {
-        tdf.Append(it->first, it->second.second);
-    }
-    tdf.LeaveSection();
+			tdf.EnterSection(_T("modoptions"));
+				OptionsWrapper::wxStringTripleVec optlistMod = battle.CustomBattleOptions().getOptions( OptionsWrapper::ModOption );
+				for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistMod.begin(); it != optlistMod.end(); ++it)
+				{
+						tdf.Append(it->first, it->second.second);
+				}
+			tdf.LeaveSection();
 
     tdf.LeaveSection();
 
