@@ -798,11 +798,11 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
         wxLogMessage(_T("New filename in torrent: %s"), archive_filename.GetFullName().c_str());
         #if LIBTORRENT_MINOR_VERSION < 14
 					std::vector<libtorrent::file_entry> map;
-					libtorrent::file_entry foo = t_info.file_at(0);
+					libtorrent::file_entry foo = t_info->file_at(0);
 					map.push_back( foo );
 					map.front().path = boost::filesystem::path(STD_STRING( archive_filename.GetFullName() ) );
 					wxLogMessage(_T("New filename in torrent: %s"), archive_filename.GetFullName().c_str() );
-					if ( !t_info.remap_files(map) )
+					if ( !t_info->remap_files(map) )
 					{
 					 wxLogMessage(_T("Cannot remap filenames in the torrent, aborting seed"));
 					 return false;
