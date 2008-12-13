@@ -796,14 +796,32 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
            return false;
         }
         wxLogMessage(_T("New filename in torrent: %s"), archive_filename.GetFullName().c_str());
-        t_info->files().rename_file(0, std::string(archive_filename.GetFullName().mb_str()));
+        #if LIBTORRENT_MINOR_VERSION < 14
+					std::vector<libtorrent::file_entry> map;
+					libtorrent::file_entry foo = t_info.file_at(0);
+					map.push_back( foo );
+					map.front().path = boost::filesystem::path(STD_STRING( archive_filename.GetFullName() ) );
+					wxLogMessage(_T("New filename in torrent: %s"), archive_filename.GetFullName().c_str() );
+					if ( !t_info.remap_files(map) )
+					{
+					 wxLogMessage(_T("Cannot remap filenames in the torrent, aborting seed"));
+					 return false;
+					}
+				#else
+					t_info->files().rename_file(0, std::string(archive_filename.GetFullName().mb_str()));
+				#endif
     }
     wxLogMessage(_T("(4) Joining torrent: add_torrent(%s,[%s],%s,[%s])"),m_tracker_urls[m_connected_tracker_index].c_str(),torrent_infohash_b64.c_str(),row->name.c_str(),path.GetFullPath().c_str());
 
     try
     {
-        p.save_path = path.GetFullPath().mb_str();
-        m_torrent_table.SetRowHandle(row, m_torr->add_torrent(p));
+				#if LIBTORRENT_MINOR_VERSION < 14
+					m_torrent_table.SetRowHandle(row, m_torr->add_torrent( t_info, boost::filesystem::path(path.GetFullPath().mb_str())));
+				#else
+					p.save_path = path.GetFullPath().mb_str();
+					m_torrent_table.SetRowHandle(row, m_torr->add_torrent(p));
+				#endif
+
     }
     catch (std::exception& e)
     {
@@ -816,8 +834,13 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
         {
             if (row->handle.is_valid())
             {
-                // there's only one file in the torrent, set its priority to 0
-                row->handle.file_priority(0, 0);
+								#if LIBTORRENT_MINOR_VERSION < 14
+									std::vector<bool> tmp(1,true);
+									row->handle.filter_files(tmp);
+								#else
+									// there's only one file in the torrent, set its priority to 0
+									row->handle.file_priority(0, 0);
+                #endif
             }
             else
             {
@@ -852,6 +875,8 @@ void TorrentWrapper::CreateTorrent( const wxString& hash, const wxString& name, 
 
 
     if ( sett().GetCurrentUsedDataDir().IsEmpty() ) return; // no good things can happend if you don't know which folder to r/w files from
+
+	# if LIBTORRENT_MINOR_VERSION >= 14
 
     libtorrent::file_storage files;
 
@@ -914,6 +939,8 @@ void TorrentWrapper::CreateTorrent( const wxString& hash, const wxString& name, 
     libtorrent::entry e = newtorrent.generate();
     // TODO: e needs to be encoded and saved to a .torrent file
     // or added to m_torr
+
+	#endif
 }
 
 
