@@ -951,16 +951,11 @@ wxString SpringUnitSync::GetFileCachePath( const wxString& name, const wxString&
 {
   wxString ret = sett().GetCachePath();
   if ( !name.IsEmpty() ) ret << name;
-  else if ( !hash.IsEmpty() )
-  {
-    if ( IsMod ) ret << m_mods_list[hash];
-    else ret << m_maps_list[hash];
-  }
   else return wxEmptyString;
   if ( !hash.IsEmpty() ) ret << hash;
   else
   {
-    if ( IsMod ) ret <<  _T("-") << susynclib().GetPrimaryModChecksumFromName( name );
+    if ( IsMod ) ret <<  _T("-") << m_mods_list[name];
     else
     {
         //very important to call getmapcount before getmapchecksum
