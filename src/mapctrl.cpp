@@ -17,7 +17,6 @@
 #include "uiutils.h"
 #include "mapctrl.h"
 #include "iunitsync.h"
-#include "springunitsync.h" // FIXME
 #include "user.h"
 #include "utils.h"
 #include "ui.h"
@@ -113,7 +112,6 @@ MapCtrl::MapCtrl( wxWindow* parent, int size, IBattle* battle, Ui& ui, bool read
   m_minimap(0),
   m_metalmap(0),
   m_heightmap(0),
-  m_map_image_async_result(0),
   m_battle(battle),
   m_ui(ui),
   m_mapname(_T("")),
@@ -428,7 +426,7 @@ void MapCtrl::LoadMinimap()
       m_lastsize = wxSize( -1, -1 );
       return;
     }
-    m_map_image_async_result = usync().GetMinimapAsync( map, w, h, this );
+    usync().GetMinimapAsync( map, w, h, this );
     //m_minimap = new wxBitmap( usync().GetMinimap( map, w, h ) );
     if (m_draw_start_types && usync().VersionSupports(IUnitSync::USYNC_GetInfoMap)) {
       // todo: optimize? (currently loads image from disk twice)
@@ -453,10 +451,6 @@ void MapCtrl::LoadMinimap()
 
 void MapCtrl::FreeMinimap()
 {
-  if (m_map_image_async_result && m_map_image_async_result->Cancel()) {
-    delete m_map_image_async_result;
-    m_map_image_async_result = 0;
-  }
   delete m_minimap;
   m_minimap = 0;
   delete m_metalmap;
@@ -1361,27 +1355,21 @@ void MapCtrl::OnGetMapImageAsyncCompleted( wxCommandEvent& event )
 {
   wxLogDebugFunc( _T("") );
 
-  if ( m_map_image_async_result == NULL ) return;
-
-  wxImage img = m_map_image_async_result->m_image;
-  wxString mapname = m_map_image_async_result->m_mapname;
-
-  delete m_map_image_async_result;
-  m_map_image_async_result = NULL;
+  wxString mapname = event.GetString();
 
   if ( mapname != m_mapname ) return;
 
   if ( m_minimap == NULL ) {
-    m_minimap = new wxBitmap( img );
+    m_minimap = new wxBitmap( usync().GetMinimap( m_mapname, m_lastsize.GetWidth(), m_lastsize.GetHeight() ) );
     if (m_draw_start_types && usync().VersionSupports(IUnitSync::USYNC_GetInfoMap))
-      m_map_image_async_result = usync().GetMetalmapAsync( m_mapname, m_lastsize.GetWidth(), m_lastsize.GetHeight(), this );
+      usync().GetMetalmapAsync( m_mapname, m_lastsize.GetWidth(), m_lastsize.GetHeight(), this );
   }
   else if ( m_metalmap == NULL ) {
-    m_metalmap = new wxBitmap( img );
-    m_map_image_async_result = usync().GetHeightmapAsync( m_mapname, m_lastsize.GetWidth(), m_lastsize.GetHeight(), this );
+    m_metalmap = new wxBitmap( usync().GetMetalmap( m_mapname, m_lastsize.GetWidth(), m_lastsize.GetHeight() ) );
+    usync().GetHeightmapAsync( m_mapname, m_lastsize.GetWidth(), m_lastsize.GetHeight(), this );
   }
   else if ( m_heightmap == NULL ) {
-    m_heightmap = new wxBitmap( img );
+    m_heightmap = new wxBitmap( usync().GetHeightmap( m_mapname, m_lastsize.GetWidth(), m_lastsize.GetHeight() ) );
   }
 
   Refresh();
