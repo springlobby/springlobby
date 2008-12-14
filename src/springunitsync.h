@@ -120,7 +120,8 @@ class SpringUnitSync : public IUnitSync
     mutable wxCriticalSection m_lock;
     WorkerThread m_cache_thread;
 
-    //! this function returns only the cache path without the file extension, the extension itself would be added in the function as needed
+    //! this function returns only the cache path without the file extension,
+    //! the extension itself would be added in the function as needed
     wxString GetFileCachePath( const wxString& name, const wxString& hash, bool IsMod );
 
     //! returns an array where each element is a line of the file
