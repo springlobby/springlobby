@@ -17,6 +17,7 @@
 #include "uiutils.h"
 #include "mapctrl.h"
 #include "iunitsync.h"
+#include "springunitsync.h" // FIXME
 #include "user.h"
 #include "utils.h"
 #include "ui.h"
@@ -91,6 +92,7 @@ BEGIN_EVENT_TABLE( MapCtrl, wxPanel )
   EVT_LEFT_DOWN( MapCtrl::OnLeftDown )
   EVT_LEFT_UP( MapCtrl::OnLeftUp )
   EVT_MOUSEWHEEL( MapCtrl::OnMouseWheel )
+  EVT_COMMAND( wxID_ANY, UnitSyncGetMapImageAsyncCompletedEvt, MapCtrl::OnGetMapImageAsyncCompleted )
 END_EVENT_TABLE()
 
 const int boxsize = 8;
@@ -111,6 +113,7 @@ MapCtrl::MapCtrl( wxWindow* parent, int size, IBattle* battle, Ui& ui, bool read
   m_minimap(0),
   m_metalmap(0),
   m_heightmap(0),
+  m_map_image_async_result(0),
   m_battle(battle),
   m_ui(ui),
   m_mapname(_T("")),
@@ -425,15 +428,16 @@ void MapCtrl::LoadMinimap()
       m_lastsize = wxSize( -1, -1 );
       return;
     }
-    m_minimap = new wxBitmap( usync().GetMinimap( map, w, h ) );
+    m_map_image_async_result = usync().GetMinimapAsync( map, w, h, this );
+    //m_minimap = new wxBitmap( usync().GetMinimap( map, w, h ) );
     if (m_draw_start_types && usync().VersionSupports(IUnitSync::USYNC_GetInfoMap)) {
       // todo: optimize? (currently loads image from disk twice)
-      m_metalmap = new wxBitmap( usync().GetMetalmap( map, w, h ) );
-      m_heightmap = new wxBitmap( usync().GetHeightmap( map, w, h ) );
+      //m_metalmap = new wxBitmap( usync().GetMetalmap( map, w, h ) );
+      //m_heightmap = new wxBitmap( usync().GetHeightmap( map, w, h ) );
       // singleplayer mode doesn't allow startboxes anyway
       if (!m_sp) {
-        m_metalmap_cumulative = usync().GetMetalmap( map );
-		Accumulate( m_metalmap_cumulative );
+        //m_metalmap_cumulative = usync().GetMetalmap( map );
+        //Accumulate( m_metalmap_cumulative );
       }
     }
     m_mapname = map;
@@ -449,6 +453,10 @@ void MapCtrl::LoadMinimap()
 
 void MapCtrl::FreeMinimap()
 {
+  if (m_map_image_async_result && m_map_image_async_result->Cancel()) {
+    delete m_map_image_async_result;
+    m_map_image_async_result = 0;
+  }
   delete m_minimap;
   m_minimap = 0;
   delete m_metalmap;
@@ -604,8 +612,18 @@ void MapCtrl::DrawBackground( wxDC& dc )
     return;
   }
 
+  wxBitmap* img = 0;
+  switch (m_current_infomap) {
+    case IM_Minimap: img = m_minimap; break;
+    case IM_Metalmap: img = m_metalmap; break;
+    case IM_Heightmap: img = m_heightmap; break;
+    default:
+      ASSERT_LOGIC( false, _T("missing InfoMap IM_* enumeration constant in switch") );
+      break;
+  }
+
   // Draw minimap.
-  if ( !m_minimap ) {
+  if ( !img ) {
 
     // Draw background.
     dc.DrawRectangle( 0, 0, width, height );
@@ -643,15 +661,6 @@ void MapCtrl::DrawBackground( wxDC& dc )
     }
 
     // Draw minimap
-    wxBitmap* img = 0;
-    switch (m_current_infomap) {
-      case IM_Minimap: img = m_minimap; break;
-      case IM_Metalmap: img = m_metalmap; break;
-      case IM_Heightmap: img = m_heightmap; break;
-      default:
-        ASSERT_LOGIC( false, _T("missing InfoMap IM_* enumeration constant in switch") );
-        break;
-    }
     dc.DrawBitmap( *img, r.x, r.y, false );
   }
 }
@@ -1345,4 +1354,36 @@ void MapCtrl::OnMouseWheel( wxMouseEvent& event )
     Refresh();
     Update();
   }
+}
+
+
+void MapCtrl::OnGetMapImageAsyncCompleted( wxCommandEvent& event )
+{
+  wxLogDebugFunc( _T("") );
+
+  if ( m_map_image_async_result == NULL ) return;
+
+  wxImage img = m_map_image_async_result->m_image;
+  wxString mapname = m_map_image_async_result->m_mapname;
+
+  delete m_map_image_async_result;
+  m_map_image_async_result = NULL;
+
+  if ( mapname != m_mapname ) return;
+
+  if ( m_minimap == NULL ) {
+    m_minimap = new wxBitmap( img );
+    if (m_draw_start_types && usync().VersionSupports(IUnitSync::USYNC_GetInfoMap))
+      m_map_image_async_result = usync().GetMetalmapAsync( m_mapname, m_lastsize.GetWidth(), m_lastsize.GetHeight(), this );
+  }
+  else if ( m_metalmap == NULL ) {
+    m_metalmap = new wxBitmap( img );
+    m_map_image_async_result = usync().GetHeightmapAsync( m_mapname, m_lastsize.GetWidth(), m_lastsize.GetHeight(), this );
+  }
+  else if ( m_heightmap == NULL ) {
+    m_heightmap = new wxBitmap( img );
+  }
+
+  Refresh();
+  Update();
 }

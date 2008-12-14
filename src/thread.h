@@ -1,7 +1,7 @@
 #ifndef THREAD_H
 #define THREAD_H
 #include <wx/thread.h>
-#include <queue>
+#include <vector>
 
 /// joinable thread, with overridden Sleep and Wait methods.
 /// Sleep wakes up when you call Wait()
@@ -28,36 +28,37 @@ class Thread: public wxThread
 };
 
 
+class WorkItemQueue;
+
+
 /** @brief Abstraction of a piece of work to be done by WorkerThread
     Inherit this class to define concrete work items. */
 class WorkItem
 {
   public:
 
-    /** @brief Construct a new WorkItem
-        @param priority    Priority of item, highest is run first
-        @param toBeDeleted Should this item be deleted after it has run? */
-    WorkItem(int priority = 0, bool toBeDeleted = true)
-      : priority(priority), toBeDeleted(toBeDeleted), cancel(false) {}
+    /** @brief Construct a new WorkItem */
+    WorkItem() : m_priority(0), m_toBeDeleted(true) {}
 
-    /** @brief Destrtuctor */
+    /** @brief Destructor */
     virtual ~WorkItem() {}
 
     /** @brief Implement this in derived class to do the work */
     virtual void Run() = 0;
 
-    /** @brief Cancels this WorkItem
-        It will be discarded as soon as the WorkerThread gets around to it. */
-    void Cancel() { cancel = true; }
+    /** @brief Cancel this WorkItem, remove it from queue
+        @return true if it was removed, false otherwise */
+    bool Cancel();
 
-    /** @brief Is this work cancelled? */
-    bool IsCancelled() const { return cancel; }
-
-    const int priority;     ///< Priority of item, highest is run first
-    const bool toBeDeleted; ///< Should this item be deleted after it has run?
+    int GetPriority() const { return m_priority; }
 
   private:
-    volatile bool cancel;   ///< Cancelled?
+    int m_priority;              ///< Priority of item, highest is run first
+    volatile bool m_toBeDeleted; ///< Should this item be deleted after it has run?
+    WorkItemQueue* m_queue;
+
+    friend class WorkItemQueue;
+    friend class WorkerThread;
 };
 
 
@@ -72,15 +73,14 @@ class WorkItemQueue
         @return A work item or NULL when the queue is empty */
     WorkItem* Pop();
 
+    /** @brief Remove a specific workitem from the queue
+        @return true if it was removed, false otherwise */
+    bool Remove(WorkItem* item);
+
   private:
-    struct WorkItemCompare
-    {
-      bool operator()(const WorkItem* a, const WorkItem* b) {
-        return a->priority < b->priority;
-      }
-    };
     wxCriticalSection m_lock;
-    std::priority_queue<WorkItem*, std::vector<WorkItem*>, WorkItemCompare> queue;
+    // this is a priority queue maintained as a heap stored in a vector :o
+    std::vector<WorkItem*> m_queue;
 };
 
 
@@ -89,14 +89,14 @@ class WorkerThread : public Thread
 {
   public:
     /** @brief Adds a new WorkItem to the queue */
-    void DoWork(WorkItem* item);
+    void DoWork(WorkItem* item, int priority = 0, bool toBeDeleted = true);
     /** @brief Overrides wxThread::Entry, thread entry point */
     void* Entry();
 
   private:
     void CleanupWorkItem(WorkItem* item);
 
-    WorkItemQueue workItems;
+    WorkItemQueue m_workItems;
 };
 
 #endif // THREAD_H

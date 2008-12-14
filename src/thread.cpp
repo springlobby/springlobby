@@ -1,4 +1,5 @@
 #include "thread.h"
+#include <algorithm>
 #include <wx/log.h>
 
 Thread::Thread():
@@ -37,27 +38,69 @@ bool Thread::TestDestroy(){
 }
 
 
+namespace
+{
+  struct WorkItemCompare
+  {
+    bool operator()(const WorkItem* a, const WorkItem* b)
+    {
+      return a->GetPriority() < b->GetPriority();
+    }
+  };
+};
+
+
+bool WorkItem::Cancel()
+{
+  wxLogMessage( _T("cancelling WorkItem %p"), this );
+  if (m_queue == NULL) return false;
+  return m_queue->Remove(this);
+}
+
+
 void WorkItemQueue::Push(WorkItem* item)
 {
   if (item == NULL) return;
   wxCriticalSectionLocker lock(m_lock);
-  queue.push(item);
+  m_queue.push_back(item);
+  std::push_heap(m_queue.begin(), m_queue.end(), WorkItemCompare());
+  item->m_queue = this;
 }
 
 WorkItem* WorkItemQueue::Pop()
 {
   wxCriticalSectionLocker lock(m_lock);
-  if (queue.empty()) return NULL;
-  WorkItem* item = queue.top();
-  queue.pop();
+  if (m_queue.empty()) return NULL;
+  WorkItem* item = m_queue.front();
+  std::pop_heap(m_queue.begin(), m_queue.end(), WorkItemCompare());
+  m_queue.pop_back();
+  item->m_queue = NULL;
   return item;
 }
 
+bool WorkItemQueue::Remove(WorkItem* item)
+{
+  wxCriticalSectionLocker lock(m_lock);
+  if (m_queue.empty()) return false;
+  // WARNING: this destroys the heap...
+  std::vector<WorkItem*>::iterator new_end =
+        std::remove(m_queue.begin(), m_queue.end(), item);
+  // did a WorkerThread process the item just before we got here?
+  if (new_end == m_queue.end()) return false;
+  m_queue.erase(new_end, m_queue.end());
+  // recreate the heap...
+  std::make_heap(m_queue.begin(), m_queue.end(), WorkItemCompare());
+  item->m_queue = NULL;
+  return true;
+}
 
-void WorkerThread::DoWork(WorkItem* item)
+
+void WorkerThread::DoWork(WorkItem* item, int priority, bool toBeDeleted)
 {
   wxLogMessage( _T("scheduling WorkItem %p"), item );
-  workItems.Push(item);
+  item->m_priority = priority;
+  item->m_toBeDeleted = toBeDeleted;
+  m_workItems.Push(item);
   WakeUp();
 }
 
@@ -70,15 +113,9 @@ void* WorkerThread::Entry()
   while (!TestDestroy()) {
     // sleep an hour or until a new WorkItem arrives (DoWork() will wake us up).
     Sleep(3600 * 1000);
-    while (!TestDestroy() && (item = workItems.Pop()) != NULL) {
-      if (item->IsCancelled()) {
-        wxLogMessage( _T("cancelling WorkItem %p, prio = %d"), item, item->priority );
-        CleanupWorkItem(item);
-        // no sleep, discard cancelled items at max rate
-        continue;
-      }
+    while (!TestDestroy() && (item = m_workItems.Pop()) != NULL) {
       try {
-        wxLogMessage( _T("running WorkItem %p, prio = %d"), item, item->priority );
+        wxLogMessage( _T("running WorkItem %p, prio = %d"), item, item->m_priority );
         item->Run();
       }
       catch (...) {
@@ -93,7 +130,7 @@ void* WorkerThread::Entry()
   }
 
   // cleanup leftover WorkItems
-  while ((item = workItems.Pop()) != NULL) {
+  while ((item = m_workItems.Pop()) != NULL) {
     CleanupWorkItem(item);
   }
 
@@ -103,7 +140,7 @@ void* WorkerThread::Entry()
 
 void WorkerThread::CleanupWorkItem(WorkItem* item)
 {
-  if (item->toBeDeleted) {
+  if (item->m_toBeDeleted) {
     try {
       delete item;
     }

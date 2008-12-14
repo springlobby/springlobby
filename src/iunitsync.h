@@ -3,11 +3,14 @@
 
 #include <wx/string.h>
 #include <wx/arrstr.h>
+#include <wx/event.h>
 #include <map>
 
 #include "mmoptionmodel.h"
 
 class wxImage;
+
+extern const wxEventType UnitSyncGetMapImageAsyncCompletedEvt;
 
 struct UnitSyncMod
 {
@@ -49,6 +52,7 @@ struct UnitSyncMap
 };
 
 struct GameOptions;
+class GetMapImageAsyncResult;
 
  /** UnitSync interface definition.
  */
@@ -146,11 +150,8 @@ class IUnitSync
     virtual GameOptions GetMapOptions( const wxString& name ) = 0;
 
     virtual int GetMapIndex( const wxString& name ) = 0;
-    virtual wxImage GetMinimap( const wxString& mapname ) = 0;
     virtual wxImage GetMinimap( const wxString& mapname, int width, int height ) = 0;
-    virtual wxImage GetMetalmap( const wxString& mapname ) = 0;
     virtual wxImage GetMetalmap( const wxString& mapname, int width, int height ) = 0;
-    virtual wxImage GetHeightmap( const wxString& mapname ) = 0;
     virtual wxImage GetHeightmap( const wxString& mapname, int width, int height ) = 0;
 
     virtual int GetSideCount( const wxString& modname ) = 0;
@@ -182,6 +183,10 @@ class IUnitSync
 
     virtual void CacheMap( const wxString& mapname ) = 0;
     virtual void PrefetchMap( const wxString& mapname ) = 0;
+
+    virtual GetMapImageAsyncResult* GetMinimapAsync( const wxString& mapname, int width, int height, wxEvtHandler* evtHandler ) = 0;
+    virtual GetMapImageAsyncResult* GetMetalmapAsync( const wxString& mapname, int width, int height, wxEvtHandler* evtHandler ) = 0;
+    virtual GetMapImageAsyncResult* GetHeightmapAsync( const wxString& mapname, int width, int height, wxEvtHandler* evtHandler ) = 0;
 };
 
 IUnitSync& usync();

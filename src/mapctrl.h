@@ -37,6 +37,8 @@ class MapCtrl : public wxPanel
     void OnLeftUp( wxMouseEvent& event );
     void OnMouseWheel( wxMouseEvent& event );
 
+    void OnGetMapImageAsyncCompleted( wxCommandEvent& event );
+
    protected:
 
     typedef int RectArea;
@@ -94,6 +96,7 @@ class MapCtrl : public wxPanel
     wxBitmap* m_metalmap;
     wxBitmap* m_heightmap;
     wxImage m_metalmap_cumulative;
+    GetMapImageAsyncResult* m_map_image_async_result;
 
     IBattle* m_battle;
     SinglePlayerBattle* m_sp_battle;

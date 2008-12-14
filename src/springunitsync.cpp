@@ -31,6 +31,8 @@
 
 #define LOCK_UNITSYNC wxCriticalSectionLocker lock_criticalsection(m_lock)
 
+const wxEventType UnitSyncGetMapImageAsyncCompletedEvt = wxNewEventType();
+
 
 IUnitSync& usync()
 {
@@ -956,11 +958,7 @@ wxString SpringUnitSync::GetFileCachePath( const wxString& name, const wxString&
     if ( IsMod ) ret <<  _T("-") << susynclib().GetPrimaryModChecksumFromName( name );
     else
     {
-        //very important to call getmapcount before getmapchecksum
-       int total = susynclib().GetMapCount();
-       int index = GetMapIndex( name );
-       if ( index == -1 || index > total ) return ret;
-       ret << _T("-") << susynclib().GetMapChecksum( index );
+       ret << _T("-") << m_maps_list[name];
     }
   }
   return ret;
@@ -1065,12 +1063,26 @@ namespace
   class CacheMapWorkItem : public WorkItem
   {
     public:
-      CacheMapWorkItem( const wxString& mapname ) : mapname(mapname) {}
+      wxString m_mapname;
+
       void Run() {
-        usync().CacheMap( mapname );
+        usync().CacheMap( m_mapname );
       }
-    protected:
-      wxString mapname;
+  };
+
+  class GetScaledMapImageAsyncWorkItem : public GetMapImageAsyncResult
+  {
+    public:
+      void Run()
+      {
+        m_image = (usync().*m_loadMethod)( m_mapname, m_width, m_height );
+        wxCommandEvent evt( UnitSyncGetMapImageAsyncCompletedEvt );
+        wxPostEvent( m_evtHandler, evt );
+      }
+
+      wxImage (IUnitSync::*m_loadMethod)(const wxString&, int, int);
+      int m_width;
+      int m_height;
   };
 };
 
@@ -1078,5 +1090,37 @@ namespace
 void SpringUnitSync::PrefetchMap( const wxString& mapname )
 {
   wxLogDebugFunc( mapname );
-  m_cache_thread.DoWork( new CacheMapWorkItem( mapname ) );
+  CacheMapWorkItem* work = new CacheMapWorkItem();
+  work->m_mapname = mapname;
+  m_cache_thread.DoWork( work );
+}
+
+GetMapImageAsyncResult* SpringUnitSync::_GetScaledMapImageAsync( const wxString& mapname, wxImage (IUnitSync::*loadMethod)(const wxString& mapname, int width, int height), int width, int height, wxEvtHandler* evtHandler )
+{
+  GetScaledMapImageAsyncWorkItem* work = new GetScaledMapImageAsyncWorkItem();
+  work->m_mapname = mapname;
+  work->m_evtHandler = evtHandler;
+  work->m_loadMethod = loadMethod;
+  work->m_width = width;
+  work->m_height = height;
+  m_cache_thread.DoWork( work, 100, false /* don't delete */ );
+  return work;
+}
+
+GetMapImageAsyncResult* SpringUnitSync::GetMinimapAsync( const wxString& mapname, int width, int height, wxEvtHandler* evtHandler )
+{
+  wxLogDebugFunc( _T("") );
+  return _GetScaledMapImageAsync( mapname, &IUnitSync::GetMinimap, width, height, evtHandler );
+}
+
+GetMapImageAsyncResult* SpringUnitSync::GetMetalmapAsync( const wxString& mapname, int width, int height, wxEvtHandler* evtHandler )
+{
+  wxLogDebugFunc( _T("") );
+  return _GetScaledMapImageAsync( mapname, &IUnitSync::GetMetalmap, width, height, evtHandler );
+}
+
+GetMapImageAsyncResult* SpringUnitSync::GetHeightmapAsync( const wxString& mapname, int width, int height, wxEvtHandler* evtHandler )
+{
+  wxLogDebugFunc( _T("") );
+  return _GetScaledMapImageAsync( mapname, &IUnitSync::GetHeightmap, width, height, evtHandler );
 }

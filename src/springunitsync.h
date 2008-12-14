@@ -16,6 +16,15 @@ class SpringUnitSyncLib;
 typedef std::map<wxString,wxString> LocalArchivesVector;
 
 
+class GetMapImageAsyncResult : public WorkItem
+{
+  public:
+    wxImage m_image;
+    wxString m_mapname;
+    wxEvtHandler* m_evtHandler;
+};
+
+
 class SpringUnitSync : public IUnitSync
 {
   public:
@@ -94,6 +103,13 @@ class SpringUnitSync : public IUnitSync
     /// schedule a map for prefetching
     void PrefetchMap( const wxString& mapname );
 
+    /// get minimap rescaled to given width x height
+    GetMapImageAsyncResult* GetMinimapAsync( const wxString& mapname, int width, int height, wxEvtHandler* evtHandler );
+    /// get metalmap rescaled to given width x height
+    GetMapImageAsyncResult* GetMetalmapAsync( const wxString& mapname, int width, int height, wxEvtHandler* evtHandler );
+    /// get heightmap rescaled to given width x height
+    GetMapImageAsyncResult* GetHeightmapAsync( const wxString& mapname, int width, int height, wxEvtHandler* evtHandler );
+
   private:
 
     LocalArchivesVector m_maps_list; /// maphash -> mapname
@@ -131,6 +147,8 @@ class SpringUnitSync : public IUnitSync
 
     wxImage _GetMapImage( const wxString& mapname, const wxString& imagename, wxImage (SpringUnitSyncLib::*loadMethod)(const wxString& mapname) );
     wxImage _GetScaledMapImage( const wxString& mapname, wxImage (SpringUnitSync::*loadMethod)(const wxString& mapname), int width, int height );
+
+    GetMapImageAsyncResult* _GetScaledMapImageAsync( const wxString& mapname, wxImage (IUnitSync::*loadMethod)(const wxString& mapname, int width, int height), int width, int height, wxEvtHandler* evtHandler );
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_SPRINGUNITSYNC_H
