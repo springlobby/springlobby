@@ -33,7 +33,6 @@
 #include "globalsmanager.h"
 #include "springunitsynclib.h"
 #include "settings++/presets.h"
-#include "unitsyncthread.h"
 
 const wxColor defaultHLcolor (255,0,0);
 
