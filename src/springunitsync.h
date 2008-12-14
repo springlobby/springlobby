@@ -1,6 +1,7 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_SPRINGUNITSYNC_H
 #define SPRINGLOBBY_HEADERGUARD_SPRINGUNITSYNC_H
 
+#include <list>
 #include <map>
 
 #include "iunitsync.h"
@@ -14,6 +15,28 @@ struct SpringMapInfo;
 class SpringUnitSyncLib;
 
 typedef std::map<wxString,wxString> LocalArchivesVector;
+
+
+class MostRecentlyUsedImageCache
+{
+  public:
+    MostRecentlyUsedImageCache(int max_size);
+
+    void Add( const wxString& name, const wxImage& img );
+    bool TryGet( const wxString& name, wxImage& img );
+    void Clear();
+
+  private:
+    typedef std::pair<wxString, wxImage> CacheItem;
+    typedef std::list<CacheItem> ImageList;
+    typedef std::map<wxString, ImageList::iterator> IteratorMap;
+
+    mutable wxCriticalSection m_lock;
+    ImageList m_items;
+    IteratorMap m_iterator_map;
+    int m_size;
+    const int m_max_size;
+};
 
 
 class SpringUnitSync : public IUnitSync
@@ -95,11 +118,8 @@ class SpringUnitSync : public IUnitSync
     void PrefetchMap( const wxString& mapname );
 
     void GetMinimapAsync( const wxString& mapname, wxEvtHandler* evtHandler );
-    void GetMinimapAsync( const wxString& mapname, int width, int height, wxEvtHandler* evtHandler );
     void GetMetalmapAsync( const wxString& mapname, wxEvtHandler* evtHandler );
-    void GetMetalmapAsync( const wxString& mapname, int width, int height, wxEvtHandler* evtHandler );
     void GetHeightmapAsync( const wxString& mapname, wxEvtHandler* evtHandler );
-    void GetHeightmapAsync( const wxString& mapname, int width, int height, wxEvtHandler* evtHandler );
 
   private:
 
@@ -110,6 +130,7 @@ class SpringUnitSync : public IUnitSync
 
     mutable wxCriticalSection m_lock;
     WorkerThread m_cache_thread;
+    MostRecentlyUsedImageCache m_map_image_cache;
 
     //! this function returns only the cache path without the file extension,
     //! the extension itself would be added in the function as needed
@@ -141,8 +162,6 @@ class SpringUnitSync : public IUnitSync
     wxImage _GetScaledMapImage( const wxString& mapname, wxImage (SpringUnitSync::*loadMethod)(const wxString&), int width, int height );
 
     void _GetMapImageAsync( const wxString& mapname, wxImage (SpringUnitSync::*loadMethod)(const wxString&), wxEvtHandler* evtHandler );
-    void _GetScaledMapImageAsync( const wxString& mapname, wxImage (SpringUnitSync::*loadMethod)(const wxString&, int, int), int width, int height, wxEvtHandler* evtHandler );
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_SPRINGUNITSYNC_H
-

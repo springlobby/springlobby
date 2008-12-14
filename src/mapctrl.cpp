@@ -426,18 +426,9 @@ void MapCtrl::LoadMinimap()
       m_lastsize = wxSize( -1, -1 );
       return;
     }
-    usync().GetMinimapAsync( map, w, h, this );
-    //m_minimap = new wxBitmap( usync().GetMinimap( map, w, h ) );
-    if (m_draw_start_types && usync().VersionSupports(IUnitSync::USYNC_GetInfoMap)) {
-      // todo: optimize? (currently loads image from disk twice)
-      //m_metalmap = new wxBitmap( usync().GetMetalmap( map, w, h ) );
-      //m_heightmap = new wxBitmap( usync().GetHeightmap( map, w, h ) );
-      // singleplayer mode doesn't allow startboxes anyway
-      if (!m_sp) {
-        //m_metalmap_cumulative = usync().GetMetalmap( map );
-        //Accumulate( m_metalmap_cumulative );
-      }
-    }
+    // start chain of asynchronous map image fetches
+    // first minimap, then metalmap and heightmap
+    usync().GetMinimapAsync( map, this );
     m_mapname = map;
     m_lastsize = wxSize( w, h );
     Refresh();
@@ -1361,12 +1352,18 @@ void MapCtrl::OnGetMapImageAsyncCompleted( wxCommandEvent& event )
 
   if ( m_minimap == NULL ) {
     m_minimap = new wxBitmap( usync().GetMinimap( m_mapname, m_lastsize.GetWidth(), m_lastsize.GetHeight() ) );
+    // this ensures metalmap and heightmap aren't loaded in battlelist
     if (m_draw_start_types && usync().VersionSupports(IUnitSync::USYNC_GetInfoMap))
-      usync().GetMetalmapAsync( m_mapname, m_lastsize.GetWidth(), m_lastsize.GetHeight(), this );
+      usync().GetMetalmapAsync( m_mapname, this );
   }
   else if ( m_metalmap == NULL ) {
     m_metalmap = new wxBitmap( usync().GetMetalmap( m_mapname, m_lastsize.GetWidth(), m_lastsize.GetHeight() ) );
-    usync().GetHeightmapAsync( m_mapname, m_lastsize.GetWidth(), m_lastsize.GetHeight(), this );
+    // singleplayer mode doesn't allow startboxes anyway
+    if (!m_sp) {
+      m_metalmap_cumulative = usync().GetMetalmap( m_mapname );
+      Accumulate( m_metalmap_cumulative );
+    }
+    usync().GetHeightmapAsync( m_mapname, this );
   }
   else if ( m_heightmap == NULL ) {
     m_heightmap = new wxBitmap( usync().GetHeightmap( m_mapname, m_lastsize.GetWidth(), m_lastsize.GetHeight() ) );

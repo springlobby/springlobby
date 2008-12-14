@@ -42,6 +42,7 @@ IUnitSync& usync()
 
 
 SpringUnitSync::SpringUnitSync()
+  : m_map_image_cache( 20 )
 {
   m_cache_thread.Create();
   m_cache_thread.SetPriority( WXTHREAD_MIN_PRIORITY );
@@ -75,6 +76,7 @@ void SpringUnitSync::PopulateArchiveList()
   m_mods_list.clear();
   m_mod_array.Empty();
   m_map_array.Empty();
+  m_map_image_cache.Clear();
 
   int numMaps = susynclib().GetMapCount();
   for ( int i = 0; i < numMaps; i++ )
@@ -821,9 +823,11 @@ wxImage SpringUnitSync::GetHeightmap( const wxString& mapname, int width, int he
 
 wxImage SpringUnitSync::_GetMapImage( const wxString& mapname, const wxString& imagename, wxImage (SpringUnitSyncLib::*loadMethod)(const wxString&) )
 {
-  wxString originalsizepath = GetFileCachePath( mapname, _T(""), false ) + imagename;
-
   wxImage img;
+
+  if ( m_map_image_cache.TryGet( mapname + imagename, img ) ) return img;
+
+  wxString originalsizepath = GetFileCachePath( mapname, _T(""), false ) + imagename;
 
   try
   {
@@ -845,6 +849,8 @@ wxImage SpringUnitSync::_GetMapImage( const wxString& mapname, const wxString& i
       img = wxImage( 1, 1 );
     }
   }
+
+  m_map_image_cache.Add( mapname + imagename, img );
 
   return img;
 }
@@ -1086,22 +1092,6 @@ namespace
 
       wxImage (SpringUnitSync::*m_loadMethod)(const wxString&);
   };
-
-  class GetScaledMapImageAsyncWorkItem : public GetMapImageAsyncResult
-  {
-    public:
-      void Run()
-      {
-        (m_usync->*m_loadMethod)( m_mapname, m_width, m_height );
-        wxCommandEvent evt( UnitSyncGetMapImageAsyncCompletedEvt );
-        evt.SetString( m_mapname );
-        wxPostEvent( m_evtHandler, evt );
-      }
-
-      wxImage (SpringUnitSync::*m_loadMethod)(const wxString&, int, int);
-      int m_width;
-      int m_height;
-  };
 };
 
 
@@ -1123,28 +1113,10 @@ void SpringUnitSync::_GetMapImageAsync( const wxString& mapname, wxImage (Spring
   m_cache_thread.DoWork( work, 100 );
 }
 
-void SpringUnitSync::_GetScaledMapImageAsync( const wxString& mapname, wxImage (SpringUnitSync::*loadMethod)(const wxString&, int, int), int width, int height, wxEvtHandler* evtHandler )
-{
-  GetScaledMapImageAsyncWorkItem* work = new GetScaledMapImageAsyncWorkItem();
-  work->m_usync = this;
-  work->m_mapname = wxString( mapname.c_str() ); // FIXME WX 2.9: mapname.Clone();
-  work->m_evtHandler = evtHandler;
-  work->m_loadMethod = loadMethod;
-  work->m_width = width;
-  work->m_height = height;
-  m_cache_thread.DoWork( work, 100 );
-}
-
 void SpringUnitSync::GetMinimapAsync( const wxString& mapname, wxEvtHandler* evtHandler )
 {
   wxLogDebugFunc( _T("") );
   _GetMapImageAsync( mapname, &SpringUnitSync::GetMinimap, evtHandler );
-}
-
-void SpringUnitSync::GetMinimapAsync( const wxString& mapname, int width, int height, wxEvtHandler* evtHandler )
-{
-  wxLogDebugFunc( _T("") );
-  _GetScaledMapImageAsync( mapname, &SpringUnitSync::GetMinimap, width, height, evtHandler );
 }
 
 void SpringUnitSync::GetMetalmapAsync( const wxString& mapname, wxEvtHandler* evtHandler )
@@ -1153,20 +1125,51 @@ void SpringUnitSync::GetMetalmapAsync( const wxString& mapname, wxEvtHandler* ev
   _GetMapImageAsync( mapname, &SpringUnitSync::GetMetalmap, evtHandler );
 }
 
-void SpringUnitSync::GetMetalmapAsync( const wxString& mapname, int width, int height, wxEvtHandler* evtHandler )
-{
-  wxLogDebugFunc( _T("") );
-  _GetScaledMapImageAsync( mapname, &SpringUnitSync::GetMetalmap, width, height, evtHandler );
-}
-
 void SpringUnitSync::GetHeightmapAsync( const wxString& mapname, wxEvtHandler* evtHandler )
 {
   wxLogDebugFunc( _T("") );
   _GetMapImageAsync( mapname, &SpringUnitSync::GetHeightmap, evtHandler );
 }
 
-void SpringUnitSync::GetHeightmapAsync( const wxString& mapname, int width, int height, wxEvtHandler* evtHandler )
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////// MRU image cache code
+
+MostRecentlyUsedImageCache::MostRecentlyUsedImageCache(int max_size)
+  : m_max_size(max_size)
 {
-  wxLogDebugFunc( _T("") );
-  _GetScaledMapImageAsync( mapname, &SpringUnitSync::GetHeightmap, width, height, evtHandler );
+}
+
+void MostRecentlyUsedImageCache::Add( const wxString& name, const wxImage& img )
+{
+  wxCriticalSectionLocker lock(m_lock);
+  while ( m_size >= m_max_size ) {
+    --m_size;
+    m_iterator_map.erase( m_items.back().first );
+    m_items.pop_back();
+  }
+  ++m_size;
+  m_items.push_front( CacheItem( name, img ) );
+  m_iterator_map[name] = m_items.begin();
+}
+
+bool MostRecentlyUsedImageCache::TryGet( const wxString& name, wxImage& img )
+{
+  wxCriticalSectionLocker lock(m_lock);
+  IteratorMap::iterator it = m_iterator_map.find( name );
+  if ( it == m_iterator_map.end() ) return false;
+  // reinsert at front, so that most recently used items are always at front
+  m_items.push_front( *it->second );
+  m_items.erase( it->second );
+  it->second = m_items.begin();
+  // return image
+  img = it->second->second;
+  return true;
+}
+
+void MostRecentlyUsedImageCache::Clear()
+{
+  wxCriticalSectionLocker lock(m_lock);
+  m_size = 0;
+  m_items.clear();
+  m_iterator_map.clear();
 }
