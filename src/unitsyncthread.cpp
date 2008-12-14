@@ -157,4 +157,5 @@ void UnitSyncThread::UnitSyncThreadImpl::SetCurrentIndex( unsigned int index )
 {
   m_current_index = index;
 }
+
 */

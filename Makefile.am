@@ -975,6 +975,10 @@ springsettings_SOURCES = \
 	src/utils.h \
 	src/uiutils.cpp \
 	src/uiutils.h \
+	src/unitsyncthread.cpp \
+	src/unitsyncthread.h \
+	src/thread.cpp \
+	src/thread.h \
 	src/globalsmanager.cpp \
 	src/settings++/se_utils.cpp \
 	src/settings++/se_utils.h \

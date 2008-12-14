@@ -125,7 +125,8 @@ IBattle::GameType IntToGameType( int gt );
 TASServer::TASServer(): m_ser_ver(0), m_connected(false), m_online(false),
         m_buffer(_T("")), m_last_udp_ping(0), m_ping_id(10000), m_udp_private_port(0),m_battle_id(-1),
         m_do_finalize_join_battle(false),
-        m_finalize_join_battle_id(-1)
+        m_finalize_join_battle_id(-1),
+        m_debug_dont_catch( false )
 {
     m_se = new ServerEvents( *this );
 }
@@ -536,12 +537,19 @@ void TASServer::ExecuteCommand( const wxString& in )
     }
     else
         params = params.AfterFirst( ' ' );
-    try
+    if ( m_debug_dont_catch )
     {
         ExecuteCommand( cmd, params, replyid );
     }
-    catch ( ... ) // catch everything so the app doesn't crash, may made odd beahviours but it's better than crashing randomly
+    else
     {
+        try
+        {
+            ExecuteCommand( cmd, params, replyid );
+        }
+        catch ( ... ) // catch everything so the app doesn't crash, may makes odd beahviours but it's better than crashing randomly for normal users
+        {
+        }
     }
 }
 

@@ -33,6 +33,7 @@
 #include "globalsmanager.h"
 #include "springunitsynclib.h"
 #include "settings++/presets.h"
+#include "unitsyncthread.h"
 
 const wxColor defaultHLcolor (255,0,0);
 
@@ -800,6 +801,16 @@ wxString Settings::GetCurrentUsedUnitSync()
     return GetUnitSync( GetCurrentUsedSpringIndex() );
 }
 
+wxString Settings::GetCurrentUsedSpringConfigFilePath()
+{
+	wxString path;
+	try
+	{
+    path = susynclib().GetConfigFilePath();
+	}
+	catch ( unitsync_assert ) {}
+	return path;
+}
 
 wxString Settings::GetUnitSync( const wxString& index )
 {
@@ -823,6 +834,13 @@ void Settings::SetSpringBinary( const wxString& index, const wxString& path )
 {
   m_config->Write( _T("/Spring/Paths/") + index + _T("/SpringBinPath"), path );
 }
+
+wxString Settings::GetForcedSpringConfigFilePath()
+{
+	if ( IsPortableMode() ) return GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("springsettings.cfg");
+	else return _T("");
+}
+
 // ===================================================
 
 bool Settings::GetChatLogEnable()

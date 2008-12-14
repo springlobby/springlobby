@@ -367,6 +367,8 @@ class Settings
     wxString GetCurrentUsedDataDir();
     wxString GetCurrentUsedUnitSync();
     wxString GetCurrentUsedSpringBinary();
+    //!@brief returns config file path unitsync uses, returns empty if unitsync isn't loaded
+    wxString GetCurrentUsedSpringConfigFilePath();
 
     wxString GetUnitSync( const wxString& index );
     wxString GetSpringBinary( const wxString& index );
@@ -376,6 +378,9 @@ class Settings
 
     wxString AutoFindSpringBin();
     wxString AutoFindUnitSync();
+
+    //!@brief returns config file path spring should use, returns empty for default
+    wxString GetForcedSpringConfigFilePath();
 
     /*@}*/
 

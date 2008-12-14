@@ -42,11 +42,20 @@ SpringUnitSyncLib& susynclib()
 }
 
 
-void SpringUnitSyncLib::Load( const wxString& path )
+void SpringUnitSyncLib::Load( const wxString& path, const wxString& ForceConfigFilePath )
 {
   LOCK_UNITSYNC;
 
   _Load( path );
+
+  if ( !ForceConfigFilePath.IsEmpty() )
+  {
+    if ( m_set_spring_config_file_path )
+    {
+        m_set_spring_config_file_path( ForceConfigFilePath.mb_str() );
+    }
+  }
+
   _Init();
 }
 
@@ -63,7 +72,8 @@ void SpringUnitSyncLib::_Load( const wxString& path )
   wxLogMessage( _T("Loading from: %s"), path.c_str() );
 
   // Check if library exists
-  if ( !wxFileName::FileExists( path ) ) {
+  if ( !wxFileName::FileExists( path ) )
+  {
     wxLogError( _T("File not found: %s"), path.c_str() );
     ASSERT_EXCEPTION( false, _T("Failed to load Unitsync lib.") );
   }
@@ -177,6 +187,9 @@ void SpringUnitSyncLib::_Load( const wxString& path )
     m_get_option_list_item_name = (GetOptionListItemNamePtr)_GetLibFuncPtr(_T("GetOptionListItemName"));
     m_get_option_list_item_desc = (GetOptionListItemDescPtr)_GetLibFuncPtr(_T("GetOptionListItemDesc"));
 
+    m_set_spring_config_file_path = (SetSpringConfigFilePtr)_GetLibFuncPtr(_T("SetSpringConfigFile"));
+    m_get_spring_config_file_path = (GetSpringConfigFilePtr)_GetLibFuncPtr(_T("GetSpringConfigFile"));
+
     m_open_archive = (OpenArchivePtr)_GetLibFuncPtr(_T("OpenArchive"));
     m_close_archive = (CloseArchivePtr)_GetLibFuncPtr(_T("CloseArchive"));
     m_find_Files_archive = (FindFilesArchivePtr)_GetLibFuncPtr(_T("FindFilesArchive"));
@@ -192,7 +205,7 @@ void SpringUnitSyncLib::_Load( const wxString& path )
     m_set_spring_config_string = (SetSpringConfigStringPtr)_GetLibFuncPtr(_T("SetSpringConfigString"));
     m_set_spring_config_int = (SetSpringConfigIntPtr)_GetLibFuncPtr(_T("SetSpringConfigInt"));
 
-    /// beging lua parser calls
+    // begin lua parser calls
 
     m_parser_close = (lpClosePtr)_GetLibFuncPtr(_T("lpClose"));
     m_parser_open_file = (lpOpenFilePtr)_GetLibFuncPtr(_T("lpOpenFile"));
@@ -443,6 +456,13 @@ wxString SpringUnitSyncLib::GetSpringDataDir()
   InitLib( m_get_writeable_data_dir );
 
   return WX_STRINGC( m_get_writeable_data_dir() );
+}
+
+wxString SpringUnitSyncLib::GetConfigFilePath()
+{
+  InitLib( m_get_spring_config_file_path );
+
+  return WX_STRINGC( m_get_spring_config_file_path() );
 }
 
 

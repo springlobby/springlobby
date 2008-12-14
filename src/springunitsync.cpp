@@ -122,7 +122,7 @@ void SpringUnitSync::PopulateArchiveList()
 bool SpringUnitSync::_LoadUnitSyncLib( const wxString& unitsyncloc )
 {
   try {
-    susynclib().Load( unitsyncloc );
+    susynclib().Load( unitsyncloc, sett().GetForcedSpringConfigFilePath() );
   } catch (...) {
     return false;
   }
