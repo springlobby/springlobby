@@ -165,7 +165,7 @@ bool SpringLobbyApp::OnInit()
             m_otadownloader = new HttpDownloader( url, destFilename );
         }
 
-        customMessageBoxNoModal(SL_MAIN_ICON, _("By default SpringLobby reports some statistics.?\n"
+        customMessageBoxNoModal(SL_MAIN_ICON, _("By default SpringLobby reports some statistics.\n"
                                                  "You can disable that on options tab --> General."),_("Notice"),wxOK );
         ui().mw().ShowConfigure();
     }
