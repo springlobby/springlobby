@@ -280,7 +280,7 @@ void TASServer::Connect( const wxString& addr, const int port )
     m_agreement = _T("");
 		m_crc.ResetCRC();
 		wxString handle = m_sock->GetHandle();
-		if ( handle.IsEMpty() ) m_crc.UpdateData( STD_STRING( wxString( handle + m_addr ) ) );
+		if ( !handle.IsEmpty() ) m_crc.UpdateData( STD_STRING( wxString( handle + m_addr ) ) );
 }
 
 void TASServer::Disconnect()
