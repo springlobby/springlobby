@@ -198,6 +198,7 @@ SET(SpringLobbySrc
 	src/battleroomlistctrl.cpp
 	src/battleroomtab.cpp
 	src/battleroommmoptionstab.cpp
+	src/crc.cpp
 	src/channel/channel.cpp
 	src/channel/channellist.cpp
 	src/channel/channellistctrl.cpp
