@@ -21,6 +21,7 @@ class MostRecentlyUsedImageCache
 {
   public:
     MostRecentlyUsedImageCache(int max_size);
+    ~MostRecentlyUsedImageCache();
 
     void Add( const wxString& name, const wxImage& img );
     bool TryGet( const wxString& name, wxImage& img );
@@ -36,6 +37,8 @@ class MostRecentlyUsedImageCache
     IteratorMap m_iterator_map;
     int m_size;
     const int m_max_size;
+    int m_cache_hits;
+    int m_cache_misses;
 };
 
 
@@ -112,8 +115,6 @@ class SpringUnitSync : public IUnitSync
 
     wxString GetArchivePath( const wxString& name );
 
-    /// loads and discards a maps minimap, metalmap and heightmap
-    void CacheMap( const wxString& mapname );
     /// schedule a map for prefetching
     void PrefetchMap( const wxString& mapname );
 

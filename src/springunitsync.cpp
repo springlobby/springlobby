@@ -823,6 +823,8 @@ wxImage SpringUnitSync::GetHeightmap( const wxString& mapname, int width, int he
 
 wxImage SpringUnitSync::_GetMapImage( const wxString& mapname, const wxString& imagename, wxImage (SpringUnitSyncLib::*loadMethod)(const wxString&) )
 {
+  LOCK_UNITSYNC;
+
   wxImage img;
 
   if ( m_map_image_cache.TryGet( mapname + imagename, img ) ) return img;
@@ -1040,35 +1042,23 @@ wxString SpringUnitSync::GetArchivePath( const wxString& name )
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////// Unitsync prefetch/background thread code
 
-void SpringUnitSync::CacheMap( const wxString& mapname )
-{
-  LOCK_UNITSYNC;
-  wxLogDebugFunc( mapname );
-
-  // this must be 100% thread safe calls only,
-  // it's the worker function of the cache thread.
-
-  // none of the functions called here may
-  // acquire the unitsync lock.
-
-  if (!IsLoaded()) return;
-
-  GetMinimap( mapname  );
-  GetHeightmap( mapname  );
-  GetMetalmap( mapname  );
-}
-
-
 namespace
 {
+  typedef wxImage (SpringUnitSync::*LoadMethodPtr)(const wxString&);
+
   class CacheMapWorkItem : public WorkItem
   {
     public:
+      SpringUnitSync* m_usync;
       wxString m_mapname;
+      LoadMethodPtr m_loadMethod;
 
       void Run() {
-        usync().CacheMap( m_mapname );
+        (m_usync->*m_loadMethod)( m_mapname );
       }
+
+      CacheMapWorkItem( SpringUnitSync* usync, const wxString& mapname, LoadMethodPtr loadMethod )
+        : m_usync(usync), m_mapname(mapname.c_str()), m_loadMethod(loadMethod) {}
   };
 
   class GetMapImageAsyncResult : public WorkItem // TODO: rename
@@ -1090,7 +1080,7 @@ namespace
         wxPostEvent( m_evtHandler, evt );
       }
 
-      wxImage (SpringUnitSync::*m_loadMethod)(const wxString&);
+      LoadMethodPtr m_loadMethod;
   };
 };
 
@@ -1098,9 +1088,31 @@ namespace
 void SpringUnitSync::PrefetchMap( const wxString& mapname )
 {
   wxLogDebugFunc( mapname );
-  CacheMapWorkItem* work = new CacheMapWorkItem();
-  work->m_mapname = wxString( mapname.c_str() ); // FIXME WX 2.9: mapname.Clone();
-  m_cache_thread.DoWork( work );
+
+  // Use a simple hash based on 3 characters from the mapname
+  // (without '.smf') as negative priority for the WorkItems.
+  // This ensures WorkItems for the same map are put together,
+  // which improves caching performance.
+
+  // Measured improvement: 60% more cache hits while populating replay tab.
+  // 50% hits without, 80% hits with this code.  (cache size 20 images)
+
+  const int length = std::max(0, int(mapname.length()) - 4);
+  const int hash = (mapname[length * 1/4] << 16)
+                 | (mapname[length * 2/4] << 8)
+                 | (mapname[length * 3/4]);
+  const int priority = -hash;
+
+  CacheMapWorkItem* work;
+
+  work = new CacheMapWorkItem( this, mapname, &SpringUnitSync::GetMinimap );
+  m_cache_thread.DoWork( work, priority );
+
+  work = new CacheMapWorkItem( this, mapname, &SpringUnitSync::GetMetalmap );
+  m_cache_thread.DoWork( work, priority );
+
+  work = new CacheMapWorkItem( this, mapname, &SpringUnitSync::GetHeightmap );
+  m_cache_thread.DoWork( work, priority );
 }
 
 void SpringUnitSync::_GetMapImageAsync( const wxString& mapname, wxImage (SpringUnitSync::*loadMethod)(const wxString&), wxEvtHandler* evtHandler )
@@ -1135,8 +1147,14 @@ void SpringUnitSync::GetHeightmapAsync( const wxString& mapname, wxEvtHandler* e
 ////////////////////////////// MRU image cache code
 
 MostRecentlyUsedImageCache::MostRecentlyUsedImageCache(int max_size)
-  : m_max_size(max_size)
+  : m_size(0), m_max_size(max_size), m_cache_hits(0), m_cache_misses(0)
 {
+}
+
+MostRecentlyUsedImageCache::~MostRecentlyUsedImageCache()
+{
+  wxLogMessage( _T("MostRecentlyUsedImageCache: cache hits: %d"), m_cache_hits );
+  wxLogMessage( _T("MostRecentlyUsedImageCache: cache misses: %d"), m_cache_misses );
 }
 
 void MostRecentlyUsedImageCache::Add( const wxString& name, const wxImage& img )
@@ -1156,13 +1174,17 @@ bool MostRecentlyUsedImageCache::TryGet( const wxString& name, wxImage& img )
 {
   wxCriticalSectionLocker lock(m_lock);
   IteratorMap::iterator it = m_iterator_map.find( name );
-  if ( it == m_iterator_map.end() ) return false;
+  if ( it == m_iterator_map.end() ) {
+    ++m_cache_misses;
+    return false;
+  }
   // reinsert at front, so that most recently used items are always at front
   m_items.push_front( *it->second );
   m_items.erase( it->second );
   it->second = m_items.begin();
   // return image
   img = it->second->second;
+  ++m_cache_hits;
   return true;
 }
 
