@@ -115,6 +115,12 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindo
     m_sync_box->Disable();
   }
 
+	if ( sett().IsFirstRun() )
+	{
+		sett().SetSpringBinary( sett().GetCurrentUsedSpringIndex(), m_exec_edit->GetValue() );
+		sett().SetUnitSync( sett().GetCurrentUsedSpringIndex(), m_sync_edit->GetValue() );
+	}
+
 }
 
 

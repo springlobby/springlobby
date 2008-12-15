@@ -448,6 +448,8 @@ springlobby_SOURCES = \
 	src/battleroomtab.h \
 	src/boost/md5.cpp \
 	src/boost/md5.hpp \
+	src/crc.cpp \
+	src/crc.h \
 	src/channel/channel.cpp \
 	src/channel/channel.h \
 	src/channel/channellist.cpp \

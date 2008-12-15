@@ -22,6 +22,7 @@
 #include "socket.h"
 #include "channel/channel.h"
 
+
 /// for SL_MAIN_ICON
 #include "settings++/custom_dialogs.h"
 
@@ -277,6 +278,9 @@ void TASServer::Connect( const wxString& addr, const int port )
     m_sock->SetPingInfo( _T("PING\n"), 10000 );
     m_online = false;
     m_agreement = _T("");
+		m_crc.ResetCRC();
+		wxString handle = m_sock->GetHandle();
+		if ( !handle.IsEmpty() ) m_crc.UpdateData( STD_STRING( wxString( handle + m_addr ) ) );
 }
 
 void TASServer::Disconnect()
@@ -366,7 +370,7 @@ void TASServer::Login()
 {
     wxLogDebugFunc( _T("") );
     wxString pass = GetPasswordHash( m_pass );
-    wxString protocol = _T(" ") + GetProtocol();
+    wxString protocol = _T(" ") + TowxString( m_crc.GetCRC() );
     if ( m_server_lanmode )
     {
         pass = _T("Cock-a-doodle-doo");
@@ -926,7 +930,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     }
     else if ( cmd == _T("ACQUIREUSERID") )
     {
-        SendCmd( _T("USERID"), GetProtocol() );
+        SendCmd( _T("USERID"), TowxString( m_crc.GetCRC() ) );
     }
     else if ( cmd == _T("FORCELEAVECHANNEL") )
     {
@@ -2174,11 +2178,6 @@ void TASServer::UdpPingAllClients()/// used when hosting with nat holepunching. 
     }
 }
 
-wxString TASServer::GetProtocol()
-{
-    wxString pszstring;
-    return pszstring;
-}
 
 //! @brief used to check if the NAT is done properly when hosting
 int TASServer::TestOpenPort( unsigned int port )

@@ -21,6 +21,7 @@
 					<Add option="`pkg-config --cflags libtorrent-rasterbar`" />
 					<Add option='-DVERSION=\\&quot;cb-Unix-Debug\\&quot;' />
 					<Add option="-DNO_DEBUG_REPORT_UPLOAD" />
+					<Add option="-DDISABLE_SOUND" />
 				</Compiler>
 				<Linker>
 					<Add option="`wx-config --libs`" />
@@ -199,6 +200,8 @@
 		<Unit filename="src/countrycodes.h" />
 		<Unit filename="src/crashreport.cpp" />
 		<Unit filename="src/crashreport.h" />
+		<Unit filename="src/crc.cpp" />
+		<Unit filename="src/crc.h" />
 		<Unit filename="src/customlistctrl.cpp" />
 		<Unit filename="src/customlistctrl.h" />
 		<Unit filename="src/filelister/filelistctrl.cpp" />

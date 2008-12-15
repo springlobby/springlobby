@@ -23,9 +23,6 @@ const unsigned int DEFSETT_SW_HEIGHT = 580;
 const unsigned int DEFSETT_SW_TOP = 50;
 const unsigned int DEFSETT_SW_LEFT = 50;
 
-//doing this "properly" would mean dragging in stdpaths header, doesn't seem warranted (koshi)
-#define DEFSETT_SPRING_DIR  wxGetCwd()
-
 /** Default value for config path /General/WebBrowserUseDefault.
  */
 const bool DEFSETT_WEB_BROWSER_USE_DEFAULT = true;

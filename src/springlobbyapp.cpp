@@ -151,6 +151,7 @@ bool SpringLobbyApp::OnInit()
         if ( !wxDirExists( wxStandardPaths::Get().GetUserDataDir() ) ) wxMkdir( wxStandardPaths::Get().GetUserDataDir() );
         wxString sep ( wxFileName::GetPathSeparator() );
         //! ask for downloading ota content if archive not found, start downloader in background
+	if ( !wxDirExists( sett().GetCurrentUsedDataDir() + sep + _T("base") ) ) wxMkdir( sett().GetCurrentUsedDataDir() + sep + _T("base") );
         wxString url= _T("ipxserver.dyndns.org/games/spring/mods/xta/base-ota-content.zip");
         wxString destFilename = sett().GetCurrentUsedDataDir() + sep + _T("base") + sep + _T("base-ota-content.zip");
         bool contentExists = usync().FileExists(_T("base/otacontent.sdz")) && usync().FileExists(_T("base/tacontent_v2.sdz")) && usync().FileExists(_T("base/tatextures_v062.sdz"));
@@ -163,7 +164,7 @@ bool SpringLobbyApp::OnInit()
             m_otadownloader = new HttpDownloader( url, destFilename );
         }
 
-        customMessageBoxNoModal(SL_MAIN_ICON, _("By default SpringLobby reports some statistics.?\n"
+        customMessageBoxNoModal(SL_MAIN_ICON, _("By default SpringLobby reports some statistics.\n"
                                                  "You can disable that on options tab --> General."),_("Notice"),wxOK );
         ui().mw().ShowConfigure();
     }
