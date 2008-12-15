@@ -97,7 +97,7 @@ bool WorkItemQueue::Remove(WorkItem* item)
 
 void WorkerThread::DoWork(WorkItem* item, int priority, bool toBeDeleted)
 {
-  wxLogMessage( _T("scheduling WorkItem %p"), item );
+  wxLogMessage( _T("scheduling WorkItem %p, prio = %d"), item, priority );
   item->m_priority = priority;
   item->m_toBeDeleted = toBeDeleted;
   m_workItems.Push(item);
@@ -124,8 +124,8 @@ void* WorkerThread::Entry()
         wxLogMessage( _T("WorkerThread caught exception thrown by WorkItem::Run") );
       }
       CleanupWorkItem(item);
-      // sleep a moment to give other more important threads some air.
-      Sleep(50);
+      // give other threads some air
+      Yield();
     }
   }
 
