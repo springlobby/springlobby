@@ -785,10 +785,15 @@ wxImage SpringUnitSync::GetMinimap( const wxString& mapname, int width, int heig
   // and we need to resize it to the correct aspect ratio.
   if (img.GetWidth() > 1 && img.GetHeight() > 1)
   {
-    MapInfo mapinfo = _GetMapInfoEx( mapname );
+    try {
+      MapInfo mapinfo = _GetMapInfoEx( mapname );
 
-    wxSize image_size = MakeFit(wxSize(mapinfo.width, mapinfo.height), wxSize(width, height));
-    img.Rescale( image_size.GetWidth(), image_size.GetHeight() );
+      wxSize image_size = MakeFit(wxSize(mapinfo.width, mapinfo.height), wxSize(width, height));
+      img.Rescale( image_size.GetWidth(), image_size.GetHeight() );
+    }
+    catch (...) {
+      img = wxImage( 1, 1 );
+    }
   }
 
   return img;
