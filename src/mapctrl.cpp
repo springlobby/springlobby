@@ -212,6 +212,11 @@ void MapCtrl::Accumulate( wxImage& image )
 {
 	if (!image.IsOk()) return;
 
+	// Even tho GetData() returns a non-const pointer,
+	// it does not unshare the reference counted data,
+	// so we have to make a copy of the image..
+	image = image.Copy();
+
 	const int w = image.GetWidth();
 	const int h = image.GetHeight();
 	unsigned char* data = image.GetData();
