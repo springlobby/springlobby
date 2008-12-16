@@ -53,9 +53,16 @@ CustomListCtrl::CustomListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& p
 
 void CustomListCtrl::InsertColumn(long i, wxListItem item, wxString tip, bool modifiable)
 {
-  ListBaseType::InsertColumn(i,item);
-  colInfo temp(tip,modifiable);
-  m_colinfovec.push_back(temp);
+//#ifdef __WXMSW__ //this fixes header text misalignement
+//    item.m_mask = wxLIST_MASK_FORMAT | wxLIST_MASK_TEXT;
+//    if ( item.m_image != icons().ICON_EMPTY || item.m_image != -1 )
+//        item.m_mask = item.m_mask | wxLIST_MASK_IMAGE;
+//
+//    item.m_format = wxLIST_FORMAT_LEFT;
+//#endif
+    ListBaseType::InsertColumn(i,item);
+    colInfo temp(tip,modifiable);
+    m_colinfovec.push_back(temp);
 }
 
 void CustomListCtrl::SetSelectionRestorePoint()
@@ -266,6 +273,11 @@ void CustomListCtrl::OnEndResizeCol(wxListEvent& event)
 
 bool CustomListCtrl::SetColumnWidth(int col, int width)
 {
+//#ifdef __WXMSW__ //this fixes icons disappearing in first column
+//    if ( width == wxLIST_AUTOSIZE_USEHEADER && col == 0 )
+//        width = 44;
+//#endif
+
     if ( sett().GetColumnWidth( m_name, col) != Settings::columnWidthUnset)
     {
         return ListBaseType::SetColumnWidth( col, sett().GetColumnWidth( m_name, col) );

@@ -91,7 +91,7 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, Ui& ui, MainSinglePlayerTab& 
 
   m_buttons_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
 
-  m_random_check = new wxCheckBox( this, SP_RANDOM, _("Random start postisions") );
+  m_random_check = new wxCheckBox( this, SP_RANDOM, _("Random start positions") );
   m_buttons_sizer->Add( m_random_check, 0, wxALL, 5 );
 
   m_start_btn = new wxButton( this, SP_START, _("Start"), wxDefaultPosition, wxSize(80, CONTROL_HEIGHT), 0 );
@@ -242,6 +242,11 @@ void SinglePlayerTab::OnModSelect( wxCommandEvent& event )
 
 void SinglePlayerTab::OnAddBot( wxCommandEvent& event )
 {
+  if ( m_battle.GetNumBots() > 15 )
+  {
+    customMessageBoxNoModal( SL_MAIN_ICON, _("Spring only supports up to 16 different teams"), _("Num players error"), wxICON_EXCLAMATION );
+    return;
+  }
   AddBotDialog dlg( this, m_battle, true );
   if ( dlg.ShowModal() == wxID_OK ) {
     int x = 0, y = 0, handicap = 0;

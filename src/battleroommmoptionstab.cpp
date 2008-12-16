@@ -90,10 +90,11 @@ BattleroomMMOptionsTab::BattleroomMMOptionsTab(  IBattle& battle, wxWindow* pare
 
     m_map_mod_container = new wxBoxSizer( wxVERTICAL );
 
+  m_main_sizer->Add( m_preset_sizer, 0, wxALL|wxEXPAND, 5 );
 	m_map_mod_container->Add( m_mod_options_sizer, 0, wxALL|wxEXPAND, 5 );
 	m_map_mod_container->Add( m_map_options_sizer, 0, wxALL|wxEXPAND, 5 );
 	m_main_sizer->Add( m_map_mod_container, 1, wxALL|wxEXPAND, 5 );
-  m_main_sizer->Add( m_preset_sizer, 0, wxALL|wxEXPAND, 5 );
+
 
   //m_main_sizer->FitInside(this);
 

@@ -42,24 +42,27 @@ void UpdaterClass::CheckForUpdates()
   wxString myVersion = GetSpringLobbyVersion() ;
 
   wxString msg = _("Your Version: ") + myVersion + _T("\n") + _("Latest Version: ") + latestVersion;
-
   if ( !latestVersion.IsSameAs(myVersion, false) )
   {
-    int answer = customMessageBox(SL_MAIN_ICON, _("Your SpringLobby version is not up to date.\n\n") + msg + _("\n\nWould you like for me to autodownload the new version? It will be automatically used next time you launch the lobby again."), _("Not up to Date"), wxYES_NO);
-    if (answer == wxYES)
-    {
-      wxString sep = wxFileName::GetPathSeparator();
-      wxString currentexe = wxStandardPaths::Get().GetExecutablePath();
-      if ( !wxFileName::IsDirWritable( currentexe.BeforeLast( wxFileName::GetPathSeparator() ) + wxFileName::GetPathSeparator() ) )
+      #ifdef __WXMSW__
+      int answer = customMessageBox(SL_MAIN_ICON, _("Your SpringLobby version is not up to date.\n\n") + msg + _("\n\nWould you like for me to autodownload the new version? It will be automatically used next time you launch the lobby again."), _("Not up to Date"), wxYES_NO);
+      if (answer == wxYES)
       {
-        customMessageBoxNoModal(SL_MAIN_ICON, _("Unable to write to the lobby installation directory.\nPlease update manually or enable write permissions for the current user."), _("Error"));
-        return;
+        wxString sep = wxFileName::GetPathSeparator();
+        wxString currentexe = wxStandardPaths::Get().GetExecutablePath();
+        if ( !wxFileName::IsDirWritable( currentexe.BeforeLast( wxFileName::GetPathSeparator() ) + wxFileName::GetPathSeparator() ) )
+        {
+          customMessageBoxNoModal(SL_MAIN_ICON, _("Unable to write to the lobby installation directory.\nPlease update manually or enable write permissions for the current user."), _("Error"));
+          return;
+        }
+        m_newexe = sett().GetLobbyWriteDir() + _T("update") + sep;
+        wxMkdir( m_newexe );
+        wxString url = _T("springlobby.info/windows/springlobby-") + latestVersion + _T("-win32.zip");
+        m_exedownloader = new ExeDownloader( url, m_newexe + _T("temp.zip") );
       }
-      m_newexe = sett().GetLobbyWriteDir() + _T("update") + sep;
-      wxMkdir( m_newexe );
-      wxString url = _T("springlobby.info/windows/springlobby-") + latestVersion + _T("-win32.zip");
-      m_exedownloader = new ExeDownloader( url, m_newexe + _T("temp.zip") );
-    }
+    #else
+    customMessageBox(SL_MAIN_ICON, _("Your SpringLobby version is not up to date.\n\n") + msg, _("Not up to Date") );
+    #endif
   }
 }
 
