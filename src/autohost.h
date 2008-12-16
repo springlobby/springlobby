@@ -18,13 +18,11 @@ class AutoHost
     AutoHost( Battle& battle );
 
     void SetEnabled( const bool enabled );
+    bool GetEnabled();
 
     void OnSaidBattle( const wxString& nick, const wxString& msg );
     void OnUserAdded( User& user );
     void OnUserRemoved( User& user );
-
-    wxString GetExtraCommandLineParams();
-
   private:
 
     void StartBattle();
