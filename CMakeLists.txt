@@ -198,6 +198,7 @@ SET(SpringLobbySrc
 	src/battleroomlistctrl.cpp
 	src/battleroomtab.cpp
 	src/battleroommmoptionstab.cpp
+	src/crc.cpp
 	src/channel/channel.cpp
 	src/channel/channellist.cpp
 	src/channel/channellistctrl.cpp
@@ -344,8 +345,8 @@ ENDIF (WIN32)
 cmake_policy(SET CMP0004 OLD)
 
 #libtsource is empty if "NOT WIN32"
-ADD_EXECUTABLE(springlobby WIN32 ${SpringLobbySrc} ${SettingsSrc} ${SpringLobby_RC_FILE} ${libtorrent_SRC})
-ADD_EXECUTABLE(springsettings WIN32 ${StandAloneSettings} ${SpringSettings_RC_FILE} ${SettingsSrc} ${SLSharedWithSettings} )
+ADD_EXECUTABLE(springlobby WIN32 MACOSX_BUNDLE ${SpringLobbySrc} ${SettingsSrc} ${SpringLobby_RC_FILE} ${libtorrent_SRC})
+ADD_EXECUTABLE(springsettings WIN32 MACOSX_BUNDLE ${StandAloneSettings} ${SpringSettings_RC_FILE} ${SettingsSrc} ${SLSharedWithSettings} )
 
 
 # Here the wxWidgets Libraries are added. These are set for us by the FIND Script. If you need other Libraries, you can add them here as well.

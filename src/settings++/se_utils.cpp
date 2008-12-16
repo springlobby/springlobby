@@ -34,7 +34,16 @@ void loadUnitsync()
   {
       wxCriticalSection m_lock;
       wxCriticalSectionLocker lock_criticalsection(m_lock);
-      susynclib().Load(sett().GetCurrentUsedUnitSync(), IsSettingsStandAlone());
+      wxString untisyncpath;
+      if ( IsSettingsStandAlone() )
+      {
+      	bool portable_mode = sett().IsPortableMode();
+      	sett().SetPortableMode( true ); // force portable mode to get untisync path in current bin dir
+        sett().GetCurrentUsedUnitSync();
+        sett().SetPortableMode( portable_mode ); // restore old value
+      }
+			else untisyncpath = sett().GetCurrentUsedUnitSync();
+      susynclib().Load( untisyncpath, true, sett().GetForcedSpringConfigFilePath() );
   }
   catch (...)
   {

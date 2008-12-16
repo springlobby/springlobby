@@ -12,11 +12,11 @@
 
 #define LOCK_UNITSYNC wxCriticalSectionLocker lock_criticalsection(m_lock)
 
-SpringUnitSyncLib::SpringUnitSyncLib( const wxString& path, bool DoInit ):
+SpringUnitSyncLib::SpringUnitSyncLib( const wxString& path, bool DoInit, const wxString& ForceConfigFilePath ):
   m_loaded(false),
   m_path(wxEmptyString)
 {
-  if ( path != wxEmptyString ) Load( path, DoInit );
+  if ( path != wxEmptyString ) Load( path, DoInit, ForceConfigFilePath );
 }
 
 
@@ -33,7 +33,7 @@ SpringUnitSyncLib& susynclib()
 }
 
 
-void SpringUnitSyncLib::Load( const wxString& path, bool DoInit )
+void SpringUnitSyncLib::Load( const wxString& path, bool DoInit, const wxString& ForceConfigFilePath )
 {
   LOCK_UNITSYNC;
 
@@ -45,7 +45,8 @@ void SpringUnitSyncLib::Load( const wxString& path, bool DoInit )
   wxLogMessage( _T("Loading from: %s init: %d"), path.c_str(), DoInit);
 
   // Check if library exists
-  if ( !wxFileName::FileExists( path ) ) {
+  if ( !wxFileName::FileExists( path ) )
+  {
     wxLogError( _T("File not found: %s"), path.c_str() );
     ASSERT_EXCEPTION( false, _T("Failed to load Unitsync lib.") );
   }
@@ -161,6 +162,9 @@ void SpringUnitSyncLib::Load( const wxString& path, bool DoInit )
     m_get_option_list_item_name = (GetOptionListItemNamePtr)_GetLibFuncPtr(_T("GetOptionListItemName"));
     m_get_option_list_item_desc = (GetOptionListItemDescPtr)_GetLibFuncPtr(_T("GetOptionListItemDesc"));
 
+    m_set_spring_config_file_path = (SetSpringConfigFilePtr)_GetLibFuncPtr(_T("SetSpringConfigFile"));
+    m_get_spring_config_file_path = (GetSpringConfigFilePtr)_GetLibFuncPtr(_T("GetSpringConfigFile"));
+
     m_open_archive = (OpenArchivePtr)_GetLibFuncPtr(_T("OpenArchive"));
     m_close_archive = (CloseArchivePtr)_GetLibFuncPtr(_T("CloseArchive"));
     m_find_Files_archive = (FindFilesArchivePtr)_GetLibFuncPtr(_T("FindFilesArchive"));
@@ -176,7 +180,7 @@ void SpringUnitSyncLib::Load( const wxString& path, bool DoInit )
     m_set_spring_config_string = (SetSpringConfigStringPtr)_GetLibFuncPtr(_T("SetSpringConfigString"));
     m_set_spring_config_int = (SetSpringConfigIntPtr)_GetLibFuncPtr(_T("SetSpringConfigInt"));
 
-    /// beging lua parser calls
+    // begin lua parser calls
 
     m_parser_close = (lpClosePtr)_GetLibFuncPtr(_T("lpClose"));
     m_parser_open_file = (lpOpenFilePtr)_GetLibFuncPtr(_T("lpOpenFile"));
@@ -223,12 +227,21 @@ void SpringUnitSyncLib::Load( const wxString& path, bool DoInit )
     m_parser_int_key_get_string_value = (lpGetIntKeyStrValPtr)_GetLibFuncPtr(_T("lpGetIntKeyStrVal"));
     m_parser_string_key_get_string_value = (lpGetStrKeyStrValPtr)_GetLibFuncPtr(_T("lpGetStrKeyStrVal"));
 
+    if ( !ForceConfigFilePath.IsEmpty() )
+    {
+        if ( m_set_spring_config_file_path )
+        {
+            m_set_spring_config_file_path( ForceConfigFilePath.mb_str() );
+        }
+    }
+
     if ( DoInit )
     {
       if ( m_init ) m_init( true, 1 );
     }
   }
-  catch ( ... ) {
+  catch ( ... )
+  {
     _Unload();
     ASSERT_EXCEPTION( false, _T("Failed to load Unitsync lib.") );
   }
@@ -260,7 +273,13 @@ void SpringUnitSyncLib::_Unload()
 
 void SpringUnitSyncLib::Reload( bool DoInit )
 {
-  Load( m_path, DoInit );
+	wxString path;
+	try
+	{
+		path = GetConfigFilePath(); // try to preserve current config file path when reloading
+	}
+	catch( unitsync_assert ) {}
+  Load( m_path, DoInit, path );
 }
 
 
@@ -395,6 +414,13 @@ wxString SpringUnitSyncLib::GetSpringDataDir()
   InitLib( m_get_writeable_data_dir );
 
   return WX_STRINGC( m_get_writeable_data_dir() );
+}
+
+wxString SpringUnitSyncLib::GetConfigFilePath()
+{
+  InitLib( m_get_spring_config_file_path );
+
+  return WX_STRINGC( m_get_spring_config_file_path() );
 }
 
 

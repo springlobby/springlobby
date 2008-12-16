@@ -5,6 +5,7 @@
 #include <list>
 
 #include "server.h"
+#include "crc.h"
 
 const unsigned int FIRST_UDP_SOURCEPORT = 8300;
 
@@ -125,7 +126,6 @@ class TASServer : public Server
     void OnConnected( Socket* sock );
     void OnDisconnected( Socket* sock );
     void OnDataReceived( Socket* sock );
-    wxString GetProtocol();
 
     bool IsPasswordHash( const wxString& pass );
     wxString GetPasswordHash( const wxString& pass );
@@ -142,11 +142,14 @@ class TASServer : public Server
       time_t t;
     };
 
+    CRC m_crc;
+
     ServerEvents* m_se;
     double m_ser_ver;
 
     bool m_connected;
     bool m_online;
+    bool m_debug_dont_catch;
     wxString m_buffer;
     time_t m_last_udp_ping;
     int m_ping_id;
