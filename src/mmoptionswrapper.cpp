@@ -563,10 +563,10 @@ void mmSectionTree::AddSection( const mmOptionSection section)
     }
 }
 
-mmSectionTree::SectionVector mmSectionTree::GetSectionVector()
-{
-
-}
+//mmSectionTree::SectionVector mmSectionTree::GetSectionVector()
+//{
+//
+//}
 
 void mmSectionTree::Clear()
 {

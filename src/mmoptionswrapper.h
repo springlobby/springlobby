@@ -22,7 +22,7 @@ class mmSectionTree {
 
         typedef std::vector< mmOptionSection > SectionVector;
 
-        SectionVector GetSectionVector();
+//        SectionVector GetSectionVector();
 
         void Clear();
 
