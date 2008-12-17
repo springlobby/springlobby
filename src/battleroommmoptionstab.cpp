@@ -194,8 +194,8 @@ int BattleroomMMOptionsTab::setupOptionsSectionSizer(const mmOptionSection& sect
 			m_spinctrl_map[pref+current.key] = tempspin;
 			 wxStaticText* tempst = new wxStaticText(this,-1,current.name);
 			 m_statictext_map[pref+current.key] = tempst;
-			spinSizer->Add(tempst,0);
-			spinSizer->Add(tempspin, 0, wxRIGHT, col_gap);
+			spinSizer->Add(tempst,0, wxALIGN_CENTER_VERTICAL);
+			spinSizer->Add(tempspin, 0, wxRIGHT | wxALIGN_CENTER_VERTICAL, col_gap);
 			ctrl_count++;
         }
 	}
@@ -219,8 +219,8 @@ int BattleroomMMOptionsTab::setupOptionsSectionSizer(const mmOptionSection& sect
             m_combox_map[pref+current.key] = tempchoice;
             wxStaticText* tempst = new wxStaticText(this,-1,current.name);
             m_statictext_map[pref+current.key] = tempst;
-            cbxSizer->Add(tempst,0,5);
-            cbxSizer->Add(tempchoice, 0, wxRIGHT, col_gap);
+            cbxSizer->Add(tempst,0, wxALIGN_CENTER_VERTICAL);
+            cbxSizer->Add(tempchoice, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, col_gap);
 
             ctrl_count++;
         }
@@ -241,8 +241,8 @@ int BattleroomMMOptionsTab::setupOptionsSectionSizer(const mmOptionSection& sect
             m_textctrl_map[pref+current.key] = temptext;
             wxStaticText* tempst = new wxStaticText(this,-1,current.name);
             m_statictext_map[pref+current.key] = tempst;
-            textSizer->Add(tempst,0,5);
-            textSizer->Add(temptext,0, wxRIGHT, col_gap);
+            textSizer->Add(tempst,0, wxALIGN_CENTER_VERTICAL);
+            textSizer->Add(temptext,0, wxALIGN_CENTER_VERTICAL | wxRIGHT, col_gap);
 
             ctrl_count++;
         }
