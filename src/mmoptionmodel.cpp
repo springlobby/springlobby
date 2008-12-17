@@ -22,7 +22,7 @@ mmOptionModel::mmOptionModel(wxString name_, wxString key_, wxString description
 mmOptionModel::mmOptionModel(wxString name_, wxString key_, wxString description_, OptionType type_,
                              wxString section_ , ControlType style_ )
 	: name(name_),key(key_),description(description_),type(type_),
-      section(section_), ct_type(style_)
+      ct_type(style_), section(section_)
 {
 }
 

@@ -129,15 +129,18 @@ void BattleroomMMOptionsTab::setupOptionsSizer( wxBoxSizer* parent_sizer, Option
     for ( ; it != sections.end(); ++it )
     {
         wxStaticBoxSizer* section_sizer = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, it->second.name ), wxVERTICAL );
-        setupOptionsSectionSizer( it->second, section_sizer, optFlag );
-        parent_sizer->Add( section_sizer, 0 , wxALL, section_sizer->GetChildren().size() > 0 ? 5 : 0 );
+        //only add non-empty sizer
+        if ( setupOptionsSectionSizer( it->second, section_sizer, optFlag ) )
+            parent_sizer->Add( section_sizer, 0 , wxALL, section_sizer->GetChildren().size() > 0 ? 5 : 0 );
+        else
+            delete section_sizer;
     }
     mmOptionSection dummy;
     setupOptionsSectionSizer( dummy, parent_sizer, optFlag );
 
 }
 
-void BattleroomMMOptionsTab::setupOptionsSectionSizer(const mmOptionSection& section,
+int BattleroomMMOptionsTab::setupOptionsSectionSizer(const mmOptionSection& section,
     wxBoxSizer* parent_sizer, OptionsWrapper::GameOption optFlag)
 {
     const int col_gap = 35;
@@ -149,6 +152,7 @@ void BattleroomMMOptionsTab::setupOptionsSectionSizer(const mmOptionSection& sec
 	wxFlexGridSizer* textSizer =  new wxFlexGridSizer( 4, 10, 10 );
 	wxFlexGridSizer* chkSizer = new wxFlexGridSizer( 4, 10, 10 );
 
+    int total_count = 0;
 	int ctrl_count = 0;
 	for (IUnitSync::OptionMapBoolIter i = optWrap.opts[optFlag].bool_map.begin(); i != optWrap.opts[optFlag].bool_map.end();++i)
     {
@@ -166,6 +170,7 @@ void BattleroomMMOptionsTab::setupOptionsSectionSizer(const mmOptionSection& sec
         }
 	}
 
+    total_count += ctrl_count;
 	ctrl_count = 0;
 	for ( IUnitSync::OptionMapFloatIter it = optWrap.opts[optFlag].float_map.begin(); it != optWrap.opts[optFlag].float_map.end(); ++it)
 	{
@@ -190,6 +195,7 @@ void BattleroomMMOptionsTab::setupOptionsSectionSizer(const mmOptionSection& sec
         }
 	}
 
+    total_count += ctrl_count;
 	ctrl_count = 0;
 	for ( IUnitSync::OptionMapListIter it = optWrap.opts[optFlag].list_map.begin(); it != optWrap.opts[optFlag].list_map.end(); ++it)
 	{
@@ -215,6 +221,7 @@ void BattleroomMMOptionsTab::setupOptionsSectionSizer(const mmOptionSection& sec
         }
 	}
 
+    total_count += ctrl_count;
 	ctrl_count = 0;
 	for ( IUnitSync::OptionMapStringIter it = optWrap.opts[optFlag].string_map.begin(); it != optWrap.opts[optFlag].string_map.end(); ++it)
 	{
@@ -241,6 +248,7 @@ void BattleroomMMOptionsTab::setupOptionsSectionSizer(const mmOptionSection& sec
 	parent_sizer->Add( cbxSizer, 0, wxALL, cbxSizer->GetChildren().size() > 0 ? 5 : 0 );
 	parent_sizer->Add( textSizer, 0, wxALL, textSizer->GetChildren().size() > 0 ? 5 : 0 );
 
+    return total_count;
 
 }
 
