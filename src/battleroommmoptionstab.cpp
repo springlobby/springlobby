@@ -135,8 +135,13 @@ void BattleroomMMOptionsTab::setupOptionsSizer( wxBoxSizer* parent_sizer, Option
         else
             delete section_sizer;
     }
+
+    //adds options with no asociated section
     mmOptionSection dummy;
-    setupOptionsSectionSizer( dummy, parent_sizer, optFlag );
+    if ( setupOptionsSectionSizer( dummy, parent_sizer, optFlag ) == 0 ) {
+        wxStaticText* none_found = new wxStaticText( this, wxID_ANY, _("no options available") );
+        parent_sizer->Add( none_found, 0, wxALL, 3 );
+    }
 
 }
 
