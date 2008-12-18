@@ -1162,16 +1162,31 @@ void SpringUnitSync::GetMinimapAsync( const wxString& mapname, wxEvtHandler* evt
   _GetMapImageAsync( mapname, &SpringUnitSync::GetMinimap, evtHandler );
 }
 
+void SpringUnitSync::GetMinimapAsync( const wxString& mapname, int width, int height, wxEvtHandler* evtHandler )
+{
+  GetMinimapAsync( mapname, evtHandler );
+}
+
 void SpringUnitSync::GetMetalmapAsync( const wxString& mapname, wxEvtHandler* evtHandler )
 {
   wxLogDebugFunc( _T("") );
   _GetMapImageAsync( mapname, &SpringUnitSync::GetMetalmap, evtHandler );
 }
 
+void SpringUnitSync::GetMetalmapAsync( const wxString& mapname, int width, int height, wxEvtHandler* evtHandler )
+{
+  GetMetalmapAsync( mapname, evtHandler );
+}
+
 void SpringUnitSync::GetHeightmapAsync( const wxString& mapname, wxEvtHandler* evtHandler )
 {
   wxLogDebugFunc( _T("") );
   _GetMapImageAsync( mapname, &SpringUnitSync::GetHeightmap, evtHandler );
+}
+
+void SpringUnitSync::GetHeightmapAsync( const wxString& mapname, int width, int height, wxEvtHandler* evtHandler )
+{
+  GetHeightmapAsync( mapname, evtHandler );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
