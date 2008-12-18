@@ -828,8 +828,6 @@ wxImage SpringUnitSync::GetHeightmap( const wxString& mapname, int width, int he
 
 wxImage SpringUnitSync::_GetMapImage( const wxString& mapname, const wxString& imagename, wxImage (SpringUnitSyncLib::*loadMethod)(const wxString&) )
 {
-  LOCK_UNITSYNC;
-
   wxImage img;
 
   if ( m_map_image_cache.TryGet( mapname + imagename, img ) ) return img;
@@ -957,6 +955,8 @@ void SpringUnitSync::SetSpringDataPath( const wxString& path )
 
 wxString SpringUnitSync::GetFileCachePath( const wxString& name, const wxString& hash, bool IsMod )
 {
+  LOCK_UNITSYNC;
+
   wxString ret = sett().GetCachePath();
   if ( !name.IsEmpty() ) ret << name;
   else return wxEmptyString;
@@ -1066,6 +1066,27 @@ namespace
         : m_usync(usync), m_mapname(mapname.c_str()), m_loadMethod(loadMethod) {}
   };
 
+  class CacheMinimapWorkItem : public WorkItem
+  {
+    public:
+      wxString m_mapname;
+
+      void Run() {
+        // Fetch rescaled minimap using this specialized class instead of
+        // CacheMapWorkItem with a pointer to SpringUnitSync::GetMinimap,
+        // to ensure SpringUnitSync::_GetMapInfoEx will be called too, and
+        // hence it's data cached.
+
+        // This reduces main thread blocking while waiting for WorkerThread
+        // to release it's lock while e.g. scrolling through battle list.
+
+        usync().GetMinimap( m_mapname, 100, 100 );
+      }
+
+      CacheMinimapWorkItem( const wxString& mapname )
+        : m_mapname(mapname.c_str()) {}
+  };
+
   class GetMapImageAsyncResult : public WorkItem // TODO: rename
   {
     public:
@@ -1108,16 +1129,21 @@ void SpringUnitSync::PrefetchMap( const wxString& mapname )
                  | (mapname[length * 3/4]);
   const int priority = -hash;
 
-  CacheMapWorkItem* work;
+  {
+    CacheMinimapWorkItem* work;
 
-  work = new CacheMapWorkItem( this, mapname, &SpringUnitSync::GetMinimap );
-  m_cache_thread.DoWork( work, priority );
+    work = new CacheMinimapWorkItem( mapname );
+    m_cache_thread.DoWork( work, priority );
+  }
+  {
+    CacheMapWorkItem* work;
 
-  work = new CacheMapWorkItem( this, mapname, &SpringUnitSync::GetMetalmap );
-  m_cache_thread.DoWork( work, priority );
+    work = new CacheMapWorkItem( this, mapname, &SpringUnitSync::GetMetalmap );
+    m_cache_thread.DoWork( work, priority );
 
-  work = new CacheMapWorkItem( this, mapname, &SpringUnitSync::GetHeightmap );
-  m_cache_thread.DoWork( work, priority );
+    work = new CacheMapWorkItem( this, mapname, &SpringUnitSync::GetHeightmap );
+    m_cache_thread.DoWork( work, priority );
+  }
 }
 
 void SpringUnitSync::_GetMapImageAsync( const wxString& mapname, wxImage (SpringUnitSync::*loadMethod)(const wxString&), wxEvtHandler* evtHandler )
