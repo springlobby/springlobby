@@ -185,6 +185,9 @@ class IUnitSync
 
     virtual void PrefetchMap( const wxString& mapname ) = 0;
 
+    virtual void SuspendPrefetching() = 0;
+    virtual void ResumePrefetching() = 0;
+
     virtual void GetMinimapAsync( const wxString& mapname, wxEvtHandler* evtHandler ) = 0;
     virtual void GetMinimapAsync( const wxString& mapname, int width, int height, wxEvtHandler* evtHandler ) = 0;
     virtual void GetMetalmapAsync( const wxString& mapname, wxEvtHandler* evtHandler ) = 0;

@@ -40,8 +40,12 @@ void ReplayList::LoadReplays()
     m_timer.Stop();
     size_t size = m_filenames.size();
 
-    if ( size < replay_bulk_limit )
+    usync().SuspendPrefetching();
+
+    if ( size < replay_bulk_limit ) {
         LoadReplays( 0, m_filenames.size() );
+        usync().ResumePrefetching();
+    }
     else {
         LoadReplays( 0, replay_chunk_size );
         m_current_parse_pos = replay_chunk_size;
@@ -79,6 +83,7 @@ void ReplayList::OnTimer(wxTimerEvent& event)
         //final parse run
         m_timer.Stop();
         LoadReplays( m_current_parse_pos, m_filenames.size() );
+        usync().ResumePrefetching();
     }
     else {
         LoadReplays( m_current_parse_pos, m_current_parse_pos + replay_chunk_size );

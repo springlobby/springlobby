@@ -118,6 +118,9 @@ class SpringUnitSync : public IUnitSync
     /// schedule a map for prefetching
     void PrefetchMap( const wxString& mapname );
 
+    void SuspendPrefetching();
+    void ResumePrefetching();
+
     void GetMinimapAsync( const wxString& mapname, wxEvtHandler* evtHandler );
     void GetMinimapAsync( const wxString& mapname, int width, int height, wxEvtHandler* evtHandler );
     void GetMetalmapAsync( const wxString& mapname, wxEvtHandler* evtHandler );
