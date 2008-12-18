@@ -885,7 +885,7 @@ MapInfo SpringUnitSync::_GetMapInfoEx( const wxString& mapname )
   {
     cache = GetCacheFile( GetFileCachePath( mapname, _T(""), false ) + _T(".infoex") );
 
-    ASSERT_EXCEPTION( cache.GetCount() >= 10, _T("not enought lines found in cache info ex") );
+    ASSERT_EXCEPTION( cache.GetCount() >= 11, _T("not enough lines found in cache info ex") );
     info.author = cache[0];
     info.tidalStrength =  s2l( cache[1] );
     info.gravity = s2l( cache[2] );
