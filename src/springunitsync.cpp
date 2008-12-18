@@ -42,8 +42,8 @@ IUnitSync& usync()
 
 
 SpringUnitSync::SpringUnitSync()
-  : m_map_image_cache( 20 )
-  , m_tiny_minimap_cache( 200 )
+  : m_map_image_cache( 3 )      // may take about 3M per image ( 1024x1024 24 bpp minimap )
+  , m_tiny_minimap_cache( 200 ) // takes at most 30k per image (   100x100 24 bpp minimap )
 {
   m_cache_thread.Create();
   m_cache_thread.SetPriority( WXTHREAD_MIN_PRIORITY );
