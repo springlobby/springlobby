@@ -135,6 +135,7 @@ class SpringUnitSync : public IUnitSync
     mutable wxCriticalSection m_lock;
     WorkerThread m_cache_thread;
     MostRecentlyUsedImageCache m_map_image_cache;
+    MostRecentlyUsedImageCache m_tiny_minimap_cache;
 
     //! this function returns only the cache path without the file extension,
     //! the extension itself would be added in the function as needed
