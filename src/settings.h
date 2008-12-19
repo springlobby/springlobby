@@ -3,7 +3,7 @@
 
 #include <wx/string.h>
 
-const int CACHE_VERSION     = 7;
+const int CACHE_VERSION     = 8;
 const int SETTINGS_VERSION  = 3;
 
 const wxString DEFSETT_DEFAULT_SERVER = _T("TAS Server");
@@ -22,9 +22,6 @@ const unsigned int DEFSETT_SW_WIDTH = 770;
 const unsigned int DEFSETT_SW_HEIGHT = 580;
 const unsigned int DEFSETT_SW_TOP = 50;
 const unsigned int DEFSETT_SW_LEFT = 50;
-
-//doing this "properly" would mean dragging in stdpaths header, doesn't seem warranted (koshi)
-#define DEFSETT_SPRING_DIR  wxGetCwd()
 
 /** Default value for config path /General/WebBrowserUseDefault.
  */
@@ -372,6 +369,8 @@ class Settings
     wxString GetCurrentUsedDataDir();
     wxString GetCurrentUsedUnitSync();
     wxString GetCurrentUsedSpringBinary();
+    //!@brief returns config file path unitsync uses, returns empty if unitsync isn't loaded
+    wxString GetCurrentUsedSpringConfigFilePath();
 
     wxString GetUnitSync( const wxString& index );
     wxString GetSpringBinary( const wxString& index );
@@ -381,6 +380,9 @@ class Settings
 
     wxString AutoFindSpringBin();
     wxString AutoFindUnitSync();
+
+    //!@brief returns config file path spring should use, returns empty for default
+    wxString GetForcedSpringConfigFilePath();
 
     /*@}*/
 

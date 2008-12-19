@@ -90,10 +90,11 @@ BattleroomMMOptionsTab::BattleroomMMOptionsTab(  IBattle& battle, wxWindow* pare
 
     m_map_mod_container = new wxBoxSizer( wxVERTICAL );
 
+  m_main_sizer->Add( m_preset_sizer, 0, wxALL|wxEXPAND, 5 );
 	m_map_mod_container->Add( m_mod_options_sizer, 0, wxALL|wxEXPAND, 5 );
 	m_map_mod_container->Add( m_map_options_sizer, 0, wxALL|wxEXPAND, 5 );
 	m_main_sizer->Add( m_map_mod_container, 1, wxALL|wxEXPAND, 5 );
-  m_main_sizer->Add( m_preset_sizer, 0, wxALL|wxEXPAND, 5 );
+
 
   //m_main_sizer->FitInside(this);
 
@@ -120,8 +121,32 @@ BattleroomMMOptionsTab::~BattleroomMMOptionsTab()
   #endif
 }
 
+void BattleroomMMOptionsTab::setupOptionsSizer( wxBoxSizer* parent_sizer, OptionsWrapper::GameOption optFlag )
+{
+    const IUnitSync::OptionMapSection& sections = m_battle.CustomBattleOptions().opts[optFlag].section_map;
 
-void BattleroomMMOptionsTab::setupOptionsSizer(wxBoxSizer* optFlagSizer, OptionsWrapper::GameOption optFlag)
+    IUnitSync::OptionMapSectionConstIter it = sections.begin();
+    for ( ; it != sections.end(); ++it )
+    {
+        wxStaticBoxSizer* section_sizer = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, it->second.name ), wxVERTICAL );
+        //only add non-empty sizer
+        if ( setupOptionsSectionSizer( it->second, section_sizer, optFlag ) )
+            parent_sizer->Add( section_sizer, 0 , wxALL, section_sizer->GetChildren().size() > 0 ? 5 : 0 );
+        else
+            delete section_sizer;
+    }
+
+    //adds options with no asociated section
+    mmOptionSection dummy;
+    if ( setupOptionsSectionSizer( dummy, parent_sizer, optFlag ) == 0 ) {
+        wxStaticText* none_found = new wxStaticText( this, wxID_ANY, _("no options available") );
+        parent_sizer->Add( none_found, 0, wxALL, 3 );
+    }
+
+}
+
+int BattleroomMMOptionsTab::setupOptionsSectionSizer(const mmOptionSection& section,
+    wxBoxSizer* parent_sizer, OptionsWrapper::GameOption optFlag)
 {
     const int col_gap = 35;
 	wxString pref = wxString::Format( _T("%d"),optFlag) + wxsep;
@@ -132,9 +157,12 @@ void BattleroomMMOptionsTab::setupOptionsSizer(wxBoxSizer* optFlagSizer, Options
 	wxFlexGridSizer* textSizer =  new wxFlexGridSizer( 4, 10, 10 );
 	wxFlexGridSizer* chkSizer = new wxFlexGridSizer( 4, 10, 10 );
 
+    int total_count = 0;
 	int ctrl_count = 0;
 	for (IUnitSync::OptionMapBoolIter i = optWrap.opts[optFlag].bool_map.begin(); i != optWrap.opts[optFlag].bool_map.end();++i)
-		{
+    {
+        if ( i->second.section == section.key )
+        {
 			mmOptionBool current = i->second;
 			wxCheckBox* temp = new wxCheckBox(this,BOOL_START_ID+ctrl_count,current.name);
 			temp->SetToolTip(TE(current.description));
@@ -144,11 +172,17 @@ void BattleroomMMOptionsTab::setupOptionsSizer(wxBoxSizer* optFlagSizer, Options
 			temp->Enable(enable);
 			chkSizer->Add(temp, 0, wxRIGHT, col_gap);
 			ctrl_count++;
-		}
+        }
+	}
 
+    total_count += ctrl_count;
 	ctrl_count = 0;
 	for ( IUnitSync::OptionMapFloatIter it = optWrap.opts[optFlag].float_map.begin(); it != optWrap.opts[optFlag].float_map.end(); ++it)
 	{
+	    wxString seckey = it->second.section;
+	    wxString kkey = section.key ;
+        if ( it->second.section == section.key )
+        {
 			mmOptionFloat current = it->second;
 			wxSpinCtrlDbl* tempspin = new wxSpinCtrlDbl();
 			tempspin->Create(this, FLOAT_START_ID+ctrl_count, _T(""),
@@ -160,56 +194,66 @@ void BattleroomMMOptionsTab::setupOptionsSizer(wxBoxSizer* optFlagSizer, Options
 			m_spinctrl_map[pref+current.key] = tempspin;
 			 wxStaticText* tempst = new wxStaticText(this,-1,current.name);
 			 m_statictext_map[pref+current.key] = tempst;
-			spinSizer->Add(tempst,0);
-			spinSizer->Add(tempspin, 0, wxRIGHT, col_gap);
+			spinSizer->Add(tempst,0, wxALIGN_CENTER_VERTICAL);
+			spinSizer->Add(tempspin, 0, wxRIGHT | wxALIGN_CENTER_VERTICAL, col_gap);
 			ctrl_count++;
+        }
 	}
 
+    total_count += ctrl_count;
 	ctrl_count = 0;
 	for ( IUnitSync::OptionMapListIter it = optWrap.opts[optFlag].list_map.begin(); it != optWrap.opts[optFlag].list_map.end(); ++it)
 	{
-		mmOptionList current = it->second;
+	    if ( it->second.section == section.key )
+        {
+            mmOptionList current = it->second;
 
-        int temp = int(current.cbx_choices.GetCount()-1);
-		int index = CLAMP(current.cur_choice_index,0,temp);
-		wxComboBox* tempchoice = new wxComboBox(this, LIST_START_ID+ctrl_count, current.cbx_choices[index], wxDefaultPosition,
-				wxDefaultSize, current.cbx_choices, wxCB_READONLY, wxDefaultValidator);
+            int temp = int(current.cbx_choices.GetCount()-1);
+            int index = CLAMP(current.cur_choice_index,0,temp);
+            wxComboBox* tempchoice = new wxComboBox(this, LIST_START_ID+ctrl_count, current.cbx_choices[index], wxDefaultPosition,
+                    wxDefaultSize, current.cbx_choices, wxCB_READONLY, wxDefaultValidator);
 
-		tempchoice->SetToolTip(TE(current.description));
-		tempchoice->SetName(pref+current.key);
-		tempchoice->Enable(enable);
-		m_combox_map[pref+current.key] = tempchoice;
-		wxStaticText* tempst = new wxStaticText(this,-1,current.name);
-		m_statictext_map[pref+current.key] = tempst;
-		cbxSizer->Add(tempst,0,5);
-		cbxSizer->Add(tempchoice, 0, wxRIGHT, col_gap);
+            tempchoice->SetToolTip(TE(current.description));
+            tempchoice->SetName(pref+current.key);
+            tempchoice->Enable(enable);
+            m_combox_map[pref+current.key] = tempchoice;
+            wxStaticText* tempst = new wxStaticText(this,-1,current.name);
+            m_statictext_map[pref+current.key] = tempst;
+            cbxSizer->Add(tempst,0, wxALIGN_CENTER_VERTICAL);
+            cbxSizer->Add(tempchoice, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, col_gap);
 
-		ctrl_count++;
+            ctrl_count++;
+        }
 	}
 
+    total_count += ctrl_count;
 	ctrl_count = 0;
 	for ( IUnitSync::OptionMapStringIter it = optWrap.opts[optFlag].string_map.begin(); it != optWrap.opts[optFlag].string_map.end(); ++it)
 	{
-		mmOptionString current = it->second;
-		wxTextCtrl* temptext = new wxTextCtrl(this, STRING_START_ID+ctrl_count, current.value, wxDefaultPosition,
-				wxDefaultSize, 0, wxDefaultValidator, current.key);
-		temptext->SetToolTip(TE(current.description));
-		temptext->SetName(pref+current.key);
-		temptext->Enable(enable);
-		m_textctrl_map[pref+current.key] = temptext;
-		wxStaticText* tempst = new wxStaticText(this,-1,current.name);
-		m_statictext_map[pref+current.key] = tempst;
-		textSizer->Add(tempst,0,5);
-		textSizer->Add(temptext,0, wxRIGHT, col_gap);
+	    if ( it->second.section == section.key )
+        {
+            mmOptionString current = it->second;
+            wxTextCtrl* temptext = new wxTextCtrl(this, STRING_START_ID+ctrl_count, current.value, wxDefaultPosition,
+                    wxDefaultSize, 0, wxDefaultValidator, current.key);
+            temptext->SetToolTip(TE(current.description));
+            temptext->SetName(pref+current.key);
+            temptext->Enable(enable);
+            m_textctrl_map[pref+current.key] = temptext;
+            wxStaticText* tempst = new wxStaticText(this,-1,current.name);
+            m_statictext_map[pref+current.key] = tempst;
+            textSizer->Add(tempst,0, wxALIGN_CENTER_VERTICAL);
+            textSizer->Add(temptext,0, wxALIGN_CENTER_VERTICAL | wxRIGHT, col_gap);
 
-		ctrl_count++;
+            ctrl_count++;
+        }
 	}
 
-	optFlagSizer->Add(chkSizer,0,wxALL,10);
-	optFlagSizer->Add(spinSizer,0,wxALL,10);
-	optFlagSizer->Add(cbxSizer,0,wxALL,10);
-	optFlagSizer->Add(textSizer,0,wxALL,10);
+	parent_sizer->Add( chkSizer, 0, wxALL, chkSizer->GetChildren().size() > 0 ? 5 : 0 );
+	parent_sizer->Add( spinSizer, 0, wxALL, spinSizer->GetChildren().size() > 0 ? 5 : 0 );
+	parent_sizer->Add( cbxSizer, 0, wxALL, cbxSizer->GetChildren().size() > 0 ? 5 : 0 );
+	parent_sizer->Add( textSizer, 0, wxALL, textSizer->GetChildren().size() > 0 ? 5 : 0 );
 
+    return total_count;
 
 }
 

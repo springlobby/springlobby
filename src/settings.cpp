@@ -744,7 +744,7 @@ std::map<wxString, wxString> Settings::GetSpringVersionList()
   m_config->SetPath( _T("/Spring/Paths") );
   wxString groupname;
   long dummy;
-
+  //CacheThread().Pause(); // pause caching thread
   bool groupexist = m_config->GetFirstGroup(groupname, dummy);
   while ( groupexist )
   {
@@ -762,9 +762,10 @@ std::map<wxString, wxString> Settings::GetSpringVersionList()
   m_config->SetPath( old_path );
   try
   {
-    susynclib().Init(); /// re-init current "main" unitsync
+    susynclib().Init(); // re-init current "main" unitsync
   }
   catch(...){}
+  //CacheThread().Resume(); // resume caching thread
   return ret;
 }
 
@@ -814,6 +815,16 @@ wxString Settings::GetCurrentUsedUnitSync()
     return GetUnitSync( GetCurrentUsedSpringIndex() );
 }
 
+wxString Settings::GetCurrentUsedSpringConfigFilePath()
+{
+	wxString path;
+	try
+	{
+    path = susynclib().GetConfigFilePath();
+	}
+	catch ( unitsync_assert ) {}
+	return path;
+}
 
 wxString Settings::GetUnitSync( const wxString& index )
 {
@@ -837,6 +848,13 @@ void Settings::SetSpringBinary( const wxString& index, const wxString& path )
 {
   m_config->Write( _T("/Spring/Paths/") + index + _T("/SpringBinPath"), path );
 }
+
+wxString Settings::GetForcedSpringConfigFilePath()
+{
+	if ( IsPortableMode() ) return GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("springsettings.cfg");
+	else return _T("");
+}
+
 // ===================================================
 
 bool Settings::GetChatLogEnable()
@@ -1445,7 +1463,7 @@ wxString Settings::GetLastBattleFilterProfileName()
 
 unsigned int Settings::GetTorrentPort()
 {
-    return  (unsigned int)m_config->Read( _T("/Torrent/Port"), GetLastHostPort() );
+    return  (unsigned int)m_config->Read( _T("/Torrent/Port"), DEFSETT_SPRING_PORT + 1 );
 }
 
 

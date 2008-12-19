@@ -9,6 +9,36 @@
 
 struct GameOptions;
 
+class wxFileConfig;
+
+class mmSectionTree {
+
+    public:
+        mmSectionTree();
+        ~mmSectionTree();
+
+        void AddSection( const mmOptionSection );
+        mmOptionSection GetSection( const wxString& key );
+
+        typedef std::vector< mmOptionSection > SectionVector;
+
+//        SectionVector GetSectionVector();
+
+        void Clear();
+
+    protected:
+        //map key -> option
+        typedef std::map< wxString, mmOptionSection > SectionMap;
+        SectionMap m_section_map;
+        typedef wxFileConfig ConfigType;
+        ConfigType* m_tree;
+
+        void AddSection ( const wxString& path, const mmOptionSection& section );
+        wxString FindParentpath ( const wxString& parent_key );
+        bool FindRecursive( const wxString& parent_key, wxString& path );
+
+};
+
 class OptionsWrapper
 {
 public:
@@ -33,8 +63,7 @@ public:
 	virtual ~OptionsWrapper();
 	//! just calls loadOptions(MapOption,mapname)
 	bool loadMapOptions(wxString mapname);
-	//! obsolete
-	bool reloadMapOptions(wxString mapname);
+
 	//! load corresponding options through unitsync calls
 	/*!
 	 * the containers for corresponding flag are recreated and then gets the number of options from unitsync
@@ -101,12 +130,17 @@ public:
 	//! returns the listitem key associated with listitem name
 	wxString GetNameListOptItemKey(wxString optkey, wxString itemname, GameOption flag) const ;
 
-//private:
 	const static int optionCategoriesCount = 4;
 	GameOptions opts[optionCategoriesCount];
+
+	//! after loading sections into map, parse them into tree
+	void ParseSectionMap( mmSectionTree& section_tree, const IUnitSync::OptionMapSection& section_map );
 protected:
 	//! used for code clarity in setOptions()
 	bool setSingleOptionTypeSwitch(wxString key, wxString value, GameOption modmapFlag, OptionType optType);
+
+	mmSectionTree m_mod_sections;
+	mmSectionTree m_map_sections;
 
 };
 
