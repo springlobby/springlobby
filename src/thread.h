@@ -88,24 +88,15 @@ class WorkItemQueue
 class WorkerThread : public Thread
 {
   public:
-    WorkerThread() : m_wakeUp(true) {}
-
     /** @brief Adds a new WorkItem to the queue */
     void DoWork(WorkItem* item, int priority = 0, bool toBeDeleted = true);
     /** @brief Overrides wxThread::Entry, thread entry point */
     void* Entry();
 
-    /** @brief Whether DoWork should wake up the thread
-        Note that when this is disabled the thread may sleep for indefinite
-        time before even noticing a WorkItem has been added to the queue.
-        It's advised to call WakeUp manually in such cases. */
-    void EnableAutoWakeUp(bool enabled) { m_wakeUp = enabled; }
-
   private:
     void CleanupWorkItem(WorkItem* item);
 
     WorkItemQueue m_workItems;
-    bool m_wakeUp;
 };
 
 #endif // THREAD_H

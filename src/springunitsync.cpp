@@ -1165,18 +1165,6 @@ void SpringUnitSync::PrefetchMap( const wxString& mapname )
   }
 }
 
-void SpringUnitSync::SuspendPrefetching()
-{
-  m_cache_thread.EnableAutoWakeUp( false );
-}
-
-void SpringUnitSync::ResumePrefetching()
-{
-  m_cache_thread.EnableAutoWakeUp( true );
-  // kick the thread so it stops procrastinating
-  m_cache_thread.WakeUp();
-}
-
 void SpringUnitSync::_GetMapImageAsync( const wxString& mapname, wxImage (SpringUnitSync::*loadMethod)(const wxString&), wxEvtHandler* evtHandler )
 {
   GetMapImageAsyncWorkItem* work;

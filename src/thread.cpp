@@ -101,7 +101,7 @@ void WorkerThread::DoWork(WorkItem* item, int priority, bool toBeDeleted)
   item->m_priority = priority;
   item->m_toBeDeleted = toBeDeleted;
   m_workItems.Push(item);
-  if (m_wakeUp) WakeUp();
+  WakeUp();
 }
 
 void* WorkerThread::Entry()
