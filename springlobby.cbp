@@ -4,7 +4,6 @@
 	<Project>
 		<Option title="springlobby" />
 		<Option pch_mode="0" />
-		<Option compiler="gcc" />
 		<Build>
 			<Target title="GNU | Debug">
 				<Option output="bin/GNU/Debug/springlobby" prefix_auto="0" extension_auto="0" />

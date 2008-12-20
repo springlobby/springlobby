@@ -3,7 +3,7 @@
 
 #include <wx/string.h>
 
-const int CACHE_VERSION     = 7;
+const int CACHE_VERSION     = 8;
 const int SETTINGS_VERSION  = 3;
 
 const wxString DEFSETT_DEFAULT_SERVER = _T("TAS Server");

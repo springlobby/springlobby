@@ -126,6 +126,8 @@ typedef int (USYNC_CALL_CONV *GetModOptionCountPtr)();
 typedef const char* (USYNC_CALL_CONV *GetOptionKeyPtr)(int optIndex);
 typedef const char* (USYNC_CALL_CONV *GetOptionNamePtr)(int optIndex);
 typedef const char* (USYNC_CALL_CONV *GetOptionDescPtr)(int optIndex);
+typedef const char* (USYNC_CALL_CONV *GetOptionSectionPtr)(int optIndex);
+typedef const char* (USYNC_CALL_CONV *GetOptionStylePtr)(int optIndex);
 typedef int (USYNC_CALL_CONV *GetOptionTypePtr)(int optIndex);
 typedef int (USYNC_CALL_CONV *GetOptionBoolDefPtr)(int optIndex);
 typedef float (USYNC_CALL_CONV *GetOptionNumberDefPtr)(int optIndex);
@@ -364,6 +366,8 @@ class SpringUnitSyncLib
     wxString GetOptionKey( int optIndex );
     wxString GetOptionName( int optIndex );
     wxString GetOptionDesc( int optIndex );
+    wxString GetOptionSection( int optIndex );
+    wxString GetOptionStyle( int optIndex );
     int GetOptionType( int optIndex );
     int GetOptionBoolDef( int optIndex );
     float GetOptionNumberDef( int optIndex );
@@ -564,6 +568,8 @@ class SpringUnitSyncLib
     GetOptionNamePtr m_get_option_name;
     GetOptionDescPtr m_get_option_desc;
     GetOptionTypePtr m_get_option_type;
+    GetOptionSectionPtr m_get_option_section;
+    GetOptionStylePtr m_get_option_style;
     GetOptionBoolDefPtr m_get_option_bool_def;
     GetOptionNumberDefPtr m_get_option_number_def;
     GetOptionNumberMinPtr m_get_option_number_min;
