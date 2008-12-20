@@ -3,7 +3,7 @@
 
 #include <wx/string.h>
 
-const int CACHE_VERSION     = 7;
+const int CACHE_VERSION     = 8;
 const int SETTINGS_VERSION  = 3;
 
 const wxString DEFSETT_DEFAULT_SERVER = _T("TAS Server");
@@ -22,9 +22,6 @@ const unsigned int DEFSETT_SW_WIDTH = 770;
 const unsigned int DEFSETT_SW_HEIGHT = 580;
 const unsigned int DEFSETT_SW_TOP = 50;
 const unsigned int DEFSETT_SW_LEFT = 50;
-
-//doing this "properly" would mean dragging in stdpaths header, doesn't seem warranted (koshi)
-#define DEFSETT_SPRING_DIR  wxGetCwd()
 
 /** Default value for config path /General/WebBrowserUseDefault.
  */

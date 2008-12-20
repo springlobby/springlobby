@@ -22,6 +22,7 @@
 #include "socket.h"
 #include "channel/channel.h"
 
+
 /// for SL_MAIN_ICON
 #include "settings++/custom_dialogs.h"
 
@@ -122,11 +123,13 @@ IBattle::StartType IntToStartType( int start );
 IBattle::NatType IntToNatType( int nat );
 IBattle::GameType IntToGameType( int gt );
 
-TASServer::TASServer(): m_ser_ver(0), m_connected(false), m_online(false),
-        m_buffer(_T("")), m_last_udp_ping(0), m_ping_id(10000), m_udp_private_port(0),m_battle_id(-1),
+TASServer::TASServer():
+        m_ser_ver(0), m_connected(false),
+        m_online(false), m_debug_dont_catch( false ),
+        m_buffer(_T("")), m_last_udp_ping(0),
+        m_ping_id(10000), m_udp_private_port(0),m_battle_id(-1),
         m_do_finalize_join_battle(false),
-        m_finalize_join_battle_id(-1),
-        m_debug_dont_catch( false )
+        m_finalize_join_battle_id(-1)
 {
     m_se = new ServerEvents( *this );
 }
@@ -277,6 +280,9 @@ void TASServer::Connect( const wxString& addr, const int port )
     m_sock->SetPingInfo( _T("PING\n"), 10000 );
     m_online = false;
     m_agreement = _T("");
+		m_crc.ResetCRC();
+		wxString handle = m_sock->GetHandle();
+		if ( !handle.IsEmpty() ) m_crc.UpdateData( STD_STRING( wxString( handle + m_addr ) ) );
 }
 
 void TASServer::Disconnect()
@@ -366,7 +372,7 @@ void TASServer::Login()
 {
     wxLogDebugFunc( _T("") );
     wxString pass = GetPasswordHash( m_pass );
-    wxString protocol = _T(" ") + GetProtocol();
+    wxString protocol = _T(" ") + TowxString( m_crc.GetCRC() );
     if ( m_server_lanmode )
     {
         pass = _T("Cock-a-doodle-doo");
@@ -926,7 +932,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     }
     else if ( cmd == _T("ACQUIREUSERID") )
     {
-        SendCmd( _T("USERID"), GetProtocol() );
+        SendCmd( _T("USERID"), TowxString( m_crc.GetCRC() ) );
     }
     else if ( cmd == _T("FORCELEAVECHANNEL") )
     {
@@ -2174,11 +2180,6 @@ void TASServer::UdpPingAllClients()/// used when hosting with nat holepunching. 
     }
 }
 
-wxString TASServer::GetProtocol()
-{
-    wxString pszstring;
-    return pszstring;
-}
 
 //! @brief used to check if the NAT is done properly when hosting
 int TASServer::TestOpenPort( unsigned int port )
