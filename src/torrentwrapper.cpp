@@ -1142,7 +1142,12 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
 
         for ( unsigned int index = 2; index < data.GetCount(); index++ )
         {
-            row->handle.add_url_seed( STD_STRING( data[index] ) );
+						try
+						{
+							row->handle.add_url_seed( STD_STRING( data[index] ) );
+						} catch ( std::exception& e )
+						{
+						}
         }
 
         // PING 	 every minute - client must respond with its own "PING"
