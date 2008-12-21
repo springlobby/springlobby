@@ -59,6 +59,7 @@ class MapGridCtrl : public wxPanel
 
 		wxPoint m_pos;
 		wxPoint m_last_mouse_pos;
+		bool m_in_mouse_drag;
 
 		/// Number of async minimap fetches still running on behalf of this control.
 		/// This number is limited so the control can adapt (faster) to changes in

@@ -29,6 +29,7 @@ MapGridCtrl::MapGridCtrl( wxWindow* parent, int size, IBattle* battle, Ui& ui )
 	, m_battle( battle )
 	, m_size( 0, 0 )
 	, m_pos( 0, 0 )
+	, m_in_mouse_drag( false )
 	, m_async_minimap_fetches( 0 )
 {
 }
@@ -164,7 +165,7 @@ void MapGridCtrl::OnResize( wxSizeEvent& event )
 
 void MapGridCtrl::OnMouseMove( wxMouseEvent& event )
 {
-	if ( !event.Dragging() ) return;
+	if ( !m_in_mouse_drag ) return;
 
 	m_pos -= (event.GetPosition() - m_last_mouse_pos);
 	m_last_mouse_pos = event.GetPosition();
@@ -178,12 +179,14 @@ void MapGridCtrl::OnLeftDown( wxMouseEvent& event )
 {
 	SetCursor( wxCursor( wxCURSOR_HAND ) );
 	m_last_mouse_pos = event.GetPosition();
+	m_in_mouse_drag = true;
 }
 
 
 void MapGridCtrl::OnLeftUp( wxMouseEvent& event )
 {
 	SetCursor( wxCursor( wxCURSOR_ARROW ) );
+	m_in_mouse_drag = false;
 }
 
 
