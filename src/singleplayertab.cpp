@@ -12,7 +12,7 @@
 
 #include "singleplayertab.h"
 #include "mapctrl.h"
-#include "maplistctrl.h"
+#include "mapgridctrl.h"
 #include "utils.h"
 #include "uiutils.h"
 #include "ui.h"

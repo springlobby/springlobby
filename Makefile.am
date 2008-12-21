@@ -390,8 +390,10 @@ springlobby_SOURCES = \
 	src/springunitsynclib.h \
 	src/unitsyncthread.cpp \
 	src/unitsyncthread.h \
-	src/maplistctrl.cpp \
-	src/maplistctrl.h \
+	src/mapgridctrl.cpp \
+	src/mapgridctrl.h \
+	src/mapselectctrl.cpp \
+	src/mapselectctrl.h \
 	src/mapselectdialog.cpp \
 	src/mapselectdialog.h \
 	src/bimap.h \

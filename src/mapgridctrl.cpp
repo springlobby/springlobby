@@ -1,6 +1,6 @@
 /* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
 
-#include "maplistctrl.h"
+#include "mapgridctrl.h"
 
 #include "utils.h"
 #include <wx/dcclient.h>
