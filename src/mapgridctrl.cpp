@@ -12,14 +12,14 @@
 #define MINIMAP_SIZE 98
 
 
-BEGIN_EVENT_TABLE( MapListCtrl, wxPanel )
-  EVT_PAINT( MapListCtrl::OnPaint )
-  EVT_SIZE( MapListCtrl::OnResize )
-  EVT_COMMAND( wxID_ANY, UnitSyncGetMapImageAsyncCompletedEvt, MapListCtrl::OnGetMapImageAsyncCompleted )
+BEGIN_EVENT_TABLE( MapGridCtrl, wxPanel )
+  EVT_PAINT( MapGridCtrl::OnPaint )
+  EVT_SIZE( MapGridCtrl::OnResize )
+  EVT_COMMAND( wxID_ANY, UnitSyncGetMapImageAsyncCompletedEvt, MapGridCtrl::OnGetMapImageAsyncCompleted )
 END_EVENT_TABLE()
 
 
-MapListCtrl::MapListCtrl( wxWindow* parent, int size, IBattle* battle, Ui& ui )
+MapGridCtrl::MapGridCtrl( wxWindow* parent, int size, IBattle* battle, Ui& ui )
 	: wxPanel( parent, -1, wxDefaultPosition, wxSize(size, size), wxSIMPLE_BORDER|wxFULL_REPAINT_ON_RESIZE )
 	, m_ui( ui )
 	, m_battle( battle )
@@ -27,13 +27,13 @@ MapListCtrl::MapListCtrl( wxWindow* parent, int size, IBattle* battle, Ui& ui )
 }
 
 
-MapListCtrl::~MapListCtrl()
+MapGridCtrl::~MapGridCtrl()
 {
 
 }
 
 
-void MapListCtrl::LoadMaps()
+void MapGridCtrl::LoadMaps()
 {
 	wxArrayString maps = usync().GetMapList();
 	int count = maps.size();
@@ -51,13 +51,13 @@ void MapListCtrl::LoadMaps()
 }
 
 
-void MapListCtrl::SetBattle( IBattle* battle )
+void MapGridCtrl::SetBattle( IBattle* battle )
 {
 	m_battle = battle;
 }
 
 
-void MapListCtrl::DrawMap( wxDC& dc, MapData& map, int x, int y )
+void MapGridCtrl::DrawMap( wxDC& dc, MapData& map, int x, int y )
 {
 	switch ( map.state ) {
 		case MapState_NoMinimap:
@@ -76,7 +76,7 @@ void MapListCtrl::DrawMap( wxDC& dc, MapData& map, int x, int y )
 }
 
 
-void MapListCtrl::OnPaint( wxPaintEvent& event )
+void MapGridCtrl::OnPaint( wxPaintEvent& event )
 {
 	wxLogDebugFunc( _T("") );
 
@@ -102,12 +102,12 @@ void MapListCtrl::OnPaint( wxPaintEvent& event )
 }
 
 
-void MapListCtrl::OnResize( wxSizeEvent& event )
+void MapGridCtrl::OnResize( wxSizeEvent& event )
 {
 }
 
 
-void MapListCtrl::OnGetMapImageAsyncCompleted( wxCommandEvent& event )
+void MapGridCtrl::OnGetMapImageAsyncCompleted( wxCommandEvent& event )
 {
 	wxString mapname = event.GetString();
 

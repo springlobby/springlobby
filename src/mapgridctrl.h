@@ -1,5 +1,5 @@
-#ifndef SPRINGLOBBY_HEADERGUARD_MAPLISTCTRL_H
-#define SPRINGLOBBY_HEADERGUARD_MAPLISTCTRL_H
+#ifndef SPRINGLOBBY_HEADERGUARD_MAPGRIDCTRL_H
+#define SPRINGLOBBY_HEADERGUARD_MAPGRIDCTRL_H
 
 #include "iunitsync.h"
 #include <wx/bitmap.h>
@@ -9,11 +9,11 @@ class IBattle;
 class Ui;
 
 
-class MapListCtrl : public wxPanel
+class MapGridCtrl : public wxPanel
 {
 	public:
-		MapListCtrl( wxWindow* parent, int size, IBattle* battle, Ui& ui );
-		~MapListCtrl();
+		MapGridCtrl( wxWindow* parent, int size, IBattle* battle, Ui& ui );
+		~MapGridCtrl();
 
 		void SetBattle( IBattle* battle );
 
@@ -52,4 +52,4 @@ class MapListCtrl : public wxPanel
 		DECLARE_EVENT_TABLE();
 };
 
-#endif // SPRINGLOBBY_HEADERGUARD_MAPLISTCTRL_H
+#endif // SPRINGLOBBY_HEADERGUARD_MAPGRIDCTRL_H
