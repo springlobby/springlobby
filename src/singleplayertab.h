@@ -8,6 +8,7 @@
 
 class Ui;
 class MapCtrl;
+class MapListCtrl;
 class SinglePlayerBattle;
 
 class wxWindow;
@@ -52,7 +53,8 @@ class SinglePlayerTab: public  wxScrolledWindow
     Ui& m_ui;
     SinglePlayerBattle m_battle;
 
-    MapCtrl* m_minimap;
+    //MapCtrl* m_minimap;
+    MapListCtrl* m_minimap;
     wxChoice* m_map_pick;
     wxChoice* m_mod_pick;
     wxStaticText* m_map_lbl;

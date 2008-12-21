@@ -12,6 +12,7 @@
 
 #include "singleplayertab.h"
 #include "mapctrl.h"
+#include "maplistctrl.h"
 #include "utils.h"
 #include "uiutils.h"
 #include "ui.h"
@@ -50,7 +51,8 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, Ui& ui, MainSinglePlayerTab& 
 
   wxBoxSizer* m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
-  m_minimap = new MapCtrl( this, 100, &m_battle, ui, false, false, true, true );
+  //m_minimap = new MapCtrl( this, 100, &m_battle, ui, false, false, true, true );
+  m_minimap = new MapListCtrl( this, 100, &m_battle, ui );
   m_minimap->SetToolTip( TE(_("You can drag the sun/bot icon around to define start position.\n "
                            "Hover over the icon for a popup that lets you change side, ally and bonus." )) );
   m_main_sizer->Add( m_minimap, 1, wxALL|wxEXPAND, 5 );
@@ -117,7 +119,7 @@ SinglePlayerTab::~SinglePlayerTab()
 
 void SinglePlayerTab::UpdateMinimap()
 {
-  m_minimap->UpdateMinimap();
+  //m_minimap->UpdateMinimap();
 }
 
 
@@ -176,7 +178,7 @@ void SinglePlayerTab::SetMap( unsigned int index )
       m_addbot_btn->Enable( true );
     } catch (...) {}
   }
-  m_minimap->UpdateMinimap();
+  //m_minimap->UpdateMinimap();
   m_battle.SendHostInfo( IBattle::HI_Map_Changed ); // reload map options
   m_map_pick->SetSelection( index );
 }
@@ -194,7 +196,7 @@ void SinglePlayerTab::SetMod( unsigned int index )
       m_battle.SetHostMod( mod.name, mod.hash );
     } catch (...) {}
   }
-  m_minimap->UpdateMinimap();
+  //m_minimap->UpdateMinimap();
   m_battle.SendHostInfo( IBattle::HI_Restrictions ); // Update restrictions in options.
   m_battle.SendHostInfo( IBattle::HI_Mod_Changed ); // reload mod options
   m_mod_pick->SetSelection( index );
@@ -256,7 +258,7 @@ void SinglePlayerTab::OnAddBot( wxCommandEvent& event )
     BattleBot* bot = m_battle.GetBot( i );
     ASSERT_LOGIC( bot != 0, _T("bot == 0") );
     bot->bs.colour = col;
-    m_minimap->UpdateMinimap();
+    //m_minimap->UpdateMinimap();
   }
 }
 
