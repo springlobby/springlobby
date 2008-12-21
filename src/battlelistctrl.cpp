@@ -140,6 +140,10 @@ void BattleListCtrl::AddBattle( const Battle& battle )
 {
     assert(&battle);
 
+    if ( GetIndexFromData( &battle ) != -1 ) {
+        wxLogWarning( _T("Battle already in list.") );
+        return;
+    }
     m_data.push_back( &battle );
     SetItemCount( m_data.size() );
     RefreshItem( m_data.size() );
@@ -164,13 +168,7 @@ void BattleListCtrl::UpdateBattle( const Battle& battle )
 {
     int index = GetIndexFromData( &battle );
 
-    if ( index != -1 ) {
-        m_data.erase( m_data.begin() + index );
-        SetItemCount( m_data.size() );
-
-        RefreshVisibleItems( );
-        return;
-    }
+    RefreshVisibleItems( );
     HighlightItem( index );
     MarkDirtySort();
 }
@@ -623,5 +621,11 @@ int BattleListCtrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir )
 
 int BattleListCtrl::GetIndexFromData( const DataType& data ) const
 {
+    DataCIter it = m_data.begin();
+    for ( int i = 0; it != m_data.end(); ++it, ++i ) {
+        if ( *it != 0 && data->Equals( *(*it) ) )
+            return i;
+    }
+    wxLogError( _T("didn't find the battle.") );
     return -1;
 }

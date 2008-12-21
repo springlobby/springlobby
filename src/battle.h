@@ -59,6 +59,7 @@ class CommonBattle : public UserList, public IBattle
         CommonBattle( const int id, const bool ingame, const int order );
 
         int GetBattleId() const { return m_opts.battleid; }
+        bool Equals( const CommonBattle& other ) const { return m_opts.battleid == other.GetBattleId(); }
 
         bool GetGUIListActiv() const { return m_opts.guilistactiv; }
         void SetGUIListActiv(bool Activ) { m_opts.guilistactiv = Activ; }

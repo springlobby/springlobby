@@ -204,8 +204,8 @@ void BattleListTab::SelectBattle( Battle* battle )
 }
 
 void BattleListTab::AddBattle( Battle& battle ) {
-    if ( m_filter->GetActiv() && !m_filter->FilterBattle( battle ) ) {
-    return;
+    if ( battle.GetGUIListActiv() || ( m_filter->GetActiv() && !m_filter->FilterBattle( battle ) ) ) {
+        return;
     }
 
     m_battle_list->AddBattle( battle );
@@ -273,12 +273,12 @@ void BattleListTab::UpdateList() {
 
 //  int prev_selection = m_battle_list->GetSelectedIndex();
 
-  m_ui.GetServer().battles_iter->IteratorBegin();
-  while (! m_ui.GetServer().battles_iter->EOL() ) {
-    Battle* b = m_ui.GetServer().battles_iter->GetBattle();
-    if (b!=0)
-    UpdateBattle(*b);
-  }
+//  m_ui.GetServer().battles_iter->IteratorBegin();
+//  while (! m_ui.GetServer().battles_iter->EOL() ) {
+//    Battle* b = m_ui.GetServer().battles_iter->GetBattle();
+//    if (b!=0)
+//    UpdateBattle(*b);
+//  }
 
 //  if (prev_selection > -1 )
 //  {
