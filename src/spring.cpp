@@ -232,6 +232,9 @@ wxString Spring::WriteScriptTxt( Battle& battle )
 			tdf.Append(_T("ModHash"), battle.LoadMod().hash);
 			tdf.Append(_T("MapHash"), battle.LoadMap().hash);
 
+			tdf.Append( _T("Mapname"), battle.GetHostMapName() );
+			tdf.Append( _T("GameType"), usync().GetModArchive( usync().GetModIndex( battle.GetHostModName() ) ) );
+
 			tdf.AppendLineBreak();
 
 			tdf.Append(_T("MyPlayerName"), battle.GetMe().GetNick() );
