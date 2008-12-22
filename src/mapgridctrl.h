@@ -14,10 +14,19 @@ class Ui;
 class MapGridCtrl : public wxPanel
 {
 	public:
+
+		enum SortKey
+		{
+			SortKey_Area,
+			SortKey_PosCount,
+		};
+
 		MapGridCtrl( wxWindow* parent, int size, IBattle* battle, Ui& ui );
 		~MapGridCtrl();
 
 		void SetBattle( IBattle* battle );
+
+		void Sort( SortKey vertical, SortKey horizontal );
 
 		void OnPaint( wxPaintEvent& event );
 		void OnResize( wxSizeEvent& event );
@@ -45,6 +54,10 @@ class MapGridCtrl : public wxPanel
 			wxBitmap minimap;
 			MapState state;
 		};
+
+		static bool CompareArea( const MapData* a, const MapData* b );
+		static bool ComparePosCount( const MapData* a, const MapData* b );
+		template< class Compare > void _Sort( int dimension, Compare cmp );
 
 		void LoadMaps();
 		void CheckInBounds();

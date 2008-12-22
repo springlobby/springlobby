@@ -47,6 +47,55 @@ void MapGridCtrl::SetBattle( IBattle* battle )
 }
 
 
+inline bool MapGridCtrl::CompareArea( const MapData* a, const MapData* b )
+{
+	return (a->info.width * a->info.height) < (b->info.width * b->info.height);
+}
+
+inline bool MapGridCtrl::ComparePosCount( const MapData* a, const MapData* b )
+{
+	return a->info.posCount < b->info.posCount;
+}
+
+template< class Compare > inline void MapGridCtrl::_Sort( int dimension, Compare cmp )
+{
+	if ( dimension == 0 ) {
+		// vertical sort (ie. sort entire dataset)
+		std::sort( m_grid.begin(), m_grid.end(), cmp );
+	}
+	else /*if ( dimension == 1 )*/ {
+		// horizontal sort (ie. sort each row individually)
+		for ( int y = 0; y < m_size.y; ++y ) {
+			const int idx1 = y * m_size.x;
+			const int idx2 = std::min( int(m_grid.size()), idx1 + m_size.x );
+			std::sort( m_grid.begin() + idx1, m_grid.begin() + idx2, cmp );
+		}
+	}
+}
+
+
+void MapGridCtrl::Sort( SortKey vertical, SortKey horizontal )
+{
+	wxLogDebugFunc( _T("") );
+
+	SortKey keys[2] = { vertical, horizontal };
+
+	// This looks like common antipattern 'loop switch sequence', however here
+	// it's the best way I found to prevent duplication of the switch statement,
+	// which will probably require most (all?) changes and possibly grow big.
+
+	for (int i = 0; i < 2; ++i) {
+		switch ( keys[i] ) {
+			case SortKey_Area:     _Sort( i, CompareArea ); break;
+			case SortKey_PosCount: _Sort( i, ComparePosCount ); break;
+			default:
+				ASSERT_EXCEPTION( false, _T("unimplemented SortKey in MapGridCtrl::Sort") );
+				break;
+		}
+	}
+}
+
+
 void MapGridCtrl::LoadMaps()
 {
 	wxArrayString maps = usync().GetMapList();
@@ -72,13 +121,14 @@ void MapGridCtrl::LoadMaps()
 	std::map<wxString, MapData>::iterator it = m_maps.begin();
 	if (it == m_maps.end()) return;
 
-	for (int y = 0; y < m_size.y; ++y) {
-		for (int x = 0; x < m_size.x; ++x) {
+	for (int y = 0; y < m_size.y && it != m_maps.end(); ++y) {
+		for (int x = 0; x < m_size.x && it != m_maps.end(); ++x) {
 			m_grid.push_back( &it->second );
 			++it;
-			if (it == m_maps.end()) return;
 		}
 	}
+
+	Sort( SortKey_PosCount, SortKey_Area );
 }
 
 
@@ -149,9 +199,8 @@ void MapGridCtrl::OnPaint( wxPaintEvent& event )
 	for (int y = start_grid_y, scrn_y = start_scrn_y; y < end_grid_y; ++y, scrn_y += size) {
 		for (int x = start_grid_x, scrn_x = start_scrn_x; x < end_grid_x; ++x, scrn_x += size) {
 			const int idx = y * m_size.x + x;
-			if ( idx >= 0 && idx < int(m_grid.size()) ) {
-				DrawMap( dc, *m_grid[idx], scrn_x, scrn_y );
-			}
+			if ( idx >= int(m_grid.size()) ) break;
+			DrawMap( dc, *m_grid[idx], scrn_x, scrn_y );
 		}
 	}
 }
