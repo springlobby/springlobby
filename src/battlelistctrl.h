@@ -46,24 +46,10 @@ class BattleListCtrl : public CustomVirtListCtrl<const Battle *>
 
 
   protected:
-    static int wxCALLBACK CompareStatusUP(long item1, long item2, long sortData);
     static int wxCALLBACK CompareStatusDOWN(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareCountryUP(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareCountryDOWN(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareRankUP(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareRankDOWN(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareDescriptionUP(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareDescriptionDOWN(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareMapUP(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareMapDOWN(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareModUP(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareModDOWN(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareHostUP(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareHostDOWN(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareSpectatorsUP(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareSpectatorsDOWN(long item1, long item2, long sortData);
-    static int wxCALLBACK ComparePlayerUP(long item1, long item2, long sortData);
-    static int wxCALLBACK ComparePlayerDOWN(long item1, long item2, long sortData);
+
+    static int CompareStatus( DataType u1, DataType u2 );
+    static int ComparePlayer( DataType u1, DataType u2 );
     static int wxCALLBACK CompareMaxPlayerUP(long item1, long item2, long sortData);
     static int wxCALLBACK CompareMaxPlayerDOWN(long item1, long item2, long sortData);
 
