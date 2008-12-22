@@ -102,8 +102,8 @@ wxString BattleListCtrl::OnGetItemText(long item, long column) const
         default: return wxEmptyString;
 
         case 3: return ( opts.description );
-        case 4: return ( opts.mapname );
-        case 5: return ( opts.modname );
+        case 4: return ( battle.GetHostMapName() );
+        case 5: return ( battle.GetHostModName() );
         case 6: return ( opts.founder );
         case 7: return ( wxString::Format(_T("%d"), int(battle.GetSpectators())) );
         case 8: return ( wxString::Format(_T("%d"), int(battle.GetNumUsers()) - int(battle.GetSpectators()) ) );
@@ -132,8 +132,8 @@ int BattleListCtrl::OnGetItemColumnImage(long item, long column) const
         case 0: return icons().GetBattleStatusIcon( battle );
         case 1: return icons().GetFlagIcon( battle.GetFounder().GetCountry() );
         case 2: return icons().GetRankIcon( battle.GetRankNeeded(), false );
-        case 4: return battle.MapExists() ? icons().ICON_EXISTS : icons().ICON_NEXISTS;
-        case 5: return battle.ModExists() ? icons().ICON_EXISTS : icons().ICON_NEXISTS;
+//        case 4: return battle.MapExists() ? icons().ICON_EXISTS : icons().ICON_NEXISTS;
+//        case 5: return battle.ModExists() ? icons().ICON_EXISTS : icons().ICON_NEXISTS;
     }
 }
 
