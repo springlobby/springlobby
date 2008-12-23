@@ -71,9 +71,9 @@ class BattleRoomTab : public wxScrolledWindow
     void OnUserJoined( User& user );
     void OnUserLeft( User& user );
 
-    void OnBotAdded( BattleBot& bot );
-    void OnBotRemoved( BattleBot& bot );
-    void OnBotUpdated( BattleBot& bot );
+    void OnBotAdded( User& bot );
+    void OnBotRemoved( User& bot );
+    void OnBotUpdated( User& bot );
 
     void OnUnitSyncReloaded();
 

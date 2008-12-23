@@ -870,7 +870,7 @@ void Ui::OnUserSaid( User& user, const wxString& message, bool fromme )
 }
 
 
-void Ui::OnBattleOpened( Battle& battle )
+void Ui::OnBattleOpened( IBattle& battle )
 {
     if ( m_main_win == 0 ) return;
     mw().GetJoinTab().GetBattleListTab().AddBattle( battle );
@@ -886,7 +886,7 @@ void Ui::OnBattleOpened( Battle& battle )
 }
 
 
-void Ui::OnBattleClosed( Battle& battle )
+void Ui::OnBattleClosed( IBattle& battle )
 {
     if ( m_main_win == 0 ) return;
     mw().GetJoinTab().GetBattleListTab().RemoveBattle( battle );
@@ -916,7 +916,7 @@ void Ui::OnBattleClosed( Battle& battle )
 }
 
 
-void Ui::OnUserJoinedBattle( Battle& battle, User& user )
+void Ui::OnUserJoinedBattle( IBattle& battle, User& user )
 {
     if ( m_main_win == 0 ) return;
     mw().GetJoinTab().GetBattleListTab().UpdateBattle( battle );
@@ -938,7 +938,7 @@ void Ui::OnUserJoinedBattle( Battle& battle, User& user )
 }
 
 
-void Ui::OnUserLeftBattle( Battle& battle, User& user )
+void Ui::OnUserLeftBattle( IBattle& battle, User& user )
 {
     if ( m_main_win == 0 ) return;
     mw().GetJoinTab().GetBattleListTab().UpdateBattle( battle );
@@ -961,7 +961,7 @@ void Ui::OnUserLeftBattle( Battle& battle, User& user )
     }
 }
 
-void Ui::OnBattleInfoUpdated( Battle& battle )
+void Ui::OnBattleInfoUpdated( IBattle& battle )
 {
     if ( m_main_win == 0 ) return;
     mw().GetJoinTab().GetBattleListTab().UpdateBattle( battle );
@@ -971,7 +971,7 @@ void Ui::OnBattleInfoUpdated( Battle& battle )
     }
 }
 
-void Ui::OnBattleInfoUpdated( Battle& battle, const wxString& Tag )
+void Ui::OnBattleInfoUpdated( IBattle& battle, const wxString& Tag )
 {
     if ( m_main_win == 0 ) return;
     mw().GetJoinTab().GetBattleListTab().UpdateBattle( battle );
@@ -990,7 +990,7 @@ void Ui::OnJoinedBattle( Battle& battle )
     {
         customMessageBox(SL_MAIN_ICON, _("Your spring settings are probably not configured correctly,\nyou should take another look at your settings before trying\nto play online."), _("Spring settings error"), wxOK );
     }
-    if ( battle.GetNatType() != IBattle::NAT_None )
+    if ( battle.GetNatType() != NAT_None )
     {
         wxLogWarning( _T("joining game with NAT transversal") );
 #ifdef HAVE_WX26
@@ -1007,14 +1007,14 @@ void Ui::OnHostedBattle( Battle& battle )
 }
 
 
-void Ui::OnUserBattleStatus( Battle& battle, User& user )
+void Ui::OnUserBattleStatus( IBattle& battle, User& user )
 {
     if ( m_main_win == 0 ) return;
     mw().GetJoinTab().BattleUserUpdated( user );
 }
 
 
-void Ui::OnRequestBattleStatus( Battle& battle )
+void Ui::OnRequestBattleStatus( IBattle& battle )
 {
     if ( m_main_win == 0 ) return;
     try
@@ -1059,7 +1059,7 @@ void Ui::OnBattleStarted( Battle& battle )
 }
 
 
-void Ui::OnSaidBattle( Battle& battle, const wxString& nick, const wxString& msg )
+void Ui::OnSaidBattle( IBattle& battle, const wxString& nick, const wxString& msg )
 {
     if ( m_main_win == 0 ) return;
     try
@@ -1070,7 +1070,7 @@ void Ui::OnSaidBattle( Battle& battle, const wxString& nick, const wxString& msg
 }
 
 
-void Ui::OnBattleAction( Battle& battle, const wxString& nick, const wxString& msg )
+void Ui::OnBattleAction( IBattle& battle, const wxString& nick, const wxString& msg )
 {
     if ( m_main_win == 0 ) return;
     try
@@ -1126,7 +1126,7 @@ void Ui::OnAcceptAgreement( const wxString& agreement )
 }
 
 
-void Ui::OnBattleBotAdded( Battle& battle, BattleBot& bot )
+void Ui::OnBattleBotAdded( IBattle& battle, User& bot )
 {
     if ( m_main_win == 0 ) return;
     try
@@ -1137,7 +1137,7 @@ void Ui::OnBattleBotAdded( Battle& battle, BattleBot& bot )
 }
 
 
-void Ui::OnBattleBotRemoved( Battle& battle, BattleBot& bot )
+void Ui::OnBattleBotRemoved( IBattle& battle, User& bot )
 {
     if ( m_main_win == 0 ) return;
     try
@@ -1148,7 +1148,7 @@ void Ui::OnBattleBotRemoved( Battle& battle, BattleBot& bot )
 }
 
 
-void Ui::OnBattleBotUpdated( Battle& battle, BattleBot& bot )
+void Ui::OnBattleBotUpdated( IBattle& battle, User& bot )
 {
     if ( m_main_win == 0 ) return;
     try

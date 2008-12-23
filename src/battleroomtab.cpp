@@ -718,19 +718,19 @@ void BattleRoomTab::OnUserLeft( User& user )
 }
 
 
-void BattleRoomTab::OnBotAdded( BattleBot& bot )
+void BattleRoomTab::OnBotAdded( User& bot )
 {
     m_players->AddBot( bot );
 }
 
 
-void BattleRoomTab::OnBotRemoved( BattleBot& bot )
+void BattleRoomTab::OnBotRemoved( User& bot )
 {
     m_players->RemoveBot( bot );
 }
 
 
-void BattleRoomTab::OnBotUpdated( BattleBot& bot )
+void BattleRoomTab::OnBotUpdated( User& bot )
 {
     m_players->UpdateBot( bot );
 }

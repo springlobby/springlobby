@@ -196,7 +196,7 @@ void ServerEvents::OnUserQuit( const wxString& nick )
 }
 
 
-void ServerEvents::OnBattleOpened( int id, bool replay, IBattle::NatType nat, const wxString& nick,
+void ServerEvents::OnBattleOpened( int id, bool replay, NatType nat, const wxString& nick,
                                    const wxString& host, int port, int maxplayers,
                                    bool haspass, int rank, const wxString& maphash, const wxString& map,
                                    const wxString& title, const wxString& mod )
@@ -681,9 +681,9 @@ void ServerEvents::OnBattleAddBot( int battleid, const wxString& nick, const wxS
     {
         Battle& battle = m_serv.GetBattle( battleid );
         battle.OnBotAdded( nick, owner, status, aidll );
-        BattleBot* bot = battle.GetBot( nick );
-        ASSERT_LOGIC( bot != 0, _T("Bot null after add.") );
-        ui().OnBattleBotAdded( battle, *bot );
+        User& bot = battle.GetBot( nick );
+        ASSERT_LOGIC( &bot != 0, _T("Bot null after add.") );
+        ui().OnBattleBotAdded( battle, bot );
     }
     catch (assert_exception) {}
 }
@@ -694,10 +694,10 @@ void ServerEvents::OnBattleUpdateBot( int battleid, const wxString& nick, UserBa
     {
         wxLogDebugFunc( _T("") );
         Battle& battle = m_serv.GetBattle( battleid );
-        battle.OnBotUpdated( nick, status );
-        BattleBot* bot = battle.GetBot( nick );
-        ASSERT_LOGIC( bot != 0, _T("Bot null after add.") );
-        ui().OnBattleBotUpdated( battle, *bot );
+				User& bot = battle.GetBot( nick );
+        battle.OnUserBattleStatusUpdated( bot, status );
+        ASSERT_LOGIC( &bot != 0, _T("Bot null after add.") );
+        ui().OnBattleBotUpdated( battle, bot );
     }
     catch (assert_exception) {}
 }
@@ -709,10 +709,10 @@ void ServerEvents::OnBattleRemoveBot( int battleid, const wxString& nick )
     try
     {
         Battle& battle = m_serv.GetBattle( battleid );
-        BattleBot* bot = battle.GetBot( nick );
-        ASSERT_LOGIC( bot != 0, _T("Bot null after add.") );
-        ui().OnBattleBotRemoved( battle, *bot );
-        battle.OnBotRemoved( nick );
+        User& bot = battle.GetBot( nick );
+        ASSERT_LOGIC( &bot != 0, _T("Bot null after add.") );
+        ui().OnBattleBotRemoved( battle, bot );
+        battle.OnUserRemoved( bot );
     }
     catch (assert_exception) {}
 }
@@ -751,7 +751,7 @@ void ServerEvents::OnChannelMessage( const wxString& channel, const wxString& ms
 void ServerEvents::OnHostExternalUdpPort( const unsigned int udpport )
 {
     if ( !m_serv.GetCurrentBattle() ) return;
-    if ( m_serv.GetCurrentBattle()->GetNatType() == IBattle::NAT_Hole_punching || m_serv.GetCurrentBattle()->GetNatType() == IBattle::NAT_Fixed_source_ports ) m_serv.GetCurrentBattle()->SetHostPort( udpport );
+    if ( m_serv.GetCurrentBattle()->GetNatType() == NAT_Hole_punching || m_serv.GetCurrentBattle()->GetNatType() == NAT_Fixed_source_ports ) m_serv.GetCurrentBattle()->SetHostPort( udpport );
 }
 
 
@@ -786,7 +786,7 @@ void ServerEvents::OnClientIPPort( const wxString &username, const wxString &ip,
 
         if (sett().GetShowIPAddresses())ui().OnBattleAction(*m_serv.GetCurrentBattle(),username,wxString::Format(_(" has ip=%s"),ip.c_str()));
 
-        if (m_serv.GetCurrentBattle()->GetNatType()!=IBattle::NAT_None && (udpport==0))
+        if (m_serv.GetCurrentBattle()->GetNatType() != NAT_None && (udpport==0))
         {
             /// todo: better warning message
             ///something.OutputLine( _T(" ** ") + who.GetNick() + _(" does not support nat traversal! ") + GetChatTypeStr() + _T("."), sett().GetChatColorJoinPart(), sett().GetChatFont() );

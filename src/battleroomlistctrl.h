@@ -32,13 +32,13 @@ class BattleroomListCtrl : public CustomListCtrl
     void UpdateUser( User& user );
     void UpdateList();
 
-    void AddBot( BattleBot& bot );
-    void RemoveBot( BattleBot& bot );
-    void UpdateBot( BattleBot& bot );
+    void AddBot( User& bot );
+    void RemoveBot( User& bot );
+    void UpdateBot( User& bot );
     void UpdateBot( const int& index );
 
     int GetUserIndex( User& user );
-    int GetBotIndex( BattleBot& bot );
+    int GetBotIndex( User& bot );
 
     void SortList();
 
@@ -96,7 +96,7 @@ class BattleroomListCtrl : public CustomListCtrl
     UserMenu* m_popup;
 
     User* m_sel_user;
-    BattleBot* m_sel_bot;
+    User* m_sel_bot;
     std::vector<item_content> items;
 
     wxMenu* m_sides;

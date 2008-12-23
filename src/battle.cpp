@@ -258,7 +258,7 @@ void Battle::KickPlayer( User& user )
 			 ui().OnUserLeftBattle( *this, user );
 			 OnUserRemoved( user );
 		}
-    m_serv.BattleKickPlayer( m_opts.battleid, user.GetNick() );
+    m_serv.BattleKickPlayer( m_opts.battleid, user );
 }
 
 void Battle::RingNotReadyPlayers()
@@ -287,7 +287,12 @@ bool Battle::ExecuteSayCommand( const wxString& cmd )
         {
             wxString nick=cmd.AfterFirst(' ');
             m_banned_users.insert(nick);
-            m_serv.BattleKickPlayer( m_opts.battleid, nick );
+            try
+						{
+							User& user = GetUser( nick );
+							m_serv.BattleKickPlayer( m_opts.battleid, user );
+						}
+						catch( assert_exception ) {}
             ui().OnBattleAction(*this,wxString(_T(" ")),nick+_T(" banned"));
             //m_serv.DoActionBattle( m_opts.battleid, cmd.AfterFirst(' ') );
             return true;
@@ -335,7 +340,7 @@ bool Battle::ExecuteSayCommand( const wxString& cmd )
                     m_banned_ips.insert(user.BattleStatus().ip);
                     ui().OnBattleAction(*this,wxString(_T(" ")),user.BattleStatus().ip+_T(" banned"));
                 }
-                m_serv.BattleKickPlayer( m_opts.battleid, nick );
+                m_serv.BattleKickPlayer( m_opts.battleid, user );
             }
             //m_banned_ips.erase(nick);
 
@@ -418,14 +423,19 @@ void Battle::AddBot( const wxString& nick, const wxString& owner, UserBattleStat
 
 void Battle::RemoveBot( const wxString& nick )
 {
-    m_serv.RemoveBot( m_opts.battleid, nick );
+		try
+		{
+			User& bot = GetBot( nick );
+			m_serv.RemoveBot( m_opts.battleid, bot );
+		}
+		catch(assert_exception) {}
 }
 
 
 void Battle::ForceSide( User& user, int side )
 {
 		if ( user.BattleStatus().IsBot() ) user.BattleStatus().side = side;
-		m_serv.ForceSide( m_opts.battleid, user.GetNick(), side );
+		m_serv.ForceSide( m_opts.battleid, user, side );
 }
 
 
@@ -437,7 +447,7 @@ void Battle::ForceTeam( User& user, int team )
 
     ui().OnUserBattleStatus( *this, user );
   }
-  m_serv.ForceTeam( m_opts.battleid, user.GetNick(), team );
+  m_serv.ForceTeam( m_opts.battleid, user, team );
 }
 
 
@@ -450,7 +460,7 @@ void Battle::ForceAlly( User& user, int ally )
 
     ui().OnUserBattleStatus( *this, user );
   }
-  m_serv.ForceAlly( m_opts.battleid, user.GetNick(), ally );
+  m_serv.ForceAlly( m_opts.battleid, user, ally );
 
 }
 
@@ -458,26 +468,26 @@ void Battle::ForceAlly( User& user, int ally )
 void Battle::ForceColour( User& user, const wxColour& col )
 {
 		if ( user.BattleStatus().IsBot() ) user.BattleStatus().colour = col;
-    m_serv.ForceColour( m_opts.battleid, user.GetNick(), col );
+    m_serv.ForceColour( m_opts.battleid, user, col );
 }
 
 
 void Battle::ForceSpectator( User& user, bool spectator )
 {
 		if ( user.BattleStatus().IsBot() ) user.BattleStatus().spectator = spectator;
-    m_serv.ForceSpectator( m_opts.battleid, user.GetNick(), spectator );
+    m_serv.ForceSpectator( m_opts.battleid, user, spectator );
 }
 
 
 void Battle::BattleKickPlayer( User& user )
 {
-    m_serv.BattleKickPlayer( m_opts.battleid, user.GetNick() );
+    m_serv.BattleKickPlayer( m_opts.battleid, user );
 }
 
 void Battle::SetHandicap( User& user, int handicap)
 {
 		if ( user.BattleStatus().IsBot() ) user.BattleStatus().handicap = handicap;
-    m_serv.SetHandicap ( m_opts.battleid, user.GetNick(), handicap );
+    m_serv.SetHandicap ( m_opts.battleid, user, handicap );
 }
 
 bool PlayerRankCompareFunction( User *a, User *b ) // should never operate on nulls. Hence, ASSERT_LOGIC is appropriate here.

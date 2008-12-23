@@ -217,7 +217,7 @@ wxString Spring::WriteScriptTxt( Battle& battle )
 			if ( battle.IsFounderMe() )
 			{
 					tdf.Append( _T("HostIP"), _T("localhost") );
-					if ( battle.GetNatType() == IBattle::NAT_Hole_punching ) tdf.Append( _T("HostPort"), battle.GetMyInternalUdpSourcePort() );
+					if ( battle.GetNatType() == NAT_Hole_punching ) tdf.Append( _T("HostPort"), battle.GetMyInternalUdpSourcePort() );
 					else tdf.Append(_T("HostPort"), battle.GetHostPort() );
 
 			}
@@ -225,7 +225,7 @@ wxString Spring::WriteScriptTxt( Battle& battle )
 			{
 					tdf.Append( _T("HostIP"), battle.GetHostIp() );
 					tdf.Append( _T("HostPort"), battle.GetHostPort() );
-					if ( battle.GetNatType() == IBattle::NAT_Hole_punching ) tdf.Append( _T("SourcePort"), battle.GetMyInternalUdpSourcePort() );
+					if ( battle.GetNatType() == NAT_Hole_punching ) tdf.Append( _T("SourcePort"), battle.GetMyInternalUdpSourcePort() );
 			}
 			tdf.Append( _T("IsHost"), battle.IsFounderMe() );
 
@@ -254,13 +254,14 @@ wxString Spring::WriteScriptTxt( Battle& battle )
 
 			tdf.AppendLineBreak();
 
-			unsigned int NumPlayers = battle.GetNumUsers();
+			unsigned int NumUsers = battle.GetNumUsers();
 			unsigned int NumBots = battle.GetNumBots();
+			unsigned int NumPlayers = battle.GetNumPlayers();
 
 			std::vector<SortingUser> SortedByTeam;
 			std::vector<SortingUser> SortedByAlly;
 
-			for ( unsigned int i = 0; i < NumPlayers; i++ )
+			for ( unsigned int i = 0; i < NumUsers; i++ )
 			{
 					SortingUser UserTeamSort;
 					SortingUser UserAllySort;
@@ -271,26 +272,8 @@ wxString Spring::WriteScriptTxt( Battle& battle )
 					UserTeamSort.OriginalIndex = i;
 					UserAllySort.OriginalIndex = i;
 
-					UserTeamSort.IsBot = false;
-					UserAllySort.IsBot = false;
-
-					SortedByTeam.push_back( UserTeamSort );
-					SortedByAlly.push_back( UserAllySort );
-			}
-
-			for ( unsigned int i = 0; i < NumBots; i++ )
-			{
-					SortingUser UserTeamSort;
-					SortingUser UserAllySort;
-
-					UserTeamSort.ValueToSort = battle.GetBot( i )->bs.team;
-					UserAllySort.ValueToSort = battle.GetBot( i )->bs.ally;
-
-					UserTeamSort.OriginalIndex = i;
-					UserAllySort.OriginalIndex = i;
-
-					UserTeamSort.IsBot = true;
-					UserAllySort.IsBot = true;
+					UserTeamSort.IsBot = battle.GetUser( i ).BattleStatus().IsBot();
+					UserAllySort.IsBot = UserTeamSort.IsBot;
 
 					SortedByTeam.push_back( UserTeamSort );
 					SortedByAlly.push_back( UserAllySort );
@@ -301,17 +284,19 @@ wxString Spring::WriteScriptTxt( Battle& battle )
 
 			unsigned int NumTotalPlayersWithBots = SortedByTeam.size();
 
-			for ( unsigned int i = 0; i < NumPlayers; i++ )
+			for ( unsigned int i = 0; i < NumUsers; i++ )
 			{
+					User& user = battle.GetUser( i );
+					if ( user.BattleStatus().IsBot() ) continue;
 					tdf.EnterSection( _T("PLAYER") + i2s( i ) );
-						tdf.Append( _T("name"), battle.GetUser( i ).GetNick() );
+						tdf.Append( _T("name"), user.GetNick() );
 
-						tdf.Append( _T("countryCode"),battle.GetUser( i ).GetCountry().Lower());
-						tdf.Append( _T("Spectator"), battle.GetUser( i ).BattleStatus().spectator );
+						tdf.Append( _T("countryCode"), user.GetCountry().Lower());
+						tdf.Append( _T("Spectator"), user.BattleStatus().spectator );
 
-						if ( !(battle.GetUser( i ).BattleStatus().spectator) )
+						if ( !user.BattleStatus().spectator )
 						{
-								tdf.Append( _T("team"), battle.GetUser( i ).BattleStatus().team );
+								tdf.Append( _T("team"), user.BattleStatus().team );
 						}
 					tdf.LeaveSection();
 			}
@@ -319,7 +304,7 @@ wxString Spring::WriteScriptTxt( Battle& battle )
 			tdf.AppendLineBreak();
 
 			int PreviousTeam = -1;
-			for ( int i = 0; i < NumTotalPlayersWithBots; i++ )
+			for ( int i = 0; i < NumUsers; i++ )
 			{
 					if ( PreviousTeam == SortedByTeam[i].ValueToSort ) continue; // skip duplicates
 					PreviousTeam = SortedByTeam[i].ValueToSort;
@@ -328,10 +313,10 @@ wxString Spring::WriteScriptTxt( Battle& battle )
 						UserBattleStatus status;
 						if ( SortedByTeam[i].IsBot )
 						{
-								BattleBot usr = *battle.GetBot( SortedByTeam[i].OriginalIndex );
-								status = usr.bs;
-								tdf.Append( _T("AIDLL"), usr.aidll );
-								tdf.Append( _T("TeamLeader"), battle.GetUser( usr.owner ).BattleStatus().team ); // bot owner is the team leader
+								User& usr = battle.GetBot( SortedByTeam[i].OriginalIndex );
+								status = usr.BattleStatus();
+								tdf.Append( _T("AIDLL"), usr.BattleStatus().ailib );
+								tdf.Append( _T("TeamLeader"), battle.GetUser( usr.BattleStatus().owner ).BattleStatus().team ); // bot owner is the team leader
 						}
 						else
 						{
@@ -434,15 +419,14 @@ wxString Spring::WriteSPScriptTxt( SinglePlayerBattle& battle )
 
     for ( unsigned int i = 0; i < battle.GetNumBots(); i++ )
     {
-        BattleBot* bot;
-        bot = battle.GetBot( i );
-        ASSERT_LOGIC( bot != 0, _T("bot == 0") );
-        if ( bot->aidll == _T("") ) PlayerTeam = i;
-        if (bot->bs.ally>int(AllyConv.size())-1)
+        User& bot = battle.GetBot( i );
+        ASSERT_LOGIC( &bot != 0, _T("bot == 0") );
+        if ( bot.BattleStatus().IsBot() ) PlayerTeam = i;
+        if ( bot.BattleStatus().ally > ( int( AllyConv.size() ) -1 ) )
         {
-            AllyConv.resize(bot->bs.ally+1,-1);
+            AllyConv.resize( bot.BattleStatus().ally + 1, -1 );
         }
-        if ( AllyConv[bot->bs.ally] == -1 ) AllyConv[bot->bs.ally] = NumAllys++;
+        if ( AllyConv[bot.BattleStatus().ally] == -1 ) AllyConv[bot.BattleStatus().ally] = NumAllys++;
     }
 
     ASSERT_LOGIC( PlayerTeam != -1, _T("no player found") );
@@ -479,35 +463,31 @@ wxString Spring::WriteSPScriptTxt( SinglePlayerBattle& battle )
 
 			for ( unsigned int i = 0; i < battle.GetNumBots(); i++ )
 			{
-					BattleBot* bot;
-					if ( startpostype == IBattle::ST_Pick) bot = battle.GetBot( i );
-					else bot = battle.GetBotByStartPosition( i );
-					ASSERT_LOGIC( bot != 0, _T("bot == 0") );
+					User& bot = battle.GetBot( i );
 
-					tdf.EnterSection(_T("TEAM")+i2s(i));
+					tdf.EnterSection(_T("TEAM") + i2s(i) );
 						if ( startpostype == IBattle::ST_Pick )
 						{
-								tdf.Append(_T("StartPosX"),bot->posx);
-								tdf.Append(_T("StartPosZ"),bot->posy);
+								tdf.Append(_T("StartPosX"),bot.BattleStatus().posx);
+								tdf.Append(_T("StartPosZ"),bot.BattleStatus().posy);
 						}
 
 						tdf.Append(_T("TeamLeader"),"0");
-						tdf.Append(_T("AllyTeam"),AllyConv[bot->bs.ally]);
+						tdf.Append(_T("AllyTeam"),AllyConv[bot.BattleStatus().ally]);
 
 						wxString colourstring =
-								TowxString( bot->bs.colour.Red()/255.0f ) + _T(' ') +
-								TowxString( bot->bs.colour.Green()/255.0f ) + _T(' ') +
-								TowxString( bot->bs.colour.Blue()/255.0f );
+								TowxString( bot.BattleStatus().colour.Red()/255.0f ) + _T(' ') +
+								TowxString( bot.BattleStatus().colour.Green()/255.0f ) + _T(' ') +
+								TowxString( bot.BattleStatus().colour.Blue()/255.0f );
 						tdf.Append(_T("RGBColor"), colourstring);
 
-						tdf.Append(_T("Side"),usync().GetSideName(battle.GetHostModName(), bot->bs.side));
+						tdf.Append(_T("Side"),usync().GetSideName(battle.GetHostModName(), bot.BattleStatus().side));
 
-						tdf.Append(_T("Handicap"),bot->bs.handicap);
+						tdf.Append(_T("Handicap"),bot.BattleStatus().handicap);
 
-						if ( bot->aidll != _T("") )
+						if ( bot.BattleStatus().IsBot() )
 						{
-								wxString ai = bot->aidll;
-								tdf.Append(_T("AIDLL"),ai);
+								tdf.Append(_T("AIDLL"), bot.BattleStatus().ailib );
 						}
 					tdf.LeaveSection();
 			}

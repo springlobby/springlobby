@@ -10,6 +10,7 @@ class wxString;
 class Channel;
 class User;
 class IBattle;
+class Battle;
 class SinglePlayerBattle;
 struct BattleBot;
 class ChatPanel;
@@ -126,14 +127,14 @@ class Ui
     void OnUserLeftBattle( IBattle& battle, User& user );
     void OnBattleInfoUpdated( IBattle& battle );
     void OnBattleInfoUpdated( IBattle& battle, const wxString& Tag );
-    void OnBattleStarted( IBattle& battle );
+    void OnBattleStarted( Battle& battle );
 
-    void OnBattleBotAdded( IBattle& battle, BattleBot& bot );
-    void OnBattleBotRemoved( IBattle& battle, BattleBot& bot );
-    void OnBattleBotUpdated( IBattle& battle, BattleBot& bot );
+    void OnBattleBotAdded( IBattle& battle, User& bot );
+    void OnBattleBotRemoved( IBattle& battle, User& bot );
+    void OnBattleBotUpdated( IBattle& battle, User& bot );
 
-    void OnJoinedBattle( IBattle& battle );
-    void OnHostedBattle( IBattle& battle );
+    void OnJoinedBattle( Battle& battle );
+    void OnHostedBattle( Battle& battle );
     void OnUserBattleStatus( IBattle& battle, User& user );
     void OnRequestBattleStatus( IBattle& battle );
 

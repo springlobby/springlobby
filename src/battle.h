@@ -166,7 +166,7 @@ class OfflineBattle : public IBattle
 
         UserVec m_participants;
 
-        const int m_id;
+				int m_id;
         bool m_is_founder_me;
 };
 

@@ -89,17 +89,17 @@ class TASServer : public Server
     void SendMyBattleStatus( UserBattleStatus& bs );
     void SendMyUserStatus();
 
-    void ForceSide( int battleid, const wxString& nick, int side );
-    void ForceTeam( int battleid, const wxString& nick, int team );
-    void ForceAlly( int battleid, const wxString& nick, int ally );
-    void ForceColour( int battleid, const wxString& nick, const wxColour& col );
-    void ForceSpectator( int battleid, const wxString& nick, bool spectator );
-    void BattleKickPlayer( int battleid, const wxString& nick );
-    void SetHandicap( int battleid, const wxString& nick, int handicap);
+    void ForceSide( int battleid, User& user, int side );
+    void ForceTeam( int battleid, User& user, int team );
+    void ForceAlly( int battleid, User& user, int ally );
+    void ForceColour( int battleid, User& user, const wxColour& col );
+    void ForceSpectator( int battleid, User& user, bool spectator );
+    void BattleKickPlayer( int battleid, User& user );
+    void SetHandicap( int battleid, User& user, int handicap);
 
     void AddBot( int battleid, const wxString& nick, const wxString& owner, UserBattleStatus status, const wxString& aidll );
-    void RemoveBot( int battleid, const wxString& nick );
-    void UpdateBot( int battleid, const wxString& nick, UserBattleStatus status );
+    void RemoveBot( int battleid, User& bot );
+    void UpdateBot( int battleid, User& bot, UserBattleStatus status );
 
     void StartHostedBattle();
     void SendHostInfo( HostInfo update );
