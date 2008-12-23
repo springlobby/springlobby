@@ -12,17 +12,14 @@
 class ServerEvents;
 class Channel;
 class Ui;
-class Battle;
+struct BattleOptions;
 class User;
 struct UserBattleStatus;
 class ChatPanel;
-struct BattleOptions;
 class wxString;
 typedef int ServerError;
 class wxColour;
 
-//usage long gone? (koshi)
-//#define PE_NONE 0
 
 typedef int HostInfo;
 

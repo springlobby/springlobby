@@ -1,20 +1,24 @@
 /* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
 
-#include <stdexcept>
 #include <wx/tokenzr.h>
-#include <wx/log.h>
+#include <wx/image.h>
 
 #include "ibattle.h"
 #include "utils.h"
+#include "uiutils.h"
 #include "settings.h"
 #include "ui.h"
 #include "images/fixcolours_palette.xpm"
+
+#include <list>
+
 
 IBattle::IBattle():
   m_map_loaded(false),
   m_mod_loaded(false),
   m_map_exists(false),
-  m_mod_exists(false)
+  m_mod_exists(false),
+  m_ingame(false)
 {
 }
 
@@ -26,7 +30,7 @@ IBattle::~IBattle()
 
 
 
-std::vector<wxColour> &GetFixColoursPalette()
+std::vector<wxColour> &IBattle::GetFixColoursPalette()
 {
     static std::vector<wxColour> result;
     if (result.empty())
@@ -48,9 +52,9 @@ std::vector<wxColour> &GetFixColoursPalette()
     return result;
 }
 
-wxColour GetFixColour(int i)
+wxColour IBattle::GetFixColour(int i)
 {
-    std::vector<wxColour> palette=GetFixColoursPalette();
+    std::vector<wxColour> palette = GetFixColoursPalette();
     if (((unsigned int)i)<palette.size())
     {
         return palette[i];
@@ -61,7 +65,7 @@ wxColour GetFixColour(int i)
     }
 }
 
-int Battle::GetFreeTeamNum( bool excludeme ) const
+int IBattle::GetFreeTeamNum( bool excludeme ) const
 {
     int lowest = 0;
     bool changed = true;
@@ -70,7 +74,7 @@ int Battle::GetFreeTeamNum( bool excludeme ) const
         changed = false;
         for ( user_map_t::size_type i = 0; i < GetNumUsers(); i++ )
         {
-            if ( (&GetUser( i ) == &GetMe()) && excludeme ) continue;
+            if ( ( &GetUser( i ) == &GetMe() ) && excludeme ) continue;
             //if ( GetUser( i ).BattleStatus().spectator ) continue;
             if ( GetUser( i ).BattleStatus().team == lowest )
             {
@@ -83,7 +87,7 @@ int Battle::GetFreeTeamNum( bool excludeme ) const
 }
 
 
-wxColour iBattle::GetFreeColour( User *for_whom ) const
+wxColour IBattle::GetFreeColour( User *for_whom ) const
 {
     int lowest = 0;
     bool changed = true;
@@ -106,15 +110,15 @@ wxColour iBattle::GetFreeColour( User *for_whom ) const
 
 }
 
-int ColourDifference(const wxColour &a, const wxColour &b) // returns max difference of r,g,b.
+int IBattle::ColourDifference(const wxColour &a, const wxColour &b) // returns max difference of r,g,b.
 {
     return std::max(abs(a.Red()-b.Red()),std::max(abs(a.Green()-b.Green()),abs(a.Blue()-b.Blue())));
 
 }
 
-int GetClosestFixColour(const wxColour &col, const std::vector<int> &excludes, int &difference)
+int IBattle::GetClosestFixColour(const wxColour &col, const std::vector<int> &excludes, int &difference)
 {
-    std::vector<wxColour> palette=GetFixColoursPalette();
+    std::vector<wxColour> palette = GetFixColoursPalette();
     int mindiff=1024;
     int result=0;
     int t1=palette.size();
@@ -137,7 +141,7 @@ int GetClosestFixColour(const wxColour &col, const std::vector<int> &excludes, i
     return result;
 }
 
-bool iBattle::HaveMultipleBotsInSameTeam() const
+bool IBattle::HaveMultipleBotsInSameTeam() const
 {
     std::list<BattleBot*>::const_iterator i;
     wxLogDebugFunc(_T(""));
@@ -146,51 +150,47 @@ bool iBattle::HaveMultipleBotsInSameTeam() const
 		for ( user_map_t::size_type i = 0; i < GetNumUsers(); i++ )
     {
 				User& usr = GetUser( i );
-        if ( !usr.IsBot() ) continue;
+        if ( !usr.BattleStatus().IsBot() ) continue;
         if ( teams[ usr.BattleStatus().team ] == 1 )return true;
-        teams[ usr.BattleStatus().bs.team ] = 1;
+        teams[ usr.BattleStatus().team ] = 1;
     }
     return false;
 }
 
-void iBattle::OnUserAdded( User& user )
+void IBattle::OnUserAdded( User& user )
 {
     UserList::AddUser( user );
 
-    user.BattleStatus().order = m_order++;
     user.BattleStatus().spectator = false;
     user.BattleStatus().ready = false;
     user.BattleStatus().sync = SYNC_UNKNOWN;
 }
 
-void CommonBattle::OnBotAdded( const wxString& nick, const wxString& owner, const UserBattleStatus& bs, const wxString& aidll )
+void IBattle::OnBotAdded( const wxString& nick, const wxString& owner, const UserBattleStatus& bs, const wxString& aidll )
 {
-    User& user = UserList::_AddUser( nick );
+		User user();
+		m_internal_bot_list.push_back( user );
+    UserList::AddUser( user );
 
-    user.BattleStatus().order = m_order++;
-    user.BattleStatus().spectator = false;
-    user.BattleStatus().ready = false;
-    user.BattleStatus().sync = SYNC_SYNCED;
-    user.SetNick( nick );
-		user.BattleStatus().owner = owner;
-		user.BattleStatus().ailib = aidll;
+    user().BattleStatus().spectator = false;
+    user().BattleStatus().ready = false;
+    user().BattleStatus().sync = SYNC_SYNCED;
+    user().SetNick( nick );
+		user().BattleStatus().owner = owner;
+		user().BattleStatus().ailib = aidll;
 }
 
 unsigned int IBattle::GetNumBots() const
 {
-		unsigned int count = 0:
-		for ( user_map_t::size_type i = 0; i < GetNumUsers(); i++ ) if ( GetUser( i ).IsBot() ) count++;
-		return count;
+		return m_internal_bot_list.size();
 }
 
 unsigned int IBattle::GetNumPlayers() const
 {
-		unsigned int count = 0:
-		for ( user_map_t::size_type i = 0; i < GetNumUsers(); i++ ) if ( !GetUser( i ).IsBot() ) count++;
-		return count;
+		return GetNumUsers() - GetNumBots();
 }
 
-void iBattle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
+void IBattle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 {
 
     bool previousspectatorstatus = user.BattleStatus().spectator;
@@ -214,6 +214,11 @@ void iBattle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 					}
 					SendHostInfo( HI_Spectators );
 			}
+			if ( m_opts.lockexternalbalancechanges )
+			{
+				if ( previousteam != user.BattleStatus().team ) ForceTeam( user, previousteam );
+				if ( previousally != user.BattleStatus().ally ) ForceAlly( user, previousally );
+			}
     }
 }
 
@@ -224,10 +229,22 @@ void IBattle::OnUserRemoved( User& user )
       m_opts.spectators--;
       SendHostInfo( HI_Spectators );
     }
+    user.SetBattle( 0 );
+    if ( user.IsBot() )
+    {
+    	for( UserVecCIter i = m_internal_bot_list.begin(); i != m_internal_bot_list.end(); i++ )
+    	{
+    		if ( i->second == user )
+    		{
+    			m_internal_bot_list.erase( i );
+    			break;
+    		}
+    	}
+    }
     UserList::RemoveUser( user.GetNick() );
 }
 
-bool iBattle::IsEveryoneReady()
+bool IBattle::IsEveryoneReady()
 {
     for (user_map_t::size_type i = 0; i < GetNumUsers(); i++)
     {
@@ -240,16 +257,6 @@ bool iBattle::IsEveryoneReady()
 }
 
 
-void iBattle::RingNotReadyPlayers()
-{
-    for (user_map_t::size_type i = 0; i < GetNumUsers(); i++)
-    {
-        User& u = GetUser(i);
-        if ( u.IsBot() ) continue;
-        UserBattleStatus& bs = u.BattleStatus();
-        if ( !bs.ready && !bs.spectator ) m_serv.Ring( u.GetNick() );
-    }
-}
 
 void IBattle::AddStartRect( unsigned int allyno, unsigned int left, unsigned int top, unsigned int right, unsigned int bottom )
 {
@@ -343,7 +350,7 @@ void IBattle::ForceTeam( User& user, int team )
 }
 
 
-void Battle::ForceAlly( User& user, int ally )
+void IBattle::ForceAlly( User& user, int ally )
 {
 
   if ( IsFounderMe() || user.BattleStatus().IsBot() )
@@ -355,7 +362,7 @@ void Battle::ForceAlly( User& user, int ally )
 }
 
 
-void Battle::ForceColour( User& user, const wxColour& col )
+void IBattle::ForceColour( User& user, const wxColour& col )
 {
   if ( IsFounderMe() || user.BattleStatus().IsBot() )
 		{
@@ -366,7 +373,7 @@ void Battle::ForceColour( User& user, const wxColour& col )
 }
 
 
-void Battle::ForceSpectator( User& user, bool spectator )
+void IBattle::ForceSpectator( User& user, bool spectator )
 {
 		if ( IsFounderMe() || user.BattleStatus().IsBot() )
 		{
@@ -376,7 +383,7 @@ void Battle::ForceSpectator( User& user, bool spectator )
 }
 
 
-void Battle::BattleKickPlayer( User& user )
+void IBattle::BattleKickPlayer( User& user )
 {
 		if ( IsFounderMe() || user.BattleStatus().IsBot() )
 		{
@@ -385,7 +392,7 @@ void Battle::BattleKickPlayer( User& user )
 		}
 }
 
-int SinglePlayerBattle::GetFreeAlly()
+int IBattle::GetFreeAlly()
 {
   int lowest = 0;
   bool changed = true;
@@ -404,7 +411,7 @@ int SinglePlayerBattle::GetFreeAlly()
   return lowest;
 }
 
-void SinglePlayerBattle::GetFreePosition( int& x, int& y )
+void IBattle::GetFreePosition( int& x, int& y )
 {
   UnitSyncMap map = LoadMap();
   for ( int i = 0; i < map.info.posCount; i++ )
@@ -430,7 +437,7 @@ void SinglePlayerBattle::GetFreePosition( int& x, int& y )
   y = map.info.height / 2;
 }
 
-void Battle::SetHandicap( User& user, int handicap)
+void IBattle::SetHandicap( User& user, int handicap)
 {
 		if ( IsFounderMe() || user.BattleStatus().IsBot() ) user.BattleStatus().colour = col;
     m_serv.SetHandicap ( m_opts.battleid, user.GetNick(), handicap );

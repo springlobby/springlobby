@@ -66,19 +66,11 @@ void User::SetStatus( const UserStatus& status )
   }
 
 }
-/*
-void User::SetBattleStatus( const UserBattleStatus& status, bool setorder )
-{
-  int order = m_bstatus.order;
-  m_bstatus = status;
-  if ( !setorder ) m_bstatus.order = order;
-}
-*/
 
-void CommonUser::UpdateBattleStatus( const UserBattleStatus& status, bool setorder )
+
+void CommonUser::UpdateBattleStatus( const UserBattleStatus& status )
 {
 
-  //int order = m_bstatus.order;
   //m_bstatus = status;
   /// total 11 members to update.
 

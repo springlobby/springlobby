@@ -36,7 +36,6 @@ struct UserBattleStatus
 {
   /// when adding something to this struct, also modify User::UpdateBattleStatus()
   // total 11 members here
-  int order;
   int team;
   int ally;
   wxColour colour;
@@ -96,8 +95,8 @@ class CommonUser
         virtual void SetStatus( const UserStatus& status );
 
         UserBattleStatus& BattleStatus() { return m_bstatus; }
-        //void SetBattleStatus( const UserBattleStatus& status, bool setorder = false );/// dont use this to avoid overwriting data like ip and port, use following method.
-        void UpdateBattleStatus( const UserBattleStatus& status, bool setorder = false );
+        //void SetBattleStatus( const UserBattleStatus& status );/// dont use this to avoid overwriting data like ip and port, use following method.
+        void UpdateBattleStatus( const UserBattleStatus& status );
 
     /*    void SetUserData( void* userdata ) { m_data = userdata; }
         void* GetUserData() { return m_data; }*/

@@ -30,7 +30,7 @@ const std::list<BattleBot*>::size_type BOT_SEEKPOS_INVALID = (std::list<BattleBo
 
 
 Battle::Battle( Server& serv, int id ) :
-        CommonBattle(id,false,0), //m_ingame(false),m_order(0)
+        CommonBattle( id ), //m_ingame(false)
         m_serv(serv),
         m_ah(*this),
         m_autolock_on_start(false),
@@ -207,9 +207,7 @@ void Battle::OnUserAdded( User& user )
 
     //UserBattleStatus bs;
     //bs.spectator=true;
-    //bs.order = m_order++;
     //user.UpdateBattleStatus( bs, true );
-    user.BattleStatus().order = m_order++;
     user.BattleStatus().spectator = false;
     user.BattleStatus().ready = false;
     user.BattleStatus().sync = SYNC_UNKNOWN;
@@ -245,37 +243,12 @@ void Battle::OnUserAdded( User& user )
 
 void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 {
-
-    bool previousspectatorstatus = user.BattleStatus().spectator;
-    int previousteam = user.BattleStatus().team;
-    int previousally = user.BattleStatus().ally;
-
-    user.UpdateBattleStatus( status );
-
     if ( status.handicap != 0 )
     {
         ui().OnBattleAction( *this, wxString(_T(" ")) , ( _T("Warning: user ") + user.GetNick() + _T(" got bonus ") ) << status.handicap );
     }
-
     if ( IsFounderMe() )
     {
-        if ( status.spectator != previousspectatorstatus )
-        {
-            if ( status.spectator )
-            {
-                m_opts.spectators++;
-            }
-            else
-            {
-                m_opts.spectators--;
-            }
-            SendHostInfo( HI_Spectators );
-        }
-        if ( m_opts.lockexternalbalancechanges )
-        {
-          if ( previousteam != user.BattleStatus().team ) ForceTeam( user, previousteam );
-          if ( previousally != user.BattleStatus().ally ) ForceAlly( user, previousally );
-        }
         if ( ( m_opts.rankneeded > 1 ) && ( user.GetStatus().rank < m_opts.rankneeded ))
         {
             switch ( m_opts.ranklimittype )
@@ -302,13 +275,6 @@ void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 
 void Battle::OnUserRemoved( User& user )
 {
-    if ( IsFounderMe() && user.BattleStatus().spectator )
-    {
-      m_opts.spectators--;
-      SendHostInfo( HI_Spectators );
-    }
-    user.SetBattle( 0 );
-    UserList::RemoveUser( user.GetNick() );
     m_ah.OnUserRemoved(user);
 }
 
@@ -323,7 +289,16 @@ void Battle::KickPlayer( User& user )
     m_serv.BattleKickPlayer( m_opts.battleid, user.GetNick() );
 }
 
-
+void Battle::RingNotReadyPlayers()
+{
+    for (user_map_t::size_type i = 0; i < GetNumUsers(); i++)
+    {
+        User& u = GetUser(i);
+        if ( u.BattleStatus().IsBot() ) continue;
+        UserBattleStatus& bs = u.BattleStatus();
+        if ( !bs.ready && !bs.spectator ) m_serv.Ring( u.GetNick() );
+    }
+}
 
 bool Battle::ExecuteSayCommand( const wxString& cmd )
 {
@@ -478,7 +453,7 @@ void Battle::RemoveBot( const wxString& nick )
 void Battle::ForceSide( User& user, int side )
 {
 		if ( user.BattleStatus().IsBot() ) user.BattleStatus().side = side;
-		m_serv.ForceSide( m_opts.battleid, user, side );
+		m_serv.ForceSide( m_opts.battleid, user.GetNick(), side );
 }
 
 
@@ -490,7 +465,7 @@ void Battle::ForceTeam( User& user, int team )
 
     ui().OnUserBattleStatus( *this, user );
   }
-  m_serv.ForceTeam( m_opts.battleid, user, team );
+  m_serv.ForceTeam( m_opts.battleid, user.GetNick(), team );
 }
 
 
@@ -503,7 +478,7 @@ void Battle::ForceAlly( User& user, int ally )
 
     ui().OnUserBattleStatus( *this, user );
   }
-  m_serv.ForceAlly( m_opts.battleid, user, ally );
+  m_serv.ForceAlly( m_opts.battleid, user.GetNick(), ally );
 
 }
 
@@ -962,9 +937,7 @@ void Battle::ForceUnsyncedToSpectate()
     }
 }
 
-CommonBattle::CommonBattle( const int id, const bool ingame, const int order ):
-m_ingame(ingame),
-m_order(order)
+CommonBattle::CommonBattle( const int id )
 {
     m_opts.battleid = id;
 }
@@ -972,44 +945,12 @@ m_order(order)
 
 
 
-
-
-BattleBot* CommonBattle::GetBot( const wxString& name ) const
-{
-    std::list<BattleBot*>::const_iterator i;
-
-    for ( i = m_bots.begin(); i != m_bots.end(); ++i )
-    {
-        if ( *i == 0 ) continue;
-        wxLogMessage( _T("%s"), ((*i)->name).c_str ());
-        if ( (*i)->name == name )
-        {
-            return *i;
-        }
-    }
-    return 0;
-}
-
-BattleBot* CommonBattle::GetBot( unsigned int index ) const
-{
-    if ((m_bot_pos == BOT_SEEKPOS_INVALID) || (m_bot_pos > index))
-    {
-        m_bot_seek = m_bots.begin();
-        m_bot_pos = 0;
-    }
-    std::advance( m_bot_seek, index - m_bot_pos );
-    m_bot_pos = index;
-    return *m_bot_seek;
-}
-
-
-
 OfflineBattle::OfflineBattle(const int id)
-        :CommonBattle(id, false, 0)
+        :CommonBattle( id )
 {}
 
 OfflineBattle::OfflineBattle()
-        :CommonBattle(0, false, 0)
+        :CommonBattle( 0 )
 {}
 
 
