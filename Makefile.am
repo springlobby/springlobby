@@ -222,7 +222,6 @@ libtorrent_headers = \
 	$(libt_dir)/include/libtorrent/kademlia/node_entry.hpp \
 	$(libt_dir)/include/libtorrent/kademlia/node_id.hpp \
 	$(libt_dir)/include/libtorrent/kademlia/observer.hpp \
-	$(libt_dir)/include/libtorrent/kademlia/packet_iterator.hpp \
 	$(libt_dir)/include/libtorrent/kademlia/refresh.hpp \
 	$(libt_dir)/include/libtorrent/kademlia/routing_table.hpp \
 	$(libt_dir)/include/libtorrent/kademlia/rpc_manager.hpp \
