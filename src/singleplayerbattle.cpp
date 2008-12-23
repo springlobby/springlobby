@@ -17,6 +17,8 @@ SinglePlayerBattle::SinglePlayerBattle(Ui& ui, MainSinglePlayerTab& msptab):
   m_sptab(msptab)
 {
   CustomBattleOptions().setSingleOption( _T("startpostype"), wxString::Format(_T("%d"), 3), OptionsWrapper::EngineOption );
+  UserBattleStatus bo;
+  m_me = OnBotAdded( _T("Player"), _T(""), bo, _T("") );
 }
 
 

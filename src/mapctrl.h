@@ -57,7 +57,7 @@ class MapCtrl : public wxPanel
 
     void DrawOutlinedText( wxDC& dc, const wxString& str, int x, int y, const wxColour& outline, const wxColour& font );
 
-    wxRect GetBotRect( BattleBot& bot, bool selected );
+    wxRect GetBotRect( User& bot, bool selected );
     RectArea GetBotRectArea( const wxRect& botrect, int x, int y );
 
     wxRect GetBotSideRect() { return wxRect( 37, 20, 16, 16 ); }
@@ -79,7 +79,7 @@ class MapCtrl : public wxPanel
 
     void GetClosestStartPos( int fromx, int fromy, int& index, int& x, int& y, int& range );
 
-    void DrawBot( wxDC& dc, BattleBot& bot, bool selected, bool moving );
+    void DrawBot( wxDC& dc, User& bot, bool selected, bool moving );
     void DrawSinglePlayer( wxDC& dc );
     void DrawBackground( wxDC& dc );
     void DrawStartRects( wxDC& dc );

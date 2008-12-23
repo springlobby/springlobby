@@ -13,40 +13,10 @@
 class Ui;
 class Server;
 
-class CommonBattle : public IBattle
-{
-    public:
-        CommonBattle( const int id );
-
-
-
-        void AddStartRect( unsigned int allyno, unsigned int left, unsigned int top, unsigned int right, unsigned int bottom );
-        void RemoveStartRect( unsigned int allyno );
-        void ResizeStartRect( unsigned int allyno );
-        void StartRectRemoved( unsigned int allyno );
-        void StartRectResized( unsigned int allyno );
-        void StartRectAdded( unsigned int allyno );
-        BattleStartRect GetStartRect( unsigned int allyno );
-        void ClearStartRects();
-        unsigned int GetNumRects();
-
-        BattleBot* GetBot( const wxString& name ) const;
-        BattleBot* GetBot( unsigned int index ) const;
-        unsigned int GetNumBots() const;
-        void OnBotAdded( const wxString& nick, const wxString& owner, const UserBattleStatus& bs, const wxString& aidll );
-        void OnBotRemoved( const wxString& nick );
-        void OnBotUpdated( const wxString& name, const UserBattleStatus& bs );
-        virtual void SetBotTeam( const wxString& nick, int team ) = 0;
-        virtual void SetBotAlly( const wxString& nick, int ally ) = 0;
-        virtual void SetBotSide( const wxString& nick, int side ) = 0;
-        virtual void SetBotColour( const wxString& nick, const wxColour& col ) = 0;
-        virtual void SetBotHandicap( const wxString& nick, int handicap ) = 0;
-
-};
 
 /** \brief model of a sp/mp battle
  * \todo DOCME */
-class Battle : public CommonBattle
+class Battle : public IBattle
 {
   public:
     Battle( Server& serv, int id );
@@ -81,10 +51,6 @@ class Battle : public CommonBattle
     void Say( const wxString& msg );
     void DoAction( const wxString& msg );
 
-    /*bool IsMapAvailable();
-    bool IsModAvailable();*/
-
-    bool HaveMultipleBotsInSameTeam() const;
 
     void OnRequestBattleStatus();
     void SendMyBattleStatus();
@@ -114,6 +80,9 @@ class Battle : public CommonBattle
     void OnUserBattleStatusUpdated( User &user, UserBattleStatus status );
     void OnUserRemoved( User& user );
 
+    bool IsFounderMe();
+
+    int GetMyPlayerNum();
 
     void Autobalance( BalanceType balance_type = balance_divide, bool clans = true, bool strong_clans = true, int allyteamsize = 0 );
     void FixTeamIDs( BalanceType balance_type = balance_divide, bool clans = true, bool strong_clans = true, int controlteamsize = 0 );
@@ -150,12 +119,11 @@ class Battle : public CommonBattle
     Server& m_serv;
     AutoHost m_ah;
     bool m_autolock_on_start;
-    bool m_generating_script;
 
-    void RemoveUser( wxString const& user ) {}
+    const int m_id;
 };
 
-class OfflineBattle : public CommonBattle
+class OfflineBattle : public IBattle
 {
     public:
         OfflineBattle ( const int id );
@@ -177,6 +145,8 @@ class OfflineBattle : public CommonBattle
         void Update ( const wxString& Tag ) {}
         //---
 
+        bool IsFounderMe() { return m_is_founder_me; }
+
         void SetBotTeam( const wxString& nick, int team );
         void SetBotAlly( const wxString& nick, int ally );
         void SetBotSide( const wxString& nick, int side );
@@ -195,6 +165,9 @@ class OfflineBattle : public CommonBattle
     protected:
 
         UserVec m_participants;
+
+        const int m_id;
+        bool m_is_founder_me;
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_BATTLE_H

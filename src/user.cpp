@@ -33,13 +33,13 @@ void User::Said( const wxString& message )
 
 void User::Say( const wxString& message )
 {
-  m_serv.SayPrivate( m_nick, message );
+  GetServer().SayPrivate( m_nick, message );
 }
 
 
 void User::DoAction( const wxString& message )
 {
-  m_serv.DoActionPrivate( m_nick, message );
+  GetServer().DoActionPrivate( m_nick, message );
 }
 
 
@@ -92,14 +92,14 @@ void CommonUser::UpdateBattleStatus( const UserBattleStatus& status )
 
 void User::SendMyUserStatus()
 {
-  m_serv.SendMyUserStatus();
+  GetServer().SendMyUserStatus();
 }
 
 
 bool User::ExecuteSayCommand( const wxString& cmd )
 {
   if ( cmd.BeforeFirst(' ').Lower() == _T("/me") ) {
-    m_serv.DoActionPrivate( m_nick, cmd.AfterFirst(' ') );
+    GetServer().DoActionPrivate( m_nick, cmd.AfterFirst(' ') );
     return true;
   }  else return false;
 }

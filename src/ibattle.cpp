@@ -18,7 +18,8 @@ IBattle::IBattle():
   m_mod_loaded(false),
   m_map_exists(false),
   m_mod_exists(false),
-  m_ingame(false)
+  m_ingame(false),
+	m_generating_script(false)
 {
 }
 
@@ -26,6 +27,19 @@ IBattle::IBattle():
 IBattle::~IBattle()
 {
 }
+
+bool IBattle::IsSynced()
+{
+    LoadMod();
+    LoadMap();
+    bool synced = true;
+    if ( !m_host_map.hash.IsEmpty() ) synced = synced && (m_local_map.hash == m_host_map.hash);
+    if ( !m_host_map.name.IsEmpty() ) synced = synced && (m_local_map.name == m_host_map.name);
+    if ( !m_host_mod.hash.IsEmpty() ) synced = synced && (m_local_mod.hash == m_host_mod.hash);
+    if ( !m_host_mod.name.IsEmpty() ) synced = synced && (m_local_mod.name == m_host_mod.name);
+    return synced;
+}
+
 
 
 
@@ -65,27 +79,15 @@ wxColour IBattle::GetFixColour(int i)
     }
 }
 
-int IBattle::GetFreeTeamNum( bool excludeme ) const
+int IBattle::GetPlayerNum( const User& user )
 {
-    int lowest = 0;
-    bool changed = true;
-    while ( changed )
+    for (user_map_t::size_type i = 0; i < GetNumUsers(); i++)
     {
-        changed = false;
-        for ( user_map_t::size_type i = 0; i < GetNumUsers(); i++ )
-        {
-            if ( ( &GetUser( i ) == &GetMe() ) && excludeme ) continue;
-            //if ( GetUser( i ).BattleStatus().spectator ) continue;
-            if ( GetUser( i ).BattleStatus().team == lowest )
-            {
-                lowest++;
-                changed = true;
-            }
-        }
+        if ( &GetUser(i) == &user ) return i;
     }
-    return lowest;
+    ASSERT_EXCEPTION(false, _T("The player is not in this game.") );
+    return -1;
 }
-
 
 wxColour IBattle::GetFreeColour( User *for_whom ) const
 {
@@ -166,18 +168,18 @@ void IBattle::OnUserAdded( User& user )
     user.BattleStatus().sync = SYNC_UNKNOWN;
 }
 
-void IBattle::OnBotAdded( const wxString& nick, const wxString& owner, const UserBattleStatus& bs, const wxString& aidll )
+User& IBattle::OnBotAdded( const wxString& nick, const wxString& owner, const UserBattleStatus& bs, const wxString& aidll )
 {
-		User user();
+		User user( nick );
 		m_internal_bot_list.push_back( user );
     UserList::AddUser( user );
 
-    user().BattleStatus().spectator = false;
-    user().BattleStatus().ready = false;
-    user().BattleStatus().sync = SYNC_SYNCED;
-    user().SetNick( nick );
-		user().BattleStatus().owner = owner;
-		user().BattleStatus().ailib = aidll;
+    user.BattleStatus().spectator = false;
+    user.BattleStatus().ready = false;
+    user.BattleStatus().sync = SYNC_SYNCED;
+		user.BattleStatus().owner = owner;
+		user.BattleStatus().ailib = aidll;
+		return user;
 }
 
 unsigned int IBattle::GetNumBots() const
@@ -230,11 +232,11 @@ void IBattle::OnUserRemoved( User& user )
       SendHostInfo( HI_Spectators );
     }
     user.SetBattle( 0 );
-    if ( user.IsBot() )
+    if ( user.BattleStatus().IsBot() )
     {
-    	for( UserVecCIter i = m_internal_bot_list.begin(); i != m_internal_bot_list.end(); i++ )
+    	for( UserVecIter i = m_internal_bot_list.begin(); i != m_internal_bot_list.end(); i++ )
     	{
-    		if ( i->second == user )
+    		if ( &(*i) == &user )
     		{
     			m_internal_bot_list.erase( i );
     			break;
@@ -249,7 +251,7 @@ bool IBattle::IsEveryoneReady()
     for (user_map_t::size_type i = 0; i < GetNumUsers(); i++)
     {
 				User& usr = GetUser(i);
-				if ( usr.IsBot() ) continue;
+				if ( usr.BattleStatus().IsBot() ) continue;
         UserBattleStatus& bs = usr.BattleStatus();
         if ( !bs.ready && !bs.spectator ) return false;
     }
@@ -337,7 +339,7 @@ void IBattle::ClearStartRects()
 
 void IBattle::ForceSide( User& user, int side )
 {
-	if ( usr.IsBot() ) usr.BattleStatus().side = side;
+	if ( user.BattleStatus().IsBot() ) user.BattleStatus().side = side;
 }
 
 void IBattle::ForceTeam( User& user, int team )
@@ -355,7 +357,7 @@ void IBattle::ForceAlly( User& user, int ally )
 
   if ( IsFounderMe() || user.BattleStatus().IsBot() )
   {
-    user.BattleStatus().team = team;// update locally first so locking status changes won't revert host's
+    user.BattleStatus().ally = ally;// update locally first so locking status changes won't revert host's
     ui().OnUserBattleStatus( *this, user );
   }
 
@@ -377,7 +379,7 @@ void IBattle::ForceSpectator( User& user, bool spectator )
 {
 		if ( IsFounderMe() || user.BattleStatus().IsBot() )
 		{
-			 user.BattleStatus().colour = col;
+			 user.BattleStatus().spectator = spectator;
 			 ui().OnUserBattleStatus( *this, user );
 		}
 }
@@ -439,8 +441,7 @@ void IBattle::GetFreePosition( int& x, int& y )
 
 void IBattle::SetHandicap( User& user, int handicap)
 {
-		if ( IsFounderMe() || user.BattleStatus().IsBot() ) user.BattleStatus().colour = col;
-    m_serv.SetHandicap ( m_opts.battleid, user.GetNick(), handicap );
+		if ( IsFounderMe() || user.BattleStatus().IsBot() ) user.BattleStatus().handicap = handicap;
 }
 
 void IBattle::SetHostMap(const wxString& mapname, const wxString& hash)
@@ -590,11 +591,6 @@ void IBattle::OnUnitSyncReloaded()
   else  m_map_exists = usync().MapExists( m_host_map.name );
 }
 
-
-unsigned int IBattle::AddBot( int ally, int posx, int posy, int handicap, const wxString& aidll )
-{
-  return (unsigned int)(-1);/// note: that looks pretty crappy and needs to be investigated.
-}
 
 
 static wxString FixPresetName( const wxString& name )

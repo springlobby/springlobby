@@ -176,6 +176,12 @@ public:
     virtual wxString GetHostMapName() const;
     virtual wxString GetHostMapHash() const;
 
+    virtual bool IsSynced();
+
+    virtual bool IsFounderMe() = 0;
+
+		virtual int GetPlayerNum( const User& user );
+
     virtual void SetHostMod( const wxString& modname, const wxString& hash );
     virtual void SetLocalMod( const UnitSyncMod& mod );
     virtual const UnitSyncMod& LoadMod();
@@ -189,9 +195,17 @@ public:
     void OnUserAdded( User& user );
     void OnUserBattleStatusUpdated( User &user, UserBattleStatus status );
     void OnUserRemoved( User& user );
-    virtual User GetMe() = 0;
 
 		bool IsEveryoneReady();
+
+		void ForceSide( User& user, int side );
+		void ForceAlly( User& user, int ally );
+		void ForceTeam( User& user, int team );
+		void ForceColour( User& user, const wxColour& col );
+		void ForceSpectator( User& user, bool spectator );
+		void SetHandicap( User& user, int handicap);
+		void BattleKickPlayer( User& user );
+
 
     virtual void AddStartRect( unsigned int allyno, unsigned int left, unsigned int top, unsigned int right, unsigned int bottom );
     virtual void RemoveStartRect( unsigned int allyno );
@@ -202,25 +216,22 @@ public:
     virtual void ClearStartRects();
     virtual unsigned int GetNumRects();
 
-    virtual int GetFreeTeamNum( bool excludeme ) const;
+    virtual int GetFreeTeamNum( bool excludeme );
 
     virtual int GetMyAlly();
     virtual void SetMyAlly( int ally );
-
-    virtual bool IsFounderMe();
 
     virtual void SendHostInfo( HostInfo update );
     virtual void SendHostInfo( const wxString& Tag );
 		virtual void Update ( const wxString& Tag );
 
-    virtual BattleBot* GetBot( unsigned int index ) const;
-    virtual BattleBot* GetBot( const wxString& name ) const;
+    virtual User& GetBot( unsigned int index ) const;
+    virtual User& GetBot( const wxString& name ) const;
 
     virtual unsigned int GetNumBots() const;
-    virtual unsigned int AddBot( int ally, int posx, int posy, int handicap, const wxString& aidll );
     virtual void RemoveBot( unsigned int index );
     virtual bool HaveMultipleBotsInSameTeam() const;
-    virtual void OnBotAdded( const wxString& nick, const wxString& owner, const UserBattleStatus& bs, const wxString& aidll );
+    virtual User& OnBotAdded( const wxString& nick, const wxString& owner, const UserBattleStatus& bs, const wxString& aidll );
 
     virtual void GetFreePosition( int& x, int& y );
     virtual int GetFreeAlly();
@@ -301,6 +312,7 @@ public:
 
 		typedef std::vector<User> UserVec;
 		typedef UserVec::const_iterator UserVecCIter;
+		typedef UserVec::iterator UserVecIter;
 
 protected:
 
@@ -320,6 +332,8 @@ protected:
     BattleOptions m_opts;
 
 		bool m_ingame;
+
+		bool m_generating_script;
 
 		std::map<unsigned int,BattleStartRect> m_rects;
 

@@ -371,13 +371,13 @@ void MapCtrl::RelocateBots()
   if ( m_battle == 0 ) return;
 
   for ( unsigned int i = 0; i < m_battle->GetNumBots(); i++ ) {
-    BattleBot* bot = m_battle->GetBot( i );
+    User& bot = m_battle->GetBot( i );
     try
     {
-    ASSERT_LOGIC( bot != 0, _T("bot == 0") );
+    ASSERT_LOGIC( &bot != 0, _T("bot == 0") );
     } catch (...) { return; }
-    m_battle->GetFreePosition( bot->posx, bot->posy );
-    if ( bot->posx == -1 ) m_battle->RemoveBot( i );
+    m_battle->GetFreePosition( bot.BattleStatus().posx, bot.BattleStatus().posy );
+    if ( bot.BattleStatus().posx == -1 ) m_battle->RemoveBot( i );
   }
 }
 
@@ -703,13 +703,13 @@ void MapCtrl::DrawStartPositions( wxDC& dc )
 }
 
 
-wxRect MapCtrl::GetBotRect( BattleBot& bot, bool selected )
+wxRect MapCtrl::GetBotRect( User& bot, bool selected )
 {
   ASSERT_LOGIC( m_battle != 0, _T("Bot == 0") );
   wxRect mr = GetMinimapRect();
   m_map = m_battle->LoadMap();
-  int x = (int)( (double)((double)bot.posx / (double)m_map.info.width) * (double)mr.width ) - 8;
-  int y = (int)( (double)(bot.posy / (double)m_map.info.height) * (double)mr.height ) - 8;
+  int x = (int)( (double)((double)bot.BattleStatus().posx / (double)m_map.info.width) * (double)mr.width ) - 8;
+  int y = (int)( (double)(bot.BattleStatus().posy / (double)m_map.info.height) * (double)mr.height ) - 8;
   int box_height = 70;
   int box_width = 75;
   if ( selected ) {
@@ -779,10 +779,10 @@ void MapCtrl::DrawOutlinedText( wxDC& dc, const wxString& str, int x, int y, con
 
 }
 
-void MapCtrl::DrawBot( wxDC& dc, BattleBot& bot, bool selected, bool moving )
+void MapCtrl::DrawBot( wxDC& dc, User& bot, bool selected, bool moving )
 {
   wxBitmap* img;
-  if ( bot.aidll == _T("") ) img = m_player_img;
+  if ( !bot.BattleStatus().IsBot() ) img = m_player_img;
   else img = m_bot_img;
 
   wxFont f( 9, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_LIGHT );
@@ -790,7 +790,7 @@ void MapCtrl::DrawBot( wxDC& dc, BattleBot& bot, bool selected, bool moving )
   dc.SetTextForeground( *wxWHITE );
 
   wxRect r = GetBotRect( bot, selected );
-  wxColour col = bot.bs.colour;
+  wxColour col = bot.BattleStatus().colour;
 
   if ( selected ) {
     wxRect siderect = GetBotSideRect();
@@ -807,11 +807,11 @@ void MapCtrl::DrawBot( wxDC& dc, BattleBot& bot, bool selected, bool moving )
       wxString mod = m_battle->GetHostModName();
       int scount = usync().GetSideCount( mod );
       if ( scount <= 0 ) ASSERT_EXCEPTION( false, _T("Mod has no sides.") );
-      wxString side = usync().GetSideName( mod, bot.bs.side % scount );
+      wxString side = usync().GetSideName( mod, bot.BattleStatus().side % scount );
       bmp = new wxBitmap( usync().GetSidePicture( mod, side ) );
     } catch (...) {
       delete bmp;
-      if ( bot.bs.side == 0 ) bmp = new wxBitmap( *charArr2wxBitmap(no1_icon_png, sizeof(no1_icon_png) ) );
+      if ( bot.BattleStatus().side == 0 ) bmp = new wxBitmap( *charArr2wxBitmap(no1_icon_png, sizeof(no1_icon_png) ) );
       else bmp = new wxBitmap( *charArr2wxBitmap(no2_icon_png, sizeof(no2_icon_png) ) );
     }
 
@@ -819,8 +819,8 @@ void MapCtrl::DrawBot( wxDC& dc, BattleBot& bot, bool selected, bool moving )
     delete bmp;
 
     wxRect updownallyrect = GetBotUpAllyButtonRect();
-    DrawOutlinedText( dc, wxString::Format( _("ally:   %d"), bot.bs.ally + 1 ), r.x+3, r.y+updownallyrect.y, wxColour(50,50,50), *wxWHITE );
-    //dc.DrawText( wxString::Format( _("ally: %d"), bot.bs.ally + 1 ), r.x+4, r.y+40 );
+    DrawOutlinedText( dc, wxString::Format( _("ally:   %d"), bot.BattleStatus().ally + 1 ), r.x+3, r.y+updownallyrect.y, wxColour(50,50,50), *wxWHITE );
+    //dc.DrawText( wxString::Format( _("ally: %d"), bot.BattleStatus().ally + 1 ), r.x+4, r.y+40 );
 
     if ( m_rect_area == RA_UpAllyButton ) dc.DrawBitmap( wxBitmap(upsel_down_xpm), r.x+updownallyrect.x, r.y+updownallyrect.y, true );
     else if ( m_rect_area == RA_DownAllyButton ) dc.DrawBitmap( wxBitmap(up_downsel_xpm), r.x+updownallyrect.x, r.y+updownallyrect.y, true );
@@ -829,7 +829,7 @@ void MapCtrl::DrawBot( wxDC& dc, BattleBot& bot, bool selected, bool moving )
     wxRect updownhandicaprect = GetBotUpHandicapButtonRect();
     wxFont b( 6, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_LIGHT );
     dc.SetFont( b );
-    DrawOutlinedText( dc, wxString::Format( _("bonus: %d%%"), bot.bs.handicap ), r.x+3, r.y+updownhandicaprect.y+2, wxColour(50,50,50), *wxWHITE );
+    DrawOutlinedText( dc, wxString::Format( _("bonus: %d%%"), bot.BattleStatus().handicap ), r.x+3, r.y+updownhandicaprect.y+2, wxColour(50,50,50), *wxWHITE );
     dc.SetFont( f );
 
     if ( m_rect_area == RA_UpHandicapButton ) dc.DrawBitmap( wxBitmap(upsel_down_xpm), r.x+updownhandicaprect.x, r.y+updownhandicaprect.y, true );
@@ -855,7 +855,7 @@ void MapCtrl::DrawBot( wxDC& dc, BattleBot& bot, bool selected, bool moving )
     dc.DrawBitmap( *img, r.x+2, r.y+2, true );
 
     int w, h;
-    wxString allystr = wxString::Format( _T("%d"), bot.bs.ally + 1 );
+    wxString allystr = wxString::Format( _T("%d"), bot.BattleStatus().ally + 1 );
     dc.GetTextExtent( allystr, &w, &h );
 
     DrawOutlinedText( dc, allystr, r.width - w - 3 + r.x, r.height - h - 1 + r.y, wxColour(50,50,50), *wxWHITE );
@@ -887,12 +887,12 @@ void MapCtrl::DrawSinglePlayer( wxDC& dc )
     int x = (int)( (double)((double)m_map.info.positions[i].x / (double)m_map.info.width) * (double)mr.width ) - 8;
     int y = (int)( (double)(m_map.info.positions[i].y / (double)m_map.info.height) * (double)mr.height ) - 8;
 
-    BattleBot* bot = 0;
+    User* bot = 0;
     for ( unsigned int bi = 0; bi < m_battle->GetNumBots(); bi++ ) {
-      BattleBot* tbot = m_battle->GetBot(bi);
-      if ( tbot == 0 ) continue;
-      if ( (tbot->posx == m_map.info.positions[i].x) && (tbot->posy == m_map.info.positions[i].y) ) {
-        bot = tbot;
+      User& tbot = m_battle->GetBot(bi);
+      if ( &tbot == 0 ) continue;
+      if ( (tbot.BattleStatus().posx == m_map.info.positions[i].x) && (tbot.BattleStatus().posy == m_map.info.positions[i].y) ) {
+        bot = &tbot;
         break;
       }
     }
@@ -909,11 +909,11 @@ void MapCtrl::DrawSinglePlayer( wxDC& dc )
   }
 
   for ( unsigned int i = 0; i < m_battle->GetNumBots(); i++ ) {
-    BattleBot* bot = m_battle->GetBot(i);
-    if ( bot == 0 ) continue;
+    User& bot = m_battle->GetBot(i);
+    if ( &bot == 0 ) continue;
 
     bool expanded = (int)i == m_bot_expanded;
-    DrawBot( dc, *bot, (m_maction != MA_Move) && expanded, (m_maction == MA_Move) && expanded );
+    DrawBot( dc, bot, (m_maction != MA_Move) && expanded, (m_maction == MA_Move) && expanded );
 
   }
 
@@ -972,42 +972,42 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
 
     if ( !m_battle->MapExists() ) return;
     if ( m_maction == MA_Move ) {
-      BattleBot* bot = m_battle->GetBot( m_bot_expanded );
+      User& bot = m_battle->GetBot( m_bot_expanded );
       try
       {
-        ASSERT_LOGIC( bot != 0, _T("MapCtrl::OnMouseMove(): bot = 0") );
+        ASSERT_LOGIC( &bot != 0, _T("MapCtrl::OnMouseMove(): bot = 0") );
       } catch (...) { return; }
       m_map = m_battle->LoadMap();
 
       wxRect mr = GetMinimapRect();
-      wxRect r = GetBotRect( *bot, false );
+      wxRect r = GetBotRect( bot, false );
 
-      bot->posx = (int)( ( (double)(event.GetX() - mr.x) / (double)mr.width ) * (double)m_map.info.width );
-      bot->posy = (int)( ( (double)(event.GetY() - mr.y) / (double)mr.height ) * (double)m_map.info.height );
-      CLAMP( bot->posx, 0, m_map.info.width );
-      CLAMP( bot->posy, 0, m_map.info.height );
+      bot.BattleStatus().posx = (int)( ( (double)(event.GetX() - mr.x) / (double)mr.width ) * (double)m_map.info.width );
+      bot.BattleStatus().posy = (int)( ( (double)(event.GetY() - mr.y) / (double)mr.height ) * (double)m_map.info.height );
+      CLAMP( bot.BattleStatus().posx, 0, m_map.info.width );
+      CLAMP( bot.BattleStatus().posy, 0, m_map.info.height );
 
       int x, y, index, range;
-      GetClosestStartPos( bot->posx, bot->posy, index, x, y, range );
+      GetClosestStartPos( bot.BattleStatus().posx, bot.BattleStatus().posy, index, x, y, range );
       if ( index != -1 ) {
         if ( range < (10.0 / (double)mr.width) * (double)m_map.info.width ) {
-          bot->posx = x;
-          bot->posy = y;
+          bot.BattleStatus().posx = x;
+          bot.BattleStatus().posy = y;
         }
       }
-      RefreshRect( r.Union( GetBotRect( *bot, false ) ), false );
+      RefreshRect( r.Union( GetBotRect( bot, false ) ), false );
       return;
     }
 
     if ( m_bot_expanded >= (int)m_battle->GetNumBots() ) m_bot_expanded = -1;
 
     if ( m_bot_expanded != -1 ) {
-      BattleBot* bot = m_battle->GetBot( m_bot_expanded );
+      User& bot = m_battle->GetBot( m_bot_expanded );
       try
       {
-      ASSERT_LOGIC( bot != 0, _T("MapCtrl::OnMouseMove(): bot = 0") );
+      ASSERT_LOGIC( &bot != 0, _T("MapCtrl::OnMouseMove(): bot = 0") );
       } catch (...) { return; }
-      wxRect r = GetBotRect( *bot, true );
+      wxRect r = GetBotRect( bot, true );
       if ( r.CONTAINS( event.GetX(), event.GetY() )  ) {
         RectArea last = m_rect_area;
         m_rect_area = GetBotRectArea( r, event.GetX(), event.GetY() );
@@ -1018,13 +1018,13 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
       }
     } else {
       for ( unsigned int i = 0; i < m_battle->GetNumBots(); i++ ) {
-        BattleBot* bot = m_battle->GetBot(i);
-        if ( bot == 0 ) continue;
-        wxRect r = GetBotRect( *bot, false );
+        User& bot = m_battle->GetBot(i);
+        if ( &bot == 0 ) continue;
+        wxRect r = GetBotRect( bot, false );
         if ( r.CONTAINS( event.GetX(), event.GetY() )  ) {
           m_rect_area = GetBotRectArea( r, event.GetX(), event.GetY() );
           m_bot_expanded = i;
-          RefreshRect( GetBotRect( *bot, true ), false );
+          RefreshRect( GetBotRect( bot, true ), false );
           break;
         }
       }
@@ -1159,12 +1159,12 @@ void MapCtrl::OnLeftDown( wxMouseEvent& event )
     else return;
     if ( m_mdown_area == RA_Move ) m_maction = MA_Move;
     else m_maction = MA_None;
-    BattleBot* bot = m_battle->GetBot( m_bot_expanded );
+    User& bot = m_battle->GetBot( m_bot_expanded );
     try
     {
-    ASSERT_LOGIC( bot != 0, _T("MapCtrl::OnLeftDown(): bot = 0") );
+    ASSERT_LOGIC( &bot != 0, _T("MapCtrl::OnLeftDown(): bot = 0") );
     } catch (...) { return; }
-    RefreshRect( GetBotRect( *bot, true ), false );
+    RefreshRect( GetBotRect( bot, true ), false );
     return;
   }
 
@@ -1235,38 +1235,38 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
   if ( m_sp ) {
     if ( m_bot_expanded == -1 ) return;
     if ( m_rect_area != m_mdown_area ) return;
-    BattleBot* bot = m_battle->GetBot( m_bot_expanded );
+    User& bot = m_battle->GetBot( m_bot_expanded );
     try
     {
-    ASSERT_LOGIC( bot != 0, _T("MapCtrl::OnLeftUp(): bot == 0") );
+    ASSERT_LOGIC( &bot != 0, _T("MapCtrl::OnLeftUp(): bot == 0") );
     } catch (...) { return; }
 
     if ( m_mdown_area == RA_UpAllyButton ) {
-      bot->bs.ally = ( bot->bs.ally + 1 ) % 16;
-      RefreshRect( GetBotRect( *bot, true ), false );
+      bot.BattleStatus().ally = ( bot.BattleStatus().ally + 1 ) % 16;
+      RefreshRect( GetBotRect( bot, true ), false );
 
     } else if ( m_mdown_area == RA_DownAllyButton ) {
-      bot->bs.ally = (bot->bs.ally - 1) >= 0 ? (bot->bs.ally - 1) : 15;
-      RefreshRect( GetBotRect( *bot, true ), false );
+      bot.BattleStatus().ally = (bot.BattleStatus().ally - 1) >= 0 ? (bot.BattleStatus().ally - 1) : 15;
+      RefreshRect( GetBotRect( bot, true ), false );
 
     } else if ( m_mdown_area == RA_UpHandicapButton ) {
-      if ( bot->bs.handicap == 100 ) bot->bs.handicap = 0;
-      else bot->bs.handicap = ( bot->bs.handicap + 5 );
-      RefreshRect( GetBotRect( *bot, true ), false );
+      if ( bot.BattleStatus().handicap == 100 ) bot.BattleStatus().handicap = 0;
+      else bot.BattleStatus().handicap = ( bot.BattleStatus().handicap + 5 );
+      RefreshRect( GetBotRect( bot, true ), false );
 
     } else if ( m_mdown_area == RA_DownHandicapButton ) {
-      bot->bs.handicap = (bot->bs.handicap - 5) >= 0 ? (bot->bs.handicap - 5) : 100;
-      RefreshRect( GetBotRect( *bot, true ), false );
+      bot.BattleStatus().handicap = (bot.BattleStatus().handicap - 5) >= 0 ? (bot.BattleStatus().handicap - 5) : 100;
+      RefreshRect( GetBotRect( bot, true ), false );
 
     } else if ( m_mdown_area == RA_Side ) {
       try {
-        if ( usync().GetSideCount( m_battle->GetHostModName() ) > 0 ) bot->bs.side = (bot->bs.side + 1) % usync().GetSideCount( m_battle->GetHostModName() );
-        else bot->bs.side = 0;
+        if ( usync().GetSideCount( m_battle->GetHostModName() ) > 0 ) bot.BattleStatus().side = (bot.BattleStatus().side + 1) % usync().GetSideCount( m_battle->GetHostModName() );
+        else bot.BattleStatus().side = 0;
       } catch(...) {}
-      RefreshRect( GetBotRect( *bot, true ), false );
+      RefreshRect( GetBotRect( bot, true ), false );
 
     } else if ( m_mdown_area == RA_Close ) {
-      wxRect r = GetBotRect( *bot, true );
+      wxRect r = GetBotRect( bot, true );
       m_battle->RemoveBot( m_bot_expanded );
       RefreshRect( r, false );
     }

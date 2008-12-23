@@ -30,18 +30,16 @@ const std::list<BattleBot*>::size_type BOT_SEEKPOS_INVALID = (std::list<BattleBo
 
 
 Battle::Battle( Server& serv, int id ) :
-        CommonBattle( id ), //m_ingame(false)
         m_serv(serv),
         m_ah(*this),
         m_autolock_on_start(false),
-        m_generating_script(false)
+        m_id( id )
 {
 }
 
 
 Battle::~Battle()
 {
-    ClearStartRects();
 }
 
 
@@ -147,17 +145,7 @@ void Battle::SetImReady( bool ready )
 }
 
 
-bool Battle::IsSynced()
-{
-    LoadMod();
-    LoadMap();
-    bool synced = true;
-    if ( !m_host_map.hash.IsEmpty() ) synced = synced && (m_local_map.hash == m_host_map.hash);
-    if ( !m_host_map.name.IsEmpty() ) synced = synced && (m_local_map.name == m_host_map.name);
-    if ( !m_host_mod.hash.IsEmpty() ) synced = synced && (m_local_mod.hash == m_host_mod.hash);
-    if ( !m_host_mod.name.IsEmpty() ) synced = synced && (m_local_mod.name == m_host_mod.name);
-    return synced;
-}
+
 
 
 /*bool Battle::HasMod()
@@ -181,22 +169,6 @@ void Battle::DoAction( const wxString& msg )
 User& Battle::GetMe() const
 {
     return m_serv.GetMe();
-}
-
-
-bool Battle::IsFounderMe() const
-{
-    return ( ( m_opts.founder == m_serv.GetMe().GetNick() ) || ( m_opts.isproxy  && !m_generating_script ) );
-}
-
-int Battle::GetMyPlayerNum() const
-{
-    for (user_map_t::size_type i = 0; i < GetNumUsers(); i++)
-    {
-        if ( &GetUser(i) == &m_serv.GetMe() ) return i;
-    }
-    ASSERT_EXCEPTION(false, _T("You are not in this game.") );
-    return -1;
 }
 
 
@@ -937,20 +909,46 @@ void Battle::ForceUnsyncedToSpectate()
     }
 }
 
-CommonBattle::CommonBattle( const int id )
+bool Battle::IsFounderMe()
 {
-    m_opts.battleid = id;
+    return ( ( m_opts.founder == GetMe().GetNick() ) || ( m_opts.isproxy  && !m_generating_script ) );
+}
+
+int Battle::GetMyPlayerNum()
+{
+    return GetPlayerNum( GetMe() );
 }
 
 
 
+int Battle::GetFreeTeamNum( bool excludeme ) const
+{
+    int lowest = 0;
+    bool changed = true;
+    while ( changed )
+    {
+        changed = false;
+        for ( user_map_t::size_type i = 0; i < GetNumUsers(); i++ )
+        {
+            if ( ( &GetUser( i ) == &GetMe() ) && excludeme ) continue;
+            //if ( GetUser( i ).BattleStatus().spectator ) continue;
+            if ( GetUser( i ).BattleStatus().team == lowest )
+            {
+                lowest++;
+                changed = true;
+            }
+        }
+    }
+    return lowest;
+}
 
-OfflineBattle::OfflineBattle(const int id)
-        :CommonBattle( id )
+
+OfflineBattle::OfflineBattle(const int id):
+m_id( id )
 {}
 
-OfflineBattle::OfflineBattle()
-        :CommonBattle( 0 )
+OfflineBattle::OfflineBattle():
+m_id( 0 )
 {}
 
 
