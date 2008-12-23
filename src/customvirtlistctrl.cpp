@@ -413,3 +413,9 @@ typename CustomVirtListCtrl<T>::DataType CustomVirtListCtrl<T>::GetDataFromIndex
 {
     return m_data[index];
 }
+
+template < class T >
+typename CustomVirtListCtrl<T>::DataType CustomVirtListCtrl<T>::GetSelectedData()
+{
+    return GetDataFromIndex( m_selected_index );
+}

@@ -446,7 +446,7 @@ void BattleListTab::OnJoin( wxCommandEvent& event )
 
   if ( m_battle_list->GetSelectedIndex() < 0 ) return;
 
-//  DoJoin( m_ui.GetServer().battles_iter->GetBattle( m_battle_list->GetSelectedData() ) );
+  DoJoin( *m_battle_list->GetSelectedData() );
 
 }
 

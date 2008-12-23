@@ -204,6 +204,7 @@ public:
     long GetSelectedIndex();
     void SetSelectedIndex(const long newindex);
     DataType GetDataFromIndex ( const  long index );
+    DataType GetSelectedData();
     /** @}
      */
 
