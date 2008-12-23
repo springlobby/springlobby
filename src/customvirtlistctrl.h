@@ -36,6 +36,9 @@ class SLTipWindow;
 template < class DataImp >
 class CustomVirtListCtrl : public ListBaseType
 {
+public:
+    typedef DataImp DataType;
+
 protected:
     typedef UserActions::ActionType ActionType;
     //! used to display tooltips for a certain amount of time
@@ -200,6 +203,7 @@ public:
      */
     long GetSelectedIndex();
     void SetSelectedIndex(const long newindex);
+    DataType GetDataFromIndex ( const  long index );
     /** @}
      */
 
@@ -271,7 +275,6 @@ public:
      virtual void Clear();
 
 protected:
-    typedef DataImp DataType;
     typedef std::vector< DataImp > DataVector;
     typedef typename DataVector::iterator DataIter;
     typedef typename DataVector::const_iterator DataCIter;

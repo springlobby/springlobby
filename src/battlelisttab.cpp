@@ -526,7 +526,8 @@ void BattleListTab::OnSelect( wxListEvent& event )
   if ( event.GetIndex() == -1 ) {
     SelectBattle( 0 );
   } else {
-    SelectBattle( &m_ui.GetServer().battles_iter->GetBattle( m_battle_list->GetItemData( event.GetIndex() ) ) );
+      Battle* b = ( m_battle_list->GetDataFromIndex( event.GetIndex() ) ) ;
+    SelectBattle( b );//
   }
 }
 

@@ -14,15 +14,15 @@ class Ui;
 
 /** \brief The ListCtrll contained in BattleListTab dispalying all currently active battles with their infos
  * \todo DOCMEMORE */
-class BattleListCtrl : public CustomVirtListCtrl<const Battle *>
+class BattleListCtrl : public CustomVirtListCtrl< Battle *>
 {
   public:
     BattleListCtrl( wxWindow* parent, Ui& ui );
     ~BattleListCtrl();
 
-    void AddBattle( const Battle& battle );
-    void RemoveBattle( const Battle& battle );
-    void UpdateBattle( const Battle& battle );
+    void AddBattle( Battle& battle );
+    void RemoveBattle( Battle& battle );
+    void UpdateBattle( Battle& battle );
 
 
     void OnListRightClick( wxListEvent& event );

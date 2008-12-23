@@ -21,7 +21,7 @@
 #include "aui/auimanager.h"
 #endif
 
-BEGIN_EVENT_TABLE(BattleListCtrl, CustomVirtListCtrl<const Battle *>)
+BEGIN_EVENT_TABLE(BattleListCtrl, CustomVirtListCtrl< Battle *>)
 
   EVT_LIST_ITEM_RIGHT_CLICK( BLIST_LIST, BattleListCtrl::OnListRightClick )
   EVT_LIST_COL_CLICK       ( BLIST_LIST, BattleListCtrl::OnColClick )
@@ -37,7 +37,7 @@ END_EVENT_TABLE()
 Ui* BattleListCtrl::m_ui_for_sort = 0;
 
 BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui ):
-  CustomVirtListCtrl<const Battle *>(parent, BLIST_LIST, wxDefaultPosition, wxDefaultSize,
+  CustomVirtListCtrl< Battle *>(parent, BLIST_LIST, wxDefaultPosition, wxDefaultSize,
             wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("BattleListCtrl"), 10, &CompareOneCrit),
   m_ui(ui)
 {
@@ -137,7 +137,7 @@ int BattleListCtrl::OnGetItemColumnImage(long item, long column) const
     }
 }
 
-void BattleListCtrl::AddBattle( const Battle& battle )
+void BattleListCtrl::AddBattle( Battle& battle )
 {
     assert(&battle);
 
@@ -152,7 +152,7 @@ void BattleListCtrl::AddBattle( const Battle& battle )
     MarkDirtySort();
 }
 
-void BattleListCtrl::RemoveBattle( const Battle& battle )
+void BattleListCtrl::RemoveBattle( Battle& battle )
 {
     int index = GetIndexFromData( &battle );
 
@@ -165,7 +165,7 @@ void BattleListCtrl::RemoveBattle( const Battle& battle )
     wxLogError( _T("Didn't find the battle to remove.") );
 }
 
-void BattleListCtrl::UpdateBattle( const Battle& battle )
+void BattleListCtrl::UpdateBattle( Battle& battle )
 {
     int index = GetIndexFromData( &battle );
 

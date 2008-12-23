@@ -408,3 +408,8 @@ void CustomVirtListCtrl<T>::Clear()
     RefreshVisibleItems();
 }
 
+template < class T >
+typename CustomVirtListCtrl<T>::DataType CustomVirtListCtrl<T>::GetDataFromIndex ( const  long index )
+{
+    return m_data[index];
+}
