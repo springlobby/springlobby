@@ -826,10 +826,10 @@ void ServerEvents::AutoCheckCommandSpam( Battle& battle, User& user )
     else info.count = 0;
     info.lastmessage = now;
     m_spam_check[nick] = info;
-    if ( info.count > 3 )
+    if ( info.count == 7 )
     {
-        battle.DoAction( _T("is autokicking ") + nick + _T(" due to command spam.") );
-        battle.KickPlayer( user );
+			battle.DoAction( _T("is autokicking ") + nick + _T(" due to command spam.") );
+			battle.KickPlayer( user );
     }
 }
 
