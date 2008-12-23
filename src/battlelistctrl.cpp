@@ -132,8 +132,8 @@ int BattleListCtrl::OnGetItemColumnImage(long item, long column) const
         case 0: return icons().GetBattleStatusIcon( battle );
         case 1: return icons().GetFlagIcon( battle.GetFounder().GetCountry() );
         case 2: return icons().GetRankIcon( battle.GetRankNeeded(), false );
-//        case 4: return battle.MapExists() ? icons().ICON_EXISTS : icons().ICON_NEXISTS;
-//        case 5: return battle.ModExists() ? icons().ICON_EXISTS : icons().ICON_NEXISTS;
+        case 4: return battle.MapExists() ? icons().ICON_EXISTS : icons().ICON_NEXISTS;
+        case 5: return battle.ModExists() ? icons().ICON_EXISTS : icons().ICON_NEXISTS;
     }
 }
 
@@ -202,21 +202,19 @@ void BattleListCtrl::OnListRightClick( wxListEvent& event )
 
 void BattleListCtrl::OnDLMap( wxCommandEvent& event )
 {
-//  if ( m_selected != -1 ) {
-//    if ( m_ui.GetServer().battles_iter->BattleExists(m_selected) ) {
-//      m_ui.DownloadMap( m_ui.GetServer().battles_iter->GetBattle(m_selected).GetHostMapHash(), m_ui.GetServer().battles_iter->GetBattle(m_selected).GetHostMapName() );
-//    }
-//  }
+    if ( m_selected_index > 0 &&  m_data.size() > m_selected_index ) {
+        DataType dt = m_data[m_selected_index];
+        m_ui.DownloadMap( dt->GetHostMapHash(), dt->GetHostMapName() );
+    }
 }
 
 
 void BattleListCtrl::OnDLMod( wxCommandEvent& event )
 {
-//  if ( m_selected != -1 ) {
-//    if ( m_ui.GetServer().battles_iter->BattleExists(m_selected) ) {
-//      m_ui.DownloadMod( m_ui.GetServer().battles_iter->GetBattle(m_selected).GetHostModHash(), m_ui.GetServer().battles_iter->GetBattle(m_selected).GetHostModName() );
-//    }
-//  }
+    if ( m_selected_index > 0 &&  m_data.size() > m_selected_index ) {
+        DataType dt = m_data[m_selected_index];
+        m_ui.DownloadMod( dt->GetHostModHash(), dt->GetHostModName() );
+    }
 }
 
 
