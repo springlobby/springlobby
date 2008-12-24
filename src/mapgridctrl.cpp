@@ -6,7 +6,7 @@
 #include "utils.h"
 #include <wx/dcclient.h>
 #include <wx/image.h>
-
+#include <algorithm>
 
 /// Size of the map previews.  This should be same as size of map previews in
 /// battle list and as prefetch size in SpringUnitSync for performance reasons.
