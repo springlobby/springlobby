@@ -4,6 +4,7 @@
 	<Project>
 		<Option title="springlobby" />
 		<Option pch_mode="0" />
+		<Option compiler="gcc" />
 		<Build>
 			<Target title="GNU | Debug">
 				<Option output="bin/GNU/Debug/springlobby" prefix_auto="0" extension_auto="0" />
@@ -279,6 +280,12 @@
 		<Unit filename="src/mainwindow.h" />
 		<Unit filename="src/mapctrl.cpp" />
 		<Unit filename="src/mapctrl.h" />
+		<Unit filename="src/mapgridctrl.cpp" />
+		<Unit filename="src/mapgridctrl.h" />
+		<Unit filename="src/mapselectctrl.cpp" />
+		<Unit filename="src/mapselectctrl.h" />
+		<Unit filename="src/mapselectdialog.cpp" />
+		<Unit filename="src/mapselectdialog.h" />
 		<Unit filename="src/mmoptionmodel.cpp" />
 		<Unit filename="src/mmoptionmodel.h" />
 		<Unit filename="src/mmoptionswrapper.cpp" />
