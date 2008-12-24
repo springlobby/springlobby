@@ -93,7 +93,7 @@ bool Spring::Run( Battle& battle )
   }
 
   #ifndef NO_TORRENT_SYSTEM
-  wxString CommandForAutomaticTeamSpeak = _T("SCRIPT|") + battle.GetMe().GetNick() + _T("|");
+  wxString CommandForAutomaticTeamSpeak = _T("SCRIPT|"); // + battle.GetMe().GetNick() + _T("|");
   for ( UserList::user_map_t::size_type i = 0; i < battle.GetNumUsers(); i++ )
   {
     CommandForAutomaticTeamSpeak << battle.GetUser(i).GetNick() << _T("|") << u2s( battle.GetUser(i).BattleStatus().ally) << _T("|");
