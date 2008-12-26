@@ -37,6 +37,7 @@ class SinglePlayerTab: public  wxScrolledWindow
 
     void OnMapSelect( wxCommandEvent& event );
     void OnModSelect( wxCommandEvent& event );
+    void OnMapBrowse( wxCommandEvent& event );
     void OnAddBot( wxCommandEvent& event );
     void OnStart( wxCommandEvent& event );
     void OnRandomCheck( wxCommandEvent& event );

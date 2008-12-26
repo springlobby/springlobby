@@ -31,9 +31,10 @@ BEGIN_EVENT_TABLE(SinglePlayerTab, wxPanel)
 
   EVT_CHOICE( SP_MAP_PICK, SinglePlayerTab::OnMapSelect )
   EVT_CHOICE( SP_MOD_PICK, SinglePlayerTab::OnModSelect )
-  EVT_BUTTON( SP_ADD_BOT , SinglePlayerTab::OnAddBot )
-  EVT_BUTTON( SP_START , SinglePlayerTab::OnStart )
-  EVT_BUTTON( SP_RESET , SinglePlayerTab::OnReset )
+  EVT_BUTTON( SP_BROWSE_MAP, SinglePlayerTab::OnMapBrowse )
+  EVT_BUTTON( SP_ADD_BOT, SinglePlayerTab::OnAddBot )
+  EVT_BUTTON( SP_RESET, SinglePlayerTab::OnReset )
+  EVT_BUTTON( SP_START, SinglePlayerTab::OnStart )
   EVT_CHECKBOX( SP_RANDOM, SinglePlayerTab::OnRandomCheck )
 
 END_EVENT_TABLE()
@@ -63,8 +64,8 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, Ui& ui, MainSinglePlayerTab& 
   m_map_pick = new wxChoice( this, SP_MAP_PICK );
   m_ctrl_sizer->Add( m_map_pick, 1, wxALL, 5 );
 
-//  m_select_btn = new wxButton( this, SP_BROWSE_MAP, _T("..."), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
-//  m_ctrl_sizer->Add( m_select_btn, 0, wxBOTTOM|wxRIGHT|wxTOP, 5 );
+  m_select_btn = new wxButton( this, SP_BROWSE_MAP, _T("..."), wxDefaultPosition, wxSize(CONTROL_HEIGHT, CONTROL_HEIGHT), wxBU_EXACTFIT );
+  m_ctrl_sizer->Add( m_select_btn, 0, wxBOTTOM|wxRIGHT|wxTOP, 5 );
 
   m_mod_lbl = new wxStaticText( this, -1, _("Mod:") );
   m_ctrl_sizer->Add( m_mod_lbl, 0, wxALL, 5 );
@@ -237,6 +238,12 @@ void SinglePlayerTab::OnModSelect( wxCommandEvent& event )
 {
   unsigned int index = (unsigned int)m_mod_pick->GetCurrentSelection();
   SetMod( index );
+}
+
+
+void SinglePlayerTab::OnMapBrowse( wxCommandEvent& event )
+{
+	wxLogDebugFunc( _T("") );
 }
 
 
