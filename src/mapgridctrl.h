@@ -7,7 +7,6 @@
 #include <wx/bitmap.h>
 #include <wx/panel.h>
 
-class IBattle;
 class Ui;
 
 
@@ -21,10 +20,8 @@ class MapGridCtrl : public wxPanel
 			SortKey_PosCount,
 		};
 
-		MapGridCtrl( wxWindow* parent, int size, IBattle* battle, Ui& ui );
+		MapGridCtrl( wxWindow* parent, Ui& ui );
 		~MapGridCtrl();
-
-		void SetBattle( IBattle* battle );
 
 		void Sort( SortKey vertical, SortKey horizontal );
 
@@ -64,7 +61,6 @@ class MapGridCtrl : public wxPanel
 		void DrawMap( wxDC& dc, MapData& map, int x, int y );
 
 		Ui& m_ui;
-		IBattle* m_battle;
 
 		std::map< wxString, MapData > m_maps;
 		std::vector< MapData* > m_grid;

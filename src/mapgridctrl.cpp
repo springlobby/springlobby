@@ -23,10 +23,9 @@ BEGIN_EVENT_TABLE( MapGridCtrl, wxPanel )
 END_EVENT_TABLE()
 
 
-MapGridCtrl::MapGridCtrl( wxWindow* parent, int size, IBattle* battle, Ui& ui )
-	: wxPanel( parent, -1, wxDefaultPosition, wxSize(size, size), wxSIMPLE_BORDER|wxFULL_REPAINT_ON_RESIZE )
+MapGridCtrl::MapGridCtrl( wxWindow* parent, Ui& ui )
+	: wxPanel( parent, -1, wxDefaultPosition, wxDefaultSize, wxSIMPLE_BORDER|wxFULL_REPAINT_ON_RESIZE )
 	, m_ui( ui )
-	, m_battle( battle )
 	, m_size( 0, 0 )
 	, m_pos( 0, 0 )
 	, m_in_mouse_drag( false )
@@ -38,12 +37,6 @@ MapGridCtrl::MapGridCtrl( wxWindow* parent, int size, IBattle* battle, Ui& ui )
 MapGridCtrl::~MapGridCtrl()
 {
 
-}
-
-
-void MapGridCtrl::SetBattle( IBattle* battle )
-{
-	m_battle = battle;
 }
 
 
