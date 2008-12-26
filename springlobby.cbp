@@ -401,6 +401,8 @@
 		<Unit filename="src/utils.cpp" />
 		<Unit filename="src/utils.h" />
 		<Unit filename="wxsmith/AutoBalanceDialog.wxs" />
+		<Unit filename="wxsmith/MainTorrentTab.wxs" />
+		<Unit filename="wxsmith/MapSelectDialog.wxs" />
 		<Extensions>
 			<code_completion />
 			<envvars />
@@ -409,6 +411,7 @@
 				<resources>
 					<wxDialog wxs="wxsmith/AutoBalanceDialog.wxs" src="src/autobalancedialog.cpp" hdr="src/autobalancedialog.h" name="AutoBalanceDialog" language="CPP" />
 					<wxFrame wxs="wxsmith/MainTorrentTab.wxs" src="MainTorrentTab.cpp" hdr="MainTorrentTab.h" name="MainTorrentTab" language="CPP" />
+					<wxDialog wxs="wxsmith/MapSelectDialog.wxs" src="src/mapselectdialog.cpp" hdr="src/mapselectdialog.h" fwddecl="1" name="MapSelectDialog" language="CPP" />
 				</resources>
 			</wxsmith>
 			<debugger />
