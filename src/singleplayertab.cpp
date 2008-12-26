@@ -11,7 +11,9 @@
 #include <wx/checkbox.h>
 
 #include "singleplayertab.h"
+#include "mainwindow.h"
 #include "mapctrl.h"
+#include "mapselectdialog.h"
 #include "utils.h"
 #include "uiutils.h"
 #include "ui.h"
@@ -243,7 +245,8 @@ void SinglePlayerTab::OnModSelect( wxCommandEvent& event )
 
 void SinglePlayerTab::OnMapBrowse( wxCommandEvent& event )
 {
-	wxLogDebugFunc( _T("") );
+	MapSelectDialog dlg( &m_ui.mw(), m_ui );
+	dlg.ShowModal();
 }
 
 
