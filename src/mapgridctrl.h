@@ -16,6 +16,7 @@ class MapGridCtrl : public wxPanel
 
 		enum SortKey
 		{
+			SortKey_Name,
 			SortKey_Area,
 			SortKey_PosCount,
 		};
@@ -53,6 +54,7 @@ class MapGridCtrl : public wxPanel
 			MapState state;
 		};
 
+		static bool CompareName( const MapData* a, const MapData* b );
 		static bool CompareArea( const MapData* a, const MapData* b );
 		static bool ComparePosCount( const MapData* a, const MapData* b );
 		template< class Compare > void _Sort( int dimension, Compare cmp );
@@ -74,6 +76,9 @@ class MapGridCtrl : public wxPanel
 		/// This number is limited so the control can adapt (faster) to changes in
 		/// the set of visible maps.  (it fetches only visible maps)
 		int m_async_minimap_fetches;
+
+		/// Map which is currently under the mouse pointer.
+		MapData* m_mouseover_map;
 
 		DECLARE_EVENT_TABLE();
 };

@@ -40,6 +40,11 @@ MapGridCtrl::~MapGridCtrl()
 }
 
 
+inline bool MapGridCtrl::CompareName( const MapData* a, const MapData* b )
+{
+	return a->name.CmpNoCase( b->name ) < 0;
+}
+
 inline bool MapGridCtrl::CompareArea( const MapData* a, const MapData* b )
 {
 	return (a->info.width * a->info.height) < (b->info.width * b->info.height);
@@ -52,16 +57,16 @@ inline bool MapGridCtrl::ComparePosCount( const MapData* a, const MapData* b )
 
 template< class Compare > inline void MapGridCtrl::_Sort( int dimension, Compare cmp )
 {
-	if ( dimension == 0 ) {
+	if ( dimension <= 1 ) {
 		// vertical sort (ie. sort entire dataset)
-		std::sort( m_grid.begin(), m_grid.end(), cmp );
+		std::stable_sort( m_grid.begin(), m_grid.end(), cmp );
 	}
-	else /*if ( dimension == 1 )*/ {
+	else /*if ( dimension == 2 )*/ {
 		// horizontal sort (ie. sort each row individually)
 		for ( int y = 0; y < m_size.y; ++y ) {
 			const int idx1 = y * m_size.x;
 			const int idx2 = std::min( int(m_grid.size()), idx1 + m_size.x );
-			std::sort( m_grid.begin() + idx1, m_grid.begin() + idx2, cmp );
+			std::stable_sort( m_grid.begin() + idx1, m_grid.begin() + idx2, cmp );
 		}
 	}
 }
@@ -71,14 +76,19 @@ void MapGridCtrl::Sort( SortKey vertical, SortKey horizontal )
 {
 	if ( m_maps.empty() ) return;
 
-	SortKey keys[2] = { vertical, horizontal };
+	// Always start by sorting on name, to get duplicate maps together.
+	SortKey keys[3] = { SortKey_Name, vertical, horizontal };
 
 	// This looks like common antipattern 'loop switch sequence', however here
 	// it's the best way I found to prevent duplication of the switch statement,
 	// which will probably require most (all?) changes and possibly grow big.
 
-	for (int i = 0; i < 2; ++i) {
+	for (int i = 0; i < 3; ++i) {
+		// Do nothing if current sortkey is same as previous one.
+		if ( i > 0 && keys[i] == keys[i - 1] ) continue;
+		// Sort dimension i on sortkey keys[i].
 		switch ( keys[i] ) {
+			case SortKey_Name:     _Sort( i, CompareName ); break;
 			case SortKey_Area:     _Sort( i, CompareArea ); break;
 			case SortKey_PosCount: _Sort( i, ComparePosCount ); break;
 			default:
@@ -123,7 +133,7 @@ void MapGridCtrl::LoadMaps()
 		}
 	}
 
-	Sort( SortKey_PosCount, SortKey_Area );
+	Sort( SortKey_Name, SortKey_Name );
 }
 
 
@@ -209,13 +219,28 @@ void MapGridCtrl::OnResize( wxSizeEvent& event )
 
 void MapGridCtrl::OnMouseMove( wxMouseEvent& event )
 {
-	if ( !m_in_mouse_drag ) return;
+	if ( m_in_mouse_drag ) {
+		m_pos -= (event.GetPosition() - m_last_mouse_pos);
+		m_last_mouse_pos = event.GetPosition();
 
-	m_pos -= (event.GetPosition() - m_last_mouse_pos);
-	m_last_mouse_pos = event.GetPosition();
+		CheckInBounds();
+		Refresh();
+	}
+	else {
+		// the (5, 5) is some random offset to correct error in assumption
+		// that event.GetPosition() is relative to client area of control.
+		const wxPoint pos = wxPoint2DInt (event.GetPosition() + m_pos - wxPoint(5, 5)) / MINIMAP_SIZE;
+		const int idx = pos.y * m_size.x + pos.x;
 
-	CheckInBounds();
-	Refresh();
+		if ( pos.x >= 0 && pos.x < m_size.x && pos.y >= 0 && pos.y <= m_size.y && idx < (int)m_grid.size() ) {
+			m_mouseover_map = m_grid[idx];
+			SetToolTip( m_mouseover_map->name + _T("\n") + TowxString(m_mouseover_map->info.width / 512) + _T("x") + TowxString(m_mouseover_map->info.height / 512) );
+		}
+		else {
+			m_mouseover_map = NULL;
+			SetToolTip( _T("") );
+		}
+	}
 }
 
 

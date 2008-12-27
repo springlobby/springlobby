@@ -12,10 +12,10 @@
 //*)
 
 //(*IdInit(MapSelectDialog)
-const long MapSelectDialog::ID_STATICTEXT1 = wxNewId();
-const long MapSelectDialog::ID_HORIZONTAL = wxNewId();
 const long MapSelectDialog::ID_STATICTEXT2 = wxNewId();
 const long MapSelectDialog::ID_VERTICAL = wxNewId();
+const long MapSelectDialog::ID_STATICTEXT1 = wxNewId();
+const long MapSelectDialog::ID_HORIZONTAL = wxNewId();
 const long MapSelectDialog::ID_MAPGRID = wxNewId();
 //*)
 
@@ -37,14 +37,14 @@ MapSelectDialog::MapSelectDialog(wxWindow* parent,Ui& ui)
 	Create(parent, wxID_ANY, _("Select map"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER, _T("wxID_ANY"));
 	BoxSizer1 = new wxBoxSizer(wxHORIZONTAL);
 	BoxSizer2 = new wxBoxSizer(wxVERTICAL);
-	StaticText1 = new wxStaticText(this, ID_STATICTEXT1, _("Horizontal sort key"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT1"));
-	BoxSizer2->Add(StaticText1, 0, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
-	m_horizontal_choice = new wxChoice(this, ID_HORIZONTAL, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, _T("ID_HORIZONTAL"));
-	BoxSizer2->Add(m_horizontal_choice, 0, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	StaticText2 = new wxStaticText(this, ID_STATICTEXT2, _("Vertical sort key"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT2"));
 	BoxSizer2->Add(StaticText2, 0, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
 	m_vertical_choice = new wxChoice(this, ID_VERTICAL, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, _T("ID_VERTICAL"));
 	BoxSizer2->Add(m_vertical_choice, 0, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	StaticText1 = new wxStaticText(this, ID_STATICTEXT1, _("Horizontal sort key"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT1"));
+	BoxSizer2->Add(StaticText1, 0, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
+	m_horizontal_choice = new wxChoice(this, ID_HORIZONTAL, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, _T("ID_HORIZONTAL"));
+	BoxSizer2->Add(m_horizontal_choice, 0, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	BoxSizer2->Add(-1,-1,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	StdDialogButtonSizer1 = new wxStdDialogButtonSizer();
 	StdDialogButtonSizer1->AddButton(new wxButton(this, wxID_CANCEL, wxEmptyString));
@@ -59,8 +59,8 @@ MapSelectDialog::MapSelectDialog(wxWindow* parent,Ui& ui)
 	BoxSizer1->SetSizeHints(this);
 	Center();
 
-	Connect(ID_HORIZONTAL,wxEVT_COMMAND_CHOICE_SELECTED,(wxObjectEventFunction)&MapSelectDialog::OnSortKeySelect);
 	Connect(ID_VERTICAL,wxEVT_COMMAND_CHOICE_SELECTED,(wxObjectEventFunction)&MapSelectDialog::OnSortKeySelect);
+	Connect(ID_HORIZONTAL,wxEVT_COMMAND_CHOICE_SELECTED,(wxObjectEventFunction)&MapSelectDialog::OnSortKeySelect);
 	Connect(wxID_ANY,wxEVT_INIT_DIALOG,(wxObjectEventFunction)&MapSelectDialog::OnInit);
 	//*)
 }
@@ -93,7 +93,8 @@ void MapSelectDialog::OnSortKeySelect( wxCommandEvent& event )
 
 void MapSelectDialog::AppendSortKeys( wxChoice* choice )
 {
-	choice->Append( _("Area"), (void*) MapGridCtrl::SortKey_Area );
+	choice->Append( _("Name"), (void*) MapGridCtrl::SortKey_Name );
+	choice->Append( _("Size"), (void*) MapGridCtrl::SortKey_Area );
 	choice->Append( _("Number of start positions"), (void*) MapGridCtrl::SortKey_PosCount );
 }
 

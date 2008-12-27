@@ -28,10 +28,10 @@ class MapSelectDialog: public wxDialog
 		//*)
 
 		//(*Identifiers(MapSelectDialog)
-		static const long ID_STATICTEXT1;
-		static const long ID_HORIZONTAL;
 		static const long ID_STATICTEXT2;
 		static const long ID_VERTICAL;
+		static const long ID_STATICTEXT1;
+		static const long ID_HORIZONTAL;
 		static const long ID_MAPGRID;
 		//*)
 
