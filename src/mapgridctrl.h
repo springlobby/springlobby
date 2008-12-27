@@ -20,7 +20,7 @@ class MapGridCtrl : public wxPanel
 			SortKey_PosCount,
 		};
 
-		MapGridCtrl( wxWindow* parent, Ui& ui );
+		MapGridCtrl( wxWindow* parent, Ui& ui, wxSize size = wxDefaultSize );
 		~MapGridCtrl();
 
 		void Sort( SortKey vertical, SortKey horizontal );
