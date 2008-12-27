@@ -23,6 +23,7 @@ class MapGridCtrl : public wxPanel
 		MapGridCtrl( wxWindow* parent, Ui& ui, wxSize size = wxDefaultSize );
 		~MapGridCtrl();
 
+		void LoadMaps();
 		void Sort( SortKey vertical, SortKey horizontal );
 
 		void OnPaint( wxPaintEvent& event );
@@ -56,7 +57,6 @@ class MapGridCtrl : public wxPanel
 		static bool ComparePosCount( const MapData* a, const MapData* b );
 		template< class Compare > void _Sort( int dimension, Compare cmp );
 
-		void LoadMaps();
 		void CheckInBounds();
 		void DrawMap( wxDC& dc, MapData& map, int x, int y );
 

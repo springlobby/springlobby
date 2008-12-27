@@ -3,22 +3,38 @@
 	<object class="wxDialog" name="MapSelectDialog">
 		<title>Select map</title>
 		<centered>1</centered>
-		<size>800,600</size>
 		<id_arg>0</id_arg>
 		<style>wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER</style>
+		<handler function="OnInit" entry="EVT_INIT_DIALOG" />
 		<object class="wxBoxSizer" variable="BoxSizer1" member="no">
 			<object class="sizeritem">
 				<object class="wxBoxSizer" variable="BoxSizer2" member="no">
 					<orient>wxVERTICAL</orient>
 					<object class="sizeritem">
-						<object class="wxStaticText" name="ID_STATICTEXT1" variable="StaticText1" member="yes">
-							<label>Label</label>
+						<object class="wxStaticText" name="ID_STATICTEXT1" variable="StaticText1" member="no">
+							<label>Horizontal sort key</label>
 						</object>
-						<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
 						<border>5</border>
 					</object>
 					<object class="sizeritem">
-						<object class="wxChoice" name="ID_CHOICE1" variable="Choice1" member="yes" />
+						<object class="wxChoice" name="ID_HORIZONTAL" variable="m_horizontal_choice" member="yes">
+							<handler function="OnSortKeySelect" entry="EVT_CHOICE" />
+						</object>
+						<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<border>5</border>
+					</object>
+					<object class="sizeritem">
+						<object class="wxStaticText" name="ID_STATICTEXT2" variable="StaticText2" member="no">
+							<label>Vertical sort key</label>
+						</object>
+						<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+						<border>5</border>
+					</object>
+					<object class="sizeritem">
+						<object class="wxChoice" name="ID_VERTICAL" variable="m_vertical_choice" member="yes">
+							<handler function="OnSortKeySelect" entry="EVT_CHOICE" />
+						</object>
 						<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
 						<border>5</border>
 					</object>
@@ -49,10 +65,11 @@
 			</object>
 			<object class="sizeritem">
 				<object class="Custom" name="ID_MAPGRID" subclass="MapGridCtrl" variable="m_mapgrid" member="yes">
-					<creating_code>$(THIS) = new $(CLASS)($(PARENT),m__ui);</creating_code>
+					<creating_code>$(THIS) = new $(CLASS)($(PARENT), m__ui, $(SIZE));</creating_code>
 					<include_file>mapgridctrl.h</include_file>
-					<size>415,428</size>
-					<minsize>300,300</minsize>
+					<local_include>1</local_include>
+					<style></style>
+					<size>400,400</size>
 				</object>
 				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
 				<border>5</border>

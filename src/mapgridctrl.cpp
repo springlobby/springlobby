@@ -69,7 +69,7 @@ template< class Compare > inline void MapGridCtrl::_Sort( int dimension, Compare
 
 void MapGridCtrl::Sort( SortKey vertical, SortKey horizontal )
 {
-	wxLogDebugFunc( _T("") );
+	if ( m_maps.empty() ) return;
 
 	SortKey keys[2] = { vertical, horizontal };
 
@@ -86,6 +86,8 @@ void MapGridCtrl::Sort( SortKey vertical, SortKey horizontal )
 				break;
 		}
 	}
+
+	Refresh();
 }
 
 
@@ -162,7 +164,7 @@ void MapGridCtrl::DrawMap( wxDC& dc, MapData& map, int x, int y )
 
 void MapGridCtrl::OnPaint( wxPaintEvent& event )
 {
-	if ( m_maps.size() == 0 ) LoadMaps();
+	if ( m_maps.empty() ) return;
 
 	wxPaintDC dc( this );
 

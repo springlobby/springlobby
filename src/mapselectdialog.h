@@ -16,25 +16,32 @@ class MapSelectDialog: public wxDialog
 {
 	public:
 
-		MapSelectDialog(wxWindow* parent,Ui& ui);
+		MapSelectDialog( wxWindow* parent, Ui& ui );
 		virtual ~MapSelectDialog();
 
 	protected:
 
 		//(*Declarations(MapSelectDialog)
 		MapGridCtrl* m_mapgrid;
-		wxStaticText* StaticText1;
-		wxChoice* Choice1;
+		wxChoice* m_vertical_choice;
+		wxChoice* m_horizontal_choice;
 		//*)
 
 		//(*Identifiers(MapSelectDialog)
 		static const long ID_STATICTEXT1;
-		static const long ID_CHOICE1;
+		static const long ID_HORIZONTAL;
+		static const long ID_STATICTEXT2;
+		static const long ID_VERTICAL;
 		static const long ID_MAPGRID;
 		//*)
 
 		//(*Handlers(MapSelectDialog)
+		void OnInit(wxInitDialogEvent& event);
+		void OnSortKeySelect(wxCommandEvent& event);
 		//*)
+
+		void AppendSortKeys( wxChoice* choice );
+		void Sort();
 
 		Ui& m_ui;
 
