@@ -266,24 +266,7 @@ void BattleListTab::RemoveAllBattles() {
 
 
 void BattleListTab::UpdateList() {
-//  if ( !battle.GetGUIListActiv() ) {
-//    AddBattle( battle );
-//    return;
-//  }
-
-//  int prev_selection = m_battle_list->GetSelectedIndex();
-
-//  m_ui.GetServer().battles_iter->IteratorBegin();
-//  while (! m_ui.GetServer().battles_iter->EOL() ) {
-//    Battle* b = m_ui.GetServer().battles_iter->GetBattle();
-//    if (b!=0)
-//    UpdateBattle(*b);
-//  }
-
-//  if (prev_selection > -1 )
-//  {
-//    m_battle_list->SetItemState( prev_selection, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED );
-//  }
+    m_battle_list->RefreshVisibleItems();
 }
 
 
@@ -459,7 +442,7 @@ void BattleListTab::OnListJoin( wxListEvent& event )
   } catch (...) { return; }
   if ( event.GetIndex() < 0 ) return;
 
-  DoJoin( m_ui.GetServer().battles_iter->GetBattle( m_battle_list->GetItemData( event.GetIndex() ) ) );
+  DoJoin( *m_battle_list->GetSelectedData() );
 }
 
 
