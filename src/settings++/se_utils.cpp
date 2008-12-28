@@ -9,7 +9,7 @@
 #include "../settings.h"
 #include "../springunitsynclib.h"
 
-static bool standalonemode;
+static bool standalonemode = true;
 
 bool IsSettingsStandAlone()
 {
@@ -39,7 +39,7 @@ void loadUnitsync()
       {
       	bool portable_mode = sett().IsPortableMode();
       	sett().SetPortableMode( true ); // force portable mode to get untisync path in current bin dir
-        sett().GetCurrentUsedUnitSync();
+        untisyncpath = sett().GetCurrentUsedUnitSync();
         sett().SetPortableMode( portable_mode ); // restore old value
       }
 			else unitsyncpath = sett().GetCurrentUsedUnitSync();

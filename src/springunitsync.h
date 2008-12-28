@@ -74,8 +74,7 @@ class SpringUnitSync : public IUnitSync
 
     int GetMapIndex( const wxString& name );
 
-    int GetSideCount( const wxString& modname );
-    wxString GetSideName( const wxString& modname, int index );
+		wxArrayString GetSides( const wxString& modname  );
     wxImage GetSidePicture( const wxString& modname, const wxString& SideName );
 
     bool LoadUnitSyncLib( const wxString& unitsyncloc );

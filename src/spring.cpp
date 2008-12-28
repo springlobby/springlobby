@@ -390,7 +390,9 @@ wxString Spring::WriteScriptTxt( Battle& battle )
 
     wxLogMessage( _T("%d"), battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().side );
 
-    tdf.Append(_T("Side"),usync().GetSideName( battle.GetHostModName(), battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().side ));
+		wxArrayString sides = usync().GetSides( battle.GetHostModName() );
+		int side = battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().side;
+		if ( side < sides.GetCount() ) tdf.Append( _T("Side"), sides[side] );
     tdf.Append(_T("Handicap"), battle.GetUser( ordered_users[TeamLeader].index ).BattleStatus().handicap);
 
     tdf.LeaveSection();
@@ -421,7 +423,9 @@ wxString Spring::WriteScriptTxt( Battle& battle )
       TowxString( bot.bs.colour.Blue()/255.0f );
     tdf.Append(_T("RGBColor"), colourstring);
 
-    tdf.Append(_T("Side"),usync().GetSideName( battle.GetHostModName(), bot.bs.side ));
+		wxArrayString sides = usync().GetSides( battle.GetHostModName() );
+		int side = bot.bs.side;
+		if ( side < sides.GetCount() ) tdf.Append( _T("Side"), sides[side] );
 
 
     tdf.Append(_T("Handicap"),bot.bs.handicap);
@@ -583,7 +587,9 @@ wxString Spring::WriteSPScriptTxt( SinglePlayerBattle& battle )
       TowxString( bot->bs.colour.Blue()/255.0f );
     tdf.Append(_T("RGBColor"), colourstring);
 
-    tdf.Append(_T("Side"),usync().GetSideName(battle.GetHostModName(), bot->bs.side));
+		wxArrayString sides = usync().GetSides( battle.GetHostModName() );
+		int side = bot->bs.side;
+		if ( side < sides.GetCount() ) tdf.Append( _T("Side"), sides[side] );
 
     tdf.Append(_T("Handicap"),bot->bs.handicap);
 

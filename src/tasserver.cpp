@@ -1721,14 +1721,6 @@ void TASServer::ForceSide( int battleid, const wxString& nick, int side )
         GetMe().BattleStatus().side = side;
         SendMyBattleStatus( GetMe().BattleStatus() );
     }
-    else
-    {
-        try
-        {
-            DoActionBattle( battleid, _T("suggests that ") + nick + _T(" changes to ") + usync().GetSideName( GetBattle(battleid).GetHostModName(), side ) + _T(" side.") );
-        }
-        catch (...) {}
-    }
 }
 
 
