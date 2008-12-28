@@ -92,7 +92,7 @@ bool Spring::Run( Battle& battle )
   }
 
   #ifndef NO_TORRENT_SYSTEM
-  wxString CommandForAutomaticTeamSpeak = _T("SCRIPT|") + battle.GetMe().GetNick() + _T("|");
+  wxString CommandForAutomaticTeamSpeak = _T("SCRIPT|"); // + battle.GetMe().GetNick() + _T("|");
   for ( UserList::user_map_t::size_type i = 0; i < battle.GetNumUsers(); i++ )
   {
     CommandForAutomaticTeamSpeak << battle.GetUser(i).GetNick() << _T("|") << u2s( battle.GetUser(i).BattleStatus().ally) << _T("|");
@@ -231,6 +231,9 @@ wxString Spring::WriteScriptTxt( Battle& battle )
 
 			tdf.Append(_T("ModHash"), battle.LoadMod().hash);
 			tdf.Append(_T("MapHash"), battle.LoadMap().hash);
+
+			tdf.Append( _T("Mapname"), battle.GetHostMapName() );
+			tdf.Append( _T("GameType"), usync().GetModArchive( usync().GetModIndex( battle.GetHostModName() ) ) );
 
 			tdf.AppendLineBreak();
 
@@ -481,7 +484,9 @@ wxString Spring::WriteSPScriptTxt( SinglePlayerBattle& battle )
 								TowxString( bot.BattleStatus().colour.Blue()/255.0f );
 						tdf.Append(_T("RGBColor"), colourstring);
 
-						tdf.Append(_T("Side"),usync().GetSideName(battle.GetHostModName(), bot.BattleStatus().side));
+						wxArrayString sides = usync().GetSides( battle.GetHostModName() );
+						int side = bot.BattleStatus().side;
+						if ( side < sides.GetCount() ) tdf.Append( _T("Side"), sides[side] );
 
 						tdf.Append(_T("Handicap"),bot.BattleStatus().handicap);
 

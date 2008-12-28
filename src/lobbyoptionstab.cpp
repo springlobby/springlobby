@@ -12,7 +12,7 @@
 #include <wx/filedlg.h>
 
 #include "settings.h"
-//#include
+#include "utils.h"
 
 #ifndef HAVE_WX26
 #include "aui/auimanager.h"

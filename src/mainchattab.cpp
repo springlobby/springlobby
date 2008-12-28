@@ -277,11 +277,11 @@ ChatPanel* MainChatTab::AddChatPannel( User& user )
 #ifndef HAVE_WX26
 void MainChatTab::OnTabClose( wxAuiNotebookEvent& event )
 {
-    int oldsel = event.GetOldSelection();
-    ChatPanel* oldpanel = (ChatPanel*)m_chat_tabs->GetPage( oldsel );
-    if ( oldpanel )
+    int selection = event.GetSelection();
+    ChatPanel* panel = (ChatPanel*)m_chat_tabs->GetPage( selection );
+    if ( panel )
     {
-        oldpanel->Part();
+        panel->Part();
     }
 }
 #endif
