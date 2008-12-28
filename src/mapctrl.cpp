@@ -109,6 +109,7 @@ static inline int ReadInt24(const unsigned char* p) {
 
 MapCtrl::MapCtrl( wxWindow* parent, int size, IBattle* battle, Ui& ui, bool readonly, bool fixed_size, bool draw_start_types, bool singleplayer ):
   wxPanel( parent, -1, wxDefaultPosition, wxSize(size, size), wxSIMPLE_BORDER|wxFULL_REPAINT_ON_RESIZE ),
+  m_async(this),
   m_minimap(0),
   m_metalmap(0),
   m_heightmap(0),
@@ -433,7 +434,7 @@ void MapCtrl::LoadMinimap()
     }
     // start chain of asynchronous map image fetches
     // first minimap, then metalmap and heightmap
-    usync().GetMinimapAsync( map, w, h, this );
+    m_async.GetMinimap( map, w, h );
     m_mapname = map;
     m_lastsize = wxSize( w, h );
     Refresh();
@@ -802,13 +803,17 @@ void MapCtrl::DrawBot( wxDC& dc, BattleBot& bot, bool selected, bool moving )
     }
 
     wxBitmap* bmp = 0;
-    try {
+    try
+    {
       wxString mod = m_battle->GetHostModName();
-      int scount = usync().GetSideCount( mod );
-      if ( scount <= 0 ) ASSERT_EXCEPTION( false, _T("Mod has no sides.") );
-      wxString side = usync().GetSideName( mod, bot.bs.side % scount );
+      wxArrayString sides = usync().GetSides( mod );
+			int scount = sides.GetCount();
+      ASSERT_EXCEPTION( scount > 0, _T("Mod has no sides.") );
+      ASSERT_EXCEPTION( bot.bs.side < scount, _T("Side index out of bounds") );
+      wxString side = sides[bot.bs.side];
       bmp = new wxBitmap( usync().GetSidePicture( mod, side ) );
-    } catch (...) {
+    } catch (...)
+    {
       delete bmp;
       if ( bot.bs.side == 0 ) bmp = new wxBitmap( *charArr2wxBitmap(no1_icon_png, sizeof(no1_icon_png) ) );
       else bmp = new wxBitmap( *charArr2wxBitmap(no2_icon_png, sizeof(no2_icon_png) ) );
@@ -1258,8 +1263,11 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
       RefreshRect( GetBotRect( *bot, true ), false );
 
     } else if ( m_mdown_area == RA_Side ) {
-      try {
-        if ( usync().GetSideCount( m_battle->GetHostModName() ) > 0 ) bot->bs.side = (bot->bs.side + 1) % usync().GetSideCount( m_battle->GetHostModName() );
+      try
+      {
+      	wxArrayString sides = usync().GetSides( m_battle->GetHostModName() );
+      	unsigned int sidecount = sides.GetCount();
+        if ( sidecount > 0 ) bot->bs.side = (bot->bs.side + 1) % sidecount;
         else bot->bs.side = 0;
       } catch(...) {}
       RefreshRect( GetBotRect( *bot, true ), false );
@@ -1362,7 +1370,7 @@ void MapCtrl::OnGetMapImageAsyncCompleted( wxCommandEvent& event )
     m_minimap = new wxBitmap( usync().GetMinimap( m_mapname, w, h ) );
     // this ensures metalmap and heightmap aren't loaded in battlelist
     if (m_draw_start_types && usync().VersionSupports(IUnitSync::USYNC_GetInfoMap))
-      usync().GetMetalmapAsync( m_mapname, w, h, this );
+      m_async.GetMetalmap( m_mapname, w, h );
   }
   else if ( m_metalmap == NULL ) {
     m_metalmap = new wxBitmap( usync().GetMetalmap( m_mapname, w, h ) );
@@ -1371,7 +1379,7 @@ void MapCtrl::OnGetMapImageAsyncCompleted( wxCommandEvent& event )
       m_metalmap_cumulative = usync().GetMetalmap( m_mapname );
       Accumulate( m_metalmap_cumulative );
     }
-    usync().GetHeightmapAsync( m_mapname, w, h, this );
+    m_async.GetHeightmap( m_mapname, w, h );
   }
   else if ( m_heightmap == NULL ) {
     m_heightmap = new wxBitmap( usync().GetHeightmap( m_mapname, w, h ) );

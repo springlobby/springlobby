@@ -30,7 +30,37 @@ POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#ifndef NDEBUG
+#ifdef __GNUC__
+
+#include <cxxabi.h>
+#include <string>
+#include <cstring>
+#include <stdlib.h>
+
+std::string demangle(char const* name)
+{
+// in case this string comes
+	char const* start = strchr(name, '(');
+	if (start != 0) ++start;
+	else start = name;
+	char const* end = strchr(start, '+');
+
+	std::string in;
+	if (end == 0) in.assign(start);
+	else in.assign(start, end);
+
+	size_t len;
+	int status;
+	char* unmangled = ::abi::__cxa_demangle(in.c_str(), 0, &len, &status);
+	if (unmangled == 0) return in;
+	std::string ret(unmangled);
+	free(unmangled);
+	return ret;
+}
+
+#endif
+
+#ifdef TORRENT_DEBUG
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -58,7 +88,7 @@ void assert_fail(char const* expr, int line, char const* file, char const* funct
 
 	for (int i = 0; i < size; ++i)
 	{
-		fprintf(stderr, "%d: %s\n", i, symbols[i]);
+		fprintf(stderr, "%d: %s\n", i, demangle(symbols[i]).c_str());
 	}
 
 	free(symbols);

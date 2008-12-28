@@ -121,12 +121,6 @@ void* UnitSyncThread::ModCacheThread::Entry()
       try
       {
         usync().GetModOptions( modname );
-        unsigned int sidecount = usync().GetSideCount( modname );
-        for ( unsigned int i = 0; i < sidecount; i++ )
-        {
-          usync().GetSidePicture( modname, usync().GetSideName( modname, i ) );
-        }
-        usync().GetAIList( modname );
         usync().GetUnitsList( modname );
       } catch (...) {}
       m_current_index++;
