@@ -29,6 +29,7 @@ const wxEventType MapGridCtrl::MapSelectedEvt = wxNewEventType();
 MapGridCtrl::MapGridCtrl( wxWindow* parent, Ui& ui, wxSize size, wxWindowID id )
 	: wxPanel( parent, id, wxDefaultPosition, size, wxSIMPLE_BORDER|wxFULL_REPAINT_ON_RESIZE )
 	, m_ui( ui )
+	, m_async( this )
 	, m_size( 0, 0 )
 	, m_pos( 0, 0 )
 	, m_in_mouse_drag( false )
@@ -160,7 +161,7 @@ void MapGridCtrl::DrawMap( wxDC& dc, MapData& map, int x, int y )
 	switch ( map.state ) {
 		case MapState_NoMinimap:
 			if (m_async_minimap_fetches < 2) {
-				usync().GetMinimapAsync( map.name, MINIMAP_SIZE, MINIMAP_SIZE, this );
+				m_async.GetMinimap( map.name, MINIMAP_SIZE, MINIMAP_SIZE );
 				map.state = MapState_GetMinimap;
 				++m_async_minimap_fetches;
 			}

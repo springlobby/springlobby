@@ -1,5 +1,6 @@
 #include "mapselectdialog.h"
 #include "settings.h"
+#include "utils.h"
 
 //(*InternalHeaders(MapSelectDialog)
 #include <wx/sizer.h>

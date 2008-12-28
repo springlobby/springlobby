@@ -67,6 +67,7 @@ class MapGridCtrl : public wxPanel
 		void DrawMap( wxDC& dc, MapData& map, int x, int y );
 
 		Ui& m_ui;
+		UnitSyncAsyncOps m_async;
 
 		std::map< wxString, MapData > m_maps;
 		std::vector< MapData* > m_grid;
