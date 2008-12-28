@@ -329,12 +329,15 @@ void MapGridCtrl::OnLeftUp( wxMouseEvent& event )
 
 	if ( wxPoint2DInt(event.GetPosition() - m_first_mouse_pos).GetVectorLength() <= 3 ) {
 		m_selected_map = m_mouseover_map;
-		wxLogMessage( _T("MapGridCtrl: Selected map: ") + m_selected_map->name );
 
-		wxCommandEvent evt( MapSelectedEvt, GetId() );
-		evt.SetEventObject( this );
-		evt.SetString( m_selected_map->name );
-		wxPostEvent( this, evt );
+		if ( m_selected_map != NULL ) {
+			wxLogMessage( _T("MapGridCtrl: Selected map: ") + m_selected_map->name );
+
+			wxCommandEvent evt( MapSelectedEvt, GetId() );
+			evt.SetEventObject( this );
+			evt.SetString( m_selected_map->name );
+			wxPostEvent( this, evt );
+		}
 	}
 }
 
