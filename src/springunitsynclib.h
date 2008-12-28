@@ -326,6 +326,7 @@ class SpringUnitSyncLib
     void AddAllArchives( const wxString& root );
 
     void SetCurrentMod( const wxString& modname );
+    void UnSetCurrentMod( );
 
     wxString GetFullUnitName( int index );
     wxString GetUnitName( int index );
