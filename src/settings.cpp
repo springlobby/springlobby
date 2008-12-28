@@ -652,6 +652,8 @@ wxPathList Settings::GetAdditionalSearchPaths( wxPathList& pl )
     ret.Add( path );
     ret.Add( path + _T("Spring") + sep );
     ret.Add( path + _T("spring") + sep );
+    ret.Add( path + _T("games") + sep + _T("Spring") + sep );
+    ret.Add( path + _T("games") + sep + _T("spring") + sep );
   }
   return ret;
 }
