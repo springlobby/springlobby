@@ -623,7 +623,7 @@ void ChatPanel::OnResize( wxSizeEvent& event )
 void ChatPanel::OnLinkEvent( wxTextUrlEvent& event )
 {
     if ( !event.GetMouseEvent().LeftDown() ) return;
-        wxString url = event.GetString();
+  wxString url = m_chatlog_text->GetRange( event.GetURLStart(), event.GetURLEnd());
     m_ui.OpenWebBrowser( url );
 }
 

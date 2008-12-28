@@ -16,7 +16,10 @@
 #include <wx/file.h>
 #include <wx/fs_zip.h> //filesystem zip handler
 #include <wx/socket.h>
-
+#ifdef __WXMSW__
+	#include <wx/msw/registry.h>
+#endif
+#include <wx/utils.h>
 
 #include "springlobbyapp.h"
 #include "mainwindow.h"
@@ -115,8 +118,8 @@ bool SpringLobbyApp::OnInit()
 
     if ( (sett().GetCacheVersion() < CACHE_VERSION) && !sett().IsFirstRun() )
     {
-        sett().SetMapCachingThreadProgress( 0 ); /// reset map cache thread
-        sett().SetModCachingThreadProgress( 0 ); /// reset mod cache thread
+        sett().SetMapCachingThreadProgress( 0 ); // reset map cache thread
+        sett().SetModCachingThreadProgress( 0 ); // reset mod cache thread
         CacheThread().LoadSettingsFromFile();
         if ( wxDirExists( sett().GetCachePath() )  )
         {
@@ -131,8 +134,12 @@ bool SpringLobbyApp::OnInit()
     }
 
     if ( !sett().IsFirstRun() && ( sett().GetSettingsVersion() < 3 ) ) sett().ConvertOldSpringDirsOptions();
+    if ( !sett().IsFirstRun() && ( sett().GetSettingsVersion() < 4 ) )
+    {
+    	if ( sett().GetTorrentPort() == DEFSETT_SPRING_PORT ) sett().SetTorrentPort( DEFSETT_SPRING_PORT + 1 );
+    }
 
-    ui().ReloadUnitSync(); /// first time load of unitsync
+    ui().ReloadUnitSync(); // first time load of unitsync
     ui().ShowMainWindow();
 
     if ( sett().IsFirstRun() )
@@ -152,7 +159,8 @@ bool SpringLobbyApp::OnInit()
 
         if ( !wxDirExists( wxStandardPaths::Get().GetUserDataDir() ) ) wxMkdir( wxStandardPaths::Get().GetUserDataDir() );
         wxString sep ( wxFileName::GetPathSeparator() );
-        //! ask for downloading ota content if archive not found, start downloader in background
+        // ask for downloading ota content if archive not found, start downloader in background
+	if ( !wxDirExists( sett().GetCurrentUsedDataDir() + sep + _T("base") ) ) wxMkdir( sett().GetCurrentUsedDataDir() + sep + _T("base") );
         wxString url= _T("ipxserver.dyndns.org/games/spring/mods/xta/base-ota-content.zip");
         wxString destFilename = sett().GetCurrentUsedDataDir() + sep + _T("base") + sep + _T("base-ota-content.zip");
         bool contentExists = usync().FileExists(_T("base/otacontent.sdz")) && usync().FileExists(_T("base/tacontent_v2.sdz")) && usync().FileExists(_T("base/tatextures_v062.sdz"));
@@ -165,7 +173,7 @@ bool SpringLobbyApp::OnInit()
             m_otadownloader = new HttpDownloader( url, destFilename );
         }
 
-        customMessageBoxNoModal(SL_MAIN_ICON, _("By default SpringLobby reports some statistics.?\n"
+        customMessageBoxNoModal(SL_MAIN_ICON, _("By default SpringLobby reports some statistics.\n"
                                                  "You can disable that on options tab --> General."),_("Notice"),wxOK );
         ui().mw().ShowConfigure();
     }
@@ -235,27 +243,39 @@ void SpringLobbyApp::OnTimer( wxTimerEvent& event )
 
 void SpringLobbyApp::SetupUserFolders()
 {
-#ifdef __WXGTK__
 #ifndef HAVE_WX26
       wxString sep = wxFileName::GetPathSeparator();
       wxString defaultdir = wxFileName::GetHomeDir() + sep +_T("spring");
-
       wxArrayString choices;
-      choices.Add( _("Do nothing") );
-      choices.Add( _("Create a folder in a custom path (you'll get prompted for the path)") );
-      choices.Add( _("I have already a SpringData folder, i want to browse manually for it") );
+#ifdef __WXMSW__
+      wxRegKey UACkey(_T("HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System") ); // check if uac is on, skip dialog if not
+      if( !UACkey.Exists() ) return;
+      long value;
+      if( !UACkey.QueryValue( _T("EnableLUA"), &value ) )
+      {
+      	if( value == 0 ) return;
+      }
+			int createdefault = choices.Add( _("Create a spring directory in my documents folder") );
+#endif
+
+      int donothing = choices.Add( _("Do nothing") );
+      int createcustompath = choices.Add( _("Create a folder in a custom path (you'll get prompted for the path)") );
+      int choseexisting = choices.Add( _("I have already a SpringData folder, i want to browse manually for it") );
 
       int result = wxGetSingleChoiceIndex(
-                       _("Looks like you don't have yet a user SpringData folder structure\nWhat would you like to do? (leave default choice if you don't know what is this for)"),
+                       _("Looks like you don't have yet a user SpringData folder structure\nWhat would you like to do? (leave default choice if you don't know what this is for)"),
                        _("First time wizard"),
                        choices );
 
       wxString dir;
       bool createdirs = true;
-      if ( result == 2 ) createdirs = false;
-      else if ( result == 0 ) return;
+      if ( result == choseexisting ) createdirs = false;
+      else if ( result == donothing ) return;
+      #ifdef __WXMSW__
+      else if ( result == createdefault ) dir = defaultdir;
+      #endif
 
-      if ( result == 1 || result == 2 ) dir = wxDirSelector( _("Choose a folder"), defaultdir );
+      if ( result == createcustompath || result == choseexisting ) dir = wxDirSelector( _("Choose a folder"), defaultdir );
 
       if ( createdirs )
       {
@@ -275,16 +295,19 @@ void SpringLobbyApp::SetupUserFolders()
           }
           else
           {
-            #ifdef __WXGTK__
-            if ( wxFileName::FileExists( _T("/usr/share/games/spring/uikeys.txt") ) ) /// this hardcoded path is a bit dumb but it's too early in the code to do proper spring path detection
+          	wxPathList pl;
+						pl.AddEnvList( _T("%ProgramFiles%") );
+						pl.Add( wxGetOSDirectory() );
+						pl.AddEnvList( _T("XDG_DATA_DIRS") );
+						pl = sett().GetAdditionalSearchPaths( pl );
+          	wxString uikeyslocation = pl.FindValidPath( _T("uikeys.txt") );
+            if ( !uikeyslocation.IsEmpty() )
             {
-              wxCopyFile( _T("/usr/share/games/spring/uikeys.txt"), dir + sep + _T("uikeys.txt"), false );
+              wxCopyFile( uikeyslocation, dir + sep + _T("uikeys.txt"), false );
             }
-            #endif
           }
       }
       usync().SetSpringDataPath(dir);
-#endif
 #endif
 }
 

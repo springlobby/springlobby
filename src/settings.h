@@ -3,8 +3,8 @@
 
 #include <wx/string.h>
 
-const int CACHE_VERSION     = 7;
-const int SETTINGS_VERSION  = 3;
+const int CACHE_VERSION     = 8;
+const int SETTINGS_VERSION  = 4;
 
 const wxString DEFSETT_DEFAULT_SERVER = _T("TAS Server");
 const wxString DEFSETT_DEFAULT_SERVER_HOST = _T("taspringmaster.clan-sy.com");
@@ -23,19 +23,14 @@ const unsigned int DEFSETT_SW_HEIGHT = 580;
 const unsigned int DEFSETT_SW_TOP = 50;
 const unsigned int DEFSETT_SW_LEFT = 50;
 
-//doing this "properly" would mean dragging in stdpaths header, doesn't seem warranted (koshi)
-#define DEFSETT_SPRING_DIR  wxGetCwd()
-
 /** Default value for config path /General/WebBrowserUseDefault.
  */
 const bool DEFSETT_WEB_BROWSER_USE_DEFAULT = true;
 
 #include <wx/fileconf.h>
-#include <wx/window.h>
-#include "utils.h"
 #include "useractions.h"
 
-
+class wxWindow;
 class wxConfigBase;
 class wxFont;
 struct BattleListFilterValues;
@@ -47,45 +42,19 @@ class wxColour;
 struct wxColourData;
 class wxSize;
 class wxPoint;
+class wxPathList;
 
 class SL_WinConf : public wxFileConfig
 {
     public:
-    SL_WinConf (const wxString& appName, const wxString& vendorName,
-                           const wxString& strLocal, const wxString& strGlobal,
-                           long style,
-                           const wxMBConv& conv)
-            : wxFileConfig(appName, vendorName,
-                           strLocal, strGlobal,
-                           style)
+			SL_WinConf ( const wxString& appName, const wxString& vendorName, const wxString& strLocal, const wxString& strGlobal, long style, const wxMBConv& conv):
+			wxFileConfig( appName, vendorName, strLocal, strGlobal, style)
+			{
+			}
 
-    {
-
-    }
-
-    SL_WinConf(wxFileInputStream& in);
-
-//    int Read(const wxString& key, int def)
-//    {
-//      return s2l(wxFileConfig::Read(key, TowxString<long>(def)));
-//    }
-//
-//    bool Write(const wxString& key, const int lval)
-//    {
-//        return wxFileConfig::Write(key, TowxString<int>(lval) );
-//    }
-
+			SL_WinConf( wxFileInputStream& in );
     protected:
-
-//    bool DoReadLong(const wxString& key, long *pl) const
-//    {
-//        wxFileConfig::DoReadString(key,
-//    }
-
-    bool DoWriteLong(const wxString& key, long lValue)
-    {
-        return wxFileConfig::DoWriteString(key, TowxString<long>( lValue ) );
-    }
+			bool DoWriteLong(const wxString& key, long lValue);
 };
 
 
@@ -313,10 +282,10 @@ class Settings
     int    GetWindowLeft( const wxString& window );
     void   SetWindowLeft( const wxString& window, const int value );
 
-    wxSize  GetWindowSize( const wxString& window, const wxSize& def = wxDefaultSize );
+    wxSize  GetWindowSize( const wxString& window, const wxSize& def );
     void    SetWindowSize( const wxString& window, const wxSize& size  );
 
-    wxPoint  GetWindowPos( const wxString& window, const wxPoint& def = wxDefaultPosition );
+    wxPoint  GetWindowPos( const wxString& window, const wxPoint& def );
     void    SetWindowPos( const wxString& window, const wxPoint& pos );
 
     bool UseOldSpringLaunchMethod();
@@ -356,6 +325,8 @@ class Settings
      * @{
      */
 
+		wxPathList GetAdditionalSearchPaths( wxPathList& pl );
+
     void ConvertOldSpringDirsOptions();
 
     std::map<wxString, wxString> GetSpringVersionList(); /// index -> version
@@ -367,6 +338,8 @@ class Settings
     wxString GetCurrentUsedDataDir();
     wxString GetCurrentUsedUnitSync();
     wxString GetCurrentUsedSpringBinary();
+    //!@brief returns config file path unitsync uses, returns empty if unitsync isn't loaded
+    wxString GetCurrentUsedSpringConfigFilePath();
 
     wxString GetUnitSync( const wxString& index );
     wxString GetSpringBinary( const wxString& index );
@@ -376,6 +349,9 @@ class Settings
 
     wxString AutoFindSpringBin();
     wxString AutoFindUnitSync();
+
+    //!@brief returns config file path spring should use, returns empty for default
+    wxString GetForcedSpringConfigFilePath();
 
     /*@}*/
 

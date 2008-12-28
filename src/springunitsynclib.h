@@ -85,6 +85,9 @@ typedef int (USYNC_CALL_CONV *FileSizeVFSPtr)(int);
 typedef int (USYNC_CALL_CONV *ReadFileVFSPtr)(int, void*, int);
 typedef void (USYNC_CALL_CONV *CloseFileVFSPtr)(int);
 
+typedef void (USYNC_CALL_CONV *SetSpringConfigFilePtr)(const char*);
+typedef const char * (USYNC_CALL_CONV *GetSpringConfigFilePtr)();
+
 typedef int (USYNC_CALL_CONV *GetSpringConfigIntPtr)(const char*, int );
 typedef const char* (USYNC_CALL_CONV *GetSpringConfigStringPtr)(const char*, const char* );
 typedef float (USYNC_CALL_CONV *GetSpringConfigFloatPtr)(const char*, float );
@@ -123,6 +126,8 @@ typedef int (USYNC_CALL_CONV *GetModOptionCountPtr)();
 typedef const char* (USYNC_CALL_CONV *GetOptionKeyPtr)(int optIndex);
 typedef const char* (USYNC_CALL_CONV *GetOptionNamePtr)(int optIndex);
 typedef const char* (USYNC_CALL_CONV *GetOptionDescPtr)(int optIndex);
+typedef const char* (USYNC_CALL_CONV *GetOptionSectionPtr)(int optIndex);
+typedef const char* (USYNC_CALL_CONV *GetOptionStylePtr)(int optIndex);
 typedef int (USYNC_CALL_CONV *GetOptionTypePtr)(int optIndex);
 typedef int (USYNC_CALL_CONV *GetOptionBoolDefPtr)(int optIndex);
 typedef float (USYNC_CALL_CONV *GetOptionNumberDefPtr)(int optIndex);
@@ -207,7 +212,7 @@ class SpringUnitSyncLib
      * @param DoInit specifies whenever init function should be attempted to run after successful load.
      * @see Load().
     */
-    SpringUnitSyncLib( const wxString& path = wxEmptyString, bool DoInit = false );
+    SpringUnitSyncLib( const wxString& path = wxEmptyString, bool DoInit = false, const wxString& ForceConfigFilePath = _T("") );
 
     /**
      * Destructor, unloads unitsync if loaded.
@@ -218,10 +223,11 @@ class SpringUnitSyncLib
      * Loads the unitsync library from path.
      * @param path ath to the unitsync lib.
      * @param DoInit specifies whenever init function should be attempted to run after successful load.
+     * @param ForceConfigFilePath if set forces unitsync to use pointed config file, if empty leaves to spring's default
      * @see Unload().
      * @note Throws runtime_error if load failed.
      */
-    void Load( const wxString& path, bool DoInit );
+    void Load( const wxString& path, bool DoInit, const wxString& ForceConfigFilePath );
 
     /**
      * Unload the unitsync library. Does nothing if not loaded.
@@ -263,6 +269,7 @@ class SpringUnitSyncLib
     wxString GetSpringVersion();
 
     wxString GetSpringDataDir();
+    wxString GetConfigFilePath();
 
     int GetMapCount();
     wxString GetMapChecksum( int index );
@@ -356,6 +363,8 @@ class SpringUnitSyncLib
     wxString GetOptionKey( int optIndex );
     wxString GetOptionName( int optIndex );
     wxString GetOptionDesc( int optIndex );
+    wxString GetOptionSection( int optIndex );
+    wxString GetOptionStyle( int optIndex );
     int GetOptionType( int optIndex );
     int GetOptionBoolDef( int optIndex );
     float GetOptionNumberDef( int optIndex );
@@ -545,6 +554,8 @@ class SpringUnitSyncLib
     GetOptionNamePtr m_get_option_name;
     GetOptionDescPtr m_get_option_desc;
     GetOptionTypePtr m_get_option_type;
+    GetOptionSectionPtr m_get_option_section;
+    GetOptionStylePtr m_get_option_style;
     GetOptionBoolDefPtr m_get_option_bool_def;
     GetOptionNumberDefPtr m_get_option_number_def;
     GetOptionNumberMinPtr m_get_option_number_min;
@@ -564,6 +575,8 @@ class SpringUnitSyncLib
     ReadArchiveFilePtr m_read_archive_file;
     CloseArchiveFilePtr m_close_archive_file;
     SizeArchiveFilePtr m_size_archive_file;
+    SetSpringConfigFilePtr m_set_spring_config_file_path;
+    GetSpringConfigFilePtr m_get_spring_config_file_path;
     SetSpringConfigFloatPtr m_set_spring_config_float;
     GetSpringConfigFloatPtr m_get_spring_config_float;
     GetSpringConfigIntPtr m_get_spring_config_int;
@@ -571,7 +584,7 @@ class SpringUnitSyncLib
     SetSpringConfigStringPtr m_set_spring_config_string;
     SetSpringConfigIntPtr m_set_spring_config_int;
 
-    /// lua parser section
+    // lua parser section
 
     lpClosePtr m_parser_close;
     lpOpenFilePtr m_parser_open_file;
