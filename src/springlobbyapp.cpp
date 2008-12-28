@@ -246,9 +246,9 @@ void SpringLobbyApp::SetupUserFolders()
       wxString defaultdir = wxFileName::GetHomeDir() + sep +_T("spring");
 
       wxArrayString choices;
-      choices.Add( _("Do nothing") );
-      choices.Add( _("Create a folder in a custom path (you'll get prompted for the path)") );
-      choices.Add( _("I have already a SpringData folder, i want to browse manually for it") );
+      int donothing = choices.Add( _("Do nothing") );
+      int createcustompath = choices.Add( _("Create a folder in a custom path (you'll get prompted for the path)") );
+      int choseexisting = choices.Add( _("I have already a SpringData folder, i want to browse manually for it") );
 
       int result = wxGetSingleChoiceIndex(
                        _("Looks like you don't have yet a user SpringData folder structure\nWhat would you like to do? (leave default choice if you don't know what this is for)"),
@@ -257,10 +257,10 @@ void SpringLobbyApp::SetupUserFolders()
 
       wxString dir;
       bool createdirs = true;
-      if ( result == 2 ) createdirs = false;
-      else if ( result == 0 ) return;
+      if ( result == choseexisting ) createdirs = false;
+      else if ( result == donothing ) return;
 
-      if ( result == 1 || result == 2 ) dir = wxDirSelector( _("Choose a folder"), defaultdir );
+      if ( result == createcustompath || result == choseexisting ) dir = wxDirSelector( _("Choose a folder"), defaultdir );
 
       if ( createdirs )
       {
