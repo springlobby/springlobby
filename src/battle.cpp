@@ -217,14 +217,14 @@ int GetClosestFixColour(const wxColour &col, const std::vector<int> &excludes, i
 
 void Battle::FixColours( )
 {
-    if (!IsFounderMe())return;
-    std::vector<wxColour> &palette=GetFixColoursPalette();
-    std::vector<int> palette_use(palette.size(),0);
-    user_map_t::size_type max_fix_users=std::min( GetNumUsers(),palette.size());
+    if ( !IsFounderMe() )return;
+    std::vector<wxColour> &palette = GetFixColoursPalette();
+    std::vector<int> palette_use( palette.size(), 0 );
+    user_map_t::size_type max_fix_users = std::min( GetNumUsers(), palette.size() );
 
-    wxColour my_col=GetMe().BattleStatus().colour;// Never changes color of founder (me) :-)
-    int my_diff=0;
-    int my_col_i=GetClosestFixColour(my_col,palette_use,my_diff);
+    wxColour my_col = GetMe().BattleStatus().colour; // Never changes color of founder (me) :-)
+    int my_diff = 0;
+    int my_col_i = GetClosestFixColour( my_col, palette_use,my_diff );
     palette_use[my_col_i]++;
 
     for ( user_map_t::size_type i = 0; i < max_fix_users; i++ )
@@ -235,7 +235,7 @@ void Battle::FixColours( )
         int user_diff=0;
         int user_col_i=GetClosestFixColour(user_col,palette_use,user_diff);
         palette_use[user_col_i]++;
-        if (user_diff>32)
+        if ( user_diff > 60 )
         {
             ForceColour( user, palette[user_col_i]);
             wxLogMessage(_T("Forcing colour on fix. diff=%d"),user_diff);
@@ -421,13 +421,12 @@ void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
             if ( status.spectator )
             {
                 m_opts.spectators++;
-                SendHostInfo( HI_Spectators );
             }
             else
             {
                 m_opts.spectators--;
-                SendHostInfo( HI_Spectators );
             }
+            SendHostInfo( HI_Spectators );
         }
         if ( m_opts.lockexternalbalancechanges )
         {
@@ -507,6 +506,13 @@ bool Battle::ExecuteSayCommand( const wxString& cmd )
         m_serv.DoActionBattle( m_opts.battleid, cmd.AfterFirst(' ') );
         return true;
     }
+		if ( cmd_name == _T("/replacehostip") )
+		{
+				wxString ip = cmd.AfterFirst(' ');
+				if ( ip.IsEmpty() ) return false;
+				m_opts.ip = ip;
+				return true;
+		}
     //< quick hotfix for bans
     if (IsFounderMe())
     {
@@ -567,13 +573,6 @@ bool Battle::ExecuteSayCommand( const wxString& cmd )
             //m_banned_ips.erase(nick);
 
             //m_serv.DoActionBattle( m_opts.battleid, cmd.AfterFirst(' ') );
-            return true;
-        }
-        if ( cmd_name == _T("/replacehostip") )
-        {
-            wxString ip = cmd.AfterFirst(' ');
-            if ( ip.IsEmpty() ) return false;
-            m_opts.ip = ip;
             return true;
         }
     }
@@ -1011,21 +1010,17 @@ void Battle::Autobalance( BalanceType balance_type, bool support_clans, bool str
         }
     }
 
-    std::sort( players_sorted.begin(), players_sorted.end(), PlayerTeamCompareFunction ); // sort by team to remove duplicates
-    int previousteam = -1;
-    std::vector<User*>::iterator it = players_sorted.begin();
-    while( it != players_sorted.end() ) // remove duplicate teams
-    { // TODO (BrainDamage#1#): correct "balance" rank so it takes account of removed users
-      std::vector<User*>::iterator next = it;
-      ++next;
-      User usr = **it;
-      if ( usr.BattleStatus().team == previousteam )
-      {
-        previousteam = usr.BattleStatus().team;
-        players_sorted.erase( it );
-      }
-      else previousteam = usr.BattleStatus().team;
-      it=next;
+    // remove players in the same team so only one remains
+    std::map< int, User*> dedupe_teams;
+    for ( std::vector<User*>::iterator it = players_sorted.begin(); it != players_sorted.end(); it++ )
+    {
+        dedupe_teams[(*it)->BattleStatus().team] = *it;
+    }
+    players_sorted.clear();
+    players_sorted.reserve( dedupe_teams.size() );
+    for ( std::map<int, User*>::iterator it = dedupe_teams.begin(); it != dedupe_teams.end(); it++ )
+    {
+        players_sorted.push_back( it->second );
     }
 
     shuffle( players_sorted );

@@ -113,6 +113,9 @@ public:
     endpoint_type remote_endpoint_;
   };
 
+  // The type of the reactor used for connect operations.
+  typedef detail::select_reactor<true> reactor_type;
+
   // The implementation type of the socket.
   class implementation_type
   {
@@ -156,6 +159,9 @@ public:
     // The protocol associated with the socket.
     protocol_type protocol_;
 
+    // Per-descriptor data used by the reactor.
+    reactor_type::per_descriptor_data reactor_data_;
+
 #if defined(ASIO_ENABLE_CANCELIO)
     // The ID of the thread from which it is safe to cancel asynchronous
     // operations. 0 means no asynchronous operations have been started yet.
@@ -168,9 +174,6 @@ public:
     implementation_type* next_;
     implementation_type* prev_;
   };
-
-  // The type of the reactor used for connect operations.
-  typedef detail::select_reactor<true> reactor_type;
 
   // The maximum number of buffers to support in a single operation.
   enum { max_buffers = 64 < max_iov_len ? 64 : max_iov_len };
@@ -304,7 +307,7 @@ public:
             interlocked_compare_exchange_pointer(
               reinterpret_cast<void**>(&reactor_), 0, 0));
       if (reactor)
-        reactor->close_descriptor(impl.socket_);
+        reactor->close_descriptor(impl.socket_, impl.reactor_data_);
 
       if (socket_ops::close(impl.socket_, ec) == socket_error_retval)
         return ec;
@@ -334,6 +337,7 @@ public:
     if (!is_open(impl))
     {
       ec = asio::error::bad_descriptor;
+      return ec;
     }
     else if (FARPROC cancel_io_ex_ptr = ::GetProcAddress(
           ::GetModuleHandleA("KERNEL32"), "CancelIoEx"))
@@ -794,6 +798,16 @@ public:
       op_type* handler_op(static_cast<op_type*>(op));
       typedef handler_alloc_traits<Handler, op_type> alloc_traits;
       handler_ptr<alloc_traits> ptr(handler_op->handler_, handler_op);
+
+      // A sub-object of the handler may be the true owner of the memory
+      // associated with the handler. Consequently, a local copy of the handler
+      // is required to ensure that any owning sub-object remains valid until
+      // after we have deallocated the memory here.
+      Handler handler(handler_op->handler_);
+      (void)handler;
+
+      // Free the memory associated with the handler.
+      ptr.reset();
     }
 
     asio::io_service::work work_;
@@ -877,19 +891,27 @@ public:
   }
 
   template <typename Handler>
-  class null_buffers_handler
+  class null_buffers_operation
   {
   public:
-    null_buffers_handler(asio::io_service& io_service, Handler handler)
+    null_buffers_operation(asio::io_service& io_service, Handler handler)
       : work_(io_service),
         handler_(handler)
     {
     }
 
-    bool operator()(const asio::error_code& result)
+    bool perform(asio::error_code&,
+        std::size_t& bytes_transferred)
     {
-      work_.get_io_service().post(bind_handler(handler_, result, 0));
+      bytes_transferred = 0;
       return true;
+    }
+
+    void complete(const asio::error_code& ec,
+        std::size_t bytes_transferred)
+    {
+      work_.get_io_service().post(bind_handler(
+            handler_, ec, bytes_transferred));
     }
 
   private:
@@ -921,8 +943,8 @@ public:
             reinterpret_cast<void**>(&reactor_), reactor);
       }
 
-      reactor->start_write_op(impl.socket_,
-          null_buffers_handler<Handler>(this->get_io_service(), handler),
+      reactor->start_write_op(impl.socket_, impl.reactor_data_,
+          null_buffers_operation<Handler>(this->get_io_service(), handler),
           false);
     }
   }
@@ -1055,6 +1077,16 @@ public:
       op_type* handler_op(static_cast<op_type*>(op));
       typedef handler_alloc_traits<Handler, op_type> alloc_traits;
       handler_ptr<alloc_traits> ptr(handler_op->handler_, handler_op);
+
+      // A sub-object of the handler may be the true owner of the memory
+      // associated with the handler. Consequently, a local copy of the handler
+      // is required to ensure that any owning sub-object remains valid until
+      // after we have deallocated the memory here.
+      Handler handler(handler_op->handler_);
+      (void)handler;
+
+      // Free the memory associated with the handler.
+      ptr.reset();
     }
 
     asio::io_service::work work_;
@@ -1148,8 +1180,8 @@ public:
             reinterpret_cast<void**>(&reactor_), reactor);
       }
 
-      reactor->start_write_op(impl.socket_,
-          null_buffers_handler<Handler>(this->get_io_service(), handler),
+      reactor->start_write_op(impl.socket_, impl.reactor_data_,
+          null_buffers_operation<Handler>(this->get_io_service(), handler),
           false);
     }
   }
@@ -1203,7 +1235,7 @@ public:
           asio::error::get_system_category());
       return 0;
     }
-    if (bytes_transferred == 0)
+    if (bytes_transferred == 0 && impl.protocol_.type() == SOCK_STREAM)
     {
       ec = asio::error::eof;
       return 0;
@@ -1234,7 +1266,7 @@ public:
     : public operation
   {
   public:
-    receive_operation(win_iocp_io_service& io_service,
+    receive_operation(int protocol_type, win_iocp_io_service& io_service,
         weak_cancel_token_type cancel_token,
         const MutableBufferSequence& buffers, Handler handler)
       : operation(io_service,
@@ -1242,6 +1274,7 @@ public:
             MutableBufferSequence, Handler>::do_completion_impl,
           &receive_operation<
             MutableBufferSequence, Handler>::destroy_impl),
+        protocol_type_(protocol_type),
         work_(io_service.get_io_service()),
         cancel_token_(cancel_token),
         buffers_(buffers),
@@ -1290,6 +1323,7 @@ public:
 
       // Check for connection closed.
       else if (!ec && bytes_transferred == 0
+          && handler_op->protocol_type_ == SOCK_STREAM
           && !boost::is_same<MutableBufferSequence, null_buffers>::value)
       {
         ec = asio::error::eof;
@@ -1314,8 +1348,19 @@ public:
       op_type* handler_op(static_cast<op_type*>(op));
       typedef handler_alloc_traits<Handler, op_type> alloc_traits;
       handler_ptr<alloc_traits> ptr(handler_op->handler_, handler_op);
+
+      // A sub-object of the handler may be the true owner of the memory
+      // associated with the handler. Consequently, a local copy of the handler
+      // is required to ensure that any owning sub-object remains valid until
+      // after we have deallocated the memory here.
+      Handler handler(handler_op->handler_);
+      (void)handler;
+
+      // Free the memory associated with the handler.
+      ptr.reset();
     }
 
+    int protocol_type_;
     asio::io_service::work work_;
     weak_cancel_token_type cancel_token_;
     MutableBufferSequence buffers_;
@@ -1348,8 +1393,9 @@ public:
     typedef receive_operation<MutableBufferSequence, Handler> value_type;
     typedef handler_alloc_traits<Handler, value_type> alloc_traits;
     raw_handler_ptr<alloc_traits> raw_ptr(handler);
-    handler_ptr<alloc_traits> ptr(raw_ptr, iocp_service_,
-        impl.cancel_token_, buffers, handler);
+    int protocol_type = impl.protocol_.type();
+    handler_ptr<alloc_traits> ptr(raw_ptr, protocol_type,
+        iocp_service_, impl.cancel_token_, buffers, handler);
 
     // Copy buffers into WSABUF array.
     ::WSABUF bufs[max_buffers];
@@ -1422,8 +1468,9 @@ public:
       typedef receive_operation<null_buffers, Handler> value_type;
       typedef handler_alloc_traits<Handler, value_type> alloc_traits;
       raw_handler_ptr<alloc_traits> raw_ptr(handler);
-      handler_ptr<alloc_traits> ptr(raw_ptr, iocp_service_,
-          impl.cancel_token_, buffers, handler);
+      int protocol_type = impl.protocol_.type();
+      handler_ptr<alloc_traits> ptr(raw_ptr, protocol_type,
+          iocp_service_, impl.cancel_token_, buffers, handler);
 
       // Issue a receive operation with an empty buffer.
       ::WSABUF buf = { 0, 0 };
@@ -1461,13 +1508,13 @@ public:
 
       if (flags & socket_base::message_out_of_band)
       {
-        reactor->start_except_op(impl.socket_,
-            null_buffers_handler<Handler>(this->get_io_service(), handler));
+        reactor->start_except_op(impl.socket_, impl.reactor_data_,
+            null_buffers_operation<Handler>(this->get_io_service(), handler));
       }
       else
       {
-        reactor->start_read_op(impl.socket_,
-            null_buffers_handler<Handler>(this->get_io_service(), handler),
+        reactor->start_read_op(impl.socket_, impl.reactor_data_,
+            null_buffers_operation<Handler>(this->get_io_service(), handler),
             false);
       }
     }
@@ -1514,7 +1561,7 @@ public:
           asio::error::get_system_category());
       return 0;
     }
-    if (bytes_transferred == 0)
+    if (bytes_transferred == 0 && impl.protocol_.type() == SOCK_STREAM)
     {
       ec = asio::error::eof;
       return 0;
@@ -1551,7 +1598,7 @@ public:
     : public operation
   {
   public:
-    receive_from_operation(win_iocp_io_service& io_service,
+    receive_from_operation(int protocol_type, win_iocp_io_service& io_service,
         endpoint_type& endpoint, const MutableBufferSequence& buffers,
         Handler handler)
       : operation(io_service,
@@ -1559,6 +1606,7 @@ public:
             MutableBufferSequence, Handler>::do_completion_impl,
           &receive_from_operation<
             MutableBufferSequence, Handler>::destroy_impl),
+        protocol_type_(protocol_type),
         endpoint_(endpoint),
         endpoint_size_(static_cast<int>(endpoint.capacity())),
         work_(io_service.get_io_service()),
@@ -1605,7 +1653,8 @@ public:
       }
 
       // Check for connection closed.
-      if (!ec && bytes_transferred == 0)
+      if (!ec && bytes_transferred == 0
+          && handler_op->protocol_type_ == SOCK_STREAM)
       {
         ec = asio::error::eof;
       }
@@ -1632,8 +1681,19 @@ public:
       op_type* handler_op(static_cast<op_type*>(op));
       typedef handler_alloc_traits<Handler, op_type> alloc_traits;
       handler_ptr<alloc_traits> ptr(handler_op->handler_, handler_op);
+
+      // A sub-object of the handler may be the true owner of the memory
+      // associated with the handler. Consequently, a local copy of the handler
+      // is required to ensure that any owning sub-object remains valid until
+      // after we have deallocated the memory here.
+      Handler handler(handler_op->handler_);
+      (void)handler;
+
+      // Free the memory associated with the handler.
+      ptr.reset();
     }
 
+    int protocol_type_;
     endpoint_type& endpoint_;
     int endpoint_size_;
     asio::io_service::work work_;
@@ -1668,8 +1728,9 @@ public:
     typedef receive_from_operation<MutableBufferSequence, Handler> value_type;
     typedef handler_alloc_traits<Handler, value_type> alloc_traits;
     raw_handler_ptr<alloc_traits> raw_ptr(handler);
-    handler_ptr<alloc_traits> ptr(raw_ptr, iocp_service_,
-        sender_endp, buffers, handler);
+    int protocol_type = impl.protocol_.type();
+    handler_ptr<alloc_traits> ptr(raw_ptr, protocol_type,
+        iocp_service_, sender_endp, buffers, handler);
 
     // Copy buffers into WSABUF array.
     ::WSABUF bufs[max_buffers];
@@ -1734,13 +1795,13 @@ public:
 
       if (flags & socket_base::message_out_of_band)
       {
-        reactor->start_except_op(impl.socket_,
-            null_buffers_handler<Handler>(this->get_io_service(), handler));
+        reactor->start_except_op(impl.socket_, impl.reactor_data_,
+            null_buffers_operation<Handler>(this->get_io_service(), handler));
       }
       else
       {
-        reactor->start_read_op(impl.socket_,
-            null_buffers_handler<Handler>(this->get_io_service(), handler),
+        reactor->start_read_op(impl.socket_, impl.reactor_data_,
+            null_buffers_operation<Handler>(this->get_io_service(), handler),
             false);
       }
     }
@@ -1986,6 +2047,16 @@ public:
       op_type* handler_op(static_cast<op_type*>(op));
       typedef handler_alloc_traits<Handler, op_type> alloc_traits;
       handler_ptr<alloc_traits> ptr(handler_op->handler_, handler_op);
+
+      // A sub-object of the handler may be the true owner of the memory
+      // associated with the handler. Consequently, a local copy of the handler
+      // is required to ensure that any owning sub-object remains valid until
+      // after we have deallocated the memory here.
+      Handler handler(handler_op->handler_);
+      (void)handler;
+
+      // Free the memory associated with the handler.
+      ptr.reset();
     }
 
     win_iocp_io_service& io_service_;
@@ -2104,58 +2175,38 @@ public:
   }
 
   template <typename Handler>
-  class connect_handler
+  class connect_operation
   {
   public:
-    connect_handler(socket_type socket, bool user_set_non_blocking,
-        boost::shared_ptr<bool> completed,
-        asio::io_service& io_service,
-        reactor_type& reactor, Handler handler)
+    connect_operation(socket_type socket, bool user_set_non_blocking,
+        asio::io_service& io_service, Handler handler)
       : socket_(socket),
         user_set_non_blocking_(user_set_non_blocking),
-        completed_(completed),
         io_service_(io_service),
-        reactor_(reactor),
         work_(io_service),
         handler_(handler)
     {
     }
 
-    bool operator()(const asio::error_code& result)
+    bool perform(asio::error_code& ec,
+        std::size_t& bytes_transferred)
     {
-      // Check whether a handler has already been called for the connection.
-      // If it has, then we don't want to do anything in this handler.
-      if (*completed_)
-        return true;
-
-      // Cancel the other reactor operation for the connection.
-      *completed_ = true;
-      reactor_.enqueue_cancel_ops_unlocked(socket_);
-
       // Check whether the operation was successful.
-      if (result)
-      {
-        io_service_.post(bind_handler(handler_, result));
+      if (ec)
         return true;
-      }
 
       // Get the error code from the connect operation.
       int connect_error = 0;
       size_t connect_error_len = sizeof(connect_error);
-      asio::error_code ec;
       if (socket_ops::getsockopt(socket_, SOL_SOCKET, SO_ERROR,
             &connect_error, &connect_error_len, ec) == socket_error_retval)
-      {
-        io_service_.post(bind_handler(handler_, ec));
         return true;
-      }
 
       // If connection failed then post the handler with the error code.
       if (connect_error)
       {
         ec = asio::error_code(connect_error,
             asio::error::get_system_category());
-        io_service_.post(bind_handler(handler_, ec));
         return true;
       }
 
@@ -2164,24 +2215,23 @@ public:
       {
         ioctl_arg_type non_blocking = 0;
         if (socket_ops::ioctl(socket_, FIONBIO, &non_blocking, ec))
-        {
-          io_service_.post(bind_handler(handler_, ec));
           return true;
-        }
       }
 
       // Post the result of the successful connection operation.
       ec = asio::error_code();
-      io_service_.post(bind_handler(handler_, ec));
       return true;
+    }
+
+    void complete(const asio::error_code& ec, std::size_t)
+    {
+      io_service_.post(bind_handler(handler_, ec));
     }
 
   private:
     socket_type socket_;
     bool user_set_non_blocking_;
-    boost::shared_ptr<bool> completed_;
     asio::io_service& io_service_;
-    reactor_type& reactor_;
     asio::io_service::work work_;
     Handler handler_;
   };
@@ -2249,11 +2299,11 @@ public:
       // The connection is happening in the background, and we need to wait
       // until the socket becomes writeable.
       boost::shared_ptr<bool> completed(new bool(false));
-      reactor->start_write_and_except_ops(impl.socket_,
-          connect_handler<Handler>(
+      reactor->start_connect_op(impl.socket_, impl.reactor_data_,
+          connect_operation<Handler>(
             impl.socket_,
             (impl.flags_ & implementation_type::user_set_non_blocking) != 0,
-            completed, this->get_io_service(), *reactor, handler));
+            this->get_io_service(), handler));
     }
     else
     {
@@ -2284,7 +2334,7 @@ private:
             interlocked_compare_exchange_pointer(
               reinterpret_cast<void**>(&reactor_), 0, 0));
       if (reactor)
-        reactor->close_descriptor(impl.socket_);
+        reactor->close_descriptor(impl.socket_, impl.reactor_data_);
 
       // The socket destructor must not block. If the user has changed the
       // linger option to block in the foreground, we will change it back to the
