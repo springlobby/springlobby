@@ -65,7 +65,7 @@
 			</object>
 			<object class="sizeritem">
 				<object class="Custom" name="ID_MAPGRID" subclass="MapGridCtrl" variable="m_mapgrid" member="yes">
-					<creating_code>$(THIS) = new $(CLASS)($(PARENT), m__ui, $(SIZE));</creating_code>
+					<creating_code>$(THIS) = new $(CLASS)($(PARENT), m__ui, $(SIZE), $(ID));</creating_code>
 					<include_file>mapgridctrl.h</include_file>
 					<local_include>1</local_include>
 					<style></style>

@@ -11,6 +11,8 @@ class wxChoice;
 //*)
 
 class Ui;
+class UnitSyncMap;
+
 
 class MapSelectDialog: public wxDialog
 {
@@ -18,6 +20,8 @@ class MapSelectDialog: public wxDialog
 
 		MapSelectDialog( wxWindow* parent, Ui& ui );
 		virtual ~MapSelectDialog();
+
+		UnitSyncMap* GetSelectedMap() const;
 
 	protected:
 
@@ -39,6 +43,8 @@ class MapSelectDialog: public wxDialog
 		void OnInit(wxInitDialogEvent& event);
 		void OnSortKeySelect(wxCommandEvent& event);
 		//*)
+
+		void OnMapSelected( wxCommandEvent& event );
 
 		void AppendSortKeys( wxChoice* choice );
 		void Sort();

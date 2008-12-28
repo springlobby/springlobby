@@ -52,7 +52,7 @@ MapSelectDialog::MapSelectDialog(wxWindow* parent,Ui& ui)
 	StdDialogButtonSizer1->Realize();
 	BoxSizer2->Add(StdDialogButtonSizer1, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	BoxSizer1->Add(BoxSizer2, 0, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-	m_mapgrid = new MapGridCtrl(this, m_ui, wxSize(400,400));
+	m_mapgrid = new MapGridCtrl(this, m_ui, wxSize(400,400), ID_MAPGRID);
 	BoxSizer1->Add(m_mapgrid, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	SetSizer(BoxSizer1);
 	BoxSizer1->Fit(this);
@@ -63,6 +63,8 @@ MapSelectDialog::MapSelectDialog(wxWindow* parent,Ui& ui)
 	Connect(ID_HORIZONTAL,wxEVT_COMMAND_CHOICE_SELECTED,(wxObjectEventFunction)&MapSelectDialog::OnSortKeySelect);
 	Connect(wxID_ANY,wxEVT_INIT_DIALOG,(wxObjectEventFunction)&MapSelectDialog::OnInit);
 	//*)
+
+	Connect(ID_MAPGRID,MapGridCtrl::MapSelectedEvt,(wxObjectEventFunction)&MapSelectDialog::OnMapSelected,0,this);
 }
 
 MapSelectDialog::~MapSelectDialog()
@@ -107,4 +109,17 @@ static MapGridCtrl::SortKey GetSelectedSortKey( wxChoice* choice )
 void MapSelectDialog::Sort()
 {
 	m_mapgrid->Sort( GetSelectedSortKey( m_vertical_choice ), GetSelectedSortKey( m_horizontal_choice ) );
+}
+
+
+void MapSelectDialog::OnMapSelected( wxCommandEvent& event )
+{
+	wxLogDebugFunc( event.GetString() );
+	EndModal( wxID_OK );
+}
+
+
+UnitSyncMap* MapSelectDialog::GetSelectedMap() const
+{
+	return m_mapgrid->GetSelectedMap();
 }
