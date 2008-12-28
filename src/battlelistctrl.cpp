@@ -139,7 +139,7 @@ int BattleListCtrl::OnGetItemColumnImage(long item, long column) const
 
 void BattleListCtrl::AddBattle( Battle& battle )
 {
-    assert(&battle);
+    //assert(&battle);
 
     if ( GetIndexFromData( &battle ) != -1 ) {
         wxLogWarning( _T("Battle already in list.") );
@@ -149,7 +149,7 @@ void BattleListCtrl::AddBattle( Battle& battle )
     SetItemCount( m_data.size() );
     RefreshItem( m_data.size() );
     HighlightItem( m_data.size() );
-    MarkDirtySort();
+//    MarkDirtySort();
 }
 
 void BattleListCtrl::RemoveBattle( Battle& battle )
@@ -177,7 +177,13 @@ void BattleListCtrl::UpdateBattle( Battle& battle )
 void BattleListCtrl::HighlightItem( long item )
 {
     //prioritize highlighting host over joined players
-    const Battle& b = ui().GetServer().GetBattle( GetItemData(item) );
+    if ( item > m_data.size() || item < 0 )
+        return;
+
+    const Battle* bh = m_data[item];
+    if ( bh == NULL )
+    return;
+    const Battle& b = *m_data[item];
     wxString host = b.GetFounder().GetNick();
     HighlightItemUser( item, host );
     if ( useractions().DoActionOnUser( m_highlightAction, host ) )

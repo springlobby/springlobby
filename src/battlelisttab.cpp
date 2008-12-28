@@ -210,6 +210,7 @@ void BattleListTab::AddBattle( Battle& battle ) {
 
     m_battle_list->AddBattle( battle );
     battle.SetGUIListActiv( true );
+    m_battle_list->MarkDirtySort();
 }
 
 
@@ -266,6 +267,12 @@ void BattleListTab::RemoveAllBattles() {
 
 
 void BattleListTab::UpdateList() {
+    m_ui.GetServer().battles_iter->IteratorBegin();
+    while (! m_ui.GetServer().battles_iter->EOL() ) {
+        Battle* b = m_ui.GetServer().battles_iter->GetBattle();
+        if (b!=0)
+            UpdateBattle(*b);
+    }
     m_battle_list->RefreshVisibleItems();
 }
 
@@ -430,7 +437,7 @@ void BattleListTab::OnJoin( wxCommandEvent& event )
   if ( m_battle_list->GetSelectedIndex() < 0 ) return;
 
   DoJoin( *m_battle_list->GetSelectedData() );
-
+//    DoJoin( m_ui.GetServer().battles_iter->GetBattle( m_battle_list->GetItemData( event.GetIndex() ) ) );
 }
 
 
