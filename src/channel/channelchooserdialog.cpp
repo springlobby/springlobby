@@ -16,7 +16,7 @@ ChannelChooserDialog::ChannelChooserDialog(wxWindow* parent, wxWindowID id,
     SetSizer( m_main_sizer );
 
     wxString name = _T("CHANNELCHOOSER");
-    wxPoint pos = sett().GetWindowPos( name );
+    wxPoint pos = sett().GetWindowPos( name, wxDefaultPosition );
     wxSize size = sett().GetWindowSize( name, wxSize( 470, 400 ) );
     SetSize( pos.x , pos.y, size.GetWidth(), size.GetHeight() );
     Layout();

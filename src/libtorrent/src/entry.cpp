@@ -35,8 +35,10 @@ POSSIBILITY OF SUCH DAMAGE.
 #include <algorithm>
 #include <iostream>
 #include <iomanip>
+#include <boost/bind.hpp>
 #include "libtorrent/entry.hpp"
 #include "libtorrent/config.hpp"
+#include "libtorrent/escape_string.hpp"
 
 #if defined(_MSC_VER)
 namespace std
@@ -54,19 +56,6 @@ namespace
 		TORRENT_ASSERT(o);
 		o->~T();
 	}
-
-	struct compare_string
-	{
-		compare_string(char const* s): m_str(s)  {}
-	
-		bool operator()(
-			std::pair<std::string
-			, libtorrent::entry> const& e) const
-		{
-			return m_str && e.first == m_str;
-		}
-		char const* m_str;
-	};
 }
 
 namespace libtorrent
@@ -99,28 +88,42 @@ namespace libtorrent
 		if (i != dict().end()) return i->second;
 		dictionary_type::iterator ret = dict().insert(
 			dict().begin()
+			, std::make_pair(key, entry()));
+		return ret->second;
+	}
+
+	entry& entry::operator[](std::string const& key)
+	{
+		dictionary_type::iterator i = dict().find(key);
+		if (i != dict().end()) return i->second;
+		dictionary_type::iterator ret = dict().insert(
+			dict().begin()
 			, std::make_pair(std::string(key), entry()));
 		return ret->second;
 	}
 
-
-	entry& entry::operator[](std::string const& key)
-	{
-		return (*this)[key.c_str()];
-	}
-
 	entry* entry::find_key(char const* key)
 	{
-		dictionary_type::iterator i = std::find_if(
-			dict().begin()
-			, dict().end()
-			, compare_string(key));
+		dictionary_type::iterator i = dict().find(key);
 		if (i == dict().end()) return 0;
 		return &i->second;
-	
 	}
 
 	entry const* entry::find_key(char const* key) const
+	{
+		dictionary_type::const_iterator i = dict().find(key);
+		if (i == dict().end()) return 0;
+		return &i->second;
+	}
+	
+	entry* entry::find_key(std::string const& key)
+	{
+		dictionary_type::iterator i = dict().find(key);
+		if (i == dict().end()) return 0;
+		return &i->second;
+	}
+
+	entry const* entry::find_key(std::string const& key) const
 	{
 		dictionary_type::const_iterator i = dict().find(key);
 		if (i == dict().end()) return 0;
@@ -142,9 +145,38 @@ namespace libtorrent
 	}
 #endif
 
+	entry::entry()
+		: m_type(undefined_t)
+	{
+#ifdef TORRENT_DEBUG
+		m_type_queried = true;
+#endif
+	}
+
+	entry::entry(data_type t)
+		: m_type(undefined_t)
+	{
+		construct(t);
+#ifdef TORRENT_DEBUG
+		m_type_queried = true;
+#endif
+	}
+
+	entry::entry(const entry& e)
+		: m_type(undefined_t)
+	{
+		copy(e);
+#ifdef TORRENT_DEBUG
+		m_type_queried = e.m_type_queried;
+#endif
+	}
+
 	entry::entry(dictionary_type const& v)
 		: m_type(undefined_t)
 	{
+#ifdef TORRENT_DEBUG
+		m_type_queried = true;
+#endif
 		new(data) dictionary_type(v);
 		m_type = dictionary_t;
 	}
@@ -152,6 +184,9 @@ namespace libtorrent
 	entry::entry(string_type const& v)
 		: m_type(undefined_t)
 	{
+#ifdef TORRENT_DEBUG
+		m_type_queried = true;
+#endif
 		new(data) string_type(v);
 		m_type = string_t;
 	}
@@ -159,6 +194,9 @@ namespace libtorrent
 	entry::entry(list_type const& v)
 		: m_type(undefined_t)
 	{
+#ifdef TORRENT_DEBUG
+		m_type_queried = true;
+#endif
 		new(data) list_type(v);
 		m_type = list_t;
 	}
@@ -166,6 +204,9 @@ namespace libtorrent
 	entry::entry(integer_type const& v)
 		: m_type(undefined_t)
 	{
+#ifdef TORRENT_DEBUG
+		m_type_queried = true;
+#endif
 		new(data) integer_type(v);
 		m_type = int_t;
 	}
@@ -175,6 +216,9 @@ namespace libtorrent
 		destruct();
 		new(data) dictionary_type(v);
 		m_type = dictionary_t;
+#ifdef TORRENT_DEBUG
+		m_type_queried = true;
+#endif
 	}
 
 	void entry::operator=(string_type const& v)
@@ -182,6 +226,9 @@ namespace libtorrent
 		destruct();
 		new(data) string_type(v);
 		m_type = string_t;
+#ifdef TORRENT_DEBUG
+		m_type_queried = true;
+#endif
 	}
 
 	void entry::operator=(list_type const& v)
@@ -189,6 +236,9 @@ namespace libtorrent
 		destruct();
 		new(data) list_type(v);
 		m_type = list_t;
+#ifdef TORRENT_DEBUG
+		m_type_queried = true;
+#endif
 	}
 
 	void entry::operator=(integer_type const& v)
@@ -196,6 +246,9 @@ namespace libtorrent
 		destruct();
 		new(data) integer_type(v);
 		m_type = int_t;
+#ifdef TORRENT_DEBUG
+		m_type_queried = true;
+#endif
 	}
 
 	bool entry::operator==(entry const& e) const
@@ -235,16 +288,17 @@ namespace libtorrent
 			new (data) dictionary_type;
 			break;
 		default:
-			TORRENT_ASSERT(m_type == undefined_t);
-			m_type = undefined_t;
-			return;
+			TORRENT_ASSERT(t == undefined_t);
 		}
 		m_type = t;
+#ifdef TORRENT_DEBUG
+		m_type_queried = true;
+#endif
 	}
 
 	void entry::copy(entry const& e)
 	{
-		switch(e.m_type)
+		switch (e.type())
 		{
 		case int_t:
 			new(data) integer_type(e.integer());
@@ -259,10 +313,12 @@ namespace libtorrent
 			new (data) dictionary_type(e.dict());
 			break;
 		default:
-			m_type = undefined_t;
-			return;
+			TORRENT_ASSERT(e.type() == undefined_t);
 		}
-		m_type = e.m_type;
+		m_type = e.type();
+#ifdef TORRENT_DEBUG
+		m_type_queried = true;
+#endif
 	}
 
 	void entry::destruct()
@@ -286,6 +342,9 @@ namespace libtorrent
 			break;
 		}
 		m_type = undefined_t;
+#ifdef TORRENT_DEBUG
+		m_type_queried = false;
+#endif
 	}
 
 	void entry::swap(entry& e)
@@ -314,21 +373,8 @@ namespace libtorrent
 						break;
 					}
 				}
-				if (binary_string)
-				{
-					os.unsetf(std::ios_base::dec);
-					os.setf(std::ios_base::hex);
-					for (std::string::const_iterator i = string().begin(); i != string().end(); ++i)
-						os << std::setfill('0') << std::setw(2)
-							<< static_cast<unsigned int>((unsigned char)*i);
-					os.unsetf(std::ios_base::hex);
-					os.setf(std::ios_base::dec);
-					os << "\n";
-				}
-				else
-				{
-					os << string() << "\n";
-				}
+				if (binary_string) os << to_hex(string()) << "\n";
+				else os << string() << "\n";
 			} break;
 		case list_t:
 			{
@@ -343,8 +389,21 @@ namespace libtorrent
 				os << "dictionary\n";
 				for (dictionary_type::const_iterator i = dict().begin(); i != dict().end(); ++i)
 				{
+					bool binary_string = false;
+					for (std::string::const_iterator k = i->first.begin(); k != i->first.end(); ++k)
+					{
+						if (!std::isprint(static_cast<unsigned char>(*k)))
+						{
+							binary_string = true;
+							break;
+						}
+					}
 					for (int j = 0; j < indent+1; ++j) os << " ";
-					os << "[" << i->first << "]";
+					os << "[";
+					if (binary_string) os << to_hex(i->first);
+					else os << i->first;
+					os << "]";
+
 					if (i->second.type() != entry::string_t
 						&& i->second.type() != entry::int_t)
 						os << "\n";

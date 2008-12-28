@@ -156,8 +156,7 @@ class IUnitSync
     virtual wxImage GetHeightmap( const wxString& mapname ) = 0;
     virtual wxImage GetHeightmap( const wxString& mapname, int width, int height ) = 0;
 
-    virtual int GetSideCount( const wxString& modname ) = 0;
-    virtual wxString GetSideName( const wxString& modname, int index ) = 0;
+    virtual wxArrayString GetSides( const wxString& modname  ) = 0;
     virtual wxImage GetSidePicture( const wxString& modname, const wxString& SideName ) =0;
 
     virtual int GetNumUnits( const wxString& modname ) = 0;
