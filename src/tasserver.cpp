@@ -372,7 +372,7 @@ void TASServer::Login()
 {
     wxLogDebugFunc( _T("") );
     wxString pass = GetPasswordHash( m_pass );
-    wxString protocol = _T(" ") + TowxString( m_crc.GetCRC() );
+    wxString protocol = _T("\t") + TowxString( m_crc.GetCRC() );
     if ( m_server_lanmode )
     {
         pass = _T("Cock-a-doodle-doo");
