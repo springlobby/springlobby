@@ -350,7 +350,9 @@ wxString Spring::WriteScriptTxt( Battle& battle )
 								TowxString( status.colour.Blue()/255.0 );
 						tdf.Append( _T("RGBColor"), colourstring);
 
-						tdf.Append( _T("Side"), usync().GetSideName( battle.GetHostModName(), status.side ) );
+						wxArrayString sides = usync().GetSides( battle.GetHostModName() );
+						int side = status.side;
+						if ( side < sides.GetCount() ) tdf.Append( _T("Side"), sides[side] );
 						tdf.Append( _T("Handicap"), status.handicap );
 					tdf.LeaveSection();
 			}
