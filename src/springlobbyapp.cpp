@@ -248,10 +248,10 @@ void SpringLobbyApp::SetupUserFolders()
       wxString defaultdir = wxFileName::GetHomeDir() + sep +_T("spring");
       wxArrayString choices;
 #ifdef __WXMSW__
-      wxRegKey UACkey(_T("HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System") ); // check if uac is on, skip dialog if not
+      wxRegKey UACkey(_T("HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System") ); // check if uac is on, skip dialog if not
       if( !UACkey.Exists() ) return;
       long value;
-      if( !UACkey.QueryValue( _T("EnableLUA"), value ) )
+      if( !UACkey.QueryValue( _T("EnableLUA"), &value ) )
       {
       	if( value == 0 ) return;
       }
