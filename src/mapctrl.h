@@ -92,6 +92,8 @@ class MapCtrl : public wxPanel
 
     void _SetCursor();
 
+    UnitSyncAsyncOps m_async;
+
     wxBitmap* m_minimap;
     wxBitmap* m_metalmap;
     wxBitmap* m_heightmap;

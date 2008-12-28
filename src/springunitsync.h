@@ -17,6 +17,7 @@ class SpringUnitSyncLib;
 typedef std::map<wxString,wxString> LocalArchivesVector;
 
 
+/// Thread safe MRU cache for images (wxImage) with a name (wxString)
 class MostRecentlyUsedImageCache
 {
   public:
@@ -39,6 +40,25 @@ class MostRecentlyUsedImageCache
     const int m_max_size;
     int m_cache_hits;
     int m_cache_misses;
+};
+
+
+/// Thread safe mapping from evtHandlerId to wxEvtHandler*
+class EvtHandlerCollection
+{
+  public:
+    EvtHandlerCollection() : m_last_id(0) {}
+
+    int Add( wxEvtHandler* evtHandler );
+    void Remove( int evtHandlerId );
+    void PostEvent( int evtHandlerId, wxEvent& evt );
+
+  private:
+    typedef std::map<int, wxEvtHandler*> EvtHandlerMap;
+
+    mutable wxCriticalSection m_lock;
+    EvtHandlerMap m_items;
+    int m_last_id;
 };
 
 
@@ -118,12 +138,16 @@ class SpringUnitSync : public IUnitSync
     /// schedule a map for prefetching
     void PrefetchMap( const wxString& mapname );
 
-    void GetMinimapAsync( const wxString& mapname, wxEvtHandler* evtHandler );
-    void GetMinimapAsync( const wxString& mapname, int width, int height, wxEvtHandler* evtHandler );
-    void GetMetalmapAsync( const wxString& mapname, wxEvtHandler* evtHandler );
-    void GetMetalmapAsync( const wxString& mapname, int width, int height, wxEvtHandler* evtHandler );
-    void GetHeightmapAsync( const wxString& mapname, wxEvtHandler* evtHandler );
-    void GetHeightmapAsync( const wxString& mapname, int width, int height, wxEvtHandler* evtHandler );
+    int RegisterEvtHandler( wxEvtHandler* evtHandler );
+    void UnregisterEvtHandler( int evtHandlerId );
+    void PostEvent( int evtHandlerId, wxEvent& evt ); // helper for WorkItems
+
+    void GetMinimapAsync( const wxString& mapname, int evtHandlerId );
+    void GetMinimapAsync( const wxString& mapname, int width, int height, int evtHandlerId );
+    void GetMetalmapAsync( const wxString& mapname, int evtHandlerId );
+    void GetMetalmapAsync( const wxString& mapname, int width, int height, int evtHandlerId );
+    void GetHeightmapAsync( const wxString& mapname, int evtHandlerId );
+    void GetHeightmapAsync( const wxString& mapname, int width, int height, int evtHandlerId );
 
   private:
 
@@ -134,6 +158,7 @@ class SpringUnitSync : public IUnitSync
 
     mutable wxCriticalSection m_lock;
     WorkerThread m_cache_thread;
+    EvtHandlerCollection m_evt_handlers;
 
     /// this cache facilitates async image fetching (image is stored in cache
     /// in background thread, then main thread gets it from cache)
@@ -170,7 +195,7 @@ class SpringUnitSync : public IUnitSync
     wxImage _GetMapImage( const wxString& mapname, const wxString& imagename, wxImage (SpringUnitSyncLib::*loadMethod)(const wxString&) );
     wxImage _GetScaledMapImage( const wxString& mapname, wxImage (SpringUnitSync::*loadMethod)(const wxString&), int width, int height );
 
-    void _GetMapImageAsync( const wxString& mapname, wxImage (SpringUnitSync::*loadMethod)(const wxString&), wxEvtHandler* evtHandler );
+    void _GetMapImageAsync( const wxString& mapname, wxImage (SpringUnitSync::*loadMethod)(const wxString&), int evtHandlerId );
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_SPRINGUNITSYNC_H

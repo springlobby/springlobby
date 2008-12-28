@@ -109,6 +109,7 @@ static inline int ReadInt24(const unsigned char* p) {
 
 MapCtrl::MapCtrl( wxWindow* parent, int size, IBattle* battle, Ui& ui, bool readonly, bool fixed_size, bool draw_start_types, bool singleplayer ):
   wxPanel( parent, -1, wxDefaultPosition, wxSize(size, size), wxSIMPLE_BORDER|wxFULL_REPAINT_ON_RESIZE ),
+  m_async(this),
   m_minimap(0),
   m_metalmap(0),
   m_heightmap(0),
@@ -433,7 +434,7 @@ void MapCtrl::LoadMinimap()
     }
     // start chain of asynchronous map image fetches
     // first minimap, then metalmap and heightmap
-    usync().GetMinimapAsync( map, w, h, this );
+    m_async.GetMinimap( map, w, h );
     m_mapname = map;
     m_lastsize = wxSize( w, h );
     Refresh();
@@ -1362,7 +1363,7 @@ void MapCtrl::OnGetMapImageAsyncCompleted( wxCommandEvent& event )
     m_minimap = new wxBitmap( usync().GetMinimap( m_mapname, w, h ) );
     // this ensures metalmap and heightmap aren't loaded in battlelist
     if (m_draw_start_types && usync().VersionSupports(IUnitSync::USYNC_GetInfoMap))
-      usync().GetMetalmapAsync( m_mapname, w, h, this );
+      m_async.GetMetalmap( m_mapname, w, h );
   }
   else if ( m_metalmap == NULL ) {
     m_metalmap = new wxBitmap( usync().GetMetalmap( m_mapname, w, h ) );
@@ -1371,7 +1372,7 @@ void MapCtrl::OnGetMapImageAsyncCompleted( wxCommandEvent& event )
       m_metalmap_cumulative = usync().GetMetalmap( m_mapname );
       Accumulate( m_metalmap_cumulative );
     }
-    usync().GetHeightmapAsync( m_mapname, w, h, this );
+    m_async.GetHeightmap( m_mapname, w, h );
   }
   else if ( m_heightmap == NULL ) {
     m_heightmap = new wxBitmap( usync().GetHeightmap( m_mapname, w, h ) );

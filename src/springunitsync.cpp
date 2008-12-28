@@ -1082,18 +1082,18 @@ namespace
     public:
       SpringUnitSync* m_usync;
       wxString m_mapname;
-      wxEvtHandler* m_evtHandler;
+      int m_evtHandlerId;
 
     protected:
       void PostEvent()
       {
         wxCommandEvent evt( UnitSyncGetMapImageAsyncCompletedEvt );
         evt.SetString( m_mapname );
-        wxPostEvent( m_evtHandler, evt );
+        m_usync->PostEvent( m_evtHandlerId, evt );
       }
 
-      GetMapImageAsyncResult( SpringUnitSync* usync, const wxString& mapname, wxEvtHandler* evtHandler )
-        : m_usync(usync), m_mapname(mapname.c_str()), m_evtHandler(evtHandler) {}
+      GetMapImageAsyncResult( SpringUnitSync* usync, const wxString& mapname, int evtHandlerId )
+        : m_usync(usync), m_mapname(mapname.c_str()), m_evtHandlerId(evtHandlerId) {}
   };
 
   class GetMapImageAsyncWorkItem : public GetMapImageAsyncResult
@@ -1107,8 +1107,8 @@ namespace
 
       LoadMethodPtr m_loadMethod;
 
-      GetMapImageAsyncWorkItem( SpringUnitSync* usync, const wxString& mapname, wxEvtHandler* evtHandler, LoadMethodPtr loadMethod )
-        : GetMapImageAsyncResult( usync, mapname, evtHandler ), m_loadMethod(loadMethod) {}
+      GetMapImageAsyncWorkItem( SpringUnitSync* usync, const wxString& mapname, int evtHandlerId, LoadMethodPtr loadMethod )
+        : GetMapImageAsyncResult( usync, mapname, evtHandlerId ), m_loadMethod(loadMethod) {}
   };
 
   class GetScaledMapImageAsyncWorkItem : public GetMapImageAsyncResult
@@ -1124,8 +1124,8 @@ namespace
       int m_height;
       ScaledLoadMethodPtr m_loadMethod;
 
-      GetScaledMapImageAsyncWorkItem( SpringUnitSync* usync, const wxString& mapname, int w, int h, wxEvtHandler* evtHandler, ScaledLoadMethodPtr loadMethod )
-        : GetMapImageAsyncResult( usync, mapname, evtHandler ), m_width(w), m_height(h), m_loadMethod(loadMethod) {}
+      GetScaledMapImageAsyncWorkItem( SpringUnitSync* usync, const wxString& mapname, int w, int h, int evtHandlerId, ScaledLoadMethodPtr loadMethod )
+        : GetMapImageAsyncResult( usync, mapname, evtHandlerId ), m_width(w), m_height(h), m_loadMethod(loadMethod) {}
   };
 };
 
@@ -1165,50 +1165,65 @@ void SpringUnitSync::PrefetchMap( const wxString& mapname )
   }
 }
 
-void SpringUnitSync::_GetMapImageAsync( const wxString& mapname, wxImage (SpringUnitSync::*loadMethod)(const wxString&), wxEvtHandler* evtHandler )
+int SpringUnitSync::RegisterEvtHandler( wxEvtHandler* evtHandler )
+{
+  return m_evt_handlers.Add( evtHandler );
+}
+
+void SpringUnitSync::UnregisterEvtHandler( int evtHandlerId )
+{
+  m_evt_handlers.Remove( evtHandlerId );
+}
+
+void SpringUnitSync::PostEvent( int evtHandlerId, wxEvent& evt )
+{
+  m_evt_handlers.PostEvent( evtHandlerId, evt );
+}
+
+void SpringUnitSync::_GetMapImageAsync( const wxString& mapname, wxImage (SpringUnitSync::*loadMethod)(const wxString&), int evtHandlerId )
 {
   GetMapImageAsyncWorkItem* work;
 
-  work = new GetMapImageAsyncWorkItem( this, mapname, evtHandler, loadMethod );
+  work = new GetMapImageAsyncWorkItem( this, mapname, evtHandlerId, loadMethod );
   m_cache_thread.DoWork( work, 100 );
 }
 
-void SpringUnitSync::GetMinimapAsync( const wxString& mapname, wxEvtHandler* evtHandler )
+void SpringUnitSync::GetMinimapAsync( const wxString& mapname, int evtHandlerId )
 {
   wxLogDebugFunc( mapname );
-  _GetMapImageAsync( mapname, &SpringUnitSync::GetMinimap, evtHandler );
+  _GetMapImageAsync( mapname, &SpringUnitSync::GetMinimap, evtHandlerId );
 }
 
-void SpringUnitSync::GetMinimapAsync( const wxString& mapname, int width, int height, wxEvtHandler* evtHandler )
+void SpringUnitSync::GetMinimapAsync( const wxString& mapname, int width, int height, int evtHandlerId )
 {
   wxLogDebugFunc( mapname + _T(" size: ") + TowxString(width) + _T("x") + TowxString(height) );
 
   GetScaledMapImageAsyncWorkItem* work;
 
-  work = new GetScaledMapImageAsyncWorkItem( this, mapname, width, height, evtHandler, &SpringUnitSync::GetMinimap );
+  work = new GetScaledMapImageAsyncWorkItem( this, mapname, width, height, evtHandlerId, &SpringUnitSync::GetMinimap );
   m_cache_thread.DoWork( work, 100 );
 }
 
-void SpringUnitSync::GetMetalmapAsync( const wxString& mapname, wxEvtHandler* evtHandler )
+void SpringUnitSync::GetMetalmapAsync( const wxString& mapname, int evtHandlerId )
 {
   wxLogDebugFunc( mapname );
-  _GetMapImageAsync( mapname, &SpringUnitSync::GetMetalmap, evtHandler );
+  _GetMapImageAsync( mapname, &SpringUnitSync::GetMetalmap, evtHandlerId );
 }
 
-void SpringUnitSync::GetMetalmapAsync( const wxString& mapname, int width, int height, wxEvtHandler* evtHandler )
+void SpringUnitSync::GetMetalmapAsync( const wxString& mapname, int width, int height, int evtHandlerId )
 {
-  GetMetalmapAsync( mapname, evtHandler );
+  GetMetalmapAsync( mapname, evtHandlerId );
 }
 
-void SpringUnitSync::GetHeightmapAsync( const wxString& mapname, wxEvtHandler* evtHandler )
+void SpringUnitSync::GetHeightmapAsync( const wxString& mapname, int evtHandlerId )
 {
   wxLogDebugFunc( mapname );
-  _GetMapImageAsync( mapname, &SpringUnitSync::GetHeightmap, evtHandler );
+  _GetMapImageAsync( mapname, &SpringUnitSync::GetHeightmap, evtHandlerId );
 }
 
-void SpringUnitSync::GetHeightmapAsync( const wxString& mapname, int width, int height, wxEvtHandler* evtHandler )
+void SpringUnitSync::GetHeightmapAsync( const wxString& mapname, int width, int height, int evtHandlerId )
 {
-  GetHeightmapAsync( mapname, evtHandler );
+  GetHeightmapAsync( mapname, evtHandlerId );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1262,4 +1277,29 @@ void MostRecentlyUsedImageCache::Clear()
   m_size = 0;
   m_items.clear();
   m_iterator_map.clear();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////// EvtHandlerCollection code
+
+int EvtHandlerCollection::Add( wxEvtHandler* evtHandler )
+{
+  wxCriticalSectionLocker lock(m_lock);
+  ++m_last_id;
+  m_items[m_last_id] = evtHandler;
+  return m_last_id;
+}
+
+void EvtHandlerCollection::Remove( int evtHandlerId )
+{
+  wxCriticalSectionLocker lock(m_lock);
+  EvtHandlerMap::iterator it = m_items.find( evtHandlerId );
+  if ( it != m_items.end() ) m_items.erase( it );
+}
+
+void EvtHandlerCollection::PostEvent( int evtHandlerId, wxEvent& evt )
+{
+  wxCriticalSectionLocker lock(m_lock);
+  EvtHandlerMap::iterator it = m_items.find( evtHandlerId );
+  if ( it != m_items.end() ) wxPostEvent( it->second, evt );
 }

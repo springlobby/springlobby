@@ -188,12 +188,15 @@ class IUnitSync
 
     virtual void PrefetchMap( const wxString& mapname ) = 0;
 
-    virtual void GetMinimapAsync( const wxString& mapname, wxEvtHandler* evtHandler ) = 0;
-    virtual void GetMinimapAsync( const wxString& mapname, int width, int height, wxEvtHandler* evtHandler ) = 0;
-    virtual void GetMetalmapAsync( const wxString& mapname, wxEvtHandler* evtHandler ) = 0;
-    virtual void GetMetalmapAsync( const wxString& mapname, int width, int height, wxEvtHandler* evtHandler ) = 0;
-    virtual void GetHeightmapAsync( const wxString& mapname, wxEvtHandler* evtHandler ) = 0;
-    virtual void GetHeightmapAsync( const wxString& mapname, int width, int height, wxEvtHandler* evtHandler ) = 0;
+    virtual int RegisterEvtHandler( wxEvtHandler* evtHandler ) = 0;
+    virtual void UnregisterEvtHandler( int evtHandlerId ) = 0;
+
+    virtual void GetMinimapAsync( const wxString& mapname, int evtHandlerId ) = 0;
+    virtual void GetMinimapAsync( const wxString& mapname, int width, int height, int evtHandlerId ) = 0;
+    virtual void GetMetalmapAsync( const wxString& mapname, int evtHandlerId ) = 0;
+    virtual void GetMetalmapAsync( const wxString& mapname, int width, int height, int evtHandlerId ) = 0;
+    virtual void GetHeightmapAsync( const wxString& mapname, int evtHandlerId ) = 0;
+    virtual void GetHeightmapAsync( const wxString& mapname, int width, int height, int evtHandlerId ) = 0;
 };
 
 IUnitSync& usync();
@@ -206,6 +209,28 @@ struct GameOptions
   IUnitSync::OptionMapList list_map;
   IUnitSync::OptionMapInt int_map;
   IUnitSync::OptionMapSection section_map;
+};
+
+/// Helper class for managing async operations safely
+class UnitSyncAsyncOps
+{
+  public:
+    UnitSyncAsyncOps( wxEvtHandler* evtHandler ) {
+      m_id = usync().RegisterEvtHandler( evtHandler );
+    }
+    ~UnitSyncAsyncOps() {
+      usync().UnregisterEvtHandler( m_id );
+    }
+
+    void GetMinimap( const wxString& mapname )                 { usync().GetMinimapAsync( mapname, m_id ); }
+    void GetMinimap( const wxString& mapname, int w, int h )   { usync().GetMinimapAsync( mapname, w, h, m_id ); }
+    void GetMetalmap( const wxString& mapname )                { usync().GetMetalmapAsync( mapname, m_id ); }
+    void GetMetalmap( const wxString& mapname, int w, int h )  { usync().GetMetalmapAsync( mapname, w, h, m_id ); }
+    void GetHeightmap( const wxString& mapname )               { usync().GetHeightmapAsync( mapname, m_id ); }
+    void GetHeightmap( const wxString& mapname, int w, int h ) { usync().GetHeightmapAsync( mapname, w, h, m_id ); }
+
+  private:
+    int m_id;
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_IUNITSYNC_H
