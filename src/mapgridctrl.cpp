@@ -247,11 +247,14 @@ void MapGridCtrl::OnMouseMove( wxMouseEvent& event )
 	else {
 		// the (5, 5) is some random offset to correct error in assumption
 		// that event.GetPosition() is relative to client area of control.
-		const wxPoint pos = wxPoint2DInt (event.GetPosition() + m_pos - wxPoint(5, 5)) / MINIMAP_SIZE;
+		const wxPoint pos_unscaled = event.GetPosition() + m_pos - wxPoint(5, 5);
+		const wxPoint pos = wxPoint2DInt(pos_unscaled) / MINIMAP_SIZE;
 		const int idx = pos.y * m_size.x + pos.x;
 		MapData* old_mouseover_map = m_mouseover_map;
 
-		if ( pos.x >= 0 && pos.x < m_size.x && pos.y >= 0 && pos.y <= m_size.y && idx < (int)m_grid.size() ) {
+		// use pos_unscaled for tests against 0 because negative values lower
+		// than MINIMAP_SIZE get rounded up to 0 when diviving by MINIMAP_SIZE..
+		if ( pos_unscaled.x >= 0 && pos.x < m_size.x && pos_unscaled.y >= 0 && pos.y <= m_size.y && idx < (int)m_grid.size() ) {
 			m_mouseover_map = m_grid[idx];
 		}
 		else {
