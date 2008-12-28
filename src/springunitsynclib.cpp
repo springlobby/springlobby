@@ -406,6 +406,11 @@ void SpringUnitSyncLib::_SetCurrentMod( const wxString& modname )
   }
 }
 
+void SpringUnitSyncLib::UnSetCurrentMod( )
+{
+    m_current_mod = wxEmptyString;
+}
+
 
 int SpringUnitSyncLib::GetModIndex( const wxString& name )
 {
