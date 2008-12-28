@@ -4,7 +4,7 @@
 #include <wx/string.h>
 
 const int CACHE_VERSION     = 8;
-const int SETTINGS_VERSION  = 3;
+const int SETTINGS_VERSION  = 4;
 
 const wxString DEFSETT_DEFAULT_SERVER = _T("TAS Server");
 const wxString DEFSETT_DEFAULT_SERVER_HOST = _T("taspringmaster.clan-sy.com");

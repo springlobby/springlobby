@@ -115,8 +115,8 @@ bool SpringLobbyApp::OnInit()
 
     if ( (sett().GetCacheVersion() < CACHE_VERSION) && !sett().IsFirstRun() )
     {
-        sett().SetMapCachingThreadProgress( 0 ); /// reset map cache thread
-        sett().SetModCachingThreadProgress( 0 ); /// reset mod cache thread
+        sett().SetMapCachingThreadProgress( 0 ); // reset map cache thread
+        sett().SetModCachingThreadProgress( 0 ); // reset mod cache thread
         CacheThread().LoadSettingsFromFile();
         if ( wxDirExists( sett().GetCachePath() )  )
         {
@@ -131,8 +131,12 @@ bool SpringLobbyApp::OnInit()
     }
 
     if ( !sett().IsFirstRun() && ( sett().GetSettingsVersion() < 3 ) ) sett().ConvertOldSpringDirsOptions();
+    if ( !sett().IsFirstRun() && ( sett().GetSettingsVersion() < 4 ) )
+    {
+    	if ( sett().GetTorrentPort() == DEFSETT_SPRING_PORT ) sett().SetTorrentPort( DEFSETT_SPRING_PORT + 1 );
+    }
 
-    ui().ReloadUnitSync(); /// first time load of unitsync
+    ui().ReloadUnitSync(); // first time load of unitsync
     ui().ShowMainWindow();
 
     if ( sett().IsFirstRun() )
@@ -152,7 +156,7 @@ bool SpringLobbyApp::OnInit()
 
         if ( !wxDirExists( wxStandardPaths::Get().GetUserDataDir() ) ) wxMkdir( wxStandardPaths::Get().GetUserDataDir() );
         wxString sep ( wxFileName::GetPathSeparator() );
-        //! ask for downloading ota content if archive not found, start downloader in background
+        // ask for downloading ota content if archive not found, start downloader in background
 	if ( !wxDirExists( sett().GetCurrentUsedDataDir() + sep + _T("base") ) ) wxMkdir( sett().GetCurrentUsedDataDir() + sep + _T("base") );
         wxString url= _T("ipxserver.dyndns.org/games/spring/mods/xta/base-ota-content.zip");
         wxString destFilename = sett().GetCurrentUsedDataDir() + sep + _T("base") + sep + _T("base-ota-content.zip");
