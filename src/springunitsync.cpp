@@ -565,24 +565,12 @@ GameOptions SpringUnitSync::GetModOptions( const wxString& name )
 wxArrayString SpringUnitSync::GetSides( const wxString& modname )
 {
 	wxArrayString ret;
-	int count = GetSideCount( modname );
-	for( int i = 0; i < count; i++ ) ret.Add( GetSideName( modname, i ) );
+	try
+	{
+		ret = susynclib().GetSides( modname );
+	}
+	catch( unitsync_assert ) {}
 	return ret;
-}
-
-int SpringUnitSync::GetSideCount( const wxString& modname )
-{
-  wxLogDebugFunc( modname );
-  if ( !ModExists( modname ) ) return 0;
-	susynclib().AddAllArchives( GetModArchive( susynclib().GetModIndex( modname )  ) );
-	return susynclib().GetSideCount( modname );
-}
-
-
-wxString SpringUnitSync::GetSideName( const wxString& modname, int index )
-{
-  wxLogDebugFunc( modname + _T(", ") + TowxString(index) );
-  return susynclib().GetSideName( modname, index );
 }
 
 

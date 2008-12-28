@@ -124,9 +124,6 @@ class SpringUnitSync : public IUnitSync
 
     double _GetSpringVersion();
 
-		int GetSideCount( const wxString& modname );
-    wxString GetSideName( const wxString& modname, int index );
-
     wxImage _GetMapImage( const wxString& mapname, const wxString& imagename, wxImage (SpringUnitSyncLib::*loadMethod)(const wxString& mapname) );
     wxImage _GetScaledMapImage( const wxString& mapname, wxImage (SpringUnitSync::*loadMethod)(const wxString& mapname), int width, int height );
 };

@@ -722,21 +722,16 @@ int SpringUnitSyncLib::GetPrimaryModChecksumFromName( const wxString& name )
 }
 
 
-int SpringUnitSyncLib::GetSideCount( const wxString& modName )
+wxArrayString SpringUnitSyncLib::GetSides( const wxString& modName )
 {
   InitLib( m_get_side_count );
-
-  SetCurrentMod( modName );
-  return m_get_side_count();
-}
-
-
-wxString SpringUnitSyncLib::GetSideName( const wxString& modName, int index )
-{
   InitLib( m_get_side_name );
 
   SetCurrentMod( modName );
-  return WX_STRINGC( m_get_side_name( index ) );
+  int count = m_get_side_count();
+  wxArrayString ret;
+  for ( int i = 0; i < count; i ++ ) ret.Add( WX_STRINGC( m_get_side_name( i ) ) );
+  return ret;
 }
 
 
