@@ -1,6 +1,7 @@
 #include "autobalancedialog.h"
 
 #include "settings.h"
+#include "utils.h"
 
 //(*InternalHeaders(AutoBalanceDialog)
 #include <wx/intl.h>

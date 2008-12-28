@@ -4,7 +4,7 @@
 #include <wx/string.h>
 
 const int CACHE_VERSION     = 8;
-const int SETTINGS_VERSION  = 3;
+const int SETTINGS_VERSION  = 4;
 
 const wxString DEFSETT_DEFAULT_SERVER = _T("TAS Server");
 const wxString DEFSETT_DEFAULT_SERVER_HOST = _T("taspringmaster.clan-sy.com");
@@ -28,11 +28,9 @@ const unsigned int DEFSETT_SW_LEFT = 50;
 const bool DEFSETT_WEB_BROWSER_USE_DEFAULT = true;
 
 #include <wx/fileconf.h>
-#include <wx/window.h>
-#include "utils.h"
 #include "useractions.h"
 
-
+class wxWindow;
 class wxConfigBase;
 class wxFont;
 struct BattleListFilterValues;
@@ -44,45 +42,19 @@ class wxColour;
 struct wxColourData;
 class wxSize;
 class wxPoint;
+class wxPathList;
 
 class SL_WinConf : public wxFileConfig
 {
     public:
-    SL_WinConf (const wxString& appName, const wxString& vendorName,
-                           const wxString& strLocal, const wxString& strGlobal,
-                           long style,
-                           const wxMBConv& conv)
-            : wxFileConfig(appName, vendorName,
-                           strLocal, strGlobal,
-                           style)
+			SL_WinConf ( const wxString& appName, const wxString& vendorName, const wxString& strLocal, const wxString& strGlobal, long style, const wxMBConv& conv):
+			wxFileConfig( appName, vendorName, strLocal, strGlobal, style)
+			{
+			}
 
-    {
-
-    }
-
-    SL_WinConf(wxFileInputStream& in);
-
-//    int Read(const wxString& key, int def)
-//    {
-//      return s2l(wxFileConfig::Read(key, TowxString<long>(def)));
-//    }
-//
-//    bool Write(const wxString& key, const int lval)
-//    {
-//        return wxFileConfig::Write(key, TowxString<int>(lval) );
-//    }
-
+			SL_WinConf( wxFileInputStream& in );
     protected:
-
-//    bool DoReadLong(const wxString& key, long *pl) const
-//    {
-//        wxFileConfig::DoReadString(key,
-//    }
-
-    bool DoWriteLong(const wxString& key, long lValue)
-    {
-        return wxFileConfig::DoWriteString(key, TowxString<long>( lValue ) );
-    }
+			bool DoWriteLong(const wxString& key, long lValue);
 };
 
 
@@ -310,10 +282,10 @@ class Settings
     int    GetWindowLeft( const wxString& window );
     void   SetWindowLeft( const wxString& window, const int value );
 
-    wxSize  GetWindowSize( const wxString& window, const wxSize& def = wxDefaultSize );
+    wxSize  GetWindowSize( const wxString& window, const wxSize& def );
     void    SetWindowSize( const wxString& window, const wxSize& size  );
 
-    wxPoint  GetWindowPos( const wxString& window, const wxPoint& def = wxDefaultPosition );
+    wxPoint  GetWindowPos( const wxString& window, const wxPoint& def );
     void    SetWindowPos( const wxString& window, const wxPoint& pos );
 
     bool UseOldSpringLaunchMethod();
@@ -352,6 +324,8 @@ class Settings
     /** @name Spring locations
      * @{
      */
+
+		wxPathList GetAdditionalSearchPaths( wxPathList& pl );
 
     void ConvertOldSpringDirsOptions();
 

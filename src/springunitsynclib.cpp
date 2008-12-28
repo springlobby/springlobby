@@ -399,11 +399,16 @@ void SpringUnitSyncLib::SetCurrentMod( const wxString& modname )
 void SpringUnitSyncLib::_SetCurrentMod( const wxString& modname )
 {
   if ( m_current_mod != modname ) {
-    wxLogDebugFunc( _T("") );
+    wxLogDebugFunc( modname );
     _Init();
     m_add_all_archives( m_get_mod_archive( m_get_mod_index( modname.mb_str( wxConvUTF8 ) ) ) );
     m_current_mod = modname;
   }
+}
+
+void SpringUnitSyncLib::UnSetCurrentMod( )
+{
+    m_current_mod = wxEmptyString;
 }
 
 
@@ -764,21 +769,16 @@ int SpringUnitSyncLib::GetPrimaryModChecksumFromName( const wxString& name )
 }
 
 
-int SpringUnitSyncLib::GetSideCount( const wxString& modName )
+wxArrayString SpringUnitSyncLib::GetSides( const wxString& modName )
 {
   InitLib( m_get_side_count );
+	UNITSYNC_EXCEPTION( m_get_side_name, _T("Function was not in unitsync library.") )
 
   _SetCurrentMod( modName );
-  return m_get_side_count();
-}
-
-
-wxString SpringUnitSyncLib::GetSideName( const wxString& modName, int index )
-{
-  InitLib( m_get_side_name );
-
-  _SetCurrentMod( modName );
-  return WX_STRINGC( m_get_side_name( index ) );
+  int count = m_get_side_count();
+  wxArrayString ret;
+  for ( int i = 0; i < count; i ++ ) ret.Add( WX_STRINGC( m_get_side_name( i ) ) );
+  return ret;
 }
 
 

@@ -803,13 +803,17 @@ void MapCtrl::DrawBot( wxDC& dc, BattleBot& bot, bool selected, bool moving )
     }
 
     wxBitmap* bmp = 0;
-    try {
+    try
+    {
       wxString mod = m_battle->GetHostModName();
-      int scount = usync().GetSideCount( mod );
-      if ( scount <= 0 ) ASSERT_EXCEPTION( false, _T("Mod has no sides.") );
-      wxString side = usync().GetSideName( mod, bot.bs.side % scount );
+      wxArrayString sides = usync().GetSides( mod );
+			int scount = sides.GetCount();
+      ASSERT_EXCEPTION( scount > 0, _T("Mod has no sides.") );
+      ASSERT_EXCEPTION( bot.bs.side < scount, _T("Side index out of bounds") );
+      wxString side = sides[bot.bs.side];
       bmp = new wxBitmap( usync().GetSidePicture( mod, side ) );
-    } catch (...) {
+    } catch (...)
+    {
       delete bmp;
       if ( bot.bs.side == 0 ) bmp = new wxBitmap( *charArr2wxBitmap(no1_icon_png, sizeof(no1_icon_png) ) );
       else bmp = new wxBitmap( *charArr2wxBitmap(no2_icon_png, sizeof(no2_icon_png) ) );
@@ -1259,8 +1263,11 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
       RefreshRect( GetBotRect( *bot, true ), false );
 
     } else if ( m_mdown_area == RA_Side ) {
-      try {
-        if ( usync().GetSideCount( m_battle->GetHostModName() ) > 0 ) bot->bs.side = (bot->bs.side + 1) % usync().GetSideCount( m_battle->GetHostModName() );
+      try
+      {
+      	wxArrayString sides = usync().GetSides( m_battle->GetHostModName() );
+      	unsigned int sidecount = sides.GetCount();
+        if ( sidecount > 0 ) bot->bs.side = (bot->bs.side + 1) % sidecount;
         else bot->bs.side = 0;
       } catch(...) {}
       RefreshRect( GetBotRect( *bot, true ), false );
