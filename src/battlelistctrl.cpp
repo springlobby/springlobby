@@ -177,12 +177,9 @@ void BattleListCtrl::UpdateBattle( Battle& battle )
 void BattleListCtrl::HighlightItem( long item )
 {
     //prioritize highlighting host over joined players
-    if ( item > m_data.size() || item < 0 )
+    if ( item > m_data.size() -1 || item < 0 )
         return;
 
-    const Battle* bh = m_data[item];
-    if ( bh == NULL )
-    return;
     const Battle& b = *m_data[item];
     wxString host = b.GetFounder().GetNick();
     HighlightItemUser( item, host );
