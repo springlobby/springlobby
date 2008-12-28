@@ -546,7 +546,7 @@ TorrentWrapper::DownloadRequestStatus TorrentWrapper::RequestFileByRow( const To
 
     if ( !JoinTorrent( row, false ) ) return torrent_join_failed;
 
-    m_socket_class->Send( wxString::Format( _T("N+|%s\n"), row->hash.c_str() ) ); // request for seeders for the file
+    SendMessageToCoordinator( wxString::Format( _T("N+|%s\n"), row->hash.c_str() ) ); // request for seeders for the file
     return success;
 }
 
@@ -640,7 +640,11 @@ std::map<int,TorrentInfos> TorrentWrapper::CollectGuiInfos()
 
 void TorrentWrapper::SendMessageToCoordinator( const wxString& message )
 {
-    if ( IsConnectedToP2PSystem()  ) m_socket_class->Send( message + _T("\n") );
+    if ( IsConnectedToP2PSystem()  )
+    {
+			 wxLogMessage( _T("T send: %s"), message.c_str() );
+    	 m_socket_class->Send( message + _T("\n") );
+    }
 }
 
 
@@ -1027,7 +1031,7 @@ void TorrentWrapper::RemoveUnneededTorrents()
                 if ( ! wxRenameFile(sourceName, targetName, false) ) wxLogError(wxString::Format(_T("torrent: Failed to move \"%s\" to \"%s\""), sourceName.c_str(), targetName.c_str()));
                 else wxLogMessage(wxString::Format(_T("torrent: Moved \"%s\" to \"%s\""), sourceName.c_str(), targetName.c_str()));
 
-                m_socket_class->Send( _T("N-|")  + it->second->hash + _T("\n") ); //notify the system we don't need the file anymore
+                SendMessageToCoordinator( _T("N-|")  + it->second->hash + _T("\n") ); //notify the system we don't need the file anymore
 
                 wxCommandEvent refreshevt(UnitSyncReloadRequest); // request an unitsync reload
                 wxPostEvent( &SL_GlobalEvtHandler::GetSL_GlobalEvtHandler(), refreshevt );
@@ -1072,7 +1076,7 @@ void TorrentWrapper::TryToJoinQueuedTorrents()
 
 void TorrentWrapper::ReceiveandExecute( const wxString& msg )
 {
-    wxLogMessage(_T("torrent: %s"), msg.c_str() );
+    wxLogMessage(_T("T recive: %s"), msg.c_str() );
 
     wxArrayString data = wxStringTokenize( msg, _T('|') );
 
@@ -1098,7 +1102,7 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
 
         GetTorrentTable().InsertRow( newtorrent );
 
-        // m_socket_class->Send(  _T("IH|") + data[1] + _T("\n") );
+        // SendMessageToCoordinator(  _T("IH|") + data[1] + _T("\n") );
 
         // T-|hash 	 informs client that torrent was removed from server
     }
@@ -1155,7 +1159,7 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
     else if ( data[0] == _T("PING") )
     {
 
-        m_socket_class->Send( _T("PING\n") );
+        SendMessageToCoordinator( _T("PING\n") );
 
         //IH|hash|infohash infos the client about torrent's infohash b64 encoded
     }
@@ -1208,7 +1212,7 @@ void TorrentWrapper::OnDisconnected( Socket* sock )
     {
         if ( !i->first.is_seed() ) TorrentsToResume.Add( i->second->hash ); // save leeching torrents for resume on next connection
 
-        m_socket_class->Send( wxString::Format( _T("N-|%s\n"), i->second->hash.c_str() ) ); // release all files requests
+        SendMessageToCoordinator( wxString::Format( _T("N-|%s\n"), i->second->hash.c_str() ) ); // release all files requests
         try
         {
             m_torr->remove_torrent(i->first); //remove all torrents upon disconnect
