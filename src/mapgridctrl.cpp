@@ -156,6 +156,18 @@ void MapGridCtrl::CheckInBounds()
 }
 
 
+void MapGridCtrl::UpdateToolTip()
+{
+	if ( m_mouseover_map != NULL ) {
+		SetToolTip( m_mouseover_map->name + _T("\n") + TowxString(m_mouseover_map->info.width / 512) + _T("x") + TowxString(m_mouseover_map->info.height / 512) );
+	}
+	else {
+		SetToolTip( _("Drag to move around the grid of map previews.\n"
+		              "Click to select a map and close this window.") );
+	}
+}
+
+
 void MapGridCtrl::DrawMap( wxDC& dc, MapData& map, int x, int y )
 {
 	switch ( map.state ) {
@@ -237,14 +249,17 @@ void MapGridCtrl::OnMouseMove( wxMouseEvent& event )
 		// that event.GetPosition() is relative to client area of control.
 		const wxPoint pos = wxPoint2DInt (event.GetPosition() + m_pos - wxPoint(5, 5)) / MINIMAP_SIZE;
 		const int idx = pos.y * m_size.x + pos.x;
+		MapData* old_mouseover_map = m_mouseover_map;
 
 		if ( pos.x >= 0 && pos.x < m_size.x && pos.y >= 0 && pos.y <= m_size.y && idx < (int)m_grid.size() ) {
 			m_mouseover_map = m_grid[idx];
-			SetToolTip( m_mouseover_map->name + _T("\n") + TowxString(m_mouseover_map->info.width / 512) + _T("x") + TowxString(m_mouseover_map->info.height / 512) );
 		}
 		else {
 			m_mouseover_map = NULL;
-			SetToolTip( _T("") );
+		}
+
+		if ( old_mouseover_map != m_mouseover_map ) {
+			UpdateToolTip();
 		}
 	}
 }

@@ -64,6 +64,7 @@ class MapGridCtrl : public wxPanel
 		template< class Compare > void _Sort( int dimension, Compare cmp );
 
 		void CheckInBounds();
+		void UpdateToolTip();
 		void DrawMap( wxDC& dc, MapData& map, int x, int y );
 
 		Ui& m_ui;
