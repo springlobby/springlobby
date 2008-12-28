@@ -295,7 +295,6 @@ void SpringLobbyApp::SetupUserFolders()
           {
           	wxPathList pl;
 						pl.AddEnvList( _T("%ProgramFiles%") );
-						pl.Add( wxGetOSDirectory() );
 						pl.AddEnvList( _T("XDG_DATA_DIRS") );
 						pl = sett().GetAdditionalSearchPaths( pl );
           	wxString uikeyslocation = pl.FindValidPath( _T("uikeys.txt") );

@@ -645,6 +645,8 @@ wxPathList Settings::GetAdditionalSearchPaths( wxPathList& pl )
   pl.Add( sp.GetResourcesDir().BeforeLast( sep ) );
 #endif
 
+	pl.Add( wxGetOSDirectory() );
+
   for ( size_t i = 0; i < pl.GetCount(); i++ )
   {
     wxString path = pl[i];
@@ -663,8 +665,6 @@ wxString Settings::AutoFindSpringBin()
   wxPathList pl;
 
   pl.AddEnvList( _T("%ProgramFiles%") );
-	pl.Add( wxGetOSDirectory() );
-
   pl.AddEnvList( _T("PATH") );
 
   pl = GetAdditionalSearchPaths( pl );
@@ -678,7 +678,6 @@ wxString Settings::AutoFindUnitSync()
   wxPathList pl;
 
   pl.AddEnvList( _T("%ProgramFiles%") );
-	pl.Add( wxGetOSDirectory() );
 
   pl.AddEnvList( _T("LDPATH") );
   pl.AddEnvList( _T("LD_LIBRARY_PATH") );
