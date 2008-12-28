@@ -245,7 +245,7 @@ void SpringLobbyApp::SetupUserFolders()
       choices.Add( _("I have already a SpringData folder, i want to browse manually for it") );
 
       int result = wxGetSingleChoiceIndex(
-                       _("Looks like you don't have yet a user SpringData folder structure\nWhat would you like to do? (leave default choice if you don't know what is this for)"),
+                       _("Looks like you don't have yet a user SpringData folder structure\nWhat would you like to do? (leave default choice if you don't know what this is for)"),
                        _("First time wizard"),
                        choices );
 
