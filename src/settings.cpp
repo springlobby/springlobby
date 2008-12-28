@@ -43,9 +43,15 @@ Settings& sett()
     return m_sett;
 }
 
-SL_WinConf::SL_WinConf(wxFileInputStream& in)
-  : wxFileConfig(in)
-{}
+SL_WinConf::SL_WinConf(wxFileInputStream& in):
+wxFileConfig( in )
+{
+}
+
+bool SL_WinConf::DoWriteLong(const wxString& key, long lValue)
+{
+		return wxFileConfig::DoWriteString(key, TowxString<long>( lValue ) );
+}
 
 Settings::Settings()
 {
@@ -582,7 +588,7 @@ void Settings::SetWindowLeft( const wxString& window, const int value )
 }
 
 //some code duplication necessary to be able to simply use wx defaults
-wxSize  Settings::GetWindowSize( const wxString& window, const wxSize& def  )
+wxSize  Settings::GetWindowSize( const wxString& window, const wxSize& def )
 {
     wxSize ret = def;
     ret.SetHeight( m_config->Read( _T("/GUI/")+ window + _T("/height"), ret.GetHeight() ) );
@@ -613,27 +619,16 @@ void Settings::SetWindowPos( const wxString& window, const wxPoint& pos )
 
 // ========================================================
 
-
-
-wxString Settings::AutoFindSpringBin()
+wxPathList Settings::GetAdditionalSearchPaths( wxPathList& pl )
 {
-  wxPathList pl;
-  wxStandardPathsBase& sp = wxStandardPathsBase::Get();
+	wxPathList ret;
+	wxChar sep = wxFileName::GetPathSeparator();
+	wxStandardPathsBase& sp = wxStandardPathsBase::Get();
 
-#ifdef __WXMSW__
-  wxRegKey programreg( _T("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion") );
-  wxString tmp;
-  if ( programreg.QueryValue( _T("ProgramFilesDir"), tmp ) ) pl.Add( tmp );
+  pl.Add( wxFileName::GetCwd() );
 
-  pl.Add( _T("C:\\Program") );
-  pl.Add( _T("C:\\Program Files") );
-#else
-  pl.Add( _T("/usr/local/games") );
-  pl.Add( _T("/usr/local/games/bin") );
-  pl.Add( _T("/usr/local/bin") );
-  pl.Add( _T("/usr/games") );
-  pl.Add( _T("/usr/games/bin") );
-  pl.Add( _T("/usr/bin") );
+#ifdef HAVE_WX28
+  pl.Add( sp.GetExecutablePath() );
 #endif
 
   pl.Add( wxFileName::GetCwd() );
@@ -643,38 +638,49 @@ wxString Settings::AutoFindSpringBin()
 #endif
 
   pl.Add( wxFileName::GetHomeDir() );
-  pl.Add( sp.GetUserDataDir().BeforeLast( wxFileName::GetPathSeparator() ) );
-  pl.Add( sp.GetDataDir().BeforeLast( wxFileName::GetPathSeparator() ) );
+  pl.Add( sp.GetUserDataDir().BeforeLast( sep ) );
+  pl.Add( sp.GetDataDir().BeforeLast( sep ) );
 
 #ifdef HAVE_WX28
-  pl.Add( sp.GetResourcesDir().BeforeLast( wxFileName::GetPathSeparator() ) );
+  pl.Add( sp.GetResourcesDir().BeforeLast( sep ) );
 #endif
 
-  for ( size_t i = 0; i < pl.GetCount(); i++ ) {
+  for ( size_t i = 0; i < pl.GetCount(); i++ )
+  {
     wxString path = pl[i];
-    if ( path.Last() != wxFileName::GetPathSeparator() ) path += wxFileName::GetPathSeparator();
-    if ( IsSpringBin( path + SPRING_BIN ) ) return path + SPRING_BIN;
-    if ( IsSpringBin( path + _T("Spring") + wxFileName::GetPathSeparator() + SPRING_BIN ) ) return path + _T("Spring") + wxFileName::GetPathSeparator() + SPRING_BIN;
-    if ( IsSpringBin( path + _T("spring") + wxFileName::GetPathSeparator() + SPRING_BIN ) ) return path + _T("spring") + wxFileName::GetPathSeparator() + SPRING_BIN;
+    if ( path.Last() != sep ) path += sep;
+    ret.Add( path );
+    ret.Add( path + _T("Spring") + sep );
+    ret.Add( path + _T("spring") + sep );
   }
-  return _T("");
+  return ret;
+}
+
+wxString Settings::AutoFindSpringBin()
+{
+  wxPathList pl;
+
+  pl.AddEnvList( _T("%ProgramFiles%") );
+	pl.Add( wxGetOSDirectory() );
+
+  pl.AddEnvList( _T("PATH") );
+
+  pl = GetAdditionalSearchPaths( pl );
+
+  return pl.FindValidPath( SPRING_BIN );
 }
 
 
 wxString Settings::AutoFindUnitSync()
 {
   wxPathList pl;
-  wxStandardPathsBase& sp = wxStandardPathsBase::Get();
 
-#ifdef __WXMSW__
-  wxRegKey programreg( _T("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion") );
-  wxString tmp;
-  if ( programreg.QueryValue( _T("ProgramFilesDir"), tmp ) ) pl.Add( tmp );
+  pl.AddEnvList( _T("%ProgramFiles%") );
+	pl.Add( wxGetOSDirectory() );
 
-  pl.Add( wxGetOSDirectory() );
-  pl.Add( _T("C:\\Program") );
-  pl.Add( _T("C:\\Program Files") );
-#else
+  pl.AddEnvList( _T("LDPATH") );
+  pl.AddEnvList( _T("LD_LIBRARY_PATH") );
+
   pl.Add( _T("/usr/local/lib64") );
   pl.Add( _T("/usr/local/games") );
   pl.Add( _T("/usr/local/games/lib") );
@@ -684,40 +690,12 @@ wxString Settings::AutoFindUnitSync()
   pl.Add( _T("/usr/games") );
   pl.Add( _T("/usr/games/lib64") );
   pl.Add( _T("/usr/games/lib") );
-#endif
 
-  pl.Add( wxFileName::GetCwd() );
+	pl = GetAdditionalSearchPaths( pl );
 
-#ifdef HAVE_WX28
-  pl.Add( sp.GetExecutablePath() );
-#endif
-
-  pl.Add( wxFileName::GetCwd() );
-
-#ifdef HAVE_WX28
-  pl.Add( sp.GetExecutablePath() );
-#endif
-
-  pl.Add( wxFileName::GetHomeDir() );
-  pl.Add( sp.GetUserDataDir().BeforeLast( wxFileName::GetPathSeparator() ) );
-  pl.Add( sp.GetDataDir().BeforeLast( wxFileName::GetPathSeparator() ) );
-
-#ifdef HAVE_WX28
-  pl.Add( sp.GetResourcesDir().BeforeLast( wxFileName::GetPathSeparator() ) );
-#endif
-
-  for ( size_t i = 0; i < pl.GetCount(); i++ ) {
-    wxString path = pl[i];
-    if ( path.Last() != wxFileName::GetPathSeparator() ) path += wxFileName::GetPathSeparator();
-    if ( wxFile::Exists( path + _T("unitsync") + GetLibExtension() ) ) return path + _T("unitsync") + GetLibExtension();
-    if ( wxFile::Exists( path + _T("Spring") + wxFileName::GetPathSeparator() + _T("unitsync") + GetLibExtension() ) ) return path + _T("Spring") + wxFileName::GetPathSeparator() + _T("unitsync") + GetLibExtension();
-    if ( wxFile::Exists( path + _T("spring") + wxFileName::GetPathSeparator() + _T("unitsync") + GetLibExtension() ) ) return path + _T("spring") + wxFileName::GetPathSeparator() + _T("unitsync") + GetLibExtension();
-    if ( wxFile::Exists( path + _T("libunitsync") + GetLibExtension() ) ) return path + _T("libunitsync") + GetLibExtension();
-    if ( wxFile::Exists( path + _T("Spring") + wxFileName::GetPathSeparator() + _T("libunitsync") + GetLibExtension() ) ) return path + _T("Spring") + wxFileName::GetPathSeparator() + _T("libunitsync") + GetLibExtension();
-    if ( wxFile::Exists( path + _T("spring") + wxFileName::GetPathSeparator() + _T("libunitsync") + GetLibExtension() ) ) return path + _T("spring") + wxFileName::GetPathSeparator() + _T("libunitsync") + GetLibExtension();
-  }
-
-  return _T("");
+	wxString retpath = pl.FindValidPath( _T("unitsync") + GetLibExtension() );
+	if ( retpath.IsEmpty() ) pl.FindValidPath( _T("libunitsync") + GetLibExtension() );
+	return retpath;
 }
 
 

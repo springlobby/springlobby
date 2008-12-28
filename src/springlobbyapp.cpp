@@ -16,7 +16,10 @@
 #include <wx/file.h>
 #include <wx/fs_zip.h> //filesystem zip handler
 #include <wx/socket.h>
-
+#ifdef __WXMSW__
+	#include <wx/msw/registry.h>
+#endif
+#include <wx/utils.h>
 
 #include "springlobbyapp.h"
 #include "mainwindow.h"
@@ -240,12 +243,21 @@ void SpringLobbyApp::OnTimer( wxTimerEvent& event )
 
 void SpringLobbyApp::SetupUserFolders()
 {
-#ifdef __WXGTK__
 #ifndef HAVE_WX26
       wxString sep = wxFileName::GetPathSeparator();
       wxString defaultdir = wxFileName::GetHomeDir() + sep +_T("spring");
-
       wxArrayString choices;
+#ifdef __WXMSW__
+      wxRegKey UACkey(_T("HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System") ); // check if uac is on, skip dialog if not
+      if( !UACkey.Exists() ) return;
+      long value;
+      if( !UACkey.QueryValue( _T("EnableLUA"), value ) )
+      {
+      	if( value == 0 ) return;
+      }
+			int createdefault = choices.Add( _("Create a spring directory in my documents folder") );
+#endif
+
       int donothing = choices.Add( _("Do nothing") );
       int createcustompath = choices.Add( _("Create a folder in a custom path (you'll get prompted for the path)") );
       int choseexisting = choices.Add( _("I have already a SpringData folder, i want to browse manually for it") );
@@ -259,6 +271,9 @@ void SpringLobbyApp::SetupUserFolders()
       bool createdirs = true;
       if ( result == choseexisting ) createdirs = false;
       else if ( result == donothing ) return;
+      #ifdef __WXMSW__
+      else if ( result == createdefault ) dir = defaultdir;
+      #endif
 
       if ( result == createcustompath || result == choseexisting ) dir = wxDirSelector( _("Choose a folder"), defaultdir );
 
@@ -280,16 +295,19 @@ void SpringLobbyApp::SetupUserFolders()
           }
           else
           {
-            #ifdef __WXGTK__
-            if ( wxFileName::FileExists( _T("/usr/share/games/spring/uikeys.txt") ) ) /// this hardcoded path is a bit dumb but it's too early in the code to do proper spring path detection
+          	wxPathList pl;
+						pl.AddEnvList( _T("%ProgramFiles%") );
+						pl.Add( wxGetOSDirectory() );
+						pl.AddEnvList( _T("XDG_DATA_DIRS") );
+						pl = sett().GetAdditionalSearchPaths( pl );
+          	wxString uikeyslocation = pl.FindValidPath( _T("uikeys.txt") );
+            if ( !uikeyslocation.IsEmpty() )
             {
-              wxCopyFile( _T("/usr/share/games/spring/uikeys.txt"), dir + sep + _T("uikeys.txt"), false );
+              wxCopyFile( uikeyslocation, dir + sep + _T("uikeys.txt"), false );
             }
-            #endif
           }
       }
       usync().SetSpringDataPath(dir);
-#endif
 #endif
 }
 
