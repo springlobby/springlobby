@@ -39,7 +39,7 @@ void loadUnitsync()
       {
       	bool portable_mode = sett().IsPortableMode();
       	sett().SetPortableMode( true ); // force portable mode to get untisync path in current bin dir
-        untisyncpath = sett().GetCurrentUsedUnitSync();
+        unitsyncpath = sett().GetCurrentUsedUnitSync();
         sett().SetPortableMode( portable_mode ); // restore old value
       }
 			else unitsyncpath = sett().GetCurrentUsedUnitSync();
