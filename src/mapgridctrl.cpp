@@ -37,6 +37,7 @@ MapGridCtrl::MapGridCtrl( wxWindow* parent, Ui& ui, wxSize size, wxWindowID id )
 	, m_mouseover_map( NULL )
 	, m_selected_map( NULL )
 {
+	UpdateToolTip();
 }
 
 
