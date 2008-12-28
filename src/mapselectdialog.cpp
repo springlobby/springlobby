@@ -96,8 +96,17 @@ void MapSelectDialog::OnSortKeySelect( wxCommandEvent& event )
 
 void MapSelectDialog::AppendSortKeys( wxChoice* choice )
 {
+	// see MapGridCtrl for available SortKeys
 	choice->Append( _("Name"), (void*) MapGridCtrl::SortKey_Name );
-	choice->Append( _("Size"), (void*) MapGridCtrl::SortKey_Area );
+	choice->Append( _("Tidal strength"), (void*) MapGridCtrl::SortKey_TidalStrength );
+	choice->Append( _("Gravity"), (void*) MapGridCtrl::SortKey_Gravity );
+	choice->Append( _("Metal scale"), (void*) MapGridCtrl::SortKey_MaxMetal );
+	choice->Append( _("Extractor radius"), (void*) MapGridCtrl::SortKey_ExtractorRadius );
+	choice->Append( _("Minimum wind"), (void*) MapGridCtrl::SortKey_MinWind );
+	choice->Append( _("Maximum wind"), (void*) MapGridCtrl::SortKey_MaxWind );
+	choice->Append( _("Average wind"), (void*) MapGridCtrl::SortKey_Wind );
+	choice->Append( _("Size (map area)"), (void*) MapGridCtrl::SortKey_Area );
+	choice->Append( _("Aspect ratio"), (void*) MapGridCtrl::SortKey_AspectRatio );
 	choice->Append( _("Number of start positions"), (void*) MapGridCtrl::SortKey_PosCount );
 }
 

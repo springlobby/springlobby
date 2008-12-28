@@ -19,7 +19,15 @@ class MapGridCtrl : public wxPanel
 		enum SortKey
 		{
 			SortKey_Name,
-			SortKey_Area,
+			SortKey_TidalStrength,
+			SortKey_Gravity,
+			SortKey_MaxMetal,
+			SortKey_ExtractorRadius,
+			SortKey_MinWind,
+			SortKey_MaxWind,
+			SortKey_Wind,        // minWind + maxWind
+			SortKey_Area,        // width * height
+			SortKey_AspectRatio, // max(width/height, height/width)
 			SortKey_PosCount,
 		};
 
@@ -59,7 +67,15 @@ class MapGridCtrl : public wxPanel
 		};
 
 		static bool CompareName( const MapData* a, const MapData* b );
+		static bool CompareTidalStrength( const MapData* a, const MapData* b );
+		static bool CompareGravity( const MapData* a, const MapData* b );
+		static bool CompareMaxMetal( const MapData* a, const MapData* b );
+		static bool CompareExtractorRadius( const MapData* a, const MapData* b );
+		static bool CompareMinWind( const MapData* a, const MapData* b );
+		static bool CompareMaxWind( const MapData* a, const MapData* b );
+		static bool CompareWind( const MapData* a, const MapData* b );
 		static bool CompareArea( const MapData* a, const MapData* b );
+		static bool CompareAspectRatio( const MapData* a, const MapData* b );
 		static bool ComparePosCount( const MapData* a, const MapData* b );
 		template< class Compare > void _Sort( int dimension, Compare cmp );
 
