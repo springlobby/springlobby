@@ -20,6 +20,7 @@
 #include <wx/font.h>
 #include <wx/log.h>
 #include <wx/wfstream.h>
+#include <wx/settings.h>
 #ifdef __WXMSW__
 #include <wx/msw/registry.h>
 #endif
@@ -543,7 +544,13 @@ int Settings::GetWindowWidth( const wxString& window )
 //! @brief Set width position of MainWindow
 void Settings::SetWindowWidth( const wxString& window, const int value )
 {
-    m_config->Write( _T("/GUI/")+ window + _T("/width"), value );
+    m_config->Write(
+            _T("/GUI/")+ window + _T("/width"),
+            clamp(  value,
+                    wxSystemSettings::GetMetric( wxSYS_WINDOWMIN_X ),
+                    wxSystemSettings::GetMetric( wxSYS_SCREEN_X )
+            )
+        );
 }
 
 
@@ -557,7 +564,13 @@ int Settings::GetWindowHeight( const wxString& window )
 //! @brief Set height position of MainWindow
 void Settings::SetWindowHeight( const wxString& window, const int value )
 {
-    m_config->Write( _T("/GUI/")+ window + _T("/height"), value );
+    m_config->Write(
+            _T("/GUI/")+ window + _T("/height"),
+            clamp(  value,
+                    wxSystemSettings::GetMetric( wxSYS_WINDOWMIN_Y ),
+                    wxSystemSettings::GetMetric( wxSYS_SCREEN_Y )
+            )
+        );
 }
 
 
@@ -571,7 +584,13 @@ int Settings::GetWindowTop( const wxString& window )
 //! @brief Set top position of MainWindow
 void Settings::SetWindowTop( const wxString& window, const int value )
 {
-    m_config->Write( _T("/GUI/")+ window + _T("/top"), value );
+    m_config->Write(
+            _T("/GUI/")+ window + _T("/top"),
+            clamp( value,
+                    0,
+                    wxSystemSettings::GetMetric( wxSYS_SCREEN_Y ) - 20
+            )
+        );
 }
 
 
@@ -584,7 +603,13 @@ int Settings::GetWindowLeft( const wxString& window )
 //! @brief Set left position of MainWindow
 void Settings::SetWindowLeft( const wxString& window, const int value )
 {
-    m_config->Write( _T("/GUI/")+ window + _T("/left"), value );
+    m_config->Write(
+            _T("/GUI/")+ window + _T("/left"),
+            clamp( value,
+                    0,
+                    wxSystemSettings::GetMetric( wxSYS_SCREEN_X ) - 20
+            )
+        );
 }
 
 //some code duplication necessary to be able to simply use wx defaults
