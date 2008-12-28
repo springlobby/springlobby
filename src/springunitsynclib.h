@@ -317,8 +317,7 @@ class SpringUnitSyncLib
     wxString GetPrimaryModArchiveList( int arnr );
     int GetPrimaryModChecksumFromName( const wxString& name );
 
-    int GetSideCount( const wxString& modName );
-    wxString GetSideName( const wxString& modName, int index );
+    wxArrayString GetSides( const wxString& modName );
 
     /**
      * Add all achives.
@@ -327,6 +326,7 @@ class SpringUnitSyncLib
     void AddAllArchives( const wxString& root );
 
     void SetCurrentMod( const wxString& modname );
+    void UnSetCurrentMod( );
 
     wxString GetFullUnitName( int index );
     wxString GetUnitName( int index );

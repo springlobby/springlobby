@@ -26,6 +26,7 @@
 #include "settings.h"
 #include "uiutils.h"
 #include "groupoptionspanel.h"
+#include "utils.h"
 
 #ifndef NO_TORRENT_SYSTEM
 #include "torrentoptionspanel.h"
