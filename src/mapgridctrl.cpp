@@ -23,13 +23,18 @@ BEGIN_EVENT_TABLE( MapGridCtrl, wxPanel )
 END_EVENT_TABLE()
 
 
-MapGridCtrl::MapGridCtrl( wxWindow* parent, Ui& ui, wxSize size )
-	: wxPanel( parent, -1, wxDefaultPosition, size, wxSIMPLE_BORDER|wxFULL_REPAINT_ON_RESIZE )
+const wxEventType MapGridCtrl::MapSelectedEvt = wxNewEventType();
+
+
+MapGridCtrl::MapGridCtrl( wxWindow* parent, Ui& ui, wxSize size, wxWindowID id )
+	: wxPanel( parent, id, wxDefaultPosition, size, wxSIMPLE_BORDER|wxFULL_REPAINT_ON_RESIZE )
 	, m_ui( ui )
 	, m_size( 0, 0 )
 	, m_pos( 0, 0 )
 	, m_in_mouse_drag( false )
 	, m_async_minimap_fetches( 0 )
+	, m_mouseover_map( NULL )
+	, m_selected_map( NULL )
 {
 }
 
@@ -247,6 +252,7 @@ void MapGridCtrl::OnMouseMove( wxMouseEvent& event )
 void MapGridCtrl::OnLeftDown( wxMouseEvent& event )
 {
 	SetCursor( wxCursor( wxCURSOR_HAND ) );
+	m_first_mouse_pos = event.GetPosition();
 	m_last_mouse_pos = event.GetPosition();
 	m_in_mouse_drag = true;
 }
@@ -256,6 +262,16 @@ void MapGridCtrl::OnLeftUp( wxMouseEvent& event )
 {
 	SetCursor( wxCursor( wxCURSOR_ARROW ) );
 	m_in_mouse_drag = false;
+
+	if ( wxPoint2DInt(event.GetPosition() - m_first_mouse_pos).GetVectorLength() <= 3 ) {
+		m_selected_map = m_mouseover_map;
+		wxLogMessage( _T("MapGridCtrl: Selected map: ") + m_selected_map->name );
+
+		wxCommandEvent evt( MapSelectedEvt, GetId() );
+		evt.SetEventObject( this );
+		evt.SetString( m_selected_map->name );
+		wxPostEvent( this, evt );
+	}
 }
 
 

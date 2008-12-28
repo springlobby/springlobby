@@ -14,6 +14,8 @@ class MapGridCtrl : public wxPanel
 {
 	public:
 
+		static const wxEventType MapSelectedEvt;
+
 		enum SortKey
 		{
 			SortKey_Name,
@@ -21,11 +23,13 @@ class MapGridCtrl : public wxPanel
 			SortKey_PosCount,
 		};
 
-		MapGridCtrl( wxWindow* parent, Ui& ui, wxSize size = wxDefaultSize );
+		MapGridCtrl( wxWindow* parent, Ui& ui, wxSize size = wxDefaultSize, wxWindowID id = -1 );
 		~MapGridCtrl();
 
 		void LoadMaps();
 		void Sort( SortKey vertical, SortKey horizontal );
+
+		UnitSyncMap* GetSelectedMap() const { return m_selected_map; }
 
 		void OnPaint( wxPaintEvent& event );
 		void OnResize( wxSizeEvent& event );
@@ -69,6 +73,7 @@ class MapGridCtrl : public wxPanel
 		wxSize m_size;
 
 		wxPoint m_pos;
+		wxPoint m_first_mouse_pos;
 		wxPoint m_last_mouse_pos;
 		bool m_in_mouse_drag;
 
@@ -79,6 +84,8 @@ class MapGridCtrl : public wxPanel
 
 		/// Map which is currently under the mouse pointer.
 		MapData* m_mouseover_map;
+		/// Map which was last clicked.
+		MapData* m_selected_map;
 
 		DECLARE_EVENT_TABLE();
 };
