@@ -725,7 +725,7 @@ int SpringUnitSyncLib::GetPrimaryModChecksumFromName( const wxString& name )
 wxArrayString SpringUnitSyncLib::GetSides( const wxString& modName )
 {
   InitLib( m_get_side_count );
-  InitLib( m_get_side_name );
+	UNITSYNC_EXCEPTION( m_get_side_name, _T("Function was not in unitsync library.") )
 
   SetCurrentMod( modName );
   int count = m_get_side_count();
