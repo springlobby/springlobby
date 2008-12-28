@@ -562,44 +562,27 @@ GameOptions SpringUnitSync::GetModOptions( const wxString& name )
   return ret;
 }
 
+wxArrayString SpringUnitSync::GetSides( const wxString& modname )
+{
+	wxArrayString ret;
+	int count = GetSideCount( modname );
+	for( int i = 0; i < count; i++ ) ret.Add( GetSideName( modname, i ) );
+	return ret;
+}
 
 int SpringUnitSync::GetSideCount( const wxString& modname )
 {
-  wxLogDebugFunc( _T("") );
+  wxLogDebugFunc( modname );
   if ( !ModExists( modname ) ) return 0;
-  wxArrayString cache;
-  try
-  {
-    cache = GetCacheFile( GetFileCachePath( modname, _T(""), true ) + _T(".sidecount") );
-  }
-  catch (...)
-  {
-    susynclib().AddAllArchives( GetModArchive( susynclib().GetModIndex( modname )  ) );
-    cache.Add( TowxString( susynclib().GetSideCount( modname ) ) );
-    SetCacheFile( GetFileCachePath( modname, _T(""), true ) + _T(".sidecount"), cache );
-  }
-  return (int)s2l( cache[0] );
+	susynclib().AddAllArchives( GetModArchive( susynclib().GetModIndex( modname )  ) );
+	return susynclib().GetSideCount( modname );
 }
 
 
 wxString SpringUnitSync::GetSideName( const wxString& modname, int index )
 {
-  wxLogDebugFunc( _T("") );
-  if ( (index < 0) || (!ModExists( modname )) ) return _T("unknown");
-  if ( index >= GetSideCount( modname ) ) return _T("unknown");
-  ASSERT_LOGIC( GetSideCount( modname ) > index, _T("Side index too high.") );
-  wxArrayString cache;
-  try
-  {
-    cache = GetCacheFile( GetFileCachePath( modname, _T(""), true ) + _T("-") + TowxString( index ) + _T(".sidename") );
-  }
-  catch (...)
-  {
-    susynclib().GetSideCount( modname );
-    cache.Add( susynclib().GetSideName( modname, index ) );
-    SetCacheFile( GetFileCachePath( modname, _T(""), true ) + _T("-") + TowxString( index ) + _T(".sidename"), cache );
-  }
-  return cache[0];
+  wxLogDebugFunc( modname + _T(", ") + TowxString(index) );
+  return susynclib().GetSideName( modname, index );
 }
 
 
@@ -646,46 +629,37 @@ wxArrayString SpringUnitSync::GetAIList( const wxString& modname )
 {
   wxLogDebugFunc( _T("") );
 
-  /// list dynamic link libraries
+  // list dynamic link libraries
   int dllini = susynclib().InitFindVFS(  wxDynamicLibrary::CanonicalizeName(_T("AI/Bot-libs/*"), wxDL_MODULE) );
 
   wxArrayString ret;
   wxString FileName;
 
   dllini = susynclib().FindFilesVFS( dllini, FileName );
-  while ( dllini ) {
-    if ( ret.Index( FileName.BeforeLast( '/') ) == wxNOT_FOUND ) ret.Add ( FileName ); /// don't add duplicates
+  while ( dllini )
+  {
+    if ( ret.Index( FileName.BeforeLast( '/') ) == wxNOT_FOUND ) ret.Add ( FileName ); // don't add duplicates
     dllini = susynclib().FindFilesVFS( dllini, FileName );
   }
-  /// list jar files (java AIs)
+  // list jar files (java AIs)
   int jarini = susynclib().InitFindVFS(  _T("AI/Bot-libs/*.jar") );
 
   jarini = susynclib().FindFilesVFS( jarini, FileName );
-  while ( jarini ) {
-    if ( ret.Index( FileName.BeforeLast( '/') ) == wxNOT_FOUND ) ret.Add ( FileName ); /// don't add duplicates
+  while ( jarini )
+  {
+    if ( ret.Index( FileName.BeforeLast( '/') ) == wxNOT_FOUND ) ret.Add ( FileName ); // don't add duplicates
     jarini = susynclib().FindFilesVFS( jarini, FileName );
   }
 
-  wxArrayString cache;
-  try
-  {
-    cache = GetCacheFile( GetFileCachePath( modname, _T(""), true ) + _T(".luaai") );
+	try
+	{ // Older versions of unitsync does not have these functions.
+		const int LuaAICount = susynclib().GetLuaAICount( modname );
+		for ( int i = 0; i < LuaAICount; i++ )
+		{
+			 ret.Add( _T( "LuaAI:" ) +  susynclib().GetLuaAIName( i ) );
+		}
+	} catch (...) {}
 
-    unsigned int aicount = cache.GetCount();
-    for ( unsigned int count = 0; count < aicount; count++ ) ret.Add( cache[count] );
-  } catch (...)
-  {
-    /// list mod's LuaAI
-    try { /// Older versions of unitsync does not have these functions.
-      const int LuaAICount = susynclib().GetLuaAICount( modname );
-      for ( int i = 0; i < LuaAICount; i++ )
-      {
-         ret.Add( _T( "LuaAI:" ) +  susynclib().GetLuaAIName( i ) );
-         cache.Add( _T( "LuaAI:" ) +  susynclib().GetLuaAIName( i ) );
-      }
-    } catch (...) {}
-    SetCacheFile( GetFileCachePath( modname, _T(""), true ) + _T(".luaai"), cache );
-  }
   return ret;
 }
 

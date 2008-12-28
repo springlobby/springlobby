@@ -47,8 +47,7 @@ class SpringUnitSync : public IUnitSync
 
     int GetMapIndex( const wxString& name );
 
-    int GetSideCount( const wxString& modname );
-    wxString GetSideName( const wxString& modname, int index );
+		wxArrayString GetSides( const wxString& modname  );
     wxImage GetSidePicture( const wxString& modname, const wxString& SideName );
 
     bool LoadUnitSyncLib( const wxString& unitsyncloc );
@@ -124,6 +123,9 @@ class SpringUnitSync : public IUnitSync
     void PopulateArchiveList();
 
     double _GetSpringVersion();
+
+		int GetSideCount( const wxString& modname );
+    wxString GetSideName( const wxString& modname, int index );
 
     wxImage _GetMapImage( const wxString& mapname, const wxString& imagename, wxImage (SpringUnitSyncLib::*loadMethod)(const wxString& mapname) );
     wxImage _GetScaledMapImage( const wxString& mapname, wxImage (SpringUnitSync::*loadMethod)(const wxString& mapname), int width, int height );
