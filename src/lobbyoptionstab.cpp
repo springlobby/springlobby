@@ -14,6 +14,8 @@
 #include "settings.h"
 #include "springlobbyapp.h"
 #include "settings++/custom_dialogs.h"
+#include "utils.h"
+
 
 #ifndef HAVE_WX26
 #include "aui/auimanager.h"

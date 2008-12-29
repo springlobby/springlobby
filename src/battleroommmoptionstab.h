@@ -79,11 +79,17 @@ class BattleroomMMOptionsTab : public wxScrolledWindow
 		textCtrlMap m_textctrl_map;
 		staticTextMap m_statictext_map;
 
+		/** \brief setup toplevel sizer per GameOption with all child sizers ( sections )
+            */
+		void setupOptionsSizer( wxBoxSizer* parent_sizer, OptionsWrapper::GameOption optFlag );
+
+
         /** \brief generate Gui elements from loaded MMoptions
          * for all values in all option maps create a control (pointer),
          * set the controls name to the option key and add it to the appropiate map and sizer.
+         * \return the total num of controls in the sizer
          */
-		void setupOptionsSizer(wxBoxSizer* optFlagSizer, OptionsWrapper::GameOption optFlag);
+		int setupOptionsSectionSizer(const mmOptionSection& section, wxBoxSizer* parent_sizer, OptionsWrapper::GameOption optFlag);
 
 		/** \name Event handlers
 		 * @{

@@ -25,6 +25,7 @@
 #include <wx/string.h>
 
 #include "images/fixcolours_palette.xpm"
+#include "springunitsynclib.h"
 
 
 std::vector<wxColour> &GetFixColoursPalette()
@@ -116,6 +117,7 @@ void Battle::Join( const wxString& password )
 void Battle::Leave()
 {
     m_serv.LeaveBattle( m_opts.battleid );
+    susynclib().UnSetCurrentMod( );
 }
 
 
@@ -506,6 +508,13 @@ bool Battle::ExecuteSayCommand( const wxString& cmd )
         m_serv.DoActionBattle( m_opts.battleid, cmd.AfterFirst(' ') );
         return true;
     }
+		if ( cmd_name == _T("/replacehostip") )
+		{
+				wxString ip = cmd.AfterFirst(' ');
+				if ( ip.IsEmpty() ) return false;
+				m_opts.ip = ip;
+				return true;
+		}
     //< quick hotfix for bans
     if (IsFounderMe())
     {
@@ -566,13 +575,6 @@ bool Battle::ExecuteSayCommand( const wxString& cmd )
             //m_banned_ips.erase(nick);
 
             //m_serv.DoActionBattle( m_opts.battleid, cmd.AfterFirst(' ') );
-            return true;
-        }
-        if ( cmd_name == _T("/replacehostip") )
-        {
-            wxString ip = cmd.AfterFirst(' ');
-            if ( ip.IsEmpty() ) return false;
-            m_opts.ip = ip;
             return true;
         }
     }

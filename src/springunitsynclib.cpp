@@ -149,6 +149,8 @@ void SpringUnitSyncLib::Load( const wxString& path, bool DoInit, const wxString&
     m_get_option_name = (GetOptionNamePtr)_GetLibFuncPtr(_T("GetOptionName"));
     m_get_option_desc = (GetOptionDescPtr)_GetLibFuncPtr(_T("GetOptionDesc"));
     m_get_option_type = (GetOptionTypePtr)_GetLibFuncPtr(_T("GetOptionType"));
+    m_get_option_section = (GetOptionSectionPtr)_GetLibFuncPtr(_T("GetOptionSection"));
+    m_get_option_style = (GetOptionStylePtr)_GetLibFuncPtr(_T("GetOptionStyle"));
     m_get_option_bool_def = (GetOptionBoolDefPtr)_GetLibFuncPtr(_T("GetOptionBoolDef"));
     m_get_option_number_def = (GetOptionNumberDefPtr)_GetLibFuncPtr(_T("GetOptionNumberDef"));
     m_get_option_number_min = (GetOptionNumberMinPtr)_GetLibFuncPtr(_T("GetOptionNumberMin"));
@@ -384,6 +386,11 @@ void SpringUnitSyncLib::SetCurrentMod( const wxString& modname )
     AddAllArchives( GetPrimaryModArchive( GetModIndex( modname ) ) );
     m_current_mod = modname;
   }
+}
+
+void SpringUnitSyncLib::UnSetCurrentMod( )
+{
+    m_current_mod = wxEmptyString;
 }
 
 
@@ -720,21 +727,16 @@ int SpringUnitSyncLib::GetPrimaryModChecksumFromName( const wxString& name )
 }
 
 
-int SpringUnitSyncLib::GetSideCount( const wxString& modName )
+wxArrayString SpringUnitSyncLib::GetSides( const wxString& modName )
 {
   InitLib( m_get_side_count );
+	UNITSYNC_EXCEPTION( m_get_side_name, _T("Function was not in unitsync library.") )
 
   SetCurrentMod( modName );
-  return m_get_side_count();
-}
-
-
-wxString SpringUnitSyncLib::GetSideName( const wxString& modName, int index )
-{
-  InitLib( m_get_side_name );
-
-  SetCurrentMod( modName );
-  return WX_STRINGC( m_get_side_name( index ) );
+  int count = m_get_side_count();
+  wxArrayString ret;
+  for ( int i = 0; i < count; i ++ ) ret.Add( WX_STRINGC( m_get_side_name( i ) ) );
+  return ret;
 }
 
 
@@ -909,6 +911,20 @@ wxString SpringUnitSyncLib::GetOptionDesc( int optIndex )
   InitLib( m_get_option_desc );
 
   return WX_STRINGC( m_get_option_desc( optIndex ) );
+}
+
+wxString SpringUnitSyncLib::GetOptionSection( int optIndex )
+{
+  InitLib( m_get_option_section );
+
+  return WX_STRINGC( m_get_option_section( optIndex ) );
+}
+
+wxString SpringUnitSyncLib::GetOptionStyle( int optIndex )
+{
+  InitLib( m_get_option_style );
+
+  return WX_STRINGC( m_get_option_style( optIndex ) );
 }
 
 
