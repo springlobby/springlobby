@@ -47,14 +47,14 @@ wxString GetLibExtension()
 
 //! @brief Initializes the logging functions.
 ///initializes logging in an hidden stream and std::cout/gui messages
-void InitializeLoggingTargets( bool console, bool showgui, bool logcrash, int verbosity )
+void InitializeLoggingTargets( wxFrame* parent, bool console, bool showgui, bool logcrash, int verbosity )
 {
-//current
+
   wxLogChain *lastlog;
   if ( showgui && verbosity != 0 )
   {
     ///gui window logging
-    wxLog *loggerwin = new wxLogWindow(0, _T("SpringLobby error console"), showgui );
+    wxLog *loggerwin = new wxLogWindow( (wxWindow*) parent, _T("SpringLobby error console"), showgui );
     wxLogChain *logGuiChain = new wxLogChain( loggerwin );
     lastlog = logGuiChain;
   }
@@ -107,7 +107,9 @@ void InitializeLoggingTargets( bool console, bool showgui, bool logcrash, int ve
         lastlog->SetLogLevel( wxLOG_Warning );
     }
   }
-  else if ( verbosity == 0 ) wxLogNull NoLog;
+  else if ( verbosity == 0 ){
+    new wxLogNull;
+  }
 
 //old
 /*

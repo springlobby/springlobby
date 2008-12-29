@@ -72,10 +72,15 @@ BEGIN_EVENT_TABLE(SpringLobbyApp, wxApp)
 END_EVENT_TABLE()
 
 SpringLobbyApp::SpringLobbyApp()
+    : m_timer( new wxTimer(this, TIMER_ID) ),
+    m_locale( NULL ),
+    m_otadownloader( NULL ),
+    m_log_console( false ),
+    m_log_window_show( false ),
+    m_crash_handle_disable( false )
 {
-    m_timer = new wxTimer(this, TIMER_ID);
-    m_locale = NULL;
-    m_otadownloader = NULL;
+
+
 }
 
 SpringLobbyApp::~SpringLobbyApp()
@@ -98,20 +103,15 @@ bool SpringLobbyApp::OnInit()
 
 #endif
 
-
-  //initialize all loggers
-  InitializeLoggingTargets( m_log_console, m_log_window_show, !m_crash_handle_disable, m_log_verbosity );
-
-    wxSocketBase::Initialize();
-
-
-    wxLogDebugFunc( _T("") );
+    //this needs to called _before_ mainwindow instance is created
     wxInitAllImageHandlers();
-
-
      //TODO needed?
     wxImage::AddHandler(new wxPNGHandler);
     wxFileSystem::AddHandler(new wxZipFSHandler);
+    //initialize all loggers
+    InitializeLoggingTargets( (wxFrame*) &(ui().mw()), m_log_console, m_log_window_show, !m_crash_handle_disable, m_log_verbosity );
+
+    wxSocketBase::Initialize();
 
     m_locale = new wxLocale( );
     m_locale->Init();
@@ -337,16 +337,21 @@ bool SpringLobbyApp::ParseCmdLine()
 
     if ( !parser.Parse(true) )
     {
-      m_log_console = parser.Found(_T("console-logging"));
-      m_log_window_show = parser.Found(_T("gui-logging"));
-      m_crash_handle_disable = parser.Found(_T("no-crash-handler"));
-      if ( !parser.Found(_T("log-verbosity"), &m_log_verbosity ) ) m_log_verbosity = 3;
-      if ( parser.Found(_T("help")) ) return false; // not a syntax error, but program should stop if user asked for command line usage
-      return true;
+        m_log_console = parser.Found(_T("console-logging"));
+        m_log_window_show = parser.Found(_T("gui-logging"));
+        m_crash_handle_disable = parser.Found(_T("no-crash-handler"));
+
+        if ( !parser.Found(_T("log-verbosity"), &m_log_verbosity ) )
+            m_log_verbosity = 3;
+
+        if ( parser.Found(_T("help")) )
+            return false; // not a syntax error, but program should stop if user asked for command line usage
+
+        return true;
     }
     else
     {
-      return false;
+        return false;
     }
   #else // wxUSE_CMDLINE_PARSER
   return true;

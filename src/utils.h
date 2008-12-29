@@ -106,7 +106,7 @@ template <typename T> T clamp(const T var,const T min,const T max)
 { return ( (var < min) ? min : ( var > max ) ? max : var ); }
 
 wxString GetLibExtension();
-void InitializeLoggingTargets( bool console, bool showgui, bool logcrash, int verbosity );
+void InitializeLoggingTargets( wxFrame* parent, bool console, bool showgui, bool logcrash, int verbosity );
 wxString GetWordParam( wxString& params );
 wxString GetSentenceParam( wxString& params );
 long GetIntParam( wxString& params );
