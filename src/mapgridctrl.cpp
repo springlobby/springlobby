@@ -3,6 +3,7 @@
 
 #include "mapgridctrl.h"
 
+#include "uiutils.h"
 #include "utils.h"
 #include <wx/dcclient.h>
 #include <wx/image.h>
@@ -204,7 +205,25 @@ void MapGridCtrl::CheckInBounds()
 void MapGridCtrl::UpdateToolTip()
 {
 	if ( m_mouseover_map != NULL ) {
-		SetToolTip( m_mouseover_map->name + _T("\n") + TowxString(m_mouseover_map->info.width / 512) + _T("x") + TowxString(m_mouseover_map->info.height / 512) );
+		const MapInfo& info = m_mouseover_map->info;
+		const wxString endl = _T("\n");
+		wxString tooltip = RefineMapname( m_mouseover_map->name );
+
+		tooltip += _T(" (") + TowxString(info.width / 512) + _T("x") + TowxString(info.height / 512) + _T(")");
+		if ( !info.author.empty() ) tooltip += _(" by ") + info.author;
+		tooltip += endl + endl;
+
+		if ( !info.description.empty() ) tooltip += info.description + endl;
+
+		// TODO: maybe use something else then tabs?  May be pain to get right when translating..
+		tooltip += _("Tidal strength\t: ") + TowxString(info.tidalStrength) + endl;
+		tooltip += _("Gravity\t\t: ") + TowxString(info.gravity) + endl;
+		tooltip += _("Metal scale\t: ") + TowxString(info.maxMetal) + endl;
+		tooltip += _("Extractor radius\t: ") + TowxString(info.extractorRadius) + endl;
+		tooltip += _("Wind\t\t\t: ") + TowxString(info.minWind) + _T(" - ") + TowxString(info.maxWind) + endl;
+		tooltip += _("Start positions\t: ") + TowxString(info.posCount);
+
+		SetToolTip( tooltip );
 	}
 	else {
 		SetToolTip( _("Drag to move around the grid of map previews.\n"
