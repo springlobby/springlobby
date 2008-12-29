@@ -13,6 +13,9 @@
 /// battle list and as prefetch size in SpringUnitSync for performance reasons.
 #define MINIMAP_SIZE 98
 
+/// Margin between the map previews, in pixels.
+#define MINIMAP_MARGIN 1
+
 
 BEGIN_EVENT_TABLE( MapGridCtrl, wxPanel )
 	EVT_PAINT( MapGridCtrl::OnPaint )
@@ -206,7 +209,7 @@ void MapGridCtrl::LoadMaps()
 
 void MapGridCtrl::CheckInBounds()
 {
-	const int size = MINIMAP_SIZE + 1;
+	const int size = MINIMAP_SIZE + MINIMAP_MARGIN;
 
 	int width, height;
 	GetClientSize( &width, &height );
@@ -301,7 +304,7 @@ void MapGridCtrl::OnPaint( wxPaintEvent& event )
 	int width, height;
 	GetClientSize( &width, &height );
 
-	const int size = MINIMAP_SIZE + 1;
+	const int size = MINIMAP_SIZE + MINIMAP_MARGIN;
 
 	// simple tile mapping algorithm
 	int start_scrn_x = -(m_pos.x % size);
@@ -347,10 +350,8 @@ void MapGridCtrl::OnMouseMove( wxMouseEvent& event )
 		Refresh();
 	}
 	else {
-		// the (5, 5) is some random offset to correct error in assumption
-		// that event.GetPosition() is relative to client area of control.
-		const wxPoint pos_unscaled = event.GetPosition() + m_pos - wxPoint(5, 5);
-		const wxPoint pos = wxPoint2DInt(pos_unscaled) / MINIMAP_SIZE;
+		const wxPoint pos_unscaled = event.GetPosition() + m_pos;
+		const wxPoint pos = wxPoint2DInt(pos_unscaled) / (MINIMAP_SIZE + MINIMAP_MARGIN);
 		const int idx = pos.y * m_size.x + pos.x;
 		MapData* old_mouseover_map = m_mouseover_map;
 
