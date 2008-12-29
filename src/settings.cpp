@@ -36,6 +36,8 @@
 #include "settings++/presets.h"
 
 const wxColor defaultHLcolor (255,0,0);
+bool Settings::m_user_defined_config = false;
+wxString Settings::m_user_defined_config_path = wxEmptyString;
 
 
 Settings& sett()
@@ -60,16 +62,21 @@ Settings::Settings()
   wxString userfilepath = wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator() + _T("springlobby.conf");
   wxString globalfilepath =  wxStandardPathsBase::Get().GetExecutablePath().BeforeLast( wxFileName::GetPathSeparator() ) + wxFileName::GetPathSeparator() + _T("springlobby.conf");
 
-  if (  wxFileName::FileExists( userfilepath ) || !wxFileName::FileExists( globalfilepath ) || !wxFileName::IsFileWritable( globalfilepath ) )
-  {
-     m_chosed_path = userfilepath;
-     SetPortableMode( false );
-  }
-  else
-  {
-     m_chosed_path = globalfilepath; /// portable mode, use only current app paths
-     SetPortableMode ( true );
-  }
+    if ( m_user_defined_config )
+    {
+        m_chosed_path = userfilepath;
+        SetPortableMode( false );
+    }
+    else if (  wxFileName::FileExists( userfilepath ) || !wxFileName::FileExists( globalfilepath ) || !wxFileName::IsFileWritable( globalfilepath ) )
+    {
+        m_chosed_path = userfilepath;
+        SetPortableMode( false );
+    }
+    else
+    {
+        m_chosed_path = globalfilepath; /// portable mode, use only current app paths
+        SetPortableMode ( true );
+    }
 
   // if it doesn't exist, try to create it
   if ( !wxFileName::FileExists( m_chosed_path ) )
@@ -82,7 +89,10 @@ Settings::Settings()
 
      if ( !outstream.IsOk() )
      {
-         // TODO: error handling
+         if ( m_user_defined_config ) {
+            wxLogError( _T("unable to use specified config file") );
+            exit(-1);
+         }
      }
   }
 
@@ -90,7 +100,10 @@ Settings::Settings()
 
   if ( !instream.IsOk() )
   {
-      // TODO: error handling
+      if ( m_user_defined_config ) {
+            wxLogError( _T("unable to use specified config file") );
+            exit(-1);
+         }
   }
 
   m_config = new SL_WinConf( instream );
@@ -98,7 +111,8 @@ Settings::Settings()
   #else
   //removed temporarily because it's suspected to cause a bug with userdir creation
  // m_config = new wxConfig( _T("SpringLobby"), wxEmptyString, _T(".springlobby/springlobby.conf"), _T("springlobby.global.conf"), wxCONFIG_USE_LOCAL_FILE | wxCONFIG_USE_GLOBAL_FILE  );
-  m_config = new wxConfig( _T("SpringLobby"), wxEmptyString, _T(".springlobby/springlobby.conf"), _T("springlobby.global.conf") );
+  wxString path = m_user_defined_config ? m_user_defined_config_path : _T(".springlobby/springlobby.conf");
+  m_config = new wxConfig( _T("SpringLobby"), wxEmptyString, path, _T("springlobby.global.conf") );
   SetPortableMode ( false );
   #endif
   if ( !m_config->Exists( _T("/Server") ) ) SetDefaultSettings();

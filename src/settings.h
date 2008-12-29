@@ -68,6 +68,11 @@ class Settings
     Settings();
     ~Settings();
 
+    /** used for passing config file at command line
+    */
+    static bool m_user_defined_config;
+    static wxString m_user_defined_config_path;
+
     bool IsPortableMode();
     void SetPortableMode( bool mode );
 

@@ -330,6 +330,7 @@ bool SpringLobbyApp::ParseCmdLine()
       { wxCMD_LINE_SWITCH, _T("nc"), _T("no-crash-handler"), _("don't use the crash handler (useful for debugging)"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
       { wxCMD_LINE_SWITCH, _T("cl"), _T("console-logging"),  _("shows application log to the console(if available)"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
       { wxCMD_LINE_SWITCH, _T("gl"), _T("gui-logging"),  _("enables application log window"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
+      { wxCMD_LINE_SWITCH, _T("c"), _T("config-file"),  _("override default choice for config-file"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
       { wxCMD_LINE_OPTION, _T("l"), _T("log-verbosity"),  _("overrides default logging verbosity, can be:\n                                0: no log\n                                1: critical errors\n                                2: errors\n                                3: warnings (default)\n                                4: messages\n                                5: function trace"), wxCMD_LINE_VAL_NUMBER, wxCMD_LINE_PARAM_OPTIONAL },
     };
 
@@ -340,6 +341,8 @@ bool SpringLobbyApp::ParseCmdLine()
         m_log_console = parser.Found(_T("console-logging"));
         m_log_window_show = parser.Found(_T("gui-logging"));
         m_crash_handle_disable = parser.Found(_T("no-crash-handler"));
+
+        Settings::m_user_defined_config = parser.Found( _T("config-file"), &Settings::m_user_defined_config_path );
 
         if ( !parser.Found(_T("log-verbosity"), &m_log_verbosity ) )
             m_log_verbosity = 3;
