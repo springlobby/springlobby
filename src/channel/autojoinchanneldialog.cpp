@@ -1,5 +1,5 @@
 #include "autojoinchanneldialog.h"
-#include "settings.h"
+
 
 #include <wx/intl.h>
 #include <wx/datetime.h>
@@ -11,7 +11,7 @@
 #include <wx/event.h>
 #include <wx/statline.h>
 #include <wx/stattext.h>
-#include "settings.h"
+#include "../settings.h"
 
 BEGIN_EVENT_TABLE( AutojoinChannelDialog, wxDialog )
 

@@ -14,7 +14,7 @@
 #include "settings.h"
 #include "server.h"
 #include "spring.h"
-#include "channel.h"
+#include "channel/channel.h"
 #include "utils.h"
 #include "connectwindow.h"
 #include "mainwindow.h"

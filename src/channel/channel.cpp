@@ -4,13 +4,13 @@
 //
 
 #include "channel.h"
-#include "ui.h"
-#include "server.h"
-#include "user.h"
-#include "utils.h"
+#include "../ui.h"
+#include "../server.h"
+#include "../user.h"
+#include "../utils.h"
 #include <wx/regex.h>
 #include <wx/log.h>
-#include "chatpanel.h"
+#include "../chatpanel.h"
 
 Channel::~Channel() {
   if(uidata.panel)uidata.panel->SetChannel(NULL);
