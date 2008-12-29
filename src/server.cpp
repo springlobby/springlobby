@@ -9,7 +9,7 @@
 #include "server.h"
 #include "socket.h"
 #include "battle.h"
-#include "channel.h"
+#include "channel/channel.h"
 #include "user.h"
 #include "utils.h"
 #include "chatpanel.h"

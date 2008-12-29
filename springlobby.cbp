@@ -4,7 +4,6 @@
 	<Project>
 		<Option title="springlobby" />
 		<Option pch_mode="0" />
-		<Option compiler="gcc" />
 		<Build>
 			<Target title="GNU | Debug">
 				<Option output="bin/GNU/Debug/springlobby" prefix_auto="0" extension_auto="0" />
@@ -19,18 +18,17 @@
 					<Add option="-g" />
 					<Add option="`wx-config --cflags`" />
 					<Add option="`sdl-config --cflags`" />
-					<Add option="`pkg-config --cflags libtorrent`" />
-					<Add option='-DVERSION=\\&quot;ery-latest-version-Unix-Debug\\&quot;' />
+					<Add option="`pkg-config --cflags libtorrent-rasterbar`" />
+					<Add option='-DVERSION=\\&quot;cb-Unix-Debug\\&quot;' />
 					<Add option="-DNO_DEBUG_REPORT_UPLOAD" />
 					<Add option="-DDISABLE_SOUND" />
-					<Add option="-DNO_RICHTEXT_CHAT" />
 				</Compiler>
 				<Linker>
 					<Add option="`wx-config --libs`" />
 					<Add option="`pkg-config --libs libtorrent-rasterbar`" />
-					<Add option="`pkg-config --libs libtorrent`" />
 					<Add option="`sdl-config --libs`" />
 					<Add library="SDL_mixer" />
+					<Add library="SDL_sound" />
 				</Linker>
 			</Target>
 			<Target title="GNU | Profile">
@@ -174,16 +172,12 @@
 		<Unit filename="src/agreementdialog.h" />
 		<Unit filename="src/aui/artprovider.cpp" />
 		<Unit filename="src/aui/artprovider.h" />
-		<Unit filename="src/aui/auibook.h" />
 		<Unit filename="src/aui/auimanager.cpp" />
 		<Unit filename="src/aui/auimanager.h" />
-		<Unit filename="src/aui/auiuitls.h" />
 		<Unit filename="src/autobalancedialog.cpp" />
 		<Unit filename="src/autobalancedialog.h" />
 		<Unit filename="src/autohost.cpp" />
 		<Unit filename="src/autohost.h" />
-		<Unit filename="src/autojoinchanneldialog.cpp" />
-		<Unit filename="src/autojoinchanneldialog.h" />
 		<Unit filename="src/autopointers.h" />
 		<Unit filename="src/base64.cpp" />
 		<Unit filename="src/base64.h" />
@@ -209,10 +203,18 @@
 		<Unit filename="src/battleroomtab.h" />
 		<Unit filename="src/boost/md5.cpp" />
 		<Unit filename="src/boost/md5.hpp" />
-		<Unit filename="src/channel.cpp" />
-		<Unit filename="src/channel.h" />
-		<Unit filename="src/channellist.cpp" />
-		<Unit filename="src/channellist.h" />
+		<Unit filename="src/channel/autojoinchanneldialog.cpp" />
+		<Unit filename="src/channel/autojoinchanneldialog.h" />
+		<Unit filename="src/channel/channel.cpp" />
+		<Unit filename="src/channel/channel.h" />
+		<Unit filename="src/channel/channelchooser.cpp" />
+		<Unit filename="src/channel/channelchooser.h" />
+		<Unit filename="src/channel/channelchooserdialog.cpp" />
+		<Unit filename="src/channel/channelchooserdialog.h" />
+		<Unit filename="src/channel/channellist.cpp" />
+		<Unit filename="src/channel/channellist.h" />
+		<Unit filename="src/channel/channellistctrl.cpp" />
+		<Unit filename="src/channel/channellistctrl.h" />
 		<Unit filename="src/chatlog.cpp" />
 		<Unit filename="src/chatlog.h" />
 		<Unit filename="src/chatoptionstab.cpp" />
@@ -225,6 +227,8 @@
 		<Unit filename="src/countrycodes.h" />
 		<Unit filename="src/crashreport.cpp" />
 		<Unit filename="src/crashreport.h" />
+		<Unit filename="src/crc.cpp" />
+		<Unit filename="src/crc.h" />
 		<Unit filename="src/customlistctrl.cpp" />
 		<Unit filename="src/customlistctrl.h" />
 		<Unit filename="src/filelister/filelistctrl.cpp" />
@@ -242,8 +246,6 @@
 		<Unit filename="src/globalsmanager.h" />
 		<Unit filename="src/groupoptionspanel.cpp" />
 		<Unit filename="src/groupoptionspanel.h" />
-		<Unit filename="src/groupuserdialog.cpp" />
-		<Unit filename="src/groupuserdialog.h" />
 		<Unit filename="src/hostbattledialog.cpp" />
 		<Unit filename="src/hostbattledialog.h" />
 		<Unit filename="src/httpdownloader.cpp" />
@@ -252,7 +254,6 @@
 		<Unit filename="src/ibattle.h" />
 		<Unit filename="src/iconimagelist.cpp" />
 		<Unit filename="src/iconimagelist.h" />
-		<Unit filename="src/images/SpringLobby.ico" />
 		<Unit filename="src/images/battle.xpm" />
 		<Unit filename="src/images/battle_list.xpm" />
 		<Unit filename="src/images/battle_map.xpm" />

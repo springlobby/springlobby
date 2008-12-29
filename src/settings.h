@@ -3,8 +3,8 @@
 
 #include <wx/string.h>
 
-const int CACHE_VERSION     = 7;
-const int SETTINGS_VERSION  = 3;
+const int CACHE_VERSION     = 8;
+const int SETTINGS_VERSION  = 4;
 
 const wxString DEFSETT_DEFAULT_SERVER = _T("TAS Server");
 const wxString DEFSETT_DEFAULT_SERVER_HOST = _T("taspringmaster.clan-sy.com");
@@ -23,18 +23,14 @@ const unsigned int DEFSETT_SW_HEIGHT = 580;
 const unsigned int DEFSETT_SW_TOP = 50;
 const unsigned int DEFSETT_SW_LEFT = 50;
 
-//doing this "properly" would mean dragging in stdpaths header, doesn't seem warranted (koshi)
-#define DEFSETT_SPRING_DIR  wxGetCwd()
-
 /** Default value for config path /General/WebBrowserUseDefault.
  */
 const bool DEFSETT_WEB_BROWSER_USE_DEFAULT = true;
 
 #include <wx/fileconf.h>
-#include "utils.h"
 #include "useractions.h"
 
-
+class wxWindow;
 class wxConfigBase;
 class wxFont;
 struct BattleListFilterValues;
@@ -44,45 +40,21 @@ class wxFileName;
 class wxColor;
 class wxColour;
 struct wxColourData;
+class wxSize;
+class wxPoint;
+class wxPathList;
 
 class SL_WinConf : public wxFileConfig
 {
     public:
-    SL_WinConf (const wxString& appName, const wxString& vendorName,
-                           const wxString& strLocal, const wxString& strGlobal,
-                           long style,
-                           const wxMBConv& conv)
-            : wxFileConfig(appName, vendorName,
-                           strLocal, strGlobal,
-                           style)
+			SL_WinConf ( const wxString& appName, const wxString& vendorName, const wxString& strLocal, const wxString& strGlobal, long style, const wxMBConv& conv):
+			wxFileConfig( appName, vendorName, strLocal, strGlobal, style)
+			{
+			}
 
-    {
-
-    }
-
-    SL_WinConf(wxFileInputStream& in);
-
-//    int Read(const wxString& key, int def)
-//    {
-//      return s2l(wxFileConfig::Read(key, TowxString<long>(def)));
-//    }
-//
-//    bool Write(const wxString& key, const int lval)
-//    {
-//        return wxFileConfig::Write(key, TowxString<int>(lval) );
-//    }
-
+			SL_WinConf( wxFileInputStream& in );
     protected:
-
-//    bool DoReadLong(const wxString& key, long *pl) const
-//    {
-//        wxFileConfig::DoReadString(key,
-//    }
-
-    bool DoWriteLong(const wxString& key, long lValue)
-    {
-        return wxFileConfig::DoWriteString(key, TowxString<long>( lValue ) );
-    }
+			bool DoWriteLong(const wxString& key, long lValue);
 };
 
 
@@ -298,17 +270,23 @@ class Settings
      void SaveCustomColors( const wxColourData& cdata, const wxString& paletteName = _T("Default") );
      wxColourData GetCustomColors( const wxString& paletteName = _T("Default") );
 
-    int    GetMainWindowWidth();
-    void   SetMainWindowWidth( const int value );
+    int    GetWindowWidth( const wxString& window );
+    void   SetWindowWidth( const wxString& window, const int value );
 
-    int    GetMainWindowHeight();
-    void   SetMainWindowHeight( const int value );
+    int    GetWindowHeight( const wxString& window );
+    void   SetWindowHeight( const wxString& window, const int value );
 
-    int    GetMainWindowTop();
-    void   SetMainWindowTop( const int value );
+    int    GetWindowTop( const wxString& window );
+    void   SetWindowTop( const wxString& window, const int value );
 
-    int    GetMainWindowLeft();
-    void   SetMainWindowLeft( const int value );
+    int    GetWindowLeft( const wxString& window );
+    void   SetWindowLeft( const wxString& window, const int value );
+
+    wxSize  GetWindowSize( const wxString& window, const wxSize& def );
+    void    SetWindowSize( const wxString& window, const wxSize& size  );
+
+    wxPoint  GetWindowPos( const wxString& window, const wxPoint& def );
+    void    SetWindowPos( const wxString& window, const wxPoint& pos );
 
     bool UseOldSpringLaunchMethod();
     void SetOldSpringLaunchMethod( bool value );
@@ -347,6 +325,8 @@ class Settings
      * @{
      */
 
+		wxPathList GetAdditionalSearchPaths( wxPathList& pl );
+
     void ConvertOldSpringDirsOptions();
 
     std::map<wxString, wxString> GetSpringVersionList(); /// index -> version
@@ -358,6 +338,8 @@ class Settings
     wxString GetCurrentUsedDataDir();
     wxString GetCurrentUsedUnitSync();
     wxString GetCurrentUsedSpringBinary();
+    //!@brief returns config file path unitsync uses, returns empty if unitsync isn't loaded
+    wxString GetCurrentUsedSpringConfigFilePath();
 
     wxString GetUnitSync( const wxString& index );
     wxString GetSpringBinary( const wxString& index );
@@ -367,6 +349,9 @@ class Settings
 
     wxString AutoFindSpringBin();
     wxString AutoFindUnitSync();
+
+    //!@brief returns config file path spring should use, returns empty for default
+    wxString GetForcedSpringConfigFilePath();
 
     /*@}*/
 
@@ -380,8 +365,8 @@ class Settings
     void   SetChatLogLoc( const wxString& loc );
 
     //!@brief sets how many lines can stay in a chat panel before the old will start getting erased, 0 to disable
-    void SetChatHistoryLenght( unsigned int historylines );
-    unsigned int GetChatHistoryLenght();
+    void SetChatHistoryLenght( int historylines );
+    int GetChatHistoryLenght();
 
     void SetChatPMSoundNotificationEnabled( bool enabled );
     bool GetChatPMSoundNotificationEnabled();
@@ -490,7 +475,20 @@ class Settings
     void SetBalanceStrongClans(bool value);
     bool GetBalanceStrongClans();
 
+    void SetBalanceGrouping( int value );
+    int GetBalanceGrouping();
 
+    void SetFixIDMethod(int value);
+    int GetFixIDMethod();
+
+    void SetFixIDClans(bool value);
+    bool GetFixIDClans();
+
+    void SetFixIDStrongClans(bool value);
+    bool GetFixIDStrongClans();
+
+    void SetFixIDGrouping( int value );
+    int GetFixIDGrouping();
 
     /** @name Battle filters
      * @{
@@ -588,17 +586,6 @@ class Settings
     wxString getSimpleDetail();
     void setSimpleDetail( wxString );
 
-    int    GetSettingsWindowWidth();
-    void   SetSettingsWindowWidth( const int value );
-
-    int    GetSettingsWindowHeight();
-    void   SetSettingsWindowHeight( const int value );
-
-    int    GetSettingsWindowTop();
-    void   SetSettingsWindowTop( const int value );
-
-    int    GetSettingsWindowLeft();
-    void   SetSettingsWindowLeft( const int value );
   /**@}*/
 
   protected:

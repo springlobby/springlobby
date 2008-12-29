@@ -149,6 +149,10 @@ class uninitialized_array
 
   private:
     T* elems;
+
+	// copying not allowed
+	uninitialized_array(const uninitialized_array&);
+	uninitialized_array& operator=(const uninitialized_array&);
 };
 
 
