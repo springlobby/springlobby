@@ -18,11 +18,17 @@
 						<border>5</border>
 					</object>
 					<object class="sizeritem">
-						<object class="wxChoice" name="ID_VERTICAL" variable="m_vertical_choice" member="yes">
-							<handler function="OnSortKeySelect" entry="EVT_CHOICE" />
+						<object class="wxBoxSizer" variable="boxSizerVertical" member="no">
+							<object class="sizeritem">
+								<object class="wxChoice" name="ID_VERTICAL_CHOICE" variable="m_vertical_choice" member="yes">
+									<handler function="OnSortKeySelect" entry="EVT_CHOICE" />
+								</object>
+								<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<border>5</border>
+								<option>1</option>
+							</object>
 						</object>
 						<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
-						<border>5</border>
 					</object>
 					<object class="sizeritem">
 						<object class="wxStaticText" name="ID_STATICTEXT1" variable="StaticText1" member="no">
@@ -32,11 +38,17 @@
 						<border>5</border>
 					</object>
 					<object class="sizeritem">
-						<object class="wxChoice" name="ID_HORIZONTAL" variable="m_horizontal_choice" member="yes">
-							<handler function="OnSortKeySelect" entry="EVT_CHOICE" />
+						<object class="wxBoxSizer" variable="boxSizerHorizontal" member="no">
+							<object class="sizeritem">
+								<object class="wxChoice" name="ID_HORIZONTAL_CHOICE" variable="m_horizontal_choice" member="yes">
+									<handler function="OnSortKeySelect" entry="EVT_CHOICE" />
+								</object>
+								<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<border>5</border>
+								<option>1</option>
+							</object>
 						</object>
 						<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
-						<border>5</border>
 					</object>
 					<object class="spacer">
 						<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>

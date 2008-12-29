@@ -35,7 +35,7 @@ class MapGridCtrl : public wxPanel
 		~MapGridCtrl();
 
 		void LoadMaps();
-		void Sort( SortKey vertical, SortKey horizontal );
+		void Sort( SortKey vertical, SortKey horizontal, bool vertical_direction = false, bool horizontal_direction = false );
 
 		UnitSyncMap* GetSelectedMap() const { return m_selected_map; }
 
@@ -66,17 +66,37 @@ class MapGridCtrl : public wxPanel
 			MapState state;
 		};
 
-		static bool CompareName( const MapData* a, const MapData* b );
-		static bool CompareTidalStrength( const MapData* a, const MapData* b );
-		static bool CompareGravity( const MapData* a, const MapData* b );
-		static bool CompareMaxMetal( const MapData* a, const MapData* b );
-		static bool CompareExtractorRadius( const MapData* a, const MapData* b );
-		static bool CompareMinWind( const MapData* a, const MapData* b );
-		static bool CompareMaxWind( const MapData* a, const MapData* b );
-		static bool CompareWind( const MapData* a, const MapData* b );
-		static bool CompareArea( const MapData* a, const MapData* b );
-		static bool CompareAspectRatio( const MapData* a, const MapData* b );
-		static bool ComparePosCount( const MapData* a, const MapData* b );
+		// wrapper around the Compare*() methods below to allow changing sort direction
+		template< class Compare > class _Compare2
+		{
+			public:
+				_Compare2( bool direction, Compare cmp )
+					: m_cmp( cmp ), m_direction( direction ? -1 : 1 ) {}
+				bool operator()( const MapData* a, const MapData* b ) {
+					return (m_direction * m_cmp( a, b )) < 0;
+				}
+			private:
+				Compare m_cmp;
+				int m_direction;
+		};
+
+		// allow a _Compare2 to be constructed with implicit template arguments
+		template< class Compare > _Compare2< Compare > _Compare( bool direction, Compare cmp ) {
+			return _Compare2< Compare >( direction, cmp );
+		}
+
+		// comparison methods returning -1 if a < b, 1 if a > b and 0 if !(a < b) && !(a > b)
+		static int CompareName( const MapData* a, const MapData* b );
+		static int CompareTidalStrength( const MapData* a, const MapData* b );
+		static int CompareGravity( const MapData* a, const MapData* b );
+		static int CompareMaxMetal( const MapData* a, const MapData* b );
+		static int CompareExtractorRadius( const MapData* a, const MapData* b );
+		static int CompareMinWind( const MapData* a, const MapData* b );
+		static int CompareMaxWind( const MapData* a, const MapData* b );
+		static int CompareWind( const MapData* a, const MapData* b );
+		static int CompareArea( const MapData* a, const MapData* b );
+		static int CompareAspectRatio( const MapData* a, const MapData* b );
+		static int ComparePosCount( const MapData* a, const MapData* b );
 		template< class Compare > void _Sort( int dimension, Compare cmp );
 
 		void CheckInBounds();

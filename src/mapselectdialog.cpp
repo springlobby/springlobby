@@ -14,11 +14,13 @@
 
 //(*IdInit(MapSelectDialog)
 const long MapSelectDialog::ID_STATICTEXT2 = wxNewId();
-const long MapSelectDialog::ID_VERTICAL = wxNewId();
+const long MapSelectDialog::ID_VERTICAL_CHOICE = wxNewId();
 const long MapSelectDialog::ID_STATICTEXT1 = wxNewId();
-const long MapSelectDialog::ID_HORIZONTAL = wxNewId();
+const long MapSelectDialog::ID_HORIZONTAL_CHOICE = wxNewId();
 const long MapSelectDialog::ID_MAPGRID = wxNewId();
 //*)
+const long MapSelectDialog::ID_VERTICAL_DIRECTION = wxNewId();
+const long MapSelectDialog::ID_HORIZONTAL_DIRECTION = wxNewId();
 
 BEGIN_EVENT_TABLE(MapSelectDialog,wxDialog)
 	//(*EventTable(MapSelectDialog)
@@ -27,12 +29,16 @@ END_EVENT_TABLE()
 
 MapSelectDialog::MapSelectDialog(wxWindow* parent,Ui& ui)
 	: m_ui(ui)
+	, m_vertical_direction(false)
+	, m_horizontal_direction(false)
 {
 	//(*Initialize(MapSelectDialog)
 	wxStaticText* StaticText2;
 	wxStaticText* StaticText1;
 	wxBoxSizer* BoxSizer2;
+	wxBoxSizer* boxSizerHorizontal;
 	wxBoxSizer* BoxSizer1;
+	wxBoxSizer* boxSizerVertical;
 	wxStdDialogButtonSizer* StdDialogButtonSizer1;
 
 	Create(parent, wxID_ANY, _("Select map"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER, _T("wxID_ANY"));
@@ -40,12 +46,16 @@ MapSelectDialog::MapSelectDialog(wxWindow* parent,Ui& ui)
 	BoxSizer2 = new wxBoxSizer(wxVERTICAL);
 	StaticText2 = new wxStaticText(this, ID_STATICTEXT2, _("Vertical sort key"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT2"));
 	BoxSizer2->Add(StaticText2, 0, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
-	m_vertical_choice = new wxChoice(this, ID_VERTICAL, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, _T("ID_VERTICAL"));
-	BoxSizer2->Add(m_vertical_choice, 0, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	boxSizerVertical = new wxBoxSizer(wxHORIZONTAL);
+	m_vertical_choice = new wxChoice(this, ID_VERTICAL_CHOICE, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, _T("ID_VERTICAL_CHOICE"));
+	boxSizerVertical->Add(m_vertical_choice, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	BoxSizer2->Add(boxSizerVertical, 0, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
 	StaticText1 = new wxStaticText(this, ID_STATICTEXT1, _("Horizontal sort key"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT1"));
 	BoxSizer2->Add(StaticText1, 0, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
-	m_horizontal_choice = new wxChoice(this, ID_HORIZONTAL, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, _T("ID_HORIZONTAL"));
-	BoxSizer2->Add(m_horizontal_choice, 0, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	boxSizerHorizontal = new wxBoxSizer(wxHORIZONTAL);
+	m_horizontal_choice = new wxChoice(this, ID_HORIZONTAL_CHOICE, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, _T("ID_HORIZONTAL_CHOICE"));
+	boxSizerHorizontal->Add(m_horizontal_choice, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	BoxSizer2->Add(boxSizerHorizontal, 0, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
 	BoxSizer2->Add(-1,-1,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	StdDialogButtonSizer1 = new wxStdDialogButtonSizer();
 	StdDialogButtonSizer1->AddButton(new wxButton(this, wxID_CANCEL, wxEmptyString));
@@ -60,12 +70,24 @@ MapSelectDialog::MapSelectDialog(wxWindow* parent,Ui& ui)
 	BoxSizer1->SetSizeHints(this);
 	Center();
 
-	Connect(ID_VERTICAL,wxEVT_COMMAND_CHOICE_SELECTED,(wxObjectEventFunction)&MapSelectDialog::OnSortKeySelect);
-	Connect(ID_HORIZONTAL,wxEVT_COMMAND_CHOICE_SELECTED,(wxObjectEventFunction)&MapSelectDialog::OnSortKeySelect);
+	Connect(ID_VERTICAL_CHOICE,wxEVT_COMMAND_CHOICE_SELECTED,(wxObjectEventFunction)&MapSelectDialog::OnSortKeySelect);
+	Connect(ID_HORIZONTAL_CHOICE,wxEVT_COMMAND_CHOICE_SELECTED,(wxObjectEventFunction)&MapSelectDialog::OnSortKeySelect);
 	Connect(wxID_ANY,wxEVT_INIT_DIALOG,(wxObjectEventFunction)&MapSelectDialog::OnInit);
 	//*)
 
 	Connect(ID_MAPGRID,MapGridCtrl::MapSelectedEvt,(wxObjectEventFunction)&MapSelectDialog::OnMapSelected,0,this);
+
+	// Ugh.. Can not have these created by generated code because wxSmith doesn't accept a symbolic size,
+	// (ie. wxSize(CONTROL_HEIGHT,CONTROL_HEIGHT)) and all Set*Size() methods don't seem to have any effect.
+	m_vertical_direction_button = new wxButton(this, ID_VERTICAL_DIRECTION, _T("ᴠ"), wxDefaultPosition, wxSize(CONTROL_HEIGHT,CONTROL_HEIGHT), 0, wxDefaultValidator, _T("ID_VERTICAL_DIRECTION"));
+	boxSizerVertical->Add(m_vertical_direction_button, 0, wxALL|wxEXPAND|wxSHAPED|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	m_horizontal_direction_button = new wxButton(this, ID_HORIZONTAL_DIRECTION, _T(">"), wxDefaultPosition, wxSize(CONTROL_HEIGHT,CONTROL_HEIGHT), 0, wxDefaultValidator, _T("ID_HORIZONTAL_DIRECTION"));
+	boxSizerHorizontal->Add(m_horizontal_direction_button, 0, wxALL|wxEXPAND|wxSHAPED|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+
+  //<>ᴠᴧ
+
+	Connect(ID_VERTICAL_DIRECTION, wxEVT_COMMAND_BUTTON_CLICKED, (wxObjectEventFunction)&MapSelectDialog::OnVerticalDirectionClicked);
+	Connect(ID_HORIZONTAL_DIRECTION, wxEVT_COMMAND_BUTTON_CLICKED, (wxObjectEventFunction)&MapSelectDialog::OnHorizontalDirectionClicked);
 }
 
 MapSelectDialog::~MapSelectDialog()
@@ -118,9 +140,13 @@ static MapGridCtrl::SortKey GetSelectedSortKey( wxChoice* choice )
 
 void MapSelectDialog::Sort()
 {
-	m_mapgrid->Sort( GetSelectedSortKey( m_vertical_choice ), GetSelectedSortKey( m_horizontal_choice ) );
+	m_mapgrid->Sort( GetSelectedSortKey( m_vertical_choice ), GetSelectedSortKey( m_horizontal_choice ), m_vertical_direction, m_horizontal_direction );
 }
 
+UnitSyncMap* MapSelectDialog::GetSelectedMap() const
+{
+	return m_mapgrid->GetSelectedMap();
+}
 
 void MapSelectDialog::OnMapSelected( wxCommandEvent& event )
 {
@@ -128,8 +154,16 @@ void MapSelectDialog::OnMapSelected( wxCommandEvent& event )
 	EndModal( wxID_OK );
 }
 
-
-UnitSyncMap* MapSelectDialog::GetSelectedMap() const
+void MapSelectDialog::OnVerticalDirectionClicked( wxCommandEvent& event )
 {
-	return m_mapgrid->GetSelectedMap();
+	m_vertical_direction = !m_vertical_direction;
+	m_vertical_direction_button->SetLabel( m_vertical_direction ? _T("ᴧ") : _T("ᴠ") );
+	Sort();
+}
+
+void MapSelectDialog::OnHorizontalDirectionClicked( wxCommandEvent& event )
+{
+	m_horizontal_direction = !m_horizontal_direction;
+	m_horizontal_direction_button->SetLabel( m_horizontal_direction ? _T("<") : _T(">") );
+	Sort();
 }

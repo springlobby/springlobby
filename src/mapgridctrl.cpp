@@ -48,41 +48,51 @@ MapGridCtrl::~MapGridCtrl()
 }
 
 
-inline bool MapGridCtrl::CompareName( const MapData* a, const MapData* b )
+#define CMP( var ) \
+	if ( a->info.var < b->info.var ) return -1; \
+	if ( a->info.var > b->info.var ) return 1; \
+	return 0
+
+#define CMP2( a, b ) \
+	if ( (a) < (b) ) return -1; \
+	if ( (a) > (b) ) return 1; \
+	return 0
+
+inline int MapGridCtrl::CompareName( const MapData* a, const MapData* b )
 {
-	return a->name.CmpNoCase( b->name ) < 0;
+	return a->name.CmpNoCase( b->name );
 }
-inline bool MapGridCtrl::CompareTidalStrength( const MapData* a, const MapData* b )
+inline int MapGridCtrl::CompareTidalStrength( const MapData* a, const MapData* b )
 {
-	return a->info.tidalStrength < b->info.tidalStrength;
+	CMP( tidalStrength );
 }
-inline bool MapGridCtrl::CompareGravity( const MapData* a, const MapData* b )
+inline int MapGridCtrl::CompareGravity( const MapData* a, const MapData* b )
 {
-	return a->info.gravity < b->info.gravity;
+	CMP( gravity );
 }
-inline bool MapGridCtrl::CompareMaxMetal( const MapData* a, const MapData* b )
+inline int MapGridCtrl::CompareMaxMetal( const MapData* a, const MapData* b )
 {
-	return a->info.maxMetal < b->info.maxMetal;
+	CMP( maxMetal );
 }
-inline bool MapGridCtrl::CompareExtractorRadius( const MapData* a, const MapData* b )
+inline int MapGridCtrl::CompareExtractorRadius( const MapData* a, const MapData* b )
 {
-	return a->info.extractorRadius < b->info.extractorRadius;
+	CMP( extractorRadius );
 }
-inline bool MapGridCtrl::CompareMinWind( const MapData* a, const MapData* b )
+inline int MapGridCtrl::CompareMinWind( const MapData* a, const MapData* b )
 {
-	return a->info.minWind < b->info.minWind;
+	CMP( minWind );
 }
-inline bool MapGridCtrl::CompareMaxWind( const MapData* a, const MapData* b )
+inline int MapGridCtrl::CompareMaxWind( const MapData* a, const MapData* b )
 {
-	return a->info.maxWind < b->info.maxWind;
+	CMP( maxWind );
 }
-inline bool MapGridCtrl::CompareWind( const MapData* a, const MapData* b )
+inline int MapGridCtrl::CompareWind( const MapData* a, const MapData* b )
 {
-	return (a->info.minWind + a->info.maxWind) < (b->info.minWind + b->info.maxWind);
+	CMP2( (a->info.minWind + a->info.maxWind), (b->info.minWind + b->info.maxWind) );
 }
-inline bool MapGridCtrl::CompareArea( const MapData* a, const MapData* b )
+inline int MapGridCtrl::CompareArea( const MapData* a, const MapData* b )
 {
-	return (a->info.width * a->info.height) < (b->info.width * b->info.height);
+	CMP2( (a->info.width * a->info.height), (b->info.width * b->info.height) );
 }
 static inline double AspectRatio( const MapInfo& x )
 {
@@ -90,14 +100,17 @@ static inline double AspectRatio( const MapInfo& x )
 	const int min = std::min( x.width, x.height );
 	return (double) max / (min != 0 ? min : 1);
 }
-inline bool MapGridCtrl::CompareAspectRatio( const MapData* a, const MapData* b )
+inline int MapGridCtrl::CompareAspectRatio( const MapData* a, const MapData* b )
 {
-	return AspectRatio( a->info ) < AspectRatio( b->info );
+	CMP2( AspectRatio( a->info ), AspectRatio( b->info ) );
 }
-inline bool MapGridCtrl::ComparePosCount( const MapData* a, const MapData* b )
+inline int MapGridCtrl::ComparePosCount( const MapData* a, const MapData* b )
 {
-	return a->info.posCount < b->info.posCount;
+	CMP( posCount );
 }
+
+#undef CMP2
+#undef CMP
 
 template< class Compare > inline void MapGridCtrl::_Sort( int dimension, Compare cmp )
 {
@@ -116,12 +129,13 @@ template< class Compare > inline void MapGridCtrl::_Sort( int dimension, Compare
 }
 
 
-void MapGridCtrl::Sort( SortKey vertical, SortKey horizontal )
+void MapGridCtrl::Sort( SortKey vertical, SortKey horizontal, bool vertical_direction, bool horizontal_direction )
 {
 	if ( m_maps.empty() ) return;
 
 	// Always start by sorting on name, to get duplicate maps together.
 	SortKey keys[3] = { SortKey_Name, vertical, horizontal };
+	bool dirs[3] = { false, vertical_direction, horizontal_direction };
 
 	// This looks like common antipattern 'loop switch sequence', however here
 	// it's the best way I found to prevent duplication of the switch statement,
@@ -129,20 +143,21 @@ void MapGridCtrl::Sort( SortKey vertical, SortKey horizontal )
 
 	for (int i = 0; i < 3; ++i) {
 		// Do nothing if current sortkey is same as previous one.
-		if ( i > 0 && keys[i] == keys[i - 1] ) continue;
+		if ( i > 0 && keys[i] == keys[i - 1] && dirs[i] == dirs[i - 1] ) continue;
 		// Sort dimension i on sortkey keys[i].
+		const bool d = dirs[i];
 		switch ( keys[i] ) {
-			case SortKey_Name:            _Sort( i, CompareName ); break;
-			case SortKey_TidalStrength:   _Sort( i, CompareTidalStrength ); break;
-			case SortKey_Gravity:         _Sort( i, CompareGravity ); break;
-			case SortKey_MaxMetal:        _Sort( i, CompareMaxMetal ); break;
-			case SortKey_ExtractorRadius: _Sort( i, CompareExtractorRadius ); break;
-			case SortKey_MinWind:         _Sort( i, CompareMinWind ); break;
-			case SortKey_MaxWind:         _Sort( i, CompareMaxWind ); break;
-			case SortKey_Wind:            _Sort( i, CompareWind ); break;
-			case SortKey_Area:            _Sort( i, CompareArea ); break;
-			case SortKey_AspectRatio:     _Sort( i, CompareAspectRatio ); break;
-			case SortKey_PosCount:        _Sort( i, ComparePosCount ); break;
+			case SortKey_Name:            _Sort( i, _Compare( d, CompareName ) ); break;
+			case SortKey_TidalStrength:   _Sort( i, _Compare( d, CompareTidalStrength ) ); break;
+			case SortKey_Gravity:         _Sort( i, _Compare( d, CompareGravity ) ); break;
+			case SortKey_MaxMetal:        _Sort( i, _Compare( d, CompareMaxMetal ) ); break;
+			case SortKey_ExtractorRadius: _Sort( i, _Compare( d, CompareExtractorRadius ) ); break;
+			case SortKey_MinWind:         _Sort( i, _Compare( d, CompareMinWind ) ); break;
+			case SortKey_MaxWind:         _Sort( i, _Compare( d, CompareMaxWind ) ); break;
+			case SortKey_Wind:            _Sort( i, _Compare( d, CompareWind ) ); break;
+			case SortKey_Area:            _Sort( i, _Compare( d, CompareArea ) ); break;
+			case SortKey_AspectRatio:     _Sort( i, _Compare( d, CompareAspectRatio ) ); break;
+			case SortKey_PosCount:        _Sort( i, _Compare( d, ComparePosCount ) ); break;
 			default:
 				ASSERT_EXCEPTION( false, _T("unimplemented SortKey in MapGridCtrl::Sort") );
 				break;
