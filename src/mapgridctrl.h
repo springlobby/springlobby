@@ -101,6 +101,8 @@ class MapGridCtrl : public wxPanel
 
 		void CheckInBounds();
 		void UpdateToolTip();
+		void UpdateAsyncFetches();
+		void FetchMinimap( MapData& map );
 		void DrawMap( wxDC& dc, MapData& map, int x, int y );
 
 		Ui& m_ui;

@@ -247,15 +247,38 @@ void MapGridCtrl::UpdateToolTip()
 }
 
 
+void MapGridCtrl::UpdateAsyncFetches()
+{
+	if ( m_async_minimap_fetches != 0 ) return;
+
+	for (int y = 0; y < m_size.y; ++y) {
+		for (int x = 0; x < m_size.x; ++x) {
+			const int idx = y * m_size.x + x;
+			if ( idx >= int(m_grid.size()) ) break;
+			if ( m_grid[idx]->state == MapState_NoMinimap ) {
+				FetchMinimap( *m_grid[idx] );
+				return;
+			}
+		}
+	}
+}
+
+
+void MapGridCtrl::FetchMinimap( MapData& map )
+{
+	if ( m_async_minimap_fetches < 2 ) {
+		m_async.GetMinimap( map.name, MINIMAP_SIZE, MINIMAP_SIZE );
+		map.state = MapState_GetMinimap;
+		++m_async_minimap_fetches;
+	}
+}
+
+
 void MapGridCtrl::DrawMap( wxDC& dc, MapData& map, int x, int y )
 {
 	switch ( map.state ) {
 		case MapState_NoMinimap:
-			if (m_async_minimap_fetches < 2) {
-				m_async.GetMinimap( map.name, MINIMAP_SIZE, MINIMAP_SIZE );
-				map.state = MapState_GetMinimap;
-				++m_async_minimap_fetches;
-			}
+			FetchMinimap( map );
 			break;
 		case MapState_GetMinimap:
 			// do nothing, waiting for async fetch of minimap
@@ -386,6 +409,7 @@ void MapGridCtrl::OnGetMapImageAsyncCompleted( wxCommandEvent& event )
 	m_maps[mapname].state = MapState_GotMinimap;
 
 	--m_async_minimap_fetches;
+	UpdateAsyncFetches();
 
 	Refresh(); // TODO: use RefreshRect ?
 }
