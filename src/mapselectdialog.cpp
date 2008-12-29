@@ -5,6 +5,8 @@
 //(*InternalHeaders(MapSelectDialog)
 #include <wx/sizer.h>
 #include <wx/stattext.h>
+#include <wx/textctrl.h>
+#include <wx/radiobut.h>
 #include "mapgridctrl.h"
 #include <wx/choice.h>
 #include <wx/intl.h>
@@ -17,6 +19,11 @@ const long MapSelectDialog::ID_STATICTEXT2 = wxNewId();
 const long MapSelectDialog::ID_VERTICAL_CHOICE = wxNewId();
 const long MapSelectDialog::ID_STATICTEXT1 = wxNewId();
 const long MapSelectDialog::ID_HORIZONTAL_CHOICE = wxNewId();
+const long MapSelectDialog::ID_FILTER_ALL = wxNewId();
+const long MapSelectDialog::ID_FILTER_POPULAR = wxNewId();
+const long MapSelectDialog::ID_FILTER_RECENT = wxNewId();
+const long MapSelectDialog::ID_FILTER_CONTAIN = wxNewId();
+const long MapSelectDialog::ID_FILTER_TEXT = wxNewId();
 const long MapSelectDialog::ID_MAPGRID = wxNewId();
 //*)
 const long MapSelectDialog::ID_VERTICAL_DIRECTION = wxNewId();
@@ -38,6 +45,8 @@ MapSelectDialog::MapSelectDialog(wxWindow* parent,Ui& ui)
 	wxBoxSizer* BoxSizer2;
 	wxBoxSizer* boxSizerHorizontal;
 	wxBoxSizer* BoxSizer1;
+	wxStaticBoxSizer* StaticBoxSizer1;
+	wxBoxSizer* BoxSizer3;
 	wxBoxSizer* boxSizerVertical;
 	wxStdDialogButtonSizer* StdDialogButtonSizer1;
 
@@ -56,6 +65,21 @@ MapSelectDialog::MapSelectDialog(wxWindow* parent,Ui& ui)
 	m_horizontal_choice = new wxChoice(this, ID_HORIZONTAL_CHOICE, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, _T("ID_HORIZONTAL_CHOICE"));
 	boxSizerHorizontal->Add(m_horizontal_choice, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	BoxSizer2->Add(boxSizerHorizontal, 0, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
+	StaticBoxSizer1 = new wxStaticBoxSizer(wxVERTICAL, this, _("Show"));
+	m_filter_all = new wxRadioButton(this, ID_FILTER_ALL, _("All maps"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_FILTER_ALL"));
+	StaticBoxSizer1->Add(m_filter_all, 0, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
+	m_filter_popular = new wxRadioButton(this, ID_FILTER_POPULAR, _("Popular maps"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_FILTER_POPULAR"));
+	StaticBoxSizer1->Add(m_filter_popular, 0, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
+	m_filter_recent = new wxRadioButton(this, ID_FILTER_RECENT, _("Recently played maps"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_FILTER_RECENT"));
+	m_filter_recent->SetValue(true);
+	StaticBoxSizer1->Add(m_filter_recent, 0, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
+	BoxSizer3 = new wxBoxSizer(wxHORIZONTAL);
+	m_filter_contain = new wxRadioButton(this, ID_FILTER_CONTAIN, _("Containing "), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_FILTER_CONTAIN"));
+	BoxSizer3->Add(m_filter_contain, 0, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
+	m_filter_text = new wxTextCtrl(this, ID_FILTER_TEXT, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_FILTER_TEXT"));
+	BoxSizer3->Add(m_filter_text, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
+	StaticBoxSizer1->Add(BoxSizer3, 0, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
+	BoxSizer2->Add(StaticBoxSizer1, 0, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	BoxSizer2->Add(-1,-1,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	StdDialogButtonSizer1 = new wxStdDialogButtonSizer();
 	StdDialogButtonSizer1->AddButton(new wxButton(this, wxID_CANCEL, wxEmptyString));
