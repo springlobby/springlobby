@@ -47,6 +47,7 @@ class MapSelectDialog: public wxDialog
 		//(*Handlers(MapSelectDialog)
 		void OnInit(wxInitDialogEvent& event);
 		void OnSortKeySelect(wxCommandEvent& event);
+		void OnMapGridLeftDClick(wxMouseEvent& event);
 		//*)
 
 		void OnMapSelected( wxCommandEvent& event );

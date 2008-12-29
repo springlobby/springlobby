@@ -72,6 +72,7 @@ MapSelectDialog::MapSelectDialog(wxWindow* parent,Ui& ui)
 
 	Connect(ID_VERTICAL_CHOICE,wxEVT_COMMAND_CHOICE_SELECTED,(wxObjectEventFunction)&MapSelectDialog::OnSortKeySelect);
 	Connect(ID_HORIZONTAL_CHOICE,wxEVT_COMMAND_CHOICE_SELECTED,(wxObjectEventFunction)&MapSelectDialog::OnSortKeySelect);
+	m_mapgrid->Connect(ID_MAPGRID,wxEVT_LEFT_DCLICK,(wxObjectEventFunction)&MapSelectDialog::OnMapGridLeftDClick,0,this);
 	Connect(wxID_ANY,wxEVT_INIT_DIALOG,(wxObjectEventFunction)&MapSelectDialog::OnInit);
 	//*)
 
@@ -151,7 +152,7 @@ UnitSyncMap* MapSelectDialog::GetSelectedMap() const
 void MapSelectDialog::OnMapSelected( wxCommandEvent& event )
 {
 	wxLogDebugFunc( event.GetString() );
-	EndModal( wxID_OK );
+	//EndModal( wxID_OK );
 }
 
 void MapSelectDialog::OnVerticalDirectionClicked( wxCommandEvent& event )
@@ -166,4 +167,13 @@ void MapSelectDialog::OnHorizontalDirectionClicked( wxCommandEvent& event )
 	m_horizontal_direction = !m_horizontal_direction;
 	m_horizontal_direction_button->SetLabel( m_horizontal_direction ? _T("<") : _T(">") );
 	Sort();
+}
+
+void MapSelectDialog::OnMapGridLeftDClick(wxMouseEvent& event)
+{
+	wxLogDebugFunc( _T("") );
+
+	if ( m_mapgrid->GetSelectedMap() ) {
+		EndModal( wxID_OK );
+	}
 }
