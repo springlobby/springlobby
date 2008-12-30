@@ -1241,3 +1241,18 @@ void Ui::WatchReplay ( wxString& filename )
     OnSpringStarting();
     m_spring->RunReplay( filename );
 }
+
+bool Ui::OnPresetRequiringMap( const wxString& mapname )
+{
+    if ( wxYES == customMessageBox( SL_MAIN_ICON,
+                        _("The selected preset requires the map ") + mapname + _(". Should it be downloaded? \
+                                    \n Selecting \"no\" will remove the missing map from the preset.\n\
+                                    Please reselect the preset after download finished"),
+                        _("Map missing"),
+                        wxYES_NO ) )
+    {
+        ui().DownloadMap( _T("") , mapname );
+        return true;
+    }
+    return false;
+}
