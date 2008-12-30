@@ -2,6 +2,33 @@
 #define SPRINGLOBBY_WIDGET_H_INCLUDED
 
 #include <wx/string.h>
+#include <vector>
+
+struct WidgetFile
+{
+    wxString url;
+    wxString local_path;
+    wxString md5;
+    long id;
+};
+
+struct WidgetImage
+{
+    wxString url;
+    long id;
+};
+
+struct ExtendedInfo
+{
+    ExtendedInfo():parsed(false) {}
+    bool parsed;
+
+    typedef std::vector< WidgetFile > Files;
+    Files files;
+
+    typedef std::vector< WidgetImage > Images;
+    Images images;
+};
 
 struct Widget
 {
@@ -21,7 +48,7 @@ struct Widget
     long rev_minor;
     wxString date;
     wxString changelog;
-
+    ExtendedInfo extendedinfo;
 };
 
 #endif // SPRINGLOBBY_WIDGET_H_INCLUDED

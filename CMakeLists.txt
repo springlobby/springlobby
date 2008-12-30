@@ -265,6 +265,8 @@ SET(SpringLobbySrc
 	src/widgets/downloadlistctrl.cpp
 	src/widgets/downloaddialog.cpp
 	src/widgets/downloadpanel.cpp
+	src/widgets/infodialog.cpp
+	src/widgets/infopanel.cpp
 	src/widgets/widget.cpp
 	src/globalsmanager.cpp
 )

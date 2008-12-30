@@ -400,6 +400,10 @@
 		<Unit filename="src/widgets/downloadlistctrl.h" />
 		<Unit filename="src/widgets/downloadpanel.cpp" />
 		<Unit filename="src/widgets/downloadpanel.h" />
+		<Unit filename="src/widgets/infodialog.cpp" />
+		<Unit filename="src/widgets/infodialog.h" />
+		<Unit filename="src/widgets/infopanel.cpp" />
+		<Unit filename="src/widgets/infopanel.h" />
 		<Unit filename="src/widgets/widget.cpp" />
 		<Unit filename="src/widgets/widget.h" />
 		<Unit filename="widgets/downloadlistctrl.h" />
