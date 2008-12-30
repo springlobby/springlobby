@@ -22,7 +22,6 @@
 
 #include "useractions.h"
 #include "Helper/utilclasses.h"
-#include "isortedlist.h"
 
 class SLTipWindow;
 
