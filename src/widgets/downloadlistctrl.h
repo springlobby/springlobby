@@ -20,8 +20,14 @@ class WidgetDownloadListctrl : public CustomVirtListCtrl<Widget>
         virtual int OnGetItemImage(long item) const;
         virtual int OnGetItemColumnImage(long item, long column) const;
 
+        void Sort();
+
     protected:
         static int CompareOneCrit( DataType u1, DataType u2, int col, int dir ) ;
+
+        void HighlightItem( long item );
+
+        int GetIndexFromData( const DataType& data ) const;
 
 };
 

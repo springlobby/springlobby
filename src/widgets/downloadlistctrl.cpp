@@ -45,7 +45,8 @@ void WidgetDownloadListctrl::AddWidget( const Widget widget )
 {
     m_data.push_back( widget );
     SetItemCount( m_data.size() );
-    RefreshItem( m_data.size() );
+    //RefreshItem( m_data.size() );
+    RefreshVisibleItems();
 }
 
 wxString WidgetDownloadListctrl::OnGetItemText(long item, long column) const
@@ -57,7 +58,7 @@ wxString WidgetDownloadListctrl::OnGetItemText(long item, long column) const
     switch ( column ) {
         default: return wxEmptyString;
         case 0: return widget.name;
-        case 1: return widget.description;
+        case 1: return widget.short_description;
         case 2: return widget.author;
         case 3: return widget.mods;
         case 4: return i2s( widget.num_downloads );
@@ -74,4 +75,19 @@ int WidgetDownloadListctrl::OnGetItemImage(long item) const
 int WidgetDownloadListctrl::OnGetItemColumnImage(long item, long column) const
 {
     return -1;
+}
+
+void WidgetDownloadListctrl::HighlightItem( long item )
+{
+
+}
+
+void WidgetDownloadListctrl::Sort()
+{
+
+}
+
+int WidgetDownloadListctrl::GetIndexFromData( const DataType& data ) const
+{
+    return 0;
 }

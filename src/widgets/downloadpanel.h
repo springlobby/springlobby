@@ -3,6 +3,11 @@
 
 #include <wx/scrolwin.h>
 
+class WidgetDownloadListctrl;
+class wxBoxSizer;
+class wxButton;
+class wxTextCtrl;
+class wxStaticText;
 
 class WidgetDownloadPanel : public wxScrolledWindow
 {
@@ -14,6 +19,10 @@ class WidgetDownloadPanel : public wxScrolledWindow
 
     protected:
         bool PopulateList();
+
+        WidgetDownloadListctrl* m_list;
+
+        wxBoxSizer* m_main_sizer;
 };
 
 #endif // SPRINGLOBBY_WIDGETDOWNLOADPANEL_H_INCLUDED

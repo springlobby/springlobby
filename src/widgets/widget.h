@@ -8,15 +8,17 @@ struct Widget
     public:
         Widget();
         virtual ~Widget();
-    int id;
+    long w_id;
+    long n_id;
     wxString name;
     wxString description;
-    unsigned int num_downloads;
+    wxString short_description;
+    long num_downloads;
     wxString mods;
     wxString author;
-    unsigned int num_images;
-    unsigned int rev_major;
-    unsigned int rev_minor;
+    long num_images;
+    long rev_major;
+    long rev_minor;
     wxString date;
     wxString changelog;
 
