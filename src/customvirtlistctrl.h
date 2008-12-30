@@ -21,7 +21,6 @@
 #include <map>
 
 #include "useractions.h"
-#include "Helper/utilclasses.h"
 
 class SLTipWindow;
 
