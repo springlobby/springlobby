@@ -921,6 +921,14 @@ springlobby_SOURCES = \
 	src/updater/updater.cpp \
 	src/updater/exedownloader.h \
 	src/updater/exedownloader.cpp \
+	src/widgets/downloadlistctrl.cpp \
+	src/widgets/downloadlistctrl.h \
+	src/widgets/downloaddialog.cpp \
+	src/widgets/downloaddialog.h \
+	src/widgets/downloadpanel.cpp \
+	src/widgets/downloadpanel.h \
+	src/widgets/widget.cpp \
+	src/widgets/widget.h \
 	src/usermenu.h \
 	src/thread.cpp \
 	src/thread.h \

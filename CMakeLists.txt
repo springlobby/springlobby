@@ -263,6 +263,10 @@ SET(SpringLobbySrc
 	src/userlist.cpp
 	src/userlistctrl.cpp
 	src/utils.cpp
+	src/widgets/downloadlistctrl.cpp
+	src/widgets/downloaddialog.cpp
+	src/widgets/downloadpanel.cpp
+	src/widgets/widget.cpp
 	src/globalsmanager.cpp
 )
 

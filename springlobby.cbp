@@ -395,6 +395,16 @@
 		<Unit filename="src/userlistctrl.h" />
 		<Unit filename="src/utils.cpp" />
 		<Unit filename="src/utils.h" />
+		<Unit filename="src/widgets/downloaddialog.cpp" />
+		<Unit filename="src/widgets/downloaddialog.h" />
+		<Unit filename="src/widgets/downloadlistctrl.cpp" />
+		<Unit filename="src/widgets/downloadlistctrl.h" />
+		<Unit filename="src/widgets/downloadpanel.cpp" />
+		<Unit filename="src/widgets/downloadpanel.h" />
+		<Unit filename="src/widgets/widget.cpp" />
+		<Unit filename="src/widgets/widget.h" />
+		<Unit filename="widgets/downloadlistctrl.h" />
+		<Unit filename="widgets/widget.h" />
 		<Unit filename="wxsmith/AutoBalanceDialog.wxs" />
 		<Extensions>
 			<code_completion />
