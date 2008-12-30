@@ -56,6 +56,8 @@ springlobby_LDADD = \
 	$(LIBTORRENT_LIBS) \
 	$(SDL_LIBS)
 
+#no better idea, this needs to included in tarball, but not compiled
+EXTRA_DIST = src/customvirtlistctrl.cpp 
 
 springsettings_LDADD = \
 	$(WX_LIBS)
@@ -864,7 +866,6 @@ springlobby_SOURCES = \
 	src/customlistctrl.h \
 	src/customlistctrl.cpp \
 	src/customvirtlistctrl.h \
-	src/customvirtlistctrl.cpp \
 	src/mmoptionmodel.h \
 	src/mmoptionmodel.cpp \
 	src/mmoptionswrapper.h \
