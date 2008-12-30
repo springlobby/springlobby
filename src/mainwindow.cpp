@@ -64,6 +64,7 @@
 #include "updater/updater.h"
 #include "channel/autojoinchanneldialog.h"
 #include "channel/channelchooserdialog.h"
+#include "widgets/downloaddialog.h"
 
 #ifdef HAVE_WX28
     #if defined(__WXMSW__)
@@ -500,6 +501,8 @@ void MainWindow::OnMenuVersion( wxCommandEvent& event )
 void MainWindow::OnUnitSyncReload( wxCommandEvent& event )
 {
   m_ui.ReloadUnitSync();
+  m_widgets_dialog = new WidgetDownloadDialog( this, wxID_ANY, _("stuff") );
+  m_widgets_dialog->Show( true );
 }
 
 

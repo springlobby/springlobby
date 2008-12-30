@@ -31,6 +31,7 @@ class wxMenu;
 class ChannelChooserDialog;
 class ReplayTab;
 class AutojoinChannelDialog;
+class WidgetDownloadDialog;
 
 // FIXME shouldn't copy this here
 typedef wxWindow wxNotebookPage;
@@ -144,6 +145,7 @@ class MainWindow : public wxFrame
     settings_frame* se_frame;
     bool se_frame_active;
     ChannelChooserDialog* m_channel_chooser;
+    WidgetDownloadDialog* m_widgets_dialog;
 
     ReplayTab* m_replay_tab;
 
