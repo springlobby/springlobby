@@ -11,8 +11,9 @@ class WidgetDownloadPanel : public wxScrolledWindow
             const wxSize& size = wxDefaultSize,
             long style = wxHSCROLL | wxVSCROLL );
         virtual ~WidgetDownloadPanel();
+
     protected:
-    private:
+        bool PopulateList();
 };
 
 #endif // SPRINGLOBBY_WIDGETDOWNLOADPANEL_H_INCLUDED

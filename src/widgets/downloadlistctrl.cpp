@@ -5,7 +5,7 @@ WidgetDownloadListctrl::WidgetDownloadListctrl(wxWindow* parent, wxWindowID id, 
     :CustomVirtListCtrl<Widget>(parent, 4239, wxDefaultPosition, wxDefaultSize,
             wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("WidgetDownloadListCtrl"), 3, &CompareOneCrit)
 {
-    //ctor
+
 }
 
 WidgetDownloadListctrl::~WidgetDownloadListctrl()
