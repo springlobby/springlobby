@@ -264,6 +264,8 @@ void SpringUnitSyncLib::_Unload()
 {
   if ( !_IsLoaded() ) return;
 
+  UnSetCurrentMod();
+
   m_uninit();
 
   delete m_libhandle;
@@ -386,6 +388,11 @@ void SpringUnitSyncLib::SetCurrentMod( const wxString& modname )
     AddAllArchives( GetPrimaryModArchive( GetModIndex( modname ) ) );
     m_current_mod = modname;
   }
+}
+
+void SpringUnitSyncLib::UnSetCurrentMod( )
+{
+    m_current_mod = wxEmptyString;
 }
 
 

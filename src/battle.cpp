@@ -25,6 +25,7 @@
 #include <wx/string.h>
 
 #include "images/fixcolours_palette.xpm"
+#include "springunitsynclib.h"
 
 
 std::vector<wxColour> &GetFixColoursPalette()
@@ -116,6 +117,7 @@ void Battle::Join( const wxString& password )
 void Battle::Leave()
 {
     m_serv.LeaveBattle( m_opts.battleid );
+    susynclib().UnSetCurrentMod( );
 }
 
 
