@@ -1,4 +1,4 @@
-/* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
+/* Copyright (C) 2007, 2008 The SpringLobby Team. All rights reserved. */
 //
 // Class: SpringLobbyApp
 //
@@ -241,6 +241,26 @@ void SpringLobbyApp::OnTimer( wxTimerEvent& event )
 }
 
 
+/** Try to create the named directory, if it doesn't exist.
+ *
+ * @param name Path to directory that should exist or be created.
+ *
+ * @param perm Value of @p perm parameter for wxFileName::Mkdir.
+ *
+ * @param flags Value of @p flags parameter for wxFileName::Mkdir.
+ *
+ * @return @c true if the directory already exists, or the return
+ * value of wxFileName::Mkdir if it does not.
+ */
+inline bool
+tryCreateDirectory(const wxString& name, int perm = 0775, int flags = 0)
+{
+    if ( wxFileName::DirExists(name) )
+	return true;
+    else
+	return wxFileName::Mkdir(name, perm, flags);
+}
+
 void SpringLobbyApp::SetupUserFolders()
 {
 #ifndef HAVE_WX26
@@ -278,16 +298,16 @@ void SpringLobbyApp::SetupUserFolders()
 
       if ( createdirs )
       {
-          if ( dir.IsEmpty() ||
-           ( !wxFileName::Mkdir( dir, 0775 ) ||
-              ( !wxFileName::Mkdir( dir + sep + _T("mods"), 0775 ) ||
-                !wxFileName::Mkdir( dir + sep + _T("maps"), 0775 ) ||
-                !wxFileName::Mkdir( dir + sep + _T("base"), 0775 ) ||
-                !wxFileName::Mkdir( dir + sep + _T("demos"), 0775 ) ||
-                !wxFileName::Mkdir( dir + sep + _T("screenshots"), 0775  ) )
-              )
-            )
-          {
+	  if ( dir.IsEmpty() ||
+	       ( !tryCreateDirectory( dir, 0775 ) ||
+		 ( !tryCreateDirectory( dir + sep + _T("mods"), 0775 ) ||
+		   !tryCreateDirectory( dir + sep + _T("maps"), 0775 ) ||
+		   !tryCreateDirectory( dir + sep + _T("base"), 0775 ) ||
+		   !tryCreateDirectory( dir + sep + _T("demos"), 0775 ) ||
+		   !tryCreateDirectory( dir + sep + _T("screenshots"), 0775  ) )
+		   )
+	      )
+	  {
               if ( dir.IsEmpty() ) dir = defaultdir;
               wxMessageBox( _("Something went wrong when creating the directories\nPlease create manually the following folders:") + wxString(_T("\n")) + dir +  _T("\n") + dir + sep + _T("mods\n") + dir + sep + _T("maps\n") + dir + sep + _T("base\n") );
               return;
