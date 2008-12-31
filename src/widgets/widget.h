@@ -15,6 +15,7 @@ struct WidgetFile
 struct WidgetImage
 {
     wxString url;
+    wxString local_path;
     long id;
 };
 

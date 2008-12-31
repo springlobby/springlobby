@@ -10,6 +10,7 @@
 
 #include "../utils.h"
 #include "downloadlistctrl.h"
+#include "infodialog.h"
 
 const int invalid_id = -1;
 
@@ -24,6 +25,7 @@ WidgetDownloadPanel::WidgetDownloadPanel(wxWindow* parent, wxWindowID id, const 
     SetSizer( m_main_sizer );
     Layout();
     m_list->RefreshVisibleItems();
+    Widget w = m_list->GetDataFromIndex( 0 );
 }
 
 WidgetDownloadPanel::~WidgetDownloadPanel()

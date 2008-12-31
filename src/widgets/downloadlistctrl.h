@@ -26,9 +26,16 @@ class WidgetDownloadListctrl : public CustomVirtListCtrl<Widget>
         static int CompareOneCrit( DataType u1, DataType u2, int col, int dir ) ;
 
         void HighlightItem( long item );
+        void OnColClick( wxListEvent& event );
+        void OnActivateItem( wxListEvent& event );
 
         int GetIndexFromData( const DataType& data ) const;
 
+        enum {
+            WIDGETLISTCTRL_ID
+        };
+
+        DECLARE_EVENT_TABLE()
 };
 
 #endif // WIDGETDOWNLOADLISTCTRL_H

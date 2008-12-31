@@ -1,10 +1,16 @@
 #include "downloadlistctrl.h"
+#include "infodialog.h"
 
 const unsigned int column_count = 6;
 
+BEGIN_EVENT_TABLE( WidgetDownloadListctrl, CustomVirtListCtrl<Widget> )
+  EVT_LIST_ITEM_ACTIVATED( WIDGETLISTCTRL_ID, WidgetDownloadListctrl::OnActivateItem )
+  EVT_LIST_COL_CLICK( WIDGETLISTCTRL_ID, WidgetDownloadListctrl::OnColClick )
+END_EVENT_TABLE()
+
 WidgetDownloadListctrl::WidgetDownloadListctrl(wxWindow* parent, wxWindowID id, const wxString& name,
                     long style, const wxPoint& pt, const wxSize& sz)
-    :CustomVirtListCtrl<Widget>(parent, 4239, wxDefaultPosition, wxDefaultSize,
+    :CustomVirtListCtrl<Widget>(parent, WIDGETLISTCTRL_ID, wxDefaultPosition, wxDefaultSize,
             wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("WidgetDownloadListCtrl"), column_count, &CompareOneCrit)
 {
     const int as = wxLIST_AUTOSIZE;
@@ -90,4 +96,17 @@ void WidgetDownloadListctrl::Sort()
 int WidgetDownloadListctrl::GetIndexFromData( const DataType& data ) const
 {
     return 0;
+}
+
+void WidgetDownloadListctrl::OnColClick( wxListEvent& event )
+{
+
+}
+
+void WidgetDownloadListctrl::OnActivateItem( wxListEvent& event )
+{
+    int index = event.GetIndex();
+    if ( index == -1 ) return;
+    WidgetInfoDialog* dl = new WidgetInfoDialog( m_data[index], (wxWindow*)this, -1, _("stuff") );
+    dl->Show(true);
 }

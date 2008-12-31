@@ -6,10 +6,13 @@
 #include <wx/sizer.h>
 #include <wx/statline.h>
 #include <wx/stattext.h>
+#include <wx/sstream.h>
+#include <wx/wfstream.h>
+#include <wx/filename.h>
 
 #include "widget.h"
 #include "../utils.h"
-#include "../iunitsync.h"
+#include "../settings.h"
 
 const int invalid_id = -1;
 
@@ -20,7 +23,7 @@ WidgetInfoPanel::WidgetInfoPanel( Widget& widget, wxWindow* parent, wxWindowID i
 {
     if ( !m_widget.extendedinfo.parsed ) {
         GetFileInfos();
-        if ( GetImageInfos() )
+         GetImageInfos() ;
             DownloadImages();
     }
     m_widget.extendedinfo.parsed = true;
@@ -31,7 +34,7 @@ WidgetInfoPanel::~WidgetInfoPanel()
 {
     //dtor
 }
-
+#include "../ui.h"
 bool WidgetInfoPanel::GetFileInfos()
 {
     bool success = true;
@@ -42,7 +45,6 @@ bool WidgetInfoPanel::GetFileInfos()
     wxString query_url = _T("/luaManager/lua_manager.php?m=1&id=") + TowxString( m_widget.w_id );
         // PHP file sending XML content
 	wxInputStream *httpStream = http.GetInputStream( query_url );
-
 	if (http.GetError() == wxPROTO_NOERR)
 	{
                 // will crash here, if xml content is not formatted PERFECTLY
@@ -86,7 +88,7 @@ bool WidgetInfoPanel::GetFileInfos()
 
 	return success;
 }
-
+#include <iostream>
 bool WidgetInfoPanel::GetImageInfos()
 {
     bool success = true;
@@ -102,7 +104,7 @@ bool WidgetInfoPanel::GetImageInfos()
 	{
                 // will crash here, if xml content is not formatted PERFECTLY
 		wxXmlDocument xml(*httpStream);
-
+wxString url;
 		wxXmlNode *node = xml.GetRoot()->GetChildren();
 		ExtendedInfo& info = m_widget.extendedinfo;
 		while (node)
@@ -120,7 +122,7 @@ bool WidgetInfoPanel::GetImageInfos()
                     }
                     item = item->GetNext();
                 }
-
+                url += _T("&&");
                 info.images.push_back( file );
             }
 
@@ -138,5 +140,43 @@ bool WidgetInfoPanel::GetImageInfos()
 
 bool WidgetInfoPanel::DownloadImages()
 {
+    wxString sep ( wxFileName::GetPathSeparator() );
+
+    ExtendedInfo::Images& images = m_widget.extendedinfo.images;
+    ExtendedInfo::Images::iterator it = images.begin();
+    for ( ; it != images.end(); ++it ) {
+
+        wxString fileurl = it->url;
+        fileurl.Replace( _T("http://") , _T("") );
+        wxString destpath = sett().GetCachePath() + fileurl.AfterLast(_T('/'));
+
+        it->local_path = destpath;
+        wxHTTP FileDownloading;
+        /// normal timeout is 10 minutes.. set to 10 secs.
+        FileDownloading.SetTimeout(10);
+        FileDownloading.Connect( fileurl.BeforeFirst(_T('/')), 80);
+
+        wxInputStream* httpstream = FileDownloading.GetInputStream( _T("/") + fileurl.AfterFirst(_T('/')) );
+
+        if ( httpstream )
+        {
+            try
+            {
+              wxFileOutputStream outs( destpath );
+              httpstream->Read(outs);
+              outs.Close();
+              delete httpstream;
+              httpstream = 0;
+              //download success
+
+            }
+            catch (...)
+            {
+                wxLogMessage(_T("exception on download of") + fileurl);
+                return false;
+            }
+        }
+    }
+    return true;
 
 }
