@@ -13,9 +13,43 @@
 
 #include "jpeghandler.h"
 
-BEGIN_EVENT_TABLE( ImageViewer, wxDialog )
-    EVT_PAINT(ImageViewer::OnPaint)
+BEGIN_EVENT_TABLE( ImagePanel, wxPanel )
+    EVT_PAINT(ImagePanel::OnPaint)
 END_EVENT_TABLE()
+
+BEGIN_EVENT_TABLE( ImageViewer, wxDialog )
+    //EVT_PAINT(ImageViewer::OnPaint)
+END_EVENT_TABLE()
+
+ImagePanel::ImagePanel( const wxString& file, wxWindow* parent, wxWindowID id )
+    : wxPanel( parent, id ),
+    m_file( file )
+{
+    m_jpeg_handler = new SL_JPEGHandler();
+    wxString old_name = (new wxJPEGHandler)->GetName();
+    wxImage::RemoveHandler( old_name );
+    wxImage::AddHandler(m_jpeg_handler);
+
+
+}
+
+ImagePanel::~ImagePanel()
+{
+    wxImage::AddHandler( new wxJPEGHandler );
+}
+
+void ImagePanel::SetBitmap( const wxString& file )
+{
+    m_file = file;
+}
+
+void ImagePanel::OnPaint(wxPaintEvent& WXUNUSED(event))
+{
+    wxPaintDC dc( this );
+    wxImage im ( m_file );
+    dc.DrawBitmap( wxBitmap(im), 0, 0, true /* use mask */ );
+}
+
 
 ImageViewer::ImageViewer(const wxArrayString& filenames, wxWindow* parent, wxWindowID id,
             const wxString& title, long style )
@@ -23,21 +57,10 @@ ImageViewer::ImageViewer(const wxArrayString& filenames, wxWindow* parent, wxWin
     m_filenames( filenames ),
     m_num_files( filenames.Count() )
 {
-    m_jpeg_handler = new SL_JPEGHandler();
-    wxString old_name = (new wxJPEGHandler)->GetName();
-    wxImage::RemoveHandler( old_name );
-    wxImage::AddHandler(m_jpeg_handler);
-
+    m_panel = new ImagePanel( m_filenames[0], this, -1 );
 }
 
 ImageViewer::~ImageViewer()
 {
-    wxImage::AddHandler( new wxJPEGHandler );
 }
 
-void ImageViewer::OnPaint(wxPaintEvent& WXUNUSED(event))
-{
-    wxImage test(_T("/share/springdata/screenshots/screen000.jpg" ));
-    wxPaintDC dc( this );
-    dc.DrawBitmap( wxBitmap(test), 0, 0, true /* use mask */ );
-}
