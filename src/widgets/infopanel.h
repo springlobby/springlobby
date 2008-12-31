@@ -3,14 +3,23 @@
 
 #include <wx/scrolwin.h>
 
+class Widget;
 
 class WidgetInfoPanel : public wxScrolledWindow
 {
     public:
-        WidgetInfoPanel();
+        WidgetInfoPanel( Widget& widget, wxWindow* parent, wxWindowID id, const wxString& title = _T(""), const wxPoint& pos = wxDefaultPosition,
+            const wxSize& size = wxDefaultSize,
+            long style = wxHSCROLL | wxVSCROLL );
         virtual ~WidgetInfoPanel();
+
     protected:
-    private:
+        Widget& m_widget;
+
+        bool GetFileInfos();
+        bool GetImageInfos();
+        bool DownloadImages();
+
 };
 
 #endif // SPRINGLOBBY_WIDGETINFOPANEL_H_INCLUDED

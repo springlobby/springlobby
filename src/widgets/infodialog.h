@@ -3,14 +3,17 @@
 
 #include <wx/dialog.h>
 class Widget;
+class WidgetInfoPanel;
 
 class WidgetInfoDialog : public wxDialog
 {
     public:
-        WidgetInfoDialog(Widget& widget);
+        WidgetInfoDialog(Widget& widget,wxWindow* parent, wxWindowID id, const wxString& title,
+            long style = wxCAPTION | wxRESIZE_BORDER | wxCLOSE_BOX | wxMAXIMIZE_BOX | wxMINIMIZE_BOX | wxDEFAULT_DIALOG_STYLE );
         virtual ~WidgetInfoDialog();
+
     protected:
-    private:
+        WidgetInfoPanel* m_panel;
 };
 
 #endif // SPRINGLOBBY_WIDGETINFODIALOG_H_INCLUDED

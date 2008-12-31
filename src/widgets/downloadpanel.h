@@ -12,7 +12,7 @@ class wxStaticText;
 class WidgetDownloadPanel : public wxScrolledWindow
 {
     public:
-        WidgetDownloadPanel(wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos = wxDefaultPosition,
+        WidgetDownloadPanel(wxWindow* parent, wxWindowID id, const wxString& title = _T(""), const wxPoint& pos = wxDefaultPosition,
             const wxSize& size = wxDefaultSize,
             long style = wxHSCROLL | wxVSCROLL );
         virtual ~WidgetDownloadPanel();
