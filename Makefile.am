@@ -892,6 +892,8 @@ springlobby_SOURCES = \
 	src/Helper/colorbutton.h \
         src/Helper/wxtextctrlhist.cpp \
 	src/Helper/wxtextctrlhist.h \
+	src/Helper/jpeghandler.h \
+	src/Helper/jpeghandler.cpp \
 	src/filelister/filelistctrl.h \
 	src/filelister/filelistdialog.h \
 	src/filelister/filelistfilter.h \

@@ -177,6 +177,7 @@ SET(SpringLobbySrc
 	src/channel/channelchooserdialog.cpp
 	src/Helper/wxtextctrlhist.cpp
 	src/Helper/colorbutton.cpp
+	src/Helper/jpeghandler.cpp
 	src/filelister/filelistctrl.cpp
 	src/filelister/filelistdialog.cpp
 	src/filelister/filelistfilter.cpp

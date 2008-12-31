@@ -4,6 +4,7 @@
 	<Project>
 		<Option title="springlobby" />
 		<Option pch_mode="0" />
+		<Option compiler="gcc" />
 		<Build>
 			<Target title="GNU | Debug">
 				<Option output="bin/GNU/Debug/springlobby" prefix_auto="0" extension_auto="0" />
@@ -136,6 +137,8 @@
 		<Unit filename="src/Helper/TextCompletionDatabase.hpp" />
 		<Unit filename="src/Helper/colorbutton.cpp" />
 		<Unit filename="src/Helper/colorbutton.h" />
+		<Unit filename="src/Helper/jpeghandler.cpp" />
+		<Unit filename="src/Helper/jpeghandler.h" />
 		<Unit filename="src/Helper/wxtextctrlhist.cpp" />
 		<Unit filename="src/Helper/wxtextctrlhist.h" />
 		<Unit filename="src/addbotdialog.cpp" />
