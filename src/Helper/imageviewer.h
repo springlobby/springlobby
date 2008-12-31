@@ -3,6 +3,8 @@
 
 #include <wx/dialog.h>
 
+class wxPaintEvent;
+class SL_JPEGHandler;
 
 class ImageViewer : public wxDialog
 {
@@ -15,6 +17,11 @@ class ImageViewer : public wxDialog
         const wxArrayString& m_filenames;
         unsigned int m_current_file_index;
         const unsigned int m_num_files;
+        SL_JPEGHandler* m_jpeg_handler;
+
+        void OnPaint(wxPaintEvent& WXUNUSED(event));
+
+        DECLARE_EVENT_TABLE()
 };
 
 #endif // SPRINGLOBBY_IMAGEVIEWER_H_INCLUDED

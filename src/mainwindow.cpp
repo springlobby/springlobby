@@ -497,9 +497,13 @@ void MainWindow::OnMenuVersion( wxCommandEvent& event )
   Updater().CheckForUpdates();
 }
 
+#include "Helper/imageviewer.h"
 void MainWindow::OnUnitSyncReload( wxCommandEvent& event )
 {
   m_ui.ReloadUnitSync();
+  wxArrayString ar;
+  ImageViewer* img  = new ImageViewer( ar, this, -1, _T("stuff") );
+  img->Show( true );
 }
 
 
