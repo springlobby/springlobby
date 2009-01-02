@@ -22,6 +22,8 @@ public:
         m_mime = wxT("image/jpeg");
     }
 
+    wxSize m_parentSize;
+
     static SL_JPEGHandler& GetInstance() { static SL_JPEGHandler m_handler; return m_handler; }
 
 #if wxUSE_STREAMS

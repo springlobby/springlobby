@@ -9,6 +9,7 @@
 
 // For compilers that support precompilation, includes "wx.h".
 #include <wx/wxprec.h>
+#include "../utils.h"
 
 #ifdef __BORLANDC__
     #pragma hdrstop
@@ -23,6 +24,7 @@
     #include <wx/app.h>
     #include <wx/intl.h>
     #include <wx/bitmap.h>
+    #include <wx/image.h>
     #include <wx/module.h>
 #endif
 
@@ -270,25 +272,28 @@ bool SL_JPEGHandler::LoadFile( wxImage *image, wxInputStream& stream, bool verbo
         bytesPerPixel = 3;
     }
 
+    int f_x = m_parentSize.GetX() ;/// cinfo.image_width;
+    int f_y = m_parentSize.GetY() ;/// cinfo.image_height ;
 
+    cinfo.scale_num = 1;
+    //int tb = m_some_number;//wxGetApp().GetConfig()->tb_size;     // get the program's thumbnail size
+    int factor_w, factor_h;
+    factor_w = (cinfo.image_width - cinfo.image_width  % f_x) / f_x;
+    factor_h = (cinfo.image_height - cinfo.image_height  % f_y) / f_y;
+    wxLogError( _("x: ") + i2s( factor_w ) );
+    wxLogError( _("y: ") + i2s( factor_h ) );
+    //if ( factor_w > 1 && factor_h > 1 )
+    {
+      if ( factor_w < factor_h )
+        cinfo.scale_denom = (  double(factor_w) );
+      else
+        cinfo.scale_denom = ( double(factor_h) );
+     }
 
-//    cinfo.scale_num = 1;
-//    int tb = 2;//wxGetApp().GetConfig()->tb_size;     // get the program's thumbnail size
-//    int factor_w, factor_h;
-//    factor_w = (cinfo.image_width - cinfo.image_width  % tb) / tb;
-//    factor_h = (cinfo.image_height - cinfo.image_height  % tb) / tb;
-//    if ( factor_w > 1 && factor_h > 1 )
-//    {
-//      if ( factor_w < factor_h )
-//        cinfo.scale_denom = factor_w;
-//      else
-//        cinfo.scale_denom = factor_h;
-//     }
-//
-//    jpeg_start_decompress( &cinfo );
-//    // create image with new scaled size
+    jpeg_start_decompress( &cinfo );
+    // create image with new scaled size
 //    image->Create( cinfo.output_width, cinfo.output_height );
-
+//
 //    if ( image->HasOption(wxIMAGE_OPTION_MAX_WIDTH) || image->HasOption(wxIMAGE_OPTION_MAX_HEIGHT)
 //    )
 //    {
@@ -308,8 +313,8 @@ bool SL_JPEGHandler::LoadFile( wxImage *image, wxInputStream& stream, bool verbo
 //            cinfo.scale_denom = cinfo.scale_denom << 1;
 //        }
 //    }
-    cinfo.scale_denom = 3;
-    jpeg_start_decompress( &cinfo );
+////    cinfo.scale_denom = 3;
+//    jpeg_start_decompress( &cinfo );
 
     image->Create( cinfo.image_width, cinfo.image_height );
     if (!image->Ok()) {

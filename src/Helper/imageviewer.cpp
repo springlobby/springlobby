@@ -46,6 +46,7 @@ void ImagePanel::SetBitmap( const wxString& file )
 void ImagePanel::OnPaint(wxPaintEvent& WXUNUSED(event))
 {
     wxPaintDC dc( this );
+    m_jpeg_handler->m_parentSize = this->GetClientSize();
     wxImage im ( m_file );
     dc.DrawBitmap( wxBitmap(im), 0, 0, true /* use mask */ );
 }

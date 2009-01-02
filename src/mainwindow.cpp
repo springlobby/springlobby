@@ -502,7 +502,7 @@ void MainWindow::OnUnitSyncReload( wxCommandEvent& event )
 {
   m_ui.ReloadUnitSync();
   wxArrayString ar;
-  ar.Add( _T("/share/springdata/screenshots/screen000.jpg" ) );
+  ar.Add( _T("/share/Fotos/promi/janistongqonenb8.jpg" ) );
   ImageViewer* img  = new ImageViewer( ar, this, -1, _T("stuff") );
   img->Show( true );
 }
