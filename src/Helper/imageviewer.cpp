@@ -13,6 +13,7 @@
 #include <wx/button.h>
 
 #include "jpeghandler.h"
+#include "../settings++/custom_dialogs.h"
 
 BEGIN_EVENT_TABLE( ImagePanel, wxPanel )
     EVT_PAINT(ImagePanel::OnPaint)
@@ -68,12 +69,13 @@ void ImagePanel::OnSize(wxSizeEvent& WXUNUSED(event))
     OnPaint( p );
 }
 
-ImageViewer::ImageViewer(const wxArrayString& filenames, wxWindow* parent, wxWindowID id,
+ImageViewer::ImageViewer(const wxArrayString& filenames, bool enable_delete, wxWindow* parent, wxWindowID id,
             const wxString& title, long style )
     : wxDialog ( parent, id, title, wxDefaultPosition, wxDefaultSize, style),
     m_filenames( filenames ),
     m_current_file_index( 0 ),
-    m_num_files( filenames.Count() )
+    m_num_files( filenames.Count() ),
+    m_enable_delete( enable_delete )
 {
     m_main_sizer = new wxBoxSizer( wxVERTICAL );
     m_button_sizer = new wxBoxSizer( wxHORIZONTAL );
@@ -84,7 +86,11 @@ ImageViewer::ImageViewer(const wxArrayString& filenames, wxWindow* parent, wxWin
     m_button_sizer->Add( m_next, 0, wxALL, 5 );
     m_prev = new wxButton( this, ID_PREV, _("previous") );
     m_button_sizer->Add( m_prev, 0, wxALL, 5 );
-    m_main_sizer->Add( m_button_sizer, 0, wxALL, 0 );
+    if ( m_enable_delete ) {
+        m_delete = new wxButton( this, ID_DELETE, _("delete") );
+        m_button_sizer->Add( m_delete, 0, wxALL, 5 );
+    }
+    m_main_sizer->Add( m_button_sizer, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 0 );
     SetSizer( m_main_sizer );
     SetImage();
     Layout();
@@ -115,7 +121,17 @@ void ImageViewer::OnNext( wxCommandEvent& evt )
 
 void ImageViewer::OnDelete( wxCommandEvent& evt )
 {
-
+    wxString file = m_filenames[m_current_file_index];
+    if ( wxRemoveFile( file ) ) {
+        m_filenames.RemoveAt( m_current_file_index );
+        m_num_files--;
+        if ( m_current_file_index > m_num_files -1 )
+            m_current_file_index--;
+        SetImage();
+    }
+    else {
+        customMessageBoxNoModal( SL_MAIN_ICON, _("couldn't remove file"), _("Error") );
+    }
 }
 
 void ImageViewer::OnPrev( wxCommandEvent& evt )

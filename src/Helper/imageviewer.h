@@ -32,19 +32,21 @@ class wxButton;
 class ImageViewer : public wxDialog
 {
     public:
-        ImageViewer(const wxArrayString& filenames, wxWindow* parent, wxWindowID id, const wxString& title,
+        ImageViewer(const wxArrayString& filenames, bool enable_delete, wxWindow* parent, wxWindowID id, const wxString& title,
             long style = wxCAPTION | wxRESIZE_BORDER | wxCLOSE_BOX | wxMAXIMIZE_BOX | wxMINIMIZE_BOX | wxDEFAULT_DIALOG_STYLE );
         virtual ~ImageViewer();
 
     protected:
-        const wxArrayString m_filenames;
+        wxArrayString m_filenames;
         unsigned int m_current_file_index;
-        const unsigned int m_num_files;
+        unsigned int m_num_files;
+        bool m_enable_delete;
 
         wxBoxSizer* m_main_sizer;
         wxBoxSizer* m_button_sizer;
         wxButton* m_next;
         wxButton* m_prev;
+        wxButton* m_delete;
         ImagePanel* m_panel;
 
         void OnNext( wxCommandEvent& evt );
