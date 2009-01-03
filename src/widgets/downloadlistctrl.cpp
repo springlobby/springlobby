@@ -1,5 +1,5 @@
 #include "downloadlistctrl.h"
-#include "infodialog.h"
+
 
 const unsigned int column_count = 6;
 
@@ -107,6 +107,6 @@ void WidgetDownloadListctrl::OnActivateItem( wxListEvent& event )
 {
     int index = event.GetIndex();
     if ( index == -1 ) return;
-    WidgetInfoDialog* dl = new WidgetInfoDialog( m_data[index], (wxWindow*)this, -1, _("stuff") );
-    dl->Show(true);
+//    WidgetInfoDialog* dl = new WidgetInfoDialog( m_data[index], (wxWindow*)this, -1, _("stuff") );
+//    dl->Show(true);
 }

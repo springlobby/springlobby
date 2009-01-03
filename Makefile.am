@@ -933,8 +933,6 @@ springlobby_SOURCES = \
 	src/widgets/downloaddialog.h \
 	src/widgets/downloadpanel.cpp \
 	src/widgets/downloadpanel.h \
-	src/widgets/infodialog.cpp \
-	src/widgets/infodialog.h \
 	src/widgets/infopanel.cpp \
 	src/widgets/infopanel.h \
 	src/widgets/widget.cpp \

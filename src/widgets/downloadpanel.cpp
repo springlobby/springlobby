@@ -10,7 +10,7 @@
 
 #include "../utils.h"
 #include "downloadlistctrl.h"
-#include "infodialog.h"
+#include "infopanel.h"
 
 const int invalid_id = -1;
 
