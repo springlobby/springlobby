@@ -14,8 +14,21 @@
 #include "widget.h"
 #include "../utils.h"
 #include "../settings.h"
+#include "../ui.h"
+#include "../Helper/imageviewer.h"
+
 
 const int invalid_id = -1;
+
+
+BEGIN_EVENT_TABLE( WidgetInfoPanel, wxPanel)
+    EVT_BUTTON( WidgetInfoPanel::BUT_CHG_LOG, WidgetInfoPanel::OnChangeLog )
+    EVT_BUTTON( WidgetInfoPanel::BUT_DOWNLOAD, WidgetInfoPanel::OnDownload )
+    EVT_BUTTON( WidgetInfoPanel::BUT_REMOVE, WidgetInfoPanel::OnRemove )
+    EVT_BUTTON( WidgetInfoPanel::BUT_UPDATE, WidgetInfoPanel::OnUpdate )
+    EVT_BUTTON( WidgetInfoPanel::BUT_PICS, WidgetInfoPanel::OnPics )
+
+END_EVENT_TABLE()
 
 WidgetInfoPanel::WidgetInfoPanel( Widget& widget, wxWindow* parent, wxWindowID id, const wxString& title,
     const wxPoint& pos , const wxSize& size , long style )
@@ -84,15 +97,42 @@ void WidgetInfoPanel::Create()
 
     m_main_sizer->Add( m_top_sizer, 0, wxALL, 5 );
 
+    m_download = new wxButton( this, BUT_DOWNLOAD, _("Download") );
+    m_chg_log = new wxButton( this, BUT_CHG_LOG, _("View changelog") );
+    m_pics = new wxButton( this, BUT_PICS, _("View Screenshots") );
+    m_update = new wxButton( this, BUT_UPDATE, _("Update") );
+    m_remove = new wxButton( this, BUT_REMOVE, _("Remove") );
+
+    const int flag = wxALL;
+    const int spc = 5;
+    m_button_sizer->Add( m_download, 0, flag, spc );
+    m_button_sizer->Add( m_update, 0, flag, spc );
+    m_button_sizer->Add( m_remove, 0, flag, spc );
+    m_button_sizer->Add( m_chg_log, 0, flag, spc );
+    m_button_sizer->Add( m_pics, 0, flag, spc );
+
+    m_main_sizer->Add( m_button_sizer, 0, wxEXPAND|wxALL, 0 );
+    SetButtonStates();
+
     SetSizer( m_main_sizer );
     Layout();
+}
+
+void WidgetInfoPanel::SetButtonStates()
+{
+    m_download->Enable( true );
+    m_chg_log->Enable( m_widget.changelog != _T("") );
+    m_pics->Enable( m_widget.extendedinfo.images.size() > 0 );
+    m_update->Enable( false );
+    m_remove->Enable( false );
+
 }
 
 WidgetInfoPanel::~WidgetInfoPanel()
 {
     //dtor
 }
-#include "../ui.h"
+
 bool WidgetInfoPanel::GetFileInfos()
 {
     bool success = true;
@@ -238,3 +278,30 @@ bool WidgetInfoPanel::DownloadImages()
     return true;
 
 }
+
+void WidgetInfoPanel::OnDownload( wxCommandEvent& evt )
+{
+
+}
+
+void WidgetInfoPanel::OnPics( wxCommandEvent& evt )
+{
+    ImageViewer* iv = new ImageViewer( m_widget.GetImageFilenames(), false, this, -1);
+    iv->Show( true );
+}
+
+void WidgetInfoPanel::OnChangeLog( wxCommandEvent& evt )
+{
+
+}
+
+void WidgetInfoPanel::OnRemove( wxCommandEvent& evt )
+{
+
+}
+
+void WidgetInfoPanel::OnUpdate( wxCommandEvent& evt )
+{
+
+}
+

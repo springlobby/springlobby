@@ -4,6 +4,8 @@
 #include <wx/string.h>
 #include <vector>
 
+class wxArrayString;
+
 struct WidgetFile
 {
     wxString url;
@@ -53,6 +55,7 @@ struct Widget
     ExtendedInfo extendedinfo;
 
     bool IsInstalled();
+    wxArrayString GetImageFilenames();
 };
 
 #endif // SPRINGLOBBY_WIDGET_H_INCLUDED

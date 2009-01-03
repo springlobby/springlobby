@@ -6,6 +6,8 @@
 class Widget;
 class wxGridSizer;
 class wxBoxSizer;
+class wxButton;
+class wxCommandEvent;
 
 class WidgetInfoPanel : public wxScrolledWindow
 {
@@ -26,10 +28,34 @@ class WidgetInfoPanel : public wxScrolledWindow
 
         wxBoxSizer* m_busy_notice;
 
+        wxButton* m_download;
+        wxButton* m_chg_log;
+        wxButton* m_update;
+        wxButton* m_remove;
+        wxButton* m_pics;
+
+        void SetButtonStates();
+
+        void OnDownload( wxCommandEvent& evt );
+        void OnPics( wxCommandEvent& evt );
+        void OnChangeLog( wxCommandEvent& evt );
+        void OnRemove( wxCommandEvent& evt );
+        void OnUpdate( wxCommandEvent& evt );
+
+        enum {
+            BUT_DOWNLOAD,
+            BUT_CHG_LOG,
+            BUT_UPDATE,
+            BUT_REMOVE,
+            BUT_PICS
+        };
+
         bool GetFileInfos();
         bool GetImageInfos();
         bool DownloadImages();
 
+    protected:
+        DECLARE_EVENT_TABLE()
 };
 
 #endif // SPRINGLOBBY_WIDGETINFOPANEL_H_INCLUDED
