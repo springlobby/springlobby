@@ -978,7 +978,7 @@ wxString SpringUnitSync::GetArchivePath( const wxString& name )
 wxArrayString SpringUnitSync::GetScreenshotFilenames()
 {
     wxArrayString ret;
-    int ini = susynclib().InitFindVFS( _T("screenshots/*.jpg") );
+    int ini = susynclib().InitFindVFS( _T("screenshots/*.*") );
 
     wxString FilePath ;
     do
