@@ -47,9 +47,12 @@ struct Widget
     long num_images;
     long rev_major;
     long rev_minor;
+    wxString rev;
     wxString date;
     wxString changelog;
     ExtendedInfo extendedinfo;
+
+    bool IsInstalled();
 };
 
 #endif // SPRINGLOBBY_WIDGET_H_INCLUDED

@@ -6,6 +6,7 @@
 #include <wx/sizer.h>
 #include <wx/statline.h>
 #include <wx/stattext.h>
+#include <wx/statbox.h>
 #include <wx/sstream.h>
 #include <wx/wfstream.h>
 #include <wx/filename.h>
@@ -27,6 +28,53 @@ WidgetInfoPanel::WidgetInfoPanel( Widget& widget, wxWindow* parent, wxWindowID i
             DownloadImages();
     }
     m_widget.extendedinfo.parsed = true;
+
+    m_main_sizer = new wxBoxSizer( wxVERTICAL );
+    m_top_sizer = new wxBoxSizer( wxHORIZONTAL );
+    m_button_sizer = new wxBoxSizer( wxHORIZONTAL );
+
+    m_grid_sizer = new wxGridSizer( 2, 5, 5 );
+    wxStaticText* name_lbl = new wxStaticText( this, -1, _("Name") );
+    m_grid_sizer->Add( name_lbl );
+    wxStaticText* name = new wxStaticText( this, -1, m_widget.name );
+    m_grid_sizer->Add( name );
+
+    wxStaticText* author_lbl = new wxStaticText( this, -1, _("Author") );
+    m_grid_sizer->Add( author_lbl );
+    wxStaticText* author = new wxStaticText( this, -1, m_widget.author );
+    m_grid_sizer->Add( author );
+
+    wxStaticText* mods_lbl = new wxStaticText( this, -1, _("Suitable mods") );
+    m_grid_sizer->Add( mods_lbl );
+    wxStaticText* mods = new wxStaticText( this, -1, m_widget.mods );
+    m_grid_sizer->Add( mods );
+
+    wxStaticText* rev_lbl = new wxStaticText( this, -1, _("Current version") );
+    m_grid_sizer->Add( rev_lbl );
+    wxStaticText* rev = new wxStaticText( this, -1, m_widget.rev );
+    m_grid_sizer->Add( rev );
+
+    wxStaticText* dl_lbl = new wxStaticText( this, -1, _("# downloaded") );
+    m_grid_sizer->Add( dl_lbl );
+    wxStaticText* dl = new wxStaticText( this, -1, TowxString( m_widget.num_downloads ) );
+    m_grid_sizer->Add( dl );
+
+    wxStaticText* publ_lbl = new wxStaticText( this, -1, _("Published on") );
+    m_grid_sizer->Add( publ_lbl );
+    wxStaticText* publ = new wxStaticText( this, -1, m_widget.date );
+    m_grid_sizer->Add( publ );
+
+    m_top_sizer->Add( m_grid_sizer, 1, wxEXPAND, 0 );
+
+    wxStaticBoxSizer* desc_frame = new wxStaticBoxSizer( new wxStaticBox( this, -1, _("Description") ), wxVERTICAL );
+    wxStaticText* desc = new wxStaticText( this, -1, m_widget.description );
+    desc_frame->Add( desc, 1, wxEXPAND| wxALL, 3 );
+    m_top_sizer->Add( desc_frame, 1, wxEXPAND|wxLEFT, 10 );
+
+    m_main_sizer->Add( m_top_sizer, 0, wxALL, 5 );
+
+    SetSizer( m_main_sizer );
+    Layout();
 
 }
 

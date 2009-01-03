@@ -9,3 +9,8 @@ Widget::~Widget()
 {
     //dtor
 }
+
+bool Widget::IsInstalled()
+{
+
+}

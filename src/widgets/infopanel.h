@@ -4,6 +4,8 @@
 #include <wx/scrolwin.h>
 
 class Widget;
+class wxGridSizer;
+class wxBoxSizer;
 
 class WidgetInfoPanel : public wxScrolledWindow
 {
@@ -15,6 +17,10 @@ class WidgetInfoPanel : public wxScrolledWindow
 
     protected:
         Widget& m_widget;
+        wxBoxSizer* m_main_sizer;
+        wxBoxSizer* m_top_sizer;
+        wxBoxSizer* m_button_sizer;
+        wxGridSizer* m_grid_sizer;
 
         bool GetFileInfos();
         bool GetImageInfos();

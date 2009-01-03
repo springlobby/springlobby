@@ -69,6 +69,7 @@ bool WidgetDownloadPanel::PopulateList()
                         wxString rev = item->GetNodeContent();
                         w.rev_major = s2l( rev.BeforeFirst( '.' ) );
                         w.rev_minor = s2l( rev.AfterFirst( '.' ) );
+                        w.rev = rev;
                     }
                     else if ( name == _T("NameId") ) {
                         w.n_id = s2l( item->GetNodeContent() );

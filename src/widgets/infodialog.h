@@ -4,6 +4,7 @@
 #include <wx/dialog.h>
 class Widget;
 class WidgetInfoPanel;
+class wxBoxSizer;
 
 class WidgetInfoDialog : public wxDialog
 {
@@ -14,6 +15,7 @@ class WidgetInfoDialog : public wxDialog
 
     protected:
         WidgetInfoPanel* m_panel;
+        wxBoxSizer* m_main_sizer;
 };
 
 #endif // SPRINGLOBBY_WIDGETINFODIALOG_H_INCLUDED
