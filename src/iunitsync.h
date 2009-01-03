@@ -181,6 +181,8 @@ class IUnitSync
     virtual bool FileExists( const wxString& name ) = 0;
 
     virtual wxString GetArchivePath( const wxString& name ) = 0;
+
+    virtual wxArrayString GetScreenshotFilenames() = 0;
 };
 
 IUnitSync& usync();

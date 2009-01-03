@@ -146,6 +146,7 @@ IF( OPTION_TORRENT_SYSTEM )
 	    INCLUDE_DIRECTORIES(${SpringLobby_SOURCE_DIR}/src/libtorrent/include
 				${SpringLobby_SOURCE_DIR}/src/libtorrent/zlib
 				${SpringLobby_SOURCE_DIR}/src/libtorrent/ )
+	    INCLUDE ( ${SpringLobby_SOURCE_DIR}/cmake/libtorrent.cmake )
 	    ADD_DEFINITIONS( -D_WIN32_WINNT=0x0501 -DBOOST_WINDOWS -DTORRENT_DISABLE_ENCRYPTION )
 	    LINK_LIBRARIES( boost_thread-mt boost_filesystem-mt  ws2_32 mswsock boost_date_time-mt )
 	    link_directories( ${boost_LIB_DIR} )
@@ -173,10 +174,12 @@ SET(SpringLobbySrc
 	src/updater/updater.cpp
 	src/updater/versionchecker.cpp
 	src/Helper/TextCompletionDatabase.cpp
+	src/Helper/imageviewer.cpp
 	src/channel/channelchooser.cpp
 	src/channel/channelchooserdialog.cpp
 	src/Helper/wxtextctrlhist.cpp
 	src/Helper/colorbutton.cpp
+	src/Helper/jpeghandler.cpp
 	src/filelister/filelistctrl.cpp
 	src/filelister/filelistdialog.cpp
 	src/filelister/filelistfilter.cpp
@@ -343,9 +346,6 @@ endif( OPTION_TRANSLATION_SUPPORT )
 #----------------------------------------------------------------------------------------------------
 
 # Here we define the executable SpringLobby ( or on Windows SpringLobby.exe )
-IF (WIN32)
-    INCLUDE ( ${SpringLobby_SOURCE_DIR}/cmake/libtorrent.cmake )
-ENDIF (WIN32)
 
 #auto-remove whitespaces before/after lib paths
 cmake_policy(SET CMP0004 OLD)

@@ -974,3 +974,18 @@ wxString SpringUnitSync::GetArchivePath( const wxString& name )
 
   return susynclib().GetArchivePath( name );
 }
+
+wxArrayString SpringUnitSync::GetScreenshotFilenames()
+{
+    wxArrayString ret;
+    int ini = susynclib().InitFindVFS( _T("screenshots/*.jpg") );
+
+    wxString FilePath ;
+    do
+    {
+        ini = susynclib().FindFilesVFS ( ini, FilePath );
+        ret.Add( wxString ( FilePath, wxConvUTF8 ) );
+    } while (ini != 0);
+
+    return ret;
+}

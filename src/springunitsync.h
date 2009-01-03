@@ -47,7 +47,7 @@ class SpringUnitSync : public IUnitSync
 
     int GetMapIndex( const wxString& name );
 
-		wxArrayString GetSides( const wxString& modname  );
+    wxArrayString GetSides( const wxString& modname  );
     wxImage GetSidePicture( const wxString& modname, const wxString& SideName );
 
     bool LoadUnitSyncLib( const wxString& unitsyncloc );
@@ -86,6 +86,8 @@ class SpringUnitSync : public IUnitSync
     bool FileExists( const wxString& name );
 
     wxString GetArchivePath( const wxString& name );
+
+    wxArrayString GetScreenshotFilenames();
 
   private:
 
