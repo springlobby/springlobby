@@ -667,7 +667,9 @@ void ChatPanel::Said( const wxString& who, const wxString& message )
         col = sett().GetChatColor(_T("Normal"));
   }
 
-	if ( who == _T( "MelBot" ) && message.StartsWith( _T( "<" ) ) && message.Contains( _T( ">" ) ) ) {
+	if ( ( who == _T( "MelBot" ) || who == _T( "[BOT]tizbacbridgebot" ) )
+            && message.StartsWith( _T( "<" ) ) && message.Contains( _T( ">" ) ) )
+    {
 		wxString who2;
 		wxString message2;
 		who2 = message.BeforeFirst( '>' ).AfterFirst( '<' ) + _T( "@IRC" );
