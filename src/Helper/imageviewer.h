@@ -20,6 +20,7 @@ class ImagePanel : public wxPanel
 
         void SetBitmap( const wxString& file );
         void OnPaint(wxPaintEvent& WXUNUSED(event));
+        void OnSize(wxSizeEvent& WXUNUSED(event));
 
         DECLARE_EVENT_TABLE()
 };

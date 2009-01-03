@@ -15,6 +15,7 @@
 
 BEGIN_EVENT_TABLE( ImagePanel, wxPanel )
     EVT_PAINT(ImagePanel::OnPaint)
+    EVT_SIZE( ImagePanel::OnSize)
 END_EVENT_TABLE()
 
 BEGIN_EVENT_TABLE( ImageViewer, wxDialog )
@@ -25,10 +26,10 @@ ImagePanel::ImagePanel( const wxString& file, wxWindow* parent, wxWindowID id )
     : wxPanel( parent, id ),
     m_file( file )
 {
-    m_jpeg_handler = new SL_JPEGHandler();
-    wxString old_name = (new wxJPEGHandler)->GetName();
-    wxImage::RemoveHandler( old_name );
-    wxImage::AddHandler(m_jpeg_handler);
+//    m_jpeg_handler = new SL_JPEGHandler();
+//    wxString old_name = (new wxJPEGHandler)->GetName();
+//    wxImage::RemoveHandler( old_name );
+//    wxImage::AddHandler(m_jpeg_handler);
 
 
 }
@@ -46,11 +47,17 @@ void ImagePanel::SetBitmap( const wxString& file )
 void ImagePanel::OnPaint(wxPaintEvent& WXUNUSED(event))
 {
     wxPaintDC dc( this );
-    m_jpeg_handler->m_parentSize = this->GetClientSize();
+    //m_jpeg_handler->m_parentSize = this->GetClientSize();
     wxImage im ( m_file );
-    dc.DrawBitmap( wxBitmap(im), 0, 0, true /* use mask */ );
-}
 
+    dc.DrawBitmap( wxBitmap(im.Rescale( GetClientSize().GetX(), GetClientSize().GetY() ) ), 0, 0, true /* use mask */ );
+
+}
+void ImagePanel::OnSize(wxSizeEvent& WXUNUSED(event))
+{
+    wxPaintEvent p;
+    OnPaint( p );
+}
 
 ImageViewer::ImageViewer(const wxArrayString& filenames, wxWindow* parent, wxWindowID id,
             const wxString& title, long style )
