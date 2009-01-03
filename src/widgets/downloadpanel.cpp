@@ -106,6 +106,7 @@ bool WidgetDownloadPanel::PopulateList()
                         w.description = desc;
                         desc.Replace( _T("\r\n"), _T(" "), true );
                         desc.Replace( _T("\n"), _T(" "), true );
+                        desc.Replace( _T("\r"), _T(" "), true );
                         w.short_description = desc;
                     }
                     else if ( name == _T("Author") ) {
