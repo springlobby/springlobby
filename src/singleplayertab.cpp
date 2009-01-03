@@ -11,7 +11,6 @@
 #include <wx/checkbox.h>
 
 #include "singleplayertab.h"
-#include "mainwindow.h"
 #include "mapctrl.h"
 #include "mapselectdialog.h"
 #include "utils.h"
@@ -250,15 +249,9 @@ void SinglePlayerTab::OnMapBrowse( wxCommandEvent& event )
 
 	if ( dlg.ShowModal() == wxID_OK ) {
 		wxLogDebugFunc( dlg.GetSelectedMap()->name );
-		// TODO: this could be done more elegant..
-		const int count = m_map_pick->GetCount();
 		const wxString mapname = RefineMapname( dlg.GetSelectedMap()->name );
-		for (int i = 0; i < count; ++i) {
-			if ( m_map_pick->GetString( i ) == mapname ) {
-				SetMap( i );
-				break;
-			}
-		}
+		const int idx = m_map_pick->FindString( mapname, true /*case sensitive*/ );
+		if ( idx != wxNOT_FOUND ) SetMap( idx );
 	}
 }
 

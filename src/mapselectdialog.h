@@ -1,6 +1,11 @@
 #ifndef MAPSELECTDIALOG_H
 #define MAPSELECTDIALOG_H
 
+// If this isn't included errors result when trying to pass the MainWindow*
+// to MapSelectDialog constructor as wxWindow* (because compiler doesn't know
+// MainWindow inherits wxWindow in that case.)
+#include "mainwindow.h"
+
 //(*Headers(MapSelectDialog)
 #include <wx/dialog.h>
 class wxStdDialogButtonSizer;
