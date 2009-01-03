@@ -47,11 +47,13 @@ class ImageViewer : public wxDialog
         wxButton* m_next;
         wxButton* m_prev;
         wxButton* m_delete;
+        wxButton* m_save_as;
         ImagePanel* m_panel;
 
         void OnNext( wxCommandEvent& evt );
         void OnDelete( wxCommandEvent& evt );
         void OnPrev( wxCommandEvent& evt );
+        void OnSaveAs( wxCommandEvent& evt );
 
         void SetButtonStates();
         void SetImage();
@@ -59,7 +61,8 @@ class ImageViewer : public wxDialog
         enum {
             ID_DELETE,
             ID_NEXT,
-            ID_PREV
+            ID_PREV,
+            ID_SAVE_AS
         };
 
         DECLARE_EVENT_TABLE()
