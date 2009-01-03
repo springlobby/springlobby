@@ -29,11 +29,20 @@ AC_ARG_ENABLE(sound,
  [ sound=no
  ])
 
+debug=no
+AC_ARG_ENABLE(debug,
+ [  --enable-debug Enable debugging],
+ [ debug=yes
+ ])
+
 AC_ARG_WITH(sdl-config,[  --with-sdl-config=/path/to/sdl-config (optional) for finding right sdl includes],
             SDL_CONFIG="$withval")
 
 AC_ARG_WITH(boost-prefix,[  --with-boost-prefix=/path/to/boost_topdir (optional) for finding right boost includes],
       CXXFLAGS="$CXXFLAGS -I$withval ")
+
+AC_ARG_WITH(opt-level,[  --with-opt-level=N (optional) with N = 0..3],
+      CXXFLAGS="$CXXFLAGS -O$withval ")
 
 AC_CANONICAL_HOST
 
@@ -120,6 +129,12 @@ if test x$sound = xyes ; then
     AM_PATH_SDL(1.2.10, true , AC_ERROR("Sound requires SDL > 1.2.10 SDL_sound and SDL_mixer use --disable-sound to skip the dependency and the feature") )
 else
     CXXFLAGS="$CXXFLAGS -DDISABLE_SOUND "
+fi
+
+if test x$debug = xyes ; then
+    CXXFLAGS="$CXXFLAGS -DDEBUG -g"
+else
+    CXXFLAGS="$CXXFLAGS -DNDEBUG "
 fi
 
 #on windows append identifier to version string
