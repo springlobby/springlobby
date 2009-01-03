@@ -11,6 +11,7 @@
 #include <wx/scrolwin.h>
 #include <wx/dcclient.h>
 #include <wx/button.h>
+#include <wx/filedlg.h>
 
 #include "jpeghandler.h"
 #include "../settings++/custom_dialogs.h"
@@ -24,6 +25,7 @@ BEGIN_EVENT_TABLE( ImageViewer, wxDialog )
     EVT_BUTTON( ImageViewer::ID_NEXT, ImageViewer::OnNext )
     EVT_BUTTON( ImageViewer::ID_DELETE, ImageViewer::OnDelete )
     EVT_BUTTON( ImageViewer::ID_PREV, ImageViewer::OnPrev )
+    EVT_BUTTON( ImageViewer::ID_SAVE_AS, ImageViewer::OnSaveAs )
 END_EVENT_TABLE()
 
 ImagePanel::ImagePanel( const wxString& file, wxWindow* parent, wxWindowID id )
@@ -82,14 +84,20 @@ ImageViewer::ImageViewer(const wxArrayString& filenames, bool enable_delete, wxW
     m_panel = new ImagePanel( this, -1 );
     m_main_sizer->Add( m_panel, 1, wxEXPAND | wxALL, 0 );
 
-    m_next = new wxButton( this, ID_NEXT, _("next") );
-    m_button_sizer->Add( m_next, 0, wxALL, 5 );
     m_prev = new wxButton( this, ID_PREV, _("previous") );
     m_button_sizer->Add( m_prev, 0, wxALL, 5 );
+
+    m_next = new wxButton( this, ID_NEXT, _("next") );
+    m_button_sizer->Add( m_next, 0, wxALL, 5 );
+
     if ( m_enable_delete ) {
         m_delete = new wxButton( this, ID_DELETE, _("delete") );
         m_button_sizer->Add( m_delete, 0, wxALL, 5 );
     }
+
+    m_save_as = new wxButton( this, ID_SAVE_AS, _("save as") );
+    m_button_sizer->Add( m_save_as, 0, wxALL, 5 );
+
     m_main_sizer->Add( m_button_sizer, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 0 );
     SetSizer( m_main_sizer );
     SetImage();
@@ -139,3 +147,23 @@ void ImageViewer::OnPrev( wxCommandEvent& evt )
     m_current_file_index--;
     SetImage();
 }
+
+void ImageViewer::OnSaveAs( wxCommandEvent& evt )
+{
+    wxString ext = m_filenames[m_current_file_index].AfterLast( '.' );
+    wxString mask = _T("*.") + ext;
+    wxFileDialog fd( this, _("Choose a filename"), _T(""), _T(""), mask, wxFD_SAVE | wxFD_OVERWRITE_PROMPT );
+    if ( fd.ShowModal() == wxID_OK ) {
+        wxString new_file = fd.GetPath();
+        if ( !new_file.EndsWith( ext ) )
+            new_file += _T(".") + ext;
+
+        if ( wxCopyFile( m_filenames[m_current_file_index], new_file ) ) {
+            customMessageBoxNoModal( SL_MAIN_ICON, _("File successfully saved"), _("Success") );
+        }
+        else {
+            customMessageBoxNoModal( SL_MAIN_ICON, _("Couldn't save file"), _("Error") );
+        }
+    }
+}
+
