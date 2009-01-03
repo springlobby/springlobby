@@ -103,6 +103,11 @@ void WidgetDownloadListctrl::OnColClick( wxListEvent& event )
 
 }
 
+Widget& WidgetDownloadListctrl::GetSelectedWidget()
+{
+    return m_data[m_selected_index];
+}
+
 void WidgetDownloadListctrl::OnActivateItem( wxListEvent& event )
 {
     int index = event.GetIndex();

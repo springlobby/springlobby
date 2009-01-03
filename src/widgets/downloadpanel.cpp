@@ -14,12 +14,20 @@
 
 const int invalid_id = -1;
 
+
+BEGIN_EVENT_TABLE( WidgetDownloadPanel , wxScrolledWindow)
+
+//  EVT_LIST_ITEM_ACTIVATED ( BattleListTab::BATTLE_JOIN , BattleListTab::OnListJoin    )
+  EVT_LIST_ITEM_SELECTED  ( WidgetDownloadListctrl::WIDGETLISTCTRL_ID, WidgetDownloadPanel::OnSelect )
+
+END_EVENT_TABLE()
+
 WidgetDownloadPanel::WidgetDownloadPanel(wxWindow* parent, wxWindowID id, const wxString& title,
     const wxPoint& pos , const wxSize& size , long style )
     : wxScrolledWindow (parent,  id, pos, size, style)
 {
     m_main_sizer = new wxBoxSizer ( wxVERTICAL );
-    m_list = new WidgetDownloadListctrl( this, -1 );
+    m_list = new WidgetDownloadListctrl( this, WidgetDownloadListctrl::WIDGETLISTCTRL_ID );
     m_main_sizer->Add( m_list, 1, wxALL | wxEXPAND );
     bool hu = PopulateList();
     SetSizer( m_main_sizer );
@@ -31,6 +39,18 @@ WidgetDownloadPanel::WidgetDownloadPanel(wxWindow* parent, wxWindowID id, const 
 WidgetDownloadPanel::~WidgetDownloadPanel()
 {
     //dtor
+}
+
+void WidgetDownloadPanel::OnSelect( wxListEvent& event )
+{
+    if ( m_main_sizer->Detach( m_info_panel ) )
+        m_info_panel->Destroy();
+
+    m_list->OnSelected( event );
+
+    m_info_panel = new WidgetInfoPanel( m_list->GetSelectedWidget(), this, ID_PANEL );
+    m_main_sizer->Add( m_info_panel );
+    Layout();
 }
 
 bool WidgetDownloadPanel::PopulateList()

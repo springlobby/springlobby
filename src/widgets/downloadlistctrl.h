@@ -14,6 +14,7 @@ class WidgetDownloadListctrl : public CustomVirtListCtrl<Widget>
         virtual ~WidgetDownloadListctrl();
 
         void AddWidget( const Widget widget );
+        Widget& GetSelectedWidget();
 
         //these are overloaded to use list in virtual style
         virtual wxString OnGetItemText(long item, long column) const;
@@ -31,10 +32,12 @@ class WidgetDownloadListctrl : public CustomVirtListCtrl<Widget>
 
         int GetIndexFromData( const DataType& data ) const;
 
+    public:
         enum {
             WIDGETLISTCTRL_ID
         };
 
+    protected:
         DECLARE_EVENT_TABLE()
 };
 
