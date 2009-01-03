@@ -104,6 +104,7 @@ bool WidgetDownloadPanel::PopulateList()
                     else if ( name == _T("Description") ) {
                         wxString desc = item->GetNodeContent();
                         w.description = desc;
+                        desc.Replace( _T("\r\n"), _T(" "), true );
                         desc.Replace( _T("\n"), _T(" "), true );
                         w.short_description = desc;
                     }
