@@ -500,11 +500,13 @@ void MainWindow::OnMenuVersion( wxCommandEvent& event )
 #include "Helper/imageviewer.h"
 void MainWindow::OnUnitSyncReload( wxCommandEvent& event )
 {
-  m_ui.ReloadUnitSync();
-  wxArrayString ar;
-  ar.Add( _T("/share/Fotos/promi/janistongqonenb8.jpg" ) );
-  ImageViewer* img  = new ImageViewer( ar, this, -1, _T("stuff") );
-  img->Show( true );
+    m_ui.ReloadUnitSync();
+
+//    wxString base = sett().GetSp
+    wxArrayString ar;
+    ar.Add( _T("/share/Fotos/promi/janistongqonenb8.jpg" ) );
+    ImageViewer* img  = new ImageViewer( ar, this, -1, _T("stuff") );
+    img->Show( true );
 }
 
 

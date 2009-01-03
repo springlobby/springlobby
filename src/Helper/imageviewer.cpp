@@ -10,6 +10,7 @@
 #include <wx/image.h>
 #include <wx/scrolwin.h>
 #include <wx/dcclient.h>
+#include <wx/button.h>
 
 #include "jpeghandler.h"
 
@@ -19,7 +20,9 @@ BEGIN_EVENT_TABLE( ImagePanel, wxPanel )
 END_EVENT_TABLE()
 
 BEGIN_EVENT_TABLE( ImageViewer, wxDialog )
-    //EVT_PAINT(ImageViewer::OnPaint)
+    EVT_BUTTON( ImageViewer::ID_NEXT, ImageViewer::OnNext )
+    EVT_BUTTON( ImageViewer::ID_DELETE, ImageViewer::OnDelete )
+    EVT_BUTTON( ImageViewer::ID_PREV, ImageViewer::OnPrev )
 END_EVENT_TABLE()
 
 ImagePanel::ImagePanel( const wxString& file, wxWindow* parent, wxWindowID id )
@@ -36,12 +39,14 @@ ImagePanel::ImagePanel( const wxString& file, wxWindow* parent, wxWindowID id )
 
 ImagePanel::~ImagePanel()
 {
-    wxImage::AddHandler( new wxJPEGHandler );
+    //wxImage::AddHandler( new wxJPEGHandler );
 }
 
 void ImagePanel::SetBitmap( const wxString& file )
 {
     m_file = file;
+    wxPaintEvent p;
+    OnPaint( p );
 }
 
 void ImagePanel::OnPaint(wxPaintEvent& WXUNUSED(event))
@@ -63,12 +68,52 @@ ImageViewer::ImageViewer(const wxArrayString& filenames, wxWindow* parent, wxWin
             const wxString& title, long style )
     : wxDialog ( parent, id, title, wxDefaultPosition, wxDefaultSize, style),
     m_filenames( filenames ),
+    m_current_file_index( 0 ),
     m_num_files( filenames.Count() )
 {
+    m_main_sizer = new wxBoxSizer( wxVERTICAL );
+    m_button_sizer = new wxBoxSizer( wxHORIZONTAL );
     m_panel = new ImagePanel( m_filenames[0], this, -1 );
+    m_main_sizer->Add( m_panel, 1, wxEXPAND | wxALL, 0 );
+
+    m_next = new wxButton( this, ID_NEXT, _("next") );
+    m_button_sizer->Add( m_next, 0, wxALL, 5 );
+    m_prev = new wxButton( this, ID_NEXT, _("previous") );
+    m_button_sizer->Add( m_prev, 0, wxALL, 5 );
+    m_main_sizer->Add( m_button_sizer, 0, wxALL, 0 );
+    SetSizer( m_main_sizer );
+    SetButtonStates();
+    Layout();
 }
 
 ImageViewer::~ImageViewer()
 {
 }
 
+void ImageViewer::SetButtonStates()
+{
+    m_next->Enable( m_current_file_index < m_num_files -1 );
+    m_prev->Enable( m_current_file_index > 0 );
+}
+
+void ImageViewer::SetImage()
+{
+    m_panel->SetBitmap( m_filenames[m_current_file_index] );
+}
+
+void ImageViewer::OnNext( wxCommandEvent& evt )
+{
+    m_current_file_index++;
+    SetImage();
+}
+
+void ImageViewer::OnDelete( wxCommandEvent& evt )
+{
+
+}
+
+void ImageViewer::OnPrev( wxCommandEvent& evt )
+{
+    m_current_file_index--;
+    SetImage();
+}
