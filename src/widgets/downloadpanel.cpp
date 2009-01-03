@@ -33,7 +33,6 @@ WidgetDownloadPanel::WidgetDownloadPanel(wxWindow* parent, wxWindowID id, const 
     SetSizer( m_main_sizer );
     Layout();
     m_list->RefreshVisibleItems();
-    Widget w = m_list->GetDataFromIndex( 0 );
 }
 
 WidgetDownloadPanel::~WidgetDownloadPanel()
@@ -49,7 +48,9 @@ void WidgetDownloadPanel::OnSelect( wxListEvent& event )
     m_list->OnSelected( event );
 
     m_info_panel = new WidgetInfoPanel( m_list->GetSelectedWidget(), this, ID_PANEL );
-    m_main_sizer->Add( m_info_panel );
+    m_main_sizer->Add( m_info_panel, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 4 );
+    Layout();
+    m_info_panel->Create();
     Layout();
 }
 

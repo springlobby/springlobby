@@ -22,13 +22,24 @@ WidgetInfoPanel::WidgetInfoPanel( Widget& widget, wxWindow* parent, wxWindowID i
     : wxScrolledWindow (parent,  id, pos, size, style),
     m_widget( widget )
 {
+    m_busy_notice = new wxBoxSizer( wxVERTICAL );
+    wxStaticText* m_busy_notice_lbl = new wxStaticText( this, -1, _("getting infos") );
+    m_busy_notice->Add( m_busy_notice_lbl, 1, wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL );
+    SetSizer( m_busy_notice );
+
+}
+
+void WidgetInfoPanel::Create()
+{
     if ( !m_widget.extendedinfo.parsed ) {
         GetFileInfos();
          GetImageInfos() ;
             DownloadImages();
     }
     m_widget.extendedinfo.parsed = true;
-
+    m_busy_notice->DeleteWindows();
+    m_busy_notice->Show( false );
+//    m_busy_notice->Destroy();
     m_main_sizer = new wxBoxSizer( wxVERTICAL );
     m_top_sizer = new wxBoxSizer( wxHORIZONTAL );
     m_button_sizer = new wxBoxSizer( wxHORIZONTAL );
@@ -75,7 +86,6 @@ WidgetInfoPanel::WidgetInfoPanel( Widget& widget, wxWindow* parent, wxWindowID i
 
     SetSizer( m_main_sizer );
     Layout();
-
 }
 
 WidgetInfoPanel::~WidgetInfoPanel()

@@ -86,6 +86,7 @@ class MainWindow : public wxFrame
     void OnShowSettingsPP( wxCommandEvent& event );
     void OnShowChannelChooser( wxCommandEvent& event );
     void OnShowScreenshots( wxCommandEvent& event );
+    void OnDLWidgets( wxCommandEvent& event );
     void forceSettingsFrameClose();
     void OnUnitSyncReloaded();
     void OnChannelList( const wxString& channel, const int& numusers, const wxString& topic );
@@ -169,7 +170,8 @@ class MainWindow : public wxFrame
         MENU_STOP_TORRENT,
         MENU_AUTOJOIN_CHANNELS,
         MENU_CHANNELCHOOSER,
-        MENU_SCREENSHOTS
+        MENU_SCREENSHOTS,
+        MENU_DL_WIDGETS
 
     };
 

@@ -15,12 +15,16 @@ class WidgetInfoPanel : public wxScrolledWindow
             long style = wxHSCROLL | wxVSCROLL );
         virtual ~WidgetInfoPanel();
 
+        void Create();
+
     protected:
         Widget& m_widget;
         wxBoxSizer* m_main_sizer;
         wxBoxSizer* m_top_sizer;
         wxBoxSizer* m_button_sizer;
         wxGridSizer* m_grid_sizer;
+
+        wxBoxSizer* m_busy_notice;
 
         bool GetFileInfos();
         bool GetImageInfos();
