@@ -12,6 +12,7 @@ class ImagePanel : public wxPanel
 {
     public:
         ImagePanel( const wxString& file, wxWindow* parent, wxWindowID id );
+        ImagePanel( wxWindow* parent, wxWindowID id );
         virtual ~ImagePanel();
         void SetBitmap( const wxString& file );
 
@@ -36,7 +37,7 @@ class ImageViewer : public wxDialog
         virtual ~ImageViewer();
 
     protected:
-        const wxArrayString& m_filenames;
+        const wxArrayString m_filenames;
         unsigned int m_current_file_index;
         const unsigned int m_num_files;
 

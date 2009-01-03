@@ -64,6 +64,7 @@
 #include "updater/updater.h"
 #include "channel/autojoinchanneldialog.h"
 #include "channel/channelchooserdialog.h"
+#include "Helper/imageviewer.h"
 
 #ifdef HAVE_WX28
     #if defined(__WXMSW__)
@@ -91,6 +92,7 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
 //  EVT_MENU( MENU_SHOW_TOOLTIPS, MainWindow::OnShowToolTips )
   EVT_MENU( MENU_AUTOJOIN_CHANNELS, MainWindow::OnMenuAutojoinChannels )
   EVT_MENU( MENU_CHANNELCHOOSER, MainWindow::OnShowChannelChooser )
+  EVT_MENU( MENU_SCREENSHOTS, MainWindow::OnShowScreenshots )
   EVT_MENU_OPEN( MainWindow::OnMenuOpen )
   #ifdef HAVE_WX26
   EVT_LISTBOOK_PAGE_CHANGED( MAIN_TABS, MainWindow::OnTabsChanged )
@@ -128,6 +130,7 @@ MainWindow::MainWindow( Ui& ui ) :
   m_menuTools->Append(MENU_CHANNELCHOOSER, _("Channel &list"));
   m_menuTools->Append(MENU_CHAT, _("Open private &chat..."));
   m_menuTools->Append(MENU_AUTOJOIN_CHANNELS, _("&Autojoin channels..."));
+  m_menuTools->Append(MENU_SCREENSHOTS, _("&View screenshots"));
   m_menuTools->AppendSeparator();
   m_menuTools->Append(MENU_USYNC, _("&Reload maps/mods"));
 
@@ -497,18 +500,21 @@ void MainWindow::OnMenuVersion( wxCommandEvent& event )
   Updater().CheckForUpdates();
 }
 
-#include "Helper/imageviewer.h"
 void MainWindow::OnUnitSyncReload( wxCommandEvent& event )
 {
     m_ui.ReloadUnitSync();
-
-//    wxString base = sett().GetSp
-    wxArrayString ar;
-    ar.Add( _T("/share/Fotos/promi/janistongqonenb8.jpg" ) );
-    ImageViewer* img  = new ImageViewer( ar, this, -1, _T("stuff") );
-    img->Show( true );
 }
 
+void MainWindow::OnShowScreenshots( wxCommandEvent& event )
+{
+    wxSortedArrayString ar = usync().GetScreenshotFilenames();
+    if ( ar.Count() == 0 ) {
+        customMessageBoxNoModal( SL_MAIN_ICON, _("There were no screenshots found in your spring data directory."), _("No files found") );
+        return;
+    }
+    ImageViewer* img  = new ImageViewer( ar, this, -1, _T("Screenshots") );
+    img->Show( true );
+}
 
 void MainWindow::OnMenuStartTorrent( wxCommandEvent& event )
 {

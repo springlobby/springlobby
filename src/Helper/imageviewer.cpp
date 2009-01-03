@@ -37,6 +37,10 @@ ImagePanel::ImagePanel( const wxString& file, wxWindow* parent, wxWindowID id )
 
 }
 
+ImagePanel::ImagePanel( wxWindow* parent, wxWindowID id )
+    : wxPanel( parent, id )
+{}
+
 ImagePanel::~ImagePanel()
 {
     //wxImage::AddHandler( new wxJPEGHandler );
@@ -73,16 +77,16 @@ ImageViewer::ImageViewer(const wxArrayString& filenames, wxWindow* parent, wxWin
 {
     m_main_sizer = new wxBoxSizer( wxVERTICAL );
     m_button_sizer = new wxBoxSizer( wxHORIZONTAL );
-    m_panel = new ImagePanel( m_filenames[0], this, -1 );
+    m_panel = new ImagePanel( this, -1 );
     m_main_sizer->Add( m_panel, 1, wxEXPAND | wxALL, 0 );
 
     m_next = new wxButton( this, ID_NEXT, _("next") );
     m_button_sizer->Add( m_next, 0, wxALL, 5 );
-    m_prev = new wxButton( this, ID_NEXT, _("previous") );
+    m_prev = new wxButton( this, ID_PREV, _("previous") );
     m_button_sizer->Add( m_prev, 0, wxALL, 5 );
     m_main_sizer->Add( m_button_sizer, 0, wxALL, 0 );
     SetSizer( m_main_sizer );
-    SetButtonStates();
+    SetImage();
     Layout();
 }
 
@@ -98,7 +102,9 @@ void ImageViewer::SetButtonStates()
 
 void ImageViewer::SetImage()
 {
+    SetButtonStates();
     m_panel->SetBitmap( m_filenames[m_current_file_index] );
+    SetTitle( m_filenames[m_current_file_index] );
 }
 
 void ImageViewer::OnNext( wxCommandEvent& evt )
