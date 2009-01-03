@@ -32,7 +32,7 @@ class wxButton;
 class ImageViewer : public wxDialog
 {
     public:
-        ImageViewer(const wxArrayString& filenames, bool enable_delete, wxWindow* parent, wxWindowID id, const wxString& title,
+        ImageViewer(const wxArrayString& filenames, bool enable_delete, wxWindow* parent, wxWindowID id, const wxString& title = _T(""),
             long style = wxCAPTION | wxRESIZE_BORDER | wxCLOSE_BOX | wxMAXIMIZE_BOX | wxMINIMIZE_BOX | wxDEFAULT_DIALOG_STYLE );
         virtual ~ImageViewer();
 
