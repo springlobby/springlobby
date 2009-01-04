@@ -12,7 +12,7 @@ else
 	filename=sl_${2}.zip
 fi
 
-zip -u ${filename} springlobby.exe
+zip -9 -u ${filename} springlobby.exe
 
 scp ${filename} rg:/usr/local/www/springlobby.info/temp/builds/${filename}
 ssh rg chown www-data:www-data /usr/local/www/springlobby.info/temp/builds/${filename}
