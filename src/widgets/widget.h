@@ -61,6 +61,7 @@ struct Widget
     bool DownloadImages();
     bool GetFileInfos();
     bool Install();
+    bool Remove();
 };
 
 #endif // SPRINGLOBBY_WIDGET_H_INCLUDED

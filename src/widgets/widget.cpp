@@ -9,6 +9,7 @@
 
 #include "../utils.h"
 #include "../settings.h"
+#include "../springunitsync.h"
 
 const int invalid_id = -1;
 
@@ -52,7 +53,6 @@ bool Widget::GetImageInfos()
 	{
                 // will crash here, if xml content is not formatted PERFECTLY
 		wxXmlDocument xml(*httpStream);
-        wxString url;
 		wxXmlNode *node = xml.GetRoot()->GetChildren();
 		while (node)
 		{
@@ -69,7 +69,6 @@ bool Widget::GetImageInfos()
                     }
                     item = item->GetNext();
                 }
-                url += _T("&&");
                 extendedinfo.images.push_back( file );
             }
 
@@ -130,6 +129,8 @@ bool Widget::DownloadImages()
 bool Widget::GetFileInfos()
 {
     bool success = true;
+    unsigned int file_present_count = 0;
+    wxString sep ( wxFileName::GetPathSeparator() );
 	wxHTTP http;
 
 	http.SetTimeout(6);
@@ -161,6 +162,7 @@ bool Widget::GetFileInfos()
                     }
                     else if ( name == _T("LocalPath") ) {
                         file.local_path = item->GetNodeContent();
+                        file_present_count += usync().FileExists( _T("LuaUI") + file.local_path );
                     }
                     item = item->GetNext();
                 }
@@ -176,6 +178,9 @@ bool Widget::GetFileInfos()
 
 	http.Close();
 	wxDELETE(httpStream);
+
+    if ( file_present_count == extendedinfo.files.size() )
+        is_installed = true;
 
 	return success;
 }
@@ -195,7 +200,6 @@ bool Widget::Install()
         wxString fileurl = it->url;
         fileurl.Replace( _T("http://") , _T("") );
         wxString destpath = sett().GetCurrentUsedDataDir() + _T("LuaUI") + it->local_path;
-        //create dirs for destpath
 
         wxHTTP FileDownloading;
         /// normal timeout is 10 minutes.. set to 10 secs.
@@ -230,3 +234,29 @@ bool Widget::Install()
     return true;
 
 }
+
+bool Widget::Remove()
+{
+    if ( !extendedinfo.parsed || !is_installed )
+        return false;
+
+    unsigned int file_remove_successes = 0;
+
+    ExtendedInfo::Files& files = extendedinfo.files;
+    ExtendedInfo::Files::const_iterator it = files.begin();
+    for ( ; it != files.end(); ++it ) {
+        wxString destpath = sett().GetCurrentUsedDataDir() + _T("LuaUI") + it->local_path;
+        file_remove_successes += wxRemoveFile( destpath );
+    }
+
+    if ( file_remove_successes == files.size() ) {
+        is_installed = false;
+        return true;
+    }
+    if ( file_remove_successes < files.size() && file_remove_successes > 0 ) {
+        is_installed = false;
+        return false;
+    }
+    return false;
+}
+

@@ -11,7 +11,7 @@
 
 #include "../utils.h"
 //#include "../settings.h"
-//#include "../ui.h"
+#include "../settings++/custom_dialogs.h"
 #include "../Helper/imageviewer.h"
 
 BEGIN_EVENT_TABLE( WidgetInfoPanel, wxPanel)
@@ -128,7 +128,13 @@ WidgetInfoPanel::~WidgetInfoPanel()
 
 void WidgetInfoPanel::OnDownload( wxCommandEvent& evt )
 {
-    m_widget.Install();
+    if ( m_widget.Install() ) {
+        customMessageBoxNoModal( SL_MAIN_ICON, _("Widget files have been installed."), _("Success") );
+    }
+    else {
+        customMessageBoxNoModal( SL_MAIN_ICON, _("Widget files have not been installed."), _("Error") );
+    }
+    SetButtonStates();
 }
 
 void WidgetInfoPanel::OnPics( wxCommandEvent& evt )
@@ -144,7 +150,13 @@ void WidgetInfoPanel::OnChangeLog( wxCommandEvent& evt )
 
 void WidgetInfoPanel::OnRemove( wxCommandEvent& evt )
 {
-
+    if ( m_widget.Remove() ) {
+        customMessageBoxNoModal( SL_MAIN_ICON, _("Widget files have been removed."), _("Success") );
+    }
+    else {
+        customMessageBoxNoModal( SL_MAIN_ICON, _("Widget files have not been removed."), _("Error") );
+    }
+    SetButtonStates();
 }
 
 void WidgetInfoPanel::OnUpdate( wxCommandEvent& evt )
