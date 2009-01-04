@@ -434,21 +434,15 @@ void TASServer::Update( int mselapsed )
     }
     else   // We are connected already.
     {
-        if ( !IsConnected() )
-        {
-            m_connected = false;
-            m_online = false;
-            m_se->OnDisconnected();
-            return;
-        }
+        if ( !IsConnected() ) return;
 
         time_t now = time( 0 );
 
-        /// joining battle with nat traversal:
-        /// if we havent finalized joining yet, and udp_reply_timeout seconds has passed since
-        /// we did UdpPing(our name) , join battle anyway, but with warning message that nat failed.
-        /// (if we'd receive reply from server, we'd finalize already)
-        ///
+        // joining battle with nat traversal:
+        // if we havent finalized joining yet, and udp_reply_timeout seconds has passed since
+        // we did UdpPing(our name) , join battle anyway, but with warning message that nat failed.
+        // (if we'd receive reply from server, we'd finalize already)
+        //
         if (m_do_finalize_join_battle&&(m_last_udp_ping+udp_reply_timeout<now))
         {
             customMessageBoxNoModal(SL_MAIN_ICON,_("Failed to punch through NAT, playing this battle might not work for you or for other players."),_("Error"), wxICON_ERROR);
@@ -2052,10 +2046,11 @@ void TASServer::OnConnected( Socket* sock )
 
 void TASServer::OnDisconnected( Socket* sock )
 {
-    wxLogDebugFunc( _T("") );
+    wxLogDebugFunc( TowxString(m_connected) );
+    bool tmp = m_connected;
     m_connected = false;
     m_online = false;
-    m_se->OnDisconnected();
+    if ( tmp ) m_se->OnDisconnected();
 }
 
 
