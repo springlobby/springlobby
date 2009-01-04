@@ -186,6 +186,7 @@ bool Widget::Install()
         return false;
 
     wxString sep ( wxFileName::GetPathSeparator() );
+    wxChar sep_c ( wxFileName::GetPathSeparator() );
 
     ExtendedInfo::Files& files = extendedinfo.files;
     ExtendedInfo::Files::iterator it = files.begin();
@@ -207,12 +208,15 @@ bool Widget::Install()
         {
             try
             {
-              wxFileOutputStream outs( destpath );
-              httpstream->Read(outs);
-              outs.Close();
-              delete httpstream;
-              httpstream = 0;
-              //download success
+                if ( !wxFileName::DirExists( destpath.BeforeLast( sep_c ) ) ) {
+                    wxFileName::Mkdir( destpath.BeforeLast( sep_c ), 0755, wxPATH_MKDIR_FULL );
+                }
+                wxFileOutputStream outs( destpath );
+                httpstream->Read(outs);
+                outs.Close();
+                delete httpstream;
+                httpstream = 0;
+                //download success
 
             }
             catch (...)
