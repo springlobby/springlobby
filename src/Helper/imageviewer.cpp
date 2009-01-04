@@ -13,7 +13,6 @@
 #include <wx/button.h>
 #include <wx/filedlg.h>
 
-#include "jpeghandler.h"
 #include "../settings++/custom_dialogs.h"
 
 BEGIN_EVENT_TABLE( ImagePanel, wxPanel )
@@ -31,23 +30,14 @@ END_EVENT_TABLE()
 ImagePanel::ImagePanel( const wxString& file, wxWindow* parent, wxWindowID id )
     : wxPanel( parent, id ),
     m_file( file )
-{
-//    m_jpeg_handler = new SL_JPEGHandler();
-//    wxString old_name = (new wxJPEGHandler)->GetName();
-//    wxImage::RemoveHandler( old_name );
-//    wxImage::AddHandler(m_jpeg_handler);
-
-
-}
+{}
 
 ImagePanel::ImagePanel( wxWindow* parent, wxWindowID id )
     : wxPanel( parent, id )
 {}
 
 ImagePanel::~ImagePanel()
-{
-    //wxImage::AddHandler( new wxJPEGHandler );
-}
+{}
 
 void ImagePanel::SetBitmap( const wxString& file )
 {
@@ -59,11 +49,8 @@ void ImagePanel::SetBitmap( const wxString& file )
 void ImagePanel::OnPaint(wxPaintEvent& WXUNUSED(event))
 {
     wxPaintDC dc( this );
-    //m_jpeg_handler->m_parentSize = this->GetClientSize();
     wxImage im ( m_file );
-
     dc.DrawBitmap( wxBitmap(im.Rescale( GetClientSize().GetX(), GetClientSize().GetY() ) ), 0, 0, true /* use mask */ );
-
 }
 void ImagePanel::OnSize(wxSizeEvent& WXUNUSED(event))
 {

@@ -56,6 +56,8 @@ springlobby_LDADD = \
 	$(LIBTORRENT_LIBS) \
 	$(SDL_LIBS)
 
+#no better idea, this needs to included in tarball, but not compiled
+EXTRA_DIST = src/customvirtlistctrl.cpp 
 
 springsettings_LDADD = \
 	$(WX_LIBS)
@@ -863,6 +865,7 @@ springlobby_SOURCES = \
 	src/images/empty.xpm \
 	src/customlistctrl.h \
 	src/customlistctrl.cpp \
+	src/customvirtlistctrl.h \
 	src/mmoptionmodel.h \
 	src/mmoptionmodel.cpp \
 	src/mmoptionswrapper.h \
@@ -892,8 +895,7 @@ springlobby_SOURCES = \
 	src/Helper/colorbutton.h \
         src/Helper/wxtextctrlhist.cpp \
 	src/Helper/wxtextctrlhist.h \
-	src/Helper/jpeghandler.h \
-	src/Helper/jpeghandler.cpp \
+	src/Helper/sortutil.h \
 	src/Helper/imageviewer.h \
 	src/Helper/imageviewer.cpp \
 	src/filelister/filelistctrl.h \
@@ -923,6 +925,16 @@ springlobby_SOURCES = \
 	src/updater/updater.cpp \
 	src/updater/exedownloader.h \
 	src/updater/exedownloader.cpp \
+	src/widgets/downloadlistctrl.cpp \
+	src/widgets/downloadlistctrl.h \
+	src/widgets/downloaddialog.cpp \
+	src/widgets/downloaddialog.h \
+	src/widgets/downloadpanel.cpp \
+	src/widgets/downloadpanel.h \
+	src/widgets/infopanel.cpp \
+	src/widgets/infopanel.h \
+	src/widgets/widget.cpp \
+	src/widgets/widget.h \
 	src/usermenu.h \
 	src/thread.cpp \
 	src/thread.h \
