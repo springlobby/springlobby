@@ -264,6 +264,8 @@ void SpringUnitSyncLib::_Unload()
 {
   if ( !_IsLoaded() ) return;
 
+  UnSetCurrentMod();
+
   m_uninit();
 
   delete m_libhandle;

@@ -152,6 +152,8 @@ class Ui
     void OnMapInfoCached( const wxString& mapname );
     void OnMinimapCached( const wxString& mapname );
     void OnModUnitsCached( const wxString& modname );
+    //! ask to download missing map, return true if download attempted
+    bool OnPresetRequiringMap( const wxString& mapname );
 
     bool IsThisMe(User& other);
     bool IsThisMe(User* other);
