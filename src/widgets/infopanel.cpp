@@ -93,13 +93,13 @@ void WidgetInfoPanel::Create()
     m_download = new wxButton( this, BUT_DOWNLOAD, _("Download") );
     m_chg_log = new wxButton( this, BUT_CHG_LOG, _("View changelog") );
     m_pics = new wxButton( this, BUT_PICS, _("View Screenshots") );
-    m_update = new wxButton( this, BUT_UPDATE, _("Update") );
+//    m_update = new wxButton( this, BUT_UPDATE, _("Update") );
     m_remove = new wxButton( this, BUT_REMOVE, _("Remove") );
 
     const int flag = wxALL;
     const int spc = 5;
     m_button_sizer->Add( m_download, 0, flag, spc );
-    m_button_sizer->Add( m_update, 0, flag, spc );
+//    m_button_sizer->Add( m_update, 0, flag, spc );
     m_button_sizer->Add( m_remove, 0, flag, spc );
     m_button_sizer->Add( m_chg_log, 0, flag, spc );
     m_button_sizer->Add( m_pics, 0, flag, spc );
@@ -116,7 +116,7 @@ void WidgetInfoPanel::SetButtonStates()
     m_download->Enable( !m_widget.is_installed );
     m_chg_log->Enable( m_widget.changelog != _T("") );
     m_pics->Enable( m_widget.extendedinfo.images.size() > 0 );
-    m_update->Enable( false );
+//    m_update->Enable( false );
     m_remove->Enable( m_widget.is_installed );
 
 }
@@ -145,7 +145,7 @@ void WidgetInfoPanel::OnPics( wxCommandEvent& evt )
 
 void WidgetInfoPanel::OnChangeLog( wxCommandEvent& evt )
 {
-
+    serverMessageBox( SL_MAIN_ICON, m_widget.changelog, _("Changelog"), wxOK);
 }
 
 void WidgetInfoPanel::OnRemove( wxCommandEvent& evt )
