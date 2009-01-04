@@ -113,11 +113,11 @@ void WidgetInfoPanel::Create()
 
 void WidgetInfoPanel::SetButtonStates()
 {
-    m_download->Enable( true );
+    m_download->Enable( !m_widget.is_installed );
     m_chg_log->Enable( m_widget.changelog != _T("") );
     m_pics->Enable( m_widget.extendedinfo.images.size() > 0 );
     m_update->Enable( false );
-    m_remove->Enable( false );
+    m_remove->Enable( m_widget.is_installed );
 
 }
 
@@ -128,7 +128,7 @@ WidgetInfoPanel::~WidgetInfoPanel()
 
 void WidgetInfoPanel::OnDownload( wxCommandEvent& evt )
 {
-
+    m_widget.Install();
 }
 
 void WidgetInfoPanel::OnPics( wxCommandEvent& evt )

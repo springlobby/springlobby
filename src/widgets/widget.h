@@ -53,12 +53,14 @@ struct Widget
     wxString date;
     wxString changelog;
     ExtendedInfo extendedinfo;
+    bool is_installed;
 
     bool IsInstalled();
     wxArrayString GetImageFilenames();
     bool GetImageInfos();
     bool DownloadImages();
     bool GetFileInfos();
+    bool Install();
 };
 
 #endif // SPRINGLOBBY_WIDGET_H_INCLUDED

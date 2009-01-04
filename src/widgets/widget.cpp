@@ -179,3 +179,50 @@ bool Widget::GetFileInfos()
 
 	return success;
 }
+
+bool Widget::Install()
+{
+    if ( !extendedinfo.parsed )
+        return false;
+
+    wxString sep ( wxFileName::GetPathSeparator() );
+
+    ExtendedInfo::Files& files = extendedinfo.files;
+    ExtendedInfo::Files::iterator it = files.begin();
+    for ( ; it != files.end(); ++it ) {
+
+        wxString fileurl = it->url;
+        fileurl.Replace( _T("http://") , _T("") );
+        wxString destpath = sett().GetCurrentUsedDataDir() + _T("LuaUI") + it->local_path;
+        //create dirs for destpath
+
+        wxHTTP FileDownloading;
+        /// normal timeout is 10 minutes.. set to 10 secs.
+        FileDownloading.SetTimeout(10);
+        FileDownloading.Connect( fileurl.BeforeFirst(_T('/')), 80);
+
+        wxInputStream* httpstream = FileDownloading.GetInputStream( _T("/") + fileurl.AfterFirst(_T('/')) );
+
+        if ( httpstream )
+        {
+            try
+            {
+              wxFileOutputStream outs( destpath );
+              httpstream->Read(outs);
+              outs.Close();
+              delete httpstream;
+              httpstream = 0;
+              //download success
+
+            }
+            catch (...)
+            {
+                wxLogMessage(_T("exception on download of") + fileurl);
+                return false;
+            }
+        }
+    }
+    is_installed = true;
+    return true;
+
+}
