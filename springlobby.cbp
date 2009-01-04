@@ -139,8 +139,6 @@
 		<Unit filename="src/Helper/colorbutton.h" />
 		<Unit filename="src/Helper/imageviewer.cpp" />
 		<Unit filename="src/Helper/imageviewer.h" />
-		<Unit filename="src/Helper/jpeghandler.cpp" />
-		<Unit filename="src/Helper/jpeghandler.h" />
 		<Unit filename="src/Helper/wxtextctrlhist.cpp" />
 		<Unit filename="src/Helper/wxtextctrlhist.h" />
 		<Unit filename="src/addbotdialog.cpp" />

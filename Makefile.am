@@ -896,8 +896,6 @@ springlobby_SOURCES = \
         src/Helper/wxtextctrlhist.cpp \
 	src/Helper/wxtextctrlhist.h \
 	src/Helper/sortutil.h \
-	src/Helper/jpeghandler.h \
-	src/Helper/jpeghandler.cpp \
 	src/Helper/imageviewer.h \
 	src/Helper/imageviewer.cpp \
 	src/filelister/filelistctrl.h \
