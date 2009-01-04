@@ -714,7 +714,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         if ( channel == _T("autohost") )
         {
           m_relay_host_manager_list.Clear();
-          wxStringTokenizer tkr( params, _T("\n") );
+          wxStringTokenizer tkr( params, _T("\\n") );
           while( tkr.HasMoreTokens() )
           {
             m_relay_host_manager_list.Add( tkr.GetNextToken() );
@@ -819,6 +819,15 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         channel = GetWordParam( params );
         units = GetIntParam( params );
         topic = GetSentenceParam( params );
+        if ( channel == _T("autohost") )
+        {
+          m_relay_host_manager_list.Clear();
+          wxStringTokenizer tkr( topic, _T("\\n") );
+          while( tkr.HasMoreTokens() )
+          {
+            m_relay_host_manager_list.Add( tkr.GetNextToken() );
+          }
+        }
         m_se->OnChannelList( channel, units, topic );
     }
     else if ( cmd == _T("ENDOFCHANNELS") )
@@ -1308,7 +1317,7 @@ void TASServer::HostBattle( BattleOptions bo, const wxString& password )
 {
     wxLogDebugFunc( _T("") );
 
-    /// to see ip addresses of users as they join (in the log), pretend you're hosting with NAT.
+    // to see ip addresses of users as they join (in the log), pretend you're hosting with NAT.
     int nat_type=bo.nattype;
     /*
     if(nat_type==0 && sett().GetShowIPAddresses()){
@@ -1359,7 +1368,7 @@ void TASServer::HostBattle( BattleOptions bo, const wxString& password )
               else
               {
                  choice++;
-                 choice = rand() % ( numbots -1 );
+                 if ( choice >= ( numbots -1 ) ) choice = 0;
                  if ( choice == begin ) doloop = false;
               }
             }
