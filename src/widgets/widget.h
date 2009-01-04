@@ -56,6 +56,9 @@ struct Widget
 
     bool IsInstalled();
     wxArrayString GetImageFilenames();
+    bool GetImageInfos();
+    bool DownloadImages();
+    bool GetFileInfos();
 };
 
 #endif // SPRINGLOBBY_WIDGET_H_INCLUDED

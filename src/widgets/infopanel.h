@@ -50,10 +50,6 @@ class WidgetInfoPanel : public wxScrolledWindow
             BUT_PICS
         };
 
-        bool GetFileInfos();
-        bool GetImageInfos();
-        bool DownloadImages();
-
     protected:
         DECLARE_EVENT_TABLE()
 };
