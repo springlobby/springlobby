@@ -64,7 +64,6 @@
 #include "updater/updater.h"
 #include "channel/autojoinchanneldialog.h"
 #include "channel/channelchooserdialog.h"
-#include "widgets/downloaddialog.h"
 #include "Helper/imageviewer.h"
 
 #ifdef HAVE_WX28
@@ -94,7 +93,6 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU( MENU_AUTOJOIN_CHANNELS, MainWindow::OnMenuAutojoinChannels )
   EVT_MENU( MENU_CHANNELCHOOSER, MainWindow::OnShowChannelChooser )
   EVT_MENU( MENU_SCREENSHOTS, MainWindow::OnShowScreenshots )
-  EVT_MENU( MENU_DL_WIDGETS, MainWindow::OnDLWidgets )
   EVT_MENU_OPEN( MainWindow::OnMenuOpen )
   #ifdef HAVE_WX26
   EVT_LISTBOOK_PAGE_CHANGED( MAIN_TABS, MainWindow::OnTabsChanged )
@@ -109,8 +107,7 @@ MainWindow::MainWindow( Ui& ui )
     : wxFrame( (wxFrame*)0, -1, _("SpringLobby"), wxPoint(50, 50), wxSize(450, 340) ),
     m_ui(ui),
     m_autojoin_dialog(NULL),
-    m_channel_chooser(NULL),
-    m_widgets_dialog(NULL)
+    m_channel_chooser(NULL)
 {
   SetIcon( wxIcon(springlobby_xpm) );
 
@@ -136,7 +133,6 @@ MainWindow::MainWindow( Ui& ui )
   m_menuTools->Append(MENU_CHAT, _("Open private &chat..."));
   m_menuTools->Append(MENU_AUTOJOIN_CHANNELS, _("&Autojoin channels..."));
   m_menuTools->Append(MENU_SCREENSHOTS, _("&View screenshots"));
-  m_menuTools->Append(MENU_DL_WIDGETS, _("&Download LUA widgets"));
   m_menuTools->AppendSeparator();
   m_menuTools->Append(MENU_USYNC, _("&Reload maps/mods"));
 
@@ -509,17 +505,6 @@ void MainWindow::OnMenuVersion( wxCommandEvent& event )
 void MainWindow::OnUnitSyncReload( wxCommandEvent& event )
 {
     m_ui.ReloadUnitSync();
-}
-
-void MainWindow::OnDLWidgets( wxCommandEvent& event )
-{
-    if ( m_widgets_dialog && m_widgets_dialog->IsShown() ) {
-        m_widgets_dialog->SetFocus();
-    }
-    else {
-        m_widgets_dialog = new WidgetDownloadDialog( this, wxID_ANY, _("stuff") );
-        m_widgets_dialog->Show( true );
-    }
 }
 
 void MainWindow::OnShowScreenshots( wxCommandEvent& event )
