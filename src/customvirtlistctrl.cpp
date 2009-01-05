@@ -77,6 +77,7 @@ template < class T >
 void CustomVirtListCtrl<T>::AddColumn(long i, int width, const wxString& label, const wxString& tip, bool modifiable)
 {
     ListBaseType::InsertColumn( i, label, wxLIST_FORMAT_LEFT, width);
+    SetColumnWidth( i, width );
     colInfo temp(tip,modifiable);
     m_colinfovec.push_back(temp);
 }
