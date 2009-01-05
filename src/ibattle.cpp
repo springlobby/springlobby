@@ -179,6 +179,18 @@ bool IBattle::HaveMultipleBotsInSameTeam() const
     return false;
 }
 
+void IBattle::SendHostInfo( HostInfo update )
+{
+}
+
+void IBattle::SendHostInfo( const wxString& Tag )
+{
+}
+
+void IBattle::Update ( const wxString& Tag )
+{
+}
+
 void IBattle::OnUserAdded( User& user )
 {
     UserList::AddUser( user );
