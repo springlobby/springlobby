@@ -131,7 +131,7 @@ bool Spring::Run( SinglePlayerBattle& battle )
     }
 
     wxFile f( path, wxFile::write );
-    f.Write( WriteSPScriptTxt(battle) );
+    f.Write( WriteScriptTxt(battle) );
     f.Close();
 
   } catch (...)
@@ -203,7 +203,7 @@ struct SortingUser
     }
 };
 
-wxString Spring::WriteScriptTxt( Battle& battle )
+wxString Spring::WriteScriptTxt( IBattle& battle )
 {
     wxLogMessage(_T("0 WriteScriptTxt called "));
 
@@ -249,6 +249,9 @@ wxString Spring::WriteScriptTxt( Battle& battle )
 																		Host-only section
 			**********************************************************************************/
 
+			long startpostype;
+			battle.CustomBattleOptions().getSingleValue( _T("startpostype"), OptionsWrapper::EngineOption ).ToLong( &startpostype );
+
 			OptionsWrapper::wxStringTripleVec optlistEng = battle.CustomBattleOptions().getOptions( OptionsWrapper::EngineOption );
 			for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistEng.begin(); it != optlistEng.end(); ++it)
 			{
@@ -258,8 +261,6 @@ wxString Spring::WriteScriptTxt( Battle& battle )
 			tdf.AppendLineBreak();
 
 			unsigned int NumUsers = battle.GetNumUsers();
-			unsigned int NumBots = battle.GetNumBots();
-			unsigned int NumPlayers = battle.GetNumPlayers();
 
 			std::vector<SortingUser> SortedByTeam;
 			std::vector<SortingUser> SortedByAlly;
@@ -307,7 +308,7 @@ wxString Spring::WriteScriptTxt( Battle& battle )
 			tdf.AppendLineBreak();
 
 			int PreviousTeam = -1;
-			for ( int i = 0; i < NumUsers; i++ )
+			for ( unsigned int i = 0; i < NumUsers; i++ )
 			{
 					if ( PreviousTeam == SortedByTeam[i].ValueToSort ) continue; // skip duplicates
 					PreviousTeam = SortedByTeam[i].ValueToSort;
@@ -324,7 +325,14 @@ wxString Spring::WriteScriptTxt( Battle& battle )
 						else
 						{
 								User usr = battle.GetUser( SortedByTeam[i].OriginalIndex );
+								status = usr.BattleStatus();
 								tdf.Append( _T("TeamLeader"), SortedByTeam[i].OriginalIndex );
+						}
+
+						if ( startpostype == IBattle::ST_Pick )
+						{
+								tdf.Append(_T("StartPosX"), status.posx );
+								tdf.Append(_T("StartPosZ"), status.posy );
 						}
 
 						tdf.Append( _T("AllyTeam"), status.ally );
@@ -336,17 +344,14 @@ wxString Spring::WriteScriptTxt( Battle& battle )
 						tdf.Append( _T("RGBColor"), colourstring);
 
 						wxArrayString sides = usync().GetSides( battle.GetHostModName() );
-						int side = status.side;
+						unsigned int side = status.side;
 						if ( side < sides.GetCount() ) tdf.Append( _T("Side"), sides[side] );
 						tdf.Append( _T("Handicap"), status.handicap );
 					tdf.LeaveSection();
 			}
 
-			long startpostype;
-			battle.CustomBattleOptions().getSingleValue( _T("startpostype"), OptionsWrapper::EngineOption ).ToLong( &startpostype );
-
 			int PreviousAlly = -1;
-			for ( int i = 0; i < NumTotalPlayersWithBots; i++ )
+			for ( unsigned int i = 0; i < NumTotalPlayersWithBots; i++ )
 			{
 					if ( PreviousAlly == SortedByAlly[i].ValueToSort ) continue;
 					PreviousAlly = SortedByAlly[i].ValueToSort;
@@ -406,133 +411,3 @@ wxString Spring::WriteScriptTxt( Battle& battle )
 
 }
 
-
-wxString Spring::WriteSPScriptTxt( SinglePlayerBattle& battle )
-{
-    wxString ret;
-    TDFWriter tdf(ret);
-    std::vector<int> AllyConv;
-
-    int NumAllys = 0;
-    int PlayerTeam = -1;
-
-    long startpostype;
-    battle.CustomBattleOptions().getSingleValue( _T("startpostype"), OptionsWrapper::EngineOption ).ToLong( &startpostype );
-
-    wxLogMessage( _T("StartPosType=%d"), (int)startpostype );
-
-
-    for ( unsigned int i = 0; i < battle.GetNumUsers(); i++ )
-    {
-        User& bot = battle.GetUser( i );
-        ASSERT_LOGIC( &bot != 0, _T("bot == 0") );
-        if ( bot.BattleStatus().IsBot() ) PlayerTeam = i;
-        if ( bot.BattleStatus().ally > ( int( AllyConv.size() ) -1 ) )
-        {
-            AllyConv.resize( bot.BattleStatus().ally + 1, -1 );
-        }
-        if ( AllyConv[bot.BattleStatus().ally] == -1 ) AllyConv[bot.BattleStatus().ally] = NumAllys++;
-    }
-
-    ASSERT_LOGIC( PlayerTeam != -1, _T("no player found") );
-
-    // Start generating the script.
-    //s  = wxString::Format( _T("[GAME]\n{\n") );
-    tdf.EnterSection(_T("GAME"));
-
-			tdf.Append(_T("Mapname"), battle.GetHostMapName() );
-
-			tdf.Append(_T("GameType"), battle.GetHostModName());
-
-			unsigned long uhash;
-			battle.LoadMod().hash.ToULong(&uhash);
-
-			tdf.Append(_T("ModHash"),int(uhash));
-
-			OptionsWrapper::wxStringTripleVec optlistEng = battle.CustomBattleOptions().getOptions( OptionsWrapper::EngineOption );
-			for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistEng.begin(); it != optlistEng.end(); ++it)
-			{
-					tdf.Append(it->first, it->second.second);
-			}
-
-			tdf.Append(_T("HostIP"),"localhost");
-			tdf.Append(_T("HostPort"),"8452");
-			tdf.Append(_T("MyPlayerName"), _T("Player") );
-			tdf.Append(_T("IsHost"), battle.IsFounderMe());
-
-			tdf.EnterSection(_T("PLAYER0"));
-				tdf.Append(_T("name"),"Player");
-				tdf.Append(_T("Spectator"),"0");
-				tdf.Append(_T("team"),PlayerTeam);
-			tdf.LeaveSection();
-
-			for ( unsigned int i = 0; i < battle.GetNumUsers(); i++ )
-			{
-					User& bot = battle.GetUser( i );
-
-					tdf.EnterSection(_T("TEAM") + i2s(i) );
-						if ( startpostype == IBattle::ST_Pick )
-						{
-								tdf.Append(_T("StartPosX"),bot.BattleStatus().posx);
-								tdf.Append(_T("StartPosZ"),bot.BattleStatus().posy);
-						}
-
-						tdf.Append(_T("TeamLeader"),"0");
-						tdf.Append(_T("AllyTeam"),AllyConv[bot.BattleStatus().ally]);
-
-						wxString colourstring =
-								TowxString( bot.BattleStatus().colour.Red()/255.0f ) + _T(' ') +
-								TowxString( bot.BattleStatus().colour.Green()/255.0f ) + _T(' ') +
-								TowxString( bot.BattleStatus().colour.Blue()/255.0f );
-						tdf.Append(_T("RGBColor"), colourstring);
-
-						wxArrayString sides = usync().GetSides( battle.GetHostModName() );
-						int side = bot.BattleStatus().side;
-						if ( side < sides.GetCount() ) tdf.Append( _T("Side"), sides[side] );
-
-						tdf.Append(_T("Handicap"),bot.BattleStatus().handicap);
-
-						if ( bot.BattleStatus().IsBot() )
-						{
-								tdf.Append(_T("AIDLL"), bot.BattleStatus().ailib );
-						}
-					tdf.LeaveSection();
-			}
-
-			for ( int i = 0; i < NumAllys; i++ )
-			{
-					tdf.EnterSection(_T("ALLYTEAM")+i2s(i));
-					tdf.Append(_T("NumAllies"),"0");
-					tdf.LeaveSection();
-			}
-			wxArrayString units = battle.DisabledUnits();
-			tdf.Append(_T("NumRestrictions"),units.GetCount());
-
-			tdf.EnterSection(_T("RESTRICT"));
-				for ( unsigned int i = 0; i < units.GetCount(); i++)
-				{
-						tdf.Append(_T("Unit")+i2s(i),units[i].c_str());
-						tdf.Append(_T("Limit")+i2s(i),_T("0"));
-				}
-			tdf.LeaveSection();
-
-			tdf.EnterSection(_T("mapoptions"));
-				OptionsWrapper::wxStringTripleVec optlistMap = battle.CustomBattleOptions().getOptions( OptionsWrapper::MapOption );
-				for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistMap.begin(); it != optlistMap.end(); ++it)
-				{
-						tdf.Append(it->first, it->second.second);
-				}
-			tdf.LeaveSection();
-
-			tdf.EnterSection(_T("modoptions"));
-				OptionsWrapper::wxStringTripleVec optlistMod = battle.CustomBattleOptions().getOptions( OptionsWrapper::ModOption );
-				for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistMod.begin(); it != optlistMod.end(); ++it)
-				{
-						tdf.Append(it->first, it->second.second);
-				}
-			tdf.LeaveSection();
-
-    tdf.LeaveSection();
-
-    return ret;
-}
