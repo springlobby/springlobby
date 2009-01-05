@@ -109,9 +109,8 @@ void ServerEvents::OnPong( int ping_time )
 {
     if ( ping_time == -1 )
     {
-        wxLogWarning( _("Ping Timeout!") );
-        m_serv.Disconnect();
-        OnDisconnected();
+        wxLogWarning( _T("Ping Timeout!") );
+        if ( m_serv.IsConnected() ) m_serv.Disconnect();
     }
 }
 

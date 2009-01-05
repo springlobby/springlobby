@@ -662,14 +662,14 @@ void Ui::OnDisconnected( Server& server )
 
     if ( server.uidata.panel )
     {
-        server.uidata.panel->StatusMessage( _T("Disconnected from server.") );
+        server.uidata.panel->StatusMessage( _("Disconnected from server.") );
 
         server.uidata.panel->SetServer( 0 );
-        /// leads to crash. Disabled for now
+        // leads to crash. Disabled for now
         //server.uidata.panel = 0;
     }
-
-    /// Crashes. Disabled for now.
+		customMessageBoxNoModal( SL_MAIN_ICON, _("Disconnected from server"), _("Not online"), wxICON_EXCLAMATION|wxOK );
+    // Crashes. Disabled for now.
     //mw().GetChatTab().CloseAllChats();
 
 }
@@ -1240,4 +1240,19 @@ void Ui::WatchReplay ( wxString& filename )
 {
     OnSpringStarting();
     m_spring->RunReplay( filename );
+}
+
+bool Ui::OnPresetRequiringMap( const wxString& mapname )
+{
+    if ( wxYES == customMessageBox( SL_MAIN_ICON,
+                        _("The selected preset requires the map ") + mapname + _(". Should it be downloaded? \
+                                    \n Selecting \"no\" will remove the missing map from the preset.\n\
+                                    Please reselect the preset after download finished"),
+                        _("Map missing"),
+                        wxYES_NO ) )
+    {
+        ui().DownloadMap( _T("") , mapname );
+        return true;
+    }
+    return false;
 }

@@ -92,10 +92,10 @@ bool Spring::Run( Battle& battle )
   }
 
   #ifndef NO_TORRENT_SYSTEM
-  wxString CommandForAutomaticTeamSpeak = _T("SCRIPT|"); // + battle.GetMe().GetNick() + _T("|");
+  wxString CommandForAutomaticTeamSpeak = _T("SCRIPT|") + battle.GetFounder().GetNick() + _T("|");
   for ( UserList::user_map_t::size_type i = 0; i < battle.GetNumUsers(); i++ )
   {
-    CommandForAutomaticTeamSpeak << battle.GetUser(i).GetNick() << _T("|") << u2s( battle.GetUser(i).BattleStatus().ally) << _T("|");
+    CommandForAutomaticTeamSpeak << u2s( battle.GetUser(i).BattleStatus().ally) << battle.GetUser(i).GetNick() << _T("|") << _T("|");
   }
   torrent().SendMessageToCoordinator(CommandForAutomaticTeamSpeak);
   #endif
@@ -335,7 +335,9 @@ wxString Spring::WriteScriptTxt( Battle& battle )
 								TowxString( status.colour.Blue()/255.0 );
 						tdf.Append( _T("RGBColor"), colourstring);
 
-						tdf.Append( _T("Side"), usync().GetSideName( battle.GetHostModName(), status.side ) );
+						wxArrayString sides = usync().GetSides( battle.GetHostModName() );
+						int side = status.side;
+						if ( side < sides.GetCount() ) tdf.Append( _T("Side"), sides[side] );
 						tdf.Append( _T("Handicap"), status.handicap );
 					tdf.LeaveSection();
 			}

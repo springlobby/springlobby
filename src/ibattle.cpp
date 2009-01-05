@@ -625,10 +625,16 @@ bool IBattle::LoadOptionsPreset( const wxString& name )
     {
       if ( !options[_T("mapname")].IsEmpty() )
       {
-        UnitSyncMap map = usync().GetMapEx( options[_T("mapname")] );
-        SetLocalMap( map );
-
-        SendHostInfo( HI_Map );
+        if ( usync().MapExists( options[_T("mapname")] ) ) {
+            UnitSyncMap map = usync().GetMapEx( options[_T("mapname")] );
+            SetLocalMap( map );
+            SendHostInfo( HI_Map );
+        }
+        else if ( !ui().OnPresetRequiringMap( options[_T("mapname")] ) ) {
+            //user didn't want to download the missing map, so set to empty to not have it tried to be loaded again
+            options[_T("mapname")] = _T("");
+            sett().SetHostingPreset( m_preset, i, options );
+        }
       }
       unsigned int localrectcount = GetNumRects();
       for( unsigned int localrect = 0 ; localrect < localrectcount; ++localrect) if ( GetStartRect( localrect ).exist ) RemoveStartRect( localrect );

@@ -76,6 +76,7 @@ void Battle::Join( const wxString& password )
 void Battle::Leave()
 {
     m_serv.LeaveBattle( m_opts.battleid );
+    susynclib().UnSetCurrentMod( );
 }
 
 
