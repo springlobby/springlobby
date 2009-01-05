@@ -465,7 +465,7 @@ void MapCtrl::UpdateMinimap()
   _SetCursor();
   if ( m_battle == 0 ) return;
   GetClientSize( &w, &h );
-  if ( m_battle ) { ///needs to be looked into, crahses with replaytab (koshi)
+  if ( m_battle ) { //needs to be looked into, crahses with replaytab (koshi)
       if ( (m_mapname != m_battle->GetHostMapName() ) || ( m_lastsize != wxSize(w, h) ) ) {
         FreeMinimap();
         LoadMinimap();
@@ -917,7 +917,7 @@ void MapCtrl::DrawSinglePlayer( wxDC& dc )
     User& bot = m_battle->GetUser(i);
     if ( &bot == 0 ) continue;
 
-    bool expanded = ( m_bot_expanded != 0 );
+    bool expanded = m_bot_expanded;
     DrawBot( dc, bot, (m_maction != MA_Move) && expanded, (m_maction == MA_Move) && expanded );
 
   }
@@ -1236,7 +1236,7 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
   if ( m_battle == 0 ) return;
 
   if ( m_sp ) {
-    if ( m_bot_expanded ) return;
+    if ( !m_bot_expanded ) return;
     if ( m_rect_area != m_mdown_area ) return;
     User& bot = *m_bot_expanded;
     try
