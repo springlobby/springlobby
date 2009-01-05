@@ -8,6 +8,7 @@ class wxGridSizer;
 class wxBoxSizer;
 class wxButton;
 class wxCommandEvent;
+class wxTextUrlEvent;
 
 class WidgetInfoPanel : public wxScrolledWindow
 {
@@ -41,13 +42,15 @@ class WidgetInfoPanel : public wxScrolledWindow
         void OnChangeLog( wxCommandEvent& evt );
         void OnRemove( wxCommandEvent& evt );
         void OnUpdate( wxCommandEvent& evt );
+        void OnLink( wxTextUrlEvent& evt );
 
         enum {
             BUT_DOWNLOAD,
             BUT_CHG_LOG,
             BUT_UPDATE,
             BUT_REMOVE,
-            BUT_PICS
+            BUT_PICS,
+            CTL_DESC
         };
 
     protected:
