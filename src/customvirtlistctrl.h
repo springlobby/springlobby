@@ -50,7 +50,17 @@ protected:
     #endif
     unsigned int m_coloumnCount;
 
-    typedef std::pair<wxString,bool> colInfo;
+    struct colInfo {
+        colInfo(int n, wxString l, wxString t, bool c, int s):
+            col_num(n),label(l),tip(t),can_resize(c),size(s) {}
+
+        int col_num;
+        wxString label;
+        wxString tip;
+        bool can_resize;
+        int size;
+    };
+
     typedef std::vector<colInfo> colInfoVec;
 
     //! maps outward column index to internal
@@ -235,6 +245,8 @@ public:
     void noOp(wxMouseEvent& event);
     //! automatically get saved column width if already saved, otherwise use parameter and save new width
     virtual bool SetColumnWidth(int col, int width);
+    //! reset columns with current set size (only effects coloumns with auto-size)
+    void ResetColumnSizes();
 
     // funcs that should make things easier for group highlighting
     ///all that needs to be implemented in child class for UpdateHighlights to work
