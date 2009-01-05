@@ -206,8 +206,6 @@ public:
 
     virtual int GetFreeTeamNum( bool excludeme );
 
-    virtual int GetMyAlly();
-    virtual void SetMyAlly( int ally );
     virtual User& GetMe() = 0;
 
     virtual void SendHostInfo( HostInfo update );
@@ -298,6 +296,8 @@ public:
 		typedef std::vector<User> UserVec;
 		typedef UserVec::const_iterator UserVecCIter;
 		typedef UserVec::iterator UserVecIter;
+
+		void SetBattleOptions( const BattleOptions& options ) { m_opts = options; }
 
 protected:
 

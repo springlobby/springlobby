@@ -920,32 +920,3 @@ int Battle::GetMyPlayerNum()
     return GetPlayerNum( GetMe() );
 }
 
-
-
-
-OfflineBattle::OfflineBattle(const int id):
-m_id( id )
-{}
-
-OfflineBattle::OfflineBattle():
-m_id( 0 )
-{}
-
-
-
-void OfflineBattle::AddUser( const wxString& nick )
-{
-    OfflineUser user( nick, wxEmptyString, 0 );
-    AddUser( user );
-}
-
-bool OfflineBattle::ModExists()
-{
-    bool tmp = usync().ModExistsCheckHash( m_host_mod.hash );
-    return tmp;
-}
-
-bool OfflineBattle::MapExists()
-{
-    return usync().MapExists( m_host_map.name );
-}

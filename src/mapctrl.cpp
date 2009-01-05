@@ -663,7 +663,7 @@ void MapCtrl::DrawStartRects( wxDC& dc )
     wxRect sr = GetStartRect( i );
     if ( sr.IsEmpty() ) continue;
     wxColour col;
-    if ( i == m_battle->GetMyAlly() ) {
+    if ( i == m_battle->GetMe().BattleStatus().ally ) {
       col.Set( 0, 200, 0 );
     } else {
       col.Set( 200, 0, 0 );
@@ -1223,9 +1223,7 @@ void MapCtrl::OnLeftDown( wxMouseEvent& event )
     // Readonly.
     if ( m_mover_rect >= 0 ) {
       // Join ally rect that user clicked on
-      if ( m_battle->GetMyAlly() != m_mover_rect ) {
-        m_battle->SetMyAlly( m_mover_rect );
-      }
+        m_battle->GetMe().BattleStatus().ally = m_mover_rect;
 
     }
     m_maction = MA_None;

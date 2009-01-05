@@ -32,7 +32,6 @@ class Battle : public IBattle
 
     int GetMyPlayerNum() const;
 
-    wxColour GetFreeColour( User *for_whom ) const;
     void FixColours( );
 
     void Update();
@@ -51,9 +50,6 @@ class Battle : public IBattle
 
     void OnRequestBattleStatus();
     void SendMyBattleStatus();
-
-    bool IsSynced();
-    //bool HasMod();
 
     bool ExecuteSayCommand( const wxString& cmd );
 
@@ -112,49 +108,6 @@ class Battle : public IBattle
     bool m_autolock_on_start;
 
     const int m_id;
-};
-
-class OfflineBattle : public IBattle
-{
-    public:
-        OfflineBattle ( const int id );
-        OfflineBattle ( );
-        ~OfflineBattle (){};
-
-        void AddUser( const OfflineUser& user );
-        void AddUser( const wxString& nick );
-        void UpdateUserBattleStatus( OfflineUser &user, UserBattleStatus status );
-        void RemoveUser( OfflineUser& user );
-
-        //funcs from Ibattle i'm too lazy to refactor in a meaningful way
-        wxColour GetFreeColour( User *for_whom ) const {return wxColour(); };
-        int GetMyAlly() { return 0; }
-        void SetMyAlly( int ally ) { }
-        bool IsFounderMe() const {return true;}
-        void SendHostInfo( HostInfo update ) {}
-        void SendHostInfo( const wxString& Tag ) {}
-        void Update ( const wxString& Tag ) {}
-        //---
-
-        bool IsFounderMe() { return m_is_founder_me; }
-
-        void SetBattleOptions( const BattleOptions& options ) { m_opts = options;}
-        user_map_t::size_type GetNumUsers() const { return m_participants.size(); }
-
-        UserVecCIter GetFirstUser() const { return m_participants.begin(); }
-        UserVecCIter GetLastUser() const { return m_participants.end(); }
-
-        virtual bool ModExists();
-        virtual bool MapExists();
-
-        User& GetMe();
-
-    protected:
-
-        UserVec m_participants;
-
-				int m_id;
-        bool m_is_founder_me;
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_BATTLE_H
