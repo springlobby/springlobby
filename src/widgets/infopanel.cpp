@@ -85,7 +85,7 @@ void WidgetInfoPanel::Create()
     wxStaticText* publ = new wxStaticText( this, -1, m_widget.date );
     m_grid_sizer->Add( publ );
 
-    m_top_sizer->Add( m_grid_sizer, 1, wxEXPAND, 0 );
+    m_top_sizer->Add( m_grid_sizer, 0, wxEXPAND, 0 );
 
     //wxStaticBoxSizer* desc_frame = new wxStaticBoxSizer( new wxStaticBox( this, -1, _("Description") ), wxVERTICAL );
     wxHtmlWindow* desc = new wxHtmlWindow( this, CTL_DESC, wxDefaultPosition,

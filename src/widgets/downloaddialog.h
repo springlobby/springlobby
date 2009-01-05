@@ -13,6 +13,8 @@ class WidgetDownloadDialog : public wxDialog
             long style = wxCAPTION | wxRESIZE_BORDER | wxCLOSE_BOX | wxMAXIMIZE_BOX | wxMINIMIZE_BOX | wxDEFAULT_DIALOG_STYLE );
         virtual ~WidgetDownloadDialog();
 
+        bool Show( bool show = true );
+
     protected:
         wxBoxSizer* m_main_sizer;
         WidgetDownloadPanel* m_widgets_panel;

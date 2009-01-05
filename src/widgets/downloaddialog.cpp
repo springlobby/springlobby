@@ -3,10 +3,11 @@
 #include <wx/sizer.h>
 
 #include "downloadpanel.h"
+#include "../settings.h"
 
 WidgetDownloadDialog::WidgetDownloadDialog(wxWindow* parent, wxWindowID id,
             const wxString& title, long style )
-    : wxDialog ( parent, id, title, wxDefaultPosition, wxDefaultSize, style )
+    : wxDialog ( parent, id, title, wxDefaultPosition, wxDefaultSize, style, _T("CHANNELCHOOSER") )
 {
     m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
@@ -15,14 +16,23 @@ WidgetDownloadDialog::WidgetDownloadDialog(wxWindow* parent, wxWindowID id,
 
     SetSizer( m_main_sizer );
 
-//    wxString name = _T("CHANNELCHOOSER");
-//    wxPoint pos = sett().GetWindowPos( name, wxDefaultPosition );
-//    wxSize size = sett().GetWindowSize( name, wxSize( 470, 400 ) );
-//    SetSize( pos.x , pos.y, size.GetWidth(), size.GetHeight() );
-//    Layout();
+    wxString name = GetName();
+    wxPoint pos = sett().GetWindowPos( name, wxDefaultPosition );
+    wxSize size = sett().GetWindowSize( name, wxSize( 670, 400 ) );
+    SetSize( pos.x , pos.y, size.GetWidth(), size.GetHeight() );
+    Layout();
 }
 
 WidgetDownloadDialog::~WidgetDownloadDialog()
 {
-    //dtor
+
+}
+
+bool WidgetDownloadDialog::Show( bool show )
+{
+    if ( !show ) {
+        sett().SetWindowSize( GetName(), GetSize() );
+        sett().SetWindowPos( GetName(), GetPosition() );
+    }
+    return wxDialog::Show( show );
 }

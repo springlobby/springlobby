@@ -95,8 +95,12 @@ bool Widget::DownloadImages()
         wxString fileurl = it->url;
         fileurl.Replace( _T("http://") , _T("") );
         wxString destpath = sett().GetCachePath() + fileurl.AfterLast(_T('/'));
-
         it->local_path = destpath;
+
+        if ( wxFileExists( destpath ) ) // no need to redownload images
+            continue;
+
+
         wxHTTP FileDownloading;
         /// normal timeout is 10 minutes.. set to 10 secs.
         FileDownloading.SetTimeout(10);

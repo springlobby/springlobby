@@ -84,7 +84,7 @@ bool WidgetDownloadPanel::PopulateList()
                         w.num_images = s2l( item->GetNodeContent() );
                     }
                     else if ( name == _T("DownloadCount") ) {
-                        w.num_images = s2l( item->GetNodeContent() );
+                        w.num_downloads = s2l( item->GetNodeContent() );
                     }
                     else if ( name == _T("Version") ) {
                         wxString rev = item->GetNodeContent();
