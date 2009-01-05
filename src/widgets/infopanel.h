@@ -9,6 +9,7 @@ class wxBoxSizer;
 class wxButton;
 class wxCommandEvent;
 class wxTextUrlEvent;
+class ServerMessageBox;
 
 class WidgetInfoPanel : public wxScrolledWindow
 {
@@ -28,6 +29,8 @@ class WidgetInfoPanel : public wxScrolledWindow
         wxGridSizer* m_grid_sizer;
 
         wxBoxSizer* m_busy_notice;
+
+        ServerMessageBox* m_changelog;
 
         wxButton* m_download;
         wxButton* m_chg_log;

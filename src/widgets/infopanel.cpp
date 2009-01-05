@@ -15,6 +15,9 @@
 #include "../Helper/imageviewer.h"
 #include <wx/html/htmlwin.h>
 #include <wx/file.h>
+#include <wx/tokenzr.h>
+#include <wx/icon.h>
+#include "../images/springlobby.xpm"
 
 
 BEGIN_EVENT_TABLE( WidgetInfoPanel, wxPanel)
@@ -118,6 +121,12 @@ void WidgetInfoPanel::Create()
 
     SetSizer( m_main_sizer );
     Layout();
+
+    wxStringTokenizer tk( m_widget.changelog, _T("\r\n") );
+
+    m_changelog = new ServerMessageBox( new wxIcon(springlobby_xpm), this, tk.GetNextToken(), _("Changelog") );
+    while ( tk.HasMoreTokens() )
+        m_changelog->AppendMessage( tk.GetNextToken() );
 }
 
 void WidgetInfoPanel::SetButtonStates()
@@ -159,7 +168,7 @@ void WidgetInfoPanel::OnPics( wxCommandEvent& evt )
 
 void WidgetInfoPanel::OnChangeLog( wxCommandEvent& evt )
 {
-    serverMessageBox( SL_MAIN_ICON, m_widget.changelog, _("Changelog"), wxOK);
+    m_changelog->Show();//( SL_MAIN_ICON, m_widget.changelog, _("Changelog"), wxOK);
 }
 
 void WidgetInfoPanel::OnRemove( wxCommandEvent& evt )
