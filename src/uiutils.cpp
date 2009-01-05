@@ -157,6 +157,16 @@ wxColour GetColorFromStrng( const wxString color )
     return wxColour( r%256, g%256, b%256 );
 }
 
+
+/**
+ @brief Blends two images based on alpha channel present in foreground image.
+ @param foreground Foreground image, must have an alpha channel
+ @param background Background image, may have an alpha channel
+ @return A copy of the background image with the foreground image blended on
+ top of it. The returned image will have an alpha channel iff the background
+ image has an alpha channel. In that case the alpha channel is blended
+ identical to the red/green/blue channels.
+*/
 wxImage BlendImage( const wxImage& foreground, const wxImage&  background )
 {
     unsigned char* background_data = background.GetData();
@@ -169,20 +179,24 @@ wxImage BlendImage( const wxImage& foreground, const wxImage&  background )
     }
 
     wxImage ret( background.GetWidth(), foreground.GetHeight() );
-    ret.InitAlpha();
     unsigned char* result_data = ret.GetData();
 
     bool zhu = background.HasAlpha();
-    if (  zhu && foreground.HasAlpha() )
+    if ( foreground.HasAlpha() )
     {
-        unsigned char* background_alpha = background.GetAlpha();
+        unsigned char* background_alpha = NULL;
         unsigned char* foreground_alpha = foreground.GetAlpha();
-        unsigned char* result_alpha = ret.GetAlpha();
+        unsigned char* result_alpha = NULL;
         unsigned int pixel_count = background.GetWidth() * background.GetHeight();
+
+        if ( zhu ) {
+          background_alpha = background.GetAlpha();
+          ret.InitAlpha();
+          result_alpha = result_alpha = ret.GetAlpha();
+        }
 
         for ( unsigned int i = 0, i_a = 0; i < pixel_count * 3; i+=3,  i_a++ )
         {
-            unsigned char back_alpha = background_alpha[i_a] ;
             unsigned char fore_alpha = foreground_alpha[i_a] ;
             float back_blend_fac = ( 255 - fore_alpha)/255.0;
             float fore_blend_fac = fore_alpha/255.0 ;
@@ -190,7 +204,11 @@ wxImage BlendImage( const wxImage& foreground, const wxImage&  background )
             result_data[i]    = foreground_data[i]   * fore_blend_fac + background_data[i]   * back_blend_fac ;
             result_data[i+1]  = foreground_data[i+1] * fore_blend_fac + background_data[i+1] * back_blend_fac ;
             result_data[i+2]  = foreground_data[i+2] * fore_blend_fac + background_data[i+2] * back_blend_fac ;
-            result_alpha[i_a] = fore_alpha           * fore_blend_fac + back_alpha           * back_blend_fac ;
+
+            if ( zhu ) {
+              unsigned char back_alpha = background_alpha[i_a] ;
+              result_alpha[i_a] = fore_alpha           * fore_blend_fac + back_alpha           * back_blend_fac ;
+            }
         }
         return ret;
     }
