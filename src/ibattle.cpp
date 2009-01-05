@@ -528,7 +528,8 @@ wxString IBattle::GetHostMapHash() const
 
 void IBattle::SetHostMod( const wxString& modname, const wxString& hash )
 {
-  if ( m_host_mod.name != modname || m_host_mod.hash != hash ){
+  if ( m_host_mod.name != modname || m_host_mod.hash != hash )
+  {
     m_mod_loaded = false;
     m_host_mod.name = modname;
     m_host_mod.hash = hash;
@@ -540,7 +541,8 @@ void IBattle::SetHostMod( const wxString& modname, const wxString& hash )
 
 void IBattle::SetLocalMod( const UnitSyncMod& mod )
 {
-  if ( mod.name != m_local_mod.name || mod.hash != m_local_mod.hash ) {
+  if ( mod.name != m_local_mod.name || mod.hash != m_local_mod.hash )
+  {
     m_local_mod = mod;
     m_mod_loaded = true;
     if ( !m_host_mod.hash.IsEmpty() ) m_mod_exists = usync().ModExists( m_host_mod.name, m_host_mod.hash );
@@ -551,7 +553,8 @@ void IBattle::SetLocalMod( const UnitSyncMod& mod )
 
 const UnitSyncMod& IBattle::LoadMod()
 {
-  if ( !m_mod_loaded ) {
+  if ( !m_mod_loaded )
+   {
     try {
       ASSERT_EXCEPTION( m_mod_exists, _T("Mod does not exist.") );
       m_local_mod = usync().GetMod( m_host_mod.name );

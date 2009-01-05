@@ -216,7 +216,7 @@ void ReplayList::GetBattleFromScript( const wxString& script_, OfflineBattle& ba
             if ( player.ok() ) {
                 User user ( player->GetString( _T("name") ), (player->GetString( _T("countryCode")).Upper() ), 0);
                 UserBattleStatus status;
-								wxArrayString sides = usync().GetSides( battle.GetHostModName() );
+								wxArrayString sides = usync().GetSides( battle.LoadMod().name );
                 user.BattleStatus().side = sides.Index( player->GetString( _T("side") ) );
                 status.spectator = player->GetInt( _T("Spectator"), 0 );
                 opts.spectators += status.spectator;
