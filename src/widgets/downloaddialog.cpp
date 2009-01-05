@@ -7,7 +7,7 @@
 
 WidgetDownloadDialog::WidgetDownloadDialog(wxWindow* parent, wxWindowID id,
             const wxString& title, long style )
-    : wxDialog ( parent, id, title, wxDefaultPosition, wxDefaultSize, style, _T("CHANNELCHOOSER") )
+    : wxDialog ( parent, id, title, wxDefaultPosition, wxDefaultSize, style, _T("WIDGETDIALOG") )
 {
     m_main_sizer = new wxBoxSizer( wxVERTICAL );
 

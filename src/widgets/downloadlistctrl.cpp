@@ -51,8 +51,8 @@ void WidgetDownloadListctrl::AddWidget( const Widget widget )
 {
     m_data.push_back( widget );
     SetItemCount( m_data.size() );
-    //RefreshItem( m_data.size() );
-    RefreshVisibleItems();
+    RefreshItem( m_data.size() );
+    //RefreshVisibleItems();
 }
 
 wxString WidgetDownloadListctrl::OnGetItemText(long item, long column) const
