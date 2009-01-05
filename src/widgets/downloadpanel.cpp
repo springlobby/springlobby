@@ -48,7 +48,7 @@ void WidgetDownloadPanel::OnSelect( wxListEvent& event )
     m_list->OnSelected( event );
 
     m_info_panel = new WidgetInfoPanel( m_list->GetSelectedWidget(), this, ID_PANEL );
-    m_main_sizer->Add( m_info_panel, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 4 );
+    m_main_sizer->Add( m_info_panel, 0, wxEXPAND|wxALL, 4 );
     Layout();
     m_info_panel->Create();
     Layout();

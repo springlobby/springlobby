@@ -13,7 +13,9 @@
 //#include "../settings.h"
 #include "../settings++/custom_dialogs.h"
 #include "../Helper/imageviewer.h"
-#include <wx/textctrl.h>
+#include <wx/html/htmlwin.h>
+#include <wx/file.h>
+
 
 BEGIN_EVENT_TABLE( WidgetInfoPanel, wxPanel)
     EVT_BUTTON( WidgetInfoPanel::BUT_CHG_LOG, WidgetInfoPanel::OnChangeLog )
@@ -21,7 +23,7 @@ BEGIN_EVENT_TABLE( WidgetInfoPanel, wxPanel)
     EVT_BUTTON( WidgetInfoPanel::BUT_REMOVE, WidgetInfoPanel::OnRemove )
     EVT_BUTTON( WidgetInfoPanel::BUT_UPDATE, WidgetInfoPanel::OnUpdate )
     EVT_BUTTON( WidgetInfoPanel::BUT_PICS, WidgetInfoPanel::OnPics )
-    EVT_TEXT_URL( WidgetInfoPanel::CTL_DESC, WidgetInfoPanel::OnLink)
+//    EVT_TEXT_URL( WidgetInfoPanel::CTL_DESC, WidgetInfoPanel::OnLink)
 
 END_EVENT_TABLE()
 
@@ -86,12 +88,16 @@ void WidgetInfoPanel::Create()
     m_top_sizer->Add( m_grid_sizer, 1, wxEXPAND, 0 );
 
     //wxStaticBoxSizer* desc_frame = new wxStaticBoxSizer( new wxStaticBox( this, -1, _("Description") ), wxVERTICAL );
-    wxTextCtrl* desc = new wxTextCtrl( this, CTL_DESC, m_widget.description,
-                wxDefaultPosition, wxDefaultSize, wxTE_READONLY|wxTE_MULTILINE|wxTE_AUTO_URL );
+    wxHtmlWindow* desc = new wxHtmlWindow( this, CTL_DESC, wxDefaultPosition,
+            wxDefaultSize, wxHW_NO_SELECTION|wxHW_SCROLLBAR_AUTO );
+    wxString ct = _T("<html><body>") + m_widget.description + _T("</body></html>") ;//content
+    desc->SetPage( ct );
+
+
     //desc_frame->Add( desc, 0, wxALL, 3 );
     m_top_sizer->Add( desc, 1, wxEXPAND|wxLEFT, 10 );
 
-    m_main_sizer->Add( m_top_sizer, 0, wxLEFT|wxEXPAND|wxALL, 5 );
+    m_main_sizer->Add( m_top_sizer, 1, wxLEFT|wxEXPAND|wxALL, 5 );
 
     m_download = new wxButton( this, BUT_DOWNLOAD, _("Download") );
     m_chg_log = new wxButton( this, BUT_CHG_LOG, _("View changelog") );
