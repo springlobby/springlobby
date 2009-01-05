@@ -233,7 +233,7 @@ wxString Spring::WriteScriptTxt( Battle& battle )
 			tdf.Append(_T("MapHash"), battle.LoadMap().hash);
 
 			tdf.Append( _T("Mapname"), battle.GetHostMapName() );
-			tdf.Append( _T("GameType"), usync().GetModArchive( usync().GetModIndex( battle.GetHostModName() ) ) );
+			tdf.Append( _T("GameType"), battle.GetHostModName() );
 
 			tdf.AppendLineBreak();
 
@@ -440,9 +440,9 @@ wxString Spring::WriteSPScriptTxt( SinglePlayerBattle& battle )
     //s  = wxString::Format( _T("[GAME]\n{\n") );
     tdf.EnterSection(_T("GAME"));
 
-			tdf.Append(_T("Mapname"),battle.GetHostMapName());
+			tdf.Append(_T("Mapname"), battle.GetHostMapName() );
 
-			tdf.Append(_T("GameType"),usync().GetModArchive(usync().GetModIndex(battle.GetHostModName())));
+			tdf.Append(_T("GameType"), battle.GetHostModName());
 
 			unsigned long uhash;
 			battle.LoadMod().hash.ToULong(&uhash);
