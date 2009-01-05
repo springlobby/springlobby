@@ -24,6 +24,8 @@
 #include <wx/image.h>
 #include <wx/string.h>
 
+#include "images/fixcolours_palette.xpm"
+#include "springunitsynclib.h"
 
 
 const std::list<BattleBot*>::size_type BOT_SEEKPOS_INVALID = (std::list<BattleBot*>::size_type)(-1);
