@@ -316,7 +316,7 @@ wxString Spring::WriteScriptTxt( Battle& battle )
 						UserBattleStatus status;
 						if ( SortedByTeam[i].IsBot )
 						{
-								User& usr = battle.GetBot( SortedByTeam[i].OriginalIndex );
+								User& usr = battle.GetUser( SortedByTeam[i].OriginalIndex );
 								status = usr.BattleStatus();
 								tdf.Append( _T("AIDLL"), usr.BattleStatus().ailib );
 								tdf.Append( _T("TeamLeader"), battle.GetUser( usr.BattleStatus().owner ).BattleStatus().team ); // bot owner is the team leader
@@ -422,9 +422,9 @@ wxString Spring::WriteSPScriptTxt( SinglePlayerBattle& battle )
     wxLogMessage( _T("StartPosType=%d"), (int)startpostype );
 
 
-    for ( unsigned int i = 0; i < battle.GetNumBots(); i++ )
+    for ( unsigned int i = 0; i < battle.GetNumUsers(); i++ )
     {
-        User& bot = battle.GetBot( i );
+        User& bot = battle.GetUser( i );
         ASSERT_LOGIC( &bot != 0, _T("bot == 0") );
         if ( bot.BattleStatus().IsBot() ) PlayerTeam = i;
         if ( bot.BattleStatus().ally > ( int( AllyConv.size() ) -1 ) )
@@ -466,9 +466,9 @@ wxString Spring::WriteSPScriptTxt( SinglePlayerBattle& battle )
 				tdf.Append(_T("team"),PlayerTeam);
 			tdf.LeaveSection();
 
-			for ( unsigned int i = 0; i < battle.GetNumBots(); i++ )
+			for ( unsigned int i = 0; i < battle.GetNumUsers(); i++ )
 			{
-					User& bot = battle.GetBot( i );
+					User& bot = battle.GetUser( i );
 
 					tdf.EnterSection(_T("TEAM") + i2s(i) );
 						if ( startpostype == IBattle::ST_Pick )

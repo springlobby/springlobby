@@ -45,7 +45,6 @@ class Battle : public IBattle
 
     void KickPlayer( User& user );
 
-    bool IsEveryoneReady();
     void RingNotReadyPlayers();
 
     void Say( const wxString& msg );
@@ -61,12 +60,6 @@ class Battle : public IBattle
     bool ExecuteSayCommand( const wxString& cmd );
 
     void AddBot( const wxString& nick, const wxString& owner, UserBattleStatus status, const wxString& aidll );
-    void RemoveBot( const wxString& nick );
-    void SetBotTeam( const wxString& nick, int team );
-    void SetBotAlly( const wxString& nick, int ally );
-    void SetBotSide( const wxString& nick, int side );
-    void SetBotColour( const wxString& nick, const wxColour& col );
-    void SetBotHandicap( const wxString& nick, int handicap );
 
     void ForceSide( User& user, int side );
     void ForceTeam( User& user, int team );

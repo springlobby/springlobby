@@ -225,11 +225,7 @@ public:
     virtual void SendHostInfo( const wxString& Tag );
 		virtual void Update ( const wxString& Tag );
 
-    virtual User& GetBot( unsigned int index ) const;
-    virtual User& GetBot( const wxString& name ) const;
-
     virtual unsigned int GetNumBots() const;
-    virtual void RemoveBot( unsigned int index );
     virtual bool HaveMultipleBotsInSameTeam() const;
     virtual User& OnBotAdded( const wxString& nick, const wxString& owner, const UserBattleStatus& bs, const wxString& aidll );
 

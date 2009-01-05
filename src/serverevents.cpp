@@ -680,7 +680,7 @@ void ServerEvents::OnBattleAddBot( int battleid, const wxString& nick, const wxS
     {
         Battle& battle = m_serv.GetBattle( battleid );
         battle.OnBotAdded( nick, owner, status, aidll );
-        User& bot = battle.GetBot( nick );
+        User& bot = battle.GetUser( nick );
         ASSERT_LOGIC( &bot != 0, _T("Bot null after add.") );
         ui().OnBattleBotAdded( battle, bot );
     }
@@ -693,7 +693,7 @@ void ServerEvents::OnBattleUpdateBot( int battleid, const wxString& nick, UserBa
     {
         wxLogDebugFunc( _T("") );
         Battle& battle = m_serv.GetBattle( battleid );
-				User& bot = battle.GetBot( nick );
+				User& bot = battle.GetUser( nick );
         battle.OnUserBattleStatusUpdated( bot, status );
         ASSERT_LOGIC( &bot != 0, _T("Bot null after add.") );
         ui().OnBattleBotUpdated( battle, bot );
@@ -708,7 +708,7 @@ void ServerEvents::OnBattleRemoveBot( int battleid, const wxString& nick )
     try
     {
         Battle& battle = m_serv.GetBattle( battleid );
-        User& bot = battle.GetBot( nick );
+        User& bot = battle.GetUser( nick );
         ASSERT_LOGIC( &bot != 0, _T("Bot null after add.") );
         ui().OnBattleBotRemoved( battle, bot );
         battle.OnUserRemoved( bot );

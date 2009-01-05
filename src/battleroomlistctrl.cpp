@@ -56,7 +56,7 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, Battle& battle, Ui& ui
 	CustomListCtrl(parent, BRLIST_LIST, wxDefaultPosition, wxDefaultSize,
                 wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL, _T("BattleroomListCtrl") ),
 	m_battle(battle),m_popup(0),
-  m_sel_user(0), m_sel_bot(0),m_sides(0),m_spec_item(0),m_handicap_item(0),
+  m_sel_user(0), m_sides(0),m_spec_item(0),m_handicap_item(0),
   m_ui(ui)
 {
   #ifndef HAVE_WX26
@@ -342,13 +342,6 @@ void BattleroomListCtrl::AddBot( User& bot )
 }
 
 
-void BattleroomListCtrl::RemoveBot( User& bot )
-{
-  if ( &bot == m_sel_bot ) m_sel_bot = 0;
-  DeleteItem( GetBotIndex( bot ) );
-}
-
-
 void BattleroomListCtrl::UpdateBot( User& bot )
 {
   UpdateBot( GetBotIndex( bot ) );
@@ -436,19 +429,20 @@ void BattleroomListCtrl::OnListRightClick( wxListEvent& event )
 
   item_content item_content = items[(size_t)GetItemData( event.GetIndex() )];
 
-  if ( item_content.is_bot ) {
+  if ( item_content.is_bot )
+  {
     wxLogMessage(_T("Bot"));
-    m_sel_user = 0;
-    m_sel_bot = (User*)item_content.data;
+    m_sel_user = (User*)item_content.data;
     int item = m_popup->FindItem( _("Spectator") );
     m_popup->Enable( item, false );
     m_popup->Check( item, false );
     m_popup->Enable( m_popup->FindItem( _("Ring") ), false );
     m_popup->Enable( m_popup->FindItem( _("Kick") ),true);
-  } else {
+  }
+  else
+  {
     wxLogMessage(_T("User"));
-    m_sel_bot = 0;
-    m_sel_user = (User*)item_content.data;
+		m_sel_user = (User*)item_content.data;
     int item = m_popup->FindItem( _("Spectator") );
     m_popup->Check( item, m_sel_user->BattleStatus().spectator );
     m_popup->Enable( item, true );
@@ -468,11 +462,7 @@ void BattleroomListCtrl::OnTeamSelect( wxCommandEvent& event )
 {
   wxLogDebugFunc( _T("") );
   int team = event.GetId() - BRLIST_TEAM;
-  if ( m_sel_bot != 0 ) {
-    m_battle.SetBotTeam( m_sel_bot->GetNick(), team );
-  } else if ( m_sel_user != 0 ) {
-    m_battle.ForceTeam( *m_sel_user, team );
-  }
+	if( m_sel_user ) m_battle.ForceTeam( *m_sel_user, team );
 }
 
 
@@ -480,11 +470,7 @@ void BattleroomListCtrl::OnAllySelect( wxCommandEvent& event )
 {
   wxLogDebugFunc( _T("") );
   int ally = event.GetId() - BRLIST_ALLY;
-  if ( m_sel_bot != 0 ) {
-    m_battle.SetBotAlly( m_sel_bot->GetNick(), ally );
-  } else if ( m_sel_user != 0 ) {
-    m_battle.ForceAlly( *m_sel_user, ally );
-  }
+	if( m_sel_user ) m_battle.ForceAlly( *m_sel_user, ally );
 }
 
 
@@ -492,17 +478,10 @@ void BattleroomListCtrl::OnColourSelect( wxCommandEvent& event )
 {
   wxLogDebugFunc( _T("") );
 
-  if ( m_sel_bot ) {
-    wxColour CurrentColour = m_sel_bot->BattleStatus().colour;
-    CurrentColour = GetColourFromUser(this, CurrentColour);
-    if ( !CurrentColour.IsColourOk() ) return;
-    if(m_sel_bot)m_battle.SetBotColour( m_sel_bot->GetNick(), CurrentColour );
-  } else if ( m_sel_user ) {
-    wxColour CurrentColour = m_sel_user->BattleStatus().colour;
-    CurrentColour = GetColourFromUser(this, CurrentColour);
-    if ( !CurrentColour.IsColourOk() ) return;
-    if(m_sel_user)m_battle.ForceColour( *m_sel_user, CurrentColour );
-  }
+	wxColour CurrentColour = m_sel_user->BattleStatus().colour;
+	CurrentColour = GetColourFromUser(this, CurrentColour);
+	if ( !CurrentColour.IsColourOk() ) return;
+	if( m_sel_user ) m_battle.ForceColour( *m_sel_user, CurrentColour );
 
 }
 
@@ -511,11 +490,7 @@ void BattleroomListCtrl::OnSideSelect( wxCommandEvent& event )
 {
   wxLogDebugFunc( _T("") );
   int side = event.GetId() - BRLIST_SIDE;
-  if ( m_sel_bot != 0 ) {
-    m_battle.SetBotSide( m_sel_bot->GetNick(), side );
-  } else if ( m_sel_user != 0 ) {
-    m_battle.ForceSide( *m_sel_user, side );
-  }
+  if( m_sel_user ) m_battle.ForceSide( *m_sel_user, side );
 }
 
 
@@ -535,11 +510,7 @@ void BattleroomListCtrl::OnHandicapSelect( wxCommandEvent& event )
       customMessageBox(SL_MAIN_ICON, _("Value out of range.\n Enter an integer between 0 & 100."), _("Invalid number") );
       return;
     }
-    if ( m_sel_bot != 0 ) {
-      m_battle.SetBotHandicap( m_sel_bot->GetNick(), handicap );
-    } else if ( m_sel_user != 0 ) {
-      m_battle.SetHandicap( *m_sel_user, handicap );
-    }
+    if( m_sel_user ) m_battle.SetHandicap( *m_sel_user, handicap );
   }
 }
 
@@ -547,30 +518,21 @@ void BattleroomListCtrl::OnHandicapSelect( wxCommandEvent& event )
 void BattleroomListCtrl::OnSpecSelect( wxCommandEvent& event )
 {
   wxLogDebugFunc( _T("") );
-  if ( m_sel_user != 0 ) {
-    m_battle.ForceSpectator( *m_sel_user, m_spec_item->IsChecked() );
-  }
+  if ( m_sel_user ) m_battle.ForceSpectator( *m_sel_user, m_spec_item->IsChecked() );
 }
 
 
 void BattleroomListCtrl::OnKickPlayer( wxCommandEvent& event )
 {
   wxLogDebugFunc( _T("") );
-  if ( m_sel_bot != 0 ) {
-    m_battle.RemoveBot( m_sel_bot->GetNick() );
-  } else if ( m_sel_user != 0 ) {
-    m_battle.KickPlayer( *m_sel_user );
-  }
+	if ( m_sel_user ) m_battle.KickPlayer( *m_sel_user );
 }
 
 
 void BattleroomListCtrl::OnRingPlayer( wxCommandEvent& event )
 {
   wxLogDebugFunc( _T("") );
-  if ( m_sel_bot != 0 ) {
-  } else if ( m_sel_user != 0 ) {
-    m_battle.GetServer().Ring( m_sel_user->GetNick() );
-  }
+  if ( m_sel_user ) m_battle.GetServer().Ring( m_sel_user->GetNick() );
 }
 
 

@@ -96,7 +96,6 @@ class BattleroomListCtrl : public CustomListCtrl
     UserMenu* m_popup;
 
     User* m_sel_user;
-    User* m_sel_bot;
     std::vector<item_content> items;
 
     wxMenu* m_sides;

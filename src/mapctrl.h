@@ -137,7 +137,7 @@ class MapCtrl : public wxPanel
 
     UnitSyncMap m_map;
 
-    int m_bot_expanded;
+    User* m_bot_expanded;
 
     enum InfoMap {
       IM_Minimap,  // must be first one

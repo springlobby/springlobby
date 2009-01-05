@@ -424,16 +424,6 @@ void Battle::AddBot( const wxString& nick, const wxString& owner, UserBattleStat
 }
 
 
-void Battle::RemoveBot( const wxString& nick )
-{
-		try
-		{
-			User& bot = GetBot( nick );
-			m_serv.RemoveBot( m_opts.battleid, bot );
-		}
-		catch(assert_exception) {}
-}
-
 
 void Battle::ForceSide( User& user, int side )
 {

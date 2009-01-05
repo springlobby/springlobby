@@ -421,7 +421,7 @@ void IBattle::GetFreePosition( int& x, int& y )
     bool taken = false;
     for ( unsigned int bi = 0; bi < GetNumUsers(); bi++ )
     {
-      User& user = GetBot( bi );
+      User& user = GetUser( bi );
       if ( ( map.info.positions[i].x == user.BattleStatus().posx ) && ( map.info.positions[i].y == user.BattleStatus().posy ) )
       {
         taken = true;
