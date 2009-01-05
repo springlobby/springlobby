@@ -166,7 +166,6 @@ int IBattle::GetClosestFixColour(const wxColour &col, const std::vector<int> &ex
 
 bool IBattle::HaveMultipleBotsInSameTeam() const
 {
-    std::list<BattleBot*>::const_iterator i;
     wxLogDebugFunc(_T(""));
 
     std::vector<int> teams ( GetMaxPlayers(), -1 );

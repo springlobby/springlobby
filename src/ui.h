@@ -12,7 +12,6 @@ class User;
 class IBattle;
 class Battle;
 class SinglePlayerBattle;
-struct BattleBot;
 class ChatPanel;
 
 //this removes the necessity to drag wx/event.h into almost every other file for a single type

@@ -32,13 +32,7 @@ class BattleroomListCtrl : public CustomListCtrl
     void UpdateUser( User& user );
     void UpdateList();
 
-    void AddBot( User& bot );
-    void RemoveBot( User& bot );
-    void UpdateBot( User& bot );
-    void UpdateBot( const int& index );
-
     int GetUserIndex( User& user );
-    int GetBotIndex( User& bot );
 
     void SortList();
 

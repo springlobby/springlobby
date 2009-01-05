@@ -28,8 +28,6 @@
 #include "springunitsynclib.h"
 
 
-const std::list<BattleBot*>::size_type BOT_SEEKPOS_INVALID = (std::list<BattleBot*>::size_type)(-1);
-
 
 Battle::Battle( Server& serv, int id ) :
         m_serv(serv),
