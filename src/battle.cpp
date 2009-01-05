@@ -114,7 +114,7 @@ void Battle::FixColours( )
 
 void Battle::OnRequestBattleStatus()
 {
-    int lowest = GetFreeTeamNum();
+    int lowest = GetFreeTeamNum( true );
 
     UserBattleStatus& bs = m_serv.GetMe().BattleStatus();
     bs.team = lowest;
@@ -169,7 +169,7 @@ void Battle::DoAction( const wxString& msg )
 }
 
 
-User& Battle::GetMe() const
+User& Battle::GetMe()
 {
     return m_serv.GetMe();
 }
@@ -923,27 +923,6 @@ int Battle::GetMyPlayerNum()
 }
 
 
-
-int Battle::GetFreeTeamNum( bool excludeme ) const
-{
-    int lowest = 0;
-    bool changed = true;
-    while ( changed )
-    {
-        changed = false;
-        for ( user_map_t::size_type i = 0; i < GetNumUsers(); i++ )
-        {
-            if ( ( &GetUser( i ) == &GetMe() ) && excludeme ) continue;
-            //if ( GetUser( i ).BattleStatus().spectator ) continue;
-            if ( GetUser( i ).BattleStatus().team == lowest )
-            {
-                lowest++;
-                changed = true;
-            }
-        }
-    }
-    return lowest;
-}
 
 
 OfflineBattle::OfflineBattle(const int id):

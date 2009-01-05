@@ -42,18 +42,6 @@ struct BattleStartRect
 };
 
 
-struct BattleBot
-{
-    UserBattleStatus bs;
-    int posx;
-    int posy;
-    int handicap;
-    wxString name;
-    wxString owner;
-    wxString aidll;
-
-};
-
 enum NatType
 {
 		NAT_None = 0,
@@ -220,6 +208,7 @@ public:
 
     virtual int GetMyAlly();
     virtual void SetMyAlly( int ally );
+    virtual User& GetMe() = 0;
 
     virtual void SendHostInfo( HostInfo update );
     virtual void SendHostInfo( const wxString& Tag );

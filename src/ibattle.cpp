@@ -118,6 +118,27 @@ int IBattle::ColourDifference(const wxColour &a, const wxColour &b) // returns m
 
 }
 
+int IBattle::GetFreeTeamNum( bool excludeme )
+{
+    int lowest = 0;
+    bool changed = true;
+    while ( changed )
+    {
+        changed = false;
+        for ( user_map_t::size_type i = 0; i < GetNumUsers(); i++ )
+        {
+            if ( ( &GetUser( i ) == &GetMe() ) && excludeme ) continue;
+            //if ( GetUser( i ).BattleStatus().spectator ) continue;
+            if ( GetUser( i ).BattleStatus().team == lowest )
+            {
+                lowest++;
+                changed = true;
+            }
+        }
+    }
+    return lowest;
+}
+
 int IBattle::GetClosestFixColour(const wxColour &col, const std::vector<int> &excludes, int &difference)
 {
     std::vector<wxColour> palette = GetFixColoursPalette();

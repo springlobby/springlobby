@@ -27,13 +27,6 @@ SinglePlayerBattle::~SinglePlayerBattle()
 }
 
 
-
-
-
-
-
-
-
 void SinglePlayerBattle::SendHostInfo( HostInfo update )
 {
   if ( (update & HI_StartType) != 0 ) m_sptab.UpdateMinimap();
@@ -46,7 +39,7 @@ void SinglePlayerBattle::SendHostInfo( HostInfo update )
   }
   if ( (update & HI_Mod_Changed) != 0 )
   {
-    for ( unsigned int num = 0; num < GetNumBots(); num++ ) RemoveBot( num ); /// remove all bots
+    for ( unsigned int num = 0; num < GetNumUsers(); num++ ) BattleKickPlayer( GetUser( num ) ); // remove all bots
     CustomBattleOptions().loadOptions( OptionsWrapper::ModOption, GetHostModName() );
     wxString presetname = sett().GetModDefaultPresetName( GetHostModName() );
     if ( !presetname.IsEmpty() )

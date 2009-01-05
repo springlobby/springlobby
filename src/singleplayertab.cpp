@@ -215,7 +215,7 @@ bool SinglePlayerTab::ValidSetup()
     return false;
   }
 
-  if ( m_battle.GetNumBots() == 1 )
+  if ( m_battle.GetNumUsers() == 1 )
   {
       wxLogWarning(_T("trying to start sp game without bot"));
       if ( customMessageBox(SL_MAIN_ICON, _("Continue without adding a bot first?.\n The game will be over pretty fast.\n "),
@@ -242,7 +242,7 @@ void SinglePlayerTab::OnModSelect( wxCommandEvent& event )
 
 void SinglePlayerTab::OnAddBot( wxCommandEvent& event )
 {
-  if ( m_battle.GetNumBots() > 15 )
+  if ( m_battle.GetNumUsers() > 15 )
   {
     customMessageBoxNoModal( SL_MAIN_ICON, _("Spring only supports up to 16 different teams"), _("Num players error"), wxICON_EXCLAMATION );
     return;

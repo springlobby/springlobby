@@ -32,8 +32,6 @@ class Battle : public IBattle
 
     int GetMyPlayerNum() const;
 
-    int GetFreeTeamNum( bool excludeme = true ) const;
-
     wxColour GetFreeColour( User *for_whom ) const;
     void FixColours( );
 
@@ -98,7 +96,7 @@ class Battle : public IBattle
 
     void DisableHostStatusInProxyMode( bool value ) { m_generating_script = value; }
 
-    User& GetMe() const;
+    User& GetMe();
     bool IsFounderMe() const;
 
   protected:
@@ -140,12 +138,6 @@ class OfflineBattle : public IBattle
 
         bool IsFounderMe() { return m_is_founder_me; }
 
-        void SetBotTeam( const wxString& nick, int team );
-        void SetBotAlly( const wxString& nick, int ally );
-        void SetBotSide( const wxString& nick, int side );
-        void SetBotColour( const wxString& nick, const wxColour& col );
-        void SetBotHandicap( const wxString& nick, int handicap );
-
         void SetBattleOptions( const BattleOptions& options ) { m_opts = options;}
         user_map_t::size_type GetNumUsers() const { return m_participants.size(); }
 
@@ -154,6 +146,8 @@ class OfflineBattle : public IBattle
 
         virtual bool ModExists();
         virtual bool MapExists();
+
+        User& GetMe();
 
     protected:
 
