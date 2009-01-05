@@ -352,14 +352,15 @@ void CustomVirtListCtrl<T>::UpdateHighlights()
 }
 
 template < class T >
-void CustomVirtListCtrl<T>::HighlightItemUser( long item, const wxString& name )
+wxListItemAttr* CustomVirtListCtrl<T>::HighlightItemUser( long item, const wxString& name ) const
 {
-   if ( m_highlight && useractions().DoActionOnUser( m_highlightAction, name ) ) {
-        wxColor c = sett().GetGroupHLColor( useractions().GetGroupOfUser( name ) );
-        SetItemBackgroundColour( item, c );
+    static wxListItemAttr att;
+  if ( m_highlight && useractions().DoActionOnUser( m_highlightAction, name ) ) {
+        att.SetBackgroundColour( sett().GetGroupHLColor( useractions().GetGroupOfUser( name ) ) );
+        return &att;
   }
   else
-    SetItemBackgroundColour( item, m_bg_color );
+    return NULL;
 }
 
 template < class T >

@@ -80,11 +80,12 @@ void NickListCtrl::AddUser( const User& user )
 
     m_data.push_back( &user );
     SetItemCount( m_data.size() );
-    RefreshItem( m_data.size() );
+    RefreshItem( m_data.size() -1 );
 
     SetColumnWidth( 3, wxLIST_AUTOSIZE );
     SetColumnWidth( 0, wxLIST_AUTOSIZE );
     MarkDirtySort();
+    HighlightItem( m_data.size() -1 );
 }
 
 void NickListCtrl::RemoveUser( const User& user )
@@ -114,6 +115,7 @@ void NickListCtrl::UserUpdated( const User& user )
     else {
         wxLogWarning(_T("NickListCtrl::UserUpdated error, index == -1 ."));
     }
+    HighlightItem( index );
 }
 
 void NickListCtrl::ClearUsers()
@@ -226,13 +228,19 @@ void NickListCtrl::SetTipWindowText( const long item_hit, const wxPoint position
     }
 }
 
-void NickListCtrl::HighlightItem( long item )
+wxListItemAttr* NickListCtrl::OnGetItemAttr(long item) const
 {
-    if ( m_data[item] ) {
+    if ( item < m_data.size() && item > -1 ) {
         const User& u = *m_data[item];
         wxString name = u.GetNick();
-        HighlightItemUser( item, name );
+        return HighlightItemUser( item, name );
     }
+    return NULL;
+}
+
+void NickListCtrl::HighlightItem( long item )
+{
+
 }
 
 int NickListCtrl::GetIndexFromData( const DataType& data ) const
