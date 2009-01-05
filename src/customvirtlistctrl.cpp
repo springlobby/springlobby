@@ -78,8 +78,8 @@ void CustomVirtListCtrl<T>::AddColumn(long i, int width, const wxString& label, 
 {
     ListBaseType::InsertColumn( i, label, wxLIST_FORMAT_LEFT, width);
     SetColumnWidth( i, width );
-    colInfo temp(tip,modifiable);
-    m_colinfovec.push_back(temp);
+    colInfo temp( i, label, tip, modifiable, width );
+    m_colinfovec.push_back( temp );
 }
 
 
@@ -273,7 +273,7 @@ void CustomVirtListCtrl<T>::SetTipWindowText( const long item_hit, const wxPoint
   else
   {
     m_tiptimer.Start(m_tooltip_delay, wxTIMER_ONE_SHOT);
-    m_tiptext = TE(m_colinfovec[coloumn].first);
+    m_tiptext = TE(m_colinfovec[coloumn].tip);
   }
 }
 
@@ -293,7 +293,7 @@ int CustomVirtListCtrl<T>::getColoumnFromPosition(wxPoint pos)
 template < class T >
 void CustomVirtListCtrl<T>::OnStartResizeCol(wxListEvent& event)
 {
-    if (!m_colinfovec[event.GetColumn()].second)
+    if (!m_colinfovec[event.GetColumn()].can_resize)
         event.Veto();
 }
 
@@ -420,3 +420,12 @@ typename CustomVirtListCtrl<T>::DataType CustomVirtListCtrl<T>::GetSelectedData(
 {
     return GetDataFromIndex( m_selected_index );
 }
+
+template < class T >
+void CustomVirtListCtrl<T>::ResetColumnSizes()
+{
+    typename colInfoVec::const_iterator it = m_colinfovec.begin();
+    for ( ; it != m_colinfovec.end(); ++it )
+        SetColumnWidth( it->col_num, it->size );
+}
+

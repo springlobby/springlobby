@@ -219,7 +219,7 @@ void NickListCtrl::SetTipWindowText( const long item_hit, const wxPoint position
                 break;
 
             default:
-                m_tiptext = m_colinfovec[coloumn].first;
+                m_tiptext = m_colinfovec[coloumn].tip;
                 break;
             }
         }
