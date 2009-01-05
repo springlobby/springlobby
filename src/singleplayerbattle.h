@@ -40,7 +40,7 @@ class SinglePlayerBattle: public IBattle
     Ui& m_ui;
     MainSinglePlayerTab& m_sptab;
 
-    User& m_me;
+    User m_me;
 
 };
 

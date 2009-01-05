@@ -180,7 +180,7 @@ public:
     virtual bool ModExists();
 
     virtual BattleStartRect GetStartRect( unsigned int allyno );
-    void OnUserAdded( User& user );
+    User& OnUserAdded( User& user );
     void OnUserBattleStatusUpdated( User &user, UserBattleStatus status );
     void OnUserRemoved( User& user );
 
