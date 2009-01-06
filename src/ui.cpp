@@ -897,7 +897,6 @@ void Ui::OnBattleClosed( Battle& battle )
             if (!battle.IsFounderMe() )
                 customMessageBoxNoModal(SL_MAIN_ICON,_("The current battle was closed by the host."),_("Battle closed"));
             mw().GetJoinTab().LeaveCurrentBattle();
-            battle.Leave();
         }
     }
     catch (...){}
