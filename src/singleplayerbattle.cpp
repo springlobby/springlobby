@@ -40,7 +40,7 @@ void SinglePlayerBattle::SendHostInfo( HostInfo update )
   }
   if ( (update & HI_Mod_Changed) != 0 )
   {
-    for ( unsigned int num = 1; num < GetNumBots(); num++ ) BattleKickPlayer( GetUser( num ) ); // remove all bots
+    for ( unsigned int num = 1; num < GetNumBots(); num++ ) KickPlayer( GetUser( num ) ); // remove all bots
     CustomBattleOptions().loadOptions( OptionsWrapper::ModOption, GetHostModName() );
     wxString presetname = sett().GetModDefaultPresetName( GetHostModName() );
     if ( !presetname.IsEmpty() )

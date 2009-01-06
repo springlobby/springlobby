@@ -177,15 +177,8 @@ User& Battle::GetMe()
 
 User& Battle::OnUserAdded( User& user )
 {
+		user = IBattle::OnUserAdded( user );
     user.SetBattle( this );
-    UserList::AddUser( user );
-
-    //UserBattleStatus bs;
-    //bs.spectator=true;
-    //user.UpdateBattleStatus( bs, true );
-    user.BattleStatus().spectator = false;
-    user.BattleStatus().ready = false;
-    user.BattleStatus().sync = SYNC_UNKNOWN;
 
     if ( IsFounderMe() )
     {
@@ -206,7 +199,7 @@ User& Battle::OnUserAdded( User& user )
                 break;
             case rank_limit_autokick:
                 DoAction( _T("Rank limit autokick: ") + user.GetNick() );
-                BattleKickPlayer( user );
+                KickPlayer( user );
                 return user;
             }
         }
@@ -219,6 +212,7 @@ User& Battle::OnUserAdded( User& user )
 
 void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 {
+		IBattle::OnUserBattleStatusUpdated( user, status );
     if ( status.handicap != 0 )
     {
         ui().OnBattleAction( *this, wxString(_T(" ")) , ( _T("Warning: user ") + user.GetNick() + _T(" got bonus ") ) << status.handicap );
@@ -240,7 +234,7 @@ void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
                 break;
             case rank_limit_autokick:
                 DoAction( _T("Rank limit autokick: ") + user.GetNick() );
-                BattleKickPlayer( user );
+                KickPlayer( user );
                 break;
             }
         }
@@ -251,19 +245,10 @@ void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 
 void Battle::OnUserRemoved( User& user )
 {
+		IBattle::OnUserRemoved( user );
     m_ah.OnUserRemoved(user);
 }
 
-
-void Battle::KickPlayer( User& user )
-{
-		if ( user.BattleStatus().IsBot() )
-		{
-			 ui().OnUserLeftBattle( *this, user );
-			 OnUserRemoved( user );
-		}
-    m_serv.BattleKickPlayer( m_opts.battleid, user );
-}
 
 void Battle::RingNotReadyPlayers()
 {
@@ -371,14 +356,14 @@ bool Battle::CheckBan(User &user)
         if (m_banned_users.count(user.GetNick())>0
                 || useractions().DoActionOnUser(UserActions::ActAutokick, user.GetNick() ) )
         {
-            BattleKickPlayer(user);
+            KickPlayer(user);
             ui().OnBattleAction(*this,wxString(_T(" ")),user.GetNick()+_T(" is banned, kicking"));
             return true;
         }
         else if (m_banned_ips.count(user.BattleStatus().ip)>0)
         {
             ui().OnBattleAction(*this,wxString(_T(" ")),user.BattleStatus().ip+_T(" is banned, kicking"));
-            BattleKickPlayer(user);
+            KickPlayer(user);
             return true;
         }
     }
@@ -428,32 +413,21 @@ void Battle::AddBot( const wxString& nick, const wxString& owner, UserBattleStat
 
 void Battle::ForceSide( User& user, int side )
 {
-		if ( user.BattleStatus().IsBot() ) user.BattleStatus().side = side;
+		if ( user.BattleStatus().IsBot() ) IBattle::ForceSide( user, side );
 		m_serv.ForceSide( m_opts.battleid, user, side );
 }
 
 
 void Battle::ForceTeam( User& user, int team )
 {
-  if ( IsFounderMe() || user.BattleStatus().IsBot() )
-  {
-    user.BattleStatus().team = team;// update locally first so locking status changes won't revert host's
-
-    ui().OnUserBattleStatus( *this, user );
-  }
+  IBattle::ForceTeam( user, team );
   m_serv.ForceTeam( m_opts.battleid, user, team );
 }
 
 
 void Battle::ForceAlly( User& user, int ally )
 {
-
-  if ( IsFounderMe() || user.BattleStatus().IsBot() )
-  {
-    user.BattleStatus().ally = ally;// update locally first so locking status changes won't revert host's
-
-    ui().OnUserBattleStatus( *this, user );
-  }
+	IBattle::ForceAlly( user, ally );
   m_serv.ForceAlly( m_opts.battleid, user, ally );
 
 }
@@ -461,26 +435,27 @@ void Battle::ForceAlly( User& user, int ally )
 
 void Battle::ForceColour( User& user, const wxColour& col )
 {
-		if ( user.BattleStatus().IsBot() ) user.BattleStatus().colour = col;
+		if ( user.BattleStatus().IsBot() ) IBattle::ForceColour( user, col );
     m_serv.ForceColour( m_opts.battleid, user, col );
 }
 
 
 void Battle::ForceSpectator( User& user, bool spectator )
 {
-		if ( user.BattleStatus().IsBot() ) user.BattleStatus().spectator = spectator;
+		if ( user.BattleStatus().IsBot() ) IBattle::ForceSpectator( user, spectator );
     m_serv.ForceSpectator( m_opts.battleid, user, spectator );
 }
 
 
-void Battle::BattleKickPlayer( User& user )
+void Battle::KickPlayer( User& user )
 {
+		if ( user.BattleStatus().IsBot() ) IBattle::KickPlayer( user );
     m_serv.BattleKickPlayer( m_opts.battleid, user );
 }
 
 void Battle::SetHandicap( User& user, int handicap)
 {
-		if ( user.BattleStatus().IsBot() ) user.BattleStatus().handicap = handicap;
+		if ( user.BattleStatus().IsBot() ) IBattle::SetHandicap( user, handicap );
     m_serv.SetHandicap ( m_opts.battleid, user, handicap );
 }
 

@@ -372,7 +372,11 @@ void IBattle::ClearStartRects()
 
 void IBattle::ForceSide( User& user, int side )
 {
-	if ( user.BattleStatus().IsBot() ) user.BattleStatus().side = side;
+	if ( IsFounderMe() || user.BattleStatus().IsBot() )
+	{
+		 user.BattleStatus().side = side;
+		 ui().OnUserBattleStatus( *this, user );
+	}
 }
 
 void IBattle::ForceTeam( User& user, int team )
@@ -390,7 +394,7 @@ void IBattle::ForceAlly( User& user, int ally )
 
   if ( IsFounderMe() || user.BattleStatus().IsBot() )
   {
-    user.BattleStatus().ally = ally;// update locally first so locking status changes won't revert host's
+    user.BattleStatus().ally = ally;
     ui().OnUserBattleStatus( *this, user );
   }
 
@@ -418,7 +422,7 @@ void IBattle::ForceSpectator( User& user, bool spectator )
 }
 
 
-void IBattle::BattleKickPlayer( User& user )
+void IBattle::KickPlayer( User& user )
 {
 		if ( IsFounderMe() || user.BattleStatus().IsBot() )
 		{
@@ -431,7 +435,8 @@ int IBattle::GetFreeAlly()
 {
   int lowest = 0;
   bool changed = true;
-  while ( changed ) {
+  while ( changed )
+   {
     changed = false;
     for ( unsigned int i = 0; i < GetNumUsers(); i++ )
     {
@@ -474,7 +479,11 @@ void IBattle::GetFreePosition( int& x, int& y )
 
 void IBattle::SetHandicap( User& user, int handicap)
 {
-		if ( IsFounderMe() || user.BattleStatus().IsBot() ) user.BattleStatus().handicap = handicap;
+		if ( IsFounderMe() || user.BattleStatus().IsBot() )
+		{
+			 user.BattleStatus().handicap = handicap;
+			 ui().OnUserBattleStatus( *this, user );
+		}
 }
 
 void IBattle::SetHostMap(const wxString& mapname, const wxString& hash)

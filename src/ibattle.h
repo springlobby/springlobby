@@ -192,7 +192,7 @@ public:
 		void ForceColour( User& user, const wxColour& col );
 		void ForceSpectator( User& user, bool spectator );
 		void SetHandicap( User& user, int handicap);
-		void BattleKickPlayer( User& user );
+		void KickPlayer( User& user );
 
 
     virtual void AddStartRect( unsigned int allyno, unsigned int left, unsigned int top, unsigned int right, unsigned int bottom );
