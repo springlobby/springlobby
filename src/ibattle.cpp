@@ -212,7 +212,7 @@ User& IBattle::OnBotAdded( const wxString& nick, const wxString& owner, const Us
     user.BattleStatus().sync = SYNC_SYNCED;
 		user.BattleStatus().owner = owner;
 		user.BattleStatus().ailib = aidll;
-		return user;
+		return m_internal_bot_list[m_internal_bot_list.size()];
 }
 
 unsigned int IBattle::GetNumBots() const
