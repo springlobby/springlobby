@@ -80,6 +80,8 @@ Battle::Battle( Server& serv, int id ) :
 
 Battle::~Battle()
 {
+    if ( GetMyPlayerNum() != -1 )
+        susynclib().UnSetCurrentMod();
     ClearStartRects();
 }
 
