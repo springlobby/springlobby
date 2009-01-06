@@ -308,16 +308,15 @@ void BattleroomListCtrl::UpdateUser( const int& index )
   SetItemColumnImage( index, 3,icons().GetFlagIcon( user.GetCountry() ) );
   SetItemColumnImage( index, 4,icons().GetRankIcon( user.GetStatus().rank ) );
 
-  if( user.BattleStatus().IsBot() )
+  if( !user.BattleStatus().IsBot() )
   {
   	 SetItem( index, 5,  user.GetNick() );
-  	 SetItemColumnImage( index, 5, -1 );
   }
   else
   {
   	 SetItem( index, 5, user.GetNick() + _T(" (") + user.BattleStatus().owner + _T(")") );
-  	 SetItemColumnImage( index, 5, -1 );
   }
+	SetItemColumnImage( index, 5, -1 );
 
   if ( !user.BattleStatus().spectator ) {
     SetItem( index, 6, wxString::Format( _T("%d"), user.BattleStatus().team + 1 ) );
