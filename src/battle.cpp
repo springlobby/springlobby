@@ -34,7 +34,9 @@ Battle::Battle( Server& serv, int id ) :
         m_ah(*this),
         m_autolock_on_start(false),
         m_id( id )
+
 {
+    m_opts.battleid =  m_id;
 }
 
 
