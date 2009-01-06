@@ -255,6 +255,7 @@ void IBattle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 				if ( previousally != user.BattleStatus().ally ) ForceAlly( user, previousally );
 			}
     }
+    ui().OnUserBattleStatus( *this, user );
 }
 
 void IBattle::OnUserRemoved( User& user )

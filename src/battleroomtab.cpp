@@ -393,9 +393,9 @@ void BattleRoomTab::UpdateBattleInfo( const wxString& Tag )
     }
     else if ( type == OptionsWrapper::PrivateOptions )
     {
-        if ( key == _T("mapname") ) /// the map has been changed
+        if ( key == _T("mapname") ) // the map has been changed
         {
-            try   /// updates map info summary
+            try   // updates map info summary
             {
                 ASSERT_EXCEPTION( m_battle.MapExists(), _("Map does not exist.") );
                 UnitSyncMap map = m_battle.LoadMap();
@@ -413,7 +413,7 @@ void BattleRoomTab::UpdateBattleInfo( const wxString& Tag )
                 m_opts_list->SetItem( m_opt_list_map[ _("Tidal strength") ], 1, _T("?") );
             }
 
-            ///delete any eventual map option from the list and add options of the new map
+            //delete any eventual map option from the list and add options of the new map
             for ( long i = m_map_opts_index; i < m_opts_list->GetItemCount(); i++ ) m_opts_list->DeleteItem( i );
             m_battle.CustomBattleOptions().loadOptions( OptionsWrapper::MapOption, m_battle.GetHostModName() );
             AddMMOptionsToList( m_map_opts_index, OptionsWrapper::MapOption );
@@ -569,7 +569,7 @@ void BattleRoomTab::OnFixTeams( wxCommandEvent& event )
 void BattleRoomTab::OnFixColours( wxCommandEvent& event )
 {
     wxLogMessage(_T(""));
-    if (!IsHosted()) /// Works with autohosts, and human hosts knows what it mean.
+    if (!IsHosted()) // Works with autohosts, and human hosts knows what it mean.
     {
         m_battle.Say(_T("!fixcolors"));
         return;
