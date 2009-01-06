@@ -93,14 +93,6 @@ class MyStrings : public wxArrayString
     }
 };
 
-//template < 1 >
-//struct MyStrings
-//{
-//    static const wxString team_choices[] = { _T("1") };
-//}
-
-//TODO make this more flexible
-//const wxString team_choices[] = { _T("1"), _T("2"), _T("3"), _T("4"), _T("5"), _T("6"), _T("7"), _T("8"), _T("9"), _T("10"), _T("11"), _T("12"), _T("13"), _T("14"), _T("15"), _T("16") };
 const MyStrings<16> team_choices;
 
 BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
