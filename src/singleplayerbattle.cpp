@@ -18,7 +18,7 @@ SinglePlayerBattle::SinglePlayerBattle(Ui& ui, MainSinglePlayerTab& msptab):
   m_me( User( _T("Player") ) )
 {
 	OnUserAdded( m_me );
-  CustomBattleOptions().setSingleOption( _T("startpostype"), wxString::Format(_T("%d"), ST_Choose), OptionsWrapper::EngineOption );
+  CustomBattleOptions().setSingleOption( _T("startpostype"), wxString::Format(_T("%d"), ST_Pick), OptionsWrapper::EngineOption );
 }
 
 
