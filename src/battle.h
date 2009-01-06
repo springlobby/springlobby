@@ -63,7 +63,7 @@ class Battle : public IBattle
     void BattleKickPlayer( User& user );
     void SetHandicap( User& user, int handicap);
 
-    void OnUserAdded( User& user );
+    User& OnUserAdded( User& user );
     void OnUserBattleStatusUpdated( User &user, UserBattleStatus status );
     void OnUserRemoved( User& user );
 

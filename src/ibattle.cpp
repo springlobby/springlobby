@@ -191,13 +191,14 @@ void IBattle::Update ( const wxString& Tag )
 {
 }
 
-void IBattle::OnUserAdded( User& user )
+User& IBattle::OnUserAdded( User& user )
 {
     UserList::AddUser( user );
 
     user.BattleStatus().spectator = false;
     user.BattleStatus().ready = false;
     user.BattleStatus().sync = SYNC_UNKNOWN;
+    return user;
 }
 
 User& IBattle::OnBotAdded( const wxString& nick, const wxString& owner, const UserBattleStatus& bs, const wxString& aidll )

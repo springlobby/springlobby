@@ -15,9 +15,10 @@
 SinglePlayerBattle::SinglePlayerBattle(Ui& ui, MainSinglePlayerTab& msptab):
   m_ui(ui),
   m_sptab(msptab),
-  m_me( OnBotAdded( _T("Player"), _T(""), UserBattleStatus(), _T("") ) )
+  m_me( User( _T("Player") ) )
 {
-  CustomBattleOptions().setSingleOption( _T("startpostype"), wxString::Format(_T("%d"), 3), OptionsWrapper::EngineOption );
+	OnUserAdded( m_me );
+  CustomBattleOptions().setSingleOption( _T("startpostype"), wxString::Format(_T("%d"), ST_Pick), OptionsWrapper::EngineOption );
 }
 
 
@@ -39,7 +40,7 @@ void SinglePlayerBattle::SendHostInfo( HostInfo update )
   }
   if ( (update & HI_Mod_Changed) != 0 )
   {
-    for ( unsigned int num = 0; num < GetNumUsers(); num++ ) BattleKickPlayer( GetUser( num ) ); // remove all bots
+    for ( unsigned int num = 1; num < GetNumBots(); num++ ) BattleKickPlayer( GetUser( num ) ); // remove all bots
     CustomBattleOptions().loadOptions( OptionsWrapper::ModOption, GetHostModName() );
     wxString presetname = sett().GetModDefaultPresetName( GetHostModName() );
     if ( !presetname.IsEmpty() )

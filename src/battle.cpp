@@ -175,7 +175,7 @@ User& Battle::GetMe()
 }
 
 
-void Battle::OnUserAdded( User& user )
+User& Battle::OnUserAdded( User& user )
 {
     user.SetBattle( this );
     UserList::AddUser( user );
@@ -189,7 +189,7 @@ void Battle::OnUserAdded( User& user )
 
     if ( IsFounderMe() )
     {
-        if ( CheckBan( user ) ) return;
+        if ( CheckBan( user ) ) return user;
 
         if ( ( m_opts.rankneeded > 1 ) && ( user.GetStatus().rank < m_opts.rankneeded ))
         {
@@ -207,13 +207,14 @@ void Battle::OnUserAdded( User& user )
             case rank_limit_autokick:
                 DoAction( _T("Rank limit autokick: ") + user.GetNick() );
                 BattleKickPlayer( user );
-                return;
+                return user;
             }
         }
 
         m_ah.OnUserAdded( user );
     }
     // any code here may be skipped if the user was autokicked
+    return user;
 }
 
 void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
