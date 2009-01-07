@@ -5,6 +5,7 @@
 
 #include "iunitsync.h"
 #include <wx/bitmap.h>
+#include <wx/image.h>
 #include <wx/panel.h>
 
 class Ui;
@@ -126,6 +127,10 @@ class MapGridCtrl : public wxPanel
 		MapData* m_mouseover_map;
 		/// Map which was last clicked.
 		MapData* m_selected_map;
+
+		wxImage m_img_background;
+		wxImage m_img_minimap_alpha;
+		wxImage m_img_foreground;
 
 		DECLARE_EVENT_TABLE();
 };

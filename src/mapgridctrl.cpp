@@ -6,8 +6,10 @@
 #include "uiutils.h"
 #include "utils.h"
 #include <wx/dcclient.h>
-#include <wx/image.h>
 #include <algorithm>
+
+#include "images/map_select_1.png.h"
+#include "images/map_select_2.png.h"
 
 /// Size of the map previews.  This should be same as size of map previews in
 /// battle list and as prefetch size in SpringUnitSync for performance reasons.
@@ -41,6 +43,17 @@ MapGridCtrl::MapGridCtrl( wxWindow* parent, Ui& ui, wxSize size, wxWindowID id )
 	, m_mouseover_map( NULL )
 	, m_selected_map( NULL )
 {
+	m_img_background.Create( MINIMAP_SIZE, MINIMAP_SIZE, false /*don't clear*/ );
+	wxRect rect( 0, 0, MINIMAP_SIZE, MINIMAP_SIZE );
+	wxColor color( GetBackgroundColour() );
+	m_img_background.SetRGB( rect, color.Red(), color.Green(), color.Blue() );
+
+	m_img_minimap_alpha = charArr2wxImage( map_select_1_png, sizeof(map_select_1_png) );
+	m_img_foreground    = charArr2wxImage( map_select_2_png, sizeof(map_select_2_png) );
+
+	ASSERT_EXCEPTION( m_img_minimap_alpha.HasAlpha(), _T("map_select_1_png must have an alpha channel") );
+	ASSERT_EXCEPTION( m_img_foreground.HasAlpha(),    _T("map_select_2_png must have an alpha channel") );
+
 	UpdateToolTip();
 }
 
@@ -406,7 +419,13 @@ void MapGridCtrl::OnGetMapImageAsyncCompleted( wxCommandEvent& event )
 
 	wxLogDebugFunc( mapname );
 
-	m_maps[mapname].minimap = usync().GetMinimap( mapname, MINIMAP_SIZE, MINIMAP_SIZE );
+	wxImage minimap( usync().GetMinimap( mapname, MINIMAP_SIZE, MINIMAP_SIZE ) );
+
+	minimap.SetAlpha( m_img_minimap_alpha.GetAlpha(), true /* "static data" */ );
+	minimap = BlendImage( minimap, m_img_background, false );
+	minimap = BlendImage( m_img_foreground, minimap, false );
+
+	m_maps[mapname].minimap = minimap;
 	m_maps[mapname].state = MapState_GotMinimap;
 
 	--m_async_minimap_fetches;
