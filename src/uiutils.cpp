@@ -284,7 +284,7 @@ struct Resizer
 			unsigned char* result_pixel = result_row + bytes;
 			const unsigned char* image_pixel = image_row + bytes;
 
-			for (int x = half_min_width; x < width - half_min_width; ++x, image_pixel += bytes_per_pixel)
+			for (int x = half_min_width; x < width - half_min_width; ++x, result_pixel += bytes_per_pixel)
 			{
 				memcpy( result_pixel, image_pixel, bytes_per_pixel );
 			}
