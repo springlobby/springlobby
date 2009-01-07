@@ -162,30 +162,29 @@ wxColour GetColorFromStrng( const wxString color )
  @brief Blends two images based on alpha channel present in foreground image.
  @param foreground Foreground image, must have an alpha channel
  @param background Background image, may have an alpha channel
+ @param blend_alpha Whether the returned image will have an alpha channel.
  @return A copy of the background image with the foreground image blended on
  top of it. The returned image will have an alpha channel iff the background
  image has an alpha channel. In that case the alpha channel is blended
  identical to the red/green/blue channels.
 */
-wxImage BlendImage( const wxImage& foreground, const wxImage&  background )
+wxImage BlendImage( const wxImage& foreground, const wxImage& background, bool blend_alpha )
 {
-    unsigned char* background_data = background.GetData();
-    unsigned char* foreground_data = foreground.GetData();
-
     if ( ( foreground.GetWidth()  != background.GetWidth() ) || ( background.GetHeight() != foreground.GetHeight() ) )
     {
         wxLogDebugFunc(_T("size mismatch while blending"));
         return background;
     }
 
-    wxImage ret( background.GetWidth(), foreground.GetHeight() );
-    unsigned char* result_data = ret.GetData();
-
-    bool zhu = background.HasAlpha();
+    bool zhu = blend_alpha && background.HasAlpha();
     if ( foreground.HasAlpha() )
     {
-        unsigned char* background_alpha = NULL;
-        unsigned char* foreground_alpha = foreground.GetAlpha();
+        wxImage ret( background.GetWidth(), foreground.GetHeight() );
+        const unsigned char* background_data = background.GetData();
+        const unsigned char* foreground_data = foreground.GetData();
+        const unsigned char* background_alpha = NULL;
+        const unsigned char* foreground_alpha = foreground.GetAlpha();
+        unsigned char* result_data = ret.GetData();
         unsigned char* result_alpha = NULL;
         unsigned int pixel_count = background.GetWidth() * background.GetHeight();
 
