@@ -421,9 +421,15 @@ void MapGridCtrl::OnGetMapImageAsyncCompleted( wxCommandEvent& event )
 
 	wxImage minimap( usync().GetMinimap( mapname, MINIMAP_SIZE, MINIMAP_SIZE ) );
 
-	minimap.SetAlpha( m_img_minimap_alpha.GetAlpha(), true /* "static data" */ );
-	minimap = BlendImage( minimap, m_img_background, false );
-	minimap = BlendImage( m_img_foreground, minimap, false );
+	const int w = minimap.GetWidth();
+	const int h = minimap.GetHeight();
+	wxImage background( BorderInvariantResizeImage( m_img_background, w, h ) );
+	wxImage minimap_alpha( BorderInvariantResizeImage( m_img_minimap_alpha, w, h ) );
+	wxImage foreground( BorderInvariantResizeImage( m_img_foreground, w, h ) );
+
+	minimap.SetAlpha( minimap_alpha.GetAlpha(), true /* "static data" */ );
+	minimap = BlendImage( minimap, background, false );
+	minimap = BlendImage( foreground, minimap, false );
 
 	m_maps[mapname].minimap = minimap;
 	m_maps[mapname].state = MapState_GotMinimap;
