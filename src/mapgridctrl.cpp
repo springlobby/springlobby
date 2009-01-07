@@ -6,6 +6,7 @@
 #include "uiutils.h"
 #include "utils.h"
 #include <wx/dcclient.h>
+#include <wx/settings.h>
 #include <algorithm>
 
 #include "images/map_select_1.png.h"
@@ -304,6 +305,12 @@ void MapGridCtrl::DrawMap( wxDC& dc, MapData& map, int x, int y )
 			y += (MINIMAP_SIZE - map.minimap.GetHeight()) / 2;
 			dc.DrawBitmap( map.minimap, x, y, false );
 			break;
+	}
+
+	if ( &map == m_selected_map ) {
+		dc.SetPen( wxPen( wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHT ) ) );
+		dc.SetBrush( wxBrush( wxColour(), wxTRANSPARENT ) );
+		dc.DrawRectangle( x - 1, y - 1, map.minimap.GetWidth() + 2, map.minimap.GetHeight() + 2 );
 	}
 }
 
