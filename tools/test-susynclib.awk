@@ -53,7 +53,7 @@ BEGIN {
 		split( $0, syms, /[^_A-Za-z0-9"']*/ )
 		for ( i in syms ) {
 			if ( syms[i] ~ /[_A-Za_z][_A-Za_z0-9]*/ )
-				callgraph[function_name, syms[i]] = 1;
+				callgraph[function_name, syms[i]] = NR;
 		}
 		delete syms;
 	}
@@ -67,7 +67,7 @@ END {
 		for ( key in callgraph ) {
 			split( key, func, "," );
 			if ( func[2] in functions_with_lock && !(func[1] in functions_with_lock) ) {
-				functions_with_lock[func[1]] = 2;
+				functions_with_lock[func[1]] = 1 + functions_with_lock[func[2]];
 				done = 0;
 			}
 		}
@@ -79,8 +79,8 @@ END {
 	for ( key in callgraph ) {
 		split( key, func, "," );
 		if ( func[1] != func[2] && functions_with_lock[func[1]] == 1 && functions_with_lock[func[2]] >= 1 ) {
-			printf "Error: %s (%d) calls %s (%d) and both take unitsync lock\n", \
-				func[1], functions_with_lock[func[1]], func[2], functions_with_lock[func[2]];
+			printf "%s:%d: Error: %s (%d) calls %s (%d) and both take unitsync lock\n", \
+				FILENAME, callgraph[key], func[1], functions_with_lock[func[1]], func[2], functions_with_lock[func[2]];
 			++errcount;
 		}
 	}
