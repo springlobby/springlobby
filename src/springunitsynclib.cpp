@@ -253,8 +253,10 @@ void SpringUnitSyncLib::_Load( const wxString& path )
 
 void SpringUnitSyncLib::_Init()
 {
-  if ( _IsLoaded() && m_init != NULL )
+  if ( _IsLoaded() && m_init != NULL ) {
+    m_current_mod = wxEmptyString;
     m_init( true, 1 );
+  }
 }
 
 
@@ -271,6 +273,11 @@ void SpringUnitSyncLib::_Unload()
 {
   // as soon as we enter m_uninit unitsync technically isn't loaded anymore.
   m_loaded = false;
+
+  m_path = wxEmptyString;
+
+  // can't call UnSetCurrentMod() because it takes the unitsync lock
+  m_current_mod = wxEmptyString;
 
   if (m_uninit)
     m_uninit();
@@ -389,6 +396,13 @@ void SpringUnitSyncLib::_SetCurrentMod( const wxString& modname )
     m_add_all_archives( m_get_mod_archive( m_get_mod_index( modname.mb_str( wxConvUTF8 ) ) ) );
     m_current_mod = modname;
   }
+}
+
+
+void SpringUnitSyncLib::UnSetCurrentMod( )
+{
+  LOCK_UNITSYNC;
+  m_current_mod = wxEmptyString;
 }
 
 
