@@ -702,7 +702,10 @@ int SpringUnitSyncLib::GetPrimaryModCount()
 wxString SpringUnitSyncLib::GetPrimaryModArchive( int index )
 {
   InitLib( m_get_mod_archive );
+  UNITSYNC_EXCEPTION( m_get_mod_count, _T("Function was not in unitsync library.") );
 
+  int count = m_get_mod_count();
+	UNITSYNC_EXCEPTION( index < count, _T("index out of bounds") );
   return WX_STRINGC( m_get_mod_archive( index ) );
 }
 
