@@ -218,28 +218,27 @@ wxImage BlendImage( const wxImage& foreground, const wxImage&  background )
 
 wxBitmap* charArr2wxBitmap(const unsigned char * arg, int size)
 {
-    wxMemoryInputStream istream( arg, size );
-    wxImage temp( istream, wxBITMAP_TYPE_PNG );
-    return new wxBitmap(temp );
+    return new wxBitmap( charArr2wxImage( arg, size) );
 }
 
 //wxBitmap charArr2wxBitmap(const unsigned char * arg, int size)
 //{
-//    wxMemoryInputStream istream( arg, size );
-//     wxImage temp( istream, wxBITMAP_TYPE_PNG );
-//    return wxBitmap(temp );
+//    return wxBitmap( charArr2wxImage( arg, size) );
 //}
+
+wxImage charArr2wxImage(const unsigned char * arg, int size)
+{
+    wxMemoryInputStream istream( arg, size );
+    return wxImage( istream, wxBITMAP_TYPE_PNG );
+}
 
 wxBitmap* charArr2wxBitmapWithBlending(const unsigned char * dest, int dest_size, const unsigned char * text, int text_size )
 {
-    wxMemoryInputStream istream1( dest, dest_size );
-    wxImage dest_img( istream1, wxBITMAP_TYPE_PNG );
-    wxMemoryInputStream istream2( text, text_size );
-    wxImage text_img( istream2, wxBITMAP_TYPE_PNG );
+    wxImage dest_img( charArr2wxImage( dest, dest_size ) );
+    wxImage text_img( charArr2wxImage( text, text_size ) );
     wxImage ret = BlendImage(text_img, dest_img );
 
     return new wxBitmap( ret );
-
 }
 
 wxBitmap* BlendBitmaps( const wxBitmap& background, const wxBitmap& overlay, const int dim )
