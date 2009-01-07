@@ -771,34 +771,21 @@ void Settings::ConvertOldSpringDirsOptions()
 std::map<wxString, wxString> Settings::GetSpringVersionList()
 {
   wxLogDebugFunc(_T(""));
-  std::map<wxString, wxString> ret;
   wxString old_path = m_config->GetPath();
   m_config->SetPath( _T("/Spring/Paths") );
   wxString groupname;
   long dummy;
   //CacheThread().Pause(); // pause caching thread
+
+  std::map<wxString, wxString> usync_paths;
   bool groupexist = m_config->GetFirstGroup(groupname, dummy);
   while ( groupexist )
   {
-    wxString usync_path = m_config->Read( _T("/Spring/Paths/") + groupname + _T("/UnitSyncPath"), _T("") );
-    try
-    {
-      SpringUnitSyncLib libloader( usync_path, false );
-      ret[groupname] = libloader.GetSpringVersion();
-    }
-    catch(...)
-    {
-    }
+    usync_paths[groupname] = m_config->Read( _T("/Spring/Paths/") + groupname + _T("/UnitSyncPath"), _T("") );
     groupexist = m_config->GetNextGroup(groupname, dummy);
   }
   m_config->SetPath( old_path );
-  try
-  {
-    susynclib().Init(); // re-init current "main" unitsync
-  }
-  catch(...){}
-  //CacheThread().Resume(); // resume caching thread
-  return ret;
+  return susynclib().GetSpringVersionList(usync_paths);
 }
 
 wxString Settings::GetCurrentUsedSpringIndex()
