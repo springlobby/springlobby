@@ -189,10 +189,11 @@ wxImage BlendImage( const wxImage& foreground, const wxImage&  background )
         unsigned char* result_alpha = NULL;
         unsigned int pixel_count = background.GetWidth() * background.GetHeight();
 
-        if ( zhu ) {
+        if ( zhu )
+        {
           background_alpha = background.GetAlpha();
           ret.InitAlpha();
-          result_alpha = result_alpha = ret.GetAlpha();
+          result_alpha = ret.GetAlpha();
         }
 
         for ( unsigned int i = 0, i_a = 0; i < pixel_count * 3; i+=3,  i_a++ )
@@ -205,7 +206,8 @@ wxImage BlendImage( const wxImage& foreground, const wxImage&  background )
             result_data[i+1]  = foreground_data[i+1] * fore_blend_fac + background_data[i+1] * back_blend_fac ;
             result_data[i+2]  = foreground_data[i+2] * fore_blend_fac + background_data[i+2] * back_blend_fac ;
 
-            if ( zhu ) {
+            if ( zhu )
+            {
               unsigned char back_alpha = background_alpha[i_a] ;
               result_alpha[i_a] = fore_alpha           * fore_blend_fac + back_alpha           * back_blend_fac ;
             }
