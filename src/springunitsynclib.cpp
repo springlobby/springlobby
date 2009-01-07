@@ -257,7 +257,8 @@ void SpringUnitSyncLib::_Load( const wxString& path )
     // only when we end up here unitsync was succesfully loaded.
     m_loaded = true;
   }
-  catch ( ... ) {
+  catch ( ... )
+  {
     // don't uninit unitsync in _Unload -- it hasn't been init'ed yet
     m_uninit = NULL;
     _Unload();
@@ -412,6 +413,7 @@ void SpringUnitSyncLib::_SetCurrentMod( const wxString& modname )
     m_current_mod = modname;
   }
 }
+
 
 void SpringUnitSyncLib::UnSetCurrentMod( )
 {
@@ -700,7 +702,10 @@ int SpringUnitSyncLib::GetPrimaryModCount()
 wxString SpringUnitSyncLib::GetPrimaryModArchive( int index )
 {
   InitLib( m_get_mod_archive );
+  UNITSYNC_EXCEPTION( m_get_mod_count, _T("Function was not in unitsync library.") );
 
+  int count = m_get_mod_count();
+	UNITSYNC_EXCEPTION( index < count, _T("index out of bounds") );
   return WX_STRINGC( m_get_mod_archive( index ) );
 }
 

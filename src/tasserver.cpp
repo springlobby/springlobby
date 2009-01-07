@@ -434,21 +434,15 @@ void TASServer::Update( int mselapsed )
     }
     else   // We are connected already.
     {
-        if ( !IsConnected() )
-        {
-            m_connected = false;
-            m_online = false;
-            m_se->OnDisconnected();
-            return;
-        }
+        if ( !IsConnected() ) return;
 
         time_t now = time( 0 );
 
-        /// joining battle with nat traversal:
-        /// if we havent finalized joining yet, and udp_reply_timeout seconds has passed since
-        /// we did UdpPing(our name) , join battle anyway, but with warning message that nat failed.
-        /// (if we'd receive reply from server, we'd finalize already)
-        ///
+        // joining battle with nat traversal:
+        // if we havent finalized joining yet, and udp_reply_timeout seconds has passed since
+        // we did UdpPing(our name) , join battle anyway, but with warning message that nat failed.
+        // (if we'd receive reply from server, we'd finalize already)
+        //
         if (m_do_finalize_join_battle&&(m_last_udp_ping+udp_reply_timeout<now))
         {
             customMessageBoxNoModal(SL_MAIN_ICON,_("Failed to punch through NAT, playing this battle might not work for you or for other players."),_("Error"), wxICON_ERROR);
@@ -714,7 +708,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         if ( channel == _T("autohost") )
         {
           m_relay_host_manager_list.Clear();
-          wxStringTokenizer tkr( params, _T("\n") );
+          wxStringTokenizer tkr( params, _T("\\n") );
           while( tkr.HasMoreTokens() )
           {
             m_relay_host_manager_list.Add( tkr.GetNextToken() );
@@ -819,6 +813,15 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         channel = GetWordParam( params );
         units = GetIntParam( params );
         topic = GetSentenceParam( params );
+        if ( channel == _T("autohost") )
+        {
+          m_relay_host_manager_list.Clear();
+          wxStringTokenizer tkr( topic, _T("\\n") );
+          while( tkr.HasMoreTokens() )
+          {
+            m_relay_host_manager_list.Add( tkr.GetNextToken() );
+          }
+        }
         m_se->OnChannelList( channel, units, topic );
     }
     else if ( cmd == _T("ENDOFCHANNELS") )
@@ -1308,7 +1311,7 @@ void TASServer::HostBattle( BattleOptions bo, const wxString& password )
 {
     wxLogDebugFunc( _T("") );
 
-    /// to see ip addresses of users as they join (in the log), pretend you're hosting with NAT.
+    // to see ip addresses of users as they join (in the log), pretend you're hosting with NAT.
     int nat_type=bo.nattype;
     /*
     if(nat_type==0 && sett().GetShowIPAddresses()){
@@ -1359,7 +1362,7 @@ void TASServer::HostBattle( BattleOptions bo, const wxString& password )
               else
               {
                  choice++;
-                 choice = rand() % ( numbots -1 );
+                 if ( choice >= ( numbots -1 ) ) choice = 0;
                  if ( choice == begin ) doloop = false;
               }
             }
@@ -2043,10 +2046,11 @@ void TASServer::OnConnected( Socket* sock )
 
 void TASServer::OnDisconnected( Socket* sock )
 {
-    wxLogDebugFunc( _T("") );
+    wxLogDebugFunc( TowxString(m_connected) );
+    bool tmp = m_connected;
     m_connected = false;
     m_online = false;
-    m_se->OnDisconnected();
+    if ( tmp ) m_se->OnDisconnected();
 }
 
 
