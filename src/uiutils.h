@@ -47,6 +47,9 @@ wxBitmap charArr2wxBitmap(const unsigned char * arg, int size);
 wxBitmap charArr2wxBitmapWithBlending(const unsigned char * arg, int size,
             const unsigned char * text, int text_size);
 
+//! shrinks/expands image by removing/duplicating rows/columns from the center of the image
+wxImage BorderInvariantResizeImage(  const wxImage& image, int width, int height );
+
 
 //! when querying for a color, always use this (it'll autosave/retrieve custom defined colors)
 wxColour GetColourFromUser(wxWindow *parent, const wxColour& colInit,

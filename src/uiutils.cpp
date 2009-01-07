@@ -250,6 +250,99 @@ wxBitmap BlendBitmaps( const wxBitmap& background, const wxBitmap& overlay, cons
     return wxBitmap( ret );
 }
 
+
+namespace {
+struct Resizer
+{
+	// Helper class for BorderInvariantResizeImage
+	// Author: Tobi Vollebregt
+
+	Resizer( wxImage& result, const wxImage& image, bool alpha )
+		: width( result.GetWidth() )
+		, height( result.GetHeight() )
+		, imwidth( image.GetWidth() )
+		, imheight( image.GetHeight() )
+		, half_min_width( (std::min(width, imwidth) + 1) / 2 )    // round up to cover middle pixel
+		, half_min_height( (std::min(height, imheight) + 1) / 2 ) // if new width/height is uneven.
+		, bytes_per_pixel( alpha ? 1 : 3 )
+		, image_data( alpha ? image.GetAlpha() : image.GetData() )
+		, result_data( alpha ? result.GetAlpha() : result.GetData() )
+	{
+	}
+
+	void CopyRow( int result_y, int image_y )
+	{
+		unsigned char* result_row = result_data + bytes_per_pixel * result_y * width;
+		const unsigned char* image_row = image_data + bytes_per_pixel * image_y * imwidth;
+		const int bytes = bytes_per_pixel * half_min_width;
+
+		memcpy( result_row, image_row, bytes );
+		memcpy( result_row + bytes_per_pixel * width - bytes, image_row + bytes_per_pixel * imwidth - bytes, bytes );
+
+		if ( width > imwidth )
+		{
+			unsigned char* result_pixel = result_row + bytes;
+			const unsigned char* image_pixel = image_row + bytes;
+
+			for (int x = half_min_width; x < width - half_min_width; ++x, image_pixel += bytes_per_pixel)
+			{
+				memcpy( result_pixel, image_pixel, bytes_per_pixel );
+			}
+		}
+	}
+
+	void CopyTopAndBottomRows()
+	{
+		for (int y = 0; y < half_min_height; ++y)
+		{
+			CopyRow( y, y );
+			CopyRow( height - 1 - y, imheight - 1 - y );
+		}
+	}
+
+	void CopyCenterRows()
+	{
+		for (int y = half_min_height; y < height - half_min_height; ++y)
+		{
+			CopyRow( y, half_min_height - 1 );
+		}
+	}
+
+	void operator () ()
+	{
+		CopyTopAndBottomRows();
+		CopyCenterRows();
+	}
+
+	const int width, height;
+	const int imwidth, imheight;
+	const int half_min_width, half_min_height;
+	const int bytes_per_pixel;
+	const unsigned char* const image_data;
+	unsigned char* const result_data;
+};
+}
+
+wxImage BorderInvariantResizeImage(  const wxImage& image, int width, int height )
+{
+	if ( !image.IsOk() || (width == image.GetWidth() && height == image.GetHeight()) )
+		return image;
+
+	wxImage ret( width, height );
+	Resizer data_resize( ret, image, false );
+	data_resize();
+
+	if ( image.HasAlpha() )
+	{
+		ret.InitAlpha();
+		Resizer alpha_resize( ret, image, true );
+		alpha_resize();
+	}
+
+	return ret;
+}
+
+
 wxColour GetColourFromUser(wxWindow *parent, const wxColour& colInit, const wxString& caption, const wxString& palette)
 {
     wxColourData data;
