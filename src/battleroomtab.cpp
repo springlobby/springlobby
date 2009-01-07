@@ -82,9 +82,18 @@ BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
 
 END_EVENT_TABLE()
 
-//TODO make this more flexible
-const wxString team_choices[] = { _T("1"), _T("2"), _T("3"), _T("4"), _T("5"), _T("6"), _T("7"), _T("8"), _T("9"), _T("10"), _T("11"), _T("12"), _T("13"), _T("14"), _T("15"), _T("16") };
+template < int N, int S = 1 >
+class MyStrings : public wxArrayString
+{
+    public:
+    MyStrings()
+    {
+        for ( int i = S; i <= N; ++i)
+            Add( TowxString(i) );
+    }
+};
 
+const MyStrings<16> team_choices;
 
 BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
         wxScrolledWindow( parent, -1 ),m_ui(ui), m_battle(battle)
@@ -98,9 +107,9 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
     UserBattleStatus& myself = m_battle.GetMe().BattleStatus();
 
     m_player_panel = new wxPanel( m_splitter , -1 );
-    m_team_sel = new wxComboBox( m_player_panel, BROOM_TEAMSEL, _T("1"), wxDefaultPosition, wxSize(50,CONTROL_HEIGHT), 16, team_choices );
+    m_team_sel = new wxComboBox( m_player_panel, BROOM_TEAMSEL, _T("1"), wxDefaultPosition, wxSize(50,CONTROL_HEIGHT), team_choices );
     m_team_sel->SetToolTip(TE(_("Players with the same team number share control of their units.")));
-    m_ally_sel = new wxComboBox( m_player_panel, BROOM_ALLYSEL, _T("1"), wxDefaultPosition, wxSize(50,CONTROL_HEIGHT), 16, team_choices );
+    m_ally_sel = new wxComboBox( m_player_panel, BROOM_ALLYSEL, _T("1"), wxDefaultPosition, wxSize(50,CONTROL_HEIGHT), team_choices );
     m_ally_sel->SetToolTip(TE(_("Players with the same ally number work together to achieve victory.")));
     m_color_sel = new ColorButton( m_player_panel, BROOM_COLOURSEL, myself.colour, wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
     m_color_sel->SetToolTip(TE(_("Select a color to identify your units in-game")));

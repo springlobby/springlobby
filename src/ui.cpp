@@ -662,14 +662,14 @@ void Ui::OnDisconnected( Server& server )
 
     if ( server.uidata.panel )
     {
-        server.uidata.panel->StatusMessage( _T("Disconnected from server.") );
+        server.uidata.panel->StatusMessage( _("Disconnected from server.") );
 
         server.uidata.panel->SetServer( 0 );
-        /// leads to crash. Disabled for now
+        // leads to crash. Disabled for now
         //server.uidata.panel = 0;
     }
-
-    /// Crashes. Disabled for now.
+		customMessageBoxNoModal( SL_MAIN_ICON, _("Disconnected from server"), _("Not online"), wxICON_EXCLAMATION|wxOK );
+    // Crashes. Disabled for now.
     //mw().GetChatTab().CloseAllChats();
 
 }

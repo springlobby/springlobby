@@ -257,7 +257,8 @@ void SpringUnitSyncLib::_Load( const wxString& path )
     // only when we end up here unitsync was succesfully loaded.
     m_loaded = true;
   }
-  catch ( ... ) {
+  catch ( ... )
+  {
     // don't uninit unitsync in _Unload -- it hasn't been init'ed yet
     m_uninit = NULL;
     _Unload();
@@ -412,6 +413,7 @@ void SpringUnitSyncLib::_SetCurrentMod( const wxString& modname )
     m_current_mod = modname;
   }
 }
+
 
 void SpringUnitSyncLib::UnSetCurrentMod( )
 {

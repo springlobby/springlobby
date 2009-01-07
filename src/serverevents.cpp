@@ -109,9 +109,8 @@ void ServerEvents::OnPong( int ping_time )
 {
     if ( ping_time == -1 )
     {
-        wxLogWarning( _("Ping Timeout!") );
-        m_serv.Disconnect();
-        OnDisconnected();
+        wxLogWarning( _T("Ping Timeout!") );
+        if ( m_serv.IsConnected() ) m_serv.Disconnect();
     }
 }
 
@@ -804,7 +803,6 @@ void ServerEvents::OnClientIPPort( const wxString &username, const wxString &ip,
 void ServerEvents::OnKickedFromBattle()
 {
     customMessageBoxNoModal(SL_MAIN_ICON,_("You were kicked from the battle!"),_("Kicked by Host"));
-
 }
 
 
