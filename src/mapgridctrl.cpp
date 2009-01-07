@@ -416,6 +416,8 @@ void MapGridCtrl::OnLeftUp( wxMouseEvent& event )
 			evt.SetString( m_selected_map->name );
 			wxPostEvent( this, evt );
 		}
+
+		Refresh();
 	}
 }
 
