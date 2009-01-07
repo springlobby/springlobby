@@ -703,7 +703,7 @@ wxString SpringUnitSyncLib::GetPrimaryModArchive( int index )
 {
   InitLib( m_get_mod_archive );
 	int total = GetPrimaryModCount();
-	UNITSYNC_EXCEPTION( index < total, _T("index out of bounds") );
+	UNITSYNC_EXCEPTION( index < total, _T("index out of bounds");
   return WX_STRINGC( m_get_mod_archive( index ) );
 }
 
