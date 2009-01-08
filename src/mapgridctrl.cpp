@@ -185,39 +185,31 @@ void MapGridCtrl::Sort( SortKey vertical, SortKey horizontal, bool vertical_dire
 }
 
 
-void MapGridCtrl::LoadMaps()
+void MapGridCtrl::Clear()
 {
-	wxArrayString maps = usync().GetMapList();
-	int count = maps.size();
-
-	wxLogDebugFunc( TowxString( maps.size() ) );
-
 	m_maps.clear();
 	m_grid.clear();
+}
 
-	for (int i = 0; i < count; ++i ) {
-		try {
-			m_maps[maps[i]] = usync().GetMapEx( maps[i] );
-		}
-		catch (...) {}
-	}
 
+void MapGridCtrl::AddMap( const wxString& mapname )
+{
+	AddMap( usync().GetMapEx( mapname ) );
+}
+
+
+void MapGridCtrl::AddMap( const UnitSyncMap& map )
+{
+	// no duplicates (would crash because of dangling MapData pointers in m_grid)
+	if ( m_maps.find( map.name ) != m_maps.end() ) return;
+
+	m_maps[map.name] = map;
+	m_grid.push_back( &m_maps[map.name] );
+
+	// recalculate grid size (keep it approximately square)
 	const int width = int(sqrt( m_maps.size() ));
-
 	m_size.x = width;
 	m_size.y = (m_maps.size() + width - 1) / width;
-
-	std::map<wxString, MapData>::iterator it = m_maps.begin();
-	if (it == m_maps.end()) return;
-
-	for (int y = 0; y < m_size.y && it != m_maps.end(); ++y) {
-		for (int x = 0; x < m_size.x && it != m_maps.end(); ++x) {
-			m_grid.push_back( &it->second );
-			++it;
-		}
-	}
-
-	Sort( SortKey_Name, SortKey_Name );
 }
 
 

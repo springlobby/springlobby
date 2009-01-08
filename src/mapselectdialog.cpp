@@ -36,8 +36,8 @@ END_EVENT_TABLE()
 
 MapSelectDialog::MapSelectDialog(wxWindow* parent,Ui& ui)
 	: m_ui(ui)
-	, m_vertical_direction(false)
 	, m_horizontal_direction(false)
+	, m_vertical_direction(false)
 {
 	//(*Initialize(MapSelectDialog)
 	wxStaticText* StaticText2;
@@ -130,7 +130,16 @@ void MapSelectDialog::OnInit( wxInitDialogEvent& event )
 	m_horizontal_choice->SetSelection( 0 );
 	m_vertical_choice->SetSelection( 0 );
 
-	m_mapgrid->LoadMaps();
+	wxArrayString maps = usync().GetMapList();
+	int count = maps.size();
+
+	for (int i = 0; i < count; ++i ) {
+		try {
+			m_mapgrid->AddMap( maps[i] );
+		}
+		catch (...) {}
+	}
+
 	Sort();
 }
 

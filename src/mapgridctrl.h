@@ -35,7 +35,9 @@ class MapGridCtrl : public wxPanel
 		MapGridCtrl( wxWindow* parent, Ui& ui, wxSize size = wxDefaultSize, wxWindowID id = -1 );
 		~MapGridCtrl();
 
-		void LoadMaps();
+		void Clear();
+		void AddMap( const wxString& mapname );
+		void AddMap( const UnitSyncMap& map );
 		void Sort( SortKey vertical, SortKey horizontal, bool vertical_direction = false, bool horizontal_direction = false );
 
 		UnitSyncMap* GetSelectedMap() const { return m_selected_map; }
