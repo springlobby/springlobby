@@ -304,13 +304,13 @@ void MapGridCtrl::DrawMap( wxDC& dc, MapData& map, int x, int y )
 			x += (MINIMAP_SIZE - map.minimap.GetWidth()) / 2;
 			y += (MINIMAP_SIZE - map.minimap.GetHeight()) / 2;
 			dc.DrawBitmap( map.minimap, x, y, false );
+			// draw selection
+			if ( &map == m_selected_map ) {
+				dc.SetPen( wxPen( wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHT ) ) );
+				dc.SetBrush( wxBrush( wxColour(0, 0, 0), wxTRANSPARENT ) );
+				dc.DrawRectangle( x - 1, y - 1, map.minimap.GetWidth() + 2, map.minimap.GetHeight() + 2 );
+			}
 			break;
-	}
-
-	if ( &map == m_selected_map ) {
-		dc.SetPen( wxPen( wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHT ) ) );
-		dc.SetBrush( wxBrush( wxColour(0, 0, 0), wxTRANSPARENT ) );
-		dc.DrawRectangle( x - 1, y - 1, map.minimap.GetWidth() + 2, map.minimap.GetHeight() + 2 );
 	}
 }
 
