@@ -79,6 +79,7 @@ class MapSelectDialog: public wxDialog
 		void OnFilterAllSelect(wxCommandEvent& event);
 		void OnFilterPopularSelect(wxCommandEvent& event);
 		void OnFilterRecentSelect(wxCommandEvent& event);
+		void OnFilterTextChanged(wxCommandEvent& event);
 		//*)
 
 		void OnMapSelected( wxCommandEvent& event );
@@ -86,7 +87,7 @@ class MapSelectDialog: public wxDialog
 		void OnHorizontalDirectionClicked( wxCommandEvent& event );
 
 		void AppendSortKeys( wxChoice* choice );
-		void Sort();
+		void UpdateSortAndFilter();
 
 		void Idle();
 		void Load( State newstate );

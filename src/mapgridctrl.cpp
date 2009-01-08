@@ -180,20 +180,37 @@ void MapGridCtrl::Sort( SortKey vertical, SortKey horizontal, bool vertical_dire
 				break;
 		}
 	}
-
-	Refresh();
 }
 
 
 void MapGridCtrl::Clear()
 {
+	m_maps_unused.insert( m_maps.begin(), m_maps.end() );
+	m_maps_unused.insert( m_maps_filtered.begin(), m_maps_filtered.end() );
 	m_maps.clear();
+	m_maps_filtered.clear();
 	m_grid.clear();
+	m_mouseover_map = NULL; // can't be sure pointer will stay valid
+	m_selected_map = NULL;
 }
 
 
 void MapGridCtrl::AddMap( const wxString& mapname )
 {
+	// no duplicates (would crash because of dangling MapData pointers in m_grid)
+	if ( m_maps.find( mapname ) != m_maps.end() ) return;
+
+	// check if we still have it in m_maps_unused..
+	MapMap::iterator it = m_maps_unused.find( mapname );
+	if ( it != m_maps_unused.end() ) {
+		m_maps.insert( *it );
+		m_grid.push_back( &m_maps[mapname] );
+		m_maps_unused.erase( it );
+		UpdateGridSize();
+		return;
+	}
+
+	// if not, get it from unitsync
 	try {
 		AddMap( usync().GetMapEx( mapname ) );
 	}
@@ -205,10 +222,17 @@ void MapGridCtrl::AddMap( const UnitSyncMap& map )
 {
 	// no duplicates (would crash because of dangling MapData pointers in m_grid)
 	if ( m_maps.find( map.name ) != m_maps.end() ) return;
+	// don't want map to exist in both m_maps and m_maps_unused.
+	m_maps_unused.erase( map.name );
 
 	m_maps[map.name] = map;
 	m_grid.push_back( &m_maps[map.name] );
+	UpdateGridSize();
+}
 
+
+void MapGridCtrl::UpdateGridSize()
+{
 	// recalculate grid size (keep it approximately square)
 	const int width = int(sqrt( m_maps.size() ) + 0.5);
 	m_size.x = width;
@@ -417,6 +441,17 @@ void MapGridCtrl::OnLeftUp( wxMouseEvent& event )
 }
 
 
+void MapGridCtrl::SetMinimap( MapMap& maps, const wxString& mapname, const wxBitmap& minimap )
+{
+	MapMap::iterator it = maps.find( mapname );
+
+	if ( it != maps.end() ) {
+		it->second.minimap = minimap;
+		it->second.state = MapState_GotMinimap;
+	}
+}
+
+
 void MapGridCtrl::OnGetMapImageAsyncCompleted( wxCommandEvent& event )
 {
 	wxString mapname = event.GetString();
@@ -435,8 +470,11 @@ void MapGridCtrl::OnGetMapImageAsyncCompleted( wxCommandEvent& event )
 	minimap = BlendImage( minimap, background, false );
 	minimap = BlendImage( foreground, minimap, false );
 
-	m_maps[mapname].minimap = minimap;
-	m_maps[mapname].state = MapState_GotMinimap;
+	// set the minimap in all MapMaps
+	wxBitmap minimap_bmp( minimap );
+	SetMinimap( m_maps, mapname, minimap_bmp );
+	SetMinimap( m_maps_unused, mapname, minimap_bmp );
+	SetMinimap( m_maps_filtered, mapname, minimap_bmp );
 
 	--m_async_minimap_fetches;
 	UpdateAsyncFetches();

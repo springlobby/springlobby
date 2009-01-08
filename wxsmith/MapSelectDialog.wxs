@@ -84,7 +84,9 @@
 						<object class="wxStaticBoxSizer" variable="StaticBoxSizer2" member="no">
 							<label>Filter</label>
 							<object class="sizeritem">
-								<object class="wxTextCtrl" name="ID_FILTER_TEXT" variable="m_filter_text" member="yes" />
+								<object class="wxTextCtrl" name="ID_FILTER_TEXT" variable="m_filter_text" member="yes">
+									<handler function="OnFilterTextChanged" entry="EVT_TEXT" />
+								</object>
 								<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
 								<option>1</option>
 							</object>

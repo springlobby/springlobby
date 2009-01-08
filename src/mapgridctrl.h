@@ -38,7 +38,36 @@ class MapGridCtrl : public wxPanel
 		void Clear();
 		void AddMap( const wxString& mapname );
 		void AddMap( const UnitSyncMap& map );
+
+		void CheckInBounds();
+
+		/* ===== sorting ===== */
 		void Sort( SortKey vertical, SortKey horizontal, bool vertical_direction = false, bool horizontal_direction = false );
+
+		/* ===== filtering ===== */
+		template< class Predicate > int Filter( Predicate pred )
+		{
+			std::vector< wxString > maps;
+
+			m_maps_filtered.insert( m_maps.begin(), m_maps.end() );
+			m_maps_unused.insert( m_maps.begin(), m_maps.end() );
+			m_maps.clear();
+			m_grid.clear();
+			m_mouseover_map = NULL; // can't be sure pointer will stay valid
+			m_selected_map = NULL;
+
+
+			for (MapMap::iterator it = m_maps_filtered.begin(); it != m_maps_filtered.end(); ++it) {
+				if ( pred( it->second ) ) maps.push_back( it->first );
+			}
+
+			for (std::vector< wxString >::iterator it = maps.begin(); it != maps.end(); ++it) {
+				AddMap( *it );
+				m_maps_filtered.erase( *it );
+			}
+
+			return m_maps.size();
+		}
 
 		UnitSyncMap* GetSelectedMap() const { return m_selected_map; }
 
@@ -68,6 +97,8 @@ class MapGridCtrl : public wxPanel
 			wxBitmap minimap;
 			MapState state;
 		};
+
+		typedef std::map< wxString, MapData > MapMap;
 
 		// wrapper around the Compare*() methods below to allow changing sort direction
 		template< class Compare > class _Compare2
@@ -102,16 +133,19 @@ class MapGridCtrl : public wxPanel
 		static int ComparePosCount( const MapData* a, const MapData* b );
 		template< class Compare > void _Sort( int dimension, Compare cmp );
 
-		void CheckInBounds();
+		void UpdateGridSize();
 		void UpdateToolTip();
 		void UpdateAsyncFetches();
 		void FetchMinimap( MapData& map );
 		void DrawMap( wxDC& dc, MapData& map, int x, int y );
+		void SetMinimap( MapMap& maps, const wxString& mapname, const wxBitmap& minimap );
 
 		Ui& m_ui;
 		UnitSyncAsyncOps m_async;
 
-		std::map< wxString, MapData > m_maps;
+		MapMap m_maps;
+		MapMap m_maps_unused;
+		MapMap m_maps_filtered;
 		std::vector< MapData* > m_grid;
 		wxSize m_size;
 

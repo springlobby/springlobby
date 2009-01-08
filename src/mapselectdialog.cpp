@@ -101,6 +101,7 @@ MapSelectDialog::MapSelectDialog(wxWindow* parent,Ui& ui)
 	Connect(ID_FILTER_ALL,wxEVT_COMMAND_RADIOBUTTON_SELECTED,(wxObjectEventFunction)&MapSelectDialog::OnFilterAllSelect);
 	Connect(ID_FILTER_POPULAR,wxEVT_COMMAND_RADIOBUTTON_SELECTED,(wxObjectEventFunction)&MapSelectDialog::OnFilterPopularSelect);
 	Connect(ID_FILTER_RECENT,wxEVT_COMMAND_RADIOBUTTON_SELECTED,(wxObjectEventFunction)&MapSelectDialog::OnFilterRecentSelect);
+	Connect(ID_FILTER_TEXT,wxEVT_COMMAND_TEXT_UPDATED,(wxObjectEventFunction)&MapSelectDialog::OnFilterTextChanged);
 	m_mapgrid->Connect(ID_MAPGRID,wxEVT_LEFT_DCLICK,(wxObjectEventFunction)&MapSelectDialog::OnMapGridLeftDClick,0,this);
 	Connect(ID_TIMER,wxEVT_TIMER,(wxObjectEventFunction)&MapSelectDialog::OnTimerTrigger);
 	Connect(wxID_ANY,wxEVT_INIT_DIALOG,(wxObjectEventFunction)&MapSelectDialog::OnInit);
@@ -143,7 +144,7 @@ void MapSelectDialog::OnInit( wxInitDialogEvent& event )
 
 void MapSelectDialog::OnSortKeySelect( wxCommandEvent& event )
 {
-	Sort();
+	UpdateSortAndFilter();
 }
 
 
@@ -163,15 +164,32 @@ void MapSelectDialog::AppendSortKeys( wxChoice* choice )
 	choice->Append( _("Number of start positions"), (void*) MapGridCtrl::SortKey_PosCount );
 }
 
-
 static MapGridCtrl::SortKey GetSelectedSortKey( wxChoice* choice )
 {
 	return (MapGridCtrl::SortKey) (int) choice->GetClientData( choice->GetSelection() );
 }
 
-void MapSelectDialog::Sort()
+namespace {
+struct FilterPredicate
 {
+	FilterPredicate( const wxString& searchText ) : searchText(searchText.Lower()) {}
+	bool operator () ( const UnitSyncMap& map ) const
+	{
+		return map.name.Lower().Contains( searchText )
+			|| map.info.description.Lower().Contains( searchText )
+			|| map.info.author.Lower().Contains( searchText );
+	}
+	wxString searchText;
+};
+}
+
+void MapSelectDialog::UpdateSortAndFilter()
+{
+	FilterPredicate predicate( m_filter_text->GetValue() );
+	m_mapgrid->Filter( predicate );
 	m_mapgrid->Sort( GetSelectedSortKey( m_vertical_choice ), GetSelectedSortKey( m_horizontal_choice ), m_vertical_direction, m_horizontal_direction );
+	m_mapgrid->CheckInBounds();
+	m_mapgrid->Refresh();
 }
 
 UnitSyncMap* MapSelectDialog::GetSelectedMap() const
@@ -189,14 +207,14 @@ void MapSelectDialog::OnVerticalDirectionClicked( wxCommandEvent& event )
 {
 	m_vertical_direction = !m_vertical_direction;
 	m_vertical_direction_button->SetLabel( m_vertical_direction ? _T("ᴧ") : _T("ᴠ") );
-	Sort();
+	UpdateSortAndFilter();
 }
 
 void MapSelectDialog::OnHorizontalDirectionClicked( wxCommandEvent& event )
 {
 	m_horizontal_direction = !m_horizontal_direction;
 	m_horizontal_direction_button->SetLabel( m_horizontal_direction ? _T("<") : _T(">") );
-	Sort();
+	UpdateSortAndFilter();
 }
 
 void MapSelectDialog::OnMapGridLeftDClick(wxMouseEvent& event)
@@ -235,7 +253,7 @@ void MapSelectDialog::Idle()
 {
 	m_state = State_Idle;
 	if ( m_timer.IsRunning() ) m_timer.Stop();
-	Sort();
+	UpdateSortAndFilter();
 }
 
 void MapSelectDialog::Load( State newstate )
@@ -298,4 +316,9 @@ void MapSelectDialog::OnFilterPopularSelect(wxCommandEvent& event)
 void MapSelectDialog::OnFilterRecentSelect(wxCommandEvent& event)
 {
 	Load( State_LoadRecent );
+}
+
+void MapSelectDialog::OnFilterTextChanged(wxCommandEvent& event)
+{
+	if ( m_state == State_Idle ) UpdateSortAndFilter();
 }
