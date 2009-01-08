@@ -150,7 +150,7 @@ void MapSelectDialog::OnInit( wxInitDialogEvent& event )
 	m_maps = usync().GetMapList();
 	usync().GetReplayList( m_replays );
 
-	m_filter_popular->Enable( m_ui.GetServer().IsOnline() );
+	m_filter_popular->Enable( m_ui.IsConnected() );
 	m_filter_recent->Enable( !m_replays.empty() );
 
 	Load( State_LoadRecent );
@@ -293,11 +293,14 @@ bool MapSelectDialog::LoadAllStep()
 
 bool MapSelectDialog::LoadPopularStep()
 {
-	m_ui.GetServer().battles_iter->IteratorBegin();
-	while ( !m_ui.GetServer().battles_iter->EOL() ) {
-		Battle* b = m_ui.GetServer().battles_iter->GetBattle();
-		if ( b != NULL ) m_mapgrid->AddMap( b->GetHostMapName() );
+	try {
+		m_ui.GetServer().battles_iter->IteratorBegin();
+		while ( !m_ui.GetServer().battles_iter->EOL() ) {
+			Battle* b = m_ui.GetServer().battles_iter->GetBattle();
+			if ( b != NULL ) m_mapgrid->AddMap( b->GetHostMapName() );
+		}
 	}
+	catch (...) {} // m_ui.GetServer may throw when disconnected...
 	return false;
 }
 
