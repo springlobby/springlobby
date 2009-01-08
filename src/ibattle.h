@@ -208,6 +208,8 @@ public:
 
     virtual void Update ( const wxString& Tag ) =0;
 
+    virtual void OnSelfLeftBattle();
+
 protected:
 
     bool m_map_loaded;
