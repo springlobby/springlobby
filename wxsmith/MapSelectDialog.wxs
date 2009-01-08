@@ -101,12 +101,12 @@
 					<object class="sizeritem">
 						<object class="wxStdDialogButtonSizer" variable="StdDialogButtonSizer1" member="no">
 							<object class="button">
-								<object class="wxButton" name="wxID_CANCEL">
+								<object class="wxButton" name="wxID_OK">
 									<label></label>
 								</object>
 							</object>
 							<object class="button">
-								<object class="wxButton" name="wxID_APPLY">
+								<object class="wxButton" name="wxID_CANCEL">
 									<label></label>
 								</object>
 							</object>
