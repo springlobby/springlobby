@@ -8,6 +8,7 @@
 #include "utils.h"
 #include "settings.h"
 #include "ui.h"
+#include "springunitsynclib.h"
 
 IBattle::IBattle():
   m_map_loaded(false),
@@ -161,6 +162,10 @@ wxArrayString IBattle::DisabledUnits()
   return m_units;
 }
 
+void IBattle::OnSelfLeftBattle()
+{
+    susynclib().UnSetCurrentMod(); //left battle
+}
 
 void IBattle::OnUnitSyncReloaded()
 {
