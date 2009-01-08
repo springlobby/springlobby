@@ -151,9 +151,17 @@ void MapSelectDialog::OnInit( wxInitDialogEvent& event )
 	usync().GetReplayList( m_replays );
 
 	m_filter_popular->Enable( m_ui.IsConnected() );
-	m_filter_recent->Enable( !m_replays.empty() );
 
-	Load( State_LoadRecent );
+	// due to a bug / crappy design in SpringUnitSync / unitsync itself we
+	// get a replay list with one empty item when there are no replays..
+	if ( m_replays.empty() || ( m_replays.size() == 1 && m_replays[0] == wxEmptyString ) ) {
+		m_filter_all->SetValue( true );
+		m_filter_recent->Enable( false );
+		Load( State_LoadAll );
+	}
+	else {
+		Load( State_LoadRecent );
+	}
 }
 
 
