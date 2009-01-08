@@ -194,7 +194,10 @@ void MapGridCtrl::Clear()
 
 void MapGridCtrl::AddMap( const wxString& mapname )
 {
-	AddMap( usync().GetMapEx( mapname ) );
+	try {
+		AddMap( usync().GetMapEx( mapname ) );
+	}
+	catch (...) {}
 }
 
 
