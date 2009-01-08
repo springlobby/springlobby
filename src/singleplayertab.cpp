@@ -247,7 +247,7 @@ void SinglePlayerTab::OnMapBrowse( wxCommandEvent& event )
 	wxLogDebugFunc( _T("") );
 	MapSelectDialog dlg( &m_ui.mw(), m_ui );
 
-	if ( dlg.ShowModal() == wxID_OK ) {
+	if ( dlg.ShowModal() == wxID_OK && dlg.GetSelectedMap() != NULL ) {
 		wxLogDebugFunc( dlg.GetSelectedMap()->name );
 		const wxString mapname = RefineMapname( dlg.GetSelectedMap()->name );
 		const int idx = m_map_pick->FindString( mapname, true /*case sensitive*/ );
