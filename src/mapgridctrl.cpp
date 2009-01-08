@@ -6,6 +6,7 @@
 #include "uiutils.h"
 #include "utils.h"
 #include <wx/dcclient.h>
+#include <wx/geometry.h>
 #include <wx/settings.h>
 #include <algorithm>
 
