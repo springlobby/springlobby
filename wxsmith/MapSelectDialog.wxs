@@ -57,6 +57,7 @@
 							<object class="sizeritem">
 								<object class="wxRadioButton" name="ID_FILTER_ALL" variable="m_filter_all" member="yes">
 									<label>All maps</label>
+									<tooltip>Shows all available maps</tooltip>
 									<handler function="OnFilterAllSelect" entry="EVT_RADIOBUTTON" />
 								</object>
 								<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
@@ -64,6 +65,7 @@
 							<object class="sizeritem">
 								<object class="wxRadioButton" name="ID_FILTER_POPULAR" variable="m_filter_popular" member="yes">
 									<label>Popular maps</label>
+									<tooltip>Shows only maps which are currently being player on the server. You must be online to use this.</tooltip>
 									<handler function="OnFilterPopularSelect" entry="EVT_RADIOBUTTON" />
 								</object>
 								<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
@@ -72,6 +74,7 @@
 								<object class="wxRadioButton" name="ID_FILTER_RECENT" variable="m_filter_recent" member="yes">
 									<label>Recently played maps</label>
 									<selected>1</selected>
+									<tooltip>Shows only maps you played recently. (Based on your replays.)</tooltip>
 									<handler function="OnFilterRecentSelect" entry="EVT_RADIOBUTTON" />
 								</object>
 								<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
@@ -85,6 +88,7 @@
 							<label>Filter</label>
 							<object class="sizeritem">
 								<object class="wxTextCtrl" name="ID_FILTER_TEXT" variable="m_filter_text" member="yes">
+									<tooltip>Shows only maps which contain this text in their name or description.</tooltip>
 									<handler function="OnFilterTextChanged" entry="EVT_TEXT" />
 								</object>
 								<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>

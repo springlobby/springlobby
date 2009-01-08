@@ -1,5 +1,9 @@
+/* Author: Tobi Vollebregt */
+
 #ifndef MAPSELECTDIALOG_H
 #define MAPSELECTDIALOG_H
+
+#include <vector>
 
 // If this isn't included errors result when trying to pass the MainWindow*
 // to MapSelectDialog constructor as wxWindow* (because compiler doesn't know
@@ -99,6 +103,7 @@ class MapSelectDialog: public wxDialog
 		bool m_horizontal_direction;
 		bool m_vertical_direction;
 		wxArrayString m_maps;
+		std::vector< wxString > m_replays;
 		State m_state;
 		int m_index;
 

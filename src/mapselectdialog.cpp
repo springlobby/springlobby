@@ -1,7 +1,13 @@
+/* Author: Tobi Vollebregt */
+
 #include "mapselectdialog.h"
+
+#include "battle.h"
+#include "server.h"
 #include "settings.h"
-#include "utils.h"
+#include "ui.h"
 #include "uiutils.h"
+#include "utils.h"
 
 //(*InternalHeaders(MapSelectDialog)
 #include <wx/sizer.h>
@@ -69,15 +75,19 @@ MapSelectDialog::MapSelectDialog(wxWindow* parent,Ui& ui)
 	BoxSizer2->Add(boxSizerHorizontal, 0, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
 	StaticBoxSizer1 = new wxStaticBoxSizer(wxVERTICAL, this, _("Show"));
 	m_filter_all = new wxRadioButton(this, ID_FILTER_ALL, _("All maps"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_FILTER_ALL"));
+	m_filter_all->SetToolTip(_("Shows all available maps"));
 	StaticBoxSizer1->Add(m_filter_all, 0, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
 	m_filter_popular = new wxRadioButton(this, ID_FILTER_POPULAR, _("Popular maps"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_FILTER_POPULAR"));
+	m_filter_popular->SetToolTip(_("Shows only maps which are currently being player on the server. You must be online to use this."));
 	StaticBoxSizer1->Add(m_filter_popular, 0, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
 	m_filter_recent = new wxRadioButton(this, ID_FILTER_RECENT, _("Recently played maps"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_FILTER_RECENT"));
 	m_filter_recent->SetValue(true);
+	m_filter_recent->SetToolTip(_("Shows only maps you played recently. (Based on your replays.)"));
 	StaticBoxSizer1->Add(m_filter_recent, 0, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
 	BoxSizer2->Add(StaticBoxSizer1, 0, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	StaticBoxSizer2 = new wxStaticBoxSizer(wxHORIZONTAL, this, _("Filter"));
 	m_filter_text = new wxTextCtrl(this, ID_FILTER_TEXT, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_FILTER_TEXT"));
+	m_filter_text->SetToolTip(_("Shows only maps which contain this text in their name or description."));
 	StaticBoxSizer2->Add(m_filter_text, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
 	BoxSizer2->Add(StaticBoxSizer2, 0, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	BoxSizer2->Add(-1,-1,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
@@ -138,6 +148,11 @@ void MapSelectDialog::OnInit( wxInitDialogEvent& event )
 	m_vertical_choice->SetSelection( 0 );
 
 	m_maps = usync().GetMapList();
+	usync().GetReplayList( m_replays );
+
+	m_filter_popular->Enable( m_ui.GetServer().IsOnline() );
+	m_filter_recent->Enable( !m_replays.empty() );
+
 	Load( State_LoadRecent );
 }
 
@@ -278,22 +293,24 @@ bool MapSelectDialog::LoadAllStep()
 
 bool MapSelectDialog::LoadPopularStep()
 {
+	m_ui.GetServer().battles_iter->IteratorBegin();
+	while ( !m_ui.GetServer().battles_iter->EOL() ) {
+		Battle* b = m_ui.GetServer().battles_iter->GetBattle();
+		if ( b != NULL ) m_mapgrid->AddMap( b->GetHostMapName() );
+	}
 	return false;
 }
 
 bool MapSelectDialog::LoadRecentStep()
 {
 	const int count = m_maps.size();
-	std::vector<wxString> replays;
-
-	usync().GetReplayList( replays );
 
 	// just check whether map names are contained in replay names
 	// not the most elegant solution but, hey, it works
 	for ( ; m_index < count; ++m_index ) {
 		// prefix and suffix with underscore to prevent most common partial matches
 		const wxString mapname = _T("_") + m_maps[m_index].BeforeLast( '.' ) + _T("_");
-		for (std::vector<wxString>::const_iterator it = replays.begin(); it != replays.end(); ++it) {
+		for (std::vector< wxString >::const_iterator it = m_replays.begin(); it != m_replays.end(); ++it) {
 			if ( it->Contains( mapname ) )
 				m_mapgrid->AddMap( m_maps[m_index] );
 		}
