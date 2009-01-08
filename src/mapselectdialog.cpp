@@ -1,6 +1,7 @@
 #include "mapselectdialog.h"
 #include "settings.h"
 #include "utils.h"
+#include "uiutils.h"
 
 //(*InternalHeaders(MapSelectDialog)
 #include <wx/sizer.h>
@@ -22,9 +23,9 @@ const long MapSelectDialog::ID_HORIZONTAL_CHOICE = wxNewId();
 const long MapSelectDialog::ID_FILTER_ALL = wxNewId();
 const long MapSelectDialog::ID_FILTER_POPULAR = wxNewId();
 const long MapSelectDialog::ID_FILTER_RECENT = wxNewId();
-const long MapSelectDialog::ID_FILTER_CONTAIN = wxNewId();
 const long MapSelectDialog::ID_FILTER_TEXT = wxNewId();
 const long MapSelectDialog::ID_MAPGRID = wxNewId();
+const long MapSelectDialog::ID_TIMER = wxNewId();
 //*)
 const long MapSelectDialog::ID_VERTICAL_DIRECTION = wxNewId();
 const long MapSelectDialog::ID_HORIZONTAL_DIRECTION = wxNewId();
@@ -38,15 +39,16 @@ MapSelectDialog::MapSelectDialog(wxWindow* parent,Ui& ui)
 	: m_ui(ui)
 	, m_horizontal_direction(false)
 	, m_vertical_direction(false)
+	, m_state(State_Idle)
 {
 	//(*Initialize(MapSelectDialog)
+	wxStaticBoxSizer* StaticBoxSizer2;
 	wxStaticText* StaticText2;
 	wxStaticText* StaticText1;
 	wxBoxSizer* BoxSizer2;
 	wxBoxSizer* boxSizerHorizontal;
 	wxBoxSizer* BoxSizer1;
 	wxStaticBoxSizer* StaticBoxSizer1;
-	wxBoxSizer* BoxSizer3;
 	wxBoxSizer* boxSizerVertical;
 	wxStdDialogButtonSizer* StdDialogButtonSizer1;
 
@@ -73,13 +75,11 @@ MapSelectDialog::MapSelectDialog(wxWindow* parent,Ui& ui)
 	m_filter_recent = new wxRadioButton(this, ID_FILTER_RECENT, _("Recently played maps"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_FILTER_RECENT"));
 	m_filter_recent->SetValue(true);
 	StaticBoxSizer1->Add(m_filter_recent, 0, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
-	BoxSizer3 = new wxBoxSizer(wxHORIZONTAL);
-	m_filter_contain = new wxRadioButton(this, ID_FILTER_CONTAIN, _("Containing "), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_FILTER_CONTAIN"));
-	BoxSizer3->Add(m_filter_contain, 0, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
-	m_filter_text = new wxTextCtrl(this, ID_FILTER_TEXT, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_FILTER_TEXT"));
-	BoxSizer3->Add(m_filter_text, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
-	StaticBoxSizer1->Add(BoxSizer3, 0, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
 	BoxSizer2->Add(StaticBoxSizer1, 0, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	StaticBoxSizer2 = new wxStaticBoxSizer(wxHORIZONTAL, this, _("Filter"));
+	m_filter_text = new wxTextCtrl(this, ID_FILTER_TEXT, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_FILTER_TEXT"));
+	StaticBoxSizer2->Add(m_filter_text, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
+	BoxSizer2->Add(StaticBoxSizer2, 0, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	BoxSizer2->Add(-1,-1,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	StdDialogButtonSizer1 = new wxStdDialogButtonSizer();
 	StdDialogButtonSizer1->AddButton(new wxButton(this, wxID_OK, wxEmptyString));
@@ -90,13 +90,19 @@ MapSelectDialog::MapSelectDialog(wxWindow* parent,Ui& ui)
 	m_mapgrid = new MapGridCtrl(this, m_ui, wxSize(400,400), ID_MAPGRID);
 	BoxSizer1->Add(m_mapgrid, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	SetSizer(BoxSizer1);
+	m_timer.SetOwner(this, ID_TIMER);
+	m_timer.Start(50, true);
 	BoxSizer1->Fit(this);
 	BoxSizer1->SetSizeHints(this);
 	Center();
 
 	Connect(ID_VERTICAL_CHOICE,wxEVT_COMMAND_CHOICE_SELECTED,(wxObjectEventFunction)&MapSelectDialog::OnSortKeySelect);
 	Connect(ID_HORIZONTAL_CHOICE,wxEVT_COMMAND_CHOICE_SELECTED,(wxObjectEventFunction)&MapSelectDialog::OnSortKeySelect);
+	Connect(ID_FILTER_ALL,wxEVT_COMMAND_RADIOBUTTON_SELECTED,(wxObjectEventFunction)&MapSelectDialog::OnFilterAllSelect);
+	Connect(ID_FILTER_POPULAR,wxEVT_COMMAND_RADIOBUTTON_SELECTED,(wxObjectEventFunction)&MapSelectDialog::OnFilterPopularSelect);
+	Connect(ID_FILTER_RECENT,wxEVT_COMMAND_RADIOBUTTON_SELECTED,(wxObjectEventFunction)&MapSelectDialog::OnFilterRecentSelect);
 	m_mapgrid->Connect(ID_MAPGRID,wxEVT_LEFT_DCLICK,(wxObjectEventFunction)&MapSelectDialog::OnMapGridLeftDClick,0,this);
+	Connect(ID_TIMER,wxEVT_TIMER,(wxObjectEventFunction)&MapSelectDialog::OnTimerTrigger);
 	Connect(wxID_ANY,wxEVT_INIT_DIALOG,(wxObjectEventFunction)&MapSelectDialog::OnInit);
 	//*)
 
@@ -130,17 +136,8 @@ void MapSelectDialog::OnInit( wxInitDialogEvent& event )
 	m_horizontal_choice->SetSelection( 0 );
 	m_vertical_choice->SetSelection( 0 );
 
-	wxArrayString maps = usync().GetMapList();
-	int count = maps.size();
-
-	for (int i = 0; i < count; ++i ) {
-		try {
-			m_mapgrid->AddMap( maps[i] );
-		}
-		catch (...) {}
-	}
-
-	Sort();
+	m_maps = usync().GetMapList();
+	Load( State_LoadRecent );
 }
 
 
@@ -209,4 +206,96 @@ void MapSelectDialog::OnMapGridLeftDClick(wxMouseEvent& event)
 	if ( m_mapgrid->GetSelectedMap() ) {
 		EndModal( wxID_OK );
 	}
+}
+
+void MapSelectDialog::OnTimerTrigger(wxTimerEvent& event)
+{
+	switch (m_state) {
+		case State_Idle:
+			// should never be reached because timer should have been stopped
+			break;
+		case State_LoadAll:
+			if ( !LoadAllStep() ) Idle();
+			break;
+		case State_LoadPopular:
+			if ( !LoadPopularStep() ) Idle();
+			break;
+		case State_LoadRecent:
+			if ( !LoadRecentStep() ) Idle();
+			break;
+		default:
+			ASSERT_EXCEPTION( false, _T("unknown state in MapSelectDialog::OnTimerTrigger") );
+			break;
+	}
+}
+
+// state transitioners
+
+void MapSelectDialog::Idle()
+{
+	m_state = State_Idle;
+	if ( m_timer.IsRunning() ) m_timer.Stop();
+	Sort();
+}
+
+void MapSelectDialog::Load( State newstate )
+{
+	m_mapgrid->Clear();
+	m_index = 0;
+	m_state = newstate;
+	m_timer.Start( -1, true /* one shot */ );
+}
+
+// implementation of the states
+
+bool MapSelectDialog::LoadAllStep()
+{
+	const int count = m_maps.size();
+
+	for ( ; m_index < count; ++m_index ) {
+		m_mapgrid->AddMap( m_maps[m_index] );
+	}
+	return false;
+}
+
+bool MapSelectDialog::LoadPopularStep()
+{
+	return false;
+}
+
+bool MapSelectDialog::LoadRecentStep()
+{
+	const int count = m_maps.size();
+	std::vector<wxString> replays;
+
+	usync().GetReplayList( replays );
+
+	// just check whether map names are contained in replay names
+	// not the most elegant solution but, hey, it works
+	for ( ; m_index < count; ++m_index ) {
+		// prefix and suffix with underscore to prevent most common partial matches
+		const wxString mapname = _T("_") + m_maps[m_index].BeforeLast( '.' ) + _T("_");
+		for (std::vector<wxString>::const_iterator it = replays.begin(); it != replays.end(); ++it) {
+			if ( it->Contains( mapname ) )
+				m_mapgrid->AddMap( m_maps[m_index] );
+		}
+	}
+	return false;
+}
+
+// filter event handlers
+
+void MapSelectDialog::OnFilterAllSelect(wxCommandEvent& event)
+{
+	Load( State_LoadAll );
+}
+
+void MapSelectDialog::OnFilterPopularSelect(wxCommandEvent& event)
+{
+	Load( State_LoadPopular );
+}
+
+void MapSelectDialog::OnFilterRecentSelect(wxCommandEvent& event)
+{
+	Load( State_LoadRecent );
 }
