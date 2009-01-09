@@ -803,7 +803,6 @@ void ServerEvents::OnClientIPPort( const wxString &username, const wxString &ip,
 void ServerEvents::OnKickedFromBattle()
 {
     customMessageBoxNoModal(SL_MAIN_ICON,_("You were kicked from the battle!"),_("Kicked by Host"));
-
 }
 
 

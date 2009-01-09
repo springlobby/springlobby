@@ -5,8 +5,7 @@
 
 #ifdef __WXMSW__
 #include <wx/fileconf.h>
-#include <wx/filename.h>
-#include <wx/wfstream.h>
+#include <wx/msw/registry.h>
 #else
 #include <wx/config.h>
 #endif
@@ -21,9 +20,6 @@
 #include <wx/log.h>
 #include <wx/wfstream.h>
 #include <wx/settings.h>
-#ifdef __WXMSW__
-#include <wx/msw/registry.h>
-#endif
 
 #include "nonportable.h"
 #include "settings.h"
@@ -130,7 +126,7 @@ Settings::Settings()
   m_config = new wxConfig( _T("SpringLobby"), wxEmptyString, _T(".springlobby/springlobby.conf"), _T("springlobby.global.conf") );
   SetPortableMode ( false );
   #endif
-  if ( !m_config->Exists( _T("/Server") ) ) SetDefaultSettings();
+  if ( !m_config->Exists( _T("/Servers") ) ) SetDefaultSettings();
 
   if ( !m_config->Exists( _T("/Groups") ) ) AddGroup( _("Default") );
 }
@@ -771,34 +767,21 @@ void Settings::ConvertOldSpringDirsOptions()
 std::map<wxString, wxString> Settings::GetSpringVersionList()
 {
   wxLogDebugFunc(_T(""));
-  std::map<wxString, wxString> ret;
   wxString old_path = m_config->GetPath();
   m_config->SetPath( _T("/Spring/Paths") );
   wxString groupname;
   long dummy;
   //CacheThread().Pause(); // pause caching thread
+
+  std::map<wxString, wxString> usync_paths;
   bool groupexist = m_config->GetFirstGroup(groupname, dummy);
   while ( groupexist )
   {
-    wxString usync_path = m_config->Read( _T("/Spring/Paths/") + groupname + _T("/UnitSyncPath"), _T("") );
-    try
-    {
-      SpringUnitSyncLib libloader( usync_path, false );
-      ret[groupname] = libloader.GetSpringVersion();
-    }
-    catch(...)
-    {
-    }
+    usync_paths[groupname] = m_config->Read( _T("/Spring/Paths/") + groupname + _T("/UnitSyncPath"), _T("") );
     groupexist = m_config->GetNextGroup(groupname, dummy);
   }
   m_config->SetPath( old_path );
-  try
-  {
-    susynclib().Init(); // re-init current "main" unitsync
-  }
-  catch(...){}
-  //CacheThread().Resume(); // resume caching thread
-  return ret;
+  return susynclib().GetSpringVersionList(usync_paths);
 }
 
 wxString Settings::GetCurrentUsedSpringIndex()

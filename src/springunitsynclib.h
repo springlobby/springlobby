@@ -200,7 +200,13 @@ typedef const char* (USYNC_CALL_CONV *lpGetStrKeyStrValPtr)(const char* key, con
 
 /**
  * Primitive class handeling the unitsync library.
- * This class is thread safe but may block execution in case two threads use it at the same time.
+ *
+ * This class is - in a limited way - thread safe but may block execution
+ * in case two threads use it at the same time.  The thread safety ensures
+ * there can never be multiple threads executing unitsync functions at the
+ * same time.  However, many unitsync functions use (hidden) global state,
+ * so often there is a need for running multiple unitsync methods while
+ * holding a single lock continuously.
  */
 class SpringUnitSyncLib
 {
@@ -208,11 +214,8 @@ class SpringUnitSyncLib
 
     /**
      * Constructor.
-     * @param path path to the unitsync lib, if specified the lib will be loaded when created.
-     * @param DoInit specifies whenever init function should be attempted to run after successful load.
-     * @see Load().
-    */
-    SpringUnitSyncLib( const wxString& path = wxEmptyString, bool DoInit = false, const wxString& ForceConfigFilePath = _T("") );
+     */
+    SpringUnitSyncLib();
 
     /**
      * Destructor, unloads unitsync if loaded.
@@ -221,26 +224,18 @@ class SpringUnitSyncLib
 
     /**
      * Loads the unitsync library from path.
-     * @param path ath to the unitsync lib.
-     * @param DoInit specifies whenever init function should be attempted to run after successful load.
+     * @param path path to the unitsync lib.
      * @param ForceConfigFilePath if set forces unitsync to use pointed config file, if empty leaves to spring's default
      * @see Unload().
      * @note Throws runtime_error if load failed.
      */
-    void Load( const wxString& path, bool DoInit, const wxString& ForceConfigFilePath );
+    void Load( const wxString& path, const wxString& ForceConfigFilePath );
 
     /**
      * Unload the unitsync library. Does nothing if not loaded.
      * @see Load().
      */
     void Unload();
-
-    /**
-     * Reloads the unitsync library.
-     * @note Throws logic_error if no path has been set in constructor or in Load() call. Throws runtime_error if reloading fails.
-     * @see Load().
-     */
-    void Reload( bool DoInit );
 
     /**
      * Returns true if the library is loaded.
@@ -259,14 +254,22 @@ class SpringUnitSyncLib
      */
     wxArrayString GetUnitsyncErrors();
 
-    bool Init();
-
     bool VersionSupports( IUnitSync::GameFeature feature );
 
 
     int GetModIndex( const wxString& name );
 
     wxString GetSpringVersion();
+
+    /**
+     * Loads unitsync from any number of paths in succession,
+     * queries the Spring versions supported by these unitsyncs,
+     * and returns those.
+     *
+     * This is done by a single function because this "transaction"
+     * needs to hold the unitsync lock the entire time.
+     */
+    std::map<wxString, wxString> GetSpringVersionList(const std::map<wxString, wxString>& usync_paths);
 
     wxString GetSpringDataDir();
     wxString GetConfigFilePath();
@@ -452,7 +455,7 @@ class SpringUnitSyncLib
     wxDynamicLibrary* m_libhandle;
 
     //! Critical section controlling access to unitsync functions.
-    wxCriticalSection m_lock;
+    mutable wxCriticalSection m_lock;
 
     //! Path to unitsync.
     wxString m_path;
@@ -460,13 +463,22 @@ class SpringUnitSyncLib
     //! the current loaded mod.
     wxString m_current_mod;
 
-    //! Macro that checks if a function is present/loaded, unitsync is loaded, and locks it on call.
-    #define InitLib( arg ) { LOCK_UNITSYNC; UNITSYNC_EXCEPTION( m_loaded, _T("Unitsync not loaded.") ); UNITSYNC_EXCEPTION( arg, _T("Function was not in unitsync library.") ); }
-
     /**
      * Loads a function pointer from unitsync.
      */
     void* _GetLibFuncPtr( const wxString& name );
+
+    /**
+     * Loads the unitsync library from path.
+     * @note this function is not threadsafe if called from code not locked.
+     * @see Load()
+     */
+    void _Load( const wxString& path );
+
+    /**
+     * Initializes unitsync.
+     */
+    void _Init();
 
     /**
      * Internal Unload() function.
@@ -481,6 +493,8 @@ class SpringUnitSyncLib
     bool _IsLoaded();
 
     void _ConvertSpringMapInfo( const SpringMapInfo& in, MapInfo& out );
+
+    void _SetCurrentMod( const wxString& modname );
 
     /**
      * \defgroup DllFuncPointers Pointers to the functions in unitsync.
