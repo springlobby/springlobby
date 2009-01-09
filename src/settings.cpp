@@ -5,8 +5,7 @@
 
 #ifdef __WXMSW__
 #include <wx/fileconf.h>
-#include <wx/filename.h>
-#include <wx/wfstream.h>
+#include <wx/msw/registry.h>
 #else
 #include <wx/config.h>
 #endif
@@ -21,9 +20,6 @@
 #include <wx/log.h>
 #include <wx/wfstream.h>
 #include <wx/settings.h>
-#ifdef __WXMSW__
-#include <wx/msw/registry.h>
-#endif
 
 #include "nonportable.h"
 #include "settings.h"
