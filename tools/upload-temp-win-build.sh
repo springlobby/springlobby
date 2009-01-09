@@ -14,7 +14,7 @@ fi
 
 zip -9 -u ${filename} springlobby.exe
 
-scp ${filename} springlobby.info:/usr/local/www/springlobby.info/temp/builds/${filename}
+scp ${filename} springlobby:/usr/local/www/springlobby.info/temp/builds/${filename}
 #ssh rg chown www-data:www-data /usr/local/www/springlobby.info/temp/builds/${filename}
 
 echo "http://springlobby.info/temp/builds/${filename}"
