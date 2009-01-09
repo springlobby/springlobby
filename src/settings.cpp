@@ -126,7 +126,7 @@ Settings::Settings()
   m_config = new wxConfig( _T("SpringLobby"), wxEmptyString, _T(".springlobby/springlobby.conf"), _T("springlobby.global.conf") );
   SetPortableMode ( false );
   #endif
-  if ( !m_config->Exists( _T("/Server") ) ) SetDefaultSettings();
+  if ( !m_config->Exists( _T("/Servers") ) ) SetDefaultSettings();
 
   if ( !m_config->Exists( _T("/Groups") ) ) AddGroup( _("Default") );
 }
