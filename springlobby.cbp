@@ -4,6 +4,7 @@
 	<Project>
 		<Option title="springlobby" />
 		<Option pch_mode="0" />
+		<Option compiler="gcc" />
 		<Build>
 			<Target title="GNU | Debug">
 				<Option output="bin/GNU/Debug/springlobby" prefix_auto="0" extension_auto="0" />
@@ -18,6 +19,7 @@
 					<Add option="`wx-config --cflags`" />
 					<Add option="`sdl-config --cflags`" />
 					<Add option="`pkg-config --cflags libtorrent-rasterbar`" />
+					<Add option="-Wno-strict-aliasing" />
 					<Add option='-DVERSION=\\&quot;cb-Unix-Debug\\&quot;' />
 					<Add option="-DNO_DEBUG_REPORT_UPLOAD" />
 					<Add option="-DDISABLE_SOUND" />
