@@ -141,6 +141,8 @@ MapSelectDialog::~MapSelectDialog()
 
 void MapSelectDialog::OnInit( wxInitDialogEvent& event )
 {
+	wxLogDebugFunc( _T("") );
+
 	AppendSortKeys( m_horizontal_choice );
 	AppendSortKeys( m_vertical_choice );
 
@@ -167,6 +169,7 @@ void MapSelectDialog::OnInit( wxInitDialogEvent& event )
 
 void MapSelectDialog::OnSortKeySelect( wxCommandEvent& event )
 {
+	wxLogDebugFunc( _T("") );
 	UpdateSortAndFilter();
 }
 
@@ -217,6 +220,7 @@ void MapSelectDialog::UpdateSortAndFilter()
 
 UnitSyncMap* MapSelectDialog::GetSelectedMap() const
 {
+	wxLogDebugFunc( _T("") );
 	return m_mapgrid->GetSelectedMap();
 }
 
@@ -228,6 +232,7 @@ void MapSelectDialog::OnMapSelected( wxCommandEvent& event )
 
 void MapSelectDialog::OnVerticalDirectionClicked( wxCommandEvent& event )
 {
+	wxLogDebugFunc( _T("") );
 	m_vertical_direction = !m_vertical_direction;
 	m_vertical_direction_button->SetLabel( m_vertical_direction ? _T("ᴧ") : _T("ᴠ") );
 	UpdateSortAndFilter();
@@ -235,6 +240,7 @@ void MapSelectDialog::OnVerticalDirectionClicked( wxCommandEvent& event )
 
 void MapSelectDialog::OnHorizontalDirectionClicked( wxCommandEvent& event )
 {
+	wxLogDebugFunc( _T("") );
 	m_horizontal_direction = !m_horizontal_direction;
 	m_horizontal_direction_button->SetLabel( m_horizontal_direction ? _T("<") : _T(">") );
 	UpdateSortAndFilter();
@@ -251,6 +257,8 @@ void MapSelectDialog::OnMapGridLeftDClick(wxMouseEvent& event)
 
 void MapSelectDialog::OnTimerTrigger(wxTimerEvent& event)
 {
+	wxLogDebugFunc( _T("") );
+
 	switch (m_state) {
 		case State_Idle:
 			// should never be reached because timer should have been stopped
@@ -274,6 +282,7 @@ void MapSelectDialog::OnTimerTrigger(wxTimerEvent& event)
 
 void MapSelectDialog::Idle()
 {
+	wxLogDebugFunc( _T("") );
 	m_state = State_Idle;
 	if ( m_timer.IsRunning() ) m_timer.Stop();
 	UpdateSortAndFilter();
@@ -281,6 +290,7 @@ void MapSelectDialog::Idle()
 
 void MapSelectDialog::Load( State newstate )
 {
+	wxLogDebugFunc( _T("") );
 	m_mapgrid->Clear();
 	m_index = 0;
 	m_state = newstate;
@@ -291,6 +301,7 @@ void MapSelectDialog::Load( State newstate )
 
 bool MapSelectDialog::LoadAllStep()
 {
+	wxLogDebugFunc( _T("") );
 	const int count = m_maps.size();
 
 	for ( ; m_index < count; ++m_index ) {
@@ -301,6 +312,7 @@ bool MapSelectDialog::LoadAllStep()
 
 bool MapSelectDialog::LoadPopularStep()
 {
+	wxLogDebugFunc( _T("") );
 	try {
 		m_ui.GetServer().battles_iter->IteratorBegin();
 		while ( !m_ui.GetServer().battles_iter->EOL() ) {
@@ -314,6 +326,7 @@ bool MapSelectDialog::LoadPopularStep()
 
 bool MapSelectDialog::LoadRecentStep()
 {
+	wxLogDebugFunc( _T("") );
 	const int count = m_maps.size();
 
 	// just check whether map names are contained in replay names
@@ -326,6 +339,7 @@ bool MapSelectDialog::LoadRecentStep()
 				m_mapgrid->AddMap( m_maps[m_index] );
 		}
 	}
+
 	return false;
 }
 
@@ -333,20 +347,24 @@ bool MapSelectDialog::LoadRecentStep()
 
 void MapSelectDialog::OnFilterAllSelect(wxCommandEvent& event)
 {
+	wxLogDebugFunc( _T("") );
 	Load( State_LoadAll );
 }
 
 void MapSelectDialog::OnFilterPopularSelect(wxCommandEvent& event)
 {
+	wxLogDebugFunc( _T("") );
 	Load( State_LoadPopular );
 }
 
 void MapSelectDialog::OnFilterRecentSelect(wxCommandEvent& event)
 {
+	wxLogDebugFunc( _T("") );
 	Load( State_LoadRecent );
 }
 
 void MapSelectDialog::OnFilterTextChanged(wxCommandEvent& event)
 {
+	wxLogDebugFunc( _T("") );
 	if ( m_state == State_Idle ) UpdateSortAndFilter();
 }
