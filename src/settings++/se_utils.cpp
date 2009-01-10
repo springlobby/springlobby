@@ -47,7 +47,7 @@ void loadUnitsync()
       }
         else
             untisyncpath = sett().GetCurrentUsedUnitSync();
-      susynclib().Load( untisyncpath, _T("") );
+      susynclib().Load( untisyncpath, sett().GetForcedSpringConfigFilePath() );
   }
   catch (...)
   {
