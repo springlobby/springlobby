@@ -47,7 +47,7 @@ void loadUnitsync()
       }
         else
             untisyncpath = sett().GetCurrentUsedUnitSync();
-      susynclib().Load( untisyncpath );
+      susynclib().Load( untisyncpath, _T("") );
   }
   catch (...)
   {
