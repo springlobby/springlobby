@@ -5,8 +5,7 @@
 
 #ifdef __WXMSW__
 #include <wx/fileconf.h>
-#include <wx/filename.h>
-#include <wx/wfstream.h>
+#include <wx/msw/registry.h>
 #else
 #include <wx/config.h>
 #endif
@@ -21,9 +20,6 @@
 #include <wx/log.h>
 #include <wx/wfstream.h>
 #include <wx/settings.h>
-#ifdef __WXMSW__
-#include <wx/msw/registry.h>
-#endif
 
 #include "nonportable.h"
 #include "settings.h"
@@ -130,7 +126,7 @@ Settings::Settings()
   m_config = new wxConfig( _T("SpringLobby"), wxEmptyString, _T(".springlobby/springlobby.conf"), _T("springlobby.global.conf") );
   SetPortableMode ( false );
   #endif
-  if ( !m_config->Exists( _T("/Server") ) ) SetDefaultSettings();
+  if ( !m_config->Exists( _T("/Servers") ) ) SetDefaultSettings();
 
   if ( !m_config->Exists( _T("/Groups") ) ) AddGroup( _("Default") );
 }
