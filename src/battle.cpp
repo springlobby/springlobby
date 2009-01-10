@@ -1007,7 +1007,7 @@ void Battle::Autobalance( BalanceType balance_type, bool support_clans, bool str
 
     for ( size_t i = 0; i < GetNumUsers(); ++i )
     {
-        User usr = GetUser( i );
+        User& usr = GetUser( i );
         if ( !usr.BattleStatus().spectator )
         {
             players_sorted.push_back( &usr );
@@ -1115,7 +1115,7 @@ void Battle::Autobalance( BalanceType balance_type, bool support_clans, bool str
             wxLogMessage( _T("setting team %d to alliance %d"), balanceteam, i );
             for ( size_t h = 0; h < totalplayers; h++ ) // change ally num of all players in the team
             {
-              User usr = GetUser( h );
+              User& usr = GetUser( h );
               if ( usr.BattleStatus().team == balanceteam ) ForceAlly( usr, alliances[i].allynum );
             }
         }
