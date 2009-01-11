@@ -1,13 +1,19 @@
-#include "se_utils.h"
+#include <wx/filename.h>
+#include <wx/stdpaths.h>
+#include <wx/filename.h>
+#include <wx/utils.h>
+#include <wx/log.h>
+#include <wx/intl.h>
 
 #include <string>
 #include <sstream>
-#include <wx/intl.h>
+
+#include "se_utils.h"
+
 #include "custom_dialogs.h"
-#include <wx/utils.h>
-#include <wx/log.h>
 #include "../settings.h"
 #include "../springunitsynclib.h"
+#include "../utils.h"
 
 static bool standalonemode = true;
 
@@ -37,14 +43,11 @@ void loadUnitsync()
       wxString untisyncpath;
       if ( IsSettingsStandAlone() )
       {
-      	bool portable_mode = sett().IsPortableMode();
-      	sett().SetPortableMode( true ); // force portable mode to get untisync path in current bin dir
-        untisyncpath = sett().GetCurrentUsedUnitSync();
-        sett().SetPortableMode( portable_mode ); // restore old value
+        untisyncpath = wxStandardPathsBase::Get().GetExecutablePath().BeforeLast( wxFileName::GetPathSeparator() ) + wxFileName::GetPathSeparator() + _T("unitsync") + GetLibExtension();
       }
         else
             untisyncpath = sett().GetCurrentUsedUnitSync();
-      susynclib().Load( untisyncpath, true, sett().GetForcedSpringConfigFilePath() );
+      susynclib().Load( untisyncpath, sett().GetForcedSpringConfigFilePath() );
   }
   catch (...)
   {

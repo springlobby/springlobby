@@ -877,8 +877,8 @@ void MapCtrl::DrawUser( wxDC& dc, User& user, bool selected, bool moving )
     } catch (...)
     {
       delete bmp;
-      if ( user.BattleStatus().side == 0 ) bmp = new wxBitmap( *charArr2wxBitmap(no1_icon_png, sizeof(no1_icon_png) ) );
-      else bmp = new wxBitmap( *charArr2wxBitmap(no2_icon_png, sizeof(no2_icon_png) ) );
+      if ( user.BattleStatus().side == 0 ) bmp = new wxBitmap( charArr2wxBitmap(no1_icon_png, sizeof(no1_icon_png) ) );
+      else bmp = new wxBitmap( charArr2wxBitmap(no2_icon_png, sizeof(no2_icon_png) ) );
     }
 
     dc.DrawBitmap( *bmp, r.x+siderect.x, r.y+siderect.y, true );

@@ -29,6 +29,10 @@
 					<Add library="SDL_mixer" />
 					<Add library="SDL_sound" />
 				</Linker>
+				<ExtraCommands>
+					<Add before="chmod +x tools/test-susynclib.awk" />
+					<Add before="tools/test-susynclib.awk src/springunitsynclib.cpp" />
+				</ExtraCommands>
 			</Target>
 			<Target title="GNU | Profile">
 				<Option output="bin/GNU/Profile/springlobby" prefix_auto="0" extension_auto="0" />
@@ -54,6 +58,10 @@
 					<Add option="`sdl-config --libs`" />
 					<Add library="SDL_mixer" />
 				</Linker>
+				<ExtraCommands>
+					<Add before="chmod +x tools/test-susynclib.awk" />
+					<Add before="tools/test-susynclib.awk src/springunitsynclib.cpp" />
+				</ExtraCommands>
 			</Target>
 			<Target title="Win32 | Debug">
 				<Option output="bin/Win32/Debug/springlobby" prefix_auto="0" extension_auto="1" />
