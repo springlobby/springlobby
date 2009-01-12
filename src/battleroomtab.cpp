@@ -726,24 +726,6 @@ void BattleRoomTab::OnUserLeft( User& user )
 }
 
 
-void BattleRoomTab::OnBotAdded( User& bot )
-{
-    m_players->AddUser( bot );
-}
-
-
-void BattleRoomTab::OnBotRemoved( User& bot )
-{
-    m_players->RemoveUser( bot );
-}
-
-
-void BattleRoomTab::OnBotUpdated( User& bot )
-{
-    m_players->UpdateUser( bot );
-}
-
-
 void BattleRoomTab::OnUnitSyncReloaded()
 {
     m_minimap->UpdateMinimap();

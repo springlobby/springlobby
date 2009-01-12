@@ -437,27 +437,23 @@ void Battle::ForceAlly( User& user, int ally )
 
 void Battle::ForceColour( User& user, const wxColour& col )
 {
-		if ( user.BattleStatus().IsBot() ) IBattle::ForceColour( user, col );
     m_serv.ForceColour( m_opts.battleid, user, col );
 }
 
 
 void Battle::ForceSpectator( User& user, bool spectator )
 {
-		if ( user.BattleStatus().IsBot() ) IBattle::ForceSpectator( user, spectator );
     m_serv.ForceSpectator( m_opts.battleid, user, spectator );
 }
 
 
 void Battle::KickPlayer( User& user )
 {
-		if ( user.BattleStatus().IsBot() ) IBattle::KickPlayer( user );
     m_serv.BattleKickPlayer( m_opts.battleid, user );
 }
 
 void Battle::SetHandicap( User& user, int handicap)
 {
-		if ( user.BattleStatus().IsBot() ) IBattle::SetHandicap( user, handicap );
     m_serv.SetHandicap ( m_opts.battleid, user, handicap );
 }
 

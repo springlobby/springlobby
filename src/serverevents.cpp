@@ -300,8 +300,8 @@ void ServerEvents::OnClientBattleStatus( int battleid, const wxString& nick, Use
 {
     try
     {
-        User& user = m_serv.GetUser( nick );
         Battle& battle = m_serv.GetBattle( battleid );
+        User& user = battle.GetUser( nick );
 
         if ( battle.IsFounderMe() ) AutoCheckCommandSpam( battle, user );
 
@@ -355,9 +355,8 @@ void ServerEvents::OnUserLeftBattle( int battleid, const wxString& nick )
     wxLogDebugFunc( _T("") );
     try
     {
-        User& user = m_serv.GetUser( nick );
         Battle& battle = m_serv.GetBattle( battleid );
-
+				User& user = battle.GetUser( nick );
 
         battle.OnUserRemoved( user );
 
@@ -682,38 +681,20 @@ void ServerEvents::OnBattleAddBot( int battleid, const wxString& nick, UserBattl
         battle.OnBotAdded( nick, status );
         User& bot = battle.GetUser( nick );
         ASSERT_LOGIC( &bot != 0, _T("Bot null after add.") );
-        ui().OnBattleBotAdded( battle, bot );
+        ui().OnUserJoinedBattle( battle, bot );
     }
     catch (assert_exception) {}
 }
 
 void ServerEvents::OnBattleUpdateBot( int battleid, const wxString& nick, UserBattleStatus status )
 {
-    try
-    {
-        wxLogDebugFunc( _T("") );
-        Battle& battle = m_serv.GetBattle( battleid );
-				User& bot = battle.GetUser( nick );
-        battle.OnUserBattleStatusUpdated( bot, status );
-        ASSERT_LOGIC( &bot != 0, _T("Bot null after add.") );
-        ui().OnBattleBotUpdated( battle, bot );
-    }
-    catch (assert_exception) {}
+    OnClientBattleStatus( battleid, nick, status );
 }
 
 
 void ServerEvents::OnBattleRemoveBot( int battleid, const wxString& nick )
 {
-    wxLogDebugFunc( _T("") );
-    try
-    {
-        Battle& battle = m_serv.GetBattle( battleid );
-        User& bot = battle.GetUser( nick );
-        ASSERT_LOGIC( &bot != 0, _T("Bot null after add.") );
-        ui().OnBattleBotRemoved( battle, bot );
-        battle.OnUserRemoved( bot );
-    }
-    catch (assert_exception) {}
+    OnUserLeftBattle( battleid, nick );
 }
 
 
