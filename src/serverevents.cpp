@@ -305,12 +305,8 @@ void ServerEvents::OnClientBattleStatus( int battleid, const wxString& nick, Use
 
         if ( battle.IsFounderMe() ) AutoCheckCommandSpam( battle, user );
 
-        if ( ( status == user.BattleStatus() ) && ( nick != battle.GetMe().GetNick() ) ) return; // drop the message if no updates to current status are present;
         status.color_index = user.BattleStatus().color_index;
-
         battle.OnUserBattleStatusUpdated( user, status );
-
-        ui().OnUserBattleStatus( battle, user );
     }
     catch (std::runtime_error &except)
     {

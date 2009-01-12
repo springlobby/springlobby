@@ -228,7 +228,6 @@ void IBattle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 
     user.UpdateBattleStatus( status );
 
-
     if ( IsFounderMe() )
     {
 			if ( status.spectator != previousspectatorstatus )
