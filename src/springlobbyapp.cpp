@@ -149,7 +149,7 @@ bool SpringLobbyApp::OnInit()
 					wxString nick = sett().GetServerAccountNick( sett().GetServerName( i ) );
 					if ( !wordlist.Contains( nick ) )
 					{
-						 if ( !wordlist.IsEmpty() && !wordlist.EndsWith( _T(';') ) ) += _T(";");
+						 if ( !wordlist.IsEmpty() && !wordlist.EndsWith( _T(";") ) ) wordlist += _T(";");
 					}  wordlist += nick;
 				}
 				sett().SetHighlightedWords( wordlist );
