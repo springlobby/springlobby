@@ -214,7 +214,7 @@ public:
 
     virtual unsigned int GetNumBots() const;
     virtual bool HaveMultipleBotsInSameTeam() const;
-    virtual User& OnBotAdded( const wxString& nick, const wxString& owner, const UserBattleStatus& bs, const wxString& aidll );
+    virtual User& OnBotAdded( const wxString& nick, const UserBattleStatus& bs );
 
     virtual void GetFreePosition( int& x, int& y );
     virtual int GetFreeAlly();

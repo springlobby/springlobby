@@ -201,18 +201,12 @@ User& IBattle::OnUserAdded( User& user )
     return user;
 }
 
-User& IBattle::OnBotAdded( const wxString& nick, const wxString& owner, const UserBattleStatus& bs, const wxString& aidll )
+User& IBattle::OnBotAdded( const wxString& nick, const UserBattleStatus& bs )
 {
-		User user( nick );
-		m_internal_bot_list.push_back( user );
-    UserList::AddUser( user );
-
-    user.BattleStatus().spectator = false;
-    user.BattleStatus().ready = false;
-    user.BattleStatus().sync = SYNC_SYNCED;
-		user.BattleStatus().owner = owner;
-		user.BattleStatus().ailib = aidll;
-		return m_internal_bot_list[m_internal_bot_list.size()];
+		m_internal_bot_list.push_back( User( nick ) );
+		User& user = m_internal_bot_list[m_internal_bot_list.size()];
+		user.UpdateBattleStatus( bs );
+		return OnUserAdded( user );
 }
 
 unsigned int IBattle::GetNumBots() const

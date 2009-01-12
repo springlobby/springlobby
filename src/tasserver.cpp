@@ -867,8 +867,9 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         bstatus = ConvTasbattlestatus( tasbstatus.tasdata );
         color.data = GetIntParam( params );
         bstatus.colour = wxColour( color.color.red, color.color.green, color.color.blue );
-        ai = GetSentenceParam( params );
-        m_se->OnBattleAddBot( id, nick, owner, bstatus, ai );
+        bstatus.ailib = GetSentenceParam( params );
+        bstatus.owner =owner;
+        m_se->OnBattleAddBot( id, nick, bstatus );
     }
     else if ( cmd == _T("UPDATEBOT") )
     {

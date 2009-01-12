@@ -249,7 +249,7 @@ void SinglePlayerTab::OnAddBot( wxCommandEvent& event )
   }
   AddBotDialog dlg( this, m_battle, true );
   if ( dlg.ShowModal() == wxID_OK ) {
-    int x = 0, y = 0, handicap = 0;
+    int x = 0, y = 0;
     m_battle.GetFreePosition( x, y );
     UserBattleStatus bs;
 		bs.colour = m_battle.GetFreeColour( NULL );
@@ -257,7 +257,9 @@ void SinglePlayerTab::OnAddBot( wxCommandEvent& event )
     bs.posy = y;
     bs.ally = m_battle.GetFreeAlly();
     bs.team = m_battle.GetFreeTeamNum( NULL );
-    User& bot = m_battle.OnBotAdded( _T("Bot") + TowxString( bs.team ), m_battle.GetMe().GetNick(), bs, dlg.GetAI() );
+    bs.owner = m_battle.GetMe().GetNick();
+    bs.ailib = dlg.GetAI();
+    User& bot = m_battle.OnBotAdded( _T("Bot") + TowxString( bs.team ), bs  );
     ASSERT_LOGIC( &bot != 0, _T("bot == 0") );
 
     m_minimap->UpdateMinimap();

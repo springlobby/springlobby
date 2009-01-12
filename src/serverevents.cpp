@@ -673,13 +673,13 @@ void ServerEvents::OnBattleStartRectRemove( int battleid, int allyno )
 }
 
 
-void ServerEvents::OnBattleAddBot( int battleid, const wxString& nick, const wxString& owner, UserBattleStatus status, const wxString& aidll )
+void ServerEvents::OnBattleAddBot( int battleid, const wxString& nick, UserBattleStatus status )
 {
     wxLogDebugFunc( _T("") );
     try
     {
         Battle& battle = m_serv.GetBattle( battleid );
-        battle.OnBotAdded( nick, owner, status, aidll );
+        battle.OnBotAdded( nick, status );
         User& bot = battle.GetUser( nick );
         ASSERT_LOGIC( &bot != 0, _T("Bot null after add.") );
         ui().OnBattleBotAdded( battle, bot );

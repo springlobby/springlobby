@@ -71,7 +71,7 @@ class ServerEvents
     void OnBattleStartRectAdd( int battleid, int allyno, int left, int top, int right, int bottom );
     void OnBattleStartRectRemove( int battleid, int allyno );
 
-    void OnBattleAddBot( int battleid, const wxString& nick, const wxString& owner, UserBattleStatus status, const wxString& aidll );
+    void OnBattleAddBot( int battleid, const wxString& nick, UserBattleStatus status );
     void OnBattleUpdateBot( int battleid, const wxString& nick, UserBattleStatus status );
     void OnBattleRemoveBot( int battleid, const wxString& nick );
 
