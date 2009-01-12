@@ -18,6 +18,7 @@ SinglePlayerBattle::SinglePlayerBattle(Ui& ui, MainSinglePlayerTab& msptab):
   m_me( User( _T("Player") ) )
 {
 	OnUserAdded( m_me );
+	ForceColour( m_me, GetFreeColour( m_me ) );
   CustomBattleOptions().setSingleOption( _T("startpostype"), wxString::Format(_T("%d"), ST_Pick), OptionsWrapper::EngineOption );
 }
 

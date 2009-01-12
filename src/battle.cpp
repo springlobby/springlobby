@@ -124,7 +124,7 @@ void Battle::OnRequestBattleStatus()
     bs.spectator = false;
     bs.colour = sett().GetBattleLastColour();
     // theres some highly annoying bug with color changes on player join/leave.
-    if ( !bs.colour.IsColourOk() ) bs.colour = GetFreeColour(&m_serv.GetMe());
+    if ( !bs.colour.IsColourOk() ) bs.colour = GetFreeColour( GetMe() );
 
     SendMyBattleStatus();
 }

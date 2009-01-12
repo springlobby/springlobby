@@ -89,7 +89,7 @@ int IBattle::GetPlayerNum( const User& user )
     return -1;
 }
 
-wxColour IBattle::GetFreeColour( User *for_whom ) const
+wxColour IBattle::GetFreeColour( User &for_whom ) const
 {
     int lowest = 0;
     bool changed = true;
@@ -98,9 +98,9 @@ wxColour IBattle::GetFreeColour( User *for_whom ) const
         changed = false;
         for ( user_map_t::size_type i = 0; i < GetNumUsers(); i++ )
         {
-            if ( &GetUser( i ) == for_whom ) continue;
-            //if ( GetUser( i ).BattleStatus().spectator ) continue;
+            if ( &GetUser( i ) == &for_whom ) continue;
             UserBattleStatus& bs = GetUser( i ).BattleStatus();
+            if ( bs.spectator ) continue;
             if ( AreColoursSimilar( bs.colour, wxColour(colour_values[lowest][0], colour_values[lowest][1], colour_values[lowest][2]) ) )
             {
                 lowest++;
@@ -109,7 +109,12 @@ wxColour IBattle::GetFreeColour( User *for_whom ) const
         }
     }
     return wxColour( colour_values[lowest][0], colour_values[lowest][1], colour_values[lowest][2] );
+}
 
+wxColour IBattle::GetFreeColour() const
+{
+		User temp( _T("") ); // fake user that isn't present in battle, therefore will never be found :P
+    return GetFreeColour( temp );
 }
 
 int IBattle::ColourDifference(const wxColour &a, const wxColour &b) // returns max difference of r,g,b.

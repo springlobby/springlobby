@@ -252,11 +252,11 @@ void SinglePlayerTab::OnAddBot( wxCommandEvent& event )
     int x = 0, y = 0;
     m_battle.GetFreePosition( x, y );
     UserBattleStatus bs;
-		bs.colour = m_battle.GetFreeColour( NULL );
+		bs.colour = m_battle.GetFreeColour();
     bs.posx = x;
     bs.posy = y;
     bs.ally = m_battle.GetFreeAlly();
-    bs.team = m_battle.GetFreeTeamNum( NULL );
+    bs.team = m_battle.GetFreeTeamNum( false );
     bs.owner = m_battle.GetMe().GetNick();
     bs.ailib = dlg.GetAI();
     User& bot = m_battle.OnBotAdded( _T("Bot") + TowxString( bs.team ), bs  );

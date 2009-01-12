@@ -602,7 +602,7 @@ void BattleRoomTab::OnAddBot( wxCommandEvent& event )
         bs.side = 0;
         bs.ready = true;
         bs.handicap = 0;
-        bs.colour = m_battle.GetFreeColour( NULL );
+        bs.colour = m_battle.GetFreeColour();
         m_ui.GetServer().AddBot( m_battle.GetBattleId(), dlg.GetNick(), m_battle.GetMe().GetNick(), bs, dlg.GetAI() );
     }
 }
