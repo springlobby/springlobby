@@ -133,10 +133,27 @@ bool SpringLobbyApp::OnInit()
         }
     }
 
-    if ( !sett().IsFirstRun() && ( sett().GetSettingsVersion() < 3 ) ) sett().ConvertOldSpringDirsOptions();
-    if ( !sett().IsFirstRun() && ( sett().GetSettingsVersion() < 4 ) )
+    if ( !sett().IsFirstRun() )
     {
-    	if ( sett().GetTorrentPort() == DEFSETT_SPRING_PORT ) sett().SetTorrentPort( DEFSETT_SPRING_PORT + 1 );
+    	if ( sett().GetSettingsVersion() < 3 ) sett().ConvertOldSpringDirsOptions();
+			if ( sett().GetSettingsVersion() < 4 )
+			{
+				if ( sett().GetTorrentPort() == DEFSETT_SPRING_PORT ) sett().SetTorrentPort( DEFSETT_SPRING_PORT + 1 );
+			}
+			if ( sett().GetSettingsVersion() < 5 )
+			{
+				int count = sett().GetNumServers();
+				wxString wordlist = sett().GetHighlightedWords();
+				for ( int i= 0; i < count; i++ )
+				{
+					wxString nick = sett().GetServerAccountNick( sett().GetServerName( i ) );
+					if ( !wordlist.Contains( nick ) )
+					{
+						 if ( !wordlist.IsEmpty() && !wordlist.EndsWith( _T(";") ) ) wordlist += _T(";");
+					}  wordlist += nick;
+				}
+				sett().SetHighlightedWords( wordlist );
+			}
     }
 
     ui().ReloadUnitSync(); // first time load of unitsync
