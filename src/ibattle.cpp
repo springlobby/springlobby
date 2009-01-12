@@ -258,8 +258,9 @@ void IBattle::OnUserRemoved( User& user )
       m_opts.spectators--;
       SendHostInfo( HI_Spectators );
     }
-    user.SetBattle( 0 );
-    if ( user.BattleStatus().IsBot() )
+    UserList::RemoveUser( user.GetNick() );
+    if ( !user.BattleStatus().IsBot() ) user.SetBattle( 0 );
+    else
     {
     	for( UserVecIter i = m_internal_bot_list.begin(); i != m_internal_bot_list.end(); i++ )
     	{
@@ -270,7 +271,6 @@ void IBattle::OnUserRemoved( User& user )
     		}
     	}
     }
-    UserList::RemoveUser( user.GetNick() );
 }
 
 bool IBattle::IsEveryoneReady()

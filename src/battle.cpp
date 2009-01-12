@@ -247,8 +247,8 @@ void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 
 void Battle::OnUserRemoved( User& user )
 {
-		IBattle::OnUserRemoved( user );
     m_ah.OnUserRemoved(user);
+    IBattle::OnUserRemoved( user );
 }
 
 
