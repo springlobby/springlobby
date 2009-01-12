@@ -34,8 +34,8 @@ struct UserStatus {
 
 struct UserBattleStatus
 {
-  /// when adding something to this struct, also modify User::UpdateBattleStatus()
-  // total 11 members here
+  // when adding something to this struct, also modify User::UpdateBattleStatus()
+  // total 13 members here
   int team;
   int ally;
   wxColour colour;
@@ -57,11 +57,11 @@ struct UserBattleStatus
   UserBattleStatus(): team(0),ally(0),colour(wxColour(0,0,0)),color_index(-1),handicap(0),side(0),sync(SYNC_UNKNOWN),spectator(true),ready(false), posx(-1), posy(-1), udpport(0) {}
   bool operator == ( const UserBattleStatus& s )
   {
-    return ( ( team == s.team ) && ( colour == s.colour ) && ( handicap == s.handicap ) && ( side == s.side ) && ( sync == s.sync ) && ( spectator == s.spectator ) && ( ready == s.ready ) );
+    return ( ( team == s.team ) && ( colour == s.colour ) && ( handicap == s.handicap ) && ( side == s.side ) && ( sync == s.sync ) && ( spectator == s.spectator ) && ( ready == s.ready ) && ( owner == s.owner ) && ( ailib == s.ailib ) );
   }
   bool operator != ( const UserBattleStatus& s )
   {
-    return ( ( team != s.team ) || ( colour != s.colour ) || ( handicap != s.handicap ) || ( side != s.side ) || ( sync != s.sync ) || ( spectator != s.spectator ) || ( ready != s.ready ) );
+    return ( ( team != s.team ) || ( colour != s.colour ) || ( handicap != s.handicap ) || ( side != s.side ) || ( sync != s.sync ) || ( spectator != s.spectator ) || ( ready != s.ready ) || ( owner != s.owner ) || ( ailib != s.ailib ) );
   }
 };
 

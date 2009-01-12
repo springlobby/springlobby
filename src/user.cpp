@@ -71,22 +71,23 @@ void User::SetStatus( const UserStatus& status )
 void CommonUser::UpdateBattleStatus( const UserBattleStatus& status )
 {
 
-  //m_bstatus = status;
-  /// total 11 members to update.
+  // total 13 members to update.
 
-  m_bstatus.team=status.team;
-  m_bstatus.ally=status.ally;
-  m_bstatus.colour=status.colour;
-  m_bstatus.color_index=status.color_index;
-  m_bstatus.handicap=status.handicap;
-  m_bstatus.side=status.side;
-  m_bstatus.sync=status.sync;
-  m_bstatus.spectator=status.spectator;
-  m_bstatus.ready=status.ready;
+  m_bstatus.team = status.team;
+  m_bstatus.ally = status.ally;
+  m_bstatus.colour = status.colour;
+  m_bstatus.color_index = status.color_index;
+  m_bstatus.handicap = status.handicap;
+  m_bstatus.side = status.side;
+  m_bstatus.sync = status.sync;
+  m_bstatus.spectator = status.spectator;
+  m_bstatus.ready = status.ready;
+  m_bstatus.ailib = status.ailib;
+  m_bstatus.owner = status.owner;
 
-  /// update ip and port if those were set.
-  if(!status.ip.empty())m_bstatus.ip=status.ip;
-  if(status.udpport!=0)m_bstatus.udpport=status.udpport;/// 12
+  // update ip and port if those were set.
+  if( !status.ip.empty() ) m_bstatus.ip = status.ip;
+  if( status.udpport != 0 ) m_bstatus.udpport = status.udpport;// 14
 }
 
 
