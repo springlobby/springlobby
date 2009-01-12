@@ -204,7 +204,7 @@ User& IBattle::OnUserAdded( User& user )
 User& IBattle::OnBotAdded( const wxString& nick, const UserBattleStatus& bs )
 {
 		m_internal_bot_list.push_back( User( nick ) );
-		User& user = m_internal_bot_list[m_internal_bot_list.size()];
+		User& user = m_internal_bot_list[ m_internal_bot_list.size() -1 ];
 		user.UpdateBattleStatus( bs );
 		return OnUserAdded( user );
 }
