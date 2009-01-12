@@ -919,11 +919,8 @@ void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint po
 void BattleroomListCtrl::HighlightItem( long item )
 {
     item_content user_content = items[(size_t)GetItemData( item )];
-    if ( !user_content.is_bot )
-    {
-        User& user = *((User*) user_content.data);
-        HighlightItemUser( item, user.GetNick() );
-    }
+		User& user = *((User*) user_content.data);
+		HighlightItemUser( item, user.GetNick() );
 }
 
 void BattleroomListCtrl::OnUserMenuAddToGroup( wxCommandEvent& event )
