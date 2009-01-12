@@ -629,56 +629,40 @@ void BattleRoomTab::OnAutoHost( wxCommandEvent& event )
 
 void BattleRoomTab::OnImSpec( wxCommandEvent& event )
 {
-    UserBattleStatus& bs = m_battle.GetMe().BattleStatus();
-    bs.spectator = m_spec_chk->GetValue();
-    //m_battle.GetMe().SetBattleStatus( bs );
-    m_battle.SendMyBattleStatus();
+    m_battle.ForceSpectator( m_battle.GetMe(), m_spec_chk->GetValue() );
 }
 
 
 void BattleRoomTab::OnTeamSel( wxCommandEvent& event )
 {
-    User& u = m_battle.GetMe();
-    UserBattleStatus& bs = u.BattleStatus();
-    m_team_sel->GetValue().ToULong( (unsigned long*)&bs.team );
-    bs.team--;
-    //u.SetBattleStatus( bs );
-    m_battle.SendMyBattleStatus();
+		unsigned long team;
+    m_team_sel->GetValue().ToULong( &team );
+		m_battle.ForceTeam( m_battle.GetMe(), team -1  );
 }
 
 
 void BattleRoomTab::OnAllySel( wxCommandEvent& event )
 {
-    User& u = m_battle.GetMe();
-    UserBattleStatus& bs = u.BattleStatus();
-    m_ally_sel->GetValue().ToULong( (unsigned long*)&bs.ally );
-    bs.ally--;
-    //u.SetBattleStatus( bs );
-    m_battle.SendMyBattleStatus();
+		unsigned long ally;
+    m_ally_sel->GetValue().ToULong( &ally );
+		m_battle.ForceAlly( m_battle.GetMe(), ally -1  );
 }
 
 
 void BattleRoomTab::OnColourSel( wxCommandEvent& event )
 {
     User& u = m_battle.GetMe();
-    UserBattleStatus& bs = u.BattleStatus();
-    wxColour CurrentColour = bs.colour;
+    wxColour CurrentColour = u.BattleStatus().colour;
     CurrentColour = GetColourFromUser(this, CurrentColour);
     if ( !CurrentColour.IsColourOk() ) return;
-    bs.colour = CurrentColour;
     sett().SetBattleLastColour( CurrentColour );
-    //u.SetBattleStatus( bs );
-    m_battle.SendMyBattleStatus();
+    m_battle.ForceColour( u, CurrentColour );
 }
 
 
 void BattleRoomTab::OnSideSel( wxCommandEvent& event )
 {
-    User& u = m_battle.GetMe();
-    UserBattleStatus& bs = u.BattleStatus();
-    bs.side = m_side_sel->GetSelection();
-    //u.SetBattleStatus( bs );
-    m_battle.SendMyBattleStatus();
+    m_battle.ForceSide( m_battle.GetMe(), m_side_sel->GetSelection() );
 }
 
 
@@ -710,7 +694,7 @@ void BattleRoomTab::OnShowManagePlayersMenu( wxCommandEvent& event )
 
 void BattleRoomTab::OnUserJoined( User& user )
 {
-    m_chat->Joined( user );
+    if( !user.BattleStatus().IsBot() ) m_chat->Joined( user );
     m_players->AddUser( user );
     if ( &user == &m_battle.GetMe() )
     {
@@ -721,7 +705,7 @@ void BattleRoomTab::OnUserJoined( User& user )
 
 void BattleRoomTab::OnUserLeft( User& user )
 {
-    m_chat->Parted( user, wxEmptyString );
+    if( !user.BattleStatus().IsBot() ) m_chat->Parted( user, wxEmptyString );
     m_players->RemoveUser( user );
 }
 
