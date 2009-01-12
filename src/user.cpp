@@ -86,7 +86,7 @@ void CommonUser::UpdateBattleStatus( const UserBattleStatus& status )
   m_bstatus.owner = status.owner;
 
   // update ip and port if those were set.
-  if( !status.ip.empty() ) m_bstatus.ip = status.ip;
+  if( !status.ip.IsEmpty() ) m_bstatus.ip = status.ip;
   if( status.udpport != 0 ) m_bstatus.udpport = status.udpport;// 14
 }
 
