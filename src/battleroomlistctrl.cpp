@@ -311,6 +311,7 @@ void BattleroomListCtrl::UpdateUser( const int& index )
   if( !user.BattleStatus().IsBot() )
   {
   	 SetItem( index, 5,  user.GetNick() );
+  	 SetItem( index, 8, wxString::Format( _T("%.1f GHz"), user.GetCpu() / 1000.0 ) );
   }
   else
   {
@@ -318,17 +319,19 @@ void BattleroomListCtrl::UpdateUser( const int& index )
   }
 	SetItemColumnImage( index, 5, -1 );
 
-  if ( !user.BattleStatus().spectator ) {
+  if ( !user.BattleStatus().spectator )
+  {
     SetItem( index, 6, wxString::Format( _T("%d"), user.BattleStatus().team + 1 ) );
     SetItem( index, 7, wxString::Format( _T("%d"), user.BattleStatus().ally + 1 ) );
     SetItem( index, 9, wxString::Format( _T("%d%%"), user.BattleStatus().handicap ) );
-  } else {
+  }
+  else
+  {
     SetItem( index, 6, _T("") );
     SetItem( index, 7, _T("") );
     SetItem( index, 9, _T("") );
   }
   HighlightItemUser( index, user.GetNick() );
-  SetItem( index, 8, wxString::Format( _T("%.1f GHz"), user.GetCpu() / 1000.0 ) );
 
   MarkDirtySort();
 }
