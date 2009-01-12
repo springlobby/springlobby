@@ -156,7 +156,7 @@ bool Spring::LaunchSpring( const wxString& params  )
 		#ifndef __WXMSW__
 		configfileflags = _T("--config=\"") + configfileflags + _T("\" ");
 		#else
-		//configfileflags = _T("/config \"") + configfileflags + _T("\" ");
+		configfileflags = _T(""); // _T("/config \"") + configfileflags + _T("\" ");
 		#endif
   }
   wxString cmd =  _T("\"") + sett().GetCurrentUsedSpringBinary() + _T("\" ") + configfileflags + params;
