@@ -80,9 +80,8 @@ void CommonUser::UpdateBattleStatus( const UserBattleStatus& status, bool setord
 
   //int order = m_bstatus.order;
   //m_bstatus = status;
-  /// total 12 members to update.
+  /// total 11 members to update.
 
-  if ( setorder ) m_bstatus.order=status.order; /// 1
   m_bstatus.team=status.team;
   m_bstatus.ally=status.ally;
   m_bstatus.colour=status.colour;
@@ -96,8 +95,6 @@ void CommonUser::UpdateBattleStatus( const UserBattleStatus& status, bool setord
   /// update ip and port if those were set.
   if(!status.ip.empty())m_bstatus.ip=status.ip;
   if(status.udpport!=0)m_bstatus.udpport=status.udpport;/// 12
-
-  //if ( !setorder ) m_bstatus.order = order;
 }
 
 

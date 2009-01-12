@@ -407,7 +407,7 @@ void SpringUnitSyncLib::SetCurrentMod( const wxString& modname )
 void SpringUnitSyncLib::_SetCurrentMod( const wxString& modname )
 {
   if ( m_current_mod != modname ) {
-    wxLogDebugFunc( _T("") );
+    wxLogDebugFunc( modname );
     _Init();
     m_add_all_archives( m_get_mod_archive( m_get_mod_index( modname.mb_str( wxConvUTF8 ) ) ) );
     m_current_mod = modname;
