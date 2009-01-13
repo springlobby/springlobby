@@ -192,7 +192,7 @@ public:
 		void ForceColour( User& user, const wxColour& col );
 		void ForceSpectator( User& user, bool spectator );
 		void SetHandicap( User& user, int handicap);
-		void BattleKickPlayer( User& user );
+		void KickPlayer( User& user );
 
 
     virtual void AddStartRect( unsigned int allyno, unsigned int left, unsigned int top, unsigned int right, unsigned int bottom );
@@ -214,7 +214,7 @@ public:
 
     virtual unsigned int GetNumBots() const;
     virtual bool HaveMultipleBotsInSameTeam() const;
-    virtual User& OnBotAdded( const wxString& nick, const wxString& owner, const UserBattleStatus& bs, const wxString& aidll );
+    virtual User& OnBotAdded( const wxString& nick, const UserBattleStatus& bs );
 
     virtual void GetFreePosition( int& x, int& y );
     virtual int GetFreeAlly();
@@ -240,7 +240,8 @@ public:
     virtual std::vector<wxColour> &GetFixColoursPalette();
     virtual int GetClosestFixColour(const wxColour &col, const std::vector<int> &excludes, int &difference);
     virtual wxColour GetFixColour(int i);
-    virtual wxColour GetFreeColour( User *for_whom ) const;
+    virtual wxColour GetFreeColour( User &for_whom ) const;
+    virtual wxColour GetFreeColour() const;
 
     virtual int ColourDifference(const wxColour &a, const wxColour &b);
 

@@ -250,24 +250,9 @@ void BattleroomListCtrl::UpdateUser( const int& index )
   item_content user_content = items[(size_t)GetItemData( index )];
   User& user = *((User*) user_content.data);
 
-  int statimg;
-  if ( user.BattleStatus().IsBot() ) statimg = index,icons().ICON_BOT;
-  else if ( &m_battle.GetFounder() == &user )
-  {
-    statimg =icons().GetHostIcon( user.BattleStatus().spectator );
-  }
-  else
-  {
-      bool spec = user.BattleStatus().spectator;
-    statimg = icons().GetReadyIcon( spec, user.BattleStatus().ready, user.BattleStatus().sync );
-  }
-  SetItemImage( index, statimg );
-
-  SetItemColumnImage( index, 1, -1 );
 
 	if ( user.BattleStatus().IsBot() )
 	{
-
 		SetItemColumnImage( index, 2, icons().GetColourIcon( user.BattleStatus().team ) );
 
 		SetItemColumnImage( index, 3,icons().ICON_NONE );
@@ -285,6 +270,46 @@ void BattleroomListCtrl::UpdateUser( const int& index )
   {
     icons().SetColourIcon( user.BattleStatus().team, user.BattleStatus().colour );
 
+    SetItemColumnImage( index, 2, icons().GetColourIcon( user.BattleStatus().team ) );
+
+  }
+  else
+  {
+    SetItemColumnImage( index, 2, -1 );
+  }
+
+  SetItemColumnImage( index, 4,icons().GetRankIcon( user.GetStatus().rank ) );
+
+  if( !user.BattleStatus().IsBot() )
+  {
+  	 SetItem( index, 5,  user.GetNick() );
+  	 SetItem( index, 8, wxString::Format( _T("%.1f GHz"), user.GetCpu() / 1000.0 ) );
+  	 SetItemColumnImage( index, 3,icons().GetFlagIcon( user.GetCountry() ) );
+		if ( &m_battle.GetFounder() == &user )
+		{
+			SetItemImage( index, icons().GetHostIcon( user.BattleStatus().spectator ) );
+		}
+		else
+		{
+			SetItemImage( index, icons().GetReadyIcon( user.BattleStatus().spectator, user.BattleStatus().ready, user.BattleStatus().sync ) );
+		}
+  }
+  else
+  {
+  	 SetItem( index, 5, user.GetNick() + _T(" (") + user.BattleStatus().owner + _T(")") );
+			SetItemImage( index, index,icons().ICON_BOT );
+
+
+  }
+  SetItemColumnImage( index, 1, -1 );
+	SetItemColumnImage( index, 5, -1 );
+
+  if ( !user.BattleStatus().spectator )
+  {
+    SetItem( index, 6, wxString::Format( _T("%d"), user.BattleStatus().team + 1 ) );
+    SetItem( index, 7, wxString::Format( _T("%d"), user.BattleStatus().ally + 1 ) );
+    SetItem( index, 9, wxString::Format( _T("%d%%"), user.BattleStatus().handicap ) );
+
     try
     {
     	wxArrayString sides = usync().GetSides( m_battle.GetHostModName() );
@@ -297,39 +322,14 @@ void BattleroomListCtrl::UpdateUser( const int& index )
       SetItem( index, 1, wxString::Format( _T("s%d"), user.BattleStatus().side + 1 ) );
     }
 
-    SetItemColumnImage( index, 2, icons().GetColourIcon( user.BattleStatus().team ) );
-
   }
   else
   {
-    SetItemColumnImage( index, 2, -1 );
-  }
-
-  SetItemColumnImage( index, 3,icons().GetFlagIcon( user.GetCountry() ) );
-  SetItemColumnImage( index, 4,icons().GetRankIcon( user.GetStatus().rank ) );
-
-  if( user.BattleStatus().IsBot() )
-  {
-  	 SetItem( index, 5,  user.GetNick() );
-  	 SetItemColumnImage( index, 5, -1 );
-  }
-  else
-  {
-  	 SetItem( index, 5, user.GetNick() + _T(" (") + user.BattleStatus().owner + _T(")") );
-  	 SetItemColumnImage( index, 5, -1 );
-  }
-
-  if ( !user.BattleStatus().spectator ) {
-    SetItem( index, 6, wxString::Format( _T("%d"), user.BattleStatus().team + 1 ) );
-    SetItem( index, 7, wxString::Format( _T("%d"), user.BattleStatus().ally + 1 ) );
-    SetItem( index, 9, wxString::Format( _T("%d%%"), user.BattleStatus().handicap ) );
-  } else {
     SetItem( index, 6, _T("") );
     SetItem( index, 7, _T("") );
     SetItem( index, 9, _T("") );
   }
   HighlightItemUser( index, user.GetNick() );
-  SetItem( index, 8, wxString::Format( _T("%.1f GHz"), user.GetCpu() / 1000.0 ) );
 
   MarkDirtySort();
 }
@@ -919,11 +919,8 @@ void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint po
 void BattleroomListCtrl::HighlightItem( long item )
 {
     item_content user_content = items[(size_t)GetItemData( item )];
-    if ( !user_content.is_bot )
-    {
-        User& user = *((User*) user_content.data);
-        HighlightItemUser( item, user.GetNick() );
-    }
+		User& user = *((User*) user_content.data);
+		HighlightItemUser( item, user.GetNick() );
 }
 
 void BattleroomListCtrl::OnUserMenuAddToGroup( wxCommandEvent& event )

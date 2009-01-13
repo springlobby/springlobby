@@ -647,11 +647,6 @@ void ChatPanel::Said( const wxString& who, const wxString& message )
 	if ( who.Upper() == me.Upper() )
   {
 		col = sett().GetChatColor(_T("Mine"));
-	} else if ( message.Upper().Contains( me.Upper() ) )
-    {
-      SetIconHighlight( highlight_important );
-      col = sett().GetChatColor(_T("Notification"));
-      req_user = true;
 	} else
 	{
     // change the image of the tab to show new events

@@ -1126,39 +1126,6 @@ void Ui::OnAcceptAgreement( const wxString& agreement )
 }
 
 
-void Ui::OnBattleBotAdded( IBattle& battle, User& bot )
-{
-    if ( m_main_win == 0 ) return;
-    try
-    {
-        if ( &mw().GetJoinTab().GetBattleRoomTab().GetBattle() == &battle ) mw().GetJoinTab().GetBattleRoomTab().OnBotAdded( bot );
-    }
-    catch (...) {}
-}
-
-
-void Ui::OnBattleBotRemoved( IBattle& battle, User& bot )
-{
-    if ( m_main_win == 0 ) return;
-    try
-    {
-        if ( &mw().GetJoinTab().GetBattleRoomTab().GetBattle() == &battle ) mw().GetJoinTab().GetBattleRoomTab().OnBotRemoved( bot );
-    }
-    catch (...) {}
-}
-
-
-void Ui::OnBattleBotUpdated( IBattle& battle, User& bot )
-{
-    if ( m_main_win == 0 ) return;
-    try
-    {
-        if ( &mw().GetJoinTab().GetBattleRoomTab().GetBattle() == &battle ) mw().GetJoinTab().GetBattleRoomTab().OnBotUpdated( bot );
-    }
-    catch (...) {}
-}
-
-
 void Ui::OnRing( const wxString& from )
 {
     if ( m_main_win == 0 ) return;

@@ -867,8 +867,9 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         bstatus = ConvTasbattlestatus( tasbstatus.tasdata );
         color.data = GetIntParam( params );
         bstatus.colour = wxColour( color.color.red, color.color.green, color.color.blue );
-        ai = GetSentenceParam( params );
-        m_se->OnBattleAddBot( id, nick, owner, bstatus, ai );
+        bstatus.ailib = GetSentenceParam( params );
+        bstatus.owner =owner;
+        m_se->OnBattleAddBot( id, nick, bstatus );
     }
     else if ( cmd == _T("UPDATEBOT") )
     {
@@ -1723,6 +1724,7 @@ void TASServer::ForceSide( int battleid, User& user, int side )
     {
         GetMe().BattleStatus().side = side;
         SendMyBattleStatus( GetMe().BattleStatus() );
+        return;
     }
 }
 
@@ -1746,17 +1748,15 @@ void TASServer::ForceTeam( int battleid, User& user, int team )
 				UpdateBot( battleid, user, user.BattleStatus() );
 				return;
 		}
+		if ( &user == &GetMe() )
+		{
+				GetMe().BattleStatus().team = team;
+				SendMyBattleStatus( GetMe().BattleStatus() );
+				return;
+		}
     if ( !GetBattle(battleid).IsFounderMe() )
     {
-        if ( &user == &GetMe() )
-        {
-            GetMe().BattleStatus().team = team;
-            SendMyBattleStatus( GetMe().BattleStatus() );
-        }
-        else
-        {
-            DoActionBattle( battleid, _T("suggests that ") + user.GetNick() + _T(" changes to team #") + wxString::Format( _T("%d"), team + 1 ) + _T(".") );
-        }
+				DoActionBattle( battleid, _T("suggests that ") + user.GetNick() + _T(" changes to team #") + wxString::Format( _T("%d"), team + 1 ) + _T(".") );
         return;
     }
 
@@ -1787,18 +1787,17 @@ void TASServer::ForceAlly( int battleid, User& user, int ally )
 			 return;
 		}
 
+		if ( &user == &GetMe() )
+		{
+				GetMe().BattleStatus().ally = ally;
+				SendMyBattleStatus( GetMe().BattleStatus() );
+				return;
+		}
+
     if ( !GetBattle(battleid).IsFounderMe() )
     {
-        if ( &user == &GetMe() )
-        {
-            GetMe().BattleStatus().ally = ally;
-            SendMyBattleStatus( GetMe().BattleStatus() );
-        }
-        else
-        {
-            DoActionBattle( battleid, _T("suggests that ") + user.GetNick() + _T(" changes to ally #") + wxString::Format( _T("%d"), ally + 1 ) + _T(".") );
-        }
-        return;
+			DoActionBattle( battleid, _T("suggests that ") + user.GetNick() + _T(" changes to ally #") + wxString::Format( _T("%d"), ally + 1 ) + _T(".") );
+			return;
     }
 
     //FORCEALLYNO username teamno
@@ -1827,19 +1826,16 @@ void TASServer::ForceColour( int battleid, User& user, const wxColour& col )
 			 UpdateBot( battleid, user, user.BattleStatus() );
 			 return;
 		}
-
+		if ( &user == &GetMe() )
+		{
+				GetMe().BattleStatus().colour = col;
+				SendMyBattleStatus( GetMe().BattleStatus() );
+				return;
+		}
     if ( !GetBattle(battleid).IsFounderMe() )
     {
-        if ( &user == &GetMe() )
-        {
-            GetMe().BattleStatus().colour = col;
-            SendMyBattleStatus( GetMe().BattleStatus() );
-        }
-        else
-        {
-            DoActionBattle( battleid, _T("sugests that ") + user.GetNick() + _T(" changes colour.") );
-        }
-        return;
+			DoActionBattle( battleid, _T("sugests that ") + user.GetNick() + _T(" changes colour.") );
+			return;
     }
 
     UTASColor tascl;
@@ -1873,34 +1869,17 @@ void TASServer::ForceSpectator( int battleid, User& user, bool spectator )
 			 UpdateBot( battleid, user, user.BattleStatus() );
 			 return;
 		}
-
-    if ( !GetBattle(battleid).IsFounderMe())
+		if ( &user == &GetMe() )
+		{
+				GetMe().BattleStatus().spectator = spectator;
+				SendMyBattleStatus( GetMe().BattleStatus() );
+				return;
+		}
+    if ( !GetBattle(battleid).IsFounderMe() )
     {
-        if ( &user == &GetMe() )
-        {
-            GetMe().BattleStatus().spectator = spectator;
-            SendMyBattleStatus( GetMe().BattleStatus() );
-        }
-        else
-        {
-            if ( spectator ) DoActionBattle( battleid, _T("suggests that ") + user.GetNick() + _T(" becomes a spectator.") );
-            else DoActionBattle( battleid, _T("suggests that ") + user.GetNick() + _T(" plays.") );
-        }
-        return;
-    }
-
-    if ( !spectator )
-    {
-        if ( &user == &GetMe() )
-        {
-            GetMe().BattleStatus().spectator = spectator;
-            SendMyBattleStatus( GetMe().BattleStatus() );
-        }
-        else
-        {
-            DoActionBattle( battleid, _T("suggests that ") + user.GetNick() + _T(" plays.") );
-        }
-        return;
+			if ( spectator ) DoActionBattle( battleid, _T("suggests that ") + user.GetNick() + _T(" becomes a spectator.") );
+			else DoActionBattle( battleid, _T("suggests that ") + user.GetNick() + _T(" plays.") );
+			return;
     }
 
     //FORCESPECTATORMODE username
@@ -1928,18 +1907,15 @@ void TASServer::BattleKickPlayer( int battleid, User& user )
     	RemoveBot( battleid, user );
     	return;
     }
-
+		if ( &user == &GetMe() )
+		{
+				LeaveBattle( battleid );
+				return;
+		}
     if ( !GetBattle(battleid).IsFounderMe() )
     {
-        if ( &user == &GetMe() )
-        {
-            LeaveBattle( battleid );
-        }
-        else
-        {
-            DoActionBattle( battleid, _T("thinks ") + user.GetNick() + _T(" should leave.") );
-        }
-        return;
+			DoActionBattle( battleid, _T("thinks ") + user.GetNick() + _T(" should leave.") );
+			return;
     }
 
     //KICKFROMBATTLE username

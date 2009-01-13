@@ -18,6 +18,9 @@ SinglePlayerBattle::SinglePlayerBattle(Ui& ui, MainSinglePlayerTab& msptab):
   m_me( User( _T("Player") ) )
 {
 	OnUserAdded( m_me );
+	UserBattleStatus bs = m_me.BattleStatus();
+	bs.colour = GetFreeColour( m_me );
+	m_me.UpdateBattleStatus( bs ); // don't use forcecolor because it sources ui() which is not initialized yet here
   CustomBattleOptions().setSingleOption( _T("startpostype"), wxString::Format(_T("%d"), ST_Pick), OptionsWrapper::EngineOption );
 }
 
@@ -40,7 +43,7 @@ void SinglePlayerBattle::SendHostInfo( HostInfo update )
   }
   if ( (update & HI_Mod_Changed) != 0 )
   {
-    for ( unsigned int num = 1; num < GetNumBots(); num++ ) BattleKickPlayer( GetUser( num ) ); // remove all bots
+    for ( unsigned int num = 1; num < GetNumBots(); num++ ) KickPlayer( GetUser( num ) ); // remove all bots
     CustomBattleOptions().loadOptions( OptionsWrapper::ModOption, GetHostModName() );
     wxString presetname = sett().GetModDefaultPresetName( GetHostModName() );
     if ( !presetname.IsEmpty() )

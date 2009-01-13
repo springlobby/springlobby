@@ -128,10 +128,6 @@ class Ui
     void OnBattleInfoUpdated( IBattle& battle, const wxString& Tag );
     void OnBattleStarted( Battle& battle );
 
-    void OnBattleBotAdded( IBattle& battle, User& bot );
-    void OnBattleBotRemoved( IBattle& battle, User& bot );
-    void OnBattleBotUpdated( IBattle& battle, User& bot );
-
     void OnJoinedBattle( Battle& battle );
     void OnHostedBattle( Battle& battle );
     void OnUserBattleStatus( IBattle& battle, User& user );

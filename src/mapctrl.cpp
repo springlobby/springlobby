@@ -389,7 +389,7 @@ void MapCtrl::RelocateUsers()
     {
 			User& user = m_battle->GetUser( i );
 			m_battle->GetFreePosition( user.BattleStatus().posx, user.BattleStatus().posy );
-			if ( user.BattleStatus().posx == -1 ) m_battle->BattleKickPlayer( user );
+			if ( user.BattleStatus().posx == -1 ) m_battle->KickPlayer( user );
     }
     catch (...) {}
   }
@@ -877,8 +877,8 @@ void MapCtrl::DrawUser( wxDC& dc, User& user, bool selected, bool moving )
     } catch (...)
     {
       delete bmp;
-      if ( user.BattleStatus().side == 0 ) bmp = new wxBitmap( *charArr2wxBitmap(no1_icon_png, sizeof(no1_icon_png) ) );
-      else bmp = new wxBitmap( *charArr2wxBitmap(no2_icon_png, sizeof(no2_icon_png) ) );
+      if ( user.BattleStatus().side == 0 ) bmp = new wxBitmap( charArr2wxBitmap(no1_icon_png, sizeof(no1_icon_png) ) );
+      else bmp = new wxBitmap( charArr2wxBitmap(no2_icon_png, sizeof(no2_icon_png) ) );
     }
 
     dc.DrawBitmap( *bmp, r.x+siderect.x, r.y+siderect.y, true );
@@ -1412,7 +1412,7 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
     else if ( m_mdown_area == RA_Close )
     {
       wxRect r = GetUserRect( user, true );
-      m_battle->BattleKickPlayer( *m_user_expanded );
+      m_battle->KickPlayer( *m_user_expanded );
       RefreshRect( r, false );
     }
     m_mdown_area = RA_Main;
