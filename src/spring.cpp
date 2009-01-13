@@ -156,7 +156,7 @@ bool Spring::LaunchSpring( const wxString& params  )
 		#ifndef __WXMSW__
 		configfileflags = _T("--config=\"") + configfileflags + _T("\" ");
 		#else
-		configfileflags = _T("/config \"") + configfileflags + _T("\" ");
+		configfileflags = _T(""); // _T("/config \"") + configfileflags + _T("\" ");
 		#endif
   }
   wxString cmd =  _T("\"") + sett().GetCurrentUsedSpringBinary() + _T("\" ") + configfileflags + params;
@@ -307,6 +307,8 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 
 			tdf.AppendLineBreak();
 
+
+			wxArrayString sides = usync().GetSides( battle.GetHostModName() );
 			int PreviousTeam = -1;
 			for ( unsigned int i = 0; i < NumUsers; i++ )
 			{
@@ -343,7 +345,6 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 								TowxString( status.colour.Blue()/255.0 );
 						tdf.Append( _T("RGBColor"), colourstring);
 
-						wxArrayString sides = usync().GetSides( battle.GetHostModName() );
 						unsigned int side = status.side;
 						if ( side < sides.GetCount() ) tdf.Append( _T("Side"), sides[side] );
 						tdf.Append( _T("Handicap"), status.handicap );
