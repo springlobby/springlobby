@@ -321,6 +321,8 @@ wxString Spring::WriteScriptTxt( Battle& battle )
 
 			tdf.AppendLineBreak();
 
+
+			wxArrayString sides = usync().GetSides( battle.GetHostModName() );
 			int PreviousTeam = -1;
 			for ( int i = 0; i < NumTotalPlayersWithBots; i++ )
 			{
@@ -350,7 +352,6 @@ wxString Spring::WriteScriptTxt( Battle& battle )
 								TowxString( status.colour.Blue()/255.0 );
 						tdf.Append( _T("RGBColor"), colourstring);
 
-						wxArrayString sides = usync().GetSides( battle.GetHostModName() );
 						int side = status.side;
 						if ( side < sides.GetCount() ) tdf.Append( _T("Side"), sides[side] );
 						tdf.Append( _T("Handicap"), status.handicap );
