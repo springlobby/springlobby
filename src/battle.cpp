@@ -80,8 +80,10 @@ Battle::Battle( Server& serv, int id ) :
 
 Battle::~Battle()
 {
-    if ( GetMyPlayerNum() != -1 )
-        susynclib().UnSetCurrentMod();
+    //causes segfault on disconnect, functionality is still somewhat needed
+//    if ( GetMyPlayerNum() != -1 )
+//        susynclib().UnSetCurrentMod();
+
     ClearStartRects();
 }
 
