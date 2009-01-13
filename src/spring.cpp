@@ -190,18 +190,6 @@ void Spring::OnTerminated( wxCommandEvent& event )
     m_ui.OnSpringTerminated( true );
 }
 
-struct SortingUser
-{
-    int ValueToSort;
-    int OriginalIndex;
-    bool IsBot;
-
-    // comparison function for sorting
-    bool operator<( const SortingUser b) const
-    {
-        return ( ValueToSort < b.ValueToSort );
-    }
-};
 
 wxString Spring::WriteScriptTxt( IBattle& battle )
 {
@@ -262,47 +250,31 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 
 			unsigned int NumUsers = battle.GetNumUsers();
 
-			std::vector<SortingUser> SortedByTeam;
-			std::vector<SortingUser> SortedByAlly;
-
+			std::map<int, User*> dedupe_teams; // team -> user* ( for teams deduping )
 			for ( unsigned int i = 0; i < NumUsers; i++ )
 			{
-					SortingUser UserTeamSort;
-					SortingUser UserAllySort;
-
-					UserTeamSort.ValueToSort = battle.GetUser( i ).BattleStatus().team;
-					UserAllySort.ValueToSort = battle.GetUser( i ).BattleStatus().ally;
-
-					UserTeamSort.OriginalIndex = i;
-					UserAllySort.OriginalIndex = i;
-
-					UserTeamSort.IsBot = battle.GetUser( i ).BattleStatus().IsBot();
-					UserAllySort.IsBot = UserTeamSort.IsBot;
-
-					SortedByTeam.push_back( UserTeamSort );
-					SortedByAlly.push_back( UserAllySort );
+					User& usr = battle.GetUser( i );
+					dedupe_teams[usr.BattleStatus().team] = &usr;
 			}
-
-			std::sort( SortedByTeam.begin(), SortedByTeam.end() );
-			std::sort( SortedByAlly.begin(), SortedByAlly.end() );
-
-			unsigned int NumTotalPlayersWithBots = SortedByTeam.size();
+			std::map<User*, int> player_to_number; // player -> ordernumber
 
 			for ( unsigned int i = 0; i < NumUsers; i++ )
 			{
 					User& user = battle.GetUser( i );
-					if ( user.BattleStatus().IsBot() ) continue;
+					UserBattleStatus status = user.BattleStatus();
+					if ( status.IsBot() ) continue;
 					tdf.EnterSection( _T("PLAYER") + i2s( i ) );
 						tdf.Append( _T("name"), user.GetNick() );
 
 						tdf.Append( _T("countryCode"), user.GetCountry().Lower());
-						tdf.Append( _T("Spectator"), user.BattleStatus().spectator );
+						tdf.Append( _T("Spectator"), status.spectator );
 
-						if ( !user.BattleStatus().spectator )
+						if ( !status.spectator )
 						{
-								tdf.Append( _T("team"), user.BattleStatus().team );
+								tdf.Append( _T("team"), status.team );
 						}
 					tdf.LeaveSection();
+					player_to_number[&user] = i;
 			}
 
 			tdf.AppendLineBreak();
@@ -310,25 +282,23 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 
 			wxArrayString sides = usync().GetSides( battle.GetHostModName() );
 			int PreviousTeam = -1;
-			for ( unsigned int i = 0; i < NumUsers; i++ )
+			for ( std::map<int, User*>::iterator itor = dedupe_teams.begin(); itor != dedupe_teams.end(); itor++ )
 			{
-					if ( PreviousTeam == SortedByTeam[i].ValueToSort ) continue; // skip duplicates
-					PreviousTeam = SortedByTeam[i].ValueToSort;
+					if ( !itor->second ) continue;
+					User& usr = *itor->second;
+					UserBattleStatus status = usr.BattleStatus();
+					if ( PreviousTeam == status.team ) continue; // skip duplicates
+					PreviousTeam = status.team;
 
-					tdf.EnterSection( _T("TEAM") + i2s( SortedByTeam[i].ValueToSort ) );
-						UserBattleStatus status;
-						if ( SortedByTeam[i].IsBot )
+					tdf.EnterSection( _T("TEAM") + i2s( PreviousTeam ) );
+						if ( status.IsBot() )
 						{
-								User& usr = battle.GetUser( SortedByTeam[i].OriginalIndex );
-								status = usr.BattleStatus();
-								tdf.Append( _T("AIDLL"), usr.BattleStatus().ailib );
-								tdf.Append( _T("TeamLeader"), battle.GetUser( usr.BattleStatus().owner ).BattleStatus().team ); // bot owner is the team leader
+								tdf.Append( _T("AIDLL"), status.ailib );
+								tdf.Append( _T("TeamLeader"), player_to_number[&battle.GetUser( status.owner )] ); // bot owner is the team leader
 						}
 						else
 						{
-								User usr = battle.GetUser( SortedByTeam[i].OriginalIndex );
-								status = usr.BattleStatus();
-								tdf.Append( _T("TeamLeader"), SortedByTeam[i].OriginalIndex );
+								tdf.Append( _T("TeamLeader"), player_to_number[&usr] );
 						}
 
 						if ( startpostype == IBattle::ST_Pick )
@@ -352,17 +322,19 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 			}
 
 			int PreviousAlly = -1;
-			for ( unsigned int i = 0; i < NumTotalPlayersWithBots; i++ )
+			for ( unsigned int i = 0; i < NumUsers; i++ )
 			{
-					if ( PreviousAlly == SortedByAlly[i].ValueToSort ) continue;
-					PreviousAlly = SortedByAlly[i].ValueToSort;
+					User& usr = battle.GetUser( i );
+					UserBattleStatus status = usr.BattleStatus();
+					if ( PreviousAlly == status.ally ) continue; // skip duplicates
+					PreviousAlly = status.ally;
 
-					tdf.EnterSection( _T("ALLYTEAM") + i2s( SortedByAlly[i].ValueToSort ) );
+					tdf.EnterSection( _T("ALLYTEAM") + i2s( PreviousAlly ) );
 						tdf.Append( _T("NumAllies"), 0 );
 
 						if ( startpostype == IBattle::ST_Choose )
 						{
-								BattleStartRect sr = battle.GetStartRect( SortedByAlly[i].ValueToSort );
+								BattleStartRect sr = battle.GetStartRect( status.ally );
 								if ( sr.IsOk() )
 								{
 										const char* old_locale = std::setlocale(LC_NUMERIC, "C");
