@@ -80,9 +80,8 @@ Battle::Battle( Server& serv, int id ) :
 
 Battle::~Battle()
 {
-    //causes segfault on disconnect, functionality is still somewhat needed
-//    if ( GetMyPlayerNum() != -1 )
-//        susynclib().UnSetCurrentMod();
+    if ( m_is_self_in )
+        susynclib().UnSetCurrentMod();
 
     ClearStartRects();
 }
@@ -115,12 +114,14 @@ void Battle::Update( const wxString& Tag )
 void Battle::Join( const wxString& password )
 {
     m_serv.JoinBattle( m_opts.battleid, password );
+    m_is_self_in = true;
 }
 
 
 void Battle::Leave()
 {
     m_serv.LeaveBattle( m_opts.battleid );
+    m_is_self_in = false;
     susynclib().UnSetCurrentMod( );
 }
 

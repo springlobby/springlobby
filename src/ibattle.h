@@ -210,6 +210,7 @@ public:
 
     virtual void OnSelfLeftBattle();
 
+
 protected:
 
     bool m_map_loaded;
@@ -226,6 +227,8 @@ protected:
     OptionsWrapper m_opt_wrap;
 
     wxString m_preset;
+
+    bool m_is_self_in;
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_IBATTLE_H

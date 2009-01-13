@@ -14,7 +14,8 @@ IBattle::IBattle():
   m_map_loaded(false),
   m_mod_loaded(false),
   m_map_exists(false),
-  m_mod_exists(false)
+  m_mod_exists(false),
+  m_is_self_in(false)
 {
 }
 
@@ -165,6 +166,7 @@ wxArrayString IBattle::DisabledUnits()
 void IBattle::OnSelfLeftBattle()
 {
     susynclib().UnSetCurrentMod(); //left battle
+    m_is_self_in = false;
 }
 
 void IBattle::OnUnitSyncReloaded()
