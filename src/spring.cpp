@@ -261,7 +261,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 			for ( unsigned int i = 0; i < NumUsers; i++ )
 			{
 					User& user = battle.GetUser( i );
-					UserBattleStatus status = user.BattleStatus();
+					UserBattleStatus& status = user.BattleStatus();
 					if ( status.IsBot() ) continue;
 					tdf.EnterSection( _T("PLAYER") + i2s( i ) );
 						tdf.Append( _T("Name"), user.GetNick() );
@@ -287,7 +287,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 			{
 					if ( !itor->second ) continue;
 					User& usr = *itor->second;
-					UserBattleStatus status = usr.BattleStatus();
+					UserBattleStatus& status = usr.BattleStatus();
 					if ( PreviousTeam == status.team ) continue; // skip duplicates
 					PreviousTeam = status.team;
 
@@ -326,7 +326,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 			for ( unsigned int i = 0; i < NumUsers; i++ )
 			{
 					User& usr = battle.GetUser( i );
-					UserBattleStatus status = usr.BattleStatus();
+					UserBattleStatus& status = usr.BattleStatus();
 					if ( PreviousAlly == status.ally ) continue; // skip duplicates
 					PreviousAlly = status.ally;
 
