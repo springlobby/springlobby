@@ -109,9 +109,8 @@ void ServerEvents::OnPong( int ping_time )
 {
     if ( ping_time == -1 )
     {
-        wxLogWarning( _("Ping Timeout!") );
-        m_serv.Disconnect();
-        OnDisconnected();
+        wxLogWarning( _T("Ping Timeout!") );
+        if ( m_serv.IsConnected() ) m_serv.Disconnect();
     }
 }
 
@@ -306,7 +305,6 @@ void ServerEvents::OnClientBattleStatus( int battleid, const wxString& nick, Use
 
         if ( battle.IsFounderMe() ) AutoCheckCommandSpam( battle, user );
 
-        if ( status == user.BattleStatus() ) return; /// drop the message if no updates to current status are present;
         status.color_index = user.BattleStatus().color_index;
 
         battle.OnUserBattleStatusUpdated( user, status );

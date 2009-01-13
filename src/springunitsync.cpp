@@ -118,7 +118,7 @@ void SpringUnitSync::PopulateArchiveList()
 bool SpringUnitSync::_LoadUnitSyncLib( const wxString& unitsyncloc )
 {
   try {
-    susynclib().Load( unitsyncloc, true, sett().GetForcedSpringConfigFilePath() );
+    susynclib().Load( unitsyncloc, sett().GetForcedSpringConfigFilePath() );
   } catch (...) {
     return false;
   }
@@ -715,10 +715,15 @@ wxImage SpringUnitSync::GetMinimap( const wxString& mapname, int width, int heig
   // and we need to resize it to the correct aspect ratio.
   if (img.GetWidth() > 1 && img.GetHeight() > 1)
   {
-    MapInfo mapinfo = _GetMapInfoEx( mapname );
+    try {
+      MapInfo mapinfo = _GetMapInfoEx( mapname );
 
-    wxSize image_size = MakeFit(wxSize(mapinfo.width, mapinfo.height), wxSize(width, height));
-    img.Rescale( image_size.GetWidth(), image_size.GetHeight() );
+      wxSize image_size = MakeFit(wxSize(mapinfo.width, mapinfo.height), wxSize(width, height));
+      img.Rescale( image_size.GetWidth(), image_size.GetHeight() );
+    }
+    catch (...) {
+      img = wxImage( 1, 1 );
+    }
   }
 
   return img;
@@ -804,7 +809,7 @@ MapInfo SpringUnitSync::_GetMapInfoEx( const wxString& mapname )
   {
     cache = GetCacheFile( GetFileCachePath( mapname, _T(""), false ) + _T(".infoex") );
 
-    ASSERT_EXCEPTION( cache.GetCount() >= 10, _T("not enought lines found in cache info ex") );
+    ASSERT_EXCEPTION( cache.GetCount() >= 11, _T("not enough lines found in cache info ex") );
     info.author = cache[0];
     info.tidalStrength =  s2l( cache[1] );
     info.gravity = s2l( cache[2] );
@@ -880,16 +885,11 @@ wxString SpringUnitSync::GetFileCachePath( const wxString& name, const wxString&
 {
   wxString ret = sett().GetCachePath();
   if ( !name.IsEmpty() ) ret << name;
-  else if ( !hash.IsEmpty() )
-  {
-    if ( IsMod ) ret << m_mods_list[hash];
-    else ret << m_maps_list[hash];
-  }
   else return wxEmptyString;
   if ( !hash.IsEmpty() ) ret << hash;
   else
   {
-    if ( IsMod ) ret <<  _T("-") << susynclib().GetPrimaryModChecksumFromName( name );
+    if ( IsMod ) ret <<  _T("-") << m_mods_list[name];
     else
     {
         //very important to call getmapcount before getmapchecksum

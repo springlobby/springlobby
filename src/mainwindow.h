@@ -131,14 +131,6 @@ class MainWindow : public wxFrame
     MainTorrentTab* m_torrent_tab;
     #endif
 
-    wxBitmap* m_chat_icon;
-    wxBitmap* m_battle_icon;
-    wxBitmap* m_options_icon;
-    wxBitmap* m_sp_icon;
-    wxBitmap* m_downloads_icon;
-    wxBitmap* m_replay_icon;
-    wxBitmap* m_select_image;
-
     wxImageList* m_func_tab_images;
     AutojoinChannelDialog* m_autojoin_dialog;
     settings_frame* se_frame;

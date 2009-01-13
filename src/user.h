@@ -35,7 +35,7 @@ struct UserStatus {
 struct UserBattleStatus
 {
   /// when adding something to this struct, also modify User::UpdateBattleStatus()
-  /// total 12 members here
+  /// total 11 members here
   int order;
   int team;
   int ally;
@@ -49,14 +49,14 @@ struct UserBattleStatus
   /// for nat holepunching
   wxString ip;
   unsigned int udpport;
-  UserBattleStatus(): order(-1),team(0),ally(0),colour(wxColour(0,0,0)),color_index(-1),handicap(0),side(0),sync(SYNC_UNKNOWN),spectator(true),ready(false),udpport(0) {}
+  UserBattleStatus(): team(0),ally(0),colour(wxColour(0,0,0)),color_index(-1),handicap(0),side(0),sync(SYNC_UNKNOWN),spectator(true),ready(false),udpport(0) {}
   bool operator == ( const UserBattleStatus& s )
   {
-    return ( ( order == s.order ) && ( team == s.team ) && ( colour == s.colour ) && ( handicap == s.handicap ) && ( side == s.side ) && ( sync == s.sync ) && ( spectator == s.spectator ) && ( ready == s.ready ) );
+    return ( ( team == s.team ) && ( colour == s.colour ) && ( handicap == s.handicap ) && ( side == s.side ) && ( sync == s.sync ) && ( spectator == s.spectator ) && ( ready == s.ready ) );
   }
   bool operator != ( const UserBattleStatus& s )
   {
-    return ( ( order != s.order ) || ( team != s.team ) || ( colour != s.colour ) || ( handicap != s.handicap ) || ( side != s.side ) || ( sync != s.sync ) || ( spectator != s.spectator ) || ( ready != s.ready ) );
+    return ( ( team != s.team ) || ( colour != s.colour ) || ( handicap != s.handicap ) || ( side != s.side ) || ( sync != s.sync ) || ( spectator != s.spectator ) || ( ready != s.ready ) );
   }
 };
 
