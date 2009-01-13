@@ -264,14 +264,15 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 					UserBattleStatus status = user.BattleStatus();
 					if ( status.IsBot() ) continue;
 					tdf.EnterSection( _T("PLAYER") + i2s( i ) );
-						tdf.Append( _T("name"), user.GetNick() );
+						tdf.Append( _T("Name"), user.GetNick() );
 
-						tdf.Append( _T("countryCode"), user.GetCountry().Lower());
+						tdf.Append( _T("CountryCode"), user.GetCountry().Lower());
 						tdf.Append( _T("Spectator"), status.spectator );
+						tdf.Append( _T("Rank"), user.GetRank() );
 
 						if ( !status.spectator )
 						{
-								tdf.Append( _T("team"), status.team );
+								tdf.Append( _T("Team"), status.team );
 						}
 					tdf.LeaveSection();
 					player_to_number[&user] = i;

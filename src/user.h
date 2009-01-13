@@ -147,7 +147,7 @@ class User : public CommonUser
     static wxString GetRankName(UserStatus::RankContainer rank);
 
     float GetBalanceRank();
-
+    UserStatus::RankContainer GetRank();
     wxString GetClan();
 
   protected:

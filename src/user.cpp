@@ -105,6 +105,11 @@ bool User::ExecuteSayCommand( const wxString& cmd )
   }  else return false;
 }
 
+UserStatus::RankContainer User::GetRank()
+{
+	return GetStatus().rank;
+}
+
 wxString User::GetRankName(UserStatus::RankContainer rank)
 {
   //TODO: better interface to ranks?
