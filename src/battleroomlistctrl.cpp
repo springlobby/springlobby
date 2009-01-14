@@ -247,24 +247,10 @@ void BattleroomListCtrl::UpdateUser( const int& index )
   User* tmp = items[(size_t)GetItemData( index )];
   if ( !tmp ) return;
 	User& user = *tmp;
-	icons().SetColourIcon( user.BattleStatus().team, user.BattleStatus().colour );
-	if ( user.BattleStatus().IsBot() )
-	{
-		SetItemColumnImage( index, 3,icons().ICON_NONE );
-		SetItemColumnImage( index, 4,icons().ICON_NONE );
-
-		wxString botdll = user.BattleStatus().ailib;
-		if ( botdll.Contains(_T('.')) ) botdll = botdll.BeforeLast(_T('.'));
-		if ( botdll.Contains(_T('/')) ) botdll = botdll.AfterLast(_T('/'));
-		if ( botdll.Contains(_T('\\')) ) botdll = botdll.AfterLast(_T('\\'));
-		if ( botdll.Contains(_T("LuaAI:")) ) botdll = botdll.AfterFirst(_T(':'));
-
-		SetItem( index, 8, botdll );
-	}
-	else SetItemColumnImage( index, 4, icons().GetRankIcon( user.GetStatus().rank ) );
 
   if( !user.BattleStatus().IsBot() )
   {
+			SetItemColumnImage( index, 4, icons().GetRankIcon( user.GetStatus().rank ) );
   	 SetItem( index, 5,  user.GetNick() );
   	 SetItem( index, 8, wxString::Format( _T("%.1f GHz"), user.GetCpu() / 1000.0 ) );
   	 SetItemColumnImage( index, 3,icons().GetFlagIcon( user.GetCountry() ) );
@@ -274,14 +260,23 @@ void BattleroomListCtrl::UpdateUser( const int& index )
 		}
 		else
 		{
-			SetItemImage( index, icons().GetReadyIcon( user.BattleStatus().spectator, user.BattleStatus().ready, user.BattleStatus().sync ) );
+			SetItemImage( index, icons().GetReadyIcon( user.BattleStatus().spectator, user.BattleStatus().ready, user.BattleStatus().sync, user.BattleStatus().IsBot() ) );
 		}
   }
   else
   {
-  	 SetItem( index, 5, user.GetNick() + _T(" (") + user.BattleStatus().owner + _T(")") );
-			SetItemImage( index, index,icons().ICON_BOT );
+  	SetItemImage( index, index,icons().ICON_BOT );
+		SetItemColumnImage( index, 3,icons().ICON_NONE );
+		SetItemColumnImage( index, 4,icons().ICON_NONE );
+		SetItem( index, 5, user.GetNick() + _T(" (") + user.BattleStatus().owner + _T(")") );
 
+		wxString botdll = user.BattleStatus().ailib;
+		if ( botdll.Contains(_T('.')) ) botdll = botdll.BeforeLast(_T('.'));
+		if ( botdll.Contains(_T('/')) ) botdll = botdll.AfterLast(_T('/'));
+		if ( botdll.Contains(_T('\\')) ) botdll = botdll.AfterLast(_T('\\'));
+		if ( botdll.Contains(_T("LuaAI:")) ) botdll = botdll.AfterFirst(_T(':'));
+
+		SetItem( index, 8, botdll );
 
   }
   SetItemColumnImage( index, 1, -1 );
@@ -289,6 +284,7 @@ void BattleroomListCtrl::UpdateUser( const int& index )
 
   if ( !user.BattleStatus().spectator )
   {
+		icons().SetColourIcon( user.BattleStatus().team, user.BattleStatus().colour );
     SetItem( index, 6, wxString::Format( _T("%d"), user.BattleStatus().team + 1 ) );
     SetItem( index, 7, wxString::Format( _T("%d"), user.BattleStatus().ally + 1 ) );
     SetItem( index, 9, wxString::Format( _T("%d%%"), user.BattleStatus().handicap ) );
