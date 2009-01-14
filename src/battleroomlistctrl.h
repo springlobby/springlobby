@@ -11,11 +11,6 @@ struct BattleBot;
 class wxIcon;
 
 
-struct item_content {
-  bool is_bot;
-  void* data;
-};
-
 /** \brief display participants of battle and their info (ally,team,color,cpu...)
  * \todo DOCMEMORE */
 class BattleroomListCtrl : public CustomListCtrl
@@ -32,13 +27,7 @@ class BattleroomListCtrl : public CustomListCtrl
     void UpdateUser( User& user );
     void UpdateList();
 
-    void AddBot( BattleBot& bot );
-    void RemoveBot( BattleBot& bot );
-    void UpdateBot( BattleBot& bot );
-    void UpdateBot( const int& index );
-
     int GetUserIndex( User& user );
-    int GetBotIndex( BattleBot& bot );
 
     void SortList();
 
@@ -96,8 +85,7 @@ class BattleroomListCtrl : public CustomListCtrl
     UserMenu* m_popup;
 
     User* m_sel_user;
-    BattleBot* m_sel_bot;
-    std::vector<item_content> items;
+    std::vector<User*> items;
 
     wxMenu* m_sides;
     wxMenuItem* m_spec_item;

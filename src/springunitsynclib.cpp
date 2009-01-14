@@ -5,6 +5,7 @@
 #include <wx/image.h>
 #include <wx/log.h>
 #include <stdexcept>
+#include <cmath>
 
 #include "springunitsynclib.h"
 #include "utils.h"
@@ -653,7 +654,7 @@ wxImage SpringUnitSyncLib::GetHeightmap( const wxString& mapFileName )
     const double value = (grayscale[i] - min) / (range / (numPoints - 1));
     const int idx1 = int(value);
     const int idx2 = idx1 + 1;
-    const int t = int(256.0 * (value - floor(value)));
+    const int t = int(256.0 * (value - std::floor(value)));
 
     //assert(idx1 >= 0 && idx1 < numPoints-1);
     //assert(idx2 >= 1 && idx2 < numPoints);

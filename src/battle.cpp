@@ -28,61 +28,22 @@
 #include "springunitsynclib.h"
 
 
-std::vector<wxColour> &GetFixColoursPalette()
-{
-    static std::vector<wxColour> result;
-    if (result.empty())
-    {
-        wxImage image(fixcolours_palette_xpm);
-        unsigned char* data=image.GetData();
-        size_t len=image.GetWidth()*image.GetHeight();
-        for (size_t i=0;i<len;++i)
-        {
-            int r=data[i*3];
-            int g=data[i*3+1];
-            int b=data[i*3+2];
-            if (r||g||b)
-            {
-                result.push_back(wxColour(r,g,b));
-            }
-        }
-    }
-    return result;
-}
-
-wxColour GetFixColour(int i)
-{
-    std::vector<wxColour> palette=GetFixColoursPalette();
-    if (((unsigned int)i)<palette.size())
-    {
-        return palette[i];
-    }
-    else
-    {
-        return wxColour(127,127,127);
-    }
-}
-
-const std::list<BattleBot*>::size_type BOT_SEEKPOS_INVALID = (std::list<BattleBot*>::size_type)(-1);
-
 
 Battle::Battle( Server& serv, int id ) :
-        CommonBattle(id,false,0), //m_ingame(false),m_order(0)
         m_serv(serv),
         m_ah(*this),
         m_autolock_on_start(false),
-        m_generating_script(false)
+        m_id( id )
+
 {
-
-
+    m_opts.battleid =  m_id;
 }
 
 
 Battle::~Battle()
 {
-    if ( GetMyPlayerNum() != -1 )
+    if ( m_is_self_in )
         susynclib().UnSetCurrentMod();
-    ClearStartRects();
 }
 
 
@@ -113,111 +74,17 @@ void Battle::Update( const wxString& Tag )
 void Battle::Join( const wxString& password )
 {
     m_serv.JoinBattle( m_opts.battleid, password );
+    m_is_self_in = true;
 }
 
 
 void Battle::Leave()
 {
     m_serv.LeaveBattle( m_opts.battleid );
+    m_is_self_in = false;
     susynclib().UnSetCurrentMod( );
 }
 
-
-int Battle::GetFreeTeamNum( bool excludeme ) const
-{
-    int lowest = 0;
-    bool changed = true;
-    while ( changed )
-    {
-        changed = false;
-        for ( user_map_t::size_type i = 0; i < GetNumUsers(); i++ )
-        {
-            if ( (&GetUser( i ) == &GetMe()) && excludeme ) continue;
-            //if ( GetUser( i ).BattleStatus().spectator ) continue;
-            if ( GetUser( i ).BattleStatus().team == lowest )
-            {
-                lowest++;
-                changed = true;
-            }
-        }
-        std::list<BattleBot*>::const_iterator i;
-        for ( i = m_bots.begin(); i != m_bots.end(); ++i )
-        {
-            if ( *i == 0 ) continue;
-            if ( (*i)->bs.team == lowest )
-            {
-                lowest++;
-                changed = true;
-            }
-        }
-    }
-    return lowest;
-}
-
-
-wxColour Battle::GetFreeColour( User *for_whom ) const
-{
-    int lowest = 0;
-    bool changed = true;
-    while ( changed )
-    {
-        changed = false;
-        for ( user_map_t::size_type i = 0; i < GetNumUsers(); i++ )
-        {
-            if ( &GetUser( i ) == for_whom ) continue;
-            //if ( GetUser( i ).BattleStatus().spectator ) continue;
-            UserBattleStatus& bs = GetUser( i ).BattleStatus();
-            if ( AreColoursSimilar( bs.colour, wxColour(colour_values[lowest][0], colour_values[lowest][1], colour_values[lowest][2]) ) )
-            {
-                lowest++;
-                changed = true;
-            }
-        }
-        std::list<BattleBot*>::const_iterator i;
-        for ( i = m_bots.begin(); i != m_bots.end(); ++i )
-        {
-            if ( *i == 0 ) continue;
-            if ( AreColoursSimilar( (*i)->bs.colour, wxColour(colour_values[lowest][0], colour_values[lowest][1], colour_values[lowest][2]) ) )
-            {
-                lowest++;
-                changed = true;
-            }
-        }
-    }
-    return wxColour( colour_values[lowest][0], colour_values[lowest][1], colour_values[lowest][2] );
-
-}
-
-int ColourDifference(const wxColour &a, const wxColour &b) // returns max difference of r,g,b.
-{
-    return std::max(abs(a.Red()-b.Red()),std::max(abs(a.Green()-b.Green()),abs(a.Blue()-b.Blue())));
-
-}
-
-int GetClosestFixColour(const wxColour &col, const std::vector<int> &excludes, int &difference)
-{
-    std::vector<wxColour> palette=GetFixColoursPalette();
-    int mindiff=1024;
-    int result=0;
-    int t1=palette.size();
-    int t2=excludes.size();
-    wxLogMessage(_T("GetClosestFixColour %d %d"),t1,t2);
-    for (size_t i=0;i<palette.size();++i)
-    {
-        if ((i>=excludes.size()) || (!excludes[i]))
-        {
-            int diff=ColourDifference(palette[i],col);
-            if (diff<mindiff)
-            {
-                mindiff=diff;
-                result=i;
-            }
-        }
-    }
-    difference=mindiff;
-    wxLogMessage(_T("GetClosestFixColour result=%d diff=%d"),result,difference);
-    return result;
-}
 
 void Battle::FixColours( )
 {
@@ -246,13 +113,12 @@ void Battle::FixColours( )
 
         }
     }
-// TODO (dizekat#1#): Fix colors for bots aswell.
 }
 
 
 void Battle::OnRequestBattleStatus()
 {
-    int lowest = GetFreeTeamNum();
+    int lowest = GetFreeTeamNum( true );
 
     UserBattleStatus& bs = m_serv.GetMe().BattleStatus();
     bs.team = lowest;
@@ -260,7 +126,7 @@ void Battle::OnRequestBattleStatus()
     bs.spectator = false;
     bs.colour = sett().GetBattleLastColour();
     // theres some highly annoying bug with color changes on player join/leave.
-    if ( !bs.colour.IsColourOk() ) bs.colour = GetFreeColour(&m_serv.GetMe());
+    if ( !bs.colour.IsColourOk() ) bs.colour = GetFreeColour( GetMe() );
 
     SendMyBattleStatus();
 }
@@ -286,17 +152,7 @@ void Battle::SetImReady( bool ready )
 }
 
 
-bool Battle::IsSynced()
-{
-    LoadMod();
-    LoadMap();
-    bool synced = true;
-    if ( !m_host_map.hash.IsEmpty() ) synced = synced && (m_local_map.hash == m_host_map.hash);
-    if ( !m_host_map.name.IsEmpty() ) synced = synced && (m_local_map.name == m_host_map.name);
-    if ( !m_host_mod.hash.IsEmpty() ) synced = synced && (m_local_mod.hash == m_host_mod.hash);
-    if ( !m_host_mod.name.IsEmpty() ) synced = synced && (m_local_mod.name == m_host_mod.name);
-    return synced;
-}
+
 
 
 /*bool Battle::HasMod()
@@ -317,67 +173,20 @@ void Battle::DoAction( const wxString& msg )
 }
 
 
-bool Battle::HaveMultipleBotsInSameTeam() const
-{
-    std::list<BattleBot*>::const_iterator i;
-    wxLogDebugFunc(_T(""));
-
-    std::vector<int> teams ( GetMaxPlayers(), -1 );
-    for ( i = m_bots.begin(); i != m_bots.end(); ++i )
-    {
-        if ( *i == 0 ) continue;
-        if ( teams[(*i)->bs.team ] == 1 )return true;
-        teams[ (*i)->bs.team ] = 1;
-    }
-    return false;
-}
-
-
-User& Battle::GetMe() const
+User& Battle::GetMe()
 {
     return m_serv.GetMe();
 }
 
 
-bool Battle::IsFounderMe() const
+User& Battle::OnUserAdded( User& user )
 {
-    return ( ( m_opts.founder == m_serv.GetMe().GetNick() ) || ( m_opts.isproxy  && !m_generating_script ) );
-}
-
-int Battle::GetMyPlayerNum() const
-{
-    for (user_map_t::size_type i = 0; i < GetNumUsers(); i++)
-    {
-        if ( &GetUser(i) == &m_serv.GetMe() ) return i;
-    }
-    ASSERT_EXCEPTION(false, _T("You are not in this game.") );
-    return -1;
-}
-
-
-void Battle::OnUserAdded( User& user )
-{
+		user = IBattle::OnUserAdded( user );
     user.SetBattle( this );
-    UserList::AddUser( user );
-
-    //UserBattleStatus bs;
-    //bs.spectator=true;
-    //bs.order = m_order++;
-    //user.UpdateBattleStatus( bs, true );
-    user.BattleStatus().order = m_order++;
-    user.BattleStatus().spectator = false;
-    user.BattleStatus().ready = false;
-    user.BattleStatus().sync = SYNC_UNKNOWN;
 
     if ( IsFounderMe() )
     {
-      if ( user.BattleStatus().spectator )
-      {
-        m_opts.spectators++;
-        SendHostInfo( HI_Spectators );
-      }
-
-        if ( CheckBan( user ) ) return;
+        if ( CheckBan( user ) ) return user;
 
         if ( ( m_opts.rankneeded > 1 ) && ( user.GetStatus().rank < m_opts.rankneeded ))
         {
@@ -394,49 +203,26 @@ void Battle::OnUserAdded( User& user )
                 break;
             case rank_limit_autokick:
                 DoAction( _T("Rank limit autokick: ") + user.GetNick() );
-                BattleKickPlayer( user );
-                return;
+                KickPlayer( user );
+                return user;
             }
         }
 
         m_ah.OnUserAdded( user );
     }
     // any code here may be skipped if the user was autokicked
+    return user;
 }
 
 void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 {
-
-    bool previousspectatorstatus = user.BattleStatus().spectator;
-    int previousteam = user.BattleStatus().team;
-    int previousally = user.BattleStatus().ally;
-
-    user.UpdateBattleStatus( status );
-
+		IBattle::OnUserBattleStatusUpdated( user, status );
     if ( status.handicap != 0 )
     {
         ui().OnBattleAction( *this, wxString(_T(" ")) , ( _T("Warning: user ") + user.GetNick() + _T(" got bonus ") ) << status.handicap );
     }
-
     if ( IsFounderMe() )
     {
-        if ( status.spectator != previousspectatorstatus )
-        {
-            if ( status.spectator )
-            {
-                m_opts.spectators++;
-            }
-            else
-            {
-                m_opts.spectators--;
-            }
-            SendHostInfo( HI_Spectators );
-        }
-        if ( m_opts.lockexternalbalancechanges )
-        {
-          if ( previousteam != user.BattleStatus().team ) ForceTeam( user, previousteam );
-          if ( previousally != user.BattleStatus().ally ) ForceAlly( user, previousally );
-        }
         if ( ( m_opts.rankneeded > 1 ) && ( user.GetStatus().rank < m_opts.rankneeded ))
         {
             switch ( m_opts.ranklimittype )
@@ -452,7 +238,7 @@ void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
                 break;
             case rank_limit_autokick:
                 DoAction( _T("Rank limit autokick: ") + user.GetNick() );
-                BattleKickPlayer( user );
+                KickPlayer( user );
                 break;
             }
         }
@@ -463,31 +249,8 @@ void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 
 void Battle::OnUserRemoved( User& user )
 {
-    if ( IsFounderMe() && user.BattleStatus().spectator )
-    {
-      m_opts.spectators--;
-      SendHostInfo( HI_Spectators );
-    }
-    user.SetBattle( 0 );
-    UserList::RemoveUser( user.GetNick() );
     m_ah.OnUserRemoved(user);
-}
-
-
-void Battle::KickPlayer( User& user )
-{
-    m_serv.BattleKickPlayer( m_opts.battleid, user.GetNick() );
-}
-
-
-bool Battle::IsEveryoneReady()
-{
-    for (user_map_t::size_type i = 0; i < GetNumUsers(); i++)
-    {
-        UserBattleStatus& bs = GetUser(i).BattleStatus();
-        if ( !bs.ready && !bs.spectator ) return false;
-    }
-    return true;
+    IBattle::OnUserRemoved( user );
 }
 
 
@@ -496,11 +259,11 @@ void Battle::RingNotReadyPlayers()
     for (user_map_t::size_type i = 0; i < GetNumUsers(); i++)
     {
         User& u = GetUser(i);
+        if ( u.BattleStatus().IsBot() ) continue;
         UserBattleStatus& bs = u.BattleStatus();
         if ( !bs.ready && !bs.spectator ) m_serv.Ring( u.GetNick() );
     }
 }
-
 
 bool Battle::ExecuteSayCommand( const wxString& cmd )
 {
@@ -524,7 +287,12 @@ bool Battle::ExecuteSayCommand( const wxString& cmd )
         {
             wxString nick=cmd.AfterFirst(' ');
             m_banned_users.insert(nick);
-            m_serv.BattleKickPlayer( m_opts.battleid, nick );
+            try
+						{
+							User& user = GetUser( nick );
+							m_serv.BattleKickPlayer( m_opts.battleid, user );
+						}
+						catch( assert_exception ) {}
             ui().OnBattleAction(*this,wxString(_T(" ")),nick+_T(" banned"));
             //m_serv.DoActionBattle( m_opts.battleid, cmd.AfterFirst(' ') );
             return true;
@@ -572,7 +340,7 @@ bool Battle::ExecuteSayCommand( const wxString& cmd )
                     m_banned_ips.insert(user.BattleStatus().ip);
                     ui().OnBattleAction(*this,wxString(_T(" ")),user.BattleStatus().ip+_T(" banned"));
                 }
-                m_serv.BattleKickPlayer( m_opts.battleid, nick );
+                m_serv.BattleKickPlayer( m_opts.battleid, user );
             }
             //m_banned_ips.erase(nick);
 
@@ -592,14 +360,14 @@ bool Battle::CheckBan(User &user)
         if (m_banned_users.count(user.GetNick())>0
                 || useractions().DoActionOnUser(UserActions::ActAutokick, user.GetNick() ) )
         {
-            BattleKickPlayer(user);
+            KickPlayer(user);
             ui().OnBattleAction(*this,wxString(_T(" ")),user.GetNick()+_T(" is banned, kicking"));
             return true;
         }
         else if (m_banned_ips.count(user.BattleStatus().ip)>0)
         {
             ui().OnBattleAction(*this,wxString(_T(" ")),user.BattleStatus().ip+_T(" is banned, kicking"));
-            BattleKickPlayer(user);
+            KickPlayer(user);
             return true;
         }
     }
@@ -639,77 +407,6 @@ bool Battle::GetLockExternalBalanceChanges()
     return m_opts.lockexternalbalancechanges;
 }
 
-void CommonBattle::AddStartRect( unsigned int allyno, unsigned int left, unsigned int top, unsigned int right, unsigned int bottom )
-{
-    BattleStartRect sr;
-
-    sr.ally = allyno;
-    sr.left = left;
-    sr.top = top;
-    sr.right = right;
-    sr.bottom = bottom;
-    sr.toadd = true;
-    sr.todelete = false;
-    sr.toresize = false;
-    sr.exist = true;
-
-    m_rects[allyno] = sr;
-}
-
-
-void CommonBattle::RemoveStartRect( unsigned int allyno )
-{
-    if ( allyno >= m_rects.size() ) return;
-    BattleStartRect sr = m_rects[allyno];
-    sr.todelete = true;
-    m_rects[allyno] = sr;
-}
-
-
-void CommonBattle::ResizeStartRect( unsigned int allyno )
-{
-    if ( allyno >= m_rects.size() ) return;
-    BattleStartRect sr = m_rects[allyno];
-    sr.toresize = true;
-    m_rects[allyno] = sr;
-}
-
-
-void CommonBattle::StartRectRemoved( unsigned int allyno )
-{
-    if ( allyno >= m_rects.size() ) return;
-    if ( m_rects[allyno].todelete ) m_rects.erase(allyno);
-}
-
-
-void CommonBattle::StartRectResized( unsigned int allyno )
-{
-    if ( allyno >= m_rects.size() ) return;
-    BattleStartRect sr = m_rects[allyno];
-    sr.toresize = false;
-    m_rects[allyno] = sr;
-}
-
-
-void CommonBattle::StartRectAdded( unsigned int allyno )
-{
-    if ( allyno >= m_rects.size() ) return;
-    BattleStartRect sr = m_rects[allyno];
-    sr.toadd = false;
-    m_rects[allyno] = sr;
-}
-
-
-BattleStartRect CommonBattle::GetStartRect( unsigned int allyno )
-{
-    return m_rects[allyno];
-}
-
-void CommonBattle::ClearStartRects()
-{
-    m_rects.clear();
-}
-
 
 void Battle::AddBot( const wxString& nick, const wxString& owner, UserBattleStatus status, const wxString& aidll )
 {
@@ -717,155 +414,49 @@ void Battle::AddBot( const wxString& nick, const wxString& owner, UserBattleStat
 }
 
 
-void Battle::RemoveBot( const wxString& nick )
-{
-    m_serv.RemoveBot( m_opts.battleid, nick );
-}
-
-
-void Battle::SetBotTeam( const wxString& nick, int team )
-{
-    BattleBot* bot = GetBot( nick );
-    try
-    {
-        ASSERT_LOGIC( bot != 0, _T("Bot not found") );
-    }
-    catch (...)
-    {
-        return;
-    }
-    bot->bs.team = team;
-    m_serv.UpdateBot( m_opts.battleid, bot->name, bot->bs );
-}
-
-
-void Battle::SetBotAlly( const wxString& nick, int ally )
-{
-    BattleBot* bot = GetBot( nick );
-    try
-    {
-        ASSERT_LOGIC( bot != 0, _T("Bot not found") );
-    }
-    catch (...)
-    {
-        return;
-    }
-    bot->bs.ally = ally;
-    m_serv.UpdateBot( m_opts.battleid, bot->name, bot->bs );
-}
-
-
-void Battle::SetBotSide( const wxString& nick, int side )
-{
-    BattleBot* bot = GetBot( nick );
-    try
-    {
-        ASSERT_LOGIC( bot != 0, _T("Bot not found") );
-    }
-    catch (...)
-    {
-        return;
-    }
-    bot->bs.side = side;
-    m_serv.UpdateBot( m_opts.battleid, bot->name, bot->bs );
-}
-
-
-void Battle::SetBotColour( const wxString& nick, const wxColour& col )
-{
-    BattleBot* bot = GetBot( nick );
-    try
-    {
-        ASSERT_LOGIC( bot != 0, _T("Bot not found") );
-    }
-    catch (...)
-    {
-        return;
-    }
-    bot->bs.colour = col;
-    m_serv.UpdateBot( m_opts.battleid, bot->name, bot->bs );
-}
-
-
-void Battle::SetBotHandicap( const wxString& nick, int handicap )
-{
-    BattleBot* bot = GetBot( nick );
-    try
-    {
-        ASSERT_LOGIC( bot != 0, _T("Bot not found") );
-    }
-    catch (...)
-    {
-        return;
-    }
-    if ( bot->owner != GetMe().GetNick() && !IsFounderMe() )
-    {
-        m_serv.DoActionBattle( m_opts.battleid, _T("thinks ") + nick + _T(" should get a ") + wxString::Format( _T("%d"),  handicap ) + _T("% resource bonus") );
-        return;
-    }
-    bot->bs.handicap = handicap;
-    m_serv.UpdateBot( m_opts.battleid, bot->name, bot->bs );
-}
 
 void Battle::ForceSide( User& user, int side )
 {
-    m_serv.ForceSide( m_opts.battleid, user.GetNick(), side );
+		if ( user.BattleStatus().IsBot() ) IBattle::ForceSide( user, side );
+		m_serv.ForceSide( m_opts.battleid, user, side );
 }
 
 
 void Battle::ForceTeam( User& user, int team )
 {
-  if ( IsFounderMe() )
-  {
-    UserBattleStatus status = user.BattleStatus();
-    status.team = team;
-    user.UpdateBattleStatus( status ); // update locally first so locking status changes won't revert host's
-    ui().OnUserBattleStatus( *this, user );
-  }
-  m_serv.ForceTeam( m_opts.battleid, user.GetNick(), team );
+  IBattle::ForceTeam( user, team );
+  m_serv.ForceTeam( m_opts.battleid, user, team );
 }
 
 
 void Battle::ForceAlly( User& user, int ally )
 {
-    if (&user==&GetMe())
-    {
-        SetMyAlly(ally);
-    }
-    else
-    {
-      if ( IsFounderMe() )
-      {
-        UserBattleStatus status = user.BattleStatus();
-        status.ally = ally;
-        user.UpdateBattleStatus( status ); // update locally first so locking status changes won't revert host's
-        ui().OnUserBattleStatus( *this, user );
-      }
-      m_serv.ForceAlly( m_opts.battleid, user.GetNick(), ally );
-    }
+	IBattle::ForceAlly( user, ally );
+  m_serv.ForceAlly( m_opts.battleid, user, ally );
+
 }
 
 
 void Battle::ForceColour( User& user, const wxColour& col )
 {
-    m_serv.ForceColour( m_opts.battleid, user.GetNick(), col );
+    m_serv.ForceColour( m_opts.battleid, user, col );
 }
 
 
 void Battle::ForceSpectator( User& user, bool spectator )
 {
-    m_serv.ForceSpectator( m_opts.battleid, user.GetNick(), spectator );
+    m_serv.ForceSpectator( m_opts.battleid, user, spectator );
 }
 
 
-void Battle::BattleKickPlayer( User& user )
+void Battle::KickPlayer( User& user )
 {
-    m_serv.BattleKickPlayer( m_opts.battleid, user.GetNick() );
+    m_serv.BattleKickPlayer( m_opts.battleid, user );
 }
 
 void Battle::SetHandicap( User& user, int handicap)
 {
-    m_serv.SetHandicap ( m_opts.battleid, user.GetNick(), handicap );
+    m_serv.SetHandicap ( m_opts.battleid, user, handicap );
 }
 
 bool PlayerRankCompareFunction( User *a, User *b ) // should never operate on nulls. Hence, ASSERT_LOGIC is appropriate here.
@@ -1297,214 +888,13 @@ void Battle::ForceUnsyncedToSpectate()
     }
 }
 
-CommonBattle::CommonBattle( const int id, const bool ingame, const int order ):
-m_ingame(ingame),
-m_order(order),
-m_bot_seek(m_bots.end()),
-m_bot_pos(BOT_SEEKPOS_INVALID)
+bool Battle::IsFounderMe()
 {
-    m_opts.battleid = id;
+    return ( ( m_opts.founder == GetMe().GetNick() ) || ( m_opts.isproxy  && !m_generating_script ) );
 }
 
-unsigned int CommonBattle::GetNumRects()
+int Battle::GetMyPlayerNum()
 {
-    return m_rects.size();
+    return GetPlayerNum( GetMe() );
 }
 
-
-void CommonBattle::OnBotAdded( const wxString& nick, const wxString& owner, const UserBattleStatus& bs, const wxString& aidll )
-{
-    BattleBot* bot = GetBot(nick);
-    bool created = true;
-    if ( bot == 0 ) bot = new BattleBot();
-    else created = false;
-
-    wxLogDebugFunc( wxString::Format( _T("created: %d"), created) );
-
-    bot->name = nick;
-    bot->bs = bs;
-    bot->bs.order = m_order++;
-    bot->owner = owner;
-    bot->aidll = aidll;
-
-    if ( created )
-    {
-        m_bots.push_back( bot );
-        m_bot_pos = BOT_SEEKPOS_INVALID;
-    }
-}
-
-
-void CommonBattle::OnBotRemoved( const wxString& nick )
-{
-    BattleBot* bot = GetBot( nick );
-    m_bots.remove( bot );
-    delete bot;
-    m_bot_pos = BOT_SEEKPOS_INVALID;
-}
-
-
-void CommonBattle::OnBotUpdated( const wxString& name, const UserBattleStatus& bs )
-{
-    BattleBot* bot = GetBot( name );
-    try
-    {
-        ASSERT_LOGIC( bot != 0, _T("Bot not found") );
-    }
-    catch (...)
-    {
-        return;
-    }
-    int order = bot->bs.order;
-    bot->bs = bs;
-    bot->bs.order = order;
-}
-
-
-BattleBot* CommonBattle::GetBot( const wxString& name ) const
-{
-    std::list<BattleBot*>::const_iterator i;
-
-    for ( i = m_bots.begin(); i != m_bots.end(); ++i )
-    {
-        if ( *i == 0 ) continue;
-        wxLogMessage( _T("%s"), ((*i)->name).c_str ());
-        if ( (*i)->name == name )
-        {
-            return *i;
-        }
-    }
-    return 0;
-}
-
-BattleBot* CommonBattle::GetBot( unsigned int index ) const
-{
-    if ((m_bot_pos == BOT_SEEKPOS_INVALID) || (m_bot_pos > index))
-    {
-        m_bot_seek = m_bots.begin();
-        m_bot_pos = 0;
-    }
-    std::advance( m_bot_seek, index - m_bot_pos );
-    m_bot_pos = index;
-    return *m_bot_seek;
-}
-
-unsigned int CommonBattle::GetNumBots() const
-{
-    return m_bots.size();
-}
-
-void OfflineBattle::RemoveUser(OfflineUser& user)
-{
-
-}
-
-void OfflineBattle::UpdateUserBattleStatus(OfflineUser &user, UserBattleStatus status)
-{
-
-}
-
-void OfflineBattle::AddUser( const OfflineUser& user)
-{
-    m_participants.push_back(user);
-}
-
-OfflineBattle::OfflineBattle(const int id)
-        :CommonBattle(id, false, 0)
-{}
-
-OfflineBattle::OfflineBattle()
-        :CommonBattle(0, false, 0)
-{}
-
-void OfflineBattle::SetBotTeam( const wxString& nick, int team )
-{
-    BattleBot* bot = GetBot( nick );
-    try
-    {
-        ASSERT_LOGIC( bot != 0, _T("Bot not found") );
-    }
-    catch (...)
-    {
-        return;
-    }
-    bot->bs.team = team;
-}
-
-
-void OfflineBattle::SetBotAlly( const wxString& nick, int ally )
-{
-    BattleBot* bot = GetBot( nick );
-    try
-    {
-        ASSERT_LOGIC( bot != 0, _T("Bot not found") );
-    }
-    catch (...)
-    {
-        return;
-    }
-    bot->bs.ally = ally;
-}
-
-
-void OfflineBattle::SetBotSide( const wxString& nick, int side )
-{
-    BattleBot* bot = GetBot( nick );
-    try
-    {
-        ASSERT_LOGIC( bot != 0, _T("Bot not found") );
-    }
-    catch (...)
-    {
-        return;
-    }
-    bot->bs.side = side;
-}
-
-
-void OfflineBattle::SetBotColour( const wxString& nick, const wxColour& col )
-{
-    BattleBot* bot = GetBot( nick );
-    try
-    {
-        ASSERT_LOGIC( bot != 0, _T("Bot not found") );
-    }
-    catch (...)
-    {
-        return;
-    }
-    bot->bs.colour = col;
-}
-
-
-void OfflineBattle::SetBotHandicap( const wxString& nick, int handicap )
-{
-    BattleBot* bot = GetBot( nick );
-    try
-    {
-        ASSERT_LOGIC( bot != 0, _T("Bot not found") );
-    }
-    catch (...)
-    {
-        return;
-    }
-
-    bot->bs.handicap = handicap;
-}
-
-void OfflineBattle::AddUser( const wxString& nick )
-{
-    OfflineUser user( nick, wxEmptyString, 0 );
-    AddUser( user );
-}
-
-bool OfflineBattle::ModExists()
-{
-    bool tmp = usync().ModExistsCheckHash( m_host_mod.hash );
-    return tmp;
-}
-
-bool OfflineBattle::MapExists()
-{
-    return usync().MapExists( m_host_map.name );
-}
