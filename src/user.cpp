@@ -71,7 +71,7 @@ void User::SetStatus( const UserStatus& status )
 void CommonUser::UpdateBattleStatus( const UserBattleStatus& status )
 {
 
-  // total 13 members to update.
+  // total 15 members to update.
 
   m_bstatus.team = status.team;
   m_bstatus.ally = status.ally;
@@ -84,6 +84,8 @@ void CommonUser::UpdateBattleStatus( const UserBattleStatus& status )
   m_bstatus.ready = status.ready;
   if( !status.ailib.IsEmpty() ) m_bstatus.ailib = status.ailib;
   if( !status.ailib.IsEmpty() ) m_bstatus.owner = status.owner;
+  m_bstatus.posx = status.posx;
+  m_bstatus.posy = status.posy;
 
   // update ip and port if those were set.
   if( !status.ip.IsEmpty() ) m_bstatus.ip = status.ip;

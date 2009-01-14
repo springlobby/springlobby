@@ -35,7 +35,7 @@ struct UserStatus {
 struct UserBattleStatus
 {
   // when adding something to this struct, also modify User::UpdateBattleStatus()
-  // total 13 members here
+  // total 15 members here
   int team;
   int ally;
   wxColour colour;
