@@ -21,6 +21,7 @@ IBattle::IBattle():
   m_ingame(false),
 	m_generating_script(false)
 {
+	m_internal_bot_list.reserve(32);
 }
 
 
