@@ -11,11 +11,6 @@ struct BattleBot;
 class wxIcon;
 
 
-struct item_content {
-  bool is_bot;
-  void* data;
-};
-
 /** \brief display participants of battle and their info (ally,team,color,cpu...)
  * \todo DOCMEMORE */
 class BattleroomListCtrl : public CustomListCtrl
@@ -90,7 +85,7 @@ class BattleroomListCtrl : public CustomListCtrl
     UserMenu* m_popup;
 
     User* m_sel_user;
-    std::vector<item_content> items;
+    std::vector<User*> items;
 
     wxMenu* m_sides;
     wxMenuItem* m_spec_item;

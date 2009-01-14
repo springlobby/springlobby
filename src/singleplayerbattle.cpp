@@ -18,7 +18,7 @@ SinglePlayerBattle::SinglePlayerBattle(Ui& ui, MainSinglePlayerTab& msptab):
   m_me( User( _T("Player") ) )
 {
 	OnUserAdded( m_me );
-	UserBattleStatus bs = m_me.BattleStatus();
+	UserBattleStatus& bs = m_me.BattleStatus();
 	bs.colour = GetFreeColour( m_me );
 	m_me.UpdateBattleStatus( bs ); // don't use forcecolor because it sources ui() which is not initialized yet here
   CustomBattleOptions().setSingleOption( _T("startpostype"), wxString::Format(_T("%d"), ST_Pick), OptionsWrapper::EngineOption );
