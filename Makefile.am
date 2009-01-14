@@ -498,6 +498,7 @@ springlobby_SOURCES = \
 	src/mapctrl.cpp \
 	src/mapctrl.h \
 	src/mutexwrapper.h \
+	src/offlinebattle.h \
 	src/nicklistctrl.cpp \
 	src/nicklistctrl.h \
 	src/replay/replaytab.h \

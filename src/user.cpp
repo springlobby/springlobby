@@ -33,13 +33,13 @@ void User::Said( const wxString& message )
 
 void User::Say( const wxString& message )
 {
-  m_serv.SayPrivate( m_nick, message );
+  GetServer().SayPrivate( m_nick, message );
 }
 
 
 void User::DoAction( const wxString& message )
 {
-  m_serv.DoActionPrivate( m_nick, message );
+  GetServer().DoActionPrivate( m_nick, message );
 }
 
 
@@ -66,53 +66,50 @@ void User::SetStatus( const UserStatus& status )
   }
 
 }
-/*
-void User::SetBattleStatus( const UserBattleStatus& status, bool setorder )
-{
-  int order = m_bstatus.order;
-  m_bstatus = status;
-  if ( !setorder ) m_bstatus.order = order;
-}
-*/
 
-void CommonUser::UpdateBattleStatus( const UserBattleStatus& status, bool setorder )
+
+void CommonUser::UpdateBattleStatus( const UserBattleStatus& status )
 {
 
-  //int order = m_bstatus.order;
-  //m_bstatus = status;
-  /// total 12 members to update.
+  // total 15 members to update.
 
-  if ( setorder ) m_bstatus.order=status.order; /// 1
-  m_bstatus.team=status.team;
-  m_bstatus.ally=status.ally;
-  m_bstatus.colour=status.colour;
-  m_bstatus.color_index=status.color_index;
-  m_bstatus.handicap=status.handicap;
-  m_bstatus.side=status.side;
-  m_bstatus.sync=status.sync;
-  m_bstatus.spectator=status.spectator;
-  m_bstatus.ready=status.ready;
+  m_bstatus.team = status.team;
+  m_bstatus.ally = status.ally;
+  m_bstatus.colour = status.colour;
+  m_bstatus.color_index = status.color_index;
+  m_bstatus.handicap = status.handicap;
+  m_bstatus.side = status.side;
+  m_bstatus.sync = status.sync;
+  m_bstatus.spectator = status.spectator;
+  m_bstatus.ready = status.ready;
+  if( !status.ailib.IsEmpty() ) m_bstatus.ailib = status.ailib;
+  if( !status.ailib.IsEmpty() ) m_bstatus.owner = status.owner;
+  m_bstatus.posx = status.posx;
+  m_bstatus.posy = status.posy;
 
-  /// update ip and port if those were set.
-  if(!status.ip.empty())m_bstatus.ip=status.ip;
-  if(status.udpport!=0)m_bstatus.udpport=status.udpport;/// 12
-
-  //if ( !setorder ) m_bstatus.order = order;
+  // update ip and port if those were set.
+  if( !status.ip.IsEmpty() ) m_bstatus.ip = status.ip;
+  if( status.udpport != 0 ) m_bstatus.udpport = status.udpport;// 14
 }
 
 
 void User::SendMyUserStatus()
 {
-  m_serv.SendMyUserStatus();
+  GetServer().SendMyUserStatus();
 }
 
 
 bool User::ExecuteSayCommand( const wxString& cmd )
 {
   if ( cmd.BeforeFirst(' ').Lower() == _T("/me") ) {
-    m_serv.DoActionPrivate( m_nick, cmd.AfterFirst(' ') );
+    GetServer().DoActionPrivate( m_nick, cmd.AfterFirst(' ') );
     return true;
   }  else return false;
+}
+
+UserStatus::RankContainer User::GetRank()
+{
+	return GetStatus().rank;
 }
 
 wxString User::GetRankName(UserStatus::RankContainer rank)

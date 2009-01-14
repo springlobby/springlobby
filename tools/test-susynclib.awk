@@ -65,9 +65,9 @@ END {
 	do {
 		done = 1;
 		for ( key in callgraph ) {
-			split( key, func, "," );
-			if ( func[2] in functions_with_lock && !(func[1] in functions_with_lock) ) {
-				functions_with_lock[func[1]] = 1 + functions_with_lock[func[2]];
+			split( key, fun, "," );
+			if ( fun[2] in functions_with_lock && !(fun[1] in functions_with_lock) ) {
+				functions_with_lock[fun[1]] = 1 + functions_with_lock[fun[2]];
 				done = 0;
 			}
 		}
@@ -77,10 +77,10 @@ END {
 	# Output warnings for all calls that may cause a deadlock.
 	errcount = 0;
 	for ( key in callgraph ) {
-		split( key, func, "," );
-		if ( func[1] != func[2] && functions_with_lock[func[1]] == 1 && functions_with_lock[func[2]] >= 1 ) {
+		split( key, fun, "," );
+		if ( fun[1] != fun[2] && functions_with_lock[fun[1]] == 1 && functions_with_lock[fun[2]] >= 1 ) {
 			printf "%s:%d: Error: %s (%d) calls %s (%d) and both take unitsync lock\n", \
-				FILENAME, callgraph[key], func[1], functions_with_lock[func[1]], func[2], functions_with_lock[func[2]];
+				FILENAME, callgraph[key], fun[1], functions_with_lock[fun[1]], fun[2], functions_with_lock[fun[2]];
 			++errcount;
 		}
 	}
