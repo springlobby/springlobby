@@ -266,6 +266,7 @@ void BattleroomListCtrl::UpdateUser( const int& index )
   else
   {
   	SetItemImage( index, index,icons().ICON_BOT );
+  	SetItemColumnImage( index, 0, icons().ICON_BOT );
 		SetItemColumnImage( index, 3,icons().ICON_NONE );
 		SetItemColumnImage( index, 4,icons().ICON_NONE );
 		SetItem( index, 5, user.GetNick() + _T(" (") + user.BattleStatus().owner + _T(")") );
