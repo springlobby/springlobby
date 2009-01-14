@@ -34,9 +34,8 @@ struct UserStatus {
 
 struct UserBattleStatus
 {
-  /// when adding something to this struct, also modify User::UpdateBattleStatus()
-  /// total 11 members here
-  int order;
+  // when adding something to this struct, also modify User::UpdateBattleStatus()
+  // total 15 members here
   int team;
   int ally;
   wxColour colour;
@@ -46,17 +45,23 @@ struct UserBattleStatus
   int sync;
   bool spectator;
   bool ready;
-  /// for nat holepunching
+	int posx; // for startpos = 4
+	int posy; // for startpos = 4
+	// bot-only stuff
+	wxString owner;
+	wxString ailib;
+  // for nat holepunching
   wxString ip;
   unsigned int udpport;
-  UserBattleStatus(): team(0),ally(0),colour(wxColour(0,0,0)),color_index(-1),handicap(0),side(0),sync(SYNC_UNKNOWN),spectator(true),ready(false),udpport(0) {}
+  bool IsBot() { return !ailib.IsEmpty(); }
+  UserBattleStatus(): team(0),ally(0),colour(wxColour(0,0,0)),color_index(-1),handicap(0),side(0),sync(SYNC_UNKNOWN),spectator(false),ready(false), posx(-1), posy(-1), udpport(0) {}
   bool operator == ( const UserBattleStatus& s )
   {
-    return ( ( team == s.team ) && ( colour == s.colour ) && ( handicap == s.handicap ) && ( side == s.side ) && ( sync == s.sync ) && ( spectator == s.spectator ) && ( ready == s.ready ) );
+    return ( ( team == s.team ) && ( colour == s.colour ) && ( handicap == s.handicap ) && ( side == s.side ) && ( sync == s.sync ) && ( spectator == s.spectator ) && ( ready == s.ready ) && ( owner == s.owner ) && ( ailib == s.ailib ) );
   }
   bool operator != ( const UserBattleStatus& s )
   {
-    return ( ( team != s.team ) || ( colour != s.colour ) || ( handicap != s.handicap ) || ( side != s.side ) || ( sync != s.sync ) || ( spectator != s.spectator ) || ( ready != s.ready ) );
+    return ( ( team != s.team ) || ( colour != s.colour ) || ( handicap != s.handicap ) || ( side != s.side ) || ( sync != s.sync ) || ( spectator != s.spectator ) || ( ready != s.ready ) || ( owner != s.owner ) || ( ailib != s.ailib ) );
   }
 };
 
@@ -90,8 +95,8 @@ class CommonUser
         virtual void SetStatus( const UserStatus& status );
 
         UserBattleStatus& BattleStatus() { return m_bstatus; }
-        //void SetBattleStatus( const UserBattleStatus& status, bool setorder = false );/// dont use this to avoid overwriting data like ip and port, use following method.
-        void UpdateBattleStatus( const UserBattleStatus& status, bool setorder = false );
+        //void SetBattleStatus( const UserBattleStatus& status );/// dont use this to avoid overwriting data like ip and port, use following method.
+        void UpdateBattleStatus( const UserBattleStatus& status );
 
     /*    void SetUserData( void* userdata ) { m_data = userdata; }
         void* GetUserData() { return m_data; }*/
@@ -114,16 +119,18 @@ class User : public CommonUser
 
     UiUserData uidata;
 
-    User( Server& serv ): CommonUser( wxEmptyString,wxEmptyString,0 ), m_serv(serv), m_battle(0) {}
-    User( const wxString& nick, Server& serv ) : CommonUser( nick,wxEmptyString,0 ),m_serv(serv), m_battle(0){}
+    User( Server& serv ): CommonUser( wxEmptyString,wxEmptyString,0 ), m_serv(&serv), m_battle(0) {}
+    User( const wxString& nick, Server& serv ) : CommonUser( nick,wxEmptyString,0 ),m_serv(&serv), m_battle(0){}
     User( const wxString& nick, const wxString& country, const int& cpu, Server& serv) :
-      CommonUser( nick,country,cpu ) ,m_serv(serv), m_battle(0) {}
+      CommonUser( nick,country,cpu ) ,m_serv(&serv), m_battle(0) {}
+		User( const wxString& nick ): CommonUser( nick, wxEmptyString, 0 ), m_serv(0) {};
+		User( const wxString& nick, const wxString& country, const int& cpu ) : CommonUser( nick,country,cpu ) ,m_serv(0) {}
 
     virtual ~User();
 
     // User interface
 
-    Server& GetServer() { return m_serv; }
+    Server& GetServer() { return *m_serv; }
 
     void Said( const wxString& message );
     void Say( const wxString& message );
@@ -140,28 +147,14 @@ class User : public CommonUser
     static wxString GetRankName(UserStatus::RankContainer rank);
 
     float GetBalanceRank();
-
+    UserStatus::RankContainer GetRank();
     wxString GetClan();
 
   protected:
     // User variables
 
-    Server& m_serv;
+    Server* m_serv;
     Battle* m_battle;
-};
-
-class OfflineUser : public CommonUser
-{
-    public:
-        OfflineUser(const wxString& nick, const wxString& country, const int& cpu)
-           : CommonUser( nick, country, cpu )  {};
-
-        void SetSideName(const wxString& name ) { m_side_name = name; }
-        wxString GetSideName() const { return m_side_name; }
-
-    protected:
-        wxString m_side_name;
-
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_USER_H

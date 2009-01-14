@@ -5,8 +5,8 @@
 #include <wx/string.h>
 #include <wx/timer.h>
 #include <wx/arrstr.h>
-#include "../battle.h"
 #include "../tdfcontainer.h"
+#include "../offlinebattle.h"
 
 //copied from spring sources for reference
 //struct DemoFileHeader

@@ -215,7 +215,7 @@ bool SinglePlayerTab::ValidSetup()
     return false;
   }
 
-  if ( m_battle.GetNumBots() == 1 )
+  if ( m_battle.GetNumUsers() == 1 )
   {
       wxLogWarning(_T("trying to start sp game without bot"));
       if ( customMessageBox(SL_MAIN_ICON, _("Continue without adding a bot first?.\n The game will be over pretty fast.\n "),
@@ -242,20 +242,26 @@ void SinglePlayerTab::OnModSelect( wxCommandEvent& event )
 
 void SinglePlayerTab::OnAddBot( wxCommandEvent& event )
 {
-  if ( m_battle.GetNumBots() > 15 )
+  if ( m_battle.GetNumUsers() > 15 )
   {
     customMessageBoxNoModal( SL_MAIN_ICON, _("Spring only supports up to 16 different teams"), _("Num players error"), wxICON_EXCLAMATION );
     return;
   }
   AddBotDialog dlg( this, m_battle, true );
   if ( dlg.ShowModal() == wxID_OK ) {
-    int x = 0, y = 0, handicap = 0;
+    int x = 0, y = 0;
     m_battle.GetFreePosition( x, y );
-    wxColour col = m_battle.GetFreeColour( NULL );
-    int i = m_battle.AddBot( m_battle.GetFreeAlly(), x, y, handicap, dlg.GetAI() );
-    BattleBot* bot = m_battle.GetBot( i );
-    ASSERT_LOGIC( bot != 0, _T("bot == 0") );
-    bot->bs.colour = col;
+    UserBattleStatus bs;
+		bs.colour = m_battle.GetFreeColour();
+    bs.posx = x;
+    bs.posy = y;
+    bs.ally = m_battle.GetFreeAlly();
+    bs.team = m_battle.GetFreeTeamNum( false );
+    bs.owner = m_battle.GetMe().GetNick();
+    bs.ailib = dlg.GetAI();
+    User& bot = m_battle.OnBotAdded( _T("Bot") + TowxString( bs.team ), bs  );
+    ASSERT_LOGIC( &bot != 0, _T("bot == 0") );
+
     m_minimap->UpdateMinimap();
   }
 }
