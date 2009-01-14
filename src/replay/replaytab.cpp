@@ -419,10 +419,10 @@ void ReplayTab::OnSelect( wxListEvent& event )
             m_minimap->SetBattle( &(rep.battle) );
             m_minimap->UpdateMinimap();
             m_players->Clear();
-            for ( OfflineBattle::UserVecCIter it = rep.battle.GetFirstUser();
-                it != rep.battle.GetLastUser(); ++it )
+            for ( size_t i = 0; i < rep.battle.GetNumUsers(); ++i )
             {
-                UserListctrl::UserData ud ( it->GetNick() , it->GetCountry() );
+								User& usr = rep.battle.GetUser( i );
+                UserListctrl::UserData ud ( usr.GetNick() , usr.GetCountry() );
                 m_players->AddUser( ud );
             }
         }
