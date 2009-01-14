@@ -1940,7 +1940,7 @@ void TASServer::SetHandicap( int battleid, User& user, int handicap)
 		if ( user.BattleStatus().IsBot() )
 		{
 				user.BattleStatus().handicap = handicap;
-				UpdateBot( battleid, user, UserBattleStatus() );
+				UpdateBot( battleid, user, user.BattleStatus() );
 				return;
 		}
 
@@ -1956,7 +1956,7 @@ void TASServer::SetHandicap( int battleid, User& user, int handicap)
 }
 
 
-void TASServer::AddBot( int battleid, const wxString& nick, const wxString& owner, UserBattleStatus status, const wxString& aidll )
+void TASServer::AddBot( int battleid, const wxString& nick, const wxString& owner, UserBattleStatus& status, const wxString& aidll )
 {
     wxLogDebugFunc( _T("") );
     try
@@ -2011,7 +2011,7 @@ void TASServer::RemoveBot( int battleid, User& bot )
 }
 
 
-void TASServer::UpdateBot( int battleid, User& bot, UserBattleStatus status )
+void TASServer::UpdateBot( int battleid, User& bot, UserBattleStatus& status )
 {
     wxLogDebugFunc( _T("") );
     try

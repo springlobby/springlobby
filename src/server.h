@@ -114,9 +114,9 @@ class Server : public iNetClass
     virtual void SetHandicap( int battleid, User& user, int handicap) = 0;
 
 
-    virtual void AddBot( int battleid, const wxString& nick, const wxString& owner, UserBattleStatus status, const wxString& aidll ) = 0;
+    virtual void AddBot( int battleid, const wxString& nick, const wxString& owner, UserBattleStatus& status, const wxString& aidll ) = 0;
     virtual void RemoveBot( int battleid, User& user ) = 0;
-    virtual void UpdateBot( int battleid, User& user, UserBattleStatus status ) = 0;
+    virtual void UpdateBot( int battleid, User& user, UserBattleStatus& status ) = 0;
 
     virtual void SendHostInfo( HostInfo update ) = 0;
     virtual void SendHostInfo( const wxString& Tag ) = 0;
