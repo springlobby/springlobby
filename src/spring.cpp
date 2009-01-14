@@ -217,14 +217,6 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 			}
 			tdf.Append( _T("IsHost"), battle.IsFounderMe() );
 
-			tdf.Append(_T("ModHash"), battle.LoadMod().hash);
-			tdf.Append(_T("MapHash"), battle.LoadMap().hash);
-
-			tdf.Append( _T("Mapname"), battle.GetHostMapName() );
-			tdf.Append( _T("GameType"), battle.GetHostModName() );
-
-			tdf.AppendLineBreak();
-
 			tdf.Append(_T("MyPlayerName"), battle.GetMe().GetNick() );
 
 			if ( !battle.IsFounderMe() )
@@ -236,6 +228,14 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 			/**********************************************************************************
 																		Host-only section
 			**********************************************************************************/
+
+			tdf.AppendLineBreak();
+
+			tdf.Append(_T("ModHash"), battle.LoadMod().hash);
+			tdf.Append(_T("MapHash"), battle.LoadMap().hash);
+
+			tdf.Append( _T("Mapname"), battle.GetHostMapName() );
+			tdf.Append( _T("GameType"), battle.GetHostModName() );
 
 			long startpostype;
 			battle.CustomBattleOptions().getSingleValue( _T("startpostype"), OptionsWrapper::EngineOption ).ToLong( &startpostype );
