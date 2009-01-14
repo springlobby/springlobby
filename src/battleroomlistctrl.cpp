@@ -247,11 +247,9 @@ void BattleroomListCtrl::UpdateUser( const int& index )
   User* tmp = items[(size_t)GetItemData( index )];
   if ( !tmp ) return;
 	User& user = *tmp;
-
+	icons().SetColourIcon( user.BattleStatus().team, user.BattleStatus().colour );
 	if ( user.BattleStatus().IsBot() )
 	{
-		SetItemColumnImage( index, 2, icons().GetColourIcon( user.BattleStatus().team ) );
-
 		SetItemColumnImage( index, 3,icons().ICON_NONE );
 		SetItemColumnImage( index, 4,icons().ICON_NONE );
 
@@ -263,19 +261,7 @@ void BattleroomListCtrl::UpdateUser( const int& index )
 
 		SetItem( index, 8, botdll );
 	}
-  else if ( !user.BattleStatus().spectator )
-  {
-    icons().SetColourIcon( user.BattleStatus().team, user.BattleStatus().colour );
-
-    SetItemColumnImage( index, 2, icons().GetColourIcon( user.BattleStatus().team ) );
-
-  }
-  else
-  {
-    SetItemColumnImage( index, 2, -1 );
-  }
-
-  SetItemColumnImage( index, 4,icons().GetRankIcon( user.GetStatus().rank ) );
+	else SetItemColumnImage( index, 4, icons().GetRankIcon( user.GetStatus().rank ) );
 
   if( !user.BattleStatus().IsBot() )
   {
@@ -306,7 +292,7 @@ void BattleroomListCtrl::UpdateUser( const int& index )
     SetItem( index, 6, wxString::Format( _T("%d"), user.BattleStatus().team + 1 ) );
     SetItem( index, 7, wxString::Format( _T("%d"), user.BattleStatus().ally + 1 ) );
     SetItem( index, 9, wxString::Format( _T("%d%%"), user.BattleStatus().handicap ) );
-
+    SetItemColumnImage( index, 2, icons().GetColourIcon( user.BattleStatus().team ) );
     try
     {
     	wxArrayString sides = usync().GetSides( m_battle.GetHostModName() );
@@ -322,6 +308,7 @@ void BattleroomListCtrl::UpdateUser( const int& index )
   }
   else
   {
+  	SetItemColumnImage( index, 2, -1 );
     SetItem( index, 6, _T("") );
     SetItem( index, 7, _T("") );
     SetItem( index, 9, _T("") );
