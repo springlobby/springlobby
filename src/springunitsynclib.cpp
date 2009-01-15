@@ -170,7 +170,8 @@ void SpringUnitSyncLib::_Load( const wxString& path )
     m_get_luaai_desc = (GetLuaAIDescPtr)_GetLibFuncPtr(_T("GetLuaAIDesc"));
 
     m_get_map_option_count = (GetMapOptionCountPtr)_GetLibFuncPtr(_T("GetMapOptionCount"));
-    m_get_Mod_option_count = (GetModOptionCountPtr)_GetLibFuncPtr(_T("GetModOptionCount"));
+    m_get_mod_option_count = (GetModOptionCountPtr)_GetLibFuncPtr(_T("GetModOptionCount"));
+    m_get_skirmish_ai_option_count = (GetSkirmishAIOptionCountPtr)_GetLibFuncPtr(_T("GetSkirmishAIOptionCount"));
     m_get_option_key = (GetOptionKeyPtr)_GetLibFuncPtr(_T("GetOptionKey"));
     m_get_option_name = (GetOptionNamePtr)_GetLibFuncPtr(_T("GetOptionName"));
     m_get_option_desc = (GetOptionDescPtr)_GetLibFuncPtr(_T("GetOptionDesc"));
@@ -207,6 +208,12 @@ void SpringUnitSyncLib::_Load( const wxString& path )
     m_get_spring_config_string = (GetSpringConfigStringPtr)_GetLibFuncPtr(_T("GetSpringConfigString"));
     m_set_spring_config_string = (SetSpringConfigStringPtr)_GetLibFuncPtr(_T("SetSpringConfigString"));
     m_set_spring_config_int = (SetSpringConfigIntPtr)_GetLibFuncPtr(_T("SetSpringConfigInt"));
+
+		m_get_skirmish_ai_count = (GetSkirmishAICountPtr)_GetLibFuncPtr(_T("GetSkirmishAICount"));
+		m_get_skirmish_ai_info_count = (GetSkirmishAIInfoCountPtr)_GetLibFuncPtr(_T("GetSkirmishAIInfoCount"));
+		m_get_skirmish_ai_info_key = (GetInfoKeyPtr)_GetLibFuncPtr(_T("GetInfoKey"));
+		m_get_skirmish_ai_info_value = (GetInfoValuePtr)_GetLibFuncPtr(_T("GetInfoValue"));
+		m_get_skirmish_ai_info_description = (GetInfoDescriptionPtr)_GetLibFuncPtr(_T("GetInfoDescription"));
 
     // begin lua parser calls
 
@@ -941,11 +948,11 @@ int SpringUnitSyncLib::GetMapOptionCount( const wxString& name )
 
 int SpringUnitSyncLib::GetModOptionCount( const wxString& name )
 {
-  InitLib( m_get_Mod_option_count );
+  InitLib( m_get_mod_option_count );
   ASSERT_EXCEPTION( !name.IsEmpty(), _T("passing void modname to unitsync") );
 
   _SetCurrentMod( name );
-  return m_get_Mod_option_count();
+  return m_get_mod_option_count();
 }
 
 
