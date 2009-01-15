@@ -1559,7 +1559,7 @@ wxString Settings::GetTempStorage()
 
 void Settings::SetShowTooltips( bool show)
 {
-    m_config->Write(_T("GUI/ShowTooltips"), show );
+    m_config->Write(_T("/GUI/ShowTooltips"), show );
 }
 
 bool Settings::GetShowTooltips()
@@ -1575,6 +1575,35 @@ void Settings::SaveLayout( wxString& layout_name, wxString& layout )
 wxString Settings::GetLayout( wxString& layout_name )
 {
     return  m_config->Read( _T("/Layout/") + layout_name, _T("") );
+}
+
+wxArrayString Settings::GetLayoutList()
+{
+  wxLogDebugFunc(_T(""));
+  wxString old_path = m_config->GetPath();
+  m_config->SetPath( _T("/Layout") );
+  wxString entry;
+  long dummy;
+
+  wxArrayString ret;
+  bool entryexist = m_config->GetFirstEntry(entry, dummy);
+  while ( entryexist )
+  {
+    ret.Add( entry );
+    entryexist = m_config->GetNextEntry(entry, dummy);
+  }
+  m_config->SetPath( old_path );
+  return ret;
+}
+
+void Settings::SetDefaultLayout( const wxString& layout_name )
+{
+	m_config->Write(_T("/GUI/DefaultLayout"), layout_name );
+}
+
+wxString Settings::GetDefaultLayout()
+{
+	return m_config->Read( _T("/GUI/DefaultLayout"), _T("") );
 }
 
 void Settings::SetColumnWidth( const wxString& list_name, const int coloumn_ind, const int coloumn_width )
