@@ -61,7 +61,8 @@ class IUnitSync
     {
       USYNC_Sett_Handler,
       USYNC_GetInfoMap,
-      USYNC_GetDataDir
+      USYNC_GetDataDir,
+      USYNC_GetSkirmishAI
     };
 
     enum MediaType
