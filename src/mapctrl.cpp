@@ -943,12 +943,14 @@ void MapCtrl::DrawSinglePlayer( wxDC& dc )
   long longval;
   m_battle->CustomBattleOptions().getSingleValue( _T("startpostype") , OptionsWrapper::EngineOption ).ToLong( &longval );
 
-  if ( longval == IBattle::ST_Fixed ) {
+  if ( longval == IBattle::ST_Fixed )
+  {
     wxFont f( 7, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_LIGHT );
     dc.SetFont( f );
   }
 
-  for ( int i = 0; i < m_map.info.posCount; i++ ) {
+  for ( int i = 0; i < m_map.info.posCount; i++ )
+  {
 
     int x = (int)( (double)((double)m_map.info.positions[i].x / (double)m_map.info.width) * (double)mr.width ) - 8;
     int y = (int)( (double)(m_map.info.positions[i].y / (double)m_map.info.height) * (double)mr.height ) - 8;
@@ -958,7 +960,8 @@ void MapCtrl::DrawSinglePlayer( wxDC& dc )
     {
       User& tbot = m_battle->GetUser(bi);
       if ( &tbot == 0 ) continue;
-      if ( (tbot.BattleStatus().posx == m_map.info.positions[i].x) && (tbot.BattleStatus().posy == m_map.info.positions[i].y) ) {
+      if ( (tbot.BattleStatus().posx == m_map.info.positions[i].x) && (tbot.BattleStatus().posy == m_map.info.positions[i].y) )
+      {
         bot = &tbot;
         break;
       }
@@ -968,14 +971,16 @@ void MapCtrl::DrawSinglePlayer( wxDC& dc )
 
     dc.DrawBitmap( *m_start_ally, x+mr.x, y+mr.y, true );
 
-    if ( longval == IBattle::ST_Fixed ) {
+    if ( longval == IBattle::ST_Fixed )
+    {
       wxCoord w, h;
       dc.GetTextExtent( wxString::Format(_T("%d"), i+1 ), &w, &h );
       dc.DrawText( wxString::Format(_T("%d"), i+1 ), x+mr.x+(8-w/2), y+mr.y+(8-h/2) );
     }
   }
 
-  for ( unsigned int i = 0; i < m_battle->GetNumUsers(); i++ ) {
+  for ( unsigned int i = 0; i < m_battle->GetNumUsers(); i++ )
+  {
     User& bot = m_battle->GetUser(i);
     if ( &bot == 0 ) continue;
 
@@ -1000,31 +1005,29 @@ void MapCtrl::OnPaint( wxPaintEvent& WXUNUSED(event) )
 	long longval;
 	m_battle->CustomBattleOptions().getSingleValue( _T("startpostype") , OptionsWrapper::EngineOption ).ToLong( &longval );
 
-  if ( longval == IBattle::ST_Pick )
-  {
-    DrawSinglePlayer( dc );
-  }
-  else
-  {
 
-    if ( m_draw_start_types )
-    {
-      if ( longval == IBattle::ST_Choose )
-      {
-        DrawStartRects( dc );
-      } else {
-        DrawStartPositions( dc );
-      }
+	if ( m_draw_start_types )
+	{
+		if ( longval == IBattle::ST_Choose )
+		{
+			DrawStartRects( dc );
+			// Draw add rect.
+			if ( m_tmp_brect.ally != -1 )
+			{
+				wxRect tmp=GetStartRect(m_tmp_brect);
+				DrawStartRect( dc, m_tmp_brect.ally, tmp, *wxWHITE, false );
+			}
+		}
+		else if ( longval == IBattle::ST_Pick )
+		{
+			DrawSinglePlayer( dc );
+		}
+		else
+		{
+			DrawStartPositions( dc );
+		}
+	}
 
-    }
-
-    // Draw add rect.
-    if ( m_tmp_brect.ally != -1 ) {
-      wxRect tmp=GetStartRect(m_tmp_brect);
-      DrawStartRect( dc, m_tmp_brect.ally, tmp, *wxWHITE, false );
-    }
-
-  }
 }
 
 
