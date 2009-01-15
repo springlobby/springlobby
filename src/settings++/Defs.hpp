@@ -270,7 +270,7 @@ const Control AO_SLI[] = {
 	{_("Maximum simultaneous sounds"), _T("MaxSounds"),            ID_AO_SLI_0,	_T("32") , {_("maximum different sounds played at the same time\n"
 																								"Set this to zero to disable sound completely.")}},
 	{_("Global sound volume"),   _T("SoundVolume"),                ID_AO_SLI_1,	_T("100"), {_("overall sound volume")}},
-	{_("Unit reply volume"),     _T("UnitReplyVolume"),       ID_AO_SLI_2,	_T("20") , {_("reply volume relative to global volume")}}
+	{_("Unit reply volume"),     _T("UnitReplyVolume"),       ID_AO_SLI_2,	_T("100") , {_("reply volume relative to global volume")}}
 
 };
 
@@ -436,6 +436,7 @@ const category_sizes_map_type entries_[] = { RC_TEXT_entry, MO_RBUT_entry, MO_CB
                                             VO_RBUT_entry, VO_CBOX_entry, RO_SLI_entry, UI_ZOOM_entry, W4_CONTROLS_entry};
 
 static category_sizes_map s_category_sizes ( entries_ , entries_ + sizeof(entries_) / sizeof(entries_[0]) );
+
 
 /** not used
 #define NUM_DEFAULTS 88
