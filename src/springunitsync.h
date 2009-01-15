@@ -60,6 +60,7 @@ class SpringUnitSync : public IUnitSync
     bool VersionSupports( GameFeature feature );
 
     wxArrayString GetAIList( const wxString& modname );
+    wxArrayString GetAIInfos( int index );
 
     int GetNumUnits( const wxString& modname );
     wxArrayString GetUnitsList( const wxString& modname );
