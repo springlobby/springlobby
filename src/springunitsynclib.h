@@ -96,7 +96,6 @@ typedef void (USYNC_CALL_CONV *SetSpringConfigStringPtr)(const char*, const char
 typedef void (USYNC_CALL_CONV *SetSpringConfigIntPtr)(const char*, int );
 typedef void (USYNC_CALL_CONV *SetSpringConfigFloatPtr)(const char*, float );
 
-
 typedef int (USYNC_CALL_CONV *ProcessUnitsPtr)(void);
 typedef void (USYNC_CALL_CONV *AddArchivePtr)(const char* name);
 typedef unsigned int (USYNC_CALL_CONV *GetArchiveChecksumPtr)(const char* arname);
@@ -118,11 +117,14 @@ typedef const char* (USYNC_CALL_CONV *GetPrimaryModArchiveListPtr)(int arnr);
 typedef unsigned int (USYNC_CALL_CONV *GetPrimaryModChecksumFromNamePtr)(const char* name);
 typedef unsigned int (USYNC_CALL_CONV *GetModValidMapCountPtr)();
 typedef const char* (USYNC_CALL_CONV *GetModValidMapPtr)(int index);
+
 typedef int (USYNC_CALL_CONV *GetLuaAICountPtr)();
 typedef const char* (USYNC_CALL_CONV *GetLuaAINamePtr)(int aiIndex);
 typedef const char* (USYNC_CALL_CONV *GetLuaAIDescPtr)(int aiIndex);
+
 typedef int (USYNC_CALL_CONV *GetMapOptionCountPtr)(const char* name);
 typedef int (USYNC_CALL_CONV *GetModOptionCountPtr)();
+typedef int (USYNC_CALL_CONV *GetSkirmishAIOptionCountPtr)(int index);
 typedef const char* (USYNC_CALL_CONV *GetOptionKeyPtr)(int optIndex);
 typedef const char* (USYNC_CALL_CONV *GetOptionNamePtr)(int optIndex);
 typedef const char* (USYNC_CALL_CONV *GetOptionDescPtr)(int optIndex);
@@ -141,6 +143,7 @@ typedef const char* (USYNC_CALL_CONV *GetOptionListDefPtr)(int optIndex);
 typedef const char* (USYNC_CALL_CONV *GetOptionListItemKeyPtr)(int optIndex, int itemIndex);
 typedef const char* (USYNC_CALL_CONV *GetOptionListItemNamePtr)(int optIndex, int itemIndex);
 typedef const char* (USYNC_CALL_CONV *GetOptionListItemDescPtr)(int optIndex, int itemIndex);
+
 typedef int (USYNC_CALL_CONV *OpenArchivePtr)(const char* name);
 typedef void (USYNC_CALL_CONV *CloseArchivePtr)(int archive);
 typedef int (USYNC_CALL_CONV *FindFilesArchivePtr)(int archive, int cur, char* nameBuf, int* size);
@@ -148,6 +151,12 @@ typedef int (USYNC_CALL_CONV *OpenArchiveFilePtr)(int archive, const char* name)
 typedef int (USYNC_CALL_CONV *ReadArchiveFilePtr)(int archive, int handle, void* buffer, int numBytes);
 typedef void (USYNC_CALL_CONV *CloseArchiveFilePtr)(int archive, int handle);
 typedef int (USYNC_CALL_CONV *SizeArchiveFilePtr)(int archive, int handle);
+
+typedef int (USYNC_CALL_CONV *GetSkirmishAICountPtr)();
+typedef int (USYNC_CALL_CONV *GetSkirmishAIInfoCountPtr)(int index);
+typedef const char* (USYNC_CALL_CONV *GetInfoKeyPtr)(int index);
+typedef const char* (USYNC_CALL_CONV *GetInfoValuePtr)(int index);
+typedef const char* (USYNC_CALL_CONV *GetInfoDescriptionPtr)(int index);
 
 /// Unitsync functions wrapping lua parser
 typedef void (USYNC_CALL_CONV *lpClosePtr)();
@@ -363,6 +372,7 @@ class SpringUnitSyncLib
 
     int GetMapOptionCount( const wxString& name );
     int GetModOptionCount( const wxString& name );
+    int GetAIOptionCount( int index );
     wxString GetOptionKey( int optIndex );
     wxString GetOptionName( int optIndex );
     wxString GetOptionDesc( int optIndex );
@@ -397,6 +407,15 @@ class SpringUnitSyncLib
     void SetSpringConfigString( const wxString& key, const wxString& value );
     void SetSpringConfigInt( const wxString& key, int value );
     void SetSpringConfigFloat( const wxString& key, const float value );
+
+    /// AI info
+    int GetSkirmishAICount();
+    /**
+     * Get next search result.
+     * @param the AI index within range of GetSkirmishAIInfoCount
+     * @return an array made of blocks with this layout { key, value, description }
+     */
+    wxArrayString GetAIInfo( int index );
 
     /// lua parser
 
@@ -559,11 +578,14 @@ class SpringUnitSyncLib
     GetPrimaryModChecksumFromNamePtr m_get_primary_mod_checksum_from_name;
     GetModValidMapCountPtr m_get_mod_valid_map_count;
     GetModValidMapPtr m_get_valid_map;
+
     GetLuaAICountPtr m_get_luaai_count;
     GetLuaAINamePtr m_get_luaai_name;
     GetLuaAIDescPtr m_get_luaai_desc;
+
     GetMapOptionCountPtr m_get_map_option_count;
-    GetModOptionCountPtr m_get_Mod_option_count;
+    GetModOptionCountPtr m_get_mod_option_count;
+		GetSkirmishAIOptionCountPtr m_get_skirmish_ai_option_count;
     GetOptionKeyPtr m_get_option_key;
     GetOptionNamePtr m_get_option_name;
     GetOptionDescPtr m_get_option_desc;
@@ -582,6 +604,7 @@ class SpringUnitSyncLib
     GetOptionListItemKeyPtr m_get_option_list_item_key;
     GetOptionListItemNamePtr m_get_option_list_item_name;
     GetOptionListItemDescPtr m_get_option_list_item_desc;
+
     OpenArchivePtr m_open_archive;
     CloseArchivePtr m_close_archive;
     FindFilesArchivePtr m_find_Files_archive;
@@ -589,6 +612,7 @@ class SpringUnitSyncLib
     ReadArchiveFilePtr m_read_archive_file;
     CloseArchiveFilePtr m_close_archive_file;
     SizeArchiveFilePtr m_size_archive_file;
+
     SetSpringConfigFilePtr m_set_spring_config_file_path;
     GetSpringConfigFilePtr m_get_spring_config_file_path;
     SetSpringConfigFloatPtr m_set_spring_config_float;
@@ -597,6 +621,12 @@ class SpringUnitSyncLib
     GetSpringConfigStringPtr m_get_spring_config_string;
     SetSpringConfigStringPtr m_set_spring_config_string;
     SetSpringConfigIntPtr m_set_spring_config_int;
+
+		GetSkirmishAICountPtr m_get_skirmish_ai_count;
+		GetSkirmishAIInfoCountPtr m_get_skirmish_ai_info_count;
+		GetInfoKeyPtr m_get_skirmish_ai_info_key;
+		GetInfoValuePtr m_get_skirmish_ai_info_value;
+		GetInfoDescriptionPtr m_get_skirmish_ai_info_description;
 
     // lua parser section
 
