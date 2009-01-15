@@ -372,6 +372,7 @@ class SpringUnitSyncLib
 
     int GetMapOptionCount( const wxString& name );
     int GetModOptionCount( const wxString& name );
+    int GetAIOptionCount( int index );
     wxString GetOptionKey( int optIndex );
     wxString GetOptionName( int optIndex );
     wxString GetOptionDesc( int optIndex );
@@ -406,6 +407,15 @@ class SpringUnitSyncLib
     void SetSpringConfigString( const wxString& key, const wxString& value );
     void SetSpringConfigInt( const wxString& key, int value );
     void SetSpringConfigFloat( const wxString& key, const float value );
+
+    /// AI info
+    int GetSkirmishAICount();
+    /**
+     * Get next search result.
+     * @param the AI index within range of GetSkirmishAIInfoCount
+     * @return an array made of blocks with this layout { key, value, description }
+     */
+    wxArrayString GetAIInfo( int index );
 
     /// lua parser
 
