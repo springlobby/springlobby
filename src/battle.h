@@ -53,7 +53,7 @@ class Battle : public IBattle
 
     bool ExecuteSayCommand( const wxString& cmd );
 
-    void AddBot( const wxString& nick, const wxString& owner, UserBattleStatus status, const wxString& aidll );
+    void AddBot( const wxString& nick, UserBattleStatus status );
 
     void ForceSide( User& user, int side );
     void ForceTeam( User& user, int team );

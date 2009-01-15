@@ -95,11 +95,15 @@ wxString AddBotDialog::GetNick()
 }
 
 
-wxString AddBotDialog::GetAI()
+wxString AddBotDialog::GetAIShortName()
 {
   return m_ais[ m_ai->GetSelection() ];
 }
 
+wxString AddBotDialog::GetAIVersion()
+{
+  return m_ais[ m_ai->GetSelection() ];
+}
 
 wxString AddBotDialog::RefineAIName( const wxString& name )
 {

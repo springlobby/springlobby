@@ -271,13 +271,17 @@ void BattleroomListCtrl::UpdateUser( const int& index )
 		SetItemColumnImage( index, 4,icons().ICON_NONE );
 		SetItem( index, 5, user.GetNick() + _T(" (") + user.BattleStatus().owner + _T(")") );
 
-		wxString botdll = user.BattleStatus().ailib;
-		if ( botdll.Contains(_T('.')) ) botdll = botdll.BeforeLast(_T('.'));
-		if ( botdll.Contains(_T('/')) ) botdll = botdll.AfterLast(_T('/'));
-		if ( botdll.Contains(_T('\\')) ) botdll = botdll.AfterLast(_T('\\'));
-		if ( botdll.Contains(_T("LuaAI:")) ) botdll = botdll.AfterFirst(_T(':'));
+		wxString botname = user.BattleStatus().aishortname;
+		if ( !user.BattleStatus().aiversion.IsEmpty() ) botname += _T(" ") + user.BattleStatus().aiversion;
+		if ( !usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) )
+		{
+			if ( botname.Contains(_T('.')) ) botname = botname.BeforeLast(_T('.'));
+			if ( botname.Contains(_T('/')) ) botname = botname.AfterLast(_T('/'));
+			if ( botname.Contains(_T('\\')) ) botname = botname.AfterLast(_T('\\'));
+		}
+		if ( botname.Contains(_T("LuaAI:")) ) botname = botname.AfterFirst(_T(':'));
 
-		SetItem( index, 8, botdll );
+		SetItem( index, 8, botname );
 
   }
   SetItemColumnImage( index, 1, -1 );
@@ -810,13 +814,13 @@ int wxCALLBACK BattleroomListCtrl::CompareCpuUP(long item1, long item2, long sor
 
   if ( user1->BattleStatus().IsBot() )
   {
-    wxString aidll1 = user1->BattleStatus().ailib.Upper();
+    wxString ailib1 = user1->BattleStatus().aishortname.Upper() + _T(" ") + user1->BattleStatus().aiversion.Upper();
     if ( user2->BattleStatus().IsBot() )
     {
-      wxString aidll2 = user2->BattleStatus().ailib.Upper();
-      if ( aidll1 < aidll2 )
+      wxString ailib2 = user2->BattleStatus().aishortname.Upper() + _T(" ") + user2->BattleStatus().aiversion.Upper();
+      if ( ailib1 < ailib2 )
         return -1;
-      if ( aidll1 > aidll2 )
+      if ( ailib1 > ailib2 )
         return 1;
       return 0;
     } else {
@@ -932,7 +936,7 @@ void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint po
             break;
 
         case 8: // cpu
-            m_tiptext = user->BattleStatus().IsBot() ? user->BattleStatus().ailib : m_colinfovec[coloumn].first;
+            m_tiptext = user->BattleStatus().IsBot() ? ( user->BattleStatus().aishortname + _T(" ") + user->BattleStatus().aiversion ) : m_colinfovec[coloumn].first;
             break;
 
         default:

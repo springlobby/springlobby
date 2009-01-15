@@ -98,7 +98,7 @@ class TASServer : public Server
     void BattleKickPlayer( int battleid, User& user );
     void SetHandicap( int battleid, User& user, int handicap);
 
-    void AddBot( int battleid, const wxString& nick, const wxString& owner, UserBattleStatus& status, const wxString& aidll );
+    void AddBot( int battleid, const wxString& nick, UserBattleStatus& status );
     void RemoveBot( int battleid, User& bot );
     void UpdateBot( int battleid, User& bot, UserBattleStatus& status );
 
