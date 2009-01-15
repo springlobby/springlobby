@@ -94,7 +94,7 @@ void AutoBalanceDialog::OnOk(wxCommandEvent& event)
   EndModal( wxID_OK );
 }
 
-AutoBalanceDialog::BalanceOptions AutoBalanceDialog::AutoBalanceDialog::GetResult()
+AutoBalanceDialog::BalanceOptions AutoBalanceDialog::GetResult()
 {
   BalanceOptions ret;
   ret.type = (IBattle::BalanceType)m_method_choice->GetSelection();
