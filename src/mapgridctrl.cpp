@@ -235,7 +235,7 @@ void MapGridCtrl::AddMap( const UnitSyncMap& map )
 void MapGridCtrl::UpdateGridSize()
 {
 	// recalculate grid size (keep it approximately square)
-	const int width = int(sqrt( m_maps.size() ) + 0.5);
+	const int width = int(sqrt( double(m_maps.size()) ) + 0.5);
 	m_size.x = width;
 	m_size.y = (m_maps.size() + width - 1) / width;
 }
