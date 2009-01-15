@@ -812,14 +812,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\autojoinchanneldialog.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\base16.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\src\base64.cpp"
 				>
 			</File>
@@ -861,14 +853,6 @@
 			</File>
 			<File
 				RelativePath=".\src\battleroomtab.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\channel.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\channellist.cpp"
 				>
 			</File>
 			<File
@@ -981,10 +965,6 @@
 			</File>
 			<File
 				RelativePath=".\src\mapctrl.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\maplistctrl.cpp"
 				>
 			</File>
 			<File
@@ -1344,10 +1324,6 @@
 				</File>
 				<File
 					RelativePath=".\src\settings++\presets.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\src\settings++\se_settings.cpp"
 					>
 				</File>
 				<File
