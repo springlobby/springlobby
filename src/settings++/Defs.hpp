@@ -227,7 +227,7 @@ const Control RO_SLI[] = {
 	{_("Tree view-distance"),           _T("TreeRadius"),          ID_RO_SLI_1,	_T("1000"), {_("sets the maximum distance at which trees will still be rendered")}	},
 	{_("Terrain detail"),               _T("GroundDetail"),        ID_RO_SLI_2,	_T("80"), {_("higher value = more terrain details")}	},
 	{_("Unit detail"),                  _T("UnitLodDist"),         ID_RO_SLI_3,	_T("300"), {_("higher value = more detailed units")}	},
-	{_("Grass detail"),                 _T("GrassDetail"),         ID_RO_SLI_4,	_T("3"), {_("higher value = more detailed graas")}	},
+	{_("Grass detail"),                 _T("GrassDetail"),         ID_RO_SLI_4,	_T("3"), {_("higher value = more detailed grass")}	},
 	{_("Ground decals"),                _T("GroundDecals"),        ID_RO_SLI_5,	_T("0"), {_("only on/off available at this time")}	},
 	{_("Unit icon distance"),           _T("UnitIconDist"),        ID_RO_SLI_6,	_T("350"), {_("determines at which range units are still fully rendered\n"
 																								"higher value = greater range = more units rendered at the same time")}	},
@@ -255,7 +255,7 @@ const category_sizes_map_type VO_RBUT_entry ( _T("VO_RBUT"), sizeof(VO_RBUT) / C
 
 
 const Control VO_SLI[] = {
-	{_("Full-screen anti-aliasing samples"), _T("FSAALevel"), ID_VO_SLI_0,	_T("0"), {_("how much anti-aliasing should be applied")}}
+	{_("Full-scene anti-aliasing samples"), _T("FSAALevel"), ID_VO_SLI_0,	_T("0"), {_("how much anti-aliasing should be applied")}}
 };
 
 const category_sizes_map_type VO_SLI_entry ( _T("VO_SLI"), sizeof(VO_SLI) / Control_size );
