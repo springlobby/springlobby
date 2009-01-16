@@ -1,6 +1,6 @@
 #ifndef GLOBALSMANAGER_H
 #define GLOBALSMANAGER_H
-#include <vector>
+
 #include <stdexcept>
 
 class GlobalDestroyedError: public std::runtime_error

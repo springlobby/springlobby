@@ -363,7 +363,7 @@ void DataList::InsertRename(PNode node) {/// rename if such entry already exists
         return;
       }
     }
-    std::cout<<"insertRename: iterated over 10 000 names, way too many"<<std::endl;
+    wxLogError( _T("insertRename: iterated over 10 000 names, way too many") );
   }
 }
 
@@ -389,7 +389,7 @@ void DataList::InsertRenameAt(PNode node, PNode where) {// rename if such entry 
         return;
       }
     }
-    std::cout<<"insertRename: iterated over 10 000 names, way too many"<<std::endl;
+    wxLogError( _T("insertRename: iterated over 10 000 names, way too many") );
   }
 }
 
