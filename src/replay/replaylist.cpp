@@ -264,7 +264,7 @@ void ReplayList::GetHeaderInfo( Replay& rep, const wxString& ReplayPath )
         replay.Read( &gametime, 4);
         rep.duration = gametime;
         rep.size = replay.Length();
-        unsigned long unixtime = 0;
+		wxLongLong_t unixtime = 0;
         replay.Seek( 56 );
         replay.Read( &unixtime, 8 );
         wxDateTime dt;
