@@ -5,7 +5,7 @@
 
 #include "uiutils.h"
 #include "utils.h"
-#include <wx/dcclient.h>
+#include <wx/dcbuffer.h>
 #include <wx/geometry.h>
 #include <wx/settings.h>
 #include <algorithm>
@@ -45,6 +45,9 @@ MapGridCtrl::MapGridCtrl( wxWindow* parent, Ui& ui, wxSize size, wxWindowID id )
 	, m_mouseover_map( NULL )
 	, m_selected_map( NULL )
 {
+	SetBackgroundStyle( wxBG_STYLE_CUSTOM );
+	SetBackgroundColour( *wxLIGHT_GREY );
+
 	m_img_background.Create( MINIMAP_SIZE, MINIMAP_SIZE, false /*don't clear*/ );
 	wxRect rect( 0, 0, MINIMAP_SIZE, MINIMAP_SIZE );
 	wxColor color( GetBackgroundColour() );
@@ -335,12 +338,26 @@ void MapGridCtrl::DrawMap( wxDC& dc, MapData& map, int x, int y )
 }
 
 
+void MapGridCtrl::DrawBackground( wxDC& dc )
+{
+	int width, height;
+	GetClientSize( &width, &height );
+
+	dc.SetPen( wxPen( *wxLIGHT_GREY ) );
+	dc.SetBrush( wxBrush( *wxLIGHT_GREY, wxSOLID ) );
+
+	dc.DrawRectangle( 0, 0, width, height );
+}
+
+
 void MapGridCtrl::OnPaint( wxPaintEvent& event )
 {
 	// This line must come first, to avoid an endless succession of paint messages.
 	// OnPaint handlers must always create a wxPaintDC.
 
-	wxPaintDC dc( this );
+	wxBufferedPaintDC dc( this );
+
+	DrawBackground( dc );
 
 	if ( m_maps.empty() ) return;
 

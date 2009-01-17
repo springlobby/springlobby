@@ -138,6 +138,7 @@ class MapGridCtrl : public wxPanel
 		void UpdateAsyncFetches();
 		void FetchMinimap( MapData& map );
 		void DrawMap( wxDC& dc, MapData& map, int x, int y );
+		void DrawBackground( wxDC& dc );
 		void SetMinimap( MapMap& maps, const wxString& mapname, const wxBitmap& minimap );
 
 		Ui& m_ui;
