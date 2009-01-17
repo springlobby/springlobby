@@ -27,7 +27,7 @@ BEGIN_EVENT_TABLE( MapGridCtrl, wxPanel )
 	EVT_MOTION( MapGridCtrl::OnMouseMove )
 	EVT_LEFT_DOWN( MapGridCtrl::OnLeftDown )
 	EVT_LEFT_UP( MapGridCtrl::OnLeftUp )
-  EVT_COMMAND( wxID_ANY, UnitSyncGetMapImageAsyncCompletedEvt, MapGridCtrl::OnGetMapImageAsyncCompleted )
+	EVT_COMMAND( wxID_ANY, UnitSyncGetMapImageAsyncCompletedEvt, MapGridCtrl::OnGetMapImageAsyncCompleted )
 END_EVENT_TABLE()
 
 
@@ -337,9 +337,12 @@ void MapGridCtrl::DrawMap( wxDC& dc, MapData& map, int x, int y )
 
 void MapGridCtrl::OnPaint( wxPaintEvent& event )
 {
-	if ( m_maps.empty() ) return;
+	// This line must come first, to avoid an endless succession of paint messages.
+	// OnPaint handlers must always create a wxPaintDC.
 
 	wxPaintDC dc( this );
+
+	if ( m_maps.empty() ) return;
 
 	int width, height;
 	GetClientSize( &width, &height );
