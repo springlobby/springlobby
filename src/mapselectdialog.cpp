@@ -294,7 +294,8 @@ void MapSelectDialog::Load( State newstate )
 	m_mapgrid->Clear();
 	m_index = 0;
 	m_state = newstate;
-	m_timer.Start( -1, true /* one shot */ );
+	bool timer_success = m_timer.Start( -1, true /* one shot */ );
+	ASSERT_EXCEPTION( timer_success, _T("Failed to start timer") );
 }
 
 // implementation of the states
