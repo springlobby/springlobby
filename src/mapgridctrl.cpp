@@ -405,7 +405,10 @@ void MapGridCtrl::OnMouseMove( wxMouseEvent& event )
 	if ( m_in_mouse_drag ) {
 		// Fix for for not receiving LeftUp event when left button
 		// is released outside the control (happens on Windows.)
-		if ( !event.LeftIsDown() ) OnLeftUp( event );
+		if ( !event.LeftIsDown() ) {
+			OnLeftUp( event );
+			return;
+		}
 
 		m_pos -= (event.GetPosition() - m_last_mouse_pos);
 		m_last_mouse_pos = event.GetPosition();
