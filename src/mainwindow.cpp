@@ -12,6 +12,7 @@
 #include <wx/sizer.h>
 #include <wx/menu.h>
 #include <wx/dcmemory.h>
+#include <wx/choicdlg.h>
 #ifndef HAVE_WX26
 #include <wx/aui/auibook.h>
 #include "aui/auimanager.h"
@@ -88,6 +89,9 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU( MENU_ABOUT, MainWindow::OnMenuAbout )
   EVT_MENU( MENU_START_TORRENT, MainWindow::OnMenuStartTorrent )
   EVT_MENU( MENU_STOP_TORRENT, MainWindow::OnMenuStopTorrent )
+  EVT_MENU( MENU_SAVE_LAYOUT, MainWindow::OnMenuSaveLayout )
+  EVT_MENU( MENU_LOAD_LAYOUT, MainWindow::OnMenuLoadLayout )
+  EVT_MENU( MENU_DEFAULT_LAYOUT, MainWindow::OnMenuDefaultLayout )
 //  EVT_MENU( MENU_SHOW_TOOLTIPS, MainWindow::OnShowToolTips )
   EVT_MENU( MENU_AUTOJOIN_CHANNELS, MainWindow::OnMenuAutojoinChannels )
   EVT_MENU( MENU_CHANNELCHOOSER, MainWindow::OnShowChannelChooser )
@@ -122,6 +126,14 @@ MainWindow::MainWindow( Ui& ui ) :
   //m_menuEdit = new wxMenu;
   //TODO doesn't work atm
 
+  #ifndef HAVE_WX26
+  /*
+	wxMenu* menuView = new wxMenu;
+	menuView->Append( MENU_SAVE_LAYOUT, _("&Save Layout") );
+	menuView->Append( MENU_LOAD_LAYOUT, _("&Load layout") );
+	menuView->Append( MENU_DEFAULT_LAYOUT, _("&Set &Laoyut as default") );
+	*/
+	#endif
 
   m_menuTools = new wxMenu;
   m_menuTools->Append(MENU_JOIN, _("&Join channel..."));
@@ -147,6 +159,9 @@ MainWindow::MainWindow( Ui& ui ) :
   m_menubar = new wxMenuBar;
   m_menubar->Append(menuFile, _("&File"));
   //m_menubar->Append(m_menuEdit, _("&Edit"));
+  #ifndef HAVE_WX26
+  //m_menubar->Append(menuView, _("&View"));
+  #endif
   m_menubar->Append(m_menuTools, _("&Tools"));
   m_menubar->Append(menuHelp, _("&Help"));
   SetMenuBar(m_menubar);
@@ -565,4 +580,36 @@ void MainWindow::OnChannelList( const wxString& channel, const int& numusers, co
 void MainWindow::OnChannelListStart( )
 {
     m_channel_chooser->ClearChannels();
+}
+
+
+void MainWindow::OnMenuSaveLayout( wxCommandEvent& event )
+{
+	#ifndef HAVE_WX26
+	wxString answer;
+	if ( !ui().AskText( _("Layout manager"),_("Enter a profile name"), answer ) ) return;
+	wxString layout = GetAui().manager->SavePerspective();
+	sett().SaveLayout( answer, layout );
+	#endif
+}
+
+void MainWindow::OnMenuLoadLayout( wxCommandEvent& event )
+{
+	#ifndef HAVE_WX26
+	wxArrayString layouts = sett().GetLayoutList();
+	int result = wxGetSingleChoiceIndex( _("Which profile fo you want to load?"), _("Layout manager"), layouts );
+	if ( ( result < 0  ) || ( result > layouts.GetCount() ) ) return;
+	GetAui().manager->LoadPerspective( sett().GetLayout( layouts[result] ) );
+	#endif
+}
+
+
+void MainWindow::OnMenuDefaultLayout( wxCommandEvent& event )
+{
+	#ifndef HAVE_WX26
+	wxArrayString layouts = sett().GetLayoutList();
+	int result = wxGetSingleChoiceIndex( _("Which profile do you want to be default?"), _("Layout manager"), layouts );
+	if ( ( result < 0  ) || ( result > layouts.GetCount() ) ) return;
+	sett().SetDefaultLayout( layouts[result] );
+	#endif
 }

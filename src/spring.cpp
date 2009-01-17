@@ -254,6 +254,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 			for ( unsigned int i = 0; i < NumUsers; i++ )
 			{
 					User& usr = battle.GetUser( i );
+					if ( usr.BattleStatus().spectator ) continue; // skip spectators
 					dedupe_teams[usr.BattleStatus().team] = &usr;
 			}
 			std::map<User*, int> player_to_number; // player -> ordernumber

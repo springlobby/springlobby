@@ -68,6 +68,9 @@ class Settings
     Settings();
     ~Settings();
 
+		/// used to import default configs from a file in windows
+    void SetDefaultConfigs( SL_WinConf& conf );
+
     bool IsPortableMode();
     void SetPortableMode( bool mode );
 
@@ -575,6 +578,9 @@ class Settings
      */
     void SaveLayout( wxString& layout_name, wxString& layout_string );
     wxString GetLayout( wxString& layout_name );
+    wxArrayString GetLayoutList();
+    void SetDefaultLayout( const wxString& layout_name );
+    wxString GetDefaultLayout();
     /**@}*/
 
     enum CompletionMethod {

@@ -206,6 +206,7 @@ User& IBattle::OnUserAdded( User& user )
     user.BattleStatus().spectator = false;
     user.BattleStatus().ready = false;
     user.BattleStatus().sync = SYNC_UNKNOWN;
+    if ( ( user.BattleStatus().posx < 0 ) || ( user.BattleStatus().posy < 0 ) ) GetFreePosition( user.BattleStatus().posx, user.BattleStatus().posy );
     return user;
 }
 

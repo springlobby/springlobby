@@ -154,6 +154,45 @@ void Settings::SaveSettings()
   #endif
 }
 
+void Settings::SetDefaultConfigs( SL_WinConf& conf )
+{
+  wxString str;
+  long dummy;
+
+  // now all groups...
+  bool bCont = conf.GetFirstGroup(str, dummy);
+  while ( bCont )
+  {
+  	// climb all tree branches until you hit the most further
+		bCont = conf.GetFirstGroup(str, dummy);
+    if ( bCont )
+    {
+			conf.SetPath( str );
+    }
+    else
+    {
+			// enum all entries and add to the config
+			wxString currentpath = conf.GetPath();
+			bool exist = conf.GetFirstEntry(str, dummy);
+			while ( exist )
+			{
+				if ( !m_config->Exists( str ) ) // in theory "main" config should be blank at this point, but better be paranoyd and don't overwrite existing keys...
+				{
+					m_config->Write( str, conf.Read( str, _T("") ) ); // append to main config
+				}
+
+				exist = conf.GetNextEntry(str, dummy);
+			}
+
+			if ( currentpath != _T("/") )
+			{
+				conf.SetPath( _T("..") ); // go to the parent folder
+				conf.DeleteGroup( currentpath ); // remove last analyzed group so it doesn't get iterated again
+				bCont = true;
+			}
+    }
+  }
+}
 
 bool Settings::IsPortableMode()
 {
@@ -1558,7 +1597,7 @@ wxString Settings::GetTempStorage()
 
 void Settings::SetShowTooltips( bool show)
 {
-    m_config->Write(_T("GUI/ShowTooltips"), show );
+    m_config->Write(_T("/GUI/ShowTooltips"), show );
 }
 
 bool Settings::GetShowTooltips()
@@ -1574,6 +1613,35 @@ void Settings::SaveLayout( wxString& layout_name, wxString& layout )
 wxString Settings::GetLayout( wxString& layout_name )
 {
     return  m_config->Read( _T("/Layout/") + layout_name, _T("") );
+}
+
+wxArrayString Settings::GetLayoutList()
+{
+  wxLogDebugFunc(_T(""));
+  wxString old_path = m_config->GetPath();
+  m_config->SetPath( _T("/Layout") );
+  wxString entry;
+  long dummy;
+
+  wxArrayString ret;
+  bool entryexist = m_config->GetFirstEntry(entry, dummy);
+  while ( entryexist )
+  {
+    ret.Add( entry );
+    entryexist = m_config->GetNextEntry(entry, dummy);
+  }
+  m_config->SetPath( old_path );
+  return ret;
+}
+
+void Settings::SetDefaultLayout( const wxString& layout_name )
+{
+	m_config->Write(_T("/GUI/DefaultLayout"), layout_name );
+}
+
+wxString Settings::GetDefaultLayout()
+{
+	return m_config->Read( _T("/GUI/DefaultLayout"), _T("") );
 }
 
 void Settings::SetColumnWidth( const wxString& list_name, const int coloumn_ind, const int coloumn_width )
