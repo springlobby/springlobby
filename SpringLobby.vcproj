@@ -1132,10 +1132,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\maplistctrl.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\src\mapselectdialog.cpp"
 				>
 			</File>
