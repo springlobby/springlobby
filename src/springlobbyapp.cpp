@@ -112,6 +112,23 @@ bool SpringLobbyApp::OnInit()
 #endif
     m_locale->AddCatalog( _T("springlobby") );
 
+		#ifdef __WXMSW__
+		if( sett().IsFirstRun() )
+		{
+			wxString defaultconfigpath =  wxStandardPathsBase::Get().GetExecutablePath().BeforeLast( wxFileName::GetPathSeparator() ) + wxFileName::GetPathSeparator() + _T("springlobby.global.conf");
+			if (  wxFileName::FileExists( defaultconfigpath ) )
+			{
+				wxFileInputStream instream( defaultconfigpath );
+
+				if ( instream.IsOk() )
+				{
+					SL_WinConf defaultconf( instream );
+					sett().SetDefaultConfigs( defaultconf );
+				}
+			}
+		}
+		#endif
+
     SetSettingsStandAlone( false );
 
     if ( sett().IsFirstRun() && !wxDirExists( wxStandardPaths::Get().GetUserDataDir() ) ) wxMkdir( wxStandardPaths::Get().GetUserDataDir() );

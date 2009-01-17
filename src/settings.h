@@ -68,6 +68,9 @@ class Settings
     Settings();
     ~Settings();
 
+		/// used to import default configs from a file in windows
+    void SetDefaultConfigs( SL_WinConf& conf );
+
     bool IsPortableMode();
     void SetPortableMode( bool mode );
 

@@ -154,6 +154,45 @@ void Settings::SaveSettings()
   #endif
 }
 
+void Settings::SetDefaultConfigs( SL_WinConf& conf )
+{
+  wxString str;
+  long dummy;
+
+  // now all groups...
+  bool bCont = conf.GetFirstGroup(str, dummy);
+  while ( bCont )
+  {
+  	// climb all tree branches until you hit the most further
+		bCont = conf.GetFirstGroup(str, dummy);
+    if ( bCont )
+    {
+			conf.SetPath( str );
+    }
+    else
+    {
+			// enum all entries and add to the config
+			wxString currentpath = conf.GetPath();
+			bool exist = conf.GetFirstEntry(str, dummy);
+			while ( exist )
+			{
+				if ( !m_config->Exists( str ) ) // in theory "main" config should be blank at this point, but better be paranoyd and don't overwrite existing keys...
+				{
+					m_config->Write( str, conf.Read( str, _T("") ) ); // append to main config
+				}
+
+				exist = conf.GetNextEntry(str, dummy);
+			}
+
+			if ( currentpath != _T("/") )
+			{
+				conf.SetPath( _T("..") ); // go to the parent folder
+				conf.DeleteGroup( currentpath ); // remove last analyzed group so it doesn't get iterated again
+				bCont = true;
+			}
+    }
+  }
+}
 
 bool Settings::IsPortableMode()
 {
