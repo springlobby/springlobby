@@ -421,6 +421,7 @@ void Settings::ConvertOldServerSettings()
     m_config->DeleteGroup( _T("/Server") );
     m_config->DeleteGroup( _T("/Servers") );
     SetDefaultServerSettings();
+    count = servers.GetCount();
 		for ( int i = 0; i < count; i++ )
 		{
 			wxString server_name = servers[i];
