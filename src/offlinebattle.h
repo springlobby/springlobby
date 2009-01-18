@@ -12,7 +12,7 @@ class OfflineBattle : public IBattle
 
 			User& GetMe() { return m_me; }
 			bool IsFounderMe() {return true;}
-			void OnUserAdded( User user )
+			void OnUserAdded( const User& user )
 			{
 				m_internal_user_list[user.GetNick()] = user;
 				UserList::AddUser( m_internal_user_list[user.GetNick()] );
