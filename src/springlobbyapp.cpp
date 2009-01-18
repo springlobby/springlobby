@@ -160,17 +160,22 @@ bool SpringLobbyApp::OnInit()
 			}
 			if ( sett().GetSettingsVersion() < 5 )
 			{
-				int count = sett().GetNumServers();
+				wxArrayString list = sett().GetServers();
+				int count = list.GetCount();
 				wxString wordlist = sett().GetHighlightedWords();
 				for ( int i= 0; i < count; i++ )
 				{
-					wxString nick = sett().GetServerAccountNick( sett().GetServerName( i ) );
+					wxString nick = sett().GetServerAccountNick( list[i] );
 					if ( !wordlist.Contains( nick ) )
 					{
 						 if ( !wordlist.IsEmpty() && !wordlist.EndsWith( _T(";") ) ) wordlist += _T(";");
 					}  wordlist += nick;
 				}
 				sett().SetHighlightedWords( wordlist );
+			}
+			if ( sett().GetSettingsVersion() < 6 )
+			{
+				sett().ConvertOldServerSettings();
 			}
     }
 
