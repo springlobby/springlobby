@@ -397,11 +397,39 @@ void Settings::SetDefaultServerSettings()
 }
 
 
-//! @brief Restores default settings
-void Settings::DeleteOldServerSettings()
+//! @brief convert old server settings format
+void Settings::ConvertOldServerSettings()
 {
+		wxArrayString servers;
+		std::map<wxString, bool> m_autosave_pass;
+		std::map<wxString, wxString> m_saved_nicks;
+		std::map<wxString, wxString> m_saved_pass;
+		std::map<wxString, wxString> m_saved_hosts;
+		std::map<wxString, int> m_saved_ports;
+		int count = m_config->Read( _T("/Servers/Count"), 0l );
+		for ( int i = 0; i < count; i++ )
+		{
+			wxString server_name = m_config->Read( wxString::Format( _T("/Servers/Server%d"), i ), _T("") );
+			if ( server_name == _T("TAS Server") ) continue;
+			servers.Add( server_name );
+			m_saved_nicks[server_name] = m_config->Read( _T("/Server/")+ server_name +_T("/nick"), _T("") );
+			m_saved_pass[server_name] = m_config->Read( _T("/Server/")+ server_name +_T("/pass"), _T("") );
+			m_autosave_pass[server_name] = m_config->Read( _T("/Server/")+ server_name +_T("/savepass"), 0l );
+			m_saved_ports[server_name] = m_config->Read( _T("/Server/")+ server_name +_T("/port"), DEFSETT_DEFAULT_SERVER_PORT );
+			m_saved_hosts[server_name] = m_config->Read( _T("/Server/")+ server_name +_T("/host"), DEFSETT_DEFAULT_SERVER_HOST );
+		}
     m_config->DeleteGroup( _T("/Server") );
     m_config->DeleteGroup( _T("/Servers") );
+    SetDefaultServerSettings();
+		for ( int i = 0; i < count; i++ )
+		{
+			wxString server_name = servers[i];
+			SetServer( server_name, m_saved_hosts[server_name], m_saved_ports[server_name] );
+			SetServerAccountNick( server_name, m_saved_nicks[server_name] );
+			SetServerAccountPass( server_name, m_saved_pass[server_name] );
+			SetServerAccountSavePass( server_name, m_autosave_pass[server_name] );
+		}
+
 }
 
 //! @brief Checks if the server name/alias exists in the settings

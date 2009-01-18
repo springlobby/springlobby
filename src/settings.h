@@ -179,7 +179,7 @@ class Settings
     /** @name Servers
      * @{
      */
-		void DeleteOldServerSettings();
+		void ConvertOldServerSettings();
     wxString GetDefaultServer();
     void SetDefaultServer( const wxString& server_name );
     void SetAutoConnect( bool do_autoconnect );

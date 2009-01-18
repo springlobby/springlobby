@@ -174,8 +174,7 @@ bool SpringLobbyApp::OnInit()
 			}
 			if ( sett().GetSettingsVersion() < 6 )
 			{
-				sett().DeleteOldServerSettings();
-				sett().SetDefaultServerSettings();
+				sett().ConvertOldServerSettings();
 			}
     }
 
