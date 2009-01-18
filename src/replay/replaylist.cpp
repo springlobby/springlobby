@@ -211,9 +211,11 @@ void ReplayList::GetBattleFromScript( const wxString& script_, OfflineBattle& ba
 //        int teamnum = replayNode->GetInt  ( _T("NumTeams"), 1);
 
         //[PLAYERX] sections
-        for ( int i = 0; i < playernum ; ++i ){
+        for ( int i = 0; i < playernum ; ++i )
+        {
             PDataList player ( replayNode->Find( _T("PLAYER") + i2s(i) ) );
-            if ( player.ok() ) {
+            if ( player.ok() )
+            {
                 User user ( player->GetString( _T("name") ), (player->GetString( _T("countryCode")).Upper() ), 0);
                 UserBattleStatus status;
 								wxArrayString sides = usync().GetSides( battle.LoadMod().name );
@@ -223,7 +225,7 @@ void ReplayList::GetBattleFromScript( const wxString& script_, OfflineBattle& ba
                 status.team = player->GetInt( _T("team") );
 
                 user.UpdateBattleStatus( status );
-                battle.AddUser( user );
+                battle.OnUserAdded( user );
             }
         }
 
