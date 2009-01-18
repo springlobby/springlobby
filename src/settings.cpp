@@ -411,7 +411,7 @@ void Settings::ConvertOldServerSettings()
 		for ( int i = 0; i < count; i++ )
 		{
 			wxString server_name = m_config->Read( wxString::Format( _T("/Servers/Server%d"), i ), _T("") );
-			if ( server_name == _T("TAS Server") ) continue;
+			if ( server_name == _T("TAS Server") ) server_name = WX_STRINGC( DEFSETT_DEFAULT_SERVER_NAME );
 			servers.Add( server_name );
 			m_saved_nicks[server_name] = m_config->Read( _T("/Server/")+ server_name +_T("/nick"), _T("") );
 			m_saved_pass[server_name] = m_config->Read( _T("/Server/")+ server_name +_T("/pass"), _T("") );
