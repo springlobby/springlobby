@@ -6,7 +6,7 @@
 const int CACHE_VERSION     = 9;
 const int SETTINGS_VERSION  = 6;
 
-const wxString DEFSETT_DEFAULT_SERVER_NAME= _T("TAS Server");
+const wxString DEFSETT_DEFAULT_SERVER_NAME= _T("Official Server");
 const wxString DEFSETT_DEFAULT_SERVER_HOST = _T("taspringmaster.clan-sy.com");
 const int DEFSETT_DEFAULT_SERVER_PORT = 8200;
 const bool DEFSETT_SAVE_PASSWORD = false;
