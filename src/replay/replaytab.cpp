@@ -399,10 +399,14 @@ void ReplayTab::OnFilterActiv( wxCommandEvent& event )
 void ReplayTab::OnSelect( wxListEvent& event )
 {
     wxLogDebugFunc( _T("") );
-    if ( event.GetIndex() == -1 ) {
+    if ( event.GetIndex() == -1 )
+		{
         Deselect();
-    } else {
-        try {
+    }
+    else
+    {
+        try
+        {
             m_watch_btn->Enable( true );
             m_delete_btn->Enable( true );
             int index = event.GetIndex();
