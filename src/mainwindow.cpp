@@ -127,10 +127,12 @@ MainWindow::MainWindow( Ui& ui ) :
   //TODO doesn't work atm
 
   #ifndef HAVE_WX26
+  /*
 	wxMenu* menuView = new wxMenu;
 	menuView->Append( MENU_SAVE_LAYOUT, _("&Save Layout") );
 	menuView->Append( MENU_LOAD_LAYOUT, _("&Load layout") );
 	menuView->Append( MENU_DEFAULT_LAYOUT, _("&Set &Laoyut as default") );
+	*/
 	#endif
 
   m_menuTools = new wxMenu;
@@ -158,7 +160,7 @@ MainWindow::MainWindow( Ui& ui ) :
   m_menubar->Append(menuFile, _("&File"));
   //m_menubar->Append(m_menuEdit, _("&Edit"));
   #ifndef HAVE_WX26
-  m_menubar->Append(menuView, _("&View"));
+  //m_menubar->Append(menuView, _("&View"));
   #endif
   m_menubar->Append(m_menuTools, _("&Tools"));
   m_menubar->Append(menuHelp, _("&Help"));

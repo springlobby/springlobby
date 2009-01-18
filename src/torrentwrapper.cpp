@@ -1009,6 +1009,7 @@ void TorrentWrapper::RemoveUnneededTorrents()
     std::map<libtorrent::torrent_handle, TorrentTable::PRow> torrenthandles = GetTorrentTable().RowByTorrentHandles();
     for (std::map<libtorrent::torrent_handle, TorrentTable::PRow>::iterator  it = torrenthandles.begin(); it != torrenthandles.end(); ++it)
     {
+				if ( !it->first.is_valid() ) continue;
         if ( !it->first.is_seed() ) continue;
 
 
