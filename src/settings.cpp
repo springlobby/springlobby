@@ -393,6 +393,7 @@ unsigned int Settings::GetModCachingThreadProgress()
 void Settings::SetDefaultServerSettings()
 {
     SetServer( WX_STRINGC(DEFSETT_DEFAULT_SERVER_NAME), WX_STRINGC(DEFSETT_DEFAULT_SERVER_HOST), DEFSETT_DEFAULT_SERVER_PORT );
+    SetServer( _T("Backup server"), _T("taspringmaster.servegame.com"), 8200 );
     SetDefaultServer( WX_STRINGC(DEFSETT_DEFAULT_SERVER_NAME) );
 }
 
