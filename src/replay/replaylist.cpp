@@ -64,9 +64,17 @@ void ReplayList::LoadReplays( const unsigned int from, const unsigned int to)
     for (unsigned int i = from; i < end; ++i)
     {
         Replay rep;
-        if ( GetReplayInfos( m_filenames[i] , rep ) ){
-            AddReplay( rep );
+        rep.id = m_last_id;
+        m_last_id++;
+        AddReplay( rep );
+        if ( GetReplayInfos( m_filenames[i] , m_replays[rep.id] ) )
+        {
             m_replay_tab.AddReplay( m_replays[rep.id] );
+        }
+        else
+        {
+        	RemoveReplay( rep.id );
+					m_last_id--;
         }
     }
     wxLogMessage(_T("done ReplayList::LoadReplays(%d,%d) %d"),from,to,replays_load_count);
@@ -75,7 +83,8 @@ void ReplayList::LoadReplays( const unsigned int from, const unsigned int to)
 
 void ReplayList::OnTimer(wxTimerEvent& event)
 {
-    if ( replay_chunk_size + m_current_parse_pos >  m_filenames.size() ){
+    if ( replay_chunk_size + m_current_parse_pos >  m_filenames.size() )
+    {
         //final parse run
         m_timer.Stop();
         LoadReplays( m_current_parse_pos, m_filenames.size() );
@@ -86,13 +95,14 @@ void ReplayList::OnTimer(wxTimerEvent& event)
     }
 }
 
-void ReplayList::AddReplay( Replay replay )
+void ReplayList::AddReplay( const Replay& replay )
 {
   m_replays[replay.id] = replay;
 }
 
 
-void ReplayList::RemoveReplay( replay_id_t const& id ) {
+void ReplayList::RemoveReplay( replay_id_t const& id )
+{
   m_replays.erase(id);
 }
 
@@ -101,7 +111,8 @@ replay_map_t::size_type ReplayList::GetNumReplays()
   return m_replays.size();
 }
 
-Replay &ReplayList::GetReplayById( replay_id_t const& id ) {
+Replay &ReplayList::GetReplayById( replay_id_t const& id )
+{
 //TODO catch
   replay_iter_t b = m_replays.find(id);
   if (b == m_replays.end())
@@ -142,7 +153,6 @@ bool ReplayList::GetReplayInfos ( const wxString& ReplayPath, Replay& ret )
 
     ret.MapName = FileName.BeforeLast(_T('_'));
 
-    ret.id = m_last_id;
     wxString script;
     GetScriptFromReplay( ReplayPath,script );
 
@@ -155,7 +165,6 @@ bool ReplayList::GetReplayInfos ( const wxString& ReplayPath, Replay& ret )
     GetBattleFromScript( script,ret.battle  );
     ret.ModName = ret.battle.GetHostModName();
 
-    m_last_id++; //sucessful parsing assumed --> increment id(index)
     return true;
 }
 
@@ -191,7 +200,8 @@ void ReplayList::GetBattleFromScript( const wxString& script_, OfflineBattle& ba
     PDataList script( ParseTDF(ss) );
 
     PDataList replayNode ( script->Find(_T("GAME") ) );
-    if ( replayNode.ok() ){
+    if ( replayNode.ok() )
+    {
 
         wxString modname = replayNode->GetString( _T("GameType") );
         wxString modhash    = replayNode->GetString( _T("ModHash") );
@@ -211,19 +221,22 @@ void ReplayList::GetBattleFromScript( const wxString& script_, OfflineBattle& ba
 //        int teamnum = replayNode->GetInt  ( _T("NumTeams"), 1);
 
         //[PLAYERX] sections
-        for ( int i = 0; i < playernum ; ++i ){
+        for ( int i = 0; i < playernum ; ++i )
+        {
             PDataList player ( replayNode->Find( _T("PLAYER") + i2s(i) ) );
-            if ( player.ok() ) {
+            if ( player.ok() )
+            {
                 User user ( player->GetString( _T("name") ), (player->GetString( _T("countryCode")).Upper() ), 0);
-                UserBattleStatus status;
-								wxArrayString sides = usync().GetSides( battle.LoadMod().name );
-                user.BattleStatus().side = sides.Index( player->GetString( _T("side") ) );
-                status.spectator = player->GetInt( _T("Spectator"), 0 );
-                opts.spectators += status.spectator;
-                status.team = player->GetInt( _T("team") );
+                if ( battle.ModExists() )
+                {
+									wxArrayString sides = usync().GetSides( battle.LoadMod().name );
+									user.BattleStatus().side = sides.Index( player->GetString( _T("side") ) );
+                }
+                user.BattleStatus().spectator = player->GetInt( _T("Spectator"), 0 );
+                opts.spectators += user.BattleStatus().spectator;
+                user.BattleStatus().team = player->GetInt( _T("team") );
 
-                user.UpdateBattleStatus( status );
-                battle.AddUser( user );
+                battle.OnOfflineAddUser( user );
             }
         }
 
@@ -264,7 +277,7 @@ void ReplayList::GetHeaderInfo( Replay& rep, const wxString& ReplayPath )
         replay.Read( &gametime, 4);
         rep.duration = gametime;
         rep.size = replay.Length();
-        unsigned long unixtime = 0;
+		wxLongLong_t unixtime = 0;
         replay.Seek( 56 );
         replay.Read( &unixtime, 8 );
         wxDateTime dt;

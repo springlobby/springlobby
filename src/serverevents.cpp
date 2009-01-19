@@ -353,10 +353,8 @@ void ServerEvents::OnUserLeftBattle( int battleid, const wxString& nick )
     {
         Battle& battle = m_serv.GetBattle( battleid );
 				User& user = battle.GetUser( nick );
-
-        battle.OnUserRemoved( user );
-
         ui().OnUserLeftBattle( battle, user );
+        battle.OnUserRemoved( user );
     }
     catch (std::runtime_error &except)
     {
@@ -405,17 +403,20 @@ void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const w
             if ( key.Left( 11 ) == _T( "mapoptions/" ) )
             {
                 key = key.AfterFirst( '/' );
-                if (  battle.CustomBattleOptions().setSingleOption( key,  value, OptionsWrapper::MapOption ) )  // m_serv.LeaveBattle( battleid ); // host has sent a bad option, leave battle
-                    battle.Update( wxString::Format(_T("%d_%s"), OptionsWrapper::MapOption, key.c_str() ) );
+                battle.CustomBattleOptions().setSingleOption( key,  value, OptionsWrapper::MapOption );
+								battle.Update( wxString::Format(_T("%d_%s"), OptionsWrapper::MapOption, key.c_str() ) );
             }
             else if ( key.Left( 11 ) == _T( "modoptions/" ) )
             {
                 key = key.AfterFirst( '/' );
-                if (  battle.CustomBattleOptions().setSingleOption( key, value, OptionsWrapper::ModOption ) );//m_serv.LeaveBattle( battleid ); // host has sent a bad option, leave battle
+								battle.CustomBattleOptions().setSingleOption( key, value, OptionsWrapper::ModOption );
                 battle.Update(  wxString::Format(_T("%d_%s"), OptionsWrapper::ModOption,  key.c_str() ) );
             }
-            else if (  battle.CustomBattleOptions().setSingleOption( key,  value, OptionsWrapper::EngineOption ) )
-                battle.Update( wxString::Format(_T("%d_%s"), OptionsWrapper::EngineOption, key.c_str() ) );
+            else
+            {
+							battle.CustomBattleOptions().setSingleOption( key,  value, OptionsWrapper::EngineOption );
+							battle.Update( wxString::Format(_T("%d_%s"), OptionsWrapper::EngineOption, key.c_str() ) );
+            }
         }
     }
     catch (assert_exception) {}
@@ -785,10 +786,9 @@ void ServerEvents::OnKickedFromBattle()
 
 void ServerEvents::OnRedirect( const wxString& address,  unsigned int port, const wxString& CurrentNick, const wxString& CurrentPassword )
 {
-    sett().AddServer( address );
-    sett().SetServerHost( address, address );
-    sett().SetServerPort( address, (int)port );
-    ui().DoConnect( address, CurrentNick, CurrentPassword );
+		wxString name = address + _T(":") + TowxString(port);
+    sett().SetServer( name, address, port );
+    ui().DoConnect( name, CurrentNick, CurrentPassword );
 }
 
 
