@@ -59,6 +59,8 @@ MapGridCtrl::MapGridCtrl( wxWindow* parent, Ui& ui, wxSize size, wxWindowID id )
 	ASSERT_EXCEPTION( m_img_minimap_alpha.HasAlpha(), _T("map_select_1_png must have an alpha channel") );
 	ASSERT_EXCEPTION( m_img_foreground.HasAlpha(),    _T("map_select_2_png must have an alpha channel") );
 
+	m_img_minimap_loading = BlendImage( m_img_foreground, m_img_background, false );
+
 	UpdateToolTip();
 }
 
@@ -319,9 +321,11 @@ void MapGridCtrl::DrawMap( wxDC& dc, MapData& map, int x, int y )
 	switch ( map.state ) {
 		case MapState_NoMinimap:
 			FetchMinimap( map );
-			break;
+			// fall through, both when starting fetch and when waiting
+			// for it to finish, we want to show temporary image
 		case MapState_GetMinimap:
-			// do nothing, waiting for async fetch of minimap
+			// draw temporary image while waiting for async fetch of minimap
+			dc.DrawBitmap( m_img_minimap_loading, x, y );
 			break;
 		case MapState_GotMinimap:
 			x += (MINIMAP_SIZE - map.minimap.GetWidth()) / 2;

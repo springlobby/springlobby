@@ -165,9 +165,15 @@ class MapGridCtrl : public wxPanel
 		/// Map which was last clicked.
 		MapData* m_selected_map;
 
+		/// solid color background
 		wxImage m_img_background;
+		/// map_select_1_png, alpha channel of this is attached to minimap before
+		/// blending it over m_img_background
 		wxImage m_img_minimap_alpha;
+		/// map_select_2_png, this is alpha blended on top of the minimap
 		wxImage m_img_foreground;
+		/// this is displayed for maps whose minimap has not yet been loaded
+		wxBitmap m_img_minimap_loading;
 
 		DECLARE_EVENT_TABLE();
 };
