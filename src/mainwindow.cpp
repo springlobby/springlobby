@@ -207,7 +207,7 @@ MainWindow::MainWindow( Ui& ui ) :
   m_func_tabs->AddPage( m_opts_tab, _("Options"), false, charArr2wxBitmap( options_icon_png , sizeof (options_icon_png) ) );
   m_func_tabs->AddPage( m_replay_tab, _("Replays"), false, charArr2wxBitmap( downloads_icon_png , sizeof (replay_icon_png) ) );
 #ifndef NO_TORRENT_SYSTEM
-  m_func_tabs->AddPage( m_torrent_tab, _("Downloads"), false, charArr2wxBitmap(  replay_icon_png , sizeof (downloads_icon_png) ) );
+  m_func_tabs->AddPage( m_torrent_tab, _("Downloads"), false, charArr2wxBitmap(  downloads_icon_png , sizeof (downloads_icon_png) ) );
 #endif
 #endif
 

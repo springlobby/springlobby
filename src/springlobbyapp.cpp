@@ -14,6 +14,7 @@
 #include <wx/dirdlg.h>
 #include <wx/tooltip.h>
 #include <wx/file.h>
+#include <wx/wfstream.h>
 #include <wx/fs_zip.h> //filesystem zip handler
 #include <wx/socket.h>
 #ifdef __WXMSW__
