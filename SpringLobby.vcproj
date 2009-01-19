@@ -350,7 +350,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\autohost.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\autojoinchanneldialog.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\autopointers.h"
 				>
 			</File>
 			<File
@@ -442,6 +450,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\crc.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\customlistctrl.h"
 				>
 			</File>
@@ -455,6 +467,14 @@
 			</File>
 			<File
 				RelativePath=".\src\globalevents.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\globalsmanager.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\groupoptionspanel.h"
 				>
 			</File>
 			<File
@@ -479,6 +499,10 @@
 			</File>
 			<File
 				RelativePath=".\src\iunitsync.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\lobbyoptionstab.h"
 				>
 			</File>
 			<File
@@ -542,11 +566,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\offlinebattle.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\revision.h"
 				>
 			</File>
 			<File
 				RelativePath=".\src\sdlsound.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\selectusersdialog.h"
 				>
 			</File>
 			<File
@@ -614,6 +646,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\thread.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\torrentlistctrl.h"
 				>
 			</File>
@@ -642,7 +678,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\useractions.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\userlist.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\userlistctrl.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\usermenu.h"
 				>
 			</File>
 			<File
@@ -669,7 +717,19 @@
 				Name="Helper"
 				>
 				<File
+					RelativePath=".\src\Helper\colorbutton.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\Helper\listctrl.h"
+					>
+				</File>
+				<File
 					RelativePath=".\src\Helper\TextCompletionDatabase.hpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\Helper\wxtextctrlhist.h"
 					>
 				</File>
 			</Filter>
@@ -745,7 +805,83 @@
 				Name="updater"
 				>
 				<File
+					RelativePath=".\src\updater\exedownloader.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\updater\updater.h"
+					>
+				</File>
+				<File
 					RelativePath=".\src\updater\versionchecker.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="aui"
+				>
+				<File
+					RelativePath=".\src\aui\artprovider.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\aui\auimanager.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\aui\auiutils.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="channel"
+				>
+				<File
+					RelativePath=".\src\channel\autojoinchanneldialog.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\channel\channel.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\channel\channelchooser.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\channel\channelchooserdialog.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\channel\channellist.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\channel\channellistctrl.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="replay"
+				>
+				<File
+					RelativePath=".\src\replay\replayfilter.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\replay\replaylist.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\replay\replaylistctrl.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\replay\replaylistfiltervalues.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\replay\replaytab.h"
 					>
 				</File>
 			</Filter>
@@ -812,11 +948,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\autojoinchanneldialog.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\base16.cpp"
+				RelativePath=".\src\autohost.cpp"
 				>
 			</File>
 			<File
@@ -864,14 +996,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\channel.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\channellist.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\src\chatlog.cpp"
 				>
 			</File>
@@ -896,6 +1020,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\crc.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\customlistctrl.cpp"
 				>
 			</File>
@@ -905,6 +1033,14 @@
 			</File>
 			<File
 				RelativePath=".\src\globalevents.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\globalsmanager.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\groupoptionspanel.cpp"
 				>
 			</File>
 			<File
@@ -921,6 +1057,10 @@
 			</File>
 			<File
 				RelativePath=".\src\iconimagelist.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\lobbyoptionstab.cpp"
 				>
 			</File>
 			<File
@@ -1009,6 +1149,10 @@
 			</File>
 			<File
 				RelativePath=".\src\sdlsound.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\selectusersdialog.cpp"
 				>
 			</File>
 			<File
@@ -1120,6 +1264,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\thread.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\torrentlistctrl.cpp"
 				>
 				<FileConfiguration
@@ -1212,7 +1360,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\useractions.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\userlist.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\userlistctrl.cpp"
 				>
 			</File>
 			<File
@@ -1319,7 +1475,19 @@
 				Name="Helper"
 				>
 				<File
+					RelativePath=".\src\Helper\colorbutton.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\Helper\listctrl.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\src\Helper\TextCompletionDatabase.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\Helper\wxtextctrlhist.cpp"
 					>
 				</File>
 			</Filter>
@@ -1344,10 +1512,6 @@
 				</File>
 				<File
 					RelativePath=".\src\settings++\presets.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\src\settings++\se_settings.cpp"
 					>
 				</File>
 				<File
@@ -1387,7 +1551,75 @@
 				Name="updater"
 				>
 				<File
+					RelativePath=".\src\updater\exedownloader.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\updater\updater.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\src\updater\versionchecker.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="aui"
+				>
+				<File
+					RelativePath=".\src\aui\artprovider.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\aui\auimanager.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="channel"
+				>
+				<File
+					RelativePath=".\src\channel\autojoinchanneldialog.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\channel\channel.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\channel\channelchooser.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\channel\channelchooserdialog.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\channel\channellist.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\channel\channellistctrl.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="replay"
+				>
+				<File
+					RelativePath=".\src\replay\replayfilter.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\replay\replaylist.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\replay\replaylistctrl.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\replay\replaytab.cpp"
 					>
 				</File>
 			</Filter>

@@ -122,10 +122,10 @@ class User : public CommonUser
 
     User( Server& serv ): CommonUser( wxEmptyString,wxEmptyString,0 ), m_serv(&serv), m_battle(0) {}
     User( const wxString& nick, Server& serv ) : CommonUser( nick,wxEmptyString,0 ),m_serv(&serv), m_battle(0){}
-    User( const wxString& nick, const wxString& country, const int& cpu, Server& serv) :
-      CommonUser( nick,country,cpu ) ,m_serv(&serv), m_battle(0) {}
+    User( const wxString& nick, const wxString& country, const int& cpu, Server& serv) : CommonUser( nick,country,cpu ) ,m_serv(&serv), m_battle(0) {}
 		User( const wxString& nick ): CommonUser( nick, wxEmptyString, 0 ), m_serv(0) {};
 		User( const wxString& nick, const wxString& country, const int& cpu ) : CommonUser( nick,country,cpu ) ,m_serv(0) {}
+		User(): CommonUser( wxEmptyString, wxEmptyString, 0 ), m_serv(0) {};
 
     virtual ~User();
 
