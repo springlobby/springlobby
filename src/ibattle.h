@@ -294,7 +294,7 @@ public:
 		virtual wxString GetDescription() const { return m_opts.description; }
 		// virtual void SetModname( const wxString& mod ) { m_opts.modname = mod; }
 
-		typedef std::vector<User> UserVec;
+		typedef std::map<wxString, User> UserVec;
 		typedef UserVec::const_iterator UserVecCIter;
 		typedef UserVec::iterator UserVecIter;
 

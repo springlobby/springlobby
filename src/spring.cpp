@@ -250,11 +250,21 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 
 			unsigned int NumUsers = battle.GetNumUsers();
 
+			std::map<int, int> m_ally_map; // spring wants consegutive allies, this maps non consegutive allies to consegutive
+
 			std::map<int, User*> dedupe_teams; // team -> user* ( for teams deduping )
 			for ( unsigned int i = 0; i < NumUsers; i++ )
 			{
 					User& usr = battle.GetUser( i );
+					if ( usr.BattleStatus().spectator ) continue; // skip spectators
+					m_ally_map[ usr.BattleStatus().ally ] = usr.BattleStatus().ally;
 					dedupe_teams[usr.BattleStatus().team] = &usr;
+			}
+			int progressive_ally = 0;
+			for ( std::map<int, int>::iterator itor = m_ally_map.begin(); itor != m_ally_map.end(); itor++ ) // fill the map with numers in cosegutive progression
+			{
+				itor->second = progressive_ally;
+				progressive_ally++;
 			}
 			std::map<User*, int> player_to_number; // player -> ordernumber
 
@@ -308,7 +318,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 								tdf.Append(_T("StartPosZ"), status.posy );
 						}
 
-						tdf.Append( _T("AllyTeam"), status.ally );
+						tdf.Append( _T("AllyTeam"), m_ally_map[status.ally] );
 
 						wxString colourstring =
 								TowxString( status.colour.Red()/255.0 ) + _T(' ') +
@@ -327,10 +337,11 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 			{
 					User& usr = battle.GetUser( i );
 					UserBattleStatus& status = usr.BattleStatus();
+					if ( status.spectator ) continue;
 					if ( PreviousAlly == status.ally ) continue; // skip duplicates
 					PreviousAlly = status.ally;
 
-					tdf.EnterSection( _T("ALLYTEAM") + i2s( PreviousAlly ) );
+					tdf.EnterSection( _T("ALLYTEAM") + i2s( m_ally_map[PreviousAlly] ) );
 						tdf.Append( _T("NumAllies"), 0 );
 
 						if ( startpostype == IBattle::ST_Choose )

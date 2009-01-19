@@ -112,6 +112,23 @@ bool SpringLobbyApp::OnInit()
 #endif
     m_locale->AddCatalog( _T("springlobby") );
 
+		#ifdef __WXMSW__
+		if( sett().IsFirstRun() )
+		{
+			wxString defaultconfigpath =  wxStandardPathsBase::Get().GetExecutablePath().BeforeLast( wxFileName::GetPathSeparator() ) + wxFileName::GetPathSeparator() + _T("springlobby.global.conf");
+			if (  wxFileName::FileExists( defaultconfigpath ) )
+			{
+				wxFileInputStream instream( defaultconfigpath );
+
+				if ( instream.IsOk() )
+				{
+					SL_WinConf defaultconf( instream );
+					sett().SetDefaultConfigs( defaultconf );
+				}
+			}
+		}
+		#endif
+
     SetSettingsStandAlone( false );
 
     if ( sett().IsFirstRun() && !wxDirExists( wxStandardPaths::Get().GetUserDataDir() ) ) wxMkdir( wxStandardPaths::Get().GetUserDataDir() );
@@ -142,17 +159,22 @@ bool SpringLobbyApp::OnInit()
 			}
 			if ( sett().GetSettingsVersion() < 5 )
 			{
-				int count = sett().GetNumServers();
+				wxArrayString list = sett().GetServers();
+				int count = list.GetCount();
 				wxString wordlist = sett().GetHighlightedWords();
 				for ( int i= 0; i < count; i++ )
 				{
-					wxString nick = sett().GetServerAccountNick( sett().GetServerName( i ) );
+					wxString nick = sett().GetServerAccountNick( list[i] );
 					if ( !wordlist.Contains( nick ) )
 					{
 						 if ( !wordlist.IsEmpty() && !wordlist.EndsWith( _T(";") ) ) wordlist += _T(";");
 					}  wordlist += nick;
 				}
 				sett().SetHighlightedWords( wordlist );
+			}
+			if ( sett().GetSettingsVersion() < 6 )
+			{
+				sett().ConvertOldServerSettings();
 			}
     }
 

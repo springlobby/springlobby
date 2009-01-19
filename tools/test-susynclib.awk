@@ -39,20 +39,20 @@ BEGIN {
 # Create a set of functions which take the unitsync lock.
 /InitLib|LOCK_UNITSYNC/ {
 	if ( in_function )
-		functions_with_lock[ function_name ] = 1;
+		functions_with_lock[function_name] = 1;
 }
 
 # Update <callgraph> for the current function with everything that looks
 # like an identifier.  This also includes keywords and the like, but given
 # that keywords will never be in <functions_with_lock>, it does not matter
 # for the end result.
-/[_A-Za_z][_A-Za_z0-9]*/ {
+/[_A-Za-z][_A-Za-z0-9]*/ {
 	if ( in_function ) {
-		# Quote characters are excluded from the separator to be able to weed out
-		# symbols at start or end of a string. (This is sufficient for our purposes)
-		split( $0, syms, /[^_A-Za-z0-9"']*/ )
+		gsub( /"[^"]*"/, "" ); # Remove strings.
+		gsub( /'[^']*'/, "" ); # Remove character constants.
+		split( $0, syms, /[^_A-Za-z0-9]+/ )
 		for ( i in syms ) {
-			if ( syms[i] ~ /[_A-Za_z][_A-Za_z0-9]*/ )
+			if ( syms[i] ~ /^[_A-Za-z][_A-Za-z0-9]*$/ )
 				callgraph[function_name, syms[i]] = NR;
 		}
 		delete syms;
