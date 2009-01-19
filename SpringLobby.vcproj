@@ -538,10 +538,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\maplistctrl.h"
-				>
-			</File>
-			<File
 				RelativePath=".\src\mapselectdialog.h"
 				>
 			</File>

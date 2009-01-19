@@ -226,7 +226,6 @@ SET(SpringLobbySrc
 	src/mainwindow.cpp
 	src/mapctrl.cpp
 	src/mapgridctrl.cpp
-	src/mapselectctrl.cpp
 	src/mapselectdialog.cpp
 	src/mmoptionmodel.cpp
 	src/mmoptionswrapper.cpp

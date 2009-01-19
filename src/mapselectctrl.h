@@ -1,8 +1,0 @@
-/* Author: Tobi Vollebregt */
-
-#ifndef SPRINGLOBBY_HEADERGUARD_MAPSELECTCTRL_H
-#define SPRINGLOBBY_HEADERGUARD_MAPSELECTCTRL_H
-
-
-
-#endif

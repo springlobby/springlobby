@@ -291,8 +291,6 @@
 		<Unit filename="src/mapctrl.h" />
 		<Unit filename="src/mapgridctrl.cpp" />
 		<Unit filename="src/mapgridctrl.h" />
-		<Unit filename="src/mapselectctrl.cpp" />
-		<Unit filename="src/mapselectctrl.h" />
 		<Unit filename="src/mapselectdialog.cpp" />
 		<Unit filename="src/mapselectdialog.h" />
 		<Unit filename="src/mmoptionmodel.cpp" />
