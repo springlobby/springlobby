@@ -248,11 +248,6 @@ bool TASServer::ExecuteSayCommand( const wxString& cmd )
         ExecuteCommand( _T("CHANGEPASSWORD"), oldpassword + _T(" ") + newpassword );
         return true;
     }
-    else if ( subcmd == _T("/channels") )
-    {
-	ui().mw().ShowChannelChooser();
-	return true;
-    }
 
     return false;
 }
