@@ -254,8 +254,20 @@ void MapGridCtrl::CheckInBounds()
 	GetClientSize( &width, &height );
 
 	// this ensures always at least a quarter of the client area contains minimaps
-	m_pos.x = std::max( -width  / 2, std::min( size * m_size.x - width  / 2, m_pos.x ) );
-	m_pos.y = std::max( -height / 2, std::min( size * m_size.y - height / 2, m_pos.y ) );
+	//m_pos.x = std::max( -width  / 2, std::min( size * m_size.x - width  / 2, m_pos.x ) );
+	//m_pos.y = std::max( -height / 2, std::min( size * m_size.y - height / 2, m_pos.y ) );
+
+	// this ensures the maps are centered when they fit on the screen,
+	// otherwise it ensures the entire client area contains minimaps.
+	if ( width / size >= m_size.x )
+		m_pos.x = -(width - m_size.x * size) / 2;
+	else
+		m_pos.x = std::max( -1, std::min( size * m_size.x - width, m_pos.x ) );
+
+	if ( height / size >= m_size.y )
+		m_pos.y = -(height - m_size.y * size) / 2;
+	else
+		m_pos.y = std::max( -1, std::min( size * m_size.y - height, m_pos.y ) );
 }
 
 
