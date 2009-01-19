@@ -329,7 +329,7 @@ int BattleroomListCtrl::GetUserIndex( User& user )
     if ( &user == usr )
       return i;
   }
-  wxLogError( _T("didn't find the battle.") );
+  wxLogError( _T("GetUserIndex didn't find the user in this battle.") );
   return -1;
 }
 

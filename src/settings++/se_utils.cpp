@@ -40,13 +40,18 @@ void loadUnitsync()
   {
       wxCriticalSection m_lock;
       wxCriticalSectionLocker lock_criticalsection(m_lock);
-      wxString unitsyncpath;
+      wxString untisyncpath;
+      #ifdef __WXMSW_
       if ( IsSettingsStandAlone() )
       {
         unitsyncpath = wxStandardPathsBase::Get().GetExecutablePath().BeforeLast( wxFileName::GetPathSeparator() ) + wxFileName::GetPathSeparator() + _T("unitsync") + GetLibExtension();
       }
-			else unitsyncpath = sett().GetCurrentUsedUnitSync();
-      susynclib().Load( unitsyncpath, sett().GetForcedSpringConfigFilePath() );
+        else
+            untisyncpath = sett().GetCurrentUsedUnitSync();
+			#else
+			untisyncpath = sett().GetCurrentUsedUnitSync();
+			#endif
+      susynclib().Load( untisyncpath, sett().GetForcedSpringConfigFilePath() );
   }
   catch (...)
   {

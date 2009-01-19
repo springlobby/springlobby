@@ -23,7 +23,6 @@ IBattle::IBattle():
   m_is_self_in(false)
 
 {
-	m_internal_bot_list.reserve(32);
 }
 
 
@@ -212,8 +211,8 @@ User& IBattle::OnUserAdded( User& user )
 
 User& IBattle::OnBotAdded( const wxString& nick, const UserBattleStatus& bs )
 {
-		m_internal_bot_list.push_back( User( nick ) );
-		User& user = m_internal_bot_list[ m_internal_bot_list.size() -1 ];
+		m_internal_bot_list[nick] = User( nick );
+		User& user = m_internal_bot_list[nick];
 		user.UpdateBattleStatus( bs );
 		return OnUserAdded( user );
 }
@@ -271,14 +270,11 @@ void IBattle::OnUserRemoved( User& user )
     if ( !user.BattleStatus().IsBot() ) user.SetBattle( 0 );
     else
     {
-    	for( UserVecIter i = m_internal_bot_list.begin(); i != m_internal_bot_list.end(); i++ )
-    	{
-    		if ( &(*i) == &user )
-    		{
-    			m_internal_bot_list.erase( i );
-    			break;
-    		}
-    	}
+    	UserVecIter itor = m_internal_bot_list.find( user.GetNick() );
+			if ( itor != m_internal_bot_list.end() )
+			{
+    			m_internal_bot_list.erase( itor );
+			}
     }
 }
 

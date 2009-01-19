@@ -353,10 +353,8 @@ void ServerEvents::OnUserLeftBattle( int battleid, const wxString& nick )
     {
         Battle& battle = m_serv.GetBattle( battleid );
 				User& user = battle.GetUser( nick );
-
-        battle.OnUserRemoved( user );
-
         ui().OnUserLeftBattle( battle, user );
+        battle.OnUserRemoved( user );
     }
     catch (std::runtime_error &except)
     {
@@ -788,10 +786,9 @@ void ServerEvents::OnKickedFromBattle()
 
 void ServerEvents::OnRedirect( const wxString& address,  unsigned int port, const wxString& CurrentNick, const wxString& CurrentPassword )
 {
-    sett().AddServer( address );
-    sett().SetServerHost( address, address );
-    sett().SetServerPort( address, (int)port );
-    ui().DoConnect( address, CurrentNick, CurrentPassword );
+		wxString name = address + _T(":") + TowxString(port);
+    sett().SetServer( name, address, port );
+    ui().DoConnect( name, CurrentNick, CurrentPassword );
 }
 
 
