@@ -470,14 +470,7 @@ bool Ui::ExecuteSayCommand( const wxString& cmd )
     }
     else if ( cmd.BeforeFirst(' ').Lower() == _T("/channels") )
     {
-        ChatPanel* panel = GetActiveChatPanel();
-        if ( panel == 0 )
-        {
-            ShowMessage( _("error"), _("no active chat panels open.") );
-            return false;
-        }
-        panel->StatusMessage(_("Active chat channels:"));
-        m_serv->RequestChannels();
+        mw().ShowChannelChooser();
         return true;
     }
     return false;
