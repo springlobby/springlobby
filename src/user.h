@@ -35,7 +35,7 @@ struct UserStatus {
 struct UserBattleStatus
 {
   // when adding something to this struct, also modify User::UpdateBattleStatus()
-  // total 15 members here
+  // total 16 members here
   int team;
   int ally;
   wxColour colour;
@@ -51,18 +51,19 @@ struct UserBattleStatus
 	wxString owner;
 	wxString aishortname;
 	wxString aiversion;
+	bool isluaai;
   // for nat holepunching
   wxString ip;
   unsigned int udpport;
   bool IsBot() { return !aishortname.IsEmpty(); }
-  UserBattleStatus(): team(0),ally(0),colour(wxColour(0,0,0)),color_index(-1),handicap(0),side(0),sync(SYNC_UNKNOWN),spectator(false),ready(false), posx(-1), posy(-1), udpport(0) {}
+  UserBattleStatus(): team(0),ally(0),colour(wxColour(0,0,0)),color_index(-1),handicap(0),side(0),sync(SYNC_UNKNOWN),spectator(false),ready(false), posx(-1), posy(-1),isluaai(false), udpport(0) {}
   bool operator == ( const UserBattleStatus& s )
   {
-    return ( ( team == s.team ) && ( colour == s.colour ) && ( handicap == s.handicap ) && ( side == s.side ) && ( sync == s.sync ) && ( spectator == s.spectator ) && ( ready == s.ready ) && ( owner == s.owner ) && ( aishortname == s.aishortname ) );
+    return ( ( team == s.team ) && ( colour == s.colour ) && ( handicap == s.handicap ) && ( side == s.side ) && ( sync == s.sync ) && ( spectator == s.spectator ) && ( ready == s.ready ) && ( owner == s.owner ) && ( aishortname == s.aishortname ) && ( isluaai == s.isluaai ) );
   }
   bool operator != ( const UserBattleStatus& s )
   {
-    return ( ( team != s.team ) || ( colour != s.colour ) || ( handicap != s.handicap ) || ( side != s.side ) || ( sync != s.sync ) || ( spectator != s.spectator ) || ( ready != s.ready ) || ( owner != s.owner ) || ( aishortname != s.aishortname ) );
+    return ( ( team != s.team ) || ( colour != s.colour ) || ( handicap != s.handicap ) || ( side != s.side ) || ( sync != s.sync ) || ( spectator != s.spectator ) || ( ready != s.ready ) || ( owner != s.owner ) || ( aishortname != s.aishortname ) || ( isluaai != s.isluaai ) );
   }
 };
 

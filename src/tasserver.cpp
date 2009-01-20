@@ -870,6 +870,8 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         wxString ai = GetSentenceParam( params );
         if( usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) ) bstatus.aishortname = ai.BeforeFirst( _T('|') );
         else bstatus.aishortname = ai;
+				bstatus.isluaai = bstatus.aishortname.Contains( _T("LuaAI:") );
+				if ( bstatus.isluaai ) bstatus.aishortname = bstatus.aishortname.AfterFirst( _T(':') );
         bstatus.aiversion = ai.AfterFirst( _T('|') );
         bstatus.owner =owner;
         m_se->OnBattleAddBot( id, nick, bstatus );
@@ -1982,9 +1984,11 @@ void TASServer::AddBot( int battleid, const wxString& nick, UserBattleStatus& st
     tascl.color.zero = 0;
     //ADDBOT name battlestatus teamcolor {AIDLL}
     wxString msg;
-    if ( usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) ) msg =  nick + wxString::Format( _T(" %d %d "), tasbs.data, tascl.data ) + status.aishortname + _T("|") + status.aiversion;
-    else msg =  nick + wxString::Format( _T(" %d %d "), tasbs.data, tascl.data ) + status.aishortname;
-    SendCmd( _T("ADDBOT"), msg );
+    wxString ailib;
+    if ( status.isluaai ) ailib = _T("LuaAI:");
+    ailib += status.aishortname;
+    if ( usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) && !status.isluaai ) ailib += _T("|") + status.aiversion;
+    SendCmd( _T("ADDBOT"), nick + wxString::Format( _T(" %d %d "), tasbs.data, tascl.data ) + ailib );
 }
 
 

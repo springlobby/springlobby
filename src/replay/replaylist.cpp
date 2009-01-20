@@ -237,12 +237,26 @@ void ReplayList::GetBattleFromScript( const wxString& script_, OfflineBattle& ba
         for ( int i = 0; i < playernum ; ++i )
         {
             PDataList player ( replayNode->Find( _T("PLAYER") + i2s(i) ) );
-            if ( player.ok() )
+            PDataList bot ( replayNode->Find( _T("AI") + i2s(i) ) );
+            if ( player.ok() || bot.ok() )
             {
+								if ( bot.ok() ) player = bot;
                 User user ( player->GetString( _T("Name") ), (player->GetString( _T("CountryCode")).Upper() ), 0);
                 user.BattleStatus().spectator = player->GetInt( _T("Spectator"), 0 );
                 opts.spectators += user.BattleStatus().spectator;
                 user.BattleStatus().team = player->GetInt( _T("Team") );
+                if ( bot.ok() )
+                {
+                	user.BattleStatus().aishortname = bot->GetString( _T("ShortName" ) );
+                	user.BattleStatus().aiversion = bot->GetString( _T("Version" ) );
+                	user.BattleStatus().isluaai = bot->GetInt( _T("IsLuaAI" ), 0 );
+                	int ownerindex = bot->GetInt( _T("Host" ) );
+                	PDataList aiowner ( replayNode->Find( _T("PLAYER") + i2s(ownerindex) ) );
+                	if ( aiowner.ok() )
+                	{
+                		user.BattleStatus().owner = aiowner->GetString( _T("Name") );
+                	}
+                }
 
                 IBattle::TeamInfoContainer teaminfos = parsed_teams[user.BattleStatus().team];
                 if ( !teaminfos.exist )
@@ -255,7 +269,7 @@ void ReplayList::GetBattleFromScript( const wxString& script_, OfflineBattle& ba
 											teaminfos.StartPosX = team->GetInt( _T("StartPosX"), -1 );
 											teaminfos.StartPosY = team->GetInt( _T("StartPosY"), -1 );
 											teaminfos.TeamLeader = team->GetInt( _T("AllyTeam"), 0 );
-											teaminfos.RGBColor = GetColorFromFloatStrng( team->GetString( _T("RGBColor"), _T("") ) );
+											teaminfos.RGBColor = GetColorFromFloatStrng( team->GetString( _T("RGBColor") ) );
 											teaminfos.SideName = team->GetString( _T("Side"), _T("") );
 											teaminfos.Handicap = team->GetInt( _T("Handicap"), 0 );
 											int sidepos = sides.Index( teaminfos.SideName );
@@ -289,7 +303,8 @@ void ReplayList::GetBattleFromScript( const wxString& script_, OfflineBattle& ba
 										}
                 }
 
-                battle.OnOfflineAddUser( user );
+                if ( !bot.ok() ) battle.OnOfflineAddUser( user );
+                else battle.OnBotAdded( user.GetNick(), user.BattleStatus() );
             }
 
         }
