@@ -155,6 +155,29 @@ public:
         BT_Single = 2
     };
 
+		struct TeamInfoContainer
+		{
+				bool exist;
+				int TeamLeader;
+				int StartPosX;
+				int StartPosY;
+				int AllyTeam;
+				wxColor RGBColor;
+				wxString SideName;
+				int Handicap;
+				int SideNum;
+		};
+
+		struct AllyInfoContainer
+		{
+				bool exist;
+				int NumAllies;
+				int StartRectLeft;
+				int StartRectTop;
+				int StartRectRight;
+				int StartRectBottom;
+		};
+
 
     /**@}*/
 
@@ -294,13 +317,29 @@ public:
 		virtual wxString GetDescription() const { return m_opts.description; }
 		// virtual void SetModname( const wxString& mod ) { m_opts.modname = mod; }
 
+
 		typedef std::map<wxString, User> UserVec;
 		typedef UserVec::const_iterator UserVecCIter;
 		typedef UserVec::iterator UserVecIter;
 
 		void SetBattleOptions( const BattleOptions& options ) { m_opts = options; }
 
-        virtual void OnSelfLeftBattle();
+		virtual void OnSelfLeftBattle();
+
+		/// replay&savegame parsing stuff
+		typedef std::map<int, TeamInfoContainer> TeamVec;
+		typedef TeamVec::const_iterator TeamVecCIter;
+		typedef TeamVec::iterator TeamVecIter;
+
+		typedef std::map<int, AllyInfoContainer> AllyVec;
+		typedef AllyVec::const_iterator AllyVecCIter;
+		typedef AllyVec::iterator AllyVecIter;
+
+		TeamVec GetParsedTeamsVec() { return m_parsed_teams; }
+		AllyVec GetParsedAlliesVec() { return m_parsed_allies; }
+
+		void SetParsedTeamsVec( const TeamVec& t ) { m_parsed_teams = t; }
+		void SetParsedAlliesVec( const AllyVec& a ) { m_parsed_allies = a; }
 
 
 protected:
@@ -330,6 +369,12 @@ protected:
 
     bool m_is_self_in;
     UserVec m_internal_bot_list;
+
+    /// replay&savegame stuff
+    // wxString m_script; -- not sure if to include this
+    TeamVec m_parsed_teams;
+    AllyVec m_parsed_allies;
+
 
 };
 

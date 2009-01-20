@@ -246,6 +246,9 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 					tdf.Append(it->first,it->second.second);
 			}
 
+			tdf.Append( _T("NumPlayers"), battle.GetNumPlayers() );
+			tdf.Append( _T("NumUsers"), battle.GetNumUsers() );
+
 			tdf.AppendLineBreak();
 
 			unsigned int NumUsers = battle.GetNumUsers();
