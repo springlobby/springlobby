@@ -210,7 +210,7 @@ void ReplayList::GetBattleFromScript( const wxString& script_, OfflineBattle& ba
 
         //don't have the maphash, what to do?
         //ui download function works with mapname if hash is empty, so works for now
-        opts.mapname    = replayNode->GetString( _T("Mapname") );
+        opts.mapname    = replayNode->GetString( _T("MapName") );
         battle.SetHostMap( opts.mapname, wxEmptyString );
 
 //        opts.ip         = replayNode->GetString( _T("HostIP") );
@@ -218,6 +218,8 @@ void ReplayList::GetBattleFromScript( const wxString& script_, OfflineBattle& ba
         opts.spectators = 0;
 
         int playernum = replayNode->GetInt  ( _T("NumPlayers"), 0);
+        int usersnum = replayNode->GetInt  ( _T("NumUsers"), 0);
+        if ( usersnum > 0 ) playernum = usersnum;
 //        int allynum = replayNode->GetInt  ( _T("NumAllyTeams"), 1);
 //        int teamnum = replayNode->GetInt  ( _T("NumTeams"), 1);
 
@@ -237,15 +239,10 @@ void ReplayList::GetBattleFromScript( const wxString& script_, OfflineBattle& ba
             PDataList player ( replayNode->Find( _T("PLAYER") + i2s(i) ) );
             if ( player.ok() )
             {
-                User user ( player->GetString( _T("name") ), (player->GetString( _T("countryCode")).Upper() ), 0);
-                if ( battle.ModExists() )
-                {
-									wxArrayString sides = usync().GetSides( battle.LoadMod().name );
-									user.BattleStatus().side = sides.Index( player->GetString( _T("side") ) );
-                }
+                User user ( player->GetString( _T("Name") ), (player->GetString( _T("CountryCode")).Upper() ), 0);
                 user.BattleStatus().spectator = player->GetInt( _T("Spectator"), 0 );
                 opts.spectators += user.BattleStatus().spectator;
-                user.BattleStatus().team = player->GetInt( _T("team") );
+                user.BattleStatus().team = player->GetInt( _T("Team") );
 
                 IBattle::TeamInfoContainer teaminfos = parsed_teams[user.BattleStatus().team];
                 if ( !teaminfos.exist )
