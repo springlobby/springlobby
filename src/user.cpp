@@ -82,11 +82,7 @@ void CommonUser::UpdateBattleStatus( const UserBattleStatus& status )
   m_bstatus.sync = status.sync;
   m_bstatus.spectator = status.spectator;
   m_bstatus.ready = status.ready;
-  if( !status.aishortname.IsEmpty() )
-  {
-  	 m_bstatus.aishortname = status.aishortname;
-  	 m_bstatus.isluaai = status.isluaai;
-  }
+  if( !status.aishortname.IsEmpty() ) m_bstatus.aishortname = status.aishortname;
   if( !status.aiversion.IsEmpty() ) m_bstatus.aiversion = status.aiversion;
   if( !status.owner.IsEmpty() ) m_bstatus.owner = status.owner;
   if( status.posx > 0 ) m_bstatus.posx = status.posx;

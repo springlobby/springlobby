@@ -1228,9 +1228,10 @@ void SpringUnitSyncLib::SetSpringConfigFloat( const wxString& key, const float v
 }
 
 
-int SpringUnitSyncLib::GetSkirmishAICount()
+int SpringUnitSyncLib::GetSkirmishAICount( const wxString& modname )
 {
   InitLib( m_get_skirmish_ai_count );
+  _SetCurrentMod( modname );
 
   return m_get_skirmish_ai_count();
 }

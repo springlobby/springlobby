@@ -301,7 +301,6 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 								tdf.Append( _T("Name"), user.GetNick() ); // AI's nick;
 								tdf.Append( _T("ShortName"), status.aishortname ); // AI libtype
 								tdf.Append( _T("Version"), status.aiversion ); // AI libtype version
-								tdf.Append( _T("IsLuaAI"), status.isluaai );
 								tdf.Append( _T("Team"), status.team );
 								tdf.Append( _T("Host"), player_to_number[&battle.GetUser( status.owner )] );
 							tdf.LeaveSection();
@@ -325,10 +324,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 					tdf.EnterSection( _T("TEAM") + i2s( PreviousTeam ) );
 						if ( !usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) && status.IsBot() )
 						{
-								wxString ailib;
-								if ( status.isluaai ) ailib += _T("LuaAI:");
-								ailib += status.aishortname;
-								tdf.Append( _T("AIDLL"), ailib );
+								tdf.Append( _T("AIDLL"), status.aishortname );
 								tdf.Append( _T("TeamLeader"), player_to_number[&battle.GetUser( status.owner )] ); // bot owner is the team leader
 						}
 						else

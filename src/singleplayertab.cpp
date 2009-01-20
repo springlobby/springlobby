@@ -260,8 +260,6 @@ void SinglePlayerTab::OnAddBot( wxCommandEvent& event )
     bs.owner = m_battle.GetMe().GetNick();
     bs.aishortname = dlg.GetAIShortName();
     bs.aiversion = dlg.GetAIVersion();
-		bs.isluaai = bs.aishortname.Contains( _T("LuaAI:") );
-		if ( bs.isluaai ) bs.aishortname = bs.aishortname.AfterFirst( _T(':') );
     User& bot = m_battle.OnBotAdded( _T("Bot") + TowxString( bs.team ), bs  );
     ASSERT_LOGIC( &bot != 0, _T("bot == 0") );
 

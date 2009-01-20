@@ -606,8 +606,6 @@ void BattleRoomTab::OnAddBot( wxCommandEvent& event )
         bs.aishortname = dlg.GetAIShortName();
         bs.aiversion = dlg.GetAIVersion();
         bs.owner = m_battle.GetMe().GetNick();
-        bs.isluaai = bs.aishortname.Contains( _T("LuaAI:") );
-        if ( bs.isluaai ) bs.aishortname = bs.aishortname.AfterFirst( _T(':') );
         m_ui.GetServer().AddBot( m_battle.GetBattleId(), dlg.GetNick(), bs );
     }
 }

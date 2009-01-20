@@ -278,8 +278,8 @@ void BattleroomListCtrl::UpdateUser( const int& index )
 			if ( botname.Contains(_T('.')) ) botname = botname.BeforeLast(_T('.'));
 			if ( botname.Contains(_T('/')) ) botname = botname.AfterLast(_T('/'));
 			if ( botname.Contains(_T('\\')) ) botname = botname.AfterLast(_T('\\'));
+			if ( botname.Contains(_T("LuaAI:")) ) botname = botname.AfterFirst(_T(':'));
 		}
-		if ( botname.Contains(_T("LuaAI:")) ) botname = botname.AfterFirst(_T(':'));
 
 		SetItem( index, 8, botname );
 

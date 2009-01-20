@@ -621,13 +621,16 @@ wxArrayString SpringUnitSync::GetAIList( const wxString& modname )
 
 	if ( usync().VersionSupports( USYNC_GetSkirmishAI ) )
 	{
-		int total = susynclib().GetSkirmishAICount();
+		int total = susynclib().GetSkirmishAICount( modname );
 		for ( int i = 0; i < total; i++ )
 		{
 			wxArrayString infos = susynclib().GetAIInfo( i );
 			int namepos = infos.Index( _T("shortName") ) + 1;
 			int versionpos = infos.Index( _T("version") ) + 1;
-			ret.Add( infos[namepos] + _T(" ") + infos[versionpos] );
+			wxString ainame;
+			if ( namepos > 0 ) ainame += infos[namepos];
+			if ( versionpos > 0 ) ainame += _T(" ") + infos[versionpos];
+			ret.Add( ainame );
 		}
 	}
 	else
@@ -651,17 +654,17 @@ wxArrayString SpringUnitSync::GetAIList( const wxString& modname )
 			if ( ret.Index( FileName.BeforeLast( '/') ) == wxNOT_FOUND ) ret.Add ( FileName ); // don't add duplicates
 			jarini = susynclib().FindFilesVFS( jarini, FileName );
 		}
-	}
 
-	// luaai
-	try
-	{ // Older versions of unitsync does not have these functions.
-		const int LuaAICount = susynclib().GetLuaAICount( modname );
-		for ( int i = 0; i < LuaAICount; i++ )
+		// luaai
+		try
 		{
-			 ret.Add( _T( "LuaAI:" ) +  susynclib().GetLuaAIName( i ) );
-		}
-	} catch (...) {}
+			const int LuaAICount = susynclib().GetLuaAICount( modname );
+			for ( int i = 0; i < LuaAICount; i++ )
+			{
+				 ret.Add( _T( "LuaAI:" ) +  susynclib().GetLuaAIName( i ) );
+			}
+		} catch (...) {}
+	}
 
   return ret;
 }

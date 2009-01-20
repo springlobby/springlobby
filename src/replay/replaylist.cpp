@@ -249,7 +249,6 @@ void ReplayList::GetBattleFromScript( const wxString& script_, OfflineBattle& ba
                 {
                 	user.BattleStatus().aishortname = bot->GetString( _T("ShortName" ) );
                 	user.BattleStatus().aiversion = bot->GetString( _T("Version" ) );
-                	user.BattleStatus().isluaai = bot->GetInt( _T("IsLuaAI" ), 0 );
                 	int ownerindex = bot->GetInt( _T("Host" ) );
                 	PDataList aiowner ( replayNode->Find( _T("PLAYER") + i2s(ownerindex) ) );
                 	if ( aiowner.ok() )

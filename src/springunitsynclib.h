@@ -409,7 +409,7 @@ class SpringUnitSyncLib
     void SetSpringConfigFloat( const wxString& key, const float value );
 
     /// AI info
-    int GetSkirmishAICount();
+    int GetSkirmishAICount( const wxString& modname );
     /**
      * Get next search result.
      * @param the AI index within range of GetSkirmishAIInfoCount
