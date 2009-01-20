@@ -15,7 +15,7 @@
 #include "../settings++/custom_dialogs.h"
 #include "../tdfcontainer.h"
 #include "replaytab.h"
-#include "uiutils.h"
+#include "../uiutils.h"
 
 const unsigned int replay_bulk_limit = 300;
 const unsigned int replay_chunk_size = 50;
