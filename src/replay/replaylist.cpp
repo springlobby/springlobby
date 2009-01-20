@@ -303,8 +303,7 @@ void ReplayList::GetBattleFromScript( const wxString& script_, OfflineBattle& ba
 										}
                 }
 
-                if ( !bot.ok() ) battle.OnOfflineAddUser( user );
-                else battle.OnBotAdded( user.GetNick(), user.BattleStatus() );
+                battle.OnOfflineAddUser( user );
             }
 
         }
