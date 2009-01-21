@@ -1520,37 +1520,37 @@ void ChatPanel::OnUserMenuModeratorMute( wxCommandEvent& event )
 	if ( !m_ui.AskText( _( "Mute user" ), _( "Duration:" ), duration ) ) return;
 	long int dur = 0;
 	duration.ToLong( &dur, dur );
-	m_ui.GetServer().ModeratorMute( m_channel->GetName(), GetSelectedUser()->GetNick(), ( int ) dur, false );
+	m_ui.GetServer().ModeratorMute( m_channel->GetName(), GetSelectedUser()->GetNick(), ( int ) dur, true );
 }
 
 
 void ChatPanel::OnUserMenuModeratorMute5( wxCommandEvent& event )
 {
-	m_ui.GetServer().ModeratorMute( m_channel->GetName(), GetSelectedUser()->GetNick(), 5, false );
+	m_ui.GetServer().ModeratorMute( m_channel->GetName(), GetSelectedUser()->GetNick(), 5, true );
 }
 
 
 void ChatPanel::OnUserMenuModeratorMute10( wxCommandEvent& event )
 {
-	m_ui.GetServer().ModeratorMute( m_channel->GetName(), GetSelectedUser()->GetNick(), 10, false );
+	m_ui.GetServer().ModeratorMute( m_channel->GetName(), GetSelectedUser()->GetNick(), 10, true );
 }
 
 
 void ChatPanel::OnUserMenuModeratorMute30( wxCommandEvent& event )
 {
-	m_ui.GetServer().ModeratorMute( m_channel->GetName(), GetSelectedUser()->GetNick(), 30, false );
+	m_ui.GetServer().ModeratorMute( m_channel->GetName(), GetSelectedUser()->GetNick(), 30, true );
 }
 
 
 void ChatPanel::OnUserMenuModeratorMute120( wxCommandEvent& event )
 {
-	m_ui.GetServer().ModeratorMute( m_channel->GetName(), GetSelectedUser()->GetNick(), 120, false );
+	m_ui.GetServer().ModeratorMute( m_channel->GetName(), GetSelectedUser()->GetNick(), 120, true );
 }
 
 
 void ChatPanel::OnUserMenuModeratorMute1440( wxCommandEvent& event )
 {
-	m_ui.GetServer().ModeratorMute( m_channel->GetName(), GetSelectedUser()->GetNick(), 1440, false );
+	m_ui.GetServer().ModeratorMute( m_channel->GetName(), GetSelectedUser()->GetNick(), 1440, true );
 }
 
 
