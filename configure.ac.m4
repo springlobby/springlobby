@@ -44,6 +44,10 @@ AC_ARG_WITH(boost-prefix,[  --with-boost-prefix=/path/to/boost_topdir (optional)
 AC_ARG_WITH(opt-level,[  --with-opt-level=N (optional) with N = 0..3],
       CXXFLAGS="$CXXFLAGS -O$withval ")
 
+AC_ARG_WITH(aux-version,[  --with-aux-version='some string' (packager use only)],
+      AC_DEFINE_UNQUOTED([AUX_VERSION], " $withval", [] ) )
+
+
 AC_CANONICAL_HOST
 
 AC_LANG([C++])
