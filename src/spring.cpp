@@ -271,12 +271,12 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 			}
 			std::map<User*, int> player_to_number; // player -> ordernumber
 
-			for ( unsigned int i = 0; i < NumUsers; i++ )
+			for ( unsigned int i = 0, pn = 0; i < NumUsers; i++ )
 			{
 					User& user = battle.GetUser( i );
 					UserBattleStatus& status = user.BattleStatus();
 					if ( status.IsBot() ) continue;
-						tdf.EnterSection( _T("PLAYER") + i2s( i ) );
+					tdf.EnterSection( _T("PLAYER") + i2s( pn ) );
 							tdf.Append( _T("Name"), user.GetNick() );
 
 							tdf.Append( _T("CountryCode"), user.GetCountry().Lower());
@@ -285,26 +285,26 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 
 							if ( !status.spectator )
 							{
-									tdf.Append( _T("Team"), status.team );
+								tdf.Append( _T("Team"), status.team );
 							}
-						tdf.LeaveSection();
-					player_to_number[&user] = i;
+					tdf.LeaveSection();
+					player_to_number[&user] = pn++;
 			}
 			if ( usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) )
 			{
-				for ( unsigned int i = 0; i < NumUsers; i++ )
+				for ( unsigned int i = 0, an = 0; i < NumUsers; i++ )
 				{
 						User& user = battle.GetUser( i );
 						UserBattleStatus& status = user.BattleStatus();
 						if ( !status.IsBot() ) continue;
-							tdf.EnterSection( _T("AI") + i2s( i ) );
+						tdf.EnterSection( _T("AI") + i2s( an ) );
 								tdf.Append( _T("Name"), user.GetNick() ); // AI's nick;
 								tdf.Append( _T("ShortName"), status.aishortname ); // AI libtype
 								tdf.Append( _T("Version"), status.aiversion ); // AI libtype version
 								tdf.Append( _T("Team"), status.team );
 								tdf.Append( _T("Host"), player_to_number[&battle.GetUser( status.owner )] );
-							tdf.LeaveSection();
-						player_to_number[&user] = i;
+						tdf.LeaveSection();
+						player_to_number[&user] = an++;
 				}
 			}
 
@@ -329,7 +329,14 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 						}
 						else
 						{
-								tdf.Append( _T("TeamLeader"), player_to_number[&usr] );
+								if ( status.IsBot() )
+								{
+										tdf.Append( _T("TeamLeader"), player_to_number[&battle.GetUser( status.owner )] );
+								}
+								else
+								{
+										tdf.Append( _T("TeamLeader"), player_to_number[&usr] );
+								}
 						}
 
 						if ( startpostype == IBattle::ST_Pick )
