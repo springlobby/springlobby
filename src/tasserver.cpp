@@ -649,7 +649,17 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
 				if ( sett().GetReportStats() )
 				{
 					if ( UserExists( _T("SL_bot") ) ) SayPrivate( _T("SL_bot"), _T("is using SpringLobby v") + GetSpringLobbyVersion() );
-					if ( UserExists( _T("insanebot") ) ) SayPrivate( _T("insanebot"), _T("is using SpringLobby v") + GetSpringLobbyVersion() );
+					wxString version = WX_STRINGC(VERSION).BeforeFirst( _T(' ') );
+					wxString aux;
+					#ifdef AUX_VERSION
+						aux = WX_STRINGC(AUX_VERSION);
+						aux.Replace( _T(" "), _T("") );
+						aux = _T(" ") + aux;
+					#endif
+					wxString os = _T("crap");
+					wxString wxversion = wxVERSION_STRING;
+					wxversion.Replace( _T(" "), _T("") );
+					if ( UserExists( _T("insanebot") ) ) SayPrivate( _T("insanebot"), _T("stats.report ") + wxversion + _T(" ") + os + aux );
 				}
         m_se->OnLoginInfoComplete();
     }
@@ -739,9 +749,13 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     {
         nick = GetWordParam( params );
         if ( ( ( nick == m_relay_host_bot ) || ( nick == m_relay_host_manager ) ) && params.StartsWith( _T("!") ) ) return; // drop the message
-        if ( ( nick == _T("SL_bot") ) || ( nick == _T("insanebot") ) )
+        if ( nick == _T("SL_bot") )
         {
         	if ( params.StartsWith( _T("is using SpringLobby v") ) ) return;
+        }
+        if ( nick == _T("insanebot") )
+        {
+        	 if ( params.StartsWith( _T("stats.report") ) ) return;
         }
         m_se->OnPrivateMessage( nick, params, true );
     }
