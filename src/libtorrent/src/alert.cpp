@@ -37,13 +37,36 @@ POSSIBILITY OF SUCH DAMAGE.
 
 namespace libtorrent {
 
-	alert::alert() : m_timestamp(time_now()) {}
-	alert::~alert() {}
-	ptime alert::timestamp() const { return m_timestamp; }
+	alert::alert(severity_t severity, const std::string& msg)
+		: m_msg(msg)
+		, m_severity(severity)
+		, m_timestamp(time_now())
+	{
+	}
+
+	alert::~alert()
+	{
+	}
+
+	ptime alert::timestamp() const
+	{
+		return m_timestamp;
+	}
+
+	const std::string& alert::msg() const
+	{
+		return m_msg;
+	}
+
+	alert::severity_t alert::severity() const
+	{
+		return m_severity;
+	}
+
+
 
 	alert_manager::alert_manager()
-		: m_alert_mask(alert::error_notification)
-		, m_queue_size_limit(queue_size_limit_default)
+		: m_severity(alert::fatal)
 	{}
 
 	alert_manager::~alert_manager()
@@ -73,9 +96,8 @@ namespace libtorrent {
 			xt.sec += 1;
 		}
 		xt.nsec = boost::xtime::xtime_nsec_t(nsec);
-		// apparently this call can be interrupted
-		// prematurely if there are other signals
 		if (!m_condition.timed_wait(lock, xt)) return 0;
+		TORRENT_ASSERT(!m_alerts.empty());
 		if (m_alerts.empty()) return 0;
 		return m_alerts.front();
 	}
@@ -83,8 +105,15 @@ namespace libtorrent {
 	void alert_manager::post_alert(const alert& alert_)
 	{
 		boost::mutex::scoped_lock lock(m_mutex);
+		if (m_severity > alert_.severity()) return;
 
-		if (m_alerts.size() >= m_queue_size_limit) return;
+		// the internal limit is 100 alerts
+		if (m_alerts.size() == 100)
+		{
+			alert* result = m_alerts.front();
+			m_alerts.pop();
+			delete result;
+		}
 		m_alerts.push(alert_.clone().release());
 		m_condition.notify_all();
 	}
@@ -107,12 +136,16 @@ namespace libtorrent {
 		return !m_alerts.empty();
 	}
 
-	size_t alert_manager::set_alert_queue_size_limit(size_t queue_size_limit_)
+	void alert_manager::set_severity(alert::severity_t severity)
 	{
 		boost::mutex::scoped_lock lock(m_mutex);
-
-		std::swap(m_queue_size_limit, queue_size_limit_);
-		return queue_size_limit_;
+		
+		m_severity = severity;
+	}
+	
+	bool alert_manager::should_post(alert::severity_t severity) const
+	{
+		return severity >= m_severity;
 	}
 
 } // namespace libtorrent
