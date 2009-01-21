@@ -95,19 +95,38 @@ wxString AddBotDialog::GetNick()
 }
 
 
-wxString AddBotDialog::GetAI()
+wxString AddBotDialog::GetAIShortName()
 {
-  return m_ais[ m_ai->GetSelection() ];
+	wxArrayString infos = usync().GetAIInfos( m_ai->GetSelection() );
+	if ( infos.GetCount() == 0 ) return m_ais[ m_ai->GetSelection() ];
+  else
+  {
+		int namepos = infos.Index( _T("shortName") ) + 1;
+		return infos[namepos];
+  }
 }
 
+wxString AddBotDialog::GetAIVersion()
+{
+	wxArrayString infos = usync().GetAIInfos( m_ai->GetSelection() );
+	if ( infos.GetCount() == 0 ) return _T("");
+  else
+  {
+		int namepos = infos.Index( _T("version") ) + 1;
+		return infos[namepos];
+  }
+}
 
 wxString AddBotDialog::RefineAIName( const wxString& name )
 {
   wxString ret = name;
-  if (ret.Contains(_T('.')) ) ret = ret.BeforeLast(_T('.'));
-  if ( ret.Contains(_T('/')) ) ret = ret.AfterLast(_T('/'));
-  if ( ret.Contains(_T('\\')) ) ret = ret.AfterLast(_T('\\'));
-  if ( ret.Contains(_T("LuaAI:")) ) ret = ret.AfterFirst(_T(':'));
+  if ( !usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) )
+  {
+		if ( ret.Contains(_T('.')) ) ret = ret.BeforeLast(_T('.'));
+		if ( ret.Contains(_T('/')) ) ret = ret.AfterLast(_T('/'));
+		if ( ret.Contains(_T('\\')) ) ret = ret.AfterLast(_T('\\'));
+		if ( ret.Contains(_T("LuaAI:")) ) ret = ret.AfterFirst(_T(':'));
+  }
   if ( m_ai->FindString( ret ) == wxNOT_FOUND ) return ret;
   wxString ret2;
   int i = 2;

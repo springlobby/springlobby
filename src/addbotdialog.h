@@ -20,7 +20,8 @@ class AddBotDialog : public wxDialog
     AddBotDialog( wxWindow* parent, IBattle& battle, bool singleplayer = false );
 
     wxString GetNick();
-    wxString GetAI();
+    wxString GetAIShortName();
+    wxString GetAIVersion();
 
     void ReloadAIList();
 

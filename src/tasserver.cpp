@@ -646,6 +646,22 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     }
     else if ( cmd == _T("LOGININFOEND") )
     {
+				if ( sett().GetReportStats() )
+				{
+					wxString version = WX_STRINGC(VERSION).BeforeFirst( _T(' ') );
+					wxString aux;
+					#ifdef AUX_VERSION
+						aux = WX_STRINGC(AUX_VERSION);
+						aux.Replace( _T(" "), _T("") );
+						aux = _T(" ") + aux;
+					#endif
+					wxString os = _T("crap");
+					wxString wxversion = wxVERSION_STRING;
+					wxversion.Replace( _T(" "), _T("") );
+					wxString reportstring = _T("stats.report ") + wxversion + _T(" ") + os + aux;
+					if ( UserExists( _T("insanebot") ) ) SayPrivate( _T("insanebot"), reportstring );
+					if ( UserExists( _T("SL_bot") ) ) SayPrivate( _T("SL_bot"), reportstring );
+				}
         m_se->OnLoginInfoComplete();
     }
     else if ( cmd == _T("REMOVEUSER") )
@@ -734,6 +750,10 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     {
         nick = GetWordParam( params );
         if ( ( ( nick == m_relay_host_bot ) || ( nick == m_relay_host_manager ) ) && params.StartsWith( _T("!") ) ) return; // drop the message
+        if ( nick == _T("SL_bot") || ( nick == _T("insanebot") ) )
+        {
+        	if ( params.StartsWith( _T("stats.report") ) ) return;
+        }
         m_se->OnPrivateMessage( nick, params, true );
     }
     else if ( cmd == _T("SAIDPRIVATE") )
@@ -867,7 +887,10 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         bstatus = ConvTasbattlestatus( tasbstatus.tasdata );
         color.data = GetIntParam( params );
         bstatus.colour = wxColour( color.color.red, color.color.green, color.color.blue );
-        bstatus.ailib = GetSentenceParam( params );
+        wxString ai = GetSentenceParam( params );
+        if( usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) ) bstatus.aishortname = ai.BeforeFirst( _T('|') );
+        else bstatus.aishortname = ai;
+        bstatus.aiversion = ai.AfterFirst( _T('|') );
         bstatus.owner =owner;
         m_se->OnBattleAddBot( id, nick, bstatus );
     }
@@ -1956,7 +1979,7 @@ void TASServer::SetHandicap( int battleid, User& user, int handicap)
 }
 
 
-void TASServer::AddBot( int battleid, const wxString& nick, const wxString& owner, UserBattleStatus& status, const wxString& aidll )
+void TASServer::AddBot( int battleid, const wxString& nick, UserBattleStatus& status )
 {
     wxLogDebugFunc( _T("") );
     try
@@ -1978,7 +2001,11 @@ void TASServer::AddBot( int battleid, const wxString& nick, const wxString& owne
     tascl.color.blue = status.colour.Blue();
     tascl.color.zero = 0;
     //ADDBOT name battlestatus teamcolor {AIDLL}
-    SendCmd( _T("ADDBOT"), nick + wxString::Format( _T(" %d %d "), tasbs.data, tascl.data ) + aidll );
+    wxString msg;
+    wxString ailib;
+    ailib += status.aishortname;
+    if ( usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) ) ailib += _T("|") + status.aiversion;
+    SendCmd( _T("ADDBOT"), nick + wxString::Format( _T(" %d %d "), tasbs.data, tascl.data ) + ailib );
 }
 
 

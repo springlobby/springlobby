@@ -258,7 +258,8 @@ void SinglePlayerTab::OnAddBot( wxCommandEvent& event )
     bs.ally = m_battle.GetFreeAlly();
     bs.team = m_battle.GetFreeTeamNum( false );
     bs.owner = m_battle.GetMe().GetNick();
-    bs.ailib = dlg.GetAI();
+    bs.aishortname = dlg.GetAIShortName();
+    bs.aiversion = dlg.GetAIVersion();
     User& bot = m_battle.OnBotAdded( _T("Bot") + TowxString( bs.team ), bs  );
     ASSERT_LOGIC( &bot != 0, _T("bot == 0") );
 

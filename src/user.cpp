@@ -71,7 +71,7 @@ void User::SetStatus( const UserStatus& status )
 void CommonUser::UpdateBattleStatus( const UserBattleStatus& status )
 {
 
-  // total 15 members to update.
+  // total 16 members to update.
 
   m_bstatus.team = status.team;
   m_bstatus.ally = status.ally;
@@ -82,8 +82,9 @@ void CommonUser::UpdateBattleStatus( const UserBattleStatus& status )
   m_bstatus.sync = status.sync;
   m_bstatus.spectator = status.spectator;
   m_bstatus.ready = status.ready;
-  if( !status.ailib.IsEmpty() ) m_bstatus.ailib = status.ailib;
-  if( !status.ailib.IsEmpty() ) m_bstatus.owner = status.owner;
+  if( !status.aishortname.IsEmpty() ) m_bstatus.aishortname = status.aishortname;
+  if( !status.aiversion.IsEmpty() ) m_bstatus.aiversion = status.aiversion;
+  if( !status.owner.IsEmpty() ) m_bstatus.owner = status.owner;
   if( status.posx > 0 ) m_bstatus.posx = status.posx;
   if( status.posy > 0 ) m_bstatus.posy = status.posy;
 

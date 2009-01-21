@@ -177,6 +177,10 @@ bool SpringLobbyApp::OnInit()
 			{
 				sett().ConvertOldServerSettings();
 			}
+			if ( sett().GetSettingsVersion() < 7 )
+			{
+				sett().AddChannelJoin( _T("springlobby"), _T("") );
+			}
     }
 
     ui().ReloadUnitSync(); // first time load of unitsync

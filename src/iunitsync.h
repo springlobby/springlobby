@@ -172,6 +172,7 @@ class IUnitSync
     virtual bool VersionSupports( GameFeature feature ) = 0;
 
     virtual wxArrayString GetAIList( const wxString& modname ) = 0;
+    virtual wxArrayString GetAIInfos( int index ) = 0;
 
     virtual bool ReloadUnitSyncLib() = 0;
 

@@ -369,12 +369,9 @@ void ChatPanel::CreatePopup()
 		wxLogMessage( _T( "channel" ) );
 		m_autorejoin = new wxMenuItem( m_popup_menu, CHAT_MENU_CH_AUTOJOIN, _( "Auto join this channel" ), wxEmptyString, wxITEM_CHECK );
 		m_popup_menu->Append( m_autorejoin );
-		if ( m_channel && m_channel->GetName() != _T( "springlobby" ) ) {
+		if ( m_channel ) {
 			bool isautojoin = sett().GetChannelJoinIndex( m_channel->GetName() ) >= 0;
 			m_autorejoin->Check( isautojoin );
-		} else {
-			m_autorejoin->Check( true );
-			m_autorejoin->Enable( false );
 		}
 
 		wxMenuItem* leaveitem = new wxMenuItem( m_popup_menu, CHAT_MENU_CH_LEAVE, _( "Leave" ), wxEmptyString, wxITEM_NORMAL );
@@ -1520,37 +1517,37 @@ void ChatPanel::OnUserMenuModeratorMute( wxCommandEvent& event )
 	if ( !m_ui.AskText( _( "Mute user" ), _( "Duration:" ), duration ) ) return;
 	long int dur = 0;
 	duration.ToLong( &dur, dur );
-	m_ui.GetServer().ModeratorMute( m_channel->GetName(), GetSelectedUser()->GetNick(), ( int ) dur, false );
+	m_ui.GetServer().ModeratorMute( m_channel->GetName(), GetSelectedUser()->GetNick(), ( int ) dur, true );
 }
 
 
 void ChatPanel::OnUserMenuModeratorMute5( wxCommandEvent& event )
 {
-	m_ui.GetServer().ModeratorMute( m_channel->GetName(), GetSelectedUser()->GetNick(), 5, false );
+	m_ui.GetServer().ModeratorMute( m_channel->GetName(), GetSelectedUser()->GetNick(), 5, true );
 }
 
 
 void ChatPanel::OnUserMenuModeratorMute10( wxCommandEvent& event )
 {
-	m_ui.GetServer().ModeratorMute( m_channel->GetName(), GetSelectedUser()->GetNick(), 10, false );
+	m_ui.GetServer().ModeratorMute( m_channel->GetName(), GetSelectedUser()->GetNick(), 10, true );
 }
 
 
 void ChatPanel::OnUserMenuModeratorMute30( wxCommandEvent& event )
 {
-	m_ui.GetServer().ModeratorMute( m_channel->GetName(), GetSelectedUser()->GetNick(), 30, false );
+	m_ui.GetServer().ModeratorMute( m_channel->GetName(), GetSelectedUser()->GetNick(), 30, true );
 }
 
 
 void ChatPanel::OnUserMenuModeratorMute120( wxCommandEvent& event )
 {
-	m_ui.GetServer().ModeratorMute( m_channel->GetName(), GetSelectedUser()->GetNick(), 120, false );
+	m_ui.GetServer().ModeratorMute( m_channel->GetName(), GetSelectedUser()->GetNick(), 120, true );
 }
 
 
 void ChatPanel::OnUserMenuModeratorMute1440( wxCommandEvent& event )
 {
-	m_ui.GetServer().ModeratorMute( m_channel->GetName(), GetSelectedUser()->GetNick(), 1440, false );
+	m_ui.GetServer().ModeratorMute( m_channel->GetName(), GetSelectedUser()->GetNick(), 1440, true );
 }
 
 
