@@ -8,6 +8,7 @@
 #include <wx/statline.h>
 #include <wx/filename.h>
 #include <wx/dir.h>
+#include <wx/listctrl.h>
 
 #include "settings.h"
 #include "utils.h"
@@ -34,7 +35,8 @@ AddBotDialog::AddBotDialog( wxWindow* parent, IBattle& battle , bool singleplaye
   wxBoxSizer* m_main_sizer;
   m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
-  if ( !m_sp ) {
+  if ( !m_sp )
+  {
     wxBoxSizer* m_nick_sizer;
     m_nick_sizer = new wxBoxSizer( wxHORIZONTAL );
 
@@ -61,6 +63,19 @@ AddBotDialog::AddBotDialog( wxWindow* parent, IBattle& battle , bool singleplaye
   m_ai_sizer->Add( m_ai, 2, wxALL, 5 );
 
   m_main_sizer->Add( m_ai_sizer, 0, wxEXPAND, 5 );
+
+  m_ai_infos_lst = new wxListCtrl( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL );
+  wxListItem col;
+  col.SetText( _("property") );
+  col.SetImage( -1 );
+  m_ai_infos_lst->InsertColumn( 0, col );
+  wxListItem col2;
+  col2.SetText( _("value") );
+  col2.SetImage( -1 );
+  m_ai_infos_lst->InsertColumn( 1, col2 );
+	m_ai_infos_lst->Hide();
+
+	m_main_sizer->Add( m_ai_infos_lst, 0, wxALL|wxEXPAND, 5 );
 
   m_main_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
 
@@ -140,17 +155,20 @@ wxString AddBotDialog::RefineAIName( const wxString& name )
 
 void AddBotDialog::ReloadAIList()
 {
-  try {
+  try
+  {
     m_ais = usync().GetAIList( m_battle.GetHostModName() );
   } catch (...) {}
 
   m_ai->Clear();
   for ( unsigned int i = 0; i < m_ais.GetCount(); i++ ) m_ai->Append( RefineAIName(m_ais[i]) );
-
-  if ( m_ais.GetCount() > 0 ) {
+  if ( m_ais.GetCount() > 0 )
+  {
     m_ai->SetStringSelection( sett().GetLastAI() );
     if ( m_ai->GetStringSelection() == wxEmptyString ) m_ai->SetSelection( 0 );
-  } else {
+  }
+  else
+  {
     customMessageBox(SL_MAIN_ICON, _("No AI bots found in your Spring installation."), _("No bot-libs found"), wxOK );
   }
   m_add_btn->Enable( m_ai->GetStringSelection() != wxEmptyString );
@@ -173,4 +191,18 @@ void AddBotDialog::OnAddBot( wxCommandEvent& event )
 void AddBotDialog::OnSelectBot( wxCommandEvent& event )
 {
   m_add_btn->Enable( m_ai->GetStringSelection() != wxEmptyString );
+  m_ai_infos_lst->DeleteAllItems();
+  wxArrayString info = usync().GetAIInfos( m_ai->GetSelection() );
+  int count = info.GetCount();
+	if ( count > 0 ) m_ai_infos_lst->Show();
+	else m_ai_infos_lst->Hide();
+	for ( int i = 0; i < count; i = i + 3 )
+	{
+		long index = m_ai_infos_lst->InsertItem( i, info[i] );
+		m_ai_infos_lst->SetItem( index, 0,  info[i] );
+		m_ai_infos_lst->SetItem( index, 1,  info[i+1] );
+	}
+	m_ai_infos_lst->SetColumnWidth( 0, wxLIST_AUTOSIZE );
+	m_ai_infos_lst->SetColumnWidth( 1, wxLIST_AUTOSIZE );
+
 }

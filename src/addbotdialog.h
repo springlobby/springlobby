@@ -10,6 +10,7 @@ class wxStaticLine;
 class wxButton;
 class wxCommandEvent;
 class IBattle;
+class wxListCtrl;
 
 /** \brief used in SP/MP BattletAB to present choice of AIs to add
  * \todo DOCMEMORE */
@@ -37,6 +38,8 @@ class AddBotDialog : public wxDialog
     wxStaticLine* m_buttons_sep;
     wxButton* m_cancel_btn;
     wxButton* m_add_btn;
+    wxListCtrl* m_ai_infos_lst;
+
 
     IBattle& m_battle;
 
