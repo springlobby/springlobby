@@ -35,7 +35,7 @@ namespace asio {
  *
  * This default implementation is simply:
  * @code
- * return ::operator new(size);
+ * return ::operator new(bytes);
  * @endcode
  *
  * @note All temporary objects associated with a handler will be deallocated

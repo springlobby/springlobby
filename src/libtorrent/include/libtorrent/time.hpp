@@ -34,7 +34,6 @@ POSSIBILITY OF SUCH DAMAGE.
 #define TORRENT_TIME_HPP_INCLUDED
 
 #include <ctime>
-#include <boost/version.hpp>
 
 #ifndef _WIN32
 #include <unistd.h>
@@ -87,11 +86,7 @@ namespace libtorrent
 
 #else
 
-#if BOOST_VERSION < 103500
 #include <asio/time_traits.hpp>
-#else
-#include <boost/asio/time_traits.hpp>
-#endif
 #include <boost/cstdint.hpp>
 #include "libtorrent/assert.hpp"
 
@@ -104,7 +99,6 @@ namespace libtorrent
 		time_duration operator/(int rhs) const { return time_duration(diff / rhs); }
 		explicit time_duration(boost::int64_t d) : diff(d) {}
 		time_duration& operator-=(time_duration const& c) { diff -= c.diff; return *this; }
-		time_duration& operator+=(time_duration const& c) { diff += c.diff; return *this; }
 		time_duration operator+(time_duration const& c) { return time_duration(diff + c.diff); }
 		boost::int64_t diff;
 	};
@@ -124,8 +118,6 @@ namespace libtorrent
 	{
 		ptime() {}
 		explicit ptime(boost::int64_t t): time(t) {}
-		ptime& operator+=(time_duration rhs) { time += rhs.diff; return *this; }
-		ptime& operator-=(time_duration rhs) { time -= rhs.diff; return *this; }
 		boost::int64_t time;
 	};
 
@@ -159,9 +151,6 @@ namespace libtorrent
 }
 
 // asio time_traits
-#if BOOST_VERSION >= 103500
-namespace boost { 
-#endif
 namespace asio
 {
 	template<>
@@ -182,9 +171,6 @@ namespace asio
 		{ return boost::posix_time::microseconds(libtorrent::total_microseconds(d)); }
 	};
 }
-#if BOOST_VERSION >= 103500
-}
-#endif
 
 #if defined(__MACH__)
 
@@ -282,7 +268,7 @@ namespace libtorrent
 			if (performace_counter_frequency.QuadPart == 0)
 				QueryPerformanceFrequency(&performace_counter_frequency);
 
-#ifdef TORRENT_DEBUG
+#ifndef NDEBUG
 			// make sure we don't overflow
 			boost::int64_t ret = (pc * 1000 / performace_counter_frequency.QuadPart) * 1000;
 			TORRENT_ASSERT((pc >= 0 && pc >= ret) || (pc < 0 && pc < ret));
@@ -295,7 +281,7 @@ namespace libtorrent
 			static LARGE_INTEGER performace_counter_frequency = {0,0};
 			if (performace_counter_frequency.QuadPart == 0)
 				QueryPerformanceFrequency(&performace_counter_frequency);
-#ifdef TORRENT_DEBUG
+#ifndef NDEBUG
 			// make sure we don't overflow
 			boost::int64_t ret = (ms / 1000) * performace_counter_frequency.QuadPart / 1000;
 			TORRENT_ASSERT((ms >= 0 && ms <= ret)
