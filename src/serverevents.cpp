@@ -56,7 +56,6 @@ void ServerEvents::OnLogin()
 void ServerEvents::OnLoginInfoComplete()
 {
     wxLogDebugFunc( _T("") );
-    m_serv.JoinChannel( _T("springlobby"), _T("") );
     //m_serv.RequestChannels();
     int num = sett().GetNumChannelsJoin();
     for ( int i= 0; i < num; i++ )
@@ -498,10 +497,6 @@ void ServerEvents::OnJoinChannelResult( bool success, const wxString& channel, c
         Channel& chan = m_serv._AddChannel( channel );
         chan.SetPassword( m_serv.m_channel_pw[channel] );
         ui().OnJoinedChannelSuccessful( chan );
-        if ( channel == _T("springlobby") && sett().GetReportStats() )
-        {
-            m_serv.DoActionChannel( _T("springlobby"), _T("is using SpringLobby v") + GetSpringLobbyVersion() );
-        }
 
     }
     else

@@ -646,6 +646,11 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     }
     else if ( cmd == _T("LOGININFOEND") )
     {
+				if ( sett().GetReportStats() )
+				{
+					if ( UserExists( _T("SL_bot") ) ) SayPrivate( _T("SL_bot"), _T("is using SpringLobby v") + GetSpringLobbyVersion() );
+					if ( UserExists( _T("insanebot") ) ) SayPrivate( _T("insanebot"), _T("is using SpringLobby v") + GetSpringLobbyVersion() );
+				}
         m_se->OnLoginInfoComplete();
     }
     else if ( cmd == _T("REMOVEUSER") )
@@ -734,6 +739,10 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     {
         nick = GetWordParam( params );
         if ( ( ( nick == m_relay_host_bot ) || ( nick == m_relay_host_manager ) ) && params.StartsWith( _T("!") ) ) return; // drop the message
+        if ( ( nick == _T("SL_bot") ) || ( nick == _T("insanebot") ) )
+        {
+        	if ( params.StartsWith( _T("is using SpringLobby v") ) ) return;
+        }
         m_se->OnPrivateMessage( nick, params, true );
     }
     else if ( cmd == _T("SAIDPRIVATE") )

@@ -369,12 +369,9 @@ void ChatPanel::CreatePopup()
 		wxLogMessage( _T( "channel" ) );
 		m_autorejoin = new wxMenuItem( m_popup_menu, CHAT_MENU_CH_AUTOJOIN, _( "Auto join this channel" ), wxEmptyString, wxITEM_CHECK );
 		m_popup_menu->Append( m_autorejoin );
-		if ( m_channel && m_channel->GetName() != _T( "springlobby" ) ) {
+		if ( m_channel ) {
 			bool isautojoin = sett().GetChannelJoinIndex( m_channel->GetName() ) >= 0;
 			m_autorejoin->Check( isautojoin );
-		} else {
-			m_autorejoin->Check( true );
-			m_autorejoin->Enable( false );
 		}
 
 		wxMenuItem* leaveitem = new wxMenuItem( m_popup_menu, CHAT_MENU_CH_LEAVE, _( "Leave" ), wxEmptyString, wxITEM_NORMAL );
