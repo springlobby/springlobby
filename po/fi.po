@@ -3,18 +3,18 @@
 # This file is distributed under the same license as the springlobby package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
 #
-#: src/filelister/filelistfilter.cpp:52 src/Helper/wxtextctrlhist.h:13
-#: src/settings++/Defs.hpp:264 src/settings++/Defs.hpp:344
-#: src/settings++/Defs.hpp:346 src/settings++/Defs.hpp:348
-#: src/settings++/Defs.hpp:350 src/settings++/Defs.hpp:352
-#: src/settings++/Defs.hpp:404 src/settings++/Defs.hpp:405
-#: src/settings++/Defs.hpp:413 src/settings++/Defs.hpp:418
-#: src/settings++/Defs.hpp:421 src/utils.cpp:258
+#: src/filelister/filelistfilter.cpp:52 src/groupuserdialog.cpp:75
+#: src/Helper/wxtextctrlhist.h:13 src/settings++/Defs.hpp:264
+#: src/settings++/Defs.hpp:344 src/settings++/Defs.hpp:346
+#: src/settings++/Defs.hpp:348 src/settings++/Defs.hpp:350
+#: src/settings++/Defs.hpp:352 src/settings++/Defs.hpp:404
+#: src/settings++/Defs.hpp:405 src/settings++/Defs.hpp:413
+#: src/settings++/Defs.hpp:418 src/settings++/Defs.hpp:421 src/utils.cpp:260
 msgid ""
 msgstr ""
 "Project-Id-Version: springlobby\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-12-23 17:31+0100\n"
+"POT-Creation-Date: 2008-11-16 01:15+0100\n"
 "PO-Revision-Date: 2008-07-30 23:31+0000\n"
 "Last-Translator: SpringLobby_Buildbot <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
@@ -40,7 +40,7 @@ msgstr "Tekoäly"
 msgid "Choose the AI library to use with this bot."
 msgstr "Valitse tämän tietokonepelaajan ohjaukseen käytettävä AI-kirjasto"
 
-#: src/addbotdialog.cpp:73 src/autobalancedialog.cpp:63
+#: src/addbotdialog.cpp:73 src/autobalancedialog.cpp:61
 #: src/connectwindow.cpp:86 src/hostbattledialog.cpp:212
 msgid "Cancel"
 msgstr "Peruuta"
@@ -73,40 +73,40 @@ msgstr "Kyllä"
 msgid "No"
 msgstr "Ei"
 
-#: src/autobalancedialog.cpp:34
+#: src/autobalancedialog.cpp:38
 msgid "Autobalance players into teams"
 msgstr ""
 
-#: src/autobalancedialog.cpp:37
+#: src/autobalancedialog.cpp:41
 msgid "Method"
 msgstr ""
 
-#: src/autobalancedialog.cpp:40
-msgid "Divide ranks evenly"
-msgstr ""
-
-#: src/autobalancedialog.cpp:41 src/battlemaptab.cpp:102
-#: src/battleroomtab.cpp:341
+#: src/autobalancedialog.cpp:44 src/battlemaptab.cpp:102
+#: src/battleroomtab.cpp:301
 msgid "Random"
 msgstr "Sattumanvarainen"
 
-#: src/autobalancedialog.cpp:43
+#: src/autobalancedialog.cpp:45
+msgid "Divide ranks evenly"
+msgstr ""
+
+#: src/autobalancedialog.cpp:47
 msgid "Clans"
 msgstr ""
 
-#: src/autobalancedialog.cpp:46 src/hostbattledialog.cpp:138
+#: src/autobalancedialog.cpp:50 src/hostbattledialog.cpp:138
 msgid "None"
 msgstr "Ei mitään"
 
-#: src/autobalancedialog.cpp:47
+#: src/autobalancedialog.cpp:51
 msgid "Fair"
 msgstr ""
 
-#: src/autobalancedialog.cpp:48
+#: src/autobalancedialog.cpp:52
 msgid "Always"
 msgstr ""
 
-#: src/autobalancedialog.cpp:49
+#: src/autobalancedialog.cpp:53
 msgid ""
 "Put members of same clan ( users having same clantag, like '[smurfzor]Alice' "
 "and '[smurfzor]Bob' ) together into same alliance. \n"
@@ -116,17 +116,7 @@ msgid ""
 "unfair."
 msgstr ""
 
-#: src/autobalancedialog.cpp:51
-#, fuzzy
-msgid "Grouping size"
-msgstr "Toiminto"
-
-#: src/autobalancedialog.cpp:54
-#, fuzzy
-msgid "Auto select"
-msgstr "Yhdistä uudelleen"
-
-#: src/autobalancedialog.cpp:66 src/connectwindow.cpp:85
+#: src/autobalancedialog.cpp:64 src/connectwindow.cpp:85
 msgid "Ok"
 msgstr "Ok"
 
@@ -172,15 +162,6 @@ msgstr "Lataa &map"
 msgid "Download m&od"
 msgstr "Lataa m&od"
 
-#: src/battlelistctrl.cpp:549 src/battlelisttab.cpp:113
-msgid "Spectators:"
-msgstr "Katsojat:"
-
-#: src/battlelistctrl.cpp:556
-#, fuzzy
-msgid "Active Players:"
-msgstr "Pelaajat:"
-
 #: src/battlelistfilter.cpp:90
 msgid "Host:"
 msgstr "Palvelin:"
@@ -189,8 +170,7 @@ msgstr "Palvelin:"
 msgid "Status:"
 msgstr "Tila:"
 
-#: src/battlelistfilter.cpp:113 src/battleroomtab.cpp:162
-#: src/battleroomtab.cpp:164
+#: src/battlelistfilter.cpp:113 src/battleroomtab.cpp:142
 msgid "Locked"
 msgstr "Lukittu"
 
@@ -231,7 +211,7 @@ msgstr "Pelaaja:"
 msgid "All"
 msgstr "Kaikki"
 
-#: src/battlelistfilter.cpp:236 src/battlelisttab.cpp:95
+#: src/battlelistfilter.cpp:236 src/battlelisttab.cpp:96
 #: src/replay/replayfilter.cpp:99 src/replay/replaytab.cpp:87
 #: src/singleplayertab.cpp:60
 msgid "Map:"
@@ -245,7 +225,7 @@ msgstr "Vain asennetut kartat"
 msgid "Max.Player:"
 msgstr "Maksimi määrä pelaajia:"
 
-#: src/battlelistfilter.cpp:291 src/battlelisttab.cpp:101
+#: src/battlelistfilter.cpp:291 src/battlelisttab.cpp:102
 #: src/replay/replayfilter.cpp:132 src/replay/replaytab.cpp:93
 #: src/singleplayertab.cpp:69
 msgid "Mod:"
@@ -265,67 +245,71 @@ msgstr "    Katsoja:"
 msgid "%d%"
 msgstr ""
 
-#: src/battlelisttab.cpp:107 src/replay/replaytab.cpp:99
+#: src/battlelisttab.cpp:108 src/replay/replaytab.cpp:99
 msgid "Players:"
 msgstr "Pelaajat:"
 
-#: src/battlelisttab.cpp:139 src/battlelisttab.cpp:141
+#: src/battlelisttab.cpp:114
+msgid "Spectators:"
+msgstr "Katsojat:"
+
+#: src/battlelisttab.cpp:140 src/battlelisttab.cpp:142
 #, fuzzy
 msgid " Filter "
 msgstr "&Tiedosto"
 
-#: src/battlelisttab.cpp:146 src/battlelisttab.cpp:148
+#: src/battlelisttab.cpp:147 src/battlelisttab.cpp:149
 #, fuzzy
 msgid " Battle infos "
 msgstr "Pelilistaus"
 
-#: src/battlelisttab.cpp:152
+#: src/battlelisttab.cpp:153
 #, fuzzy
 msgid "Activated"
 msgstr "Aloitettu"
 
-#: src/battlelisttab.cpp:161
+#: src/battlelisttab.cpp:162
 msgid "Host new..."
 msgstr "Isännöi uusi..."
 
-#: src/battlelisttab.cpp:164
+#: src/battlelisttab.cpp:165
 msgid "Join"
 msgstr "liity"
 
-#: src/battlelisttab.cpp:376
+#: src/battlelisttab.cpp:378
 msgid ""
 "You cannot host a game while being offline. Please connect to a lobby server."
 msgstr ""
 "Et voi isännöidä peliä ellet ole yhdistyneenä. Ole hyvä ja yhdistä "
 "palvelimeen."
 
-#: src/battlelisttab.cpp:376
+#: src/battlelisttab.cpp:378
 msgid "Not Online."
 msgstr "Ei kirjautuneena."
 
-#: src/battlelisttab.cpp:382
+#: src/battlelisttab.cpp:384
 msgid "Hosting is disabled due to the incompatible version you're using"
 msgstr "Pelien isännöinti estetty väärän ohjelmistoversion vuoksi."
 
-#: src/battlelisttab.cpp:382 src/battlelisttab.cpp:387
-#: src/battlelisttab.cpp:543 src/battlelisttab.cpp:559
+#: src/battlelisttab.cpp:384 src/battlelisttab.cpp:389
+#: src/battlelisttab.cpp:564 src/battlelisttab.cpp:580
 #: src/replay/replaytab.cpp:307 src/replay/replaytab.cpp:329
-#: src/settings++/panel_pathoption.cpp:91 src/singleplayertab.cpp:268
-#: src/springoptionstab.cpp:191 src/ui.cpp:616 src/ui.cpp:636
+#: src/settings++/panel_pathoption.cpp:91 src/singleplayertab.cpp:263
+#: src/springoptionstab.cpp:185 src/ui.cpp:616 src/ui.cpp:636
 msgid "Spring error"
 msgstr "Spring virhe"
 
-#: src/battlelisttab.cpp:387
+#: src/battlelisttab.cpp:389
 msgid ""
 "You already are running a Spring instance, close it first in order to be "
 "able to host a new game"
 msgstr "Spring on jo käynnissä. Sulje se jotta voit isännöidä uuden pelin"
 
-#: src/battlelisttab.cpp:392 src/battlelisttab.cpp:549
+#: src/battlelisttab.cpp:394 src/battlelisttab.cpp:570
 msgid "Already in a battle"
 msgstr "Olet jo mukana pelissä"
 
-#: src/battlelisttab.cpp:392
+#: src/battlelisttab.cpp:394
 msgid ""
 "You are already in a battle.\n"
 "\n"
@@ -335,21 +319,21 @@ msgstr ""
 "\n"
 "Haluatko poistua nykyisestä pelistä käynnistääksesi uuden?"
 
-#: src/battlelisttab.cpp:414
+#: src/battlelisttab.cpp:416
 msgid ""
 "Your using wxWidgets prior to version 2.8,\n"
 " port testing is not supported.\n"
 " Hosting may or may not work."
 msgstr ""
 
-#: src/battlelisttab.cpp:421
+#: src/battlelisttab.cpp:423
 #, c-format
 msgid ""
 "The server used for testing your port %d is unreachable. \n"
 "Hosting may or may not work with this setting."
 msgstr ""
 
-#: src/battlelisttab.cpp:429 src/battlelisttab.cpp:439
+#: src/battlelisttab.cpp:431 src/battlelisttab.cpp:441
 #, c-format
 msgid ""
 "Battle not started because the port you selected (%d) is unable to recieve "
@@ -361,15 +345,15 @@ msgid ""
 " option in the hosting settings."
 msgstr ""
 
-#: src/battlelisttab.cpp:452
+#: src/battlelisttab.cpp:454
 msgid "Battle not started beacuse the mod you selected could not be found. "
 msgstr "Peli ei käynnistynyt koska valitsemasi modi ei löytynyt. "
 
-#: src/battlelisttab.cpp:452
+#: src/battlelisttab.cpp:454
 msgid "Error starting battle."
 msgstr "Virhe käynnistäessä peliä."
 
-#: src/battlelisttab.cpp:463 src/battlelisttab.cpp:470
+#: src/battlelisttab.cpp:465 src/battlelisttab.cpp:472
 msgid ""
 "Couldn't find any maps in your spring installation. This could happen when "
 "you set the Spring settings incorrectly."
@@ -377,17 +361,22 @@ msgstr ""
 "Karttatiedostoja ei voitu löytää. Tämä tapahtuu kun et ole säätänyt Spring:"
 "in asetuksia oikein."
 
-#: src/battlelisttab.cpp:463 src/battlelisttab.cpp:470
+#: src/battlelisttab.cpp:465 src/battlelisttab.cpp:472
 msgid "No maps found"
 msgstr "Yhtään karttaa ei löytynyt."
 
-#: src/battlelisttab.cpp:543
+#: src/battlelisttab.cpp:532
+#, fuzzy
+msgid "Battle filter is active"
+msgstr "Pelilistaus"
+
+#: src/battlelisttab.cpp:564
 msgid ""
 "Joining battles is disabled due to the incompatible spring version you're "
 "using."
 msgstr "Peleihin liittyminen on estetty johtuen väärästä Spring-versiosta."
 
-#: src/battlelisttab.cpp:549
+#: src/battlelisttab.cpp:570
 msgid ""
 "You are already in a battle.\n"
 "\n"
@@ -397,70 +386,70 @@ msgstr ""
 "\n"
 "Haluatko poistua nykyisestä pelistä liittyäksesi tähän?"
 
-#: src/battlelisttab.cpp:559
+#: src/battlelisttab.cpp:580
 msgid ""
 "You already are running a Spring instance, close it first in order to be "
 "able to join another battle."
 msgstr "Spring on jo käynnissä. Sulje se pystyäksesi liittymään peliin."
 
-#: src/battlelisttab.cpp:564 src/replay/replaytab.cpp:339
+#: src/battlelisttab.cpp:585 src/replay/replaytab.cpp:339
 msgid "Do you want me to take you to the download page?"
 msgstr ""
 
-#: src/battlelisttab.cpp:566 src/replay/replaytab.cpp:341
+#: src/battlelisttab.cpp:587 src/replay/replaytab.cpp:341
 msgid ""
 "Should i try to download it for you?\n"
 "You can see the progress in the \"Download Manager\" tab."
 msgstr ""
 
-#: src/battlelisttab.cpp:570
+#: src/battlelisttab.cpp:591
 msgid ""
 "You need to download the mod before you can join this game.\n"
 "\n"
 msgstr ""
 
-#: src/battlelisttab.cpp:570 src/replay/replaytab.cpp:347
+#: src/battlelisttab.cpp:591 src/replay/replaytab.cpp:347
 msgid "Mod not available"
 msgstr "Modia ei ole saatavilla"
 
-#: src/battlelisttab.cpp:579
+#: src/battlelisttab.cpp:600
 msgid ""
 "You need to download the map to be able to play in this game.\n"
 "\n"
 msgstr ""
 
-#: src/battlelisttab.cpp:579 src/replay/replaytab.cpp:356
+#: src/battlelisttab.cpp:600 src/replay/replaytab.cpp:356
 msgid "Map not available"
 msgstr "Karttatiedostoa ei saatavilla"
 
-#: src/battlelisttab.cpp:587 src/chatpanel.cpp:1372
+#: src/battlelisttab.cpp:608 src/chatpanel.cpp:1484
 msgid "Battle password"
 msgstr "Pelin salasana"
 
-#: src/battlelisttab.cpp:587
+#: src/battlelisttab.cpp:608
 msgid "Enter password"
 msgstr "Syötä salasana"
 
-#: src/battlemaptab.cpp:86 src/battleroomtab.cpp:197
+#: src/battlemaptab.cpp:86 src/battleroomtab.cpp:156
 msgid "Option"
 msgstr "Asetus"
 
-#: src/battlemaptab.cpp:88 src/battleroomtab.cpp:199
+#: src/battlemaptab.cpp:88 src/battleroomtab.cpp:158
 msgid "Value"
 msgstr "Arvo"
 
-#: src/battlemaptab.cpp:93 src/battleroomtab.cpp:204 src/battleroomtab.cpp:205
-#: src/battleroomtab.cpp:404 src/battleroomtab.cpp:412
+#: src/battlemaptab.cpp:93 src/battleroomtab.cpp:163 src/battleroomtab.cpp:164
+#: src/battleroomtab.cpp:355 src/battleroomtab.cpp:361
 msgid "Size"
 msgstr "Koko"
 
-#: src/battlemaptab.cpp:94 src/battleroomtab.cpp:206 src/battleroomtab.cpp:207
-#: src/battleroomtab.cpp:405 src/battleroomtab.cpp:413
+#: src/battlemaptab.cpp:94 src/battleroomtab.cpp:165 src/battleroomtab.cpp:166
+#: src/battleroomtab.cpp:356 src/battleroomtab.cpp:362
 msgid "Windspeed"
 msgstr "Tuulen nopeus"
 
-#: src/battlemaptab.cpp:95 src/battleroomtab.cpp:208 src/battleroomtab.cpp:209
-#: src/battleroomtab.cpp:406 src/battleroomtab.cpp:414
+#: src/battlemaptab.cpp:95 src/battleroomtab.cpp:167 src/battleroomtab.cpp:168
+#: src/battleroomtab.cpp:357 src/battleroomtab.cpp:363
 msgid "Tidal strength"
 msgstr "Merivirtauksen voimakkuus"
 
@@ -476,7 +465,7 @@ msgstr "Metallinlouhijan säde"
 msgid "Max metal"
 msgstr "Maksimi metalli"
 
-#: src/battlemaptab.cpp:102 src/battleroomtab.cpp:339
+#: src/battlemaptab.cpp:102 src/battleroomtab.cpp:300
 msgid "Fixed"
 msgstr "Ennalta määrätty"
 
@@ -544,15 +533,15 @@ msgstr "suoritin"
 msgid "Resource Bonus"
 msgstr "Resurssilisä"
 
-#: src/battleroomlistctrl.cpp:137 src/battleroomtab.cpp:125
+#: src/battleroomlistctrl.cpp:137 src/battleroomtab.cpp:108
 msgid "Team"
 msgstr "Joukkue"
 
-#: src/battleroomlistctrl.cpp:145 src/battleroomtab.cpp:126
+#: src/battleroomlistctrl.cpp:145 src/battleroomtab.cpp:109
 msgid "Ally"
 msgstr "Liittolainen"
 
-#: src/battleroomlistctrl.cpp:155 src/battleroomtab.cpp:128
+#: src/battleroomlistctrl.cpp:155 src/battleroomtab.cpp:111
 msgid "Side"
 msgstr "Puoli"
 
@@ -565,7 +554,7 @@ msgid "Set Resource Bonus"
 msgstr "Aseta resurssilisä"
 
 #: src/battleroomlistctrl.cpp:169 src/battleroomlistctrl.cpp:433
-#: src/battleroomlistctrl.cpp:442 src/battleroomtab.cpp:109
+#: src/battleroomlistctrl.cpp:442 src/battleroomtab.cpp:94
 msgid "Spectator"
 msgstr "Katsoja"
 
@@ -575,7 +564,7 @@ msgid "Kick"
 msgstr "Potkaise"
 
 #: src/battleroomlistctrl.cpp:176 src/battleroomlistctrl.cpp:436
-#: src/battleroomlistctrl.cpp:445 src/chatpanel.cpp:510
+#: src/battleroomlistctrl.cpp:445 src/chatpanel.cpp:549
 msgid "Ring"
 msgstr "Heräte"
 
@@ -599,11 +588,11 @@ msgstr ""
 "Annettu arvo virheellinen\n"
 " Anna kokonaisluku väliltä 0 - 100"
 
-#: src/battleroomlistctrl.cpp:1085 src/chatpanel.cpp:1599
+#: src/battleroomlistctrl.cpp:1085 src/chatpanel.cpp:1711
 msgid "Enter name"
 msgstr ""
 
-#: src/battleroomlistctrl.cpp:1086 src/chatpanel.cpp:1600
+#: src/battleroomlistctrl.cpp:1086 src/chatpanel.cpp:1712
 msgid ""
 "Please enter the name for the new group.\n"
 "After clicking ok you will be taken to adjust its settings."
@@ -663,228 +652,201 @@ msgstr "oletus"
 msgid "Use the current set of options as mod's default."
 msgstr ""
 
-#: src/battleroommmoptionstab.cpp:142
-#, fuzzy
-msgid "no options available"
-msgstr "Modia ei ole saatavilla"
-
-#: src/battleroommmoptionstab.cpp:434
+#: src/battleroommmoptionstab.cpp:390
 msgid ""
 "Cannot load an options set without a name\n"
 "Please select one from the list and try again."
 msgstr ""
 
-#: src/battleroommmoptionstab.cpp:434 src/battleroommmoptionstab.cpp:447
-#: src/battleroommmoptionstab.cpp:459 src/battleroommmoptionstab.cpp:470
+#: src/battleroommmoptionstab.cpp:390 src/battleroommmoptionstab.cpp:403
+#: src/battleroommmoptionstab.cpp:415 src/battleroommmoptionstab.cpp:426
 #: src/ui.cpp:476 src/ui.cpp:789
 msgid "error"
 msgstr "virhe"
 
-#: src/battleroommmoptionstab.cpp:447
+#: src/battleroommmoptionstab.cpp:403
 msgid ""
 "Cannot save an options set without a name\n"
 "Please write one in the list or chose an existing to overwrite and try again."
 msgstr ""
 
-#: src/battleroommmoptionstab.cpp:459
+#: src/battleroommmoptionstab.cpp:415
 msgid ""
 "Cannot delete an options set without a name\n"
 "Please select one from the list and try again."
 msgstr ""
 
-#: src/battleroommmoptionstab.cpp:470
+#: src/battleroommmoptionstab.cpp:426
 msgid ""
 "No options set is selected to set as default\n"
 "Please select one from the list and try again."
 msgstr ""
 
-#: src/battleroomtab.cpp:102
+#: src/battleroomtab.cpp:87
 msgid "Players with the same team number share control of their units."
 msgstr ""
 
-#: src/battleroomtab.cpp:104
+#: src/battleroomtab.cpp:89
 msgid "Players with the same ally number work together to achieve victory."
 msgstr ""
 
-#: src/battleroomtab.cpp:106
+#: src/battleroomtab.cpp:91
 msgid "Select a color to identify your units in-game"
 msgstr ""
 
-#: src/battleroomtab.cpp:108
+#: src/battleroomtab.cpp:93
 msgid "Select your faction"
 msgstr ""
 
-#: src/battleroomtab.cpp:110
+#: src/battleroomtab.cpp:95
 msgid "Spectate (watch) the battle instead of playing"
 msgstr ""
 
-#: src/battleroomtab.cpp:111
+#: src/battleroomtab.cpp:96
 msgid "I'm ready"
 msgstr "Valmis"
 
-#: src/battleroomtab.cpp:112
+#: src/battleroomtab.cpp:97
 msgid "Click this if you are content with the battle settings."
 msgstr ""
 
-#: src/battleroomtab.cpp:127
+#: src/battleroomtab.cpp:110
 msgid "Color"
 msgstr "Väri"
 
-#: src/battleroomtab.cpp:136
+#: src/battleroomtab.cpp:119
 msgid ""
 "A preview of the selected map.  You can see the starting positions, or (if "
 "set) starting boxes."
 msgstr ""
 
-#: src/battleroomtab.cpp:143 src/chatpanel.cpp:380
+#: src/battleroomtab.cpp:126 src/chatpanel.cpp:404
 msgid "Leave"
 msgstr "Poistu"
 
-#: src/battleroomtab.cpp:144
+#: src/battleroomtab.cpp:127
 msgid "Leave the battle and return to the battle list"
 msgstr ""
 
-#: src/battleroomtab.cpp:145 src/singleplayertab.cpp:97
+#: src/battleroomtab.cpp:128 src/singleplayertab.cpp:97
 msgid "Start"
 msgstr "Käynnistä"
 
-#: src/battleroomtab.cpp:146
+#: src/battleroomtab.cpp:129
 msgid "Start the battle"
 msgstr ""
 
-#: src/battleroomtab.cpp:148
-msgid "Player Management"
-msgstr ""
-
-#: src/battleroomtab.cpp:149
-msgid "Various functions to make team games simplers to setup"
-msgstr ""
-
-#: src/battleroomtab.cpp:151
+#: src/battleroomtab.cpp:130
 msgid "Add Bot..."
 msgstr "Lisää tietokonepelaaja"
 
-#: src/battleroomtab.cpp:152
+#: src/battleroomtab.cpp:131
 msgid "Add a computer-controlled player to the game"
 msgstr ""
 
-#: src/battleroomtab.cpp:154 src/battleroomtab.cpp:156
+#: src/battleroomtab.cpp:132
 msgid "Autolock on start"
 msgstr ""
 
-#: src/battleroomtab.cpp:158
+#: src/battleroomtab.cpp:133
 msgid ""
 "Automatically locks the battle when the game starts and unlock when it's "
 "finished."
 msgstr ""
 
-#: src/battleroomtab.cpp:166
+#: src/battleroomtab.cpp:136
+msgid "Fix colours"
+msgstr ""
+
+#: src/battleroomtab.cpp:137
+msgid "Make player colors unique"
+msgstr ""
+
+#: src/battleroomtab.cpp:139
+msgid "Balance"
+msgstr ""
+
+#: src/battleroomtab.cpp:140
+msgid "Automatically balance players into two or more alliances"
+msgstr ""
+
+#: src/battleroomtab.cpp:143
 msgid "Prevent additional players from joining the battle"
 msgstr ""
 
-#: src/battleroomtab.cpp:168 src/battleroomtab.cpp:170
+#: src/battleroomtab.cpp:144
 msgid "Autohost"
 msgstr ""
 
-#: src/battleroomtab.cpp:172
+#: src/battleroomtab.cpp:145
 msgid ""
 "Toggle autohost mode.  This allows players to control your battle using "
 "commands like '!balance' and '!start'."
 msgstr ""
 
-#: src/battleroomtab.cpp:176
-msgid "Lock Balance"
-msgstr ""
-
-#: src/battleroomtab.cpp:176
-msgid "When activated, prevents anyone but the host to change team and ally"
-msgstr ""
-
-#: src/battleroomtab.cpp:180
-msgid "Balance alliances"
-msgstr ""
-
-#: src/battleroomtab.cpp:180
-msgid "Automatically balance players into two or more alliances"
-msgstr ""
-
-#: src/battleroomtab.cpp:183
-msgid "Fix colours"
-msgstr ""
-
-#: src/battleroomtab.cpp:183
-msgid "Make player colors unique"
-msgstr ""
-
-#: src/battleroomtab.cpp:186
-msgid "Balance teams"
-msgstr ""
-
-#: src/battleroomtab.cpp:186
-msgid ""
-"Automatically balance players into control teams, by default none shares "
-"control"
-msgstr ""
-
-#: src/battleroomtab.cpp:190
+#: src/battleroomtab.cpp:149
 msgid "Load battle preset"
 msgstr ""
 
-#: src/battleroomtab.cpp:285
+#: src/battleroomtab.cpp:244
 msgid "Only the host can change the game options"
 msgstr ""
 
-#: src/battleroomtab.cpp:288
+#: src/battleroomtab.cpp:247
 msgid "Only the host can start the battle."
 msgstr ""
 
-#: src/battleroomtab.cpp:291
-msgid "Only the host can use those functions."
+#: src/battleroomtab.cpp:251
+msgid "Only the host can balance alliances."
 msgstr ""
 
-#: src/battleroomtab.cpp:294 src/battleroomtab.cpp:300
+#: src/battleroomtab.cpp:254
+msgid "Only the host can fix player colours."
+msgstr ""
+
+#: src/battleroomtab.cpp:257 src/battleroomtab.cpp:263
 msgid "Only the host can lock the game."
 msgstr ""
 
-#: src/battleroomtab.cpp:297
+#: src/battleroomtab.cpp:260
 msgid "Only the host can toggle autohost mode."
 msgstr ""
 
-#: src/battleroomtab.cpp:343
+#: src/battleroomtab.cpp:302
 msgid "Boxes"
 msgstr ""
 
-#: src/battleroomtab.cpp:345
+#: src/battleroomtab.cpp:303
 msgid "Pick"
 msgstr ""
 
-#: src/battleroomtab.cpp:357
+#: src/battleroomtab.cpp:312
 msgid "Continue"
 msgstr ""
 
-#: src/battleroomtab.cpp:359
+#: src/battleroomtab.cpp:313
 msgid "End"
 msgstr ""
 
-#: src/battleroomtab.cpp:361
+#: src/battleroomtab.cpp:314
 msgid "Lineage"
 msgstr ""
 
-#: src/battleroomtab.cpp:401
+#: src/battleroomtab.cpp:352
 msgid "Map does not exist."
 msgstr ""
 
-#: src/battleroomtab.cpp:497
+#: src/battleroomtab.cpp:445
 msgid ""
 "There are two or more bots on the same team.  Because bots don't know how to "
 "share, this won't work."
 msgstr ""
 
-#: src/battleroomtab.cpp:497
+#: src/battleroomtab.cpp:445
 msgid "Bot team sharing."
 msgstr "Tietokonepelaaja jaetussa joukkueessa."
 
-#: src/battleroomtab.cpp:505
+#: src/battleroomtab.cpp:452
 msgid ""
 "Some players are not ready yet.\n"
 "Ring these players?"
@@ -892,24 +854,13 @@ msgstr ""
 "Jotkut pelaajat eivät ole valmiita vielä.\n"
 "Lähetetäänkö heille heräte?"
 
-#: src/battleroomtab.cpp:505 src/battleroomtab.cpp:511
+#: src/battleroomtab.cpp:452 src/battleroomtab.cpp:457
 msgid "Not ready"
 msgstr "Ei valmiina"
 
-#: src/battleroomtab.cpp:511
+#: src/battleroomtab.cpp:457
 msgid "Force start?"
 msgstr "Pakota pelin alkaminen?"
-
-#: src/battleroomtab.cpp:516
-msgid ""
-"You have more than 32 players (including spectators) in your battle\n"
-"Spring supports maximum 32"
-msgstr ""
-
-#: src/battleroomtab.cpp:516 src/singleplayertab.cpp:247
-#, fuzzy
-msgid "Num players error"
-msgstr "Pelaajien määrä"
 
 #: src/channel/autojoinchanneldialog.cpp:25
 #, fuzzy
@@ -1047,11 +998,11 @@ msgstr "Palvelin"
 msgid "Client"
 msgstr "Asiakasohjelma"
 
-#: src/chatoptionstab.cpp:223 src/chatpanel.cpp:1336 src/chatpanel.cpp:1510
-#: src/chatpanel.cpp:1516 src/chatpanel.cpp:1609 src/replay/replaytab.cpp:381
-#: src/settings++/tab_abstract.cpp:127 src/tasserver.cpp:454
+#: src/chatoptionstab.cpp:223 src/chatpanel.cpp:1448 src/chatpanel.cpp:1622
+#: src/chatpanel.cpp:1628 src/chatpanel.cpp:1721 src/replay/replaytab.cpp:381
+#: src/settings++/tab_abstract.cpp:127 src/tasserver.cpp:447
 #: src/updater/updater.cpp:39 src/updater/updater.cpp:55
-#: src/updater/updater.cpp:71 src/updater/updater.cpp:74
+#: src/updater/updater.cpp:68 src/updater/updater.cpp:71
 msgid "Error"
 msgstr "Virhe"
 
@@ -1127,426 +1078,426 @@ msgstr ""
 msgid "Additionally play sound/flash titlebar "
 msgstr ""
 
-#: src/chatpanel.cpp:140
+#: src/chatpanel.cpp:147
 msgid "channel_"
 msgstr ""
 
-#: src/chatpanel.cpp:142
+#: src/chatpanel.cpp:149
 msgid "#"
 msgstr ""
 
-#: src/chatpanel.cpp:312
+#: src/chatpanel.cpp:342
 msgid "right click for options (like autojoin)"
 msgstr ""
 
-#: src/chatpanel.cpp:315
+#: src/chatpanel.cpp:345
 msgid "Send"
 msgstr "Lähetä"
 
-#: src/chatpanel.cpp:363
-msgid "Disable text appending (workaround for autoscroll)"
-msgstr ""
-
-#: src/chatpanel.cpp:370
+#: src/chatpanel.cpp:394
 msgid "Auto join this channel"
 msgstr "Liity tähän kanavaan automaattisesti"
 
-#: src/chatpanel.cpp:383
+#: src/chatpanel.cpp:407
 msgid "Display Join/Leave Messages"
 msgstr "Näytä Liity/Poistu -ilmoitukset"
 
-#: src/chatpanel.cpp:389
+#: src/chatpanel.cpp:413
 msgid "Show mute list"
 msgstr ""
 
-#: src/chatpanel.cpp:395
+#: src/chatpanel.cpp:417 src/chatpanel.cpp:471
+msgid "Select all"
+msgstr "Valitse kaikki"
+
+#: src/chatpanel.cpp:419 src/chatpanel.cpp:473
+msgid "Copy"
+msgstr "Kopioi"
+
+#: src/chatpanel.cpp:425
 msgid "Channel info"
 msgstr "Kanavan tiedot"
 
-#: src/chatpanel.cpp:399 src/chatpanel.cpp:1172
+#: src/chatpanel.cpp:429 src/chatpanel.cpp:1284
 msgid "Set topic..."
 msgstr "Aseta kanavan ostikko..."
 
-#: src/chatpanel.cpp:401 src/chatpanel.cpp:1189
+#: src/chatpanel.cpp:431 src/chatpanel.cpp:1301
 msgid "Channel message..."
 msgstr "Kanavan viesti..."
 
-#: src/chatpanel.cpp:405
+#: src/chatpanel.cpp:435
 msgid "Lock..."
 msgstr "Lukitse..."
 
-#: src/chatpanel.cpp:407
+#: src/chatpanel.cpp:437
 msgid "Unlock"
 msgstr "Poista lukitus"
 
-#: src/chatpanel.cpp:411
+#: src/chatpanel.cpp:441
 msgid "Register..."
 msgstr "Rekisteröidy..."
 
-#: src/chatpanel.cpp:413
+#: src/chatpanel.cpp:443
 msgid "Unregister"
 msgstr "Rekisteröinnin poisto"
 
-#: src/chatpanel.cpp:419
+#: src/chatpanel.cpp:449
 msgid "On"
 msgstr "Päällä"
 
-#: src/chatpanel.cpp:421
+#: src/chatpanel.cpp:451
 msgid "Off"
 msgstr "Pois päältä"
 
-#: src/chatpanel.cpp:425
+#: src/chatpanel.cpp:455
 msgid "Is on?"
 msgstr "On päällä?"
 
-#: src/chatpanel.cpp:427
+#: src/chatpanel.cpp:457
 msgid "Spam protection"
 msgstr "Spammin esto"
 
-#: src/chatpanel.cpp:428 src/chatpanel.cpp:534
+#: src/chatpanel.cpp:458 src/chatpanel.cpp:573
 msgid "ChanServ"
 msgstr "ChanServ"
 
-#: src/chatpanel.cpp:434
+#: src/chatpanel.cpp:465
 msgid "Disconnect"
 msgstr "Katkaise yhteys"
 
-#: src/chatpanel.cpp:436
+#: src/chatpanel.cpp:467
 msgid "Reconnect"
 msgstr "Yhdistä uudelleen"
 
-#: src/chatpanel.cpp:445
+#: src/chatpanel.cpp:482
 msgid "Remove..."
 msgstr "Poista..."
 
-#: src/chatpanel.cpp:447
+#: src/chatpanel.cpp:484
 msgid "Change password..."
 msgstr "Vaihda salasana..."
 
-#: src/chatpanel.cpp:449
+#: src/chatpanel.cpp:486
 msgid "Set access..."
 msgstr "Aseta oikeudet..."
 
-#: src/chatpanel.cpp:451
+#: src/chatpanel.cpp:488
 msgid "Accounts"
 msgstr "Tilit"
 
-#: src/chatpanel.cpp:454
+#: src/chatpanel.cpp:491
 msgid "Broadcast..."
 msgstr "Kuulutus..."
 
-#: src/chatpanel.cpp:456
+#: src/chatpanel.cpp:493
 msgid "Admin"
 msgstr "Ylläpitäjä"
 
-#: src/chatpanel.cpp:466
+#: src/chatpanel.cpp:505
 msgid "Open Chat"
 msgstr "Avoin keskustelu"
 
-#: src/chatpanel.cpp:468
+#: src/chatpanel.cpp:507
 msgid "Join same battle"
 msgstr "Liity samaan keskusteluun"
 
-#: src/chatpanel.cpp:474
+#: src/chatpanel.cpp:513
 msgid "Ingame time"
 msgstr "Pelissä vietetty aika"
 
-#: src/chatpanel.cpp:476
+#: src/chatpanel.cpp:515
 msgid "Retrieve IP and Smurfs"
 msgstr "Etsi IP sekä smurffipelaajat"
 
-#: src/chatpanel.cpp:483 src/chatpanel.cpp:521
+#: src/chatpanel.cpp:522 src/chatpanel.cpp:560
 msgid "Mute..."
 msgstr "Hiljennä..."
 
-#: src/chatpanel.cpp:485
+#: src/chatpanel.cpp:524
 msgid "Mute for 5 minutes"
 msgstr "Hiljennä 5 minuutiksi"
 
-#: src/chatpanel.cpp:487
+#: src/chatpanel.cpp:526
 msgid "Mute for 10 minutes"
 msgstr "Hiljennä 10 minuutiksi"
 
-#: src/chatpanel.cpp:489
+#: src/chatpanel.cpp:528
 msgid "Mute for 30 minutes"
 msgstr "Hiljennä 30 minuutiksi"
 
-#: src/chatpanel.cpp:491
+#: src/chatpanel.cpp:530
 msgid "Mute for 2 hours"
 msgstr "Hiljennä 2 tunniksi"
 
-#: src/chatpanel.cpp:493
+#: src/chatpanel.cpp:532
 msgid "Mute for 1 day"
 msgstr "Hiljennä 1 päiväksi"
 
-#: src/chatpanel.cpp:496 src/chatpanel.cpp:523
+#: src/chatpanel.cpp:535 src/chatpanel.cpp:562
 msgid "Unmute"
 msgstr "Poista hiljennys"
 
-#: src/chatpanel.cpp:498
+#: src/chatpanel.cpp:537
 msgid "Mute"
 msgstr "Hiljennä"
 
-#: src/chatpanel.cpp:500 src/chatpanel.cpp:526
+#: src/chatpanel.cpp:539 src/chatpanel.cpp:565
 msgid "Kick..."
 msgstr "Potkaise..."
 
-#: src/chatpanel.cpp:504
+#: src/chatpanel.cpp:543
 msgid "Ban..."
 msgstr "Banni..."
 
-#: src/chatpanel.cpp:506
+#: src/chatpanel.cpp:545
 msgid "Unban"
 msgstr "Poista banni"
 
-#: src/chatpanel.cpp:514
+#: src/chatpanel.cpp:553
 msgid "Slap!"
 msgstr "Läimäytä!"
 
-#: src/chatpanel.cpp:530
+#: src/chatpanel.cpp:569
 msgid "Op"
 msgstr "Anna opit"
 
-#: src/chatpanel.cpp:532
+#: src/chatpanel.cpp:571
 msgid "DeOp"
 msgstr "Poista opit"
 
-#: src/chatpanel.cpp:759
+#: src/chatpanel.cpp:857
 msgid " !! Command: \""
 msgstr " !! Komento: \""
 
-#: src/chatpanel.cpp:759
+#: src/chatpanel.cpp:857
 msgid "\" params: \""
 msgstr "\" parametrit: \""
 
-#: src/chatpanel.cpp:765
+#: src/chatpanel.cpp:863
 msgid "channel"
 msgstr "kanava"
 
-#: src/chatpanel.cpp:766
+#: src/chatpanel.cpp:864
 msgid "battle"
 msgstr "peli"
 
-#: src/chatpanel.cpp:767
+#: src/chatpanel.cpp:865
 msgid "server"
 msgstr "palvelin"
 
-#: src/chatpanel.cpp:779 src/chatpanel.cpp:784
+#: src/chatpanel.cpp:877 src/chatpanel.cpp:882
 msgid " joined the "
 msgstr " liityit peliin "
 
-#: src/chatpanel.cpp:813 src/chatpanel.cpp:818
+#: src/chatpanel.cpp:905 src/chatpanel.cpp:915
 msgid " left the "
 msgstr " poistuit pelistä "
 
-#: src/chatpanel.cpp:843
-#, fuzzy
-msgid " ** Channel topic:"
-msgstr "Kanavan tiedot"
-
-#: src/chatpanel.cpp:850
-#, fuzzy
-msgid " ** Set by "
+#: src/chatpanel.cpp:940
+msgid ""
+"\n"
+" * Set by "
 msgstr ""
 "\n"
 " * Asettaja "
 
-#: src/chatpanel.cpp:877 src/chatpanel.cpp:906 src/chatpanel.cpp:935
+#: src/chatpanel.cpp:967 src/chatpanel.cpp:996 src/chatpanel.cpp:1025
 msgid "Chat closed."
 msgstr "Keskustelu suljettu."
 
-#: src/chatpanel.cpp:918
+#: src/chatpanel.cpp:1008
 msgid "_SERVER"
 msgstr "_PALVELIN"
 
-#: src/chatpanel.cpp:986
+#: src/chatpanel.cpp:1076
 #, c-format
 msgid "Are you sure you want to paste %d lines?"
 msgstr "Oletko varma että haluat liittää %d riviä?"
 
-#: src/chatpanel.cpp:986
+#: src/chatpanel.cpp:1076
 msgid "Flood warning"
 msgstr "Floodaus varoitus"
 
-#: src/chatpanel.cpp:998
+#: src/chatpanel.cpp:1088
 msgid " You have SpringLobby v"
 msgstr " Sinulla on käytössä SpringLobby v"
 
-#: src/chatpanel.cpp:1005
+#: src/chatpanel.cpp:1095
 msgid " You are not in channel or channel does not exist."
 msgstr " Et ole kanavalla tai kanavaa ei ole olemassa."
 
-#: src/chatpanel.cpp:1011 src/chatpanel.cpp:1025 src/chatpanel.cpp:1039
-#: src/chatpanel.cpp:1049
+#: src/chatpanel.cpp:1101 src/chatpanel.cpp:1115 src/chatpanel.cpp:1129
+#: src/chatpanel.cpp:1139
 #, c-format
 msgid ""
 " Error: Command (%s) does not exist, use /help for a list of available "
 "commands."
 msgstr ""
 
-#: src/chatpanel.cpp:1019
+#: src/chatpanel.cpp:1109
 msgid ""
 " You are not in battle or battle does not exist, use /help for a list of "
 "available commands."
 msgstr ""
 
-#: src/chatpanel.cpp:1033
+#: src/chatpanel.cpp:1123
 msgid " User is offline."
 msgstr " Käyttäjä ei ole yhdistyneenä."
 
-#: src/chatpanel.cpp:1060
+#: src/chatpanel.cpp:1150
 msgid " Sent: \""
 msgstr " Lähetetty: \""
 
-#: src/chatpanel.cpp:1060
+#: src/chatpanel.cpp:1150
 msgid "\""
 msgstr "\""
 
-#: src/chatpanel.cpp:1151 src/chatpanel.cpp:1165 src/chatpanel.cpp:1183
-#: src/chatpanel.cpp:1200 src/chatpanel.cpp:1217 src/chatpanel.cpp:1233
-#: src/chatpanel.cpp:1250 src/chatpanel.cpp:1266 src/chatpanel.cpp:1280
-#: src/chatpanel.cpp:1294 src/chatpanel.cpp:1397 src/chatpanel.cpp:1419
-#: src/chatpanel.cpp:1436 src/chatpanel.cpp:1458 src/chatpanel.cpp:1475
+#: src/chatpanel.cpp:1263 src/chatpanel.cpp:1277 src/chatpanel.cpp:1295
+#: src/chatpanel.cpp:1312 src/chatpanel.cpp:1329 src/chatpanel.cpp:1345
+#: src/chatpanel.cpp:1362 src/chatpanel.cpp:1378 src/chatpanel.cpp:1392
+#: src/chatpanel.cpp:1406 src/chatpanel.cpp:1509 src/chatpanel.cpp:1531
+#: src/chatpanel.cpp:1548 src/chatpanel.cpp:1570 src/chatpanel.cpp:1587
 msgid "ChanServ error"
 msgstr "ChanServ virhe"
 
-#: src/chatpanel.cpp:1151 src/chatpanel.cpp:1165 src/chatpanel.cpp:1183
-#: src/chatpanel.cpp:1200 src/chatpanel.cpp:1217 src/chatpanel.cpp:1266
-#: src/chatpanel.cpp:1280 src/chatpanel.cpp:1294 src/chatpanel.cpp:1397
-#: src/chatpanel.cpp:1419 src/chatpanel.cpp:1436 src/chatpanel.cpp:1458
-#: src/chatpanel.cpp:1475
+#: src/chatpanel.cpp:1263 src/chatpanel.cpp:1277 src/chatpanel.cpp:1295
+#: src/chatpanel.cpp:1312 src/chatpanel.cpp:1329 src/chatpanel.cpp:1378
+#: src/chatpanel.cpp:1392 src/chatpanel.cpp:1406 src/chatpanel.cpp:1509
+#: src/chatpanel.cpp:1531 src/chatpanel.cpp:1548 src/chatpanel.cpp:1570
+#: src/chatpanel.cpp:1587
 msgid "ChanServ is not in this channel."
 msgstr "ChanServ ei ole tällä kanavalla."
 
-#: src/chatpanel.cpp:1172
+#: src/chatpanel.cpp:1284
 msgid "What should be the new topic?"
 msgstr "Anna uusi kanavan otsikko?"
 
-#: src/chatpanel.cpp:1189
+#: src/chatpanel.cpp:1301
 msgid "Message:"
 msgstr "Viesti:"
 
-#: src/chatpanel.cpp:1206
+#: src/chatpanel.cpp:1318
 msgid "Lock channel..."
 msgstr "Lukitse kanava..."
 
-#: src/chatpanel.cpp:1206
+#: src/chatpanel.cpp:1318
 msgid "What should the new password be?"
 msgstr "Anna uusi salasana?"
 
-#: src/chatpanel.cpp:1222
+#: src/chatpanel.cpp:1334
 msgid "Unlock Channel"
 msgstr "Poista lukitus"
 
-#: src/chatpanel.cpp:1222
+#: src/chatpanel.cpp:1334
 msgid "Are you sure you want to unlock this channel?"
 msgstr "Oletko varma että haluat poistaa lukituksen tältä kanavalta?"
 
-#: src/chatpanel.cpp:1233 src/chatpanel.cpp:1250
+#: src/chatpanel.cpp:1345 src/chatpanel.cpp:1362
 msgid "ChanServ is not on this server."
 msgstr "ChanServ ei ole tällä palvelimella."
 
-#: src/chatpanel.cpp:1239
+#: src/chatpanel.cpp:1351
 msgid "Register Channel"
 msgstr "Rekisteröi kanava"
 
-#: src/chatpanel.cpp:1239
+#: src/chatpanel.cpp:1351
 msgid "Who should be appointed founder of this channel?"
 msgstr "Kuka nimetään tämän kanavan perustajaksi?"
 
-#: src/chatpanel.cpp:1255
+#: src/chatpanel.cpp:1367
 msgid "Unregister Channel"
 msgstr "Poista rekisteröinti tältä kanavalta"
 
-#: src/chatpanel.cpp:1255
+#: src/chatpanel.cpp:1367
 msgid "Are you sure you want to unregister this channel?"
 msgstr "Oletko varma että haluat poistaa rekisteröinnin tältä kanavalta?"
 
-#: src/chatpanel.cpp:1319
+#: src/chatpanel.cpp:1431
 msgid "Remove User Acount"
 msgstr "Käyttäjätili poistettu"
 
-#: src/chatpanel.cpp:1319
+#: src/chatpanel.cpp:1431
 msgid "What user account do you want to remove today?"
 msgstr "Minkä käyttäjätilin haluat poistaa tänään?"
 
-#: src/chatpanel.cpp:1320
+#: src/chatpanel.cpp:1432
 msgid "Remove Account"
 msgstr "Poista käyttäjätili"
 
-#: src/chatpanel.cpp:1320
+#: src/chatpanel.cpp:1432
 msgid "Are you sure you want to remove the account "
 msgstr "Oletko varma että haluat poistaa käyttäjätilin? "
 
-#: src/chatpanel.cpp:1328 src/chatpanel.cpp:1329
+#: src/chatpanel.cpp:1440 src/chatpanel.cpp:1441
 msgid "Change User Acount Password"
 msgstr "Vaihda käyttäjätilin salasana"
 
-#: src/chatpanel.cpp:1328
+#: src/chatpanel.cpp:1440
 msgid "What user account do you want to change the password for?"
 msgstr "Minkä käyttäjätilin salasanan haluat vaihtaa?"
 
-#: src/chatpanel.cpp:1329
+#: src/chatpanel.cpp:1441
 msgid "What would be the new password?"
 msgstr "Anna uusi salasana?"
 
-#: src/chatpanel.cpp:1336 src/chatpanel.cpp:1510 src/chatpanel.cpp:1516
+#: src/chatpanel.cpp:1448 src/chatpanel.cpp:1622 src/chatpanel.cpp:1628
 msgid "Not Implemented"
 msgstr "Ei toteutettu"
 
-#: src/chatpanel.cpp:1343
+#: src/chatpanel.cpp:1455
 msgid "Broadcast Message"
 msgstr "Kuuluta viesti"
 
-#: src/chatpanel.cpp:1343
+#: src/chatpanel.cpp:1455
 msgid "Message to be broadcasted:"
 msgstr "Kuulutettava viesti:"
 
-#: src/chatpanel.cpp:1365
+#: src/chatpanel.cpp:1477
 msgid "You don't have the mod "
 msgstr ""
 
-#: src/chatpanel.cpp:1366
+#: src/chatpanel.cpp:1478
 msgid " . Please download it first"
 msgstr ""
 
-#: src/chatpanel.cpp:1366
+#: src/chatpanel.cpp:1478
 msgid "Mod unavailable"
 msgstr ""
 
-#: src/chatpanel.cpp:1372
+#: src/chatpanel.cpp:1484
 msgid "This battle is password protected, enter the password."
 msgstr "Tämä peli on suojattu, anna salasana."
 
-#: src/chatpanel.cpp:1402
+#: src/chatpanel.cpp:1514
 msgid "Mute User"
 msgstr "Hiljennä käyttäjä"
 
-#: src/chatpanel.cpp:1402
+#: src/chatpanel.cpp:1514
 msgid "For how many minutes should the user be muted?"
 msgstr "Miten moneksi minuutiksi käyttäjä hiljennetään?"
 
-#: src/chatpanel.cpp:1444
+#: src/chatpanel.cpp:1556
 msgid "Kick User"
 msgstr "Potkaise käyttäjä"
 
-#: src/chatpanel.cpp:1444 src/chatpanel.cpp:1503
+#: src/chatpanel.cpp:1556 src/chatpanel.cpp:1615
 msgid "Reason:"
 msgstr "Syy:"
 
-#: src/chatpanel.cpp:1503
+#: src/chatpanel.cpp:1615
 msgid "Kick user"
 msgstr "Potkaise käyttäjä"
 
-#: src/chatpanel.cpp:1523
+#: src/chatpanel.cpp:1635
 msgid "Mute user"
 msgstr "Hiljennä käyttäjä"
 
-#: src/chatpanel.cpp:1523
+#: src/chatpanel.cpp:1635
 msgid "Duration:"
 msgstr "Kesto:"
 
-#: src/chatpanel.cpp:1609
+#: src/chatpanel.cpp:1721
 msgid "couldn't add user"
 msgstr ""
 
@@ -2822,6 +2773,35 @@ msgstr "Käyttäjän nimi"
 msgid "Add New Group"
 msgstr ""
 
+#: src/groupuserdialog.cpp:72
+#, fuzzy
+msgid "Add user"
+msgstr "(%d käyttäjät)"
+
+#: src/groupuserdialog.cpp:73
+#, fuzzy
+msgid "Remove selected"
+msgstr "Ei modia valittuna."
+
+#: src/groupuserdialog.cpp:74
+msgid "you can also enter a ';' seperated list of usernames:"
+msgstr ""
+
+#: src/groupuserdialog.cpp:83
+msgid "not connected to server, no user to display"
+msgstr ""
+
+#: src/groupuserdialog.cpp:153
+msgid ""
+"At least one username contained non-ascii or whitespace character.\n"
+"Please correct and try again."
+msgstr ""
+
+#: src/groupuserdialog.cpp:154
+#, fuzzy
+msgid "Invalid usernames"
+msgstr "Virheellinen numero"
+
 #: src/hostbattledialog.cpp:47
 msgid "Host new battle"
 msgstr "Isännöi uusi peli"
@@ -3287,38 +3267,38 @@ msgstr ""
 msgid "Not connected"
 msgstr "Yhdistä uudelleen"
 
-#: src/mapctrl.cpp:544
+#: src/mapctrl.cpp:540
 #, c-format
 msgid "Metal: %.1f%%"
 msgstr ""
 
-#: src/mapctrl.cpp:626 src/mapctrl.cpp:627
+#: src/mapctrl.cpp:622 src/mapctrl.cpp:623
 msgid "Refresh"
 msgstr "Päivitä"
 
-#: src/mapctrl.cpp:628 src/mapctrl.cpp:629
+#: src/mapctrl.cpp:624 src/mapctrl.cpp:625
 msgid "Download"
 msgstr "Lataa"
 
-#: src/mapctrl.cpp:798
+#: src/mapctrl.cpp:793
 msgid "side:"
 msgstr "Puoli:"
 
-#: src/mapctrl.cpp:822
+#: src/mapctrl.cpp:817
 #, c-format
 msgid "ally:   %d"
 msgstr "liitto: %d"
 
-#: src/mapctrl.cpp:832
+#: src/mapctrl.cpp:827
 #, c-format
 msgid "bonus: %d%%"
 msgstr "bonus: %d%%"
 
-#: src/mmoptionswrapper.cpp:101
+#: src/mmoptionswrapper.cpp:85
 msgid "Start Position Type"
 msgstr "Aloituskohtien tyyppi"
 
-#: src/mmoptionswrapper.cpp:102
+#: src/mmoptionswrapper.cpp:86
 msgid ""
 "How players will select where to be spawned in the map\n"
 "0: fixed map positions\n"
@@ -3332,12 +3312,12 @@ msgstr ""
 "2: valitse pelissä\n"
 "3: valitse ennen pelin alkua"
 
-#: src/mmoptionswrapper.cpp:108
+#: src/mmoptionswrapper.cpp:92
 #, fuzzy
 msgid "List of restricted units"
 msgstr "Kielletyt yksiköt"
 
-#: src/mmoptionswrapper.cpp:110
+#: src/mmoptionswrapper.cpp:94
 msgid "Map name"
 msgstr ""
 
@@ -3463,85 +3443,85 @@ msgstr ""
 msgid "Select Users"
 msgstr "Valitse"
 
-#: src/serverevents.cpp:112
+#: src/serverevents.cpp:107
 msgid "Ping Timeout!"
 msgstr "Ping kutsun aikavirhe!"
 
-#: src/serverevents.cpp:132
+#: src/serverevents.cpp:123
 #, fuzzy
 msgid " is online"
 msgstr " Käyttäjä ei ole yhdistyneenä."
 
-#: src/serverevents.cpp:154
+#: src/serverevents.cpp:144
 msgid " is now "
 msgstr ""
 
-#: src/serverevents.cpp:177
+#: src/serverevents.cpp:162
 msgid "OnUserStatus() failed ! (exception)"
 msgstr "OnUserStatus() epäonnistui ! (exception)"
 
-#: src/serverevents.cpp:191
+#: src/serverevents.cpp:175
 #, fuzzy
 msgid " just went offline"
 msgstr " Käyttäjä ei ole yhdistyneenä."
 
-#: src/serverevents.cpp:226
+#: src/serverevents.cpp:207
 #, fuzzy
 msgid " opened battle "
 msgstr " liityit peliin "
 
-#: src/serverevents.cpp:514
+#: src/serverevents.cpp:438
 msgid "Join channel failed"
 msgstr ""
 
-#: src/serverevents.cpp:514
+#: src/serverevents.cpp:438
 msgid "Could not join channel "
 msgstr ""
 
-#: src/serverevents.cpp:514
+#: src/serverevents.cpp:438
 msgid " because: "
 msgstr ""
 
-#: src/serverevents.cpp:741
+#: src/serverevents.cpp:620
 msgid "Server Message"
 msgstr ""
 
-#: src/serverevents.cpp:787
+#: src/serverevents.cpp:664
 #, c-format
 msgid " has ip=%s"
 msgstr ""
 
-#: src/serverevents.cpp:793
+#: src/serverevents.cpp:669
 msgid " does not really support nat traversal"
 msgstr ""
 
-#: src/serverevents.cpp:806
+#: src/serverevents.cpp:680
 msgid "You were kicked from the battle!"
 msgstr ""
 
-#: src/serverevents.cpp:806
+#: src/serverevents.cpp:680
 msgid "Kicked by Host"
 msgstr ""
 
-#: src/serverevents.cpp:838
+#: src/serverevents.cpp:712
 msgid "Begin mutelist for "
 msgstr ""
 
-#: src/serverevents.cpp:838
+#: src/serverevents.cpp:712
 #, fuzzy
 msgid " mutelist"
 msgstr "Pelilistaus"
 
-#: src/serverevents.cpp:845
+#: src/serverevents.cpp:719
 msgid " indefinite time remaining"
 msgstr ""
 
-#: src/serverevents.cpp:847
+#: src/serverevents.cpp:721
 #, c-format
 msgid " %d minutes remaining"
 msgstr ""
 
-#: src/serverevents.cpp:853
+#: src/serverevents.cpp:727
 msgid "End mutelist for "
 msgstr ""
 
@@ -4285,7 +4265,7 @@ msgstr ""
 msgid "everyone reporting bugs/suggestions"
 msgstr ""
 
-#: src/settings++/Main.cpp:97
+#: src/settings++/Main.cpp:95
 msgid ""
 "The application has generated a fatal error and will be terminated\n"
 "Generating a bug report is not possible\n"
@@ -4293,7 +4273,7 @@ msgid ""
 "please enable wxUSE_DEBUGREPORT"
 msgstr ""
 
-#: src/settings++/Main.cpp:97 src/springlobbyapp.cpp:225
+#: src/settings++/Main.cpp:95 src/springlobbyapp.cpp:229
 msgid "Critical error"
 msgstr ""
 
@@ -4325,7 +4305,7 @@ msgstr ""
 msgid "Choose an unitsync library"
 msgstr ""
 
-#: src/settings++/panel_pathoption.cpp:76 src/springoptionstab.cpp:173
+#: src/settings++/panel_pathoption.cpp:76 src/springoptionstab.cpp:167
 msgid "Any File"
 msgstr ""
 
@@ -4357,15 +4337,15 @@ msgstr ""
 msgid "very high"
 msgstr ""
 
-#: src/settings++/se_utils.cpp:58
+#: src/settings++/se_utils.cpp:51
 msgid "can't launch default browser"
 msgstr ""
 
-#: src/settings++/se_utils.cpp:59 src/ui.cpp:368 src/ui.cpp:376
+#: src/settings++/se_utils.cpp:52 src/ui.cpp:368 src/ui.cpp:376
 msgid "Couldn't launch browser. URL is: "
 msgstr ""
 
-#: src/settings++/se_utils.cpp:59 src/ui.cpp:368 src/ui.cpp:376
+#: src/settings++/se_utils.cpp:52 src/ui.cpp:368 src/ui.cpp:376
 msgid "Couldn't launch browser."
 msgstr ""
 
@@ -4527,7 +4507,7 @@ msgstr ""
 
 #: src/singleplayertab.cpp:94
 #, fuzzy
-msgid "Random start positions"
+msgid "Random start postisions"
 msgstr "Aloituskohdat"
 
 #: src/singleplayertab.cpp:134 src/singleplayertab.cpp:155
@@ -4553,19 +4533,15 @@ msgstr ""
 msgid "No Bot added"
 msgstr ""
 
-#: src/singleplayertab.cpp:247
-msgid "Spring only supports up to 16 different teams"
-msgstr ""
-
-#: src/singleplayertab.cpp:268
+#: src/singleplayertab.cpp:263
 msgid "You cannot start a spring instance while another is already running"
 msgstr ""
 
-#: src/springlobbyapp.cpp:145
+#: src/springlobbyapp.cpp:142
 msgid "Hi "
 msgstr ""
 
-#: src/springlobbyapp.cpp:145
+#: src/springlobbyapp.cpp:142
 msgid ""
 ",\n"
 "It looks like this is your first time using SpringLobby. I have guessed a "
@@ -4576,11 +4552,11 @@ msgid ""
 "enjoy a nice game of Spring :)"
 msgstr ""
 
-#: src/springlobbyapp.cpp:145
+#: src/springlobbyapp.cpp:142
 msgid "Welcome"
 msgstr ""
 
-#: src/springlobbyapp.cpp:148
+#: src/springlobbyapp.cpp:145
 msgid ""
 "You're using a wxwidgets library of the 2.6.x series\n"
 " battle filtering, advanced gui and joining/hosting games using nat "
@@ -4588,33 +4564,33 @@ msgid ""
 " won't be available"
 msgstr ""
 
-#: src/springlobbyapp.cpp:148
+#: src/springlobbyapp.cpp:145
 msgid "Missing Functionality"
 msgstr ""
 
-#: src/springlobbyapp.cpp:162
+#: src/springlobbyapp.cpp:166
 msgid ""
 "Do you want to download OTA content?\n"
 "You need this to be able to play TA based mods.\n"
 "You need to own a copy of Total Annihilation do legally download it."
 msgstr ""
 
-#: src/springlobbyapp.cpp:164
+#: src/springlobbyapp.cpp:168
 msgid "Download OTA content?"
 msgstr ""
 
-#: src/springlobbyapp.cpp:169
+#: src/springlobbyapp.cpp:173
 msgid ""
-"By default SpringLobby reports some statistics.\n"
+"By default SpringLobby reports some statistics.?\n"
 "You can disable that on options tab --> General."
 msgstr ""
 
-#: src/springlobbyapp.cpp:170
+#: src/springlobbyapp.cpp:174
 #, fuzzy
 msgid "Notice"
 msgstr "Ei mitään"
 
-#: src/springlobbyapp.cpp:225
+#: src/springlobbyapp.cpp:229
 msgid ""
 "The application has generated a fatal error and will be terminated\n"
 "Generating a bug report is not possible\n"
@@ -4622,35 +4598,35 @@ msgid ""
 "please get a wxWidgets library that supports wxUSE_DEBUGREPORT"
 msgstr ""
 
-#: src/springlobbyapp.cpp:245
+#: src/springlobbyapp.cpp:249
 #, fuzzy
 msgid "Do nothing"
 msgstr "\"Hole Punching\" tekniikka"
 
-#: src/springlobbyapp.cpp:246
+#: src/springlobbyapp.cpp:250
 msgid "Create a folder in a custom path (you'll get prompted for the path)"
 msgstr ""
 
-#: src/springlobbyapp.cpp:247
+#: src/springlobbyapp.cpp:251
 msgid "I have already a SpringData folder, i want to browse manually for it"
 msgstr ""
 
-#: src/springlobbyapp.cpp:250
+#: src/springlobbyapp.cpp:254
 msgid ""
 "Looks like you don't have yet a user SpringData folder structure\n"
-"What would you like to do? (leave default choice if you don't know what this "
-"is for)"
+"What would you like to do? (leave default choice if you don't know what is "
+"this for)"
 msgstr ""
 
-#: src/springlobbyapp.cpp:251
+#: src/springlobbyapp.cpp:255
 msgid "First time wizard"
 msgstr ""
 
-#: src/springlobbyapp.cpp:259
+#: src/springlobbyapp.cpp:263
 msgid "Choose a folder"
 msgstr ""
 
-#: src/springlobbyapp.cpp:274
+#: src/springlobbyapp.cpp:278
 msgid ""
 "Something went wrong when creating the directories\n"
 "Please create manually the following folders:"
@@ -4676,34 +4652,34 @@ msgstr ""
 msgid "Auto Configure"
 msgstr ""
 
-#: src/springoptionstab.cpp:162
+#: src/springoptionstab.cpp:156
 msgid "Choose a Spring executable"
 msgstr ""
 
-#: src/springoptionstab.cpp:170
+#: src/springoptionstab.cpp:164
 msgid "Choose UnitSync library"
 msgstr ""
 
-#: src/springoptionstab.cpp:173
+#: src/springoptionstab.cpp:167
 msgid "Library"
 msgstr ""
 
-#: src/springoptionstab.cpp:190
+#: src/springoptionstab.cpp:184
 msgid ""
 "SpringLobby is unable to load your UnitSync library.\n"
 "\n"
 "You might want to take another look at your unitsync setting."
 msgstr ""
 
-#: src/tasserver.cpp:334
+#: src/tasserver.cpp:327
 msgid "Connection timed out"
 msgstr ""
 
-#: src/tasserver.cpp:347
+#: src/tasserver.cpp:340
 msgid "Unknown answer from server"
 msgstr "Tuntematon vastaus palvelimelta"
 
-#: src/tasserver.cpp:454
+#: src/tasserver.cpp:447
 msgid ""
 "Failed to punch through NAT, playing this battle might not work for you or "
 "for other players."
@@ -4811,13 +4787,13 @@ msgstr ""
 msgid "maximum number of concurrent connections"
 msgstr ""
 
-#: src/torrentwrapper.cpp:332
+#: src/torrentwrapper.cpp:330
 msgid ""
 "Tried all known trackers for torrent system. No connection could be "
 "established"
 msgstr ""
 
-#: src/torrentwrapper.cpp:333
+#: src/torrentwrapper.cpp:331
 msgid "Torrent system failure"
 msgstr ""
 
@@ -5035,7 +5011,7 @@ msgstr "Sinun versio: "
 msgid "Latest Version: "
 msgstr "Viimeisin versio: "
 
-#: src/updater/updater.cpp:48 src/updater/updater.cpp:64
+#: src/updater/updater.cpp:48
 msgid ""
 "Your SpringLobby version is not up to date.\n"
 "\n"
@@ -5051,7 +5027,7 @@ msgid ""
 "automatically used next time you launch the lobby again."
 msgstr ""
 
-#: src/updater/updater.cpp:48 src/updater/updater.cpp:64
+#: src/updater/updater.cpp:48
 msgid "Not up to Date"
 msgstr "Ei ajan tasalla"
 
@@ -5061,7 +5037,7 @@ msgid ""
 "Please update manually or enable write permissions for the current user."
 msgstr ""
 
-#: src/updater/updater.cpp:71
+#: src/updater/updater.cpp:68
 #, fuzzy
 msgid ""
 "There was an error downloading for the latest version.\n"
@@ -5072,7 +5048,7 @@ msgstr ""
 "Kokeile myöhemmin uudelleen.\n"
 "Jos ongelma pysyy, voit tehdä siitä ilmoituksen springlobby:n kehittäjille."
 
-#: src/updater/updater.cpp:74
+#: src/updater/updater.cpp:71
 #, fuzzy, c-format
 msgid ""
 "There was an error while trying to replace the current executable version\n"
@@ -5084,11 +5060,11 @@ msgstr ""
 "Kokeile myöhemmin uudelleen.\n"
 "Jos ongelma pysyy, voit tehdä siitä ilmoituksen springlobby:n kehittäjille."
 
-#: src/updater/updater.cpp:78
+#: src/updater/updater.cpp:75
 msgid "Update complete. The changes will be available next lobby start."
 msgstr ""
 
-#: src/updater/updater.cpp:78
+#: src/updater/updater.cpp:75
 #, fuzzy
 msgid "Success"
 msgstr "Aseta oikeudet..."
@@ -5228,28 +5204,6 @@ msgstr "Lisää tietokonepelaaja"
 #, fuzzy
 msgid "Remove from group"
 msgstr "Käyttäjätili poistettu"
-
-#, fuzzy
-#~ msgid "Battle filter is active"
-#~ msgstr "Pelilistaus"
-
-#~ msgid "Select all"
-#~ msgstr "Valitse kaikki"
-
-#~ msgid "Copy"
-#~ msgstr "Kopioi"
-
-#, fuzzy
-#~ msgid "Add user"
-#~ msgstr "(%d käyttäjät)"
-
-#, fuzzy
-#~ msgid "Remove selected"
-#~ msgstr "Ei modia valittuna."
-
-#, fuzzy
-#~ msgid "Invalid usernames"
-#~ msgstr "Virheellinen numero"
 
 #, fuzzy
 #~ msgid ""
