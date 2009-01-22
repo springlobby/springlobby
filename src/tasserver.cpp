@@ -7,6 +7,7 @@
 #include <wx/socket.h>
 #include <wx/log.h>
 #include <wx/tokenzr.h>
+#include <wx/platinfo.h>
 
 #include <stdexcept>
 #include <algorithm>
@@ -655,7 +656,8 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
 						aux.Replace( _T(" "), _T("") );
 						aux = _T(" ") + aux;
 					#endif
-					wxString os = _T("crap");
+					wxString os = wxPlatformInfo::Get().GetOperatingSystemIdName();
+					os.Replace( _T(" "), _T("") );
 					wxString wxversion = wxVERSION_STRING;
 					wxversion.Replace( _T(" "), _T("") );
 					wxString reportstring = _T("stats.report ") + version + _T(" ") + wxversion + _T(" ") + os + aux;
