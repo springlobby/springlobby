@@ -1,10 +1,6 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_SINGLEPLAYERBATTLE_H
 #define SPRINGLOBBY_HEADERGUARD_SINGLEPLAYERBATTLE_H
 
-
-#include <wx/string.h>
-#include <vector>
-
 #include "ibattle.h"
 #include "user.h"
 
@@ -12,8 +8,7 @@ class Ui;
 class BattleBot;
 class MainSinglePlayerTab;
 class wxColour;
-
-
+class wxString;
 
 
 class SinglePlayerBattle: public IBattle

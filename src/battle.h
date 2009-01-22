@@ -1,17 +1,14 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_BATTLE_H
 #define SPRINGLOBBY_HEADERGUARD_BATTLE_H
 
-#include <map>
-#include <list>
 #include <set>
 
 #include "autohost.h"
-#include "userlist.h"
-#include "user.h"
 #include "ibattle.h"
 
 class Ui;
 class Server;
+class User;
 
 
 /** \brief model of a sp/mp battle

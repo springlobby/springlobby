@@ -1,15 +1,10 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_CHATPANEL_H
 #define SPRINGLOBBY_HEADERGUARD_CHATPANEL_H
 
-#include <iostream>
-
 #include <wx/panel.h>
-#include <wx/event.h>
-#include <wx/string.h>
-#include <wx/menu.h>
 #include <wx/textctrl.h>
+#include <vector>
 
-#include "chatlog.h"
 #include "usermenu.h"
 #include "Helper/TextCompletionDatabase.hpp"
 
@@ -19,22 +14,20 @@ class wxBoxSizer;
 class wxSplitterWindow;
 class wxTextCtrl;
 class wxTextCtrlHist;
-class wxRichTextCtrl;
-class wxRichTextAttr;
 class wxTextUrlEvent;
 class wxComboBox;
 class wxButton;
-class wxNotebook;
 class NickListCtrl;
 class Channel;
 class User;
+class ChatLog;
 class Server;
 class Battle;
 class Ui;
 
-class wxFocusEvent;
 class wxMouseEvent;
 class wxAuiNotebook;
+class wxNotebook;
 class wxImageList;
 
 enum ChatPanelType {

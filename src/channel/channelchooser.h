@@ -2,7 +2,6 @@
 #define CHANNELCHOOSERPANEL_H
 
 #include <wx/scrolwin.h>
-#include <vector>
 
 class ChannelListctrl;
 class wxBoxSizer;

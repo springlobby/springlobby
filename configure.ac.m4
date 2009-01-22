@@ -44,6 +44,10 @@ AC_ARG_WITH(boost-prefix,[  --with-boost-prefix=/path/to/boost_topdir (optional)
 AC_ARG_WITH(opt-level,[  --with-opt-level=N (optional) with N = 0..3],
       CXXFLAGS="$CXXFLAGS -O$withval ")
 
+AC_ARG_WITH(aux-version,[  --with-aux-version='some string' (packager use only)],
+      AC_DEFINE_UNQUOTED([AUX_VERSION], " $withval", [] ) )
+
+
 AC_CANONICAL_HOST
 
 AC_LANG([C++])
@@ -62,7 +66,7 @@ AM_PATH_WXCONFIG([2.6.3], [],
            where wxWidgets libraries are installed (returned by
            'wx-config --libs' command) is in LD_LIBRARY_PATH or
            equivalent variable and wxWidgets version is 2.6.3 or above.
-   ])], [base,core,net,adv,qa,richtext,aui])
+   ])], [base,core,net,adv,qa,aui])
 win_build=0
 AC_ARG_VAR([WINDRES], [Windows resource file compiler command])
 if test x$host_os = xmingw32msvc ; then
