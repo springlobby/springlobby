@@ -658,7 +658,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
 					wxString os = _T("crap");
 					wxString wxversion = wxVERSION_STRING;
 					wxversion.Replace( _T(" "), _T("") );
-					wxString reportstring = _T("stats.report ") + wxversion + _T(" ") + os + aux;
+					wxString reportstring = _T("stats.report ") + version + _T(" ") + wxversion + _T(" ") + os + aux;
 					if ( UserExists( _T("insanebot") ) ) SayPrivate( _T("insanebot"), reportstring );
 					if ( UserExists( _T("SL_bot") ) ) SayPrivate( _T("SL_bot"), reportstring );
 				}
