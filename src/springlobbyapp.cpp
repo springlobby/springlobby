@@ -218,6 +218,18 @@ bool SpringLobbyApp::OnInit()
         }
 
         customMessageBoxNoModal(SL_MAIN_ICON, _("By default SpringLobby reports some statistics.\n"
+
+				// copy uikeys.txt
+				wxPathList pl;
+				pl.AddEnvList( _T("%ProgramFiles%") );
+				pl.AddEnvList( _T("XDG_DATA_DIRS") );
+				pl = sett().GetAdditionalSearchPaths( pl );
+				wxString uikeyslocation = pl.FindValidPath( _T("uikeys.txt") );
+				if ( !uikeyslocation.IsEmpty() )
+				{
+					wxCopyFile( uikeyslocation, sett().GetCurrentUsedDataDir() + sep + _T("uikeys.txt"), false );
+				}
+
                                                  "You can disable that on options tab --> General."),_("Notice"),wxOK );
         ui().mw().ShowConfigure();
     }
@@ -342,32 +354,20 @@ void SpringLobbyApp::SetupUserFolders()
 
       if ( createdirs )
       {
-	  if ( dir.IsEmpty() ||
+				if ( dir.IsEmpty() ||
 	       ( !tryCreateDirectory( dir, 0775 ) ||
-		 ( !tryCreateDirectory( dir + sep + _T("mods"), 0775 ) ||
-		   !tryCreateDirectory( dir + sep + _T("maps"), 0775 ) ||
-		   !tryCreateDirectory( dir + sep + _T("base"), 0775 ) ||
-		   !tryCreateDirectory( dir + sep + _T("demos"), 0775 ) ||
-		   !tryCreateDirectory( dir + sep + _T("screenshots"), 0775  ) )
-		   )
-	      )
-	  {
-              if ( dir.IsEmpty() ) dir = defaultdir;
-              wxMessageBox( _("Something went wrong when creating the directories\nPlease create manually the following folders:") + wxString(_T("\n")) + dir +  _T("\n") + dir + sep + _T("mods\n") + dir + sep + _T("maps\n") + dir + sep + _T("base\n") );
-              return;
-          }
-          else
-          {
-          	wxPathList pl;
-						pl.AddEnvList( _T("%ProgramFiles%") );
-						pl.AddEnvList( _T("XDG_DATA_DIRS") );
-						pl = sett().GetAdditionalSearchPaths( pl );
-          	wxString uikeyslocation = pl.FindValidPath( _T("uikeys.txt") );
-            if ( !uikeyslocation.IsEmpty() )
-            {
-              wxCopyFile( uikeyslocation, dir + sep + _T("uikeys.txt"), false );
-            }
-          }
+				 ( !tryCreateDirectory( dir + sep + _T("mods"), 0775 ) ||
+		       !tryCreateDirectory( dir + sep + _T("maps"), 0775 ) ||
+		       !tryCreateDirectory( dir + sep + _T("base"), 0775 ) ||
+		       !tryCreateDirectory( dir + sep + _T("demos"), 0775 ) ||
+					 !tryCreateDirectory( dir + sep + _T("screenshots"), 0775  ) )
+				 )
+	       )
+				{
+					if ( dir.IsEmpty() ) dir = defaultdir;
+					wxMessageBox( _("Something went wrong when creating the directories\nPlease create manually the following folders:") + wxString(_T("\n")) + dir +  _T("\n") + dir + sep + _T("mods\n") + dir + sep + _T("maps\n") + dir + sep + _T("base\n") );
+				r	eturn;
+				}
       }
       usync().SetSpringDataPath(dir);
 #endif
