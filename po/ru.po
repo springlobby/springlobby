@@ -4958,7 +4958,7 @@ msgstr "скачать (KB/s)"
 
 #: src/torrentoptionspanel.cpp:75
 msgid "Numbers"
-msgstr "Номера"
+msgstr ""
 
 #: src/torrentoptionspanel.cpp:79
 msgid "maximum upload speed in KB/sec(-1 for infinite)"
