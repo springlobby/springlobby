@@ -22,6 +22,9 @@
 #include "serverevents.h"
 #include "socket.h"
 #include "channel/channel.h"
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 
 
 /// for SL_MAIN_ICON
