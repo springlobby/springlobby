@@ -311,7 +311,7 @@ void ChatPanel::CreateControls( )
                                    wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_AUTO_URL );
 	if ( m_type == CPT_Channel ) m_chatlog_text->SetToolTip( TE(_("right click for options (like autojoin)" ) ) );
 
-	m_say_text = new wxTextCtrlHist( textcompletiondatabase, m_chat_panel, CHAT_TEXT, _T( "" ), wxDefaultPosition, wxSize( 100, CONTROL_HEIGHT ), wxTE_PROCESS_ENTER | wxTE_MULTILINE | wxTE_PROCESS_TAB );
+	m_say_text = new wxTextCtrlHist( textcompletiondatabase, m_chat_panel, CHAT_TEXT, _T( "" ), wxDefaultPosition, wxSize( 100, CONTROL_HEIGHT ), wxTE_PROCESS_ENTER | wxTE_PROCESS_TAB );
 	m_say_button = new wxButton( m_chat_panel, CHAT_SEND, _( "Send" ), wxDefaultPosition, wxSize( 80, CONTROL_HEIGHT ) );
 
 	// Adding elements to sizers
@@ -971,11 +971,8 @@ void ChatPanel::_SetChannel( Channel* channel )
 
 void ChatPanel::Say( const wxString& message )
 {
-	wxLogDebugFunc( _T( "" ) );
-	wxString messagecopy = message;
-	messagecopy.Replace( _T("\r\n"), _T("\n") );
-	messagecopy.Replace( _T("\r"), _T("\n") );
-	wxStringTokenizer lines( messagecopy, _T( '\n' ) );
+	wxLogDebugFunc( message );
+	wxStringTokenizer lines( message, _T( '\n' ) );
 	if ( lines.CountTokens() > 5 ) {
 		wxMessageDialog dlg( &m_ui.mw(), wxString::Format( _( "Are you sure you want to paste %d lines?" ), lines.CountTokens() ), _( "Flood warning" ), wxYES_NO );
 		if ( dlg.ShowModal() == wxID_NO ) return;
