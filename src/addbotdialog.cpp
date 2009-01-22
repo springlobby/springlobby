@@ -32,7 +32,6 @@ AddBotDialog::AddBotDialog( wxWindow* parent, IBattle& battle , bool singleplaye
 
   this->SetSizeHints( wxDefaultSize, wxDefaultSize );
 
-  wxBoxSizer* m_main_sizer;
   m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
   if ( !m_sp )
@@ -73,9 +72,12 @@ AddBotDialog::AddBotDialog( wxWindow* parent, IBattle& battle , bool singleplaye
   col2.SetText( _("value") );
   col2.SetImage( -1 );
   m_ai_infos_lst->InsertColumn( 1, col2 );
-	m_ai_infos_lst->Hide();
 
-	m_main_sizer->Add( m_ai_infos_lst, 0, wxALL|wxEXPAND, 5 );
+
+	m_info_sizer = new wxBoxSizer(wxVERTICAL);
+	m_info_sizer->Add( m_ai_infos_lst, 0, wxALL|wxEXPAND, 5 );
+	m_main_sizer->Add( m_info_sizer, 0, wxEXPAND, 5 );
+	m_main_sizer->Hide( m_info_sizer );
 
   m_main_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
 
@@ -194,8 +196,8 @@ void AddBotDialog::OnSelectBot( wxCommandEvent& event )
   m_ai_infos_lst->DeleteAllItems();
   wxArrayString info = usync().GetAIInfos( m_ai->GetSelection() );
   int count = info.GetCount();
-	if ( count > 0 ) m_ai_infos_lst->Show();
-	else m_ai_infos_lst->Hide();
+  if ( count > 0 ) m_main_sizer->Show( m_info_sizer );
+  else m_main_sizer->Hide( m_info_sizer );
 	for ( int i = 0; i < count; i = i + 3 )
 	{
 		long index = m_ai_infos_lst->InsertItem( i, info[i] );
@@ -204,5 +206,6 @@ void AddBotDialog::OnSelectBot( wxCommandEvent& event )
 	}
 	m_ai_infos_lst->SetColumnWidth( 0, wxLIST_AUTOSIZE );
 	m_ai_infos_lst->SetColumnWidth( 1, wxLIST_AUTOSIZE );
+	Layout();
 
 }

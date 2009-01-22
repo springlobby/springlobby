@@ -11,6 +11,7 @@ class wxButton;
 class wxCommandEvent;
 class IBattle;
 class wxListCtrl;
+class wxBoxSizer;
 
 /** \brief used in SP/MP BattletAB to present choice of AIs to add
  * \todo DOCMEMORE */
@@ -39,6 +40,9 @@ class AddBotDialog : public wxDialog
     wxButton* m_cancel_btn;
     wxButton* m_add_btn;
     wxListCtrl* m_ai_infos_lst;
+
+    wxBoxSizer* m_main_sizer;
+    wxBoxSizer* m_info_sizer;
 
 
     IBattle& m_battle;
