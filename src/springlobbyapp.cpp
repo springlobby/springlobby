@@ -217,7 +217,8 @@ bool SpringLobbyApp::OnInit()
             m_otadownloader = new HttpDownloader( url, destFilename );
         }
 
-        customMessageBoxNoModal(SL_MAIN_ICON, _("By default SpringLobby reports some statistics.\n"
+        customMessageBoxNoModal(SL_MAIN_ICON, _("By default SpringLobby reports some statistics.\nYou can disable that on options tab --> General."),_("Notice"),wxOK );
+
 
 				// copy uikeys.txt
 				wxPathList pl;
@@ -230,7 +231,6 @@ bool SpringLobbyApp::OnInit()
 					wxCopyFile( uikeyslocation, sett().GetCurrentUsedDataDir() + sep + _T("uikeys.txt"), false );
 				}
 
-                                                 "You can disable that on options tab --> General."),_("Notice"),wxOK );
         ui().mw().ShowConfigure();
     }
     else
