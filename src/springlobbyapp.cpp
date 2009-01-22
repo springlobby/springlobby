@@ -366,7 +366,7 @@ void SpringLobbyApp::SetupUserFolders()
 				{
 					if ( dir.IsEmpty() ) dir = defaultdir;
 					wxMessageBox( _("Something went wrong when creating the directories\nPlease create manually the following folders:") + wxString(_T("\n")) + dir +  _T("\n") + dir + sep + _T("mods\n") + dir + sep + _T("maps\n") + dir + sep + _T("base\n") );
-				r	eturn;
+				return;
 				}
       }
       usync().SetSpringDataPath(dir);
