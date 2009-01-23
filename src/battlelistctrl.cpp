@@ -21,7 +21,7 @@
 #include "aui/auimanager.h"
 #endif
 
-BEGIN_EVENT_TABLE(BattleListCtrl, CustomVirtListCtrl< Battle *>)
+BEGIN_EVENT_TABLE(BattleListCtrl, CustomVirtListCtrl< IBattle *>)
 
   EVT_LIST_ITEM_RIGHT_CLICK( BLIST_LIST, BattleListCtrl::OnListRightClick )
   EVT_LIST_COL_CLICK       ( BLIST_LIST, BattleListCtrl::OnColClick )
@@ -37,7 +37,7 @@ END_EVENT_TABLE()
 Ui* BattleListCtrl::m_ui_for_sort = 0;
 
 BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui ):
-  CustomVirtListCtrl< Battle *>(parent, BLIST_LIST, wxDefaultPosition, wxDefaultSize,
+  CustomVirtListCtrl< IBattle *>(parent, BLIST_LIST, wxDefaultPosition, wxDefaultSize,
             wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("BattleListCtrl"), 10, &CompareOneCrit),
   m_ui(ui)
 {
@@ -92,7 +92,7 @@ wxString BattleListCtrl::OnGetItemText(long item, long column) const
     if ( m_data[item] == NULL )
         return wxEmptyString;
 
-    const Battle& battle= *m_data[item];
+    const IBattle& battle= *m_data[item];
     const BattleOptions& opts = battle.GetBattleOptions();
 
     switch ( column ) {
@@ -124,7 +124,7 @@ int BattleListCtrl::OnGetItemColumnImage(long item, long column) const
     if ( m_data[item] == NULL )
         return -1;
 
-    const Battle& battle= *m_data[item];
+    const IBattle& battle= *m_data[item];
 
     switch ( column ) {
         default: return -1;
@@ -137,7 +137,7 @@ int BattleListCtrl::OnGetItemColumnImage(long item, long column) const
     }
 }
 
-void BattleListCtrl::AddBattle( Battle& battle )
+void BattleListCtrl::AddBattle( IBattle& battle )
 {
     //assert(&battle);
 
@@ -152,7 +152,7 @@ void BattleListCtrl::AddBattle( Battle& battle )
 //    MarkDirtySort();
 }
 
-void BattleListCtrl::RemoveBattle( Battle& battle )
+void BattleListCtrl::RemoveBattle( IBattle& battle )
 {
     int index = GetIndexFromData( &battle );
 
@@ -165,7 +165,7 @@ void BattleListCtrl::RemoveBattle( Battle& battle )
     wxLogError( _T("Didn't find the battle to remove.") );
 }
 
-void BattleListCtrl::UpdateBattle( Battle& battle )
+void BattleListCtrl::UpdateBattle( IBattle& battle )
 {
     int index = GetIndexFromData( &battle );
 
@@ -180,7 +180,7 @@ void BattleListCtrl::HighlightItem( long item )
     if ( item > m_data.size() -1 || item < 0 )
         return;
 
-    const Battle& b = *m_data[item];
+    const IBattle& b = *m_data[item];
     wxString host = b.GetFounder().GetNick();
     HighlightItemUser( item, host );
     if ( useractions().DoActionOnUser( m_highlightAction, host ) )
@@ -275,8 +275,8 @@ int BattleListCtrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir )
 
 int BattleListCtrl::CompareStatus( DataType u1, DataType u2 )
 {
-  const Battle& battle1 = *u1;
-  const Battle& battle2 = *u2;
+  const IBattle& battle1 = *u1;
+  const IBattle& battle2 = *u2;
 
   int b1 = 0, b2 = 0;
 
@@ -309,8 +309,8 @@ int BattleListCtrl::CompareStatus( DataType u1, DataType u2 )
 
 int BattleListCtrl::ComparePlayer( DataType u1, DataType u2 )
 {
-    const Battle& battle1 = *u1;
-    const Battle& battle2 = *u2;
+    const IBattle& battle1 = *u1;
+    const IBattle& battle2 = *u2;
 
     int n1 = battle1.GetNumUsers() - battle1.GetSpectators();
     int n2 = battle2.GetNumUsers() - battle2.GetSpectators();
@@ -325,7 +325,7 @@ void BattleListCtrl::SetTipWindowText( const long item_hit, const wxPoint positi
         return;
     }
 
-    const Battle& battle= *m_data[item];
+    const IBattle& battle= *m_data[item];
 
     int coloumn = getColoumnFromPosition(position);
     switch (coloumn)

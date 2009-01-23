@@ -429,27 +429,28 @@ void BattleListTab::OnFilterActiv( wxCommandEvent& event )
 
 void BattleListTab::OnJoin( wxCommandEvent& event )
 {
-  try
-  {
-    ASSERT_LOGIC( m_battle_list != 0, _T("m_battle_list = 0") );
-  } catch (...) { return; }
+    try
+    {
+        ASSERT_LOGIC( m_battle_list != 0, _T("m_battle_list = 0") );
+    } catch (...) { return; }
 
-  if ( m_battle_list->GetSelectedIndex() < 0 ) return;
+    if ( m_battle_list->GetSelectedIndex() < 0 ) return;
 
-  DoJoin( *m_battle_list->GetSelectedData() );
-//    DoJoin( m_ui.GetServer().battles_iter->GetBattle( m_battle_list->GetItemData( event.GetIndex() ) ) );
+    int id = m_battle_list->GetSelectedData()->GetBattleId();
+    DoJoin( m_ui.GetServer().battles_iter->GetBattle( id ) );
 }
 
 
 void BattleListTab::OnListJoin( wxListEvent& event )
 {
-  try
-  {
-    ASSERT_LOGIC( m_battle_list != 0, _T("m_battle_list = 0") );
-  } catch (...) { return; }
-  if ( event.GetIndex() < 0 ) return;
+    try
+    {
+        ASSERT_LOGIC( m_battle_list != 0, _T("m_battle_list = 0") );
+    } catch (...) { return; }
+    if ( event.GetIndex() < 0 ) return;
 
-  DoJoin( *m_battle_list->GetSelectedData() );
+    int id = m_battle_list->GetSelectedData()->GetBattleId();
+    DoJoin( m_ui.GetServer().battles_iter->GetBattle( id ) );
 }
 
 
@@ -516,7 +517,7 @@ void BattleListTab::OnSelect( wxListEvent& event )
   if ( event.GetIndex() == -1 ) {
     SelectBattle( 0 );
   } else {
-      Battle* b = ( m_battle_list->GetDataFromIndex( event.GetIndex() ) ) ;
+      IBattle* b = ( m_battle_list->GetDataFromIndex( event.GetIndex() ) ) ;
     SelectBattle( b );//
   }
 }

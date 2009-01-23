@@ -15,7 +15,7 @@
 
 User::User( Server& serv )
     : CommonUser( _T("none"),_T("unknown"),0 ),
-    m_serv(serv),
+    m_serv(&serv),
     m_battle(0),
     m_flagicon_idx( icons().GetFlagIcon( _T("unknown") ) ),
     m_rankicon_idx( icons().GetRankIcon( 0 ) ),
@@ -24,7 +24,7 @@ User::User( Server& serv )
 
 User::User( const wxString& nick, Server& serv )
     : CommonUser( nick,_T("unknown"),0 ),
-    m_serv(serv),
+    m_serv(&serv),
     m_battle(0),
     m_flagicon_idx( icons().GetFlagIcon( _T("unknown") ) ),
     m_rankicon_idx( icons().GetRankIcon( 0 ) ),
@@ -33,9 +33,36 @@ User::User( const wxString& nick, Server& serv )
 
 User::User( const wxString& nick, const wxString& country, const int& cpu, Server& serv)
     : CommonUser( nick,country,cpu ),
-    m_serv(serv),
+    m_serv(&serv),
     m_battle(0),
     m_flagicon_idx( icons().GetFlagIcon( country ) ),
+    m_rankicon_idx( icons().GetRankIcon( 0 ) ),
+    m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) )
+{}
+
+User::User( const wxString& nick )
+    : CommonUser( nick, wxEmptyString, 0 ),
+    m_serv(0),
+    m_battle(0),
+    m_flagicon_idx( icons().GetFlagIcon( _T("unknown") ) ),
+    m_rankicon_idx( icons().GetRankIcon( 0 ) ),
+    m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) )
+{}
+
+User::User( const wxString& nick, const wxString& country, const int& cpu )
+    : CommonUser( nick,country,cpu ) ,
+    m_serv(0),
+    m_battle(0),
+    m_flagicon_idx( icons().GetFlagIcon( _T("unknown") ) ),
+    m_rankicon_idx( icons().GetRankIcon( 0 ) ),
+    m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) )
+{}
+
+User::User()
+    : CommonUser( wxEmptyString, wxEmptyString, 0 ),
+    m_serv(0),
+    m_battle(0),
+    m_flagicon_idx( icons().GetFlagIcon( _T("unknown") ) ),
     m_rankicon_idx( icons().GetRankIcon( 0 ) ),
     m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) )
 {}

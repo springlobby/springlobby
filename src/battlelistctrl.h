@@ -7,22 +7,22 @@
 #include "customvirtlistctrl.h"
 
 class wxMenu;
-class Battle;
+class IBattle;
 class wxListEvent;
 class wxCommandEvent;
 class Ui;
 
 /** \brief The ListCtrll contained in BattleListTab dispalying all currently active battles with their infos
  * \todo DOCMEMORE */
-class BattleListCtrl : public CustomVirtListCtrl< Battle *>
+class BattleListCtrl : public CustomVirtListCtrl< IBattle *>
 {
   public:
     BattleListCtrl( wxWindow* parent, Ui& ui );
     ~BattleListCtrl();
 
-    void AddBattle( Battle& battle );
-    void RemoveBattle( Battle& battle );
-    void UpdateBattle( Battle& battle );
+    void AddBattle( IBattle& battle );
+    void RemoveBattle( IBattle& battle );
+    void UpdateBattle( IBattle& battle );
 
 
     void OnListRightClick( wxListEvent& event );
