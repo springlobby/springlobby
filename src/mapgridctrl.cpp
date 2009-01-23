@@ -371,7 +371,7 @@ void MapGridCtrl::OnPaint( wxPaintEvent& event )
 	// This line must come first, to avoid an endless succession of paint messages.
 	// OnPaint handlers must always create a wxPaintDC.
 
-	wxBufferedPaintDC dc( this );
+	wxAutoBufferedPaintDC dc( this );
 
 	DrawBackground( dc );
 
