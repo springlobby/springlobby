@@ -341,6 +341,9 @@ public:
 		void SetParsedTeamsVec( const TeamVec& t ) { m_parsed_teams = t; }
 		void SetParsedAlliesVec( const AllyVec& a ) { m_parsed_allies = a; }
 
+		const BattleOptions& GetBattleOptions() const { return m_opts; }
+
+        bool Equals( const IBattle& other ) const { return m_opts.battleid == other.GetBattleOptions().battleid; }
 
 protected:
 
