@@ -182,7 +182,7 @@ BattleListTab::~BattleListTab()
 }
 
 
-void BattleListTab::SelectBattle( Battle* battle )
+void BattleListTab::SelectBattle( IBattle* battle )
 {
   m_sel_battle = battle;
   m_minimap->SetBattle( m_sel_battle );
@@ -203,7 +203,7 @@ void BattleListTab::SelectBattle( Battle* battle )
   }
 }
 
-void BattleListTab::AddBattle( Battle& battle ) {
+void BattleListTab::AddBattle( IBattle& battle ) {
     if ( battle.GetGUIListActiv() || ( m_filter->GetActiv() && !m_filter->FilterBattle( battle ) ) ) {
         return;
     }
@@ -214,7 +214,7 @@ void BattleListTab::AddBattle( Battle& battle ) {
 }
 
 
-void BattleListTab::RemoveBattle( Battle& battle ) {
+void BattleListTab::RemoveBattle( IBattle& battle ) {
 
     if ( &battle == m_sel_battle ) {
         m_battle_list->ResetSelection();
@@ -234,7 +234,7 @@ void BattleListTab::UserUpdate( User& user )
 }
 
 
-void BattleListTab::UpdateBattle( Battle& battle )
+void BattleListTab::UpdateBattle( IBattle& battle )
 {
     if ( !battle.GetGUIListActiv() ) {
         AddBattle( battle );
@@ -319,9 +319,9 @@ void BattleListTab::OnHost( wxCommandEvent& event )
     BattleOptions bo;
     bo.description = sett().GetLastHostDescription();
     bo.port = sett().GetLastHostPort();
-    bo.nattype = IBattle::NatType(sett().GetLastHostNATSetting());
+    bo.nattype = NatType(sett().GetLastHostNATSetting());
 
-    if ( bo.nattype == IBattle::NAT_None && sett().GetTestHostPort() )
+    if ( bo.nattype == NAT_None && sett().GetTestHostPort() )
     {
         switch ( m_ui.TestHostPort( bo.port ) )
         {

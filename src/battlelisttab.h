@@ -5,6 +5,7 @@
 
 class User;
 class Ui;
+class IBattle;
 class Battle;
 class BattleListCtrl;
 class BattleListFilter;
@@ -30,9 +31,9 @@ class BattleListTab : public wxScrolledWindow
     BattleListTab( wxWindow* parent, Ui& ui );
      ~BattleListTab();
 
-    void AddBattle( Battle& battle );
-    void RemoveBattle( Battle& battle );
-    void UpdateBattle( Battle& battle );
+    void AddBattle( IBattle& battle );
+    void RemoveBattle( IBattle& battle );
+    void UpdateBattle( IBattle& battle );
 
     void UserUpdate( User& user );
 
@@ -40,7 +41,7 @@ class BattleListTab : public wxScrolledWindow
 
     void UpdateList();
 
-    void SelectBattle( Battle* battle );
+    void SelectBattle( IBattle* battle );
 
     void OnHost( wxCommandEvent& event );
     void OnFilter( wxCommandEvent& event );
@@ -94,7 +95,7 @@ class BattleListTab : public wxScrolledWindow
 
     Ui& m_ui;
 
-    Battle* m_sel_battle;
+    IBattle* m_sel_battle;
 
     enum {
         BATTLE_JOIN = wxID_HIGHEST,

@@ -157,6 +157,21 @@ wxColour GetColorFromStrng( const wxString color )
     return wxColour( r%256, g%256, b%256 );
 }
 
+wxColour GetColorFromFloatStrng( const wxString color )
+{
+    wxString c = color;
+    double r = 0, g = 0, b = 0;
+    c.BeforeFirst( ' ' ).ToDouble( &r );
+    c = c.AfterFirst( ' ' );
+    c.BeforeFirst( ' ' ).ToDouble( &g );
+    c = c.AfterFirst( ' ' );
+    c.BeforeFirst( ' ' ).ToDouble( &b );
+    CLAMP( r, 0, 1  );
+    CLAMP( g, 0, 1  );
+    CLAMP( b, 0, 1  );
+    return wxColour( (unsigned char)(r*256), (unsigned char)(g*256), (unsigned char)(b*256) );
+}
+
 wxImage BlendImage( const wxImage& foreground, const wxImage&  background )
 {
     unsigned char* background_data = background.GetData();
@@ -198,11 +213,11 @@ wxImage BlendImage( const wxImage& foreground, const wxImage&  background )
     return background;
 }
 
-wxBitmap* charArr2wxBitmap(const unsigned char * arg, int size)
+wxBitmap charArr2wxBitmap(const unsigned char * arg, int size)
 {
     wxMemoryInputStream istream( arg, size );
     wxImage temp( istream, wxBITMAP_TYPE_PNG );
-    return new wxBitmap(temp );
+    return wxBitmap(temp );
 }
 
 //wxBitmap charArr2wxBitmap(const unsigned char * arg, int size)
@@ -212,7 +227,7 @@ wxBitmap* charArr2wxBitmap(const unsigned char * arg, int size)
 //    return wxBitmap(temp );
 //}
 
-wxBitmap* charArr2wxBitmapWithBlending(const unsigned char * dest, int dest_size, const unsigned char * text, int text_size )
+wxBitmap charArr2wxBitmapWithBlending(const unsigned char * dest, int dest_size, const unsigned char * text, int text_size )
 {
     wxMemoryInputStream istream1( dest, dest_size );
     wxImage dest_img( istream1, wxBITMAP_TYPE_PNG );
@@ -220,16 +235,16 @@ wxBitmap* charArr2wxBitmapWithBlending(const unsigned char * dest, int dest_size
     wxImage text_img( istream2, wxBITMAP_TYPE_PNG );
     wxImage ret = BlendImage(text_img, dest_img );
 
-    return new wxBitmap( ret );
+    return wxBitmap( ret );
 
 }
 
-wxBitmap* BlendBitmaps( const wxBitmap& background, const wxBitmap& overlay, const int dim )
+wxBitmap BlendBitmaps( const wxBitmap& background, const wxBitmap& overlay, const int dim )
 {
     wxImage back = background.ConvertToImage();
     wxImage front = overlay.ConvertToImage();
     wxImage ret = BlendImage( front, back );
-    return new wxBitmap( ret );
+    return wxBitmap( ret );
 }
 
 wxColour GetColourFromUser(wxWindow *parent, const wxColour& colInit, const wxString& caption, const wxString& palette)

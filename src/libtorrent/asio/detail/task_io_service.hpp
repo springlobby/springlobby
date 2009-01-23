@@ -15,10 +15,6 @@
 # pragma once
 #endif // defined(_MSC_VER) && (_MSC_VER >= 1200)
 
-#if defined(ASIO_ENABLE_TWO_LOCK_QUEUE)
-#include "asio/detail/task_io_service_2lock.hpp"
-#else // defined(ASIO_ENABLE_TWO_LOCK_QUEUE)
-
 #include "asio/detail/push_options.hpp"
 
 #include "asio/error_code.hpp"
@@ -419,7 +415,5 @@ private:
 } // namespace asio
 
 #include "asio/detail/pop_options.hpp"
-
-#endif // defined(ASIO_ENABLE_TWO_LOCK_QUEUE)
 
 #endif // ASIO_DETAIL_TASK_IO_SERVICE_HPP

@@ -56,7 +56,7 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, Battle& battle, Ui& ui
 	CustomListCtrl(parent, BRLIST_LIST, wxDefaultPosition, wxDefaultSize,
                 wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL, _T("BattleroomListCtrl"), 10 ),
 	m_battle(battle),m_popup(0),
-  m_sel_user(0), m_sel_bot(0),m_sides(0),m_spec_item(0),m_handicap_item(0),
+  m_sel_user(0), m_sides(0),m_spec_item(0),m_handicap_item(0),
   m_ui(ui)
 {
   #ifndef HAVE_WX26
@@ -195,7 +195,9 @@ void BattleroomListCtrl::UpdateList()
 
 void BattleroomListCtrl::AddUser( User& user )
 {
-  int index = InsertItem( GetItemCount(),icons().ICON_NREADY );
+	int index;
+  if( !user.BattleStatus().IsBot() ) index = InsertItem( GetItemCount(),icons().ICON_NREADY );
+	else index = InsertItem( GetItemCount(),icons().ICON_BOT );
   try
   {
     ASSERT_LOGIC( index != -1, _T("index = -1") );
@@ -203,10 +205,7 @@ void BattleroomListCtrl::AddUser( User& user )
 
   wxLogMessage(_T("BattleroomListCtrl::AddUser index=%d name=%s"),index,user.GetNick().c_str());
 
-  item_content new_content;
-  new_content.is_bot = false;
-  new_content.data = (void*) &user;
-  items.push_back(new_content);
+  items.push_back(&user);
 
   SetItemData(index, (wxUIntPtr)(items.size()-1) );
 
@@ -245,23 +244,56 @@ void BattleroomListCtrl::UpdateUser( const int& index )
 
   if( !GetItem( item ) ) return;
 
-  item_content user_content = items[(size_t)GetItemData( index )];
-  User& user = *((User*) user_content.data);
+  User* tmp = items[(size_t)GetItemData( index )];
+  if ( !tmp ) return;
+	User& user = *tmp;
 
-  int statimg;
-  if ( &m_battle.GetFounder() == &user ) {
-    statimg =icons().GetHostIcon( user.BattleStatus().spectator );
-  } else {
-      bool spec = user.BattleStatus().spectator;
-    statimg = icons().GetReadyIcon( spec, user.BattleStatus().ready, user.BattleStatus().sync );
+  if( !user.BattleStatus().IsBot() )
+  {
+			SetItemColumnImage( index, 4, icons().GetRankIcon( user.GetStatus().rank ) );
+  	 SetItem( index, 5,  user.GetNick() );
+  	 SetItem( index, 8, wxString::Format( _T("%.1f GHz"), user.GetCpu() / 1000.0 ) );
+  	 SetItemColumnImage( index, 3,icons().GetFlagIcon( user.GetCountry() ) );
+		if ( &m_battle.GetFounder() == &user )
+		{
+			SetItemImage( index, icons().GetHostIcon( user.BattleStatus().spectator ) );
+		}
+		else
+		{
+			SetItemImage( index, icons().GetReadyIcon( user.BattleStatus().spectator, user.BattleStatus().ready, user.BattleStatus().sync, user.BattleStatus().IsBot() ) );
+		}
   }
-  SetItemImage( index, statimg );
+  else
+  {
+  	SetItemImage( index, index,icons().ICON_BOT );
+  	SetItemColumnImage( index, 0, icons().ICON_BOT );
+		SetItemColumnImage( index, 3,icons().ICON_NONE );
+		SetItemColumnImage( index, 4,icons().ICON_NONE );
+		SetItem( index, 5, user.GetNick() + _T(" (") + user.BattleStatus().owner + _T(")") );
 
+		wxString botname = user.BattleStatus().aishortname;
+		if ( !user.BattleStatus().aiversion.IsEmpty() ) botname += _T(" ") + user.BattleStatus().aiversion;
+		if ( !usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) )
+		{
+			if ( botname.Contains(_T('.')) ) botname = botname.BeforeLast(_T('.'));
+			if ( botname.Contains(_T('/')) ) botname = botname.AfterLast(_T('/'));
+			if ( botname.Contains(_T('\\')) ) botname = botname.AfterLast(_T('\\'));
+			if ( botname.Contains(_T("LuaAI:")) ) botname = botname.AfterFirst(_T(':'));
+		}
+
+		SetItem( index, 8, botname );
+
+  }
   SetItemColumnImage( index, 1, -1 );
+	SetItemColumnImage( index, 5, -1 );
 
-  if ( !user.BattleStatus().spectator ) {
-    icons().SetColourIcon( user.BattleStatus().team, user.BattleStatus().colour );
-
+  if ( !user.BattleStatus().spectator )
+  {
+		icons().SetColourIcon( user.BattleStatus().team, user.BattleStatus().colour );
+    SetItem( index, 6, wxString::Format( _T("%d"), user.BattleStatus().team + 1 ) );
+    SetItem( index, 7, wxString::Format( _T("%d"), user.BattleStatus().ally + 1 ) );
+    SetItem( index, 9, wxString::Format( _T("%d%%"), user.BattleStatus().handicap ) );
+    SetItemColumnImage( index, 2, icons().GetColourIcon( user.BattleStatus().team ) );
     try
     {
     	wxArrayString sides = usync().GetSides( m_battle.GetHostModName() );
@@ -274,30 +306,15 @@ void BattleroomListCtrl::UpdateUser( const int& index )
       SetItem( index, 1, wxString::Format( _T("s%d"), user.BattleStatus().side + 1 ) );
     }
 
-    SetItemColumnImage( index, 2, icons().GetColourIcon( user.BattleStatus().team ) );
-
-  } else {
-    SetItemColumnImage( index, 2, -1 );
   }
-
-  SetItemColumnImage( index, 3,icons().GetFlagIcon( user.GetCountry() ) );
-  SetItemColumnImage( index, 4,icons().GetRankIcon( user.GetStatus().rank ) );
-
-  SetItem( index, 5,  user.GetNick() );
-  if ( !user.Status().bot ) SetItemColumnImage( index, 5, -1 );
-  else SetItemColumnImage( index, 5,icons().ICON_BOT );
-
-  if ( !user.BattleStatus().spectator ) {
-    SetItem( index, 6, wxString::Format( _T("%d"), user.BattleStatus().team + 1 ) );
-    SetItem( index, 7, wxString::Format( _T("%d"), user.BattleStatus().ally + 1 ) );
-    SetItem( index, 9, wxString::Format( _T("%d%%"), user.BattleStatus().handicap ) );
-  } else {
+  else
+  {
+  	SetItemColumnImage( index, 2, -1 );
     SetItem( index, 6, _T("") );
     SetItem( index, 7, _T("") );
     SetItem( index, 9, _T("") );
   }
   HighlightItemUser( index, user.GetNick() );
-  SetItem( index, 8, wxString::Format( _T("%.1f GHz"), user.GetCpu() / 1000.0 ) );
 
   MarkDirtySort();
 }
@@ -305,127 +322,21 @@ void BattleroomListCtrl::UpdateUser( const int& index )
 
 int BattleroomListCtrl::GetUserIndex( User& user )
 {
-  for (int i = 0; i < GetItemCount() ; i++ ) {
+  for (int i = 0; i < GetItemCount() ; i++ )
+  {
     wxListItem item;
     item.SetId( i );
     GetItem( item );
 
-    item_content item_data = items[(size_t)GetItemData( i )];
+    User* usr = items[(size_t)GetItemData( i )];
 
-    if(item_data.is_bot) continue;
-
-    if ( (unsigned long)&user == (unsigned long)item_data.data )
+    if ( &user == usr )
       return i;
   }
-  wxLogError( _T("didn't find the battle.") );
+  wxLogError( _T("GetUserIndex didn't find the user in this battle.") );
   return -1;
 }
 
-
-void BattleroomListCtrl::AddBot( BattleBot& bot )
-{
-  int index = InsertItem( GetItemCount(),icons().ICON_BOT );
-  try
-  {
-    ASSERT_LOGIC( index != -1, _T("index = -1") );
-  } catch (...) { return; }
-
-  item_content new_content;
-  new_content.is_bot = true;
-  new_content.data = (void*) &bot;
-  items.push_back(new_content);
-
-  SetItemData(index, (wxUIntPtr)(items.size()-1) );
-
-  UpdateBot( index );
-  MarkDirtySort();
-}
-
-
-void BattleroomListCtrl::RemoveBot( BattleBot& bot )
-{
-  if ( &bot == m_sel_bot ) m_sel_bot = 0;
-  DeleteItem( GetBotIndex( bot ) );
-}
-
-
-void BattleroomListCtrl::UpdateBot( BattleBot& bot )
-{
-  UpdateBot( GetBotIndex( bot ) );
-}
-
-
-void BattleroomListCtrl::UpdateBot( const int& index )
-{
-  try
-  {
-    ASSERT_LOGIC( index != -1, _T("index = -1") );
-  } catch (...) { return; }
-
-  wxListItem item;
-  item.SetId( index );
-
-  if( !GetItem( item ) ) return;
-
-  item_content bot_content = items[(size_t)GetItemData( index )];
-  BattleBot& bot = *((BattleBot*)bot_content.data);
-
-  icons().SetColourIcon( bot.bs.team,  bot.bs.colour );
-
-  SetItemImage( index,icons().ICON_BOT );
-
-  SetItemColumnImage( index, 1, -1 );
-
-  try
-  {
-		wxArrayString sides = usync().GetSides( m_battle.GetHostModName() );
-		ASSERT_EXCEPTION( bot.bs.side < sides.GetCount(), _T("Side index too high") );
-    int sideimg = icons().GetSideIcon( m_battle.GetHostModName(), bot.bs.side );
-    if ( sideimg >= 0 ) SetItemColumnImage( index, 1, sideimg );
-    else SetItem( index, 1, sides[bot.bs.side] );
-  } catch ( ... ) {
-    SetItem( index, 1, wxString::Format( _T("s%d"), bot.bs.side + 1 ) );
-  }
-
-  SetItemColumnImage( index, 2, icons().GetColourIcon( bot.bs.team ) );
-
-  SetItemColumnImage( index, 3,icons().ICON_NONE );
-  SetItemColumnImage( index, 4,icons().ICON_NONE );
-
-  SetItem( index, 5, bot.name + _T(" (") + bot.owner + _T(")") );
-
-  SetItem( index, 6, wxString::Format( _T("%d"), bot.bs.team + 1 ) );
-  SetItem( index, 7, wxString::Format( _T("%d"), bot.bs.ally + 1 ) );
-  SetItem( index, 9, wxString::Format( _T("%d%%"), bot.bs.handicap ) );
-
-  wxString botdll = bot.aidll;
-  if ( botdll.Contains(_T('.')) ) botdll = botdll.BeforeLast(_T('.'));
-  if ( botdll.Contains(_T('/')) ) botdll = botdll.AfterLast(_T('/'));
-  if ( botdll.Contains(_T('\\')) ) botdll = botdll.AfterLast(_T('\\'));
-  if ( botdll.Contains(_T("LuaAI:")) ) botdll = botdll.AfterFirst(_T(':'));
-
-  SetItem( index, 8, botdll );
-  MarkDirtySort();
-}
-
-
-int BattleroomListCtrl::GetBotIndex( BattleBot& bot )
-{
-  for (int i = 0; i < GetItemCount() ; i++ ) {
-    wxListItem item;
-    item.SetId( i );
-    GetItem( item );
-
-    item_content item_data = items[(size_t)GetItemData( i )];
-
-    if(!item_data.is_bot) continue;
-
-    if ( (unsigned long)&bot == (unsigned long)item_data.data )
-      return i;
-  }
-  wxLogError( _T("didn't find the bot.") );
-  return -1;
-}
 
 
 void BattleroomListCtrl::OnListRightClick( wxListEvent& event )
@@ -434,21 +345,21 @@ void BattleroomListCtrl::OnListRightClick( wxListEvent& event )
 
   if ( event.GetIndex() == -1 ) return;
 
-  item_content item_content = items[(size_t)GetItemData( event.GetIndex() )];
-
-  if ( item_content.is_bot ) {
+  User* user = items[(size_t)GetItemData( event.GetIndex() )];
+	m_sel_user = user;
+  if ( m_sel_user->BattleStatus().IsBot() )
+  {
     wxLogMessage(_T("Bot"));
-    m_sel_user = 0;
-    m_sel_bot = (BattleBot*)item_content.data;
+
     int item = m_popup->FindItem( _("Spectator") );
     m_popup->Enable( item, false );
     m_popup->Check( item, false );
     m_popup->Enable( m_popup->FindItem( _("Ring") ), false );
     m_popup->Enable( m_popup->FindItem( _("Kick") ),true);
-  } else {
+  }
+  else
+  {
     wxLogMessage(_T("User"));
-    m_sel_bot = 0;
-    m_sel_user = (User*)item_content.data;
     int item = m_popup->FindItem( _("Spectator") );
     m_popup->Check( item, m_sel_user->BattleStatus().spectator );
     m_popup->Enable( item, true );
@@ -458,7 +369,7 @@ void BattleroomListCtrl::OnListRightClick( wxListEvent& event )
   }
 
   wxLogMessage(_T("Popup"));
-  m_popup->EnableItems(!item_content.is_bot, GetSelectedUserNick() );
+  m_popup->EnableItems(!m_sel_user->BattleStatus().IsBot(), GetSelectedUserNick() );
   PopupMenu( m_popup );
   wxLogMessage(_T("Done"));
 }
@@ -468,11 +379,7 @@ void BattleroomListCtrl::OnTeamSelect( wxCommandEvent& event )
 {
   wxLogDebugFunc( _T("") );
   int team = event.GetId() - BRLIST_TEAM;
-  if ( m_sel_bot != 0 ) {
-    m_battle.SetBotTeam( m_sel_bot->name, team );
-  } else if ( m_sel_user != 0 ) {
-    m_battle.ForceTeam( *m_sel_user, team );
-  }
+	if( m_sel_user ) m_battle.ForceTeam( *m_sel_user, team );
 }
 
 
@@ -480,11 +387,7 @@ void BattleroomListCtrl::OnAllySelect( wxCommandEvent& event )
 {
   wxLogDebugFunc( _T("") );
   int ally = event.GetId() - BRLIST_ALLY;
-  if ( m_sel_bot != 0 ) {
-    m_battle.SetBotAlly( m_sel_bot->name, ally );
-  } else if ( m_sel_user != 0 ) {
-    m_battle.ForceAlly( *m_sel_user, ally );
-  }
+	if( m_sel_user ) m_battle.ForceAlly( *m_sel_user, ally );
 }
 
 
@@ -492,17 +395,10 @@ void BattleroomListCtrl::OnColourSelect( wxCommandEvent& event )
 {
   wxLogDebugFunc( _T("") );
 
-  if ( m_sel_bot ) {
-    wxColour CurrentColour = m_sel_bot->bs.colour;
-    CurrentColour = GetColourFromUser(this, CurrentColour);
-    if ( !CurrentColour.IsColourOk() ) return;
-    if(m_sel_bot)m_battle.SetBotColour( m_sel_bot->name, CurrentColour );
-  } else if ( m_sel_user ) {
-    wxColour CurrentColour = m_sel_user->BattleStatus().colour;
-    CurrentColour = GetColourFromUser(this, CurrentColour);
-    if ( !CurrentColour.IsColourOk() ) return;
-    if(m_sel_user)m_battle.ForceColour( *m_sel_user, CurrentColour );
-  }
+	wxColour CurrentColour = m_sel_user->BattleStatus().colour;
+	CurrentColour = GetColourFromUser(this, CurrentColour);
+	if ( !CurrentColour.IsColourOk() ) return;
+	if( m_sel_user ) m_battle.ForceColour( *m_sel_user, CurrentColour );
 
 }
 
@@ -511,11 +407,7 @@ void BattleroomListCtrl::OnSideSelect( wxCommandEvent& event )
 {
   wxLogDebugFunc( _T("") );
   int side = event.GetId() - BRLIST_SIDE;
-  if ( m_sel_bot != 0 ) {
-    m_battle.SetBotSide( m_sel_bot->name, side );
-  } else if ( m_sel_user != 0 ) {
-    m_battle.ForceSide( *m_sel_user, side );
-  }
+  if( m_sel_user ) m_battle.ForceSide( *m_sel_user, side );
 }
 
 
@@ -535,11 +427,7 @@ void BattleroomListCtrl::OnHandicapSelect( wxCommandEvent& event )
       customMessageBox(SL_MAIN_ICON, _("Value out of range.\n Enter an integer between 0 & 100."), _("Invalid number") );
       return;
     }
-    if ( m_sel_bot != 0 ) {
-      m_battle.SetBotHandicap( m_sel_bot->name, handicap );
-    } else if ( m_sel_user != 0 ) {
-      m_battle.SetHandicap( *m_sel_user, handicap );
-    }
+    if( m_sel_user ) m_battle.SetHandicap( *m_sel_user, handicap );
   }
 }
 
@@ -547,30 +435,21 @@ void BattleroomListCtrl::OnHandicapSelect( wxCommandEvent& event )
 void BattleroomListCtrl::OnSpecSelect( wxCommandEvent& event )
 {
   wxLogDebugFunc( _T("") );
-  if ( m_sel_user != 0 ) {
-    m_battle.ForceSpectator( *m_sel_user, m_spec_item->IsChecked() );
-  }
+  if ( m_sel_user ) m_battle.ForceSpectator( *m_sel_user, m_spec_item->IsChecked() );
 }
 
 
 void BattleroomListCtrl::OnKickPlayer( wxCommandEvent& event )
 {
   wxLogDebugFunc( _T("") );
-  if ( m_sel_bot != 0 ) {
-    m_battle.RemoveBot( m_sel_bot->name );
-  } else if ( m_sel_user != 0 ) {
-    m_battle.KickPlayer( *m_sel_user );
-  }
+	if ( m_sel_user ) m_battle.KickPlayer( *m_sel_user );
 }
 
 
 void BattleroomListCtrl::OnRingPlayer( wxCommandEvent& event )
 {
   wxLogDebugFunc( _T("") );
-  if ( m_sel_bot != 0 ) {
-  } else if ( m_sel_user != 0 ) {
-    m_battle.GetServer().Ring( m_sel_user->GetNick() );
-  }
+  if ( m_sel_user ) m_battle.GetServer().Ring( m_sel_user->GetNick() );
 }
 
 
@@ -622,34 +501,44 @@ void BattleroomListCtrl::Sort()
 int wxCALLBACK BattleroomListCtrl::CompareStatusUP(long item1, long item2, long sortData)
 {
   BattleroomListCtrl& bl = *(BattleroomListCtrl*)sortData;
-  item_content content1 = bl.items[(size_t)item1];
-  item_content content2 = bl.items[(size_t)item2];
+  User* user1= bl.items[(size_t)item1];
+  User* user2= bl.items[(size_t)item2];
+
+	if ( !user1 && !user2 ) return 0;
+	else if ( !user1 ) return 1;
+	else if ( !user2 ) return -1;
 
   int status1 = 0;
-  if ( content1.is_bot ) {
+  if ( user1->BattleStatus().IsBot() )
+  {
     status1 = 9;
-  } else {
-    if ( &bl.m_battle.GetFounder() != ((User*)content1.data) )
+  }
+  else
+  {
+    if ( &bl.m_battle.GetFounder() != user1 )
       status1 = 1;
-    if ( ((User*)content1.data)->BattleStatus().ready )
+    if ( user1->BattleStatus().ready )
       status1 += 5;
-    if ( !((User*)content1.data)->BattleStatus().sync )
+    if ( user1->BattleStatus().sync )
       status1 += 7;
-    if ( ((User*)content1.data)->BattleStatus().spectator )
+    if ( user1->BattleStatus().spectator )
       status1 += 10;
   }
 
   int status2 = 0;
-  if ( content2.is_bot ) {
+  if ( user1->BattleStatus().IsBot() )
+  {
     status2 = 9;
-  } else {
-    if ( &bl.m_battle.GetFounder() != ((User*)content2.data) )
+  }
+  else
+  {
+    if ( &bl.m_battle.GetFounder() != user2 )
       status2 = 1;
-    if ( ((User*)content2.data)->BattleStatus().ready )
+    if ( user2->BattleStatus().ready )
       status2 += 5;
-    if ( !((User*)content2.data)->BattleStatus().sync )
+    if ( user2->BattleStatus().sync )
       status2 += 7;
-    if ( ((User*)content2.data)->BattleStatus().spectator )
+    if ( user2->BattleStatus().spectator )
       status2 += 10;
   }
 
@@ -671,24 +560,24 @@ int wxCALLBACK BattleroomListCtrl::CompareStatusDOWN(long item1, long item2, lon
 int wxCALLBACK BattleroomListCtrl::CompareSideUP(long item1, long item2, long sortData)
 {
   BattleroomListCtrl& bl = *(BattleroomListCtrl*)sortData;
-  item_content content1 = bl.items[(size_t)item1];
-  item_content content2 = bl.items[(size_t)item2];
+  User* user1= bl.items[(size_t)item1];
+  User* user2= bl.items[(size_t)item2];
+
+	if ( !user1 && !user2 ) return 0;
+	else if ( !user1 ) return 1;
+	else if ( !user2 ) return -1;
 
   int side1;
-  if ( content1.is_bot )
-    side1 = ((BattleBot*)content1.data)->bs.side;
-  else if ( ((User*)content1.data)->BattleStatus().spectator )
+  if ( user1->BattleStatus().spectator )
     side1 = 1000;
   else
-    side1 = ((User*)content1.data)->BattleStatus().side;
+    side1 = user1->BattleStatus().side;
 
   int side2;
-  if ( content2.is_bot )
-    side2 = ((BattleBot*)content2.data)->bs.side;
-  else if ( ((User*)content2.data)->BattleStatus().spectator )
+  if ( user2->BattleStatus().spectator )
     side2 = 1000;
   else
-    side2 = ((User*)content2.data)->BattleStatus().side;
+    side2 = user2->BattleStatus().side;
 
   if ( side1 < side2 )
       return -1;
@@ -708,40 +597,26 @@ int wxCALLBACK BattleroomListCtrl::CompareSideDOWN(long item1, long item2, long 
 int wxCALLBACK BattleroomListCtrl::CompareColorUP(long item1, long item2, long sortData)
 {
   BattleroomListCtrl& bl = *(BattleroomListCtrl*)sortData;
-  item_content content1 = bl.items[(size_t)item1];
-  item_content content2 = bl.items[(size_t)item2];
+  User* user1= bl.items[(size_t)item1];
+  User* user2= bl.items[(size_t)item2];
+
+	if ( !user1 && !user2 ) return 0;
+	else if ( !user1 ) return 1;
+	else if ( !user2 ) return -1;
 
   int color1_r, color1_g, color1_b;
-  if ( content1.is_bot )
-    {
-      if ( ((BattleBot*)content1.data)->bs.spectator ) return -1;
-      color1_r = ((BattleBot*)content1.data)->bs.colour.Red();
-      color1_g = ((BattleBot*)content1.data)->bs.colour.Green();
-      color1_b = ((BattleBot*)content1.data)->bs.colour.Blue();
-    }
-  else
-    {
-      if ( ((User*)content1.data)->BattleStatus().spectator ) return -1;
-      color1_r = ((User*)content1.data)->BattleStatus().colour.Red();
-      color1_g = ((User*)content1.data)->BattleStatus().colour.Green();
-      color1_b = ((User*)content1.data)->BattleStatus().colour.Blue();
-    }
+
+	if ( user1->BattleStatus().spectator ) return -1;
+	color1_r = user1->BattleStatus().colour.Red();
+	color1_g = user1->BattleStatus().colour.Green();
+	color1_b = user1->BattleStatus().colour.Blue();
 
   int color2_r, color2_g, color2_b;
-  if ( content2.is_bot )
-    {
-      if ( ((BattleBot*)content2.data)->bs.spectator ) return 1;
-      color2_r = ((BattleBot*)content2.data)->bs.colour.Red();
-      color2_g = ((BattleBot*)content2.data)->bs.colour.Green();
-      color2_b = ((BattleBot*)content2.data)->bs.colour.Blue();
-    }
-  else
-    {
-      if ( ((User*)content2.data)->BattleStatus().spectator ) return 1;
-      color2_r = ((User*)content2.data)->BattleStatus().colour.Red();
-      color2_g = ((User*)content2.data)->BattleStatus().colour.Green();
-      color2_b = ((User*)content2.data)->BattleStatus().colour.Blue();
-    }
+
+	if ( user2->BattleStatus().spectator ) return 1;
+	color2_r = user2->BattleStatus().colour.Red();
+	color2_g = user2->BattleStatus().colour.Green();
+	color2_b = user2->BattleStatus().colour.Blue();
 
   if ( (color1_r + color1_g + color1_b)/3 < (color2_r + color2_g + color2_b)/3 )
       return -1;
@@ -761,20 +636,16 @@ int wxCALLBACK BattleroomListCtrl::CompareColorDOWN(long item1, long item2, long
 int wxCALLBACK BattleroomListCtrl::CompareCountryUP(long item1, long item2, long sortData)
 {
   BattleroomListCtrl& bl = *(BattleroomListCtrl*)sortData;
-  item_content content1 = bl.items[(size_t)item1];
-  item_content content2 = bl.items[(size_t)item2];
+  User* user1= bl.items[(size_t)item1];
+  User* user2= bl.items[(size_t)item2];
 
-  wxString country1;
-  if ( content1.is_bot )
-    country1 = _T("");
-  else
-    country1 = ((User*)content1.data)->GetCountry().Upper();
+	if ( !user1 && !user2 ) return 0;
+	else if ( !user1 ) return 1;
+	else if ( !user2 ) return -1;
 
-  wxString country2;
-  if ( content2.is_bot )
-    country2 = _T("");
-  else
-    country2 = ((User*)content2.data)->GetCountry().Upper();
+  wxString country1 = user1->GetCountry().Upper();
+
+  wxString country2 = user2->GetCountry().Upper();
 
   if ( country1 < country2 )
       return -1;
@@ -794,20 +665,24 @@ int wxCALLBACK BattleroomListCtrl::CompareCountryDOWN(long item1, long item2, lo
 int wxCALLBACK BattleroomListCtrl::CompareRankUP(long item1, long item2, long sortData)
 {
   BattleroomListCtrl& bl = *(BattleroomListCtrl*)sortData;
-  item_content content1 = bl.items[(size_t)item1];
-  item_content content2 = bl.items[(size_t)item2];
+  User* user1= bl.items[(size_t)item1];
+  User* user2= bl.items[(size_t)item2];
+
+	if ( !user1 && !user2 ) return 0;
+	else if ( !user1 ) return 1;
+	else if ( !user2 ) return -1;
 
   int rank1;
-  if ( content1.is_bot )
+  if ( user1->BattleStatus().IsBot() )
     rank1 = 1000;
   else
-    rank1 = ((User*)content1.data)->GetStatus().rank;
+    rank1 = user1->GetStatus().rank;
 
   int rank2;
-  if ( content2.is_bot )
+  if ( user2->BattleStatus().IsBot() )
     rank2 = 1000;
   else
-    rank2 = ((User*)content2.data)->GetStatus().rank;
+    rank2 = user2->GetStatus().rank;
 
   if ( rank1 < rank2 )
       return -1;
@@ -827,20 +702,16 @@ int wxCALLBACK BattleroomListCtrl::CompareRankDOWN(long item1, long item2, long 
 int wxCALLBACK BattleroomListCtrl::CompareNicknameUP(long item1, long item2, long sortData)
 {
   BattleroomListCtrl& bl = *(BattleroomListCtrl*)sortData;
-  item_content content1 = bl.items[(size_t)item1];
-  item_content content2 = bl.items[(size_t)item2];
+  User* user1= bl.items[(size_t)item1];
+  User* user2= bl.items[(size_t)item2];
 
-  wxString name1;
-  if ( content1.is_bot )
-    name1 = ((BattleBot*)content1.data)->name.Upper();
-  else
-    name1 = ((User*)content1.data)->GetNick().Upper();
+	if ( !user1 && !user2 ) return 0;
+	else if ( !user1 ) return 1;
+	else if ( !user2 ) return -1;
 
-  wxString name2;
-  if ( content2.is_bot )
-    name2 = ((BattleBot*)content2.data)->name.Upper();
-  else
-    name2 = ((User*)content2.data)->GetNick().Upper();
+  wxString name1 = user1->GetNick().Upper();
+
+  wxString name2 = user2->GetNick().Upper();
 
   if ( name1 < name2 )
       return -1;
@@ -860,24 +731,24 @@ int wxCALLBACK BattleroomListCtrl::CompareNicknameDOWN(long item1, long item2, l
 int wxCALLBACK BattleroomListCtrl::CompareTeamUP(long item1, long item2, long sortData)
 {
   BattleroomListCtrl& bl = *(BattleroomListCtrl*)sortData;
-  item_content content1 = bl.items[(size_t)item1];
-  item_content content2 = bl.items[(size_t)item2];
+  User* user1= bl.items[(size_t)item1];
+  User* user2= bl.items[(size_t)item2];
+
+	if ( !user1 && !user2 ) return 0;
+	else if ( !user1 ) return 1;
+	else if ( !user2 ) return -1;
 
   int team1;
-  if ( content1.is_bot )
-    team1 = ((BattleBot*)content1.data)->bs.team;
-  else if ( ((User*)content1.data)->BattleStatus().spectator )
+  if ( user1->BattleStatus().spectator )
     team1 = 1000;
   else
-    team1 = ((User*)content1.data)->BattleStatus().team;
+    team1 = user1->BattleStatus().team;
 
   int team2;
-  if ( content2.is_bot )
-    team2 = ((BattleBot*)content2.data)->bs.team;
-  else if ( ((User*)content2.data)->BattleStatus().spectator )
+  if ( user2->BattleStatus().spectator )
     team2 = 1000;
   else
-    team2 = ((User*)content2.data)->BattleStatus().team;
+    team2 = user2->BattleStatus().team;
 
   if ( team1 < team2 )
       return -1;
@@ -897,24 +768,24 @@ int wxCALLBACK BattleroomListCtrl::CompareTeamDOWN(long item1, long item2, long 
 int wxCALLBACK BattleroomListCtrl::CompareAllyUP(long item1, long item2, long sortData)
 {
   BattleroomListCtrl& bl = *(BattleroomListCtrl*)sortData;
-  item_content content1 = bl.items[(size_t)item1];
-  item_content content2 = bl.items[(size_t)item2];
+  User* user1= bl.items[(size_t)item1];
+  User* user2= bl.items[(size_t)item2];
+
+	if ( !user1 && !user2 ) return 0;
+	else if ( !user1 ) return 1;
+	else if ( !user2 ) return -1;
 
   int ally1;
-  if ( content1.is_bot )
-    ally1 = ((BattleBot*)content1.data)->bs.ally;
-  else if ( ((User*)content1.data)->BattleStatus().spectator )
+  if ( user1->BattleStatus().spectator )
     ally1 = 1000;
   else
-    ally1 = ((User*)content1.data)->BattleStatus().ally;
+    ally1 = user1->BattleStatus().ally;
 
   int ally2;
-  if ( content2.is_bot )
-    ally2 = ((BattleBot*)content2.data)->bs.ally;
-  else if ( ((User*)content2.data)->BattleStatus().spectator )
+  if ( user2->BattleStatus().spectator )
     ally2 = 1000;
   else
-    ally2 = ((User*)content2.data)->BattleStatus().ally;
+    ally2 = user2->BattleStatus().ally;
 
   if ( ally1 < ally2 )
       return -1;
@@ -934,27 +805,36 @@ int wxCALLBACK BattleroomListCtrl::CompareAllyDOWN(long item1, long item2, long 
 int wxCALLBACK BattleroomListCtrl::CompareCpuUP(long item1, long item2, long sortData)
 {
   BattleroomListCtrl& bl = *(BattleroomListCtrl*)sortData;
-  item_content content1 = bl.items[(size_t)item1];
-  item_content content2 = bl.items[(size_t)item2];
+  User* user1= bl.items[(size_t)item1];
+  User* user2= bl.items[(size_t)item2];
 
-  if ( content1.is_bot ) {
-    wxString aidll1 = ((BattleBot*)content1.data)->aidll.Upper();
-    if ( content2.is_bot ) {
-      wxString aidll2 = ((BattleBot*)content2.data)->aidll.Upper();
-      if ( aidll1 < aidll2 )
+	if ( !user1 && !user2 ) return 0;
+	else if ( !user1 ) return 1;
+	else if ( !user2 ) return -1;
+
+  if ( user1->BattleStatus().IsBot() )
+  {
+    wxString ailib1 = user1->BattleStatus().aishortname.Upper() + _T(" ") + user1->BattleStatus().aiversion.Upper();
+    if ( user2->BattleStatus().IsBot() )
+    {
+      wxString ailib2 = user2->BattleStatus().aishortname.Upper() + _T(" ") + user2->BattleStatus().aiversion.Upper();
+      if ( ailib1 < ailib2 )
         return -1;
-      if ( aidll1 > aidll2 )
+      if ( ailib1 > ailib2 )
         return 1;
       return 0;
     } else {
       return 1;
     }
-  } else {
-    int cpu1 = ((User*)content1.data)->GetCpu();
-    if ( content2.is_bot ) {
+  }
+  else
+  {
+    int cpu1 = user1->GetCpu();
+    if ( user1->BattleStatus().IsBot() )
+    {
       return -1;
     } else {
-      int cpu2 = ((User*)content2.data)->GetCpu();
+      int cpu2 = user2->GetCpu();
       if ( cpu1 < cpu2 )
         return -1;
       if ( cpu1 > cpu2 )
@@ -974,24 +854,24 @@ int wxCALLBACK BattleroomListCtrl::CompareCpuDOWN(long item1, long item2, long s
 int wxCALLBACK BattleroomListCtrl::CompareHandicapUP(long item1, long item2, long sortData)
 {
   BattleroomListCtrl& bl = *(BattleroomListCtrl*)sortData;
-  item_content content1 = bl.items[(size_t)item1];
-  item_content content2 = bl.items[(size_t)item2];
+  User* user1= bl.items[(size_t)item1];
+  User* user2= bl.items[(size_t)item2];
+
+	if ( !user1 && !user2 ) return 0;
+	else if ( !user1 ) return 1;
+	else if ( !user2 ) return -1;
 
   int handicap1;
-  if ( content1.is_bot )
-    handicap1 = ((BattleBot*)content1.data)->bs.handicap;
-  else if ( ((User*)content1.data)->BattleStatus().spectator )
+	if ( user1->BattleStatus().spectator )
     handicap1 = 1000;
   else
-    handicap1 = ((User*)content1.data)->BattleStatus().handicap;
+    handicap1 = user1->BattleStatus().handicap;
 
   int handicap2;
-  if ( content2.is_bot )
-    handicap2 = ((BattleBot*)content2.data)->bs.handicap;
-  else if ( ((User*)content2.data)->BattleStatus().spectator )
+	if ( user2->BattleStatus().spectator )
     handicap2 = 1000;
   else
-    handicap2 = ((User*)content2.data)->BattleStatus().handicap;
+    handicap2 = user2->BattleStatus().handicap;
 
   if ( handicap1 < handicap2 )
       return -1;
@@ -1010,7 +890,12 @@ int wxCALLBACK BattleroomListCtrl::CompareHandicapDOWN(long item1, long item2, l
 void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint position)
 {
     long item = GetItemData(item_hit);
-    item_content content = this->items[(size_t)item];
+    User* user = this->items[(size_t)item];
+    if ( !user )
+    {
+    	 m_tiptext = _T("");
+    	 return;
+    }
     int coloumn = getColoumnFromPosition( position );
     if (coloumn > (int)m_colinfovec.size() || coloumn < 0)
     {
@@ -1021,47 +906,37 @@ void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint po
         switch (coloumn)
         {
         case 0: // is bot?
-            if ( content.is_bot )
+            if ( user->BattleStatus().IsBot() )
                 m_tiptext = _T("This is an AI controlled Player (bot)");
-            else if ( ((User*)content.data)->BattleStatus().spectator )
+            else if  ( user->BattleStatus().spectator )
                 m_tiptext = _T("Spectator");
             else
                 m_tiptext =  _T("Human Player");
             break;
         case 1: // icon
-            if ( content.is_bot )
-            {
-								wxArrayString sides = usync().GetSides( m_battle.GetHostModName() );
-								int side = ((BattleBot*)content.data)->bs.side;
-								if ( side < sides.GetCount() ) m_tiptext = sides[side];
-            }
-            else if ( ((User*)content.data)->BattleStatus().spectator )
+            if ( user->BattleStatus().spectator )
                 m_tiptext = _T("Spectators have no side");
             else
             {
 								wxArrayString sides = usync().GetSides( m_battle.GetHostModName() );
-								int side = ((User*)content.data)->BattleStatus().side;
+								int side = user->BattleStatus().side;
 								if ( side < sides.GetCount() ) m_tiptext = sides[side];
             }
             break;
 
         case 3: // country
-            m_tiptext = (content.is_bot ? _T("This bot is from nowhere particluar")
-                    : GetFlagNameFromCountryCode(((User*)content.data)->GetCountry().Upper()));
+            m_tiptext = user->BattleStatus().IsBot() ? _T("This bot is from nowhere particluar") : GetFlagNameFromCountryCode(user->GetCountry().Upper());
             break;
         case 4: // rank
-            m_tiptext = (content.is_bot ? _T("This bot has no rank")
-                    : ((User*)content.data)->GetRankName(((User*)content.data)->GetStatus().rank));
+            m_tiptext = user->BattleStatus().IsBot() ? _T("This bot has no rank") : user->GetRankName(user->GetStatus().rank);
             break;
 
         case 5: //name
-            m_tiptext = (content.is_bot ?((BattleBot*)content.data)->name
-                    : ((User*)content.data)->GetNick() );
+            m_tiptext = user->BattleStatus().IsBot() ?user->GetNick() : user->GetNick();
             break;
 
         case 8: // cpu
-            m_tiptext = (content.is_bot ? ((BattleBot*)content.data)->aidll
-                    : m_colinfovec[coloumn].first);
+            m_tiptext = user->BattleStatus().IsBot() ? ( user->BattleStatus().aishortname + _T(" ") + user->BattleStatus().aiversion ) : m_colinfovec[coloumn].first;
             break;
 
         default:
@@ -1073,12 +948,9 @@ void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint po
 
 void BattleroomListCtrl::HighlightItem( long item )
 {
-    item_content user_content = items[(size_t)GetItemData( item )];
-    if ( !user_content.is_bot )
-    {
-        User& user = *((User*) user_content.data);
-        HighlightItemUser( item, user.GetNick() );
-    }
+    User* usr = items[(size_t)GetItemData( item )];
+    if ( !usr ) return;
+		HighlightItemUser( item, usr->GetNick() );
 }
 
 void BattleroomListCtrl::OnUserMenuAddToGroup( wxCommandEvent& event )
@@ -1111,9 +983,9 @@ void BattleroomListCtrl::OnUserMenuCreateGroup( wxCommandEvent& event )
 
 wxString BattleroomListCtrl::GetSelectedUserNick()
 {
-    item_content content = this->items[(size_t)GetSelectedData()];
-    return (content.is_bot ?((BattleBot*)content.data)->name
-                    : ((User*)content.data)->GetNick() );
+    User* usr = items[(size_t)GetSelectedData()];
+    if ( !usr ) return _T("");
+    return usr->GetNick();
 }
 
 void BattleroomListCtrl::SortList()

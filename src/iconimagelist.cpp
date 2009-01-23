@@ -83,18 +83,18 @@
 
 IconImageList::IconImageList() : wxImageList(16,16,true)
 {
-    ICON_ADMIN = Add( *charArr2wxBitmap( admin_png, sizeof(admin_png) ) );
-    ICON_ADMIN_AWAY = Add( *charArr2wxBitmap( admin_away_png, sizeof(admin_away_png) ) );
-    ICON_ADMIN_BROOM = Add( *charArr2wxBitmap( admin_broom_png, sizeof(admin_broom_png) ) );
-    ICON_ADMIN_INGAME = Add( *charArr2wxBitmap( admin_ingame_png, sizeof(admin_ingame_png) ) );
+    ICON_ADMIN = Add( charArr2wxBitmap( admin_png, sizeof(admin_png) ) );
+    ICON_ADMIN_AWAY = Add( charArr2wxBitmap( admin_away_png, sizeof(admin_away_png) ) );
+    ICON_ADMIN_BROOM = Add( charArr2wxBitmap( admin_broom_png, sizeof(admin_broom_png) ) );
+    ICON_ADMIN_INGAME = Add( charArr2wxBitmap( admin_ingame_png, sizeof(admin_ingame_png) ) );
 
     ICON_BOT = Add( wxBitmap(bot_xpm) );
-    ICON_BOT_BROOM = Add( *charArr2wxBitmap( bot_broom_png, sizeof( bot_broom_png ) )  );
-    ICON_BOT_INGAME = Add( *charArr2wxBitmap( bot_ingame_png, sizeof( bot_ingame_png ) ) );
+    ICON_BOT_BROOM = Add( charArr2wxBitmap( bot_broom_png, sizeof( bot_broom_png ) )  );
+    ICON_BOT_INGAME = Add( charArr2wxBitmap( bot_ingame_png, sizeof( bot_ingame_png ) ) );
 
-    ICON_AWAY = Add( *charArr2wxBitmap( away_png, sizeof( away_png ) ) );
-    ICON_BROOM = Add( *charArr2wxBitmap(broom_png, sizeof(broom_png) ) );
-    ICON_INGAME = Add( *charArr2wxBitmap(ingame_png, sizeof(ingame_png) ) );
+    ICON_AWAY = Add( charArr2wxBitmap( away_png, sizeof( away_png ) ) );
+    ICON_BROOM = Add( charArr2wxBitmap(broom_png, sizeof(broom_png) ) );
+    ICON_INGAME = Add( charArr2wxBitmap(ingame_png, sizeof(ingame_png) ) );
 
     ICON_OP = Add( wxBitmap(chanop_xpm) );
     ICON_OP_AWAY = Add( wxBitmap(chanop_away_xpm) );
@@ -113,17 +113,17 @@ IconImageList::IconImageList() : wxImageList(16,16,true)
     ICON_RANK6 = Add( wxBitmap(rank5_xpm) );
     ICON_RANK7 = Add( wxBitmap(rank6_xpm) );
 
-    ICON_READY = ICON_OPEN_GAME = Add( *charArr2wxBitmap(open_game_png, sizeof(open_game_png) ) );
-    ICON_OPEN_PW_GAME = Add( *charArr2wxBitmap(open_pw_game_png, sizeof(open_pw_game_png) ) );
-    ICON_OPEN_FULL_PW_GAME = Add( *charArr2wxBitmap(open_full_pw_game_png, sizeof(open_full_pw_game_png) ) );
-    ICON_OPEN_FULL_GAME = Add( *charArr2wxBitmap(open_full_game_png, sizeof(open_full_game_png) ) );
-    ICON_NREADY = ICON_CLOSED_GAME = Add( *charArr2wxBitmap(closed_game_png, sizeof(closed_game_png) ) );
-    ICON_CLOSED_PW_GAME = Add( *charArr2wxBitmap(closed_pw_game_png, sizeof(closed_pw_game_png) ) );
-    ICON_CLOSED_FULL_PW_GAME = Add( *charArr2wxBitmap(closed_full_pw_game_png, sizeof(closed_full_pw_game_png) ) );
-    ICON_CLOSED_FULL_GAME = Add( *charArr2wxBitmap(closed_full_game_png, sizeof(closed_full_game_png) ) );
-    ICON_STARTED_GAME = Add(  *charArr2wxBitmap(ingame_png, sizeof(ingame_png) ) );
+    ICON_READY = ICON_OPEN_GAME = Add( charArr2wxBitmap(open_game_png, sizeof(open_game_png) ) );
+    ICON_OPEN_PW_GAME = Add( charArr2wxBitmap(open_pw_game_png, sizeof(open_pw_game_png) ) );
+    ICON_OPEN_FULL_PW_GAME = Add( charArr2wxBitmap(open_full_pw_game_png, sizeof(open_full_pw_game_png) ) );
+    ICON_OPEN_FULL_GAME = Add( charArr2wxBitmap(open_full_game_png, sizeof(open_full_game_png) ) );
+    ICON_NREADY = ICON_CLOSED_GAME = Add( charArr2wxBitmap(closed_game_png, sizeof(closed_game_png) ) );
+    ICON_CLOSED_PW_GAME = Add( charArr2wxBitmap(closed_pw_game_png, sizeof(closed_pw_game_png) ) );
+    ICON_CLOSED_FULL_PW_GAME = Add( charArr2wxBitmap(closed_full_pw_game_png, sizeof(closed_full_pw_game_png) ) );
+    ICON_CLOSED_FULL_GAME = Add( charArr2wxBitmap(closed_full_game_png, sizeof(closed_full_game_png) ) );
+    ICON_STARTED_GAME = Add(  charArr2wxBitmap(ingame_png, sizeof(ingame_png) ) );
 
-    ICON_STARTED_GAME_LOCKED = Add( *charArr2wxBitmapWithBlending( closed_game_png, sizeof(closed_game_png), ingame_png, sizeof(ingame_png) ) );
+    ICON_STARTED_GAME_LOCKED = Add( charArr2wxBitmapWithBlending( closed_game_png, sizeof(closed_game_png), ingame_png, sizeof(ingame_png) ) );
 
 
     ICON_READY_UNSYNC = Add( wxBitmap(ready_unsync_xpm) );
@@ -134,12 +134,12 @@ IconImageList::IconImageList() : wxImageList(16,16,true)
     ICON_NEXISTS = Add( wxBitmap(nexists_xpm) );
     ICON_EXISTS = Add( wxBitmap(exists_xpm) );
 
-    ICON_SPECTATOR = Add( *charArr2wxBitmap(spectator_png, sizeof(spectator_png) ) );
+    ICON_SPECTATOR = Add( charArr2wxBitmap(spectator_png, sizeof(spectator_png) ) );
     ICON_HOST = Add( wxBitmap(host_xpm) );
     ICON_HOST_SPECTATOR = Add( wxBitmap(host_spectator_xpm) );
 
-    ICON_SIDEPIC_0 = Add( *charArr2wxBitmap(no1_icon_png, sizeof(no1_icon_png) ) );
-    ICON_SIDEPIC_1 = Add( *charArr2wxBitmap(no2_icon_png, sizeof(no2_icon_png) ) );
+    ICON_SIDEPIC_0 = Add( charArr2wxBitmap(no1_icon_png, sizeof(no1_icon_png) ) );
+    ICON_SIDEPIC_1 = Add( charArr2wxBitmap(no2_icon_png, sizeof(no2_icon_png) ) );
 
     SetColourIcon( 0, wxColour( 255,   0,   0 ) );
     SetColourIcon( 1, wxColour(   0, 255,   0 ) );
@@ -160,7 +160,7 @@ IconImageList::IconImageList() : wxImageList(16,16,true)
     ICON_NONE = ICON_NOSTATE = ICON_RANK_NONE = ICON_GAME_UNKNOWN = -1;
 #endif
 
-    ICON_WARNING_OVERLAY = Add(*charArr2wxBitmap(warning_small_png, sizeof(warning_small_png) ));
+    ICON_WARNING_OVERLAY = Add(charArr2wxBitmap(warning_small_png, sizeof(warning_small_png) ));
 
 }
 
@@ -244,7 +244,7 @@ int IconImageList::GetFlagIcon( const wxString& flagname )
 }
 
 
-int IconImageList::GetBattleStatusIcon( const Battle& battle ) const
+int IconImageList::GetBattleStatusIcon( const IBattle& battle ) const
 {
     if ( battle.GetInGame() ) {
       return battle.IsLocked()?ICON_STARTED_GAME_LOCKED:ICON_STARTED_GAME;
@@ -278,7 +278,7 @@ int IconImageList::GetBattleStatusIcon( const Battle& battle ) const
     return ICON_GAME_UNKNOWN;
 }
 
-wxString IconImageList::GetBattleStatus( const Battle& battle ) const
+wxString IconImageList::GetBattleStatus( const IBattle& battle ) const
 {
     if ( battle.GetInGame() ) return _T("Game has already started");
     if ( !battle.IsLocked() )
@@ -349,10 +349,12 @@ int IconImageList::GetSideIcon( const wxString& modname, int side )
   return -1;
 }
 
-int IconImageList::GetReadyIcon( const bool& spectator,const bool& ready, const int& sync )
+int IconImageList::GetReadyIcon( const bool& spectator,const bool& ready, const int& sync, const bool& bot )
 {
     int index;
-    if ( spectator )
+    if ( bot )
+				index = ICON_BOT;
+    else if ( spectator )
         index = ICON_SPECTATOR;
     else if ( ready )
         index = ICON_READY;
@@ -361,9 +363,11 @@ int IconImageList::GetReadyIcon( const bool& spectator,const bool& ready, const 
 
     if ( sync == SYNC_SYNCED )
         return index;
-    else {
-        if ( m_state_index_map.find(index) == m_state_index_map.end() ) {
-            m_state_index_map[index] = Add( *BlendBitmaps( GetBitmap( index ), GetBitmap( ICON_WARNING_OVERLAY ) ) );
+    else
+    {
+        if ( m_state_index_map.find(index) == m_state_index_map.end() )
+        {
+            m_state_index_map[index] = Add( BlendBitmaps( GetBitmap( index ), GetBitmap( ICON_WARNING_OVERLAY ) ) );
         }
         return m_state_index_map[index];
     }

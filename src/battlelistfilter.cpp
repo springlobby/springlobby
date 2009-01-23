@@ -446,7 +446,7 @@ bool BattleListFilter::_IntCompare(int a,int b,m_button_mode mode)
   }
 }
 
-bool BattleListFilter::FilterBattle(Battle& battle)
+bool BattleListFilter::FilterBattle(IBattle& battle)
 {
 
   if (!m_activ) return true;
