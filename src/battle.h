@@ -1,17 +1,14 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_BATTLE_H
 #define SPRINGLOBBY_HEADERGUARD_BATTLE_H
 
-#include <map>
-#include <list>
 #include <set>
 
 #include "autohost.h"
-#include "userlist.h"
-#include "user.h"
 #include "ibattle.h"
 
 class Ui;
 class Server;
+class User;
 
 
 /** \brief model of a sp/mp battle
@@ -53,7 +50,7 @@ class Battle : public IBattle
 
     bool ExecuteSayCommand( const wxString& cmd );
 
-    void AddBot( const wxString& nick, const wxString& owner, UserBattleStatus status, const wxString& aidll );
+    void AddBot( const wxString& nick, UserBattleStatus status );
 
     void ForceSide( User& user, int side );
     void ForceTeam( User& user, int team );

@@ -56,9 +56,6 @@ POSSIBILITY OF SUCH DAMAGE.
 #pragma warning(pop)
 #endif
 
-#include "libtorrent/extensions/ut_pex.hpp"
-#include "libtorrent/extensions/ut_metadata.hpp"
-#include "libtorrent/extensions/smart_ban.hpp"
 #include "libtorrent/peer_id.hpp"
 #include "libtorrent/torrent_info.hpp"
 #include "libtorrent/tracker_manager.hpp"
@@ -82,11 +79,6 @@ using boost::weak_ptr;
 using boost::bind;
 using boost::mutex;
 using libtorrent::aux::session_impl;
-
-#ifdef TORRENT_MEMDEBUG
-void start_malloc_debug();
-void stop_malloc_debug();
-#endif
 
 namespace libtorrent
 {
@@ -115,92 +107,47 @@ namespace libtorrent
 		fingerprint const& id
 		, std::pair<int, int> listen_port_range
 		, char const* listen_interface
-		, int flags
-#if defined TORRENT_VERBOSE_LOGGING || defined TORRENT_LOGGING || defined TORRENT_ERROR_LOGGING
+#if defined(TORRENT_VERBOSE_LOGGING) || defined(TORRENT_LOGGING)
 		, fs::path logpath
 #endif
 		)
 		: m_impl(new session_impl(listen_port_range, id, listen_interface
-#if defined TORRENT_VERBOSE_LOGGING || defined TORRENT_LOGGING || defined TORRENT_ERROR_LOGGING
+#if defined(TORRENT_VERBOSE_LOGGING) || defined(TORRENT_LOGGING)
 					, logpath
 #endif
-		))
+					))
 	{
-#ifdef TORRENT_MEMDEBUG
-		start_malloc_debug();
-#endif
 		// turn off the filename checking in boost.filesystem
 		TORRENT_ASSERT(listen_port_range.first > 0);
 		TORRENT_ASSERT(listen_port_range.first < listen_port_range.second);
-#ifdef TORRENT_DEBUG
+#ifndef NDEBUG
 		// this test was added after it came to my attention
 		// that devstudios managed c++ failed to generate
 		// correct code for boost.function
 		boost::function0<void> test = boost::ref(*m_impl);
 		TORRENT_ASSERT(!test.empty());
 #endif
-#ifndef TORRENT_DISABLE_EXTENSIONS
-		if (flags & add_default_plugins)
-		{
-			add_extension(create_ut_pex_plugin);
-			add_extension(create_ut_metadata_plugin);
-			add_extension(create_smart_ban_plugin);
-		}
-#endif
-		if (flags & start_default_features)
-		{
-			start_upnp();
-			start_natpmp();
-#ifndef TORRENT_DISABLE_DHT
-			start_dht();
-#endif
-			start_lsd();
-		}
 	}
 
 	session::session(fingerprint const& id
-		, int flags
-#if defined TORRENT_VERBOSE_LOGGING || defined TORRENT_LOGGING || defined TORRENT_ERROR_LOGGING
+#if defined(TORRENT_VERBOSE_LOGGING) || defined(TORRENT_LOGGING)
 		, fs::path logpath
 #endif
 		)
-#if defined TORRENT_VERBOSE_LOGGING || defined TORRENT_LOGGING || defined TORRENT_ERROR_LOGGING
+#if defined(TORRENT_VERBOSE_LOGGING) || defined(TORRENT_LOGGING)
 		: m_impl(new session_impl(std::make_pair(0, 0), id, "0.0.0.0", logpath))
 #else
 		: m_impl(new session_impl(std::make_pair(0, 0), id, "0.0.0.0"))
 #endif
 	{
-#ifdef TORRENT_MEMDEBUG
-		start_malloc_debug();
-#endif
-#ifdef TORRENT_DEBUG
+#ifndef NDEBUG
 		boost::function0<void> test = boost::ref(*m_impl);
 		TORRENT_ASSERT(!test.empty());
 #endif
-#ifndef TORRENT_DISABLE_EXTENSIONS
-		if (flags & add_default_plugins)
-		{
-			add_extension(create_ut_pex_plugin);
-			add_extension(create_ut_metadata_plugin);
-			add_extension(create_smart_ban_plugin);
-		}
-#endif
-		if (flags & start_default_features)
-		{
-			start_upnp();
-			start_natpmp();
-#ifndef TORRENT_DISABLE_DHT
-			start_dht();
-#endif
-			start_lsd();
-		}
 	}
 
 	session::~session()
 	{
-#ifdef TORRENT_MEMDEBUG
-		stop_malloc_debug();
-#endif
 		TORRENT_ASSERT(m_impl);
 		// if there is at least one destruction-proxy
 		// abort the session and let the destructor
@@ -209,40 +156,9 @@ namespace libtorrent
 			m_impl->abort();
 	}
 
-#ifndef TORRENT_DISABLE_EXTENSIONS
 	void session::add_extension(boost::function<boost::shared_ptr<torrent_plugin>(torrent*, void*)> ext)
 	{
 		m_impl->add_extension(ext);
-	}
-#endif
-
-#ifndef TORRENT_DISABLE_GEO_IP
-	bool session::load_asnum_db(char const* file)
-	{
-		return m_impl->load_asnum_db(file);
-	}
-
-	bool session::load_country_db(char const* file)
-	{
-		return m_impl->load_country_db(file);
-	}
-
-	int session::as_for_ip(address const& addr)
-	{
-		aux::session_impl::mutex_t::scoped_lock l(m_impl->m_mutex);
-		return m_impl->as_for_ip(addr);
-	}
-
-#endif
-
-	void session::load_state(entry const& ses_state)
-	{
-		m_impl->load_state(ses_state);
-	}
-
-	entry session::state() const
-	{
-		return m_impl->state();
 	}
 
 	void session::set_ip_filter(ip_filter const& f)
@@ -280,12 +196,7 @@ namespace libtorrent
 		return m_impl->find_torrent_handle(info_hash);
 	}
 
-	torrent_handle session::add_torrent(add_torrent_params const& params)
-	{
-		return m_impl->add_torrent(params);
-	}
 
-#ifndef TORRENT_NO_DEPRECATE
 	// if the torrent already exists, this will throw duplicate_torrent
 	torrent_handle session::add_torrent(
 		torrent_info const& ti
@@ -295,19 +206,10 @@ namespace libtorrent
 		, bool paused
 		, storage_constructor_type sc)
 	{
+		TORRENT_ASSERT(!ti.m_half_metadata);
 		boost::intrusive_ptr<torrent_info> tip(new torrent_info(ti));
-		add_torrent_params p(sc);
-		p.ti = tip;
-		p.save_path = save_path;
-		std::vector<char> buf;
-		if (resume_data.type() != entry::undefined_t)
-		{
-			bencode(std::back_inserter(buf), resume_data);
-			p.resume_data = &buf;
-		}
-		p.storage_mode = storage_mode;
-		p.paused = paused;
-		return m_impl->add_torrent(p);
+		return m_impl->add_torrent(tip, save_path, resume_data
+			, storage_mode, sc, paused, 0);
 	}
 
 	torrent_handle session::add_torrent(
@@ -319,19 +221,9 @@ namespace libtorrent
 		, storage_constructor_type sc
 		, void* userdata)
 	{
-		add_torrent_params p(sc);
-		p.ti = ti;
-		p.save_path = save_path;
-		std::vector<char> buf;
-		if (resume_data.type() != entry::undefined_t)
-		{
-			bencode(std::back_inserter(buf), resume_data);
-			p.resume_data = &buf;
-		}
-		p.storage_mode = storage_mode;
-		p.paused = paused;
-		p.userdata = userdata;
-		return m_impl->add_torrent(p);
+		TORRENT_ASSERT(!ti->m_half_metadata);
+		return m_impl->add_torrent(ti, save_path, resume_data
+			, storage_mode, sc, paused, userdata);
 	}
 
 	torrent_handle session::add_torrent(
@@ -345,15 +237,9 @@ namespace libtorrent
 		, storage_constructor_type sc
 		, void* userdata)
 	{
-		add_torrent_params p(sc);
-		p.tracker_url = tracker_url;
-		p.info_hash = info_hash;
-		p.save_path = save_path;
-		p.paused = paused;
-		p.userdata = userdata;
-		return m_impl->add_torrent(p);
+		return m_impl->add_torrent(tracker_url, info_hash, name, save_path, e
+			, storage_mode, sc, paused, userdata);
 	}
-#endif
 
 	void session::remove_torrent(const torrent_handle& h, int options)
 	{
@@ -375,21 +261,6 @@ namespace libtorrent
 	session_status session::status() const
 	{
 		return m_impl->status();
-	}
-
-	void session::pause() { m_impl->pause(); }
-	void session::resume() { m_impl->resume(); }
-	bool session::is_paused() const { return m_impl->is_paused(); }
-
-	void session::get_cache_info(sha1_hash const& ih
-		, std::vector<cached_piece_info>& ret) const
-	{
-		m_impl->m_disk_thread.get_cache_info(ih, ret);
-	}
-
-	cache_status session::get_cache_status() const
-	{
-		return m_impl->m_disk_thread.status();
 	}
 
 #ifndef TORRENT_DISABLE_DHT
@@ -556,49 +427,24 @@ namespace libtorrent
 		return m_impl->wait_for_alert(max_wait);
 	}
 
-	void session::set_alert_mask(int m)
-	{
-		m_impl->set_alert_mask(m);
-	}
-
-	size_t session::set_alert_queue_size_limit(size_t queue_size_limit_)
-	{
-		return m_impl->set_alert_queue_size_limit(queue_size_limit_);
-	}
-
-#ifndef TORRENT_NO_DEPRECATE
 	void session::set_severity_level(alert::severity_t s)
 	{
-		int m = 0;
-		switch (s)
-		{
-			case alert::debug: m = alert::all_categories; break;
-			case alert::info: m = alert::all_categories & ~(alert::debug_notification
-				| alert::progress_notification); break;
-			case alert::warning: m = alert::all_categories & ~(alert::debug_notification
-				| alert::status_notification | alert::progress_notification); break;
-			case alert::critical: m = alert::error_notification | alert::storage_notification; break;
-			case alert::fatal: m = alert::error_notification; break;
-			default: break;
-		}
-
-		m_impl->set_alert_mask(m);
+		m_impl->set_severity_level(s);
 	}
-#endif
 
 	void session::start_lsd()
 	{
 		m_impl->start_lsd();
 	}
 	
-	natpmp* session::start_natpmp()
+	void session::start_natpmp()
 	{
-		return m_impl->start_natpmp();
+		m_impl->start_natpmp();
 	}
 	
-	upnp* session::start_upnp()
+	void session::start_upnp()
 	{
-		return m_impl->start_upnp();
+		m_impl->start_upnp();
 	}
 	
 	void session::stop_lsd()

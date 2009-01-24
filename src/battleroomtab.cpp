@@ -603,9 +603,10 @@ void BattleRoomTab::OnAddBot( wxCommandEvent& event )
         bs.ready = true;
         bs.handicap = 0;
         bs.colour = m_battle.GetFreeColour();
-        bs.ailib = dlg.GetAI();
+        bs.aishortname = dlg.GetAIShortName();
+        bs.aiversion = dlg.GetAIVersion();
         bs.owner = m_battle.GetMe().GetNick();
-        m_ui.GetServer().AddBot( m_battle.GetBattleId(), dlg.GetNick(), m_battle.GetMe().GetNick(), bs, dlg.GetAI() );
+        m_ui.GetServer().AddBot( m_battle.GetBattleId(), dlg.GetNick(), bs );
     }
 }
 

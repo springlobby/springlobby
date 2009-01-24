@@ -81,10 +81,11 @@ namespace
 		virtual void add_handshake(entry&) {}
 		
 		// called when the extension handshake from the other end is received
-		virtual bool on_extension_handshake(lazy_entry const& h)
+		virtual bool on_extension_handshake(entry const& h)
 		{
 			log_timestamp();
-			m_file << "<== EXTENSION_HANDSHAKE\n" << h;
+			m_file << "<== EXTENSION_HANDSHAKE\n";
+			h.print(m_file);
 			return true;
 		}
 
@@ -211,9 +212,8 @@ namespace
 		virtual boost::shared_ptr<peer_plugin> new_connection(
 			peer_connection* pc)
 		{
-			error_code ec;
 			return boost::shared_ptr<peer_plugin>(new logger_peer_plugin(
-				pc->remote().address().to_string(ec) + "_"
+				pc->remote().address().to_string() + "_"
 				+ boost::lexical_cast<std::string>(pc->remote().port()) + ".log"));
 		}
 	};

@@ -15,6 +15,7 @@
 #include "../settings++/custom_dialogs.h"
 #include "../tdfcontainer.h"
 #include "replaytab.h"
+#include "../uiutils.h"
 
 const unsigned int replay_bulk_limit = 300;
 const unsigned int replay_chunk_size = 50;
@@ -162,7 +163,7 @@ bool ReplayList::GetReplayInfos ( const wxString& ReplayPath, Replay& ret )
         return false;
 
     GetHeaderInfo( ret, ReplayPath );
-    GetBattleFromScript( script,ret.battle  );
+    GetBattleFromScript( script, ret.battle, false  );
     ret.ModName = ret.battle.GetHostModName();
 
     return true;
@@ -192,7 +193,7 @@ void ReplayList::GetScriptFromReplay ( const wxString& ReplayPath, wxString& scr
 }
 
 //! (koshi) don't delete commented things please, they might be need in the future and i'm lazy
-void ReplayList::GetBattleFromScript( const wxString& script_, OfflineBattle& battle )
+void ReplayList::GetBattleFromScript( const wxString& script_, OfflineBattle& battle, bool loadmod )
 {
 
     BattleOptions opts;
@@ -209,7 +210,7 @@ void ReplayList::GetBattleFromScript( const wxString& script_, OfflineBattle& ba
 
         //don't have the maphash, what to do?
         //ui download function works with mapname if hash is empty, so works for now
-        opts.mapname    = replayNode->GetString( _T("Mapname") );
+        opts.mapname    = replayNode->GetString( _T("MapName") );
         battle.SetHostMap( opts.mapname, wxEmptyString );
 
 //        opts.ip         = replayNode->GetString( _T("HostIP") );
@@ -217,32 +218,103 @@ void ReplayList::GetBattleFromScript( const wxString& script_, OfflineBattle& ba
         opts.spectators = 0;
 
         int playernum = replayNode->GetInt  ( _T("NumPlayers"), 0);
+        int usersnum = replayNode->GetInt  ( _T("NumUsers"), 0);
+        if ( usersnum > 0 ) playernum = usersnum;
 //        int allynum = replayNode->GetInt  ( _T("NumAllyTeams"), 1);
 //        int teamnum = replayNode->GetInt  ( _T("NumTeams"), 1);
+
+
+        wxArrayString sides;
+        if ( loadmod )
+        {
+        	sides = usync().GetSides( modname );
+        }
+
+				IBattle::TeamVec parsed_teams = battle.GetParsedTeamsVec();
+				IBattle::AllyVec parsed_allies = battle.GetParsedAlliesVec();
 
         //[PLAYERX] sections
         for ( int i = 0; i < playernum ; ++i )
         {
             PDataList player ( replayNode->Find( _T("PLAYER") + i2s(i) ) );
-            if ( player.ok() )
+            PDataList bot ( replayNode->Find( _T("AI") + i2s(i) ) );
+            if ( player.ok() || bot.ok() )
             {
-                User user ( player->GetString( _T("name") ), (player->GetString( _T("countryCode")).Upper() ), 0);
-                if ( battle.ModExists() )
-                {
-									wxArrayString sides = usync().GetSides( battle.LoadMod().name );
-									user.BattleStatus().side = sides.Index( player->GetString( _T("side") ) );
-                }
+								if ( bot.ok() ) player = bot;
+                User user ( player->GetString( _T("Name") ), (player->GetString( _T("CountryCode")).Upper() ), 0);
                 user.BattleStatus().spectator = player->GetInt( _T("Spectator"), 0 );
                 opts.spectators += user.BattleStatus().spectator;
-                user.BattleStatus().team = player->GetInt( _T("team") );
+                user.BattleStatus().team = player->GetInt( _T("Team") );
+                if ( bot.ok() )
+                {
+                	user.BattleStatus().aishortname = bot->GetString( _T("ShortName" ) );
+                	user.BattleStatus().aiversion = bot->GetString( _T("Version" ) );
+                	int ownerindex = bot->GetInt( _T("Host" ) );
+                	PDataList aiowner ( replayNode->Find( _T("PLAYER") + i2s(ownerindex) ) );
+                	if ( aiowner.ok() )
+                	{
+                		user.BattleStatus().owner = aiowner->GetString( _T("Name") );
+                	}
+                }
+
+                IBattle::TeamInfoContainer teaminfos = parsed_teams[user.BattleStatus().team];
+                if ( !teaminfos.exist )
+                {
+									PDataList team( replayNode->Find( _T("TEAM") + i2s( user.BattleStatus().team ) ) );
+									if ( team.ok() )
+									{
+											teaminfos.exist = true;
+											teaminfos.TeamLeader = team->GetInt( _T("TeamLeader"), 0 );
+											teaminfos.StartPosX = team->GetInt( _T("StartPosX"), -1 );
+											teaminfos.StartPosY = team->GetInt( _T("StartPosY"), -1 );
+											teaminfos.TeamLeader = team->GetInt( _T("AllyTeam"), 0 );
+											teaminfos.RGBColor = GetColorFromFloatStrng( team->GetString( _T("RGBColor") ) );
+											teaminfos.SideName = team->GetString( _T("Side"), _T("") );
+											teaminfos.Handicap = team->GetInt( _T("Handicap"), 0 );
+											int sidepos = sides.Index( teaminfos.SideName );
+											teaminfos.SideNum = sidepos;
+											parsed_teams[ user.BattleStatus().team ] = teaminfos;
+									}
+                }
+                if ( teaminfos.exist )
+                {
+										user.BattleStatus().ally = teaminfos.AllyTeam;
+										user.BattleStatus().posx = teaminfos.StartPosX;
+										user.BattleStatus().posy = teaminfos.StartPosY;
+										user.BattleStatus().colour = teaminfos.RGBColor;
+										user.BattleStatus().handicap = teaminfos.Handicap;
+										if ( teaminfos.SideNum >= 0 ) user.BattleStatus().side = teaminfos.SideNum;
+										IBattle::AllyInfoContainer allyinfos = parsed_allies[user.BattleStatus().ally];
+										if ( !allyinfos.exist )
+										{
+												PDataList ally( replayNode->Find( _T("ALLYTEAM") + i2s( user.BattleStatus().ally ) ) );
+												if ( ally.ok() )
+												{
+													allyinfos.exist = true;
+													allyinfos.NumAllies = ally->GetInt( _T("NumAllies"), 0 );
+													allyinfos.StartRectLeft = ally->GetInt( _T("StartRectLeft"), 0 );
+													allyinfos.StartRectTop = ally->GetInt( _T("StartRectTop"), 0 );
+													allyinfos.StartRectRight = ally->GetInt( _T("StartRectRight"), 0 );
+													allyinfos.StartRectBottom = ally->GetInt( _T("StartRectBottom"), 0 );
+													parsed_allies[ user.BattleStatus().ally ] = allyinfos;
+													battle.AddStartRect( user.BattleStatus().ally, allyinfos.StartRectTop, allyinfos.StartRectTop, allyinfos.StartRectRight, allyinfos.StartRectBottom );
+												}
+										}
+                }
 
                 battle.OnOfflineAddUser( user );
             }
+
         }
+        battle.SetParsedTeamsVec( parsed_teams );
+        battle.SetParsedAlliesVec( parsed_allies );
 
         //MMoptions, this'll fail unless loading map/mod into wrapper first
-//        LoadMMOpts( _T("mapoptions"), battle, replayNode );
-//        LoadMMOpts( _T("modoptions"), battle, replayNode );
+        if ( loadmod )
+        {
+					LoadMMOpts( _T("mapoptions"), battle, replayNode );
+					LoadMMOpts( _T("modoptions"), battle, replayNode );
+        }
 
         opts.maxplayers = playernum ;
 

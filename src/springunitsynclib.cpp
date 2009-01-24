@@ -532,6 +532,18 @@ wxString SpringUnitSyncLib::GetMapArchiveName( int arnr )
 }
 
 
+wxArrayString SpringUnitSyncLib::GetMapDeps( int index )
+{
+  int count = GetMapArchiveCount( index );
+	wxArrayString ret;
+	for ( int i = 0; i < count; i++ )
+	{
+		ret.Add( GetMapArchiveName( i ) );
+	}
+  return ret;
+}
+
+
 MapInfo SpringUnitSyncLib::GetMapInfoEx( const wxString& mapName, int version )
 {
   InitLib( m_get_map_info_ex );
@@ -791,6 +803,18 @@ int SpringUnitSyncLib::GetPrimaryModChecksumFromName( const wxString& name )
 }
 
 
+wxArrayString SpringUnitSyncLib::GetModDeps( int index )
+{
+  int count = GetPrimaryModArchiveCount( index );
+	wxArrayString ret;
+	for ( int i = 0; i < count; i++ )
+	{
+		ret.Add( GetPrimaryModArchiveList( i ) );
+	}
+  return ret;
+}
+
+
 wxArrayString SpringUnitSyncLib::GetSides( const wxString& modName )
 {
   InitLib( m_get_side_count );
@@ -957,14 +981,14 @@ int SpringUnitSyncLib::GetModOptionCount( const wxString& name )
 }
 
 
-int SpringUnitSyncLib::GetAIOptionCount( int index )
+int SpringUnitSyncLib::GetAIOptionCount( int aiIndex )
 {
 	InitLib( m_get_skirmish_ai_option_count );
 	ASSERT_EXCEPTION( m_get_skirmish_ai_count , _T("Function was not in unitsync library.") );
 
-	UNITSYNC_EXCEPTION( ( index > 0 ) && ( index < m_get_skirmish_ai_count() ), _T("index out of bounds") );
+	UNITSYNC_EXCEPTION( ( aiIndex >= 0 ) && ( aiIndex < m_get_skirmish_ai_count() ), _T("aiIndex out of bounds") );
 
-	return m_get_skirmish_ai_option_count( index );
+	return m_get_skirmish_ai_option_count( aiIndex );
 }
 
 
@@ -1228,15 +1252,16 @@ void SpringUnitSyncLib::SetSpringConfigFloat( const wxString& key, const float v
 }
 
 
-int SpringUnitSyncLib::GetSkirmishAICount()
+int SpringUnitSyncLib::GetSkirmishAICount( const wxString& modname )
 {
   InitLib( m_get_skirmish_ai_count );
+  _SetCurrentMod( modname );
 
   return m_get_skirmish_ai_count();
 }
 
 
-wxArrayString SpringUnitSyncLib::GetAIInfo( int index )
+wxArrayString SpringUnitSyncLib::GetAIInfo( int aiIndex )
 {
 	InitLib( m_get_skirmish_ai_count );
 	UNITSYNC_EXCEPTION( m_get_skirmish_ai_info_count, _T("Function was not in unitsync library.") );
@@ -1245,14 +1270,14 @@ wxArrayString SpringUnitSyncLib::GetAIInfo( int index )
 	UNITSYNC_EXCEPTION( m_get_skirmish_ai_info_value, _T("Function was not in unitsync library.") );
 
 	wxArrayString ret;
-	UNITSYNC_EXCEPTION( ( index < 0 ) && ( index > m_get_skirmish_ai_count() ), _T("index out of bounds") );
+	UNITSYNC_EXCEPTION( ( aiIndex >= 0 ) && ( aiIndex < m_get_skirmish_ai_count() ), _T("aiIndex out of bounds") );
 
-	int infocount = m_get_skirmish_ai_info_count( index );
-	for( int i = 0; i < infocount; i++ )
+	int infoCount = m_get_skirmish_ai_info_count( aiIndex );
+	for( int i = 0; i < infoCount; i++ )
 	{
-		ret.Add( WX_STRINGC( m_get_skirmish_ai_info_key( index ) ) );
-		ret.Add( WX_STRINGC( m_get_skirmish_ai_info_value( index ) ) );
-		ret.Add( WX_STRINGC( m_get_skirmish_ai_info_description( index ) ) );
+		ret.Add( WX_STRINGC( m_get_skirmish_ai_info_key( i ) ) );
+		ret.Add( WX_STRINGC( m_get_skirmish_ai_info_value( i ) ) );
+		ret.Add( WX_STRINGC( m_get_skirmish_ai_info_description( i ) ) );
 	}
 	return ret;
 }

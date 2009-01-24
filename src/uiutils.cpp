@@ -158,6 +158,21 @@ wxColour GetColorFromStrng( const wxString color )
 }
 
 
+wxColour GetColorFromFloatStrng( const wxString color )
+{
+    wxString c = color;
+    double r = 0, g = 0, b = 0;
+    c.BeforeFirst( ' ' ).ToDouble( &r );
+    c = c.AfterFirst( ' ' );
+    c.BeforeFirst( ' ' ).ToDouble( &g );
+    c = c.AfterFirst( ' ' );
+    c.BeforeFirst( ' ' ).ToDouble( &b );
+    CLAMP( r, 0, 1  );
+    CLAMP( g, 0, 1  );
+    CLAMP( b, 0, 1  );
+    return wxColour( (unsigned char)(r*256), (unsigned char)(g*256), (unsigned char)(b*256) );
+}
+
 /**
  @brief Blends two images based on alpha channel present in foreground image.
  @param foreground Foreground image, must have an alpha channel
