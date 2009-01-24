@@ -543,17 +543,6 @@ wxArrayString SpringUnitSyncLib::GetMapDeps( int index )
   return ret;
 }
 
-wxArrayString SpringUnitSync::GetMapDeps( const wxString& mapname )
-{
-	wxArrayString ret;
-	try
-	{
-		ret = susynclib().GetMapDeps( GetMapIndex( mapname ) );
-	}
-	catch( unitsync_assert ) {}
-	return ret;
-}
-
 
 MapInfo SpringUnitSyncLib::GetMapInfoEx( const wxString& mapName, int version )
 {
