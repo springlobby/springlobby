@@ -539,7 +539,7 @@ void BattleListTab::OnUnitSyncReloaded()
 
 void BattleListTab::UpdateHighlights()
 {
-    m_battle_list->UpdateHighlights();
+    m_battle_list->RefreshVisibleItems();
 }
 
 

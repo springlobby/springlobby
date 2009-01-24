@@ -144,9 +144,9 @@ class User : public CommonUser
     Battle* GetBattle() const;
     void SetBattle( Battle* battle );
 
-    void SendMyUserStatus();
+    void SendMyUserStatus() const;
     void SetStatus( const UserStatus& status );
-    void SetCountry( const wxString& country ) { m_country = country; };
+    void SetCountry( const wxString& country );
 
     bool ExecuteSayCommand( const wxString& cmd ) const;
 

@@ -14,19 +14,19 @@
 #include <wx/intl.h>
 
 User::User( Server& serv )
-    : CommonUser( _T("none"),_T("unknown"),0 ),
+    : CommonUser( _T(""),_T(""),0 ),
     m_serv(&serv),
     m_battle(0),
-    m_flagicon_idx( icons().GetFlagIcon( _T("unknown") ) ),
+    m_flagicon_idx( icons().GetFlagIcon( _T("") ) ),
     m_rankicon_idx( icons().GetRankIcon( 0 ) ),
     m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) )
 {}
 
 User::User( const wxString& nick, Server& serv )
-    : CommonUser( nick,_T("unknown"),0 ),
+    : CommonUser( nick,_T(""),0 ),
     m_serv(&serv),
     m_battle(0),
-    m_flagicon_idx( icons().GetFlagIcon( _T("unknown") ) ),
+    m_flagicon_idx( icons().GetFlagIcon( _T("") ) ),
     m_rankicon_idx( icons().GetRankIcon( 0 ) ),
     m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) )
 {}
@@ -44,7 +44,7 @@ User::User( const wxString& nick )
     : CommonUser( nick, wxEmptyString, 0 ),
     m_serv(0),
     m_battle(0),
-    m_flagicon_idx( icons().GetFlagIcon( _T("unknown") ) ),
+    m_flagicon_idx( icons().GetFlagIcon( _T("") ) ),
     m_rankicon_idx( icons().GetRankIcon( 0 ) ),
     m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) )
 {}
@@ -53,7 +53,7 @@ User::User( const wxString& nick, const wxString& country, const int& cpu )
     : CommonUser( nick,country,cpu ) ,
     m_serv(0),
     m_battle(0),
-    m_flagicon_idx( icons().GetFlagIcon( _T("unknown") ) ),
+    m_flagicon_idx( icons().GetFlagIcon( country ) ),
     m_rankicon_idx( icons().GetRankIcon( 0 ) ),
     m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) )
 {}
@@ -62,7 +62,7 @@ User::User()
     : CommonUser( wxEmptyString, wxEmptyString, 0 ),
     m_serv(0),
     m_battle(0),
-    m_flagicon_idx( icons().GetFlagIcon( _T("unknown") ) ),
+    m_flagicon_idx( icons().GetFlagIcon( _T("") ) ),
     m_rankicon_idx( icons().GetRankIcon( 0 ) ),
     m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) )
 {}
@@ -124,6 +124,12 @@ void User::SetStatus( const UserStatus& status )
   m_rankicon_idx =  icons().GetRankIcon( m_status.rank );
 }
 
+void User::SetCountry( const wxString& country )
+{
+    m_country = country;
+    m_flagicon_idx = icons().GetFlagIcon( country );
+};
+
 void CommonUser::UpdateBattleStatus( const UserBattleStatus& status )
 {
 
@@ -150,7 +156,7 @@ void CommonUser::UpdateBattleStatus( const UserBattleStatus& status )
 }
 
 
-void User::SendMyUserStatus()
+void User::SendMyUserStatus() const
 {
   GetServer().SendMyUserStatus();
 }

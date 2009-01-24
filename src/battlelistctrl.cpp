@@ -137,6 +137,29 @@ int BattleListCtrl::OnGetItemColumnImage(long item, long column) const
     }
 }
 
+wxListItemAttr* BattleListCtrl::OnGetItemAttr(long item) const
+{
+    if ( item < m_data.size() && item > -1 ) {
+        const IBattle& b = *m_data[item];
+        wxString host = b.GetFounder().GetNick();
+        wxListItemAttr* attr = HighlightItemUser( item, host );
+        if ( attr != NULL )
+            return attr;
+
+        //to avoid color flicker check first if highlighting should be done
+        //and return if it should
+        for ( unsigned int i = 0; i < b.GetNumUsers(); ++i){
+            wxString name = b.GetUser(i).GetNick();
+            attr = HighlightItemUser( item, name );
+            if ( attr != NULL )
+                return attr;
+
+        }
+    }
+    return NULL;
+}
+
+
 void BattleListCtrl::AddBattle( IBattle& battle )
 {
     //assert(&battle);
@@ -148,7 +171,6 @@ void BattleListCtrl::AddBattle( IBattle& battle )
     m_data.push_back( &battle );
     SetItemCount( m_data.size() );
     RefreshItem( m_data.size() );
-    HighlightItem( m_data.size() );
 //    MarkDirtySort();
 }
 
@@ -170,38 +192,13 @@ void BattleListCtrl::UpdateBattle( IBattle& battle )
     int index = GetIndexFromData( &battle );
 
     RefreshVisibleItems( );
-    HighlightItem( index );
     MarkDirtySort();
-}
-
-void BattleListCtrl::HighlightItem( long item )
-{
-    //prioritize highlighting host over joined players
-    if ( item > m_data.size() -1 || item < 0 )
-        return;
-
-    const IBattle& b = *m_data[item];
-    wxString host = b.GetFounder().GetNick();
-    HighlightItemUser( item, host );
-    if ( useractions().DoActionOnUser( m_highlightAction, host ) )
-        return;
-
-    //to avoid color flicker check first if highlighting should be done
-    //and return if it should
-    for ( unsigned int i = 0; i < b.GetNumUsers(); ++i){
-        wxString name = b.GetUser(i).GetNick();
-        HighlightItemUser( item, name );
-        if ( useractions().DoActionOnUser( m_highlightAction, name ) )
-            return;
-
-    }
 }
 
 void BattleListCtrl::OnListRightClick( wxListEvent& event )
 {
     PopupMenu( m_popup );
 }
-
 
 void BattleListCtrl::OnDLMap( wxCommandEvent& event )
 {
@@ -211,7 +208,6 @@ void BattleListCtrl::OnDLMap( wxCommandEvent& event )
     }
 }
 
-
 void BattleListCtrl::OnDLMod( wxCommandEvent& event )
 {
     if ( m_selected_index > 0 &&  m_data.size() > m_selected_index ) {
@@ -219,7 +215,6 @@ void BattleListCtrl::OnDLMod( wxCommandEvent& event )
         m_ui.DownloadMod( dt->GetHostModHash(), dt->GetHostModName() );
     }
 }
-
 
 void BattleListCtrl::OnColClick( wxListEvent& event )
 {

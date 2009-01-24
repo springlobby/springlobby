@@ -335,21 +335,21 @@ void CustomVirtListCtrl<T>::noOp(wxMouseEvent& event)
     event.Skip();
 }
 
-template < class T >
-void CustomVirtListCtrl<T>::UpdateHighlights()
-{
-  Freeze();
-  try {
-      long item = -1;
-      while ( true ) {
-        item = GetNextItem(item, wxLIST_NEXT_ALL, wxLIST_STATE_DONTCARE);
-        if ( item == -1 )
-          break;
-        HighlightItem( item );
-      }
-  } catch(...) {}
-  Thaw();
-}
+//template < class T >
+//void CustomVirtListCtrl<T>::UpdateHighlights()
+//{
+//  Freeze();
+//  try {
+//      long item = -1;
+//      while ( true ) {
+//        item = GetNextItem(item, wxLIST_NEXT_ALL, wxLIST_STATE_DONTCARE);
+//        if ( item == -1 )
+//          break;
+//        HighlightItem( item );
+//      }
+//  } catch(...) {}
+//  Thaw();
+//}
 
 template < class T >
 wxListItemAttr* CustomVirtListCtrl<T>::HighlightItemUser( long item, const wxString& name ) const

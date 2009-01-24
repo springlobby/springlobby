@@ -250,9 +250,9 @@ public:
 
     // funcs that should make things easier for group highlighting
     ///all that needs to be implemented in child class for UpdateHighlights to work
-    virtual void HighlightItem( long item ) = 0;
+
     wxListItemAttr* HighlightItemUser( long item, const wxString& name ) const;
-    void UpdateHighlights();
+
     void SetHighLightAction( UserActions::ActionType action );
     void RefreshVisibleItems();
 

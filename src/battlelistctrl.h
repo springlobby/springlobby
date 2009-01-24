@@ -30,13 +30,12 @@ class BattleListCtrl : public CustomVirtListCtrl< IBattle *>
     void OnDLMod( wxCommandEvent& event );
     void OnColClick( wxListEvent& event );
     virtual void SetTipWindowText( const long item_hit, const wxPoint position);
-    void HighlightItem( long item );
-    //void HighlightItem( long item, const wxString& name );
 
     //these are overloaded to use list in virtual style
     virtual wxString OnGetItemText(long item, long column) const;
     virtual int OnGetItemImage(long item) const;
     virtual int OnGetItemColumnImage(long item, long column) const;
+    wxListItemAttr * OnGetItemAttr(long item) const;
 
     enum {
         BLIST_LIST = wxID_HIGHEST,
