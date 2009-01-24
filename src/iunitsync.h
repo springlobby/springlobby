@@ -136,6 +136,8 @@ class IUnitSync
     virtual GameOptions GetModOptions( const wxString& name ) = 0;
     /**@}*/
 
+    virtual wxArrayString GetModDeps( const wxString& name ) = 0;
+
     virtual int GetNumMaps() = 0;
     virtual wxArrayString GetMapList() = 0;
     virtual wxArrayString GetModValidMapList( const wxString& modname ) = 0;
@@ -148,6 +150,7 @@ class IUnitSync
     virtual UnitSyncMap GetMapEx( int index ) = 0;
     virtual wxString GetMapArchive( int index ) = 0;
     virtual GameOptions GetMapOptions( const wxString& name ) = 0;
+    virtual wxArrayString GetMapDeps( const wxString& name ) = 0;
 
     virtual int GetMapIndex( const wxString& name ) = 0;
     virtual wxImage GetMinimap( const wxString& mapname ) = 0;

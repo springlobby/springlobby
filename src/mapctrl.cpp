@@ -1412,7 +1412,7 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
     else if ( m_mdown_area == RA_Close )
     {
       wxRect r = GetUserRect( user, true );
-      m_battle->KickPlayer( *m_user_expanded );
+      m_battle->KickPlayer( user );
       RefreshRect( r, false );
     }
     m_mdown_area = RA_Main;

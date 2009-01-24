@@ -532,6 +532,29 @@ wxString SpringUnitSyncLib::GetMapArchiveName( int arnr )
 }
 
 
+wxArrayString SpringUnitSyncLib::GetMapDeps( int index )
+{
+  int count = GetMapArchiveCount( index );
+	wxArrayString ret;
+	for ( int i = 0; i < count; i++ )
+	{
+		ret.Add( GetMapArchiveName( i ) );
+	}
+  return ret;
+}
+
+wxArrayString SpringUnitSync::GetMapDeps( const wxString& mapname )
+{
+	wxArrayString ret;
+	try
+	{
+		ret = susynclib().GetMapDeps( GetMapIndex( mapname ) );
+	}
+	catch( unitsync_assert ) {}
+	return ret;
+}
+
+
 MapInfo SpringUnitSyncLib::GetMapInfoEx( const wxString& mapName, int version )
 {
   InitLib( m_get_map_info_ex );
@@ -788,6 +811,18 @@ int SpringUnitSyncLib::GetPrimaryModChecksumFromName( const wxString& name )
   InitLib( m_get_primary_mod_checksum_from_name );
 
   return (int)m_get_primary_mod_checksum_from_name( name.mb_str( wxConvUTF8 ) );
+}
+
+
+wxArrayString SpringUnitSyncLib::GetModDeps( int index )
+{
+  int count = GetPrimaryModArchiveCount( index );
+	wxArrayString ret;
+	for ( int i = 0; i < count; i++ )
+	{
+		ret.Add( GetPrimaryModArchiveList( i ) );
+	}
+  return ret;
 }
 
 

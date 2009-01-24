@@ -562,6 +562,17 @@ GameOptions SpringUnitSync::GetModOptions( const wxString& name )
   return ret;
 }
 
+wxArrayString SpringUnitSync::GetModDeps( const wxString& modname )
+{
+	wxArrayString ret;
+	try
+	{
+		ret = susynclib().GetModDeps( GetModIndex( modname ) );
+	}
+	catch( unitsync_assert ) {}
+	return ret;
+}
+
 wxArrayString SpringUnitSync::GetSides( const wxString& modname )
 {
 	wxArrayString ret;
