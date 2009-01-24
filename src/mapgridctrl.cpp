@@ -59,7 +59,7 @@ MapGridCtrl::MapGridCtrl( wxWindow* parent, Ui& ui, wxSize size, wxWindowID id )
 	ASSERT_EXCEPTION( m_img_minimap_alpha.HasAlpha(), _T("map_select_1_png must have an alpha channel") );
 	ASSERT_EXCEPTION( m_img_foreground.HasAlpha(),    _T("map_select_2_png must have an alpha channel") );
 
-	m_img_minimap_loading = BlendImage( m_img_foreground, m_img_background, false );
+	m_img_minimap_loading = wxBitmap( BlendImage( m_img_foreground, m_img_background, false ) );
 
 	UpdateToolTip();
 }

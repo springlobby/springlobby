@@ -157,6 +157,7 @@ wxColour GetColorFromStrng( const wxString color )
     return wxColour( r%256, g%256, b%256 );
 }
 
+
 wxColour GetColorFromFloatStrng( const wxString color )
 {
     wxString c = color;
