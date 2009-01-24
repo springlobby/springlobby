@@ -21,6 +21,7 @@
 	#include <wx/msw/registry.h>
 #endif
 #include <wx/utils.h>
+#include <wx/wfstream.h>
 
 #include "springlobbyapp.h"
 #include "mainwindow.h"

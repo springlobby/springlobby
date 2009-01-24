@@ -32,7 +32,6 @@
 					<Add library="SDL_sound" />
 				</Linker>
 				<ExtraCommands>
-					<Add before="chmod +x tools/test-susynclib.awk" />
 					<Add before="tools/test-susynclib.awk src/springunitsynclib.cpp" />
 				</ExtraCommands>
 			</Target>
@@ -61,7 +60,6 @@
 					<Add library="SDL_mixer" />
 				</Linker>
 				<ExtraCommands>
-					<Add before="chmod +x tools/test-susynclib.awk" />
 					<Add before="tools/test-susynclib.awk src/springunitsynclib.cpp" />
 				</ExtraCommands>
 			</Target>
