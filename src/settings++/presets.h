@@ -83,7 +83,7 @@ const int vl_DynamicSky[5] = {0,0,0,0,1};//dynamic clouds
 const int vl_SmoothPoints[5] = {0,1,1,1,1};
 const int vl_SmoothLines[5] = {0,0,1,1,1};
 const int vl_FSAA[5] = {0,0,0,0,1};//fullscreen aa enable/disable
-const int vl_FSAALevel[5] = {0,0,0,0,1};//fullscreen aa samples
+const int vl_FSAALevel[5] = {0,0,0,0,1};//fullscene aa samples
 const int vl_AdvUnitShading[5] = {0,0,0,1,1}; //refl. units
 
 const presetValues<int, 5> pr_DepthBufferBits = presetValues<int, 5>(wxT("DepthBufferBits"),levels_vlow_To_vHigh,vl_DepthBufferBits);

@@ -14,6 +14,7 @@
 #include <wx/dirdlg.h>
 #include <wx/tooltip.h>
 #include <wx/file.h>
+#include <wx/wfstream.h>
 #include <wx/fs_zip.h> //filesystem zip handler
 #include <wx/socket.h>
 #ifdef __WXMSW__
@@ -175,6 +176,10 @@ bool SpringLobbyApp::OnInit()
 			{
 				sett().ConvertOldServerSettings();
 			}
+			if ( sett().GetSettingsVersion() < 7 )
+			{
+				sett().AddChannelJoin( _T("springlobby"), _T("") );
+			}
     }
 
     ui().ReloadUnitSync(); // first time load of unitsync
@@ -185,6 +190,7 @@ bool SpringLobbyApp::OnInit()
 #ifdef __WXMSW__
         sett().SetOldSpringLaunchMethod( true );
 #endif
+				sett().AddChannelJoin( _T("springlobby"), _T("") );
         sett().AddChannelJoin( _T("newbies"), _T("") );
         wxLogMessage( _T("first time startup"));
         wxMessageBox(_("Hi ") + wxGetUserName() + _(",\nIt looks like this is your first time using SpringLobby. I have guessed a configuration that I think will work for you but you should review it, especially the Spring configuration. \n\nWhen you are done you can go to the File menu, connect to a server, and enjoy a nice game of Spring :)"), _("Welcome"),
@@ -211,8 +217,20 @@ bool SpringLobbyApp::OnInit()
             m_otadownloader = new HttpDownloader( url, destFilename );
         }
 
-        customMessageBoxNoModal(SL_MAIN_ICON, _("By default SpringLobby reports some statistics.\n"
-                                                 "You can disable that on options tab --> General."),_("Notice"),wxOK );
+        customMessageBoxNoModal(SL_MAIN_ICON, _("By default SpringLobby reports some statistics.\nYou can disable that on options tab --> General."),_("Notice"),wxOK );
+
+
+				// copy uikeys.txt
+				wxPathList pl;
+				pl.AddEnvList( _T("%ProgramFiles%") );
+				pl.AddEnvList( _T("XDG_DATA_DIRS") );
+				pl = sett().GetAdditionalSearchPaths( pl );
+				wxString uikeyslocation = pl.FindValidPath( _T("uikeys.txt") );
+				if ( !uikeyslocation.IsEmpty() )
+				{
+					wxCopyFile( uikeyslocation, sett().GetCurrentUsedDataDir() + sep + _T("uikeys.txt"), false );
+				}
+
         ui().mw().ShowConfigure();
     }
     else
@@ -336,32 +354,20 @@ void SpringLobbyApp::SetupUserFolders()
 
       if ( createdirs )
       {
-	  if ( dir.IsEmpty() ||
+				if ( dir.IsEmpty() ||
 	       ( !tryCreateDirectory( dir, 0775 ) ||
-		 ( !tryCreateDirectory( dir + sep + _T("mods"), 0775 ) ||
-		   !tryCreateDirectory( dir + sep + _T("maps"), 0775 ) ||
-		   !tryCreateDirectory( dir + sep + _T("base"), 0775 ) ||
-		   !tryCreateDirectory( dir + sep + _T("demos"), 0775 ) ||
-		   !tryCreateDirectory( dir + sep + _T("screenshots"), 0775  ) )
-		   )
-	      )
-	  {
-              if ( dir.IsEmpty() ) dir = defaultdir;
-              wxMessageBox( _("Something went wrong when creating the directories\nPlease create manually the following folders:") + wxString(_T("\n")) + dir +  _T("\n") + dir + sep + _T("mods\n") + dir + sep + _T("maps\n") + dir + sep + _T("base\n") );
-              return;
-          }
-          else
-          {
-          	wxPathList pl;
-						pl.AddEnvList( _T("%ProgramFiles%") );
-						pl.AddEnvList( _T("XDG_DATA_DIRS") );
-						pl = sett().GetAdditionalSearchPaths( pl );
-          	wxString uikeyslocation = pl.FindValidPath( _T("uikeys.txt") );
-            if ( !uikeyslocation.IsEmpty() )
-            {
-              wxCopyFile( uikeyslocation, dir + sep + _T("uikeys.txt"), false );
-            }
-          }
+				 ( !tryCreateDirectory( dir + sep + _T("mods"), 0775 ) ||
+		       !tryCreateDirectory( dir + sep + _T("maps"), 0775 ) ||
+		       !tryCreateDirectory( dir + sep + _T("base"), 0775 ) ||
+		       !tryCreateDirectory( dir + sep + _T("demos"), 0775 ) ||
+					 !tryCreateDirectory( dir + sep + _T("screenshots"), 0775  ) )
+				 )
+	       )
+				{
+					if ( dir.IsEmpty() ) dir = defaultdir;
+					wxMessageBox( _("Something went wrong when creating the directories\nPlease create manually the following folders:") + wxString(_T("\n")) + dir +  _T("\n") + dir + sep + _T("mods\n") + dir + sep + _T("maps\n") + dir + sep + _T("base\n") );
+				return;
+				}
       }
       usync().SetSpringDataPath(dir);
 #endif

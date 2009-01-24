@@ -408,9 +408,9 @@ bool Battle::GetLockExternalBalanceChanges()
 }
 
 
-void Battle::AddBot( const wxString& nick, const wxString& owner, UserBattleStatus status, const wxString& aidll )
+void Battle::AddBot( const wxString& nick, UserBattleStatus status )
 {
-    m_serv.AddBot( m_opts.battleid, nick, owner, status, aidll );
+    m_serv.AddBot( m_opts.battleid, nick, status );
 }
 
 

@@ -3,8 +3,6 @@
 
 //almost only needed for NAtType enum def
 #include "battle.h"
-//when not nec anymore uncommnet this
-//include <map>
 
 class Ui;
 struct UserStatus;
