@@ -98,8 +98,30 @@
 						<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
 						<border>5</border>
 					</object>
-					<object class="spacer">
-						<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+					<object class="sizeritem">
+						<object class="wxStaticBoxSizer" variable="m_map_details" member="yes">
+							<label>Map details</label>
+							<orient>wxVERTICAL</orient>
+							<object class="sizeritem">
+								<object class="wxStaticText" name="ID_MAP_NAME" variable="m_map_name" member="yes">
+									<label>1&#x0A;2&#x0A;3&#x0A;4&#x0A;5&#x0A;6&#x0A;7&#x0A;8</label>
+									<extra_code>m__map__name-&gt;SetLabel( wxEmptyString );</extra_code>
+									<style>wxST_NO_AUTORESIZE</style>
+								</object>
+								<flag>wxTOP|wxLEFT|wxRIGHT|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<border>5</border>
+							</object>
+							<object class="sizeritem">
+								<object class="wxListCtrl" name="ID_MAP_OPTS_LIST" variable="m_map_opts_list" member="yes">
+									<size>170,120</size>
+									<style>wxLC_REPORT|wxLC_NO_HEADER</style>
+								</object>
+								<flag>wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<border>5</border>
+								<option>1</option>
+							</object>
+						</object>
+						<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
 						<border>5</border>
 						<option>1</option>
 					</object>
@@ -129,7 +151,7 @@
 					<include_file>mapgridctrl.h</include_file>
 					<local_include>1</local_include>
 					<style></style>
-					<size>400,400</size>
+					<size>600,400</size>
 					<handler function="OnMapGridLeftDClick" entry="EVT_LEFT_DCLICK" />
 				</object>
 				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>

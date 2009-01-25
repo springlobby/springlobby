@@ -8,8 +8,10 @@
 #include "ui.h"
 #include "uiutils.h"
 #include "utils.h"
+#include <wx/settings.h>
 
 //(*InternalHeaders(MapSelectDialog)
+#include <wx/listctrl.h>
 #include <wx/sizer.h>
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
@@ -30,6 +32,8 @@ const long MapSelectDialog::ID_FILTER_ALL = wxNewId();
 const long MapSelectDialog::ID_FILTER_POPULAR = wxNewId();
 const long MapSelectDialog::ID_FILTER_RECENT = wxNewId();
 const long MapSelectDialog::ID_FILTER_TEXT = wxNewId();
+const long MapSelectDialog::ID_MAP_NAME = wxNewId();
+const long MapSelectDialog::ID_MAP_OPTS_LIST = wxNewId();
 const long MapSelectDialog::ID_MAPGRID = wxNewId();
 //*)
 const long MapSelectDialog::ID_VERTICAL_DIRECTION = wxNewId();
@@ -88,14 +92,20 @@ MapSelectDialog::MapSelectDialog(wxWindow* parent,Ui& ui)
 	m_filter_text->SetToolTip(_("Shows only maps which contain this text in their name or description."));
 	StaticBoxSizer2->Add(m_filter_text, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
 	BoxSizer2->Add(StaticBoxSizer2, 0, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-	BoxSizer2->Add(-1,-1,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	m_map_details = new wxStaticBoxSizer(wxVERTICAL, this, _("Map details"));
+	m_map_name = new wxStaticText(this, ID_MAP_NAME, _("1\n2\n3\n4\n5\n6\n7\n8"), wxDefaultPosition, wxDefaultSize, wxST_NO_AUTORESIZE, _T("ID_MAP_NAME"));
+	m_map_name->SetLabel( wxEmptyString );
+	m_map_details->Add(m_map_name, 0, wxTOP|wxLEFT|wxRIGHT|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	m_map_opts_list = new wxListCtrl(this, ID_MAP_OPTS_LIST, wxDefaultPosition, wxSize(170,120), wxLC_REPORT|wxLC_NO_HEADER, wxDefaultValidator, _T("ID_MAP_OPTS_LIST"));
+	m_map_details->Add(m_map_opts_list, 1, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	BoxSizer2->Add(m_map_details, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	StdDialogButtonSizer1 = new wxStdDialogButtonSizer();
 	StdDialogButtonSizer1->AddButton(new wxButton(this, wxID_OK, wxEmptyString));
 	StdDialogButtonSizer1->AddButton(new wxButton(this, wxID_CANCEL, wxEmptyString));
 	StdDialogButtonSizer1->Realize();
 	BoxSizer2->Add(StdDialogButtonSizer1, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	BoxSizer1->Add(BoxSizer2, 0, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-	m_mapgrid = new MapGridCtrl(this, m_ui, wxSize(400,400), ID_MAPGRID);
+	m_mapgrid = new MapGridCtrl(this, m_ui, wxSize(600,400), ID_MAPGRID);
 	BoxSizer1->Add(m_mapgrid, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	SetSizer(BoxSizer1);
 	BoxSizer1->Fit(this);
@@ -121,10 +131,31 @@ MapSelectDialog::MapSelectDialog(wxWindow* parent,Ui& ui)
 	m_horizontal_direction_button = new wxButton(this, ID_HORIZONTAL_DIRECTION, _T(">"), wxDefaultPosition, wxSize(CONTROL_HEIGHT,CONTROL_HEIGHT), 0, wxDefaultValidator, _T("ID_HORIZONTAL_DIRECTION"));
 	boxSizerHorizontal->Add(m_horizontal_direction_button, 0, wxALL|wxEXPAND|wxSHAPED|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 
-  //<>ᴠᴧ
+	//<>ᴠᴧ
 
 	Connect(ID_VERTICAL_DIRECTION, wxEVT_COMMAND_BUTTON_CLICKED, (wxObjectEventFunction)&MapSelectDialog::OnVerticalDirectionClicked);
 	Connect(ID_HORIZONTAL_DIRECTION, wxEVT_COMMAND_BUTTON_CLICKED, (wxObjectEventFunction)&MapSelectDialog::OnHorizontalDirectionClicked);
+
+	// TODO: refactor, this is copied from battlemaptab.cpp
+	m_map_opts_list->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_BTNFACE ) );
+	m_map_opts_list->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_LIGHT ) );
+
+	wxListItem col;
+
+	col.SetText( _("Option") );
+	m_map_opts_list->InsertColumn( 0, col );
+	col.SetText( _("Value") );
+	m_map_opts_list->InsertColumn( 1, col );
+	m_map_opts_list->SetColumnWidth( 0, 90 );
+	m_map_opts_list->SetColumnWidth( 1, 80 );
+
+	m_map_opts_list->InsertItem( 0, _("Size") );
+	m_map_opts_list->InsertItem( 1, _("Windspeed") );
+	m_map_opts_list->InsertItem( 2, _("Tidal strength") );
+	m_map_opts_list->InsertItem( 3, _("Gravity") );
+	m_map_opts_list->InsertItem( 4, _("Extractor radius") );
+	m_map_opts_list->InsertItem( 5, _("Max metal") );
+	m_map_opts_list->InsertItem( 6, _("Start positions") );
 }
 
 MapSelectDialog::~MapSelectDialog()
@@ -221,8 +252,24 @@ UnitSyncMap* MapSelectDialog::GetSelectedMap() const
 
 void MapSelectDialog::OnMapSelected( wxCommandEvent& event )
 {
-	wxLogDebugFunc( event.GetString() );
-	//EndModal( wxID_OK );
+	const wxString& mapname = event.GetString();
+
+	wxLogDebugFunc( mapname );
+
+	const UnitSyncMap* pMap = m_mapgrid->GetSelectedMap();
+	if ( pMap == NULL) return;
+	const UnitSyncMap& map = *pMap;
+
+	m_map_name->SetLabel( RefineMapname( map.name ) + _T("\n\n") + map.info.description );
+
+	// TODO: refactor, this is copied from battlemaptab.cpp
+	m_map_opts_list->SetItem( 0, 1, wxString::Format( _T("%dx%d"), map.info.width/512, map.info.height/512 ) );
+	m_map_opts_list->SetItem( 1, 1, wxString::Format( _T("%d-%d"), map.info.minWind, map.info.maxWind ) );
+	m_map_opts_list->SetItem( 2, 1, wxString::Format( _T("%d"), map.info.tidalStrength ) );
+	m_map_opts_list->SetItem( 3, 1, wxString::Format( _T("%d"), map.info.gravity ) );
+	m_map_opts_list->SetItem( 4, 1, wxString::Format( _T("%d"), map.info.extractorRadius ) );
+	m_map_opts_list->SetItem( 5, 1, wxString::Format( _T("%.3f"), map.info.maxMetal ) );
+	m_map_opts_list->SetItem( 6, 1, wxString::Format( _T("%d"), map.info.posCount ) );
 }
 
 void MapSelectDialog::OnVerticalDirectionClicked( wxCommandEvent& event )

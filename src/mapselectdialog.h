@@ -17,6 +17,7 @@ class wxTextCtrl;
 class MapGridCtrl;
 class wxRadioButton;
 class wxStaticText;
+class wxListCtrl;
 class wxBoxSizer;
 class wxStaticBoxSizer;
 class wxChoice;
@@ -40,12 +41,15 @@ class MapSelectDialog: public wxDialog
 
 		//(*Declarations(MapSelectDialog)
 		wxRadioButton* m_filter_recent;
+		wxStaticText* m_map_name;
 		wxRadioButton* m_filter_all;
 		MapGridCtrl* m_mapgrid;
 		wxChoice* m_vertical_choice;
 		wxChoice* m_horizontal_choice;
 		wxTextCtrl* m_filter_text;
+		wxListCtrl* m_map_opts_list;
 		wxRadioButton* m_filter_popular;
+		wxStaticBoxSizer* m_map_details;
 		//*)
 		wxButton* m_vertical_direction_button;
 		wxButton* m_horizontal_direction_button;
@@ -59,6 +63,8 @@ class MapSelectDialog: public wxDialog
 		static const long ID_FILTER_POPULAR;
 		static const long ID_FILTER_RECENT;
 		static const long ID_FILTER_TEXT;
+		static const long ID_MAP_NAME;
+		static const long ID_MAP_OPTS_LIST;
 		static const long ID_MAPGRID;
 		//*)
 		static const long ID_VERTICAL_DIRECTION;
