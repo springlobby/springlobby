@@ -25,7 +25,7 @@ class wxChoice;
 class wxButton;
 
 class Ui;
-class UnitSyncMap;
+struct UnitSyncMap;
 
 
 class MapSelectDialog: public wxDialog
