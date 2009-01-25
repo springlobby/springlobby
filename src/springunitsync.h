@@ -159,6 +159,11 @@ class SpringUnitSync : public IUnitSync
     wxArrayString m_map_array;
     wxArrayString m_mod_array;
 
+    /// caches sett().GetCachePath(), because that method calls back into
+    /// susynclib(), there's a good chance main thread blocks on some
+    /// WorkerThread operation... cache is invalidated on reload.
+    wxString m_cache_path;
+
     mutable wxCriticalSection m_lock;
     WorkerThread m_cache_thread;
     EvtHandlerCollection m_evt_handlers;

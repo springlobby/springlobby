@@ -65,6 +65,7 @@ bool SpringUnitSync::LoadUnitSyncLib( const wxString& unitsyncloc )
    bool ret = _LoadUnitSyncLib( unitsyncloc );
    if (ret)
    {
+      m_cache_path = sett().GetCachePath();
       PopulateArchiveList();
    }
    return ret;
@@ -956,7 +957,7 @@ wxString SpringUnitSync::GetFileCachePath( const wxString& name, const wxString&
 {
   LOCK_UNITSYNC;
 
-  wxString ret = sett().GetCachePath();
+  wxString ret = m_cache_path;
   if ( !name.IsEmpty() ) ret << name;
   else return wxEmptyString;
   if ( !hash.IsEmpty() ) ret << hash;
