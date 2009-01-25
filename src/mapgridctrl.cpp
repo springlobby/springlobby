@@ -248,6 +248,7 @@ void MapGridCtrl::UpdateGridSize()
 	const int width = int(sqrt( double(m_maps.size()) ) + 0.5);
 	m_size.x = width;
 	m_size.y = (m_maps.size() + width - 1) / width;
+	CheckInBounds();
 }
 
 
