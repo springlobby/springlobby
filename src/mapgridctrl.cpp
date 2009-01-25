@@ -200,6 +200,7 @@ void MapGridCtrl::Clear()
 {
 	m_maps_unused.insert( m_maps.begin(), m_maps.end() );
 	m_maps_unused.insert( m_maps_filtered.begin(), m_maps_filtered.end() );
+	m_pending_maps.clear();
 	m_maps.clear();
 	m_maps_filtered.clear();
 	m_grid.clear();
