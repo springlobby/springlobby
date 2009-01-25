@@ -10,7 +10,7 @@
 
 class wxImage;
 
-extern const wxEventType UnitSyncGetMapImageAsyncCompletedEvt;
+extern const wxEventType UnitSyncAsyncOperationCompletedEvt;
 
 struct UnitSyncMod
 {
@@ -201,6 +201,7 @@ class IUnitSync
     virtual void GetMetalmapAsync( const wxString& mapname, int width, int height, int evtHandlerId ) = 0;
     virtual void GetHeightmapAsync( const wxString& mapname, int evtHandlerId ) = 0;
     virtual void GetHeightmapAsync( const wxString& mapname, int width, int height, int evtHandlerId ) = 0;
+    virtual void GetMapExAsync( const wxString& mapname, int evtHandlerId ) = 0;
 };
 
 IUnitSync& usync();
@@ -232,6 +233,7 @@ class UnitSyncAsyncOps
     void GetMetalmap( const wxString& mapname, int w, int h )  { usync().GetMetalmapAsync( mapname, w, h, m_id ); }
     void GetHeightmap( const wxString& mapname )               { usync().GetHeightmapAsync( mapname, m_id ); }
     void GetHeightmap( const wxString& mapname, int w, int h ) { usync().GetHeightmapAsync( mapname, w, h, m_id ); }
+    void GetMapEx( const wxString& mapname )                   { usync().GetMapExAsync( mapname, m_id ); }
 
   private:
     int m_id;

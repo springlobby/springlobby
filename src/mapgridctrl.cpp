@@ -27,7 +27,8 @@ BEGIN_EVENT_TABLE( MapGridCtrl, wxPanel )
 	EVT_MOTION( MapGridCtrl::OnMouseMove )
 	EVT_LEFT_DOWN( MapGridCtrl::OnLeftDown )
 	EVT_LEFT_UP( MapGridCtrl::OnLeftUp )
-	EVT_COMMAND( wxID_ANY, UnitSyncGetMapImageAsyncCompletedEvt, MapGridCtrl::OnGetMapImageAsyncCompleted )
+	EVT_COMMAND( 2, UnitSyncAsyncOperationCompletedEvt, MapGridCtrl::OnGetMapImageAsyncCompleted )
+	EVT_COMMAND( 3, UnitSyncAsyncOperationCompletedEvt, MapGridCtrl::OnGetMapExAsyncCompleted )
 END_EVENT_TABLE()
 
 
@@ -217,10 +218,7 @@ void MapGridCtrl::AddMap( const wxString& mapname )
 	}
 
 	// if not, get it from unitsync
-	try {
-		AddMap( usync().GetMapEx( mapname ) );
-	}
-	catch (...) {}
+	m_async.GetMapEx( mapname );
 }
 
 
@@ -524,4 +522,19 @@ void MapGridCtrl::OnGetMapImageAsyncCompleted( wxCommandEvent& event )
 	UpdateAsyncFetches();
 
 	Refresh(); // TODO: use RefreshRect ?
+}
+
+
+void MapGridCtrl::OnGetMapExAsyncCompleted( wxCommandEvent& event )
+{
+	wxString mapname = event.GetString();
+
+	wxLogDebugFunc( mapname );
+
+	try {
+		AddMap( usync().GetMapEx( mapname ) );
+	}
+	catch (...) {}
+
+	Refresh();
 }

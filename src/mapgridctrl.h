@@ -79,6 +79,7 @@ class MapGridCtrl : public wxPanel
 		void OnLeftUp( wxMouseEvent& event );
 
 		void OnGetMapImageAsyncCompleted( wxCommandEvent& event );
+		void OnGetMapExAsyncCompleted( wxCommandEvent& event );
 
 	protected:
 

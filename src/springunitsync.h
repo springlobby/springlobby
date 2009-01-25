@@ -150,6 +150,7 @@ class SpringUnitSync : public IUnitSync
     void GetMetalmapAsync( const wxString& mapname, int width, int height, int evtHandlerId );
     void GetHeightmapAsync( const wxString& mapname, int evtHandlerId );
     void GetHeightmapAsync( const wxString& mapname, int width, int height, int evtHandlerId );
+    void GetMapExAsync( const wxString& mapname, int evtHandlerId );
 
   private:
 

@@ -31,7 +31,7 @@
 
 #define LOCK_UNITSYNC wxCriticalSectionLocker lock_criticalsection(m_lock)
 
-const wxEventType UnitSyncGetMapImageAsyncCompletedEvt = wxNewEventType();
+const wxEventType UnitSyncAsyncOperationCompletedEvt = wxNewEventType();
 
 
 IUnitSync& usync()
@@ -1098,9 +1098,9 @@ namespace
       int m_evtHandlerId;
 
     protected:
-      void PostEvent()
+      void PostEvent( int id )
       {
-        wxCommandEvent evt( UnitSyncGetMapImageAsyncCompletedEvt );
+        wxCommandEvent evt( UnitSyncAsyncOperationCompletedEvt, id );
         evt.SetString( m_mapname );
         m_usync->PostEvent( m_evtHandlerId, evt );
       }
@@ -1115,7 +1115,7 @@ namespace
       void Run()
       {
         (m_usync->*m_loadMethod)( m_mapname );
-        PostEvent();
+        PostEvent( 1 );
       }
 
       LoadMethodPtr m_loadMethod;
@@ -1130,7 +1130,7 @@ namespace
       void Run()
       {
         (m_usync->*m_loadMethod)( m_mapname, m_width, m_height );
-        PostEvent();
+        PostEvent( 2 );
       }
 
       int m_width;
@@ -1139,6 +1139,19 @@ namespace
 
       GetScaledMapImageAsyncWorkItem( SpringUnitSync* usync, const wxString& mapname, int w, int h, int evtHandlerId, ScaledLoadMethodPtr loadMethod )
         : GetMapImageAsyncResult( usync, mapname, evtHandlerId ), m_width(w), m_height(h), m_loadMethod(loadMethod) {}
+  };
+
+  class GetMapExAsyncWorkItem : public GetMapImageAsyncResult
+  {
+    public:
+      void Run()
+      {
+        m_usync->GetMapEx( m_mapname );
+        PostEvent( 3 );
+      }
+
+      GetMapExAsyncWorkItem( SpringUnitSync* usync, const wxString& mapname, int evtHandlerId )
+        : GetMapImageAsyncResult( usync, mapname, evtHandlerId ) {}
   };
 };
 
@@ -1237,6 +1250,16 @@ void SpringUnitSync::GetHeightmapAsync( const wxString& mapname, int evtHandlerI
 void SpringUnitSync::GetHeightmapAsync( const wxString& mapname, int width, int height, int evtHandlerId )
 {
   GetHeightmapAsync( mapname, evtHandlerId );
+}
+
+void SpringUnitSync::GetMapExAsync( const wxString& mapname, int evtHandlerId )
+{
+  wxLogDebugFunc( mapname );
+
+  GetMapExAsyncWorkItem* work;
+
+  work = new GetMapExAsyncWorkItem( this, mapname, evtHandlerId );
+  m_cache_thread.DoWork( work, 200 /* higher prio then GetMinimapAsync */ );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
