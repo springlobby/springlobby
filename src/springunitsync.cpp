@@ -1100,44 +1100,62 @@ namespace
   class GetMapImageAsyncResult : public WorkItem // TODO: rename
   {
     public:
+      void Run()
+      {
+        try
+		{
+          RunCore();
+        }
+        catch (...)
+        {
+          // Event without mapname means some async job failed.
+          // This is sufficient for now, we just need symmetry between
+          // number of initiated async jobs and number of finished/failed
+          // async jobs.
+          m_mapname = wxEmptyString;
+        }
+        PostEvent();
+      }
+
+    protected:
       SpringUnitSync* m_usync;
       wxString m_mapname;
       int m_evtHandlerId;
+      int m_evtId;
 
-    protected:
-      void PostEvent( int id )
+      void PostEvent()
       {
-        wxCommandEvent evt( UnitSyncAsyncOperationCompletedEvt, id );
+        wxCommandEvent evt( UnitSyncAsyncOperationCompletedEvt, m_evtId );
         evt.SetString( m_mapname );
         m_usync->PostEvent( m_evtHandlerId, evt );
       }
 
-      GetMapImageAsyncResult( SpringUnitSync* usync, const wxString& mapname, int evtHandlerId )
-        : m_usync(usync), m_mapname(mapname.c_str()), m_evtHandlerId(evtHandlerId) {}
+      virtual void RunCore() = 0;
+
+      GetMapImageAsyncResult( SpringUnitSync* usync, const wxString& mapname, int evtHandlerId, int evtId )
+        : m_usync(usync), m_mapname(mapname.c_str()), m_evtHandlerId(evtHandlerId), m_evtId(evtId) {}
   };
 
   class GetMapImageAsyncWorkItem : public GetMapImageAsyncResult
   {
     public:
-      void Run()
+      void RunCore()
       {
-        (m_usync->*m_loadMethod)( m_mapname );
-        PostEvent( 1 );
+		(m_usync->*m_loadMethod)( m_mapname );
       }
 
       LoadMethodPtr m_loadMethod;
 
       GetMapImageAsyncWorkItem( SpringUnitSync* usync, const wxString& mapname, int evtHandlerId, LoadMethodPtr loadMethod )
-        : GetMapImageAsyncResult( usync, mapname, evtHandlerId ), m_loadMethod(loadMethod) {}
+        : GetMapImageAsyncResult( usync, mapname, evtHandlerId, 1 ), m_loadMethod(loadMethod) {}
   };
 
   class GetScaledMapImageAsyncWorkItem : public GetMapImageAsyncResult
   {
     public:
-      void Run()
+      void RunCore()
       {
         (m_usync->*m_loadMethod)( m_mapname, m_width, m_height );
-        PostEvent( 2 );
       }
 
       int m_width;
@@ -1145,20 +1163,19 @@ namespace
       ScaledLoadMethodPtr m_loadMethod;
 
       GetScaledMapImageAsyncWorkItem( SpringUnitSync* usync, const wxString& mapname, int w, int h, int evtHandlerId, ScaledLoadMethodPtr loadMethod )
-        : GetMapImageAsyncResult( usync, mapname, evtHandlerId ), m_width(w), m_height(h), m_loadMethod(loadMethod) {}
+        : GetMapImageAsyncResult( usync, mapname, evtHandlerId, 2 ), m_width(w), m_height(h), m_loadMethod(loadMethod) {}
   };
 
   class GetMapExAsyncWorkItem : public GetMapImageAsyncResult
   {
     public:
-      void Run()
+      void RunCore()
       {
         m_usync->GetMapEx( m_mapname );
-        PostEvent( 3 );
       }
 
       GetMapExAsyncWorkItem( SpringUnitSync* usync, const wxString& mapname, int evtHandlerId )
-        : GetMapImageAsyncResult( usync, mapname, evtHandlerId ) {}
+        : GetMapImageAsyncResult( usync, mapname, evtHandlerId, 3 ) {}
   };
 };
 
