@@ -45,6 +45,7 @@ MapGridCtrl::MapGridCtrl( wxWindow* parent, Ui& ui, wxSize size, wxWindowID id )
 	: wxPanel( parent, id, wxDefaultPosition, size, wxSIMPLE_BORDER|wxFULL_REPAINT_ON_RESIZE )
 	, m_ui( ui )
 	, m_async( this )
+	, m_selection_follows_mouse( false ) // TODO: make this a setting sometime?
 	, m_size( 0, 0 )
 	, m_pos( 0, 0 )
 	, m_in_mouse_drag( false )
@@ -430,6 +431,7 @@ void MapGridCtrl::OnMouseMove( wxMouseEvent& event )
 		const wxPoint pos_unscaled = event.GetPosition() + m_pos;
 		const wxPoint pos = wxPoint2DInt(pos_unscaled) / (MINIMAP_SIZE + MINIMAP_MARGIN);
 		const int idx = pos.y * m_size.x + pos.x;
+		MapData* old_mouseover_map = m_mouseover_map;
 
 		// use pos_unscaled for tests against 0 because negative values lower
 		// than MINIMAP_SIZE get rounded up to 0 when diviving by MINIMAP_SIZE..
@@ -438,6 +440,12 @@ void MapGridCtrl::OnMouseMove( wxMouseEvent& event )
 		}
 		else {
 			m_mouseover_map = NULL;
+		}
+
+		if ( m_mouseover_map != old_mouseover_map ) {
+			if ( m_selection_follows_mouse && m_mouseover_map != NULL ) {
+				SelectMap( m_mouseover_map );
+			}
 		}
 	}
 }
@@ -458,19 +466,25 @@ void MapGridCtrl::OnLeftUp( wxMouseEvent& event )
 	m_in_mouse_drag = false;
 
 	if ( wxPoint2DInt(event.GetPosition() - m_first_mouse_pos).GetVectorLength() <= 3 ) {
-		m_selected_map = m_mouseover_map;
-
-		if ( m_selected_map != NULL ) {
-			wxLogMessage( _T("MapGridCtrl: Selected map: ") + m_selected_map->name );
-
-			wxCommandEvent evt( MapSelectedEvt, GetId() );
-			evt.SetEventObject( this );
-			evt.SetString( m_selected_map->name );
-			wxPostEvent( this, evt );
-		}
-
-		Refresh();
+		SelectMap( m_mouseover_map );
 	}
+}
+
+
+void MapGridCtrl::SelectMap( MapData* map )
+{
+	m_selected_map = map;
+
+	if ( m_selected_map != NULL ) {
+		wxLogMessage( _T("MapGridCtrl: Selected map: ") + m_selected_map->name );
+
+		wxCommandEvent evt( MapSelectedEvt, GetId() );
+		evt.SetEventObject( this );
+		evt.SetString( m_selected_map->name );
+		wxPostEvent( this, evt );
+	}
+
+	Refresh();
 }
 
 

@@ -141,9 +141,12 @@ class MapGridCtrl : public wxPanel
 		void DrawMap( wxDC& dc, MapData& map, int x, int y );
 		void DrawBackground( wxDC& dc );
 		void SetMinimap( MapMap& maps, const wxString& mapname, const wxBitmap& minimap );
+		void SelectMap( MapData* map );
 
 		Ui& m_ui;
 		UnitSyncAsyncOps m_async;
+
+		const bool m_selection_follows_mouse;
 
 		/// Set of maps which are queued to be fetched asynchronously.
 		std::vector< wxString > m_pending_maps;
