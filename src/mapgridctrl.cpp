@@ -68,8 +68,6 @@ MapGridCtrl::MapGridCtrl( wxWindow* parent, Ui& ui, wxSize size, wxWindowID id )
 	ASSERT_EXCEPTION( m_img_foreground.HasAlpha(),    _T("map_select_2_png must have an alpha channel") );
 
 	m_img_minimap_loading = wxBitmap( BlendImage( m_img_foreground, m_img_background, false ) );
-
-	UpdateToolTip();
 }
 
 
@@ -277,36 +275,6 @@ void MapGridCtrl::CheckInBounds()
 }
 
 
-void MapGridCtrl::UpdateToolTip()
-{
-	if ( m_mouseover_map != NULL ) {
-		const MapInfo& info = m_mouseover_map->info;
-		const wxString endl = _T("\n");
-		wxString tooltip = RefineMapname( m_mouseover_map->name );
-
-		tooltip += _T(" (") + TowxString(info.width / 512) + _T("x") + TowxString(info.height / 512) + _T(")");
-		if ( !info.author.empty() ) tooltip += _(" by ") + info.author;
-		tooltip += endl + endl;
-
-		if ( !info.description.empty() ) tooltip += info.description + endl;
-
-		// TODO: maybe use something else then tabs?  May be pain to get right when translating..
-		tooltip += _("Tidal strength\t: ") + TowxString(info.tidalStrength) + endl;
-		tooltip += _("Gravity\t\t: ") + TowxString(info.gravity) + endl;
-		tooltip += _("Metal scale\t: ") + TowxString(info.maxMetal) + endl;
-		tooltip += _("Extractor radius\t: ") + TowxString(info.extractorRadius) + endl;
-		tooltip += _("Wind\t\t\t: ") + TowxString(info.minWind) + _T(" - ") + TowxString(info.maxWind) + endl;
-		tooltip += _("Start positions\t: ") + TowxString(info.posCount);
-
-		SetToolTip( tooltip );
-	}
-	else {
-		SetToolTip( _("Drag to move around the grid of map previews.\n"
-		              "Click to select a map and close this window.") );
-	}
-}
-
-
 void MapGridCtrl::UpdateAsyncFetches()
 {
 	while ( m_async_mapinfo_fetches < MAX_MAPINFO_FETCHES && !m_pending_maps.empty() ) {
@@ -462,7 +430,6 @@ void MapGridCtrl::OnMouseMove( wxMouseEvent& event )
 		const wxPoint pos_unscaled = event.GetPosition() + m_pos;
 		const wxPoint pos = wxPoint2DInt(pos_unscaled) / (MINIMAP_SIZE + MINIMAP_MARGIN);
 		const int idx = pos.y * m_size.x + pos.x;
-		MapData* old_mouseover_map = m_mouseover_map;
 
 		// use pos_unscaled for tests against 0 because negative values lower
 		// than MINIMAP_SIZE get rounded up to 0 when diviving by MINIMAP_SIZE..
@@ -471,10 +438,6 @@ void MapGridCtrl::OnMouseMove( wxMouseEvent& event )
 		}
 		else {
 			m_mouseover_map = NULL;
-		}
-
-		if ( old_mouseover_map != m_mouseover_map ) {
-			UpdateToolTip();
 		}
 	}
 }

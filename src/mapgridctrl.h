@@ -135,7 +135,6 @@ class MapGridCtrl : public wxPanel
 		template< class Compare > void _Sort( int dimension, Compare cmp );
 
 		void UpdateGridSize();
-		void UpdateToolTip();
 		void UpdateAsyncFetches();
 		void FetchMapInfo( const wxString& mapname );
 		void FetchMinimap( MapData& map );
