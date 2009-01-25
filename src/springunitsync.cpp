@@ -70,8 +70,8 @@ bool SpringUnitSync::LoadUnitSyncLib( const wxString& unitsyncloc )
 
 void SpringUnitSync::PopulateArchiveList()
 {
-  m_maps_list.empty();
-  m_mods_list.empty();
+  m_maps_list.clear();
+  m_mods_list.clear();
   m_mod_array.Empty();
   m_map_array.Empty();
 
@@ -118,7 +118,7 @@ void SpringUnitSync::PopulateArchiveList()
 bool SpringUnitSync::_LoadUnitSyncLib( const wxString& unitsyncloc )
 {
   try {
-    susynclib().Load( unitsyncloc, true, sett().GetForcedSpringConfigFilePath() );
+    susynclib().Load( unitsyncloc, sett().GetForcedSpringConfigFilePath() );
   } catch (...) {
     return false;
   }
@@ -617,40 +617,68 @@ wxArrayString SpringUnitSync::GetAIList( const wxString& modname )
 {
   wxLogDebugFunc( _T("") );
 
-  // list dynamic link libraries
-  int dllini = susynclib().InitFindVFS(  wxDynamicLibrary::CanonicalizeName(_T("AI/Bot-libs/*"), wxDL_MODULE) );
+	wxArrayString ret;
 
-  wxArrayString ret;
-  wxString FileName;
-
-  dllini = susynclib().FindFilesVFS( dllini, FileName );
-  while ( dllini )
-  {
-    if ( ret.Index( FileName.BeforeLast( '/') ) == wxNOT_FOUND ) ret.Add ( FileName ); // don't add duplicates
-    dllini = susynclib().FindFilesVFS( dllini, FileName );
-  }
-  // list jar files (java AIs)
-  int jarini = susynclib().InitFindVFS(  _T("AI/Bot-libs/*.jar") );
-
-  jarini = susynclib().FindFilesVFS( jarini, FileName );
-  while ( jarini )
-  {
-    if ( ret.Index( FileName.BeforeLast( '/') ) == wxNOT_FOUND ) ret.Add ( FileName ); // don't add duplicates
-    jarini = susynclib().FindFilesVFS( jarini, FileName );
-  }
-
-	try
-	{ // Older versions of unitsync does not have these functions.
-		const int LuaAICount = susynclib().GetLuaAICount( modname );
-		for ( int i = 0; i < LuaAICount; i++ )
+	if ( usync().VersionSupports( USYNC_GetSkirmishAI ) )
+	{
+		int total = susynclib().GetSkirmishAICount( modname );
+		for ( int i = 0; i < total; i++ )
 		{
-			 ret.Add( _T( "LuaAI:" ) +  susynclib().GetLuaAIName( i ) );
+			wxArrayString infos = susynclib().GetAIInfo( i );
+			int namepos = infos.Index( _T("shortName") ) + 1;
+			int versionpos = infos.Index( _T("version") ) + 1;
+			wxString ainame;
+			if ( namepos > 0 ) ainame += infos[namepos];
+			if ( versionpos > 0 ) ainame += _T(" ") + infos[versionpos];
+			ret.Add( ainame );
 		}
-	} catch (...) {}
+	}
+	else
+	{
+		// list dynamic link libraries
+		int dllini = susynclib().InitFindVFS(  wxDynamicLibrary::CanonicalizeName(_T("AI/Bot-libs/*"), wxDL_MODULE) );
+
+		wxString FileName;
+		dllini = susynclib().FindFilesVFS( dllini, FileName );
+		while ( dllini )
+		{
+			if ( ret.Index( FileName.BeforeLast( '/') ) == wxNOT_FOUND ) ret.Add ( FileName ); // don't add duplicates
+			dllini = susynclib().FindFilesVFS( dllini, FileName );
+		}
+		// list jar files (java AIs)
+		int jarini = susynclib().InitFindVFS(  _T("AI/Bot-libs/*.jar") );
+
+		jarini = susynclib().FindFilesVFS( jarini, FileName );
+		while ( jarini )
+		{
+			if ( ret.Index( FileName.BeforeLast( '/') ) == wxNOT_FOUND ) ret.Add ( FileName ); // don't add duplicates
+			jarini = susynclib().FindFilesVFS( jarini, FileName );
+		}
+
+		// luaai
+		try
+		{
+			const int LuaAICount = susynclib().GetLuaAICount( modname );
+			for ( int i = 0; i < LuaAICount; i++ )
+			{
+				 ret.Add( _T( "LuaAI:" ) +  susynclib().GetLuaAIName( i ) );
+			}
+		} catch (...) {}
+	}
 
   return ret;
 }
 
+wxArrayString SpringUnitSync::GetAIInfos( int index )
+{
+	wxArrayString ret;
+	try
+	{
+		ret = susynclib().GetAIInfo( index );
+	}
+	catch ( unitsync_assert ) {}
+	return ret;
+}
 
 int SpringUnitSync::GetNumUnits( const wxString& modname )
 {
@@ -715,10 +743,15 @@ wxImage SpringUnitSync::GetMinimap( const wxString& mapname, int width, int heig
   // and we need to resize it to the correct aspect ratio.
   if (img.GetWidth() > 1 && img.GetHeight() > 1)
   {
-    MapInfo mapinfo = _GetMapInfoEx( mapname );
+    try {
+      MapInfo mapinfo = _GetMapInfoEx( mapname );
 
-    wxSize image_size = MakeFit(wxSize(mapinfo.width, mapinfo.height), wxSize(width, height));
-    img.Rescale( image_size.GetWidth(), image_size.GetHeight() );
+      wxSize image_size = MakeFit(wxSize(mapinfo.width, mapinfo.height), wxSize(width, height));
+      img.Rescale( image_size.GetWidth(), image_size.GetHeight() );
+    }
+    catch (...) {
+      img = wxImage( 1, 1 );
+    }
   }
 
   return img;
@@ -804,7 +837,7 @@ MapInfo SpringUnitSync::_GetMapInfoEx( const wxString& mapname )
   {
     cache = GetCacheFile( GetFileCachePath( mapname, _T(""), false ) + _T(".infoex") );
 
-    ASSERT_EXCEPTION( cache.GetCount() >= 10, _T("not enought lines found in cache info ex") );
+    ASSERT_EXCEPTION( cache.GetCount() >= 11, _T("not enough lines found in cache info ex") );
     info.author = cache[0];
     info.tidalStrength =  s2l( cache[1] );
     info.gravity = s2l( cache[2] );
@@ -880,16 +913,11 @@ wxString SpringUnitSync::GetFileCachePath( const wxString& name, const wxString&
 {
   wxString ret = sett().GetCachePath();
   if ( !name.IsEmpty() ) ret << name;
-  else if ( !hash.IsEmpty() )
-  {
-    if ( IsMod ) ret << m_mods_list[hash];
-    else ret << m_maps_list[hash];
-  }
   else return wxEmptyString;
   if ( !hash.IsEmpty() ) ret << hash;
   else
   {
-    if ( IsMod ) ret <<  _T("-") << susynclib().GetPrimaryModChecksumFromName( name );
+    if ( IsMod ) ret <<  _T("-") << m_mods_list[name];
     else
     {
         //very important to call getmapcount before getmapchecksum

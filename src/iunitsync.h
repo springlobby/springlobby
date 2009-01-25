@@ -61,7 +61,8 @@ class IUnitSync
     {
       USYNC_Sett_Handler,
       USYNC_GetInfoMap,
-      USYNC_GetDataDir
+      USYNC_GetDataDir,
+      USYNC_GetSkirmishAI
     };
 
     enum MediaType
@@ -171,6 +172,7 @@ class IUnitSync
     virtual bool VersionSupports( GameFeature feature ) = 0;
 
     virtual wxArrayString GetAIList( const wxString& modname ) = 0;
+    virtual wxArrayString GetAIInfos( int index ) = 0;
 
     virtual bool ReloadUnitSyncLib() = 0;
 

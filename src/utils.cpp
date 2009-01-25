@@ -176,7 +176,7 @@ wxString GetSpringLobbyVersion()
 #ifndef AUX_VERSION
     return (WX_STRINGC(VERSION)).BeforeFirst( _T(' ') );
 #else
-    return (WX_STRINGC(VERSION)).BeforeFirst( _T(' ') ) + _T(" AUX_VERSION");
+    return (WX_STRINGC(VERSION)).BeforeFirst( _T(' ') ) + WX_STRINGC(AUX_VERSION);
 #endif
 
 }

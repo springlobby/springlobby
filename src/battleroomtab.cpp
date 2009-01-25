@@ -82,9 +82,18 @@ BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
 
 END_EVENT_TABLE()
 
-//TODO make this more flexible
-const wxString team_choices[] = { _T("1"), _T("2"), _T("3"), _T("4"), _T("5"), _T("6"), _T("7"), _T("8"), _T("9"), _T("10"), _T("11"), _T("12"), _T("13"), _T("14"), _T("15"), _T("16") };
+template < int N, int S = 1 >
+class MyStrings : public wxArrayString
+{
+    public:
+    MyStrings()
+    {
+        for ( int i = S; i <= N; ++i)
+            Add( TowxString(i) );
+    }
+};
 
+const MyStrings<16> team_choices;
 
 BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
         wxScrolledWindow( parent, -1 ),m_ui(ui), m_battle(battle)
@@ -98,9 +107,9 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
     UserBattleStatus& myself = m_battle.GetMe().BattleStatus();
 
     m_player_panel = new wxPanel( m_splitter , -1 );
-    m_team_sel = new wxComboBox( m_player_panel, BROOM_TEAMSEL, _T("1"), wxDefaultPosition, wxSize(50,CONTROL_HEIGHT), 16, team_choices );
+    m_team_sel = new wxComboBox( m_player_panel, BROOM_TEAMSEL, _T("1"), wxDefaultPosition, wxSize(50,CONTROL_HEIGHT), team_choices );
     m_team_sel->SetToolTip(TE(_("Players with the same team number share control of their units.")));
-    m_ally_sel = new wxComboBox( m_player_panel, BROOM_ALLYSEL, _T("1"), wxDefaultPosition, wxSize(50,CONTROL_HEIGHT), 16, team_choices );
+    m_ally_sel = new wxComboBox( m_player_panel, BROOM_ALLYSEL, _T("1"), wxDefaultPosition, wxSize(50,CONTROL_HEIGHT), team_choices );
     m_ally_sel->SetToolTip(TE(_("Players with the same ally number work together to achieve victory.")));
     m_color_sel = new ColorButton( m_player_panel, BROOM_COLOURSEL, myself.colour, wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
     m_color_sel->SetToolTip(TE(_("Select a color to identify your units in-game")));
@@ -393,9 +402,9 @@ void BattleRoomTab::UpdateBattleInfo( const wxString& Tag )
     }
     else if ( type == OptionsWrapper::PrivateOptions )
     {
-        if ( key == _T("mapname") ) /// the map has been changed
+        if ( key == _T("mapname") ) // the map has been changed
         {
-            try   /// updates map info summary
+            try   // updates map info summary
             {
                 ASSERT_EXCEPTION( m_battle.MapExists(), _("Map does not exist.") );
                 UnitSyncMap map = m_battle.LoadMap();
@@ -413,7 +422,7 @@ void BattleRoomTab::UpdateBattleInfo( const wxString& Tag )
                 m_opts_list->SetItem( m_opt_list_map[ _("Tidal strength") ], 1, _T("?") );
             }
 
-            ///delete any eventual map option from the list and add options of the new map
+            //delete any eventual map option from the list and add options of the new map
             for ( long i = m_map_opts_index; i < m_opts_list->GetItemCount(); i++ ) m_opts_list->DeleteItem( i );
             m_battle.CustomBattleOptions().loadOptions( OptionsWrapper::MapOption, m_battle.GetHostModName() );
             AddMMOptionsToList( m_map_opts_index, OptionsWrapper::MapOption );
@@ -569,7 +578,7 @@ void BattleRoomTab::OnFixTeams( wxCommandEvent& event )
 void BattleRoomTab::OnFixColours( wxCommandEvent& event )
 {
     wxLogMessage(_T(""));
-    if (!IsHosted()) /// Works with autohosts, and human hosts knows what it mean.
+    if (!IsHosted()) // Works with autohosts, and human hosts knows what it mean.
     {
         m_battle.Say(_T("!fixcolors"));
         return;
@@ -592,10 +601,12 @@ void BattleRoomTab::OnAddBot( wxCommandEvent& event )
         bs.spectator = false;
         bs.side = 0;
         bs.ready = true;
-        bs.order = 0;
         bs.handicap = 0;
-        bs.colour = m_battle.GetFreeColour( NULL );
-        m_ui.GetServer().AddBot( m_battle.GetBattleId(), dlg.GetNick(), m_battle.GetMe().GetNick(), bs, dlg.GetAI() );
+        bs.colour = m_battle.GetFreeColour();
+        bs.aishortname = dlg.GetAIShortName();
+        bs.aiversion = dlg.GetAIVersion();
+        bs.owner = m_battle.GetMe().GetNick();
+        m_ui.GetServer().AddBot( m_battle.GetBattleId(), dlg.GetNick(), bs );
     }
 }
 
@@ -621,56 +632,40 @@ void BattleRoomTab::OnAutoHost( wxCommandEvent& event )
 
 void BattleRoomTab::OnImSpec( wxCommandEvent& event )
 {
-    UserBattleStatus& bs = m_battle.GetMe().BattleStatus();
-    bs.spectator = m_spec_chk->GetValue();
-    //m_battle.GetMe().SetBattleStatus( bs );
-    m_battle.SendMyBattleStatus();
+    m_battle.ForceSpectator( m_battle.GetMe(), m_spec_chk->GetValue() );
 }
 
 
 void BattleRoomTab::OnTeamSel( wxCommandEvent& event )
 {
-    User& u = m_battle.GetMe();
-    UserBattleStatus& bs = u.BattleStatus();
-    m_team_sel->GetValue().ToULong( (unsigned long*)&bs.team );
-    bs.team--;
-    //u.SetBattleStatus( bs );
-    m_battle.SendMyBattleStatus();
+		unsigned long team;
+    m_team_sel->GetValue().ToULong( &team );
+		m_battle.ForceTeam( m_battle.GetMe(), team -1  );
 }
 
 
 void BattleRoomTab::OnAllySel( wxCommandEvent& event )
 {
-    User& u = m_battle.GetMe();
-    UserBattleStatus& bs = u.BattleStatus();
-    m_ally_sel->GetValue().ToULong( (unsigned long*)&bs.ally );
-    bs.ally--;
-    //u.SetBattleStatus( bs );
-    m_battle.SendMyBattleStatus();
+		unsigned long ally;
+    m_ally_sel->GetValue().ToULong( &ally );
+		m_battle.ForceAlly( m_battle.GetMe(), ally -1  );
 }
 
 
 void BattleRoomTab::OnColourSel( wxCommandEvent& event )
 {
     User& u = m_battle.GetMe();
-    UserBattleStatus& bs = u.BattleStatus();
-    wxColour CurrentColour = bs.colour;
+    wxColour CurrentColour = u.BattleStatus().colour;
     CurrentColour = GetColourFromUser(this, CurrentColour);
     if ( !CurrentColour.IsColourOk() ) return;
-    bs.colour = CurrentColour;
     sett().SetBattleLastColour( CurrentColour );
-    //u.SetBattleStatus( bs );
-    m_battle.SendMyBattleStatus();
+    m_battle.ForceColour( u, CurrentColour );
 }
 
 
 void BattleRoomTab::OnSideSel( wxCommandEvent& event )
 {
-    User& u = m_battle.GetMe();
-    UserBattleStatus& bs = u.BattleStatus();
-    bs.side = m_side_sel->GetSelection();
-    //u.SetBattleStatus( bs );
-    m_battle.SendMyBattleStatus();
+    m_battle.ForceSide( m_battle.GetMe(), m_side_sel->GetSelection() );
 }
 
 
@@ -702,7 +697,7 @@ void BattleRoomTab::OnShowManagePlayersMenu( wxCommandEvent& event )
 
 void BattleRoomTab::OnUserJoined( User& user )
 {
-    m_chat->Joined( user );
+    if( !user.BattleStatus().IsBot() ) m_chat->Joined( user );
     m_players->AddUser( user );
     if ( &user == &m_battle.GetMe() )
     {
@@ -713,26 +708,8 @@ void BattleRoomTab::OnUserJoined( User& user )
 
 void BattleRoomTab::OnUserLeft( User& user )
 {
-    m_chat->Parted( user, wxEmptyString );
+    if( !user.BattleStatus().IsBot() ) m_chat->Parted( user, wxEmptyString );
     m_players->RemoveUser( user );
-}
-
-
-void BattleRoomTab::OnBotAdded( BattleBot& bot )
-{
-    m_players->AddBot( bot );
-}
-
-
-void BattleRoomTab::OnBotRemoved( BattleBot& bot )
-{
-    m_players->RemoveBot( bot );
-}
-
-
-void BattleRoomTab::OnBotUpdated( BattleBot& bot )
-{
-    m_players->UpdateBot( bot );
 }
 
 

@@ -12,6 +12,7 @@
 #include <wx/sizer.h>
 #include <wx/menu.h>
 #include <wx/dcmemory.h>
+#include <wx/choicdlg.h>
 #ifndef HAVE_WX26
 #include <wx/aui/auibook.h>
 #include "aui/auimanager.h"
@@ -89,6 +90,9 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU( MENU_ABOUT, MainWindow::OnMenuAbout )
   EVT_MENU( MENU_START_TORRENT, MainWindow::OnMenuStartTorrent )
   EVT_MENU( MENU_STOP_TORRENT, MainWindow::OnMenuStopTorrent )
+  EVT_MENU( MENU_SAVE_LAYOUT, MainWindow::OnMenuSaveLayout )
+  EVT_MENU( MENU_LOAD_LAYOUT, MainWindow::OnMenuLoadLayout )
+  EVT_MENU( MENU_DEFAULT_LAYOUT, MainWindow::OnMenuDefaultLayout )
 //  EVT_MENU( MENU_SHOW_TOOLTIPS, MainWindow::OnShowToolTips )
   EVT_MENU( MENU_AUTOJOIN_CHANNELS, MainWindow::OnMenuAutojoinChannels )
   EVT_MENU( MENU_SELECT_LOCALE, MainWindow::OnMenuSelectLocale )
@@ -124,6 +128,14 @@ MainWindow::MainWindow( Ui& ui ) :
   //m_menuEdit = new wxMenu;
   //TODO doesn't work atm
 
+  #ifndef HAVE_WX26
+  /*
+	wxMenu* menuView = new wxMenu;
+	menuView->Append( MENU_SAVE_LAYOUT, _("&Save Layout") );
+	menuView->Append( MENU_LOAD_LAYOUT, _("&Load layout") );
+	menuView->Append( MENU_DEFAULT_LAYOUT, _("&Set &Laoyut as default") );
+	*/
+	#endif
 
   m_menuTools = new wxMenu;
   m_menuTools->Append(MENU_JOIN, _("&Join channel..."));
@@ -150,6 +162,9 @@ MainWindow::MainWindow( Ui& ui ) :
   m_menubar = new wxMenuBar;
   m_menubar->Append(menuFile, _("&File"));
   //m_menubar->Append(m_menuEdit, _("&Edit"));
+  #ifndef HAVE_WX26
+  //m_menubar->Append(menuView, _("&View"));
+  #endif
   m_menubar->Append(m_menuTools, _("&Tools"));
   m_menubar->Append(menuHelp, _("&Help"));
   SetMenuBar(m_menubar);
@@ -163,14 +178,6 @@ MainWindow::MainWindow( Ui& ui ) :
   m_func_tabs = new wxListbook( this, MAIN_TABS, wxDefaultPosition, wxDefaultSize, wxLB_LEFT );
   #endif
 
-  m_chat_icon =  charArr2wxBitmap( chat_icon_png , sizeof (chat_icon_png) ) ;
-  m_battle_icon = charArr2wxBitmap( join_icon_png , sizeof (join_icon_png) );
-  m_sp_icon = charArr2wxBitmap( single_player_icon_png , sizeof (single_player_icon_png) );
-  m_options_icon =   charArr2wxBitmap( options_icon_png , sizeof (options_icon_png) ) ;
-  m_downloads_icon = charArr2wxBitmap( downloads_icon_png , sizeof (downloads_icon_png) );
-  m_replay_icon = charArr2wxBitmap(  replay_icon_png , sizeof (replay_icon_png) );
-
-  m_select_image = new wxBitmap( select_icon_xpm );
 
   m_func_tab_images = new wxImageList( 32, 32 );
   MakeImages();
@@ -197,13 +204,13 @@ MainWindow::MainWindow( Ui& ui ) :
   m_func_tabs->AddPage( m_torrent_tab, _T(""), false, 5 );
 #endif
 #else
-  m_func_tabs->AddPage( m_chat_tab, _("Chat"), true, *m_chat_icon );
-  m_func_tabs->AddPage( m_join_tab, _("Multiplayer"), false, *m_battle_icon );
-  m_func_tabs->AddPage( m_sp_tab, _("Singleplayer"), false, *m_sp_icon );
-  m_func_tabs->AddPage( m_opts_tab, _("Options"), false, *m_options_icon );
-  m_func_tabs->AddPage( m_replay_tab, _("Replays"), false, *m_replay_icon );
+  m_func_tabs->AddPage( m_chat_tab, _("Chat"), true, charArr2wxBitmap( chat_icon_png , sizeof (chat_icon_png) ) );
+  m_func_tabs->AddPage( m_join_tab, _("Multiplayer"), false, charArr2wxBitmap( join_icon_png , sizeof (join_icon_png) ) );
+  m_func_tabs->AddPage( m_sp_tab, _("Singleplayer"), false, charArr2wxBitmap( single_player_icon_png , sizeof (single_player_icon_png) ) );
+  m_func_tabs->AddPage( m_opts_tab, _("Options"), false, charArr2wxBitmap( options_icon_png , sizeof (options_icon_png) ) );
+  m_func_tabs->AddPage( m_replay_tab, _("Replays"), false, charArr2wxBitmap( replay_icon_png , sizeof (replay_icon_png) ) );
 #ifndef NO_TORRENT_SYSTEM
-  m_func_tabs->AddPage( m_torrent_tab, _("Downloads"), false, *m_downloads_icon );
+  m_func_tabs->AddPage( m_torrent_tab, _("Downloads"), false, charArr2wxBitmap(  downloads_icon_png , sizeof (downloads_icon_png) ) );
 #endif
 #endif
 
@@ -254,10 +261,6 @@ MainWindow::~MainWindow()
     delete m_autojoin_dialog;
     m_autojoin_dialog = 0;
   }
-  delete m_chat_icon;
-  delete m_battle_icon;
-  delete m_options_icon;
-  delete m_select_image;
 
 }
 
@@ -281,46 +284,6 @@ void DrawBmpOnBmp( wxBitmap& canvas, wxBitmap& object, int x, int y )
 
 void MainWindow::MakeImages()
 {
-  m_func_tab_images->RemoveAll();
-
-  //if ( m_func_tabs->GetSelection() == 0 ) {
-    /*wxBitmap img( *m_select_image );
-    DrawBmpOnBmp( img, *m_chat_icon, 0, 0 );
-    m_func_tab_images->Add( img );
-  } else {*/
- // DrawTxtOnBmp( *m_battle_icon, _("Test"), 1,1);
-    m_func_tab_images->Add( *m_chat_icon );
-  //}
-
-  //if ( m_func_tabs->GetSelection() == 1 ) {
-    /*wxBitmap img( *m_select_image );
-    DrawBmpOnBmp( img, *m_battle_icon, 0, 0 );
-    m_func_tab_images->Add( img );
-  } else {*/
-    m_func_tab_images->Add( *m_battle_icon );
-  //}
-
-  //if ( m_func_tabs->GetSelection() == 2 ) {
-    /*wxBitmap img( *m_select_image );
-    DrawBmpOnBmp( img, *m_sp_icon, 0, 0 );
-    m_func_tab_images->Add( img );
-  } else {*/
-    m_func_tab_images->Add( *m_sp_icon );
-  //}
-
-  //if ( m_func_tabs->GetSelection() == 3 ) {
-    /*wxBitmap img( *m_select_image );
-    DrawBmpOnBmp( img, *m_options_icon, 0, 0 );
-    m_func_tab_images->Add( img );
-  } else {*/
-    m_func_tab_images->Add( *m_options_icon );
-
-    m_func_tab_images->Add( *m_replay_icon );
-
-    m_func_tab_images->Add( *m_downloads_icon );
-
-  //}
-
 }
 
 
@@ -630,3 +593,33 @@ void MainWindow::OnChannelListStart( )
     m_channel_chooser->ClearChannels();
 }
 
+void MainWindow::OnMenuSaveLayout( wxCommandEvent& event )
+{
+	#ifndef HAVE_WX26
+	wxString answer;
+	if ( !ui().AskText( _("Layout manager"),_("Enter a profile name"), answer ) ) return;
+	wxString layout = GetAui().manager->SavePerspective();
+	sett().SaveLayout( answer, layout );
+	#endif
+}
+
+void MainWindow::OnMenuLoadLayout( wxCommandEvent& event )
+{
+	#ifndef HAVE_WX26
+	wxArrayString layouts = sett().GetLayoutList();
+	int result = wxGetSingleChoiceIndex( _("Which profile fo you want to load?"), _("Layout manager"), layouts );
+	if ( ( result < 0  ) || ( result > layouts.GetCount() ) ) return;
+	GetAui().manager->LoadPerspective( sett().GetLayout( layouts[result] ) );
+	#endif
+}
+
+
+void MainWindow::OnMenuDefaultLayout( wxCommandEvent& event )
+{
+	#ifndef HAVE_WX26
+	wxArrayString layouts = sett().GetLayoutList();
+	int result = wxGetSingleChoiceIndex( _("Which profile do you want to be default?"), _("Layout manager"), layouts );
+	if ( ( result < 0  ) || ( result > layouts.GetCount() ) ) return;
+	sett().SetDefaultLayout( layouts[result] );
+	#endif
+}

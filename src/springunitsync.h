@@ -60,6 +60,7 @@ class SpringUnitSync : public IUnitSync
     bool VersionSupports( GameFeature feature );
 
     wxArrayString GetAIList( const wxString& modname );
+    wxArrayString GetAIInfos( int index );
 
     int GetNumUnits( const wxString& modname );
     wxArrayString GetUnitsList( const wxString& modname );
@@ -99,7 +100,8 @@ class SpringUnitSync : public IUnitSync
 
 //    void* _GetLibFuncPtr( const wxString& name );
 
-    //! this function returns only the cache path without the file extension, the extension itself would be added in the function as needed
+    //! this function returns only the cache path without the file extension,
+    //! the extension itself would be added in the function as needed
     wxString GetFileCachePath( const wxString& name, const wxString& hash, bool IsMod );
 
     //! returns an array where each element is a line of the file
