@@ -284,14 +284,14 @@ void MapGridCtrl::UpdateAsyncFetches()
 	}
 
 	// no minimap fetches until all mapinfo fetches are finished
-	if ( m_async_mapinfo_fetches == 0 && m_async_minimap_fetches < MAX_MINIMAP_FETCHES ) {
+	if ( m_async_mapinfo_fetches == 0 && m_async_minimap_fetches == 0 ) {
 		for (int y = 0; y < m_size.y; ++y) {
 			for (int x = 0; x < m_size.x; ++x) {
 				const int idx = y * m_size.x + x;
 				if ( idx >= int(m_grid.size()) ) break;
 				if ( m_grid[idx]->state == MapState_NoMinimap ) {
 					FetchMinimap( *m_grid[idx] );
-					if ( m_async_minimap_fetches >= MAX_MINIMAP_FETCHES ) return;
+					return;
 				}
 			}
 		}
