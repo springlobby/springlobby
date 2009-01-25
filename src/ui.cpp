@@ -1089,8 +1089,6 @@ void Ui::OnSpringStarting()
 #ifndef NO_TORRENT_SYSTEM
   torrent().SetIngameStatus(m_ingame);
 #endif
-  CacheThread().Pause();
-
 }
 
 
@@ -1100,7 +1098,6 @@ void Ui::OnSpringTerminated( long exit_code )
 #ifndef NO_TORRENT_SYSTEM
     torrent().SetIngameStatus(m_ingame);
 #endif
-    CacheThread().Resume();
     if ( !m_serv ) return;
 
     m_serv->GetMe().Status().in_game = false;

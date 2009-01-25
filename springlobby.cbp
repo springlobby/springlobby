@@ -283,6 +283,10 @@
 		<Unit filename="src/mainwindow.h" />
 		<Unit filename="src/mapctrl.cpp" />
 		<Unit filename="src/mapctrl.h" />
+		<Unit filename="src/mapgridctrl.cpp" />
+		<Unit filename="src/mapgridctrl.h" />
+		<Unit filename="src/mapselectdialog.cpp" />
+		<Unit filename="src/mapselectdialog.h" />
 		<Unit filename="src/mmoptionmodel.cpp" />
 		<Unit filename="src/mmoptionmodel.h" />
 		<Unit filename="src/mmoptionswrapper.cpp" />
@@ -398,6 +402,8 @@
 		<Unit filename="src/utils.cpp" />
 		<Unit filename="src/utils.h" />
 		<Unit filename="wxsmith/AutoBalanceDialog.wxs" />
+		<Unit filename="wxsmith/MainTorrentTab.wxs" />
+		<Unit filename="wxsmith/MapSelectDialog.wxs" />
 		<Extensions>
 			<code_completion />
 			<envvars />
@@ -406,6 +412,7 @@
 				<resources>
 					<wxDialog wxs="wxsmith/AutoBalanceDialog.wxs" src="src/autobalancedialog.cpp" hdr="src/autobalancedialog.h" name="AutoBalanceDialog" language="CPP" />
 					<wxFrame wxs="wxsmith/MainTorrentTab.wxs" src="MainTorrentTab.cpp" hdr="MainTorrentTab.h" name="MainTorrentTab" language="CPP" />
+					<wxDialog wxs="wxsmith/MapSelectDialog.wxs" src="src/mapselectdialog.cpp" hdr="src/mapselectdialog.h" fwddecl="1" name="MapSelectDialog" language="CPP" />
 				</resources>
 			</wxsmith>
 			<debugger />

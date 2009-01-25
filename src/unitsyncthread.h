@@ -1,6 +1,7 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_UNITSYNCTHREAD_H
 #define SPRINGLOBBY_HEADERGUARD_UNITSYNCTHREAD_H
 
+/*
 #include "thread.h"
 
 
@@ -53,17 +54,13 @@ class UnitSyncThread
         void* Entry();
     };
 
-    /*
-
     MapCacheThread m_map_thread;
     ModCacheThread m_mod_thread;
 
-    */
-
     wxCriticalSection m_lock;
-
 };
 
 UnitSyncThread& CacheThread();
+*/
 
 #endif // SPRINGLOBBY_HEADERGUARD_UNITSYNCTHREAD_H

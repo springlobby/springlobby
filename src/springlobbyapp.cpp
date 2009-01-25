@@ -38,7 +38,6 @@
 #include "torrentwrapper.h"
 #endif
 #include "updater/updater.h"
-#include "unitsyncthread.h"
 #include "replay/replaytab.h"
 #include "globalsmanager.h"
 
@@ -139,7 +138,6 @@ bool SpringLobbyApp::OnInit()
     {
         sett().SetMapCachingThreadProgress( 0 ); // reset map cache thread
         sett().SetModCachingThreadProgress( 0 ); // reset mod cache thread
-        CacheThread().LoadSettingsFromFile();
         if ( wxDirExists( sett().GetCachePath() )  )
         {
             wxLogWarning( _T("erasing old cache ver %d (app cache ver %d)"), sett().GetCacheVersion(), CACHE_VERSION );
@@ -209,7 +207,11 @@ bool SpringLobbyApp::OnInit()
 	if ( !wxDirExists( sett().GetCurrentUsedDataDir() + sep + _T("base") ) ) wxMkdir( sett().GetCurrentUsedDataDir() + sep + _T("base") );
         wxString url= _T("ipxserver.dyndns.org/games/spring/mods/xta/base-ota-content.zip");
         wxString destFilename = sett().GetCurrentUsedDataDir() + sep + _T("base") + sep + _T("base-ota-content.zip");
-        bool contentExists = usync().FileExists(_T("base/otacontent.sdz")) && usync().FileExists(_T("base/tacontent_v2.sdz")) && usync().FileExists(_T("base/tatextures_v062.sdz"));
+        bool contentExists = false;
+        if ( usync().IsLoaded() )
+        {
+					contentExists = usync().FileExists(_T("base/otacontent.sdz")) && usync().FileExists(_T("base/tacontent_v2.sdz")) && usync().FileExists(_T("base/tatextures_v062.sdz"));
+        }
 
         if ( !contentExists &&
                 customMessageBox(SL_MAIN_ICON, _("Do you want to download OTA content?\n"
@@ -274,7 +276,10 @@ int SpringLobbyApp::OnExit()
 
   sett().SaveSettings(); /// to make sure that cache path gets saved before destroying unitsync
 
-  usync().FreeUnitSyncLib();
+	if ( usync().IsLoaded() )
+	{
+		usync().FreeUnitSyncLib();
+	}
 
   DestroyGlobals();
 
@@ -371,7 +376,10 @@ void SpringLobbyApp::SetupUserFolders()
 				return;
 				}
       }
-      usync().SetSpringDataPath(dir);
+      if ( usync().IsLoaded() )
+      {
+				usync().SetSpringDataPath(dir);
+      }
 #endif
 }
 

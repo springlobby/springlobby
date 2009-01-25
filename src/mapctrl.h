@@ -36,6 +36,8 @@ class MapCtrl : public wxPanel
     void OnLeftUp( wxMouseEvent& event );
     void OnMouseWheel( wxMouseEvent& event );
 
+    void OnGetMapImageAsyncCompleted( wxCommandEvent& event );
+
    protected:
 
     typedef int RectArea;
@@ -88,6 +90,8 @@ class MapCtrl : public wxPanel
     void SetMouseOverRect( int index );
 
     void _SetCursor();
+
+    UnitSyncAsyncOps m_async;
 
     wxBitmap* m_minimap;
     wxBitmap* m_metalmap;
