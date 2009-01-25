@@ -39,7 +39,7 @@ class wxFileInputStream;
 class wxFileName;
 class wxColor;
 class wxColour;
-struct wxColourData;
+class wxColourData;
 class wxSize;
 class wxPoint;
 class wxPathList;
