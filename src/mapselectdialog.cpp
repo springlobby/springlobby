@@ -307,6 +307,8 @@ void MapSelectDialog::LoadAll()
 	for ( int i = 0; i < count; ++i ) {
 		m_mapgrid->AddMap( m_maps[i] );
 	}
+
+	m_mapgrid->Refresh();
 }
 
 void MapSelectDialog::LoadPopular()
@@ -323,6 +325,8 @@ void MapSelectDialog::LoadPopular()
 		}
 	}
 	catch (...) {} // m_ui.GetServer may throw when disconnected...
+
+	m_mapgrid->Refresh();
 }
 
 void MapSelectDialog::LoadRecent()
@@ -342,6 +346,8 @@ void MapSelectDialog::LoadRecent()
 				m_mapgrid->AddMap( m_maps[i] );
 		}
 	}
+
+	m_mapgrid->Refresh();
 }
 
 // filter event handlers
