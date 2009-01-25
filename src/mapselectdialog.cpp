@@ -31,7 +31,6 @@ const long MapSelectDialog::ID_FILTER_POPULAR = wxNewId();
 const long MapSelectDialog::ID_FILTER_RECENT = wxNewId();
 const long MapSelectDialog::ID_FILTER_TEXT = wxNewId();
 const long MapSelectDialog::ID_MAPGRID = wxNewId();
-const long MapSelectDialog::ID_TIMER = wxNewId();
 //*)
 const long MapSelectDialog::ID_VERTICAL_DIRECTION = wxNewId();
 const long MapSelectDialog::ID_HORIZONTAL_DIRECTION = wxNewId();
@@ -45,7 +44,6 @@ MapSelectDialog::MapSelectDialog(wxWindow* parent,Ui& ui)
 	: m_ui(ui)
 	, m_horizontal_direction(false)
 	, m_vertical_direction(false)
-	, m_state(State_Idle)
 {
 	//(*Initialize(MapSelectDialog)
 	wxStaticBoxSizer* StaticBoxSizer2;
@@ -57,7 +55,7 @@ MapSelectDialog::MapSelectDialog(wxWindow* parent,Ui& ui)
 	wxStaticBoxSizer* StaticBoxSizer1;
 	wxBoxSizer* boxSizerVertical;
 	wxStdDialogButtonSizer* StdDialogButtonSizer1;
-	
+
 	Create(parent, wxID_ANY, _("Select map"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX, _T("wxID_ANY"));
 	BoxSizer1 = new wxBoxSizer(wxHORIZONTAL);
 	BoxSizer2 = new wxBoxSizer(wxVERTICAL);
@@ -100,12 +98,10 @@ MapSelectDialog::MapSelectDialog(wxWindow* parent,Ui& ui)
 	m_mapgrid = new MapGridCtrl(this, m_ui, wxSize(400,400), ID_MAPGRID);
 	BoxSizer1->Add(m_mapgrid, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	SetSizer(BoxSizer1);
-	m_timer.SetOwner(this, ID_TIMER);
-	m_timer.Start(50, true);
 	BoxSizer1->Fit(this);
 	BoxSizer1->SetSizeHints(this);
 	Center();
-	
+
 	Connect(ID_VERTICAL_CHOICE,wxEVT_COMMAND_CHOICE_SELECTED,(wxObjectEventFunction)&MapSelectDialog::OnSortKeySelect);
 	Connect(ID_HORIZONTAL_CHOICE,wxEVT_COMMAND_CHOICE_SELECTED,(wxObjectEventFunction)&MapSelectDialog::OnSortKeySelect);
 	Connect(ID_FILTER_ALL,wxEVT_COMMAND_RADIOBUTTON_SELECTED,(wxObjectEventFunction)&MapSelectDialog::OnFilterAllSelect);
@@ -113,7 +109,6 @@ MapSelectDialog::MapSelectDialog(wxWindow* parent,Ui& ui)
 	Connect(ID_FILTER_RECENT,wxEVT_COMMAND_RADIOBUTTON_SELECTED,(wxObjectEventFunction)&MapSelectDialog::OnFilterRecentSelect);
 	Connect(ID_FILTER_TEXT,wxEVT_COMMAND_TEXT_UPDATED,(wxObjectEventFunction)&MapSelectDialog::OnFilterTextChanged);
 	m_mapgrid->Connect(ID_MAPGRID,wxEVT_LEFT_DCLICK,(wxObjectEventFunction)&MapSelectDialog::OnMapGridLeftDClick,0,this);
-	Connect(ID_TIMER,wxEVT_TIMER,(wxObjectEventFunction)&MapSelectDialog::OnTimerTrigger);
 	Connect(wxID_ANY,wxEVT_INIT_DIALOG,(wxObjectEventFunction)&MapSelectDialog::OnInit);
 	//*)
 
@@ -159,10 +154,10 @@ void MapSelectDialog::OnInit( wxInitDialogEvent& event )
 	if ( m_replays.empty() || ( m_replays.size() == 1 && m_replays[0] == wxEmptyString ) ) {
 		m_filter_all->SetValue( true );
 		m_filter_recent->Enable( false );
-		Load( State_LoadAll );
+		LoadAll();
 	}
 	else {
-		Load( State_LoadRecent );
+		LoadRecent();
 	}
 }
 
@@ -255,65 +250,24 @@ void MapSelectDialog::OnMapGridLeftDClick(wxMouseEvent& event)
 	}
 }
 
-void MapSelectDialog::OnTimerTrigger(wxTimerEvent& event)
-{
-	wxLogDebugFunc( _T("") );
-
-	switch (m_state) {
-		case State_Idle:
-			// should never be reached because timer should have been stopped
-			break;
-		case State_LoadAll:
-			if ( !LoadAllStep() ) Idle();
-			break;
-		case State_LoadPopular:
-			if ( !LoadPopularStep() ) Idle();
-			break;
-		case State_LoadRecent:
-			if ( !LoadRecentStep() ) Idle();
-			break;
-		default:
-			ASSERT_EXCEPTION( false, _T("unknown state in MapSelectDialog::OnTimerTrigger") );
-			break;
-	}
-}
-
-// state transitioners
-
-void MapSelectDialog::Idle()
-{
-	wxLogDebugFunc( _T("") );
-	m_state = State_Idle;
-	if ( m_timer.IsRunning() ) m_timer.Stop();
-	UpdateSortAndFilter();
-}
-
-void MapSelectDialog::Load( State newstate )
-{
-	wxLogDebugFunc( _T("") );
-	m_mapgrid->Clear();
-	m_index = 0;
-	m_state = newstate;
-	bool timer_success = m_timer.Start( -1, true /* one shot */ );
-	ASSERT_EXCEPTION( timer_success, _T("Failed to start timer") );
-}
-
-// implementation of the states
-
-bool MapSelectDialog::LoadAllStep()
+void MapSelectDialog::LoadAll()
 {
 	wxLogDebugFunc( _T("") );
 	const int count = m_maps.size();
 
-	for ( ; m_index < count; ++m_index ) {
-		m_mapgrid->AddMap( m_maps[m_index] );
+	m_mapgrid->Clear();
+
+	for ( int i = 0; i < count; ++i ) {
+		m_mapgrid->AddMap( m_maps[i] );
 	}
-	return false;
 }
 
-bool MapSelectDialog::LoadPopularStep()
+void MapSelectDialog::LoadPopular()
 {
 	wxLogDebugFunc( _T("") );
+
+	m_mapgrid->Clear();
+
 	try {
 		m_ui.GetServer().battles_iter->IteratorBegin();
 		while ( !m_ui.GetServer().battles_iter->EOL() ) {
@@ -322,26 +276,25 @@ bool MapSelectDialog::LoadPopularStep()
 		}
 	}
 	catch (...) {} // m_ui.GetServer may throw when disconnected...
-	return false;
 }
 
-bool MapSelectDialog::LoadRecentStep()
+void MapSelectDialog::LoadRecent()
 {
 	wxLogDebugFunc( _T("") );
 	const int count = m_maps.size();
 
+	m_mapgrid->Clear();
+
 	// just check whether map names are contained in replay names
 	// not the most elegant solution but, hey, it works
-	for ( ; m_index < count; ++m_index ) {
+	for ( int i = 0; i < count; ++i ) {
 		// prefix and suffix with underscore to prevent most common partial matches
-		const wxString mapname = _T("_") + m_maps[m_index].BeforeLast( '.' ) + _T("_");
+		const wxString mapname = _T("_") + m_maps[i].BeforeLast( '.' ) + _T("_");
 		for (std::vector< wxString >::const_iterator it = m_replays.begin(); it != m_replays.end(); ++it) {
 			if ( it->Contains( mapname ) )
-				m_mapgrid->AddMap( m_maps[m_index] );
+				m_mapgrid->AddMap( m_maps[i] );
 		}
 	}
-
-	return false;
 }
 
 // filter event handlers
@@ -349,23 +302,23 @@ bool MapSelectDialog::LoadRecentStep()
 void MapSelectDialog::OnFilterAllSelect(wxCommandEvent& event)
 {
 	wxLogDebugFunc( _T("") );
-	Load( State_LoadAll );
+	LoadAll();
 }
 
 void MapSelectDialog::OnFilterPopularSelect(wxCommandEvent& event)
 {
 	wxLogDebugFunc( _T("") );
-	Load( State_LoadPopular );
+	LoadPopular();
 }
 
 void MapSelectDialog::OnFilterRecentSelect(wxCommandEvent& event)
 {
 	wxLogDebugFunc( _T("") );
-	Load( State_LoadRecent );
+	LoadRecent();
 }
 
 void MapSelectDialog::OnFilterTextChanged(wxCommandEvent& event)
 {
 	wxLogDebugFunc( _T("") );
-	if ( m_state == State_Idle ) UpdateSortAndFilter();
+	UpdateSortAndFilter();
 }

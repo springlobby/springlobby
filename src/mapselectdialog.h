@@ -12,7 +12,6 @@
 
 //(*Headers(MapSelectDialog)
 #include <wx/dialog.h>
-#include <wx/timer.h>
 class wxStdDialogButtonSizer;
 class wxTextCtrl;
 class MapGridCtrl;
@@ -39,14 +38,6 @@ class MapSelectDialog: public wxDialog
 
 	protected:
 
-		enum State
-		{
-			State_Idle,
-			State_LoadAll,
-			State_LoadPopular,
-			State_LoadRecent,
-		};
-
 		//(*Declarations(MapSelectDialog)
 		wxRadioButton* m_filter_recent;
 		wxRadioButton* m_filter_all;
@@ -54,7 +45,6 @@ class MapSelectDialog: public wxDialog
 		wxChoice* m_vertical_choice;
 		wxChoice* m_horizontal_choice;
 		wxTextCtrl* m_filter_text;
-		wxTimer m_timer;
 		wxRadioButton* m_filter_popular;
 		//*)
 		wxButton* m_vertical_direction_button;
@@ -70,7 +60,6 @@ class MapSelectDialog: public wxDialog
 		static const long ID_FILTER_RECENT;
 		static const long ID_FILTER_TEXT;
 		static const long ID_MAPGRID;
-		static const long ID_TIMER;
 		//*)
 		static const long ID_VERTICAL_DIRECTION;
 		static const long ID_HORIZONTAL_DIRECTION;
@@ -79,7 +68,6 @@ class MapSelectDialog: public wxDialog
 		void OnInit(wxInitDialogEvent& event);
 		void OnSortKeySelect(wxCommandEvent& event);
 		void OnMapGridLeftDClick(wxMouseEvent& event);
-		void OnTimerTrigger(wxTimerEvent& event);
 		void OnFilterAllSelect(wxCommandEvent& event);
 		void OnFilterPopularSelect(wxCommandEvent& event);
 		void OnFilterRecentSelect(wxCommandEvent& event);
@@ -93,19 +81,15 @@ class MapSelectDialog: public wxDialog
 		void AppendSortKeys( wxChoice* choice );
 		void UpdateSortAndFilter();
 
-		void Idle();
-		void Load( State newstate );
-		bool LoadAllStep();
-		bool LoadPopularStep();
-		bool LoadRecentStep();
+		void LoadAll();
+		void LoadPopular();
+		void LoadRecent();
 
 		Ui& m_ui;
 		bool m_horizontal_direction;
 		bool m_vertical_direction;
 		wxArrayString m_maps;
 		std::vector< wxString > m_replays;
-		State m_state;
-		int m_index;
 
 		DECLARE_EVENT_TABLE()
 };

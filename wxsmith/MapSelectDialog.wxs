@@ -137,10 +137,5 @@
 				<option>1</option>
 			</object>
 		</object>
-		<object class="wxTimer" name="ID_TIMER" variable="m_timer" member="yes">
-			<interval>50</interval>
-			<oneshoot>1</oneshoot>
-			<handler function="OnTimerTrigger" entry="EVT_TIMER" />
-		</object>
 	</object>
 </wxsmith>
