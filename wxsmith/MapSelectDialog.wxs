@@ -115,7 +115,7 @@
 							<object class="sizeritem">
 								<object class="wxListCtrl" name="ID_MAP_OPTS_LIST" variable="m_map_opts_list" member="yes">
 									<size>170,120</size>
-									<style>wxLC_REPORT|wxLC_NO_HEADER</style>
+									<style>wxLC_REPORT|wxLC_NO_HEADER|wxNO_BORDER</style>
 								</object>
 								<flag>wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
 								<border>5</border>
