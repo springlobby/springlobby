@@ -104,7 +104,8 @@
 							<orient>wxVERTICAL</orient>
 							<object class="sizeritem">
 								<object class="wxStaticText" name="ID_MAP_NAME" variable="m_map_name" member="yes">
-									<label>1&#x0A;2&#x0A;3&#x0A;4&#x0A;5&#x0A;6&#x0A;7&#x0A;8</label>
+									<label></label>
+									<size>170,90</size>
 									<extra_code>m__map__name-&gt;SetLabel( wxEmptyString );</extra_code>
 									<style>wxST_NO_AUTORESIZE</style>
 								</object>

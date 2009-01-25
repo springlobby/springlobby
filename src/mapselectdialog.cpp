@@ -93,7 +93,7 @@ MapSelectDialog::MapSelectDialog(wxWindow* parent,Ui& ui)
 	StaticBoxSizer2->Add(m_filter_text, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
 	BoxSizer2->Add(StaticBoxSizer2, 0, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	m_map_details = new wxStaticBoxSizer(wxVERTICAL, this, _("Map details"));
-	m_map_name = new wxStaticText(this, ID_MAP_NAME, _("1\n2\n3\n4\n5\n6\n7\n8"), wxDefaultPosition, wxDefaultSize, wxST_NO_AUTORESIZE, _T("ID_MAP_NAME"));
+	m_map_name = new wxStaticText(this, ID_MAP_NAME, wxEmptyString, wxDefaultPosition, wxSize(170,90), wxST_NO_AUTORESIZE, _T("ID_MAP_NAME"));
 	m_map_name->SetLabel( wxEmptyString );
 	m_map_details->Add(m_map_name, 0, wxTOP|wxLEFT|wxRIGHT|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	m_map_opts_list = new wxListCtrl(this, ID_MAP_OPTS_LIST, wxDefaultPosition, wxSize(170,120), wxLC_REPORT|wxLC_NO_HEADER, wxDefaultValidator, _T("ID_MAP_OPTS_LIST"));
