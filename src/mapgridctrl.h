@@ -137,6 +137,7 @@ class MapGridCtrl : public wxPanel
 		void UpdateGridSize();
 		void UpdateToolTip();
 		void UpdateAsyncFetches();
+		void FetchMapInfo( const wxString& mapname );
 		void FetchMinimap( MapData& map );
 		void DrawMap( wxDC& dc, MapData& map, int x, int y );
 		void DrawBackground( wxDC& dc );
@@ -144,6 +145,9 @@ class MapGridCtrl : public wxPanel
 
 		Ui& m_ui;
 		UnitSyncAsyncOps m_async;
+
+		/// Set of maps which are queued to be fetched asynchronously.
+		std::vector< wxString > m_pending_maps;
 
 		MapMap m_maps;
 		MapMap m_maps_unused;
@@ -155,6 +159,11 @@ class MapGridCtrl : public wxPanel
 		wxPoint m_first_mouse_pos;
 		wxPoint m_last_mouse_pos;
 		bool m_in_mouse_drag;
+
+		/// Number of async minimap fetches still running on behalf of this control.
+		/// This number is limited so SL doesn't keep fetching maps after this
+		/// control is destroyed.
+		int m_async_mapinfo_fetches;
 
 		/// Number of async minimap fetches still running on behalf of this control.
 		/// This number is limited so the control can adapt (faster) to changes in

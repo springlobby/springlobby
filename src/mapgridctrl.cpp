@@ -20,6 +20,12 @@
 /// Margin between the map previews, in pixels.
 #define MINIMAP_MARGIN 1
 
+/// Maximum minimap fetches in WorkerThread queue
+/// (these will still be executed after control is destroyed)
+#define MAX_MINIMAP_FETCHES 2
+/// Maximum mapinfo fetches in WorkerThread queue
+#define MAX_MAPINFO_FETCHES 5
+
 
 BEGIN_EVENT_TABLE( MapGridCtrl, wxPanel )
 	EVT_PAINT( MapGridCtrl::OnPaint )
@@ -42,6 +48,7 @@ MapGridCtrl::MapGridCtrl( wxWindow* parent, Ui& ui, wxSize size, wxWindowID id )
 	, m_size( 0, 0 )
 	, m_pos( 0, 0 )
 	, m_in_mouse_drag( false )
+	, m_async_mapinfo_fetches( 0 )
 	, m_async_minimap_fetches( 0 )
 	, m_mouseover_map( NULL )
 	, m_selected_map( NULL )
@@ -218,7 +225,7 @@ void MapGridCtrl::AddMap( const wxString& mapname )
 	}
 
 	// if not, get it from unitsync
-	m_async.GetMapEx( mapname );
+	FetchMapInfo( mapname );
 }
 
 
@@ -301,24 +308,44 @@ void MapGridCtrl::UpdateToolTip()
 
 void MapGridCtrl::UpdateAsyncFetches()
 {
-	if ( m_async_minimap_fetches != 0 ) return;
+	while ( m_async_mapinfo_fetches < MAX_MAPINFO_FETCHES && !m_pending_maps.empty() ) {
+		wxString mapname = m_pending_maps.back();
+		m_pending_maps.pop_back();
+		FetchMapInfo( mapname );
+	}
 
-	for (int y = 0; y < m_size.y; ++y) {
-		for (int x = 0; x < m_size.x; ++x) {
-			const int idx = y * m_size.x + x;
-			if ( idx >= int(m_grid.size()) ) break;
-			if ( m_grid[idx]->state == MapState_NoMinimap ) {
-				FetchMinimap( *m_grid[idx] );
-				return;
+	// no minimap fetches until all mapinfo fetches are finished
+	if ( m_async_mapinfo_fetches == 0 && m_async_minimap_fetches < MAX_MINIMAP_FETCHES ) {
+		for (int y = 0; y < m_size.y; ++y) {
+			for (int x = 0; x < m_size.x; ++x) {
+				const int idx = y * m_size.x + x;
+				if ( idx >= int(m_grid.size()) ) break;
+				if ( m_grid[idx]->state == MapState_NoMinimap ) {
+					FetchMinimap( *m_grid[idx] );
+					if ( m_async_minimap_fetches >= MAX_MINIMAP_FETCHES ) return;
+				}
 			}
 		}
 	}
 }
 
 
+void MapGridCtrl::FetchMapInfo( const wxString& mapname )
+{
+	if ( m_async_mapinfo_fetches < MAX_MAPINFO_FETCHES ) {
+		m_async.GetMapEx( mapname );
+		++m_async_mapinfo_fetches;
+	}
+	else {
+		m_pending_maps.push_back( mapname );
+	}
+}
+
+
 void MapGridCtrl::FetchMinimap( MapData& map )
 {
-	if ( m_async_minimap_fetches < 2 ) {
+	// must be finished fetching mapinfos
+	if ( m_async_mapinfo_fetches == 0 && m_async_minimap_fetches < MAX_MINIMAP_FETCHES ) {
 		m_async.GetMinimap( map.name, MINIMAP_SIZE, MINIMAP_SIZE );
 		map.state = MapState_GetMinimap;
 		++m_async_minimap_fetches;
@@ -500,28 +527,31 @@ void MapGridCtrl::OnGetMapImageAsyncCompleted( wxCommandEvent& event )
 
 	wxLogDebugFunc( mapname );
 
-	wxImage minimap( usync().GetMinimap( mapname, MINIMAP_SIZE, MINIMAP_SIZE ) );
+	// if mapname is empty, some error occurred in usync().GetMinimap...
+	if ( !mapname.empty() ) {
+		wxImage minimap( usync().GetMinimap( mapname, MINIMAP_SIZE, MINIMAP_SIZE ) );
 
-	const int w = minimap.GetWidth();
-	const int h = minimap.GetHeight();
-	wxImage background( BorderInvariantResizeImage( m_img_background, w, h ) );
-	wxImage minimap_alpha( BorderInvariantResizeImage( m_img_minimap_alpha, w, h ) );
-	wxImage foreground( BorderInvariantResizeImage( m_img_foreground, w, h ) );
+		const int w = minimap.GetWidth();
+		const int h = minimap.GetHeight();
+		wxImage background( BorderInvariantResizeImage( m_img_background, w, h ) );
+		wxImage minimap_alpha( BorderInvariantResizeImage( m_img_minimap_alpha, w, h ) );
+		wxImage foreground( BorderInvariantResizeImage( m_img_foreground, w, h ) );
 
-	minimap.SetAlpha( minimap_alpha.GetAlpha(), true /* "static data" */ );
-	minimap = BlendImage( minimap, background, false );
-	minimap = BlendImage( foreground, minimap, false );
+		minimap.SetAlpha( minimap_alpha.GetAlpha(), true /* "static data" */ );
+		minimap = BlendImage( minimap, background, false );
+		minimap = BlendImage( foreground, minimap, false );
 
-	// set the minimap in all MapMaps
-	wxBitmap minimap_bmp( minimap );
-	SetMinimap( m_maps, mapname, minimap_bmp );
-	SetMinimap( m_maps_unused, mapname, minimap_bmp );
-	SetMinimap( m_maps_filtered, mapname, minimap_bmp );
+		// set the minimap in all MapMaps
+		wxBitmap minimap_bmp( minimap );
+		SetMinimap( m_maps, mapname, minimap_bmp );
+		SetMinimap( m_maps_unused, mapname, minimap_bmp );
+		SetMinimap( m_maps_filtered, mapname, minimap_bmp );
+
+		Refresh(); // TODO: use RefreshRect ?
+	}
 
 	--m_async_minimap_fetches;
 	UpdateAsyncFetches();
-
-	Refresh(); // TODO: use RefreshRect ?
 }
 
 
@@ -531,10 +561,16 @@ void MapGridCtrl::OnGetMapExAsyncCompleted( wxCommandEvent& event )
 
 	wxLogDebugFunc( mapname );
 
-	try {
-		AddMap( usync().GetMapEx( mapname ) );
-	}
-	catch (...) {}
+	// if mapname is empty, some error occurred in usync().GetMapEx...
+	if ( !mapname.empty() ) {
+		try {
+			AddMap( usync().GetMapEx( mapname ) );
+		}
+		catch (...) {}
 
-	Refresh();
+		Refresh();
+	}
+
+	--m_async_mapinfo_fetches;
+	UpdateAsyncFetches();
 }
