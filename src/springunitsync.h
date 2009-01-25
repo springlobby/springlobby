@@ -6,6 +6,7 @@
 
 #include "iunitsync.h"
 #include "thread.h"
+#include "utils.h"
 
 class wxCriticalSection;
 class wxDynamicLibrary;
@@ -17,30 +18,77 @@ class SpringUnitSyncLib;
 typedef std::map<wxString,wxString> LocalArchivesVector;
 
 
-/// Thread safe MRU cache for images (wxImage) with a name (wxString)
-class MostRecentlyUsedImageCache
+/// Thread safe MRU cache (works like a std::map but has maximum size)
+template<typename TKey, typename TValue>
+class MostRecentlyUsedCache
 {
   public:
-    MostRecentlyUsedImageCache(int max_size);
-    ~MostRecentlyUsedImageCache();
+    MostRecentlyUsedCache(int max_size)
+    : m_size(0), m_max_size(max_size), m_cache_hits(0), m_cache_misses(0)
+    {
+    }
 
-    void Add( const wxString& name, const wxImage& img );
-    bool TryGet( const wxString& name, wxImage& img );
-    void Clear();
+    ~MostRecentlyUsedCache()
+    {
+      wxLogDebugFunc( _T("cache hits: ") + TowxString( m_cache_hits ) );
+      wxLogDebugFunc( _T("cache misses: ") + TowxString( m_cache_misses ) );
+    }
+
+    void Add( const TKey& name, const TValue& img )
+    {
+      wxCriticalSectionLocker lock(m_lock);
+      while ( m_size >= m_max_size ) {
+        --m_size;
+        m_iterator_map.erase( m_items.back().first );
+        m_items.pop_back();
+      }
+      ++m_size;
+      m_items.push_front( CacheItem( name, img ) );
+      m_iterator_map[name] = m_items.begin();
+    }
+
+    bool TryGet( const TKey& name, TValue& img )
+    {
+      wxCriticalSectionLocker lock(m_lock);
+      typename IteratorMap::iterator it = m_iterator_map.find( name );
+      if ( it == m_iterator_map.end() ) {
+        ++m_cache_misses;
+        return false;
+      }
+      // reinsert at front, so that most recently used items are always at front
+      m_items.push_front( *it->second );
+      m_items.erase( it->second );
+      it->second = m_items.begin();
+      // return image
+      img = it->second->second;
+      ++m_cache_hits;
+      return true;
+    }
+
+    void Clear()
+    {
+      wxCriticalSectionLocker lock(m_lock);
+      m_size = 0;
+      m_items.clear();
+      m_iterator_map.clear();
+    }
 
   private:
-    typedef std::pair<wxString, wxImage> CacheItem;
-    typedef std::list<CacheItem> ImageList;
-    typedef std::map<wxString, ImageList::iterator> IteratorMap;
+    typedef std::pair<TKey, TValue> CacheItem;
+    typedef std::list<CacheItem> CacheItemList;
+    typedef std::map<TKey, typename CacheItemList::iterator> IteratorMap;
 
     mutable wxCriticalSection m_lock;
-    ImageList m_items;
+    CacheItemList m_items;
     IteratorMap m_iterator_map;
     int m_size;
     const int m_max_size;
     int m_cache_hits;
     int m_cache_misses;
 };
+
+typedef MostRecentlyUsedCache<wxString,wxImage> MostRecentlyUsedImageCache;
+typedef MostRecentlyUsedCache<wxString,MapInfo> MostRecentlyUsedMapInfoCache;
 
 
 /// Thread safe mapping from evtHandlerId to wxEvtHandler*
@@ -173,6 +221,9 @@ class SpringUnitSync : public IUnitSync
     MostRecentlyUsedImageCache m_map_image_cache;
     /// this cache is a real cache, it stores minimaps with max size 100x100
     MostRecentlyUsedImageCache m_tiny_minimap_cache;
+
+    /// this caches MapInfo to facilitate GetMapExAsync
+    MostRecentlyUsedMapInfoCache m_mapinfo_cache;
 
     //! this function returns only the cache path without the file extension,
     //! the extension itself would be added in the function as needed

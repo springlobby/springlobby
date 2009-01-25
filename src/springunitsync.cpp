@@ -21,7 +21,6 @@
 #include <clocale>
 
 #include "springunitsync.h"
-#include "utils.h"
 #include "settings.h"
 #include "springunitsynclib.h"
 #include "settings++/custom_dialogs.h"
@@ -44,6 +43,7 @@ IUnitSync& usync()
 SpringUnitSync::SpringUnitSync()
   : m_map_image_cache( 3 )      // may take about 3M per image ( 1024x1024 24 bpp minimap )
   , m_tiny_minimap_cache( 200 ) // takes at most 30k per image (   100x100 24 bpp minimap )
+  , m_mapinfo_cache( 1000000 )  // this one is just misused as thread safe std::map ...
 {
   m_cache_thread.Create();
   m_cache_thread.SetPriority( WXTHREAD_MIN_PRIORITY );
@@ -79,6 +79,7 @@ void SpringUnitSync::PopulateArchiveList()
   m_mod_array.Empty();
   m_map_array.Empty();
   m_map_image_cache.Clear();
+  m_mapinfo_cache.Clear();
 
   int numMaps = susynclib().GetMapCount();
   for ( int i = 0; i < numMaps; i++ )
@@ -878,6 +879,9 @@ wxImage SpringUnitSync::_GetScaledMapImage( const wxString& mapname, wxImage (Sp
 MapInfo SpringUnitSync::_GetMapInfoEx( const wxString& mapname )
 {
   MapInfo info;
+
+  if ( m_mapinfo_cache.TryGet( mapname, info ) ) return info;
+
   wxArrayString cache;
   try
   {
@@ -936,6 +940,8 @@ MapInfo SpringUnitSync::_GetMapInfoEx( const wxString& mapname )
 
     SetCacheFile( GetFileCachePath( mapname, _T(""), false ) + _T(".infoex"), cache );
   }
+
+  m_mapinfo_cache.Add( mapname, info );
 
   return info;
 }
@@ -1261,59 +1267,6 @@ void SpringUnitSync::GetMapExAsync( const wxString& mapname, int evtHandlerId )
 
   work = new GetMapExAsyncWorkItem( this, mapname, evtHandlerId );
   m_cache_thread.DoWork( work, 200 /* higher prio then GetMinimapAsync */ );
-}
-
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////// MRU image cache code
-
-MostRecentlyUsedImageCache::MostRecentlyUsedImageCache(int max_size)
-  : m_size(0), m_max_size(max_size), m_cache_hits(0), m_cache_misses(0)
-{
-}
-
-MostRecentlyUsedImageCache::~MostRecentlyUsedImageCache()
-{
-  wxLogMessage( _T("MostRecentlyUsedImageCache: cache hits: %d"), m_cache_hits );
-  wxLogMessage( _T("MostRecentlyUsedImageCache: cache misses: %d"), m_cache_misses );
-}
-
-void MostRecentlyUsedImageCache::Add( const wxString& name, const wxImage& img )
-{
-  wxCriticalSectionLocker lock(m_lock);
-  while ( m_size >= m_max_size ) {
-    --m_size;
-    m_iterator_map.erase( m_items.back().first );
-    m_items.pop_back();
-  }
-  ++m_size;
-  m_items.push_front( CacheItem( name, img ) );
-  m_iterator_map[name] = m_items.begin();
-}
-
-bool MostRecentlyUsedImageCache::TryGet( const wxString& name, wxImage& img )
-{
-  wxCriticalSectionLocker lock(m_lock);
-  IteratorMap::iterator it = m_iterator_map.find( name );
-  if ( it == m_iterator_map.end() ) {
-    ++m_cache_misses;
-    return false;
-  }
-  // reinsert at front, so that most recently used items are always at front
-  m_items.push_front( *it->second );
-  m_items.erase( it->second );
-  it->second = m_items.begin();
-  // return image
-  img = it->second->second;
-  ++m_cache_hits;
-  return true;
-}
-
-void MostRecentlyUsedImageCache::Clear()
-{
-  wxCriticalSectionLocker lock(m_lock);
-  m_size = 0;
-  m_items.clear();
-  m_iterator_map.clear();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
