@@ -3,6 +3,7 @@
 
 #include "mapgridctrl.h"
 
+#include "settings.h"
 #include "uiutils.h"
 #include "utils.h"
 #include <wx/dcbuffer.h>
@@ -45,7 +46,7 @@ MapGridCtrl::MapGridCtrl( wxWindow* parent, Ui& ui, wxSize size, wxWindowID id )
 	: wxPanel( parent, id, wxDefaultPosition, size, wxSIMPLE_BORDER|wxFULL_REPAINT_ON_RESIZE )
 	, m_ui( ui )
 	, m_async( this )
-	, m_selection_follows_mouse( false ) // TODO: make this a setting sometime?
+	, m_selection_follows_mouse( sett().GetMapSelectorFollowsMouse() )
 	, m_size( 0, 0 )
 	, m_pos( 0, 0 )
 	, m_in_mouse_drag( false )
