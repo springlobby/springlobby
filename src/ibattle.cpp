@@ -493,7 +493,7 @@ void IBattle::SetHostMap(const wxString& mapname, const wxString& hash)
     m_host_map.hash = hash;
     if ( !m_host_map.hash.IsEmpty() ) m_map_exists = usync().MapExists( m_host_map.name, m_host_map.hash );
     else m_map_exists = usync().MapExists( m_host_map.name );
-    if ( m_map_exists ) usync().PrefetchMap( m_host_map.name );
+    if ( m_map_exists && !ui().IsSpringRunning() ) usync().PrefetchMap( m_host_map.name );
   }
 }
 
@@ -505,7 +505,7 @@ void IBattle::SetLocalMap(const UnitSyncMap& map)
     m_map_loaded = true;
     if ( !m_host_map.hash.IsEmpty() ) m_map_exists = usync().MapExists( m_host_map.name, m_host_map.hash );
     else m_map_exists = usync().MapExists( m_host_map.name );
-    if ( m_map_exists ) usync().PrefetchMap( m_host_map.name );
+    if ( m_map_exists && !ui().IsSpringRunning() ) usync().PrefetchMap( m_host_map.name );
   }
 }
 
