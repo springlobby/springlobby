@@ -190,6 +190,8 @@ void MapSelectDialog::OnInit( wxInitDialogEvent& event )
 	else {
 		LoadRecent();
 	}
+
+	m_filter_text->SetFocus();
 }
 
 
