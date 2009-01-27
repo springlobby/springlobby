@@ -256,7 +256,6 @@ void IBattle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 				if ( previousally != user.BattleStatus().ally ) ForceAlly( user, previousally );
 			}
     }
-    ui().OnUserBattleStatus( *this, user );
 }
 
 void IBattle::OnUserRemoved( User& user )
@@ -374,7 +373,6 @@ void IBattle::ForceSide( User& user, int side )
 	if ( IsFounderMe() || user.BattleStatus().IsBot() )
 	{
 		 user.BattleStatus().side = side;
-		 ui().OnUserBattleStatus( *this, user );
 	}
 }
 
@@ -383,7 +381,6 @@ void IBattle::ForceTeam( User& user, int team )
   if ( IsFounderMe() || user.BattleStatus().IsBot() )
   {
     user.BattleStatus().team = team;
-    ui().OnUserBattleStatus( *this, user );
   }
 }
 
@@ -394,7 +391,6 @@ void IBattle::ForceAlly( User& user, int ally )
   if ( IsFounderMe() || user.BattleStatus().IsBot() )
   {
     user.BattleStatus().ally = ally;
-    ui().OnUserBattleStatus( *this, user );
   }
 
 }
@@ -405,7 +401,6 @@ void IBattle::ForceColour( User& user, const wxColour& col )
   if ( IsFounderMe() || user.BattleStatus().IsBot() )
 		{
 			 user.BattleStatus().colour = col;
-			 ui().OnUserBattleStatus( *this, user );
 		}
 
 }
@@ -416,7 +411,14 @@ void IBattle::ForceSpectator( User& user, bool spectator )
 		if ( IsFounderMe() || user.BattleStatus().IsBot() )
 		{
 			 user.BattleStatus().spectator = spectator;
-			 ui().OnUserBattleStatus( *this, user );
+		}
+}
+
+void IBattle::SetHandicap( User& user, int handicap)
+{
+		if ( IsFounderMe() || user.BattleStatus().IsBot() )
+		{
+			 user.BattleStatus().handicap = handicap;
 		}
 }
 
@@ -425,7 +427,6 @@ void IBattle::KickPlayer( User& user )
 {
 		if ( IsFounderMe() || user.BattleStatus().IsBot() )
 		{
-			 ui().OnUserLeftBattle( *this, user );
 			 OnUserRemoved( user );
 		}
 }
@@ -476,14 +477,6 @@ void IBattle::GetFreePosition( int& x, int& y )
   y = map.info.height / 2;
 }
 
-void IBattle::SetHandicap( User& user, int handicap)
-{
-		if ( IsFounderMe() || user.BattleStatus().IsBot() )
-		{
-			 user.BattleStatus().handicap = handicap;
-			 ui().OnUserBattleStatus( *this, user );
-		}
-}
 
 void IBattle::SetHostMap(const wxString& mapname, const wxString& hash)
 {

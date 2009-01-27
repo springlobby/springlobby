@@ -203,8 +203,10 @@ void BattleListTab::SelectBattle( IBattle* battle )
   }
 }
 
-void BattleListTab::AddBattle( IBattle& battle ) {
-  if ( m_filter->GetActiv() && !m_filter->FilterBattle( battle ) ) {
+void BattleListTab::AddBattle( IBattle& battle )
+{
+  if ( m_filter->GetActiv() && !m_filter->FilterBattle( battle ) )
+  {
     return;
   }
   int index = m_battle_list->InsertItem( m_battle_list->GetItemCount(), icons().GetBattleStatusIcon( battle ) );
@@ -276,19 +278,23 @@ void BattleListTab::UserUpdate( User& user )
 
 void BattleListTab::UpdateBattle( IBattle& battle )
 {
-  if ( !battle.GetGUIListActiv() ) {
+  if ( !battle.GetGUIListActiv() )
+  {
     AddBattle( battle );
     return;
   }
 
-  if ( m_filter->GetActiv() && !m_filter->FilterBattle( battle ) ) {
+  if ( m_filter->GetActiv() && !m_filter->FilterBattle( battle ) )
+  {
     RemoveBattle( battle );
     return;
   }
 
   int index = -1;
-  for (int i = 0; i < m_battle_list->GetItemCount() ; i++ ) {
-    if ( battle.GetBattleId() == (int)m_battle_list->GetItemData( i ) ) {
+  for (int i = 0; i < m_battle_list->GetItemCount() ; i++ )
+  {
+    if ( battle.GetBattleId() == (int)m_battle_list->GetItemData( i ) )
+    {
       index = i;
       break;
     }
@@ -326,7 +332,8 @@ void BattleListTab::UpdateBattle( IBattle& battle )
 }
 
 
-void BattleListTab::RemoveAllBattles() {
+void BattleListTab::RemoveAllBattles()
+{
   SelectBattle( 0 );
   m_ui.GetServer().battles_iter->IteratorBegin();
   while (! m_ui.GetServer().battles_iter->EOL() ) {
@@ -338,8 +345,10 @@ void BattleListTab::RemoveAllBattles() {
 }
 
 
-void BattleListTab::UpdateList() {
-//  if ( !battle.GetGUIListActiv() ) {
+void BattleListTab::UpdateList()
+{
+//  if ( !battle.GetGUIListActiv() )
+//  {
 //    AddBattle( battle );
 //    return;
 //  }
