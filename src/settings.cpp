@@ -127,6 +127,11 @@ Settings::Settings()
   SetPortableMode ( false );
   #endif
   if ( !m_config->Exists( _T("/Server") ) ) SetDefaultServerSettings();
+  if ( !m_config->Exists( _T("/Channels") )
+  {
+		AddChannelJoin( _T("springlobby"), _T("") );
+		AddChannelJoin( _T("newbies"), _T("") );
+  }
 
   if ( !m_config->Exists( _T("/Groups") ) ) AddGroup( _("Default") );
 }
