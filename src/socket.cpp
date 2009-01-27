@@ -224,7 +224,7 @@ bool Socket::Receive( wxString& data )
 wxString Socket::GetHandle()
 {
 	wxString handle;
-	#ifdef __WXMSW
+	#ifdef __WXMSW__
 
     IP_ADAPTER_INFO AdapterInfo[16];       // Allocate information for 16 cards
     DWORD dwBufLen = sizeof(AdapterInfo);  // Save memory size of buffer
