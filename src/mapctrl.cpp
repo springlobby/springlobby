@@ -1414,6 +1414,7 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
       wxRect r = GetUserRect( user, true );
       m_battle->KickPlayer( user );
       RefreshRect( r, false );
+			m_user_expanded = 0;
     }
     m_mdown_area = RA_Main;
     m_maction = MA_None;
