@@ -204,23 +204,27 @@ bool SpringLobbyApp::OnInit()
 
         if ( !wxDirExists( wxStandardPaths::Get().GetUserDataDir() ) ) wxMkdir( wxStandardPaths::Get().GetUserDataDir() );
         wxString sep ( wxFileName::GetPathSeparator() );
-        // ask for downloading ota content if archive not found, start downloader in background
-	if ( !wxDirExists( sett().GetCurrentUsedDataDir() + sep + _T("base") ) ) wxMkdir( sett().GetCurrentUsedDataDir() + sep + _T("base") );
-        wxString url= _T("ipxserver.dyndns.org/games/spring/mods/xta/base-ota-content.zip");
-        wxString destFilename = sett().GetCurrentUsedDataDir() + sep + _T("base") + sep + _T("base-ota-content.zip");
-        bool contentExists = false;
-        if ( usync().IsLoaded() )
-        {
-					contentExists = usync().FileExists(_T("base/otacontent.sdz")) && usync().FileExists(_T("base/tacontent_v2.sdz")) && usync().FileExists(_T("base/tatextures_v062.sdz"));
-        }
+				if ( !wxDirExists( sett().GetCurrentUsedDataDir() + sep + _T("base") ) ) wxMkdir( sett().GetCurrentUsedDataDir() + sep + _T("base") );
 
-        if ( !contentExists &&
-                customMessageBox(SL_MAIN_ICON, _("Do you want to download OTA content?\n"
-                                                 "You need this to be able to play TA based mods.\n"
-                                                 "You need to own a copy of Total Annihilation do legally download it."),_("Download OTA content?"),wxYES_NO) == wxYES )
-        {
-            m_otadownloader = new HttpDownloader( url, destFilename );
-        }
+				if ( !sett().SkipDownloadOtaContent() )
+				{
+					// ask for downloading ota content if archive not found, start downloader in background
+					wxString url= _T("ipxserver.dyndns.org/games/spring/mods/xta/base-ota-content.zip");
+					wxString destFilename = sett().GetCurrentUsedDataDir() + sep + _T("base") + sep + _T("base-ota-content.zip");
+					bool contentExists = false;
+					if ( usync().IsLoaded() )
+					{
+						contentExists = usync().FileExists(_T("base/otacontent.sdz")) && usync().FileExists(_T("base/tacontent_v2.sdz")) && usync().FileExists(_T("base/tatextures_v062.sdz"));
+					}
+
+					if ( !contentExists &&
+									customMessageBox(SL_MAIN_ICON, _("Do you want to download OTA content?\n"
+																									 "You need this to be able to play TA based mods.\n"
+																									 "You need to own a copy of Total Annihilation do legally download it."),_("Download OTA content?"),wxYES_NO) == wxYES )
+					{
+							m_otadownloader = new HttpDownloader( url, destFilename );
+					}
+				}
 
         customMessageBoxNoModal(SL_MAIN_ICON, _("By default SpringLobby reports some statistics.\nYou can disable that on options tab --> General."),_("Notice"),wxOK );
 

@@ -127,7 +127,7 @@ Settings::Settings()
   SetPortableMode ( false );
   #endif
   if ( !m_config->Exists( _T("/Server") ) ) SetDefaultServerSettings();
-  if ( !m_config->Exists( _T("/Channels") )
+  if ( !m_config->Exists( _T("/Channels") ) )
   {
 		AddChannelJoin( _T("springlobby"), _T("") );
 		AddChannelJoin( _T("newbies"), _T("") );
@@ -1591,6 +1591,12 @@ wxFileName Settings::GetTorrentDataDir()
 wxString Settings::GetTempStorage()
 {
   return wxFileName::GetTempDir();
+}
+
+
+bool Settings::SkipDownloadOtaContent()
+{
+  return m_config->Read( _T("/General/NoOtaDownload"), 0l ) ;
 }
 
 
