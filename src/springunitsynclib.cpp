@@ -49,13 +49,13 @@ void SpringUnitSyncLib::Load( const wxString& path, const wxString& ForceConfigF
 
   _Load( path );
 
-	if ( !ForceConfigFilePath.IsEmpty() )
-	{
-			if ( m_set_spring_config_file_path )
-			{
-					m_set_spring_config_file_path( ForceConfigFilePath.mb_str() );
-			}
-	}
+  if ( !ForceConfigFilePath.IsEmpty() )
+  {
+    if ( m_set_spring_config_file_path )
+    {
+        m_set_spring_config_file_path( ForceConfigFilePath.mb_str() );
+    }
+  }
 
   _Init();
 }

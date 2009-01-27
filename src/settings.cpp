@@ -1645,6 +1645,16 @@ int Settings::GetColumnWidth( const wxString& list_name, const int coloumn )
     return m_config->Read(_T("GUI/ColoumnWidths/") + list_name + _T("/") + TowxString(coloumn), columnWidthUnset);
 }
 
+void Settings::SetMapSelectorFollowsMouse( bool value )
+{
+    m_config->Write(_T("GUI/MapSelector/SelectionFollowsMouse"), value);
+}
+
+bool Settings::GetMapSelectorFollowsMouse()
+{
+	return m_config->Read(_T("GUI/MapSelector/SelectionFollowsMouse"), 0l);
+}
+
 void Settings::SetPeopleList( const wxArrayString& friends, const wxString& group  )
 {
     unsigned int friendsCount = friends.GetCount();

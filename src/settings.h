@@ -39,7 +39,7 @@ class wxFileInputStream;
 class wxFileName;
 class wxColor;
 class wxColour;
-struct wxColourData;
+class wxColourData;
 class wxSize;
 class wxPoint;
 class wxPathList;
@@ -301,6 +301,9 @@ class Settings
     int GetColumnWidth( const wxString& list_name, const int coloumn );
     //! used to signal unset column width in Get...
     enum { columnWidthUnset };
+
+    void SetMapSelectorFollowsMouse( bool value );
+    bool GetMapSelectorFollowsMouse();
 
     /*@}*/
 

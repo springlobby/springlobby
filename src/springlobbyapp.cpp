@@ -38,7 +38,6 @@
 #include "torrentwrapper.h"
 #endif
 #include "updater/updater.h"
-#include "unitsyncthread.h"
 #include "replay/replaytab.h"
 #include "globalsmanager.h"
 
@@ -139,7 +138,6 @@ bool SpringLobbyApp::OnInit()
     {
         sett().SetMapCachingThreadProgress( 0 ); // reset map cache thread
         sett().SetModCachingThreadProgress( 0 ); // reset mod cache thread
-        CacheThread().LoadSettingsFromFile();
         if ( wxDirExists( sett().GetCachePath() )  )
         {
             wxLogWarning( _T("erasing old cache ver %d (app cache ver %d)"), sett().GetCacheVersion(), CACHE_VERSION );
