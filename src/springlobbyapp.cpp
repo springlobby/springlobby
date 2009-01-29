@@ -180,6 +180,13 @@ bool SpringLobbyApp::OnInit()
 			{
 				sett().AddChannelJoin( _T("springlobby"), _T("") );
 			}
+			if ( sett().GetSettingsVersion() < 8 )
+			{
+				 sett().DeleteServer( _T("Backup server") );
+				 sett().SetServer( _T("Backup server 1"), _T("springbackup1.servegame.com"), 8200 );
+				 sett().SetServer( _T("Backup server 2"), _T("springbackup2.servegame.org"), 8200 );
+				 sett().SetServer( _T("Test server"), _T("taspringmaster.servegame.com"), 8300 );
+			}
     }
 
     ui().ReloadUnitSync(); // first time load of unitsync

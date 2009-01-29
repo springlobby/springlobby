@@ -4,7 +4,7 @@
 #include <wx/string.h>
 
 const int CACHE_VERSION     = 9;
-const int SETTINGS_VERSION  = 7;
+const int SETTINGS_VERSION  = 8;
 
 const wxString DEFSETT_DEFAULT_SERVER_NAME= _T("Official server");
 const wxString DEFSETT_DEFAULT_SERVER_HOST = _T("taspringmaster.clan-sy.com");
@@ -193,6 +193,7 @@ class Settings
     wxArrayString GetServers();
     bool ServerExists( const wxString& server_name );
     void SetServer( const wxString& server_name, const wxString& url, int port );
+    void DeleteServer( const wxString& server_name );
     /**@}*/
 
     /* ================================================================ */

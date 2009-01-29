@@ -497,6 +497,14 @@ void   Settings::SetServer( const wxString& server_name, const wxString& url, in
     m_config->Write( _T("/Server/Servers/")+ server_name +_T("/Port"), port );
 }
 
+//! @brief Deletes a server from the list.
+//!
+//! @param server_name the server name/alias
+void Settings::DeleteServer( const wxString& server_name )
+{
+		m_config->DeleteGroup( _T("/Server/Servers/") + server_name );
+}
+
 
 //! @brief Get port number of a server.
 //!
