@@ -1,4 +1,4 @@
-/* Copyright (C) 2007, 2008 The SpringLobby Team. All rights reserved. */
+/* Copyright (C) 2007-2009 The SpringLobby Team. All rights reserved. */
 //
 // Class: Ui
 //
@@ -470,15 +470,8 @@ bool Ui::ExecuteSayCommand( const wxString& cmd )
     }
     else if ( cmd.BeforeFirst(' ').Lower() == _T("/channels") )
     {
-        ChatPanel* panel = GetActiveChatPanel();
-        if ( panel == 0 )
-        {
-            ShowMessage( _("error"), _("no active chat panels open.") );
-            return false;
-        }
-        panel->StatusMessage(_("Active chat channels:"));
-        m_serv->RequestChannels();
-        return true;
+	mw().ShowChannelChooser();
+	return true;
     }
     return false;
 }
@@ -947,13 +940,15 @@ void Ui::OnUserLeftBattle( IBattle& battle, User& user )
         if ( &mw().GetJoinTab().GetBattleRoomTab().GetBattle() == &battle )
         {
             mw().GetJoinTab().GetBattleRoomTab().OnUserLeft( user );
-            if ( &user == &m_serv->GetMe() ) {
+            if ( &user == &m_serv->GetMe() )
+            {
                 mw().GetJoinTab().LeaveCurrentBattle();
                 battle.OnSelfLeftBattle();
             }
         }
     }
     catch (...) {}
+    if ( user.BattleStatus().IsBot() ) return;
     for ( int i = 0; i < m_serv->GetNumChannels(); i++ )
     {
         Channel& chan = m_serv->GetChannel( i );
@@ -1089,8 +1084,6 @@ void Ui::OnSpringStarting()
 #ifndef NO_TORRENT_SYSTEM
   torrent().SetIngameStatus(m_ingame);
 #endif
-  CacheThread().Pause();
-
 }
 
 
@@ -1100,7 +1093,6 @@ void Ui::OnSpringTerminated( long exit_code )
 #ifndef NO_TORRENT_SYSTEM
     torrent().SetIngameStatus(m_ingame);
 #endif
-    CacheThread().Resume();
     if ( !m_serv ) return;
 
     m_serv->GetMe().Status().in_game = false;

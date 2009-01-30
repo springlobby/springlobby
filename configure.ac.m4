@@ -44,6 +44,10 @@ AC_ARG_WITH(boost-prefix,[  --with-boost-prefix=/path/to/boost_topdir (optional)
 AC_ARG_WITH(opt-level,[  --with-opt-level=N (optional) with N = 0..3],
       CXXFLAGS="$CXXFLAGS -O$withval ")
 
+AC_ARG_WITH(aux-version,[  --with-aux-version='some string' (packager use only)],
+      AC_DEFINE_UNQUOTED([AUX_VERSION], " $withval", [] ) )
+
+
 AC_CANONICAL_HOST
 
 AC_LANG([C++])
@@ -62,12 +66,13 @@ AM_PATH_WXCONFIG([2.6.3], [],
            where wxWidgets libraries are installed (returned by
            'wx-config --libs' command) is in LD_LIBRARY_PATH or
            equivalent variable and wxWidgets version is 2.6.3 or above.
-   ])], [base,core,net,adv,qa,richtext,aui])
+   ])], [base,core,net,adv,qa,aui])
 win_build=0
 AC_ARG_VAR([WINDRES], [Windows resource file compiler command])
 if test x$host_os = xmingw32msvc ; then
   AC_CHECK_TOOL([WINDRES], [windres], [:])
   win_build=1
+  LIBS="$LIBS -liphlpapi"
   if test x$WINDRES = x: ; then
     AC_MSG_ERROR([missing required windres windows resource compiler.])
   fi
@@ -118,7 +123,7 @@ if test "$win_build" = 0 ; then
 else
     if test x$usetorrent = xyes ; then
         CXXFLAGS="$CXXFLAGS  -D_WIN32_WINNT=0x0501 -DBOOST_WINDOWS -DTORRENT_DISABLE_ENCRYPTION  "
-        LIBS='-mthreads -Wl,-allow-multiple-definition -L/var/lib/buildbot/lib/mingw/lib -lboost_thread-mt -lboost_filesystem-mt  -lws2_32 -lmswsock -lboost_date_time-mt'
+        LIBS="$LIBS -mthreads -Wl,-allow-multiple-definition -L/var/lib/buildbot/lib/mingw/lib -lboost_thread-mt -lboost_filesystem-mt  -lws2_32 -lmswsock -lboost_date_time-mt"
     else
        	CXXFLAGS="$CXXFLAGS -DNO_TORRENT_SYSTEM"
     fi

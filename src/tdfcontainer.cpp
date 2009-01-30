@@ -315,7 +315,7 @@ DataList::~DataList() {// disconnect from childs
 bool DataList::Insert(PNode node)/// return false if such entry already exists.
 {
   if(!node.Ok())return false;
-  bool inserted=nodes.insert(std::pair<wxString, PNode>((*node).name, node)).second;
+  bool inserted=nodes.insert(std::pair<wxString, PNode>((*node).name.Lower(), node)).second;
   if(!inserted)return false;
 
   node->parent=this;
@@ -363,7 +363,7 @@ void DataList::InsertRename(PNode node) {/// rename if such entry already exists
         return;
       }
     }
-    std::cout<<"insertRename: iterated over 10 000 names, way too many"<<std::endl;
+    wxLogError( _T("insertRename: iterated over 10 000 names, way too many") );
   }
 }
 
@@ -389,15 +389,15 @@ void DataList::InsertRenameAt(PNode node, PNode where) {// rename if such entry 
         return;
       }
     }
-    std::cout<<"insertRename: iterated over 10 000 names, way too many"<<std::endl;
+    wxLogError( _T("insertRename: iterated over 10 000 names, way too many") );
   }
 }
 
 bool DataList::Remove( const wxString &str ) {
-  //PNode node=nodes.find(str)->last;
+  //PNode node=nodes.find(str.Lower())->last;
   PNode node = Find(str);
   if(!node.Ok())return false;
-  if(nodes.erase(str)<=0) return false;
+  if(nodes.erase(str.Lower())<=0) return false;
 
   node->parent=NULL;
   node->ListRemove();
@@ -406,7 +406,7 @@ bool DataList::Remove( const wxString &str ) {
 
 bool DataList::Remove( PNode node ) {
   if(!node.Ok())return false;
-  if(nodes.erase(node->Name())<=0) return false;
+  if(nodes.erase(node->Name().Lower())<=0) return false;
 
   node->parent=NULL;
   node->ListRemove();
@@ -415,17 +415,17 @@ bool DataList::Remove( PNode node ) {
 
 bool DataList::Rename(const wxString &old_name, const wxString &new_name){
   /// check that new name is not used up.
-  if(nodes.find(new_name)!=nodes.end())return false;
-  nodes_iterator i=nodes.find(old_name);
+  if(nodes.find(new_name.Lower())!=nodes.end())return false;
+  nodes_iterator i=nodes.find(old_name.Lower());
   if(i==nodes.end())return false;
   PNode node=i->second;
 
   ASSERT_LOGIC(node.Ok(), _T("Internal TDF tree consistency (1)"));
-  ASSERT_LOGIC(node->Name()==old_name, _T("Internal TDF tree consistency (2)"));
+  ASSERT_LOGIC(node->Name().Lower()==old_name.Lower(), _T("Internal TDF tree consistency (2)"));
 
-  node->name=new_name;
+  node->name=new_name.Lower();
   nodes.erase(i);
-  bool inserted=nodes.insert(std::pair<wxString, PNode>((*node).name, node)).second;
+  bool inserted=nodes.insert(std::pair<wxString, PNode>((*node).name.Lower(), node)).second;
   ASSERT_LOGIC(inserted,_T("DataList::Rename failed"));
   return inserted;
 }
@@ -434,9 +434,9 @@ bool DataList::Rename(const wxString &old_name, const wxString &new_name){
 PNode DataList::Find( const wxString &str ) {
   if(str==_T(".."))return Parent();
   if(str==_T("."))return this;
-  nodes_iterator i=nodes.find(str);
+  nodes_iterator i=nodes.find(str.Lower());
   if(i!=nodes.end()){
-    ASSERT_LOGIC(i->second->Name()==str, _T("Internal TDF tree consistency (3)"));
+    ASSERT_LOGIC(i->second->Name().Lower()==str.Lower(), _T("Internal TDF tree consistency (3)"));
     return i->second;
   }
   return NULL;

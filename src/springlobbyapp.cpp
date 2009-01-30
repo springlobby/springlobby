@@ -14,12 +14,14 @@
 #include <wx/dirdlg.h>
 #include <wx/tooltip.h>
 #include <wx/file.h>
+#include <wx/wfstream.h>
 #include <wx/fs_zip.h> //filesystem zip handler
 #include <wx/socket.h>
 #ifdef __WXMSW__
 	#include <wx/msw/registry.h>
 #endif
 #include <wx/utils.h>
+#include <wx/wfstream.h>
 
 #include "springlobbyapp.h"
 #include "mainwindow.h"
@@ -36,7 +38,6 @@
 #include "torrentwrapper.h"
 #endif
 #include "updater/updater.h"
-#include "unitsyncthread.h"
 #include "replay/replaytab.h"
 #include "globalsmanager.h"
 
@@ -137,7 +138,6 @@ bool SpringLobbyApp::OnInit()
     {
         sett().SetMapCachingThreadProgress( 0 ); // reset map cache thread
         sett().SetModCachingThreadProgress( 0 ); // reset mod cache thread
-        CacheThread().LoadSettingsFromFile();
         if ( wxDirExists( sett().GetCachePath() )  )
         {
             wxLogWarning( _T("erasing old cache ver %d (app cache ver %d)"), sett().GetCacheVersion(), CACHE_VERSION );
@@ -176,6 +176,17 @@ bool SpringLobbyApp::OnInit()
 			{
 				sett().ConvertOldServerSettings();
 			}
+			if ( sett().GetSettingsVersion() < 7 )
+			{
+				sett().AddChannelJoin( _T("springlobby"), _T("") );
+			}
+			if ( sett().GetSettingsVersion() < 8 )
+			{
+				 sett().DeleteServer( _T("Backup server") );
+				 sett().SetServer( _T("Backup server 1"), _T("springbackup1.servegame.com"), 8200 );
+				 sett().SetServer( _T("Backup server 2"), _T("springbackup2.servegame.org"), 8200 );
+				 sett().SetServer( _T("Test server"), _T("taspringmaster.servegame.com"), 8300 );
+			}
     }
 
     ui().ReloadUnitSync(); // first time load of unitsync
@@ -186,7 +197,7 @@ bool SpringLobbyApp::OnInit()
 #ifdef __WXMSW__
         sett().SetOldSpringLaunchMethod( true );
 #endif
-        sett().AddChannelJoin( _T("newbies"), _T("") );
+
         wxLogMessage( _T("first time startup"));
         wxMessageBox(_("Hi ") + wxGetUserName() + _(",\nIt looks like this is your first time using SpringLobby. I have guessed a configuration that I think will work for you but you should review it, especially the Spring configuration. \n\nWhen you are done you can go to the File menu, connect to a server, and enjoy a nice game of Spring :)"), _("Welcome"),
                      wxOK | wxICON_INFORMATION, &ui().mw() );
@@ -198,22 +209,42 @@ bool SpringLobbyApp::OnInit()
 
         if ( !wxDirExists( wxStandardPaths::Get().GetUserDataDir() ) ) wxMkdir( wxStandardPaths::Get().GetUserDataDir() );
         wxString sep ( wxFileName::GetPathSeparator() );
-        // ask for downloading ota content if archive not found, start downloader in background
-	if ( !wxDirExists( sett().GetCurrentUsedDataDir() + sep + _T("base") ) ) wxMkdir( sett().GetCurrentUsedDataDir() + sep + _T("base") );
-        wxString url= _T("ipxserver.dyndns.org/games/spring/mods/xta/base-ota-content.zip");
-        wxString destFilename = sett().GetCurrentUsedDataDir() + sep + _T("base") + sep + _T("base-ota-content.zip");
-        bool contentExists = usync().FileExists(_T("base/otacontent.sdz")) && usync().FileExists(_T("base/tacontent_v2.sdz")) && usync().FileExists(_T("base/tatextures_v062.sdz"));
+				if ( !wxDirExists( sett().GetCurrentUsedDataDir() + sep + _T("base") ) ) wxMkdir( sett().GetCurrentUsedDataDir() + sep + _T("base") );
 
-        if ( !contentExists &&
-                customMessageBox(SL_MAIN_ICON, _("Do you want to download OTA content?\n"
-                                                 "You need this to be able to play TA based mods.\n"
-                                                 "You need to own a copy of Total Annihilation do legally download it."),_("Download OTA content?"),wxYES_NO) == wxYES )
-        {
-            m_otadownloader = new HttpDownloader( url, destFilename );
-        }
+				if ( !sett().SkipDownloadOtaContent() )
+				{
+					// ask for downloading ota content if archive not found, start downloader in background
+					wxString url= _T("ipxserver.dyndns.org/games/spring/mods/xta/base-ota-content.zip");
+					wxString destFilename = sett().GetCurrentUsedDataDir() + sep + _T("base") + sep + _T("base-ota-content.zip");
+					bool contentExists = false;
+					if ( usync().IsLoaded() )
+					{
+						contentExists = usync().FileExists(_T("base/otacontent.sdz")) && usync().FileExists(_T("base/tacontent_v2.sdz")) && usync().FileExists(_T("base/tatextures_v062.sdz"));
+					}
 
-        customMessageBoxNoModal(SL_MAIN_ICON, _("By default SpringLobby reports some statistics.\n"
-                                                 "You can disable that on options tab --> General."),_("Notice"),wxOK );
+					if ( !contentExists &&
+									customMessageBox(SL_MAIN_ICON, _("Do you want to download OTA content?\n"
+																									 "You need this to be able to play TA based mods.\n"
+																									 "You need to own a copy of Total Annihilation do legally download it."),_("Download OTA content?"),wxYES_NO) == wxYES )
+					{
+							m_otadownloader = new HttpDownloader( url, destFilename );
+					}
+				}
+
+        customMessageBoxNoModal(SL_MAIN_ICON, _("By default SpringLobby reports some statistics.\nYou can disable that on options tab --> General."),_("Notice"),wxOK );
+
+
+				// copy uikeys.txt
+				wxPathList pl;
+				pl.AddEnvList( _T("%ProgramFiles%") );
+				pl.AddEnvList( _T("XDG_DATA_DIRS") );
+				pl = sett().GetAdditionalSearchPaths( pl );
+				wxString uikeyslocation = pl.FindValidPath( _T("uikeys.txt") );
+				if ( !uikeyslocation.IsEmpty() )
+				{
+					wxCopyFile( uikeyslocation, sett().GetCurrentUsedDataDir() + sep + _T("uikeys.txt"), false );
+				}
+
         ui().mw().ShowConfigure();
     }
     else
@@ -255,7 +286,10 @@ int SpringLobbyApp::OnExit()
 
   sett().SaveSettings(); /// to make sure that cache path gets saved before destroying unitsync
 
-  usync().FreeUnitSyncLib();
+	if ( usync().IsLoaded() )
+	{
+		usync().FreeUnitSyncLib();
+	}
 
   DestroyGlobals();
 
@@ -337,34 +371,25 @@ void SpringLobbyApp::SetupUserFolders()
 
       if ( createdirs )
       {
-	  if ( dir.IsEmpty() ||
+				if ( dir.IsEmpty() ||
 	       ( !tryCreateDirectory( dir, 0775 ) ||
-		 ( !tryCreateDirectory( dir + sep + _T("mods"), 0775 ) ||
-		   !tryCreateDirectory( dir + sep + _T("maps"), 0775 ) ||
-		   !tryCreateDirectory( dir + sep + _T("base"), 0775 ) ||
-		   !tryCreateDirectory( dir + sep + _T("demos"), 0775 ) ||
-		   !tryCreateDirectory( dir + sep + _T("screenshots"), 0775  ) )
-		   )
-	      )
-	  {
-              if ( dir.IsEmpty() ) dir = defaultdir;
-              wxMessageBox( _("Something went wrong when creating the directories\nPlease create manually the following folders:") + wxString(_T("\n")) + dir +  _T("\n") + dir + sep + _T("mods\n") + dir + sep + _T("maps\n") + dir + sep + _T("base\n") );
-              return;
-          }
-          else
-          {
-          	wxPathList pl;
-						pl.AddEnvList( _T("%ProgramFiles%") );
-						pl.AddEnvList( _T("XDG_DATA_DIRS") );
-						pl = sett().GetAdditionalSearchPaths( pl );
-          	wxString uikeyslocation = pl.FindValidPath( _T("uikeys.txt") );
-            if ( !uikeyslocation.IsEmpty() )
-            {
-              wxCopyFile( uikeyslocation, dir + sep + _T("uikeys.txt"), false );
-            }
-          }
+				 ( !tryCreateDirectory( dir + sep + _T("mods"), 0775 ) ||
+		       !tryCreateDirectory( dir + sep + _T("maps"), 0775 ) ||
+		       !tryCreateDirectory( dir + sep + _T("base"), 0775 ) ||
+		       !tryCreateDirectory( dir + sep + _T("demos"), 0775 ) ||
+					 !tryCreateDirectory( dir + sep + _T("screenshots"), 0775  ) )
+				 )
+	       )
+				{
+					if ( dir.IsEmpty() ) dir = defaultdir;
+					wxMessageBox( _("Something went wrong when creating the directories\nPlease create manually the following folders:") + wxString(_T("\n")) + dir +  _T("\n") + dir + sep + _T("mods\n") + dir + sep + _T("maps\n") + dir + sep + _T("base\n") );
+				return;
+				}
       }
-      usync().SetSpringDataPath(dir);
+      if ( usync().IsLoaded() )
+      {
+				usync().SetSpringDataPath(dir);
+      }
 #endif
 }
 

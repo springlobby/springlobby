@@ -35,7 +35,7 @@ struct UserStatus {
 struct UserBattleStatus
 {
   // when adding something to this struct, also modify User::UpdateBattleStatus()
-  // total 15 members here
+  // total 16 members here
   int team;
   int ally;
   wxColour colour;
@@ -49,19 +49,20 @@ struct UserBattleStatus
 	int posy; // for startpos = 4
 	// bot-only stuff
 	wxString owner;
-	wxString ailib;
+	wxString aishortname;
+	wxString aiversion;
   // for nat holepunching
   wxString ip;
   unsigned int udpport;
-  bool IsBot() { return !ailib.IsEmpty(); }
+  bool IsBot() { return !aishortname.IsEmpty(); }
   UserBattleStatus(): team(0),ally(0),colour(wxColour(0,0,0)),color_index(-1),handicap(0),side(0),sync(SYNC_UNKNOWN),spectator(false),ready(false), posx(-1), posy(-1), udpport(0) {}
   bool operator == ( const UserBattleStatus& s )
   {
-    return ( ( team == s.team ) && ( colour == s.colour ) && ( handicap == s.handicap ) && ( side == s.side ) && ( sync == s.sync ) && ( spectator == s.spectator ) && ( ready == s.ready ) && ( owner == s.owner ) && ( ailib == s.ailib ) );
+    return ( ( team == s.team ) && ( colour == s.colour ) && ( handicap == s.handicap ) && ( side == s.side ) && ( sync == s.sync ) && ( spectator == s.spectator ) && ( ready == s.ready ) && ( owner == s.owner ) && ( aishortname == s.aishortname ) );
   }
   bool operator != ( const UserBattleStatus& s )
   {
-    return ( ( team != s.team ) || ( colour != s.colour ) || ( handicap != s.handicap ) || ( side != s.side ) || ( sync != s.sync ) || ( spectator != s.spectator ) || ( ready != s.ready ) || ( owner != s.owner ) || ( ailib != s.ailib ) );
+    return ( ( team != s.team ) || ( colour != s.colour ) || ( handicap != s.handicap ) || ( side != s.side ) || ( sync != s.sync ) || ( spectator != s.spectator ) || ( ready != s.ready ) || ( owner != s.owner ) || ( aishortname != s.aishortname ) );
   }
 };
 
@@ -121,10 +122,10 @@ class User : public CommonUser
 
     User( Server& serv ): CommonUser( wxEmptyString,wxEmptyString,0 ), m_serv(&serv), m_battle(0) {}
     User( const wxString& nick, Server& serv ) : CommonUser( nick,wxEmptyString,0 ),m_serv(&serv), m_battle(0){}
-    User( const wxString& nick, const wxString& country, const int& cpu, Server& serv) :
-      CommonUser( nick,country,cpu ) ,m_serv(&serv), m_battle(0) {}
+    User( const wxString& nick, const wxString& country, const int& cpu, Server& serv) : CommonUser( nick,country,cpu ) ,m_serv(&serv), m_battle(0) {}
 		User( const wxString& nick ): CommonUser( nick, wxEmptyString, 0 ), m_serv(0) {};
 		User( const wxString& nick, const wxString& country, const int& cpu ) : CommonUser( nick,country,cpu ) ,m_serv(0) {}
+		User(): CommonUser( wxEmptyString, wxEmptyString, 0 ), m_serv(0) {};
 
     virtual ~User();
 

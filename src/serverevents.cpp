@@ -56,7 +56,6 @@ void ServerEvents::OnLogin()
 void ServerEvents::OnLoginInfoComplete()
 {
     wxLogDebugFunc( _T("") );
-    m_serv.JoinChannel( _T("springlobby"), _T("") );
     //m_serv.RequestChannels();
     int num = sett().GetNumChannelsJoin();
     for ( int i= 0; i < num; i++ )
@@ -353,10 +352,8 @@ void ServerEvents::OnUserLeftBattle( int battleid, const wxString& nick )
     {
         Battle& battle = m_serv.GetBattle( battleid );
 				User& user = battle.GetUser( nick );
-
         battle.OnUserRemoved( user );
-
-        ui().OnUserLeftBattle( battle, user );
+				ui().OnUserLeftBattle( battle, user );
     }
     catch (std::runtime_error &except)
     {
@@ -500,10 +497,6 @@ void ServerEvents::OnJoinChannelResult( bool success, const wxString& channel, c
         Channel& chan = m_serv._AddChannel( channel );
         chan.SetPassword( m_serv.m_channel_pw[channel] );
         ui().OnJoinedChannelSuccessful( chan );
-        if ( channel == _T("springlobby") && sett().GetReportStats() )
-        {
-            m_serv.DoActionChannel( _T("springlobby"), _T("is using SpringLobby v") + GetSpringLobbyVersion() );
-        }
 
     }
     else
@@ -693,7 +686,17 @@ void ServerEvents::OnBattleUpdateBot( int battleid, const wxString& nick, UserBa
 
 void ServerEvents::OnBattleRemoveBot( int battleid, const wxString& nick )
 {
-    OnUserLeftBattle( battleid, nick );
+    wxLogDebugFunc( _T("") );
+    try
+    {
+        Battle& battle = m_serv.GetBattle( battleid );
+				User& user = battle.GetUser( nick );
+				ui().OnUserLeftBattle( battle, user );
+        battle.OnUserRemoved( user );
+    }
+    catch (std::runtime_error &except)
+    {
+    }
 }
 
 

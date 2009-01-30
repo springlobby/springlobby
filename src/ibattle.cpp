@@ -23,7 +23,6 @@ IBattle::IBattle():
   m_is_self_in(false)
 
 {
-	m_internal_bot_list.reserve(32);
 }
 
 
@@ -212,8 +211,8 @@ User& IBattle::OnUserAdded( User& user )
 
 User& IBattle::OnBotAdded( const wxString& nick, const UserBattleStatus& bs )
 {
-		m_internal_bot_list.push_back( User( nick ) );
-		User& user = m_internal_bot_list[ m_internal_bot_list.size() -1 ];
+		m_internal_bot_list[nick] = User( nick );
+		User& user = m_internal_bot_list[nick];
 		user.UpdateBattleStatus( bs );
 		return OnUserAdded( user );
 }
@@ -257,7 +256,6 @@ void IBattle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 				if ( previousally != user.BattleStatus().ally ) ForceAlly( user, previousally );
 			}
     }
-    ui().OnUserBattleStatus( *this, user );
 }
 
 void IBattle::OnUserRemoved( User& user )
@@ -271,14 +269,11 @@ void IBattle::OnUserRemoved( User& user )
     if ( !user.BattleStatus().IsBot() ) user.SetBattle( 0 );
     else
     {
-    	for( UserVecIter i = m_internal_bot_list.begin(); i != m_internal_bot_list.end(); i++ )
-    	{
-    		if ( &(*i) == &user )
-    		{
-    			m_internal_bot_list.erase( i );
-    			break;
-    		}
-    	}
+    	UserVecIter itor = m_internal_bot_list.find( user.GetNick() );
+			if ( itor != m_internal_bot_list.end() )
+			{
+    			m_internal_bot_list.erase( itor );
+			}
     }
 }
 
@@ -378,7 +373,6 @@ void IBattle::ForceSide( User& user, int side )
 	if ( IsFounderMe() || user.BattleStatus().IsBot() )
 	{
 		 user.BattleStatus().side = side;
-		 ui().OnUserBattleStatus( *this, user );
 	}
 }
 
@@ -387,7 +381,6 @@ void IBattle::ForceTeam( User& user, int team )
   if ( IsFounderMe() || user.BattleStatus().IsBot() )
   {
     user.BattleStatus().team = team;
-    ui().OnUserBattleStatus( *this, user );
   }
 }
 
@@ -398,7 +391,6 @@ void IBattle::ForceAlly( User& user, int ally )
   if ( IsFounderMe() || user.BattleStatus().IsBot() )
   {
     user.BattleStatus().ally = ally;
-    ui().OnUserBattleStatus( *this, user );
   }
 
 }
@@ -409,7 +401,6 @@ void IBattle::ForceColour( User& user, const wxColour& col )
   if ( IsFounderMe() || user.BattleStatus().IsBot() )
 		{
 			 user.BattleStatus().colour = col;
-			 ui().OnUserBattleStatus( *this, user );
 		}
 
 }
@@ -420,7 +411,14 @@ void IBattle::ForceSpectator( User& user, bool spectator )
 		if ( IsFounderMe() || user.BattleStatus().IsBot() )
 		{
 			 user.BattleStatus().spectator = spectator;
-			 ui().OnUserBattleStatus( *this, user );
+		}
+}
+
+void IBattle::SetHandicap( User& user, int handicap)
+{
+		if ( IsFounderMe() || user.BattleStatus().IsBot() )
+		{
+			 user.BattleStatus().handicap = handicap;
 		}
 }
 
@@ -429,7 +427,6 @@ void IBattle::KickPlayer( User& user )
 {
 		if ( IsFounderMe() || user.BattleStatus().IsBot() )
 		{
-			 ui().OnUserLeftBattle( *this, user );
 			 OnUserRemoved( user );
 		}
 }
@@ -480,14 +477,6 @@ void IBattle::GetFreePosition( int& x, int& y )
   y = map.info.height / 2;
 }
 
-void IBattle::SetHandicap( User& user, int handicap)
-{
-		if ( IsFounderMe() || user.BattleStatus().IsBot() )
-		{
-			 user.BattleStatus().handicap = handicap;
-			 ui().OnUserBattleStatus( *this, user );
-		}
-}
 
 void IBattle::SetHostMap(const wxString& mapname, const wxString& hash)
 {
@@ -497,6 +486,7 @@ void IBattle::SetHostMap(const wxString& mapname, const wxString& hash)
     m_host_map.hash = hash;
     if ( !m_host_map.hash.IsEmpty() ) m_map_exists = usync().MapExists( m_host_map.name, m_host_map.hash );
     else m_map_exists = usync().MapExists( m_host_map.name );
+    if ( m_map_exists && !ui().IsSpringRunning() ) usync().PrefetchMap( m_host_map.name );
   }
 }
 
@@ -508,6 +498,7 @@ void IBattle::SetLocalMap(const UnitSyncMap& map)
     m_map_loaded = true;
     if ( !m_host_map.hash.IsEmpty() ) m_map_exists = usync().MapExists( m_host_map.name, m_host_map.hash );
     else m_map_exists = usync().MapExists( m_host_map.name );
+    if ( m_map_exists && !ui().IsSpringRunning() ) usync().PrefetchMap( m_host_map.name );
   }
 }
 

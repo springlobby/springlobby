@@ -91,6 +91,7 @@ BEGIN_EVENT_TABLE( MapCtrl, wxPanel )
   EVT_LEFT_DOWN( MapCtrl::OnLeftDown )
   EVT_LEFT_UP( MapCtrl::OnLeftUp )
   EVT_MOUSEWHEEL( MapCtrl::OnMouseWheel )
+  EVT_COMMAND( wxID_ANY, UnitSyncAsyncOperationCompletedEvt, MapCtrl::OnGetMapImageAsyncCompleted )
 END_EVENT_TABLE()
 
 const int boxsize = 8;
@@ -108,6 +109,7 @@ static inline int ReadInt24(const unsigned char* p) {
 
 MapCtrl::MapCtrl( wxWindow* parent, int size, IBattle* battle, Ui& ui, bool readonly, bool fixed_size, bool draw_start_types, bool singleplayer ):
   wxPanel( parent, -1, wxDefaultPosition, wxSize(size, size), wxSIMPLE_BORDER|wxFULL_REPAINT_ON_RESIZE ),
+  m_async(this),
   m_minimap(0),
   m_metalmap(0),
   m_heightmap(0),
@@ -213,6 +215,11 @@ wxRect MapCtrl::GetStartRect( const BattleStartRect& sr )
 void MapCtrl::Accumulate( wxImage& image )
 {
 	if (!image.IsOk()) return;
+
+	// Even tho GetData() returns a non-const pointer,
+	// it does not unshare the reference counted data,
+	// so we have to make a copy of the image..
+	image = image.Copy();
 
 	const int w = image.GetWidth();
 	const int h = image.GetHeight();
@@ -446,15 +453,11 @@ void MapCtrl::LoadMinimap()
       m_lastsize = wxSize( -1, -1 );
       return;
     }
-    m_minimap = new wxBitmap( usync().GetMinimap( map, w, h ) );
-    if ( m_draw_start_types && usync().VersionSupports(IUnitSync::USYNC_GetInfoMap) )
-    {
-      // todo: optimize? (currently loads image from disk twice)
-      m_metalmap = new wxBitmap( usync().GetMetalmap( map, w, h ) );
-      m_heightmap = new wxBitmap( usync().GetHeightmap( map, w, h ) );
-			m_metalmap_cumulative = usync().GetMetalmap( map );
-			Accumulate( m_metalmap_cumulative );
-    }
+
+    // start chain of asynchronous map image fetches
+    // first minimap, then metalmap and heightmap
+    m_async.GetMinimap( map, w, h );
+
     m_mapname = map;
     m_lastsize = wxSize( w, h );
     Refresh();
@@ -639,8 +642,18 @@ void MapCtrl::DrawBackground( wxDC& dc )
     return;
   }
 
+  wxBitmap* img = 0;
+  switch (m_current_infomap) {
+    case IM_Minimap: img = m_minimap; break;
+    case IM_Metalmap: img = m_metalmap; break;
+    case IM_Heightmap: img = m_heightmap; break;
+    default:
+      ASSERT_LOGIC( false, _T("missing InfoMap IM_* enumeration constant in switch") );
+      break;
+  }
+
   // Draw minimap.
-  if ( !m_minimap )
+  if ( !img )
   {
 
     // Draw background.
@@ -683,16 +696,6 @@ void MapCtrl::DrawBackground( wxDC& dc )
     }
 
     // Draw minimap
-    wxBitmap* img = 0;
-    switch (m_current_infomap)
-    {
-      case IM_Minimap: img = m_minimap; break;
-      case IM_Metalmap: img = m_metalmap; break;
-      case IM_Heightmap: img = m_heightmap; break;
-      default:
-        ASSERT_LOGIC( false, _T("missing InfoMap IM_* enumeration constant in switch") );
-        break;
-    }
     dc.DrawBitmap( *img, r.x, r.y, false );
   }
 }
@@ -1415,8 +1418,9 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
     else if ( m_mdown_area == RA_Close )
     {
       wxRect r = GetUserRect( user, true );
-      m_battle->KickPlayer( *m_user_expanded );
+      m_battle->KickPlayer( user );
       RefreshRect( r, false );
+			m_user_expanded = 0;
     }
     m_mdown_area = RA_Main;
     m_maction = MA_None;
@@ -1508,4 +1512,39 @@ void MapCtrl::OnMouseWheel( wxMouseEvent& event )
     Refresh();
     Update();
   }
+}
+
+
+void MapCtrl::OnGetMapImageAsyncCompleted( wxCommandEvent& event )
+{
+  wxLogDebugFunc( _T("") );
+
+  wxString mapname = event.GetString();
+
+  if ( mapname != m_mapname ) return;
+
+  const int w = m_lastsize.GetWidth();
+  const int h = m_lastsize.GetHeight();
+
+  if ( m_minimap == NULL ) {
+    m_minimap = new wxBitmap( usync().GetMinimap( m_mapname, w, h ) );
+    // this ensures metalmap and heightmap aren't loaded in battlelist
+    if (m_draw_start_types && usync().VersionSupports(IUnitSync::USYNC_GetInfoMap))
+      m_async.GetMetalmap( m_mapname, w, h );
+  }
+  else if ( m_metalmap == NULL ) {
+    m_metalmap = new wxBitmap( usync().GetMetalmap( m_mapname, w, h ) );
+    // singleplayer mode doesn't allow startboxes anyway
+    if (!m_sp) {
+      m_metalmap_cumulative = usync().GetMetalmap( m_mapname );
+      Accumulate( m_metalmap_cumulative );
+    }
+    m_async.GetHeightmap( m_mapname, w, h );
+  }
+  else if ( m_heightmap == NULL ) {
+    m_heightmap = new wxBitmap( usync().GetHeightmap( m_mapname, w, h ) );
+  }
+
+  Refresh();
+  Update();
 }

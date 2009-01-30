@@ -48,6 +48,7 @@ struct Replay
     Replay():id(0),playernum(0),can_watch(false),duration(0),size(0){};
 };
 
+
 typedef unsigned int replay_id_t;
 
 //! @brief mapping from replay id number to replay object
@@ -66,7 +67,7 @@ class ReplayList : public wxEvtHandler
     //!loads replays between two indices
     void LoadReplays( const unsigned int from, const unsigned int to);
 
-    void AddReplay( Replay replay );
+    void AddReplay( const Replay& replay );
     void RemoveReplay( replay_id_t const& id );
 
     Replay &GetReplayById( replay_id_t const& id );
@@ -88,7 +89,7 @@ class ReplayList : public wxEvtHandler
 
     bool GetReplayInfos ( const wxString& ReplayPath, Replay& ret );
     void GetScriptFromReplay ( const wxString& ReplayPath, wxString& script );
-    void GetBattleFromScript( const wxString& script, OfflineBattle& battle );
+    void GetBattleFromScript( const wxString& script, OfflineBattle& battle, bool loadmod );
     BattleOptions GetBattleOptsFromScript( const wxString& script_ );
 
     //! load mod/map options

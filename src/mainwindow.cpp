@@ -1,4 +1,4 @@
-/* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
+/* Copyright (C) 2007-2009 The SpringLobby Team. All rights reserved. */
 //
 // Class: MainWindow
 //
@@ -205,9 +205,9 @@ MainWindow::MainWindow( Ui& ui ) :
   m_func_tabs->AddPage( m_join_tab, _("Multiplayer"), false, charArr2wxBitmap( join_icon_png , sizeof (join_icon_png) ) );
   m_func_tabs->AddPage( m_sp_tab, _("Singleplayer"), false, charArr2wxBitmap( single_player_icon_png , sizeof (single_player_icon_png) ) );
   m_func_tabs->AddPage( m_opts_tab, _("Options"), false, charArr2wxBitmap( options_icon_png , sizeof (options_icon_png) ) );
-  m_func_tabs->AddPage( m_replay_tab, _("Replays"), false, charArr2wxBitmap( downloads_icon_png , sizeof (downloads_icon_png) ) );
+  m_func_tabs->AddPage( m_replay_tab, _("Replays"), false, charArr2wxBitmap( replay_icon_png , sizeof (replay_icon_png) ) );
 #ifndef NO_TORRENT_SYSTEM
-  m_func_tabs->AddPage( m_torrent_tab, _("Downloads"), false, charArr2wxBitmap(  replay_icon_png , sizeof (replay_icon_png) ) );
+  m_func_tabs->AddPage( m_torrent_tab, _("Downloads"), false, charArr2wxBitmap(  downloads_icon_png , sizeof (downloads_icon_png) ) );
 #endif
 #endif
 
@@ -327,7 +327,7 @@ MainTorrentTab& MainWindow::GetTorrentTab()
 #endif
 ChatPanel* MainWindow::GetActiveChatPanel()
 {
-  int index = m_func_tabs->GetSelection();
+  unsigned int index = m_func_tabs->GetSelection();
   if ( index == PAGE_CHAT ) return m_chat_tab->GetActiveChatPanel();
   if ( index == PAGE_JOIN ) return m_join_tab->GetActiveChatPanel();
   return 0;
@@ -375,6 +375,20 @@ void MainWindow::ShowConfigure( const unsigned int page )
   m_func_tabs->SetSelection( PAGE_OPTOS );
   //possibly out of bounds is captured by m_opts_tab itslef
   m_opts_tab->SetSelection( page );
+}
+
+void MainWindow::ShowChannelChooser()
+{
+    if ( m_channel_chooser && m_channel_chooser->IsShown() )
+        return;
+
+    if ( !ui().IsConnected() )
+        customMessageBox( SL_MAIN_ICON, _("You need to be connected to server to view channel list"), _("Not connected") );
+    else {
+        m_channel_chooser->ClearChannels();
+        ui().GetServer().RequestChannels();
+        m_channel_chooser->Show( true );
+    }
 }
 
 //! @brief Called when join channel menuitem is clicked
@@ -560,16 +574,7 @@ void MainWindow::OnMenuAutojoinChannels( wxCommandEvent& event )
 
 void MainWindow::OnShowChannelChooser( wxCommandEvent& event )
 {
-    if ( m_channel_chooser && m_channel_chooser->IsShown() )
-        return;
-
-    if ( !ui().IsConnected() )
-        customMessageBox( SL_MAIN_ICON, _("You need to be connected to server to view channel list"), _("Not connected") );
-    else {
-        m_channel_chooser->ClearChannels();
-        ui().GetServer().RequestChannels();
-        m_channel_chooser->Show( true );
-    }
+    ShowChannelChooser();
 }
 
 void MainWindow::OnChannelList( const wxString& channel, const int& numusers, const wxString& topic )
@@ -597,7 +602,7 @@ void MainWindow::OnMenuLoadLayout( wxCommandEvent& event )
 {
 	#ifndef HAVE_WX26
 	wxArrayString layouts = sett().GetLayoutList();
-	int result = wxGetSingleChoiceIndex( _("Which profile fo you want to load?"), _("Layout manager"), layouts );
+	unsigned int result = wxGetSingleChoiceIndex( _("Which profile fo you want to load?"), _("Layout manager"), layouts );
 	if ( ( result < 0  ) || ( result > layouts.GetCount() ) ) return;
 	GetAui().manager->LoadPerspective( sett().GetLayout( layouts[result] ) );
 	#endif
@@ -608,7 +613,7 @@ void MainWindow::OnMenuDefaultLayout( wxCommandEvent& event )
 {
 	#ifndef HAVE_WX26
 	wxArrayString layouts = sett().GetLayoutList();
-	int result = wxGetSingleChoiceIndex( _("Which profile do you want to be default?"), _("Layout manager"), layouts );
+	unsigned int result = wxGetSingleChoiceIndex( _("Which profile do you want to be default?"), _("Layout manager"), layouts );
 	if ( ( result < 0  ) || ( result > layouts.GetCount() ) ) return;
 	sett().SetDefaultLayout( layouts[result] );
 	#endif

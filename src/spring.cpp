@@ -246,16 +246,28 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 					tdf.Append(it->first,it->second.second);
 			}
 
+			tdf.Append( _T("NumPlayers"), battle.GetNumPlayers() );
+			tdf.Append( _T("NumUsers"), battle.GetNumUsers() );
+
 			tdf.AppendLineBreak();
 
 			unsigned int NumUsers = battle.GetNumUsers();
+
+			std::map<int, int> m_ally_map; // spring wants consegutive allies, this maps non consegutive allies to consegutive
 
 			std::map<int, User*> dedupe_teams; // team -> user* ( for teams deduping )
 			for ( unsigned int i = 0; i < NumUsers; i++ )
 			{
 					User& usr = battle.GetUser( i );
 					if ( usr.BattleStatus().spectator ) continue; // skip spectators
+					m_ally_map[ usr.BattleStatus().ally ] = usr.BattleStatus().ally;
 					dedupe_teams[usr.BattleStatus().team] = &usr;
+			}
+			int progressive_ally = 0;
+			for ( std::map<int, int>::iterator itor = m_ally_map.begin(); itor != m_ally_map.end(); itor++ ) // fill the map with numers in cosegutive progression
+			{
+				itor->second = progressive_ally;
+				progressive_ally++;
 			}
 			std::map<User*, int> player_to_number; // player -> ordernumber
 
@@ -265,18 +277,35 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 					UserBattleStatus& status = user.BattleStatus();
 					if ( status.IsBot() ) continue;
 					tdf.EnterSection( _T("PLAYER") + i2s( i ) );
-						tdf.Append( _T("Name"), user.GetNick() );
+							tdf.Append( _T("Name"), user.GetNick() );
 
-						tdf.Append( _T("CountryCode"), user.GetCountry().Lower());
-						tdf.Append( _T("Spectator"), status.spectator );
-						tdf.Append( _T("Rank"), user.GetRank() );
+							tdf.Append( _T("CountryCode"), user.GetCountry().Lower());
+							tdf.Append( _T("Spectator"), status.spectator );
+							tdf.Append( _T("Rank"), user.GetRank() );
 
-						if ( !status.spectator )
-						{
+							if ( !status.spectator )
+							{
 								tdf.Append( _T("Team"), status.team );
-						}
+							}
 					tdf.LeaveSection();
 					player_to_number[&user] = i;
+			}
+			if ( usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) )
+			{
+				for ( unsigned int i = 0; i < NumUsers; i++ )
+				{
+						User& user = battle.GetUser( i );
+						UserBattleStatus& status = user.BattleStatus();
+						if ( !status.IsBot() ) continue;
+						tdf.EnterSection( _T("AI") + i2s( i ) );
+								tdf.Append( _T("Name"), user.GetNick() ); // AI's nick;
+								tdf.Append( _T("ShortName"), status.aishortname ); // AI libtype
+								tdf.Append( _T("Version"), status.aiversion ); // AI libtype version
+								tdf.Append( _T("Team"), status.team );
+								tdf.Append( _T("Host"), player_to_number[&battle.GetUser( status.owner )] );
+						tdf.LeaveSection();
+						player_to_number[&user] = i;
+				}
 			}
 
 			tdf.AppendLineBreak();
@@ -293,14 +322,21 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 					PreviousTeam = status.team;
 
 					tdf.EnterSection( _T("TEAM") + i2s( PreviousTeam ) );
-						if ( status.IsBot() )
+						if ( !usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) && status.IsBot() )
 						{
-								tdf.Append( _T("AIDLL"), status.ailib );
+								tdf.Append( _T("AIDLL"), status.aishortname );
 								tdf.Append( _T("TeamLeader"), player_to_number[&battle.GetUser( status.owner )] ); // bot owner is the team leader
 						}
 						else
 						{
-								tdf.Append( _T("TeamLeader"), player_to_number[&usr] );
+								if ( status.IsBot() )
+								{
+										tdf.Append( _T("TeamLeader"), player_to_number[&battle.GetUser( status.owner )] );
+								}
+								else
+								{
+										tdf.Append( _T("TeamLeader"), player_to_number[&usr] );
+								}
 						}
 
 						if ( startpostype == IBattle::ST_Pick )
@@ -309,7 +345,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 								tdf.Append(_T("StartPosZ"), status.posy );
 						}
 
-						tdf.Append( _T("AllyTeam"), status.ally );
+						tdf.Append( _T("AllyTeam"), m_ally_map[status.ally] );
 
 						wxString colourstring =
 								TowxString( status.colour.Red()/255.0 ) + _T(' ') +
@@ -328,10 +364,11 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 			{
 					User& usr = battle.GetUser( i );
 					UserBattleStatus& status = usr.BattleStatus();
+					if ( status.spectator ) continue;
 					if ( PreviousAlly == status.ally ) continue; // skip duplicates
 					PreviousAlly = status.ally;
 
-					tdf.EnterSection( _T("ALLYTEAM") + i2s( PreviousAlly ) );
+					tdf.EnterSection( _T("ALLYTEAM") + i2s( m_ally_map[PreviousAlly] ) );
 						tdf.Append( _T("NumAllies"), 0 );
 
 						if ( startpostype == IBattle::ST_Choose )

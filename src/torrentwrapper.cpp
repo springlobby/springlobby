@@ -219,7 +219,6 @@ std::set<TorrentTable::PRow> TorrentTable::QueuedTorrentsByRow()
 }
 
 
-
 TorrentWrapper& torrent()
 {
     static GlobalObjectHolder<TorrentWrapper> m_torr_wrap;
@@ -497,6 +496,7 @@ void TorrentWrapper::UpdateFromTimer( int mselapsed )
         RemoveUnneededTorrents();
         TryToJoinQueuedTorrents();
         ResumeFromList();
+        SearchAndGetQueuedDependencies();
     }
 }
 
@@ -754,8 +754,15 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
 					return false;
 			}
 
-			libtorrent::torrent_info torrent_info (e);
-			libtorrent::torrent_info* t_info = &torrent_info;
+			libtorrent::torrent_info t_info (e);
+
+			if ( t_info.num_files() != 1 )
+			{
+					wxLogMessage( _T("torrent contains an invalid number of files") );
+					return false;
+			}
+
+			wxString torrentfilename = WX_STRING( t_info.begin_files()->path.string() ); // get the file name in the torrent infos
 
     #else
 			libtorrent::add_torrent_params p;
@@ -774,17 +781,16 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
 			//decode success
 
 			boost::intrusive_ptr<libtorrent::torrent_info> t_info = p.ti;
+
+			if ( t_info->num_files() != 1 )
+			{
+					wxLogMessage( _T("torrent contains an invalid number of files") );
+					return false;
+			}
+
+			wxString torrentfilename = WX_STRING( t_info->file_at(0).path.string() ); // get the file name in the torrent infos
     #endif
 
-
-
-		if ( t_info->num_files() != 1 )
-		{
-				wxLogMessage( _T("torrent contains an invalid number of files") );
-				return false;
-		}
-
-		wxString torrentfilename = WX_STRING( t_info->file_at(0).path.string() ); // get the file name in the torrent infos
 
     wxLogMessage( _T("requested filename: %s"), torrentfilename.c_str() );
 
@@ -802,11 +808,11 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
         wxLogMessage(_T("New filename in torrent: %s"), archive_filename.GetFullName().c_str());
         #if LIBTORRENT_VERSION_MINOR < 14
 					std::vector<libtorrent::file_entry> map;
-					libtorrent::file_entry foo = t_info->file_at(0);
+					libtorrent::file_entry foo = t_info.file_at(0);
 					map.push_back( foo );
 					map.front().path = boost::filesystem::path(STD_STRING( archive_filename.GetFullName() ) );
 					wxLogMessage(_T("New filename in torrent: %s"), archive_filename.GetFullName().c_str() );
-					if ( !t_info->remap_files(map) )
+					if ( !t_info.remap_files(map) )
 					{
 					 wxLogMessage(_T("Cannot remap filenames in the torrent, aborting seed"));
 					 return false;
@@ -1034,6 +1040,9 @@ void TorrentWrapper::RemoveUnneededTorrents()
 
                 SendMessageToCoordinator( _T("N-|")  + it->second->hash + _T("\n") ); //notify the system we don't need the file anymore
 
+                TorrentTable::Row fileinfo( *it->second );
+                m_dep_check_queue.push_back( fileinfo );
+
                 wxCommandEvent refreshevt(UnitSyncReloadRequest); // request an unitsync reload
                 wxPostEvent( &SL_GlobalEvtHandler::GetSL_GlobalEvtHandler(), refreshevt );
             }
@@ -1072,6 +1081,48 @@ void TorrentWrapper::TryToJoinQueuedTorrents()
             RequestFileByRow( *it );
         }
     }
+
+}
+
+void TorrentWrapper::SearchAndGetQueuedDependencies()
+{
+	std::vector<TorrentTable::Row> listcopy = m_dep_check_queue;
+	int position = 0;
+	for ( std::vector<TorrentTable::Row>::iterator itor = listcopy.begin(); itor != listcopy.end(); itor++ )
+	{
+
+		if ( itor->type == IUnitSync::map )
+		{
+			if ( usync().MapExists( itor->name, itor->hash ) )
+			{
+				wxArrayString deps = usync().GetMapDeps( itor->name );
+				int count = deps.GetCount();
+				for ( int i = 0; i < count; i++ )
+				{
+					RequestFileByName( deps[i] );
+				}
+				std::vector<TorrentTable::Row>::iterator toremove = m_dep_check_queue.begin();
+				m_dep_check_queue.erase(toremove+position);
+				position--;
+			}
+		}
+		else if ( itor->type == IUnitSync::mod )
+		{
+			if ( usync().ModExists( itor->name, itor->hash ) )
+			{
+				wxArrayString deps = usync().GetModDeps( itor->name );
+				int count = deps.GetCount();
+				for ( int i = 0; i < count; i++ )
+				{
+					RequestFileByName( deps[i] );
+				}
+				std::vector<TorrentTable::Row>::iterator toremove = m_dep_check_queue.begin();
+				m_dep_check_queue.erase(toremove+position);
+				position--;
+			}
+		}
+		position++;
+	}
 
 }
 

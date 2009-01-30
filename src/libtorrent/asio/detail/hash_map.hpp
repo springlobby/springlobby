@@ -43,7 +43,6 @@ inline std::size_t calculate_hash_value(SOCKET s)
 }
 #endif // defined(_WIN64)
 
-// Note: assumes K and V are POD types.
 template <typename K, typename V>
 class hash_map
   : private noncopyable
@@ -140,7 +139,7 @@ public:
     if (it == values_.end())
     {
       buckets_[bucket].first = buckets_[bucket].last =
-        values_insert(values_.end(), v);
+        values_.insert(values_.end(), v);
       return std::pair<iterator, bool>(buckets_[bucket].last, true);
     }
     iterator end = buckets_[bucket].last;
@@ -151,7 +150,7 @@ public:
         return std::pair<iterator, bool>(it, false);
       ++it;
     }
-    buckets_[bucket].last = values_insert(end, v);
+    buckets_[bucket].last = values_.insert(end, v);
     return std::pair<iterator, bool>(buckets_[bucket].last, true);
   }
 
@@ -170,7 +169,7 @@ public:
     else if (is_last)
       --buckets_[bucket].last;
 
-    values_erase(it);
+    values_.erase(it);
   }
 
   // Remove all entries from the map.
@@ -185,35 +184,8 @@ public:
   }
 
 private:
-  // Insert an element into the values list by splicing from the spares list,
-  // if a spare is available, and otherwise by inserting a new element.
-  iterator values_insert(iterator it, const value_type& v)
-  {
-    if (spares_.empty())
-    {
-      return values_.insert(it, v);
-    }
-    else
-    {
-      spares_.front() = v;
-      values_.splice(it, spares_, spares_.begin());
-      return --it;
-    }
-  }
-
-  // Erase an element from the values list by splicing it to the spares list.
-  void values_erase(iterator it)
-  {
-    *it = value_type();
-    spares_.splice(spares_.begin(), values_, it);
-  }
-
   // The list of all values in the hash map.
   std::list<value_type> values_;
-
-  // The list of spare nodes waiting to be recycled. Assumes that POD types only
-  // are stored in the hash map.
-  std::list<value_type> spares_;
 
   // The type for a bucket in the hash table.
   struct bucket_type

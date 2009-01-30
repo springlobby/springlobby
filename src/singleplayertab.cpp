@@ -12,6 +12,7 @@
 
 #include "singleplayertab.h"
 #include "mapctrl.h"
+#include "mapselectdialog.h"
 #include "utils.h"
 #include "uiutils.h"
 #include "ui.h"
@@ -31,9 +32,10 @@ BEGIN_EVENT_TABLE(SinglePlayerTab, wxPanel)
 
   EVT_CHOICE( SP_MAP_PICK, SinglePlayerTab::OnMapSelect )
   EVT_CHOICE( SP_MOD_PICK, SinglePlayerTab::OnModSelect )
-  EVT_BUTTON( SP_ADD_BOT , SinglePlayerTab::OnAddBot )
-  EVT_BUTTON( SP_START , SinglePlayerTab::OnStart )
-  EVT_BUTTON( SP_RESET , SinglePlayerTab::OnReset )
+  EVT_BUTTON( SP_BROWSE_MAP, SinglePlayerTab::OnMapBrowse )
+  EVT_BUTTON( SP_ADD_BOT, SinglePlayerTab::OnAddBot )
+  EVT_BUTTON( SP_RESET, SinglePlayerTab::OnReset )
+  EVT_BUTTON( SP_START, SinglePlayerTab::OnStart )
   EVT_CHECKBOX( SP_RANDOM, SinglePlayerTab::OnRandomCheck )
 
 END_EVENT_TABLE()
@@ -63,8 +65,8 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, Ui& ui, MainSinglePlayerTab& 
   m_map_pick = new wxChoice( this, SP_MAP_PICK );
   m_ctrl_sizer->Add( m_map_pick, 1, wxALL, 5 );
 
-//  m_select_btn = new wxButton( this, SP_BROWSE_MAP, _T("..."), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
-//  m_ctrl_sizer->Add( m_select_btn, 0, wxBOTTOM|wxRIGHT|wxTOP, 5 );
+  m_select_btn = new wxButton( this, SP_BROWSE_MAP, _T("..."), wxDefaultPosition, wxSize(CONTROL_HEIGHT, CONTROL_HEIGHT), wxBU_EXACTFIT );
+  m_ctrl_sizer->Add( m_select_btn, 0, wxBOTTOM|wxRIGHT|wxTOP, 5 );
 
   m_mod_lbl = new wxStaticText( this, -1, _("Mod:") );
   m_ctrl_sizer->Add( m_mod_lbl, 0, wxALL, 5 );
@@ -240,6 +242,20 @@ void SinglePlayerTab::OnModSelect( wxCommandEvent& event )
 }
 
 
+void SinglePlayerTab::OnMapBrowse( wxCommandEvent& event )
+{
+	wxLogDebugFunc( _T("") );
+	MapSelectDialog dlg( &m_ui.mw(), m_ui );
+
+	if ( dlg.ShowModal() == wxID_OK && dlg.GetSelectedMap() != NULL ) {
+		wxLogDebugFunc( dlg.GetSelectedMap()->name );
+		const wxString mapname = RefineMapname( dlg.GetSelectedMap()->name );
+		const int idx = m_map_pick->FindString( mapname, true /*case sensitive*/ );
+		if ( idx != wxNOT_FOUND ) SetMap( idx );
+	}
+}
+
+
 void SinglePlayerTab::OnAddBot( wxCommandEvent& event )
 {
   if ( m_battle.GetNumUsers() > 15 )
@@ -258,7 +274,8 @@ void SinglePlayerTab::OnAddBot( wxCommandEvent& event )
     bs.ally = m_battle.GetFreeAlly();
     bs.team = m_battle.GetFreeTeamNum( false );
     bs.owner = m_battle.GetMe().GetNick();
-    bs.ailib = dlg.GetAI();
+    bs.aishortname = dlg.GetAIShortName();
+    bs.aiversion = dlg.GetAIVersion();
     User& bot = m_battle.OnBotAdded( _T("Bot") + TowxString( bs.team ), bs  );
     ASSERT_LOGIC( &bot != 0, _T("bot == 0") );
 

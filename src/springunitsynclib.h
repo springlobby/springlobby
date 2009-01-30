@@ -288,6 +288,7 @@ class SpringUnitSyncLib
     wxString GetMapName( int index );
     int GetMapArchiveCount( int index );
     wxString GetMapArchiveName( int arnr );
+    wxArrayString GetMapDeps( int index );
 
     /**
      * @brief Get information about a map.
@@ -328,6 +329,7 @@ class SpringUnitSyncLib
     int GetPrimaryModArchiveCount( int index );
     wxString GetPrimaryModArchiveList( int arnr );
     int GetPrimaryModChecksumFromName( const wxString& name );
+    wxArrayString GetModDeps( int index );
 
     wxArrayString GetSides( const wxString& modName );
 
@@ -409,7 +411,7 @@ class SpringUnitSyncLib
     void SetSpringConfigFloat( const wxString& key, const float value );
 
     /// AI info
-    int GetSkirmishAICount();
+    int GetSkirmishAICount( const wxString& modname );
     /**
      * Get next search result.
      * @param the AI index within range of GetSkirmishAIInfoCount

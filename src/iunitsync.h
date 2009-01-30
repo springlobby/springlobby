@@ -3,11 +3,14 @@
 
 #include <wx/string.h>
 #include <wx/arrstr.h>
+#include <wx/event.h>
 #include <map>
 
 #include "mmoptionmodel.h"
 
 class wxImage;
+
+extern const wxEventType UnitSyncAsyncOperationCompletedEvt;
 
 struct UnitSyncMod
 {
@@ -136,6 +139,8 @@ class IUnitSync
     virtual GameOptions GetModOptions( const wxString& name ) = 0;
     /**@}*/
 
+    virtual wxArrayString GetModDeps( const wxString& name ) = 0;
+
     virtual int GetNumMaps() = 0;
     virtual wxArrayString GetMapList() = 0;
     virtual wxArrayString GetModValidMapList( const wxString& modname ) = 0;
@@ -148,6 +153,7 @@ class IUnitSync
     virtual UnitSyncMap GetMapEx( int index ) = 0;
     virtual wxString GetMapArchive( int index ) = 0;
     virtual GameOptions GetMapOptions( const wxString& name ) = 0;
+    virtual wxArrayString GetMapDeps( const wxString& name ) = 0;
 
     virtual int GetMapIndex( const wxString& name ) = 0;
     virtual wxImage GetMinimap( const wxString& mapname ) = 0;
@@ -172,6 +178,7 @@ class IUnitSync
     virtual bool VersionSupports( GameFeature feature ) = 0;
 
     virtual wxArrayString GetAIList( const wxString& modname ) = 0;
+    virtual wxArrayString GetAIInfos( int index ) = 0;
 
     virtual bool ReloadUnitSyncLib() = 0;
 
@@ -182,6 +189,19 @@ class IUnitSync
     virtual bool FileExists( const wxString& name ) = 0;
 
     virtual wxString GetArchivePath( const wxString& name ) = 0;
+
+    virtual void PrefetchMap( const wxString& mapname ) = 0;
+
+    virtual int RegisterEvtHandler( wxEvtHandler* evtHandler ) = 0;
+    virtual void UnregisterEvtHandler( int evtHandlerId ) = 0;
+
+    virtual void GetMinimapAsync( const wxString& mapname, int evtHandlerId ) = 0;
+    virtual void GetMinimapAsync( const wxString& mapname, int width, int height, int evtHandlerId ) = 0;
+    virtual void GetMetalmapAsync( const wxString& mapname, int evtHandlerId ) = 0;
+    virtual void GetMetalmapAsync( const wxString& mapname, int width, int height, int evtHandlerId ) = 0;
+    virtual void GetHeightmapAsync( const wxString& mapname, int evtHandlerId ) = 0;
+    virtual void GetHeightmapAsync( const wxString& mapname, int width, int height, int evtHandlerId ) = 0;
+    virtual void GetMapExAsync( const wxString& mapname, int evtHandlerId ) = 0;
 };
 
 IUnitSync& usync();
@@ -194,6 +214,29 @@ struct GameOptions
   IUnitSync::OptionMapList list_map;
   IUnitSync::OptionMapInt int_map;
   IUnitSync::OptionMapSection section_map;
+};
+
+/// Helper class for managing async operations safely
+class UnitSyncAsyncOps
+{
+  public:
+    UnitSyncAsyncOps( wxEvtHandler* evtHandler ) {
+      m_id = usync().RegisterEvtHandler( evtHandler );
+    }
+    ~UnitSyncAsyncOps() {
+      usync().UnregisterEvtHandler( m_id );
+    }
+
+    void GetMinimap( const wxString& mapname )                 { usync().GetMinimapAsync( mapname, m_id ); }
+    void GetMinimap( const wxString& mapname, int w, int h )   { usync().GetMinimapAsync( mapname, w, h, m_id ); }
+    void GetMetalmap( const wxString& mapname )                { usync().GetMetalmapAsync( mapname, m_id ); }
+    void GetMetalmap( const wxString& mapname, int w, int h )  { usync().GetMetalmapAsync( mapname, w, h, m_id ); }
+    void GetHeightmap( const wxString& mapname )               { usync().GetHeightmapAsync( mapname, m_id ); }
+    void GetHeightmap( const wxString& mapname, int w, int h ) { usync().GetHeightmapAsync( mapname, w, h, m_id ); }
+    void GetMapEx( const wxString& mapname )                   { usync().GetMapExAsync( mapname, m_id ); }
+
+  private:
+    int m_id;
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_IUNITSYNC_H
