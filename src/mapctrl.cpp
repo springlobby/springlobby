@@ -988,6 +988,7 @@ void MapCtrl::DrawSinglePlayer( wxDC& dc )
     if ( &bot == 0 ) continue;
 
     bool expanded = m_user_expanded;
+    if ( !m_sp ) expanded = false;
     DrawUser( dc, bot, (m_maction != MA_Move) && expanded, (m_maction == MA_Move) && expanded );
 
   }
