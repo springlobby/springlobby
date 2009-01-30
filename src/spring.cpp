@@ -263,6 +263,19 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 				}
 			tdf.LeaveSection();
 
+			wxArrayString units = battle.DisabledUnits();
+			tdf.Append( _T("NumRestrictions"), units.GetCount());
+			tdf.EnterSection( _T("RESTRICT") );
+				for ( unsigned int i = 0; i < units.GetCount(); i++)
+				{
+						tdf.Append(_T("Unit") + i2s( i ), units[i].c_str() );
+						tdf.Append(_T("Limit") + i2s(i), _T("0") );
+				}
+			tdf.LeaveSection();
+
+
+			tdf.AppendLineBreak();
+
 			tdf.Append( _T("NumPlayers"), battle.GetNumPlayers() );
 			tdf.Append( _T("NumUsers"), battle.GetNumUsers() );
 
@@ -417,19 +430,6 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 						}
 					tdf.LeaveSection();
 			}
-
-			tdf.AppendLineBreak();
-
-			wxArrayString units = battle.DisabledUnits();
-			tdf.Append( _T("NumRestrictions"), units.GetCount());
-			tdf.EnterSection( _T("RESTRICT") );
-				for ( unsigned int i = 0; i < units.GetCount(); i++)
-				{
-						tdf.Append(_T("Unit") + i2s( i ), units[i].c_str() );
-						tdf.Append(_T("Limit") + i2s(i), _T("0") );
-				}
-			tdf.LeaveSection();
-
 
     tdf.LeaveSection();
 
