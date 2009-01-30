@@ -104,7 +104,7 @@ ReplayTab::ReplayTab( wxWindow* parent, Ui& ui ) :
 
     m_info_sizer->Add( m_data_sizer, 1, wxEXPAND, 5 );
 
-    m_players = new UserListctrl( this, _T("replayusers"),REPLAY_USER_LIST );
+    m_players = new UserListctrl( this, _T("replayusers"), true, REPLAY_USER_LIST );
     m_info_sizer->Add( m_players , 1, wxEXPAND, 5 );
 
     m_main_sizer->Add( m_info_sizer, 0, wxEXPAND, 5 );

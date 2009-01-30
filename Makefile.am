@@ -392,8 +392,8 @@ springlobby_SOURCES = \
 	src/springunitsynclib.h \
 	src/unitsyncthread.cpp \
 	src/unitsyncthread.h \
-	src/maplistctrl.cpp \
-	src/maplistctrl.h \
+	src/mapgridctrl.cpp \
+	src/mapgridctrl.h \
 	src/mapselectdialog.cpp \
 	src/mapselectdialog.h \
 	src/bimap.h \
@@ -604,6 +604,8 @@ springlobby_SOURCES = \
 	src/images/warning_small.png.h \
 	src/images/spectator.png.h \
 	src/images/single_player_icon_text.png.h \
+	src/images/map_select_1.png.h \
+	src/images/map_select_2.png.h \
 	src/images/select_icon.xpm \
 	src/images/server.xpm \
 	src/images/spectator.xpm \

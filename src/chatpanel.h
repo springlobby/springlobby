@@ -114,6 +114,8 @@ class ChatPanel : public wxPanel
     void OnUserConnected();
 
     void OnSay( wxCommandEvent& event );
+    void OnPaste( wxClipboardTextEvent& event );
+
     void OnResize( wxSizeEvent& event );
 
     void OnLinkEvent( wxTextUrlEvent& event );

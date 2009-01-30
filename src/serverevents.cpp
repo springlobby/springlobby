@@ -352,8 +352,8 @@ void ServerEvents::OnUserLeftBattle( int battleid, const wxString& nick )
     {
         Battle& battle = m_serv.GetBattle( battleid );
 				User& user = battle.GetUser( nick );
-        ui().OnUserLeftBattle( battle, user );
         battle.OnUserRemoved( user );
+				ui().OnUserLeftBattle( battle, user );
     }
     catch (std::runtime_error &except)
     {
@@ -686,7 +686,17 @@ void ServerEvents::OnBattleUpdateBot( int battleid, const wxString& nick, UserBa
 
 void ServerEvents::OnBattleRemoveBot( int battleid, const wxString& nick )
 {
-    OnUserLeftBattle( battleid, nick );
+    wxLogDebugFunc( _T("") );
+    try
+    {
+        Battle& battle = m_serv.GetBattle( battleid );
+				User& user = battle.GetUser( nick );
+				ui().OnUserLeftBattle( battle, user );
+        battle.OnUserRemoved( user );
+    }
+    catch (std::runtime_error &except)
+    {
+    }
 }
 
 

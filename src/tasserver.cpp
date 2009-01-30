@@ -1,4 +1,4 @@
-/* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
+/* Copyright (C) 2007-2009 The SpringLobby Team. All rights reserved. */
 
 #include <wx/string.h>
 #include <wx/regex.h>
@@ -22,10 +22,10 @@
 #include "serverevents.h"
 #include "socket.h"
 #include "channel/channel.h"
+
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
-
 
 /// for SL_MAIN_ICON
 #include "settings++/custom_dialogs.h"
@@ -251,6 +251,7 @@ bool TASServer::ExecuteSayCommand( const wxString& cmd )
         ExecuteCommand( _T("CHANGEPASSWORD"), oldpassword + _T(" ") + newpassword );
         return true;
     }
+
     return false;
 }
 

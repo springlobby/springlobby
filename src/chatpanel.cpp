@@ -18,6 +18,8 @@
 #include <wx/utils.h>
 #include <wx/event.h>
 #include <wx/app.h>
+#include <wx/clipbrd.h>
+#include <wx/dataobj.h>
 
 #ifndef HAVE_WX26
 #include "aui/auimanager.h"
@@ -56,6 +58,7 @@ END_EVENT_TABLE()
 BEGIN_EVENT_TABLE( ChatPanel, wxPanel )
 
 	EVT_TEXT_ENTER( CHAT_TEXT, ChatPanel::OnSay )
+	EVT_TEXT_PASTE( CHAT_TEXT, ChatPanel::OnPaste )
 	EVT_BUTTON( CHAT_SEND, ChatPanel::OnSay )
 	EVT_SIZE( ChatPanel::OnResize )
 	EVT_TEXT_URL( CHAT_LOG,  ChatPanel::OnLinkEvent )
@@ -311,7 +314,7 @@ void ChatPanel::CreateControls( )
                                    wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_AUTO_URL );
 	if ( m_type == CPT_Channel ) m_chatlog_text->SetToolTip( TE(_("right click for options (like autojoin)" ) ) );
 
-	m_say_text = new wxTextCtrlHist( textcompletiondatabase, m_chat_panel, CHAT_TEXT, _T( "" ), wxDefaultPosition, wxSize( 100, CONTROL_HEIGHT ), wxTE_PROCESS_ENTER | wxTE_MULTILINE | wxTE_PROCESS_TAB );
+	m_say_text = new wxTextCtrlHist( textcompletiondatabase, m_chat_panel, CHAT_TEXT, _T( "" ), wxDefaultPosition, wxSize( 100, CONTROL_HEIGHT ), wxTE_PROCESS_ENTER | wxTE_PROCESS_TAB );
 	m_say_button = new wxButton( m_chat_panel, CHAT_SEND, _( "Send" ), wxDefaultPosition, wxSize( 80, CONTROL_HEIGHT ) );
 
 	// Adding elements to sizers
@@ -629,6 +632,27 @@ void ChatPanel::OnSay( wxCommandEvent& event )
 {
 	Say( m_say_text->GetValue() );
   m_say_text->SetValue( _T( "" ) );
+}
+
+void ChatPanel::OnPaste( wxClipboardTextEvent& event )
+{
+  // Read some text
+  if (wxTheClipboard->Open())
+  {
+		wxTextDataObject data;
+		if ( wxTheClipboard->GetData( data ) )
+		{
+			wxString converted = data.GetText();
+			converted.Replace( _T("\r\n"), _T("\n") );
+			converted.Replace( _T("\r"), _T("\n") );
+			m_say_text->WriteText( converted );
+    }
+    else event.Skip();
+  }
+  else event.Skip();
+	wxTheClipboard->Close();
+
+
 }
 
 
@@ -971,11 +995,8 @@ void ChatPanel::_SetChannel( Channel* channel )
 
 void ChatPanel::Say( const wxString& message )
 {
-	wxLogDebugFunc( _T( "" ) );
-	wxString messagecopy = message;
-	messagecopy.Replace( _T("\r\n"), _T("\n") );
-	messagecopy.Replace( _T("\r"), _T("\n") );
-	wxStringTokenizer lines( messagecopy, _T( '\n' ) );
+	wxLogDebugFunc( message );
+	wxStringTokenizer lines( message, _T( '\n' ) );
 	if ( lines.CountTokens() > 5 ) {
 		wxMessageDialog dlg( &m_ui.mw(), wxString::Format( _( "Are you sure you want to paste %d lines?" ), lines.CountTokens() ), _( "Flood warning" ), wxYES_NO );
 		if ( dlg.ShowModal() == wxID_NO ) return;
