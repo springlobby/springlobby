@@ -1,4 +1,4 @@
-/* Copyright (C) 2007, 2008 The SpringLobby Team. All rights reserved. */
+/* Copyright (C) 2007-2009 The SpringLobby Team. All rights reserved. */
 //
 // Class: Ui
 //
@@ -470,15 +470,8 @@ bool Ui::ExecuteSayCommand( const wxString& cmd )
     }
     else if ( cmd.BeforeFirst(' ').Lower() == _T("/channels") )
     {
-        ChatPanel* panel = GetActiveChatPanel();
-        if ( panel == 0 )
-        {
-            ShowMessage( _("error"), _("no active chat panels open.") );
-            return false;
-        }
-        panel->StatusMessage(_("Active chat channels:"));
-        m_serv->RequestChannels();
-        return true;
+	mw().ShowChannelChooser();
+	return true;
     }
     return false;
 }
