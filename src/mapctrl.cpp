@@ -349,10 +349,13 @@ void MapCtrl::_SetCursor()
 	{
 		long longval;
 		m_battle->CustomBattleOptions().getSingleValue( _T("startpostype") , OptionsWrapper::EngineOption ).ToLong( &longval );
-		if ( longval != IBattle::ST_Choose ) {
+		if ( longval != IBattle::ST_Choose )
+		{
 			SetCursor( wxCursor( wxCURSOR_ARROW ) );
 			return;
-		} else {
+		}
+		else
+		{
 			SetCursor( wxCursor( wxCURSOR_ARROW ) );
 			return;
 		}
@@ -916,7 +919,9 @@ void MapCtrl::DrawUser( wxDC& dc, User& user, bool selected, bool moving )
 
     dc.DrawBitmap( *img, r.x+2, r.y+2, true );
 
-  } else {
+  }
+  else
+  {
 
     dc.SetPen( wxPen( ColourDelta( col, -40 ) ) );
     dc.SetBrush( wxBrush( col, wxSOLID ) );
