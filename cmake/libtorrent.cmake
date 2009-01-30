@@ -41,17 +41,6 @@ SET(libtorrent_SRC
 	${libtorrent_SOURCE_DIR}/http_stream.cpp
 	${libtorrent_SOURCE_DIR}/connection_queue.cpp
 	${libtorrent_SOURCE_DIR}/disk_io_thread.cpp
-	${libtorrent_SOURCE_DIR}/http_parser.cpp
-	${libtorrent_SOURCE_DIR}/udp_socket.cpp
-	${libtorrent_SOURCE_DIR}/create_torrent.cpp
-	${libtorrent_SOURCE_DIR}/disk_buffer_holder.cpp
-	${libtorrent_SOURCE_DIR}/file_storage.cpp
-	${libtorrent_SOURCE_DIR}/lazy_bdecode.cpp
-	${libtorrent_SOURCE_DIR}/ut_metadata.cpp
-	${libtorrent_SOURCE_DIR}/smart_ban.cpp
-	${libtorrent_SOURCE_DIR}/gzip.cpp
-	${libtorrent_SOURCE_DIR}/parse_url.cpp
-	${libtorrent_SOURCE_DIR}/GeoIP.c
 
 	${libtorrent_SOURCE_DIR}/kademlia/closest_nodes.cpp
 	${libtorrent_SOURCE_DIR}/kademlia/dht_tracker.cpp

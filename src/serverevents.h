@@ -3,8 +3,6 @@
 
 //almost only needed for NAtType enum def
 #include "battle.h"
-//when not nec anymore uncommnet this
-//include <map>
 
 class Ui;
 struct UserStatus;
@@ -50,7 +48,7 @@ class ServerEvents
     void OnUserStatus( const wxString& nick, UserStatus status );
     void OnUserQuit( const wxString& nick );
 
-    void OnBattleOpened( int id, bool replay, IBattle::NatType nat, const wxString& nick,
+    void OnBattleOpened( int id, bool replay, NatType nat, const wxString& nick,
                          const wxString& host, int port, int maxplayers,
                          bool haspass, int rank, const wxString& maphash, const wxString& map,
                          const wxString& title, const wxString& mod );
@@ -71,7 +69,7 @@ class ServerEvents
     void OnBattleStartRectAdd( int battleid, int allyno, int left, int top, int right, int bottom );
     void OnBattleStartRectRemove( int battleid, int allyno );
 
-    void OnBattleAddBot( int battleid, const wxString& nick, const wxString& owner, UserBattleStatus status, const wxString& aidll );
+    void OnBattleAddBot( int battleid, const wxString& nick, UserBattleStatus status );
     void OnBattleUpdateBot( int battleid, const wxString& nick, UserBattleStatus status );
     void OnBattleRemoveBot( int battleid, const wxString& nick );
 

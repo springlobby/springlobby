@@ -27,6 +27,7 @@
 #include "utils.h"
 #include "chatpanel.h"
 #include "mapctrl.h"
+#include "mapselectdialog.h"
 #include "uiutils.h"
 #include "server.h"
 #include "settings.h"
@@ -39,6 +40,7 @@
 BEGIN_EVENT_TABLE(BattleMapTab, wxPanel)
 
   EVT_CHOICE( BMAP_MAP_SEL, BattleMapTab::OnMapSelect )
+  EVT_BUTTON( BMAP_MAP_BROWSE, BattleMapTab::OnMapBrowse )
   EVT_RADIOBOX( BMAP_START_TYPE, BattleMapTab::OnStartTypeSelect )
 
 END_EVENT_TABLE()
@@ -66,9 +68,9 @@ BattleMapTab::BattleMapTab( wxWindow* parent, Ui& ui, Battle& battle ):
   m_map_combo = new wxChoice( this, BMAP_MAP_SEL, wxDefaultPosition, wxDefaultSize );
   m_selmap_sizer->Add( m_map_combo, 1, wxALL, 2 );
 
- // m_browse_btn = new wxButton( this, wxID_ANY, _("Select"), wxDefaultPosition, wxDefaultSize, 0 );
+  m_browse_btn = new wxButton( this, BMAP_MAP_BROWSE, _("Select"), wxDefaultPosition, wxDefaultSize, 0 );
 
-  //m_selmap_sizer->Add( m_browse_btn, 0, wxALL, 2 );
+  m_selmap_sizer->Add( m_browse_btn, 0, wxALL, 2 );
 
   m_map_sizer->Add( m_selmap_sizer, 0, wxEXPAND, 5 );
 
@@ -202,16 +204,13 @@ void BattleMapTab::UpdateUser( User& user )
 }
 
 
-void BattleMapTab::OnMapSelect( wxCommandEvent& event )
+void BattleMapTab::SetMap( int index )
 {
-
   if ( !m_battle.IsFounderMe() ) {
     //m_map_combo->SetSelection( m_map_combo->FindString( RefineMapname( m_battle.GetHostMapName() ) ) );
     return;
   }
 
-  int index = m_map_combo->GetCurrentSelection();
-  //wxString name = m_map_combo->GetString( index );
   try
   {
     UnitSyncMap map = usync().GetMapEx( index );
@@ -221,6 +220,26 @@ void BattleMapTab::OnMapSelect( wxCommandEvent& event )
     for( unsigned int i=0;i<m_battle.GetNumRects();++i) if ( m_battle.GetStartRect( i ).exist ) m_battle.RemoveStartRect(i);
     m_battle.SendHostInfo( IBattle::HI_StartRects );
   } catch (...) {}
+}
+
+
+void BattleMapTab::OnMapSelect( wxCommandEvent& event )
+{
+	SetMap( m_map_combo->GetCurrentSelection() );
+}
+
+
+void BattleMapTab::OnMapBrowse( wxCommandEvent& event )
+{
+	wxLogDebugFunc( _T("") );
+	MapSelectDialog dlg( &m_ui.mw(), m_ui );
+
+	if ( dlg.ShowModal() == wxID_OK && dlg.GetSelectedMap() != NULL ) {
+		wxLogDebugFunc( dlg.GetSelectedMap()->name );
+		const wxString mapname = RefineMapname( dlg.GetSelectedMap()->name );
+		const int idx = m_map_combo->FindString( mapname, true /*case sensitive*/ );
+		if ( idx != wxNOT_FOUND ) SetMap( idx );
+	}
 }
 
 

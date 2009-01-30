@@ -5,8 +5,7 @@
 
 #ifdef __WXMSW__
 #include <wx/fileconf.h>
-#include <wx/filename.h>
-#include <wx/wfstream.h>
+#include <wx/msw/registry.h>
 #else
 #include <wx/config.h>
 #endif
@@ -21,9 +20,6 @@
 #include <wx/log.h>
 #include <wx/wfstream.h>
 #include <wx/settings.h>
-#ifdef __WXMSW__
-#include <wx/msw/registry.h>
-#endif
 
 #include "nonportable.h"
 #include "settings.h"
@@ -35,10 +31,41 @@
 #include "springunitsynclib.h"
 #include "settings++/presets.h"
 
-const wxColor defaultHLcolor (255,0,0);
 bool Settings::m_user_defined_config = false;
 wxString Settings::m_user_defined_config_path = wxEmptyString;
 
+
+const wxColor defaultHLcolor (255,0,0);
+typedef std::map<wxString, wxColor> NamedColorMap;
+static GlobalObjectHolder<NamedColorMap> defaultChatColorsHolder;
+static NamedColorMap& defaultChatColors (defaultChatColorsHolder);
+bool defaultChatColorsInitialized (false);
+
+/** Color used when a requested (color) name cannot be found in either
+ * the user's configuration or the default colors map.  This is
+ * supposed to be somewhat repugnant to the average user, to deter
+ * developers from using colors without adding them to the default
+ * colors map.
+ */
+static wxColor noSuchChatColor(255, 0, 114); /* Hot pink. ^_^ */
+
+static void
+initDefaultChatColors()
+{
+    defaultChatColors.insert(std::make_pair(_T("Normal"), wxColor(0, 0, 0)));
+    defaultChatColors.insert(std::make_pair(_T("Background"), wxColor(255, 255, 255)));
+    defaultChatColors.insert(std::make_pair(_T("Highlight"), wxColor(255, 0, 0)));
+    defaultChatColors.insert(std::make_pair(_T("Mine"), wxColor(100, 100, 140)));
+    defaultChatColors.insert(std::make_pair(_T("Notification"), wxColor(255, 40, 40)));
+    defaultChatColors.insert(std::make_pair(_T("Action"), wxColor(230, 0, 255)));
+    defaultChatColors.insert(std::make_pair(_T("Server"), wxColor(0, 80, 128)));
+    defaultChatColors.insert(std::make_pair(_T("Client"), wxColor(20, 200, 25)));
+    defaultChatColors.insert(std::make_pair(_T("JoinPart"), wxColor(0, 80, 0)));
+    defaultChatColors.insert(std::make_pair(_T("Error"), wxColor(128, 0, 0)));
+    defaultChatColors.insert(std::make_pair(_T("Time"), wxColor(100, 100, 140)));
+
+    defaultChatColorsInitialized = true;
+}
 
 Settings& sett()
 {
@@ -115,7 +142,12 @@ Settings::Settings()
   m_config = new wxConfig( _T("SpringLobby"), wxEmptyString, path, _T("springlobby.global.conf") );
   SetPortableMode ( false );
   #endif
-  if ( !m_config->Exists( _T("/Server") ) ) SetDefaultSettings();
+  if ( !m_config->Exists( _T("/Server") ) ) SetDefaultServerSettings();
+  if ( !m_config->Exists( _T("/Channels") ) )
+  {
+		AddChannelJoin( _T("springlobby"), _T("") );
+		AddChannelJoin( _T("newbies"), _T("") );
+  }
 
   if ( !m_config->Exists( _T("/Groups") ) ) AddGroup( _("Default") );
 }
@@ -143,6 +175,79 @@ void Settings::SaveSettings()
   #endif
 }
 
+void Settings::SetDefaultConfigs( SL_WinConf& conf )
+{
+  wxString str;
+  long dummy;
+
+  // now all groups...
+  bool bCont = conf.GetFirstGroup(str, dummy);
+  while ( bCont )
+  {
+  	// climb all tree branches until you hit the most further
+		bCont = conf.GetFirstGroup(str, dummy);
+    if ( bCont )
+    {
+			conf.SetPath( str );
+    }
+    else
+    {
+			// enum all entries and add to the config
+			wxString currentpath = conf.GetPath();
+			bool exist = conf.GetFirstEntry(str, dummy);
+			while ( exist )
+			{
+				if ( !m_config->Exists( str ) ) // in theory "main" config should be blank at this point, but better be paranoyd and don't overwrite existing keys...
+				{
+					m_config->Write( str, conf.Read( str, _T("") ) ); // append to main config
+				}
+
+				exist = conf.GetNextEntry(str, dummy);
+			}
+
+			if ( currentpath != _T("/") )
+			{
+				conf.SetPath( _T("..") ); // go to the parent folder
+				conf.DeleteGroup( currentpath ); // remove last analyzed group so it doesn't get iterated again
+				bCont = true;
+			}
+    }
+  }
+}
+
+wxArrayString Settings::GetGroupList( const wxString& base_key )
+{
+  wxString old_path = m_config->GetPath();
+  m_config->SetPath( base_key );
+  wxString groupname;
+  long dummy;
+  wxArrayString ret;
+  bool groupexist = m_config->GetFirstGroup(groupname, dummy);
+  while ( groupexist )
+  {
+		ret.Add( groupname );
+    groupexist = m_config->GetNextGroup(groupname, dummy);
+  }
+  m_config->SetPath( old_path );
+  return ret;
+}
+
+wxArrayString Settings::GetEntryList( const wxString& base_key )
+{
+  wxString old_path = m_config->GetPath();
+  m_config->SetPath( base_key );
+  wxString entryname;
+  long dummy;
+  wxArrayString ret;
+  bool entryexist = m_config->GetFirstEntry(entryname, dummy);
+  while ( entryexist )
+  {
+		ret.Add( entryname );
+    entryexist = m_config->GetNextEntry(entryname, dummy);
+  }
+  m_config->SetPath( old_path );
+  return ret;
+}
 
 bool Settings::IsPortableMode()
 {
@@ -306,19 +411,54 @@ unsigned int Settings::GetModCachingThreadProgress()
 
 
 //! @brief Restores default settings
-void Settings::SetDefaultSettings()
+void Settings::SetDefaultServerSettings()
 {
-    AddServer( WX_STRINGC(DEFSETT_DEFAULT_SERVER) );
-    SetServerHost( WX_STRINGC(DEFSETT_DEFAULT_SERVER), WX_STRINGC(DEFSETT_DEFAULT_SERVER_HOST) );
-    SetServerPort( WX_STRINGC(DEFSETT_DEFAULT_SERVER), DEFSETT_DEFAULT_SERVER_PORT );
-    SetDefaultServer( WX_STRINGC(DEFSETT_DEFAULT_SERVER) );
+    SetServer( WX_STRINGC(DEFSETT_DEFAULT_SERVER_NAME), WX_STRINGC(DEFSETT_DEFAULT_SERVER_HOST), DEFSETT_DEFAULT_SERVER_PORT );
+    SetServer( _T("Backup server"), _T("taspringmaster.servegame.com"), 8200 );
+    SetDefaultServer( WX_STRINGC(DEFSETT_DEFAULT_SERVER_NAME) );
 }
 
+
+//! @brief convert old server settings format
+void Settings::ConvertOldServerSettings()
+{
+		wxArrayString servers;
+		std::map<wxString, bool> m_autosave_pass;
+		std::map<wxString, wxString> m_saved_nicks;
+		std::map<wxString, wxString> m_saved_pass;
+		std::map<wxString, wxString> m_saved_hosts;
+		std::map<wxString, int> m_saved_ports;
+		int count = m_config->Read( _T("/Servers/Count"), 0l );
+		for ( int i = 0; i < count; i++ )
+		{
+			wxString server_name = m_config->Read( wxString::Format( _T("/Servers/Server%d"), i ), _T("") );
+			if ( server_name == _T("TAS Server") ) server_name = WX_STRINGC( DEFSETT_DEFAULT_SERVER_NAME );
+			servers.Add( server_name );
+			m_saved_nicks[server_name] = m_config->Read( _T("/Server/")+ server_name +_T("/nick"), _T("") );
+			m_saved_pass[server_name] = m_config->Read( _T("/Server/")+ server_name +_T("/pass"), _T("") );
+			m_autosave_pass[server_name] = m_config->Read( _T("/Server/")+ server_name +_T("/savepass"), 0l );
+			m_saved_ports[server_name] = m_config->Read( _T("/Server/")+ server_name +_T("/port"), DEFSETT_DEFAULT_SERVER_PORT );
+			m_saved_hosts[server_name] = m_config->Read( _T("/Server/")+ server_name +_T("/host"), DEFSETT_DEFAULT_SERVER_HOST );
+		}
+    m_config->DeleteGroup( _T("/Server") );
+    m_config->DeleteGroup( _T("/Servers") );
+    SetDefaultServerSettings();
+    count = servers.GetCount();
+		for ( int i = 0; i < count; i++ )
+		{
+			wxString server_name = servers[i];
+			SetServer( server_name, m_saved_hosts[server_name], m_saved_ports[server_name] );
+			SetServerAccountNick( server_name, m_saved_nicks[server_name] );
+			SetServerAccountPass( server_name, m_saved_pass[server_name] );
+			SetServerAccountSavePass( server_name, m_autosave_pass[server_name] );
+		}
+
+}
 
 //! @brief Checks if the server name/alias exists in the settings
 bool Settings::ServerExists( const wxString& server_name )
 {
-    return m_config->Exists( _T("/Server/")+ server_name );
+    return m_config->Exists( _T("/Server/Servers/")+ server_name );
 }
 
 
@@ -327,8 +467,8 @@ bool Settings::ServerExists( const wxString& server_name )
 //! @note Normally this will be the previously selected server. But at first run it will be a server that is set as the default.
 wxString Settings::GetDefaultServer()
 {
-    wxString serv = WX_STRINGC(DEFSETT_DEFAULT_SERVER);
-    return m_config->Read( _T("/Servers/Default"), serv );
+    wxString serv = WX_STRINGC(DEFSETT_DEFAULT_SERVER_NAME);
+    return m_config->Read( _T("/Server/Default"), serv );
 }
 
 void Settings::SetAutoConnect( bool do_autoconnect )
@@ -348,7 +488,7 @@ bool Settings::GetAutoConnect( )
 //! @see GetDefaultServer()
 void   Settings::SetDefaultServer( const wxString& server_name )
 {
-    m_config->Write( _T("/Servers/Default"),  server_name );
+    m_config->Write( _T("/Server/Default"),  server_name );
 }
 
 
@@ -358,17 +498,27 @@ void   Settings::SetDefaultServer( const wxString& server_name )
 wxString Settings::GetServerHost( const wxString& server_name )
 {
     wxString host = WX_STRINGC(DEFSETT_DEFAULT_SERVER_HOST);
-    return m_config->Read( _T("/Server/")+ server_name +_T("/host"), host );
+    return m_config->Read( _T("/Server/Servers/")+ server_name +_T("/Host"), host );
 }
 
 
 //! @brief Set hostname of a server.
 //!
 //! @param server_name the server name/alias
-//! @param value the vaule to be set
-void   Settings::SetServerHost( const wxString& server_name, const wxString& value )
+//! @param the host url address
+//! @param the port where the service is run
+void   Settings::SetServer( const wxString& server_name, const wxString& url, int port )
 {
-    m_config->Write( _T("/Server/")+ server_name +_T("/host"), value );
+    m_config->Write( _T("/Server/Servers/")+ server_name +_T("/Host"), url );
+    m_config->Write( _T("/Server/Servers/")+ server_name +_T("/Port"), port );
+}
+
+//! @brief Deletes a server from the list.
+//!
+//! @param server_name the server name/alias
+void Settings::DeleteServer( const wxString& server_name )
+{
+		m_config->DeleteGroup( _T("/Server/Servers/") + server_name );
 }
 
 
@@ -377,61 +527,13 @@ void   Settings::SetServerHost( const wxString& server_name, const wxString& val
 //! @param server_name the server name/alias
 int    Settings::GetServerPort( const wxString& server_name )
 {
-    return m_config->Read( _T("/Server/")+ server_name +_T("/port"), DEFSETT_DEFAULT_SERVER_PORT );
+    return m_config->Read( _T("/Server/Servers/")+ server_name +_T("/Port"), DEFSETT_DEFAULT_SERVER_PORT );
 }
 
-
-//! @brief Set port number of a server.
-//!
-//! @param server_name the server name/alias
-//! @param value the vaule to be set
-void   Settings::SetServerPort( const wxString& server_name, const int value )
+//! @brief Get list of server aliases
+wxArrayString Settings::GetServers()
 {
-    m_config->Write( _T("/Server/")+ server_name +_T("/port"), value );
-}
-
-
-void Settings::AddServer( const wxString& server_name )
-{
-    int index = GetServerIndex( server_name );
-    if ( index != -1 ) return;
-
-    index = GetNumServers();
-    SetNumServers( index + 1 );
-
-    m_config->Write( _T("/Servers/Server")+ wxString::Format( _T("%d"), index ), server_name );
-}
-
-int Settings::GetNumServers()
-{
-    return m_config->Read( _T("/Servers/Count"), (long)0 );
-}
-
-
-
-void Settings::SetNumServers( int num )
-{
-    m_config->Write( _T("/Servers/Count"), num );
-}
-
-
-int Settings::GetServerIndex( const wxString& server_name )
-{
-    int num = GetNumServers();
-    for ( int i= 0; i < num; i++ )
-    {
-        if ( GetServerName( i ) == server_name ) return i;
-    }
-    return -1;
-}
-
-
-//! @brief Get name/alias of a server.
-//!
-//! @param index the server index
-wxString Settings::GetServerName( int index )
-{
-    return m_config->Read( wxString::Format( _T("/Servers/Server%d"), index ), _T("") );
+    return GetGroupList( _T("/Server/Servers/") );
 }
 
 
@@ -440,7 +542,7 @@ wxString Settings::GetServerName( int index )
 //! @param server_name the server name/alias
 wxString Settings::GetServerAccountNick( const wxString& server_name )
 {
-    return m_config->Read( _T("/Server/")+ server_name +_T("/nick"), _T("") ) ;
+    return m_config->Read( _T("/Server/Servers/")+ server_name +_T("/Nick"), _T("") ) ;
 }
 
 
@@ -450,7 +552,7 @@ wxString Settings::GetServerAccountNick( const wxString& server_name )
 //! @param value the vaule to be set
 void Settings::SetServerAccountNick( const wxString& server_name, const wxString& value )
 {
-    m_config->Write( _T("/Server/")+ server_name +_T("/nick"), value );
+    m_config->Write( _T("/Server/Servers/")+ server_name +_T("/Nick"), value );
 }
 
 
@@ -460,7 +562,7 @@ void Settings::SetServerAccountNick( const wxString& server_name, const wxString
 //! @todo Implement
 wxString Settings::GetServerAccountPass( const wxString& server_name )
 {
-    return m_config->Read( _T("/Server/")+ server_name +_T("/pass"), _T("") );
+    return m_config->Read( _T("/Server/Servers/")+ server_name +_T("/Pass"), _T("") );
 }
 
 
@@ -471,7 +573,7 @@ wxString Settings::GetServerAccountPass( const wxString& server_name )
 //! @todo Implement
 void   Settings::SetServerAccountPass( const wxString& server_name, const wxString& value )
 {
-    m_config->Write( _T("/Server/")+ server_name +_T("/pass"), value );
+    m_config->Write( _T("/Server/Servers/")+ server_name +_T("/Pass"), value );
 }
 
 
@@ -481,7 +583,7 @@ void   Settings::SetServerAccountPass( const wxString& server_name, const wxStri
 //! @todo Implement
 bool   Settings::GetServerAccountSavePass( const wxString& server_name )
 {
-    return m_config->Read( _T("/Server/")+ server_name +_T("/savepass"), (long int)false );
+    return m_config->Read( _T("/Server/Servers/")+ server_name +_T("/savepass"), (long int)false );
 }
 
 
@@ -492,7 +594,7 @@ bool   Settings::GetServerAccountSavePass( const wxString& server_name )
 //! @todo Implement
 void Settings::SetServerAccountSavePass( const wxString& server_name, const bool value )
 {
-    m_config->Write( _T("/Server/")+ server_name +_T("/savepass"), (long int)value );
+    m_config->Write( _T("/Server/Servers/")+ server_name +_T("/savepass"), (long int)value );
 }
 
 
@@ -756,34 +858,15 @@ void Settings::ConvertOldSpringDirsOptions()
 std::map<wxString, wxString> Settings::GetSpringVersionList()
 {
   wxLogDebugFunc(_T(""));
-  std::map<wxString, wxString> ret;
-  wxString old_path = m_config->GetPath();
-  m_config->SetPath( _T("/Spring/Paths") );
-  wxString groupname;
-  long dummy;
-  //CacheThread().Pause(); // pause caching thread
-  bool groupexist = m_config->GetFirstGroup(groupname, dummy);
-  while ( groupexist )
+  wxArrayString list = GetGroupList( _T("/Spring/Paths") );
+  int count = list.GetCount();
+  std::map<wxString, wxString> usync_paths;
+  for ( int i = 0; i < count; i++ )
   {
-    wxString usync_path = m_config->Read( _T("/Spring/Paths/") + groupname + _T("/UnitSyncPath"), _T("") );
-    try
-    {
-      SpringUnitSyncLib libloader( usync_path, false );
-      ret[groupname] = libloader.GetSpringVersion();
-    }
-    catch(...)
-    {
-    }
-    groupexist = m_config->GetNextGroup(groupname, dummy);
+  	wxString groupname = list[i];
+    usync_paths[groupname] = m_config->Read( _T("/Spring/Paths/") + groupname + _T("/UnitSyncPath"), _T("") );
   }
-  m_config->SetPath( old_path );
-  try
-  {
-    susynclib().Init(); // re-init current "main" unitsync
-  }
-  catch(...){}
-  //CacheThread().Resume(); // resume caching thread
-  return ret;
+  return susynclib().GetSpringVersionList(usync_paths);
 }
 
 wxString Settings::GetCurrentUsedSpringIndex()
@@ -1048,39 +1131,21 @@ void Settings::SetHostingPreset( const wxString& name, int optiontype, std::map<
 std::map<wxString,wxString> Settings::GetHostingPreset( const wxString& name, int optiontype )
 {
   std::map<wxString,wxString> ret;
-  wxString old_path = m_config->GetPath();
-  m_config->SetPath( _T("/Hosting/Preset/") + name + _T("/") + TowxString( optiontype ));
-  wxString keyname;
-  long dummy;
-  bool keyexist = m_config->GetFirstEntry(keyname, dummy);
-  while ( keyexist )
+  wxArrayString list = GetEntryList( _T("/Hosting/Preset/") + name + _T("/") + TowxString( optiontype ) );
+  int count = list.GetCount();
+
+  for( int i = 0; i < count; i ++ )
   {
+  	wxString keyname = list[i];
     ret[keyname] = m_config->Read( keyname );
-
-    keyexist = m_config->GetNextEntry(keyname, dummy);
   }
-
-  m_config->SetPath( old_path );
   return ret;
 }
 
 
 wxArrayString Settings::GetPresetList()
 {
-  wxArrayString ret;
-  wxString old_path = m_config->GetPath();
-  m_config->SetPath( _T("/Hosting/Preset") );
-  wxString groupname;
-  long dummy;
-
-  bool groupexist = m_config->GetFirstGroup(groupname, dummy);
-  while ( groupexist )
-  {
-    ret.Add( groupname );
-    groupexist = m_config->GetNextGroup(groupname, dummy);
-  }
-  m_config->SetPath( old_path );
-  return ret;
+  return GetGroupList( _T("/Hosting/Preset") );
 }
 
 
@@ -1088,20 +1153,14 @@ void Settings::DeletePreset( const wxString& name )
 {
   m_config->DeleteGroup( _T("/Hosting/Preset/") + name );
 
-  ///delete mod default preset associated
-  wxString old_path = m_config->GetPath();
-  m_config->SetPath( _T("/Hosting/ModDefaultPreset") );
-  wxString keyname;
-  long dummy;
-  bool keyexist = m_config->GetFirstEntry(keyname, dummy);
-  while ( keyexist )
+  //delete mod default preset associated
+  wxArrayString list = GetEntryList( _T("/Hosting/ModDefaultPreset") );
+  int count = list.GetCount();
+  for( int i = 0; i < count; i ++ )
   {
+  	wxString keyname = list[i];
     if ( m_config->Read( keyname ) == name ) m_config->DeleteEntry( keyname );
-
-    keyexist = m_config->GetNextEntry(keyname, dummy);
   }
-
-  m_config->SetPath( old_path );
 }
 
 
@@ -1235,114 +1294,38 @@ bool Settings::GetChatPMSoundNotificationEnabled()
 }
 
 
-wxColour Settings::GetChatColorNormal()
+wxColour
+Settings::GetChatColor(const wxString& name)
 {
-    return wxColour( GetColorFromStrng( m_config->Read( _T("/Chat/Colour/Normal"), _T( "0 0 0" ) ) ) );
+    if ( ! defaultChatColorsInitialized )
+	initDefaultChatColors();
+    wxString colorString ( wxEmptyString );
+    wxColour defaultColor ( noSuchChatColor );
+    NamedColorMap::iterator iter ( defaultChatColors.find(name) );
+
+    if ( iter == defaultChatColors.end() )
+	wxLogError(_T("Request for unrecognized color name \"") + name + _T("\""));
+    else
+	defaultColor = iter->second;
+
+    if ( m_config->Read(_T("/Chat/Colour/") + name, &colorString, wxEmptyString) )
+	/* Color was read from user's configuration. */
+	return GetColorFromStrng(colorString);
+    else
+	return defaultColor;
 }
 
-void Settings::SetChatColorNormal( wxColour value )
+bool
+Settings::SetChatColor(const wxString& name, const wxColour& color)
 {
-    m_config->Write( _T("/Chat/Colour/Normal"), GetColorString(value) );
-}
+    if ( ! defaultChatColorsInitialized )
+	initDefaultChatColors();
+    NamedColorMap::iterator iter ( defaultChatColors.find(name) );
 
-wxColour Settings::GetChatColorBackground()
-{
-    return wxColour( GetColorFromStrng( m_config->Read( _T("/Chat/Colour/Background"), _T( "255 255 255" ) ) ) );
-}
+    if ( iter == defaultChatColors.end() )
+	wxLogError(_T("Setting unrecognized color \"") + name + _T("\""));
 
-void Settings::SetChatColorBackground( wxColour value )
-{
-    m_config->Write( _T("/Chat/Colour/Background"), GetColorString(value) );
-}
-
-wxColour Settings::GetChatColorHighlight()
-{
-    return wxColour( GetColorFromStrng( m_config->Read( _T("/Chat/Colour/Highlight"), _T( "255 0 0" ) ) ) );
-}
-
-void Settings::SetChatColorHighlight( wxColour value )
-{
-    m_config->Write( _T("/Chat/Colour/Highlight"), GetColorString(value) );
-}
-
-wxColour Settings::GetChatColorMine()
-{
-    return wxColour( GetColorFromStrng( m_config->Read( _T("/Chat/Colour/Mine"), _T( "100 100 140" ) ) ) );
-}
-
-void Settings::SetChatColorMine( wxColour value )
-{
-    m_config->Write( _T("/Chat/Colour/Mine"), GetColorString(value) );
-}
-
-wxColour Settings::GetChatColorNotification()
-{
-    return wxColour( GetColorFromStrng( m_config->Read( _T("/Chat/Colour/Notification"), _T( "255 40 40" ) ) ) );
-}
-
-void Settings::SetChatColorNotification( wxColour value )
-{
-    m_config->Write( _T("/Chat/Colour/Notification"), GetColorString(value) );
-}
-
-wxColour Settings::GetChatColorAction()
-{
-    return wxColour( GetColorFromStrng( m_config->Read( _T("/Chat/Colour/Action"), _T( "230 0 255" ) ) ) );
-}
-
-void Settings::SetChatColorAction( wxColour value )
-{
-    m_config->Write( _T("/Chat/Colour/Action"), GetColorString(value) );
-}
-
-wxColour Settings::GetChatColorServer()
-{
-    return wxColour( GetColorFromStrng( m_config->Read( _T("/Chat/Colour/Server"), _T( "0 80 128" ) ) ) );
-}
-
-void Settings::SetChatColorServer( wxColour value )
-{
-    m_config->Write( _T("/Chat/Colour/Server"), GetColorString(value) );
-}
-
-wxColour Settings::GetChatColorClient()
-{
-    return wxColour( GetColorFromStrng( m_config->Read( _T("/Chat/Colour/Client"), _T( "20 200 25" ) ) ) );
-}
-
-void Settings::SetChatColorClient( wxColour value )
-{
-    m_config->Write( _T("/Chat/Colour/Client"), GetColorString(value) );
-}
-
-wxColour Settings::GetChatColorJoinPart()
-{
-    return wxColour( GetColorFromStrng( m_config->Read( _T("/Chat/Colour/JoinPart"), _T( "0 80 0" ) ) ) );
-}
-
-void Settings::SetChatColorJoinPart( wxColour value )
-{
-    m_config->Write( _T("/Chat/Colour/JoinPart"), GetColorString(value) );
-}
-
-wxColour Settings::GetChatColorError()
-{
-    return wxColour( GetColorFromStrng( m_config->Read( _T("/Chat/Colour/Error"), _T( "128 0 0" ) ) ) );
-}
-
-void Settings::SetChatColorError( wxColour value )
-{
-    m_config->Write( _T("/Chat/Colour/Error"), GetColorString(value) );
-}
-
-wxColour Settings::GetChatColorTime()
-{
-    return wxColour( GetColorFromStrng( m_config->Read( _T("/Chat/Colour/Time"), _T( "100 100 140" ) ) ) );
-}
-
-void Settings::SetChatColorTime( wxColour value )
-{
-    m_config->Write( _T("/Chat/Colour/Time"), GetColorString(value) );
+    return m_config->Write(_T("/Chat/Colour/") + name, GetColorString(color));
 }
 
 wxFont Settings::GetChatFont()
@@ -1635,9 +1618,15 @@ wxString Settings::GetTempStorage()
 }
 
 
+bool Settings::SkipDownloadOtaContent()
+{
+  return m_config->Read( _T("/General/NoOtaDownload"), 0l ) ;
+}
+
+
 void Settings::SetShowTooltips( bool show)
 {
-    m_config->Write(_T("GUI/ShowTooltips"), show );
+    m_config->Write(_T("/GUI/ShowTooltips"), show );
 }
 
 bool Settings::GetShowTooltips()
@@ -1655,6 +1644,21 @@ wxString Settings::GetLayout( wxString& layout_name )
     return  m_config->Read( _T("/Layout/") + layout_name, _T("") );
 }
 
+wxArrayString Settings::GetLayoutList()
+{
+  return GetEntryList( _T("/Layout") );
+}
+
+void Settings::SetDefaultLayout( const wxString& layout_name )
+{
+	m_config->Write(_T("/GUI/DefaultLayout"), layout_name );
+}
+
+wxString Settings::GetDefaultLayout()
+{
+	return m_config->Read( _T("/GUI/DefaultLayout"), _T("") );
+}
+
 void Settings::SetColumnWidth( const wxString& list_name, const int coloumn_ind, const int coloumn_width )
 {
     m_config->Write(_T("GUI/ColoumnWidths/") + list_name + _T("/") + TowxString(coloumn_ind), coloumn_width );
@@ -1663,6 +1667,16 @@ void Settings::SetColumnWidth( const wxString& list_name, const int coloumn_ind,
 int Settings::GetColumnWidth( const wxString& list_name, const int coloumn )
 {
     return m_config->Read(_T("GUI/ColoumnWidths/") + list_name + _T("/") + TowxString(coloumn), columnWidthUnset);
+}
+
+void Settings::SetMapSelectorFollowsMouse( bool value )
+{
+    m_config->Write(_T("GUI/MapSelector/SelectionFollowsMouse"), value);
+}
+
+bool Settings::GetMapSelectorFollowsMouse()
+{
+	return m_config->Read(_T("GUI/MapSelector/SelectionFollowsMouse"), 0l);
 }
 
 void Settings::SetPeopleList( const wxArrayString& friends, const wxString& group  )
@@ -1701,22 +1715,9 @@ wxColor Settings::GetGroupHLColor( const wxString& group  ) const
     return wxColour( GetColorFromStrng( m_config->Read( _T("/Groups/") + group + _T("/Opts/HLColor") , _T( "100 100 140" ) ) ) );
 }
 
-wxArrayString Settings::GetGroups( ) const
+wxArrayString Settings::GetGroups( )
 {
-    wxString old_path = m_config->GetPath();
-    m_config->SetPath( _T("/Groups/") );
-    wxArrayString ret;
-    long dummy;
-    wxString tmp;
-    bool cont = m_config->GetFirstGroup( tmp, dummy );
-    while ( cont )
-    {
-        ret.Add( tmp );
-        cont = m_config->GetNextGroup( tmp, dummy );
-    }
-
-    m_config->SetPath( old_path );
-    return ret;
+    return GetGroupList( _T("/Groups/") );
 }
 
 void Settings::AddGroup( const wxString& group )
@@ -1756,33 +1757,36 @@ void Settings::SetGroupActions( const wxString& group, UserActions::ActionType a
 
 UserActions::ActionType Settings::GetGroupActions( const wxString& group ) const
 {
-  wxString key=_T("/Groups/")+group+_T("/Opts/Actions");
-  if(m_config->HasEntry(key)){/// Backward compatibility.
-    wxLogMessage(_T("loading deprecated group actions and updating config"));
-    UserActions::ActionType action=(UserActions::ActionType) m_config->Read( key, (long) UserActions::ActNone ) ;
+  wxString key =_T("/Groups/") + group + _T("/Opts/Actions");
+  if(m_config->HasEntry( key ) )// Backward compatibility.
+  {
+    wxLogMessage( _T("loading deprecated group actions and updating config") );
+    UserActions::ActionType action = (UserActions::ActionType)m_config->Read( key, (long)UserActions::ActNone ) ;
     m_config->DeleteEntry(key);
 
-/// a bit ugly, but i want to update options
-    Settings *this_nonconst=const_cast<Settings *>(this);
-    this_nonconst->SetGroupActions(group,action);
+		// a bit ugly, but i want to update options
+    Settings *this_nonconst = const_cast<Settings*>(this);
+    this_nonconst->SetGroupActions( group, action );
 
     return action;
   }
-  key=_T("/Groups/")+group+_T("/Opts/ActionsList");
-  if(!m_config->Exists(key))return UserActions::ActNone;
-  key+=_T("/");
-  int i=0;
-  int mask=1;
-  int result=0;
-  while(mask<=UserActions::ActLast){
-    if( m_config->Read( key+m_configActionNames[i], (long)0) ){
-      result|=mask;
+  key = _T("/Groups/") + group + _T("/Opts/ActionsList");
+  if( !m_config->Exists( key ) ) return UserActions::ActNone;
+  key += _T("/");
+  int i = 0;
+  int mask = 1;
+  int result = 0;
+  while( mask <= UserActions::ActLast )
+  {
+    if( m_config->Read( key + m_configActionNames[i], 0l ) )
+    {
+      result |= mask;
     }
     i++;
-    mask<<=1;
+    mask <<= 1;
   }
-  if(result==0)return UserActions::ActNone;
-  return (UserActions::ActionType) result;
+  if( result ==0 ) return UserActions::ActNone;
+  return (UserActions::ActionType)result;
 }
 
 

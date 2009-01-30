@@ -3,7 +3,10 @@
 
 #include <wx/string.h>
 #include <wx/colour.h>
+#include <wx/log.h>
 #include "utils.h"
+
+class wxColour;
 /// Todo: add TDFContainer class.
 ///
 
@@ -44,7 +47,6 @@ class TDFWriter
 /// project: render_control_new/utils/parsing.h and cpp , database.h and cpp
 ///
 
-#include <iostream>
 #include <sstream>
 #include <vector>
 #include <deque>

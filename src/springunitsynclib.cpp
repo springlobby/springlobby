@@ -5,6 +5,7 @@
 #include <wx/image.h>
 #include <wx/log.h>
 #include <stdexcept>
+#include <cmath>
 
 #include "springunitsynclib.h"
 #include "utils.h"
@@ -12,17 +13,26 @@
 
 #define LOCK_UNITSYNC wxCriticalSectionLocker lock_criticalsection(m_lock)
 
-SpringUnitSyncLib::SpringUnitSyncLib( const wxString& path, bool DoInit, const wxString& ForceConfigFilePath ):
+//! Macro that checks if a function is present/loaded, unitsync is loaded, and locks it on call.
+#define InitLib( arg ) \
+	LOCK_UNITSYNC; \
+	UNITSYNC_EXCEPTION( m_loaded, _T("Unitsync not loaded.") ); \
+	UNITSYNC_EXCEPTION( arg, _T("Function was not in unitsync library.") );
+
+
+SpringUnitSyncLib::SpringUnitSyncLib():
   m_loaded(false),
-  m_path(wxEmptyString)
+  m_libhandle(NULL),
+  m_path(wxEmptyString),
+  m_init(NULL),
+  m_uninit(NULL)
 {
-  if ( path != wxEmptyString ) Load( path, DoInit, ForceConfigFilePath );
 }
 
 
 SpringUnitSyncLib::~SpringUnitSyncLib()
 {
-  if ( _IsLoaded() ) _Unload();
+  Unload();
 }
 
 
@@ -33,16 +43,34 @@ SpringUnitSyncLib& susynclib()
 }
 
 
-void SpringUnitSyncLib::Load( const wxString& path, bool DoInit, const wxString& ForceConfigFilePath )
+void SpringUnitSyncLib::Load( const wxString& path, const wxString& ForceConfigFilePath )
 {
   LOCK_UNITSYNC;
+
+  _Load( path );
+
+  if ( !ForceConfigFilePath.IsEmpty() )
+  {
+    if ( m_set_spring_config_file_path )
+    {
+        m_set_spring_config_file_path( ForceConfigFilePath.mb_str() );
+    }
+  }
+
+  _Init();
+}
+
+
+void SpringUnitSyncLib::_Load( const wxString& path )
+{
+  if ( _IsLoaded() && path == m_path ) return;
 
   _Unload();
 
   m_path = path;
 
   // Load the library.
-  wxLogMessage( _T("Loading from: %s init: %d"), path.c_str(), DoInit);
+  wxLogMessage( _T("Loading from: %s"), path.c_str() );
 
   // Check if library exists
   if ( !wxFileName::FileExists( path ) )
@@ -72,8 +100,6 @@ void SpringUnitSyncLib::Load( const wxString& path, bool DoInit, const wxString&
   }
 
   ASSERT_EXCEPTION( m_libhandle != 0, _T("Couldn't load the unitsync library") );
-
-  m_loaded = true;
 
   // Load all function from library.
   try {
@@ -144,7 +170,8 @@ void SpringUnitSyncLib::Load( const wxString& path, bool DoInit, const wxString&
     m_get_luaai_desc = (GetLuaAIDescPtr)_GetLibFuncPtr(_T("GetLuaAIDesc"));
 
     m_get_map_option_count = (GetMapOptionCountPtr)_GetLibFuncPtr(_T("GetMapOptionCount"));
-    m_get_Mod_option_count = (GetModOptionCountPtr)_GetLibFuncPtr(_T("GetModOptionCount"));
+    m_get_mod_option_count = (GetModOptionCountPtr)_GetLibFuncPtr(_T("GetModOptionCount"));
+    m_get_skirmish_ai_option_count = (GetSkirmishAIOptionCountPtr)_GetLibFuncPtr(_T("GetSkirmishAIOptionCount"));
     m_get_option_key = (GetOptionKeyPtr)_GetLibFuncPtr(_T("GetOptionKey"));
     m_get_option_name = (GetOptionNamePtr)_GetLibFuncPtr(_T("GetOptionName"));
     m_get_option_desc = (GetOptionDescPtr)_GetLibFuncPtr(_T("GetOptionDesc"));
@@ -181,6 +208,12 @@ void SpringUnitSyncLib::Load( const wxString& path, bool DoInit, const wxString&
     m_get_spring_config_string = (GetSpringConfigStringPtr)_GetLibFuncPtr(_T("GetSpringConfigString"));
     m_set_spring_config_string = (SetSpringConfigStringPtr)_GetLibFuncPtr(_T("SetSpringConfigString"));
     m_set_spring_config_int = (SetSpringConfigIntPtr)_GetLibFuncPtr(_T("SetSpringConfigInt"));
+
+		m_get_skirmish_ai_count = (GetSkirmishAICountPtr)_GetLibFuncPtr(_T("GetSkirmishAICount"));
+		m_get_skirmish_ai_info_count = (GetSkirmishAIInfoCountPtr)_GetLibFuncPtr(_T("GetSkirmishAIInfoCount"));
+		m_get_skirmish_ai_info_key = (GetInfoKeyPtr)_GetLibFuncPtr(_T("GetInfoKey"));
+		m_get_skirmish_ai_info_value = (GetInfoValuePtr)_GetLibFuncPtr(_T("GetInfoValue"));
+		m_get_skirmish_ai_info_description = (GetInfoDescriptionPtr)_GetLibFuncPtr(_T("GetInfoDescription"));
 
     // begin lua parser calls
 
@@ -229,25 +262,25 @@ void SpringUnitSyncLib::Load( const wxString& path, bool DoInit, const wxString&
     m_parser_int_key_get_string_value = (lpGetIntKeyStrValPtr)_GetLibFuncPtr(_T("lpGetIntKeyStrVal"));
     m_parser_string_key_get_string_value = (lpGetStrKeyStrValPtr)_GetLibFuncPtr(_T("lpGetStrKeyStrVal"));
 
-    if ( !ForceConfigFilePath.IsEmpty() )
-    {
-        if ( m_set_spring_config_file_path )
-        {
-            m_set_spring_config_file_path( ForceConfigFilePath.mb_str() );
-        }
-    }
-
-    if ( DoInit )
-    {
-      if ( m_init ) m_init( true, 1 );
-    }
+    // only when we end up here unitsync was succesfully loaded.
+    m_loaded = true;
   }
   catch ( ... )
   {
+    // don't uninit unitsync in _Unload -- it hasn't been init'ed yet
+    m_uninit = NULL;
     _Unload();
     ASSERT_EXCEPTION( false, _T("Failed to load Unitsync lib.") );
   }
+}
 
+
+void SpringUnitSyncLib::_Init()
+{
+  if ( _IsLoaded() && m_init != NULL ) {
+    m_current_mod = wxEmptyString;
+    m_init( true, 1 );
+  }
 }
 
 
@@ -262,30 +295,32 @@ void SpringUnitSyncLib::Unload()
 
 void SpringUnitSyncLib::_Unload()
 {
-  if ( !_IsLoaded() ) return;
+  // as soon as we enter m_uninit unitsync technically isn't loaded anymore.
+  m_loaded = false;
 
-  m_uninit();
+  m_path = wxEmptyString;
+
+  // can't call UnSetCurrentMod() because it takes the unitsync lock
+  m_current_mod = wxEmptyString;
+
+  if (m_uninit)
+    m_uninit();
 
   delete m_libhandle;
-  m_libhandle = 0;
+  m_libhandle = NULL;
 
-  m_loaded = false;
-}
-
-
-void SpringUnitSyncLib::Reload( bool DoInit )
-{
-	wxString path;
-	try
-	{
-		path = GetConfigFilePath(); // try to preserve current config file path when reloading
-	}
-	catch( unitsync_assert ) {}
-  Load( m_path, DoInit, path );
+  m_init = NULL;
+  m_uninit = NULL;
 }
 
 
 bool SpringUnitSyncLib::IsLoaded()
+{
+  return m_loaded;
+}
+
+
+bool SpringUnitSyncLib::_IsLoaded()
 {
   return m_loaded;
 }
@@ -305,43 +340,35 @@ wxArrayString SpringUnitSyncLib::GetUnitsyncErrors()
   try
   {
     InitLib( m_get_next_error );
+
+    wxString msg = WX_STRINGC( m_get_next_error() );
+    while ( !msg.IsEmpty() )
+    {
+      ret.Add( msg );
+      msg = WX_STRINGC( m_get_next_error() );
+    }
+    return ret;
   }
   catch ( unitsync_assert &e )
   {
     ret.Add( WX_STRINGC( e.what() ) );
     return ret;
   }
-  wxString msg = WX_STRINGC( m_get_next_error() );
-  while ( !msg.IsEmpty() )
-  {
-    ret.Add( msg );
-    msg = WX_STRINGC( m_get_next_error() );
-  }
-  return ret;
 }
 
-bool SpringUnitSyncLib::Init()
-{
-  InitLib( m_init );
-
-  return m_init( true, 1 );
-}
 
 bool SpringUnitSyncLib::VersionSupports( IUnitSync::GameFeature feature )
 {
+  LOCK_UNITSYNC;
+
   switch (feature)
   {
     case IUnitSync::USYNC_Sett_Handler: return m_set_spring_config_string;
     case IUnitSync::USYNC_GetInfoMap:   return m_get_infomap_size;
     case IUnitSync::USYNC_GetDataDir:   return m_get_writeable_data_dir;
+    case IUnitSync::USYNC_GetSkirmishAI:   return m_get_skirmish_ai_count;
   }
   return false;
-}
-
-
-bool SpringUnitSyncLib::_IsLoaded()
-{
-  return m_loaded;
 }
 
 
@@ -379,28 +406,62 @@ void SpringUnitSyncLib::_ConvertSpringMapInfo( const SpringMapInfo& in, MapInfo&
 
 void SpringUnitSyncLib::SetCurrentMod( const wxString& modname )
 {
-  wxLogDebugFunc( _T("") );
+  InitLib( m_init ); // assumes the others are fine
+                     // (m_add_all_archives, m_get_mod_archive, m_get_mod_index)
+
+  _SetCurrentMod( modname );
+}
+
+
+void SpringUnitSyncLib::_SetCurrentMod( const wxString& modname )
+{
   if ( m_current_mod != modname ) {
-    m_uninit();
-    m_init( true, 1 );
-    AddAllArchives( GetPrimaryModArchive( GetModIndex( modname ) ) );
+    wxLogDebugFunc( modname );
+    _Init();
+    m_add_all_archives( m_get_mod_archive( m_get_mod_index( modname.mb_str( wxConvUTF8 ) ) ) );
     m_current_mod = modname;
   }
 }
 
+
 void SpringUnitSyncLib::UnSetCurrentMod( )
 {
-    m_current_mod = wxEmptyString;
+  LOCK_UNITSYNC;
+  m_current_mod = wxEmptyString;
 }
 
 
 int SpringUnitSyncLib::GetModIndex( const wxString& name )
 {
-  int count = GetPrimaryModCount();
-  for ( int i = 0; i < count; i++ ) {
-    if ( name == GetPrimaryModName( i ) ) return i;
+  return GetPrimaryModIndex( name );
+}
+
+
+std::map<wxString, wxString> SpringUnitSyncLib::GetSpringVersionList(const std::map<wxString, wxString>& usync_paths)
+{
+  LOCK_UNITSYNC;
+  wxLogDebugFunc(_T(""));
+
+  std::map<wxString, wxString> ret;
+  wxString old_path = m_path;
+
+  for (std::map<wxString, wxString>::const_iterator it = usync_paths.begin(); it != usync_paths.end(); ++it)
+  {
+    try
+    {
+      _Load( it->second );
+      ret[it->first] = WX_STRINGC( m_get_spring_version() );
+    }
+    catch(...){}
   }
-  return -1;
+
+  try
+  {
+    _Load( old_path ); /// re-init current "main" unitsync
+    _Init();
+  }
+  catch(...){}
+  return ret;
 }
 
 
@@ -468,6 +529,18 @@ wxString SpringUnitSyncLib::GetMapArchiveName( int arnr )
   InitLib( m_get_map_archive_name );
 
   return WX_STRINGC( m_get_map_archive_name( arnr ) );
+}
+
+
+wxArrayString SpringUnitSyncLib::GetMapDeps( int index )
+{
+  int count = GetMapArchiveCount( index );
+	wxArrayString ret;
+	for ( int i = 0; i < count; i++ )
+	{
+		ret.Add( GetMapArchiveName( i ) );
+	}
+  return ret;
 }
 
 
@@ -601,7 +674,7 @@ wxImage SpringUnitSyncLib::GetHeightmap( const wxString& mapFileName )
     const double value = (grayscale[i] - min) / (range / (numPoints - 1));
     const int idx1 = int(value);
     const int idx2 = idx1 + 1;
-    const int t = int(256.0 * (value - floor(value)));
+    const int t = int(256.0 * (value - std::floor(value)));
 
     //assert(idx1 >= 0 && idx1 < numPoints-1);
     //assert(idx2 >= 1 && idx2 < numPoints);
@@ -650,7 +723,10 @@ int SpringUnitSyncLib::GetPrimaryModCount()
 wxString SpringUnitSyncLib::GetPrimaryModArchive( int index )
 {
   InitLib( m_get_mod_archive );
+  UNITSYNC_EXCEPTION( m_get_mod_count, _T("Function was not in unitsync library.") );
 
+  int count = m_get_mod_count();
+	UNITSYNC_EXCEPTION( index < count, _T("index out of bounds") );
   return WX_STRINGC( m_get_mod_archive( index ) );
 }
 
@@ -727,12 +803,24 @@ int SpringUnitSyncLib::GetPrimaryModChecksumFromName( const wxString& name )
 }
 
 
+wxArrayString SpringUnitSyncLib::GetModDeps( int index )
+{
+  int count = GetPrimaryModArchiveCount( index );
+	wxArrayString ret;
+	for ( int i = 0; i < count; i++ )
+	{
+		ret.Add( GetPrimaryModArchiveList( i ) );
+	}
+  return ret;
+}
+
+
 wxArrayString SpringUnitSyncLib::GetSides( const wxString& modName )
 {
   InitLib( m_get_side_count );
 	UNITSYNC_EXCEPTION( m_get_side_name, _T("Function was not in unitsync library.") )
 
-  SetCurrentMod( modName );
+  _SetCurrentMod( modName );
   int count = m_get_side_count();
   wxArrayString ret;
   for ( int i = 0; i < count; i ++ ) ret.Add( WX_STRINGC( m_get_side_name( i ) ) );
@@ -782,7 +870,7 @@ int SpringUnitSyncLib::ProcessUnitsNoChecksum()
 
 int SpringUnitSyncLib::InitFindVFS( const wxString& pattern )
 {
-  InitLib( m_proc_units_nocheck );
+  InitLib( m_init_find_vfs );
 
   return m_init_find_vfs( pattern.mb_str(wxConvUTF8) );
 }
@@ -836,7 +924,8 @@ void SpringUnitSyncLib::CloseFileVFS( int handle )
 int SpringUnitSyncLib::GetLuaAICount( const wxString& modname )
 {
   InitLib( m_get_luaai_count );
-  SetCurrentMod( modname );
+
+  _SetCurrentMod( modname );
   return m_get_luaai_count();
 }
 
@@ -860,7 +949,7 @@ unsigned int SpringUnitSyncLib::GetValidMapCount( const wxString& modname )
 {
   InitLib( m_get_mod_valid_map_count );
 
-  SetCurrentMod( modname );
+  _SetCurrentMod( modname );
   return m_get_mod_valid_map_count();
 }
 
@@ -877,16 +966,29 @@ int SpringUnitSyncLib::GetMapOptionCount( const wxString& name )
 {
   InitLib( m_get_map_option_count );
   ASSERT_EXCEPTION( !name.IsEmpty(), _T("passing void mapname to unitsync") );
+
   return m_get_map_option_count( name.mb_str( wxConvUTF8 ) );
 }
 
 
 int SpringUnitSyncLib::GetModOptionCount( const wxString& name )
 {
-  InitLib( m_get_Mod_option_count );
+  InitLib( m_get_mod_option_count );
   ASSERT_EXCEPTION( !name.IsEmpty(), _T("passing void modname to unitsync") );
-  SetCurrentMod( name );
-  return m_get_Mod_option_count();
+
+  _SetCurrentMod( name );
+  return m_get_mod_option_count();
+}
+
+
+int SpringUnitSyncLib::GetAIOptionCount( int aiIndex )
+{
+	InitLib( m_get_skirmish_ai_option_count );
+	ASSERT_EXCEPTION( m_get_skirmish_ai_count , _T("Function was not in unitsync library.") );
+
+	UNITSYNC_EXCEPTION( ( aiIndex >= 0 ) && ( aiIndex < m_get_skirmish_ai_count() ), _T("aiIndex out of bounds") );
+
+	return m_get_skirmish_ai_option_count( aiIndex );
 }
 
 
@@ -1147,6 +1249,37 @@ void SpringUnitSyncLib::SetSpringConfigFloat( const wxString& key, const float v
   InitLib( m_set_spring_config_float );
 
   m_set_spring_config_float( key.mb_str( wxConvUTF8 ), value );
+}
+
+
+int SpringUnitSyncLib::GetSkirmishAICount( const wxString& modname )
+{
+  InitLib( m_get_skirmish_ai_count );
+  _SetCurrentMod( modname );
+
+  return m_get_skirmish_ai_count();
+}
+
+
+wxArrayString SpringUnitSyncLib::GetAIInfo( int aiIndex )
+{
+	InitLib( m_get_skirmish_ai_count );
+	UNITSYNC_EXCEPTION( m_get_skirmish_ai_info_count, _T("Function was not in unitsync library.") );
+	UNITSYNC_EXCEPTION( m_get_skirmish_ai_info_description, _T("Function was not in unitsync library.") );
+	UNITSYNC_EXCEPTION( m_get_skirmish_ai_info_key, _T("Function was not in unitsync library.") );
+	UNITSYNC_EXCEPTION( m_get_skirmish_ai_info_value, _T("Function was not in unitsync library.") );
+
+	wxArrayString ret;
+	UNITSYNC_EXCEPTION( ( aiIndex >= 0 ) && ( aiIndex < m_get_skirmish_ai_count() ), _T("aiIndex out of bounds") );
+
+	int infoCount = m_get_skirmish_ai_info_count( aiIndex );
+	for( int i = 0; i < infoCount; i++ )
+	{
+		ret.Add( WX_STRINGC( m_get_skirmish_ai_info_key( i ) ) );
+		ret.Add( WX_STRINGC( m_get_skirmish_ai_info_value( i ) ) );
+		ret.Add( WX_STRINGC( m_get_skirmish_ai_info_description( i ) ) );
+	}
+	return ret;
 }
 
 /// lua parser

@@ -56,7 +56,6 @@ void ServerEvents::OnLogin()
 void ServerEvents::OnLoginInfoComplete()
 {
     wxLogDebugFunc( _T("") );
-    m_serv.JoinChannel( _T("springlobby"), _T("") );
     //m_serv.RequestChannels();
     int num = sett().GetNumChannelsJoin();
     for ( int i= 0; i < num; i++ )
@@ -109,9 +108,8 @@ void ServerEvents::OnPong( int ping_time )
 {
     if ( ping_time == -1 )
     {
-        wxLogWarning( _("Ping Timeout!") );
-        m_serv.Disconnect();
-        OnDisconnected();
+        wxLogWarning( _T("Ping Timeout!") );
+        if ( m_serv.IsConnected() ) m_serv.Disconnect();
     }
 }
 
@@ -196,7 +194,7 @@ void ServerEvents::OnUserQuit( const wxString& nick )
 }
 
 
-void ServerEvents::OnBattleOpened( int id, bool replay, IBattle::NatType nat, const wxString& nick,
+void ServerEvents::OnBattleOpened( int id, bool replay, NatType nat, const wxString& nick,
                                    const wxString& host, int port, int maxplayers,
                                    bool haspass, int rank, const wxString& maphash, const wxString& map,
                                    const wxString& title, const wxString& mod )
@@ -301,17 +299,13 @@ void ServerEvents::OnClientBattleStatus( int battleid, const wxString& nick, Use
 {
     try
     {
-        User& user = m_serv.GetUser( nick );
         Battle& battle = m_serv.GetBattle( battleid );
+        User& user = battle.GetUser( nick );
 
         if ( battle.IsFounderMe() ) AutoCheckCommandSpam( battle, user );
 
-        if ( status == user.BattleStatus() ) return; /// drop the message if no updates to current status are present;
         status.color_index = user.BattleStatus().color_index;
-
         battle.OnUserBattleStatusUpdated( user, status );
-
-        ui().OnUserBattleStatus( battle, user );
     }
     catch (std::runtime_error &except)
     {
@@ -356,13 +350,10 @@ void ServerEvents::OnUserLeftBattle( int battleid, const wxString& nick )
     wxLogDebugFunc( _T("") );
     try
     {
-        User& user = m_serv.GetUser( nick );
         Battle& battle = m_serv.GetBattle( battleid );
-
-
+				User& user = battle.GetUser( nick );
         battle.OnUserRemoved( user );
-
-        ui().OnUserLeftBattle( battle, user );
+				ui().OnUserLeftBattle( battle, user );
     }
     catch (std::runtime_error &except)
     {
@@ -411,17 +402,20 @@ void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const w
             if ( key.Left( 11 ) == _T( "mapoptions/" ) )
             {
                 key = key.AfterFirst( '/' );
-                if (  battle.CustomBattleOptions().setSingleOption( key,  value, OptionsWrapper::MapOption ) )  // m_serv.LeaveBattle( battleid ); // host has sent a bad option, leave battle
-                    battle.Update( wxString::Format(_T("%d_%s"), OptionsWrapper::MapOption, key.c_str() ) );
+                battle.CustomBattleOptions().setSingleOption( key,  value, OptionsWrapper::MapOption );
+								battle.Update( wxString::Format(_T("%d_%s"), OptionsWrapper::MapOption, key.c_str() ) );
             }
             else if ( key.Left( 11 ) == _T( "modoptions/" ) )
             {
                 key = key.AfterFirst( '/' );
-                if (  battle.CustomBattleOptions().setSingleOption( key, value, OptionsWrapper::ModOption ) );//m_serv.LeaveBattle( battleid ); // host has sent a bad option, leave battle
+								battle.CustomBattleOptions().setSingleOption( key, value, OptionsWrapper::ModOption );
                 battle.Update(  wxString::Format(_T("%d_%s"), OptionsWrapper::ModOption,  key.c_str() ) );
             }
-            else if (  battle.CustomBattleOptions().setSingleOption( key,  value, OptionsWrapper::EngineOption ) )
-                battle.Update( wxString::Format(_T("%d_%s"), OptionsWrapper::EngineOption, key.c_str() ) );
+            else
+            {
+							battle.CustomBattleOptions().setSingleOption( key,  value, OptionsWrapper::EngineOption );
+							battle.Update( wxString::Format(_T("%d_%s"), OptionsWrapper::EngineOption, key.c_str() ) );
+            }
         }
     }
     catch (assert_exception) {}
@@ -503,10 +497,6 @@ void ServerEvents::OnJoinChannelResult( bool success, const wxString& channel, c
         Channel& chan = m_serv._AddChannel( channel );
         chan.SetPassword( m_serv.m_channel_pw[channel] );
         ui().OnJoinedChannelSuccessful( chan );
-        if ( channel == _T("springlobby") && sett().GetReportStats() )
-        {
-            m_serv.DoActionChannel( _T("springlobby"), _T("is using SpringLobby v") + GetSpringLobbyVersion() );
-        }
 
     }
     else
@@ -674,32 +664,23 @@ void ServerEvents::OnBattleStartRectRemove( int battleid, int allyno )
 }
 
 
-void ServerEvents::OnBattleAddBot( int battleid, const wxString& nick, const wxString& owner, UserBattleStatus status, const wxString& aidll )
+void ServerEvents::OnBattleAddBot( int battleid, const wxString& nick, UserBattleStatus status )
 {
     wxLogDebugFunc( _T("") );
     try
     {
         Battle& battle = m_serv.GetBattle( battleid );
-        battle.OnBotAdded( nick, owner, status, aidll );
-        BattleBot* bot = battle.GetBot( nick );
-        ASSERT_LOGIC( bot != 0, _T("Bot null after add.") );
-        ui().OnBattleBotAdded( battle, *bot );
+        battle.OnBotAdded( nick, status );
+        User& bot = battle.GetUser( nick );
+        ASSERT_LOGIC( &bot != 0, _T("Bot null after add.") );
+        ui().OnUserJoinedBattle( battle, bot );
     }
     catch (assert_exception) {}
 }
 
 void ServerEvents::OnBattleUpdateBot( int battleid, const wxString& nick, UserBattleStatus status )
 {
-    try
-    {
-        wxLogDebugFunc( _T("") );
-        Battle& battle = m_serv.GetBattle( battleid );
-        battle.OnBotUpdated( nick, status );
-        BattleBot* bot = battle.GetBot( nick );
-        ASSERT_LOGIC( bot != 0, _T("Bot null after add.") );
-        ui().OnBattleBotUpdated( battle, *bot );
-    }
-    catch (assert_exception) {}
+    OnClientBattleStatus( battleid, nick, status );
 }
 
 
@@ -709,12 +690,13 @@ void ServerEvents::OnBattleRemoveBot( int battleid, const wxString& nick )
     try
     {
         Battle& battle = m_serv.GetBattle( battleid );
-        BattleBot* bot = battle.GetBot( nick );
-        ASSERT_LOGIC( bot != 0, _T("Bot null after add.") );
-        ui().OnBattleBotRemoved( battle, *bot );
-        battle.OnBotRemoved( nick );
+				User& user = battle.GetUser( nick );
+				ui().OnUserLeftBattle( battle, user );
+        battle.OnUserRemoved( user );
     }
-    catch (assert_exception) {}
+    catch (std::runtime_error &except)
+    {
+    }
 }
 
 
@@ -751,7 +733,7 @@ void ServerEvents::OnChannelMessage( const wxString& channel, const wxString& ms
 void ServerEvents::OnHostExternalUdpPort( const unsigned int udpport )
 {
     if ( !m_serv.GetCurrentBattle() ) return;
-    if ( m_serv.GetCurrentBattle()->GetNatType() == IBattle::NAT_Hole_punching || m_serv.GetCurrentBattle()->GetNatType() == IBattle::NAT_Fixed_source_ports ) m_serv.GetCurrentBattle()->SetHostPort( udpport );
+    if ( m_serv.GetCurrentBattle()->GetNatType() == NAT_Hole_punching || m_serv.GetCurrentBattle()->GetNatType() == NAT_Fixed_source_ports ) m_serv.GetCurrentBattle()->SetHostPort( udpport );
 }
 
 
@@ -786,7 +768,7 @@ void ServerEvents::OnClientIPPort( const wxString &username, const wxString &ip,
 
         if (sett().GetShowIPAddresses())ui().OnBattleAction(*m_serv.GetCurrentBattle(),username,wxString::Format(_(" has ip=%s"),ip.c_str()));
 
-        if (m_serv.GetCurrentBattle()->GetNatType()!=IBattle::NAT_None && (udpport==0))
+        if (m_serv.GetCurrentBattle()->GetNatType() != NAT_None && (udpport==0))
         {
             /// todo: better warning message
             ///something.OutputLine( _T(" ** ") + who.GetNick() + _(" does not support nat traversal! ") + GetChatTypeStr() + _T("."), sett().GetChatColorJoinPart(), sett().GetChatFont() );
@@ -804,16 +786,14 @@ void ServerEvents::OnClientIPPort( const wxString &username, const wxString &ip,
 void ServerEvents::OnKickedFromBattle()
 {
     customMessageBoxNoModal(SL_MAIN_ICON,_("You were kicked from the battle!"),_("Kicked by Host"));
-
 }
 
 
 void ServerEvents::OnRedirect( const wxString& address,  unsigned int port, const wxString& CurrentNick, const wxString& CurrentPassword )
 {
-    sett().AddServer( address );
-    sett().SetServerHost( address, address );
-    sett().SetServerPort( address, (int)port );
-    ui().DoConnect( address, CurrentNick, CurrentPassword );
+		wxString name = address + _T(":") + TowxString(port);
+    sett().SetServer( name, address, port );
+    ui().DoConnect( name, CurrentNick, CurrentPassword );
 }
 
 

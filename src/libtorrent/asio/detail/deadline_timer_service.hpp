@@ -26,7 +26,6 @@
 #include "asio/error.hpp"
 #include "asio/io_service.hpp"
 #include "asio/detail/bind_handler.hpp"
-#include "asio/detail/handler_base_from_member.hpp"
 #include "asio/detail/noncopyable.hpp"
 #include "asio/detail/service_base.hpp"
 #include "asio/detail/socket_ops.hpp"
@@ -154,25 +153,25 @@ public:
   }
 
   template <typename Handler>
-  class wait_handler : 
-    public handler_base_from_member<Handler>
+  class wait_handler
   {
   public:
     wait_handler(asio::io_service& io_service, Handler handler)
-      : handler_base_from_member<Handler>(handler),
-        io_service_(io_service),
-        work_(io_service)
+      : io_service_(io_service),
+        work_(io_service),
+        handler_(handler)
     {
     }
 
     void operator()(const asio::error_code& result)
     {
-      io_service_.post(detail::bind_handler(this->handler_, result));
+      io_service_.post(detail::bind_handler(handler_, result));
     }
 
   private:
     asio::io_service& io_service_;
     asio::io_service::work work_;
+    Handler handler_;
   };
 
   // Start an asynchronous wait on the timer.

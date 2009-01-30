@@ -115,7 +115,8 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle ):
 
   ReloadRestrictions();
 
-  if ( !m_battle.IsFounderMe() ) {
+  if ( !m_battle.IsFounderMe() )
+  {
     m_restrict_btn->Disable();
     m_allow_btn->Disable();
     m_clear_btn->Disable();

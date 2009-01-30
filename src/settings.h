@@ -3,10 +3,10 @@
 
 #include <wx/string.h>
 
-const int CACHE_VERSION     = 8;
-const int SETTINGS_VERSION  = 4;
+const int CACHE_VERSION     = 9;
+const int SETTINGS_VERSION  = 8;
 
-const wxString DEFSETT_DEFAULT_SERVER = _T("TAS Server");
+const wxString DEFSETT_DEFAULT_SERVER_NAME= _T("Official server");
 const wxString DEFSETT_DEFAULT_SERVER_HOST = _T("taspringmaster.clan-sy.com");
 const int DEFSETT_DEFAULT_SERVER_PORT = 8200;
 const bool DEFSETT_SAVE_PASSWORD = false;
@@ -39,7 +39,7 @@ class wxFileInputStream;
 class wxFileName;
 class wxColor;
 class wxColour;
-struct wxColourData;
+class wxColourData;
 class wxSize;
 class wxPoint;
 class wxPathList;
@@ -73,12 +73,20 @@ class Settings
     static bool m_user_defined_config;
     static wxString m_user_defined_config_path;
 
+		/// used to import default configs from a file in windows
+    void SetDefaultConfigs( SL_WinConf& conf );
+
+    /// list all entries subkeys of a parent group
+    wxArrayString GetGroupList( const wxString& base_key );
+    /// list all groups subkeys of a parent group
+    wxArrayString GetEntryList( const wxString& base_key );
+
     bool IsPortableMode();
     void SetPortableMode( bool mode );
 
     /** Initialize all settings to default.
      */
-    void SetDefaultSettings();
+    void SetDefaultServerSettings();
     void SaveSettings();
 
     bool IsFirstRun();
@@ -97,6 +105,8 @@ class Settings
     wxString GetLobbyWriteDir();
 
     wxString GetTempStorage();
+
+    bool SkipDownloadOtaContent();
 
     /* ================================================================ */
     /** @name Network
@@ -176,25 +186,19 @@ class Settings
     /** @name Servers
      * @{
      */
+		void ConvertOldServerSettings();
     wxString GetDefaultServer();
     void SetDefaultServer( const wxString& server_name );
     void SetAutoConnect( bool do_autoconnect );
     bool GetAutoConnect( );
 
-    bool ServerExists( const wxString& server_name );
-
     wxString GetServerHost( const wxString& server_name );
-    void SetServerHost( const wxString& server_name, const wxString& value );
-
     int GetServerPort( const wxString& server_name );
-    void SetServerPort( const wxString& server_name, const int value );
 
-    int GetNumServers();
-    void SetNumServers( int num );
-    void AddServer( const wxString& server_name );
-    int GetServerIndex( const wxString& server_name );
-
-    wxString GetServerName( int index );
+    wxArrayString GetServers();
+    bool ServerExists( const wxString& server_name );
+    void SetServer( const wxString& server_name, const wxString& url, int port );
+    void DeleteServer( const wxString& server_name );
     /**@}*/
 
     /* ================================================================ */
@@ -304,6 +308,9 @@ class Settings
     //! used to signal unset column width in Get...
     enum { columnWidthUnset };
 
+    void SetMapSelectorFollowsMouse( bool value );
+    bool GetMapSelectorFollowsMouse();
+
     /*@}*/
 
     /* ================================================================ */
@@ -313,7 +320,7 @@ class Settings
     void SetPeopleList( const wxArrayString& friends, const wxString& group = _T("default") );
     wxArrayString GetPeopleList( const wxString& group = _T("default") ) const;
 
-    wxArrayString GetGroups( ) const;
+    wxArrayString GetGroups( );
     void AddGroup( const wxString& group ) ;
     void DeleteGroup( const wxString& group ) ;
 
@@ -376,28 +383,41 @@ class Settings
     void SetChatPMSoundNotificationEnabled( bool enabled );
     bool GetChatPMSoundNotificationEnabled();
 
-    wxColour GetChatColorNormal();
-    void SetChatColorNormal( wxColour value );
-    wxColour GetChatColorBackground();
-    void SetChatColorBackground( wxColour value );
-    wxColour GetChatColorHighlight();
-    void SetChatColorHighlight( wxColour value );
-    wxColour GetChatColorMine();
-    void SetChatColorMine( wxColour value );
-    wxColour GetChatColorNotification();
-    void SetChatColorNotification( wxColour value );
-    wxColour GetChatColorAction();
-    void SetChatColorAction( wxColour value );
-    wxColour GetChatColorServer();
-    void SetChatColorServer( wxColour value );
-    wxColour GetChatColorClient();
-    void SetChatColorClient( wxColour value );
-    wxColour GetChatColorJoinPart();
-    void SetChatColorJoinPart( wxColour value );
-    wxColour GetChatColorError();
-    void SetChatColorError( wxColour value );
-    wxColour GetChatColorTime();
-    void SetChatColorTime( wxColour value );
+
+    /** Get named chat color.
+     *
+     * Color names should be in @c Namecase or @c CamelCase, or (if applicable)
+     * @c TLAC (Three-Letter Acronym Case ;)
+     *
+     *     * If the named color exists in the user's configuration, that value
+     *       will be used.
+     *
+     *     * If the named color does not exist in the user's configuration, an
+     *       attempt will be made to look up a predefined default for that
+     *       color.
+     *
+     *     * If the color still has not been found, a non-fatal error message
+     *       will be logged and a generic color (likely unfit for the intended
+     *       purpose) will be used.
+     *
+     *
+     * @param name Name of the color to get.
+     *
+     * @returns A value to use for the named color.
+     */
+    wxColour GetChatColor(const wxString& name);
+
+
+    /** Set the value of a named chat color.
+     *
+     * If the color's name cannot be found in the list of predefined colors, a
+     * non-fatal error message will be logged.
+     *
+     * @returns @c true if the value was written successfully, or @c false
+     * otherwise.
+     */
+    bool SetChatColor(const wxString& name, const wxColour& color);
+
     wxFont GetChatFont();
     void SetChatFont( wxFont value );
 
@@ -567,6 +587,9 @@ class Settings
      */
     void SaveLayout( wxString& layout_name, wxString& layout_string );
     wxString GetLayout( wxString& layout_name );
+    wxArrayString GetLayoutList();
+    void SetDefaultLayout( const wxString& layout_name );
+    wxString GetDefaultLayout();
     /**@}*/
 
     enum CompletionMethod {
