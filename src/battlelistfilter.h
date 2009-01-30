@@ -45,7 +45,7 @@ class BattleListFilter : public wxPanel
     void OnMaxPlayerChange   ( wxCommandEvent& event );
     void OnSpectatorChange   ( wxCommandEvent& event );
 
-    bool FilterBattle(Battle& battle);
+    bool FilterBattle(IBattle& battle);
     bool GetActiv() const;
 
     void SetFilterHighlighted( bool state );

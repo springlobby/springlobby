@@ -17,7 +17,7 @@ class wxStaticLine;
 class wxCheckBox;
 class wxToggleButton;
 class ReplayList_Iter;
-class Replay;
+struct Replay;
 class ReplayList;
 class ReplayListFilter;
 class ReplayListCtrl;

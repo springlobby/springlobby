@@ -227,7 +227,7 @@ const Control RO_SLI[] = {
 	{_("Tree view-distance"),           _T("TreeRadius"),          ID_RO_SLI_1,	_T("1000"), {_("sets the maximum distance at which trees will still be rendered")}	},
 	{_("Terrain detail"),               _T("GroundDetail"),        ID_RO_SLI_2,	_T("80"), {_("higher value = more terrain details")}	},
 	{_("Unit detail"),                  _T("UnitLodDist"),         ID_RO_SLI_3,	_T("300"), {_("higher value = more detailed units")}	},
-	{_("Grass detail"),                 _T("GrassDetail"),         ID_RO_SLI_4,	_T("3"), {_("higher value = more detailed graas")}	},
+	{_("Grass detail"),                 _T("GrassDetail"),         ID_RO_SLI_4,	_T("3"), {_("higher value = more detailed grass")}	},
 	{_("Ground decals"),                _T("GroundDecals"),        ID_RO_SLI_5,	_T("0"), {_("only on/off available at this time")}	},
 	{_("Unit icon distance"),           _T("UnitIconDist"),        ID_RO_SLI_6,	_T("350"), {_("determines at which range units are still fully rendered\n"
 																								"higher value = greater range = more units rendered at the same time")}	},
@@ -255,7 +255,7 @@ const category_sizes_map_type VO_RBUT_entry ( _T("VO_RBUT"), sizeof(VO_RBUT) / C
 
 
 const Control VO_SLI[] = {
-	{_("Full-screen anti-aliasing samples"), _T("FSAALevel"), ID_VO_SLI_0,	_T("0"), {_("how much anti-aliasing should be applied")}}
+	{_("Full-scene anti-aliasing samples"), _T("FSAALevel"), ID_VO_SLI_0,	_T("0"), {_("how much anti-aliasing should be applied")}}
 };
 
 const category_sizes_map_type VO_SLI_entry ( _T("VO_SLI"), sizeof(VO_SLI) / Control_size );
@@ -270,7 +270,7 @@ const Control AO_SLI[] = {
 	{_("Maximum simultaneous sounds"), _T("MaxSounds"),            ID_AO_SLI_0,	_T("32") , {_("maximum different sounds played at the same time\n"
 																								"Set this to zero to disable sound completely.")}},
 	{_("Global sound volume"),   _T("SoundVolume"),                ID_AO_SLI_1,	_T("100"), {_("overall sound volume")}},
-	{_("Unit reply volume"),     _T("UnitReplySoundVolume"),       ID_AO_SLI_2,	_T("20") , {_("reply volume relative to global volume")}}
+	{_("Unit reply volume"),     _T("UnitReplyVolume"),       ID_AO_SLI_2,	_T("100") , {_("reply volume relative to global volume")}}
 
 };
 
@@ -436,6 +436,7 @@ const category_sizes_map_type entries_[] = { RC_TEXT_entry, MO_RBUT_entry, MO_CB
                                             VO_RBUT_entry, VO_CBOX_entry, RO_SLI_entry, UI_ZOOM_entry, W4_CONTROLS_entry};
 
 static category_sizes_map s_category_sizes ( entries_ , entries_ + sizeof(entries_) / sizeof(entries_[0]) );
+
 
 /** not used
 #define NUM_DEFAULTS 88

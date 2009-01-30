@@ -10,6 +10,8 @@ class wxStaticLine;
 class wxButton;
 class wxCommandEvent;
 class IBattle;
+class wxListCtrl;
+class wxBoxSizer;
 
 /** \brief used in SP/MP BattletAB to present choice of AIs to add
  * \todo DOCMEMORE */
@@ -20,7 +22,8 @@ class AddBotDialog : public wxDialog
     AddBotDialog( wxWindow* parent, IBattle& battle, bool singleplayer = false );
 
     wxString GetNick();
-    wxString GetAI();
+    wxString GetAIShortName();
+    wxString GetAIVersion();
 
     void ReloadAIList();
 
@@ -36,6 +39,11 @@ class AddBotDialog : public wxDialog
     wxStaticLine* m_buttons_sep;
     wxButton* m_cancel_btn;
     wxButton* m_add_btn;
+    wxListCtrl* m_ai_infos_lst;
+
+    wxBoxSizer* m_main_sizer;
+    wxBoxSizer* m_info_sizer;
+
 
     IBattle& m_battle;
 

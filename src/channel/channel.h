@@ -3,19 +3,12 @@
 
 #include "../userlist.h"
 #include <set>
-#include <vector>
-#include <utility>
 #include <wx/regex.h>
 
 class Channel;
 class Server;
 class Ui;
 class ChatPanel;
-
-//! wtf is this even? commenting it makes no error (koshi)
-typedef void(*channel_msg_callback)(Channel&,User&,const wxString&);
-typedef void(*channel_cmd_callback)(Channel&);
-typedef void(*channel_whocmd_callback)(Channel&,User&);
 
 struct UiChannelData {
   UiChannelData(): panel(0) {}
@@ -72,7 +65,7 @@ class Channel : public UserList
     Ui& m_ui;
 
     std::set<wxString> m_banned_users;
-    //std::string ban_regex;
+
     bool m_do_ban_regex;
     wxRegEx m_ban_regex;
 

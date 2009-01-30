@@ -69,7 +69,7 @@ void UserActions::Init()
     }
     for ( int i = 0; i < m_numActions; ++i)
     {
-        ActionType cur = (ActionType) std::pow( 2.0, i);
+        ActionType cur = (ActionType) (int) std::pow( 2.0, i);
         wxSortedArrayString tmp;
         for ( unsigned int i = 0; i < m_groupNames.GetCount(); ++i)
         {

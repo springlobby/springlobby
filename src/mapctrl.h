@@ -21,8 +21,7 @@ class BattleRoomTab;
 class MapCtrl : public wxPanel
 {
   public:
-    MapCtrl( wxWindow* parent, int size, IBattle* battle, Ui& ui, bool readonly, bool fixed_size,
-      bool draw_start_types, bool singleplayer );
+    MapCtrl( wxWindow* parent, int size, IBattle* battle, Ui& ui, bool readonly, bool fixed_size, bool draw_start_types, bool singleplayer );
     ~MapCtrl();
 
     void SetBattle( IBattle* battle );
@@ -37,11 +36,13 @@ class MapCtrl : public wxPanel
     void OnLeftUp( wxMouseEvent& event );
     void OnMouseWheel( wxMouseEvent& event );
 
+    void OnGetMapImageAsyncCompleted( wxCommandEvent& event );
+
    protected:
 
     typedef int RectArea;
     typedef int MouseAction;
-    typedef int BotRectOrient;
+    typedef int UserRectOrient;
 
     void LoadMinimap();
     void FreeMinimap();
@@ -57,16 +58,16 @@ class MapCtrl : public wxPanel
 
     void DrawOutlinedText( wxDC& dc, const wxString& str, int x, int y, const wxColour& outline, const wxColour& font );
 
-    wxRect GetBotRect( BattleBot& bot, bool selected );
-    RectArea GetBotRectArea( const wxRect& botrect, int x, int y );
+    wxRect GetUserRect( User& user, bool selected );
+    RectArea GetUserRectArea( const wxRect& userrect, int x, int y );
 
-    wxRect GetBotSideRect() { return wxRect( 37, 20, 16, 16 ); }
-    wxRect GetBotHandicapRect() { return wxRect( 40, 55, 16, 16 ); }
-    wxRect GetBotCloseRect() { return wxRect( 59, 4, 14, 14 ); }
-    wxRect GetBotUpAllyButtonRect() { return wxRect( 61, 35, 12, 8 ); }
-    wxRect GetBotDownAllyButtonRect() { return wxRect( 61, 43, 12, 8 ); }
-    wxRect GetBotUpHandicapButtonRect() { return wxRect( 61, 52, 12, 8 ); }
-    wxRect GetBotDownHandicapButtonRect() { return wxRect( 61, 60, 12, 8 ); }
+    wxRect GetUserSideRect() { return wxRect( 37, 20, 16, 16 ); }
+    wxRect GetUserHandicapRect() { return wxRect( 40, 55, 16, 16 ); }
+    wxRect GetUserCloseRect() { return wxRect( 59, 4, 14, 14 ); }
+    wxRect GetUserUpAllyButtonRect() { return wxRect( 61, 35, 12, 8 ); }
+    wxRect GetUserDownAllyButtonRect() { return wxRect( 61, 43, 12, 8 ); }
+    wxRect GetUserUpHandicapButtonRect() { return wxRect( 61, 52, 12, 8 ); }
+    wxRect GetUserDownHandicapButtonRect() { return wxRect( 61, 60, 12, 8 ); }
 
     wxRect GetRefreshRect();
     wxRect GetDownloadRect();
@@ -75,11 +76,11 @@ class MapCtrl : public wxPanel
 
     void RequireImages();
 
-    void RelocateBots();
+    void RelocateUsers();
 
     void GetClosestStartPos( int fromx, int fromy, int& index, int& x, int& y, int& range );
 
-    void DrawBot( wxDC& dc, BattleBot& bot, bool selected, bool moving );
+    void DrawUser( wxDC& dc, User& user, bool selected, bool moving );
     void DrawSinglePlayer( wxDC& dc );
     void DrawBackground( wxDC& dc );
     void DrawStartRects( wxDC& dc );
@@ -90,13 +91,14 @@ class MapCtrl : public wxPanel
 
     void _SetCursor();
 
+    UnitSyncAsyncOps m_async;
+
     wxBitmap* m_minimap;
     wxBitmap* m_metalmap;
     wxBitmap* m_heightmap;
     wxImage m_metalmap_cumulative;
 
     IBattle* m_battle;
-    SinglePlayerBattle* m_sp_battle;
 
     Ui& m_ui;
     wxString m_mapname;
@@ -137,9 +139,10 @@ class MapCtrl : public wxPanel
 
     UnitSyncMap m_map;
 
-    int m_bot_expanded;
+    User* m_user_expanded;
 
-    enum InfoMap {
+    enum InfoMap
+    {
       IM_Minimap,  // must be first one
       IM_Metalmap, // entries must be consecutively numbered (without gaps)
       IM_Heightmap,
