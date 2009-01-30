@@ -127,6 +127,11 @@ Settings::Settings()
   SetPortableMode ( false );
   #endif
   if ( !m_config->Exists( _T("/Server") ) ) SetDefaultServerSettings();
+  if ( !m_config->Exists( _T("/Channels") ) )
+  {
+		AddChannelJoin( _T("springlobby"), _T("") );
+		AddChannelJoin( _T("newbies"), _T("") );
+  }
 
   if ( !m_config->Exists( _T("/Groups") ) ) AddGroup( _("Default") );
 }
@@ -490,6 +495,14 @@ void   Settings::SetServer( const wxString& server_name, const wxString& url, in
 {
     m_config->Write( _T("/Server/Servers/")+ server_name +_T("/Host"), url );
     m_config->Write( _T("/Server/Servers/")+ server_name +_T("/Port"), port );
+}
+
+//! @brief Deletes a server from the list.
+//!
+//! @param server_name the server name/alias
+void Settings::DeleteServer( const wxString& server_name )
+{
+		m_config->DeleteGroup( _T("/Server/Servers/") + server_name );
 }
 
 
@@ -1589,6 +1602,12 @@ wxString Settings::GetTempStorage()
 }
 
 
+bool Settings::SkipDownloadOtaContent()
+{
+  return m_config->Read( _T("/General/NoOtaDownload"), 0l ) ;
+}
+
+
 void Settings::SetShowTooltips( bool show)
 {
     m_config->Write(_T("/GUI/ShowTooltips"), show );
@@ -1632,6 +1651,16 @@ void Settings::SetColumnWidth( const wxString& list_name, const int coloumn_ind,
 int Settings::GetColumnWidth( const wxString& list_name, const int coloumn )
 {
     return m_config->Read(_T("GUI/ColoumnWidths/") + list_name + _T("/") + TowxString(coloumn), columnWidthUnset);
+}
+
+void Settings::SetMapSelectorFollowsMouse( bool value )
+{
+    m_config->Write(_T("GUI/MapSelector/SelectionFollowsMouse"), value);
+}
+
+bool Settings::GetMapSelectorFollowsMouse()
+{
+	return m_config->Read(_T("GUI/MapSelector/SelectionFollowsMouse"), 0l);
 }
 
 void Settings::SetPeopleList( const wxArrayString& friends, const wxString& group  )

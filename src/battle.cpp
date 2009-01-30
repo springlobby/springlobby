@@ -244,6 +244,7 @@ void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
         }
 
     }
+		ui().OnUserBattleStatus( *this, user );
 }
 
 

@@ -219,7 +219,6 @@ std::set<TorrentTable::PRow> TorrentTable::QueuedTorrentsByRow()
 }
 
 
-
 TorrentWrapper& torrent()
 {
     static GlobalObjectHolder<TorrentWrapper> m_torr_wrap;
@@ -497,6 +496,7 @@ void TorrentWrapper::UpdateFromTimer( int mselapsed )
         RemoveUnneededTorrents();
         TryToJoinQueuedTorrents();
         ResumeFromList();
+        SearchAndGetQueuedDependencies();
     }
 }
 
@@ -1040,6 +1040,9 @@ void TorrentWrapper::RemoveUnneededTorrents()
 
                 SendMessageToCoordinator( _T("N-|")  + it->second->hash + _T("\n") ); //notify the system we don't need the file anymore
 
+                TorrentTable::Row fileinfo( *it->second );
+                m_dep_check_queue.push_back( fileinfo );
+
                 wxCommandEvent refreshevt(UnitSyncReloadRequest); // request an unitsync reload
                 wxPostEvent( &SL_GlobalEvtHandler::GetSL_GlobalEvtHandler(), refreshevt );
             }
@@ -1078,6 +1081,48 @@ void TorrentWrapper::TryToJoinQueuedTorrents()
             RequestFileByRow( *it );
         }
     }
+
+}
+
+void TorrentWrapper::SearchAndGetQueuedDependencies()
+{
+	std::vector<TorrentTable::Row> listcopy = m_dep_check_queue;
+	int position = 0;
+	for ( std::vector<TorrentTable::Row>::iterator itor = listcopy.begin(); itor != listcopy.end(); itor++ )
+	{
+
+		if ( itor->type == IUnitSync::map )
+		{
+			if ( usync().MapExists( itor->name, itor->hash ) )
+			{
+				wxArrayString deps = usync().GetMapDeps( itor->name );
+				int count = deps.GetCount();
+				for ( int i = 0; i < count; i++ )
+				{
+					RequestFileByName( deps[i] );
+				}
+				std::vector<TorrentTable::Row>::iterator toremove = m_dep_check_queue.begin();
+				m_dep_check_queue.erase(toremove+position);
+				position--;
+			}
+		}
+		else if ( itor->type == IUnitSync::mod )
+		{
+			if ( usync().ModExists( itor->name, itor->hash ) )
+			{
+				wxArrayString deps = usync().GetModDeps( itor->name );
+				int count = deps.GetCount();
+				for ( int i = 0; i < count; i++ )
+				{
+					RequestFileByName( deps[i] );
+				}
+				std::vector<TorrentTable::Row>::iterator toremove = m_dep_check_queue.begin();
+				m_dep_check_queue.erase(toremove+position);
+				position--;
+			}
+		}
+		position++;
+	}
 
 }
 

@@ -49,13 +49,13 @@ void SpringUnitSyncLib::Load( const wxString& path, const wxString& ForceConfigF
 
   _Load( path );
 
-	if ( !ForceConfigFilePath.IsEmpty() )
-	{
-			if ( m_set_spring_config_file_path )
-			{
-					m_set_spring_config_file_path( ForceConfigFilePath.mb_str() );
-			}
-	}
+  if ( !ForceConfigFilePath.IsEmpty() )
+  {
+    if ( m_set_spring_config_file_path )
+    {
+        m_set_spring_config_file_path( ForceConfigFilePath.mb_str() );
+    }
+  }
 
   _Init();
 }
@@ -532,6 +532,18 @@ wxString SpringUnitSyncLib::GetMapArchiveName( int arnr )
 }
 
 
+wxArrayString SpringUnitSyncLib::GetMapDeps( int index )
+{
+  int count = GetMapArchiveCount( index );
+	wxArrayString ret;
+	for ( int i = 0; i < count; i++ )
+	{
+		ret.Add( GetMapArchiveName( i ) );
+	}
+  return ret;
+}
+
+
 MapInfo SpringUnitSyncLib::GetMapInfoEx( const wxString& mapName, int version )
 {
   InitLib( m_get_map_info_ex );
@@ -788,6 +800,18 @@ int SpringUnitSyncLib::GetPrimaryModChecksumFromName( const wxString& name )
   InitLib( m_get_primary_mod_checksum_from_name );
 
   return (int)m_get_primary_mod_checksum_from_name( name.mb_str( wxConvUTF8 ) );
+}
+
+
+wxArrayString SpringUnitSyncLib::GetModDeps( int index )
+{
+  int count = GetPrimaryModArchiveCount( index );
+	wxArrayString ret;
+	for ( int i = 0; i < count; i++ )
+	{
+		ret.Add( GetPrimaryModArchiveList( i ) );
+	}
+  return ret;
 }
 
 

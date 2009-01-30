@@ -190,6 +190,7 @@ private:
     void JoinRequestedTorrents();
     void RemoveUnneededTorrents();
     void TryToJoinQueuedTorrents();
+    void SearchAndGetQueuedDependencies();
     void ResumeFromList();
 
     void ReceiveandExecute( const wxString& msg );
@@ -210,6 +211,8 @@ private:
 
     libtorrent::session* m_torr;
     Socket* m_socket_class;
+
+    std::vector<TorrentTable::Row> m_dep_check_queue;
 
     //!we set this when trying a tracker and waiting for connection to be established
     bool m_is_connecting;

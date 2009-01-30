@@ -4,7 +4,7 @@
 #include <wx/string.h>
 
 const int CACHE_VERSION     = 9;
-const int SETTINGS_VERSION  = 7;
+const int SETTINGS_VERSION  = 8;
 
 const wxString DEFSETT_DEFAULT_SERVER_NAME= _T("Official server");
 const wxString DEFSETT_DEFAULT_SERVER_HOST = _T("taspringmaster.clan-sy.com");
@@ -39,7 +39,7 @@ class wxFileInputStream;
 class wxFileName;
 class wxColor;
 class wxColour;
-struct wxColourData;
+class wxColourData;
 class wxSize;
 class wxPoint;
 class wxPathList;
@@ -100,6 +100,8 @@ class Settings
     wxString GetLobbyWriteDir();
 
     wxString GetTempStorage();
+
+    bool SkipDownloadOtaContent();
 
     /* ================================================================ */
     /** @name Network
@@ -191,6 +193,7 @@ class Settings
     wxArrayString GetServers();
     bool ServerExists( const wxString& server_name );
     void SetServer( const wxString& server_name, const wxString& url, int port );
+    void DeleteServer( const wxString& server_name );
     /**@}*/
 
     /* ================================================================ */
@@ -299,6 +302,9 @@ class Settings
     int GetColumnWidth( const wxString& list_name, const int coloumn );
     //! used to signal unset column width in Get...
     enum { columnWidthUnset };
+
+    void SetMapSelectorFollowsMouse( bool value );
+    bool GetMapSelectorFollowsMouse();
 
     void SetLanguageID ( const long id );
     long GetLanguageID ( );

@@ -225,7 +225,7 @@ SET(SpringLobbySrc
 	src/maintorrenttab.cpp
 	src/mainwindow.cpp
 	src/mapctrl.cpp
-	src/maplistctrl.cpp
+	src/mapgridctrl.cpp
 	src/mapselectdialog.cpp
 	src/mmoptionmodel.cpp
 	src/mmoptionswrapper.cpp
