@@ -318,6 +318,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 					if ( !itor->second ) continue;
 					User& usr = *itor->second;
 					UserBattleStatus& status = usr.BattleStatus();
+					if ( status.spectator ) continue;
 					if ( PreviousTeam == status.team ) continue; // skip duplicates
 					PreviousTeam = status.team;
 
