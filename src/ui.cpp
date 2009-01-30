@@ -916,7 +916,11 @@ void Ui::OnUserJoinedBattle( IBattle& battle, User& user )
 
     try
     {
-        if ( &mw().GetJoinTab().GetBattleRoomTab().GetBattle() == &battle ) mw().GetJoinTab().GetBattleRoomTab().OnUserJoined( user );
+        if ( &mw().GetJoinTab().GetBattleRoomTab().GetBattle() == &battle )
+        {
+        	 mw().GetJoinTab().GetBattleRoomTab().OnUserJoined( user );
+        	 OnBattleInfoUpdated( battle );
+        }
     }
     catch (...){}
 
@@ -940,6 +944,7 @@ void Ui::OnUserLeftBattle( IBattle& battle, User& user )
         if ( &mw().GetJoinTab().GetBattleRoomTab().GetBattle() == &battle )
         {
             mw().GetJoinTab().GetBattleRoomTab().OnUserLeft( user );
+						OnBattleInfoUpdated( battle );
             if ( &user == &m_serv->GetMe() )
             {
                 mw().GetJoinTab().LeaveCurrentBattle();
@@ -1009,6 +1014,7 @@ void Ui::OnUserBattleStatus( IBattle& battle, User& user )
 {
     if ( m_main_win == 0 ) return;
     mw().GetJoinTab().BattleUserUpdated( user );
+    OnBattleInfoUpdated( battle );
 }
 
 
