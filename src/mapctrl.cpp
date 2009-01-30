@@ -981,15 +981,18 @@ void MapCtrl::DrawSinglePlayer( wxDC& dc )
       dc.DrawText( wxString::Format(_T("%d"), i+1 ), x+mr.x+(8-w/2), y+mr.y+(8-h/2) );
     }
   }
-
+	int previousteam = -1;
   for ( unsigned int i = 0; i < m_battle->GetNumUsers(); i++ )
   {
-    User& bot = m_battle->GetUser(i);
-    if ( &bot == 0 ) continue;
+    User& usr = m_battle->GetUser(i);
+    if ( &usr == 0 ) continue;
+    int currentteam = usr.BattleStatus().team;
+    if ( currentteam == previousteam ) continue;
+    else previousteam = currentteam;
 
     bool expanded = m_user_expanded;
     if ( !m_sp ) expanded = false;
-    DrawUser( dc, bot, (m_maction != MA_Move) && expanded, (m_maction == MA_Move) && expanded );
+    DrawUser( dc, usr, (m_maction != MA_Move) && expanded, (m_maction == MA_Move) && expanded );
 
   }
 
