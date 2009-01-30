@@ -246,6 +246,23 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 					tdf.Append(it->first,it->second.second);
 			}
 
+			tdf.EnterSection( _T("mapoptions") );
+				OptionsWrapper::wxStringTripleVec optlistMap = battle.CustomBattleOptions().getOptions( OptionsWrapper::MapOption );
+				for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistMap.begin(); it != optlistMap.end(); ++it)
+				{
+						tdf.Append(it->first,it->second.second);
+				}
+			tdf.LeaveSection();
+
+
+			tdf.EnterSection(_T("modoptions"));
+				OptionsWrapper::wxStringTripleVec optlistMod = battle.CustomBattleOptions().getOptions( OptionsWrapper::ModOption );
+				for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistMod.begin(); it != optlistMod.end(); ++it)
+				{
+						tdf.Append(it->first,it->second.second);
+				}
+			tdf.LeaveSection();
+
 			tdf.Append( _T("NumPlayers"), battle.GetNumPlayers() );
 			tdf.Append( _T("NumUsers"), battle.GetNumUsers() );
 
@@ -369,6 +386,8 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 					tdf.LeaveSection();
 			}
 
+			tdf.AppendLineBreak();
+
 			int PreviousAlly = -1;
 			for ( unsigned int i = 0; i < NumUsers; i++ )
 			{
@@ -399,6 +418,8 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 					tdf.LeaveSection();
 			}
 
+			tdf.AppendLineBreak();
+
 			wxArrayString units = battle.DisabledUnits();
 			tdf.Append( _T("NumRestrictions"), units.GetCount());
 			tdf.EnterSection( _T("RESTRICT") );
@@ -406,23 +427,6 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 				{
 						tdf.Append(_T("Unit") + i2s( i ), units[i].c_str() );
 						tdf.Append(_T("Limit") + i2s(i), _T("0") );
-				}
-			tdf.LeaveSection();
-
-			tdf.EnterSection( _T("mapoptions") );
-				OptionsWrapper::wxStringTripleVec optlistMap = battle.CustomBattleOptions().getOptions( OptionsWrapper::MapOption );
-				for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistMap.begin(); it != optlistMap.end(); ++it)
-				{
-						tdf.Append(it->first,it->second.second);
-				}
-			tdf.LeaveSection();
-
-
-			tdf.EnterSection(_T("modoptions"));
-				OptionsWrapper::wxStringTripleVec optlistMod = battle.CustomBattleOptions().getOptions( OptionsWrapper::ModOption );
-				for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistMod.begin(); it != optlistMod.end(); ++it)
-				{
-						tdf.Append(it->first,it->second.second);
 				}
 			tdf.LeaveSection();
 
