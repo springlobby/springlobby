@@ -991,6 +991,7 @@ void MapCtrl::DrawSinglePlayer( wxDC& dc )
   {
     User& usr = m_battle->GetUser(i);
     if ( &usr == 0 ) continue;
+    if ( usr.BattleStatus().spectator ) continue;
     int currentteam = usr.BattleStatus().team;
     if ( currentteam == previousteam ) continue;
     else previousteam = currentteam;
