@@ -255,13 +255,11 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 
 			std::map<int, int> m_ally_map; // spring wants consegutive allies, this maps non consegutive allies to consegutive
 
-			std::map<int, User*> dedupe_teams; // team -> user* ( for teams deduping )
 			for ( unsigned int i = 0; i < NumUsers; i++ )
 			{
 					User& usr = battle.GetUser( i );
 					if ( usr.BattleStatus().spectator ) continue; // skip spectators
 					m_ally_map[ usr.BattleStatus().ally ] = usr.BattleStatus().ally;
-					dedupe_teams[usr.BattleStatus().team] = &usr;
 			}
 			int progressive_ally = 0;
 			for ( std::map<int, int>::iterator itor = m_ally_map.begin(); itor != m_ally_map.end(); itor++ ) // fill the map with numers in cosegutive progression
@@ -282,11 +280,23 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 							tdf.Append( _T("CountryCode"), user.GetCountry().Lower());
 							tdf.Append( _T("Spectator"), status.spectator );
 							tdf.Append( _T("Rank"), user.GetRank() );
-
 							if ( !status.spectator )
 							{
 								tdf.Append( _T("Team"), status.team );
 							}
+							else
+							{
+								 for ( unsigned int j = 0; j < NumUsers; j++ ) // spectate a random player to spring won't complain about a missing team
+								 {
+								 	UserBattleStatus& stat = battle.GetUser( j ).BattleStatus();
+								 	if ( !stat.spectator )
+								 	{
+								 		 tdf.Append( _T("Team"), stat.team );
+								 		 break;
+								 	}
+								 }
+							}
+
 					tdf.LeaveSection();
 					player_to_number[&user] = i;
 			}
@@ -313,10 +323,9 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 
 			wxArrayString sides = usync().GetSides( battle.GetHostModName() );
 			int PreviousTeam = -1;
-			for ( std::map<int, User*>::iterator itor = dedupe_teams.begin(); itor != dedupe_teams.end(); itor++ )
+			for ( unsigned int i = 0; i < NumUsers; i++ )
 			{
-					if ( !itor->second ) continue;
-					User& usr = *itor->second;
+					User& usr = battle.GetUser( i );
 					UserBattleStatus& status = usr.BattleStatus();
 					if ( status.spectator ) continue;
 					if ( PreviousTeam == status.team ) continue; // skip duplicates
