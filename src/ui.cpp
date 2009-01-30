@@ -948,6 +948,7 @@ void Ui::OnUserLeftBattle( IBattle& battle, User& user )
         }
     }
     catch (...) {}
+    if ( user.BattleStatus().IsBot() ) return;
     for ( int i = 0; i < m_serv->GetNumChannels(); i++ )
     {
         Channel& chan = m_serv->GetChannel( i );
