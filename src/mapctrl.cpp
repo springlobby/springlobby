@@ -914,7 +914,7 @@ void MapCtrl::DrawUser( wxDC& dc, User& user, bool selected, bool moving )
     dc.DrawRectangle( r.x+1, r.y+1, r.width-2, 18 );
 
     /* Draw the little 'X' (close button) in the corner... */
-    if ( ! m_sp || &user != &(m_battle->GetMe()) )
+    if ( &user != &(m_battle->GetMe()) )
     {
 	wxRect closerect = GetUserCloseRect();
 	if ( m_rect_area == RA_Close ) dc.DrawBitmap( *m_close_hi_img, r.x+closerect.x, r.y+closerect.y, true );
@@ -1419,7 +1419,7 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
       RefreshRect( GetUserRect( user, true ), false );
 
     }
-    else if ( m_mdown_area == RA_Close )
+    else if ( m_mdown_area == RA_Close && m_user_expanded != &m_battle->GetMe() )
     {
       wxRect r = GetUserRect( user, true );
       m_battle->KickPlayer( user );
