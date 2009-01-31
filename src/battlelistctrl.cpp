@@ -315,12 +315,12 @@ int BattleListCtrl::ComparePlayer( DataType u1, DataType u2 )
 void BattleListCtrl::SetTipWindowText( const long item_hit, const wxPoint position)
 {
     long item = GetItemData(item_hit);
-    if ( m_data[item] == NULL ) {
+    if ( m_data.size() < item_hit ) {
         m_tiptext = _T("");
         return;
     }
 
-    const IBattle& battle= *m_data[item];
+    const IBattle& battle= *m_data[item_hit];
 
     int coloumn = getColoumnFromPosition(position);
     switch (coloumn)
