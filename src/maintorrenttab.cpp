@@ -46,10 +46,10 @@ MainTorrentTab::MainTorrentTab(wxWindow* parent, Ui& ui)
 	wxBoxSizer* m_firstrow_box = new wxBoxSizer( wxHORIZONTAL );
 
     wxStaticText* m_list_lbl = new wxStaticText( this, ID_OUTGOING_LBL, _("Transfers in progress: ") );
-    m_listbox->Add(m_list_lbl, 0, wxBOTTOM, 5);
+    m_listbox->Add(m_list_lbl, 0, wxALL, 5);
 	m_torrent_list = new TorrentListCtrl(this, m_ui);
 	m_listbox->Add( m_torrent_list, 2, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL, 5);
-	m_mainbox->Add(m_listbox, 2, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL, 5);
+	m_mainbox->Add(m_listbox, 2, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL, 0);
 
 	m_outgoing_lbl = new wxStaticText( this, ID_OUTGOING_LBL, _("Total Outgoing: ") );
     m_incoming_lbl = new wxStaticText( this, ID_INCOMING_LBL, _("Total Incoming: ") );

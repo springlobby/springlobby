@@ -18,6 +18,8 @@
 #include <wx/utils.h>
 #include <wx/event.h>
 #include <wx/app.h>
+#include <wx/clipbrd.h>
+#include <wx/dataobj.h>
 
 #ifndef HAVE_WX26
 #include "aui/auimanager.h"
@@ -56,6 +58,7 @@ END_EVENT_TABLE()
 BEGIN_EVENT_TABLE( ChatPanel, wxPanel )
 
 	EVT_TEXT_ENTER( CHAT_TEXT, ChatPanel::OnSay )
+	EVT_TEXT_PASTE( CHAT_TEXT, ChatPanel::OnPaste )
 	EVT_BUTTON( CHAT_SEND, ChatPanel::OnSay )
 	EVT_SIZE( ChatPanel::OnResize )
 	EVT_TEXT_URL( CHAT_LOG,  ChatPanel::OnLinkEvent )
@@ -311,7 +314,7 @@ void ChatPanel::CreateControls( )
                                    wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_AUTO_URL );
 	if ( m_type == CPT_Channel ) m_chatlog_text->SetToolTip( TE(_("right click for options (like autojoin)" ) ) );
 
-	m_say_text = new wxTextCtrlHist( textcompletiondatabase, m_chat_panel, CHAT_TEXT, _T( "" ), wxDefaultPosition, wxSize( 100, CONTROL_HEIGHT ), wxTE_PROCESS_ENTER | wxTE_MULTILINE | wxTE_PROCESS_TAB );
+	m_say_text = new wxTextCtrlHist( textcompletiondatabase, m_chat_panel, CHAT_TEXT, _T( "" ), wxDefaultPosition, wxSize( 100, CONTROL_HEIGHT ), wxTE_PROCESS_ENTER | wxTE_PROCESS_TAB );
 	m_say_button = new wxButton( m_chat_panel, CHAT_SEND, _( "Send" ), wxDefaultPosition, wxSize( 80, CONTROL_HEIGHT ) );
 
 	// Adding elements to sizers
@@ -369,12 +372,9 @@ void ChatPanel::CreatePopup()
 		wxLogMessage( _T( "channel" ) );
 		m_autorejoin = new wxMenuItem( m_popup_menu, CHAT_MENU_CH_AUTOJOIN, _( "Auto join this channel" ), wxEmptyString, wxITEM_CHECK );
 		m_popup_menu->Append( m_autorejoin );
-		if ( m_channel && m_channel->GetName() != _T( "springlobby" ) ) {
+		if ( m_channel ) {
 			bool isautojoin = sett().GetChannelJoinIndex( m_channel->GetName() ) >= 0;
 			m_autorejoin->Check( isautojoin );
-		} else {
-			m_autorejoin->Check( true );
-			m_autorejoin->Enable( false );
 		}
 
 		wxMenuItem* leaveitem = new wxMenuItem( m_popup_menu, CHAT_MENU_CH_LEAVE, _( "Leave" ), wxEmptyString, wxITEM_NORMAL );
@@ -634,6 +634,27 @@ void ChatPanel::OnSay( wxCommandEvent& event )
   m_say_text->SetValue( _T( "" ) );
 }
 
+void ChatPanel::OnPaste( wxClipboardTextEvent& event )
+{
+  // Read some text
+  if (wxTheClipboard->Open())
+  {
+		wxTextDataObject data;
+		if ( wxTheClipboard->GetData( data ) )
+		{
+			wxString converted = data.GetText();
+			converted.Replace( _T("\r\n"), _T("\n") );
+			converted.Replace( _T("\r"), _T("\n") );
+			m_say_text->WriteText( converted );
+    }
+    else event.Skip();
+  }
+  else event.Skip();
+	wxTheClipboard->Close();
+
+
+}
+
 
 //! @brief Output a message said in the channel.
 //!
@@ -647,11 +668,6 @@ void ChatPanel::Said( const wxString& who, const wxString& message )
 	if ( who.Upper() == me.Upper() )
   {
 		col = sett().GetChatColor(_T("Mine"));
-	} else if ( message.Upper().Contains( me.Upper() ) )
-    {
-      SetIconHighlight( highlight_important );
-      col = sett().GetChatColor(_T("Notification"));
-      req_user = true;
 	} else
 	{
     // change the image of the tab to show new events
@@ -667,7 +683,9 @@ void ChatPanel::Said( const wxString& who, const wxString& message )
         col = sett().GetChatColor(_T("Normal"));
   }
 
-	if ( who == _T( "MelBot" ) && message.StartsWith( _T( "<" ) ) && message.Contains( _T( ">" ) ) ) {
+	if ( ( who == _T( "MelBot" ) || who == _T( "[BOT]tizbacbridgebot" ) )
+            && message.StartsWith( _T( "<" ) ) && message.Contains( _T( ">" ) ) )
+    {
 		wxString who2;
 		wxString message2;
 		who2 = message.BeforeFirst( '>' ).AfterFirst( '<' ) + _T( "@IRC" );
@@ -977,11 +995,8 @@ void ChatPanel::_SetChannel( Channel* channel )
 
 void ChatPanel::Say( const wxString& message )
 {
-	wxLogDebugFunc( _T( "" ) );
-	wxString messagecopy = message;
-	messagecopy.Replace( _T("\r\n"), _T("\n") );
-	messagecopy.Replace( _T("\r"), _T("\n") );
-	wxStringTokenizer lines( messagecopy, _T( '\n' ) );
+	wxLogDebugFunc( message );
+	wxStringTokenizer lines( message, _T( '\n' ) );
 	if ( lines.CountTokens() > 5 ) {
 		wxMessageDialog dlg( &m_ui.mw(), wxString::Format( _( "Are you sure you want to paste %d lines?" ), lines.CountTokens() ), _( "Flood warning" ), wxYES_NO );
 		if ( dlg.ShowModal() == wxID_NO ) return;
@@ -1523,37 +1538,37 @@ void ChatPanel::OnUserMenuModeratorMute( wxCommandEvent& event )
 	if ( !m_ui.AskText( _( "Mute user" ), _( "Duration:" ), duration ) ) return;
 	long int dur = 0;
 	duration.ToLong( &dur, dur );
-	m_ui.GetServer().ModeratorMute( m_channel->GetName(), GetSelectedUser()->GetNick(), ( int ) dur, false );
+	m_ui.GetServer().ModeratorMute( m_channel->GetName(), GetSelectedUser()->GetNick(), ( int ) dur, true );
 }
 
 
 void ChatPanel::OnUserMenuModeratorMute5( wxCommandEvent& event )
 {
-	m_ui.GetServer().ModeratorMute( m_channel->GetName(), GetSelectedUser()->GetNick(), 5, false );
+	m_ui.GetServer().ModeratorMute( m_channel->GetName(), GetSelectedUser()->GetNick(), 5, true );
 }
 
 
 void ChatPanel::OnUserMenuModeratorMute10( wxCommandEvent& event )
 {
-	m_ui.GetServer().ModeratorMute( m_channel->GetName(), GetSelectedUser()->GetNick(), 10, false );
+	m_ui.GetServer().ModeratorMute( m_channel->GetName(), GetSelectedUser()->GetNick(), 10, true );
 }
 
 
 void ChatPanel::OnUserMenuModeratorMute30( wxCommandEvent& event )
 {
-	m_ui.GetServer().ModeratorMute( m_channel->GetName(), GetSelectedUser()->GetNick(), 30, false );
+	m_ui.GetServer().ModeratorMute( m_channel->GetName(), GetSelectedUser()->GetNick(), 30, true );
 }
 
 
 void ChatPanel::OnUserMenuModeratorMute120( wxCommandEvent& event )
 {
-	m_ui.GetServer().ModeratorMute( m_channel->GetName(), GetSelectedUser()->GetNick(), 120, false );
+	m_ui.GetServer().ModeratorMute( m_channel->GetName(), GetSelectedUser()->GetNick(), 120, true );
 }
 
 
 void ChatPanel::OnUserMenuModeratorMute1440( wxCommandEvent& event )
 {
-	m_ui.GetServer().ModeratorMute( m_channel->GetName(), GetSelectedUser()->GetNick(), 1440, false );
+	m_ui.GetServer().ModeratorMute( m_channel->GetName(), GetSelectedUser()->GetNick(), 1440, true );
 }
 
 
@@ -1633,7 +1648,7 @@ void ChatPanel::OnMenuToggleAppend( wxCommandEvent& event )
 void ChatPanel::UpdateNicklistHighlights()
 {
     if ( m_show_nick_list && (m_nicklist != 0) ) {
-      m_nicklist->UpdateHighlights();
+      m_nicklist->RefreshVisibleItems();
     }
 }
 

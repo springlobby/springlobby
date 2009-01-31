@@ -4,7 +4,7 @@
 #include "../customlistctrl.h"
 
 class wxMenu;
-class Replay;
+struct Replay;
 class wxListEvent;
 class wxCommandEvent;
 class Ui;

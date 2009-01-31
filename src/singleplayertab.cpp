@@ -12,6 +12,7 @@
 
 #include "singleplayertab.h"
 #include "mapctrl.h"
+#include "mapselectdialog.h"
 #include "utils.h"
 #include "uiutils.h"
 #include "ui.h"
@@ -31,9 +32,10 @@ BEGIN_EVENT_TABLE(SinglePlayerTab, wxPanel)
 
   EVT_CHOICE( SP_MAP_PICK, SinglePlayerTab::OnMapSelect )
   EVT_CHOICE( SP_MOD_PICK, SinglePlayerTab::OnModSelect )
-  EVT_BUTTON( SP_ADD_BOT , SinglePlayerTab::OnAddBot )
-  EVT_BUTTON( SP_START , SinglePlayerTab::OnStart )
-  EVT_BUTTON( SP_RESET , SinglePlayerTab::OnReset )
+  EVT_BUTTON( SP_BROWSE_MAP, SinglePlayerTab::OnMapBrowse )
+  EVT_BUTTON( SP_ADD_BOT, SinglePlayerTab::OnAddBot )
+  EVT_BUTTON( SP_RESET, SinglePlayerTab::OnReset )
+  EVT_BUTTON( SP_START, SinglePlayerTab::OnStart )
   EVT_CHECKBOX( SP_RANDOM, SinglePlayerTab::OnRandomCheck )
 
 END_EVENT_TABLE()
@@ -63,8 +65,8 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, Ui& ui, MainSinglePlayerTab& 
   m_map_pick = new wxChoice( this, SP_MAP_PICK );
   m_ctrl_sizer->Add( m_map_pick, 1, wxALL, 5 );
 
-//  m_select_btn = new wxButton( this, SP_BROWSE_MAP, _T("..."), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
-//  m_ctrl_sizer->Add( m_select_btn, 0, wxBOTTOM|wxRIGHT|wxTOP, 5 );
+  m_select_btn = new wxButton( this, SP_BROWSE_MAP, _T("..."), wxDefaultPosition, wxSize(CONTROL_HEIGHT, CONTROL_HEIGHT), wxBU_EXACTFIT );
+  m_ctrl_sizer->Add( m_select_btn, 0, wxBOTTOM|wxRIGHT|wxTOP, 5 );
 
   m_mod_lbl = new wxStaticText( this, -1, _("Mod:") );
   m_ctrl_sizer->Add( m_mod_lbl, 0, wxALL, 5 );
@@ -215,7 +217,7 @@ bool SinglePlayerTab::ValidSetup()
     return false;
   }
 
-  if ( m_battle.GetNumBots() == 1 )
+  if ( m_battle.GetNumUsers() == 1 )
   {
       wxLogWarning(_T("trying to start sp game without bot"));
       if ( customMessageBox(SL_MAIN_ICON, _("Continue without adding a bot first?.\n The game will be over pretty fast.\n "),
@@ -240,22 +242,43 @@ void SinglePlayerTab::OnModSelect( wxCommandEvent& event )
 }
 
 
+void SinglePlayerTab::OnMapBrowse( wxCommandEvent& event )
+{
+	wxLogDebugFunc( _T("") );
+	MapSelectDialog dlg( &m_ui.mw(), m_ui );
+
+	if ( dlg.ShowModal() == wxID_OK && dlg.GetSelectedMap() != NULL ) {
+		wxLogDebugFunc( dlg.GetSelectedMap()->name );
+		const wxString mapname = RefineMapname( dlg.GetSelectedMap()->name );
+		const int idx = m_map_pick->FindString( mapname, true /*case sensitive*/ );
+		if ( idx != wxNOT_FOUND ) SetMap( idx );
+	}
+}
+
+
 void SinglePlayerTab::OnAddBot( wxCommandEvent& event )
 {
-  if ( m_battle.GetNumBots() > 15 )
+  if ( m_battle.GetNumUsers() > 15 )
   {
     customMessageBoxNoModal( SL_MAIN_ICON, _("Spring only supports up to 16 different teams"), _("Num players error"), wxICON_EXCLAMATION );
     return;
   }
   AddBotDialog dlg( this, m_battle, true );
   if ( dlg.ShowModal() == wxID_OK ) {
-    int x = 0, y = 0, handicap = 0;
+    int x = 0, y = 0;
     m_battle.GetFreePosition( x, y );
-    wxColour col = m_battle.GetFreeColour( NULL );
-    int i = m_battle.AddBot( m_battle.GetFreeAlly(), x, y, handicap, dlg.GetAI() );
-    BattleBot* bot = m_battle.GetBot( i );
-    ASSERT_LOGIC( bot != 0, _T("bot == 0") );
-    bot->bs.colour = col;
+    UserBattleStatus bs;
+		bs.colour = m_battle.GetFreeColour();
+    bs.posx = x;
+    bs.posy = y;
+    bs.ally = m_battle.GetFreeAlly();
+    bs.team = m_battle.GetFreeTeamNum( false );
+    bs.owner = m_battle.GetMe().GetNick();
+    bs.aishortname = dlg.GetAIShortName();
+    bs.aiversion = dlg.GetAIVersion();
+    User& bot = m_battle.OnBotAdded( _T("Bot") + TowxString( bs.team ), bs  );
+    ASSERT_LOGIC( &bot != 0, _T("bot == 0") );
+
     m_minimap->UpdateMinimap();
   }
 }

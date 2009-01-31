@@ -5,6 +5,7 @@
 #include <wx/string.h>
 #include <wx/log.h>
 #include <stdexcept>
+#include <algorithm>
 
 #include "socket.h"
 #include "server.h"
@@ -224,14 +225,14 @@ bool Socket::Receive( wxString& data )
 wxString Socket::GetHandle()
 {
 	wxString handle;
-	#ifdef __WXMSW
+	#ifdef __WXMSW__
 
     IP_ADAPTER_INFO AdapterInfo[16];       // Allocate information for 16 cards
     DWORD dwBufLen = sizeof(AdapterInfo);  // Save memory size of buffer
 
     DWORD dwStatus = GetAdaptersInfo ( AdapterInfo, &dwBufLen); // Get info
 		if (dwStatus != NO_ERROR) return _T(""); // Check status
-    for (unsigned int i=0; i<MIN(6, AdapterInfo[0].AddressLength); i++)
+    for (unsigned int i=0; i<std::min( (unsigned int)6, (unsigned int)AdapterInfo[0].AddressLength); i++)
     {
         handle += TowxString(((unsigned int)AdapterInfo[0].Address[i])&255);
         if (i != 5) handle += _T(':');

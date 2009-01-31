@@ -335,31 +335,32 @@ void CustomVirtListCtrl<T>::noOp(wxMouseEvent& event)
     event.Skip();
 }
 
-template < class T >
-void CustomVirtListCtrl<T>::UpdateHighlights()
-{
-  Freeze();
-  try {
-      long item = -1;
-      while ( true ) {
-        item = GetNextItem(item, wxLIST_NEXT_ALL, wxLIST_STATE_DONTCARE);
-        if ( item == -1 )
-          break;
-        HighlightItem( item );
-      }
-  } catch(...) {}
-  Thaw();
-}
+//template < class T >
+//void CustomVirtListCtrl<T>::UpdateHighlights()
+//{
+//  Freeze();
+//  try {
+//      long item = -1;
+//      while ( true ) {
+//        item = GetNextItem(item, wxLIST_NEXT_ALL, wxLIST_STATE_DONTCARE);
+//        if ( item == -1 )
+//          break;
+//        HighlightItem( item );
+//      }
+//  } catch(...) {}
+//  Thaw();
+//}
 
 template < class T >
-void CustomVirtListCtrl<T>::HighlightItemUser( long item, const wxString& name )
+wxListItemAttr* CustomVirtListCtrl<T>::HighlightItemUser( long item, const wxString& name ) const
 {
-   if ( m_highlight && useractions().DoActionOnUser( m_highlightAction, name ) ) {
-        wxColor c = sett().GetGroupHLColor( useractions().GetGroupOfUser( name ) );
-        SetItemBackgroundColour( item, c );
+    static wxListItemAttr att;
+  if ( m_highlight && useractions().DoActionOnUser( m_highlightAction, name ) ) {
+        att.SetBackgroundColour( sett().GetGroupHLColor( useractions().GetGroupOfUser( name ) ) );
+        return &att;
   }
   else
-    SetItemBackgroundColour( item, m_bg_color );
+    return NULL;
 }
 
 template < class T >

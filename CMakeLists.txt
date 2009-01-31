@@ -45,7 +45,7 @@ SET( OPTION_TRANSLATION_SUPPORT
 
 # Here you can define, what Libraries of wxWidgets you need for your Application. You can figure out what Libraries you need here:
 # http://www.wxwidgets.org/manuals/2.8/wx_librarieslist.html
-SET(wxWidgets_USE_LIBS base core gl net adv qa richtext aui )
+SET(wxWidgets_USE_LIBS base core gl net adv qa aui )
 
 # We need the Find package for wxWidgets to work
 IF (NOT WIN32)
@@ -62,7 +62,7 @@ IF (NOT WIN32)
     ENDIF(wxWidgets_FOUND)
 ELSE (NOT WIN32)
     INCLUDE_DIRECTORIES( ${wxWidgets_INCLUDE_DIRS} )
-    SET(wxWidgets_LIBRARIES wx_baseu-2.8-i586-mingw32msvc wx_mswu_core-2.8-i586-mingw32msvc wx_baseu_net-2.8-i586-mingw32msvc wx_mswu_adv-2.8-i586-mingw32msvc wx_mswu_qa-2.8-i586-mingw32msvc wx_mswu_richtext-2.8-i586-mingw32msvc wx_mswu_aui-2.8-i586-mingw32msvc )
+    SET(wxWidgets_LIBRARIES wx_baseu-2.8-i586-mingw32msvc wx_mswu_core-2.8-i586-mingw32msvc wx_baseu_net-2.8-i586-mingw32msvc wx_mswu_adv-2.8-i586-mingw32msvc wx_mswu_qa-2.8-i586-mingw32msvc wx_mswu_aui-2.8-i586-mingw32msvc )
     link_directories( ${wxWidgets_LIB_DIR} )
 ENDIF(NOT WIN32)
 
@@ -226,7 +226,7 @@ SET(SpringLobbySrc
 	src/maintorrenttab.cpp
 	src/mainwindow.cpp
 	src/mapctrl.cpp
-	src/maplistctrl.cpp
+	src/mapgridctrl.cpp
 	src/mapselectdialog.cpp
 	src/mmoptionmodel.cpp
 	src/mmoptionswrapper.cpp
@@ -315,6 +315,9 @@ IF(WIN32)
     SET(SpringSettings_RC_FILE ${CMAKE_CURRENT_BINARY_DIR}/ss_icon.o )
     SET(SpringLobbySrc ${SpringLobbySrc} src/Helper/listctrl.cpp)
     SET(StandAloneSettings ${StandAloneSettings} src/settings++/settings.rc)
+ELSE(WIN32)
+# If we don't build for windows, include some source code checks as pre-build step.
+    ADD_CUSTOM_TARGET(test_susynclib ALL COMMAND tools/test-susynclib.awk src/springunitsynclib.cpp WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
 ENDIF(WIN32)
 
 #----------------------------------------------------------------------------------------------------

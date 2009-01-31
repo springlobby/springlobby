@@ -48,16 +48,6 @@ BattleroomMMOptionsTab::BattleroomMMOptionsTab(  IBattle& battle, wxWindow* pare
   #endif
 	m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
-	m_mod_options_sizer = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, _("Mod Options") ), wxVERTICAL );
-	m_mod_layout = new wxBoxSizer( wxVERTICAL);
-	setupOptionsSizer(m_mod_layout,OptionsWrapper::ModOption);
-	m_mod_options_sizer->Add( m_mod_layout, 1, wxEXPAND, 5 );
-
-	m_map_options_sizer = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, _("Map Options") ), wxVERTICAL );
-	m_map_layout = new wxBoxSizer( wxVERTICAL);
-	setupOptionsSizer(m_map_layout,OptionsWrapper::MapOption);
-	m_map_options_sizer->Add( m_map_layout, 1, wxEXPAND, 5 );
-
   wxStaticBoxSizer* m_preset_sizer;
   m_preset_sizer = new wxStaticBoxSizer( new wxStaticBox( this, -1, _("Manage Presets") ), wxHORIZONTAL );
 
@@ -90,7 +80,18 @@ BattleroomMMOptionsTab::BattleroomMMOptionsTab(  IBattle& battle, wxWindow* pare
 
     m_map_mod_container = new wxBoxSizer( wxVERTICAL );
 
-  m_main_sizer->Add( m_preset_sizer, 0, wxALL|wxEXPAND, 5 );
+	m_mod_options_sizer = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, _("Mod Options") ), wxVERTICAL );
+	m_mod_layout = new wxBoxSizer( wxVERTICAL);
+	setupOptionsSizer(m_mod_layout,OptionsWrapper::ModOption);
+	m_mod_options_sizer->Add( m_mod_layout, 1, wxEXPAND, 5 );
+
+	m_map_options_sizer = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, _("Map Options") ), wxVERTICAL );
+	m_map_layout = new wxBoxSizer( wxVERTICAL);
+	setupOptionsSizer(m_map_layout,OptionsWrapper::MapOption);
+	m_map_options_sizer->Add( m_map_layout, 1, wxEXPAND, 5 );
+
+
+    m_main_sizer->Add( m_preset_sizer, 0, wxALL|wxEXPAND, 5 );
 	m_map_mod_container->Add( m_mod_options_sizer, 0, wxALL|wxEXPAND, 5 );
 	m_map_mod_container->Add( m_map_options_sizer, 0, wxALL|wxEXPAND, 5 );
 	m_main_sizer->Add( m_map_mod_container, 1, wxALL|wxEXPAND, 5 );
@@ -125,22 +126,34 @@ void BattleroomMMOptionsTab::setupOptionsSizer( wxBoxSizer* parent_sizer, Option
 {
     const IUnitSync::OptionMapSection& sections = m_battle.CustomBattleOptions().opts[optFlag].section_map;
 
+    unsigned int num_options = 0;
     IUnitSync::OptionMapSectionConstIter it = sections.begin();
     for ( ; it != sections.end(); ++it )
     {
         wxStaticBoxSizer* section_sizer = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, it->second.name ), wxVERTICAL );
         //only add non-empty sizer
-        if ( setupOptionsSectionSizer( it->second, section_sizer, optFlag ) )
+        if ( setupOptionsSectionSizer( it->second, section_sizer, optFlag ) ) {
             parent_sizer->Add( section_sizer, 0 , wxALL, section_sizer->GetChildren().size() > 0 ? 5 : 0 );
+            num_options++;
+        }
         else
             delete section_sizer;
     }
 
     //adds options with no asociated section
     mmOptionSection dummy;
-    if ( setupOptionsSectionSizer( dummy, parent_sizer, optFlag ) == 0 ) {
-        wxStaticText* none_found = new wxStaticText( this, wxID_ANY, _("no options available") );
-        parent_sizer->Add( none_found, 0, wxALL, 3 );
+    wxBoxSizer* section_sizer = new wxBoxSizer( wxVERTICAL );
+    if ( setupOptionsSectionSizer( dummy, section_sizer, optFlag ) == 0 ) {
+        if ( num_options == 0 ) {
+            wxString name = wxString::Format( _T("%d"),optFlag) + wxsep + _T("no_opts");
+            wxStaticText* none_found = new wxStaticText( this, wxID_ANY, _("no options available"),
+                                            wxDefaultPosition, wxDefaultSize, 0, name  );
+            m_statictext_map[name] = none_found;
+            parent_sizer->Add( none_found, 0, wxALL, 3 );
+        }
+    }
+    else {
+       parent_sizer->Add( section_sizer, 0 , wxALL, section_sizer->GetChildren().size() > 0 ? 5 : 0 );
     }
 
 }

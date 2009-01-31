@@ -96,7 +96,6 @@ typedef void (USYNC_CALL_CONV *SetSpringConfigStringPtr)(const char*, const char
 typedef void (USYNC_CALL_CONV *SetSpringConfigIntPtr)(const char*, int );
 typedef void (USYNC_CALL_CONV *SetSpringConfigFloatPtr)(const char*, float );
 
-
 typedef int (USYNC_CALL_CONV *ProcessUnitsPtr)(void);
 typedef void (USYNC_CALL_CONV *AddArchivePtr)(const char* name);
 typedef unsigned int (USYNC_CALL_CONV *GetArchiveChecksumPtr)(const char* arname);
@@ -118,11 +117,14 @@ typedef const char* (USYNC_CALL_CONV *GetPrimaryModArchiveListPtr)(int arnr);
 typedef unsigned int (USYNC_CALL_CONV *GetPrimaryModChecksumFromNamePtr)(const char* name);
 typedef unsigned int (USYNC_CALL_CONV *GetModValidMapCountPtr)();
 typedef const char* (USYNC_CALL_CONV *GetModValidMapPtr)(int index);
+
 typedef int (USYNC_CALL_CONV *GetLuaAICountPtr)();
 typedef const char* (USYNC_CALL_CONV *GetLuaAINamePtr)(int aiIndex);
 typedef const char* (USYNC_CALL_CONV *GetLuaAIDescPtr)(int aiIndex);
+
 typedef int (USYNC_CALL_CONV *GetMapOptionCountPtr)(const char* name);
 typedef int (USYNC_CALL_CONV *GetModOptionCountPtr)();
+typedef int (USYNC_CALL_CONV *GetSkirmishAIOptionCountPtr)(int index);
 typedef const char* (USYNC_CALL_CONV *GetOptionKeyPtr)(int optIndex);
 typedef const char* (USYNC_CALL_CONV *GetOptionNamePtr)(int optIndex);
 typedef const char* (USYNC_CALL_CONV *GetOptionDescPtr)(int optIndex);
@@ -141,6 +143,7 @@ typedef const char* (USYNC_CALL_CONV *GetOptionListDefPtr)(int optIndex);
 typedef const char* (USYNC_CALL_CONV *GetOptionListItemKeyPtr)(int optIndex, int itemIndex);
 typedef const char* (USYNC_CALL_CONV *GetOptionListItemNamePtr)(int optIndex, int itemIndex);
 typedef const char* (USYNC_CALL_CONV *GetOptionListItemDescPtr)(int optIndex, int itemIndex);
+
 typedef int (USYNC_CALL_CONV *OpenArchivePtr)(const char* name);
 typedef void (USYNC_CALL_CONV *CloseArchivePtr)(int archive);
 typedef int (USYNC_CALL_CONV *FindFilesArchivePtr)(int archive, int cur, char* nameBuf, int* size);
@@ -148,6 +151,12 @@ typedef int (USYNC_CALL_CONV *OpenArchiveFilePtr)(int archive, const char* name)
 typedef int (USYNC_CALL_CONV *ReadArchiveFilePtr)(int archive, int handle, void* buffer, int numBytes);
 typedef void (USYNC_CALL_CONV *CloseArchiveFilePtr)(int archive, int handle);
 typedef int (USYNC_CALL_CONV *SizeArchiveFilePtr)(int archive, int handle);
+
+typedef int (USYNC_CALL_CONV *GetSkirmishAICountPtr)();
+typedef int (USYNC_CALL_CONV *GetSkirmishAIInfoCountPtr)(int index);
+typedef const char* (USYNC_CALL_CONV *GetInfoKeyPtr)(int index);
+typedef const char* (USYNC_CALL_CONV *GetInfoValuePtr)(int index);
+typedef const char* (USYNC_CALL_CONV *GetInfoDescriptionPtr)(int index);
 
 /// Unitsync functions wrapping lua parser
 typedef void (USYNC_CALL_CONV *lpClosePtr)();
@@ -200,7 +209,13 @@ typedef const char* (USYNC_CALL_CONV *lpGetStrKeyStrValPtr)(const char* key, con
 
 /**
  * Primitive class handeling the unitsync library.
- * This class is thread safe but may block execution in case two threads use it at the same time.
+ *
+ * This class is - in a limited way - thread safe but may block execution
+ * in case two threads use it at the same time.  The thread safety ensures
+ * there can never be multiple threads executing unitsync functions at the
+ * same time.  However, many unitsync functions use (hidden) global state,
+ * so often there is a need for running multiple unitsync methods while
+ * holding a single lock continuously.
  */
 class SpringUnitSyncLib
 {
@@ -208,11 +223,8 @@ class SpringUnitSyncLib
 
     /**
      * Constructor.
-     * @param path path to the unitsync lib, if specified the lib will be loaded when created.
-     * @param DoInit specifies whenever init function should be attempted to run after successful load.
-     * @see Load().
-    */
-    SpringUnitSyncLib( const wxString& path = wxEmptyString, bool DoInit = false, const wxString& ForceConfigFilePath = _T("") );
+     */
+    SpringUnitSyncLib();
 
     /**
      * Destructor, unloads unitsync if loaded.
@@ -221,26 +233,18 @@ class SpringUnitSyncLib
 
     /**
      * Loads the unitsync library from path.
-     * @param path ath to the unitsync lib.
-     * @param DoInit specifies whenever init function should be attempted to run after successful load.
+     * @param path path to the unitsync lib.
      * @param ForceConfigFilePath if set forces unitsync to use pointed config file, if empty leaves to spring's default
      * @see Unload().
      * @note Throws runtime_error if load failed.
      */
-    void Load( const wxString& path, bool DoInit, const wxString& ForceConfigFilePath );
+    void Load( const wxString& path, const wxString& ForceConfigFilePath );
 
     /**
      * Unload the unitsync library. Does nothing if not loaded.
      * @see Load().
      */
     void Unload();
-
-    /**
-     * Reloads the unitsync library.
-     * @note Throws logic_error if no path has been set in constructor or in Load() call. Throws runtime_error if reloading fails.
-     * @see Load().
-     */
-    void Reload( bool DoInit );
 
     /**
      * Returns true if the library is loaded.
@@ -259,14 +263,22 @@ class SpringUnitSyncLib
      */
     wxArrayString GetUnitsyncErrors();
 
-    bool Init();
-
     bool VersionSupports( IUnitSync::GameFeature feature );
 
 
     int GetModIndex( const wxString& name );
 
     wxString GetSpringVersion();
+
+    /**
+     * Loads unitsync from any number of paths in succession,
+     * queries the Spring versions supported by these unitsyncs,
+     * and returns those.
+     *
+     * This is done by a single function because this "transaction"
+     * needs to hold the unitsync lock the entire time.
+     */
+    std::map<wxString, wxString> GetSpringVersionList(const std::map<wxString, wxString>& usync_paths);
 
     wxString GetSpringDataDir();
     wxString GetConfigFilePath();
@@ -276,6 +288,7 @@ class SpringUnitSyncLib
     wxString GetMapName( int index );
     int GetMapArchiveCount( int index );
     wxString GetMapArchiveName( int arnr );
+    wxArrayString GetMapDeps( int index );
 
     /**
      * @brief Get information about a map.
@@ -316,6 +329,7 @@ class SpringUnitSyncLib
     int GetPrimaryModArchiveCount( int index );
     wxString GetPrimaryModArchiveList( int arnr );
     int GetPrimaryModChecksumFromName( const wxString& name );
+    wxArrayString GetModDeps( int index );
 
     wxArrayString GetSides( const wxString& modName );
 
@@ -360,6 +374,7 @@ class SpringUnitSyncLib
 
     int GetMapOptionCount( const wxString& name );
     int GetModOptionCount( const wxString& name );
+    int GetAIOptionCount( int index );
     wxString GetOptionKey( int optIndex );
     wxString GetOptionName( int optIndex );
     wxString GetOptionDesc( int optIndex );
@@ -394,6 +409,15 @@ class SpringUnitSyncLib
     void SetSpringConfigString( const wxString& key, const wxString& value );
     void SetSpringConfigInt( const wxString& key, int value );
     void SetSpringConfigFloat( const wxString& key, const float value );
+
+    /// AI info
+    int GetSkirmishAICount( const wxString& modname );
+    /**
+     * Get next search result.
+     * @param the AI index within range of GetSkirmishAIInfoCount
+     * @return an array made of blocks with this layout { key, value, description }
+     */
+    wxArrayString GetAIInfo( int index );
 
     /// lua parser
 
@@ -452,7 +476,7 @@ class SpringUnitSyncLib
     wxDynamicLibrary* m_libhandle;
 
     //! Critical section controlling access to unitsync functions.
-    wxCriticalSection m_lock;
+    mutable wxCriticalSection m_lock;
 
     //! Path to unitsync.
     wxString m_path;
@@ -460,13 +484,22 @@ class SpringUnitSyncLib
     //! the current loaded mod.
     wxString m_current_mod;
 
-    //! Macro that checks if a function is present/loaded, unitsync is loaded, and locks it on call.
-    #define InitLib( arg ) { LOCK_UNITSYNC; UNITSYNC_EXCEPTION( m_loaded, _T("Unitsync not loaded.") ); UNITSYNC_EXCEPTION( arg, _T("Function was not in unitsync library.") ); }
-
     /**
      * Loads a function pointer from unitsync.
      */
     void* _GetLibFuncPtr( const wxString& name );
+
+    /**
+     * Loads the unitsync library from path.
+     * @note this function is not threadsafe if called from code not locked.
+     * @see Load()
+     */
+    void _Load( const wxString& path );
+
+    /**
+     * Initializes unitsync.
+     */
+    void _Init();
 
     /**
      * Internal Unload() function.
@@ -481,6 +514,8 @@ class SpringUnitSyncLib
     bool _IsLoaded();
 
     void _ConvertSpringMapInfo( const SpringMapInfo& in, MapInfo& out );
+
+    void _SetCurrentMod( const wxString& modname );
 
     /**
      * \defgroup DllFuncPointers Pointers to the functions in unitsync.
@@ -545,11 +580,14 @@ class SpringUnitSyncLib
     GetPrimaryModChecksumFromNamePtr m_get_primary_mod_checksum_from_name;
     GetModValidMapCountPtr m_get_mod_valid_map_count;
     GetModValidMapPtr m_get_valid_map;
+
     GetLuaAICountPtr m_get_luaai_count;
     GetLuaAINamePtr m_get_luaai_name;
     GetLuaAIDescPtr m_get_luaai_desc;
+
     GetMapOptionCountPtr m_get_map_option_count;
-    GetModOptionCountPtr m_get_Mod_option_count;
+    GetModOptionCountPtr m_get_mod_option_count;
+		GetSkirmishAIOptionCountPtr m_get_skirmish_ai_option_count;
     GetOptionKeyPtr m_get_option_key;
     GetOptionNamePtr m_get_option_name;
     GetOptionDescPtr m_get_option_desc;
@@ -568,6 +606,7 @@ class SpringUnitSyncLib
     GetOptionListItemKeyPtr m_get_option_list_item_key;
     GetOptionListItemNamePtr m_get_option_list_item_name;
     GetOptionListItemDescPtr m_get_option_list_item_desc;
+
     OpenArchivePtr m_open_archive;
     CloseArchivePtr m_close_archive;
     FindFilesArchivePtr m_find_Files_archive;
@@ -575,6 +614,7 @@ class SpringUnitSyncLib
     ReadArchiveFilePtr m_read_archive_file;
     CloseArchiveFilePtr m_close_archive_file;
     SizeArchiveFilePtr m_size_archive_file;
+
     SetSpringConfigFilePtr m_set_spring_config_file_path;
     GetSpringConfigFilePtr m_get_spring_config_file_path;
     SetSpringConfigFloatPtr m_set_spring_config_float;
@@ -583,6 +623,12 @@ class SpringUnitSyncLib
     GetSpringConfigStringPtr m_get_spring_config_string;
     SetSpringConfigStringPtr m_set_spring_config_string;
     SetSpringConfigIntPtr m_set_spring_config_int;
+
+		GetSkirmishAICountPtr m_get_skirmish_ai_count;
+		GetSkirmishAIInfoCountPtr m_get_skirmish_ai_info_count;
+		GetInfoKeyPtr m_get_skirmish_ai_info_key;
+		GetInfoValuePtr m_get_skirmish_ai_info_value;
+		GetInfoDescriptionPtr m_get_skirmish_ai_info_description;
 
     // lua parser section
 

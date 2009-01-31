@@ -6,7 +6,6 @@
 #include "filelistfilter.h"
 
 #include "../customlistctrl.h"
-#include <vector>
 #include <wx/intl.h>
 
 class wxMenu;

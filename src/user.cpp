@@ -14,28 +14,55 @@
 #include <wx/intl.h>
 
 User::User( Server& serv )
-    : CommonUser( _T("none"),_T("unknown"),0 ),
-    m_serv(serv),
+    : CommonUser( _T(""),_T(""),0 ),
+    m_serv(&serv),
     m_battle(0),
-    m_flagicon_idx( icons().GetFlagIcon( _T("unknown") ) ),
+    m_flagicon_idx( icons().GetFlagIcon( _T("") ) ),
     m_rankicon_idx( icons().GetRankIcon( 0 ) ),
     m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) )
 {}
 
 User::User( const wxString& nick, Server& serv )
-    : CommonUser( nick,_T("unknown"),0 ),
-    m_serv(serv),
+    : CommonUser( nick,_T(""),0 ),
+    m_serv(&serv),
     m_battle(0),
-    m_flagicon_idx( icons().GetFlagIcon( _T("unknown") ) ),
+    m_flagicon_idx( icons().GetFlagIcon( _T("") ) ),
     m_rankicon_idx( icons().GetRankIcon( 0 ) ),
     m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) )
 {}
 
 User::User( const wxString& nick, const wxString& country, const int& cpu, Server& serv)
     : CommonUser( nick,country,cpu ),
-    m_serv(serv),
+    m_serv(&serv),
     m_battle(0),
     m_flagicon_idx( icons().GetFlagIcon( country ) ),
+    m_rankicon_idx( icons().GetRankIcon( 0 ) ),
+    m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) )
+{}
+
+User::User( const wxString& nick )
+    : CommonUser( nick, wxEmptyString, 0 ),
+    m_serv(0),
+    m_battle(0),
+    m_flagicon_idx( icons().GetFlagIcon( _T("") ) ),
+    m_rankicon_idx( icons().GetRankIcon( 0 ) ),
+    m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) )
+{}
+
+User::User( const wxString& nick, const wxString& country, const int& cpu )
+    : CommonUser( nick,country,cpu ) ,
+    m_serv(0),
+    m_battle(0),
+    m_flagicon_idx( icons().GetFlagIcon( country ) ),
+    m_rankicon_idx( icons().GetRankIcon( 0 ) ),
+    m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) )
+{}
+
+User::User()
+    : CommonUser( wxEmptyString, wxEmptyString, 0 ),
+    m_serv(0),
+    m_battle(0),
+    m_flagicon_idx( icons().GetFlagIcon( _T("") ) ),
     m_rankicon_idx( icons().GetRankIcon( 0 ) ),
     m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) )
 {}
@@ -61,13 +88,13 @@ void User::Said( const wxString& message ) const
 
 void User::Say( const wxString& message ) const
 {
-  m_serv.SayPrivate( m_nick, message );
+  GetServer().SayPrivate( m_nick, message );
 }
 
 
 void User::DoAction( const wxString& message ) const
 {
-  m_serv.DoActionPrivate( m_nick, message );
+  GetServer().DoActionPrivate( m_nick, message );
 }
 
 
@@ -100,57 +127,52 @@ void User::SetStatus( const UserStatus& status )
 void User::SetCountry( const wxString& country )
 {
     m_country = country;
-    m_flagicon_idx =  icons().GetFlagIcon( country );
-}
+    m_flagicon_idx = icons().GetFlagIcon( country );
+};
 
-/*
-void User::SetBattleStatus( const UserBattleStatus& status, bool setorder )
-{
-  int order = m_bstatus.order;
-  m_bstatus = status;
-  if ( !setorder ) m_bstatus.order = order;
-}
-*/
-
-void CommonUser::UpdateBattleStatus( const UserBattleStatus& status, bool setorder )
+void CommonUser::UpdateBattleStatus( const UserBattleStatus& status )
 {
 
-  //int order = m_bstatus.order;
-  //m_bstatus = status;
-  /// total 12 members to update.
+  // total 16 members to update.
 
-  if ( setorder ) m_bstatus.order=status.order; /// 1
-  m_bstatus.team=status.team;
-  m_bstatus.ally=status.ally;
-  m_bstatus.colour=status.colour;
-  m_bstatus.color_index=status.color_index;
-  m_bstatus.handicap=status.handicap;
-  m_bstatus.side=status.side;
-  m_bstatus.sync=status.sync;
-  m_bstatus.spectator=status.spectator;
-  m_bstatus.ready=status.ready;
+  m_bstatus.team = status.team;
+  m_bstatus.ally = status.ally;
+  m_bstatus.colour = status.colour;
+  m_bstatus.color_index = status.color_index;
+  m_bstatus.handicap = status.handicap;
+  m_bstatus.side = status.side;
+  m_bstatus.sync = status.sync;
+  m_bstatus.spectator = status.spectator;
+  m_bstatus.ready = status.ready;
+  if( !status.aishortname.IsEmpty() ) m_bstatus.aishortname = status.aishortname;
+  if( !status.aiversion.IsEmpty() ) m_bstatus.aiversion = status.aiversion;
+  if( !status.owner.IsEmpty() ) m_bstatus.owner = status.owner;
+  if( status.posx > 0 ) m_bstatus.posx = status.posx;
+  if( status.posy > 0 ) m_bstatus.posy = status.posy;
 
-  /// update ip and port if those were set.
-  if(!status.ip.empty())m_bstatus.ip=status.ip;
-  if(status.udpport!=0)m_bstatus.udpport=status.udpport;/// 12
-
-  //if ( !setorder ) m_bstatus.order = order;
-
+  // update ip and port if those were set.
+  if( !status.ip.IsEmpty() ) m_bstatus.ip = status.ip;
+  if( status.udpport != 0 ) m_bstatus.udpport = status.udpport;// 14
 }
 
 
-void User::SendMyUserStatus()
+void User::SendMyUserStatus() const
 {
-  m_serv.SendMyUserStatus();
+  GetServer().SendMyUserStatus();
 }
 
 
 bool User::ExecuteSayCommand( const wxString& cmd ) const
 {
   if ( cmd.BeforeFirst(' ').Lower() == _T("/me") ) {
-    m_serv.DoActionPrivate( m_nick, cmd.AfterFirst(' ') );
+    GetServer().DoActionPrivate( m_nick, cmd.AfterFirst(' ') );
     return true;
   }  else return false;
+}
+
+UserStatus::RankContainer User::GetRank()
+{
+	return GetStatus().rank;
 }
 
 wxString User::GetRankName(UserStatus::RankContainer rank)

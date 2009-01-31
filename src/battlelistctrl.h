@@ -7,22 +7,22 @@
 #include "customvirtlistctrl.h"
 
 class wxMenu;
-class Battle;
+class IBattle;
 class wxListEvent;
 class wxCommandEvent;
 class Ui;
 
 /** \brief The ListCtrll contained in BattleListTab dispalying all currently active battles with their infos
  * \todo DOCMEMORE */
-class BattleListCtrl : public CustomVirtListCtrl< Battle *>
+class BattleListCtrl : public CustomVirtListCtrl< IBattle *>
 {
   public:
     BattleListCtrl( wxWindow* parent, Ui& ui );
     ~BattleListCtrl();
 
-    void AddBattle( Battle& battle );
-    void RemoveBattle( Battle& battle );
-    void UpdateBattle( Battle& battle );
+    void AddBattle( IBattle& battle );
+    void RemoveBattle( IBattle& battle );
+    void UpdateBattle( IBattle& battle );
 
 
     void OnListRightClick( wxListEvent& event );
@@ -30,13 +30,12 @@ class BattleListCtrl : public CustomVirtListCtrl< Battle *>
     void OnDLMod( wxCommandEvent& event );
     void OnColClick( wxListEvent& event );
     virtual void SetTipWindowText( const long item_hit, const wxPoint position);
-    void HighlightItem( long item );
-    //void HighlightItem( long item, const wxString& name );
 
     //these are overloaded to use list in virtual style
     virtual wxString OnGetItemText(long item, long column) const;
     virtual int OnGetItemImage(long item) const;
     virtual int OnGetItemColumnImage(long item, long column) const;
+    wxListItemAttr * OnGetItemAttr(long item) const;
 
     enum {
         BLIST_LIST = wxID_HIGHEST,

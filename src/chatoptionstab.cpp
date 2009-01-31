@@ -258,7 +258,7 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( p
 
   bCustomColorsSizer->Add( bColorSizer, 1, wxEXPAND, 5 );
 
-  m_test_text = new wxTextCtrl( m_custom_colors, wxID_ANY, _("[19:35] ** Server ** Connected to TAS Server.\n[22:30] <Dude> hi everyone\n[22:30] ** Dude2 joined the channel.\n[22:30] * Dude2 thinks his colors looks nice\n[22:45] <Dude> Dude2: orl?\n[22:46] <Dude2> But could be better, should tweak them some more...\n"), wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY|wxTE_RICH );
+  m_test_text = new wxTextCtrl( m_custom_colors, wxID_ANY, _("[19:35] ** Server ** Connected to Server.\n[22:30] <Dude> hi everyone\n[22:30] ** Dude2 joined the channel.\n[22:30] * Dude2 thinks his colors looks nice\n[22:45] <Dude> Dude2: orl?\n[22:46] <Dude2> But could be better, should tweak them some more...\n"), wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY|wxTE_RICH );
   bCustomColorsSizer->Add( m_test_text, 1, wxALL|wxEXPAND, 5 );
 
   m_custom_colors->SetSizer( bCustomColorsSizer );
@@ -284,7 +284,7 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( p
 
   sbColorsSizer->Add( bColorsVSizer, 1, wxEXPAND, 5 );
 
-  bMainSizerV->Add( sbColorsSizer, 0, wxEXPAND|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
+  bMainSizerV->Add( sbColorsSizer, 0, wxEXPAND|wxBOTTOM|wxRIGHT|wxLEFT|wxTOP, 5 );
 
 
 
@@ -343,7 +343,7 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( p
   bMainSizerV->Add( bBotomSizer, 0, wxEXPAND|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
 
 
-  bMainSizerV->Add( 0, 0, 1, wxEXPAND, 5 );
+  bMainSizerV->Add( 0, 0, 1, wxEXPAND | wxALL, 5 );
 
   SetScrollRate( 3, 3 );
 
@@ -372,7 +372,7 @@ void ChatOptionsTab::UpdateTextSample()
   m_test_text->SetDefaultStyle(wxTextAttr( m_ts_color->GetColor(), m_bg_color->GetBackgroundColour(), m_chat_font ));
   m_test_text->AppendText( _T("[19:35]") );
   m_test_text->SetDefaultStyle(wxTextAttr( m_server_color->GetColor(), m_bg_color->GetBackgroundColour(), m_chat_font ));
-  m_test_text->AppendText( _T(" ** Server ** Connected to TAS Server.\n") );
+  m_test_text->AppendText( _T(" ** Server ** Connected to Server.\n") );
 
   m_test_text->SetDefaultStyle(wxTextAttr( m_ts_color->GetColor(), m_bg_color->GetBackgroundColour(), m_chat_font ));
   m_test_text->AppendText( _T("[22:30]") );
