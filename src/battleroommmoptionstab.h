@@ -48,12 +48,12 @@ class BattleroomMMOptionsTab : public wxScrolledWindow
 		void OnReloadControls(OptionsWrapper::GameOption flag);
 		void Update( const wxString& Tag );
 
-    void UpdatePresetList();
+        void UpdatePresetList();
 
-    void OnLoadPreset( wxCommandEvent& event );
-    void OnSavePreset( wxCommandEvent& event );
-    void OnDeletePreset( wxCommandEvent& event );
-    void OnSetModDefaultPreset( wxCommandEvent& event );
+        void OnLoadPreset( wxCommandEvent& event );
+        void OnSavePreset( wxCommandEvent& event );
+        void OnDeletePreset( wxCommandEvent& event );
+        void OnSetModDefaultPreset( wxCommandEvent& event );
 
 	protected:
 		 IBattle& m_battle;
@@ -65,11 +65,11 @@ class BattleroomMMOptionsTab : public wxScrolledWindow
 		wxBoxSizer* m_map_layout;
 		wxBoxSizer* m_map_mod_container;
 
-    wxButton* m_load_btn;
-    wxButton* m_save_btn;
-    wxButton* m_delete_btn;
-    wxButton* m_default_btn;
-    wxComboBox* m_options_preset_sel;
+        wxButton* m_load_btn;
+        wxButton* m_save_btn;
+        wxButton* m_delete_btn;
+        wxButton* m_default_btn;
+        wxComboBox* m_options_preset_sel;
 
 		OptionsWrapper* m_mapmodoptions;
 
