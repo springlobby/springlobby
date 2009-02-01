@@ -61,10 +61,10 @@
 #define USER_BOX_ICON_HALFHEIGHT (USER_BOX_ICON_HEIGHT / 2)
 
 
-const wxSize user_box_size(USER_BOX_ICON_WIDTH + 2 * USER_BOX_ICON_PADDING,
-			   USER_BOX_ICON_HEIGHT + 2 * USER_BOX_ICON_PADDING);
+const wxSize user_box_icon_size ( USER_BOX_ICON_WIDTH + 2 * USER_BOX_ICON_PADDING,
+				  USER_BOX_ICON_HEIGHT + 2 * USER_BOX_ICON_PADDING );
 
-const wxSize user_box_expanded_size(USER_BOX_EXPANDED_WIDTH, USER_BOX_EXPANDED_HEIGHT);
+const wxSize user_box_expanded_size ( USER_BOX_EXPANDED_WIDTH, USER_BOX_EXPANDED_HEIGHT );
 
 // i think this is ok as temp measure to avoid warnings
 // until we drop support for wx26
@@ -844,10 +844,11 @@ wxRect MapCtrl::GetUserRect( const User& user, bool selected )
   wxPoint absolute_position ( GetTranslatedScaledUserMapPosition(user) );
   wxPoint box_start ( absolute_position.x - USER_BOX_ICON_HALFWIDTH - USER_BOX_ICON_PADDING,
 		      absolute_position.y - USER_BOX_ICON_HALFWIDTH - USER_BOX_ICON_PADDING );
-  wxRect user_box ( box_start, selected ? user_box_expanded_size : user_box_size );
+  wxRect user_box ( box_start, selected ? user_box_expanded_size : user_box_icon_size );
   wxRect cram_into_box ( GetDrawableRect() );
   wxPoint offset ( ::FitInside(user_box, cram_into_box) );
   user_box.Offset(offset);
+
   return user_box;
 }
 
