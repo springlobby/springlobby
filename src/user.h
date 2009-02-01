@@ -96,6 +96,15 @@ class CommonUser
         virtual void SetStatus( const UserStatus& status );
 
         UserBattleStatus& BattleStatus() { return m_bstatus; }
+
+    /** Read-only variant of BattleStatus() above.
+     */
+    const UserBattleStatus&
+    BattleStatus() const
+    {
+	return m_bstatus;
+    }
+
         //void SetBattleStatus( const UserBattleStatus& status );/// dont use this to avoid overwriting data like ip and port, use following method.
         void UpdateBattleStatus( const UserBattleStatus& status );
 

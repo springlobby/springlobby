@@ -1,4 +1,4 @@
-/* Copyright (C) 2007, 2008 The SpringLobby Team. All rights reserved. */
+/* Copyright (C) 2007, 2008, 2009 The SpringLobby Team. All rights reserved. */
 
 #include <wx/panel.h>
 #include <wx/dcclient.h>
@@ -38,6 +38,33 @@
 #include "images/not_found_icon.xpm"
 #include "images/download_map.xpm"
 #include "images/reload_map.xpm"
+
+#define USER_BOX_EXPANDED_HEIGHT 70
+#define USER_BOX_EXPANDED_WIDTH 75
+
+/** How much padding to place around the icon of a user box.
+ */
+#define USER_BOX_ICON_PADDING 2
+
+
+/** Width of the e.g. player or bot images that mark a player/bot's
+ * chosen start position.
+ */
+#define USER_BOX_ICON_WIDTH 16
+
+/** Height of the e.g. player or bot images that mark a player/bot's
+ * chosen start position.
+ */
+#define USER_BOX_ICON_HEIGHT 16
+
+#define USER_BOX_ICON_HALFWIDTH (USER_BOX_ICON_WIDTH / 2)
+#define USER_BOX_ICON_HALFHEIGHT (USER_BOX_ICON_HEIGHT / 2)
+
+
+const wxSize user_box_size(USER_BOX_ICON_WIDTH + 2 * USER_BOX_ICON_PADDING,
+			   USER_BOX_ICON_HEIGHT + 2 * USER_BOX_ICON_PADDING);
+
+const wxSize user_box_expanded_size(USER_BOX_EXPANDED_WIDTH, USER_BOX_EXPANDED_HEIGHT);
 
 // i think this is ok as temp measure to avoid warnings
 // until we drop support for wx26
@@ -94,6 +121,7 @@ BEGIN_EVENT_TABLE( MapCtrl, wxPanel )
   EVT_COMMAND( wxID_ANY, UnitSyncAsyncOperationCompletedEvt, MapCtrl::OnGetMapImageAsyncCompleted )
 END_EVENT_TABLE()
 
+/* Something to do with start box sizes. */
 const int boxsize = 8;
 const int minboxsize = 40;
 
@@ -170,7 +198,15 @@ void MapCtrl::SetBattle( IBattle* battle )
 }
 
 
-wxRect MapCtrl::GetMinimapRect()
+wxRect
+MapCtrl::GetDrawableRect() const
+{
+  int w ( 0 ), h ( 0 );
+  GetClientSize(&w, &h);
+  return wxRect(0, 0, w, h);
+}
+
+wxRect MapCtrl::GetMinimapRect() const
 {
   if ( m_minimap == 0 ) return wxRect();
 
@@ -758,48 +794,61 @@ void MapCtrl::DrawStartPositions( wxDC& dc )
   }
 }
 
+wxRealPoint
+MapCtrl::GetUserMapPositionAsReal(const User& user) const
+{
+    return wxRealPoint(static_cast<double>(user.BattleStatus().posx) / static_cast<double>(m_map.info.width),
+		       static_cast<double>(user.BattleStatus().posy) / static_cast<double>(m_map.info.height));
+}
 
-wxRect MapCtrl::GetUserRect( User& user, bool selected )
+wxPoint
+MapCtrl::GetTranslatedScaledUserMapPosition(const User& user) const
+{
+    wxRealPoint rmp ( GetUserMapPositionAsReal(user) );
+    wxRect mr ( GetMinimapRect() );
+
+    return wxPoint(mr.x + static_cast<int>(rmp.x * mr.width),
+		   mr.y + static_cast<int>(rmp.y * mr.height));
+}
+
+/** Try to fit @p what inside @p container.
+ *
+ * @return a wxPoint that can be used with wxRect::Offset.
+ */
+inline wxPoint
+FitInside(const wxRect& what, const wxRect& container)
+{
+    ASSERT_LOGIC ( what.width <= container.width && what.height <= container.height,
+		   _T("Can't fit rect inside target container") );
+
+    wxPoint offset ( 0, 0 );
+
+    if ( what.x < container.x )
+	offset.x += container.x - what.x;
+    else if ( what.GetRight() > container.GetRight() )
+	offset.x += container.GetRight() - what.GetRight();
+
+    if ( what.y < container.y )
+	offset.y += container.y - what.y;
+    else if ( what.GetBottom() > container.GetBottom() )
+	offset.y += container.GetBottom() - what.GetBottom();
+
+    return offset;
+}
+
+wxRect MapCtrl::GetUserRect( const User& user, bool selected )
 {
   ASSERT_LOGIC( m_battle != 0, _T("Bot == 0") );
-  wxRect mr = GetMinimapRect();
   m_map = m_battle->LoadMap();
-  int x = (int)( (double)((double)user.BattleStatus().posx / (double)m_map.info.width) * (double)mr.width ) - 8;
-  int y = (int)( (double)(user.BattleStatus().posy / (double)m_map.info.height) * (double)mr.height ) - 8;
-  int box_height = 70;
-  int box_width = 75;
-  if ( selected ) {
-    bool we = x+box_width>mr.width;
-    bool he = y+box_height>mr.height;
-    if ( we )
-    {
-      if ( he )
-      {
-        //bro = BRO_BottomRight;
-        return wxRect( mr.x+mr.width-box_width, mr.y+mr.height-box_height, box_width, box_height );
-      }
-      else
-      {
-        //bro = BRO_TopRight;
-        return wxRect( mr.x+mr.width-box_width, y+mr.y-2, box_width, box_height );
-      }
-    }
-    else if ( he )
-    {
-      //bro = BRO_BottomLeft;
-      return wxRect( x+mr.x-2, mr.y+mr.height-box_height, box_width, box_height );
-    }
-    else
-    {
-      //bro = BRO_TopLeft;
-      return wxRect( x+mr.x-2, y+mr.y-2, box_width, box_height );
-    }
-  }
-  else
-  {
-    //bro = BRO_TopLeft;
-    return wxRect( x+mr.x-2, y+mr.y-2, 20, 20 );
-  }
+
+  wxPoint absolute_position ( GetTranslatedScaledUserMapPosition(user) );
+  wxPoint box_start ( absolute_position.x - USER_BOX_ICON_HALFWIDTH - USER_BOX_ICON_PADDING,
+		      absolute_position.y - USER_BOX_ICON_HALFWIDTH - USER_BOX_ICON_PADDING );
+  wxRect user_box ( box_start, selected ? user_box_expanded_size : user_box_size );
+  wxRect cram_into_box ( GetDrawableRect() );
+  wxPoint offset ( ::FitInside(user_box, cram_into_box) );
+  user_box.Offset(offset);
+  return user_box;
 }
 
 
@@ -824,7 +873,7 @@ MapCtrl::RectArea MapCtrl::GetUserRectArea( const wxRect& userrect, int x, int y
   wxRect HandicapDown = GetUserDownHandicapButtonRect();
   if ( HandicapDown.CONTAINS( x, y ) ) return RA_DownHandicapButton;
 
-   wxRect bot( 0, 0, 16, 16 );
+  wxRect bot( 0, 0, USER_BOX_ICON_WIDTH, USER_BOX_ICON_HEIGHT );
   if ( bot.CONTAINS( x, y ) ) return RA_Move;
 
   return RA_Main;
@@ -926,7 +975,7 @@ void MapCtrl::DrawUser( wxDC& dc, User& user, bool selected, bool moving )
     dc.SetPen( wxPen( ColourDelta( col, -40 ) ) );
     dc.SetBrush( wxBrush( col, wxSOLID ) );
     dc.DrawRectangle( r.x, r.y, r.width, r.height );
-    dc.DrawBitmap( *img, r.x+2, r.y+2, true );
+    dc.DrawBitmap( *img, r.x+ USER_BOX_ICON_PADDING, r.y+USER_BOX_ICON_PADDING, true );
 
     int w, h;
     wxString allystr = wxString::Format( _T("%d"), user.BattleStatus().ally + 1 );

@@ -48,7 +48,21 @@ class MapCtrl : public wxPanel
     void FreeMinimap();
 
     BattleStartRect GetBattleRect( int x1, int y1, int x2, int y2, int ally = -1 );
-    wxRect GetMinimapRect();
+
+    /** Get the rect occupied by the minimap.
+     *
+     * @see GetDrawableRect
+     */
+    wxRect GetMinimapRect() const;
+
+    /** Get the widget-drawable area as a wxRect.  This is similar to
+     * GetMinimapRect, but includes the area not filled by the minimap.
+     *
+     * @return The wxRect corresponding {0, 0, ClientWidth, ClientHeight}.
+     *
+     * @see GetMinimapRect, wxWindow::GetClientSize
+     */
+    wxRect GetDrawableRect() const;
 
     wxRect GetStartRect( int index );
     wxRect GetStartRect( const BattleStartRect& sr );
@@ -58,7 +72,19 @@ class MapCtrl : public wxPanel
 
     void DrawOutlinedText( wxDC& dc, const wxString& str, int x, int y, const wxColour& outline, const wxColour& font );
 
-    wxRect GetUserRect( User& user, bool selected );
+    /** Get the relative (range: [0.0,1.0]) x- and y- coordinates of
+     * the user's start position.
+     */
+    wxRealPoint GetUserMapPositionAsReal(const User& user) const;
+
+    /** Get an absolute (relative to the client's [*this* MapCtrl
+     * widget's] drawable area) user map position.
+     *
+     * The returned point is as would be used with wxDC methods.
+     */
+    wxPoint GetTranslatedScaledUserMapPosition(const User& user) const;
+
+    wxRect GetUserRect( const User& user, bool selected );
     RectArea GetUserRectArea( const wxRect& userrect, int x, int y );
 
     wxRect GetUserSideRect() { return wxRect( 37, 20, 16, 16 ); }
