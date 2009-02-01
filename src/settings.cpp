@@ -1114,16 +1114,24 @@ void Settings::SetHostingPreset( const wxString& name, int optiontype, std::map<
 
 std::map<wxString,wxString> Settings::GetHostingPreset( const wxString& name, int optiontype )
 {
-  std::map<wxString,wxString> ret;
-  wxArrayString list = GetEntryList( _T("/Hosting/Preset/") + name + _T("/") + TowxString( optiontype ) );
-  int count = list.GetCount();
+    wxString path_base = _T("/Hosting/Preset/") + name + _T("/") + TowxString( optiontype );
+    std::map<wxString,wxString> ret;
+    wxArrayString list = GetEntryList( path_base );
 
-  for( int i = 0; i < count; i ++ )
-  {
-  	wxString keyname = list[i];
-    ret[keyname] = m_config->Read( keyname );
-  }
-  return ret;
+    wxString old_path = m_config->GetPath();
+    m_config->SetPath( path_base );
+
+    int count = list.GetCount();
+    for( int i = 0; i < count; i ++ )
+    {
+        wxString keyname = list[i];
+        wxString val = m_config->Read( keyname );
+        ret[keyname] = val;
+    }
+
+    m_config->SetPath( old_path );
+
+    return ret;
 }
 
 
