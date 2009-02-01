@@ -62,8 +62,6 @@ void SinglePlayerBattle::SendHostInfo( HostInfo update )
         Update(  wxString::Format(_T("%d_%s"), i , itor->first.c_str() ) );
       }
     }
-    m_sptab.ReloadModOptContrls();
-    m_sptab.ReloadMapOptContrls();
   }
 }
 

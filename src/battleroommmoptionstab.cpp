@@ -448,6 +448,12 @@ void BattleroomMMOptionsTab<BattleType>::OnReloadControls(OptionsWrapper::GameOp
     SetScrollbars( 10, 10, 62, 62 );
 }
 
+template < class BattleType >
+void BattleroomMMOptionsTab<BattleType>::OnReloadControls()
+{
+    for ( unsigned int i = 0; i < OptionsWrapper::LastOption; i++)
+        OnReloadControls( (OptionsWrapper::GameOption) i );
+}
 
 template < class BattleType >
 void BattleroomMMOptionsTab<BattleType>::OnLoadPreset( wxCommandEvent& event )
@@ -460,6 +466,7 @@ void BattleroomMMOptionsTab<BattleType>::OnLoadPreset( wxCommandEvent& event )
   }
   m_battle.LoadOptionsPreset( presetname );
   m_battle.SendHostInfo( IBattle::HI_Send_All_opts );
+  OnReloadControls( );
 }
 
 

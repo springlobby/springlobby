@@ -46,8 +46,10 @@ class BattleroomMMOptionsTab : public wxScrolledWindow
 		~BattleroomMMOptionsTab();
 
 		void UpdateOptControls(wxString controlName);
+		//!relaod single category
 		void OnReloadControls(OptionsWrapper::GameOption flag);
-		void Update( const wxString& Tag );
+		//!reload all categories
+		void OnReloadControls();
 
         void UpdatePresetList();
 
