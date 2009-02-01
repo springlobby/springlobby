@@ -16,7 +16,7 @@ class OptionsWrapper;
 class wxCheckBox;
 class wxComboBox;
 class wxCommandEvent;
-class IBattle;
+class Battle;
 class wxSpinCtrlDbl;
 class wxTextCtrl;
 class wxSpinEvent;
@@ -38,10 +38,11 @@ typedef std::map<wxString,wxStaticText*> staticTextMap;
  * That way we can use the inverse mapping in the event handlers to go from the name of event-generating gui element
  * to the mmOptionKey that needs to be changed.
  */
+template < class BattleType >
 class BattleroomMMOptionsTab : public wxScrolledWindow
 {
 	public:
-		BattleroomMMOptionsTab( IBattle& battle, wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,300 ), long style = wxTAB_TRAVERSAL );
+		BattleroomMMOptionsTab( BattleType& battle, wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,300 ), long style = wxTAB_TRAVERSAL );
 		~BattleroomMMOptionsTab();
 
 		void UpdateOptControls(wxString controlName);
@@ -56,7 +57,7 @@ class BattleroomMMOptionsTab : public wxScrolledWindow
         void OnSetModDefaultPreset( wxCommandEvent& event );
 
 	protected:
-		 IBattle& m_battle;
+        BattleType& m_battle;
 
 		wxBoxSizer* m_main_sizer;
 		wxStaticBoxSizer* m_mod_options_sizer;
@@ -116,6 +117,7 @@ enum
   BOPTS_CHOSEPRES
 };
 
+#include "battleroommmoptionstab.cpp"
 
 #endif /*BATTLEROOMMMOPTIONSTAB_H_*/
 

@@ -2,6 +2,7 @@
 #define SPRINGLOBBY_HEADERGUARD_MAINJOINBATTLETAB_H
 
 #include <wx/scrolwin.h>
+#include "battleroommmoptionstab.h"
 
 class Ui;
 class BattleListTab;
@@ -14,7 +15,6 @@ class wxBoxSizer;
 class wxImageList;
 class wxAuiNotebook;
 class wxNotebook;
-class BattleroomMMOptionsTab;
 
 class MainJoinBattleTab : public wxScrolledWindow
 {
@@ -37,7 +37,7 @@ class MainJoinBattleTab : public wxScrolledWindow
     BattleRoomTab& GetBattleRoomTab();
     BattleMapTab& GetBattleMapTab();
     BattleOptionsTab& GetOptionsTab();
-    BattleroomMMOptionsTab& GetMMOptionsTab();
+    BattleroomMMOptionsTab<Battle>& GetMMOptionsTab();
 
     void ReloadPresetList();
 
@@ -62,7 +62,7 @@ class MainJoinBattleTab : public wxScrolledWindow
     BattleRoomTab* m_battle_tab;
     BattleMapTab* m_map_tab;
     BattleOptionsTab* m_opts_tab;
-    BattleroomMMOptionsTab* m_mm_opts_tab;
+    BattleroomMMOptionsTab<Battle>* m_mm_opts_tab;
     Ui& m_ui;
 
     enum {
