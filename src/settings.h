@@ -70,6 +70,7 @@ class Settings
 
 		/// used to import default configs from a file in windows
     void SetDefaultConfigs( SL_WinConf& conf );
+    void SetDefaultConfigs( wxConfig& conf );
 
     /// list all entries subkeys of a parent group
     wxArrayString GetGroupList( const wxString& base_key );
@@ -194,6 +195,8 @@ class Settings
     bool ServerExists( const wxString& server_name );
     void SetServer( const wxString& server_name, const wxString& url, int port );
     void DeleteServer( const wxString& server_name );
+
+    bool ShouldAddDefaultServerSettings();
     /**@}*/
 
     /* ================================================================ */
@@ -264,6 +267,8 @@ class Settings
      */
     wxString GetChannelJoinName( int index );
     /**@}*/
+
+    bool ShouldAddDefaultChannelSettings();
 
 
     /* ================================================================ */
