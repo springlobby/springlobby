@@ -215,7 +215,7 @@ bool SpringLobbyApp::OnInit()
 					sett().AddChannelJoin( _T("springlobby"), _T("") );
 					sett().AddChannelJoin( _T("newbies"), _T("") );
 				}
-				if ( sett().ShouldAddDefaultGroup() ) sett().AddGroup( _("Default") );
+				if ( sett().ShouldAddDefaultGroupSettings() ) sett().AddGroup( _("Default") );
 
         if ( !wxDirExists( wxStandardPaths::Get().GetUserDataDir() ) ) wxMkdir( wxStandardPaths::Get().GetUserDataDir() );
         wxString sep ( wxFileName::GetPathSeparator() );
