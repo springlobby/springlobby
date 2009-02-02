@@ -330,6 +330,8 @@ class Settings
     void SetGroupActions( const wxString& group, UserActions::ActionType action );
     UserActions::ActionType GetGroupActions( const wxString& group ) const;
 
+		bool ShouldAddDefaultGroupSettings();
+
     /*@}*/
 
     /* ================================================================ */

@@ -126,7 +126,7 @@ Settings::Settings()
   m_config = new wxConfig( _T("SpringLobby"), wxEmptyString, _T(".springlobby/springlobby.conf"), _T("springlobby.global.conf") );
   SetPortableMode ( false );
   #endif
-	if ( !m_config->Exists( _T("/Groups") ) ) AddGroup( _("Default") );
+	if ( !m_config->Exists( _T("/Groups") ) ) ;
 }
 
 Settings::~Settings()
@@ -442,7 +442,7 @@ unsigned int Settings::GetModCachingThreadProgress()
 
 bool Settings::ShouldAddDefaultServerSettings()
 {
-		return m_config->Exists( _T("/Server") );
+		return !m_config->Exists( _T("/Server") );
 }
 
 //! @brief Restores default settings
@@ -687,7 +687,7 @@ wxString Settings::GetChannelJoinName( int index )
 
 bool Settings::ShouldAddDefaultChannelSettings()
 {
-		return m_config->Exists( _T("/Channels" ));
+		return !m_config->Exists( _T("/Channels" ));
 }
 
 /************* SPRINGLOBBY WINDOW POS/SIZE   ******************/
@@ -1830,6 +1830,10 @@ UserActions::ActionType Settings::GetGroupActions( const wxString& group ) const
   return (UserActions::ActionType)result;
 }
 
+bool Settings::ShouldAddDefaultGroupSettings()
+{
+		return !m_config->Exists( _T("/Groups" ));
+}
 
 void Settings::SaveCustomColors( const wxColourData& _cdata, const wxString& paletteName  )
 {
