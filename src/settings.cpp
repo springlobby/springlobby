@@ -152,54 +152,12 @@ void Settings::SaveSettings()
   #endif
 }
 
+
+#ifdef __WXMSW__
 void Settings::SetDefaultConfigs( SL_WinConf& conf )
-{
-  wxString str;
-  long dummy;
-	wxString previousgroup;
-
-  // now all groups...
-  bool groupcontinue = conf.GetFirstGroup(str, dummy);
-  while ( groupcontinue )
-  {
-  	// climb all tree branches until you hit the most further
-		groupcontinue = conf.GetFirstGroup(str, dummy);
-    if ( groupcontinue && ( previousgroup != str ) )
-    {
-			conf.SetPath( str );
-			previousgroup = str;
-    }
-    else
-    {
-			// enum all entries and add to the config
-			wxString currentpath = conf.GetPath();
-			bool exist = conf.GetFirstEntry(str, dummy);
-			while ( exist )
-			{
-				if ( !m_config->Exists( currentpath + _T("/") + str ) ) // in theory "main" config should be blank at this point, but better be paranoyd and don't overwrite existing keys...
-				{
-					m_config->Write( currentpath + _T("/") + str, conf.Read( str, _T("") ) ); // append to main config
-				}
-
-				exist = conf.GetNextEntry(str, dummy);
-			}
-
-			if ( !currentpath.IsEmpty() )
-			{
-				wxString todelete = currentpath.AfterLast(_T('/'));
-				currentpath = currentpath.BeforeLast(_T('/'));
-				conf.SetPath( currentpath ); // go to the parent folder
-				conf.DeleteGroup( todelete ); // remove last analyzed group so it doesn't get iterated again
-				groupcontinue = true;
-			}
-			previousgroup = _T("");
-    }
-  }
-  m_config->Flush();
-}
-
-
+#else
 void Settings::SetDefaultConfigs( wxConfig& conf )
+#endif
 {
   wxString str;
   long dummy;

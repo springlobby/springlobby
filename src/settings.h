@@ -69,8 +69,11 @@ class Settings
     ~Settings();
 
 		/// used to import default configs from a file in windows
+		#ifdef __WXMSW__
     void SetDefaultConfigs( SL_WinConf& conf );
+    #else
     void SetDefaultConfigs( wxConfig& conf );
+    #endif
 
     /// list all entries subkeys of a parent group
     wxArrayString GetGroupList( const wxString& base_key );
