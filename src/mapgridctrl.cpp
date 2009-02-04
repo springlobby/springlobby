@@ -556,7 +556,7 @@ void MapGridCtrl::OnGetMapExAsyncCompleted( wxCommandEvent& event )
 	UpdateAsyncFetches();
 
 	// UpdateAsyncFetches didn't start a new one, so we finished
-	// and can raise the GridSizeChangedEvt
+	// and can raise the LoadingCompletedEvt
 	if ( m_async_mapinfo_fetches == 0 ) {
 		wxCommandEvent evt( LoadingCompletedEvt, GetId() );
 		evt.SetEventObject( this );
