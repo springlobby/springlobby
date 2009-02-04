@@ -126,6 +126,7 @@ MapSelectDialog::MapSelectDialog(wxWindow* parent,Ui& ui)
 	//*)
 
 	Connect(ID_MAPGRID,MapGridCtrl::MapSelectedEvt,(wxObjectEventFunction)&MapSelectDialog::OnMapSelected,0,this);
+	Connect(ID_MAPGRID,MapGridCtrl::LoadingCompletedEvt,(wxObjectEventFunction)&MapSelectDialog::OnMapLoadingCompleted,0,this);
 
 	// Ugh.. Can not have these created by generated code because wxSmith doesn't accept a symbolic size,
 	// (ie. wxSize(CONTROL_HEIGHT,CONTROL_HEIGHT)) and all Set*Size() methods don't seem to have any effect.
@@ -292,6 +293,13 @@ void MapSelectDialog::OnMapSelected( wxCommandEvent& event )
 	m_map_opts_list->SetItem( 4, 1, wxString::Format( _T("%d"), map.info.extractorRadius ) );
 	m_map_opts_list->SetItem( 5, 1, wxString::Format( _T("%.3f"), map.info.maxMetal ) );
 	m_map_opts_list->SetItem( 6, 1, wxString::Format( _T("%d"), map.info.posCount ) );
+}
+
+void MapSelectDialog::OnMapLoadingCompleted( wxCommandEvent& event )
+{
+	wxLogDebugFunc( _T("") );
+	// to apply stored sorting settings we need to re-apply sorting after loading finished
+	UpdateSortAndFilter();
 }
 
 void MapSelectDialog::OnVerticalDirectionClicked( wxCommandEvent& event )
