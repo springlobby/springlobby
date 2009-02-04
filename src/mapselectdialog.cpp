@@ -131,8 +131,6 @@ MapSelectDialog::MapSelectDialog(wxWindow* parent,Ui& ui)
 	boxSizerVertical->Add(m_vertical_direction_button, 0, wxALL|wxEXPAND|wxSHAPED|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	m_horizontal_direction_button = new wxButton(this, ID_HORIZONTAL_DIRECTION, _T(">"), wxDefaultPosition, wxSize(CONTROL_HEIGHT,CONTROL_HEIGHT), 0, wxDefaultValidator, _T("ID_HORIZONTAL_DIRECTION"));
 	boxSizerHorizontal->Add(m_horizontal_direction_button, 0, wxALL|wxEXPAND|wxSHAPED|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-    m_horizontal_direction_button->SetLabel( m_horizontal_direction ? _T("<") : _T(">") );
-    m_vertical_direction_button->SetLabel( m_vertical_direction ? _T("ᴧ") : _T("ᴠ") );
 	//<>ᴠᴧ
 
 	Connect(ID_VERTICAL_DIRECTION, wxEVT_COMMAND_BUTTON_CLICKED, (wxObjectEventFunction)&MapSelectDialog::OnVerticalDirectionClicked);
@@ -181,6 +179,9 @@ void MapSelectDialog::OnInit( wxInitDialogEvent& event )
 	m_horizontal_choice->SetSelection( sett().GetHorizontalSortkeyIndex() );
 	m_vertical_choice->SetSelection( sett().GetVerticalSortkeyIndex() );
 
+    m_horizontal_direction_button->SetLabel( m_horizontal_direction ? _T("<") : _T(">") );
+    m_vertical_direction_button->SetLabel( m_vertical_direction ? _T("ᴧ") : _T("ᴠ") );
+
 	m_maps = usync().GetMapList();
 	usync().GetReplayList( m_replays );
 
@@ -196,6 +197,8 @@ void MapSelectDialog::OnInit( wxInitDialogEvent& event )
 	else {
 		LoadRecent();
 	}
+
+    UpdateSortAndFilter();
 
 	m_filter_text->SetFocus();
 }
