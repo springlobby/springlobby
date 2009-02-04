@@ -81,6 +81,7 @@ class MapSelectDialog: public wxDialog
 		//*)
 
 		void OnMapSelected( wxCommandEvent& event );
+		void OnMapLoadingCompleted( wxCommandEvent& event );
 		void OnVerticalDirectionClicked( wxCommandEvent& event );
 		void OnHorizontalDirectionClicked( wxCommandEvent& event );
 
