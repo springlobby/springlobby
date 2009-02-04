@@ -56,7 +56,7 @@ initDefaultChatColors()
     defaultChatColors.insert(std::make_pair(_T("Action"), wxColor(230, 0, 255)));
     defaultChatColors.insert(std::make_pair(_T("Server"), wxColor(0, 80, 128)));
     defaultChatColors.insert(std::make_pair(_T("Client"), wxColor(20, 200, 25)));
-    defaultChatColors.insert(std::make_pair(_T("JoinPart"), wxColor(0, 80, 0)));
+    defaultChatColors.insert(std::make_pair(_T("JoinPart"), wxColor(66, 204, 66)));
     defaultChatColors.insert(std::make_pair(_T("Error"), wxColor(128, 0, 0)));
     defaultChatColors.insert(std::make_pair(_T("Time"), wxColor(100, 100, 140)));
 
