@@ -97,6 +97,8 @@ class MapSelectDialog: public wxDialog
 		wxArrayString m_maps;
 		std::vector< wxString > m_replays;
 
+		static const wxString m_dialog_name;
+
 		DECLARE_EVENT_TABLE()
 };
 

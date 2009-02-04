@@ -40,6 +40,8 @@ const long MapSelectDialog::ID_MAPGRID = wxNewId();
 const long MapSelectDialog::ID_VERTICAL_DIRECTION = wxNewId();
 const long MapSelectDialog::ID_HORIZONTAL_DIRECTION = wxNewId();
 
+const wxString MapSelectDialog::m_dialog_name = _T("MapSelectionDialog");
+
 BEGIN_EVENT_TABLE(MapSelectDialog,wxDialog)
 	//(*EventTable(MapSelectDialog)
 	//*)
@@ -156,16 +158,25 @@ MapSelectDialog::MapSelectDialog(wxWindow* parent,Ui& ui)
 	m_map_opts_list->InsertItem( 4, _("Extractor radius") );
 	m_map_opts_list->InsertItem( 5, _("Max metal") );
 	m_map_opts_list->InsertItem( 6, _("Start positions") );
+
+	//could prolly go into Create() params, dunno how tho w/o meddling w wxsmith
+
+    wxPoint pos = sett().GetWindowPos( m_dialog_name , wxPoint( DEFSETT_MW_LEFT, DEFSETT_MW_TOP ) );
+    wxSize size = sett().GetWindowSize( m_dialog_name , wxSize( DEFSETT_MW_WIDTH, DEFSETT_MW_HEIGHT ) );
+    SetSize( pos.x , pos.y, size.GetWidth(), size.GetHeight() );
+    Layout();
 }
 
 MapSelectDialog::~MapSelectDialog()
 {
 	//(*Destroy(MapSelectDialog)
+	//*)
 	sett().SetHorizontalSortkeyIndex( m_horizontal_choice->GetSelection() );
 	sett().SetVerticalSortkeyIndex( m_vertical_choice->GetSelection() );
 	sett().SetHorizontalSortorder( m_horizontal_direction );
 	sett().SetVerticalSortorder( m_vertical_direction );
-	//*)
+	sett().SetWindowSize( m_dialog_name , GetSize() );
+    sett().SetWindowPos( m_dialog_name , GetPosition() );
 }
 
 
