@@ -311,9 +311,6 @@ class Settings
     //! used to signal unset column width in Get...
     enum { columnWidthUnset };
 
-    void SetMapSelectorFollowsMouse( bool value );
-    bool GetMapSelectorFollowsMouse();
-
     /*@}*/
 
     /* ================================================================ */
@@ -620,6 +617,29 @@ class Settings
     void setSimpleDetail( wxString );
 
   /**@}*/
+
+  /* ================================================================ */
+    /** @name Map selection dialog
+     * @{
+     */
+    unsigned int GetVerticalSortkeyIndex(  );
+    void SetVerticalSortkeyIndex( const unsigned int idx );
+
+    unsigned int GetHorizontalSortkeyIndex(  );
+    void SetHorizontalSortkeyIndex( const unsigned int idx );
+
+    /** \return true for "<" false for ">" */
+    bool GetHorizontalSortorder();
+    void SetHorizontalSortorder( const bool order );
+
+    /** \return true for "ᴧ", false for "ᴠ" */
+    bool GetVerticalSortorder();
+    void SetVerticalSortorder( const bool order );
+
+    void SetMapSelectorFollowsMouse( bool value );
+    bool GetMapSelectorFollowsMouse();
+    /**@}*/
+
 
   protected:
     bool IsSpringBin( const wxString& path );

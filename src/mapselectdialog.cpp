@@ -8,6 +8,7 @@
 #include "ui.h"
 #include "uiutils.h"
 #include "utils.h"
+#include "settings.h"
 #include <wx/settings.h>
 
 //(*InternalHeaders(MapSelectDialog)
@@ -46,8 +47,8 @@ END_EVENT_TABLE()
 
 MapSelectDialog::MapSelectDialog(wxWindow* parent,Ui& ui)
 	: m_ui(ui)
-	, m_horizontal_direction(false)
-	, m_vertical_direction(false)
+	, m_horizontal_direction( sett().GetHorizontalSortorder() )
+	, m_vertical_direction( sett().GetVerticalSortorder() )
 {
 	//(*Initialize(MapSelectDialog)
 	wxStaticBoxSizer* StaticBoxSizer2;
@@ -130,7 +131,8 @@ MapSelectDialog::MapSelectDialog(wxWindow* parent,Ui& ui)
 	boxSizerVertical->Add(m_vertical_direction_button, 0, wxALL|wxEXPAND|wxSHAPED|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	m_horizontal_direction_button = new wxButton(this, ID_HORIZONTAL_DIRECTION, _T(">"), wxDefaultPosition, wxSize(CONTROL_HEIGHT,CONTROL_HEIGHT), 0, wxDefaultValidator, _T("ID_HORIZONTAL_DIRECTION"));
 	boxSizerHorizontal->Add(m_horizontal_direction_button, 0, wxALL|wxEXPAND|wxSHAPED|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-
+    m_horizontal_direction_button->SetLabel( m_horizontal_direction ? _T("<") : _T(">") );
+    m_vertical_direction_button->SetLabel( m_vertical_direction ? _T("ᴧ") : _T("ᴠ") );
 	//<>ᴠᴧ
 
 	Connect(ID_VERTICAL_DIRECTION, wxEVT_COMMAND_BUTTON_CLICKED, (wxObjectEventFunction)&MapSelectDialog::OnVerticalDirectionClicked);
@@ -161,6 +163,10 @@ MapSelectDialog::MapSelectDialog(wxWindow* parent,Ui& ui)
 MapSelectDialog::~MapSelectDialog()
 {
 	//(*Destroy(MapSelectDialog)
+	sett().SetHorizontalSortkeyIndex( m_horizontal_choice->GetSelection() );
+	sett().SetVerticalSortkeyIndex( m_vertical_choice->GetSelection() );
+	sett().SetHorizontalSortorder( m_horizontal_direction );
+	sett().SetVerticalSortorder( m_vertical_direction );
 	//*)
 }
 
@@ -172,8 +178,8 @@ void MapSelectDialog::OnInit( wxInitDialogEvent& event )
 	AppendSortKeys( m_horizontal_choice );
 	AppendSortKeys( m_vertical_choice );
 
-	m_horizontal_choice->SetSelection( 0 );
-	m_vertical_choice->SetSelection( 0 );
+	m_horizontal_choice->SetSelection( sett().GetHorizontalSortkeyIndex() );
+	m_vertical_choice->SetSelection( sett().GetVerticalSortkeyIndex() );
 
 	m_maps = usync().GetMapList();
 	usync().GetReplayList( m_replays );
