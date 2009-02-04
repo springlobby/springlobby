@@ -638,6 +638,12 @@ class Settings
 
     void SetMapSelectorFollowsMouse( bool value );
     bool GetMapSelectorFollowsMouse();
+
+    /** \return m_filter_all_sett = 0; (default)
+                m_filter_recent_sett = 1;
+                m_filter_popular_sett = 2; */
+    unsigned int GetMapSelectorFilterRadio();
+    void SetMapSelectorFilterRadio( const unsigned int val );
     /**@}*/
 
 

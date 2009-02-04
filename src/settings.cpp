@@ -1939,9 +1939,18 @@ void Settings::SetMapSelectorFollowsMouse( bool value )
 
 bool Settings::GetMapSelectorFollowsMouse()
 {
-	return m_config->Read(_T("/GUI/MapSelector/SelectionFollowsMouse"), 0l);
+	return m_config->Read(_T("/GUI/MapSelector/SelectionFollowsMouse"), 0l );
 }
 
+unsigned int Settings::GetMapSelectorFilterRadio()
+{
+    return m_config->Read(_T("/GUI/MapSelector/FilterRadio"), 0l );
+}
+
+void Settings::SetMapSelectorFilterRadio( const unsigned int val )
+{
+    m_config->Write(_T("/GUI/MapSelector/FilterRadio"), (int) val );
+}
 
 //////////////////////////////////////////////////////////////////////////////
 ///                            SpringSettings                              ///

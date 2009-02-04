@@ -40,7 +40,7 @@ const long MapSelectDialog::ID_MAPGRID = wxNewId();
 const long MapSelectDialog::ID_VERTICAL_DIRECTION = wxNewId();
 const long MapSelectDialog::ID_HORIZONTAL_DIRECTION = wxNewId();
 
-const wxString MapSelectDialog::m_dialog_name = _T("MapSelectionDialog");
+const wxString MapSelectDialog::m_dialog_name = _T("MapSelector");
 
 BEGIN_EVENT_TABLE(MapSelectDialog,wxDialog)
 	//(*EventTable(MapSelectDialog)
@@ -178,6 +178,12 @@ MapSelectDialog::~MapSelectDialog()
 	sett().SetVerticalSortorder( m_vertical_direction );
 	sett().SetWindowSize( m_dialog_name , GetSize() );
     sett().SetWindowPos( m_dialog_name , GetPosition() );
+    if ( m_filter_all->GetValue() )
+        sett().SetMapSelectorFilterRadio( m_filter_all_sett );
+    else if ( m_filter_recent->GetValue() )
+        sett().SetMapSelectorFilterRadio( m_filter_recent_sett );
+    else
+        sett().SetMapSelectorFilterRadio( m_filter_popular_sett );
 }
 
 
@@ -197,18 +203,42 @@ void MapSelectDialog::OnInit( wxInitDialogEvent& event )
 	m_maps = usync().GetMapList();
 	usync().GetReplayList( m_replays );
 
+    const unsigned int lastFilter = sett().GetMapSelectorFilterRadio();
 	m_filter_popular->Enable( m_ui.IsConnected() );
 
 	// due to a bug / crappy design in SpringUnitSync / unitsync itself we
 	// get a replay list with one empty item when there are no replays..
-	if ( m_replays.empty() || ( m_replays.size() == 1 && m_replays[0] == wxEmptyString ) ) {
+	bool no_replays = m_replays.empty() || ( m_replays.size() == 1 && m_replays[0] == wxEmptyString );
+	if ( no_replays ) {
 		m_filter_all->SetValue( true );
 		m_filter_recent->Enable( false );
-		LoadAll();
+	}
+
+	if ( lastFilter == m_filter_popular_sett ) {
+	    if ( m_ui.IsConnected() ) {
+	        m_filter_popular->SetValue( true );
+            LoadPopular();
+	    }
+	    else {
+	        m_filter_all->SetValue( true );
+	        LoadAll();
+	    }
+	}
+	else if ( lastFilter == m_filter_recent_sett ) {
+	    if ( !no_replays ) {
+            m_filter_recent->Enable( true );
+            m_filter_recent->SetValue( true );
+            LoadRecent();
+	    }
+	    else {
+	        m_filter_all->SetValue( true );
+	        LoadAll();
+	    }
 	}
 	else {
-		LoadRecent();
-	}
+	        m_filter_all->SetValue( true );
+	        LoadAll();
+    }
 
     UpdateSortAndFilter();
 
