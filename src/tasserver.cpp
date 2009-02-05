@@ -621,7 +621,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         port = GetIntParam( params );
         maxplayers = GetIntParam( params );
         haspass = GetBoolParam( params );
-        rank = GetIntParam( params ) + 1;
+        rank = GetIntParam( params );
         hash = GetWordParam( params );
         map = GetSentenceParam( params );
         title = GetSentenceParam( params );
@@ -1347,7 +1347,7 @@ void TASServer::HostBattle( BattleOptions bo, const wxString& password )
                              bo.maxplayers
                            );
     cmd +=  bo.modhash;
-    cmd += wxString::Format( _T(" %d "), bo.rankneeded -1 );
+    cmd += wxString::Format( _T(" %d "), bo.rankneeded );
     cmd += bo.maphash + _T(" ");
     cmd += bo.mapname + _T("\t");
     cmd += bo.description + _T("\t");
@@ -2261,7 +2261,7 @@ UserStatus ConvTasclientstatus( TASClientstatus tas )
     UserStatus stat;
     stat.in_game = tas.in_game;
     stat.away = tas.away;
-    stat.rank = (UserStatus::RankContainer)(tas.rank + 1);
+    stat.rank = (UserStatus::RankContainer)tas.rank;
     stat.moderator = tas.moderator;
     stat.bot = tas.bot;
     return stat;
