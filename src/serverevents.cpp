@@ -332,12 +332,6 @@ void ServerEvents::OnUserJoinedBattle( int battleid, const wxString& nick )
                 ui().OnBattleStarted( battle );
             }
         }
-        if ( battle.IsFounderMe() &&  ( battle.GetNumUsers() > 31 ) )
-        {
-          battle.DoAction( _T("is locking the battle because Spring does not support more than 32 players (including spectators)" ) );
-          battle.SetIsLocked( true );
-          battle.SendHostInfo( IBattle::HI_Locked );
-        }
     }
     catch (std::runtime_error &except)
     {
