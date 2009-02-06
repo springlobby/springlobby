@@ -311,9 +311,6 @@ class Settings
     //! used to signal unset column width in Get...
     enum { columnWidthUnset };
 
-    void SetMapSelectorFollowsMouse( bool value );
-    bool GetMapSelectorFollowsMouse();
-
     void SetLanguageID ( const long id );
     long GetLanguageID ( );
 
