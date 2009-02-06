@@ -69,7 +69,11 @@ class Settings
     ~Settings();
 
 		/// used to import default configs from a file in windows
+		#ifdef __WXMSW__
     void SetDefaultConfigs( SL_WinConf& conf );
+    #else
+    void SetDefaultConfigs( wxConfig& conf );
+    #endif
 
     /// list all entries subkeys of a parent group
     wxArrayString GetGroupList( const wxString& base_key );
@@ -194,6 +198,8 @@ class Settings
     bool ServerExists( const wxString& server_name );
     void SetServer( const wxString& server_name, const wxString& url, int port );
     void DeleteServer( const wxString& server_name );
+
+    bool ShouldAddDefaultServerSettings();
     /**@}*/
 
     /* ================================================================ */
@@ -265,6 +271,8 @@ class Settings
     wxString GetChannelJoinName( int index );
     /**@}*/
 
+    bool ShouldAddDefaultChannelSettings();
+
 
     /* ================================================================ */
     /** @name UI
@@ -327,6 +335,8 @@ class Settings
 
     void SetGroupActions( const wxString& group, UserActions::ActionType action );
     UserActions::ActionType GetGroupActions( const wxString& group ) const;
+
+		bool ShouldAddDefaultGroupSettings();
 
     /*@}*/
 
@@ -613,6 +623,35 @@ class Settings
     void setSimpleDetail( wxString );
 
   /**@}*/
+
+  /* ================================================================ */
+    /** @name Map selection dialog
+     * @{
+     */
+    unsigned int GetVerticalSortkeyIndex(  );
+    void SetVerticalSortkeyIndex( const unsigned int idx );
+
+    unsigned int GetHorizontalSortkeyIndex(  );
+    void SetHorizontalSortkeyIndex( const unsigned int idx );
+
+    /** \return true for "<" false for ">" */
+    bool GetHorizontalSortorder();
+    void SetHorizontalSortorder( const bool order );
+
+    /** \return true for "ᴧ", false for "ᴠ" */
+    bool GetVerticalSortorder();
+    void SetVerticalSortorder( const bool order );
+
+    void SetMapSelectorFollowsMouse( bool value );
+    bool GetMapSelectorFollowsMouse();
+
+    /** \return m_filter_all_sett = 0; (default)
+                m_filter_recent_sett = 1;
+                m_filter_popular_sett = 2; */
+    unsigned int GetMapSelectorFilterRadio();
+    void SetMapSelectorFilterRadio( const unsigned int val );
+    /**@}*/
+
 
   protected:
     bool IsSpringBin( const wxString& path );

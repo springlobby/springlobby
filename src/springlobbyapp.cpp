@@ -118,22 +118,24 @@ bool SpringLobbyApp::OnInit()
     m_translationhelper->Load();
 
 
-		#ifdef __WXMSW__
 		if( sett().IsFirstRun() )
 		{
-			wxString defaultconfigpath =  wxStandardPathsBase::Get().GetExecutablePath().BeforeLast( wxFileName::GetPathSeparator() ) + wxFileName::GetPathSeparator() + _T("springlobby.global.conf");
+			wxString defaultconfigpath = GetExecutableFolder() + wxFileName::GetPathSeparator() + _T("springlobby.global.conf");
 			if (  wxFileName::FileExists( defaultconfigpath ) )
 			{
 				wxFileInputStream instream( defaultconfigpath );
 
 				if ( instream.IsOk() )
 				{
+					#ifdef __WXMSW__
 					SL_WinConf defaultconf( instream );
+					#else
+					wxConfig defaultconf( instream );
+					#endif
 					sett().SetDefaultConfigs( defaultconf );
 				}
 			}
 		}
-		#endif
 
     SetSettingsStandAlone( false );
 
@@ -211,6 +213,14 @@ bool SpringLobbyApp::OnInit()
 #endif
 
         SetupUserFolders();
+
+				if ( sett().ShouldAddDefaultServerSettings() ) sett().SetDefaultServerSettings();
+				if ( sett().ShouldAddDefaultChannelSettings() )
+				{
+					sett().AddChannelJoin( _T("springlobby"), _T("") );
+					sett().AddChannelJoin( _T("newbies"), _T("") );
+				}
+				if ( sett().ShouldAddDefaultGroupSettings() ) sett().AddGroup( _("Default") );
 
         if ( !wxDirExists( wxStandardPaths::Get().GetUserDataDir() ) ) wxMkdir( wxStandardPaths::Get().GetUserDataDir() );
         wxString sep ( wxFileName::GetPathSeparator() );

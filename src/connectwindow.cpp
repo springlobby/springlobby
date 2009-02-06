@@ -108,7 +108,7 @@ ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
     m_rpass_sizer->Add( m_rpass_check, 2, wxEXPAND | wxALL | wxALIGN_RIGHT, 4 );
     m_rpass_sizer->Add( m_autoconnect_check, 2, wxEXPAND | wxALL | wxALIGN_RIGHT, 4 );
 
-    m_pass_sizer->Add( m_pass_lbl, 1, wxEXPAND | wxALL, 4 );
+    m_pass_sizer->Add( m_pass_lbl, 1, wxALL | wxALIGN_CENTER_VERTICAL, 4 );
     m_pass_sizer->Add( m_pass_text, 2, wxEXPAND | wxALL, 4 );
 
     //FIXME was lazy, absoulte positioning isn't that nice
@@ -116,13 +116,13 @@ ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
     m_check_sizer->Add(pos1,0,0);
     m_check_sizer->Add( m_rpass_sizer, 0, wxEXPAND | wxALIGN_RIGHT);
 
-    m_nick_sizer->Add( m_nick_lbl, 1, wxEXPAND | wxALL, 4 );
+    m_nick_sizer->Add( m_nick_lbl, 1, wxALL | wxALIGN_CENTER_VERTICAL, 4 );
     m_nick_sizer->Add( m_nick_text, 2, wxEXPAND | wxALL, 4 );
 
-    m_server_sizer->Add( m_server_lbl, 1, wxEXPAND | wxALL, 4 );
+    m_server_sizer->Add( m_server_lbl, 1, wxALL | wxALIGN_CENTER_VERTICAL, 4 );
     m_server_sizer->Add( m_server_combo, 2, wxEXPAND | wxALL, 4 );
 
-    m_login_main_sizer->Add( m_server_sizer, 0, wxEXPAND );
+    m_login_main_sizer->Add( m_server_sizer, 0, wxEXPAND | wxALL, 0 );
     m_login_main_sizer->Add( m_ser_acc_line, 0, wxEXPAND | wxALL, 4 );
     m_login_main_sizer->Add( m_nick_sizer, 0, wxEXPAND );
     m_login_main_sizer->Add( m_pass_sizer, 0, wxEXPAND  );
@@ -143,7 +143,7 @@ ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
     wxBoxSizer* m_regnick_sizer = new wxBoxSizer( wxHORIZONTAL );
 
     m_regnick_lbl = new wxStaticText( m_register_tab, wxID_ANY, _("Nick"), wxDefaultPosition, wxDefaultSize, 0 );
-    m_regnick_sizer->Add( m_regnick_lbl, 1, wxALL, 4 );
+    m_regnick_sizer->Add( m_regnick_lbl, 1, wxALL | wxALIGN_CENTER_VERTICAL, 4 );
 
     m_regnick_text = new wxTextCtrl( m_register_tab, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     m_regnick_sizer->Add( m_regnick_text, 1, wxALL, 4 );
@@ -156,7 +156,7 @@ ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
     wxBoxSizer* m_regpass1_sizer = new wxBoxSizer( wxHORIZONTAL );
 
     m_regpass1_lbl = new wxStaticText( m_register_tab, wxID_ANY, _("Password"), wxDefaultPosition, wxDefaultSize, 0 );
-    m_regpass1_sizer->Add( m_regpass1_lbl, 1, wxALL, 4 );
+    m_regpass1_sizer->Add( m_regpass1_lbl, 1, wxALL | wxALIGN_CENTER_VERTICAL, 4 );
 
     m_regpass1_text = new wxTextCtrl( m_register_tab, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PASSWORD );
     m_regpass1_sizer->Add( m_regpass1_text, 1, wxALL, 4 );
@@ -166,7 +166,7 @@ ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
     wxBoxSizer* m_regpass1_sizer1 = new wxBoxSizer( wxHORIZONTAL );
 
     m_regpass2_lbl = new wxStaticText( m_register_tab, wxID_ANY, wxT("Retype password"), wxDefaultPosition, wxDefaultSize, 0 );
-    m_regpass1_sizer1->Add( m_regpass2_lbl, 1, wxALL, 4 );
+    m_regpass1_sizer1->Add( m_regpass2_lbl, 1, wxALL | wxALIGN_CENTER_VERTICAL, 4 );
 
     m_regpass2_text = new wxTextCtrl( m_register_tab, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PASSWORD );
     m_regpass1_sizer1->Add( m_regpass2_text, 1, wxALL, 4 );

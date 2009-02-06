@@ -44,7 +44,7 @@ void loadUnitsync()
       #ifdef __WXMSW_
       if ( IsSettingsStandAlone() )
       {
-        unitsyncpath = wxStandardPathsBase::Get().GetExecutablePath().BeforeLast( wxFileName::GetPathSeparator() ) + wxFileName::GetPathSeparator() + _T("unitsync") + GetLibExtension();
+        unitsyncpath = GetExecutableFolder() + wxFileName::GetPathSeparator() + _T("unitsync") + GetLibExtension();
       }
         else
             untisyncpath = sett().GetCurrentUsedUnitSync();

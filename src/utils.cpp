@@ -6,6 +6,8 @@
 #include <wx/dynlib.h>
 #include <iostream>
 #include <wx/log.h>
+#include <wx/stdpaths.h>
+#include <wx/filename.h>
 
 #include "utils.h"
 #include "crashreport.h"
@@ -38,6 +40,7 @@
 #include <wx/intl.h>
 #include "settings.h"
 #include <vector>
+
 
 wxString GetLibExtension()
 {
@@ -179,6 +182,11 @@ wxString GetSpringLobbyVersion()
     return (WX_STRINGC(VERSION)).BeforeFirst( _T(' ') ) + WX_STRINGC(AUX_VERSION);
 #endif
 
+}
+
+wxString GetExecutableFolder()
+{
+	return wxStandardPathsBase::Get().GetExecutablePath().BeforeLast( wxFileName::GetPathSeparator() );
 }
 
 

@@ -112,6 +112,7 @@ wxString GetSentenceParam( wxString& params );
 long GetIntParam( wxString& params );
 bool GetBoolParam( wxString& params );
 wxString GetSpringLobbyVersion();
+wxString GetExecutableFolder();
 
 //! matches against regex for printable ascii chars, excluding space
 bool IsValidNickname( const wxString& name );

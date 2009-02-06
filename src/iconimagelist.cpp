@@ -225,7 +225,6 @@ int IconImageList::GetRankIcon( const unsigned int& rank, const bool& showlowest
     if ( !showlowest && rank == UserStatus::RANK_1 ) return ICON_RANK_NONE;
     switch (rank)
     {
-      case UserStatus::RANK_UNKNOWN: return ICON_RANK1;
       case UserStatus::RANK_1: return ICON_RANK1;
       case UserStatus::RANK_2: return ICON_RANK2;
       case UserStatus::RANK_3: return ICON_RANK3;
