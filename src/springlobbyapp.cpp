@@ -296,7 +296,6 @@ int SpringLobbyApp::OnExit()
     {
         wxDELETE(m_translationhelper);
     }
-    return 0;
 
 
     if ( m_otadownloader != 0 )
