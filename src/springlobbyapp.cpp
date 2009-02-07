@@ -77,6 +77,7 @@ SpringLobbyApp::SpringLobbyApp()
 {
     m_timer = new wxTimer(this, TIMER_ID);
     m_otadownloader = NULL;
+    SetAppName( _T("springlobby") );
 }
 
 SpringLobbyApp::~SpringLobbyApp()
@@ -107,12 +108,14 @@ bool SpringLobbyApp::OnInit()
     wxFileSystem::AddHandler(new wxZipFSHandler);
 
 
-//#ifdef __WXMSW__
-    wxString path = wxStandardPaths::Get().GetExecutablePath().BeforeLast( wxFileName::GetPathSeparator() )
-                    + wxFileName::GetPathSeparator() + _T("locale");
-//#else //temp disabled for debugging
-//    wxString path = wxStandardPaths::GetLocalizedResourcesDir(wxStandardPaths::ResourceCat_Messages);
-//#endif
+#ifdef __WXMSW__
+    wxString path = wxStandardPaths::Get().GetExecutablePath().BeforeLast( wxFileName::GetPathSeparator() );
+    path += wxFileName::GetPathSeparator() + _T("locale");
+#else
+    wxString path = wxStandardPaths::Get().GetLocalizedResourcesDir(_T("noneWH"),wxStandardPaths::ResourceCat_Messages);
+    path = path.Left( path.First(_T("noneWH") ) );
+#endif
+
 
     m_translationhelper = new wxTranslationHelper( *( (wxApp*)this ), path );
     m_translationhelper->Load();
