@@ -2033,6 +2033,6 @@ void Settings::SetLanguageID ( const long id )
 
 long Settings::GetLanguageID ( )
 {
-    return m_config->Read( _T("/General/LanguageID") , wxLANGUAGE_UNKNOWN );
+    return m_config->Read( _T("/General/LanguageID") , wxLANGUAGE_DEFAULT  );
 }
 
