@@ -424,6 +424,6 @@ bool SpringLobbyApp::SelectLanguage()
     int current_selection_index;
     m_translationhelper->GetInstalledLanguages( names, identifiers, current_selection_index );
     bool ret = m_translationhelper->AskUserForLanguage( names, identifiers, current_selection_index );
-    m_translationhelper->Save();
+    if ( ret ) m_translationhelper->Save();
     return ret;
 }
