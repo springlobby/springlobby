@@ -112,7 +112,7 @@ BattleroomMMOptionsTab::BattleroomMMOptionsTab(  IBattle& battle, wxWindow* pare
     m_default_btn->Disable();
   }
 
-	//SetScrollbars( 10, 10, 62, 62 );
+	SetScrollRate( 4, 4 );
 }
 
 BattleroomMMOptionsTab::~BattleroomMMOptionsTab()
