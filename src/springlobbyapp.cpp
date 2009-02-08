@@ -109,8 +109,7 @@ bool SpringLobbyApp::OnInit()
 
 
 #ifdef __WXMSW__
-    wxString path = wxStandardPaths::Get().GetExecutablePath().BeforeLast( wxFileName::GetPathSeparator() );
-    path += wxFileName::GetPathSeparator() + _T("locale");
+    wxString path = wxPathOnly( wxStandardPaths::Get().GetExecutablePath() ) + wxFileName::GetPathSeparator() + _T("locale");
 #else
     wxString path = wxStandardPaths::Get().GetLocalizedResourcesDir(_T("noneWH"),wxStandardPaths::ResourceCat_Messages);
     path = path.Left( path.First(_T("noneWH") ) );
