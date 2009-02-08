@@ -539,26 +539,23 @@ void Ui::OnUpdate( int mselapsed )
         m_serv->Update( mselapsed );
     }
 
-    if ( !m_ingame )
-    {
-      if ( m_upd_counter_battlelist % 50 == 0  )
-      {
-        try
-        {
-          mw().GetJoinTab().Update();
-        } catch ( assert_exception &e ) {}
-      }
-      m_upd_counter_battlelist++;
+		if ( m_upd_counter_battlelist % 50 == 0  )
+		{
+			try
+			{
+				mw().GetJoinTab().Update();
+			} catch ( assert_exception &e ) {}
+		}
+		m_upd_counter_battlelist++;
 
-      if ( m_upd_counter_chat % 47 == 0  )
-      {
-        try
-        {
-          mw().GetChatTab().Update();
-        } catch ( assert_exception &e ) {}
-      }
-      m_upd_counter_chat++;
-    }
+		if ( m_upd_counter_chat % 47 == 0  )
+		{
+			try
+			{
+				mw().GetChatTab().Update();
+			} catch ( assert_exception &e ) {}
+		}
+		m_upd_counter_chat++;
 
     if ( !m_checked_for_update )
     {
