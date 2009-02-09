@@ -78,9 +78,12 @@ void UpdaterClass::OnDownloadEvent( int code )
     {
         bool locale_ok = UpdateLocale( m_newexe, false );
         if ( locale_ok ) {
-            wxRmdir( m_newexe );
             customMessageBoxNoModal(SL_MAIN_ICON, _("Update complete. The changes will be available next lobby start."), _("Success"));
         }
+        else {
+            customMessageBoxNoModal(SL_MAIN_ICON, _("Binary updated successfully. \nSome translation files could not be updated.\nPlease report this in #springlobby after restarting."), _("Partial success"));
+        }
+        wxRmdir( m_newexe );
     }
   }
 }
