@@ -23,7 +23,6 @@
 
 BEGIN_EVENT_TABLE(LobbyOptionsTab, wxPanel)
     EVT_BUTTON ( SPRING_WEBBROWSE, LobbyOptionsTab::OnBrowseWeb )
-    EVT_BUTTON ( BUTTON_SELECT_LOCALE, LobbyOptionsTab::OnSelectLocale )
     EVT_RADIOBUTTON( SPRING_DEFWEB, LobbyOptionsTab::OnDefaultWeb )
 END_EVENT_TABLE()
 
@@ -34,13 +33,6 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
     GetAui().manager->AddPane( this, wxLEFT, _T("lobbyoptionstab") );
     #endif
     m_main_sizer = new wxBoxSizer ( wxVERTICAL );
-
-    //! TODO make this not feel totally misplaced
-    wxStaticBoxSizer* m_select_locale_sizer = new wxStaticBoxSizer ( wxVERTICAL, this, _("") );
-    m_select_locale = new wxButton( this, -1, _("Choose lanuage"), wxDefaultPosition, wxDefaultSize, 0 );
-    m_select_locale_sizer->Add( m_select_locale, 0, wxEXPAND|wxALL, 5);
-
-    m_main_sizer->Add( m_select_locale_sizer, 0, wxALL, 15 );
 
 /* ================================
    * Web browser
@@ -200,10 +192,4 @@ void LobbyOptionsTab::OnDefaultWeb( wxCommandEvent& event )
   HandleWebloc( m_web_def_radio->GetValue() );
 }
 
-void LobbyOptionsTab::OnSelectLocale( wxCommandEvent& event )
-{
-    if ( wxGetApp().SelectLanguage() ) {
-        customMessageBoxNoModal( SL_MAIN_ICON, _("You need to restart SpringLobby for the language change to take effect."),
-                                    _("Restart required"), wxICON_EXCLAMATION | wxOK );
-    }
-}
+

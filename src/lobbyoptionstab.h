@@ -21,7 +21,6 @@ class LobbyOptionsTab : public wxScrolledWindow
         void OnRestore( wxCommandEvent& event );
 
         void OnBrowseWeb( wxCommandEvent& event );
-        void OnSelectLocale( wxCommandEvent& event );
         void OnDefaultWeb( wxCommandEvent& event );
         void HandleWebloc( bool defloc );
 
@@ -55,8 +54,7 @@ class LobbyOptionsTab : public wxScrolledWindow
     enum
     {
         SPRING_WEBBROWSE = wxID_HIGHEST,
-        SPRING_DEFWEB,
-        BUTTON_SELECT_LOCALE
+        SPRING_DEFWEB
     };
 
 
