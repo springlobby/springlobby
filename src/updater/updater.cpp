@@ -58,9 +58,8 @@ void UpdaterClass::CheckForUpdates()
         m_newexe = sett().GetLobbyWriteDir() + _T("update") + sep;
         wxMkdir( m_newexe );
         wxString url = _T("springlobby.info/windows/springlobby-") + latestVersion + _T("-win32.zip");
-//        wxString url = _T("springlobby.info/windows/springlobby-0.0.1.1043-win32.zip");
         m_exedownloader = new ExeDownloader( url, m_newexe + _T("temp.zip") );
-      }//springlobby-0.0.1.1043-win32.zip
+      }
     #else
     customMessageBox(SL_MAIN_ICON, _("Your SpringLobby version is not up to date.\n\n") + msg, _("Not up to Date") );
     #endif
