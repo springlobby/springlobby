@@ -15,6 +15,7 @@ class UpdaterClass
 protected:
 
     bool UpdateExe( const wxString& newexe, bool WaitForReboot );
+    bool UpdateLocale( const wxString& newdir, bool WaitForReboot );
 
     wxString m_newexe;
     ExeDownloader* m_exedownloader;

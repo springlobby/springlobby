@@ -42,7 +42,7 @@ void UpdaterClass::CheckForUpdates()
   wxString myVersion = GetSpringLobbyVersion() ;
 
   wxString msg = _("Your Version: ") + myVersion + _T("\n") + _("Latest Version: ") + latestVersion;
-  if ( !latestVersion.IsSameAs(myVersion, false) )
+  if (true) //( !latestVersion.IsSameAs(myVersion, false) )
   {
       #ifdef __WXMSW__
       int answer = customMessageBox(SL_MAIN_ICON, _("Your SpringLobby version is not up to date.\n\n") + msg + _("\n\nWould you like for me to autodownload the new version? It will be automatically used next time you launch the lobby again."), _("Not up to Date"), wxYES_NO);
@@ -57,9 +57,10 @@ void UpdaterClass::CheckForUpdates()
         }
         m_newexe = sett().GetLobbyWriteDir() + _T("update") + sep;
         wxMkdir( m_newexe );
-        wxString url = _T("springlobby.info/windows/springlobby-") + latestVersion + _T("-win32.zip");
+//        wxString url = _T("springlobby.info/windows/springlobby-") + latestVersion + _T("-win32.zip");
+        wxString url = _T("springlobby.info/windows/springlobby-0.0.1.1043-win32.zip");
         m_exedownloader = new ExeDownloader( url, m_newexe + _T("temp.zip") );
-      }
+      }//springlobby-0.0.1.1043-win32.zip
     #else
     customMessageBox(SL_MAIN_ICON, _("Your SpringLobby version is not up to date.\n\n") + msg, _("Not up to Date") );
     #endif
@@ -71,15 +72,25 @@ void UpdaterClass::OnDownloadEvent( int code )
   if ( code != 0) customMessageBox(SL_MAIN_ICON, _("There was an error downloading for the latest version.\nPlease try again later.\nIf the problem persists, please use Help->Report Bug to report this bug."), _("Error"));
   else
   {
-    if ( !UpdateExe( m_newexe , false ) )  customMessageBoxNoModal(SL_MAIN_ICON, wxString::Format( _("There was an error while trying to replace the current executable version\n manual copy is necessary from: %s\n to: %s\nPlease use Help->Report Bug to report this bug."), m_newexe.c_str(), wxStandardPaths::Get().GetExecutablePath().c_str() ), _("Error"));
+    if ( !UpdateExe( m_newexe , false ) )
+        customMessageBoxNoModal(SL_MAIN_ICON, wxString::Format( _("There was an error while trying to replace the current executable version\n manual copy is necessary from: %s\n to: %s\nPlease use Help->Report Bug to report this bug."), m_newexe.c_str(), wxStandardPaths::Get().GetExecutablePath().c_str() ), _("Error"));
     else
     {
-        wxRmdir( m_newexe );
-        customMessageBoxNoModal(SL_MAIN_ICON, _("Update complete. The changes will be available next lobby start."), _("Success"));
+        bool locale_ok = UpdateLocale( m_newexe, false );
+        if ( locale_ok ) {
+            wxRmdir( m_newexe );
+            customMessageBoxNoModal(SL_MAIN_ICON, _("Update complete. The changes will be available next lobby start."), _("Success"));
+        }
     }
   }
 }
 
+bool UpdaterClass::UpdateLocale( const wxString& tempdir, bool WaitForReboot )
+{
+    wxString target = wxPathOnly( wxStandardPaths::Get().GetExecutablePath() ) + wxFileName::GetPathSeparator() + _T("locale");
+    wxString origin = tempdir + _T("locale") + wxFileName::GetPathSeparator() ;
+    return CopyDir( origin, target );
+}
 
 bool UpdaterClass::UpdateExe( const wxString& newexe, bool WaitForReboot )
 {
