@@ -211,7 +211,11 @@ User& IBattle::OnUserAdded( User& user )
 			user.BattleStatus().ally = GetFreeAlly( &user == &GetMe() );
 			user.BattleStatus().colour = GetFreeColour();
     }
-    if ( ( user.BattleStatus().pos.x < 0 ) || ( user.BattleStatus().pos.y < 0 ) ) GetFreePosition( user.BattleStatus().pos.x, user.BattleStatus().pos.y );
+    if ( ( user.BattleStatus().pos.x < 0 ) || ( user.BattleStatus().pos.y < 0 ) )
+    {
+    	 GetFreePosition( user.BattleStatus().pos.x, user.BattleStatus().pos.y );
+    	 UserPositionChanged( user );
+    }
     return user;
 }
 
