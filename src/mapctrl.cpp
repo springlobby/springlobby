@@ -397,8 +397,8 @@ void MapCtrl::RelocateUsers()
     try
     {
 			User& user = m_battle->GetUser( i );
-			m_battle->GetFreePosition( user.BattleStatus().posx, user.BattleStatus().posy );
-			if ( user.BattleStatus().posx == -1 ) m_battle->KickPlayer( user );
+			m_battle->GetFreePosition( user.BattleStatus().pos.x, user.BattleStatus().pos.y );
+			if ( user.BattleStatus().pos.x == -1 ) m_battle->KickPlayer( user );
     }
     catch (...) {}
   }
@@ -760,8 +760,8 @@ void MapCtrl::DrawStartPositions( wxDC& dc )
 wxRealPoint
 MapCtrl::GetUserMapPositionAsReal(const User& user) const
 {
-    return wxRealPoint(static_cast<double>(user.BattleStatus().posx) / static_cast<double>(m_map.info.width),
-		       static_cast<double>(user.BattleStatus().posy) / static_cast<double>(m_map.info.height));
+    return wxRealPoint(static_cast<double>(user.BattleStatus().pos.x) / static_cast<double>(m_map.info.width),
+		       static_cast<double>(user.BattleStatus().pos.y) / static_cast<double>(m_map.info.height));
 }
 
 wxPoint
@@ -977,7 +977,7 @@ void MapCtrl::DrawUserPositions( wxDC& dc )
     {
       User& tbot = m_battle->GetUser(bi);
       if ( &tbot == 0 ) continue;
-      if ( (tbot.BattleStatus().posx == m_map.info.positions[i].x) && (tbot.BattleStatus().posy == m_map.info.positions[i].y) )
+      if ( (tbot.BattleStatus().pos.x == m_map.info.positions[i].x) && (tbot.BattleStatus().pos.y == m_map.info.positions[i].y) )
       {
         bot = &tbot;
         break;
@@ -1079,19 +1079,19 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
       wxRect mr = GetMinimapRect();
       wxRect r = GetUserRect( user, false );
 
-      user.BattleStatus().posx = (int)( ( (double)(event.GetX() - mr.x) / (double)mr.width ) * (double)m_map.info.width );
-      user.BattleStatus().posy = (int)( ( (double)(event.GetY() - mr.y) / (double)mr.height ) * (double)m_map.info.height );
-      CLAMP( user.BattleStatus().posx, 0, m_map.info.width );
-      CLAMP( user.BattleStatus().posy, 0, m_map.info.height );
+      user.BattleStatus().pos.x = (int)( ( (double)(event.GetX() - mr.x) / (double)mr.width ) * (double)m_map.info.width );
+      user.BattleStatus().pos.y = (int)( ( (double)(event.GetY() - mr.y) / (double)mr.height ) * (double)m_map.info.height );
+      CLAMP( user.BattleStatus().pos.x, 0, m_map.info.width );
+      CLAMP( user.BattleStatus().pos.y, 0, m_map.info.height );
 
       int x, y, index, range;
-      GetClosestStartPos( user.BattleStatus().posx, user.BattleStatus().posy, index, x, y, range );
+      GetClosestStartPos( user.BattleStatus().pos.x, user.BattleStatus().pos.y, index, x, y, range );
       if ( index != -1 )
       {
         if ( range < (10.0 / (double)mr.width) * (double)m_map.info.width )
         {
-          user.BattleStatus().posx = x;
-          user.BattleStatus().posy = y;
+          user.BattleStatus().pos.x = x;
+          user.BattleStatus().pos.y = y;
         }
       }
       RefreshRect( r.Union( GetUserRect( user, false ) ), false );
@@ -1392,7 +1392,7 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
     } catch (...) { return; }
 		if ( ( m_mdown_area == Move ) && ( m_maction == Moved ) )
 		{
-
+			m_battle->UserPositionChanged( user );
 		}
     else if ( m_mdown_area == UpAllyButton )
     {

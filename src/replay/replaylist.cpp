@@ -279,8 +279,8 @@ void ReplayList::GetBattleFromScript( const wxString& script_, OfflineBattle& ba
                 if ( teaminfos.exist )
                 {
 										user.BattleStatus().ally = teaminfos.AllyTeam;
-										user.BattleStatus().posx = teaminfos.StartPosX;
-										user.BattleStatus().posy = teaminfos.StartPosY;
+										user.BattleStatus().pos.x = teaminfos.StartPosX;
+										user.BattleStatus().pos.y = teaminfos.StartPosY;
 										user.BattleStatus().colour = teaminfos.RGBColor;
 										user.BattleStatus().handicap = teaminfos.Handicap;
 										if ( teaminfos.SideNum >= 0 ) user.BattleStatus().side = teaminfos.SideNum;

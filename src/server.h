@@ -121,6 +121,7 @@ class Server : public iNetClass
     virtual void SendHostInfo( HostInfo update ) = 0;
     virtual void SendHostInfo( const wxString& Tag ) = 0;
     virtual void SendRaw( const wxString& raw ) = 0;
+    virtual void SendUserPosition( const User& usr ) = 0;
 
     virtual void RequestInGameTime( const wxString& nick ) = 0;
 

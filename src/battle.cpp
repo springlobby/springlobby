@@ -899,3 +899,7 @@ int Battle::GetMyPlayerNum()
     return GetPlayerNum( GetMe() );
 }
 
+void Battle::UserPositionChanged( const User& user )
+{
+	  m_serv.SendUserPosition( user );
+}

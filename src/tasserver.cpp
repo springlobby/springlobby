@@ -1637,6 +1637,38 @@ void TASServer::SendHostInfo( const wxString& Tag )
 }
 
 
+void TASServer::SendUserPosition( const User& user )
+{
+	wxLogDebugFunc( _T("") );
+
+	try
+	{
+			ASSERT_LOGIC( m_battle_id != -1, _T("invalid m_battle_id value") );
+			ASSERT_LOGIC( BattleExists(m_battle_id), _T("battle doesn't exists") );
+
+			Battle& battle = GetBattle( m_battle_id );
+			ASSERT_LOGIC( battle.IsFounderMe(), _T("I'm not founder") );
+
+			UserBattleStatus status = user.BattleStatus();
+			wxString msgx = _T("/game/Team") + TowxString( status.team ) + _T("/StartPosX=") + TowxString( status.pos.x );
+			wxString msgy = _T("/game/Team") + TowxString( status.team ) + _T("/StartPosY=") + TowxString( status.pos.y );
+			wxString netmessage = msgx + _T("\t") + msgy;
+			if ( battle.IsProxy() )
+			{
+				RelayCmd( _T("SETSCRIPTTAGS"), netmessage );
+			}
+			else
+			{
+				SendCmd( _T("SETSCRIPTTAGS"), netmessage );
+			}
+
+	}
+	catch (...)
+	{
+			return;
+	}
+}
+
 void TASServer::SendRaw( const wxString& raw )
 {
     SendCmd( raw );

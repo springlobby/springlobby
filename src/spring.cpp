@@ -381,8 +381,8 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 
 						if ( startpostype == IBattle::ST_Pick )
 						{
-								tdf.Append(_T("StartPosX"), status.posx );
-								tdf.Append(_T("StartPosZ"), status.posy );
+								tdf.Append(_T("StartPosX"), status.pos.x );
+								tdf.Append(_T("StartPosZ"), status.pos.y );
 						}
 
 						tdf.Append( _T("AllyTeam"), m_ally_map[status.ally] );

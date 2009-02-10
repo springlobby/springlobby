@@ -208,7 +208,7 @@ User& IBattle::OnUserAdded( User& user )
     user.BattleStatus().team = GetFreeTeamNum( false );
     user.BattleStatus().ally = GetFreeAlly();
     user.BattleStatus().colour = GetFreeColour();
-    if ( ( user.BattleStatus().posx < 0 ) || ( user.BattleStatus().posy < 0 ) ) GetFreePosition( user.BattleStatus().posx, user.BattleStatus().posy );
+    if ( ( user.BattleStatus().pos.x < 0 ) || ( user.BattleStatus().pos.y < 0 ) ) GetFreePosition( user.BattleStatus().pos.x, user.BattleStatus().pos.y );
     return user;
 }
 
@@ -463,7 +463,7 @@ void IBattle::GetFreePosition( int& x, int& y )
     for ( unsigned int bi = 0; bi < GetNumUsers(); bi++ )
     {
       User& user = GetUser( bi );
-      if ( ( map.info.positions[i].x == user.BattleStatus().posx ) && ( map.info.positions[i].y == user.BattleStatus().posy ) )
+      if ( ( map.info.positions[i].x == user.BattleStatus().pos.x ) && ( map.info.positions[i].y == user.BattleStatus().pos.y ) )
       {
         taken = true;
         break;
@@ -779,4 +779,8 @@ void IBattle::DeletePreset( const wxString& name )
 wxArrayString IBattle::GetPresetList()
 {
   return sett().GetPresetList();
+}
+
+void IBattle::UserPositionChanged( const User& user )
+{
 }

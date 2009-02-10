@@ -20,20 +20,9 @@ class ChatPanel;
 typedef int wxEventType;
 #endif
 
-
-typedef int HostInfo;
-
 typedef int AlertEventType;
 
 extern const wxEventType torrentSystemStatusUpdateEvt;
-
-//these seem to be completely obsolete (koshi)
-//#define AE_MESSAGE 1
-//#define AE_HIGHLIGHT_MESSAGE 2
-//#define AE_PM 4
-//#define AE_ERROR 8
-//#define AE_DISCONNECT 16
-//#define AE_BATTLE_MESSAGE 32
 
 
 //! @brief UI main class

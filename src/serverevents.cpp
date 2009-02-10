@@ -411,6 +411,38 @@ void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const w
 								battle.CustomBattleOptions().setSingleOption( key, value, OptionsWrapper::ModOption );
                 battle.Update(  wxString::Format(_T("%d_%s"), OptionsWrapper::ModOption,  key.c_str() ) );
             }
+            else if ( key.Left( 4 ) == _T( "Team" ) && key.Contains( _T("StartPos") ) )
+            {
+            	 int team = s2l( key.BeforeFirst(_T('/')).Mid( 5 ) );
+							 if ( key.Contains( _T("StartPosX") ) )
+							 {
+							 	 int numusers = battle.GetNumUsers();
+							 	 for ( int i = 0; i < numusers; i++ )
+							 	 {
+							 	 	 User& usr = battle.GetUser( i );
+							 	 	 UserBattleStatus& status = usr.BattleStatus();
+							 	 	 if ( status.team == team )
+							 	 	 {
+							 	 	 	 status.pos.x = s2l( value );
+										 battle.OnUserBattleStatusUpdated( usr, status );
+							 	 	 }
+							 	 }
+							 }
+							 else if ( key.Contains( _T("StartPosY") ) )
+							 {
+							 	 int numusers = battle.GetNumUsers();
+							 	 for ( int i = 0; i < numusers; i++ )
+							 	 {
+							 	 	 User& usr = battle.GetUser( i );
+							 	 	 UserBattleStatus& status = usr.BattleStatus();
+							 	 	 if ( status.team == team )
+							 	 	 {
+							 	 	 	 status.pos.y = s2l( value );
+							 	 	 	 battle.OnUserBattleStatusUpdated( usr, status );
+							 	 	 }
+							 	 }
+							 }
+            }
             else
             {
 							battle.CustomBattleOptions().setSingleOption( key,  value, OptionsWrapper::EngineOption );

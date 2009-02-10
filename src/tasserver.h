@@ -105,6 +105,7 @@ class TASServer : public Server
     void StartHostedBattle();
     void SendHostInfo( HostInfo update );
     void SendHostInfo( const wxString& Tag );
+    void SendUserPosition( const User& user );
 
     void SendRaw( const wxString& raw );
 
