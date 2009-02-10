@@ -1076,7 +1076,7 @@ void MapCtrl::OnPaint( wxPaintEvent& WXUNUSED(event) )
 		}
 		else
 		{
-			DrawUserPositions( dc );
+			DrawStartPositions( dc );
 		}
 	}
 
