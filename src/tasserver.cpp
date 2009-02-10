@@ -1650,8 +1650,8 @@ void TASServer::SendUserPosition( const User& user )
 			ASSERT_LOGIC( battle.IsFounderMe(), _T("I'm not founder") );
 
 			UserBattleStatus status = user.BattleStatus();
-			wxString msgx = _T("/game/Team") + TowxString( status.team ) + _T("/StartPosX=") + TowxString( status.pos.x );
-			wxString msgy = _T("/game/Team") + TowxString( status.team ) + _T("/StartPosY=") + TowxString( status.pos.y );
+			wxString msgx = _T("game/Team") + TowxString( status.team ) + _T("/StartPosX=") + TowxString( status.pos.x );
+			wxString msgy = _T("game/Team") + TowxString( status.team ) + _T("/StartPosY=") + TowxString( status.pos.y );
 			wxString netmessage = msgx + _T("\t") + msgy;
 			if ( battle.IsProxy() )
 			{
