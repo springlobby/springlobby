@@ -1554,10 +1554,8 @@ void MapCtrl::OnGetMapImageAsyncCompleted( wxCommandEvent& event )
   else if ( m_metalmap == NULL ) {
     m_metalmap = new wxBitmap( usync().GetMetalmap( m_mapname, w, h ) );
     // singleplayer mode doesn't allow startboxes anyway
-    if (!m_sp) {
-      m_metalmap_cumulative = usync().GetMetalmap( m_mapname );
-      Accumulate( m_metalmap_cumulative );
-    }
+		m_metalmap_cumulative = usync().GetMetalmap( m_mapname );
+		Accumulate( m_metalmap_cumulative );
     m_async.GetHeightmap( m_mapname, w, h );
   }
   else if ( m_heightmap == NULL ) {
