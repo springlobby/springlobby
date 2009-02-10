@@ -542,7 +542,9 @@ void BattleroomMMOptionsTab::OnInfoButton( wxCommandEvent& event )
         nameInfoMap::const_iterator iter = m_name_info_map.find( button->GetName() );
         if ( iter != m_name_info_map.end() ) {
             //needs to be moved a little away from cursor pos
-            new wxTipWindow ( this, iter->second , 1000 );
+            wxPoint pos =  wxGetMousePosition();
+            wxTipWindow* tip = new wxTipWindow ( this, iter->second , 1000 );
+            tip->Move( pos.x, pos.y - tip->GetSize().GetHeight() );
         }
     }
 }
