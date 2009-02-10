@@ -20,6 +20,47 @@ class BattleRoomTab;
 
 class MapCtrl : public wxPanel
 {
+
+	enum RectangleArea
+	{
+		Main = -1,
+		UpLeft,
+		UpRight,
+		DownRight,
+		DownLeft,
+		UpAllyButton,
+		DownAllyButton,
+		Side,
+		UpHandicapButton,
+		DownHandicapButton,
+		Handicap,
+		Close,
+		Move,
+		Download,
+		Refreshing
+	};
+
+	enum MouseAction
+	{
+		None,
+		Add,
+		Delete,
+		Moved,
+		ResizeUpLeft,
+		ResizeUpRight,
+		ResizeDownLeft,
+		ResizeDownRight
+	};
+
+	enum UserRectOrientation
+	{
+		TopLeft,
+		BottomLeft,
+		TopRight,
+		BottomRight
+	};
+
+
   public:
     MapCtrl( wxWindow* parent, int size, IBattle* battle, Ui& ui, bool readonly, bool fixed_size, bool draw_start_types, bool singleplayer );
     ~MapCtrl();
@@ -39,10 +80,6 @@ class MapCtrl : public wxPanel
     void OnGetMapImageAsyncCompleted( wxCommandEvent& event );
 
    protected:
-
-    typedef int RectArea;
-    typedef int MouseAction;
-    typedef int UserRectOrient;
 
     void LoadMinimap();
     void FreeMinimap();
@@ -85,7 +122,7 @@ class MapCtrl : public wxPanel
     wxPoint GetTranslatedScaledUserMapPosition(const User& user) const;
 
     wxRect GetUserRect( const User& user, bool selected );
-    RectArea GetUserRectArea( const wxRect& userrect, int x, int y );
+    RectangleArea GetUserRectArea( const wxRect& userrect, int x, int y );
 
     wxRect GetUserSideRect() { return wxRect( 37, 20, 16, 16 ); }
     wxRect GetUserHandicapRect() { return wxRect( 40, 55, 16, 16 ); }
@@ -137,10 +174,10 @@ class MapCtrl : public wxPanel
     int m_mover_rect;
     int m_mdown_rect;
 
-    RectArea m_rect_area;
-    RectArea m_last_rect_area;
+    RectangleArea m_rect_area;
+    RectangleArea m_last_rect_area;
 
-    RectArea m_mdown_area;
+    RectangleArea m_mdown_area;
     BattleStartRect m_tmp_brect;
 
     MouseAction m_maction;

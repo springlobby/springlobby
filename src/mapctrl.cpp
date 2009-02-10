@@ -74,43 +74,6 @@ const wxSize user_box_expanded_size ( USER_BOX_EXPANDED_WIDTH, USER_BOX_EXPANDED
     #define CONTAINS Inside
 #endif
 
-//typedef int RectArea;
-const int RA_Main               = -1;
-const int RA_UpLeft             = 0;
-const int RA_UpRight            = 1;
-const int RA_DownRight          = 2;
-const int RA_DownLeft           = 3;
-const int RA_UpAllyButton       = 4;
-const int RA_DownAllyButton     = 5;
-const int RA_Side               = 6;
-const int RA_UpHandicapButton   = 7;
-const int RA_DownHandicapButton = 8;
-const int RA_Handicap           = 9;
-const int RA_Close              = 10;
-const int RA_Move               = 11;
-const int RA_Download           = 12;
-const int RA_Refresh            = 13;
-
-
-//typedef int MouseAction;
-const int MA_None               = 0;
-const int MA_Add                = 1;
-const int MA_Delete             = 2;
-const int MA_Move               = 3;
-const int MA_ResizeUpLeft       = 4;
-const int MA_ResizeUpRight      = 5;
-const int MA_ResizeDownLeft     = 6;
-const int MA_ResizeDownRight    = 7;
-
-
-//typedef int BotRectOrient;
-const int BRO_TopLeft           = 0;
-const int BRO_BottomLeft        = 1;
-const int BRO_TopRight          = 2;
-const int BRO_BottomRight       = 3;
-
-
-
 BEGIN_EVENT_TABLE( MapCtrl, wxPanel )
   EVT_PAINT( MapCtrl::OnPaint )
   EVT_SIZE( MapCtrl::OnResize )
@@ -149,9 +112,9 @@ MapCtrl::MapCtrl( wxWindow* parent, int size, IBattle* battle, Ui& ui, bool read
   m_ro(readonly),
   m_sp(singleplayer),
   m_mover_rect(-2),
-  m_rect_area(RA_Main),
-  m_last_rect_area(RA_Main),
-  m_maction(MA_None),
+  m_rect_area(Main),
+  m_last_rect_area(Main),
+  m_maction(None),
   m_lastsize(-1,-1),
   m_close_img(0),
   m_close_hi_img(0),
@@ -376,7 +339,7 @@ void MapCtrl::_SetCursor()
 {
   if ( !m_minimap )
   {
-    if ( m_rect_area != RA_Main ) SetCursor( wxCursor( wxCURSOR_HAND ) );
+    if ( m_rect_area != Main ) SetCursor( wxCursor( wxCURSOR_HAND ) );
     else SetCursor( wxCursor( wxCURSOR_ARROW ) );
     return;
   }
@@ -401,10 +364,10 @@ void MapCtrl::_SetCursor()
   {
     if ( m_mover_rect >= 0 )
     {
-      if      ( m_rect_area == RA_UpLeft )    SetCursor( wxCursor( wxCURSOR_SIZENWSE ) );
-      else if ( m_rect_area == RA_UpRight )   SetCursor( wxCursor( wxCURSOR_ARROW ) );
-      else if ( m_rect_area == RA_DownLeft )  SetCursor( wxCursor( wxCURSOR_SIZENESW ) );
-      else if ( m_rect_area == RA_DownRight ) SetCursor( wxCursor( wxCURSOR_SIZENWSE ) );
+      if      ( m_rect_area == UpLeft )    SetCursor( wxCursor( wxCURSOR_SIZENWSE ) );
+      else if ( m_rect_area == UpRight )   SetCursor( wxCursor( wxCURSOR_ARROW ) );
+      else if ( m_rect_area == DownLeft )  SetCursor( wxCursor( wxCURSOR_SIZENESW ) );
+      else if ( m_rect_area == DownRight ) SetCursor( wxCursor( wxCURSOR_SIZENWSE ) );
       else SetCursor( wxCursor( wxCURSOR_SIZING ) );
     }
     else if ( m_mover_rect == -1 )
@@ -640,7 +603,7 @@ void MapCtrl::DrawStartRect( wxDC& dc, int index, wxRect& sr, const wxColour& co
     //dc.DrawRectangle( sr.x + sr.width - boxsize, sr.y + 1, boxsize, boxsize );
     //dc.DrawRectangle( sr.x, sr.y + sr.height - boxsize, boxsize, boxsize );
 
-    if ( m_rect_area != RA_UpRight ) dc.DrawBitmap( *m_close_img, sr.x + sr.width - 16, sr.y + 2, true );
+    if ( m_rect_area != UpRight ) dc.DrawBitmap( *m_close_img, sr.x + sr.width - 16, sr.y + 2, true );
     else dc.DrawBitmap( *m_close_hi_img, sr.x + sr.width - 16, sr.y + 2, true );
 
   }
@@ -705,15 +668,15 @@ void MapCtrl::DrawBackground( wxDC& dc )
     if ( !m_dl_img ) m_dl_img = new wxBitmap( download_map_xpm );
 
     dc.DrawBitmap( *m_nfound_img, width/2 - 32, height/2 - 32, true );
-    if ( (m_rect_area == RA_Refresh) && (m_mdown_area != RA_Refresh) ) dc.DrawBitmap( *m_reload_img, 6, height - 28, true );
+    if ( (m_rect_area == Refreshing) && (m_mdown_area != Refreshing) ) dc.DrawBitmap( *m_reload_img, 6, height - 28, true );
     else dc.DrawBitmap( *m_reload_img, 5, height - 27, true );
-    if ( (m_rect_area == RA_Download) && (m_mdown_area != RA_Download) ) dc.DrawBitmap( *m_dl_img, 6, height - 53, true );
+    if ( (m_rect_area == Download) && (m_mdown_area != Download) ) dc.DrawBitmap( *m_dl_img, 6, height - 53, true );
     else dc.DrawBitmap( *m_dl_img, 5, height - 52, true );
 
     dc.SetFont( wxFont( 9, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL ) );
-    if ( m_rect_area == RA_Refresh ) DrawOutlinedText( dc, _("Refresh"), 28, height - 25, wxColour(50,50,50), *wxWHITE );
+    if ( m_rect_area == Refreshing ) DrawOutlinedText( dc, _("Refresh"), 28, height - 25, wxColour(50,50,50), *wxWHITE );
     else DrawOutlinedText( dc, _("Refresh"), 28, height - 25, *wxWHITE, wxColour(50,50,50) );
-    if ( m_rect_area == RA_Download ) DrawOutlinedText( dc, _("Download"), 28, height - 50, wxColour(50,50,50), *wxWHITE );
+    if ( m_rect_area == Download ) DrawOutlinedText( dc, _("Download"), 28, height - 50, wxColour(50,50,50), *wxWHITE );
     else  DrawOutlinedText( dc, _("Download"), 28, height - 50, *wxWHITE, wxColour(50,50,50) );
 
   }
@@ -853,31 +816,31 @@ wxRect MapCtrl::GetUserRect( const User& user, bool selected )
 }
 
 
-MapCtrl::RectArea MapCtrl::GetUserRectArea( const wxRect& userrect, int x, int y )
+MapCtrl::RectangleArea MapCtrl::GetUserRectArea( const wxRect& userrect, int x, int y )
 {
   x = x - userrect.x;
   y = y - userrect.y;
   wxRect close = GetUserCloseRect();
 
 //TODO when wx26 support dropped remove macros
-  if ( close.CONTAINS( x, y ) ) return RA_Close;
+  if ( close.CONTAINS( x, y ) ) return Close;
   wxRect side = GetUserSideRect();
-  if ( side.CONTAINS( x, y ) ) return RA_Side;
+  if ( side.CONTAINS( x, y ) ) return Side;
   wxRect AllyUp = GetUserUpAllyButtonRect();
-  if ( AllyUp.CONTAINS( x, y ) ) return RA_UpAllyButton;
+  if ( AllyUp.CONTAINS( x, y ) ) return UpAllyButton;
   wxRect AllyDown = GetUserDownAllyButtonRect();
-  if ( AllyDown.CONTAINS( x, y ) ) return RA_DownAllyButton;
+  if ( AllyDown.CONTAINS( x, y ) ) return DownAllyButton;
   wxRect handicap = GetUserHandicapRect();
-  if ( handicap.CONTAINS( x, y ) ) return RA_Handicap;
+  if ( handicap.CONTAINS( x, y ) ) return Handicap;
   wxRect HandicapUp = GetUserUpHandicapButtonRect();
-  if ( HandicapUp.CONTAINS( x, y ) ) return RA_UpHandicapButton;
+  if ( HandicapUp.CONTAINS( x, y ) ) return UpHandicapButton;
   wxRect HandicapDown = GetUserDownHandicapButtonRect();
-  if ( HandicapDown.CONTAINS( x, y ) ) return RA_DownHandicapButton;
+  if ( HandicapDown.CONTAINS( x, y ) ) return DownHandicapButton;
 
   wxRect bot( 0, 0, USER_BOX_ICON_WIDTH, USER_BOX_ICON_HEIGHT );
-  if ( bot.CONTAINS( x, y ) ) return RA_Move;
+  if ( bot.CONTAINS( x, y ) ) return Move;
 
-  return RA_Main;
+  return Main;
 }
 
 
@@ -915,7 +878,7 @@ void MapCtrl::DrawUser( wxDC& dc, User& user, bool selected, bool moving )
     DrawStartRect( dc, -1, r,ColourDelta( col, -40 ) , false, 180 );
     DrawOutlinedText( dc, _("side:"), r.x+3, r.y+siderect.y-1, wxColour(50,50,50), *wxWHITE );
 
-    if ( m_rect_area == RA_Side )
+    if ( m_rect_area == Side )
     {
       wxRect tmp( r.x+siderect.x-1, r.y+siderect.y-1, siderect.width+2, siderect.height+2 );
       DrawStartRect( dc, -1, tmp, col, false );
@@ -946,8 +909,8 @@ void MapCtrl::DrawUser( wxDC& dc, User& user, bool selected, bool moving )
     DrawOutlinedText( dc, wxString::Format( _("ally:   %d"), user.BattleStatus().ally + 1 ), r.x+3, r.y+updownallyrect.y, wxColour(50,50,50), *wxWHITE );
     //dc.DrawText( wxString::Format( _("ally: %d"), bot.BattleStatus().ally + 1 ), r.x+4, r.y+40 );
 
-    if ( m_rect_area == RA_UpAllyButton ) dc.DrawBitmap( wxBitmap(upsel_down_xpm), r.x+updownallyrect.x, r.y+updownallyrect.y, true );
-    else if ( m_rect_area == RA_DownAllyButton ) dc.DrawBitmap( wxBitmap(up_downsel_xpm), r.x+updownallyrect.x, r.y+updownallyrect.y, true );
+    if ( m_rect_area == UpAllyButton ) dc.DrawBitmap( wxBitmap(upsel_down_xpm), r.x+updownallyrect.x, r.y+updownallyrect.y, true );
+    else if ( m_rect_area == DownAllyButton ) dc.DrawBitmap( wxBitmap(up_downsel_xpm), r.x+updownallyrect.x, r.y+updownallyrect.y, true );
     else dc.DrawBitmap( wxBitmap(up_down_xpm), r.x+updownallyrect.x, r.y+updownallyrect.y, true );
 
     /* Draw the Handicap numeric select */
@@ -957,8 +920,8 @@ void MapCtrl::DrawUser( wxDC& dc, User& user, bool selected, bool moving )
     DrawOutlinedText( dc, wxString::Format( _("bonus: %d%%"), user.BattleStatus().handicap ), r.x+3, r.y+updownhandicaprect.y+2, wxColour(50,50,50), *wxWHITE );
     dc.SetFont( f );
 
-    if ( m_rect_area == RA_UpHandicapButton ) dc.DrawBitmap( wxBitmap(upsel_down_xpm), r.x+updownhandicaprect.x, r.y+updownhandicaprect.y, true );
-    else if ( m_rect_area == RA_DownHandicapButton ) dc.DrawBitmap( wxBitmap(up_downsel_xpm), r.x+updownhandicaprect.x, r.y+updownhandicaprect.y, true );
+    if ( m_rect_area == UpHandicapButton ) dc.DrawBitmap( wxBitmap(upsel_down_xpm), r.x+updownhandicaprect.x, r.y+updownhandicaprect.y, true );
+    else if ( m_rect_area == DownHandicapButton ) dc.DrawBitmap( wxBitmap(up_downsel_xpm), r.x+updownhandicaprect.x, r.y+updownhandicaprect.y, true );
     else dc.DrawBitmap( wxBitmap(up_down_xpm), r.x+updownhandicaprect.x, r.y+updownhandicaprect.y, true );
 
     dc.SetPen( wxPen( col ) );
@@ -970,7 +933,7 @@ void MapCtrl::DrawUser( wxDC& dc, User& user, bool selected, bool moving )
     if ( &user != &(m_battle->GetMe()) )
     {
 			wxRect closerect = GetUserCloseRect();
-			if ( m_rect_area == RA_Close ) dc.DrawBitmap( *m_close_hi_img, r.x+closerect.x, r.y+closerect.y, true );
+			if ( m_rect_area == Close ) dc.DrawBitmap( *m_close_hi_img, r.x+closerect.x, r.y+closerect.y, true );
 			else dc.DrawBitmap( *m_close_img, r.x+closerect.x, r.y+closerect.y, true );
     }
     dc.DrawBitmap( *img, r.x+2, r.y+2, true );
@@ -1037,7 +1000,7 @@ void MapCtrl::DrawUserPositions( wxDC& dc )
 
     bool expanded = m_user_expanded;
     if ( !m_sp ) expanded = false;
-    DrawUser( dc, usr, (m_maction != MA_Move) && expanded, (m_maction == MA_Move) && expanded );
+    DrawUser( dc, usr, (m_maction != Moved) && expanded, (m_maction == Moved) && expanded );
 
   }
 
@@ -1101,7 +1064,7 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
   {
 
     if ( !m_battle->MapExists() ) return;
-    if ( m_maction == MA_Move )
+    if ( m_maction == Moved )
     {
       User& user = *m_user_expanded;
       try
@@ -1150,7 +1113,7 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
       wxRect r = GetUserRect( user, true );
       if ( r.CONTAINS( event.GetX(), event.GetY() )  )
       {
-        RectArea last = m_rect_area;
+        RectangleArea last = m_rect_area;
         m_rect_area = GetUserRectArea( r, event.GetX(), event.GetY() );
         if ( last != m_rect_area ) RefreshRect( r, false );
       }
@@ -1183,18 +1146,18 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
   {
     wxRect r = GetRefreshRect();
     wxRect d = GetDownloadRect();
-    RectArea old = m_rect_area;
+    RectangleArea old = m_rect_area;
     if ( r.CONTAINS( event.GetX(), event.GetY() ) )
     {
-      m_rect_area = RA_Refresh;
+      m_rect_area = Refreshing;
     }
     else if ( d.CONTAINS( event.GetX(), event.GetY() ) )
     {
-      m_rect_area = RA_Download;
+      m_rect_area = Download;
     }
     else
     {
-      m_rect_area = RA_Main;
+      m_rect_area = Main;
     }
     _SetCursor();
     if ( m_rect_area != old )
@@ -1209,7 +1172,7 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
 
   if ( longval != IBattle::ST_Choose ) return;
 
-  if ( m_maction == MA_Add )
+  if ( m_maction == Add )
   { // We are currently adding a rect.
 
     wxRect oldr = GetStartRect( m_tmp_brect );
@@ -1225,7 +1188,7 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
     return;
 
   }
-  else if ( m_maction == MA_ResizeDownRight )
+  else if ( m_maction == ResizeDownRight )
   {
 
     wxRect sr = GetStartRect( m_mdown_rect );
@@ -1245,7 +1208,7 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
     return;
 
   }
-  else if ( m_maction == MA_ResizeUpLeft )
+  else if ( m_maction == ResizeUpLeft )
   {
 
     wxRect sr = GetStartRect( m_mdown_rect );
@@ -1290,11 +1253,11 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
 
         if ( !m_ro )
         {
-          if      ( (wxRect( r.x + r.width - m_close_img->GetWidth(), r.y + 1, m_close_img->GetWidth(), m_close_img->GetWidth() )).CONTAINS( p ) ) m_rect_area = RA_UpRight;
-          else if ( (wxRect( r.x, r.y, boxsize, boxsize )).CONTAINS( p ) ) m_rect_area = RA_UpLeft;
-          else if ( (wxRect( r.x + r.width - boxsize, r.y + r.height - boxsize, boxsize, boxsize )).CONTAINS( p ) ) m_rect_area = RA_DownRight;
-          //else if ( (wxRect( r.x, r.y + r.height - boxsize, boxsize, boxsize )).CONTAINS( p ) ) m_rect_area = RA_DownLeft;
-          else m_rect_area = RA_Main;
+          if      ( (wxRect( r.x + r.width - m_close_img->GetWidth(), r.y + 1, m_close_img->GetWidth(), m_close_img->GetWidth() )).CONTAINS( p ) ) m_rect_area = UpRight;
+          else if ( (wxRect( r.x, r.y, boxsize, boxsize )).CONTAINS( p ) ) m_rect_area = UpLeft;
+          else if ( (wxRect( r.x + r.width - boxsize, r.y + r.height - boxsize, boxsize, boxsize )).CONTAINS( p ) ) m_rect_area = DownRight;
+          //else if ( (wxRect( r.x, r.y + r.height - boxsize, boxsize, boxsize )).CONTAINS( p ) ) m_rect_area = DownLeft;
+          else m_rect_area = Main;
         }
         SetMouseOverRect( i );
 
@@ -1325,8 +1288,8 @@ void MapCtrl::OnLeftDown( wxMouseEvent& event )
   {
     if ( m_user_expanded ) m_mdown_area = m_rect_area;
     else return;
-    if ( m_mdown_area == RA_Move ) m_maction = MA_Move;
-    else m_maction = MA_None;
+    if ( m_mdown_area == Move ) m_maction = Moved;
+    else m_maction = None;
     User& user = *m_user_expanded;
     try
     {
@@ -1341,7 +1304,7 @@ void MapCtrl::OnLeftDown( wxMouseEvent& event )
 
   if ( !m_minimap )
   {
-    if ( m_rect_area != RA_Main )
+    if ( m_rect_area != Main )
     {
       m_mdown_area = m_rect_area;
       Refresh();
@@ -1364,32 +1327,32 @@ void MapCtrl::OnLeftDown( wxMouseEvent& event )
       m_mdown_x = event.GetX();
       m_mdown_y = event.GetY();
 
-      if      ( m_mdown_area == RA_UpLeft )
+      if      ( m_mdown_area == UpLeft )
       {
-        m_maction = MA_ResizeUpLeft;
+        m_maction = ResizeUpLeft;
       }
-      else if ( m_mdown_area == RA_UpRight )
+      else if ( m_mdown_area == UpRight )
       {
-        m_maction = MA_Delete;
+        m_maction = Delete;
       }
-      else if ( m_mdown_area == RA_DownLeft )
+      else if ( m_mdown_area == DownLeft )
       {
-//        m_maction = MA_ResizeDownLeft;
+//        m_maction = ResizeDownLeft;
       }
-      else if ( m_mdown_area == RA_DownRight )
+      else if ( m_mdown_area == DownRight )
       {
-        m_maction = MA_ResizeDownRight;
+        m_maction = ResizeDownRight;
       }
-			else if ( m_mdown_area == RA_Main )
+			else if ( m_mdown_area == Main )
 			{
-        m_maction = MA_Move;
+        m_maction = Moved;
       }
 
     }
     else if ( m_mover_rect == -1 )
     { // We are over empty minimap area.
 
-      m_maction = MA_Add; // Add new start rect.
+      m_maction = Add; // Add new start rect.
       m_mdown_x = event.GetX();
       m_mdown_y = event.GetY();
       m_tmp_brect.ally = GetNewRectIndex();
@@ -1407,7 +1370,7 @@ void MapCtrl::OnLeftDown( wxMouseEvent& event )
         m_battle->GetMe().BattleStatus().ally = m_mover_rect;
 
     }
-    m_maction = MA_None;
+    m_maction = None;
   }
 }
 
@@ -1427,32 +1390,35 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
     {
 			ASSERT_LOGIC( &user != 0, _T("MapCtrl::OnLeftUp(): user == 0") );
     } catch (...) { return; }
+		if ( ( m_mdown_area == Move ) && ( m_maction == Moved ) )
+		{
 
-    if ( m_mdown_area == RA_UpAllyButton )
+		}
+    else if ( m_mdown_area == UpAllyButton )
     {
       user.BattleStatus().ally = ( user.BattleStatus().ally + 1 ) % 16;
       RefreshRect( GetUserRect( user, true ), false );
 
     }
-    else if ( m_mdown_area == RA_DownAllyButton )
+    else if ( m_mdown_area == DownAllyButton )
     {
       user.BattleStatus().ally = (user.BattleStatus().ally - 1) >= 0 ? (user.BattleStatus().ally - 1) : 15;
       RefreshRect( GetUserRect( user, true ), false );
 
     }
-    else if ( m_mdown_area == RA_UpHandicapButton )
+    else if ( m_mdown_area == UpHandicapButton )
     {
       if ( user.BattleStatus().handicap == 100 ) user.BattleStatus().handicap = 0;
       else user.BattleStatus().handicap = ( user.BattleStatus().handicap + 5 );
       RefreshRect( GetUserRect( user, true ), false );
 
     }
-    else if ( m_mdown_area == RA_DownHandicapButton )
+    else if ( m_mdown_area == DownHandicapButton )
 		{
       user.BattleStatus().handicap = (user.BattleStatus().handicap - 5) >= 0 ? (user.BattleStatus().handicap - 5) : 100;
       RefreshRect( GetUserRect( user, true ), false );
 
-    } else if ( m_mdown_area == RA_Side )
+    } else if ( m_mdown_area == Side )
     {
       try
       {
@@ -1464,15 +1430,15 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
       RefreshRect( GetUserRect( user, true ), false );
 
     }
-    else if ( m_mdown_area == RA_Close && m_user_expanded != &m_battle->GetMe() )
+    else if ( m_mdown_area == Close && m_user_expanded != &m_battle->GetMe() )
     {
       wxRect r = GetUserRect( user, true );
       m_battle->KickPlayer( user );
       RefreshRect( r, false );
 			m_user_expanded = 0;
     }
-    m_mdown_area = RA_Main;
-    m_maction = MA_None;
+    m_mdown_area = Main;
+    m_maction = None;
     return;
   }
 
@@ -1480,18 +1446,18 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
   {
     if ( m_mdown_area == m_rect_area )
     {
-      if ( m_mdown_area == RA_Refresh )
+      if ( m_mdown_area == Refreshing )
       {
         m_ui.ReloadUnitSync();
         m_battle->Update( wxString::Format( _T("%d_mapname"), OptionsWrapper::PrivateOptions ) );
         UpdateMinimap();
       }
-      else if ( m_mdown_area == RA_Download )
+      else if ( m_mdown_area == Download )
       {
         m_ui.DownloadMap( m_battle->GetHostMapHash(),  m_battle->GetHostMapName() );
       }
     }
-    m_mdown_area = RA_Main;
+    m_mdown_area = Main;
     Refresh();
     Update();
     return;
@@ -1501,7 +1467,7 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
 
   if ( longval != IBattle::ST_Choose ) return;
 
-  if ( m_maction == MA_Add )
+  if ( m_maction == Add )
   {
 
     m_tmp_brect.ally = -1;
@@ -1518,7 +1484,7 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
     m_battle->SendHostInfo( IBattle::HI_StartRects );
     UpdateMinimap();
   }
-  else if ( m_maction == MA_Delete )
+  else if ( m_maction == Delete )
   {
 
     if ( (m_mdown_area == m_rect_area) && (m_mover_rect == m_mdown_rect) )
@@ -1529,13 +1495,13 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
     }
 
   }
-  else if ( (m_maction == MA_ResizeDownRight)||(m_maction == MA_ResizeUpLeft) )
+  else if ( (m_maction == ResizeDownRight)||(m_maction == ResizeUpLeft) )
   {
     m_battle->ResizeStartRect( m_mdown_rect );
     m_battle->SendHostInfo( IBattle::HI_StartRects );
   }
 
-  m_maction = MA_None;
+  m_maction = None;
 
 }
 
