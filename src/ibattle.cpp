@@ -205,6 +205,9 @@ User& IBattle::OnUserAdded( User& user )
     user.BattleStatus().spectator = false;
     user.BattleStatus().ready = false;
     user.BattleStatus().sync = SYNC_UNKNOWN;
+    user.BattleStatus().team = GetFreeTeamNum( false );
+    user.BattleStatus().ally = GetFreeAlly();
+    user.BattleStatus().colour = GetFreeColour();
     if ( ( user.BattleStatus().posx < 0 ) || ( user.BattleStatus().posy < 0 ) ) GetFreePosition( user.BattleStatus().posx, user.BattleStatus().posy );
     return user;
 }
