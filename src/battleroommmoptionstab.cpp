@@ -526,11 +526,8 @@ void BattleroomMMOptionsTab::OnButton( wxCommandEvent& event )
 
 void BattleroomMMOptionsTab::OnInfoButton( wxCommandEvent& event )
 {
-    wxWindow* control = FindWindowById( event.GetId() - BUTTON_ID_OFFSET , this );
-    if ( control ) {
-        wxToolTip* tip = control->GetToolTip();
-        if ( tip ) {
-            customMessageBoxNoModal( SL_MAIN_ICON, tip->GetTip() , _T("dummybox") );
-        }
+    idInfoMap::const_iterator iter = m_id_info_map.find( event.GetId() - BUTTON_ID_OFFSET );
+    if ( iter != m_id_info_map.end() ) {
+        customMessageBoxNoModal( SL_MAIN_ICON, iter->second , _T("dummybox") );
     }
 }
