@@ -160,9 +160,9 @@ void BattleroomMMOptionsTab::setupOptionsSizer( wxBoxSizer* parent_sizer, Option
 
 }
 
-wxButton* BattleroomMMOptionsTab::getButton( wxWindowID id )
+wxButton* BattleroomMMOptionsTab::getButton( const wxWindowID id, const wxString& name )
 {
-    return new wxButton(this, id + BUTTON_ID_OFFSET, _T("?"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT, wxDefaultValidator, _T("button") );
+    return new wxButton(this, id + BUTTON_ID_OFFSET, _T("?"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT, wxDefaultValidator, name );
 }
 
 int BattleroomMMOptionsTab::setupOptionsSectionSizer(const mmOptionSection& section,
@@ -188,13 +188,13 @@ int BattleroomMMOptionsTab::setupOptionsSectionSizer(const mmOptionSection& sect
 			mmOptionBool current = i->second;
 			wxCheckBox* temp = new wxCheckBox(this,BOOL_START_ID+ctrl_count,current.name);
 			temp->SetToolTip(TE(current.description));
-			m_id_info_map[BOOL_START_ID+ctrl_count] = current.description;
+			m_name_info_map[pref+current.key] = current.description;
 			temp->SetName(pref+current.key);
 			m_chkbox_map[pref+current.key] = temp;
 			temp->SetValue(current.value);
 			temp->Enable(enable);
 			chkSizer->Add(temp, 0, wxRIGHT, b_gap);
-			chkSizer->Add(getButton(BOOL_START_ID+ctrl_count), 0, wxRIGHT, col_gap);
+			chkSizer->Add(getButton(BOOL_START_ID+ctrl_count,pref+current.key), 0, wxRIGHT, col_gap);
 			ctrl_count++;
         }
 	}
@@ -213,7 +213,7 @@ int BattleroomMMOptionsTab::setupOptionsSectionSizer(const mmOptionSection& sect
 					wxDefaultPosition, wxDefaultSize, 0, double(current.min), double(current.max),
 					double(current.value),double(current.stepping), wxSPINCTRLDBL_AUTODIGITS, current.key);
 			tempspin->SetToolTip(TE(current.description));
-			m_id_info_map[FLOAT_START_ID+ctrl_count] = current.description;
+			m_name_info_map[pref+current.key] = current.description;
 			tempspin->Enable(enable);
 			tempspin->SetName(pref+current.key);
 			m_spinctrl_map[pref+current.key] = tempspin;
@@ -221,7 +221,7 @@ int BattleroomMMOptionsTab::setupOptionsSectionSizer(const mmOptionSection& sect
 			 m_statictext_map[pref+current.key] = tempst;
 			spinSizer->Add(tempst,0, wxALIGN_CENTER_VERTICAL);
 			spinSizer->Add(tempspin, 0, wxRIGHT | wxALIGN_CENTER_VERTICAL, b_gap);
-			spinSizer->Add(getButton(FLOAT_START_ID+ctrl_count), 0, wxRIGHT , col_gap);
+			spinSizer->Add(getButton(FLOAT_START_ID+ctrl_count,pref+current.key), 0, wxRIGHT , col_gap);
 			ctrl_count++;
         }
 	}
@@ -240,7 +240,7 @@ int BattleroomMMOptionsTab::setupOptionsSectionSizer(const mmOptionSection& sect
                     wxDefaultSize, current.cbx_choices, wxCB_READONLY, wxDefaultValidator);
 
             tempchoice->SetToolTip(TE(current.description));
-            m_id_info_map[LIST_START_ID+ctrl_count] = current.description;
+            m_name_info_map[pref+current.key] = current.description;
             tempchoice->SetName(pref+current.key);
             tempchoice->Enable(enable);
             m_combox_map[pref+current.key] = tempchoice;
@@ -248,7 +248,7 @@ int BattleroomMMOptionsTab::setupOptionsSectionSizer(const mmOptionSection& sect
             m_statictext_map[pref+current.key] = tempst;
             cbxSizer->Add(tempst,0, wxALIGN_CENTER_VERTICAL);
             cbxSizer->Add(tempchoice, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, b_gap);
-            cbxSizer->Add(getButton(LIST_START_ID+ctrl_count), 0,  wxRIGHT, col_gap);
+            cbxSizer->Add(getButton(LIST_START_ID+ctrl_count,pref+current.key), 0,  wxRIGHT, col_gap);
 
             ctrl_count++;
         }
@@ -264,7 +264,7 @@ int BattleroomMMOptionsTab::setupOptionsSectionSizer(const mmOptionSection& sect
             wxTextCtrl* temptext = new wxTextCtrl(this, STRING_START_ID+ctrl_count, current.value, wxDefaultPosition,
                     wxDefaultSize, 0, wxDefaultValidator, current.key);
             temptext->SetToolTip(TE(current.description));
-            m_id_info_map[STRING_START_ID+ctrl_count] = current.description;
+            m_name_info_map[pref+current.key] = current.description;
             temptext->SetName(pref+current.key);
             temptext->Enable(enable);
             m_textctrl_map[pref+current.key] = temptext;
@@ -272,7 +272,7 @@ int BattleroomMMOptionsTab::setupOptionsSectionSizer(const mmOptionSection& sect
             m_statictext_map[pref+current.key] = tempst;
             textSizer->Add(tempst,0, wxALIGN_CENTER_VERTICAL);
             textSizer->Add(temptext,0, wxALIGN_CENTER_VERTICAL | wxRIGHT, b_gap);
-            textSizer->Add(getButton(STRING_START_ID+ctrl_count),0, wxRIGHT, col_gap);
+            textSizer->Add(getButton(STRING_START_ID+ctrl_count,pref+current.key),0, wxRIGHT, col_gap);
 
             ctrl_count++;
         }
@@ -526,8 +526,11 @@ void BattleroomMMOptionsTab::OnButton( wxCommandEvent& event )
 
 void BattleroomMMOptionsTab::OnInfoButton( wxCommandEvent& event )
 {
-    idInfoMap::const_iterator iter = m_id_info_map.find( event.GetId() - BUTTON_ID_OFFSET );
-    if ( iter != m_id_info_map.end() ) {
-        customMessageBoxNoModal( SL_MAIN_ICON, iter->second , _T("dummybox") );
+    wxWindow* button = (wxWindow*) event.GetEventObject();
+    if ( button ) {
+        nameInfoMap::const_iterator iter = m_name_info_map.find( button->GetName() );
+        if ( iter != m_name_info_map.end() ) {
+            customMessageBoxNoModal( SL_MAIN_ICON, iter->second , _T("dummybox") );
+        }
     }
 }
