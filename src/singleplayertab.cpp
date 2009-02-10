@@ -264,15 +264,9 @@ void SinglePlayerTab::OnAddBot( wxCommandEvent& event )
     return;
   }
   AddBotDialog dlg( this, m_battle, true );
-  if ( dlg.ShowModal() == wxID_OK ) {
-    int x = 0, y = 0;
-    m_battle.GetFreePosition( x, y );
+  if ( dlg.ShowModal() == wxID_OK )
+  {
     UserBattleStatus bs;
-		bs.colour = m_battle.GetFreeColour();
-    bs.posx = x;
-    bs.posy = y;
-    bs.ally = m_battle.GetFreeAlly();
-    bs.team = m_battle.GetFreeTeamNum( false );
     bs.owner = m_battle.GetMe().GetNick();
     bs.aishortname = dlg.GetAIShortName();
     bs.aiversion = dlg.GetAIVersion();
