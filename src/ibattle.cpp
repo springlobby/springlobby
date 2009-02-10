@@ -211,7 +211,7 @@ User& IBattle::OnUserAdded( User& user )
 			user.BattleStatus().ally = GetFreeAlly( &user == &GetMe() );
 			user.BattleStatus().colour = GetFreeColour();
     }
-    if ( ( user.BattleStatus().pos.x < 0 ) || ( user.BattleStatus().pos.y < 0 ) )
+    if ( IsFounderMe() && ( ( user.BattleStatus().pos.x < 0 ) || ( user.BattleStatus().pos.y < 0 ) ) )
     {
     	 UserPosition& pos = user.BattleStatus().pos;
     	 pos = GetFreePosition();
