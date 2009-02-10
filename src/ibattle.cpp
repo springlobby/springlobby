@@ -213,7 +213,8 @@ User& IBattle::OnUserAdded( User& user )
     }
     if ( ( user.BattleStatus().pos.x < 0 ) || ( user.BattleStatus().pos.y < 0 ) )
     {
-    	 GetFreePosition( user.BattleStatus().pos.x, user.BattleStatus().pos.y );
+    	 UserPosition& pos = user.BattleStatus().pos;
+    	 pos = GetFreePosition();
     	 UserPositionChanged( user );
     }
     return user;
@@ -462,8 +463,9 @@ int IBattle::GetFreeAlly( bool excludeme )
   return lowest;
 }
 
-void IBattle::GetFreePosition( int& x, int& y )
+UserPosition IBattle::GetFreePosition()
 {
+	UserPosition ret;
   UnitSyncMap map = LoadMap();
   for ( int i = 0; i < map.info.posCount; i++ )
 	{
@@ -479,13 +481,14 @@ void IBattle::GetFreePosition( int& x, int& y )
     }
     if ( !taken )
     {
-      x = CLAMP(map.info.positions[i].x, 0, map.info.width);
-      y = CLAMP(map.info.positions[i].y, 0, map.info.height);
-      return;
+      ret.x = CLAMP(map.info.positions[i].x, 0, map.info.width);
+      ret.y = CLAMP(map.info.positions[i].y, 0, map.info.height);
+      return ret;
     }
   }
-  x = map.info.width / 2;
-  y = map.info.height / 2;
+  ret.x = map.info.width / 2;
+  ret.y = map.info.height / 2;
+  return ret;
 }
 
 

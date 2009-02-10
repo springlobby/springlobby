@@ -397,7 +397,8 @@ void MapCtrl::RelocateUsers()
     try
     {
 			User& user = m_battle->GetUser( i );
-			m_battle->GetFreePosition( user.BattleStatus().pos.x, user.BattleStatus().pos.y );
+			UserPosition& pos = user.BattleStatus().pos;
+			pos = m_battle->GetFreePosition();
 			if ( user.BattleStatus().pos.x == -1 ) m_battle->KickPlayer( user );
     }
     catch (...) {}
