@@ -22,9 +22,9 @@ wxTranslationHelper::wxTranslationHelper( wxApp & app,
 
 wxTranslationHelper::~wxTranslationHelper()
 {
-	Save();
 	if(m_Locale)
 	{
+		Save();
 		wxDELETE(m_Locale);
 	}
 }
