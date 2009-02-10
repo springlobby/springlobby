@@ -1285,22 +1285,25 @@ void MapCtrl::OnLeftDown( wxMouseEvent& event )
 	long longval;
 	m_battle->CustomBattleOptions().getSingleValue( _T("startpostype") , OptionsWrapper::EngineOption ).ToLong( &longval );
 
-  if ( longval == IBattle::ST_Pick )
+  if ( !m_ro )
   {
-    if ( m_user_expanded ) m_mdown_area = m_rect_area;
-    else return;
-    if ( m_mdown_area == Move ) m_maction = Moved;
-    else m_maction = None;
-    User& user = *m_user_expanded;
-    try
-    {
-			ASSERT_LOGIC( &user != 0, _T("MapCtrl::OnLeftDown(): user = 0") );
-    } catch (...)
-    {
+		if ( longval == IBattle::ST_Pick )
+		{
+			if ( m_user_expanded ) m_mdown_area = m_rect_area;
+			else return;
+			if ( m_mdown_area == Move ) m_maction = Moved;
+			else m_maction = None;
+			User& user = *m_user_expanded;
+			try
+			{
+				ASSERT_LOGIC( &user != 0, _T("MapCtrl::OnLeftDown(): user = 0") );
+			} catch (...)
+			{
+				return;
+			}
+			RefreshRect( GetUserRect( user, true ), false );
 			return;
 		}
-    RefreshRect( GetUserRect( user, true ), false );
-    return;
   }
 
   if ( !m_minimap )
