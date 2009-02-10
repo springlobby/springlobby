@@ -232,7 +232,7 @@ public:
     virtual void ClearStartRects();
     virtual unsigned int GetNumRects();
 
-    virtual int GetFreeTeamNum( bool excludeme );
+    virtual int GetFreeTeamNum( bool excludeme = false );
 
     virtual User& GetMe() = 0;
 
