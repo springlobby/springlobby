@@ -1072,7 +1072,7 @@ void MapCtrl::OnPaint( wxPaintEvent& WXUNUSED(event) )
 		}
 		else if ( longval == IBattle::ST_Pick )
 		{
-			DrawSinglePlayer( dc );
+			DrawUserPositions( dc );
 		}
 		else
 		{
