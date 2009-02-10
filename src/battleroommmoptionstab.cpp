@@ -10,6 +10,7 @@
 #include <wx/defs.h>
 #include <wx/intl.h>
 #include <wx/button.h>
+#include <wx/tooltip.h>
 #include <map>
 
 #include "utils.h"
@@ -33,10 +34,11 @@ BEGIN_EVENT_TABLE( BattleroomMMOptionsTab,  wxPanel)
 	EVT_TEXT_ENTER					(wxID_ANY,  BattleroomMMOptionsTab::OnTextCtrlChange)
 	EVT_SPINCTRL					(wxID_ANY,  BattleroomMMOptionsTab::OnSpinCtrlChange)
 
-  EVT_BUTTON( BOPTS_LOADPRES, BattleroomMMOptionsTab::OnLoadPreset )
-  EVT_BUTTON( BOPTS_SAVEPRES, BattleroomMMOptionsTab::OnSavePreset )
-  EVT_BUTTON( BOPTS_DELETEPRES, BattleroomMMOptionsTab::OnDeletePreset )
-  EVT_BUTTON( BOPTS_SETDEFAULTPRES, BattleroomMMOptionsTab::OnSetModDefaultPreset )
+//  EVT_BUTTON( BOPTS_LOADPRES, BattleroomMMOptionsTab::OnLoadPreset )
+//  EVT_BUTTON( BOPTS_SAVEPRES, BattleroomMMOptionsTab::OnSavePreset )
+//  EVT_BUTTON( BOPTS_DELETEPRES, BattleroomMMOptionsTab::OnDeletePreset )
+//  EVT_BUTTON( BOPTS_SETDEFAULTPRES, BattleroomMMOptionsTab::OnSetModDefaultPreset )
+  EVT_BUTTON( wxID_ANY, BattleroomMMOptionsTab::OnButton )
 
 END_EVENT_TABLE()
 
@@ -158,6 +160,11 @@ void BattleroomMMOptionsTab::setupOptionsSizer( wxBoxSizer* parent_sizer, Option
 
 }
 
+wxButton* BattleroomMMOptionsTab::getButton( wxWindowID id )
+{
+    return new wxButton(this, id + BUTTON_ID_OFFSET, _T("?"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT, wxDefaultValidator, _T("button") );
+}
+
 int BattleroomMMOptionsTab::setupOptionsSectionSizer(const mmOptionSection& section,
     wxBoxSizer* parent_sizer, OptionsWrapper::GameOption optFlag)
 {
@@ -169,6 +176,8 @@ int BattleroomMMOptionsTab::setupOptionsSectionSizer(const mmOptionSection& sect
 	wxFlexGridSizer* spinSizer =  new wxFlexGridSizer( 4, 10, 10 );
 	wxFlexGridSizer* textSizer =  new wxFlexGridSizer( 4, 10, 10 );
 	wxFlexGridSizer* chkSizer = new wxFlexGridSizer( 4, 10, 10 );
+
+    const int b_gap = 1;
 
     int total_count = 0;
 	int ctrl_count = 0;
@@ -183,7 +192,8 @@ int BattleroomMMOptionsTab::setupOptionsSectionSizer(const mmOptionSection& sect
 			m_chkbox_map[pref+current.key] = temp;
 			temp->SetValue(current.value);
 			temp->Enable(enable);
-			chkSizer->Add(temp, 0, wxRIGHT, col_gap);
+			chkSizer->Add(temp, 0, wxRIGHT, b_gap);
+			chkSizer->Add(getButton(BOOL_START_ID+ctrl_count), 0, wxRIGHT, col_gap);
 			ctrl_count++;
         }
 	}
@@ -208,7 +218,8 @@ int BattleroomMMOptionsTab::setupOptionsSectionSizer(const mmOptionSection& sect
 			 wxStaticText* tempst = new wxStaticText(this,-1,current.name);
 			 m_statictext_map[pref+current.key] = tempst;
 			spinSizer->Add(tempst,0, wxALIGN_CENTER_VERTICAL);
-			spinSizer->Add(tempspin, 0, wxRIGHT | wxALIGN_CENTER_VERTICAL, col_gap);
+			spinSizer->Add(tempspin, 0, wxRIGHT | wxALIGN_CENTER_VERTICAL, b_gap);
+			spinSizer->Add(getButton(FLOAT_START_ID+ctrl_count), 0, wxRIGHT | wxALIGN_CENTER_VERTICAL, col_gap);
 			ctrl_count++;
         }
 	}
@@ -233,7 +244,8 @@ int BattleroomMMOptionsTab::setupOptionsSectionSizer(const mmOptionSection& sect
             wxStaticText* tempst = new wxStaticText(this,-1,current.name);
             m_statictext_map[pref+current.key] = tempst;
             cbxSizer->Add(tempst,0, wxALIGN_CENTER_VERTICAL);
-            cbxSizer->Add(tempchoice, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, col_gap);
+            cbxSizer->Add(tempchoice, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, b_gap);
+            cbxSizer->Add(getButton(LIST_START_ID+ctrl_count), 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, col_gap);
 
             ctrl_count++;
         }
@@ -255,7 +267,8 @@ int BattleroomMMOptionsTab::setupOptionsSectionSizer(const mmOptionSection& sect
             wxStaticText* tempst = new wxStaticText(this,-1,current.name);
             m_statictext_map[pref+current.key] = tempst;
             textSizer->Add(tempst,0, wxALIGN_CENTER_VERTICAL);
-            textSizer->Add(temptext,0, wxALIGN_CENTER_VERTICAL | wxRIGHT, col_gap);
+            textSizer->Add(temptext,0, wxALIGN_CENTER_VERTICAL | wxRIGHT, b_gap);
+            textSizer->Add(getButton(STRING_START_ID+ctrl_count),0, wxALIGN_CENTER_VERTICAL | wxRIGHT, col_gap);
 
             ctrl_count++;
         }
@@ -492,4 +505,28 @@ void BattleroomMMOptionsTab::UpdatePresetList()
     m_options_preset_sel->Clear();
     m_options_preset_sel->Append(sett().GetPresetList());
     m_options_preset_sel->SetStringSelection(  m_battle.GetCurrentPreset() );
+}
+
+void BattleroomMMOptionsTab::OnButton( wxCommandEvent& event )
+{
+    switch ( event.GetId() ) {
+        case BOPTS_LOADPRES: OnLoadPreset ( event ); break;
+        case BOPTS_SAVEPRES: OnSavePreset ( event ); break;
+        case BOPTS_DELETEPRES: OnDeletePreset ( event ); break;
+        case BOPTS_SETDEFAULTPRES: OnSetModDefaultPreset ( event ); break;
+        default: OnInfoButton( event ); break;
+
+    }
+
+}
+
+void BattleroomMMOptionsTab::OnInfoButton( wxCommandEvent& event )
+{
+    wxWindow* control = FindWindowById( event.GetId() - BUTTON_ID_OFFSET , this );
+    if ( control ) {
+        wxToolTip* tip = control->GetToolTip();
+        if ( tip ) {
+            customMessageBoxNoModal( SL_MAIN_ICON, tip->GetTip() , _T("dummybox") );
+        }
+    }
 }

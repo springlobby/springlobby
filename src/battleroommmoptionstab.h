@@ -9,6 +9,7 @@ const int BOOL_START_ID = 3000;
 const int FLOAT_START_ID = 4000;
 const int LIST_START_ID = 5000;
 const int STRING_START_ID = 6000;
+const int BUTTON_ID_OFFSET = 7000;
 
 class wxBoxSizer;
 class wxStaticBoxSizer;
@@ -50,10 +51,12 @@ class BattleroomMMOptionsTab : public wxScrolledWindow
 
         void UpdatePresetList();
 
+        void OnButton( wxCommandEvent& event );
         void OnLoadPreset( wxCommandEvent& event );
         void OnSavePreset( wxCommandEvent& event );
         void OnDeletePreset( wxCommandEvent& event );
         void OnSetModDefaultPreset( wxCommandEvent& event );
+        void OnInfoButton( wxCommandEvent& event );
 
 	protected:
 		 IBattle& m_battle;
@@ -101,6 +104,8 @@ class BattleroomMMOptionsTab : public wxScrolledWindow
 		void OnTextCtrlChange(wxCommandEvent& event);
 		void OnSpinCtrlChange(wxSpinEvent& event);
 		/** @} */
+
+		wxButton* getButton( wxWindowID id );
 
 
 		DECLARE_EVENT_TABLE();
