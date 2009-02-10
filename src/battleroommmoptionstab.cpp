@@ -10,6 +10,7 @@
 #include <wx/defs.h>
 #include <wx/intl.h>
 #include <wx/button.h>
+#include <wx/tipwin.h>
 #include <wx/tooltip.h>
 #include <map>
 
@@ -540,7 +541,7 @@ void BattleroomMMOptionsTab::OnInfoButton( wxCommandEvent& event )
     if ( button ) {
         nameInfoMap::const_iterator iter = m_name_info_map.find( button->GetName() );
         if ( iter != m_name_info_map.end() ) {
-            customMessageBoxNoModal( SL_MAIN_ICON, iter->second , _T("dummybox") );
+            new wxTipWindow ( this, iter->second , 1000 );
         }
     }
 }
