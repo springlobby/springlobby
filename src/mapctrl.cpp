@@ -808,7 +808,7 @@ wxRect MapCtrl::GetUserRect( const User& user, bool selected )
   wxPoint absolute_position ( GetTranslatedScaledUserMapPosition(user) );
   wxPoint box_start ( absolute_position.x - USER_BOX_ICON_HALFWIDTH - USER_BOX_ICON_PADDING,
 		      absolute_position.y - USER_BOX_ICON_HALFWIDTH - USER_BOX_ICON_PADDING );
-  wxRect user_box ( box_start, selected ? user_box_expanded_size : user_box_icon_size );
+  wxRect user_box ( box_start, ( selected && m_sp ) ? user_box_expanded_size : user_box_icon_size );
   wxRect cram_into_box ( GetDrawableRect() );
   wxPoint offset ( ::FitInside(user_box, cram_into_box) );
   user_box.Offset(offset);
