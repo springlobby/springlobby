@@ -8,6 +8,7 @@
 #include "ui.h"
 #include "uiutils.h"
 #include "utils.h"
+#include "settings.h"
 #include <wx/settings.h>
 
 //(*InternalHeaders(MapSelectDialog)
@@ -39,6 +40,8 @@ const long MapSelectDialog::ID_MAPGRID = wxNewId();
 const long MapSelectDialog::ID_VERTICAL_DIRECTION = wxNewId();
 const long MapSelectDialog::ID_HORIZONTAL_DIRECTION = wxNewId();
 
+const wxString MapSelectDialog::m_dialog_name = _T("MapSelector");
+
 BEGIN_EVENT_TABLE(MapSelectDialog,wxDialog)
 	//(*EventTable(MapSelectDialog)
 	//*)
@@ -46,8 +49,8 @@ END_EVENT_TABLE()
 
 MapSelectDialog::MapSelectDialog(wxWindow* parent,Ui& ui)
 	: m_ui(ui)
-	, m_horizontal_direction(false)
-	, m_vertical_direction(false)
+	, m_horizontal_direction( sett().GetHorizontalSortorder() )
+	, m_vertical_direction( sett().GetVerticalSortorder() )
 {
 	//(*Initialize(MapSelectDialog)
 	wxStaticBoxSizer* StaticBoxSizer2;
@@ -123,6 +126,7 @@ MapSelectDialog::MapSelectDialog(wxWindow* parent,Ui& ui)
 	//*)
 
 	Connect(ID_MAPGRID,MapGridCtrl::MapSelectedEvt,(wxObjectEventFunction)&MapSelectDialog::OnMapSelected,0,this);
+	Connect(ID_MAPGRID,MapGridCtrl::LoadingCompletedEvt,(wxObjectEventFunction)&MapSelectDialog::OnMapLoadingCompleted,0,this);
 
 	// Ugh.. Can not have these created by generated code because wxSmith doesn't accept a symbolic size,
 	// (ie. wxSize(CONTROL_HEIGHT,CONTROL_HEIGHT)) and all Set*Size() methods don't seem to have any effect.
@@ -130,7 +134,6 @@ MapSelectDialog::MapSelectDialog(wxWindow* parent,Ui& ui)
 	boxSizerVertical->Add(m_vertical_direction_button, 0, wxALL|wxEXPAND|wxSHAPED|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	m_horizontal_direction_button = new wxButton(this, ID_HORIZONTAL_DIRECTION, _T(">"), wxDefaultPosition, wxSize(CONTROL_HEIGHT,CONTROL_HEIGHT), 0, wxDefaultValidator, _T("ID_HORIZONTAL_DIRECTION"));
 	boxSizerHorizontal->Add(m_horizontal_direction_button, 0, wxALL|wxEXPAND|wxSHAPED|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-
 	//<>ᴠᴧ
 
 	Connect(ID_VERTICAL_DIRECTION, wxEVT_COMMAND_BUTTON_CLICKED, (wxObjectEventFunction)&MapSelectDialog::OnVerticalDirectionClicked);
@@ -156,12 +159,31 @@ MapSelectDialog::MapSelectDialog(wxWindow* parent,Ui& ui)
 	m_map_opts_list->InsertItem( 4, _("Extractor radius") );
 	m_map_opts_list->InsertItem( 5, _("Max metal") );
 	m_map_opts_list->InsertItem( 6, _("Start positions") );
+
+	//could prolly go into Create() params, dunno how tho w/o meddling w wxsmith
+
+    wxPoint pos = sett().GetWindowPos( m_dialog_name , wxPoint( DEFSETT_MW_LEFT, DEFSETT_MW_TOP ) );
+    wxSize size = sett().GetWindowSize( m_dialog_name , wxSize( DEFSETT_MW_WIDTH, DEFSETT_MW_HEIGHT ) );
+    SetSize( pos.x , pos.y, size.GetWidth(), size.GetHeight() );
+    Layout();
 }
 
 MapSelectDialog::~MapSelectDialog()
 {
 	//(*Destroy(MapSelectDialog)
 	//*)
+	sett().SetHorizontalSortkeyIndex( m_horizontal_choice->GetSelection() );
+	sett().SetVerticalSortkeyIndex( m_vertical_choice->GetSelection() );
+	sett().SetHorizontalSortorder( m_horizontal_direction );
+	sett().SetVerticalSortorder( m_vertical_direction );
+	sett().SetWindowSize( m_dialog_name , GetSize() );
+    sett().SetWindowPos( m_dialog_name , GetPosition() );
+    if ( m_filter_all->GetValue() )
+        sett().SetMapSelectorFilterRadio( m_filter_all_sett );
+    else if ( m_filter_recent->GetValue() )
+        sett().SetMapSelectorFilterRadio( m_filter_recent_sett );
+    else
+        sett().SetMapSelectorFilterRadio( m_filter_popular_sett );
 }
 
 
@@ -172,24 +194,53 @@ void MapSelectDialog::OnInit( wxInitDialogEvent& event )
 	AppendSortKeys( m_horizontal_choice );
 	AppendSortKeys( m_vertical_choice );
 
-	m_horizontal_choice->SetSelection( 0 );
-	m_vertical_choice->SetSelection( 0 );
+	m_horizontal_choice->SetSelection( sett().GetHorizontalSortkeyIndex() );
+	m_vertical_choice->SetSelection( sett().GetVerticalSortkeyIndex() );
+
+    m_horizontal_direction_button->SetLabel( m_horizontal_direction ? _T("<") : _T(">") );
+    m_vertical_direction_button->SetLabel( m_vertical_direction ? _T("ᴧ") : _T("ᴠ") );
 
 	m_maps = usync().GetMapList();
 	usync().GetReplayList( m_replays );
 
+    const unsigned int lastFilter = sett().GetMapSelectorFilterRadio();
 	m_filter_popular->Enable( m_ui.IsConnected() );
 
 	// due to a bug / crappy design in SpringUnitSync / unitsync itself we
 	// get a replay list with one empty item when there are no replays..
-	if ( m_replays.empty() || ( m_replays.size() == 1 && m_replays[0] == wxEmptyString ) ) {
+	bool no_replays = m_replays.empty() || ( m_replays.size() == 1 && m_replays[0] == wxEmptyString );
+	if ( no_replays ) {
 		m_filter_all->SetValue( true );
 		m_filter_recent->Enable( false );
-		LoadAll();
+	}
+
+	if ( lastFilter == m_filter_popular_sett ) {
+	    if ( m_ui.IsConnected() ) {
+	        m_filter_popular->SetValue( true );
+            LoadPopular();
+	    }
+	    else {
+	        m_filter_all->SetValue( true );
+	        LoadAll();
+	    }
+	}
+	else if ( lastFilter == m_filter_recent_sett ) {
+	    if ( !no_replays ) {
+            m_filter_recent->Enable( true );
+            m_filter_recent->SetValue( true );
+            LoadRecent();
+	    }
+	    else {
+	        m_filter_all->SetValue( true );
+	        LoadAll();
+	    }
 	}
 	else {
-		LoadRecent();
-	}
+	        m_filter_all->SetValue( true );
+	        LoadAll();
+    }
+
+    UpdateSortAndFilter();
 
 	m_filter_text->SetFocus();
 }
@@ -272,6 +323,13 @@ void MapSelectDialog::OnMapSelected( wxCommandEvent& event )
 	m_map_opts_list->SetItem( 4, 1, wxString::Format( _T("%d"), map.info.extractorRadius ) );
 	m_map_opts_list->SetItem( 5, 1, wxString::Format( _T("%.3f"), map.info.maxMetal ) );
 	m_map_opts_list->SetItem( 6, 1, wxString::Format( _T("%d"), map.info.posCount ) );
+}
+
+void MapSelectDialog::OnMapLoadingCompleted( wxCommandEvent& event )
+{
+	wxLogDebugFunc( _T("") );
+	// to apply stored sorting settings we need to re-apply sorting after loading finished
+	UpdateSortAndFilter();
 }
 
 void MapSelectDialog::OnVerticalDirectionClicked( wxCommandEvent& event )

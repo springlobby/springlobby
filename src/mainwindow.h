@@ -89,6 +89,7 @@ class MainWindow : public wxFrame
     void OnReportBug( wxCommandEvent& event );
     void OnShowDocs( wxCommandEvent& event );
     void OnShowSettingsPP( wxCommandEvent& event );
+    void OnMenuSelectLocale( wxCommandEvent& event );
     void OnShowChannelChooser( wxCommandEvent& event );
     void forceSettingsFrameClose();
     void OnUnitSyncReloaded();
@@ -163,10 +164,13 @@ class MainWindow : public wxFrame
         MENU_START_TORRENT,
         MENU_STOP_TORRENT,
         MENU_AUTOJOIN_CHANNELS,
+        MENU_SELECT_LOCALE,
         MENU_CHANNELCHOOSER,
         MENU_SAVE_LAYOUT,
         MENU_LOAD_LAYOUT,
         MENU_DEFAULT_LAYOUT
+
+
 
     };
 

@@ -15,7 +15,10 @@ class MapGridCtrl : public wxPanel
 {
 	public:
 
+		/// this event is raised each time when a new map is selected
 		static const wxEventType MapSelectedEvt;
+		/// this event is raised after the loading of map infos finished
+		static const wxEventType LoadingCompletedEvt;
 
 		enum SortKey
 		{
@@ -55,7 +58,6 @@ class MapGridCtrl : public wxPanel
 			m_grid.clear();
 			m_mouseover_map = NULL; // can't be sure pointer will stay valid
 			m_selected_map = NULL;
-
 
 			for (MapMap::iterator it = m_maps_filtered.begin(); it != m_maps_filtered.end(); ++it) {
 				if ( pred( it->second ) ) maps.push_back( it->first );

@@ -21,6 +21,7 @@
 #include <wx/listbook.h>
 #endif
 #include <wx/tooltip.h>
+#include "springlobbyapp.h"
 
 #include <stdexcept>
 
@@ -94,6 +95,7 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU( MENU_DEFAULT_LAYOUT, MainWindow::OnMenuDefaultLayout )
 //  EVT_MENU( MENU_SHOW_TOOLTIPS, MainWindow::OnShowToolTips )
   EVT_MENU( MENU_AUTOJOIN_CHANNELS, MainWindow::OnMenuAutojoinChannels )
+  EVT_MENU( MENU_SELECT_LOCALE, MainWindow::OnMenuSelectLocale )
   EVT_MENU( MENU_CHANNELCHOOSER, MainWindow::OnShowChannelChooser )
   EVT_MENU_OPEN( MainWindow::OnMenuOpen )
   #ifdef HAVE_WX26
@@ -153,6 +155,7 @@ MainWindow::MainWindow( Ui& ui ) :
 
   wxMenu *menuHelp = new wxMenu;
   menuHelp->Append(MENU_ABOUT, _("&About"));
+  menuHelp->Append(MENU_SELECT_LOCALE, _("&Change language"));
   menuHelp->Append(MENU_TRAC, _("&Report a bug..."));
   menuHelp->Append(MENU_DOC, _("&Documentation"));
 
@@ -572,6 +575,14 @@ void MainWindow::OnMenuAutojoinChannels( wxCommandEvent& event )
     m_autojoin_dialog->Show();
 }
 
+void MainWindow::OnMenuSelectLocale( wxCommandEvent& event )
+{
+    if ( wxGetApp().SelectLanguage() ) {
+        customMessageBoxNoModal( SL_MAIN_ICON, _("You need to restart SpringLobby for the language change to take effect."),
+                                    _("Restart required"), wxICON_EXCLAMATION | wxOK );
+    }
+}
+
 void MainWindow::OnShowChannelChooser( wxCommandEvent& event )
 {
     ShowChannelChooser();
@@ -586,7 +597,6 @@ void MainWindow::OnChannelListStart( )
 {
     m_channel_chooser->ClearChannels();
 }
-
 
 void MainWindow::OnMenuSaveLayout( wxCommandEvent& event )
 {

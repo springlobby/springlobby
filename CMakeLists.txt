@@ -264,6 +264,7 @@ SET(SpringLobbySrc
 	src/userlistctrl.cpp
 	src/utils.cpp
 	src/globalsmanager.cpp
+	src/Helper/wxTranslationHelper.cpp
 )
 
 SET(SettingsSrc

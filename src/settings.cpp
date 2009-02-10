@@ -1668,16 +1668,6 @@ int Settings::GetColumnWidth( const wxString& list_name, const int coloumn )
     return m_config->Read(_T("GUI/ColoumnWidths/") + list_name + _T("/") + TowxString(coloumn), columnWidthUnset);
 }
 
-void Settings::SetMapSelectorFollowsMouse( bool value )
-{
-    m_config->Write(_T("GUI/MapSelector/SelectionFollowsMouse"), value);
-}
-
-bool Settings::GetMapSelectorFollowsMouse()
-{
-	return m_config->Read(_T("GUI/MapSelector/SelectionFollowsMouse"), 0l);
-}
-
 void Settings::SetPeopleList( const wxArrayString& friends, const wxString& group  )
 {
     unsigned int friendsCount = friends.GetCount();
@@ -1902,6 +1892,66 @@ Settings::CompletionMethod Settings::GetCompletionMethod(  ) const
 }
 
 
+unsigned int Settings::GetHorizontalSortkeyIndex()
+{
+    return m_config->Read( _T("/GUI/MapSelector/HorizontalSortkeyIndex"), 0l );
+}
+
+void Settings::SetHorizontalSortkeyIndex(const unsigned int idx)
+{
+    m_config->Write( _T("/GUI/MapSelector/HorizontalSortkeyIndex"), (int) idx );
+}
+
+unsigned int Settings::GetVerticalSortkeyIndex()
+{
+    return m_config->Read( _T("/GUI/MapSelector/VerticalSortkeyIndex"), 0l );
+}
+
+void Settings::SetVerticalSortkeyIndex(const unsigned int idx)
+{
+    m_config->Write( _T("/GUI/MapSelector/VerticalSortkeyIndex"), (int) idx );
+}
+
+bool Settings::GetHorizontalSortorder()
+{
+    return m_config->Read( _T("/GUI/MapSelector/HorizontalSortorder"), 0l );
+}
+
+void Settings::SetHorizontalSortorder(const bool order)
+{
+    m_config->Write( _T("/GUI/MapSelector/HorizontalSortorder"), order );
+}
+
+bool Settings::GetVerticalSortorder()
+{
+    return m_config->Read( _T("/GUI/MapSelector/VerticalSortorder"), 0l );
+}
+
+void Settings::SetVerticalSortorder( const bool order )
+{
+    m_config->Write( _T("/GUI/MapSelector/VerticalSortorder"), order );
+}
+
+void Settings::SetMapSelectorFollowsMouse( bool value )
+{
+    m_config->Write( _T("/GUI/MapSelector/SelectionFollowsMouse"), value);
+}
+
+bool Settings::GetMapSelectorFollowsMouse()
+{
+	return m_config->Read(_T("/GUI/MapSelector/SelectionFollowsMouse"), 0l );
+}
+
+unsigned int Settings::GetMapSelectorFilterRadio()
+{
+    return m_config->Read(_T("/GUI/MapSelector/FilterRadio"), 0l );
+}
+
+void Settings::SetMapSelectorFilterRadio( const unsigned int val )
+{
+    m_config->Write(_T("/GUI/MapSelector/FilterRadio"), (int) val );
+}
+
 //////////////////////////////////////////////////////////////////////////////
 ///                            SpringSettings                              ///
 //////////////////////////////////////////////////////////////////////////////
@@ -1975,3 +2025,14 @@ bool Settings::IsSpringBin( const wxString& path )
 #endif
   return true;
 }
+
+void Settings::SetLanguageID ( const long id )
+{
+    m_config->Write( _T("/General/LanguageID") , id );
+}
+
+long Settings::GetLanguageID ( )
+{
+    return m_config->Read( _T("/General/LanguageID") , wxLANGUAGE_DEFAULT  );
+}
+
