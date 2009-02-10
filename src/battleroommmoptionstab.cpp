@@ -163,7 +163,7 @@ void BattleroomMMOptionsTab::setupOptionsSizer( wxBoxSizer* parent_sizer, Option
 
 wxButton* BattleroomMMOptionsTab::getButton( const wxWindowID id, const wxString& name )
 {
-    m_button_map[name] = new wxButton(this, id + BUTTON_ID_OFFSET, _T("?"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT, wxDefaultValidator, name );
+    m_button_map[name] = new wxButton(this, id + BUTTON_ID_OFFSET, _T("?"), wxDefaultPosition, wxDefaultSize, wxNO_BORDER|wxBU_EXACTFIT, wxDefaultValidator, name );
     return m_button_map[name];
 }
 
@@ -196,8 +196,8 @@ int BattleroomMMOptionsTab::setupOptionsSectionSizer(const mmOptionSection& sect
 			temp->SetValue(current.value);
 			temp->Enable(enable);
 			wxBoxSizer* ct_sizer = new wxBoxSizer( wxHORIZONTAL );
-			ct_sizer->Add(temp, 0, wxRIGHT, b_gap);
-			ct_sizer->Add(getButton(BOOL_START_ID+ctrl_count,pref+current.key), 0, wxRIGHT, col_gap);
+			ct_sizer->Add(temp, 0, wxRIGHT| wxALIGN_CENTER_VERTICAL, b_gap);
+			ct_sizer->Add(getButton(BOOL_START_ID+ctrl_count,pref+current.key), 0, wxRIGHT| wxALIGN_CENTER_VERTICAL, col_gap);
 			chkSizer->Add( ct_sizer );
 			ctrl_count++;
         }
@@ -541,6 +541,7 @@ void BattleroomMMOptionsTab::OnInfoButton( wxCommandEvent& event )
     if ( button ) {
         nameInfoMap::const_iterator iter = m_name_info_map.find( button->GetName() );
         if ( iter != m_name_info_map.end() ) {
+            //needs to be moved a little away from cursor pos
             new wxTipWindow ( this, iter->second , 1000 );
         }
     }
