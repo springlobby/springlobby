@@ -413,7 +413,7 @@ void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const w
             }
             else if ( key.Left( 4 ) == _T( "team" ) && key.Contains( _T("startpos") ) )
             {
-            	 int team = s2l( key.BeforeFirst(_T('/')).Mid( 5 ) );
+            	 int team = s2l( key.BeforeFirst(_T('/')).Mid( 4 ) );
 							 if ( key.Contains( _T("startposx") ) )
 							 {
 							 	 int numusers = battle.GetNumUsers();
