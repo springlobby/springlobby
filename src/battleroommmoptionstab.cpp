@@ -244,9 +244,13 @@ int BattleroomMMOptionsTab::setupOptionsSectionSizer(const mmOptionSection& sect
             int index = CLAMP(current.cur_choice_index,0,temp);
             wxComboBox* tempchoice = new wxComboBox(this, LIST_START_ID+ctrl_count, current.cbx_choices[index], wxDefaultPosition,
                     wxDefaultSize, current.cbx_choices, wxCB_READONLY, wxDefaultValidator);
-
-            tempchoice->SetToolTip(TE(current.description));
-            m_name_info_map[pref+current.key] = current.description;
+						wxString tooltip = current.description + _T("\n");
+						for ( ListItemVec::iterator itor = current.listitems.begin(); itor != current.listitems.end(); itor++ )
+						{
+							tooltip+= _T("\n") + itor->name + _T(": ") + itor->desc;
+						}
+            tempchoice->SetToolTip(TE(tooltip));
+            m_name_info_map[pref+current.key] = tooltip;
             tempchoice->SetName(pref+current.key);
             tempchoice->Enable(enable);
             m_combox_map[pref+current.key] = tempchoice;
