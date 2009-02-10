@@ -11,9 +11,10 @@ const unsigned int SYNC_SYNCED = 1;
 const unsigned int SYNC_UNSYNCED = 2;
 
 //! @brief Struct used to store a client's status.
-struct UserStatus {
-    enum RankContainer {
-      RANK_UNKNOWN,
+struct UserStatus
+{
+    enum RankContainer
+    {
       RANK_1,
       RANK_2,
       RANK_3,
@@ -28,7 +29,7 @@ struct UserStatus {
   RankContainer rank;
   bool moderator;
   bool bot;
-  UserStatus(): in_game(false), away(false), rank(RANK_UNKNOWN), moderator(false), bot(false) {}
+  UserStatus(): in_game(false), away(false), rank(RANK_1), moderator(false), bot(false) {}
   wxString GetDiffString ( const UserStatus& other );
 };
 

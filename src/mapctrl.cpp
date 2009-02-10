@@ -1,4 +1,4 @@
-/* Copyright (C) 2007, 2008, 2009 The SpringLobby Team. All rights reserved. */
+/* Copyright (C) 2007-2009 The SpringLobby Team. All rights reserved. */
 
 #include <wx/panel.h>
 #include <wx/dcclient.h>
@@ -910,6 +910,7 @@ void MapCtrl::DrawUser( wxDC& dc, User& user, bool selected, bool moving )
 
   if ( selected )
   {
+      /* Drawing the whole user-battle-settings-box deal */
     wxRect siderect = GetUserSideRect();
     DrawStartRect( dc, -1, r,ColourDelta( col, -40 ) , false, 180 );
     DrawOutlinedText( dc, _("side:"), r.x+3, r.y+siderect.y-1, wxColour(50,50,50), *wxWHITE );
@@ -940,6 +941,7 @@ void MapCtrl::DrawUser( wxDC& dc, User& user, bool selected, bool moving )
     dc.DrawBitmap( *bmp, r.x+siderect.x, r.y+siderect.y, true );
     delete bmp;
 
+    /* Draw the Ally Number numeric select */
     wxRect updownallyrect = GetUserUpAllyButtonRect();
     DrawOutlinedText( dc, wxString::Format( _("ally:   %d"), user.BattleStatus().ally + 1 ), r.x+3, r.y+updownallyrect.y, wxColour(50,50,50), *wxWHITE );
     //dc.DrawText( wxString::Format( _("ally: %d"), bot.BattleStatus().ally + 1 ), r.x+4, r.y+40 );
@@ -948,6 +950,7 @@ void MapCtrl::DrawUser( wxDC& dc, User& user, bool selected, bool moving )
     else if ( m_rect_area == RA_DownAllyButton ) dc.DrawBitmap( wxBitmap(up_downsel_xpm), r.x+updownallyrect.x, r.y+updownallyrect.y, true );
     else dc.DrawBitmap( wxBitmap(up_down_xpm), r.x+updownallyrect.x, r.y+updownallyrect.y, true );
 
+    /* Draw the Handicap numeric select */
     wxRect updownhandicaprect = GetUserUpHandicapButtonRect();
     wxFont b( 6, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_LIGHT );
     dc.SetFont( b );
@@ -963,16 +966,18 @@ void MapCtrl::DrawUser( wxDC& dc, User& user, bool selected, bool moving )
 
     dc.DrawRectangle( r.x+1, r.y+1, r.width-2, 18 );
 
-    wxRect closerect = GetUserCloseRect();
-    if ( m_rect_area == RA_Close ) dc.DrawBitmap( *m_close_hi_img, r.x+closerect.x, r.y+closerect.y, true );
-    else dc.DrawBitmap( *m_close_img, r.x+closerect.x, r.y+closerect.y, true );
-
+    /* Draw the little 'X' (close button) in the corner... */
+    if ( &user != &(m_battle->GetMe()) )
+    {
+			wxRect closerect = GetUserCloseRect();
+			if ( m_rect_area == RA_Close ) dc.DrawBitmap( *m_close_hi_img, r.x+closerect.x, r.y+closerect.y, true );
+			else dc.DrawBitmap( *m_close_img, r.x+closerect.x, r.y+closerect.y, true );
+    }
     dc.DrawBitmap( *img, r.x+2, r.y+2, true );
-
   }
   else
   {
-
+		/* Just drawing an icon */
     dc.SetPen( wxPen( ColourDelta( col, -40 ) ) );
     dc.SetBrush( wxBrush( col, wxSOLID ) );
     dc.DrawRectangle( r.x, r.y, r.width, r.height );
@@ -1475,7 +1480,7 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
       RefreshRect( GetUserRect( user, true ), false );
 
     }
-    else if ( m_mdown_area == RA_Close )
+    else if ( m_mdown_area == RA_Close && m_user_expanded != &m_battle->GetMe() )
     {
       wxRect r = GetUserRect( user, true );
       m_battle->KickPlayer( user );

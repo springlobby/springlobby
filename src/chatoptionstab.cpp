@@ -284,7 +284,7 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( p
 
   sbColorsSizer->Add( bColorsVSizer, 1, wxEXPAND, 5 );
 
-  bMainSizerV->Add( sbColorsSizer, 0, wxEXPAND|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
+  bMainSizerV->Add( sbColorsSizer, 0, wxEXPAND|wxBOTTOM|wxRIGHT|wxLEFT|wxTOP, 5 );
 
 
 
@@ -343,7 +343,7 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( p
   bMainSizerV->Add( bBotomSizer, 0, wxEXPAND|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
 
 
-  bMainSizerV->Add( 0, 0, 1, wxEXPAND, 5 );
+  bMainSizerV->Add( 0, 0, 1, wxEXPAND | wxALL, 5 );
 
   SetScrollRate( 3, 3 );
 
