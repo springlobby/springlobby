@@ -162,7 +162,8 @@ void BattleroomMMOptionsTab::setupOptionsSizer( wxBoxSizer* parent_sizer, Option
 
 wxButton* BattleroomMMOptionsTab::getButton( const wxWindowID id, const wxString& name )
 {
-    return new wxButton(this, id + BUTTON_ID_OFFSET, _T("?"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT, wxDefaultValidator, name );
+    m_button_map[name] = new wxButton(this, id + BUTTON_ID_OFFSET, _T("?"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT, wxDefaultValidator, name );
+    return m_button_map[name];
 }
 
 int BattleroomMMOptionsTab::setupOptionsSectionSizer(const mmOptionSection& section,
@@ -426,6 +427,7 @@ void BattleroomMMOptionsTab::OnReloadControls(OptionsWrapper::GameOption flag)
 	RemovePrefixed(m_textctrl_map,pref);
 	RemovePrefixed(m_combox_map,pref);
 	RemovePrefixed(m_statictext_map,pref);
+	RemovePrefixed(m_button_map,pref);
 
 	//reloading the controls
 	switch (flag)

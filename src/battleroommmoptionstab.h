@@ -30,6 +30,7 @@ typedef std::map<wxString,wxComboBox*> comboBoxMap;
 typedef std::map<wxString,wxSpinCtrlDbl*> spinCtrlMap;
 typedef std::map<wxString,wxTextCtrl*> textCtrlMap;
 typedef std::map<wxString,wxStaticText*> staticTextMap;
+typedef std::map<wxString,wxButton*> buttonMap;
 typedef std::map<wxString,wxString> nameInfoMap; //! map control name <-> info (description)
 
 /** \brief a panel displaying programmatically generated gui elements to manipulate mmOptions
@@ -82,6 +83,7 @@ class BattleroomMMOptionsTab : public wxScrolledWindow
 		spinCtrlMap m_spinctrl_map;
 		textCtrlMap m_textctrl_map;
 		staticTextMap m_statictext_map;
+		buttonMap m_button_map;
 		nameInfoMap m_name_info_map;
 
 		/** \brief setup toplevel sizer per GameOption with all child sizers ( sections )
