@@ -205,8 +205,8 @@ User& IBattle::OnUserAdded( User& user )
     user.BattleStatus().spectator = false;
     user.BattleStatus().ready = false;
     user.BattleStatus().sync = SYNC_UNKNOWN;
-    user.BattleStatus().team = GetFreeTeamNum( false );
-    user.BattleStatus().ally = GetFreeAlly();
+    user.BattleStatus().team = GetFreeTeamNum( &user == &GetMe() );
+    user.BattleStatus().ally = GetFreeAlly( &user == &GetMe() );
     user.BattleStatus().colour = GetFreeColour();
     if ( ( user.BattleStatus().pos.x < 0 ) || ( user.BattleStatus().pos.y < 0 ) ) GetFreePosition( user.BattleStatus().pos.x, user.BattleStatus().pos.y );
     return user;
@@ -434,7 +434,7 @@ void IBattle::KickPlayer( User& user )
 		}
 }
 
-int IBattle::GetFreeAlly()
+int IBattle::GetFreeAlly( bool excludeme )
 {
   int lowest = 0;
   bool changed = true;
@@ -444,6 +444,7 @@ int IBattle::GetFreeAlly()
     for ( unsigned int i = 0; i < GetNumUsers(); i++ )
     {
       User& user = GetUser( i );
+      if ( ( &GetUser( i ) == &GetMe() ) && excludeme ) continue;
       if ( user.BattleStatus().ally == lowest )
       {
         lowest++;

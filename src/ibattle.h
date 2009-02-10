@@ -245,7 +245,7 @@ public:
     virtual User& OnBotAdded( const wxString& nick, const UserBattleStatus& bs );
 
     virtual void GetFreePosition( int& x, int& y );
-    virtual int GetFreeAlly();
+    virtual int GetFreeAlly( bool excludeme = false );
 
     virtual void DisableUnit( const wxString& unitname );
     virtual void EnableUnit( const wxString& unitname );
