@@ -107,7 +107,7 @@ class MapCtrl : public wxPanel
     void GetClosestStartPos( int fromx, int fromy, int& index, int& x, int& y, int& range );
 
     void DrawUser( wxDC& dc, User& user, bool selected, bool moving );
-    void DrawSinglePlayer( wxDC& dc );
+    void DrawUserPositions( wxDC& dc );
     void DrawBackground( wxDC& dc );
     void DrawStartRects( wxDC& dc );
     void DrawStartPositions( wxDC& dc );

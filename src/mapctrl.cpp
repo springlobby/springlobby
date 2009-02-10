@@ -993,7 +993,7 @@ void MapCtrl::DrawUser( wxDC& dc, User& user, bool selected, bool moving )
 }
 
 
-void MapCtrl::DrawSinglePlayer( wxDC& dc )
+void MapCtrl::DrawUserPositions( wxDC& dc )
 {
   wxLogDebugFunc(_T("") );
   if ( m_battle == 0 ) return;
@@ -1002,15 +1002,6 @@ void MapCtrl::DrawSinglePlayer( wxDC& dc )
   wxRect mr = GetMinimapRect();
   m_map = m_battle->LoadMap();
   RequireImages();
-
-  long longval;
-  m_battle->CustomBattleOptions().getSingleValue( _T("startpostype") , OptionsWrapper::EngineOption ).ToLong( &longval );
-
-  if ( longval == IBattle::ST_Fixed )
-  {
-    wxFont f( 7, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_LIGHT );
-    dc.SetFont( f );
-  }
 
   for ( int i = 0; i < m_map.info.posCount; i++ )
   {
@@ -1033,13 +1024,6 @@ void MapCtrl::DrawSinglePlayer( wxDC& dc )
     if ( bot != 0 ) continue;
 
     dc.DrawBitmap( *m_start_ally, x+mr.x, y+mr.y, true );
-
-    if ( longval == IBattle::ST_Fixed )
-    {
-      wxCoord w, h;
-      dc.GetTextExtent( wxString::Format(_T("%d"), i+1 ), &w, &h );
-      dc.DrawText( wxString::Format(_T("%d"), i+1 ), x+mr.x+(8-w/2), y+mr.y+(8-h/2) );
-    }
   }
 	int previousteam = -1;
   for ( unsigned int i = 0; i < m_battle->GetNumUsers(); i++ )
@@ -1092,7 +1076,7 @@ void MapCtrl::OnPaint( wxPaintEvent& WXUNUSED(event) )
 		}
 		else
 		{
-			DrawStartPositions( dc );
+			DrawUserPositions( dc );
 		}
 	}
 
