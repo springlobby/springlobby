@@ -411,10 +411,10 @@ void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const w
 								battle.CustomBattleOptions().setSingleOption( key, value, OptionsWrapper::ModOption );
                 battle.Update(  wxString::Format(_T("%d_%s"), OptionsWrapper::ModOption,  key.c_str() ) );
             }
-            else if ( key.Left( 4 ) == _T( "Team" ) && key.Contains( _T("StartPos") ) )
+            else if ( key.Left( 4 ) == _T( "team" ) && key.Contains( _T("startpos") ) )
             {
             	 int team = s2l( key.BeforeFirst(_T('/')).Mid( 5 ) );
-							 if ( key.Contains( _T("StartPosX") ) )
+							 if ( key.Contains( _T("startposx") ) )
 							 {
 							 	 int numusers = battle.GetNumUsers();
 							 	 for ( int i = 0; i < numusers; i++ )
@@ -428,7 +428,7 @@ void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const w
 							 	 	 }
 							 	 }
 							 }
-							 else if ( key.Contains( _T("StartPosY") ) )
+							 else if ( key.Contains( _T("startposy") ) )
 							 {
 							 	 int numusers = battle.GetNumUsers();
 							 	 for ( int i = 0; i < numusers; i++ )
