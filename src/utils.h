@@ -112,6 +112,7 @@ wxString GetSentenceParam( wxString& params );
 long GetIntParam( wxString& params );
 bool GetBoolParam( wxString& params );
 wxString GetSpringLobbyVersion();
+wxString GetExecutableFolder();
 
 //! matches against regex for printable ascii chars, excluding space
 bool IsValidNickname( const wxString& name );
@@ -179,4 +180,13 @@ class wxArrayString;
  */
 wxString GetBestMatch(const wxArrayString& a, const wxString& s, double* distance = NULL);
 
+//! convert wxArrayString into a wxString[] which must be delete[]d by caller
+int ConvertWXArrayToC(const wxArrayString& aChoices, wxString **choices);
+
+/**
+    let origin be /path/to/some/dir and destination /some/other/path
+    this will copy dir (and everything below that recursively to /some/other/path/dir
+    \return true if successful
+*/
+bool CopyDir( wxString origin, wxString destination, bool overwrite = true);
 #endif // SPRINGLOBBY_HEADERGUARD_UTILS_H

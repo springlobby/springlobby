@@ -882,6 +882,8 @@ springlobby_SOURCES = \
 	src/httpdownloader.cpp \
 	src/Helper/TextCompletionDatabase.hpp \
 	src/Helper/TextCompletionDatabase.cpp \
+	src/Helper/wxTranslationHelper.h \
+	src/Helper/wxTranslationHelper.cpp \
 	src/channel/channelchooser.cpp \
 	src/channel/channelchooser.h \
 	src/channel/channelchooserdialog.cpp \

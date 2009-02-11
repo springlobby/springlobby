@@ -81,6 +81,7 @@ class MapSelectDialog: public wxDialog
 		//*)
 
 		void OnMapSelected( wxCommandEvent& event );
+		void OnMapLoadingCompleted( wxCommandEvent& event );
 		void OnVerticalDirectionClicked( wxCommandEvent& event );
 		void OnHorizontalDirectionClicked( wxCommandEvent& event );
 
@@ -96,6 +97,11 @@ class MapSelectDialog: public wxDialog
 		bool m_vertical_direction;
 		wxArrayString m_maps;
 		std::vector< wxString > m_replays;
+
+		static const wxString m_dialog_name;
+		static const unsigned int m_filter_all_sett = 0;
+		static const unsigned int m_filter_recent_sett = 1;
+		static const unsigned int m_filter_popular_sett = 2;
 
 		DECLARE_EVENT_TABLE()
 };

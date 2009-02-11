@@ -40,6 +40,7 @@
 #include "updater/updater.h"
 #include "replay/replaytab.h"
 #include "globalsmanager.h"
+#include "Helper/wxTranslationHelper.h"
 
 const unsigned int TIMER_ID         = 101;
 const unsigned int TIMER_INTERVAL   = 100;
@@ -72,10 +73,11 @@ BEGIN_EVENT_TABLE(SpringLobbyApp, wxApp)
 END_EVENT_TABLE()
 
 SpringLobbyApp::SpringLobbyApp()
+    :m_translationhelper( NULL )
 {
     m_timer = new wxTimer(this, TIMER_ID);
-    m_locale = NULL;
     m_otadownloader = NULL;
+    SetAppName( _T("springlobby") );
 }
 
 SpringLobbyApp::~SpringLobbyApp()
@@ -105,30 +107,37 @@ bool SpringLobbyApp::OnInit()
     wxImage::AddHandler(new wxPNGHandler);
     wxFileSystem::AddHandler(new wxZipFSHandler);
 
-    m_locale = new wxLocale( );
-    m_locale->Init();
-#ifdef __WXMSW__
-    wxString path = wxStandardPaths::Get().GetExecutablePath().BeforeLast( wxFileName::GetPathSeparator() );
-    m_locale->AddCatalogLookupPathPrefix(path +  wxFileName::GetPathSeparator() + _T("locale") );
-#endif
-    m_locale->AddCatalog( _T("springlobby") );
 
-		#ifdef __WXMSW__
+#ifdef __WXMSW__
+    wxString path = wxPathOnly( wxStandardPaths::Get().GetExecutablePath() ) + wxFileName::GetPathSeparator() + _T("locale");
+#else
+    wxString path = wxStandardPaths::Get().GetLocalizedResourcesDir(_T("noneWH"),wxStandardPaths::ResourceCat_Messages);
+    path = path.Left( path.First(_T("noneWH") ) );
+#endif
+
+
+    m_translationhelper = new wxTranslationHelper( *( (wxApp*)this ), path );
+    m_translationhelper->Load();
+
+
 		if( sett().IsFirstRun() )
 		{
-			wxString defaultconfigpath =  wxStandardPathsBase::Get().GetExecutablePath().BeforeLast( wxFileName::GetPathSeparator() ) + wxFileName::GetPathSeparator() + _T("springlobby.global.conf");
+			wxString defaultconfigpath = GetExecutableFolder() + wxFileName::GetPathSeparator() + _T("springlobby.global.conf");
 			if (  wxFileName::FileExists( defaultconfigpath ) )
 			{
 				wxFileInputStream instream( defaultconfigpath );
 
 				if ( instream.IsOk() )
 				{
+					#ifdef __WXMSW__
 					SL_WinConf defaultconf( instream );
+					#else
+					wxConfig defaultconf( instream );
+					#endif
 					sett().SetDefaultConfigs( defaultconf );
 				}
 			}
 		}
-		#endif
 
     SetSettingsStandAlone( false );
 
@@ -207,6 +216,14 @@ bool SpringLobbyApp::OnInit()
 
         SetupUserFolders();
 
+				if ( sett().ShouldAddDefaultServerSettings() ) sett().SetDefaultServerSettings();
+				if ( sett().ShouldAddDefaultChannelSettings() )
+				{
+					sett().AddChannelJoin( _T("springlobby"), _T("") );
+					sett().AddChannelJoin( _T("newbies"), _T("") );
+				}
+				if ( sett().ShouldAddDefaultGroupSettings() ) sett().AddGroup( _("Default") );
+
         if ( !wxDirExists( wxStandardPaths::Get().GetUserDataDir() ) ) wxMkdir( wxStandardPaths::Get().GetUserDataDir() );
         wxString sep ( wxFileName::GetPathSeparator() );
 				if ( !wxDirExists( sett().GetCurrentUsedDataDir() + sep + _T("base") ) ) wxMkdir( sett().GetCurrentUsedDataDir() + sep + _T("base") );
@@ -273,6 +290,12 @@ bool SpringLobbyApp::OnInit()
 int SpringLobbyApp::OnExit()
 {
     wxLogDebugFunc( _T("") );
+
+    if(m_translationhelper)
+    {
+        wxDELETE(m_translationhelper);
+    }
+
 
     if ( m_otadownloader != 0 )
         delete m_otadownloader ;
@@ -393,3 +416,13 @@ void SpringLobbyApp::SetupUserFolders()
 #endif
 }
 
+bool SpringLobbyApp::SelectLanguage()
+{
+    wxArrayString names;
+    wxArrayLong identifiers;
+    int current_selection_index;
+    m_translationhelper->GetInstalledLanguages( names, identifiers, current_selection_index );
+    bool ret = m_translationhelper->AskUserForLanguage( names, identifiers, current_selection_index );
+    if ( ret ) m_translationhelper->Save();
+    return ret;
+}

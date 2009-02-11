@@ -215,7 +215,7 @@ void ServerEvents::OnBattleOpened( int id, bool replay, NatType nat, const wxStr
         battle.SetHostPort( port );
         battle.SetMaxPlayers( maxplayers );
         battle.SetIsPassworded( haspass );
-        battle.SetRankNeeded( ( rank / 100 ) +1 );
+        battle.SetRankNeeded( rank );
         battle.SetHostMap( map, maphash );
         battle.SetDescription( title );
         battle.SetHostMod( mod, wxEmptyString );

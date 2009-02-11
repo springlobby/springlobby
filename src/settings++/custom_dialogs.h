@@ -161,6 +161,14 @@ private:
 	wxTextCtrl* text_ctrl;
 };
 
-
+//! extends the wx method by allowing to set selection
+int GetSingleChoiceIndex( const wxString& message,
+                            const wxString& caption,
+                            const wxArrayString& aChoices,
+                            const int selected,
+                            wxWindow *parent = NULL,
+                            int x = wxDefaultCoord,
+                            int y = wxDefaultCoord,
+                            bool centre = true );
 
 #endif /*CUSTOM_MSG_DLG_H_*/

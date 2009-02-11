@@ -57,7 +57,7 @@ initDefaultChatColors()
     defaultChatColors.insert(std::make_pair(_T("Action"), wxColor(230, 0, 255)));
     defaultChatColors.insert(std::make_pair(_T("Server"), wxColor(0, 80, 128)));
     defaultChatColors.insert(std::make_pair(_T("Client"), wxColor(20, 200, 25)));
-    defaultChatColors.insert(std::make_pair(_T("JoinPart"), wxColor(0, 80, 0)));
+    defaultChatColors.insert(std::make_pair(_T("JoinPart"), wxColor(66, 204, 66)));
     defaultChatColors.insert(std::make_pair(_T("Error"), wxColor(128, 0, 0)));
     defaultChatColors.insert(std::make_pair(_T("Time"), wxColor(100, 100, 140)));
 
@@ -84,7 +84,7 @@ Settings::Settings()
 {
   #if defined(__WXMSW__) && !defined(HAVE_WX26)
   wxString userfilepath = wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator() + _T("springlobby.conf");
-  wxString globalfilepath =  wxStandardPathsBase::Get().GetExecutablePath().BeforeLast( wxFileName::GetPathSeparator() ) + wxFileName::GetPathSeparator() + _T("springlobby.conf");
+  wxString globalfilepath =  GetExecutableFolder() + wxFileName::GetPathSeparator() + _T("springlobby.conf");
 
   if (  wxFileName::FileExists( userfilepath ) || !wxFileName::FileExists( globalfilepath ) || !wxFileName::IsFileWritable( globalfilepath ) )
   {
@@ -127,14 +127,7 @@ Settings::Settings()
   m_config = new wxConfig( _T("SpringLobby"), wxEmptyString, _T(".springlobby/springlobby.conf"), _T("springlobby.global.conf") );
   SetPortableMode ( false );
   #endif
-  if ( !m_config->Exists( _T("/Server") ) ) SetDefaultServerSettings();
-  if ( !m_config->Exists( _T("/Channels") ) )
-  {
-		AddChannelJoin( _T("springlobby"), _T("") );
-		AddChannelJoin( _T("newbies"), _T("") );
-  }
-
-  if ( !m_config->Exists( _T("/Groups") ) ) AddGroup( _("Default") );
+	m_config->SetRecordDefaults( true );
 }
 
 Settings::~Settings()
@@ -160,20 +153,27 @@ void Settings::SaveSettings()
   #endif
 }
 
+
+#ifdef __WXMSW__
 void Settings::SetDefaultConfigs( SL_WinConf& conf )
+#else
+void Settings::SetDefaultConfigs( wxConfig& conf )
+#endif
 {
   wxString str;
   long dummy;
+	wxString previousgroup;
 
   // now all groups...
-  bool bCont = conf.GetFirstGroup(str, dummy);
-  while ( bCont )
+  bool groupcontinue = conf.GetFirstGroup(str, dummy);
+  while ( groupcontinue )
   {
   	// climb all tree branches until you hit the most further
-		bCont = conf.GetFirstGroup(str, dummy);
-    if ( bCont )
+		groupcontinue = conf.GetFirstGroup(str, dummy);
+    if ( groupcontinue && ( previousgroup != str ) )
     {
 			conf.SetPath( str );
+			previousgroup = str;
     }
     else
     {
@@ -182,23 +182,28 @@ void Settings::SetDefaultConfigs( SL_WinConf& conf )
 			bool exist = conf.GetFirstEntry(str, dummy);
 			while ( exist )
 			{
-				if ( !m_config->Exists( str ) ) // in theory "main" config should be blank at this point, but better be paranoyd and don't overwrite existing keys...
+				if ( !m_config->Exists( currentpath + _T("/") + str ) ) // in theory "main" config should be blank at this point, but better be paranoyd and don't overwrite existing keys...
 				{
-					m_config->Write( str, conf.Read( str, _T("") ) ); // append to main config
+					m_config->Write( currentpath + _T("/") + str, conf.Read( str, _T("") ) ); // append to main config
 				}
 
 				exist = conf.GetNextEntry(str, dummy);
 			}
 
-			if ( currentpath != _T("/") )
+			if ( !currentpath.IsEmpty() )
 			{
-				conf.SetPath( _T("..") ); // go to the parent folder
-				conf.DeleteGroup( currentpath ); // remove last analyzed group so it doesn't get iterated again
-				bCont = true;
+				wxString todelete = currentpath.AfterLast(_T('/'));
+				currentpath = currentpath.BeforeLast(_T('/'));
+				conf.SetPath( currentpath ); // go to the parent folder
+				conf.DeleteGroup( todelete ); // remove last analyzed group so it doesn't get iterated again
+				groupcontinue = true;
 			}
+			previousgroup = _T("");
     }
   }
+  m_config->Flush();
 }
+
 
 wxArrayString Settings::GetGroupList( const wxString& base_key )
 {
@@ -394,6 +399,10 @@ unsigned int Settings::GetModCachingThreadProgress()
     return m_config->Read( _T("/General/LastModCachingThreadIndex"), 0l );
 }
 
+bool Settings::ShouldAddDefaultServerSettings()
+{
+		return !m_config->Exists( _T("/Server") );
+}
 
 //! @brief Restores default settings
 void Settings::SetDefaultServerSettings()
@@ -634,6 +643,12 @@ wxString Settings::GetChannelJoinName( int index )
 {
     return m_config->Read( wxString::Format( _T("/Channels/Channel%d"), index ), _T("") );
 }
+
+bool Settings::ShouldAddDefaultChannelSettings()
+{
+		return !m_config->Exists( _T("/Channels" ));
+}
+
 /************* SPRINGLOBBY WINDOW POS/SIZE   ******************/
 //! @brief Get width of MainWindow.
 int Settings::GetWindowWidth( const wxString& window )
@@ -881,9 +896,9 @@ wxString Settings::GetCurrentUsedDataDir()
     else dir = susynclib().GetSpringConfigString( _T("SpringData"), _T("") );
   }
   #ifdef __WXMSW__
-  if ( dir.IsEmpty() ) dir = wxStandardPathsBase::Get().GetExecutablePath().BeforeLast( wxFileName::GetPathSeparator() ); /// fallback
+  if ( dir.IsEmpty() ) dir = GetExecutableFolder(); // fallback
   #else
-  if ( dir.IsEmpty() ) dir = wxFileName::GetHomeDir() + wxFileName::GetPathSeparator() + _T(".spring"); /// fallback
+  if ( dir.IsEmpty() ) dir = wxFileName::GetHomeDir() + wxFileName::GetPathSeparator() + _T(".spring"); // fallback
   #endif
   return dir;
 }
@@ -1654,16 +1669,6 @@ int Settings::GetColumnWidth( const wxString& list_name, const int coloumn )
     return m_config->Read(_T("GUI/ColoumnWidths/") + list_name + _T("/") + TowxString(coloumn), columnWidthUnset);
 }
 
-void Settings::SetMapSelectorFollowsMouse( bool value )
-{
-    m_config->Write(_T("GUI/MapSelector/SelectionFollowsMouse"), value);
-}
-
-bool Settings::GetMapSelectorFollowsMouse()
-{
-	return m_config->Read(_T("GUI/MapSelector/SelectionFollowsMouse"), 0l);
-}
-
 void Settings::SetPeopleList( const wxArrayString& friends, const wxString& group  )
 {
     unsigned int friendsCount = friends.GetCount();
@@ -1774,6 +1779,10 @@ UserActions::ActionType Settings::GetGroupActions( const wxString& group ) const
   return (UserActions::ActionType)result;
 }
 
+bool Settings::ShouldAddDefaultGroupSettings()
+{
+		return !m_config->Exists( _T("/Groups" ));
+}
 
 void Settings::SaveCustomColors( const wxColourData& _cdata, const wxString& paletteName  )
 {
@@ -1884,6 +1893,66 @@ Settings::CompletionMethod Settings::GetCompletionMethod(  ) const
 }
 
 
+unsigned int Settings::GetHorizontalSortkeyIndex()
+{
+    return m_config->Read( _T("/GUI/MapSelector/HorizontalSortkeyIndex"), 0l );
+}
+
+void Settings::SetHorizontalSortkeyIndex(const unsigned int idx)
+{
+    m_config->Write( _T("/GUI/MapSelector/HorizontalSortkeyIndex"), (int) idx );
+}
+
+unsigned int Settings::GetVerticalSortkeyIndex()
+{
+    return m_config->Read( _T("/GUI/MapSelector/VerticalSortkeyIndex"), 0l );
+}
+
+void Settings::SetVerticalSortkeyIndex(const unsigned int idx)
+{
+    m_config->Write( _T("/GUI/MapSelector/VerticalSortkeyIndex"), (int) idx );
+}
+
+bool Settings::GetHorizontalSortorder()
+{
+    return m_config->Read( _T("/GUI/MapSelector/HorizontalSortorder"), 0l );
+}
+
+void Settings::SetHorizontalSortorder(const bool order)
+{
+    m_config->Write( _T("/GUI/MapSelector/HorizontalSortorder"), order );
+}
+
+bool Settings::GetVerticalSortorder()
+{
+    return m_config->Read( _T("/GUI/MapSelector/VerticalSortorder"), 0l );
+}
+
+void Settings::SetVerticalSortorder( const bool order )
+{
+    m_config->Write( _T("/GUI/MapSelector/VerticalSortorder"), order );
+}
+
+void Settings::SetMapSelectorFollowsMouse( bool value )
+{
+    m_config->Write( _T("/GUI/MapSelector/SelectionFollowsMouse"), value);
+}
+
+bool Settings::GetMapSelectorFollowsMouse()
+{
+	return m_config->Read(_T("/GUI/MapSelector/SelectionFollowsMouse"), 0l );
+}
+
+unsigned int Settings::GetMapSelectorFilterRadio()
+{
+    return m_config->Read(_T("/GUI/MapSelector/FilterRadio"), 0l );
+}
+
+void Settings::SetMapSelectorFilterRadio( const unsigned int val )
+{
+    m_config->Write(_T("/GUI/MapSelector/FilterRadio"), (int) val );
+}
+
 //////////////////////////////////////////////////////////////////////////////
 ///                            SpringSettings                              ///
 //////////////////////////////////////////////////////////////////////////////
@@ -1957,3 +2026,14 @@ bool Settings::IsSpringBin( const wxString& path )
 #endif
   return true;
 }
+
+void Settings::SetLanguageID ( const long id )
+{
+    m_config->Write( _T("/General/LanguageID") , id );
+}
+
+long Settings::GetLanguageID ( )
+{
+    return m_config->Read( _T("/General/LanguageID") , wxLANGUAGE_DEFAULT  );
+}
+

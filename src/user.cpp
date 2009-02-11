@@ -178,8 +178,8 @@ UserStatus::RankContainer User::GetRank()
 wxString User::GetRankName(UserStatus::RankContainer rank)
 {
   //TODO: better interface to ranks?
-      switch(rank) {
-          case UserStatus::RANK_UNKNOWN: return _("Newbie");
+      switch( rank )
+      {
           case UserStatus::RANK_1: return _("Newbie");
           case UserStatus::RANK_2: return _("Beginner");
           case UserStatus::RANK_3: return _("Average");
@@ -188,20 +188,23 @@ wxString User::GetRankName(UserStatus::RankContainer rank)
           case UserStatus::RANK_6: return _("Highly experienced");
           case UserStatus::RANK_7: return _("Veteran");
       }
-      return _("no rank");
+			return _("Unknown");
 }
 
-float User::GetBalanceRank(){
-  return 1.0+0.1*float(GetStatus().rank-UserStatus::RANK_1)/float(UserStatus::RANK_7-UserStatus::RANK_1);
+float User::GetBalanceRank()
+{
+  return 1.0 + 0.1 * float( GetStatus().rank - UserStatus::RANK_1 ) / float( UserStatus::RANK_7 - UserStatus::RANK_1 );
 }
 
-wxString User::GetClan(){
-  wxString tmp=m_nick.AfterFirst('[');
-  if(tmp!=m_nick){
-    wxString clan=tmp.BeforeFirst(']');
-    if(clan!=tmp)return clan;
+wxString User::GetClan()
+{
+  wxString tmp = m_nick.AfterFirst('[');
+  if ( tmp != m_nick )
+  {
+    wxString clan = tmp.BeforeFirst(']');
+    if ( clan != tmp ) return clan;
   }
-  return wxString();
+  return _T("");
 }
 
 void CommonUser::SetStatus( const UserStatus& status )
