@@ -10,6 +10,8 @@
 #include <wx/defs.h>
 #include <wx/intl.h>
 #include <wx/button.h>
+#include <wx/tipwin.h>
+#include <wx/tooltip.h>
 #include <map>
 
 #include "utils.h"
@@ -33,10 +35,11 @@ BEGIN_EVENT_TABLE_TEMPLATE1( BattleroomMMOptionsTab, wxPanel, BattleType)
 	EVT_TEXT_ENTER					(wxID_ANY,  BattleroomMMOptionsTab::OnTextCtrlChange)
 	EVT_SPINCTRL					(wxID_ANY,  BattleroomMMOptionsTab::OnSpinCtrlChange)
 
-  EVT_BUTTON( BOPTS_LOADPRES, BattleroomMMOptionsTab::OnLoadPreset )
-  EVT_BUTTON( BOPTS_SAVEPRES, BattleroomMMOptionsTab::OnSavePreset )
-  EVT_BUTTON( BOPTS_DELETEPRES, BattleroomMMOptionsTab::OnDeletePreset )
-  EVT_BUTTON( BOPTS_SETDEFAULTPRES, BattleroomMMOptionsTab::OnSetModDefaultPreset )
+//  EVT_BUTTON( BOPTS_LOADPRES, BattleroomMMOptionsTab::OnLoadPreset )
+//  EVT_BUTTON( BOPTS_SAVEPRES, BattleroomMMOptionsTab::OnSavePreset )
+//  EVT_BUTTON( BOPTS_DELETEPRES, BattleroomMMOptionsTab::OnDeletePreset )
+//  EVT_BUTTON( BOPTS_SETDEFAULTPRES, BattleroomMMOptionsTab::OnSetModDefaultPreset )
+  EVT_BUTTON( wxID_ANY, BattleroomMMOptionsTab::OnButton )
 
 END_EVENT_TABLE()
 
@@ -113,7 +116,7 @@ BattleroomMMOptionsTab<BattleType>::BattleroomMMOptionsTab(  BattleType& battle,
     m_default_btn->Disable();
   }
 
-	//SetScrollbars( 10, 10, 62, 62 );
+	SetScrollRate( 4, 4 );
 }
 
 template < class BattleType >
@@ -161,6 +164,12 @@ void BattleroomMMOptionsTab<BattleType>::setupOptionsSizer( wxBoxSizer* parent_s
 
 }
 
+wxButton* BattleroomMMOptionsTab::getButton( const wxWindowID id, const wxString& name )
+{
+    m_button_map[name] = new wxButton(this, id + BUTTON_ID_OFFSET, _T("?"), wxDefaultPosition, wxDefaultSize, wxNO_BORDER|wxBU_EXACTFIT, wxDefaultValidator, name );
+    return m_button_map[name];
+}
+
 template < class BattleType >
 int BattleroomMMOptionsTab<BattleType>::setupOptionsSectionSizer(const mmOptionSection& section,
     wxBoxSizer* parent_sizer, OptionsWrapper::GameOption optFlag)
@@ -174,6 +183,8 @@ int BattleroomMMOptionsTab<BattleType>::setupOptionsSectionSizer(const mmOptionS
 	wxFlexGridSizer* textSizer =  new wxFlexGridSizer( 4, 10, 10 );
 	wxFlexGridSizer* chkSizer = new wxFlexGridSizer( 4, 10, 10 );
 
+    const int b_gap = 1;
+
     int total_count = 0;
 	int ctrl_count = 0;
 	for (IUnitSync::OptionMapBoolIter i = optWrap.opts[optFlag].bool_map.begin(); i != optWrap.opts[optFlag].bool_map.end();++i)
@@ -183,11 +194,15 @@ int BattleroomMMOptionsTab<BattleType>::setupOptionsSectionSizer(const mmOptionS
 			mmOptionBool current = i->second;
 			wxCheckBox* temp = new wxCheckBox(this,BOOL_START_ID+ctrl_count,current.name);
 			temp->SetToolTip(TE(current.description));
+			m_name_info_map[pref+current.key] = current.description;
 			temp->SetName(pref+current.key);
 			m_chkbox_map[pref+current.key] = temp;
 			temp->SetValue(current.value);
 			temp->Enable(enable);
-			chkSizer->Add(temp, 0, wxRIGHT, col_gap);
+			wxBoxSizer* ct_sizer = new wxBoxSizer( wxHORIZONTAL );
+			ct_sizer->Add(temp, 0, wxRIGHT| wxALIGN_CENTER_VERTICAL, b_gap);
+			ct_sizer->Add(getButton(BOOL_START_ID+ctrl_count,pref+current.key), 0, wxRIGHT| wxALIGN_CENTER_VERTICAL, col_gap);
+			chkSizer->Add( ct_sizer );
 			ctrl_count++;
         }
 	}
@@ -206,13 +221,17 @@ int BattleroomMMOptionsTab<BattleType>::setupOptionsSectionSizer(const mmOptionS
 					wxDefaultPosition, wxDefaultSize, 0, double(current.min), double(current.max),
 					double(current.value),double(current.stepping), wxSPINCTRLDBL_AUTODIGITS, current.key);
 			tempspin->SetToolTip(TE(current.description));
+			m_name_info_map[pref+current.key] = current.description;
 			tempspin->Enable(enable);
 			tempspin->SetName(pref+current.key);
 			m_spinctrl_map[pref+current.key] = tempspin;
 			 wxStaticText* tempst = new wxStaticText(this,-1,current.name);
 			 m_statictext_map[pref+current.key] = tempst;
 			spinSizer->Add(tempst,0, wxALIGN_CENTER_VERTICAL);
-			spinSizer->Add(tempspin, 0, wxRIGHT | wxALIGN_CENTER_VERTICAL, col_gap);
+			wxBoxSizer* ct_sizer = new wxBoxSizer( wxHORIZONTAL );
+			ct_sizer->Add(tempspin, 0, wxRIGHT | wxALIGN_CENTER_VERTICAL, b_gap);
+			ct_sizer->Add(getButton(FLOAT_START_ID+ctrl_count,pref+current.key), 0, wxRIGHT , col_gap);
+			spinSizer->Add( ct_sizer );
 			ctrl_count++;
         }
 	}
@@ -229,15 +248,23 @@ int BattleroomMMOptionsTab<BattleType>::setupOptionsSectionSizer(const mmOptionS
             int index = CLAMP(current.cur_choice_index,0,temp);
             wxComboBox* tempchoice = new wxComboBox(this, LIST_START_ID+ctrl_count, current.cbx_choices[index], wxDefaultPosition,
                     wxDefaultSize, current.cbx_choices, wxCB_READONLY, wxDefaultValidator);
-
-            tempchoice->SetToolTip(TE(current.description));
+						wxString tooltip = current.description + _T("\n");
+						for ( ListItemVec::iterator itor = current.listitems.begin(); itor != current.listitems.end(); itor++ )
+						{
+							tooltip+= _T("\n") + itor->name + _T(": ") + itor->desc;
+						}
+            tempchoice->SetToolTip(TE(tooltip));
+            m_name_info_map[pref+current.key] = tooltip;
             tempchoice->SetName(pref+current.key);
             tempchoice->Enable(enable);
             m_combox_map[pref+current.key] = tempchoice;
             wxStaticText* tempst = new wxStaticText(this,-1,current.name);
             m_statictext_map[pref+current.key] = tempst;
             cbxSizer->Add(tempst,0, wxALIGN_CENTER_VERTICAL);
-            cbxSizer->Add(tempchoice, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, col_gap);
+            wxBoxSizer* ct_sizer = new wxBoxSizer( wxHORIZONTAL );
+            ct_sizer->Add(tempchoice, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, b_gap);
+            ct_sizer->Add(getButton(LIST_START_ID+ctrl_count,pref+current.key), 0,  wxRIGHT, col_gap);
+            cbxSizer->Add( ct_sizer );
 
             ctrl_count++;
         }
@@ -253,13 +280,17 @@ int BattleroomMMOptionsTab<BattleType>::setupOptionsSectionSizer(const mmOptionS
             wxTextCtrl* temptext = new wxTextCtrl(this, STRING_START_ID+ctrl_count, current.value, wxDefaultPosition,
                     wxDefaultSize, 0, wxDefaultValidator, current.key);
             temptext->SetToolTip(TE(current.description));
+            m_name_info_map[pref+current.key] = current.description;
             temptext->SetName(pref+current.key);
             temptext->Enable(enable);
             m_textctrl_map[pref+current.key] = temptext;
             wxStaticText* tempst = new wxStaticText(this,-1,current.name);
             m_statictext_map[pref+current.key] = tempst;
             textSizer->Add(tempst,0, wxALIGN_CENTER_VERTICAL);
-            textSizer->Add(temptext,0, wxALIGN_CENTER_VERTICAL | wxRIGHT, col_gap);
+            wxBoxSizer* ct_sizer = new wxBoxSizer( wxHORIZONTAL );
+            ct_sizer->Add(temptext,0, wxALIGN_CENTER_VERTICAL | wxRIGHT, b_gap);
+            ct_sizer->Add(getButton(STRING_START_ID+ctrl_count,pref+current.key),0, wxRIGHT, col_gap);
+            textSizer->Add( ct_sizer );
 
             ctrl_count++;
         }
@@ -419,6 +450,7 @@ void BattleroomMMOptionsTab<BattleType>::OnReloadControls(OptionsWrapper::GameOp
 	RemovePrefixed(m_textctrl_map,pref);
 	RemovePrefixed(m_combox_map,pref);
 	RemovePrefixed(m_statictext_map,pref);
+	RemovePrefixed(m_button_map,pref);
 
 	//reloading the controls
 	switch (flag)
@@ -514,4 +546,31 @@ void BattleroomMMOptionsTab<BattleType>::UpdatePresetList()
     m_options_preset_sel->Clear();
     m_options_preset_sel->Append(sett().GetPresetList());
     m_options_preset_sel->SetStringSelection(  m_battle.GetCurrentPreset() );
+}
+
+void BattleroomMMOptionsTab::OnButton( wxCommandEvent& event )
+{
+    switch ( event.GetId() ) {
+        case BOPTS_LOADPRES: OnLoadPreset ( event ); break;
+        case BOPTS_SAVEPRES: OnSavePreset ( event ); break;
+        case BOPTS_DELETEPRES: OnDeletePreset ( event ); break;
+        case BOPTS_SETDEFAULTPRES: OnSetModDefaultPreset ( event ); break;
+        default: OnInfoButton( event ); break;
+
+    }
+
+}
+
+void BattleroomMMOptionsTab::OnInfoButton( wxCommandEvent& event )
+{
+    wxWindow* button = (wxWindow*) event.GetEventObject();
+    if ( button ) {
+        nameInfoMap::const_iterator iter = m_name_info_map.find( button->GetName() );
+        if ( iter != m_name_info_map.end() ) {
+            //needs to be moved a little away from cursor pos
+            wxPoint pos =  wxGetMousePosition();
+            wxTipWindow* tip = new wxTipWindow ( this, iter->second , 1000 );
+            tip->Move( pos.x, pos.y - tip->GetSize().GetHeight() );
+        }
+    }
 }

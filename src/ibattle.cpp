@@ -480,7 +480,8 @@ void IBattle::GetFreePosition( int& x, int& y )
 
 void IBattle::SetHostMap(const wxString& mapname, const wxString& hash)
 {
-  if ( mapname != m_host_map.name || hash != m_host_map.hash ) {
+  if ( mapname != m_host_map.name || hash != m_host_map.hash )
+  {
     m_map_loaded = false;
     m_host_map.name = mapname;
     m_host_map.hash = hash;
@@ -625,6 +626,7 @@ void IBattle::OnSelfLeftBattle()
 {
     susynclib().UnSetCurrentMod(); //left battle
     m_is_self_in = false;
+    ClearStartRects();
 }
 
 void IBattle::OnUnitSyncReloaded()

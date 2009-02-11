@@ -42,6 +42,7 @@ class LobbyOptionsTab : public wxScrolledWindow
         wxRadioButton* m_complete_method_old;
         wxRadioButton* m_complete_method_new;
         wxButton* m_web_browse_btn;
+        wxButton* m_select_locale;
         wxRadioButton* m_web_def_radio;
         wxRadioButton* m_web_spec_radio;
 

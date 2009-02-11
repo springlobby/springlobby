@@ -9,6 +9,7 @@ const int BOOL_START_ID = 3000;
 const int FLOAT_START_ID = 4000;
 const int LIST_START_ID = 5000;
 const int STRING_START_ID = 6000;
+const int BUTTON_ID_OFFSET = 7000;
 
 class wxBoxSizer;
 class wxStaticBoxSizer;
@@ -29,6 +30,8 @@ typedef std::map<wxString,wxComboBox*> comboBoxMap;
 typedef std::map<wxString,wxSpinCtrlDbl*> spinCtrlMap;
 typedef std::map<wxString,wxTextCtrl*> textCtrlMap;
 typedef std::map<wxString,wxStaticText*> staticTextMap;
+typedef std::map<wxString,wxButton*> buttonMap;
+typedef std::map<wxString,wxString> nameInfoMap; //! map control name <-> info (description)
 
 /** \brief a panel displaying programmatically generated gui elements to manipulate mmOptions
  * Since storing of data is mixed in with gui elements, this is a very delicate place to apply changes to.
@@ -53,10 +56,12 @@ class BattleroomMMOptionsTab : public wxScrolledWindow
 
         void UpdatePresetList();
 
+        void OnButton( wxCommandEvent& event );
         void OnLoadPreset( wxCommandEvent& event );
         void OnSavePreset( wxCommandEvent& event );
         void OnDeletePreset( wxCommandEvent& event );
         void OnSetModDefaultPreset( wxCommandEvent& event );
+        void OnInfoButton( wxCommandEvent& event );
 
 	protected:
         BattleType& m_battle;
@@ -81,6 +86,8 @@ class BattleroomMMOptionsTab : public wxScrolledWindow
 		spinCtrlMap m_spinctrl_map;
 		textCtrlMap m_textctrl_map;
 		staticTextMap m_statictext_map;
+		buttonMap m_button_map;
+		nameInfoMap m_name_info_map;
 
 		/** \brief setup toplevel sizer per GameOption with all child sizers ( sections )
             */
@@ -104,6 +111,8 @@ class BattleroomMMOptionsTab : public wxScrolledWindow
 		void OnTextCtrlChange(wxCommandEvent& event);
 		void OnSpinCtrlChange(wxSpinEvent& event);
 		/** @} */
+
+		wxButton* getButton( const wxWindowID id, const wxString& name );
 
 
 		DECLARE_EVENT_TABLE();

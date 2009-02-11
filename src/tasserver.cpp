@@ -926,16 +926,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     }
     else if ( cmd == _T("SERVERMSG") )
     {
-        // if a moderator asked for a players IP, just give him all smurfs
-        wxRegEx ipregex( _T("'s IP is (([0-9]{1,3}\\.){3}[0-9]{1,3})") );
-        if ( ipregex.Matches( params ) )
-        {
-            ModeratorFindByIP(  ipregex.GetMatch( params, 1 ) );
-        }
-        else
-        {
-            m_se->OnServerMessage( params );
-        }
+				m_se->OnServerMessage( params );
         //SERVERMSG {message}
     }
     else if ( cmd == _T("JOINBATTLEFAILED") )
@@ -2270,7 +2261,7 @@ UserStatus ConvTasclientstatus( TASClientstatus tas )
     UserStatus stat;
     stat.in_game = tas.in_game;
     stat.away = tas.away;
-    stat.rank = (UserStatus::RankContainer)(tas.rank + 1);
+    stat.rank = (UserStatus::RankContainer)tas.rank;
     stat.moderator = tas.moderator;
     stat.bot = tas.bot;
     return stat;

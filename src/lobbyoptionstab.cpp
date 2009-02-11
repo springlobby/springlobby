@@ -12,7 +12,10 @@
 #include <wx/filedlg.h>
 
 #include "settings.h"
+#include "springlobbyapp.h"
+#include "settings++/custom_dialogs.h"
 #include "utils.h"
+
 
 #ifndef HAVE_WX26
 #include "aui/auimanager.h"
@@ -188,3 +191,5 @@ void LobbyOptionsTab::OnDefaultWeb( wxCommandEvent& event )
 {
   HandleWebloc( m_web_def_radio->GetValue() );
 }
+
+
