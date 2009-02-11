@@ -164,7 +164,8 @@ void BattleroomMMOptionsTab<BattleType>::setupOptionsSizer( wxBoxSizer* parent_s
 
 }
 
-wxButton* BattleroomMMOptionsTab::getButton( const wxWindowID id, const wxString& name )
+template < class BattleType >
+wxButton* BattleroomMMOptionsTab<BattleType>::getButton( const wxWindowID id, const wxString& name )
 {
     m_button_map[name] = new wxButton(this, id + BUTTON_ID_OFFSET, _T("?"), wxDefaultPosition, wxDefaultSize, wxNO_BORDER|wxBU_EXACTFIT, wxDefaultValidator, name );
     return m_button_map[name];
@@ -548,7 +549,8 @@ void BattleroomMMOptionsTab<BattleType>::UpdatePresetList()
     m_options_preset_sel->SetStringSelection(  m_battle.GetCurrentPreset() );
 }
 
-void BattleroomMMOptionsTab::OnButton( wxCommandEvent& event )
+template < class BattleType >
+void BattleroomMMOptionsTab<BattleType>::OnButton( wxCommandEvent& event )
 {
     switch ( event.GetId() ) {
         case BOPTS_LOADPRES: OnLoadPreset ( event ); break;
@@ -561,7 +563,8 @@ void BattleroomMMOptionsTab::OnButton( wxCommandEvent& event )
 
 }
 
-void BattleroomMMOptionsTab::OnInfoButton( wxCommandEvent& event )
+template < class BattleType >
+void BattleroomMMOptionsTab<BattleType>::OnInfoButton( wxCommandEvent& event )
 {
     wxWindow* button = (wxWindow*) event.GetEventObject();
     if ( button ) {
