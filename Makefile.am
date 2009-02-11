@@ -863,7 +863,6 @@ springlobby_SOURCES = \
 	src/mmoptionswrapper.h \
 	src/mmoptionswrapper.cpp \
 	src/battleroommmoptionstab.h \
-	src/battleroommmoptionstab.cpp \
 	src/torrentwrapper.cpp \
 	src/torrentwrapper.h \
 	src/thingdef.h \
