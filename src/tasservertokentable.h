@@ -1,6 +1,9 @@
 #ifndef TASSERVERTOKENTABLE_H_INCLUDED
 #define TASSERVERTOKENTABLE_H_INCLUDED
 
+#include <wx/string.h>
+#include <map>
+
 static std::map<wxString,wxString> m_command_alias;
 static std::map<wxString,wxString> m_send_command_alias;
 
@@ -100,7 +103,7 @@ void TASServer::FillAliasMap()
 		m_command_alias[_T("~")] = _T("TESTLOGINDENY");
 		m_command_alias[_T("")] = _T("ACQUIREUSERID");
 		m_command_alias[_T("")] = _T("USERID");
-		for ( std::map<wxString,wxString>::iterator i ; i != m_command_alias.end(); i++) m_send_command_alias[i->second] = i->first; ///swap content for second map
+		for ( std::map<wxString,wxString>::iterator i = m_command_alias.begin(); i != m_command_alias.end(); i++) m_send_command_alias[i->second] = i->first; //swap content for second map
 }
 
 // returns original if not found
