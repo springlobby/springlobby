@@ -526,6 +526,7 @@ springlobby_SOURCES = \
 	src/springunitsync.h \
 	src/tasserver.cpp \
 	src/tasserver.h \
+	src/tasservertokentable.h \
 	src/ui.cpp \
 	src/ui.h \
 	src/uiutils.cpp \
