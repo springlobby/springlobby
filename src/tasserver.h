@@ -43,7 +43,7 @@ class TASServer : public Server
 
     void Ping();
 
-
+    void UDPPing();/// used for nat travelsal
     /// generic udp "ping" function
     /// return value: actual source port which was used. May differ from src_port
     /// 0 if udp ping failed
@@ -171,15 +171,17 @@ class TASServer : public Server
     bool m_do_finalize_join_battle;
     int m_finalize_join_battle_id;
     wxString m_finalize_join_battle_pw;
+		bool m_token_transmission;
 
     void FinalizeJoinBattle();
 
     void ReceiveAndExecute();
+
     void SendCmd( const wxString& command, const wxString& param = _T("") );
     void RelayCmd( const wxString& command, const wxString& param = _T("") );
+		void FillAliasMap();
 
     wxString m_current_chan_name_mutelist;
-
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_TASSERVER_H
