@@ -161,12 +161,12 @@ bool TASServer::ExecuteSayCommand( const wxString& cmd )
     }
     else if ( subcmd == _T("/ban") )
     {
-        SendCmd( _T("BANLISTADD"), params );
+        SendCmd( _T("BAN"), params );
         return true;
     }
     else if ( subcmd == _T("/unban") )
     {
-        SendCmd( _T("BANLISTREMOVE"), params );
+        SendCmd( _T("UNBAN"), params );
         return true;
     }
     else if ( subcmd == _T("/banlist") )
