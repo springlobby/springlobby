@@ -78,21 +78,18 @@ class IUnitSync
     typedef std::map<wxString,mmOptionFloat> OptionMapFloat;
     typedef std::map<wxString,mmOptionString> OptionMapString;
     typedef std::map<wxString,mmOptionList> OptionMapList;
-    typedef std::map<wxString,mmOptionInt> OptionMapInt;
     typedef std::map<wxString,mmOptionSection> OptionMapSection;
 
     typedef std::map<wxString,mmOptionBool>::iterator OptionMapBoolIter;
     typedef std::map<wxString,mmOptionFloat>::iterator OptionMapFloatIter;
     typedef std::map<wxString,mmOptionString>::iterator OptionMapStringIter;
     typedef std::map<wxString,mmOptionList>::iterator OptionMapListIter;
-    typedef std::map<wxString,mmOptionInt>::iterator OptionMapIntIter;
     typedef std::map<wxString,mmOptionSection>::iterator OptionMapSectionIter;
 
     typedef std::map<wxString,mmOptionBool>::const_iterator OptionMapBoolConstIter;
     typedef std::map<wxString,mmOptionFloat>::const_iterator OptionMapFloatConstIter;
     typedef std::map<wxString,mmOptionString>::const_iterator OptionMapStringConstIter;
     typedef std::map<wxString,mmOptionList>::const_iterator OptionMapListConstIter;
-    typedef std::map<wxString,mmOptionInt>::const_iterator OptionMapIntConstIter;
     typedef std::map<wxString,mmOptionSection>::const_iterator OptionMapSectionConstIter;
 
     /** @name Mods
@@ -212,7 +209,6 @@ struct GameOptions
   IUnitSync::OptionMapFloat float_map;
   IUnitSync::OptionMapString string_map;
   IUnitSync::OptionMapList list_map;
-  IUnitSync::OptionMapInt int_map;
   IUnitSync::OptionMapSection section_map;
 };
 

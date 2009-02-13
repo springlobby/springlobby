@@ -389,16 +389,16 @@ void BattleRoomTab::UpdateBattleInfo( const wxString& Tag )
     if ( ( type == OptionsWrapper::MapOption ) || ( type == OptionsWrapper::ModOption ) || ( type == OptionsWrapper::EngineOption ) )
     {
         OptionType DataType = m_battle.CustomBattleOptions().GetSingleOptionType( key );
+        value = m_battle.CustomBattleOptions().getSingleValue( key, (OptionsWrapper::GameOption)type );
         if ( DataType == opt_bool )
         {
-            long boolval;
-            m_battle.CustomBattleOptions().getSingleValue( key, (OptionsWrapper::GameOption)type ).ToLong( &boolval );
-            m_opts_list->SetItem( index, 1, bool2yn( boolval ) );
+            value =  bool2yn( s2l( value ) ); // convert from 0/1 to literal Yes/No
         }
-        else
+        else if ( DataType == opt_list )
         {
-            m_opts_list->SetItem( index, 1, m_battle.CustomBattleOptions().getSingleValue( key, (OptionsWrapper::GameOption)type ) );
+        	 value = m_battle.CustomBattleOptions().GetNameListOptValue( key, type ); // get the key full name not short key
         }
+				m_opts_list->SetItem( index, 1, value );
     }
     else if ( type == OptionsWrapper::PrivateOptions )
     {
@@ -726,18 +726,9 @@ long BattleRoomTab::AddMMOptionsToList( long pos, OptionsWrapper::GameOption opt
     for (OptionsWrapper::wxStringTripleVec::iterator it = optlist.begin(); it != optlist.end(); ++it)
     {
         m_opts_list->InsertItem( pos, it->second.first );
-        m_opt_list_map[ wxString::Format(_T("%d_"), optFlag ) + it->first ] = pos;
-        OptionType DataType = m_battle.CustomBattleOptions().GetSingleOptionType( it->first );
-        wxString value;
-        if ( DataType == opt_bool )
-        {
-            long boolval;
-            it->second.second.ToLong( &boolval );
-            value = bool2yn( boolval );
-        }
-        else
-            value = it->second.second;
-        m_opts_list->SetItem( pos, 1, value );
+        wxString tag = wxString::Format(_T("%d_"), optFlag ) + it->first;
+        m_opt_list_map[ tag ] = pos;
+        UpdateBattleInfo( tag );
         pos++;
     }
     return pos;

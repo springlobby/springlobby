@@ -147,23 +147,6 @@ struct mmOptionList : public mmOptionModel
 
 };
 
-//! Holds a long integer option
-struct mmOptionInt : public mmOptionModel
-{
-	//! sets members accordingly
-	mmOptionInt(wxString name_, wxString key_, wxString description_, int def_, int stepping_, int min_, int max_,
-                wxString section_ = SLGlobals::nosection_name, wxString style_ = SLGlobals::nostyle_name);
-	//! sets wxstring member to "" and int members to 0
-	mmOptionInt();
-
-	long def;
-	//! this will always represent the current value, also the only member that should change after creation
-	long value;
-
-	//! the increment with that value may change in min,max boundaries
-	long stepping;
-	long min, max;
-};
 
 struct mmOptionSection : public mmOptionModel{
     mmOptionSection (wxString name_, wxString key_, wxString description_,
