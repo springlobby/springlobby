@@ -41,6 +41,7 @@
 #include "autobalancedialog.h"
 #include "settings.h"
 #include "Helper/colorbutton.h"
+#include "mapselectdialog.h"
 
 #ifndef HAVE_WX26
 #include "aui/auimanager.h"
@@ -67,6 +68,8 @@ BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
     EVT_BUTTON( BROOM_SAVEPRES, BattleRoomTab::OnSavePreset )
     EVT_BUTTON( BROOM_DELETEPRES, BattleRoomTab::OnDeletePreset )
     EVT_BUTTON( BROOM_SETDEFAULTPRES, BattleRoomTab::OnSetModDefaultPreset )
+
+    EVT_BUTTON( BROOM_MAP_BROWSE, BattleRoomTab::OnMapBrowse )
 
     #if  wxUSE_TOGGLEBTN
     EVT_TOGGLEBUTTON( BROOM_AUTOHOST, BattleRoomTab::OnAutoHost )
@@ -147,6 +150,8 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
 
     m_minimap = new MapCtrl( this, 162, &m_battle, m_ui, true, true, true, false );
     m_minimap->SetToolTip(TE(_("A preview of the selected map.  You can see the starting positions, or (if set) starting boxes.")));
+
+    m_browse_map_btn = new wxButton( this, BROOM_MAP_BROWSE, _("Select map"), wxDefaultPosition, wxDefaultSize, 0 );
 
     m_players = new BattleroomListCtrl( m_player_panel, battle, m_ui );
     m_chat = new ChatPanel( m_splitter, m_ui, battle );
@@ -288,6 +293,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
     //m_info1_sizer->Add( m_size_lbl, 1, wxEXPAND );
 
     m_info_sizer->Add( m_minimap, 0, wxEXPAND );
+    m_info_sizer->Add( m_browse_map_btn, 0, wxEXPAND );
     m_info_sizer->Add( m_map_lbl, 0, wxEXPAND );
     //m_info_sizer->Add( m_info1_sizer, 0, wxEXPAND );
     //m_info_sizer->Add( m_tidal_lbl, 0, wxEXPAND );
@@ -323,6 +329,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
         m_options_preset_sel->Disable();
 				m_save_btn->Disable();
 				m_delete_btn->Disable();
+				m_browse_map_btn->Disable();
 				m_default_btn->Disable();
         m_start_btn->Disable();
         m_manage_players_btn->Disable();
@@ -800,6 +807,29 @@ void BattleRoomTab::OnSetModDefaultPreset( wxCommandEvent& event )
   sett().SetModDefaultPresetName( m_battle.GetHostModName(), choices[result] );
 }
 
+
+void BattleRoomTab::OnMapBrowse( wxCommandEvent& event )
+{
+	wxLogDebugFunc( _T("") );
+	if ( !m_battle.IsFounderMe() ) return;
+	MapSelectDialog dlg( &m_ui.mw(), m_ui );
+
+	if ( dlg.ShowModal() == wxID_OK && dlg.GetSelectedMap() != NULL )
+	{
+		wxString mapname = dlg.GetSelectedMap()->name;
+		wxLogDebugFunc( mapname );
+		try
+		{
+			UnitSyncMap map = usync().GetMapEx( mapname );
+			m_battle.SetLocalMap( map );
+
+			m_battle.SendHostInfo( IBattle::HI_Map );
+			for( unsigned int i=0;i<m_battle.GetNumRects();++i) if ( m_battle.GetStartRect( i ).exist ) m_battle.RemoveStartRect(i);
+			m_battle.SendHostInfo( IBattle::HI_StartRects );
+		} catch (...) {}
+
+	}
+}
 
 void BattleRoomTab::SortPlayerList()
 {
