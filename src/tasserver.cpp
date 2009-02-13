@@ -30,7 +30,7 @@
 #include "config.h"
 #endif
 
-/// for SL_MAIN_ICON
+// for SL_MAIN_ICON
 #include "settings++/custom_dialogs.h"
 
 #include "settings.h"
@@ -470,7 +470,7 @@ void TASServer::Update( int mselapsed )
         {
             // Is it time for a nat traversal PING?
             m_last_udp_ping = now;
-            /// Nat travelsal "ping"
+            // Nat travelsal "ping"
             if ( m_battle_id != -1 )
             {
                 Battle *battle=GetCurrentBattle();
@@ -490,7 +490,7 @@ void TASServer::Update( int mselapsed )
                     }
                     else
                     {
-                        /// old logging for debug
+                        // old logging for debug
                         //if(battle->GetNatType()!=NAT_Hole_punching)wxLogMessage( _T("pinging: current battle not using NAT_Hole_punching") );
                         //if(battle->GetInGame())wxLogMessage( _T("pinging: current battle is in game") );
                     }
@@ -1374,7 +1374,6 @@ void TASServer::HostBattle( BattleOptions bo, const wxString& password )
     cmd += bo.mapname + _T("\t");
     cmd += bo.description + _T("\t");
     cmd += bo.modname;
-    wxLogMessage( _T("OPENBATTLE %s"), cmd.c_str() );
     if ( !bo.isproxy )
     {
        SendCmd( _T("OPENBATTLE"), cmd );
@@ -1438,20 +1437,20 @@ void TASServer::JoinBattle( const int& battleid, const wxString& password )
                 m_udp_private_port=sett().GetClientPort();
 
                 m_last_udp_ping = time(0);
-                /// its important to set time now, to prevent Update()
-                /// from calling FinalizeJoinBattle() on timeout.
-                /// m_do_finalize_join_battle must be set to true after setting time, not before.
+                // its important to set time now, to prevent Update()
+                // from calling FinalizeJoinBattle() on timeout.
+                // m_do_finalize_join_battle must be set to true after setting time, not before.
                 m_do_finalize_join_battle=true;
-                for (int n=0;n<5;++n) /// do 5 udp pings with tiny interval
+                for (int n=0;n<5;++n) // do 5 udp pings with tiny interval
                 {
                     UdpPingTheServer( m_user );
-                    // sleep(0);/// sleep until end of timeslice.
+                    // sleep(0);// sleep until end of timeslice.
                 }
-                m_last_udp_ping = time(0);/// set time again
+                m_last_udp_ping = time(0);// set time again
             }
             else
             {
-                /// if not using nat, finalize now.
+                // if not using nat, finalize now.
                 m_do_finalize_join_battle=true;
                 FinalizeJoinBattle();
             }
@@ -1551,7 +1550,7 @@ void TASServer::SendHostInfo( HostInfo update )
     if ( (update & IBattle::HI_StartRects) > 0 )   // Startrects should be updated.
     {
 
-        for ( unsigned int i = 16; i < battle.GetNumRects(); i++ )  /// FIXME (BrainDamage#1#):  remove this when not needing to connect to TASserver (because doesn't support >16 start boxes)
+        for ( unsigned int i = 16; i < battle.GetNumRects(); i++ )  // FIXME (BrainDamage#1#):  remove this when not needing to connect to TASserver (because doesn't support >16 start boxes)
         {
             battle.RemoveStartRect( i );
             battle.StartRectRemoved( i );
@@ -1560,7 +1559,7 @@ void TASServer::SendHostInfo( HostInfo update )
         unsigned int numrects =  battle.GetNumRects();
         for ( unsigned int i = 0; i < numrects; i++ )   // Loop through all, and remove updated or deleted.
         {
-            if ( i >= 16 ) break; /// FIXME (BrainDamage#1#):  remove this when not needing to connect to TASserver (because doesn't support >16 start boxes)
+            if ( i >= 16 ) break; // FIXME (BrainDamage#1#):  remove this when not needing to connect to TASserver (because doesn't support >16 start boxes)
             wxString cmd;
             BattleStartRect sr = battle.GetStartRect( i );
             if ( !sr.exist ) continue;
@@ -2159,7 +2158,7 @@ void TASServer::OnDataReceived( Socket* sock )
 //! @brief Send udp ping.
 //! @note used for nat travelsal.
 
-unsigned int TASServer::UdpPing(unsigned int src_port, const wxString &target, unsigned int target_port, const wxString &message)/// full parameters version, used to ping all clients when hosting.
+unsigned int TASServer::UdpPing(unsigned int src_port, const wxString &target, unsigned int target_port, const wxString &message)// full parameters version, used to ping all clients when hosting.
 {
 #ifndef HAVE_WX26
     int result=0;
@@ -2205,41 +2204,41 @@ void TASServer::UdpPingTheServer(const wxString &message)
 }
 
 
-/// copypasta from spring.cpp , to get users ordered same way as in tasclient.
+// copypasta from spring.cpp , to get users ordered same way as in tasclient.
 struct UserOrder
 {
-    int index;/// user number for GetUser
-    int order;/// user order (we'll sort by it)
-    bool operator<(UserOrder b) const  /// comparison function for sorting
+    int index;// user number for GetUser
+    int order;// user order (we'll sort by it)
+    bool operator<(UserOrder b) const  // comparison function for sorting
     {
         return order<b.order;
     }
 };
 
 
-void TASServer::UdpPingAllClients()/// used when hosting with nat holepunching. has some rudimentary support for fixed source ports.
+void TASServer::UdpPingAllClients()// used when hosting with nat holepunching. has some rudimentary support for fixed source ports.
 {
     Battle *battle=GetCurrentBattle();
     if (!battle)return;
     if (!battle->IsFounderMe())return;
     wxLogMessage(_T("UdpPingAllClients()"));
 
-    /// I'm gonna mimic tasclient's behavior.
-    /// It of course doesnt matter in which order pings are sent,
-    /// but when doing "fixed source ports", the port must be
-    /// FIRST_UDP_SOURCEPORT + index of user excluding myself
-    /// so users must be reindexed in same way as in tasclient
-    /// to get same source ports for pings.
+    // I'm gonna mimic tasclient's behavior.
+    // It of course doesnt matter in which order pings are sent,
+    // but when doing "fixed source ports", the port must be
+    // FIRST_UDP_SOURCEPORT + index of user excluding myself
+    // so users must be reindexed in same way as in tasclient
+    // to get same source ports for pings.
 
 
-    /// copypasta from spring.cpp
+    // copypasta from spring.cpp
     std::vector<UserOrder> ordered_users;
 
 
     for ( UserList::user_map_t::size_type i = 0; i < battle->GetNumUsers(); i++ )
     {
         User &user=battle->GetUser(i);
-        if (&user == &(battle->GetMe()))continue;/// dont include myself (change in copypasta)
+        if (&user == &(battle->GetMe()))continue;// dont include myself (change in copypasta)
 
         UserOrder tmp;
         tmp.index=i;
