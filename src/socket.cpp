@@ -376,7 +376,7 @@ void Socket::SetSendRateLimit( int Bps )
 //! @note Called from separate thread
 void Socket::Ping()
 {
-  /// Dont log here, else it may crash.
+  // Dont log here, else it may crash.
   // wxLogMessage( _T("Sent ping.") );
   if ( m_ping_msg != wxEmptyString ) Send( m_ping_msg );
 }
@@ -418,7 +418,7 @@ void* PingThread::Entry()
   {
     if ( !m_sock.GetPingEnabled() ) break;
     m_sock.Ping();
-    /// break if woken
+    // break if woken
     if(!Sleep(milliseconds))break;
   }
   return 0;

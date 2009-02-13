@@ -51,7 +51,7 @@ void ExeDownloader::ExeDownloaderThread::Init()
 void* ExeDownloader::ExeDownloaderThread::Entry()
 {
     wxHTTP FileDownloading;
-    /// normal timeout is 10 minutes.. set to 10 secs.
+    // normal timeout is 10 minutes.. set to 10 secs.
     FileDownloading.SetTimeout(10);
     FileDownloading.Connect( m_fileurl.BeforeFirst(_T('/')), 80);
     //customMessageBox(SL_MAIN_ICON, _("connect dl\n.")+m_destpath, _("Error"));

@@ -205,7 +205,7 @@ void MainTorrentTab::OnUpdate()
     m_torrent_list->DeleteAllItems();
     for (map_infos_iter iter = info_map.begin(); iter != info_map.end(); ++iter)
     {
-      if (iter->first == 0) continue; ///skip global torrent stats
+      if (iter->first == 0) continue; //skip global torrent stats
       AddTorrentInfo(iter->second);
 
     }

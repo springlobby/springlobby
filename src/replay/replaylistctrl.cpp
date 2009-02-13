@@ -232,7 +232,7 @@ int wxCALLBACK ReplayListCtrl::CompareUniversal(long item1, long item2, long sor
   SortOrder *m_sortorder=(SortOrder *)sortData;
   for(int i=0;i<4;++i){
     int c=0;
-    switch ( m_sortorder[i].col ) {/// switch is just a jump table, dont optimize anything here.
+    switch ( m_sortorder[i].col ) {// switch is just a jump table, dont optimize anything here.
       case 0 : c=MyCompare(replay1.date,replay2.date) ; break;
       case 1 : c=MyCompare(replay1.battle.GetHostModName(),replay2.battle.GetHostModName()); break;
       case 2 : c=MyCompare(replay1.battle.GetHostMapName(),replay2.battle.GetHostMapName()); break;

@@ -354,7 +354,7 @@ void ReplayList::GetHeaderInfo( Replay& rep, const wxString& ReplayPath )
         replay.Read( &unixtime, 8 );
         wxDateTime dt;
         dt.Set( (time_t) unixtime );
-        /// todo: add 2 strings one for date other for time?
+        // todo: add 2 strings one for date other for time?
         wxString date = dt.FormatISODate()+_T(" ")+dt.FormatISOTime();
         rep.date = date;
     }

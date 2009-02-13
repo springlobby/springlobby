@@ -625,7 +625,7 @@ bool Ui::IsSpringCompatible()
     message << _T("\n") << _("Online play is currently disabled.");
     customMessageBoxNoModal (SL_MAIN_ICON, message, _("Spring error"), wxICON_EXCLAMATION|wxOK );
     wxLogWarning ( _T("no spring version supported by the server found") );
-    return false; /// no compatible version found
+    return false; // no compatible version found
 }
 
 

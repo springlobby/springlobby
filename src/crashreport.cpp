@@ -46,7 +46,7 @@ void CrashReport::GenerateReport(wxDebugReport::Context ctx)
 {
   wxSetWorkingDirectory( wxFileName::GetTempDir() );
 
-  bool online = true; /// TODO (BrainDamage#1#): check if being online
+  bool online = true; // TODO (BrainDamage#1#): check if being online
 
   //! @brief forcefully disables uploading debug reports in favour to local zipped storage
   #ifdef NO_DEBUG_REPORT_UPLOAD

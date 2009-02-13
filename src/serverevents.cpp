@@ -36,7 +36,7 @@ void ServerEvents::OnDisconnected()
     m_serv.SetRequiredSpring (_T(""));
     ui().OnDisconnected( m_serv );
 #ifndef NO_TORRENT_SYSTEM
-    try /// settings may be already destroyed
+    try // settings may be already destroyed
     {
         if ( sett().GetTorrentSystemAutoStartMode() == 0 ) torrent().DisconnectFromP2PSystem();
     }
@@ -802,8 +802,8 @@ void ServerEvents::OnClientIPPort( const wxString &username, const wxString &ip,
 
         if (m_serv.GetCurrentBattle()->GetNatType() != NAT_None && (udpport==0))
         {
-            /// todo: better warning message
-            ///something.OutputLine( _T(" ** ") + who.GetNick() + _(" does not support nat traversal! ") + GetChatTypeStr() + _T("."), sett().GetChatColorJoinPart(), sett().GetChatFont() );
+            // todo: better warning message
+            //something.OutputLine( _T(" ** ") + who.GetNick() + _(" does not support nat traversal! ") + GetChatTypeStr() + _T("."), sett().GetChatColorJoinPart(), sett().GetChatFont() );
             ui().OnBattleAction(*m_serv.GetCurrentBattle(),username,_(" does not really support nat traversal"));
         }
         m_serv.GetCurrentBattle()->CheckBan(user);

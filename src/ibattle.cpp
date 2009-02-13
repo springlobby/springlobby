@@ -668,7 +668,7 @@ static wxString FixPresetName( const wxString& name )
 bool IBattle::LoadOptionsPreset( const wxString& name )
 {
   wxString preset = FixPresetName(name);
-  if (preset == _T("")) return false; ///preset not found
+  if (preset == _T("")) return false; //preset not found
   m_preset = preset;
 
   for ( unsigned int i = 0; i < OptionsWrapper::LastOption; i++)
@@ -724,7 +724,7 @@ bool IBattle::LoadOptionsPreset( const wxString& name )
 void IBattle::SaveOptionsPreset( const wxString& name )
 {
   m_preset = FixPresetName(name);
-  if (m_preset == _T("")) m_preset = name; ///new preset
+  if (m_preset == _T("")) m_preset = name; //new preset
 
   for ( int i = 0; i < (int)OptionsWrapper::LastOption; i++)
   {

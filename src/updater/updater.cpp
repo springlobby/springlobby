@@ -111,7 +111,7 @@ bool UpdaterClass::UpdateExe( const wxString& newexe, bool WaitForReboot )
 
   if ( !wxCopyFile( newexe + _T("springlobby.exe"), currentexe ) )
   {
-    wxRenameFile(  backupfile, currentexe.AfterLast( wxFileName::GetPathSeparator() )  ); ///restore original file from backup on update failure
+    wxRenameFile(  backupfile, currentexe.AfterLast( wxFileName::GetPathSeparator() )  ); //restore original file from backup on update failure
     return false;
   }
 

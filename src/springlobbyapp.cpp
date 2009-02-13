@@ -302,12 +302,12 @@ int SpringLobbyApp::OnExit()
 
   #ifndef NO_TORRENT_SYSTEM
   //if( sett().GetTorrentSystemAutoStartMode() == 1 )
-  torrent().DisconnectFromP2PSystem();/// Cant hurt to disconnect unconditionally.
+  torrent().DisconnectFromP2PSystem();// Cant hurt to disconnect unconditionally.
   #endif
 
   m_timer->Stop();
 
-  sett().SaveSettings(); /// to make sure that cache path gets saved before destroying unitsync
+  sett().SaveSettings(); // to make sure that cache path gets saved before destroying unitsync
 
 	if ( usync().IsLoaded() )
 	{

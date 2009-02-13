@@ -92,7 +92,7 @@ Settings::Settings()
   }
   else
   {
-     m_chosed_path = globalfilepath; /// portable mode, use only current app paths
+     m_chosed_path = globalfilepath; // portable mode, use only current app paths
      SetPortableMode ( true );
   }
 

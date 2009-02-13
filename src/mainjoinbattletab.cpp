@@ -165,7 +165,7 @@ void MainJoinBattleTab::JoinBattle( Battle& battle )
   m_tabs->InsertPage( 4, m_opts_tab, _("Unit Restrictions"), false, wxIcon(battle_settings_xpm) );
   #endif
   #ifdef __WXMSW__
-    Refresh(); /// this is needed to avoid a weird frame overlay glitch in windows
+    Refresh(); // this is needed to avoid a weird frame overlay glitch in windows
   #endif
 }
 

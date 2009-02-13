@@ -393,7 +393,7 @@ void MainChatTab::Update()
     for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ )
     {
         ChatPanel* tmp = (ChatPanel*)m_chat_tabs->GetPage(i);
-        if ( m_close_window == m_chat_tabs->GetPage( i ) ) continue; ///skip the close button
+        if ( m_close_window == m_chat_tabs->GetPage( i ) ) continue; //skip the close button
         if ( ( tmp != 0 ) && ( tmp->GetPanelType() == CPT_Channel ) )
         {
             tmp->SortNickList();

@@ -60,7 +60,7 @@ void HttpDownloader::HttpDownloaderThread::Init()
 void* HttpDownloader::HttpDownloaderThread::Entry()
 {
     wxHTTP FileDownloading;
-    /// normal timeout is 10 minutes.. set to 10 secs.
+    // normal timeout is 10 minutes.. set to 10 secs.
     FileDownloading.SetTimeout(10);
     FileDownloading.Connect( m_fileurl.BeforeFirst(_T('/')), 80);
     wxInputStream* m_httpstream = FileDownloading.GetInputStream( _T("/") + m_fileurl.AfterFirst(_T('/')) );

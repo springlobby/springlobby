@@ -98,7 +98,7 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui ):
   Sort( );
 
 #if defined(__WXMAC__)
-/// on mac, autosize does not work at all
+// on mac, autosize does not work at all
   SetColumnWidth( 0, 20 );
   SetColumnWidth( 1, 20 );
   SetColumnWidth( 2, 20 );

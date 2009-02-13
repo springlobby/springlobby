@@ -245,7 +245,7 @@ ChatPanel::~ChatPanel()
 		if ( m_channel->uidata.panel == this ) m_channel->uidata.panel = 0;
 	}
 	delete m_chat_log;
-	m_chat_log = 0;/// for case of double destructor or whatever
+	m_chat_log = 0;// for case of double destructor or whatever
 
 	if ( m_type == CPT_Channel )
 	{
@@ -891,7 +891,7 @@ void ChatPanel::SetChannel( Channel* chan )
 	ASSERT_LOGIC( m_type == CPT_Channel, _T( "Not of type channel" ) );
 
 	if (( chan == 0 ) && ( m_channel != 0 ) ) {
-		/// causes weird crash.
+		// causes weird crash.
 		StatusMessage( _( "Chat closed." ) );
 
 		m_channel->uidata.panel = 0;
