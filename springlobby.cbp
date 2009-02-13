@@ -371,6 +371,7 @@
 		<Unit filename="src/springunitsynclib.h" />
 		<Unit filename="src/tasserver.cpp" />
 		<Unit filename="src/tasserver.h" />
+		<Unit filename="src/tasservertokentable.h" />
 		<Unit filename="src/tdfcontainer.cpp" />
 		<Unit filename="src/tdfcontainer.h" />
 		<Unit filename="src/thread.cpp" />
