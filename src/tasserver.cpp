@@ -142,7 +142,7 @@ m_udp_private_port(0),
 m_battle_id(-1),
 m_do_finalize_join_battle(false),
 m_finalize_join_battle_id(-1),
-m_token_transmission( true )
+m_token_transmission( false )
 {
     m_se = new ServerEvents( *this );
 	  FillAliasMap();
