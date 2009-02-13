@@ -7,6 +7,7 @@
 #include <wx/intl.h>
 #include <wx/combobox.h>
 #include <wx/stattext.h>
+#include <wx/statbox.h>
 #include <wx/statline.h>
 #include <wx/checkbox.h>
 #include <wx/button.h>
@@ -14,6 +15,7 @@
 #include <wx/sizer.h>
 #include <wx/msgdlg.h>
 #include <wx/settings.h>
+#include <wx/choicdlg.h>
 #include <wx/colordlg.h>
 #include <wx/colour.h>
 #include <wx/log.h>
@@ -62,6 +64,9 @@ BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
     EVT_COMBOBOX( BROOM_SIDESEL, BattleRoomTab::OnSideSel )
 
     EVT_COMBOBOX( BROOM_PRESETSEL, BattleRoomTab::OnPresetSel )
+    EVT_BUTTON( BROOM_SAVEPRES, BattleRoomTab::OnSavePreset )
+    EVT_BUTTON( BROOM_DELETEPRES, BattleRoomTab::OnDeletePreset )
+    EVT_BUTTON( BROOM_SETDEFAULTPRES, BattleRoomTab::OnSetModDefaultPreset )
 
     #if  wxUSE_TOGGLEBTN
     EVT_TOGGLEBUTTON( BROOM_AUTOHOST, BattleRoomTab::OnAutoHost )
@@ -194,8 +199,34 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
     wxMenuItem* m_fix_team_mnu = new wxMenuItem( m_manage_users_mnu, BROOM_FIXID, _( "Balance teams" ), _("Automatically balance players into control teams, by default none shares control") );
     m_manage_users_mnu->Append( m_fix_team_mnu );
 
+	  wxStaticBoxSizer* m_preset_sizer;
+		m_preset_sizer = new wxStaticBoxSizer( new wxStaticBox( this, -1, _("Manage Presets") ), wxVERTICAL );
+
+		wxBoxSizer* m_preset_btns_sizer;
+		m_preset_btns_sizer = new wxBoxSizer( wxHORIZONTAL );
+
     m_options_preset_sel = new wxComboBox( this, BROOM_PRESETSEL, sett().GetModDefaultPresetName( m_battle.GetHostModName() ), wxDefaultPosition, wxDefaultSize,  sett().GetPresetList(), wxCB_READONLY );
     m_options_preset_sel->SetToolTip(TE(_("Load battle preset")));
+
+    m_preset_sizer->Add( m_options_preset_sel, 0, wxEXPAND|wxALL, 5 );
+
+		m_save_btn = new wxButton( this, BROOM_SAVEPRES, _("Save"), wxDefaultPosition, wxDefaultSize, 0 );
+		m_save_btn->SetToolTip( TE(_("Save a set of options.")) );
+
+		m_preset_btns_sizer->Add( m_save_btn, 0, wxALL, 5 );
+
+		m_delete_btn = new wxButton( this, BROOM_DELETEPRES, _("Delete"), wxDefaultPosition, wxDefaultSize, 0 );
+		m_delete_btn->SetToolTip( TE(_("Delete a set of options.")) );
+
+		m_preset_btns_sizer->Add( m_delete_btn, 0, wxALL, 5 );
+
+		m_default_btn = new wxButton( this, BROOM_SETDEFAULTPRES, _("Set default"), wxDefaultPosition, wxDefaultSize, 0 );
+		m_default_btn->SetToolTip( TE(_("Use the current set of options as mod's default.")) );
+
+		m_preset_btns_sizer->Add( m_default_btn, 0, wxALL, 5 );
+
+		m_preset_sizer->Add( m_preset_btns_sizer, 0, 0, 0 );
+
 
     m_opts_list = new wxListCtrl( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_NO_HEADER|wxLC_REPORT );
     m_opts_list->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_BTNFACE ) );
@@ -261,7 +292,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
     //m_info_sizer->Add( m_info1_sizer, 0, wxEXPAND );
     //m_info_sizer->Add( m_tidal_lbl, 0, wxEXPAND );
     m_info_sizer->Add( m_opts_list, 1, wxEXPAND | wxTOP, 4 );
-    m_info_sizer->Add( m_options_preset_sel, 0, wxEXPAND | wxTOP, 4 );
+    m_info_sizer->Add( m_preset_sizer, 0, wxEXPAND | wxTOP, 4 );
 
 
     m_top_sizer->Add( m_splitter, 1, wxEXPAND | wxALL, 2 );
@@ -290,22 +321,14 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
     if ( !IsHosted() )
     {
         m_options_preset_sel->Disable();
-        m_options_preset_sel->SetToolTip(TE(_("Only the host can change the game options")));
-
+				m_save_btn->Disable();
+				m_delete_btn->Disable();
+				m_default_btn->Disable();
         m_start_btn->Disable();
-        m_start_btn->SetToolTip(TE(_("Only the host can start the battle.")));
-
         m_manage_players_btn->Disable();
-        m_manage_players_btn->SetToolTip(TE(_("Only the host can use those functions.")));
-
         m_lock_chk->Disable();
-        m_lock_chk->SetToolTip(TE(_("Only the host can lock the game.")));
-
         m_autohost_chk->Disable();
-        m_autohost_chk->SetToolTip(TE(_("Only the host can toggle autohost mode.")));
-
         m_autolock_chk->Disable();
-        m_autolock_chk->SetToolTip(TE(_("Only the host can lock the game.")));
     }
     else
     {
@@ -745,6 +768,36 @@ void BattleRoomTab::UpdatePresetList()
     m_options_preset_sel->Clear();
     m_options_preset_sel->Append(sett().GetPresetList());
     m_options_preset_sel->SetStringSelection(  m_battle.GetCurrentPreset() );
+}
+
+
+void BattleRoomTab::OnSavePreset( wxCommandEvent& event )
+{
+  wxString presetname;
+	if ( ui().AskText( _("Enter preset name"), _("Enter a name to save the current set of options\nIf a preset with the same name already exist, it will be overwritten"), presetname ) ) return;
+  if ( presetname.IsEmpty() )
+  {
+     customMessageBoxNoModal( SL_MAIN_ICON , _("Cannot save an options set without a name."), _("error"), wxICON_EXCLAMATION|wxOK );
+     return;
+  }
+  m_battle.SaveOptionsPreset( presetname );
+}
+
+
+void BattleRoomTab::OnDeletePreset( wxCommandEvent& event )
+{
+  wxArrayString choices = m_battle.GetPresetList();
+	int result = wxGetSingleChoiceIndex(_("Pick an existing option set from the list"),_("Set delete preset"), choices );
+	if ( result < 0 ) return;
+  m_battle.DeletePreset( choices[result] );
+}
+
+void BattleRoomTab::OnSetModDefaultPreset( wxCommandEvent& event )
+{
+  wxArrayString choices = m_battle.GetPresetList();
+	int result = wxGetSingleChoiceIndex(_("Pick an existing option set from the list"),_("Set mod default preset"), choices );
+	if ( result < 0 ) return;
+  sett().SetModDefaultPresetName( m_battle.GetHostModName(), choices[result] );
 }
 
 

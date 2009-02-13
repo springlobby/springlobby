@@ -7,6 +7,7 @@
 #include <wx/slider.h>
 #include <wx/combobox.h>
 #include <wx/stattext.h>
+#include <wx/choicdlg.h>
 #include <wx/defs.h>
 #include <wx/intl.h>
 #include <wx/button.h>
@@ -21,6 +22,7 @@
 #include "settings++/custom_dialogs.h"
 #include "server.h"
 #include "settings.h"
+#include "ui.h"
 
 #ifndef HAVE_WX26
 #include "aui/auimanager.h"
@@ -54,7 +56,7 @@ BattleroomMMOptionsTab::BattleroomMMOptionsTab(  IBattle& battle, wxWindow* pare
   wxStaticBoxSizer* m_preset_sizer;
   m_preset_sizer = new wxStaticBoxSizer( new wxStaticBox( this, -1, _("Manage Presets") ), wxHORIZONTAL );
 
-  m_options_preset_sel = new wxComboBox( this, BOPTS_CHOSEPRES, sett().GetModDefaultPresetName( m_battle.GetHostModName() ), wxDefaultPosition, wxDefaultSize,  sett().GetPresetList() );
+  m_options_preset_sel = new wxComboBox( this, BOPTS_CHOSEPRES, sett().GetModDefaultPresetName( m_battle.GetHostModName() ), wxDefaultPosition, wxDefaultSize,  sett().GetPresetList(), wxCB_READONLY );
   m_options_preset_sel->SetToolTip(TE(_("Set name.")));
 
   m_preset_sizer->Add( m_options_preset_sel, 0, wxALL, 5 );
@@ -486,10 +488,11 @@ void BattleroomMMOptionsTab::OnLoadPreset( wxCommandEvent& event )
 
 void BattleroomMMOptionsTab::OnSavePreset( wxCommandEvent& event )
 {
-  wxString presetname = m_options_preset_sel->GetValue();
+  wxString presetname;
+	if ( ui().AskText( _("Enter preset name"), _("Enter a name to save the current set of options\nIf a preset with the same name already exist, it will be overwritten"), presetname ) ) return;
   if ( presetname.IsEmpty() )
   {
-     customMessageBoxNoModal( SL_MAIN_ICON , _("Cannot save an options set without a name\nPlease write one in the list or chose an existing to overwrite and try again."), _("error"), wxICON_EXCLAMATION|wxOK );
+     customMessageBoxNoModal( SL_MAIN_ICON , _("Cannot save an options set without a name."), _("error"), wxICON_EXCLAMATION|wxOK );
      return;
   }
   m_battle.SaveOptionsPreset( presetname );
@@ -498,24 +501,18 @@ void BattleroomMMOptionsTab::OnSavePreset( wxCommandEvent& event )
 
 void BattleroomMMOptionsTab::OnDeletePreset( wxCommandEvent& event )
 {
-  wxString presetname = m_options_preset_sel->GetValue();
-  if ( presetname.IsEmpty() )
-  {
-     customMessageBoxNoModal( SL_MAIN_ICON , _("Cannot delete an options set without a name\nPlease select one from the list and try again."), _("error"), wxICON_EXCLAMATION|wxOK );
-     return;
-  }
-  m_battle.DeletePreset( presetname );
+  wxArrayString choices = m_battle.GetPresetList();
+	int result = wxGetSingleChoiceIndex(_("Pick an existing option set from the list"),_("Set delete preset"), choices );
+	if ( result < 0 ) return;
+  m_battle.DeletePreset( choices[result] );
 }
 
 void BattleroomMMOptionsTab::OnSetModDefaultPreset( wxCommandEvent& event )
 {
-  wxString presetname = m_options_preset_sel->GetValue();
-  if ( presetname.IsEmpty() )
-  {
-     customMessageBoxNoModal( SL_MAIN_ICON , _("No options set is selected to set as default\nPlease select one from the list and try again."), _("error"), wxICON_EXCLAMATION|wxOK );
-     return;
-  }
-  sett().SetModDefaultPresetName( m_battle.GetHostModName(), presetname );
+  wxArrayString choices = m_battle.GetPresetList();
+	int result = wxGetSingleChoiceIndex(_("Pick an existing option set from the list"),_("Set mod default preset"), choices );
+	if ( result < 0 ) return;
+  sett().SetModDefaultPresetName( m_battle.GetHostModName(), choices[result] );
 }
 
 

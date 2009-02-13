@@ -67,6 +67,10 @@ class BattleRoomTab : public wxScrolledWindow
     void OnAutoLock( wxCommandEvent& event );
     void OnLockBalance( wxCommandEvent& event );
     void OnShowManagePlayersMenu( wxCommandEvent& event );
+		void OnLoadPreset( wxCommandEvent& event );
+		void OnSavePreset( wxCommandEvent& event );
+		void OnDeletePreset( wxCommandEvent& event );
+		void OnSetModDefaultPreset( wxCommandEvent& event );
 
     void OnUserJoined( User& user );
     void OnUserLeft( User& user );
@@ -129,6 +133,9 @@ class BattleRoomTab : public wxScrolledWindow
     wxButton* m_start_btn;
     wxButton* m_addbot_btn;
     wxButton* m_manage_players_btn;
+		wxButton* m_save_btn;
+		wxButton* m_delete_btn;
+		wxButton* m_default_btn;
 
     wxMenu* m_manage_users_mnu;
     wxMenuItem* m_lock_balance_mnu;
@@ -165,7 +172,10 @@ class BattleRoomTab : public wxScrolledWindow
         BROOM_FIXCOLOURS,
         BROOM_PRESETSEL,
         BROOM_AUTOHOST,
-        BROOM_AUTOLOCK
+        BROOM_AUTOLOCK,
+				BROOM_SAVEPRES,
+				BROOM_DELETEPRES,
+				BROOM_SETDEFAULTPRES
     };
 
     DECLARE_EVENT_TABLE();
