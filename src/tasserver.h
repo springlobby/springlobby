@@ -182,6 +182,8 @@ class TASServer : public Server
 		void FillAliasMap();
 
     wxString m_current_chan_name_mutelist;
+
+		wxArrayString m_relay_host_manager_list;
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_TASSERVER_H

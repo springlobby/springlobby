@@ -146,6 +146,7 @@ m_token_transmission( false )
 {
     m_se = new ServerEvents( *this );
 	  FillAliasMap();
+	  m_relay_host_manager_list.Clear();
 }
 
 TASServer::~TASServer()
@@ -745,12 +746,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         pos = GetIntParam( params );
         if ( channel == _T("autohost") )
         {
-          m_relay_host_manager_list.Clear();
-          wxStringTokenizer tkr( params, _T("\\n") );
-          while( tkr.HasMoreTokens() )
-          {
-            m_relay_host_manager_list.Add( tkr.GetNextToken() );
-          }
+          m_relay_host_manager_list = wxStringTokenize( params, _T("\\n") );
         }
         m_se->OnChannelTopic( channel, nick, params, pos/1000 );
     }
@@ -857,12 +853,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         topic = GetSentenceParam( params );
         if ( channel == _T("autohost") )
         {
-          m_relay_host_manager_list.Clear();
-          wxStringTokenizer tkr( topic, _T("\\n") );
-          while( tkr.HasMoreTokens() )
-          {
-            m_relay_host_manager_list.Add( tkr.GetNextToken() );
-          }
+          m_relay_host_manager_list = wxStringTokenize( topic, _T("\\n") );
         }
         m_se->OnChannelList( channel, units, topic );
     }
@@ -1400,12 +1391,20 @@ void TASServer::HostBattle( BattleOptions bo, const wxString& password )
             }
             else
             {
-              if ( numbots == 1 ) doloop = false;
+              if ( numbots == 1 )
+              {
+              	 doloop = false;
+              	 m_relay_host_manager = _T("");
+              }
               else
               {
                  choice++;
                  if ( choice >= ( numbots -1 ) ) choice = 0;
-                 if ( choice == begin ) doloop = false;
+                 if ( choice == begin )
+                 {
+                 	 doloop = false;
+                 	 m_relay_host_manager = _T("");
+                 }
               }
             }
           }
@@ -2134,6 +2133,7 @@ void TASServer::OnConnected( Socket* sock )
     m_connected = true;
     m_online = false;
 		m_token_transmission = false;
+		m_relay_host_manager_list.Clear();
 }
 
 
@@ -2144,6 +2144,7 @@ void TASServer::OnDisconnected( Socket* sock )
     m_connected = false;
     m_online = false;
 		m_token_transmission = false;
+		m_relay_host_manager_list.Clear();
     if ( tmp ) m_se->OnDisconnected();
 }
 
