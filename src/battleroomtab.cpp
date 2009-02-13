@@ -151,7 +151,8 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
     m_minimap = new MapCtrl( this, 162, &m_battle, m_ui, true, true, true, false );
     m_minimap->SetToolTip(TE(_("A preview of the selected map.  You can see the starting positions, or (if set) starting boxes.")));
 
-    m_browse_map_btn = new wxButton( this, BROOM_MAP_BROWSE, _("Map"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_browse_map_btn = new wxButton( this, BROOM_MAP_BROWSE, _("Map"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+    m_browse_map_btn->SetSize( m_browse_map_btn->GetSize().GetWidth() * 2 , m_browse_map_btn->GetSize().GetHeight() ) ; // has 0 effect
 
     m_players = new BattleroomListCtrl( m_player_panel, battle, m_ui );
     m_chat = new ChatPanel( m_splitter, m_ui, battle );
@@ -213,7 +214,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
     m_options_preset_sel = new wxComboBox( this, BROOM_PRESETSEL, sett().GetModDefaultPresetName( m_battle.GetHostModName() ), wxDefaultPosition, wxDefaultSize,  sett().GetPresetList(), wxCB_READONLY );
     m_options_preset_sel->SetToolTip(TE(_("Load battle preset")));
 
-    m_preset_sizer->Add( m_options_preset_sel, 0, wxALL );
+    m_preset_sizer->Add( m_options_preset_sel, 0, wxEXPAND | wxALL );
 
 		m_save_btn = new wxButton( this, BROOM_SAVEPRES, _("Save"), wxDefaultPosition, wxDefaultSize );
 		m_save_btn->SetToolTip( TE(_("Save a set of options.")) );
@@ -294,10 +295,10 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
     //m_info1_sizer->Add( m_size_lbl, 1, wxEXPAND );
 
     m_info_sizer->Add( m_minimap, 0, wxEXPAND );
-    m_map_select_sizer->Add( m_map_lbl, 0, wxALL );
+    m_map_select_sizer->Add( m_map_lbl, 0, wxALL | wxALIGN_CENTER_VERTICAL );
     m_map_select_sizer->AddStretchSpacer();
-		m_map_select_sizer->Add( m_browse_map_btn, 1, wxALIGN_RIGHT );
-    m_info_sizer->Add( m_map_select_sizer, 0, wxALL );
+		m_map_select_sizer->Add( m_browse_map_btn, 0, wxALIGN_RIGHT );
+    m_info_sizer->Add( m_map_select_sizer, 0, wxEXPAND | wxALL, 2 );
     //m_info_sizer->Add( m_info1_sizer, 0, wxEXPAND );
     //m_info_sizer->Add( m_tidal_lbl, 0, wxEXPAND );
     m_info_sizer->Add( m_opts_list, 1, wxEXPAND | wxTOP, 4 );
