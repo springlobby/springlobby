@@ -678,7 +678,8 @@ bool IBattle::LoadOptionsPreset( const wxString& name )
     {
       for ( std::map<wxString,wxString>::iterator itor = options.begin(); itor != options.end(); itor++ )
       {
-        CustomBattleOptions().setSingleOption( itor->first, itor->second, (OptionsWrapper::GameOption)i );
+            wxLogWarning( itor->first + _T(" ::: ") + itor->second );
+            CustomBattleOptions().setSingleOption( itor->first, itor->second, (OptionsWrapper::GameOption)i );
       }
     }
     else
