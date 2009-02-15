@@ -292,6 +292,8 @@
 		<Unit filename="src/mmoptionmodel.h" />
 		<Unit filename="src/mmoptionswrapper.cpp" />
 		<Unit filename="src/mmoptionswrapper.h" />
+		<Unit filename="src/mmoptionwindows.cpp" />
+		<Unit filename="src/mmoptionwindows.h" />
 		<Unit filename="src/nicklistctrl.cpp" />
 		<Unit filename="src/nicklistctrl.h" />
 		<Unit filename="src/nonportable.h" />
