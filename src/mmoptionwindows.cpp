@@ -126,5 +126,6 @@ void SingleOptionDialog::OnOk(wxCommandEvent& event)
 	else if ( m_spinctrl ) value = TowxString( m_spinctrl->GetValue() );
 	else if ( m_checkbox ) value = TowxString( m_checkbox->GetValue() );
 	m_battle.CustomBattleOptions().setSingleOption( key, value, optFlag );
+	m_battle.SendHostInfo( m_tag )
   EndModal( wxID_OK );
 }
