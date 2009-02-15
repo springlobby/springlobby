@@ -60,6 +60,7 @@ springlobby_LDADD = \
 springsettings_LDADD = \
 	$(WX_LIBS)
 
+
 if USE_WINDRES
 RESOURCECOMPILE = $(WINDRES) -I $(srcdir)/src $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
     $(AM_CPPFLAGS) $(CPPFLAGS) # $(AM_CXXFLAGS) $(CXXFLAGS)
