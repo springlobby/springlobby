@@ -920,7 +920,9 @@ springlobby_SOURCES = \
 	src/thread.cpp \
 	src/thread.h \
 	src/globalsmanager.cpp \
-	src/globalsmanager.h
+	src/globalsmanager.h \
+	src/mmoptionwindows.cpp \
+	src/mmwindows.h
 
 
 
