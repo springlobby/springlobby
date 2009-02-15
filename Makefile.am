@@ -922,7 +922,7 @@ springlobby_SOURCES = \
 	src/globalsmanager.cpp \
 	src/globalsmanager.h \
 	src/mmoptionwindows.cpp \
-	src/mmwindows.h
+	src/mmoptionwindows.h
 
 
 
