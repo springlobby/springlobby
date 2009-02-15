@@ -851,7 +851,7 @@ void BattleRoomTab::OnOptionActivate( wxListEvent& event )
 		}
 	}
 	SingleOptionDialog dlg( m_battle, tag );
-
+	dlg.ShowModal();
 }
 
 void BattleRoomTab::SortPlayerList()
