@@ -850,6 +850,11 @@ void BattleRoomTab::OnOptionActivate( wxListEvent& event )
 			 break;
 		}
 	}
+	OptionsWrapper& optWrap = m_battle.CustomBattleOptions();
+	OptionsWrapper::GameOption optFlag = (OptionsWrapper::GameOption)s2l(tag.BeforeFirst( '_' ));
+	wxString key = tag.AfterFirst( '_' );
+	OptionType type = optWrap.GetSingleOptionType( key );
+	if ( !optWrap.keyExists( key, optFlag, false, type ) ) return;
 	SingleOptionDialog dlg( m_battle, tag );
 	dlg.ShowModal();
 }
