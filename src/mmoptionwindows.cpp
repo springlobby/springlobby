@@ -23,7 +23,11 @@ END_EVENT_TABLE()
 
 SingleOptionDialog::SingleOptionDialog( Battle& battle, const wxString& optiontag ):
 m_battle( battle ),
-m_tag( optiontag )
+m_tag( optiontag ),
+m_checkbox(0),
+m_textctrl(0),
+m_spinctrl(0),
+m_combobox(0)
 {
 	OptionsWrapper& optWrap = m_battle.CustomBattleOptions();
 	OptionsWrapper::GameOption optFlag = (OptionsWrapper::GameOption)s2l(optiontag.BeforeFirst( '_' ));
