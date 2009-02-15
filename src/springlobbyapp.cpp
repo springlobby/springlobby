@@ -219,7 +219,7 @@ bool SpringLobbyApp::OnInit()
 				if ( sett().ShouldAddDefaultServerSettings() ) sett().SetDefaultServerSettings();
 				if ( sett().ShouldAddDefaultChannelSettings() )
 				{
-					sett().AddChannelJoin( _T("springlobby"), _T("") );
+					sett().AddChannelJoin( _T("main"), _T("") );
 					sett().AddChannelJoin( _T("newbies"), _T("") );
 				}
 				if ( sett().ShouldAddDefaultGroupSettings() ) sett().AddGroup( _("Default") );
