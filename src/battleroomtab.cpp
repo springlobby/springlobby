@@ -235,7 +235,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
 
 
     m_opts_list = new wxListCtrl( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_NO_HEADER|wxLC_REPORT );
-    m_opts_list->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_BTNFACE ) );
+    //m_opts_list->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_BTNFACE ) );
     m_opts_list->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_LIGHT ) );
     wxListItem col;
 
@@ -354,8 +354,8 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
     SetSizer( m_main_sizer );
     Layout();
     unsigned int widthfraction = m_opts_list->GetClientSize().GetWidth() / 3;
-    m_opts_list->SetColumnWidth( 0, widthfraction * 2 );
-    m_opts_list->SetColumnWidth( 1, widthfraction );
+    m_opts_list->SetColumnWidth( 0, widthfraction * 1.95 );
+    m_opts_list->SetColumnWidth( 1, widthfraction * 0.95 );
 
 }
 
