@@ -107,6 +107,9 @@ m_tag( optiontag )
 	m_main_sizer->Fit(this);
 	m_main_sizer->SetSizeHints(this);
 
+	SetSizer( m_main_sizer );
+	Layout();
+
 	Connect(ID_CANCEL,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&SingleOptionDialog::OnCancel);
 	Connect(ID_OK,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&SingleOptionDialog::OnOk);
 }
