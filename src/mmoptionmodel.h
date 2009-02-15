@@ -18,7 +18,6 @@ enum OptionType {
 	opt_list       = 2,
 	opt_float      = 3,
 	opt_string     = 4,
-	opt_int        = 6, //! did this never actually exist?
 	opt_section    = 5
 };
 

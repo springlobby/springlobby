@@ -116,7 +116,6 @@ class BattleroomMMOptionsTab : public wxScrolledWindow
 
 
 		DECLARE_EVENT_TABLE();
-
 };
 
 enum

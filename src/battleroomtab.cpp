@@ -42,6 +42,7 @@
 #include "settings.h"
 #include "Helper/colorbutton.h"
 #include "mapselectdialog.h"
+#include "mmoptionwindows.h"
 
 #ifndef HAVE_WX26
 #include "aui/auimanager.h"
@@ -87,6 +88,8 @@ BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
     EVT_MENU ( BROOM_BALANCE, BattleRoomTab::OnBalance )
     EVT_MENU ( BROOM_FIXID, BattleRoomTab::OnFixTeams )
     EVT_MENU ( BROOM_FIXCOLOURS, BattleRoomTab::OnFixColours )
+
+    EVT_LIST_ITEM_ACTIVATED( BROOM_OPTIONLIST, BattleRoomTab::OnOptionActivate)
 
 END_EVENT_TABLE()
 
@@ -234,7 +237,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
 		m_preset_sizer->Add( m_preset_btns_sizer, 0, wxEXPAND );
 
 
-    m_opts_list = new wxListCtrl( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_NO_HEADER|wxLC_REPORT );
+    m_opts_list = new wxListCtrl( this, BROOM_OPTIONLIST, wxDefaultPosition, wxDefaultSize, wxLC_NO_HEADER|wxLC_REPORT );
     //m_opts_list->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_BTNFACE ) );
     m_opts_list->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_LIGHT ) );
     wxListItem col;
@@ -833,6 +836,22 @@ void BattleRoomTab::OnMapBrowse( wxCommandEvent& event )
 		} catch (...) {}
 
 	}
+}
+
+void BattleRoomTab::OnOptionActivate( wxListEvent& event )
+{
+	long index = event.GetIndex();
+	wxString tag;
+	for ( OptionListMap::iterator itor = m_opt_list_map.begin(); itor != m_opt_list_map.end(); itor++ )
+	{
+		if ( itor->second == index )
+		{
+			 tag = itor->first;
+			 break;
+		}
+	}
+	SingleOptionDialog dlg( m_battle, tag );
+
 }
 
 void BattleRoomTab::SortPlayerList()

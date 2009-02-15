@@ -72,6 +72,7 @@ class BattleRoomTab : public wxScrolledWindow
 		void OnDeletePreset( wxCommandEvent& event );
 		void OnSetModDefaultPreset( wxCommandEvent& event );
 		void OnMapBrowse( wxCommandEvent& event );
+		void OnOptionActivate( wxListEvent& event );
 
     void OnUserJoined( User& user );
     void OnUserLeft( User& user );
@@ -178,7 +179,8 @@ class BattleRoomTab : public wxScrolledWindow
 				BROOM_SAVEPRES,
 				BROOM_DELETEPRES,
 				BROOM_SETDEFAULTPRES,
-				BROOM_MAP_BROWSE
+				BROOM_MAP_BROWSE,
+				BROOM_OPTIONLIST
     };
 
     DECLARE_EVENT_TABLE();
