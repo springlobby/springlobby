@@ -240,6 +240,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
     m_opts_list = new wxListCtrl( this, BROOM_OPTIONLIST, wxDefaultPosition, wxDefaultSize, wxLC_NO_HEADER|wxLC_REPORT );
     //m_opts_list->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_BTNFACE ) );
     m_opts_list->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_LIGHT ) );
+    m_opts_list->SetToolTip( TE(_("Activate an element to quickly change it")) );
     wxListItem col;
 
     col.SetText( _("Option") );
