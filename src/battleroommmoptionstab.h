@@ -127,7 +127,6 @@ enum
   BOPTS_CHOSEPRES
 };
 
-#include "battleroommmoptionstab.cpp"
 
 #endif /*BATTLEROOMMMOPTIONSTAB_H_*/
 
