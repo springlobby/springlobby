@@ -7,7 +7,6 @@ src/battlelisttab.cpp
 src/battlemaptab.cpp
 src/battleoptionstab.cpp
 src/battleroomlistctrl.cpp
-src/battleroommmoptionstab.cpp
 src/battleroomtab.cpp
 src/channel/autojoinchanneldialog.cpp
 src/channel/channelchooser.cpp
