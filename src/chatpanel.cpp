@@ -843,8 +843,6 @@ void ChatPanel::Parted( User& who, const wxString& message )
 
 void ChatPanel::SetTopic( const wxString& who, const wxString& message )
 {
-	wxString refined = message;
-	refined.Replace( _T( "\\n" ), _T( "\n" ) );
 	/*
 	int pos = refined.Find( _T("\\n") ); // serch for the \n string
 	while ( pos != -1 )
@@ -859,7 +857,7 @@ void ChatPanel::SetTopic( const wxString& who, const wxString& message )
   // change the image of the tab to show new events
   SetIconHighlight( highlight_say );
   OutputLine( _( " ** Channel topic:" ), sett().GetChatColor(_T("Server")), f );
-  wxStringTokenizer tkz( refined, _T("\n"), wxTOKEN_RET_EMPTY_ALL );
+  wxStringTokenizer tkz( message, _T("\n"), wxTOKEN_RET_EMPTY_ALL );
 	while ( tkz.HasMoreTokens() )
 	{
 	  wxString msg = tkz.GetNextToken().Strip();
@@ -1183,9 +1181,7 @@ void ChatPanel::OnChannelMenuTopic( wxCommandEvent& event )
 	User& cs = m_channel->GetUser( _T( "ChanServ" ) );
 
 	wxString topic = m_channel->GetTopic();
-	topic.Replace( _T("\\n"), _T("\n") );
 	if ( !m_ui.AskText( _( "Set topic..." ), _( "What should be the new topic?" ), topic, wxOK | wxCANCEL | wxCENTRE | wxTE_MULTILINE ) ) return;
-  topic.Replace( _T("\n"), _T("\\n") );
 	cs.Say( _T( "!TOPIC #" ) + m_channel->GetName() + _T( " " ) + topic );
 	//TOPIC /<channame>/ {topic}
 }

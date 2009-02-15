@@ -187,6 +187,7 @@ bool TASServer::ExecuteSayCommand( const wxString& cmd )
     }
     else if ( subcmd == _T("/topic") )
     {
+				params.Replace( _T("\n"), _T("\\n") );
         SendCmd( _T("CHANNELTOPIC"), params );
         return true;
     }
@@ -744,9 +745,10 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         channel = GetWordParam( params );
         nick = GetWordParam( params );
         pos = GetIntParam( params );
+        params.Replace( _T("\\n"), _T("\n") );
         if ( channel == _T("autohost") )
         {
-          m_relay_host_manager_list = wxStringTokenize( params, _T("\\n") );
+          m_relay_host_manager_list = wxStringTokenize( params, _T("\n") );
         }
         m_se->OnChannelTopic( channel, nick, params, pos/1000 );
     }
@@ -853,7 +855,9 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         topic = GetSentenceParam( params );
         if ( channel == _T("autohost") )
         {
-          m_relay_host_manager_list = wxStringTokenize( topic, _T("\\n") );
+        	wxString stringcopy = topic;
+        	stringcopy.Replace( _T("\\n"), _T("\n") );
+          m_relay_host_manager_list = wxStringTokenize( stringcopy, _T("\\n") );
         }
         m_se->OnChannelList( channel, units, topic );
     }
@@ -1256,7 +1260,9 @@ void TASServer::Ring( const wxString& nick )
 
 void TASServer::ModeratorSetChannelTopic( const wxString& channel, const wxString& topic )
 {
-    SendCmd( _T("CHANNELTOPIC"), channel + _T(" ") + topic );
+		wxString msgcopy = topic;
+	  msgcopy.Replace( _T("\n"), _T("\\n") );
+    SendCmd( _T("CHANNELTOPIC"), channel + _T(" ") + msgcopy );
 }
 
 
