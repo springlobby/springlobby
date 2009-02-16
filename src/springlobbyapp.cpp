@@ -272,11 +272,10 @@ bool SpringLobbyApp::OnInit()
 				}
 
     #ifdef __WXMSW__
-        if ( TASClientPresent() ) {
-            //ask
-            {
-                ImportTASClientSettings();
-            }
+        if ( TASClientPresent() &&
+                customMessageBox(SL_MAIN_ICON, _("Should I try to import (some) TASClient settings?\n" ),_("Import settings?"), wxYES_NO ) == wxYES )
+        {
+            ImportTASClientSettings();
         }
     #endif
 
