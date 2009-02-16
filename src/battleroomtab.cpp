@@ -841,6 +841,7 @@ void BattleRoomTab::OnMapBrowse( wxCommandEvent& event )
 
 void BattleRoomTab::OnOptionActivate( wxListEvent& event )
 {
+	if ( !m_battle.IsFounderMe() ) return;
 	long index = event.GetIndex();
 	wxString tag;
 	for ( OptionListMap::iterator itor = m_opt_list_map.begin(); itor != m_opt_list_map.end(); itor++ )
