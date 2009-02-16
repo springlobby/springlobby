@@ -815,27 +815,28 @@ wxString Settings::AutoFindSpringBin()
 
 wxString Settings::AutoFindUnitSync()
 {
-  wxPathList pl;
+    wxPathList pl;
 
-  pl.AddEnvList( _T("%ProgramFiles%") );
+    pl.AddEnvList( _T("%ProgramFiles%") );
 
-  pl.AddEnvList( _T("LDPATH") );
-  pl.AddEnvList( _T("LD_LIBRARY_PATH") );
+    pl.AddEnvList( _T("LDPATH") );
+    pl.AddEnvList( _T("LD_LIBRARY_PATH") );
 
-  pl.Add( _T("/usr/local/lib64") );
-  pl.Add( _T("/usr/local/games") );
-  pl.Add( _T("/usr/local/games/lib") );
-  pl.Add( _T("/usr/local/lib") );
-  pl.Add( _T("/usr/lib64") );
-  pl.Add( _T("/usr/lib") );
-  pl.Add( _T("/usr/games") );
-  pl.Add( _T("/usr/games/lib64") );
-  pl.Add( _T("/usr/games/lib") );
+    pl.Add( _T("/usr/local/lib64") );
+    pl.Add( _T("/usr/local/games") );
+    pl.Add( _T("/usr/local/games/lib") );
+    pl.Add( _T("/usr/local/lib") );
+    pl.Add( _T("/usr/lib64") );
+    pl.Add( _T("/usr/lib") );
+    pl.Add( _T("/usr/games") );
+    pl.Add( _T("/usr/games/lib64") );
+    pl.Add( _T("/usr/games/lib") );
 
 	pl = GetAdditionalSearchPaths( pl );
 
 	wxString retpath = pl.FindValidPath( _T("unitsync") + GetLibExtension() );
-	if ( retpath.IsEmpty() ) pl.FindValidPath( _T("libunitsync") + GetLibExtension() );
+	if ( retpath.IsEmpty() )
+        retpath = pl.FindValidPath( _T("libunitsync") + GetLibExtension() );
 	return retpath;
 }
 
