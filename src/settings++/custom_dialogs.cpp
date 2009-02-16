@@ -14,11 +14,12 @@
 #include <wx/statbmp.h>
 #include <wx/listctrl.h>
 #include <wx/dialog.h>
-
+#include <wx/choicdlg.h>
 
 
 #include "../images/springsettings.xpm"
 #include "../images/springlobby.xpm"
+#include "../utils.h"
 
 BEGIN_EVENT_TABLE(CustomMessageBox ,wxDialog)
   EVT_BUTTON(wxID_NO, CustomMessageBox::OnOptionsNo)
@@ -37,6 +38,7 @@ wxWindow* CustomMessageBoxBase::m_lobbyWindow = 0;
 static CustomMessageBox* s_nonmodbox = 0;
 static ServerMessageBox* s_serverMsgBox = 0;
 static ActNotifBox* s_actNotifBox = 0;
+static MutelistWindow* s_mutelistWindow = 0;
 
 CustomMessageBox::CustomMessageBox(wxIcon* icon ,wxWindow *parent, const wxString& message,
         const wxString& caption ,
@@ -387,3 +389,57 @@ void actNotifBox( int whichIcon , const wxString& message,const wxString& captio
             s_actNotifBox->Show(true);
 		}
 }
+
+int GetSingleChoiceIndex( const wxString& message,
+                            const wxString& caption,
+                            const wxArrayString& aChoices,
+                            const int selected,
+                            wxWindow *parent ,
+                            int x ,
+                            int y ,
+                            bool centre )
+{
+    wxString *choices;
+    int n = ConvertWXArrayToC(aChoices, &choices);
+
+    wxSingleChoiceDialog dialog(parent, message, caption, n, choices);
+    dialog.SetSelection( selected );
+
+    int choice;
+    if ( dialog.ShowModal() == wxID_OK )
+        choice = dialog.GetSelection();
+    else
+        choice = -1;
+
+    delete [] choices;
+
+    return choice;
+}
+
+void mutelistWindow( const wxString& message, const wxString& caption,
+        long style, const int x, const int y )
+{
+        wxWindow* parent = CustomMessageBoxBase::getLobbypointer();
+		wxIcon* icon = new wxIcon(springlobby_xpm);
+
+		if ( s_mutelistWindow != 0 && s_mutelistWindow->IsShown() )
+		{
+		    s_mutelistWindow->AppendMessage(message);
+		}
+		else
+		{
+            s_mutelistWindow = new MutelistWindow(icon,parent,wxEmptyString,caption,style,wxPoint(x,y));
+            s_mutelistWindow->AppendMessage(message);
+            s_mutelistWindow->Show(true);
+		}
+}
+
+MutelistWindow::MutelistWindow(wxIcon* icon ,wxWindow *parent, const wxString& message,
+        const wxString& caption ,
+        long style, const wxPoint& pos)
+    : ServerMessageBox( icon , parent, message, caption, style, pos)
+{}
+
+MutelistWindow::~MutelistWindow ()
+{}
+

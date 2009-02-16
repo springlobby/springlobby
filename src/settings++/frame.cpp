@@ -58,8 +58,8 @@ BEGIN_EVENT_TABLE(settings_frame,wxFrame)
 	EVT_MENU(wxID_ANY,settings_frame::OnMenuChoice)
 END_EVENT_TABLE()
 
-settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size)
-: wxFrame(parent, id, title, position, size)
+settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& pa_size)
+: wxFrame(parent, id, title, position, pa_size)
 {
 	alreadyCalled = false;
 	parentWindow = parent;
@@ -81,10 +81,14 @@ settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &
 		notebook->AddPage(new PathOptionPanel(notebook,this),_("Error!"));
 		SetTitle(_T("SpringSettings"));
 	}
-	 SetIcon(*settingsIcon);
-	 SetSize( sett().GetSettingsWindowLeft(), sett().GetSettingsWindowTop(), sett().GetSettingsWindowWidth(), sett().GetSettingsWindowHeight() );
+
+     SetIcon(*settingsIcon);
+     wxString name = _T("SETTINGSFRAME");
+     wxPoint pos = sett().GetWindowPos( name, wxPoint( DEFSETT_SW_LEFT, DEFSETT_SW_TOP ) );
+     wxSize size = sett().GetWindowSize( name, wxSize( DEFSETT_SW_WIDTH, DEFSETT_SW_HEIGHT ) );
+     SetSize( pos.x , pos.y, size.GetWidth(), size.GetHeight() );
      Layout();
-	 Center();
+     Center();
 }
 
 void settings_frame::buildGuiFromErrorPanel()
@@ -346,16 +350,12 @@ void settings_frame::updateAllControls()
 }
 void settings_frame::OnClose(wxCloseEvent& event)
 {
-	if ( !alreadyCalled){
-	     int x, y, w, h;
-          GetSize( &w, &h );
-          sett().SetSettingsWindowHeight( h );
-          sett().SetSettingsWindowWidth( w );
-          GetPosition( &x, &y );
-          sett().SetSettingsWindowTop( y );
-          sett().SetSettingsWindowLeft( x );
-          sett().SaveSettings();
-		handleExit();
+	if ( !alreadyCalled ){
+        wxString name = _T("SETTINGSFRAME");
+        sett().SetWindowSize( name, GetSize() );
+        sett().SetWindowPos( name, GetPosition() );
+        sett().SaveSettings();
+        handleExit();
 	}
 }
 

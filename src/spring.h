@@ -4,6 +4,7 @@
 #include <wx/event.h>
 
 class wxCommandEvent;
+class IBattle;
 class SinglePlayerBattle;
 class Battle;
 class Ui;
@@ -28,11 +29,12 @@ class Spring: public wxEvtHandler
      */
     bool RunReplay ( wxString& filename );
 
-    wxString WriteScriptTxt( Battle& battle );
-    wxString WriteSPScriptTxt( SinglePlayerBattle& battle );
+    wxString WriteScriptTxt( IBattle& battle );
     void OnTerminated( wxCommandEvent& event );
 
   protected:
+		bool LaunchSpring( const wxString& params );
+
     Ui& m_ui;
     SpringProcess* m_process;
     wxSpringProcess* m_wx_process;

@@ -1,4 +1,4 @@
-/* Copyright (C) 2007, 2008 The SpringLobby Team. All rights reserved. */
+/* Copyright (C) 2007-2009 The SpringLobby Team. All rights reserved. */
 //
 // Class: Ui
 //
@@ -14,7 +14,7 @@
 #include "settings.h"
 #include "server.h"
 #include "spring.h"
-#include "channel.h"
+#include "channel/channel.h"
 #include "utils.h"
 #include "connectwindow.h"
 #include "mainwindow.h"
@@ -470,15 +470,8 @@ bool Ui::ExecuteSayCommand( const wxString& cmd )
     }
     else if ( cmd.BeforeFirst(' ').Lower() == _T("/channels") )
     {
-        ChatPanel* panel = GetActiveChatPanel();
-        if ( panel == 0 )
-        {
-            ShowMessage( _("error"), _("no active chat panels open.") );
-            return false;
-        }
-        panel->StatusMessage(_("Active chat channels:"));
-        m_serv->RequestChannels();
-        return true;
+	mw().ShowChannelChooser();
+	return true;
     }
     return false;
 }
@@ -546,26 +539,23 @@ void Ui::OnUpdate( int mselapsed )
         m_serv->Update( mselapsed );
     }
 
-    if ( !m_ingame )
-    {
-      if ( m_upd_counter_battlelist % 50 == 0  )
-      {
-        try
-        {
-          mw().GetJoinTab().Update();
-        } catch ( assert_exception &e ) {}
-      }
-      m_upd_counter_battlelist++;
+		if ( m_upd_counter_battlelist % 50 == 0  )
+		{
+			try
+			{
+				mw().GetJoinTab().Update();
+			} catch ( assert_exception &e ) {}
+		}
+		m_upd_counter_battlelist++;
 
-      if ( m_upd_counter_chat % 47 == 0  )
-      {
-        try
-        {
-          mw().GetChatTab().Update();
-        } catch ( assert_exception &e ) {}
-      }
-      m_upd_counter_chat++;
-    }
+		if ( m_upd_counter_chat % 47 == 0  )
+		{
+			try
+			{
+				mw().GetChatTab().Update();
+			} catch ( assert_exception &e ) {}
+		}
+		m_upd_counter_chat++;
 
     if ( !m_checked_for_update )
     {
@@ -635,7 +625,7 @@ bool Ui::IsSpringCompatible()
     message << _T("\n") << _("Online play is currently disabled.");
     customMessageBoxNoModal (SL_MAIN_ICON, message, _("Spring error"), wxICON_EXCLAMATION|wxOK );
     wxLogWarning ( _T("no spring version supported by the server found") );
-    return false; /// no compatible version found
+    return false; // no compatible version found
 }
 
 
@@ -662,14 +652,14 @@ void Ui::OnDisconnected( Server& server )
 
     if ( server.uidata.panel )
     {
-        server.uidata.panel->StatusMessage( _T("Disconnected from server.") );
+        server.uidata.panel->StatusMessage( _("Disconnected from server.") );
 
         server.uidata.panel->SetServer( 0 );
-        /// leads to crash. Disabled for now
+        // leads to crash. Disabled for now
         //server.uidata.panel = 0;
     }
-
-    /// Crashes. Disabled for now.
+		customMessageBoxNoModal( SL_MAIN_ICON, _("Disconnected from server"), _("Not online"), wxICON_EXCLAMATION|wxOK );
+    // Crashes. Disabled for now.
     //mw().GetChatTab().CloseAllChats();
 
 }
@@ -870,7 +860,7 @@ void Ui::OnUserSaid( User& user, const wxString& message, bool fromme )
 }
 
 
-void Ui::OnBattleOpened( Battle& battle )
+void Ui::OnBattleOpened( IBattle& battle )
 {
     if ( m_main_win == 0 ) return;
     mw().GetJoinTab().GetBattleListTab().AddBattle( battle );
@@ -886,7 +876,7 @@ void Ui::OnBattleOpened( Battle& battle )
 }
 
 
-void Ui::OnBattleClosed( Battle& battle )
+void Ui::OnBattleClosed( IBattle& battle )
 {
     if ( m_main_win == 0 ) return;
     mw().GetJoinTab().GetBattleListTab().RemoveBattle( battle );
@@ -916,14 +906,18 @@ void Ui::OnBattleClosed( Battle& battle )
 }
 
 
-void Ui::OnUserJoinedBattle( Battle& battle, User& user )
+void Ui::OnUserJoinedBattle( IBattle& battle, User& user )
 {
     if ( m_main_win == 0 ) return;
     mw().GetJoinTab().GetBattleListTab().UpdateBattle( battle );
 
     try
     {
-        if ( &mw().GetJoinTab().GetBattleRoomTab().GetBattle() == &battle ) mw().GetJoinTab().GetBattleRoomTab().OnUserJoined( user );
+        if ( &mw().GetJoinTab().GetBattleRoomTab().GetBattle() == &battle )
+        {
+        	 mw().GetJoinTab().GetBattleRoomTab().OnUserJoined( user );
+        	 OnBattleInfoUpdated( battle );
+        }
     }
     catch (...){}
 
@@ -938,7 +932,7 @@ void Ui::OnUserJoinedBattle( Battle& battle, User& user )
 }
 
 
-void Ui::OnUserLeftBattle( Battle& battle, User& user )
+void Ui::OnUserLeftBattle( IBattle& battle, User& user )
 {
     if ( m_main_win == 0 ) return;
     mw().GetJoinTab().GetBattleListTab().UpdateBattle( battle );
@@ -947,10 +941,16 @@ void Ui::OnUserLeftBattle( Battle& battle, User& user )
         if ( &mw().GetJoinTab().GetBattleRoomTab().GetBattle() == &battle )
         {
             mw().GetJoinTab().GetBattleRoomTab().OnUserLeft( user );
-            if ( &user == &m_serv->GetMe() ) mw().GetJoinTab().LeaveCurrentBattle();
+						OnBattleInfoUpdated( battle );
+            if ( &user == &m_serv->GetMe() )
+            {
+                mw().GetJoinTab().LeaveCurrentBattle();
+                battle.OnSelfLeftBattle();
+            }
         }
     }
     catch (...) {}
+    if ( user.BattleStatus().IsBot() ) return;
     for ( int i = 0; i < m_serv->GetNumChannels(); i++ )
     {
         Channel& chan = m_serv->GetChannel( i );
@@ -961,7 +961,7 @@ void Ui::OnUserLeftBattle( Battle& battle, User& user )
     }
 }
 
-void Ui::OnBattleInfoUpdated( Battle& battle )
+void Ui::OnBattleInfoUpdated( IBattle& battle )
 {
     if ( m_main_win == 0 ) return;
     mw().GetJoinTab().GetBattleListTab().UpdateBattle( battle );
@@ -971,7 +971,7 @@ void Ui::OnBattleInfoUpdated( Battle& battle )
     }
 }
 
-void Ui::OnBattleInfoUpdated( Battle& battle, const wxString& Tag )
+void Ui::OnBattleInfoUpdated( IBattle& battle, const wxString& Tag )
 {
     if ( m_main_win == 0 ) return;
     mw().GetJoinTab().GetBattleListTab().UpdateBattle( battle );
@@ -990,7 +990,7 @@ void Ui::OnJoinedBattle( Battle& battle )
     {
         customMessageBox(SL_MAIN_ICON, _("Your spring settings are probably not configured correctly,\nyou should take another look at your settings before trying\nto play online."), _("Spring settings error"), wxOK );
     }
-    if ( battle.GetNatType() != IBattle::NAT_None )
+    if ( battle.GetNatType() != NAT_None )
     {
         wxLogWarning( _T("joining game with NAT transversal") );
 #ifdef HAVE_WX26
@@ -1007,14 +1007,15 @@ void Ui::OnHostedBattle( Battle& battle )
 }
 
 
-void Ui::OnUserBattleStatus( Battle& battle, User& user )
+void Ui::OnUserBattleStatus( IBattle& battle, User& user )
 {
     if ( m_main_win == 0 ) return;
     mw().GetJoinTab().BattleUserUpdated( user );
+    OnBattleInfoUpdated( battle );
 }
 
 
-void Ui::OnRequestBattleStatus( Battle& battle )
+void Ui::OnRequestBattleStatus( IBattle& battle )
 {
     if ( m_main_win == 0 ) return;
     try
@@ -1059,7 +1060,7 @@ void Ui::OnBattleStarted( Battle& battle )
 }
 
 
-void Ui::OnSaidBattle( Battle& battle, const wxString& nick, const wxString& msg )
+void Ui::OnSaidBattle( IBattle& battle, const wxString& nick, const wxString& msg )
 {
     if ( m_main_win == 0 ) return;
     try
@@ -1070,7 +1071,7 @@ void Ui::OnSaidBattle( Battle& battle, const wxString& nick, const wxString& msg
 }
 
 
-void Ui::OnBattleAction( Battle& battle, const wxString& nick, const wxString& msg )
+void Ui::OnBattleAction( IBattle& battle, const wxString& nick, const wxString& msg )
 {
     if ( m_main_win == 0 ) return;
     try
@@ -1086,8 +1087,6 @@ void Ui::OnSpringStarting()
 #ifndef NO_TORRENT_SYSTEM
   torrent().SetIngameStatus(m_ingame);
 #endif
-  CacheThread().Pause();
-
 }
 
 
@@ -1097,7 +1096,6 @@ void Ui::OnSpringTerminated( long exit_code )
 #ifndef NO_TORRENT_SYSTEM
     torrent().SetIngameStatus(m_ingame);
 #endif
-    CacheThread().Resume();
     if ( !m_serv ) return;
 
     m_serv->GetMe().Status().in_game = false;
@@ -1123,39 +1121,6 @@ void Ui::OnAcceptAgreement( const wxString& agreement )
         m_serv->AcceptAgreement();
         m_serv->Login();
     }
-}
-
-
-void Ui::OnBattleBotAdded( Battle& battle, BattleBot& bot )
-{
-    if ( m_main_win == 0 ) return;
-    try
-    {
-        if ( &mw().GetJoinTab().GetBattleRoomTab().GetBattle() == &battle ) mw().GetJoinTab().GetBattleRoomTab().OnBotAdded( bot );
-    }
-    catch (...) {}
-}
-
-
-void Ui::OnBattleBotRemoved( Battle& battle, BattleBot& bot )
-{
-    if ( m_main_win == 0 ) return;
-    try
-    {
-        if ( &mw().GetJoinTab().GetBattleRoomTab().GetBattle() == &battle ) mw().GetJoinTab().GetBattleRoomTab().OnBotRemoved( bot );
-    }
-    catch (...) {}
-}
-
-
-void Ui::OnBattleBotUpdated( Battle& battle, BattleBot& bot )
-{
-    if ( m_main_win == 0 ) return;
-    try
-    {
-        if ( &mw().GetJoinTab().GetBattleRoomTab().GetBattle() == &battle ) mw().GetJoinTab().GetBattleRoomTab().OnBotUpdated( bot );
-    }
-    catch (...) {}
 }
 
 
@@ -1242,3 +1207,17 @@ void Ui::WatchReplay ( wxString& filename )
     m_spring->RunReplay( filename );
 }
 
+bool Ui::OnPresetRequiringMap( const wxString& mapname )
+{
+    if ( wxYES == customMessageBox( SL_MAIN_ICON,
+                        _("The selected preset requires the map ") + mapname + _(". Should it be downloaded? \
+                                    \n Selecting \"no\" will remove the missing map from the preset.\n\
+                                    Please reselect the preset after download finished"),
+                        _("Map missing"),
+                        wxYES_NO ) )
+    {
+        ui().DownloadMap( _T("") , mapname );
+        return true;
+    }
+    return false;
+}

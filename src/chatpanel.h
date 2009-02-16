@@ -1,14 +1,10 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_CHATPANEL_H
 #define SPRINGLOBBY_HEADERGUARD_CHATPANEL_H
 
-#include <iostream>
-
 #include <wx/panel.h>
-#include <wx/event.h>
-#include <wx/string.h>
-#include <wx/menu.h>
+#include <wx/textctrl.h>
+#include <vector>
 
-#include "chatlog.h"
 #include "usermenu.h"
 #include "Helper/TextCompletionDatabase.hpp"
 
@@ -18,21 +14,20 @@ class wxBoxSizer;
 class wxSplitterWindow;
 class wxTextCtrl;
 class wxTextCtrlHist;
-class wxRichTextCtrl;
 class wxTextUrlEvent;
 class wxComboBox;
 class wxButton;
-class wxNotebook;
 class NickListCtrl;
 class Channel;
 class User;
+class ChatLog;
 class Server;
 class Battle;
 class Ui;
 
-class wxFocusEvent;
 class wxMouseEvent;
 class wxAuiNotebook;
+class wxNotebook;
 class wxImageList;
 
 enum ChatPanelType {
@@ -47,6 +42,14 @@ enum HighlightType
   highlight_say,
   highlight_join_leave,
   highlight_important
+};
+
+struct ChatLine
+{
+  wxString chat;
+  wxString time;
+  wxTextAttr timestyle;
+  wxTextAttr chatstyle;
 };
 
 /*! @brief wxPanel that contains a chat.
@@ -107,20 +110,18 @@ class ChatPanel : public wxPanel
 
     bool IsOk();
 
-    void CheckLength();
-
     void OnUserDisconnected();
     void OnUserConnected();
 
     void OnSay( wxCommandEvent& event );
+    void OnPaste( wxClipboardTextEvent& event );
+
     void OnResize( wxSizeEvent& event );
 
     void OnLinkEvent( wxTextUrlEvent& event );
     void OnMouseDown( wxMouseEvent& event );
 
-    void OnMenuSelectAll( wxCommandEvent& event );
-    void OnMenuCopy( wxCommandEvent& event );
-    void OnChannelMenuClear ( wxCommandEvent& event );
+    void OnMenuToggleAppend( wxCommandEvent& event );
 
     void OnChannelMenuLeave( wxCommandEvent& event );
     void OnChannelMenuDisplayJoinLeave( wxCommandEvent& event );
@@ -135,6 +136,7 @@ class ChatPanel : public wxPanel
     void OnChannelMenuSpamOn( wxCommandEvent& event );
     void OnChannelMenuSpanOff( wxCommandEvent& event );
     void OnChannelMenuSpamIsOn( wxCommandEvent& event );
+    void OnChannelMenuShowMutelist( wxCommandEvent& event );
 
     void OnServerMenuDisconnect( wxCommandEvent& event );
     void OnServerMenuReconnect( wxCommandEvent& event );
@@ -179,6 +181,7 @@ class ChatPanel : public wxPanel
 
     void _SetChannel( Channel* channel );
     void OutputLine( const wxString& message, const wxColour& col, const wxFont& fon );
+    void OutputLine( const ChatLine& line );
     void SetIconHighlight( HighlightType highlight );
 
     bool ContainsWordToHighlight( const wxString& message );
@@ -194,11 +197,7 @@ class ChatPanel : public wxPanel
     wxPanel* m_chat_panel;      //!< Panel containing the chat. Only used when nicklist is visible.
     wxPanel* m_nick_panel;      //!< Panel containing the nicklist.
 
-    #ifndef NO_RICHTEXT_CHAT
-    wxRichTextCtrl* m_chatlog_text; //!< The chat log textcontrol.
-    #else
     wxTextCtrl* m_chatlog_text; //!< The chat log textcontrol.
-    #endif
     wxTextCtrlHist* m_say_text;     //!< The say textcontrol.
 
     NickListCtrl* m_nicklist;   //!< The nicklist.
@@ -222,6 +221,7 @@ class ChatPanel : public wxPanel
 
     wxMenu* m_popup_menu;
     wxMenuItem* m_autorejoin;
+    wxMenuItem* m_append_menu;
     ChatLog* m_chat_log;
     wxMenuItem* displayjoinitem;
     typedef SL_GENERIC::UserMenu<ChatPanel> UserMenu;
@@ -241,6 +241,9 @@ class ChatPanel : public wxPanel
     static const int m_groupMenu_baseID = 6798;
 	TextCompletionDatabase textcompletiondatabase;
 
+    std::vector<ChatLine> m_buffer;
+    bool m_disable_append;
+
     DECLARE_EVENT_TABLE();
 };
 
@@ -249,6 +252,8 @@ enum
     CHAT_SEND = wxID_HIGHEST,
     CHAT_TEXT,
     CHAT_LOG,
+
+    CHAT_MENU_DISABLE_APPEND,
 
     CHAT_MENU_CH_CLEAR,
     CHAT_MENU_CH_LEAVE,
@@ -293,7 +298,9 @@ enum
     CHAT_MENU_US_MODERATOR_MUTE_120,
     CHAT_MENU_US_MODERATOR_MUTE_1440,
     CHAT_MENU_US_MODERATOR_UNMUTE,
-    CHAT_MENU_US_MODERATOR_RING
+    CHAT_MENU_US_MODERATOR_RING,
+
+    CHAT_MENU_SHOW_MUTELIST
 };
 
 

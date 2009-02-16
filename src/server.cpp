@@ -9,7 +9,7 @@
 #include "server.h"
 #include "socket.h"
 #include "battle.h"
-#include "channel.h"
+#include "channel/channel.h"
 #include "user.h"
 #include "utils.h"
 #include "chatpanel.h"
@@ -113,6 +113,12 @@ void Server::_RemoveUser( const wxString& nickname )
   try{
     User* u = &m_users.GetUser( nickname );
     m_users.RemoveUser( nickname );
+    int numchannels = m_channels.GetNumChannels();
+    for ( int i = 0; i < numchannels; i++ )
+    {
+    	Channel& chan = m_channels.GetChannel( i );
+    	if ( chan.UserExists( nickname ) ) chan.Left( *u, _T("server idiocy") );
+    }
     delete u;
   }catch(std::runtime_error){
   }

@@ -17,20 +17,19 @@
 					<Add option="-Wall" />
 					<Add option="-g" />
 					<Add option="`wx-config --cflags`" />
-					<Add option="`sdl-config --cflags`" />
-					<Add option="`pkg-config --cflags libtorrent`" />
-					<Add option='-DVERSION=\\&quot;ery-latest-version-Unix-Debug\\&quot;' />
+					<Add option="`pkg-config --cflags libtorrent-rasterbar`" />
+					<Add option="-Wno-strict-aliasing" />
+					<Add option='-DVERSION=\\&quot;cb-Unix-Debug\\&quot;' />
 					<Add option="-DNO_DEBUG_REPORT_UPLOAD" />
 					<Add option="-DDISABLE_SOUND" />
-					<Add option="-DNO_RICHTEXT_CHAT" />
 				</Compiler>
 				<Linker>
 					<Add option="`wx-config --libs`" />
 					<Add option="`pkg-config --libs libtorrent-rasterbar`" />
-					<Add option="`pkg-config --libs libtorrent`" />
-					<Add option="`sdl-config --libs`" />
-					<Add library="SDL_mixer" />
 				</Linker>
+				<ExtraCommands>
+					<Add before="tools/test-susynclib.awk src/springunitsynclib.cpp" />
+				</ExtraCommands>
 			</Target>
 			<Target title="GNU | Profile">
 				<Option output="bin/GNU/Profile/springlobby" prefix_auto="0" extension_auto="0" />
@@ -40,22 +39,25 @@
 				<Option compiler="gcc" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
+					<Add option="-O2" />
 					<Add option="-Wall" />
 					<Add option="-pg" />
 					<Add option="-g" />
 					<Add option="`wx-config --cflags`" />
-					<Add option="`pkg-config --cflags libtorrent`" />
-					<Add option="`sdl-config --cflags`" />
-					<Add option='-DVERSION=\\&quot;0.0.1-svn-cb\\&quot;' />
+					<Add option="`pkg-config --cflags libtorrent-rasterbar`" />
+					<Add option="-Wno-strict-aliasing" />
+					<Add option='-DVERSION=\\&quot;cb-Unix-Profile\\&quot;' />
 					<Add option="-DNO_DEBUG_REPORT_UPLOAD" />
+					<Add option="-DDISABLE_SOUND" />
 				</Compiler>
 				<Linker>
 					<Add option="-pg" />
 					<Add option="`wx-config --libs`" />
-					<Add option="`pkg-config --libs libtorrent`" />
-					<Add option="`sdl-config --libs`" />
-					<Add library="SDL_mixer" />
+					<Add option="`pkg-config --libs libtorrent-rasterbar`" />
 				</Linker>
+				<ExtraCommands>
+					<Add before="tools/test-susynclib.awk src/springunitsynclib.cpp" />
+				</ExtraCommands>
 			</Target>
 			<Target title="Win32 | Debug">
 				<Option output="bin/Win32/Debug/springlobby" prefix_auto="0" extension_auto="1" />
@@ -138,6 +140,8 @@
 		<Unit filename="src/Helper/TextCompletionDatabase.hpp" />
 		<Unit filename="src/Helper/colorbutton.cpp" />
 		<Unit filename="src/Helper/colorbutton.h" />
+		<Unit filename="src/Helper/wxTranslationHelper.cpp" />
+		<Unit filename="src/Helper/wxTranslationHelper.h" />
 		<Unit filename="src/Helper/wxtextctrlhist.cpp" />
 		<Unit filename="src/Helper/wxtextctrlhist.h" />
 		<Unit filename="src/addbotdialog.cpp" />
@@ -146,16 +150,12 @@
 		<Unit filename="src/agreementdialog.h" />
 		<Unit filename="src/aui/artprovider.cpp" />
 		<Unit filename="src/aui/artprovider.h" />
-		<Unit filename="src/aui/auibook.h" />
 		<Unit filename="src/aui/auimanager.cpp" />
 		<Unit filename="src/aui/auimanager.h" />
-		<Unit filename="src/aui/auiuitls.h" />
 		<Unit filename="src/autobalancedialog.cpp" />
 		<Unit filename="src/autobalancedialog.h" />
 		<Unit filename="src/autohost.cpp" />
 		<Unit filename="src/autohost.h" />
-		<Unit filename="src/autojoinchanneldialog.cpp" />
-		<Unit filename="src/autojoinchanneldialog.h" />
 		<Unit filename="src/autopointers.h" />
 		<Unit filename="src/base64.cpp" />
 		<Unit filename="src/base64.h" />
@@ -175,16 +175,23 @@
 		<Unit filename="src/battleoptionstab.h" />
 		<Unit filename="src/battleroomlistctrl.cpp" />
 		<Unit filename="src/battleroomlistctrl.h" />
-		<Unit filename="src/battleroommmoptionstab.cpp" />
 		<Unit filename="src/battleroommmoptionstab.h" />
 		<Unit filename="src/battleroomtab.cpp" />
 		<Unit filename="src/battleroomtab.h" />
 		<Unit filename="src/boost/md5.cpp" />
 		<Unit filename="src/boost/md5.hpp" />
-		<Unit filename="src/channel.cpp" />
-		<Unit filename="src/channel.h" />
-		<Unit filename="src/channellist.cpp" />
-		<Unit filename="src/channellist.h" />
+		<Unit filename="src/channel/autojoinchanneldialog.cpp" />
+		<Unit filename="src/channel/autojoinchanneldialog.h" />
+		<Unit filename="src/channel/channel.cpp" />
+		<Unit filename="src/channel/channel.h" />
+		<Unit filename="src/channel/channelchooser.cpp" />
+		<Unit filename="src/channel/channelchooser.h" />
+		<Unit filename="src/channel/channelchooserdialog.cpp" />
+		<Unit filename="src/channel/channelchooserdialog.h" />
+		<Unit filename="src/channel/channellist.cpp" />
+		<Unit filename="src/channel/channellist.h" />
+		<Unit filename="src/channel/channellistctrl.cpp" />
+		<Unit filename="src/channel/channellistctrl.h" />
 		<Unit filename="src/chatlog.cpp" />
 		<Unit filename="src/chatlog.h" />
 		<Unit filename="src/chatoptionstab.cpp" />
@@ -197,6 +204,8 @@
 		<Unit filename="src/countrycodes.h" />
 		<Unit filename="src/crashreport.cpp" />
 		<Unit filename="src/crashreport.h" />
+		<Unit filename="src/crc.cpp" />
+		<Unit filename="src/crc.h" />
 		<Unit filename="src/customlistctrl.cpp" />
 		<Unit filename="src/customlistctrl.h" />
 		<Unit filename="src/filelister/filelistctrl.cpp" />
@@ -214,8 +223,6 @@
 		<Unit filename="src/globalsmanager.h" />
 		<Unit filename="src/groupoptionspanel.cpp" />
 		<Unit filename="src/groupoptionspanel.h" />
-		<Unit filename="src/groupuserdialog.cpp" />
-		<Unit filename="src/groupuserdialog.h" />
 		<Unit filename="src/hostbattledialog.cpp" />
 		<Unit filename="src/hostbattledialog.h" />
 		<Unit filename="src/httpdownloader.cpp" />
@@ -224,7 +231,6 @@
 		<Unit filename="src/ibattle.h" />
 		<Unit filename="src/iconimagelist.cpp" />
 		<Unit filename="src/iconimagelist.h" />
-		<Unit filename="src/images/SpringLobby.ico" />
 		<Unit filename="src/images/battle.xpm" />
 		<Unit filename="src/images/battle_list.xpm" />
 		<Unit filename="src/images/battle_map.xpm" />
@@ -276,14 +282,18 @@
 		<Unit filename="src/maintorrenttab.h" />
 		<Unit filename="src/mainwindow.cpp" />
 		<Unit filename="src/mainwindow.h" />
-		<Unit filename="src/managegroupspanel.cpp" />
-		<Unit filename="src/managegroupspanel.h" />
 		<Unit filename="src/mapctrl.cpp" />
 		<Unit filename="src/mapctrl.h" />
+		<Unit filename="src/mapgridctrl.cpp" />
+		<Unit filename="src/mapgridctrl.h" />
+		<Unit filename="src/mapselectdialog.cpp" />
+		<Unit filename="src/mapselectdialog.h" />
 		<Unit filename="src/mmoptionmodel.cpp" />
 		<Unit filename="src/mmoptionmodel.h" />
 		<Unit filename="src/mmoptionswrapper.cpp" />
 		<Unit filename="src/mmoptionswrapper.h" />
+		<Unit filename="src/mmoptionwindows.cpp" />
+		<Unit filename="src/mmoptionwindows.h" />
 		<Unit filename="src/nicklistctrl.cpp" />
 		<Unit filename="src/nicklistctrl.h" />
 		<Unit filename="src/nonportable.h" />
@@ -296,9 +306,6 @@
 		<Unit filename="src/replay/replaylistfiltervalues.h" />
 		<Unit filename="src/replay/replaytab.cpp" />
 		<Unit filename="src/replay/replaytab.h" />
-		<Unit filename="src/replayfilter.h" />
-		<Unit filename="src/replaylistctrl.h" />
-		<Unit filename="src/replaytab.h" />
 		<Unit filename="src/sdlsound.cpp" />
 		<Unit filename="src/sdlsound.h" />
 		<Unit filename="src/selectusersdialog.cpp" />
@@ -365,6 +372,7 @@
 		<Unit filename="src/springunitsynclib.h" />
 		<Unit filename="src/tasserver.cpp" />
 		<Unit filename="src/tasserver.h" />
+		<Unit filename="src/tasservertokentable.h" />
 		<Unit filename="src/tdfcontainer.cpp" />
 		<Unit filename="src/tdfcontainer.h" />
 		<Unit filename="src/thread.cpp" />
@@ -398,6 +406,8 @@
 		<Unit filename="src/utils.cpp" />
 		<Unit filename="src/utils.h" />
 		<Unit filename="wxsmith/AutoBalanceDialog.wxs" />
+		<Unit filename="wxsmith/MainTorrentTab.wxs" />
+		<Unit filename="wxsmith/MapSelectDialog.wxs" />
 		<Extensions>
 			<code_completion />
 			<envvars />
@@ -406,6 +416,7 @@
 				<resources>
 					<wxDialog wxs="wxsmith/AutoBalanceDialog.wxs" src="src/autobalancedialog.cpp" hdr="src/autobalancedialog.h" name="AutoBalanceDialog" language="CPP" />
 					<wxFrame wxs="wxsmith/MainTorrentTab.wxs" src="MainTorrentTab.cpp" hdr="MainTorrentTab.h" name="MainTorrentTab" language="CPP" />
+					<wxDialog wxs="wxsmith/MapSelectDialog.wxs" src="src/mapselectdialog.cpp" hdr="src/mapselectdialog.h" fwddecl="1" name="MapSelectDialog" language="CPP" />
 				</resources>
 			</wxsmith>
 			<debugger />

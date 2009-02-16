@@ -15,6 +15,7 @@
 #include "../settings++/custom_dialogs.h"
 #include "../tdfcontainer.h"
 #include "replaytab.h"
+#include "../uiutils.h"
 
 const unsigned int replay_bulk_limit = 300;
 const unsigned int replay_chunk_size = 50;
@@ -64,9 +65,17 @@ void ReplayList::LoadReplays( const unsigned int from, const unsigned int to)
     for (unsigned int i = from; i < end; ++i)
     {
         Replay rep;
-        if ( GetReplayInfos( m_filenames[i] , rep ) ){
-            AddReplay( rep );
+        rep.id = m_last_id;
+        m_last_id++;
+        AddReplay( rep );
+        if ( GetReplayInfos( m_filenames[i] , m_replays[rep.id] ) )
+        {
             m_replay_tab.AddReplay( m_replays[rep.id] );
+        }
+        else
+        {
+        	RemoveReplay( rep.id );
+					m_last_id--;
         }
     }
     wxLogMessage(_T("done ReplayList::LoadReplays(%d,%d) %d"),from,to,replays_load_count);
@@ -75,7 +84,8 @@ void ReplayList::LoadReplays( const unsigned int from, const unsigned int to)
 
 void ReplayList::OnTimer(wxTimerEvent& event)
 {
-    if ( replay_chunk_size + m_current_parse_pos >  m_filenames.size() ){
+    if ( replay_chunk_size + m_current_parse_pos >  m_filenames.size() )
+    {
         //final parse run
         m_timer.Stop();
         LoadReplays( m_current_parse_pos, m_filenames.size() );
@@ -86,13 +96,14 @@ void ReplayList::OnTimer(wxTimerEvent& event)
     }
 }
 
-void ReplayList::AddReplay( Replay replay )
+void ReplayList::AddReplay( const Replay& replay )
 {
   m_replays[replay.id] = replay;
 }
 
 
-void ReplayList::RemoveReplay( replay_id_t const& id ) {
+void ReplayList::RemoveReplay( replay_id_t const& id )
+{
   m_replays.erase(id);
 }
 
@@ -101,7 +112,8 @@ replay_map_t::size_type ReplayList::GetNumReplays()
   return m_replays.size();
 }
 
-Replay &ReplayList::GetReplayById( replay_id_t const& id ) {
+Replay &ReplayList::GetReplayById( replay_id_t const& id )
+{
 //TODO catch
   replay_iter_t b = m_replays.find(id);
   if (b == m_replays.end())
@@ -142,7 +154,6 @@ bool ReplayList::GetReplayInfos ( const wxString& ReplayPath, Replay& ret )
 
     ret.MapName = FileName.BeforeLast(_T('_'));
 
-    ret.id = m_last_id;
     wxString script;
     GetScriptFromReplay( ReplayPath,script );
 
@@ -152,10 +163,9 @@ bool ReplayList::GetReplayInfos ( const wxString& ReplayPath, Replay& ret )
         return false;
 
     GetHeaderInfo( ret, ReplayPath );
-    GetBattleFromScript( script,ret.battle  );
+    GetBattleFromScript( script, ret.battle, false  );
     ret.ModName = ret.battle.GetHostModName();
 
-    m_last_id++; //sucessful parsing assumed --> increment id(index)
     return true;
 }
 
@@ -183,7 +193,7 @@ void ReplayList::GetScriptFromReplay ( const wxString& ReplayPath, wxString& scr
 }
 
 //! (koshi) don't delete commented things please, they might be need in the future and i'm lazy
-void ReplayList::GetBattleFromScript( const wxString& script_, OfflineBattle& battle )
+void ReplayList::GetBattleFromScript( const wxString& script_, OfflineBattle& battle, bool loadmod )
 {
 
     BattleOptions opts;
@@ -191,7 +201,8 @@ void ReplayList::GetBattleFromScript( const wxString& script_, OfflineBattle& ba
     PDataList script( ParseTDF(ss) );
 
     PDataList replayNode ( script->Find(_T("GAME") ) );
-    if ( replayNode.ok() ){
+    if ( replayNode.ok() )
+    {
 
         wxString modname = replayNode->GetString( _T("GameType") );
         wxString modhash    = replayNode->GetString( _T("ModHash") );
@@ -199,7 +210,7 @@ void ReplayList::GetBattleFromScript( const wxString& script_, OfflineBattle& ba
 
         //don't have the maphash, what to do?
         //ui download function works with mapname if hash is empty, so works for now
-        opts.mapname    = replayNode->GetString( _T("Mapname") );
+        opts.mapname    = replayNode->GetString( _T("MapName") );
         battle.SetHostMap( opts.mapname, wxEmptyString );
 
 //        opts.ip         = replayNode->GetString( _T("HostIP") );
@@ -207,29 +218,103 @@ void ReplayList::GetBattleFromScript( const wxString& script_, OfflineBattle& ba
         opts.spectators = 0;
 
         int playernum = replayNode->GetInt  ( _T("NumPlayers"), 0);
+        int usersnum = replayNode->GetInt  ( _T("NumUsers"), 0);
+        if ( usersnum > 0 ) playernum = usersnum;
 //        int allynum = replayNode->GetInt  ( _T("NumAllyTeams"), 1);
 //        int teamnum = replayNode->GetInt  ( _T("NumTeams"), 1);
 
-        //[PLAYERX] sections
-        for ( int i = 0; i < playernum ; ++i ){
-            PDataList player ( replayNode->Find( _T("PLAYER") + i2s(i) ) );
-            if ( player.ok() ) {
-                OfflineUser user ( player->GetString( _T("name") ), (player->GetString( _T("countryCode")).Upper() ), 0);
-                UserBattleStatus status;
-                //how to convert back?
-                user.SetSideName( player->GetString( _T("side") ) );
-                status.spectator = player->GetInt( _T("Spectator"), 0 );
-                opts.spectators += status.spectator;
-                status.team = player->GetInt( _T("team") );
 
-                user.UpdateBattleStatus( status );
-                battle.AddUser( user );
-            }
+        wxArrayString sides;
+        if ( loadmod )
+        {
+        	sides = usync().GetSides( modname );
         }
 
+				IBattle::TeamVec parsed_teams = battle.GetParsedTeamsVec();
+				IBattle::AllyVec parsed_allies = battle.GetParsedAlliesVec();
+
+        //[PLAYERX] sections
+        for ( int i = 0; i < playernum ; ++i )
+        {
+            PDataList player ( replayNode->Find( _T("PLAYER") + i2s(i) ) );
+            PDataList bot ( replayNode->Find( _T("AI") + i2s(i) ) );
+            if ( player.ok() || bot.ok() )
+            {
+								if ( bot.ok() ) player = bot;
+                User user ( player->GetString( _T("Name") ), (player->GetString( _T("CountryCode")).Upper() ), 0);
+                user.BattleStatus().spectator = player->GetInt( _T("Spectator"), 0 );
+                opts.spectators += user.BattleStatus().spectator;
+                user.BattleStatus().team = player->GetInt( _T("Team") );
+                if ( bot.ok() )
+                {
+                	user.BattleStatus().aishortname = bot->GetString( _T("ShortName" ) );
+                	user.BattleStatus().aiversion = bot->GetString( _T("Version" ) );
+                	int ownerindex = bot->GetInt( _T("Host" ) );
+                	PDataList aiowner ( replayNode->Find( _T("PLAYER") + i2s(ownerindex) ) );
+                	if ( aiowner.ok() )
+                	{
+                		user.BattleStatus().owner = aiowner->GetString( _T("Name") );
+                	}
+                }
+
+                IBattle::TeamInfoContainer teaminfos = parsed_teams[user.BattleStatus().team];
+                if ( !teaminfos.exist )
+                {
+									PDataList team( replayNode->Find( _T("TEAM") + i2s( user.BattleStatus().team ) ) );
+									if ( team.ok() )
+									{
+											teaminfos.exist = true;
+											teaminfos.TeamLeader = team->GetInt( _T("TeamLeader"), 0 );
+											teaminfos.StartPosX = team->GetInt( _T("StartPosX"), -1 );
+											teaminfos.StartPosY = team->GetInt( _T("StartPosY"), -1 );
+											teaminfos.TeamLeader = team->GetInt( _T("AllyTeam"), 0 );
+											teaminfos.RGBColor = GetColorFromFloatStrng( team->GetString( _T("RGBColor") ) );
+											teaminfos.SideName = team->GetString( _T("Side"), _T("") );
+											teaminfos.Handicap = team->GetInt( _T("Handicap"), 0 );
+											int sidepos = sides.Index( teaminfos.SideName );
+											teaminfos.SideNum = sidepos;
+											parsed_teams[ user.BattleStatus().team ] = teaminfos;
+									}
+                }
+                if ( teaminfos.exist )
+                {
+										user.BattleStatus().ally = teaminfos.AllyTeam;
+										user.BattleStatus().pos.x = teaminfos.StartPosX;
+										user.BattleStatus().pos.y = teaminfos.StartPosY;
+										user.BattleStatus().colour = teaminfos.RGBColor;
+										user.BattleStatus().handicap = teaminfos.Handicap;
+										if ( teaminfos.SideNum >= 0 ) user.BattleStatus().side = teaminfos.SideNum;
+										IBattle::AllyInfoContainer allyinfos = parsed_allies[user.BattleStatus().ally];
+										if ( !allyinfos.exist )
+										{
+												PDataList ally( replayNode->Find( _T("ALLYTEAM") + i2s( user.BattleStatus().ally ) ) );
+												if ( ally.ok() )
+												{
+													allyinfos.exist = true;
+													allyinfos.NumAllies = ally->GetInt( _T("NumAllies"), 0 );
+													allyinfos.StartRectLeft = ally->GetInt( _T("StartRectLeft"), 0 );
+													allyinfos.StartRectTop = ally->GetInt( _T("StartRectTop"), 0 );
+													allyinfos.StartRectRight = ally->GetInt( _T("StartRectRight"), 0 );
+													allyinfos.StartRectBottom = ally->GetInt( _T("StartRectBottom"), 0 );
+													parsed_allies[ user.BattleStatus().ally ] = allyinfos;
+													battle.AddStartRect( user.BattleStatus().ally, allyinfos.StartRectTop, allyinfos.StartRectTop, allyinfos.StartRectRight, allyinfos.StartRectBottom );
+												}
+										}
+                }
+
+                battle.OnOfflineAddUser( user );
+            }
+
+        }
+        battle.SetParsedTeamsVec( parsed_teams );
+        battle.SetParsedAlliesVec( parsed_allies );
+
         //MMoptions, this'll fail unless loading map/mod into wrapper first
-//        LoadMMOpts( _T("mapoptions"), battle, replayNode );
-//        LoadMMOpts( _T("modoptions"), battle, replayNode );
+        if ( loadmod )
+        {
+					LoadMMOpts( _T("mapoptions"), battle, replayNode );
+					LoadMMOpts( _T("modoptions"), battle, replayNode );
+        }
 
         opts.maxplayers = playernum ;
 
@@ -264,12 +349,12 @@ void ReplayList::GetHeaderInfo( Replay& rep, const wxString& ReplayPath )
         replay.Read( &gametime, 4);
         rep.duration = gametime;
         rep.size = replay.Length();
-        unsigned long unixtime = 0;
+		wxLongLong_t unixtime = 0;
         replay.Seek( 56 );
         replay.Read( &unixtime, 8 );
         wxDateTime dt;
         dt.Set( (time_t) unixtime );
-        /// todo: add 2 strings one for date other for time?
+        // todo: add 2 strings one for date other for time?
         wxString date = dt.FormatISODate()+_T(" ")+dt.FormatISOTime();
         rep.date = date;
     }

@@ -51,7 +51,7 @@ void ExeDownloader::ExeDownloaderThread::Init()
 void* ExeDownloader::ExeDownloaderThread::Entry()
 {
     wxHTTP FileDownloading;
-    /// normal timeout is 10 minutes.. set to 10 secs.
+    // normal timeout is 10 minutes.. set to 10 secs.
     FileDownloading.SetTimeout(10);
     FileDownloading.Connect( m_fileurl.BeforeFirst(_T('/')), 80);
     //customMessageBox(SL_MAIN_ICON, _("connect dl\n.")+m_destpath, _("Error"));
@@ -101,18 +101,29 @@ bool ExeDownloader::ExeDownloaderThread::Unzip()
         std::auto_ptr<wxZipEntry> entry;
 
         //wxString base = sett().GetSpringDir + wxFileName::GetPathSeparator() + base + wxFileName::GetPathSeparator();
-        wxString base = m_destpath.BeforeLast( wxFileName::GetPathSeparator()) + wxFileName::GetPathSeparator();
+        wxString base = wxPathOnly( m_destpath ) + wxFileName::GetPathSeparator();
         wxFFileInputStream in(m_destpath);
         wxZipInputStream zip(in);
 
         while (entry.reset(zip.GetNextEntry()), entry.get() != NULL)
         {
             // access meta-data
-            wxString name = entry->GetName();
+            wxString name = entry->GetInternalName();
+//            name.Replace( wxT("/") , wxT("\\") );
             // read 'zip' to access the entry's data
-            wxFFileOutputStream out(base + name);
-            out.Write(zip);
-            out.Close();
+            using namespace std;
+            wxString file = base + name;
+            wxString path = wxPathOnly( file );
+            if ( ( entry->IsDir() )  ) {
+                if ( !wxDirExists( file ) )
+                wxFileName::Mkdir( file, 0775, wxPATH_MKDIR_FULL );
+                wxLogWarning( path );
+            }
+            else {
+                wxFFileOutputStream out( file );
+                out.Write(zip);
+                out.Close();
+            }
         }
     }
     catch (...)

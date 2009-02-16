@@ -33,11 +33,11 @@ UserListctrl::UserListctrl(wxWindow* parent, const wxString& name, bool highligh
 void UserListctrl::SetColumnWidths()
 {
     #if defined(__WXMAC__)
-    /// autosize is entirely broken on wxmac.
+    // autosize is entirely broken on wxmac.
       SetColumnWidth( 0, 20 );
       SetColumnWidth( 1, 228 );
     #else
-     /// on wxGTK it works, sort of.
+     // on wxGTK it works, sort of.
       SetColumnWidth( 0, wxLIST_AUTOSIZE_USEHEADER );
       SetColumnWidth( 1, 160 );
     #endif

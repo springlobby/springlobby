@@ -20,6 +20,10 @@ void AutoHost::SetEnabled( const bool enabled )
   m_enabled = enabled;
 }
 
+bool AutoHost::GetEnabled()
+{
+	return m_enabled;
+}
 
 void AutoHost::OnSaidBattle( const wxString& nick, const wxString& msg )
 {
@@ -38,6 +42,10 @@ void AutoHost::OnSaidBattle( const wxString& nick, const wxString& msg )
   // check for autohost commands
 
   if (msg == _T("!start")) {
+    if ( m_battle.GetNumUsers() > 32 ) {
+      m_battle.DoAction( _T("cannot start the game because there are more than 32 players (including spectators) in the battle, spring supports maximum 32") );
+      return;
+    }
     StartBattle();
     m_lastActionTime = currentTime;
   }
@@ -110,9 +118,14 @@ void AutoHost::OnSaidBattle( const wxString& nick, const wxString& msg )
     m_battle.SendHostInfo( IBattle::HI_Locked );
     m_lastActionTime = currentTime;
   }
-  else if ( msg == _T("!fixids") ) {
-    m_battle.FixTeamIDs();
-    m_battle.DoAction( _T( "is making control teams unique." ) );
+  else if ( msg.StartsWith( _T("!fixids") ) ) {
+    unsigned int num = s2l( msg.AfterFirst( _T(' ') ) );
+    m_battle.FixTeamIDs( IBattle::balance_divide, false, false, num );
+    m_lastActionTime = currentTime;
+  }
+  else if ( msg.StartsWith( _T("!cfixids") ) ) {
+    unsigned int num = s2l( msg.AfterFirst( _T(' ') ) );
+    m_battle.FixTeamIDs( IBattle::balance_divide, true, true, num );
     m_lastActionTime = currentTime;
   }
   else if ( msg == _T("!spectunsynced") ) {
@@ -174,20 +187,4 @@ void AutoHost::StartBattle()
   // todo: copied from Ui::StartHostedBattle
   sett().SetLastHostMap( m_battle.GetHostMapName() );
   sett().SaveSettings();
-}
-
-
-wxString AutoHost::GetExtraCommandLineParams()
-{
-  if (m_enabled) {
-    // -m, --minimise          Start minimised
-    // -q [T], --quit=[T]      Quit immediately on game over or after T seconds
-    #ifndef __WXMSW__
-    return _T("--minimise --quit=1000000000");
-    #else
-    return _T("/minimise /quit 1000000000");
-    #endif
-  }
-  else
-    return wxEmptyString;
 }

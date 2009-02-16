@@ -9,9 +9,9 @@ class MainWindow;
 class wxString;
 class Channel;
 class User;
+class IBattle;
 class Battle;
 class SinglePlayerBattle;
-struct BattleBot;
 class ChatPanel;
 
 //this removes the necessity to drag wx/event.h into almost every other file for a single type
@@ -20,20 +20,9 @@ class ChatPanel;
 typedef int wxEventType;
 #endif
 
-
-typedef int HostInfo;
-
 typedef int AlertEventType;
 
 extern const wxEventType torrentSystemStatusUpdateEvt;
-
-//these seem to be completely obsolete (koshi)
-//#define AE_MESSAGE 1
-//#define AE_HIGHLIGHT_MESSAGE 2
-//#define AE_PM 4
-//#define AE_ERROR 8
-//#define AE_DISCONNECT 16
-//#define AE_BATTLE_MESSAGE 32
 
 
 //! @brief UI main class
@@ -120,25 +109,21 @@ class Ui
     void OnMotd( Server& server, const wxString& message );
     void OnServerMessage( Server& server, const wxString& message );
 
-    void OnBattleOpened( Battle& battle );
-    void OnBattleClosed( Battle& battle );
-    void OnUserJoinedBattle( Battle& battle, User& user );
-    void OnUserLeftBattle( Battle& battle, User& user );
-    void OnBattleInfoUpdated( Battle& battle );
-    void OnBattleInfoUpdated( Battle& battle, const wxString& Tag );
+    void OnBattleOpened( IBattle& battle );
+    void OnBattleClosed( IBattle& battle );
+    void OnUserJoinedBattle( IBattle& battle, User& user );
+    void OnUserLeftBattle( IBattle& battle, User& user );
+    void OnBattleInfoUpdated( IBattle& battle );
+    void OnBattleInfoUpdated( IBattle& battle, const wxString& Tag );
     void OnBattleStarted( Battle& battle );
-
-    void OnBattleBotAdded( Battle& battle, BattleBot& bot );
-    void OnBattleBotRemoved( Battle& battle, BattleBot& bot );
-    void OnBattleBotUpdated( Battle& battle, BattleBot& bot );
 
     void OnJoinedBattle( Battle& battle );
     void OnHostedBattle( Battle& battle );
-    void OnUserBattleStatus( Battle& battle, User& user );
-    void OnRequestBattleStatus( Battle& battle );
+    void OnUserBattleStatus( IBattle& battle, User& user );
+    void OnRequestBattleStatus( IBattle& battle );
 
-    void OnSaidBattle( Battle& battle, const wxString& nick, const wxString& msg );
-    void OnBattleAction( Battle& battle, const wxString& nick, const wxString& msg );
+    void OnSaidBattle( IBattle& battle, const wxString& nick, const wxString& msg );
+    void OnBattleAction( IBattle& battle, const wxString& nick, const wxString& msg );
 
     void OnSpringStarting();
     void OnSpringTerminated( long exit_code );
@@ -152,6 +137,8 @@ class Ui
     void OnMapInfoCached( const wxString& mapname );
     void OnMinimapCached( const wxString& mapname );
     void OnModUnitsCached( const wxString& modname );
+    //! ask to download missing map, return true if download attempted
+    bool OnPresetRequiringMap( const wxString& mapname );
 
     bool IsThisMe(User& other);
     bool IsThisMe(User* other);

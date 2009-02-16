@@ -25,7 +25,7 @@ AM_CPPFLAGS = \
 # strict aliasing check is disabled, because wxWidgets headers have problems
 AM_CXXFLAGS = \
 	-Wall \
-	-Wno-strict-aliasing -DNDEBUG
+	-Wno-strict-aliasing
 
 desktopdir = $(datadir)/applications
 dist_desktop_DATA = \
@@ -56,6 +56,8 @@ springlobby_LDADD = \
 	$(LIBTORRENT_LIBS) \
 	$(SDL_LIBS)
 
+EXTRA_DIST = \
+	src/battleroommmoptionstab.cpp
 
 springsettings_LDADD = \
 	$(WX_LIBS)
@@ -390,8 +392,8 @@ springlobby_SOURCES = \
 	src/springunitsynclib.h \
 	src/unitsyncthread.cpp \
 	src/unitsyncthread.h \
-	src/maplistctrl.cpp \
-	src/maplistctrl.h \
+	src/mapgridctrl.cpp \
+	src/mapgridctrl.h \
 	src/mapselectdialog.cpp \
 	src/mapselectdialog.h \
 	src/bimap.h \
@@ -448,12 +450,14 @@ springlobby_SOURCES = \
 	src/battleroomtab.h \
 	src/boost/md5.cpp \
 	src/boost/md5.hpp \
-	src/channel.cpp \
-	src/channel.h \
-	src/channellist.cpp \
-	src/channellist.h \
-	src/channellistctrl.cpp \
-	src/channellistctrl.h \
+	src/crc.cpp \
+	src/crc.h \
+	src/channel/channel.cpp \
+	src/channel/channel.h \
+	src/channel/channellist.cpp \
+	src/channel/channellist.h \
+	src/channel/channellistctrl.cpp \
+	src/channel/channellistctrl.h \
 	src/chatoptionstab.cpp \
 	src/chatoptionstab.h \
 	src/chatpanel.cpp \
@@ -486,6 +490,7 @@ springlobby_SOURCES = \
 	src/mapctrl.cpp \
 	src/mapctrl.h \
 	src/mutexwrapper.h \
+	src/offlinebattle.h \
 	src/nicklistctrl.cpp \
 	src/nicklistctrl.h \
 	src/replay/replaytab.h \
@@ -523,6 +528,7 @@ springlobby_SOURCES = \
 	src/springunitsync.h \
 	src/tasserver.cpp \
 	src/tasserver.h \
+	src/tasservertokentable.h \
 	src/ui.cpp \
 	src/ui.h \
 	src/uiutils.cpp \
@@ -599,6 +605,8 @@ springlobby_SOURCES = \
 	src/images/warning_small.png.h \
 	src/images/spectator.png.h \
 	src/images/single_player_icon_text.png.h \
+	src/images/map_select_1.png.h \
+	src/images/map_select_2.png.h \
 	src/images/select_icon.xpm \
 	src/images/server.xpm \
 	src/images/spectator.xpm \
@@ -858,7 +866,6 @@ springlobby_SOURCES = \
 	src/mmoptionswrapper.h \
 	src/mmoptionswrapper.cpp \
 	src/battleroommmoptionstab.h \
-	src/battleroommmoptionstab.cpp \
 	src/torrentwrapper.cpp \
 	src/torrentwrapper.h \
 	src/thingdef.h \
@@ -874,6 +881,16 @@ springlobby_SOURCES = \
 	src/httpdownloader.cpp \
 	src/Helper/TextCompletionDatabase.hpp \
 	src/Helper/TextCompletionDatabase.cpp \
+	src/Helper/wxTranslationHelper.h \
+	src/Helper/wxTranslationHelper.cpp \
+	src/channel/channelchooser.cpp \
+	src/channel/channelchooser.h \
+	src/channel/channelchooserdialog.cpp \
+	src/channel/channelchooserdialog.h \
+        src/Helper/colorbutton.cpp \
+	src/Helper/colorbutton.h \
+        src/Helper/wxtextctrlhist.cpp \
+	src/Helper/wxtextctrlhist.h \
 	src/filelister/filelistctrl.h \
 	src/filelister/filelistdialog.h \
 	src/filelister/filelistfilter.h \
@@ -881,19 +898,15 @@ springlobby_SOURCES = \
 	src/filelister/filelistdialog.cpp \
 	src/filelister/filelistfilter.cpp \
 	configure.ac \
-	src/autojoinchanneldialog.h \
+	src/channel/autojoinchanneldialog.h \
 	src/autopointers.h \
-	src/autojoinchanneldialog.cpp \
+	src/channel/autojoinchanneldialog.cpp \
 	src/useractions.h \
 	src/useractions.cpp \
 	src/selectusersdialog.h \
 	src/selectusersdialog.cpp \
 	src/groupoptionspanel.h \
 	src/groupoptionspanel.cpp \
-	src/Helper/wxtextctrlhist.h \
-	src/Helper/wxtextctrlhist.cpp \
-	src/Helper/colorbutton.cpp \
-	src/Helper/colorbutton.h \
 	src/lobbyoptionstab.h \
 	src/lobbyoptionstab.cpp \
 	src/aui/auimanager.h \
@@ -909,7 +922,9 @@ springlobby_SOURCES = \
 	src/thread.cpp \
 	src/thread.h \
 	src/globalsmanager.cpp \
-	src/globalsmanager.h
+	src/globalsmanager.h \
+	src/mmoptionwindows.cpp \
+	src/mmoptionwindows.h
 
 
 

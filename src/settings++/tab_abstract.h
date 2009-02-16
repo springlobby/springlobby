@@ -40,6 +40,29 @@ typedef std::map<wxString,int> intMap;
 typedef std::map<wxString,wxString> stringMap;
 typedef std::map<wxString,float> floatMap;
 
+template <int numerator, int denominator = 1>
+class Scaler
+{
+    private:
+
+
+    public:
+        template < typename T >
+        static T Up( const T val )
+        {
+            const double fac = denominator != 0 ? numerator/(double)denominator : numerator;
+            return (T) ( fac * val );
+        }
+
+        template < typename T >
+        static T Down ( const T val )
+        {
+            const double fac = denominator != 0 ? numerator/(double)denominator : numerator;
+            return (T) ( val / fac );
+        }
+};
+
+
 class abstract_panel : public wxScrolledWindow
 {
 

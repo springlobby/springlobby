@@ -53,6 +53,13 @@ void actNotifBox(int whichIcon , const wxString& message,
         const wxString& caption = _T("User action notification"),
         long style = wxOK|wxICON_INFORMATION,  const int x = -1, const int y = -1 );
 
+/** \brief show  mutelist for a specific channel
+ *
+ */
+void mutelistWindow( const wxString& message,
+        const wxString& caption = _T("Mutelist"),
+        long style = wxOK|wxICON_INFORMATION,  const int x = -1, const int y = -1 );
+
 //! cleanup
 void freeStaticBox();
 
@@ -108,6 +115,18 @@ public:
     virtual void AppendMessage(const wxString& message);
 };
 
+/** \brief displays channel mutelist */
+class MutelistWindow : public ServerMessageBox
+{
+public:
+    MutelistWindow (wxIcon* icon ,wxWindow *parent, const wxString& message,
+	        const wxString& caption = _T("User action notification") ,
+	        long style = wxOK, const wxPoint& pos = wxDefaultPosition);
+    virtual ~MutelistWindow ();
+
+    //virtual void AppendMessage(const wxString& message);
+};
+
 /** \brief encapsulates pointers common to ServerMessageBox and CustomMessageBox
  * \todo this isn't really that well designed, make a real base class of this?
  */
@@ -142,6 +161,14 @@ private:
 	wxTextCtrl* text_ctrl;
 };
 
-
+//! extends the wx method by allowing to set selection
+int GetSingleChoiceIndex( const wxString& message,
+                            const wxString& caption,
+                            const wxArrayString& aChoices,
+                            const int selected,
+                            wxWindow *parent = NULL,
+                            int x = wxDefaultCoord,
+                            int y = wxDefaultCoord,
+                            bool centre = true );
 
 #endif /*CUSTOM_MSG_DLG_H_*/

@@ -28,6 +28,7 @@ class settings_frame;
 class wxMenuItem;
 class wxMenuBar;
 class wxMenu;
+class ChannelChooserDialog;
 class ReplayTab;
 class AutojoinChannelDialog;
 
@@ -66,6 +67,9 @@ class MainWindow : public wxFrame
 
     void ShowConfigure( const unsigned int page = OPT_PAGE_SPRING );
 
+    /** Show the channel list dialog. */
+    void ShowChannelChooser();
+
     void OnMenuAbout( wxCommandEvent& event );
     void OnMenuJoin( wxCommandEvent& event );
     void OnMenuChat( wxCommandEvent& event );
@@ -74,6 +78,9 @@ class MainWindow : public wxFrame
     void OnMenuSaveOptions( wxCommandEvent& event );
     void OnMenuQuit( wxCommandEvent& event );
     void OnMenuVersion ( wxCommandEvent& event );
+    void OnMenuSaveLayout( wxCommandEvent& event );
+    void OnMenuLoadLayout( wxCommandEvent& event );
+    void OnMenuDefaultLayout( wxCommandEvent& event );
     void OnUnitSyncReload( wxCommandEvent& event );
     void OnMenuStartTorrent( wxCommandEvent& event );
     void OnMenuStopTorrent( wxCommandEvent& event );
@@ -82,8 +89,12 @@ class MainWindow : public wxFrame
     void OnReportBug( wxCommandEvent& event );
     void OnShowDocs( wxCommandEvent& event );
     void OnShowSettingsPP( wxCommandEvent& event );
+    void OnMenuSelectLocale( wxCommandEvent& event );
+    void OnShowChannelChooser( wxCommandEvent& event );
     void forceSettingsFrameClose();
     void OnUnitSyncReloaded();
+    void OnChannelList( const wxString& channel, const int& numusers, const wxString& topic );
+    void OnChannelListStart( );
 
 
     #ifdef HAVE_WX26
@@ -127,18 +138,11 @@ class MainWindow : public wxFrame
     MainTorrentTab* m_torrent_tab;
     #endif
 
-    wxBitmap* m_chat_icon;
-    wxBitmap* m_battle_icon;
-    wxBitmap* m_options_icon;
-    wxBitmap* m_sp_icon;
-    wxBitmap* m_downloads_icon;
-    wxBitmap* m_replay_icon;
-    wxBitmap* m_select_image;
-
     wxImageList* m_func_tab_images;
     AutojoinChannelDialog* m_autojoin_dialog;
     settings_frame* se_frame;
     bool se_frame_active;
+    ChannelChooserDialog* m_channel_chooser;
 
     ReplayTab* m_replay_tab;
 
@@ -159,7 +163,14 @@ class MainWindow : public wxFrame
         MENU_VERSION,
         MENU_START_TORRENT,
         MENU_STOP_TORRENT,
-        MENU_AUTOJOIN_CHANNELS
+        MENU_AUTOJOIN_CHANNELS,
+        MENU_SELECT_LOCALE,
+        MENU_CHANNELCHOOSER,
+        MENU_SAVE_LAYOUT,
+        MENU_LOAD_LAYOUT,
+        MENU_DEFAULT_LAYOUT
+
+
 
     };
 

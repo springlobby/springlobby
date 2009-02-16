@@ -35,9 +35,12 @@ class BattleMapTab : public wxScrolledWindow
      void ReloadMaplist();
 
      void OnMapSelect( wxCommandEvent& event );
+     void OnMapBrowse( wxCommandEvent& event );
      void OnStartTypeSelect( wxCommandEvent& event );
 
     void OnUnitSyncReloaded();
+
+    void SetMap( int index );
 
   protected:
     Ui& m_ui;
@@ -52,6 +55,7 @@ class BattleMapTab : public wxScrolledWindow
 
     enum {
       BMAP_MAP_SEL = wxID_HIGHEST,
+      BMAP_MAP_BROWSE,
       BMAP_START_TYPE
     };
 

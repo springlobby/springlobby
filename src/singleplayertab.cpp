@@ -9,15 +9,18 @@
 #include <wx/statline.h>
 #include <wx/stattext.h>
 #include <wx/checkbox.h>
+#include <wx/clrpicker.h>
 
 #include "singleplayertab.h"
 #include "mapctrl.h"
+#include "mapselectdialog.h"
 #include "utils.h"
 #include "uiutils.h"
 #include "ui.h"
 #include "iunitsync.h"
 #include "addbotdialog.h"
 #include "server.h"
+#include "settings.h"
 
 #ifndef HAVE_WX26
 #include "aui/auimanager.h"
@@ -31,10 +34,13 @@ BEGIN_EVENT_TABLE(SinglePlayerTab, wxPanel)
 
   EVT_CHOICE( SP_MAP_PICK, SinglePlayerTab::OnMapSelect )
   EVT_CHOICE( SP_MOD_PICK, SinglePlayerTab::OnModSelect )
-  EVT_BUTTON( SP_ADD_BOT , SinglePlayerTab::OnAddBot )
-  EVT_BUTTON( SP_START , SinglePlayerTab::OnStart )
-  EVT_BUTTON( SP_RESET , SinglePlayerTab::OnReset )
+  EVT_BUTTON( SP_BROWSE_MAP, SinglePlayerTab::OnMapBrowse )
+  EVT_BUTTON( SP_ADD_BOT, SinglePlayerTab::OnAddBot )
+  EVT_BUTTON( SP_RESET, SinglePlayerTab::OnReset )
+  EVT_BUTTON( SP_START, SinglePlayerTab::OnStart )
   EVT_CHECKBOX( SP_RANDOM, SinglePlayerTab::OnRandomCheck )
+  EVT_CHECKBOX( SP_SPECTATE, SinglePlayerTab::OnSpectatorCheck )
+	EVT_COLOURPICKER_CHANGED( SP_COLOUR, SinglePlayerTab::OnColorButton )
 
 END_EVENT_TABLE()
 
@@ -63,8 +69,8 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, Ui& ui, MainSinglePlayerTab& 
   m_map_pick = new wxChoice( this, SP_MAP_PICK );
   m_ctrl_sizer->Add( m_map_pick, 1, wxALL, 5 );
 
-//  m_select_btn = new wxButton( this, SP_BROWSE_MAP, _T("..."), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
-//  m_ctrl_sizer->Add( m_select_btn, 0, wxBOTTOM|wxRIGHT|wxTOP, 5 );
+  m_select_btn = new wxButton( this, SP_BROWSE_MAP, _T("..."), wxDefaultPosition, wxSize(CONTROL_HEIGHT, CONTROL_HEIGHT), wxBU_EXACTFIT );
+  m_ctrl_sizer->Add( m_select_btn, 0, wxBOTTOM|wxRIGHT|wxTOP, 5 );
 
   m_mod_lbl = new wxStaticText( this, -1, _("Mod:") );
   m_ctrl_sizer->Add( m_mod_lbl, 0, wxALL, 5 );
@@ -91,7 +97,13 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, Ui& ui, MainSinglePlayerTab& 
 
   m_buttons_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
 
-  m_random_check = new wxCheckBox( this, SP_RANDOM, _("Random start postisions") );
+	m_color_btn = new  wxColourPickerCtrl( this, SP_COLOUR, sett().GetBattleLastColour(), wxDefaultPosition, wxDefaultSize );
+	m_buttons_sizer->Add( m_color_btn, 0, wxALL, 0 );
+
+  m_spectator_check = new wxCheckBox( this, SP_SPECTATE, _("Spectate only") );
+  m_buttons_sizer->Add( m_spectator_check, 0, wxALL, 5 );
+
+  m_random_check = new wxCheckBox( this, SP_RANDOM, _("Random start positions") );
   m_buttons_sizer->Add( m_random_check, 0, wxALL, 5 );
 
   m_start_btn = new wxButton( this, SP_START, _("Start"), wxDefaultPosition, wxSize(80, CONTROL_HEIGHT), 0 );
@@ -215,7 +227,7 @@ bool SinglePlayerTab::ValidSetup()
     return false;
   }
 
-  if ( m_battle.GetNumBots() == 1 )
+  if ( m_battle.GetNumUsers() == 1 )
   {
       wxLogWarning(_T("trying to start sp game without bot"));
       if ( customMessageBox(SL_MAIN_ICON, _("Continue without adding a bot first?.\n The game will be over pretty fast.\n "),
@@ -240,17 +252,40 @@ void SinglePlayerTab::OnModSelect( wxCommandEvent& event )
 }
 
 
+void SinglePlayerTab::OnMapBrowse( wxCommandEvent& event )
+{
+	wxLogDebugFunc( _T("") );
+	MapSelectDialog dlg( &m_ui.mw(), m_ui );
+
+	if ( dlg.ShowModal() == wxID_OK && dlg.GetSelectedMap() != NULL ) {
+		wxLogDebugFunc( dlg.GetSelectedMap()->name );
+		const wxString mapname = RefineMapname( dlg.GetSelectedMap()->name );
+		const int idx = m_map_pick->FindString( mapname, true /*case sensitive*/ );
+		if ( idx != wxNOT_FOUND ) SetMap( idx );
+	}
+}
+
+
 void SinglePlayerTab::OnAddBot( wxCommandEvent& event )
 {
+  if ( m_battle.GetNumUsers() > 15 )
+  {
+    customMessageBoxNoModal( SL_MAIN_ICON, _("Spring only supports up to 16 different teams"), _("Num players error"), wxICON_EXCLAMATION );
+    return;
+  }
   AddBotDialog dlg( this, m_battle, true );
-  if ( dlg.ShowModal() == wxID_OK ) {
-    int x = 0, y = 0, handicap = 0;
-    m_battle.GetFreePosition( x, y );
-    wxColour col = m_battle.GetFreeColour( NULL );
-    int i = m_battle.AddBot( m_battle.GetFreeAlly(), x, y, handicap, dlg.GetAI() );
-    BattleBot* bot = m_battle.GetBot( i );
-    ASSERT_LOGIC( bot != 0, _T("bot == 0") );
-    bot->bs.colour = col;
+  if ( dlg.ShowModal() == wxID_OK )
+  {
+    UserBattleStatus bs;
+    bs.owner = m_battle.GetMe().GetNick();
+    bs.aishortname = dlg.GetAIShortName();
+    bs.aiversion = dlg.GetAIVersion();
+		bs.team = m_battle.GetFreeTeamNum();
+		bs.ally = m_battle.GetFreeAlly();
+		bs.colour = m_battle.GetFreeColour();
+    User& bot = m_battle.OnBotAdded( _T("Bot") + TowxString( bs.team ), bs  );
+    ASSERT_LOGIC( &bot != 0, _T("bot == 0") );
+
     m_minimap->UpdateMinimap();
   }
 }
@@ -270,11 +305,21 @@ void SinglePlayerTab::OnStart( wxCommandEvent& event )
 
 void SinglePlayerTab::OnRandomCheck( wxCommandEvent& event )
 {
-
     if ( m_random_check->IsChecked() ) m_battle.CustomBattleOptions().setSingleOption( _T("startpostype"), i2s(IBattle::ST_Random), OptionsWrapper::EngineOption );
     else m_battle.CustomBattleOptions().setSingleOption( _T("startpostype"), i2s(IBattle::ST_Pick), OptionsWrapper::EngineOption );
     m_battle.SendHostInfo( IBattle::HI_StartType );
+}
 
+void SinglePlayerTab::OnSpectatorCheck( wxCommandEvent& event )
+{
+    m_battle.GetMe().BattleStatus().spectator = m_spectator_check->IsChecked();
+    UpdateMinimap();
+}
+
+void SinglePlayerTab::OnColorButton( wxColourPickerEvent& event )
+{
+    m_battle.ForceColour( m_battle.GetMe(), event.GetColour() );
+    UpdateMinimap();
 }
 
 void SinglePlayerTab::Update( const wxString& Tag )

@@ -1,15 +1,17 @@
 src/addbotdialog.cpp
 src/agreementdialog.cpp
 src/autobalancedialog.cpp
-src/autojoinchanneldialog.cpp
 src/battlelistctrl.cpp
 src/battlelistfilter.cpp
 src/battlelisttab.cpp
 src/battlemaptab.cpp
 src/battleoptionstab.cpp
 src/battleroomlistctrl.cpp
-src/battleroommmoptionstab.cpp
 src/battleroomtab.cpp
+src/channel/autojoinchanneldialog.cpp
+src/channel/channelchooser.cpp
+src/channel/channelchooserdialog.cpp
+src/channel/channellistctrl.cpp
 src/chatlog.cpp
 src/chatoptionstab.cpp
 src/chatpanel.cpp
@@ -59,7 +61,6 @@ src/settings++/tab_ui.cpp
 src/singleplayertab.cpp
 src/springlobbyapp.cpp
 src/springoptionstab.cpp
-src/springunitsync.cpp
 src/tasserver.cpp
 src/tdfcontainer.cpp
 src/torrentlistctrl.cpp

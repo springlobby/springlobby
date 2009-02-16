@@ -12,7 +12,10 @@
 #include <wx/filedlg.h>
 
 #include "settings.h"
-//#include
+#include "springlobbyapp.h"
+#include "settings++/custom_dialogs.h"
+#include "utils.h"
+
 
 #ifndef HAVE_WX26
 #include "aui/auimanager.h"
@@ -54,7 +57,7 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
     else m_web_spec_radio->SetValue( true );
 
     m_web_loc_sizer = new wxBoxSizer( wxHORIZONTAL );
-    m_web_loc_sizer->Add( m_web_loc_text, 0, wxALL, 2 );
+    m_web_loc_sizer->Add( m_web_loc_text, 0, wxALL | wxALIGN_CENTER_VERTICAL, 2 );
     m_web_loc_sizer->Add( m_web_edit, 1, wxEXPAND );
     m_web_loc_sizer->Add( m_web_browse_btn );
 
@@ -78,9 +81,9 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
     m_reportstats_sizer->Add( m_reportstats_label, 1, wxEXPAND|wxALL, 5);
     m_reportstats_sizer->Add( m_reportstats, 0, wxEXPAND|wxALL, 5);
 
-    m_main_sizer->Add( m_web_box_sizer, 0, wxEXPAND | wxALL, 15 );
-    m_main_sizer->Add( m_autojoin_sizer, 0, wxALL, 15 );
-    m_main_sizer->Add( m_reportstats_sizer, 0, wxALL, 15 );
+    m_main_sizer->Add( m_web_box_sizer, 0, wxEXPAND | wxALL, 5 );
+    m_main_sizer->Add( m_autojoin_sizer, 0, wxALL, 5 );
+    m_main_sizer->Add( m_reportstats_sizer, 0, wxALL, 5 );
 
 #ifdef __WXMSW__
     wxStaticBoxSizer* m_updater_sizer = new wxStaticBoxSizer ( wxVERTICAL, this, _("Automatic updates") );
@@ -90,7 +93,7 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
     m_updater_sizer->Add( m_updater_label, 1, wxEXPAND|wxALL, 5);
     m_updater_sizer->Add( m_updater, 0, wxEXPAND|wxALL, 5);
 
-    m_main_sizer->Add( m_updater_sizer, 0, wxALL, 15 );
+    m_main_sizer->Add( m_updater_sizer, 0, wxALL, 5 );
 #endif
 
     wxStaticBoxSizer* m_show_tooltips_sizer = new wxStaticBoxSizer ( wxVERTICAL, this, _("Tooltips") );
@@ -102,7 +105,7 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
 #endif
     m_show_tooltips_sizer->Add( m_show_tooltips, 0, wxEXPAND|wxALL, 5);
 
-    m_main_sizer->Add( m_show_tooltips_sizer, 0, wxALL, 15 );
+    m_main_sizer->Add( m_show_tooltips_sizer, 0, wxALL, 5 );
 
     wxStaticBoxSizer* m_complete_method_sizer = new wxStaticBoxSizer ( wxVERTICAL, this, _("Tab completion method") );
     m_complete_method_label = new wxStaticText ( this, -1, _("\"Match exact\" will complete a word if there is one and only one match.\n"
@@ -115,7 +118,7 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
     m_complete_method_sizer->Add( m_complete_method_old, 0, wxEXPAND|wxALL, 5);
     m_complete_method_sizer->Add( m_complete_method_new, 0, wxEXPAND|wxALL, 5);
 
-    m_main_sizer->Add( m_complete_method_sizer, 0, wxALL, 15 );
+    m_main_sizer->Add( m_complete_method_sizer, 0, wxALL, 5 );
 
     SetScrollRate( 10, 10 );
     SetSizer( m_main_sizer );
@@ -188,3 +191,5 @@ void LobbyOptionsTab::OnDefaultWeb( wxCommandEvent& event )
 {
   HandleWebloc( m_web_def_radio->GetValue() );
 }
+
+

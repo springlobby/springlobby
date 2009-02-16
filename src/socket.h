@@ -68,6 +68,7 @@ class Socket
     bool GetPingEnabled() { return m_ping_msg != wxEmptyString; }
 
     wxString GetLocalAddress();
+    wxString GetHandle();
 
     SockState State( );
     SockError Error( );

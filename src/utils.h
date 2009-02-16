@@ -59,7 +59,17 @@ class assert_exception : public std::runtime_error
 {wxLogMessage(_T("runtime assertion ( %s:%d ): %s"), TowxString(__FILE__).c_str(),__LINE__ , wxString(msg).c_str() );throw assert_exception(std::string(wxString(msg).mb_str()));}
 
 
-#define CLAMP(var,min,max) ((var)=((var)<(min))?(min):((var)>(max))?(max):(var))
+/** @todo convert to a templated function */
+#define CLAMP(var,min,max)    \
+  ( (var) =		      \
+    ( (var) < (min)	      \
+      ? (min)		      \
+      : ( (var) > (max)	      \
+	  ? (max)	      \
+	  : (var)	      \
+	)		      \
+    )			      \
+  )
 
 #ifdef __WXMSW__
 #define CONTROL_HEIGHT 22
@@ -112,6 +122,7 @@ wxString GetSentenceParam( wxString& params );
 long GetIntParam( wxString& params );
 bool GetBoolParam( wxString& params );
 wxString GetSpringLobbyVersion();
+wxString GetExecutableFolder();
 
 //! matches against regex for printable ascii chars, excluding space
 bool IsValidNickname( const wxString& name );
@@ -149,6 +160,10 @@ class uninitialized_array
 
   private:
     T* elems;
+
+	// copying not allowed
+	uninitialized_array(const uninitialized_array&);
+	uninitialized_array& operator=(const uninitialized_array&);
 };
 
 
@@ -175,4 +190,13 @@ class wxArrayString;
  */
 wxString GetBestMatch(const wxArrayString& a, const wxString& s, double* distance = NULL);
 
+//! convert wxArrayString into a wxString[] which must be delete[]d by caller
+int ConvertWXArrayToC(const wxArrayString& aChoices, wxString **choices);
+
+/**
+    let origin be /path/to/some/dir and destination /some/other/path
+    this will copy dir (and everything below that recursively to /some/other/path/dir
+    \return true if successful
+*/
+bool CopyDir( wxString origin, wxString destination, bool overwrite = true);
 #endif // SPRINGLOBBY_HEADERGUARD_UTILS_H

@@ -25,6 +25,7 @@
 #include "../crashreport.h"
 //#include "../utils.h"
 #include "../settings.h"
+#include "se_utils.h"
 
 #include <iostream>
 #include <wx/msgdlg.h>
@@ -70,9 +71,8 @@ bool Springsettings::OnInit()
 {
 	//initialize all loggers
     InitializeLoggingTargets();
-    #ifdef __WXMSW__
-		sett().SetPortableMode( true );
-		#endif
+
+    SetSettingsStandAlone( true );
     settings_frame* frame = new settings_frame(NULL,wxID_ANY,wxT("SpringSettings"),wxDefaultPosition,
     		wxDefaultSize);
     SetTopWindow(frame);

@@ -25,6 +25,7 @@ class MapCtrl;
 class ColorButton;
 class wxBitmapComboBox;
 struct UnitSyncMap;
+class wxToggleButton;
 
 typedef std::map<wxString,long> OptionListMap;
 
@@ -51,6 +52,7 @@ class BattleRoomTab : public wxScrolledWindow
     void OnStart( wxCommandEvent& event );
     void OnLeave( wxCommandEvent& event );
     void OnBalance( wxCommandEvent& event );
+    void OnFixTeams( wxCommandEvent& event );
     void OnFixColours( wxCommandEvent& event );
     void OnAddBot( wxCommandEvent& event );
     void OnImReady( wxCommandEvent& event );
@@ -63,13 +65,17 @@ class BattleRoomTab : public wxScrolledWindow
     void OnSideSel( wxCommandEvent& event );
     void OnPresetSel( wxCommandEvent& event );
     void OnAutoLock( wxCommandEvent& event );
+    void OnLockBalance( wxCommandEvent& event );
+    void OnShowManagePlayersMenu( wxCommandEvent& event );
+		void OnLoadPreset( wxCommandEvent& event );
+		void OnSavePreset( wxCommandEvent& event );
+		void OnDeletePreset( wxCommandEvent& event );
+		void OnSetModDefaultPreset( wxCommandEvent& event );
+		void OnMapBrowse( wxCommandEvent& event );
+		void OnOptionActivate( wxListEvent& event );
 
     void OnUserJoined( User& user );
     void OnUserLeft( User& user );
-
-    void OnBotAdded( BattleBot& bot );
-    void OnBotRemoved( BattleBot& bot );
-    void OnBotUpdated( BattleBot& bot );
 
     void OnUnitSyncReloaded();
 
@@ -128,15 +134,26 @@ class BattleRoomTab : public wxScrolledWindow
     wxButton* m_leave_btn;
     wxButton* m_start_btn;
     wxButton* m_addbot_btn;
-    wxButton* m_fix_colours_btn;
-    wxButton* m_balance_btn;
+    wxButton* m_manage_players_btn;
+		wxButton* m_save_btn;
+		wxButton* m_delete_btn;
+		wxButton* m_default_btn;
+		wxButton* m_browse_map_btn;
 
+    wxMenu* m_manage_users_mnu;
+    wxMenuItem* m_lock_balance_mnu;
 
     wxCheckBox* m_ready_chk;
     wxCheckBox* m_spec_chk;
+    #if wxUSE_TOGGLEBTN
+    wxToggleButton* m_lock_chk;
+    wxToggleButton* m_autohost_chk;
+    wxToggleButton* m_autolock_chk;
+    #else
     wxCheckBox* m_lock_chk;
     wxCheckBox* m_autohost_chk;
     wxCheckBox* m_autolock_chk;
+    #endif
 
     wxListCtrl* m_opts_list;
 
@@ -144,6 +161,8 @@ class BattleRoomTab : public wxScrolledWindow
         BROOM_LEAVE = wxID_HIGHEST,
         BROOM_IMREADY,
         BROOM_LOCK,
+        BROOM_LOCK_BALANCE,
+        BROOM_MANAGE_MENU,
         BROOM_SPEC,
         BROOM_TEAMSEL,
         BROOM_ALLYSEL,
@@ -152,10 +171,16 @@ class BattleRoomTab : public wxScrolledWindow
         BROOM_START,
         BROOM_ADDBOT,
         BROOM_BALANCE,
+        BROOM_FIXID,
         BROOM_FIXCOLOURS,
         BROOM_PRESETSEL,
         BROOM_AUTOHOST,
-        BROOM_AUTOLOCK
+        BROOM_AUTOLOCK,
+				BROOM_SAVEPRES,
+				BROOM_DELETEPRES,
+				BROOM_SETDEFAULTPRES,
+				BROOM_MAP_BROWSE,
+				BROOM_OPTIONLIST
     };
 
     DECLARE_EVENT_TABLE();

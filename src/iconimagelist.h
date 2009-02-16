@@ -5,7 +5,7 @@
 #include <wx/imaglist.h>
 #include <map>
 
-class Battle;
+class IBattle;
 class wxColor;
 struct UserStatus;
 
@@ -19,13 +19,13 @@ class IconImageList : public wxImageList
 
     int GetRankIcon( const unsigned int& rank, const bool& showlowest = true );
     int GetFlagIcon( const wxString& flagname );
-    int GetBattleStatusIcon( const Battle& battle ) const;
-    wxString GetBattleStatus(const Battle& battle) const;
+    int GetBattleStatusIcon( const IBattle& battle ) const;
+    wxString GetBattleStatus(const IBattle& battle) const;
     int GetHostIcon( const bool& spectator = false );
     int GetColourIcon( const int& num );
     void SetColourIcon( const int& num, const wxColour& colour );
     int GetSideIcon( const wxString& modname, int side );
-    int GetReadyIcon( const bool& spectator, const bool& ready, const int& sync );
+    int GetReadyIcon( const bool& spectator, const bool& ready, const int& sync, const bool& bot );
 
     int ICON_NONE;
 

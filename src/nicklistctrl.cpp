@@ -70,13 +70,13 @@ NickListCtrl::NickListCtrl( wxWindow* parent, bool show_header, NickListCtrl::Us
 
   long width = GetSize().x -( GetColumnWidth( 0 ) + GetColumnWidth( 1 ) + GetColumnWidth( 2 ) );
 #if defined(__WXMAC__)
-/// autosize is entirely broken on wxmac.
+// autosize is entirely broken on wxmac.
   SetColumnWidth( 0, 20 );
   SetColumnWidth( 1, 20 );
   SetColumnWidth( 2, 20 );
   SetColumnWidth( 3, width );
 #else
- /// on wxGTK it works, sort of.
+ // on wxGTK it works, sort of.
   SetColumnWidth( 0, wxLIST_AUTOSIZE_USEHEADER );
   SetColumnWidth( 1, wxLIST_AUTOSIZE_USEHEADER );
   SetColumnWidth( 2, wxLIST_AUTOSIZE_USEHEADER );
@@ -185,6 +185,7 @@ void NickListCtrl::OnActivateItem( wxListEvent& event )
   if ( index == -1 ) return;
   User* user = (User*)event.GetData();
   ui().mw().OpenPrivateChat( *user );
+  SetSelectedIndex( index );
   //FIXME why was this lfet here, what was it supposed to do?
   //m_ui.mw().OnTabsChanged( event2 );
 }
@@ -196,8 +197,11 @@ void NickListCtrl::OnShowMenu( wxContextMenuEvent& event )
   if ( m_menu != 0 )
   {
       //no need to popup the menu when there's no user selected
-      if ( GetSelectedIndex() != -1 ){
-          m_menu->EnableItems( (GetSelectedIndex()!=-1), _("JK") );
+      int selected = GetSelectedIndex();
+      if ( selected != -1 ){
+          User& user = *((User*)GetItemData( selected ));
+          wxString nick = user.GetNick();
+          m_menu->EnableItems( ( selected !=-1 ), nick );
           PopupMenu( m_menu );
       }
   }

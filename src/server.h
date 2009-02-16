@@ -2,8 +2,9 @@
 #define SPRINGLOBBY_HEADERGUARD_SERVER_H
 
 #include <wx/string.h>
+#include <wx/arrstr.h>
 
-#include "channellist.h"
+#include "channel/channellist.h"
 #include "userlist.h"
 #include "battlelist.h"
 #include "inetclass.h"
@@ -11,17 +12,14 @@
 class ServerEvents;
 class Channel;
 class Ui;
-class Battle;
+struct BattleOptions;
 class User;
 struct UserBattleStatus;
 class ChatPanel;
-struct BattleOptions;
 class wxString;
 typedef int ServerError;
 class wxColour;
 
-//usage long gone? (koshi)
-//#define PE_NONE 0
 
 typedef int HostInfo;
 
@@ -107,22 +105,23 @@ class Server : public iNetClass
     virtual void LeaveBattle( const int& battleid ) = 0;
     virtual void StartHostedBattle() = 0;
 
-    virtual void ForceSide( int battleid, const wxString& nick, int side ) = 0;
-    virtual void ForceTeam( int battleid, const wxString& nick, int team ) = 0;
-    virtual void ForceAlly( int battleid, const wxString& nick, int ally ) = 0;
-    virtual void ForceColour( int battleid, const wxString& nick, const wxColour& col ) = 0;
-    virtual void ForceSpectator( int battleid, const wxString& nick, bool spectator ) = 0;
-    virtual void BattleKickPlayer( int battleid, const wxString& nick ) = 0;
-    virtual void SetHandicap( int battleid, const wxString& nick, int handicap) = 0;
+    virtual void ForceSide( int battleid, User& user, int side ) = 0;
+    virtual void ForceTeam( int battleid, User& user, int team ) = 0;
+    virtual void ForceAlly( int battleid, User& user, int ally ) = 0;
+    virtual void ForceColour( int battleid, User& user, const wxColour& col ) = 0;
+    virtual void ForceSpectator( int battleid, User& user, bool spectator ) = 0;
+    virtual void BattleKickPlayer( int battleid, User& user ) = 0;
+    virtual void SetHandicap( int battleid, User& user, int handicap) = 0;
 
 
-    virtual void AddBot( int battleid, const wxString& nick, const wxString& owner, UserBattleStatus status, const wxString& aidll ) = 0;
-    virtual void RemoveBot( int battleid, const wxString& nick ) = 0;
-    virtual void UpdateBot( int battleid, const wxString& nick, UserBattleStatus status ) = 0;
+    virtual void AddBot( int battleid, const wxString& nick, UserBattleStatus& status ) = 0;
+    virtual void RemoveBot( int battleid, User& user ) = 0;
+    virtual void UpdateBot( int battleid, User& user, UserBattleStatus& status ) = 0;
 
     virtual void SendHostInfo( HostInfo update ) = 0;
     virtual void SendHostInfo( const wxString& Tag ) = 0;
     virtual void SendRaw( const wxString& raw ) = 0;
+    virtual void SendUserPosition( const User& usr ) = 0;
 
     virtual void RequestInGameTime( const wxString& nick ) = 0;
 
@@ -187,6 +186,9 @@ class Server : public iNetClass
     BattleList m_battles;
 
     wxString m_relay_host_bot;
+    wxString m_relay_host_manager;
+
+    wxArrayString m_relay_host_manager_list;
 
     User& _AddUser( const wxString& user );
     void _RemoveUser( const wxString& nickname );

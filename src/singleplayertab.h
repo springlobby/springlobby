@@ -17,6 +17,8 @@ class wxChoice;
 class wxStaticText;
 class wxCommandEvent;
 class wxCheckBox;
+class wxColourPickerCtrl;
+class wxColourPickerEvent;
 
 class SinglePlayerTab: public  wxScrolledWindow
 {
@@ -37,9 +39,12 @@ class SinglePlayerTab: public  wxScrolledWindow
 
     void OnMapSelect( wxCommandEvent& event );
     void OnModSelect( wxCommandEvent& event );
+    void OnMapBrowse( wxCommandEvent& event );
     void OnAddBot( wxCommandEvent& event );
     void OnStart( wxCommandEvent& event );
     void OnRandomCheck( wxCommandEvent& event );
+    void OnSpectatorCheck( wxCommandEvent& event );
+    void OnColorButton( wxColourPickerEvent& event );
     void OnReset( wxCommandEvent& event );
 
     void OnUnitSyncReloaded();
@@ -62,7 +67,9 @@ class SinglePlayerTab: public  wxScrolledWindow
     wxStaticLine* m_buttons_sep;
     wxButton* m_reset_btn;
     wxCheckBox* m_random_check;
+    wxCheckBox* m_spectator_check;
     wxButton* m_start_btn;
+    wxColourPickerCtrl* m_color_btn;
 
     enum
     {
@@ -72,7 +79,9 @@ class SinglePlayerTab: public  wxScrolledWindow
       SP_ADD_BOT,
       SP_RESET,
       SP_START,
-      SP_RANDOM
+      SP_RANDOM,
+      SP_SPECTATE,
+      SP_COLOUR
     };
    DECLARE_EVENT_TABLE()
 };

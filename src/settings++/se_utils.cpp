@@ -1,13 +1,32 @@
-#include "se_utils.h"
+#include <wx/filename.h>
+#include <wx/stdpaths.h>
+#include <wx/filename.h>
+#include <wx/utils.h>
+#include <wx/log.h>
+#include <wx/intl.h>
 
 #include <string>
 #include <sstream>
-#include <wx/intl.h>
+
+#include "se_utils.h"
+
 #include "custom_dialogs.h"
-#include <wx/utils.h>
-#include <wx/log.h>
 #include "../settings.h"
 #include "../springunitsynclib.h"
+#include "../utils.h"
+
+static bool standalonemode = true;
+
+bool IsSettingsStandAlone()
+{
+  return standalonemode;
+}
+
+void SetSettingsStandAlone( bool value )
+{
+  standalonemode = value;
+}
+
 
 int fromString(const wxString& s) {
         long temp = 0;
@@ -17,31 +36,27 @@ int fromString(const wxString& s) {
 
 void loadUnitsync()
 {
-	//should be done in susynclib().Load
-	//wxSetWorkingDirectory(OptionsHandler.getUsyncLoc().BeforeLast('\\'));
-#ifdef __WXMSW__
-	try
-	{
-		wxCriticalSection m_lock;
-		wxCriticalSectionLocker lock_criticalsection(m_lock);
-		susynclib().Load(_T("unitsync.dll"), false);
-	}
-	catch (...)
-	{
-#endif
-        try
-        {
-            wxCriticalSection m_lock;
-            wxCriticalSectionLocker lock_criticalsection(m_lock);
-            susynclib().Load(sett().GetCurrentUsedUnitSync(), false);
-        }
-        catch (...)
-        {
-            wxLogError( _T("springsettings: couldn't load unitsync") );
-        }
-#ifdef __WXMSW__
-	}
-#endif
+  try
+  {
+      wxCriticalSection m_lock;
+      wxCriticalSectionLocker lock_criticalsection(m_lock);
+      wxString untisyncpath;
+      #ifdef __WXMSW_
+      if ( IsSettingsStandAlone() )
+      {
+        unitsyncpath = GetExecutableFolder() + wxFileName::GetPathSeparator() + _T("unitsync") + GetLibExtension();
+      }
+        else
+            untisyncpath = sett().GetCurrentUsedUnitSync();
+			#else
+			untisyncpath = sett().GetCurrentUsedUnitSync();
+			#endif
+      susynclib().Load( untisyncpath, sett().GetForcedSpringConfigFilePath() );
+  }
+  catch (...)
+  {
+      wxLogError( _T("springsettings: couldn't load unitsync") );
+  }
 }
 
 void openUrl(const wxString& url)

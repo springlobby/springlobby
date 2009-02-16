@@ -1,4 +1,4 @@
-/* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
+/* Copyright (C) 2007, 2008 The SpringLobby Team. All rights reserved. */
 //
 // Class: MainChatTab
 //
@@ -20,7 +20,7 @@
 #include "mainchattab.h"
 #include "utils.h"
 #include "mainwindow.h"
-#include "channel.h"
+#include "channel/channel.h"
 #include "user.h"
 #include "chatpanel.h"
 #include "ui.h"
@@ -71,16 +71,16 @@ MainChatTab::MainChatTab( wxWindow* parent, Ui& ui )
   m_imagelist->Add( wxBitmap(channel_xpm) );
   m_imagelist->Add( wxBitmap(userchat_xpm) );
 
-  m_imagelist->Add( wxBitmap ( ReplaceChannelStatusColour( wxBitmap( channel_xpm ), sett().GetChatColorJoinPart() ) ) );
-  m_imagelist->Add( wxBitmap ( ReplaceChannelStatusColour( wxBitmap(userchat_xpm ), sett().GetChatColorJoinPart() ) ) );
+  m_imagelist->Add( wxBitmap ( ReplaceChannelStatusColour( wxBitmap( channel_xpm ), sett().GetChatColor(_T("JoinPart")) ) ) );
+  m_imagelist->Add( wxBitmap ( ReplaceChannelStatusColour( wxBitmap(userchat_xpm ), sett().GetChatColor(_T("JoinPart")) ) ) );
 
-  m_imagelist->Add( wxBitmap ( ReplaceChannelStatusColour( wxBitmap( channel_xpm ), sett().GetChatColorMine() ) ) );
-  m_imagelist->Add( wxBitmap ( ReplaceChannelStatusColour( wxBitmap( userchat_xpm ), sett().GetChatColorMine() ) ) );
+  m_imagelist->Add( wxBitmap ( ReplaceChannelStatusColour( wxBitmap( channel_xpm ), sett().GetChatColor(_T("Mine")) ) ) );
+  m_imagelist->Add( wxBitmap ( ReplaceChannelStatusColour( wxBitmap( userchat_xpm ), sett().GetChatColor(_T("Mine")) ) ) );
 
-  m_imagelist->Add( wxBitmap ( ReplaceChannelStatusColour( wxBitmap( channel_xpm ), sett().GetChatColorHighlight() ) ) );
-  m_imagelist->Add( wxBitmap ( ReplaceChannelStatusColour( wxBitmap( userchat_xpm ), sett().GetChatColorHighlight() ) ) );
+  m_imagelist->Add( wxBitmap ( ReplaceChannelStatusColour( wxBitmap( channel_xpm ), sett().GetChatColor(_T("Highlight")) ) ) );
+  m_imagelist->Add( wxBitmap ( ReplaceChannelStatusColour( wxBitmap( userchat_xpm ), sett().GetChatColor(_T("Highlight")) ) ) );
 
-  m_imagelist->Add( wxBitmap ( ReplaceChannelStatusColour( wxBitmap( server_xpm ), sett().GetChatColorError() ) ) );
+  m_imagelist->Add( wxBitmap ( ReplaceChannelStatusColour( wxBitmap( server_xpm ), sett().GetChatColor(_T("Error")) ) ) );
 
   #ifdef HAVE_WX26
   m_chat_tabs->AssignImageList( m_imagelist );
@@ -277,11 +277,11 @@ ChatPanel* MainChatTab::AddChatPannel( User& user )
 #ifndef HAVE_WX26
 void MainChatTab::OnTabClose( wxAuiNotebookEvent& event )
 {
-    int oldsel = event.GetOldSelection();
-    ChatPanel* oldpanel = (ChatPanel*)m_chat_tabs->GetPage( oldsel );
-    if ( oldpanel )
+    int selection = event.GetSelection();
+    ChatPanel* panel = (ChatPanel*)m_chat_tabs->GetPage( selection );
+    if ( panel )
     {
-        oldpanel->Part();
+        panel->Part();
     }
 }
 #endif
@@ -393,7 +393,7 @@ void MainChatTab::Update()
     for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ )
     {
         ChatPanel* tmp = (ChatPanel*)m_chat_tabs->GetPage(i);
-        if ( m_close_window == m_chat_tabs->GetPage( i ) ) continue; ///skip the close button
+        if ( m_close_window == m_chat_tabs->GetPage( i ) ) continue; //skip the close button
         if ( ( tmp != 0 ) && ( tmp->GetPanelType() == CPT_Channel ) )
         {
             tmp->SortNickList();

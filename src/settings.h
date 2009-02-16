@@ -3,10 +3,10 @@
 
 #include <wx/string.h>
 
-const int CACHE_VERSION     = 7;
-const int SETTINGS_VERSION  = 3;
+const int CACHE_VERSION     = 9;
+const int SETTINGS_VERSION  = 9;
 
-const wxString DEFSETT_DEFAULT_SERVER = _T("TAS Server");
+const wxString DEFSETT_DEFAULT_SERVER_NAME= _T("Official server");
 const wxString DEFSETT_DEFAULT_SERVER_HOST = _T("taspringmaster.clan-sy.com");
 const int DEFSETT_DEFAULT_SERVER_PORT = 8200;
 const bool DEFSETT_SAVE_PASSWORD = false;
@@ -23,18 +23,14 @@ const unsigned int DEFSETT_SW_HEIGHT = 580;
 const unsigned int DEFSETT_SW_TOP = 50;
 const unsigned int DEFSETT_SW_LEFT = 50;
 
-//doing this "properly" would mean dragging in stdpaths header, doesn't seem warranted (koshi)
-#define DEFSETT_SPRING_DIR  wxGetCwd()
-
 /** Default value for config path /General/WebBrowserUseDefault.
  */
 const bool DEFSETT_WEB_BROWSER_USE_DEFAULT = true;
 
 #include <wx/fileconf.h>
-#include "utils.h"
 #include "useractions.h"
 
-
+class wxWindow;
 class wxConfigBase;
 class wxFont;
 struct BattleListFilterValues;
@@ -43,46 +39,22 @@ class wxFileInputStream;
 class wxFileName;
 class wxColor;
 class wxColour;
-struct wxColourData;
+class wxColourData;
+class wxSize;
+class wxPoint;
+class wxPathList;
 
 class SL_WinConf : public wxFileConfig
 {
     public:
-    SL_WinConf (const wxString& appName, const wxString& vendorName,
-                           const wxString& strLocal, const wxString& strGlobal,
-                           long style,
-                           const wxMBConv& conv)
-            : wxFileConfig(appName, vendorName,
-                           strLocal, strGlobal,
-                           style)
+			SL_WinConf ( const wxString& appName, const wxString& vendorName, const wxString& strLocal, const wxString& strGlobal, long style, const wxMBConv& conv):
+			wxFileConfig( appName, vendorName, strLocal, strGlobal, style)
+			{
+			}
 
-    {
-
-    }
-
-    SL_WinConf(wxFileInputStream& in);
-
-//    int Read(const wxString& key, int def)
-//    {
-//      return s2l(wxFileConfig::Read(key, TowxString<long>(def)));
-//    }
-//
-//    bool Write(const wxString& key, const int lval)
-//    {
-//        return wxFileConfig::Write(key, TowxString<int>(lval) );
-//    }
-
+			SL_WinConf( wxFileInputStream& in );
     protected:
-
-//    bool DoReadLong(const wxString& key, long *pl) const
-//    {
-//        wxFileConfig::DoReadString(key,
-//    }
-
-    bool DoWriteLong(const wxString& key, long lValue)
-    {
-        return wxFileConfig::DoWriteString(key, TowxString<long>( lValue ) );
-    }
+			bool DoWriteLong(const wxString& key, long lValue);
 };
 
 
@@ -96,12 +68,24 @@ class Settings
     Settings();
     ~Settings();
 
+		/// used to import default configs from a file in windows
+		#ifdef __WXMSW__
+    void SetDefaultConfigs( SL_WinConf& conf );
+    #else
+    void SetDefaultConfigs( wxConfig& conf );
+    #endif
+
+    /// list all entries subkeys of a parent group
+    wxArrayString GetGroupList( const wxString& base_key );
+    /// list all groups subkeys of a parent group
+    wxArrayString GetEntryList( const wxString& base_key );
+
     bool IsPortableMode();
     void SetPortableMode( bool mode );
 
     /** Initialize all settings to default.
      */
-    void SetDefaultSettings();
+    void SetDefaultServerSettings();
     void SaveSettings();
 
     bool IsFirstRun();
@@ -120,6 +104,8 @@ class Settings
     wxString GetLobbyWriteDir();
 
     wxString GetTempStorage();
+
+    bool SkipDownloadOtaContent();
 
     /* ================================================================ */
     /** @name Network
@@ -199,25 +185,21 @@ class Settings
     /** @name Servers
      * @{
      */
+		void ConvertOldServerSettings();
     wxString GetDefaultServer();
     void SetDefaultServer( const wxString& server_name );
     void SetAutoConnect( bool do_autoconnect );
     bool GetAutoConnect( );
 
-    bool ServerExists( const wxString& server_name );
-
     wxString GetServerHost( const wxString& server_name );
-    void SetServerHost( const wxString& server_name, const wxString& value );
-
     int GetServerPort( const wxString& server_name );
-    void SetServerPort( const wxString& server_name, const int value );
 
-    int GetNumServers();
-    void SetNumServers( int num );
-    void AddServer( const wxString& server_name );
-    int GetServerIndex( const wxString& server_name );
+    wxArrayString GetServers();
+    bool ServerExists( const wxString& server_name );
+    void SetServer( const wxString& server_name, const wxString& url, int port );
+    void DeleteServer( const wxString& server_name );
 
-    wxString GetServerName( int index );
+    bool ShouldAddDefaultServerSettings();
     /**@}*/
 
     /* ================================================================ */
@@ -289,6 +271,8 @@ class Settings
     wxString GetChannelJoinName( int index );
     /**@}*/
 
+    bool ShouldAddDefaultChannelSettings();
+
 
     /* ================================================================ */
     /** @name UI
@@ -298,17 +282,23 @@ class Settings
      void SaveCustomColors( const wxColourData& cdata, const wxString& paletteName = _T("Default") );
      wxColourData GetCustomColors( const wxString& paletteName = _T("Default") );
 
-    int    GetMainWindowWidth();
-    void   SetMainWindowWidth( const int value );
+    int    GetWindowWidth( const wxString& window );
+    void   SetWindowWidth( const wxString& window, const int value );
 
-    int    GetMainWindowHeight();
-    void   SetMainWindowHeight( const int value );
+    int    GetWindowHeight( const wxString& window );
+    void   SetWindowHeight( const wxString& window, const int value );
 
-    int    GetMainWindowTop();
-    void   SetMainWindowTop( const int value );
+    int    GetWindowTop( const wxString& window );
+    void   SetWindowTop( const wxString& window, const int value );
 
-    int    GetMainWindowLeft();
-    void   SetMainWindowLeft( const int value );
+    int    GetWindowLeft( const wxString& window );
+    void   SetWindowLeft( const wxString& window, const int value );
+
+    wxSize  GetWindowSize( const wxString& window, const wxSize& def );
+    void    SetWindowSize( const wxString& window, const wxSize& size  );
+
+    wxPoint  GetWindowPos( const wxString& window, const wxPoint& def );
+    void    SetWindowPos( const wxString& window, const wxPoint& pos );
 
     bool UseOldSpringLaunchMethod();
     void SetOldSpringLaunchMethod( bool value );
@@ -321,6 +311,9 @@ class Settings
     //! used to signal unset column width in Get...
     enum { columnWidthUnset };
 
+    void SetLanguageID ( const long id );
+    long GetLanguageID ( );
+
     /*@}*/
 
     /* ================================================================ */
@@ -330,7 +323,7 @@ class Settings
     void SetPeopleList( const wxArrayString& friends, const wxString& group = _T("default") );
     wxArrayString GetPeopleList( const wxString& group = _T("default") ) const;
 
-    wxArrayString GetGroups( ) const;
+    wxArrayString GetGroups( );
     void AddGroup( const wxString& group ) ;
     void DeleteGroup( const wxString& group ) ;
 
@@ -340,12 +333,16 @@ class Settings
     void SetGroupActions( const wxString& group, UserActions::ActionType action );
     UserActions::ActionType GetGroupActions( const wxString& group ) const;
 
+		bool ShouldAddDefaultGroupSettings();
+
     /*@}*/
 
     /* ================================================================ */
     /** @name Spring locations
      * @{
      */
+
+		wxPathList GetAdditionalSearchPaths( wxPathList& pl );
 
     void ConvertOldSpringDirsOptions();
 
@@ -358,6 +355,8 @@ class Settings
     wxString GetCurrentUsedDataDir();
     wxString GetCurrentUsedUnitSync();
     wxString GetCurrentUsedSpringBinary();
+    //!@brief returns config file path unitsync uses, returns empty if unitsync isn't loaded
+    wxString GetCurrentUsedSpringConfigFilePath();
 
     wxString GetUnitSync( const wxString& index );
     wxString GetSpringBinary( const wxString& index );
@@ -367,6 +366,9 @@ class Settings
 
     wxString AutoFindSpringBin();
     wxString AutoFindUnitSync();
+
+    //!@brief returns config file path spring should use, returns empty for default
+    wxString GetForcedSpringConfigFilePath();
 
     /*@}*/
 
@@ -380,34 +382,47 @@ class Settings
     void   SetChatLogLoc( const wxString& loc );
 
     //!@brief sets how many lines can stay in a chat panel before the old will start getting erased, 0 to disable
-    void SetChatHistoryLenght( unsigned int historylines );
-    unsigned int GetChatHistoryLenght();
+    void SetChatHistoryLenght( int historylines );
+    int GetChatHistoryLenght();
 
     void SetChatPMSoundNotificationEnabled( bool enabled );
     bool GetChatPMSoundNotificationEnabled();
 
-    wxColour GetChatColorNormal();
-    void SetChatColorNormal( wxColour value );
-    wxColour GetChatColorBackground();
-    void SetChatColorBackground( wxColour value );
-    wxColour GetChatColorHighlight();
-    void SetChatColorHighlight( wxColour value );
-    wxColour GetChatColorMine();
-    void SetChatColorMine( wxColour value );
-    wxColour GetChatColorNotification();
-    void SetChatColorNotification( wxColour value );
-    wxColour GetChatColorAction();
-    void SetChatColorAction( wxColour value );
-    wxColour GetChatColorServer();
-    void SetChatColorServer( wxColour value );
-    wxColour GetChatColorClient();
-    void SetChatColorClient( wxColour value );
-    wxColour GetChatColorJoinPart();
-    void SetChatColorJoinPart( wxColour value );
-    wxColour GetChatColorError();
-    void SetChatColorError( wxColour value );
-    wxColour GetChatColorTime();
-    void SetChatColorTime( wxColour value );
+
+    /** Get named chat color.
+     *
+     * Color names should be in @c Namecase or @c CamelCase, or (if applicable)
+     * @c TLAC (Three-Letter Acronym Case ;)
+     *
+     *     * If the named color exists in the user's configuration, that value
+     *       will be used.
+     *
+     *     * If the named color does not exist in the user's configuration, an
+     *       attempt will be made to look up a predefined default for that
+     *       color.
+     *
+     *     * If the color still has not been found, a non-fatal error message
+     *       will be logged and a generic color (likely unfit for the intended
+     *       purpose) will be used.
+     *
+     *
+     * @param name Name of the color to get.
+     *
+     * @returns A value to use for the named color.
+     */
+    wxColour GetChatColor(const wxString& name);
+
+
+    /** Set the value of a named chat color.
+     *
+     * If the color's name cannot be found in the list of predefined colors, a
+     * non-fatal error message will be logged.
+     *
+     * @returns @c true if the value was written successfully, or @c false
+     * otherwise.
+     */
+    bool SetChatColor(const wxString& name, const wxColour& color);
+
     wxFont GetChatFont();
     void SetChatFont( wxFont value );
 
@@ -490,7 +505,20 @@ class Settings
     void SetBalanceStrongClans(bool value);
     bool GetBalanceStrongClans();
 
+    void SetBalanceGrouping( int value );
+    int GetBalanceGrouping();
 
+    void SetFixIDMethod(int value);
+    int GetFixIDMethod();
+
+    void SetFixIDClans(bool value);
+    bool GetFixIDClans();
+
+    void SetFixIDStrongClans(bool value);
+    bool GetFixIDStrongClans();
+
+    void SetFixIDGrouping( int value );
+    int GetFixIDGrouping();
 
     /** @name Battle filters
      * @{
@@ -564,6 +592,9 @@ class Settings
      */
     void SaveLayout( wxString& layout_name, wxString& layout_string );
     wxString GetLayout( wxString& layout_name );
+    wxArrayString GetLayoutList();
+    void SetDefaultLayout( const wxString& layout_name );
+    wxString GetDefaultLayout();
     /**@}*/
 
     enum CompletionMethod {
@@ -588,18 +619,36 @@ class Settings
     wxString getSimpleDetail();
     void setSimpleDetail( wxString );
 
-    int    GetSettingsWindowWidth();
-    void   SetSettingsWindowWidth( const int value );
-
-    int    GetSettingsWindowHeight();
-    void   SetSettingsWindowHeight( const int value );
-
-    int    GetSettingsWindowTop();
-    void   SetSettingsWindowTop( const int value );
-
-    int    GetSettingsWindowLeft();
-    void   SetSettingsWindowLeft( const int value );
   /**@}*/
+
+  /* ================================================================ */
+    /** @name Map selection dialog
+     * @{
+     */
+    unsigned int GetVerticalSortkeyIndex(  );
+    void SetVerticalSortkeyIndex( const unsigned int idx );
+
+    unsigned int GetHorizontalSortkeyIndex(  );
+    void SetHorizontalSortkeyIndex( const unsigned int idx );
+
+    /** \return true for "<" false for ">" */
+    bool GetHorizontalSortorder();
+    void SetHorizontalSortorder( const bool order );
+
+    /** \return true for "ᴧ", false for "ᴠ" */
+    bool GetVerticalSortorder();
+    void SetVerticalSortorder( const bool order );
+
+    void SetMapSelectorFollowsMouse( bool value );
+    bool GetMapSelectorFollowsMouse();
+
+    /** \return m_filter_all_sett = 0; (default)
+                m_filter_recent_sett = 1;
+                m_filter_popular_sett = 2; */
+    unsigned int GetMapSelectorFilterRadio();
+    void SetMapSelectorFilterRadio( const unsigned int val );
+    /**@}*/
+
 
   protected:
     bool IsSpringBin( const wxString& path );

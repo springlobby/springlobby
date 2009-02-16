@@ -132,8 +132,7 @@ void MainJoinBattleTab::UpdateCurrentBattle( const wxString& Tag )
 
   try
   {
-	  if ( !GetBattleRoomTab().GetBattle().IsFounderMe() )
-      GetMMOptionsTab().UpdateOptControls( Tag );
+		GetMMOptionsTab().UpdateOptControls( Tag );
   } catch (...) {}
 }
 
@@ -152,7 +151,7 @@ void MainJoinBattleTab::JoinBattle( Battle& battle )
   m_battle_tab = new BattleRoomTab( m_tabs, m_ui, battle );
   m_map_tab = new BattleMapTab( m_tabs, m_ui, battle );
   m_opts_tab = new BattleOptionsTab( m_tabs, m_ui, battle );
-  m_mm_opts_tab = new BattleroomMMOptionsTab( battle, m_tabs);
+  m_mm_opts_tab = new BattleroomMMOptionsTab<Battle>( battle, m_tabs);
   #ifdef HAVE_WX26
   m_tabs->InsertPage( 1, m_battle_tab, _("Battleroom"), true, 1 );
   m_tabs->InsertPage( 2, m_map_tab, _("Map"), false, 2 );
@@ -165,7 +164,7 @@ void MainJoinBattleTab::JoinBattle( Battle& battle )
   m_tabs->InsertPage( 4, m_opts_tab, _("Unit Restrictions"), false, wxIcon(battle_settings_xpm) );
   #endif
   #ifdef __WXMSW__
-    Refresh(); /// this is needed to avoid a weird frame overlay glitch in windows
+    Refresh(); // this is needed to avoid a weird frame overlay glitch in windows
   #endif
 }
 
@@ -272,7 +271,7 @@ BattleOptionsTab& MainJoinBattleTab::GetOptionsTab()
 }
 
 
-BattleroomMMOptionsTab& MainJoinBattleTab::GetMMOptionsTab()
+BattleroomMMOptionsTab<Battle>& MainJoinBattleTab::GetMMOptionsTab()
 {
   ASSERT_EXCEPTION( m_mm_opts_tab, _T("m_mm_opts_tab == 0") );
   return *m_mm_opts_tab;

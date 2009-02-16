@@ -45,7 +45,7 @@ SET( OPTION_TRANSLATION_SUPPORT
 
 # Here you can define, what Libraries of wxWidgets you need for your Application. You can figure out what Libraries you need here:
 # http://www.wxwidgets.org/manuals/2.8/wx_librarieslist.html
-SET(wxWidgets_USE_LIBS base core gl net adv qa richtext aui )
+SET(wxWidgets_USE_LIBS base core gl net adv qa aui )
 
 # We need the Find package for wxWidgets to work
 IF (NOT WIN32)
@@ -62,7 +62,7 @@ IF (NOT WIN32)
     ENDIF(wxWidgets_FOUND)
 ELSE (NOT WIN32)
     INCLUDE_DIRECTORIES( ${wxWidgets_INCLUDE_DIRS} )
-    SET(wxWidgets_LIBRARIES wx_baseu-2.8-i586-mingw32msvc wx_mswu_core-2.8-i586-mingw32msvc wx_baseu_net-2.8-i586-mingw32msvc wx_mswu_adv-2.8-i586-mingw32msvc wx_mswu_qa-2.8-i586-mingw32msvc wx_mswu_richtext-2.8-i586-mingw32msvc wx_mswu_aui-2.8-i586-mingw32msvc )
+    SET(wxWidgets_LIBRARIES wx_baseu-2.8-i586-mingw32msvc wx_mswu_core-2.8-i586-mingw32msvc wx_baseu_net-2.8-i586-mingw32msvc wx_mswu_adv-2.8-i586-mingw32msvc wx_mswu_qa-2.8-i586-mingw32msvc wx_mswu_aui-2.8-i586-mingw32msvc )
     link_directories( ${wxWidgets_LIB_DIR} )
 ENDIF(NOT WIN32)
 
@@ -146,6 +146,7 @@ IF( OPTION_TORRENT_SYSTEM )
 	    INCLUDE_DIRECTORIES(${SpringLobby_SOURCE_DIR}/src/libtorrent/include
 				${SpringLobby_SOURCE_DIR}/src/libtorrent/zlib
 				${SpringLobby_SOURCE_DIR}/src/libtorrent/ )
+	    INCLUDE ( ${SpringLobby_SOURCE_DIR}/cmake/libtorrent.cmake )
 	    ADD_DEFINITIONS( -D_WIN32_WINNT=0x0501 -DBOOST_WINDOWS -DTORRENT_DISABLE_ENCRYPTION )
 	    LINK_LIBRARIES( boost_thread-mt boost_filesystem-mt  ws2_32 mswsock boost_date_time-mt )
 	    link_directories( ${boost_LIB_DIR} )
@@ -173,8 +174,10 @@ SET(SpringLobbySrc
 	src/updater/updater.cpp
 	src/updater/versionchecker.cpp
 	src/Helper/TextCompletionDatabase.cpp
-  src/Helper/colorbutton.cpp
-  src/Helper/wxtextctrlhist.cpp
+	src/channel/channelchooser.cpp
+	src/channel/channelchooserdialog.cpp
+	src/Helper/wxtextctrlhist.cpp
+	src/Helper/colorbutton.cpp
 	src/filelister/filelistctrl.cpp
 	src/filelister/filelistdialog.cpp
 	src/filelister/filelistfilter.cpp
@@ -182,7 +185,7 @@ SET(SpringLobbySrc
         src/aui/artprovider.cpp
 	src/autobalancedialog.cpp
 	src/autohost.cpp
-	src/autojoinchanneldialog.cpp
+	src/channel/autojoinchanneldialog.cpp
 	src/addbotdialog.cpp
 	src/agreementdialog.cpp
 	src/base64.cpp
@@ -195,9 +198,10 @@ SET(SpringLobbySrc
 	src/battleoptionstab.cpp
 	src/battleroomlistctrl.cpp
 	src/battleroomtab.cpp
-	src/battleroommmoptionstab.cpp
-	src/channel.cpp
-	src/channellist.cpp
+	src/crc.cpp
+	src/channel/channel.cpp
+	src/channel/channellist.cpp
+	src/channel/channellistctrl.cpp
 	src/chatlog.cpp
 	src/chatoptionstab.cpp
 	src/chatpanel.cpp
@@ -208,7 +212,6 @@ SET(SpringLobbySrc
 	src/flagimages.cpp
 	src/globalevents.cpp
 	src/groupoptionspanel.cpp
-	src/groupuserdialog.cpp
 	src/httpdownloader.cpp
 	src/hostbattledialog.cpp
 	src/ibattle.cpp
@@ -220,10 +223,10 @@ SET(SpringLobbySrc
 	src/mainsingleplayertab.cpp
 	src/maintorrenttab.cpp
 	src/mainwindow.cpp
-	src/managegroupspanel.cpp
 	src/mapctrl.cpp
-	src/maplistctrl.cpp
+	src/mapgridctrl.cpp
 	src/mapselectdialog.cpp
+	src/mmoptionwindows.cpp
 	src/mmoptionmodel.cpp
 	src/mmoptionswrapper.cpp
 	src/nicklistctrl.cpp
@@ -261,6 +264,7 @@ SET(SpringLobbySrc
 	src/userlistctrl.cpp
 	src/utils.cpp
 	src/globalsmanager.cpp
+	src/Helper/wxTranslationHelper.cpp
 )
 
 SET(SettingsSrc
@@ -306,6 +310,9 @@ IF(WIN32)
     SET(SpringSettings_RC_FILE ${CMAKE_CURRENT_BINARY_DIR}/ss_icon.o )
     SET(SpringLobbySrc ${SpringLobbySrc} src/Helper/listctrl.cpp)
     SET(StandAloneSettings ${StandAloneSettings} src/settings++/settings.rc)
+ELSE(WIN32)
+# If we don't build for windows, include some source code checks as pre-build step.
+    ADD_CUSTOM_TARGET(test_susynclib ALL COMMAND tools/test-susynclib.awk src/springunitsynclib.cpp WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
 ENDIF(WIN32)
 
 #----------------------------------------------------------------------------------------------------
@@ -335,16 +342,13 @@ endif( OPTION_TRANSLATION_SUPPORT )
 #----------------------------------------------------------------------------------------------------
 
 # Here we define the executable SpringLobby ( or on Windows SpringLobby.exe )
-IF (WIN32)
-    INCLUDE ( ${SpringLobby_SOURCE_DIR}/cmake/libtorrent.cmake )
-ENDIF (WIN32)
 
 #auto-remove whitespaces before/after lib paths
 cmake_policy(SET CMP0004 OLD)
 
 #libtsource is empty if "NOT WIN32"
-ADD_EXECUTABLE(springlobby WIN32 ${SpringLobbySrc} ${SettingsSrc} ${SpringLobby_RC_FILE} ${libtorrent_SRC})
-ADD_EXECUTABLE(springsettings WIN32 ${StandAloneSettings} ${SpringSettings_RC_FILE} ${SettingsSrc} ${SLSharedWithSettings} )
+ADD_EXECUTABLE(springlobby WIN32 MACOSX_BUNDLE ${SpringLobbySrc} ${SettingsSrc} ${SpringLobby_RC_FILE} ${libtorrent_SRC})
+ADD_EXECUTABLE(springsettings WIN32 MACOSX_BUNDLE ${StandAloneSettings} ${SpringSettings_RC_FILE} ${SettingsSrc} ${SLSharedWithSettings} )
 
 
 # Here the wxWidgets Libraries are added. These are set for us by the FIND Script. If you need other Libraries, you can add them here as well.
