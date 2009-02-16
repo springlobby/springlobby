@@ -9,6 +9,7 @@
 #include <wx/statline.h>
 #include <wx/stattext.h>
 #include <wx/checkbox.h>
+#include <wx/clrpicker.h>
 
 #include "singleplayertab.h"
 #include "mapctrl.h"
@@ -19,6 +20,7 @@
 #include "iunitsync.h"
 #include "addbotdialog.h"
 #include "server.h"
+#include "settings.h"
 
 #ifndef HAVE_WX26
 #include "aui/auimanager.h"
@@ -38,6 +40,7 @@ BEGIN_EVENT_TABLE(SinglePlayerTab, wxPanel)
   EVT_BUTTON( SP_START, SinglePlayerTab::OnStart )
   EVT_CHECKBOX( SP_RANDOM, SinglePlayerTab::OnRandomCheck )
   EVT_CHECKBOX( SP_SPECTATE, SinglePlayerTab::OnSpectatorCheck )
+	EVT_COLOURPICKER_CHANGED( SP_COLOUR, SinglePlayerTab::OnColorButton )
 
 END_EVENT_TABLE()
 
@@ -93,6 +96,9 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, Ui& ui, MainSinglePlayerTab& 
 //  m_buttons_sizer->Add( m_reset_btn, 0, wxALL, 5 );
 
   m_buttons_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
+
+	m_color_btn = new  wxColourPickerCtrl( this, SP_COLOUR, sett().GetBattleLastColour(), wxDefaultPosition, wxDefaultSize );
+	m_buttons_sizer->Add( m_color_btn, 0, wxALL, 0 );
 
   m_spectator_check = new wxCheckBox( this, SP_SPECTATE, _("Spectate only") );
   m_buttons_sizer->Add( m_spectator_check, 0, wxALL, 5 );
@@ -307,6 +313,12 @@ void SinglePlayerTab::OnRandomCheck( wxCommandEvent& event )
 void SinglePlayerTab::OnSpectatorCheck( wxCommandEvent& event )
 {
     m_battle.GetMe().BattleStatus().spectator = m_spectator_check->IsChecked();
+    UpdateMinimap();
+}
+
+void SinglePlayerTab::OnColorButton( wxColourPickerEvent& event )
+{
+    m_battle.ForceColour( m_battle.GetMe(), event.GetColour() );
     UpdateMinimap();
 }
 
