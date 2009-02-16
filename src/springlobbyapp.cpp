@@ -198,8 +198,11 @@ bool SpringLobbyApp::OnInit()
 			}
 			if ( sett().GetSettingsVersion() < 9 )
 			{
-				sett().RemoveChannelJoin( _T("springlobby") );
-				sett().AddChannelJoin( _T("main"), _T("") );
+				if ( sett().GetChannelJoinIndex( _T("springlobby" ) ) != -1 )
+				{
+					sett().RemoveChannelJoin( _T("springlobby") );
+					sett().AddChannelJoin( _T("main"), _T("") );
+				}
 			}
     }
 
