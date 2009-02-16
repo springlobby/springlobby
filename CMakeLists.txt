@@ -265,6 +265,7 @@ SET(SpringLobbySrc
 	src/utils.cpp
 	src/globalsmanager.cpp
 	src/Helper/wxTranslationHelper.cpp
+	src/Helper/tasclientimport.cpp
 )
 
 SET(SettingsSrc
