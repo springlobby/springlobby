@@ -294,6 +294,45 @@ wxString OptionsWrapper::getSingleValue(wxString key, GameOption modmapFlag) con
 	return wxEmptyString;
 }
 
+wxString OptionsWrapper::getDefaultValue(wxString key, GameOption modmapFlag) const
+{
+	OptionType optType = opt_undefined;
+	wxString ret;
+	if ( keyExists(key,modmapFlag,false,optType) )
+	{
+			//purposefully create a copy, no better idea
+	    GameOptions tempOpt = opts[modmapFlag];
+		switch ( optType )
+		{
+			{
+			case opt_bool:
+				ret = TowxString( tempOpt.bool_map[key].def );
+				break;
+			}
+			case opt_float:
+			{
+				ret = TowxString( tempOpt.float_map[key].def );
+				break;
+			}
+			case opt_string:
+			{
+				ret = tempOpt.string_map[key].def;
+				break;
+			}
+			case opt_list:
+			{
+				ret = tempOpt.list_map[key].def;
+				break;
+			}
+			default:
+			{
+				break;
+			}
+		}
+	}
+	return ret;
+}
+
 bool  OptionsWrapper::setSingleOptionTypeSwitch(wxString key, wxString value, GameOption modmapFlag, OptionType optType)
 {
 	switch (optType)

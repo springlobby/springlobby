@@ -132,8 +132,7 @@ void MainJoinBattleTab::UpdateCurrentBattle( const wxString& Tag )
 
   try
   {
-	  if ( !GetBattleRoomTab().GetBattle().IsFounderMe() )
-      GetMMOptionsTab().UpdateOptControls( Tag );
+		GetMMOptionsTab().UpdateOptControls( Tag );
   } catch (...) {}
 }
 

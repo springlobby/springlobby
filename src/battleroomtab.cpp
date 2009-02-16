@@ -428,6 +428,8 @@ void BattleRoomTab::UpdateBattleInfo( const wxString& Tag )
     {
         OptionType DataType = m_battle.CustomBattleOptions().GetSingleOptionType( key );
         value = m_battle.CustomBattleOptions().getSingleValue( key, (OptionsWrapper::GameOption)type );
+        if ( m_battle.CustomBattleOptions().getDefaultValue( key, type) == value ) m_opts_list->SetItemFont( index, wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_LIGHT ) );
+        else m_opts_list->SetItemFont( index, wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD ) );
         if ( DataType == opt_bool )
         {
             value =  bool2yn( s2l( value ) ); // convert from 0/1 to literal Yes/No
