@@ -41,6 +41,7 @@
 #include "replay/replaytab.h"
 #include "globalsmanager.h"
 #include "Helper/wxTranslationHelper.h"
+#include "Helper/tasclientimport.h"
 
 const unsigned int TIMER_ID         = 101;
 const unsigned int TIMER_INTERVAL   = 100;
@@ -269,6 +270,14 @@ bool SpringLobbyApp::OnInit()
 				{
 					wxCopyFile( uikeyslocation, sett().GetCurrentUsedDataDir() + sep + _T("uikeys.txt"), false );
 				}
+
+    #ifdef __WXMSW__
+        if ( TASClientPresent() &&
+                customMessageBox(SL_MAIN_ICON, _("Should I try to import (some) TASClient settings?\n" ),_("Import settings?"), wxYES_NO ) == wxYES )
+        {
+            ImportTASClientSettings();
+        }
+    #endif
 
         ui().mw().ShowConfigure();
     }
