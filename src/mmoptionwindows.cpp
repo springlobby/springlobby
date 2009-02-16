@@ -52,7 +52,7 @@ m_combobox(0)
 			m_checkbox = new wxCheckBox(this, wxID_ANY, opt.name );
 			m_checkbox->SetToolTip(TE(opt.description));
 			m_checkbox->SetValue(opt.value);
-			m_main_sizer->Add( m_checkbox );
+			m_main_sizer->Add( m_checkbox, 0, wxEXPAND );
 			break;
 		}
 		case opt_float:
@@ -61,7 +61,7 @@ m_combobox(0)
 			m_spinctrl = new wxSpinCtrlDbl();
 			m_spinctrl->Create(this, wxID_ANY, _T(""), wxDefaultPosition, wxDefaultSize, 0, double(opt.min), double(opt.max), double(opt.value),double(opt.stepping), wxSPINCTRLDBL_AUTODIGITS, opt.key);
 			m_spinctrl->SetToolTip(TE(opt.description));
-			m_main_sizer->Add( m_spinctrl );
+			m_main_sizer->Add( m_spinctrl, 0, wxEXPAND );
 			break;
 		}
 		case opt_string:
@@ -69,7 +69,7 @@ m_combobox(0)
 			mmOptionString opt = optWrap.opts[optFlag].string_map[key];
 		  m_textctrl = new wxTextCtrl(this, wxID_ANY, opt.value, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, opt.key);
 			m_textctrl->SetToolTip(TE(opt.description));
-			m_main_sizer->Add( m_textctrl );
+			m_main_sizer->Add( m_textctrl, 0, wxEXPAND );
 			break;
 		}
 		case opt_list:
@@ -84,7 +84,7 @@ m_combobox(0)
 				tooltip+= _T("\n") + itor->name + _T(": ") + itor->desc;
 			}
 			m_combobox->SetToolTip(TE(tooltip));
-			m_main_sizer->Add( m_combobox );
+			m_main_sizer->Add( m_combobox, 0, wxEXPAND );
 			break;
 		}
 		default:
