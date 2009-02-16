@@ -56,6 +56,7 @@ springlobby_LDADD = \
 	$(LIBTORRENT_LIBS) \
 	$(SDL_LIBS)
 
+#put template source files here (those need to be present in tarball, but not compiled)
 EXTRA_DIST = \
 	src/battleroommmoptionstab.cpp
 
