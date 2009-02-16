@@ -115,6 +115,8 @@ public:
 
 	wxString getSingleValue(wxString key, GameOption flag) const;
 
+	wxString getDefaultValue(wxString key, GameOption flag) const;
+
 	//! sets a single option in specified container
 	/*! \return true if success, false otherwise */
 	bool setSingleOption(wxString key, wxString value, GameOption modmapFlag);
