@@ -33,11 +33,8 @@ static wxString GetVal( const wxRegKey& reg, const wxString& name, const wxStrin
 
 wxString GetChan( const wxString& token )
 {
-    wxLogWarning( token );
-    wxString ret = token.Right( token.First( '#' ) );
-    ret = ret.BeforeFirst( ' ' ) ;
-    wxLogWarning( _T("--") );
-    wxLogWarning( ret );
+    wxString ret = token.AfterFirst('#');
+    ret = ret.Left( ret.Find( ' ' ) );
     return ret;
 }
 
@@ -50,7 +47,8 @@ bool ImportAutojoins()
     fname = fname + sep + _T("var") + sep + _T("perform.dat");
     if ( wxFileName::FileExists( fname ) ) {
         wxTextFile file( fname );
-        wxLogWarning( _T("parisng file: ") + fname );
+        wxLogWarning( _T("parsing file: ") + fname );
+        file.Open();
         for ( wxString line = file.GetFirstLine(); !file.Eof(); line = file.GetNextLine() ) {
             wxString chan = GetChan( line );
             sett().AddChannelJoin( chan, _T("") );
