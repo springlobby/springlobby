@@ -38,6 +38,7 @@ BEGIN_EVENT_TABLE( BattleroomListCtrl,  CustomListCtrl)
   EVT_LIST_COL_CLICK       ( BRLIST_LIST, BattleroomListCtrl::OnColClick )
   EVT_MENU                 ( BRLIST_SPEC, BattleroomListCtrl::OnSpecSelect )
   EVT_MENU                 ( BRLIST_KICK, BattleroomListCtrl::OnKickPlayer )
+  EVT_LIST_ITEM_ACTIVATED( BRLIST_LIST, BattleroomListCtrl::OnActivateItem )
 //  EVT_MENU                 ( BRLIST_ADDCREATEGROUP, BattleroomListCtrl::OnPlayerAddToGroup )
 //  EVT_MENU                 ( BRLIST_ADDTOGROUP, BattleroomListCtrl::OnPlayerAddToGroup )
   EVT_MENU                 ( BRLIST_RING, BattleroomListCtrl::OnRingPlayer )
@@ -995,4 +996,11 @@ void BattleroomListCtrl::SortList()
   Sort();
   RestoreSelection();
   m_dirty_sort = false;
+}
+
+void BattleroomListCtrl::OnActivateItem( wxListEvent& event )
+{
+    User* usr = items[(size_t)GetSelectedData()];
+    if ( usr != NULL && !usr->BattleStatus().IsBot() )
+        ui().mw().OpenPrivateChat( *usr );
 }

@@ -39,6 +39,7 @@ class BattleroomListCtrl : public CustomListCtrl
     void OnSideSelect( wxCommandEvent& event );
     void OnHandicapSelect( wxCommandEvent& event );
     void OnSpecSelect( wxCommandEvent& event );
+    void OnActivateItem( wxListEvent& event );
 
     void OnKickPlayer( wxCommandEvent& event );
     void OnRingPlayer( wxCommandEvent& event );
