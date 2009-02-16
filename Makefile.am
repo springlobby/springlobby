@@ -56,10 +56,11 @@ springlobby_LDADD = \
 	$(LIBTORRENT_LIBS) \
 	$(SDL_LIBS)
 
+EXTRA_DIST = \
+	src/battleroommmoptionstab.cpp
 
 springsettings_LDADD = \
 	$(WX_LIBS)
-
 
 if USE_WINDRES
 RESOURCECOMPILE = $(WINDRES) -I $(srcdir)/src $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
