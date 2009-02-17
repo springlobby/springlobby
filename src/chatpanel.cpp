@@ -857,7 +857,7 @@ void ChatPanel::SetTopic( const wxString& who, const wxString& message )
   // change the image of the tab to show new events
   SetIconHighlight( highlight_say );
   OutputLine( _( " ** Channel topic:" ), sett().GetChatColorServer(), f );
-  wxStringTokenizer tkz( refined, _T("\n") );
+  wxStringTokenizer tkz( message, _T("\n") );
 	while ( tkz.HasMoreTokens() )
 	{
 	  wxString msg = tkz.GetNextToken().Strip();
