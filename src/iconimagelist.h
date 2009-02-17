@@ -25,7 +25,7 @@ class IconImageList : public wxImageList
     int GetColourIcon( const int& num );
     void SetColourIcon( const int& num, const wxColour& colour );
     int GetSideIcon( const wxString& modname, int side );
-    int GetReadyIcon( const bool& spectator, const bool& ready, const int& sync, const bool& bot );
+    int GetReadyIcon( const bool& spectator, const bool& ready, const unsigned int& sync, const bool& bot );
 
     int ICON_NONE;
 
