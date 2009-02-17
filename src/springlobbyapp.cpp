@@ -197,6 +197,10 @@ bool SpringLobbyApp::OnInit()
 				 sett().SetServer( _T("Backup server 2"), _T("springbackup2.servegame.org"), 8200 );
 				 sett().SetServer( _T("Test server"), _T("taspringmaster.servegame.com"), 8300 );
 			}
+			if ( sett().GetSettingsVersion() < 10 )
+			{
+				sett().ConvertOldColorSettings();
+			}
     }
 
     ui().ReloadUnitSync(); // first time load of unitsync
