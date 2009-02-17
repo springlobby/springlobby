@@ -579,7 +579,11 @@ bool TorrentWrapper::RemoveTorrentByRow( const TorrentTable::PRow& row )
         else if (row->status==P2P::leeching) m_leech_count--;
 
         if ( filecompleted ) GetTorrentTable().SetRowStatus( row, P2P::stored ); // fix the file status and automatically remove row handle
-        else GetTorrentTable().SetRowStatus( row, P2P::not_stored );
+        else
+        {
+        	 GetTorrentTable().SetRowStatus( row, P2P::not_stored );
+        	 SendMessageToCoordinator( _T("N-|")  + it->second->hash + _T("\n") );  //notify the system we don't need the file anymore
+        }
     }
     catch (std::exception& e)
     {
@@ -1065,8 +1069,6 @@ void TorrentWrapper::RemoveUnneededTorrents()
                  */
                 if ( ! wxRenameFile(sourceName, targetName, false) ) wxLogError(wxString::Format(_T("torrent: Failed to move \"%s\" to \"%s\""), sourceName.c_str(), targetName.c_str()));
                 else wxLogMessage(wxString::Format(_T("torrent: Moved \"%s\" to \"%s\""), sourceName.c_str(), targetName.c_str()));
-
-                SendMessageToCoordinator( _T("N-|")  + it->second->hash + _T("\n") ); //notify the system we don't need the file anymore
 
                 TorrentTable::Row fileinfo( *it->second );
                 m_dep_check_queue.push_back( fileinfo );
