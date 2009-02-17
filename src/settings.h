@@ -388,41 +388,28 @@ class Settings
     void SetChatPMSoundNotificationEnabled( bool enabled );
     bool GetChatPMSoundNotificationEnabled();
 
-
-    /** Get named chat color.
-     *
-     * Color names should be in @c Namecase or @c CamelCase, or (if applicable)
-     * @c TLAC (Three-Letter Acronym Case ;)
-     *
-     *     * If the named color exists in the user's configuration, that value
-     *       will be used.
-     *
-     *     * If the named color does not exist in the user's configuration, an
-     *       attempt will be made to look up a predefined default for that
-     *       color.
-     *
-     *     * If the color still has not been found, a non-fatal error message
-     *       will be logged and a generic color (likely unfit for the intended
-     *       purpose) will be used.
-     *
-     *
-     * @param name Name of the color to get.
-     *
-     * @returns A value to use for the named color.
-     */
-    wxColour GetChatColor(const wxString& name);
-
-
-    /** Set the value of a named chat color.
-     *
-     * If the color's name cannot be found in the list of predefined colors, a
-     * non-fatal error message will be logged.
-     *
-     * @returns @c true if the value was written successfully, or @c false
-     * otherwise.
-     */
-    bool SetChatColor(const wxString& name, const wxColour& color);
-
+    wxColour GetChatColorNormal();
+    void SetChatColorNormal( wxColour value );
+    wxColour GetChatColorBackground();
+    void SetChatColorBackground( wxColour value );
+    wxColour GetChatColorHighlight();
+    void SetChatColorHighlight( wxColour value );
+    wxColour GetChatColorMine();
+    void SetChatColorMine( wxColour value );
+    wxColour GetChatColorNotification();
+    void SetChatColorNotification( wxColour value );
+    wxColour GetChatColorAction();
+    void SetChatColorAction( wxColour value );
+    wxColour GetChatColorServer();
+    void SetChatColorServer( wxColour value );
+    wxColour GetChatColorClient();
+    void SetChatColorClient( wxColour value );
+    wxColour GetChatColorJoinPart();
+    void SetChatColorJoinPart( wxColour value );
+    wxColour GetChatColorError();
+    void SetChatColorError( wxColour value );
+    wxColour GetChatColorTime();
+    void SetChatColorTime( wxColour value );
     wxFont GetChatFont();
     void SetChatFont( wxFont value );
 

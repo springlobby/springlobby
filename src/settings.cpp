@@ -32,36 +32,6 @@
 #include "settings++/presets.h"
 
 const wxColor defaultHLcolor (255,0,0);
-typedef std::map<wxString, wxColor> NamedColorMap;
-static GlobalObjectHolder<NamedColorMap> defaultChatColorsHolder;
-static NamedColorMap& defaultChatColors (defaultChatColorsHolder);
-bool defaultChatColorsInitialized (false);
-
-/** Color used when a requested (color) name cannot be found in either
- * the user's configuration or the default colors map.  This is
- * supposed to be somewhat repugnant to the average user, to deter
- * developers from using colors without adding them to the default
- * colors map.
- */
-static wxColor noSuchChatColor(255, 0, 114); /* Hot pink. ^_^ */
-
-static void
-initDefaultChatColors()
-{
-    defaultChatColors.insert(std::make_pair(_T("Normal"), wxColor(0, 0, 0)));
-    defaultChatColors.insert(std::make_pair(_T("Background"), wxColor(255, 255, 255)));
-    defaultChatColors.insert(std::make_pair(_T("Highlight"), wxColor(255, 0, 0)));
-    defaultChatColors.insert(std::make_pair(_T("Mine"), wxColor(100, 100, 140)));
-    defaultChatColors.insert(std::make_pair(_T("Notification"), wxColor(255, 40, 40)));
-    defaultChatColors.insert(std::make_pair(_T("Action"), wxColor(230, 0, 255)));
-    defaultChatColors.insert(std::make_pair(_T("Server"), wxColor(0, 80, 128)));
-    defaultChatColors.insert(std::make_pair(_T("Client"), wxColor(20, 200, 25)));
-    defaultChatColors.insert(std::make_pair(_T("JoinPart"), wxColor(66, 204, 66)));
-    defaultChatColors.insert(std::make_pair(_T("Error"), wxColor(128, 0, 0)));
-    defaultChatColors.insert(std::make_pair(_T("Time"), wxColor(100, 100, 140)));
-
-    defaultChatColorsInitialized = true;
-}
 
 Settings& sett()
 {
@@ -1302,38 +1272,114 @@ bool Settings::GetChatPMSoundNotificationEnabled()
 }
 
 
-wxColour
-Settings::GetChatColor(const wxString& name)
+wxColour Settings::GetChatColorNormal()
 {
-    if ( ! defaultChatColorsInitialized )
-	initDefaultChatColors();
-    wxString colorString ( wxEmptyString );
-    wxColour defaultColor ( noSuchChatColor );
-    NamedColorMap::iterator iter ( defaultChatColors.find(name) );
-
-    if ( iter == defaultChatColors.end() )
-	wxLogError(_T("Request for unrecognized color name \"") + name + _T("\""));
-    else
-	defaultColor = iter->second;
-
-    if ( m_config->Read(_T("/Chat/Colour/") + name, &colorString, wxEmptyString) )
-	/* Color was read from user's configuration. */
-	return GetColorFromStrng(colorString);
-    else
-	return defaultColor;
+    return wxColour( GetColorFromStrng( m_config->Read( _T("/Chat/Colour/Normal"), _T( "0 0 0" ) ) ) );
 }
 
-bool
-Settings::SetChatColor(const wxString& name, const wxColour& color)
+void Settings::SetChatColorNormal( wxColour value )
 {
-    if ( ! defaultChatColorsInitialized )
-	initDefaultChatColors();
-    NamedColorMap::iterator iter ( defaultChatColors.find(name) );
+    m_config->Write( _T("/Chat/Colour/Normal"), GetColorString(value) );
+}
 
-    if ( iter == defaultChatColors.end() )
-	wxLogError(_T("Setting unrecognized color \"") + name + _T("\""));
+wxColour Settings::GetChatColorBackground()
+{
+    return wxColour( GetColorFromStrng( m_config->Read( _T("/Chat/Colour/Background"), _T( "255 255 255" ) ) ) );
+}
 
-    return m_config->Write(_T("/Chat/Colour/") + name, GetColorString(color));
+void Settings::SetChatColorBackground( wxColour value )
+{
+    m_config->Write( _T("/Chat/Colour/Background"), GetColorString(value) );
+}
+
+wxColour Settings::GetChatColorHighlight()
+{
+    return wxColour( GetColorFromStrng( m_config->Read( _T("/Chat/Colour/Highlight"), _T( "255 0 0" ) ) ) );
+}
+
+void Settings::SetChatColorHighlight( wxColour value )
+{
+    m_config->Write( _T("/Chat/Colour/Highlight"), GetColorString(value) );
+}
+
+wxColour Settings::GetChatColorMine()
+{
+    return wxColour( GetColorFromStrng( m_config->Read( _T("/Chat/Colour/Mine"), _T( "100 100 140" ) ) ) );
+}
+
+void Settings::SetChatColorMine( wxColour value )
+{
+    m_config->Write( _T("/Chat/Colour/Mine"), GetColorString(value) );
+}
+
+wxColour Settings::GetChatColorNotification()
+{
+    return wxColour( GetColorFromStrng( m_config->Read( _T("/Chat/Colour/Notification"), _T( "255 40 40" ) ) ) );
+}
+
+void Settings::SetChatColorNotification( wxColour value )
+{
+    m_config->Write( _T("/Chat/Colour/Notification"), GetColorString(value) );
+}
+
+wxColour Settings::GetChatColorAction()
+{
+    return wxColour( GetColorFromStrng( m_config->Read( _T("/Chat/Colour/Action"), _T( "230 0 255" ) ) ) );
+}
+
+void Settings::SetChatColorAction( wxColour value )
+{
+    m_config->Write( _T("/Chat/Colour/Action"), GetColorString(value) );
+}
+
+wxColour Settings::GetChatColorServer()
+{
+    return wxColour( GetColorFromStrng( m_config->Read( _T("/Chat/Colour/Server"), _T( "0 80 128" ) ) ) );
+}
+
+void Settings::SetChatColorServer( wxColour value )
+{
+    m_config->Write( _T("/Chat/Colour/Server"), GetColorString(value) );
+}
+
+wxColour Settings::GetChatColorClient()
+{
+    return wxColour( GetColorFromStrng( m_config->Read( _T("/Chat/Colour/Client"), _T( "20 200 25" ) ) ) );
+}
+
+void Settings::SetChatColorClient( wxColour value )
+{
+    m_config->Write( _T("/Chat/Colour/Client"), GetColorString(value) );
+}
+
+wxColour Settings::GetChatColorJoinPart()
+{
+    return wxColour( GetColorFromStrng( m_config->Read( _T("/Chat/Colour/JoinPart"), _T( "0 80 0" ) ) ) );
+}
+
+void Settings::SetChatColorJoinPart( wxColour value )
+{
+    m_config->Write( _T("/Chat/Colour/JoinPart"), GetColorString(value) );
+}
+
+wxColour Settings::GetChatColorError()
+{
+    return wxColour( GetColorFromStrng( m_config->Read( _T("/Chat/Colour/Error"), _T( "128 0 0" ) ) ) );
+}
+
+void Settings::SetChatColorError( wxColour value )
+{
+    m_config->Write( _T("/Chat/Colour/Error"), GetColorString(value) );
+}
+
+wxColour Settings::GetChatColorTime()
+{
+    return wxColour( GetColorFromStrng( m_config->Read( _T("/Chat/Colour/Time"), _T( "100 100 140" ) ) ) );
+}
+
+void Settings::SetChatColorTime( wxColour value )
+{
+    m_config->Write( _T("/Chat/Colour/Time"), GetColorString(value) );
 }
 
 wxFont Settings::GetChatFont()
