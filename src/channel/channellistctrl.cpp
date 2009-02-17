@@ -164,7 +164,7 @@ void ChannelListctrl::OnColClick( wxListEvent& event )
   SetColumn( m_sortorder[0].col, col );
 
   int i;
-  for ( i = 0; m_sortorder[i].col != event.GetColumn() && i < 3; ++i ) {}
+  for ( i = 0; m_sortorder[i].col != event.GetColumn() && i < 2; ++i ) {}
   if (i > 2) { i = 2; }
   for ( ; i > 0; i--) { m_sortorder[i] = m_sortorder[i-1]; }
   m_sortorder[0].col = event.GetColumn();

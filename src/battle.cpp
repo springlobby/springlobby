@@ -2,9 +2,6 @@
 //
 // Class: Battle
 //
-#include <wx/log.h>
-#include <stdexcept>
-
 #include "battle.h"
 #include "ui.h"
 #include "iunitsync.h"
@@ -15,17 +12,17 @@
 #include "settings.h"
 #include "useractions.h"
 #include "settings++/custom_dialogs.h"
-
+#include "springunitsynclib.h"
 #include "iconimagelist.h"
 
 #include <algorithm>
-#include <math.h>
+#include <cmath>
+#include <stdexcept>
 
 #include <wx/image.h>
 #include <wx/string.h>
+#include <wx/log.h>
 
-#include "images/fixcolours_palette.xpm"
-#include "springunitsynclib.h"
 
 
 
