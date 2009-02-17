@@ -161,7 +161,7 @@ void TorrentTable::SetRowStatus( TorrentTable::PRow row, P2P::FileStatus status 
         if ( status != P2P::seeding && status != P2P::leeching ) RemoveRowHandle( row );
     }
     if ( row->status == P2P::queued && status != P2P::queued ) queued_torrents.erase( row );
-    if ( status == P2P::queued ) queued_torrents.insert( row );
+    if ( status == P2P::queued && row->status != P2P::queued ) queued_torrents.insert( row );
     row->status = status;
 }
 
@@ -428,7 +428,7 @@ TorrentWrapper::DownloadRequestStatus TorrentWrapper::RequestFileByHash( const w
 {
     TorrentTable::PRow row=m_torrent_table.RowByHash(hash);
     if ( !row.ok() ) return missing_in_table;
-    return RequestFileByRow( row );
+    return QueueFileByRow( row );
 }
 
 
@@ -436,7 +436,7 @@ TorrentWrapper::DownloadRequestStatus TorrentWrapper::RequestFileByName( const w
 {
     TorrentTable::PRow row=m_torrent_table.RowByName(name);
     if ( !row.ok() ) return missing_in_table;
-    return RequestFileByRow( row );
+    return QueueFileByRow( row );
 }
 
 
@@ -528,8 +528,7 @@ void TorrentWrapper::ResumeFromList()
 //// private functions to interface with the system ////
 ////////////////////////////////////////////////////////
 
-
-TorrentWrapper::DownloadRequestStatus TorrentWrapper::RequestFileByRow( const TorrentTable::PRow& row )
+TorrentWrapper::DownloadRequestStatus TorrentWrapper::QueueFileByRow( const TorrentTable::PRow& row )
 {
     if (ingame) return paused_ingame;
     if ( !IsConnectedToP2PSystem()  ) return not_connected;
@@ -538,15 +537,26 @@ TorrentWrapper::DownloadRequestStatus TorrentWrapper::RequestFileByRow( const To
 
     if (row->status==P2P::leeching||(row->status&P2P::stored) || (row->status == P2P::queued) ) return duplicate_request;
 
+		GetTorrentTable().SetRowStatus( row, P2P::queued );
+		return scheduled_in_cue;
+}
+
+TorrentWrapper::DownloadRequestStatus TorrentWrapper::RequestFileByRow( const TorrentTable::PRow& row )
+{
+    if (ingame) return paused_ingame;
+    if ( !IsConnectedToP2PSystem()  ) return not_connected;
+
+    if (!row.ok())return file_not_found;
+
+    if (row->status==P2P::leeching||(row->status&P2P::stored) ) return duplicate_request;
+
     if ( m_leech_count > 4 )
     {
-        GetTorrentTable().SetRowStatus( row, P2P::queued );
-        return scheduled_in_cue;
+    	 GetTorrentTable().SetRowStatus( row, P2P::queued );
+    	 return scheduled_in_cue;
     }
 
     if ( !JoinTorrent( row, false ) ) return torrent_join_failed;
-
-    SendMessageToCoordinator( wxString::Format( _T("N+|%s\n"), row->hash.c_str() ) ); // request for seeders for the file
     return success;
 }
 
@@ -555,6 +565,11 @@ bool TorrentWrapper::RemoveTorrentByRow( const TorrentTable::PRow& row )
 {
     if (!row.ok())return false;
     wxLogDebugFunc( row->name );
+    if ( row->status==P2P::queued )
+    {
+    	TorrentTable().SetRowStatus( row, P2P::not_stored );
+    	return true;
+    }
     try
     {
         bool filecompleted = row->handle.is_seed();
@@ -735,7 +750,19 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
 
 
     wxLogMessage(_T("(3) Joining torrent: downloading info file"));
-    if (!DownloadTorrentFileFromTracker( row->hash )) return false;
+    if (!DownloadTorrentFileFromTracker( row->hash ))
+    {
+    	 wxLogError(_T("(3) info file download failed"));
+    	 if ( IsSeed ) // remove from seed list
+    	 {
+					GetTorrentTable().RemoveSeedRequest( row );
+    	 }
+    	 else // remove from queue list
+    	 {
+					GetTorrentTable().SetRowStatus( row, P2P::not_stored );
+    	 }
+    	 return false;
+    }
 
 		#if LIBTORRENT_VERSION_MINOR < 14
 			// read torrent from file
@@ -872,6 +899,7 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
     {
         GetTorrentTable().SetRowStatus( row, P2P::leeching );
         m_leech_count++;
+				SendMessageToCoordinator( wxString::Format( _T("N+|%s\n"), row->hash.c_str() ) ); // request for seeders for the file
     }
 
     wxLogMessage(_T("(5) Joining torrent: done"));
