@@ -1278,7 +1278,7 @@ wxColor ConvertOldRGBFormat( wxString color )
 	color = color.AfterFirst( _T(' ') );
 	color.BeforeFirst( _T(' ') ).ToLong( &G );
 	color = color.AfterFirst( _T(' ') );
-	color.BeforeFirst( _T(' ') ).ToLong( &R );
+	color.BeforeFirst( _T(' ') ).ToLong( &B );
 	return wxColor( R % 256, G % 256, B % 256 );
 }
 
