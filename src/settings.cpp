@@ -1274,7 +1274,7 @@ bool Settings::GetChatPMSoundNotificationEnabled()
 
 wxColour Settings::GetChatColorNormal()
 {
-    return wxColour( GetColorFromStrng( m_config->Read( _T("/Chat/Colour/Normal"), _T( "0 0 0" ) ) ) );
+    return wxColour( GetColorFromStrng( m_config->Read( _T("/Chat/Colour/Normal"), _T( "#000000" ) ) ) );
 }
 
 void Settings::SetChatColorNormal( wxColour value )
