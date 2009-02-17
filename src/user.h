@@ -50,7 +50,7 @@ struct UserBattleStatus
   int color_index;
   int handicap;
   int side;
-  int sync;
+  unsigned int sync;
   bool spectator;
   bool ready;
 	UserPosition pos; // for startpos = 4

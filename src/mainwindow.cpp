@@ -54,7 +54,6 @@
 #include "images/single_player_icon_text.png.h"
 #include "images/options_icon.png.h"
 #include "images/options_icon_text.png.h"
-#include "images/select_icon.xpm"
 #include "images/downloads_icon.png.h"
 #include "images/downloads_icon_text.png.h"
 #include "images/replay_icon.png.h"
