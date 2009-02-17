@@ -568,7 +568,11 @@ TorrentWrapper::DownloadRequestStatus TorrentWrapper::RequestFileByRow( const To
     	 return scheduled_in_cue;
     }
 
-    if ( !JoinTorrent( row, false ) ) return torrent_join_failed;
+    if ( !JoinTorrent( row, false ) )
+    {
+    	 GetTorrentTable().SetRowStatus( row, P2P::not_stored ); // remove from queue list or it will keep failing
+    	 return torrent_join_failed;
+    }
     return success;
 }
 
@@ -652,7 +656,7 @@ std::map<int,TorrentInfos> TorrentWrapper::CollectGuiInfos()
     // display infos about queued torrents
 
     std::set<TorrentTable::PRow> queuedrequests = GetTorrentTable().QueuedTorrentsByRow();
-    for ( std::set<TorrentTable::PRow>::iterator it = queuedrequests.begin(); ( it != queuedrequests.end() ) && ( TorrentTable().GetOpenLeechsCount() < 4 ); it++ )
+    for ( std::set<TorrentTable::PRow>::iterator it = queuedrequests.begin(); ( it != queuedrequests.end() ) && ( GetTorrentTable().GetOpenLeechsCount() < 4 ); it++ )
     {
         TorrentInfos QueuedTorrent;
         QueuedTorrent.numcopies = -1;
@@ -766,14 +770,6 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
     if (!DownloadTorrentFileFromTracker( row->hash ))
     {
     	 wxLogError(_T("(3) info file download failed"));
-    	 if ( IsSeed ) // remove from seed list
-    	 {
-					GetTorrentTable().RemoveSeedRequest( row );
-    	 }
-    	 else // remove from queue list
-    	 {
-					GetTorrentTable().SetRowStatus( row, P2P::not_stored );
-    	 }
     	 return false;
     }
 
@@ -1036,11 +1032,11 @@ void TorrentWrapper::JoinRequestedTorrents()
     {
         if (!it->ok())continue;
 
-        if ( TorrentTable().GetOpenSeedsCount() > 9 ) break; // too many seeds open
+        if ( GetTorrentTable().GetOpenSeedsCount() > 9 ) break; // too many seeds open
 
         if ( (*it)->status != P2P::stored ) continue; // torrent must be present locally and not seeding/leeching
 
-        JoinTorrent( *it, true );
+        if ( !JoinTorrent( *it, true ) ) GetTorrentTable().RemoveSeedRequest( *it );
 
     }
 
@@ -1105,11 +1101,11 @@ void TorrentWrapper::RemoveUnneededTorrents()
 void TorrentWrapper::TryToJoinQueuedTorrents()
 {
 
-    if ( TorrentTable().GetOpenLeechsCount() < 5 )
+    if ( GetTorrentTable().GetOpenLeechsCount() < 5 )
     {
         // join queued files if there are available slots
         std::set<TorrentTable::PRow> queuedrequests = GetTorrentTable().QueuedTorrentsByRow();
-        for ( std::set<TorrentTable::PRow>::iterator it = queuedrequests.begin(); ( it != queuedrequests.end() ) && ( TorrentTable().GetOpenLeechsCount() < 4 ); it++ )
+        for ( std::set<TorrentTable::PRow>::iterator it = queuedrequests.begin(); ( it != queuedrequests.end() ) && ( GetTorrentTable().GetOpenLeechsCount() < 4 ); it++ )
         {
             if ( !it->ok() ) continue;
             RequestFileByRow( *it );
