@@ -160,7 +160,7 @@ void TorrentTable::SetRowStatus( TorrentTable::PRow row, P2P::FileStatus status 
 		if ( row->status != P2P::leeching && status == P2P::leeching ) m_leech_count++;
 		if ( row->status == P2P::seeding && status != P2P::seeding ) m_seed_count--;
 		if ( row->status == P2P::leeching && status != P2P::leeching ) m_leech_count--;
-    if ( status == P2P::queued && row->status != P2P::queued ) queued_torrents.insert( row );
+    if ( row->status != P2P::queued && status == P2P::queued ) queued_torrents.insert( row );
 		if ( row->status == P2P::queued && status != P2P::queued ) queued_torrents.erase( row );
     if ( row->status == P2P::seeding || row->status == P2P::leeching )
     {
