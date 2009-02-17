@@ -562,7 +562,7 @@ TorrentWrapper::DownloadRequestStatus TorrentWrapper::RequestFileByRow( const To
 
     if (row->status==P2P::leeching||(row->status&P2P::stored) ) return duplicate_request;
 
-    if ( GetTorrentTable().GetOpenSeedsCount() > 4 )
+    if ( GetTorrentTable().GetOpenLeechsCount() > 4 )
     {
     	 GetTorrentTable().SetRowStatus( row, P2P::queued );
     	 return scheduled_in_cue;
