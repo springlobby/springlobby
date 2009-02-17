@@ -62,6 +62,12 @@ public:
 
     bool IsConsistent();
 
+    TorrentTable():
+    m_seed_count(0),
+    m_leech_count(0)
+    {
+    }
+
 class Row: public RefcountedContainer
     {
         /// If you want to modify row's keys, you need to remove it from table first,
@@ -123,6 +129,9 @@ class Row: public RefcountedContainer
     std::map<libtorrent::torrent_handle, PRow> RowByTorrentHandles();
     std::set<PRow> QueuedTorrentsByRow();
 
+    unsigned int GetOpenSeedsCount();
+    unsigned int GetOpenLeechsCount();
+
 private:
 
 
@@ -134,6 +143,9 @@ private:
     std::map<libtorrent::torrent_handle, PRow> handle_index;
     std::set<PRow> seed_requests;
     std::set<PRow> queued_torrents;
+
+    unsigned int m_seed_count;
+    unsigned int m_leech_count;
 };
 
 class TorrentWrapper : public iNetClass
@@ -202,8 +214,6 @@ private:
     wxString m_buffer;
 
     bool ingame;
-    unsigned int m_seed_count;
-    unsigned int m_leech_count;
     unsigned int m_timer_count;
 
     wxArrayString m_tracker_urls;
