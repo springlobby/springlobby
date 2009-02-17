@@ -237,7 +237,7 @@ wxString Socket::GetHandle()
         handle += TowxString(((unsigned int)AdapterInfo[0].Address[i])&255);
         if (i != 5) handle += _T(':');
     }
-	#elif defined(__WXGTK__)
+	#elif defined(__WXGTK__) && defined(linux)
 	int sock = socket (AF_INET, SOCK_DGRAM, 0);
 	if (sock < 0)
 	{
