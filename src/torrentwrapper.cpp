@@ -169,6 +169,11 @@ void TorrentTable::SetRowStatus( TorrentTable::PRow row, P2P::FileStatus status 
     row->status = status;
 }
 
+void TorrentTable::SetRowTransferredData( PRow row, TransferredData data )
+{
+	seed_sent_data[row] = data;
+}
+
 void TorrentTable::AddSeedRequest(TorrentTable::PRow row)
 {
     seed_requests.insert(row);
@@ -220,6 +225,11 @@ std::map<libtorrent::torrent_handle, TorrentTable::PRow> TorrentTable::RowByTorr
 std::set<TorrentTable::PRow> TorrentTable::QueuedTorrentsByRow()
 {
     return queued_torrents;
+}
+
+std::map<TorrentTable::PRow, TorrentTable::TransferredData> TorrentTable::TransferredDataByRow()
+{
+	return seed_sent_data;
 }
 
 unsigned int TorrentTable::GetOpenSeedsCount()
@@ -1045,11 +1055,24 @@ void TorrentWrapper::JoinRequestedTorrents()
 void TorrentWrapper::RemoveUnneededTorrents()
 {
     std::map<libtorrent::torrent_handle, TorrentTable::PRow> torrenthandles = GetTorrentTable().RowByTorrentHandles();
+    std::map<TorrentTable::PRow, TorrentTable::TransferredData> transfer_data_map = GetTorrentTable().TransferredDataByRow();
     for (std::map<libtorrent::torrent_handle, TorrentTable::PRow>::iterator  it = torrenthandles.begin(); it != torrenthandles.end(); ++it)
     {
 				if ( !it->first.is_valid() ) continue;
         if ( !it->first.is_seed() ) continue;
 
+				// save how much the torrent has seeded
+				unsigned int payload_upload = it->first.status().total_payload_upload;
+
+				TorrentTable::TransferredData old_data = transfer_data_map[it->second];
+				if ( payload_upload == old_data.sentdata )
+				{
+					old_data.failed_check_counts = old_data.failed_check_counts + 1;
+				}
+				else old_data.sentdata = payload_upload;
+				GetTorrentTable().SetRowTransferredData( it->second, old_data );
+				// if the torrent didn't seed any data in the last 2 minutes, remove it from the request list
+				if ( old_data.failed_check_counts > 60 ) GetTorrentTable().RemoveSeedRequest( it->second );
 
         if ( it->second->status == P2P::leeching ) // if torrent was opened in leech mode but now it's seeding it means it was requested from the user but now it's completed
         {

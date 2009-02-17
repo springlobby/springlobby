@@ -108,6 +108,13 @@ class Row: public RefcountedContainer
     typedef RefcountedPointer<Row> PRow;
 
 
+		struct TransferredData
+		{
+			unsigned int failed_check_counts;
+			unsigned int sentdata;
+			TransferredData(): failed_check_counts(0), sentdata(0) {}
+		};
+
     void InsertRow(PRow row);
     void RemoveRow(PRow row);
 
@@ -117,6 +124,7 @@ class Row: public RefcountedContainer
     void SetRowHandle(PRow row, const libtorrent::torrent_handle &handle);
     void RemoveRowHandle( PRow row );
     void SetRowStatus( PRow row, P2P::FileStatus status );
+    void SetRowTransferredData( PRow row, TransferredData data );
 
     bool IsSeedRequest(PRow row);
 
@@ -128,6 +136,7 @@ class Row: public RefcountedContainer
     std::set<PRow> SeedRequestsByRow();
     std::map<libtorrent::torrent_handle, PRow> RowByTorrentHandles();
     std::set<PRow> QueuedTorrentsByRow();
+    std::map<TorrentTable::PRow, TransferredData> TransferredDataByRow();
 
     unsigned int GetOpenSeedsCount();
     unsigned int GetOpenLeechsCount();
@@ -143,6 +152,7 @@ private:
     std::map<libtorrent::torrent_handle, PRow> handle_index;
     std::set<PRow> seed_requests;
     std::set<PRow> queued_torrents;
+    std::map<TorrentTable::PRow, TorrentTable::TransferredData>  seed_sent_data;
 
     unsigned int m_seed_count;
     unsigned int m_leech_count;
