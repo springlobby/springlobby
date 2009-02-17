@@ -33,8 +33,7 @@
 
 const wxColor defaultHLcolor (255,0,0);
 typedef std::map<wxString, wxColor> NamedColorMap;
-static GlobalObjectHolder<NamedColorMap> defaultChatColorsHolder;
-static NamedColorMap& defaultChatColors (defaultChatColorsHolder);
+static GlobalObjectHolder<NamedColorMap> defaultChatColors;
 bool defaultChatColorsInitialized (false);
 
 /** Color used when a requested (color) name cannot be found in either
@@ -51,7 +50,7 @@ initDefaultChatColors()
     defaultChatColors.insert(std::make_pair(_T("Normal"), wxColor(0, 0, 0)));
     defaultChatColors.insert(std::make_pair(_T("Background"), wxColor(255, 255, 255)));
     defaultChatColors.insert(std::make_pair(_T("Highlight"), wxColor(255, 0, 0)));
-    defaultChatColors.insert(std::make_pair(_T("Mine"), wxColor(100, 100, 140)));
+    defaultChatColors.insert(std::make_pair(_T("Mine")), wxColor(100, 100, 140));
     defaultChatColors.insert(std::make_pair(_T("Notification"), wxColor(255, 40, 40)));
     defaultChatColors.insert(std::make_pair(_T("Action"), wxColor(230, 0, 255)));
     defaultChatColors.insert(std::make_pair(_T("Server"), wxColor(0, 80, 128)));
@@ -1314,7 +1313,7 @@ Settings::GetChatColor(const wxString& name)
     if ( iter == defaultChatColors.end() )
 	wxLogError(_T("Request for unrecognized color name \"") + name + _T("\""));
     else
-	defaultColor = iter->second;
+	defaultColor = iter.second;
 
     if ( m_config->Read(_T("/Chat/Colour/") + name, &colorString, wxEmptyString) )
 	/* Color was read from user's configuration. */
