@@ -1273,13 +1273,13 @@ bool Settings::GetChatPMSoundNotificationEnabled()
 
 wxColor ConvertOldRGBFormat( wxString color )
 {
-	unsigned char R, G, B = 0;
-	R = s2l( color.BeforeFirst( _T(' ') ) );
+	long R = 0, G = 0, B = 0;
+	R = color.BeforeFirst( _T(' ') ).ToLong( &R );
 	color = color.AfterFirst( _T(' ') );
-	G = s2l( color.BeforeFirst( _T(' ') ) );
+	color.BeforeFirst( _T(' ') ).ToLong( &G );
 	color = color.AfterFirst( _T(' ') );
-	B = s2l( color.BeforeFirst( _T(' ') ) );
-	return wxColor( R, G, B );
+	color.BeforeFirst( _T(' ') ).ToLong( &R );
+	return wxColor( R % 256, G % 256, B % 256 );
 }
 
 void Settings::ConvertOldColorSettings()
