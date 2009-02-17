@@ -1274,12 +1274,12 @@ bool Settings::GetChatPMSoundNotificationEnabled()
 
 wxColour Settings::GetChatColorNormal()
 {
-    return wxColour( GetColorFromStrng( m_config->Read( _T("/Chat/Colour/Normal"), _T( "#000000" ) ) ) );
+    return wxColour( m_config->Read( _T("/Chat/Colour/Normal"), _T( "#000000" ) ) );
 }
 
 void Settings::SetChatColorNormal( wxColour value )
 {
-    m_config->Write( _T("/Chat/Colour/Normal"), GetColorString(value) );
+    m_config->Write( _T("/Chat/Colour/Normal"), value.GetAsString( wxC2S_CSS_SYNTAX ) );
 }
 
 
@@ -1360,7 +1360,7 @@ wxColour Settings::GetChatColorJoinPart()
 
 void Settings::SetChatColorJoinPart( wxColour value )
 {
-    m_config->Write( _T("/Chat/Colour/JoinPart"), GetColorString(value) );
+    m_config->Write( _T("/Chat/Colour/JoinPart"), value.GetAsString( wxC2S_CSS_SYNTAX ) );
 }
 
 wxColour Settings::GetChatColorError()
