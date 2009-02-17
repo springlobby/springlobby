@@ -1044,13 +1044,13 @@ bool Settings::GetLastHostRelayedMode()
 
 wxColour Settings::GetBattleLastColour()
 {
-   return  GetColorFromStrng( m_config->Read( _T("/Hosting/MyLastColour"), _T("1 1 0") ) );
+   return  wxColor( m_config->Read( _T("/Hosting/MyLastColour"), _T("#FFFF00") ) );
 }
 
 
 void Settings::SetBattleLastColour( const wxColour& col )
 {
-  m_config->Write( _T("/Hosting/MyLastColour"), GetColorString( col ) );
+  m_config->Write( _T("/Hosting/MyLastColour"), col.GetAsString( wxC2S_HTML_SYNTAX ) );
 }
 
 void Settings::SetLastHostDescription( const wxString& value )
@@ -1318,7 +1318,7 @@ Settings::GetChatColor(const wxString& name)
 
     if ( m_config->Read(_T("/Chat/Colour/") + name, &colorString, wxEmptyString) )
 	/* Color was read from user's configuration. */
-	return GetColorFromStrng(colorString);
+	return wxColor(colorString);
     else
 	return defaultColor;
 }
@@ -1333,7 +1333,7 @@ Settings::SetChatColor(const wxString& name, const wxColour& color)
     if ( iter == defaultChatColors.end() )
 	wxLogError(_T("Setting unrecognized color \"") + name + _T("\""));
 
-    return m_config->Write(_T("/Chat/Colour/") + name, GetColorString(color));
+    return m_config->Write(_T("/Chat/Colour/") + name, color.GetAsString( wxC2S_HTML_SYNTAX ) );
 }
 
 wxFont Settings::GetChatFont()
@@ -1704,13 +1704,13 @@ wxArrayString Settings::GetPeopleList( const wxString& group  ) const
 
 void Settings::SetGroupHLColor( const wxColor& color, const wxString& group )
 {
-    m_config->Write( _T("/Groups/") + group + _T("/Opts/HLColor"), GetColorString( color ) );
+    m_config->Write( _T("/Groups/") + group + _T("/Opts/HLColor"), color.GetAsString( wxC2S_HTML_SYNTAX ) );
 
 }
 
 wxColor Settings::GetGroupHLColor( const wxString& group  ) const
 {
-    return wxColour( GetColorFromStrng( m_config->Read( _T("/Groups/") + group + _T("/Opts/HLColor") , _T( "100 100 140" ) ) ) );
+    return wxColour( m_config->Read( _T("/Groups/") + group + _T("/Opts/HLColor") , _T( "#64648C" ) ) );
 }
 
 wxArrayString Settings::GetGroups( )
@@ -1801,7 +1801,7 @@ void Settings::SaveCustomColors( const wxColourData& _cdata, const wxString& pal
         wxColor col = cdata.GetCustomColour( i );
         if ( !col.IsOk() )
             col = wxColor ( 255, 255, 255 );
-        m_config->Write( _T("/CustomColors/") + paletteName + _T("/") + TowxString(i), GetColorString( col ) ) ;
+        m_config->Write( _T("/CustomColors/") + paletteName + _T("/") + TowxString(i),  col.GetAsString( wxC2S_HTML_SYNTAX ) ) ;
     }
 }
 
@@ -1811,8 +1811,7 @@ wxColourData Settings::GetCustomColors( const wxString& paletteName )
     //note 16 colors is wx limit
     for ( int i = 0; i < 16; ++i)
     {
-        wxColor col = GetColorFromStrng ( m_config->Read( _T("/CustomColors/") + paletteName + _T("/") + TowxString(i),
-                                        GetColorString(  wxColor ( 255, 255, 255 ) ) ) );
+        wxColor col( m_config->Read( _T("/CustomColors/") + paletteName + _T("/") + TowxString(i), wxColor ( 255, 255, 255 ).GetAsString( wxC2S_HTML_SYNTAX ) ) );
         cdata.SetCustomColour( i, col );
     }
 

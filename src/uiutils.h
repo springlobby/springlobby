@@ -34,8 +34,6 @@ bool AreColoursSimilar( const wxColour& col1, const wxColour& col2, int mindiff 
 void ColourDelta( int& r, int& g, int& b, const int& delta );
 wxColour ColourDelta( const wxColour& colour, const int& delta );
 
-wxString GetColorString( const wxColour& color );
-wxColour GetColorFromStrng( const wxString color );
 wxColour GetColorFromFloatStrng( const wxString color );
 
 //! apply standard alpha blending to images
