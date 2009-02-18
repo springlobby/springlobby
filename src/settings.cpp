@@ -1274,7 +1274,7 @@ bool Settings::GetChatPMSoundNotificationEnabled()
 wxColor ConvertOldRGBFormat( wxString color )
 {
 	long R = 0, G = 0, B = 0;
-	R = color.BeforeFirst( _T(' ') ).ToLong( &R );
+	color.BeforeFirst( _T(' ') ).ToLong( &R );
 	color = color.AfterFirst( _T(' ') );
 	color.BeforeFirst( _T(' ') ).ToLong( &G );
 	color = color.AfterFirst( _T(' ') );
