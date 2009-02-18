@@ -97,7 +97,7 @@ class Socket
     unsigned int m_udp_private_port;
     int m_rate;
     int m_sent;
-    wxString m_buffer;
+    std::string m_buffer;
     wxString m_rcv_buffer;
 
     wxSocketClient* _CreateSocket();
