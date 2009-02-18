@@ -27,7 +27,8 @@ BEGIN_EVENT_TABLE(LobbyOptionsTab, wxPanel)
 END_EVENT_TABLE()
 
 LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
-    : wxScrolledWindow( parent, -1 )
+    : wxScrolledWindow( parent, -1 ),
+    m_show_tooltips_label( 0 )
 {
     #ifndef HAVE_WX26
     GetAui().manager->AddPane( this, wxLEFT, _T("lobbyoptionstab") );
@@ -97,10 +98,10 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
 #endif
 
     wxStaticBoxSizer* m_show_tooltips_sizer = new wxStaticBoxSizer ( wxVERTICAL, this, _("Tooltips") );
-    m_show_tooltips_label = new wxStaticText ( this, -1, _("Requires SpringLobby restart to take effect.") );
     m_show_tooltips = new wxCheckBox( this, -1, _("Show Tooltips?"), wxDefaultPosition, wxDefaultSize, 0 );
     m_show_tooltips->SetValue( sett().GetShowTooltips() );
 #ifndef __WXMSW__ // on windows this change is immediate
+    m_show_tooltips_label = new wxStaticText ( this, -1, _("Requires SpringLobby restart to take effect.") );
     m_show_tooltips_sizer->Add( m_show_tooltips_label, 1, wxEXPAND|wxALL, 5);
 #endif
     m_show_tooltips_sizer->Add( m_show_tooltips, 0, wxEXPAND|wxALL, 5);
