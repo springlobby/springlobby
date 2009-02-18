@@ -153,27 +153,28 @@ bool Socket::Send( const wxString& data )
 //! @note Does not lock the criticalsection.
 bool Socket::_Send( const wxString& data )
 {
-  if ( !m_sock ) {
+  if ( !m_sock )
+  {
     wxLogError( _T("Socket NULL") );
     return false;
   }
 
-  if ( m_rate > 0 ) {
-    m_buffer += data;
-    int max = m_rate - m_sent;
-    if ( max > 0 ) {
-      wxString send = m_buffer.substr( 0, max );
-      m_buffer.erase( 0, max );
-      //wxLogMessage( _T("send: %d  sent: %d  max: %d   :  buff: %d"), send.length() , m_sent, max, m_buffer.length() );
-      std::string s = (const char*)send.mb_str(wxConvUTF8);
-      m_sock->Write( s.c_str(), s.length() );
-      m_sent += s.length();
-    }
-  } else {
-    if ( data.length() <= 0) return true;
-    std::string s = (const char*)data.mb_str(wxConvUTF8);
-    m_sock->Write( s.c_str(), s.length() );
+	m_buffer += (const char*)data.mb_str(wxConvUTF8);
+	int crop = m_buffer.length();
+  if ( m_rate > 0 )
+  {
+  	 int max = m_rate - m_sent;
+  	 if ( crop > 0 ) crop = max;
   }
+  std::string send = m_buffer.substr( 0, crop );
+	//wxLogMessage( _T("send: %d  sent: %d  max: %d   :  buff: %d"), send.length() , m_sent, max, m_buffer.length() );
+	m_sock->Write( send.c_str(), send.length() );
+	if ( !m_sock->Error() )
+	{
+		wxUint32 sentdata = m_sock->LastCount();
+		m_buffer.erase( 0, sentdata );
+		m_sent += sentdata;
+	}
   return !m_sock->Error();
 }
 
