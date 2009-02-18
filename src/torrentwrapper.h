@@ -16,6 +16,7 @@
 #include "inetclass.h"
 #include "mutexwrapper.h"
 #include "iunitsync.h"
+#include "thread.h"
 
 #include "autopointers.h"
 
@@ -25,6 +26,7 @@
 namespace libtorrent{ class session; };
 namespace libtorrent { struct torrent_handle; };
 */
+class TorrentWrapper;
 
 namespace P2P {
 enum FileStatus
@@ -55,6 +57,21 @@ struct TorrentInfos
 
 
 #define TorrentTable_validate
+
+class TorrentMaintenanceThread : public Thread
+{
+	public:
+		TorrentMaintenanceThread( TorrentWrapper* parent );
+		void Init();
+		void Stop();
+		void* Entry();
+
+	protected:
+		bool TestDestroy();
+
+		bool m_stop_thread;
+		TorrentWrapper& m_parent;
+};
 
 class TorrentTable
 {
@@ -201,6 +218,13 @@ public:
     std::map<int,TorrentInfos> CollectGuiInfos();
     void SendMessageToCoordinator( const wxString& message );
 
+    /// threaded maintenance tasks
+    void JoinRequestedTorrents();
+    void RemoveUnneededTorrents();
+    void TryToJoinQueuedTorrents();
+    void SearchAndGetQueuedDependencies();
+		void ResumeFromList();
+
     TorrentTable &GetTorrentTable()
     {
         return m_torrent_table;
@@ -214,11 +238,6 @@ private:
     bool RemoveTorrentByRow( const TorrentTable::PRow& row );
     bool JoinTorrent( const TorrentTable::PRow& row, bool IsSeed );
     bool DownloadTorrentFileFromTracker( const wxString& hash );
-    void JoinRequestedTorrents();
-    void RemoveUnneededTorrents();
-    void TryToJoinQueuedTorrents();
-    void SearchAndGetQueuedDependencies();
-    void ResumeFromList();
 
     void ReceiveandExecute( const wxString& msg );
     void OnConnected( Socket* sock );
@@ -233,6 +252,8 @@ private:
     wxArrayString m_tracker_urls;
 
     TorrentTable m_torrent_table;
+
+    TorrentMaintenanceThread m_maintenance_thread;
 
     libtorrent::session* m_torr;
     Socket* m_socket_class;

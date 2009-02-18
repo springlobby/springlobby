@@ -64,6 +64,46 @@ getDataSubdirForType(const IUnitSync::MediaType type)
     }
 }
 
+TorrentMaintenanceThread::TorrentMaintenanceThread( TorrentWrapper* parent ):
+m_stop_thread( false ),
+m_parent( *parent )
+{
+}
+
+void TorrentMaintenanceThread::Init()
+{
+	Create();
+	SetPriority( WXTHREAD_MIN_PRIORITY );
+	Run();
+}
+
+void TorrentMaintenanceThread::Stop()
+{
+	m_stop_thread = true;
+}
+
+void* TorrentMaintenanceThread::Entry()
+{
+	while ( !TestDestroy() )
+	{
+		if( !Sleep( 2000 ) ) break;
+		if ( m_parent.IsConnectedToP2PSystem() )
+		{
+				//  DON'T alter function call order here or bad things may happend like locust, earthquakes or raptor attack
+				m_parent.JoinRequestedTorrents();
+				m_parent.RemoveUnneededTorrents();
+				m_parent.TryToJoinQueuedTorrents();
+				m_parent.ResumeFromList();
+				m_parent.SearchAndGetQueuedDependencies();
+		}
+	}
+	return 0;
+}
+
+bool TorrentMaintenanceThread::TestDestroy()
+{
+	return Thread::TestDestroy() || m_stop_thread;
+}
 
 /** Get the wxFileName of a wxTorrentFile given its wxHash (where a
  * wxHash is a wxString).
@@ -276,6 +316,7 @@ TorrentWrapper& torrent()
 TorrentWrapper::TorrentWrapper():
         ingame(false),
         m_timer_count(0),
+        m_maintenance_thread(this),
         m_is_connecting(false),
         m_started(false)
 {
@@ -489,6 +530,8 @@ void TorrentWrapper::SetIngameStatus( bool status )
 {
     if ( status == ingame ) return; // no change needed
     ingame = status;
+    if ( ingame ) m_maintenance_thread.Pause();
+    else m_maintenance_thread.Resume();
     if ( !IsConnectedToP2PSystem() ) return;
     try
     {
@@ -532,16 +575,6 @@ void TorrentWrapper::UpdateFromTimer( int mselapsed )
             m_is_connecting = false;
         else
             ConnectToP2PSystem( m_connected_tracker_index +1 );
-    }
-
-    if (!ingame && IsConnectedToP2PSystem() )
-    {
-        //  DON'T alter function call order here or bad things may happend like locust, earthquakes or raptor attack
-        JoinRequestedTorrents();
-        RemoveUnneededTorrents();
-        TryToJoinQueuedTorrents();
-        ResumeFromList();
-        SearchAndGetQueuedDependencies();
     }
 }
 
@@ -1311,7 +1344,7 @@ void TorrentWrapper::OnConnected( Socket* sock )
     }
 
     m_torrent_table = TorrentTable(); // flush the torrent data
-
+		m_maintenance_thread.Init();
 
 }
 
@@ -1361,6 +1394,7 @@ void TorrentWrapper::OnDisconnected( Socket* sock )
     {
     }
     m_started = false;
+    m_maintenance_thread.Stop();
 }
 
 
