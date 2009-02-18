@@ -148,14 +148,28 @@ void TorrentTable::SetRowHandle(TorrentTable::PRow row, const libtorrent::torren
     if (row->handle!=libtorrent::torrent_handle())handle_index[row->handle]=row;
 }
 
+void TorrentTable::AddRowToDependencyCheckQueue(PRow row)
+{
+	if (!row.ok())return;
+	dep_check_queue.insert( row );
+}
+
+void TorrentTable::RemoveRowFromDependencyCheckQueue( PRow row )
+{
+	if (!row.ok())return;
+	dep_check_queue.erase( row );
+}
+
 void TorrentTable::RemoveRowHandle( PRow row )
 {
+		if (!row.ok())return;
     handle_index.erase(row->handle);
     row->handle= libtorrent::torrent_handle();
 }
 
 void TorrentTable::SetRowStatus( TorrentTable::PRow row, P2P::FileStatus status )
 {
+		if (!row.ok())return;
 		if ( row->status != P2P::seeding && status == P2P::seeding ) m_seed_count++;
 		if ( row->status != P2P::leeching && status == P2P::leeching ) m_leech_count++;
 		if ( row->status == P2P::seeding && status != P2P::seeding ) m_seed_count--;
@@ -171,20 +185,24 @@ void TorrentTable::SetRowStatus( TorrentTable::PRow row, P2P::FileStatus status 
 
 void TorrentTable::SetRowTransferredData( PRow row, TransferredData data )
 {
+	if (!row.ok())return;
 	seed_sent_data[row] = data;
 }
 
 void TorrentTable::AddSeedRequest(TorrentTable::PRow row)
 {
+		if (!row.ok())return;
     seed_requests.insert(row);
 }
 void TorrentTable::RemoveSeedRequest(TorrentTable::PRow row)
 {
+		if (!row.ok())return;
     seed_requests.erase(row);
 }
 
 bool TorrentTable::IsSeedRequest(TorrentTable::PRow row)
 {
+		if (!row.ok()) return false;
     return seed_requests.count(row)>0;
 }
 
@@ -230,6 +248,11 @@ std::set<TorrentTable::PRow> TorrentTable::QueuedTorrentsByRow()
 std::map<TorrentTable::PRow, TorrentTable::TransferredData> TorrentTable::TransferredDataByRow()
 {
 	return seed_sent_data;
+}
+
+std::set<TorrentTable::PRow> TorrentTable::DependencyCheckQueuebyRow()
+{
+	return dep_check_queue;
 }
 
 unsigned int TorrentTable::GetOpenSeedsCount()
@@ -1093,8 +1116,7 @@ void TorrentWrapper::RemoveUnneededTorrents()
                 if ( ! wxRenameFile(sourceName, targetName, false) ) wxLogError(wxString::Format(_T("torrent: Failed to move \"%s\" to \"%s\""), sourceName.c_str(), targetName.c_str()));
                 else wxLogMessage(wxString::Format(_T("torrent: Moved \"%s\" to \"%s\""), sourceName.c_str(), targetName.c_str()));
 
-                TorrentTable::Row fileinfo( *it->second );
-                m_dep_check_queue.push_back( fileinfo );
+                GetTorrentTable().AddRowToDependencyCheckQueue( it->second );
 
                 wxCommandEvent refreshevt(UnitSyncReloadRequest); // request an unitsync reload
                 wxPostEvent( &SL_GlobalEvtHandler::GetSL_GlobalEvtHandler(), refreshevt );
@@ -1139,42 +1161,36 @@ void TorrentWrapper::TryToJoinQueuedTorrents()
 
 void TorrentWrapper::SearchAndGetQueuedDependencies()
 {
-	std::vector<TorrentTable::Row> listcopy = m_dep_check_queue;
-	int position = 0;
-	for ( std::vector<TorrentTable::Row>::iterator itor = listcopy.begin(); itor != listcopy.end(); itor++ )
+	std::set<TorrentTable::PRow> listcopy = GetTorrentTable().DependencyCheckQueuebyRow();
+	for ( std::set<TorrentTable::PRow>::iterator itor = listcopy.begin(); itor != listcopy.end(); itor++ )
 	{
-
-		if ( itor->type == IUnitSync::map )
+		TorrentTable::PRow row = *itor;
+		if ( row->type == IUnitSync::map )
 		{
-			if ( usync().MapExists( itor->name, itor->hash ) )
+			if ( usync().MapExists( row->name, row->hash ) )
 			{
-				wxArrayString deps = usync().GetMapDeps( itor->name );
+				wxArrayString deps = usync().GetMapDeps( row->name );
 				int count = deps.GetCount();
 				for ( int i = 0; i < count; i++ )
 				{
 					RequestFileByName( deps[i] );
 				}
-				std::vector<TorrentTable::Row>::iterator toremove = m_dep_check_queue.begin();
-				m_dep_check_queue.erase(toremove+position);
-				position--;
+				GetTorrentTable().RemoveRowFromDependencyCheckQueue( row );
 			}
 		}
-		else if ( itor->type == IUnitSync::mod )
+		else if ( row->type == IUnitSync::mod )
 		{
-			if ( usync().ModExists( itor->name, itor->hash ) )
+			if ( usync().ModExists( row->name, row->hash ) )
 			{
-				wxArrayString deps = usync().GetModDeps( itor->name );
+				wxArrayString deps = usync().GetModDeps( row->name );
 				int count = deps.GetCount();
 				for ( int i = 0; i < count; i++ )
 				{
 					RequestFileByName( deps[i] );
 				}
-				std::vector<TorrentTable::Row>::iterator toremove = m_dep_check_queue.begin();
-				m_dep_check_queue.erase(toremove+position);
-				position--;
+				GetTorrentTable().RemoveRowFromDependencyCheckQueue( row );
 			}
 		}
-		position++;
 	}
 
 }
