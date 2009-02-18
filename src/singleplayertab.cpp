@@ -98,7 +98,7 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, Ui& ui, MainSinglePlayerTab& 
 
   m_buttons_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
 
-	m_color_btn = new  ColorButton( this, SP_COLOUR, wxColor(0,0,0), wxDefaultPosition, wxDefaultSize );
+	m_color_btn = new  ColorButton( this, SP_COLOUR, sett().GetBattleLastColour(), wxDefaultPosition, wxDefaultSize );
 	m_buttons_sizer->Add( m_color_btn, 0, wxALL, 0 );
 
   m_spectator_check = new wxCheckBox( this, SP_SPECTATE, _("Spectate only") );
