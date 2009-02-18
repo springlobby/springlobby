@@ -1294,6 +1294,7 @@ void Settings::ConvertOldColorSettings()
 	SetChatColorJoinPart( ConvertOldRGBFormat( m_config->Read( _T("/Chat/Colour/JoinPart"), _T("66 204 66") ) ) );
 	SetChatColorError( ConvertOldRGBFormat( m_config->Read( _T("/Chat/Colour/Error"), _T("128 0 0") ) ) );
 	SetChatColorTime( ConvertOldRGBFormat( m_config->Read( _T("/Chat/Colour/Time"), _T("100 100 140") ) ) );
+	SetChatColorAction( ConvertOldRGBFormat( m_config->Read( _T("/Chat/Colour/Action"), _T("230 0 255") ) ) );
 	SetBattleLastColour( ConvertOldRGBFormat( m_config->Read( _T("/Hosting/MyLastColour"), _T("255 255 0") ) ) );
 
 	//convert custom color palette, note 16 colors is wx limit
