@@ -239,6 +239,7 @@ bool TASServer::ExecuteSayCommand( const wxString& cmd )
     else if ( subcmd == _T("/rename") )
     {
         SendCmd( _T("RENAMEACCOUNT"), params );
+        sett().SetServerAccountNick( sett().GetDefaultServer(), params ); // this code assumes that default server hasn't changed since login ( like it should atm )
         return true;
     }
     else if ( subcmd == _T("/testmd5") )
