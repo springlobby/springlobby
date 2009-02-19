@@ -148,7 +148,7 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, Battle& battle, Ui& ui
   try
   {
   	wxArrayString sides = usync().GetSides( m_battle.GetHostModName() );
-    for ( int i = 0; i < sides.GetCount(); i++ )
+    for ( unsigned int i = 0; i < sides.GetCount(); i++ )
     {
       wxMenuItem* side = new wxMenuItem( m_sides, BRLIST_SIDE + i, sides[i], wxEmptyString, wxITEM_NORMAL );
       m_sides->Append( side );

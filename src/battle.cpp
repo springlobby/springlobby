@@ -24,7 +24,7 @@
 #include <wx/image.h>
 #include <wx/string.h>
 
-#include "images/fixcolours_palette.xpm"
+//#include "images/fixcolours_palette.xpm"
 #include "springunitsynclib.h"
 
 
@@ -566,7 +566,7 @@ void Battle::Autobalance( BalanceType balance_type, bool support_clans, bool str
     std::vector<Alliance>alliances;
     if ( numallyteams == 0 ) // 0 == use num start rects
     {
-        int tmp = GetNumRects();
+//        int tmp = GetNumRects();
         int ally = 0;
         for ( int i = 0; i < numallyteams; ++i )
         {
@@ -703,7 +703,7 @@ void Battle::Autobalance( BalanceType balance_type, bool support_clans, bool str
         for ( size_t j = 0; j < alliances[i].players.size(); ++j )
         {
             ASSERT_LOGIC( alliances[i].players[j], _T("fail in Autobalance, NULL player") );
-            int balanceteam = alliances[i].players[j]->BattleStatus().team;
+            unsigned int balanceteam = alliances[i].players[j]->BattleStatus().team;
             wxLogMessage( _T("setting team %d to alliance %d"), balanceteam, i );
             for ( size_t h = 0; h < totalplayers; h++ ) // change ally num of all players in the team
             {
