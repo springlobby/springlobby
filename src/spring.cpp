@@ -263,13 +263,15 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 				}
 			tdf.LeaveSection();
 
-			wxArrayString units = battle.DisabledUnits();
-			tdf.Append( _T("NumRestrictions"), units.GetCount());
+			std::map<wxString,int> units = battle.RestrictedUnits();
+			tdf.Append( _T("NumRestrictions"), units.size());
 			tdf.EnterSection( _T("RESTRICT") );
-				for ( unsigned int i = 0; i < units.GetCount(); i++)
+				int restrictcount = 0;
+				for ( std::map<wxString, int>::iterator itor = units.begin(); itor != units.end(); itor++ )
 				{
-						tdf.Append(_T("Unit") + i2s( i ), units[i].c_str() );
-						tdf.Append(_T("Limit") + i2s(i), _T("0") );
+						tdf.Append(_T("Unit") + i2s( restrictcount ), itor->first );
+						tdf.Append(_T("Limit") + i2s( restrictcount ), itor->second );
+						restrictcount++;
 				}
 			tdf.LeaveSection();
 

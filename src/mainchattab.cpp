@@ -263,14 +263,14 @@ ChatPanel* MainChatTab::AddChatPannel( User& user )
       }
     }
   }
-
+	int selection = m_chat_tabs->GetSelection();
   ChatPanel* chat = new ChatPanel( m_chat_tabs, m_ui, user, m_imagelist );
   #ifdef HAVE_WX26
   m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, user.GetNick(), true, 3 );
   #else
   m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, user.GetNick(), true, wxBitmap(userchat_xpm) );
   #endif
-  chat->FocusInputBox();
+  if ( selection > 0 ) m_chat_tabs->SetSelection( selection );
   return chat;
 }
 
