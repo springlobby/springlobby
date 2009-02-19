@@ -615,29 +615,29 @@ bool IBattle::ModExists()
 
 
 
-void IBattle::DisableUnit( const wxString& unitname )
+void IBattle::RestrictUnit( const wxString& unitname, int count )
 {
-  if ( m_units.Index( unitname ) == wxNOT_FOUND ) m_units.Add( unitname );
+  m_restricted_units[ unitname ] = count;
 }
 
 
-void IBattle::EnableUnit( const wxString& unitname )
+void IBattle::UnrestrictUnit( const wxString& unitname )
 {
-  int pos = m_units.Index( unitname );
-  if ( pos == wxNOT_FOUND ) return;
-  m_units.RemoveAt( pos );
+  std::map<wxString,int>::iterator pos = m_restricted_units.find( unitname );
+  if ( pos == m_restricted_units.end() ) return;
+  m_restricted_units.erase( pos );
 }
 
 
-void IBattle::EnableAllUnits()
+void IBattle::UnrestrictAllUnits()
 {
-  m_units.Empty();
+  m_restricted_units.clear();
 }
 
 
-wxArrayString IBattle::DisabledUnits()
+std::map<wxString,int> IBattle::RestrictedUnits()
 {
-  return m_units;
+  return m_restricted_units;
 }
 
 void IBattle::OnSelfLeftBattle()
@@ -714,7 +714,13 @@ bool IBattle::LoadOptionsPreset( const wxString& name )
       }
       SendHostInfo( HI_StartRects );
 
-      m_units = wxStringTokenize( options[_T("restrictions")], _T('\t') );
+      wxStringTokenizer tkr( options[_T("restrictions")], _T('\t') );
+      m_restricted_units.clear();
+      while( tkr.HasMoreTokens() )
+      {
+      	wxString unitinfo = tkr.GetNextToken();
+      	RestrictUnit( unitinfo.BeforeLast(_T('=')), s2l( unitinfo.AfterLast(_T('=')) ) );
+      }
       SendHostInfo( HI_Restrictions );
       Update( wxString::Format( _T("%d_restrictions"), OptionsWrapper::PrivateOptions ) );
 
@@ -761,11 +767,10 @@ void IBattle::SaveOptionsPreset( const wxString& name )
       }
       opts[_T("numrects")] = TowxString( validrectcount );
 
-      unsigned int restrcount = m_units.GetCount();
       wxString restrictionsstring;
-      for ( unsigned int restrnum = 0; restrnum < restrcount; restrnum++ )
+      for ( std::map<wxString, int>::iterator itor = m_restricted_units.begin(); itor != m_restricted_units.end(); itor++ )
       {
-        restrictionsstring << m_units[restrnum] << _T('\t');
+        restrictionsstring << itor->first << _T('=') << TowxString(itor->second) << _T('\t');
       }
       opts[_T("restrictions")] = restrictionsstring;
 

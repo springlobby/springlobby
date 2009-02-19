@@ -152,9 +152,9 @@ void BattleOptionsTab::ReloadRestrictions()
   try {
     m_allowed_list->InsertItems( usync().GetUnitsList( m_battle.GetHostModName() ), 0 );
   } catch (...) {}
-  wxArrayString units = m_battle.DisabledUnits();
+  std::map<wxString,int> units = m_battle.RestrictedUnits();
 
-  for ( unsigned int i = 0; i < units.GetCount(); i++) Restrict( units[i] );
+  for ( std::map<wxString, int>::iterator itor = units.begin(); itor != units.end(); itor++ ) Restrict( itor->first );
 }
 
 
@@ -210,7 +210,7 @@ void BattleOptionsTab::Restrict( int index )
     m_allowed_list->Delete( index );
     unit = unit.AfterLast( '(' );
     unit = unit.BeforeLast( ')' );
-    m_battle.DisableUnit( unit );
+    m_battle.RestrictUnit( unit );
   }
 }
 
@@ -223,7 +223,7 @@ void BattleOptionsTab::Allow( int index)
     m_restrict_list->Delete( index );
     unit = unit.AfterLast( '(' );
     unit = unit.BeforeLast( ')' );
-    m_battle.EnableUnit( unit );
+    m_battle.UnrestrictUnit( unit );
   }
 }
 
@@ -274,6 +274,6 @@ void BattleOptionsTab::OnAllow( wxCommandEvent& event )
 
 void BattleOptionsTab::OnClearRestrictions( wxCommandEvent& event )
 {
-  m_battle.EnableAllUnits();
+  m_battle.UnrestrictAllUnits();
   ReloadRestrictions();
 }
