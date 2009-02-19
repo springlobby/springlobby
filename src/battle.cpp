@@ -697,13 +697,13 @@ void Battle::Autobalance( BalanceType balance_type, bool support_clans, bool str
         alliances[my_random( rnd_k )].AddPlayer( players_sorted[i] );
     }
 
-    int totalplayers = GetNumUsers();
+    unsigned int totalplayers = GetNumUsers();
     for ( size_t i = 0; i < alliances.size(); ++i )
     {
         for ( size_t j = 0; j < alliances[i].players.size(); ++j )
         {
             ASSERT_LOGIC( alliances[i].players[j], _T("fail in Autobalance, NULL player") );
-            unsigned int balanceteam = alliances[i].players[j]->BattleStatus().team;
+            int balanceteam = alliances[i].players[j]->BattleStatus().team;
             wxLogMessage( _T("setting team %d to alliance %d"), balanceteam, i );
             for ( size_t h = 0; h < totalplayers; h++ ) // change ally num of all players in the team
             {
@@ -733,7 +733,7 @@ void Battle::FixTeamIDs( BalanceType balance_type, bool support_clans, bool stro
     }
     numcontrolteams = std::min( numcontrolteams, 16 ); // clamp to 16 (max spring supports)
 
-    if ( numcontrolteams >= ( GetNumUsers() - GetSpectators() ) ) // autobalance behaves weird when trying to put one player per team and i CBA to fix it, so i'll reuse the old code :P
+    if ( numcontrolteams >= (int)( GetNumUsers() - GetSpectators() ) ) // autobalance behaves weird when trying to put one player per team and i CBA to fix it, so i'll reuse the old code :P
     {
       DoAction(_T("is making control teams unique..."));
       // apparently tasserver doesnt like when i fix/force ids of everyone.

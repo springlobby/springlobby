@@ -331,7 +331,7 @@ int IconImageList::GetSideIcon( const wxString& modname, int side )
 {
 	wxArrayString sides = usync().GetSides( modname );
 	wxString sidename;
-	if( side < sides.GetCount() ) sidename = sides[side];
+	if( side < (int)sides.GetCount() ) sidename = sides[side];
   wxString cachestring = modname + _T("_") + sidename;
   if (m_cached_side_icons[cachestring] == 0){
     try
@@ -360,7 +360,7 @@ int IconImageList::GetReadyIcon( const bool& spectator,const bool& ready, const 
     else
         index = ICON_NREADY;
 
-    if ( sync == SYNC_SYNCED )
+    if ( sync == (int)SYNC_SYNCED )
         return index;
     else
     {
