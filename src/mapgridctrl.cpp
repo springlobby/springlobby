@@ -416,6 +416,7 @@ void MapGridCtrl::OnResize( wxSizeEvent& event )
 
 void MapGridCtrl::OnMouseMove( wxMouseEvent& event )
 {
+    SetCursor( wxCursor( wxCURSOR_HAND ) );
 	if ( m_in_mouse_drag ) {
 		// Fix for for not receiving LeftUp event when left button
 		// is released outside the control (happens on Windows.)

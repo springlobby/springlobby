@@ -355,7 +355,8 @@ void MapCtrl::_SetCursor()
 		}
 		else
 		{
-			SetCursor( wxCursor( wxCURSOR_ARROW ) );
+		    if ( !m_ro ) SetCursor( wxCursor( wxCURSOR_CROSS ) );
+		    else SetCursor( wxCursor( wxCURSOR_ARROW ) );
 			return;
 		}
 	}

@@ -482,7 +482,7 @@ void ChatOptionsTab::OnSelectFont( wxCommandEvent& event )
 {
   wxFontData data;
   data.SetChosenFont( m_chat_font );
-  wxFontDialog dlg( 0, data );
+  wxFontDialog dlg( (wxWindow*) &ui().mw(), data );
   if ( dlg.ShowModal() == wxID_OK ) {
     m_chat_font = dlg.GetFontData().GetChosenFont();
     m_fontname->SetLabel( m_chat_font.GetFaceName() );
