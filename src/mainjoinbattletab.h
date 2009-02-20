@@ -52,11 +52,8 @@ class MainJoinBattleTab : public wxScrolledWindow
 
     wxImageList* m_imagelist;
 
-    #ifdef HAVE_WX26
-    wxNotebook* m_tabs;
-    #else
     wxAuiNotebook* m_tabs;
-    #endif
+
     BattleListTab* m_list_tab;
 
     BattleRoomTab* m_battle_tab;
