@@ -376,15 +376,6 @@ void SpringLobbyApp::SetupUserFolders()
       wxString sep = wxFileName::GetPathSeparator();
       wxString defaultdir = wxFileName::GetHomeDir() + sep +_T("spring");
       wxArrayString choices;
-#ifdef __WXMSW__
-      wxRegKey UACpath( _T("HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System") ); // check if UAC is on, skip dialog if not
-      if( !UACpath.Exists() ) return;
-      long value;
-      if( !UACpath.QueryValue( _T("EnableLUA"), &value ) ) return; // reg key not present -> not vista -> dialog useless
-			if( value == 0 ) return; // UAC is off -> skip dialog
-
-			int createdefault = choices.Add( _("Create a spring directory in my documents folder") );
-#endif
 
       int donothing = choices.Add( _("Do nothing") );
       int createcustompath = choices.Add( _("Create a folder in a custom path (you'll get prompted for the path)") );
