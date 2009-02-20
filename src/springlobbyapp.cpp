@@ -390,9 +390,6 @@ void SpringLobbyApp::SetupUserFolders()
       bool createdirs = true;
       if ( result == choseexisting ) createdirs = false;
       else if ( result == donothing ) return;
-      #ifdef __WXMSW__
-      else if ( result == createdefault ) dir = defaultdir;
-      #endif
 
       if ( result == createcustompath || result == choseexisting ) dir = wxDirSelector( _("Choose a folder"), defaultdir );
 
