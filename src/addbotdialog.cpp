@@ -75,8 +75,8 @@ AddBotDialog::AddBotDialog( wxWindow* parent, IBattle& battle , bool singleplaye
 
 
 	m_info_sizer = new wxBoxSizer(wxVERTICAL);
-	m_info_sizer->Add( m_ai_infos_lst, 0, wxALL|wxEXPAND );
-	m_main_sizer->Add( m_info_sizer, 0, wxALL|wxEXPAND );
+	m_info_sizer->Add( m_ai_infos_lst, 1, wxALL|wxEXPAND );
+	m_main_sizer->Add( m_info_sizer, 1, wxALL|wxEXPAND );
 
 
   m_buttons_sep = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
