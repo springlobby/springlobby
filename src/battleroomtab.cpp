@@ -472,7 +472,7 @@ void BattleRoomTab::UpdateBattleInfo( const wxString& Tag )
         }
         else if ( key == _T("restrictions") )
         {
-            m_opts_list->SetItem( index, 1, bool2yn( m_battle.DisabledUnits().GetCount() > 0 ) );
+            m_opts_list->SetItem( index, 1, bool2yn( m_battle.RestrictedUnits().size() > 0 ) );
         }
     }
 }

@@ -247,10 +247,10 @@ public:
     virtual UserPosition GetFreePosition();
     virtual int GetFreeAlly( bool excludeme = false );
 
-    virtual void DisableUnit( const wxString& unitname );
-    virtual void EnableUnit( const wxString& unitname );
-    virtual void EnableAllUnits();
-    virtual wxArrayString DisabledUnits();
+    virtual void RestrictUnit( const wxString& unitname, int count = 0 );
+    virtual void UnrestrictUnit( const wxString& unitname );
+    virtual void UnrestrictAllUnits();
+    virtual std::map<wxString,int> RestrictedUnits();
 
     virtual void OnUnitSyncReloaded();
 
@@ -360,7 +360,7 @@ protected:
     UnitSyncMap m_host_map;
     UnitSyncMod m_host_mod;
 
-    wxArrayString m_units;
+    std::map<wxString, int> m_restricted_units;
 
     OptionsWrapper m_opt_wrap;
 

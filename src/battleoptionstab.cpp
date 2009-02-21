@@ -15,6 +15,7 @@
 #include <wx/choice.h>
 #include <wx/tokenzr.h>
 #include <wx/checklst.h>
+#include <wx/numdlg.h>
 
 #include "battleoptionstab.h"
 #include "ui.h"
@@ -152,9 +153,10 @@ void BattleOptionsTab::ReloadRestrictions()
   try {
     m_allowed_list->InsertItems( usync().GetUnitsList( m_battle.GetHostModName() ), 0 );
   } catch (...) {}
-  wxArrayString units = m_battle.DisabledUnits();
+  std::map<wxString,int> units = m_battle.RestrictedUnits();
 
-  for ( unsigned int i = 0; i < units.GetCount(); i++) Restrict( units[i] );
+  for ( std::map<wxString, int>::iterator itor = units.begin(); itor != units.end(); itor++ )
+	  Restrict( itor->first, itor->second );
 }
 
 
@@ -188,10 +190,10 @@ bool BattleOptionsTab::IsRestricted( const wxString& name )
 }
 
 
-void BattleOptionsTab::Restrict( const wxString& name )
+void BattleOptionsTab::Restrict( const wxString& name, int count )
 {
   int i = GetAllowedUnitIndex( name );
-  Restrict( i );
+  Restrict( i, count );
 }
 
 
@@ -202,15 +204,12 @@ void BattleOptionsTab::Allow( const wxString& name )
 }
 
 
-void BattleOptionsTab::Restrict( int index )
+void BattleOptionsTab::Restrict( int index, int count )
 {
   if ( index >= 0 ) {
     wxString unit = m_allowed_list->GetString( index );
-    m_restrict_list->Append( unit );
+    m_restrict_list->Append( unit << _T(" [") << count << _T("]") );
     m_allowed_list->Delete( index );
-    unit = unit.AfterLast( '(' );
-    unit = unit.BeforeLast( ')' );
-    m_battle.DisableUnit( unit );
   }
 }
 
@@ -221,9 +220,6 @@ void BattleOptionsTab::Allow( int index)
     wxString unit = m_restrict_list->GetString( index );
     m_allowed_list->Append( unit );
     m_restrict_list->Delete( index );
-    unit = unit.AfterLast( '(' );
-    unit = unit.BeforeLast( ')' );
-    m_battle.EnableUnit( unit );
   }
 }
 
@@ -246,7 +242,9 @@ void BattleOptionsTab::OnRestrict( wxCommandEvent& event )
     names.Add( name );
   }
   for ( unsigned int i = 0; i < names.Count(); i++ ) {
-    Restrict( names.Item( i ) );
+    wxString unit = names.Item( i );
+    int count = wxGetNumberFromUser( _("How many units of this type do you wish to allow?"), _T(""), _("Unit restriction"), 0, 0, 500000 );
+    if ( count >= 0 ) m_battle.RestrictUnit( unit, count );
   }
   if ( names.Count() > 0 ) m_battle.SendHostInfo( IBattle::HI_Restrictions );
 }
@@ -265,7 +263,8 @@ void BattleOptionsTab::OnAllow( wxCommandEvent& event )
     names.Add( name );
   }
   for ( unsigned int i = 0; i < names.Count(); i++ ) {
-    Allow( names.Item( i ) );
+    wxString unit =  names.Item( i );
+    m_battle.UnrestrictUnit( unit );
   }
   if ( names.Count() > 0 ) m_battle.SendHostInfo( IBattle::HI_Restrictions );
 
@@ -274,6 +273,6 @@ void BattleOptionsTab::OnAllow( wxCommandEvent& event )
 
 void BattleOptionsTab::OnClearRestrictions( wxCommandEvent& event )
 {
-  m_battle.EnableAllUnits();
+  m_battle.UnrestrictAllUnits();
   ReloadRestrictions();
 }

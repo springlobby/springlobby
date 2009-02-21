@@ -239,6 +239,7 @@ bool TASServer::ExecuteSayCommand( const wxString& cmd )
     else if ( subcmd == _T("/rename") )
     {
         SendCmd( _T("RENAMEACCOUNT"), params );
+        sett().SetServerAccountNick( sett().GetDefaultServer(), params ); // this code assumes that default server hasn't changed since login ( like it should atm )
         return true;
     }
     else if ( subcmd == _T("/testmd5") )
@@ -1599,17 +1600,28 @@ void TASServer::SendHostInfo( HostInfo update )
     }
     if ( (update & IBattle::HI_Restrictions) > 0 )
     {
-        wxArrayString units = battle.DisabledUnits();
+        std::map<wxString, int> units = battle.RestrictedUnits();
         if ( !battle.IsProxy() ) SendCmd( _T("ENABLEALLUNITS") );
         else RelayCmd( _T("ENABLEALLUNITS") );
-        if ( units.GetCount() > 0 )
+        if ( units.size() > 0 )
         {
             wxString msg;
-            for ( unsigned int i = 0; i < units.GetCount(); i++ ) msg += units[i] + _T(" ");
+            wxString scriptmsg;
+            for ( std::map<wxString, int>::iterator itor = units.begin(); itor != units.end(); itor++ )
             {
-              if ( !battle.IsProxy() ) SendCmd( _T("DISABLEUNITS"), msg );
-              else RelayCmd( _T("DISABLEUNITS"), msg );
+            	 msg << itor->first + _T(" ");
+            	 scriptmsg << _T("game/restrict/") + itor->first + _T("=") + TowxString(itor->second) + _T('\t'); // this is a serious protocol abuse, but on the other hand, the protocol fucking suck and it's unmaintained so it will do for now
             }
+						if ( !battle.IsProxy() )
+						{
+							 SendCmd( _T("DISABLEUNITS"), msg );
+							 SendCmd( _T("SETSCRIPTTAGS"), scriptmsg );
+						}
+						else
+						{
+							 RelayCmd( _T("DISABLEUNITS"), msg );
+						   RelayCmd( _T("SETSCRIPTTAGS"), scriptmsg );
+						}
         }
     }
 }
