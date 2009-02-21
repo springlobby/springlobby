@@ -1720,12 +1720,6 @@ wxString Settings::GetTempStorage()
 }
 
 
-bool Settings::SkipDownloadOtaContent()
-{
-  return m_config->Read( _T("/General/NoOtaDownload"), 0l ) ;
-}
-
-
 void Settings::SetShowTooltips( bool show)
 {
     m_config->Write(_T("/GUI/ShowTooltips"), show );
