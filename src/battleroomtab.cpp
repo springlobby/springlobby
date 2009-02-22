@@ -140,8 +140,6 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
         {
             m_side_sel->Append( sides[i], icons().GetBitmap( icons().GetSideIcon( m_battle.GetHostModName(), i ) ) );
         }
-//        m_side_sel->SetClientSize( wxSize( , CONTROL_HEIGHT ) );
-
     }
     catch (...) {}
 
