@@ -15,7 +15,7 @@
 SinglePlayerBattle::SinglePlayerBattle(Ui& ui, MainSinglePlayerTab& msptab):
   m_ui(ui),
   m_sptab(msptab),
-  m_me( User( _T("Player") ) )
+  m_me( User( _("Player") ) )
 {
 	OnUserAdded( m_me );
 	m_me.BattleStatus().colour = sett().GetBattleLastColour();

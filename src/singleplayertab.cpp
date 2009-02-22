@@ -294,6 +294,8 @@ void SinglePlayerTab::OnAddBot( wxCommandEvent& event )
 
 void SinglePlayerTab::OnStart( wxCommandEvent& event )
 {
+  wxString nick = usync().GetDefaultNick();
+  if ( !nick.IsEmpty() ) m_battle.GetMe().SetNick( nick );
   if ( m_ui.IsSpringRunning() ) {
     wxLogWarning(_T("trying to start spring while another instance is running") );
     customMessageBoxNoModal(SL_MAIN_ICON, _("You cannot start a spring instance while another is already running"), _("Spring error"), wxICON_EXCLAMATION );
