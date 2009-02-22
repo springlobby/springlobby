@@ -999,8 +999,8 @@ void ChatPanel::Say( const wxString& message )
 	wxLogDebugFunc( message );
 	wxStringTokenizer lines( message, _T( '\n' ) );
 	if ( lines.CountTokens() > 5 ) {
-		wxMessageDialog dlg( &m_ui.mw(), wxString::Format( _( "Are you sure you want to paste %d lines?" ), lines.CountTokens() ), _( "Flood warning" ), wxYES_NO );
-		if ( dlg.ShowModal() == wxID_NO ) return;
+		int answer = customMessageBox ( SL_MAIN_ICON, wxString::Format( _( "Are you sure you want to paste %d lines?" ), lines.CountTokens() ), _( "Flood warning" ), wxYES_NO );
+		if ( answer == wxNO ) return;
 	}
 	while ( lines.HasMoreTokens() ) {
 		wxString line = lines.GetNextToken();
