@@ -302,7 +302,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
     //m_info1_sizer->Add( m_size_lbl, 1, wxEXPAND );
 
     m_info_sizer->Add( m_minimap, 0, wxEXPAND );
-    m_map_select_sizer->Add( m_map_combo, 1, wxALL | wxEXPAND | wxALIGN_CENTER_VERTICAL );
+    m_map_select_sizer->Add( m_map_combo, 0, wxALL | wxEXPAND | wxALIGN_CENTER_VERTICAL );
 		m_map_select_sizer->Add( m_browse_map_btn, 0, wxALIGN_RIGHT );
     m_info_sizer->Add( m_map_select_sizer, 0, wxALL );
     //m_info_sizer->Add( m_info1_sizer, 0, wxEXPAND );
@@ -352,10 +352,10 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
         m_ready_chk->Disable();
     }
 
+		ReloadMaplist();
+
     UpdateBattleInfo( wxString::Format( _T("%d_mapname"), OptionsWrapper::PrivateOptions ) );
     UpdateBattleInfo();
-
-    ReloadMaplist();
 
     SetScrollRate( 3, 3 );
     SetSizer( m_main_sizer );
