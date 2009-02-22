@@ -1,8 +1,11 @@
+
+#include <wx/wupdlock.h>
+#include <wx/colour.h>
+#include <wx/log.h>
+
 #include "customlistctrl.h"
 #include "utils.h"
 #include "settings.h"
-#include <wx/colour.h>
-#include <wx/log.h>
 #include "iconimagelist.h"
 #include "settings++/custom_dialogs.h"
 #include "uiutils.h"
@@ -303,7 +306,7 @@ void CustomListCtrl::noOp(wxMouseEvent& event)
 
 void CustomListCtrl::UpdateHighlights()
 {
-  Freeze();
+   wxWindowUpdateLocker noUpdates(this);
   try {
       long item = -1;
       while ( true ) {
@@ -313,7 +316,6 @@ void CustomListCtrl::UpdateHighlights()
         HighlightItem( item );
       }
   } catch(...) {}
-  Thaw();
 }
 
 void CustomListCtrl::HighlightItemUser( long item, const wxString& name )

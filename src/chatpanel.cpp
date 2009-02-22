@@ -22,6 +22,7 @@
 #include <wx/clipbrd.h>
 #include <wx/dataobj.h>
 #include <wx/imaglist.h>
+#include <wx/wupdlock.h>
 
 #include "aui/auimanager.h"
 #include "channel/channel.h"
@@ -566,7 +567,7 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const 
 void ChatPanel::OutputLine( const ChatLine& line )
 {
   #ifdef __WXMSW__
-  m_chatlog_text->Freeze();
+    wxWindowUpdateLocker noUpdates(m_chatlog_text);
   #endif
 
   m_chatlog_text->SetDefaultStyle( line.timestyle );
@@ -586,7 +587,6 @@ void ChatPanel::OutputLine( const ChatLine& line )
   #ifdef __WXMSW__
   m_chatlog_text->ScrollLines( 10 ); // to prevent for weird empty space appended
   m_chatlog_text->ShowPosition( m_chatlog_text->GetLastPosition() );// scroll to the bottom
-  m_chatlog_text->Thaw();
   #endif
 }
 
