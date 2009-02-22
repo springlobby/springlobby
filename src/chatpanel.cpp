@@ -5,6 +5,7 @@
 
 
 #include <stdexcept>
+
 #include <wx/intl.h>
 #include <wx/datetime.h>
 #include <wx/sizer.h>
@@ -20,14 +21,9 @@
 #include <wx/app.h>
 #include <wx/clipbrd.h>
 #include <wx/dataobj.h>
-
-#ifndef HAVE_WX26
-#include "aui/auimanager.h"
 #include <wx/imaglist.h>
-#else
-#include <wx/notebook.h>
-#endif
 
+#include "aui/auimanager.h"
 #include "channel/channel.h"
 #include "chatpanel.h"
 #include "utils.h"
@@ -117,11 +113,7 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Channel& chan, wxImageList* imag
   wxPanel( parent, -1 ),
   m_show_nick_list( true ),
   m_nicklist(0),
-  #ifdef HAVE_WX26
-  m_chat_tabs(( wxNotebook* )parent ),
-  #else
   m_chat_tabs(( wxAuiNotebook* )parent ),
-  #endif
   m_ui( ui ),
   m_channel( &chan ),
   m_server( 0 ),
@@ -152,11 +144,7 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, User& user, wxImageList* imaglis
   wxPanel( parent, -1 ),
   m_show_nick_list( false ),
   m_nicklist(0),
-  #ifdef HAVE_WX26
-  m_chat_tabs(( wxNotebook* )parent ),
-  #else
   m_chat_tabs(( wxAuiNotebook* )parent ),
-  #endif
   m_ui( ui ),
   m_channel( 0 ),
   m_server( 0 ),
@@ -180,11 +168,7 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Server& serv, wxImageList* imagl
   wxPanel( parent, -1 ),
   m_show_nick_list( false ),
   m_nicklist(0),
-  #ifdef HAVE_WX26
-  m_chat_tabs(( wxNotebook* )parent ),
-  #else
   m_chat_tabs(( wxAuiNotebook* )parent ),
-  #endif
   m_ui( ui ),
   m_channel( 0 ),
   m_server( &serv ),
@@ -250,22 +234,16 @@ ChatPanel::~ChatPanel()
 	if ( m_type == CPT_Channel )
 	{
         m_chatlog_text->Disconnect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( ChatPanel::OnMouseDown ), 0, 0 );
-        #ifndef HAVE_WX26
         if(GetAui().manager)GetAui().manager->DetachPane( this );
-        #endif
 	}
 	else if ( m_type == CPT_Server )
 	{
         m_chatlog_text->Disconnect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( ChatPanel::OnMouseDown ), 0, 0 );
-        #ifndef HAVE_WX26
         if(GetAui().manager)GetAui().manager->DetachPane( this );
-        #endif
 	}
 	else if ( m_type == CPT_User )
 	{
-        #ifndef HAVE_WX26
         if(GetAui().manager)GetAui().manager->DetachPane( this );
-        #endif
 	}
 }
 
@@ -1674,20 +1652,12 @@ void ChatPanel::SetIconHighlight( HighlightType highlight )
             if ( m_type == CPT_Channel && m_icon_index < 6 )
             {
                m_icon_index = 6;
-               #ifdef HAVE_WX26
-               m_chat_tabs->SetPageImage( i, m_icon_index );
-               #else
                m_chat_tabs->SetPageBitmap( i, m_imagelist->GetBitmap(m_icon_index));
-               #endif
             }
             else if ( m_type == CPT_User && m_icon_index < 7 )
             {
                m_icon_index = 7;
-               #ifdef HAVE_WX26
-               m_chat_tabs->SetPageImage( i, m_icon_index );
-               #else
                m_chat_tabs->SetPageBitmap( i, m_imagelist->GetBitmap(m_icon_index));
-               #endif
             }
             break;
           }
@@ -1696,20 +1666,12 @@ void ChatPanel::SetIconHighlight( HighlightType highlight )
             if ( m_type == CPT_Channel && m_icon_index < 4 )
             {
                m_icon_index = 4;
-               #ifdef HAVE_WX26
-               m_chat_tabs->SetPageImage( i, m_icon_index );
-               #else
                m_chat_tabs->SetPageBitmap( i, m_imagelist->GetBitmap(m_icon_index));
-               #endif
             }
             else if ( m_type == CPT_User && m_icon_index < 5 )
             {
                m_icon_index = 5;
-               #ifdef HAVE_WX26
-               m_chat_tabs->SetPageImage( i, m_icon_index );
-               #else
                m_chat_tabs->SetPageBitmap( i, m_imagelist->GetBitmap(m_icon_index));
-               #endif
             }
             break;
           }
@@ -1718,29 +1680,17 @@ void ChatPanel::SetIconHighlight( HighlightType highlight )
             if ( m_type == CPT_Channel && m_icon_index < 8 )
             {
                m_icon_index = 8;
-               #ifdef HAVE_WX26
-               m_chat_tabs->SetPageImage( i, m_icon_index );
-               #else
                m_chat_tabs->SetPageBitmap( i, m_imagelist->GetBitmap(m_icon_index));
-               #endif
             }
             else if ( m_type == CPT_User && m_icon_index < 9 )
             {
                m_icon_index = 9;
-               #ifdef HAVE_WX26
-               m_chat_tabs->SetPageImage( i, m_icon_index );
-               #else
                m_chat_tabs->SetPageBitmap( i, m_imagelist->GetBitmap(m_icon_index));
-               #endif
             }
             else if ( m_type == CPT_Server && m_icon_index < 10 )
             {
                m_icon_index = 10;
-               #ifdef HAVE_WX26
-               m_chat_tabs->SetPageImage( i, m_icon_index );
-               #else
                m_chat_tabs->SetPageBitmap( i, m_imagelist->GetBitmap(m_icon_index));
-               #endif
             }
             break;
           }

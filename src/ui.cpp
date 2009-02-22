@@ -993,9 +993,6 @@ void Ui::OnJoinedBattle( Battle& battle )
     if ( battle.GetNatType() != NAT_None )
     {
         wxLogWarning( _T("joining game with NAT transversal") );
-#ifdef HAVE_WX26
-        customMessageBox(SL_MAIN_ICON, _("This game uses NAT traversal that is not supported by wx 2.6 build of springlobby. \n\nYou will not be able to play in this battle. \nUpdate your wxwidgets to 2.8 or newer to enable NAT traversal support."), _("NAT traversal"), wxOK );
-#endif
     }
 }
 

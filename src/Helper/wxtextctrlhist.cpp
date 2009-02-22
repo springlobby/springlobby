@@ -80,7 +80,6 @@ void wxTextCtrlHist::OnChar(wxKeyEvent & event)
         else
         if(keyCode == WXK_TAB)
         {
-         #ifndef HAVE_WX26
             wxString text = this->GetValue();
             long pos_Cursor = this->GetInsertionPoint();
             wxString selection_Begin_InsertPos = this->GetRange( 0, pos_Cursor );
@@ -155,7 +154,6 @@ void wxTextCtrlHist::OnChar(wxKeyEvent & event)
                 this->SetInsertionPoint( selection_Begin_InsertPos.length() );
                 wxBell();
             }
-            #endif
         }
         else
             event.Skip();

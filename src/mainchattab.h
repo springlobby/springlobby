@@ -36,12 +36,8 @@ class MainChatTab : public wxScrolledWindow
 
     void RejoinChannels();
 
-    #ifdef HAVE_WX26
-    void OnTabsChanged( wxListbookEvent& event );
-    #else
     void OnTabsChanged( wxAuiNotebookEvent& event );
     void OnTabClose( wxAuiNotebookEvent& event );
-    #endif
     void OnUserConnected( User& user );
     void OnUserDisconnected( User& user );
 
@@ -58,11 +54,7 @@ class MainChatTab : public wxScrolledWindow
     Ui& m_ui;
 
     wxWindow* m_close_window;
-    #ifdef HAVE_WX26
-    wxNotebook* m_chat_tabs;
-    #else
     wxAuiNotebook* m_chat_tabs;
-    #endif
     wxBoxSizer* m_main_sizer;
     wxImageList* m_imagelist;
     ChatPanel* m_server_chat;

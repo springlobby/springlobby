@@ -13,18 +13,14 @@
 #include <wx/menu.h>
 #include <wx/dcmemory.h>
 #include <wx/choicdlg.h>
-#ifndef HAVE_WX26
 #include <wx/aui/auibook.h>
-#include "aui/auimanager.h"
-#include "aui/artprovider.h"
-#else
-#include <wx/listbook.h>
-#endif
 #include <wx/tooltip.h>
-#include "springlobbyapp.h"
 
 #include <stdexcept>
 
+#include "aui/auimanager.h"
+#include "aui/artprovider.h"
+#include "springlobbyapp.h"
 #include "mainwindow.h"
 #include "settings.h"
 #include "ui.h"
@@ -97,11 +93,7 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU( MENU_SELECT_LOCALE, MainWindow::OnMenuSelectLocale )
   EVT_MENU( MENU_CHANNELCHOOSER, MainWindow::OnShowChannelChooser )
   EVT_MENU_OPEN( MainWindow::OnMenuOpen )
-  #ifdef HAVE_WX26
-  EVT_LISTBOOK_PAGE_CHANGED( MAIN_TABS, MainWindow::OnTabsChanged )
-  #else
   EVT_AUINOTEBOOK_PAGE_CHANGED( MAIN_TABS, MainWindow::OnTabsChanged )
-  #endif
 END_EVENT_TABLE()
 
 
@@ -112,9 +104,7 @@ MainWindow::MainWindow( Ui& ui ) :
 {
   SetIcon( wxIcon(springlobby_xpm) );
 
-  #ifndef HAVE_WX26
   GetAui().manager = new wxAuiManager( this );
-  #endif
 
   wxMenu *menuFile = new wxMenu;
   menuFile->Append(MENU_CONNECT, _("&Connect..."));
@@ -127,14 +117,13 @@ MainWindow::MainWindow( Ui& ui ) :
   //m_menuEdit = new wxMenu;
   //TODO doesn't work atm
 
-  #ifndef HAVE_WX26
-  /*
+
+  /* loading layouts currently borked
 	wxMenu* menuView = new wxMenu;
 	menuView->Append( MENU_SAVE_LAYOUT, _("&Save Layout") );
 	menuView->Append( MENU_LOAD_LAYOUT, _("&Load layout") );
 	menuView->Append( MENU_DEFAULT_LAYOUT, _("&Set &Laoyut as default") );
 	*/
-	#endif
 
   m_menuTools = new wxMenu;
   m_menuTools->Append(MENU_JOIN, _("&Join channel..."));
@@ -161,29 +150,22 @@ MainWindow::MainWindow( Ui& ui ) :
   m_menubar = new wxMenuBar;
   m_menubar->Append(menuFile, _("&File"));
   //m_menubar->Append(m_menuEdit, _("&Edit"));
-  #ifndef HAVE_WX26
-  //m_menubar->Append(menuView, _("&View"));
-  #endif
+
+  //m_menubar->Append(menuView, _("&View")); //layout stuff --> disabled
+
   m_menubar->Append(m_menuTools, _("&Tools"));
   m_menubar->Append(menuHelp, _("&Help"));
   SetMenuBar(m_menubar);
 
   m_main_sizer = new wxBoxSizer( wxHORIZONTAL );
-  #ifndef HAVE_WX26
   m_func_tabs = new wxAuiNotebook(  this, MAIN_TABS, wxDefaultPosition, wxDefaultSize,
         wxAUI_NB_WINDOWLIST_BUTTON | wxAUI_NB_TAB_SPLIT | wxAUI_NB_TAB_MOVE | wxAUI_NB_TAB_EXTERNAL_MOVE | wxAUI_NB_SCROLL_BUTTONS | wxAUI_NB_LEFT );
   m_func_tabs->SetArtProvider(new SLArtProvider);
-  #else
-  m_func_tabs = new wxListbook( this, MAIN_TABS, wxDefaultPosition, wxDefaultSize, wxLB_LEFT );
-  #endif
 
 
   m_func_tab_images = new wxImageList( 32, 32 );
   MakeImages();
 
-  #ifdef HAVE_WX26
-  m_func_tabs->AssignImageList( m_func_tab_images );
-  #endif
   m_chat_tab = new MainChatTab( m_func_tabs, m_ui );
   m_join_tab = new MainJoinBattleTab( m_func_tabs, m_ui );
   m_sp_tab = new MainSinglePlayerTab( m_func_tabs, m_ui );
@@ -193,16 +175,6 @@ MainWindow::MainWindow( Ui& ui ) :
   m_torrent_tab = new MainTorrentTab( m_func_tabs, m_ui);
 #endif
 
-#ifdef HAVE_WX26
-  m_func_tabs->AddPage( m_chat_tab, _T(""), true, 0 );
-  m_func_tabs->AddPage( m_join_tab, _T(""), false, 1 );
-  m_func_tabs->AddPage( m_sp_tab, _T(""), false, 2 );
-  m_func_tabs->AddPage( m_opts_tab, _T(""), false, 3 );
-  m_func_tabs->AddPage( m_replay_tab, _T(""), false, 4 );
-#ifndef NO_TORRENT_SYSTEM
-  m_func_tabs->AddPage( m_torrent_tab, _T(""), false, 5 );
-#endif
-#else
   m_func_tabs->AddPage( m_chat_tab, _("Chat"), true, charArr2wxBitmap( chat_icon_png , sizeof (chat_icon_png) ) );
   m_func_tabs->AddPage( m_join_tab, _("Multiplayer"), false, charArr2wxBitmap( join_icon_png , sizeof (join_icon_png) ) );
   m_func_tabs->AddPage( m_sp_tab, _("Singleplayer"), false, charArr2wxBitmap( single_player_icon_png , sizeof (single_player_icon_png) ) );
@@ -210,7 +182,6 @@ MainWindow::MainWindow( Ui& ui ) :
   m_func_tabs->AddPage( m_replay_tab, _("Replays"), false, charArr2wxBitmap( replay_icon_png , sizeof (replay_icon_png) ) );
 #ifndef NO_TORRENT_SYSTEM
   m_func_tabs->AddPage( m_torrent_tab, _("Downloads"), false, charArr2wxBitmap(  downloads_icon_png , sizeof (downloads_icon_png) ) );
-#endif
 #endif
 
   m_main_sizer->Add( m_func_tabs, 1, wxEXPAND | wxALL, 0 );
@@ -238,14 +209,12 @@ void MainWindow::forceSettingsFrameClose()
 
 MainWindow::~MainWindow()
 {
-  #ifndef HAVE_WX26
   wxAuiManager* manager=GetAui().manager;
   if(manager){
     GetAui().manager=NULL;
     manager->UnInit();
     delete manager;
   }
-  #endif
 
   wxString name = _T("MAINWINDOW");
   sett().SetWindowSize( name, GetSize() );
@@ -421,7 +390,6 @@ void MainWindow::OnMenuChat( wxCommandEvent& event )
 
 void MainWindow::OnMenuAbout( wxCommandEvent& event )
 {
-#ifdef HAVE_WX28
     wxAboutDialogInfo info;
 	info.SetName(_T("SpringLobby"));
 	info.SetVersion (GetSpringLobbyVersion());
@@ -435,17 +403,12 @@ void MainWindow::OnMenuAbout( wxCommandEvent& event )
 	info.AddDeveloper(_T("koshi"));
 	info.AddDeveloper(_T("semi_"));
 	info.AddDeveloper(_T("tc-"));
-  info.AddTranslator(_T("chaosch (simplified chinese)"));
+    info.AddTranslator(_T("chaosch (simplified chinese)"));
 	info.AddTranslator(_T("lejocelyn (french)"));
 	info.AddTranslator(_T("Suprano (german)"));
-  info.AddTranslator(_T("tc- (swedish)"));
+    info.AddTranslator(_T("tc- (swedish)"));
 	info.SetIcon(wxIcon(springlobby_xpm));
 	wxAboutBox(info);
-
-#else
-    customMessageBoxNoModal(SL_MAIN_ICON,_T("SpringLobby version: ")+GetSpringLobbyVersion(),_T("About"));
-#endif
-
 }
 
 void MainWindow::OnMenuConnect( wxCommandEvent& event )
@@ -531,16 +494,8 @@ void MainWindow::OnShowDocs( wxCommandEvent& event )
   m_ui.OpenWebBrowser( _T("http://springlobby.info") );
 }
 
-#ifdef HAVE_WX26
-void MainWindow::OnTabsChanged( wxNotebookEvent& event )
-#else
 void MainWindow::OnTabsChanged( wxAuiNotebookEvent& event )
-#endif
 {
-  #ifdef HAVE_WX26
-  MakeImages();
-  #endif
-
   int newsel = event.GetSelection();
 
   if ( newsel == 0 || newsel == 1 )
@@ -599,31 +554,25 @@ void MainWindow::OnChannelListStart( )
 
 void MainWindow::OnMenuSaveLayout( wxCommandEvent& event )
 {
-	#ifndef HAVE_WX26
 	wxString answer;
 	if ( !ui().AskText( _("Layout manager"),_("Enter a profile name"), answer ) ) return;
 	wxString layout = GetAui().manager->SavePerspective();
 	sett().SaveLayout( answer, layout );
-	#endif
 }
 
 void MainWindow::OnMenuLoadLayout( wxCommandEvent& event )
 {
-	#ifndef HAVE_WX26
 	wxArrayString layouts = sett().GetLayoutList();
 	unsigned int result = wxGetSingleChoiceIndex( _("Which profile fo you want to load?"), _("Layout manager"), layouts );
 	if ( ( result < 0  ) || ( result > layouts.GetCount() ) ) return;
 	GetAui().manager->LoadPerspective( sett().GetLayout( layouts[result] ) );
-	#endif
 }
 
 
 void MainWindow::OnMenuDefaultLayout( wxCommandEvent& event )
 {
-	#ifndef HAVE_WX26
 	wxArrayString layouts = sett().GetLayoutList();
 	unsigned int result = wxGetSingleChoiceIndex( _("Which profile do you want to be default?"), _("Layout manager"), layouts );
 	if ( ( result < 0  ) || ( result > layouts.GetCount() ) ) return;
 	sett().SetDefaultLayout( layouts[result] );
-	#endif
 }

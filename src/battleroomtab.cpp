@@ -22,6 +22,9 @@
 #include <wx/bmpcbox.h>
 #include <wx/image.h>
 #include <wx/choice.h>
+#if wxUSE_TOGGLEBTN
+#include <wx/tglbtn.h>
+#endif
 
 #include <stdexcept>
 
@@ -44,14 +47,7 @@
 #include "Helper/colorbutton.h"
 #include "mapselectdialog.h"
 #include "mmoptionwindows.h"
-
-#ifndef HAVE_WX26
 #include "aui/auimanager.h"
-#endif
-
-#if wxUSE_TOGGLEBTN
-#include <wx/tglbtn.h>
-#endif
 
 BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
 
@@ -111,9 +107,8 @@ const MyStrings<16> team_choices;
 BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
         wxScrolledWindow( parent, -1 ),m_ui(ui), m_battle(battle)
 {
-#ifndef HAVE_WX26
     GetAui().manager->AddPane( this, wxLEFT, _T("battleroomtab") );
-#endif
+
     // Create all widgets
     m_splitter = new wxSplitterWindow( this, -1, wxDefaultPosition, wxSize(100, 60) );
 
@@ -374,9 +369,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
 
 BattleRoomTab::~BattleRoomTab()
 {
-#ifndef HAVE_WX26
     if (GetAui().manager)GetAui().manager->DetachPane( this );
-#endif
 }
 
 

@@ -2179,7 +2179,6 @@ void TASServer::OnDataReceived( Socket* sock )
 
 unsigned int TASServer::UdpPing(unsigned int src_port, const wxString &target, unsigned int target_port, const wxString &message)// full parameters version, used to ping all clients when hosting.
 {
-#ifndef HAVE_WX26
     int result=0;
     wxLogMessage(_T("UdpPing src_port=%d , target='%s' , target_port=%d , message='%s'"),src_port,target.c_str(),target_port, message.c_str());
     wxIPV4address local_addr;
@@ -2209,7 +2208,6 @@ unsigned int TASServer::UdpPing(unsigned int src_port, const wxString &target, u
 
     if (udp_socket.Error())wxLogWarning(_T("wxDatagramSocket Error=%d"),udp_socket.LastError());
     return result;
-#endif
 }
 
 void TASServer::UdpPingTheServer(const wxString &message)
@@ -2292,7 +2290,6 @@ void TASServer::UdpPingAllClients()// used when hosting with nat holepunching. h
 //! @brief used to check if the NAT is done properly when hosting
 int TASServer::TestOpenPort( unsigned int port )
 {
-#ifndef HAVE_WX26
     wxIPV4address local_addr;
     local_addr.AnyAddress(); // <--- THATS ESSENTIAL!
     local_addr.Service(port);
@@ -2320,9 +2317,6 @@ int TASServer::TestOpenPort( unsigned int port )
         return porttest_socketError;
     }
     return porttest_pass;
-#endif
-    return porttest_pass_WX26;
-
 }
 
 
