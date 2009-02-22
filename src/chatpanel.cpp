@@ -344,6 +344,9 @@ void ChatPanel::CreateControls( )
   m_chatlog_text->SetBackgroundColour( sett().GetChatColorBackground() );
   m_chatlog_text->SetFont( sett().GetChatFont() );
 
+	m_say_text->SetBackgroundColour( sett().GetChatColorBackground() );
+  m_say_text->SetDefaultStyle( wxTextAttr( sett().GetChatColorNormal(), sett().GetChatColorBackground(), sett().GetChatFont() ) );
+
   // Fill up TextCompletionDatabase
   textcompletiondatabase.Insert_Mapping( _T("DLDK"), _T("Der Lockruf des Kaos") );
   textcompletiondatabase.Insert_Mapping( _T("lol"), _T("Laughing out loud") );

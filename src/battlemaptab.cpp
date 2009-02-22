@@ -206,11 +206,6 @@ void BattleMapTab::UpdateUser( User& user )
 
 void BattleMapTab::SetMap( int index )
 {
-  if ( !m_battle.IsFounderMe() ) {
-    //m_map_combo->SetSelection( m_map_combo->FindString( RefineMapname( m_battle.GetHostMapName() ) ) );
-    return;
-  }
-
   try
   {
     UnitSyncMap map = usync().GetMapEx( index );
@@ -225,6 +220,17 @@ void BattleMapTab::SetMap( int index )
 
 void BattleMapTab::OnMapSelect( wxCommandEvent& event )
 {
+	if ( !m_battle.IsFounderMe() )
+	{
+		try
+		{
+			m_battle.DoAction( _T("suggests ") + usync().GetMap( m_map_combo->GetCurrentSelection() ).name );
+		}
+		catch(...)
+		{
+		}
+		return;
+	}
 	SetMap( m_map_combo->GetCurrentSelection() );
 }
 
@@ -234,10 +240,16 @@ void BattleMapTab::OnMapBrowse( wxCommandEvent& event )
 	wxLogDebugFunc( _T("") );
 	MapSelectDialog dlg( &m_ui.mw(), m_ui );
 
-	if ( dlg.ShowModal() == wxID_OK && dlg.GetSelectedMap() != NULL ) {
-		wxLogDebugFunc( dlg.GetSelectedMap()->name );
-		const wxString mapname = RefineMapname( dlg.GetSelectedMap()->name );
-		const int idx = m_map_combo->FindString( mapname, true /*case sensitive*/ );
+	if ( dlg.ShowModal() == wxID_OK && dlg.GetSelectedMap() != NULL )
+	{
+		wxString mapname = dlg.GetSelectedMap()->name;
+		wxLogDebugFunc( mapname );
+		if ( !m_battle.IsFounderMe() )
+		{
+			m_battle.DoAction( _T("suggests ") + mapname  );
+			return;
+		}
+		const int idx = m_map_combo->FindString( RefineMapname( mapname ), true /*case sensitive*/ );
 		if ( idx != wxNOT_FOUND ) SetMap( idx );
 	}
 }

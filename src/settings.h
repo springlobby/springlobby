@@ -105,8 +105,6 @@ class Settings
 
     wxString GetTempStorage();
 
-    bool SkipDownloadOtaContent();
-
     /* ================================================================ */
     /** @name Network
      * @{
