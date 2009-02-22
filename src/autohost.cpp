@@ -165,11 +165,6 @@ void AutoHost::StartBattle()
   // todo: the logic here is copied from BattleRoomTab::OnStart, may wish to refactor this sometime.
   // note: the strings here must remain untranslated because they're visible to everyone in the battle!
 
-  if ( m_battle.HaveMultipleBotsInSameTeam() ) {
-    m_battle.DoAction(_T("There are two or more bots on the same team.  Because bots don't know how to share, this won't work."));
-    return;
-  }
-
   m_battle.GetMe().BattleStatus().ready = true;
 
   if ( !m_battle.IsEveryoneReady() ) {

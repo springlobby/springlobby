@@ -540,12 +540,6 @@ ChatPanel& BattleRoomTab::GetChatPanel()
 
 void BattleRoomTab::OnStart( wxCommandEvent& event )
 {
-    if ( m_battle.HaveMultipleBotsInSameTeam() )
-    {
-        wxMessageDialog dlg( this, _("There are two or more bots on the same team.  Because bots don't know how to share, this won't work."), _("Bot team sharing."), wxOK );
-        dlg.ShowModal();
-        return;
-    }
     m_battle.GetMe().BattleStatus().ready = true;
 
     if ( !m_battle.IsEveryoneReady() )
