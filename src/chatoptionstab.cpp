@@ -39,10 +39,7 @@
 #include "spring.h"
 #include "mainwindow.h"
 #include "Helper/colorbutton.h"
-
-#ifndef HAVE_WX26
 #include "aui/auimanager.h"
-#endif
 
 BEGIN_EVENT_TABLE( ChatOptionsTab, wxPanel )
   EVT_BUTTON( ID_SELFONT, ChatOptionsTab::OnSelectFont )
@@ -63,10 +60,7 @@ END_EVENT_TABLE()
 
 ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( parent, -1 ),m_ui(ui)
 {
-
-  #ifndef HAVE_WX26
   GetAui().manager->AddPane( this, wxLEFT, _T("chatoptionstab") );
-  #endif
 
   wxBoxSizer* bMainSizerV;
   bMainSizerV = new wxBoxSizer( wxVERTICAL );

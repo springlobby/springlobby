@@ -51,7 +51,7 @@ bool SL_WinConf::DoWriteLong(const wxString& key, long lValue)
 
 Settings::Settings()
 {
-  #if defined(__WXMSW__) && !defined(HAVE_WX26)
+  #if defined(__WXMSW__)
   wxString userfilepath = wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator() + _T("springlobby.conf");
   wxString globalfilepath =  GetExecutableFolder() + wxFileName::GetPathSeparator() + _T("springlobby.conf");
 
@@ -110,7 +110,7 @@ void Settings::SaveSettings()
   SetCacheVersion();
   SetSettingsVersion();
   m_config->Flush();
-  #if defined(__WXMSW__) && !defined(HAVE_WX26)
+  #if defined(__WXMSW__)
   wxFileOutputStream outstream( m_chosed_path );
 
   if ( !outstream.IsOk() )

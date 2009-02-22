@@ -24,10 +24,7 @@
 #include "utils.h"
 #include "server.h"
 #include "mmoptionswrapper.h"
-
-#ifndef HAVE_WX26
 #include "aui/auimanager.h"
-#endif
 
 
 BEGIN_EVENT_TABLE(BattleOptionsTab, wxPanel)
@@ -43,10 +40,7 @@ END_EVENT_TABLE()
 BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle ):
   wxScrolledWindow( parent, -1 ), m_ui(ui), m_battle(battle)
 {
-
-  #ifndef HAVE_WX26
   GetAui().manager->AddPane( this, wxLEFT, _T("battleoptionstab") );
-  #endif
 
   wxBoxSizer* m_main_sizer;
   m_main_sizer = new wxBoxSizer( wxHORIZONTAL );
@@ -127,9 +121,7 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle ):
 
 BattleOptionsTab::~BattleOptionsTab()
 {
-  #ifndef HAVE_WX26
-  if(GetAui().manager)GetAui().manager->DetachPane( this );
-  #endif
+    if(GetAui().manager)GetAui().manager->DetachPane( this );
 }
 
 

@@ -17,6 +17,7 @@
 #include <wx/settings.h>
 #include <wx/arrstr.h>
 #include <wx/choice.h>
+
 #include <stdexcept>
 
 #include "battlemaptab.h"
@@ -31,11 +32,7 @@
 #include "uiutils.h"
 #include "server.h"
 #include "settings.h"
-
-
-#ifndef HAVE_WX26
 #include "aui/auimanager.h"
-#endif
 
 BEGIN_EVENT_TABLE(BattleMapTab, wxPanel)
 
@@ -49,10 +46,7 @@ END_EVENT_TABLE()
 BattleMapTab::BattleMapTab( wxWindow* parent, Ui& ui, Battle& battle ):
   wxScrolledWindow( parent, -1 ), m_ui(ui), m_battle(battle)
 {
-
-  #ifndef HAVE_WX26
   GetAui().manager->AddPane( this, wxLEFT, _T("battlemaptab") );
-  #endif
 
   wxBoxSizer* m_main_sizer = new wxBoxSizer( wxHORIZONTAL );
   wxBoxSizer* m_map_sizer = new wxBoxSizer( wxVERTICAL );
@@ -124,9 +118,7 @@ BattleMapTab::BattleMapTab( wxWindow* parent, Ui& ui, Battle& battle ):
 
 BattleMapTab::~BattleMapTab()
 {
-  #ifndef HAVE_WX26
-  if(GetAui().manager)GetAui().manager->DetachPane( this );
-  #endif
+    if(GetAui().manager)GetAui().manager->DetachPane( this );
 }
 
 

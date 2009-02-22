@@ -77,11 +77,7 @@ class assert_exception : public std::runtime_error
 #define CONTROL_HEIGHT 28
 #endif
 
-#ifdef HAVE_WX26
-#define IsColourOk() Ok()
-#else
 #define IsColourOk() IsOk()
-#endif
 
 /** \name Type conversions
  * @{ */

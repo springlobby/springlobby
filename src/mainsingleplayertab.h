@@ -37,11 +37,7 @@ class MainSinglePlayerTab : public wxScrolledWindow
 
     wxBoxSizer* m_main_sizer;
     wxImageList* m_imagelist;
-    #ifdef HAVE_WX26
-    wxNotebook* m_tabs;
-    #else
     wxAuiNotebook* m_tabs;
-    #endif
 
     SinglePlayerTab* m_sp_tab;
     BattleOptionsTab* m_opts_tab;

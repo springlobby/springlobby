@@ -1054,6 +1054,16 @@ wxString SpringUnitSync::GetArchivePath( const wxString& name )
   return susynclib().GetArchivePath( name );
 }
 
+wxString SpringUnitSync::GetDefaultNick()
+{
+	return susynclib().GetSpringConfigString( _T("name"), _T("") );
+}
+
+void SpringUnitSync::SetDefaultNick( const wxString& nick )
+{
+	susynclib().SetSpringConfigString( _T("name"), nick );
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////// Unitsync prefetch/background thread code
 
@@ -1289,6 +1299,7 @@ void SpringUnitSync::GetMapExAsync( const wxString& mapname, int evtHandlerId )
   work = new GetMapExAsyncWorkItem( this, mapname, evtHandlerId );
   m_cache_thread.DoWork( work, 200 /* higher prio then GetMinimapAsync */ );
 }
+
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////// EvtHandlerCollection code

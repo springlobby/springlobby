@@ -22,13 +22,8 @@
 #include "server.h"
 #include "settings.h"
 #include "Helper/colorbutton.h"
-
-#ifndef HAVE_WX26
 #include "aui/auimanager.h"
-#endif
-
 #include "settings++/custom_dialogs.h"
-
 #include "springunitsynclib.h"
 
 BEGIN_EVENT_TABLE(SinglePlayerTab, wxPanel)
@@ -51,9 +46,7 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, Ui& ui, MainSinglePlayerTab& 
   m_ui( ui ),
   m_battle( ui, msptab )
 {
-  #ifndef HAVE_WX26
   GetAui().manager->AddPane( this, wxLEFT, _T("singleplayertab") );
-  #endif
 
   wxBoxSizer* m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
@@ -294,6 +287,8 @@ void SinglePlayerTab::OnAddBot( wxCommandEvent& event )
 
 void SinglePlayerTab::OnStart( wxCommandEvent& event )
 {
+  wxString nick = usync().GetDefaultNick();
+  if ( !nick.IsEmpty() ) m_battle.GetMe().SetNick( nick );
   if ( m_ui.IsSpringRunning() ) {
     wxLogWarning(_T("trying to start spring while another instance is running") );
     customMessageBoxNoModal(SL_MAIN_ICON, _("You cannot start a spring instance while another is already running"), _("Spring error"), wxICON_EXCLAMATION );

@@ -1,13 +1,5 @@
 #ifndef NO_TORRENT_SYSTEM
 
-//don't ever move this include after torrentoptionspanel.h
-//you'll get a strange error, the cause of which remains in the dark
-#ifndef HAVE_WX26
-#include "aui/auimanager.h"
-#endif
-
-#include "torrentoptionspanel.h"
-
 #include <wx/textctrl.h>
 #include <wx/checkbox.h>
 #include <wx/sizer.h>
@@ -17,23 +9,21 @@
 #include <wx/radiobut.h>
 #include <wx/button.h>
 
+#include "torrentoptionspanel.h"
+#include "aui/auimanager.h"
 #include "settings.h"
 #include "ui.h"
 #include "torrentwrapper.h"
 #include "utils.h"
 
 
-
-BEGIN_EVENT_TABLE( TorrentOptionsPanel, wxPanel )
+BEGIN_EVENT_TABLE( TorrentOptionsPanel, wxScrolledWindow )
 END_EVENT_TABLE()
 
 TorrentOptionsPanel::TorrentOptionsPanel( wxWindow* parent, Ui& ui)
     : wxScrolledWindow( parent, -1), m_ui(ui)
 {
-
-    #ifndef HAVE_WX26
     GetAui().manager->AddPane( this, wxLEFT, _T("torrentoptionspanel") );
-    #endif
 
     wxBoxSizer* mainboxsizer = new wxBoxSizer( wxVERTICAL );
 

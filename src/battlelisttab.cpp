@@ -14,10 +14,8 @@
 #include <wx/tglbtn.h>
 #endif
 
-#ifndef HAVE_WX26
-#include "aui/auimanager.h"
-#endif
 
+#include "aui/auimanager.h"
 #include "battlelisttab.h"
 #include "battlelistctrl.h"
 #include "battle.h"
@@ -36,10 +34,7 @@
 #include "battlelistfilter.h"
 #include "iconimagelist.h"
 #include "useractions.h"
-
 #include "settings++/custom_dialogs.h"
-//#include "images/springlobby.xpm"
-//#include <wx/icon.h>
 
 const unsigned int BATTLELIST_COLOUMNCOUNT = 10;
 
@@ -67,9 +62,7 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( par
   m_ui(ui),
   m_sel_battle(0)
 {
-  #ifndef HAVE_WX26
   GetAui().manager->AddPane( this, wxLEFT, _T("battlelisttab") );
-  #endif
 
   m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
@@ -151,10 +144,6 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( par
 
   m_filter_activ = new wxCheckBox( this, BATTLE_LIST_FILTER_ACTIV , _("Activated"), wxDefaultPosition, wxDefaultSize, 0 );
   m_buttons_sizer->Add( m_filter_activ, 0, wxALL, 5 );
-
-  #ifdef HAVE_WX26
-  m_filter_activ->Disable();
-  #endif
 
   m_buttons_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
 

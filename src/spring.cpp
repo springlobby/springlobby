@@ -308,7 +308,6 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 					if ( status.IsBot() ) continue;
 					tdf.EnterSection( _T("PLAYER") + i2s( i ) );
 							tdf.Append( _T("Name"), user.GetNick() );
-
 							tdf.Append( _T("CountryCode"), user.GetCountry().Lower());
 							tdf.Append( _T("Spectator"), status.spectator );
 							tdf.Append( _T("Rank"), user.GetRank() );

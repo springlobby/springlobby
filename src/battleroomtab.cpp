@@ -22,6 +22,9 @@
 #include <wx/bmpcbox.h>
 #include <wx/image.h>
 #include <wx/choice.h>
+#if wxUSE_TOGGLEBTN
+#include <wx/tglbtn.h>
+#endif
 
 #include <stdexcept>
 
@@ -44,14 +47,7 @@
 #include "Helper/colorbutton.h"
 #include "mapselectdialog.h"
 #include "mmoptionwindows.h"
-
-#ifndef HAVE_WX26
 #include "aui/auimanager.h"
-#endif
-
-#if wxUSE_TOGGLEBTN
-#include <wx/tglbtn.h>
-#endif
 
 BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
 
@@ -111,9 +107,8 @@ const MyStrings<16> team_choices;
 BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
         wxScrolledWindow( parent, -1 ),m_ui(ui), m_battle(battle)
 {
-#ifndef HAVE_WX26
     GetAui().manager->AddPane( this, wxLEFT, _T("battleroomtab") );
-#endif
+
     // Create all widgets
     m_splitter = new wxSplitterWindow( this, -1, wxDefaultPosition, wxSize(100, 60) );
 
@@ -279,6 +274,11 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
     //m_info1_sizer = new wxBoxSizer( wxHORIZONTAL );
     m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
+    int side_sel_width = m_side_sel->GetWidestItemWidth();
+    wxBoxSizer* m_side_sel_sizer = new wxBoxSizer( wxHORIZONTAL );
+    m_side_sel_sizer->SetMinSize( side_sel_width, CONTROL_HEIGHT );
+    m_side_sel_sizer->Add( m_side_sel, 1, wxEXPAND );
+
     // Put widgets in place
     m_player_sett_sizer->Add( m_team_lbl, 0, wxEXPAND | wxALL, 2 );
     m_player_sett_sizer->Add( m_team_sel, 0, wxEXPAND | wxALL, 2 );
@@ -287,7 +287,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
     m_player_sett_sizer->Add( m_color_lbl, 0, wxEXPAND | wxALL, 2 );
     m_player_sett_sizer->Add( m_color_sel, 0, wxEXPAND | wxALL, 2 );
     m_player_sett_sizer->Add( m_side_lbl, 0, wxEXPAND | wxALL, 2 );
-    m_player_sett_sizer->Add( m_side_sel, 0, wxEXPAND | wxALL, 2 );
+    m_player_sett_sizer->Add( m_side_sel_sizer, 0, wxEXPAND | wxALL, 2 );
     m_player_sett_sizer->Add( m_spec_chk, 0, wxEXPAND | wxALL, 2 );
     m_player_sett_sizer->Add( m_ready_chk, 0, wxEXPAND | wxALL, 2 );
 
@@ -302,7 +302,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
     //m_info1_sizer->Add( m_size_lbl, 1, wxEXPAND );
 
     m_info_sizer->Add( m_minimap, 0, wxEXPAND );
-    m_map_select_sizer->Add( m_map_combo, 1, wxALL | wxEXPAND | wxALIGN_CENTER_VERTICAL );
+    m_map_select_sizer->Add( m_map_combo, 0, wxALL | wxEXPAND | wxALIGN_CENTER_VERTICAL );
 		m_map_select_sizer->Add( m_browse_map_btn, 0, wxALIGN_RIGHT );
     m_info_sizer->Add( m_map_select_sizer, 0, wxALL );
     //m_info_sizer->Add( m_info1_sizer, 0, wxEXPAND );
@@ -352,10 +352,10 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
         m_ready_chk->Disable();
     }
 
+		ReloadMaplist();
+
     UpdateBattleInfo( wxString::Format( _T("%d_mapname"), OptionsWrapper::PrivateOptions ) );
     UpdateBattleInfo();
-
-    ReloadMaplist();
 
     SetScrollRate( 3, 3 );
     SetSizer( m_main_sizer );
@@ -369,9 +369,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
 
 BattleRoomTab::~BattleRoomTab()
 {
-#ifndef HAVE_WX26
     if (GetAui().manager)GetAui().manager->DetachPane( this );
-#endif
 }
 
 
@@ -548,14 +546,14 @@ void BattleRoomTab::OnStart( wxCommandEvent& event )
 
     if ( !m_battle.IsEveryoneReady() )
     {
-        wxMessageDialog dlg1( this, _("Some players are not ready yet.\nRing these players?"), _("Not ready"), wxYES_NO );
-        if ( dlg1.ShowModal() == wxID_YES )
+        int answer = customMessageBox( SL_MAIN_ICON, _("Some players are not ready yet.\nRing these players?"), _("Not ready"), wxYES_NO );
+        if ( answer == wxYES )
         {
             m_battle.RingNotReadyPlayers();
             return;
         }
-        wxMessageDialog dlg2( this, _("Force start?"), _("Not ready"), wxYES_NO );
-        if ( dlg2.ShowModal() == wxID_NO ) return;
+        answer = customMessageBox( SL_MAIN_ICON, _("Force start?"), _("Not ready"), wxYES_NO );
+        if ( answer == wxNO ) return;
     }
     m_ui.StartHostedBattle();
 }
