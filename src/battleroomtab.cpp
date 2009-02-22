@@ -540,12 +540,6 @@ ChatPanel& BattleRoomTab::GetChatPanel()
 
 void BattleRoomTab::OnStart( wxCommandEvent& event )
 {
-    if ( m_battle.HaveMultipleBotsInSameTeam() )
-    {
-        wxMessageDialog dlg( this, _("There are two or more bots on the same team.  Because bots don't know how to share, this won't work."), _("Bot team sharing."), wxOK );
-        dlg.ShowModal();
-        return;
-    }
     m_battle.GetMe().BattleStatus().ready = true;
 
     if ( !m_battle.IsEveryoneReady() )
@@ -558,11 +552,6 @@ void BattleRoomTab::OnStart( wxCommandEvent& event )
         }
         wxMessageDialog dlg2( this, _("Force start?"), _("Not ready"), wxYES_NO );
         if ( dlg2.ShowModal() == wxID_NO ) return;
-    }
-    if ( m_battle.GetNumUsers() > 32 )
-    {
-      customMessageBoxNoModal( SL_MAIN_ICON, _("You have more than 32 players (including spectators) in your battle\nSpring supports maximum 32"), _("Num players error"), wxICON_EXCLAMATION );
-      return;
     }
     m_ui.StartHostedBattle();
 }

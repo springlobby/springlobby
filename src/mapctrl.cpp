@@ -516,17 +516,20 @@ void MapCtrl::RequireImages()
 }
 
 
-void MapCtrl::DrawStartRect( wxDC& dc, int index, wxRect& sr, const wxColour& col, bool mouseover, int alphalevel )
+void MapCtrl::DrawStartRect( wxDC& dc, int index, wxRect& sr, const wxColour& col, bool mouseover, int alphalevel, bool forceInsideMinimap )
 {
   int x1 = sr.x;
   int y1 = sr.y;
   int x2 = sr.x + sr.width;
   int y2 = sr.y + sr.height;
   wxRect mr = GetMinimapRect();
-  x1 = std::max( mr.x, x1 );
-  y1 = std::max( mr.y, y1 );
-  x2 = std::min( mr.x+mr.width, x2 );
-  y2 = std::min( mr.y+mr.height, y2 );
+  if ( forceInsideMinimap )
+  {
+      x1 = std::max( mr.x, x1 );
+      y1 = std::max( mr.y, y1 );
+      x2 = std::min( mr.x+mr.width, x2 );
+      y2 = std::min( mr.y+mr.height, y2 );
+  }
   sr.x = x1;
   sr.y = y1;
   sr.width = x2 - x1;
@@ -876,8 +879,10 @@ void MapCtrl::DrawUser( wxDC& dc, User& user, bool selected, bool moving )
   if ( selected )
   {
       /* Drawing the whole user-battle-settings-box deal */
+    DrawStartRect( dc, -1, r,ColourDelta( col, -40 ) , false, 180 , false); /* box background */
+
+    /* Side selector */
     wxRect siderect = GetUserSideRect();
-    DrawStartRect( dc, -1, r,ColourDelta( col, -40 ) , false, 180 );
     DrawOutlinedText( dc, _("side:"), r.x+3, r.y+siderect.y-1, wxColour(50,50,50), *wxWHITE );
 
     if ( m_rect_area == Side )

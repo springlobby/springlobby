@@ -241,7 +241,6 @@ public:
 		virtual void Update ( const wxString& Tag );
 
     virtual unsigned int GetNumBots() const;
-    virtual bool HaveMultipleBotsInSameTeam() const;
     virtual User& OnBotAdded( const wxString& nick, const UserBattleStatus& bs );
 
     virtual UserPosition GetFreePosition();

@@ -31,7 +31,6 @@
 #include "ui.h"
 #include "iunitsync.h"
 #include "channel/channel.h"
-#include "httpdownloader.h"
 #include "settings++/custom_dialogs.h"
 #include "settings++/se_utils.h"
 #ifndef NO_TORRENT_SYSTEM
@@ -77,7 +76,6 @@ SpringLobbyApp::SpringLobbyApp()
     :m_translationhelper( NULL )
 {
     m_timer = new wxTimer(this, TIMER_ID);
-    m_otadownloader = NULL;
     SetAppName( _T("springlobby") );
 }
 
@@ -230,28 +228,6 @@ bool SpringLobbyApp::OnInit()
 				if ( sett().ShouldAddDefaultGroupSettings() ) sett().AddGroup( _("Default") );
 
         if ( !wxDirExists( wxStandardPaths::Get().GetUserDataDir() ) ) wxMkdir( wxStandardPaths::Get().GetUserDataDir() );
-        wxString sep ( wxFileName::GetPathSeparator() );
-				if ( !wxDirExists( sett().GetCurrentUsedDataDir() + sep + _T("base") ) ) wxMkdir( sett().GetCurrentUsedDataDir() + sep + _T("base") );
-
-				if ( !sett().SkipDownloadOtaContent() )
-				{
-					// ask for downloading ota content if archive not found, start downloader in background
-					wxString url= _T("ipxserver.dyndns.org/games/spring/mods/xta/base-ota-content.zip");
-					wxString destFilename = sett().GetCurrentUsedDataDir() + sep + _T("base") + sep + _T("base-ota-content.zip");
-					bool contentExists = false;
-					if ( usync().IsLoaded() )
-					{
-						contentExists = usync().FileExists(_T("base/otacontent.sdz")) && usync().FileExists(_T("base/tacontent_v2.sdz")) && usync().FileExists(_T("base/tatextures_v062.sdz"));
-					}
-
-					if ( !contentExists &&
-									customMessageBox(SL_MAIN_ICON, _("Do you want to download OTA content?\n"
-																									 "You need this to be able to play TA based mods.\n"
-																									 "You need to own a copy of Total Annihilation do legally download it."),_("Download OTA content?"),wxYES_NO) == wxYES )
-					{
-							m_otadownloader = new HttpDownloader( url, destFilename );
-					}
-				}
 
         customMessageBoxNoModal(SL_MAIN_ICON, _("By default SpringLobby reports some statistics.\nYou can disable that on options tab --> General."),_("Notice"),wxOK );
 
@@ -264,7 +240,7 @@ bool SpringLobbyApp::OnInit()
 				wxString uikeyslocation = pl.FindValidPath( _T("uikeys.txt") );
 				if ( !uikeyslocation.IsEmpty() )
 				{
-					wxCopyFile( uikeyslocation, sett().GetCurrentUsedDataDir() + sep + _T("uikeys.txt"), false );
+					wxCopyFile( uikeyslocation, sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("uikeys.txt"), false );
 				}
 
     #ifdef __WXMSW__
@@ -309,9 +285,6 @@ int SpringLobbyApp::OnExit()
         wxDELETE(m_translationhelper);
     }
 
-
-    if ( m_otadownloader != 0 )
-        delete m_otadownloader ;
 
   #ifndef NO_TORRENT_SYSTEM
   //if( sett().GetTorrentSystemAutoStartMode() == 1 )
@@ -376,15 +349,6 @@ void SpringLobbyApp::SetupUserFolders()
       wxString sep = wxFileName::GetPathSeparator();
       wxString defaultdir = wxFileName::GetHomeDir() + sep +_T("spring");
       wxArrayString choices;
-#ifdef __WXMSW__
-      wxRegKey UACpath( _T("HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System") ); // check if UAC is on, skip dialog if not
-      if( !UACpath.Exists() ) return;
-      long value;
-      if( !UACpath.QueryValue( _T("EnableLUA"), &value ) ) return; // reg key not present -> not vista -> dialog useless
-			if( value == 0 ) return; // UAC is off -> skip dialog
-
-			int createdefault = choices.Add( _("Create a spring directory in my documents folder") );
-#endif
 
       int donothing = choices.Add( _("Do nothing") );
       int createcustompath = choices.Add( _("Create a folder in a custom path (you'll get prompted for the path)") );
@@ -399,9 +363,6 @@ void SpringLobbyApp::SetupUserFolders()
       bool createdirs = true;
       if ( result == choseexisting ) createdirs = false;
       else if ( result == donothing ) return;
-      #ifdef __WXMSW__
-      else if ( result == createdefault ) dir = defaultdir;
-      #endif
 
       if ( result == createcustompath || result == choseexisting ) dir = wxDirSelector( _("Choose a folder"), defaultdir );
 

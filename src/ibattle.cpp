@@ -171,20 +171,6 @@ int IBattle::GetClosestFixColour(const wxColour &col, const std::vector<int> &ex
     return result;
 }
 
-bool IBattle::HaveMultipleBotsInSameTeam() const
-{
-    wxLogDebugFunc(_T(""));
-
-    std::vector<int> teams ( GetMaxPlayers(), -1 );
-		for ( user_map_t::size_type i = 0; i < GetNumUsers(); i++ )
-    {
-				User& usr = GetUser( i );
-        if ( !usr.BattleStatus().IsBot() ) continue;
-        if ( teams[ usr.BattleStatus().team ] == 1 )return true;
-        teams[ usr.BattleStatus().team ] = 1;
-    }
-    return false;
-}
 
 void IBattle::SendHostInfo( HostInfo update )
 {
