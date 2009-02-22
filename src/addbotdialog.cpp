@@ -63,31 +63,39 @@ AddBotDialog::AddBotDialog( wxWindow* parent, IBattle& battle , bool singleplaye
 
   m_main_sizer->Add( m_ai_sizer, 0, wxEXPAND, 5 );
 
-  m_ai_infos_lst = new wxListCtrl( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_NO_HEADER );
-  wxListItem col;
-  col.SetText( _("property") );
-  col.SetImage( -1 );
-  m_ai_infos_lst->InsertColumn( 0, col );
-  wxListItem col2;
-  col2.SetText( _("value") );
-  col2.SetImage( -1 );
-  m_ai_infos_lst->InsertColumn( 1, col2 );
-
-  m_ai_infos_lst->DeleteAllItems();
-  wxArrayString info = usync().GetAIInfos( m_ai->GetSelection() );
-  int count = info.GetCount();
-	for ( int i = 0; i < count; i = i + 3 )
+	if ( usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) )
 	{
-		long index = m_ai_infos_lst->InsertItem( i, info[i] );
-		m_ai_infos_lst->SetItem( index, 0,  info[i] );
-		m_ai_infos_lst->SetItem( index, 1,  info[i+1] );
-	}
-	m_ai_infos_lst->SetColumnWidth( 0, wxLIST_AUTOSIZE );
-	m_ai_infos_lst->SetColumnWidth( 1, wxLIST_AUTOSIZE );
+		m_ai_infos_lst = new wxListCtrl( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_NO_HEADER );
+		wxListItem col;
+		col.SetText( _("property") );
+		col.SetImage( -1 );
+		m_ai_infos_lst->InsertColumn( 0, col );
+		wxListItem col2;
+		col2.SetText( _("value") );
+		col2.SetImage( -1 );
+		m_ai_infos_lst->InsertColumn( 1, col2 );
 
-	m_info_sizer = new wxBoxSizer(wxVERTICAL);
-	m_info_sizer->Add( m_ai_infos_lst, 1, wxALL|wxEXPAND );
-	m_main_sizer->Add( m_info_sizer, 1, wxALL|wxEXPAND );
+		m_ai_infos_lst->DeleteAllItems();
+		wxArrayString info = usync().GetAIInfos( m_ai->GetSelection() );
+		int count = info.GetCount();
+		for ( int i = 0; i < count; i = i + 3 )
+		{
+			long index = m_ai_infos_lst->InsertItem( i, info[i] );
+			m_ai_infos_lst->SetItem( index, 0,  info[i] );
+			m_ai_infos_lst->SetItem( index, 1,  info[i+1] );
+		}
+		m_ai_infos_lst->SetColumnWidth( 0, wxLIST_AUTOSIZE );
+		m_ai_infos_lst->SetColumnWidth( 1, wxLIST_AUTOSIZE );
+
+		m_info_sizer = new wxBoxSizer(wxVERTICAL);
+		m_info_sizer->Add( m_ai_infos_lst, 1, wxALL|wxEXPAND );
+		m_main_sizer->Add( m_info_sizer, 1, wxALL|wxEXPAND );
+	}
+	else
+	{
+		 this->SetSize( wxSize(-1, 155) );
+		 m_main_sizer->AddStretchSpacer();
+	}
 
 
   m_buttons_sep = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
@@ -202,6 +210,7 @@ void AddBotDialog::OnAddBot( wxCommandEvent& event )
 void AddBotDialog::OnSelectBot( wxCommandEvent& event )
 {
   m_add_btn->Enable( m_ai->GetStringSelection() != wxEmptyString );
+  if ( !usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) ) return;
   m_ai_infos_lst->DeleteAllItems();
   wxArrayString info = usync().GetAIInfos( m_ai->GetSelection() );
   int count = info.GetCount();
