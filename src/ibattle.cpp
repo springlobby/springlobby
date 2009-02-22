@@ -459,7 +459,9 @@ UserPosition IBattle::GetFreePosition()
     for ( unsigned int bi = 0; bi < GetNumUsers(); bi++ )
     {
       User& user = GetUser( bi );
-      if ( ( map.info.positions[i].x == user.BattleStatus().pos.x ) && ( map.info.positions[i].y == user.BattleStatus().pos.y ) )
+      UserBattleStatus& status = user.BattleStatus();
+      if ( status.spectator ) continue;
+      if ( ( map.info.positions[i].x == status.pos.x ) && ( map.info.positions[i].y == status.pos.y ) )
       {
         taken = true;
         break;
