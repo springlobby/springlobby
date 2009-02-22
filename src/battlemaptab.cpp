@@ -243,12 +243,12 @@ void BattleMapTab::OnMapBrowse( wxCommandEvent& event )
 	if ( dlg.ShowModal() == wxID_OK && dlg.GetSelectedMap() != NULL )
 	{
 		wxString mapname = dlg.GetSelectedMap()->name;
+		wxLogDebugFunc( mapname );
 		if ( !m_battle.IsFounderMe() )
 		{
 			m_battle.DoAction( _T("suggests ") + mapname  );
 			return;
 		}
-		wxLogDebugFunc( mapname );
 		const int idx = m_map_combo->FindString( RefineMapname( mapname ), true /*case sensitive*/ );
 		if ( idx != wxNOT_FOUND ) SetMap( idx );
 	}

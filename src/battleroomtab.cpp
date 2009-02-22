@@ -21,6 +21,7 @@
 #include <wx/log.h>
 #include <wx/bmpcbox.h>
 #include <wx/image.h>
+#include <wx/choice.h>
 
 #include <stdexcept>
 
@@ -71,6 +72,7 @@ BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
     EVT_BUTTON( BROOM_SETDEFAULTPRES, BattleRoomTab::OnSetModDefaultPreset )
 
     EVT_BUTTON( BROOM_MAP_BROWSE, BattleRoomTab::OnMapBrowse )
+    EVT_CHOICE( BROOM_MAP_SEL, BattleRoomTab::OnMapSelect )
 
     #if  wxUSE_TOGGLEBTN
     EVT_TOGGLEBUTTON( BROOM_AUTOHOST, BattleRoomTab::OnAutoHost )
@@ -146,10 +148,11 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
     m_color_lbl = new wxStaticText( m_player_panel, -1, _("Color") );
     m_side_lbl = new wxStaticText( m_player_panel, -1, _("Side") );
 
-    m_map_lbl = new wxStaticText( this, -1, RefineMapname( battle.GetHostMapName() ) );
     m_size_lbl = new wxStaticText( this, -1, _T("") );
     m_wind_lbl = new wxStaticText( this, -1, _T("") );
     m_tidal_lbl = new wxStaticText( this, -1, _T("") );
+
+    m_map_combo = new wxChoice( this, BROOM_MAP_SEL, wxDefaultPosition, wxDefaultSize );
 
     m_minimap = new MapCtrl( this, 162, &m_battle, m_ui, true, true, true, false );
     m_minimap->SetToolTip(TE(_("A preview of the selected map.  You can see the starting positions, or (if set) starting boxes.")));
@@ -299,10 +302,9 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
     //m_info1_sizer->Add( m_size_lbl, 1, wxEXPAND );
 
     m_info_sizer->Add( m_minimap, 0, wxEXPAND );
-    m_map_select_sizer->Add( m_map_lbl, 0, wxALL | wxALIGN_CENTER_VERTICAL );
-    m_map_select_sizer->AddStretchSpacer();
+    m_map_select_sizer->Add( m_map_combo, 1, wxALL | wxEXPAND | wxALIGN_CENTER_VERTICAL );
 		m_map_select_sizer->Add( m_browse_map_btn, 0, wxALIGN_RIGHT );
-    m_info_sizer->Add( m_map_select_sizer, 0, wxEXPAND | wxALL, 2 );
+    m_info_sizer->Add( m_map_select_sizer, 0, wxALL );
     //m_info_sizer->Add( m_info1_sizer, 0, wxEXPAND );
     //m_info_sizer->Add( m_tidal_lbl, 0, wxEXPAND );
     m_info_sizer->Add( m_opts_list, 1, wxEXPAND | wxTOP, 4 );
@@ -352,6 +354,8 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
 
     UpdateBattleInfo( wxString::Format( _T("%d_mapname"), OptionsWrapper::PrivateOptions ) );
     UpdateBattleInfo();
+
+    ReloadMaplist();
 
     SetScrollRate( 3, 3 );
     SetSizer( m_main_sizer );
@@ -447,7 +451,8 @@ void BattleRoomTab::UpdateBattleInfo( const wxString& Tag )
             {
                 ASSERT_EXCEPTION( m_battle.MapExists(), _("Map does not exist.") );
                 UnitSyncMap map = m_battle.LoadMap();
-                m_map_lbl->SetLabel( RefineMapname( map.name ) );
+								int index = m_map_combo->FindString( RefineMapname( map.name ) );
+								if ( index != wxNOT_FOUND ) m_map_combo->SetSelection( index );
                 m_opts_list->SetItem( m_opt_list_map[ _("Size") ] , 1, wxString::Format( _T("%.0fx%.0f"), map.info.width/512.0, map.info.height/512.0 ) );
                 m_opts_list->SetItem( m_opt_list_map[ _("Windspeed") ], 1, wxString::Format( _T("%d-%d"), map.info.minWind, map.info.maxWind) );
                 m_opts_list->SetItem( m_opt_list_map[ _("Tidal strength") ], 1, wxString::Format( _T("%d"), map.info.tidalStrength) );
@@ -455,7 +460,6 @@ void BattleRoomTab::UpdateBattleInfo( const wxString& Tag )
             }
             catch (...)
             {
-                m_map_lbl->SetLabel( RefineMapname( m_battle.GetHostMapName() ) );
                 m_opts_list->SetItem( m_opt_list_map[ _("Size") ], 1, _T("?x?") );
                 m_opts_list->SetItem( m_opt_list_map[ _("Windspeed") ], 1, _T("?-?") );
                 m_opts_list->SetItem( m_opt_list_map[ _("Tidal strength") ], 1, _T("?") );
@@ -486,6 +490,11 @@ BattleroomListCtrl& BattleRoomTab::GetPlayersListCtrl()
 void BattleRoomTab::UpdateUser( User& user )
 {
     m_players->UpdateUser( user );
+
+    m_minimap->UpdateMinimap();
+
+    UpdateHighlights();
+
     if ( &user != &m_battle.GetMe() ) return;
 
     UserBattleStatus& bs = user.BattleStatus();
@@ -516,10 +525,6 @@ void BattleRoomTab::UpdateUser( User& user )
 
     icons().SetColourIcon( bs.team, user.BattleStatus().colour );
     m_color_sel->SetColor( user.BattleStatus().colour );
-
-    m_minimap->UpdateMinimap();
-
-    UpdateHighlights();
 }
 
 
@@ -744,6 +749,7 @@ void BattleRoomTab::OnUserLeft( User& user )
 void BattleRoomTab::OnUnitSyncReloaded()
 {
     m_minimap->UpdateMinimap();
+    ReloadMaplist();
     UpdateBattleInfo();
     m_battle.SendMyBattleStatus(); // This should reset sync status.
 }
@@ -820,17 +826,50 @@ void BattleRoomTab::OnMapBrowse( wxCommandEvent& event )
 			m_battle.DoAction( _T("suggests ") + mapname );
 			return;
 		}
-		try
-		{
-			UnitSyncMap map = usync().GetMapEx( mapname );
-			m_battle.SetLocalMap( map );
-
-			m_battle.SendHostInfo( IBattle::HI_Map );
-			for( unsigned int i=0;i<m_battle.GetNumRects();++i) if ( m_battle.GetStartRect( i ).exist ) m_battle.RemoveStartRect(i);
-			m_battle.SendHostInfo( IBattle::HI_StartRects );
-		} catch (...) {}
+		const int idx = m_map_combo->FindString( RefineMapname( mapname ), true /*case sensitive*/ );
+		if ( idx != wxNOT_FOUND ) SetMap( idx );
 
 	}
+}
+
+void BattleRoomTab::ReloadMaplist()
+{
+  m_map_combo->Clear();
+
+  wxArrayString maplist= usync().GetMapList();
+ // maplist.Sort(CompareStringIgnoreCase);
+
+  size_t nummaps = maplist.Count();
+  for ( size_t i = 0; i < nummaps; i++ ) m_map_combo->Insert( RefineMapname(maplist[i]), i );
+}
+
+void BattleRoomTab::SetMap( int index )
+{
+  try
+  {
+    UnitSyncMap map = usync().GetMapEx( index );
+    m_battle.SetLocalMap( map );
+
+    m_battle.SendHostInfo( IBattle::HI_Map );
+    for( unsigned int i=0;i<m_battle.GetNumRects();++i) if ( m_battle.GetStartRect( i ).exist ) m_battle.RemoveStartRect(i);
+    m_battle.SendHostInfo( IBattle::HI_StartRects );
+  } catch (...) {}
+}
+
+void BattleRoomTab::OnMapSelect( wxCommandEvent& event )
+{
+	if ( !m_battle.IsFounderMe() )
+	{
+		try
+		{
+			m_battle.DoAction( _T("suggests ") + usync().GetMap( m_map_combo->GetCurrentSelection() ).name );
+		}
+		catch(...)
+		{
+		}
+		return;
+	}
+	SetMap( m_map_combo->GetCurrentSelection() );
 }
 
 void BattleRoomTab::OnOptionActivate( wxListEvent& event )
