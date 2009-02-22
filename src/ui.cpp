@@ -386,8 +386,8 @@ void Ui::OpenWebBrowser( const wxString& url )
 //! @note this does not return until the user pressed any of the buttons or closed the dialog.
 bool Ui::Ask( const wxString& heading, const wxString& question )
 {
-    wxMessageDialog ask_dlg( &mw(), question, heading, wxYES_NO );
-    return ( ask_dlg.ShowModal() == wxID_YES );
+    int answer = customMessageBox( SL_MAIN_ICON, question, heading, wxYES_NO );
+    return ( answer == wxYES );
 }
 
 

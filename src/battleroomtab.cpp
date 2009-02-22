@@ -548,14 +548,14 @@ void BattleRoomTab::OnStart( wxCommandEvent& event )
 
     if ( !m_battle.IsEveryoneReady() )
     {
-        wxMessageDialog dlg1( this, _("Some players are not ready yet.\nRing these players?"), _("Not ready"), wxYES_NO );
-        if ( dlg1.ShowModal() == wxID_YES )
+        int answer = customMessageBox( SL_MAIN_ICON, _("Some players are not ready yet.\nRing these players?"), _("Not ready"), wxYES_NO );
+        if ( answer == wxYES )
         {
             m_battle.RingNotReadyPlayers();
             return;
         }
-        wxMessageDialog dlg2( this, _("Force start?"), _("Not ready"), wxYES_NO );
-        if ( dlg2.ShowModal() == wxID_NO ) return;
+        answer = customMessageBox( SL_MAIN_ICON, _("Force start?"), _("Not ready"), wxYES_NO );
+        if ( answer == wxNO ) return;
     }
     m_ui.StartHostedBattle();
 }
