@@ -337,7 +337,6 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
         m_options_preset_sel->Disable();
 				m_save_btn->Disable();
 				m_delete_btn->Disable();
-				m_browse_map_btn->Disable();
 				m_default_btn->Disable();
         m_start_btn->Disable();
         m_manage_players_btn->Disable();
@@ -810,13 +809,17 @@ void BattleRoomTab::OnSetModDefaultPreset( wxCommandEvent& event )
 void BattleRoomTab::OnMapBrowse( wxCommandEvent& event )
 {
 	wxLogDebugFunc( _T("") );
-	if ( !m_battle.IsFounderMe() ) return;
 	MapSelectDialog dlg( &m_ui.mw(), m_ui );
 
 	if ( dlg.ShowModal() == wxID_OK && dlg.GetSelectedMap() != NULL )
 	{
 		wxString mapname = dlg.GetSelectedMap()->name;
 		wxLogDebugFunc( mapname );
+		if ( !m_battle.IsFounderMe() )
+		{
+			m_battle.DoAction( _T("suggests ") + mapname );
+			return;
+		}
 		try
 		{
 			UnitSyncMap map = usync().GetMapEx( mapname );
