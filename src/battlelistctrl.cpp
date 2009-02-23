@@ -15,12 +15,7 @@
 #include "settings.h"
 #include "settings++/custom_dialogs.h"
 #include "useractions.h"
-<<<<<<< HEAD:src/battlelistctrl.cpp
 #include "Helper/sortutil.h"
-
-#ifndef HAVE_WX26
-=======
->>>>>>> master:src/battlelistctrl.cpp
 #include "aui/auimanager.h"
 
 
