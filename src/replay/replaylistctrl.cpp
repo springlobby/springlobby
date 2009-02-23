@@ -197,9 +197,9 @@ void ReplayListCtrl::OnColClick( wxListEvent& event )
 
 void ReplayListCtrl::Sort()//needs adjusting when column order etc is stable
 {
-//  ReplayListCtrl::m_replaylist_sort = &m_replaylist;
-//  if (m_replaylist_sort == 0 ) return;
-//  SortItems( CompareUniversal , (long)(m_sortorder) );
+  ReplayListCtrl::m_replaylist_sort = &m_replaylist;
+  if (m_replaylist_sort == 0 ) return;
+  SortItems( CompareUniversal , (long)(&m_sortorder) );
 }
 
 template<class T>
