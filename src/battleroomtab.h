@@ -127,7 +127,7 @@ class BattleRoomTab : public wxScrolledWindow
 
     wxPanel* m_player_panel;
 
-		wxChoice* m_map_combo;
+		wxComboBox* m_map_combo;
 
     BattleroomListCtrl* m_players;
     ChatPanel* m_chat;

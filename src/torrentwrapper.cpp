@@ -373,6 +373,7 @@ TorrentWrapper::TorrentWrapper():
 TorrentWrapper::~TorrentWrapper()
 {
     wxLogMessage(_T("TorrentWrapper::~TorrentWrapper()"));
+    m_socket_class->SetTimeout( 1 );
     try
     {
         m_torr->stop_upnp();

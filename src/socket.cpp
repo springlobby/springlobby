@@ -125,6 +125,11 @@ void Socket::Connect( const wxString& addr, const int port )
   m_sock->SetTimeout( 40 );
 }
 
+void Socket::SetTimeout( const int seconds )
+{
+    if ( m_sock != 0 )
+        m_sock->SetTimeout( seconds );
+}
 
 //! @brief Disconnect from remote host if connected.
 //! @note This turns off the ping thread.

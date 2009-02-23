@@ -68,7 +68,7 @@ BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
     EVT_BUTTON( BROOM_SETDEFAULTPRES, BattleRoomTab::OnSetModDefaultPreset )
 
     EVT_BUTTON( BROOM_MAP_BROWSE, BattleRoomTab::OnMapBrowse )
-    EVT_CHOICE( BROOM_MAP_SEL, BattleRoomTab::OnMapSelect )
+    EVT_COMBOBOX( BROOM_MAP_SEL, BattleRoomTab::OnMapSelect )
 
     #if  wxUSE_TOGGLEBTN
     EVT_TOGGLEBUTTON( BROOM_AUTOHOST, BattleRoomTab::OnAutoHost )
@@ -147,7 +147,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
     m_wind_lbl = new wxStaticText( this, -1, _T("") );
     m_tidal_lbl = new wxStaticText( this, -1, _T("") );
 
-    m_map_combo = new wxChoice( this, BROOM_MAP_SEL, wxDefaultPosition, wxDefaultSize );
+    m_map_combo = new wxComboBox( this, BROOM_MAP_SEL, _T(""), wxDefaultPosition, wxDefaultSize );
 
     m_minimap = new MapCtrl( this, 162, &m_battle, m_ui, true, true, true, false );
     m_minimap->SetToolTip(TE(_("A preview of the selected map.  You can see the starting positions, or (if set) starting boxes.")));
@@ -449,8 +449,6 @@ void BattleRoomTab::UpdateBattleInfo( const wxString& Tag )
             {
                 ASSERT_EXCEPTION( m_battle.MapExists(), _("Map does not exist.") );
                 UnitSyncMap map = m_battle.LoadMap();
-								int index = m_map_combo->FindString( RefineMapname( map.name ) );
-								if ( index != wxNOT_FOUND ) m_map_combo->SetSelection( index );
                 m_opts_list->SetItem( m_opt_list_map[ _("Size") ] , 1, wxString::Format( _T("%.0fx%.0f"), map.info.width/512.0, map.info.height/512.0 ) );
                 m_opts_list->SetItem( m_opt_list_map[ _("Windspeed") ], 1, wxString::Format( _T("%d-%d"), map.info.minWind, map.info.maxWind) );
                 m_opts_list->SetItem( m_opt_list_map[ _("Tidal strength") ], 1, wxString::Format( _T("%d"), map.info.tidalStrength) );
@@ -462,6 +460,10 @@ void BattleRoomTab::UpdateBattleInfo( const wxString& Tag )
                 m_opts_list->SetItem( m_opt_list_map[ _("Windspeed") ], 1, _T("?-?") );
                 m_opts_list->SetItem( m_opt_list_map[ _("Tidal strength") ], 1, _T("?") );
             }
+            wxString mapname = RefineMapname( m_battle.GetHostMapName() );
+						int index = m_map_combo->FindString( mapname );
+						if ( index != wxNOT_FOUND ) m_map_combo->SetSelection( index );
+						else m_map_combo->SetValue( mapname );
 
             //delete any eventual map option from the list and add options of the new map
             for ( long i = m_map_opts_index; i < m_opts_list->GetItemCount(); i++ ) m_opts_list->DeleteItem( i );
