@@ -25,10 +25,10 @@
 class SLTipWindow;
 
 
-/** \brief Used as base class for all ListCtrls throughout SL
+/** \brief Used as base class for some ListCtrls throughout SL
  * Provides generic functionality, such as column tooltips, possiblity to prohibit coloumn resizing and selection modifiers. \n
  * Some of the provided functionality only makes sense for single-select lists (see grouping) \n
- * Note: Tooltips are a bitch and anyone shoudl feel to revise them (koshi)
+ * Note: Tooltips are a bitch and anyone should feel free to revise them (koshi)
  * \tparam the type of stored data
  */
 template < class DataImp >

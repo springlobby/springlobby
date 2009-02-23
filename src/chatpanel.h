@@ -106,7 +106,7 @@ class ChatPanel : public wxPanel
     void SetIconIndex( size_t index ) { m_icon_index = index; }
 
     User& GetMe();
-    User* GetSelectedUser();
+    const User* GetSelectedUser();
 
     bool IsOk();
 
