@@ -76,6 +76,8 @@ class Socket
     void SetSendRateLimit( int Bps = -1 );
     void OnTimer( int mselapsed );
 
+    void SetTimeout( const int seconds );
+
     protected:
 
   // Socket variables
