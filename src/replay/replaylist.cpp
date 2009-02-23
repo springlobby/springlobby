@@ -279,8 +279,8 @@ void ReplayList::GetBattleFromScript( const wxString& script_, OfflineBattle& ba
                 if ( teaminfos.exist )
                 {
 										user.BattleStatus().ally = teaminfos.AllyTeam;
-										user.BattleStatus().posx = teaminfos.StartPosX;
-										user.BattleStatus().posy = teaminfos.StartPosY;
+										user.BattleStatus().pos.x = teaminfos.StartPosX;
+										user.BattleStatus().pos.y = teaminfos.StartPosY;
 										user.BattleStatus().colour = teaminfos.RGBColor;
 										user.BattleStatus().handicap = teaminfos.Handicap;
 										if ( teaminfos.SideNum >= 0 ) user.BattleStatus().side = teaminfos.SideNum;
@@ -354,7 +354,7 @@ void ReplayList::GetHeaderInfo( Replay& rep, const wxString& ReplayPath )
         replay.Read( &unixtime, 8 );
         wxDateTime dt;
         dt.Set( (time_t) unixtime );
-        /// todo: add 2 strings one for date other for time?
+        // todo: add 2 strings one for date other for time?
         wxString date = dt.FormatISODate()+_T(" ")+dt.FormatISOTime();
         rep.date = date;
     }

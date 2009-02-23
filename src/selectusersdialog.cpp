@@ -14,6 +14,7 @@
 #include <wx/statline.h>
 #include <wx/button.h>
 #include <wx/tokenzr.h>
+#include <wx/wupdlock.h>
 
 #include "iconimagelist.h"
 #include "ui.h"
@@ -115,7 +116,7 @@ void SelectUsersDialog::PopulateUsersList()
   if ( ui().IsConnected() ) {
     const UserList& userlist = ui().GetServer().GetUserList();
 
-    m_user_list->Freeze();
+    wxWindowUpdateLocker noUpdates(m_user_list);
     for ( unsigned int i = 0; i < userlist.GetNumUsers(); ++i) {
       wxString name = userlist.GetUser( i ).GetNick();
       if ( !useractions().IsKnown( name ) && !ui().IsThisMe( name ) ) {
@@ -124,14 +125,12 @@ void SelectUsersDialog::PopulateUsersList()
       }
     }
     Sort();
-    m_user_list->Thaw();
-
   }
 }
 
 void SelectUsersDialog::ClearList()
 {
-  m_user_list->Freeze();
+    wxWindowUpdateLocker noUpdates(m_user_list);
   long item = -1;
   while ( true ) {
     item = m_user_list->GetNextItem(item, wxLIST_NEXT_ALL, wxLIST_STATE_DONTCARE);
@@ -140,7 +139,6 @@ void SelectUsersDialog::ClearList()
     RemoveUserFromList( item );
     item = -1;
   }
-  m_user_list->Thaw();
 }
 
 long SelectUsersDialog::AddUserToList( const wxString& nick, const wxString& flag )
@@ -219,7 +217,7 @@ void SelectUsersDialog::OnNameFilterChange( wxCommandEvent& event )
 
   wxArrayString del;
 
-  m_user_list->Freeze();
+wxWindowUpdateLocker noUpdates(m_user_list);
   while ( true ) {
     item = m_user_list->GetNextItem(item, wxLIST_NEXT_ALL, wxLIST_STATE_DONTCARE);
     if ( item == -1 )
@@ -272,7 +270,7 @@ void SelectUsersDialog::OnNameFilterChange( wxCommandEvent& event )
     if ( item != -1 )
       m_user_list->SetItemState(item, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
   }
-  m_user_list->Thaw();
+
 }
 
 void SelectUsersDialog::OnNameActivated( wxListEvent& event )
@@ -326,7 +324,6 @@ int wxCALLBACK SelectUsersDialog::CompareName(long item1, long item2, long sortD
 
 void SelectUsersDialog::Sort()
 {
-  m_user_list->Freeze();
+  wxWindowUpdateLocker noUpdates(m_user_list);
   m_user_list->SortItems(CompareName, (wxUIntPtr)m_user_list);
-  m_user_list->Thaw();
 }

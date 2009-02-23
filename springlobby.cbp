@@ -140,6 +140,8 @@
 		<Unit filename="src/Helper/TextCompletionDatabase.hpp" />
 		<Unit filename="src/Helper/colorbutton.cpp" />
 		<Unit filename="src/Helper/colorbutton.h" />
+		<Unit filename="src/Helper/tasclientimport.cpp" />
+		<Unit filename="src/Helper/tasclientimport.h" />
 		<Unit filename="src/Helper/wxTranslationHelper.cpp" />
 		<Unit filename="src/Helper/wxTranslationHelper.h" />
 		<Unit filename="src/Helper/wxtextctrlhist.cpp" />
@@ -175,7 +177,6 @@
 		<Unit filename="src/battleoptionstab.h" />
 		<Unit filename="src/battleroomlistctrl.cpp" />
 		<Unit filename="src/battleroomlistctrl.h" />
-		<Unit filename="src/battleroommmoptionstab.cpp" />
 		<Unit filename="src/battleroommmoptionstab.h" />
 		<Unit filename="src/battleroomtab.cpp" />
 		<Unit filename="src/battleroomtab.h" />
@@ -293,6 +294,8 @@
 		<Unit filename="src/mmoptionmodel.h" />
 		<Unit filename="src/mmoptionswrapper.cpp" />
 		<Unit filename="src/mmoptionswrapper.h" />
+		<Unit filename="src/mmoptionwindows.cpp" />
+		<Unit filename="src/mmoptionwindows.h" />
 		<Unit filename="src/nicklistctrl.cpp" />
 		<Unit filename="src/nicklistctrl.h" />
 		<Unit filename="src/nonportable.h" />
@@ -371,6 +374,7 @@
 		<Unit filename="src/springunitsynclib.h" />
 		<Unit filename="src/tasserver.cpp" />
 		<Unit filename="src/tasserver.h" />
+		<Unit filename="src/tasservertokentable.h" />
 		<Unit filename="src/tdfcontainer.cpp" />
 		<Unit filename="src/tdfcontainer.h" />
 		<Unit filename="src/thread.cpp" />

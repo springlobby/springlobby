@@ -25,14 +25,6 @@ BEGIN_EVENT_TABLE(CustomMessageBox ,wxDialog)
   EVT_BUTTON(wxID_NO, CustomMessageBox::OnOptionsNo)
 END_EVENT_TABLE()
 
-#ifdef HAVE_WX26
-    enum
-    {
-        // all flags allowed in wxDialogBase::CreateButtonSizer()
-        ButtonSizerFlags = wxOK|wxCANCEL|wxYES|wxNO|wxHELP|wxNO_DEFAULT
-    };
-#endif
-
 wxWindow* CustomMessageBoxBase::m_settingsWindow = 0;
 wxWindow* CustomMessageBoxBase::m_lobbyWindow = 0;
 static CustomMessageBox* s_nonmodbox = 0;

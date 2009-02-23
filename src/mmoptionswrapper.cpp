@@ -98,15 +98,18 @@ bool OptionsWrapper::loadOptions(GameOption modmapFlag, wxString name)
 			break;
     case EngineOption:
     {
-        opt.int_map[_T("startpostype")] = mmOptionInt( _("Start Position Type"),_T("startpostype"),
-        _("How players will select where to be spawned in the map\n0: fixed map positions\n1: random map positions\n2: chose in game\n3: chose in the lobby before starting"),
-        0, 1, 0, 3);
+
+        mmOptionList startpos( _("Start Position Type"),_T("startpostype"), _("How players will select where to be spawned in the map\n0: fixed map positions\n1: random map positions\n2: chose in game\n3: chose in the lobby before starting"), _T("0") );
+        startpos.addItem( _T("0"), _("Fixed"), _T("Use the map defined start positions, the positions will be assigned incrementally from the team with lowest number to highest") );
+        startpos.addItem( _T("1"), _("Random"), _T("Use the map defined start positions, the positions will be assigned randomly, only the first positions will be used to rotate between the players") );
+        startpos.addItem( _T("2"), _("Chose in game"), _T("Each player will be able to pick it's own starting point right before the game will start, the range can be limited using bounding boxes for allies from the host") );
+        startpos.addItem( _T("3"), _("Chose before game"), _T("The host will positionate the players start positions in the map preview before the game will be launched") );
+        opt.list_map[_T("startpostype")] = startpos;
         break;
     }
     case PrivateOptions:
     {
-        opt.string_map[_T("restrictions")] = mmOptionString(_("List of restricted units"), /// tab separated list
-        _T("restrictedunits"), _T("Units in this list won't be available in game"), _T(""), 0 );
+        opt.string_map[_T("restrictions")] = mmOptionString(_("List of restricted units"), _T("restrictedunits"), _T("Units in this list won't be available in game"), _T(""), 0 ); // tab separated list
         opt.string_map[_T("mapname")] = mmOptionString(_("Map name"), _T("mapname"), _T("Map name"), _T(""), 0 );
         break;
     }
@@ -141,11 +144,6 @@ bool OptionsWrapper::keyExists(wxString key, GameOption modmapFlag, bool showErr
 	else if ( opts[modmapFlag].float_map.find(key)!=  opts[modmapFlag].float_map.end())
 	{
 		optType = opt_float;
-		exists = true;
-	}
-	else if ( opts[modmapFlag].int_map.find(key)!=  opts[modmapFlag].int_map.end())
-	{
-		optType = opt_int;
 		exists = true;
 	}
 	else if ( opts[modmapFlag].section_map.find(key)!=  opts[modmapFlag].section_map.end())
@@ -210,10 +208,6 @@ OptionsWrapper::wxStringTripleVec OptionsWrapper::getOptions( GameOption modmapF
 		list.push_back( wxStringTriple( (*it).first, wxStringPair ( it->second.name, it->second.value ) ) );
 	}
 
-	for (IUnitSync::OptionMapIntConstIter it = opts[modmapFlag].int_map.begin(); it != opts[modmapFlag].int_map.end(); ++it)
-	{
-		list.push_back( wxStringTriple( (*it).first, wxStringPair ( it->second.name, i2s(it->second.value) ) ) );
-	}
 	return list;
 }
 
@@ -240,10 +234,6 @@ std::map<wxString,wxString> OptionsWrapper::getOptionsMap( GameOption modmapFlag
 		map[it->first] = it->second.value;
 	}
 
-	for (IUnitSync::OptionMapIntConstIter it = opts[modmapFlag].int_map.begin(); it != opts[modmapFlag].int_map.end(); ++it)
-	{
-		map[it->first] =  i2s(it->second.value);
-	}
 	return map;
 }
 
@@ -290,8 +280,6 @@ wxString OptionsWrapper::getSingleValue(wxString key, GameOption modmapFlag) con
 			return f2s( tempOpt.float_map[key].value );
 		case opt_bool:
 			return i2s( tempOpt.bool_map[key].value );
-		case opt_int:
-			return i2s( tempOpt.int_map[key].value );
 		case opt_string:
 			return  tempOpt.string_map[key].value ;
 		case opt_list:
@@ -303,6 +291,45 @@ wxString OptionsWrapper::getSingleValue(wxString key, GameOption modmapFlag) con
 	}
 
 	return wxEmptyString;
+}
+
+wxString OptionsWrapper::getDefaultValue(wxString key, GameOption modmapFlag) const
+{
+	OptionType optType = opt_undefined;
+	wxString ret;
+	if ( keyExists(key,modmapFlag,false,optType) )
+	{
+			//purposefully create a copy, no better idea
+	    GameOptions tempOpt = opts[modmapFlag];
+		switch ( optType )
+		{
+			{
+			case opt_bool:
+				ret = TowxString( tempOpt.bool_map[key].def );
+				break;
+			}
+			case opt_float:
+			{
+				ret = TowxString( tempOpt.float_map[key].def );
+				break;
+			}
+			case opt_string:
+			{
+				ret = tempOpt.string_map[key].def;
+				break;
+			}
+			case opt_list:
+			{
+				ret = tempOpt.list_map[key].def;
+				break;
+			}
+			default:
+			{
+				break;
+			}
+		}
+	}
+	return ret;
 }
 
 bool  OptionsWrapper::setSingleOptionTypeSwitch(wxString key, wxString value, GameOption modmapFlag, OptionType optType)
@@ -321,20 +348,6 @@ bool  OptionsWrapper::setSingleOptionTypeSwitch(wxString key, wxString value, Ga
 			}
 			else
 				(opts[modmapFlag].float_map)[key].value = d_val;
-			break;
-		}
-		case opt_int :
-		{
-			//test if min < val < max
-			long l_val = 0;
-			bool l_conv_ok = value.ToLong(&l_val);
-			if( !l_conv_ok || l_val < (opts[modmapFlag].int_map)[key].min || l_val > (opts[modmapFlag].int_map)[key].max )
-			{
-				wxLogWarning(_T("recieved number option exceeds boundaries"));
-				return false;
-			}
-			else
-				(opts[modmapFlag].int_map)[key].value = l_val;
 			break;
 		}
 		case opt_bool :

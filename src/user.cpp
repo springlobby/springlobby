@@ -147,8 +147,8 @@ void CommonUser::UpdateBattleStatus( const UserBattleStatus& status )
   if( !status.aishortname.IsEmpty() ) m_bstatus.aishortname = status.aishortname;
   if( !status.aiversion.IsEmpty() ) m_bstatus.aiversion = status.aiversion;
   if( !status.owner.IsEmpty() ) m_bstatus.owner = status.owner;
-  if( status.posx > 0 ) m_bstatus.posx = status.posx;
-  if( status.posy > 0 ) m_bstatus.posy = status.posy;
+  if( status.pos.x > 0 ) m_bstatus.pos.x = status.pos.x;
+  if( status.pos.y > 0 ) m_bstatus.pos.y = status.pos.y;
 
   // update ip and port if those were set.
   if( !status.ip.IsEmpty() ) m_bstatus.ip = status.ip;

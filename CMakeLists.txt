@@ -45,7 +45,7 @@ SET( OPTION_TRANSLATION_SUPPORT
 
 # Here you can define, what Libraries of wxWidgets you need for your Application. You can figure out what Libraries you need here:
 # http://www.wxwidgets.org/manuals/2.8/wx_librarieslist.html
-SET(wxWidgets_USE_LIBS base core gl net adv qa aui )
+SET(wxWidgets_USE_LIBS base core gl net adv aui )
 
 # We need the Find package for wxWidgets to work
 IF (NOT WIN32)
@@ -62,7 +62,7 @@ IF (NOT WIN32)
     ENDIF(wxWidgets_FOUND)
 ELSE (NOT WIN32)
     INCLUDE_DIRECTORIES( ${wxWidgets_INCLUDE_DIRS} )
-    SET(wxWidgets_LIBRARIES wx_baseu-2.8-i586-mingw32msvc wx_mswu_core-2.8-i586-mingw32msvc wx_baseu_net-2.8-i586-mingw32msvc wx_mswu_adv-2.8-i586-mingw32msvc wx_mswu_qa-2.8-i586-mingw32msvc wx_mswu_aui-2.8-i586-mingw32msvc )
+    SET(wxWidgets_LIBRARIES wx_baseu-2.8-i586-mingw32msvc wx_mswu_core-2.8-i586-mingw32msvc wx_baseu_net-2.8-i586-mingw32msvc wx_mswu_adv-2.8-i586-mingw32msvc  wx_mswu_aui-2.8-i586-mingw32msvc )
     link_directories( ${wxWidgets_LIB_DIR} )
 ENDIF(NOT WIN32)
 
@@ -198,7 +198,6 @@ SET(SpringLobbySrc
 	src/battleoptionstab.cpp
 	src/battleroomlistctrl.cpp
 	src/battleroomtab.cpp
-	src/battleroommmoptionstab.cpp
 	src/crc.cpp
 	src/channel/channel.cpp
 	src/channel/channellist.cpp
@@ -227,6 +226,7 @@ SET(SpringLobbySrc
 	src/mapctrl.cpp
 	src/mapgridctrl.cpp
 	src/mapselectdialog.cpp
+	src/mmoptionwindows.cpp
 	src/mmoptionmodel.cpp
 	src/mmoptionswrapper.cpp
 	src/nicklistctrl.cpp
@@ -265,6 +265,7 @@ SET(SpringLobbySrc
 	src/utils.cpp
 	src/globalsmanager.cpp
 	src/Helper/wxTranslationHelper.cpp
+	src/Helper/tasclientimport.cpp
 )
 
 SET(SettingsSrc

@@ -36,7 +36,7 @@ void ServerEvents::OnDisconnected()
     m_serv.SetRequiredSpring (_T(""));
     ui().OnDisconnected( m_serv );
 #ifndef NO_TORRENT_SYSTEM
-    try /// settings may be already destroyed
+    try // settings may be already destroyed
     {
         if ( sett().GetTorrentSystemAutoStartMode() == 0 ) torrent().DisconnectFromP2PSystem();
     }
@@ -332,12 +332,6 @@ void ServerEvents::OnUserJoinedBattle( int battleid, const wxString& nick )
                 ui().OnBattleStarted( battle );
             }
         }
-        if ( battle.IsFounderMe() &&  ( battle.GetNumUsers() > 31 ) )
-        {
-          battle.DoAction( _T("is locking the battle because Spring does not support more than 32 players (including spectators)" ) );
-          battle.SetIsLocked( true );
-          battle.SendHostInfo( IBattle::HI_Locked );
-        }
     }
     catch (std::runtime_error &except)
     {
@@ -411,6 +405,42 @@ void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const w
 								battle.CustomBattleOptions().setSingleOption( key, value, OptionsWrapper::ModOption );
                 battle.Update(  wxString::Format(_T("%d_%s"), OptionsWrapper::ModOption,  key.c_str() ) );
             }
+            else if ( key.Left( 8 ) == _T( "restrict" ) )
+            {
+            	OnBattleDisableUnit( battleid, key.AfterFirst(_T('/')), s2l(value) );
+            }
+            else if ( key.Left( 4 ) == _T( "team" ) && key.Contains( _T("startpos") ) )
+            {
+            	 int team = s2l( key.BeforeFirst(_T('/')).Mid( 4 ) );
+							 if ( key.Contains( _T("startposx") ) )
+							 {
+							 	 int numusers = battle.GetNumUsers();
+							 	 for ( int i = 0; i < numusers; i++ )
+							 	 {
+							 	 	 User& usr = battle.GetUser( i );
+							 	 	 UserBattleStatus& status = usr.BattleStatus();
+							 	 	 if ( status.team == team )
+							 	 	 {
+							 	 	 	 status.pos.x = s2l( value );
+										 battle.OnUserBattleStatusUpdated( usr, status );
+							 	 	 }
+							 	 }
+							 }
+							 else if ( key.Contains( _T("startposy") ) )
+							 {
+							 	 int numusers = battle.GetNumUsers();
+							 	 for ( int i = 0; i < numusers; i++ )
+							 	 {
+							 	 	 User& usr = battle.GetUser( i );
+							 	 	 UserBattleStatus& status = usr.BattleStatus();
+							 	 	 if ( status.team == team )
+							 	 	 {
+							 	 	 	 status.pos.y = s2l( value );
+							 	 	 	 battle.OnUserBattleStatusUpdated( usr, status );
+							 	 	 }
+							 	 }
+							 }
+            }
             else
             {
 							battle.CustomBattleOptions().setSingleOption( key,  value, OptionsWrapper::EngineOption );
@@ -449,13 +479,13 @@ void ServerEvents::OnBattleClosed( int battleid )
 }
 
 
-void ServerEvents::OnBattleDisableUnit( int battleid, const wxString& unitname )
+void ServerEvents::OnBattleDisableUnit( int battleid, const wxString& unitname, int count )
 {
     wxLogDebugFunc( _T("") );
     try
     {
         Battle& battle = m_serv.GetBattle( battleid );
-        battle.DisableUnit( unitname );
+        battle.RestrictUnit( unitname, count );
         battle.Update( wxString::Format( _T("%d_restrictions"), OptionsWrapper::PrivateOptions ) );
     }
     catch ( assert_exception ) {}
@@ -468,7 +498,7 @@ void ServerEvents::OnBattleEnableUnit( int battleid, const wxString& unitname )
     try
     {
         Battle& battle = m_serv.GetBattle( battleid );
-        battle.EnableUnit( unitname );
+        battle.UnrestrictUnit( unitname );
         battle.Update( wxString::Format( _T("%d_restrictions"), OptionsWrapper::PrivateOptions ) );
     }
     catch ( assert_exception ) {}
@@ -481,7 +511,7 @@ void ServerEvents::OnBattleEnableAllUnits( int battleid )
     try
     {
         Battle& battle = m_serv.GetBattle( battleid );
-        battle.EnableAllUnits();
+        battle.UnrestrictAllUnits();
         battle.Update( wxString::Format( _T("%d_restrictions"), OptionsWrapper::PrivateOptions ) );
     }
     catch ( assert_exception ) {}
@@ -770,8 +800,8 @@ void ServerEvents::OnClientIPPort( const wxString &username, const wxString &ip,
 
         if (m_serv.GetCurrentBattle()->GetNatType() != NAT_None && (udpport==0))
         {
-            /// todo: better warning message
-            ///something.OutputLine( _T(" ** ") + who.GetNick() + _(" does not support nat traversal! ") + GetChatTypeStr() + _T("."), sett().GetChatColorJoinPart(), sett().GetChatFont() );
+            // todo: better warning message
+            //something.OutputLine( _T(" ** ") + who.GetNick() + _(" does not support nat traversal! ") + GetChatTypeStr() + _T("."), sett().GetChatColorJoinPart(), sett().GetChatFont() );
             ui().OnBattleAction(*m_serv.GetCurrentBattle(),username,_(" does not really support nat traversal"));
         }
         m_serv.GetCurrentBattle()->CheckBan(user);

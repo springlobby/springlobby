@@ -56,8 +56,10 @@ springlobby_LDADD = \
 	$(LIBTORRENT_LIBS) \
 	$(SDL_LIBS)
 
-#no better idea, this needs to included in tarball, but not compiled
-EXTRA_DIST = src/customvirtlistctrl.cpp 
+#put template source files here (those need to be present in tarball, but not compiled)
+EXTRA_DIST = \
+	src/battleroommmoptionstab.cpp \
+	src/customvirtlistctrl.cpp
 
 springsettings_LDADD = \
 	$(WX_LIBS)
@@ -528,6 +530,7 @@ springlobby_SOURCES = \
 	src/springunitsync.h \
 	src/tasserver.cpp \
 	src/tasserver.h \
+	src/tasservertokentable.h \
 	src/ui.cpp \
 	src/ui.h \
 	src/uiutils.cpp \
@@ -866,7 +869,6 @@ springlobby_SOURCES = \
 	src/mmoptionswrapper.h \
 	src/mmoptionswrapper.cpp \
 	src/battleroommmoptionstab.h \
-	src/battleroommmoptionstab.cpp \
 	src/torrentwrapper.cpp \
 	src/torrentwrapper.h \
 	src/thingdef.h \
@@ -884,6 +886,8 @@ springlobby_SOURCES = \
 	src/Helper/TextCompletionDatabase.cpp \
 	src/Helper/wxTranslationHelper.h \
 	src/Helper/wxTranslationHelper.cpp \
+	src/Helper/tasclientimport.h \
+	src/Helper/tasclientimport.cpp \
 	src/channel/channelchooser.cpp \
 	src/channel/channelchooser.h \
 	src/channel/channelchooserdialog.cpp \
@@ -924,7 +928,9 @@ springlobby_SOURCES = \
 	src/thread.cpp \
 	src/thread.h \
 	src/globalsmanager.cpp \
-	src/globalsmanager.h
+	src/globalsmanager.h \
+	src/mmoptionwindows.cpp \
+	src/mmoptionwindows.h
 
 
 

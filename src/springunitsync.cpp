@@ -634,7 +634,7 @@ wxImage SpringUnitSync::GetSidePicture( const wxString& modname, const wxString&
     cache.InitAlpha();
     for ( int x = 0; x < cache.GetWidth(); x++ )
       for ( int y = 0; y < cache.GetHeight(); y++ )
-        if ( cache.GetBlue( x, y ) == 255 && cache.GetGreen( x, y ) == 255 && cache.GetRed( x, y ) == 255 ) cache.SetAlpha( x, y, 0 ); /// set pixel to be transparent
+        if ( cache.GetBlue( x, y ) == 255 && cache.GetGreen( x, y ) == 255 && cache.GetRed( x, y ) == 255 ) cache.SetAlpha( x, y, 0 ); // set pixel to be transparent
     cache.SaveFile( GetFileCachePath( modname, _T(""), true ) + _T("-") + SideName + _T(".sidepicture.png"), wxBITMAP_TYPE_PNG );
   }
   return cache;
@@ -1054,6 +1054,16 @@ wxString SpringUnitSync::GetArchivePath( const wxString& name )
   return susynclib().GetArchivePath( name );
 }
 
+wxString SpringUnitSync::GetDefaultNick()
+{
+	return susynclib().GetSpringConfigString( _T("name"), _T("") );
+}
+
+void SpringUnitSync::SetDefaultNick( const wxString& nick )
+{
+	susynclib().SetSpringConfigString( _T("name"), nick );
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////// Unitsync prefetch/background thread code
 
@@ -1289,6 +1299,7 @@ void SpringUnitSync::GetMapExAsync( const wxString& mapname, int evtHandlerId )
   work = new GetMapExAsyncWorkItem( this, mapname, evtHandlerId );
   m_cache_thread.DoWork( work, 200 /* higher prio then GetMinimapAsync */ );
 }
+
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////// EvtHandlerCollection code

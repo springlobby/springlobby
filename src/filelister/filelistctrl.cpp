@@ -63,7 +63,7 @@ FileListCtrl::FileListCtrl( wxWindow* parent, FileListDialog* fld  ):
 void FileListCtrl::SetColumnWidths()
 {
 #if defined(__WXMAC__)
-/// on mac, autosize does not work at all
+// on mac, autosize does not work at all
 	SetColumnWidth( 0, 250 );
 	SetColumnWidth( 1, 60 );
 	SetColumnWidth( 2, 150 );

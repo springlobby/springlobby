@@ -15,11 +15,14 @@
 #include "settings.h"
 #include "settings++/custom_dialogs.h"
 #include "useractions.h"
+<<<<<<< HEAD:src/battlelistctrl.cpp
 #include "Helper/sortutil.h"
 
 #ifndef HAVE_WX26
+=======
+>>>>>>> master:src/battlelistctrl.cpp
 #include "aui/auimanager.h"
-#endif
+
 
 BEGIN_EVENT_TABLE(BattleListCtrl, CustomVirtListCtrl< IBattle *>)
 
@@ -41,10 +44,8 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui ):
             wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("BattleListCtrl"), 10, &CompareOneCrit),
   m_ui(ui)
 {
-
-#ifndef HAVE_WX26
     GetAui().manager->AddPane( this, wxLEFT, _T("battlelistctrl") );
-#endif
+
 
     const int hd = wxLIST_AUTOSIZE_USEHEADER;
 

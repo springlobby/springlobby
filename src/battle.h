@@ -92,6 +92,8 @@ class Battle : public IBattle
     User& GetMe();
     bool IsFounderMe() const;
 
+    void UserPositionChanged( const User& user );
+
   protected:
     // Battle variables
 

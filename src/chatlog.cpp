@@ -29,7 +29,7 @@ ChatLog::ChatLog(const wxString& server,const wxString& room):
     #ifdef __WXMSW__
         m_server.Replace( wxT(":"), wxT("_") ) ;
     #endif
-    /// testing.
+    // testing.
     // m_active = OpenLogFile(m_server,m_room) ;
     wxLogMessage( _T("ChatLog::ChatLog( %s, %s )"), m_server.c_str(), m_room.c_str()) ;
 }
@@ -42,10 +42,10 @@ ChatLog::~ChatLog()
     wxDateTime now = wxDateTime::Now();
     WriteLine( _("### Session Closed at [") + now.Format( _T("%Y-%m-%d %H:%M") ) + _("]") );
     WriteLine( _T(" \n \n \n") );
-    /// crashes right there on close.
+    // crashes right there on close.
     m_logfile->Close();
   }
-  /// it is safe to delete a null pointer.
+  // it is safe to delete a null pointer.
  	delete m_logfile;
   m_logfile = 0;
 }

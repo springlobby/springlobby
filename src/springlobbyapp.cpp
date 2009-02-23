@@ -31,7 +31,6 @@
 #include "ui.h"
 #include "iunitsync.h"
 #include "channel/channel.h"
-#include "httpdownloader.h"
 #include "settings++/custom_dialogs.h"
 #include "settings++/se_utils.h"
 #ifndef NO_TORRENT_SYSTEM
@@ -41,6 +40,7 @@
 #include "replay/replaytab.h"
 #include "globalsmanager.h"
 #include "Helper/wxTranslationHelper.h"
+#include "Helper/tasclientimport.h"
 
 const unsigned int TIMER_ID         = 101;
 const unsigned int TIMER_INTERVAL   = 100;
@@ -76,7 +76,6 @@ SpringLobbyApp::SpringLobbyApp()
     :m_translationhelper( NULL )
 {
     m_timer = new wxTimer(this, TIMER_ID);
-    m_otadownloader = NULL;
     SetAppName( _T("springlobby") );
 }
 
@@ -196,6 +195,24 @@ bool SpringLobbyApp::OnInit()
 				 sett().SetServer( _T("Backup server 2"), _T("springbackup2.servegame.org"), 8200 );
 				 sett().SetServer( _T("Test server"), _T("taspringmaster.servegame.com"), 8300 );
 			}
+			if ( sett().GetSettingsVersion() < 10 )
+			{
+				sett().ConvertOldColorSettings();
+			}
+			if ( sett().GetSettingsVersion() < 11 )
+			{
+		  #ifdef __WXMSW__
+				wxRegKey UACpath( _T("HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System") ); // check if UAC is on, skip dialog if not
+				if( UACpath.Exists() )
+				{
+					long value;
+					if( UACpath.QueryValue( _T("EnableLUA"), &value ) ) // reg key not present -> not vista
+					{
+						if( value != 0 ) usync().SetSpringDataPath(_T("")); // UAC is on, fix the spring data path
+					}
+				}
+			#endif
+			}
     }
 
     ui().ReloadUnitSync(); // first time load of unitsync
@@ -210,43 +227,17 @@ bool SpringLobbyApp::OnInit()
         wxLogMessage( _T("first time startup"));
         wxMessageBox(_("Hi ") + wxGetUserName() + _(",\nIt looks like this is your first time using SpringLobby. I have guessed a configuration that I think will work for you but you should review it, especially the Spring configuration. \n\nWhen you are done you can go to the File menu, connect to a server, and enjoy a nice game of Spring :)"), _("Welcome"),
                      wxOK | wxICON_INFORMATION, &ui().mw() );
-#ifdef HAVE_WX26
-        wxMessageBox(_("You're using a wxwidgets library of the 2.6.x series\n battle filtering, advanced gui and joining/hosting games using nat traversal\n won't be available"), _("Missing Functionality"), wxICON_INFORMATION, &ui().mw() );
-#endif
-
         SetupUserFolders();
 
 				if ( sett().ShouldAddDefaultServerSettings() ) sett().SetDefaultServerSettings();
 				if ( sett().ShouldAddDefaultChannelSettings() )
 				{
-					sett().AddChannelJoin( _T("springlobby"), _T("") );
+					sett().AddChannelJoin( _T("main"), _T("") );
 					sett().AddChannelJoin( _T("newbies"), _T("") );
 				}
 				if ( sett().ShouldAddDefaultGroupSettings() ) sett().AddGroup( _("Default") );
 
         if ( !wxDirExists( wxStandardPaths::Get().GetUserDataDir() ) ) wxMkdir( wxStandardPaths::Get().GetUserDataDir() );
-        wxString sep ( wxFileName::GetPathSeparator() );
-				if ( !wxDirExists( sett().GetCurrentUsedDataDir() + sep + _T("base") ) ) wxMkdir( sett().GetCurrentUsedDataDir() + sep + _T("base") );
-
-				if ( !sett().SkipDownloadOtaContent() )
-				{
-					// ask for downloading ota content if archive not found, start downloader in background
-					wxString url= _T("ipxserver.dyndns.org/games/spring/mods/xta/base-ota-content.zip");
-					wxString destFilename = sett().GetCurrentUsedDataDir() + sep + _T("base") + sep + _T("base-ota-content.zip");
-					bool contentExists = false;
-					if ( usync().IsLoaded() )
-					{
-						contentExists = usync().FileExists(_T("base/otacontent.sdz")) && usync().FileExists(_T("base/tacontent_v2.sdz")) && usync().FileExists(_T("base/tatextures_v062.sdz"));
-					}
-
-					if ( !contentExists &&
-									customMessageBox(SL_MAIN_ICON, _("Do you want to download OTA content?\n"
-																									 "You need this to be able to play TA based mods.\n"
-																									 "You need to own a copy of Total Annihilation do legally download it."),_("Download OTA content?"),wxYES_NO) == wxYES )
-					{
-							m_otadownloader = new HttpDownloader( url, destFilename );
-					}
-				}
 
         customMessageBoxNoModal(SL_MAIN_ICON, _("By default SpringLobby reports some statistics.\nYou can disable that on options tab --> General."),_("Notice"),wxOK );
 
@@ -259,8 +250,16 @@ bool SpringLobbyApp::OnInit()
 				wxString uikeyslocation = pl.FindValidPath( _T("uikeys.txt") );
 				if ( !uikeyslocation.IsEmpty() )
 				{
-					wxCopyFile( uikeyslocation, sett().GetCurrentUsedDataDir() + sep + _T("uikeys.txt"), false );
+					wxCopyFile( uikeyslocation, sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("uikeys.txt"), false );
 				}
+
+    #ifdef __WXMSW__
+        if ( TASClientPresent() &&
+                customMessageBox(SL_MAIN_ICON, _("Should I try to import (some) TASClient settings?\n" ),_("Import settings?"), wxYES_NO ) == wxYES )
+        {
+            ImportTASClientSettings();
+        }
+    #endif
 
         ui().mw().ShowConfigure();
     }
@@ -297,17 +296,14 @@ int SpringLobbyApp::OnExit()
     }
 
 
-    if ( m_otadownloader != 0 )
-        delete m_otadownloader ;
-
   #ifndef NO_TORRENT_SYSTEM
   //if( sett().GetTorrentSystemAutoStartMode() == 1 )
-  torrent().DisconnectFromP2PSystem();/// Cant hurt to disconnect unconditionally.
+  torrent().DisconnectFromP2PSystem();// Cant hurt to disconnect unconditionally.
   #endif
 
   m_timer->Stop();
 
-  sett().SaveSettings(); /// to make sure that cache path gets saved before destroying unitsync
+  sett().SaveSettings(); // to make sure that cache path gets saved before destroying unitsync
 
 	if ( usync().IsLoaded() )
 	{
@@ -359,19 +355,9 @@ tryCreateDirectory(const wxString& name, int perm = 0775, int flags = 0)
 
 void SpringLobbyApp::SetupUserFolders()
 {
-#ifndef HAVE_WX26
       wxString sep = wxFileName::GetPathSeparator();
       wxString defaultdir = wxFileName::GetHomeDir() + sep +_T("spring");
       wxArrayString choices;
-#ifdef __WXMSW__
-      wxRegKey UACpath( _T("HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System") ); // check if UAC is on, skip dialog if not
-      if( !UACpath.Exists() ) return;
-      long value;
-      if( !UACpath.QueryValue( _T("EnableLUA"), &value ) ) return; // reg key not present -> not vista -> dialog useless
-			if( value == 0 ) return; // UAC is off -> skip dialog
-
-			int createdefault = choices.Add( _("Create a spring directory in my documents folder") );
-#endif
 
       int donothing = choices.Add( _("Do nothing") );
       int createcustompath = choices.Add( _("Create a folder in a custom path (you'll get prompted for the path)") );
@@ -386,9 +372,6 @@ void SpringLobbyApp::SetupUserFolders()
       bool createdirs = true;
       if ( result == choseexisting ) createdirs = false;
       else if ( result == donothing ) return;
-      #ifdef __WXMSW__
-      else if ( result == createdefault ) dir = defaultdir;
-      #endif
 
       if ( result == createcustompath || result == choseexisting ) dir = wxDirSelector( _("Choose a folder"), defaultdir );
 
@@ -413,7 +396,6 @@ void SpringLobbyApp::SetupUserFolders()
       {
 				usync().SetSpringDataPath(dir);
       }
-#endif
 }
 
 bool SpringLobbyApp::SelectLanguage()

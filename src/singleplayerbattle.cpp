@@ -15,10 +15,10 @@
 SinglePlayerBattle::SinglePlayerBattle(Ui& ui, MainSinglePlayerTab& msptab):
   m_ui(ui),
   m_sptab(msptab),
-  m_me( User( _T("Player") ) )
+  m_me( User( _("Player") ) )
 {
 	OnUserAdded( m_me );
-	m_me.BattleStatus().colour = GetFreeColour( m_me );
+	m_me.BattleStatus().colour = sett().GetBattleLastColour();
   CustomBattleOptions().setSingleOption( _T("startpostype"), wxString::Format(_T("%d"), ST_Pick), OptionsWrapper::EngineOption );
 }
 

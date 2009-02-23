@@ -9,6 +9,7 @@
 #include <wx/colordlg.h>
 #include <wx/colour.h>
 #include <wx/log.h>
+
 #include <stdexcept>
 #include <vector>
 
@@ -24,11 +25,7 @@
 #include "uiutils.h"
 #include "countrycodes.h"
 #include "mainwindow.h"
-
-#ifndef HAVE_WX26
 #include "aui/auimanager.h"
-#endif
-
 #include "settings++/custom_dialogs.h"
 
 
@@ -38,6 +35,7 @@ BEGIN_EVENT_TABLE( BattleroomListCtrl,  CustomListCtrl)
   EVT_LIST_COL_CLICK       ( BRLIST_LIST, BattleroomListCtrl::OnColClick )
   EVT_MENU                 ( BRLIST_SPEC, BattleroomListCtrl::OnSpecSelect )
   EVT_MENU                 ( BRLIST_KICK, BattleroomListCtrl::OnKickPlayer )
+  EVT_LIST_ITEM_ACTIVATED( BRLIST_LIST, BattleroomListCtrl::OnActivateItem )
 //  EVT_MENU                 ( BRLIST_ADDCREATEGROUP, BattleroomListCtrl::OnPlayerAddToGroup )
 //  EVT_MENU                 ( BRLIST_ADDTOGROUP, BattleroomListCtrl::OnPlayerAddToGroup )
   EVT_MENU                 ( BRLIST_RING, BattleroomListCtrl::OnRingPlayer )
@@ -59,9 +57,7 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, Battle& battle, Ui& ui
   m_sel_user(0), m_sides(0),m_spec_item(0),m_handicap_item(0),
   m_ui(ui)
 {
-  #ifndef HAVE_WX26
   GetAui().manager->AddPane( this, wxLEFT, _T("battleroomlistctrl") );
-  #endif
 
   wxListItem col;
 
@@ -995,4 +991,11 @@ void BattleroomListCtrl::SortList()
   Sort();
   RestoreSelection();
   m_dirty_sort = false;
+}
+
+void BattleroomListCtrl::OnActivateItem( wxListEvent& event )
+{
+    User* usr = items[(size_t)GetSelectedData()];
+    if ( usr != NULL && !usr->BattleStatus().IsBot() )
+        ui().mw().OpenPrivateChat( *usr );
 }

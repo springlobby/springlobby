@@ -386,8 +386,8 @@ void Ui::OpenWebBrowser( const wxString& url )
 //! @note this does not return until the user pressed any of the buttons or closed the dialog.
 bool Ui::Ask( const wxString& heading, const wxString& question )
 {
-    wxMessageDialog ask_dlg( &mw(), question, heading, wxYES_NO );
-    return ( ask_dlg.ShowModal() == wxID_YES );
+    int answer = customMessageBox( SL_MAIN_ICON, question, heading, wxYES_NO );
+    return ( answer == wxYES );
 }
 
 
@@ -625,7 +625,7 @@ bool Ui::IsSpringCompatible()
     message << _T("\n") << _("Online play is currently disabled.");
     customMessageBoxNoModal (SL_MAIN_ICON, message, _("Spring error"), wxICON_EXCLAMATION|wxOK );
     wxLogWarning ( _T("no spring version supported by the server found") );
-    return false; /// no compatible version found
+    return false; // no compatible version found
 }
 
 
@@ -913,7 +913,11 @@ void Ui::OnUserJoinedBattle( IBattle& battle, User& user )
 
     try
     {
-        if ( &mw().GetJoinTab().GetBattleRoomTab().GetBattle() == &battle ) mw().GetJoinTab().GetBattleRoomTab().OnUserJoined( user );
+        if ( &mw().GetJoinTab().GetBattleRoomTab().GetBattle() == &battle )
+        {
+        	 mw().GetJoinTab().GetBattleRoomTab().OnUserJoined( user );
+        	 OnBattleInfoUpdated( battle );
+        }
     }
     catch (...){}
 
@@ -937,6 +941,7 @@ void Ui::OnUserLeftBattle( IBattle& battle, User& user )
         if ( &mw().GetJoinTab().GetBattleRoomTab().GetBattle() == &battle )
         {
             mw().GetJoinTab().GetBattleRoomTab().OnUserLeft( user );
+						OnBattleInfoUpdated( battle );
             if ( &user == &m_serv->GetMe() )
             {
                 mw().GetJoinTab().LeaveCurrentBattle();
@@ -988,9 +993,6 @@ void Ui::OnJoinedBattle( Battle& battle )
     if ( battle.GetNatType() != NAT_None )
     {
         wxLogWarning( _T("joining game with NAT transversal") );
-#ifdef HAVE_WX26
-        customMessageBox(SL_MAIN_ICON, _("This game uses NAT traversal that is not supported by wx 2.6 build of springlobby. \n\nYou will not be able to play in this battle. \nUpdate your wxwidgets to 2.8 or newer to enable NAT traversal support."), _("NAT traversal"), wxOK );
-#endif
     }
 }
 
@@ -1006,6 +1008,7 @@ void Ui::OnUserBattleStatus( IBattle& battle, User& user )
 {
     if ( m_main_win == 0 ) return;
     mw().GetJoinTab().BattleUserUpdated( user );
+    OnBattleInfoUpdated( battle );
 }
 
 
