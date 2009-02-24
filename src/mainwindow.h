@@ -63,7 +63,7 @@ class MainWindow : public wxFrame
 
     // MainWindow interface
     void OpenChannelChat( Channel& channel );
-    void OpenPrivateChat( const User& user );
+    void OpenPrivateChat( const User& user, bool doFocus = false );
 
     void ShowConfigure( const unsigned int page = OPT_PAGE_SPRING );
 

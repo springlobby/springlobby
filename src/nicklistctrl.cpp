@@ -131,7 +131,7 @@ void NickListCtrl::OnActivateItem( wxListEvent& event )
 
   const User* user = m_data[index];
   if ( user ) {
-    ui().mw().OpenPrivateChat( *user );
+    ui().mw().OpenPrivateChat( *user, true ); //true --> setfoucs
   }
   SetSelectedIndex( index );
 }
