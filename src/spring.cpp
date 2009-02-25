@@ -223,7 +223,8 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 			}
 			else
 			{
-				tdf.Append( _T("MyPlayerName"), battle.GetFounder().GetNick() );
+				if ( battle.IsFounderMe() ) tdf.Append( _T("MyPlayerName"), battle.GetFounder().GetNick() );
+				else  tdf.Append(_T("MyPlayerName"), battle.GetMe().GetNick() );
 			}
 
 			if ( !battle.IsFounderMe() )
