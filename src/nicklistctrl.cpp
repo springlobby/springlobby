@@ -58,14 +58,16 @@ NickListCtrl::NickListCtrl( wxWindow* parent, bool show_header, NickListCtrl::Us
     AddColumn( 2, widths[2], _("r"), _T("Rank") );
     AddColumn( 3, widths[3], _("Nickname"), _T("Nickname") );
 
-    m_sortorder[0].col = 0;
-    m_sortorder[0].direction = -1;
-    m_sortorder[1].col = 3;
-    m_sortorder[1].direction = 1;
-    m_sortorder[2].col = 2;
-    m_sortorder[2].direction = 1;
-    m_sortorder[3].col = 1;
-    m_sortorder[3].direction = 1;
+    if ( m_sortorder.size() == 0 ) {
+        m_sortorder[0].col = 0;
+        m_sortorder[0].direction = -1;
+        m_sortorder[1].col = 3;
+        m_sortorder[1].direction = 1;
+        m_sortorder[2].col = 2;
+        m_sortorder[2].direction = 1;
+        m_sortorder[3].col = 1;
+        m_sortorder[3].direction = 1;
+    }
 }
 
 NickListCtrl::~NickListCtrl()

@@ -41,7 +41,8 @@ CustomVirtListCtrl<T>::CustomVirtListCtrl(wxWindow* parent, wxWindowID id, const
   m_highlightAction(hlaction),
   m_bg_color( GetBackgroundColour() ),
   m_dirty_sort(false),
-  m_comparator( m_sortorder, func )
+  m_comparator( m_sortorder, func ),
+  m_sortorder( sett().GetSortOrder( name ) )
 {
     //dummy init , will later be replaced with loading from settings
     for ( unsigned int i = 0; i < m_coloumnCount; ++i) {
@@ -53,9 +54,12 @@ CustomVirtListCtrl<T>::CustomVirtListCtrl(wxWindow* parent, wxWindowID id, const
     SetImageList( &icons(), wxIMAGE_LIST_SMALL );
     SetImageList( &icons(), wxIMAGE_LIST_STATE );
 
-    //make sure we have at least one (empty) sort criteria
-    m_sortorder[0].direction = 0;
-    m_sortorder[0].col = 0;
+}
+
+template < class T >
+CustomVirtListCtrl<T>::~CustomVirtListCtrl()
+{
+    sett().SetSortOrder( m_name, m_sortorder );
 }
 
 template < class T >
