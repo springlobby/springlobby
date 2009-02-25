@@ -140,6 +140,7 @@
 		<Unit filename="src/Helper/TextCompletionDatabase.hpp" />
 		<Unit filename="src/Helper/colorbutton.cpp" />
 		<Unit filename="src/Helper/colorbutton.h" />
+		<Unit filename="src/Helper/sortutil.h" />
 		<Unit filename="src/Helper/tasclientimport.cpp" />
 		<Unit filename="src/Helper/tasclientimport.h" />
 		<Unit filename="src/Helper/wxTranslationHelper.cpp" />
@@ -210,6 +211,7 @@
 		<Unit filename="src/crc.h" />
 		<Unit filename="src/customlistctrl.cpp" />
 		<Unit filename="src/customlistctrl.h" />
+		<Unit filename="src/customvirtlistctrl.h" />
 		<Unit filename="src/filelister/filelistctrl.cpp" />
 		<Unit filename="src/filelister/filelistctrl.h" />
 		<Unit filename="src/filelister/filelistdialog.cpp" />

@@ -29,6 +29,7 @@ const bool DEFSETT_WEB_BROWSER_USE_DEFAULT = true;
 
 #include <wx/fileconf.h>
 #include "useractions.h"
+#include "Helper/sortutil.h"
 
 class wxWindow;
 class wxConfigBase;
@@ -308,6 +309,9 @@ class Settings
 
     ColumnMap GetColumnMap( const wxString& name );
     void GetColumnMap( const wxString& name, const ColumnMap& map );
+
+    SortOrder GetSortOrder( const wxString& list_name );
+    void SetSortOrder( const wxString& list_name, const SortOrder& order  );
 
     void SetColumnWidth( const wxString& list_name, const int coloumn_ind, const int coloumn_width );
     int GetColumnWidth( const wxString& list_name, const int coloumn );

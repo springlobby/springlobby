@@ -18,7 +18,7 @@ class NickListCtrl : public CustomVirtListCtrl<const User*>
   public:
     NickListCtrl( wxWindow* parent, bool show_header = true, UserMenu* popup = 0,
         bool singleSelectList = true, const wxString& name = _T("NickListCtrl"), bool highlight = true  );
-    ~NickListCtrl();
+    virtual ~NickListCtrl();
 
     virtual void AddUser( const User& user );
     void RemoveUser( const User& user );

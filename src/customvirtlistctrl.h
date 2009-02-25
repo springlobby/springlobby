@@ -21,6 +21,7 @@
 #include <map>
 
 #include "useractions.h"
+#include "Helper/sortutil.h"
 
 class SLTipWindow;
 
@@ -121,14 +122,7 @@ protected:
      * @{
      */
 
-     //! set direction to +1 for down, -1 for up
-    struct SortOrderItem {
-        int col;
-        int direction;
-    };
-    //! map sort priority <--> ( column, direction )
-    typedef std::map<int,SortOrderItem> SortOrder;
-    SortOrder m_sortorder;
+    static SortOrder m_sortorder;
 
     /** generic comparator that gets it's real functionality
      * in derived classes via comapre callbakc func that
@@ -200,7 +194,7 @@ public:
                     const wxSize& sz,long style, wxString name, unsigned int column_count, CompareFunction func, bool highlight = true,
                     UserActions::ActionType hlaction = UserActions::ActHighlight);
 
-    virtual ~CustomVirtListCtrl(){}
+    virtual ~CustomVirtListCtrl();
 
     void OnSelected( wxListEvent& event );
     void OnDeselected( wxListEvent& event );

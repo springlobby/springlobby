@@ -18,6 +18,7 @@
 #include "Helper/sortutil.h"
 #include "aui/auimanager.h"
 
+template<> SortOrder CustomVirtListCtrl<IBattle*>::m_sortorder = sett().GetSortOrder( _T("BattleListCtrl") ) ;
 
 BEGIN_EVENT_TABLE(BattleListCtrl, CustomVirtListCtrl< IBattle *>)
 
@@ -31,8 +32,6 @@ BEGIN_EVENT_TABLE(BattleListCtrl, CustomVirtListCtrl< IBattle *>)
 #endif
 #endif
 END_EVENT_TABLE()
-
-Ui* BattleListCtrl::m_ui_for_sort = 0;
 
 BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui ):
   CustomVirtListCtrl< IBattle *>(parent, BLIST_LIST, wxDefaultPosition, wxDefaultSize,
@@ -62,14 +61,16 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui ):
     AddColumn( 8, widths[8], _("p"), _T("Number of Players joined") );
     AddColumn( 9, widths[9], _("m"), _T("Maximum number of Players that can join") );
 
-    m_sortorder[0].col = 0;
-    m_sortorder[0].direction = true;
-    m_sortorder[1].col = 5;
-    m_sortorder[1].direction = true;
-    m_sortorder[2].col = 9;
-    m_sortorder[2].direction = true;
-    m_sortorder[3].col = 4;
-    m_sortorder[3].direction = true;
+    if ( m_sortorder.size() == 0 ) {
+        m_sortorder[0].col = 0;
+        m_sortorder[0].direction = true;
+        m_sortorder[1].col = 5;
+        m_sortorder[1].direction = true;
+        m_sortorder[2].col = 9;
+        m_sortorder[2].direction = true;
+        m_sortorder[3].col = 4;
+        m_sortorder[3].direction = true;
+    }
 
     m_popup = new wxMenu( _T("") );
     // &m enables shortcout "alt + m" and underlines m
