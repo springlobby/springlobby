@@ -49,15 +49,12 @@ class BattleListCtrl : public CustomVirtListCtrl< IBattle *>
 
     static int CompareStatus( DataType u1, DataType u2 );
     static int ComparePlayer( DataType u1, DataType u2 );
-    static int wxCALLBACK CompareMaxPlayerUP(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareMaxPlayerDOWN(long item1, long item2, long sortData);
 
     static int CompareOneCrit( DataType u1, DataType u2, int col, int dir ) ;
     int GetIndexFromData( const DataType& data ) const;
 
     wxMenu* m_popup;
     Ui& m_ui;
-    static Ui* m_ui_for_sort;
 
     virtual void Sort();
 

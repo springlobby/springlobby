@@ -33,8 +33,6 @@ BEGIN_EVENT_TABLE(BattleListCtrl, CustomVirtListCtrl< IBattle *>)
 #endif
 END_EVENT_TABLE()
 
-Ui* BattleListCtrl::m_ui_for_sort = 0;
-
 BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui ):
   CustomVirtListCtrl< IBattle *>(parent, BLIST_LIST, wxDefaultPosition, wxDefaultSize,
             wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("BattleListCtrl"), 10, &CompareOneCrit),
