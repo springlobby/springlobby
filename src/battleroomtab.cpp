@@ -515,8 +515,10 @@ void BattleRoomTab::UpdateUser( User& user )
     }
     else
     {
-        if ( !IsHosted() )
+        if ( !IsHosted() || m_battle.IsProxy() )
+        {
             m_ready_chk->Enable();
+        }
 
         m_ready_chk->SetValue( bs.ready );
         m_side_sel->Enable();
