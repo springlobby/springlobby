@@ -38,6 +38,7 @@ BEGIN_EVENT_TABLE( NickListCtrl, CustomVirtListCtrl<const User*> )
 #endif
 END_EVENT_TABLE()
 
+template<> SortOrder CustomVirtListCtrl<const User*>::m_sortorder = sett().GetSortOrder( _T("NickListCtrl") ) ;
 
 NickListCtrl::NickListCtrl( wxWindow* parent, bool show_header, NickListCtrl::UserMenu* popup, bool singleSelectList,
                             const wxString& name, bool highlight):
@@ -169,8 +170,7 @@ void NickListCtrl::OnColClick( wxListEvent& event )
   for ( ; i > 0; i--) { m_sortorder[i] = m_sortorder[i-1]; }
   m_sortorder[0].col = event.GetColumn();
   m_sortorder[0].direction *= -1;
-    if ( m_sortorder[0].col == 0 )
-        { int *i = 0;*i=9; }
+
 
   GetColumn( m_sortorder[0].col, col );
   col.SetImage( ( m_sortorder[0].direction > 0)?icons().ICON_UP:icons().ICON_DOWN );

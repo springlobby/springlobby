@@ -122,7 +122,7 @@ protected:
      * @{
      */
 
-    SortOrder m_sortorder;
+    static SortOrder m_sortorder;
 
     /** generic comparator that gets it's real functionality
      * in derived classes via comapre callbakc func that

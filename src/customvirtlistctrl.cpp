@@ -41,7 +41,6 @@ CustomVirtListCtrl<T>::CustomVirtListCtrl(wxWindow* parent, wxWindowID id, const
   m_highlightAction(hlaction),
   m_bg_color( GetBackgroundColour() ),
   m_dirty_sort(false),
-  m_sortorder( sett().GetSortOrder( name ) ),
   m_comparator( m_sortorder, func )
 {
     //dummy init , will later be replaced with loading from settings
