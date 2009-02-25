@@ -158,26 +158,32 @@ TASServer::~TASServer()
 bool TASServer::ExecuteSayCommand( const wxString& cmd )
 {
     if ( m_sock == 0 ) return false;
-    wxString subcmd = cmd.BeforeFirst(' ').Lower();
+    wxArrayString arrayparams = wxStringTokenize( cmd, _T(" ") );
+    if ( arrayparams.GetCount() == 0 ) return false;
+    wxString subcmd = arrayparams[0];
     wxString params = cmd.AfterFirst( ' ' );
     if ( subcmd == _T("/ingame") )
     {
-        SendCmd( _T("GETINGAMETIME"), params );
+				if ( arrayparams.GetCount() != 2 ) return false;
+        SendCmd( _T("GETINGAMETIME"), arrayparams[1] );
         return true;
     }
     else if ( subcmd == _T("/kick") )
     {
+				if ( arrayparams.GetCount() < 2 ) return false;
         SendCmd( _T("KICKUSER"), params );
         return true;
     }
     else if ( subcmd == _T("/ban") )
     {
+				if ( arrayparams.GetCount() < 2 ) return false;
         SendCmd( _T("BAN"), params );
         return true;
     }
     else if ( subcmd == _T("/unban") )
     {
-        SendCmd( _T("UNBAN"), params );
+				if ( arrayparams.GetCount() != 2 ) return false;
+        SendCmd( _T("UNBAN"), arrayparams[1] );
         return true;
     }
     else if ( subcmd == _T("/banlist") )
@@ -193,53 +199,64 @@ bool TASServer::ExecuteSayCommand( const wxString& cmd )
     }
     else if ( subcmd == _T("/chanmsg") )
     {
+				if ( arrayparams.GetCount() < 2 ) return false;
         SendCmd( _T("CHANNELMESSAGE"), params );
         return true;
     }
     else if ( subcmd == _T("/ring") )
     {
-        SendCmd( _T("RING"), params );
+				if ( arrayparams.GetCount() != 2 ) return false;
+        SendCmd( _T("RING"), arrayparams[1] );
         return true;
     }
     else if ( subcmd == _T("/ip") )
     {
-        SendCmd( _T("GETIP"), params );
+				if ( arrayparams.GetCount() != 2 ) return false;
+        SendCmd( _T("GETIP"), arrayparams[1] );
         return true;
     }
     else if ( subcmd == _T("/mute") )
     {
+				if ( arrayparams.GetCount() < 4 ) return false;
+				if ( arrayparams.GetCount() > 5 ) return false;
         SendCmd( _T("MUTE"), params );
         return true;
     }
     else if ( subcmd == _T("/unmute") )
     {
-        SendCmd( _T("UNMUTE"), params );
+				if ( arrayparams.GetCount() != 3 ) return false;
+        SendCmd( _T("UNMUTE"), arrayparams[1] );
         return true;
     }
     else if ( subcmd == _T("/mutelist") )
     {
-        SendCmd( _T("MUTELIST"), params );
+				if ( arrayparams.GetCount() != 2 ) return false;
+        SendCmd( _T("MUTELIST"), arrayparams[1] );
         return true;
     }
     else if ( subcmd == _T("/lastlogin") )
     {
-        SendCmd( _T("GETLASTLOGINTIME"), params );
+				if ( arrayparams.GetCount() != 2 ) return false;
+        SendCmd( _T("GETLASTLOGINTIME"), arrayparams[1] );
         return true;
     }
     else if ( subcmd == _T("/findip") )
     {
-        SendCmd( _T("FINDIP"), params );
+				if ( arrayparams.GetCount() != 2 ) return false;
+        SendCmd( _T("FINDIP"), arrayparams[1] );
         return true;
     }
     else if ( subcmd == _T("/lastip") )
     {
-        SendCmd( _T("GETLASTIP"), params );
+				if ( arrayparams.GetCount() != 2 ) return false;
+        SendCmd( _T("GETLASTIP"), arrayparams[1] );
         return true;
     }
     else if ( subcmd == _T("/rename") )
     {
-        SendCmd( _T("RENAMEACCOUNT"), params );
-        sett().SetServerAccountNick( sett().GetDefaultServer(), params ); // this code assumes that default server hasn't changed since login ( like it should atm )
+				if ( arrayparams.GetCount() != 2 ) return false;
+        SendCmd( _T("RENAMEACCOUNT"), arrayparams[1] );
+        sett().SetServerAccountNick( sett().GetDefaultServer(), arrayparams[1] ); // this code assumes that default server hasn't changed since login ( like it should atm )
         return true;
     }
     else if ( subcmd == _T("/testmd5") )
@@ -249,19 +266,20 @@ bool TASServer::ExecuteSayCommand( const wxString& cmd )
     }
     else if ( subcmd == _T("/hook") )
     {
-        ExecuteCommand( _T("HOOK"), params );
+        SendCmd( _T("HOOK"), params );
         return true;
     }
     else if ( subcmd == _T("/quit") )
     {
-        ExecuteCommand( _T("EXIT"), params );
+        SendCmd( _T("EXIT"), params );
         return true;
     }
     else if ( subcmd == _T("/changepassword") )
     {
-        wxString oldpassword = GetPasswordHash( cmd.AfterFirst(' ').BeforeFirst(' ') );
-        wxString newpassword = GetPasswordHash( cmd.AfterFirst(' ').AfterFirst(' ') );
-        ExecuteCommand( _T("CHANGEPASSWORD"), oldpassword + _T(" ") + newpassword );
+				if ( arrayparams.GetCount() != 3 ) return false;
+        wxString oldpassword = GetPasswordHash( arrayparams[1] );
+        wxString newpassword = GetPasswordHash( arrayparams[2] );
+        SendCmd( _T("CHANGEPASSWORD"), oldpassword + _T(" ") + newpassword );
         return true;
     }
 

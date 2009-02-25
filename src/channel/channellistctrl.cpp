@@ -2,8 +2,12 @@
 #include "../iconimagelist.h"
 #include "../utils.h"
 #include "../ui.h"
+#include <algorithm>
+#include "../Helper/sortutil.h"
 
-BEGIN_EVENT_TABLE( ChannelListctrl, CustomListCtrl )
+template<> SortOrder CustomVirtListCtrl<ChannelInfo>::m_sortorder = sett().GetSortOrder( _T("ChannelListCtrl") ) ;
+
+BEGIN_EVENT_TABLE( ChannelListctrl, CustomVirtListCtrl<ChannelInfo> )
   EVT_LIST_ITEM_ACTIVATED( CHANNELLIST, ChannelListctrl::OnActivateItem )
   EVT_LIST_COL_CLICK( CHANNELLIST, ChannelListctrl::OnColClick )
 END_EVENT_TABLE()
@@ -11,50 +15,29 @@ END_EVENT_TABLE()
 
 ChannelListctrl::ChannelListctrl(wxWindow* parent, wxWindowID id, const wxString& name,
                     long style, const wxPoint& pt, const wxSize& sz)
-    :CustomListCtrl(parent, CHANNELLIST, wxDefaultPosition, wxDefaultSize,
-            wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("ChannelListCtrl"))
-
+    :CustomVirtListCtrl<ChannelInfo>(parent, CHANNELLIST, wxDefaultPosition, wxDefaultSize,
+            wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("ChannelListCtrl"), 3, &CompareOneCrit)
 {
-  wxListItem col;
-
-  col.SetText( _("Channel name") );
-  col.SetImage( icons().ICON_EMPTY );
-  InsertColumn( 0, col, _T("Channelname") );
-
-  col.SetText( _("# users") );
-  col.SetImage( icons().ICON_EMPTY );
-  InsertColumn( 1, col, _T("users") );
-
-  col.SetText( _("topic") );
-  col.SetImage( icons().ICON_EMPTY );
-  InsertColumn( 2, col, _T("topic") );
-
-  m_sortorder[2].col = 2;
-  m_sortorder[2].direction = false;
-  m_sortorder[0].col = 0;
-  m_sortorder[0].direction = true;
-  m_sortorder[1].col = 1;
-  m_sortorder[1].direction = true;
-
-
 #if defined(__WXMSW__)
- // autosize is part-broken on msw.
-  SetColumnWidth( 0, 120 );
-  SetColumnWidth( 1, 45 );
-  SetColumnWidth( 2, 300 );
-
+    const int widths [3] = { wxLIST_AUTOSIZE, wxLIST_AUTOSIZE, wxLIST_AUTOSIZE };
 #elif defined(__WXMAC__)
-// autosize is entirely broken on wxmac.
-  SetColumnWidth( 0, 120 );
-  SetColumnWidth( 1, 45 );
-  SetColumnWidth( 2, 300 );
+    const int widths [3] = { wxLIST_AUTOSIZE, wxLIST_AUTOSIZE, wxLIST_AUTOSIZE };
 #else
- // on wxGTK it works, sort of.
-  SetColumnWidth( 0, wxLIST_AUTOSIZE );
-  SetColumnWidth( 1, 30 );
-  SetColumnWidth( 2, wxLIST_AUTOSIZE );
+    const int widths [3] = { wxLIST_AUTOSIZE, wxLIST_AUTOSIZE, wxLIST_AUTOSIZE };
 #endif
 
+    AddColumn( 0, widths[0], _("Channel"), _T("Channelname") );
+    AddColumn( 1, widths[1], _("# users"), _T("users") );
+    AddColumn( 2, widths[2], _T("topic"), _T("topic") );
+
+    if ( m_sortorder.size() == 0 ) {
+        m_sortorder[2].col = 2;
+        m_sortorder[2].direction = 1;
+        m_sortorder[0].col = 0;
+        m_sortorder[0].direction = 1;
+        m_sortorder[1].col = 1;
+        m_sortorder[1].direction = 1;
+    }
 }
 
 ChannelListctrl::~ChannelListctrl()
@@ -62,14 +45,7 @@ ChannelListctrl::~ChannelListctrl()
     //dtor
 }
 
-/** @brief SetTipWindowText
-  *
-  * @todo: document this function
-  */
-void ChannelListctrl::SetTipWindowText(const long item_hit, const wxPoint position)
-{
-
-}
+void ChannelListctrl::HighlightItem( long item ){}
 
 /** @brief AddChannel
   *
@@ -77,105 +53,64 @@ void ChannelListctrl::SetTipWindowText(const long item_hit, const wxPoint positi
   */
 void ChannelListctrl::AddChannel(const wxString& channel, unsigned int num_users, const wxString& topic )
 {
-    SetSelectionRestorePoint();
-
-    //todo: don't add if already in it?
-
     ChannelInfo data ( channel, num_users, topic );
-    int index = InsertItem( GetItemCount(), channel );
-    SetItem( index, 0, channel );
-    SetItem( index, 1, TowxString(num_users) );
-    SetItem( index, 2, topic );
-    SetItemImage( index, icons().ICON_EMPTY );
-    m_data[index] = data;
-    SetItemData(index, (wxUIntPtr) &m_data[index]);
-    //highlight
-    //HighlightItemUser( index, userdata.first );
+    m_data.push_back( data );
+    m_visible_idxs[m_data.size() -1] = ( m_data.size() -1 );
+    SetItemCount( m_visible_idxs.size() );
 
-    Sort();
-    RestoreSelection();
+    RefreshItem( m_visible_idxs.size() - 1);
+    SetColumnWidth( 0, wxLIST_AUTOSIZE );
 }
 
-/** @brief Sort
-  *
-  * @todo: document this function
-  */
+int ChannelListctrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir )
+{
+    switch ( col ) {
+        case 0: return dir * u1.name.CmpNoCase( u2.name );
+        case 1: return dir * compareSimple( u1.usercount, u2.usercount );
+        case 2: return dir * u1.topic.CmpNoCase( u2.topic );
+        default: return 0;
+    }
+}
+
+int ChannelListctrl::GetIndexFromData( const DataType& data ) const
+{
+    DataCIter it = m_data.begin();
+    for ( int i = 0; it != m_data.end(); ++it , ++i) {
+        if ( it->name == data.name )
+            return i;
+    }
+    return -1;
+}
+
 void ChannelListctrl::Sort()
 {
-    for (int i = 1; i >= 0; i--) {
-    switch ( m_sortorder[ i ].col ) {
-      case 0 : SortItems( ( m_sortorder[ i ].direction )?&CompareChannelnameUP:&CompareChannelnameDOWN, 0 ); break;
-      case 1 : SortItems( ( m_sortorder[ i ].direction )?&CompareNumUsersUP:&CompareNumUsersDOWN , 0 ); break;
-
-    }
-  }
-}
-
-/** @brief HighlightItem
-  *
-  * @todo: document this function
-  */
-void ChannelListctrl::HighlightItem(long item)
-{
-
-}
-/** @brief CompareNumUsersDOWN
-  *
-  * @todo: document this function
-  */
-int wxCALLBACK ChannelListctrl::CompareNumUsersDOWN(long item1, long item2, long sortData)
-{
-    return  (*(ChannelInfo*) item1 ).usercount <  (*(ChannelInfo*) item2 ).usercount;
-}
-
-/** @brief CompareNumUsersUP
-  *
-  * @todo: document this function
-  */
-int wxCALLBACK ChannelListctrl::CompareNumUsersUP(long item1, long item2, long sortData)
-{
-    return  (*(ChannelInfo*) item1 ).usercount >=  (*(ChannelInfo*) item2 ).usercount;
-}
-
-/** @brief CompareChannelnameDOWN
-  *
-  * @todo: document this function
-  */
-int wxCALLBACK ChannelListctrl::CompareChannelnameDOWN(long item1, long item2, long sortData)
-{
-    return (*(ChannelInfo*) item1 ).name.Upper() <  (*(ChannelInfo*) item2 ).name.Upper();
-}
-
-/** @brief CompareChannelnameUP
-  *
-  * @todo: document this function
-  */
-int wxCALLBACK ChannelListctrl::CompareChannelnameUP(long item1, long item2, long sortData)
-{
-    return (*(ChannelInfo*) item1 ).name.Upper() >=  (*(ChannelInfo*) item2 ).name.Upper();
+    SaveSelection();
+    SLInsertionSort( m_data, m_comparator );
+    FilterChannel( m_last_filter_value );
+    RestoreSelection();
 }
 
 void ChannelListctrl::OnColClick( wxListEvent& event )
 {
-  if ( event.GetColumn() == -1 ) return;
-  wxListItem col;
-  GetColumn( m_sortorder[0].col, col );
-  col.SetImage( -1 );
-  SetColumn( m_sortorder[0].col, col );
+    if ( event.GetColumn() == -1 ) return;
+    wxListItem col;
+    GetColumn( m_sortorder[0].col, col );
+    col.SetImage( -1 );
+    SetColumn( m_sortorder[0].col, col );
 
-  int i;
-  for ( i = 0; m_sortorder[i].col != event.GetColumn() && i < 2; ++i ) {}
-  if (i > 2) { i = 2; }
-  for ( ; i > 0; i--) { m_sortorder[i] = m_sortorder[i-1]; }
-  m_sortorder[0].col = event.GetColumn();
-  m_sortorder[0].direction = !m_sortorder[0].direction;
+    int i;
+    for ( i = 0; m_sortorder[i].col != event.GetColumn() && i < 3; ++i ) {}
+    if (i > 2) { i = 2; }
+    for ( ; i > 0; i--) { m_sortorder[i] = m_sortorder[i-1]; }
+    m_sortorder[0].col = event.GetColumn();
+    m_sortorder[0].direction *= -1;
 
 
-  GetColumn( m_sortorder[0].col, col );
-  col.SetImage( ( m_sortorder[0].direction )?icons().ICON_UP:icons().ICON_DOWN );
-  SetColumn( m_sortorder[0].col, col );
-
-  Sort();
+    GetColumn( m_sortorder[0].col, col );
+    col.SetImage( ( m_sortorder[0].direction > 0 )?icons().ICON_UP:icons().ICON_DOWN );
+    SetColumn( m_sortorder[0].col, col );
+    MarkDirtySort();
+    SortList();
 }
 
 /** @brief OnActivateItem
@@ -184,16 +119,16 @@ void ChannelListctrl::OnColClick( wxListEvent& event )
   */
 void ChannelListctrl::OnActivateItem(wxListEvent& event)
 {
-  int index = event.GetIndex();
-  if ( index == -1 ) return;
-  wxString chan_name = (*(ChannelInfo*)event.GetData() ).name;
-  ui().JoinChannel( chan_name, _T("") );
+    int index = event.GetIndex();
+    if ( index == -1 ) return;
+    wxString chan_name = m_data[ m_visible_idxs[index] ].name;
+    ui().JoinChannel( chan_name, _T("") );
 }
 
 void ChannelListctrl::ClearChannels()
 {
-    DeleteAllItems();
-    m_data.clear();
+    m_visible_idxs.clear();
+    Clear();
 }
 
 wxString ChannelListctrl::GetInfo()
@@ -205,20 +140,67 @@ wxString ChannelListctrl::GetInfo()
 
 void ChannelListctrl::FilterChannel( const wxString& partial )
 {
-    DeleteAllItems();
-
-    for ( ChannelInfoIter it = m_data.begin(); it != m_data.end(); ++it ) {
-        const ChannelInfo& data = it->second;
+    m_visible_idxs.clear();
+    unsigned int idx = 0;
+    for ( unsigned int i = 0; i < m_data.size() ; ++i ) {
+        const ChannelInfo& data = m_data[i];
         if ( data.name.Contains( partial ) ) {
-            int index = InsertItem( GetItemCount(), data.name );
-            SetItem( index, 0, data.name );
-            SetItem( index, 1, TowxString( data.usercount ) );
-            SetItem( index, 2, data.topic );
-            SetItemData( index, (wxUIntPtr) &(it->second) );
+            m_visible_idxs[idx] = i;
+            idx++;
         }
     }
-    //highlight
-    //HighlightItemUser( index, userdata.first );
-
-    Sort();
+    SelectNone();
+    m_last_filter_value = partial;
+    SetItemCount( m_visible_idxs.size() );
+    RefreshVisibleItems( );
 }
+
+
+int ChannelListctrl::OnGetItemColumnImage(long item, long column) const
+{
+    return -1;
+}
+
+int ChannelListctrl::OnGetItemImage(long item) const
+{
+    return -1;
+}
+
+wxString ChannelListctrl::OnGetItemText(long item, long column) const
+{
+    int idx = m_visible_idxs.find(item)->second;
+    const DataType& chan = m_data[ idx ];
+
+    switch ( column ) {
+        case 0: return chan.name;
+        case 1: return TowxString( chan.usercount );
+        case 2: return chan.topic;
+        default: return wxEmptyString;
+    }
+}
+
+void ChannelListctrl::SetTipWindowText(const long item_hit, const wxPoint position)
+{
+    int coloumn = getColoumnFromPosition(position);
+    if (coloumn > (int)m_colinfovec.size() || coloumn < 0 || item_hit < 0 || item_hit > m_data.size() )
+    {
+        m_tiptext = _T("");
+    }
+    else
+    {
+        const DataType& channel = m_data[item_hit];
+        {
+            switch (coloumn)
+            {
+            case 2: // status
+                m_tiptext = channel.topic;
+                break;
+
+            default:
+                m_tiptext = _T("");
+                break;
+            }
+        }
+    }
+}
+

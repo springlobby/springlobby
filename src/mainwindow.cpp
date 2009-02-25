@@ -33,6 +33,7 @@
 #include "mainoptionstab.h"
 #include "iunitsync.h"
 #include "uiutils.h"
+#include "chatpanel.h"
 #include "replay/replaytab.h"
 #ifndef NO_TORRENT_SYSTEM
 #include "maintorrenttab.h"
@@ -332,11 +333,14 @@ void MainWindow::OpenChannelChat( Channel& channel )
 //! @brief Open a new chat tab with a private chat
 //!
 //! @param nick The user to whom the chatwindow should be opened to
-void MainWindow::OpenPrivateChat( User& user )
+void MainWindow::OpenPrivateChat( const User& user, bool doFocus )
 {
   ASSERT_LOGIC( m_chat_tab != 0, _T("m_chat_tab") );
   m_func_tabs->SetSelection( 0 );
-  m_chat_tab->AddChatPannel( user );
+  ChatPanel* cp = m_chat_tab->AddChatPannel( user );
+  if ( doFocus )
+    cp->FocusInputBox();
+
 }
 
 

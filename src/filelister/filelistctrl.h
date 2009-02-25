@@ -39,11 +39,6 @@ class FileListCtrl : public CustomListCtrl
     static int wxCALLBACK CompareTypeUP(long item1, long item2, long sortData);
     static int wxCALLBACK CompareTypeDOWN(long item1, long item2, long sortData);
 
-    struct {
-      int col;
-      bool direction;
-    } m_sortorder[3];
-
     wxMenu* m_popup;
 //    Ui& m_ui;
 //    static Ui* m_ui_for_sort;

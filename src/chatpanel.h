@@ -65,7 +65,7 @@ class ChatPanel : public wxPanel
   public:
 
     ChatPanel( wxWindow* parent, Ui& ui, Channel& chan, wxImageList* imaglist );
-    ChatPanel( wxWindow* parent, Ui& ui, User& user, wxImageList* imaglist  );
+    ChatPanel( wxWindow* parent, Ui& ui, const User& user, wxImageList* imaglist  );
     ChatPanel( wxWindow* parent, Ui& ui, Server& serv, wxImageList* imaglist  );
     ChatPanel( wxWindow* parent, Ui& ui, Battle& battle );
     ~ChatPanel();
@@ -90,8 +90,8 @@ class ChatPanel : public wxPanel
     Server* GetServer();
     void SetServer( Server* serv );
 
-    User* GetUser();
-    void SetUser( User* usr );
+    const User* GetUser() const ;
+    void SetUser( const User* usr );
 
     bool IsServerPanel();
     ChatPanelType GetPanelType();
@@ -106,7 +106,7 @@ class ChatPanel : public wxPanel
     void SetIconIndex( size_t index ) { m_icon_index = index; }
 
     User& GetMe();
-    User* GetSelectedUser();
+    const User* GetSelectedUser();
 
     bool IsOk();
 
@@ -207,7 +207,7 @@ class ChatPanel : public wxPanel
     Ui& m_ui;
     Channel* m_channel;         //!< Channel object.
     Server* m_server;           //!< Server object.
-    User* m_user;               //!< User object.
+    const User* m_user;               //!< User object.
     Battle* m_battle;           //!< User object.
 
     ChatPanelType m_type;       //!< Channel object.

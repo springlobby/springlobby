@@ -74,13 +74,7 @@ class BattleroomListCtrl : public CustomListCtrl
 
     wxString GetSelectedUserNick();
 
-    struct {
-      int col;
-      bool direction;
-    } m_sortorder[4];
-
     Battle& m_battle;
-
 
     typedef SL_GENERIC::UserMenu<BattleroomListCtrl> UserMenu;
     UserMenu* m_popup;

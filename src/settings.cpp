@@ -29,7 +29,9 @@
 #include "replay/replaylistfiltervalues.h"
 #include "globalsmanager.h"
 #include "springunitsynclib.h"
+#include "customlistctrl.h"
 #include "settings++/presets.h"
+#include "Helper/sortutil.h"
 
 const wxColor defaultHLcolor (255,0,0);
 
@@ -2132,3 +2134,38 @@ long Settings::GetLanguageID ( )
     return m_config->Read( _T("/General/LanguageID") , wxLANGUAGE_DEFAULT  );
 }
 
+SortOrder Settings::GetSortOrder( const wxString& list_name )
+{
+    SortOrder order;
+    wxString old_path = m_config->GetPath();
+    m_config->SetPath( _T("/UI/SortOrder/") + list_name + _T("/") );
+    unsigned int entries  = m_config->GetNumberOfGroups( false ); //do not recurse
+    for ( unsigned int i = 0; i < entries ; i++ )
+    {
+        SortOrderItem it;
+        it.direction = m_config->Read( TowxString(i) + _T("/dir"), 1 );
+        it.col = m_config->Read( TowxString(i) + _T("/col"), i );
+        order[i] = it;
+    }
+    m_config->SetPath( old_path );
+    return order;
+}
+
+
+void Settings::SetSortOrder( const wxString& list_name, const SortOrder& order  )
+{
+    SortOrder::const_iterator it = order.begin();
+    for ( ; it != order.end(); ++it) {
+        m_config->Write( _T("/UI/SortOrder/" ) + list_name + _T("/") + TowxString( it->first ) + _T("/dir"), it->second.direction );
+        m_config->Write( _T("/UI/SortOrder/" ) + list_name + _T("/") + TowxString( it->first ) + _T("/col"), it->second.col );
+    }
+}
+//void Settings::SetColumnWidth( const wxString& list_name, const int coloumn_ind, const int coloumn_width )
+//{
+//    m_config->Write(_T("GUI/ColoumnWidths/") + list_name + _T("/") + TowxString(coloumn_ind), coloumn_width );
+//}
+//
+//int Settings::GetColumnWidth( const wxString& list_name, const int coloumn )
+//{
+//    return m_config->Read(_T("GUI/ColoumnWidths/") + list_name + _T("/") + TowxString(coloumn), columnWidthUnset);
+//}

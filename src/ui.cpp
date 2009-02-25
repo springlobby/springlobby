@@ -8,6 +8,7 @@
 #include <wx/thread.h>
 #include <wx/intl.h>
 #include <wx/utils.h>
+#include <wx/filename.h>
 
 #include "ui.h"
 #include "tasserver.h"
@@ -1037,6 +1038,16 @@ void Ui::OnBattleStarted( Battle& battle )
             if ( battle.IsProxy() )
             {
               wxString hostscript = m_spring->WriteScriptTxt( battle );
+							try
+							{
+								wxString path = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("relayhost_script.txt");
+								if ( !wxFile::Access( path, wxFile::write ) ) wxLogError( _T("Access denied to script.txt.") );
+
+								wxFile f( path, wxFile::write );
+								f.Write( hostscript );
+								f.Close();
+
+							} catch (...) {}
               m_serv->SendScriptToProxy( hostscript );
             }
             battle.GetMe().BattleStatus().ready = false;

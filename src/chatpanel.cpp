@@ -86,7 +86,7 @@ BEGIN_EVENT_TABLE( ChatPanel, wxPanel )
 	EVT_MENU( CHAT_MENU_US_CHAT, ChatPanel::OnUserMenuOpenChat )
 	EVT_MENU( CHAT_MENU_US_JOIN, ChatPanel::OnUserMenuJoinSame )
 	EVT_MENU( CHAT_MENU_US_SLAP, ChatPanel::OnUserMenuSlap )
-//	EVT_MENU( CHAT_MENU_US_ADD_TO_GROUP, ChatPanel::OnUserMenuAddToGroup )
+	EVT_MENU( CHAT_MENU_US_ADD_TO_GROUP, ChatPanel::OnUserMenuAddToGroup )
 	EVT_MENU( CHAT_MENU_US_MUTE, ChatPanel::OnUserMenuMute )
 	EVT_MENU( CHAT_MENU_US_UNMUTE, ChatPanel::OnUserMenuUnmute )
 	EVT_MENU( CHAT_MENU_US_KICK, ChatPanel::OnUserMenuKick )
@@ -141,7 +141,7 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Channel& chan, wxImageList* imag
 }
 
 
-ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, User& user, wxImageList* imaglist  ):
+ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, const User& user, wxImageList* imaglist  ):
   wxPanel( parent, -1 ),
   m_show_nick_list( false ),
   m_nicklist(0),
@@ -324,7 +324,8 @@ void ChatPanel::CreateControls( )
   m_chatlog_text->SetFont( sett().GetChatFont() );
 
 	m_say_text->SetBackgroundColour( sett().GetChatColorBackground() );
-  m_say_text->SetDefaultStyle( wxTextAttr( sett().GetChatColorNormal(), sett().GetChatColorBackground(), sett().GetChatFont() ) );
+	m_say_text->SetFont( sett().GetChatFont() );
+	m_say_text->SetForegroundColour(sett().GetChatColorNormal());
 
   // Fill up TextCompletionDatabase
   textcompletiondatabase.Insert_Mapping( _T("DLDK"), _T("Der Lockruf des Kaos") );
@@ -519,14 +520,11 @@ ChatPanel::UserMenu* ChatPanel::CreateNickListMenu()
 }
 
 
-User* ChatPanel::GetSelectedUser()
+const User* ChatPanel::GetSelectedUser()
 {
 	if ( !m_show_nick_list || ( m_nicklist == 0 ) ) return 0;
 
-	int item = m_nicklist->GetNextItem( -1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED );
-	if ( item == -1 ) return 0;
-
-	return ( User* )m_nicklist->GetItemData( item );
+	return m_nicklist->GetSelectedData();
 }
 
 
@@ -917,13 +915,13 @@ void ChatPanel::SetServer( Server* serv )
 }
 
 
-User* ChatPanel::GetUser()
+const User* ChatPanel::GetUser() const
 {
 	return m_user;
 }
 
 
-void ChatPanel::SetUser( User* usr )
+void ChatPanel::SetUser( const User* usr )
 {
 	ASSERT_LOGIC( m_type == CPT_User, _T( "Not of type user" ) );
 
@@ -1339,7 +1337,7 @@ void ChatPanel::OnServerMenuBroadcast( wxCommandEvent& event )
 
 void ChatPanel::OnUserMenuOpenChat( wxCommandEvent& event )
 {
-	User* user = GetSelectedUser();
+	const User* user = GetSelectedUser();
 	if ( user == 0 ) return;
 
 	m_ui.mw().OpenPrivateChat( *user );
@@ -1348,7 +1346,7 @@ void ChatPanel::OnUserMenuOpenChat( wxCommandEvent& event )
 
 void ChatPanel::OnUserMenuJoinSame( wxCommandEvent& event )
 {
-	User* user = GetSelectedUser();
+	const User* user = GetSelectedUser();
 	if ( user == 0 ) return;
 	Battle* battle = user->GetBattle();
 	if ( battle == 0 ) return;
@@ -1369,7 +1367,7 @@ void ChatPanel::OnUserMenuJoinSame( wxCommandEvent& event )
 
 void ChatPanel::OnUserMenuSlap( wxCommandEvent& event )
 {
-	User* user = GetSelectedUser();
+	const User* user = GetSelectedUser();
 	if ( user == 0 ) return;
 
 	if ( m_type == CPT_Channel ) {
@@ -1395,7 +1393,7 @@ void ChatPanel::OnUserMenuMute( wxCommandEvent& event )
 
 	User& cs = m_channel->GetUser( _T( "ChanServ" ) );
 
-	User* user = GetSelectedUser();
+	const User* user = GetSelectedUser();
 	if ( user == 0 ) return;
 
 	cs.Say( _T( "!MUTE #" ) + m_channel->GetName() + _T( " " ) + user->GetNick() + _T( " " ) + mutetime );
@@ -1413,7 +1411,7 @@ void ChatPanel::OnUserMenuUnmute( wxCommandEvent& event )
 	}
 	User& cs = m_channel->GetUser( _T( "ChanServ" ) );
 
-	User* user = GetSelectedUser();
+	const User* user = GetSelectedUser();
 	if ( user == 0 ) return;
 
 	cs.Say( _T( "!UNMUTE #" ) + m_channel->GetName() + _T( " " ) + user->GetNick() );
@@ -1429,7 +1427,7 @@ void ChatPanel::OnUserMenuKick( wxCommandEvent& event )
 		return;
 	}
 
-	User* user = GetSelectedUser();
+	const User* user = GetSelectedUser();
 	if ( user == 0 ) return;
 
 	wxString msg;
@@ -1451,7 +1449,7 @@ void ChatPanel::OnUserMenuOp( wxCommandEvent& event )
 		return;
 	}
 
-	User* user = GetSelectedUser();
+	const User* user = GetSelectedUser();
 	if ( user == 0 ) return;
 	User& cs = m_channel->GetUser( _T( "ChanServ" ) );
 
@@ -1468,7 +1466,7 @@ void ChatPanel::OnUserMenuDeop( wxCommandEvent& event )
 		return;
 	}
 
-	User* user = GetSelectedUser();
+	const User* user = GetSelectedUser();
 	if ( user == 0 ) return;
 	User& cs = m_channel->GetUser( _T( "ChanServ" ) );
 
@@ -1571,7 +1569,7 @@ void ChatPanel::OnUserMenuAddToGroup( wxCommandEvent& event )
 {
     int id  = event.GetId() - GROUP_ID;
     wxString groupname = m_usermenu->GetGroupByEvtID(id);
-    User* user = GetSelectedUser();
+    const User* user = GetSelectedUser();
     if ( user )
         useractions().AddUserToGroup( groupname, user->GetNick() );
 }
@@ -1579,7 +1577,7 @@ void ChatPanel::OnUserMenuAddToGroup( wxCommandEvent& event )
 
 void ChatPanel::OnUserMenuDeleteFromGroup( wxCommandEvent& event )
 {
-    User* user = GetSelectedUser();
+    const User* user = GetSelectedUser();
     if ( user )
         useractions().RemoveUser( user->GetNick() );
 }
@@ -1591,7 +1589,7 @@ void ChatPanel::OnUserMenuCreateGroup( wxCommandEvent& event )
     if ( ui().AskText( _("Enter name"),
         _("Please enter the name for the new group.\nAfter clicking ok you will be taken to adjust its settings."), name ) )
     {
-        User* user = GetSelectedUser();
+        const User* user = GetSelectedUser();
         if ( user ) {
             useractions().AddGroup( name );
             useractions().AddUserToGroup( name, user->GetNick() );
@@ -1625,7 +1623,7 @@ void ChatPanel::OnMenuToggleAppend( wxCommandEvent& event )
 void ChatPanel::UpdateNicklistHighlights()
 {
     if ( m_show_nick_list && (m_nicklist != 0) ) {
-      m_nicklist->UpdateHighlights();
+      m_nicklist->RefreshVisibleItems();
     }
 }
 

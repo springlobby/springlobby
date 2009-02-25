@@ -27,10 +27,15 @@ END_EVENT_TABLE()
 
 //wxTipWindow* CustomListCtrl::m_tipwindow = 0;
 CustomListCtrl::CustomListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pt, const wxSize& sz,long style,wxString name,
-                                bool highlight, UserActions::ActionType hlaction ):
+                               unsigned int column_count, bool highlight, UserActions::ActionType hlaction ):
   ListBaseType(parent, id, pt, sz, style),
   m_tiptimer(this, IDD_TIP_TIMER),
   m_tiptext(_T("")),
+#if wxUSE_TIPWINDOW
+  m_tipwindow( 0 ),
+  m_controlPointer( 0 ),
+#endif
+  m_coloumnCount( column_count ),
   m_selected(-1),
   m_selected_index(-1),
   m_prev_selected(-1),
@@ -42,12 +47,11 @@ CustomListCtrl::CustomListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& p
   m_bg_color( GetBackgroundColour() ),
   m_dirty_sort(false)
 {
-#if wxUSE_TIPWINDOW
-    m_tipwindow = 0;
-    controlPointer = 0;
-#endif
-    m_tiptext = _T("");
+    //dummy init , will later be replaced with loading from settings
+    for ( unsigned int i = 0; i < m_coloumnCount; ++i) {
+        m_column_map[i] = i;
 
+    }
 
     SetImageList( &icons(), wxIMAGE_LIST_NORMAL );
     SetImageList( &icons(), wxIMAGE_LIST_SMALL );
@@ -64,6 +68,13 @@ void CustomListCtrl::InsertColumn(long i, wxListItem item, wxString tip, bool mo
 //    item.m_format = wxLIST_FORMAT_LEFT;
 //#endif
     ListBaseType::InsertColumn(i,item);
+    colInfo temp(tip,modifiable);
+    m_colinfovec.push_back(temp);
+}
+
+void CustomListCtrl::AddColumn(long i, int width, const wxString& label, const wxString& tip, bool modifiable)
+{
+    ListBaseType::InsertColumn( i, label, wxLIST_FORMAT_LEFT, width);
     colInfo temp(tip,modifiable);
     m_colinfovec.push_back(temp);
 }
@@ -158,8 +169,8 @@ void CustomListCtrl::OnTimer(wxTimerEvent& event)
   if (!m_tiptext.empty())
   {
       m_tipwindow = new SLTipWindow(this, m_tiptext);
-      controlPointer = &m_tipwindow;
-      m_tipwindow->SetTipWindowPtr((wxTipWindow**)controlPointer);
+      m_controlPointer = &m_tipwindow;
+      m_tipwindow->SetTipWindowPtr((wxTipWindow**)m_controlPointer);
 #ifndef __WXMSW__
       m_tipwindow->SetBoundingRect(wxRect(1,1,50,50));
 #endif
@@ -170,7 +181,7 @@ void CustomListCtrl::OnTimer(wxTimerEvent& event)
   {
       m_tiptext = wxEmptyString;
       m_tiptimer.Stop();
-      if (controlPointer!= 0 && *controlPointer!= 0)
+      if (m_controlPointer!= 0 && *m_controlPointer!= 0)
       {
           m_tipwindow->Close();
           m_tipwindow = 0;
@@ -276,11 +287,6 @@ void CustomListCtrl::OnEndResizeCol(wxListEvent& event)
 
 bool CustomListCtrl::SetColumnWidth(int col, int width)
 {
-//#ifdef __WXMSW__ //this fixes icons disappearing in first column
-//    if ( width == wxLIST_AUTOSIZE_USEHEADER && col == 0 )
-//        width = 44;
-//#endif
-
     if ( sett().GetColumnWidth( m_name, col) != Settings::columnWidthUnset)
     {
         return ListBaseType::SetColumnWidth( col, sett().GetColumnWidth( m_name, col) );
@@ -296,7 +302,7 @@ void CustomListCtrl::noOp(wxMouseEvent& event)
 {
     m_tiptext = wxEmptyString;
 //            m_tiptimer.Stop();
-//            if (controlPointer!= 0 && *controlPointer!= 0)
+//            if (m_controlPointer!= 0 && *m_controlPointer!= 0)
 //            {
 //                m_tipwindow->Close();
 //                m_tipwindow = 0;

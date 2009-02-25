@@ -4,7 +4,7 @@
 #include <wx/string.h>
 
 const int CACHE_VERSION     = 9;
-const int SETTINGS_VERSION  = 10;
+const int SETTINGS_VERSION  = 11;
 
 const wxString DEFSETT_DEFAULT_SERVER_NAME= _T("Official server");
 const wxString DEFSETT_DEFAULT_SERVER_HOST = _T("taspringmaster.clan-sy.com");
@@ -29,6 +29,7 @@ const bool DEFSETT_WEB_BROWSER_USE_DEFAULT = true;
 
 #include <wx/fileconf.h>
 #include "useractions.h"
+#include "Helper/sortutil.h"
 
 class wxWindow;
 class wxConfigBase;
@@ -43,6 +44,8 @@ class wxColourData;
 class wxSize;
 class wxPoint;
 class wxPathList;
+
+typedef std::map<unsigned int,unsigned int> ColumnMap;
 
 class SL_WinConf : public wxFileConfig
 {
@@ -303,6 +306,12 @@ class Settings
 
     void SetShowTooltips( bool show);
     bool GetShowTooltips();
+
+    ColumnMap GetColumnMap( const wxString& name );
+    void GetColumnMap( const wxString& name, const ColumnMap& map );
+
+    SortOrder GetSortOrder( const wxString& list_name );
+    void SetSortOrder( const wxString& list_name, const SortOrder& order  );
 
     void SetColumnWidth( const wxString& list_name, const int coloumn_ind, const int coloumn_width );
     int GetColumnWidth( const wxString& list_name, const int coloumn );

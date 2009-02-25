@@ -210,7 +210,7 @@ ChatPanel* MainChatTab::AddChatPannel( Server& server, const wxString& name )
   return chat;
 }
 
-ChatPanel* MainChatTab::AddChatPannel( User& user )
+ChatPanel* MainChatTab::AddChatPannel( const User& user )
 {
   for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ ) {
     if ( m_chat_tabs->GetPageText(i) == user.GetNick() ) {

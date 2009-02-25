@@ -383,16 +383,6 @@ bool Battle::GetAutoLockOnStart()
     return m_autolock_on_start;
 }
 
-void Battle::SetIsProxy( bool value )
-{
-    m_opts.isproxy = value;
-}
-
-bool Battle::IsProxy()
-{
-    return m_opts.isproxy;
-}
-
 void Battle::SetLockExternalBalanceChanges( bool value )
 {
     if ( value ) DoAction( _T("has locked player balance changes") );
@@ -886,15 +876,6 @@ void Battle::ForceUnsyncedToSpectate()
     }
 }
 
-bool Battle::IsFounderMe()
-{
-    return ( ( m_opts.founder == GetMe().GetNick() ) || ( m_opts.isproxy  && !m_generating_script ) );
-}
-
-int Battle::GetMyPlayerNum()
-{
-    return GetPlayerNum( GetMe() );
-}
 
 void Battle::UserPositionChanged( const User& user )
 {

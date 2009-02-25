@@ -346,7 +346,8 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
         m_autohost_chk->Disable();
         m_autolock_chk->Disable();
     }
-    else
+
+    if ( IsHosted() && !m_battle.IsProxy() )
     {
         m_battle.SetImReady ( true );
         m_ready_chk->Disable();
@@ -514,8 +515,10 @@ void BattleRoomTab::UpdateUser( User& user )
     }
     else
     {
-        if ( !IsHosted() )
+        if ( !IsHosted() || m_battle.IsProxy() )
+        {
             m_ready_chk->Enable();
+        }
 
         m_ready_chk->SetValue( bs.ready );
         m_side_sel->Enable();
