@@ -192,9 +192,14 @@ public:
     virtual wxString GetHostMapName() const;
     virtual wxString GetHostMapHash() const;
 
+    virtual void SetIsProxy( bool value );
+    virtual bool IsProxy();
+
     virtual bool IsSynced();
 
-    virtual bool IsFounderMe() = 0;
+    virtual bool IsFounderMe();
+
+    virtual int GetMyPlayerNum();
 
 		virtual int GetPlayerNum( const User& user );
 
@@ -347,7 +352,9 @@ public:
 
 		const BattleOptions& GetBattleOptions() const { return m_opts; }
 
-        bool Equals( const IBattle& other ) const { return m_opts.battleid == other.GetBattleOptions().battleid; }
+		bool Equals( const IBattle& other ) const { return m_opts.battleid == other.GetBattleOptions().battleid; }
+
+		virtual void DisableHostStatusInProxyMode( bool value ) { m_generating_script = value; }
 
 		virtual void UserPositionChanged( const User& usr );
 

@@ -793,3 +793,24 @@ wxArrayString IBattle::GetPresetList()
 void IBattle::UserPositionChanged( const User& user )
 {
 }
+
+void IBattle::SetIsProxy( bool value )
+{
+    m_opts.isproxy = value;
+}
+
+bool IBattle::IsProxy()
+{
+    return m_opts.isproxy;
+}
+
+bool IBattle::IsFounderMe()
+{
+    return ( ( m_opts.founder == GetMe().GetNick() ) || ( m_opts.isproxy  && !m_generating_script ) );
+}
+
+int IBattle::GetMyPlayerNum()
+{
+    return GetPlayerNum( GetMe() );
+}
+
