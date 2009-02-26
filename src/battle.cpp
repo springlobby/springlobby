@@ -405,7 +405,6 @@ void Battle::AddBot( const wxString& nick, UserBattleStatus status )
 
 void Battle::ForceSide( User& user, int side )
 {
-		if ( user.BattleStatus().IsBot() ) IBattle::ForceSide( user, side );
 		m_serv.ForceSide( m_opts.battleid, user, side );
 }
 

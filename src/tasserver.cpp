@@ -1828,11 +1828,19 @@ void TASServer::ForceSide( int battleid, User& user, int side )
         return;
     }
 
+		UserBattleStatus& status = user().BattleStatus();
+
     if ( &user == &GetMe() )
     {
-        GetMe().BattleStatus().side = side;
-        SendMyBattleStatus( GetMe().BattleStatus() );
+        status.side = side;
+        SendMyBattleStatus( status );
         return;
+    }
+
+    if ( status.IsBot() )
+    {
+    	status.side = side;
+    	UpdateBot( battleid, user, status );
     }
 }
 
