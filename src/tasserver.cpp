@@ -1827,7 +1827,7 @@ void TASServer::ForceSide( int battleid, User& user, int side )
         return;
     }
 
-		UserBattleStatus& status = user().BattleStatus();
+		UserBattleStatus& status = user.BattleStatus();
 
     if ( &user == &GetMe() )
     {
