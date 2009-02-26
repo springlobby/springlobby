@@ -30,12 +30,14 @@ WidgetDownloadListctrl::WidgetDownloadListctrl(wxWindow* parent, wxWindowID id, 
     AddColumn( 4, widths[4], _T("Downloads"), _T("Downloads") );
     AddColumn( 5, widths[5], _T("Date"), _T("Date") );
 
-    m_sortorder[2].col = 2;
-    m_sortorder[2].direction = 1;
-    m_sortorder[0].col = 0;
-    m_sortorder[0].direction = 1;
-    m_sortorder[1].col = 1;
-    m_sortorder[1].direction = 1;
+    if ( m_sortorder.size() == 0 ) {
+        m_sortorder[2].col = 2;
+        m_sortorder[2].direction = 1;
+        m_sortorder[0].col = 0;
+        m_sortorder[0].direction = 1;
+        m_sortorder[1].col = 1;
+        m_sortorder[1].direction = 1;
+    }
 }
 
 WidgetDownloadListctrl::~WidgetDownloadListctrl()
@@ -45,7 +47,15 @@ WidgetDownloadListctrl::~WidgetDownloadListctrl()
 
 int WidgetDownloadListctrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir )
 {
-    return 0;
+    switch ( col ) {
+        case 0: return dir * u1.name.CmpNoCase( u2.name );
+        case 1: return dir * u1.short_description.CmpNoCase( u2.short_description );
+        case 2: return dir * u1.author.CmpNoCase( u2.author );
+        case 3: return dir * u1.mods.CmpNoCase( u2.mods );
+        case 4: return dir * compareSimple( u1.num_downloads, u2.num_downloads );
+        case 5: return dir * u1.date.CmpNoCase( u2.date );
+        default: return 0;
+    }
 }
 
 void WidgetDownloadListctrl::AddWidget( const Widget widget )
@@ -91,7 +101,12 @@ void WidgetDownloadListctrl::HighlightItem( long item )
 
 void WidgetDownloadListctrl::Sort()
 {
-
+    if ( m_data.size() > 0 )
+    {
+        SaveSelection();
+        SLInsertionSort( m_data, m_comparator );
+        RestoreSelection();
+    }
 }
 
 int WidgetDownloadListctrl::GetIndexFromData( const DataType& data ) const
@@ -101,7 +116,25 @@ int WidgetDownloadListctrl::GetIndexFromData( const DataType& data ) const
 
 void WidgetDownloadListctrl::OnColClick( wxListEvent& event )
 {
+  if ( event.GetColumn() == -1 ) return;
+  wxListItem col;
+  GetColumn( m_sortorder[0].col, col );
+  col.SetImage( icons().ICON_NONE );
+  SetColumn( m_sortorder[0].col, col );
 
+  int i;
+  for ( i = 0; m_sortorder[i].col != event.GetColumn() && i < 4; ++i ) {}
+  if ( i > 3 ) { i = 3; }
+  for ( ; i > 0; i--) { m_sortorder[i] = m_sortorder[i-1]; }
+  m_sortorder[0].col = event.GetColumn();
+  m_sortorder[0].direction *= -1;
+
+
+  GetColumn( m_sortorder[0].col, col );
+  col.SetImage( ( m_sortorder[0].direction > 0 )?icons().ICON_UP:icons().ICON_DOWN );
+  SetColumn( m_sortorder[0].col, col );
+
+  SortList( true );
 }
 
 Widget& WidgetDownloadListctrl::GetSelectedWidget()

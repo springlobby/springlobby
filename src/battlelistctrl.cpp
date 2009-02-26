@@ -230,7 +230,6 @@ void BattleListCtrl::OnColClick( wxListEvent& event )
 
 
   GetColumn( m_sortorder[0].col, col );
-  //col.SetImage( ( m_sortorder[0].direction )?ICON_UP:ICON_DOWN );
   col.SetImage( ( m_sortorder[0].direction > 0 )?icons().ICON_UP:icons().ICON_DOWN );
   SetColumn( m_sortorder[0].col, col );
 
