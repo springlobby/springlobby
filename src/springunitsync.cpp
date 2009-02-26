@@ -1054,7 +1054,6 @@ wxString SpringUnitSync::GetArchivePath( const wxString& name )
   return susynclib().GetArchivePath( name );
 }
 
-<<<<<<< HEAD:src/springunitsync.cpp
 wxArrayString SpringUnitSync::GetScreenshotFilenames()
 {
     wxArrayString ret;
