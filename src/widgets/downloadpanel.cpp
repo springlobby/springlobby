@@ -33,7 +33,7 @@ WidgetDownloadPanel::WidgetDownloadPanel(wxWindow* parent, wxWindowID id, const 
     m_list->ResetColumnSizes();
     SetSizer( m_main_sizer );
     Layout();
-    m_list->RefreshVisibleItems();
+    m_list->SortList( true );
 }
 
 WidgetDownloadPanel::~WidgetDownloadPanel()
