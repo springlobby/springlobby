@@ -765,10 +765,6 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         nick = GetWordParam( params );
         pos = GetIntParam( params );
         params.Replace( _T("\\n"), _T("\n") );
-        if ( channel == _T("autohost") )
-        {
-          m_relay_host_manager_list = wxStringTokenize( params, _T("\n") );
-        }
         m_se->OnChannelTopic( channel, nick, params, pos/1000 );
     }
     else if ( cmd == _T("SAIDEX") )
@@ -811,6 +807,15 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
           m_relay_host_manager = _T("");
           return;
         }
+        if ( nick == _T("ManagerListServ") )
+				{
+					if  ( params.StartsWith(_T("managerlist ")) )
+					{
+						 wxString list = params.AfterFirst( _T(' ') );
+						 m_relay_host_manager_list = wxStringTokenize( list, _T("\t") );
+						 return;
+					}
+				}
         m_se->OnPrivateMessage( nick, params, false );
     }
     else if ( cmd == _T("JOINBATTLE") )
@@ -872,12 +877,6 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         channel = GetWordParam( params );
         units = GetIntParam( params );
         topic = GetSentenceParam( params );
-        if ( channel == _T("autohost") )
-        {
-        	wxString stringcopy = topic;
-        	stringcopy.Replace( _T("\\n"), _T("\n") );
-          m_relay_host_manager_list = wxStringTokenize( stringcopy, _T("\\n") );
-        }
         m_se->OnChannelList( channel, units, topic );
     }
     else if ( cmd == _T("ENDOFCHANNELS") )
