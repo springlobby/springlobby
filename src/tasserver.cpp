@@ -786,6 +786,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     {
         nick = GetWordParam( params );
         if ( ( ( nick == m_relay_host_bot ) || ( nick == m_relay_host_manager ) ) && params.StartsWith( _T("!") ) ) return; // drop the message
+        if ( ( nick == _T("RelayHostManagerList") ) && ( params == _T("!listmanagers") ) ) return;// drop the message
         if ( nick == _T("SL_bot") || ( nick == _T("insanebot") ) )
         {
         	if ( params.StartsWith( _T("stats.report") ) ) return;
