@@ -53,9 +53,12 @@ CustomVirtListCtrl<T>::CustomVirtListCtrl(wxWindow* parent, wxWindowID id, const
     SetImageList( &icons(), wxIMAGE_LIST_SMALL );
     SetImageList( &icons(), wxIMAGE_LIST_STATE );
 
-    //make sure we have at least one (empty) sort criteria
-    m_sortorder[0].direction = 0;
-    m_sortorder[0].col = 0;
+}
+
+template < class T >
+CustomVirtListCtrl<T>::~CustomVirtListCtrl()
+{
+    sett().SetSortOrder( m_name, m_sortorder );
 }
 
 template < class T >

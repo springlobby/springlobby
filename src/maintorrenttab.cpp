@@ -15,10 +15,7 @@
 #include "Helper/colorbutton.h"
 #include "filelister/filelistdialog.h"
 #include "widgets/downloaddialog.h"
-
-#ifndef HAVE_WX26
 #include "aui/auimanager.h"
-#endif
 
 BEGIN_EVENT_TABLE(MainTorrentTab,wxPanel)
 	//(*EventTable(MainTorrentTab)
@@ -33,9 +30,7 @@ MainTorrentTab::MainTorrentTab(wxWindow* parent, Ui& ui)
     m_widgets_dialog(NULL),
     m_ui(ui)
 {
-  #ifndef HAVE_WX26
-  GetAui().manager->AddPane( this, wxLEFT, _T("maintorrenttab") );
-  #endif
+    GetAui().manager->AddPane( this, wxLEFT, _T("maintorrenttab") );
 
 	m_mainbox = new wxBoxSizer (wxVERTICAL);
 
@@ -221,7 +216,7 @@ void MainTorrentTab::OnUpdate()
     m_torrent_list->DeleteAllItems();
     for (map_infos_iter iter = info_map.begin(); iter != info_map.end(); ++iter)
     {
-      if (iter->first == 0) continue; ///skip global torrent stats
+      if (iter->first == 0) continue; //skip global torrent stats
       AddTorrentInfo(iter->second);
 
     }

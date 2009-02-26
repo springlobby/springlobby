@@ -2,6 +2,7 @@
 #define SPRINGLOBBY_HEADERGUARD_MAINSINGLEPLAYERTAB_H
 
 #include <wx/scrolwin.h>
+#include "battleroommmoptionstab.h"
 
 class Ui;
 class wxNotebook;
@@ -10,8 +11,6 @@ class wxImageList;
 class wxBoxSizer;
 class SinglePlayerTab;
 class BattleOptionsTab;
-class BattleroomMMOptionsTab;
-
 
 class MainSinglePlayerTab : public wxScrolledWindow
 {
@@ -30,7 +29,7 @@ class MainSinglePlayerTab : public wxScrolledWindow
 
     SinglePlayerTab& GetSinglePlayerTab();
     BattleOptionsTab& GetOptionsTab();
-    BattleroomMMOptionsTab& GetMMOptionsTab();
+    BattleroomMMOptionsTab<SinglePlayerBattle>& GetMMOptionsTab();
 
   protected:
 
@@ -38,15 +37,11 @@ class MainSinglePlayerTab : public wxScrolledWindow
 
     wxBoxSizer* m_main_sizer;
     wxImageList* m_imagelist;
-    #ifdef HAVE_WX26
-    wxNotebook* m_tabs;
-    #else
     wxAuiNotebook* m_tabs;
-    #endif
 
     SinglePlayerTab* m_sp_tab;
     BattleOptionsTab* m_opts_tab;
-    BattleroomMMOptionsTab* m_mm_opts_tab;
+    BattleroomMMOptionsTab<SinglePlayerBattle>* m_mm_opts_tab;
 
 };
 

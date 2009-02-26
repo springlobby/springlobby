@@ -106,7 +106,7 @@ class ChatPanel : public wxPanel
     void SetIconIndex( size_t index ) { m_icon_index = index; }
 
     User& GetMe();
-    User* GetSelectedUser();
+    const User* GetSelectedUser();
 
     bool IsOk();
 
@@ -203,11 +203,7 @@ class ChatPanel : public wxPanel
     wxComboBox* m_nick_filter;  //!< The filter combo.
 
     wxButton* m_say_button;     //!< The say button.
-    #ifdef HAVE_WX26
-    wxNotebook* m_chat_tabs;
-    #else
     wxAuiNotebook* m_chat_tabs;
-    #endif
     Ui& m_ui;
     Channel* m_channel;         //!< Channel object.
     Server* m_server;           //!< Server object.

@@ -5,7 +5,7 @@
 #include <algorithm>
 #include "../Helper/sortutil.h"
 
-
+template<> SortOrder CustomVirtListCtrl<ChannelInfo>::m_sortorder = sett().GetSortOrder( _T("ChannelListCtrl") ) ;
 
 BEGIN_EVENT_TABLE( ChannelListctrl, CustomVirtListCtrl<ChannelInfo> )
   EVT_LIST_ITEM_ACTIVATED( CHANNELLIST, ChannelListctrl::OnActivateItem )
@@ -30,12 +30,14 @@ ChannelListctrl::ChannelListctrl(wxWindow* parent, wxWindowID id, const wxString
     AddColumn( 1, widths[1], _("# users"), _T("users") );
     AddColumn( 2, widths[2], _T("topic"), _T("topic") );
 
-    m_sortorder[2].col = 2;
-    m_sortorder[2].direction = 1;
-    m_sortorder[0].col = 0;
-    m_sortorder[0].direction = 1;
-    m_sortorder[1].col = 1;
-    m_sortorder[1].direction = 1;
+    if ( m_sortorder.size() == 0 ) {
+        m_sortorder[2].col = 2;
+        m_sortorder[2].direction = 1;
+        m_sortorder[0].col = 0;
+        m_sortorder[0].direction = 1;
+        m_sortorder[1].col = 1;
+        m_sortorder[1].direction = 1;
+    }
 }
 
 ChannelListctrl::~ChannelListctrl()

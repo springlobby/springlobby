@@ -64,19 +64,12 @@ class Battle : public IBattle
     void OnUserBattleStatusUpdated( User &user, UserBattleStatus status );
     void OnUserRemoved( User& user );
 
-    bool IsFounderMe();
-
-    int GetMyPlayerNum();
-
     void Autobalance( BalanceType balance_type = balance_divide, bool clans = true, bool strong_clans = true, int allyteamsize = 0 );
     void FixTeamIDs( BalanceType balance_type = balance_divide, bool clans = true, bool strong_clans = true, int controlteamsize = 0 );
     void ForceUnsyncedToSpectate();
 
     void SetAutoLockOnStart( bool value );
     bool GetAutoLockOnStart();
-
-    void SetIsProxy( bool value );
-    bool IsProxy();
 
     void SetLockExternalBalanceChanges( bool value );
     bool GetLockExternalBalanceChanges();
@@ -87,10 +80,9 @@ class Battle : public IBattle
 
     void SetImReady( bool ready );
 
-    void DisableHostStatusInProxyMode( bool value ) { m_generating_script = value; }
-
     User& GetMe();
-    bool IsFounderMe() const;
+
+    void UserPositionChanged( const User& user );
 
   protected:
     // Battle variables

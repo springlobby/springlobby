@@ -50,6 +50,8 @@ class ChannelListctrl : public CustomVirtListCtrl<ChannelInfo>
 
         int GetIndexFromData( const DataType& data ) const;
 
+        CustomVirtListCtrl<ChannelInfo>::m_sortorder;
+
         //! passed as callback to generic ItemComparator, returns -1,0,1 as per defined ordering
         static int CompareOneCrit( DataType u1, DataType u2, int col, int dir ) ;
 

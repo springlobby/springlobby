@@ -197,9 +197,9 @@ void ReplayListCtrl::OnColClick( wxListEvent& event )
 
 void ReplayListCtrl::Sort()//needs adjusting when column order etc is stable
 {
-//  ReplayListCtrl::m_replaylist_sort = &m_replaylist;
-//  if (m_replaylist_sort == 0 ) return;
-//  SortItems( CompareUniversal , (long)(m_sortorder) );
+  ReplayListCtrl::m_replaylist_sort = &m_replaylist;
+  if (m_replaylist_sort == 0 ) return;
+  SortItems( CompareUniversal , (long)(&m_sortorder) );
 }
 
 template<class T>
@@ -230,22 +230,25 @@ int wxCALLBACK ReplayListCtrl::CompareUniversal(long item1, long item2, long sor
   }catch(std::runtime_error){
     return 0;
   }
-//  SortOrder *m_sortorder=(SortOrder *)sortData;
-//  for(int i=0;i<4;++i){
-//    int c=0;
-//    switch ( m_sortorder[i].col ) {/// switch is just a jump table, dont optimize anything here.
-//      case 0 : c=MyCompare(replay1.date,replay2.date) ; break;
-//      case 1 : c=MyCompare(replay1.battle.GetHostModName(),replay2.battle.GetHostModName()); break;
-//      case 2 : c=MyCompare(replay1.battle.GetHostMapName(),replay2.battle.GetHostMapName()); break;
-//      case 3 : c=MyCompare(replay1.battle.GetNumUsers() - replay1.battle.GetSpectators(), replay2.battle.GetNumUsers() - replay2.battle.GetSpectators()); break;
-//      case 4 : c=MyCompare(replay1.duration,replay2.duration); break;
-//      case 5 : c=MyCompare(replay1.SpringVersion, replay2.SpringVersion); break;
-//      case 6 : c=MyCompare(replay1.size, replay2.size); break;
-//      case 7 : c=MyCompare(replay1.Filename.AfterLast( wxFileName::GetPathSeparator() ), replay2.Filename.AfterLast( wxFileName::GetPathSeparator() )); break;
-//    }
-//    if(!m_sortorder[i].direction)c=-c;
-//    if(c!=0)return c;
-//  }
+  SortOrder* sortorder_p = (SortOrder *)sortData;
+  if ( sortorder_p ) {
+      for(int i=0;i<4;++i){
+          SortOrderItem sortOrder = (*sortorder_p)[i];
+        int c=0;
+        switch ( sortOrder.col ) {// switch is just a jump table, dont optimize anything here.
+          case 0 : c=MyCompare(replay1.date,replay2.date) ; break;
+          case 1 : c=MyCompare(replay1.battle.GetHostModName(),replay2.battle.GetHostModName()); break;
+          case 2 : c=MyCompare(replay1.battle.GetHostMapName(),replay2.battle.GetHostMapName()); break;
+          case 3 : c=MyCompare(replay1.battle.GetNumUsers() - replay1.battle.GetSpectators(), replay2.battle.GetNumUsers() - replay2.battle.GetSpectators()); break;
+          case 4 : c=MyCompare(replay1.duration,replay2.duration); break;
+          case 5 : c=MyCompare(replay1.SpringVersion, replay2.SpringVersion); break;
+          case 6 : c=MyCompare(replay1.size, replay2.size); break;
+          case 7 : c=MyCompare(replay1.Filename.AfterLast( wxFileName::GetPathSeparator() ), replay2.Filename.AfterLast( wxFileName::GetPathSeparator() )); break;
+        }
+        if( !sortOrder.direction ) c *= -1;
+        if(c!=0)return c;
+      }
+  }
   return 0;
 }
 

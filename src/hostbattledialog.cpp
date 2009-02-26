@@ -279,13 +279,13 @@ void HostBattleDialog::OnCancel( wxCommandEvent& event )
 
 int HostBattleDialog::GetSelectedRank()
 {
-  if ( m_rank0_radio->GetValue() ) return 000;
-  if ( m_rank1_radio->GetValue() ) return 100;
-  if ( m_rank2_radio->GetValue() ) return 200;
-  if ( m_rank3_radio->GetValue() ) return 300;
-  if ( m_rank4_radio->GetValue() ) return 400;
-  if ( m_rank5_radio->GetValue() ) return 500;
-  if ( m_rank6_radio->GetValue() ) return 600;
+  if ( m_rank0_radio->GetValue() ) return 0;
+  if ( m_rank1_radio->GetValue() ) return 1;
+  if ( m_rank2_radio->GetValue() ) return 2;
+  if ( m_rank3_radio->GetValue() ) return 3;
+  if ( m_rank4_radio->GetValue() ) return 4;
+  if ( m_rank5_radio->GetValue() ) return 5;
+  if ( m_rank6_radio->GetValue() ) return 6;
   return 000;
 }
 

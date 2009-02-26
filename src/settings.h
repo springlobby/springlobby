@@ -4,7 +4,7 @@
 #include <wx/string.h>
 
 const int CACHE_VERSION     = 9;
-const int SETTINGS_VERSION  = 8;
+const int SETTINGS_VERSION  = 11;
 
 const wxString DEFSETT_DEFAULT_SERVER_NAME= _T("Official server");
 const wxString DEFSETT_DEFAULT_SERVER_HOST = _T("taspringmaster.clan-sy.com");
@@ -29,6 +29,7 @@ const bool DEFSETT_WEB_BROWSER_USE_DEFAULT = true;
 
 #include <wx/fileconf.h>
 #include "useractions.h"
+#include "Helper/sortutil.h"
 
 class wxWindow;
 class wxConfigBase;
@@ -71,7 +72,11 @@ class Settings
     ~Settings();
 
 		/// used to import default configs from a file in windows
+		#ifdef __WXMSW__
     void SetDefaultConfigs( SL_WinConf& conf );
+    #else
+    void SetDefaultConfigs( wxConfig& conf );
+    #endif
 
     /// list all entries subkeys of a parent group
     wxArrayString GetGroupList( const wxString& base_key );
@@ -102,8 +107,6 @@ class Settings
     wxString GetLobbyWriteDir();
 
     wxString GetTempStorage();
-
-    bool SkipDownloadOtaContent();
 
     /* ================================================================ */
     /** @name Network
@@ -196,6 +199,8 @@ class Settings
     bool ServerExists( const wxString& server_name );
     void SetServer( const wxString& server_name, const wxString& url, int port );
     void DeleteServer( const wxString& server_name );
+
+    bool ShouldAddDefaultServerSettings();
     /**@}*/
 
     /* ================================================================ */
@@ -267,6 +272,8 @@ class Settings
     wxString GetChannelJoinName( int index );
     /**@}*/
 
+    bool ShouldAddDefaultChannelSettings();
+
 
     /* ================================================================ */
     /** @name UI
@@ -303,13 +310,16 @@ class Settings
     ColumnMap GetColumnMap( const wxString& name );
     void GetColumnMap( const wxString& name, const ColumnMap& map );
 
+    SortOrder GetSortOrder( const wxString& list_name );
+    void SetSortOrder( const wxString& list_name, const SortOrder& order  );
+
     void SetColumnWidth( const wxString& list_name, const int coloumn_ind, const int coloumn_width );
     int GetColumnWidth( const wxString& list_name, const int coloumn );
     //! used to signal unset column width in Get...
     enum { columnWidthUnset };
 
-    void SetMapSelectorFollowsMouse( bool value );
-    bool GetMapSelectorFollowsMouse();
+    void SetLanguageID ( const long id );
+    long GetLanguageID ( );
 
     /*@}*/
 
@@ -329,6 +339,8 @@ class Settings
 
     void SetGroupActions( const wxString& group, UserActions::ActionType action );
     UserActions::ActionType GetGroupActions( const wxString& group ) const;
+
+		bool ShouldAddDefaultGroupSettings();
 
     /*@}*/
 
@@ -383,41 +395,30 @@ class Settings
     void SetChatPMSoundNotificationEnabled( bool enabled );
     bool GetChatPMSoundNotificationEnabled();
 
+    void ConvertOldColorSettings();
 
-    /** Get named chat color.
-     *
-     * Color names should be in @c Namecase or @c CamelCase, or (if applicable)
-     * @c TLAC (Three-Letter Acronym Case ;)
-     *
-     *     * If the named color exists in the user's configuration, that value
-     *       will be used.
-     *
-     *     * If the named color does not exist in the user's configuration, an
-     *       attempt will be made to look up a predefined default for that
-     *       color.
-     *
-     *     * If the color still has not been found, a non-fatal error message
-     *       will be logged and a generic color (likely unfit for the intended
-     *       purpose) will be used.
-     *
-     *
-     * @param name Name of the color to get.
-     *
-     * @returns A value to use for the named color.
-     */
-    wxColour GetChatColor(const wxString& name);
-
-
-    /** Set the value of a named chat color.
-     *
-     * If the color's name cannot be found in the list of predefined colors, a
-     * non-fatal error message will be logged.
-     *
-     * @returns @c true if the value was written successfully, or @c false
-     * otherwise.
-     */
-    bool SetChatColor(const wxString& name, const wxColour& color);
-
+    wxColour GetChatColorNormal();
+    void SetChatColorNormal( wxColour value );
+    wxColour GetChatColorBackground();
+    void SetChatColorBackground( wxColour value );
+    wxColour GetChatColorHighlight();
+    void SetChatColorHighlight( wxColour value );
+    wxColour GetChatColorMine();
+    void SetChatColorMine( wxColour value );
+    wxColour GetChatColorNotification();
+    void SetChatColorNotification( wxColour value );
+    wxColour GetChatColorAction();
+    void SetChatColorAction( wxColour value );
+    wxColour GetChatColorServer();
+    void SetChatColorServer( wxColour value );
+    wxColour GetChatColorClient();
+    void SetChatColorClient( wxColour value );
+    wxColour GetChatColorJoinPart();
+    void SetChatColorJoinPart( wxColour value );
+    wxColour GetChatColorError();
+    void SetChatColorError( wxColour value );
+    wxColour GetChatColorTime();
+    void SetChatColorTime( wxColour value );
     wxFont GetChatFont();
     void SetChatFont( wxFont value );
 
@@ -615,6 +616,35 @@ class Settings
     void setSimpleDetail( wxString );
 
   /**@}*/
+
+  /* ================================================================ */
+    /** @name Map selection dialog
+     * @{
+     */
+    unsigned int GetVerticalSortkeyIndex(  );
+    void SetVerticalSortkeyIndex( const unsigned int idx );
+
+    unsigned int GetHorizontalSortkeyIndex(  );
+    void SetHorizontalSortkeyIndex( const unsigned int idx );
+
+    /** \return true for "<" false for ">" */
+    bool GetHorizontalSortorder();
+    void SetHorizontalSortorder( const bool order );
+
+    /** \return true for "ᴧ", false for "ᴠ" */
+    bool GetVerticalSortorder();
+    void SetVerticalSortorder( const bool order );
+
+    void SetMapSelectorFollowsMouse( bool value );
+    bool GetMapSelectorFollowsMouse();
+
+    /** \return m_filter_all_sett = 0; (default)
+                m_filter_recent_sett = 1;
+                m_filter_popular_sett = 2; */
+    unsigned int GetMapSelectorFilterRadio();
+    void SetMapSelectorFilterRadio( const unsigned int val );
+    /**@}*/
+
 
   protected:
     bool IsSpringBin( const wxString& path );

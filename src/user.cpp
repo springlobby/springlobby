@@ -147,8 +147,8 @@ void CommonUser::UpdateBattleStatus( const UserBattleStatus& status )
   if( !status.aishortname.IsEmpty() ) m_bstatus.aishortname = status.aishortname;
   if( !status.aiversion.IsEmpty() ) m_bstatus.aiversion = status.aiversion;
   if( !status.owner.IsEmpty() ) m_bstatus.owner = status.owner;
-  if( status.posx > 0 ) m_bstatus.posx = status.posx;
-  if( status.posy > 0 ) m_bstatus.posy = status.posy;
+  if( status.pos.x > 0 ) m_bstatus.pos.x = status.pos.x;
+  if( status.pos.y > 0 ) m_bstatus.pos.y = status.pos.y;
 
   // update ip and port if those were set.
   if( !status.ip.IsEmpty() ) m_bstatus.ip = status.ip;
@@ -178,8 +178,8 @@ UserStatus::RankContainer User::GetRank()
 wxString User::GetRankName(UserStatus::RankContainer rank)
 {
   //TODO: better interface to ranks?
-      switch(rank) {
-          case UserStatus::RANK_UNKNOWN: return _("Newbie");
+      switch( rank )
+      {
           case UserStatus::RANK_1: return _("Newbie");
           case UserStatus::RANK_2: return _("Beginner");
           case UserStatus::RANK_3: return _("Average");
@@ -188,20 +188,23 @@ wxString User::GetRankName(UserStatus::RankContainer rank)
           case UserStatus::RANK_6: return _("Highly experienced");
           case UserStatus::RANK_7: return _("Veteran");
       }
-      return _("no rank");
+			return _("Unknown");
 }
 
-float User::GetBalanceRank(){
-  return 1.0+0.1*float(GetStatus().rank-UserStatus::RANK_1)/float(UserStatus::RANK_7-UserStatus::RANK_1);
+float User::GetBalanceRank()
+{
+  return 1.0 + 0.1 * float( GetStatus().rank - UserStatus::RANK_1 ) / float( UserStatus::RANK_7 - UserStatus::RANK_1 );
 }
 
-wxString User::GetClan(){
-  wxString tmp=m_nick.AfterFirst('[');
-  if(tmp!=m_nick){
-    wxString clan=tmp.BeforeFirst(']');
-    if(clan!=tmp)return clan;
+wxString User::GetClan()
+{
+  wxString tmp = m_nick.AfterFirst('[');
+  if ( tmp != m_nick )
+  {
+    wxString clan = tmp.BeforeFirst(']');
+    if ( clan != tmp ) return clan;
   }
-  return wxString();
+  return _T("");
 }
 
 void CommonUser::SetStatus( const UserStatus& status )

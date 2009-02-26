@@ -17,6 +17,7 @@
 #include <wx/settings.h>
 #include <wx/arrstr.h>
 #include <wx/choice.h>
+
 #include <stdexcept>
 
 #include "battlemaptab.h"
@@ -31,11 +32,7 @@
 #include "uiutils.h"
 #include "server.h"
 #include "settings.h"
-
-
-#ifndef HAVE_WX26
 #include "aui/auimanager.h"
-#endif
 
 BEGIN_EVENT_TABLE(BattleMapTab, wxPanel)
 
@@ -49,10 +46,7 @@ END_EVENT_TABLE()
 BattleMapTab::BattleMapTab( wxWindow* parent, Ui& ui, Battle& battle ):
   wxScrolledWindow( parent, -1 ), m_ui(ui), m_battle(battle)
 {
-
-  #ifndef HAVE_WX26
   GetAui().manager->AddPane( this, wxLEFT, _T("battlemaptab") );
-  #endif
 
   wxBoxSizer* m_main_sizer = new wxBoxSizer( wxHORIZONTAL );
   wxBoxSizer* m_map_sizer = new wxBoxSizer( wxVERTICAL );
@@ -101,7 +95,7 @@ BattleMapTab::BattleMapTab( wxWindow* parent, Ui& ui, Battle& battle ):
 
   m_opts_sizer->Add( m_map_opts_list, 0, wxALL, 2 );
 
-  wxString m_start_radiosChoices[] = { _("Fixed"),_("Random"), _("Choose in game") };
+  wxString m_start_radiosChoices[] = { _("Fixed"),_("Random"), _("Choose in game"), _("Chose before game") };
   int m_start_radiosNChoices = sizeof( m_start_radiosChoices ) / sizeof( wxString );
   //TODO these need to be tooltipped, no idea how yet
   m_start_radios = new wxRadioBox( this, BMAP_START_TYPE, _("Startpositions"), wxDefaultPosition, wxSize( 150,-1 ), m_start_radiosNChoices, m_start_radiosChoices, 1, wxRA_SPECIFY_COLS );
@@ -124,9 +118,7 @@ BattleMapTab::BattleMapTab( wxWindow* parent, Ui& ui, Battle& battle ):
 
 BattleMapTab::~BattleMapTab()
 {
-  #ifndef HAVE_WX26
-  if(GetAui().manager)GetAui().manager->DetachPane( this );
-  #endif
+    if(GetAui().manager)GetAui().manager->DetachPane( this );
 }
 
 
@@ -206,11 +198,6 @@ void BattleMapTab::UpdateUser( User& user )
 
 void BattleMapTab::SetMap( int index )
 {
-  if ( !m_battle.IsFounderMe() ) {
-    //m_map_combo->SetSelection( m_map_combo->FindString( RefineMapname( m_battle.GetHostMapName() ) ) );
-    return;
-  }
-
   try
   {
     UnitSyncMap map = usync().GetMapEx( index );
@@ -225,6 +212,17 @@ void BattleMapTab::SetMap( int index )
 
 void BattleMapTab::OnMapSelect( wxCommandEvent& event )
 {
+	if ( !m_battle.IsFounderMe() )
+	{
+		try
+		{
+			m_battle.DoAction( _T("suggests ") + usync().GetMap( m_map_combo->GetCurrentSelection() ).name );
+		}
+		catch(...)
+		{
+		}
+		return;
+	}
 	SetMap( m_map_combo->GetCurrentSelection() );
 }
 
@@ -234,10 +232,16 @@ void BattleMapTab::OnMapBrowse( wxCommandEvent& event )
 	wxLogDebugFunc( _T("") );
 	MapSelectDialog dlg( &m_ui.mw(), m_ui );
 
-	if ( dlg.ShowModal() == wxID_OK && dlg.GetSelectedMap() != NULL ) {
-		wxLogDebugFunc( dlg.GetSelectedMap()->name );
-		const wxString mapname = RefineMapname( dlg.GetSelectedMap()->name );
-		const int idx = m_map_combo->FindString( mapname, true /*case sensitive*/ );
+	if ( dlg.ShowModal() == wxID_OK && dlg.GetSelectedMap() != NULL )
+	{
+		wxString mapname = dlg.GetSelectedMap()->name;
+		wxLogDebugFunc( mapname );
+		if ( !m_battle.IsFounderMe() )
+		{
+			m_battle.DoAction( _T("suggests ") + mapname  );
+			return;
+		}
+		const int idx = m_map_combo->FindString( RefineMapname( mapname ), true /*case sensitive*/ );
 		if ( idx != wxNOT_FOUND ) SetMap( idx );
 	}
 }

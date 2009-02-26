@@ -14,23 +14,16 @@
 #include <wx/statbmp.h>
 #include <wx/listctrl.h>
 #include <wx/dialog.h>
-
+#include <wx/choicdlg.h>
 
 
 #include "../images/springsettings.xpm"
 #include "../images/springlobby.xpm"
+#include "../utils.h"
 
 BEGIN_EVENT_TABLE(CustomMessageBox ,wxDialog)
   EVT_BUTTON(wxID_NO, CustomMessageBox::OnOptionsNo)
 END_EVENT_TABLE()
-
-#ifdef HAVE_WX26
-    enum
-    {
-        // all flags allowed in wxDialogBase::CreateButtonSizer()
-        ButtonSizerFlags = wxOK|wxCANCEL|wxYES|wxNO|wxHELP|wxNO_DEFAULT
-    };
-#endif
 
 wxWindow* CustomMessageBoxBase::m_settingsWindow = 0;
 wxWindow* CustomMessageBoxBase::m_lobbyWindow = 0;
@@ -389,6 +382,31 @@ void actNotifBox( int whichIcon , const wxString& message,const wxString& captio
 		}
 }
 
+int GetSingleChoiceIndex( const wxString& message,
+                            const wxString& caption,
+                            const wxArrayString& aChoices,
+                            const int selected,
+                            wxWindow *parent ,
+                            int x ,
+                            int y ,
+                            bool centre )
+{
+    wxString *choices;
+    int n = ConvertWXArrayToC(aChoices, &choices);
+
+    wxSingleChoiceDialog dialog(parent, message, caption, n, choices);
+    dialog.SetSelection( selected );
+
+    int choice;
+    if ( dialog.ShowModal() == wxID_OK )
+        choice = dialog.GetSelection();
+    else
+        choice = -1;
+
+    delete [] choices;
+
+    return choice;
+}
 
 void mutelistWindow( const wxString& message, const wxString& caption,
         long style, const int x, const int y )
@@ -416,3 +434,4 @@ MutelistWindow::MutelistWindow(wxIcon* icon ,wxWindow *parent, const wxString& m
 
 MutelistWindow::~MutelistWindow ()
 {}
+

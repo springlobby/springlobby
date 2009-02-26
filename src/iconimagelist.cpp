@@ -72,7 +72,6 @@
 #include "images/warning_small.png.h"
 
 #include "images/colourbox.xpm"
-//#include "images/fixcolours_palette.xpm"
 
 #include "images/unknown_flag.xpm"
 
@@ -225,7 +224,6 @@ int IconImageList::GetRankIcon( const unsigned int& rank, const bool& showlowest
     if ( !showlowest && rank == UserStatus::RANK_1 ) return ICON_RANK_NONE;
     switch (rank)
     {
-      case UserStatus::RANK_UNKNOWN: return ICON_RANK1;
       case UserStatus::RANK_1: return ICON_RANK1;
       case UserStatus::RANK_2: return ICON_RANK2;
       case UserStatus::RANK_3: return ICON_RANK3;
@@ -349,11 +347,11 @@ int IconImageList::GetSideIcon( const wxString& modname, int side )
   return -1;
 }
 
-int IconImageList::GetReadyIcon( const bool& spectator,const bool& ready, const int& sync, const bool& bot )
+int IconImageList::GetReadyIcon( const bool& spectator,const bool& ready, const unsigned int& sync, const bool& bot )
 {
     int index;
     if ( bot )
-				index = ICON_BOT;
+        index = ICON_BOT;
     else if ( spectator )
         index = ICON_SPECTATOR;
     else if ( ready )
@@ -361,13 +359,23 @@ int IconImageList::GetReadyIcon( const bool& spectator,const bool& ready, const 
     else
         index = ICON_NREADY;
 
-    if ( sync == SYNC_SYNCED )
+    if ( sync == SYNC_SYNCED ) //could this cause #674 ??
         return index;
     else
     {
         if ( m_state_index_map.find(index) == m_state_index_map.end() )
         {
-            m_state_index_map[index] = Add( BlendBitmaps( GetBitmap( index ), GetBitmap( ICON_WARNING_OVERLAY ) ) );
+            wxBitmap bg;
+            if ( index == ICON_NREADY )
+                bg = charArr2wxBitmap(closed_game_png, sizeof(closed_game_png) ); // ICON_NREADY
+            else if ( index == ICON_READY )
+                bg = charArr2wxBitmap(open_game_png, sizeof(open_game_png) ); // ICON_READY
+            else if ( index == ICON_SPECTATOR )
+                bg = charArr2wxBitmap( spectator_png, sizeof(spectator_png) ); // ICON_SPECTATOR
+            else
+                bg = wxBitmap(bot_xpm); // ICON_BOT
+
+            m_state_index_map[index] = Add( BlendBitmaps( bg, charArr2wxBitmap(warning_small_png, sizeof(warning_small_png) ) ) );
         }
         return m_state_index_map[index];
     }

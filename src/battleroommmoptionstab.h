@@ -9,6 +9,7 @@ const int BOOL_START_ID = 3000;
 const int FLOAT_START_ID = 4000;
 const int LIST_START_ID = 5000;
 const int STRING_START_ID = 6000;
+const int BUTTON_ID_OFFSET = 7000;
 
 class wxBoxSizer;
 class wxStaticBoxSizer;
@@ -16,7 +17,7 @@ class OptionsWrapper;
 class wxCheckBox;
 class wxComboBox;
 class wxCommandEvent;
-class IBattle;
+class Battle;
 class wxSpinCtrlDbl;
 class wxTextCtrl;
 class wxSpinEvent;
@@ -29,6 +30,8 @@ typedef std::map<wxString,wxComboBox*> comboBoxMap;
 typedef std::map<wxString,wxSpinCtrlDbl*> spinCtrlMap;
 typedef std::map<wxString,wxTextCtrl*> textCtrlMap;
 typedef std::map<wxString,wxStaticText*> staticTextMap;
+typedef std::map<wxString,wxButton*> buttonMap;
+typedef std::map<wxString,wxString> nameInfoMap; //! map control name <-> info (description)
 
 /** \brief a panel displaying programmatically generated gui elements to manipulate mmOptions
  * Since storing of data is mixed in with gui elements, this is a very delicate place to apply changes to.
@@ -38,25 +41,30 @@ typedef std::map<wxString,wxStaticText*> staticTextMap;
  * That way we can use the inverse mapping in the event handlers to go from the name of event-generating gui element
  * to the mmOptionKey that needs to be changed.
  */
+template < class BattleType >
 class BattleroomMMOptionsTab : public wxScrolledWindow
 {
 	public:
-		BattleroomMMOptionsTab( IBattle& battle, wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,300 ), long style = wxTAB_TRAVERSAL );
+		BattleroomMMOptionsTab( BattleType& battle, wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,300 ), long style = wxTAB_TRAVERSAL );
 		~BattleroomMMOptionsTab();
 
 		void UpdateOptControls(wxString controlName);
+		//!relaod single category
 		void OnReloadControls(OptionsWrapper::GameOption flag);
-		void Update( const wxString& Tag );
+		//!reload all categories
+		void OnReloadControls();
 
         void UpdatePresetList();
 
+        void OnButton( wxCommandEvent& event );
         void OnLoadPreset( wxCommandEvent& event );
         void OnSavePreset( wxCommandEvent& event );
         void OnDeletePreset( wxCommandEvent& event );
         void OnSetModDefaultPreset( wxCommandEvent& event );
+        void OnInfoButton( wxCommandEvent& event );
 
 	protected:
-		 IBattle& m_battle;
+        BattleType& m_battle;
 
 		wxBoxSizer* m_main_sizer;
 		wxStaticBoxSizer* m_mod_options_sizer;
@@ -78,6 +86,8 @@ class BattleroomMMOptionsTab : public wxScrolledWindow
 		spinCtrlMap m_spinctrl_map;
 		textCtrlMap m_textctrl_map;
 		staticTextMap m_statictext_map;
+		buttonMap m_button_map;
+		nameInfoMap m_name_info_map;
 
 		/** \brief setup toplevel sizer per GameOption with all child sizers ( sections )
             */
@@ -102,9 +112,10 @@ class BattleroomMMOptionsTab : public wxScrolledWindow
 		void OnSpinCtrlChange(wxSpinEvent& event);
 		/** @} */
 
+		wxButton* getButton( const wxWindowID id, const wxString& name );
+
 
 		DECLARE_EVENT_TABLE();
-
 };
 
 enum
@@ -116,6 +127,6 @@ enum
   BOPTS_CHOSEPRES
 };
 
+#include "battleroommmoptionstab.cpp"
 
 #endif /*BATTLEROOMMMOPTIONSTAB_H_*/
-

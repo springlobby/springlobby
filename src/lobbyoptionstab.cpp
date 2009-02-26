@@ -1,5 +1,3 @@
-#include "lobbyoptionstab.h"
-#include "nonportable.h"
 #include <wx/sizer.h>
 #include <wx/statbox.h>
 #include <wx/intl.h>
@@ -11,12 +9,14 @@
 #include <wx/button.h>
 #include <wx/filedlg.h>
 
+#include "lobbyoptionstab.h"
+#include "nonportable.h"
 #include "settings.h"
+#include "springlobbyapp.h"
+#include "settings++/custom_dialogs.h"
 #include "utils.h"
-
-#ifndef HAVE_WX26
 #include "aui/auimanager.h"
-#endif
+
 
 BEGIN_EVENT_TABLE(LobbyOptionsTab, wxPanel)
     EVT_BUTTON ( SPRING_WEBBROWSE, LobbyOptionsTab::OnBrowseWeb )
@@ -24,11 +24,11 @@ BEGIN_EVENT_TABLE(LobbyOptionsTab, wxPanel)
 END_EVENT_TABLE()
 
 LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
-    : wxScrolledWindow( parent, -1 )
+    : wxScrolledWindow( parent, -1 ),
+    m_show_tooltips_label( 0 )
 {
-    #ifndef HAVE_WX26
     GetAui().manager->AddPane( this, wxLEFT, _T("lobbyoptionstab") );
-    #endif
+
     m_main_sizer = new wxBoxSizer ( wxVERTICAL );
 
 /* ================================
@@ -94,10 +94,10 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
 #endif
 
     wxStaticBoxSizer* m_show_tooltips_sizer = new wxStaticBoxSizer ( wxVERTICAL, this, _("Tooltips") );
-    m_show_tooltips_label = new wxStaticText ( this, -1, _("Requires SpringLobby restart to take effect.") );
     m_show_tooltips = new wxCheckBox( this, -1, _("Show Tooltips?"), wxDefaultPosition, wxDefaultSize, 0 );
     m_show_tooltips->SetValue( sett().GetShowTooltips() );
 #ifndef __WXMSW__ // on windows this change is immediate
+    m_show_tooltips_label = new wxStaticText ( this, -1, _("Requires SpringLobby restart to take effect.") );
     m_show_tooltips_sizer->Add( m_show_tooltips_label, 1, wxEXPAND|wxALL, 5);
 #endif
     m_show_tooltips_sizer->Add( m_show_tooltips, 0, wxEXPAND|wxALL, 5);
@@ -188,3 +188,5 @@ void LobbyOptionsTab::OnDefaultWeb( wxCommandEvent& event )
 {
   HandleWebloc( m_web_def_radio->GetValue() );
 }
+
+

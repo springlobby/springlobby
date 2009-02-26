@@ -25,7 +25,14 @@ void SLBubbleSort( ContainerType& data, const Comparator& cmp )
     }
 }
 
-class SortOrder;
+ //! set direction to +1 for down, -1 for up
+struct SortOrderItem {
+    int col;
+    int direction;
+};
+//! map sort priority <--> ( column, direction )
+typedef std::map<int,SortOrderItem> SortOrder;
+
 
 template< class ContainerType, class Comparator >
 void SLInsertionSort( ContainerType& data, const Comparator& cmp )

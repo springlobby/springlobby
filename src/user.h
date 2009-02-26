@@ -11,16 +11,17 @@ const unsigned int SYNC_SYNCED = 1;
 const unsigned int SYNC_UNSYNCED = 2;
 
 //! @brief Struct used to store a client's status.
-struct UserStatus {
-    enum RankContainer {
-      RANK_UNKNOWN = 0,
-      RANK_1 = 1,
-      RANK_2 = 2,
-      RANK_3 = 3,
-      RANK_4 = 4,
-      RANK_5 = 5,
-      RANK_6 = 6,
-      RANK_7 = 7
+struct UserStatus
+{
+    enum RankContainer
+    {
+      RANK_1,
+      RANK_2,
+      RANK_3,
+      RANK_4,
+      RANK_5,
+      RANK_6,
+      RANK_7
     };
 
   bool in_game;
@@ -28,8 +29,15 @@ struct UserStatus {
   RankContainer rank;
   bool moderator;
   bool bot;
-  UserStatus(): in_game(false), away(false), rank(RANK_UNKNOWN), moderator(false), bot(false) {}
+  UserStatus(): in_game(false), away(false), rank(RANK_1), moderator(false), bot(false) {}
   wxString GetDiffString ( const UserStatus& other );
+};
+
+struct UserPosition
+{
+	int x;
+	int y;
+	UserPosition(): x(-1), y(-1) {}
 };
 
 struct UserBattleStatus
@@ -42,11 +50,10 @@ struct UserBattleStatus
   int color_index;
   int handicap;
   int side;
-  int sync;
+  unsigned int sync;
   bool spectator;
   bool ready;
-	int posx; // for startpos = 4
-	int posy; // for startpos = 4
+	UserPosition pos; // for startpos = 4
 	// bot-only stuff
 	wxString owner;
 	wxString aishortname;
@@ -55,7 +62,7 @@ struct UserBattleStatus
   wxString ip;
   unsigned int udpport;
   bool IsBot() { return !aishortname.IsEmpty(); }
-  UserBattleStatus(): team(0),ally(0),colour(wxColour(0,0,0)),color_index(-1),handicap(0),side(0),sync(SYNC_UNKNOWN),spectator(false),ready(false), posx(-1), posy(-1), udpport(0) {}
+  UserBattleStatus(): team(0),ally(0),colour(wxColour(0,0,0)),color_index(-1),handicap(0),side(0),sync(SYNC_UNKNOWN),spectator(false),ready(false), udpport(0) {}
   bool operator == ( const UserBattleStatus& s )
   {
     return ( ( team == s.team ) && ( colour == s.colour ) && ( handicap == s.handicap ) && ( side == s.side ) && ( sync == s.sync ) && ( spectator == s.spectator ) && ( ready == s.ready ) && ( owner == s.owner ) && ( aishortname == s.aishortname ) );
@@ -96,7 +103,16 @@ class CommonUser
         virtual void SetStatus( const UserStatus& status );
 
         UserBattleStatus& BattleStatus() { return m_bstatus; }
+
 		UserBattleStatus GetBattleStatus() const { return m_bstatus; }
+
+	    /** Read-only variant of BattleStatus() above.
+	     */
+	    const UserBattleStatus&
+	    BattleStatus() const {
+			return m_bstatus;
+    	}
+
         //void SetBattleStatus( const UserBattleStatus& status );/// dont use this to avoid overwriting data like ip and port, use following method.
         void UpdateBattleStatus( const UserBattleStatus& status );
 

@@ -2,9 +2,6 @@
 //
 // Class: Battle
 //
-#include <wx/log.h>
-#include <stdexcept>
-
 #include "battle.h"
 #include "ui.h"
 #include "iunitsync.h"
@@ -15,17 +12,17 @@
 #include "settings.h"
 #include "useractions.h"
 #include "settings++/custom_dialogs.h"
-
+#include "springunitsynclib.h"
 #include "iconimagelist.h"
 
 #include <algorithm>
-#include <math.h>
+#include <cmath>
+#include <stdexcept>
 
 #include <wx/image.h>
 #include <wx/string.h>
+#include <wx/log.h>
 
-#include "images/fixcolours_palette.xpm"
-#include "springunitsynclib.h"
 
 
 
@@ -188,7 +185,7 @@ User& Battle::OnUserAdded( User& user )
     {
         if ( CheckBan( user ) ) return user;
 
-        if ( ( m_opts.rankneeded > 1 ) && ( user.GetStatus().rank < m_opts.rankneeded ))
+        if ( ( m_opts.rankneeded > UserStatus::RANK_1 ) && ( user.GetStatus().rank < m_opts.rankneeded ))
         {
             switch ( m_opts.ranklimittype )
             {
@@ -223,7 +220,7 @@ void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
     }
     if ( IsFounderMe() )
     {
-        if ( ( m_opts.rankneeded > 1 ) && ( user.GetStatus().rank < m_opts.rankneeded ))
+        if ( ( m_opts.rankneeded > UserStatus::RANK_1 ) && ( user.GetStatus().rank < m_opts.rankneeded ))
         {
             switch ( m_opts.ranklimittype )
             {
@@ -386,16 +383,6 @@ bool Battle::GetAutoLockOnStart()
     return m_autolock_on_start;
 }
 
-void Battle::SetIsProxy( bool value )
-{
-    m_opts.isproxy = value;
-}
-
-bool Battle::IsProxy()
-{
-    return m_opts.isproxy;
-}
-
 void Battle::SetLockExternalBalanceChanges( bool value )
 {
     if ( value ) DoAction( _T("has locked player balance changes") );
@@ -418,7 +405,6 @@ void Battle::AddBot( const wxString& nick, UserBattleStatus status )
 
 void Battle::ForceSide( User& user, int side )
 {
-		if ( user.BattleStatus().IsBot() ) IBattle::ForceSide( user, side );
 		m_serv.ForceSide( m_opts.battleid, user, side );
 }
 
@@ -889,13 +875,8 @@ void Battle::ForceUnsyncedToSpectate()
     }
 }
 
-bool Battle::IsFounderMe()
-{
-    return ( ( m_opts.founder == GetMe().GetNick() ) || ( m_opts.isproxy  && !m_generating_script ) );
-}
 
-int Battle::GetMyPlayerNum()
+void Battle::UserPositionChanged( const User& user )
 {
-    return GetPlayerNum( GetMe() );
+	  m_serv.SendUserPosition( user );
 }
-

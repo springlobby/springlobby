@@ -142,6 +142,11 @@ class SpringUnitSync : public IUnitSync
     GameOptions GetMapOptions( const wxString& name );
     wxArrayString GetMapDeps( const wxString& name );
 
+    //! function to fetch default singplayer/replay/savegame's default nick
+		wxString GetDefaultNick();
+		//! function to set default singplayer/replay/savegame's default nick
+		void SetDefaultNick( const wxString& nick );
+
     int GetMapIndex( const wxString& name );
 
     wxArrayString GetSides( const wxString& modname  );

@@ -217,7 +217,15 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 			}
 			tdf.Append( _T("IsHost"), battle.IsFounderMe() );
 
-			tdf.Append(_T("MyPlayerName"), battle.GetMe().GetNick() );
+			if ( !battle.IsProxy() )
+			{
+				 tdf.Append(_T("MyPlayerName"), battle.GetMe().GetNick() );
+			}
+			else
+			{
+				if ( battle.IsFounderMe() ) tdf.Append( _T("MyPlayerName"), battle.GetFounder().GetNick() );
+				else  tdf.Append(_T("MyPlayerName"), battle.GetMe().GetNick() );
+			}
 
 			if ( !battle.IsFounderMe() )
 			{
@@ -246,6 +254,38 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 					tdf.Append(it->first,it->second.second);
 			}
 
+			tdf.EnterSection( _T("mapoptions") );
+				OptionsWrapper::wxStringTripleVec optlistMap = battle.CustomBattleOptions().getOptions( OptionsWrapper::MapOption );
+				for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistMap.begin(); it != optlistMap.end(); ++it)
+				{
+						tdf.Append(it->first,it->second.second);
+				}
+			tdf.LeaveSection();
+
+
+			tdf.EnterSection(_T("modoptions"));
+				OptionsWrapper::wxStringTripleVec optlistMod = battle.CustomBattleOptions().getOptions( OptionsWrapper::ModOption );
+				for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistMod.begin(); it != optlistMod.end(); ++it)
+				{
+						tdf.Append(it->first,it->second.second);
+				}
+			tdf.LeaveSection();
+
+			std::map<wxString,int> units = battle.RestrictedUnits();
+			tdf.Append( _T("NumRestrictions"), units.size());
+			tdf.EnterSection( _T("RESTRICT") );
+				int restrictcount = 0;
+				for ( std::map<wxString, int>::iterator itor = units.begin(); itor != units.end(); itor++ )
+				{
+						tdf.Append(_T("Unit") + i2s( restrictcount ), itor->first );
+						tdf.Append(_T("Limit") + i2s( restrictcount ), itor->second );
+						restrictcount++;
+				}
+			tdf.LeaveSection();
+
+
+			tdf.AppendLineBreak();
+
 			tdf.Append( _T("NumPlayers"), battle.GetNumPlayers() );
 			tdf.Append( _T("NumUsers"), battle.GetNumUsers() );
 
@@ -255,13 +295,11 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 
 			std::map<int, int> m_ally_map; // spring wants consegutive allies, this maps non consegutive allies to consegutive
 
-			std::map<int, User*> dedupe_teams; // team -> user* ( for teams deduping )
 			for ( unsigned int i = 0; i < NumUsers; i++ )
 			{
 					User& usr = battle.GetUser( i );
 					if ( usr.BattleStatus().spectator ) continue; // skip spectators
 					m_ally_map[ usr.BattleStatus().ally ] = usr.BattleStatus().ally;
-					dedupe_teams[usr.BattleStatus().team] = &usr;
 			}
 			int progressive_ally = 0;
 			for ( std::map<int, int>::iterator itor = m_ally_map.begin(); itor != m_ally_map.end(); itor++ ) // fill the map with numers in cosegutive progression
@@ -278,15 +316,26 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 					if ( status.IsBot() ) continue;
 					tdf.EnterSection( _T("PLAYER") + i2s( i ) );
 							tdf.Append( _T("Name"), user.GetNick() );
-
 							tdf.Append( _T("CountryCode"), user.GetCountry().Lower());
 							tdf.Append( _T("Spectator"), status.spectator );
 							tdf.Append( _T("Rank"), user.GetRank() );
-
 							if ( !status.spectator )
 							{
 								tdf.Append( _T("Team"), status.team );
 							}
+							else
+							{
+								 for ( unsigned int j = 0; j < NumUsers; j++ ) // spectate a random player to spring won't complain about a missing team
+								 {
+								 	UserBattleStatus& stat = battle.GetUser( j ).BattleStatus();
+								 	if ( !stat.spectator )
+								 	{
+								 		 tdf.Append( _T("Team"), stat.team );
+								 		 break;
+								 	}
+								 }
+							}
+
 					tdf.LeaveSection();
 					player_to_number[&user] = i;
 			}
@@ -313,11 +362,11 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 
 			wxArrayString sides = usync().GetSides( battle.GetHostModName() );
 			int PreviousTeam = -1;
-			for ( std::map<int, User*>::iterator itor = dedupe_teams.begin(); itor != dedupe_teams.end(); itor++ )
+			for ( unsigned int i = 0; i < NumUsers; i++ )
 			{
-					if ( !itor->second ) continue;
-					User& usr = *itor->second;
+					User& usr = battle.GetUser( i );
 					UserBattleStatus& status = usr.BattleStatus();
+					if ( status.spectator ) continue;
 					if ( PreviousTeam == status.team ) continue; // skip duplicates
 					PreviousTeam = status.team;
 
@@ -341,8 +390,8 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 
 						if ( startpostype == IBattle::ST_Pick )
 						{
-								tdf.Append(_T("StartPosX"), status.posx );
-								tdf.Append(_T("StartPosZ"), status.posy );
+								tdf.Append(_T("StartPosX"), status.pos.x );
+								tdf.Append(_T("StartPosZ"), status.pos.y );
 						}
 
 						tdf.Append( _T("AllyTeam"), m_ally_map[status.ally] );
@@ -358,6 +407,8 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 						tdf.Append( _T("Handicap"), status.handicap );
 					tdf.LeaveSection();
 			}
+
+			tdf.AppendLineBreak();
 
 			int PreviousAlly = -1;
 			for ( unsigned int i = 0; i < NumUsers; i++ )
@@ -388,34 +439,6 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 						}
 					tdf.LeaveSection();
 			}
-
-			wxArrayString units = battle.DisabledUnits();
-			tdf.Append( _T("NumRestrictions"), units.GetCount());
-			tdf.EnterSection( _T("RESTRICT") );
-				for ( unsigned int i = 0; i < units.GetCount(); i++)
-				{
-						tdf.Append(_T("Unit") + i2s( i ), units[i].c_str() );
-						tdf.Append(_T("Limit") + i2s(i), _T("0") );
-				}
-			tdf.LeaveSection();
-
-			tdf.EnterSection( _T("mapoptions") );
-				OptionsWrapper::wxStringTripleVec optlistMap = battle.CustomBattleOptions().getOptions( OptionsWrapper::MapOption );
-				for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistMap.begin(); it != optlistMap.end(); ++it)
-				{
-						tdf.Append(it->first,it->second.second);
-				}
-			tdf.LeaveSection();
-
-
-			tdf.EnterSection(_T("modoptions"));
-				OptionsWrapper::wxStringTripleVec optlistMod = battle.CustomBattleOptions().getOptions( OptionsWrapper::ModOption );
-				for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistMod.begin(); it != optlistMod.end(); ++it)
-				{
-						tdf.Append(it->first,it->second.second);
-				}
-			tdf.LeaveSection();
-
 
     tdf.LeaveSection();
 

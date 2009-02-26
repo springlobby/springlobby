@@ -334,7 +334,7 @@ void GetOptionCachefileEntry( const int i, wxArrayString& entry, GameOptions& re
 
         entry.Add( ret.float_map[key].name );
         wxString descr = ret.float_map[key].description;
-        descr.Replace( _T("\n"), _T("") );
+        descr.Replace( _T("\n"), _T("\\n") );
         entry.Add( descr );
         entry.Add( TowxString( ret.float_map[key].def ) );
         entry.Add( TowxString( ret.float_map[key].stepping ) );
@@ -352,7 +352,7 @@ void GetOptionCachefileEntry( const int i, wxArrayString& entry, GameOptions& re
 
         entry.Add( susynclib().GetOptionName(i) );
         wxString descr = ret.bool_map[key].description;
-        descr.Replace( _T("\n"), _T("") );
+        descr.Replace( _T("\n"), _T("\\n") );
         entry.Add( descr );
         entry.Add( TowxString( ret.bool_map[key].def ) );
         entry.Add( ret.bool_map[key].section );
@@ -368,7 +368,7 @@ void GetOptionCachefileEntry( const int i, wxArrayString& entry, GameOptions& re
 
         entry.Add( ret.string_map[key].name );
         wxString descr = ret.string_map[key].description;
-        descr.Replace( _T("\n"), _T("") );
+        descr.Replace( _T("\n"), _T("\\n") );
         entry.Add( descr );
         entry.Add( ret.string_map[key].def );
         entry.Add( TowxString( ret.string_map[key].max_len ) );
@@ -384,7 +384,7 @@ void GetOptionCachefileEntry( const int i, wxArrayString& entry, GameOptions& re
 
         entry.Add( ret.list_map[key].name );
         wxString descr = ret.list_map[key].description;
-        descr.Replace( _T("\n"), _T("") );
+        descr.Replace( _T("\n"), _T("\\n") );
         entry.Add( descr );
         entry.Add( ret.list_map[key].def );
         int listItemCount = susynclib().GetOptionListCount(i);
@@ -392,7 +392,7 @@ void GetOptionCachefileEntry( const int i, wxArrayString& entry, GameOptions& re
          for (int j = 0; j < listItemCount; ++j)
          {
            wxString descr = susynclib().GetOptionListItemDesc(i,j);
-           descr.Replace( _T("\n"), _T("") );
+           descr.Replace( _T("\n"), _T("\\n") );
            ret.list_map[key].addItem(susynclib().GetOptionListItemKey(i,j),susynclib().GetOptionListItemName(i,j), descr);
            entry.Add( susynclib().GetOptionListItemKey(i,j) );
            entry.Add( susynclib().GetOptionListItemName(i,j) );
@@ -410,7 +410,7 @@ void GetOptionCachefileEntry( const int i, wxArrayString& entry, GameOptions& re
 
         entry.Add( ret.section_map[key].name );
         wxString descr = ret.section_map[key].description;
-        descr.Replace( _T("\n"), _T("") );
+        descr.Replace( _T("\n"), _T("\\n") );
         entry.Add( descr );
         entry.Add( ret.section_map[key].section );
         entry.Add( ret.section_map[key].ct_type_string );
@@ -426,40 +426,44 @@ void ParseOptionCacheFile( wxArrayString& cache, GameOptions& ret )
       // key  type
       wxArrayString params = wxStringTokenize( cache[i], _T("\t"), wxTOKEN_RET_EMPTY);
       wxString key = params[0];
+      wxString description = params[3];
+      description.Replace( _T("\\n"), _T("\n") );
       switch ( s2l( params[1] ) )
       {
       case opt_float:
         // name description default_value step_size min_value max_value
         ret.float_map[key] = mmOptionFloat( params[2], key,
-            params[3], (float)s2d( params[4] ), (float)s2d( params[5] ),
+            description, (float)s2d( params[4] ), (float)s2d( params[5] ),
             (float)s2d( params[6] ), (float)s2d( params[7] ), params[8],params[9] );
         break;
       case opt_bool:
         // name description default_value
         ret.bool_map[key] = mmOptionBool( params[2], key,
-            params[3], (bool)s2l( params[4] ), params[5],params[6] );
+            description, (bool)s2l( params[4] ), params[5],params[6] );
         break;
       case opt_string:
         // name description default_value max_lenght
         ret.string_map[key] = mmOptionString( params[2], key,
-            params[3], params[4], (unsigned int) s2l( params[5] ), params[6],params[7] );
+            description, params[4], (unsigned int) s2l( params[5] ), params[6],params[7] );
         break;
       case opt_list:
       {
          unsigned int last_item_index = ( (unsigned int)s2l(params[5]) * 3 + 6);
          //be sure to check index alignement
          ret.list_map[key] = mmOptionList( params[2],key,
-            params[3], params[4], params[last_item_index],params[last_item_index +1] );
+            description, params[4], params[last_item_index],params[last_item_index +1] );
             //there's 3 members per item, therefor the 3 + params[5] (which is listitemcount)
          for (unsigned int j = 6; j < last_item_index; j = j + 3)
          {
-           ret.list_map[key].addItem( params[j], params[j+1], params[j+2] );
+         	 wxString item_description = params[j+2];
+         	 item_description.Replace( _T("\\n"), _T("\n") );
+           ret.list_map[key].addItem( params[j], params[j+1], item_description );
          }
          break;
       }
       case opt_section:
         ret.section_map[key] = mmOptionSection( params[2], key,
-            params[3], params[4], params[5] );
+            description, params[4], params[5] );
         break;
       }
     }
@@ -630,7 +634,7 @@ wxImage SpringUnitSync::GetSidePicture( const wxString& modname, const wxString&
     cache.InitAlpha();
     for ( int x = 0; x < cache.GetWidth(); x++ )
       for ( int y = 0; y < cache.GetHeight(); y++ )
-        if ( cache.GetBlue( x, y ) == 255 && cache.GetGreen( x, y ) == 255 && cache.GetRed( x, y ) == 255 ) cache.SetAlpha( x, y, 0 ); /// set pixel to be transparent
+        if ( cache.GetBlue( x, y ) == 255 && cache.GetGreen( x, y ) == 255 && cache.GetRed( x, y ) == 255 ) cache.SetAlpha( x, y, 0 ); // set pixel to be transparent
     cache.SaveFile( GetFileCachePath( modname, _T(""), true ) + _T("-") + SideName + _T(".sidepicture.png"), wxBITMAP_TYPE_PNG );
   }
   return cache;
@@ -1050,6 +1054,7 @@ wxString SpringUnitSync::GetArchivePath( const wxString& name )
   return susynclib().GetArchivePath( name );
 }
 
+<<<<<<< HEAD:src/springunitsync.cpp
 wxArrayString SpringUnitSync::GetScreenshotFilenames()
 {
     wxArrayString ret;
@@ -1063,6 +1068,16 @@ wxArrayString SpringUnitSync::GetScreenshotFilenames()
     } while (ini != 0);
 
     return ret;
+}
+
+wxString SpringUnitSync::GetDefaultNick()
+{
+	return susynclib().GetSpringConfigString( _T("name"), _T("") );
+}
+
+void SpringUnitSync::SetDefaultNick( const wxString& nick )
+{
+	susynclib().SetSpringConfigString( _T("name"), nick );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1300,6 +1315,7 @@ void SpringUnitSync::GetMapExAsync( const wxString& mapname, int evtHandlerId )
   work = new GetMapExAsyncWorkItem( this, mapname, evtHandlerId );
   m_cache_thread.DoWork( work, 200 /* higher prio then GetMinimapAsync */ );
 }
+
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////// EvtHandlerCollection code
