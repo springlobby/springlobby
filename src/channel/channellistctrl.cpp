@@ -5,7 +5,7 @@
 #include <algorithm>
 #include "../Helper/sortutil.h"
 
-template<> SortOrder CustomVirtListCtrl<ChannelInfo>::m_sortorder = sett().GetSortOrder( _T("ChannelListCtrl") ) ;
+template<> SortOrder CustomVirtListCtrl<ChannelInfo>::m_sortorder = SortOrder();
 
 BEGIN_EVENT_TABLE( ChannelListctrl, CustomVirtListCtrl<ChannelInfo> )
   EVT_LIST_ITEM_ACTIVATED( CHANNELLIST, ChannelListctrl::OnActivateItem )

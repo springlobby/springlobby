@@ -38,7 +38,7 @@ BEGIN_EVENT_TABLE( NickListCtrl, CustomVirtListCtrl<const User*> )
 #endif
 END_EVENT_TABLE()
 
-template<> SortOrder CustomVirtListCtrl<const User*>::m_sortorder = sett().GetSortOrder( _T("NickListCtrl") ) ;
+template<> SortOrder CustomVirtListCtrl<const User*>::m_sortorder = SortOrder( ) ;
 
 NickListCtrl::NickListCtrl( wxWindow* parent, bool show_header, NickListCtrl::UserMenu* popup, bool singleSelectList,
                             const wxString& name, bool highlight):
