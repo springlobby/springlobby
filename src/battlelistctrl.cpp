@@ -18,7 +18,7 @@
 #include "Helper/sortutil.h"
 #include "aui/auimanager.h"
 
-template<> SortOrder CustomVirtListCtrl<IBattle*>::m_sortorder = sett().GetSortOrder( _T("BattleListCtrl") ) ;
+template<> SortOrder CustomVirtListCtrl<IBattle*>::m_sortorder = SortOrder();
 
 BEGIN_EVENT_TABLE(BattleListCtrl, CustomVirtListCtrl< IBattle *>)
 
