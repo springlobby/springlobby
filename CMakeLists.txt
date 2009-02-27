@@ -45,7 +45,7 @@ SET( OPTION_TRANSLATION_SUPPORT
 
 # Here you can define, what Libraries of wxWidgets you need for your Application. You can figure out what Libraries you need here:
 # http://www.wxwidgets.org/manuals/2.8/wx_librarieslist.html
-SET(wxWidgets_USE_LIBS base core gl net adv aui )
+SET(wxWidgets_USE_LIBS base core gl net adv aui html xml )
 
 # We need the Find package for wxWidgets to work
 IF (NOT WIN32)
