@@ -45,7 +45,6 @@ class WidgetInfoPanel : public wxScrolledWindow
         void OnChangeLog( wxCommandEvent& evt );
         void OnRemove( wxCommandEvent& evt );
         void OnUpdate( wxCommandEvent& evt );
-        void OnLink( wxTextUrlEvent& evt );
 
         enum {
             BUT_DOWNLOAD,

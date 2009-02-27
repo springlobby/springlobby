@@ -142,6 +142,8 @@
 		<Unit filename="src/Helper/colorbutton.h" />
 		<Unit filename="src/Helper/imageviewer.cpp" />
 		<Unit filename="src/Helper/imageviewer.h" />
+		<Unit filename="src/Helper/slhtmlwindow.cpp" />
+		<Unit filename="src/Helper/slhtmlwindow.h" />
 		<Unit filename="src/Helper/sortutil.h" />
 		<Unit filename="src/Helper/tasclientimport.cpp" />
 		<Unit filename="src/Helper/tasclientimport.h" />

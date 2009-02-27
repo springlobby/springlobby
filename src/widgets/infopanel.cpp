@@ -13,7 +13,7 @@
 //#include "../settings.h"
 #include "../settings++/custom_dialogs.h"
 #include "../Helper/imageviewer.h"
-#include <wx/html/htmlwin.h>
+#include "../Helper/slhtmlwindow.h"
 #include <wx/file.h>
 #include <wx/tokenzr.h>
 #include <wx/icon.h>
@@ -26,7 +26,6 @@ BEGIN_EVENT_TABLE( WidgetInfoPanel, wxPanel)
     EVT_BUTTON( WidgetInfoPanel::BUT_REMOVE, WidgetInfoPanel::OnRemove )
     EVT_BUTTON( WidgetInfoPanel::BUT_UPDATE, WidgetInfoPanel::OnUpdate )
     EVT_BUTTON( WidgetInfoPanel::BUT_PICS, WidgetInfoPanel::OnPics )
-//    EVT_TEXT_URL( WidgetInfoPanel::CTL_DESC, WidgetInfoPanel::OnLink)
 
 END_EVENT_TABLE()
 
@@ -91,7 +90,7 @@ void WidgetInfoPanel::Create()
     m_top_sizer->Add( m_grid_sizer, 0, wxEXPAND, 0 );
 
     //wxStaticBoxSizer* desc_frame = new wxStaticBoxSizer( new wxStaticBox( this, -1, _("Description") ), wxVERTICAL );
-    wxHtmlWindow* desc = new wxHtmlWindow( this, CTL_DESC, wxDefaultPosition,
+    wxHtmlWindow* desc = new slHtmlWindow( this, CTL_DESC, wxDefaultPosition,
             wxDefaultSize, wxHW_NO_SELECTION|wxHW_SCROLLBAR_AUTO );
     wxString ct = _T("<html><body>") + m_widget.description + _T("</body></html>") ;//content
     desc->SetPage( ct );
@@ -142,11 +141,6 @@ void WidgetInfoPanel::SetButtonStates()
 WidgetInfoPanel::~WidgetInfoPanel()
 {
     //dtor
-}
-
-void WidgetInfoPanel::OnLink( wxTextUrlEvent& evt )
-{
-
 }
 
 void WidgetInfoPanel::OnDownload( wxCommandEvent& evt )
