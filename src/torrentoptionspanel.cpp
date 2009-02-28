@@ -94,6 +94,9 @@ TorrentOptionsPanel::TorrentOptionsPanel( wxWindow* parent, Ui& ui)
 
     mainboxsizer->Add( m_numbers_box_sizer, 0, wxALL, 5 );
 
+    //the lazy man's solution to options not being set correctly at panel creation
+    wxCommandEvent dummy;
+    OnRestore( dummy );
 
     SetSizer( mainboxsizer );
     SetScrollRate( 3, 3 );
@@ -155,7 +158,7 @@ void TorrentOptionsPanel::SetAutoStartRadio()
     switch ( sett().GetTorrentSystemAutoStartMode() )
     {
         case 1:
-            m_autostart_logon->SetValue( true );
+            m_autostart_start->SetValue( true );
             break;
         case 2:
             m_autostart_manual->SetValue( true );
