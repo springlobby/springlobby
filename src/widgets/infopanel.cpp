@@ -5,20 +5,17 @@
 #include <wx/statline.h>
 #include <wx/stattext.h>
 #include <wx/statbox.h>
-
+#include <wx/file.h>
+#include <wx/tokenzr.h>
+#include <wx/icon.h>
+#include <wx/textctrl.h>
 
 #include "widget.h"
-
 #include "../utils.h"
 //#include "../settings.h"
 #include "../settings++/custom_dialogs.h"
 #include "../Helper/imageviewer.h"
 #include "../Helper/slhtmlwindow.h"
-#include <wx/file.h>
-#include <wx/tokenzr.h>
-#include <wx/icon.h>
-#include "../images/springlobby.xpm"
-
 
 BEGIN_EVENT_TABLE( WidgetInfoPanel, wxPanel)
     EVT_BUTTON( WidgetInfoPanel::BUT_CHG_LOG, WidgetInfoPanel::OnChangeLog )
@@ -26,6 +23,7 @@ BEGIN_EVENT_TABLE( WidgetInfoPanel, wxPanel)
     EVT_BUTTON( WidgetInfoPanel::BUT_REMOVE, WidgetInfoPanel::OnRemove )
     EVT_BUTTON( WidgetInfoPanel::BUT_UPDATE, WidgetInfoPanel::OnUpdate )
     EVT_BUTTON( WidgetInfoPanel::BUT_PICS, WidgetInfoPanel::OnPics )
+    EVT_BUTTON( WidgetInfoPanel::BUT_DESC, WidgetInfoPanel::OnDescription )
 
 END_EVENT_TABLE()
 
@@ -89,21 +87,45 @@ void WidgetInfoPanel::Create()
 
     m_top_sizer->Add( m_grid_sizer, 0, wxEXPAND, 0 );
 
+    m_desc_sizer = new wxBoxSizer ( wxHORIZONTAL );
+    m_screeny_sizer = new wxBoxSizer ( wxHORIZONTAL );
+    m_chglog_sizer = new wxBoxSizer ( wxHORIZONTAL );
+    m_variable_info_sizer = new wxBoxSizer ( wxHORIZONTAL );
+
     //wxStaticBoxSizer* desc_frame = new wxStaticBoxSizer( new wxStaticBox( this, -1, _("Description") ), wxVERTICAL );
-    wxHtmlWindow* desc = new slHtmlWindow( this, CTL_DESC, wxDefaultPosition,
+    m_desc = new slHtmlWindow( this, CTL_DESC, wxDefaultPosition,
             wxDefaultSize, wxHW_NO_SELECTION|wxHW_SCROLLBAR_AUTO );
     wxString ct = _T("<html><body>") + m_widget.description + _T("</body></html>") ;//content
-    desc->SetPage( ct );
+    m_desc->SetPage( ct );
+    m_desc_sizer->Add( m_desc, 1, wxEXPAND | wxALIGN_CENTER);
 
+    m_changelog = new wxTextCtrl( this, -1, _T( "" ), wxDefaultPosition,
+                                wxDefaultSize, wxTE_MULTILINE | wxTE_READONLY );
 
-    //desc_frame->Add( desc, 0, wxALL, 3 );
-    m_top_sizer->Add( desc, 1, wxEXPAND|wxLEFT, 10 );
+    wxStringTokenizer tk( m_widget.changelog, _T("\r\n") );
+    while ( tk.HasMoreTokens() )
+        m_changelog->AppendText( tk.GetNextToken() );
+    m_chglog_sizer->Add( m_changelog, 1, wxEXPAND | wxALIGN_CENTER );
+    m_chglog_sizer->Show( false );
+
+    if ( m_widget.GetImageFilenames().GetCount() > 0 ) {
+        m_imageviewer = new ImageViewerPanel( m_widget.GetImageFilenames(), false, this, -1, 0);
+        m_screeny_sizer->Add( m_imageviewer, 1, wxEXPAND | wxALIGN_CENTER );
+    }
+    m_screeny_sizer->Show( false );
+
+    m_variable_info_sizer->Add( m_desc_sizer , 1, wxEXPAND | wxALIGN_CENTER );
+    m_variable_info_sizer->Add( m_screeny_sizer , 1, wxEXPAND | wxALIGN_CENTER );
+    m_variable_info_sizer->Add( m_chglog_sizer , 1, wxEXPAND | wxALIGN_CENTER );
+
+    m_top_sizer->Add( m_variable_info_sizer, 1, wxEXPAND|wxLEFT, 10 );
 
     m_main_sizer->Add( m_top_sizer, 1, wxLEFT|wxEXPAND|wxALL, 5 );
 
     m_download = new wxButton( this, BUT_DOWNLOAD, _("Download") );
-    m_chg_log = new wxButton( this, BUT_CHG_LOG, _("View changelog") );
-    m_pics = new wxButton( this, BUT_PICS, _("View Screenshots") );
+    m_chg_log = new wxButton( this, BUT_CHG_LOG, _("Changelog") );
+    m_pics = new wxButton( this, BUT_PICS, _("Screenshots") );
+    m_show_desc = new wxButton( this, BUT_DESC, _("Description") );
 //    m_update = new wxButton( this, BUT_UPDATE, _("Update") );
     m_remove = new wxButton( this, BUT_REMOVE, _("Remove") );
 
@@ -114,6 +136,7 @@ void WidgetInfoPanel::Create()
     m_button_sizer->Add( m_remove, 0, flag, spc );
     m_button_sizer->Add( m_chg_log, 0, flag, spc );
     m_button_sizer->Add( m_pics, 0, flag, spc );
+    m_button_sizer->Add( m_show_desc, 0, flag, spc );
 
     m_main_sizer->Add( m_button_sizer, 0, wxLEFT|wxEXPAND|wxALL, 0 );
     SetButtonStates();
@@ -121,18 +144,14 @@ void WidgetInfoPanel::Create()
     SetSizer( m_main_sizer );
     Layout();
 
-    wxStringTokenizer tk( m_widget.changelog, _T("\r\n") );
-
-    m_changelog = new ServerMessageBox( new wxIcon(springlobby_xpm), this, tk.GetNextToken(), _("Changelog") );
-    while ( tk.HasMoreTokens() )
-        m_changelog->AppendMessage( tk.GetNextToken() );
 }
 
 void WidgetInfoPanel::SetButtonStates()
 {
     m_download->Enable( !m_widget.is_installed );
-    m_chg_log->Enable( m_widget.changelog != _T("") );
-    m_pics->Enable( m_widget.extendedinfo.images.size() > 0 );
+    m_show_desc->Enable( !m_variable_info_sizer->IsShown( m_desc_sizer ) );
+    m_chg_log->Enable( m_widget.changelog != _T("") && !m_variable_info_sizer->IsShown( m_chglog_sizer ) );
+    m_pics->Enable( m_widget.extendedinfo.images.size() > 0 && !m_variable_info_sizer->IsShown( m_screeny_sizer ) );
 //    m_update->Enable( false );
     m_remove->Enable( m_widget.is_installed );
 
@@ -156,13 +175,30 @@ void WidgetInfoPanel::OnDownload( wxCommandEvent& evt )
 
 void WidgetInfoPanel::OnPics( wxCommandEvent& evt )
 {
-    ImageViewerDialog* iv = new ImageViewerDialog( m_widget.GetImageFilenames(), false, this, -1);
-    iv->Show( true );
+    //do not show, recurse to children
+    m_variable_info_sizer->Show( m_desc_sizer, false, true );
+    m_variable_info_sizer->Show( m_chglog_sizer, false, true );
+    m_variable_info_sizer->Show( m_screeny_sizer, true, true );
+    Layout();
+    SetButtonStates();
 }
 
 void WidgetInfoPanel::OnChangeLog( wxCommandEvent& evt )
 {
-    m_changelog->Show();//( SL_MAIN_ICON, m_widget.changelog, _("Changelog"), wxOK);
+    m_variable_info_sizer->Show( m_desc_sizer, false, true );
+    m_variable_info_sizer->Show( m_screeny_sizer, false, true );
+    m_variable_info_sizer->Show( m_chglog_sizer, true, true );
+    Layout();
+    SetButtonStates();
+}
+
+void WidgetInfoPanel::OnDescription( wxCommandEvent& evt )
+{
+    m_variable_info_sizer->Show( m_screeny_sizer, false, true );
+    m_variable_info_sizer->Show( m_chglog_sizer, false, true );
+    m_variable_info_sizer->Show( m_desc_sizer, true, true );
+    Layout();
+    SetButtonStates();
 }
 
 void WidgetInfoPanel::OnRemove( wxCommandEvent& evt )

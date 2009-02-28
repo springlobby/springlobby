@@ -10,6 +10,9 @@ class wxButton;
 class wxCommandEvent;
 class wxTextUrlEvent;
 class ServerMessageBox;
+class wxTextCtrl;
+class ImageViewerPanel;
+class wxHtmlWindow;
 
 class WidgetInfoPanel : public wxScrolledWindow
 {
@@ -27,13 +30,20 @@ class WidgetInfoPanel : public wxScrolledWindow
         wxBoxSizer* m_top_sizer;
         wxBoxSizer* m_button_sizer;
         wxGridSizer* m_grid_sizer;
+        wxBoxSizer* m_desc_sizer;
+        wxBoxSizer* m_screeny_sizer;
+        wxBoxSizer* m_chglog_sizer;
+        wxBoxSizer* m_variable_info_sizer;
 
         wxBoxSizer* m_busy_notice;
 
-        ServerMessageBox* m_changelog;
+        wxTextCtrl* m_changelog;
+        ImageViewerPanel* m_imageviewer;
+        wxHtmlWindow* m_desc;
 
         wxButton* m_download;
         wxButton* m_chg_log;
+        wxButton* m_show_desc;
         wxButton* m_update;
         wxButton* m_remove;
         wxButton* m_pics;
@@ -43,6 +53,7 @@ class WidgetInfoPanel : public wxScrolledWindow
         void OnDownload( wxCommandEvent& evt );
         void OnPics( wxCommandEvent& evt );
         void OnChangeLog( wxCommandEvent& evt );
+        void OnDescription( wxCommandEvent& evt );
         void OnRemove( wxCommandEvent& evt );
         void OnUpdate( wxCommandEvent& evt );
 
@@ -52,7 +63,8 @@ class WidgetInfoPanel : public wxScrolledWindow
             BUT_UPDATE,
             BUT_REMOVE,
             BUT_PICS,
-            CTL_DESC
+            CTL_DESC,
+            BUT_DESC
         };
 
     protected:

@@ -30,7 +30,7 @@ WidgetDownloadPanel::WidgetDownloadPanel(wxWindow* parent, wxWindowID id, const 
     m_main_sizer = new wxBoxSizer ( wxVERTICAL );
     m_list = new WidgetDownloadListctrl( this, WidgetDownloadListctrl::WIDGETLISTCTRL_ID );
     m_main_sizer->Add( m_list, 1, wxALL | wxEXPAND );
-    bool hu = PopulateList();
+    PopulateList();
     m_list->ResetColumnSizes();
     SetSizer( m_main_sizer );
     Layout();
