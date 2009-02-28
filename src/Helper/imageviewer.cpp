@@ -50,7 +50,19 @@ void ImagePanel::OnPaint(wxPaintEvent& WXUNUSED(event))
 {
     wxPaintDC dc( this );
     wxImage im ( m_file );
-    dc.DrawBitmap( wxBitmap(im.Rescale( GetClientSize().GetX(), GetClientSize().GetY() ) ), 0, 0, true /* use mask */ );
+    int h,w,H,W;
+    h = im.GetHeight();
+    w = im.GetWidth();
+    double ratio = double ( h ) / double ( w );
+    H = GetClientSize().GetY();
+    W = GetClientSize().GetX();
+    if ( W / ratio < H )
+        H = W / ratio ;
+    else {
+        W = H * ratio;//W * ratio;
+        //H =  W / ratio;
+    }
+    dc.DrawBitmap( wxBitmap(im.Rescale( W, H ) ), 0, 0, true /* use mask */ );
 }
 void ImagePanel::OnSize(wxSizeEvent& WXUNUSED(event))
 {
