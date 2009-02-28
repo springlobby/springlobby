@@ -19,6 +19,7 @@ class MapCtrl;
 class wxListCtrl;
 class wxChoice;
 class wxRadioBox;
+class wxMouseEvent;
 
 /** \brief select map, draw startboxes (in sp define startpos)
  * \todo DOCMEMORE */
@@ -37,6 +38,7 @@ class BattleMapTab : public wxScrolledWindow
      void OnMapSelect( wxCommandEvent& event );
      void OnMapBrowse( wxCommandEvent& event );
      void OnStartTypeSelect( wxCommandEvent& event );
+     void OnMouseWheel( wxMouseEvent& event );
 
     void OnUnitSyncReloaded();
 

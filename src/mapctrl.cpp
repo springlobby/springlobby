@@ -80,7 +80,7 @@ BEGIN_EVENT_TABLE( MapCtrl, wxPanel )
   EVT_MOTION( MapCtrl::OnMouseMove )
   EVT_LEFT_DOWN( MapCtrl::OnLeftDown )
   EVT_LEFT_UP( MapCtrl::OnLeftUp )
-  EVT_MOUSEWHEEL( MapCtrl::OnMouseWheel )
+//  EVT_MOUSEWHEEL( MapCtrl::OnMouseWheel )
   EVT_COMMAND( wxID_ANY, UnitSyncAsyncOperationCompletedEvt, MapCtrl::OnGetMapImageAsyncCompleted )
 END_EVENT_TABLE()
 

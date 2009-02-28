@@ -17,6 +17,7 @@ class wxChoice;
 class wxStaticText;
 class wxCommandEvent;
 class wxCheckBox;
+class wxMouseEvent;
 class ColorButton;
 
 class SinglePlayerTab: public  wxScrolledWindow
@@ -45,6 +46,7 @@ class SinglePlayerTab: public  wxScrolledWindow
     void OnSpectatorCheck( wxCommandEvent& event );
     void OnColorButton( wxCommandEvent& event );
     void OnReset( wxCommandEvent& event );
+    void OnMouseWheel( wxMouseEvent& event );
 
     void OnUnitSyncReloaded();
 
