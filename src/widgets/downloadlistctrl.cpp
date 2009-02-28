@@ -1,6 +1,6 @@
 #include "downloadlistctrl.h"
 
-template<> SortOrder CustomVirtListCtrl<Widget>::m_sortorder = sett().GetSortOrder( _T("WidgetDownloadListCtrl") ) ;
+template<> SortOrder CustomVirtListCtrl<Widget>::m_sortorder = SortOrder();
 
 const unsigned int column_count = 6;
 
