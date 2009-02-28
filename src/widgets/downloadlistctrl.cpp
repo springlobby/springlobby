@@ -22,13 +22,13 @@ WidgetDownloadListctrl::WidgetDownloadListctrl(wxWindow* parent, wxWindowID id, 
 #else
     const int widths [column_count] = { as, as, as, as, as, as };
 #endif
-
-    AddColumn( 0, widths[0], _("Name"), _T("Name") );
-    AddColumn( 1, widths[1], _("Description"), _T("Description") );
-    AddColumn( 2, widths[2], _T("Author"), _T("Author") );
-    AddColumn( 3, widths[3], _T("Mods"), _T("Compatible mods") );
-    AddColumn( 4, widths[4], _T("Downloads"), _T("Downloads") );
-    AddColumn( 5, widths[5], _T("Date"), _T("Date") );
+    int i = 0;
+    AddColumn( i++, widths[0], _("Name"), _T("Name") );
+//    AddColumn( i++, widths[1], _("Description"), _T("Description") );
+    AddColumn( i++, widths[2], _T("Author"), _T("Author") );
+    AddColumn( i++, widths[3], _T("Mods"), _T("Compatible mods") );
+    AddColumn( i++, widths[4], _T("Downloads"), _T("Downloads") );
+//    AddColumn( i++, widths[5], _T("Date"), _T("Date") );
 
     if ( m_sortorder.size() == 0 ) {
         m_sortorder[2].col = 2;
@@ -49,11 +49,11 @@ int WidgetDownloadListctrl::CompareOneCrit( DataType u1, DataType u2, int col, i
 {
     switch ( col ) {
         case 0: return dir * u1.name.CmpNoCase( u2.name );
-        case 1: return dir * u1.short_description.CmpNoCase( u2.short_description );
-        case 2: return dir * u1.author.CmpNoCase( u2.author );
-        case 3: return dir * u1.mods.CmpNoCase( u2.mods );
-        case 4: return dir * compareSimple( u1.num_downloads, u2.num_downloads );
-        case 5: return dir * u1.date.CmpNoCase( u2.date );
+//        case 1: return dir * u1.short_description.CmpNoCase( u2.short_description );
+        case 1: return dir * u1.author.CmpNoCase( u2.author );
+        case 2: return dir * u1.mods.CmpNoCase( u2.mods );
+        case 3: return dir * compareSimple( u1.num_downloads, u2.num_downloads );
+//        case 5: return dir * u1.date.CmpNoCase( u2.date );
         default: return 0;
     }
 }
@@ -75,11 +75,11 @@ wxString WidgetDownloadListctrl::OnGetItemText(long item, long column) const
     switch ( column ) {
         default: return wxEmptyString;
         case 0: return widget.name;
-        case 1: return widget.short_description;
-        case 2: return widget.author;
-        case 3: return widget.mods;
-        case 4: return i2s( widget.num_downloads );
-        case 5: return widget.date;
+//        case 1: return widget.short_description;
+        case 1: return widget.author;
+        case 2: return widget.mods;
+        case 3: return i2s( widget.num_downloads );
+//        case 5: return widget.date;
     }
 
 }

@@ -9,6 +9,7 @@
 #include <wx/tokenzr.h>
 #include <wx/icon.h>
 #include <wx/textctrl.h>
+#include <wx/statline.h>
 
 #include "widget.h"
 #include "../utils.h"
@@ -51,8 +52,8 @@ void WidgetInfoPanel::Create()
     m_busy_notice->Show( false );
 //    m_busy_notice->Destroy();
     m_main_sizer = new wxBoxSizer( wxVERTICAL );
-    m_top_sizer = new wxBoxSizer( wxHORIZONTAL );
-    m_button_sizer = new wxBoxSizer( wxHORIZONTAL );
+    m_left_sizer = new wxBoxSizer( wxVERTICAL );
+    m_left_button_sizer = new wxBoxSizer( wxHORIZONTAL );
 
     m_grid_sizer = new wxGridSizer( 2, 5, 5 );
     wxStaticText* name_lbl = new wxStaticText( this, -1, _("Name") );
@@ -85,12 +86,27 @@ void WidgetInfoPanel::Create()
     wxStaticText* publ = new wxStaticText( this, -1, m_widget.date );
     m_grid_sizer->Add( publ );
 
-    m_top_sizer->Add( m_grid_sizer, 0, wxEXPAND, 0 );
+    m_left_sizer->Add( m_grid_sizer, 0, wxEXPAND, 0 );
 
     m_desc_sizer = new wxBoxSizer ( wxHORIZONTAL );
     m_screeny_sizer = new wxBoxSizer ( wxHORIZONTAL );
     m_chglog_sizer = new wxBoxSizer ( wxHORIZONTAL );
-    m_variable_info_sizer = new wxBoxSizer ( wxHORIZONTAL );
+    m_right_button_sizer= new wxBoxSizer ( wxHORIZONTAL );
+    m_right_sizer = new wxBoxSizer ( wxVERTICAL );
+
+    m_download = new wxButton( this, BUT_DOWNLOAD, _("Download") );
+    m_chg_log = new wxButton( this, BUT_CHG_LOG, _("Changelog") );
+    m_pics = new wxButton( this, BUT_PICS, _("Screenshots") );
+    m_show_desc = new wxButton( this, BUT_DESC, _("Description") );
+//    m_update = new wxButton( this, BUT_UPDATE, _("Update") );
+    m_remove = new wxButton( this, BUT_REMOVE, _("Remove") );
+
+    const int flag = wxALL;
+    const int spc = 5;
+    m_right_button_sizer->Add( m_chg_log, 0, flag, spc );
+    m_right_button_sizer->Add( m_pics, 0, flag, spc );
+    m_right_button_sizer->Add( m_show_desc, 0, flag, spc );
+    m_right_sizer->Add( m_right_button_sizer );
 
     //wxStaticBoxSizer* desc_frame = new wxStaticBoxSizer( new wxStaticBox( this, -1, _("Description") ), wxVERTICAL );
     m_desc = new slHtmlWindow( this, CTL_DESC, wxDefaultPosition,
@@ -105,7 +121,7 @@ void WidgetInfoPanel::Create()
     wxStringTokenizer tk( m_widget.changelog, _T("\r\n") );
     while ( tk.HasMoreTokens() )
         m_changelog->AppendText( tk.GetNextToken() );
-    m_chglog_sizer->Add( m_changelog, 1, wxEXPAND | wxALIGN_CENTER );
+    m_chglog_sizer->Add( m_changelog, 1, wxEXPAND | wxALIGN_TOP | wxALIGN_LEFT );
     m_chglog_sizer->Show( false );
 
     if ( m_widget.GetImageFilenames().GetCount() > 0 ) {
@@ -114,31 +130,19 @@ void WidgetInfoPanel::Create()
     }
     m_screeny_sizer->Show( false );
 
-    m_variable_info_sizer->Add( m_desc_sizer , 1, wxEXPAND | wxALIGN_CENTER );
-    m_variable_info_sizer->Add( m_screeny_sizer , 1, wxEXPAND | wxALIGN_CENTER );
-    m_variable_info_sizer->Add( m_chglog_sizer , 1, wxEXPAND | wxALIGN_CENTER );
+    m_right_sizer->Add( m_desc_sizer , 1, wxEXPAND | wxALIGN_LEFT );
+    m_right_sizer->Add( m_screeny_sizer , 1, wxEXPAND | wxALIGN_LEFT );
+    m_right_sizer->Add( m_chglog_sizer , 1, wxEXPAND | wxALIGN_TOP | wxALIGN_LEFT );
 
-    m_top_sizer->Add( m_variable_info_sizer, 1, wxEXPAND|wxLEFT, 10 );
 
-    m_main_sizer->Add( m_top_sizer, 1, wxLEFT|wxEXPAND|wxALL, 5 );
-
-    m_download = new wxButton( this, BUT_DOWNLOAD, _("Download") );
-    m_chg_log = new wxButton( this, BUT_CHG_LOG, _("Changelog") );
-    m_pics = new wxButton( this, BUT_PICS, _("Screenshots") );
-    m_show_desc = new wxButton( this, BUT_DESC, _("Description") );
-//    m_update = new wxButton( this, BUT_UPDATE, _("Update") );
-    m_remove = new wxButton( this, BUT_REMOVE, _("Remove") );
-
-    const int flag = wxALL;
-    const int spc = 5;
-    m_button_sizer->Add( m_download, 0, flag, spc );
+    m_left_button_sizer->Add( m_download, 0, flag, spc );
 //    m_button_sizer->Add( m_update, 0, flag, spc );
-    m_button_sizer->Add( m_remove, 0, flag, spc );
-    m_button_sizer->Add( m_chg_log, 0, flag, spc );
-    m_button_sizer->Add( m_pics, 0, flag, spc );
-    m_button_sizer->Add( m_show_desc, 0, flag, spc );
+    m_left_button_sizer->Add( m_remove, 0, flag, spc );
+    m_left_sizer->Add( m_left_button_sizer );
 
-    m_main_sizer->Add( m_button_sizer, 0, wxLEFT|wxEXPAND|wxALL, 0 );
+    m_main_sizer->Add( m_left_sizer, 0, wxLEFT|wxALL, 0 );
+    m_main_sizer->Add( new wxStaticLine( this ), 0, wxEXPAND );
+    m_main_sizer->Add( m_right_sizer, 1, wxLEFT|wxEXPAND|wxLEFT, 10 );
     SetButtonStates();
 
     SetSizer( m_main_sizer );
@@ -149,9 +153,9 @@ void WidgetInfoPanel::Create()
 void WidgetInfoPanel::SetButtonStates()
 {
     m_download->Enable( !m_widget.is_installed );
-    m_show_desc->Enable( !m_variable_info_sizer->IsShown( m_desc_sizer ) );
-    m_chg_log->Enable( m_widget.changelog != _T("") && !m_variable_info_sizer->IsShown( m_chglog_sizer ) );
-    m_pics->Enable( m_widget.extendedinfo.images.size() > 0 && !m_variable_info_sizer->IsShown( m_screeny_sizer ) );
+    m_show_desc->Enable( !m_right_sizer->IsShown( m_desc_sizer ) );
+    m_chg_log->Enable( m_widget.changelog != _T("") && !m_right_sizer->IsShown( m_chglog_sizer ) );
+    m_pics->Enable( m_widget.extendedinfo.images.size() > 0 && !m_right_sizer->IsShown( m_screeny_sizer ) );
 //    m_update->Enable( false );
     m_remove->Enable( m_widget.is_installed );
 
@@ -176,27 +180,27 @@ void WidgetInfoPanel::OnDownload( wxCommandEvent& evt )
 void WidgetInfoPanel::OnPics( wxCommandEvent& evt )
 {
     //do not show, recurse to children
-    m_variable_info_sizer->Show( m_desc_sizer, false, true );
-    m_variable_info_sizer->Show( m_chglog_sizer, false, true );
-    m_variable_info_sizer->Show( m_screeny_sizer, true, true );
+    m_right_sizer->Show( m_desc_sizer, false, true );
+    m_right_sizer->Show( m_chglog_sizer, false, true );
+    m_right_sizer->Show( m_screeny_sizer, true, true );
     Layout();
     SetButtonStates();
 }
 
 void WidgetInfoPanel::OnChangeLog( wxCommandEvent& evt )
 {
-    m_variable_info_sizer->Show( m_desc_sizer, false, true );
-    m_variable_info_sizer->Show( m_screeny_sizer, false, true );
-    m_variable_info_sizer->Show( m_chglog_sizer, true, true );
+    m_right_sizer->Show( m_desc_sizer, false, true );
+    m_right_sizer->Show( m_screeny_sizer, false, true );
+    m_right_sizer->Show( m_chglog_sizer, true, true );
     Layout();
     SetButtonStates();
 }
 
 void WidgetInfoPanel::OnDescription( wxCommandEvent& evt )
 {
-    m_variable_info_sizer->Show( m_screeny_sizer, false, true );
-    m_variable_info_sizer->Show( m_chglog_sizer, false, true );
-    m_variable_info_sizer->Show( m_desc_sizer, true, true );
+    m_right_sizer->Show( m_screeny_sizer, false, true );
+    m_right_sizer->Show( m_chglog_sizer, false, true );
+    m_right_sizer->Show( m_desc_sizer, true, true );
     Layout();
     SetButtonStates();
 }

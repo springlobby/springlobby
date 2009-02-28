@@ -27,8 +27,10 @@ class WidgetInfoPanel : public wxScrolledWindow
     protected:
         Widget& m_widget;
         wxBoxSizer* m_main_sizer;
-        wxBoxSizer* m_top_sizer;
-        wxBoxSizer* m_button_sizer;
+        wxBoxSizer* m_left_sizer;
+        wxBoxSizer* m_right_sizer;
+        wxBoxSizer* m_left_button_sizer;
+        wxBoxSizer* m_right_button_sizer;
         wxGridSizer* m_grid_sizer;
         wxBoxSizer* m_desc_sizer;
         wxBoxSizer* m_screeny_sizer;
