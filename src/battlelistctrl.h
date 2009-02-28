@@ -28,7 +28,6 @@ class BattleListCtrl : public CustomVirtListCtrl< IBattle *>
     void OnListRightClick( wxListEvent& event );
     void OnDLMap( wxCommandEvent& event );
     void OnDLMod( wxCommandEvent& event );
-    void OnColClick( wxListEvent& event );
     virtual void SetTipWindowText( const long item_hit, const wxPoint position);
 
     //these are overloaded to use list in virtual style

@@ -145,6 +145,10 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( par
   m_filter_activ = new wxCheckBox( this, BATTLE_LIST_FILTER_ACTIV , _("Activated"), wxDefaultPosition, wxDefaultSize, 0 );
   m_buttons_sizer->Add( m_filter_activ, 0, wxALL, 5 );
 
+
+  m_buttons_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
+  m_battle_num = new wxStaticText( this, wxID_ANY, _("0 battles displayed"), wxDefaultPosition, wxDefaultSize, 0 );
+  m_buttons_sizer->Add( m_battle_num, 0, wxALIGN_CENTER|wxLEFT|wxRIGHT, 4 );
   m_buttons_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
 
   m_host_btn = new wxButton( this, BATTLE_HOST, _("Host new..."), wxDefaultPosition, wxSize( -1,28 ), 0 );
@@ -170,6 +174,11 @@ BattleListTab::~BattleListTab()
         m_filter->SaveFilterValues();
 }
 
+void BattleListTab::SetNumDisplayed()
+{
+    int num = m_battle_list->GetItemCount();
+    m_battle_num->SetLabel( wxString::Format( _("%d battles displayed"), num ) );
+}
 
 void BattleListTab::SelectBattle( IBattle* battle )
 {
@@ -205,6 +214,7 @@ void BattleListTab::AddBattle( IBattle& battle ) {
     m_battle_list->AddBattle( battle );
     battle.SetGUIListActiv( true );
     m_battle_list->MarkDirtySort();
+    SetNumDisplayed();
 }
 
 
@@ -219,7 +229,7 @@ void BattleListTab::RemoveBattle( IBattle& battle )
     m_battle_list->RemoveBattle( battle );
 
     battle.SetGUIListActiv( false );
-
+    SetNumDisplayed();
 }
 
 
@@ -260,6 +270,7 @@ void BattleListTab::RemoveAllBattles()
         temp_battle->SetGUIListActiv( false );
   }
   m_battle_list->Clear();
+  SetNumDisplayed();
 }
 
 
@@ -438,6 +449,7 @@ void BattleListTab::OnFilterActiv( wxCommandEvent& event )
   }
   m_filter->SetActiv( active );
   sett().SetBattleFilterActivState( active );
+  SetNumDisplayed();
 }
 
 

@@ -74,6 +74,7 @@ class BattleListTab : public wxScrolledWindow
     wxStaticText* m_players_text;
     wxStaticText* m_spec_lbl;
     wxStaticText* m_spec_text;
+    wxStaticText* m_battle_num;
     NickListCtrl* m_players;
     wxStaticLine* m_buttons_sep;
     wxButton* m_host_btn;
@@ -96,6 +97,8 @@ class BattleListTab : public wxScrolledWindow
     Ui& m_ui;
 
     IBattle* m_sel_battle;
+
+    void SetNumDisplayed();
 
     enum {
         BATTLE_JOIN = wxID_HIGHEST,

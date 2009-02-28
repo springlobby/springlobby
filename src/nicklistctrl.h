@@ -31,7 +31,6 @@ class NickListCtrl : public CustomVirtListCtrl<const User*>
     void ClearUsers();
 
     void OnActivateItem( wxListEvent& event );
-    void OnColClick( wxListEvent& event );
     void OnShowMenu( wxContextMenuEvent& event );
     virtual void SetTipWindowText( const long item_hit, const wxPoint position);
 

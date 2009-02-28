@@ -123,6 +123,7 @@ protected:
      */
 
     static SortOrder m_sortorder;
+    unsigned int m_sort_criteria_count;
 
     /** generic comparator that gets it's real functionality
      * in derived classes via comapre callbakc func that
@@ -191,7 +192,7 @@ public:
 
 public:
     CustomVirtListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pt,
-                    const wxSize& sz,long style, wxString name, unsigned int column_count, CompareFunction func, bool highlight = true,
+                    const wxSize& sz,long style, const wxString& name, unsigned int column_count, unsigned int sort_criteria_count, CompareFunction func, bool highlight = true,
                     UserActions::ActionType hlaction = UserActions::ActHighlight);
 
     virtual ~CustomVirtListCtrl();
@@ -278,6 +279,9 @@ public:
 
      //! delete all data, selections, and whatnot
      virtual void Clear();
+
+     //! handle sort order updates
+     void OnColClick( wxListEvent& event );
 
 protected:
     typedef std::vector< DataImp > DataVector;

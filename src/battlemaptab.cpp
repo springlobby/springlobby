@@ -39,6 +39,7 @@ BEGIN_EVENT_TABLE(BattleMapTab, wxPanel)
   EVT_CHOICE( BMAP_MAP_SEL, BattleMapTab::OnMapSelect )
   EVT_BUTTON( BMAP_MAP_BROWSE, BattleMapTab::OnMapBrowse )
   EVT_RADIOBOX( BMAP_START_TYPE, BattleMapTab::OnStartTypeSelect )
+  EVT_MOUSEWHEEL( BattleMapTab::OnMouseWheel )
 
 END_EVENT_TABLE()
 
@@ -121,6 +122,17 @@ BattleMapTab::~BattleMapTab()
     if(GetAui().manager)GetAui().manager->DetachPane( this );
 }
 
+void BattleMapTab::OnMouseWheel( wxMouseEvent& event )
+{
+    if ( m_minimap ) {
+        wxRect map_rect = m_minimap->GetRect();
+        if ( map_rect.Contains( event.GetPosition() ) ) {
+            m_minimap->OnMouseWheel( event );
+            return;
+        }
+    }
+    event.Skip();
+}
 
 void BattleMapTab::Update()
 {
