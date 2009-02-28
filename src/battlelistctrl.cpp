@@ -23,7 +23,6 @@ template<> SortOrder CustomVirtListCtrl<IBattle*>::m_sortorder = SortOrder();
 BEGIN_EVENT_TABLE(BattleListCtrl, CustomVirtListCtrl< IBattle *>)
 
   EVT_LIST_ITEM_RIGHT_CLICK( BLIST_LIST, BattleListCtrl::OnListRightClick )
-  EVT_LIST_COL_CLICK       ( BLIST_LIST, BattleListCtrl::OnColClick )
   EVT_MENU                 ( BLIST_DLMAP, BattleListCtrl::OnDLMap )
   EVT_MENU                 ( BLIST_DLMOD, BattleListCtrl::OnDLMod )
 #if wxUSE_TIPWINDOW
@@ -35,7 +34,7 @@ END_EVENT_TABLE()
 
 BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui ):
   CustomVirtListCtrl< IBattle *>(parent, BLIST_LIST, wxDefaultPosition, wxDefaultSize,
-            wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("BattleListCtrl"), 10, &CompareOneCrit),
+            wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("BattleListCtrl"), 10, 4, &CompareOneCrit),
   m_ui(ui)
 {
     GetAui().manager->AddPane( this, wxLEFT, _T("battlelistctrl") );
@@ -212,31 +211,6 @@ void BattleListCtrl::OnDLMod( wxCommandEvent& event )
         m_ui.DownloadMod( dt->GetHostModHash(), dt->GetHostModName() );
     }
 }
-
-void BattleListCtrl::OnColClick( wxListEvent& event )
-{
-  if ( event.GetColumn() == -1 ) return;
-  wxListItem col;
-  GetColumn( m_sortorder[0].col, col );
-  col.SetImage( icons().ICON_NONE );
-  SetColumn( m_sortorder[0].col, col );
-
-  int i;
-  for ( i = 0; m_sortorder[i].col != event.GetColumn() && i < 4; ++i ) {}
-  if ( i > 3 ) { i = 3; }
-  for ( ; i > 0; i--) { m_sortorder[i] = m_sortorder[i-1]; }
-  m_sortorder[0].col = event.GetColumn();
-  m_sortorder[0].direction *= -1;
-
-
-  GetColumn( m_sortorder[0].col, col );
-  //col.SetImage( ( m_sortorder[0].direction )?ICON_UP:ICON_DOWN );
-  col.SetImage( ( m_sortorder[0].direction > 0 )?icons().ICON_UP:icons().ICON_DOWN );
-  SetColumn( m_sortorder[0].col, col );
-
-  SortList( true );
-}
-
 
 void BattleListCtrl::Sort()
 {

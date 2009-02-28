@@ -9,14 +9,13 @@ template<> SortOrder CustomVirtListCtrl<ChannelInfo>::m_sortorder = SortOrder();
 
 BEGIN_EVENT_TABLE( ChannelListctrl, CustomVirtListCtrl<ChannelInfo> )
   EVT_LIST_ITEM_ACTIVATED( CHANNELLIST, ChannelListctrl::OnActivateItem )
-  EVT_LIST_COL_CLICK( CHANNELLIST, ChannelListctrl::OnColClick )
 END_EVENT_TABLE()
 
 
 ChannelListctrl::ChannelListctrl(wxWindow* parent, wxWindowID id, const wxString& name,
                     long style, const wxPoint& pt, const wxSize& sz)
     :CustomVirtListCtrl<ChannelInfo>(parent, CHANNELLIST, wxDefaultPosition, wxDefaultSize,
-            wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("ChannelListCtrl"), 3, &CompareOneCrit)
+            wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("ChannelListCtrl"), 3, 3, &CompareOneCrit)
 {
 #if defined(__WXMSW__)
     const int widths [3] = { wxLIST_AUTOSIZE, wxLIST_AUTOSIZE, wxLIST_AUTOSIZE };
@@ -88,29 +87,6 @@ void ChannelListctrl::Sort()
     SLInsertionSort( m_data, m_comparator );
     FilterChannel( m_last_filter_value );
     RestoreSelection();
-}
-
-void ChannelListctrl::OnColClick( wxListEvent& event )
-{
-    if ( event.GetColumn() == -1 ) return;
-    wxListItem col;
-    GetColumn( m_sortorder[0].col, col );
-    col.SetImage( -1 );
-    SetColumn( m_sortorder[0].col, col );
-
-    int i;
-    for ( i = 0; m_sortorder[i].col != event.GetColumn() && i < 3; ++i ) {}
-    if (i > 2) { i = 2; }
-    for ( ; i > 0; i--) { m_sortorder[i] = m_sortorder[i-1]; }
-    m_sortorder[0].col = event.GetColumn();
-    m_sortorder[0].direction *= -1;
-
-
-    GetColumn( m_sortorder[0].col, col );
-    col.SetImage( ( m_sortorder[0].direction > 0 )?icons().ICON_UP:icons().ICON_DOWN );
-    SetColumn( m_sortorder[0].col, col );
-    MarkDirtySort();
-    SortList();
 }
 
 /** @brief OnActivateItem

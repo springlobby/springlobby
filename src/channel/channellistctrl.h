@@ -38,7 +38,6 @@ class ChannelListctrl : public CustomVirtListCtrl<ChannelInfo>
         void Sort();
         void SetTipWindowText( const long item_hit, const wxPoint position);
 
-        void OnColClick( wxListEvent& event );
         void OnActivateItem( wxListEvent& event );
 
         void HighlightItem( long item );
