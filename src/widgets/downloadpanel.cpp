@@ -13,6 +13,7 @@
 #include "infopanel.h"
 
 const int invalid_id = -1;
+const unsigned int max_short_desc_length = 50;
 
 
 BEGIN_EVENT_TABLE( WidgetDownloadPanel , wxScrolledWindow)
@@ -108,6 +109,9 @@ bool WidgetDownloadPanel::PopulateList()
                         desc.Replace( _T("\r\n"), _T(" "), true );
                         desc.Replace( _T("\n"), _T(" "), true );
                         desc.Replace( _T("\r"), _T(" "), true );
+                        if ( desc.Len() > max_short_desc_length ) {
+                            desc = desc.Left(  max_short_desc_length -1 ) + _T("...");
+                        }
                         w.short_description = desc;
                     }
                     else if ( name == _T("Author") ) {

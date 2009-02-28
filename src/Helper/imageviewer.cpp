@@ -20,11 +20,11 @@ BEGIN_EVENT_TABLE( ImagePanel, wxPanel )
     EVT_SIZE( ImagePanel::OnSize)
 END_EVENT_TABLE()
 
-BEGIN_EVENT_TABLE( ImageViewer, wxDialog )
-    EVT_BUTTON( ImageViewer::ID_NEXT, ImageViewer::OnNext )
-    EVT_BUTTON( ImageViewer::ID_DELETE, ImageViewer::OnDelete )
-    EVT_BUTTON( ImageViewer::ID_PREV, ImageViewer::OnPrev )
-    EVT_BUTTON( ImageViewer::ID_SAVE_AS, ImageViewer::OnSaveAs )
+BEGIN_EVENT_TABLE( ImageViewerPanel, wxPanel )
+    EVT_BUTTON( ImageViewerPanel::ID_NEXT, ImageViewerPanel::OnNext )
+    EVT_BUTTON( ImageViewerPanel::ID_DELETE, ImageViewerPanel::OnDelete )
+    EVT_BUTTON( ImageViewerPanel::ID_PREV, ImageViewerPanel::OnPrev )
+    EVT_BUTTON( ImageViewerPanel::ID_SAVE_AS, ImageViewerPanel::OnSaveAs )
 END_EVENT_TABLE()
 
 ImagePanel::ImagePanel( const wxString& file, wxWindow* parent, wxWindowID id )
@@ -58,9 +58,9 @@ void ImagePanel::OnSize(wxSizeEvent& WXUNUSED(event))
     OnPaint( p );
 }
 
-ImageViewer::ImageViewer(const wxArrayString& filenames, bool enable_delete, wxWindow* parent, wxWindowID id,
-            const wxString& title, long style )
-    : wxDialog ( parent, id, title, wxDefaultPosition, wxDefaultSize, style),
+ImageViewerPanel::ImageViewerPanel(const wxArrayString& filenames, bool enable_delete, wxWindow* parent,
+        wxWindowID id, long style )
+    : wxPanel ( parent, id, wxDefaultPosition, wxDefaultSize ),
     m_filenames( filenames ),
     m_current_file_index( 0 ),
     m_num_files( filenames.Count() ),
@@ -91,30 +91,30 @@ ImageViewer::ImageViewer(const wxArrayString& filenames, bool enable_delete, wxW
     Layout();
 }
 
-ImageViewer::~ImageViewer()
+ImageViewerPanel::~ImageViewerPanel()
 {
 }
 
-void ImageViewer::SetButtonStates()
+void ImageViewerPanel::SetButtonStates()
 {
     m_next->Enable( m_current_file_index < m_num_files -1 );
     m_prev->Enable( m_current_file_index > 0 );
 }
 
-void ImageViewer::SetImage()
+void ImageViewerPanel::SetImage()
 {
     SetButtonStates();
     m_panel->SetBitmap( m_filenames[m_current_file_index] );
-    SetTitle( m_filenames[m_current_file_index] );
+//    SetTitle( m_filenames[m_current_file_index] );
 }
 
-void ImageViewer::OnNext( wxCommandEvent& evt )
+void ImageViewerPanel::OnNext( wxCommandEvent& evt )
 {
     m_current_file_index++;
     SetImage();
 }
 
-void ImageViewer::OnDelete( wxCommandEvent& evt )
+void ImageViewerPanel::OnDelete( wxCommandEvent& evt )
 {
     wxString file = m_filenames[m_current_file_index];
     if ( wxRemoveFile( file ) ) {
@@ -129,13 +129,13 @@ void ImageViewer::OnDelete( wxCommandEvent& evt )
     }
 }
 
-void ImageViewer::OnPrev( wxCommandEvent& evt )
+void ImageViewerPanel::OnPrev( wxCommandEvent& evt )
 {
     m_current_file_index--;
     SetImage();
 }
 
-void ImageViewer::OnSaveAs( wxCommandEvent& evt )
+void ImageViewerPanel::OnSaveAs( wxCommandEvent& evt )
 {
     wxString ext = m_filenames[m_current_file_index].AfterLast( '.' );
     wxString mask = _T("*.") + ext;
@@ -154,3 +154,14 @@ void ImageViewer::OnSaveAs( wxCommandEvent& evt )
     }
 }
 
+ImageViewerDialog::ImageViewerDialog(const wxArrayString& filenames, bool enable_delete, wxWindow* parent, wxWindowID id,
+            const wxString& title, long style )
+    : wxDialog ( parent, id, title, wxDefaultPosition, wxDefaultSize, style)
+{
+    m_main_sizer = new wxBoxSizer( wxVERTICAL );
+    long p_style = 0;
+    m_imageviewer_panel = new ImageViewerPanel( filenames, enable_delete, this, -1,p_style );
+    m_main_sizer->Add( m_imageviewer_panel, 1, wxEXPAND|wxALIGN_CENTER, 0 );
+    SetSizer( m_main_sizer );
+
+}

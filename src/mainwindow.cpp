@@ -460,7 +460,7 @@ void MainWindow::OnShowScreenshots( wxCommandEvent& event )
         customMessageBoxNoModal( SL_MAIN_ICON, _("There were no screenshots found in your spring data directory."), _("No files found") );
         return;
     }
-    ImageViewer* img  = new ImageViewer( ar, true, this, -1, _T("Screenshots") );
+    ImageViewerDialog* img  = new ImageViewerDialog( ar, true, this, -1, _T("Screenshots") );
     img->Show( true );
 }
 

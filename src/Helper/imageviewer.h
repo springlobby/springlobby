@@ -29,12 +29,11 @@ class ImagePanel : public wxPanel
 class wxBoxSizer;
 class wxButton;
 
-class ImageViewer : public wxDialog
+class ImageViewerPanel : public wxPanel
 {
     public:
-        ImageViewer(const wxArrayString& filenames, bool enable_delete, wxWindow* parent, wxWindowID id, const wxString& title = _T(""),
-            long style = wxCAPTION | wxRESIZE_BORDER | wxCLOSE_BOX | wxMAXIMIZE_BOX | wxMINIMIZE_BOX | wxDEFAULT_DIALOG_STYLE );
-        virtual ~ImageViewer();
+        ImageViewerPanel(const wxArrayString& filenames, bool enable_delete, wxWindow* parent, wxWindowID id, long style );
+        virtual ~ImageViewerPanel();
 
     protected:
         wxArrayString m_filenames;
@@ -66,6 +65,18 @@ class ImageViewer : public wxDialog
         };
 
         DECLARE_EVENT_TABLE()
+};
+
+class ImageViewerDialog : public wxDialog
+{
+    public:
+        ImageViewerDialog(const wxArrayString& filenames, bool enable_delete, wxWindow* parent, wxWindowID id, const wxString& title = _T(""),
+            long style = wxCAPTION | wxRESIZE_BORDER | wxCLOSE_BOX | wxMAXIMIZE_BOX | wxMINIMIZE_BOX | wxDEFAULT_DIALOG_STYLE );
+        virtual ~ImageViewerDialog(){}
+
+    protected:
+        ImageViewerPanel* m_imageviewer_panel;
+        wxBoxSizer* m_main_sizer;
 };
 
 #endif // SPRINGLOBBY_IMAGEVIEWER_H_INCLUDED

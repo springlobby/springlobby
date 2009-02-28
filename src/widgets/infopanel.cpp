@@ -156,7 +156,7 @@ void WidgetInfoPanel::OnDownload( wxCommandEvent& evt )
 
 void WidgetInfoPanel::OnPics( wxCommandEvent& evt )
 {
-    ImageViewer* iv = new ImageViewer( m_widget.GetImageFilenames(), false, this, -1);
+    ImageViewerDialog* iv = new ImageViewerDialog( m_widget.GetImageFilenames(), false, this, -1);
     iv->Show( true );
 }
 

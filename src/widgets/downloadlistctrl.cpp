@@ -12,7 +12,7 @@ END_EVENT_TABLE()
 WidgetDownloadListctrl::WidgetDownloadListctrl(wxWindow* parent, wxWindowID id, const wxString& name,
                     long style, const wxPoint& pt, const wxSize& sz)
     :CustomVirtListCtrl<Widget>(parent, WIDGETLISTCTRL_ID, wxDefaultPosition, wxDefaultSize,
-            wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("WidgetDownloadListCtrl"), column_count, &CompareOneCrit)
+            wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("WidgetDownloadListCtrl"), column_count, 3, &CompareOneCrit)
 {
     const int as = wxLIST_AUTOSIZE;
 #if defined(__WXMSW__)
@@ -112,29 +112,6 @@ void WidgetDownloadListctrl::Sort()
 int WidgetDownloadListctrl::GetIndexFromData( const DataType& data ) const
 {
     return 0;
-}
-
-void WidgetDownloadListctrl::OnColClick( wxListEvent& event )
-{
-  if ( event.GetColumn() == -1 ) return;
-  wxListItem col;
-  GetColumn( m_sortorder[0].col, col );
-  col.SetImage( icons().ICON_NONE );
-  SetColumn( m_sortorder[0].col, col );
-
-  int i;
-  for ( i = 0; m_sortorder[i].col != event.GetColumn() && i < 4; ++i ) {}
-  if ( i > 3 ) { i = 3; }
-  for ( ; i > 0; i--) { m_sortorder[i] = m_sortorder[i-1]; }
-  m_sortorder[0].col = event.GetColumn();
-  m_sortorder[0].direction *= -1;
-
-
-  GetColumn( m_sortorder[0].col, col );
-  col.SetImage( ( m_sortorder[0].direction > 0 )?icons().ICON_UP:icons().ICON_DOWN );
-  SetColumn( m_sortorder[0].col, col );
-
-  SortList( true );
 }
 
 Widget& WidgetDownloadListctrl::GetSelectedWidget()
