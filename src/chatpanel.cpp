@@ -355,6 +355,7 @@ void ChatPanel::CreatePopup()
 
   wxMenuItem* copy = new wxMenuItem( m_popup_menu, wxID_COPY, _( "Copy" ), wxEmptyString, wxITEM_NORMAL );
   m_popup_menu->Append( copy );
+    //      eventID,    eventType,                  member function pointer to be called        userData            instance on which member function is called
   Connect( wxID_COPY, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTextCtrl::OnCopy, (wxObject*) NULL, (wxEvtHandler*)m_chatlog_text );
 
 
