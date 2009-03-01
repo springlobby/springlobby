@@ -165,7 +165,7 @@ MainWindow::MainWindow( Ui& ui ) :
 
 
   m_func_tab_images = new wxImageList( 32, 32 );
-  MakeImages();
+
 
   m_chat_tab = new MainChatTab( m_func_tabs, m_ui );
   m_join_tab = new MainJoinBattleTab( m_func_tabs, m_ui );
@@ -250,10 +250,6 @@ void DrawBmpOnBmp( wxBitmap& canvas, wxBitmap& object, int x, int y )
 //  dc.DrawText( text, x, y);
 //  dc.SelectObject( wxNullBitmap );
 //}
-
-void MainWindow::MakeImages()
-{
-}
 
 
 /*
