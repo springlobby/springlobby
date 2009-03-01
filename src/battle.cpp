@@ -683,7 +683,7 @@ void Battle::Autobalance( BalanceType balance_type, bool support_clans, bool str
         alliances[my_random( rnd_k )].AddPlayer( players_sorted[i] );
     }
 
-    int totalplayers = GetNumUsers();
+    UserList::user_map_t::size_type totalplayers = GetNumUsers();
     for ( size_t i = 0; i < alliances.size(); ++i )
     {
         for ( size_t j = 0; j < alliances[i].players.size(); ++j )

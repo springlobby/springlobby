@@ -29,7 +29,6 @@
 
 BEGIN_EVENT_TABLE( NickListCtrl, CustomVirtListCtrl<const User*> )
   EVT_LIST_ITEM_ACTIVATED( NICK_LIST, NickListCtrl::OnActivateItem )
-  EVT_LIST_COL_CLICK( NICK_LIST, NickListCtrl::OnColClick )
   EVT_CONTEXT_MENU( NickListCtrl::OnShowMenu )
 #if wxUSE_TIPWINDOW
 #ifndef __WXMSW__ //disables tooltips on win and mac
@@ -44,7 +43,7 @@ NickListCtrl::NickListCtrl( wxWindow* parent, bool show_header, NickListCtrl::Us
                             const wxString& name, bool highlight):
   CustomVirtListCtrl<const User*>( parent, NICK_LIST, wxDefaultPosition, wxDefaultSize,
               wxLC_VIRTUAL | wxSUNKEN_BORDER | wxLC_REPORT | (int)(!show_header) * wxLC_NO_HEADER | (int)(singleSelectList) * wxLC_SINGLE_SEL,
-              name, 4, &CompareOneCrit, highlight ),
+              name, 4, 3, &CompareOneCrit, highlight ),
   m_menu(popup)
 {
 
@@ -156,35 +155,11 @@ void NickListCtrl::OnShowMenu( wxContextMenuEvent& event )
   }
 }
 
-void NickListCtrl::OnColClick( wxListEvent& event )
-{
-  if ( event.GetColumn() == -1 ) return;
-  wxListItem col;
-  GetColumn( m_sortorder[0].col, col );
-  col.SetImage( -1 );
-  SetColumn( m_sortorder[0].col, col );
-
-  int i;
-  for ( i = 0; m_sortorder[i].col != event.GetColumn() && i < 4; ++i ) {}
-  if (i > 3) { i = 3; }
-  for ( ; i > 0; i--) { m_sortorder[i] = m_sortorder[i-1]; }
-  m_sortorder[0].col = event.GetColumn();
-  m_sortorder[0].direction *= -1;
-
-
-  GetColumn( m_sortorder[0].col, col );
-  col.SetImage( ( m_sortorder[0].direction > 0)?icons().ICON_UP:icons().ICON_DOWN );
-  SetColumn( m_sortorder[0].col, col );
-
-  SortList( true );
-}
-
-
 void NickListCtrl::SetTipWindowText( const long item_hit, const wxPoint position)
 {
 
     int coloumn = getColoumnFromPosition(position);
-    if (coloumn > (int)m_colinfovec.size() || coloumn < 0 || item_hit < 0 || item_hit > m_data.size() || m_data[item_hit]==NULL )
+    if (coloumn > (int)m_colinfovec.size() || coloumn < 0 || item_hit < 0 || item_hit > (long) m_data.size() || m_data[item_hit]==NULL )
     {
         m_tiptext = _T("");
     }
@@ -233,7 +208,7 @@ void NickListCtrl::SetTipWindowText( const long item_hit, const wxPoint position
 
 wxListItemAttr* NickListCtrl::OnGetItemAttr(long item) const
 {
-    if ( item < m_data.size() && item > -1 ) {
+    if ( item < (long) m_data.size() && item > -1 ) {
         const User& u = *m_data[item];
         wxString name = u.GetNick();
         return HighlightItemUser( item, name );

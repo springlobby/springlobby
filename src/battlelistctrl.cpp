@@ -23,7 +23,6 @@ template<> SortOrder CustomVirtListCtrl<IBattle*>::m_sortorder = SortOrder();
 BEGIN_EVENT_TABLE(BattleListCtrl, CustomVirtListCtrl< IBattle *>)
 
   EVT_LIST_ITEM_RIGHT_CLICK( BLIST_LIST, BattleListCtrl::OnListRightClick )
-  EVT_LIST_COL_CLICK       ( BLIST_LIST, BattleListCtrl::OnColClick )
   EVT_MENU                 ( BLIST_DLMAP, BattleListCtrl::OnDLMap )
   EVT_MENU                 ( BLIST_DLMOD, BattleListCtrl::OnDLMod )
 #if wxUSE_TIPWINDOW
@@ -35,8 +34,9 @@ END_EVENT_TABLE()
 
 BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui ):
   CustomVirtListCtrl< IBattle *>(parent, BLIST_LIST, wxDefaultPosition, wxDefaultSize,
-            wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("BattleListCtrl"), 10, &CompareOneCrit),
-  m_ui(ui)
+            wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("BattleListCtrl"), 10, 4, &CompareOneCrit),
+  m_ui(ui),
+  m_popup( 0 )
 {
     GetAui().manager->AddPane( this, wxLEFT, _T("battlelistctrl") );
 
@@ -72,16 +72,13 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui ):
         m_sortorder[3].direction = true;
     }
 
-    m_popup = new wxMenu( _T("") );
-    // &m enables shortcout "alt + m" and underlines m
-    m_popup->Append( BLIST_DLMAP, _("Download &map") );
-    m_popup->Append( BLIST_DLMOD, _("Download m&od") );
 }
 
 
 BattleListCtrl::~BattleListCtrl()
 {
-    delete m_popup;
+    if ( m_popup )
+        delete m_popup;
 }
 
 wxString BattleListCtrl::OnGetItemText(long item, long column) const
@@ -188,13 +185,29 @@ void BattleListCtrl::UpdateBattle( IBattle& battle )
 {
     int index = GetIndexFromData( &battle );
 
-    RefreshVisibleItems( );
+    RefreshItem( index );
     MarkDirtySort();
 }
 
 void BattleListCtrl::OnListRightClick( wxListEvent& event )
 {
-    PopupMenu( m_popup );
+    int idx = event.GetIndex();
+    if ( idx < m_data.size() && idx > -1 ) {
+
+        DataType dt = m_data[idx];
+        bool mod_missing = !dt->ModExists();
+        bool map_missing = !dt->MapExists();
+        m_popup = new wxMenu( _T("") );
+        // &m enables shortcout "alt + m" and underlines m
+        if ( map_missing )
+            m_popup->Append( BLIST_DLMAP, _("Download &map") );
+
+        if ( mod_missing )
+            m_popup->Append( BLIST_DLMOD, _("Download m&od") );
+
+        if ( map_missing || mod_missing )
+            PopupMenu( m_popup );
+    }
 }
 
 void BattleListCtrl::OnDLMap( wxCommandEvent& event )
@@ -212,31 +225,6 @@ void BattleListCtrl::OnDLMod( wxCommandEvent& event )
         m_ui.DownloadMod( dt->GetHostModHash(), dt->GetHostModName() );
     }
 }
-
-void BattleListCtrl::OnColClick( wxListEvent& event )
-{
-  if ( event.GetColumn() == -1 ) return;
-  wxListItem col;
-  GetColumn( m_sortorder[0].col, col );
-  col.SetImage( icons().ICON_NONE );
-  SetColumn( m_sortorder[0].col, col );
-
-  int i;
-  for ( i = 0; m_sortorder[i].col != event.GetColumn() && i < 4; ++i ) {}
-  if ( i > 3 ) { i = 3; }
-  for ( ; i > 0; i--) { m_sortorder[i] = m_sortorder[i-1]; }
-  m_sortorder[0].col = event.GetColumn();
-  m_sortorder[0].direction *= -1;
-
-
-  GetColumn( m_sortorder[0].col, col );
-  //col.SetImage( ( m_sortorder[0].direction )?ICON_UP:ICON_DOWN );
-  col.SetImage( ( m_sortorder[0].direction > 0 )?icons().ICON_UP:icons().ICON_DOWN );
-  SetColumn( m_sortorder[0].col, col );
-
-  SortList( true );
-}
-
 
 void BattleListCtrl::Sort()
 {

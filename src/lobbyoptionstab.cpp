@@ -16,6 +16,8 @@
 #include "settings++/custom_dialogs.h"
 #include "utils.h"
 #include "aui/auimanager.h"
+#include "ui.h"
+#include "mainwindow.h"
 
 
 BEGIN_EVENT_TABLE(LobbyOptionsTab, wxPanel)
@@ -117,6 +119,12 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
 
     m_main_sizer->Add( m_complete_method_sizer, 0, wxALL, 5 );
 
+    wxStaticBoxSizer* m_use_tabicons_sizer = new wxStaticBoxSizer ( wxVERTICAL, this, _("Tab icons") );
+    m_use_tabicons = new wxCheckBox( this, -1, _("Show big icons in mainwindow tabs?"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_use_tabicons->SetValue( sett().GetUseTabIcons() );
+    m_use_tabicons_sizer->Add( m_use_tabicons , 0, wxEXPAND | wxALL, 5 );
+    m_main_sizer->Add( m_use_tabicons_sizer , 0, wxALL, 5 );
+
     SetScrollRate( 10, 10 );
     SetSizer( m_main_sizer );
 }
@@ -141,6 +149,9 @@ void LobbyOptionsTab::OnApply(wxCommandEvent& event)
     sett().SetShowTooltips(show);
 
     sett().SetCompletionMethod( m_complete_method_new->GetValue() ? Settings::MatchNearest: Settings::MatchExact );
+
+    sett().SetUseTabIcons( m_use_tabicons->IsChecked() );
+    ui().mw().SetTabIcons();
 }
 
 
@@ -159,6 +170,7 @@ void LobbyOptionsTab::OnRestore(wxCommandEvent& event)
     m_complete_method_new->SetValue( sett().GetCompletionMethod() == Settings::MatchNearest );
 
     HandleWebloc( sett().GetWebBrowserUseDefault() );
+    m_use_tabicons->SetValue( sett().GetUseTabIcons()  );
 }
 
 void LobbyOptionsTab::HandleWebloc( bool defloc )

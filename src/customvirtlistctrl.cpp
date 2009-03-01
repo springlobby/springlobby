@@ -19,12 +19,14 @@ BEGIN_EVENT_TABLE_TEMPLATE1(CustomVirtListCtrl, ListBaseType, T)
   EVT_LIST_ITEM_SELECTED   ( wxID_ANY, CustomVirtListCtrl::OnSelected )
   EVT_LIST_ITEM_DESELECTED ( wxID_ANY, CustomVirtListCtrl::OnDeselected )
   EVT_LIST_DELETE_ITEM     ( wxID_ANY, CustomVirtListCtrl::OnDeselected )
+  EVT_LIST_COL_CLICK       ( wxID_ANY, CustomVirtListCtrl::OnColClick )
 END_EVENT_TABLE()
 
 
 template < class T >
-CustomVirtListCtrl<T>::CustomVirtListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pt, const wxSize& sz,long style,wxString name,
-                               unsigned int column_count, CompareFunction func, bool highlight, UserActions::ActionType hlaction ):
+CustomVirtListCtrl<T>::CustomVirtListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pt, const wxSize& sz,
+                long style, const wxString& name, unsigned int column_count, unsigned int sort_criteria_count,
+                CompareFunction func, bool highlight, UserActions::ActionType hlaction ):
   ListBaseType(parent, id, pt, sz, style | wxLC_VIRTUAL),
   m_tiptimer(this, IDD_TIP_TIMER),
   m_tiptext(_T("")),
@@ -41,6 +43,7 @@ CustomVirtListCtrl<T>::CustomVirtListCtrl(wxWindow* parent, wxWindowID id, const
   m_highlightAction(hlaction),
   m_bg_color( GetBackgroundColour() ),
   m_dirty_sort(false),
+  m_sort_criteria_count( sort_criteria_count ),
   m_comparator( m_sortorder, func )
 {
     //dummy init , will later be replaced with loading from settings
@@ -434,3 +437,41 @@ void CustomVirtListCtrl<T>::ResetColumnSizes()
         SetColumnWidth( it->col_num, it->size );
 }
 
+template < class T >
+void CustomVirtListCtrl<T>::OnColClick( wxListEvent& event )
+{
+    if ( event.GetColumn() == -1 )
+        return;
+
+    wxListItem col;
+    GetColumn( m_sortorder[0].col, col );
+    col.SetImage( icons().ICON_NONE );
+    SetColumn( m_sortorder[0].col, col );
+    int evt_col = event.GetColumn();
+
+    unsigned int i = 0;
+    SortOrder::const_iterator it = m_sortorder.begin();
+    for ( ; it != m_sortorder.begin(); ++i, ++it ) {
+        if ( m_sortorder[i].col == evt_col )
+            break;
+    }
+
+//    for ( ; m_sortorder[i].col != event.GetColumn() && i < 4; ++i ) {}
+
+    i = clamp( i, (unsigned int)0, m_sort_criteria_count );
+
+    for ( ; i > 0; i--) {
+        m_sortorder[i] = m_sortorder[i-1];
+    }
+
+    m_sortorder[0].col = event.GetColumn();
+    m_sortorder[0].direction *= -1;
+
+
+    GetColumn( m_sortorder[0].col, col );
+    //col.SetImage( ( m_sortorder[0].direction )?ICON_UP:ICON_DOWN );
+    col.SetImage( ( m_sortorder[0].direction > 0 )?icons().ICON_UP:icons().ICON_DOWN );
+    SetColumn( m_sortorder[0].col, col );
+
+  SortList( true );
+}
