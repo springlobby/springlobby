@@ -35,7 +35,8 @@ END_EVENT_TABLE()
 BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui ):
   CustomVirtListCtrl< IBattle *>(parent, BLIST_LIST, wxDefaultPosition, wxDefaultSize,
             wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("BattleListCtrl"), 10, 4, &CompareOneCrit),
-  m_ui(ui)
+  m_ui(ui),
+  m_popup( 0 )
 {
     GetAui().manager->AddPane( this, wxLEFT, _T("battlelistctrl") );
 
@@ -71,16 +72,13 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui ):
         m_sortorder[3].direction = true;
     }
 
-    m_popup = new wxMenu( _T("") );
-    // &m enables shortcout "alt + m" and underlines m
-    m_popup->Append( BLIST_DLMAP, _("Download &map") );
-    m_popup->Append( BLIST_DLMOD, _("Download m&od") );
 }
 
 
 BattleListCtrl::~BattleListCtrl()
 {
-    delete m_popup;
+    if ( m_popup )
+        delete m_popup;
 }
 
 wxString BattleListCtrl::OnGetItemText(long item, long column) const
@@ -193,7 +191,23 @@ void BattleListCtrl::UpdateBattle( IBattle& battle )
 
 void BattleListCtrl::OnListRightClick( wxListEvent& event )
 {
-    PopupMenu( m_popup );
+    int idx = event.GetIndex();
+    if ( idx < m_data.size() && idx > -1 ) {
+
+        DataType dt = m_data[idx];
+        bool mod_missing = !dt->ModExists();
+        bool map_missing = !dt->MapExists();
+        m_popup = new wxMenu( _T("") );
+        // &m enables shortcout "alt + m" and underlines m
+        if ( map_missing )
+            m_popup->Append( BLIST_DLMAP, _("Download &map") );
+
+        if ( mod_missing )
+            m_popup->Append( BLIST_DLMOD, _("Download m&od") );
+
+        if ( map_missing || mod_missing )
+            PopupMenu( m_popup );
+    }
 }
 
 void BattleListCtrl::OnDLMap( wxCommandEvent& event )
