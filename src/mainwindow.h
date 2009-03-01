@@ -109,6 +109,8 @@ class MainWindow : public wxFrame
     ChatPanel* GetChannelChatPanel( const wxString& channel );
     MainOptionsTab& GetOptionsTab();
 
+    void SetTabIcons();
+
   protected:
     // MainWindow variables
     Ui& m_ui;
@@ -135,6 +137,8 @@ class MainWindow : public wxFrame
     ChannelChooserDialog* m_channel_chooser;
 
     ReplayTab* m_replay_tab;
+
+    wxBitmap GetTabIcon( const unsigned char* data, size_t size  );
 
     enum {
         MENU_SETTINGSPP,

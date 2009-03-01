@@ -30,6 +30,7 @@ class LobbyOptionsTab : public wxScrolledWindow
         wxCheckBox* m_reportstats;
         wxCheckBox* m_updater;
         wxCheckBox* m_show_tooltips;
+        wxCheckBox* m_use_tabicons;
 
         wxStaticText* m_autoconnect_label;
         wxStaticText* m_reportstats_label;
