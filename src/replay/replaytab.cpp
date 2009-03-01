@@ -24,7 +24,7 @@
 #include "../settings.h"
 #include "../iunitsync.h"
 #include "../mapctrl.h"
-#include "../userlistctrl.h"
+#include "../battleroomlistctrl.h"
 
 #include "replayfilter.h"
 #include "../iconimagelist.h"
@@ -104,7 +104,7 @@ ReplayTab::ReplayTab( wxWindow* parent, Ui& ui ) :
 
     m_info_sizer->Add( m_data_sizer, 1, wxEXPAND, 5 );
 
-    m_players = new UserListctrl( this, _T("replayusers"), true, REPLAY_USER_LIST );
+    m_players = new BattleroomListCtrl( this, 0, m_ui, true );
     m_info_sizer->Add( m_players , 1, wxEXPAND, 5 );
 
     m_main_sizer->Add( m_info_sizer, 0, wxEXPAND, 5 );
@@ -418,12 +418,21 @@ void ReplayTab::OnSelect( wxListEvent& event )
             m_mod_text->SetLabel(rep.battle.GetHostModName());
             m_minimap->SetBattle( &(rep.battle) );
             m_minimap->UpdateMinimap();
-            m_players->Clear();
+            try
+            {
+							IBattle& oldbattle = m_players->GetBattle();
+							for ( size_t i = 0; i < oldbattle.GetNumUsers(); ++i )
+							{
+									User& usr = oldbattle.GetUser( i );
+									m_players->RemoveUser( usr );
+							}
+            } catch ( assert_exception ) {}
+            m_players->DeleteAllItems();
+            m_players->SetBattle( (IBattle*)&rep.battle );
             for ( size_t i = 0; i < rep.battle.GetNumUsers(); ++i )
             {
 								User& usr = rep.battle.GetUser( i );
-                UserListctrl::UserData ud ( usr.GetNick() , usr.GetCountry() );
-                m_players->AddUser( ud );
+                m_players->AddUser( usr );
             }
         }
         catch ( ... ) {
