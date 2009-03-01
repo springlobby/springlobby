@@ -353,6 +353,11 @@ void ChatPanel::CreatePopup()
   m_popup_menu->Append( m_append_menu );
   m_append_menu->Check( m_disable_append );
 
+  wxMenuItem* copy = new wxMenuItem( m_popup_menu, wxID_COPY, _( "Copy" ), wxEmptyString, wxITEM_NORMAL );
+  m_popup_menu->Append( copy );
+  Connect( wxID_COPY, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTextCtrl::OnCopy, (wxObject*) NULL, (wxEvtHandler*)m_chatlog_text );
+
+
 	if ( m_type == CPT_Channel ) {
 
 		wxLogMessage( _T( "channel" ) );
