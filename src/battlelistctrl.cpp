@@ -187,7 +187,7 @@ void BattleListCtrl::UpdateBattle( IBattle& battle )
 {
     int index = GetIndexFromData( &battle );
 
-    RefreshVisibleItems( );
+    RefreshItem( index );
     MarkDirtySort();
 }
 

@@ -43,8 +43,8 @@ CustomVirtListCtrl<T>::CustomVirtListCtrl(wxWindow* parent, wxWindowID id, const
   m_highlightAction(hlaction),
   m_bg_color( GetBackgroundColour() ),
   m_dirty_sort(false),
-  m_comparator( m_sortorder, func ),
-  m_sort_criteria_count( sort_criteria_count )
+  m_sort_criteria_count( sort_criteria_count ),
+  m_comparator( m_sortorder, func )
 {
     //dummy init , will later be replaced with loading from settings
     for ( unsigned int i = 0; i < m_coloumnCount; ++i) {

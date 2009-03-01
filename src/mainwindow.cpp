@@ -163,9 +163,7 @@ MainWindow::MainWindow( Ui& ui ) :
         wxAUI_NB_WINDOWLIST_BUTTON | wxAUI_NB_TAB_SPLIT | wxAUI_NB_TAB_MOVE | wxAUI_NB_TAB_EXTERNAL_MOVE | wxAUI_NB_SCROLL_BUTTONS | wxAUI_NB_LEFT );
   m_func_tabs->SetArtProvider(new SLArtProvider);
 
-
-  m_func_tab_images = new wxImageList( 32, 32 );
-
+    bool use_icons = false;
 
   m_chat_tab = new MainChatTab( m_func_tabs, m_ui );
   m_join_tab = new MainJoinBattleTab( m_func_tabs, m_ui );

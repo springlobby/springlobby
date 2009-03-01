@@ -159,7 +159,7 @@ void NickListCtrl::SetTipWindowText( const long item_hit, const wxPoint position
 {
 
     int coloumn = getColoumnFromPosition(position);
-    if (coloumn > (int)m_colinfovec.size() || coloumn < 0 || item_hit < 0 || item_hit > m_data.size() || m_data[item_hit]==NULL )
+    if (coloumn > (int)m_colinfovec.size() || coloumn < 0 || item_hit < 0 || item_hit > (long) m_data.size() || m_data[item_hit]==NULL )
     {
         m_tiptext = _T("");
     }
@@ -208,7 +208,7 @@ void NickListCtrl::SetTipWindowText( const long item_hit, const wxPoint position
 
 wxListItemAttr* NickListCtrl::OnGetItemAttr(long item) const
 {
-    if ( item < m_data.size() && item > -1 ) {
+    if ( item < (long) m_data.size() && item > -1 ) {
         const User& u = *m_data[item];
         wxString name = u.GetNick();
         return HighlightItemUser( item, name );

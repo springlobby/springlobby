@@ -129,7 +129,6 @@ class MainWindow : public wxFrame
     MainTorrentTab* m_torrent_tab;
     #endif
 
-    wxImageList* m_func_tab_images;
     AutojoinChannelDialog* m_autojoin_dialog;
     settings_frame* se_frame;
     bool se_frame_active;
