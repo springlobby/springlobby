@@ -85,27 +85,27 @@ ReplayTab::ReplayTab( wxWindow* parent, Ui& ui ) :
     m_data_sizer = new wxFlexGridSizer( 4, 2, 0, 0 );
 
     m_map_lbl = new wxStaticText( this, wxID_ANY, _("Map:"), wxDefaultPosition, wxDefaultSize, 0 );
-    m_data_sizer->Add( m_map_lbl, 0, wxALL, 5 );
+    m_data_sizer->Add( m_map_lbl, 1, wxALL|wxEXPAND, 5 );
 
     m_map_text = new wxStaticText( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-    m_data_sizer->Add( m_map_text, 0, wxALL, 5 );
+    m_data_sizer->Add( m_map_text, 1, wxALL|wxEXPAND, 5 );
 
     m_mod_lbl = new wxStaticText( this, wxID_ANY, _("Mod:"), wxDefaultPosition, wxDefaultSize, 0 );
-    m_data_sizer->Add( m_mod_lbl, 0, wxALL, 5 );
+    m_data_sizer->Add( m_mod_lbl, 1, wxALL|wxEXPAND, 5 );
 
     m_mod_text = new wxStaticText( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-    m_data_sizer->Add( m_mod_text, 0, wxALL, 5 );
+    m_data_sizer->Add( m_mod_text, 1, wxALL|wxEXPAND, 5 );
 
     m_players_lbl = new wxStaticText( this, wxID_ANY, _("Players:"), wxDefaultPosition, wxDefaultSize, 0 );
-    m_data_sizer->Add( m_players_lbl, 0, wxALL, 5 );
+    m_data_sizer->Add( m_players_lbl, 1, wxALL|wxEXPAND, 5 );
 
     m_players_text = new wxStaticText( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-    m_data_sizer->Add( m_players_text, 0, wxALL, 5 );
+    m_data_sizer->Add( m_players_text, 1, wxALL|wxEXPAND, 5 );
 
-    m_info_sizer->Add( m_data_sizer, 1, wxEXPAND, 5 );
+    m_info_sizer->Add( m_data_sizer, 1, wxEXPAND|wxALL, 0 );
 
     m_players = new BattleroomListCtrl( this, 0, m_ui, true );
-    m_info_sizer->Add( m_players , 1, wxEXPAND, 5 );
+    m_info_sizer->Add( m_players , 2, wxALL|wxEXPAND, 0 );
 
     m_main_sizer->Add( m_info_sizer, 0, wxEXPAND, 5 );
 
