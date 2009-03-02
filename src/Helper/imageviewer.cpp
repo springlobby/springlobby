@@ -14,6 +14,7 @@
 #include <wx/filedlg.h>
 
 #include "../settings++/custom_dialogs.h"
+#include "../uiutils.h"
 
 BEGIN_EVENT_TABLE( ImagePanel, wxPanel )
     EVT_PAINT(ImagePanel::OnPaint)
@@ -53,16 +54,13 @@ void ImagePanel::OnPaint(wxPaintEvent& WXUNUSED(event))
     int h,w,H,W;
     h = im.GetHeight();
     w = im.GetWidth();
-    double ratio = double ( h ) / double ( w );
-    H = GetClientSize().GetY();
-    W = GetClientSize().GetX();
-    if ( W / ratio < H )
-        H = W / ratio ;
-    else {
-        W = H * ratio;//W * ratio;
-        //H =  W / ratio;
-    }
-    dc.DrawBitmap( wxBitmap(im.Rescale( W, H ) ), 0, 0, true /* use mask */ );
+    wxSize c_sz = GetClientSize();
+    wxSize im_sz ( w, h );
+    im_sz = MakeFit( im_sz, c_sz );
+    h = im_sz.GetHeight();
+    w = im_sz.GetWidth();
+    dc.Clear();
+    dc.DrawBitmap( wxBitmap(im.Rescale( w, h ) ), 0, 0, true /* use mask */ );
 }
 void ImagePanel::OnSize(wxSizeEvent& WXUNUSED(event))
 {
