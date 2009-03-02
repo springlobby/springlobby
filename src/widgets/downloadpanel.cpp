@@ -32,9 +32,9 @@ WidgetDownloadPanel::WidgetDownloadPanel(wxWindow* parent, wxWindowID id, const 
 
     m_main_sizer = new wxBoxSizer ( wxHORIZONTAL );
     m_list = new WidgetDownloadListctrl( m_splitter, WidgetDownloadListctrl::WIDGETLISTCTRL_ID );
-//    m_main_sizer->Add( m_list, 1, wxALL | wxEXPAND );
     PopulateList();
     m_list->ResetColumnSizes();
+
     Widget dummy;
     m_info_panel = new WidgetInfoPanel( dummy, m_splitter, ID_PANEL );
     m_info_panel->Create();
@@ -86,7 +86,6 @@ bool WidgetDownloadPanel::PopulateList()
 
 	if (http.GetError() == wxPROTO_NOERR)
 	{
-                // will crash here, if xml content is not formatted PERFECTLY
 		wxXmlDocument xml(*httpStream);
 
 		wxXmlNode *node = xml.GetRoot()->GetChildren();
