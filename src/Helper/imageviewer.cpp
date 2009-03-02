@@ -51,16 +51,13 @@ void ImagePanel::OnPaint(wxPaintEvent& WXUNUSED(event))
 {
     wxPaintDC dc( this );
     wxImage im ( m_file );
-    int h,w,H,W;
-    h = im.GetHeight();
-    w = im.GetWidth();
+
     wxSize c_sz = GetClientSize();
-    wxSize im_sz ( w, h );
+    wxSize im_sz ( im.GetWidth(), im.GetHeight() );
     im_sz = MakeFit( im_sz, c_sz );
-    h = im_sz.GetHeight();
-    w = im_sz.GetWidth();
+
     dc.Clear();
-    dc.DrawBitmap( wxBitmap(im.Rescale( w, h ) ), 0, 0, true /* use mask */ );
+    dc.DrawBitmap( wxBitmap(im.Rescale( im_sz.GetWidth(), im_sz.GetHeight() ) ), 0, 0, true /* use mask */ );
 }
 void ImagePanel::OnSize(wxSizeEvent& WXUNUSED(event))
 {
