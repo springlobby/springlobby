@@ -8,6 +8,7 @@
 #include <wx/thread.h>
 #include <wx/intl.h>
 #include <wx/utils.h>
+#include <wx/filename.h>
 
 #include "ui.h"
 #include "tasserver.h"
@@ -386,8 +387,8 @@ void Ui::OpenWebBrowser( const wxString& url )
 //! @note this does not return until the user pressed any of the buttons or closed the dialog.
 bool Ui::Ask( const wxString& heading, const wxString& question )
 {
-    wxMessageDialog ask_dlg( &mw(), question, heading, wxYES_NO );
-    return ( ask_dlg.ShowModal() == wxID_YES );
+    int answer = customMessageBox( SL_MAIN_ICON, question, heading, wxYES_NO );
+    return ( answer == wxYES );
 }
 
 
@@ -993,9 +994,6 @@ void Ui::OnJoinedBattle( Battle& battle )
     if ( battle.GetNatType() != NAT_None )
     {
         wxLogWarning( _T("joining game with NAT transversal") );
-#ifdef HAVE_WX26
-        customMessageBox(SL_MAIN_ICON, _("This game uses NAT traversal that is not supported by wx 2.6 build of springlobby. \n\nYou will not be able to play in this battle. \nUpdate your wxwidgets to 2.8 or newer to enable NAT traversal support."), _("NAT traversal"), wxOK );
-#endif
     }
 }
 
@@ -1040,6 +1038,16 @@ void Ui::OnBattleStarted( Battle& battle )
             if ( battle.IsProxy() )
             {
               wxString hostscript = m_spring->WriteScriptTxt( battle );
+							try
+							{
+								wxString path = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("relayhost_script.txt");
+								if ( !wxFile::Access( path, wxFile::write ) ) wxLogError( _T("Access denied to script.txt.") );
+
+								wxFile f( path, wxFile::write );
+								f.Write( hostscript );
+								f.Close();
+
+							} catch (...) {}
               m_serv->SendScriptToProxy( hostscript );
             }
             battle.GetMe().BattleStatus().ready = false;

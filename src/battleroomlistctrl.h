@@ -39,6 +39,7 @@ class BattleroomListCtrl : public CustomListCtrl
     void OnSideSelect( wxCommandEvent& event );
     void OnHandicapSelect( wxCommandEvent& event );
     void OnSpecSelect( wxCommandEvent& event );
+    void OnActivateItem( wxListEvent& event );
 
     void OnKickPlayer( wxCommandEvent& event );
     void OnRingPlayer( wxCommandEvent& event );
@@ -73,13 +74,7 @@ class BattleroomListCtrl : public CustomListCtrl
 
     wxString GetSelectedUserNick();
 
-    struct {
-      int col;
-      bool direction;
-    } m_sortorder[4];
-
     Battle& m_battle;
-
 
     typedef SL_GENERIC::UserMenu<BattleroomListCtrl> UserMenu;
     UserMenu* m_popup;

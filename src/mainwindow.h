@@ -63,7 +63,7 @@ class MainWindow : public wxFrame
 
     // MainWindow interface
     void OpenChannelChat( Channel& channel );
-    void OpenPrivateChat( User& user );
+    void OpenPrivateChat( const User& user, bool doFocus = false );
 
     void ShowConfigure( const unsigned int page = OPT_PAGE_SPRING );
 
@@ -97,11 +97,7 @@ class MainWindow : public wxFrame
     void OnChannelListStart( );
 
 
-    #ifdef HAVE_WX26
-    void OnTabsChanged( wxNotebookEvent& event );
-    #else
     void OnTabsChanged( wxAuiNotebookEvent& event );
-    #endif
     MainChatTab& GetChatTab();
     MainJoinBattleTab& GetJoinTab();
     MainSinglePlayerTab& GetSPTab();
@@ -123,11 +119,7 @@ class MainWindow : public wxFrame
     wxMenu* m_menuTools;
 
     wxBoxSizer* m_main_sizer;
-    #ifndef HAVE_WX26
     wxAuiNotebook* m_func_tabs;
-    #else
-    wxListbook* m_func_tabs;
-    #endif
     wxNotebookPage* m_chat_page;
 
     MainChatTab* m_chat_tab;

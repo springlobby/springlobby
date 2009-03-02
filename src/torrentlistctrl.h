@@ -57,12 +57,6 @@ class TorrentListCtrl : public CustomListCtrl
     static int wxCALLBACK CompareFileSizeDOWN(long item1, long item2, long sortData);
     static map_infos* m_info_map;
 
-    struct {
-      int col;
-      bool direction;
-    } m_sortorder[4];
-
-    //wxMenu* m_popup;
 
     enum {
         TLIST_CLICK

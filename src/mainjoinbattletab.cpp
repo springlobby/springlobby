@@ -8,16 +8,11 @@
 #include <wx/notebook.h>
 #include <wx/imaglist.h>
 #include <wx/sizer.h>
-#include <stdexcept>
+#include <wx/wupdlock.h>
 #include <wx/log.h>
 
-#ifndef HAVE_WX26
-#include "aui/auimanager.h"
-#include "aui/artprovider.h"
-#else
-#include <wx/listbook.h>
-#endif
-
+#include "ui.h"
+#include "settings.h"
 #include "battle.h"
 #include "mainjoinbattletab.h"
 #include "battlelisttab.h"
@@ -26,48 +21,34 @@
 #include "battleoptionstab.h"
 #include "utils.h"
 #include "battleroommmoptionstab.h"
+#include "aui/auimanager.h"
+#include "aui/artprovider.h"
 
 #include "images/battle_list.xpm"
 #include "images/battle.xpm"
 #include "images/battle_map.xpm"
 #include "images/battle_settings.xpm"
 
-#include "ui.h"
-#include "settings.h"
-
+#include <stdexcept>
 
 MainJoinBattleTab::MainJoinBattleTab( wxWindow* parent, Ui& ui ) :
     wxScrolledWindow( parent, -1 ),m_battle_tab(0),m_map_tab(0),m_opts_tab(0),m_mm_opts_tab(0),m_ui(ui)
 {
-  #ifndef HAVE_WX26
   GetAui().manager->AddPane( this, wxLEFT, _T("mainjoinbattletab") );
-  #endif
 
   m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
-  #ifdef HAVE_WX26
-  m_tabs = new wxNotebook( this, BATTLE_TABS, wxDefaultPosition, wxDefaultSize, wxLB_TOP );
-  #else
   m_tabs = new wxAuiNotebook( this, BATTLE_TABS, wxDefaultPosition, wxDefaultSize, wxAUI_NB_TAB_SPLIT | wxAUI_NB_TAB_MOVE | wxAUI_NB_SCROLL_BUTTONS | wxAUI_NB_TOP | wxAUI_NB_TAB_EXTERNAL_MOVE );
   m_tabs->SetArtProvider(new SLArtProvider);
-
-  #endif
 
   m_imagelist = new wxImageList( 12, 12 );
   m_imagelist->Add( wxIcon(battle_list_xpm) );
   m_imagelist->Add( wxIcon(battle_xpm) );
   m_imagelist->Add( wxIcon(battle_map_xpm) );
   m_imagelist->Add( wxIcon(battle_settings_xpm) );
-  #ifdef HAVE_WX26
-  m_tabs->AssignImageList( m_imagelist );
-  #endif
 
   m_list_tab = new BattleListTab( m_tabs, m_ui );
-  #ifdef HAVE_WX26
-  m_tabs->AddPage( m_list_tab, _("Battle list"), true, 0 );
-  #else
   m_tabs->AddPage( m_list_tab, _("Battle list"), true, wxIcon(battle_list_xpm) );
-  #endif
 
   m_main_sizer->Add( m_tabs, 1, wxEXPAND );
 
@@ -149,20 +130,17 @@ void MainJoinBattleTab::JoinBattle( Battle& battle )
   LeaveCurrentBattle();
 
   m_battle_tab = new BattleRoomTab( m_tabs, m_ui, battle );
-  m_map_tab = new BattleMapTab( m_tabs, m_ui, battle );
-  m_opts_tab = new BattleOptionsTab( m_tabs, m_ui, battle );
-  m_mm_opts_tab = new BattleroomMMOptionsTab<Battle>( battle, m_tabs);
-  #ifdef HAVE_WX26
-  m_tabs->InsertPage( 1, m_battle_tab, _("Battleroom"), true, 1 );
-  m_tabs->InsertPage( 2, m_map_tab, _("Map"), false, 2 );
-  m_tabs->InsertPage( 3, m_mm_opts_tab, _("Options"), false, 3 );
-  m_tabs->InsertPage( 4, m_opts_tab, _("Unit Restrictions"), false, 3 );
-  #else
   m_tabs->InsertPage( 1, m_battle_tab, _("Battleroom"), true, wxIcon(battle_xpm) );
+
+  m_map_tab = new BattleMapTab( m_tabs, m_ui, battle );
   m_tabs->InsertPage( 2, m_map_tab, _("Map"), false, wxIcon(battle_map_xpm) );
+
+  m_mm_opts_tab = new BattleroomMMOptionsTab<Battle>( battle, m_tabs);
   m_tabs->InsertPage( 3, m_mm_opts_tab, _("Options"), false, wxIcon(battle_settings_xpm) );
+
+  m_opts_tab = new BattleOptionsTab( m_tabs, m_ui, battle );
   m_tabs->InsertPage( 4, m_opts_tab, _("Unit Restrictions"), false, wxIcon(battle_settings_xpm) );
-  #endif
+
   #ifdef __WXMSW__
     Refresh(); // this is needed to avoid a weird frame overlay glitch in windows
   #endif

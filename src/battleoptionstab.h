@@ -29,9 +29,9 @@ class BattleOptionsTab : public wxScrolledWindow
     int GetAllowedUnitIndex( const wxString& name );
     int GetRestrictedUnitIndex( const wxString& name );
     bool IsRestricted( const wxString& name );
-    void Restrict( const wxString& name );
+    void Restrict( const wxString& name, int count );
     void Allow( const wxString& name );
-    void Restrict( int index );
+    void Restrict( int index, int count );
     void Allow( int index );
 
 

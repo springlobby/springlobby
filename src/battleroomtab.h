@@ -26,6 +26,7 @@ class ColorButton;
 class wxBitmapComboBox;
 struct UnitSyncMap;
 class wxToggleButton;
+class wxChoice;
 
 typedef std::map<wxString,long> OptionListMap;
 
@@ -72,12 +73,15 @@ class BattleRoomTab : public wxScrolledWindow
 		void OnDeletePreset( wxCommandEvent& event );
 		void OnSetModDefaultPreset( wxCommandEvent& event );
 		void OnMapBrowse( wxCommandEvent& event );
+		void OnMapSelect( wxCommandEvent& event );
 		void OnOptionActivate( wxListEvent& event );
 
     void OnUserJoined( User& user );
     void OnUserLeft( User& user );
 
     void OnUnitSyncReloaded();
+		void ReloadMaplist();
+		void SetMap( int index );
 
     void UpdateHighlights();
 
@@ -115,7 +119,6 @@ class BattleRoomTab : public wxScrolledWindow
     wxStaticText* m_ally_lbl;
     wxStaticText* m_side_lbl;
     wxStaticText* m_color_lbl;
-    wxStaticText* m_map_lbl;
     wxStaticText* m_wind_lbl;
     wxStaticText* m_tidal_lbl;
     wxStaticText* m_size_lbl;
@@ -124,6 +127,7 @@ class BattleRoomTab : public wxScrolledWindow
 
     wxPanel* m_player_panel;
 
+		wxComboBox* m_map_combo;
 
     BattleroomListCtrl* m_players;
     ChatPanel* m_chat;
@@ -180,6 +184,7 @@ class BattleRoomTab : public wxScrolledWindow
 				BROOM_DELETEPRES,
 				BROOM_SETDEFAULTPRES,
 				BROOM_MAP_BROWSE,
+				BROOM_MAP_SEL,
 				BROOM_OPTIONLIST
     };
 

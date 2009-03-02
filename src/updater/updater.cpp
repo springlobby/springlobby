@@ -45,7 +45,7 @@ void UpdaterClass::CheckForUpdates()
   if ( !latestVersion.IsSameAs(myVersion, false) )
   {
       #ifdef __WXMSW__
-      int answer = customMessageBox(SL_MAIN_ICON, _("Your SpringLobby version is not up to date.\n\n") + msg + _("\n\nWould you like for me to autodownload the new version? It will be automatically used next time you launch the lobby again."), _("Not up to Date"), wxYES_NO);
+      int answer = customMessageBox(SL_MAIN_ICON, _("Your SpringLobby version is not up to date.\n\n") + msg + _("\n\nWould you like for me to autodownload the new version? Changes will take effect next you launch the lobby again."), _("Not up to date"), wxYES_NO);
       if (answer == wxYES)
       {
         wxString sep = wxFileName::GetPathSeparator();

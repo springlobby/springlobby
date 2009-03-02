@@ -30,18 +30,14 @@ class MainChatTab : public wxScrolledWindow
 
     ChatPanel* AddChatPannel( Channel& channel );
     ChatPanel* AddChatPannel( Server& server, const wxString& name );
-    ChatPanel* AddChatPannel( User& user );
+    ChatPanel* AddChatPannel( const User& user );
     /** \brief this is only used if channel is left via raw command in server tab */
     bool RemoveChatPanel( ChatPanel* panel );
 
     void RejoinChannels();
 
-    #ifdef HAVE_WX26
-    void OnTabsChanged( wxListbookEvent& event );
-    #else
     void OnTabsChanged( wxAuiNotebookEvent& event );
     void OnTabClose( wxAuiNotebookEvent& event );
-    #endif
     void OnUserConnected( User& user );
     void OnUserDisconnected( User& user );
 
@@ -58,11 +54,7 @@ class MainChatTab : public wxScrolledWindow
     Ui& m_ui;
 
     wxWindow* m_close_window;
-    #ifdef HAVE_WX26
-    wxNotebook* m_chat_tabs;
-    #else
     wxAuiNotebook* m_chat_tabs;
-    #endif
     wxBoxSizer* m_main_sizer;
     wxImageList* m_imagelist;
     ChatPanel* m_server_chat;

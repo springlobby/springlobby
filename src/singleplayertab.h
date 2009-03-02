@@ -17,8 +17,8 @@ class wxChoice;
 class wxStaticText;
 class wxCommandEvent;
 class wxCheckBox;
-class wxColourPickerCtrl;
-class wxColourPickerEvent;
+class wxMouseEvent;
+class ColorButton;
 
 class SinglePlayerTab: public  wxScrolledWindow
 {
@@ -44,8 +44,9 @@ class SinglePlayerTab: public  wxScrolledWindow
     void OnStart( wxCommandEvent& event );
     void OnRandomCheck( wxCommandEvent& event );
     void OnSpectatorCheck( wxCommandEvent& event );
-    void OnColorButton( wxColourPickerEvent& event );
+    void OnColorButton( wxCommandEvent& event );
     void OnReset( wxCommandEvent& event );
+    void OnMouseWheel( wxMouseEvent& event );
 
     void OnUnitSyncReloaded();
 
@@ -69,7 +70,7 @@ class SinglePlayerTab: public  wxScrolledWindow
     wxCheckBox* m_random_check;
     wxCheckBox* m_spectator_check;
     wxButton* m_start_btn;
-    wxColourPickerCtrl* m_color_btn;
+    ColorButton* m_color_btn;
 
     enum
     {

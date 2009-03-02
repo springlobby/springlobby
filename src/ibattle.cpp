@@ -171,20 +171,6 @@ int IBattle::GetClosestFixColour(const wxColour &col, const std::vector<int> &ex
     return result;
 }
 
-bool IBattle::HaveMultipleBotsInSameTeam() const
-{
-    wxLogDebugFunc(_T(""));
-
-    std::vector<int> teams ( GetMaxPlayers(), -1 );
-		for ( user_map_t::size_type i = 0; i < GetNumUsers(); i++ )
-    {
-				User& usr = GetUser( i );
-        if ( !usr.BattleStatus().IsBot() ) continue;
-        if ( teams[ usr.BattleStatus().team ] == 1 )return true;
-        teams[ usr.BattleStatus().team ] = 1;
-    }
-    return false;
-}
 
 void IBattle::SendHostInfo( HostInfo update )
 {
@@ -473,7 +459,9 @@ UserPosition IBattle::GetFreePosition()
     for ( unsigned int bi = 0; bi < GetNumUsers(); bi++ )
     {
       User& user = GetUser( bi );
-      if ( ( map.info.positions[i].x == user.BattleStatus().pos.x ) && ( map.info.positions[i].y == user.BattleStatus().pos.y ) )
+      UserBattleStatus& status = user.BattleStatus();
+      if ( status.spectator ) continue;
+      if ( ( map.info.positions[i].x == status.pos.x ) && ( map.info.positions[i].y == status.pos.y ) )
       {
         taken = true;
         break;
@@ -600,14 +588,14 @@ wxString IBattle::GetHostModHash() const
 }
 
 
-bool IBattle::MapExists()
+bool IBattle::MapExists() const
 {
   return m_map_exists;
   //return usync().MapExists( m_map_name, m_map.hash );
 }
 
 
-bool IBattle::ModExists()
+bool IBattle::ModExists() const
 {
   return m_mod_exists;
   //return usync().ModExists( m_mod_name );
@@ -615,29 +603,29 @@ bool IBattle::ModExists()
 
 
 
-void IBattle::DisableUnit( const wxString& unitname )
+void IBattle::RestrictUnit( const wxString& unitname, int count )
 {
-  if ( m_units.Index( unitname ) == wxNOT_FOUND ) m_units.Add( unitname );
+  m_restricted_units[ unitname ] = count;
 }
 
 
-void IBattle::EnableUnit( const wxString& unitname )
+void IBattle::UnrestrictUnit( const wxString& unitname )
 {
-  int pos = m_units.Index( unitname );
-  if ( pos == wxNOT_FOUND ) return;
-  m_units.RemoveAt( pos );
+  std::map<wxString,int>::iterator pos = m_restricted_units.find( unitname );
+  if ( pos == m_restricted_units.end() ) return;
+  m_restricted_units.erase( pos );
 }
 
 
-void IBattle::EnableAllUnits()
+void IBattle::UnrestrictAllUnits()
 {
-  m_units.Empty();
+  m_restricted_units.clear();
 }
 
 
-wxArrayString IBattle::DisabledUnits()
+std::map<wxString,int> IBattle::RestrictedUnits()
 {
-  return m_units;
+  return m_restricted_units;
 }
 
 void IBattle::OnSelfLeftBattle()
@@ -714,7 +702,13 @@ bool IBattle::LoadOptionsPreset( const wxString& name )
       }
       SendHostInfo( HI_StartRects );
 
-      m_units = wxStringTokenize( options[_T("restrictions")], _T('\t') );
+      wxStringTokenizer tkr( options[_T("restrictions")], _T('\t') );
+      m_restricted_units.clear();
+      while( tkr.HasMoreTokens() )
+      {
+      	wxString unitinfo = tkr.GetNextToken();
+      	RestrictUnit( unitinfo.BeforeLast(_T('=')), s2l( unitinfo.AfterLast(_T('=')) ) );
+      }
       SendHostInfo( HI_Restrictions );
       Update( wxString::Format( _T("%d_restrictions"), OptionsWrapper::PrivateOptions ) );
 
@@ -761,11 +755,10 @@ void IBattle::SaveOptionsPreset( const wxString& name )
       }
       opts[_T("numrects")] = TowxString( validrectcount );
 
-      unsigned int restrcount = m_units.GetCount();
       wxString restrictionsstring;
-      for ( unsigned int restrnum = 0; restrnum < restrcount; restrnum++ )
+      for ( std::map<wxString, int>::iterator itor = m_restricted_units.begin(); itor != m_restricted_units.end(); itor++ )
       {
-        restrictionsstring << m_units[restrnum] << _T('\t');
+        restrictionsstring << itor->first << _T('=') << TowxString(itor->second) << _T('\t');
       }
       opts[_T("restrictions")] = restrictionsstring;
 
@@ -800,3 +793,24 @@ wxArrayString IBattle::GetPresetList()
 void IBattle::UserPositionChanged( const User& user )
 {
 }
+
+void IBattle::SetIsProxy( bool value )
+{
+    m_opts.isproxy = value;
+}
+
+bool IBattle::IsProxy()
+{
+    return m_opts.isproxy;
+}
+
+bool IBattle::IsFounderMe()
+{
+    return ( ( m_opts.founder == GetMe().GetNick() ) || ( m_opts.isproxy  && !m_generating_script ) );
+}
+
+int IBattle::GetMyPlayerNum()
+{
+    return GetPlayerNum( GetMe() );
+}
+

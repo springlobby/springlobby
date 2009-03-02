@@ -125,6 +125,11 @@ void Socket::Connect( const wxString& addr, const int port )
   m_sock->SetTimeout( 40 );
 }
 
+void Socket::SetTimeout( const int seconds )
+{
+    if ( m_sock != 0 )
+        m_sock->SetTimeout( seconds );
+}
 
 //! @brief Disconnect from remote host if connected.
 //! @note This turns off the ping thread.
@@ -153,27 +158,28 @@ bool Socket::Send( const wxString& data )
 //! @note Does not lock the criticalsection.
 bool Socket::_Send( const wxString& data )
 {
-  if ( !m_sock ) {
+  if ( !m_sock )
+  {
     wxLogError( _T("Socket NULL") );
     return false;
   }
 
-  if ( m_rate > 0 ) {
-    m_buffer += data;
-    int max = m_rate - m_sent;
-    if ( max > 0 ) {
-      wxString send = m_buffer.substr( 0, max );
-      m_buffer.erase( 0, max );
-      //wxLogMessage( _T("send: %d  sent: %d  max: %d   :  buff: %d"), send.length() , m_sent, max, m_buffer.length() );
-      std::string s = (const char*)send.mb_str(wxConvUTF8);
-      m_sock->Write( s.c_str(), s.length() );
-      m_sent += s.length();
-    }
-  } else {
-    if ( data.length() <= 0) return true;
-    std::string s = (const char*)data.mb_str(wxConvUTF8);
-    m_sock->Write( s.c_str(), s.length() );
+	m_buffer += (const char*)data.mb_str(wxConvUTF8);
+	int crop = m_buffer.length();
+  if ( m_rate > 0 )
+  {
+  	 int max = m_rate - m_sent;
+  	 if ( crop > 0 ) crop = max;
   }
+  std::string send = m_buffer.substr( 0, crop );
+	//wxLogMessage( _T("send: %d  sent: %d  max: %d   :  buff: %d"), send.length() , m_sent, max, m_buffer.length() );
+	m_sock->Write( send.c_str(), send.length() );
+	if ( !m_sock->Error() )
+	{
+		wxUint32 sentdata = m_sock->LastCount();
+		m_buffer.erase( 0, sentdata );
+		m_sent += sentdata;
+	}
   return !m_sock->Error();
 }
 
@@ -205,9 +211,7 @@ bool Socket::Receive( wxString& data )
       if ( d.IsEmpty() )
       {
         d = wxString( &buff[0], wxConvLocal );
-        #ifndef HAVE_WX26
         if ( d.IsEmpty() ) d = wxString( &buff[0], wxCSConv(_T("latin-1")) );
-        #endif
       }
       m_rcv_buffer << d;
     }
@@ -237,7 +241,7 @@ wxString Socket::GetHandle()
         handle += TowxString(((unsigned int)AdapterInfo[0].Address[i])&255);
         if (i != 5) handle += _T(':');
     }
-	#elif defined(__WXGTK__)
+	#elif defined(__WXGTK__) && defined(linux)
 	int sock = socket (AF_INET, SOCK_DGRAM, 0);
 	if (sock < 0)
 	{

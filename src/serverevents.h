@@ -73,7 +73,7 @@ class ServerEvents
     void OnBattleUpdateBot( int battleid, const wxString& nick, UserBattleStatus status );
     void OnBattleRemoveBot( int battleid, const wxString& nick );
 
-    void OnBattleDisableUnit( int battleid, const wxString& unitname );
+    void OnBattleDisableUnit( int battleid, const wxString& unitname, int count = 0 );
     void OnBattleEnableUnit( int battleid, const wxString& unitname );
     void OnBattleEnableAllUnits( int battleid );
 

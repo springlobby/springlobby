@@ -139,34 +139,15 @@ wxColour ColourDelta( const wxColour& colour, const int& delta )
 
 
 
-wxString GetColorString( const wxColour& color )
-{
-    return wxString::Format( _T("%d %d %d"), color.Red(), color.Green(), color.Blue() );
-
-}
-
-wxColour GetColorFromStrng( const wxString color )
-{
-    wxString c = color;
-    long r = 0, g = 0, b = 0;
-    c.BeforeFirst( ' ' ).ToLong( &r );
-    c = c.AfterFirst( ' ' );
-    c.BeforeFirst( ' ' ).ToLong( &g );
-    c = c.AfterFirst( ' ' );
-    c.BeforeFirst( ' ' ).ToLong( &b );
-    return wxColour( r%256, g%256, b%256 );
-}
-
-
 wxColour GetColorFromFloatStrng( const wxString color )
 {
     wxString c = color;
-    double r = 0, g = 0, b = 0;
-    c.BeforeFirst( ' ' ).ToDouble( &r );
+    float r = 0, g = 0, b = 0;
+    r = s2d(c.BeforeFirst( ' ' ));
     c = c.AfterFirst( ' ' );
-    c.BeforeFirst( ' ' ).ToDouble( &g );
+    g = s2d( c.BeforeFirst( ' ' ));
     c = c.AfterFirst( ' ' );
-    c.BeforeFirst( ' ' ).ToDouble( &b );
+    b = s2d(c.BeforeFirst( ' ' ));
     CLAMP( r, 0, 1  );
     CLAMP( g, 0, 1  );
     CLAMP( b, 0, 1  );

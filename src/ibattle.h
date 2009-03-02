@@ -192,9 +192,14 @@ public:
     virtual wxString GetHostMapName() const;
     virtual wxString GetHostMapHash() const;
 
+    virtual void SetIsProxy( bool value );
+    virtual bool IsProxy();
+
     virtual bool IsSynced();
 
-    virtual bool IsFounderMe() = 0;
+    virtual bool IsFounderMe();
+
+    virtual int GetMyPlayerNum();
 
 		virtual int GetPlayerNum( const User& user );
 
@@ -204,8 +209,8 @@ public:
     virtual wxString GetHostModName() const;
     virtual wxString GetHostModHash() const;
 
-    virtual bool MapExists();
-    virtual bool ModExists();
+    virtual bool MapExists() const;
+    virtual bool ModExists() const;
 
     virtual BattleStartRect GetStartRect( unsigned int allyno );
     User& OnUserAdded( User& user );
@@ -241,16 +246,15 @@ public:
 		virtual void Update ( const wxString& Tag );
 
     virtual unsigned int GetNumBots() const;
-    virtual bool HaveMultipleBotsInSameTeam() const;
     virtual User& OnBotAdded( const wxString& nick, const UserBattleStatus& bs );
 
     virtual UserPosition GetFreePosition();
     virtual int GetFreeAlly( bool excludeme = false );
 
-    virtual void DisableUnit( const wxString& unitname );
-    virtual void EnableUnit( const wxString& unitname );
-    virtual void EnableAllUnits();
-    virtual wxArrayString DisabledUnits();
+    virtual void RestrictUnit( const wxString& unitname, int count = 0 );
+    virtual void UnrestrictUnit( const wxString& unitname );
+    virtual void UnrestrictAllUnits();
+    virtual std::map<wxString,int> RestrictedUnits();
 
     virtual void OnUnitSyncReloaded();
 
@@ -346,8 +350,13 @@ public:
 		void SetParsedTeamsVec( const TeamVec& t ) { m_parsed_teams = t; }
 		void SetParsedAlliesVec( const AllyVec& a ) { m_parsed_allies = a; }
 
-		virtual void UserPositionChanged( const User& usr );
+		const BattleOptions& GetBattleOptions() const { return m_opts; }
 
+		bool Equals( const IBattle& other ) const { return m_opts.battleid == other.GetBattleOptions().battleid; }
+
+		virtual void DisableHostStatusInProxyMode( bool value ) { m_generating_script = value; }
+
+		virtual void UserPositionChanged( const User& usr );
 
 protected:
 
@@ -360,7 +369,7 @@ protected:
     UnitSyncMap m_host_map;
     UnitSyncMod m_host_mod;
 
-    wxArrayString m_units;
+    std::map<wxString, int> m_restricted_units;
 
     OptionsWrapper m_opt_wrap;
 

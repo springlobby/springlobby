@@ -67,7 +67,7 @@ m_textctrl(0)
 		case opt_string:
 		{
 			mmOptionString opt = optWrap.opts[optFlag].string_map[key];
-		  m_textctrl = new wxTextCtrl(this, wxID_ANY, opt.value, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, opt.key);
+            m_textctrl = new wxTextCtrl(this, wxID_ANY, opt.value, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, opt.key);
 			m_textctrl->SetToolTip(TE(opt.description));
 			m_main_sizer->Add( m_textctrl, 0, wxEXPAND );
 			break;

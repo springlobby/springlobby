@@ -171,6 +171,9 @@ class IUnitSync
 
     virtual bool IsLoaded() = 0;
 
+		virtual wxString GetDefaultNick() = 0;
+		virtual void SetDefaultNick( const wxString& nick ) = 0;
+
     virtual wxString GetSpringVersion() = 0;
     virtual bool VersionSupports( GameFeature feature ) = 0;
 
