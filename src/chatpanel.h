@@ -17,6 +17,7 @@ class wxTextCtrlHist;
 class wxTextUrlEvent;
 class wxComboBox;
 class wxButton;
+class wxBitmapButton;
 class NickListCtrl;
 class Channel;
 class User;
@@ -113,6 +114,7 @@ class ChatPanel : public wxPanel
     void OnUserDisconnected();
     void OnUserConnected();
 
+    void OnChanOpts( wxCommandEvent& event );
     void OnSay( wxCommandEvent& event );
     void OnPaste( wxClipboardTextEvent& event );
 
@@ -199,6 +201,7 @@ class ChatPanel : public wxPanel
 
     wxTextCtrl* m_chatlog_text; //!< The chat log textcontrol.
     wxTextCtrlHist* m_say_text;     //!< The say textcontrol.
+    wxBitmapButton* m_chan_opts_button; //!< The channel options button.
 
     NickListCtrl* m_nicklist;   //!< The nicklist.
     wxComboBox* m_nick_filter;  //!< The filter combo.
@@ -248,6 +251,7 @@ enum
     CHAT_SEND = wxID_HIGHEST,
     CHAT_TEXT,
     CHAT_LOG,
+    CHAT_CHAN_OPTS,
 
     CHAT_MENU_DISABLE_APPEND,
 
