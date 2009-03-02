@@ -102,7 +102,8 @@ class MyStrings : public wxArrayString
     }
 };
 
-const MyStrings<16> team_choices;
+const MyStrings<SPRING_MAX_TEAMS> team_choices;
+const MyStrings<SPRING_MAX_ALLIES> ally_choices;
 
 BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
         wxScrolledWindow( parent, -1 ),m_ui(ui), m_battle(battle)
@@ -117,7 +118,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
     m_player_panel = new wxPanel( m_splitter , -1 );
     m_team_sel = new wxComboBox( m_player_panel, BROOM_TEAMSEL, _T("1"), wxDefaultPosition, wxSize(50,CONTROL_HEIGHT), team_choices );
     m_team_sel->SetToolTip(TE(_("Players with the same team number share control of their units.")));
-    m_ally_sel = new wxComboBox( m_player_panel, BROOM_ALLYSEL, _T("1"), wxDefaultPosition, wxSize(50,CONTROL_HEIGHT), team_choices );
+    m_ally_sel = new wxComboBox( m_player_panel, BROOM_ALLYSEL, _T("1"), wxDefaultPosition, wxSize(50,CONTROL_HEIGHT), ally_choices );
     m_ally_sel->SetToolTip(TE(_("Players with the same ally number work together to achieve victory.")));
     m_color_sel = new ColorButton( m_player_panel, BROOM_COLOURSEL, myself.colour, wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
     m_color_sel->SetToolTip(TE(_("Select a color to identify your units in-game")));
