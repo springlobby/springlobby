@@ -423,16 +423,26 @@ void ReplayTab::OnSelect( wxListEvent& event )
 							IBattle& oldbattle = m_players->GetBattle();
 							for ( size_t i = 0; i < oldbattle.GetNumUsers(); ++i )
 							{
-									User& usr = oldbattle.GetUser( i );
-									m_players->RemoveUser( usr );
+									try
+									{
+										User& usr = oldbattle.GetUser( i );
+										m_players->RemoveUser( usr );
+									}
+									catch(...)
+									{}
 							}
             } catch ( assert_exception ) {}
             m_players->DeleteAllItems();
             m_players->SetBattle( (IBattle*)&rep.battle );
             for ( size_t i = 0; i < rep.battle.GetNumUsers(); ++i )
             {
-								User& usr = rep.battle.GetUser( i );
-                m_players->AddUser( usr );
+								try
+								{
+									User& usr = rep.battle.GetUser( i );
+									m_players->AddUser( usr );
+								}
+								catch(...)
+								{}
             }
         }
         catch ( ... ) {
