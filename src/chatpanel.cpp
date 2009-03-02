@@ -23,6 +23,7 @@
 #include <wx/dataobj.h>
 #include <wx/imaglist.h>
 #include <wx/wupdlock.h>
+#include <wx/bmpbuttn.h>
 
 #include "aui/auimanager.h"
 #include "channel/channel.h"
@@ -56,6 +57,7 @@ BEGIN_EVENT_TABLE( ChatPanel, wxPanel )
 
 	EVT_TEXT_ENTER( CHAT_TEXT, ChatPanel::OnSay )
 	EVT_TEXT_PASTE( CHAT_TEXT, ChatPanel::OnPaste )
+	EVT_BUTTON( CHAT_CHAN_OPTS, ChatPanel::OnChanOpts )
 	EVT_BUTTON( CHAT_SEND, ChatPanel::OnSay )
 	EVT_SIZE( ChatPanel::OnResize )
 	EVT_TEXT_URL( CHAT_LOG,  ChatPanel::OnLinkEvent )
@@ -294,12 +296,20 @@ void ChatPanel::CreateControls( )
 
   m_chatlog_text = new wxTextCtrl( m_chat_panel, CHAT_LOG, _T( "" ), wxDefaultPosition, wxDefaultSize,
                                    wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_AUTO_URL );
-	if ( m_type == CPT_Channel ) m_chatlog_text->SetToolTip( TE(_("right click for options (like autojoin)" ) ) );
+	if ( m_type == CPT_Channel ) {
+	  m_chatlog_text->SetToolTip( TE(_("right click for options (like autojoin)" ) ) );
+	  m_chan_opts_button = new wxBitmapButton(m_chat_panel, CHAT_CHAN_OPTS, icons().GetBitmap(icons().ICON_CHANNEL_OPTIONS), wxDefaultPosition , wxSize( CONTROL_HEIGHT, CONTROL_HEIGHT ) );
+	} else {
+	  m_chan_opts_button = 0;
+	}
+
 
 	m_say_text = new wxTextCtrlHist( textcompletiondatabase, m_chat_panel, CHAT_TEXT, _T( "" ), wxDefaultPosition, wxSize( 100, CONTROL_HEIGHT ), wxTE_PROCESS_ENTER | wxTE_PROCESS_TAB );
 	m_say_button = new wxButton( m_chat_panel, CHAT_SEND, _( "Send" ), wxDefaultPosition, wxSize( 80, CONTROL_HEIGHT ) );
 
 	// Adding elements to sizers
+	if ( m_type == CPT_Channel )
+    m_say_sizer->Add( m_chan_opts_button );
 	m_say_sizer->Add( m_say_text, 1, wxEXPAND );
 	m_say_sizer->Add( m_say_button );
 	m_chat_sizer->Add( m_chatlog_text, 1, wxEXPAND );
@@ -610,9 +620,17 @@ void ChatPanel::OnResize( wxSizeEvent& event )
 
 void ChatPanel::OnLinkEvent( wxTextUrlEvent& event )
 {
-    if ( !event.GetMouseEvent().LeftDown() ) return;
+  if ( !event.GetMouseEvent().LeftDown() ) return;
   wxString url = m_chatlog_text->GetRange( event.GetURLStart(), event.GetURLEnd());
-    m_ui.OpenWebBrowser( url );
+  m_ui.OpenWebBrowser( url );
+}
+
+
+void ChatPanel::OnChanOpts( wxCommandEvent& event )
+{
+  CreatePopup();
+  if ( (m_chan_opts_button == 0) || (m_popup_menu == 0)) return;
+  m_chan_opts_button->PopupMenu(m_popup_menu);
 }
 
 
@@ -955,7 +973,7 @@ bool ChatPanel::IsServerPanel()
 }
 
 
-ChatPanelType ChatPanel::GetPanelType()
+int ChatPanel::GetPanelType()
 {
 	return m_type;
 }

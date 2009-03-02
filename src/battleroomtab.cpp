@@ -131,7 +131,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
     try
     {
         wxArrayString sides = usync().GetSides( m_battle.GetHostModName() );
-        for ( int i = 0; i < sides.GetCount(); i++ )
+        for ( unsigned int i = 0; i < sides.GetCount(); i++ )
         {
             m_side_sel->Append( sides[i], icons().GetBitmap( icons().GetSideIcon( m_battle.GetHostModName(), i ) ) );
         }

@@ -24,8 +24,6 @@
 #include <wx/log.h>
 
 
-
-
 Battle::Battle( Server& serv, int id ) :
         m_serv(serv),
         m_ah(*this),
@@ -552,7 +550,7 @@ void Battle::Autobalance( BalanceType balance_type, bool support_clans, bool str
     std::vector<Alliance>alliances;
     if ( numallyteams == 0 ) // 0 == use num start rects
     {
-        int tmp = GetNumRects();
+//        int tmp = GetNumRects();
         int ally = 0;
         for ( int i = 0; i < numallyteams; ++i )
         {
@@ -719,7 +717,7 @@ void Battle::FixTeamIDs( BalanceType balance_type, bool support_clans, bool stro
     }
     numcontrolteams = std::min( numcontrolteams, 16 ); // clamp to 16 (max spring supports)
 
-    if ( numcontrolteams >= ( GetNumUsers() - GetSpectators() ) ) // autobalance behaves weird when trying to put one player per team and i CBA to fix it, so i'll reuse the old code :P
+    if ( numcontrolteams >= (int)( GetNumUsers() - GetSpectators() ) ) // autobalance behaves weird when trying to put one player per team and i CBA to fix it, so i'll reuse the old code :P
     {
       DoAction(_T("is making control teams unique..."));
       // apparently tasserver doesnt like when i fix/force ids of everyone.

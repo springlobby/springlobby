@@ -931,7 +931,7 @@ void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint po
             {
 								wxArrayString sides = usync().GetSides( m_battle->GetHostModName() );
 								int side = user->BattleStatus().side;
-								if ( side < sides.GetCount() ) m_tiptext = sides[side];
+								if ( side < (int)sides.GetCount() ) m_tiptext = sides[side];
             }
             break;
 

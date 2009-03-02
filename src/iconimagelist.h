@@ -97,6 +97,8 @@ class IconImageList : public wxImageList
 
     int ICON_WARNING_OVERLAY;
 
+    int ICON_CHANNEL_OPTIONS;
+
     int ICON_EMPTY;
 
   protected:
