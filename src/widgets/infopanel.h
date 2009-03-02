@@ -13,6 +13,7 @@ class ServerMessageBox;
 class wxTextCtrl;
 class ImageViewerPanel;
 class wxHtmlWindow;
+class wxAuiNotebook;
 
 class WidgetInfoPanel : public wxScrolledWindow
 {
@@ -30,11 +31,11 @@ class WidgetInfoPanel : public wxScrolledWindow
         wxBoxSizer* m_left_sizer;
         wxBoxSizer* m_right_sizer;
         wxBoxSizer* m_left_button_sizer;
-        wxBoxSizer* m_right_button_sizer;
+//        wxBoxSizer* m_right_button_sizer;
         wxGridSizer* m_grid_sizer;
-        wxBoxSizer* m_desc_sizer;
-        wxBoxSizer* m_screeny_sizer;
-        wxBoxSizer* m_chglog_sizer;
+//        wxBoxSizer* m_desc_sizer;
+//        wxBoxSizer* m_screeny_sizer;
+//        wxBoxSizer* m_chglog_sizer;
         wxBoxSizer* m_variable_info_sizer;
 
         wxBoxSizer* m_busy_notice;
@@ -43,12 +44,11 @@ class WidgetInfoPanel : public wxScrolledWindow
         ImageViewerPanel* m_imageviewer;
         wxHtmlWindow* m_desc;
 
-        wxButton* m_download;
-        wxButton* m_chg_log;
-        wxButton* m_show_desc;
+        wxAuiNotebook* m_ext_info;
         wxButton* m_update;
         wxButton* m_remove;
-        wxButton* m_pics;
+        wxButton* m_download;
+
 
         void SetButtonStates();
 
