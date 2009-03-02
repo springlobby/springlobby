@@ -5,7 +5,7 @@
 
 #include <wx/intl.h>
 #include <wx/menu.h>
-#include <wx/textdlg.h>
+#include <wx/numdlg.h>
 #include <wx/colordlg.h>
 #include <wx/colour.h>
 #include <wx/log.h>
@@ -425,20 +425,11 @@ void BattleroomListCtrl::OnSideSelect( wxCommandEvent& event )
 void BattleroomListCtrl::OnHandicapSelect( wxCommandEvent& event )
 {
   wxLogDebugFunc( _T("") );
-  wxTextEntryDialog dlg( this , _("Please enter a value between 0 and 100"), _("Set Resource Bonus"), _T("0"), wxOK, wxDefaultPosition );
-  if ( dlg.ShowModal() == wxID_OK ) {
-    long handicap;
-    if ( !dlg.GetValue().ToLong( &handicap ) ) {
-     wxLogWarning( _T("input is not a number") );
-     customMessageBox(SL_MAIN_ICON, _("Not a number"), _("Invalid number") );
-     return;
-    }
-    if ( handicap < 0 || handicap > 100 ) {
-      wxLogWarning( _T("input value is out of range") );
-      customMessageBox(SL_MAIN_ICON, _("Value out of range.\n Enter an integer between 0 & 100."), _("Invalid number") );
-      return;
-    }
-    if( m_sel_user ) ((Battle*)m_battle)->SetHandicap( *m_sel_user, handicap );
+  if( !m_sel_user ) return;
+  long handicap = wxGetNumberFromUser( _("Please enter a value between 0 and 100"), _("Set Resource Bonus"), _T(""), m_sel_user->BattleStatus().handicap, 0, 100, (wxWindow*)&ui().mw(), wxDefaultPosition );
+	if ( handicap != -1 )
+	{
+     ((Battle*)m_battle)->SetHandicap( *m_sel_user, handicap );
   }
 }
 
