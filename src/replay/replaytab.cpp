@@ -178,7 +178,7 @@ void ReplayTab::AddReplay( Replay& replay ) {
 
     int index = m_replay_listctrl->InsertItem( 0, replay.date );
     ASSERT_LOGIC( index != -1, _T("index = -1") );
-    long replayid = (long)replay.id ;
+//    long replayid = (long)replay.id ;
     m_replay_listctrl->SetItemData(index, (long)replay.id );
 
     if (index != -1)

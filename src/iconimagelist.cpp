@@ -75,6 +75,8 @@
 
 #include "images/unknown_flag.xpm"
 
+#include "images/channel_options.xpm"
+
 #include "flagimages.h"
 
 #include "images/empty.xpm"
@@ -139,6 +141,8 @@ IconImageList::IconImageList() : wxImageList(16,16,true)
 
     ICON_SIDEPIC_0 = Add( charArr2wxBitmap(no1_icon_png, sizeof(no1_icon_png) ) );
     ICON_SIDEPIC_1 = Add( charArr2wxBitmap(no2_icon_png, sizeof(no2_icon_png) ) );
+
+    ICON_CHANNEL_OPTIONS = Add( wxBitmap(channel_options_xpm) );
 
     SetColourIcon( 0, wxColour( 255,   0,   0 ) );
     SetColourIcon( 1, wxColour(   0, 255,   0 ) );
@@ -330,7 +334,7 @@ int IconImageList::GetSideIcon( const wxString& modname, int side )
 {
 	wxArrayString sides = usync().GetSides( modname );
 	wxString sidename;
-	if( side < sides.GetCount() ) sidename = sides[side];
+	if( side < (int)sides.GetCount() ) sidename = sides[side];
   wxString cachestring = modname + _T("_") + sidename;
   if (m_cached_side_icons[cachestring] == 0){
     try
@@ -361,6 +365,7 @@ int IconImageList::GetReadyIcon( const bool& spectator,const bool& ready, const 
 
     if ( sync == SYNC_SYNCED ) //could this cause #674 ??
         return index;
+
     else
     {
         if ( m_state_index_map.find(index) == m_state_index_map.end() )

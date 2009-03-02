@@ -17,6 +17,7 @@ class wxTextCtrlHist;
 class wxTextUrlEvent;
 class wxComboBox;
 class wxButton;
+class wxBitmapButton;
 class NickListCtrl;
 class Channel;
 class User;
@@ -94,7 +95,7 @@ class ChatPanel : public wxPanel
     void SetUser( const User* usr );
 
     bool IsServerPanel();
-    ChatPanelType GetPanelType();
+    int GetPanelType();
 
     void Say( const wxString& message );
     void Part();
@@ -113,6 +114,7 @@ class ChatPanel : public wxPanel
     void OnUserDisconnected();
     void OnUserConnected();
 
+    void OnChanOpts( wxCommandEvent& event );
     void OnSay( wxCommandEvent& event );
     void OnPaste( wxClipboardTextEvent& event );
 
@@ -167,17 +169,18 @@ class ChatPanel : public wxPanel
     void OnUserMenuModeratorUnmute( wxCommandEvent& event );
     void OnUserMenuModeratorRing( wxCommandEvent& event );
 
-	void OnKeyPressed( wxKeyEvent& keyevent );
-	void OnKeyReleased( wxKeyEvent& keyevent );
+    void OnKeyPressed( wxKeyEvent& keyevent );
+    void OnKeyReleased( wxKeyEvent& keyevent );
 
-	void OnUserMenuAddToGroup( wxCommandEvent& event );
-	void OnUserMenuDeleteFromGroup( wxCommandEvent& event );
-	void OnUserMenuCreateGroup( wxCommandEvent& event );
-	void UpdateNicklistHighlights();
+    void OnUserMenuAddToGroup( wxCommandEvent& event );
+    void OnUserMenuDeleteFromGroup( wxCommandEvent& event );
+    void OnUserMenuCreateGroup( wxCommandEvent& event );
+    void UpdateNicklistHighlights();
 
-	void SortNickList();
+    void SortNickList();
 
   protected:
+
     void _SetChannel( Channel* channel );
     void OutputLine( const wxString& message, const wxColour& col, const wxFont& fon );
     void OutputLine( const ChatLine& line );
@@ -198,6 +201,7 @@ class ChatPanel : public wxPanel
 
     wxTextCtrl* m_chatlog_text; //!< The chat log textcontrol.
     wxTextCtrlHist* m_say_text;     //!< The say textcontrol.
+    wxBitmapButton* m_chan_opts_button; //!< The channel options button.
 
     NickListCtrl* m_nicklist;   //!< The nicklist.
     wxComboBox* m_nick_filter;  //!< The filter combo.
@@ -210,7 +214,7 @@ class ChatPanel : public wxPanel
     const User* m_user;               //!< User object.
     Battle* m_battle;           //!< User object.
 
-    ChatPanelType m_type;       //!< Channel object.
+    int m_type;       //!< Channel object.
 
     wxString m_chan_pass;
 
@@ -247,6 +251,7 @@ enum
     CHAT_SEND = wxID_HIGHEST,
     CHAT_TEXT,
     CHAT_LOG,
+    CHAT_CHAN_OPTS,
 
     CHAT_MENU_DISABLE_APPEND,
 

@@ -144,7 +144,7 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, Battle& battle, Ui& ui
   try
   {
   	wxArrayString sides = usync().GetSides( m_battle.GetHostModName() );
-    for ( int i = 0; i < sides.GetCount(); i++ )
+    for ( unsigned int i = 0; i < sides.GetCount(); i++ )
     {
       wxMenuItem* side = new wxMenuItem( m_sides, BRLIST_SIDE + i, sides[i], wxEmptyString, wxITEM_NORMAL );
       m_sides->Append( side );
@@ -293,7 +293,7 @@ void BattleroomListCtrl::UpdateUser( const int& index )
     try
     {
     	wxArrayString sides = usync().GetSides( m_battle.GetHostModName() );
-    	ASSERT_EXCEPTION( user.BattleStatus().side < sides.GetCount(), _T("Side index too high") );
+    	ASSERT_EXCEPTION( user.BattleStatus().side < (int)sides.GetCount(), _T("Side index too high") );
       int sideimg = icons().GetSideIcon( m_battle.GetHostModName(), user.BattleStatus().side );
       if ( sideimg >= 0 ) SetItemColumnImage( index, 1, sideimg );
       else SetItem( index, 1, sides[user.BattleStatus().side]);
@@ -916,7 +916,7 @@ void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint po
             {
 								wxArrayString sides = usync().GetSides( m_battle.GetHostModName() );
 								int side = user->BattleStatus().side;
-								if ( side < sides.GetCount() ) m_tiptext = sides[side];
+								if ( side < (int)sides.GetCount() ) m_tiptext = sides[side];
             }
             break;
 
