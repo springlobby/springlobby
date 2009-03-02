@@ -1729,7 +1729,7 @@ void Settings::SetShowTooltips( bool show)
 
 bool Settings::GetShowTooltips()
 {
-    return m_config->Read(_T("GUI/ShowTooltips"), 1l);
+    return m_config->Read(_T("/GUI/ShowTooltips"), 1l);
 }
 
 void Settings::SaveLayout( wxString& layout_name, wxString& layout )
@@ -2151,7 +2151,6 @@ SortOrder Settings::GetSortOrder( const wxString& list_name )
     return order;
 }
 
-
 void Settings::SetSortOrder( const wxString& list_name, const SortOrder& order  )
 {
     SortOrder::const_iterator it = order.begin();
@@ -2160,12 +2159,13 @@ void Settings::SetSortOrder( const wxString& list_name, const SortOrder& order  
         m_config->Write( _T("/UI/SortOrder/" ) + list_name + _T("/") + TowxString( it->first ) + _T("/col"), it->second.col );
     }
 }
-//void Settings::SetColumnWidth( const wxString& list_name, const int coloumn_ind, const int coloumn_width )
-//{
-//    m_config->Write(_T("GUI/ColoumnWidths/") + list_name + _T("/") + TowxString(coloumn_ind), coloumn_width );
-//}
-//
-//int Settings::GetColumnWidth( const wxString& list_name, const int coloumn )
-//{
-//    return m_config->Read(_T("GUI/ColoumnWidths/") + list_name + _T("/") + TowxString(coloumn), columnWidthUnset);
-//}
+
+bool Settings::GetUseTabIcons()
+{
+    return m_config->Read(_T("/GUI/UseTabIcons"), 1l);
+}
+
+void Settings::SetUseTabIcons( bool use )
+{
+    m_config->Write(_T("/GUI/UseTabIcons"), use );
+}

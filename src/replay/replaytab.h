@@ -5,7 +5,7 @@
 
 class Ui;
 class MapCtrl;
-class UserListctrl;
+class BattleroomListCtrl;
 class wxCommandEvent;
 class wxListEvent;
 class wxStaticText;
@@ -80,7 +80,7 @@ class ReplayTab : public wxPanel
     wxButton* m_delete_btn;
     wxButton* m_reload_btn;
 
-    UserListctrl* m_players;
+    BattleroomListCtrl* m_players;
 
     wxCheckBox* m_filter_activ;
 #if wxUSE_TOGGLEBTN

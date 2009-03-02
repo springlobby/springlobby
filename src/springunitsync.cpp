@@ -608,35 +608,31 @@ wxImage SpringUnitSync::GetSidePicture( const wxString& modname, const wxString&
 
   wxImage cache;
 
-  if ( !cache.LoadFile( GetFileCachePath( modname, _T(""), true ) + _T("-") + SideName + _T(".sidepicture.png") ) )
-  {
-    susynclib().SetCurrentMod( modname );
-    wxLogDebugFunc( _T("SideName = \"") + SideName + _T("\"") );
-    wxString ImgName = _T("SidePics");
-    ImgName += _T("/");
-    ImgName += SideName.Upper();
-    ImgName += _T(".bmp");
+	susynclib().SetCurrentMod( modname );
+	wxLogDebugFunc( _T("SideName = \"") + SideName + _T("\"") );
+	wxString ImgName = _T("SidePics");
+	ImgName += _T("/");
+	ImgName += SideName.Upper();
+	ImgName += _T(".bmp");
 
-    int ini = susynclib().OpenFileVFS (ImgName );
-    ASSERT_EXCEPTION( ini, _T("cannot find side image") );
+	int ini = susynclib().OpenFileVFS (ImgName );
+	ASSERT_EXCEPTION( ini, _T("cannot find side image") );
 
-    int FileSize = susynclib().FileSizeVFS(ini);
-    if (FileSize == 0) {
-      susynclib().CloseFileVFS(ini);
-      ASSERT_EXCEPTION( FileSize, _T("side image has size 0") );
-    }
+	int FileSize = susynclib().FileSizeVFS(ini);
+	if (FileSize == 0) {
+		susynclib().CloseFileVFS(ini);
+		ASSERT_EXCEPTION( FileSize, _T("side image has size 0") );
+	}
 
-    uninitialized_array<char> FileContent(FileSize);
-    susynclib().ReadFileVFS(ini, FileContent, FileSize);
-    wxMemoryInputStream FileContentStream( FileContent, FileSize );
+	uninitialized_array<char> FileContent(FileSize);
+	susynclib().ReadFileVFS(ini, FileContent, FileSize);
+	wxMemoryInputStream FileContentStream( FileContent, FileSize );
 
-    cache.LoadFile( FileContentStream, wxBITMAP_TYPE_ANY, -1);
-    cache.InitAlpha();
-    for ( int x = 0; x < cache.GetWidth(); x++ )
-      for ( int y = 0; y < cache.GetHeight(); y++ )
-        if ( cache.GetBlue( x, y ) == 255 && cache.GetGreen( x, y ) == 255 && cache.GetRed( x, y ) == 255 ) cache.SetAlpha( x, y, 0 ); // set pixel to be transparent
-    cache.SaveFile( GetFileCachePath( modname, _T(""), true ) + _T("-") + SideName + _T(".sidepicture.png"), wxBITMAP_TYPE_PNG );
-  }
+	cache.LoadFile( FileContentStream, wxBITMAP_TYPE_ANY, -1);
+	cache.InitAlpha();
+	for ( int x = 0; x < cache.GetWidth(); x++ )
+		for ( int y = 0; y < cache.GetHeight(); y++ )
+			if ( cache.GetBlue( x, y ) == 255 && cache.GetGreen( x, y ) == 255 && cache.GetRed( x, y ) == 255 ) cache.SetAlpha( x, y, 0 ); // set pixel to be transparent
   return cache;
 }
 

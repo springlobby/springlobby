@@ -169,9 +169,6 @@ MainWindow::MainWindow( Ui& ui )
   m_func_tabs->SetArtProvider(new SLArtProvider);
 
 
-  m_func_tab_images = new wxImageList( 32, 32 );
-  MakeImages();
-
   m_chat_tab = new MainChatTab( m_func_tabs, m_ui );
   m_join_tab = new MainJoinBattleTab( m_func_tabs, m_ui );
   m_sp_tab = new MainSinglePlayerTab( m_func_tabs, m_ui );
@@ -181,15 +178,15 @@ MainWindow::MainWindow( Ui& ui )
   m_torrent_tab = new MainTorrentTab( m_func_tabs, m_ui);
 #endif
 
-  m_func_tabs->AddPage( m_chat_tab, _("Chat"), true, charArr2wxBitmap( chat_icon_png , sizeof (chat_icon_png) ) );
-  m_func_tabs->AddPage( m_join_tab, _("Multiplayer"), false, charArr2wxBitmap( join_icon_png , sizeof (join_icon_png) ) );
-  m_func_tabs->AddPage( m_sp_tab, _("Singleplayer"), false, charArr2wxBitmap( single_player_icon_png , sizeof (single_player_icon_png) ) );
-  m_func_tabs->AddPage( m_opts_tab, _("Options"), false, charArr2wxBitmap( options_icon_png , sizeof (options_icon_png) ) );
-  m_func_tabs->AddPage( m_replay_tab, _("Replays"), false, charArr2wxBitmap( replay_icon_png , sizeof (replay_icon_png) ) );
+  m_func_tabs->AddPage( m_chat_tab, _("Chat"), true );
+  m_func_tabs->AddPage( m_join_tab, _("Multiplayer"), false );
+  m_func_tabs->AddPage( m_sp_tab, _("Singleplayer"), false );
+  m_func_tabs->AddPage( m_opts_tab, _("Options"), false );
+  m_func_tabs->AddPage( m_replay_tab, _("Replays"), false );
 #ifndef NO_TORRENT_SYSTEM
-  m_func_tabs->AddPage( m_torrent_tab, _("Downloads"), false, charArr2wxBitmap(  downloads_icon_png , sizeof (downloads_icon_png) ) );
+  m_func_tabs->AddPage( m_torrent_tab, _("Downloads"), false );
 #endif
-
+  SetTabIcons();
   m_main_sizer->Add( m_func_tabs, 1, wxEXPAND | wxALL, 0 );
 
   SetSizer( m_main_sizer );
@@ -205,6 +202,27 @@ MainWindow::MainWindow( Ui& ui )
 
   m_channel_chooser = new ChannelChooserDialog( this, -1, _("Choose channels to join") );
 
+}
+
+wxBitmap MainWindow::GetTabIcon( const unsigned char* data, size_t size )
+{
+    if ( sett().GetUseTabIcons() )
+        return charArr2wxBitmap( data , size );
+    else
+        return wxNullBitmap;
+}
+
+void MainWindow::SetTabIcons()
+{
+    m_func_tabs->SetPageBitmap( 0, GetTabIcon( chat_icon_png, sizeof(chat_icon_png)  ) );
+    m_func_tabs->SetPageBitmap( 1, GetTabIcon( join_icon_png, sizeof(join_icon_png) ) );
+    m_func_tabs->SetPageBitmap( 2, GetTabIcon( single_player_icon_png , sizeof (single_player_icon_png) ) );
+    m_func_tabs->SetPageBitmap( 3, GetTabIcon( options_icon_png , sizeof (options_icon_png) ) );
+    m_func_tabs->SetPageBitmap( 4, GetTabIcon( replay_icon_png , sizeof (replay_icon_png) ) );
+#ifndef NO_TORRENT_SYSTEM
+    m_func_tabs->SetPageBitmap( 5, GetTabIcon(  downloads_icon_png , sizeof (downloads_icon_png) ) );
+#endif
+    Refresh();
 }
 
 void MainWindow::forceSettingsFrameClose()
@@ -255,10 +273,6 @@ void DrawBmpOnBmp( wxBitmap& canvas, wxBitmap& object, int x, int y )
 //  dc.DrawText( text, x, y);
 //  dc.SelectObject( wxNullBitmap );
 //}
-
-void MainWindow::MakeImages()
-{
-}
 
 
 /*

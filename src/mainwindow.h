@@ -110,7 +110,8 @@ class MainWindow : public wxFrame
     ChatPanel* GetActiveChatPanel();
     ChatPanel* GetChannelChatPanel( const wxString& channel );
     MainOptionsTab& GetOptionsTab();
-    void MakeImages();
+
+    void SetTabIcons();
 
   protected:
     // MainWindow variables
@@ -132,13 +133,14 @@ class MainWindow : public wxFrame
     MainTorrentTab* m_torrent_tab;
     #endif
 
-    wxImageList* m_func_tab_images;
     AutojoinChannelDialog* m_autojoin_dialog;
     settings_frame* se_frame;
     bool se_frame_active;
     ChannelChooserDialog* m_channel_chooser;
 
     ReplayTab* m_replay_tab;
+
+    wxBitmap GetTabIcon( const unsigned char* data, size_t size  );
 
     enum {
         MENU_SETTINGSPP,

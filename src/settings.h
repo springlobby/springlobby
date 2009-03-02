@@ -591,6 +591,9 @@ class Settings
     wxArrayString GetLayoutList();
     void SetDefaultLayout( const wxString& layout_name );
     wxString GetDefaultLayout();
+    //! icons for mainwindow tabs??
+    bool GetUseTabIcons();
+    void SetUseTabIcons( bool use );
     /**@}*/
 
     enum CompletionMethod {
