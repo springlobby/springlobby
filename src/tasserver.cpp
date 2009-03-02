@@ -1574,17 +1574,9 @@ void TASServer::SendHostInfo( HostInfo update )
 
     if ( (update & IBattle::HI_StartRects) > 0 )   // Startrects should be updated.
     {
-
-        for ( unsigned int i = 16; i < battle.GetNumRects(); i++ )  // FIXME (BrainDamage#1#):  remove this when not needing to connect to TASserver (because doesn't support >16 start boxes)
-        {
-            battle.RemoveStartRect( i );
-            battle.StartRectRemoved( i );
-        }
-
         unsigned int numrects =  battle.GetNumRects();
         for ( unsigned int i = 0; i < numrects; i++ )   // Loop through all, and remove updated or deleted.
         {
-            if ( i >= 16 ) break; // FIXME (BrainDamage#1#):  remove this when not needing to connect to TASserver (because doesn't support >16 start boxes)
             wxString cmd;
             BattleStartRect sr = battle.GetStartRect( i );
             if ( !sr.exist ) continue;

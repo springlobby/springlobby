@@ -36,6 +36,9 @@ wxColour ColourDelta( const wxColour& colour, const int& delta );
 
 wxColour GetColorFromFloatStrng( const wxString color );
 
+//! takes best fitting size of original inside bounds keeping aspect ratio
+wxSize MakeFit(const wxSize &original, const wxSize &bounds);
+
 //! apply standard alpha blending to images
 wxImage BlendImage( const wxImage& foreground, const wxImage& background, bool blend_alpha = true );
 wxBitmap BlendBitmaps( const wxBitmap& background, const wxBitmap& overlay, const int dim = 16 );

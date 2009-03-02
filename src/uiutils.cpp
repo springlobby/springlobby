@@ -389,6 +389,21 @@ wxImage ReplaceChannelStatusColour( wxBitmap img, const wxColour& colour )
 
 }
 
+wxSize MakeFit(const wxSize &original, const wxSize &bounds)
+{
+  if( ( bounds.GetWidth() <= 0 ) || ( bounds.GetHeight() <= 0 ) ) return wxSize(0,0);
+  int sizex = ( original.GetWidth() * bounds.GetHeight() ) / original.GetHeight();
+  if( sizex <= bounds.GetWidth() )
+  {
+    return wxSize( sizex, bounds.GetHeight() );
+  }
+  else
+  {
+    int sizey = ( original.GetHeight() * bounds.GetWidth() ) / original.GetWidth();
+    return wxSize( bounds.GetWidth(), sizey );
+  }
+}
+
 #if wxUSE_TIPWINDOW
 BEGIN_EVENT_TABLE(SLTipWindow, wxTipWindow)
   EVT_MOUSEWHEEL(SLTipWindow::Cancel)
