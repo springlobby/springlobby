@@ -124,7 +124,6 @@ void WidgetInfoPanel::Create()
 
     if ( m_widget.GetImageFilenames().GetCount() > 0 ) {
         m_imageviewer = new ImageViewerPanel( m_widget.GetImageFilenames(), false, this, -1, 0);
-//        m_screeny_sizer->Add( m_imageviewer, 1, wxEXPAND | wxALIGN_CENTER );
         m_ext_info->AddPage( m_imageviewer, _("Screenshots") , false );
     }
 
@@ -132,9 +131,9 @@ void WidgetInfoPanel::Create()
 
     wxStaticBoxSizer* top_box = new wxStaticBoxSizer ( wxVERTICAL, this );
     top_box->Add( m_left_sizer );
-    m_main_sizer->Add( top_box, 0, wxLEFT|wxALL, 5 );
+    m_main_sizer->Add( top_box, 0, wxLEFT | wxEXPAND, 5 );
     m_main_sizer->Add( new wxStaticLine( this ), 0, wxEXPAND );
-    m_main_sizer->Add( m_right_sizer, 1, wxLEFT|wxEXPAND|wxLEFT, 5 );
+    m_main_sizer->Add( m_right_sizer, 1, wxLEFT|wxEXPAND, 5 );
     SetButtonStates();
 
     SetSizer( m_main_sizer );

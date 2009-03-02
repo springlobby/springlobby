@@ -321,6 +321,9 @@ class Settings
     void SetLanguageID ( const long id );
     long GetLanguageID ( );
 
+    int GetSashPosition( const wxString& window_name );
+    void SetSashPosition( const wxString& window_name, const int pos );
+
     /*@}*/
 
     /* ================================================================ */

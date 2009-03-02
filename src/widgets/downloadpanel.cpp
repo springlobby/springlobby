@@ -7,6 +7,7 @@
 #include <wx/statline.h>
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
+#include <wx/splitter.h>
 
 #include "../utils.h"
 #include "downloadlistctrl.h"
@@ -18,20 +19,32 @@ const unsigned int max_short_desc_length = 50;
 
 BEGIN_EVENT_TABLE( WidgetDownloadPanel , wxScrolledWindow)
 
-//  EVT_LIST_ITEM_ACTIVATED ( BattleListTab::BATTLE_JOIN , BattleListTab::OnListJoin    )
-  EVT_LIST_ITEM_SELECTED  ( WidgetDownloadListctrl::WIDGETLISTCTRL_ID, WidgetDownloadPanel::OnSelect )
+    EVT_SPLITTER_SASH_POS_CHANGED( wxID_ANY, WidgetDownloadPanel::OnSashChanged )
+    EVT_LIST_ITEM_SELECTED  ( WidgetDownloadListctrl::WIDGETLISTCTRL_ID, WidgetDownloadPanel::OnSelect )
 
 END_EVENT_TABLE()
 
 WidgetDownloadPanel::WidgetDownloadPanel(wxWindow* parent, wxWindowID id, const wxString& title,
     const wxPoint& pos , const wxSize& size , long style )
-    : wxScrolledWindow (parent,  id, pos, size, style)
+    : wxScrolledWindow (parent,  id, pos, size, style, _T("widget-dl") )
 {
+    m_splitter = new wxSplitterWindow( this, -1, wxDefaultPosition, wxDefaultSize );
+
     m_main_sizer = new wxBoxSizer ( wxHORIZONTAL );
-    m_list = new WidgetDownloadListctrl( this, WidgetDownloadListctrl::WIDGETLISTCTRL_ID );
-    m_main_sizer->Add( m_list, 1, wxALL | wxEXPAND );
+    m_list = new WidgetDownloadListctrl( m_splitter, WidgetDownloadListctrl::WIDGETLISTCTRL_ID );
+//    m_main_sizer->Add( m_list, 1, wxALL | wxEXPAND );
     PopulateList();
     m_list->ResetColumnSizes();
+    Widget dummy;
+    m_info_panel = new WidgetInfoPanel( dummy, m_splitter, ID_PANEL );
+    m_info_panel->Create();
+
+    m_splitter->SplitVertically( m_list, m_info_panel );
+    m_main_sizer->Add( m_splitter, 1, wxEXPAND|wxALL, 4 );
+
+    m_splitter->SetMinimumPaneSize( 400 );
+    m_splitter->SetSashPosition( sett().GetSashPosition( GetName() ) );
+
     SetSizer( m_main_sizer );
     Layout();
     m_list->SortList( true );
@@ -39,19 +52,24 @@ WidgetDownloadPanel::WidgetDownloadPanel(wxWindow* parent, wxWindowID id, const 
 
 WidgetDownloadPanel::~WidgetDownloadPanel()
 {
-    //dtor
+    sett().SetSashPosition( GetName(), m_splitter->GetSashPosition( ) );
+}
+
+void WidgetDownloadPanel::OnSashChanged( wxSplitterEvent& evt )
+{
+    sett().SetSashPosition( GetName(), evt.GetSashPosition( ) );
+    evt.Skip();
 }
 
 void WidgetDownloadPanel::OnSelect( wxListEvent& event )
 {
-    if ( m_main_sizer->Detach( m_info_panel ) )
-        m_info_panel->Destroy();
-
     m_list->OnSelected( event );
 
-    m_info_panel = new WidgetInfoPanel( m_list->GetSelectedWidget(), this, ID_PANEL );
-    m_main_sizer->Add( m_info_panel, 1, wxEXPAND|wxALL, 4 );
-    Layout();
+    m_splitter->Unsplit();
+    m_info_panel = new WidgetInfoPanel( m_list->GetSelectedWidget(), m_splitter, ID_PANEL );
+    m_splitter->SplitVertically( m_list, m_info_panel );
+    m_splitter->SetSashPosition( sett().GetSashPosition( GetName() ) );
+
     m_info_panel->Create();
     Layout();
 }

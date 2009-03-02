@@ -10,6 +10,8 @@ class wxButton;
 class wxTextCtrl;
 class wxStaticText;
 class wxListEvent;
+class wxSplitterWindow;
+class wxSplitterEvent;
 
 class WidgetDownloadPanel : public wxScrolledWindow
 {
@@ -26,7 +28,10 @@ class WidgetDownloadPanel : public wxScrolledWindow
         WidgetDownloadListctrl* m_list;
         WidgetInfoPanel* m_info_panel;
 
+        wxSplitterWindow* m_splitter;
         wxBoxSizer* m_main_sizer;
+
+        void OnSashChanged( wxSplitterEvent& evt );
 
         enum {
             ID_LIST,
