@@ -22,6 +22,7 @@
 #include "ui.h"
 #include "server.h"
 #include "ibattle.h"
+#include "settings.h"
 
 #include "images/close.xpm"
 #include "images/close_hi.xpm"
@@ -1406,13 +1407,13 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
 		}
     else if ( m_mdown_area == UpAllyButton )
     {
-      user.BattleStatus().ally = ( user.BattleStatus().ally + 1 ) % 16;
+      user.BattleStatus().ally = ( user.BattleStatus().ally + 1 ) % SPRING_MAX_ALLIES;
       RefreshRect( GetUserRect( user, true ), false );
 
     }
     else if ( m_mdown_area == DownAllyButton )
     {
-      user.BattleStatus().ally = (user.BattleStatus().ally - 1) >= 0 ? (user.BattleStatus().ally - 1) : 15;
+      user.BattleStatus().ally = (user.BattleStatus().ally - 1) >= 0 ? (user.BattleStatus().ally - 1) : ( SPRING_MAX_ALLIES -1 );
       RefreshRect( GetUserRect( user, true ), false );
 
     }

@@ -23,6 +23,10 @@ const unsigned int DEFSETT_SW_HEIGHT = 580;
 const unsigned int DEFSETT_SW_TOP = 50;
 const unsigned int DEFSETT_SW_LEFT = 50;
 
+const unsigned int SPRING_MAX_USERS = 32;
+const unsigned int SPRING_MAX_TEAMS = 16;
+const unsigned int SPRING_MAX_ALLIES = 16;
+
 /** Default value for config path /General/WebBrowserUseDefault.
  */
 const bool DEFSETT_WEB_BROWSER_USE_DEFAULT = true;

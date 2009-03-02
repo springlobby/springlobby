@@ -28,6 +28,7 @@
 #include "mainwindow.h"
 #include "aui/auimanager.h"
 #include "settings++/custom_dialogs.h"
+#include "settings.h"
 
 
 BEGIN_EVENT_TABLE( BattleroomListCtrl,  CustomListCtrl)
@@ -129,7 +130,8 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, IBattle* battle, Ui& u
 		wxMenu* m_teams;
 		m_teams = new wxMenu();
 
-		for ( int i = 0; i < 16; i++ ) {
+		for ( int i = 0; i < SPRING_MAX_TEAMS; i++ )
+		{
 			wxMenuItem* team = new wxMenuItem( m_teams, BRLIST_TEAM + i, wxString::Format( _T("%d"), i+1 ) , wxEmptyString, wxITEM_NORMAL );
 			m_teams->Append( team );
 			Connect( BRLIST_TEAM + i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnTeamSelect ) );
@@ -137,7 +139,8 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, IBattle* battle, Ui& u
 		m_popup->Append( -1, _("Team"), m_teams );
 
 		wxMenu* m_allies = new wxMenu();
-		for ( int i = 0; i < 16; i++ ) {
+		for ( int i = 0; i < SPRING_MAX_ALLIES; i++ )
+		{
 			wxMenuItem* ally = new wxMenuItem( m_allies, BRLIST_ALLY + i, wxString::Format( _T("%d"), i+1 ) , wxEmptyString, wxITEM_NORMAL );
 			m_allies->Append( ally );
 			Connect( BRLIST_ALLY + i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnAllySelect ) );
