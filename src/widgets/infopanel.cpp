@@ -14,7 +14,7 @@
 #include <wx/wupdlock.h>
 
 #include "widget.h"
-#include "aui/artprovider.h"
+#include "../aui/artprovider.h"
 #include "../utils.h"
 //#include "../settings.h"
 #include "../settings++/custom_dialogs.h"
