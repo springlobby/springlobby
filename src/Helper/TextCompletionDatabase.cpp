@@ -106,9 +106,9 @@ TextCompletionDatabase::GetMapping( wxString abbreviation ) {
 
 	// We compile the regular Expression and if it's correct, we store it in the Regex Container
 	#ifdef wxHAS_REGEX_ADVANCED
-        regex_Abbreviations.Compile( regex_Text, wxRE_ADVANCED );
+        regex_Abbreviations.Compile( regex_Text, wxRE_ADVANCED | wxRE_ICASE );
     #else
-        regex_Abbreviations.Compile( regex_Text, wxRE_EXTENDED );
+        regex_Abbreviations.Compile( regex_Text, wxRE_EXTENDED | wxRE_ICASE );
     #endif
 
 
