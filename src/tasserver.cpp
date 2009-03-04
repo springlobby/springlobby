@@ -578,6 +578,7 @@ void TASServer::ExecuteCommand( const wxString& in )
 		wxString copy = cmd;
 		cmd = DecodeTokenMessage( cmd );
 		if ( copy != cmd ) m_token_transmission = true;
+		cmd.UpperCase();
 
     if ( m_debug_dont_catch )
     {
