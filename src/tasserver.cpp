@@ -622,7 +622,9 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     }
     else if ( cmd == _T("ACCEPTED") )
     {
+				if ( m_online ) return; // in case is the server sends WTF
         m_online = true;
+        m_user = params;
         m_se->OnLogin( );
     }
     else if ( cmd == _T("MOTD") )
