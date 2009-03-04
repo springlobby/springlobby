@@ -95,7 +95,7 @@ bool Spring::Run( Battle& battle )
   wxString CommandForAutomaticTeamSpeak = _T("SCRIPT|") + battle.GetFounder().GetNick() + _T("|");
   for ( UserList::user_map_t::size_type i = 0; i < battle.GetNumUsers(); i++ )
   {
-    CommandForAutomaticTeamSpeak << u2s( battle.GetUser(i).BattleStatus().ally) << battle.GetUser(i).GetNick() << _T("|") << _T("|");
+    CommandForAutomaticTeamSpeak << u2s( battle.GetUser(i).BattleStatus().ally) << _T("|") << battle.GetUser(i).GetNick() << _T("|");
   }
   torrent().SendMessageToCoordinator(CommandForAutomaticTeamSpeak);
   #endif
