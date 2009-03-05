@@ -1035,7 +1035,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         while ( (command = GetSentenceParam( params )) != _T("") )
         {
             wxString key = command.BeforeFirst( '=' ).Lower();
-            wxString value = command.AfterFirst( '=' ).Lower();
+            wxString value = command.AfterFirst( '=' );
             m_se->OnSetBattleInfo( m_battle_id, key, value );
         }
         m_se->OnBattleInfoUpdated( m_battle_id );
