@@ -156,6 +156,10 @@ bool Channel::ExecuteSayCommand( const wxString& in )
   if ( param == _T("/me") ) {
     DoAction( cmdline );
     return true;
+	if ( in == _T("/part") || in == _T("/p") ) {
+		Leave();
+		uidata.panel = 0;
+		return true;
   } else if ( param == _T("/sayver") ) {
     DoAction( _T("is using SpringLobby v") + GetSpringLobbyVersion() );
     return true;
