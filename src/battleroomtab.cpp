@@ -639,7 +639,7 @@ void BattleRoomTab::OnAddBot( wxCommandEvent& event )
         bs.side = 0;
         bs.ready = true;
         bs.handicap = 0;
-        bs.colour = m_battle.GetFreeColour();
+        bs.colour = m_battle.GetNewColour();
         bs.aishortname = dlg.GetAIShortName();
         bs.aiversion = dlg.GetAIVersion();
         bs.owner = m_battle.GetMe().GetNick();
