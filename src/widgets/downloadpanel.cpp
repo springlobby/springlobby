@@ -2,11 +2,7 @@
 
 #include <wx/protocol/http.h>
 #include <wx/xml/xml.h>
-#include <wx/button.h>
 #include <wx/sizer.h>
-#include <wx/statline.h>
-#include <wx/stattext.h>
-#include <wx/textctrl.h>
 #include <wx/splitter.h>
 
 #include "../utils.h"
