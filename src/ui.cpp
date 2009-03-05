@@ -714,7 +714,7 @@ void Ui::OnChannelMessage( const wxString& channel, const wxString& msg )
 }
 
 
-/** \brief this is only used if channel is left via raw command in server tab */
+/** \brief this was used when channel was left via raw command in server tab, now it's not used by anything */
 void Ui::OnLeaveChannel( wxString& name )
 {
     ChatPanel* panel = GetChannelChatPanel( name );
