@@ -500,6 +500,8 @@ void Ui::ConsoleHelp( const wxString& topic )
         panel->ClientMessage( _("  \"/j\" - Alias to /join.") );
         panel->ClientMessage( _("  \"/ingame\" - Show how much time you have in game.") );
         panel->ClientMessage( _("  \"/msg username [text]\" - sends a private message containing text to username.") );
+        panel->ClientMessage( _("  \"/part - Leaves current channel.") );
+        panel->ClientMessage( _("  \"/p - alias to /part.") );
         panel->ClientMessage( _("  \"/rename newalias\" - Changes your nickname to newalias.") );
         panel->ClientMessage( _("  \"/sayver\" - Say what version of springlobby you have in chat.") );
         panel->ClientMessage( _("  \"/testmd5 text\" - Returns md5-b64 hash of given text.") );
