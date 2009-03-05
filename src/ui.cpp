@@ -500,6 +500,8 @@ void Ui::ConsoleHelp( const wxString& topic )
         panel->ClientMessage( _("  \"/j\" - Alias to /join.") );
         panel->ClientMessage( _("  \"/ingame\" - Show how much time you have in game.") );
         panel->ClientMessage( _("  \"/msg username [text]\" - sends a private message containing text to username.") );
+        panel->ClientMessage( _("  \"/part - Leaves current channel.") );
+        panel->ClientMessage( _("  \"/p - alias to /part.") );
         panel->ClientMessage( _("  \"/rename newalias\" - Changes your nickname to newalias.") );
         panel->ClientMessage( _("  \"/sayver\" - Say what version of springlobby you have in chat.") );
         panel->ClientMessage( _("  \"/testmd5 text\" - Returns md5-b64 hash of given text.") );
@@ -714,7 +716,7 @@ void Ui::OnChannelMessage( const wxString& channel, const wxString& msg )
 }
 
 
-/** \brief this is only used if channel is left via raw command in server tab */
+/** \brief this was used when channel was left via raw command in server tab, now it's not used by anything */
 void Ui::OnLeaveChannel( wxString& name )
 {
     ChatPanel* panel = GetChannelChatPanel( name );

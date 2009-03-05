@@ -578,6 +578,7 @@ void TASServer::ExecuteCommand( const wxString& in )
 		wxString copy = cmd;
 		cmd = DecodeTokenMessage( cmd );
 		if ( copy != cmd ) m_token_transmission = true;
+		cmd.UpperCase();
 
     if ( m_debug_dont_catch )
     {
@@ -610,7 +611,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     UserBattleStatus bstatus;
     UTASColor color;
 
-    if ( cmd == _T("TASServer"))
+    if ( cmd == _T("TASSERVER"))
     {
         mod = GetWordParam( params );
         mod.ToDouble( &m_ser_ver );
@@ -622,7 +623,9 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     }
     else if ( cmd == _T("ACCEPTED") )
     {
+				if ( m_online ) return; // in case is the server sends WTF
         m_online = true;
+        m_user = params;
         m_se->OnLogin( );
     }
     else if ( cmd == _T("MOTD") )
@@ -1031,7 +1034,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         wxString command;
         while ( (command = GetSentenceParam( params )) != _T("") )
         {
-            wxString key = command.BeforeFirst( '=' );
+            wxString key = command.BeforeFirst( '=' ).Lower();
             wxString value = command.AfterFirst( '=' );
             m_se->OnSetBattleInfo( m_battle_id, key, value );
         }

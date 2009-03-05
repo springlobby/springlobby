@@ -1069,10 +1069,17 @@ void ChatPanel::Say( const wxString& message )
 				return;
 			}
 
-            //we need to close the channel tab if leaving manually
-            if (line.Upper().StartsWith( _T( "LEAVE" ) ) ) {
+            //we need to disable the channel tab if leaving manually
+            if (line.Upper().StartsWith( _T( "LEAVE" ) ) )
+            {
                 wxString channame = line.AfterFirst(' ').BeforeFirst(' ');
-                ui().OnLeaveChannel( channame );
+                try
+                {
+									Channel& chan = m_server->GetChannel( channame );
+									chan.Leave();
+									chan.uidata.panel = 0;
+								}
+								catch( assert_exception ) {}
             }
 
 			m_server->SendRaw( line );
@@ -1086,7 +1093,8 @@ void ChatPanel::Say( const wxString& message )
 void ChatPanel::Part()
 {
 	wxLogDebugFunc( _T( "" ) );
-	if ( m_type == CPT_Channel ) {
+	if ( m_type == CPT_Channel )
+	{
 		if ( m_channel == 0 ) return;
 		m_channel->Leave();
 		m_channel->uidata.panel = 0;

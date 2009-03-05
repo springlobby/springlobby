@@ -1331,7 +1331,6 @@ void TorrentWrapper::OnDisconnected( Socket* sock )
     {
         if ( !i->first.is_seed() ) TorrentsToResume.Add( i->second->hash ); // save leeching torrents for resume on next connection
 
-        SendMessageToCoordinator( wxString::Format( _T("N-|%s\n"), i->second->hash.c_str() ) ); // release all files requests
         try
         {
             m_torr->remove_torrent(i->first); //remove all torrents upon disconnect
