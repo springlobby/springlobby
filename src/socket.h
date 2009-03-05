@@ -59,7 +59,7 @@ class Socket
     void Disconnect( );
 
     bool Send( const wxString& data );
-    bool Receive( wxString& data );
+    wxString Receive();
 
 
     void Ping();
@@ -100,7 +100,6 @@ class Socket
     int m_rate;
     int m_sent;
     std::string m_buffer;
-    wxString m_rcv_buffer;
 
     wxSocketClient* _CreateSocket();
 

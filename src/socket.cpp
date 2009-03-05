@@ -185,45 +185,45 @@ bool Socket::_Send( const wxString& data )
 
 
 //! @brief Receive data from connection
-bool Socket::Receive( wxString& data )
+wxString Socket::Receive()
 {
-  if ( m_sock == 0 ) {
+	wxString ret;
+  if ( m_sock == 0 )
+  {
     wxLogError( _T("Socket NULL") );
-    return false;
+    return ret;
   }
 
   LOCK_SOCKET;
 
-  const int buff_size = 1337;
+  const int chunk_size = 1337;
 
-  char buff[buff_size+2] = { 0 };
-  int readnum;
+  std::vector<char> buff;
+  int readnum = 0;
+  int totalbytes = 0;
 
-  buff[buff_size+1] = '\0';
-
-  do {
-    m_sock->Read( &buff[0], buff_size );
+  do
+  {
+  	buff.resize( totalbytes + chunk_size ); // increase buffer capacity to fit incoming chunk
+    m_sock->Read( &buff[totalbytes], chunk_size );
     readnum = m_sock->LastCount();
-    buff[readnum] = '\0';
+    totalbytes += readnum;
+  } while ( readnum >= chunk_size );
 
-    if ( readnum > 0 ) {
-      wxString d = wxString( &buff[0], wxConvUTF8 );
-      if ( d.IsEmpty() )
-      {
-        d = wxString( &buff[0], wxConvLocal );
-        if ( d.IsEmpty() ) d = wxString( &buff[0], wxCSConv(_T("latin-1")) );
-      }
-      m_rcv_buffer << d;
-    }
-  } while ( readnum >= buff_size );
+	if ( totalbytes > 0 )
+	{
+		ret = wxString( &buff[0], wxConvUTF8, totalbytes );
+		if ( ret.IsEmpty() )
+		{
+			ret = wxString( &buff[0], wxConvLocal, totalbytes );
+			if ( ret.IsEmpty() )
+			{
+				 ret = wxString( &buff[0], wxCSConv(_T("latin-1")), totalbytes );
+			}
+		}
+	}
 
-  if ( m_rcv_buffer.Contains(_T("\n")) ) {
-    data = m_rcv_buffer.BeforeFirst('\n');
-    m_rcv_buffer = m_rcv_buffer.AfterFirst('\n');
-    return true;
-  } else {
-    return false;
-  }
+	return ret;
 }
 
 wxString Socket::GetHandle()

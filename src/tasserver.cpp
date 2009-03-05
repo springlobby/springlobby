@@ -358,13 +358,12 @@ bool TASServer::Register( const wxString& addr, const int port, const wxString& 
     m_sock->Connect( addr, port );
     if ( !IsConnected() ) return false;
 
-    wxString data;
-    m_sock->Receive( data );
+    wxString data = m_sock->Receive().BeforeLast(_T('\n'));
     if ( GetWordParam( data ) != _T("TASServer") ) return false;
 
     SendCmd( _T("REGISTER"), nick + _T(" ") + GetPasswordHash( password ) );
 
-    m_sock->Receive( data );
+    data = m_sock->Receive().BeforeLast(_T('\n'));
     if ( data.IsEmpty() )
     {
         reason = _("Connection timed out");
@@ -521,31 +520,6 @@ void TASServer::Update( int mselapsed )
         HandlePinglist();
     }
 
-    ReceiveAndExecute();
-
-}
-
-
-void TASServer::ReceiveAndExecute()
-{
-    wxString data;
-
-    do
-    {
-
-        data = _T("");
-        if ( m_sock->Receive( data ) )
-        {
-            m_buffer += data;
-            wxString cmd;
-            if ( ( cmd = m_buffer.BeforeFirst( '\n' ) ) != _T("") )
-            {
-                m_buffer = m_buffer.AfterFirst( '\n' );
-                ExecuteCommand( cmd );
-            }
-        }
-    }
-    while ( !data.IsEmpty() ); // Go on until recive stops providing data.
 }
 
 
@@ -2191,8 +2165,18 @@ void TASServer::OnDisconnected( Socket* sock )
 
 void TASServer::OnDataReceived( Socket* sock )
 {
-    //TASServer* serv = (TASServer*)sock->GetUserdata();
-    ReceiveAndExecute();
+		if ( sock == 0 ) return;
+
+    wxString data = sock->Receive();
+		m_buffer << data;
+		int returnpos = m_buffer.Find( _T("\n") );
+		while ( returnpos != -1 )
+		{
+			wxString cmd = m_buffer.Left( returnpos );
+			m_buffer = m_buffer.Mid( returnpos + 1 );
+			ExecuteCommand( cmd );
+			returnpos = m_buffer.Find( _T("\n") );
+		}
 }
 
 

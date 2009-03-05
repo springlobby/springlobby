@@ -1366,27 +1366,18 @@ void TorrentWrapper::OnDisconnected( Socket* sock )
 
 void TorrentWrapper::OnDataReceived( Socket* sock )
 {
-    if ( sock == 0 ) return;
+		if ( sock == 0 ) return;
 
-    wxString data;
-
-
-    do
-    {
-
-        data = _T("");
-        if ( sock->Receive( data ) )
-        {
-            m_buffer += data;
-            wxString cmd;
-            if ( ( cmd = m_buffer.BeforeFirst( '\n' ) ) != _T("") )
-            {
-                m_buffer = m_buffer.AfterFirst( '\n' );
-                ReceiveandExecute( cmd );
-            }
-        }
-    }
-    while ( !data.IsEmpty() );
+    wxString data = sock->Receive();
+		m_buffer << data;
+		int returnpos = m_buffer.Find( _T("\n") );
+		while ( returnpos != -1 )
+		{
+			wxString cmd = m_buffer.Left( returnpos );
+			m_buffer = m_buffer.Mid( returnpos + 1 );
+			ReceiveandExecute( cmd );
+			returnpos = m_buffer.Find( _T("\n") );
+		}
 }
 
 #endif
