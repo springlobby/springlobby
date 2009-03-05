@@ -611,7 +611,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     UserBattleStatus bstatus;
     UTASColor color;
 
-    if ( cmd == _T("TASServer"))
+    if ( cmd == _T("TASSERVER"))
     {
         mod = GetWordParam( params );
         mod.ToDouble( &m_ser_ver );
