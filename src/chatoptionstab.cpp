@@ -359,53 +359,53 @@ ChatOptionsTab::~ChatOptionsTab()
 
 void ChatOptionsTab::UpdateTextSample()
 {
+	m_test_text->Clear();
   m_test_text->SetFont( m_chat_font );
-  m_test_text->SetBackgroundColour( m_bg_color->GetBackgroundColour() );
-  m_test_text->Clear();
+  m_test_text->SetBackgroundColour( m_bg_color->GetColor() );
 
-  m_test_text->SetDefaultStyle(wxTextAttr( m_ts_color->GetColor(), m_bg_color->GetBackgroundColour(), m_chat_font ));
+  m_test_text->SetDefaultStyle(wxTextAttr( m_ts_color->GetColor(), m_bg_color->GetColor(), m_chat_font ));
   m_test_text->AppendText( _T("[19:35]") );
-  m_test_text->SetDefaultStyle(wxTextAttr( m_server_color->GetColor(), m_bg_color->GetBackgroundColour(), m_chat_font ));
+  m_test_text->SetDefaultStyle(wxTextAttr( m_server_color->GetColor(), m_bg_color->GetColor(), m_chat_font ));
   m_test_text->AppendText( _T(" ** Server ** Connected to Server.\n") );
 
-  m_test_text->SetDefaultStyle(wxTextAttr( m_ts_color->GetColor(), m_bg_color->GetBackgroundColour(), m_chat_font ));
+  m_test_text->SetDefaultStyle(wxTextAttr( m_ts_color->GetColor(), m_bg_color->GetColor(), m_chat_font ));
   m_test_text->AppendText( _T("[22:30]") );
-  m_test_text->SetDefaultStyle(wxTextAttr( m_normal_color->GetColor(), m_bg_color->GetBackgroundColour(), m_chat_font ));
+  m_test_text->SetDefaultStyle(wxTextAttr( m_normal_color->GetColor(), m_bg_color->GetColor(), m_chat_font ));
   m_test_text->AppendText( _T(" <Dude> hi everyone\n") );
 
-  m_test_text->SetDefaultStyle(wxTextAttr( m_ts_color->GetColor(), m_bg_color->GetBackgroundColour(), m_chat_font ));
+  m_test_text->SetDefaultStyle(wxTextAttr( m_ts_color->GetColor(), m_bg_color->GetColor(), m_chat_font ));
   m_test_text->AppendText( _T("[22:30]") );
-  m_test_text->SetDefaultStyle(wxTextAttr( m_joinleave_color->GetColor(), m_bg_color->GetBackgroundColour(), m_chat_font ));
+  m_test_text->SetDefaultStyle(wxTextAttr( m_joinleave_color->GetColor(), m_bg_color->GetColor(), m_chat_font ));
   m_test_text->AppendText( _T(" ** Dude2 joined the channel.\n") );
 
-  m_test_text->SetDefaultStyle(wxTextAttr( m_ts_color->GetColor(), m_bg_color->GetBackgroundColour(), m_chat_font ));
+  m_test_text->SetDefaultStyle(wxTextAttr( m_ts_color->GetColor(), m_bg_color->GetColor(), m_chat_font ));
   m_test_text->AppendText( _T("[22:31]") );
-  m_test_text->SetDefaultStyle(wxTextAttr( m_action_color->GetColor(), m_bg_color->GetBackgroundColour(), m_chat_font ));
+  m_test_text->SetDefaultStyle(wxTextAttr( m_action_color->GetColor(), m_bg_color->GetColor(), m_chat_font ));
   m_test_text->AppendText( _T(" * Dude2 thinks his colors looks nice\n") );
 
-  m_test_text->SetDefaultStyle(wxTextAttr( m_ts_color->GetColor(), m_bg_color->GetBackgroundColour(), m_chat_font ));
+  m_test_text->SetDefaultStyle(wxTextAttr( m_ts_color->GetColor(), m_bg_color->GetColor(), m_chat_font ));
   m_test_text->AppendText( _T("[22:33]") );
-  m_test_text->SetDefaultStyle(wxTextAttr( m_note_color->GetColor(), m_bg_color->GetBackgroundColour(), m_chat_font ));
+  m_test_text->SetDefaultStyle(wxTextAttr( m_note_color->GetColor(), m_bg_color->GetColor(), m_chat_font ));
   m_test_text->AppendText( _T("<Dude> Dude2: orl?\n") );
 
-  m_test_text->SetDefaultStyle(wxTextAttr( m_ts_color->GetColor(), m_bg_color->GetBackgroundColour(), m_chat_font ));
+  m_test_text->SetDefaultStyle(wxTextAttr( m_ts_color->GetColor(), m_bg_color->GetColor(), m_chat_font ));
   m_test_text->AppendText( _T("[22:33]") );
-  m_test_text->SetDefaultStyle(wxTextAttr( m_my_color->GetColor(), m_bg_color->GetBackgroundColour(), m_chat_font ));
+  m_test_text->SetDefaultStyle(wxTextAttr( m_my_color->GetColor(), m_bg_color->GetColor(), m_chat_font ));
   m_test_text->AppendText( _T(" <Dude2> Yeah, but could be better, should tweak them some more...\n") );
 
-  m_test_text->SetDefaultStyle(wxTextAttr( m_ts_color->GetColor(), m_bg_color->GetBackgroundColour(), m_chat_font ));
+  m_test_text->SetDefaultStyle(wxTextAttr( m_ts_color->GetColor(), m_bg_color->GetColor(), m_chat_font ));
   m_test_text->AppendText( _T("[22:33]") );
-  m_test_text->SetDefaultStyle(wxTextAttr( m_highlight_color->GetColor(), m_bg_color->GetBackgroundColour(), m_chat_font ));
+  m_test_text->SetDefaultStyle(wxTextAttr( m_highlight_color->GetColor(), m_bg_color->GetColor(), m_chat_font ));
   m_test_text->AppendText( _T(" <Dude> bla bla bla Highlighted word bla bla.\n") );
 
-  m_test_text->SetDefaultStyle(wxTextAttr( m_ts_color->GetColor(), m_bg_color->GetBackgroundColour(), m_chat_font ));
+  m_test_text->SetDefaultStyle(wxTextAttr( m_ts_color->GetColor(), m_bg_color->GetColor(), m_chat_font ));
   m_test_text->AppendText( _T("[22:33]") );
-  m_test_text->SetDefaultStyle(wxTextAttr( m_error_color->GetColor(), m_bg_color->GetBackgroundColour(), m_chat_font ));
+  m_test_text->SetDefaultStyle(wxTextAttr( m_error_color->GetColor(), m_bg_color->GetColor(), m_chat_font ));
   m_test_text->AppendText( _T(" !! Error error.\n") );
 
-  m_test_text->SetDefaultStyle(wxTextAttr( m_ts_color->GetColor(), m_bg_color->GetBackgroundColour(), m_chat_font ));
+  m_test_text->SetDefaultStyle(wxTextAttr( m_ts_color->GetColor(), m_bg_color->GetColor(), m_chat_font ));
   m_test_text->AppendText( _T("[22:33]") );
-  m_test_text->SetDefaultStyle(wxTextAttr( m_client_color->GetColor(), m_bg_color->GetBackgroundColour(), m_chat_font ));
+  m_test_text->SetDefaultStyle(wxTextAttr( m_client_color->GetColor(), m_bg_color->GetColor(), m_chat_font ));
   m_test_text->AppendText( _T(" ** Client message.") );
 
 }
