@@ -1377,36 +1377,29 @@ void TASServer::HostBattle( BattleOptions bo, const wxString& password )
        unsigned int numbots = m_relay_host_manager_list.GetCount();
        if ( numbots > 0 )
        {
-          unsigned int begin;
-          if ( numbots == 1 ) begin = 0;
-          else begin = rand() % ( numbots -1 );
-          bool doloop = true;
+          unsigned int begin = 0;
+          srand ( time(NULL) );
+          if ( numbots > 1 ) begin = rand() % ( numbots -1 );
           unsigned int choice = begin;
-          while ( doloop )
+          m_relay_host_manager = _T("");
+          m_delayed_open_command = _T("");
+          while ( true )
           {
-            m_relay_host_manager = m_relay_host_manager_list[choice];
-            if ( UserExists( m_relay_host_manager ) && !GetUser( m_relay_host_manager ).GetStatus().in_game ) // skip the PM if the manager is not connected or reports it's ingame ( no slots available )
+            wxString currentmanager = m_relay_host_manager_list[choice];
+            if ( UserExists( currentmanager ) && !GetUser( currentmanager ).GetStatus().in_game ) // skip the PM if the manager is not connected or reports it's ingame ( no slots available )
             {
-              SayPrivate( m_relay_host_manager, _T("!spawn") );
+            	m_relay_host_manager = currentmanager;
+              SayPrivate( currentmanager, _T("!spawn") );
               m_delayed_open_command = cmd;
-              doloop = false;
+              break;
             }
             else
             {
-              if ( numbots == 1 )
-              {
-              	 doloop = false;
-              	 m_relay_host_manager = _T("");
-              }
+              if ( numbots == 1 ) break;
               else
               {
-                 choice++;
-                 if ( choice >= ( numbots -1 ) ) choice = 0;
-                 if ( choice == begin )
-                 {
-                 	 doloop = false;
-                 	 m_relay_host_manager = _T("");
-                 }
+                 choice = ( choice + 1 ) % ( numbots - 1 );
+                 if ( choice == begin ) break;
               }
             }
           }
