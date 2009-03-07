@@ -1388,8 +1388,8 @@ void TASServer::HostBattle( BattleOptions bo, const wxString& password )
             if ( UserExists( currentmanager ) && !GetUser( currentmanager ).GetStatus().in_game ) // skip the PM if the manager is not connected or reports it's ingame ( no slots available )
             {
             	m_relay_host_manager = currentmanager;
+							m_delayed_open_command = cmd;
               SayPrivate( currentmanager, _T("!spawn") );
-              m_delayed_open_command = cmd;
               break;
             }
             else
