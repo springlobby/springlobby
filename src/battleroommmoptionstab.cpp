@@ -506,14 +506,15 @@ void BattleroomMMOptionsTab<BattleType>::OnLoadPreset( wxCommandEvent& event )
 template < class BattleType >
 void BattleroomMMOptionsTab<BattleType>::OnSavePreset( wxCommandEvent& event )
 {
-  wxString presetname;
-	if ( ui().AskText( _("Enter preset name"), _("Enter a name to save the current set of options\nIf a preset with the same name already exist, it will be overwritten"), presetname ) ) return;
-  if ( presetname.IsEmpty() )
-  {
-     customMessageBoxNoModal( SL_MAIN_ICON , _("Cannot save an options set without a name."), _("error"), wxICON_EXCLAMATION|wxOK );
-     return;
-  }
-  m_battle.SaveOptionsPreset( presetname );
+    wxString presetname;
+	if ( !ui().AskText( _("Enter preset name"), _("Enter a name to save the current set of options\nIf a preset with the same name already exist, it will be overwritten"), presetname ) )
+        return;
+    if ( presetname.IsEmpty() )
+    {
+        customMessageBoxNoModal( SL_MAIN_ICON , _("Cannot save an options set without a name."), _("error"), wxICON_EXCLAMATION|wxOK );
+        return;
+    }
+    m_battle.SaveOptionsPreset( presetname );
 }
 
 
