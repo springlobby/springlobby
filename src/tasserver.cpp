@@ -1116,7 +1116,6 @@ void TASServer::Ping()
     pli.id = m_ping_id;
     pli.t = time( 0 );
     m_pinglist.push_back ( pli );
-    m_last_udp_ping = time( 0 );
 }
 
 
@@ -1386,7 +1385,7 @@ void TASServer::HostBattle( BattleOptions bo, const wxString& password )
           while ( doloop )
           {
             m_relay_host_manager = m_relay_host_manager_list[choice];
-            if ( UserExists( m_relay_host_manager ) )
+            if ( UserExists( m_relay_host_manager ) && !GetUser( m_relay_host_manager ).GetStatus().in_game ) // skip the PM if the manager is not connected or reports it's ingame ( no slots available )
             {
               SayPrivate( m_relay_host_manager, _T("!spawn") );
               m_delayed_open_command = cmd;
