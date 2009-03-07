@@ -1377,9 +1377,8 @@ void TASServer::HostBattle( BattleOptions bo, const wxString& password )
        unsigned int numbots = m_relay_host_manager_list.GetCount();
        if ( numbots > 0 )
        {
-          unsigned int begin = 0;
           srand ( time(NULL) );
-          if ( numbots > 1 ) begin = rand() % ( numbots -1 );
+          unsigned int begin = rand() % numbots;
           unsigned int choice = begin;
           m_relay_host_manager = _T("");
           m_delayed_open_command = _T("");
@@ -1395,12 +1394,8 @@ void TASServer::HostBattle( BattleOptions bo, const wxString& password )
             }
             else
             {
-              if ( numbots == 1 ) break;
-              else
-              {
-                 choice = ( choice + 1 ) % ( numbots - 1 );
-                 if ( choice == begin ) break;
-              }
+              choice = ( choice + 1 ) % numbots;
+							if ( choice == begin ) break;
             }
           }
        }
