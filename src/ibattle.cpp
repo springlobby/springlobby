@@ -278,7 +278,7 @@ void IBattle::OnUserRemoved( User& user )
       m_opts.spectators--;
       SendHostInfo( HI_Spectators );
     }
-    if ( &user == &GetMe() ) battle.OnSelfLeftBattle();
+    if ( &user == &GetMe() ) OnSelfLeftBattle();
     UserList::RemoveUser( user.GetNick() );
     if ( !user.BattleStatus().IsBot() ) user.SetBattle( 0 );
     else
