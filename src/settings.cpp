@@ -567,15 +567,15 @@ void Settings::SetServerAccountSavePass( const wxString& server_name, const bool
 
 int Settings::GetNumChannelsJoin()
 {
-    return m_config->GetNumberOfGroups( _T("/Channels") );
+    return m_config->GetNumberOfGroups( _T("/Channels/AutoJoin") );
 }
 
 void Settings::AddChannelJoin( const wxString& channel , const wxString& key )
 {
     int index = GetNumChannelsJoin();
 
-    m_config->Write( wxString::Format( _T("/Channels/Channel%d/Name"), index ), channel );
-    m_config->Write( wxString::Format( _T("/Channels/Channel%d/Password"), index ), key );
+    m_config->Write( wxString::Format( _T("/Channels/AutoJoin/Channel%d/Name"), index ), channel );
+    m_config->Write( wxString::Format( _T("/Channels/AutoJoin/Channel%d/Password"), index ), key );
 }
 
 
@@ -584,8 +584,8 @@ void Settings::RemoveChannelJoin( const wxString& channel )
     int index = GetChannelJoinIndex( channel );
     if ( index == -1 ) return;
     int total = GetNumChannelsJoin();
-    m_config->DeleteGroup( _T("/Channels/Channel") + TowxString( index ) );
-    m_config->RenameGroup( _T("/Channels/Channel") + TowxString(total - 1), _T("/Channels/Channel") + TowxString( index ) );
+    m_config->DeleteGroup( _T("/Channels/AutoJoin/Channel") + TowxString( index ) );
+    m_config->RenameGroup( _T("/Channels/AutoJoin/Channel") + TowxString(total - 1), _T("/Channels/AutoJoin/Channel") + TowxString( index ) );
 }
 
 void Settings::RemoveAllChannelsJoin()
@@ -600,7 +600,7 @@ int Settings::GetChannelJoinIndex( const wxString& name )
 	int ret = -1;
 	for ( int i = 0; i < numchannels; i++ )
 	{
-		if ( m_config->Read( wxString::Format( _T("/Channels/Channel%d/Name"), i ), _T("") ) == name ) ret = i;
+		if ( m_config->Read( wxString::Format( _T("/Channels/AutoJoin/Channel%d/Name"), i ), _T("") ) == name ) ret = i;
 	}
 	return ret;
 }
@@ -612,8 +612,8 @@ std::vector<ChannelJoinInfo> Settings::GetChannelsJoin()
     for ( int i= 0; i < num; i++ )
     {
     	  ChannelJoinInfo info;
-    	  info.name = m_config->Read( wxString::Format( _T("/Channels/Channel%d/Name"), index ), _T("") );
-    	  info.password = m_config->Read( wxString::Format( _T("/Channels/Channel%d/Password"), index ), _T("") );
+    	  info.name = m_config->Read( wxString::Format( _T("/Channels/AutoJoin/Channel%d/Name"), index ), _T("") );
+    	  info.password = m_config->Read( wxString::Format( _T("/Channels/AutoJoin/Channel%d/Password"), index ), _T("") );
         ret.push_back( info );
     }
     return ret;
