@@ -567,55 +567,51 @@ void Settings::SetServerAccountSavePass( const wxString& server_name, const bool
 
 int Settings::GetNumChannelsJoin()
 {
-    return m_config->Read( _T("/Channels/Count"), (long)0 );
-}
-
-void Settings::SetNumChannelsJoin( int num )
-{
-    m_config->Write( _T("/Channels/Count"), num );
+    return m_config->Read( _T("/Channels/Count"), 0l );
 }
 
 void Settings::AddChannelJoin( const wxString& channel , const wxString& key )
 {
-    int index = GetChannelJoinIndex( channel );
-    if ( index != -1 ) return;
+    int index = GetNumChannelsJoin();
+    m_config->Write( _T("/Channels/Count"), index + 1 );
 
-    index = GetNumChannelsJoin();
-    SetNumChannelsJoin( index + 1 );
-
-    m_config->Write( wxString::Format( _T("/Channels/Channel%d"), index ), channel + _T(" ") + key );
+    m_config->Write( wxString::Format( _T("/Channels/Channel%d/Name"), index ), channel );
+    m_config->Write( wxString::Format( _T("/Channels/Channel%d/Password"), index ), key );
 }
 
 
 void Settings::RemoveChannelJoin( const wxString& channel )
 {
-    int index = GetChannelJoinIndex( channel );
+    wxArrayString chanlist = GetChannelsJoin();
+    int index = chanlist.Index( _T("channel") );
     if ( index == -1 ) return;
     int total = GetNumChannelsJoin();
-    wxString LastEntry;
-    m_config->Read( _T("/Channels/Channel") +  wxString::Format( _T("%d"), total - 1 ), &LastEntry);
-    m_config->Write( _T("/Channels/Channel") + wxString::Format( _T("%d"), index ), LastEntry );
-    m_config->DeleteEntry( _T("/Channels/Channel") + wxString::Format( _T("%d"), total - 1 ) );
-    SetNumChannelsJoin( total -1 );
+    m_config->DeleteGroup( _T("/Channels/Channel") + TowxString( index ) );
+    m_config->RenameGroup( _T("/Channels/Channel") + TowxString(total - 1), _T("/Channels/Channel") + TowxString( index ) );
+    m_config->Write( _T("/Channels/Count"), total - 1 );
+}
+
+void Settings::RemoveAllChannelsJoin()
+{
+	m_config->DeleteGroup( _T("/Channels") );
 }
 
 
-int Settings::GetChannelJoinIndex( const wxString& server_name )
+wxArrayString Settings::GetChannelsJoin()
 {
+		wxArrayString ret;
     int num = GetNumChannelsJoin();
     for ( int i= 0; i < num; i++ )
     {
-        wxString name = GetChannelJoinName( i );
-        name = name.BeforeFirst( ' ' );
-        if ( name == server_name ) return i;
+    	  wxString value;
+    	  value << m_config->Read( wxString::Format( _T("/Channels/Channel%d/Name"), index ), _T("") );
+    	  value << _T(" ") << m_config->Read( wxString::Format( _T("/Channels/Channel%d/Password"), index ), _T("") );
+        ret.Add( value );
     }
-    return -1;
+    return ret;
 }
 
-wxString Settings::GetChannelJoinName( int index )
-{
-    return m_config->Read( wxString::Format( _T("/Channels/Channel%d"), index ), _T("") );
-}
+
 
 bool Settings::ShouldAddDefaultChannelSettings()
 {

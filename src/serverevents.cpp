@@ -57,10 +57,10 @@ void ServerEvents::OnLoginInfoComplete()
 {
     wxLogDebugFunc( _T("") );
     //m_serv.RequestChannels();
-    int num = sett().GetNumChannelsJoin();
-    for ( int i= 0; i < num; i++ )
+    wxArrayString autojoin = sett().GetChannelsJoin();
+    for ( unsigned int i= 0; i < autojoin.GetCount(); i++ )
     {
-        wxString channel = sett().GetChannelJoinName(i);
+        wxString channel = autojoin[i];
         wxString pass = channel.AfterFirst(' ');
         if ( !pass.IsEmpty() ) channel = channel.BeforeFirst(' ');
         m_serv.JoinChannel( channel, pass );

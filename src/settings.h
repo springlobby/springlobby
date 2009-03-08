@@ -235,17 +235,6 @@ class Settings
     int GetNumChannelsJoin();
 
 
-    /** Set the number of channels currently in the autojoin list.  This
-     * function is not intended for direct use, and will probably go away soon.
-     *
-     * @internal
-     *
-     * @param num The new maximum number of channels we think are in the
-     * autojoin list.
-     */
-    void SetNumChannelsJoin( int num );
-
-
     /** Add a channel to the autojoin list.
      */
     void AddChannelJoin( const wxString& channel , const wxString& key );
@@ -257,27 +246,20 @@ class Settings
     void RemoveChannelJoin( const wxString& channel );
 
 
-    /** Determine the index of a channel name in the autojoin list.
+    /** Returns the list of channels to autojoin
      *
-     * @param channel A channel name
-     *
-     * @returns The channel's autojoin list index, or @c -1 if it was not found.
+     * @returns channels in this format "channelname password"
      */
-    int GetChannelJoinIndex( const wxString& channel );
+    wxArrayString GetChannelsJoin();
 
 
-    /** Fetch the name corresponding to the given index in the autojoin list.
+    /** Deletes all autojoined channels
      *
-     * @param index A channel index
-     *
-     * @returns The name corresponding to @c index, or an empty string if it was
-     * not found.
      */
-    wxString GetChannelJoinName( int index );
-    /**@}*/
+    void RemoveAllChannelsJoin();
 
     bool ShouldAddDefaultChannelSettings();
-
+		/**@}*/
 
     /* ================================================================ */
     /** @name UI

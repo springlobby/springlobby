@@ -24,7 +24,6 @@ class AutojoinChannelDialog : public wxDialog
 
 		void OnOk( wxCommandEvent& event );
 		void OnCancel( wxCommandEvent& event );
-        wxString m_old_channels;
 		DECLARE_EVENT_TABLE()
 };
 
