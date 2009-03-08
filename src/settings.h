@@ -2,9 +2,10 @@
 #define SPRINGLOBBY_HEADERGUARD_SETTINGS_H
 
 #include <wx/string.h>
+#include <vector>
 
 const int CACHE_VERSION     = 9;
-const int SETTINGS_VERSION  = 11;
+const int SETTINGS_VERSION  = 12;
 
 const wxString DEFSETT_DEFAULT_SERVER_NAME= _T("Official server");
 const wxString DEFSETT_DEFAULT_SERVER_HOST = _T("taspringmaster.clan-sy.com");
@@ -51,6 +52,12 @@ class wxPathList;
 
 typedef std::map<unsigned int,unsigned int> ColumnMap;
 
+struct ChannelJoinInfo
+{
+	wxString name;
+	wxString password;
+};
+
 class SL_WinConf : public wxFileConfig
 {
     public:
@@ -86,6 +93,8 @@ class Settings
     wxArrayString GetGroupList( const wxString& base_key );
     /// list all groups subkeys of a parent group
     wxArrayString GetEntryList( const wxString& base_key );
+    /// counts all groups subkeys of a parent group
+		unsigned int GetGroupCount( const wxString& base_key );
 
     bool IsPortableMode();
     void SetPortableMode( bool mode );
@@ -235,17 +244,6 @@ class Settings
     int GetNumChannelsJoin();
 
 
-    /** Set the number of channels currently in the autojoin list.  This
-     * function is not intended for direct use, and will probably go away soon.
-     *
-     * @internal
-     *
-     * @param num The new maximum number of channels we think are in the
-     * autojoin list.
-     */
-    void SetNumChannelsJoin( int num );
-
-
     /** Add a channel to the autojoin list.
      */
     void AddChannelJoin( const wxString& channel , const wxString& key );
@@ -257,27 +255,28 @@ class Settings
     void RemoveChannelJoin( const wxString& channel );
 
 
-    /** Determine the index of a channel name in the autojoin list.
+    /** Returns the list of channels to autojoin
      *
-     * @param channel A channel name
-     *
-     * @returns The channel's autojoin list index, or @c -1 if it was not found.
+     * @returns std::vector of ChannelJoinInfo struct, don't break ordering index!
      */
-    int GetChannelJoinIndex( const wxString& channel );
+    std::vector<ChannelJoinInfo> GetChannelsJoin();
 
 
-    /** Fetch the name corresponding to the given index in the autojoin list.
+    /** Deletes all autojoined channels
      *
-     * @param index A channel index
-     *
-     * @returns The name corresponding to @c index, or an empty string if it was
-     * not found.
      */
-    wxString GetChannelJoinName( int index );
-    /**@}*/
+    void RemoveAllChannelsJoin();
+
+    /** Returns the join order of a channel
+     *
+     * @returns the order of the channel during autojoin or -1 if not found
+     */
+		int GetChannelJoinIndex( const wxString& name );
+
+    void ConvertOldChannelSettings();
 
     bool ShouldAddDefaultChannelSettings();
-
+		/**@}*/
 
     /* ================================================================ */
     /** @name UI

@@ -210,6 +210,15 @@ wxArrayString Settings::GetEntryList( const wxString& base_key )
   return ret;
 }
 
+unsigned int Settings::GetGroupCount( const wxString& base_key )
+{
+		wxString currentpath = m_config->GetPath();
+		m_config->SetPath( base_key );
+    unsigned int count = m_config->GetNumberOfGroups( false );
+    m_config->SetPath( currentpath );
+    return count;
+}
+
 bool Settings::IsPortableMode()
 {
   return m_portable_mode;
@@ -567,23 +576,15 @@ void Settings::SetServerAccountSavePass( const wxString& server_name, const bool
 
 int Settings::GetNumChannelsJoin()
 {
-    return m_config->Read( _T("/Channels/Count"), (long)0 );
-}
-
-void Settings::SetNumChannelsJoin( int num )
-{
-    m_config->Write( _T("/Channels/Count"), num );
+	return GetGroupCount( _T("/Channels/AutoJoin") );
 }
 
 void Settings::AddChannelJoin( const wxString& channel , const wxString& key )
 {
-    int index = GetChannelJoinIndex( channel );
-    if ( index != -1 ) return;
+    int index = GetNumChannelsJoin();
 
-    index = GetNumChannelsJoin();
-    SetNumChannelsJoin( index + 1 );
-
-    m_config->Write( wxString::Format( _T("/Channels/Channel%d"), index ), channel + _T(" ") + key );
+    m_config->Write( wxString::Format( _T("/Channels/AutoJoin/Channel%d/Name"), index ), channel );
+    m_config->Write( wxString::Format( _T("/Channels/AutoJoin/Channel%d/Password"), index ), key );
 }
 
 
@@ -592,29 +593,51 @@ void Settings::RemoveChannelJoin( const wxString& channel )
     int index = GetChannelJoinIndex( channel );
     if ( index == -1 ) return;
     int total = GetNumChannelsJoin();
-    wxString LastEntry;
-    m_config->Read( _T("/Channels/Channel") +  wxString::Format( _T("%d"), total - 1 ), &LastEntry);
-    m_config->Write( _T("/Channels/Channel") + wxString::Format( _T("%d"), index ), LastEntry );
-    m_config->DeleteEntry( _T("/Channels/Channel") + wxString::Format( _T("%d"), total - 1 ) );
-    SetNumChannelsJoin( total -1 );
+    m_config->DeleteGroup( _T("/Channels/AutoJoin/Channel") + TowxString( index ) );
+    m_config->RenameGroup( _T("/Channels/AutoJoin/Channel") + TowxString(total - 1), _T("/Channels/AutoJoin/Channel") + TowxString( index ) );
+}
+
+void Settings::RemoveAllChannelsJoin()
+{
+	m_config->DeleteGroup( _T("/Channels/AutoJoin") );
 }
 
 
-int Settings::GetChannelJoinIndex( const wxString& server_name )
+int Settings::GetChannelJoinIndex( const wxString& name )
 {
+	int numchannels = GetNumChannelsJoin();
+	int ret = -1;
+	for ( int i = 0; i < numchannels; i++ )
+	{
+		if ( m_config->Read( wxString::Format( _T("/Channels/AutoJoin/Channel%d/Name"), i ), _T("") ) == name ) ret = i;
+	}
+	return ret;
+}
+
+std::vector<ChannelJoinInfo> Settings::GetChannelsJoin()
+{
+		std::vector<ChannelJoinInfo> ret;
     int num = GetNumChannelsJoin();
     for ( int i= 0; i < num; i++ )
     {
-        wxString name = GetChannelJoinName( i );
-        name = name.BeforeFirst( ' ' );
-        if ( name == server_name ) return i;
+    	  ChannelJoinInfo info;
+    	  info.name = m_config->Read( wxString::Format( _T("/Channels/AutoJoin/Channel%d/Name"), i ), _T("") );
+    	  info.password = m_config->Read( wxString::Format( _T("/Channels/AutoJoin/Channel%d/Password"), i ), _T("") );
+        ret.push_back( info );
     }
-    return -1;
+    return ret;
 }
 
-wxString Settings::GetChannelJoinName( int index )
+void Settings::ConvertOldChannelSettings()
 {
-    return m_config->Read( wxString::Format( _T("/Channels/Channel%d"), index ), _T("") );
+	int numchannels = m_config->Read( _T("/Channels/Count"), 0l);
+	m_config->DeleteEntry( _T("/Channels/Count") );
+	for ( int i = 0; i < numchannels; i++ )
+	{
+		wxString channelinfo = m_config->Read( _T("/Channels/Channel") + TowxString( i ), _T("") );
+		m_config->DeleteEntry( _T("/Channels/Channel") + TowxString( i ) );
+		AddChannelJoin( channelinfo.BeforeFirst(_T(' ')), channelinfo.AfterLast(_T(' ')) );
+	}
 }
 
 bool Settings::ShouldAddDefaultChannelSettings()
