@@ -636,7 +636,7 @@ void Settings::ConvertOldChannelSettings()
 	{
 		wxString channelinfo = m_config->Read( _T("/Channels/Channel") + TowxString( i ), _T("") );
 		m_config->DeleteEntry( _T("/Channels/Channel") + TowxString( i ) );
-		AddChannelJoin( channelinfo.BeforeFirst(_T(' ')), channelinfo.BeforeLast(_T(' ')) );
+		AddChannelJoin( channelinfo.BeforeFirst(_T(' ')), channelinfo.AfterLast(_T(' ')) );
 	}
 }
 
