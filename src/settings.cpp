@@ -611,7 +611,20 @@ wxArrayString Settings::GetChannelsJoin()
     return ret;
 }
 
-
+void Settings::ConvertOldChannelSettings()
+{
+	wxArrayString channellist;
+	int numchannels = GetNumChannelsJoin();
+	for ( int i = 0; i < numchannels; i++ )
+	{
+		channellist.Add( m_config->Read( _T("/Channels/Channel%d") + TowxString( i ), _T("") ) );
+	}
+	RemoveAllChannelsJoin();
+	for( unsigned int i = 0; i < channellist.GetCount(); i++)
+	{
+		AddChannelJoin( channellist[i].BeforeFirst( _T(' ') ), channellist[i].AfterFirst( _T(' ') ) );
+	}
+}
 
 bool Settings::ShouldAddDefaultChannelSettings()
 {
