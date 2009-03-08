@@ -93,6 +93,8 @@ class Settings
     wxArrayString GetGroupList( const wxString& base_key );
     /// list all groups subkeys of a parent group
     wxArrayString GetEntryList( const wxString& base_key );
+    /// counts all groups subkeys of a parent group
+		unsigned int GetGroupCount( const wxString& base_key );
 
     bool IsPortableMode();
     void SetPortableMode( bool mode );

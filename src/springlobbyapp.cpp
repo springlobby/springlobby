@@ -212,10 +212,10 @@ bool SpringLobbyApp::OnInit()
 					}
 				}
 			#endif
+			}
 			if ( sett().GetSettingsVersion() < 12 )
 			{
 				sett().ConvertOldChannelSettings();
-			}
 			}
     }
 
