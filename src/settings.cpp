@@ -210,7 +210,7 @@ wxArrayString Settings::GetEntryList( const wxString& base_key )
   return ret;
 }
 
-unsigned int GetGroupCount( const wxString& base_key )
+unsigned int Settings::GetGroupCount( const wxString& base_key )
 {
 		wxString currentpath = m_config->GetPath();
 		m_config->SetPath( base_key );
