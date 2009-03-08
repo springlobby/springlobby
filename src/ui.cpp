@@ -948,7 +948,6 @@ void Ui::OnUserLeftBattle( IBattle& battle, User& user )
             if ( &user == &m_serv->GetMe() )
             {
                 mw().GetJoinTab().LeaveCurrentBattle();
-                battle.OnSelfLeftBattle();
             }
         }
     }
