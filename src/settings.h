@@ -2,6 +2,7 @@
 #define SPRINGLOBBY_HEADERGUARD_SETTINGS_H
 
 #include <wx/string.h>
+#include <vector>
 
 const int CACHE_VERSION     = 9;
 const int SETTINGS_VERSION  = 12;
@@ -50,6 +51,12 @@ class wxPoint;
 class wxPathList;
 
 typedef std::map<unsigned int,unsigned int> ColumnMap;
+
+struct ChannelJoinInfo
+{
+	wxString name;
+	wxString password;
+};
 
 class SL_WinConf : public wxFileConfig
 {
@@ -248,15 +255,21 @@ class Settings
 
     /** Returns the list of channels to autojoin
      *
-     * @returns channels in this format "channelname password"
+     * @returns std::vector of ChannelJoinInfo struct, don't break ordering index!
      */
-    wxArrayString GetChannelsJoin();
+    std::vector<ChannelJoinInfo> GetChannelsJoin();
 
 
     /** Deletes all autojoined channels
      *
      */
     void RemoveAllChannelsJoin();
+
+    /** Returns the join order of a channel
+     *
+     * @returns the order of the channel during autojoin or -1 if not found
+     */
+		int GetChannelJoinIndex( const wxString& name );
 
     void ConvertOldChannelSettings();
 
