@@ -621,8 +621,8 @@ std::vector<ChannelJoinInfo> Settings::GetChannelsJoin()
     for ( int i= 0; i < num; i++ )
     {
     	  ChannelJoinInfo info;
-    	  info.name = m_config->Read( wxString::Format( _T("/Channels/AutoJoin/Channel%d/Name"), index ), _T("") );
-    	  info.password = m_config->Read( wxString::Format( _T("/Channels/AutoJoin/Channel%d/Password"), index ), _T("") );
+    	  info.name = m_config->Read( wxString::Format( _T("/Channels/AutoJoin/Channel%d/Name"), i ), _T("") );
+    	  info.password = m_config->Read( wxString::Format( _T("/Channels/AutoJoin/Channel%d/Password"), i ), _T("") );
         ret.push_back( info );
     }
     return ret;
