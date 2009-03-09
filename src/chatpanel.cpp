@@ -59,7 +59,6 @@ BEGIN_EVENT_TABLE( ChatPanel, wxPanel )
 	EVT_TEXT_PASTE( CHAT_TEXT, ChatPanel::OnPaste )
 	EVT_BUTTON( CHAT_CHAN_OPTS, ChatPanel::OnChanOpts )
 	EVT_BUTTON( CHAT_SEND, ChatPanel::OnSay )
-	EVT_SIZE( ChatPanel::OnResize )
 	EVT_TEXT_URL( CHAT_LOG,  ChatPanel::OnLinkEvent )
 
 	EVT_MENU( CHAT_MENU_DISABLE_APPEND, ChatPanel::OnMenuToggleAppend )
@@ -267,6 +266,7 @@ void ChatPanel::CreateControls( )
   if ( m_show_nick_list ) {
 
     m_splitter = new wxSplitterWindow( this, -1, wxDefaultPosition, wxDefaultSize, wxSP_3D );
+    m_splitter->SetSashGravity( 0.9 );
     m_nick_panel = new wxPanel( m_splitter, -1 );
     m_chat_panel = new wxPanel( m_splitter, -1 );
 
@@ -605,16 +605,6 @@ void ChatPanel::OutputLine( const ChatLine& line )
   m_chatlog_text->ScrollLines( 10 ); // to prevent for weird empty space appended
   m_chatlog_text->ShowPosition( m_chatlog_text->GetLastPosition() );// scroll to the bottom
   #endif
-}
-
-void ChatPanel::OnResize( wxSizeEvent& event )
-{
-	SetSize( event.GetSize() );
-	Layout();
-	if ( m_show_nick_list ) {
-		wxSize s = m_splitter->GetSize();
-		m_splitter->SetSashPosition( s.GetWidth() - 238, true );
-	}
 }
 
 
