@@ -40,6 +40,7 @@ END_EVENT_TABLE()
 
 
 const wxEventType MapGridCtrl::MapSelectedEvt = wxNewEventType();
+const wxEventType MapGridCtrl::LoadingCompletedEvt = wxNewEventType();
 
 
 MapGridCtrl::MapGridCtrl( wxWindow* parent, Ui& ui, wxSize size, wxWindowID id )
@@ -415,6 +416,7 @@ void MapGridCtrl::OnResize( wxSizeEvent& event )
 
 void MapGridCtrl::OnMouseMove( wxMouseEvent& event )
 {
+    SetCursor( wxCursor( wxCURSOR_HAND ) );
 	if ( m_in_mouse_drag ) {
 		// Fix for for not receiving LeftUp event when left button
 		// is released outside the control (happens on Windows.)
@@ -553,4 +555,12 @@ void MapGridCtrl::OnGetMapExAsyncCompleted( wxCommandEvent& event )
 
 	--m_async_mapinfo_fetches;
 	UpdateAsyncFetches();
+
+	// UpdateAsyncFetches didn't start a new one, so we finished
+	// and can raise the LoadingCompletedEvt
+	if ( m_async_mapinfo_fetches == 0 ) {
+		wxCommandEvent evt( LoadingCompletedEvt, GetId() );
+		evt.SetEventObject( this );
+		wxPostEvent( this, evt );
+	}
 }

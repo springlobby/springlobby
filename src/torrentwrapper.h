@@ -62,6 +62,12 @@ public:
 
     bool IsConsistent();
 
+    TorrentTable():
+    m_seed_count(0),
+    m_leech_count(0)
+    {
+    }
+
 class Row: public RefcountedContainer
     {
         /// If you want to modify row's keys, you need to remove it from table first,
@@ -102,6 +108,13 @@ class Row: public RefcountedContainer
     typedef RefcountedPointer<Row> PRow;
 
 
+		struct TransferredData
+		{
+			unsigned int failed_check_counts;
+			unsigned int sentdata;
+			TransferredData(): failed_check_counts(0), sentdata(0) {}
+		};
+
     void InsertRow(PRow row);
     void RemoveRow(PRow row);
 
@@ -109,8 +122,11 @@ class Row: public RefcountedContainer
     void AddSeedRequest(PRow row);
     void RemoveSeedRequest(PRow row);
     void SetRowHandle(PRow row, const libtorrent::torrent_handle &handle);
+    void AddRowToDependencyCheckQueue(PRow row);
+    void RemoveRowFromDependencyCheckQueue(PRow row);
     void RemoveRowHandle( PRow row );
     void SetRowStatus( PRow row, P2P::FileStatus status );
+    void SetRowTransferredData( PRow row, TransferredData data );
 
     bool IsSeedRequest(PRow row);
 
@@ -122,6 +138,11 @@ class Row: public RefcountedContainer
     std::set<PRow> SeedRequestsByRow();
     std::map<libtorrent::torrent_handle, PRow> RowByTorrentHandles();
     std::set<PRow> QueuedTorrentsByRow();
+    std::map<TorrentTable::PRow, TransferredData> TransferredDataByRow();
+    std::set<TorrentTable::PRow> DependencyCheckQueuebyRow();
+
+    unsigned int GetOpenSeedsCount();
+    unsigned int GetOpenLeechsCount();
 
 private:
 
@@ -134,6 +155,11 @@ private:
     std::map<libtorrent::torrent_handle, PRow> handle_index;
     std::set<PRow> seed_requests;
     std::set<PRow> queued_torrents;
+    std::map<TorrentTable::PRow, TorrentTable::TransferredData>  seed_sent_data;
+		std::set<TorrentTable::PRow> dep_check_queue;
+
+    unsigned int m_seed_count;
+    unsigned int m_leech_count;
 };
 
 class TorrentWrapper : public iNetClass
@@ -184,6 +210,7 @@ private:
 
     void CreateTorrent( const wxString& uhash, const wxString& name, IUnitSync::MediaType type );
     DownloadRequestStatus RequestFileByRow( const TorrentTable::PRow& row );
+    DownloadRequestStatus QueueFileByRow( const TorrentTable::PRow& row );
     bool RemoveTorrentByRow( const TorrentTable::PRow& row );
     bool JoinTorrent( const TorrentTable::PRow& row, bool IsSeed );
     bool DownloadTorrentFileFromTracker( const wxString& hash );
@@ -201,8 +228,6 @@ private:
     wxString m_buffer;
 
     bool ingame;
-    unsigned int m_seed_count;
-    unsigned int m_leech_count;
     unsigned int m_timer_count;
 
     wxArrayString m_tracker_urls;
@@ -212,7 +237,6 @@ private:
     libtorrent::session* m_torr;
     Socket* m_socket_class;
 
-    std::vector<TorrentTable::Row> m_dep_check_queue;
 
     //!we set this when trying a tracker and waiting for connection to be established
     bool m_is_connecting;

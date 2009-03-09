@@ -24,7 +24,7 @@
 #include "../settings.h"
 #include "../iunitsync.h"
 #include "../mapctrl.h"
-#include "../userlistctrl.h"
+#include "../battleroomlistctrl.h"
 
 #include "replayfilter.h"
 #include "../iconimagelist.h"
@@ -85,27 +85,27 @@ ReplayTab::ReplayTab( wxWindow* parent, Ui& ui ) :
     m_data_sizer = new wxFlexGridSizer( 4, 2, 0, 0 );
 
     m_map_lbl = new wxStaticText( this, wxID_ANY, _("Map:"), wxDefaultPosition, wxDefaultSize, 0 );
-    m_data_sizer->Add( m_map_lbl, 0, wxALL, 5 );
+    m_data_sizer->Add( m_map_lbl, 1, wxALL|wxEXPAND, 5 );
 
     m_map_text = new wxStaticText( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-    m_data_sizer->Add( m_map_text, 0, wxALL, 5 );
+    m_data_sizer->Add( m_map_text, 1, wxALL|wxEXPAND, 5 );
 
     m_mod_lbl = new wxStaticText( this, wxID_ANY, _("Mod:"), wxDefaultPosition, wxDefaultSize, 0 );
-    m_data_sizer->Add( m_mod_lbl, 0, wxALL, 5 );
+    m_data_sizer->Add( m_mod_lbl, 1, wxALL|wxEXPAND, 5 );
 
     m_mod_text = new wxStaticText( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-    m_data_sizer->Add( m_mod_text, 0, wxALL, 5 );
+    m_data_sizer->Add( m_mod_text, 1, wxALL|wxEXPAND, 5 );
 
     m_players_lbl = new wxStaticText( this, wxID_ANY, _("Players:"), wxDefaultPosition, wxDefaultSize, 0 );
-    m_data_sizer->Add( m_players_lbl, 0, wxALL, 5 );
+    m_data_sizer->Add( m_players_lbl, 1, wxALL|wxEXPAND, 5 );
 
     m_players_text = new wxStaticText( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-    m_data_sizer->Add( m_players_text, 0, wxALL, 5 );
+    m_data_sizer->Add( m_players_text, 1, wxALL|wxEXPAND, 5 );
 
-    m_info_sizer->Add( m_data_sizer, 1, wxEXPAND, 5 );
+    m_info_sizer->Add( m_data_sizer, 1, wxEXPAND|wxALL, 0 );
 
-    m_players = new UserListctrl( this, _T("replayusers"), true, REPLAY_USER_LIST );
-    m_info_sizer->Add( m_players , 1, wxEXPAND, 5 );
+    m_players = new BattleroomListCtrl( this, 0, m_ui, true );
+    m_info_sizer->Add( m_players , 2, wxALL|wxEXPAND, 0 );
 
     m_main_sizer->Add( m_info_sizer, 0, wxEXPAND, 5 );
 
@@ -131,10 +131,6 @@ ReplayTab::ReplayTab( wxWindow* parent, Ui& ui ) :
 
     m_filter_activ = new wxCheckBox( this, REPLAY_LIST_FILTER_ACTIV , wxT("Activated"), wxDefaultPosition, wxDefaultSize, 0 );
     m_buttons_sizer->Add( m_filter_activ, 1, wxALL|wxEXPAND, 5 );
-
-    #ifdef HAVE_WX26
-        m_filter_activ->Disable();
-    #endif
 
     m_buttons_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
 
@@ -182,7 +178,7 @@ void ReplayTab::AddReplay( Replay& replay ) {
 
     int index = m_replay_listctrl->InsertItem( 0, replay.date );
     ASSERT_LOGIC( index != -1, _T("index = -1") );
-    long replayid = (long)replay.id ;
+//    long replayid = (long)replay.id ;
     m_replay_listctrl->SetItemData(index, (long)replay.id );
 
     if (index != -1)
@@ -422,12 +418,31 @@ void ReplayTab::OnSelect( wxListEvent& event )
             m_mod_text->SetLabel(rep.battle.GetHostModName());
             m_minimap->SetBattle( &(rep.battle) );
             m_minimap->UpdateMinimap();
-            m_players->Clear();
+            try
+            {
+							IBattle& oldbattle = m_players->GetBattle();
+							for ( size_t i = 0; i < oldbattle.GetNumUsers(); ++i )
+							{
+									try
+									{
+										User& usr = oldbattle.GetUser( i );
+										m_players->RemoveUser( usr );
+									}
+									catch(...)
+									{}
+							}
+            } catch ( assert_exception ) {}
+            m_players->DeleteAllItems();
+            m_players->SetBattle( (IBattle*)&rep.battle );
             for ( size_t i = 0; i < rep.battle.GetNumUsers(); ++i )
             {
-								User& usr = rep.battle.GetUser( i );
-                UserListctrl::UserData ud ( usr.GetNick() , usr.GetCountry() );
-                m_players->AddUser( ud );
+								try
+								{
+									User& usr = rep.battle.GetUser( i );
+									m_players->AddUser( usr );
+								}
+								catch(...)
+								{}
             }
         }
         catch ( ... ) {

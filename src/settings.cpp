@@ -29,43 +29,15 @@
 #include "replay/replaylistfiltervalues.h"
 #include "globalsmanager.h"
 #include "springunitsynclib.h"
+#include "customlistctrl.h"
 #include "settings++/presets.h"
+#include "Helper/sortutil.h"
 
 bool Settings::m_user_defined_config = false;
 wxString Settings::m_user_defined_config_path = wxEmptyString;
 
 
 const wxColor defaultHLcolor (255,0,0);
-typedef std::map<wxString, wxColor> NamedColorMap;
-static GlobalObjectHolder<NamedColorMap> defaultChatColorsHolder;
-static NamedColorMap& defaultChatColors (defaultChatColorsHolder);
-bool defaultChatColorsInitialized (false);
-
-/** Color used when a requested (color) name cannot be found in either
- * the user's configuration or the default colors map.  This is
- * supposed to be somewhat repugnant to the average user, to deter
- * developers from using colors without adding them to the default
- * colors map.
- */
-static wxColor noSuchChatColor(255, 0, 114); /* Hot pink. ^_^ */
-
-static void
-initDefaultChatColors()
-{
-    defaultChatColors.insert(std::make_pair(_T("Normal"), wxColor(0, 0, 0)));
-    defaultChatColors.insert(std::make_pair(_T("Background"), wxColor(255, 255, 255)));
-    defaultChatColors.insert(std::make_pair(_T("Highlight"), wxColor(255, 0, 0)));
-    defaultChatColors.insert(std::make_pair(_T("Mine"), wxColor(100, 100, 140)));
-    defaultChatColors.insert(std::make_pair(_T("Notification"), wxColor(255, 40, 40)));
-    defaultChatColors.insert(std::make_pair(_T("Action"), wxColor(230, 0, 255)));
-    defaultChatColors.insert(std::make_pair(_T("Server"), wxColor(0, 80, 128)));
-    defaultChatColors.insert(std::make_pair(_T("Client"), wxColor(20, 200, 25)));
-    defaultChatColors.insert(std::make_pair(_T("JoinPart"), wxColor(0, 80, 0)));
-    defaultChatColors.insert(std::make_pair(_T("Error"), wxColor(128, 0, 0)));
-    defaultChatColors.insert(std::make_pair(_T("Time"), wxColor(100, 100, 140)));
-
-    defaultChatColorsInitialized = true;
-}
 
 Settings& sett()
 {
@@ -85,25 +57,20 @@ bool SL_WinConf::DoWriteLong(const wxString& key, long lValue)
 
 Settings::Settings()
 {
-  #if defined(__WXMSW__) && !defined(HAVE_WX26)
+  #if defined(__WXMSW__)
   wxString userfilepath = wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator() + _T("springlobby.conf");
-  wxString globalfilepath =  wxStandardPathsBase::Get().GetExecutablePath().BeforeLast( wxFileName::GetPathSeparator() ) + wxFileName::GetPathSeparator() + _T("springlobby.conf");
+  wxString globalfilepath =  GetExecutableFolder() + wxFileName::GetPathSeparator() + _T("springlobby.conf");
 
-    if ( m_user_defined_config )
-    {
-        m_chosed_path = userfilepath;
-        SetPortableMode( false );
-    }
-    else if (  wxFileName::FileExists( userfilepath ) || !wxFileName::FileExists( globalfilepath ) || !wxFileName::IsFileWritable( globalfilepath ) )
-    {
-        m_chosed_path = userfilepath;
-        SetPortableMode( false );
-    }
-    else
-    {
-        m_chosed_path = globalfilepath; /// portable mode, use only current app paths
-        SetPortableMode ( true );
-    }
+  if (  wxFileName::FileExists( userfilepath ) || !wxFileName::FileExists( globalfilepath ) || !wxFileName::IsFileWritable( globalfilepath ) )
+  {
+     m_chosed_path = userfilepath;
+     SetPortableMode( false );
+  }
+  else
+  {
+     m_chosed_path = globalfilepath; // portable mode, use only current app paths
+     SetPortableMode ( true );
+  }
 
   // if it doesn't exist, try to create it
   if ( !wxFileName::FileExists( m_chosed_path ) )
@@ -142,14 +109,7 @@ Settings::Settings()
   m_config = new wxConfig( _T("SpringLobby"), wxEmptyString, path, _T("springlobby.global.conf") );
   SetPortableMode ( false );
   #endif
-  if ( !m_config->Exists( _T("/Server") ) ) SetDefaultServerSettings();
-  if ( !m_config->Exists( _T("/Channels") ) )
-  {
-		AddChannelJoin( _T("springlobby"), _T("") );
-		AddChannelJoin( _T("newbies"), _T("") );
-  }
-
-  if ( !m_config->Exists( _T("/Groups") ) ) AddGroup( _("Default") );
+	m_config->SetRecordDefaults( true );
 }
 
 Settings::~Settings()
@@ -163,7 +123,7 @@ void Settings::SaveSettings()
   SetCacheVersion();
   SetSettingsVersion();
   m_config->Flush();
-  #if defined(__WXMSW__) && !defined(HAVE_WX26)
+  #if defined(__WXMSW__)
   wxFileOutputStream outstream( m_chosed_path );
 
   if ( !outstream.IsOk() )
@@ -175,20 +135,27 @@ void Settings::SaveSettings()
   #endif
 }
 
+
+#ifdef __WXMSW__
 void Settings::SetDefaultConfigs( SL_WinConf& conf )
+#else
+void Settings::SetDefaultConfigs( wxConfig& conf )
+#endif
 {
   wxString str;
   long dummy;
+	wxString previousgroup;
 
   // now all groups...
-  bool bCont = conf.GetFirstGroup(str, dummy);
-  while ( bCont )
+  bool groupcontinue = conf.GetFirstGroup(str, dummy);
+  while ( groupcontinue )
   {
   	// climb all tree branches until you hit the most further
-		bCont = conf.GetFirstGroup(str, dummy);
-    if ( bCont )
+		groupcontinue = conf.GetFirstGroup(str, dummy);
+    if ( groupcontinue && ( previousgroup != str ) )
     {
 			conf.SetPath( str );
+			previousgroup = str;
     }
     else
     {
@@ -197,23 +164,28 @@ void Settings::SetDefaultConfigs( SL_WinConf& conf )
 			bool exist = conf.GetFirstEntry(str, dummy);
 			while ( exist )
 			{
-				if ( !m_config->Exists( str ) ) // in theory "main" config should be blank at this point, but better be paranoyd and don't overwrite existing keys...
+				if ( !m_config->Exists( currentpath + _T("/") + str ) ) // in theory "main" config should be blank at this point, but better be paranoyd and don't overwrite existing keys...
 				{
-					m_config->Write( str, conf.Read( str, _T("") ) ); // append to main config
+					m_config->Write( currentpath + _T("/") + str, conf.Read( str, _T("") ) ); // append to main config
 				}
 
 				exist = conf.GetNextEntry(str, dummy);
 			}
 
-			if ( currentpath != _T("/") )
+			if ( !currentpath.IsEmpty() )
 			{
-				conf.SetPath( _T("..") ); // go to the parent folder
-				conf.DeleteGroup( currentpath ); // remove last analyzed group so it doesn't get iterated again
-				bCont = true;
+				wxString todelete = currentpath.AfterLast(_T('/'));
+				currentpath = currentpath.BeforeLast(_T('/'));
+				conf.SetPath( currentpath ); // go to the parent folder
+				conf.DeleteGroup( todelete ); // remove last analyzed group so it doesn't get iterated again
+				groupcontinue = true;
 			}
+			previousgroup = _T("");
     }
   }
+  m_config->Flush();
 }
+
 
 wxArrayString Settings::GetGroupList( const wxString& base_key )
 {
@@ -409,12 +381,18 @@ unsigned int Settings::GetModCachingThreadProgress()
     return m_config->Read( _T("/General/LastModCachingThreadIndex"), 0l );
 }
 
+bool Settings::ShouldAddDefaultServerSettings()
+{
+		return !m_config->Exists( _T("/Server") );
+}
 
 //! @brief Restores default settings
 void Settings::SetDefaultServerSettings()
 {
     SetServer( WX_STRINGC(DEFSETT_DEFAULT_SERVER_NAME), WX_STRINGC(DEFSETT_DEFAULT_SERVER_HOST), DEFSETT_DEFAULT_SERVER_PORT );
-    SetServer( _T("Backup server"), _T("taspringmaster.servegame.com"), 8200 );
+		SetServer( _T("Backup server 1"), _T("springbackup1.servegame.com"), 8200 );
+		SetServer( _T("Backup server 2"), _T("springbackup2.servegame.org"), 8200 );
+		SetServer( _T("Test server"), _T("taspringmaster.servegame.com"), 8300 );
     SetDefaultServer( WX_STRINGC(DEFSETT_DEFAULT_SERVER_NAME) );
 }
 
@@ -649,6 +627,12 @@ wxString Settings::GetChannelJoinName( int index )
 {
     return m_config->Read( wxString::Format( _T("/Channels/Channel%d"), index ), _T("") );
 }
+
+bool Settings::ShouldAddDefaultChannelSettings()
+{
+		return !m_config->Exists( _T("/Channels" ));
+}
+
 /************* SPRINGLOBBY WINDOW POS/SIZE   ******************/
 //! @brief Get width of MainWindow.
 int Settings::GetWindowWidth( const wxString& window )
@@ -816,27 +800,28 @@ wxString Settings::AutoFindSpringBin()
 
 wxString Settings::AutoFindUnitSync()
 {
-  wxPathList pl;
+    wxPathList pl;
 
-  pl.AddEnvList( _T("%ProgramFiles%") );
+    pl.AddEnvList( _T("%ProgramFiles%") );
 
-  pl.AddEnvList( _T("LDPATH") );
-  pl.AddEnvList( _T("LD_LIBRARY_PATH") );
+    pl.AddEnvList( _T("LDPATH") );
+    pl.AddEnvList( _T("LD_LIBRARY_PATH") );
 
-  pl.Add( _T("/usr/local/lib64") );
-  pl.Add( _T("/usr/local/games") );
-  pl.Add( _T("/usr/local/games/lib") );
-  pl.Add( _T("/usr/local/lib") );
-  pl.Add( _T("/usr/lib64") );
-  pl.Add( _T("/usr/lib") );
-  pl.Add( _T("/usr/games") );
-  pl.Add( _T("/usr/games/lib64") );
-  pl.Add( _T("/usr/games/lib") );
+    pl.Add( _T("/usr/local/lib64") );
+    pl.Add( _T("/usr/local/games") );
+    pl.Add( _T("/usr/local/games/lib") );
+    pl.Add( _T("/usr/local/lib") );
+    pl.Add( _T("/usr/lib64") );
+    pl.Add( _T("/usr/lib") );
+    pl.Add( _T("/usr/games") );
+    pl.Add( _T("/usr/games/lib64") );
+    pl.Add( _T("/usr/games/lib") );
 
 	pl = GetAdditionalSearchPaths( pl );
 
 	wxString retpath = pl.FindValidPath( _T("unitsync") + GetLibExtension() );
-	if ( retpath.IsEmpty() ) pl.FindValidPath( _T("libunitsync") + GetLibExtension() );
+	if ( retpath.IsEmpty() )
+        retpath = pl.FindValidPath( _T("libunitsync") + GetLibExtension() );
 	return retpath;
 }
 
@@ -896,9 +881,9 @@ wxString Settings::GetCurrentUsedDataDir()
     else dir = susynclib().GetSpringConfigString( _T("SpringData"), _T("") );
   }
   #ifdef __WXMSW__
-  if ( dir.IsEmpty() ) dir = wxStandardPathsBase::Get().GetExecutablePath().BeforeLast( wxFileName::GetPathSeparator() ); /// fallback
+  if ( dir.IsEmpty() ) dir = GetExecutableFolder(); // fallback
   #else
-  if ( dir.IsEmpty() ) dir = wxFileName::GetHomeDir() + wxFileName::GetPathSeparator() + _T(".spring"); /// fallback
+  if ( dir.IsEmpty() ) dir = wxFileName::GetHomeDir() + wxFileName::GetPathSeparator() + _T(".spring"); // fallback
   #endif
   return dir;
 }
@@ -1044,13 +1029,13 @@ bool Settings::GetLastHostRelayedMode()
 
 wxColour Settings::GetBattleLastColour()
 {
-   return  GetColorFromStrng( m_config->Read( _T("/Hosting/MyLastColour"), _T("1 1 0") ) );
+   return  wxColor( m_config->Read( _T("/Hosting/MyLastColour"), _T("#FFFF00") ) );
 }
 
 
 void Settings::SetBattleLastColour( const wxColour& col )
 {
-  m_config->Write( _T("/Hosting/MyLastColour"), GetColorString( col ) );
+  m_config->Write( _T("/Hosting/MyLastColour"), col.GetAsString( wxC2S_HTML_SYNTAX ) );
 }
 
 void Settings::SetLastHostDescription( const wxString& value )
@@ -1130,16 +1115,24 @@ void Settings::SetHostingPreset( const wxString& name, int optiontype, std::map<
 
 std::map<wxString,wxString> Settings::GetHostingPreset( const wxString& name, int optiontype )
 {
-  std::map<wxString,wxString> ret;
-  wxArrayString list = GetEntryList( _T("/Hosting/Preset/") + name + _T("/") + TowxString( optiontype ) );
-  int count = list.GetCount();
+    wxString path_base = _T("/Hosting/Preset/") + name + _T("/") + TowxString( optiontype );
+    std::map<wxString,wxString> ret;
+    wxArrayString list = GetEntryList( path_base );
 
-  for( int i = 0; i < count; i ++ )
-  {
-  	wxString keyname = list[i];
-    ret[keyname] = m_config->Read( keyname );
-  }
-  return ret;
+    wxString old_path = m_config->GetPath();
+    m_config->SetPath( path_base );
+
+    int count = list.GetCount();
+    for( int i = 0; i < count; i ++ )
+    {
+        wxString keyname = list[i];
+        wxString val = m_config->Read( keyname );
+        ret[keyname] = val;
+    }
+
+    m_config->SetPath( old_path );
+
+    return ret;
 }
 
 
@@ -1293,39 +1286,163 @@ bool Settings::GetChatPMSoundNotificationEnabled()
   return m_config->Read( _T("/Chat/PMSound"), 1l);
 }
 
-
-wxColour
-Settings::GetChatColor(const wxString& name)
+wxColor ConvertOldRGBFormat( wxString color )
 {
-    if ( ! defaultChatColorsInitialized )
-	initDefaultChatColors();
-    wxString colorString ( wxEmptyString );
-    wxColour defaultColor ( noSuchChatColor );
-    NamedColorMap::iterator iter ( defaultChatColors.find(name) );
-
-    if ( iter == defaultChatColors.end() )
-	wxLogError(_T("Request for unrecognized color name \"") + name + _T("\""));
-    else
-	defaultColor = iter->second;
-
-    if ( m_config->Read(_T("/Chat/Colour/") + name, &colorString, wxEmptyString) )
-	/* Color was read from user's configuration. */
-	return GetColorFromStrng(colorString);
-    else
-	return defaultColor;
+	long R = 0, G = 0, B = 0;
+	color.BeforeFirst( _T(' ') ).ToLong( &R );
+	color = color.AfterFirst( _T(' ') );
+	color.BeforeFirst( _T(' ') ).ToLong( &G );
+	color = color.AfterFirst( _T(' ') );
+	color.BeforeFirst( _T(' ') ).ToLong( &B );
+	return wxColor( R % 256, G % 256, B % 256 );
 }
 
-bool
-Settings::SetChatColor(const wxString& name, const wxColour& color)
+void Settings::ConvertOldColorSettings()
 {
-    if ( ! defaultChatColorsInitialized )
-	initDefaultChatColors();
-    NamedColorMap::iterator iter ( defaultChatColors.find(name) );
+	SetChatColorNormal( ConvertOldRGBFormat( m_config->Read( _T("/Chat/Colour/Normal"), _T("0 0 0") ) ) );
+	SetChatColorBackground( ConvertOldRGBFormat( m_config->Read( _T("/Chat/Colour/Background"), _T("255 255 255") ) ) );
+	SetChatColorHighlight( ConvertOldRGBFormat( m_config->Read( _T("/Chat/Colour/Highlight"), _T("255 0 0") ) ) );
+	SetChatColorMine( ConvertOldRGBFormat( m_config->Read( _T("/Chat/Colour/Mine"), _T("138 138 138") ) ) );
+	SetChatColorNotification( ConvertOldRGBFormat( m_config->Read( _T("/Chat/Colour/Notification"), _T("255 40 40") ) ) );
+	SetChatColorServer( ConvertOldRGBFormat( m_config->Read( _T("/Chat/Colour/Server"), _T("0 80 128") ) ) );
+	SetChatColorClient( ConvertOldRGBFormat( m_config->Read( _T("/Chat/Colour/Client"), _T("20 200 25") ) ) );
+	SetChatColorJoinPart( ConvertOldRGBFormat( m_config->Read( _T("/Chat/Colour/JoinPart"), _T("66 204 66") ) ) );
+	SetChatColorError( ConvertOldRGBFormat( m_config->Read( _T("/Chat/Colour/Error"), _T("128 0 0") ) ) );
+	SetChatColorTime( ConvertOldRGBFormat( m_config->Read( _T("/Chat/Colour/Time"), _T("100 100 140") ) ) );
+	SetChatColorAction( ConvertOldRGBFormat( m_config->Read( _T("/Chat/Colour/Action"), _T("230 0 255") ) ) );
+	SetBattleLastColour( ConvertOldRGBFormat( m_config->Read( _T("/Hosting/MyLastColour"), _T("255 255 0") ) ) );
 
-    if ( iter == defaultChatColors.end() )
-	wxLogError(_T("Setting unrecognized color \"") + name + _T("\""));
+	//convert custom color palette, note 16 colors is wx limit
+	wxArrayString palettes = GetGroupList( _T("/CustomColors") );
+	for ( unsigned int j = 0; j < palettes.GetCount(); j++ )
+	{
+		wxString paletteName = palettes[j];
+		for ( int i = 0; i < 16; ++i)
+		{
+				wxColor col( ConvertOldRGBFormat( m_config->Read( _T("/CustomColors/") + paletteName + _T("/") + TowxString(i), _T("255 255 255") ) ) );
+				m_config->Write( _T("/CustomColors/") + paletteName + _T("/") + TowxString(i), col.GetAsString( wxC2S_HTML_SYNTAX ) );
+		}
+	}
 
-    return m_config->Write(_T("/Chat/Colour/") + name, GetColorString(color));
+	wxArrayString groups = GetGroupList( _T("/Groups") );
+	for ( unsigned int j = 0; j < groups.GetCount(); j++ )
+	{
+		wxString group = groups[j];
+		wxColour col( ConvertOldRGBFormat ( m_config->Read( _T("/Groups/") + group + _T("/Opts/HLColor") , _T( "100 100 140" ) ) ) );
+		m_config->Write( _T("/Groups/") + group + _T("/Opts/HLColor"), col.GetAsString( wxC2S_HTML_SYNTAX ) );
+	}
+
+}
+
+wxColour Settings::GetChatColorNormal()
+{
+    return wxColour( m_config->Read( _T("/Chat/Colour/Normal"), _T( "#000000" ) ) );
+}
+
+void Settings::SetChatColorNormal( wxColour value )
+{
+    m_config->Write( _T("/Chat/Colour/Normal"), value.GetAsString( wxC2S_CSS_SYNTAX ) );
+}
+
+
+wxColour Settings::GetChatColorBackground()
+{
+    return wxColour( m_config->Read( _T("/Chat/Colour/Background"), _T( "#FFFFFF" ) ) );
+}
+
+void Settings::SetChatColorBackground( wxColour value )
+{
+    m_config->Write( _T("/Chat/Colour/Background"), value.GetAsString( wxC2S_CSS_SYNTAX ) );
+}
+
+wxColour Settings::GetChatColorHighlight()
+{
+    return wxColour( m_config->Read( _T("/Chat/Colour/Highlight"), _T( "#FF0000" ) ) );
+}
+
+void Settings::SetChatColorHighlight( wxColour value )
+{
+    m_config->Write( _T("/Chat/Colour/Highlight"), value.GetAsString( wxC2S_CSS_SYNTAX ) );
+}
+
+wxColour Settings::GetChatColorMine()
+{
+    return wxColour( m_config->Read( _T("/Chat/Colour/Mine"), _T( "#8A8A8A" ) ) );
+}
+
+void Settings::SetChatColorMine( wxColour value )
+{
+    m_config->Write( _T("/Chat/Colour/Mine"), value.GetAsString( wxC2S_CSS_SYNTAX ) );
+}
+
+wxColour Settings::GetChatColorNotification()
+{
+    return wxColour( m_config->Read( _T("/Chat/Colour/Notification"), _T( "#FF2828" ) ) );
+}
+
+void Settings::SetChatColorNotification( wxColour value )
+{
+    m_config->Write( _T("/Chat/Colour/Notification"), value.GetAsString( wxC2S_CSS_SYNTAX ) );
+}
+
+wxColour Settings::GetChatColorAction()
+{
+    return wxColour( m_config->Read( _T("/Chat/Colour/Action"), _T( "#E600FF" ) ) );
+}
+
+void Settings::SetChatColorAction( wxColour value )
+{
+    m_config->Write( _T("/Chat/Colour/Action"), value.GetAsString( wxC2S_CSS_SYNTAX ) );
+}
+
+wxColour Settings::GetChatColorServer()
+{
+    return wxColour( m_config->Read( _T("/Chat/Colour/Server"), _T( "#005080" ) ) );
+}
+
+void Settings::SetChatColorServer( wxColour value )
+{
+    m_config->Write( _T("/Chat/Colour/Server"), value.GetAsString( wxC2S_CSS_SYNTAX ) );
+}
+
+wxColour Settings::GetChatColorClient()
+{
+    return wxColour( m_config->Read( _T("/Chat/Colour/Client"), _T( "#14C819" ) ) );
+}
+
+void Settings::SetChatColorClient( wxColour value )
+{
+    m_config->Write( _T("/Chat/Colour/Client"), value.GetAsString( wxC2S_CSS_SYNTAX ) );
+}
+
+wxColour Settings::GetChatColorJoinPart()
+{
+    return wxColour( m_config->Read( _T("/Chat/Colour/JoinPart"), _T( "#42CC42" ) ) );
+}
+
+void Settings::SetChatColorJoinPart( wxColour value )
+{
+    m_config->Write( _T("/Chat/Colour/JoinPart"), value.GetAsString( wxC2S_CSS_SYNTAX ) );
+}
+
+wxColour Settings::GetChatColorError()
+{
+    return wxColour( m_config->Read( _T("/Chat/Colour/Error"), _T( "#800000" ) ) );
+}
+
+void Settings::SetChatColorError( wxColour value )
+{
+    m_config->Write( _T("/Chat/Colour/Error"), value.GetAsString( wxC2S_CSS_SYNTAX ) );
+}
+
+wxColour Settings::GetChatColorTime()
+{
+    return wxColour( m_config->Read( _T("/Chat/Colour/Time"), _T( "#64648C" ) ) );
+}
+
+void Settings::SetChatColorTime( wxColour value )
+{
+    m_config->Write( _T("/Chat/Colour/Time"), value.GetAsString( wxC2S_CSS_SYNTAX ) );
 }
 
 wxFont Settings::GetChatFont()
@@ -1618,12 +1735,6 @@ wxString Settings::GetTempStorage()
 }
 
 
-bool Settings::SkipDownloadOtaContent()
-{
-  return m_config->Read( _T("/General/NoOtaDownload"), 0l ) ;
-}
-
-
 void Settings::SetShowTooltips( bool show)
 {
     m_config->Write(_T("/GUI/ShowTooltips"), show );
@@ -1631,7 +1742,7 @@ void Settings::SetShowTooltips( bool show)
 
 bool Settings::GetShowTooltips()
 {
-    return m_config->Read(_T("GUI/ShowTooltips"), 1l);
+    return m_config->Read(_T("/GUI/ShowTooltips"), 1l);
 }
 
 void Settings::SaveLayout( wxString& layout_name, wxString& layout )
@@ -1669,16 +1780,6 @@ int Settings::GetColumnWidth( const wxString& list_name, const int coloumn )
     return m_config->Read(_T("GUI/ColoumnWidths/") + list_name + _T("/") + TowxString(coloumn), columnWidthUnset);
 }
 
-void Settings::SetMapSelectorFollowsMouse( bool value )
-{
-    m_config->Write(_T("GUI/MapSelector/SelectionFollowsMouse"), value);
-}
-
-bool Settings::GetMapSelectorFollowsMouse()
-{
-	return m_config->Read(_T("GUI/MapSelector/SelectionFollowsMouse"), 0l);
-}
-
 void Settings::SetPeopleList( const wxArrayString& friends, const wxString& group  )
 {
     unsigned int friendsCount = friends.GetCount();
@@ -1706,13 +1807,13 @@ wxArrayString Settings::GetPeopleList( const wxString& group  ) const
 
 void Settings::SetGroupHLColor( const wxColor& color, const wxString& group )
 {
-    m_config->Write( _T("/Groups/") + group + _T("/Opts/HLColor"), GetColorString( color ) );
+    m_config->Write( _T("/Groups/") + group + _T("/Opts/HLColor"), color.GetAsString( wxC2S_HTML_SYNTAX ) );
 
 }
 
 wxColor Settings::GetGroupHLColor( const wxString& group  ) const
 {
-    return wxColour( GetColorFromStrng( m_config->Read( _T("/Groups/") + group + _T("/Opts/HLColor") , _T( "100 100 140" ) ) ) );
+    return wxColour( m_config->Read( _T("/Groups/") + group + _T("/Opts/HLColor") , _T( "#64648C" ) ) );
 }
 
 wxArrayString Settings::GetGroups( )
@@ -1789,6 +1890,10 @@ UserActions::ActionType Settings::GetGroupActions( const wxString& group ) const
   return (UserActions::ActionType)result;
 }
 
+bool Settings::ShouldAddDefaultGroupSettings()
+{
+		return !m_config->Exists( _T("/Groups" ));
+}
 
 void Settings::SaveCustomColors( const wxColourData& _cdata, const wxString& paletteName  )
 {
@@ -1799,7 +1904,7 @@ void Settings::SaveCustomColors( const wxColourData& _cdata, const wxString& pal
         wxColor col = cdata.GetCustomColour( i );
         if ( !col.IsOk() )
             col = wxColor ( 255, 255, 255 );
-        m_config->Write( _T("/CustomColors/") + paletteName + _T("/") + TowxString(i), GetColorString( col ) ) ;
+        m_config->Write( _T("/CustomColors/") + paletteName + _T("/") + TowxString(i),  col.GetAsString( wxC2S_HTML_SYNTAX ) ) ;
     }
 }
 
@@ -1809,8 +1914,7 @@ wxColourData Settings::GetCustomColors( const wxString& paletteName )
     //note 16 colors is wx limit
     for ( int i = 0; i < 16; ++i)
     {
-        wxColor col = GetColorFromStrng ( m_config->Read( _T("/CustomColors/") + paletteName + _T("/") + TowxString(i),
-                                        GetColorString(  wxColor ( 255, 255, 255 ) ) ) );
+        wxColor col( m_config->Read( _T("/CustomColors/") + paletteName + _T("/") + TowxString(i), wxColor ( 255, 255, 255 ).GetAsString( wxC2S_HTML_SYNTAX ) ) );
         cdata.SetCustomColour( i, col );
     }
 
@@ -1899,6 +2003,66 @@ Settings::CompletionMethod Settings::GetCompletionMethod(  ) const
 }
 
 
+unsigned int Settings::GetHorizontalSortkeyIndex()
+{
+    return m_config->Read( _T("/GUI/MapSelector/HorizontalSortkeyIndex"), 0l );
+}
+
+void Settings::SetHorizontalSortkeyIndex(const unsigned int idx)
+{
+    m_config->Write( _T("/GUI/MapSelector/HorizontalSortkeyIndex"), (int) idx );
+}
+
+unsigned int Settings::GetVerticalSortkeyIndex()
+{
+    return m_config->Read( _T("/GUI/MapSelector/VerticalSortkeyIndex"), 0l );
+}
+
+void Settings::SetVerticalSortkeyIndex(const unsigned int idx)
+{
+    m_config->Write( _T("/GUI/MapSelector/VerticalSortkeyIndex"), (int) idx );
+}
+
+bool Settings::GetHorizontalSortorder()
+{
+    return m_config->Read( _T("/GUI/MapSelector/HorizontalSortorder"), 0l );
+}
+
+void Settings::SetHorizontalSortorder(const bool order)
+{
+    m_config->Write( _T("/GUI/MapSelector/HorizontalSortorder"), order );
+}
+
+bool Settings::GetVerticalSortorder()
+{
+    return m_config->Read( _T("/GUI/MapSelector/VerticalSortorder"), 0l );
+}
+
+void Settings::SetVerticalSortorder( const bool order )
+{
+    m_config->Write( _T("/GUI/MapSelector/VerticalSortorder"), order );
+}
+
+void Settings::SetMapSelectorFollowsMouse( bool value )
+{
+    m_config->Write( _T("/GUI/MapSelector/SelectionFollowsMouse"), value);
+}
+
+bool Settings::GetMapSelectorFollowsMouse()
+{
+	return m_config->Read(_T("/GUI/MapSelector/SelectionFollowsMouse"), 0l );
+}
+
+unsigned int Settings::GetMapSelectorFilterRadio()
+{
+    return m_config->Read(_T("/GUI/MapSelector/FilterRadio"), 0l );
+}
+
+void Settings::SetMapSelectorFilterRadio( const unsigned int val )
+{
+    m_config->Write(_T("/GUI/MapSelector/FilterRadio"), (int) val );
+}
+
 //////////////////////////////////////////////////////////////////////////////
 ///                            SpringSettings                              ///
 //////////////////////////////////////////////////////////////////////////////
@@ -1971,4 +2135,50 @@ bool Settings::IsSpringBin( const wxString& path )
   if ( !wxFileName::IsFileExecutable( path ) ) return false;
 #endif
   return true;
+}
+
+void Settings::SetLanguageID ( const long id )
+{
+    m_config->Write( _T("/General/LanguageID") , id );
+}
+
+long Settings::GetLanguageID ( )
+{
+    return m_config->Read( _T("/General/LanguageID") , wxLANGUAGE_DEFAULT  );
+}
+
+SortOrder Settings::GetSortOrder( const wxString& list_name )
+{
+    SortOrder order;
+    wxString old_path = m_config->GetPath();
+    m_config->SetPath( _T("/UI/SortOrder/") + list_name + _T("/") );
+    unsigned int entries  = m_config->GetNumberOfGroups( false ); //do not recurse
+    for ( unsigned int i = 0; i < entries ; i++ )
+    {
+        SortOrderItem it;
+        it.direction = m_config->Read( TowxString(i) + _T("/dir"), 1 );
+        it.col = m_config->Read( TowxString(i) + _T("/col"), i );
+        order[i] = it;
+    }
+    m_config->SetPath( old_path );
+    return order;
+}
+
+void Settings::SetSortOrder( const wxString& list_name, const SortOrder& order  )
+{
+    SortOrder::const_iterator it = order.begin();
+    for ( ; it != order.end(); ++it) {
+        m_config->Write( _T("/UI/SortOrder/" ) + list_name + _T("/") + TowxString( it->first ) + _T("/dir"), it->second.direction );
+        m_config->Write( _T("/UI/SortOrder/" ) + list_name + _T("/") + TowxString( it->first ) + _T("/col"), it->second.col );
+    }
+}
+
+bool Settings::GetUseTabIcons()
+{
+    return m_config->Read(_T("/GUI/UseTabIcons"), 1l);
+}
+
+void Settings::SetUseTabIcons( bool use )
+{
+    m_config->Write(_T("/GUI/UseTabIcons"), use );
 }

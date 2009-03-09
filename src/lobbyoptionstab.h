@@ -30,6 +30,7 @@ class LobbyOptionsTab : public wxScrolledWindow
         wxCheckBox* m_reportstats;
         wxCheckBox* m_updater;
         wxCheckBox* m_show_tooltips;
+        wxCheckBox* m_use_tabicons;
 
         wxStaticText* m_autoconnect_label;
         wxStaticText* m_reportstats_label;
@@ -42,6 +43,7 @@ class LobbyOptionsTab : public wxScrolledWindow
         wxRadioButton* m_complete_method_old;
         wxRadioButton* m_complete_method_new;
         wxButton* m_web_browse_btn;
+        wxButton* m_select_locale;
         wxRadioButton* m_web_def_radio;
         wxRadioButton* m_web_spec_radio;
 

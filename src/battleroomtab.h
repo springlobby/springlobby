@@ -26,6 +26,7 @@ class ColorButton;
 class wxBitmapComboBox;
 struct UnitSyncMap;
 class wxToggleButton;
+class wxChoice;
 
 typedef std::map<wxString,long> OptionListMap;
 
@@ -67,11 +68,20 @@ class BattleRoomTab : public wxScrolledWindow
     void OnAutoLock( wxCommandEvent& event );
     void OnLockBalance( wxCommandEvent& event );
     void OnShowManagePlayersMenu( wxCommandEvent& event );
+		void OnLoadPreset( wxCommandEvent& event );
+		void OnSavePreset( wxCommandEvent& event );
+		void OnDeletePreset( wxCommandEvent& event );
+		void OnSetModDefaultPreset( wxCommandEvent& event );
+		void OnMapBrowse( wxCommandEvent& event );
+		void OnMapSelect( wxCommandEvent& event );
+		void OnOptionActivate( wxListEvent& event );
 
     void OnUserJoined( User& user );
     void OnUserLeft( User& user );
 
     void OnUnitSyncReloaded();
+		void ReloadMaplist();
+		void SetMap( int index );
 
     void UpdateHighlights();
 
@@ -109,7 +119,6 @@ class BattleRoomTab : public wxScrolledWindow
     wxStaticText* m_ally_lbl;
     wxStaticText* m_side_lbl;
     wxStaticText* m_color_lbl;
-    wxStaticText* m_map_lbl;
     wxStaticText* m_wind_lbl;
     wxStaticText* m_tidal_lbl;
     wxStaticText* m_size_lbl;
@@ -118,6 +127,7 @@ class BattleRoomTab : public wxScrolledWindow
 
     wxPanel* m_player_panel;
 
+		wxComboBox* m_map_combo;
 
     BattleroomListCtrl* m_players;
     ChatPanel* m_chat;
@@ -129,6 +139,10 @@ class BattleRoomTab : public wxScrolledWindow
     wxButton* m_start_btn;
     wxButton* m_addbot_btn;
     wxButton* m_manage_players_btn;
+		wxButton* m_save_btn;
+		wxButton* m_delete_btn;
+		wxButton* m_default_btn;
+		wxButton* m_browse_map_btn;
 
     wxMenu* m_manage_users_mnu;
     wxMenuItem* m_lock_balance_mnu;
@@ -165,7 +179,13 @@ class BattleRoomTab : public wxScrolledWindow
         BROOM_FIXCOLOURS,
         BROOM_PRESETSEL,
         BROOM_AUTOHOST,
-        BROOM_AUTOLOCK
+        BROOM_AUTOLOCK,
+				BROOM_SAVEPRES,
+				BROOM_DELETEPRES,
+				BROOM_SETDEFAULTPRES,
+				BROOM_MAP_BROWSE,
+				BROOM_MAP_SEL,
+				BROOM_OPTIONLIST
     };
 
     DECLARE_EVENT_TABLE();

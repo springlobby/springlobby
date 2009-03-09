@@ -14,10 +14,7 @@
 #include "utils.h"
 #include "Helper/colorbutton.h"
 #include "filelister/filelistdialog.h"
-
-#ifndef HAVE_WX26
 #include "aui/auimanager.h"
-#endif
 
 BEGIN_EVENT_TABLE(MainTorrentTab,wxPanel)
 	//(*EventTable(MainTorrentTab)
@@ -29,9 +26,7 @@ END_EVENT_TABLE()
 MainTorrentTab::MainTorrentTab(wxWindow* parent, Ui& ui)
     : wxScrolledWindow(parent), m_ui(ui)
 {
-  #ifndef HAVE_WX26
-  GetAui().manager->AddPane( this, wxLEFT, _T("maintorrenttab") );
-  #endif
+    GetAui().manager->AddPane( this, wxLEFT, _T("maintorrenttab") );
 
 	m_mainbox = new wxBoxSizer (wxVERTICAL);
 
@@ -42,10 +37,10 @@ MainTorrentTab::MainTorrentTab(wxWindow* parent, Ui& ui)
 	wxBoxSizer* m_firstrow_box = new wxBoxSizer( wxHORIZONTAL );
 
     wxStaticText* m_list_lbl = new wxStaticText( this, ID_OUTGOING_LBL, _("Transfers in progress: ") );
-    m_listbox->Add(m_list_lbl, 0, wxBOTTOM, 5);
+    m_listbox->Add(m_list_lbl, 0, wxALL, 5);
 	m_torrent_list = new TorrentListCtrl(this, m_ui);
 	m_listbox->Add( m_torrent_list, 2, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL, 5);
-	m_mainbox->Add(m_listbox, 2, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL, 5);
+	m_mainbox->Add(m_listbox, 2, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL, 0);
 
 	m_outgoing_lbl = new wxStaticText( this, ID_OUTGOING_LBL, _("Total Outgoing: ") );
     m_incoming_lbl = new wxStaticText( this, ID_INCOMING_LBL, _("Total Incoming: ") );
@@ -205,7 +200,7 @@ void MainTorrentTab::OnUpdate()
     m_torrent_list->DeleteAllItems();
     for (map_infos_iter iter = info_map.begin(); iter != info_map.end(); ++iter)
     {
-      if (iter->first == 0) continue; ///skip global torrent stats
+      if (iter->first == 0) continue; //skip global torrent stats
       AddTorrentInfo(iter->second);
 
     }

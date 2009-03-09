@@ -75,12 +75,12 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindo
   m_exec_loc_sizer = new wxBoxSizer( wxHORIZONTAL );
   m_sync_loc_sizer = new wxBoxSizer( wxHORIZONTAL );
 
-  m_exec_loc_sizer->Add( m_exec_loc_text, 0, wxALL, 2 );
+  m_exec_loc_sizer->Add( m_exec_loc_text, 0, wxALL | wxALIGN_CENTER_VERTICAL, 2 );
   m_exec_loc_sizer->Add( m_exec_edit, 1, wxEXPAND );
   m_exec_loc_sizer->Add( m_exec_browse_btn );
   m_exec_loc_sizer->Add( m_exec_find_btn );
 
-  m_sync_loc_sizer->Add( m_sync_loc_text, 0, wxALL, 2 );
+  m_sync_loc_sizer->Add( m_sync_loc_text, 0, wxALL | wxALIGN_CENTER_VERTICAL, 2 );
   m_sync_loc_sizer->Add( m_sync_edit, 1, wxEXPAND );
   m_sync_loc_sizer->Add( m_sync_browse_btn );
   m_sync_loc_sizer->Add( m_sync_find_btn );
@@ -95,10 +95,10 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindo
   m_aconf_sizer->AddStretchSpacer();
   m_aconf_sizer->Add( m_auto_btn );
 
-  m_main_sizer->Add( m_exec_box_sizer, 0, wxEXPAND | wxALL, 2 );
-  m_main_sizer->Add( m_sync_box_sizer, 0, wxEXPAND | wxALL, 2 );
+  m_main_sizer->Add( m_exec_box_sizer, 0, wxEXPAND | wxALL, 5 );
+  m_main_sizer->Add( m_sync_box_sizer, 0, wxEXPAND | wxALL, 5 );
 
-  m_main_sizer->Add( m_aconf_sizer, 0, wxEXPAND | wxALL, 2 );
+  m_main_sizer->Add( m_aconf_sizer, 0, wxEXPAND | wxALL, 5 );
   m_main_sizer->AddStretchSpacer();
 
   SetSizer( m_main_sizer );

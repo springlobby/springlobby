@@ -103,20 +103,25 @@ public:
     /** @name Constants
      * @{
      */
-    static const unsigned int HI_None           = 0;
-    static const unsigned int HI_Map            = 1;
-    static const unsigned int HI_Locked         = 2;
-    static const unsigned int HI_Spectators     = 4;
-    static const unsigned int HI_StartResources = 8;
-    static const unsigned int HI_MaxUnits = 16;
-    static const unsigned int HI_StartType = 32;
-    static const unsigned int HI_GameType = 64;
-    static const unsigned int HI_Options = 128;
-    static const unsigned int HI_StartRects = 256;
-    static const unsigned int HI_Restrictions = 512;
-    static const unsigned int HI_Map_Changed = 1024;
-    static const unsigned int HI_Mod_Changed = 2048;
-    static const unsigned int HI_Send_All_opts  = 4096;
+		enum HostInfo
+		{
+			HI_None = 0,
+			HI_Map = 1,
+			HI_Locked = 2,
+			HI_Spectators = 4,
+			HI_StartResources = 8,
+			HI_MaxUnits = 16,
+			HI_StartType = 32,
+			HI_GameType = 64,
+			HI_Options = 128,
+			HI_StartRects = 256,
+			HI_Restrictions = 512,
+			HI_Map_Changed = 1024,
+			HI_Mod_Changed = 2048,
+			HI_User_Positions  = 4096,
+			HI_Send_All_opts  = 8192
+		};
+
     /**@}*/
 
     /** @name Enums
@@ -187,9 +192,14 @@ public:
     virtual wxString GetHostMapName() const;
     virtual wxString GetHostMapHash() const;
 
+    virtual void SetIsProxy( bool value );
+    virtual bool IsProxy();
+
     virtual bool IsSynced();
 
-    virtual bool IsFounderMe() = 0;
+    virtual bool IsFounderMe();
+
+    virtual int GetMyPlayerNum();
 
 		virtual int GetPlayerNum( const User& user );
 
@@ -199,8 +209,8 @@ public:
     virtual wxString GetHostModName() const;
     virtual wxString GetHostModHash() const;
 
-    virtual bool MapExists();
-    virtual bool ModExists();
+    virtual bool MapExists() const;
+    virtual bool ModExists() const;
 
     virtual BattleStartRect GetStartRect( unsigned int allyno );
     User& OnUserAdded( User& user );
@@ -227,7 +237,7 @@ public:
     virtual void ClearStartRects();
     virtual unsigned int GetNumRects();
 
-    virtual int GetFreeTeamNum( bool excludeme );
+    virtual int GetFreeTeamNum( bool excludeme = false );
 
     virtual User& GetMe() = 0;
 
@@ -236,16 +246,15 @@ public:
 		virtual void Update ( const wxString& Tag );
 
     virtual unsigned int GetNumBots() const;
-    virtual bool HaveMultipleBotsInSameTeam() const;
     virtual User& OnBotAdded( const wxString& nick, const UserBattleStatus& bs );
 
-    virtual void GetFreePosition( int& x, int& y );
-    virtual int GetFreeAlly();
+    virtual UserPosition GetFreePosition();
+    virtual int GetFreeAlly( bool excludeme = false );
 
-    virtual void DisableUnit( const wxString& unitname );
-    virtual void EnableUnit( const wxString& unitname );
-    virtual void EnableAllUnits();
-    virtual wxArrayString DisabledUnits();
+    virtual void RestrictUnit( const wxString& unitname, int count = 0 );
+    virtual void UnrestrictUnit( const wxString& unitname );
+    virtual void UnrestrictAllUnits();
+    virtual std::map<wxString,int> RestrictedUnits();
 
     virtual void OnUnitSyncReloaded();
 
@@ -264,7 +273,7 @@ public:
     virtual int GetClosestFixColour(const wxColour &col, const std::vector<int> &excludes, int &difference);
     virtual wxColour GetFixColour(int i);
     virtual wxColour GetFreeColour( User &for_whom ) const;
-    virtual wxColour GetFreeColour() const;
+    wxColour GetNewColour() const;
 
     virtual int ColourDifference(const wxColour &a, const wxColour &b);
 
@@ -341,6 +350,13 @@ public:
 		void SetParsedTeamsVec( const TeamVec& t ) { m_parsed_teams = t; }
 		void SetParsedAlliesVec( const AllyVec& a ) { m_parsed_allies = a; }
 
+		const BattleOptions& GetBattleOptions() const { return m_opts; }
+
+		bool Equals( const IBattle& other ) const { return m_opts.battleid == other.GetBattleOptions().battleid; }
+
+		virtual void DisableHostStatusInProxyMode( bool value ) { m_generating_script = value; }
+
+		virtual void UserPositionChanged( const User& usr );
 
 protected:
 
@@ -353,7 +369,7 @@ protected:
     UnitSyncMap m_host_map;
     UnitSyncMod m_host_mod;
 
-    wxArrayString m_units;
+    std::map<wxString, int> m_restricted_units;
 
     OptionsWrapper m_opt_wrap;
 

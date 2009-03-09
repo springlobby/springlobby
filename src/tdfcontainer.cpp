@@ -87,11 +87,11 @@ char Tokenizer::GetNextChar(){
 
   char c=(*include_stack.back().stream).get();
 
-  if((!skip_eol) && (c==10 || c==13)){/// end of line
+  if((!skip_eol) && (c==10 || c==13)){// end of line
       include_stack.back().line+=1;
       include_stack.back().column=1;
 
-      /// if next is different we'll skip it.
+      // if next is different we'll skip it.
       //std::istream &stream=(*include_stack.back().stream);
       char nc=(*include_stack.back().stream).peek();
       if((nc==10 || nc==13) &&(nc!=c))skip_eol=true;
@@ -127,7 +127,7 @@ void Tokenizer::ReadToken(Token &token){
 
   char c=GetNextChar();
   token.value_s+=c;
-  /// first find what token is it, and handle all except numbers
+  // first find what token is it, and handle all except numbers
   switch(c){
   case '[':{
       token.type=Token::type_section_name;
@@ -135,7 +135,7 @@ void Tokenizer::ReadToken(Token &token){
       bool skip_next_eol_char=false;
       while(Good()){
         c=GetNextChar();
-        /// wxString has problem with zero characters, replace by space.
+        // wxString has problem with zero characters, replace by space.
         if(c==0){
           c=' ';
         }
@@ -152,7 +152,7 @@ void Tokenizer::ReadToken(Token &token){
         {
           token.value_s+=c;
         }
-        /// handle end of line
+        // handle end of line
         if(skip_next_eol_char){
           skip_next_eol_char=false;
         }else if(c==10 || c==13){
@@ -180,7 +180,7 @@ void Tokenizer::ReadToken(Token &token){
       token.value_s+=c;
     }
     return;
-  case '/':/// handle comments
+  case '/':// handle comments
   if(PeekNextChar()=='/'){
     //SkipToEOL();
     if(!include_stack.empty()){
@@ -414,7 +414,7 @@ bool DataList::Remove( PNode node ) {
 }
 
 bool DataList::Rename(const wxString &old_name, const wxString &new_name){
-  /// check that new name is not used up.
+  // check that new name is not used up.
   if(nodes.find(new_name.Lower())!=nodes.end())return false;
   nodes_iterator i=nodes.find(old_name.Lower());
   if(i==nodes.end())return false;
@@ -457,7 +457,7 @@ PNode DataList::FindByPath( const wxString &str ) {
   int i=0;
   wxString buff;
   PDataList current_dir(this);
-  if(str[i]=='/') {/// go to root
+  if(str[i]=='/') {// go to root
     PDataList tmp=Parent();
     while(tmp.Ok()) {
       current_dir=tmp;
@@ -589,7 +589,7 @@ void DataList::Load(Tokenizer &f){
         }else{
           PDataList new_list(new DataList);
           new_list->SetName(t.value_s);
-          new_list->Load(f);/// will eat the '}'
+          new_list->Load(f);// will eat the '}'
           Insert(PNode(new_list));
         }
       }

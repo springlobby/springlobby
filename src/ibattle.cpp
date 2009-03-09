@@ -113,10 +113,26 @@ wxColour IBattle::GetFreeColour( User &for_whom ) const
     return wxColour( colour_values[lowest][0], colour_values[lowest][1], colour_values[lowest][2] );
 }
 
-wxColour IBattle::GetFreeColour() const
+
+wxColour IBattle::GetNewColour() const
 {
-		User temp( _T("") ); // fake user that isn't present in battle, therefore will never be found :P
-    return GetFreeColour( temp );
+    int lowest = 0;
+    bool changed = true;
+    while ( changed )
+    {
+        changed = false;
+        for ( user_map_t::size_type i = 0; i < GetNumUsers(); i++ )
+        {
+            UserBattleStatus& bs = GetUser( i ).BattleStatus();
+            if ( bs.spectator ) continue;
+            if ( AreColoursSimilar( bs.colour, wxColour(colour_values[lowest][0], colour_values[lowest][1], colour_values[lowest][2]) ) )
+            {
+                lowest++;
+                changed = true;
+            }
+        }
+    }
+    return wxColour( colour_values[lowest][0], colour_values[lowest][1], colour_values[lowest][2] );
 }
 
 int IBattle::ColourDifference(const wxColour &a, const wxColour &b) // returns max difference of r,g,b.
@@ -171,20 +187,6 @@ int IBattle::GetClosestFixColour(const wxColour &col, const std::vector<int> &ex
     return result;
 }
 
-bool IBattle::HaveMultipleBotsInSameTeam() const
-{
-    wxLogDebugFunc(_T(""));
-
-    std::vector<int> teams ( GetMaxPlayers(), -1 );
-		for ( user_map_t::size_type i = 0; i < GetNumUsers(); i++ )
-    {
-				User& usr = GetUser( i );
-        if ( !usr.BattleStatus().IsBot() ) continue;
-        if ( teams[ usr.BattleStatus().team ] == 1 )return true;
-        teams[ usr.BattleStatus().team ] = 1;
-    }
-    return false;
-}
 
 void IBattle::SendHostInfo( HostInfo update )
 {
@@ -205,7 +207,18 @@ User& IBattle::OnUserAdded( User& user )
     user.BattleStatus().spectator = false;
     user.BattleStatus().ready = false;
     user.BattleStatus().sync = SYNC_UNKNOWN;
-    if ( ( user.BattleStatus().posx < 0 ) || ( user.BattleStatus().posy < 0 ) ) GetFreePosition( user.BattleStatus().posx, user.BattleStatus().posy );
+    if ( !user.BattleStatus().IsBot() )
+    {
+			user.BattleStatus().team = GetFreeTeamNum( &user == &GetMe() );
+			user.BattleStatus().ally = GetFreeAlly( &user == &GetMe() );
+			user.BattleStatus().colour = GetFreeColour( user );
+    }
+    if ( IsFounderMe() && ( ( user.BattleStatus().pos.x < 0 ) || ( user.BattleStatus().pos.y < 0 ) ) )
+    {
+    	 UserPosition& pos = user.BattleStatus().pos;
+    	 pos = GetFreePosition();
+    	 UserPositionChanged( user );
+    }
     return user;
 }
 
@@ -431,7 +444,7 @@ void IBattle::KickPlayer( User& user )
 		}
 }
 
-int IBattle::GetFreeAlly()
+int IBattle::GetFreeAlly( bool excludeme )
 {
   int lowest = 0;
   bool changed = true;
@@ -441,6 +454,7 @@ int IBattle::GetFreeAlly()
     for ( unsigned int i = 0; i < GetNumUsers(); i++ )
     {
       User& user = GetUser( i );
+      if ( ( &GetUser( i ) == &GetMe() ) && excludeme ) continue;
       if ( user.BattleStatus().ally == lowest )
       {
         lowest++;
@@ -451,8 +465,9 @@ int IBattle::GetFreeAlly()
   return lowest;
 }
 
-void IBattle::GetFreePosition( int& x, int& y )
+UserPosition IBattle::GetFreePosition()
 {
+	UserPosition ret;
   UnitSyncMap map = LoadMap();
   for ( int i = 0; i < map.info.posCount; i++ )
 	{
@@ -460,7 +475,9 @@ void IBattle::GetFreePosition( int& x, int& y )
     for ( unsigned int bi = 0; bi < GetNumUsers(); bi++ )
     {
       User& user = GetUser( bi );
-      if ( ( map.info.positions[i].x == user.BattleStatus().posx ) && ( map.info.positions[i].y == user.BattleStatus().posy ) )
+      UserBattleStatus& status = user.BattleStatus();
+      if ( status.spectator ) continue;
+      if ( ( map.info.positions[i].x == status.pos.x ) && ( map.info.positions[i].y == status.pos.y ) )
       {
         taken = true;
         break;
@@ -468,25 +485,29 @@ void IBattle::GetFreePosition( int& x, int& y )
     }
     if ( !taken )
     {
-      x = CLAMP(map.info.positions[i].x, 0, map.info.width);
-      y = CLAMP(map.info.positions[i].y, 0, map.info.height);
-      return;
+      ret.x = CLAMP(map.info.positions[i].x, 0, map.info.width);
+      ret.y = CLAMP(map.info.positions[i].y, 0, map.info.height);
+      return ret;
     }
   }
-  x = map.info.width / 2;
-  y = map.info.height / 2;
+  ret.x = map.info.width / 2;
+  ret.y = map.info.height / 2;
+  return ret;
 }
 
 
 void IBattle::SetHostMap(const wxString& mapname, const wxString& hash)
 {
-  if ( mapname != m_host_map.name || hash != m_host_map.hash ) {
+  if ( mapname != m_host_map.name || hash != m_host_map.hash )
+  {
     m_map_loaded = false;
     m_host_map.name = mapname;
     m_host_map.hash = hash;
     if ( !m_host_map.hash.IsEmpty() ) m_map_exists = usync().MapExists( m_host_map.name, m_host_map.hash );
     else m_map_exists = usync().MapExists( m_host_map.name );
-    if ( m_map_exists && !ui().IsSpringRunning() ) usync().PrefetchMap( m_host_map.name );
+    #ifndef __WXMSW__
+		if ( m_map_exists && !ui().IsSpringRunning() ) usync().PrefetchMap( m_host_map.name );
+		#endif
   }
 }
 
@@ -498,7 +519,9 @@ void IBattle::SetLocalMap(const UnitSyncMap& map)
     m_map_loaded = true;
     if ( !m_host_map.hash.IsEmpty() ) m_map_exists = usync().MapExists( m_host_map.name, m_host_map.hash );
     else m_map_exists = usync().MapExists( m_host_map.name );
+    #ifndef __WXMSW__
     if ( m_map_exists && !ui().IsSpringRunning() ) usync().PrefetchMap( m_host_map.name );
+    #endif
   }
 }
 
@@ -581,14 +604,14 @@ wxString IBattle::GetHostModHash() const
 }
 
 
-bool IBattle::MapExists()
+bool IBattle::MapExists() const
 {
   return m_map_exists;
   //return usync().MapExists( m_map_name, m_map.hash );
 }
 
 
-bool IBattle::ModExists()
+bool IBattle::ModExists() const
 {
   return m_mod_exists;
   //return usync().ModExists( m_mod_name );
@@ -596,35 +619,36 @@ bool IBattle::ModExists()
 
 
 
-void IBattle::DisableUnit( const wxString& unitname )
+void IBattle::RestrictUnit( const wxString& unitname, int count )
 {
-  if ( m_units.Index( unitname ) == wxNOT_FOUND ) m_units.Add( unitname );
+  m_restricted_units[ unitname ] = count;
 }
 
 
-void IBattle::EnableUnit( const wxString& unitname )
+void IBattle::UnrestrictUnit( const wxString& unitname )
 {
-  int pos = m_units.Index( unitname );
-  if ( pos == wxNOT_FOUND ) return;
-  m_units.RemoveAt( pos );
+  std::map<wxString,int>::iterator pos = m_restricted_units.find( unitname );
+  if ( pos == m_restricted_units.end() ) return;
+  m_restricted_units.erase( pos );
 }
 
 
-void IBattle::EnableAllUnits()
+void IBattle::UnrestrictAllUnits()
 {
-  m_units.Empty();
+  m_restricted_units.clear();
 }
 
 
-wxArrayString IBattle::DisabledUnits()
+std::map<wxString,int> IBattle::RestrictedUnits()
 {
-  return m_units;
+  return m_restricted_units;
 }
 
 void IBattle::OnSelfLeftBattle()
 {
     susynclib().UnSetCurrentMod(); //left battle
     m_is_self_in = false;
+    ClearStartRects();
 }
 
 void IBattle::OnUnitSyncReloaded()
@@ -652,7 +676,7 @@ static wxString FixPresetName( const wxString& name )
 bool IBattle::LoadOptionsPreset( const wxString& name )
 {
   wxString preset = FixPresetName(name);
-  if (preset == _T("")) return false; ///preset not found
+  if (preset == _T("")) return false; //preset not found
   m_preset = preset;
 
   for ( unsigned int i = 0; i < OptionsWrapper::LastOption; i++)
@@ -662,7 +686,8 @@ bool IBattle::LoadOptionsPreset( const wxString& name )
     {
       for ( std::map<wxString,wxString>::iterator itor = options.begin(); itor != options.end(); itor++ )
       {
-        CustomBattleOptions().setSingleOption( itor->first, itor->second, (OptionsWrapper::GameOption)i );
+            wxLogWarning( itor->first + _T(" ::: ") + itor->second );
+            CustomBattleOptions().setSingleOption( itor->first, itor->second, (OptionsWrapper::GameOption)i );
       }
     }
     else
@@ -693,7 +718,13 @@ bool IBattle::LoadOptionsPreset( const wxString& name )
       }
       SendHostInfo( HI_StartRects );
 
-      m_units = wxStringTokenize( options[_T("restrictions")], _T('\t') );
+      wxStringTokenizer tkr( options[_T("restrictions")], _T('\t') );
+      m_restricted_units.clear();
+      while( tkr.HasMoreTokens() )
+      {
+      	wxString unitinfo = tkr.GetNextToken();
+      	RestrictUnit( unitinfo.BeforeLast(_T('=')), s2l( unitinfo.AfterLast(_T('=')) ) );
+      }
       SendHostInfo( HI_Restrictions );
       Update( wxString::Format( _T("%d_restrictions"), OptionsWrapper::PrivateOptions ) );
 
@@ -708,7 +739,7 @@ bool IBattle::LoadOptionsPreset( const wxString& name )
 void IBattle::SaveOptionsPreset( const wxString& name )
 {
   m_preset = FixPresetName(name);
-  if (m_preset == _T("")) m_preset = name; ///new preset
+  if (m_preset == _T("")) m_preset = name; //new preset
 
   for ( int i = 0; i < (int)OptionsWrapper::LastOption; i++)
   {
@@ -740,11 +771,10 @@ void IBattle::SaveOptionsPreset( const wxString& name )
       }
       opts[_T("numrects")] = TowxString( validrectcount );
 
-      unsigned int restrcount = m_units.GetCount();
       wxString restrictionsstring;
-      for ( unsigned int restrnum = 0; restrnum < restrcount; restrnum++ )
+      for ( std::map<wxString, int>::iterator itor = m_restricted_units.begin(); itor != m_restricted_units.end(); itor++ )
       {
-        restrictionsstring << m_units[restrnum] << _T('\t');
+        restrictionsstring << itor->first << _T('=') << TowxString(itor->second) << _T('\t');
       }
       opts[_T("restrictions")] = restrictionsstring;
 
@@ -775,3 +805,28 @@ wxArrayString IBattle::GetPresetList()
 {
   return sett().GetPresetList();
 }
+
+void IBattle::UserPositionChanged( const User& user )
+{
+}
+
+void IBattle::SetIsProxy( bool value )
+{
+    m_opts.isproxy = value;
+}
+
+bool IBattle::IsProxy()
+{
+    return m_opts.isproxy;
+}
+
+bool IBattle::IsFounderMe()
+{
+    return ( ( m_opts.founder == GetMe().GetNick() ) || ( m_opts.isproxy  && !m_generating_script ) );
+}
+
+int IBattle::GetMyPlayerNum()
+{
+    return GetPlayerNum( GetMe() );
+}
+

@@ -17,6 +17,7 @@ class wxTextCtrlHist;
 class wxTextUrlEvent;
 class wxComboBox;
 class wxButton;
+class wxBitmapButton;
 class NickListCtrl;
 class Channel;
 class User;
@@ -65,7 +66,7 @@ class ChatPanel : public wxPanel
   public:
 
     ChatPanel( wxWindow* parent, Ui& ui, Channel& chan, wxImageList* imaglist );
-    ChatPanel( wxWindow* parent, Ui& ui, User& user, wxImageList* imaglist  );
+    ChatPanel( wxWindow* parent, Ui& ui, const User& user, wxImageList* imaglist  );
     ChatPanel( wxWindow* parent, Ui& ui, Server& serv, wxImageList* imaglist  );
     ChatPanel( wxWindow* parent, Ui& ui, Battle& battle );
     ~ChatPanel();
@@ -90,11 +91,11 @@ class ChatPanel : public wxPanel
     Server* GetServer();
     void SetServer( Server* serv );
 
-    User* GetUser();
-    void SetUser( User* usr );
+    const User* GetUser() const ;
+    void SetUser( const User* usr );
 
     bool IsServerPanel();
-    ChatPanelType GetPanelType();
+    int GetPanelType();
 
     void Say( const wxString& message );
     void Part();
@@ -106,17 +107,16 @@ class ChatPanel : public wxPanel
     void SetIconIndex( size_t index ) { m_icon_index = index; }
 
     User& GetMe();
-    User* GetSelectedUser();
+    const User* GetSelectedUser();
 
     bool IsOk();
 
     void OnUserDisconnected();
     void OnUserConnected();
 
+    void OnChanOpts( wxCommandEvent& event );
     void OnSay( wxCommandEvent& event );
     void OnPaste( wxClipboardTextEvent& event );
-
-    void OnResize( wxSizeEvent& event );
 
     void OnLinkEvent( wxTextUrlEvent& event );
     void OnMouseDown( wxMouseEvent& event );
@@ -167,17 +167,18 @@ class ChatPanel : public wxPanel
     void OnUserMenuModeratorUnmute( wxCommandEvent& event );
     void OnUserMenuModeratorRing( wxCommandEvent& event );
 
-	void OnKeyPressed( wxKeyEvent& keyevent );
-	void OnKeyReleased( wxKeyEvent& keyevent );
+    void OnKeyPressed( wxKeyEvent& keyevent );
+    void OnKeyReleased( wxKeyEvent& keyevent );
 
-	void OnUserMenuAddToGroup( wxCommandEvent& event );
-	void OnUserMenuDeleteFromGroup( wxCommandEvent& event );
-	void OnUserMenuCreateGroup( wxCommandEvent& event );
-	void UpdateNicklistHighlights();
+    void OnUserMenuAddToGroup( wxCommandEvent& event );
+    void OnUserMenuDeleteFromGroup( wxCommandEvent& event );
+    void OnUserMenuCreateGroup( wxCommandEvent& event );
+    void UpdateNicklistHighlights();
 
-	void SortNickList();
+    void SortNickList();
 
   protected:
+
     void _SetChannel( Channel* channel );
     void OutputLine( const wxString& message, const wxColour& col, const wxFont& fon );
     void OutputLine( const ChatLine& line );
@@ -198,23 +199,20 @@ class ChatPanel : public wxPanel
 
     wxTextCtrl* m_chatlog_text; //!< The chat log textcontrol.
     wxTextCtrlHist* m_say_text;     //!< The say textcontrol.
+    wxBitmapButton* m_chan_opts_button; //!< The channel options button.
 
     NickListCtrl* m_nicklist;   //!< The nicklist.
     wxComboBox* m_nick_filter;  //!< The filter combo.
 
     wxButton* m_say_button;     //!< The say button.
-    #ifdef HAVE_WX26
-    wxNotebook* m_chat_tabs;
-    #else
     wxAuiNotebook* m_chat_tabs;
-    #endif
     Ui& m_ui;
     Channel* m_channel;         //!< Channel object.
     Server* m_server;           //!< Server object.
-    User* m_user;               //!< User object.
+    const User* m_user;               //!< User object.
     Battle* m_battle;           //!< User object.
 
-    ChatPanelType m_type;       //!< Channel object.
+    int m_type;       //!< Channel object.
 
     wxString m_chan_pass;
 
@@ -251,6 +249,7 @@ enum
     CHAT_SEND = wxID_HIGHEST,
     CHAT_TEXT,
     CHAT_LOG,
+    CHAT_CHAN_OPTS,
 
     CHAT_MENU_DISABLE_APPEND,
 

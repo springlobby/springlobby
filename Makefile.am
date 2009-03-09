@@ -25,7 +25,7 @@ AM_CPPFLAGS = \
 # strict aliasing check is disabled, because wxWidgets headers have problems
 AM_CXXFLAGS = \
 	-Wall \
-	-Wno-strict-aliasing
+	-Wno-strict-aliasing -DDEBUG -g
 
 desktopdir = $(datadir)/applications
 dist_desktop_DATA = \
@@ -56,6 +56,10 @@ springlobby_LDADD = \
 	$(LIBTORRENT_LIBS) \
 	$(SDL_LIBS)
 
+#put template source files here (those need to be present in tarball, but not compiled)
+EXTRA_DIST = \
+	src/battleroommmoptionstab.cpp \
+	src/customvirtlistctrl.cpp
 
 springsettings_LDADD = \
 	$(WX_LIBS)
@@ -400,6 +404,7 @@ springlobby_SOURCES = \
 	src/images/broom.png.h \
 	src/images/bot_ingame.png.h \
 	src/images/bot_broom.png.h \
+	src/images/channel_options.xpm \
 	src/images/chanop_ingame.xpm \
 	src/images/chanop_away.xpm \
 	src/images/chanop_broom.xpm \
@@ -526,6 +531,7 @@ springlobby_SOURCES = \
 	src/springunitsync.h \
 	src/tasserver.cpp \
 	src/tasserver.h \
+	src/tasservertokentable.h \
 	src/ui.cpp \
 	src/ui.h \
 	src/uiutils.cpp \
@@ -858,12 +864,12 @@ springlobby_SOURCES = \
 	src/images/empty.xpm \
 	src/customlistctrl.h \
 	src/customlistctrl.cpp \
+	src/customvirtlistctrl.h \
 	src/mmoptionmodel.h \
 	src/mmoptionmodel.cpp \
 	src/mmoptionswrapper.h \
 	src/mmoptionswrapper.cpp \
 	src/battleroommmoptionstab.h \
-	src/battleroommmoptionstab.cpp \
 	src/torrentwrapper.cpp \
 	src/torrentwrapper.h \
 	src/thingdef.h \
@@ -879,6 +885,10 @@ springlobby_SOURCES = \
 	src/httpdownloader.cpp \
 	src/Helper/TextCompletionDatabase.hpp \
 	src/Helper/TextCompletionDatabase.cpp \
+	src/Helper/wxTranslationHelper.h \
+	src/Helper/wxTranslationHelper.cpp \
+	src/Helper/tasclientimport.h \
+	src/Helper/tasclientimport.cpp \
 	src/channel/channelchooser.cpp \
 	src/channel/channelchooser.h \
 	src/channel/channelchooserdialog.cpp \
@@ -887,6 +897,7 @@ springlobby_SOURCES = \
 	src/Helper/colorbutton.h \
         src/Helper/wxtextctrlhist.cpp \
 	src/Helper/wxtextctrlhist.h \
+	src/Helper/sortutil.h \
 	src/filelister/filelistctrl.h \
 	src/filelister/filelistdialog.h \
 	src/filelister/filelistfilter.h \
@@ -918,7 +929,9 @@ springlobby_SOURCES = \
 	src/thread.cpp \
 	src/thread.h \
 	src/globalsmanager.cpp \
-	src/globalsmanager.h
+	src/globalsmanager.h \
+	src/mmoptionwindows.cpp \
+	src/mmoptionwindows.h
 
 
 

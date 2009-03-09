@@ -8,6 +8,9 @@
 
 int GetFlagIndex( const wxString& flag )
 {
+  if ( flag.IsEmpty() )
+    return FLAG_NONE;
+
   for (int i = 0; flag_str[i]; ++i) {
     if ( flag == WX_STRINGC(flag_str[i]) ) {
       return i;

@@ -8,6 +8,7 @@
 #include <wx/thread.h>
 #include <wx/intl.h>
 #include <wx/utils.h>
+#include <wx/filename.h>
 
 #include "ui.h"
 #include "tasserver.h"
@@ -386,8 +387,8 @@ void Ui::OpenWebBrowser( const wxString& url )
 //! @note this does not return until the user pressed any of the buttons or closed the dialog.
 bool Ui::Ask( const wxString& heading, const wxString& question )
 {
-    wxMessageDialog ask_dlg( &mw(), question, heading, wxYES_NO );
-    return ( ask_dlg.ShowModal() == wxID_YES );
+    int answer = customMessageBox( SL_MAIN_ICON, question, heading, wxYES_NO );
+    return ( answer == wxYES );
 }
 
 
@@ -499,6 +500,8 @@ void Ui::ConsoleHelp( const wxString& topic )
         panel->ClientMessage( _("  \"/j\" - Alias to /join.") );
         panel->ClientMessage( _("  \"/ingame\" - Show how much time you have in game.") );
         panel->ClientMessage( _("  \"/msg username [text]\" - sends a private message containing text to username.") );
+        panel->ClientMessage( _("  \"/part - Leaves current channel.") );
+        panel->ClientMessage( _("  \"/p - alias to /part.") );
         panel->ClientMessage( _("  \"/rename newalias\" - Changes your nickname to newalias.") );
         panel->ClientMessage( _("  \"/sayver\" - Say what version of springlobby you have in chat.") );
         panel->ClientMessage( _("  \"/testmd5 text\" - Returns md5-b64 hash of given text.") );
@@ -539,26 +542,23 @@ void Ui::OnUpdate( int mselapsed )
         m_serv->Update( mselapsed );
     }
 
-    if ( !m_ingame )
-    {
-      if ( m_upd_counter_battlelist % 50 == 0  )
-      {
-        try
-        {
-          mw().GetJoinTab().Update();
-        } catch ( assert_exception &e ) {}
-      }
-      m_upd_counter_battlelist++;
+		if ( m_upd_counter_battlelist % 50 == 0  )
+		{
+			try
+			{
+				mw().GetJoinTab().Update();
+			} catch ( assert_exception &e ) {}
+		}
+		m_upd_counter_battlelist++;
 
-      if ( m_upd_counter_chat % 47 == 0  )
-      {
-        try
-        {
-          mw().GetChatTab().Update();
-        } catch ( assert_exception &e ) {}
-      }
-      m_upd_counter_chat++;
-    }
+		if ( m_upd_counter_chat % 47 == 0  )
+		{
+			try
+			{
+				mw().GetChatTab().Update();
+			} catch ( assert_exception &e ) {}
+		}
+		m_upd_counter_chat++;
 
     if ( !m_checked_for_update )
     {
@@ -628,7 +628,7 @@ bool Ui::IsSpringCompatible()
     message << _T("\n") << _("Online play is currently disabled.");
     customMessageBoxNoModal (SL_MAIN_ICON, message, _("Spring error"), wxICON_EXCLAMATION|wxOK );
     wxLogWarning ( _T("no spring version supported by the server found") );
-    return false; /// no compatible version found
+    return false; // no compatible version found
 }
 
 
@@ -716,7 +716,7 @@ void Ui::OnChannelMessage( const wxString& channel, const wxString& msg )
 }
 
 
-/** \brief this is only used if channel is left via raw command in server tab */
+/** \brief this was used when channel was left via raw command in server tab, now it's not used by anything */
 void Ui::OnLeaveChannel( wxString& name )
 {
     ChatPanel* panel = GetChannelChatPanel( name );
@@ -916,7 +916,11 @@ void Ui::OnUserJoinedBattle( IBattle& battle, User& user )
 
     try
     {
-        if ( &mw().GetJoinTab().GetBattleRoomTab().GetBattle() == &battle ) mw().GetJoinTab().GetBattleRoomTab().OnUserJoined( user );
+        if ( &mw().GetJoinTab().GetBattleRoomTab().GetBattle() == &battle )
+        {
+        	 mw().GetJoinTab().GetBattleRoomTab().OnUserJoined( user );
+        	 OnBattleInfoUpdated( battle );
+        }
     }
     catch (...){}
 
@@ -940,6 +944,7 @@ void Ui::OnUserLeftBattle( IBattle& battle, User& user )
         if ( &mw().GetJoinTab().GetBattleRoomTab().GetBattle() == &battle )
         {
             mw().GetJoinTab().GetBattleRoomTab().OnUserLeft( user );
+						OnBattleInfoUpdated( battle );
             if ( &user == &m_serv->GetMe() )
             {
                 mw().GetJoinTab().LeaveCurrentBattle();
@@ -991,9 +996,6 @@ void Ui::OnJoinedBattle( Battle& battle )
     if ( battle.GetNatType() != NAT_None )
     {
         wxLogWarning( _T("joining game with NAT transversal") );
-#ifdef HAVE_WX26
-        customMessageBox(SL_MAIN_ICON, _("This game uses NAT traversal that is not supported by wx 2.6 build of springlobby. \n\nYou will not be able to play in this battle. \nUpdate your wxwidgets to 2.8 or newer to enable NAT traversal support."), _("NAT traversal"), wxOK );
-#endif
     }
 }
 
@@ -1009,6 +1011,7 @@ void Ui::OnUserBattleStatus( IBattle& battle, User& user )
 {
     if ( m_main_win == 0 ) return;
     mw().GetJoinTab().BattleUserUpdated( user );
+    OnBattleInfoUpdated( battle );
 }
 
 
@@ -1037,6 +1040,16 @@ void Ui::OnBattleStarted( Battle& battle )
             if ( battle.IsProxy() )
             {
               wxString hostscript = m_spring->WriteScriptTxt( battle );
+							try
+							{
+								wxString path = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("relayhost_script.txt");
+								if ( !wxFile::Access( path, wxFile::write ) ) wxLogError( _T("Access denied to script.txt.") );
+
+								wxFile f( path, wxFile::write );
+								f.Write( hostscript );
+								f.Close();
+
+							} catch (...) {}
               m_serv->SendScriptToProxy( hostscript );
             }
             battle.GetMe().BattleStatus().ready = false;

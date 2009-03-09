@@ -9,6 +9,7 @@
 #include <wx/statline.h>
 #include <wx/stattext.h>
 #include <wx/checkbox.h>
+#include <wx/colordlg.h>
 
 #include "singleplayertab.h"
 #include "mapctrl.h"
@@ -19,24 +20,24 @@
 #include "iunitsync.h"
 #include "addbotdialog.h"
 #include "server.h"
-
-#ifndef HAVE_WX26
+#include "settings.h"
+#include "Helper/colorbutton.h"
 #include "aui/auimanager.h"
-#endif
-
 #include "settings++/custom_dialogs.h"
-
 #include "springunitsynclib.h"
 
 BEGIN_EVENT_TABLE(SinglePlayerTab, wxPanel)
 
-  EVT_CHOICE( SP_MAP_PICK, SinglePlayerTab::OnMapSelect )
-  EVT_CHOICE( SP_MOD_PICK, SinglePlayerTab::OnModSelect )
-  EVT_BUTTON( SP_BROWSE_MAP, SinglePlayerTab::OnMapBrowse )
-  EVT_BUTTON( SP_ADD_BOT, SinglePlayerTab::OnAddBot )
-  EVT_BUTTON( SP_RESET, SinglePlayerTab::OnReset )
-  EVT_BUTTON( SP_START, SinglePlayerTab::OnStart )
-  EVT_CHECKBOX( SP_RANDOM, SinglePlayerTab::OnRandomCheck )
+    EVT_CHOICE( SP_MAP_PICK, SinglePlayerTab::OnMapSelect )
+    EVT_CHOICE( SP_MOD_PICK, SinglePlayerTab::OnModSelect )
+    EVT_BUTTON( SP_BROWSE_MAP, SinglePlayerTab::OnMapBrowse )
+    EVT_BUTTON( SP_ADD_BOT, SinglePlayerTab::OnAddBot )
+    EVT_BUTTON( SP_RESET, SinglePlayerTab::OnReset )
+    EVT_BUTTON( SP_START, SinglePlayerTab::OnStart )
+    EVT_CHECKBOX( SP_RANDOM, SinglePlayerTab::OnRandomCheck )
+    EVT_CHECKBOX( SP_SPECTATE, SinglePlayerTab::OnSpectatorCheck )
+    EVT_BUTTON( SP_COLOUR, SinglePlayerTab::OnColorButton )
+    EVT_MOUSEWHEEL( SinglePlayerTab::OnMouseWheel )
 
 END_EVENT_TABLE()
 
@@ -46,9 +47,7 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, Ui& ui, MainSinglePlayerTab& 
   m_ui( ui ),
   m_battle( ui, msptab )
 {
-  #ifndef HAVE_WX26
   GetAui().manager->AddPane( this, wxLEFT, _T("singleplayertab") );
-  #endif
 
   wxBoxSizer* m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
@@ -92,6 +91,12 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, Ui& ui, MainSinglePlayerTab& 
 //  m_buttons_sizer->Add( m_reset_btn, 0, wxALL, 5 );
 
   m_buttons_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
+
+	m_color_btn = new  ColorButton( this, SP_COLOUR, sett().GetBattleLastColour(), wxDefaultPosition, wxSize(30, CONTROL_HEIGHT) );
+	m_buttons_sizer->Add( m_color_btn, 0, wxALL, 0 );
+
+  m_spectator_check = new wxCheckBox( this, SP_SPECTATE, _("Spectate only") );
+  m_buttons_sizer->Add( m_spectator_check, 0, wxALL, 5 );
 
   m_random_check = new wxCheckBox( this, SP_RANDOM, _("Random start positions") );
   m_buttons_sizer->Add( m_random_check, 0, wxALL, 5 );
@@ -258,24 +263,16 @@ void SinglePlayerTab::OnMapBrowse( wxCommandEvent& event )
 
 void SinglePlayerTab::OnAddBot( wxCommandEvent& event )
 {
-  if ( m_battle.GetNumUsers() > 15 )
-  {
-    customMessageBoxNoModal( SL_MAIN_ICON, _("Spring only supports up to 16 different teams"), _("Num players error"), wxICON_EXCLAMATION );
-    return;
-  }
   AddBotDialog dlg( this, m_battle, true );
-  if ( dlg.ShowModal() == wxID_OK ) {
-    int x = 0, y = 0;
-    m_battle.GetFreePosition( x, y );
+  if ( dlg.ShowModal() == wxID_OK )
+  {
     UserBattleStatus bs;
-		bs.colour = m_battle.GetFreeColour();
-    bs.posx = x;
-    bs.posy = y;
-    bs.ally = m_battle.GetFreeAlly();
-    bs.team = m_battle.GetFreeTeamNum( false );
     bs.owner = m_battle.GetMe().GetNick();
     bs.aishortname = dlg.GetAIShortName();
     bs.aiversion = dlg.GetAIVersion();
+		bs.team = m_battle.GetFreeTeamNum();
+		bs.ally = m_battle.GetFreeAlly();
+		bs.colour = m_battle.GetNewColour();
     User& bot = m_battle.OnBotAdded( _T("Bot") + TowxString( bs.team ), bs  );
     ASSERT_LOGIC( &bot != 0, _T("bot == 0") );
 
@@ -286,6 +283,8 @@ void SinglePlayerTab::OnAddBot( wxCommandEvent& event )
 
 void SinglePlayerTab::OnStart( wxCommandEvent& event )
 {
+  wxString nick = usync().GetDefaultNick();
+  if ( !nick.IsEmpty() ) m_battle.GetMe().SetNick( nick );
   if ( m_ui.IsSpringRunning() ) {
     wxLogWarning(_T("trying to start spring while another instance is running") );
     customMessageBoxNoModal(SL_MAIN_ICON, _("You cannot start a spring instance while another is already running"), _("Spring error"), wxICON_EXCLAMATION );
@@ -298,11 +297,26 @@ void SinglePlayerTab::OnStart( wxCommandEvent& event )
 
 void SinglePlayerTab::OnRandomCheck( wxCommandEvent& event )
 {
-
     if ( m_random_check->IsChecked() ) m_battle.CustomBattleOptions().setSingleOption( _T("startpostype"), i2s(IBattle::ST_Random), OptionsWrapper::EngineOption );
     else m_battle.CustomBattleOptions().setSingleOption( _T("startpostype"), i2s(IBattle::ST_Pick), OptionsWrapper::EngineOption );
     m_battle.SendHostInfo( IBattle::HI_StartType );
+}
 
+void SinglePlayerTab::OnSpectatorCheck( wxCommandEvent& event )
+{
+    m_battle.GetMe().BattleStatus().spectator = m_spectator_check->IsChecked();
+    UpdateMinimap();
+}
+
+void SinglePlayerTab::OnColorButton( wxCommandEvent& event )
+{
+    User& u = m_battle.GetMe();
+    wxColour CurrentColour = u.BattleStatus().colour;
+    CurrentColour = GetColourFromUser(this, CurrentColour);
+    if ( !CurrentColour.IsColourOk() ) return;
+    sett().SetBattleLastColour( CurrentColour );
+    m_battle.ForceColour( u, CurrentColour );
+    UpdateMinimap();
 }
 
 void SinglePlayerTab::Update( const wxString& Tag )
@@ -335,4 +349,16 @@ void SinglePlayerTab::UpdatePresetList()
 void SinglePlayerTab::OnReset( wxCommandEvent& event )
 {
 
+}
+
+void SinglePlayerTab::OnMouseWheel( wxMouseEvent& event )
+{
+    if ( m_minimap ) {
+        wxRect map_rect = m_minimap->GetRect();
+        if ( map_rect.Contains( event.GetPosition() ) ) {
+            m_minimap->OnMouseWheel( event );
+            return;
+        }
+    }
+    event.Skip();
 }

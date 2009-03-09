@@ -4,9 +4,10 @@
 #include <wx/app.h>
 
 class wxTimer;
+class wxTimerEvent;
 class wxIcon;
 class wxLocale;
-class HttpDownloader;
+class wxTranslationHelper;
 
 //! @brief SpringLobby wxApp
 class SpringLobbyApp : public wxApp
@@ -22,6 +23,7 @@ class SpringLobbyApp : public wxApp
 
     // System Events
     void OnTimer( wxTimerEvent& event );
+    bool SelectLanguage();
 
     bool ParseCmdLine();
 
@@ -32,8 +34,7 @@ class SpringLobbyApp : public wxApp
 
     wxTimer* m_timer;
 
-    wxLocale* m_locale;
-    HttpDownloader* m_otadownloader ;
+    wxTranslationHelper* m_translationhelper;
 
     DECLARE_EVENT_TABLE()
 

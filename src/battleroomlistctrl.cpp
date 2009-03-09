@@ -5,10 +5,11 @@
 
 #include <wx/intl.h>
 #include <wx/menu.h>
-#include <wx/textdlg.h>
+#include <wx/numdlg.h>
 #include <wx/colordlg.h>
 #include <wx/colour.h>
 #include <wx/log.h>
+
 #include <stdexcept>
 #include <vector>
 
@@ -16,6 +17,7 @@
 #include "iconimagelist.h"
 #include "iunitsync.h"
 #include "battle.h"
+#include "ibattle.h"
 #include "uiutils.h"
 #include "ui.h"
 #include "user.h"
@@ -24,12 +26,9 @@
 #include "uiutils.h"
 #include "countrycodes.h"
 #include "mainwindow.h"
-
-#ifndef HAVE_WX26
 #include "aui/auimanager.h"
-#endif
-
 #include "settings++/custom_dialogs.h"
+#include "settings.h"
 
 
 BEGIN_EVENT_TABLE( BattleroomListCtrl,  CustomListCtrl)
@@ -38,6 +37,7 @@ BEGIN_EVENT_TABLE( BattleroomListCtrl,  CustomListCtrl)
   EVT_LIST_COL_CLICK       ( BRLIST_LIST, BattleroomListCtrl::OnColClick )
   EVT_MENU                 ( BRLIST_SPEC, BattleroomListCtrl::OnSpecSelect )
   EVT_MENU                 ( BRLIST_KICK, BattleroomListCtrl::OnKickPlayer )
+  EVT_LIST_ITEM_ACTIVATED( BRLIST_LIST, BattleroomListCtrl::OnActivateItem )
 //  EVT_MENU                 ( BRLIST_ADDCREATEGROUP, BattleroomListCtrl::OnPlayerAddToGroup )
 //  EVT_MENU                 ( BRLIST_ADDTOGROUP, BattleroomListCtrl::OnPlayerAddToGroup )
   EVT_MENU                 ( BRLIST_RING, BattleroomListCtrl::OnRingPlayer )
@@ -52,16 +52,15 @@ END_EVENT_TABLE()
 
 Ui* BattleroomListCtrl::m_ui_for_sort = 0;
 
-BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, Battle& battle, Ui& ui ) :
+BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, IBattle* battle, Ui& ui, bool readonly ) :
 	CustomListCtrl(parent, BRLIST_LIST, wxDefaultPosition, wxDefaultSize,
-                wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL, _T("BattleroomListCtrl") ),
+                wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL, _T("BattleroomListCtrl"), 10 ),
 	m_battle(battle),m_popup(0),
   m_sel_user(0), m_sides(0),m_spec_item(0),m_handicap_item(0),
-  m_ui(ui)
+  m_ui(ui),
+  m_ro(readonly)
 {
-  #ifndef HAVE_WX26
   GetAui().manager->AddPane( this, wxLEFT, _T("battleroomlistctrl") );
-  #endif
 
   wxListItem col;
 
@@ -125,59 +124,64 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, Battle& battle, Ui& ui
   SetColumnWidth( 8, 80 );
   SetColumnWidth( 9, 130 );
 
-  m_popup = new UserMenu(this);
-  wxMenu* m_teams;
-  m_teams = new wxMenu();
+	if ( !m_ro )
+	{
+		m_popup = new UserMenu(this);
+		wxMenu* m_teams;
+		m_teams = new wxMenu();
 
-  for ( int i = 0; i < 16; i++ ) {
-    wxMenuItem* team = new wxMenuItem( m_teams, BRLIST_TEAM + i, wxString::Format( _T("%d"), i+1 ) , wxEmptyString, wxITEM_NORMAL );
-    m_teams->Append( team );
-    Connect( BRLIST_TEAM + i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnTeamSelect ) );
-  }
-  m_popup->Append( -1, _("Team"), m_teams );
+		for ( int i = 0; i < SPRING_MAX_TEAMS; i++ )
+		{
+			wxMenuItem* team = new wxMenuItem( m_teams, BRLIST_TEAM + i, wxString::Format( _T("%d"), i+1 ) , wxEmptyString, wxITEM_NORMAL );
+			m_teams->Append( team );
+			Connect( BRLIST_TEAM + i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnTeamSelect ) );
+		}
+		m_popup->Append( -1, _("Team"), m_teams );
 
-  wxMenu* m_allies = new wxMenu();
-  for ( int i = 0; i < 16; i++ ) {
-    wxMenuItem* ally = new wxMenuItem( m_allies, BRLIST_ALLY + i, wxString::Format( _T("%d"), i+1 ) , wxEmptyString, wxITEM_NORMAL );
-    m_allies->Append( ally );
-    Connect( BRLIST_ALLY + i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnAllySelect ) );
-  }
-  m_popup->Append( -1, _("Ally"), m_allies );
+		wxMenu* m_allies = new wxMenu();
+		for ( int i = 0; i < SPRING_MAX_ALLIES; i++ )
+		{
+			wxMenuItem* ally = new wxMenuItem( m_allies, BRLIST_ALLY + i, wxString::Format( _T("%d"), i+1 ) , wxEmptyString, wxITEM_NORMAL );
+			m_allies->Append( ally );
+			Connect( BRLIST_ALLY + i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnAllySelect ) );
+		}
+		m_popup->Append( -1, _("Ally"), m_allies );
 
-  m_sides = new wxMenu();
-  try
-  {
-  	wxArrayString sides = usync().GetSides( m_battle.GetHostModName() );
-    for ( int i = 0; i < sides.GetCount(); i++ )
-    {
-      wxMenuItem* side = new wxMenuItem( m_sides, BRLIST_SIDE + i, sides[i], wxEmptyString, wxITEM_NORMAL );
-      m_sides->Append( side );
-      Connect( BRLIST_SIDE + i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnSideSelect ) );
-    }
-  } catch (...) {}
-  m_popup->Append( -1, _("Side"), m_sides );
+		m_sides = new wxMenu();
+		try
+		{
+			wxArrayString sides = usync().GetSides( m_battle->GetHostModName() );
+			for ( int i = 0; i < sides.GetCount(); i++ )
+			{
+				wxMenuItem* side = new wxMenuItem( m_sides, BRLIST_SIDE + i, sides[i], wxEmptyString, wxITEM_NORMAL );
+				m_sides->Append( side );
+				Connect( BRLIST_SIDE + i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnSideSelect ) );
+			}
+		} catch (...) {}
+		m_popup->Append( -1, _("Side"), m_sides );
 
-  m_popup->AppendSeparator();
+		m_popup->AppendSeparator();
 
-  wxMenuItem* m_colours = new wxMenuItem( m_popup, BRLIST_COLOUR, _("Set color"), wxEmptyString, wxITEM_NORMAL );
-  m_popup->Append( m_colours );
+		wxMenuItem* m_colours = new wxMenuItem( m_popup, BRLIST_COLOUR, _("Set color"), wxEmptyString, wxITEM_NORMAL );
+		m_popup->Append( m_colours );
 
-  m_popup->AppendSeparator();
+		m_popup->AppendSeparator();
 
-  m_handicap_item = new wxMenuItem( m_popup, BRLIST_HANDICAP, _("Set Resource Bonus"), wxEmptyString, wxITEM_NORMAL );
-  m_popup->Append( m_handicap_item );
+		m_handicap_item = new wxMenuItem( m_popup, BRLIST_HANDICAP, _("Set Resource Bonus"), wxEmptyString, wxITEM_NORMAL );
+		m_popup->Append( m_handicap_item );
 
-  m_popup->AppendSeparator();
+		m_popup->AppendSeparator();
 
-  m_spec_item = new wxMenuItem( m_popup, BRLIST_SPEC, wxString( _("Spectator") ) , wxEmptyString, wxITEM_CHECK );
-  m_popup->Append( m_spec_item );
+		m_spec_item = new wxMenuItem( m_popup, BRLIST_SPEC, wxString( _("Spectator") ) , wxEmptyString, wxITEM_CHECK );
+		m_popup->Append( m_spec_item );
 
-  m_popup->AppendSeparator();
+		m_popup->AppendSeparator();
 
-  wxMenuItem* kick = new wxMenuItem( m_popup, BRLIST_KICK, wxString( _("Kick") ) , wxEmptyString, wxITEM_NORMAL );
-  m_popup->Append( kick );
-  wxMenuItem* ring = new wxMenuItem( m_popup, BRLIST_RING, wxString( _("Ring") ) , wxEmptyString, wxITEM_NORMAL );
-  m_popup->Append( ring );
+		wxMenuItem* kick = new wxMenuItem( m_popup, BRLIST_KICK, wxString( _("Kick") ) , wxEmptyString, wxITEM_NORMAL );
+		m_popup->Append( kick );
+		wxMenuItem* ring = new wxMenuItem( m_popup, BRLIST_RING, wxString( _("Ring") ) , wxEmptyString, wxITEM_NORMAL );
+		m_popup->Append( ring );
+	}
 }
 
 
@@ -186,6 +190,16 @@ BattleroomListCtrl::~BattleroomListCtrl()
 
 }
 
+void BattleroomListCtrl::SetBattle( IBattle* battle )
+{
+	m_battle = battle;
+}
+
+IBattle& BattleroomListCtrl::GetBattle()
+{
+	ASSERT_EXCEPTION( m_battle, _T("m_battle == 0") );
+	return *m_battle;
+}
 
 void BattleroomListCtrl::UpdateList()
 {
@@ -254,7 +268,7 @@ void BattleroomListCtrl::UpdateUser( const int& index )
   	 SetItem( index, 5,  user.GetNick() );
   	 SetItem( index, 8, wxString::Format( _T("%.1f GHz"), user.GetCpu() / 1000.0 ) );
   	 SetItemColumnImage( index, 3,icons().GetFlagIcon( user.GetCountry() ) );
-		if ( &m_battle.GetFounder() == &user )
+		if ( &m_battle->GetFounder() == &user )
 		{
 			SetItemImage( index, icons().GetHostIcon( user.BattleStatus().spectator ) );
 		}
@@ -296,9 +310,9 @@ void BattleroomListCtrl::UpdateUser( const int& index )
     SetItemColumnImage( index, 2, icons().GetColourIcon( user.BattleStatus().team ) );
     try
     {
-    	wxArrayString sides = usync().GetSides( m_battle.GetHostModName() );
+    	wxArrayString sides = usync().GetSides( m_battle->GetHostModName() );
     	ASSERT_EXCEPTION( user.BattleStatus().side < sides.GetCount(), _T("Side index too high") );
-      int sideimg = icons().GetSideIcon( m_battle.GetHostModName(), user.BattleStatus().side );
+      int sideimg = icons().GetSideIcon( m_battle->GetHostModName(), user.BattleStatus().side );
       if ( sideimg >= 0 ) SetItemColumnImage( index, 1, sideimg );
       else SetItem( index, 1, sides[user.BattleStatus().side]);
     } catch ( ... )
@@ -342,7 +356,7 @@ int BattleroomListCtrl::GetUserIndex( User& user )
 void BattleroomListCtrl::OnListRightClick( wxListEvent& event )
 {
   wxLogDebugFunc( _T("") );
-
+	if ( m_ro ) return;
   if ( event.GetIndex() == -1 ) return;
 
   User* user = items[(size_t)GetItemData( event.GetIndex() )];
@@ -379,7 +393,7 @@ void BattleroomListCtrl::OnTeamSelect( wxCommandEvent& event )
 {
   wxLogDebugFunc( _T("") );
   int team = event.GetId() - BRLIST_TEAM;
-	if( m_sel_user ) m_battle.ForceTeam( *m_sel_user, team );
+	if( m_sel_user ) ((Battle*)m_battle)->ForceTeam( *m_sel_user, team );
 }
 
 
@@ -387,7 +401,7 @@ void BattleroomListCtrl::OnAllySelect( wxCommandEvent& event )
 {
   wxLogDebugFunc( _T("") );
   int ally = event.GetId() - BRLIST_ALLY;
-	if( m_sel_user ) m_battle.ForceAlly( *m_sel_user, ally );
+	if( m_sel_user ) ((Battle*)m_battle)->ForceAlly( *m_sel_user, ally );
 }
 
 
@@ -398,7 +412,7 @@ void BattleroomListCtrl::OnColourSelect( wxCommandEvent& event )
 	wxColour CurrentColour = m_sel_user->BattleStatus().colour;
 	CurrentColour = GetColourFromUser(this, CurrentColour);
 	if ( !CurrentColour.IsColourOk() ) return;
-	if( m_sel_user ) m_battle.ForceColour( *m_sel_user, CurrentColour );
+	if( m_sel_user ) ((Battle*)m_battle)->ForceColour( *m_sel_user, CurrentColour );
 
 }
 
@@ -407,27 +421,18 @@ void BattleroomListCtrl::OnSideSelect( wxCommandEvent& event )
 {
   wxLogDebugFunc( _T("") );
   int side = event.GetId() - BRLIST_SIDE;
-  if( m_sel_user ) m_battle.ForceSide( *m_sel_user, side );
+  if( m_sel_user ) ((Battle*)m_battle)->ForceSide( *m_sel_user, side );
 }
 
 
 void BattleroomListCtrl::OnHandicapSelect( wxCommandEvent& event )
 {
   wxLogDebugFunc( _T("") );
-  wxTextEntryDialog dlg( this , _("Please enter a value between 0 and 100"), _("Set Resource Bonus"), _T("0"), wxOK, wxDefaultPosition );
-  if ( dlg.ShowModal() == wxID_OK ) {
-    long handicap;
-    if ( !dlg.GetValue().ToLong( &handicap ) ) {
-     wxLogWarning( _T("input is not a number") );
-     customMessageBox(SL_MAIN_ICON, _("Not a number"), _("Invalid number") );
-     return;
-    }
-    if ( handicap < 0 || handicap > 100 ) {
-      wxLogWarning( _T("input value is out of range") );
-      customMessageBox(SL_MAIN_ICON, _("Value out of range.\n Enter an integer between 0 & 100."), _("Invalid number") );
-      return;
-    }
-    if( m_sel_user ) m_battle.SetHandicap( *m_sel_user, handicap );
+  if( !m_sel_user ) return;
+  long handicap = wxGetNumberFromUser( _("Please enter a value between 0 and 100"), _("Set Resource Bonus"), _T(""), m_sel_user->BattleStatus().handicap, 0, 100, (wxWindow*)&ui().mw(), wxDefaultPosition );
+	if ( handicap != -1 )
+	{
+     ((Battle*)m_battle)->SetHandicap( *m_sel_user, handicap );
   }
 }
 
@@ -435,21 +440,21 @@ void BattleroomListCtrl::OnHandicapSelect( wxCommandEvent& event )
 void BattleroomListCtrl::OnSpecSelect( wxCommandEvent& event )
 {
   wxLogDebugFunc( _T("") );
-  if ( m_sel_user ) m_battle.ForceSpectator( *m_sel_user, m_spec_item->IsChecked() );
+  if ( m_sel_user ) ((Battle*)m_battle)->ForceSpectator( *m_sel_user, m_spec_item->IsChecked() );
 }
 
 
 void BattleroomListCtrl::OnKickPlayer( wxCommandEvent& event )
 {
   wxLogDebugFunc( _T("") );
-	if ( m_sel_user ) m_battle.KickPlayer( *m_sel_user );
+	if ( m_sel_user ) ((Battle*)m_battle)->KickPlayer( *m_sel_user );
 }
 
 
 void BattleroomListCtrl::OnRingPlayer( wxCommandEvent& event )
 {
   wxLogDebugFunc( _T("") );
-  if ( m_sel_user ) m_battle.GetServer().Ring( m_sel_user->GetNick() );
+  if ( m_sel_user ) ((Battle*)m_battle)->GetServer().Ring( m_sel_user->GetNick() );
 }
 
 
@@ -515,7 +520,7 @@ int wxCALLBACK BattleroomListCtrl::CompareStatusUP(long item1, long item2, long 
   }
   else
   {
-    if ( &bl.m_battle.GetFounder() != user1 )
+    if ( &bl.m_battle->GetFounder() != user1 )
       status1 = 1;
     if ( user1->BattleStatus().ready )
       status1 += 5;
@@ -532,7 +537,7 @@ int wxCALLBACK BattleroomListCtrl::CompareStatusUP(long item1, long item2, long 
   }
   else
   {
-    if ( &bl.m_battle.GetFounder() != user2 )
+    if ( &bl.m_battle->GetFounder() != user2 )
       status2 = 1;
     if ( user2->BattleStatus().ready )
       status2 += 5;
@@ -918,9 +923,9 @@ void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint po
                 m_tiptext = _T("Spectators have no side");
             else
             {
-								wxArrayString sides = usync().GetSides( m_battle.GetHostModName() );
+								wxArrayString sides = usync().GetSides( m_battle->GetHostModName() );
 								int side = user->BattleStatus().side;
-								if ( side < sides.GetCount() ) m_tiptext = sides[side];
+								if ( side < (int)sides.GetCount() ) m_tiptext = sides[side];
             }
             break;
 
@@ -995,4 +1000,12 @@ void BattleroomListCtrl::SortList()
   Sort();
   RestoreSelection();
   m_dirty_sort = false;
+}
+
+void BattleroomListCtrl::OnActivateItem( wxListEvent& event )
+{
+		if ( m_ro ) return;
+    User* usr = items[(size_t)GetSelectedData()];
+    if ( usr != NULL && !usr->BattleStatus().IsBot() )
+        ui().mw().OpenPrivateChat( *usr );
 }

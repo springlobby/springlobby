@@ -34,9 +34,10 @@ bool AreColoursSimilar( const wxColour& col1, const wxColour& col2, int mindiff 
 void ColourDelta( int& r, int& g, int& b, const int& delta );
 wxColour ColourDelta( const wxColour& colour, const int& delta );
 
-wxString GetColorString( const wxColour& color );
-wxColour GetColorFromStrng( const wxString color );
 wxColour GetColorFromFloatStrng( const wxString color );
+
+//! takes best fitting size of original inside bounds keeping aspect ratio
+wxSize MakeFit(const wxSize &original, const wxSize &bounds);
 
 //! apply standard alpha blending to images
 wxImage BlendImage( const wxImage& foreground, const wxImage& background, bool blend_alpha = true );

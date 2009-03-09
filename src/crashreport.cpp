@@ -46,7 +46,7 @@ void CrashReport::GenerateReport(wxDebugReport::Context ctx)
 {
   wxSetWorkingDirectory( wxFileName::GetTempDir() );
 
-  bool online = true; /// TODO (BrainDamage#1#): check if being online
+  bool online = true; // TODO (BrainDamage#1#): check if being online
 
   wxDebugReportCompress *report = online   ? new NetDebugReport
                                            : new wxDebugReportCompress;

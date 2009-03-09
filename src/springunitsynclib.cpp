@@ -286,7 +286,7 @@ void SpringUnitSyncLib::_Init()
 
 void SpringUnitSyncLib::Unload()
 {
-  if ( !_IsLoaded() ) return;/// dont even lock anything if unloaded.
+  if ( !_IsLoaded() ) return;// dont even lock anything if unloaded.
   LOCK_UNITSYNC;
 
   _Unload();
@@ -457,7 +457,7 @@ std::map<wxString, wxString> SpringUnitSyncLib::GetSpringVersionList(const std::
 
   try
   {
-    _Load( old_path ); /// re-init current "main" unitsync
+    _Load( old_path ); // re-init current "main" unitsync
     _Init();
   }
   catch(...){}

@@ -2,9 +2,6 @@
 //
 // Class: Battle
 //
-#include <wx/log.h>
-#include <stdexcept>
-
 #include "battle.h"
 #include "ui.h"
 #include "iunitsync.h"
@@ -15,18 +12,16 @@
 #include "settings.h"
 #include "useractions.h"
 #include "settings++/custom_dialogs.h"
-
+#include "springunitsynclib.h"
 #include "iconimagelist.h"
 
 #include <algorithm>
-#include <math.h>
+#include <cmath>
+#include <stdexcept>
 
 #include <wx/image.h>
 #include <wx/string.h>
-
-#include "images/fixcolours_palette.xpm"
-#include "springunitsynclib.h"
-
+#include <wx/log.h>
 
 
 Battle::Battle( Server& serv, int id ) :
@@ -188,7 +183,7 @@ User& Battle::OnUserAdded( User& user )
     {
         if ( CheckBan( user ) ) return user;
 
-        if ( ( m_opts.rankneeded > 1 ) && ( user.GetStatus().rank < m_opts.rankneeded ))
+        if ( ( m_opts.rankneeded > UserStatus::RANK_1 ) && ( user.GetStatus().rank < m_opts.rankneeded ))
         {
             switch ( m_opts.ranklimittype )
             {
@@ -223,7 +218,7 @@ void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
     }
     if ( IsFounderMe() )
     {
-        if ( ( m_opts.rankneeded > 1 ) && ( user.GetStatus().rank < m_opts.rankneeded ))
+        if ( ( m_opts.rankneeded > UserStatus::RANK_1 ) && ( user.GetStatus().rank < m_opts.rankneeded ))
         {
             switch ( m_opts.ranklimittype )
             {
@@ -386,16 +381,6 @@ bool Battle::GetAutoLockOnStart()
     return m_autolock_on_start;
 }
 
-void Battle::SetIsProxy( bool value )
-{
-    m_opts.isproxy = value;
-}
-
-bool Battle::IsProxy()
-{
-    return m_opts.isproxy;
-}
-
 void Battle::SetLockExternalBalanceChanges( bool value )
 {
     if ( value ) DoAction( _T("has locked player balance changes") );
@@ -418,7 +403,6 @@ void Battle::AddBot( const wxString& nick, UserBattleStatus status )
 
 void Battle::ForceSide( User& user, int side )
 {
-		if ( user.BattleStatus().IsBot() ) IBattle::ForceSide( user, side );
 		m_serv.ForceSide( m_opts.battleid, user, side );
 }
 
@@ -566,7 +550,7 @@ void Battle::Autobalance( BalanceType balance_type, bool support_clans, bool str
     std::vector<Alliance>alliances;
     if ( numallyteams == 0 ) // 0 == use num start rects
     {
-        int tmp = GetNumRects();
+//        int tmp = GetNumRects();
         int ally = 0;
         for ( int i = 0; i < numallyteams; ++i )
         {
@@ -697,7 +681,7 @@ void Battle::Autobalance( BalanceType balance_type, bool support_clans, bool str
         alliances[my_random( rnd_k )].AddPlayer( players_sorted[i] );
     }
 
-    int totalplayers = GetNumUsers();
+    UserList::user_map_t::size_type totalplayers = GetNumUsers();
     for ( size_t i = 0; i < alliances.size(); ++i )
     {
         for ( size_t j = 0; j < alliances[i].players.size(); ++j )
@@ -733,7 +717,7 @@ void Battle::FixTeamIDs( BalanceType balance_type, bool support_clans, bool stro
     }
     numcontrolteams = std::min( numcontrolteams, 16 ); // clamp to 16 (max spring supports)
 
-    if ( numcontrolteams >= ( GetNumUsers() - GetSpectators() ) ) // autobalance behaves weird when trying to put one player per team and i CBA to fix it, so i'll reuse the old code :P
+    if ( numcontrolteams >= (int)( GetNumUsers() - GetSpectators() ) ) // autobalance behaves weird when trying to put one player per team and i CBA to fix it, so i'll reuse the old code :P
     {
       DoAction(_T("is making control teams unique..."));
       // apparently tasserver doesnt like when i fix/force ids of everyone.
@@ -889,13 +873,8 @@ void Battle::ForceUnsyncedToSpectate()
     }
 }
 
-bool Battle::IsFounderMe()
-{
-    return ( ( m_opts.founder == GetMe().GetNick() ) || ( m_opts.isproxy  && !m_generating_script ) );
-}
 
-int Battle::GetMyPlayerNum()
+void Battle::UserPositionChanged( const User& user )
 {
-    return GetPlayerNum( GetMe() );
+	  m_serv.SendUserPosition( user );
 }
-

@@ -5,7 +5,7 @@
 #include "usermenu.h"
 
 class User;
-class Battle;
+class IBattle;
 class Ui;
 struct BattleBot;
 class wxIcon;
@@ -16,8 +16,11 @@ class wxIcon;
 class BattleroomListCtrl : public CustomListCtrl
 {
   public:
-    BattleroomListCtrl( wxWindow* parent, Battle& battle, Ui& ui );
+    BattleroomListCtrl( wxWindow* parent, IBattle* battle, Ui& ui, bool readonly );
      ~BattleroomListCtrl();
+
+	  void SetBattle( IBattle* battle );
+	  IBattle& GetBattle();
 
     void Sort();
 
@@ -39,6 +42,7 @@ class BattleroomListCtrl : public CustomListCtrl
     void OnSideSelect( wxCommandEvent& event );
     void OnHandicapSelect( wxCommandEvent& event );
     void OnSpecSelect( wxCommandEvent& event );
+    void OnActivateItem( wxListEvent& event );
 
     void OnKickPlayer( wxCommandEvent& event );
     void OnRingPlayer( wxCommandEvent& event );
@@ -73,13 +77,7 @@ class BattleroomListCtrl : public CustomListCtrl
 
     wxString GetSelectedUserNick();
 
-    struct {
-      int col;
-      bool direction;
-    } m_sortorder[4];
-
-    Battle& m_battle;
-
+    IBattle* m_battle;
 
     typedef SL_GENERIC::UserMenu<BattleroomListCtrl> UserMenu;
     UserMenu* m_popup;
@@ -94,6 +92,8 @@ class BattleroomListCtrl : public CustomListCtrl
 
     Ui& m_ui;
     static Ui* m_ui_for_sort;
+
+		bool m_ro;
 
     enum {
       BRLIST_LIST = wxID_HIGHEST,

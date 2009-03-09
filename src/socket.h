@@ -59,7 +59,7 @@ class Socket
     void Disconnect( );
 
     bool Send( const wxString& data );
-    bool Receive( wxString& data );
+    wxString Receive();
 
 
     void Ping();
@@ -75,6 +75,8 @@ class Socket
 
     void SetSendRateLimit( int Bps = -1 );
     void OnTimer( int mselapsed );
+
+    void SetTimeout( const int seconds );
 
     protected:
 
@@ -97,8 +99,7 @@ class Socket
     unsigned int m_udp_private_port;
     int m_rate;
     int m_sent;
-    wxString m_buffer;
-    wxString m_rcv_buffer;
+    std::string m_buffer;
 
     wxSocketClient* _CreateSocket();
 

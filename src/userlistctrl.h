@@ -53,10 +53,6 @@ class UserListctrl : public CustomListCtrl
             USERLIST = 2312
         };
 
-        struct {
-          int col;
-          bool direction;
-        } m_sortorder[2];
 
         DECLARE_EVENT_TABLE()
 

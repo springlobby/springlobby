@@ -42,11 +42,7 @@ protected:
 
     wxImageList* m_imagelist;
 
-    #ifdef HAVE_WX26
-    wxNotebook* m_tabs;
-    #else
     wxAuiNotebook* m_tabs;
-    #endif
 
     SpringOptionsTab* m_spring_opts;
     ChatOptionsTab* m_chat_opts;
