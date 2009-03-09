@@ -358,13 +358,12 @@ bool TASServer::Register( const wxString& addr, const int port, const wxString& 
     m_sock->Connect( addr, port );
     if ( !IsConnected() ) return false;
 
-    wxString data;
-    m_sock->Receive( data );
+    wxString data = m_sock->Receive().BeforeLast(_T('\n'));
     if ( GetWordParam( data ) != _T("TASServer") ) return false;
 
     SendCmd( _T("REGISTER"), nick + _T(" ") + GetPasswordHash( password ) );
 
-    m_sock->Receive( data );
+    data = m_sock->Receive().BeforeLast(_T('\n'));
     if ( data.IsEmpty() )
     {
         reason = _("Connection timed out");
@@ -521,31 +520,6 @@ void TASServer::Update( int mselapsed )
         HandlePinglist();
     }
 
-    ReceiveAndExecute();
-
-}
-
-
-void TASServer::ReceiveAndExecute()
-{
-    wxString data;
-
-    do
-    {
-
-        data = _T("");
-        if ( m_sock->Receive( data ) )
-        {
-            m_buffer += data;
-            wxString cmd;
-            if ( ( cmd = m_buffer.BeforeFirst( '\n' ) ) != _T("") )
-            {
-                m_buffer = m_buffer.AfterFirst( '\n' );
-                ExecuteCommand( cmd );
-            }
-        }
-    }
-    while ( !data.IsEmpty() ); // Go on until recive stops providing data.
 }
 
 
@@ -1142,7 +1116,6 @@ void TASServer::Ping()
     pli.id = m_ping_id;
     pli.t = time( 0 );
     m_pinglist.push_back ( pli );
-    m_last_udp_ping = time( 0 );
 }
 
 
@@ -1404,37 +1377,25 @@ void TASServer::HostBattle( BattleOptions bo, const wxString& password )
        unsigned int numbots = m_relay_host_manager_list.GetCount();
        if ( numbots > 0 )
        {
-          unsigned int begin;
-          if ( numbots == 1 ) begin = 0;
-          else begin = rand() % ( numbots -1 );
-          bool doloop = true;
+          srand ( time(NULL) );
+          unsigned int begin = rand() % numbots;
           unsigned int choice = begin;
-          while ( doloop )
+          m_relay_host_manager = _T("");
+          m_delayed_open_command = _T("");
+          while ( true )
           {
-            m_relay_host_manager = m_relay_host_manager_list[choice];
-            if ( UserExists( m_relay_host_manager ) )
+            wxString currentmanager = m_relay_host_manager_list[choice];
+            if ( UserExists( currentmanager ) && !GetUser( currentmanager ).GetStatus().in_game ) // skip the PM if the manager is not connected or reports it's ingame ( no slots available )
             {
-              SayPrivate( m_relay_host_manager, _T("!spawn") );
-              m_delayed_open_command = cmd;
-              doloop = false;
+            	m_relay_host_manager = currentmanager;
+							m_delayed_open_command = cmd;
+              SayPrivate( currentmanager, _T("!spawn") );
+              break;
             }
             else
             {
-              if ( numbots == 1 )
-              {
-              	 doloop = false;
-              	 m_relay_host_manager = _T("");
-              }
-              else
-              {
-                 choice++;
-                 if ( choice >= ( numbots -1 ) ) choice = 0;
-                 if ( choice == begin )
-                 {
-                 	 doloop = false;
-                 	 m_relay_host_manager = _T("");
-                 }
-              }
+              choice = ( choice + 1 ) % numbots;
+							if ( choice == begin ) break;
             }
           }
        }
@@ -2191,8 +2152,18 @@ void TASServer::OnDisconnected( Socket* sock )
 
 void TASServer::OnDataReceived( Socket* sock )
 {
-    //TASServer* serv = (TASServer*)sock->GetUserdata();
-    ReceiveAndExecute();
+		if ( sock == 0 ) return;
+
+    wxString data = sock->Receive();
+		m_buffer << data;
+		int returnpos = m_buffer.Find( _T("\n") );
+		while ( returnpos != -1 )
+		{
+			wxString cmd = m_buffer.Left( returnpos );
+			m_buffer = m_buffer.Mid( returnpos + 1 );
+			ExecuteCommand( cmd );
+			returnpos = m_buffer.Find( _T("\n") );
+		}
 }
 
 

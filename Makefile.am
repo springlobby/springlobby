@@ -25,7 +25,7 @@ AM_CPPFLAGS = \
 # strict aliasing check is disabled, because wxWidgets headers have problems
 AM_CXXFLAGS = \
 	-Wall \
-	-Wno-strict-aliasing
+	-Wno-strict-aliasing -DDEBUG -g
 
 desktopdir = $(datadir)/applications
 dist_desktop_DATA = \
@@ -404,6 +404,7 @@ springlobby_SOURCES = \
 	src/images/broom.png.h \
 	src/images/bot_ingame.png.h \
 	src/images/bot_broom.png.h \
+	src/images/channel_options.xpm \
 	src/images/chanop_ingame.xpm \
 	src/images/chanop_away.xpm \
 	src/images/chanop_broom.xpm \

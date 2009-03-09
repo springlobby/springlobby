@@ -183,6 +183,21 @@ void ServerEvents::OnUserQuit( const wxString& nick )
     try
     {
         User &user=m_serv.GetUser( nick );
+				Battle* userbattle = user.GetBattle();
+				if ( userbattle )
+				{
+					int battleid = userbattle->GetID();
+					if ( &userbattle->GetFounder() == &user )
+					{
+						for ( int i = 0; i < userbattle->GetNumUsers(); i ++ )
+						{
+							User& battleuser = userbattle->GetUser( i );
+							OnUserLeftBattle( battleid, battleuser.GetNick() );
+						}
+						 OnBattleClosed( battleid );
+					}
+					else OnUserLeftBattle( battleid, user.GetNick() );
+				}
         ui().OnUserOffline( user );
         m_serv._RemoveUser( nick );
         if ( useractions().DoActionOnUser( UserActions::ActNotifLogin, nick ) )

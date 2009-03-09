@@ -314,15 +314,13 @@ UnitSyncMap SpringUnitSync::GetMapEx( int index )
   return m;
 }
 
-void GetOptionCachefileEntry( const int i, wxArrayString& entry, GameOptions& ret)
+void GetOptionEntry( const int i, GameOptions& ret)
 {
     //all section values for options are converted to lower case
     //since usync returns the key of section type keys lower case
     //otherwise comapring would be a real hassle
     wxString key = susynclib().GetOptionKey(i);
-      entry.Add( key );
       wxString name = susynclib().GetOptionName(i);
-      entry.Add( TowxString( susynclib().GetOptionType(i) ) );
       switch (susynclib().GetOptionType(i))
       {
       case opt_float:
@@ -332,17 +330,6 @@ void GetOptionCachefileEntry( const int i, wxArrayString& entry, GameOptions& re
             susynclib().GetOptionNumberStep(i),
             susynclib().GetOptionNumberMin(i), susynclib().GetOptionNumberMax(i),
             susynclib().GetOptionSection(i).Lower(), susynclib().GetOptionStyle(i) );
-
-        entry.Add( ret.float_map[key].name );
-        wxString descr = ret.float_map[key].description;
-        descr.Replace( _T("\n"), _T("\\n") );
-        entry.Add( descr );
-        entry.Add( TowxString( ret.float_map[key].def ) );
-        entry.Add( TowxString( ret.float_map[key].stepping ) );
-        entry.Add( TowxString( ret.float_map[key].min ) );
-        entry.Add( TowxString( ret.float_map[key].max) );
-        entry.Add( ret.float_map[key].section );
-        entry.Add( ret.float_map[key].ct_type_string );
         break;
       }
       case opt_bool:
@@ -350,14 +337,6 @@ void GetOptionCachefileEntry( const int i, wxArrayString& entry, GameOptions& re
         ret.bool_map[key] = mmOptionBool( name, key,
             susynclib().GetOptionDesc(i), susynclib().GetOptionBoolDef(i),
             susynclib().GetOptionSection(i).Lower(), susynclib().GetOptionStyle(i) );
-
-        entry.Add( susynclib().GetOptionName(i) );
-        wxString descr = ret.bool_map[key].description;
-        descr.Replace( _T("\n"), _T("\\n") );
-        entry.Add( descr );
-        entry.Add( TowxString( ret.bool_map[key].def ) );
-        entry.Add( ret.bool_map[key].section );
-        entry.Add( ret.bool_map[key].ct_type_string );
         break;
       }
       case opt_string:
@@ -366,15 +345,6 @@ void GetOptionCachefileEntry( const int i, wxArrayString& entry, GameOptions& re
             susynclib().GetOptionDesc(i), susynclib().GetOptionStringDef(i),
             susynclib().GetOptionStringMaxLen(i),
             susynclib().GetOptionSection(i).Lower(), susynclib().GetOptionStyle(i) );
-
-        entry.Add( ret.string_map[key].name );
-        wxString descr = ret.string_map[key].description;
-        descr.Replace( _T("\n"), _T("\\n") );
-        entry.Add( descr );
-        entry.Add( ret.string_map[key].def );
-        entry.Add( TowxString( ret.string_map[key].max_len ) );
-        entry.Add( ret.string_map[key].section );
-        entry.Add( ret.string_map[key].ct_type_string );
         break;
       }
       case opt_list:
@@ -383,119 +353,31 @@ void GetOptionCachefileEntry( const int i, wxArrayString& entry, GameOptions& re
             susynclib().GetOptionDesc(i),susynclib().GetOptionListDef(i),
             susynclib().GetOptionSection(i).Lower(),susynclib().GetOptionStyle(i));
 
-        entry.Add( ret.list_map[key].name );
-        wxString descr = ret.list_map[key].description;
-        descr.Replace( _T("\n"), _T("\\n") );
-        entry.Add( descr );
-        entry.Add( ret.list_map[key].def );
         int listItemCount = susynclib().GetOptionListCount(i);
-        entry.Add( TowxString( listItemCount ) );
          for (int j = 0; j < listItemCount; ++j)
          {
            wxString descr = susynclib().GetOptionListItemDesc(i,j);
-           descr.Replace( _T("\n"), _T("\\n") );
            ret.list_map[key].addItem(susynclib().GetOptionListItemKey(i,j),susynclib().GetOptionListItemName(i,j), descr);
-           entry.Add( susynclib().GetOptionListItemKey(i,j) );
-           entry.Add( susynclib().GetOptionListItemName(i,j) );
-           entry.Add( descr );
          }
-        entry.Add( ret.list_map[key].section );
-        entry.Add( ret.list_map[key].ct_type_string );
         break;
       }
       case opt_section:
       {
         ret.section_map[key] = mmOptionSection( name, key, susynclib().GetOptionDesc(i),
             susynclib().GetOptionSection(i).Lower(), susynclib().GetOptionStyle(i) );
-        wxString section = susynclib().GetOptionSection(i);
-
-        entry.Add( ret.section_map[key].name );
-        wxString descr = ret.section_map[key].description;
-        descr.Replace( _T("\n"), _T("\\n") );
-        entry.Add( descr );
-        entry.Add( ret.section_map[key].section );
-        entry.Add( ret.section_map[key].ct_type_string );
       }
       }
 }
 
-void ParseOptionCacheFile( wxArrayString& cache, GameOptions& ret )
-{
-    unsigned int count = cache.GetCount();
-    for (unsigned int i = 0; i < count; ++i)
-    {
-      // key  type
-      wxArrayString params = wxStringTokenize( cache[i], _T("\t"), wxTOKEN_RET_EMPTY);
-      wxString key = params[0];
-      wxString description = params[3];
-      description.Replace( _T("\\n"), _T("\n") );
-      switch ( s2l( params[1] ) )
-      {
-      case opt_float:
-        // name description default_value step_size min_value max_value
-        ret.float_map[key] = mmOptionFloat( params[2], key,
-            description, (float)s2d( params[4] ), (float)s2d( params[5] ),
-            (float)s2d( params[6] ), (float)s2d( params[7] ), params[8],params[9] );
-        break;
-      case opt_bool:
-        // name description default_value
-        ret.bool_map[key] = mmOptionBool( params[2], key,
-            description, (bool)s2l( params[4] ), params[5],params[6] );
-        break;
-      case opt_string:
-        // name description default_value max_lenght
-        ret.string_map[key] = mmOptionString( params[2], key,
-            description, params[4], (unsigned int) s2l( params[5] ), params[6],params[7] );
-        break;
-      case opt_list:
-      {
-         unsigned int last_item_index = ( (unsigned int)s2l(params[5]) * 3 + 6);
-         //be sure to check index alignement
-         ret.list_map[key] = mmOptionList( params[2],key,
-            description, params[4], params[last_item_index],params[last_item_index +1] );
-            //there's 3 members per item, therefor the 3 + params[5] (which is listitemcount)
-         for (unsigned int j = 6; j < last_item_index; j = j + 3)
-         {
-         	 wxString item_description = params[j+2];
-         	 item_description.Replace( _T("\\n"), _T("\n") );
-           ret.list_map[key].addItem( params[j], params[j+1], item_description );
-         }
-         break;
-      }
-      case opt_section:
-        ret.section_map[key] = mmOptionSection( params[2], key,
-            description, params[4], params[5] );
-        break;
-      }
-    }
-}
 
 GameOptions SpringUnitSync::GetMapOptions( const wxString& name )
 {
   wxLogDebugFunc( name );
   GameOptions ret;
-  wxArrayString cache;
-  try
-  {
-    cache = GetCacheFile( GetFileCachePath( name, _T(""), false ) + _T(".mapoptions") );
-    ParseOptionCacheFile( cache, ret );
-  }
-  catch (...)
-  {
-    int count = susynclib().GetMapOptionCount(name);
-    for (int i = 0; i < count; ++i)
-    {
-      wxArrayString entry;
-      GetOptionCachefileEntry( i, entry, ret );
-      wxString optiontoken;
-
-      unsigned int entrycount = entry.GetCount();
-      for ( unsigned int pos = 0; pos < entrycount; pos++ )
-        optiontoken << entry[pos] << _T('\t');
-
-      cache.Add( optiontoken );
-    }
-    SetCacheFile( GetFileCachePath( name, _T(""), false ) + _T(".mapoptions"), cache );
+	int count = susynclib().GetMapOptionCount(name);
+	for (int i = 0; i < count; ++i)
+	{
+      GetOptionEntry( i, ret );
   }
   return ret;
 }
@@ -554,29 +436,11 @@ GameOptions SpringUnitSync::GetModOptions( const wxString& name )
 {
   wxLogDebugFunc( name );
   GameOptions ret;
-  wxArrayString cache;
-  try
-  {
-    cache = GetCacheFile( GetFileCachePath( name, _T(""), true ) + _T(".modoptions") );
-    ParseOptionCacheFile( cache, ret );
-  }
-  catch (...)
-  {
-    int count = susynclib().GetModOptionCount(name);
-    for (int i = 0; i < count; ++i)
-    {
-      wxArrayString entry;
-      GetOptionCachefileEntry( i, entry, ret );
-      wxString optiontoken;
-
-      unsigned int entrycount = entry.GetCount();
-      for ( unsigned int pos = 0; pos < entrycount; pos++ )
-        optiontoken << entry[pos] << _T('\t');
-
-      cache.Add( optiontoken );
-    }
-    SetCacheFile( GetFileCachePath( name, _T(""), true ) + _T(".modoptions"), cache );
-  }
+	int count = susynclib().GetModOptionCount(name);
+	for (int i = 0; i < count; ++i)
+	{
+		GetOptionEntry( i, ret );
+	}
   return ret;
 }
 

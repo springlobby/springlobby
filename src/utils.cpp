@@ -257,6 +257,8 @@ bool IsValidNickname( const wxString& _name )
     name.Replace( _T("["), _T("") );
     name.Replace( _T("]"), _T("") );
 
+    if ( name.IsEmpty() ) return false;
+
     return !regex.Matches( name );
 }
 

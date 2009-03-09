@@ -84,6 +84,8 @@ class Battle : public IBattle
 
     void UserPositionChanged( const User& user );
 
+    int GetID() { return m_id; }
+
   protected:
     // Battle variables
 
