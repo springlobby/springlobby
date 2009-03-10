@@ -117,6 +117,7 @@ wxString GetWordParam( wxString& params );
 wxString GetSentenceParam( wxString& params );
 long GetIntParam( wxString& params );
 bool GetBoolParam( wxString& params );
+wxString GetParamByChar( wxString& params, const wxChar& sep );
 wxString GetSpringLobbyVersion();
 wxString GetExecutableFolder();
 

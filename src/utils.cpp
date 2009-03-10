@@ -111,59 +111,36 @@ double s2d( const wxString& arg )
 
 wxString GetWordParam( wxString& params )
 {
-    wxString param;
-
-    param = params.BeforeFirst( ' ' );
-    if ( param.IsEmpty() )
-    {
-        param = params;
-        params = _T("");
-        return param;
-    }
-    else
-    {
-        params = params.AfterFirst( ' ' );
-        return param;
-    }
+	return GetParamByChar( params, _T(' ') );
 }
 
 
 wxString GetSentenceParam( wxString& params )
 {
-    wxString param;
-
-    param = params.BeforeFirst( '\t' );
-    if ( param.IsEmpty() )
-    {
-        param = params;
-        params = _T("");
-        return param;
-    }
-    else
-    {
-        params = params.AfterFirst( '\t' );
-        return param;
-    }
+   return GetParamByChar( params, _T('\t') );
 }
 
 
 long GetIntParam( wxString& params )
 {
-    wxString param;
-    long ret;
+   return s2l( GetParamByChar( params, _T(' ') ) );
+}
 
-    param = params.BeforeFirst( ' ' );
-    if ( param.IsEmpty() )
-    {
-        params.ToLong( &ret );
-        params = _T("");
-    }
-    else
-    {
-        params = params.AfterFirst( ' ' );
-        param.ToLong( &ret );
-    }
-    return ret;
+wxString GetParamByChar( wxString& params, const wxChar& sep )
+{
+	int pos = params.Find( sep );
+	wxString ret;
+	if ( pos != -1 )
+	{
+		ret = params.Left( pos );
+		params = params.Mid( pos + 1 );
+	}
+	else
+	{
+		ret = params;
+		params = _T("");
+	}
+	return ret;
 }
 
 

@@ -408,11 +408,6 @@ void TASServer::Login()
     wxLogDebugFunc( _T("") );
     wxString pass = GetPasswordHash( m_pass );
     wxString protocol = _T("\t") + TowxString( m_crc.GetCRC() );
-    if ( m_server_lanmode )
-    {
-        pass = _T("Cock-a-doodle-doo");
-        protocol = _T("");
-    }
     wxString localaddr;
     if ( m_sock ) localaddr = m_sock->GetLocalAddress();
     if ( localaddr.IsEmpty() ) localaddr = _T("*");
