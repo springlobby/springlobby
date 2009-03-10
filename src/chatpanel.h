@@ -118,8 +118,6 @@ class ChatPanel : public wxPanel
     void OnSay( wxCommandEvent& event );
     void OnPaste( wxClipboardTextEvent& event );
 
-    void OnResize( wxSizeEvent& event );
-
     void OnLinkEvent( wxTextUrlEvent& event );
     void OnMouseDown( wxMouseEvent& event );
 
