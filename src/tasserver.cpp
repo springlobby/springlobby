@@ -358,12 +358,12 @@ bool TASServer::Register( const wxString& addr, const int port, const wxString& 
     m_sock->Connect( addr, port );
     if ( !IsConnected() ) return false;
 
-    wxString data = m_sock->Receive().BeforeLast(_T('\n'));
+    wxString data = m_sock->Receive().BeforeLast(_T('\n')).BeforeLast(_T('\r'));
     if ( GetWordParam( data ) != _T("TASServer") ) return false;
 
     SendCmd( _T("REGISTER"), nick + _T(" ") + GetPasswordHash( password ) );
 
-    data = m_sock->Receive().BeforeLast(_T('\n'));
+    data = m_sock->Receive().BeforeLast(_T('\n')).BeforeLast(_T('\r'));
     if ( data.IsEmpty() )
     {
         reason = _("Connection timed out");
