@@ -2151,6 +2151,7 @@ void TASServer::OnDataReceived( Socket* sock )
 
     wxString data = sock->Receive();
 		m_buffer << data;
+		m_buffer.Replace( _T("\r\n"), _T("\n") );
 		int returnpos = m_buffer.Find( _T("\n") );
 		while ( returnpos != -1 )
 		{
