@@ -1294,17 +1294,18 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
         row->infohash = data[2];
 
     }
+		// QH|query tag|name|type 	 queries clients for spring hashes of given map/mod
     else if ( data.GetCount() > 3 && data[0] == _T("QH") )
     {
 				wxString query_tag = data[1];
 				wxString unitsync_name = data[2];
 				wxString file_type = data[3];
 				wxString hash;
-				if ( file_type == _T("map") )
+				if ( file_type == _T("MAP") )
 				{
 					hash = usync().GetMap( unitsync_name ).hash;
 				}
-				else if ( file_type == _T("mod") )
+				else if ( file_type == _T("MOD") )
 				{
 					hash = usync().GetMod( unitsync_name ).hash;
 				}
