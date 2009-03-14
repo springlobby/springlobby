@@ -1294,6 +1294,22 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
         row->infohash = data[2];
 
     }
+    else if ( data.GetCount() > 3 && data[0] == _T("QH") )
+    {
+				wxString query_tag = data[1];
+				wxString unitsync_name = data[2];
+				wxString file_type = data[3];
+				wxString hash;
+				if ( file_type == _T("map") )
+				{
+					hash = usync().GetMap( unitsync_name ).hash;
+				}
+				else if ( file_type == _T("mod") )
+				{
+					hash = usync().GetMod( unitsync_name ).hash;
+				}
+				if ( !hash.IsEmpty() ) SendMessageToCoordinator( _T("QH|") + query_tag + _T("|") + hash );
+    }
 }
 
 
