@@ -14,7 +14,7 @@ fi
 
 zip -9 -u ${filename} springlobby.exe
 
-if [ ! -d /usr/local/www/springlobby.info/temp/builds/$DEVELOPER ] ;
+if [ ! -d /usr/local/www/springlobby.info/temp/builds/$DEVELOPER ] ; then
 	mdkir -p /usr/local/www/springlobby.info/temp/builds/$DEVELOPER
 fi
 
