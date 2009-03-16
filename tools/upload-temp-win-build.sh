@@ -14,7 +14,6 @@ fi
 
 zip -9 -u ${filename} springlobby.exe
 
-scp -p ${filename} springlobby:/usr/local/www/springlobby.info/temp/builds/${filename}
-ssh springlobby chmod g+r /usr/local/www/springlobby.info/temp/builds/${filename}
+/usr/bin/install -m 0755 ${filename} /usr/local/www/springlobby.info/temp/builds/${filename}
 
 echo "http://springlobby.info/temp/builds/${filename}"
