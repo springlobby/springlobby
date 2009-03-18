@@ -1292,7 +1292,7 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
         if ( !row.ok() ) return;
 
         row->infohash = data[2];
-				// QH|query tag|name|type 	 queries clients for spring hashes of given map/mod
+				// QH|query tag|type|name 	 queries clients for spring hashes of given map/mod
     }
     else if ( data[0] == _T("QH") && data.GetCount() > 3  )
     {
