@@ -19,6 +19,7 @@ BEGIN_EVENT_TABLE(ReplayListCtrl, CustomVirtListCtrl<const Replay*>)
   EVT_LIST_ITEM_RIGHT_CLICK( RLIST_LIST, ReplayListCtrl::OnListRightClick )
   EVT_MENU                 ( RLIST_DLMAP, ReplayListCtrl::OnDLMap )
   EVT_MENU                 ( RLIST_DLMOD, ReplayListCtrl::OnDLMod )
+  EVT_LIST_COL_CLICK       ( RLIST_LIST, ReplayListCtrl::OnColClick )
 #if wxUSE_TIPWINDOW
 #ifndef __WXMSW__ //disables tooltips on win
   EVT_MOTION(ReplayListCtrl::OnMouseMotion)
@@ -53,7 +54,7 @@ ReplayListCtrl::ReplayListCtrl( wxWindow* parent, ReplayList& replaylist  ):
 
     if ( m_sortorder.size() == 0 ) {
       m_sortorder[0].col = 0;
-      m_sortorder[0].direction = false;
+      m_sortorder[0].direction = true;
       m_sortorder[1].col = 1;
       m_sortorder[1].direction = true;
       m_sortorder[2].col = 2;
@@ -253,4 +254,50 @@ int ReplayListCtrl::GetIndexFromData( const DataType& data ) const
     }
     wxLogError( _T("didn't find the battle.") );
     return -1;
+}
+
+void ReplayListCtrl::OnColClick( wxListEvent& event )
+{
+  int click_col=event.GetColumn();
+  wxLogMessage(_T("click col: %d"),click_col);
+  if ( click_col == -1 ) return;
+  wxListItem col;
+  GetColumn( m_sortorder[0].col, col );
+  col.SetImage( icons().ICON_NONE );
+  SetColumn( m_sortorder[0].col, col );
+
+/*
+-  int i;
+-  for ( i = 0; m_sortorder[i].col != event.GetColumn() && i < 4; ++i ) {}
+-  if ( i > 3 ) { i = 3; }
+-  for ( ; i > 0; i--) { m_sortorder[i] = m_sortorder[i-1]; }
+-  m_sortorder[0].col = event.GetColumn();
+-  m_sortorder[0].direction = !m_sortorder[0].direction;
+-*/
+  if(click_col==m_sortorder[0].col){
+    m_sortorder[0].direction *= -1;
+  }
+  else{
+    int order_remove=3;
+    for(int i=0;i<4;++i){
+      if(m_sortorder[i].col==click_col){
+        order_remove=i;
+      }
+    }
+    for(int i=order_remove;i>0;--i){
+      m_sortorder[i]=m_sortorder[i-1];
+    }
+    m_sortorder[0].col=click_col;
+    m_sortorder[0].direction=true;
+  }
+
+  for(int i=0;i<4;++i){
+    wxLogMessage(_T("sorting level%d by %d direction %d"),i,m_sortorder[i].col,m_sortorder[i].direction);
+  }
+
+  GetColumn( m_sortorder[0].col, col );
+  col.SetImage( ( m_sortorder[0].direction )?icons().ICON_UP:icons().ICON_DOWN );
+  SetColumn( m_sortorder[0].col, col );
+
+    SortList( true );
 }

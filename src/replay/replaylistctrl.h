@@ -23,6 +23,7 @@ class ReplayListCtrl : public CustomVirtListCtrl< const Replay* >
     void OnDLMap( wxCommandEvent& event );
     void OnDLMod( wxCommandEvent& event );
     void OnMouseMotion(wxMouseEvent& event);
+    void OnColClick( wxListEvent& event );
 
     virtual void HighlightItem( long item ){};
 

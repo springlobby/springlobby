@@ -32,8 +32,6 @@
 #include "../settings++/custom_dialogs.h"
 
 
-const unsigned int REPLAYLIST_COLOUMNCOUNT = 10;
-
 BEGIN_EVENT_TABLE(ReplayTab, wxPanel)
 
   EVT_BUTTON              ( REPLAY_WATCH             , ReplayTab::OnWatch        )
