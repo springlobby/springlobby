@@ -17,9 +17,8 @@ class ReplayListCtrl : public CustomVirtListCtrl< const Replay* >
     ReplayListCtrl( wxWindow* parent, ReplayList& replaylist );
     ~ReplayListCtrl();
 
-    void SetUnsorted();
-
     void AddReplay( const Replay& replay );
+    void RemoveReplay( const Replay& replay );
     void OnListRightClick( wxListEvent& event );
     void OnDLMap( wxCommandEvent& event );
     void OnDLMod( wxCommandEvent& event );

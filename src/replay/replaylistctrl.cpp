@@ -92,6 +92,19 @@ void ReplayListCtrl::AddReplay( const Replay& replay )
     RefreshItem( m_data.size() );
 }
 
+void ReplayListCtrl::RemoveReplay( const Replay& replay )
+{
+    int index = GetIndexFromData( &replay );
+
+    if ( index != -1 ) {
+        m_data.erase( m_data.begin() + index );
+        SetItemCount( m_data.size() );
+        RefreshVisibleItems( );
+        return;
+    }
+    wxLogError( _T("Didn't find the replay to remove.") );
+}
+
 void ReplayListCtrl::OnDLMap( wxCommandEvent& event )
 {
     if ( m_selected_index > 0 &&  m_data.size() > m_selected_index ) {
@@ -108,14 +121,6 @@ void ReplayListCtrl::OnDLMod( wxCommandEvent& event )
     }
 }
 
-
-void ReplayListCtrl::SetUnsorted(){
-  wxListItem col;
-  GetColumn( m_sortorder[0].col, col );
-  col.SetImage( icons().ICON_NONE );
-  SetColumn( m_sortorder[0].col, col );
-}
-
 void ReplayListCtrl::Sort()//needs adjusting when column order etc is stable
 {
     if ( m_data.size() > 0 ) {
@@ -125,22 +130,17 @@ void ReplayListCtrl::Sort()//needs adjusting when column order etc is stable
     }
 }
 
-template<class T>
-inline int MyCompare(T a, T b){
-  return a<b?-1:(b<a?1:0);
-}
-
 int ReplayListCtrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir )
 {
     switch ( col ) {
         case 0: return dir * compareSimple( u1->date, u2->date );
-        case 1: return dir * compareSimple( u1->battle.GetHostModName(),u2->battle.GetHostModName() );
-        case 2: return dir * compareSimple( u1->battle.GetHostMapName(),u2->battle.GetHostMapName() );
+        case 1: return dir * u1->battle.GetHostModName().CmpNoCase( u2->battle.GetHostModName() );
+        case 2: return dir * u1->battle.GetHostMapName().CmpNoCase( u2->battle.GetHostMapName() );
         case 3: return dir * compareSimple( u1->battle.GetNumUsers() - u1->battle.GetSpectators(), u2->battle.GetNumUsers() - u2->battle.GetSpectators() );
         case 4: return dir * compareSimple( u1->duration,u2->duration );
-        case 5: return dir * compareSimple( u1->SpringVersion, u2->SpringVersion ) ;
+        case 5: return dir * u1->SpringVersion.CmpNoCase( u2->SpringVersion ) ;
         case 6: return dir * compareSimple( u1->size, u2->size ) ;
-        case 7: return dir * compareSimple( u1->Filename.AfterLast( wxFileName::GetPathSeparator() ), u2->Filename.AfterLast( wxFileName::GetPathSeparator() ) );
+        case 7: return dir * u1->Filename.AfterLast( wxFileName::GetPathSeparator() ).CmpNoCase( u2->Filename.AfterLast( wxFileName::GetPathSeparator() ) );
         default: return 0;
     }
 }
@@ -154,17 +154,12 @@ void ReplayListCtrl::OnMouseMotion(wxMouseEvent& event)
 		m_tiptimer.Start(m_tooltip_delay, wxTIMER_ONE_SHOT);
 		int flag = wxLIST_HITTEST_ONITEM;
 		long *ptrSubItem = new long;
-#ifdef HAVE_WX28
 		long item_hit = HitTest(position, flag, ptrSubItem);
-#else
-		long item_hit = HitTest(position, flag);
-#endif
 
 		if (item_hit != wxNOT_FOUND)
 		{
-			long item = GetItemData(item_hit);
 
-			Replay replay = m_replaylist.GetReplayById(item);
+			const Replay& replay = *GetDataFromIndex(item_hit);
 			int coloumn = getColoumnFromPosition(position);
 			switch (coloumn)
 			{
@@ -195,19 +190,6 @@ void ReplayListCtrl::OnMouseMotion(wxMouseEvent& event)
 	catch(...){}
 #endif
 }
-
-/*
-wxString duration = wxString::Format(_T("%02ld:%02ld:%02ld"), replay.duration / 3600,
-                        (replay.duration%3600)/60, (replay.duration%60)/60 ) ;
-    m_replay_listctrl->SetItem( index, 0, replay.date );
-    m_replay_listctrl->SetItem( index, 1, replay.battle.GetHostModName() );
-    m_replay_listctrl->SetItem( index, 2, replay.battle.GetHostMapName() );
-    m_replay_listctrl->SetItem( index, 3, wxString::Format(_T("%d"),replay.battle.GetNumUsers() - replay.battle.GetSpectators() ) );
-    m_replay_listctrl->SetItem( index, 4, duration );
-    m_replay_listctrl->SetItem( index, 5, replay.SpringVersion );
-    m_replay_listctrl->SetItem( index, 6, wxString::Format( _T("%d KB"),replay.size/1024 ) );
-    m_replay_listctrl->SetItem( index, 7, replay.Filename.AfterLast( wxFileName::GetPathSeparator() ) );
-*/
 
 wxString ReplayListCtrl::OnGetItemText(long item, long column) const
 {
@@ -249,34 +231,15 @@ int ReplayListCtrl::OnGetItemColumnImage(long item, long column) const
 
     switch ( column ) {
         default: return -1;
-
-//        case 0: return icons().GetBattleStatusIcon( battle );
-//        case 1: return icons().GetFlagIcon( battle.GetFounder().GetCountry() );
-//        case 2: return icons().GetRankIcon( battle.GetRankNeeded(), false );
-//        case 4: return battle.MapExists() ? icons().ICON_EXISTS : icons().ICON_NEXISTS;
-//        case 5: return battle.ModExists() ? icons().ICON_EXISTS : icons().ICON_NEXISTS;
     }
 }
 
 wxListItemAttr* ReplayListCtrl::OnGetItemAttr(long item) const
 {
-    if ( item < m_data.size() && item > -1 ) {
-        const Replay& replay = *m_data[item];
-//        wxString host = b.GetFounder().GetNick();
-//        wxListItemAttr* attr = HighlightItemUser( item, host );
-//        if ( attr != NULL )
-//            return attr;
-//
-//        //to avoid color flicker check first if highlighting should be done
-//        //and return if it should
-//        for ( unsigned int i = 0; i < b.GetNumUsers(); ++i){
-//            wxString name = b.GetUser(i).GetNick();
-//            attr = HighlightItemUser( item, name );
-//            if ( attr != NULL )
-//                return attr;
-//
-//        }
-    }
+    //not neded atm
+//    if ( item < m_data.size() && item > -1 ) {
+//        const Replay& replay = *m_data[item];
+//    }
     return NULL;
 }
 

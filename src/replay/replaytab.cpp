@@ -179,20 +179,17 @@ void ReplayTab::AddReplay( Replay& replay ) {
 }
 
 
-void ReplayTab::RemoveReplay( Replay& replay ) {
-//    try{
-//    for (int i = 0; i < m_replay_listctrl->GetItemCount() ; i++ ) {
-//        if ( replay.id == (int)m_replay_listctrl->GetItemData( i ) ) {
-//            m_replay_listctrl->DeleteItem( i );
-//            if ( m_replay_listctrl->GetSelectedIndex() == i ){
-//                Deselect();
-//            }
-//            break;
-//        }
-//    }
-//    } catch (...) {
-//        wxLogMessage( _T("exception on remove replay") );
-//    }
+void ReplayTab::RemoveReplay( Replay& replay )
+{
+    int index = m_replay_listctrl->GetIndexFromData( &replay );
+
+    if ( index == -1 )
+        return;
+
+    if ( index == m_replay_listctrl->GetSelectedIndex() )
+        Deselect();
+
+    m_replay_listctrl->RemoveReplay( replay );
 }
 
 void ReplayTab::UpdateReplay( Replay& replay )
