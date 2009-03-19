@@ -256,6 +256,7 @@ int ReplayListCtrl::GetIndexFromData( const DataType& data ) const
     return -1;
 }
 
+///!TODO get rid of this in favor of the functionality in base class
 void ReplayListCtrl::OnColClick( wxListEvent& event )
 {
   int click_col=event.GetColumn();
@@ -266,14 +267,6 @@ void ReplayListCtrl::OnColClick( wxListEvent& event )
   col.SetImage( icons().ICON_NONE );
   SetColumn( m_sortorder[0].col, col );
 
-/*
--  int i;
--  for ( i = 0; m_sortorder[i].col != event.GetColumn() && i < 4; ++i ) {}
--  if ( i > 3 ) { i = 3; }
--  for ( ; i > 0; i--) { m_sortorder[i] = m_sortorder[i-1]; }
--  m_sortorder[0].col = event.GetColumn();
--  m_sortorder[0].direction = !m_sortorder[0].direction;
--*/
   if(click_col==m_sortorder[0].col){
     m_sortorder[0].direction *= -1;
   }
@@ -296,7 +289,7 @@ void ReplayListCtrl::OnColClick( wxListEvent& event )
   }
 
   GetColumn( m_sortorder[0].col, col );
-  col.SetImage( ( m_sortorder[0].direction )?icons().ICON_UP:icons().ICON_DOWN );
+  col.SetImage( ( m_sortorder[0].direction > 0 )?icons().ICON_UP:icons().ICON_DOWN );
   SetColumn( m_sortorder[0].col, col );
 
     SortList( true );
