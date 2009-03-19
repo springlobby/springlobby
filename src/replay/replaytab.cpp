@@ -217,6 +217,10 @@ void ReplayTab::RemoveAllReplays()
 
 void ReplayTab::UpdateList()
 {
+    replay_map_t &replays=m_replays->GetReplaysMap();
+    for(replay_iter_t i=replays.begin();i!=replays.end();++i){
+        UpdateReplay(i->second);
+    }
     m_replay_listctrl->RefreshVisibleItems();
 }
 
