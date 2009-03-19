@@ -36,20 +36,23 @@ wxTextCtrlHist::wxTextCtrlHist(TextCompletionDatabase& textDb, wxWindow* parent,
 
 void wxTextCtrlHist::OnSendMessage( wxCommandEvent &event )
 {
+    Historical.Add(GetLineText(0));
+    current_pos = Historical.GetCount();
 
-  Historical.Add(GetLineText(0));
-        current_pos = Historical.GetCount();
-        if(current_pos > history_max)
-        {
-                Historical.RemoveAt(0);
-                --current_pos;
-        }
-  event.Skip();
+    if(current_pos > history_max) {
+            Historical.RemoveAt(0);
+            --current_pos;
+    }
+    event.Skip();
 }
 
 void wxTextCtrlHist::OnChar(wxKeyEvent & event)
 {
         int keyCode = event.GetKeyCode();
+
+        if ( current_pos == Historical.GetCount() ) {
+            m_original = GetValue();
+        }
 
         if(keyCode == WXK_UP)
         {
@@ -72,7 +75,7 @@ void wxTextCtrlHist::OnChar(wxKeyEvent & event)
             else
             {
                 current_pos = Historical.GetCount();
-                SetValue(wxT(""));
+                SetValue( m_original );
                 SetInsertionPointEnd();
             }
             event.Skip();

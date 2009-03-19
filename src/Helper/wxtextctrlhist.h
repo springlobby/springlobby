@@ -15,6 +15,7 @@ class wxTextCtrlHist : public wxTextCtrl
     void SetHistoryMax(int max) { history_max = max; }
   private:
     TextCompletionDatabase& textcompletiondatabase;
+    wxString m_original;
     int current_pos;
     int history_max;
     wxArrayString Historical;
