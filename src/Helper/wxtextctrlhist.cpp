@@ -62,7 +62,6 @@ void wxTextCtrlHist::OnChar(wxKeyEvent & event)
                     SetValue(Historical[current_pos]);
                     SetInsertionPointEnd();
             }
-            event.Skip();
         }
         else
         if(keyCode == WXK_DOWN)
@@ -78,7 +77,6 @@ void wxTextCtrlHist::OnChar(wxKeyEvent & event)
                 SetValue( m_original );
                 SetInsertionPointEnd();
             }
-            event.Skip();
         }
         else
         if(keyCode == WXK_TAB)
