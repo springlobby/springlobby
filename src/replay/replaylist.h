@@ -46,6 +46,8 @@ struct Replay
     wxString date;
     OfflineBattle battle;
     Replay():id(0),playernum(0),can_watch(false),duration(0),size(0){};
+
+    bool Equals( const Replay& other ) const { return Filename == other.Filename; }
 };
 
 

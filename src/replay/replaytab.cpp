@@ -176,98 +176,52 @@ void ReplayTab::AddReplay( Replay& replay ) {
         return;
     }
 
-    int index = m_replay_listctrl->InsertItem( 0, replay.date );
-    ASSERT_LOGIC( index != -1, _T("index = -1") );
-//    long replayid = (long)replay.id ;
-    m_replay_listctrl->SetItemData(index, (long)replay.id );
-
-    if (index != -1)
-        UpdateReplay( replay, index );
-    else
-        wxLogMessage( _T("Replay index == -1 at update") );
-
+    m_replay_listctrl->AddReplay( replay );
 }
 
 
 void ReplayTab::RemoveReplay( Replay& replay ) {
-    try{
-    for (int i = 0; i < m_replay_listctrl->GetItemCount() ; i++ ) {
-        if ( replay.id == (int)m_replay_listctrl->GetItemData( i ) ) {
-            m_replay_listctrl->DeleteItem( i );
-            if ( m_replay_listctrl->GetSelectedIndex() == i ){
-                Deselect();
-            }
-            break;
-        }
-    }
-    } catch (...) {
-        wxLogMessage( _T("exception on remove replay") );
-    }
+//    try{
+//    for (int i = 0; i < m_replay_listctrl->GetItemCount() ; i++ ) {
+//        if ( replay.id == (int)m_replay_listctrl->GetItemData( i ) ) {
+//            m_replay_listctrl->DeleteItem( i );
+//            if ( m_replay_listctrl->GetSelectedIndex() == i ){
+//                Deselect();
+//            }
+//            break;
+//        }
+//    }
+//    } catch (...) {
+//        wxLogMessage( _T("exception on remove replay") );
+//    }
 }
 
 void ReplayTab::UpdateReplay( Replay& replay )
 {
-
     if ( m_filter->GetActiv() && !m_filter->FilterReplay( replay ) ) {
         RemoveReplay( replay );
         return;
     }
 
-    int index = -1;
-    for (int i = 0; i < m_replay_listctrl->GetItemCount() ; i++ ) {
-        if ( replay.id == (int)m_replay_listctrl->GetItemData( i ) ) {
-          index = i;
-          break;
-        }
-    }
+    int index = m_replay_listctrl->GetIndexFromData( &replay );
 
     if (index != -1)
-        UpdateReplay( replay, index );
+        m_replay_listctrl->RefreshItem( index );
     else
         AddReplay( replay );
 
 }
 
-void ReplayTab::UpdateReplay( Replay& replay, const int index )
+void ReplayTab::RemoveAllReplays()
 {
-
-    ASSERT_LOGIC( index != -1, _T("index = -1") );
-     m_replay_listctrl->SetItemData(index, (long)replay.id );
-    wxString duration = wxString::Format(_T("%02ld:%02ld:%02ld"), replay.duration / 3600,
-                        (replay.duration%3600)/60, (replay.duration%60)/60 ) ;
-    m_replay_listctrl->SetItem( index, 0, replay.date );
-    m_replay_listctrl->SetItem( index, 1, replay.battle.GetHostModName() );
-    m_replay_listctrl->SetItem( index, 2, replay.battle.GetHostMapName() );
-    m_replay_listctrl->SetItem( index, 3, wxString::Format(_T("%d"),replay.battle.GetNumUsers() - replay.battle.GetSpectators() ) );
-    m_replay_listctrl->SetItem( index, 4, duration );
-    m_replay_listctrl->SetItem( index, 5, replay.SpringVersion );
-    m_replay_listctrl->SetItem( index, 6, wxString::Format( _T("%d KB"),replay.size/1024 ) );
-    m_replay_listctrl->SetItem( index, 7, replay.Filename.AfterLast( wxFileName::GetPathSeparator() ) );
-
-    //  if ( &replay == m_sel_replay ) SelectReplay( m_sel_replay );
-    //  m_replay_listctrl->Sort();
-
+    m_replay_listctrl->Clear();
+    //shouldn't list be cleared too here? (koshi)
 }
 
 
-void ReplayTab::RemoveAllReplays() {
-    m_replay_listctrl->DeleteAllItems();
-    m_replay_listctrl->SetUnsorted();
-}
-
-
-void ReplayTab::UpdateList() {
-/*
-  for (unsigned int i = 0; i < m_replays->GetNumReplays(); ++i) {
-    Replay b = m_replays->GetReplay(i);
-
-    UpdateReplay(b);
-  }
-  */
-  replay_map_t &replays=m_replays->GetReplaysMap();
-  for(replay_iter_t i=replays.begin();i!=replays.end();++i){
-    UpdateReplay(i->second);
-  }
+void ReplayTab::UpdateList()
+{
+    m_replay_listctrl->RefreshVisibleItems();
 }
 
 

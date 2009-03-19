@@ -34,7 +34,6 @@ class ReplayTab : public wxPanel
     void AddReplay( Replay& Replay );
     void RemoveReplay( Replay& Replay );
     void UpdateReplay( Replay& Replay );
-    void UpdateReplay( Replay& replay, const int index );
 
     //! add all replays in m_replays to listctrl
     void AddAllReplays();

@@ -1,41 +1,47 @@
 #ifndef SPRINGLOBBY_REPLAYLISTCTRL_H_INCLUDED
 #define SPRINGLOBBY_REPLAYLISTCTRL_H_INCLUDED
 
-#include "../customlistctrl.h"
+#include "../customvirtlistctrl.h"
 
 class wxMenu;
 struct Replay;
 class wxListEvent;
 class wxCommandEvent;
 class Ui;
-class ReplayList_Iter;
 class ReplayList;
 
 
-class ReplayListCtrl : public CustomListCtrl
+class ReplayListCtrl : public CustomVirtListCtrl< const Replay* >
 {
   public:
     ReplayListCtrl( wxWindow* parent, ReplayList& replaylist );
     ~ReplayListCtrl();
 
-    void Sort();
     void SetUnsorted();
 
+    void AddReplay( const Replay& replay );
     void OnListRightClick( wxListEvent& event );
     void OnDLMap( wxCommandEvent& event );
     void OnDLMod( wxCommandEvent& event );
     void OnMouseMotion(wxMouseEvent& event);
-    void OnColClick( wxListEvent& event );
+
     virtual void HighlightItem( long item ){};
 
-  protected:
-    static int wxCALLBACK CompareUniversal(long item1, long item2, long sortData);
+    //these are overloaded to use list in virtual style
+    virtual wxString OnGetItemText(long item, long column) const;
+    virtual int OnGetItemImage(long item) const;
+    virtual int OnGetItemColumnImage(long item, long column) const;
+    wxListItemAttr * OnGetItemAttr(long item) const;
+    int GetIndexFromData( const DataType& data ) const;
 
+  protected:
+    static int CompareOneCrit( DataType u1, DataType u2, int col, int dir ) ;
+
+    virtual void Sort();
 
     wxMenu* m_popup;
-   // ReplayList_Iter& m_replaylist_iter;
+
     ReplayList& m_replaylist;
-    static ReplayList* m_replaylist_sort;
 
     DECLARE_EVENT_TABLE()
 };
