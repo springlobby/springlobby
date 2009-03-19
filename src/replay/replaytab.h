@@ -90,8 +90,6 @@ class ReplayTab : public wxPanel
 
     Ui& m_ui;
 
-    int m_sel_replay_id;
-
     DECLARE_EVENT_TABLE();
 };
 

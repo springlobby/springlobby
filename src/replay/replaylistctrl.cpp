@@ -130,51 +130,6 @@ inline int MyCompare(T a, T b){
   return a<b?-1:(b<a?1:0);
 }
 
-/*
-wxString duration = wxString::Format(_T("%02ld:%02ld:%02ld"), replay.duration / 3600,
-                        (replay.duration%3600)/60, (replay.duration%60)/60 ) ;
-    m_replay_listctrl->SetItem( index, 0, replay.date );
-    m_replay_listctrl->SetItem( index, 1, replay.battle.GetHostModName() );
-    m_replay_listctrl->SetItem( index, 2, replay.battle.GetHostMapName() );
-    m_replay_listctrl->SetItem( index, 3, wxString::Format(_T("%d"),replay.battle.GetNumUsers() - replay.battle.GetSpectators() ) );
-    m_replay_listctrl->SetItem( index, 4, duration );
-    m_replay_listctrl->SetItem( index, 5, replay.SpringVersion );
-    m_replay_listctrl->SetItem( index, 6, wxString::Format( _T("%d KB"),replay.size/1024 ) );
-    m_replay_listctrl->SetItem( index, 7, replay.Filename.AfterLast( wxFileName::GetPathSeparator() ) );
-*/
-
-//
-//int wxCALLBACK ReplayListCtrl::CompareUniversal(long item1, long item2, long sortData){
-//  Replay replay1 ;
-//  Replay replay2 ;
-//  try{
-//    replay1 = m_replaylist_sort->GetReplayById(item1);
-//    replay2 = m_replaylist_sort->GetReplayById(item2);
-//  }catch(std::runtime_error){
-//    return 0;
-//  }
-//  SortOrder* sortorder_p = (SortOrder *)sortData;
-//  if ( sortorder_p ) {
-//      for(int i=0;i<4;++i){
-//          SortOrderItem sortOrder = (*sortorder_p)[i];
-//        int c=0;
-//        switch ( sortOrder.col ) {// switch is just a jump table, dont optimize anything here.
-//          case 0 : c=MyCompare(u1.date,u2.date) ; break;
-//          case 1 : c=MyCompare(u1.battle.GetHostModName(),u2.battle.GetHostModName()); break;
-//          case 2 : c=MyCompare(u1.battle.GetHostMapName(),u2.battle.GetHostMapName()); break;
-//          case 3 : c=MyCompare(u1.battle.GetNumUsers() - u1.battle.GetSpectators(), u2.battle.GetNumUsers() - u2.battle.GetSpectators()); break;
-//          case 4 : c=MyCompare(u1.duration,u2.duration); break;
-//          case 5 : c=MyCompare(u1.SpringVersion, u2.SpringVersion); break;
-//          case 6 : c=MyCompare(u1.size, u2.size); break;
-//          case 7 : c=MyCompare(u1.Filename.AfterLast( wxFileName::GetPathSeparator() ), u2.Filename.AfterLast( wxFileName::GetPathSeparator() )); break;
-//        }
-//        if( !sortOrder.direction ) c *= -1;
-//        if(c!=0)return c;
-//      }
-//  }
-//  return 0;
-//}
-
 int ReplayListCtrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir )
 {
     switch ( col ) {
@@ -241,26 +196,39 @@ void ReplayListCtrl::OnMouseMotion(wxMouseEvent& event)
 #endif
 }
 
+/*
+wxString duration = wxString::Format(_T("%02ld:%02ld:%02ld"), replay.duration / 3600,
+                        (replay.duration%3600)/60, (replay.duration%60)/60 ) ;
+    m_replay_listctrl->SetItem( index, 0, replay.date );
+    m_replay_listctrl->SetItem( index, 1, replay.battle.GetHostModName() );
+    m_replay_listctrl->SetItem( index, 2, replay.battle.GetHostMapName() );
+    m_replay_listctrl->SetItem( index, 3, wxString::Format(_T("%d"),replay.battle.GetNumUsers() - replay.battle.GetSpectators() ) );
+    m_replay_listctrl->SetItem( index, 4, duration );
+    m_replay_listctrl->SetItem( index, 5, replay.SpringVersion );
+    m_replay_listctrl->SetItem( index, 6, wxString::Format( _T("%d KB"),replay.size/1024 ) );
+    m_replay_listctrl->SetItem( index, 7, replay.Filename.AfterLast( wxFileName::GetPathSeparator() ) );
+*/
+
 wxString ReplayListCtrl::OnGetItemText(long item, long column) const
 {
     if ( m_data[item] == NULL )
         return wxEmptyString;
 
     const Replay& replay = *m_data[item];
+    wxString duration = wxString::Format(_T("%02ld:%02ld:%02ld"), replay.duration / 3600,
+                        (replay.duration%3600)/60, (replay.duration%60)/60 ) ;
 
     switch ( column ) {
-        case 0:
-        case 1:
-        case 2:
-        default: return wxEmptyString;
+        case 0: return replay.date;
+        case 1: return replay.battle.GetHostModName();
+        case 2: return replay.battle.GetHostMapName();
+        case 3: return wxString::Format(_T("%d"),replay.battle.GetNumUsers() - replay.battle.GetSpectators() );
+        case 4: return duration;
+        case 5: return replay.SpringVersion;
+        case 6: return wxString::Format( _T("%d KB"),replay.size/1024 );
+        case 7: return replay.Filename.AfterLast( wxFileName::GetPathSeparator() );
 
-//        case 3: return ( opts.description );
-//        case 4: return ( battle.GetHostMapName() );
-//        case 5: return ( battle.GetHostModName() );
-//        case 6: return ( opts.founder );
-//        case 7: return ( wxString::Format(_T("%d"), int(battle.GetSpectators())) );
-//        case 8: return ( wxString::Format(_T("%d"), int(battle.GetNumUsers()) - int(battle.GetSpectators()) ) );
-//        case 9: return ( wxString::Format(_T("%d"), int(battle.GetMaxPlayers())) );
+        default: return wxEmptyString;
     }
 }
 
