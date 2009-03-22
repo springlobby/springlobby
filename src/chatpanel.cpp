@@ -76,6 +76,7 @@ BEGIN_EVENT_TABLE( ChatPanel, wxPanel )
 	EVT_MENU( CHAT_MENU_CH_SPAM_ON, ChatPanel::OnChannelMenuSpamOn )
 	EVT_MENU( CHAT_MENU_CH_SPAM_OFF, ChatPanel::OnChannelMenuSpanOff )
 	EVT_MENU( CHAT_MENU_CH_SPAM_ISON, ChatPanel::OnChannelMenuSpamIsOn )
+	EVT_MENU( CHAT_MENU_CH_CLEAR, ChatPanel::ClearContents )
 
 	EVT_MENU( CHAT_MENU_SV_DISCON, ChatPanel::OnServerMenuDisconnect )
 	EVT_MENU( CHAT_MENU_SV_RECON, ChatPanel::OnServerMenuReconnect )
@@ -368,6 +369,8 @@ void ChatPanel::CreatePopup()
     //      eventID,    eventType,                  member function pointer to be called        userData            instance on which member function is called
   Connect( wxID_COPY, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTextCtrl::OnCopy, (wxObject*) NULL, (wxEvtHandler*)m_chatlog_text );
 
+    wxMenuItem* clear = new wxMenuItem( m_popup_menu, CHAT_MENU_CH_CLEAR, _( "Clear" ), wxEmptyString, wxITEM_NORMAL );
+    m_popup_menu->Append( clear );
 
 	if ( m_type == CPT_Channel ) {
 
@@ -1005,6 +1008,12 @@ void ChatPanel::Say( const wxString& message )
 
 		if ( line == _T( "/ver" ) ) {
 			OutputLine( _( " You have SpringLobby v" ) + GetSpringLobbyVersion(), sett().GetChatColorNormal() , sett().GetChatFont() );
+			return;
+		}
+
+		if ( line == _T( "/clear" ) ) {
+			wxCommandEvent dummy;
+			ClearContents( dummy );
 			return;
 		}
 
@@ -1728,4 +1737,9 @@ void ChatPanel::OnChannelMenuShowMutelist( wxCommandEvent& event )
     if ( m_channel && ( m_type == CPT_Channel ) ) {
        m_channel->GetServer().SendRaw( _T("MUTELIST ") + m_channel->GetName() );
     }
+}
+
+void ChatPanel::ClearContents( wxCommandEvent& event )
+{
+    m_chatlog_text->SetValue( _T("") );
 }
