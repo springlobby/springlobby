@@ -32,8 +32,12 @@ public:
 		wxString key;
 
 	//levelLabels and values_arg MUST have same length
-		presetValues ( wxString key_arg,const wxString* levelLabels,const T* values_arg);
-
+		presetValues ( wxString key_arg,const wxString* levelLabels,const T* values_arg) {
+            for(int i = 0; i< valueCount;++i) {
+                values[levelLabels[i]]=values_arg[i];
+            }
+            key = key_arg;
+		}
 };
 const int levels_low_To_High_size = 3;
 const int levels_vlow_To_vHigh_size =5;
