@@ -292,7 +292,6 @@ const Control QA_CBOX[] = {
 const category_sizes_map_type QA_CBOX_entry ( _T("QA_CBOX"), sizeof(QA_CBOX) / Control_size );
 
 const Control UI_CBOX[] = {
-	{_("Enable LuaUI widgets"),                            _T("LuaUI"),               ID_WINDOWP_UI_CBOX_1,	_T("1"), {_("mark to be able to use")}},
 
     {_("Issue commands on mini-map"),                       _T("MiniMapFullProxy"), ID_WINDOWP_UI_CBOX_2, _T("1"), {_("Issue orders on the mini-map like you would ")}},
 	{_("Show commands on mini-map"),                       _T("MiniMapDrawCommands"), ID_WINDOWP_UI_CBOX_3,	_T("1"), {_("default value is \"on\"")}},
