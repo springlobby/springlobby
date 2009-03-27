@@ -315,7 +315,7 @@ class SpringUnitSyncLib
      */
     wxImage GetHeightmap( const wxString& mapFileName );
 
-    int GetPrimaryModChecksum( int index );
+    wxString GetPrimaryModChecksum( int index );
     int GetPrimaryModIndex( const wxString& modName );
     wxString GetPrimaryModName( int index );
     int GetPrimaryModCount();
@@ -328,7 +328,7 @@ class SpringUnitSyncLib
     wxString GetPrimaryModDescription( int index );
     int GetPrimaryModArchiveCount( int index );
     wxString GetPrimaryModArchiveList( int arnr );
-    int GetPrimaryModChecksumFromName( const wxString& name );
+    wxString GetPrimaryModChecksumFromName( const wxString& name );
     wxArrayString GetModDeps( int index );
 
     wxArrayString GetSides( const wxString& modName );

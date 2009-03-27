@@ -165,6 +165,15 @@ wxString GetExecutableFolder()
 	return wxStandardPathsBase::Get().GetExecutablePath().BeforeLast( wxFileName::GetPathSeparator() );
 }
 
+wxString MakeHashUnsigned( const wxString& hash )
+{
+	return TowxString( (unsigned int)s2l( hash ) );
+}
+
+wxString MakeHashSigned( const wxString& hash )
+{
+	return TowxString( (int)s2l( hash ) );
+}
 
 // ------------------------------------------------------------------------------------------------------------------------
 ///

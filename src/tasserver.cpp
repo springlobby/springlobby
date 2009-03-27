@@ -631,7 +631,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         maxplayers = GetIntParam( params );
         haspass = GetBoolParam( params );
         rank = GetIntParam( params );
-        hash = GetWordParam( params );
+        hash = MakeHashUnsigned( GetWordParam( params ) );
         map = GetSentenceParam( params );
         title = GetSentenceParam( params );
         mod = GetSentenceParam( params );
@@ -654,7 +654,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         id = GetIntParam( params );
         specs = GetIntParam( params );
         haspass = GetBoolParam( params );
-        hash = GetWordParam( params );
+        hash = MakeHashUnsigned( GetWordParam( params ) );
         map = GetSentenceParam( params );
         m_se->OnBattleInfoUpdated( id, specs, haspass, hash, map );
     }
@@ -795,7 +795,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     else if ( cmd == _T("JOINBATTLE") )
     {
         id = GetIntParam( params );
-        hash = GetWordParam( params );
+        hash = MakeHashUnsigned( GetWordParam( params ) );
         m_battle_id = id;
         m_se->OnJoinedBattle( id, hash );
         m_se->OnBattleInfoUpdated( m_battle_id );
@@ -1356,9 +1356,9 @@ void TASServer::HostBattle( BattleOptions bo, const wxString& password )
                              bo.port,
                              bo.maxplayers
                            );
-    cmd +=  bo.modhash;
+    cmd += MakeHashSigned( bo.modhash );
     cmd += wxString::Format( _T(" %d "), bo.rankneeded );
-    cmd += bo.maphash + _T(" ");
+    cmd += MakeHashSigned( bo.maphash ) + _T(" ");
     cmd += bo.mapname + _T("\t");
     cmd += bo.description + _T("\t");
     cmd += bo.modname;
@@ -1501,7 +1501,7 @@ void TASServer::SendHostInfo( HostInfo update )
     {
         // UPDATEBATTLEINFO SpectatorCount locked maphash {mapname}
         wxString cmd = wxString::Format( _T("%d %d "), battle.GetSpectators(), battle.IsLocked() );
-        cmd += battle.LoadMap().hash + _T(" ");
+        cmd += MakeHashSigned( battle.LoadMap().hash ) + _T(" ");
         cmd += battle.LoadMap().name;
 
         if ( !battle.IsProxy() ) SendCmd( _T("UPDATEBATTLEINFO"), cmd );

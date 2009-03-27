@@ -108,7 +108,7 @@ void SpringUnitSync::PopulateArchiveList()
     try
     {
      name = susynclib().GetPrimaryModName( i );
-     hash = i2s(susynclib().GetPrimaryModChecksum( i ));
+     hash = susynclib().GetPrimaryModChecksum( i );
     } catch (...) { continue; }
     try
     {
@@ -232,7 +232,7 @@ UnitSyncMod SpringUnitSync::GetMod( int index )
   UnitSyncMod m;
   susynclib().GetPrimaryModCount();
   m.name = susynclib().GetPrimaryModName( index );
-  m.hash = i2s( susynclib().GetPrimaryModChecksum( index ) );
+  m.hash = susynclib().GetPrimaryModChecksum( index );
 
   return m;
  }
