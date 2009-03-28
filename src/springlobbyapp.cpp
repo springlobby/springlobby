@@ -40,6 +40,7 @@
 #include "globalsmanager.h"
 #include "Helper/wxTranslationHelper.h"
 #include "Helper/tasclientimport.h"
+#include "replay/replaytab.h"
 
 const unsigned int TIMER_ID         = 101;
 const unsigned int TIMER_INTERVAL   = 100;
