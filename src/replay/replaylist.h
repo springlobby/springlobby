@@ -108,7 +108,6 @@ class ReplayList : public wxEvtHandler
     unsigned long m_last_id;
     unsigned long m_fails;
 
-    DECLARE_EVENT_TABLE()
 };
 
 

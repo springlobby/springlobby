@@ -58,6 +58,7 @@ ReplayTab::ReplayTab( wxWindow* parent, Ui& ui ) :
 
     m_replays = new ReplayList ( *this );
 
+
     wxBoxSizer* m_main_sizer;
     m_main_sizer = new wxBoxSizer( wxVERTICAL );
 

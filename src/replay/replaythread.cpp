@@ -42,7 +42,7 @@ void ReplayLoader::ReplayLoaderThread::Init()
 void* ReplayLoader::ReplayLoaderThread::Entry()
 {
 
-    //download failed
+    m_replays.LoadReplays();
 //
 //        wxCommandEvent notice(ExeDownloadEvt,GetId());
 //        notice.SetInt( FileDownloading.GetError() );
