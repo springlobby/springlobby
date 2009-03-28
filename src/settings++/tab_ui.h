@@ -57,7 +57,7 @@ class tab_ui : public abstract_panel
 		wxRadioButton* ctrl_cam_radio4;
 		wxCheckBox** ctrl_ui_chkb;
 		wxSpinCtrl* ctrl_zoom_spin;
-		static const int ctrl_ui_chkb_size = 18;
+		static const int ctrl_ui_chkb_size = 17;
 
 		wxFlexGridSizer* pSizer;
 			wxFlexGridSizer* cSizerL ;
