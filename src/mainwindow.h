@@ -66,6 +66,7 @@ class MainWindow : public wxFrame
     void OpenPrivateChat( const User& user, bool doFocus = false );
 
     void ShowConfigure( const unsigned int page = OPT_PAGE_SPRING );
+    void ShowSingleplayer();
 
     /** Show the channel list dialog. */
     void ShowChannelChooser();

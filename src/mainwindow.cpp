@@ -357,6 +357,12 @@ void MainWindow::OpenPrivateChat( const User& user, bool doFocus )
 
 }
 
+//! @brief Displays the lobby singleplayer tab.
+void MainWindow::ShowSingleplayer()
+{
+  m_func_tabs->SetSelection( PAGE_SINGLE );
+}
+
 
 //! @brief Displays the lobby configuration.
 void MainWindow::ShowConfigure( const unsigned int page )

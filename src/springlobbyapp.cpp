@@ -269,7 +269,7 @@ bool SpringLobbyApp::OnInit()
     }
     else
     {
-        ui().Connect();
+        ui().mw().ShowSingleplayer();
     }
 
   #ifndef NO_TORRENT_SYSTEM
