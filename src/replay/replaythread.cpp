@@ -34,6 +34,7 @@ void ReplayLoader::Run()
 
 void ReplayLoader::OnComplete()
 {
+		if ( !m_parent ) return;
 		wxCommandEvent notice( ReplaysLoadedEvt, 1 );
 		m_parent->ProcessEvent( notice );
 }
@@ -56,9 +57,11 @@ void ReplayLoader::ReplayLoaderThread::SetParent( ReplayLoader* parent )
 
 void* ReplayLoader::ReplayLoaderThread::Entry()
 {
-
-    replaylist().LoadReplays( m_parent->GetReplayFilenames() );
-		if( m_parent ) m_parent->OnComplete();
+		if( m_parent )
+		{
+			replaylist().LoadReplays( m_parent->GetReplayFilenames() );
+			m_parent->OnComplete();
+		}
 
     return NULL;
 }
