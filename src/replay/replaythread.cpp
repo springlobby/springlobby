@@ -14,7 +14,8 @@ extern const wxEventType ReplaysLoadedEvt = wxNewEventType();
 
 
 ReplayLoader::ReplayLoader( wxWindow* parent ):
-m_parent( parent )
+m_parent( parent ),
+m_thread_loader( 0 )
 {
 }
 
@@ -25,6 +26,7 @@ ReplayLoader::~ReplayLoader()
 void ReplayLoader::Run()
 {
 		if ( !usync().IsLoaded() ) return;
+		if ( m_thread_loader ) return; // a thread is already running
 		m_filenames = usync().GetReplayList();
 		replaylist().RemoveAll();
 		m_thread_loader = new ReplayLoaderThread();
@@ -38,6 +40,7 @@ void ReplayLoader::OnComplete()
 		if ( !m_parent ) return;
 		wxCommandEvent notice( ReplaysLoadedEvt, 1 );
 		m_parent->ProcessEvent( notice );
+		m_thread_loader = 0; // the thread object deleted itself
 }
 
 wxArrayString ReplayLoader::GetReplayFilenames()
