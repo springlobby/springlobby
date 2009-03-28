@@ -54,7 +54,8 @@ END_EVENT_TABLE()
 
 ReplayTab::ReplayTab( wxWindow* parent, Ui& ui ) :
   wxPanel( parent, -1 ),
-  m_ui(ui)
+  m_ui(ui),
+  m_replay_loader ( 0 )
 {
     wxLogMessage(_T("ReplayTab::ReplayTab()"));
 
@@ -153,8 +154,7 @@ ReplayTab::ReplayTab( wxWindow* parent, Ui& ui ) :
     Deselect();
 
     //listcrl is created, safe to start filling data now
-    m_replay_loader = new ReplayLoader( (wxWindow*)this, *m_replays );
-
+    ReloadList();
 }
 
 
@@ -444,7 +444,12 @@ void ReplayTab::ReloadList()
     wxDateTime dt = wxDateTime::UNow();
     Deselect();
     m_replays->RemoveAll();
-    m_replays->LoadReplays();
+    if ( usync().IsLoaded() ) {
+        std::vector<wxString> filenames;
+        usync().GetReplayList( filenames );
+        m_replay_loader = new ReplayLoader( (wxWindow*)this, *m_replays, filenames );
+    }
+
 
 //    long sec = (wxDateTime::UNow() - dt).GetMilliseconds().ToLong();
 //    if ( sec > 0 )

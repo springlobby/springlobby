@@ -13,8 +13,8 @@ extern const wxEventType ReplaysLoadedEvt = wxNewEventType();
 
 wxWindow* ReplayLoader::m_parent = 0;
 
-ReplayLoader::ReplayLoader( wxWindow* parent, ReplayList& list )
-    : m_thread_loader( new ReplayLoaderThread ( list ) )
+ReplayLoader::ReplayLoader( wxWindow* parent, ReplayList& list, const std::vector<wxString>& filenames  )
+    : m_thread_loader( new ReplayLoaderThread ( list, filenames ) )
 {
     m_parent = parent;
 }
@@ -23,9 +23,10 @@ ReplayLoader::~ReplayLoader()
 {
 }
 
-ReplayLoader::ReplayLoaderThread::ReplayLoaderThread( ReplayList& list )
+ReplayLoader::ReplayLoaderThread::ReplayLoaderThread( ReplayList& list, const std::vector<wxString>& filenames  )
     :   m_destroy(false),
-        m_replays( list )
+        m_replays( list ),
+        m_filenames( filenames )
 {
     Init();
 }
@@ -43,8 +44,7 @@ void ReplayLoader::ReplayLoaderThread::Init()
 
 void* ReplayLoader::ReplayLoaderThread::Entry()
 {
-
-    m_replays.LoadReplays();
+    m_replays.LoadReplays( m_filenames );
 //
     if ( m_parent ) {
         wxCommandEvent notice( ReplaysLoadedEvt ,GetId());

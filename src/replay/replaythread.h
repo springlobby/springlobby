@@ -9,7 +9,7 @@ extern const wxEventType ReplaysLoadedEvt;
 class ReplayLoader
 {
 public:
-    ReplayLoader( wxWindow* parent, ReplayList& list );
+    ReplayLoader( wxWindow* parent, ReplayList& list, const std::vector<wxString>& filenames );
     ~ReplayLoader();
     void OnComplete(wxCommandEvent& event);
 
@@ -18,7 +18,7 @@ protected:
     class ReplayLoaderThread : public wxThread
         {
         public:
-            ReplayLoaderThread(  ReplayList& list );
+            ReplayLoaderThread(  ReplayList& list,const std::vector<wxString>& filenames  );
             ~ReplayLoaderThread();
             void Init();
             void* Entry();
@@ -28,6 +28,7 @@ protected:
             bool m_destroy;
 
             ReplayList& m_replays;
+            const std::vector<wxString> m_filenames;
         };
 
     static wxWindow* m_parent;

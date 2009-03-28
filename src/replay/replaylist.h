@@ -67,7 +67,7 @@ class ReplayList : public wxEvtHandler
   public:
     ReplayList();
 
-    void LoadReplays();
+    void LoadReplays( const std::vector<wxString>& filenames );
     //!loads replays between two indices
     void LoadReplays( const unsigned int from, const unsigned int to);
 
@@ -103,7 +103,6 @@ class ReplayList : public wxEvtHandler
 
     replay_map_t m_replays;
 
-    std::vector<wxString> m_filenames;
     unsigned long m_fails;
 
 };

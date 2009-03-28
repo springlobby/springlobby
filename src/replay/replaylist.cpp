@@ -22,22 +22,18 @@ ReplayList::ReplayList()
 {
 }
 
-void ReplayList::LoadReplays()
+void ReplayList::LoadReplays( const std::vector<wxString>& filenames )
 {
     m_fails = 0;
-    if ( !usync().IsLoaded() ) return ;
-    m_filenames.clear();
-    usync().GetReplayList(m_filenames);
+
     m_replays.clear();
-
-    size_t size = m_filenames.size();
-
+    size_t size = filenames.size();
     for ( size_t i = 0; i < size; ++i)
     {
         Replay rep;
         rep.id = i;
 
-        if ( GetReplayInfos( m_filenames[i] , rep ) ) {
+        if ( GetReplayInfos( filenames[i] , rep ) ) {
             AddReplay( rep );
         }
         else {
@@ -312,7 +308,7 @@ bool ReplayList::DeleteReplay( replay_id_t const& id )
     Replay rep = m_replays[id];
     if ( wxRemoveFile( rep.Filename ) ) {
 
-        m_filenames.resize(std::remove(m_filenames.begin(), m_filenames.end(), rep.Filename)-m_filenames.begin());
+        //m_filenames.resize(std::remove(m_filenames.begin(), m_filenames.end(), rep.Filename)-m_filenames.begin());
 
         m_replays.erase(id);
         return true;
@@ -322,7 +318,7 @@ bool ReplayList::DeleteReplay( replay_id_t const& id )
 
 void ReplayList::RemoveAll()
 {
-    m_filenames.clear();
+//    m_filenames.clear();
     m_replays.clear();
     m_fails = 0;
 }
