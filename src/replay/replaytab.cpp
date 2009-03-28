@@ -171,7 +171,7 @@ void ReplayTab::AddAllReplays( wxCommandEvent& evt )
     for( replay_const_iter_t i=replays.begin();i!=replays.end();++i){
         AddReplay(i->second);
     }
-    m_replay_listctrl->RefreshVisibleItems();
+//    m_replay_listctrl->RefreshVisibleItems();
 }
 
 void ReplayTab::AddReplay( const Replay& replay ) {

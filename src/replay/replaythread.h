@@ -18,18 +18,19 @@ public:
 protected:
 
     class ReplayLoaderThread : public wxThread
-        {
+    {
         public:
             ReplayLoaderThread();
             void SetParent( ReplayLoader* parent );
             void* Entry();
-				private:
-						ReplayLoader* m_parent;
-        };
+
+        private:
+            ReplayLoader* m_parent;
+    };
 
 		wxArrayString m_filenames;
     wxWindow* m_parent;
-    ReplayLoaderThread m_thread_loader;
+    ReplayLoaderThread* m_thread_loader;
 
 };
 
