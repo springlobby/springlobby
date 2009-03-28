@@ -1362,10 +1362,11 @@ void TASServer::HostBattle( BattleOptions bo, const wxString& password )
     cmd += bo.mapname + _T("\t");
     cmd += bo.description + _T("\t");
     cmd += bo.modname;
+
+    m_delayed_open_command = _T("");
     if ( !bo.isproxy )
     {
        SendCmd( _T("OPENBATTLE"), cmd );
-       m_delayed_open_command = _T("");
     }
     else
     {
@@ -1376,7 +1377,6 @@ void TASServer::HostBattle( BattleOptions bo, const wxString& password )
           unsigned int begin = rand() % numbots;
           unsigned int choice = begin;
           m_relay_host_manager = _T("");
-          m_delayed_open_command = _T("");
           while ( true )
           {
             wxString currentmanager = m_relay_host_manager_list[choice];
