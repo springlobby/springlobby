@@ -12,6 +12,7 @@ public:
     ReplayLoader( wxWindow* parent, ReplayList& list, const std::vector<wxString>& filenames );
     ~ReplayLoader();
     void OnComplete(wxCommandEvent& event);
+    void Run();
 
 protected:
 

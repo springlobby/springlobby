@@ -23,12 +23,17 @@ ReplayLoader::~ReplayLoader()
 {
 }
 
+void ReplayLoader::Run()
+{
+    m_thread_loader->Run();
+}
+
 ReplayLoader::ReplayLoaderThread::ReplayLoaderThread( ReplayList& list, const std::vector<wxString>& filenames  )
     :   m_destroy(false),
         m_replays( list ),
         m_filenames( filenames )
 {
-    Init();
+    Create();
 }
 
 ReplayLoader::ReplayLoaderThread::~ReplayLoaderThread()
@@ -37,8 +42,8 @@ ReplayLoader::ReplayLoaderThread::~ReplayLoaderThread()
 
 void ReplayLoader::ReplayLoaderThread::Init()
 {
-    Create();
-    Run();
+//    Create();
+//    Run();
 }
 
 

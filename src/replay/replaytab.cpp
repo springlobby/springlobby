@@ -60,6 +60,7 @@ ReplayTab::ReplayTab( wxWindow* parent, Ui& ui ) :
     wxLogMessage(_T("ReplayTab::ReplayTab()"));
 
     m_replays = new ReplayList ( );
+    m_replay_loader = new ReplayLoader( (wxWindow*)this, *m_replays, m_replay_filenames );
 
     wxBoxSizer* m_main_sizer;
     m_main_sizer = new wxBoxSizer( wxVERTICAL );
@@ -152,9 +153,6 @@ ReplayTab::ReplayTab( wxWindow* parent, Ui& ui ) :
 
     //none selected --> shouldn't watch/delete that
     Deselect();
-
-    //listcrl is created, safe to start filling data now
-    ReloadList();
 }
 
 
@@ -445,9 +443,10 @@ void ReplayTab::ReloadList()
     Deselect();
     m_replays->RemoveAll();
     if ( usync().IsLoaded() ) {
-        std::vector<wxString> filenames;
-        usync().GetReplayList( filenames );
-        m_replay_loader = new ReplayLoader( (wxWindow*)this, *m_replays, filenames );
+        m_replay_filenames.clear();
+        usync().GetReplayList( m_replay_filenames );
+        int size = m_replay_filenames.size();
+        m_replay_loader->Run();
     }
 
 

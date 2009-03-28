@@ -2,6 +2,7 @@
 #define SPRINGLOBBY_REPLAYTAB_H_INCLUDED
 
 #include <wx/panel.h>
+#include <vector>
 
 class Ui;
 class MapCtrl;
@@ -91,6 +92,8 @@ class ReplayTab : public wxPanel
 #endif
 
     Ui& m_ui;
+
+    std::vector<wxString> m_replay_filenames;
 
     DECLARE_EVENT_TABLE();
 };
