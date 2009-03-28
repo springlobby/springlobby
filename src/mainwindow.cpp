@@ -532,8 +532,6 @@ void MainWindow::OnUnitSyncReloaded()
   wxLogMessage( _T("Reloading Singleplayer tab") );
   GetSPTab().OnUnitSyncReloaded();
   wxLogMessage( _T("Singleplayer tab updated") );
-  GetReplayTab().ReloadList();
-  wxLogMessage( _T("Replaytab updated") );
 }
 
 void MainWindow::OnShowSettingsPP( wxCommandEvent& event )

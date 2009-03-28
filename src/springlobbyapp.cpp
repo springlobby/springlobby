@@ -276,6 +276,10 @@ bool SpringLobbyApp::OnInit()
   if( sett().GetTorrentSystemAutoStartMode() == 1 ) torrent().ConnectToP2PSystem();
   #endif
 
+    //starts the replay loading process in a thread
+    ui().mw().GetReplayTab().ReloadList();
+    wxLogMessage( _T("Replaytab updated") );
+
   m_timer->Start( TIMER_INTERVAL );
 
 //  #ifdef __WXMSW__
