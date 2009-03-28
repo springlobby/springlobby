@@ -310,6 +310,8 @@
 		<Unit filename="src/replay/replaylistfiltervalues.h" />
 		<Unit filename="src/replay/replaytab.cpp" />
 		<Unit filename="src/replay/replaytab.h" />
+		<Unit filename="src/replay/replaythread.cpp" />
+		<Unit filename="src/replay/replaythread.h" />
 		<Unit filename="src/sdlsound.cpp" />
 		<Unit filename="src/sdlsound.h" />
 		<Unit filename="src/selectusersdialog.cpp" />

@@ -231,6 +231,7 @@ SET(SpringLobbySrc
 	src/mmoptionswrapper.cpp
 	src/nicklistctrl.cpp
 	src/replay/replaylist.cpp
+	src/replay/replaythread.cpp
         src/replay/replaytab.cpp
         src/replay/replayfilter.cpp
 	src/replay/replaylistctrl.cpp

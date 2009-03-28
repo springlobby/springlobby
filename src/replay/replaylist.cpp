@@ -17,16 +17,9 @@
 #include "replaytab.h"
 #include "../uiutils.h"
 
-const unsigned int replay_bulk_limit = 300;
-const unsigned int replay_chunk_size = 50;
-const unsigned int timer_interval = 300; //miliseconds
-
-BEGIN_EVENT_TABLE(ReplayList,wxEvtHandler)
-    	EVT_TIMER(wxID_ANY, ReplayList::OnTimer)
-END_EVENT_TABLE()
 
 ReplayList::ReplayList(ReplayTab& replay_tab)
-    : m_timer(this,wxID_ANY),m_replay_tab(replay_tab),m_last_id(0)
+    : m_replay_tab(replay_tab),m_last_id(0)
 {
 }
 
@@ -38,16 +31,9 @@ void ReplayList::LoadReplays()
     usync().GetReplayList(m_filenames);
     m_replays.clear();
 
-    m_timer.Stop();
     size_t size = m_filenames.size();
 
-    if ( size < replay_bulk_limit )
-        LoadReplays( 0, m_filenames.size() );
-    else {
-        LoadReplays( 0, replay_chunk_size );
-        m_current_parse_pos = replay_chunk_size;
-        m_timer.Start( timer_interval, wxTIMER_CONTINUOUS );
-    }
+    LoadReplays( 0, m_filenames.size() );
 //
 //    std::cout<< "********" << std::endl;
 //    for (int i = 0; i< m_filenames.size(); ++i)
@@ -80,20 +66,6 @@ void ReplayList::LoadReplays( const unsigned int from, const unsigned int to)
     }
     wxLogMessage(_T("done ReplayList::LoadReplays(%d,%d) %d"),from,to,replays_load_count);
     replays_load_count+=1;
-}
-
-void ReplayList::OnTimer(wxTimerEvent& event)
-{
-    if ( replay_chunk_size + m_current_parse_pos >  m_filenames.size() )
-    {
-        //final parse run
-        m_timer.Stop();
-        LoadReplays( m_current_parse_pos, m_filenames.size() );
-    }
-    else {
-        LoadReplays( m_current_parse_pos, m_current_parse_pos + replay_chunk_size );
-        m_current_parse_pos += replay_chunk_size;
-    }
 }
 
 void ReplayList::AddReplay( const Replay& replay )

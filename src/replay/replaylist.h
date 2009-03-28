@@ -80,10 +80,7 @@ class ReplayList : public wxEvtHandler
     bool DeleteReplay( replay_id_t const& id );
     replay_map_t::size_type GetNumReplays();
 
-    void OnTimer(wxTimerEvent& event);
-
     void RemoveAll();
-
 
     replay_map_t &GetReplaysMap();
 
@@ -103,10 +100,6 @@ class ReplayList : public wxEvtHandler
     void GetHeaderInfo( Replay& rep, const wxString& ReplayPath );
 
     replay_map_t m_replays;
-
-    //! used to load replays in chunks if a lot are present
-    wxTimer m_timer;
-    unsigned int m_current_parse_pos;
 
     //! used to "remotely" add replays to gui
     ReplayTab& m_replay_tab;
