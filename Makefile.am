@@ -963,7 +963,6 @@ springlobby_SOURCES += \
 	src/settings++/tab_debug.h \
 	src/settings++/tab_audio.cpp \
 	src/settings++/presets.h \
-	src/settings++/presets.cpp \
 	src/settings++/tab_abstract.cpp \
 	src/settings++/Defs.hpp \
 	src/settings++/tab_simple.cpp \
@@ -1007,7 +1006,6 @@ springsettings_SOURCES = \
 	src/settings++/tab_debug.h \
 	src/settings++/tab_audio.cpp \
 	src/settings++/presets.h \
-	src/settings++/presets.cpp \
 	src/settings++/tab_abstract.cpp \
 	src/settings++/Main.cpp \
 	src/settings++/Defs.hpp \

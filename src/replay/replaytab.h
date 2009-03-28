@@ -34,7 +34,6 @@ class ReplayTab : public wxPanel
     void AddReplay( Replay& Replay );
     void RemoveReplay( Replay& Replay );
     void UpdateReplay( Replay& Replay );
-    void UpdateReplay( Replay& replay, const int index );
 
     //! add all replays in m_replays to listctrl
     void AddAllReplays();
@@ -91,8 +90,6 @@ class ReplayTab : public wxPanel
 
     Ui& m_ui;
 
-    int m_sel_replay_id;
-
     DECLARE_EVENT_TABLE();
 };
 
@@ -110,3 +107,21 @@ enum
 
 
 #endif // SPRINGLOBBY_REPLAYTAB_H_INCLUDED
+
+/**
+    This file is part of SpringLobby,
+    Copyright (C) 2007-09
+
+    springsettings is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License version 2 as published by
+    the Free Software Foundation.
+
+    springsettings is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SpringLobby.  If not, see <http://www.gnu.org/licenses/>.
+**/
+

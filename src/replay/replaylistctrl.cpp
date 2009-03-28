@@ -14,12 +14,12 @@
 #include "../ui.h"
 
 
-BEGIN_EVENT_TABLE(ReplayListCtrl, CustomListCtrl)
+BEGIN_EVENT_TABLE(ReplayListCtrl, CustomVirtListCtrl<const Replay*>)
 
   EVT_LIST_ITEM_RIGHT_CLICK( RLIST_LIST, ReplayListCtrl::OnListRightClick )
-  EVT_LIST_COL_CLICK       ( RLIST_LIST, ReplayListCtrl::OnColClick )
   EVT_MENU                 ( RLIST_DLMAP, ReplayListCtrl::OnDLMap )
   EVT_MENU                 ( RLIST_DLMOD, ReplayListCtrl::OnDLMod )
+  EVT_LIST_COL_CLICK       ( RLIST_LIST, ReplayListCtrl::OnColClick )
 #if wxUSE_TIPWINDOW
 #ifndef __WXMSW__ //disables tooltips on win
   EVT_MOTION(ReplayListCtrl::OnMouseMotion)
@@ -27,86 +27,48 @@ BEGIN_EVENT_TABLE(ReplayListCtrl, CustomListCtrl)
 #endif
 END_EVENT_TABLE()
 
-ReplayList* ReplayListCtrl::m_replaylist_sort = 0;
+template<> SortOrder CustomVirtListCtrl<const Replay*>::m_sortorder = SortOrder();
 
 ReplayListCtrl::ReplayListCtrl( wxWindow* parent, ReplayList& replaylist  ):
-  CustomListCtrl(parent, RLIST_LIST, wxDefaultPosition, wxDefaultSize,
+  CustomVirtListCtrl<const Replay*>(parent, RLIST_LIST, wxDefaultPosition, wxDefaultSize,
                 wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT,
-                _T("replaylistctrl"), 8 ),
+                _T("replaylistctrl"), 8, 4, &CompareOneCrit ),
   m_replaylist(replaylist)
 {
-
-  SetImageList( &icons(), wxIMAGE_LIST_NORMAL );
-  SetImageList( &icons(), wxIMAGE_LIST_SMALL );
-  SetImageList( &icons(), wxIMAGE_LIST_STATE );
-
-
-  wxListItem col;
-
-  col.SetText( _T("Date") );
-  col.SetImage( icons().ICON_NONE );
-  InsertColumn( 0, col, _T("Date of recording") );
-
-  col.SetText( _T("Mod") );
-  col.SetImage( icons().ICON_NONE );
-  InsertColumn( 1, col, _T("Modname") );
-
-  col.SetText( _T("Map") );
-  col.SetImage(  icons().ICON_NONE);
-  InsertColumn( 2, col, _T("Mapname") );
-
-  col.SetText( _("Players") );
-  col.SetImage( icons().ICON_NONE );
-  InsertColumn( 3, col, _T("Number of players") );
-
-  col.SetText( _("Duration") );
-  col.SetImage( icons().ICON_NONE );
-  InsertColumn( 4, col, _T("Duration") );
-
-  col.SetText( _("Spring Version") );
-  col.SetImage( icons().ICON_NONE );
-  InsertColumn( 5, col, _T("Spring Version") );
-
-  col.SetText( _("Filesize") );
-  col.SetImage( icons().ICON_NONE );
-  InsertColumn( 6, col, _T("Filesize in kilobyte") );
-
-  col.SetText( _("File") );
-  col.SetImage( icons().ICON_NONE );
-  InsertColumn( 7, col, _T("Filename") );
-
-
-  m_sortorder[0].col = 0;
-  m_sortorder[0].direction = false;
-  m_sortorder[1].col = 1;
-  m_sortorder[1].direction = true;
-  m_sortorder[2].col = 2;
-  m_sortorder[2].direction = true;
-  m_sortorder[3].col = 3;
-  m_sortorder[3].direction = true;
-  Sort( );
-
+    const int hd = wxLIST_AUTOSIZE_USEHEADER;
 #ifdef __WXMSW__
-  SetColumnWidth( 3, wxLIST_AUTOSIZE_USEHEADER );
-  SetColumnWidth( 5, wxLIST_AUTOSIZE_USEHEADER );
-
+    const int widths[8] = {80,140,141,hd,160,hd,70,180};
 #else
-  SetColumnWidth( 5, 50 );
-  SetColumnWidth( 3, 50 );
+    const int widths[8] = {80,140,141,50,160,50,70,180};
+
 #endif
 
-  SetColumnWidth( 0, 80 );
-  SetColumnWidth( 1, 140 );
-  SetColumnWidth( 2, 140 );
-  SetColumnWidth( 4, 160 );
-  SetColumnWidth( 5, 80 );
-  SetColumnWidth( 6, 70 );
-  SetColumnWidth( 7, 180 );
+    AddColumn( 0, widths[0], _("Date"), _("Date of recording") );
+    AddColumn( 1, widths[1], _("Mod"), _("Modname") );
+    AddColumn( 2, widths[2], _("Map"), _("Mapname") );
+    AddColumn( 3, widths[3], _("Players"), _("Number of players") );
+    AddColumn( 4, widths[4], _("Duration"), _T("Duration") );
+    AddColumn( 5, widths[5], _("Spring Version"), _("Spring Version") );
+    AddColumn( 6, widths[6], _("Filesize"), _("Filesize in kilobyte") );
+    AddColumn( 7, widths[7], _("File"), _T("Filename") );
 
-  m_popup = new wxMenu( _T("") );
-  // &m enables shortcout "alt + m" and underlines m
-  m_popup->Append( RLIST_DLMAP, _("Download &map") );
-  m_popup->Append( RLIST_DLMOD, _("Download m&od") );
+    if ( m_sortorder.size() == 0 ) {
+      m_sortorder[0].col = 0;
+      m_sortorder[0].direction = true;
+      m_sortorder[1].col = 1;
+      m_sortorder[1].direction = true;
+      m_sortorder[2].col = 2;
+      m_sortorder[2].direction = true;
+      m_sortorder[3].col = 3;
+      m_sortorder[3].direction = true;
+      Sort( );
+    }
+
+
+    m_popup = new wxMenu( _T("") );
+    // &m enables shortcout "alt + m" and underlines m
+    m_popup->Append( RLIST_DLMAP, _("Download &map") );
+    m_popup->Append( RLIST_DLMOD, _("Download m&od") );
 }
 
 
@@ -120,136 +82,68 @@ void ReplayListCtrl::OnListRightClick( wxListEvent& event )
   PopupMenu( m_popup );
 }
 
+void ReplayListCtrl::AddReplay( const Replay& replay )
+{
+    if ( GetIndexFromData( &replay ) != -1 ) {
+        wxLogWarning( _T("Replay already in list.") );
+        return;
+    }
+    m_data.push_back( &replay );
+    SetItemCount( m_data.size() );
+    RefreshItem( m_data.size() );
+}
+
+void ReplayListCtrl::RemoveReplay( const Replay& replay )
+{
+    int index = GetIndexFromData( &replay );
+
+    if ( index != -1 ) {
+        m_data.erase( m_data.begin() + index );
+        SetItemCount( m_data.size() );
+        RefreshVisibleItems( );
+        return;
+    }
+    wxLogError( _T("Didn't find the replay to remove.") );
+}
 
 void ReplayListCtrl::OnDLMap( wxCommandEvent& event )
 {
-    if ( m_selected != -1 ) {
-        if ( m_replaylist.ReplayExists(m_selected) ) {
-            OfflineBattle battle = m_replaylist.GetReplayById(m_selected).battle;
-            ui().DownloadMap( battle.GetHostMapHash(), battle.GetHostMapName() );
-        }
+    if ( m_selected_index > 0 &&  m_data.size() > m_selected_index ) {
+        OfflineBattle battle = m_data[m_selected_index]->battle;
+        ui().DownloadMap( battle.GetHostMapHash(), battle.GetHostMapName() );
     }
 }
-
 
 void ReplayListCtrl::OnDLMod( wxCommandEvent& event )
 {
-    if ( m_selected != -1 ) {
-        if ( m_replaylist.ReplayExists(m_selected) ) {
-            OfflineBattle battle = m_replaylist.GetReplayById(m_selected).battle;
-            ui().DownloadMod( battle.GetHostModHash(), battle.GetHostModName() );
-        }
+    if ( m_selected_index > 0 &&  m_data.size() > m_selected_index ) {
+        OfflineBattle battle = m_data[m_selected_index]->battle;
+        ui().DownloadMod( battle.GetHostModHash(), battle.GetHostModName() );
     }
-}
-
-
-void ReplayListCtrl::SetUnsorted(){
-  wxListItem col;
-  GetColumn( m_sortorder[0].col, col );
-  col.SetImage( icons().ICON_NONE );
-  SetColumn( m_sortorder[0].col, col );
-}
-
-void ReplayListCtrl::OnColClick( wxListEvent& event )
-{
-  int click_col=event.GetColumn();
-  wxLogMessage(_T("click col: %d"),click_col);
-  if ( click_col == -1 ) return;
-  wxListItem col;
-  GetColumn( m_sortorder[0].col, col );
-  col.SetImage( icons().ICON_NONE );
-  SetColumn( m_sortorder[0].col, col );
-
-/*
-  int i;
-  for ( i = 0; m_sortorder[i].col != event.GetColumn() && i < 4; ++i ) {}
-  if ( i > 3 ) { i = 3; }
-  for ( ; i > 0; i--) { m_sortorder[i] = m_sortorder[i-1]; }
-  m_sortorder[0].col = event.GetColumn();
-  m_sortorder[0].direction = !m_sortorder[0].direction;
-*/
-  if(click_col==m_sortorder[0].col){
-    m_sortorder[0].direction=!m_sortorder[0].direction;
-  }else{
-    int order_remove=3;
-    for(int i=0;i<4;++i){
-      if(m_sortorder[i].col==click_col){
-        order_remove=i;
-      }
-    }
-    for(int i=order_remove;i>0;--i){
-      m_sortorder[i]=m_sortorder[i-1];
-    }
-    m_sortorder[0].col=click_col;
-    m_sortorder[0].direction=false;
-  }
-
-  for(int i=0;i<4;++i){
-    wxLogMessage(_T("sorting level%d by %d direction %d"),i,m_sortorder[i].col,m_sortorder[i].direction);
-  }
-
-  GetColumn( m_sortorder[0].col, col );
-  col.SetImage( ( m_sortorder[0].direction )?icons().ICON_UP:icons().ICON_DOWN );
-  SetColumn( m_sortorder[0].col, col );
-
-  Sort();
 }
 
 void ReplayListCtrl::Sort()//needs adjusting when column order etc is stable
 {
-  ReplayListCtrl::m_replaylist_sort = &m_replaylist;
-  if (m_replaylist_sort == 0 ) return;
-  SortItems( CompareUniversal , (long)(&m_sortorder) );
+    if ( m_data.size() > 0 ) {
+        SaveSelection();
+        SLInsertionSort( m_data, m_comparator );
+        RestoreSelection();
+    }
 }
 
-template<class T>
-inline int MyCompare(T a, T b){
-  return a<b?-1:(b<a?1:0);
-}
-
-/*
-wxString duration = wxString::Format(_T("%02ld:%02ld:%02ld"), replay.duration / 3600,
-                        (replay.duration%3600)/60, (replay.duration%60)/60 ) ;
-    m_replay_listctrl->SetItem( index, 0, replay.date );
-    m_replay_listctrl->SetItem( index, 1, replay.battle.GetHostModName() );
-    m_replay_listctrl->SetItem( index, 2, replay.battle.GetHostMapName() );
-    m_replay_listctrl->SetItem( index, 3, wxString::Format(_T("%d"),replay.battle.GetNumUsers() - replay.battle.GetSpectators() ) );
-    m_replay_listctrl->SetItem( index, 4, duration );
-    m_replay_listctrl->SetItem( index, 5, replay.SpringVersion );
-    m_replay_listctrl->SetItem( index, 6, wxString::Format( _T("%d KB"),replay.size/1024 ) );
-    m_replay_listctrl->SetItem( index, 7, replay.Filename.AfterLast( wxFileName::GetPathSeparator() ) );
-*/
-
-
-int wxCALLBACK ReplayListCtrl::CompareUniversal(long item1, long item2, long sortData){
-  Replay replay1 ;
-  Replay replay2 ;
-  try{
-    replay1 = m_replaylist_sort->GetReplayById(item1);
-    replay2 = m_replaylist_sort->GetReplayById(item2);
-  }catch(std::runtime_error){
-    return 0;
-  }
-  SortOrder* sortorder_p = (SortOrder *)sortData;
-  if ( sortorder_p ) {
-      for(int i=0;i<4;++i){
-          SortOrderItem sortOrder = (*sortorder_p)[i];
-        int c=0;
-        switch ( sortOrder.col ) {// switch is just a jump table, dont optimize anything here.
-          case 0 : c=MyCompare(replay1.date,replay2.date) ; break;
-          case 1 : c=MyCompare(replay1.battle.GetHostModName(),replay2.battle.GetHostModName()); break;
-          case 2 : c=MyCompare(replay1.battle.GetHostMapName(),replay2.battle.GetHostMapName()); break;
-          case 3 : c=MyCompare(replay1.battle.GetNumUsers() - replay1.battle.GetSpectators(), replay2.battle.GetNumUsers() - replay2.battle.GetSpectators()); break;
-          case 4 : c=MyCompare(replay1.duration,replay2.duration); break;
-          case 5 : c=MyCompare(replay1.SpringVersion, replay2.SpringVersion); break;
-          case 6 : c=MyCompare(replay1.size, replay2.size); break;
-          case 7 : c=MyCompare(replay1.Filename.AfterLast( wxFileName::GetPathSeparator() ), replay2.Filename.AfterLast( wxFileName::GetPathSeparator() )); break;
-        }
-        if( !sortOrder.direction ) c *= -1;
-        if(c!=0)return c;
-      }
-  }
-  return 0;
+int ReplayListCtrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir )
+{
+    switch ( col ) {
+        case 0: return dir * compareSimple( u1->date, u2->date );
+        case 1: return dir * u1->battle.GetHostModName().CmpNoCase( u2->battle.GetHostModName() );
+        case 2: return dir * u1->battle.GetHostMapName().CmpNoCase( u2->battle.GetHostMapName() );
+        case 3: return dir * compareSimple( u1->battle.GetNumUsers() - u1->battle.GetSpectators(), u2->battle.GetNumUsers() - u2->battle.GetSpectators() );
+        case 4: return dir * compareSimple( u1->duration,u2->duration );
+        case 5: return dir * u1->SpringVersion.CmpNoCase( u2->SpringVersion ) ;
+        case 6: return dir * compareSimple( u1->size, u2->size ) ;
+        case 7: return dir * u1->Filename.AfterLast( wxFileName::GetPathSeparator() ).CmpNoCase( u2->Filename.AfterLast( wxFileName::GetPathSeparator() ) );
+        default: return 0;
+    }
 }
 
 void ReplayListCtrl::OnMouseMotion(wxMouseEvent& event)
@@ -261,17 +155,12 @@ void ReplayListCtrl::OnMouseMotion(wxMouseEvent& event)
 		m_tiptimer.Start(m_tooltip_delay, wxTIMER_ONE_SHOT);
 		int flag = wxLIST_HITTEST_ONITEM;
 		long *ptrSubItem = new long;
-#ifdef HAVE_WX28
 		long item_hit = HitTest(position, flag, ptrSubItem);
-#else
-		long item_hit = HitTest(position, flag);
-#endif
 
 		if (item_hit != wxNOT_FOUND)
 		{
-			long item = GetItemData(item_hit);
 
-			Replay replay = m_replaylist.GetReplayById(item);
+			const Replay& replay = *GetDataFromIndex(item_hit);
 			int coloumn = getColoumnFromPosition(position);
 			switch (coloumn)
 			{
@@ -303,4 +192,105 @@ void ReplayListCtrl::OnMouseMotion(wxMouseEvent& event)
 #endif
 }
 
+wxString ReplayListCtrl::OnGetItemText(long item, long column) const
+{
+    if ( m_data[item] == NULL )
+        return wxEmptyString;
 
+    const Replay& replay = *m_data[item];
+    wxString duration = wxString::Format(_T("%02ld:%02ld:%02ld"), replay.duration / 3600,
+                        (replay.duration%3600)/60, (replay.duration%60)/60 ) ;
+
+    switch ( column ) {
+        case 0: return replay.date;
+        case 1: return replay.battle.GetHostModName();
+        case 2: return replay.battle.GetHostMapName();
+        case 3: return wxString::Format(_T("%d"),replay.battle.GetNumUsers() - replay.battle.GetSpectators() );
+        case 4: return duration;
+        case 5: return replay.SpringVersion;
+        case 6: return wxString::Format( _T("%d KB"),replay.size/1024 );
+        case 7: return replay.Filename.AfterLast( wxFileName::GetPathSeparator() );
+
+        default: return wxEmptyString;
+    }
+}
+
+int ReplayListCtrl::OnGetItemImage(long item) const
+{
+    if ( m_data[item] == NULL )
+        return -1;
+
+    return -1;//icons().GetBattleStatusIcon( *m_data[item] );
+}
+
+int ReplayListCtrl::OnGetItemColumnImage(long item, long column) const
+{
+    if ( m_data[item] == NULL )
+        return -1;
+
+    const Replay& replay = *m_data[item];
+
+    switch ( column ) {
+        default: return -1;
+    }
+}
+
+wxListItemAttr* ReplayListCtrl::OnGetItemAttr(long item) const
+{
+    //not neded atm
+//    if ( item < m_data.size() && item > -1 ) {
+//        const Replay& replay = *m_data[item];
+//    }
+    return NULL;
+}
+
+
+int ReplayListCtrl::GetIndexFromData( const DataType& data ) const
+{
+    DataCIter it = m_data.begin();
+    for ( int i = 0; it != m_data.end(); ++it, ++i ) {
+        if ( *it != 0 && data->Equals( *(*it) ) )
+            return i;
+    }
+    wxLogError( _T("didn't find the battle.") );
+    return -1;
+}
+
+///!TODO get rid of this in favor of the functionality in base class
+void ReplayListCtrl::OnColClick( wxListEvent& event )
+{
+  int click_col=event.GetColumn();
+  wxLogMessage(_T("click col: %d"),click_col);
+  if ( click_col == -1 ) return;
+  wxListItem col;
+  GetColumn( m_sortorder[0].col, col );
+  col.SetImage( icons().ICON_NONE );
+  SetColumn( m_sortorder[0].col, col );
+
+  if(click_col==m_sortorder[0].col){
+    m_sortorder[0].direction *= -1;
+  }
+  else{
+    int order_remove=3;
+    for(int i=0;i<4;++i){
+      if(m_sortorder[i].col==click_col){
+        order_remove=i;
+      }
+    }
+    for(int i=order_remove;i>0;--i){
+      m_sortorder[i]=m_sortorder[i-1];
+    }
+    m_sortorder[0].col=click_col;
+    m_sortorder[0].direction=true;
+  }
+
+  for(int i=0;i<4;++i){
+    wxLogMessage(_T("sorting level%d by %d direction %d"),i,m_sortorder[i].col,m_sortorder[i].direction);
+  }
+
+  GetColumn( m_sortorder[0].col, col );
+  col.SetImage( ( m_sortorder[0].direction > 0 )?icons().ICON_UP:icons().ICON_DOWN );
+  SetColumn( m_sortorder[0].col, col );
+
+    SortList( true );
+}

@@ -506,6 +506,7 @@ void Ui::ConsoleHelp( const wxString& topic )
         panel->ClientMessage( _("  \"/sayver\" - Say what version of springlobby you have in chat.") );
         panel->ClientMessage( _("  \"/testmd5 text\" - Returns md5-b64 hash of given text.") );
         panel->ClientMessage( _("  \"/ver\" - Display what version of SpringLobby you have.") );
+        panel->ClientMessage( _("  \"/clear\" - clear all text from current chat panel") );
         panel->ClientMessage( _T("") );
         panel->ClientMessage( _("Chat commands:") );
         panel->ClientMessage( _("  \"/me action\" - Say IRC style action message.") );
