@@ -167,7 +167,7 @@ ReplayTab::~ReplayTab()
 
 void ReplayTab::AddAllReplays( wxCommandEvent& evt )
 {
-    replay_map_t replays = replaylist().GetReplaysMap();
+    const replay_map_t& replays = replaylist().GetReplaysMap();
     for( replay_const_iter_t i=replays.begin();i!=replays.end();++i){
         AddReplay(i->second);
     }
@@ -222,7 +222,7 @@ void ReplayTab::RemoveAllReplays()
 
 void ReplayTab::UpdateList()
 {
-    replay_map_t replays = replaylist().GetReplaysMap();
+    const replay_map_t& replays = replaylist().GetReplaysMap();
     for( replay_const_iter_t i=replays.begin();i!=replays.end();++i){
         UpdateReplay(i->second);
     }
