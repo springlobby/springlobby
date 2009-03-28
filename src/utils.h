@@ -120,6 +120,8 @@ bool GetBoolParam( wxString& params );
 wxString GetParamByChar( wxString& params, const wxChar& sep );
 wxString GetSpringLobbyVersion();
 wxString GetExecutableFolder();
+wxString MakeHashUnsigned( const wxString& hash );
+wxString MakeHashSigned( const wxString& hash );
 
 //! matches against regex for printable ascii chars, excluding space
 bool IsValidNickname( const wxString& name );

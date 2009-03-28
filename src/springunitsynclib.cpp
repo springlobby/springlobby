@@ -504,7 +504,7 @@ wxString SpringUnitSyncLib::GetMapChecksum( int index )
 {
   InitLib( m_get_map_checksum );
 
-  return TowxString( (int)m_get_map_checksum( index ) );
+  return TowxString( (unsigned int)m_get_map_checksum( index ) );
 }
 
 
@@ -688,11 +688,11 @@ wxImage SpringUnitSyncLib::GetHeightmap( const wxString& mapFileName )
 }
 
 
-int SpringUnitSyncLib::GetPrimaryModChecksum( int index )
+wxString SpringUnitSyncLib::GetPrimaryModChecksum( int index )
 {
   InitLib( m_get_mod_checksum );
 
-  return (int)m_get_mod_checksum( index );
+  return TowxString( (unsigned int)m_get_mod_checksum( index ) );
 }
 
 
@@ -795,11 +795,11 @@ wxString SpringUnitSyncLib::GetPrimaryModArchiveList( int arnr )
 }
 
 
-int SpringUnitSyncLib::GetPrimaryModChecksumFromName( const wxString& name )
+wxString SpringUnitSyncLib::GetPrimaryModChecksumFromName( const wxString& name )
 {
   InitLib( m_get_primary_mod_checksum_from_name );
 
-  return (int)m_get_primary_mod_checksum_from_name( name.mb_str( wxConvUTF8 ) );
+  return TowxString( (unsigned int)m_get_primary_mod_checksum_from_name( name.mb_str( wxConvUTF8 ) ) );
 }
 
 
