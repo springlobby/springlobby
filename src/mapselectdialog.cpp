@@ -201,7 +201,7 @@ void MapSelectDialog::OnInit( wxInitDialogEvent& event )
     m_vertical_direction_button->SetLabel( m_vertical_direction ? _T("ᴧ") : _T("ᴠ") );
 
 	m_maps = usync().GetMapList();
-	usync().GetReplayList( m_replays );
+	m_replays = usync().GetReplayList();
 
     const unsigned int lastFilter = sett().GetMapSelectorFilterRadio();
 	m_filter_popular->Enable( m_ui.IsConnected() );
@@ -401,8 +401,9 @@ void MapSelectDialog::LoadRecent()
 	for ( int i = 0; i < count; ++i ) {
 		// prefix and suffix with underscore to prevent most common partial matches
 		const wxString mapname = _T("_") + m_maps[i].BeforeLast( '.' ) + _T("_");
-		for (std::vector< wxString >::const_iterator it = m_replays.begin(); it != m_replays.end(); ++it) {
-			if ( it->Contains( mapname ) )
+		unsigned int replaycount = m_replays.GetCount();
+		for ( int replaynum = 0; replaynum < replaycount; replaynum++ ) {
+			if ( m_replays[replaynum].Contains( mapname ) )
 				m_mapgrid->AddMap( m_maps[i] );
 		}
 	}

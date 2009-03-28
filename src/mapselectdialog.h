@@ -96,7 +96,7 @@ class MapSelectDialog: public wxDialog
 		bool m_horizontal_direction;
 		bool m_vertical_direction;
 		wxArrayString m_maps;
-		std::vector< wxString > m_replays;
+		wxArrayString m_replays;
 
 		static const wxString m_dialog_name;
 		static const unsigned int m_filter_all_sett = 0;

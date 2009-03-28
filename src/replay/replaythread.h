@@ -2,41 +2,37 @@
 #define SPRINGLOBBY_HEADERGUARD_REPLAYTHREAD
 
 #include <wx/string.h>
-#include "replaylist.h"
 
 extern const wxEventType ReplaysLoadedEvt;
 
 class ReplayLoader
 {
 public:
-    ReplayLoader( wxWindow* parent, ReplayList& list, const std::vector<wxString>& filenames );
+    ReplayLoader( wxWindow* parent );
     ~ReplayLoader();
-    void OnComplete(wxCommandEvent& event);
+    void OnComplete();
     void Run();
+		wxArrayString GetReplayFilenames();
+
 
 protected:
 
     class ReplayLoaderThread : public wxThread
-        {
+    {
         public:
-            ReplayLoaderThread(  ReplayList& list,const std::vector<wxString>& filenames  );
-            ~ReplayLoaderThread();
-            void Init();
+            ReplayLoaderThread();
+            void SetParent( ReplayLoader* parent );
             void* Entry();
-            void CloseThread();
-            bool TestDestroy();
+
         private:
-            bool m_destroy;
+            ReplayLoader* m_parent;
+    };
 
-            ReplayList& m_replays;
-            const std::vector<wxString>& m_filenames;
-        };
-
-    static wxWindow* m_parent;
+		wxArrayString m_filenames;
+    wxWindow* m_parent;
     ReplayLoaderThread* m_thread_loader;
 
 };
-
 
 
 #endif // SPRINGLOBBY_HEADERGUARD_REPLAYTHREAD

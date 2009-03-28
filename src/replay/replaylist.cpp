@@ -16,18 +16,25 @@
 #include "../tdfcontainer.h"
 #include "replaytab.h"
 #include "../uiutils.h"
+#include "globalsmanager.h"
 
 
 ReplayList::ReplayList()
 {
 }
 
-void ReplayList::LoadReplays( const std::vector<wxString>& filenames )
+ReplayList& replaylist()
+{
+		static GlobalObjectHolder<ReplayList> m_replay_list;
+    return m_replay_list;
+}
+
+void ReplayList::LoadReplays( const wxArrayString& filenames )
 {
     m_fails = 0;
 
     m_replays.clear();
-    size_t size = filenames.size();
+    size_t size = filenames.GetCount();
     for ( size_t i = 0; i < size; ++i)
     {
         Replay rep;

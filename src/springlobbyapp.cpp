@@ -37,7 +37,6 @@
 #include "torrentwrapper.h"
 #endif
 #include "updater/updater.h"
-#include "replay/replaytab.h"
 #include "globalsmanager.h"
 #include "Helper/wxTranslationHelper.h"
 #include "Helper/tasclientimport.h"
