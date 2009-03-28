@@ -6,17 +6,17 @@
 #include <wx/log.h>
 
 #include "replaythread.h"
-#include "../settings++/custom_dialogs.h"
 #include "../utils.h"
+#include "replaylist.h"
+#include "iunitsync.h"
 
 extern const wxEventType ReplaysLoadedEvt = wxNewEventType();
 
-wxWindow* ReplayLoader::m_parent = 0;
 
-ReplayLoader::ReplayLoader( wxWindow* parent, ReplayList& list, const std::vector<wxString>& filenames  )
-    : m_thread_loader( new ReplayLoaderThread ( list, filenames ) )
+ReplayLoader::ReplayLoader( wxWindow* parent ):
+m_parent( parent )
 {
-    m_parent = parent;
+	m_thread_loader.SetParent( this );
 }
 
 ReplayLoader::~ReplayLoader()
@@ -25,47 +25,41 @@ ReplayLoader::~ReplayLoader()
 
 void ReplayLoader::Run()
 {
-    m_thread_loader->Run();
+		if ( !usync().IsLoaded() ) return;
+		m_filenames = usync().GetReplayList();
+		replaylist().RemoveAll();
+	  m_thread_loader.Create();
+    m_thread_loader.Run();
 }
 
-ReplayLoader::ReplayLoaderThread::ReplayLoaderThread( ReplayList& list, const std::vector<wxString>& filenames  )
-    :   m_destroy(false),
-        m_replays( list ),
-        m_filenames( filenames )
+void ReplayLoader::OnComplete()
 {
-    Create();
+		wxCommandEvent notice( ReplaysLoadedEvt, 1 );
+		m_parent->ProcessEvent( notice );
 }
 
-ReplayLoader::ReplayLoaderThread::~ReplayLoaderThread()
+wxArrayString ReplayLoader::GetReplayFilenames()
+{
+	return m_filenames;
+}
+
+
+ReplayLoader::ReplayLoaderThread::ReplayLoaderThread():
+m_parent(0)
 {
 }
 
-void ReplayLoader::ReplayLoaderThread::Init()
+void ReplayLoader::ReplayLoaderThread::SetParent( ReplayLoader* parent )
 {
-//    Create();
-//    Run();
+	m_parent = parent;
 }
-
 
 void* ReplayLoader::ReplayLoaderThread::Entry()
 {
-    m_replays.LoadReplays( m_filenames );
-//
-    if ( m_parent ) {
-        wxCommandEvent notice( ReplaysLoadedEvt ,GetId());
-        m_parent->ProcessEvent( notice );
-    }
+
+    replaylist().LoadReplays( m_parent->GetReplayFilenames() );
+		if( m_parent ) m_parent->OnComplete();
 
     return NULL;
 }
 
-bool ReplayLoader::ReplayLoaderThread::TestDestroy()
-{
-    return m_destroy;
-}
-
-
-void ReplayLoader::ReplayLoaderThread::CloseThread()
-{
-    m_destroy = true;
-}

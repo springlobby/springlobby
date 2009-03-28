@@ -860,32 +860,23 @@ void SpringUnitSync::SetCacheFile( const wxString& path, const wxArrayString& da
   file.Close();
 }
 
-void SpringUnitSync::GetReplayList(std::vector<wxString> &ret)
+wxArrayString  SpringUnitSync::GetReplayList()
 {
-  ret.clear();
   wxLogDebug( _T("") );
 
-  if ( !IsLoaded() ) return;
+	wxArrayString ret;
+  if ( !IsLoaded() ) return ret;
 
   int ini = susynclib().InitFindVFS( _T("demos/*.sdf") );
 
-  wxString FilePath ;
-  //wxArrayString ret;
+  wxString FilePath;
   do
   {
     ini = susynclib().FindFilesVFS ( ini, FilePath );
-    wxString FileName = wxString ( FilePath, wxConvUTF8 );
-    //ret.Add ( FileName );
-    ret.push_back(FileName);
+    ret.Add ( FilePath );
   } while (ini != 0);
 
-    int kol = ret.size();
-
-  std::sort(ret.begin(),ret.end());
-  std::vector<wxString>::iterator i=std::unique(ret.begin(),ret.end());
-  ret.resize(i - ret.begin());
-
-  kol = ret.size();
+	return ret;
 }
 
 bool SpringUnitSync::FileExists( const wxString& name )

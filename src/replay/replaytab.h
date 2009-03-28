@@ -65,7 +65,6 @@ class ReplayTab : public wxPanel
     void OnDeselect( wxListEvent& event );
 
   protected:
-    ReplayList* m_replays;
     ReplayListFilter* m_filter;
     ReplayListCtrl* m_replay_listctrl;
     ReplayLoader* m_replay_loader;
@@ -92,8 +91,6 @@ class ReplayTab : public wxPanel
 #endif
 
     Ui& m_ui;
-
-    std::vector<wxString> m_replay_filenames;
 
     DECLARE_EVENT_TABLE();
 };

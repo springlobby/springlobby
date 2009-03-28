@@ -67,7 +67,7 @@ class ReplayList : public wxEvtHandler
   public:
     ReplayList();
 
-    void LoadReplays( const std::vector<wxString>& filenames );
+    void LoadReplays( const wxArrayString& filenames );
     //!loads replays between two indices
     void LoadReplays( const unsigned int from, const unsigned int to);
 
@@ -107,6 +107,7 @@ class ReplayList : public wxEvtHandler
 
 };
 
+ReplayList& replaylist();
 
 #endif // SPRINGLOBBY_REPLAYLIST_H_INCLUDED
 

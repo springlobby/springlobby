@@ -14,7 +14,7 @@ class ReplayList;
 class ReplayListCtrl : public CustomVirtListCtrl< const Replay* >
 {
   public:
-    ReplayListCtrl( wxWindow* parent, ReplayList& replaylist );
+    ReplayListCtrl( wxWindow* parent );
     ~ReplayListCtrl();
 
     void AddReplay( const Replay& replay );
@@ -40,8 +40,6 @@ class ReplayListCtrl : public CustomVirtListCtrl< const Replay* >
     virtual void Sort();
 
     wxMenu* m_popup;
-
-    ReplayList& m_replaylist;
 
     DECLARE_EVENT_TABLE()
 };
