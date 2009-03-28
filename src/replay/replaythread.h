@@ -29,7 +29,7 @@ protected:
             bool m_destroy;
 
             ReplayList& m_replays;
-            const std::vector<wxString> m_filenames;
+            const std::vector<wxString>& m_filenames;
         };
 
     static wxWindow* m_parent;
