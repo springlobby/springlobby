@@ -16,8 +16,6 @@ extern const wxEventType ReplaysLoadedEvt = wxNewEventType();
 ReplayLoader::ReplayLoader( wxWindow* parent ):
 m_parent( parent )
 {
-	m_thread_loader = new ReplayLoaderThread();
-	m_thread_loader ->SetParent( this );
 }
 
 ReplayLoader::~ReplayLoader()
@@ -29,6 +27,8 @@ void ReplayLoader::Run()
 		if ( !usync().IsLoaded() ) return;
 		m_filenames = usync().GetReplayList();
 		replaylist().RemoveAll();
+		m_thread_loader = new ReplayLoaderThread();
+		m_thread_loader ->SetParent( this );
 	  m_thread_loader->Create();
     m_thread_loader->Run();
 }
