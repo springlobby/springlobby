@@ -30,7 +30,7 @@ void ReplayLoader::Run()
 		m_filenames = usync().GetReplayList();
 		replaylist().RemoveAll();
 		m_thread_loader = new ReplayLoaderThread();
-		m_thread_loader ->SetParent( this );
+		m_thread_loader->SetParent( this );
 	  m_thread_loader->Create();
     m_thread_loader->Run();
 }
