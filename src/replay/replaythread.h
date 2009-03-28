@@ -4,10 +4,12 @@
 #include <wx/string.h>
 #include "replaylist.h"
 
+extern const wxEventType ReplaysLoadedEvt;
+
 class ReplayLoader
 {
 public:
-    ReplayLoader( ReplayList& list );
+    ReplayLoader( wxWindow* parent, ReplayList& list );
     ~ReplayLoader();
     void OnComplete(wxCommandEvent& event);
 
@@ -28,6 +30,7 @@ protected:
             ReplayList& m_replays;
         };
 
+    static wxWindow* m_parent;
     ReplayLoaderThread* m_thread_loader;
 
 };

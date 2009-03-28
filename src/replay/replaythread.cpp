@@ -8,12 +8,16 @@
 #include "replaythread.h"
 #include "../settings++/custom_dialogs.h"
 #include "../utils.h"
-#include "../globalevents.h"
 
+extern const wxEventType ReplaysLoadedEvt = wxNewEventType();
 
-ReplayLoader::ReplayLoader( ReplayList& list )
+wxWindow* ReplayLoader::m_parent = 0;
+
+ReplayLoader::ReplayLoader( wxWindow* parent, ReplayList& list )
     : m_thread_loader( new ReplayLoaderThread ( list ) )
-{}
+{
+    m_parent = parent;
+}
 
 ReplayLoader::~ReplayLoader()
 {
@@ -22,8 +26,6 @@ ReplayLoader::~ReplayLoader()
 ReplayLoader::ReplayLoaderThread::ReplayLoaderThread( ReplayList& list )
     :   m_destroy(false),
         m_replays( list )
-
-
 {
     Init();
 }
@@ -44,9 +46,10 @@ void* ReplayLoader::ReplayLoaderThread::Entry()
 
     m_replays.LoadReplays();
 //
-//        wxCommandEvent notice(ExeDownloadEvt,GetId());
-//        notice.SetInt( FileDownloading.GetError() );
-//        wxPostEvent( &SL_GlobalEvtHandler::GetSL_GlobalEvtHandler(), notice );
+    if ( m_parent ) {
+        wxCommandEvent notice( ReplaysLoadedEvt ,GetId());
+        m_parent->ProcessEvent( notice );
+    }
 
     return NULL;
 }

@@ -282,9 +282,6 @@ bool SpringLobbyApp::OnInit()
 //  if ( sett().GetAutoUpdate() )Updater().CheckForUpdates();
 //  #endif
 
-
-  ui().mw().GetReplayTab().AddAllReplays();
-
     return true;
 }
 

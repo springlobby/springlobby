@@ -40,7 +40,7 @@ class ReplayListFilter : public wxPanel
 
     void OnPlayerChange      ( wxCommandEvent& event );
 
-    bool FilterReplay(Replay& replay);
+    bool FilterReplay( const Replay& replay );
     bool GetActiv() const;
 
     void SetFilterHighlighted( bool state );

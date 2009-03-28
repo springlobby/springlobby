@@ -17,6 +17,7 @@
 #include "replaytab.h"
 #include "replaylistctrl.h"
 #include "replaylist.h"
+#include "replaythread.h"
 #include "../ui.h"
 #include "../chatpanel.h"
 #include "../utils.h"
@@ -41,6 +42,7 @@ BEGIN_EVENT_TABLE(ReplayTab, wxPanel)
 // this doesn't get triggered (?)
   EVT_LIST_ITEM_DESELECTED( wxID_ANY               , ReplayTab::OnDeselect      )
   EVT_CHECKBOX            ( REPLAY_LIST_FILTER_ACTIV , ReplayTab::OnFilterActiv )
+  EVT_COMMAND             ( wxID_ANY, ReplaysLoadedEvt, ReplayTab::AddAllReplays  )
 #if  wxUSE_TOGGLEBTN
   EVT_TOGGLEBUTTON        ( REPLAY_LIST_FILTER_BUTTON, ReplayTab::OnFilter  )
 #else
@@ -56,8 +58,7 @@ ReplayTab::ReplayTab( wxWindow* parent, Ui& ui ) :
 {
     wxLogMessage(_T("ReplayTab::ReplayTab()"));
 
-    m_replays = new ReplayList ( *this );
-
+    m_replays = new ReplayList ( );
 
     wxBoxSizer* m_main_sizer;
     m_main_sizer = new wxBoxSizer( wxVERTICAL );
@@ -151,6 +152,9 @@ ReplayTab::ReplayTab( wxWindow* parent, Ui& ui ) :
     //none selected --> shouldn't watch/delete that
     Deselect();
 
+    //listcrl is created, safe to start filling data now
+    m_replay_loader = new ReplayLoader( (wxWindow*)this, *m_replays );
+
 }
 
 
@@ -163,12 +167,16 @@ ReplayTab::~ReplayTab()
   wxLogMessage(_T("ReplayTab::!ReplayTab()"));
 }
 
-void ReplayTab::AddAllReplays()
+void ReplayTab::AddAllReplays( wxCommandEvent& evt )
 {
-    m_replays->LoadReplays();
+    const replay_map_t &replays=m_replays->GetReplaysMap();
+    for( replay_const_iter_t i=replays.begin();i!=replays.end();++i){
+        AddReplay(i->second);
+    }
+    m_replay_listctrl->RefreshVisibleItems();
 }
 
-void ReplayTab::AddReplay( Replay& replay ) {
+void ReplayTab::AddReplay( const Replay& replay ) {
 
     if ( m_filter->GetActiv() && !m_filter->FilterReplay( replay ) ) {
         return;
@@ -178,7 +186,7 @@ void ReplayTab::AddReplay( Replay& replay ) {
 }
 
 
-void ReplayTab::RemoveReplay( Replay& replay )
+void ReplayTab::RemoveReplay( const Replay& replay )
 {
     int index = m_replay_listctrl->GetIndexFromData( &replay );
 
@@ -191,7 +199,7 @@ void ReplayTab::RemoveReplay( Replay& replay )
     m_replay_listctrl->RemoveReplay( replay );
 }
 
-void ReplayTab::UpdateReplay( Replay& replay )
+void ReplayTab::UpdateReplay( const Replay& replay )
 {
     if ( m_filter->GetActiv() && !m_filter->FilterReplay( replay ) ) {
         RemoveReplay( replay );
@@ -216,8 +224,8 @@ void ReplayTab::RemoveAllReplays()
 
 void ReplayTab::UpdateList()
 {
-    replay_map_t &replays=m_replays->GetReplaysMap();
-    for(replay_iter_t i=replays.begin();i!=replays.end();++i){
+    const replay_map_t &replays=m_replays->GetReplaysMap();
+    for( replay_const_iter_t i=replays.begin();i!=replays.end();++i){
         UpdateReplay(i->second);
     }
     m_replay_listctrl->RefreshVisibleItems();

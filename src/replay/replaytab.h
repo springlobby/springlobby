@@ -21,6 +21,7 @@ struct Replay;
 class ReplayList;
 class ReplayListFilter;
 class ReplayListCtrl;
+class ReplayLoader;
 
 class ReplayTab : public wxPanel
 {
@@ -31,12 +32,12 @@ class ReplayTab : public wxPanel
      ~ReplayTab();
 
     //! adds a single replay to listctrl
-    void AddReplay( Replay& Replay );
-    void RemoveReplay( Replay& Replay );
-    void UpdateReplay( Replay& Replay );
+    void AddReplay( const Replay& Replay );
+    void RemoveReplay( const Replay& Replay );
+    void UpdateReplay( const Replay& Replay );
 
     //! add all replays in m_replays to listctrl
-    void AddAllReplays();
+    void AddAllReplays( wxCommandEvent& evt );
     void RemoveAllReplays();
     void ReloadList();
 
@@ -66,6 +67,7 @@ class ReplayTab : public wxPanel
     ReplayList* m_replays;
     ReplayListFilter* m_filter;
     ReplayListCtrl* m_replay_listctrl;
+    ReplayLoader* m_replay_loader;
     MapCtrl* m_minimap;
     wxStaticText* m_map_lbl;
     wxStaticText* m_map_text;

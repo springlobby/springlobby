@@ -18,8 +18,7 @@
 #include "../uiutils.h"
 
 
-ReplayList::ReplayList(ReplayTab& replay_tab)
-    : m_replay_tab(replay_tab),m_last_id(0)
+ReplayList::ReplayList()
 {
 }
 
@@ -33,78 +32,49 @@ void ReplayList::LoadReplays()
 
     size_t size = m_filenames.size();
 
-    LoadReplays( 0, m_filenames.size() );
-//
-//    std::cout<< "********" << std::endl;
-//    for (int i = 0; i< m_filenames.size(); ++i)
-//        std::cout<< STD_STRING(m_filenames[i])<< '\n';
-//
-//    std::cout<< "********" << std::endl;
-
-}
-
-void ReplayList::LoadReplays( const unsigned int from, const unsigned int to)
-{
-    static long replays_load_count=0;
-    wxLogMessage(_T("ReplayList::LoadReplays(%d,%d) call #%d"),from,to,replays_load_count);
-    unsigned int end=std::min((unsigned int)to, (unsigned int)m_filenames.size());
-    for (unsigned int i = from; i < end; ++i)
+    for ( size_t i = 0; i < size; ++i)
     {
         Replay rep;
-        rep.id = m_last_id;
-        m_last_id++;
-        AddReplay( rep );
-        if ( GetReplayInfos( m_filenames[i] , m_replays[rep.id] ) )
-        {
-            m_replay_tab.AddReplay( m_replays[rep.id] );
+        rep.id = i;
+
+        if ( GetReplayInfos( m_filenames[i] , rep ) ) {
+            AddReplay( rep );
         }
-        else
-        {
-        	RemoveReplay( rep.id );
-					m_last_id--;
+        else {
+            m_fails++;
         }
     }
-    wxLogMessage(_T("done ReplayList::LoadReplays(%d,%d) %d"),from,to,replays_load_count);
-    replays_load_count+=1;
 }
 
 void ReplayList::AddReplay( const Replay& replay )
 {
-  m_replays[replay.id] = replay;
+    m_replays[replay.id] = replay;
 }
 
 
 void ReplayList::RemoveReplay( replay_id_t const& id )
 {
-  m_replays.erase(id);
+    m_replays.erase(id);
 }
 
 replay_map_t::size_type ReplayList::GetNumReplays()
 {
-  return m_replays.size();
+    return m_replays.size();
 }
 
 Replay &ReplayList::GetReplayById( replay_id_t const& id )
 {
 //TODO catch
-  replay_iter_t b = m_replays.find(id);
-  if (b == m_replays.end())
-    throw std::runtime_error("ReplayList_Iter::GetReplay(): no such replay");
-  return b->second;
+    replay_iter_t b = m_replays.find(id);
+    if (b == m_replays.end())
+        throw std::runtime_error("ReplayList_Iter::GetReplay(): no such replay");
+
+    return b->second;
 }
-/*
-Replay& ReplayList::GetReplay( int const index ) {
-//TODO secure index
-  replay_iter_t b = m_replays.begin();
-  std::advance(b,index);
-  if (b == m_replays.end())
-    throw std::runtime_error("ReplayList_Iter::GetReplay(): no such replay");
-  return b->second;
-}
-*/
+
 bool ReplayList::ReplayExists( replay_id_t const& id )
 {
-  return m_replays.find(id) != m_replays.end();
+    return m_replays.find(id) != m_replays.end();
 }
 
 bool ReplayList::GetReplayInfos ( const wxString& ReplayPath, Replay& ret )
@@ -354,11 +324,10 @@ void ReplayList::RemoveAll()
 {
     m_filenames.clear();
     m_replays.clear();
-    m_last_id = 0;
-    m_replay_tab.RemoveAllReplays();
+    m_fails = 0;
 }
 
 
-replay_map_t &ReplayList::GetReplaysMap(){
-  return m_replays;
+const replay_map_t& ReplayList::GetReplaysMap() const {
+    return m_replays;
 }
