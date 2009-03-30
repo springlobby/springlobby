@@ -165,14 +165,23 @@ wxString GetExecutableFolder()
 	return wxStandardPathsBase::Get().GetExecutablePath().BeforeLast( wxFileName::GetPathSeparator() );
 }
 
+template<class T>
+T FromwxString(const wxString& arg){
+  std::stringstream s;
+  s << STD_STRING(arg);
+  int64_t ret;
+  s >> ret;
+  return (T)ret;
+}
+
 wxString MakeHashUnsigned( const wxString& hash )
 {
-	return TowxString( (unsigned int)s2l( hash ) );
+	return TowxString( FromwxString<unsigned int>( hash ) );
 }
 
 wxString MakeHashSigned( const wxString& hash )
 {
-	return TowxString( (int)s2l( hash ) );
+	return TowxString( FromwxString<int>( hash ) );
 }
 
 // ------------------------------------------------------------------------------------------------------------------------

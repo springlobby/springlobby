@@ -97,6 +97,7 @@ wxString TowxString(T arg){
   s << arg;
   return WX_STRING( s.str() );
 }
+
 inline wxString TowxString(wxString arg){
   return arg;
 }
