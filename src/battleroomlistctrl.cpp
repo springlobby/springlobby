@@ -98,7 +98,7 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, IBattle* battle, Ui& u
 		wxMenu* m_teams;
 		m_teams = new wxMenu();
 
-		for ( int i = 0; i < SPRING_MAX_TEAMS; i++ )
+		for ( unsigned int i = 0; i < SPRING_MAX_TEAMS; i++ )
 		{
 			wxMenuItem* team = new wxMenuItem( m_teams, BRLIST_TEAM + i, wxString::Format( _T("%d"), i+1 ) , wxEmptyString, wxITEM_NORMAL );
 			m_teams->Append( team );
@@ -107,7 +107,7 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, IBattle* battle, Ui& u
 		m_popup->Append( -1, _("Team"), m_teams );
 
 		wxMenu* m_allies = new wxMenu();
-		for ( int i = 0; i < SPRING_MAX_ALLIES; i++ )
+		for ( unsigned int i = 0; i < SPRING_MAX_ALLIES; i++ )
 		{
 			wxMenuItem* ally = new wxMenuItem( m_allies, BRLIST_ALLY + i, wxString::Format( _T("%d"), i+1 ) , wxEmptyString, wxITEM_NORMAL );
 			m_allies->Append( ally );
@@ -119,7 +119,7 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, IBattle* battle, Ui& u
 		try
 		{
 			wxArrayString sides = usync().GetSides( m_battle->GetHostModName() );
-			for ( int i = 0; i < sides.GetCount(); i++ )
+			for ( unsigned int i = 0; i < sides.GetCount(); i++ )
 			{
 				wxMenuItem* side = new wxMenuItem( m_sides, BRLIST_SIDE + i, sides[i], wxEmptyString, wxITEM_NORMAL );
 				m_sides->Append( side );
@@ -207,12 +207,22 @@ void BattleroomListCtrl::UpdateUser( User& user )
 
 int BattleroomListCtrl::OnGetItemImage(long item) const
 {
+    return -1;
+}
 
+wxListItemAttr * BattleroomListCtrl::OnGetItemAttr(long item) const
+{
+    return NULL;
+}
+
+int BattleroomListCtrl::OnGetItemColumnImage(long item, long column) const
+{
+    return -1;
 }
 
 wxString BattleroomListCtrl::OnGetItemText(long item, long column) const
 {
-    if ( item == -1 || item >= m_data.size())
+    if ( item == -1 || item >= (long)m_data.size())
         return _T("");
 
     const User& user = *GetDataFromIndex( item );
@@ -223,7 +233,7 @@ wxString BattleroomListCtrl::OnGetItemText(long item, long column) const
         case 1: {
             try {
                 wxArrayString sides = usync().GetSides( m_battle->GetHostModName() );
-                ASSERT_EXCEPTION( user.BattleStatus().side < sides.GetCount(), _T("Side index too high") );
+                ASSERT_EXCEPTION( user.BattleStatus().side < (long)sides.GetCount(), _T("Side index too high") );
                 int sideimg = icons().GetSideIcon( m_battle->GetHostModName(), user.BattleStatus().side );
                 if ( sideimg < 0 )
                     return sides[user.BattleStatus().side];
@@ -352,7 +362,7 @@ void BattleroomListCtrl::OnListRightClick( wxListEvent& event )
 	if ( m_ro ) return;
 	int index = event.GetIndex();
 
-    if ( index == -1 || index >= m_data.size()) return;
+    if ( index == -1 || index >= (long)m_data.size()) return;
 
     User& user = *GetDataFromIndex( event.GetIndex() );
     m_sel_user = &user; //this is set for event handlers
@@ -452,31 +462,6 @@ void BattleroomListCtrl::OnRingPlayer( wxCommandEvent& event )
   wxLogDebugFunc( _T("") );
   if ( m_sel_user ) ((Battle*)m_battle)->GetServer().Ring( m_sel_user->GetNick() );
 }
-
-
-//void BattleroomListCtrl::OnColClick( wxListEvent& event )
-//{
-//  if ( event.GetColumn() == -1 ) return;
-//  wxListItem col;
-//  GetColumn( m_sortorder[0].col, col );
-//  col.SetImage( -1 );
-//  SetColumn( m_sortorder[0].col, col );
-//
-//  int i;
-//  for ( i = 0; m_sortorder[i].col != event.GetColumn() && i < 4; ++i ) {}
-//  if ( i > 3 ) { i = 3; }
-//  for ( ; i > 0; i--) { m_sortorder[i] = m_sortorder[i-1]; }
-//  m_sortorder[0].col = event.GetColumn();
-//  m_sortorder[0].direction = !m_sortorder[0].direction;
-//
-//
-//  GetColumn( m_sortorder[0].col, col );
-//  //col.SetImage( ( m_sortorder[0].direction )?ICON_UP:ICON_DOWN );
-//  SetColumn( m_sortorder[0].col, col );
-//
-//  Sort();
-//}
-
 
 void BattleroomListCtrl::Sort()
 {
@@ -896,7 +881,7 @@ void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint po
 {
     long item = GetItemData(item_hit);
 
-    if ( item < 0 || item >= m_data.size() )
+    if ( item < 0 || item >= (long)m_data.size() )
         return;
 
     const User& user = *GetDataFromIndex( item );
@@ -988,29 +973,17 @@ void BattleroomListCtrl::OnUserMenuCreateGroup( wxCommandEvent& event )
 
 wxString BattleroomListCtrl::GetSelectedUserNick()
 {
-    if ( m_selected_index < 0 || m_selected_index >= m_data.size() )
+    if ( m_selected_index < 0 || m_selected_index >= (long)m_data.size() )
         return wxEmptyString;
     else
         return m_data[m_selected_index]->GetNick();
-//    User* usr = items[(size_t)GetSelectedData()];
-//    if ( !usr ) return _T("");
-//    return usr->GetNick();
 }
-
-//void BattleroomListCtrl::SortList()
-//{
-//  if ( !m_dirty_sort ) return;
-//  SetSelectionRestorePoint();
-//  Sort();
-//  RestoreSelection();
-//  m_dirty_sort = false;
-//}
 
 void BattleroomListCtrl::OnActivateItem( wxListEvent& event )
 {
     if ( m_ro )
         return;
-    if ( m_selected_index < 0 || m_selected_index >= m_data.size() )
+    if ( m_selected_index < 0 || m_selected_index >= (long)m_data.size() )
         return;
 
     const User* usr = m_data[m_selected_index];
@@ -1018,33 +991,20 @@ void BattleroomListCtrl::OnActivateItem( wxListEvent& event )
         ui().mw().OpenPrivateChat( *usr );
 }
 
-/** @brief OnGetItemAttr
-  *
-  * @todo: document this function
-  */
-wxListItemAttr * BattleroomListCtrl::OnGetItemAttr(long item) const
-{
-
-}
-
-/** @brief OnGetItemColumnImage
-  *
-  * @todo: document this function
-  */
-int BattleroomListCtrl::OnGetItemColumnImage(long item, long column) const
-{
-    return -1;
-}
-
-
 int BattleroomListCtrl::GetIndexFromData(const DataType& data) const
 {
-
+    const User* user = data;
+    int i = 0;
+    for ( DataCIter it = m_data.begin(); it != m_data.end(); ++it, ++i ) {
+        if ( user == *it )
+            return i;
+    }
+    return -1;
 }
 
 int BattleroomListCtrl::CompareOneCrit(DataType u1, DataType u2, int col, int dir)
 {
-
+    return 0;
 }
 
 void BattleroomListCtrl::SortList()
