@@ -215,71 +215,52 @@ wxString BattleroomListCtrl::OnGetItemText(long item, long column) const
     if ( item == -1 || item >= m_data.size())
         return _T("");
 
-    User& user = *GetDataFromIndex( item );
+    const User& user = *GetDataFromIndex( item );
     bool is_bot = user.BattleStatus().IsBot();
     bool is_spec = user.BattleStatus().spectator;
 
-    if ( !is_bot ) {
-         SetItem( index, 5,  user.GetNick() );
-  	 SetItem( index, 8, wxString::Format( _T("%.1f GHz"), user.GetCpu() / 1000.0 ) );
-    }
-    else {
-        SetItem( index, 5, user.GetNick() + _T(" (") + user.BattleStatus().owner + _T(")") );
-
-        SetItem( index, 5, user.GetNick() + _T(" (") + user.BattleStatus().owner + _T(")") );
-
-        wxString botname = user.BattleStatus().aishortname;
-		if ( !user.BattleStatus().aiversion.IsEmpty() ) botname += _T(" ") + user.BattleStatus().aiversion;
-		if ( !usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) )
-		{
-			if ( botname.Contains(_T('.')) ) botname = botname.BeforeLast(_T('.'));
-			if ( botname.Contains(_T('/')) ) botname = botname.AfterLast(_T('/'));
-			if ( botname.Contains(_T('\\')) ) botname = botname.AfterLast(_T('\\'));
-			if ( botname.Contains(_T("LuaAI:")) ) botname = botname.AfterFirst(_T(':'));
-		}
-
-		SetItem( index, 8, botname );
-    }
-
-    if ( !is_spec ) {
-        SetItem( index, 6, wxString::Format( _T("%d"), user.BattleStatus().team + 1 ) );
-        SetItem( index, 7, wxString::Format( _T("%d"), user.BattleStatus().ally + 1 ) );
-        SetItem( index, 9, wxString::Format( _T("%d%%"), user.BattleStatus().handicap ) );
-
-        try
-        {
-            wxArrayString sides = usync().GetSides( m_battle->GetHostModName() );
-            ASSERT_EXCEPTION( user.BattleStatus().side < sides.GetCount(), _T("Side index too high") );
-            int sideimg = icons().GetSideIcon( m_battle->GetHostModName(), user.BattleStatus().side );
-            if ( sideimg >= 0 )
-                SetItemColumnImage( index, 1, sideimg );
-            else
-                SetItem( index, 1, sides[user.BattleStatus().side]);
-        } catch ( ... )
-        {
-          SetItem( index, 1, wxString::Format( _T("s%d"), user.BattleStatus().side + 1 ) );
-        }
-
-    }
-    else {
-        SetItem( index, 6, _T("") );
-        SetItem( index, 7, _T("") );
-        SetItem( index, 9, _T("") );
-    }
-
     switch ( column ) {
-        case 0: return ;
-        case 1: return ;
-        case 2: return ;
-        case 3: return ;
-        case 4: return ;
-        case 5: return ;
-        case 6: return ;
-        case 7: return ;
-        case 8: return ;
-        case 9: return ;
-        default: wxLogWarning( _T("coloumn oob in battelroomlistctrl OnGetItemText") ); return _T("");
-
+        case 1: {
+            try {
+                wxArrayString sides = usync().GetSides( m_battle->GetHostModName() );
+                ASSERT_EXCEPTION( user.BattleStatus().side < sides.GetCount(), _T("Side index too high") );
+                int sideimg = icons().GetSideIcon( m_battle->GetHostModName(), user.BattleStatus().side );
+                if ( sideimg < 0 )
+                    return sides[user.BattleStatus().side];
+            }
+            catch ( ... ) {
+                return wxString::Format( _T("s%d"), user.BattleStatus().side + 1 );
+            }
+            return _T("");
+        }
+        case 5: return is_bot ? user.GetNick() + _T(" (") + user.BattleStatus().owner + _T(")") : user.GetNick();
+        case 6: return is_spec ? _T("") : wxString::Format( _T("%d"), user.BattleStatus().team + 1 );
+        case 7: return is_spec ? _T("") : wxString::Format( _T("%d"), user.BattleStatus().ally + 1 );
+        case 8: {
+            if (!is_bot )
+                return wxString::Format( _T("%.1f GHz"), user.GetCpu() / 1000.0 );
+            else { //!TODO could prolly be cached
+                wxString botname = user.BattleStatus().aishortname;
+                if ( !user.BattleStatus().aiversion.IsEmpty() ) botname += _T(" ") + user.BattleStatus().aiversion;
+                if ( !usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) )
+                {
+                    if ( botname.Contains(_T('.')) ) botname = botname.BeforeLast(_T('.'));
+                    if ( botname.Contains(_T('/')) ) botname = botname.AfterLast(_T('/'));
+                    if ( botname.Contains(_T('\\')) ) botname = botname.AfterLast(_T('\\'));
+                    if ( botname.Contains(_T("LuaAI:")) ) botname = botname.AfterFirst(_T(':'));
+                }
+                return botname;
+            }
+        }
+        case 9: return is_spec ? _T("") : wxString::Format( _T("%d%%"), user.BattleStatus().handicap );
+        case 0:
+        case 2:
+        case 3:
+        case 4: return _T("");
+        default: {
+            wxLogWarning( _T("coloumn oob in battelroomlistctrl OnGetItemText") );
+            return _T("");
+        }
     }
 }
 
