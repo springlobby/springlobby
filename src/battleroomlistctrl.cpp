@@ -169,14 +169,6 @@ IBattle& BattleroomListCtrl::GetBattle()
 	return *m_battle;
 }
 
-
-//! never called ??
-//void BattleroomListCtrl::UpdateList()
-//{
-//
-//}
-
-
 void BattleroomListCtrl::AddUser( User& user )
 {
     if ( GetIndexFromData( &user ) != -1 ) {
@@ -213,6 +205,84 @@ void BattleroomListCtrl::UpdateUser( User& user )
     MarkDirtySort();
 }
 
+int BattleroomListCtrl::OnGetItemImage(long item) const
+{
+
+}
+
+wxString BattleroomListCtrl::OnGetItemText(long item, long column) const
+{
+    if ( item == -1 || item >= m_data.size())
+        return _T("");
+
+    User& user = *GetDataFromIndex( item );
+    bool is_bot = user.BattleStatus().IsBot();
+    bool is_spec = user.BattleStatus().spectator;
+
+    if ( !is_bot ) {
+         SetItem( index, 5,  user.GetNick() );
+  	 SetItem( index, 8, wxString::Format( _T("%.1f GHz"), user.GetCpu() / 1000.0 ) );
+    }
+    else {
+        SetItem( index, 5, user.GetNick() + _T(" (") + user.BattleStatus().owner + _T(")") );
+
+        SetItem( index, 5, user.GetNick() + _T(" (") + user.BattleStatus().owner + _T(")") );
+
+        wxString botname = user.BattleStatus().aishortname;
+		if ( !user.BattleStatus().aiversion.IsEmpty() ) botname += _T(" ") + user.BattleStatus().aiversion;
+		if ( !usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) )
+		{
+			if ( botname.Contains(_T('.')) ) botname = botname.BeforeLast(_T('.'));
+			if ( botname.Contains(_T('/')) ) botname = botname.AfterLast(_T('/'));
+			if ( botname.Contains(_T('\\')) ) botname = botname.AfterLast(_T('\\'));
+			if ( botname.Contains(_T("LuaAI:")) ) botname = botname.AfterFirst(_T(':'));
+		}
+
+		SetItem( index, 8, botname );
+    }
+
+    if ( !is_spec ) {
+        SetItem( index, 6, wxString::Format( _T("%d"), user.BattleStatus().team + 1 ) );
+        SetItem( index, 7, wxString::Format( _T("%d"), user.BattleStatus().ally + 1 ) );
+        SetItem( index, 9, wxString::Format( _T("%d%%"), user.BattleStatus().handicap ) );
+
+        try
+        {
+            wxArrayString sides = usync().GetSides( m_battle->GetHostModName() );
+            ASSERT_EXCEPTION( user.BattleStatus().side < sides.GetCount(), _T("Side index too high") );
+            int sideimg = icons().GetSideIcon( m_battle->GetHostModName(), user.BattleStatus().side );
+            if ( sideimg >= 0 )
+                SetItemColumnImage( index, 1, sideimg );
+            else
+                SetItem( index, 1, sides[user.BattleStatus().side]);
+        } catch ( ... )
+        {
+          SetItem( index, 1, wxString::Format( _T("s%d"), user.BattleStatus().side + 1 ) );
+        }
+
+    }
+    else {
+        SetItem( index, 6, _T("") );
+        SetItem( index, 7, _T("") );
+        SetItem( index, 9, _T("") );
+    }
+
+    switch ( column ) {
+        case 0: return ;
+        case 1: return ;
+        case 2: return ;
+        case 3: return ;
+        case 4: return ;
+        case 5: return ;
+        case 6: return ;
+        case 7: return ;
+        case 8: return ;
+        case 9: return ;
+        default: wxLogWarning( _T("coloumn oob in battelroomlistctrl OnGetItemText") ); return _T("");
+
+    }
+}
+
 //! this'll be set in gettext/item/attr
 void BattleroomListCtrl::UpdateUser( const int& index )
 {
@@ -220,20 +290,11 @@ void BattleroomListCtrl::UpdateUser( const int& index )
     MarkDirtySort();
 
     #if 0
-  wxListItem item;
-  item.SetId( index );
-
-  if( !GetItem( item ) ) return;
-
-  User* tmp = items[(size_t)GetItemData( index )];
-  if ( !tmp ) return;
-	User& user = *tmp;
 
   if( !user.BattleStatus().IsBot() )
   {
 			SetItemColumnImage( index, 4, icons().GetRankIcon( user.GetStatus().rank ) );
-  	 SetItem( index, 5,  user.GetNick() );
-  	 SetItem( index, 8, wxString::Format( _T("%.1f GHz"), user.GetCpu() / 1000.0 ) );
+
   	 SetItemColumnImage( index, 3,icons().GetFlagIcon( user.GetCountry() ) );
 		if ( &m_battle->GetFounder() == &user )
 		{
@@ -250,38 +311,26 @@ void BattleroomListCtrl::UpdateUser( const int& index )
   	SetItemColumnImage( index, 0, icons().ICON_BOT );
 		SetItemColumnImage( index, 3,icons().ICON_NONE );
 		SetItemColumnImage( index, 4,icons().ICON_NONE );
-		SetItem( index, 5, user.GetNick() + _T(" (") + user.BattleStatus().owner + _T(")") );
-
-		wxString botname = user.BattleStatus().aishortname;
-		if ( !user.BattleStatus().aiversion.IsEmpty() ) botname += _T(" ") + user.BattleStatus().aiversion;
-		if ( !usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) )
-		{
-			if ( botname.Contains(_T('.')) ) botname = botname.BeforeLast(_T('.'));
-			if ( botname.Contains(_T('/')) ) botname = botname.AfterLast(_T('/'));
-			if ( botname.Contains(_T('\\')) ) botname = botname.AfterLast(_T('\\'));
-			if ( botname.Contains(_T("LuaAI:")) ) botname = botname.AfterFirst(_T(':'));
-		}
-
-		SetItem( index, 8, botname );
 
   }
+
   SetItemColumnImage( index, 1, -1 );
-	SetItemColumnImage( index, 5, -1 );
+  SetItemColumnImage( index, 5, -1 );
 
   if ( !user.BattleStatus().spectator )
   {
 		icons().SetColourIcon( user.BattleStatus().team, user.BattleStatus().colour );
-    SetItem( index, 6, wxString::Format( _T("%d"), user.BattleStatus().team + 1 ) );
-    SetItem( index, 7, wxString::Format( _T("%d"), user.BattleStatus().ally + 1 ) );
-    SetItem( index, 9, wxString::Format( _T("%d%%"), user.BattleStatus().handicap ) );
+
     SetItemColumnImage( index, 2, icons().GetColourIcon( user.BattleStatus().team ) );
     try
     {
     	wxArrayString sides = usync().GetSides( m_battle->GetHostModName() );
     	ASSERT_EXCEPTION( user.BattleStatus().side < sides.GetCount(), _T("Side index too high") );
-      int sideimg = icons().GetSideIcon( m_battle->GetHostModName(), user.BattleStatus().side );
-      if ( sideimg >= 0 ) SetItemColumnImage( index, 1, sideimg );
-      else SetItem( index, 1, sides[user.BattleStatus().side]);
+        int sideimg = icons().GetSideIcon( m_battle->GetHostModName(), user.BattleStatus().side );
+        if ( sideimg >= 0 )
+            SetItemColumnImage( index, 1, sideimg );
+        else
+            SetItem( index, 1, sides[user.BattleStatus().side]);
     } catch ( ... )
     {
       SetItem( index, 1, wxString::Format( _T("s%d"), user.BattleStatus().side + 1 ) );
@@ -291,13 +340,8 @@ void BattleroomListCtrl::UpdateUser( const int& index )
   else
   {
   	SetItemColumnImage( index, 2, -1 );
-    SetItem( index, 6, _T("") );
-    SetItem( index, 7, _T("") );
-    SetItem( index, 9, _T("") );
-  }
-  HighlightItemUser( index, user.GetNick() );
 
-  MarkDirtySort();
+  }
   #endif
 }
 
@@ -1008,49 +1052,20 @@ wxListItemAttr * BattleroomListCtrl::OnGetItemAttr(long item) const
   */
 int BattleroomListCtrl::OnGetItemColumnImage(long item, long column) const
 {
-
+    return -1;
 }
 
-/** @brief OnGetItemImage
-  *
-  * @todo: document this function
-  */
-int BattleroomListCtrl::OnGetItemImage(long item) const
-{
 
-}
-
-/** @brief OnGetItemText
-  *
-  * @todo: document this function
-  */
-wxString BattleroomListCtrl::OnGetItemText(long item, long column) const
-{
-
-}
-
-/** @brief GetIndexFromData
-  *
-  * @todo: document this function
-  */
 int BattleroomListCtrl::GetIndexFromData(const DataType& data) const
 {
 
 }
 
-/** @brief CompareOneCrit
-  *
-  * @todo: document this function
-  */
 int BattleroomListCtrl::CompareOneCrit(DataType u1, DataType u2, int col, int dir)
 {
 
 }
 
-/** @brief SortList
-  *
-  * @todo: document this function
-  */
 void BattleroomListCtrl::SortList()
 {
 
