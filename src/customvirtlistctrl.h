@@ -183,6 +183,7 @@ protected:
 
     //! must be implemented in derived classes, should call the actual sorting on data and refreshitems
     virtual void Sort( ) = 0;
+
 public:
     /** only sorts if data is marked dirty, or force is true
      * calls Freeze(), Sort(), Thaw() */

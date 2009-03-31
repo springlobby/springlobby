@@ -71,7 +71,7 @@ User::~User(){
   if(uidata.panel)uidata.panel->SetUser( 0 );
 }
 
-wxString UserStatus::GetDiffString ( const UserStatus& old )
+wxString UserStatus::GetDiffString ( const UserStatus& old ) const
 {
     if ( old.away != away )
         return ( away ? _("away") : _("back") );

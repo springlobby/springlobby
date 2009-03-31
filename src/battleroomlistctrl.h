@@ -1,7 +1,7 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_BATTLEROOMLISTCTRL_H
 #define SPRINGLOBBY_HEADERGUARD_BATTLEROOMLISTCTRL_H
 
-#include "customlistctrl.h"
+#include "customvirtlistctrl.h"
 #include "usermenu.h"
 
 class User;
@@ -13,16 +13,14 @@ class wxIcon;
 
 /** \brief display participants of battle and their info (ally,team,color,cpu...)
  * \todo DOCMEMORE */
-class BattleroomListCtrl : public CustomListCtrl
+class BattleroomListCtrl : public CustomVirtListCtrl< User *>
 {
   public:
     BattleroomListCtrl( wxWindow* parent, IBattle* battle, Ui& ui, bool readonly );
      ~BattleroomListCtrl();
 
-	  void SetBattle( IBattle* battle );
-	  IBattle& GetBattle();
-
-    void Sort();
+    void SetBattle( IBattle* battle );
+    IBattle& GetBattle();
 
     void AddUser( User& user );
     void RemoveUser( User& user );
@@ -30,7 +28,7 @@ class BattleroomListCtrl : public CustomListCtrl
     void UpdateUser( User& user );
     void UpdateList();
 
-    int GetUserIndex( User& user );
+    int GetIndexFromData( const DataType& data ) const;
 
     void SortList();
 
@@ -50,7 +48,11 @@ class BattleroomListCtrl : public CustomListCtrl
     void OnUserMenuDeleteFromGroup( wxCommandEvent& event );
     void OnUserMenuAddToGroup( wxCommandEvent& event );
     virtual void SetTipWindowText( const long item_hit, const wxPoint position);
-    virtual void HighlightItem( long item );
+
+    virtual wxString OnGetItemText(long item, long column) const;
+    virtual int OnGetItemImage(long item) const;
+    virtual int OnGetItemColumnImage(long item, long column) const;
+    wxListItemAttr * OnGetItemAttr(long item) const;
 
   protected:
     static int wxCALLBACK CompareStatusUP(long item1, long item2, long sortData);
@@ -83,17 +85,19 @@ class BattleroomListCtrl : public CustomListCtrl
     UserMenu* m_popup;
 
     User* m_sel_user;
-    std::vector<User*> items;
 
     wxMenu* m_sides;
     wxMenuItem* m_spec_item;
 
     wxMenuItem* m_handicap_item;
 
-    Ui& m_ui;
-    static Ui* m_ui_for_sort;
+    static int CompareOneCrit( DataType u1, DataType u2, int col, int dir ) ;
 
-		bool m_ro;
+    Ui& m_ui;
+
+    virtual void Sort();
+
+    bool m_ro;
 
     enum {
       BRLIST_LIST = wxID_HIGHEST,

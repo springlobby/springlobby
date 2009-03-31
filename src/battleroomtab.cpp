@@ -744,7 +744,7 @@ void BattleRoomTab::OnUserJoined( User& user )
     m_players->AddUser( user );
     if ( &user == &m_battle.GetMe() )
     {
-        m_players->SetItemState( m_players->GetUserIndex( user ), wxLIST_MASK_STATE, wxLIST_STATE_SELECTED );
+        m_players->SetSelectedIndex ( m_players->GetIndexFromData( &user ) );
     }
 }
 
@@ -780,7 +780,7 @@ long BattleRoomTab::AddMMOptionsToList( long pos, OptionsWrapper::GameOption opt
 
 void BattleRoomTab::UpdateHighlights()
 {
-    m_players->UpdateHighlights();
+    m_players->RefreshVisibleItems();
 }
 
 
