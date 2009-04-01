@@ -348,18 +348,11 @@ class SpringUnitSyncLib
     int ProcessUnitsNoChecksum();
 
     /**
-     * Initialize a search.
-     * @return always 0.
+     * Search for a file pattern.
+     * @param the search patterns
+     * @return wxarraystring of results
      */
-    int InitFindVFS( const wxString& pattern );
-
-    /**
-     * Get next search result.
-     * @param handle the handle returned by InitFindVFS().
-     * @param name the returned name.
-     * @return new handle or 0 if no more results.
-     */
-    int FindFilesVFS( int handle, wxString& name );
+    wxArrayString FindFilesVFS( const wxString& name );
     int OpenFileVFS( const wxString& name );
     int FileSizeVFS( int handle );
     int ReadFileVFS( int handle, void* buffer, int bufferLength );

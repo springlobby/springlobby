@@ -182,7 +182,7 @@ class IUnitSync
 
     virtual bool ReloadUnitSyncLib() = 0;
 
-    virtual void GetReplayList(std::vector<wxString> &ret) = 0;
+    virtual wxArrayString GetReplayList() = 0;
 
     virtual void SetSpringDataPath( const wxString& path ) = 0;
 
