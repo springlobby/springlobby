@@ -360,7 +360,7 @@ void CustomVirtListCtrl<T>::noOp(wxMouseEvent& event)
 //}
 
 template < class T >
-wxListItemAttr* CustomVirtListCtrl<T>::HighlightItemUser( long item, const wxString& name ) const
+wxListItemAttr* CustomVirtListCtrl<T>::HighlightItemUser( const wxString& name ) const
 {
     static wxListItemAttr att;
   if ( m_highlight && useractions().DoActionOnUser( m_highlightAction, name ) ) {

@@ -224,12 +224,15 @@ int BattleroomListCtrl::OnGetItemImage(long item) const
 
 wxListItemAttr * BattleroomListCtrl::OnGetItemAttr(long item) const
 {
-    //void BattleroomListCtrl::HighlightItem( long item )
-//{
-//    User* usr = items[(size_t)GetItemData( item )];
-//    if ( !usr ) return;
-//		HighlightItemUser( item, usr->GetNick() );
-//}
+    if ( item == -1 || item >= (long)m_data.size())
+        return NULL;
+
+    const User& user = *GetDataFromIndex( item );
+    bool is_bot = user.BattleStatus().IsBot();
+
+    if ( !is_bot ) {
+        return HighlightItemUser( user.GetNick() );
+    }
 
     return NULL;
 }

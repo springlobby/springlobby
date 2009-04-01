@@ -136,7 +136,7 @@ wxListItemAttr* BattleListCtrl::OnGetItemAttr(long item) const
     if ( item < m_data.size() && item > -1 ) {
         const IBattle& b = *m_data[item];
         wxString host = b.GetFounder().GetNick();
-        wxListItemAttr* attr = HighlightItemUser( item, host );
+        wxListItemAttr* attr = HighlightItemUser( host );
         if ( attr != NULL )
             return attr;
 
@@ -144,7 +144,7 @@ wxListItemAttr* BattleListCtrl::OnGetItemAttr(long item) const
         //and return if it should
         for ( unsigned int i = 0; i < b.GetNumUsers(); ++i){
             wxString name = b.GetUser(i).GetNick();
-            attr = HighlightItemUser( item, name );
+            attr = HighlightItemUser( name );
             if ( attr != NULL )
                 return attr;
 
