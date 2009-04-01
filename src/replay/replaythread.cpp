@@ -8,7 +8,7 @@
 #include "replaythread.h"
 #include "../utils.h"
 #include "replaylist.h"
-#include "iunitsync.h"
+#include "../iunitsync.h"
 
 extern const wxEventType ReplaysLoadedEvt = wxNewEventType();
 

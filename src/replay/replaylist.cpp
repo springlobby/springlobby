@@ -16,7 +16,7 @@
 #include "../tdfcontainer.h"
 #include "replaytab.h"
 #include "../uiutils.h"
-#include "globalsmanager.h"
+#include "../globalsmanager.h"
 
 
 ReplayList::ReplayList()
