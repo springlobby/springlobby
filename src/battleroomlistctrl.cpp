@@ -32,6 +32,8 @@
 
 template<> SortOrder CustomVirtListCtrl<User*>::m_sortorder = SortOrder();
 
+IBattle* BattleroomListCtrl::s_battle = 0;
+
 BEGIN_EVENT_TABLE( BattleroomListCtrl,  CustomVirtListCtrl< User *>)
 
   EVT_LIST_ITEM_RIGHT_CLICK( BRLIST_LIST, BattleroomListCtrl::OnListRightClick )
@@ -447,37 +449,34 @@ void BattleroomListCtrl::OnRingPlayer( wxCommandEvent& event )
 
 void BattleroomListCtrl::Sort()
 {
-    #if 0
-  BattleroomListCtrl::m_ui_for_sort = &m_ui;
-  if (!m_ui_for_sort || !m_ui_for_sort->GetServerStatus()  ) return;
-  for (int i = 2; i >= 0; i--) {
-    switch ( m_sortorder[ i ].col ) {
-      case 0 : SortItems( ( m_sortorder[ i ].direction )?&CompareStatusUP:&CompareStatusDOWN , (wxUIntPtr)this ); break;
-      case 1 : SortItems( ( m_sortorder[ i ].direction )?&CompareSideUP:&CompareSideDOWN , (wxUIntPtr)this ); break;
-      case 2 : SortItems( ( m_sortorder[ i ].direction )?&CompareColorUP:&CompareColorDOWN , (wxUIntPtr)this ); break;
-      case 3 : SortItems( ( m_sortorder[ i ].direction )?&CompareCountryUP:&CompareCountryDOWN , (wxUIntPtr)this ); break;
-      case 4 : SortItems( ( m_sortorder[ i ].direction )?&CompareRankUP:&CompareRankDOWN , (wxUIntPtr)this ); break;
-      case 5 : SortItems( ( m_sortorder[ i ].direction )?&CompareNicknameUP:&CompareNicknameDOWN , (wxUIntPtr)this ); break;
-      case 6 : SortItems( ( m_sortorder[ i ].direction )?&CompareTeamUP:&CompareTeamDOWN , (wxUIntPtr)this ); break;
-      case 7 : SortItems( ( m_sortorder[ i ].direction )?&CompareAllyUP:&CompareAllyDOWN , (wxUIntPtr)this ); break;
-      case 8 : SortItems( ( m_sortorder[ i ].direction )?&CompareCpuUP:&CompareCpuDOWN , (wxUIntPtr)this ); break;
-      case 9 : SortItems( ( m_sortorder[ i ].direction )?&CompareHandicapUP:&CompareHandicapDOWN , (wxUIntPtr)this ); break;
+    if ( m_data.size() > 0 )
+    {
+        SaveSelection();
+        s_battle = m_battle;
+        SLInsertionSort( m_data, m_comparator );
+        RestoreSelection();
     }
-  }
-  #endif
 }
-#if 0
 
-int wxCALLBACK BattleroomListCtrl::CompareStatusUP(long item1, long item2, long sortData)
+int BattleroomListCtrl::CompareOneCrit(DataType u1, DataType u2, int col, int dir)
 {
-  BattleroomListCtrl& bl = *(BattleroomListCtrl*)sortData;
-  User* user1= bl.items[(size_t)item1];
-  User* user2= bl.items[(size_t)item2];
+    switch ( col ) {
+        case 0: return dir * CompareStatus( u1, u2, s_battle );
+        case 1: return dir * CompareSide( u1, u2 );
+        case 2: return dir * CompareColor( u1, u2 );
+        case 3: return dir * compareSimple( u1, u2 );
+        case 4: return dir * CompareRank( u1, u2 );
+        case 5: return dir * u1->GetNick().CmpNoCase( u2->GetNick() );
+        case 6: return dir * CompareTeam( u1, u2 );
+        case 7: return dir * CompareAlly( u1, u2 );
+        case 8: return dir * CompareCpu( u1, u2 );
+        case 9: return dir * CompareHandicap( u1, u2 );
+        default: return 0;
+    }
+}
 
-	if ( !user1 && !user2 ) return 0;
-	else if ( !user1 ) return 1;
-	else if ( !user2 ) return -1;
-
+int BattleroomListCtrl::CompareStatus(const DataType user1, const DataType user2, const IBattle* m_battle )
+{
   int status1 = 0;
   if ( user1->BattleStatus().IsBot() )
   {
@@ -485,7 +484,7 @@ int wxCALLBACK BattleroomListCtrl::CompareStatusUP(long item1, long item2, long 
   }
   else
   {
-    if ( &bl.m_battle->GetFounder() != user1 )
+    if ( &m_battle->GetFounder() != user1 )
       status1 = 1;
     if ( user1->BattleStatus().ready )
       status1 += 5;
@@ -502,7 +501,7 @@ int wxCALLBACK BattleroomListCtrl::CompareStatusUP(long item1, long item2, long 
   }
   else
   {
-    if ( &bl.m_battle->GetFounder() != user2 )
+    if ( &m_battle->GetFounder() != user2 )
       status2 = 1;
     if ( user2->BattleStatus().ready )
       status2 += 5;
@@ -520,19 +519,8 @@ int wxCALLBACK BattleroomListCtrl::CompareStatusUP(long item1, long item2, long 
   return 0;
 }
 
-
-int wxCALLBACK BattleroomListCtrl::CompareStatusDOWN(long item1, long item2, long sortData)
+int BattleroomListCtrl::CompareSide(const DataType user1, const DataType user2)
 {
-  return CompareStatusUP(item1, item2, sortData)*-1;
-}
-
-
-int wxCALLBACK BattleroomListCtrl::CompareSideUP(long item1, long item2, long sortData)
-{
-  BattleroomListCtrl& bl = *(BattleroomListCtrl*)sortData;
-  User* user1= bl.items[(size_t)item1];
-  User* user2= bl.items[(size_t)item2];
-
 	if ( !user1 && !user2 ) return 0;
 	else if ( !user1 ) return 1;
 	else if ( !user2 ) return -1;
@@ -557,19 +545,8 @@ int wxCALLBACK BattleroomListCtrl::CompareSideUP(long item1, long item2, long so
   return 0;
 }
 
-
-int wxCALLBACK BattleroomListCtrl::CompareSideDOWN(long item1, long item2, long sortData)
+int BattleroomListCtrl::CompareColor(const DataType user1, const DataType user2)
 {
-  return CompareSideUP(item1, item2, sortData)*-1;
-}
-
-
-int wxCALLBACK BattleroomListCtrl::CompareColorUP(long item1, long item2, long sortData)
-{
-  BattleroomListCtrl& bl = *(BattleroomListCtrl*)sortData;
-  User* user1= bl.items[(size_t)item1];
-  User* user2= bl.items[(size_t)item2];
-
 	if ( !user1 && !user2 ) return 0;
 	else if ( !user1 ) return 1;
 	else if ( !user2 ) return -1;
@@ -597,47 +574,8 @@ int wxCALLBACK BattleroomListCtrl::CompareColorUP(long item1, long item2, long s
 }
 
 
-int wxCALLBACK BattleroomListCtrl::CompareColorDOWN(long item1, long item2, long sortData)
+int BattleroomListCtrl::CompareRank(const DataType user1, const DataType user2)
 {
-  return CompareColorUP(item1, item2, sortData)*-1;
-}
-
-
-int wxCALLBACK BattleroomListCtrl::CompareCountryUP(long item1, long item2, long sortData)
-{
-  BattleroomListCtrl& bl = *(BattleroomListCtrl*)sortData;
-  User* user1= bl.items[(size_t)item1];
-  User* user2= bl.items[(size_t)item2];
-
-	if ( !user1 && !user2 ) return 0;
-	else if ( !user1 ) return 1;
-	else if ( !user2 ) return -1;
-
-  wxString country1 = user1->GetCountry().Upper();
-
-  wxString country2 = user2->GetCountry().Upper();
-
-  if ( country1 < country2 )
-      return -1;
-  if ( country1 > country2 )
-      return 1;
-
-  return 0;
-}
-
-
-int wxCALLBACK BattleroomListCtrl::CompareCountryDOWN(long item1, long item2, long sortData)
-{
-  return CompareCountryUP(item1, item2, sortData)*-1;
-}
-
-
-int wxCALLBACK BattleroomListCtrl::CompareRankUP(long item1, long item2, long sortData)
-{
-  BattleroomListCtrl& bl = *(BattleroomListCtrl*)sortData;
-  User* user1= bl.items[(size_t)item1];
-  User* user2= bl.items[(size_t)item2];
-
 	if ( !user1 && !user2 ) return 0;
 	else if ( !user1 ) return 1;
 	else if ( !user2 ) return -1;
@@ -662,48 +600,8 @@ int wxCALLBACK BattleroomListCtrl::CompareRankUP(long item1, long item2, long so
   return 0;
 }
 
-
-int wxCALLBACK BattleroomListCtrl::CompareRankDOWN(long item1, long item2, long sortData)
+int BattleroomListCtrl::CompareTeam(const DataType user1, const DataType user2)
 {
-  return CompareRankUP(item1, item2, sortData)*-1;
-}
-
-
-int wxCALLBACK BattleroomListCtrl::CompareNicknameUP(long item1, long item2, long sortData)
-{
-  BattleroomListCtrl& bl = *(BattleroomListCtrl*)sortData;
-  User* user1= bl.items[(size_t)item1];
-  User* user2= bl.items[(size_t)item2];
-
-	if ( !user1 && !user2 ) return 0;
-	else if ( !user1 ) return 1;
-	else if ( !user2 ) return -1;
-
-  wxString name1 = user1->GetNick().Upper();
-
-  wxString name2 = user2->GetNick().Upper();
-
-  if ( name1 < name2 )
-      return -1;
-  if ( name1 > name2 )
-      return 1;
-
-  return 0;
-}
-
-
-int wxCALLBACK BattleroomListCtrl::CompareNicknameDOWN(long item1, long item2, long sortData)
-{
-  return CompareNicknameUP(item1, item2, sortData)*-1;
-}
-
-
-int wxCALLBACK BattleroomListCtrl::CompareTeamUP(long item1, long item2, long sortData)
-{
-  BattleroomListCtrl& bl = *(BattleroomListCtrl*)sortData;
-  User* user1= bl.items[(size_t)item1];
-  User* user2= bl.items[(size_t)item2];
-
 	if ( !user1 && !user2 ) return 0;
 	else if ( !user1 ) return 1;
 	else if ( !user2 ) return -1;
@@ -728,19 +626,8 @@ int wxCALLBACK BattleroomListCtrl::CompareTeamUP(long item1, long item2, long so
   return 0;
 }
 
-
-int wxCALLBACK BattleroomListCtrl::CompareTeamDOWN(long item1, long item2, long sortData)
+int BattleroomListCtrl::CompareAlly(const DataType user1, const DataType user2)
 {
-  return CompareTeamUP(item1, item2, sortData)*-1;
-}
-
-
-int wxCALLBACK BattleroomListCtrl::CompareAllyUP(long item1, long item2, long sortData)
-{
-  BattleroomListCtrl& bl = *(BattleroomListCtrl*)sortData;
-  User* user1= bl.items[(size_t)item1];
-  User* user2= bl.items[(size_t)item2];
-
 	if ( !user1 && !user2 ) return 0;
 	else if ( !user1 ) return 1;
 	else if ( !user2 ) return -1;
@@ -765,19 +652,8 @@ int wxCALLBACK BattleroomListCtrl::CompareAllyUP(long item1, long item2, long so
   return 0;
 }
 
-
-int wxCALLBACK BattleroomListCtrl::CompareAllyDOWN(long item1, long item2, long sortData)
+int BattleroomListCtrl::CompareCpu(const DataType user1, const DataType user2)
 {
-  return CompareAllyUP(item1, item2, sortData)*-1;
-}
-
-
-int wxCALLBACK BattleroomListCtrl::CompareCpuUP(long item1, long item2, long sortData)
-{
-  BattleroomListCtrl& bl = *(BattleroomListCtrl*)sortData;
-  User* user1= bl.items[(size_t)item1];
-  User* user2= bl.items[(size_t)item2];
-
 	if ( !user1 && !user2 ) return 0;
 	else if ( !user1 ) return 1;
 	else if ( !user2 ) return -1;
@@ -814,23 +690,8 @@ int wxCALLBACK BattleroomListCtrl::CompareCpuUP(long item1, long item2, long sor
   }
 }
 
-
-int wxCALLBACK BattleroomListCtrl::CompareCpuDOWN(long item1, long item2, long sortData)
+int BattleroomListCtrl::CompareHandicap(const DataType user1, const DataType user2)
 {
-  return CompareCpuUP(item1, item2, sortData)*-1;
-}
-
-
-int wxCALLBACK BattleroomListCtrl::CompareHandicapUP(long item1, long item2, long sortData)
-{
-  BattleroomListCtrl& bl = *(BattleroomListCtrl*)sortData;
-  User* user1= bl.items[(size_t)item1];
-  User* user2= bl.items[(size_t)item2];
-
-	if ( !user1 && !user2 ) return 0;
-	else if ( !user1 ) return 1;
-	else if ( !user2 ) return -1;
-
   int handicap1;
 	if ( user1->BattleStatus().spectator )
     handicap1 = 1000;
@@ -850,14 +711,6 @@ int wxCALLBACK BattleroomListCtrl::CompareHandicapUP(long item1, long item2, lon
 
   return 0;
 }
-
-
-int wxCALLBACK BattleroomListCtrl::CompareHandicapDOWN(long item1, long item2, long sortData)
-{
-  return CompareHandicapUP(item1, item2, sortData)*-1;
-}
-
-#endif
 
 void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint position)
 {
@@ -977,10 +830,6 @@ int BattleroomListCtrl::GetIndexFromData(const DataType& data) const
     return -1;
 }
 
-int BattleroomListCtrl::CompareOneCrit(DataType u1, DataType u2, int col, int dir)
-{
-    return 0;
-}
 
 void BattleroomListCtrl::SortList()
 {

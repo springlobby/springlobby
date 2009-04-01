@@ -55,31 +55,21 @@ class BattleroomListCtrl : public CustomVirtListCtrl< User *>
     wxListItemAttr * OnGetItemAttr(long item) const;
 
   protected:
-    static int wxCALLBACK CompareStatusUP(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareStatusDOWN(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareSideUP(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareSideDOWN(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareColorUP(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareColorDOWN(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareCountryUP(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareCountryDOWN(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareRankUP(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareRankDOWN(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareNicknameUP(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareNicknameDOWN(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareTeamUP(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareTeamDOWN(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareAllyUP(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareAllyDOWN(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareCpuUP(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareCpuDOWN(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareHandicapUP(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareHandicapDOWN(long item1, long item2, long sortData);
-    wxString GetCellContentsString( long row_number, int column );
+    static int CompareStatus(const DataType user1, const DataType user2, const IBattle* m_battle );
+    static int CompareSide(const DataType user1, const DataType user2);
+    static int CompareColor(const DataType user1, const DataType user2);
+    static int CompareRank(const DataType user1, const DataType user2);
+    static int CompareTeam(const DataType user1, const DataType user2);
+    static int CompareAlly(const DataType user1, const DataType user2);
+    static int CompareCpu(const DataType user1, const DataType user2);
+    static int CompareHandicap(const DataType user1, const DataType user2);
+
+//    wxString GetCellContentsString( long row_number, int column );
 
     wxString GetSelectedUserNick();
 
     IBattle* m_battle;
+    static IBattle* s_battle;
 
     typedef SL_GENERIC::UserMenu<BattleroomListCtrl> UserMenu;
     UserMenu* m_popup;
