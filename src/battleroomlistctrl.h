@@ -50,7 +50,6 @@ class BattleroomListCtrl : public CustomVirtListCtrl< User *>
     virtual void SetTipWindowText( const long item_hit, const wxPoint position);
 
     virtual wxString OnGetItemText(long item, long column) const;
-    virtual int OnGetItemImage(long item) const;
     virtual int OnGetItemColumnImage(long item, long column) const;
     wxListItemAttr * OnGetItemAttr(long item) const;
 

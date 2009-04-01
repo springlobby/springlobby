@@ -133,7 +133,7 @@ int BattleListCtrl::OnGetItemColumnImage(long item, long column) const
 
 wxListItemAttr* BattleListCtrl::OnGetItemAttr(long item) const
 {
-    if ( item < m_data.size() && item > -1 ) {
+    if ( item < (long)m_data.size() && item > -1 ) {
         const IBattle& b = *m_data[item];
         wxString host = b.GetFounder().GetNick();
         wxListItemAttr* attr = HighlightItemUser( host );
@@ -192,7 +192,7 @@ void BattleListCtrl::UpdateBattle( IBattle& battle )
 void BattleListCtrl::OnListRightClick( wxListEvent& event )
 {
     int idx = event.GetIndex();
-    if ( idx < m_data.size() && idx > -1 ) {
+    if ( idx < (long)m_data.size() && idx > -1 ) {
 
         DataType dt = m_data[idx];
         bool mod_missing = !dt->ModExists();
@@ -212,7 +212,7 @@ void BattleListCtrl::OnListRightClick( wxListEvent& event )
 
 void BattleListCtrl::OnDLMap( wxCommandEvent& event )
 {
-    if ( m_selected_index > 0 &&  m_data.size() > m_selected_index ) {
+    if ( m_selected_index > 0 &&  (long)m_data.size() > m_selected_index ) {
         DataType dt = m_data[m_selected_index];
         m_ui.DownloadMap( dt->GetHostMapHash(), dt->GetHostMapName() );
     }
@@ -220,7 +220,7 @@ void BattleListCtrl::OnDLMap( wxCommandEvent& event )
 
 void BattleListCtrl::OnDLMod( wxCommandEvent& event )
 {
-    if ( m_selected_index > 0 &&  m_data.size() > m_selected_index ) {
+    if ( m_selected_index > 0 &&  (long)m_data.size() > m_selected_index ) {
         DataType dt = m_data[m_selected_index];
         m_ui.DownloadMod( dt->GetHostModHash(), dt->GetHostModName() );
     }
@@ -299,8 +299,7 @@ int BattleListCtrl::ComparePlayer( DataType u1, DataType u2 )
 
 void BattleListCtrl::SetTipWindowText( const long item_hit, const wxPoint position)
 {
-    long item = GetItemData(item_hit);
-    if ( m_data.size() < item_hit ) {
+    if ( (long)m_data.size() < item_hit ) {
         m_tiptext = _T("");
         return;
     }

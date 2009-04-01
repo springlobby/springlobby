@@ -205,25 +205,6 @@ void BattleroomListCtrl::UpdateUser( User& user )
     MarkDirtySort();
 }
 
-int BattleroomListCtrl::OnGetItemImage(long item) const
-{
-    if ( item == -1 || item >= (long)m_data.size())
-        return -1;
-
-    const User& user = *GetDataFromIndex( item );
-    bool is_bot = user.BattleStatus().IsBot();
-
-    if ( !is_bot ) {
-        if ( &m_battle->GetFounder() == &user ) {
-			return icons().GetHostIcon( user.BattleStatus().spectator );
-		}
-		else {
-			return icons().GetReadyIcon( user.BattleStatus().spectator, user.BattleStatus().ready, user.BattleStatus().sync, user.BattleStatus().IsBot() );
-		}
-    }
-    return -1;
-}
-
 wxListItemAttr * BattleroomListCtrl::OnGetItemAttr(long item) const
 {
     if ( item == -1 || item >= (long)m_data.size())
@@ -252,7 +233,18 @@ int BattleroomListCtrl::OnGetItemColumnImage(long item, long column) const
         icons().SetColourIcon( user.BattleStatus().team, user.BattleStatus().colour );
 
     switch ( column ) {
-        case 0: return is_bot ? icons().ICON_BOT : -1;
+        case 0: {
+            if ( !is_bot ) {
+                if ( &m_battle->GetFounder() == &user ) {
+                    return icons().GetHostIcon( user.BattleStatus().spectator );
+                }
+                else {
+                    return icons().GetReadyIcon( user.BattleStatus().spectator, user.BattleStatus().ready, user.BattleStatus().sync, user.BattleStatus().IsBot() );
+                }
+            }
+            else
+                return icons().ICON_BOT;
+        }
         case 2: return is_spec ? -1: icons().GetColourIcon( user.BattleStatus().team );
         case 3: return is_bot ? -1 : icons().GetFlagIcon( user.GetCountry() );
         case 4: return is_bot ? -1 : icons().GetRankIcon( user.GetStatus().rank );
