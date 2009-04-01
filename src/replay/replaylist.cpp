@@ -39,19 +39,19 @@ void ReplayList::LoadReplays( const wxArrayString& filenames )
     {
         Replay rep;
         rep.id = i;
-
-        if ( GetReplayInfos( filenames[i] , rep ) ) {
-            AddReplay( rep );
-        }
-        else {
+				Replay& rep_ref = AddReplay( rep ); // don't touch this reference, since elements inside this data structure are filled using pointers, adding & not fecthing the new addresses would screw up references when ref gets destroyed
+        if ( !GetReplayInfos( filenames[i] , rep_ref ) )
+        {
+						RemoveReplay( rep.id );
             m_fails++;
         }
     }
 }
 
-void ReplayList::AddReplay( const Replay& replay )
+Replay& ReplayList::AddReplay( const Replay& replay )
 {
     m_replays[replay.id] = replay;
+    return m_replays[replay.id];
 }
 
 

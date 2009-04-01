@@ -71,7 +71,7 @@ class ReplayList : public wxEvtHandler
     //!loads replays between two indices
     void LoadReplays( const unsigned int from, const unsigned int to);
 
-    void AddReplay( const Replay& replay );
+    Replay& AddReplay( const Replay& replay );
     void RemoveReplay( replay_id_t const& id );
 
     Replay &GetReplayById( replay_id_t const& id );
