@@ -629,7 +629,7 @@ bool TorrentWrapper::RemoveTorrentByRow( const TorrentTable::PRow& row )
         else
         {
         	 GetTorrentTable().SetRowStatus( row, P2P::not_stored );
-        	 SendMessageToCoordinator( _T("N-|")  + row->hash + _T("\n") );  //notify the system we don't need the file anymore
+        	 SendMessageToCoordinator( _T("N-|")  + MakeHashSigned(row->hash) + _T("\n") );  //notify the system we don't need the file anymore
         }
     }
     catch (std::exception& e)
@@ -937,7 +937,7 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
     else
     {
         GetTorrentTable().SetRowStatus( row, P2P::leeching );
-				SendMessageToCoordinator( wxString::Format( _T("N+|%s\n"), row->hash.c_str() ) ); // request for seeders for the file
+				SendMessageToCoordinator( wxString::Format( _T("N+|%s\n"), MakeHashSigned(row->hash).c_str() ) ); // request for seeders for the file
     }
 
     wxLogMessage(_T("(5) Joining torrent: done"));
@@ -1209,17 +1209,17 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
 
         TorrentTable::PRow newtorrent = new TorrentTable::Row;
 
-        newtorrent->hash = data[1];
+        newtorrent->hash = MakeHashUnsigned(data[1]);
         newtorrent->name = data[2];
         if ( data[3] == _T("MAP") )
         {
             newtorrent->type = IUnitSync::map;
-            if ( usync().MapExists( data[2], data[1] ) ) newtorrent->status = P2P::stored;
+            if ( usync().MapExists( newtorrent->name, newtorrent->hash ) ) newtorrent->status = P2P::stored;
         }
         else if ( data[3] == _T("MOD") )
         {
             newtorrent->type = IUnitSync::mod;
-            if ( usync().ModExists( data[2], data[1] ) ) newtorrent->status = P2P::stored;
+            if ( usync().ModExists( newtorrent->name, newtorrent->hash ) ) newtorrent->status = P2P::stored;
         }
 
         GetTorrentTable().InsertRow( newtorrent );
@@ -1231,7 +1231,7 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
     else if ( data[0] == _T("T-") && data.GetCount() > 1 )
     {
 
-        TorrentTable::PRow row = GetTorrentTable().RowByHash( data[1] );
+        TorrentTable::PRow row = GetTorrentTable().RowByHash( MakeHashUnsigned(data[1]) );
         if ( !row.ok() ) return;
         GetTorrentTable().RemoveRow( row );
 
@@ -1240,7 +1240,7 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
     else if ( data.GetCount() > 1 && data[0] == _T("S+") )
     {
 
-        TorrentTable::PRow row = GetTorrentTable().RowByHash( data[1] );
+        TorrentTable::PRow row = GetTorrentTable().RowByHash( MakeHashUnsigned(data[1]) );
         if ( !row.ok() ) return;
         GetTorrentTable().AddSeedRequest( row );
 
@@ -1254,7 +1254,7 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
     else if ( data.GetCount() > 1 && data[0] == _T("S-") )
     {
 
-        TorrentTable::PRow row = GetTorrentTable().RowByHash( data[1] );
+        TorrentTable::PRow row = GetTorrentTable().RowByHash( MakeHashUnsigned(data[1]) );
         if ( !row.ok() ) return;
         GetTorrentTable().RemoveSeedRequest( row );
 
@@ -1263,7 +1263,7 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
     else if ( data[0] == _T("M+") && data.GetCount() > 2 )
     {
 
-        TorrentTable::PRow row = GetTorrentTable().RowByHash( data[1] );
+        TorrentTable::PRow row = GetTorrentTable().RowByHash( MakeHashUnsigned(data[1]) );
         if ( !row.ok() ) return;
 
         for ( unsigned int index = 2; index < data.GetCount(); index++ )
@@ -1288,11 +1288,31 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
     else if ( data.GetCount() > 2 && data[0] == _T("IH") )
     {
 
-        TorrentTable::PRow row = GetTorrentTable().RowByHash( data[1] );
+        TorrentTable::PRow row = GetTorrentTable().RowByHash( MakeHashUnsigned(data[1]) );
         if ( !row.ok() ) return;
 
         row->infohash = data[2];
-
+				// QH|query tag|type|name 	 queries clients for spring hashes of given map/mod
+    }
+    else if ( data[0] == _T("QH") && data.GetCount() > 3  )
+    {
+				wxString query_tag = data[1];
+				wxString file_type = data[2];
+				wxString unitsync_name = data[3];
+				wxString hash;
+				if ( file_type == _T("MAP") )
+				{
+					hash = usync().GetMap( unitsync_name ).hash;
+				}
+				else if ( file_type == _T("MOD") )
+				{
+					hash = usync().GetMod( unitsync_name ).hash;
+				}
+				if ( !hash.IsEmpty() )
+				{
+					hash = MakeHashSigned( hash );
+					SendMessageToCoordinator( _T("QH|") + query_tag + _T("|") + hash );
+				}
     }
 }
 

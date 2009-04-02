@@ -362,6 +362,12 @@ void MainWindow::OpenPrivateChat( const User& user, bool doFocus )
 
 }
 
+//! @brief Displays the lobby singleplayer tab.
+void MainWindow::ShowSingleplayer()
+{
+  m_func_tabs->SetSelection( PAGE_SINGLE );
+}
+
 
 //! @brief Displays the lobby configuration.
 void MainWindow::ShowConfigure( const unsigned int page )
@@ -405,7 +411,8 @@ void MainWindow::OnMenuChat( wxCommandEvent& event )
   wxString answer;
   if ( m_ui.AskText( _("Open Private Chat..."), _("Name of user"), answer ) ) {
     if (m_ui.GetServer().UserExists( answer ) ) {
-      OpenPrivateChat( m_ui.GetServer().GetUser( answer ) );
+        //true puts focus on new tab
+      OpenPrivateChat( m_ui.GetServer().GetUser( answer ), true  );
     }
   }
 

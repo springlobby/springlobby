@@ -1,15 +1,10 @@
 /**
     This file is part of springsettings,
-    Copyright (C) 2007
-    Original work by Kloot
-    cross-plattform/UI adaptation and currently maintained by koshi (Ren� Milk)
-    visit http://spring.clan-sy.com/phpbb/viewtopic.php?t=12104
-    for more info/help
+    Copyright (C) 2007-09
 
     springsettings is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+    it under the terms of the GNU General Public License version 2 as published by
+    the Free Software Foundation.
 
     springsettings is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -19,7 +14,6 @@
     You should have received a copy of the GNU General Public License
     along with springsettings.  If not, see <http://www.gnu.org/licenses/>.
 **/
-
 
 #ifndef SETTINGS_PRESETS_H_
 #define SETTINGS_PRESETS_H_
@@ -38,8 +32,12 @@ public:
 		wxString key;
 
 	//levelLabels and values_arg MUST have same length
-		presetValues ( wxString key_arg,const wxString* levelLabels,const T* values_arg);
-
+		presetValues ( wxString key_arg,const wxString* levelLabels,const T* values_arg) {
+            for(int i = 0; i< valueCount;++i) {
+                values[levelLabels[i]]=values_arg[i];
+            }
+            key = key_arg;
+		}
 };
 const int levels_low_To_High_size = 3;
 const int levels_vlow_To_vHigh_size =5;

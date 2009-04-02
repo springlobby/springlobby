@@ -358,12 +358,12 @@ bool TASServer::Register( const wxString& addr, const int port, const wxString& 
     m_sock->Connect( addr, port );
     if ( !IsConnected() ) return false;
 
-    wxString data = m_sock->Receive().BeforeLast(_T('\n'));
+    wxString data = m_sock->Receive().BeforeLast(_T('\n')).BeforeLast(_T('\r'));
     if ( GetWordParam( data ) != _T("TASServer") ) return false;
 
     SendCmd( _T("REGISTER"), nick + _T(" ") + GetPasswordHash( password ) );
 
-    data = m_sock->Receive().BeforeLast(_T('\n'));
+    data = m_sock->Receive().BeforeLast(_T('\n')).BeforeLast(_T('\r'));
     if ( data.IsEmpty() )
     {
         reason = _("Connection timed out");
@@ -408,11 +408,6 @@ void TASServer::Login()
     wxLogDebugFunc( _T("") );
     wxString pass = GetPasswordHash( m_pass );
     wxString protocol = _T("\t") + TowxString( m_crc.GetCRC() );
-    if ( m_server_lanmode )
-    {
-        pass = _T("Cock-a-doodle-doo");
-        protocol = _T("");
-    }
     wxString localaddr;
     if ( m_sock ) localaddr = m_sock->GetLocalAddress();
     if ( localaddr.IsEmpty() ) localaddr = _T("*");
@@ -636,7 +631,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         maxplayers = GetIntParam( params );
         haspass = GetBoolParam( params );
         rank = GetIntParam( params );
-        hash = GetWordParam( params );
+        hash = MakeHashUnsigned( GetWordParam( params ) );
         map = GetSentenceParam( params );
         title = GetSentenceParam( params );
         mod = GetSentenceParam( params );
@@ -659,7 +654,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         id = GetIntParam( params );
         specs = GetIntParam( params );
         haspass = GetBoolParam( params );
-        hash = GetWordParam( params );
+        hash = MakeHashUnsigned( GetWordParam( params ) );
         map = GetSentenceParam( params );
         m_se->OnBattleInfoUpdated( id, specs, haspass, hash, map );
     }
@@ -800,7 +795,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     else if ( cmd == _T("JOINBATTLE") )
     {
         id = GetIntParam( params );
-        hash = GetWordParam( params );
+        hash = MakeHashUnsigned( GetWordParam( params ) );
         m_battle_id = id;
         m_se->OnJoinedBattle( id, hash );
         m_se->OnBattleInfoUpdated( m_battle_id );
@@ -1361,16 +1356,17 @@ void TASServer::HostBattle( BattleOptions bo, const wxString& password )
                              bo.port,
                              bo.maxplayers
                            );
-    cmd +=  bo.modhash;
+    cmd += MakeHashSigned( bo.modhash );
     cmd += wxString::Format( _T(" %d "), bo.rankneeded );
-    cmd += bo.maphash + _T(" ");
+    cmd += MakeHashSigned( bo.maphash ) + _T(" ");
     cmd += bo.mapname + _T("\t");
     cmd += bo.description + _T("\t");
     cmd += bo.modname;
+
+    m_delayed_open_command = _T("");
     if ( !bo.isproxy )
     {
        SendCmd( _T("OPENBATTLE"), cmd );
-       m_delayed_open_command = _T("");
     }
     else
     {
@@ -1381,7 +1377,6 @@ void TASServer::HostBattle( BattleOptions bo, const wxString& password )
           unsigned int begin = rand() % numbots;
           unsigned int choice = begin;
           m_relay_host_manager = _T("");
-          m_delayed_open_command = _T("");
           while ( true )
           {
             wxString currentmanager = m_relay_host_manager_list[choice];
@@ -1506,7 +1501,7 @@ void TASServer::SendHostInfo( HostInfo update )
     {
         // UPDATEBATTLEINFO SpectatorCount locked maphash {mapname}
         wxString cmd = wxString::Format( _T("%d %d "), battle.GetSpectators(), battle.IsLocked() );
-        cmd += battle.LoadMap().hash + _T(" ");
+        cmd += MakeHashSigned( battle.LoadMap().hash ) + _T(" ");
         cmd += battle.LoadMap().name;
 
         if ( !battle.IsProxy() ) SendCmd( _T("UPDATEBATTLEINFO"), cmd );
@@ -2156,6 +2151,7 @@ void TASServer::OnDataReceived( Socket* sock )
 
     wxString data = sock->Receive();
 		m_buffer << data;
+		m_buffer.Replace( _T("\r\n"), _T("\n") );
 		int returnpos = m_buffer.Find( _T("\n") );
 		while ( returnpos != -1 )
 		{

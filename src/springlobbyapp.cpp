@@ -213,6 +213,10 @@ bool SpringLobbyApp::OnInit()
 				}
 			#endif
 			}
+			if ( sett().GetSettingsVersion() < 12 )
+			{
+				sett().ConvertOldChannelSettings();
+			}
     }
 
     ui().ReloadUnitSync(); // first time load of unitsync
@@ -265,7 +269,7 @@ bool SpringLobbyApp::OnInit()
     }
     else
     {
-        ui().Connect();
+        ui().mw().ShowSingleplayer();
     }
 
   #ifndef NO_TORRENT_SYSTEM

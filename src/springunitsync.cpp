@@ -108,7 +108,7 @@ void SpringUnitSync::PopulateArchiveList()
     try
     {
      name = susynclib().GetPrimaryModName( i );
-     hash = i2s(susynclib().GetPrimaryModChecksum( i ));
+     hash = susynclib().GetPrimaryModChecksum( i );
     } catch (...) { continue; }
     try
     {
@@ -232,7 +232,7 @@ UnitSyncMod SpringUnitSync::GetMod( int index )
   UnitSyncMod m;
   susynclib().GetPrimaryModCount();
   m.name = susynclib().GetPrimaryModName( index );
-  m.hash = i2s( susynclib().GetPrimaryModChecksum( index ) );
+  m.hash = susynclib().GetPrimaryModChecksum( index );
 
   return m;
  }
@@ -737,62 +737,72 @@ MapInfo SpringUnitSync::_GetMapInfoEx( const wxString& mapname )
   if ( m_mapinfo_cache.TryGet( mapname, info ) ) return info;
 
   wxArrayString cache;
-  try
-  {
-    cache = GetCacheFile( GetFileCachePath( mapname, _T(""), false ) + _T(".infoex") );
+  try {
+      try
+      {
+        cache = GetCacheFile( GetFileCachePath( mapname, _T(""), false ) + _T(".infoex") );
 
-    ASSERT_EXCEPTION( cache.GetCount() >= 11, _T("not enough lines found in cache info ex") );
-    info.author = cache[0];
-    info.tidalStrength =  s2l( cache[1] );
-    info.gravity = s2l( cache[2] );
-    info.maxMetal = s2d( cache[3] );
-    info.extractorRadius = s2d( cache[4] );
-    info.minWind = s2l( cache[5] );
-    info.maxWind = s2l( cache[6] );
-    info.width = s2l( cache[7] );
-    info.height = s2l( cache[8] );
-    info.posCount = s2l( cache[9] );
+        ASSERT_EXCEPTION( cache.GetCount() >= 11, _T("not enough lines found in cache info ex") );
+        info.author = cache[0];
+        info.tidalStrength =  s2l( cache[1] );
+        info.gravity = s2l( cache[2] );
+        info.maxMetal = s2d( cache[3] );
+        info.extractorRadius = s2d( cache[4] );
+        info.minWind = s2l( cache[5] );
+        info.maxWind = s2l( cache[6] );
+        info.width = s2l( cache[7] );
+        info.height = s2l( cache[8] );
+        info.posCount = s2l( cache[9] );
 
-    wxArrayString posinfo = wxStringTokenize( cache[10], _T(' '), wxTOKEN_RET_EMPTY );
-    for ( int i = 0; i < info.posCount; i++)
-    {
-       StartPos position;
-       position.x = s2l( posinfo[i].BeforeFirst( _T('-') ) );
-       position.y = s2l( posinfo[i].AfterFirst( _T('-') ) );
-       info.positions[i] = position;
-    }
+        wxArrayString posinfo = wxStringTokenize( cache[10], _T(' '), wxTOKEN_RET_EMPTY );
+        for ( int i = 0; i < info.posCount; i++)
+        {
+           StartPos position;
+           position.x = s2l( posinfo[i].BeforeFirst( _T('-') ) );
+           position.y = s2l( posinfo[i].AfterFirst( _T('-') ) );
+           info.positions[i] = position;
+        }
 
-    unsigned int LineCount = cache.GetCount();
-    for ( unsigned int i = 11; i < LineCount; i++ ) info.description << cache[i] << _T('\n');
+        unsigned int LineCount = cache.GetCount();
+        for ( unsigned int i = 11; i < LineCount; i++ ) info.description << cache[i] << _T('\n');
 
+      }
+      catch (...)
+      {
+        info = susynclib().GetMapInfoEx( mapname, 1 );
+
+        cache.Add ( info.author );
+        cache.Add( TowxString( info.tidalStrength ) );
+        cache.Add( TowxString( info.gravity ) );
+        cache.Add( TowxString( info.maxMetal ) );
+        cache.Add( TowxString( info.extractorRadius ) );
+        cache.Add( TowxString( info.minWind ) );
+        cache.Add( TowxString( info.maxWind )  );
+        cache.Add( TowxString( info.width ) );
+        cache.Add( TowxString( info.height ) );
+        cache.Add( TowxString( info.posCount ) );
+
+        wxString postring;
+        for ( int i = 0; i < info.posCount; i++)
+        {
+           postring << TowxString( info.positions[i].x ) << _T('-') << TowxString( info.positions[i].y ) << _T(' ');
+        }
+        cache.Add( postring );
+
+        wxArrayString descrtoken = wxStringTokenize( info.description, _T('\n') );
+        unsigned int desclinecount = descrtoken.GetCount();
+        for ( unsigned int count = 0; count < desclinecount; count++ ) cache.Add( descrtoken[count] );
+
+        SetCacheFile( GetFileCachePath( mapname, _T(""), false ) + _T(".infoex"), cache );
+      }
   }
-  catch (...)
-  {
-    info = susynclib().GetMapInfoEx( mapname, 1 );
+  catch ( ... ) {
+      info.posCount = 0;
+      info.width = 1;
+      info.height = 1;
+      customMessageBoxNoModal( SL_MAIN_ICON, _("Failed to get infos for map ") + mapname +
+            _("\nIt probably is corrupted.\nPlease consider re-downloading/deleting it.") , _T("Error") );
 
-    cache.Add ( info.author );
-    cache.Add( TowxString( info.tidalStrength ) );
-    cache.Add( TowxString( info.gravity ) );
-    cache.Add( TowxString( info.maxMetal ) );
-    cache.Add( TowxString( info.extractorRadius ) );
-    cache.Add( TowxString( info.minWind ) );
-    cache.Add( TowxString( info.maxWind )  );
-    cache.Add( TowxString( info.width ) );
-    cache.Add( TowxString( info.height ) );
-    cache.Add( TowxString( info.posCount ) );
-
-    wxString postring;
-    for ( int i = 0; i < info.posCount; i++)
-    {
-       postring << TowxString( info.positions[i].x ) << _T('-') << TowxString( info.positions[i].y ) << _T(' ');
-    }
-    cache.Add( postring );
-
-    wxArrayString descrtoken = wxStringTokenize( info.description, _T('\n') );
-    unsigned int desclinecount = descrtoken.GetCount();
-    for ( unsigned int count = 0; count < desclinecount; count++ ) cache.Add( descrtoken[count] );
-
-    SetCacheFile( GetFileCachePath( mapname, _T(""), false ) + _T(".infoex"), cache );
   }
 
   m_mapinfo_cache.Add( mapname, info );

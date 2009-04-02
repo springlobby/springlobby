@@ -354,6 +354,12 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
         m_ready_chk->Disable();
     }
 
+    if ( battle.IsProxy() )
+    {
+			m_battle.CustomBattleOptions().setSingleOption( _T("startpostype"), _T("3"), OptionsWrapper::EngineOption ); // set start position type to chose before game
+			m_battle.SendHostInfo( wxString::Format(_T("%d_startpostype"), OptionsWrapper::EngineOption ) );
+    }
+
 		ReloadMaplist();
 
     UpdateBattleInfo( wxString::Format( _T("%d_mapname"), OptionsWrapper::PrivateOptions ) );

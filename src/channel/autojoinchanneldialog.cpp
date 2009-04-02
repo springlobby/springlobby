@@ -41,12 +41,13 @@ AutojoinChannelDialog::AutojoinChannelDialog( wxWindow* parent )
 	mainSizer->Add( buttonSizer, 0,  wxALL|wxALIGN_CENTRE, 10 );
 	SetSizer( mainSizer );
 	wxString channels;
-	for ( int i = 0; i < sett().GetNumChannelsJoin(); ++i )
+	std::vector<ChannelJoinInfo> chanlist = sett().GetChannelsJoin();
+	for ( int i = 0; i < chanlist.size(); i++ )
 	{
-		channels << sett().GetChannelJoinName( i ) + wxT( "\n" );
+		ChannelJoinInfo info = chanlist[i];
+		channels << info.name + _T(" ") + info.password + _T("\n");
 	}
 	m_channel_list->SetValue( channels );
-	m_old_channels = channels;
 }
 
 AutojoinChannelDialog::~AutojoinChannelDialog()
@@ -57,29 +58,22 @@ AutojoinChannelDialog::~AutojoinChannelDialog()
 
 void AutojoinChannelDialog::OnOk( wxCommandEvent& event )
 {
-    wxString newChannels = m_channel_list->GetValue();
+	wxString newChannels = m_channel_list->GetValue();
 
-    //add new channels
+	sett().RemoveAllChannelsJoin();
+
+	//add new channels
 	wxStringTokenizer tokenList( newChannels, _T( "\n" ) );
 	while ( tokenList.HasMoreTokens() )
 	{
 		wxString line = tokenList.GetNextToken();
-		wxString chan = line.BeforeFirst( *wxT( " " ) );
-		wxString key = line.AfterFirst( *wxT( " " ) );
+		wxString chan;
+		if ( line.Contains( _T(" ") ) ) chan = line.BeforeFirst( _T(' ') );
+		else chan = line;
+		wxString key = line.AfterFirst( _T(' ') );
 		sett().AddChannelJoin( chan, key );
 	}
 
-	//remove old channels
-	wxStringTokenizer oldList( m_old_channels, _T( "\n" ) );
-	while ( oldList.HasMoreTokens() )
-	{
-		wxString line = oldList.GetNextToken();
-		wxString chan = line.BeforeFirst( *wxT( " " ) );
-		wxString key = line.AfterFirst( *wxT( " " ) );
-		if ( !newChannels.Contains(chan) )
-            sett().RemoveChannelJoin(chan);
-	}
-	m_old_channels = newChannels;
 	this->Show( false );
 }
 

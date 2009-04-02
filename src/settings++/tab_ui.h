@@ -1,15 +1,10 @@
 /**
     This file is part of springsettings,
-    Copyright (C) 2007
-    Original work by Kloot
-    cross-plattform/UI adaptation and currently maintained by koshi (Ren� Milk)
-    visit http://spring.clan-sy.com/phpbb/viewtopic.php?t=12104
-    for more info/help
+    Copyright (C) 2007-09
 
     springsettings is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+    it under the terms of the GNU General Public License version 2 as published by
+    the Free Software Foundation.
 
     springsettings is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -62,7 +57,7 @@ class tab_ui : public abstract_panel
 		wxRadioButton* ctrl_cam_radio4;
 		wxCheckBox** ctrl_ui_chkb;
 		wxSpinCtrl* ctrl_zoom_spin;
-		static const int ctrl_ui_chkb_size = 18;
+		static const int ctrl_ui_chkb_size = 17;
 
 		wxFlexGridSizer* pSizer;
 			wxFlexGridSizer* cSizerL ;

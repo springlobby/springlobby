@@ -331,7 +331,6 @@
 		<Unit filename="src/settings++/helpmenufunctions.h" />
 		<Unit filename="src/settings++/panel_pathoption.cpp" />
 		<Unit filename="src/settings++/panel_pathoption.h" />
-		<Unit filename="src/settings++/presets.cpp" />
 		<Unit filename="src/settings++/presets.h" />
 		<Unit filename="src/settings++/se_utils.cpp" />
 		<Unit filename="src/settings++/se_utils.h" />
