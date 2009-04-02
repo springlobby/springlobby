@@ -219,7 +219,7 @@ bool SpringLobbyApp::OnInit()
 			}
 			if ( sett().GetSettingsVersion() < 13 )
 			{
-				sett().ConvertOldHighlightSettings();
+				sett().ConvertOldHiglightSettings();
 			}
     }
 
