@@ -5,7 +5,7 @@
 #include <vector>
 
 const int CACHE_VERSION     = 9;
-const int SETTINGS_VERSION  = 12;
+const int SETTINGS_VERSION  = 13;
 
 const wxString DEFSETT_DEFAULT_SERVER_NAME= _T("Official server");
 const wxString DEFSETT_DEFAULT_SERVER_HOST = _T("taspringmaster.clan-sy.com");
@@ -431,9 +431,8 @@ class Settings
     void SetDisplayJoinLeave( bool display, const wxString& channel  );
     bool GetDisplayJoinLeave( const wxString& channel );
 
-    //!@brief expects words to be a ; seperated list
-    void SetHighlightedWords( const wxString& words );
-    wxString GetHighlightedWords( );
+    void SetHighlightedWords( const wxArrayString& words );
+    wxArrayString GetHighlightedWords( );
 
     //!\brief controls if user attention is requested when highlighting a line
     void SetRequestAttOnHighlight( const bool req );
@@ -446,6 +445,7 @@ class Settings
     bool GetAlwaysAutoScrollOnFocusLost();
     void SetAlwaysAutoScrollOnFocusLost(bool value);
 
+		void ConvertOldHiglightSettings();
 
     /* ================================================================ */
     /** @name Hosting

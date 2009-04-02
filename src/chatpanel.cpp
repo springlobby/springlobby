@@ -714,10 +714,10 @@ void ChatPanel::Said( const wxString& who, const wxString& message )
 bool ChatPanel::ContainsWordToHighlight( const wxString& message )
 {
     //get list of words to highlight
-    wxStringTokenizer words ( sett().GetHighlightedWords(), _T(";") );
-    while ( words.HasMoreTokens() )
+    wxArrayString words = sett().GetHighlightedWords();
+    for ( unsigned int i = 0; i < words.GetCount(); i++ )
     {
-        if (message.Contains( words.GetNextToken() ) )
+        if ( message.Contains( words[i] ) )
             return true;
     }
     return false;

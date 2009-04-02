@@ -20,6 +20,7 @@
 #include <wx/log.h>
 #include <wx/wfstream.h>
 #include <wx/settings.h>
+#include <wx/tokenzr.h>
 
 #include "nonportable.h"
 #include "settings.h"
@@ -1497,14 +1498,22 @@ void Settings::SetAlwaysAutoScrollOnFocusLost(bool value)
   m_config->Write( _T("/Chat/AlwaysAutoScrollOnFocusLost"), value);
 }
 
-void Settings::SetHighlightedWords( const wxString& words )
+void Settings::ConvertOldHiglightSettings()
 {
-  m_config->Write( _T("/Chat/HighlightedWords"), words );
+	SetHighlightedWords( wxStringTokenize( m_config->Read( _T("/Chat/HighlightedWords"), _T("") ), _T(";") ) );
 }
 
-wxString Settings::GetHighlightedWords( )
+void Settings::SetHighlightedWords( const wxArrayString& words )
 {
-  return m_config->Read( _T("/Chat/HighlightedWords"), wxEmptyString );
+	for ( unsigned int i = 0; i < words.GetCount(); i++ )
+	{
+		m_config->Write( _T("/Chat/HighlightedWords/") + words[i], words[i] );
+	}
+}
+
+wxArrayString Settings::GetHighlightedWords()
+{
+	return GetEntryList( _T("/Chat/HighlightedWords") );
 }
 
 void Settings::SetRequestAttOnHighlight( const bool req )

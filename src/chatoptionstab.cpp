@@ -24,6 +24,7 @@
 #include <wx/colordlg.h>
 #include <wx/fontdlg.h>
 #include <wx/checkbox.h>
+#include <wx/tokenzr.h>
 
 #ifdef __WXMSW__
 #include <wx/msw/registry.h>
@@ -428,7 +429,10 @@ void ChatOptionsTab::DoRestore()
   m_fontname->SetLabel( m_chat_font.GetFaceName() );
   m_save_logs->SetValue(  sett().GetChatLogEnable() );
   m_smart_scroll->SetValue(sett().GetSmartScrollEnabled());
-  m_highlight_words->SetValue( sett().GetHighlightedWords() );
+  wxString highlightstring;
+  wxArrayString highlights = sett().GetHighlightedWords();
+  for ( unsigned int i = 0; i < highlights.GetCount(); i++) highlightstring << highlights[i] <<_T(";");
+  m_highlight_words->SetValue( highlightstring );
   m_highlight_req->SetValue( sett().GetRequestAttOnHighlight() );
   #ifndef DISABLE_SOUND
     m_play_sounds->SetValue( sett().GetChatPMSoundNotificationEnabled() );
@@ -451,7 +455,7 @@ void ChatOptionsTab::OnApply( wxCommandEvent& event )
   sett().SetChatFont( m_chat_font );
   //m_ui.mw().GetChatTab().ChangeUnreadChannelColour( m_note_color->GetBackgroundColour() );
   //m_ui.mw().GetChatTab().ChangeUnreadPMColour( m_note_color->GetBackgroundColour() );
-  sett().SetHighlightedWords( m_highlight_words->GetValue() );
+  sett().SetHighlightedWords( wxStringTokenize( m_highlight_words->GetValue(), _T(";") ) );
   sett().SetRequestAttOnHighlight( m_highlight_req->IsChecked() );
 
   //Chat Log
