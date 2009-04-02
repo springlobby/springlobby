@@ -30,8 +30,6 @@ class BattleroomListCtrl : public CustomVirtListCtrl< User *>
 
     int GetIndexFromData( const DataType& data ) const;
 
-    void SortList();
-
     void OnListRightClick( wxListEvent& event );
     void OnColClick( wxListEvent& event );
     void OnTeamSelect( wxCommandEvent& event );
