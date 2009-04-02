@@ -107,6 +107,7 @@ Battle* User::GetBattle() const
 void User::SetBattle( Battle* battle )
 {
   m_battle = battle;
+  m_statusicon_idx = icons().GetUserListStateIcon( m_status, false, m_battle != 0 );
 }
 
 void User::SetStatus( const UserStatus& status )
@@ -210,7 +211,6 @@ wxString User::GetClan()
 void CommonUser::SetStatus( const UserStatus& status )
 {
   m_status = status;
-
 }
 
 //User& User::operator= ( const User& other )
