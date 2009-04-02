@@ -49,7 +49,13 @@ void ServerEvents::OnDisconnected()
 
 void ServerEvents::OnLogin()
 {
-
+	wxString nick = m_serv.GetMe().GetNick();
+	wxArrayString highlights = sett().GetHighlightedWords();
+	if ( highlights.Index( nick ) == -1 )
+	{
+		highlights.Add( nick );
+		sett().SetHighlightedWords( highlights );
+	}
 }
 
 
