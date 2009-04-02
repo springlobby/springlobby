@@ -946,7 +946,7 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
     try
     {
 				#if LIBTORRENT_VERSION_MINOR < 14
-					m_torrent_table.SetRowHandle(row, m_torr->add_torrent( t_info, boost::filesystem::path(path.GetFullPath().mb_str())));
+					GetTorrentTable().SetRowHandle(row, m_torr->add_torrent( t_info, boost::filesystem::path(path.GetFullPath().mb_str())));
 				#else
 					p.save_path = path.GetFullPath().mb_str();
 					GetTorrentTable().SetRowHandle(row, m_torr->add_torrent(p));
@@ -1397,7 +1397,6 @@ void TorrentWrapper::OnDisconnected( Socket* sock )
 
     std::map<libtorrent::torrent_handle, TorrentTable::PRow> handles =  GetTorrentTable().RowByTorrentHandles();
 
-    for ( std::map<libtorrent::torrent_handle, TorrentTable::PRow>::iterator i = handles.begin(); i != handles.end(); i++)
     {
         if ( !i->first.is_seed() ) TorrentsToResume.Add( i->second->hash ); // save leeching torrents for resume on next connection
 
