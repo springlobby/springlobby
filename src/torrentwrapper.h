@@ -132,6 +132,9 @@ class Row: public RefcountedContainer
 			TransferredData(): failed_check_counts(0), sentdata(0) {}
 		};
 
+		// deletes all stored infos
+		void FlushData();
+
     void InsertRow(PRow row);
     void RemoveRow(PRow row);
 
@@ -227,7 +230,8 @@ public:
 
     TorrentTable &GetTorrentTable()
     {
-        return m_torrent_table;
+				ScopedLocker<TorrentTable> l_torrent_table(m_torrent_table);
+        return l_torrent_table.Get();
     }
 
 private:
@@ -251,7 +255,7 @@ private:
 
     wxArrayString m_tracker_urls;
 
-    TorrentTable m_torrent_table;
+    MutexWrapper<TorrentTable> m_torrent_table;
 
     TorrentMaintenanceThread m_maintenance_thread;
 

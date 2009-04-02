@@ -129,6 +129,23 @@ bool TorrentTable::IsConsistent()
     return true;
 }
 
+void TorrentTable::FlushData()
+{
+#ifdef TorrentTable_validate
+    all_torrents.clear();
+#endif
+    hash_index.clear();
+    name_index.clear();
+    handle_index.clear();
+    seed_requests.clear();
+    queued_torrents.clear();
+    seed_sent_data.clear();
+		dep_check_queue.clear();
+
+    m_seed_count = 0;
+    m_leech_count = 0;
+}
+
 void TorrentTable::InsertRow(TorrentTable::PRow row)
 {
     if (!row.ok())return;
@@ -478,13 +495,13 @@ void TorrentWrapper::UpdateSettings()
 
 bool TorrentWrapper::IsFileInSystem( const wxString& hash )
 {
-    return m_torrent_table.RowByHash(hash).ok();
+    return GetTorrentTable().RowByHash(hash).ok();
 }
 
 
 bool TorrentWrapper::RemoveTorrentByHash( const wxString& hash )
 {
-    TorrentTable::PRow row=m_torrent_table.RowByHash(hash);
+    TorrentTable::PRow row=GetTorrentTable().RowByHash(hash);
     if (!row.ok())return false;
     return RemoveTorrentByRow( row );
 }
@@ -513,7 +530,7 @@ HashToTorrentData& TorrentWrapper::GetSystemFileList()
 
 TorrentWrapper::DownloadRequestStatus TorrentWrapper::RequestFileByHash( const wxString& hash )
 {
-    TorrentTable::PRow row=m_torrent_table.RowByHash(hash);
+    TorrentTable::PRow row=GetTorrentTable().RowByHash(hash);
     if ( !row.ok() ) return missing_in_table;
     return QueueFileByRow( row );
 }
@@ -521,7 +538,7 @@ TorrentWrapper::DownloadRequestStatus TorrentWrapper::RequestFileByHash( const w
 
 TorrentWrapper::DownloadRequestStatus TorrentWrapper::RequestFileByName( const wxString& name )
 {
-    TorrentTable::PRow row=m_torrent_table.RowByName(name);
+    TorrentTable::PRow row=GetTorrentTable().RowByName(name);
     if ( !row.ok() ) return missing_in_table;
     return QueueFileByRow( row );
 }
@@ -707,7 +724,7 @@ std::map<int,TorrentInfos> TorrentWrapper::CollectGuiInfos()
             CurrentTorrent.numcopies = s.distributed_copies;
             CurrentTorrent.filesize = i->get_torrent_info().total_size();
 
-            TorrentTable::PRow row=m_torrent_table.RowByHandle(*i);
+            TorrentTable::PRow row=GetTorrentTable().RowByHandle(*i);
             if (!row.ok()) continue;
             CurrentTorrent.hash=row->hash;
             CurrentTorrent.downloadstatus = row->status;
@@ -932,7 +949,7 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
 					m_torrent_table.SetRowHandle(row, m_torr->add_torrent( t_info, boost::filesystem::path(path.GetFullPath().mb_str())));
 				#else
 					p.save_path = path.GetFullPath().mb_str();
-					m_torrent_table.SetRowHandle(row, m_torr->add_torrent(p));
+					GetTorrentTable().SetRowHandle(row, m_torr->add_torrent(p));
 				#endif
 
     }
@@ -1344,7 +1361,7 @@ void TorrentWrapper::OnConnected( Socket* sock )
         wxLogError( WX_STRINGC( e.what() ) ); // TODO (BrainDamage#1#): add message to user on failure
     }
 
-    m_torrent_table = TorrentTable(); // flush the torrent data
+    GetTorrentTable().FlushData(); // flush the torrent data
 		m_maintenance_thread.Init();
 
 }
@@ -1385,7 +1402,7 @@ void TorrentWrapper::OnDisconnected( Socket* sock )
     }
 
 
-    m_torrent_table = TorrentTable(); // flush the torrent data
+    GetTorrentTable().FlushData(); // flush the torrent data
 
     try
     {
