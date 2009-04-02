@@ -140,6 +140,10 @@
 		<Unit filename="src/Helper/TextCompletionDatabase.hpp" />
 		<Unit filename="src/Helper/colorbutton.cpp" />
 		<Unit filename="src/Helper/colorbutton.h" />
+		<Unit filename="src/Helper/imageviewer.cpp" />
+		<Unit filename="src/Helper/imageviewer.h" />
+		<Unit filename="src/Helper/slhtmlwindow.cpp" />
+		<Unit filename="src/Helper/slhtmlwindow.h" />
 		<Unit filename="src/Helper/sortutil.h" />
 		<Unit filename="src/Helper/tasclientimport.cpp" />
 		<Unit filename="src/Helper/tasclientimport.h" />
@@ -310,6 +314,8 @@
 		<Unit filename="src/replay/replaylistfiltervalues.h" />
 		<Unit filename="src/replay/replaytab.cpp" />
 		<Unit filename="src/replay/replaytab.h" />
+		<Unit filename="src/replay/replaythread.cpp" />
+		<Unit filename="src/replay/replaythread.h" />
 		<Unit filename="src/sdlsound.cpp" />
 		<Unit filename="src/sdlsound.h" />
 		<Unit filename="src/selectusersdialog.cpp" />
@@ -408,6 +414,16 @@
 		<Unit filename="src/userlistctrl.h" />
 		<Unit filename="src/utils.cpp" />
 		<Unit filename="src/utils.h" />
+		<Unit filename="src/widgets/downloaddialog.cpp" />
+		<Unit filename="src/widgets/downloaddialog.h" />
+		<Unit filename="src/widgets/downloadlistctrl.cpp" />
+		<Unit filename="src/widgets/downloadlistctrl.h" />
+		<Unit filename="src/widgets/downloadpanel.cpp" />
+		<Unit filename="src/widgets/downloadpanel.h" />
+		<Unit filename="src/widgets/infopanel.cpp" />
+		<Unit filename="src/widgets/infopanel.h" />
+		<Unit filename="src/widgets/widget.cpp" />
+		<Unit filename="src/widgets/widget.h" />
 		<Unit filename="wxsmith/AutoBalanceDialog.wxs" />
 		<Unit filename="wxsmith/MainTorrentTab.wxs" />
 		<Unit filename="wxsmith/MapSelectDialog.wxs" />

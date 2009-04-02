@@ -57,19 +57,21 @@ typedef unsigned int replay_id_t;
 typedef std::map<replay_id_t, Replay> replay_map_t;
 //! @brief iterator for replay map
 typedef replay_map_t::iterator replay_iter_t;
+//! @brief const iterator for replay map
+typedef replay_map_t::const_iterator replay_const_iter_t;
 
 class ReplayTab;
 
 class ReplayList : public wxEvtHandler
 {
   public:
-    ReplayList(ReplayTab& replay_tab);
+    ReplayList();
 
-    void LoadReplays();
+    void LoadReplays( const wxArrayString& filenames );
     //!loads replays between two indices
     void LoadReplays( const unsigned int from, const unsigned int to);
 
-    void AddReplay( const Replay& replay );
+    Replay& AddReplay( const Replay& replay );
     void RemoveReplay( replay_id_t const& id );
 
     Replay &GetReplayById( replay_id_t const& id );
@@ -80,12 +82,9 @@ class ReplayList : public wxEvtHandler
     bool DeleteReplay( replay_id_t const& id );
     replay_map_t::size_type GetNumReplays();
 
-    void OnTimer(wxTimerEvent& event);
-
     void RemoveAll();
 
-
-    replay_map_t &GetReplaysMap();
+    const replay_map_t& GetReplaysMap() const;
 
   protected:
 
@@ -104,20 +103,11 @@ class ReplayList : public wxEvtHandler
 
     replay_map_t m_replays;
 
-    //! used to load replays in chunks if a lot are present
-    wxTimer m_timer;
-    unsigned int m_current_parse_pos;
-
-    //! used to "remotely" add replays to gui
-    ReplayTab& m_replay_tab;
-
-    std::vector<wxString> m_filenames;
-    unsigned long m_last_id;
     unsigned long m_fails;
 
-    DECLARE_EVENT_TABLE()
 };
 
+ReplayList& replaylist();
 
 #endif // SPRINGLOBBY_REPLAYLIST_H_INCLUDED
 

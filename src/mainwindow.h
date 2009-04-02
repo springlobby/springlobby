@@ -31,6 +31,7 @@ class wxMenu;
 class ChannelChooserDialog;
 class ReplayTab;
 class AutojoinChannelDialog;
+class WidgetDownloadDialog;
 
 // FIXME shouldn't copy this here
 typedef wxWindow wxNotebookPage;
@@ -92,6 +93,7 @@ class MainWindow : public wxFrame
     void OnShowSettingsPP( wxCommandEvent& event );
     void OnMenuSelectLocale( wxCommandEvent& event );
     void OnShowChannelChooser( wxCommandEvent& event );
+    void OnShowScreenshots( wxCommandEvent& event );
     void forceSettingsFrameClose();
     void OnUnitSyncReloaded();
     void OnChannelList( const wxString& channel, const int& numusers, const wxString& topic );
@@ -163,10 +165,8 @@ class MainWindow : public wxFrame
         MENU_CHANNELCHOOSER,
         MENU_SAVE_LAYOUT,
         MENU_LOAD_LAYOUT,
-        MENU_DEFAULT_LAYOUT
-
-
-
+        MENU_DEFAULT_LAYOUT,
+        MENU_SCREENSHOTS
     };
 
     DECLARE_EVENT_TABLE()

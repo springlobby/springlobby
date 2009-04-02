@@ -29,11 +29,10 @@ END_EVENT_TABLE()
 
 template<> SortOrder CustomVirtListCtrl<const Replay*>::m_sortorder = SortOrder();
 
-ReplayListCtrl::ReplayListCtrl( wxWindow* parent, ReplayList& replaylist  ):
+ReplayListCtrl::ReplayListCtrl( wxWindow* parent  ):
   CustomVirtListCtrl<const Replay*>(parent, RLIST_LIST, wxDefaultPosition, wxDefaultSize,
                 wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT,
-                _T("replaylistctrl"), 8, 4, &CompareOneCrit ),
-  m_replaylist(replaylist)
+                _T("replaylistctrl"), 8, 4, &CompareOneCrit )
 {
     const int hd = wxLIST_AUTOSIZE_USEHEADER;
 #ifdef __WXMSW__

@@ -45,7 +45,7 @@ SET( OPTION_TRANSLATION_SUPPORT
 
 # Here you can define, what Libraries of wxWidgets you need for your Application. You can figure out what Libraries you need here:
 # http://www.wxwidgets.org/manuals/2.8/wx_librarieslist.html
-SET(wxWidgets_USE_LIBS base core gl net adv aui )
+SET(wxWidgets_USE_LIBS base core gl net adv aui html xml )
 
 # We need the Find package for wxWidgets to work
 IF (NOT WIN32)
@@ -174,6 +174,8 @@ SET(SpringLobbySrc
 	src/updater/updater.cpp
 	src/updater/versionchecker.cpp
 	src/Helper/TextCompletionDatabase.cpp
+	src/Helper/imageviewer.cpp
+	src/Helper/slhtmlwindow.cpp
 	src/channel/channelchooser.cpp
 	src/channel/channelchooserdialog.cpp
 	src/Helper/wxtextctrlhist.cpp
@@ -231,6 +233,7 @@ SET(SpringLobbySrc
 	src/mmoptionswrapper.cpp
 	src/nicklistctrl.cpp
 	src/replay/replaylist.cpp
+	src/replay/replaythread.cpp
         src/replay/replaytab.cpp
         src/replay/replayfilter.cpp
 	src/replay/replaylistctrl.cpp
@@ -263,6 +266,11 @@ SET(SpringLobbySrc
 	src/userlist.cpp
 	src/userlistctrl.cpp
 	src/utils.cpp
+	src/widgets/downloadlistctrl.cpp
+	src/widgets/downloaddialog.cpp
+	src/widgets/downloadpanel.cpp
+	src/widgets/infopanel.cpp
+	src/widgets/widget.cpp
 	src/globalsmanager.cpp
 	src/Helper/wxTranslationHelper.cpp
 	src/Helper/tasclientimport.cpp

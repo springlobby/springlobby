@@ -1166,7 +1166,6 @@ void Ui::OnModUnitsCached( const wxString& modname )
 {
 }
 
-
 void Ui::OnMainWindowDestruct()
 {
     m_main_win = 0;
@@ -1231,3 +1230,4 @@ bool Ui::OnPresetRequiringMap( const wxString& mapname )
     }
     return false;
 }
+

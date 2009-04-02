@@ -2195,3 +2195,14 @@ void Settings::SetUseTabIcons( bool use )
 {
     m_config->Write(_T("/GUI/UseTabIcons"), use );
 }
+
+int Settings::GetSashPosition( const wxString& window_name )
+{
+    return m_config->Read(_T("/GUI/SashPostion/") + window_name , 200l);
+}
+
+void Settings::SetSashPosition( const wxString& window_name, const int pos )
+{
+    m_config->Write(_T("/GUI/SashPostion/") + window_name , pos );
+}
+

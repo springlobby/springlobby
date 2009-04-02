@@ -66,7 +66,7 @@ AM_PATH_WXCONFIG([2.8.2], [],
            where wxWidgets libraries are installed (returned by
            'wx-config --libs' command) is in LD_LIBRARY_PATH or
            equivalent variable and wxWidgets version is 2.8.2 or above.
-   ])], [base,core,net,adv,aui])
+   ])], [base,core,net,adv,aui,xml,html])
 win_build=0
 AC_ARG_VAR([WINDRES], [Windows resource file compiler command])
 if test x$host_os = xmingw32msvc ; then

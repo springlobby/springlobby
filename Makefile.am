@@ -498,6 +498,8 @@ springlobby_SOURCES = \
 	src/nicklistctrl.h \
 	src/replay/replaytab.h \
 	src/replay/replaytab.cpp \
+	src/replay/replaythread.h \
+	src/replay/replaythread.cpp \
 	src/replay/replayfilter.h \
 	src/replay/replayfilter.cpp \
 	src/replay/replaylist.cpp \
@@ -889,6 +891,8 @@ springlobby_SOURCES = \
 	src/Helper/wxTranslationHelper.cpp \
 	src/Helper/tasclientimport.h \
 	src/Helper/tasclientimport.cpp \
+	src/Helper/slhtmlwindow.cpp \
+	src/Helper/slhtmlwindow.h \
 	src/channel/channelchooser.cpp \
 	src/channel/channelchooser.h \
 	src/channel/channelchooserdialog.cpp \
@@ -898,6 +902,8 @@ springlobby_SOURCES = \
         src/Helper/wxtextctrlhist.cpp \
 	src/Helper/wxtextctrlhist.h \
 	src/Helper/sortutil.h \
+	src/Helper/imageviewer.h \
+	src/Helper/imageviewer.cpp \
 	src/filelister/filelistctrl.h \
 	src/filelister/filelistdialog.h \
 	src/filelister/filelistfilter.h \
@@ -925,6 +931,16 @@ springlobby_SOURCES = \
 	src/updater/updater.cpp \
 	src/updater/exedownloader.h \
 	src/updater/exedownloader.cpp \
+	src/widgets/downloadlistctrl.cpp \
+	src/widgets/downloadlistctrl.h \
+	src/widgets/downloaddialog.cpp \
+	src/widgets/downloaddialog.h \
+	src/widgets/downloadpanel.cpp \
+	src/widgets/downloadpanel.h \
+	src/widgets/infopanel.cpp \
+	src/widgets/infopanel.h \
+	src/widgets/widget.cpp \
+	src/widgets/widget.h \
 	src/usermenu.h \
 	src/thread.cpp \
 	src/thread.h \

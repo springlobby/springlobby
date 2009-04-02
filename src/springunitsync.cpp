@@ -525,23 +525,16 @@ wxArrayString SpringUnitSync::GetAIList( const wxString& modname )
 	else
 	{
 		// list dynamic link libraries
-		int dllini = susynclib().InitFindVFS(  wxDynamicLibrary::CanonicalizeName(_T("AI/Bot-libs/*"), wxDL_MODULE) );
-
-		wxString FileName;
-		dllini = susynclib().FindFilesVFS( dllini, FileName );
-		while ( dllini )
+		wxArrayString dlllist = susynclib().FindFilesVFS( wxDynamicLibrary::CanonicalizeName(_T("AI/Bot-libs/*"), wxDL_MODULE) );
+		for( int i = 0; i < dlllist.GetCount(); i++ )
 		{
-			if ( ret.Index( FileName.BeforeLast( '/') ) == wxNOT_FOUND ) ret.Add ( FileName ); // don't add duplicates
-			dllini = susynclib().FindFilesVFS( dllini, FileName );
+			if ( ret.Index( dlllist[i].BeforeLast( '/') ) == wxNOT_FOUND ) ret.Add ( dlllist[i] ); // don't add duplicates
 		}
 		// list jar files (java AIs)
-		int jarini = susynclib().InitFindVFS(  _T("AI/Bot-libs/*.jar") );
-
-		jarini = susynclib().FindFilesVFS( jarini, FileName );
-		while ( jarini )
+		wxArrayString jarlist = susynclib().FindFilesVFS( _T("AI/Bot-libs/*.jar") );
+		for( int i = 0; i < jarlist.GetCount(); i++ )
 		{
-			if ( ret.Index( FileName.BeforeLast( '/') ) == wxNOT_FOUND ) ret.Add ( FileName ); // don't add duplicates
-			jarini = susynclib().FindFilesVFS( jarini, FileName );
+			if ( ret.Index( jarlist[i].BeforeLast( '/') ) == wxNOT_FOUND ) ret.Add ( jarlist[i] ); // don't add duplicates
 		}
 
 		// luaai
@@ -870,32 +863,14 @@ void SpringUnitSync::SetCacheFile( const wxString& path, const wxArrayString& da
   file.Close();
 }
 
-void SpringUnitSync::GetReplayList(std::vector<wxString> &ret)
+wxArrayString  SpringUnitSync::GetReplayList()
 {
-  ret.clear();
   wxLogDebug( _T("") );
 
-  if ( !IsLoaded() ) return;
+	wxArrayString ret;
+  if ( !IsLoaded() ) return ret;
 
-  int ini = susynclib().InitFindVFS( _T("demos/*.sdf") );
-
-  wxString FilePath ;
-  //wxArrayString ret;
-  do
-  {
-    ini = susynclib().FindFilesVFS ( ini, FilePath );
-    wxString FileName = wxString ( FilePath, wxConvUTF8 );
-    //ret.Add ( FileName );
-    ret.push_back(FileName);
-  } while (ini != 0);
-
-    int kol = ret.size();
-
-  std::sort(ret.begin(),ret.end());
-  std::vector<wxString>::iterator i=std::unique(ret.begin(),ret.end());
-  ret.resize(i - ret.begin());
-
-  kol = ret.size();
+	return susynclib().FindFilesVFS( _T("demos/*.sdf") );
 }
 
 bool SpringUnitSync::FileExists( const wxString& name )
@@ -912,6 +887,21 @@ wxString SpringUnitSync::GetArchivePath( const wxString& name )
   wxLogDebugFunc( name );
 
   return susynclib().GetArchivePath( name );
+}
+
+wxArrayString SpringUnitSync::GetScreenshotFilenames()
+{
+    wxArrayString ret;
+    int ini = susynclib().InitFindVFS( _T("screenshots/*.*") );
+
+    wxString FilePath ;
+    do
+    {
+        ini = susynclib().FindFilesVFS ( ini, FilePath );
+        ret.Add( wxString ( FilePath, wxConvUTF8 ) );
+    } while (ini != 0);
+
+    return ret;
 }
 
 wxString SpringUnitSync::GetDefaultNick()

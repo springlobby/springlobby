@@ -182,7 +182,7 @@ class IUnitSync
 
     virtual bool ReloadUnitSyncLib() = 0;
 
-    virtual void GetReplayList(std::vector<wxString> &ret) = 0;
+    virtual wxArrayString GetReplayList() = 0;
 
     virtual void SetSpringDataPath( const wxString& path ) = 0;
 
@@ -202,6 +202,8 @@ class IUnitSync
     virtual void GetHeightmapAsync( const wxString& mapname, int evtHandlerId ) = 0;
     virtual void GetHeightmapAsync( const wxString& mapname, int width, int height, int evtHandlerId ) = 0;
     virtual void GetMapExAsync( const wxString& mapname, int evtHandlerId ) = 0;
+
+    virtual wxArrayString GetScreenshotFilenames() = 0;
 };
 
 IUnitSync& usync();

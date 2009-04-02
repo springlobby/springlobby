@@ -37,10 +37,10 @@
 #include "torrentwrapper.h"
 #endif
 #include "updater/updater.h"
-#include "replay/replaytab.h"
 #include "globalsmanager.h"
 #include "Helper/wxTranslationHelper.h"
 #include "Helper/tasclientimport.h"
+#include "replay/replaytab.h"
 
 const unsigned int TIMER_ID         = 101;
 const unsigned int TIMER_INTERVAL   = 100;
@@ -276,14 +276,15 @@ bool SpringLobbyApp::OnInit()
   if( sett().GetTorrentSystemAutoStartMode() == 1 ) torrent().ConnectToP2PSystem();
   #endif
 
+    //starts the replay loading process in a thread
+    ui().mw().GetReplayTab().ReloadList();
+    wxLogMessage( _T("Replaytab updated") );
+
   m_timer->Start( TIMER_INTERVAL );
 
 //  #ifdef __WXMSW__
 //  if ( sett().GetAutoUpdate() )Updater().CheckForUpdates();
 //  #endif
-
-
-  ui().mw().GetReplayTab().AddAllReplays();
 
     return true;
 }

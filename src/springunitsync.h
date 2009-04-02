@@ -149,7 +149,7 @@ class SpringUnitSync : public IUnitSync
 
     int GetMapIndex( const wxString& name );
 
-		wxArrayString GetSides( const wxString& modname  );
+    wxArrayString GetSides( const wxString& modname  );
     wxImage GetSidePicture( const wxString& modname, const wxString& SideName );
 
     bool LoadUnitSyncLib( const wxString& unitsyncloc );
@@ -184,7 +184,7 @@ class SpringUnitSync : public IUnitSync
 
     void SetSpringDataPath( const wxString& path );
 
-    void GetReplayList(std::vector<wxString> &ret);
+    wxArrayString GetReplayList();
 
     bool FileExists( const wxString& name );
 
@@ -204,6 +204,8 @@ class SpringUnitSync : public IUnitSync
     void GetHeightmapAsync( const wxString& mapname, int evtHandlerId );
     void GetHeightmapAsync( const wxString& mapname, int width, int height, int evtHandlerId );
     void GetMapExAsync( const wxString& mapname, int evtHandlerId );
+
+    wxArrayString GetScreenshotFilenames();
 
   private:
 
