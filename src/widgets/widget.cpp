@@ -166,7 +166,7 @@ bool Widget::GetFileInfos()
                     }
                     else if ( name == _T("LocalPath") ) {
                         file.local_path = item->GetNodeContent();
-                        file_present_count += usync().FileExists( _T("LuaUI") + file.local_path );
+                        file_present_count += usync().FileExists( file.local_path );
                     }
                     item = item->GetNext();
                 }
@@ -203,7 +203,7 @@ bool Widget::Install()
 
         wxString fileurl = it->url;
         fileurl.Replace( _T("http://") , _T("") );
-        wxString destpath = sett().GetCurrentUsedDataDir() + _T("LuaUI") + it->local_path;
+        wxString destpath = sett().GetCurrentUsedDataDir() + it->local_path;
 
         wxHTTP FileDownloading;
         /// normal timeout is 10 minutes.. set to 10 secs.
@@ -249,7 +249,7 @@ bool Widget::Remove()
     ExtendedInfo::Files& files = extendedinfo.files;
     ExtendedInfo::Files::const_iterator it = files.begin();
     for ( ; it != files.end(); ++it ) {
-        wxString destpath = sett().GetCurrentUsedDataDir() + _T("LuaUI") + it->local_path;
+        wxString destpath = sett().GetCurrentUsedDataDir() + it->local_path;
         file_remove_successes += wxRemoveFile( destpath );
     }
 

@@ -104,7 +104,7 @@ void MainTorrentTab::OnDLWidgets( wxCommandEvent& event )
         m_widgets_dialog->SetFocus();
     }
     else {
-        m_widgets_dialog = new WidgetDownloadDialog( this, wxID_ANY, _("stuff") );
+        m_widgets_dialog = new WidgetDownloadDialog( this, wxID_ANY, _("Lua widget downloader") );
         m_widgets_dialog->Show( true );
     }
 }

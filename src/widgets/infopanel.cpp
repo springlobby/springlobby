@@ -89,7 +89,7 @@ void WidgetInfoPanel::Create()
 
     m_left_sizer->Add( m_grid_sizer, 0, wxEXPAND | wxALL, 5 );
 
-    m_download = new wxButton( this, BUT_DESC, _("Download") );
+    m_download = new wxButton( this, BUT_DOWNLOAD, _("Download") );
 //    m_update = new wxButton( this, BUT_UPDATE, _("Update") );
     m_remove = new wxButton( this, BUT_REMOVE, _("Remove") );
 
