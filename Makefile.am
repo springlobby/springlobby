@@ -498,6 +498,8 @@ springlobby_SOURCES = \
 	src/nicklistctrl.h \
 	src/replay/replaytab.h \
 	src/replay/replaytab.cpp \
+	src/replay/replaythread.h \
+	src/replay/replaythread.cpp \
 	src/replay/replayfilter.h \
 	src/replay/replayfilter.cpp \
 	src/replay/replaylist.cpp \

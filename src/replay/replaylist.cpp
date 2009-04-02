@@ -16,123 +16,68 @@
 #include "../tdfcontainer.h"
 #include "replaytab.h"
 #include "../uiutils.h"
+#include "../globalsmanager.h"
 
-const unsigned int replay_bulk_limit = 300;
-const unsigned int replay_chunk_size = 50;
-const unsigned int timer_interval = 300; //miliseconds
 
-BEGIN_EVENT_TABLE(ReplayList,wxEvtHandler)
-    	EVT_TIMER(wxID_ANY, ReplayList::OnTimer)
-END_EVENT_TABLE()
-
-ReplayList::ReplayList(ReplayTab& replay_tab)
-    : m_timer(this,wxID_ANY),m_replay_tab(replay_tab),m_last_id(0)
+ReplayList::ReplayList()
 {
 }
 
-void ReplayList::LoadReplays()
+ReplayList& replaylist()
+{
+		static GlobalObjectHolder<ReplayList> m_replay_list;
+    return m_replay_list;
+}
+
+void ReplayList::LoadReplays( const wxArrayString& filenames )
 {
     m_fails = 0;
-    if ( !usync().IsLoaded() ) return ;
-    m_filenames.clear();
-    usync().GetReplayList(m_filenames);
+
     m_replays.clear();
-
-    m_timer.Stop();
-    size_t size = m_filenames.size();
-
-    if ( size < replay_bulk_limit )
-        LoadReplays( 0, m_filenames.size() );
-    else {
-        LoadReplays( 0, replay_chunk_size );
-        m_current_parse_pos = replay_chunk_size;
-        m_timer.Start( timer_interval, wxTIMER_CONTINUOUS );
-    }
-//
-//    std::cout<< "********" << std::endl;
-//    for (int i = 0; i< m_filenames.size(); ++i)
-//        std::cout<< STD_STRING(m_filenames[i])<< '\n';
-//
-//    std::cout<< "********" << std::endl;
-
-}
-
-void ReplayList::LoadReplays( const unsigned int from, const unsigned int to)
-{
-    static long replays_load_count=0;
-    wxLogMessage(_T("ReplayList::LoadReplays(%d,%d) call #%d"),from,to,replays_load_count);
-    unsigned int end=std::min((unsigned int)to, (unsigned int)m_filenames.size());
-    for (unsigned int i = from; i < end; ++i)
+    size_t size = filenames.GetCount();
+    for ( size_t i = 0; i < size; ++i)
     {
         Replay rep;
-        rep.id = m_last_id;
-        m_last_id++;
-        AddReplay( rep );
-        if ( GetReplayInfos( m_filenames[i] , m_replays[rep.id] ) )
+        rep.id = i;
+				Replay& rep_ref = AddReplay( rep ); // don't touch this reference, since elements inside this data structure are filled using pointers, adding & not fecthing the new addresses would screw up references when rep gets destroyed
+        if ( !GetReplayInfos( filenames[i] , rep_ref ) )
         {
-            m_replay_tab.AddReplay( m_replays[rep.id] );
+						RemoveReplay( rep.id );
+            m_fails++;
         }
-        else
-        {
-        	RemoveReplay( rep.id );
-					m_last_id--;
-        }
-    }
-    wxLogMessage(_T("done ReplayList::LoadReplays(%d,%d) %d"),from,to,replays_load_count);
-    replays_load_count+=1;
-}
-
-void ReplayList::OnTimer(wxTimerEvent& event)
-{
-    if ( replay_chunk_size + m_current_parse_pos >  m_filenames.size() )
-    {
-        //final parse run
-        m_timer.Stop();
-        LoadReplays( m_current_parse_pos, m_filenames.size() );
-    }
-    else {
-        LoadReplays( m_current_parse_pos, m_current_parse_pos + replay_chunk_size );
-        m_current_parse_pos += replay_chunk_size;
     }
 }
 
-void ReplayList::AddReplay( const Replay& replay )
+Replay& ReplayList::AddReplay( const Replay& replay )
 {
-  m_replays[replay.id] = replay;
+    m_replays[replay.id] = replay;
+    return m_replays[replay.id];
 }
 
 
 void ReplayList::RemoveReplay( replay_id_t const& id )
 {
-  m_replays.erase(id);
+    m_replays.erase(id);
 }
 
 replay_map_t::size_type ReplayList::GetNumReplays()
 {
-  return m_replays.size();
+    return m_replays.size();
 }
 
 Replay &ReplayList::GetReplayById( replay_id_t const& id )
 {
 //TODO catch
-  replay_iter_t b = m_replays.find(id);
-  if (b == m_replays.end())
-    throw std::runtime_error("ReplayList_Iter::GetReplay(): no such replay");
-  return b->second;
+    replay_iter_t b = m_replays.find(id);
+    if (b == m_replays.end())
+        throw std::runtime_error("ReplayList_Iter::GetReplay(): no such replay");
+
+    return b->second;
 }
-/*
-Replay& ReplayList::GetReplay( int const index ) {
-//TODO secure index
-  replay_iter_t b = m_replays.begin();
-  std::advance(b,index);
-  if (b == m_replays.end())
-    throw std::runtime_error("ReplayList_Iter::GetReplay(): no such replay");
-  return b->second;
-}
-*/
+
 bool ReplayList::ReplayExists( replay_id_t const& id )
 {
-  return m_replays.find(id) != m_replays.end();
+    return m_replays.find(id) != m_replays.end();
 }
 
 bool ReplayList::GetReplayInfos ( const wxString& ReplayPath, Replay& ret )
@@ -370,7 +315,7 @@ bool ReplayList::DeleteReplay( replay_id_t const& id )
     Replay rep = m_replays[id];
     if ( wxRemoveFile( rep.Filename ) ) {
 
-        m_filenames.resize(std::remove(m_filenames.begin(), m_filenames.end(), rep.Filename)-m_filenames.begin());
+        //m_filenames.resize(std::remove(m_filenames.begin(), m_filenames.end(), rep.Filename)-m_filenames.begin());
 
         m_replays.erase(id);
         return true;
@@ -380,13 +325,12 @@ bool ReplayList::DeleteReplay( replay_id_t const& id )
 
 void ReplayList::RemoveAll()
 {
-    m_filenames.clear();
+//    m_filenames.clear();
     m_replays.clear();
-    m_last_id = 0;
-    m_replay_tab.RemoveAllReplays();
+    m_fails = 0;
 }
 
 
-replay_map_t &ReplayList::GetReplaysMap(){
-  return m_replays;
+const replay_map_t& ReplayList::GetReplaysMap() const {
+    return m_replays;
 }

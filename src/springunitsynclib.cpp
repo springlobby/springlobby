@@ -868,23 +868,19 @@ int SpringUnitSyncLib::ProcessUnitsNoChecksum()
 }
 
 
-int SpringUnitSyncLib::InitFindVFS( const wxString& pattern )
-{
-  InitLib( m_init_find_vfs );
-
-  return m_init_find_vfs( pattern.mb_str(wxConvUTF8) );
-}
-
-
-int SpringUnitSyncLib::FindFilesVFS( int handle, wxString& name )
+wxArrayString SpringUnitSyncLib::FindFilesVFS( const wxString& name )
 {
   InitLib( m_find_files_vfs );
-
-  char buffer[1025];
-  int ret = m_find_files_vfs( handle, &buffer[0], 1024 );
-  buffer[1024] = 0;
-  name = WX_STRINGC( &buffer[0] );
-
+	UNITSYNC_EXCEPTION( m_init_find_vfs, _T("Function was not in unitsync library.") );
+	int handle = m_init_find_vfs( name.mb_str(wxConvUTF8) );
+	wxArrayString ret;
+	do
+	{
+		char buffer[1025];
+		handle = m_find_files_vfs( handle, &buffer[0], 1024 );
+		buffer[1024] = 0;
+		ret.Add( WX_STRINGC( &buffer[0] ) );
+	} while ( handle );
   return ret;
 }
 

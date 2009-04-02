@@ -299,12 +299,12 @@ bool ReplayListFilter::_IntCompare(int a,int b,m_button_mode mode)
   }
 }
 
-bool ReplayListFilter::FilterReplay(Replay& replay)
+bool ReplayListFilter::FilterReplay( const Replay& replay )
 {
 
     if (!m_activ) return true;
 
-    OfflineBattle& battle = replay.battle;
+    const OfflineBattle& battle = replay.battle;
     //Player Check
     if ( (m_filter_player_choice_value != -1) && !_IntCompare( battle.GetNumUsers() - battle.GetSpectators() , m_filter_player_choice_value , m_filter_player_mode ) ) return false;
 

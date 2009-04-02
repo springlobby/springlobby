@@ -210,8 +210,11 @@ void BattleroomListCtrl::UpdateList()
 void BattleroomListCtrl::AddUser( User& user )
 {
 	int index;
-  if( !user.BattleStatus().IsBot() ) index = InsertItem( GetItemCount(),icons().ICON_NREADY );
-	else index = InsertItem( GetItemCount(),icons().ICON_BOT );
+    if( !user.BattleStatus().IsBot() )
+        index = InsertItem( GetItemCount(),icons().ICON_NREADY );
+	else
+        index = InsertItem( GetItemCount(),icons().ICON_BOT );
+
   try
   {
     ASSERT_LOGIC( index != -1, _T("index = -1") );

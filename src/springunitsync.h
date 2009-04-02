@@ -184,7 +184,7 @@ class SpringUnitSync : public IUnitSync
 
     void SetSpringDataPath( const wxString& path );
 
-    void GetReplayList(std::vector<wxString> &ret);
+    wxArrayString GetReplayList();
 
     bool FileExists( const wxString& name );
 
