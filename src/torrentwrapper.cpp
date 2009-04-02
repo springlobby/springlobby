@@ -1398,11 +1398,11 @@ void TorrentWrapper::OnDisconnected( Socket* sock )
     std::map<libtorrent::torrent_handle, TorrentTable::PRow> handles =  GetTorrentTable().RowByTorrentHandles();
 
     {
-        if ( !i->first.is_seed() ) TorrentsToResume.Add( i->second->hash ); // save leeching torrents for resume on next connection
+        if ( !it->first.is_seed() ) TorrentsToResume.Add( it->second->hash ); // save leeching torrents for resume on next connection
 
         try
         {
-            m_torr->remove_torrent(i->first); //remove all torrents upon disconnect
+            m_torr->remove_torrent(it->first); //remove all torrents upon disconnect
         }
         catch (std::exception& e)
         {
