@@ -107,6 +107,9 @@ BEGIN_EVENT_TABLE( ChatPanel, wxPanel )
 	EVT_MENU( CHAT_MENU_US_MODERATOR_MUTE_1440, ChatPanel::OnUserMenuModeratorMute1440 )
 	EVT_MENU( CHAT_MENU_US_MODERATOR_UNMUTE, ChatPanel::OnUserMenuModeratorUnmute )
 	EVT_MENU( CHAT_MENU_US_MODERATOR_RING, ChatPanel::OnUserMenuModeratorRing )
+
+	EVT_MENU( CHAT_MENU_COPYLINK, ChatPanel::OnUserMenuCopyLink )
+
 	EVT_MENU( CHAT_MENU_SHOW_MUTELIST, ChatPanel::OnChannelMenuShowMutelist )
 
 END_EVENT_TABLE()
@@ -369,6 +372,11 @@ void ChatPanel::CreatePopup()
     //      eventID,    eventType,                  member function pointer to be called        userData            instance on which member function is called
   Connect( wxID_COPY, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTextCtrl::OnCopy, (wxObject*) NULL, (wxEvtHandler*)m_chatlog_text );
 
+    if ( m_url_at_pos != _T("") ) {
+        wxMenuItem* copylink = new wxMenuItem( m_popup_menu, CHAT_MENU_COPYLINK, _( "Copy link location" ), wxEmptyString, wxITEM_NORMAL );
+        m_popup_menu->Append( copylink );
+    }
+
     wxMenuItem* clear = new wxMenuItem( m_popup_menu, CHAT_MENU_CH_CLEAR, _( "Clear" ), wxEmptyString, wxITEM_NORMAL );
     m_popup_menu->Append( clear );
 
@@ -613,11 +621,18 @@ void ChatPanel::OutputLine( const ChatLine& line )
 
 void ChatPanel::OnLinkEvent( wxTextUrlEvent& event )
 {
-  if ( !event.GetMouseEvent().LeftDown() ) return;
-  wxString url = m_chatlog_text->GetRange( event.GetURLStart(), event.GetURLEnd());
-  m_ui.OpenWebBrowser( url );
+    if ( !event.GetMouseEvent().LeftDown() )
+        return;
+
+    wxString url = m_chatlog_text->GetRange( event.GetURLStart(), event.GetURLEnd());
+    m_ui.OpenWebBrowser( url );
 }
 
+void ChatPanel::OnUserMenuCopyLink( wxCommandEvent& event )
+{
+    CopyToClipboard( m_url_at_pos );
+    m_url_at_pos = _T("");
+}
 
 void ChatPanel::OnChanOpts( wxCommandEvent& event )
 {
@@ -1634,10 +1649,37 @@ void ChatPanel::OnUserMenuCreateGroup( wxCommandEvent& event )
     }
 }
 
+wxString ChatPanel::FindUrl( const long pos ) const
+{
+    long last = m_chatlog_text->GetLastPosition();
+
+    long start = pos;
+    while ( start > 0 && m_chatlog_text->GetRange( start-1, start ) != _T(" ") )
+        start--;
+
+    long end = pos;
+    //the last bit prevents topic links from being copied with next line's timestamp appended
+    //checking for newline isn't possible, cause links may well span multiple lines
+    while ( end < last && m_chatlog_text->GetRange( end, end+1 ) != _T(" ") && m_chatlog_text->GetRange( end, end+1 ) != _T("[") )
+        end++;
+
+    wxString ret = m_chatlog_text->GetRange( start, end );
+    if ( ret.StartsWith( _T("http://") ) )
+        return ret;
+    else
+        return _T("");
+}
 
 void ChatPanel::OnMouseDown( wxMouseEvent& event )
 {
 	wxLogDebugFunc( _T( "" ) );
+	wxTextCoord row;
+	wxTextCoord col;
+	wxTextCtrlHitTestResult ht = m_chatlog_text->HitTest( event.GetPosition(), &col, &row);
+	if ( ht != wxTE_HT_UNKNOWN ) {
+        long pos = m_chatlog_text->XYToPosition( col, row );
+        m_url_at_pos = FindUrl( pos );
+	}
 	CreatePopup();
 	if ( m_popup_menu != 0 ) PopupMenu( m_popup_menu );
 	else event.Skip();
