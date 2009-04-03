@@ -793,9 +793,6 @@ MapInfo SpringUnitSync::_GetMapInfoEx( const wxString& mapname )
       info.posCount = 0;
       info.width = 1;
       info.height = 1;
-      customMessageBoxNoModal( SL_MAIN_ICON, _("Failed to get infos for map ") + mapname +
-            _("\nIt probably is corrupted.\nPlease consider re-downloading/deleting it.") , _T("Error") );
-
   }
 
   m_mapinfo_cache.Add( mapname, info );
