@@ -113,7 +113,7 @@ bool TorrentMaintenanceThread::TestDestroy()
 inline wxFileName
 torrentFileName(const wxString& hash)
 {
-    return sett().GetTorrentDir().GetPathWithSep() + hash + _T(".torrent");
+    return sett().GetTorrentDir().GetPathWithSep() + MakeHashSigned(hash) + _T(".torrent");
 }
 
 bool TorrentTable::IsConsistent()
@@ -851,7 +851,7 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
 
 
     wxLogMessage(_T("(3) Joining torrent: downloading info file"));
-    if (!DownloadTorrentFileFromTracker( row->hash ))
+    if (!DownloadTorrentFileFromTracker( MakeHashSigned( row->hash ) ))
     {
     	 wxLogError(_T("(3) info file download failed"));
     	 return false;
