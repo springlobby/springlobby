@@ -167,6 +167,8 @@ class ChatPanel : public wxPanel
     void OnUserMenuModeratorUnmute( wxCommandEvent& event );
     void OnUserMenuModeratorRing( wxCommandEvent& event );
 
+    void OnUserMenuCopyLink( wxCommandEvent& event );
+
     void OnKeyPressed( wxKeyEvent& keyevent );
     void OnKeyReleased( wxKeyEvent& keyevent );
 
@@ -185,6 +187,7 @@ class ChatPanel : public wxPanel
     void OutputLine( const wxString& message, const wxColour& col, const wxFont& fon );
     void OutputLine( const ChatLine& line );
     void SetIconHighlight( HighlightType highlight );
+    wxString FindUrl( const long pos ) const ;
 
     bool ContainsWordToHighlight( const wxString& message );
 
@@ -243,6 +246,8 @@ class ChatPanel : public wxPanel
     std::vector<ChatLine> m_buffer;
     bool m_disable_append;
 
+    wxString m_url_at_pos; //! the mouse event sink sets this
+
     DECLARE_EVENT_TABLE();
 };
 
@@ -299,6 +304,8 @@ enum
     CHAT_MENU_US_MODERATOR_MUTE_1440,
     CHAT_MENU_US_MODERATOR_UNMUTE,
     CHAT_MENU_US_MODERATOR_RING,
+
+    CHAT_MENU_COPYLINK,
 
     CHAT_MENU_SHOW_MUTELIST
 };

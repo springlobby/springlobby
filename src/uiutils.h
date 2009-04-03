@@ -73,6 +73,8 @@ class SLTipWindow : public wxTipWindow{
 };
 #endif
 
+void CopyToClipboard( const wxString& text );
+
 #endif
 // SPRINGLOBBY_HEADERGUARD_UIUTILS_H
 

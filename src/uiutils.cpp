@@ -8,15 +8,17 @@
 #include <wx/bitmap.h>
 #include <wx/log.h>
 #include <wx/image.h>
-
-#include <cmath>
+#include <wx/clipbrd.h>
 #include <wx/cmndata.h>
 #include <wx/colordlg.h>
+#include <wx/dataobj.h>
+
+#include <cmath>
+
 #include "uiutils.h"
 #include "utils.h"
 #include "settings++/custom_dialogs.h"
 #include "settings.h"
-
 
 wxString RefineMapname( const wxString& mapname )
 {
@@ -414,3 +416,14 @@ void SLTipWindow::Cancel(wxMouseEvent& event)
   wxTipWindow::Close();
 }
 #endif
+
+void CopyToClipboard( const wxString& text )
+{
+    if ( wxTheClipboard->Open() ) {
+        // This data objects are held by the clipboard,
+        // so do not delete them in the app.
+        wxTheClipboard->SetData( new wxTextDataObject( text ) );
+        wxTheClipboard->Close();
+    }
+}
+
