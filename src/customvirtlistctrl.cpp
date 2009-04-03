@@ -177,6 +177,7 @@ template < class T >
 void CustomVirtListCtrl<T>::SetSelectedIndex(const long newindex)
 {
     m_selected_index = newindex;
+    SetItemState( m_selected_index, wxLIST_STATE_SELECTED, -1 );
 }
 
 template < class T >
@@ -359,7 +360,7 @@ void CustomVirtListCtrl<T>::noOp(wxMouseEvent& event)
 //}
 
 template < class T >
-wxListItemAttr* CustomVirtListCtrl<T>::HighlightItemUser( long item, const wxString& name ) const
+wxListItemAttr* CustomVirtListCtrl<T>::HighlightItemUser( const wxString& name ) const
 {
     static wxListItemAttr att;
   if ( m_highlight && useractions().DoActionOnUser( m_highlightAction, name ) ) {
@@ -419,6 +420,12 @@ void CustomVirtListCtrl<T>::Clear()
 
 template < class T >
 typename CustomVirtListCtrl<T>::DataType CustomVirtListCtrl<T>::GetDataFromIndex ( const  long index )
+{
+    return m_data[index];
+}
+
+template < class T >
+const typename CustomVirtListCtrl<T>::DataType CustomVirtListCtrl<T>::GetDataFromIndex ( const  long index ) const
 {
     return m_data[index];
 }

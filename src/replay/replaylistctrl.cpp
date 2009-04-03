@@ -107,7 +107,7 @@ void ReplayListCtrl::RemoveReplay( const Replay& replay )
 
 void ReplayListCtrl::OnDLMap( wxCommandEvent& event )
 {
-    if ( m_selected_index > 0 &&  m_data.size() > m_selected_index ) {
+    if ( m_selected_index > 0 &&  (long)m_data.size() > m_selected_index ) {
         OfflineBattle battle = m_data[m_selected_index]->battle;
         ui().DownloadMap( battle.GetHostMapHash(), battle.GetHostMapName() );
     }
@@ -115,7 +115,7 @@ void ReplayListCtrl::OnDLMap( wxCommandEvent& event )
 
 void ReplayListCtrl::OnDLMod( wxCommandEvent& event )
 {
-    if ( m_selected_index > 0 &&  m_data.size() > m_selected_index ) {
+    if ( m_selected_index > 0 &&  (long)m_data.size() > m_selected_index ) {
         OfflineBattle battle = m_data[m_selected_index]->battle;
         ui().DownloadMod( battle.GetHostModHash(), battle.GetHostModName() );
     }

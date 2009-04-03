@@ -110,7 +110,7 @@ void NickListCtrl::UserUpdated( const User& user )
     int index = GetIndexFromData( &user );
     if ( index != -1 ) {
         m_data[index] = &user;
-        HighlightItemUser( index, user.GetNick() );
+        HighlightItemUser( user.GetNick() );
         MarkDirtySort();
         RefreshItem( index );
     }
@@ -211,7 +211,7 @@ wxListItemAttr* NickListCtrl::OnGetItemAttr(long item) const
     if ( item < (long) m_data.size() && item > -1 ) {
         const User& u = *m_data[item];
         wxString name = u.GetNick();
-        return HighlightItemUser( item, name );
+        return HighlightItemUser( name );
     }
     return NULL;
 }

@@ -30,7 +30,7 @@ struct UserStatus
   bool moderator;
   bool bot;
   UserStatus(): in_game(false), away(false), rank(RANK_1), moderator(false), bot(false) {}
-  wxString GetDiffString ( const UserStatus& other );
+  wxString GetDiffString ( const UserStatus& other ) const;
 };
 
 struct UserPosition
@@ -61,13 +61,13 @@ struct UserBattleStatus
   // for nat holepunching
   wxString ip;
   unsigned int udpport;
-  bool IsBot() { return !aishortname.IsEmpty(); }
+  bool IsBot() const { return !aishortname.IsEmpty(); }
   UserBattleStatus(): team(0),ally(0),colour(wxColour(0,0,0)),color_index(-1),handicap(0),side(0),sync(SYNC_UNKNOWN),spectator(false),ready(false), udpport(0) {}
-  bool operator == ( const UserBattleStatus& s )
+  bool operator == ( const UserBattleStatus& s ) const
   {
     return ( ( team == s.team ) && ( colour == s.colour ) && ( handicap == s.handicap ) && ( side == s.side ) && ( sync == s.sync ) && ( spectator == s.spectator ) && ( ready == s.ready ) && ( owner == s.owner ) && ( aishortname == s.aishortname ) );
   }
-  bool operator != ( const UserBattleStatus& s )
+  bool operator != ( const UserBattleStatus& s ) const
   {
     return ( ( team != s.team ) || ( colour != s.colour ) || ( handicap != s.handicap ) || ( side != s.side ) || ( sync != s.sync ) || ( spectator != s.spectator ) || ( ready != s.ready ) || ( owner != s.owner ) || ( aishortname != s.aishortname ) );
   }

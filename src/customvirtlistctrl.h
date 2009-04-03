@@ -183,6 +183,7 @@ protected:
 
     //! must be implemented in derived classes, should call the actual sorting on data and refreshitems
     virtual void Sort( ) = 0;
+
 public:
     /** only sorts if data is marked dirty, or force is true
      * calls Freeze(), Sort(), Thaw() */
@@ -207,6 +208,7 @@ public:
     long GetSelectedIndex();
     void SetSelectedIndex(const long newindex);
     DataType GetDataFromIndex ( const  long index );
+    const DataType GetDataFromIndex ( const  long index ) const;
     DataType GetSelectedData();
     /** @}
      */
@@ -246,7 +248,7 @@ public:
     // funcs that should make things easier for group highlighting
     ///all that needs to be implemented in child class for UpdateHighlights to work
 
-    wxListItemAttr* HighlightItemUser( long item, const wxString& name ) const;
+    wxListItemAttr* HighlightItemUser( const wxString& name ) const;
 
     void SetHighLightAction( UserActions::ActionType action );
     void RefreshVisibleItems();
@@ -272,7 +274,6 @@ public:
       * @{
      */
     virtual wxString OnGetItemText(long item, long column) const = 0;
-    virtual int OnGetItemImage(long item) const = 0;
     virtual int OnGetItemColumnImage(long item, long column) const = 0;
     /** @}
      */
