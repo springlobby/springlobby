@@ -93,7 +93,6 @@ void* TorrentMaintenanceThread::Entry()
 				m_parent.JoinRequestedTorrents();
 				m_parent.RemoveUnneededTorrents();
 				m_parent.TryToJoinQueuedTorrents();
-				m_parent.ResumeFromList();
 				m_parent.SearchAndGetQueuedDependencies();
 		}
 	}
@@ -1364,6 +1363,10 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
 					hash = MakeHashSigned( hash );
 					SendMessageToCoordinator( _T("QH|") + query_tag + _T("|") + hash );
 				}
+    }
+    else if ( data[0] == _T("TLISTDONE") )
+    {
+        ResumeFromList(); // resume download of files
     }
 }
 
