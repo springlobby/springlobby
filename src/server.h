@@ -60,7 +60,7 @@ class Server : public iNetClass
     virtual bool Register( const wxString& addr, const int port, const wxString& nick, const wxString& password,wxString& reason ) = 0;
     virtual void AcceptAgreement() = 0;
 
-    virtual void Connect( const wxString& addr, const int port ) = 0;
+    virtual void Connect( const wxString& servername, const wxString& addr, const int port ) = 0;
     virtual void Disconnect() = 0;
     virtual bool IsConnected() = 0;
 
@@ -173,11 +173,14 @@ class Server : public iNetClass
     ///used to fill userlist in groupuserdialog
     const UserList& GetUserList(){return m_users;}
 
+    wxString GetServerName() { return m_server_name; }
+
   protected:
     Socket* m_sock;
     int m_keepalive;
     wxString m_user;
     wxString m_pass;
+    wxString m_server_name;
     bool m_pass_hash;
     wxString m_required_spring_ver;
 

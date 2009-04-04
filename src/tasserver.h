@@ -31,7 +31,7 @@ class TASServer : public Server
     bool Register( const wxString& addr, const int port, const wxString& nick, const wxString& password,wxString& reason );
     void AcceptAgreement();
 
-    void Connect( const wxString& addr, const int port );
+    void Connect( const wxString& servername, const wxString& addr, const int port );
     void Disconnect();
     bool IsConnected();
 

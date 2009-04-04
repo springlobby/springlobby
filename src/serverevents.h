@@ -32,7 +32,7 @@ class ServerEvents
   // Uicontrol interface
 
     void OnConnected( const wxString& server_name, const wxString& server_ver, bool supported, const wxString& server_spring_ver, bool lanmode );
-    void OnDisconnected();
+    void OnDisconnected( bool wasonline );
 
     void OnLogin();
     void OnLoginInfoComplete();

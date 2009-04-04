@@ -295,8 +295,9 @@ void TASServer::SetSocket( Socket* sock )
 }
 
 
-void TASServer::Connect( const wxString& addr, const int port )
+void TASServer::Connect( const wxString& servername ,const wxString& addr, const int port )
 {
+		m_server_name = servername;
     m_addr=addr;
     try
     {
@@ -590,7 +591,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         m_nat_helper_port = (unsigned long)GetIntParam( params );
         lanmode = GetBoolParam( params );
         m_server_lanmode = lanmode;
-        m_se->OnConnected( _T("TAS Server"), mod, (m_ser_ver > 0), supported_spring_version, lanmode );
+        m_se->OnConnected( m_server_name, mod, (m_ser_ver > 0), supported_spring_version, lanmode );
     }
     else if ( cmd == _T("ACCEPTED") )
     {
@@ -2143,7 +2144,7 @@ void TASServer::OnDisconnected( Socket* sock )
     m_online = false;
 		m_token_transmission = false;
 		m_relay_host_manager_list.Clear();
-    if ( tmp ) m_se->OnDisconnected();
+    m_se->OnDisconnected( tmp );
 }
 
 

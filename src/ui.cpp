@@ -124,6 +124,7 @@ void Ui::ShowConnectWindow()
     }
     m_con_win->CenterOnParent();
     m_con_win->Show(true);
+    m_con_win->Raise();
 }
 
 
@@ -221,7 +222,7 @@ void Ui::DoConnect( const wxString& servername, const wxString& username, const 
     m_serv->uidata.panel->StatusMessage( _T("Connecting to server ") + servername + _T("...") );
 
     // Connect
-    m_serv->Connect( host, port );
+    m_serv->Connect( servername, host, port );
 
 }
 
@@ -589,6 +590,14 @@ void Ui::OnUpdate( int mselapsed )
 void Ui::OnConnected( Server& server, const wxString& server_name, const wxString& server_ver, bool supported )
 {
     wxLogDebugFunc( _T("") );
+    if ( !m_last_used_backup_server.IsEmpty() )
+    {
+    	 m_last_used_backup_server = _T("");
+    }
+    else // connect successful & it's not a backup server fallback -> save as default
+    {
+			 sett().SetDefaultServer( server_name );
+    }
     IsSpringCompatible();
 
     if ( server.uidata.panel ) server.uidata.panel->StatusMessage( _T("Connected to ") + server_name + _T(".") );
@@ -641,7 +650,7 @@ void Ui::OnLoggedIn( )
 }
 
 
-void Ui::OnDisconnected( Server& server )
+void Ui::OnDisconnected( Server& server, bool wasonline )
 {
     if ( m_main_win == 0 ) return;
     wxLogDebugFunc( _T("") );
@@ -662,10 +671,43 @@ void Ui::OnDisconnected( Server& server )
         // leads to crash. Disabled for now
         //server.uidata.panel = 0;
     }
-		customMessageBoxNoModal( SL_MAIN_ICON, _("Disconnected from server"), _("Not online"), wxICON_EXCLAMATION|wxOK );
+		if ( !wasonline ) // couldn't even estabilish a socket, prompt the user to switch to another server
+		{
+			wxMessageDialog dlg( &mw(), _("Connection failure"), _("A connection couldn't be established with the server\nWould you like to try again with the same server?\nNo to switch to next server in the list"), wxYES_NO | wxCANCEL | wxNO_DEFAULT );
+			switch ( dlg.ShowModal() )
+			{
+				case wxID_YES: // try again with the same server/settings
+				{
+					Reconnect();
+					break;
+				}
+				case wxID_NO: // switch to next server in the list
+				{
+					wxString previous_server = m_last_used_backup_server;
+					if ( previous_server.IsEmpty() ) previous_server = sett().GetDefaultServer();
+					wxArrayString serverlist = sett().GetServers();
+					int position = serverlist.Index( previous_server );
+					if ( position == wxNOT_FOUND ) // WTF, this should never happend
+					{
+						 wxLogError( _T("Inconsistency in server list functionality, been connected to a non existent server in the options") );
+						 position = -1;
+					}
+					position = ( position + 1) % serverlist.GetCount(); // switch to next in the list
+					m_last_used_backup_server = serverlist[position];
+					sett().SetDefaultServer( m_last_used_backup_server );
+					ShowConnectWindow();
+					sett().SetDefaultServer( previous_server ); // don't save the new server as default when switched this way
+					break;
+				}
+				case wxID_CANCEL: // do nothing
+				{
+					return;
+				}
+			}
+		}
+		else customMessageBoxNoModal( SL_MAIN_ICON, _("Disconnected from server"), _("Not online"), wxICON_EXCLAMATION|wxOK );
     // Crashes. Disabled for now.
     //mw().GetChatTab().CloseAllChats();
-
 }
 
 

@@ -86,7 +86,7 @@ class Ui
 
     void OnConnected( Server& server, const wxString& server_name, const wxString& server_ver, bool supported );
     void OnLoggedIn( );
-    void OnDisconnected( Server& server );
+    void OnDisconnected( Server& server, bool wasonline );
 
     void OnJoinedChannelSuccessful( Channel& chan );
     void OnUserJoinedChannel( Channel& chan, User& user );
@@ -154,6 +154,8 @@ class Ui
     Server* m_serv;
     MainWindow* m_main_win;
     ConnectWindow* m_con_win;
+
+    wxString m_last_used_backup_server;
 
     unsigned int m_upd_counter_torrent;
     unsigned int m_upd_counter_battlelist;

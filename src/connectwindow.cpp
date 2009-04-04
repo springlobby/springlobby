@@ -245,7 +245,6 @@ void ConnectWindow::OnOk(wxCommandEvent& event)
 		}
     if ( m_tabs->GetSelection() <= 0 )
     {
-        sett().SetDefaultServer( HostAddress );
         sett().SetServerAccountNick( HostAddress,m_nick_text->GetValue() );
         sett().SetServerAccountSavePass( HostAddress, m_rpass_check->GetValue() );
 
