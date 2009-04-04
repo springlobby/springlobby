@@ -52,12 +52,6 @@ Server::~Server()
 }
 
 
-void Server::SetSocket( Socket* sock )
-{
-  ASSERT_LOGIC( (!IsConnected()) || (sock == 0), _T("Not connected") );
-  m_sock = sock;
-}
-
 User& Server::GetUser( const wxString& nickname ) const
 {
   return m_users.GetUser( nickname );
