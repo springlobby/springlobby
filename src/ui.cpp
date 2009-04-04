@@ -668,11 +668,7 @@ void Ui::OnDisconnected( Server& server, bool wasonline )
 					if ( previous_server.IsEmpty() ) previous_server = sett().GetDefaultServer();
 					wxArrayString serverlist = sett().GetServers();
 					int position = serverlist.Index( previous_server );
-					if ( position == wxNOT_FOUND ) // WTF, this should never happend
-					{
-						 wxLogError( _T("Inconsistency in server list functionality, been connected to a non existent server in the options") );
-						 position = -1;
-					}
+					if ( position == wxNOT_FOUND ) position = -1;
 					position = ( position + 1) % serverlist.GetCount(); // switch to next in the list
 					m_last_used_backup_server = serverlist[position];
 					sett().SetDefaultServer( m_last_used_backup_server );
