@@ -335,7 +335,7 @@ bool TASServer::Register( const wxString& addr, const int port, const wxString& 
     if ( data.Contains( _T("\r") ) ) data = data.BeforeLast(_T('\r'));
     if ( GetWordParam( data ) != _T("TASServer") ) return false;
 
-    SendCmd( _T("REGISTER"), nick + _T(" ") + GetPasswordHash( password ) );
+    tempsocket.Send( _T("REGISTER ") + nick + _T(" ") + GetPasswordHash( password ) + _T("\n") );
 
     data = tempsocket.Receive().BeforeLast(_T('\n'));
     tempsocket.Disconnect();
