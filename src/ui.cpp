@@ -227,13 +227,10 @@ bool Ui::DoRegister( const wxString& servername, const wxString& username, const
         return false;
     }
 
-    // Create new Server object
-	  TASServer regserv;
-
     host = sett().GetServerHost( servername );
     port = sett().GetServerPort( servername );
 
-    return regserv.Register( host, port, username, password,reason );
+    return m_serv->Register( host, port, username, password,reason );
 
 }
 
