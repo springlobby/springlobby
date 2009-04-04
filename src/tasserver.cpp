@@ -327,7 +327,7 @@ bool TASServer::Register( const wxString& addr, const int port, const wxString& 
 {
     wxLogDebugFunc( _T("") );
 
-		Socket tempsocket( this*, true );
+		Socket tempsocket( *this, true );
     tempsocket.Connect( addr, port );
     if ( tempsocket.State() != SS_Open ) return false;
 
