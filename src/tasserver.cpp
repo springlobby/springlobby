@@ -327,16 +327,18 @@ bool TASServer::Register( const wxString& addr, const int port, const wxString& 
 {
     wxLogDebugFunc( _T("") );
 
-    m_sock->Connect( addr, port );
-    if ( !IsConnected() ) return false;
+		Socket tempsocket( this*, true );
+    tempsocket.Connect( addr, port );
+    if ( tempsocket.State() != SS_Open ) return false;
 
-    wxString data = m_sock->Receive().BeforeLast(_T('\n'));
+    wxString data = tempsocket.Receive().BeforeLast(_T('\n'));
     if ( data.Contains( _T("\r") ) ) data = data.BeforeLast(_T('\r'));
     if ( GetWordParam( data ) != _T("TASServer") ) return false;
 
     SendCmd( _T("REGISTER"), nick + _T(" ") + GetPasswordHash( password ) );
 
-    data = m_sock->Receive().BeforeLast(_T('\n'));
+    data = tempsocket.Receive().BeforeLast(_T('\n'));
+    tempsocket.Disconnect();
     if ( data.Contains( _T("\r") ) ) data = data.BeforeLast(_T('\r'));
     if ( data.IsEmpty() )
     {
