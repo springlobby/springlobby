@@ -47,15 +47,12 @@ class Server : public iNetClass
     UiServerData uidata;
 
 
-    Server(): battles_iter(new BattleList_Iter(&m_battles)),m_sock(0),m_keepalive(15) {  }
+    Server();
     virtual ~Server( );
 
     // Server interface
 
     virtual bool ExecuteSayCommand( const wxString& cmd ) = 0;
-
-    virtual void SetSocket( Socket* sock );
-    virtual Socket* GetSocket( ) { return m_sock; }
 
     virtual bool Register( const wxString& addr, const int port, const wxString& nick, const wxString& password,wxString& reason ) = 0;
     virtual void AcceptAgreement() = 0;

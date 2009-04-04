@@ -23,7 +23,6 @@
 #include "chatpanel.h"
 #include "battlelisttab.h"
 #include "battleroomtab.h"
-#include "socket.h"
 #include "battle.h"
 #include "mainchattab.h"
 #include "mainjoinbattletab.h"
@@ -160,7 +159,7 @@ void Ui::Reconnect()
         pass = pass2;
     }
 
-    if ( IsConnected() ) Disconnect();
+    Disconnect();
     DoConnect( servname, sett().GetServerAccountNick(servname), pass );
 }
 
@@ -169,11 +168,8 @@ void Ui::Disconnect()
 {
     if ( m_serv != 0 )
     {
+				if ( !IsConnected() ) return;
         m_serv->Disconnect();
-        Socket* sock = m_serv->GetSocket();
-        m_serv->SetSocket( 0 );
-        delete sock;
-        sock = 0;
         delete m_serv;
         m_serv = 0;
     }
@@ -185,7 +181,6 @@ void Ui::DoConnect( const wxString& servername, const wxString& username, const 
 {
     wxString host;
     int port;
-    Socket* sock;
 
     if ( !sett().ServerExists( servername ) )
     {
@@ -197,8 +192,6 @@ void Ui::DoConnect( const wxString& servername, const wxString& username, const 
 
     // Create new Server object
     m_serv = new TASServer( );
-    sock = new Socket( *m_serv );
-    m_serv->SetSocket( sock );
     //m_serv->SetServerEvents( &se() );
 
     m_serv->SetUsername( username );
@@ -240,8 +233,6 @@ bool Ui::DoRegister( const wxString& servername, const wxString& username, const
 
     // Create new Server object
     TASServer* serv = new TASServer( );
-    Socket* sock = new Socket( *serv, true );
-    serv->SetSocket( sock );
 
     host = sett().GetServerHost( servername );
     port = sett().GetServerPort( servername );
@@ -291,13 +282,13 @@ bool Ui::IsSpringRunning()
 void Ui::Quit()
 {
     ASSERT_LOGIC( m_main_win != 0, _T("m_main_win = 0") );
+    Disconnect();
     sett().SaveSettings();
     mw().forceSettingsFrameClose();
 
     mw().Close();
     if ( m_con_win != 0 )
         m_con_win->Close();
-    if (m_serv != 0 ) m_serv->Disconnect();
 }
 
 
