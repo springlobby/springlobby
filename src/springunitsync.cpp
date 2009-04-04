@@ -514,11 +514,11 @@ wxArrayString SpringUnitSync::GetAIList( const wxString& modname )
 		for ( int i = 0; i < total; i++ )
 		{
 			wxArrayString infos = susynclib().GetAIInfo( i );
-			int namepos = infos.Index( _T("shortName") ) + 1;
-			int versionpos = infos.Index( _T("version") ) + 1;
+			int namepos = infos.Index( _T("shortName") );
+			int versionpos = infos.Index( _T("version") );
 			wxString ainame;
-			if ( namepos > 0 ) ainame += infos[namepos];
-			if ( versionpos > 0 ) ainame += _T(" ") + infos[versionpos];
+			if ( namepos != wxNOT_FOUND ) ainame += infos[namepos +1];
+			if ( versionpos != wxNOT_FOUND ) ainame += _T(" ") + infos[versionpos +1];
 			ret.Add( ainame );
 		}
 	}
