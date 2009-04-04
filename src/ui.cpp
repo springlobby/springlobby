@@ -228,8 +228,18 @@ bool Ui::DoRegister( const wxString& servername, const wxString& username, const
 
     host = sett().GetServerHost( servername );
     port = sett().GetServerPort( servername );
-
-    return GetServer().Register( host, port, username, password,reason );
+    bool success = GetServer().Register( host, port, username, password,reason );
+    if ( success )
+    {
+			customMessageBox(SL_MAIN_ICON, _("Registration successful,\nyou should now be able to login."), _("Registration successful"), wxOK );
+    }
+    else
+    {
+			wxLogWarning( _T("registration failed, reason: %s"), reason.c_str()  );
+			if ( reason == _("Connection timed out") || reason.IsEmpty() ) ConnectionFailurePrompt();
+			else	customMessageBox(SL_MAIN_ICON,_("Registration failed, the reason was:\n")+ reason , _("Registration failed."), wxOK );
+    }
+    return success;
 
 }
 
@@ -654,40 +664,49 @@ void Ui::OnDisconnected( Server& server, bool wasonline )
     }
 		if ( !wasonline ) // couldn't even estabilish a socket, prompt the user to switch to another server
 		{
-			wxMessageDialog dlg( &mw(), _("A connection couldn't be established with the server\nWould you like to try again with the same server?\nNo to switch to next server in the list"), _("Connection failure"), wxYES_NO | wxCANCEL | wxNO_DEFAULT );
-			switch ( dlg.ShowModal() )
-			{
-				case wxID_YES: // try again with the same server/settings
-				{
-					Reconnect();
-					break;
-				}
-				case wxID_NO: // switch to next server in the list
-				{
-					wxString previous_server = m_last_used_backup_server;
-					if ( previous_server.IsEmpty() ) previous_server = sett().GetDefaultServer();
-					wxArrayString serverlist = sett().GetServers();
-					int position = serverlist.Index( previous_server );
-					if ( position == wxNOT_FOUND ) position = -1;
-					position = ( position + 1) % serverlist.GetCount(); // switch to next in the list
-					m_last_used_backup_server = serverlist[position];
-					sett().SetDefaultServer( m_last_used_backup_server );
-					m_con_win->ReloadServerList();
-					sett().SetDefaultServer( previous_server ); // don't save the new server as default when switched this way
-					ShowConnectWindow();
-					break;
-				}
-				case wxID_CANCEL: // do nothing
-				{
-					return;
-				}
-			}
+			ConnectionFailurePrompt();
 		}
 		else customMessageBoxNoModal( SL_MAIN_ICON, _("Disconnected from server"), _("Not online"), wxICON_EXCLAMATION|wxOK );
     // Crashes. Disabled for now.
     //mw().GetChatTab().CloseAllChats();
 }
 
+void Ui::ConnectionFailurePrompt()
+{
+	wxMessageDialog dlg( &mw(), _("A connection couldn't be established with the server\nWould you like to try again with the same server?\nNo to switch to next server in the list"), _("Connection failure"), wxYES_NO | wxCANCEL | wxNO_DEFAULT );
+	switch ( dlg.ShowModal() )
+	{
+		case wxID_YES: // try again with the same server/settings
+		{
+			Reconnect();
+			break;
+		}
+		case wxID_NO: // switch to next server in the list
+		{
+			SwitchToNextServer();
+			ShowConnectWindow();
+			break;
+		}
+		case wxID_CANCEL: // do nothing
+		{
+			return;
+		}
+	}
+}
+
+void Ui::SwitchToNextServer()
+{
+		wxString previous_server = m_last_used_backup_server;
+		if ( previous_server.IsEmpty() ) previous_server = sett().GetDefaultServer();
+		wxArrayString serverlist = sett().GetServers();
+		int position = serverlist.Index( previous_server );
+		if ( position == wxNOT_FOUND ) position = -1;
+		position = ( position + 1) % serverlist.GetCount(); // switch to next in the list
+		m_last_used_backup_server = serverlist[position];
+		sett().SetDefaultServer( m_last_used_backup_server );
+		m_con_win->ReloadServerList();
+		sett().SetDefaultServer( previous_server ); // don't save the new server as default when switched this way
+}
 
 //! @brief Called when client has joined a channel
 //!
