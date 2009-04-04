@@ -232,12 +232,12 @@ bool Ui::DoRegister( const wxString& servername, const wxString& username, const
     }
 
     // Create new Server object
-    TASServer* serv = new TASServer( );
+	  TASServer serv();
 
     host = sett().GetServerHost( servername );
     port = sett().GetServerPort( servername );
 
-    return serv->Register( host, port, username, password,reason );
+    return serv.Register( host, port, username, password,reason );
 
 }
 
