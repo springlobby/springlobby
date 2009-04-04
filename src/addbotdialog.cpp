@@ -132,23 +132,17 @@ wxString AddBotDialog::GetNick()
 wxString AddBotDialog::GetAIShortName()
 {
 	wxArrayString infos = usync().GetAIInfos( m_ai->GetSelection() );
-	if ( infos.GetCount() == 0 ) return m_ais[ m_ai->GetSelection() ];
-  else
-  {
-		int namepos = infos.Index( _T("shortName") ) + 1;
-		return infos[namepos];
-  }
+	int namepos = infos.Index( _T("shortName") );
+	if ( namepos == wxNOT_FOUND ) return m_ais[ m_ai->GetSelection() ];
+	return infos[namepos +1];
 }
 
 wxString AddBotDialog::GetAIVersion()
 {
 	wxArrayString infos = usync().GetAIInfos( m_ai->GetSelection() );
-	if ( infos.GetCount() == 0 ) return _T("");
-  else
-  {
-		int namepos = infos.Index( _T("version") ) + 1;
-		return infos[namepos];
-  }
+	int namepos = infos.Index( _T("version") );
+	if ( namepos == wxNOT_FOUND )
+	return infos[namepos +1];
 }
 
 wxString AddBotDialog::RefineAIName( const wxString& name )
