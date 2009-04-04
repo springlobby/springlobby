@@ -390,7 +390,7 @@ TorrentWrapper::TorrentWrapper():
 TorrentWrapper::~TorrentWrapper()
 {
     wxLogMessage(_T("TorrentWrapper::~TorrentWrapper()"));
-    m_socket_class->SetTimeout( 1 );
+    m_maintenance_thread.Stop();
     try
     {
         m_torr->stop_upnp();
@@ -415,6 +415,7 @@ TorrentWrapper::~TorrentWrapper()
     {
         wxLogError( WX_STRINGC( e.what() ) );
     }
+    m_socket_class->SetTimeout( 1 );
     DisconnectFromP2PSystem();
     delete m_torr;
     delete m_socket_class;

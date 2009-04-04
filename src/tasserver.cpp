@@ -151,6 +151,9 @@ m_token_transmission( false )
 
 TASServer::~TASServer()
 {
+		Disconnect();
+		delete m_sock;
+		m_sock = 0;
     delete m_se;
 }
 
