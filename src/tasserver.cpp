@@ -943,7 +943,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     else if ( cmd == _T("DENIED") )
     {
         if ( m_online ) return;
-        msg = GetSentenceParam( params );
+        m_last_denied = msg = GetSentenceParam( params );
         m_se->OnServerMessage( msg );
         Disconnect();
         //Command: "DENIED" params: "Already logged in".
@@ -2091,18 +2091,20 @@ void TASServer::OnConnected( Socket* sock )
     m_online = false;
 		m_token_transmission = false;
 		m_relay_host_manager_list.Clear();
+		m_last_denied = _T("");
 }
 
 
 void TASServer::OnDisconnected( Socket* sock )
 {
     wxLogDebugFunc( TowxString(m_connected) );
-    bool tmp = m_connected;
+    bool connectionwaspresent = m_online || !m_last_denied.IsEmpty();
+    m_last_denied = _T("");
     m_connected = false;
     m_online = false;
 		m_token_transmission = false;
 		m_relay_host_manager_list.Clear();
-    m_se->OnDisconnected( tmp );
+    m_se->OnDisconnected( connectionwaspresent );
 }
 
 

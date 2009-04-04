@@ -148,6 +148,7 @@ class TASServer : public Server
     ServerEvents* m_se;
     double m_ser_ver;
 
+		wxString m_last_denied;
     bool m_connected;
     bool m_online;
     bool m_debug_dont_catch;

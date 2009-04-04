@@ -672,8 +672,9 @@ void Ui::OnDisconnected( Server& server, bool wasonline )
 					position = ( position + 1) % serverlist.GetCount(); // switch to next in the list
 					m_last_used_backup_server = serverlist[position];
 					sett().SetDefaultServer( m_last_used_backup_server );
-					ShowConnectWindow();
+					m_con_win->ReloadServerList();
 					sett().SetDefaultServer( previous_server ); // don't save the new server as default when switched this way
+					ShowConnectWindow();
 					break;
 				}
 				case wxID_CANCEL: // do nothing
