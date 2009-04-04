@@ -61,6 +61,7 @@ Ui::Ui() :
     m_main_win = new MainWindow( *this );
     CustomMessageBoxBase::setLobbypointer(m_main_win);
     m_spring = new Spring(*this);
+    m_serv = new TASServer();
 }
 
 Ui::~Ui()
@@ -69,6 +70,7 @@ Ui::~Ui()
 
     delete m_main_win;
     delete m_spring;
+    delete m_serv;
 }
 
 Server& Ui::GetServer()
@@ -170,8 +172,6 @@ void Ui::Disconnect()
     {
 				if ( !IsConnected() ) return;
         m_serv->Disconnect();
-        delete m_serv;
-        m_serv = 0;
     }
 }
 
@@ -189,10 +189,6 @@ void Ui::DoConnect( const wxString& servername, const wxString& username, const 
     }
 
     Disconnect();
-
-    // Create new Server object
-    m_serv = new TASServer( );
-    //m_serv->SetServerEvents( &se() );
 
     m_serv->SetUsername( username );
     m_serv->SetPassword( password );
@@ -244,15 +240,13 @@ bool Ui::DoRegister( const wxString& servername, const wxString& username, const
 
 bool Ui::IsConnected() const
 {
-    if ( m_serv != 0 )
-        return m_serv->IsConnected();
+    if ( m_serv != 0 ) return m_serv->IsConnected();
     return false;
 }
 
 void Ui::JoinChannel( const wxString& name, const wxString& password )
 {
-    if ( m_serv != 0 )
-        m_serv->JoinChannel( name, password );
+    if ( m_serv != 0 ) m_serv->JoinChannel( name, password );
 }
 
 
