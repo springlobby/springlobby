@@ -673,7 +673,7 @@ void Ui::OnDisconnected( Server& server, bool wasonline )
     }
 		if ( !wasonline ) // couldn't even estabilish a socket, prompt the user to switch to another server
 		{
-			wxMessageDialog dlg( &mw(), _("Connection failure"), _("A connection couldn't be established with the server\nWould you like to try again with the same server?\nNo to switch to next server in the list"), wxYES_NO | wxCANCEL | wxNO_DEFAULT );
+			wxMessageDialog dlg( &mw(), _("A connection couldn't be established with the server\nWould you like to try again with the same server?\nNo to switch to next server in the list"), _("Connection failure"), wxYES_NO | wxCANCEL | wxNO_DEFAULT );
 			switch ( dlg.ShowModal() )
 			{
 				case wxID_YES: // try again with the same server/settings
