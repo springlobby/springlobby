@@ -5,4 +5,4 @@ cd $(dirname $0)/..
 
 doxygen
 
-rsync -aqzh doc/html /usr/local/www/springlobby.info/docs
+chmod -R g+rx doc/
