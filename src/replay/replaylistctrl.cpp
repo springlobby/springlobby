@@ -243,6 +243,16 @@ wxListItemAttr* ReplayListCtrl::OnGetItemAttr(long item) const
     return NULL;
 }
 
+void ReplayListCtrl::RemoveReplay( const int index )
+{
+    if ( index != -1 && index < m_data.size() ) {
+        m_data.erase( m_data.begin() + index );
+        SetItemCount( m_data.size() );
+        RefreshVisibleItems( );
+        return;
+    }
+    wxLogError( _T("Didn't find the replay to remove.") );
+}
 
 int ReplayListCtrl::GetIndexFromData( const DataType& data ) const
 {

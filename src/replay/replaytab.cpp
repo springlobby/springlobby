@@ -196,6 +196,17 @@ void ReplayTab::RemoveReplay( const Replay& replay )
     m_replay_listctrl->RemoveReplay( replay );
 }
 
+void ReplayTab::RemoveReplay( const int index )
+{
+    if ( index == -1 )
+        return;
+
+    if ( index == m_replay_listctrl->GetSelectedIndex() )
+        Deselect();
+
+    m_replay_listctrl->RemoveReplay( index );
+}
+
 void ReplayTab::UpdateReplay( const Replay& replay )
 {
     if ( m_filter->GetActiv() && !m_filter->FilterReplay( replay ) ) {
@@ -330,16 +341,16 @@ void ReplayTab::OnDelete( wxCommandEvent& event )
     int sel_index=m_replay_listctrl->GetSelectedIndex();
     if ( sel_index >=0 ) {
         try{
-            int m_sel_replay_id = m_replay_listctrl->GetSelectedData()->id;
+            const Replay& rep = *m_replay_listctrl->GetSelectedData();
+            int m_sel_replay_id = rep.id;
+            int index = m_replay_listctrl->GetIndexFromData( &rep );
             wxLogMessage(_T("Deleting replay %d "),m_sel_replay_id);
-            Replay& rep = replaylist().GetReplayById( m_sel_replay_id );
             wxString fn = rep.Filename;
             if ( !replaylist().DeleteReplay( m_sel_replay_id ) )
                 customMessageBoxNoModal(SL_MAIN_ICON, _("Could not delete Replay: ") + fn,
                     _("Error") );
             else{
-                RemoveReplay( rep );
-                Deselect();
+                RemoveReplay( index ); // Deselect is called in there too
             }
         }catch(std::runtime_error){
             return;
@@ -418,8 +429,13 @@ void ReplayTab::Deselected()
 {
     m_watch_btn->Enable( false );
     m_delete_btn->Enable( false );
+    m_players_text->SetLabel( _T("") );
+    m_map_text->SetLabel( _T("") );
+    m_mod_text->SetLabel( _T("") );
     m_minimap->SetBattle( NULL );
-    m_players->DeleteAllItems();
+    m_minimap->UpdateMinimap();
+    m_minimap->Refresh();
+    m_players->Clear();
     m_players->SetBattle( NULL );
 }
 
