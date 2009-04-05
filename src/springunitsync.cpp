@@ -888,10 +888,15 @@ wxString SpringUnitSync::GetArchivePath( const wxString& name )
 
 wxArrayString SpringUnitSync::GetScreenshotFilenames()
 {
-    wxArrayString ret;
+    wxSortedArrayString ret;
     if ( !IsLoaded() ) return ret;
 
-    return susynclib().FindFilesVFS( _T("screenshots/*.*") );
+    ret = susynclib().FindFilesVFS( _T("screenshots/*.*") );
+    for ( int i = 0; i < ret.Count() - 1; ++i ) {
+            if ( ret[i] == ret[i+1] )
+                ret.RemoveAt( i+1 );
+    }
+    return ret;
 }
 
 wxString SpringUnitSync::GetDefaultNick()
