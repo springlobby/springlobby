@@ -16,6 +16,18 @@ class iNetClass
     virtual void OnDataReceived( Socket* sock ) = 0;
 };
 
+class FakeNetClass : public iNetClass
+{
+  public:
+
+    FakeNetClass(){}
+    ~FakeNetClass(){}
+
+    void OnConnected( Socket* sock ) {}
+    void OnDisconnected( Socket* sock ) {}
+    void OnDataReceived( Socket* sock ) {}
+};
+
 #endif // SPRINGLOBBY_HEADERGUARD_INETCLASS_H
 
 /**

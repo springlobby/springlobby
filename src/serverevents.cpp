@@ -30,11 +30,11 @@ void ServerEvents::OnConnected( const wxString& server_name, const wxString& ser
 }
 
 
-void ServerEvents::OnDisconnected()
+void ServerEvents::OnDisconnected( bool wasonline )
 {
     wxLogDebugFunc( _T("") );
     m_serv.SetRequiredSpring (_T(""));
-    ui().OnDisconnected( m_serv );
+    ui().OnDisconnected( m_serv, wasonline );
 #ifndef NO_TORRENT_SYSTEM
     try // settings may be already destroyed
     {

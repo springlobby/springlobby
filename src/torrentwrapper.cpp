@@ -93,7 +93,6 @@ void* TorrentMaintenanceThread::Entry()
 				m_parent.JoinRequestedTorrents();
 				m_parent.RemoveUnneededTorrents();
 				m_parent.TryToJoinQueuedTorrents();
-				m_parent.ResumeFromList();
 				m_parent.SearchAndGetQueuedDependencies();
 		}
 	}
@@ -113,7 +112,7 @@ bool TorrentMaintenanceThread::TestDestroy()
 inline wxFileName
 torrentFileName(const wxString& hash)
 {
-    return sett().GetTorrentDir().GetPathWithSep() + hash + _T(".torrent");
+    return sett().GetTorrentDir().GetPathWithSep() + MakeHashSigned(hash) + _T(".torrent");
 }
 
 bool TorrentTable::IsConsistent()
@@ -390,7 +389,7 @@ TorrentWrapper::TorrentWrapper():
 TorrentWrapper::~TorrentWrapper()
 {
     wxLogMessage(_T("TorrentWrapper::~TorrentWrapper()"));
-    m_socket_class->SetTimeout( 1 );
+    m_maintenance_thread.Stop();
     try
     {
         m_torr->stop_upnp();
@@ -415,6 +414,7 @@ TorrentWrapper::~TorrentWrapper()
     {
         wxLogError( WX_STRINGC( e.what() ) );
     }
+    m_socket_class->SetTimeout( 1 );
     DisconnectFromP2PSystem();
     delete m_torr;
     delete m_socket_class;
@@ -851,7 +851,7 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
 
 
     wxLogMessage(_T("(3) Joining torrent: downloading info file"));
-    if (!DownloadTorrentFileFromTracker( row->hash ))
+    if (!DownloadTorrentFileFromTracker( MakeHashSigned( row->hash ) ))
     {
     	 wxLogError(_T("(3) info file download failed"));
     	 return false;
@@ -1363,6 +1363,10 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
 					hash = MakeHashSigned( hash );
 					SendMessageToCoordinator( _T("QH|") + query_tag + _T("|") + hash );
 				}
+    }
+    else if ( data[0] == _T("TLISTDONE") )
+    {
+        ResumeFromList(); // resume download of files
     }
 }
 

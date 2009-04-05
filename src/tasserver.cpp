@@ -151,13 +151,15 @@ m_token_transmission( false )
 
 TASServer::~TASServer()
 {
+		Disconnect();
+		delete m_sock;
+		m_sock = 0;
     delete m_se;
 }
 
 
 bool TASServer::ExecuteSayCommand( const wxString& cmd )
 {
-    if ( m_sock == 0 ) return false;
     wxArrayString arrayparams = wxStringTokenize( cmd, _T(" ") );
     if ( arrayparams.GetCount() == 0 ) return false;
     wxString subcmd = arrayparams[0];
@@ -287,25 +289,10 @@ bool TASServer::ExecuteSayCommand( const wxString& cmd )
 }
 
 
-void TASServer::SetSocket( Socket* sock )
+void TASServer::Connect( const wxString& servername ,const wxString& addr, const int port )
 {
-    Server::SetSocket( sock );
-    if ( m_sock == 0 ) return;
-    m_sock->SetSendRateLimit( 800 ); // 1250 is the server limit but 800 just to make sure :)
-}
-
-
-void TASServer::Connect( const wxString& addr, const int port )
-{
+		m_server_name = servername;
     m_addr=addr;
-    try
-    {
-        ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
-    }
-    catch (...)
-    {
-        return ;
-    }
 
     m_sock->Connect( addr, port );
     if ( IsConnected() )
@@ -314,6 +301,7 @@ void TASServer::Connect( const wxString& addr, const int port )
         m_connected = true;
     }
     m_sock->SetPingInfo( _T("PING\n"), 10000 );
+    m_sock->SetSendRateLimit( 800 ); // 1250 is the server limit but 800 just to make sure :)
     m_online = false;
     m_agreement = _T("");
 		m_crc.ResetCRC();
@@ -323,10 +311,6 @@ void TASServer::Connect( const wxString& addr, const int port )
 
 void TASServer::Disconnect()
 {
-    if (!m_sock)
-    {
-        return;
-    }
     if (!m_connected)
     {
         return;
@@ -338,7 +322,6 @@ void TASServer::Disconnect()
 
 bool TASServer::IsConnected()
 {
-    if ( m_sock == 0 ) return false;
     return (m_sock->State() == SS_Open);
 }
 
@@ -346,25 +329,19 @@ bool TASServer::IsConnected()
 bool TASServer::Register( const wxString& addr, const int port, const wxString& nick, const wxString& password, wxString& reason )
 {
     wxLogDebugFunc( _T("") );
+		FakeNetClass temp;
+		Socket tempsocket( temp, true );
+    tempsocket.Connect( addr, port );
+    if ( tempsocket.State() != SS_Open ) return false;
 
-    try
-    {
-        ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
-    }
-    catch (...)
-    {
-        return false ;
-    }
-    m_sock->Connect( addr, port );
-    if ( !IsConnected() ) return false;
-
-    wxString data = m_sock->Receive().BeforeLast(_T('\n'));
+    wxString data = tempsocket.Receive().BeforeLast(_T('\n'));
     if ( data.Contains( _T("\r") ) ) data = data.BeforeLast(_T('\r'));
     if ( GetWordParam( data ) != _T("TASServer") ) return false;
 
-    SendCmd( _T("REGISTER"), nick + _T(" ") + GetPasswordHash( password ) );
+    tempsocket.Send( _T("REGISTER ") + nick + _T(" ") + GetPasswordHash( password ) + _T("\n") );
 
-    data = m_sock->Receive().BeforeLast(_T('\n'));
+    data = tempsocket.Receive().BeforeLast(_T('\n'));
+    tempsocket.Disconnect();
     if ( data.Contains( _T("\r") ) ) data = data.BeforeLast(_T('\r'));
     if ( data.IsEmpty() )
     {
@@ -411,7 +388,7 @@ void TASServer::Login()
     wxString pass = GetPasswordHash( m_pass );
     wxString protocol = _T("\t") + TowxString( m_crc.GetCRC() );
     wxString localaddr;
-    if ( m_sock ) localaddr = m_sock->GetLocalAddress();
+    localaddr = m_sock->GetLocalAddress();
     if ( localaddr.IsEmpty() ) localaddr = _T("*");
     SendCmd ( _T("LOGIN"), m_user + _T(" ") + pass + _T(" ") +
               GetHostCPUSpeed() + _T(" ") + localaddr + _T(" SpringLobby ") + GetSpringLobbyVersion() + protocol );
@@ -444,14 +421,6 @@ void TASServer::AcceptAgreement()
 
 void TASServer::Update( int mselapsed )
 {
-    try
-    {
-        ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
-    }
-    catch (...)
-    {
-        return ;
-    }
 
     m_sock->OnTimer( mselapsed );
 
@@ -590,7 +559,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         m_nat_helper_port = (unsigned long)GetIntParam( params );
         lanmode = GetBoolParam( params );
         m_server_lanmode = lanmode;
-        m_se->OnConnected( _T("TAS Server"), mod, (m_ser_ver > 0), supported_spring_version, lanmode );
+        m_se->OnConnected( m_server_name, mod, (m_ser_ver > 0), supported_spring_version, lanmode );
     }
     else if ( cmd == _T("ACCEPTED") )
     {
@@ -974,7 +943,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     else if ( cmd == _T("DENIED") )
     {
         if ( m_online ) return;
-        msg = GetSentenceParam( params );
+        m_last_denied = msg = GetSentenceParam( params );
         m_se->OnServerMessage( msg );
         Disconnect();
         //Command: "DENIED" params: "Already logged in".
@@ -1076,16 +1045,6 @@ void TASServer::RelayCmd(  const wxString& command, const wxString& param )
 
 void TASServer::SendCmd( const wxString& command, const wxString& param )
 {
-
-    try
-    {
-        ASSERT_LOGIC( m_sock != 0, _T("m_sock = 0") );
-    }
-    catch (...)
-    {
-        return ;
-    }
-
 		wxString cmd, msg;
 		if ( m_token_transmission )
 		{
@@ -2132,18 +2091,20 @@ void TASServer::OnConnected( Socket* sock )
     m_online = false;
 		m_token_transmission = false;
 		m_relay_host_manager_list.Clear();
+		m_last_denied = _T("");
 }
 
 
 void TASServer::OnDisconnected( Socket* sock )
 {
     wxLogDebugFunc( TowxString(m_connected) );
-    bool tmp = m_connected;
+    bool connectionwaspresent = m_online || !m_last_denied.IsEmpty();
+    m_last_denied = _T("");
     m_connected = false;
     m_online = false;
 		m_token_transmission = false;
 		m_relay_host_manager_list.Clear();
-    if ( tmp ) m_se->OnDisconnected();
+    m_se->OnDisconnected( connectionwaspresent );
 }
 
 

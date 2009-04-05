@@ -14,6 +14,13 @@
 #include "utils.h"
 #include "chatpanel.h"
 
+Server::Server():
+battles_iter(new BattleList_Iter(&m_battles)),
+m_sock(0),
+m_keepalive(15)
+{
+	m_sock = new Socket( *this, false );
+}
 
 Server::~Server()
 {
@@ -41,14 +48,9 @@ Server::~Server()
   }
   delete battles_iter;
   if(uidata.panel)uidata.panel->SetServer(NULL);
+  delete m_sock;
 }
 
-
-void Server::SetSocket( Socket* sock )
-{
-  ASSERT_LOGIC( (!IsConnected()) || (sock == 0), _T("Not connected") );
-  m_sock = sock;
-}
 
 User& Server::GetUser( const wxString& nickname ) const
 {

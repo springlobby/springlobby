@@ -77,9 +77,10 @@ Socket::Socket( iNetClass& netclass, bool blocking ):
 //! @brief Destructor
 Socket::~Socket()
 {
-  Disconnect();
+  _EnablePingThread( false );
+
   LOCK_SOCKET;
-  if ( m_sock != 0 ) m_sock->Destroy();
+	if ( m_sock ) m_sock->Destroy();
   delete m_events;
 }
 
