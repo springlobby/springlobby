@@ -177,7 +177,6 @@ template < class T >
 void CustomVirtListCtrl<T>::SetSelectedIndex(const long newindex)
 {
     m_selected_index = newindex;
-    SetItemState( m_selected_index, wxLIST_STATE_SELECTED, -1 );
 }
 
 template < class T >

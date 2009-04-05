@@ -235,7 +235,8 @@ int BattleroomListCtrl::OnGetItemColumnImage(long item, long column) const
     switch ( column ) {
         case 0: {
             if ( !is_bot ) {
-                if ( &m_battle->GetFounder() == &user ) {
+                if ( m_battle->IsFounder( user ) ) {
+
                     return icons().GetHostIcon( user.BattleStatus().spectator );
                 }
                 else {

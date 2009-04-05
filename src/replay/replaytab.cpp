@@ -167,9 +167,9 @@ ReplayTab::~ReplayTab()
 
 void ReplayTab::AddAllReplays( wxCommandEvent& evt )
 {
-    const replay_map_t& replays = replaylist().GetReplaysMap();
+   const replay_map_t& replays = replaylist().GetReplaysMap();
     for( replay_const_iter_t i=replays.begin();i!=replays.end();++i){
-        AddReplay(i->second);
+        AddReplay( i->second  );
     }
 //    m_replay_listctrl->RefreshVisibleItems();
 }
@@ -182,7 +182,6 @@ void ReplayTab::AddReplay( const Replay& replay ) {
 
     m_replay_listctrl->AddReplay( replay );
 }
-
 
 void ReplayTab::RemoveReplay( const Replay& replay )
 {
@@ -382,21 +381,8 @@ void ReplayTab::OnSelect( wxListEvent& event )
             m_mod_text->SetLabel(rep.battle.GetHostModName());
             m_minimap->SetBattle( &(rep.battle) );
             m_minimap->UpdateMinimap();
-            try
-            {
-							IBattle& oldbattle = m_players->GetBattle();
-							for ( size_t i = 0; i < oldbattle.GetNumUsers(); ++i )
-							{
-									try
-									{
-										User& usr = oldbattle.GetUser( i );
-										m_players->RemoveUser( usr );
-									}
-									catch(...)
-									{}
-							}
-            } catch ( assert_exception ) {}
-            m_players->DeleteAllItems();
+
+            m_players->Clear();
             m_players->SetBattle( (IBattle*)&rep.battle );
             for ( size_t i = 0; i < rep.battle.GetNumUsers(); ++i )
             {
