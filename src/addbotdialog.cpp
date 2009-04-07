@@ -185,6 +185,7 @@ void AddBotDialog::ReloadAIList()
     customMessageBox(SL_MAIN_ICON, _("No AI bots found in your Spring installation."), _("No bot-libs found"), wxOK );
   }
   m_add_btn->Enable( m_ai->GetStringSelection() != wxEmptyString );
+  ShowAIInfo();
 }
 
 
@@ -202,6 +203,11 @@ void AddBotDialog::OnAddBot( wxCommandEvent& event )
 
 
 void AddBotDialog::OnSelectBot( wxCommandEvent& event )
+{
+	ShowAIInfo();
+}
+
+void AddBotDialog::ShowAIInfo()
 {
   m_add_btn->Enable( m_ai->GetStringSelection() != wxEmptyString );
   if ( !usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) ) return;
