@@ -703,9 +703,9 @@ void ChatPanel::Said( const wxString& who, const wxString& message )
 		wxString who2;
 		wxString message2;
 		who2 = message.BeforeFirst( '>' ).AfterFirst( '<' );
-		if ( who == _T( "[BOT]tizbacbridgebot" ) ) who2 += _T( "@IRC" );
+		if ( who != _T( "[BOT]tizbacbridgebot" ) ) who2 += _T( "@IRC" );
 		//don't highlight if i'm talking from irc to channel
-		if ( who2.Upper() == ( me.Upper() + _T("@IRC") ) )
+		if ( who2.Upper().BeforeLast(_T('@')) == me.Upper() )
 		{
 		    req_user = false;
 		    col = sett().GetChatColorNormal();

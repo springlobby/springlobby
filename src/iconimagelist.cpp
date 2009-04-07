@@ -19,6 +19,7 @@
 #include "images/bot.xpm"
 #include "images/bot_broom.png.h"
 #include "images/bot_ingame.png.h"
+#include "images/bot_away.xpm"
 
 #include "images/admin.png.h"
 #include "images/admin_away.png.h"
@@ -92,6 +93,7 @@ IconImageList::IconImageList() : wxImageList(16,16,true)
     ICON_BOT = Add( wxBitmap(bot_xpm) );
     ICON_BOT_BROOM = Add( charArr2wxBitmap( bot_broom_png, sizeof( bot_broom_png ) )  );
     ICON_BOT_INGAME = Add( charArr2wxBitmap( bot_ingame_png, sizeof( bot_ingame_png ) ) );
+    ICON_BOT_AWAY = Add( wxBitmap(bot_away_xpm) );
 
     ICON_AWAY = Add( charArr2wxBitmap( away_png, sizeof( away_png ) ) );
     ICON_BROOM = Add( charArr2wxBitmap(broom_png, sizeof(broom_png) ) );
@@ -181,6 +183,7 @@ int IconImageList::GetUserListStateIcon( const UserStatus& us, bool chanop, bool
     {
         if ( us.in_game ) return ICON_BOT_INGAME;
         if ( inbroom ) return ICON_BOT_BROOM;
+        if ( us.away ) return ICON_BOT_AWAY;
         return ICON_BOT;
     }
     if (us.moderator )
