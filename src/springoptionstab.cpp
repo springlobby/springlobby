@@ -160,7 +160,7 @@ void SpringOptionsTab::OnFindSync( wxCommandEvent& event )
 void SpringOptionsTab::OnBrowseExec( wxCommandEvent& event )
 {
   wxFileDialog pick( this, _("Choose a Spring executable"),
-		    sett().GetCurrentUsedSpringBinary(),
+		    wxPathOnly( sett().GetCurrentUsedSpringBinary() ),
 		    wxString(SPRING_BIN), CHOOSE_EXE );
   if ( pick.ShowModal() == wxID_OK ) m_exec_edit->SetValue( pick.GetPath() );
 }
@@ -168,7 +168,7 @@ void SpringOptionsTab::OnBrowseExec( wxCommandEvent& event )
 void SpringOptionsTab::OnBrowseSync( wxCommandEvent& event )
 {
   wxFileDialog pick( this, _("Choose UnitSync library"),
-		    sett().GetCurrentUsedSpringBinary(),
+		    wxPathOnly( sett().GetCurrentUsedSpringBinary() ),
 		    _T("unitsync") + GetLibExtension(),
 		    wxString(_("Library")) + _T("(*") + GetLibExtension() + _T(")|*") + GetLibExtension() + _T("|") + wxString(_("Any File")) + _T(" (*.*)|*.*")  );
   if ( pick.ShowModal() == wxID_OK ) m_sync_edit->SetValue( pick.GetPath() );
