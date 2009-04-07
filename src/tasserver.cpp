@@ -1382,7 +1382,7 @@ void TASServer::HostBattle( BattleOptions bo, const wxString& password )
           while ( true )
           {
             wxString currentmanager = m_relay_host_manager_list[choice];
-            if ( UserExists( currentmanager ) && !GetUser( currentmanager ).GetStatus().in_game ) // skip the PM if the manager is not connected or reports it's ingame ( no slots available )
+            if ( UserExists( currentmanager ) && !GetUser( currentmanager ).GetStatus().in_game && !GetUser( currentmanager ).GetStatus().away ) // skip the PM if the manager is not connected or reports it's ingame ( no slots available ), or it's away ( functionality disabled )
             {
             	m_relay_host_manager = currentmanager;
 							m_delayed_open_command = cmd;
