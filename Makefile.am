@@ -563,6 +563,7 @@ springlobby_SOURCES = \
 	src/images/battle_settings.xpm \
 	src/images/battle.xpm \
 	src/images/bot.xpm \
+	src/images/bot_away.xpm \
 	src/images/channel.xpm \
 	src/images/chat_icon.png.h \
 	src/images/chat_icon_text.png.h \
