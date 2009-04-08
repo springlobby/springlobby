@@ -26,6 +26,7 @@ class AddBotDialog : public wxDialog
     wxString GetAIVersion();
 
     void ReloadAIList();
+    void ShowAIInfo();
 
     void OnClose( wxCommandEvent& event );
     void OnAddBot( wxCommandEvent& event );

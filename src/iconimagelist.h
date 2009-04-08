@@ -37,6 +37,7 @@ class IconImageList : public wxImageList
     int ICON_BOT;
     int ICON_BOT_BROOM;
     int ICON_BOT_INGAME;
+    int ICON_BOT_AWAY;
 
     int ICON_NOSTATE;
     int ICON_AWAY;
