@@ -141,7 +141,7 @@ wxString AddBotDialog::GetAIVersion()
 {
 	wxArrayString infos = usync().GetAIInfos( m_ai->GetSelection() );
 	int namepos = infos.Index( _T("version") );
-	if ( namepos == wxNOT_FOUND )
+	if ( namepos == wxNOT_FOUND ) return _T("");
 	return infos[namepos +1];
 }
 
