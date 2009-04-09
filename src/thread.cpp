@@ -10,7 +10,7 @@ Thread::Thread():
 }
 
 Thread::~Thread(){
-  Wait();
+  if(IsAlive())Wait();
 }
 
 bool Thread::Sleep(int milliseconds){
