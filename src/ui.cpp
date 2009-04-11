@@ -170,7 +170,10 @@ void Ui::Disconnect()
 {
     if ( m_serv != 0 )
     {
-				if ( IsConnected() ) GetServer().Disconnect();
+				if ( IsConnected() ) {
+				    GetServer().Disconnect();
+
+				}
     }
 }
 
@@ -653,6 +656,8 @@ void Ui::OnDisconnected( Server& server, bool wasonline )
 
     mw().GetJoinTab().LeaveCurrentBattle();
     mw().GetJoinTab().GetBattleListTab().RemoveAllBattles();
+
+//    mw().GetChatTab().LeaveChannels();
 
     if ( server.uidata.panel )
     {
