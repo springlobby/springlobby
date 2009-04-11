@@ -321,6 +321,8 @@ int SpringLobbyApp::OnExit()
 
   DestroyGlobals();
 
+  exit(0);/// Must fix crashes on close, except those in destroyglobals.
+
   return 0;
 }
 
