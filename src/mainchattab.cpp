@@ -149,6 +149,22 @@ void MainChatTab::OnUserDisconnected( User& user )
   }
 }
 
+void MainChatTab::LeaveChannels()
+{
+    for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ ) {
+    ChatPanel* tmp = (ChatPanel*)m_chat_tabs->GetPage(i);
+    if ( tmp->GetPanelType() == CPT_Channel ) {
+
+      tmp->SetChannel( 0 );
+
+
+    } else if (tmp->GetPanelType() == CPT_User ) {
+
+        tmp->SetUser( 0 );
+
+    }
+  }
+}
 
 void MainChatTab::RejoinChannels()
 {
@@ -159,7 +175,10 @@ void MainChatTab::RejoinChannels()
       // TODO: This will not rejoin passworded channels.
       wxString name = m_chat_tabs->GetPageText(i);
       // #springlobby is joined automatically
-      if ( name != _T("springlobby") ) m_ui.GetServer().JoinChannel( name, _T("") );
+      if ( name != _T("springlobby") ) {
+          m_ui.GetServer().JoinChannel( name, _T("") );
+          tmp->SetChannel( &m_ui.GetServer().GetChannel( name ) );
+      }
 
     } else if (tmp->GetPanelType() == CPT_User ) {
 

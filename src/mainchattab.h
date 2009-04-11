@@ -35,6 +35,7 @@ class MainChatTab : public wxScrolledWindow
     bool RemoveChatPanel( ChatPanel* panel );
 
     void RejoinChannels();
+    void LeaveChannels();
 
     void OnTabsChanged( wxAuiNotebookEvent& event );
     void OnTabClose( wxAuiNotebookEvent& event );
