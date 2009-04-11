@@ -1147,17 +1147,16 @@ void Ui::OnSpringTerminated( long exit_code )
 #endif
     if ( !m_serv ) return;
 
-    GetServer().GetMe().Status().in_game = false;
-    GetServer().GetMe().SendMyUserStatus();
-    try
-    {
-    Battle *battle = GetServer().GetCurrentBattle();
-    if ( !battle ) return;
-    if( battle->IsFounderMe() && battle->GetAutoLockOnStart() )
-    {
-      battle->SetIsLocked( false );
-      battle->SendHostInfo( IBattle::HI_Locked );
-    }
+    try {
+        GetServer().GetMe().Status().in_game = false;
+        GetServer().GetMe().SendMyUserStatus();
+        Battle *battle = GetServer().GetCurrentBattle();
+        if ( !battle )
+            return;
+        if( battle->IsFounderMe() && battle->GetAutoLockOnStart() ) {
+          battle->SetIsLocked( false );
+          battle->SendHostInfo( IBattle::HI_Locked );
+        }
     } catch ( assert_exception ){}
 }
 
