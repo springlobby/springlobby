@@ -911,10 +911,10 @@ void ChatPanel::SetChannel( Channel* chan )
 		}
 	}
 
-//	if ( chan != 0 ) {
-//		chan->uidata.panel = this;
+	if ( chan != 0 ) {
+		chan->uidata.panel = this;
 //		m_chat_log.SetTarget( sett().GetDefaultServer(), chan->GetName() );
-//	}
+	}
 	m_channel = chan;
 }
 
@@ -937,9 +937,9 @@ void ChatPanel::SetServer( Server* serv )
 	}
 	m_server = serv;
 
-	if ( m_server ){
-	  m_chat_log.SetTarget( sett().GetDefaultServer(), _( "_SERVER" ) );
-	}
+//	if ( m_server ){
+//	  m_chat_log.SetTarget( sett().GetDefaultServer(), _( "_SERVER" ) );
+//	}
 }
 
 
@@ -962,8 +962,8 @@ void ChatPanel::SetUser( const User* usr )
 
 	m_user = usr;
 
-	if ( m_user )
-        m_chat_log.SetTarget( sett().GetDefaultServer(), usr->GetNick() );
+//	if ( m_user )
+//        m_chat_log.SetTarget( sett().GetDefaultServer(), usr->GetNick() );
 }
 
 

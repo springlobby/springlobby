@@ -13,7 +13,7 @@ class ChatLog
     bool AddMessage(const wxString& text);
     bool LogEnabled();
     wxString LogTime();
-    void SetTarget( const wxString& server,const wxString& room );
+//    void SetTarget( const wxString& server,const wxString& room );
   protected:
     bool CreateFolder(const wxString& server);
     bool WriteLine(const wxString& text);

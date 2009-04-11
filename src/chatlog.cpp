@@ -20,29 +20,21 @@
 
 bool ChatLog::m_parent_dir_exists = true;
 
-ChatLog::ChatLog(const wxString& server,const wxString& room)
-{
-    SetTarget( server, room );
-}
+ChatLog::ChatLog(const wxString& server,const wxString& room):
+//  m_logfile( 0 ),
+  m_server( server ),
+  m_room( room )
 
-void ChatLog::SetTarget( const wxString& server,const wxString& room )
 {
-    m_server = server;
-    m_room = room;
     #ifdef __WXMSW__
         m_server.Replace( wxT(":"), wxT("_") ) ;
     #endif
-    if ( m_logfile.IsOpened() ) {
-        wxDateTime now = wxDateTime::Now();
-        WriteLine( _("### Session Closed at [") + now.Format( _T("%Y-%m-%d %H:%M") ) + _("]") );
-        WriteLine( _T(" \n \n \n") );
-        // crashes right there on close.
-        m_logfile.Flush();
-        m_logfile.Close();
-    }
+    // testing.
+    // m_active = OpenLogFile(m_server,m_room) ;
     wxLogMessage( _T("ChatLog::ChatLog( %s, %s )"), m_server.c_str(), m_room.c_str()) ;
     m_active = OpenLogFile( m_server, m_room );
 }
+
 
 ChatLog::~ChatLog()
 {
@@ -55,6 +47,9 @@ ChatLog::~ChatLog()
     m_logfile.Flush();
     m_logfile.Close();
   }
+  // it is safe to delete a null pointer.
+// 	delete m_logfile;
+//  m_logfile = 0;
 }
 
 
@@ -120,6 +115,8 @@ bool ChatLog::OpenLogFile(const wxString& server,const wxString& room)
   wxString path = _GetPath() + wxFileName::GetPathSeparator() + server + wxFileName::GetPathSeparator() + room + _T(".txt");
   wxLogMessage( _T("OpenLogFile( %s, %s )"), server.c_str(), room.c_str()) ;
 
+//  delete m_logfile;
+//  m_logfile = 0;
 
   if ( m_parent_dir_exists && LogEnabled() && CreateFolder(server) ) {
     if ( wxFileExists( path ) ) {

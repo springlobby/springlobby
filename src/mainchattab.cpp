@@ -177,7 +177,7 @@ void MainChatTab::RejoinChannels()
       // #springlobby is joined automatically
       if ( name != _T("springlobby") ) {
           m_ui.GetServer().JoinChannel( name, _T("") );
-//          tmp->SetChannel( &m_ui.GetServer().GetChannel( name ) );
+          tmp->SetChannel( &m_ui.GetServer().GetChannel( name ) );
       }
 
     } else if (tmp->GetPanelType() == CPT_User ) {
