@@ -319,9 +319,12 @@ SockError Socket::Error( )
 //! @brief used to retrieve local ip address behind NAT to communicate to the server on login
 wxString Socket::GetLocalAddress()
 {
-  if ( m_sock || !m_sock->IsConnected() ) return wxEmptyString;
+  if ( !m_sock || !m_sock->IsConnected() )
+    return wxEmptyString;
+
   wxIPV4address localaddr;
   m_sock->GetLocal( localaddr );
+
   return localaddr.IPAddress();
 }
 
