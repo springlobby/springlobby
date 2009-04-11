@@ -657,7 +657,7 @@ void Ui::OnDisconnected( Server& server, bool wasonline )
     mw().GetJoinTab().LeaveCurrentBattle();
     mw().GetJoinTab().GetBattleListTab().RemoveAllBattles();
 
-//    mw().GetChatTab().LeaveChannels();
+    mw().GetChatTab().LeaveChannels();
 
     if ( server.uidata.panel )
     {
