@@ -179,10 +179,17 @@ void SinglePlayerTab::SetMap( unsigned int index )
   } else {
     try {
       UnitSyncMap map = usync().GetMapEx( index );
+        if ( map.info.info_corrupted ) {
+            m_battle.CustomBattleOptions().setSingleOption( _T("startpostype"), wxString::Format(_T("%d"), IBattle:: ST_Choose), OptionsWrapper::EngineOption );
+            customMessageBoxNoModal( SL_MAIN_ICON, _("There was a problem loading map infos. "
+            "\n Setting your startposition before game starts has been disabled."
+            "\n Spring/SpringLobby might even crash.\n Use this map at your OWN PERIL!"), _("Map infos corrupted") ) ;
+        }
       m_battle.SetHostMap( map.name, map.hash );
       m_addbot_btn->Enable( true );
     } catch (...) {}
   }
+
   m_minimap->UpdateMinimap();
   m_battle.SendHostInfo( IBattle::HI_Map_Changed ); // reload map options
   m_map_pick->SetSelection( index );

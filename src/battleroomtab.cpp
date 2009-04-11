@@ -859,8 +859,16 @@ void BattleRoomTab::SetMap( int index )
   {
     UnitSyncMap map = usync().GetMapEx( index );
     m_battle.SetLocalMap( map );
+    if ( map.info.info_corrupted ) {
+        m_battle.CustomBattleOptions().setSingleOption( _T("startpostype"),
+                        wxString::Format( _T("%d"), m_battle.IsProxy() ? IBattle:: ST_Choose + 2 : IBattle:: ST_Choose ),
+                        OptionsWrapper::EngineOption );
 
-    m_battle.SendHostInfo( IBattle::HI_Map );
+        customMessageBoxNoModal( SL_MAIN_ICON, _("There was a problem loading map infos. "
+        "\n Setting your startposition before game starts has been disabled."
+        "\n Spring/SpringLobby might even crash.\n Use this map at your OWN PERIL!"), _("Map infos corrupted") ) ;
+        m_battle.SendHostInfo( wxString::Format(_T("%d_startpostype"), OptionsWrapper::EngineOption ) );
+    }
     for( unsigned int i=0;i<m_battle.GetNumRects();++i) if ( m_battle.GetStartRect( i ).exist ) m_battle.RemoveStartRect(i);
     m_battle.SendHostInfo( IBattle::HI_StartRects );
   } catch (...) {}

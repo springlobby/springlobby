@@ -274,10 +274,13 @@ void BattleMapTab::OnMapBrowse( wxCommandEvent& event )
 
 void BattleMapTab::OnStartTypeSelect( wxCommandEvent& event )
 {
-  wxString pos = wxString::Format( _T("%d"), m_start_radios->GetSelection());
-  if ( m_battle.IsProxy() ) pos = wxString::Format( _T("%d"), m_start_radios->GetSelection() + 2);
-  m_battle.CustomBattleOptions().setSingleOption( _T("startpostype"), pos, OptionsWrapper::EngineOption );
-  m_battle.SendHostInfo( wxString::Format(_T("%d_startpostype"), OptionsWrapper::EngineOption ) );
+    wxString pos = wxString::Format( _T("%d"), m_start_radios->GetSelection());
+
+    if ( m_battle.IsProxy() )
+        pos = wxString::Format( _T("%d"), m_start_radios->GetSelection() + 2);
+
+    m_battle.CustomBattleOptions().setSingleOption( _T("startpostype"), pos, OptionsWrapper::EngineOption );
+    m_battle.SendHostInfo( wxString::Format(_T("%d_startpostype"), OptionsWrapper::EngineOption ) );
 }
 
 
