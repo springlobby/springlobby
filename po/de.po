@@ -43,7 +43,7 @@ msgstr "Wähle die KI Programmbibliothek für diesen Bot"
 
 #: src/addbotdialog.cpp:68
 msgid "property"
-msgstr ""
+msgstr "Eigenschaft"
 
 #: src/addbotdialog.cpp:72
 #, fuzzy
@@ -89,7 +89,7 @@ msgstr "Teams automatisch aufteilen"
 
 #: src/autobalancedialog.cpp:38
 msgid "Method"
-msgstr ""
+msgstr "Methode"
 
 #: src/autobalancedialog.cpp:41
 msgid "Divide ranks evenly"
@@ -102,7 +102,7 @@ msgstr "Zufällig"
 
 #: src/autobalancedialog.cpp:44
 msgid "Clans"
-msgstr ""
+msgstr "Clans"
 
 #: src/autobalancedialog.cpp:47 src/hostbattledialog.cpp:138
 msgid "None"
@@ -110,11 +110,11 @@ msgstr "Keine"
 
 #: src/autobalancedialog.cpp:48
 msgid "Fair"
-msgstr ""
+msgstr "Gerecht"
 
 #: src/autobalancedialog.cpp:49
 msgid "Always"
-msgstr ""
+msgstr "Immer"
 
 #: src/autobalancedialog.cpp:50
 msgid ""
@@ -150,14 +150,14 @@ msgstr "Beschreibung"
 #: src/filelister/filelistdialog.cpp:123 src/mainjoinbattletab.cpp:157
 #: src/mainjoinbattletab.cpp:162
 msgid "Map"
-msgstr "Map"
+msgstr "Karte"
 
 #: src/battlelistctrl.cpp:70 src/filelister/filelistctrl.cpp:174
 #: src/filelister/filelistctrl.cpp:175 src/filelister/filelistctrl.cpp:186
 #: src/filelister/filelistctrl.cpp:187 src/filelister/filelistdialog.cpp:123
 #: src/hostbattledialog.cpp:72
 msgid "Mod"
-msgstr "Mod"
+msgstr "Modifikation"
 
 #: src/battlelistctrl.cpp:74 src/hostbattledialog.cpp:216
 msgid "Host"
@@ -177,11 +177,11 @@ msgstr "m"
 
 #: src/battlelistctrl.cpp:125 src/replay/replaylistctrl.cpp:107
 msgid "Download &map"
-msgstr "Herunterladen"
+msgstr "Karte &herunterladen"
 
 #: src/battlelistctrl.cpp:126 src/replay/replaylistctrl.cpp:108
 msgid "Download m&od"
-msgstr "Mod herunterladen"
+msgstr "M&odifikation herunterladen"
 
 #: src/battlelistctrl.cpp:549 src/battlelisttab.cpp:113
 msgid "Spectators:"
@@ -190,7 +190,7 @@ msgstr "Zuschauer:"
 #: src/battlelistctrl.cpp:556
 #, fuzzy
 msgid "Active Players:"
-msgstr "Spieler:"
+msgstr "Aktive Spieler:"
 
 #: src/battlelistfilter.cpp:90
 msgid "Host:"
@@ -207,16 +207,16 @@ msgstr "Gesperrt"
 
 #: src/battlelistfilter.cpp:118
 msgid "Passworded"
-msgstr ""
+msgstr "kennwortgeschützt"
 
 #: src/battlelistfilter.cpp:123
 #, fuzzy
 msgid "Highlighted only"
-msgstr "Hervorheben"
+msgstr "Nur Hervorgehobene"
 
 #: src/battlelistfilter.cpp:133
 msgid "Rank Limit:"
-msgstr "Rank Limit"
+msgstr "Rang Limit"
 
 #: src/battlelistfilter.cpp:167
 msgid "Description:"
@@ -574,7 +574,7 @@ msgstr "CPU"
 
 #: src/battleroomlistctrl.cpp:105
 msgid "Resource Bonus"
-msgstr "Rohstoff Bonus"
+msgstr "Rohstoff-Bonus"
 
 #: src/battleroomlistctrl.cpp:138 src/battleroomtab.cpp:144
 msgid "Team"
@@ -582,7 +582,7 @@ msgstr "Team"
 
 #: src/battleroomlistctrl.cpp:146 src/battleroomtab.cpp:145
 msgid "Ally"
-msgstr "Team"
+msgstr "Allianz"
 
 #: src/battleroomlistctrl.cpp:159 src/battleroomtab.cpp:147
 msgid "Side"
@@ -594,7 +594,7 @@ msgstr "Farbe setzen"
 
 #: src/battleroomlistctrl.cpp:168 src/battleroomlistctrl.cpp:418
 msgid "Set Resource Bonus"
-msgstr "Rohstoff Bonus setzen"
+msgstr "Rohstoff-Bonus setzen"
 
 #: src/battleroomlistctrl.cpp:173 src/battleroomlistctrl.cpp:355
 #: src/battleroomlistctrl.cpp:364 src/battleroomtab.cpp:129
@@ -604,12 +604,12 @@ msgstr "Zuschauer"
 #: src/battleroomlistctrl.cpp:178 src/battleroomlistctrl.cpp:359
 #: src/battleroomlistctrl.cpp:369
 msgid "Kick"
-msgstr "Kicken"
+msgstr "Rauswerfen"
 
 #: src/battleroomlistctrl.cpp:180 src/battleroomlistctrl.cpp:358
 #: src/battleroomlistctrl.cpp:367 src/chatpanel.cpp:510
 msgid "Ring"
-msgstr "Ring"
+msgstr "Klingeln"
 
 #: src/battleroomlistctrl.cpp:418
 msgid "Please enter a value between 0 and 100"
@@ -631,7 +631,7 @@ msgstr "Wert muss zwischen 0 und 100 liegen!"
 
 #: src/battleroomlistctrl.cpp:974 src/chatpanel.cpp:1610
 msgid "Enter name"
-msgstr ""
+msgstr "Namen eingeben"
 
 #: src/battleroomlistctrl.cpp:975 src/chatpanel.cpp:1611
 msgid ""
@@ -696,11 +696,11 @@ msgstr "Start"
 
 #: src/battleroomtab.cpp:168
 msgid "Start the battle"
-msgstr ""
+msgstr "Starte die Schlacht"
 
 #: src/battleroomtab.cpp:170
 msgid "Player Management"
-msgstr ""
+msgstr "Spielerverwaltung"
 
 #: src/battleroomtab.cpp:171
 msgid "Various functions to make team games simplers to setup"
@@ -716,7 +716,7 @@ msgstr "Füge einen Computer-Spieler zum Spiel hinzu."
 
 #: src/battleroomtab.cpp:176 src/battleroomtab.cpp:178
 msgid "Autolock on start"
-msgstr ""
+msgstr "Automatisches Sperren beim Start"
 
 #: src/battleroomtab.cpp:180
 msgid ""
@@ -757,7 +757,7 @@ msgstr ""
 
 #: src/battleroomtab.cpp:205
 msgid "Fix colours"
-msgstr ""
+msgstr "Farben korrigieren"
 
 #: src/battleroomtab.cpp:205
 msgid "Make player colors unique"
@@ -765,7 +765,7 @@ msgstr "Gib jedem Spieler eine andere Farbe"
 
 #: src/battleroomtab.cpp:208
 msgid "Balance teams"
-msgstr ""
+msgstr "Teams ausbalancieren"
 
 #: src/battleroomtab.cpp:208
 msgid ""
@@ -1454,11 +1454,11 @@ msgstr "Wer soll der eingetragene Besitzer für diesen Raum sein?"
 
 #: src/chatpanel.cpp:1266
 msgid "Unregister Channel"
-msgstr "Raum entregistrieren"
+msgstr "Raum deregistrieren"
 
 #: src/chatpanel.cpp:1266
 msgid "Are you sure you want to unregister this channel?"
-msgstr "Bist du dir sicher, dass du diesen Raum entregistrieren willst?"
+msgstr "Bist du dir sicher, dass du diesen Raum deregistrieren willst?"
 
 #: src/chatpanel.cpp:1330
 msgid "Remove User Acount"
