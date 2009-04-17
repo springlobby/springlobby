@@ -409,33 +409,24 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 			}
 
 			tdf.AppendLineBreak();
-
-			int PreviousAlly = -1;
-			for ( unsigned int i = 0; i < NumUsers; i++ )
+			int maxiter = std::max( NumUsers, battle.GetNumRects() );
+			for ( unsigned int i = 0; i < maxiter; i++ )
 			{
-					User& usr = battle.GetUser( i );
-					UserBattleStatus& status = usr.BattleStatus();
-					if ( status.spectator ) continue;
-					if ( PreviousAlly == status.ally ) continue; // skip duplicates
-					PreviousAlly = status.ally;
+					BattleStartRect sr = battle.GetStartRect( i );
+					if ( !sr.IsOk() && ( i > progressive_ally ) ) continue;
 
-					tdf.EnterSection( _T("ALLYTEAM") + i2s( m_ally_map[PreviousAlly] ) );
+					tdf.EnterSection( _T("ALLYTEAM") + i2s( i ) );
 						tdf.Append( _T("NumAllies"), 0 );
-
-						if ( startpostype == IBattle::ST_Choose )
+						if ( sr.IsOk() )
 						{
-								BattleStartRect sr = battle.GetStartRect( status.ally );
-								if ( sr.IsOk() )
-								{
-										const char* old_locale = std::setlocale(LC_NUMERIC, "C");
+								const char* old_locale = std::setlocale(LC_NUMERIC, "C");
 
-										tdf.Append( _T("StartRectLeft"), wxString::Format( _T("%.3f"), sr.left / 200.0 ) );
-										tdf.Append( _T("StartRectTop"), wxString::Format( _T("%.3f"), sr.top / 200.0 ) );
-										tdf.Append( _T("StartRectRight"), wxString::Format( _T("%.3f"), sr.right / 200.0 ) );
-										tdf.Append( _T("StartRectBottom"), wxString::Format( _T("%.3f"), sr.bottom / 200.0 ) );
+								tdf.Append( _T("StartRectLeft"), wxString::Format( _T("%.3f"), sr.left / 200.0 ) );
+								tdf.Append( _T("StartRectTop"), wxString::Format( _T("%.3f"), sr.top / 200.0 ) );
+								tdf.Append( _T("StartRectRight"), wxString::Format( _T("%.3f"), sr.right / 200.0 ) );
+								tdf.Append( _T("StartRectBottom"), wxString::Format( _T("%.3f"), sr.bottom / 200.0 ) );
 
-										std::setlocale(LC_NUMERIC, old_locale);
-								}
+								std::setlocale(LC_NUMERIC, old_locale);
 						}
 					tdf.LeaveSection();
 			}
