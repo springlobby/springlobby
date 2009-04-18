@@ -582,7 +582,7 @@ msgstr "Team"
 
 #: src/battleroomlistctrl.cpp:146 src/battleroomtab.cpp:145
 msgid "Ally"
-msgstr "Allianz"
+msgstr "Bündnis"
 
 #: src/battleroomlistctrl.cpp:159 src/battleroomtab.cpp:147
 msgid "Side"
@@ -1362,7 +1362,7 @@ msgstr "Bist du sicher das du %d Zeilen einfügen willst?"
 
 #: src/chatpanel.cpp:999
 msgid "Flood warning"
-msgstr "Flood Warnung"
+msgstr "Flutwarnung"
 
 #: src/chatpanel.cpp:1011
 msgid " You have SpringLobby v"
@@ -1370,7 +1370,7 @@ msgstr " Du hast SpringLobby v"
 
 #: src/chatpanel.cpp:1018
 msgid " You are not in channel or channel does not exist."
-msgstr " Du"
+msgstr " Du bist nicht im Kanal oder der Kanal existiert nicht"
 
 #: src/chatpanel.cpp:1024 src/chatpanel.cpp:1038 src/chatpanel.cpp:1052
 #: src/chatpanel.cpp:1062
@@ -1526,7 +1526,7 @@ msgstr "Für wieviele Minuten soll der Benutzer gemutet werden?"
 
 #: src/chatpanel.cpp:1455
 msgid "Kick User"
-msgstr "Benutzer kicken"
+msgstr "Benutzer rauswerfen"
 
 #: src/chatpanel.cpp:1455 src/chatpanel.cpp:1514
 msgid "Reason:"
@@ -1538,7 +1538,7 @@ msgstr "Benutzer kicken"
 
 #: src/chatpanel.cpp:1534
 msgid "Mute user"
-msgstr "Benutzer muten"
+msgstr "Benutzer stummschalten"
 
 #: src/chatpanel.cpp:1534
 msgid "Duration:"
@@ -1564,11 +1564,11 @@ msgstr ""
 #: src/connectwindow.cpp:71 src/connectwindow.cpp:158
 #: src/hostbattledialog.cpp:87 src/ui.cpp:157
 msgid "Password"
-msgstr "Passwort"
+msgstr "Kennwort"
 
 #: src/connectwindow.cpp:73
 msgid "Remember password"
-msgstr ""
+msgstr "Kennwort merken"
 
 #: src/connectwindow.cpp:74
 msgid "Autoconnect next time"
@@ -1594,7 +1594,7 @@ msgstr ""
 
 #: src/connectwindow.cpp:89
 msgid "Login"
-msgstr "Einloggen"
+msgstr "Anmelden"
 
 #: src/connectwindow.cpp:90
 msgid "Register"
@@ -2472,7 +2472,7 @@ msgstr "Sao Tomé und Príncipe"
 
 #: src/countrycodes.cpp:211
 msgid "Soviet Union (former)"
-msgstr ""
+msgstr "Soejetunion (UdSSR)"
 
 #: src/countrycodes.cpp:212
 msgid "El Salvador"
@@ -2698,11 +2698,11 @@ msgstr "Unbekannt"
 
 #: src/globalevents.cpp:33
 msgid "Download complete"
-msgstr ""
+msgstr "Download komplett"
 
 #: src/globalevents.cpp:38
 msgid "Download failed"
-msgstr ""
+msgstr "Download fehlgeschlagen"
 
 #: src/groupoptionspanel.cpp:54 src/groupoptionspanel.cpp:167
 #, fuzzy
@@ -2711,7 +2711,7 @@ msgstr "Entfernen..."
 
 #: src/groupoptionspanel.cpp:56
 msgid "Remove an existing group"
-msgstr ""
+msgstr "Entferne eine existierende Gruppe"
 
 #: src/groupoptionspanel.cpp:60
 #, fuzzy
@@ -2720,7 +2720,7 @@ msgstr "Entfernen..."
 
 #: src/groupoptionspanel.cpp:62
 msgid "Rename an existing group"
-msgstr ""
+msgstr "Benenne eine existierende Gruppe um"
 
 #: src/groupoptionspanel.cpp:69
 #, fuzzy
@@ -2729,7 +2729,7 @@ msgstr "Bot hinzufügen..."
 
 #: src/groupoptionspanel.cpp:70
 msgid "Add new group"
-msgstr ""
+msgstr "Füge eine neue Gruppe hinzu"
 
 #: src/groupoptionspanel.cpp:83
 #, fuzzy
@@ -2738,11 +2738,11 @@ msgstr "Aktion"
 
 #: src/groupoptionspanel.cpp:88
 msgid "Notify login/logout"
-msgstr ""
+msgstr "Melde An-/Abmeldungen"
 
 #: src/groupoptionspanel.cpp:90
 msgid "Notify when users of this group go online or offline"
-msgstr ""
+msgstr "Melde, wenn Benutzer dieser Gruppe on-/offline gehen"
 
 #: src/groupoptionspanel.cpp:94
 #, fuzzy
@@ -2751,7 +2751,7 @@ msgstr "Öffne Chat"
 
 #: src/groupoptionspanel.cpp:96
 msgid "Ignore anything said in channel by any of the users in this group"
-msgstr ""
+msgstr "Ignoriere alles, was im Kanal von irgendeinem Benutzer dieser Gruppe gesagt wird"
 
 #: src/groupoptionspanel.cpp:100
 #, fuzzy
@@ -2760,23 +2760,23 @@ msgstr "Neue Schlacht eröffnen"
 
 #: src/groupoptionspanel.cpp:102
 msgid "Notify when users of this group hosts a battle"
-msgstr ""
+msgstr "Melde, wenn Benutzer dieser Grupper Schlachten eröffnen"
 
 #: src/groupoptionspanel.cpp:106
 msgid "Ignore PM"
-msgstr ""
+msgstr "Ignoriere Privatnachrichten (PM)"
 
 #: src/groupoptionspanel.cpp:108
 msgid "Ignore anything said in private chat by any of the users in this group"
-msgstr ""
+msgstr "Ignoriere alles, was im privaten Dialog von irgendeinem Benutzer dieser Gruppe gesagt wird"
 
 #: src/groupoptionspanel.cpp:112
 msgid "Notify Status Change"
-msgstr ""
+msgstr "Melde Statusveränderungen"
 
 #: src/groupoptionspanel.cpp:114
 msgid "Notify when the status of a users in this group changes"
-msgstr ""
+msgstr "Melde, wenn sich der Status eines Benutzers dieser Gruppe ändert"
 
 #: src/groupoptionspanel.cpp:118
 #, fuzzy
@@ -2785,11 +2785,11 @@ msgstr "/kick"
 
 #: src/groupoptionspanel.cpp:120
 msgid "Auto kick any of the users in this group from battles hosted"
-msgstr ""
+msgstr "Werfe jeden Benutzer dieser Gruppe automatisch raus, wenn er deiner eröffneten Schlacht beitritt"
 
 #: src/groupoptionspanel.cpp:126
 msgid "Highlight battles and the names of users in this group"
-msgstr ""
+msgstr "Hebe Schlachten und Namen von Benutzern dieser Gruppe hervor"
 
 #: src/groupoptionspanel.cpp:133
 #, fuzzy
@@ -2798,11 +2798,11 @@ msgstr "Hervorzuhebende Wörter"
 
 #: src/groupoptionspanel.cpp:138 src/groupoptionspanel.cpp:140
 msgid "Select highlight color"
-msgstr ""
+msgstr "Wähle Farbe zum Hervorheben"
 
 #: src/groupoptionspanel.cpp:151
 msgid "Users in group"
-msgstr ""
+msgstr "Benutzer in dieser Gruppe"
 
 #: src/groupoptionspanel.cpp:162
 #, fuzzy
@@ -2811,7 +2811,7 @@ msgstr "Bot hinzufügen..."
 
 #: src/groupoptionspanel.cpp:163
 msgid "Add users to group"
-msgstr ""
+msgstr "Füge Benutzer zur Gruppe hinzu"
 
 #: src/groupoptionspanel.cpp:169
 #, fuzzy
@@ -3044,11 +3044,11 @@ msgstr ""
 #: src/lobbyoptionstab.cpp:113
 #, fuzzy
 msgid "Match exact"
-msgstr "KI Ausnahmen abfangen"
+msgstr "Exakte Übereinstimmung"
 
 #: src/lobbyoptionstab.cpp:114
 msgid "Match nearest"
-msgstr ""
+msgstr "Dichteste Übereinstimmung"
 
 #: src/lobbyoptionstab.cpp:186
 msgid "Choose a web browser executable"
@@ -3056,7 +3056,7 @@ msgstr "Einen Browser (ausführbare Datei) auswählen."
 
 #: src/mainjoinbattletab.cpp:67 src/mainjoinbattletab.cpp:69
 msgid "Battle list"
-msgstr "Schlachten Liste"
+msgstr "Schlachtenliste"
 
 #: src/mainjoinbattletab.cpp:156 src/mainjoinbattletab.cpp:161
 msgid "Battleroom"
@@ -3093,7 +3093,7 @@ msgstr "Senegal"
 
 #: src/mainoptionstab.cpp:108 src/mainoptionstab.cpp:110
 msgid "Groups"
-msgstr ""
+msgstr "Gruppen"
 
 #: src/mainoptionstab.cpp:114
 msgid "Restore"
@@ -3109,7 +3109,7 @@ msgstr "Spiel"
 
 #: src/maintorrenttab.cpp:44
 msgid "Transfers in progress: "
-msgstr ""
+msgstr "Aktive Übertragungen: "
 
 #: src/maintorrenttab.cpp:50
 msgid "Total Outgoing: "
@@ -3125,7 +3125,7 @@ msgstr "Unbekannt"
 
 #: src/maintorrenttab.cpp:65
 msgid "Cancel Download"
-msgstr ""
+msgstr "Breche Download ab"
 
 #: src/maintorrenttab.cpp:68
 msgid "Publish new file"
@@ -3137,15 +3137,15 @@ msgstr "Suche eine Datei"
 
 #: src/maintorrenttab.cpp:134
 msgid "not available"
-msgstr ""
+msgstr "nicht verfügbar"
 
 #: src/maintorrenttab.cpp:137
 msgid "seeding"
-msgstr "senden"
+msgstr "sende"
 
 #: src/maintorrenttab.cpp:138
 msgid "leeching"
-msgstr ""
+msgstr "sauge"
 
 #: src/maintorrenttab.cpp:139
 msgid "queued"
@@ -3165,7 +3165,7 @@ msgstr "Status: gebremst oder angehalten (im Spiel)"
 
 #: src/maintorrenttab.cpp:197
 msgid "Status: unknown"
-msgstr ""
+msgstr "Status: unbekannt"
 
 #: src/maintorrenttab.cpp:203
 #, c-format
@@ -3205,7 +3205,7 @@ msgstr "&Channel beitreten..."
 #: src/mainwindow.cpp:141
 #, fuzzy
 msgid "Channel &list"
-msgstr "Raum Info"
+msgstr "Rauminfo"
 
 #: src/mainwindow.cpp:142
 msgid "Open private &chat..."
@@ -3258,15 +3258,15 @@ msgstr "&Hilfe"
 
 #: src/mainwindow.cpp:207
 msgid "Multiplayer"
-msgstr ""
+msgstr "Mehrspieler"
 
 #: src/mainwindow.cpp:208
 msgid "Singleplayer"
-msgstr ""
+msgstr "Einzelspieler"
 
 #: src/mainwindow.cpp:210
 msgid "Replays"
-msgstr ""
+msgstr "Aufzeichnungen der Spiele"
 
 #: src/mainwindow.cpp:212
 #, fuzzy
@@ -3318,19 +3318,19 @@ msgstr ""
 
 #: src/mainwindow.cpp:581
 msgid "Restart required"
-msgstr ""
+msgstr "Neustart erforderlich"
 
 #: src/mainwindow.cpp:604 src/mainwindow.cpp:614 src/mainwindow.cpp:625
 msgid "Layout manager"
-msgstr ""
+msgstr "Andordnungsverwalter"
 
 #: src/mainwindow.cpp:604
 msgid "Enter a profile name"
-msgstr ""
+msgstr "Gibt ein Profilname an"
 
 #: src/mainwindow.cpp:614
 msgid "Which profile fo you want to load?"
-msgstr ""
+msgstr "Welches Profil soll geladen werden?"
 
 #: src/mainwindow.cpp:625
 #, fuzzy
@@ -3340,7 +3340,7 @@ msgstr "Welchen Benutzer willst du entfernen?"
 #: src/mapctrl.cpp:580
 #, c-format
 msgid "Metal: %.1f%%"
-msgstr ""
+msgstr "Metall: %.1f%%"
 
 #: src/mapctrl.cpp:678 src/mapctrl.cpp:679
 msgid "Refresh"
@@ -3394,7 +3394,7 @@ msgstr "Verbotene Einheiten"
 
 #: src/mmoptionswrapper.cpp:114
 msgid "Map name"
-msgstr ""
+msgstr "Kartenname"
 
 #: src/nicklistctrl.cpp:49
 msgid "s"
@@ -3513,7 +3513,7 @@ msgstr ""
 #: src/selectusersdialog.h:67
 #, fuzzy
 msgid "Select Users"
-msgstr "Auswählen"
+msgstr "Wähle Benutzer"
 
 #: src/serverevents.cpp:130
 #, fuzzy
@@ -3569,7 +3569,7 @@ msgstr "SIe wurden aus der Schlacht gekickt!"
 
 #: src/serverevents.cpp:820
 msgid "Kicked by Host"
-msgstr "Vom Host gekickt"
+msgstr "Vom Host rausgeworfen"
 
 #: src/serverevents.cpp:850
 msgid "Begin mutelist for "
@@ -3587,7 +3587,7 @@ msgstr ""
 #: src/serverevents.cpp:859
 #, c-format
 msgid " %d minutes remaining"
-msgstr ""
+msgstr "%d Minuten ausstehend"
 
 #: src/serverevents.cpp:865
 msgid "End mutelist for "
@@ -3625,7 +3625,7 @@ msgstr "Baum anzeige Entfernung"
 
 #: src/settings++/Defs.hpp:227
 msgid "sets the maximum distance at which trees will still be rendered"
-msgstr ""
+msgstr "setzt die maximale Distanz bis zu der Bäume noch gezeichnet werden"
 
 #: src/settings++/Defs.hpp:228
 msgid "Terrain detail"
@@ -3845,15 +3845,15 @@ msgstr ""
 
 #: src/settings++/Defs.hpp:292
 msgid "High-resolution LOS textures"
-msgstr ""
+msgstr "Hochauflösende LOS (Line of Sight) Texturen"
 
 #: src/settings++/Defs.hpp:292
 msgid "smoother Line of Sight overlays"
-msgstr ""
+msgstr "Weichere LOS (Line of Sight) Einblendungen"
 
 #: src/settings++/Defs.hpp:293
 msgid "Draw smooth points"
-msgstr "Male glatte Punkte"
+msgstr "Punkte weichzeichnen"
 
 #: src/settings++/Defs.hpp:293
 msgid "should points be anti-aliased"
@@ -3865,7 +3865,7 @@ msgstr "Linien weichzeichnen"
 
 #: src/settings++/Defs.hpp:294
 msgid "should lines be anti-aliased"
-msgstr "Sollen Lininen weichgezeichnet werden?"
+msgstr "Sollen Linien weichgezeichnet werden?"
 
 #: src/settings++/Defs.hpp:300
 msgid "Enable LuaUI widgets"
@@ -3877,7 +3877,7 @@ msgstr "anklicken um LuaUi Wigets verfügbar zu machen"
 
 #: src/settings++/Defs.hpp:302
 msgid "Issue commands on mini-map"
-msgstr ""
+msgstr "Befehle über die Minikarte erlauben"
 
 #: src/settings++/Defs.hpp:302
 msgid "Issue orders on the mini-map like you would "
@@ -3894,7 +3894,7 @@ msgstr "Standardwert ist \"an\""
 
 #: src/settings++/Defs.hpp:304
 msgid "Draw icons on mini-map"
-msgstr "Icons auf Minimap zeichnen"
+msgstr "Symbole auf Minimap zeichnen"
 
 #: src/settings++/Defs.hpp:305
 msgid "Draw markers on mini-map"
