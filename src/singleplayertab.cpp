@@ -178,33 +178,20 @@ void SinglePlayerTab::ReloadModlist()
 
 void SinglePlayerTab::SetMap( unsigned int index )
 {
-    //m_ui.ReloadUnitSync();
-    m_addbot_btn->Enable( false );
-    if ( index >= m_map_pick->GetCount()-1 )
-    {
-        m_battle.SetHostMap( wxEmptyString, wxEmptyString );
-    }
-    else
-    {
-        try
-        {
-            UnitSyncMap map = usync().GetMapEx( index );
-            if ( map.info.info_corrupted )
-            {
-                m_battle.CustomBattleOptions().setSingleOption( _T("startpostype"), wxString::Format(_T("%d"), IBattle:: ST_Choose), OptionsWrapper::EngineOption );
-                customMessageBoxNoModal( SL_MAIN_ICON, _("There was a problem loading map infos. "
-                                         "\n Setting your startposition before game starts has been disabled."
-                                         "\n Spring/SpringLobby might even crash.\n Use this map at your OWN PERIL!"), _("Map infos corrupted") ) ;
-            }
-            m_battle.SetHostMap( map.name, map.hash );
-            m_addbot_btn->Enable( true );
-        }
-        catch (...) {}
-    }
-
-    m_minimap->UpdateMinimap();
-    m_battle.SendHostInfo( IBattle::HI_Map_Changed ); // reload map options
-    m_map_pick->SetSelection( index );
+	//m_ui.ReloadUnitSync();
+  m_addbot_btn->Enable( false );
+  if ( index >= m_map_pick->GetCount()-1 ) {
+    m_battle.SetHostMap( wxEmptyString, wxEmptyString );
+  } else {
+    try {
+      UnitSyncMap map = usync().GetMapEx( index );
+      m_battle.SetHostMap( map.name, map.hash );
+      m_addbot_btn->Enable( true );
+    } catch (...) {}
+  }
+  m_minimap->UpdateMinimap();
+  m_battle.SendHostInfo( IBattle::HI_Map_Changed ); // reload map options
+  m_map_pick->SetSelection( index );
 }
 
 
@@ -349,13 +336,15 @@ void SinglePlayerTab::OnColorButton( wxCommandEvent& event )
 
 void SinglePlayerTab::Update( const wxString& Tag )
 {
-    long type;
-    Tag.BeforeFirst( '_' ).ToLong( &type );
-    wxString key = Tag.AfterFirst( '_' );
-    wxString value = m_battle.CustomBattleOptions().getSingleValue( key, (OptionsWrapper::GameOption)type);
-    long longval;
-    value.ToLong( &longval );
-    if ( type == OptionsWrapper::PrivateOptions )
+  long type;
+  Tag.BeforeFirst( '_' ).ToLong( &type );
+  wxString key = Tag.AfterFirst( '_' );
+  wxString value = m_battle.CustomBattleOptions().getSingleValue( key, (OptionsWrapper::GameOption)type);
+  long longval;
+  value.ToLong( &longval );
+  if ( type == OptionsWrapper::PrivateOptions )
+  {
+    if ( key == _T("mapname") )
     {
         if ( key == _T("mapname") )
         {

@@ -726,7 +726,6 @@ wxImage SpringUnitSync::_GetScaledMapImage( const wxString& mapname, wxImage (Sp
 MapInfo SpringUnitSync::_GetMapInfoEx( const wxString& mapname )
 {
   MapInfo info;
-  info.info_corrupted = false;
 
   if ( m_mapinfo_cache.TryGet( mapname, info ) ) return info;
 
@@ -791,12 +790,9 @@ MapInfo SpringUnitSync::_GetMapInfoEx( const wxString& mapname )
       }
   }
   catch ( ... ) {
-        //this makes it possible (not guaranteed) to at least show the minimap
-        //in case something went wrong before
       info.posCount = 0;
       info.width = 1;
       info.height = 1;
-      info.info_corrupted = true;
   }
 
   m_mapinfo_cache.Add( mapname, info );
