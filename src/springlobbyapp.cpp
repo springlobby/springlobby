@@ -22,6 +22,7 @@
 #include <wx/utils.h>
 #include <wx/wfstream.h>
 
+#include "useractions.h"
 #include "springlobbyapp.h"
 #include "mainwindow.h"
 #include "settings.h"
@@ -241,7 +242,21 @@ bool SpringLobbyApp::OnInit()
 					sett().AddChannelJoin( _T("main"), _T("") );
 					sett().AddChannelJoin( _T("newbies"), _T("") );
 				}
-				if ( sett().ShouldAddDefaultGroupSettings() ) sett().AddGroup( _("Default") );
+				if ( sett().ShouldAddDefaultGroupSettings() )
+				{
+					 sett().AddGroup( _("Default") );
+					 sett().AddGroup( _("Ignore PM") );
+					 useractions().ChangeAction( _("Ignore PM"), UserActions::ActIgnorePM );
+					 sett().AddGroup( _("Ignore chat") );
+					 useractions().ChangeAction( _("Ignore chat"), UserActions::ActIgnoreChat );
+					 sett().AddGroup( _("Battle Autokick") );
+					 useractions().ChangeAction( _("Battle Autokick"), UserActions::ActAutokick );
+					 sett().AddGroup( _("Friends") );
+					 useractions().ChangeAction( _("Friends"), UserActions::ActNotifBattle );
+					 useractions().ChangeAction( _("Friends"), UserActions::ActHighlight );
+					 useractions().ChangeAction( _("Friends"), UserActions::ActNotifLogin );
+					 useractions().SetGroupColor( _("Friends"), wxColor( 0, 0, 255 ) );
+				}
 
         if ( !wxDirExists( wxStandardPaths::Get().GetUserDataDir() ) ) wxMkdir( wxStandardPaths::Get().GetUserDataDir() );
 
