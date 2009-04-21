@@ -193,6 +193,8 @@ void ReplayList::GetBattleFromScript( const wxString& script_, OfflineBattle& ba
                 user.BattleStatus().spectator = player->GetInt( _T("Spectator"), 0 );
                 opts.spectators += user.BattleStatus().spectator;
                 user.BattleStatus().team = player->GetInt( _T("Team") );
+                user.BattleStatus().sync = true;
+                user.BattleStatus().ready = true;
                 user.Status().rank = (UserStatus::RankContainer)player->GetInt( _T("Rank"), -1 );
                 if ( bot.ok() )
                 {
