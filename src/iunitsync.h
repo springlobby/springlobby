@@ -41,8 +41,6 @@ struct MapInfo
   StartPos positions[16];
 
   wxString author;
-
-  bool info_corrupted;
 };
 
 struct UnitSyncMap
