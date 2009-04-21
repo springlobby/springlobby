@@ -245,7 +245,7 @@ bool SpringLobbyApp::OnInit()
 
         if ( !wxDirExists( wxStandardPaths::Get().GetUserDataDir() ) ) wxMkdir( wxStandardPaths::Get().GetUserDataDir() );
 
-        customMessageBoxNoModal(SL_MAIN_ICON, _("By default SpringLobby reports some statistics.\nYou can disable that on options tab --> General."),_("Notice"),wxOK );
+        customMessageBoxNoModal(SL_MAIN_ICON, _("By default SpringLobby reports some usage statistics.\nYou can disable that on options tab --> General."),_("Notice"),wxOK );
 
 
 				// copy uikeys.txt
