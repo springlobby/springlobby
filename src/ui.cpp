@@ -170,7 +170,10 @@ void Ui::Disconnect()
 {
     if ( m_serv != 0 )
     {
-				if ( IsConnected() ) GetServer().Disconnect();
+				if ( IsConnected() ) {
+				    GetServer().Disconnect();
+
+				}
     }
 }
 
@@ -653,6 +656,8 @@ void Ui::OnDisconnected( Server& server, bool wasonline )
 
     mw().GetJoinTab().LeaveCurrentBattle();
     mw().GetJoinTab().GetBattleListTab().RemoveAllBattles();
+
+    mw().GetChatTab().LeaveChannels();
 
     if ( server.uidata.panel )
     {
@@ -1147,17 +1152,16 @@ void Ui::OnSpringTerminated( long exit_code )
 #endif
     if ( !m_serv ) return;
 
-    GetServer().GetMe().Status().in_game = false;
-    GetServer().GetMe().SendMyUserStatus();
-    try
-    {
-    Battle *battle = GetServer().GetCurrentBattle();
-    if ( !battle ) return;
-    if( battle->IsFounderMe() && battle->GetAutoLockOnStart() )
-    {
-      battle->SetIsLocked( false );
-      battle->SendHostInfo( IBattle::HI_Locked );
-    }
+    try {
+        GetServer().GetMe().Status().in_game = false;
+        GetServer().GetMe().SendMyUserStatus();
+        Battle *battle = GetServer().GetCurrentBattle();
+        if ( !battle )
+            return;
+        if( battle->IsFounderMe() && battle->GetAutoLockOnStart() ) {
+          battle->SetIsLocked( false );
+          battle->SendHostInfo( IBattle::HI_Locked );
+        }
     } catch ( assert_exception ){}
 }
 

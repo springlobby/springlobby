@@ -42,7 +42,7 @@ void ReplayList::LoadReplays( const wxArrayString& filenames )
 				Replay& rep_ref = AddReplay( rep ); // don't touch this reference, since elements inside this data structure are filled using pointers, adding & not fecthing the new addresses would screw up references when rep gets destroyed
         if ( !GetReplayInfos( filenames[i] , rep_ref ) )
         {
-						RemoveReplay( rep.id );
+            RemoveReplay( rep.id );
             m_fails++;
         }
     }
@@ -53,7 +53,6 @@ Replay& ReplayList::AddReplay( const Replay& replay )
     m_replays[replay.id] = replay;
     return m_replays[replay.id];
 }
-
 
 void ReplayList::RemoveReplay( replay_id_t const& id )
 {
@@ -170,6 +169,7 @@ void ReplayList::GetBattleFromScript( const wxString& script_, OfflineBattle& ba
         if ( usersnum > 0 ) playernum = usersnum;
 //        int allynum = replayNode->GetInt  ( _T("NumAllyTeams"), 1);
 //        int teamnum = replayNode->GetInt  ( _T("NumTeams"), 1);
+
 
 
         wxArrayString sides;

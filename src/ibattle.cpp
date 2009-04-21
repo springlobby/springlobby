@@ -826,6 +826,15 @@ bool IBattle::IsFounderMe()
     return ( ( m_opts.founder == GetMe().GetNick() ) || ( m_opts.isproxy  && !m_generating_script ) );
 }
 
+bool IBattle::IsFounder( const User& user ) const
+{
+    if ( UserExists( m_opts.founder ) ) {
+        return &GetFounder() == &user;
+    }
+    else
+        return false;
+}
+
 int IBattle::GetMyPlayerNum()
 {
     return GetPlayerNum( GetMe() );

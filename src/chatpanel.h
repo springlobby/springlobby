@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "usermenu.h"
+#include "chatlog.h"
 #include "Helper/TextCompletionDatabase.hpp"
 
 class wxCommandEvent;
@@ -224,7 +225,7 @@ class ChatPanel : public wxPanel
     wxMenu* m_popup_menu;
     wxMenuItem* m_autorejoin;
     wxMenuItem* m_append_menu;
-    ChatLog* m_chat_log;
+    ChatLog m_chat_log;
     wxMenuItem* displayjoinitem;
     typedef SL_GENERIC::UserMenu<ChatPanel> UserMenu;
     UserMenu* m_usermenu;

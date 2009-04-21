@@ -9,8 +9,12 @@ Thread::Thread():
 {
 }
 
+/** TODO this causes a segfault on exit for me (koshi) sometimes
+http://docs.wxwidgets.org/stable/wx_wxthread.html#wxthreadwait
+says to only call wxThread::Wait from another thread context
+**/
 Thread::~Thread(){
-  Wait();
+  if(IsAlive())Wait();
 }
 
 bool Thread::Sleep(int milliseconds){

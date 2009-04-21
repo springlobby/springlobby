@@ -30,7 +30,11 @@ class SpringOptionsTab : public wxScrolledWindow
     void OnFindExec( wxCommandEvent& event );
     void OnFindSync( wxCommandEvent& event );
 
+    void OnDataDir( wxCommandEvent& event );
+
   protected:
+
+		void SetupUserFolders();
 
     wxStaticText* m_exec_loc_text;
     wxStaticText* m_sync_loc_text;
@@ -39,6 +43,7 @@ class SpringOptionsTab : public wxScrolledWindow
     wxButton* m_exec_find_btn;
     wxButton* m_sync_browse_btn;
     wxButton* m_sync_find_btn;
+    wxButton* m_datadir_btn;
 
     wxButton* m_auto_btn;
 
@@ -74,6 +79,7 @@ class SpringOptionsTab : public wxScrolledWindow
         SPRING_AUTOCONF,
         SPRING_EXECFIND,
         SPRING_SYNCFIND,
+        SPRING_DATADIR
     };
 
     DECLARE_EVENT_TABLE()

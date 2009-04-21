@@ -50,13 +50,16 @@ void ImagePanel::SetBitmap( const wxString& file )
 void ImagePanel::OnPaint(wxPaintEvent& WXUNUSED(event))
 {
     wxPaintDC dc( this );
-    wxImage im ( m_file );
+    dc.Clear();
+
+    wxImage im;
+    if ( !im.LoadFile( m_file ) )
+        return;
 
     wxSize c_sz = GetClientSize();
     wxSize im_sz ( im.GetWidth(), im.GetHeight() );
     im_sz = MakeFit( im_sz, c_sz );
 
-    dc.Clear();
     dc.DrawBitmap( wxBitmap(im.Rescale( im_sz.GetWidth(), im_sz.GetHeight() ) ), 0, 0, true /* use mask */ );
 }
 void ImagePanel::OnSize(wxSizeEvent& WXUNUSED(event))
@@ -71,7 +74,8 @@ ImageViewerPanel::ImageViewerPanel(const wxArrayString& filenames, bool enable_d
     m_filenames( filenames ),
     m_current_file_index( 0 ),
     m_num_files( filenames.Count() ),
-    m_enable_delete( enable_delete )
+    m_enable_delete( enable_delete ),
+    m_delete( 0 )
 {
     m_main_sizer = new wxBoxSizer( wxVERTICAL );
     m_button_sizer = new wxBoxSizer( wxHORIZONTAL );
@@ -94,8 +98,12 @@ ImageViewerPanel::ImageViewerPanel(const wxArrayString& filenames, bool enable_d
 
     m_main_sizer->Add( m_button_sizer, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 0 );
     SetSizer( m_main_sizer );
+
+    SetButtonStates();
     SetImage();
+
     Layout();
+    m_panel->Refresh();
 }
 
 ImageViewerPanel::~ImageViewerPanel()
@@ -106,6 +114,9 @@ void ImageViewerPanel::SetButtonStates()
 {
     m_next->Enable( m_current_file_index < m_num_files -1 );
     m_prev->Enable( m_current_file_index > 0 );
+    if ( m_delete )
+        m_delete->Enable( m_num_files > 0 );
+    m_save_as->Enable( m_num_files > 0 );
 }
 
 void ImageViewerPanel::SetImage()

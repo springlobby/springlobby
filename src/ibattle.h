@@ -198,6 +198,7 @@ public:
     virtual bool IsSynced();
 
     virtual bool IsFounderMe();
+    virtual bool IsFounder( const User& user ) const;
 
     virtual int GetMyPlayerNum();
 
@@ -277,7 +278,7 @@ public:
 
     virtual int ColourDifference(const wxColour &a, const wxColour &b);
 
-		User& GetFounder() const { return GetUser( m_opts.founder ); }
+	User& GetFounder() const { return GetUser( m_opts.founder ); }
 
 		bool IsFull() const { return GetMaxPlayers() == ( GetNumUsers() - GetSpectators() ); }
 

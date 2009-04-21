@@ -21,7 +21,7 @@
 bool ChatLog::m_parent_dir_exists = true;
 
 ChatLog::ChatLog(const wxString& server,const wxString& room):
-  m_logfile( 0 ),
+//  m_logfile( 0 ),
   m_server( server ),
   m_room( room )
 
@@ -32,22 +32,24 @@ ChatLog::ChatLog(const wxString& server,const wxString& room):
     // testing.
     // m_active = OpenLogFile(m_server,m_room) ;
     wxLogMessage( _T("ChatLog::ChatLog( %s, %s )"), m_server.c_str(), m_room.c_str()) ;
+    m_active = OpenLogFile( m_server, m_room );
 }
 
 
 ChatLog::~ChatLog()
 {
-  wxLogMessage( _T("ChatLog::~ChatLog()"));
-  if ( m_logfile && m_active && m_logfile->IsOpened() ) {
+  wxLogMessage( _T("%s -- ChatLog::~ChatLog()"), m_room.c_str() );
+  if ( m_active && m_logfile.IsOpened() ) {
     wxDateTime now = wxDateTime::Now();
     WriteLine( _("### Session Closed at [") + now.Format( _T("%Y-%m-%d %H:%M") ) + _("]") );
     WriteLine( _T(" \n \n \n") );
     // crashes right there on close.
-    m_logfile->Close();
+    m_logfile.Flush();
+    m_logfile.Close();
   }
   // it is safe to delete a null pointer.
- 	delete m_logfile;
-  m_logfile = 0;
+// 	delete m_logfile;
+//  m_logfile = 0;
 }
 
 
@@ -56,7 +58,7 @@ bool ChatLog::AddMessage(const wxString& text)
   if ( !LogEnabled() ) {
     return true;
   }
-  else if ( !m_logfile) {
+  else if ( !m_logfile.IsOpened() ) {
     m_active = OpenLogFile(m_server,m_room);
   }
   return (m_active)? WriteLine(LogTime()+_T(" ")+text+_T("\n")) : false;
@@ -95,11 +97,11 @@ bool ChatLog::CreateFolder(const wxString& server)
 
 bool ChatLog::WriteLine(const wxString& text)
 {
-  try
-  {
-    ASSERT_LOGIC( m_logfile, _T("m_logfile = 0") );
-  } catch(...) {return false;}
-  if ( !m_logfile->Write( text, wxConvUTF8 ) ) {
+//  try
+//  {
+//    ASSERT_LOGIC( m_logfile, _T("m_logfile = 0") );
+//  } catch(...) {return false;}
+  if ( !m_logfile.Write( text, wxConvUTF8 ) ) {
     m_active = false;
     wxLogWarning( _T("can't write message to log (%s)"),  wxString(m_server + _T("::") + m_room).c_str() );
     customMessageBox(SL_MAIN_ICON, _("Couldn't write message to log.\nLogging will be disabled for room ") + m_server + _T("::") + m_room + _(".\n\nRejoin room to reactivate logging."), _("Log Warning") );
@@ -113,25 +115,24 @@ bool ChatLog::OpenLogFile(const wxString& server,const wxString& room)
   wxString path = _GetPath() + wxFileName::GetPathSeparator() + server + wxFileName::GetPathSeparator() + room + _T(".txt");
   wxLogMessage( _T("OpenLogFile( %s, %s )"), server.c_str(), room.c_str()) ;
 
-  delete m_logfile;
-  m_logfile = 0;
+//  delete m_logfile;
+//  m_logfile = 0;
 
   if ( m_parent_dir_exists && LogEnabled() && CreateFolder(server) ) {
     if ( wxFileExists( path ) ) {
-      m_logfile = new wxFile( path, wxFile::write_append );
+      m_logfile.Open( path, wxFile::write_append );
     } else {
-      m_logfile = new wxFile( path, wxFile::write );
+      m_logfile.Open( path, wxFile::write );
     }
-    if ( !m_logfile->IsOpened() ) {
+    if ( !m_logfile.IsOpened() ) {
       wxLogWarning( _T("Can't open log file %s"), path.c_str() ) ;
       customMessageBox(SL_MAIN_ICON, _("Can't open log file. \nBe sure that there isn't a write protection.\n") + path, _("Log Warning") ) ;
-      delete m_logfile;
-      m_logfile = 0;
+
     }
     else {
       wxDateTime now = wxDateTime::Now();
-      WriteLine( _T("### Session Start at [") + now.Format( _T("%Y-%m-%d %H:%M") ) + _T("]\n") );
-      return true;
+      return WriteLine( _T("### Session Start at [") + now.Format( _T("%Y-%m-%d %H:%M") ) + _T("]\n") );
+
     }
   }
   return false;

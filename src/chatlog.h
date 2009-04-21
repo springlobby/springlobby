@@ -2,8 +2,8 @@
 #define CHATLOG_H_INCLUDED
 
 #include <wx/string.h>
+#include <wx/file.h>
 
-class wxFile;
 
 class ChatLog
 {
@@ -13,12 +13,13 @@ class ChatLog
     bool AddMessage(const wxString& text);
     bool LogEnabled();
     wxString LogTime();
+//    void SetTarget( const wxString& server,const wxString& room );
   protected:
     bool CreateFolder(const wxString& server);
     bool WriteLine(const wxString& text);
     bool OpenLogFile(const wxString& server,const wxString& room);
     wxString _GetPath();
-    wxFile* m_logfile;
+    wxFile m_logfile;
     wxString m_server;
     wxString m_room;
     bool m_active;

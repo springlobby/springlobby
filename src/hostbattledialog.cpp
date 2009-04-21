@@ -118,6 +118,7 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent ): wxDialog( parent, -1, _(
 	wxBoxSizer* m_relayed_sizer;
 	m_relayed_sizer = new wxBoxSizer( wxHORIZONTAL );
 	m_relayed_host_check = new wxCheckBox( this, wxID_ANY, _("Relay battle to an Autohost"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_relayed_host_check->SetToolTip( TE(_("host and control game on remote server, helps if you have trouble hosting")) );
   m_relayed_host_check->SetValue( sett().GetLastHostRelayedMode() );
   m_relayed_sizer->Add(  m_relayed_host_check, 1, wxALL|wxEXPAND, 5 );
   m_main_sizer->Add( m_relayed_sizer, 0, wxEXPAND, 5 );

@@ -19,6 +19,7 @@ class ReplayListCtrl : public CustomVirtListCtrl< const Replay* >
 
     void AddReplay( const Replay& replay );
     void RemoveReplay( const Replay& replay );
+    void RemoveReplay( const int index );
     void OnListRightClick( wxListEvent& event );
     void OnDLMap( wxCommandEvent& event );
     void OnDLMod( wxCommandEvent& event );

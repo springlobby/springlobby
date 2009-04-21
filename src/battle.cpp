@@ -183,7 +183,7 @@ User& Battle::OnUserAdded( User& user )
     {
         if ( CheckBan( user ) ) return user;
 
-        if ( ( m_opts.rankneeded > UserStatus::RANK_1 ) && ( user.GetStatus().rank < m_opts.rankneeded ))
+        if ( ( !user.BattleStatus().IsBot() ) && ( m_opts.rankneeded > UserStatus::RANK_1 ) && ( user.GetStatus().rank < m_opts.rankneeded ))
         {
             switch ( m_opts.ranklimittype )
             {
