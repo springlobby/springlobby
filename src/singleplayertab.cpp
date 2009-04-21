@@ -358,6 +358,7 @@ void SinglePlayerTab::Update( const wxString& Tag )
             catch (...) {}
         }
     }
+	}
 }
 
 void SinglePlayerTab::UpdatePresetList()

@@ -249,7 +249,9 @@ int BattleroomListCtrl::OnGetItemColumnImage(long item, long column) const
         case 2: return is_spec ? -1: icons().GetColourIcon( user.BattleStatus().team );
         case 3: return is_bot ? -1 : icons().GetFlagIcon( user.GetCountry() );
         case 4: return is_bot ? -1 : icons().GetRankIcon( user.GetStatus().rank );
-        case 1: {
+        case 1:
+        {
+        	if ( is_spec ) return -1;
             try {
                 wxArrayString sides = usync().GetSides( m_battle->GetHostModName() );
                 ASSERT_EXCEPTION( user.BattleStatus().side < (long)sides.GetCount(), _T("Side index too high") );
