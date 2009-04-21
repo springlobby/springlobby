@@ -223,8 +223,32 @@ bool SpringLobbyApp::OnInit()
 			}
     }
 
+		if ( !wxDirExists( wxStandardPaths::Get().GetUserDataDir() ) ) wxMkdir( wxStandardPaths::Get().GetUserDataDir() );
+
     ui().ReloadUnitSync(); // first time load of unitsync
     ui().ShowMainWindow();
+
+		if ( sett().ShouldAddDefaultServerSettings() ) sett().SetDefaultServerSettings();
+		if ( sett().ShouldAddDefaultChannelSettings() )
+		{
+			sett().AddChannelJoin( _T("main"), _T("") );
+			sett().AddChannelJoin( _T("newbies"), _T("") );
+		}
+		if ( sett().ShouldAddDefaultGroupSettings() )
+		{
+			 sett().AddGroup( _("Default") );
+			 sett().AddGroup( _("Ignore PM") );
+			 useractions().ChangeAction( _("Ignore PM"), UserActions::ActIgnorePM );
+			 sett().AddGroup( _("Ignore chat") );
+			 useractions().ChangeAction( _("Ignore chat"), UserActions::ActIgnoreChat );
+			 sett().AddGroup( _("Battle Autokick") );
+			 useractions().ChangeAction( _("Battle Autokick"), UserActions::ActAutokick );
+			 sett().AddGroup( _("Friends") );
+			 useractions().ChangeAction( _("Friends"), UserActions::ActNotifBattle );
+			 useractions().ChangeAction( _("Friends"), UserActions::ActHighlight );
+			 useractions().ChangeAction( _("Friends"), UserActions::ActNotifLogin );
+			 useractions().SetGroupColor( _("Friends"), wxColor( 0, 0, 255 ) );
+		}
 
     if ( sett().IsFirstRun() )
     {
@@ -236,29 +260,6 @@ bool SpringLobbyApp::OnInit()
         wxMessageBox(_("Hi ") + wxGetUserName() + _(",\nIt looks like this is your first time using SpringLobby. I have guessed a configuration that I think will work for you but you should review it, especially the Spring configuration. \n\nWhen you are done you can go to the File menu, connect to a server, and enjoy a nice game of Spring :)"), _("Welcome"),
                      wxOK | wxICON_INFORMATION, &ui().mw() );
 
-				if ( sett().ShouldAddDefaultServerSettings() ) sett().SetDefaultServerSettings();
-				if ( sett().ShouldAddDefaultChannelSettings() )
-				{
-					sett().AddChannelJoin( _T("main"), _T("") );
-					sett().AddChannelJoin( _T("newbies"), _T("") );
-				}
-				if ( sett().ShouldAddDefaultGroupSettings() )
-				{
-					 sett().AddGroup( _("Default") );
-					 sett().AddGroup( _("Ignore PM") );
-					 useractions().ChangeAction( _("Ignore PM"), UserActions::ActIgnorePM );
-					 sett().AddGroup( _("Ignore chat") );
-					 useractions().ChangeAction( _("Ignore chat"), UserActions::ActIgnoreChat );
-					 sett().AddGroup( _("Battle Autokick") );
-					 useractions().ChangeAction( _("Battle Autokick"), UserActions::ActAutokick );
-					 sett().AddGroup( _("Friends") );
-					 useractions().ChangeAction( _("Friends"), UserActions::ActNotifBattle );
-					 useractions().ChangeAction( _("Friends"), UserActions::ActHighlight );
-					 useractions().ChangeAction( _("Friends"), UserActions::ActNotifLogin );
-					 useractions().SetGroupColor( _("Friends"), wxColor( 0, 0, 255 ) );
-				}
-
-        if ( !wxDirExists( wxStandardPaths::Get().GetUserDataDir() ) ) wxMkdir( wxStandardPaths::Get().GetUserDataDir() );
 
         customMessageBoxNoModal(SL_MAIN_ICON, _("By default SpringLobby reports some usage statistics.\nYou can disable that on options tab --> General."),_("Notice"),wxOK );
 
