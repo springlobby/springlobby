@@ -147,6 +147,8 @@ class Server : public iNetClass
     virtual void OnDisconnected( Socket* sock ) = 0;
     virtual void OnDataReceived( Socket* sock ) = 0;
 
+    virtual void OnDisconnected();
+
     BattleList_Iter* const battles_iter;
 
     virtual User& GetMe() = 0;
