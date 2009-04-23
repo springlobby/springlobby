@@ -201,6 +201,8 @@ class User : public CommonUser
     float GetBalanceRank();
     int GetRank();
     UserStatus::UserTrustContainer GetTrust();
+    //! should be called once, when the user logs in
+    void LoadTrustAndRank();
     //! should be used only if you want to modify both database & current value, access status container to modify only value but not database
     void SetCustomRank( const UserStatus::UserRankContainer& value );
     //! should be used only if you want to modify both database & current value, access status container to modify only value but not database

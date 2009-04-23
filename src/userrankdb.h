@@ -10,8 +10,8 @@ class UserRankDB
 {
 	struct UserBalanceInfos
 	{
-		UserStatus::UserTrustContainer trust;
 		UserStatus::UserRankContainer rank;
+		UserStatus::UserTrustContainer trust;
 		UserBalanceInfos(): rank( UserStatus::USER_RANK_UNKNOWN ), trust( UserStatus::USER_TRUST_UNKNOWN ) {}
 	};
 
@@ -28,11 +28,13 @@ class UserRankDB
 		void SetPlayerTrust( const wxString& playeridentifier, const UserStatus::UserTrustContainer& value );
 
 		bool ImportExternalPlayerDatabaseFromFile( const wxString& path );
-		bool ImportExternalPlayerDatabase( const wxInputStream& input );
+		bool ImportExternalPlayerDatabase( wxInputStream& input );
 
 	private:
 		wxFileConfig* m_database;
 		wxString m_owner;
 };
+
+UserRankDB& CustomRankDB();
 
 #endif // USERRANKDB_H_INCLUDED

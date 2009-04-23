@@ -1,7 +1,14 @@
 #include "userrankdb.h"
+#include "globalsmanager.h"
 #include <wx/fileconf.h>
 #include <wx/filename.h>
 #include <wx/wfstream.h>
+
+UserRankDB& CustomRankDB()
+{
+    static GlobalObjectHolder<UserRankDB> m_rankdb;
+    return m_rankdb;
+}
 
 UserRankDB::UserRankDB()
 {
@@ -51,7 +58,7 @@ bool UserRankDB::ImportExternalPlayerDatabaseFromFile( const wxString& filepath 
 	return ImportExternalPlayerDatabase( streamdb );
 }
 
-bool UserRankDB::ImportExternalPlayerDatabase( const wxInputStream& input )
+bool UserRankDB::ImportExternalPlayerDatabase( wxInputStream& input )
 {
 	wxFileConfig db_to_import( input, wxConvUTF8 );
 	wxString importingowner = db_to_import.Read( _T("DatabaseOwner"), _T("") );

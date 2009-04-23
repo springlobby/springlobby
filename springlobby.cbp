@@ -412,6 +412,8 @@
 		<Unit filename="src/userlist.h" />
 		<Unit filename="src/userlistctrl.cpp" />
 		<Unit filename="src/userlistctrl.h" />
+		<Unit filename="src/userrankdb.cpp" />
+		<Unit filename="src/userrankdb.h" />
 		<Unit filename="src/utils.cpp" />
 		<Unit filename="src/utils.h" />
 		<Unit filename="src/widgets/downloaddialog.cpp" />
