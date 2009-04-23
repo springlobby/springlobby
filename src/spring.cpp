@@ -318,7 +318,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 							tdf.Append( _T("Name"), user.GetNick() );
 							tdf.Append( _T("CountryCode"), user.GetCountry().Lower());
 							tdf.Append( _T("Spectator"), status.spectator );
-							tdf.Append( _T("Rank"), user.GetRank() );
+							tdf.Append( _T("Rank"), (int)user.GetRank() );
 							if ( !status.spectator )
 							{
 								tdf.Append( _T("Team"), status.team );

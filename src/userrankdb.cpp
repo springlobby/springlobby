@@ -26,9 +26,9 @@ void UserRankDB::SetOwner( const wxString& playeridentifier )
 	m_database->Write( _T("DatabaseOwner"), playeridentifier );
 }
 
-UserStatus::UserRankContainer UserRankDB::GetPlayerRank( const wxString& playeridentifier )
+UserStatus::UserRankContainer UserRankDB::GetPlayerRank( const wxString& playeridentifier, const wxString& modshortname )
 {
-	return (UserStatus::UserRankContainer)m_database->Read( _T("MergedTable/") + playeridentifier + _T("/Rank"), (long)UserStatus::USER_RANK_UNKNOWN );
+	return (UserStatus::UserRankContainer)m_database->Read( _T("MergedTable/") + playeridentifier + _T("/") + modshortname + _T("/Rank"), (long)UserStatus::USER_RANK_UNKNOWN );
 }
 
 UserStatus::UserTrustContainer UserRankDB::GetPlayerTrust( const wxString& playeridentifier )
@@ -36,9 +36,9 @@ UserStatus::UserTrustContainer UserRankDB::GetPlayerTrust( const wxString& playe
 	return (UserStatus::UserTrustContainer)m_database->Read( _T("MergedTable/") + playeridentifier + _T("/Trust"), (long)UserStatus::USER_TRUST_UNKNOWN );
 }
 
-void UserRankDB::SetPlayerRank( const wxString& playeridentifier, const UserStatus::UserRankContainer& value )
+void UserRankDB::SetPlayerRank( const wxString& playeridentifier, const wxString& modshortname, const UserStatus::UserRankContainer& value )
 {
-	m_database->Write( _T("OriginalTables/") + m_owner + _T("/") + playeridentifier + _T("/Rank"), (int)value );
+	m_database->Write( _T("OriginalTables/") + m_owner + _T("/") + playeridentifier + _T("/") + modshortname + _T("/Rank"), (int)value );
 	m_database->Write( _T("MergedTable/") + playeridentifier + _T("/Rank"), (int)value );
 	m_database->Flush();
 }
@@ -71,14 +71,27 @@ bool UserRankDB::ImportExternalPlayerDatabase( wxInputStream& input )
   bool groupexist = db_to_import.GetFirstGroup(playeridentifier, dummy);
   while ( groupexist )
   {
-  	if ( (UserStatus::UserRankContainer)m_database->Read( _T("OriginalTables/") + m_owner + _T("/") + playeridentifier + _T("/Rank"), (long)UserStatus::USER_RANK_UNKNOWN ) != UserStatus::USER_RANK_UNKNOWN )
-  	{
-  		// insert awesome merge function here
-  	}
+		// import trust if we don't have already a personal entry
   	if ( (UserStatus::UserTrustContainer)m_database->Read( _T("OriginalTables/") + m_owner + _T("/") + playeridentifier + _T("/Trust"), (long)UserStatus::USER_TRUST_UNKNOWN ) != UserStatus::USER_TRUST_UNKNOWN )
   	{
   		// insert awesome merge function here
   	}
+
+  	db_to_import.SetPath( _T("OriginalTables/") + importingowner + _T("/") + playeridentifier );
+  	wxString modshortname;
+  	long moddummy;
+  	bool modexist = db_to_import.GetFirstGroup(modshortname, moddummy);
+  	while ( modexist ) // merge singular mods
+  	{
+  		// import rank if we don't have already a personal entry
+			if ( (UserStatus::UserRankContainer)m_database->Read( _T("OriginalTables/") + m_owner + _T("/") + modshortname + _T("/") + playeridentifier + _T("/Rank"), (long)UserStatus::USER_RANK_UNKNOWN ) != UserStatus::USER_RANK_UNKNOWN )
+			{
+				// insert awesome merge function here
+			}
+			modexist = db_to_import.GetNextGroup(modshortname, moddummy);
+  	}
+  	db_to_import.SetPath( _T("OriginalTables/") + importingowner );
+
     groupexist = db_to_import.GetNextGroup(playeridentifier, dummy);
   }
 

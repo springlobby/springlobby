@@ -209,6 +209,7 @@ public:
     virtual const UnitSyncMod& LoadMod();
     virtual wxString GetHostModName() const;
     virtual wxString GetHostModHash() const;
+    virtual wxString GetModShortName() const;
 
     virtual bool MapExists() const;
     virtual bool ModExists() const;

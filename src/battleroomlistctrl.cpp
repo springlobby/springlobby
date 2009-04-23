@@ -455,7 +455,8 @@ void BattleroomListCtrl::OnSetRank( wxCommandEvent& event )
   if ( !m_sel_user ) return;
   if ( m_sel_user->BattleStatus().IsBot() ) return;
 	int rank = event.GetId() - BRLIST_RANK;
-	m_sel_user->SetCustomRank( (UserStatus::UserRankContainer)rank );
+	//m_sel_user->SetCustomRank( m_battle->GetModShortName(), (UserStatus::UserRankContainer)rank );
+	m_sel_user->SetCustomRank( _T("FIXME"), (UserStatus::UserRankContainer)rank );
 }
 
 void BattleroomListCtrl::OnSetTrust( wxCommandEvent& event )
