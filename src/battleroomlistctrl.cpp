@@ -745,7 +745,7 @@ void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint po
             break;
 
         case 3: // country
-            m_tiptext = user.BattleStatus().IsBot() ? _T("This bot is from nowhere particluar") : GetFlagNameFromCountryCode(user.GetCountry().Upper());
+            m_tiptext = user.BattleStatus().IsBot() ? _T("This bot is from nowhere particluar") : GetFlagNameFromCountryCode(user.GetCountry());
             break;
         case 4: // rank
             m_tiptext = user.BattleStatus().IsBot() ? _T("This bot has no rank") : user.GetRankName(user.GetStatus().rank);
