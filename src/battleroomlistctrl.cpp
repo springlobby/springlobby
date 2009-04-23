@@ -97,6 +97,27 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, IBattle* battle, Ui& u
   	if ( !m_ro )
 	{
 		m_popup = new UserMenu(this);
+
+		wxMenu* m_rank = new wxMenu();
+
+		for ( unsigned int i = (unsigned int)UserStatus::USER_RANK_UNKNOWN; i < (unsigned int)UserStatus::USER_RANK_10; i++ )
+		{
+			wxMenuItem* rank = new wxMenuItem( m_rank, BRLIST_RANK + i, wxString::Format( _T("%d"), i+1 ) , wxEmptyString, wxITEM_NORMAL );
+			m_rank->Append( rank );
+			Connect( BRLIST_RANK + i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnSetRank ) );
+		}
+		m_popup->Append( -1, _("Force Rank"), m_rank );
+
+		wxMenu* m_trust = new wxMenu();
+
+		for ( unsigned int i = (unsigned int)UserStatus::USER_TRUST_UNKNOWN; i < (unsigned int)UserStatus::USER_TRUST_10; i++ )
+		{
+			wxMenuItem* trust = new wxMenuItem( m_trust, BRLIST_TRUST + i, wxString::Format( _T("%d"), i+1 ) , wxEmptyString, wxITEM_NORMAL );
+			m_trust->Append( trust );
+			Connect( BRLIST_TRUST + i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnSetTrust ) );
+		}
+		m_popup->Append( -1, _("Set Trust"), m_trust );
+
 		wxMenu* m_teams;
 		m_teams = new wxMenu();
 
@@ -428,6 +449,23 @@ void BattleroomListCtrl::OnSpecSelect( wxCommandEvent& event )
   if ( m_sel_user ) ((Battle*)m_battle)->ForceSpectator( *m_sel_user, m_spec_item->IsChecked() );
 }
 
+void BattleroomListCtrl::OnSetRank( wxCommandEvent& event )
+{
+  wxLogDebugFunc( _T("") );
+  if ( !m_sel_user ) return;
+  if ( m_sel_user->BattleStatus().IsBot() ) return;
+	int rank = event.GetId() - BRLIST_RANK;
+	m_sel_user->SetCustomRank( (UserStatus::UserRankContainer)rank );
+}
+
+void BattleroomListCtrl::OnSetTrust( wxCommandEvent& event )
+{
+  wxLogDebugFunc( _T("") );
+  if ( !m_sel_user ) return;
+  if ( m_sel_user->BattleStatus().IsBot() ) return;
+  int trust = event.GetId() - BRLIST_TRUST;
+	m_sel_user->SetTrustRank( (UserStatus::UserTrustContainer)trust );
+}
 
 void BattleroomListCtrl::OnKickPlayer( wxCommandEvent& event )
 {
