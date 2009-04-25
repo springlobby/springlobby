@@ -31,22 +31,27 @@ UserStatus::UserRankContainer UserRankDB::GetPlayerRank( const wxString& playeri
 	return (UserStatus::UserRankContainer)m_database->Read( _T("MergedTable/") + playeridentifier + _T("/") + modshortname + _T("/Rank"), (long)UserStatus::USER_RANK_UNKNOWN );
 }
 
+int UserRankDB::GetPlayerRankAccuracy( const wxString& playeridentifier, const wxString& modshortname )
+{
+	return m_database->Read( _T("MergedTable/") + playeridentifier + _T("/") + modshortname + _T("/RankAccuracy"), 0l );
+}
+
 UserStatus::UserTrustContainer UserRankDB::GetPlayerTrust( const wxString& playeridentifier )
 {
-	return (UserStatus::UserTrustContainer)m_database->Read( _T("MergedTable/") + playeridentifier + _T("/Trust"), (long)UserStatus::USER_TRUST_UNKNOWN );
+	return (UserStatus::UserTrustContainer)m_database->Read( _T("OriginalTables/") + m_owner + _T("/") + playeridentifier + _T("/Trust"), (long)UserStatus::USER_TRUST_UNKNOWN );
 }
 
 void UserRankDB::SetPlayerRank( const wxString& playeridentifier, const wxString& modshortname, const UserStatus::UserRankContainer& value )
 {
 	m_database->Write( _T("OriginalTables/") + m_owner + _T("/") + playeridentifier + _T("/") + modshortname + _T("/Rank"), (int)value );
 	m_database->Write( _T("MergedTable/") + playeridentifier + _T("/Rank"), (int)value );
+	m_database->Write( _T("MergedTable/") + playeridentifier + _T("/RankAccuracy"), 100 ); // for your own ranks, accuracy is 100% by definition
 	m_database->Flush();
 }
 
 void UserRankDB::SetPlayerTrust( const wxString& playeridentifier, const UserStatus::UserTrustContainer& value )
 {
 	m_database->Write( _T("OriginalTables/") + m_owner + _T("/") + playeridentifier + _T("/Trust"), (int)value );
-	m_database->Write( _T("MergedTable/") + playeridentifier + _T("/Trust"), (int)value );
 	m_database->Flush();
 }
 

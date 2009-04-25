@@ -197,6 +197,11 @@ UserStatus::UserRankContainer User::GetCustomRank( const wxString& modshortname 
 	return CustomRankDB().GetPlayerRank( m_nick, modshortname );
 }
 
+int User::GetCustomRankAccuracy( const wxString& modshortname )
+{
+	return CustomRankDB().GetPlayerRankAccuracy( m_nick, modshortname );
+}
+
 
 wxString User::GetRankName(UserStatus::ServerRankContainer rank)
 {
@@ -214,9 +219,8 @@ wxString User::GetRankName(UserStatus::ServerRankContainer rank)
 			return _("Unknown");
 }
 
-float User::GetBalanceRank()
+float User::GetBalanceRank( const wxString& modshortname )
 {
-	wxString modshortname = _T("FIXME");
 	float currentvalue;
 	float range;
 	UserStatus::UserRankContainer customrank = GetCustomRank( modshortname );
