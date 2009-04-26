@@ -21,10 +21,8 @@
 #include "server.h"
 #include "settings.h"
 #include "ui.h"
-
-#ifndef HAVE_WX26
 #include "aui/auimanager.h"
-#endif
+
 
 const char sep = *("_");
 const wxString wxsep = _T("_");
@@ -47,9 +45,9 @@ template < class BattleType >
 BattleroomMMOptionsTab<BattleType>::BattleroomMMOptionsTab(  BattleType& battle, wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style )
 : wxScrolledWindow( parent, id, pos, size, style | wxHSCROLL ),m_battle(battle)
 {
-  #ifndef HAVE_WX26
+
   GetAui().manager->AddPane( this, wxLEFT, _T("battleroommmoptionstab") );
-  #endif
+
 	m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
   wxStaticBoxSizer* m_preset_sizer;
@@ -122,9 +120,7 @@ BattleroomMMOptionsTab<BattleType>::BattleroomMMOptionsTab(  BattleType& battle,
 template < class BattleType >
 BattleroomMMOptionsTab<BattleType>::~BattleroomMMOptionsTab()
 {
-  #ifndef HAVE_WX26
-  if(GetAui().manager)GetAui().manager->DetachPane( this );
-  #endif
+    if(GetAui().manager)GetAui().manager->DetachPane( this );
 }
 
 template < class BattleType >
