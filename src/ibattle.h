@@ -135,8 +135,6 @@ public:
         balance_random
     };
 
-    typedef int HostInfo;
-
     enum StartType
     {
         ST_Fixed = 0,
