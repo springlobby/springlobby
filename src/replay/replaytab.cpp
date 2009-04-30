@@ -443,6 +443,7 @@ void ReplayTab::ReloadList()
 {
     wxDateTime dt = wxDateTime::UNow();
     Deselect();
+    m_replay_listctrl->Clear();
 		m_replay_loader->Run();
 
 
