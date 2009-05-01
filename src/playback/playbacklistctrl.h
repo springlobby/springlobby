@@ -48,9 +48,9 @@ class PlaybackListCtrl : public CustomVirtListCtrl< const PlaybackImp* >
     PlaybackListCtrl( wxWindow* parent );
     ~PlaybackListCtrl();
 
-    void AddReplay( const PlaybackType& replay );
-    void RemoveReplay( const PlaybackType& replay );
-    void RemoveReplay( const int index );
+    void AddPlayback( const PlaybackType& replay );
+    void RemovePlayback( const PlaybackType& replay );
+    void RemovePlayback( const int index );
     void OnListRightClick( wxListEvent& event );
     void OnDLMap( wxCommandEvent& event );
     void OnDLMod( wxCommandEvent& event );

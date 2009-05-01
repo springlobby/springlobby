@@ -83,7 +83,7 @@ void PlaybackListCtrl<PlaybackType>::OnListRightClick( wxListEvent& event )
 }
 
 template <class PlaybackType>
-void PlaybackListCtrl<PlaybackType>::AddReplay( const PlaybackType& replay )
+void PlaybackListCtrl<PlaybackType>::AddPlayback( const PlaybackType& replay )
 {
     if ( GetIndexFromData( &replay ) != -1 ) {
         wxLogWarning( _T("Replay already in list.") );
@@ -95,7 +95,7 @@ void PlaybackListCtrl<PlaybackType>::AddReplay( const PlaybackType& replay )
 }
 
 template <class PlaybackType>
-void PlaybackListCtrl<PlaybackType>::RemoveReplay( const PlaybackType& replay )
+void PlaybackListCtrl<PlaybackType>::RemovePlayback( const PlaybackType& replay )
 {
     int index = GetIndexFromData( &replay );
 
@@ -256,7 +256,7 @@ wxListItemAttr* PlaybackListCtrl<PlaybackType>::OnGetItemAttr(long item) const
 }
 
 template <class PlaybackType>
-void PlaybackListCtrl<PlaybackType>::RemoveReplay( const int index )
+void PlaybackListCtrl<PlaybackType>::RemovePlayback( const int index )
 {
     if ( index != -1 && index < m_data.size() ) {
         m_data.erase( m_data.begin() + index );
@@ -270,7 +270,6 @@ void PlaybackListCtrl<PlaybackType>::RemoveReplay( const int index )
 template <class PlaybackType>
 int PlaybackListCtrl<PlaybackType>::GetIndexFromData( const DataType& data ) const
 {
-    wxString tu;
     DataCIter it = m_data.begin();
     for ( int i = 0; it != m_data.end(); ++it, ++i ) {
         if ( *it != 0 && data->Equals( *(*it) ) )

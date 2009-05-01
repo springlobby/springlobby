@@ -173,17 +173,17 @@ void PlaybackTab<PlaybackTraits>::AddAllPlaybacks( wxCommandEvent& evt )
     for( replay_const_iter_t i=replays.begin();i!=replays.end();++i){
         AddPlayback( i->second  );
     }
-//    m_replay_listctrl->RefreshVisibleItems();
+    m_replay_listctrl->RefreshVisibleItems();
 }
 
 template < class PlaybackTraits >
 void PlaybackTab<PlaybackTraits>::AddPlayback( const PlaybackType& replay ) {
 
-//    if ( m_filter->GetActiv() && !m_filter->FilterPlayback( replay ) ) {
-//        return;
-//    }
+    if ( m_filter->GetActiv() && !m_filter->FilterPlayback( replay ) ) {
+        return;
+    }
 
-//    m_replay_listctrl->AddPlayback( replay );
+    m_replay_listctrl->AddPlayback( replay );
 }
 
 template < class PlaybackTraits >
@@ -197,7 +197,7 @@ void PlaybackTab<PlaybackTraits>::RemovePlayback( const PlaybackType& replay )
     if ( index == m_replay_listctrl->GetSelectedIndex() )
         Deselect();
 
-//    m_replay_listctrl->RemovePlayback( replay );
+    m_replay_listctrl->RemovePlayback( replay );
 }
 
 template < class PlaybackTraits >
@@ -209,16 +209,16 @@ void PlaybackTab<PlaybackTraits>::RemovePlayback( const int index )
     if ( index == m_replay_listctrl->GetSelectedIndex() )
         Deselect();
 
-//    m_replay_listctrl->RemovePlayback( index );
+    m_replay_listctrl->RemovePlayback( index );
 }
 
 template < class PlaybackTraits >
 void PlaybackTab<PlaybackTraits>::UpdatePlayback( const PlaybackType& replay )
 {
-//    if ( m_filter->GetActiv() && !m_filter->FilterPlayback( replay ) ) {
-//        RemovePlayback( replay );
-//        return;
-//    }
+    if ( m_filter->GetActiv() && !m_filter->FilterPlayback( replay ) ) {
+        RemovePlayback( replay );
+        return;
+    }
 
     int index = m_replay_listctrl->GetIndexFromData( &replay );
 
@@ -358,12 +358,12 @@ void PlaybackTab<PlaybackTraits>::OnDelete( wxCommandEvent& event )
             int index = m_replay_listctrl->GetIndexFromData( &rep );
             wxLogMessage(_T("Deleting replay %d "),m_sel_replay_id);
             wxString fn = rep.Filename;
-//            if ( !replaylist().DeletePlayback( m_sel_replay_id ) )
-//                customMessageBoxNoModal(SL_MAIN_ICON, _("Could not delete Replay: ") + fn,
-//                    _("Error") );
-//            else{
-//                RemovePlayback( index ); // Deselect is called in there too
-//            }
+            if ( !replaylist().DeleteReplay( m_sel_replay_id ) )
+                customMessageBoxNoModal(SL_MAIN_ICON, _("Could not delete Replay: ") + fn,
+                    _("Error") );
+            else{
+                RemovePlayback( index ); // Deselect is called in there too
+            }
         }catch(std::runtime_error){
             return;
         }
