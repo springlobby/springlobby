@@ -7,7 +7,7 @@
 #include <wx/arrstr.h>
 #include "../tdfcontainer.h"
 #include "../offlinebattle.h"
-#include "playback/playbacktraits.h"
+#include "../playback/playbackstructs.h"
 
 //copied from spring sources for reference
 //struct DemoFileHeader

@@ -177,7 +177,7 @@ void PlaybackTab<PlaybackTraits>::AddAllPlaybacks( wxCommandEvent& evt )
 }
 
 template < class PlaybackTraits >
-void PlaybackTab<PlaybackTraits>::AddPlayback( const Replay& replay ) {
+void PlaybackTab<PlaybackTraits>::AddPlayback( const PlaybackType& replay ) {
 
 //    if ( m_filter->GetActiv() && !m_filter->FilterPlayback( replay ) ) {
 //        return;
@@ -187,7 +187,7 @@ void PlaybackTab<PlaybackTraits>::AddPlayback( const Replay& replay ) {
 }
 
 template < class PlaybackTraits >
-void PlaybackTab<PlaybackTraits>::RemovePlayback( const Replay& replay )
+void PlaybackTab<PlaybackTraits>::RemovePlayback( const PlaybackType& replay )
 {
     int index = m_replay_listctrl->GetIndexFromData( &replay );
 
@@ -213,7 +213,7 @@ void PlaybackTab<PlaybackTraits>::RemovePlayback( const int index )
 }
 
 template < class PlaybackTraits >
-void PlaybackTab<PlaybackTraits>::UpdatePlayback( const Replay& replay )
+void PlaybackTab<PlaybackTraits>::UpdatePlayback( const PlaybackType& replay )
 {
 //    if ( m_filter->GetActiv() && !m_filter->FilterPlayback( replay ) ) {
 //        RemovePlayback( replay );
@@ -277,7 +277,7 @@ void PlaybackTab<PlaybackTraits>::OnWatch( wxCommandEvent& event )
 
         wxLogMessage(_T("Watching replay %d "),m_sel_replay_id);
         try{
-            Replay& rep = replaylist().GetReplayById( m_sel_replay_id );
+            PlaybackType& rep = replaylist().GetReplayById( m_sel_replay_id );
 
             std::map<wxString, wxString> versionlist = sett().GetSpringVersionList();
             if ( versionlist.size() == 0 )
@@ -353,7 +353,7 @@ void PlaybackTab<PlaybackTraits>::OnDelete( wxCommandEvent& event )
     int sel_index=m_replay_listctrl->GetSelectedIndex();
     if ( sel_index >=0 ) {
         try{
-            const Replay& rep = *m_replay_listctrl->GetSelectedData();
+            const PlaybackType& rep = *m_replay_listctrl->GetSelectedData();
             int m_sel_replay_id = rep.id;
             int index = m_replay_listctrl->GetIndexFromData( &rep );
             wxLogMessage(_T("Deleting replay %d "),m_sel_replay_id);
@@ -396,7 +396,7 @@ void PlaybackTab<PlaybackTraits>::OnSelect( wxListEvent& event )
 
             //this might seem a bit backwards, but it's currently the only way that doesn't involve casting away constness
             int m_sel_replay_id = m_replay_listctrl->GetDataFromIndex( index )->id;
-            Replay& rep = replaylist().GetReplayById( m_sel_replay_id );
+            PlaybackType& rep = replaylist().GetReplayById( m_sel_replay_id );
 
 
             wxLogMessage(_T("Selected replay %d "),m_sel_replay_id);

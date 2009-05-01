@@ -17,8 +17,6 @@ class wxStaticText;
 class wxStaticLine;
 class wxCheckBox;
 class wxToggleButton;
-class ReplayList_Iter;
-class ReplayList;
 
 template <class PlaybackTabType>
 class PlaybackListFilter;
@@ -41,6 +39,8 @@ class PlaybackTab : public wxPanel
             PlaybackType;
         typedef PlaybackTab<PlaybackTraits>
             ThisType;
+        typedef typename PlaybackTraits::ListType
+            ListType;
 
   public:
     //! loads all replays into list and adds them to listctrl
@@ -48,10 +48,10 @@ class PlaybackTab : public wxPanel
      ~PlaybackTab();
 
     //! adds a single replay to listctrl
-    void AddPlayback( const Replay& Replay );
-    void RemovePlayback( const Replay& Replay );
+    void AddPlayback( const PlaybackType& Replay );
+    void RemovePlayback( const PlaybackType& Replay );
     void RemovePlayback( const int index );
-    void UpdatePlayback( const Replay& Replay );
+    void UpdatePlayback( const PlaybackType& Replay );
 
     //! add all replays in m_replays to listctrl
     void AddAllPlaybacks( wxCommandEvent& evt );

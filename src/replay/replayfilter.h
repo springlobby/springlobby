@@ -14,7 +14,6 @@ class wxChoice;
 class wxButton;
 class wxRegEx;
 class wxStaticText;
-struct Replay;
 
 
 /** \brief The panel contained in BattleListTab used to filter for diff info of battles
@@ -22,6 +21,10 @@ struct Replay;
 template <class PlaybackTabType>
 class PlaybackListFilter : public wxPanel
 {
+    protected:
+        typedef typename PlaybackTabType::PlaybackType
+            PlaybackType;
+
 	public:
     PlaybackListFilter ( wxWindow* parent, wxWindowID id, PlaybackTabType* parentTab, const wxPoint& pos, const wxSize& size, long style );
 
@@ -41,7 +44,7 @@ class PlaybackListFilter : public wxPanel
 
     void OnPlayerChange      ( wxCommandEvent& event );
 
-    bool FilterReplay( const Replay& replay );
+    bool FilterPlayback( const PlaybackType& playback );
     bool GetActiv() const;
 
     void SetFilterHighlighted( bool state );

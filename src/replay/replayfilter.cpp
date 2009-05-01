@@ -299,12 +299,12 @@ bool PlaybackListFilter<PlaybackTabType>::_IntCompare(int a,int b,m_button_mode 
 }
 
 template <class PlaybackTabType>
-bool PlaybackListFilter<PlaybackTabType>::FilterReplay( const Replay& replay )
+bool PlaybackListFilter<PlaybackTabType>::FilterPlayback( const typename PlaybackListFilter<PlaybackTabType>::PlaybackType& playback )
 {
 
     if (!m_activ) return true;
 
-    const OfflineBattle& battle = replay.battle;
+    const OfflineBattle& battle = playback.battle;
     //Player Check
     if ( (m_filter_player_choice_value != -1) && !_IntCompare( battle.GetNumUsers() - battle.GetSpectators() , m_filter_player_choice_value , m_filter_player_mode ) ) return false;
 
@@ -322,10 +322,10 @@ bool PlaybackListFilter<PlaybackTabType>::FilterReplay( const Replay& replay )
     //Mod:
     if ( !battle.GetHostModName().Upper().Contains( m_filter_mod_edit->GetValue().Upper() ) &&  !RefineModname( battle.GetHostModName() ).Upper().Contains( m_filter_mod_edit->GetValue().Upper() ) && !m_filter_mod_expression->Matches(RefineModname(battle.GetHostModName())) ) return false;
 
-    if ( (!m_filter_filesize_edit->GetValue().IsEmpty() ) && !_IntCompare( replay.size , 1024 * s2l( m_filter_filesize_edit->GetValue()) , m_filter_filesize_mode) ) return false;
+    if ( (!m_filter_filesize_edit->GetValue().IsEmpty() ) && !_IntCompare( playback.size , 1024 * s2l( m_filter_filesize_edit->GetValue()) , m_filter_filesize_mode) ) return false;
 
     //duration
-    if ( (!m_filter_duration_edit->GetValue().IsEmpty() ) && !_IntCompare( replay.duration , m_duration_value , m_filter_duration_mode) ) return false;
+    if ( (!m_filter_duration_edit->GetValue().IsEmpty() ) && !_IntCompare( playback.duration , m_duration_value , m_filter_duration_mode) ) return false;
 
     return true;
 }
