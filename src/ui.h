@@ -33,6 +33,11 @@ class Ui
     Ui();
     ~Ui();
 
+    enum PlaybackEnum {
+        ReplayPlayback,
+        SavegamePlayback
+    };
+
     Server& GetServer();
     bool    GetServerStatus();
     ChatPanel* GetActiveChatPanel();
@@ -60,7 +65,7 @@ class Ui
 
     bool IsSpringRunning();
 
-    void WatchReplay ( wxString& filename );
+    void WatchPlayback ( const wxString& filename, PlaybackEnum playbackType );
 
     void StartHostedBattle();
     void StartSinglePlayerGame( SinglePlayerBattle& battle );

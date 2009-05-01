@@ -59,7 +59,7 @@ bool Spring::IsRunning()
     return m_process != 0;
 }
 
-bool Spring::RunReplay ( wxString& filename )
+bool Spring::RunReplay ( const wxString& filename )
 {
   wxLogMessage( _T("launching spring with replay: ") + filename );
 

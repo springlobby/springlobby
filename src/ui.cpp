@@ -1252,8 +1252,7 @@ void Ui::ReloadPresetList()
     catch (...) {}
 }
 
-
-void Ui::WatchReplay ( wxString& filename )
+void Ui::WatchPlayback( const wxString& filename, PlaybackEnum playbackType )
 {
     OnSpringStarting();
     m_spring->RunReplay( filename );

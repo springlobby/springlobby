@@ -19,10 +19,11 @@ struct Replay;
 
 /** \brief The panel contained in BattleListTab used to filter for diff info of battles
  * \todo DOCMEMORE */
-class ReplayListFilter : public wxPanel
+template <class PlaybackTabType>
+class PlaybackListFilter : public wxPanel
 {
 	public:
-    ReplayListFilter( wxWindow* parent, wxWindowID id, ReplayTab* parentTab, const wxPoint& pos, const wxSize& size, long style );
+    PlaybackListFilter ( wxWindow* parent, wxWindowID id, PlaybackTabType* parentTab, const wxPoint& pos, const wxSize& size, long style );
 
     void OnPlayerButton   ( wxCommandEvent& event );
     void OnFilesizeButton ( wxCommandEvent& event );
@@ -57,7 +58,7 @@ class ReplayListFilter : public wxPanel
 
         bool m_activ;
 
-		ReplayTab* m_parent_tab;
+		PlaybackTabType* m_parent_tab;
 #if wxUSE_TOGGLEBTN
 		wxToggleButton* m_filter_show;
 #else
@@ -118,6 +119,7 @@ enum
     REPLAY_FILTER_FILESIZE_BUTTON
 };
 
+#include "replayfilter.cpp"
 #endif // SPRINGLOBBY_REPLAYFILTER_H_INCLUDED
 
 /**

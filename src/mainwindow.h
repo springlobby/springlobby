@@ -2,6 +2,7 @@
 #define SPRINGLOBBY_HEADERGUARD_MAINWINDOW_H
 
 #include <wx/frame.h>
+#include "playback/playbacktraits.h"
 
 class Ui;
 class Channel;
@@ -54,6 +55,8 @@ static const unsigned int OPT_PAGE_GENERAL  = 2;
 static const unsigned int OPT_PAGE_GROUPS   = 3;
 #endif
 
+template < class Traits >
+class PlaybackTab;
 
 //! @brief wxFrame that contains the main window of the client.
 class MainWindow : public wxFrame
@@ -61,6 +64,9 @@ class MainWindow : public wxFrame
   public:
     MainWindow( Ui& ui );
     virtual ~MainWindow();
+
+    typedef PlaybackTab<ReplayTraits>
+        ReplayTab;
 
     // MainWindow interface
     void OpenChannelChat( Channel& channel );

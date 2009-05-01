@@ -1,5 +1,5 @@
-#ifndef SPRINGLOBBY_REPLAYTAB_H_INCLUDED
-#define SPRINGLOBBY_REPLAYTAB_H_INCLUDED
+#ifndef SPRINGLOBBY_PlaybackTab_H_INCLUDED
+#define SPRINGLOBBY_PlaybackTab_H_INCLUDED
 
 #include <wx/panel.h>
 #include <vector>
@@ -18,29 +18,44 @@ class wxStaticLine;
 class wxCheckBox;
 class wxToggleButton;
 class ReplayList_Iter;
-struct Replay;
 class ReplayList;
-class ReplayListFilter;
+
+template <class PlaybackTabType>
+class PlaybackListFilter;
+
 class ReplayListCtrl;
 class ReplayLoader;
 
-class ReplayTab : public wxPanel
+#include "../playback/playbacktraits.h"
+
+template <class PlaybackTraitsImp>
+class PlaybackTab : public wxPanel
 {
-  friend class BattleListFilter;
+    protected:
+        friend class BattleListFilter; //! WTF?
+
+    public:
+        typedef PlaybackTraitsImp
+            PlaybackTraits;
+        typedef typename PlaybackTraits::PlaybackType
+            PlaybackType;
+        typedef PlaybackTab<PlaybackTraits>
+            ThisType;
+
   public:
     //! loads all replays into list and adds them to listctrl
-    ReplayTab( wxWindow* parent, Ui& ui );
-     ~ReplayTab();
+    PlaybackTab( wxWindow* parent, Ui& ui );
+     ~PlaybackTab();
 
     //! adds a single replay to listctrl
-    void AddReplay( const Replay& Replay );
-    void RemoveReplay( const Replay& Replay );
-    void RemoveReplay( const int index );
-    void UpdateReplay( const Replay& Replay );
+    void AddPlayback( const Replay& Replay );
+    void RemovePlayback( const Replay& Replay );
+    void RemovePlayback( const int index );
+    void UpdatePlayback( const Replay& Replay );
 
     //! add all replays in m_replays to listctrl
-    void AddAllReplays( wxCommandEvent& evt );
-    void RemoveAllReplays();
+    void AddAllPlaybacks( wxCommandEvent& evt );
+    void RemoveAllPlaybacks();
     void ReloadList();
 
     void UpdateList();
@@ -66,7 +81,7 @@ class ReplayTab : public wxPanel
     void OnDeselect( wxListEvent& event );
 
   protected:
-    ReplayListFilter* m_filter;
+    PlaybackListFilter<ThisType>* m_filter;
     ReplayListCtrl* m_replay_listctrl;
     ReplayLoader* m_replay_loader;
     MapCtrl* m_minimap;
@@ -108,8 +123,8 @@ enum
     REPLAY_USER_LIST
 };
 
-
-#endif // SPRINGLOBBY_REPLAYTAB_H_INCLUDED
+#include "replaytab.cpp"
+#endif // SPRINGLOBBY_PlaybackTab_H_INCLUDED
 
 /**
     This file is part of SpringLobby,

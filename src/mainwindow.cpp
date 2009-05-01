@@ -303,7 +303,7 @@ MainSinglePlayerTab& MainWindow::GetSPTab()
   return *m_sp_tab;
 }
 
-ReplayTab& MainWindow::GetReplayTab()
+MainWindow::ReplayTab& MainWindow::GetReplayTab()
 {
     ASSERT_EXCEPTION( m_replay_tab != 0, _T("m_replay_tab = 0") );
     return *m_replay_tab;
