@@ -54,6 +54,7 @@ protected:
     struct colInfo {
         colInfo(int n, wxString l, wxString t, bool c, int s):
             col_num(n),label(l),tip(t),can_resize(c),size(s) {}
+        colInfo(){}
 
         int col_num;
         wxString label;
