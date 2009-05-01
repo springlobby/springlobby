@@ -123,7 +123,7 @@ enum
     REPLAY_USER_LIST
 };
 
-#include "replaytab.cpp"
+#include "playbacktab.cpp"
 #endif // SPRINGLOBBY_PlaybackTab_H_INCLUDED
 
 /**

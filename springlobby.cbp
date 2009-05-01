@@ -305,14 +305,14 @@
 		<Unit filename="src/nicklistctrl.cpp" />
 		<Unit filename="src/nicklistctrl.h" />
 		<Unit filename="src/nonportable.h" />
-		<Unit filename="src/replay/replayfilter.cpp" />
+		<Unit filename="src/playback/playbackstructs.h" />
+		<Unit filename="src/playback/playbacktraits.h" />
 		<Unit filename="src/replay/replayfilter.h" />
 		<Unit filename="src/replay/replaylist.cpp" />
 		<Unit filename="src/replay/replaylist.h" />
 		<Unit filename="src/replay/replaylistctrl.cpp" />
 		<Unit filename="src/replay/replaylistctrl.h" />
 		<Unit filename="src/replay/replaylistfiltervalues.h" />
-		<Unit filename="src/replay/replaytab.cpp" />
 		<Unit filename="src/replay/replaytab.h" />
 		<Unit filename="src/replay/replaythread.cpp" />
 		<Unit filename="src/replay/replaythread.h" />

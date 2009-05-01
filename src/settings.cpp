@@ -27,7 +27,7 @@
 #include "utils.h"
 #include "uiutils.h"
 #include "battlelistfiltervalues.h"
-#include "replay/replaylistfiltervalues.h"
+#include "playback/playbackfiltervalues.h"
 #include "globalsmanager.h"
 #include "springunitsynclib.h"
 #include "customlistctrl.h"

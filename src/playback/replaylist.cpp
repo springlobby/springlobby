@@ -14,7 +14,7 @@
 #include "../utils.h"
 #include "../settings++/custom_dialogs.h"
 #include "../tdfcontainer.h"
-#include "replaytab.h"
+#include "playbacktab.h"
 #include "../uiutils.h"
 #include "../globalsmanager.h"
 

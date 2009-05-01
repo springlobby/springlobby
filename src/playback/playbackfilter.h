@@ -122,7 +122,7 @@ enum
     REPLAY_FILTER_FILESIZE_BUTTON
 };
 
-#include "replayfilter.cpp"
+#include "playbackfilter.cpp"
 #endif // SPRINGLOBBY_REPLAYFILTER_H_INCLUDED
 
 /**

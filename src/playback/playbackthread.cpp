@@ -5,7 +5,7 @@
 #include <wx/app.h>
 #include <wx/log.h>
 
-#include "replaythread.h"
+#include "playbackthread.h"
 #include "../utils.h"
 #include "replaylist.h"
 #include "../iunitsync.h"

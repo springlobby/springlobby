@@ -14,10 +14,10 @@
 #include <wx/event.h>
 #include <wx/regex.h>
 
-#include "replaytab.h"
+#include "playbacktab.h"
 #include "replaylist.h"
 //#include "PlaybackListFiltervalues.h"
-#include "replaylistfiltervalues.h"
+#include "playbackfiltervalues.h"
 #include "../battlelistctrl.h"
 #include "../battle.h"
 #include "../uiutils.h"

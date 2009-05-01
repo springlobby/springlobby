@@ -14,9 +14,9 @@
 
 #include <stdexcept>
 
-#include "replaylistctrl.h"
+#include "playbacklistctrl.h"
 #include "replaylist.h"
-#include "replaythread.h"
+#include "playbackthread.h"
 #include "../ui.h"
 #include "../chatpanel.h"
 #include "../utils.h"
@@ -26,7 +26,7 @@
 #include "../mapctrl.h"
 #include "../battleroomlistctrl.h"
 
-#include "replayfilter.h"
+#include "playbackfilter.h"
 #include "../iconimagelist.h"
 
 #include "../settings++/custom_dialogs.h"

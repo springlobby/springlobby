@@ -232,11 +232,9 @@ SET(SpringLobbySrc
 	src/mmoptionmodel.cpp
 	src/mmoptionswrapper.cpp
 	src/nicklistctrl.cpp
-	src/replay/replaylist.cpp
-	src/replay/replaythread.cpp
-        src/replay/replaytab.cpp
-        src/replay/replayfilter.cpp
-	src/replay/replaylistctrl.cpp
+	src/playback/replaylist.cpp
+	src/playback/playbackthread.cpp
+	src/playback/playbacklistctrl.cpp
 	src/sdlsound.cpp
 	src/selectusersdialog.cpp
 	src/server.cpp

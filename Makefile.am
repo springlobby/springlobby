@@ -59,7 +59,9 @@ springlobby_LDADD = \
 #put template source files here (those need to be present in tarball, but not compiled)
 EXTRA_DIST = \
 	src/battleroommmoptionstab.cpp \
-	src/customvirtlistctrl.cpp
+	src/customvirtlistctrl.cpp \
+	src/playback/playbacktab.cpp \
+	src/playback/playbackfilter.cpp 
 
 springsettings_LDADD = \
 	$(WX_LIBS)
@@ -496,17 +498,15 @@ springlobby_SOURCES = \
 	src/offlinebattle.h \
 	src/nicklistctrl.cpp \
 	src/nicklistctrl.h \
-	src/replay/replaytab.h \
-	src/replay/replaytab.cpp \
-	src/replay/replaythread.h \
-	src/replay/replaythread.cpp \
-	src/replay/replayfilter.h \
-	src/replay/replayfilter.cpp \
-	src/replay/replaylist.cpp \
-	src/replay/replaylist.h \
-	src/replay/replaylistctrl.h \
-	src/replay/replaylistctrl.cpp \
-	src/replay/replaylistfiltervalues.h \
+	src/playback/playbacktab.h \
+	src/playback/playbackthread.h \
+	src/playback/playbackthread.cpp \
+	src/playback/playbackfilter.h \
+	src/playback/replaylist.cpp \
+	src/playback/replaylist.h \
+	src/playback/playbacklistctrl.h \
+	src/playback/playbacklistctrl.cpp \
+	src/playback/playbacklistfiltervalues.h \
 	src/sdlsound.h \
 	src/sdlsound.cpp \
 	src/server.cpp \
@@ -603,8 +603,8 @@ springlobby_SOURCES = \
 	src/images/rank_unknown.xpm \
 	src/images/ready_q.xpm \
 	src/images/ready_unsync.xpm \
-	src/images/replay_icon.png.h \
-	src/images/replay_icon_text.png.h \
+	src/images/playback_icon.png.h \
+	src/images/playback_icon_text.png.h \
 	src/images/downloads_icon.png.h \
 	src/images/single_player_icon.png.h \
 	src/images/downloads_icon_text.png.h \
