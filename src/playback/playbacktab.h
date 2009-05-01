@@ -21,6 +21,9 @@ class wxToggleButton;
 template <class PlaybackTabType>
 class PlaybackListFilter;
 
+template <class PlaybackType>
+class PlaybackListCtrl;
+
 class ReplayListCtrl;
 class ReplayLoader;
 
@@ -41,6 +44,8 @@ class PlaybackTab : public wxPanel
             ThisType;
         typedef typename PlaybackTraits::ListType
             ListType;
+        typedef PlaybackListCtrl<PlaybackType>
+            ListCtrlType;
 
   public:
     //! loads all replays into list and adds them to listctrl
@@ -82,7 +87,7 @@ class PlaybackTab : public wxPanel
 
   protected:
     PlaybackListFilter<ThisType>* m_filter;
-    ReplayListCtrl* m_replay_listctrl;
+    ListCtrlType* m_replay_listctrl;
     ReplayLoader* m_replay_loader;
     MapCtrl* m_minimap;
     wxStaticText* m_map_lbl;

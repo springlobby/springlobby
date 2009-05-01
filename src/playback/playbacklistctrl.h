@@ -1,24 +1,55 @@
-#ifndef SPRINGLOBBY_REPLAYLISTCTRL_H_INCLUDED
-#define SPRINGLOBBY_REPLAYLISTCTRL_H_INCLUDED
+#ifndef SPRINGLOBBY_PlaybackListCtrl_H_INCLUDED
+#define SPRINGLOBBY_PlaybackListCtrl_H_INCLUDED
 
 #include "../customvirtlistctrl.h"
 
 class wxMenu;
-struct Replay;
 class wxListEvent;
 class wxCommandEvent;
 class Ui;
 class ReplayList;
 
-
-class ReplayListCtrl : public CustomVirtListCtrl< const Replay* >
+template <class PlaybackImp>
+class PlaybackListCtrl : public CustomVirtListCtrl< const PlaybackImp* >
 {
-  public:
-    ReplayListCtrl( wxWindow* parent );
-    ~ReplayListCtrl();
+    protected:
+        typedef PlaybackListCtrl<PlaybackImp>
+            ThisType;
+        typedef CustomVirtListCtrl< const PlaybackImp* >
+            ParentType;
+        typedef typename ParentType::DataType
+            DataType;
+        typedef PlaybackImp
+            PlaybackType;
 
-    void AddReplay( const Replay& replay );
-    void RemoveReplay( const Replay& replay );
+    using ParentType::AddColumn;
+    using ParentType::m_sortorder;
+    using ParentType::PopupMenu;
+    using ParentType::m_data;
+    using ParentType::m_selected_data;
+    using ParentType::m_selected_index;
+    using ParentType::SaveSelection;
+    using ParentType::RestoreSelection;
+    using ParentType::HitTest;
+    using ParentType::m_comparator;
+    using ParentType::m_tiptimer;
+    using ParentType::m_tiptext;
+    using ParentType::m_tooltip_delay;
+    using ParentType::m_tooltip_duration;
+    using ParentType::DataVector;
+    typedef typename ParentType::DataVector::const_iterator
+        DataCIter; //! TODO (koshi) i'd be mighty thankful if some could explain to me why the import with using ParentType::DataCIter doesn't work here;
+    using ParentType::GetDataFromIndex;
+    using ParentType::getColoumnFromPosition;
+
+
+
+  public:
+    PlaybackListCtrl( wxWindow* parent );
+    ~PlaybackListCtrl();
+
+    void AddReplay( const PlaybackType& replay );
+    void RemoveReplay( const PlaybackType& replay );
     void RemoveReplay( const int index );
     void OnListRightClick( wxListEvent& event );
     void OnDLMap( wxCommandEvent& event );
@@ -34,6 +65,8 @@ class ReplayListCtrl : public CustomVirtListCtrl< const Replay* >
     virtual int OnGetItemColumnImage(long item, long column) const;
     wxListItemAttr * OnGetItemAttr(long item) const;
     int GetIndexFromData( const DataType& data ) const;
+
+    using ParentType::RefreshVisibleItems;
 
   protected:
     static int CompareOneCrit( DataType u1, DataType u2, int col, int dir ) ;
@@ -52,7 +85,8 @@ enum
     RLIST_DLMAP
 };
 
-#endif // SPRINGLOBBY_REPLAYLISTCTRL_H_INCLUDED
+#include "playbacklistctrl.cpp"
+#endif // SPRINGLOBBY_PlaybackListCtrl_H_INCLUDED
 
 /**
     This file is part of SpringLobby,

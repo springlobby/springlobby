@@ -5,7 +5,6 @@
 #include <wx/filename.h>
 #include <wx/log.h>
 
-#include "playbacklistctrl.h"
 #include "replaylist.h"
 #include "../utils.h"
 #include "../user.h"
@@ -14,25 +13,26 @@
 #include "../ui.h"
 
 
-BEGIN_EVENT_TABLE(ReplayListCtrl, CustomVirtListCtrl<const Replay*>)
+BEGIN_EVENT_TABLE_TEMPLATE1(PlaybackListCtrl, CustomVirtListCtrl<const PlaybackType*>, PlaybackType)
 
-  EVT_LIST_ITEM_RIGHT_CLICK( RLIST_LIST, ReplayListCtrl::OnListRightClick )
-  EVT_MENU                 ( RLIST_DLMAP, ReplayListCtrl::OnDLMap )
-  EVT_MENU                 ( RLIST_DLMOD, ReplayListCtrl::OnDLMod )
-  EVT_LIST_COL_CLICK       ( RLIST_LIST, ReplayListCtrl::OnColClick )
+  EVT_LIST_ITEM_RIGHT_CLICK( RLIST_LIST, PlaybackListCtrl::OnListRightClick )
+  EVT_MENU                 ( RLIST_DLMAP, PlaybackListCtrl::OnDLMap )
+  EVT_MENU                 ( RLIST_DLMOD, PlaybackListCtrl::OnDLMod )
+  EVT_LIST_COL_CLICK       ( RLIST_LIST, ParentType::OnColClick )
 #if wxUSE_TIPWINDOW
 #ifndef __WXMSW__ //disables tooltips on win
-  EVT_MOTION(ReplayListCtrl::OnMouseMotion)
+  EVT_MOTION(PlaybackListCtrl::OnMouseMotion)
 #endif
 #endif
 END_EVENT_TABLE()
 
-template<> SortOrder CustomVirtListCtrl<const Replay*>::m_sortorder = SortOrder();
+template<class PlaybackType> SortOrder CustomVirtListCtrl<PlaybackType>::m_sortorder = SortOrder();
 
-ReplayListCtrl::ReplayListCtrl( wxWindow* parent  ):
+template <class PlaybackType>
+PlaybackListCtrl<PlaybackType>::PlaybackListCtrl( wxWindow* parent  ):
   CustomVirtListCtrl<const Replay*>(parent, RLIST_LIST, wxDefaultPosition, wxDefaultSize,
                 wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT,
-                _T("replaylistctrl"), 8, 4, &CompareOneCrit )
+                _T("PlaybackListCtrl"), 8, 4, &CompareOneCrit )
 {
     const int hd = wxLIST_AUTOSIZE_USEHEADER;
 #ifdef __WXMSW__
@@ -70,18 +70,20 @@ ReplayListCtrl::ReplayListCtrl( wxWindow* parent  ):
     m_popup->Append( RLIST_DLMOD, _("Download m&od") );
 }
 
-
-ReplayListCtrl::~ReplayListCtrl()
+template <class PlaybackType>
+PlaybackListCtrl<PlaybackType>::~PlaybackListCtrl()
 {
   delete m_popup;
 }
 
-void ReplayListCtrl::OnListRightClick( wxListEvent& event )
+template <class PlaybackType>
+void PlaybackListCtrl<PlaybackType>::OnListRightClick( wxListEvent& event )
 {
   PopupMenu( m_popup );
 }
 
-void ReplayListCtrl::AddReplay( const Replay& replay )
+template <class PlaybackType>
+void PlaybackListCtrl<PlaybackType>::AddReplay( const PlaybackType& replay )
 {
     if ( GetIndexFromData( &replay ) != -1 ) {
         wxLogWarning( _T("Replay already in list.") );
@@ -92,7 +94,8 @@ void ReplayListCtrl::AddReplay( const Replay& replay )
     RefreshItem( m_data.size() );
 }
 
-void ReplayListCtrl::RemoveReplay( const Replay& replay )
+template <class PlaybackType>
+void PlaybackListCtrl<PlaybackType>::RemoveReplay( const PlaybackType& replay )
 {
     int index = GetIndexFromData( &replay );
 
@@ -105,7 +108,8 @@ void ReplayListCtrl::RemoveReplay( const Replay& replay )
     wxLogError( _T("Didn't find the replay to remove.") );
 }
 
-void ReplayListCtrl::OnDLMap( wxCommandEvent& event )
+template <class PlaybackType>
+void PlaybackListCtrl<PlaybackType>::OnDLMap( wxCommandEvent& event )
 {
     if ( m_selected_index > 0 &&  (long)m_data.size() > m_selected_index ) {
         OfflineBattle battle = m_data[m_selected_index]->battle;
@@ -113,7 +117,8 @@ void ReplayListCtrl::OnDLMap( wxCommandEvent& event )
     }
 }
 
-void ReplayListCtrl::OnDLMod( wxCommandEvent& event )
+template <class PlaybackType>
+void PlaybackListCtrl<PlaybackType>::OnDLMod( wxCommandEvent& event )
 {
     if ( m_selected_index > 0 &&  (long)m_data.size() > m_selected_index ) {
         OfflineBattle battle = m_data[m_selected_index]->battle;
@@ -121,7 +126,8 @@ void ReplayListCtrl::OnDLMod( wxCommandEvent& event )
     }
 }
 
-void ReplayListCtrl::Sort()//needs adjusting when column order etc is stable
+template <class PlaybackType>
+void PlaybackListCtrl<PlaybackType>::Sort()//needs adjusting when column order etc is stable
 {
     if ( m_data.size() > 0 ) {
         SaveSelection();
@@ -130,7 +136,8 @@ void ReplayListCtrl::Sort()//needs adjusting when column order etc is stable
     }
 }
 
-int ReplayListCtrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir )
+template <class PlaybackType>
+int PlaybackListCtrl<PlaybackType>::CompareOneCrit( DataType u1, DataType u2, int col, int dir )
 {
     switch ( col ) {
         case 0: return dir * compareSimple( u1->date, u2->date );
@@ -145,7 +152,8 @@ int ReplayListCtrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir )
     }
 }
 
-void ReplayListCtrl::OnMouseMotion(wxMouseEvent& event)
+template <class PlaybackType>
+void PlaybackListCtrl<PlaybackType>::OnMouseMotion(wxMouseEvent& event)
 {
 #if wxUSE_TIPWINDOW
 	wxPoint position = event.GetPosition();
@@ -191,7 +199,8 @@ void ReplayListCtrl::OnMouseMotion(wxMouseEvent& event)
 #endif
 }
 
-wxString ReplayListCtrl::OnGetItemText(long item, long column) const
+template <class PlaybackType>
+wxString PlaybackListCtrl<PlaybackType>::OnGetItemText(long item, long column) const
 {
     if ( m_data[item] == NULL )
         return wxEmptyString;
@@ -214,7 +223,8 @@ wxString ReplayListCtrl::OnGetItemText(long item, long column) const
     }
 }
 
-int ReplayListCtrl::OnGetItemImage(long item) const
+template <class PlaybackType>
+int PlaybackListCtrl<PlaybackType>::OnGetItemImage(long item) const
 {
     if ( m_data[item] == NULL )
         return -1;
@@ -222,7 +232,8 @@ int ReplayListCtrl::OnGetItemImage(long item) const
     return -1;//icons().GetBattleStatusIcon( *m_data[item] );
 }
 
-int ReplayListCtrl::OnGetItemColumnImage(long item, long column) const
+template <class PlaybackType>
+int PlaybackListCtrl<PlaybackType>::OnGetItemColumnImage(long item, long column) const
 {
     if ( m_data[item] == NULL )
         return -1;
@@ -234,7 +245,8 @@ int ReplayListCtrl::OnGetItemColumnImage(long item, long column) const
     }
 }
 
-wxListItemAttr* ReplayListCtrl::OnGetItemAttr(long item) const
+template <class PlaybackType>
+wxListItemAttr* PlaybackListCtrl<PlaybackType>::OnGetItemAttr(long item) const
 {
     //not neded atm
 //    if ( item < m_data.size() && item > -1 ) {
@@ -243,7 +255,8 @@ wxListItemAttr* ReplayListCtrl::OnGetItemAttr(long item) const
     return NULL;
 }
 
-void ReplayListCtrl::RemoveReplay( const int index )
+template <class PlaybackType>
+void PlaybackListCtrl<PlaybackType>::RemoveReplay( const int index )
 {
     if ( index != -1 && index < m_data.size() ) {
         m_data.erase( m_data.begin() + index );
@@ -254,8 +267,10 @@ void ReplayListCtrl::RemoveReplay( const int index )
     wxLogError( _T("Didn't find the replay to remove.") );
 }
 
-int ReplayListCtrl::GetIndexFromData( const DataType& data ) const
+template <class PlaybackType>
+int PlaybackListCtrl<PlaybackType>::GetIndexFromData( const DataType& data ) const
 {
+    wxString tu;
     DataCIter it = m_data.begin();
     for ( int i = 0; it != m_data.end(); ++it, ++i ) {
         if ( *it != 0 && data->Equals( *(*it) ) )
@@ -265,41 +280,42 @@ int ReplayListCtrl::GetIndexFromData( const DataType& data ) const
     return -1;
 }
 
-///!TODO get rid of this in favor of the functionality in base class
-void ReplayListCtrl::OnColClick( wxListEvent& event )
-{
-  int click_col=event.GetColumn();
-  wxLogMessage(_T("click col: %d"),click_col);
-  if ( click_col == -1 ) return;
-  wxListItem col;
-  GetColumn( m_sortorder[0].col, col );
-  col.SetImage( icons().ICON_NONE );
-  SetColumn( m_sortorder[0].col, col );
-
-  if(click_col==m_sortorder[0].col){
-    m_sortorder[0].direction *= -1;
-  }
-  else{
-    int order_remove=3;
-    for(int i=0;i<4;++i){
-      if(m_sortorder[i].col==click_col){
-        order_remove=i;
-      }
-    }
-    for(int i=order_remove;i>0;--i){
-      m_sortorder[i]=m_sortorder[i-1];
-    }
-    m_sortorder[0].col=click_col;
-    m_sortorder[0].direction=true;
-  }
-
-  for(int i=0;i<4;++i){
-    wxLogMessage(_T("sorting level%d by %d direction %d"),i,m_sortorder[i].col,m_sortorder[i].direction);
-  }
-
-  GetColumn( m_sortorder[0].col, col );
-  col.SetImage( ( m_sortorder[0].direction > 0 )?icons().ICON_UP:icons().ICON_DOWN );
-  SetColumn( m_sortorder[0].col, col );
-
-    SortList( true );
-}
+/////!TODO get rid of this in favor of the functionality in base class
+//template <class PlaybackType>
+//void PlaybackListCtrl::OnColClick( wxListEvent& event )
+//{
+//  int click_col=event.GetColumn();
+//  wxLogMessage(_T("click col: %d"),click_col);
+//  if ( click_col == -1 ) return;
+//  wxListItem col;
+//  GetColumn( m_sortorder[0].col, col );
+//  col.SetImage( icons().ICON_NONE );
+//  SetColumn( m_sortorder[0].col, col );
+//
+//  if(click_col==m_sortorder[0].col){
+//    m_sortorder[0].direction *= -1;
+//  }
+//  else{
+//    int order_remove=3;
+//    for(int i=0;i<4;++i){
+//      if(m_sortorder[i].col==click_col){
+//        order_remove=i;
+//      }
+//    }
+//    for(int i=order_remove;i>0;--i){
+//      m_sortorder[i]=m_sortorder[i-1];
+//    }
+//    m_sortorder[0].col=click_col;
+//    m_sortorder[0].direction=true;
+//  }
+//
+//  for(int i=0;i<4;++i){
+//    wxLogMessage(_T("sorting level%d by %d direction %d"),i,m_sortorder[i].col,m_sortorder[i].direction);
+//  }
+//
+//  GetColumn( m_sortorder[0].col, col );
+//  col.SetImage( ( m_sortorder[0].direction > 0 )?icons().ICON_UP:icons().ICON_DOWN );
+//  SetColumn( m_sortorder[0].col, col );
+//
+//    SortList( true );
+//}

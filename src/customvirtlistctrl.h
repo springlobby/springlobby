@@ -286,13 +286,18 @@ public:
      void OnColClick( wxListEvent& event );
 
 protected:
-    typedef std::vector< DataImp > DataVector;
-    typedef typename DataVector::iterator DataIter;
-    typedef typename DataVector::const_iterator DataCIter;
+    typedef std::vector< DataImp >
+        DataVector;
+    typedef typename DataVector::iterator
+        DataIter;
+    typedef typename DataVector::const_iterator
+        DataCIter;
     DataVector m_data;
 
-    typedef DataType SelectedDataType;
-    typedef std::vector< SelectedDataType > SelectedDataVector;
+    typedef DataType
+        SelectedDataType;
+    typedef std::vector< SelectedDataType >
+        SelectedDataVector;
     SelectedDataVector m_selected_data;
 
     virtual int GetIndexFromData( const DataType& data ) const = 0;
