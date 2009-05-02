@@ -1,5 +1,5 @@
-#ifndef SPRINGLOBBY_REPLAYFILTER_H_INCLUDED
-#define SPRINGLOBBY_REPLAYFILTER_H_INCLUDED
+#ifndef SPRINGLOBBY_PLAYBACKFILTER_H_INCLUDED
+#define SPRINGLOBBY_PLAYBACKFILTER_H_INCLUDED
 
 #include <wx/panel.h>
 
@@ -123,7 +123,7 @@ enum
 };
 
 #include "playbackfilter.cpp"
-#endif // SPRINGLOBBY_REPLAYFILTER_H_INCLUDED
+#endif // SPRINGLOBBY_PLAYBACKFILTER_H_INCLUDED
 
 /**
     This file is part of SpringLobby,

@@ -34,18 +34,18 @@
 
 BEGIN_EVENT_TABLE_TEMPLATE1(PlaybackTab, wxPanel, PlaybackTraits)
 
-  EVT_BUTTON              ( REPLAY_WATCH             , PlaybackTab::OnWatch        )
-  EVT_BUTTON              ( REPLAY_RELOAD             , PlaybackTab::OnReload        )
-  EVT_BUTTON              ( REPLAY_DELETE            , PlaybackTab::OnDelete    )
+  EVT_BUTTON              ( PLAYBACK_WATCH             , PlaybackTab::OnWatch        )
+  EVT_BUTTON              ( PLAYBACK_RELOAD             , PlaybackTab::OnReload        )
+  EVT_BUTTON              ( PLAYBACK_DELETE            , PlaybackTab::OnDelete    )
   EVT_LIST_ITEM_SELECTED  ( RLIST_LIST               , PlaybackTab::OnSelect      )
 // this doesn't get triggered (?)
   EVT_LIST_ITEM_DESELECTED( wxID_ANY               , PlaybackTab::OnDeselect      )
-  EVT_CHECKBOX            ( REPLAY_LIST_FILTER_ACTIV , PlaybackTab::OnFilterActiv )
+  EVT_CHECKBOX            ( PLAYBACK_LIST_FILTER_ACTIV , PlaybackTab::OnFilterActiv )
   EVT_COMMAND             ( wxID_ANY, ReplaysLoadedEvt, PlaybackTab::AddAllPlaybacks  )
 #if  wxUSE_TOGGLEBTN
-  EVT_TOGGLEBUTTON        ( REPLAY_LIST_FILTER_BUTTON, PlaybackTab::OnFilter  )
+  EVT_TOGGLEBUTTON        ( PLAYBACK_LIST_FILTER_BUTTON, PlaybackTab::OnFilter  )
 #else
-  EVT_CHECKBOX            ( REPLAY_LIST_FILTER_BUTTON , PlaybackTab::OnFilter )
+  EVT_CHECKBOX            ( PLAYBACK_LIST_FILTER_BUTTON , PlaybackTab::OnFilter )
 #endif
 
 
@@ -122,25 +122,25 @@ PlaybackTab<PlaybackTraits>::PlaybackTab( wxWindow* parent, Ui& ui ) :
     m_buttons_sizer = new wxBoxSizer( wxHORIZONTAL );
 
     #if  wxUSE_TOGGLEBTN
-        m_filter_show = new wxToggleButton( this, REPLAY_LIST_FILTER_BUTTON , wxT(" Filter "), wxDefaultPosition , wxSize( -1,28 ), 0 );
+        m_filter_show = new wxToggleButton( this, PLAYBACK_LIST_FILTER_BUTTON , wxT(" Filter "), wxDefaultPosition , wxSize( -1,28 ), 0 );
     #else
-        m_filter_show = new wxCheckBox( this, REPLAY_LIST_FILTER_BUTTON , wxT(" Filter "), wxDefaultPosition , wxSize( -1,28 ), 0 );
+        m_filter_show = new wxCheckBox( this, PLAYBACK_LIST_FILTER_BUTTON , wxT(" Filter "), wxDefaultPosition , wxSize( -1,28 ), 0 );
     #endif
 
     m_buttons_sizer->Add( m_filter_show, 0, 0, 5 );
 
-    m_filter_activ = new wxCheckBox( this, REPLAY_LIST_FILTER_ACTIV , wxT("Activated"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_filter_activ = new wxCheckBox( this, PLAYBACK_LIST_FILTER_ACTIV , wxT("Activated"), wxDefaultPosition, wxDefaultSize, 0 );
     m_buttons_sizer->Add( m_filter_activ, 1, wxALL|wxEXPAND, 5 );
 
     m_buttons_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
 
-    m_watch_btn = new wxButton( this, REPLAY_WATCH, _("Watch"), wxDefaultPosition, wxSize( -1,28 ), 0 );
+    m_watch_btn = new wxButton( this, PLAYBACK_WATCH, _("Watch"), wxDefaultPosition, wxSize( -1,28 ), 0 );
     m_buttons_sizer->Add( m_watch_btn, 0, wxBOTTOM|wxLEFT|wxRIGHT, 5 );
 
-    m_delete_btn = new wxButton( this, REPLAY_DELETE, _("Delete"), wxDefaultPosition, wxSize( -1,28 ), 0 );
+    m_delete_btn = new wxButton( this, PLAYBACK_DELETE, _("Delete"), wxDefaultPosition, wxSize( -1,28 ), 0 );
     m_buttons_sizer->Add( m_delete_btn, 0, wxBOTTOM|wxRIGHT, 5 );
 
-    m_reload_btn = new wxButton( this, REPLAY_RELOAD, _("Reload list"), wxDefaultPosition, wxSize( -1,28 ), 0 );
+    m_reload_btn = new wxButton( this, PLAYBACK_RELOAD, _("Reload list"), wxDefaultPosition, wxSize( -1,28 ), 0 );
     m_buttons_sizer->Add( m_reload_btn, 0, wxBOTTOM|wxRIGHT, 5 );
 
     m_main_sizer->Add( m_buttons_sizer, 0, wxEXPAND, 5 );
