@@ -228,8 +228,7 @@ void BattleroomListCtrl::RemoveUser( User& user )
 void BattleroomListCtrl::UpdateUser( User& user )
 {
     int index = GetIndexFromData( &user );
-    RefreshItem( index );
-    MarkDirtySort();
+    UpdateUser( index );
 }
 
 wxListItemAttr * BattleroomListCtrl::OnGetItemAttr(long item) const
