@@ -1967,9 +1967,9 @@ bool Settings::GetAutoUpdate()
     return m_config->Read( _T("/General/AutoUpdate"), true );
 }
 
-ReplayListFilterValues Settings::GetReplayFilterValues(const wxString& profile_name)
+PlaybackListFilterValues Settings::GetReplayFilterValues(const wxString& profile_name)
 {
-    ReplayListFilterValues filtervalues;
+    PlaybackListFilterValues filtervalues;
     filtervalues.duration =         m_config->Read( _T("/ReplayFilter/")+profile_name + _T("/duration"), _T("") );
     filtervalues.map=               m_config->Read( _T("/ReplayFilter/")+profile_name + _T("/map"), _T("") );
     filtervalues.map_show =         m_config->Read( _T("/ReplayFilter/")+profile_name + _T("/map_show"), 0L );
@@ -1984,7 +1984,7 @@ ReplayListFilterValues Settings::GetReplayFilterValues(const wxString& profile_n
     return filtervalues;
 }
 
-void Settings::SetReplayFilterValues(const ReplayListFilterValues& filtervalues, const wxString& profile_name)
+void Settings::SetReplayFilterValues(const PlaybackListFilterValues& filtervalues, const wxString& profile_name)
 {
     m_config->Write( _T("/ReplayFilter/")+profile_name + _T("/duration"),filtervalues.duration);
     m_config->Write( _T("/ReplayFilter/")+profile_name + _T("/map"),filtervalues.map );

@@ -40,7 +40,7 @@ class wxWindow;
 class wxConfigBase;
 class wxFont;
 struct BattleListFilterValues;
-struct ReplayListFilterValues;
+struct PlaybackListFilterValues;
 class wxFileInputStream;
 class wxFileName;
 class wxColor;
@@ -535,8 +535,8 @@ class Settings
     /** @name Replay filters
      * @{
      */
-    ReplayListFilterValues GetReplayFilterValues(const wxString& profile_name = (_T("default")));
-    void SetReplayFilterValues(const ReplayListFilterValues& blfValues, const wxString& profile_name = _T("default"));
+    PlaybackListFilterValues GetReplayFilterValues(const wxString& profile_name = (_T("default")));
+    void SetReplayFilterValues(const PlaybackListFilterValues& blfValues, const wxString& profile_name = _T("default"));
     wxString GetLastReplayFilterProfileName();
     void SetReplayFilterActivState( const bool state );
     bool GetReplayFilterActivState( ) const;

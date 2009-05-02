@@ -29,16 +29,16 @@
 
 BEGIN_EVENT_TABLE_TEMPLATE1(PlaybackListFilter, wxPanel, PlaybackTabType)
 
-  EVT_BUTTON              ( REPLAY_FILTER_PLAYER_BUTTON   , PlaybackListFilter::OnPlayerButton      )
-  EVT_BUTTON              ( REPLAY_FILTER_DURATION_BUTTON , PlaybackListFilter::OnDurationButton    )
-  EVT_BUTTON              ( REPLAY_FILTER_FILESIZE_BUTTON , PlaybackListFilter::OnFilesizeButton    )
-  EVT_CHOICE              ( REPLAY_FILTER_PLAYER_CHOICE   , PlaybackListFilter::OnPlayerChange      )
-  EVT_TEXT                ( REPLAY_FILTER_DURATION_EDIT   , PlaybackListFilter::OnChangeDuration    )
-  EVT_TEXT                ( REPLAY_FILTER_FILESIZE_EDIT   , PlaybackListFilter::OnChangeFilesize    )
-  EVT_TEXT                ( REPLAY_FILTER_MAP_EDIT        , PlaybackListFilter::OnChangeMap         )
-  EVT_TEXT                ( REPLAY_FILTER_MOD_EDIT        , PlaybackListFilter::OnChangeMod         )
-  EVT_CHECKBOX            ( REPLAY_FILTER_MAP_SHOW        , PlaybackListFilter::OnChange            )
-  EVT_CHECKBOX            ( REPLAY_FILTER_MOD_SHOW        , PlaybackListFilter::OnChange            )
+  EVT_BUTTON              ( PLAYBACK_FILTER_PLAYER_BUTTON   , PlaybackListFilter::OnPlayerButton      )
+  EVT_BUTTON              ( PLAYBACK_FILTER_DURATION_BUTTON , PlaybackListFilter::OnDurationButton    )
+  EVT_BUTTON              ( PLAYBACK_FILTER_FILESIZE_BUTTON , PlaybackListFilter::OnFilesizeButton    )
+  EVT_CHOICE              ( PLAYBACK_FILTER_PLAYER_CHOICE   , PlaybackListFilter::OnPlayerChange      )
+  EVT_TEXT                ( PLAYBACK_FILTER_DURATION_EDIT   , PlaybackListFilter::OnChangeDuration    )
+  EVT_TEXT                ( PLAYBACK_FILTER_FILESIZE_EDIT   , PlaybackListFilter::OnChangeFilesize    )
+  EVT_TEXT                ( PLAYBACK_FILTER_MAP_EDIT        , PlaybackListFilter::OnChangeMap         )
+  EVT_TEXT                ( PLAYBACK_FILTER_MOD_EDIT        , PlaybackListFilter::OnChangeMod         )
+  EVT_CHECKBOX            ( PLAYBACK_FILTER_MAP_SHOW        , PlaybackListFilter::OnChange            )
+  EVT_CHECKBOX            ( PLAYBACK_FILTER_MOD_SHOW        , PlaybackListFilter::OnChange            )
 
 END_EVENT_TABLE()
 
@@ -50,7 +50,7 @@ PlaybackListFilter<PlaybackTabType>::PlaybackListFilter( wxWindow* parent, wxWin
     m_filter_map_expression(0), m_filter_mod_edit(0),m_filter_mod_expression(0)
 
 {
-    ReplayListFilterValues f_values = sett().GetReplayFilterValues( sett().GetLastReplayFilterProfileName() );
+    PlaybackListFilterValues f_values = sett().GetReplayFilterValues( sett().GetLastReplayFilterProfileName() );
 
 	wxBoxSizer* m_filter_sizer;
 	m_filter_sizer = new wxBoxSizer( wxHORIZONTAL );
@@ -74,13 +74,13 @@ PlaybackListFilter<PlaybackTabType>::PlaybackListFilter( wxWindow* parent, wxWin
     m_filter_player_choiceChoices.Add( _("All") );
     for (wxLongLong i = 0;i <= 32;i++) m_filter_player_choiceChoices.Add( i.ToString() );
 
-	m_filter_player_choice = new wxChoice( this, REPLAY_FILTER_PLAYER_CHOICE, wxDefaultPosition, wxSize( -1,-1 ), m_filter_player_choiceChoices, 0 );
+	m_filter_player_choice = new wxChoice( this, PLAYBACK_FILTER_PLAYER_CHOICE, wxDefaultPosition, wxSize( -1,-1 ), m_filter_player_choiceChoices, 0 );
 	m_filter_player_choice->SetSelection( GetIntParam( f_values.player_num )  );
 	m_filter_player_choice->SetMinSize( wxSize( 140,-1 ) );
 
 	m_filter_body_row2_sizer ->Add( m_filter_player_choice, 0, wxALIGN_RIGHT|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
-	m_filter_player_button = new wxButton( this, REPLAY_FILTER_PLAYER_BUTTON, f_values.player_mode, wxDefaultPosition, wxSize( 25, 25 ), 0 );
+	m_filter_player_button = new wxButton( this, PLAYBACK_FILTER_PLAYER_BUTTON, f_values.player_mode, wxDefaultPosition, wxSize( 25, 25 ), 0 );
 	m_filter_body_row2_sizer ->Add( m_filter_player_button, 0, wxALIGN_LEFT|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 
@@ -98,7 +98,7 @@ PlaybackListFilter<PlaybackTabType>::PlaybackListFilter( wxWindow* parent, wxWin
 
 	m_filter_map_sizer->Add( m_filter_map_text, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
-	m_filter_map_edit = new wxTextCtrl( this, REPLAY_FILTER_MAP_EDIT, f_values.map, wxDefaultPosition, wxSize( -1,-1 ), 0|wxSIMPLE_BORDER );
+	m_filter_map_edit = new wxTextCtrl( this, PLAYBACK_FILTER_MAP_EDIT, f_values.map, wxDefaultPosition, wxSize( -1,-1 ), 0|wxSIMPLE_BORDER );
 	m_filter_map_edit->SetMinSize( wxSize( 140,-1 ) );
     m_filter_map_expression = new wxRegEx(m_filter_map_edit->GetValue(),wxRE_ICASE);
 
@@ -109,7 +109,7 @@ PlaybackListFilter<PlaybackTabType>::PlaybackListFilter( wxWindow* parent, wxWin
 	wxBoxSizer* m_filter_only_map_sizer;
 	m_filter_only_map_sizer = new wxBoxSizer( wxHORIZONTAL );
 
-	m_filter_map_show = new wxCheckBox( this, REPLAY_FILTER_MAP_SHOW, _("Only maps i have"), wxDefaultPosition, wxSize( -1,-1 ), 0 );
+	m_filter_map_show = new wxCheckBox( this, PLAYBACK_FILTER_MAP_SHOW, _("Only maps i have"), wxDefaultPosition, wxSize( -1,-1 ), 0 );
     m_filter_map_show->SetValue(f_values.map_show);
 	m_filter_map_show->SetMinSize( wxSize( 140,-1 ) );
 
@@ -131,7 +131,7 @@ PlaybackListFilter<PlaybackTabType>::PlaybackListFilter( wxWindow* parent, wxWin
 
 	m_filter_mod_sizer->Add( m_filter_mod_text, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
-	m_filter_mod_edit = new wxTextCtrl( this, REPLAY_FILTER_MOD_EDIT, f_values.mod, wxDefaultPosition, wxSize( -1,-1 ), 0|wxSIMPLE_BORDER );
+	m_filter_mod_edit = new wxTextCtrl( this, PLAYBACK_FILTER_MOD_EDIT, f_values.mod, wxDefaultPosition, wxSize( -1,-1 ), 0|wxSIMPLE_BORDER );
 	m_filter_mod_edit->SetMinSize( wxSize( 140,-1 ) );
     m_filter_mod_expression = new wxRegEx(m_filter_mod_edit->GetValue(), wxRE_ICASE);
 
@@ -142,7 +142,7 @@ PlaybackListFilter<PlaybackTabType>::PlaybackListFilter( wxWindow* parent, wxWin
 	wxBoxSizer* m_filter_only_mod_sizer;
 	m_filter_only_mod_sizer = new wxBoxSizer( wxHORIZONTAL );
 
-	m_filter_mod_show = new wxCheckBox( this, REPLAY_FILTER_MOD_SHOW, _("Only mods i have"), wxDefaultPosition, wxSize( -1,-1 ), 0 );
+	m_filter_mod_show = new wxCheckBox( this, PLAYBACK_FILTER_MOD_SHOW, _("Only mods i have"), wxDefaultPosition, wxSize( -1,-1 ), 0 );
     m_filter_mod_show->SetValue(f_values.mod_show);
 	m_filter_mod_show->SetMinSize( wxSize( 140,-1 ) );
 
@@ -166,7 +166,7 @@ PlaybackListFilter<PlaybackTabType>::PlaybackListFilter( wxWindow* parent, wxWin
 
 	m_filter_filesize_sizer->Add( m_filter_filesize_text, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
-	m_filter_filesize_edit = new wxTextCtrl( this, REPLAY_FILTER_FILESIZE_EDIT, f_values.filesize, wxDefaultPosition, wxSize( -1,-1 ), 0|wxSIMPLE_BORDER );
+	m_filter_filesize_edit = new wxTextCtrl( this, PLAYBACK_FILTER_FILESIZE_EDIT, f_values.filesize, wxDefaultPosition, wxSize( -1,-1 ), 0|wxSIMPLE_BORDER );
 	m_filter_filesize_edit->SetMinSize( wxSize( 140,-1 ) );
 
 	m_filter_filesize_sizer->Add( m_filter_filesize_edit, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
@@ -174,7 +174,7 @@ PlaybackListFilter<PlaybackTabType>::PlaybackListFilter( wxWindow* parent, wxWin
 	m_filter_body_row5_sizer->Add( m_filter_filesize_sizer, 0, wxEXPAND, 5 );
 
 	//button here
-	m_filter_filesize_button= new wxButton( this, REPLAY_FILTER_FILESIZE_BUTTON, f_values.filesize_mode, wxDefaultPosition, wxSize( 25, 25 ), 0 );
+	m_filter_filesize_button= new wxButton( this, PLAYBACK_FILTER_FILESIZE_BUTTON, f_values.filesize_mode, wxDefaultPosition, wxSize( 25, 25 ), 0 );
 	m_filter_body_row5_sizer->Add( m_filter_filesize_button, 0, wxALIGN_LEFT|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 /////
@@ -192,14 +192,14 @@ PlaybackListFilter<PlaybackTabType>::PlaybackListFilter( wxWindow* parent, wxWin
 
 	m_filter_duration_sizer->Add( m_filter_duration_text, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
-	m_filter_duration_edit = new wxTextCtrl( this, REPLAY_FILTER_DURATION_EDIT, f_values.duration, wxDefaultPosition, wxSize( -1,-1 ), 0|wxSIMPLE_BORDER );
+	m_filter_duration_edit = new wxTextCtrl( this, PLAYBACK_FILTER_DURATION_EDIT, f_values.duration, wxDefaultPosition, wxSize( -1,-1 ), 0|wxSIMPLE_BORDER );
 	m_filter_duration_edit->SetMinSize( wxSize( 140,-1 ) );
 
 	m_filter_duration_sizer->Add( m_filter_duration_edit, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	m_filter_body_row6_sizer->Add( m_filter_duration_sizer, 0, wxEXPAND, 5 );
 
-    m_filter_duration_button = new wxButton( this, REPLAY_FILTER_DURATION_BUTTON, f_values.duration_mode, wxDefaultPosition, wxSize( 25, 25 ), 0 );
+    m_filter_duration_button = new wxButton( this, PLAYBACK_FILTER_DURATION_BUTTON, f_values.duration_mode, wxDefaultPosition, wxSize( 25, 25 ), 0 );
 	m_filter_body_row6_sizer->Add( m_filter_duration_button, 0, wxALIGN_LEFT|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 /////
@@ -400,7 +400,7 @@ bool PlaybackListFilter<PlaybackTabType>::GetActiv() const
 template <class PlaybackTabType>
 void  PlaybackListFilter<PlaybackTabType>::SaveFilterValues()
 {
-    ReplayListFilterValues filtervalues;
+    PlaybackListFilterValues filtervalues;
     filtervalues.duration = m_filter_duration_edit->GetValue() ;
     filtervalues.map = m_filter_map_edit->GetValue();
     filtervalues.map_show = m_filter_map_show->GetValue();

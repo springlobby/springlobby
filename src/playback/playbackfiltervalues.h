@@ -1,7 +1,7 @@
-#ifndef REPLAYLISTFILTERVALUES_H_INCLUDED
-#define REPLAYLISTFILTERVALUES_H_INCLUDED
+#ifndef PlaybackListFilterValues_H_INCLUDED
+#define PlaybackListFilterValues_H_INCLUDED
 
-struct ReplayListFilterValues
+struct PlaybackListFilterValues
 {
     // checkboxes
         bool map_show;
@@ -22,7 +22,7 @@ struct ReplayListFilterValues
         wxString duration_mode;
 };
 
-#endif // REPLAYLISTFILTERVALUES_H_INCLUDED
+#endif // PlaybackListFilterValues_H_INCLUDED
 
 /**
     This file is part of SpringLobby,
