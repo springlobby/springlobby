@@ -540,8 +540,8 @@ void TASServer::ExecuteCommand( const wxString& in )
 void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, int replyid )
 {
     wxString params = inparams;
-    int pos, cpu, id, nat, port, maxplayers, rank, specs, units, top, left, right, bottom, ally;
-    bool replay, haspass,lanmode = false;
+    int pos, cpu, id, nat, port, maxplayers, rank, specs, units, top, left, right, bottom, ally, type;
+    bool haspass,lanmode = false;
     wxString hash;
     wxString nick, contry, host, map, title, mod, channel, error, msg, owner, ai, supported_spring_version, topic;
     //NatType ntype;
@@ -594,7 +594,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     else if ( cmd == _T("BATTLEOPENED") )
     {
         id = GetIntParam( params );
-        replay = GetBoolParam( params );
+        type = GetIntParam( params );
         nat = GetIntParam( params );
         nick = GetWordParam( params );
         host = GetWordParam( params );
@@ -606,7 +606,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         map = GetSentenceParam( params );
         title = GetSentenceParam( params );
         mod = GetSentenceParam( params );
-        m_se->OnBattleOpened( id, replay, IntToNatType( nat ), nick, host, port, maxplayers,
+        m_se->OnBattleOpened( id, (BattleType)type, IntToNatType( nat ), nick, host, port, maxplayers,
                               haspass, rank, hash, map, title, mod );
         if ( nick == m_relay_host_bot )
         {

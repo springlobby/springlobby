@@ -118,6 +118,7 @@ void ReplayList::GetScriptFromReplay ( const wxString& ReplayPath, wxString& scr
     try
     {
         wxFile replay( ReplayPath, wxFile::read );
+        if ( !replay.IsOpened() ) return;
         replay.Seek( 20 );
         int headerSize=0 ;
         replay.Read( &headerSize, 4);
