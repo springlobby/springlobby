@@ -154,6 +154,7 @@ void ReplayList::GetBattleFromScript( const wxString& script_, OfflineBattle& ba
             {
 								if ( bot.ok() ) player = bot;
                 User user ( player->GetString( _T("Name") ), (player->GetString( _T("CountryCode")).Upper() ), 0);
+                user.BattleStatus().isfromdemo = true;
                 user.BattleStatus().spectator = player->GetInt( _T("Spectator"), 0 );
                 opts.spectators += user.BattleStatus().spectator;
                 user.BattleStatus().team = player->GetInt( _T("Team") );
