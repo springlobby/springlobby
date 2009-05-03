@@ -4,8 +4,6 @@
 #include "playbackstructs.h"
 #include "replaylist.h"
 
-class Ui;
-
 class ReplayTraits {
     public:
         typedef Replay

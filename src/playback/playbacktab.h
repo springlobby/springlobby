@@ -24,10 +24,9 @@ class PlaybackListFilter;
 template <class PlaybackType>
 class PlaybackListCtrl;
 
-class ReplayListCtrl;
 class ReplayLoader;
 
-#include "../playback/playbacktraits.h"
+#include "playbacktraits.h"
 
 template <class PlaybackTraitsImp>
 class PlaybackTab : public wxPanel

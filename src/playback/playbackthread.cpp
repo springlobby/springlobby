@@ -28,7 +28,7 @@ void ReplayLoader::Run()
 		if ( !usync().IsLoaded() ) return;
 		if ( m_thread_loader ) return; // a thread is already running
 		m_filenames = usync().GetReplayList();
-		replaylist().RemoveAll();
+//		replaylist().RemoveAll();
 		m_thread_loader = new ReplayLoaderThread();
 		m_thread_loader->SetParent( this );
 	  m_thread_loader->Create();
@@ -62,7 +62,7 @@ void* ReplayLoader::ReplayLoaderThread::Entry()
 {
 		if( m_parent )
 		{
-			replaylist().LoadReplays( m_parent->GetReplayFilenames() );
+//			replaylist().LoadReplays( m_parent->GetReplayFilenames() );
 			m_parent->OnComplete();
 		}
 

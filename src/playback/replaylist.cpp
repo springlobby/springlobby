@@ -23,12 +23,6 @@ ReplayList::ReplayList()
 {
 }
 
-ReplayList& replaylist()
-{
-		static GlobalObjectHolder<ReplayList> m_replay_list;
-    return m_replay_list;
-}
-
 void ReplayList::LoadReplays( const wxArrayString& filenames )
 {
     m_fails = 0;
@@ -46,37 +40,6 @@ void ReplayList::LoadReplays( const wxArrayString& filenames )
             m_fails++;
         }
     }
-}
-
-Replay& ReplayList::AddReplay( const Replay& replay )
-{
-    m_replays[replay.id] = replay;
-    return m_replays[replay.id];
-}
-
-void ReplayList::RemoveReplay( replay_id_t const& id )
-{
-    m_replays.erase(id);
-}
-
-replay_map_t::size_type ReplayList::GetNumReplays()
-{
-    return m_replays.size();
-}
-
-Replay &ReplayList::GetReplayById( replay_id_t const& id )
-{
-//TODO catch
-    replay_iter_t b = m_replays.find(id);
-    if (b == m_replays.end())
-        throw std::runtime_error("ReplayList_Iter::GetReplay(): no such replay");
-
-    return b->second;
-}
-
-bool ReplayList::ReplayExists( replay_id_t const& id )
-{
-    return m_replays.find(id) != m_replays.end();
 }
 
 bool ReplayList::GetReplayInfos ( const wxString& ReplayPath, Replay& ret )
@@ -312,27 +275,3 @@ void ReplayList::GetHeaderInfo( Replay& rep, const wxString& ReplayPath )
     catch (...){ }
 }
 
-bool ReplayList::DeleteReplay( replay_id_t const& id )
-{
-    Replay rep = m_replays[id];
-    if ( wxRemoveFile( rep.Filename ) ) {
-
-        //m_filenames.resize(std::remove(m_filenames.begin(), m_filenames.end(), rep.Filename)-m_filenames.begin());
-
-        m_replays.erase(id);
-        return true;
-    }
-    return false;
-}
-
-void ReplayList::RemoveAll()
-{
-//    m_filenames.clear();
-    m_replays.clear();
-    m_fails = 0;
-}
-
-
-const replay_map_t& ReplayList::GetReplaysMap() const {
-    return m_replays;
-}
