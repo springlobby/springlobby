@@ -36,7 +36,9 @@ void SavegameList::LoadPlaybacks( const wxArrayString& filenames )
     {
         Savegame rep;
         rep.id = i;
-				Savegame& rep_ref = AddPlayback( rep ); // don't touch this reference, since elements inside this data structure are filled using pointers, adding & not fecthing the new addresses would screw up references when rep gets destroyed
+        wxString fn = filenames[i];
+        Savegame& rep_ref = AddPlayback( rep ); // don't touch this reference, since elements inside this data structure are filled using pointers, adding & not fecthing the new addresses would screw up references when rep gets destroyed
+
         if ( !GetSavegameInfos( filenames[i] , rep_ref ) )
         {
             RemovePlayback( rep.id );
@@ -52,17 +54,7 @@ bool SavegameList::GetSavegameInfos ( const wxString& SavegamePath, Savegame& re
     //TODO extract moar info
     ret.Filename = SavegamePath;
 
-    wxString FileName = SavegamePath.AfterLast( '/' ); // strips file path
-    FileName = FileName.BeforeLast( _T('.') ); //strips the file extension;
-
-    ret.date = FileName.BeforeFirst(_T('_'));
-    FileName = FileName.AfterFirst(_T('_'));
-
-    FileName = FileName.AfterFirst(_T('_')); // strips hours minutes seconds informatiom
-
-    ret.SpringVersion = FileName.AfterLast(_T('_'));
-
-    ret.MapName = FileName.BeforeLast(_T('_'));
+    return true;
 
     wxString script;
     GetScriptFromSavegame( SavegamePath,script );
