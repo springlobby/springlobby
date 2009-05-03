@@ -3,38 +3,53 @@
 
 #include <wx/string.h>
 
-extern const wxEventType ReplaysLoadedEvt;
+static const wxEventType PlaybacksLoadedEvt = wxNewEventType();
 
-class ReplayLoader
+template <class PlaybackTabImp >
+class PlaybackLoader
 {
-public:
-    ReplayLoader( wxWindow* parent );
-    ~ReplayLoader();
-    void OnComplete();
-    void Run();
-		wxArrayString GetReplayFilenames();
-
-
 protected:
 
-    class ReplayLoaderThread : public wxThread
+    class PlaybackLoaderThread : public wxThread
     {
+        private:
+            typedef PlaybackLoader<PlaybackTabImp>
+                ParentType;
+
         public:
-            ReplayLoaderThread();
-            void SetParent( ReplayLoader* parent );
+            PlaybackLoaderThread();
+            void SetParent( ParentType* parent );
             void* Entry();
 
         private:
-            ReplayLoader* m_parent;
+            ParentType* m_parent;
     };
 
-		wxArrayString m_filenames;
-    wxWindow* m_parent;
-    ReplayLoaderThread* m_thread_loader;
+public:
+    typedef PlaybackTabImp
+        ParentType;
+    typedef typename ParentType::PlaybackType
+        PlaybackType;
+    typedef PlaybackLoader<PlaybackTabImp>
+        ThisType;
+    typedef PlaybackLoaderThread
+        ThreadType;
+
+
+    PlaybackLoader( ParentType* parent );
+    ~PlaybackLoader();
+    void OnComplete();
+    void Run();
+    wxArrayString GetPlaybackFilenames();
+
+protected:
+    wxArrayString m_filenames;
+    ParentType* m_parent;
+    ThreadType* m_thread_loader;
 
 };
 
-
+#include "playbackthread.cpp"
 #endif // SPRINGLOBBY_HEADERGUARD_PLAYBACKTHREAD
 
 /**

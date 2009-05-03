@@ -24,7 +24,8 @@ class PlaybackListFilter;
 template <class PlaybackType>
 class PlaybackListCtrl;
 
-class ReplayLoader;
+template <class PlaybackType>
+class PlaybackLoader;
 
 template <class PlaybackTraitsImp>
 class PlaybackTab : public wxPanel
@@ -43,6 +44,8 @@ class PlaybackTab : public wxPanel
             ListType;
         typedef PlaybackListCtrl<PlaybackType>
             ListCtrlType;
+        typedef PlaybackLoader<ThisType>
+            LoaderType;
 
   public:
     //! loads all replays into list and adds them to listctrl
@@ -85,7 +88,7 @@ class PlaybackTab : public wxPanel
   protected:
     PlaybackListFilter<ThisType>* m_filter;
     ListCtrlType* m_replay_listctrl;
-    ReplayLoader* m_replay_loader;
+    LoaderType* m_replay_loader;
     MapCtrl* m_minimap;
     wxStaticText* m_map_lbl;
     wxStaticText* m_map_text;

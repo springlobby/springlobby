@@ -41,7 +41,7 @@ BEGIN_EVENT_TABLE_TEMPLATE1(PlaybackTab, wxPanel, PlaybackTraits)
 // this doesn't get triggered (?)
   EVT_LIST_ITEM_DESELECTED( wxID_ANY               , PlaybackTab::OnDeselect      )
   EVT_CHECKBOX            ( PLAYBACK_LIST_FILTER_ACTIV , PlaybackTab::OnFilterActiv )
-  EVT_COMMAND             ( wxID_ANY, ReplaysLoadedEvt, PlaybackTab::AddAllPlaybacks  )
+  EVT_COMMAND             ( wxID_ANY, PlaybacksLoadedEvt, PlaybackTab::AddAllPlaybacks  )
 #if  wxUSE_TOGGLEBTN
   EVT_TOGGLEBUTTON        ( PLAYBACK_LIST_FILTER_BUTTON, PlaybackTab::OnFilter  )
 #else
@@ -59,7 +59,7 @@ PlaybackTab<PlaybackTraits>::PlaybackTab( wxWindow* parent, Ui& ui ) :
 {
     wxLogMessage(_T("PlaybackTab::PlaybackTab()"));
 
-    m_replay_loader = new ReplayLoader( (wxWindow*)this );
+    m_replay_loader = new LoaderType( this );
 
     wxBoxSizer* m_main_sizer;
     m_main_sizer = new wxBoxSizer( wxVERTICAL );
