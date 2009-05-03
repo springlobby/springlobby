@@ -271,7 +271,6 @@ void PlaybackTab<PlaybackTraits>::OnFilter( wxCommandEvent& event )
 template < class PlaybackTraits >
 void PlaybackTab<PlaybackTraits>::OnWatch( wxCommandEvent& event )
 {
-		rep.battle.GetMe().SetNick( usync().GetNick() );
     if (m_replay_listctrl->GetSelectedIndex() != -1 ) {
          int m_sel_replay_id = m_replay_listctrl->GetSelectedData()->id;
 
@@ -310,7 +309,7 @@ void PlaybackTab<PlaybackTraits>::OnWatch( wxCommandEvent& event )
               wxLogWarning ( _T("no spring version supported by this replay found") );
               return;
             }
-
+						rep.battle.GetMe().SetNick( usync().GetDefaultNick() );
             bool watchable = rep.battle.MapExists() && rep.battle.ModExists();
             if ( watchable )
                 m_ui.WatchPlayback( rep.battle );
