@@ -49,6 +49,7 @@ bool ReplayList::GetReplayInfos ( const wxString& ReplayPath, Replay& ret )
     //wxLOG_Info  ( STD_STRING( ReplayPath ) );
     //TODO extract moar info
     ret.Filename = ReplayPath;
+    ret.battle.SetPlayBackFilePath( ReplayPath );
 
     wxString FileName = ReplayPath.AfterLast( '/' ); // strips file path
     FileName = FileName.BeforeLast( _T('.') ); //strips the file extension;
@@ -62,26 +63,26 @@ bool ReplayList::GetReplayInfos ( const wxString& ReplayPath, Replay& ret )
 
     ret.MapName = FileName.BeforeLast(_T('_'));
 
-    wxString script;
-    GetScriptFromReplay( ReplayPath,script );
-
+		wxString script = GetScriptFromReplay( ReplayPath );
+    ret.battle.SetScript( script );
     //wxLogMessage(_T("Script: %s"), script.c_str());
 
-    if ( script.IsEmpty() )
-        return false;
+    if ( script.IsEmpty() ) return false;
 
     GetHeaderInfo( ret, ReplayPath );
-    GetBattleFromScript( script, ret.battle, false  );
+    GetBattleFromScript( ret.battle, false  );
     ret.ModName = ret.battle.GetHostModName();
 
     return true;
 }
 
-void ReplayList::GetScriptFromReplay ( const wxString& ReplayPath, wxString& script  )
+wxString ReplayList::GetScriptFromReplay ( const wxString& ReplayPath  )
 {
+	wxString script;
     try
     {
         wxFile replay( ReplayPath, wxFile::read );
+        if ( !replay.IsOpened() ) return script;
         replay.Seek( 20 );
         int headerSize=0 ;
         replay.Read( &headerSize, 4);
@@ -96,16 +97,16 @@ void ReplayList::GetScriptFromReplay ( const wxString& ReplayPath, wxString& scr
     }
     catch (...)
     {
-        return ;
     }
+	return script;
 }
 
 //! (koshi) don't delete commented things please, they might be need in the future and i'm lazy
-void ReplayList::GetBattleFromScript( const wxString& script_, OfflineBattle& battle, bool loadmod )
+void ReplayList::GetBattleFromScript( IBattle& battle, bool loadmod )
 {
 
     BattleOptions opts;
-    std::stringstream ss ( (const char *)script_.mb_str(wxConvUTF8) );// no need to convert wxstring-->std::string-->std::stringstream, convert directly.
+    std::stringstream ss ( (const char *)battle.GetScript().mb_str(wxConvUTF8) );// no need to convert wxstring-->std::string-->std::stringstream, convert directly.
     PDataList script( ParseTDF(ss) );
 
     PDataList replayNode ( script->Find(_T("GAME") ) );
@@ -154,6 +155,7 @@ void ReplayList::GetBattleFromScript( const wxString& script_, OfflineBattle& ba
             {
 								if ( bot.ok() ) player = bot;
                 User user ( player->GetString( _T("Name") ), (player->GetString( _T("CountryCode")).Upper() ), 0);
+                user.BattleStatus().isfromdemo = true;
                 user.BattleStatus().spectator = player->GetInt( _T("Spectator"), 0 );
                 opts.spectators += user.BattleStatus().spectator;
                 user.BattleStatus().team = player->GetInt( _T("Team") );
@@ -217,7 +219,7 @@ void ReplayList::GetBattleFromScript( const wxString& script_, OfflineBattle& ba
 										}
                 }
 
-                battle.OnOfflineAddUser( user );
+                battle.AddUserFromDemo( user );
             }
 
         }
@@ -237,7 +239,7 @@ void ReplayList::GetBattleFromScript( const wxString& script_, OfflineBattle& ba
     battle.SetBattleOptions( opts );
 }
 
-void ReplayList::LoadMMOpts( const wxString& sectionname, OfflineBattle& battle, const PDataList& node )
+void ReplayList::LoadMMOpts( const wxString& sectionname, IBattle& battle, const PDataList& node )
 {
     PDataList section ( node->Find(sectionname) );
     OptionsWrapper& opts = battle.CustomBattleOptions();
@@ -245,7 +247,7 @@ void ReplayList::LoadMMOpts( const wxString& sectionname, OfflineBattle& battle,
         opts.setSingleOption( n->Name(), section->GetString( n->Name() ) );
 }
 
-void ReplayList::LoadMMOpts( OfflineBattle& battle, const PDataList& node )
+void ReplayList::LoadMMOpts( IBattle& battle, const PDataList& node )
 {
     OptionsWrapper& opts = battle.CustomBattleOptions();
     typedef std::map<wxString,wxString> optMap;
