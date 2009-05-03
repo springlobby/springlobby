@@ -72,6 +72,8 @@ bool ReplayList::GetReplayInfos ( const wxString& ReplayPath, Replay& ret )
     GetHeaderInfo( ret, ReplayPath );
     GetBattleFromScript( ret.battle, false  );
     ret.ModName = ret.battle.GetHostModName();
+    if ( ReplayTraits::IsReplayType ) ret.battle.SetBattleType( BT_Replay );
+    else ret.battle.SetBattleType( BT_Savegame );
 
     return true;
 }
