@@ -6,7 +6,13 @@
 class OfflineBattle : public IBattle
 {
 	public:
-			OfflineBattle ( const int id ): m_id( id ), m_me( User(_T("")) ) {m_opts.founder = m_me.GetNick();}
+			OfflineBattle ( const int id ): m_id( id ), m_me( User(_T("")) )
+			{
+				m_opts.founder = m_me.GetNick();
+				AddUser( m_me );
+				m_me.BattleStatus().spectator = true;
+				m_me.BattleStatus().sync = true;
+			}
 			OfflineBattle ( ): m_id( 0 ), m_me( User(_T("")) ) {}
 			~OfflineBattle (){};
 			User& GetMe() { return m_me; }

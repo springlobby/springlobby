@@ -313,10 +313,10 @@ void PlaybackTab<PlaybackTraits>::OnWatch( wxCommandEvent& event )
               wxLogWarning ( _T("no spring version supported by this replay found") );
               return;
             }
-
+						rep.battle.GetMe().SetNick( usync().GetDefaultNick() );
             bool watchable = rep.battle.MapExists() && rep.battle.ModExists();
             if ( watchable )
-                m_ui.WatchPlayback( rep.Filename, PlaybackTraits::IsReplayType ? Ui::ReplayPlayback : Ui::SavegamePlayback );
+                m_ui.WatchPlayback( rep.battle );
             else {
                 #ifdef NO_TORRENT_SYSTEM
                     wxString downloadProc = _("Do you want me to take you to the download page?");

@@ -1252,10 +1252,10 @@ void Ui::ReloadPresetList()
     catch (...) {}
 }
 
-void Ui::WatchPlayback( const wxString& filename, PlaybackEnum playbackType )
+void Ui::WatchPlayback( OfflineBattle& battle )
 {
     OnSpringStarting();
-    m_spring->RunReplay( filename );
+    m_spring->Run( battle );
 }
 
 bool Ui::OnPresetRequiringMap( const wxString& mapname )
