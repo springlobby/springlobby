@@ -6,6 +6,7 @@
 class wxCommandEvent;
 class IBattle;
 class SinglePlayerBattle;
+class OfflineBattle;
 class Battle;
 class Ui;
 class SpringProcess;
@@ -22,12 +23,7 @@ class Spring: public wxEvtHandler
     bool IsRunning();
     bool Run( Battle& battle );
     bool Run( SinglePlayerBattle& battle );
-
-    //! executes spring with replay as parameter
-    /*!
-     * \param filename the full path for the replayfile
-     */
-    bool RunReplay ( const wxString& filename );
+    bool Run( OfflineBattle& battle );
 
     wxString WriteScriptTxt( IBattle& battle );
     void OnTerminated( wxCommandEvent& event );

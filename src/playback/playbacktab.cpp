@@ -271,6 +271,7 @@ void PlaybackTab<PlaybackTraits>::OnFilter( wxCommandEvent& event )
 template < class PlaybackTraits >
 void PlaybackTab<PlaybackTraits>::OnWatch( wxCommandEvent& event )
 {
+		rep.battle.GetMe().SetNick( usync().GetNick() );
     if (m_replay_listctrl->GetSelectedIndex() != -1 ) {
          int m_sel_replay_id = m_replay_listctrl->GetSelectedData()->id;
 
@@ -312,7 +313,7 @@ void PlaybackTab<PlaybackTraits>::OnWatch( wxCommandEvent& event )
 
             bool watchable = rep.battle.MapExists() && rep.battle.ModExists();
             if ( watchable )
-                m_ui.WatchPlayback( rep.Filename, PlaybackTraits::IsReplayType ? Ui::ReplayPlayback : Ui::SavegamePlayback );
+                m_ui.WatchPlayback( rep.battle );
             else {
                 #ifdef NO_TORRENT_SYSTEM
                     wxString downloadProc = _("Do you want me to take you to the download page?");

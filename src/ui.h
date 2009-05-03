@@ -12,6 +12,7 @@ class User;
 class IBattle;
 class Battle;
 class SinglePlayerBattle;
+class OfflineBattle;
 class ChatPanel;
 
 //this removes the necessity to drag wx/event.h into almost every other file for a single type
@@ -65,7 +66,7 @@ class Ui
 
     bool IsSpringRunning();
 
-    void WatchPlayback ( const wxString& filename, PlaybackEnum playbackType );
+    void WatchPlayback ( OfflineBattle& battle );
 
     void StartHostedBattle();
     void StartSinglePlayerGame( SinglePlayerBattle& battle );
