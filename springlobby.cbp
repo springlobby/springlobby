@@ -307,6 +307,7 @@
 		<Unit filename="src/nonportable.h" />
 		<Unit filename="src/playback/playbackfilter.h" />
 		<Unit filename="src/playback/playbackfiltervalues.h" />
+		<Unit filename="src/playback/playbacklist.h" />
 		<Unit filename="src/playback/playbacklistctrl.h" />
 		<Unit filename="src/playback/playbackstructs.h" />
 		<Unit filename="src/playback/playbacktab.h" />
