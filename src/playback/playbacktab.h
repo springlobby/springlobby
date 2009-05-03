@@ -26,8 +26,6 @@ class PlaybackListCtrl;
 
 class ReplayLoader;
 
-#include "playbacktraits.h"
-
 template <class PlaybackTraitsImp>
 class PlaybackTab : public wxPanel
 {

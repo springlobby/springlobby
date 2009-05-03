@@ -2,7 +2,6 @@
 #define SPRINGLOBBY_HEADERGUARD_MAINWINDOW_H
 
 #include <wx/frame.h>
-#include "playback/playbacktab.h"
 
 class Ui;
 class Channel;
@@ -34,8 +33,13 @@ class ReplayTab;
 class AutojoinChannelDialog;
 class WidgetDownloadDialog;
 
+class ReplayTraits;
+
+template < class Traits >
+class PlaybackTab;
+
 // FIXME shouldn't copy this here
-typedef wxWindow wxNotebookPage;
+//typedef wxWindow wxNotebookPage;
 
 
 // Page indexes
@@ -128,7 +132,6 @@ class MainWindow : public wxFrame
 
     wxBoxSizer* m_main_sizer;
     wxAuiNotebook* m_func_tabs;
-    wxNotebookPage* m_chat_page;
 
     MainChatTab* m_chat_tab;
     MainJoinBattleTab* m_join_tab;

@@ -1,8 +1,8 @@
 #ifndef PLAYBACKTRAITS_H_INCLUDED
 #define PLAYBACKTRAITS_H_INCLUDED
 
-#include "playbackstructs.h"
-#include "replaylist.h"
+class Replay;
+class ReplayList;
 
 class ReplayTraits {
     public:

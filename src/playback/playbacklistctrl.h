@@ -6,8 +6,6 @@
 class wxMenu;
 class wxListEvent;
 class wxCommandEvent;
-class Ui;
-class ReplayList;
 
 template <class PlaybackImp>
 class PlaybackListCtrl : public CustomVirtListCtrl< const PlaybackImp* >
@@ -41,8 +39,6 @@ class PlaybackListCtrl : public CustomVirtListCtrl< const PlaybackImp* >
         DataCIter; //! TODO (koshi) i'd be mighty thankful if some could explain to me why the import with using ParentType::DataCIter doesn't work here;
     using ParentType::GetDataFromIndex;
     using ParentType::getColoumnFromPosition;
-
-
 
   public:
     PlaybackListCtrl( wxWindow* parent );

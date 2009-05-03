@@ -3,8 +3,6 @@
 
 #include <map>
 
-#include "playbackstructs.h"
-
 template <class PB>
 class GlobalObjectHolder;
 

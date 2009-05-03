@@ -49,7 +49,7 @@ bool PlaybackList<PlaybackType>::ReplayExists( playback_id_t const& id )
 template <class PlaybackType>
 bool PlaybackList<PlaybackType>::DeleteReplay( playback_id_t const& id )
 {
-    Replay rep = m_replays[id];
+    PlaybackType rep = m_replays[id];
     if ( wxRemoveFile( rep.Filename ) ) {
 
         //m_filenames.resize(std::remove(m_filenames.begin(), m_filenames.end(), rep.Filename)-m_filenames.begin());

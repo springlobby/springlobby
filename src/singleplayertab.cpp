@@ -263,7 +263,7 @@ void SinglePlayerTab::OnModSelect( wxCommandEvent& event )
 void SinglePlayerTab::OnMapBrowse( wxCommandEvent& event )
 {
     wxLogDebugFunc( _T("") );
-    MapSelectDialog dlg( &m_ui.mw(), m_ui );
+    MapSelectDialog dlg( (wxWindow*)&m_ui.mw(), m_ui );
 
     if ( dlg.ShowModal() == wxID_OK && dlg.GetSelectedMap() != NULL )
     {

@@ -15,6 +15,7 @@
 #include "../settings++/custom_dialogs.h"
 #include "../tdfcontainer.h"
 #include "playbacktab.h"
+#include "playbackstructs.h"
 #include "../uiutils.h"
 #include "../globalsmanager.h"
 

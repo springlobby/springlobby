@@ -5,7 +5,7 @@
 #include <wx/filename.h>
 #include <wx/log.h>
 
-#include "replaylist.h"
+#include "playbackstructs.h"
 #include "../utils.h"
 #include "../user.h"
 #include "../iconimagelist.h"

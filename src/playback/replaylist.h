@@ -31,7 +31,7 @@
 //	int winningAllyTeam;    ///< The ally team that won the game, -1 if unknown.
 //};
 
-
+class Replay;
 
 class ReplayList : public PlaybackList<Replay>
 {

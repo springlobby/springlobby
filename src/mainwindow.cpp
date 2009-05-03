@@ -34,6 +34,7 @@
 #include "iunitsync.h"
 #include "uiutils.h"
 #include "chatpanel.h"
+#include "playback/playbacktraits.h"
 #include "playback/playbacktab.h"
 #ifndef NO_TORRENT_SYSTEM
 #include "maintorrenttab.h"
