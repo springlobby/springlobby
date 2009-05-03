@@ -311,7 +311,6 @@
 		<Unit filename="src/playback/playbacklistctrl.h" />
 		<Unit filename="src/playback/playbackstructs.h" />
 		<Unit filename="src/playback/playbacktab.h" />
-		<Unit filename="src/playback/playbackthread.cpp" />
 		<Unit filename="src/playback/playbackthread.h" />
 		<Unit filename="src/playback/playbacktraits.h" />
 		<Unit filename="src/playback/replaylist.cpp" />
