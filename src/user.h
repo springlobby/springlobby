@@ -81,6 +81,7 @@ struct UserBattleStatus
   unsigned int sync;
   bool spectator;
   bool ready;
+  bool isfromdemo;
 	UserPosition pos; // for startpos = 4
 	// bot-only stuff
 	wxString owner;
@@ -90,14 +91,14 @@ struct UserBattleStatus
   wxString ip;
   unsigned int udpport;
   bool IsBot() const { return !aishortname.IsEmpty(); }
-  UserBattleStatus(): team(0),ally(0),colour(wxColour(0,0,0)),color_index(-1),handicap(0),side(0),sync(SYNC_UNKNOWN),spectator(false),ready(false), udpport(0) {}
+  UserBattleStatus(): team(0),ally(0),colour(wxColour(0,0,0)),color_index(-1),handicap(0),side(0),sync(SYNC_UNKNOWN),spectator(false),ready(false), isfromdemo(false), udpport(0) {}
   bool operator == ( const UserBattleStatus& s ) const
   {
-    return ( ( team == s.team ) && ( colour == s.colour ) && ( handicap == s.handicap ) && ( side == s.side ) && ( sync == s.sync ) && ( spectator == s.spectator ) && ( ready == s.ready ) && ( owner == s.owner ) && ( aishortname == s.aishortname ) );
+    return ( ( team == s.team ) && ( colour == s.colour ) && ( handicap == s.handicap ) && ( side == s.side ) && ( sync == s.sync ) && ( spectator == s.spectator ) && ( ready == s.ready ) && ( owner == s.owner ) && ( aishortname == s.aishortname ) && ( isfromdemo == s.isfromdemo ) );
   }
   bool operator != ( const UserBattleStatus& s ) const
   {
-    return ( ( team != s.team ) || ( colour != s.colour ) || ( handicap != s.handicap ) || ( side != s.side ) || ( sync != s.sync ) || ( spectator != s.spectator ) || ( ready != s.ready ) || ( owner != s.owner ) || ( aishortname != s.aishortname ) );
+    return ( ( team != s.team ) || ( colour != s.colour ) || ( handicap != s.handicap ) || ( side != s.side ) || ( sync != s.sync ) || ( spectator != s.spectator ) || ( ready != s.ready ) || ( owner != s.owner ) || ( aishortname != s.aishortname ) || ( isfromdemo != isfromdemo ) );
   }
 };
 

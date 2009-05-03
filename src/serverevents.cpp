@@ -215,7 +215,7 @@ void ServerEvents::OnUserQuit( const wxString& nick )
 }
 
 
-void ServerEvents::OnBattleOpened( int id, bool replay, NatType nat, const wxString& nick,
+void ServerEvents::OnBattleOpened( int id, BattleType type, NatType nat, const wxString& nick,
                                    const wxString& host, int port, int maxplayers,
                                    bool haspass, int rank, const wxString& maphash, const wxString& map,
                                    const wxString& title, const wxString& mod )
@@ -229,7 +229,7 @@ void ServerEvents::OnBattleOpened( int id, bool replay, NatType nat, const wxStr
         User& user = m_serv.GetUser( nick );
         battle.OnUserAdded( user );
 
-        battle.SetIsReplay( replay );
+        battle.SetBattleType( type );
         battle.SetNatType( nat );
         battle.SetFounder( nick );
         battle.SetHostIp( host );

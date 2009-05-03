@@ -245,6 +245,29 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 			tdf.Append( _T("Mapname"), battle.GetHostMapName() );
 			tdf.Append( _T("GameType"), battle.GetHostModName() );
 
+			tdf.AppendLineBreak();
+
+			switch ( battle.GetBattleType() )
+			{
+				case BT_Played: break;
+				case BT_Replay:
+				{
+					wxString path = battle.GetPlayBackFilePath();
+					if ( path.Contains(_T("/")) ) path.BeforeLast(_T('/'));
+					tdf.Append( _T("DemoFile"), path );
+					tdf.AppendLineBreak();
+					break;
+				}
+				case BT_Savegame:
+				{
+					wxString path = battle.GetPlayBackFilePath();
+					if ( path.Contains(_T("/")) ) path.BeforeLast(_T('/'));
+					tdf.Append( _T("Savefile"), path );
+					tdf.AppendLineBreak();
+					break;
+				}
+			}
+
 			long startpostype;
 			battle.CustomBattleOptions().getSingleValue( _T("startpostype"), OptionsWrapper::EngineOption ).ToLong( &startpostype );
 
@@ -319,6 +342,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 							tdf.Append( _T("CountryCode"), user.GetCountry().Lower());
 							tdf.Append( _T("Spectator"), status.spectator );
 							tdf.Append( _T("Rank"), (int)user.GetRank() );
+							tdf.Append( _T("IsFromDemo"), int(status.isfromdemo) );
 							if ( !status.spectator )
 							{
 								tdf.Append( _T("Team"), status.team );
