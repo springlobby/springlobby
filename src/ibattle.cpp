@@ -833,7 +833,7 @@ void IBattle::UserPositionChanged( const User& user )
 }
 
 
-void IBattle::AddUserFromDemo( const User& user )
+void IBattle::AddUserFromDemo( User& user )
 {
 	user.BattleStatus().isfromdemo = true;
 	m_internal_user_list[user.GetNick()] = user;
