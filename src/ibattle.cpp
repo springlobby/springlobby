@@ -832,6 +832,14 @@ void IBattle::UserPositionChanged( const User& user )
 {
 }
 
+
+void IBattle::AddUserFromDemo( const User& user )
+{
+	user.BattleStatus().isfromdemo = true;
+	m_internal_user_list[user.GetNick()] = user;
+	UserList::AddUser( m_internal_user_list[user.GetNick()] );
+}
+
 void IBattle::SetIsProxy( bool value )
 {
     m_opts.isproxy = value;

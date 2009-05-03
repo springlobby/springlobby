@@ -372,6 +372,8 @@ public:
 		virtual void SetPlayBackFilePath( const wxString& path ) { m_playback_file_path = path; }
 		virtual wxString GetPlayBackFilePath() { return m_playback_file_path; }
 
+		virtual void AddUserFromDemo( const User& user );
+
 protected:
 
     bool m_map_loaded;
@@ -405,6 +407,7 @@ protected:
     wxString m_playback_file_path;
     TeamVec m_parsed_teams;
     AllyVec m_parsed_allies;
+		UserVec m_internal_user_list; /// to store users from savegame/replay
 
 
 };
