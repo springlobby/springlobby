@@ -55,6 +55,7 @@ bool SavegameList::GetSavegameInfos ( const wxString& SavegamePath, Savegame& re
     ret.Filename = SavegamePath;
 
     return true;
+//! ***************
 
     wxString script;
     GetScriptFromSavegame( SavegamePath,script );

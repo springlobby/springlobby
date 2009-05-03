@@ -297,6 +297,7 @@ bool SpringLobbyApp::OnInit()
 
     //starts the replay loading process in a thread
     ui().mw().GetReplayTab().ReloadList();
+    ui().mw().GetSavegameTab().ReloadList();
     wxLogMessage( _T("Replaytab updated") );
 
   m_timer->Start( TIMER_INTERVAL );

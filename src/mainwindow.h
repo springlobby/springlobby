@@ -41,10 +41,6 @@ class SavegameTraits;
 template < class Traits >
 class SavegameTab;
 
-// FIXME shouldn't copy this here
-//typedef wxWindow wxNotebookPage;
-
-
 // Page indexes
 const unsigned int PAGE_CHAT    = 0;
 const unsigned int PAGE_JOIN    = 1;
@@ -118,6 +114,7 @@ class MainWindow : public wxFrame
     MainJoinBattleTab& GetJoinTab();
     MainSinglePlayerTab& GetSPTab();
     ReplayTab& GetReplayTab();
+    SavegameTab& GetSavegameTab();
     #ifndef NO_TORRENT_SYSTEM
     MainTorrentTab& GetTorrentTab();
     #endif

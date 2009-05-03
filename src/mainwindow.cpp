@@ -312,6 +312,12 @@ MainWindow::ReplayTab& MainWindow::GetReplayTab()
     return *m_replay_tab;
 }
 
+MainWindow::SavegameTab& MainWindow::GetSavegameTab()
+{
+    ASSERT_EXCEPTION( m_replay_tab != 0, _T("m_replay_tab = 0") );
+    return *m_savegame_tab;
+}
+
 #ifndef NO_TORRENT_SYSTEM
 MainTorrentTab& MainWindow::GetTorrentTab()
 {

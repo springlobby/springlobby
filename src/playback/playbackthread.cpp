@@ -25,23 +25,23 @@ PlaybackLoader<PlaybackTabImp>::~PlaybackLoader()
 template <class PlaybackTabImp >
 void PlaybackLoader<PlaybackTabImp>::Run()
 {
-		if ( !usync().IsLoaded() ) return;
-		if ( m_thread_loader ) return; // a thread is already running
-		m_filenames = usync().GetPlaybackList( IsReplayType );
-		playbacklist<ListType>().RemoveAll();
-		m_thread_loader = new ThreadType();
-		m_thread_loader->SetParent( this );
-	  m_thread_loader->Create();
+    if ( !usync().IsLoaded() ) return;
+    if ( m_thread_loader ) return; // a thread is already running
+    m_filenames = usync().GetPlaybackList( IsReplayType );
+    playbacklist<ListType>().RemoveAll();
+    m_thread_loader = new ThreadType();
+    m_thread_loader->SetParent( this );
+    m_thread_loader->Create();
     m_thread_loader->Run();
 }
 
 template <class PlaybackTabImp >
 void PlaybackLoader<PlaybackTabImp>::OnComplete()
 {
-		if ( !m_parent ) return;
-		wxCommandEvent notice( PlaybacksLoadedEvt, 1 );
-		m_parent->ProcessEvent( notice );
-		m_thread_loader = 0; // the thread object deleted itself
+    if ( !m_parent ) return;
+        wxCommandEvent notice( PlaybacksLoadedEvt, 1 );
+    m_parent->ProcessEvent( notice );
+    m_thread_loader = 0; // the thread object deleted itself
 }
 
 template <class PlaybackTabImp >
@@ -59,11 +59,11 @@ m_parent(0)
 template <class PlaybackTabImp >
 void* PlaybackLoader<PlaybackTabImp>::ThreadType::Entry()
 {
-		if( m_parent )
-		{
-            playbacklist<ListType>().LoadPlaybacks( m_parent->GetPlaybackFilenames() );
-			m_parent->OnComplete();
-		}
+    if( m_parent )
+    {
+        playbacklist<ListType>().LoadPlaybacks( m_parent->GetPlaybackFilenames() );
+        m_parent->OnComplete();
+    }
 
     return NULL;
 }
