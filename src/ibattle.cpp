@@ -822,7 +822,6 @@ void IBattle::DeletePreset( const wxString& name )
   ui().ReloadPresetList();
 }
 
-
 wxArrayString IBattle::GetPresetList()
 {
   return sett().GetPresetList();
@@ -831,7 +830,6 @@ wxArrayString IBattle::GetPresetList()
 void IBattle::UserPositionChanged( const User& user )
 {
 }
-
 
 void IBattle::AddUserFromDemo( User& user )
 {
