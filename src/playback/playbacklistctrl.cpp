@@ -30,7 +30,7 @@ template<class PlaybackType> SortOrder CustomVirtListCtrl<PlaybackType>::m_sorto
 
 template <class PlaybackType>
 PlaybackListCtrl<PlaybackType>::PlaybackListCtrl( wxWindow* parent  ):
-  CustomVirtListCtrl<const Replay*>(parent, RLIST_LIST, wxDefaultPosition, wxDefaultSize,
+  CustomVirtListCtrl<const PlaybackType*>(parent, RLIST_LIST, wxDefaultPosition, wxDefaultSize,
                 wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT,
                 _T("PlaybackListCtrl"), 8, 4, &CompareOneCrit )
 {

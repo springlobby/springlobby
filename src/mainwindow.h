@@ -152,7 +152,7 @@ class MainWindow : public wxFrame
     ChannelChooserDialog* m_channel_chooser;
 
     ReplayTab* m_replay_tab;
-//    SavegameTab* m_savegame_tab;
+    SavegameTab* m_savegame_tab;
 
     wxBitmap GetTabIcon( const unsigned char* data, size_t size  );
 

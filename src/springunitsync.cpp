@@ -871,7 +871,10 @@ wxArrayString  SpringUnitSync::GetPlaybackList( bool ReplayType )
 	wxArrayString ret;
   if ( !IsLoaded() ) return ret;
 
-	return susynclib().FindFilesVFS( _T("demos/*.sdf") );
+    if ( ReplayType )
+        return susynclib().FindFilesVFS( _T("demos/*.sdf") );
+    else
+        return susynclib().FindFilesVFS( _T("Saves/*.ssf") );
 }
 
 bool SpringUnitSync::FileExists( const wxString& name )

@@ -175,7 +175,7 @@ MainWindow::MainWindow( Ui& ui )
   m_sp_tab = new MainSinglePlayerTab( m_func_tabs, m_ui );
   m_opts_tab = new MainOptionsTab( m_func_tabs, m_ui );
   m_replay_tab = new ReplayTab ( m_func_tabs, m_ui );
-//  m_savegame_tab = new SavegameTab( m_func_tabs, m_ui );
+  m_savegame_tab = new SavegameTab( m_func_tabs, m_ui );
 #ifndef NO_TORRENT_SYSTEM
   m_torrent_tab = new MainTorrentTab( m_func_tabs, m_ui);
 #endif
@@ -185,7 +185,7 @@ MainWindow::MainWindow( Ui& ui )
   m_func_tabs->AddPage( m_sp_tab, _("Singleplayer"), false );
   m_func_tabs->AddPage( m_opts_tab, _("Options"), false );
   m_func_tabs->AddPage( m_replay_tab, _("Replays"), false );
-//  m_func_tabs->AddPage( m_savegame_tab, _("Savegames"), false );
+  m_func_tabs->AddPage( m_savegame_tab, _("Savegames"), false );
 #ifndef NO_TORRENT_SYSTEM
   m_func_tabs->AddPage( m_torrent_tab, _("Downloads"), false );
 #endif

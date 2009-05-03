@@ -10,7 +10,7 @@ class OfflineBattle : public IBattle
 			OfflineBattle ( ): m_id( 0 ), m_me( User(_T("")) ) {}
 			~OfflineBattle (){};
 			User& GetMe() { return m_me; }
-			bool IsFounderMe() {return true;}
+			bool IsFounderMe() { return true; }
 
 	protected:
 			int m_id;

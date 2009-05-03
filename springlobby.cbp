@@ -317,12 +317,6 @@
 		<Unit filename="src/playback/replaylist.h" />
 		<Unit filename="src/playback/savegamelist.cpp" />
 		<Unit filename="src/playback/savegamelist.h" />
-		<Unit filename="src/replay/replayfilter.h" />
-		<Unit filename="src/replay/replaylist.h" />
-		<Unit filename="src/replay/replaylistctrl.h" />
-		<Unit filename="src/replay/replaylistfiltervalues.h" />
-		<Unit filename="src/replay/replaytab.h" />
-		<Unit filename="src/replay/replaythread.h" />
 		<Unit filename="src/sdlsound.cpp" />
 		<Unit filename="src/sdlsound.h" />
 		<Unit filename="src/selectusersdialog.cpp" />
