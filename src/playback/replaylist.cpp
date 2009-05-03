@@ -51,6 +51,7 @@ bool ReplayList::GetReplayInfos ( const wxString& ReplayPath, Replay& ret )
     ret.Filename = ReplayPath;
 
     wxString FileName = ReplayPath.AfterLast( '/' ); // strips file path
+    ret.battle.SetPlayBackFilePath( FileName ); // save the file name in the battle without the path infos
     FileName = FileName.BeforeLast( _T('.') ); //strips the file extension;
 
     ret.date = FileName.BeforeFirst(_T('_'));
