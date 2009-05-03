@@ -372,7 +372,7 @@ public:
 		virtual void SetPlayBackFilePath( const wxString& path ) { m_playback_file_path = path; }
 		virtual wxString GetPlayBackFilePath() { return m_playback_file_path; }
 
-		virtual void AddUserFromDemo( const User& user );
+		virtual void AddUserFromDemo( User& user );
 
 protected:
 
