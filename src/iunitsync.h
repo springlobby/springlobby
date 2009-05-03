@@ -183,7 +183,7 @@ class IUnitSync
 
     virtual bool ReloadUnitSyncLib() = 0;
 
-    virtual wxArrayString GetReplayList() = 0;
+    virtual wxArrayString GetPlaybackList( bool ReplayType = true ) = 0; //savegames otherwise
 
     virtual void SetSpringDataPath( const wxString& path ) = 0;
 

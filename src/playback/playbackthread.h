@@ -30,11 +30,14 @@ public:
         ParentType;
     typedef typename ParentType::PlaybackType
         PlaybackType;
+    typedef typename ParentType::ListType
+        ListType;
     typedef PlaybackLoader<PlaybackTabImp>
         ThisType;
     typedef PlaybackLoaderThread
         ThreadType;
 
+    static const bool IsReplayType = ParentType::IsReplayType;
 
     PlaybackLoader( ParentType* parent );
     ~PlaybackLoader();

@@ -864,7 +864,7 @@ void SpringUnitSync::SetCacheFile( const wxString& path, const wxArrayString& da
   file.Close();
 }
 
-wxArrayString  SpringUnitSync::GetReplayList()
+wxArrayString  SpringUnitSync::GetPlaybackList( bool ReplayType )
 {
   wxLogDebug( _T("") );
 

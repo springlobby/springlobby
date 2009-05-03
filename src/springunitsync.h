@@ -184,7 +184,7 @@ class SpringUnitSync : public IUnitSync
 
     void SetSpringDataPath( const wxString& path );
 
-    wxArrayString GetReplayList();
+    wxArrayString GetPlaybackList( bool ReplayType = true ); //savegames otehrwise
 
     bool FileExists( const wxString& name );
 

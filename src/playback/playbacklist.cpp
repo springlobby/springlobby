@@ -3,34 +3,36 @@
 #include "../offlinebattle.h"
 #include "../globalsmanager.h"
 
-template <class PlaybackImp>
-PlaybackList<PlaybackImp>& playbacklist()
+template <class ListImp>
+ListImp& playbacklist()
 {
-    static GlobalObjectHolder<PlaybackList<PlaybackImp> > m_replay_list;
+    static GlobalObjectHolder<ListImp> m_replay_list;
     return m_replay_list;
 }
 
-template <class PlaybackType>
-PlaybackType& PlaybackList<PlaybackType>::AddReplay( const PlaybackType& replay )
+template <class PlaybackImp>
+typename PlaybackList<PlaybackImp>::PlaybackType&
+    PlaybackList<PlaybackImp>::AddReplay( const PlaybackType& replay )
 {
     m_replays[replay.id] = replay;
     return m_replays[replay.id];
 }
 
-template <class PlaybackType>
-void PlaybackList<PlaybackType>::RemoveReplay( playback_id_t const& id )
+template <class PlaybackImp>
+void PlaybackList<PlaybackImp>::RemoveReplay( playback_id_t const& id )
 {
     m_replays.erase(id);
 }
 
-template <class PlaybackType>
-typename PlaybackList<PlaybackType>::playback_map_t::size_type PlaybackList<PlaybackType>::GetNumReplays()
+template <class PlaybackImp>
+typename PlaybackList<PlaybackImp>::playback_map_t::size_type PlaybackList<PlaybackImp>::GetNumReplays()
 {
     return m_replays.size();
 }
 
-template <class PlaybackType>
-PlaybackType& PlaybackList<PlaybackType>::GetReplayById( playback_id_t const& id )
+template <class PlaybackImp>
+typename PlaybackList<PlaybackImp>::PlaybackType&
+    PlaybackList<PlaybackImp>::GetReplayById( playback_id_t const& id )
 {
 //TODO catch
     playback_iter_t b = m_replays.find(id);
@@ -40,14 +42,14 @@ PlaybackType& PlaybackList<PlaybackType>::GetReplayById( playback_id_t const& id
     return b->second;
 }
 
-template <class PlaybackType>
-bool PlaybackList<PlaybackType>::ReplayExists( playback_id_t const& id )
+template <class PlaybackImp>
+bool PlaybackList<PlaybackImp>::ReplayExists( playback_id_t const& id )
 {
     return m_replays.find(id) != m_replays.end();
 }
 
-template <class PlaybackType>
-bool PlaybackList<PlaybackType>::DeleteReplay( playback_id_t const& id )
+template <class PlaybackImp>
+bool PlaybackList<PlaybackImp>::DeleteReplay( playback_id_t const& id )
 {
     PlaybackType rep = m_replays[id];
     if ( wxRemoveFile( rep.Filename ) ) {
@@ -60,16 +62,16 @@ bool PlaybackList<PlaybackType>::DeleteReplay( playback_id_t const& id )
     return false;
 }
 
-template <class PlaybackType>
-void PlaybackList<PlaybackType>::RemoveAll()
+template <class PlaybackImp>
+void PlaybackList<PlaybackImp>::RemoveAll()
 {
 //    m_filenames.clear();
     m_replays.clear();
     m_fails = 0;
 }
 
-template <class PlaybackType>
-const typename PlaybackList<PlaybackType>::playback_map_t& PlaybackList<PlaybackType>::GetReplaysMap() const {
+template <class PlaybackImp>
+const typename PlaybackList<PlaybackImp>::playback_map_t& PlaybackList<PlaybackImp>::GetReplaysMap() const {
     return m_replays;
 }
 

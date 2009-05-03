@@ -7,6 +7,7 @@
 #include <wx/arrstr.h>
 
 #include "playbacklist.h"
+#include "playbacktraits.h"
 //copied from spring sources for reference
 //struct DemoFileHeader
 //{
@@ -33,16 +34,23 @@
 
 class Replay;
 
+template <class PB>
+class GlobalObjectHolder;
+
 class ReplayList : public PlaybackList<Replay>
 {
   public:
-    ReplayList();
 
-    void LoadReplays( const wxArrayString& filenames );
-    //!loads replays between two indices
-    void LoadReplays( const unsigned int from, const unsigned int to);
+    typedef Replay
+        PlaybackType;
+
+   virtual  void LoadPlaybacks( const wxArrayString& filenames );
 
   protected:
+    ReplayList();
+
+    template <class PB>
+    friend class GlobalObjectHolder;
 
     bool GetReplayInfos ( const wxString& ReplayPath, Replay& ret );
     void GetScriptFromReplay ( const wxString& ReplayPath, wxString& script );

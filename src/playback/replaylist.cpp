@@ -24,7 +24,7 @@ ReplayList::ReplayList()
 {
 }
 
-void ReplayList::LoadReplays( const wxArrayString& filenames )
+void ReplayList::LoadPlaybacks( const wxArrayString& filenames )
 {
     m_fails = 0;
 

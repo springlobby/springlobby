@@ -3,8 +3,6 @@
 
 #include <map>
 
-template <class PB>
-class GlobalObjectHolder;
 
 class wxArrayString;
 
@@ -24,9 +22,9 @@ class PlaybackList : public wxEvtHandler
     //! @brief const iterator for playback map
     typedef typename playback_map_t::const_iterator playback_const_iter_t;
 
-    void LoadReplays( const wxArrayString& filenames );
+    virtual void LoadPlaybacks( const wxArrayString& filenames ) = 0;
     //!loads replays between two indices
-    void LoadReplays( const unsigned int from, const unsigned int to);
+//    virtual void LoadPlaybacks( const unsigned int from, const unsigned int to) = 0;
 
     PlaybackType& AddReplay( const PlaybackType& replay );
     void AddReplay( PlaybackType* replay );
@@ -48,17 +46,14 @@ class PlaybackList : public wxEvtHandler
   protected:
     PlaybackList() {};
 
-    template <class PB>
-    friend class GlobalObjectHolder;
-
     playback_map_t m_replays;
 
     unsigned long m_fails;
 
 };
 
-template <class PlaybackImp>
-PlaybackList<PlaybackImp>& playbacklist();
+template <class ListImp>
+ListImp& playbacklist();
 
 #include "playbacklist.cpp"
 

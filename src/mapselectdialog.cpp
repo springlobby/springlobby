@@ -201,7 +201,7 @@ void MapSelectDialog::OnInit( wxInitDialogEvent& event )
     m_vertical_direction_button->SetLabel( m_vertical_direction ? _T("ᴧ") : _T("ᴠ") );
 
 	m_maps = usync().GetMapList();
-	m_replays = usync().GetReplayList();
+	m_replays = usync().GetPlaybackList( true ); //true meaning replays, flase meaning savegames
 
     const unsigned int lastFilter = sett().GetMapSelectorFilterRadio();
 	m_filter_popular->Enable( m_ui.IsConnected() );

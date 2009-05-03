@@ -26,8 +26,8 @@ void PlaybackLoader<PlaybackTabImp>::Run()
 {
 		if ( !usync().IsLoaded() ) return;
 		if ( m_thread_loader ) return; // a thread is already running
-//		m_filenames = usync().GetPlaybackList();
-//		replaylist().RemoveAll();
+		m_filenames = usync().GetPlaybackList( IsReplayType );
+		playbacklist<ListType>().RemoveAll();
 		m_thread_loader = new ThreadType();
 		m_thread_loader->SetParent( this );
 	  m_thread_loader->Create();
@@ -60,7 +60,7 @@ void* PlaybackLoader<PlaybackTabImp>::ThreadType::Entry()
 {
 		if( m_parent )
 		{
-//			replaylist().LoadPlaybacks( m_parent->GetPlaybackFilenames() );
+            playbacklist<ListType>().LoadPlaybacks( m_parent->GetPlaybackFilenames() );
 			m_parent->OnComplete();
 		}
 

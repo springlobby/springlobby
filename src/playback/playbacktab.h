@@ -47,6 +47,8 @@ class PlaybackTab : public wxPanel
         typedef PlaybackLoader<ThisType>
             LoaderType;
 
+        static const bool IsReplayType = PlaybackTraits::IsReplayType;
+
   public:
     //! loads all replays into list and adds them to listctrl
     PlaybackTab( wxWindow* parent, Ui& ui );
