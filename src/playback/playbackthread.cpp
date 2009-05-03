@@ -7,6 +7,7 @@
 
 #include "../utils.h"
 #include "replaylist.h"
+#include "savegamelist.h"
 #include "../iunitsync.h"
 
 template <class PlaybackTabImp >

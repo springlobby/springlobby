@@ -2,7 +2,7 @@
 #define SL_PLAYBACKLIST_H_INCLUDED
 
 #include <map>
-
+#include <wx/event.h>
 
 class wxArrayString;
 

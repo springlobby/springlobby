@@ -167,7 +167,7 @@ void PlaybackListCtrl<PlaybackType>::OnMouseMotion(wxMouseEvent& event)
 		if (item_hit != wxNOT_FOUND)
 		{
 
-			const Replay& replay = *GetDataFromIndex(item_hit);
+			const PlaybackType& replay = *GetDataFromIndex(item_hit);
 			int coloumn = getColoumnFromPosition(position);
 			switch (coloumn)
 			{
@@ -205,7 +205,7 @@ wxString PlaybackListCtrl<PlaybackType>::OnGetItemText(long item, long column) c
     if ( m_data[item] == NULL )
         return wxEmptyString;
 
-    const Replay& replay = *m_data[item];
+    const PlaybackType& replay = *m_data[item];
     wxString duration = wxString::Format(_T("%02ld:%02ld:%02ld"), replay.duration / 3600,
                         (replay.duration%3600)/60, (replay.duration%60)/60 ) ;
 
@@ -238,7 +238,7 @@ int PlaybackListCtrl<PlaybackType>::OnGetItemColumnImage(long item, long column)
     if ( m_data[item] == NULL )
         return -1;
 
-    const Replay& replay = *m_data[item];
+    const PlaybackType& replay = *m_data[item];
 
     switch ( column ) {
         default: return -1;

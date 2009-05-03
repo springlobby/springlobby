@@ -34,9 +34,12 @@ class AutojoinChannelDialog;
 class WidgetDownloadDialog;
 
 class ReplayTraits;
-
 template < class Traits >
 class PlaybackTab;
+
+class SavegameTraits;
+template < class Traits >
+class SavegameTab;
 
 // FIXME shouldn't copy this here
 //typedef wxWindow wxNotebookPage;
@@ -69,6 +72,8 @@ class MainWindow : public wxFrame
 
     typedef PlaybackTab<ReplayTraits>
         ReplayTab;
+    typedef PlaybackTab<SavegameTraits>
+        SavegameTab;
 
     // MainWindow interface
     void OpenChannelChat( Channel& channel );
@@ -147,6 +152,7 @@ class MainWindow : public wxFrame
     ChannelChooserDialog* m_channel_chooser;
 
     ReplayTab* m_replay_tab;
+//    SavegameTab* m_savegame_tab;
 
     wxBitmap GetTabIcon( const unsigned char* data, size_t size  );
 

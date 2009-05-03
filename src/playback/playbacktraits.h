@@ -15,4 +15,18 @@ class ReplayTraits {
         static const bool IsReplayType = true;
 };
 
+class Savegame;
+class SavegameList;
+
+class SavegameTraits {
+    public:
+        typedef Savegame
+            PlaybackType;
+
+        typedef SavegameList
+            ListType;
+
+        static const bool IsReplayType = false;
+};
+
 #endif // PLAYBACKTRAITS_H_INCLUDED
