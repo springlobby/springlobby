@@ -227,7 +227,7 @@ bool TASServer::ExecuteSayCommand( const wxString& cmd )
     else if ( subcmd == _T("/unmute") )
     {
 				if ( arrayparams.GetCount() != 3 ) return false;
-        SendCmd( _T("UNMUTE"), arrayparams[1] );
+        SendCmd( _T("UNMUTE"), arrayparams[1] + _T(" ") + arrayparams[2] );
         return true;
     }
     else if ( subcmd == _T("/mutelist") )
