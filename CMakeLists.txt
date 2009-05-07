@@ -232,8 +232,6 @@ SET(SpringLobbySrc
 	src/mmoptionmodel.cpp
 	src/mmoptionswrapper.cpp
 	src/nicklistctrl.cpp
-	src/playback/playbackthread.cpp
-	src/playback/playbacklistctrl.cpp
 	src/playback/replaylist.cpp
 	src/playback/savegamelist.cpp
 	src/playback/scriptparser.cpp
