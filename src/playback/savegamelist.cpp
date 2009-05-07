@@ -57,7 +57,7 @@ bool SavegameList::GetSavegameInfos ( const wxString& SavegamePath, Savegame& re
 
     if ( script.IsEmpty() ) return false;
 
-    GetBattleFromScript( ret.battle, false  );
+    GetBattleFromScript( ret.battle, true  );
     ret.ModName = ret.battle.GetHostModName();
     ret.battle.SetBattleType( BT_Savegame );
 
