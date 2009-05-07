@@ -10,19 +10,27 @@
 
 void LoadMMOpts( const wxString& sectionname, IBattle& battle, const PDataList& node )
 {
+		if ( !node.ok() ) return;
     PDataList section ( node->Find(sectionname) );
+    if ( !section.ok() ) return;
     OptionsWrapper& opts = battle.CustomBattleOptions();
     for ( PNode n = section->First(); n != section->Last(); n = section->Next( n ) )
+    {
+				if ( !n.ok() ) continue;
         opts.setSingleOption( n->Name(), section->GetString( n->Name() ) );
+    }
 }
 
 void LoadMMOpts( IBattle& battle, const PDataList& node )
 {
+		if ( !node.ok() ) return;
     OptionsWrapper& opts = battle.CustomBattleOptions();
     typedef std::map<wxString,wxString> optMap;
     optMap options = opts.getOptionsMap(OptionsWrapper::EngineOption);
     for ( optMap::const_iterator i = options.begin(); i != options.end(); ++i)
+    {
         opts.setSingleOption( i->first, node->GetString( i->first, i->second ) );
+    }
 }
 
 //! (koshi) don't delete commented things please, they might be need in the future and i'm lazy
