@@ -950,8 +950,11 @@ springlobby_SOURCES = \
 	src/mmoptionwindows.cpp \
 	src/mmoptionwindows.h \
 	src/userrankdb.cpp \
-	src/userrank.h
-
+	src/userrank.h \
+	src/playback/savegamelist.cpp \
+	src/playback/savegamelist.h \
+	src/playback/scriptparser.cpp \
+	src/playback/scriptparser.h 
 
 
 if USE_WINDRES

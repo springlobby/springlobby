@@ -3,6 +3,7 @@
 /* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
 #include <iterator>
 #include <algorithm>
+#include <fstream>
 #include <wx/file.h>
 #include <wx/filefn.h>
 
@@ -65,18 +66,14 @@ bool SavegameList::GetSavegameInfos ( const wxString& SavegamePath, Savegame& re
 
 wxString SavegameList::GetScriptFromSavegame ( const wxString& SavegamePath  )
 {
-	wxString ret;
-	try
+	// blatantly copied from spring source
+	std::ifstream file(SavegamePath.mb_str(), std::ios::in|std::ios::binary);
+	std::string script;
+	char c;
+	do
 	{
-			wxFile save( SavegamePath, wxFile::read );
-
-			std::string script_a( save.Length(), '\1' );
-			save.Read( &script_a[0], save.Length() );
-			size_t pos = script_a.find( "\0" );
-			if ( pos != -1 ) ret = WX_STRING( script_a.substr( 0, pos ) );
-	}
-	catch (...)
-	{
-	}
-	return ret;
+		file.read(&c,sizeof(char));
+		if (c) script += c;
+	} while (c != 0);
+	return WX_STRING( script );
 }

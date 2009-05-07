@@ -317,6 +317,8 @@
 		<Unit filename="src/playback/replaylist.h" />
 		<Unit filename="src/playback/savegamelist.cpp" />
 		<Unit filename="src/playback/savegamelist.h" />
+		<Unit filename="src/playback/scriptparser.cpp" />
+		<Unit filename="src/playback/scriptparser.h" />
 		<Unit filename="src/sdlsound.cpp" />
 		<Unit filename="src/sdlsound.h" />
 		<Unit filename="src/selectusersdialog.cpp" />
