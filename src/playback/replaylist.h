@@ -54,7 +54,6 @@ class ReplayList : public PlaybackList<Replay>
 
     bool GetReplayInfos ( const wxString& ReplayPath, Replay& ret );
     wxString GetScriptFromReplay ( const wxString& ReplayPath );
-    void GetBattleFromScript( IBattle& battle, bool loadmod );
     BattleOptions GetBattleOptsFromScript( const wxString& script_ );
 
     //! load mod/map options
