@@ -401,9 +401,9 @@ void CustomVirtListCtrl<T>::SortList( bool force )
     if ( !m_dirty_sort && !force )
         return;
 
-    Freeze();
+//    Freeze();
     Sort();
-    Thaw();
+//    Thaw();
     m_dirty_sort = false;
     RefreshVisibleItems();
 }
