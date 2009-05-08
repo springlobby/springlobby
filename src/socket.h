@@ -4,15 +4,12 @@
 #include <wx/string.h>
 
 #include <wx/event.h>
-#include "thread.h"
 
 class iNetClass;
 class Socket;
 class wxSocketEvent;
 class wxSocketClient;
 class wxCriticalSection;
-
-class PingThread;
 
 enum SockState
 {
@@ -61,12 +58,6 @@ class Socket
     bool Send( const wxString& data );
     wxString Receive();
 
-
-    void Ping();
-    void SetPingInfo( const wxString& msg = wxEmptyString, unsigned int interval = 10000 );
-    unsigned int GetPingInterval() { return m_ping_int; }
-    bool GetPingEnabled() { return m_ping_msg != wxEmptyString; }
-
     wxString GetLocalAddress();
     wxString GetHandle();
 
@@ -87,11 +78,6 @@ class Socket
 
     wxCriticalSection m_lock;
 
-    wxString m_ping_msg;
-    unsigned int m_ping_int;
-
-    PingThread* m_ping_t;
-
     bool m_connecting;
     bool m_block;
     iNetClass& m_net_class;
@@ -104,42 +90,8 @@ class Socket
     wxSocketClient* _CreateSocket();
 
     bool _Send( const wxString& data );
-    void _EnablePingThread( bool enable = true );
-    bool _ShouldEnablePingThread();
 };
 
-
-/** A thread class that sends pings to socket.
- * Implemented as joinable thread.
- * When you want it started, construct it then call Init()
- * When you want it killed, call Wait() method.
- * Dont call other methods, especially the Destroy() method.
- */
- /*
-class PingThread: public wxThread
-{
-  public:
-    PingThread( Socket& sock );
-    void Init();
-    /// overrides wxThread::Wait
-    ExitCode Wait();
-  private:
-    Socket& m_sock;
-    wxSemaphore m_thread_sleep_semaphore;
-
-    void* Entry();
-    void OnExit();
-};*/
-class PingThread: public Thread
-{
-  public:
-    PingThread( Socket& sock );
-    void Init();
-    private:
-    Socket& m_sock;
-    void* Entry();
-    void OnExit();
-};
 
 
 #endif // SPRINGLOBBY_HEADERGUARD_SOCKET_H

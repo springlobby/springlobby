@@ -8,6 +8,8 @@
 #include "userlist.h"
 #include "battlelist.h"
 #include "inetclass.h"
+#include "thread.h"
+#include "mutexwrapper.h"
 
 class ServerEvents;
 class Channel;
@@ -19,6 +21,7 @@ class ChatPanel;
 class wxString;
 typedef int ServerError;
 class wxColour;
+class PingThread;
 
 
 typedef int HostInfo;
@@ -141,8 +144,6 @@ class Server : public iNetClass
 
     void SetRequiredSpring( const wxString& version ) { m_required_spring_ver = version; }
 
-    virtual void Ping() = 0;
-
     virtual void OnConnected( Socket* sock ) = 0;
     virtual void OnDisconnected( Socket* sock ) = 0;
     virtual void OnDataReceived( Socket* sock ) = 0;
@@ -174,14 +175,43 @@ class Server : public iNetClass
 
     wxString GetServerName() { return m_server_name; }
 
+    virtual void Ping() = 0;
+    void SetPingInfo( const wxString& msg = wxEmptyString, unsigned int interval = 10000 );
+    unsigned int GetPingInterval() { return m_ping_int; }
+    bool GetPingEnabled() { return m_ping_msg != wxEmptyString; }
+
+    Socket* GetSocket()
+    {
+				ScopedLocker<Socket*> l_socket(m_sock);
+        return l_socket.Get();
+    }
+
+    void SetSocket( Socket* newsocket )
+    {
+				ScopedLocker<Socket*> l_socket(m_sock);
+        l_socket.Set( newsocket );
+    }
+
+    static const unsigned int PING_TIMEOUT = 30;
+
   protected:
-    Socket* m_sock;
+		void _EnablePingThread( bool value );
+		bool _ShouldEnablePingThread();
+
+		MutexWrapper<Socket*> m_sock; // don't access this element directly, use Getor Set Socket instead
     int m_keepalive;
     wxString m_user;
     wxString m_pass;
     wxString m_server_name;
     bool m_pass_hash;
     wxString m_required_spring_ver;
+
+    /// ping stuff
+		wxString m_ping_msg;
+    unsigned int m_ping_int;
+
+    PingThread* m_ping_t;
+
 
     ChannelList m_channels;
     UserList m_users;
@@ -201,11 +231,28 @@ class Server : public iNetClass
     Battle& _AddBattle( const int& id );
     void _RemoveBattle( const int& id );
 
-    static const unsigned int PING_TIMEOUT = 30;
-
     virtual void SendCmd( const wxString& command, const wxString& param ) = 0;
     virtual void RelayCmd( const wxString& command, const wxString& param ) = 0;
 };
+
+
+/** A thread class that sends pings to socket.
+ * Implemented as joinable thread.
+ * When you want it started, construct it then call Init()
+ * When you want it killed, call Wait() method.
+ * Dont call other methods, especially the Destroy() method.
+ */
+class PingThread: public Thread
+{
+  public:
+    PingThread( Server& server );
+    void Init();
+    private:
+    Server& m_server;
+    void* Entry();
+    void OnExit();
+};
+
 
 #endif // SPRINGLOBBY_HEADERGUARD_SERVER_H
 
