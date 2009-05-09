@@ -173,22 +173,22 @@ MainWindow::MainWindow( Ui& ui )
   m_chat_tab = new MainChatTab( m_func_tabs, m_ui );
   m_join_tab = new MainJoinBattleTab( m_func_tabs, m_ui );
   m_sp_tab = new MainSinglePlayerTab( m_func_tabs, m_ui );
-  m_opts_tab = new MainOptionsTab( m_func_tabs, m_ui );
   m_replay_tab = new ReplayTab ( m_func_tabs, m_ui );
   m_savegame_tab = new SavegameTab( m_func_tabs, m_ui );
 #ifndef NO_TORRENT_SYSTEM
   m_torrent_tab = new MainTorrentTab( m_func_tabs, m_ui);
 #endif
+	m_opts_tab = new MainOptionsTab( m_func_tabs, m_ui );
 
   m_func_tabs->AddPage( m_chat_tab, _("Chat"), true );
   m_func_tabs->AddPage( m_join_tab, _("Multiplayer"), false );
   m_func_tabs->AddPage( m_sp_tab, _("Singleplayer"), false );
-  m_func_tabs->AddPage( m_opts_tab, _("Options"), false );
   m_func_tabs->AddPage( m_replay_tab, _("Replays"), false );
   m_func_tabs->AddPage( m_savegame_tab, _("Savegames"), false );
 #ifndef NO_TORRENT_SYSTEM
   m_func_tabs->AddPage( m_torrent_tab, _("Downloads"), false );
 #endif
+	m_func_tabs->AddPage( m_opts_tab, _("Options"), false );
   SetTabIcons();
   m_main_sizer->Add( m_func_tabs, 1, wxEXPAND | wxALL, 0 );
 
@@ -217,14 +217,16 @@ wxBitmap MainWindow::GetTabIcon( const unsigned char* data, size_t size )
 
 void MainWindow::SetTabIcons()
 {
-    m_func_tabs->SetPageBitmap( 0, GetTabIcon( chat_icon_png, sizeof(chat_icon_png)  ) );
-    m_func_tabs->SetPageBitmap( 1, GetTabIcon( join_icon_png, sizeof(join_icon_png) ) );
-    m_func_tabs->SetPageBitmap( 2, GetTabIcon( single_player_icon_png , sizeof (single_player_icon_png) ) );
-    m_func_tabs->SetPageBitmap( 3, GetTabIcon( options_icon_png , sizeof (options_icon_png) ) );
-    m_func_tabs->SetPageBitmap( 4, GetTabIcon( replay_icon_png , sizeof (replay_icon_png) ) );
+		unsigned int count = 0;
+    m_func_tabs->SetPageBitmap( count++, GetTabIcon( chat_icon_png, sizeof(chat_icon_png)  ) );
+    m_func_tabs->SetPageBitmap( count++, GetTabIcon( join_icon_png, sizeof(join_icon_png) ) );
+    m_func_tabs->SetPageBitmap( count++, GetTabIcon( single_player_icon_png , sizeof (single_player_icon_png) ) );
+    m_func_tabs->SetPageBitmap( count++, GetTabIcon( replay_icon_png , sizeof (replay_icon_png) ) );
+    m_func_tabs->SetPageBitmap( count++, GetTabIcon( replay_icon_png , sizeof (replay_icon_png) ) );
 #ifndef NO_TORRENT_SYSTEM
-    m_func_tabs->SetPageBitmap( 5, GetTabIcon(  downloads_icon_png , sizeof (downloads_icon_png) ) );
+    m_func_tabs->SetPageBitmap( count++, GetTabIcon(  downloads_icon_png , sizeof (downloads_icon_png) ) );
 #endif
+		m_func_tabs->SetPageBitmap( count++, GetTabIcon( options_icon_png , sizeof (options_icon_png) ) );
     Refresh();
 }
 
