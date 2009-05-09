@@ -14,7 +14,6 @@
 #include "playbackstructs.h"
 #include "../uiutils.h"
 #include "../globalsmanager.h"
-#include "scriptparser.h"
 
 
 SavegameList::SavegameList()
@@ -51,13 +50,12 @@ bool SavegameList::GetSavegameInfos ( const wxString& SavegamePath, Savegame& re
     ret.Filename = SavegamePath;
 		ret.battle.SetPlayBackFilePath( SavegamePath );
 
-		wxString script = GetScriptFromSavegame( SavegamePath );
-    ret.battle.SetScript( script );
+    ret.battle.SetScript( GetScriptFromSavegame( SavegamePath ) );
     //wxLogMessage(_T("Script: %s"), script.c_str());
 
-    if ( script.IsEmpty() ) return false;
+    if ( ret.battle.GetScript().IsEmpty() ) return false;
 
-    GetBattleFromScript( ret.battle, true  );
+		ret.battle.GetBattleFromScript( true );
     ret.ModName = ret.battle.GetHostModName();
     ret.battle.SetBattleType( BT_Savegame );
 

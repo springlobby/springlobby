@@ -8,6 +8,7 @@
 #include "user.h"
 #include "mmoptionswrapper.h"
 #include "userlist.h"
+#include "tdfcontainer.h"
 
 
 const unsigned int DEFAULT_SERVER_PORT = 8452;
@@ -374,7 +375,12 @@ public:
 
 		virtual void AddUserFromDemo( User& user );
 
+		virtual void GetBattleFromScript( bool loadmapmod );
+
 protected:
+
+		void LoadScriptMMOpts( const wxString& sectionname, const PDataList& node );
+		void LoadScriptMMOpts( const PDataList& node );
 
     bool m_map_loaded;
     bool m_mod_loaded;

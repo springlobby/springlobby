@@ -167,6 +167,8 @@ class Server : public iNetClass
 
     virtual void SendScriptToProxy( const wxString& script ) = 0;
 
+    virtual void SendScriptToClients( const wxString& script ) = 0;
+
     std::map<wxString,wxString> m_channel_pw;  /// channel name -> password, filled on channel join
 
     ///used to fill userlist in groupuserdialog

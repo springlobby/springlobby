@@ -11,7 +11,6 @@
 #include "playbackstructs.h"
 #include "../uiutils.h"
 #include "../globalsmanager.h"
-#include "scriptparser.h"
 
 
 ReplayList::ReplayList()
@@ -57,14 +56,13 @@ bool ReplayList::GetReplayInfos ( const wxString& ReplayPath, Replay& ret )
 
     ret.MapName = FileName.BeforeLast(_T('_'));
 
-		wxString script = GetScriptFromReplay( ReplayPath );
-    ret.battle.SetScript( script );
+    ret.battle.SetScript( GetScriptFromReplay( ReplayPath ) );
     //wxLogMessage(_T("Script: %s"), script.c_str());
 
-    if ( script.IsEmpty() ) return false;
+    if ( ret.battle.GetScript().IsEmpty() ) return false;
 
     GetHeaderInfo( ret, ReplayPath );
-    GetBattleFromScript( ret.battle, false  );
+    ret.battle.GetBattleFromScript( false );
     ret.ModName = ret.battle.GetHostModName();
     ret.battle.SetBattleType( BT_Replay );
 

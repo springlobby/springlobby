@@ -883,3 +883,30 @@ void ServerEvents::OnMutelistEnd( const wxString& channel )
 {
     mutelistWindow( _("End mutelist for ") + channel );
 }
+
+void ServerEvents::OnScriptStart( int battleid )
+{
+	if ( !m_serv.BattleExists( battleid ) )
+	{
+			return;
+	}
+	m_serv.GetBattle( battleid ).ClearScript();
+}
+
+void ServerEvents::OnScriptLine( int battleid, const wxString& line )
+{
+	if ( !m_serv.BattleExists( battleid ) )
+	{
+			return;
+	}
+	m_serv.GetBattle( battleid ).AppendScriptLine( line );
+}
+
+void ServerEvents::OnScriptEnd( int battleid )
+{
+	if ( !m_serv.BattleExists( battleid ) )
+	{
+			return;
+	}
+	m_serv.GetBattle( battleid ).GetBattleFromScript( true );
+}

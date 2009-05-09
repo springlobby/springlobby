@@ -119,6 +119,10 @@ class ServerEvents
     void OnMutelistItem( const wxString& channel, const wxString& mutee, const wxString& description );
     void OnMutelistEnd( const wxString& channel );
 
+    void OnScriptStart( int battleid );
+    void OnScriptLine( int battleid, const wxString& line );
+    void OnScriptEnd( int battleid );
+
   protected:
     Server& m_serv;
 

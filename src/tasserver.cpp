@@ -981,6 +981,21 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         m_se->OnBattleInfoUpdated( m_battle_id );
         // !! Command: "SETSCRIPTTAGS" params: "game/startpostype=0	game/maxunits=1000	game/limitdgun=0	game/startmetal=1000	game/gamemode=0	game/ghostedbuildings=-1	game/startenergy=1000	game/diminishingmms=0"
     }
+    else if ( cmd == _T("SCRIPTSTART") )
+    {
+        m_se->OnScriptStart( m_battle_id );
+        // !! Command: "SCRIPTSTART" params: ""
+    }
+    else if ( cmd == _T("SCRIPTEND") )
+    {
+        m_se->OnScriptEnd( m_battle_id );
+        // !! Command: "SCRIPTEND" params: ""
+    }
+    else if ( cmd == _T("SCRIPT") )
+    {
+        m_se->OnScriptLine(  m_battle_id, params );
+        // !! Command: "SCRIPT" params: "[game]"
+    }
     else if ( cmd == _T("FORCEQUITBATTLE"))
     {
         m_relay_host_bot = _T("");
@@ -2080,6 +2095,18 @@ void TASServer::SendScriptToProxy( const wxString& script )
       RelayCmd( _T("APPENDSCRIPTLINE"), line );
   }
   RelayCmd( _T("STARTGAME") );
+}
+
+void TASServer::SendScriptToClients( const wxString& script )
+{
+  SendCmd( _T("SCRIPTSTART") );
+  wxStringTokenizer tkzr( script, _T("\n") );
+  while ( tkzr.HasMoreTokens() )
+  {
+      wxString line = tkzr.GetNextToken();
+      SendCmd( _T("SCRIPT"), line );
+  }
+  SendCmd( _T("SCRIPTEND") );
 }
 
 void TASServer::OnConnected( Socket* sock )

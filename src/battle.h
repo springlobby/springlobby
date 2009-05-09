@@ -74,6 +74,8 @@ class Battle : public IBattle
     void SetLockExternalBalanceChanges( bool value );
     bool GetLockExternalBalanceChanges();
 
+    void SendScriptToClients();
+
     ///< quick hotfix for bans
     bool CheckBan(User &user);
     ///>
