@@ -370,4 +370,8 @@ IF (WIN32)
 ELSE (WIN32)
     install(TARGETS springlobby springsettings RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin )
     install(FILES AUTHORS COPYING NEWS README THANKS DESTINATION ${CMAKE_INSTALL_PREFIX}/share/doc/springlobby )
+    install(FILES src/images/springlobby.svg DESTINATION
+	    ${CMAKE_INSTALL_PREFIX}/share/icons/hicolor/scalable/apps)
+    install(FILES src/springlobby.desktop DESTINATION
+	    ${CMAKE_INSTALL_PREFIX}/share/applications)
 ENDIF (WIN32)
