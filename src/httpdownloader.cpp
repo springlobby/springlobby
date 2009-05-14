@@ -19,11 +19,12 @@
 #include "globalevents.h"
 
 
-HttpDownloaderThread::HttpDownloaderThread(  const wxString& FileUrl, const wxString& DestPath, wxEvtHandler& parent, int code, const bool notify, const wxString& noticeErr, const wxString& noticeOk   ) :
+HttpDownloaderThread::HttpDownloaderThread(  const wxString& FileUrl, const wxString& DestPath, wxEvtHandler& parent, int code, const bool notify, const bool unzip, const wxString& noticeErr, const wxString& noticeOk   ) :
        // m_calling_class(CallingClass),
         m_destroy(false),
         m_destpath(DestPath),
         m_fileurl(FileUrl),
+        m_do_unzip(unzip),
         m_notifyOnDownloadEvent( notify),
         m_noticeErr(noticeErr),
         m_noticeOk(noticeOk),
@@ -65,16 +66,18 @@ void* HttpDownloaderThread::Entry()
             //download success
             if (m_notifyOnDownloadEvent)
             {
-                bool unzipOk = Unzip();
-                wxCommandEvent notice(httpDownloadEvtComplete, m_id_code);
-                if (m_noticeOk == wxEmptyString)
-                    if ( unzipOk )
-                        notice.SetString(m_fileurl + _("\nsuccessfully unzipped in:\n") + m_destpath);
-                    else
-                        notice.SetString(m_fileurl + _("\nsuccessfully saved to:\n") + m_destpath +
-                            _("\n unzipping failed, please correct manually"));
-                else
-                    notice.SetString(m_noticeOk);
+            	  wxCommandEvent notice(httpDownloadEvtComplete, m_id_code);
+            	  notice.SetString(m_fileurl + _("\nsuccessfully saved to:\n") + m_destpath );
+								if ( m_do_unzip )
+								{
+									bool unzipOk = Unzip();
+									if (m_noticeOk == wxEmptyString)
+									{
+											if ( unzipOk ) notice.SetString(m_fileurl + _("\nsuccessfully unzipped in:\n") + m_destpath);
+											else notice.SetString( notice.GetString() + _("\n unzipping failed, please correct manually") );
+									}
+								}
+								if ( m_noticeOk != wxEmptyString ) notice.SetString(m_noticeOk);
 								notice.SetInt( FileDownloading.GetError() );
                 wxPostEvent( &m_parent, notice );
             }

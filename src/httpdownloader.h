@@ -10,7 +10,7 @@ const wxEventType httpDownloadEvtFailed = wxNewEventType();
 class HttpDownloaderThread : public Thread
 		{
 		public:
-				HttpDownloaderThread(  const wxString& FileUrl, const wxString& DestPath, wxEvtHandler& parent, int code = 0, const bool notify = true, const wxString& noticeErr = wxEmptyString, const wxString& noticeOk = wxEmptyString );
+				HttpDownloaderThread(  const wxString& FileUrl, const wxString& DestPath, wxEvtHandler& parent, int code = 0, const bool notify = true, const bool unzip = true, const wxString& noticeErr = wxEmptyString, const wxString& noticeOk = wxEmptyString );
 				~HttpDownloaderThread();
 				void Init();
 				void* Entry();
@@ -22,6 +22,7 @@ class HttpDownloaderThread : public Thread
 				wxString m_destpath;
 				wxString m_fileurl;
 				bool Unzip();
+				bool m_do_unzip;
 				bool m_notifyOnDownloadEvent;
 
 				wxString m_noticeErr;
