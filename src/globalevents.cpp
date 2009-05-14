@@ -10,10 +10,6 @@ const wxEventType UnitSyncReloadRequest = wxNewEventType();
 const wxEventType ExeDownloadEvt = wxNewEventType();
 
 BEGIN_EVENT_TABLE(SL_GlobalEvtHandler, wxEvtHandler)
-/*
-    EVT_COMMAND(wxID_ANY, httpDownloadEvtComplete,  SL_GlobalEvtHandler::OnHttpDownLoadComplete)
-    EVT_COMMAND(wxID_ANY, httpDownloadEvtFailed,    SL_GlobalEvtHandler::OnHttpDownLoadFailed)
-*/
     EVT_COMMAND(wxID_ANY, UnitSyncReloadRequest,    SL_GlobalEvtHandler::OnUnitSyncReload)
 END_EVENT_TABLE()
 

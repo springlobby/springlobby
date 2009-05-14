@@ -11,8 +11,8 @@
 
 
 BEGIN_EVENT_TABLE(UpdaterClass, wxEvtHandler)
-    EVT_COMMAND(wxID_ANY, httpDownloadEvtComplete,  UpdaterClass::OnHttpDownLoadComplete)
-    EVT_COMMAND(wxID_ANY, httpDownloadEvtFailed,    UpdaterClass::OnHttpDownLoadFailed)
+    EVT_COMMAND(wxID_ANY, httpDownloadEvtComplete,  UpdaterClass::OnDownloadEvent)
+    EVT_COMMAND(wxID_ANY, httpDownloadEvtFailed,    UpdaterClass::OnDownloadEvent)
 END_EVENT_TABLE()
 
 UpdaterClass& Updater()
