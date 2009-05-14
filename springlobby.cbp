@@ -400,8 +400,6 @@
 		<Unit filename="src/uiutils.h" />
 		<Unit filename="src/unitsyncthread.cpp" />
 		<Unit filename="src/unitsyncthread.h" />
-		<Unit filename="src/updater/exedownloader.cpp" />
-		<Unit filename="src/updater/exedownloader.h" />
 		<Unit filename="src/updater/updater.cpp" />
 		<Unit filename="src/updater/updater.h" />
 		<Unit filename="src/updater/versionchecker.cpp" />

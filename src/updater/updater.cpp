@@ -1,7 +1,6 @@
 #include "versionchecker.h"
 #include "../settings++/custom_dialogs.h"
 #include "../utils.h"
-#include "exedownloader.h"
 #include "updater.h"
 #include "../settings.h"
 #include "../globalsmanager.h"
