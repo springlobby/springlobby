@@ -305,6 +305,8 @@
 		<Unit filename="src/nicklistctrl.cpp" />
 		<Unit filename="src/nicklistctrl.h" />
 		<Unit filename="src/nonportable.h" />
+		<Unit filename="src/poolmanager.cpp" />
+		<Unit filename="src/poolmanager.h" />
 		<Unit filename="src/replay/replayfilter.cpp" />
 		<Unit filename="src/replay/replayfilter.h" />
 		<Unit filename="src/replay/replaylist.cpp" />

@@ -4,8 +4,6 @@
 #include <wx/event.h>
 class wxCommandEvent;
 
-extern const wxEventType httpDownloadEvtComplete;
-extern const wxEventType httpDownloadEvtFailed;
 extern const wxEventType UnitSyncReloadRequest;
 extern const wxEventType ExeDownloadEvt;
 
@@ -24,9 +22,6 @@ protected:
 
 public:
     static SL_GlobalEvtHandler& GetSL_GlobalEvtHandler();
-    void OnHttpDownLoadComplete(wxCommandEvent& event);
-    void OnHttpDownLoadFailed(wxCommandEvent& event);
-    void OnExeDownLoad(wxCommandEvent& event);
     void OnUnitSyncReload(wxCommandEvent& event);
 
 };

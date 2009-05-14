@@ -1,7 +1,7 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_EXEDOWNLOADER
 #define SPRINGLOBBY_HEADERGUARD_EXEPDOWNLOADER
 
-#include <wx/string.h>
+#include "../httpdownloader.h"
 
 class ExeDownloader
 {
