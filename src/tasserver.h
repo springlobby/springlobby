@@ -153,7 +153,7 @@ class TASServer : public Server
 		wxString m_last_denied;
     bool m_connected;
     bool m_online;
-    bool m_login_info_completed;
+    bool m_id_tag_outgoing_messages;
     bool m_debug_dont_catch;
     wxString m_buffer;
     time_t m_last_udp_ping;
