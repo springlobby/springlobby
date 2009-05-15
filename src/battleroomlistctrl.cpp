@@ -110,7 +110,7 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, IBattle* battle, Ui& u
 			m_rank->Append( rank );
 			Connect( BRLIST_RANK + i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnSetRank ) );
 		}
-		m_popup->Append( -1, _("Set Rank"), m_rank );
+		m_popup->Append( -1, _("Force Rank"), m_rank );
 
 		wxMenu* m_trust = new wxMenu();
 
