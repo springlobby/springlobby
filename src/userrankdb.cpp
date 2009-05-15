@@ -1,7 +1,5 @@
 #include "userrankdb.h"
 #include "globalsmanager.h"
-#include "settings.h"
-
 #include <wx/fileconf.h>
 #include <wx/filename.h>
 #include <wx/wfstream.h>
