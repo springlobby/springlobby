@@ -131,13 +131,15 @@ NatType IntToNatType( int nat );
 IBattle::GameType IntToGameType( int gt );
 
 TASServer::TASServer():
+m_last_manual_ping_request_id(0),
 m_ser_ver(0),
 m_connected(false),
 m_online(false),
+m_id_tag_outgoing_messages(false),
 m_debug_dont_catch( false ),
 m_buffer(_T("")),
 m_last_udp_ping(0),
-m_ping_id(10000),
+m_msg_id(1),
 m_udp_private_port(0),
 m_battle_id(-1),
 m_do_finalize_join_battle(false),
@@ -152,8 +154,8 @@ m_token_transmission( false )
 TASServer::~TASServer()
 {
 		Disconnect();
-		delete m_sock;
-		m_sock = 0;
+		delete GetSocket();
+		Server::SetSocket( 0 );
     delete m_se;
 }
 
@@ -227,7 +229,7 @@ bool TASServer::ExecuteSayCommand( const wxString& cmd )
     else if ( subcmd == _T("/unmute") )
     {
 				if ( arrayparams.GetCount() != 3 ) return false;
-        SendCmd( _T("UNMUTE"), arrayparams[1] );
+        SendCmd( _T("UNMUTE"), arrayparams[1] + _T(" ") + arrayparams[2] );
         return true;
     }
     else if ( subcmd == _T("/mutelist") )
@@ -284,6 +286,11 @@ bool TASServer::ExecuteSayCommand( const wxString& cmd )
         SendCmd( _T("CHANGEPASSWORD"), oldpassword + _T(" ") + newpassword );
         return true;
     }
+    else if ( subcmd == _T("/ping") )
+    {
+    	Ping( true );
+    	return true;
+    }
 
     return false;
 }
@@ -294,18 +301,18 @@ void TASServer::Connect( const wxString& servername ,const wxString& addr, const
 		m_server_name = servername;
     m_addr=addr;
 
-    m_sock->Connect( addr, port );
+    GetSocket()->Connect( addr, port );
     if ( IsConnected() )
     {
         m_last_udp_ping = time( 0 );
         m_connected = true;
     }
-    m_sock->SetPingInfo( _T("PING\n"), 10000 );
-    m_sock->SetSendRateLimit( 800 ); // 1250 is the server limit but 800 just to make sure :)
+    GetSocket()->SetSendRateLimit( 800 ); // 1250 is the server limit but 800 just to make sure :)
     m_online = false;
+    m_id_tag_outgoing_messages = false;
     m_agreement = _T("");
 		m_crc.ResetCRC();
-		wxString handle = m_sock->GetHandle();
+		wxString handle = GetSocket()->GetHandle();
 		if ( !handle.IsEmpty() ) m_crc.UpdateData( STD_STRING( wxString( handle + m_addr ) ) );
 }
 
@@ -316,13 +323,13 @@ void TASServer::Disconnect()
         return;
     }
     SendCmd( _T("EXIT") ); // EXIT command for new protocol compatibility
-    m_sock->Disconnect();
+    GetSocket()->Disconnect();
     m_connected = false;
 }
 
 bool TASServer::IsConnected()
 {
-    return (m_sock->State() == SS_Open);
+    return (GetSocket()->State() == SS_Open);
 }
 
 
@@ -388,7 +395,7 @@ void TASServer::Login()
     wxString pass = GetPasswordHash( m_pass );
     wxString protocol = _T("\t") + TowxString( m_crc.GetCRC() );
     wxString localaddr;
-    localaddr = m_sock->GetLocalAddress();
+    localaddr = GetSocket()->GetLocalAddress();
     if ( localaddr.IsEmpty() ) localaddr = _T("*");
     SendCmd ( _T("LOGIN"), m_user + _T(" ") + pass + _T(" ") +
               GetHostCPUSpeed() + _T(" ") + localaddr + _T(" SpringLobby ") + GetSpringLobbyVersion() + protocol );
@@ -422,7 +429,7 @@ void TASServer::AcceptAgreement()
 void TASServer::Update( int mselapsed )
 {
 
-    m_sock->OnTimer( mselapsed );
+    GetSocket()->OnTimer( mselapsed );
 
     if ( !m_connected )   // We are not formally connected yet, but might be.
     {
@@ -483,7 +490,6 @@ void TASServer::Update( int mselapsed )
                 }
             }
         }
-        HandlePinglist();
     }
 
 }
@@ -497,22 +503,14 @@ void TASServer::ExecuteCommand( const wxString& in )
     long replyid = 0;
 
     if ( in.empty() ) return;
-    try
-    {
-        ASSERT_LOGIC( params.AfterFirst( '\n' ).IsEmpty(), _T("losing data") );
-    }
-    catch (...)
-    {
-        return;
-    }
-    cmd = params.BeforeFirst( ' ' );
     if ( params[0] == '#' )
     {
+				wxString id = params.BeforeFirst( _T(' ') ).AfterFirst( _T('#') );
         params = params.AfterFirst( ' ' );
-        params.ToLong( &replyid );
+        id.ToLong( &replyid );
     }
-    else
-        params = params.AfterFirst( ' ' );
+    cmd = params.BeforeFirst( ' ' );
+		params = params.AfterFirst( ' ' );
 
 		// decode message if tokenized
 		wxString copy = cmd;
@@ -540,8 +538,8 @@ void TASServer::ExecuteCommand( const wxString& in )
 void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, int replyid )
 {
     wxString params = inparams;
-    int pos, cpu, id, nat, port, maxplayers, rank, specs, units, top, left, right, bottom, ally;
-    bool replay, haspass,lanmode = false;
+    int pos, cpu, id, nat, port, maxplayers, rank, specs, units, top, left, right, bottom, ally, type;
+    bool haspass,lanmode = false;
     wxString hash;
     wxString nick, contry, host, map, title, mod, channel, error, msg, owner, ai, supported_spring_version, topic;
     //NatType ntype;
@@ -566,6 +564,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
 				if ( m_online ) return; // in case is the server sends WTF
         m_online = true;
         m_user = params;
+        SetPingInfo( _T("PING\n"), 10000 );
         m_se->OnLogin( );
     }
     else if ( cmd == _T("MOTD") )
@@ -594,7 +593,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     else if ( cmd == _T("BATTLEOPENED") )
     {
         id = GetIntParam( params );
-        replay = GetBoolParam( params );
+        type = GetIntParam( params );
         nat = GetIntParam( params );
         nick = GetWordParam( params );
         host = GetWordParam( params );
@@ -606,7 +605,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         map = GetSentenceParam( params );
         title = GetSentenceParam( params );
         mod = GetSentenceParam( params );
-        m_se->OnBattleOpened( id, replay, IntToNatType( nat ), nick, host, port, maxplayers,
+        m_se->OnBattleOpened( id, (BattleType)type, IntToNatType( nat ), nick, host, port, maxplayers,
                               haspass, rank, hash, map, title, mod );
         if ( nick == m_relay_host_bot )
         {
@@ -1045,33 +1044,38 @@ void TASServer::RelayCmd(  const wxString& command, const wxString& param )
 
 void TASServer::SendCmd( const wxString& command, const wxString& param )
 {
+		m_msg_id++;
 		wxString cmd, msg;
+		if ( m_id_tag_outgoing_messages ) msg =  _T("#") + TowxString( m_msg_id ) + _T(" ");
 		if ( m_token_transmission )
 		{
 			cmd = EncodeTokenMessage( command );
 		}
 		else cmd = command;
-		if ( param.IsEmpty() ) msg = cmd + _T("\n");
-		else msg = cmd + _T(" ") + param + _T("\n");
-		m_sock->Send( msg );
+		if ( param.IsEmpty() ) msg = msg + cmd + _T("\n");
+		else msg =  msg + cmd + _T(" ") + param + _T("\n");
+		GetSocket()->Send( msg );
 		wxLogMessage( _T("sent: %s"), msg.c_str() );
+}
+
+void TASServer::Ping( bool manual_ping )
+{
+    //wxLogDebugFunc( _T("") );
+    if( manual_ping ) m_id_tag_outgoing_messages = true;
+		SendCmd( _T("PING") );
+		if ( manual_ping )
+		{
+				m_id_tag_outgoing_messages = false;
+				TASPingListItem pli;
+				pli.id = m_msg_id;
+				pli.t = time( 0 );
+				m_pinglist.push_back ( pli );
+    }
 }
 
 void TASServer::Ping()
 {
-    //wxLogDebugFunc( _T("") );
-    wxString cmd = _T("");
-
-    m_ping_id++;
-    if (  m_ser_ver > 0 )
-        SendCmd( _T("PING") );
-    else
-        SendCmd( _T("PING"), wxString::Format( _T("%d"), m_ping_id) );
-
-    TASPingListItem pli;
-    pli.id = m_ping_id;
-    pli.t = time( 0 );
-    m_pinglist.push_back ( pli );
+	Ping( false );
 }
 
 
@@ -1096,36 +1100,14 @@ void TASServer::HandlePong( int replyid )
     }
     else
     {
-        if ( !m_pinglist.empty() )
+        if ( !m_pinglist.empty() && ( replyid != 0 ) )
         {
             m_se->OnPong( (time( 0 ) - m_pinglist.begin()->t) );
             m_pinglist.pop_front();
         }
-        else
-        {
-            m_se->OnPong( -2 );
-        }
     }
 }
 
-
-void TASServer::HandlePinglist()
-{
-    std::list<TASPingListItem>::iterator it;
-    unsigned int now = time( 0 );
-    while ( !m_pinglist.empty() )
-    {
-        if ( m_pinglist.begin()->t + PING_TIMEOUT < now )
-        {
-            m_pinglist.pop_front();
-            m_se->OnPong( -1 );
-        }
-        else
-        {
-            break;
-        }
-    }
-}
 
 
 void TASServer::JoinChannel( const wxString& channel, const wxString& key )
@@ -2102,9 +2084,11 @@ void TASServer::OnDisconnected( Socket* sock )
     m_last_denied = _T("");
     m_connected = false;
     m_online = false;
+    m_id_tag_outgoing_messages = false;
 		m_token_transmission = false;
 		m_relay_host_manager_list.Clear();
     m_se->OnDisconnected( connectionwaspresent );
+    Server::OnDisconnected();
 }
 
 
@@ -2281,7 +2265,7 @@ UserStatus ConvTasclientstatus( TASClientstatus tas )
     UserStatus stat;
     stat.in_game = tas.in_game;
     stat.away = tas.away;
-    stat.rank = (UserStatus::RankContainer)tas.rank;
+    stat.rank = (UserStatus::ServerRankContainer)tas.rank;
     stat.moderator = tas.moderator;
     stat.bot = tas.bot;
     return stat;

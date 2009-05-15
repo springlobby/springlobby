@@ -104,15 +104,17 @@ void SpringUnitSync::PopulateArchiveList()
   int numMods = susynclib().GetPrimaryModCount();
   for ( int i = 0; i < numMods; i++ )
   {
-    wxString name, hash;
+    wxString name, hash, shortname;
     try
     {
      name = susynclib().GetPrimaryModName( i );
      hash = susynclib().GetPrimaryModChecksum( i );
+     shortname = susynclib().GetPrimaryModShortName( i );
     } catch (...) { continue; }
     try
     {
       m_mods_list[name] = hash;
+      m_shortname_list[name] = shortname;
       m_mod_array.Add( name );
     } catch (...)
     {
@@ -221,6 +223,7 @@ UnitSyncMod SpringUnitSync::GetMod( const wxString& modname )
 
   m.name = modname;
   m.hash = m_mods_list[modname];
+  m.shortname = m_shortname_list[modname];
 
   return m;
 }
@@ -233,6 +236,7 @@ UnitSyncMod SpringUnitSync::GetMod( int index )
   susynclib().GetPrimaryModCount();
   m.name = susynclib().GetPrimaryModName( index );
   m.hash = susynclib().GetPrimaryModChecksum( index );
+  m.shortname = susynclib().GetPrimaryModShortName( index );
 
   return m;
  }

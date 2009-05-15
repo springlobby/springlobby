@@ -13,7 +13,7 @@ const unsigned int SYNC_UNSYNCED = 2;
 //! @brief Struct used to store a client's status.
 struct UserStatus
 {
-    enum RankContainer
+    enum ServerRankContainer
     {
       RANK_1,
       RANK_2,
@@ -23,10 +23,38 @@ struct UserStatus
       RANK_6,
       RANK_7
     };
+    enum UserRankContainer
+    {
+    	USER_RANK_UNKNOWN,
+    	USER_RANK_1,
+    	USER_RANK_2,
+    	USER_RANK_3,
+    	USER_RANK_4,
+    	USER_RANK_5,
+    	USER_RANK_6,
+    	USER_RANK_7,
+    	USER_RANK_8,
+    	USER_RANK_9,
+    	USER_RANK_10,
+    };
+    enum UserTrustContainer
+    {
+    	USER_TRUST_UNKNOWN,
+    	USER_TRUST_1,
+    	USER_TRUST_2,
+    	USER_TRUST_3,
+    	USER_TRUST_4,
+    	USER_TRUST_5,
+    	USER_TRUST_6,
+    	USER_TRUST_7,
+    	USER_TRUST_8,
+    	USER_TRUST_9,
+    	USER_TRUST_10,
+    };
 
   bool in_game;
   bool away;
-  RankContainer rank;
+  ServerRankContainer rank;
   bool moderator;
   bool bot;
   UserStatus(): in_game(false), away(false), rank(RANK_1), moderator(false), bot(false) {}
@@ -53,6 +81,7 @@ struct UserBattleStatus
   unsigned int sync;
   bool spectator;
   bool ready;
+  bool isfromdemo;
 	UserPosition pos; // for startpos = 4
 	// bot-only stuff
 	wxString owner;
@@ -62,14 +91,14 @@ struct UserBattleStatus
   wxString ip;
   unsigned int udpport;
   bool IsBot() const { return !aishortname.IsEmpty(); }
-  UserBattleStatus(): team(0),ally(0),colour(wxColour(0,0,0)),color_index(-1),handicap(0),side(0),sync(SYNC_UNKNOWN),spectator(false),ready(false), udpport(0) {}
+  UserBattleStatus(): team(0),ally(0),colour(wxColour(0,0,0)),color_index(-1),handicap(0),side(0),sync(SYNC_UNKNOWN),spectator(false),ready(false), isfromdemo(false), udpport(0) {}
   bool operator == ( const UserBattleStatus& s ) const
   {
-    return ( ( team == s.team ) && ( colour == s.colour ) && ( handicap == s.handicap ) && ( side == s.side ) && ( sync == s.sync ) && ( spectator == s.spectator ) && ( ready == s.ready ) && ( owner == s.owner ) && ( aishortname == s.aishortname ) );
+    return ( ( team == s.team ) && ( colour == s.colour ) && ( handicap == s.handicap ) && ( side == s.side ) && ( sync == s.sync ) && ( spectator == s.spectator ) && ( ready == s.ready ) && ( owner == s.owner ) && ( aishortname == s.aishortname ) && ( isfromdemo == s.isfromdemo ) );
   }
   bool operator != ( const UserBattleStatus& s ) const
   {
-    return ( ( team != s.team ) || ( colour != s.colour ) || ( handicap != s.handicap ) || ( side != s.side ) || ( sync != s.sync ) || ( spectator != s.spectator ) || ( ready != s.ready ) || ( owner != s.owner ) || ( aishortname != s.aishortname ) );
+    return ( ( team != s.team ) || ( colour != s.colour ) || ( handicap != s.handicap ) || ( side != s.side ) || ( sync != s.sync ) || ( spectator != s.spectator ) || ( ready != s.ready ) || ( owner != s.owner ) || ( aishortname != s.aishortname ) || ( isfromdemo != isfromdemo ) );
   }
 };
 
@@ -166,10 +195,17 @@ class User : public CommonUser
 
     bool ExecuteSayCommand( const wxString& cmd ) const;
 
-    static wxString GetRankName(UserStatus::RankContainer rank);
+    static wxString GetRankName(UserStatus::ServerRankContainer rank);
 
-    float GetBalanceRank();
-    UserStatus::RankContainer GetRank();
+    float GetBalanceRank( const wxString& modshortname );
+    UserStatus::ServerRankContainer GetRank();
+    UserStatus::UserRankContainer GetCustomRank( const wxString& modshortname );
+    int GetCustomRankAccuracy( const wxString& modshortname );
+    UserStatus::UserTrustContainer GetTrust();
+    //! should be used only if you want to modify both database & current value, access status container to modify only value but not database
+    void SetCustomRank( const wxString& modshortname, const UserStatus::UserRankContainer& value );
+    //! should be used only if you want to modify both database & current value, access status container to modify only value but not database
+    void SetTrustRank( const UserStatus::UserTrustContainer& value );
     wxString GetClan();
 
     int GetFlagIconIndex() const { return m_flagicon_idx; }

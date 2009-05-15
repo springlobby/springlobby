@@ -48,7 +48,7 @@ class ServerEvents
     void OnUserStatus( const wxString& nick, UserStatus status );
     void OnUserQuit( const wxString& nick );
 
-    void OnBattleOpened( int id, bool replay, NatType nat, const wxString& nick,
+    void OnBattleOpened( int id, BattleType type, NatType nat, const wxString& nick,
                          const wxString& host, int port, int maxplayers,
                          bool haspass, int rank, const wxString& maphash, const wxString& map,
                          const wxString& title, const wxString& mod );

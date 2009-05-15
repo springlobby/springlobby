@@ -118,6 +118,7 @@ void ReplayList::GetScriptFromReplay ( const wxString& ReplayPath, wxString& scr
     try
     {
         wxFile replay( ReplayPath, wxFile::read );
+        if ( !replay.IsOpened() ) return;
         replay.Seek( 20 );
         int headerSize=0 ;
         replay.Read( &headerSize, 4);
@@ -195,7 +196,7 @@ void ReplayList::GetBattleFromScript( const wxString& script_, OfflineBattle& ba
                 user.BattleStatus().team = player->GetInt( _T("Team") );
                 user.BattleStatus().sync = true;
                 user.BattleStatus().ready = true;
-                user.Status().rank = (UserStatus::RankContainer)player->GetInt( _T("Rank"), -1 );
+                user.Status().rank = (UserStatus::ServerRankContainer)player->GetInt( _T("Rank"), -1 );
                 if ( bot.ok() )
                 {
                 	user.BattleStatus().aishortname = bot->GetString( _T("ShortName" ) );

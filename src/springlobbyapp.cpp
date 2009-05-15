@@ -209,7 +209,11 @@ bool SpringLobbyApp::OnInit()
 					long value;
 					if( UACpath.QueryValue( _T("EnableLUA"), &value ) ) // reg key not present -> not vista
 					{
-						if( value != 0 ) usync().SetSpringDataPath(_T("")); // UAC is on, fix the spring data path
+						if( value != 0 )
+						{
+							usync().ReloadUnitSync();
+							if ( usync.IsLoaded() ) usync().SetSpringDataPath(_T("")); // UAC is on, fix the spring data path
+						}
 					}
 				}
 			#endif

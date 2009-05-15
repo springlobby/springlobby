@@ -20,6 +20,7 @@
 #include "torrentwrapper.h"
 #endif
 #include "globalsmanager.h"
+#include "userrankdb.h"
 
 void ServerEvents::OnConnected( const wxString& server_name, const wxString& server_ver, bool supported, const wxString& server_spring_ver, bool lanmode )
 {
@@ -50,6 +51,7 @@ void ServerEvents::OnDisconnected( bool wasonline )
 void ServerEvents::OnLogin()
 {
 	wxString nick = m_serv.GetMe().GetNick();
+	CustomRankDB().SetOwner( nick );
 	wxArrayString highlights = sett().GetHighlightedWords();
 	if ( highlights.Index( nick ) == -1 )
 	{
@@ -110,11 +112,12 @@ void ServerEvents::OnMotd( const wxString& msg )
 
 void ServerEvents::OnPong( int ping_time )
 {
-    if ( ping_time == -1 )
+    if ( ping_time >= m_serv.PING_TIMEOUT )
     {
         wxLogWarning( _T("Ping Timeout!") );
-        if ( m_serv.IsConnected() ) m_serv.Disconnect();
+        OnServerMessage( _("Warning: Ping Timeout!") );
     }
+		OnServerMessage( wxString::Format( _("ping time is %d seconds"), ping_time ) );
 }
 
 
@@ -213,7 +216,7 @@ void ServerEvents::OnUserQuit( const wxString& nick )
 }
 
 
-void ServerEvents::OnBattleOpened( int id, bool replay, NatType nat, const wxString& nick,
+void ServerEvents::OnBattleOpened( int id, BattleType type, NatType nat, const wxString& nick,
                                    const wxString& host, int port, int maxplayers,
                                    bool haspass, int rank, const wxString& maphash, const wxString& map,
                                    const wxString& title, const wxString& mod )
@@ -227,7 +230,7 @@ void ServerEvents::OnBattleOpened( int id, bool replay, NatType nat, const wxStr
         User& user = m_serv.GetUser( nick );
         battle.OnUserAdded( user );
 
-        battle.SetIsReplay( replay );
+        battle.SetBattleType( type );
         battle.SetNatType( nat );
         battle.SetFounder( nick );
         battle.SetHostIp( host );

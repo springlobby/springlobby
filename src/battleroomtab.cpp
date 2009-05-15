@@ -501,8 +501,6 @@ void BattleRoomTab::UpdateUser( User& user )
 
     m_minimap->UpdateMinimap();
 
-    UpdateHighlights();
-
     if ( &user != &m_battle.GetMe() ) return;
 
     UserBattleStatus& bs = user.BattleStatus();

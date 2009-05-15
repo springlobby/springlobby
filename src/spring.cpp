@@ -153,11 +153,7 @@ bool Spring::LaunchSpring( const wxString& params  )
   wxString configfileflags = sett().GetCurrentUsedSpringConfigFilePath();
   if ( !configfileflags.IsEmpty() )
   {
-		#ifndef __WXMSW__
 		configfileflags = _T("--config=\"") + configfileflags + _T("\" ");
-		#else
-		configfileflags = _T(""); // _T("/config \"") + configfileflags + _T("\" ");
-		#endif
   }
   wxString cmd =  _T("\"") + sett().GetCurrentUsedSpringBinary() + _T("\" ") + configfileflags + params;
   wxLogMessage( _T("spring call params: %s"), cmd.c_str() );
@@ -245,6 +241,29 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 			tdf.Append( _T("Mapname"), battle.GetHostMapName() );
 			tdf.Append( _T("GameType"), battle.GetHostModName() );
 
+			tdf.AppendLineBreak();
+
+			switch ( battle.GetBattleType() )
+			{
+				case BT_Played: break;
+				case BT_Replay:
+				{
+					wxString path = battle.GetPlayBackFilePath();
+					if ( path.Contains(_T("/")) ) path.BeforeLast(_T('/'));
+					tdf.Append( _T("DemoFile"), path );
+					tdf.AppendLineBreak();
+					break;
+				}
+				case BT_Savegame:
+				{
+					wxString path = battle.GetPlayBackFilePath();
+					if ( path.Contains(_T("/")) ) path.BeforeLast(_T('/'));
+					tdf.Append( _T("Savefile"), path );
+					tdf.AppendLineBreak();
+					break;
+				}
+			}
+
 			long startpostype;
 			battle.CustomBattleOptions().getSingleValue( _T("startpostype"), OptionsWrapper::EngineOption ).ToLong( &startpostype );
 
@@ -318,7 +337,8 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 							tdf.Append( _T("Name"), user.GetNick() );
 							tdf.Append( _T("CountryCode"), user.GetCountry().Lower());
 							tdf.Append( _T("Spectator"), status.spectator );
-							tdf.Append( _T("Rank"), user.GetRank() );
+							tdf.Append( _T("Rank"), (int)user.GetRank() );
+							tdf.Append( _T("IsFromDemo"), int(status.isfromdemo) );
 							if ( !status.spectator )
 							{
 								tdf.Append( _T("Team"), status.team );
