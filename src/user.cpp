@@ -9,7 +9,6 @@
 #include "utils.h"
 #include "chatpanel.h"
 #include "iconimagelist.h"
-#include "userrankdb.h"
 
 #include <wx/string.h>
 #include <wx/intl.h>
@@ -30,9 +29,7 @@ User::User( const wxString& nick, Server& serv )
     m_flagicon_idx( icons().GetFlagIcon( _T("") ) ),
     m_rankicon_idx( icons().GetRankIcon( 0 ) ),
     m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) )
-{
-	LoadTrustAndRank();
-}
+{}
 
 User::User( const wxString& nick, const wxString& country, const int& cpu, Server& serv)
     : CommonUser( nick,country,cpu ),
@@ -41,9 +38,7 @@ User::User( const wxString& nick, const wxString& country, const int& cpu, Serve
     m_flagicon_idx( icons().GetFlagIcon( country ) ),
     m_rankicon_idx( icons().GetRankIcon( 0 ) ),
     m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) )
-{
-	LoadTrustAndRank();
-}
+{}
 
 User::User( const wxString& nick )
     : CommonUser( nick, wxEmptyString, 0 ),
@@ -185,24 +180,16 @@ int User::GetRank()
 void User::SetCustomRank( const UserStatus::UserRankContainer& value )
 {
 	GetStatus().userrank = value;
-	CustomRankDB().SetPlayerRank( m_nick, value );
 }
 
 void User::SetTrustRank( const UserStatus::UserTrustContainer& value )
 {
 	GetStatus().usertrust = value;
-	CustomRankDB().SetPlayerTrust( m_nick, value );
 }
 
 UserStatus::UserTrustContainer User::GetTrust()
 {
 	return GetStatus().usertrust;
-}
-
-void User::LoadTrustAndRank()
-{
-	GetStatus().userrank = CustomRankDB().GetPlayerRank( m_nick );
-	GetStatus().usertrust = CustomRankDB().GetPlayerTrust( m_nick );
 }
 
 wxString User::GetRankName(UserStatus::ServerRankContainer rank)
