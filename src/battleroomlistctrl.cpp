@@ -102,7 +102,6 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, IBattle* battle, Ui& u
 	{
 		m_popup = new UserMenu(this);
 
-		m_popup->AppendSeparator();
 		wxMenu* m_rank = new wxMenu();
 
 		for ( unsigned int i = (unsigned int)UserStatus::USER_RANK_UNKNOWN; i < (unsigned int)UserStatus::USER_RANK_10; i++ )
@@ -123,7 +122,6 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, IBattle* battle, Ui& u
 		}
 		m_popup->Append( -1, _("Set Trust"), m_trust );
 
-		m_popup->AppendSeparator();
 		wxMenu* m_teams;
 		m_teams = new wxMenu();
 
