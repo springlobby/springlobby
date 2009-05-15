@@ -15,7 +15,7 @@ UserRankDB& CustomRankDB()
 UserRankDB::UserRankDB()
 {
 	wxChar sep = wxFileName::GetPathSeparator();
-	m_database = new wxFileConfig( sett().GetCurrentUsedDataDir() + sep + _T("Lobby") + sep + _T("SpringLobby") + sep  + _T("ranks.data") );
+	m_database = new wxFileConfig( sett().GetCurrentUsedDataDir() + sep + _T("Lobby") + sep + _T("SpringLobby") + ranks.data );
 }
 
 UserRankDB::~UserRankDB()
