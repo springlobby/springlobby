@@ -153,11 +153,7 @@ bool Spring::LaunchSpring( const wxString& params  )
   wxString configfileflags = sett().GetCurrentUsedSpringConfigFilePath();
   if ( !configfileflags.IsEmpty() )
   {
-		#ifndef __WXMSW__
 		configfileflags = _T("--config=\"") + configfileflags + _T("\" ");
-		#else
-		configfileflags = _T(""); // _T("/config \"") + configfileflags + _T("\" ");
-		#endif
   }
   wxString cmd =  _T("\"") + sett().GetCurrentUsedSpringBinary() + _T("\" ") + configfileflags + params;
   wxLogMessage( _T("spring call params: %s"), cmd.c_str() );
