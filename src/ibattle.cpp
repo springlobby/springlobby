@@ -436,22 +436,6 @@ void IBattle::SetHandicap( User& user, int handicap)
 		}
 }
 
-void IBattle::SetRank( User& user, UserStatus::UserRankContainer rank )
-{
-	if ( !user.BattleStatus().IsBot() && !m_local_mod.shortname.IsEmpty() )
-	{
-		user.SetCustomRank( m_local_mod.shortname, rank );
-	}
-}
-
-void IBattle::SetTrust( User& user, UserStatus::UserTrustContainer trust )
-{
-	if ( !user.BattleStatus().IsBot() )
-	{
-		user.SetTrustRank( trust );
-	}
-}
-
 
 void IBattle::KickPlayer( User& user )
 {

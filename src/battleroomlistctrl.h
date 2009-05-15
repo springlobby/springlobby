@@ -62,9 +62,6 @@ class BattleroomListCtrl : public CustomVirtListCtrl< User *>
     static int CompareAlly(const DataType user1, const DataType user2);
     static int CompareCpu(const DataType user1, const DataType user2);
     static int CompareHandicap(const DataType user1, const DataType user2);
-    static int CompareCustomRank(const DataType user1, const DataType user2);
-    static int CompareAccuracy(const DataType user1, const DataType user2);
-    static int CompareTrust(const DataType user1, const DataType user2);
 
 //    wxString GetCellContentsString( long row_number, int column );
 

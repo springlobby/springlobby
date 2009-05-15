@@ -227,8 +227,6 @@ public:
 		void ForceColour( User& user, const wxColour& col );
 		void ForceSpectator( User& user, bool spectator );
 		void SetHandicap( User& user, int handicap);
-		void SetRank( User& user, UserStatus::UserRankContainer rank );
-		void SetTrust( User& user, UserStatus::UserTrustContainer trust );
 		void KickPlayer( User& user );
 
 

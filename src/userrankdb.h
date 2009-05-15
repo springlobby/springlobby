@@ -22,7 +22,6 @@ class UserRankDB
 		void SetOwner( const wxString& playeridentifier );
 
 		UserStatus::UserRankContainer GetPlayerRank( const wxString& playeridentifier, const wxString& modshortname );
-		int GetPlayerRankAccuracy( const wxString& playeridentifier, const wxString& modshortname );
 		UserStatus::UserTrustContainer GetPlayerTrust( const wxString& playeridentifier );
 
 		void SetPlayerRank( const wxString& playeridentifier, const wxString& modshortname, const UserStatus::UserRankContainer& value );

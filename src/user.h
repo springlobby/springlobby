@@ -197,10 +197,9 @@ class User : public CommonUser
 
     static wxString GetRankName(UserStatus::ServerRankContainer rank);
 
-    float GetBalanceRank( const wxString& modshortname );
+    float GetBalanceRank();
     UserStatus::ServerRankContainer GetRank();
     UserStatus::UserRankContainer GetCustomRank( const wxString& modshortname );
-    int GetCustomRankAccuracy( const wxString& modshortname );
     UserStatus::UserTrustContainer GetTrust();
     //! should be used only if you want to modify both database & current value, access status container to modify only value but not database
     void SetCustomRank( const wxString& modshortname, const UserStatus::UserRankContainer& value );
