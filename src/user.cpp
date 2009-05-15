@@ -9,7 +9,6 @@
 #include "utils.h"
 #include "chatpanel.h"
 #include "iconimagelist.h"
-#include "userrankdb.h"
 
 #include <wx/string.h>
 #include <wx/intl.h>
@@ -172,38 +171,12 @@ bool User::ExecuteSayCommand( const wxString& cmd ) const
   }  else return false;
 }
 
-UserStatus::ServerRankContainer User::GetRank()
+UserStatus::RankContainer User::GetRank()
 {
 	return GetStatus().rank;
 }
 
-void User::SetCustomRank( const wxString& modshortname, const UserStatus::UserRankContainer& value )
-{
-	CustomRankDB().SetPlayerRank( m_nick, modshortname, value );
-}
-
-void User::SetTrustRank( const UserStatus::UserTrustContainer& value )
-{
-	CustomRankDB().SetPlayerTrust( m_nick, value );
-}
-
-UserStatus::UserTrustContainer User::GetTrust()
-{
-	return CustomRankDB().GetPlayerTrust( m_nick );
-}
-
-UserStatus::UserRankContainer User::GetCustomRank( const wxString& modshortname )
-{
-	return CustomRankDB().GetPlayerRank( m_nick, modshortname );
-}
-
-int User::GetCustomRankAccuracy( const wxString& modshortname )
-{
-	return CustomRankDB().GetPlayerRankAccuracy( m_nick, modshortname );
-}
-
-
-wxString User::GetRankName(UserStatus::ServerRankContainer rank)
+wxString User::GetRankName(UserStatus::RankContainer rank)
 {
   //TODO: better interface to ranks?
       switch( rank )
@@ -219,23 +192,9 @@ wxString User::GetRankName(UserStatus::ServerRankContainer rank)
 			return _("Unknown");
 }
 
-float User::GetBalanceRank( const wxString& modshortname )
+float User::GetBalanceRank()
 {
-	float currentvalue;
-	float range;
-	UserStatus::UserRankContainer customrank = GetCustomRank( modshortname );
-	if ( customrank == UserStatus::USER_RANK_UNKNOWN )
-	{
-		 currentvalue = float( GetRank() - UserStatus::RANK_1 );
-		 range = float( UserStatus::RANK_7 - UserStatus::RANK_1 );
-	}
-	else
-	{
-		currentvalue = float( customrank - UserStatus::USER_RANK_1 );
-		range = float( UserStatus::USER_RANK_10 - UserStatus::USER_RANK_1 );
-	}
-
-  return 1.0 + 0.1 * currentvalue / range;
+  return 1.0 + 0.1 * float( GetStatus().rank - UserStatus::RANK_1 ) / float( UserStatus::RANK_7 - UserStatus::RANK_1 );
 }
 
 wxString User::GetClan()

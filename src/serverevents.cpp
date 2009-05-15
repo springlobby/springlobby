@@ -20,7 +20,6 @@
 #include "torrentwrapper.h"
 #endif
 #include "globalsmanager.h"
-#include "userrankdb.h"
 
 void ServerEvents::OnConnected( const wxString& server_name, const wxString& server_ver, bool supported, const wxString& server_spring_ver, bool lanmode )
 {
@@ -51,7 +50,6 @@ void ServerEvents::OnDisconnected( bool wasonline )
 void ServerEvents::OnLogin()
 {
 	wxString nick = m_serv.GetMe().GetNick();
-	CustomRankDB().SetOwner( nick );
 	wxArrayString highlights = sett().GetHighlightedWords();
 	if ( highlights.Index( nick ) == -1 )
 	{

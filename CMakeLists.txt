@@ -264,7 +264,6 @@ SET(SpringLobbySrc
 	src/useractions.cpp
 	src/userlist.cpp
 	src/userlistctrl.cpp
-	src/userrankdb.cpp
 	src/utils.cpp
 	src/widgets/downloadlistctrl.cpp
 	src/widgets/downloaddialog.cpp
