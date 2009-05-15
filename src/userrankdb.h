@@ -21,10 +21,10 @@ class UserRankDB
 
 		void SetOwner( const wxString& playeridentifier );
 
-		UserStatus::UserRankContainer GetPlayerRank( const wxString& playeridentifier, const wxString& modshortname );
+		UserStatus::UserRankContainer GetPlayerRank( const wxString& playeridentifier );
 		UserStatus::UserTrustContainer GetPlayerTrust( const wxString& playeridentifier );
 
-		void SetPlayerRank( const wxString& playeridentifier, const wxString& modshortname, const UserStatus::UserRankContainer& value );
+		void SetPlayerRank( const wxString& playeridentifier, const UserStatus::UserRankContainer& value );
 		void SetPlayerTrust( const wxString& playeridentifier, const UserStatus::UserTrustContainer& value );
 
 		bool ImportExternalPlayerDatabaseFromFile( const wxString& path );

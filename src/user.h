@@ -55,9 +55,11 @@ struct UserStatus
   bool in_game;
   bool away;
   ServerRankContainer rank;
+  UserRankContainer userrank;
+  UserTrustContainer usertrust;
   bool moderator;
   bool bot;
-  UserStatus(): in_game(false), away(false), rank(RANK_1), moderator(false), bot(false) {}
+  UserStatus(): in_game(false), away(false), rank(RANK_1), userrank( USER_RANK_UNKNOWN ), usertrust( USER_TRUST_UNKNOWN ), moderator(false), bot(false) {}
   wxString GetDiffString ( const UserStatus& other ) const;
 };
 
@@ -198,11 +200,12 @@ class User : public CommonUser
     static wxString GetRankName(UserStatus::ServerRankContainer rank);
 
     float GetBalanceRank();
-    UserStatus::ServerRankContainer GetRank();
-    UserStatus::UserRankContainer GetCustomRank( const wxString& modshortname );
+    int GetRank();
     UserStatus::UserTrustContainer GetTrust();
+    //! should be called once, when the user logs in
+    void LoadTrustAndRank();
     //! should be used only if you want to modify both database & current value, access status container to modify only value but not database
-    void SetCustomRank( const wxString& modshortname, const UserStatus::UserRankContainer& value );
+    void SetCustomRank( const UserStatus::UserRankContainer& value );
     //! should be used only if you want to modify both database & current value, access status container to modify only value but not database
     void SetTrustRank( const UserStatus::UserTrustContainer& value );
     wxString GetClan();

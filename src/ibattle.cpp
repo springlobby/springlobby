@@ -605,11 +605,6 @@ wxString IBattle::GetHostModHash() const
 }
 
 
-wxString IBattle::GetModShortName() const
-{
-	return m_host_mod.shortname;
-}
-
 bool IBattle::MapExists() const
 {
   return m_map_exists;

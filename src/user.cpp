@@ -30,7 +30,9 @@ User::User( const wxString& nick, Server& serv )
     m_flagicon_idx( icons().GetFlagIcon( _T("") ) ),
     m_rankicon_idx( icons().GetRankIcon( 0 ) ),
     m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) )
-{}
+{
+	LoadTrustAndRank();
+}
 
 User::User( const wxString& nick, const wxString& country, const int& cpu, Server& serv)
     : CommonUser( nick,country,cpu ),
@@ -39,7 +41,9 @@ User::User( const wxString& nick, const wxString& country, const int& cpu, Serve
     m_flagicon_idx( icons().GetFlagIcon( country ) ),
     m_rankicon_idx( icons().GetRankIcon( 0 ) ),
     m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) )
-{}
+{
+	LoadTrustAndRank();
+}
 
 User::User( const wxString& nick )
     : CommonUser( nick, wxEmptyString, 0 ),
@@ -172,31 +176,34 @@ bool User::ExecuteSayCommand( const wxString& cmd ) const
   }  else return false;
 }
 
-UserStatus::ServerRankContainer User::GetRank()
+int User::GetRank()
 {
-	return GetStatus().rank;
+	if ( GetStatus().userrank == UserStatus::USER_RANK_UNKNOWN ) return GetStatus().rank;
+	else return GetStatus().userrank;
 }
 
-void User::SetCustomRank( const wxString& modshortname, const UserStatus::UserRankContainer& value )
+void User::SetCustomRank( const UserStatus::UserRankContainer& value )
 {
-	CustomRankDB().SetPlayerRank( m_nick, modshortname, value );
+	GetStatus().userrank = value;
+	CustomRankDB().SetPlayerRank( m_nick, value );
 }
 
 void User::SetTrustRank( const UserStatus::UserTrustContainer& value )
 {
+	GetStatus().usertrust = value;
 	CustomRankDB().SetPlayerTrust( m_nick, value );
 }
 
 UserStatus::UserTrustContainer User::GetTrust()
 {
-	return CustomRankDB().GetPlayerTrust( m_nick );
+	return GetStatus().usertrust;
 }
 
-UserStatus::UserRankContainer User::GetCustomRank( const wxString& modshortname )
+void User::LoadTrustAndRank()
 {
-	return CustomRankDB().GetPlayerRank( m_nick, modshortname );
+	GetStatus().userrank = CustomRankDB().GetPlayerRank( m_nick );
+	GetStatus().usertrust = CustomRankDB().GetPlayerTrust( m_nick );
 }
-
 
 wxString User::GetRankName(UserStatus::ServerRankContainer rank)
 {
@@ -216,22 +223,7 @@ wxString User::GetRankName(UserStatus::ServerRankContainer rank)
 
 float User::GetBalanceRank()
 {
-	wxString modshortname = _T("FIXME");
-	float currentvalue;
-	float range;
-	UserStatus::UserRankContainer customrank = GetCustomRank( modshortname );
-	if ( customrank == UserStatus::USER_RANK_UNKNOWN )
-	{
-		 currentvalue = float( GetRank() - UserStatus::RANK_1 );
-		 range = float( UserStatus::RANK_7 - UserStatus::RANK_1 );
-	}
-	else
-	{
-		currentvalue = float( customrank - UserStatus::USER_RANK_1 );
-		range = float( UserStatus::USER_RANK_10 - UserStatus::USER_RANK_1 );
-	}
-
-  return 1.0 + 0.1 * currentvalue / range;
+  return 1.0 + 0.1 * float( GetStatus().rank - UserStatus::RANK_1 ) / float( UserStatus::RANK_7 - UserStatus::RANK_1 );
 }
 
 wxString User::GetClan()

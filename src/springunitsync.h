@@ -209,9 +209,8 @@ class SpringUnitSync : public IUnitSync
 
   private:
 
-    LocalArchivesVector m_maps_list; /// mapname -> maphash
-    LocalArchivesVector m_mods_list; /// modname -> modhash
-    LocalArchivesVector m_shortname_list; /// modname -> modshortname
+    LocalArchivesVector m_maps_list; /// maphash -> mapname
+    LocalArchivesVector m_mods_list; /// modhash -> modname
     wxArrayString m_map_array;
     wxArrayString m_mod_array;
 
