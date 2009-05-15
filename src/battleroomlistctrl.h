@@ -38,8 +38,6 @@ class BattleroomListCtrl : public CustomVirtListCtrl< User *>
     void OnSideSelect( wxCommandEvent& event );
     void OnHandicapSelect( wxCommandEvent& event );
     void OnSpecSelect( wxCommandEvent& event );
-		void OnSetRank( wxCommandEvent& event );
-		void OnSetTrust( wxCommandEvent& event );
     void OnActivateItem( wxListEvent& event );
 
     void OnKickPlayer( wxCommandEvent& event );
@@ -90,9 +88,7 @@ class BattleroomListCtrl : public CustomVirtListCtrl< User *>
 
     enum {
       BRLIST_LIST = wxID_HIGHEST,
-      BRLIST_RANK,
-      BRLIST_TRUST = BRLIST_RANK + 1000,
-      BRLIST_TEAM = BRLIST_TRUST + 1000,
+      BRLIST_TEAM,
       BRLIST_ALLY = BRLIST_TEAM + 1000,
       BRLIST_COLOUR = BRLIST_ALLY + 1000,
       BRLIST_SIDE = BRLIST_COLOUR +1000,
