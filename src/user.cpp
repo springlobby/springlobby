@@ -171,28 +171,12 @@ bool User::ExecuteSayCommand( const wxString& cmd ) const
   }  else return false;
 }
 
-int User::GetRank()
+UserStatus::RankContainer User::GetRank()
 {
-	if ( GetStatus().userrank == UserStatus::USER_RANK_UNKNOWN ) return GetStatus().rank;
-	else return GetStatus().userrank;
+	return GetStatus().rank;
 }
 
-void User::SetCustomRank( const UserStatus::UserRankContainer& value )
-{
-	GetStatus().userrank = value;
-}
-
-void User::SetTrustRank( const UserStatus::UserTrustContainer& value )
-{
-	GetStatus().usertrust = value;
-}
-
-UserStatus::UserTrustContainer User::GetTrust()
-{
-	return GetStatus().usertrust;
-}
-
-wxString User::GetRankName(UserStatus::ServerRankContainer rank)
+wxString User::GetRankName(UserStatus::RankContainer rank)
 {
   //TODO: better interface to ranks?
       switch( rank )

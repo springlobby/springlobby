@@ -13,7 +13,7 @@ const unsigned int SYNC_UNSYNCED = 2;
 //! @brief Struct used to store a client's status.
 struct UserStatus
 {
-    enum ServerRankContainer
+    enum RankContainer
     {
       RANK_1,
       RANK_2,
@@ -23,43 +23,13 @@ struct UserStatus
       RANK_6,
       RANK_7
     };
-    enum UserRankContainer
-    {
-    	USER_RANK_UNKNOWN,
-    	USER_RANK_1,
-    	USER_RANK_2,
-    	USER_RANK_3,
-    	USER_RANK_4,
-    	USER_RANK_5,
-    	USER_RANK_6,
-    	USER_RANK_7,
-    	USER_RANK_8,
-    	USER_RANK_9,
-    	USER_RANK_10,
-    };
-    enum UserTrustContainer
-    {
-    	USER_TRUST_UNKNOWN,
-    	USER_TRUST_1,
-    	USER_TRUST_2,
-    	USER_TRUST_3,
-    	USER_TRUST_4,
-    	USER_TRUST_5,
-    	USER_TRUST_6,
-    	USER_TRUST_7,
-    	USER_TRUST_8,
-    	USER_TRUST_9,
-    	USER_TRUST_10,
-    };
 
   bool in_game;
   bool away;
-  ServerRankContainer rank;
-  UserRankContainer userrank;
-  UserTrustContainer usertrust;
+  RankContainer rank;
   bool moderator;
   bool bot;
-  UserStatus(): in_game(false), away(false), rank(RANK_1), userrank( USER_RANK_UNKNOWN ), usertrust( USER_TRUST_UNKNOWN ), moderator(false), bot(false) {}
+  UserStatus(): in_game(false), away(false), rank(RANK_1), moderator(false), bot(false) {}
   wxString GetDiffString ( const UserStatus& other ) const;
 };
 
@@ -197,15 +167,10 @@ class User : public CommonUser
 
     bool ExecuteSayCommand( const wxString& cmd ) const;
 
-    static wxString GetRankName(UserStatus::ServerRankContainer rank);
+    static wxString GetRankName(UserStatus::RankContainer rank);
 
     float GetBalanceRank();
-    int GetRank();
-    UserStatus::UserTrustContainer GetTrust();
-    //! should be used only if you want to modify both database & current value, access status container to modify only value but not database
-    void SetCustomRank( const UserStatus::UserRankContainer& value );
-    //! should be used only if you want to modify both database & current value, access status container to modify only value but not database
-    void SetTrustRank( const UserStatus::UserTrustContainer& value );
+    UserStatus::RankContainer GetRank();
     wxString GetClan();
 
     int GetFlagIconIndex() const { return m_flagicon_idx; }
