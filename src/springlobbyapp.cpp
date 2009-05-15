@@ -210,7 +210,7 @@ bool SpringLobbyApp::OnInit()
 					{
 						if( value != 0 )
 						{
-							usync().ReloadUnitSync();
+							usync().ReloadUnitSyncLib();
 							if ( usync.IsLoaded() ) usync().SetSpringDataPath(_T("")); // UAC is on, fix the spring data path
 						}
 					}
