@@ -30,9 +30,6 @@ class ScopedLocker
   T &Get(){
     return mw.GetData();
   }
-  void Set(T& value){
-    mw.SetData( value );
-  }
 };
 /*
 class ScopedLocker
@@ -74,10 +71,6 @@ class MutexWrapper: public AbstractMutexWrapper
     T &GetData(){
       if(!locked)wxLogError(_T("serious error in MutexWrapper usage : not locked, but Get() is called!"));
       return data;
-    }
-    void SetData(T& value){
-      if(!locked)wxLogError(_T("serious error in MutexWrapper usage : not locked, but Set() is called!"));
-      data = value;
     }
     friend class ScopedLocker<T>;
 };

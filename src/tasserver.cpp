@@ -131,7 +131,6 @@ NatType IntToNatType( int nat );
 IBattle::GameType IntToGameType( int gt );
 
 TASServer::TASServer():
-m_last_manual_ping_request_id(0),
 m_ser_ver(0),
 m_connected(false),
 m_online(false),
@@ -153,8 +152,8 @@ m_token_transmission( false )
 TASServer::~TASServer()
 {
 		Disconnect();
-		delete GetSocket();
-		Server::SetSocket( 0 );
+		delete m_sock;
+		m_sock = 0;
     delete m_se;
 }
 
@@ -285,11 +284,6 @@ bool TASServer::ExecuteSayCommand( const wxString& cmd )
         SendCmd( _T("CHANGEPASSWORD"), oldpassword + _T(" ") + newpassword );
         return true;
     }
-    else if ( subcmd == _T("/ping") )
-    {
-    	Ping( true );
-    	return true;
-    }
 
     return false;
 }
@@ -300,18 +294,18 @@ void TASServer::Connect( const wxString& servername ,const wxString& addr, const
 		m_server_name = servername;
     m_addr=addr;
 
-    GetSocket()->Connect( addr, port );
+    m_sock->Connect( addr, port );
     if ( IsConnected() )
     {
         m_last_udp_ping = time( 0 );
         m_connected = true;
     }
-    SetPingInfo( _T("PING\n"), 10000 );
-    GetSocket()->SetSendRateLimit( 800 ); // 1250 is the server limit but 800 just to make sure :)
+    m_sock->SetPingInfo( _T("PING\n"), 10000 );
+    m_sock->SetSendRateLimit( 800 ); // 1250 is the server limit but 800 just to make sure :)
     m_online = false;
     m_agreement = _T("");
 		m_crc.ResetCRC();
-		wxString handle = GetSocket()->GetHandle();
+		wxString handle = m_sock->GetHandle();
 		if ( !handle.IsEmpty() ) m_crc.UpdateData( STD_STRING( wxString( handle + m_addr ) ) );
 }
 
@@ -322,13 +316,13 @@ void TASServer::Disconnect()
         return;
     }
     SendCmd( _T("EXIT") ); // EXIT command for new protocol compatibility
-    GetSocket()->Disconnect();
+    m_sock->Disconnect();
     m_connected = false;
 }
 
 bool TASServer::IsConnected()
 {
-    return (GetSocket()->State() == SS_Open);
+    return (m_sock->State() == SS_Open);
 }
 
 
@@ -394,7 +388,7 @@ void TASServer::Login()
     wxString pass = GetPasswordHash( m_pass );
     wxString protocol = _T("\t") + TowxString( m_crc.GetCRC() );
     wxString localaddr;
-    localaddr = GetSocket()->GetLocalAddress();
+    localaddr = m_sock->GetLocalAddress();
     if ( localaddr.IsEmpty() ) localaddr = _T("*");
     SendCmd ( _T("LOGIN"), m_user + _T(" ") + pass + _T(" ") +
               GetHostCPUSpeed() + _T(" ") + localaddr + _T(" SpringLobby ") + GetSpringLobbyVersion() + protocol );
@@ -428,7 +422,7 @@ void TASServer::AcceptAgreement()
 void TASServer::Update( int mselapsed )
 {
 
-    GetSocket()->OnTimer( mselapsed );
+    m_sock->OnTimer( mselapsed );
 
     if ( !m_connected )   // We are not formally connected yet, but might be.
     {
@@ -1059,29 +1053,25 @@ void TASServer::SendCmd( const wxString& command, const wxString& param )
 		else cmd = command;
 		if ( param.IsEmpty() ) msg = cmd + _T("\n");
 		else msg = cmd + _T(" ") + param + _T("\n");
-		GetSocket()->Send( msg );
+		m_sock->Send( msg );
 		wxLogMessage( _T("sent: %s"), msg.c_str() );
 }
 
-void TASServer::Ping( bool manual_ping )
+void TASServer::Ping()
 {
     //wxLogDebugFunc( _T("") );
+    wxString cmd = _T("");
 
     m_ping_id++;
     if (  m_ser_ver > 0 )
         SendCmd( _T("PING") );
     else
         SendCmd( _T("PING"), wxString::Format( _T("%d"), m_ping_id) );
-		if ( manual_ping ) m_last_manual_ping_request_id = m_ping_id;
+
     TASPingListItem pli;
     pli.id = m_ping_id;
     pli.t = time( 0 );
     m_pinglist.push_back ( pli );
-}
-
-void TASServer::Ping()
-{
-	Ping( false );
 }
 
 
@@ -1101,19 +1091,19 @@ void TASServer::HandlePong( int replyid )
 
     if ( found )
     {
-        m_se->OnPong( (time( 0 ) - it->t), m_last_manual_ping_request_id == replyid );
+        m_se->OnPong( (time( 0 ) - it->t) );
         m_pinglist.erase( it );
     }
     else
     {
         if ( !m_pinglist.empty() )
         {
-            m_se->OnPong( (time( 0 ) - m_pinglist.begin()->t), m_last_manual_ping_request_id == replyid );
+            m_se->OnPong( (time( 0 ) - m_pinglist.begin()->t) );
             m_pinglist.pop_front();
         }
         else
         {
-            m_se->OnPong( -2, false );
+            m_se->OnPong( -2 );
         }
     }
 }
@@ -1122,14 +1112,13 @@ void TASServer::HandlePong( int replyid )
 void TASServer::HandlePinglist()
 {
     std::list<TASPingListItem>::iterator it;
-    time_t now = time( 0 );
+    unsigned int now = time( 0 );
     while ( !m_pinglist.empty() )
     {
-				time_t point = m_pinglist.begin()->t;
-        if ( point + PING_TIMEOUT < now )
+        if ( m_pinglist.begin()->t + PING_TIMEOUT < now )
         {
             m_pinglist.pop_front();
-            m_se->OnPong( now - point, false );
+            m_se->OnPong( -1 );
         }
         else
         {

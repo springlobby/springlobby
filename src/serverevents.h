@@ -42,7 +42,7 @@ class ServerEvents
     void OnSocketError( const Sockerror& error );
     void OnProtocolError( const Protocolerror error );
     void OnMotd( const wxString& msg );
-    void OnPong( int ping_time, bool display_ping );
+    void OnPong( int ping_time );
 
     void OnNewUser( const wxString& nick, const wxString& conutry, int cpu );
     void OnUserStatus( const wxString& nick, UserStatus status );

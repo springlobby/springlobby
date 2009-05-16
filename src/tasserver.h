@@ -41,7 +41,6 @@ class TASServer : public Server
 
     void Update( int mselapsed );
 
-    void Ping( bool manual_ping  );
     void Ping();
 
     void UDPPing();/// used for nat travelsal
@@ -143,8 +142,6 @@ class TASServer : public Server
       int id;
       time_t t;
     };
-
-    unsigned int m_last_manual_ping_request_id;
 
     CRC m_crc;
 

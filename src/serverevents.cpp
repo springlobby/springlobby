@@ -107,14 +107,13 @@ void ServerEvents::OnMotd( const wxString& msg )
 }
 
 
-void ServerEvents::OnPong( int ping_time, bool display_ping )
+void ServerEvents::OnPong( int ping_time )
 {
-    if ( ping_time >= m_serv.PING_TIMEOUT )
+    if ( ping_time == -1 )
     {
         wxLogWarning( _T("Ping Timeout!") );
-        OnServerMessage( _("Warning: Ping Timeout!") );
+        if ( m_serv.IsConnected() ) m_serv.Disconnect();
     }
-		if ( display_ping ) OnServerMessage( wxString::Format( _("ping time is %d seconds"), ping_time ) );
 }
 
 
