@@ -135,9 +135,10 @@ m_ser_ver(0),
 m_connected(false),
 m_online(false),
 m_debug_dont_catch( false ),
+m_id_transmission( false ),
 m_buffer(_T("")),
 m_last_udp_ping(0),
-m_ping_id(10000),
+m_last_id(0),
 m_udp_private_port(0),
 m_battle_id(-1),
 m_do_finalize_join_battle(false),
@@ -273,7 +274,7 @@ bool TASServer::ExecuteSayCommand( const wxString& cmd )
     }
     else if ( subcmd == _T("/quit") )
     {
-        SendCmd( _T("EXIT"), params );
+        Disconnect();
         return true;
     }
     else if ( subcmd == _T("/changepassword") )
@@ -284,7 +285,11 @@ bool TASServer::ExecuteSayCommand( const wxString& cmd )
         SendCmd( _T("CHANGEPASSWORD"), oldpassword + _T(" ") + newpassword );
         return true;
     }
-
+    else if ( subcmd == _T("/ping") )
+    {
+				Ping();
+        return true;
+    }
     return false;
 }
 
@@ -483,7 +488,6 @@ void TASServer::Update( int mselapsed )
                 }
             }
         }
-        HandlePinglist();
     }
 
 }
@@ -1046,13 +1050,18 @@ void TASServer::RelayCmd(  const wxString& command, const wxString& param )
 void TASServer::SendCmd( const wxString& command, const wxString& param )
 {
 		wxString cmd, msg;
+		if ( m_id_transmission )
+		{
+			 m_last_id++;
+			 msg = msg + _T("#") + TowxString( m_last_id ) + _T(" ");
+		}
 		if ( m_token_transmission )
 		{
 			cmd = EncodeTokenMessage( command );
 		}
 		else cmd = command;
-		if ( param.IsEmpty() ) msg = cmd + _T("\n");
-		else msg = cmd + _T(" ") + param + _T("\n");
+		if ( param.IsEmpty() ) msg = msg + cmd + _T("\n");
+		else msg = msg + cmd + _T(" ") + param + _T("\n");
 		m_sock->Send( msg );
 		wxLogMessage( _T("sent: %s"), msg.c_str() );
 }
@@ -1060,16 +1069,11 @@ void TASServer::SendCmd( const wxString& command, const wxString& param )
 void TASServer::Ping()
 {
     //wxLogDebugFunc( _T("") );
-    wxString cmd = _T("");
-
-    m_ping_id++;
-    if (  m_ser_ver > 0 )
-        SendCmd( _T("PING") );
-    else
-        SendCmd( _T("PING"), wxString::Format( _T("%d"), m_ping_id) );
-
+		m_id_transmission = true;
+		SendCmd( _T("PING") );
+		m_id_transmission = false;
     TASPingListItem pli;
-    pli.id = m_ping_id;
+    pli.id = m_last_id;
     pli.t = time( 0 );
     m_pinglist.push_back ( pli );
 }
@@ -1093,37 +1097,6 @@ void TASServer::HandlePong( int replyid )
     {
         m_se->OnPong( (time( 0 ) - it->t) );
         m_pinglist.erase( it );
-    }
-    else
-    {
-        if ( !m_pinglist.empty() )
-        {
-            m_se->OnPong( (time( 0 ) - m_pinglist.begin()->t) );
-            m_pinglist.pop_front();
-        }
-        else
-        {
-            m_se->OnPong( -2 );
-        }
-    }
-}
-
-
-void TASServer::HandlePinglist()
-{
-    std::list<TASPingListItem>::iterator it;
-    unsigned int now = time( 0 );
-    while ( !m_pinglist.empty() )
-    {
-        if ( m_pinglist.begin()->t + PING_TIMEOUT < now )
-        {
-            m_pinglist.pop_front();
-            m_se->OnPong( -1 );
-        }
-        else
-        {
-            break;
-        }
     }
 }
 

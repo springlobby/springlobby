@@ -64,7 +64,7 @@ void ServerEvents::OnLoginInfoComplete()
     wxLogDebugFunc( _T("") );
     //m_serv.RequestChannels();
     std::vector<ChannelJoinInfo> autojoin = sett().GetChannelsJoin();
-    for ( std::vector<ChannelJoinInfo>::iterator itor = autojoin.being(); itor != autojoin.end(); itor++ )
+    for ( std::vector<ChannelJoinInfo>::iterator itor = autojoin.begin(); itor != autojoin.end(); itor++ )
     {
         m_serv.JoinChannel( itor->name, itor->password );
     }
@@ -109,11 +109,7 @@ void ServerEvents::OnMotd( const wxString& msg )
 
 void ServerEvents::OnPong( int ping_time )
 {
-    if ( ping_time == -1 )
-    {
-        wxLogWarning( _T("Ping Timeout!") );
-        if ( m_serv.IsConnected() ) m_serv.Disconnect();
-    }
+    ui().OnServerMessage( m_serv, wxString::Format( _("ping reply took %d seconds"), ping_time ) );
 }
 
 
