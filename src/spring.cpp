@@ -156,7 +156,7 @@ bool Spring::LaunchSpring( const wxString& params  )
 
 		configfileflags = _T("--config=\"") + configfileflags + _T("\" ");
 		#ifdef __WXMSW__
-		configfileflags = _T("");
+		if ( usync().GetSpringVersion().Contains(_T("0.78.") ) ) configfileflags = _T("");
 		#endif
   }
   wxString cmd =  _T("\"") + sett().GetCurrentUsedSpringBinary() + _T("\" ") + configfileflags + params;
