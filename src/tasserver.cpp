@@ -138,7 +138,7 @@ m_online(false),
 m_debug_dont_catch( false ),
 m_buffer(_T("")),
 m_last_udp_ping(0),
-m_msg_id(1),
+m_ping_id(10000),
 m_udp_private_port(0),
 m_battle_id(-1),
 m_do_finalize_join_battle(false),
@@ -306,6 +306,7 @@ void TASServer::Connect( const wxString& servername ,const wxString& addr, const
         m_last_udp_ping = time( 0 );
         m_connected = true;
     }
+    SetPingInfo( _T("PING\n"), 10000 );
     GetSocket()->SetSendRateLimit( 800 ); // 1250 is the server limit but 800 just to make sure :)
     m_online = false;
     m_agreement = _T("");
@@ -488,6 +489,7 @@ void TASServer::Update( int mselapsed )
                 }
             }
         }
+        HandlePinglist();
     }
 
 }
@@ -501,14 +503,22 @@ void TASServer::ExecuteCommand( const wxString& in )
     long replyid = 0;
 
     if ( in.empty() ) return;
-    if ( params[0] == '#' )
+    try
     {
-				wxString id = params.BeforeFirst( _T(' ') ).AfterFirst( _T('#') );
-        params = params.AfterFirst( ' ' );
-        id.ToLong( &replyid );
+        ASSERT_LOGIC( params.AfterFirst( '\n' ).IsEmpty(), _T("losing data") );
+    }
+    catch (...)
+    {
+        return;
     }
     cmd = params.BeforeFirst( ' ' );
-		params = params.AfterFirst( ' ' );
+    if ( params[0] == '#' )
+    {
+        params = params.AfterFirst( ' ' );
+        params.ToLong( &replyid );
+    }
+    else
+        params = params.AfterFirst( ' ' );
 
 		// decode message if tokenized
 		wxString copy = cmd;
@@ -562,7 +572,6 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
 				if ( m_online ) return; // in case is the server sends WTF
         m_online = true;
         m_user = params;
-        SetPingInfo( _T("PING\n"), 10000 );
         m_se->OnLogin( );
     }
     else if ( cmd == _T("MOTD") )
@@ -1042,15 +1051,14 @@ void TASServer::RelayCmd(  const wxString& command, const wxString& param )
 
 void TASServer::SendCmd( const wxString& command, const wxString& param )
 {
-		m_msg_id++;
 		wxString cmd, msg;
 		if ( m_token_transmission )
 		{
 			cmd = EncodeTokenMessage( command );
 		}
 		else cmd = command;
-		if ( param.IsEmpty() ) msg = _T("#") + TowxString( m_msg_id ) + _T(" ") + cmd + _T("\n");
-		else msg = _T("#") + TowxString( m_msg_id )  + _T(" ") + cmd + _T(" ") + param + _T("\n");
+		if ( param.IsEmpty() ) msg = cmd + _T("\n");
+		else msg = cmd + _T(" ") + param + _T("\n");
 		GetSocket()->Send( msg );
 		wxLogMessage( _T("sent: %s"), msg.c_str() );
 }
@@ -1058,14 +1066,17 @@ void TASServer::SendCmd( const wxString& command, const wxString& param )
 void TASServer::Ping( bool manual_ping )
 {
     //wxLogDebugFunc( _T("") );
-		SendCmd( _T("PING") );
-		if ( manual_ping )
-		{
-				TASPingListItem pli;
-				pli.id = m_msg_id;
-				pli.t = time( 0 );
-				m_pinglist.push_back ( pli );
-    }
+
+    m_ping_id++;
+    if (  m_ser_ver > 0 )
+        SendCmd( _T("PING") );
+    else
+        SendCmd( _T("PING"), wxString::Format( _T("%d"), m_ping_id) );
+		if ( manual_ping ) m_last_manual_ping_request_id = m_ping_id;
+    TASPingListItem pli;
+    pli.id = m_ping_id;
+    pli.t = time( 0 );
+    m_pinglist.push_back ( pli );
 }
 
 void TASServer::Ping()
@@ -1090,19 +1101,42 @@ void TASServer::HandlePong( int replyid )
 
     if ( found )
     {
-        m_se->OnPong( (time( 0 ) - it->t) );
+        m_se->OnPong( (time( 0 ) - it->t), m_last_manual_ping_request_id == replyid );
         m_pinglist.erase( it );
     }
     else
     {
-        if ( !m_pinglist.empty() && ( replyid != 0 ) )
+        if ( !m_pinglist.empty() )
         {
-            m_se->OnPong( (time( 0 ) - m_pinglist.begin()->t) );
+            m_se->OnPong( (time( 0 ) - m_pinglist.begin()->t), m_last_manual_ping_request_id == replyid );
             m_pinglist.pop_front();
+        }
+        else
+        {
+            m_se->OnPong( -2, false );
         }
     }
 }
 
+
+void TASServer::HandlePinglist()
+{
+    std::list<TASPingListItem>::iterator it;
+    time_t now = time( 0 );
+    while ( !m_pinglist.empty() )
+    {
+				time_t point = m_pinglist.begin()->t;
+        if ( point + PING_TIMEOUT < now )
+        {
+            m_pinglist.pop_front();
+            m_se->OnPong( now - point, false );
+        }
+        else
+        {
+            break;
+        }
+    }
+}
 
 
 void TASServer::JoinChannel( const wxString& channel, const wxString& key )

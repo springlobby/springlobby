@@ -107,14 +107,14 @@ void ServerEvents::OnMotd( const wxString& msg )
 }
 
 
-void ServerEvents::OnPong( int ping_time )
+void ServerEvents::OnPong( int ping_time, bool display_ping )
 {
     if ( ping_time >= m_serv.PING_TIMEOUT )
     {
         wxLogWarning( _T("Ping Timeout!") );
         OnServerMessage( _("Warning: Ping Timeout!") );
     }
-		OnServerMessage( wxString::Format( _("ping time is %d seconds"), ping_time ) );
+		if ( display_ping ) OnServerMessage( wxString::Format( _("ping time is %d seconds"), ping_time ) );
 }
 
 

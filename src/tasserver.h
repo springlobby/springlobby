@@ -123,6 +123,7 @@ class TASServer : public Server
     void ExecuteCommand( const wxString& cmd, const wxString& inparams, int replyid = -1 );
 
     void HandlePong( int replyid );
+    void HandlePinglist();
 
     void OnConnected( Socket* sock );
     void OnDisconnected( Socket* sock );
@@ -156,7 +157,7 @@ class TASServer : public Server
     bool m_debug_dont_catch;
     wxString m_buffer;
     time_t m_last_udp_ping;
-    int m_msg_id;
+    int m_ping_id;
     std::list<TASPingListItem> m_pinglist;
 
     unsigned long m_udp_private_port;
