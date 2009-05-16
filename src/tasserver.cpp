@@ -509,14 +509,14 @@ void TASServer::ExecuteCommand( const wxString& in )
     {
         return;
     }
-    cmd = params.BeforeFirst( ' ' );
     if ( params[0] == '#' )
     {
+				wxString id = params.BeforeFirst( ' ' ).AfterFirst( '#' );
         params = params.AfterFirst( ' ' );
-        params.ToLong( &replyid );
+        id.ToLong( &replyid );
     }
-    else
-        params = params.AfterFirst( ' ' );
+    cmd = params.BeforeFirst( ' ' );
+		params = params.AfterFirst( ' ' );
 
 		// decode message if tokenized
 		wxString copy = cmd;
