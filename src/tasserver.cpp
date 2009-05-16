@@ -131,15 +131,14 @@ NatType IntToNatType( int nat );
 IBattle::GameType IntToGameType( int gt );
 
 TASServer::TASServer():
-m_last_manual_ping_request_id(0),
 m_ser_ver(0),
 m_connected(false),
 m_online(false),
-m_id_tag_outgoing_messages(false),
 m_debug_dont_catch( false ),
+m_id_transmission( false ),
 m_buffer(_T("")),
 m_last_udp_ping(0),
-m_msg_id(1),
+m_last_id(0),
 m_udp_private_port(0),
 m_battle_id(-1),
 m_do_finalize_join_battle(false),
@@ -154,8 +153,8 @@ m_token_transmission( false )
 TASServer::~TASServer()
 {
 		Disconnect();
-		delete GetSocket();
-		Server::SetSocket( 0 );
+		delete m_sock;
+		m_sock = 0;
     delete m_se;
 }
 
@@ -275,7 +274,7 @@ bool TASServer::ExecuteSayCommand( const wxString& cmd )
     }
     else if ( subcmd == _T("/quit") )
     {
-        SendCmd( _T("EXIT"), params );
+        Disconnect();
         return true;
     }
     else if ( subcmd == _T("/changepassword") )
@@ -288,10 +287,9 @@ bool TASServer::ExecuteSayCommand( const wxString& cmd )
     }
     else if ( subcmd == _T("/ping") )
     {
-    	Ping( true );
-    	return true;
+				Ping();
+        return true;
     }
-
     return false;
 }
 
@@ -301,18 +299,18 @@ void TASServer::Connect( const wxString& servername ,const wxString& addr, const
 		m_server_name = servername;
     m_addr=addr;
 
-    GetSocket()->Connect( addr, port );
+    m_sock->Connect( addr, port );
     if ( IsConnected() )
     {
         m_last_udp_ping = time( 0 );
         m_connected = true;
     }
-    GetSocket()->SetSendRateLimit( 800 ); // 1250 is the server limit but 800 just to make sure :)
+    m_sock->SetPingInfo( _T("PING\n"), 10000 );
+    m_sock->SetSendRateLimit( 800 ); // 1250 is the server limit but 800 just to make sure :)
     m_online = false;
-    m_id_tag_outgoing_messages = false;
     m_agreement = _T("");
 		m_crc.ResetCRC();
-		wxString handle = GetSocket()->GetHandle();
+		wxString handle = m_sock->GetHandle();
 		if ( !handle.IsEmpty() ) m_crc.UpdateData( STD_STRING( wxString( handle + m_addr ) ) );
 }
 
@@ -323,13 +321,13 @@ void TASServer::Disconnect()
         return;
     }
     SendCmd( _T("EXIT") ); // EXIT command for new protocol compatibility
-    GetSocket()->Disconnect();
+    m_sock->Disconnect();
     m_connected = false;
 }
 
 bool TASServer::IsConnected()
 {
-    return (GetSocket()->State() == SS_Open);
+    return (m_sock->State() == SS_Open);
 }
 
 
@@ -395,7 +393,7 @@ void TASServer::Login()
     wxString pass = GetPasswordHash( m_pass );
     wxString protocol = _T("\t") + TowxString( m_crc.GetCRC() );
     wxString localaddr;
-    localaddr = GetSocket()->GetLocalAddress();
+    localaddr = m_sock->GetLocalAddress();
     if ( localaddr.IsEmpty() ) localaddr = _T("*");
     SendCmd ( _T("LOGIN"), m_user + _T(" ") + pass + _T(" ") +
               GetHostCPUSpeed() + _T(" ") + localaddr + _T(" SpringLobby ") + GetSpringLobbyVersion() + protocol );
@@ -429,7 +427,7 @@ void TASServer::AcceptAgreement()
 void TASServer::Update( int mselapsed )
 {
 
-    GetSocket()->OnTimer( mselapsed );
+    m_sock->OnTimer( mselapsed );
 
     if ( !m_connected )   // We are not formally connected yet, but might be.
     {
@@ -503,9 +501,17 @@ void TASServer::ExecuteCommand( const wxString& in )
     long replyid = 0;
 
     if ( in.empty() ) return;
+    try
+    {
+        ASSERT_LOGIC( params.AfterFirst( '\n' ).IsEmpty(), _T("losing data") );
+    }
+    catch (...)
+    {
+        return;
+    }
     if ( params[0] == '#' )
     {
-				wxString id = params.BeforeFirst( _T(' ') ).AfterFirst( _T('#') );
+				wxString id = params.BeforeFirst( ' ' ).AfterFirst( '#' );
         params = params.AfterFirst( ' ' );
         id.ToLong( &replyid );
     }
@@ -564,7 +570,6 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
 				if ( m_online ) return; // in case is the server sends WTF
         m_online = true;
         m_user = params;
-        SetPingInfo( _T("PING\n"), 10000 );
         m_se->OnLogin( );
     }
     else if ( cmd == _T("MOTD") )
@@ -1044,38 +1049,33 @@ void TASServer::RelayCmd(  const wxString& command, const wxString& param )
 
 void TASServer::SendCmd( const wxString& command, const wxString& param )
 {
-		m_msg_id++;
 		wxString cmd, msg;
-		if ( m_id_tag_outgoing_messages ) msg =  _T("#") + TowxString( m_msg_id ) + _T(" ");
+		if ( m_id_transmission )
+		{
+			 m_last_id++;
+			 msg = msg + _T("#") + TowxString( m_last_id ) + _T(" ");
+		}
 		if ( m_token_transmission )
 		{
 			cmd = EncodeTokenMessage( command );
 		}
 		else cmd = command;
 		if ( param.IsEmpty() ) msg = msg + cmd + _T("\n");
-		else msg =  msg + cmd + _T(" ") + param + _T("\n");
-		GetSocket()->Send( msg );
+		else msg = msg + cmd + _T(" ") + param + _T("\n");
+		m_sock->Send( msg );
 		wxLogMessage( _T("sent: %s"), msg.c_str() );
-}
-
-void TASServer::Ping( bool manual_ping )
-{
-    //wxLogDebugFunc( _T("") );
-    if( manual_ping ) m_id_tag_outgoing_messages = true;
-		SendCmd( _T("PING") );
-		if ( manual_ping )
-		{
-				m_id_tag_outgoing_messages = false;
-				TASPingListItem pli;
-				pli.id = m_msg_id;
-				pli.t = time( 0 );
-				m_pinglist.push_back ( pli );
-    }
 }
 
 void TASServer::Ping()
 {
-	Ping( false );
+    //wxLogDebugFunc( _T("") );
+		m_id_transmission = true;
+		SendCmd( _T("PING") );
+		m_id_transmission = false;
+    TASPingListItem pli;
+    pli.id = m_last_id;
+    pli.t = time( 0 );
+    m_pinglist.push_back ( pli );
 }
 
 
@@ -1098,16 +1098,7 @@ void TASServer::HandlePong( int replyid )
         m_se->OnPong( (time( 0 ) - it->t) );
         m_pinglist.erase( it );
     }
-    else
-    {
-        if ( !m_pinglist.empty() && ( replyid != 0 ) )
-        {
-            m_se->OnPong( (time( 0 ) - m_pinglist.begin()->t) );
-            m_pinglist.pop_front();
-        }
-    }
 }
-
 
 
 void TASServer::JoinChannel( const wxString& channel, const wxString& key )
@@ -2084,7 +2075,6 @@ void TASServer::OnDisconnected( Socket* sock )
     m_last_denied = _T("");
     m_connected = false;
     m_online = false;
-    m_id_tag_outgoing_messages = false;
 		m_token_transmission = false;
 		m_relay_host_manager_list.Clear();
     m_se->OnDisconnected( connectionwaspresent );

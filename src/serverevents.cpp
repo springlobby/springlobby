@@ -64,10 +64,9 @@ void ServerEvents::OnLoginInfoComplete()
     wxLogDebugFunc( _T("") );
     //m_serv.RequestChannels();
     std::vector<ChannelJoinInfo> autojoin = sett().GetChannelsJoin();
-    for ( unsigned int i= 0; i < autojoin.size(); i++ )
+    for ( std::vector<ChannelJoinInfo>::iterator itor = autojoin.begin(); itor != autojoin.end(); itor++ )
     {
-        ChannelJoinInfo channel = autojoin[i];
-        m_serv.JoinChannel( channel.name, channel.password );
+        m_serv.JoinChannel( itor->name, itor->password );
     }
 #ifndef NO_TORRENT_SYSTEM
     if ( sett().GetTorrentSystemAutoStartMode() == 0 ) torrent().ConnectToP2PSystem();
@@ -110,12 +109,7 @@ void ServerEvents::OnMotd( const wxString& msg )
 
 void ServerEvents::OnPong( int ping_time )
 {
-    if ( ping_time >= m_serv.PING_TIMEOUT )
-    {
-        wxLogWarning( _T("Ping Timeout!") );
-        OnServerMessage( _("Warning: Ping Timeout!") );
-    }
-		OnServerMessage( wxString::Format( _("ping time is %d seconds"), ping_time ) );
+    ui().OnServerMessage( m_serv, wxString::Format( _("ping reply took %d seconds"), ping_time ) );
 }
 
 

@@ -5,7 +5,6 @@
 
 #include <stdexcept>
 #include <wx/log.h>
-#include <wx/thread.h>
 
 #include "server.h"
 #include "socket.h"
@@ -17,20 +16,17 @@
 
 Server::Server():
 battles_iter(new BattleList_Iter(&m_battles)),
-m_keepalive(15),
-m_ping_msg(wxEmptyString),
-m_ping_int(0),
-m_ping_t(0)
+m_sock(0),
+m_keepalive(15)
 {
-	SetSocket( new Socket( *this, false ) );
+	m_sock = new Socket( *this, false );
 }
 
 Server::~Server()
 {
-	_EnablePingThread( false );
 	delete battles_iter;
   if(uidata.panel)uidata.panel->SetServer(NULL);
-  delete GetSocket();
+  delete m_sock;
 }
 
 
@@ -147,10 +143,8 @@ void Server::_RemoveBattle( const int& id )
 }
 
 
-
 void Server::OnDisconnected()
 {
-	_EnablePingThread( false );
   while ( battles_iter->GetNumBattles() > 0 )
   {
     battles_iter->IteratorBegin();
@@ -180,86 +174,4 @@ void Server::OnDisconnected()
     delete c;
   }
 
-}
-
-
-//! @brief Set ping info to be used by the ping thread.
-//! @note Set interval to 0 to turn off the ping thread.
-void Server::SetPingInfo( const wxString& msg, unsigned int interval )
-{
-  m_ping_msg = msg;
-  m_ping_int = interval;
-  _EnablePingThread( _ShouldEnablePingThread() );
-}
-
-
-void Server::_EnablePingThread( bool enable )
-{
-
-  if ( !enable )
-  {
-    if ( m_ping_t )
-    {
-
-      // Reset values to be sure.
-      m_ping_int = 0;
-      m_ping_msg = wxEmptyString;
-
-      m_ping_t->Wait();
-      delete m_ping_t;
-
-      m_ping_t = 0;
-    }
-  }
-  else
-  {
-    if ( !m_ping_t )
-    {
-      m_ping_t = new PingThread( *this );
-      m_ping_t->Init();
-    }
-  }
-}
-
-
-//! @brief Check if we should enable or dsable the ping htread.
-//! @see Server::_EnablePingThread
-bool Server::_ShouldEnablePingThread()
-{
-  return ( (m_ping_int != 0) );
-}
-
-
-
-
-PingThread::PingThread( Server& server ):
-  m_server(server)
-{
-}
-
-
-void PingThread::Init()
-{
-  Create();
-  SetPriority( WXTHREAD_MAX_PRIORITY );
-  Run();
-}
-
-
-void* PingThread::Entry()
-{
-  int milliseconds = m_server.GetPingInterval();
-
-  while ( !TestDestroy() )
-  {
-    if ( !m_server.GetPingEnabled() ) break;
-    m_server.Ping();
-    // break if woken
-    if(!Sleep(milliseconds))break;
-  }
-  return 0;
-}
-
-void PingThread::OnExit()
-{
 }
