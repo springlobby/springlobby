@@ -135,7 +135,7 @@ m_last_manual_ping_request_id(0),
 m_ser_ver(0),
 m_connected(false),
 m_online(false),
-m_id_tag_outgoing_messages(false),
+m_login_info_completed(false),
 m_debug_dont_catch( false ),
 m_buffer(_T("")),
 m_last_udp_ping(0),
@@ -309,7 +309,7 @@ void TASServer::Connect( const wxString& servername ,const wxString& addr, const
     }
     GetSocket()->SetSendRateLimit( 800 ); // 1250 is the server limit but 800 just to make sure :)
     m_online = false;
-    m_id_tag_outgoing_messages = false;
+    m_login_info_completed = false;
     m_agreement = _T("");
 		m_crc.ResetCRC();
 		wxString handle = GetSocket()->GetHandle();
@@ -648,6 +648,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
 					if ( UserExists( _T("SL_bot") ) ) SayPrivate( _T("SL_bot"), reportstring );
 					if ( UserExists( _T("RelayHostManagerList") ) ) SayPrivate( _T("RelayHostManagerList"), _T("!listmanagers") );
 				}
+				m_login_info_completed = true;
         m_se->OnLoginInfoComplete();
     }
     else if ( cmd == _T("REMOVEUSER") )
@@ -1046,7 +1047,7 @@ void TASServer::SendCmd( const wxString& command, const wxString& param )
 {
 		m_msg_id++;
 		wxString cmd, msg;
-		if ( m_id_tag_outgoing_messages ) msg =  _T("#") + TowxString( m_msg_id ) + _T(" ");
+		if ( m_login_info_completed ) msg =  _T("#") + TowxString( m_msg_id ) + _T(" ");
 		if ( m_token_transmission )
 		{
 			cmd = EncodeTokenMessage( command );
@@ -1061,11 +1062,9 @@ void TASServer::SendCmd( const wxString& command, const wxString& param )
 void TASServer::Ping( bool manual_ping )
 {
     //wxLogDebugFunc( _T("") );
-    if( manual_ping ) m_id_tag_outgoing_messages = true;
 		SendCmd( _T("PING") );
 		if ( manual_ping )
 		{
-				m_id_tag_outgoing_messages = false;
 				TASPingListItem pli;
 				pli.id = m_msg_id;
 				pli.t = time( 0 );
@@ -2084,7 +2083,7 @@ void TASServer::OnDisconnected( Socket* sock )
     m_last_denied = _T("");
     m_connected = false;
     m_online = false;
-    m_id_tag_outgoing_messages = false;
+    m_login_info_completed = false;
 		m_token_transmission = false;
 		m_relay_host_manager_list.Clear();
     m_se->OnDisconnected( connectionwaspresent );
