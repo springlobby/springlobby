@@ -64,10 +64,9 @@ void ServerEvents::OnLoginInfoComplete()
     wxLogDebugFunc( _T("") );
     //m_serv.RequestChannels();
     std::vector<ChannelJoinInfo> autojoin = sett().GetChannelsJoin();
-    for ( unsigned int i= 0; i < autojoin.size(); i++ )
+    for ( std::vector<ChannelJoinInfo>::iterator itor = autojoin.being(); itor != autojoin.end(); itor++ )
     {
-        ChannelJoinInfo channel = autojoin[i];
-        m_serv.JoinChannel( channel.name, channel.password );
+        m_serv.JoinChannel( itor->name, itor->password );
     }
 #ifndef NO_TORRENT_SYSTEM
     if ( sett().GetTorrentSystemAutoStartMode() == 0 ) torrent().ConnectToP2PSystem();
