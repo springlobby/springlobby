@@ -71,7 +71,7 @@ public:
 	 * \param flag decides which type of option to load
 	 * \return true if load successful, false otherwise
 	 */
-	bool loadOptions(GameOption flag, wxString name = _T(""));
+	bool loadOptions(GameOption flag, const wxString& name );
 	//! checks if given key can be found in specified container
 	/*!
 	 * \param key the key that should be checked for existance in containers

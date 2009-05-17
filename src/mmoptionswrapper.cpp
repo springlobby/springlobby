@@ -13,8 +13,8 @@
 OptionsWrapper::OptionsWrapper()
 {
 	unLoadOptions();
-	loadOptions( EngineOption );
-	loadOptions( PrivateOptions );
+	loadOptions( EngineOption, _T("") );
+	loadOptions( PrivateOptions,_T("") );
 }
 
 void OptionsWrapper::unLoadOptions()
@@ -64,7 +64,7 @@ OptionType OptionsWrapper::GetSingleOptionType (wxString key) const
 }
 
 
-bool OptionsWrapper::loadOptions(GameOption modmapFlag, wxString name)
+bool OptionsWrapper::loadOptions(GameOption modmapFlag, const wxString& name)
 {
 	unLoadOptions(modmapFlag);
 	GameOptions opt;
