@@ -465,8 +465,8 @@ void BattleroomMMOptionsTab<BattleType>::OnReloadControls(OptionsWrapper::GameOp
 			setupOptionsSizer(m_map_layout,OptionsWrapper::MapOption);
 			m_map_options_sizer->Add( m_map_layout, 1, wxALL|wxEXPAND, 5 );
 			break;
-        default:
-            break;
+		default:
+			break;
 	}
 
 
