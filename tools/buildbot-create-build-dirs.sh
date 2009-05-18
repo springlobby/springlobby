@@ -47,5 +47,7 @@ create-build-dir ()
 	)
 }
 
+DIR=$(pwd)
+echo DIR: $DIR
 create-build-dir-cmake build "-DOPTION_OPT_LEVEL=0 -DwxWidgets_CONFIG_EXECUTABLE=/var/lib/buildbot/lib/linux/wx/2.8/bin/wx-config"
-create-build-dir-cmake build-mingw-wx28 "-DCMAKE_TOOLCHAIN_FILE=${PWD}/cmake/Toolchain-mingw32.cmake"
+create-build-dir-cmake build-mingw-wx28 "-DCMAKE_TOOLCHAIN_FILE=${DIR}/cmake/Toolchain-mingw32.cmake"
