@@ -1,7 +1,6 @@
+cmake_minimum_required(VERSION 2.4)
 PROJECT(SpringLobby)
 
-#set minimum cmake version
-cmake_minimum_required(VERSION 2.4)
 SET(CMAKE_COLOR_MAKEFILE ON)
 
 #----------------------------------------------------------------------------------------------------
