@@ -73,7 +73,8 @@ BEGIN_EVENT_TABLE(SpringLobbyApp, wxApp)
 END_EVENT_TABLE()
 
 SpringLobbyApp::SpringLobbyApp()
-    :m_translationhelper( NULL )
+    :m_translationhelper( NULL ),
+    quit_called( false )
 {
     m_timer = new wxTimer(this, TIMER_ID);
     SetAppName( _T("springlobby") );
@@ -315,6 +316,8 @@ bool SpringLobbyApp::OnInit()
 //! @brief Finalizes the application
 int SpringLobbyApp::OnExit()
 {
+		if ( quit_called ) return 0;
+		quit_called = true;
     wxLogDebugFunc( _T("") );
 
     if(m_translationhelper)
