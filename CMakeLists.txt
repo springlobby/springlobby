@@ -4,9 +4,6 @@ PROJECT(SpringLobby)
 cmake_minimum_required(VERSION 2.4)
 SET(CMAKE_COLOR_MAKEFILE ON)
 
-# Add Definitions, Compiler-Switches, etc.: -Wall -O2 -g3 ...
-ADD_DEFINITIONS(-Wall -Wno-strict-aliasing -O2)
-
 #----------------------------------------------------------------------------------------------------
 # General Settings
 #----------------------------------------------------------------------------------------------------
@@ -38,13 +35,20 @@ SET( OPTION_SOUND
 SET( OPTION_TRANSLATION_SUPPORT
 	1 CACHE BOOL
 	"Enables translation support to the programs and adds facilities for helping translators (requires GNU Gettext)" )
+SET( OPTION_OPT_LEVEL
+	2 CACHE INT
+	"int value inserted in CXXFLAGS as -OX" )
+
+
+# Add Definitions, Compiler-Switches, etc.: -Wall -O2 -g3 ...
+ADD_DEFINITIONS(-Wall -Wno-strict-aliasing -O${OPTION_OPT_LEVEL} )
 
 #----------------------------------------------------------------------------------------------------
 # wxWidgets lib dependency check
 #----------------------------------------------------------------------------------------------------
 
 # Here you can define, what Libraries of wxWidgets you need for your Application. You can figure out what Libraries you need here:
-# http://www.wxwidgets.org/manuals/2.8/wx_librarieslist.html
+# http://www.wxwidgets.org/manuals/2.8-i586-mingw32msvc/wx_librarieslist.html
 SET(wxWidgets_USE_LIBS base core gl net adv aui html xml )
 
 # We need the Find package for wxWidgets to work
@@ -62,7 +66,7 @@ IF (NOT WIN32)
     ENDIF(wxWidgets_FOUND)
 ELSE (NOT WIN32)
     INCLUDE_DIRECTORIES( ${wxWidgets_INCLUDE_DIRS} )
-    SET(wxWidgets_LIBRARIES wx_baseu-2.8-i586-mingw32msvc wx_mswu_core-2.8-i586-mingw32msvc wx_baseu_net-2.8-i586-mingw32msvc wx_mswu_adv-2.8-i586-mingw32msvc  wx_mswu_aui-2.8-i586-mingw32msvc )
+    SET(wxWidgets_LIBRARIES iphlpapi wx_baseu-2.8-i586-mingw32msvc wx_mswu_core-2.8-i586-mingw32msvc wx_baseu_net-2.8-i586-mingw32msvc wx_mswu_adv-2.8-i586-mingw32msvc wx_mswu_aui-2.8-i586-mingw32msvc wx_baseu_xml-2.8-i586-mingw32msvc wx_mswu_html-2.8-i586-mingw32msvc )
     link_directories( ${wxWidgets_LIB_DIR} )
 ENDIF(NOT WIN32)
 
