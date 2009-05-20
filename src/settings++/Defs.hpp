@@ -64,7 +64,7 @@
 #define ID_RO_SLI_5 105
 #define ID_RO_SLI_6 106
 #define ID_RO_SLI_7 107
-//#define ID_RO_SLI_8 108
+#define ID_RO_SLI_8 108
 
 // ParentWin Video Options checkbox IDs
 #define ID_WINDOWP_VO_CBOX_0 250
@@ -229,7 +229,8 @@ const Control RO_SLI[] = {
 	{_("Ground decals"),                _T("GroundDecals"),        ID_RO_SLI_5,	_T("0"), {_("only on/off available at this time")}	},
 	{_("Unit icon distance"),           _T("UnitIconDist"),        ID_RO_SLI_6,	_T("350"), {_("determines at which range units are still fully rendered\n"
 																								"higher value = greater range = more units rendered at the same time")}	},
-	{_("Max simultaneous particles"),     _T("MaxParticles"),        ID_RO_SLI_7,	_T("5000")	, {_("limits how many particles are displayed at the same time")}}
+	{_("Max simultaneous particles"),     _T("MaxParticles"),        ID_RO_SLI_7,	_T("4000")	, {_("limits how many particles are displayed at the same time")}},
+	{_("Max nano simultaneous particles"),     _T("MaxNanoParticles"),        ID_RO_SLI_8,	_T("10000")	, {_("limits how many particles are displayed at the same time")}}
 	//{_("Max texture stages (SM3)"), _T("SM3MaxTextureStages"), ID_RO_SLI_8,	"6"	, {_("Decrease this if you are having bad perfomance on maps in sm3 format,\n"
 	// not needed atm																				"increase if sm3 maps look ugly.")}}
 };

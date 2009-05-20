@@ -49,7 +49,7 @@ bool abstract_panel::settingsChanged = false;
 
 const Control intControls[] = {
 		// RO_SLI[8]
-		RO_SLI[0],RO_SLI[1],RO_SLI[2],RO_SLI[3],RO_SLI[4],RO_SLI[5],RO_SLI[6],RO_SLI[7],
+		RO_SLI[0],RO_SLI[1],RO_SLI[2],RO_SLI[3],RO_SLI[4],RO_SLI[5],RO_SLI[6],RO_SLI[7],RO_SLI[8],
 		// VO_CBOX[3]
 		VO_CBOX[0],VO_CBOX[1],VO_CBOX[2],
 		//VO_RBUT[2] <- only one key
@@ -216,6 +216,7 @@ void abstract_panel::OnSliderMove(wxCommandEvent& event) {
 	wxSlider* slider = (wxSlider*) event.GetEventObject();
 
     int value = slider->GetValue();
+    int id = event.GetId();
 
 	switch (event.GetId()) {
 		case ID_RO_SLI_0: {
@@ -246,7 +247,8 @@ void abstract_panel::OnSliderMove(wxCommandEvent& event) {
 		case ID_RO_SLI_4:
 		case ID_RO_SLI_5:
 		case ID_RO_SLI_6:
-		case ID_RO_SLI_7: {
+		case ID_RO_SLI_7:
+		case ID_RO_SLI_8: {
 			int i = id - RO_SLI[0].id;
 			(intSettings)[RO_SLI[i].key]= value;
 		} break;
