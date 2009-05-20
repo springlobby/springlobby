@@ -128,6 +128,9 @@
 #define ID_AO_SLI_0 400
 #define ID_AO_SLI_1 401
 #define ID_AO_SLI_2 402
+#define ID_AO_SLI_3 403
+#define ID_AO_SLI_4 404
+#define ID_AO_SLI_5 405
 
 // ParentWin Debug Options checkbox IDs
 #define ID_WINDOWP_DO_CBOX_0 540
@@ -264,8 +267,11 @@ const category_sizes_map_type VO_SLI_EXT_entry ( _T("VO_SLI_EXT"), sizeof(VO_SLI
 const Control AO_SLI[] = {
 	{_("Maximum simultaneous sounds"), _T("MaxSounds"),            ID_AO_SLI_0,	_T("32") , {_("maximum different sounds played at the same time\n"
 																								"Set this to zero to disable sound completely.")}},
-	{_("Global sound volume"),   _T("SoundVolume"),                ID_AO_SLI_1,	_T("100"), {_("overall sound volume")}},
-	{_("Unit reply volume"),     _T("UnitReplyVolume"),       ID_AO_SLI_2,	_T("100") , {_("reply volume relative to global volume")}}
+	{_("Master sound volume"),   _T("snd_volmaster"),                ID_AO_SLI_1,	_T("60"), {_("master sound volume")}},
+	{_("General sound volume"),   _T("snd_general"),                ID_AO_SLI_2,	_T("100"), {_("general volume relative to master volume")}},
+	{_("Unit reply volume"),     _T("snd_volunitreply"),       ID_AO_SLI_3,	_T("100") , {_("reply volume relative to master volume")}},
+	{_("Battle volume"),     _T("snd_volbattle"),       ID_AO_SLI_4,	_T("100") , {_("battle volume relative to global volume")}},
+	{_("User interface volume"),     _T("snd_volui"),       ID_AO_SLI_5,	_T("100") , {_("ui volume relative to global volume")}}
 
 };
 

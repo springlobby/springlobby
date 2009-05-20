@@ -59,7 +59,7 @@ const Control intControls[] = {
 		//VO_SLI_EXT[1]
 		VO_SLI_EXT[0],
 		// AO_SLI[3]
-		AO_SLI[0],AO_SLI[1],AO_SLI[2],
+		AO_SLI[0],AO_SLI[1],AO_SLI[2],AO_SLI[3],AO_SLI[4],AO_SLI[5],
 		// QA_CBOX[10]
 		QA_CBOX[0],QA_CBOX[1],QA_CBOX[2],QA_CBOX[3],QA_CBOX[4],QA_CBOX[5],QA_CBOX[6],QA_CBOX[7],QA_CBOX[8],
 		QA_CBOX[9],QA_CBOX[10],QA_CBOX[11],
@@ -257,6 +257,9 @@ void abstract_panel::OnSliderMove(wxCommandEvent& event) {
 		case ID_AO_SLI_0: { (intSettings)[AO_SLI[0].key]= value; } break;
 		case ID_AO_SLI_1: { (intSettings)[AO_SLI[1].key]= value; } break;
 		case ID_AO_SLI_2: { (intSettings)[AO_SLI[2].key]= value; } break;
+		case ID_AO_SLI_3: { (intSettings)[AO_SLI[3].key]= value; } break;
+		case ID_AO_SLI_4: { (intSettings)[AO_SLI[4].key]= value; } break;
+		case ID_AO_SLI_5: { (intSettings)[AO_SLI[5].key]= value; } break;
 
 		case ID_DO_SLI_0: { (intSettings)[DO_SLI[0].key]= value; } break;
 
