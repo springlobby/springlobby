@@ -131,7 +131,7 @@
 
 // ParentWin Debug Options checkbox IDs
 #define ID_WINDOWP_DO_CBOX_0 540
-#define ID_WINDOWP_DO_CBOX_1 541
+
 
 // ParentWin Debug Options slider IDs
 #define ID_DO_SLI_0 500
@@ -356,8 +356,7 @@ const Control DO_SLI[] = {
 const category_sizes_map_type DO_SLI_entry ( _T("DO_SLI"), sizeof(DO_SLI) / Control_size );
 
 const Control DO_CBOX[] = {
-	{_("Catch AI exceptions"),        _T("CatchAIExceptions"), ID_WINDOWP_DO_CBOX_0,	_T("1"), {_("disable for AI debugging")}},
-	{_("Send infolog to stdout"), _T("StdoutDebug"),       ID_WINDOWP_DO_CBOX_1,	_T("0"), {_("if disabled these will only be logged")}}
+	{_("Catch AI exceptions"),        _T("CatchAIExceptions"), ID_WINDOWP_DO_CBOX_0,	_T("1"), {_("disable for AI debugging")}}
 };
 
 const category_sizes_map_type DO_CBOX_entry ( _T("DO_CBOX"), sizeof(DO_CBOX) / Control_size );

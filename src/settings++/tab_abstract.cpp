@@ -72,8 +72,8 @@ const Control intControls[] = {
 		MO_SLI_EXT[0],MO_SLI_EXT[1],MO_SLI_EXT[2],MO_SLI_EXT[3],MO_SLI_EXT[4],
 		//DO_SLI[1]
 		DO_SLI[0],
-		//DO_CBOX[2]
-		DO_CBOX[0],DO_CBOX[1],
+		//DO_CBOX[1]
+		DO_CBOX[0],
 		//WR_COMBOX[1]
 		WR_COMBOX[0],
 		//MO_CBOX[2]
@@ -380,7 +380,7 @@ void abstract_panel::OnCheckBoxTick(wxCommandEvent& event) {
 
 
 		case ID_WINDOWP_DO_CBOX_0: { (intSettings)[DO_CBOX[0].key]= checked; } break;
-		case ID_WINDOWP_DO_CBOX_1: { (intSettings)[DO_CBOX[1].key]= checked; } break;
+
 
 		case ID_WINDOWC_MO_CBOX_0: { (intSettings)[MO_CBOX[0].key]= checked; } break;
 		case ID_WINDOWC_MO_CBOX_1: { (intSettings)[MO_CBOX[1].key]= checked; } break;
