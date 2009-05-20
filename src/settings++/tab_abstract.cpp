@@ -240,26 +240,33 @@ void abstract_panel::OnSliderMove(wxCommandEvent& event) {
 			}
 		} break;
 
-		case ID_RO_SLI_1: { (intSettings)[RO_SLI[1].key]= value; } break;
-		case ID_RO_SLI_2: { (intSettings)[RO_SLI[2].key]= value; } break;
-		case ID_RO_SLI_3: { (intSettings)[RO_SLI[3].key]= value; } break;
-		case ID_RO_SLI_4: { (intSettings)[RO_SLI[4].key]= value; } break;
-		case ID_RO_SLI_5: { (intSettings)[RO_SLI[5].key]= value; } break;
-		case ID_RO_SLI_6: { (intSettings)[RO_SLI[6].key]= value; } break;
-		case ID_RO_SLI_7: { (intSettings)[RO_SLI[7].key]= value; } break;
-		//case ID_RO_SLI_8: { (intSettings)[RO_SLI[8].key]= value; } break;
+		case ID_RO_SLI_1:
+		case ID_RO_SLI_2:
+		case ID_RO_SLI_3:
+		case ID_RO_SLI_4:
+		case ID_RO_SLI_5:
+		case ID_RO_SLI_6:
+		case ID_RO_SLI_7: {
+			int i = id - RO_SLI[0].id;
+			(intSettings)[RO_SLI[i].key]= value;
+		} break;
+
 
 		case ID_VO_SLI_0: {
 			(intSettings)[VO_SLI_EXT[0].key]= (value > 0)? 1: 0;
 			(intSettings)[VO_SLI[0].key]= value;
 		} break;
 
-		case ID_AO_SLI_0: { (intSettings)[AO_SLI[0].key]= value; } break;
-		case ID_AO_SLI_1: { (intSettings)[AO_SLI[1].key]= value; } break;
-		case ID_AO_SLI_2: { (intSettings)[AO_SLI[2].key]= value; } break;
-		case ID_AO_SLI_3: { (intSettings)[AO_SLI[3].key]= value; } break;
-		case ID_AO_SLI_4: { (intSettings)[AO_SLI[4].key]= value; } break;
-		case ID_AO_SLI_5: { (intSettings)[AO_SLI[5].key]= value; } break;
+		case ID_AO_SLI_0:
+		case ID_AO_SLI_1:
+		case ID_AO_SLI_2:
+		case ID_AO_SLI_3:
+		case ID_AO_SLI_4:
+		case ID_AO_SLI_5: {
+			int i = id - AO_SLI[0].id;
+			(intSettings)[AO_SLI[i].key]= value;
+		} break;
+
 
 		case ID_DO_SLI_0: { (intSettings)[DO_SLI[0].key]= value; } break;
 
