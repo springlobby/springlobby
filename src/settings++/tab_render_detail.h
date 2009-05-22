@@ -43,7 +43,7 @@ class tab_render_detail : public abstract_panel
 		void CreateGUIControls();
 
 		wxSlider** ctrl_detail_sliders;
-		static const int ctrl_detail_sliders_size = 8;
+		static const int ctrl_detail_sliders_size = 9;
 
 		wxSizer* renderSizer ;
 					wxSizer* parentSizer ;
