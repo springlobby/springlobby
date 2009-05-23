@@ -146,16 +146,14 @@ class BattleRoomTab : public wxScrolledWindow
 
     wxMenu* m_manage_users_mnu;
     wxMenuItem* m_lock_balance_mnu;
+    wxMenuItem* m_autohost_mnu;
 
     wxCheckBox* m_ready_chk;
     wxCheckBox* m_spec_chk;
+    wxCheckBox* m_lock_chk;
     #if wxUSE_TOGGLEBTN
-    wxToggleButton* m_lock_chk;
-    wxToggleButton* m_autohost_chk;
     wxToggleButton* m_autolock_chk;
     #else
-    wxCheckBox* m_lock_chk;
-    wxCheckBox* m_autohost_chk;
     wxCheckBox* m_autolock_chk;
     #endif
 
