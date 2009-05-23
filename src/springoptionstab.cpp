@@ -13,6 +13,7 @@
 #include <wx/radiobut.h>
 #include <wx/stattext.h>
 #include <wx/button.h>
+#include <wx/checkbox.h>
 #include <wx/filefn.h>
 #include <wx/filename.h>
 #include <wx/stdpaths.h>
@@ -45,11 +46,17 @@ BEGIN_EVENT_TABLE(SpringOptionsTab, wxPanel)
     EVT_BUTTON ( SPRING_EXECFIND, SpringOptionsTab::OnFindExec )
     EVT_BUTTON ( SPRING_SYNCFIND, SpringOptionsTab::OnFindSync )
     EVT_BUTTON ( SPRING_DATADIR, SpringOptionsTab::OnDataDir )
+    EVT_CHECKBOX( SPRING_DONTSEARCH, SpringOptionsTab::OnDontSearch )
 END_EVENT_TABLE()
 
 
 SpringOptionsTab::SpringOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( parent, -1 ),m_ui(ui)
 {
+	m_dontsearch_chkbox = new wxCheckBox( this, SPRING_DONTSEARCH, _("Search only in current installed path"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
+	m_dontsearch_chkbox->SetValue( sett().GetSearchSpringOnlyInSLPath() );
+	#ifndef __WXMSW__
+	m_dontsearch_chkbox->Disable();
+	#endif
   /* ================================
    * Spring executable
    */
@@ -99,6 +106,7 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindo
   m_aconf_sizer->Add( m_auto_btn );
   m_aconf_sizer->Add( m_datadir_btn );
 
+	m_main_sizer->Add( m_dontsearch_chkbox, 0, wxEXPAND | wxALL, 5 );
   m_main_sizer->Add( m_exec_box_sizer, 0, wxEXPAND | wxALL, 5 );
   m_main_sizer->Add( m_sync_box_sizer, 0, wxEXPAND | wxALL, 5 );
 
@@ -113,16 +121,19 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindo
 
   DoRestore();
 
-  if ( sett().IsPortableMode() )
+  if ( sett().IsPortableMode() || sett().GetSearchSpringOnlyInSLPath() )
   {
     m_exec_box->Disable();
     m_sync_box->Disable();
+    m_auto_btn->Disable();
+    m_datadir_btn->Disable();
   }
 
 	if ( sett().IsFirstRun() )
 	{
 		sett().SetSpringBinary( sett().GetCurrentUsedSpringIndex(), m_exec_edit->GetValue() );
 		sett().SetUnitSync( sett().GetCurrentUsedSpringIndex(), m_sync_edit->GetValue() );
+		sett().SetSearchSpringOnlyInSLPath( m_dontsearch_chkbox->IsChecked() );
 	}
 
 }
@@ -136,6 +147,9 @@ SpringOptionsTab::~SpringOptionsTab()
 
 void SpringOptionsTab::DoRestore()
 {
+	#ifdef __WXMSW__
+	m_dontsearch_chkbox->SetValue( sett().GetSearchSpringOnlyInSLPath() );
+	#endif
   m_sync_edit->SetValue( sett().GetCurrentUsedUnitSync() );
   m_exec_edit->SetValue( sett().GetCurrentUsedSpringBinary() );
 }
@@ -183,6 +197,9 @@ void SpringOptionsTab::OnApply( wxCommandEvent& event )
 {
   sett().SetSpringBinary( sett().GetCurrentUsedSpringIndex(), m_exec_edit->GetValue() );
   sett().SetUnitSync( sett().GetCurrentUsedSpringIndex(), m_sync_edit->GetValue() );
+  #ifdef __WXMSW__
+  sett().SetSearchSpringOnlyInSLPath( m_dontsearch_chkbox->IsChecked() );
+  #endif
 
   if ( sett().IsFirstRun() ) return;
 
@@ -206,6 +223,24 @@ void SpringOptionsTab::OnRestore( wxCommandEvent& event )
 void SpringOptionsTab::OnDataDir( wxCommandEvent& event )
 {
   SetupUserFolders();
+}
+
+void SpringOptionsTab::OnDontSearch( wxCommandEvent& event )
+{
+  if ( m_dontsearch_chkbox->IsChecked() )
+  {
+    m_exec_box->Disable();
+    m_sync_box->Disable();
+    m_auto_btn->Disable();
+    m_datadir_btn->Disable();
+  }
+  else
+  {
+    m_exec_box->Enable();
+    m_sync_box->Enable();
+    m_auto_btn->Enable();
+    m_datadir_btn->Enable();
+  }
 }
 
 /** Try to create the named directory, if it doesn't exist.

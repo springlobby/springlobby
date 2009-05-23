@@ -364,6 +364,10 @@ class Settings
     void SetUsedSpringIndex( const wxString& index );
     void DeleteSpringVersionbyIndex( const wxString& index );
 
+    /// when this mode is enabled in windows SL will search for spring files only in the current executable folder
+    void SetSearchSpringOnlyInSLPath( bool value );
+    bool GetSearchSpringOnlyInSLPath();
+
     /// convenience wrappers to get current used version paths
     wxString GetCurrentUsedDataDir();
     wxString GetCurrentUsedUnitSync();
