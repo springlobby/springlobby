@@ -26,6 +26,7 @@ class ChatLog;
 class Server;
 class Battle;
 class Ui;
+class wxStaticText;
 
 class wxMouseEvent;
 class wxAuiNotebook;
@@ -217,6 +218,8 @@ class ChatPanel : public wxPanel
     Server* m_server;           //!< Server object.
     const User* m_user;               //!< User object.
     Battle* m_battle;           //!< User object.
+
+    wxStaticText* m_usercount_label;
 
     int m_type;       //!< Channel object.
 
