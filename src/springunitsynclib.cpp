@@ -443,24 +443,40 @@ std::map<wxString, wxString> SpringUnitSyncLib::GetSpringVersionList(const std::
   wxLogDebugFunc(_T(""));
 
   std::map<wxString, wxString> ret;
-  wxString old_path = m_path;
 
   for (std::map<wxString, wxString>::const_iterator it = usync_paths.begin(); it != usync_paths.end(); ++it)
   {
+  	wxString path = it->second;
     try
     {
-      _Load( it->second );
-      ret[it->first] = WX_STRINGC( m_get_spring_version() );
+
+		 if ( !wxFileName::FileExists( path ) )
+			{
+				wxLogError( _T("File not found: %s"), path.c_str() );
+				ASSERT_EXCEPTION( false, _T("Failed to load Unitsync lib.") );
+			}
+
+  #ifdef __WXMSW__
+      wxSetWorkingDirectory( path.BeforeLast('\\') );
+  #endif
+      wxDynamicLibrary temphandle( path );
+      ASSERT_EXCEPTION( temphandle.IsLoaded(), _T("Couldn't load the unitsync library") );
+
+			GetSpringVersionPtr getspringversion = 0;
+			wxString functionname = _T("GetSpringVersion");
+			if ( temphandle.HasSymbol( functionname ) )
+			{
+				getspringversion = (GetSpringVersionPtr)temphandle.GetSymbol( functionname );
+			}
+			UNITSYNC_EXCEPTION( getspringversion, _T("getspringversion: function not found") );
+			wxString version = WX_STRINGC( getspringversion() );
+			wxLogMessage( _T("Found spring version: %s"), version.c_str() );
+			ret[it->first] = version;
+
     }
     catch(...){}
   }
 
-  try
-  {
-    _Load( old_path ); // re-init current "main" unitsync
-    _Init();
-  }
-  catch(...){}
   return ret;
 }
 

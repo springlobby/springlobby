@@ -359,6 +359,7 @@ class Settings
 
     void ConvertOldSpringDirsOptions();
 
+		void RefreshSpringVersionList();
     std::map<wxString, wxString> GetSpringVersionList(); /// index -> version
     wxString GetCurrentUsedSpringIndex();
     void SetUsedSpringIndex( const wxString& index );
@@ -670,6 +671,8 @@ class Settings
 
     wxString m_chosed_path;
     bool m_portable_mode;
+
+    std::map<wxString, wxString> m_spring_versions;
 
 };
 

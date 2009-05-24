@@ -203,6 +203,7 @@ void SpringOptionsTab::OnApply( wxCommandEvent& event )
 
   if ( sett().IsFirstRun() ) return;
 
+	sett().RefreshSpringVersionList();
   if ( !usync().LoadUnitSyncLib( sett().GetCurrentUsedUnitSync() ) )
   {
     wxLogWarning( _T("Cannot load UnitSync") );

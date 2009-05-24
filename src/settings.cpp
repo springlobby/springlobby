@@ -856,6 +856,11 @@ void Settings::ConvertOldSpringDirsOptions()
 
 std::map<wxString, wxString> Settings::GetSpringVersionList()
 {
+	return m_spring_versions;
+}
+
+void Settings::RefreshSpringVersionList()
+{
   wxLogDebugFunc(_T(""));
   wxArrayString list = GetGroupList( _T("/Spring/Paths") );
   int count = list.GetCount();
@@ -865,7 +870,7 @@ std::map<wxString, wxString> Settings::GetSpringVersionList()
   	wxString groupname = list[i];
     usync_paths[groupname] = m_config->Read( _T("/Spring/Paths/") + groupname + _T("/UnitSyncPath"), _T("") );
   }
-  return susynclib().GetSpringVersionList(usync_paths);
+  m_spring_versions = susynclib().GetSpringVersionList(usync_paths);
 }
 
 wxString Settings::GetCurrentUsedSpringIndex()
