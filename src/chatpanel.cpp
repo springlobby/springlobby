@@ -24,6 +24,7 @@
 #include <wx/imaglist.h>
 #include <wx/wupdlock.h>
 #include <wx/bmpbuttn.h>
+#include <wx/stattext.h>
 
 #include "aui/auimanager.h"
 #include "channel/channel.h"
@@ -273,12 +274,14 @@ void ChatPanel::CreateControls( )
     m_chat_panel = new wxPanel( m_splitter, -1 );
 
     m_nick_sizer = new wxBoxSizer( wxVERTICAL );
+    m_usercount_label = new wxStaticText( m_nick_panel, wxID_ANY, wxString::Format( _("%d users"), GetChannel()->GetNumUsers() ) );
     m_usermenu = CreateNickListMenu();
     m_nicklist = new NickListCtrl( m_nick_panel, true, m_usermenu );
 
    // m_nick_filter = new wxComboBox( m_nick_panel, -1, _("Show all"), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT), 0, 0, wxCB_READONLY );
    // m_nick_filter->Disable();
 
+		m_nick_sizer->Add( m_usercount_label, 0 );
     m_nick_sizer->Add( m_nicklist, 1, wxEXPAND );
    // m_nick_sizer->Add( m_nick_filter, 0, wxEXPAND | wxTOP, 2 );
 
@@ -808,9 +811,12 @@ void ChatPanel::Joined( User& who )
       // change the image of the tab to show new events
       SetIconHighlight( highlight_join_leave );
       OutputLine( _T( " ** " ) + who.GetNick() + _( " joined the " ) + GetChatTypeStr() + _T( "." ), sett().GetChatColorJoinPart(), sett().GetChatFont() );
-
     }
-		if ( m_show_nick_list && ( m_nicklist != 0 ) ) m_nicklist->AddUser( who );
+		if ( m_show_nick_list && ( m_nicklist != 0 ) )
+		{
+			 m_usercount_label->SetLabel( wxString::Format( _("%d users"), GetChannel()->GetNumUsers() ) );
+			 m_nicklist->AddUser( who );
+		}
 	} else if ( m_type == CPT_Battle ) {
 		if ( sett().GetDisplayJoinLeave( _T( "game/battle" ) ) ) { OutputLine( _T( " ** " ) + who.GetNick() + _( " joined the " ) + GetChatTypeStr() + _T( "." ), sett().GetChatColorJoinPart(), sett().GetChatFont() ); }
 	}
@@ -822,7 +828,11 @@ void ChatPanel::Joined( User& who )
 
 void ChatPanel::OnChannelJoin( User& who )
 {
-	if ( m_type == CPT_Channel && m_show_nick_list && (m_nicklist != 0) ) m_nicklist->AddUser( who );
+	if ( m_type == CPT_Channel && m_show_nick_list && (m_nicklist != 0) )
+	{
+		 m_usercount_label->SetLabel( wxString::Format( _("%d users"), GetChannel()->GetNumUsers() ) );
+		 m_nicklist->AddUser( who );
+	}
 
 	// Also add the User to the TextCompletionDatabase
 	textcompletiondatabase.Insert_Mapping( who.GetNick(), who.GetNick() );
@@ -843,7 +853,11 @@ void ChatPanel::Parted( User& who, const wxString& message )
       SetIconHighlight( highlight_join_leave );
 		  OutputLine( _T( " ** " ) + who.GetNick() + _( " left the " ) + GetChatTypeStr() + _T( "( " ) + message + _T( " )." ), sett().GetChatColorJoinPart(), sett().GetChatFont() );
     }
-		if ( m_show_nick_list && ( m_nicklist != 0 ) ) m_nicklist->RemoveUser( who );
+		if ( m_show_nick_list && ( m_nicklist != 0 ) )
+		{
+			m_usercount_label->SetLabel( wxString::Format( _("%d users"), GetChannel()->GetNumUsers() ) );
+			m_nicklist->RemoveUser( who );
+		}
 
 	} else if ( m_type == CPT_Battle ) {
 		if ( sett().GetDisplayJoinLeave( _T( "game/battle" ) ) )  { OutputLine( _T( " ** " ) + who.GetNick() + _( " left the " ) + GetChatTypeStr() + _T( "( " ) + message + _T( " )." ), sett().GetChatColorJoinPart(), sett().GetChatFont() ); }

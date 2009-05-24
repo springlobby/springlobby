@@ -11,6 +11,7 @@ class wxButton;
 class wxTextCtrl;
 class wxBoxSizer;
 class Ui;
+class wxCheckBox;
 
 class SpringOptionsTab : public wxScrolledWindow
 {
@@ -31,6 +32,8 @@ class SpringOptionsTab : public wxScrolledWindow
     void OnFindSync( wxCommandEvent& event );
 
     void OnDataDir( wxCommandEvent& event );
+
+    void OnDontSearch( wxCommandEvent& event );
 
   protected:
 
@@ -67,6 +70,8 @@ class SpringOptionsTab : public wxScrolledWindow
     wxBoxSizer* m_exec_loc_sizer;
     wxBoxSizer* m_sync_loc_sizer;
 
+    wxCheckBox* m_dontsearch_chkbox;
+
     Ui& m_ui;
 
     enum {
@@ -79,7 +84,8 @@ class SpringOptionsTab : public wxScrolledWindow
         SPRING_AUTOCONF,
         SPRING_EXECFIND,
         SPRING_SYNCFIND,
-        SPRING_DATADIR
+        SPRING_DATADIR,
+        SPRING_DONTSEARCH
     };
 
     DECLARE_EVENT_TABLE()

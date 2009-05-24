@@ -856,6 +856,11 @@ void Settings::ConvertOldSpringDirsOptions()
 
 std::map<wxString, wxString> Settings::GetSpringVersionList()
 {
+	return m_spring_versions;
+}
+
+void Settings::RefreshSpringVersionList()
+{
   wxLogDebugFunc(_T(""));
   wxArrayString list = GetGroupList( _T("/Spring/Paths") );
   int count = list.GetCount();
@@ -865,7 +870,7 @@ std::map<wxString, wxString> Settings::GetSpringVersionList()
   	wxString groupname = list[i];
     usync_paths[groupname] = m_config->Read( _T("/Spring/Paths/") + groupname + _T("/UnitSyncPath"), _T("") );
   }
-  return susynclib().GetSpringVersionList(usync_paths);
+  m_spring_versions = susynclib().GetSpringVersionList(usync_paths);
 }
 
 wxString Settings::GetCurrentUsedSpringIndex()
@@ -878,6 +883,19 @@ void Settings::SetUsedSpringIndex( const wxString& index )
   m_config->Write( _T("/Spring/CurrentIndex"), index );
 }
 
+bool Settings::GetSearchSpringOnlyInSLPath()
+{
+	bool defaultval = false;
+	#ifdef __WXMSW__
+	defaultval = true;
+	#endif
+	return m_config->Read( _T("/Spring/SearchSpringOnlyInSLPath"), defaultval );
+}
+
+void Settings::SetSearchSpringOnlyInSLPath( bool value )
+{
+	m_config->Write( _T("/Spring/SearchSpringOnlyInSLPath"), value );
+}
 
 void Settings::DeleteSpringVersionbyIndex( const wxString& index )
 {
@@ -905,13 +923,21 @@ wxString Settings::GetCurrentUsedDataDir()
 
 wxString Settings::GetCurrentUsedSpringBinary()
 {
-    return GetSpringBinary( GetCurrentUsedSpringIndex() );
+		if ( IsPortableMode() ) return GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("spring.exe");
+		#ifdef __WXMSW__
+		else if ( GetSearchSpringOnlyInSLPath() ) return GetExecutableFolder() + wxFileName::GetPathSeparator() + _T("spring.exe");
+		#endif
+    else return GetSpringBinary( GetCurrentUsedSpringIndex() );
 }
 
 
 wxString Settings::GetCurrentUsedUnitSync()
 {
-    return GetUnitSync( GetCurrentUsedSpringIndex() );
+		if ( IsPortableMode() ) return GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("unitsync") + GetLibExtension();
+		#ifdef __WXMSW__
+		else if ( GetSearchSpringOnlyInSLPath() ) return GetExecutableFolder() + wxFileName::GetPathSeparator() + _T("unitsync") + GetLibExtension();
+		#endif
+    else return GetUnitSync( GetCurrentUsedSpringIndex() );
 }
 
 wxString Settings::GetCurrentUsedSpringConfigFilePath()
@@ -927,15 +953,13 @@ wxString Settings::GetCurrentUsedSpringConfigFilePath()
 
 wxString Settings::GetUnitSync( const wxString& index )
 {
-  if ( IsPortableMode() ) return GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("unitsync") + GetLibExtension();
-  else return m_config->Read( _T("/Spring/Paths/") + index + _T("/UnitSyncPath"), AutoFindUnitSync() );
+  return m_config->Read( _T("/Spring/Paths/") + index + _T("/UnitSyncPath"), AutoFindUnitSync() );
 }
 
 
 wxString Settings::GetSpringBinary( const wxString& index )
 {
-    if ( IsPortableMode() ) return GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("spring.exe");
-    else return m_config->Read( _T("/Spring/Paths/") + index + _T("/SpringBinPath"), AutoFindSpringBin() );
+    return m_config->Read( _T("/Spring/Paths/") + index + _T("/SpringBinPath"), AutoFindSpringBin() );
 }
 
 void Settings::SetUnitSync( const wxString& index, const wxString& path )

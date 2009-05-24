@@ -359,10 +359,15 @@ class Settings
 
     void ConvertOldSpringDirsOptions();
 
+		void RefreshSpringVersionList();
     std::map<wxString, wxString> GetSpringVersionList(); /// index -> version
     wxString GetCurrentUsedSpringIndex();
     void SetUsedSpringIndex( const wxString& index );
     void DeleteSpringVersionbyIndex( const wxString& index );
+
+    /// when this mode is enabled in windows SL will search for spring files only in the current executable folder
+    void SetSearchSpringOnlyInSLPath( bool value );
+    bool GetSearchSpringOnlyInSLPath();
 
     /// convenience wrappers to get current used version paths
     wxString GetCurrentUsedDataDir();
@@ -666,6 +671,8 @@ class Settings
 
     wxString m_chosed_path;
     bool m_portable_mode;
+
+    std::map<wxString, wxString> m_spring_versions;
 
 };
 

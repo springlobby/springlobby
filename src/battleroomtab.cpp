@@ -70,18 +70,16 @@ BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
     EVT_BUTTON( BROOM_MAP_BROWSE, BattleRoomTab::OnMapBrowse )
     EVT_COMBOBOX( BROOM_MAP_SEL, BattleRoomTab::OnMapSelect )
 
+		EVT_CHECKBOX( BROOM_LOCK, BattleRoomTab::OnLock )
     #if  wxUSE_TOGGLEBTN
-    EVT_TOGGLEBUTTON( BROOM_AUTOHOST, BattleRoomTab::OnAutoHost )
     EVT_TOGGLEBUTTON( BROOM_AUTOLOCK, BattleRoomTab::OnAutoLock )
-    EVT_TOGGLEBUTTON( BROOM_LOCK, BattleRoomTab::OnLock )
     #else
-    EVT_CHECKBOX( BROOM_AUTOHOST, BattleRoomTab::OnAutoHost )
     EVT_CHECKBOX( BROOM_AUTOLOCK, BattleRoomTab::OnAutoLock )
-    EVT_CHECKBOX( BROOM_LOCK, BattleRoomTab::OnLock )
     #endif
 
     EVT_BUTTON( BROOM_MANAGE_MENU, BattleRoomTab::OnShowManagePlayersMenu )
 
+		EVT_MENU( BROOM_AUTOHOST, BattleRoomTab::OnAutoHost )
     EVT_MENU( BROOM_LOCK_BALANCE, BattleRoomTab::OnLockBalance )
     EVT_MENU ( BROOM_BALANCE, BattleRoomTab::OnBalance )
     EVT_MENU ( BROOM_FIXID, BattleRoomTab::OnFixTeams )
@@ -179,20 +177,14 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
     m_autolock_chk->SetToolTip(TE(_("Automatically locks the battle when the game starts and unlock when it's finished.")));
     m_autolock_chk->SetValue( sett().GetLastAutolockStatus() );
 
-    #if wxUSE_TOGGLEBTN
-    m_lock_chk = new wxToggleButton( this, BROOM_LOCK , _("Locked"), wxDefaultPosition , wxSize( -1,CONTROL_HEIGHT ), 0 );
-    #else
     m_lock_chk = new wxCheckBox( this, BROOM_LOCK, _("Locked"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
-    #endif
     m_lock_chk->SetToolTip(TE(_("Prevent additional players from joining the battle")));
-    #if wxUSE_TOGGLEBTN
-    m_autohost_chk = new wxToggleButton( this, BROOM_AUTOHOST , _("Autohost"), wxDefaultPosition , wxSize( -1,CONTROL_HEIGHT ), 0 );
-    #else
-    m_autohost_chk = new wxCheckBox( this, BROOM_AUTOHOST, _("Autohost"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
-    #endif
-    m_autohost_chk->SetToolTip(TE(_("Toggle autohost mode.  This allows players to control your battle using commands like '!balance' and '!start'.")));
 
     m_manage_users_mnu = new wxMenu();
+
+    m_autohost_mnu = new wxMenuItem( m_manage_users_mnu, BROOM_AUTOHOST, _( "Autohost" ), _("Toggle autohost mode.  This allows players to control your battle using commands like '!balance' and '!start'."), wxITEM_CHECK );
+		m_manage_users_mnu->Append( m_autohost_mnu );
+    m_autohost_mnu->Check( false );
 
     m_lock_balance_mnu = new wxMenuItem( m_manage_users_mnu, BROOM_LOCK_BALANCE, _( "Lock Balance" ), _("When activated, prevents anyone but the host to change team and ally"), wxITEM_CHECK );
     m_manage_users_mnu->Append( m_lock_balance_mnu );
@@ -318,7 +310,6 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
     m_buttons_sizer->Add( m_leave_btn, 0, wxEXPAND | wxALL, 2 );
     m_buttons_sizer->AddStretchSpacer();
     m_buttons_sizer->Add( m_addbot_btn, 0, wxEXPAND | wxALL, 2 );
-    m_buttons_sizer->Add( m_autohost_chk, 0, wxEXPAND | wxALL, 2 );
     m_buttons_sizer->Add( m_autolock_chk, 0, wxEXPAND | wxALL, 2 );
     m_buttons_sizer->Add( m_lock_chk, 0, wxEXPAND | wxALL, 2 );
     m_buttons_sizer->Add( m_manage_players_btn, 0, wxEXPAND | wxALL, 2 );
@@ -344,7 +335,6 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
         m_start_btn->Disable();
         m_manage_players_btn->Disable();
         m_lock_chk->Disable();
-        m_autohost_chk->Disable();
         m_autolock_chk->Disable();
     }
 
@@ -666,7 +656,7 @@ void BattleRoomTab::OnLock( wxCommandEvent& event )
 
 void BattleRoomTab::OnAutoHost( wxCommandEvent& event )
 {
-    m_battle.GetAutoHost().SetEnabled( m_autohost_chk->GetValue() );
+    m_battle.GetAutoHost().SetEnabled( m_autohost_mnu->IsChecked() );
 }
 
 
