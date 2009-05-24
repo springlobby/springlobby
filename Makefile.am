@@ -949,7 +949,7 @@ springlobby_SOURCES = \
 	src/globalsmanager.h \
 	src/mmoptionwindows.cpp \
 	src/mmoptionwindows.h \
-	src/images/flappy_icon.png.h
+	src/images/floppy_icon.png.h
 
 
 
