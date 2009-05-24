@@ -277,7 +277,8 @@ void SpringUnitSyncLib::_Load( const wxString& path )
 
 void SpringUnitSyncLib::_Init()
 {
-  if ( _IsLoaded() && m_init != NULL ) {
+  if ( _IsLoaded() && m_init != NULL )
+  {
     m_current_mod = wxEmptyString;
     m_init( true, 1 );
   }
@@ -415,9 +416,10 @@ void SpringUnitSyncLib::SetCurrentMod( const wxString& modname )
 
 void SpringUnitSyncLib::_SetCurrentMod( const wxString& modname )
 {
-  if ( m_current_mod != modname ) {
+  if ( m_current_mod != modname )
+  {
     wxLogDebugFunc( modname );
-    _Init();
+		if ( !m_current_mod.IsEmpty() ) _Init();
     m_add_all_archives( m_get_mod_archive( m_get_mod_index( modname.mb_str( wxConvUTF8 ) ) ) );
     m_current_mod = modname;
   }
@@ -427,6 +429,7 @@ void SpringUnitSyncLib::_SetCurrentMod( const wxString& modname )
 void SpringUnitSyncLib::UnSetCurrentMod( )
 {
   LOCK_UNITSYNC;
+  if ( !m_current_mod.IsEmpty() ) _Init();
   m_current_mod = wxEmptyString;
 }
 
