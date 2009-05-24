@@ -55,6 +55,7 @@
 #include "images/downloads_icon_text.png.h"
 #include "images/replay_icon.png.h"
 #include "images/replay_icon_text.png.h"
+#include "images/floppy_icon.png.h"
 
 #include "settings++/frame.h"
 #include "settings++/custom_dialogs.h"
@@ -219,6 +220,8 @@ void MainWindow::SetTabIcons()
     m_func_tabs->SetPageBitmap( 2, GetTabIcon( single_player_icon_png , sizeof (single_player_icon_png) ) );
     m_func_tabs->SetPageBitmap( 3, GetTabIcon( options_icon_png , sizeof (options_icon_png) ) );
     m_func_tabs->SetPageBitmap( 4, GetTabIcon( replay_icon_png , sizeof (replay_icon_png) ) );
+    //for savegmae tab
+    //m_func_tabs->SetPageBitmap( 4, GetTabIcon( floppy_icon_png , sizeof (floppy_icon_png) ) );
 #ifndef NO_TORRENT_SYSTEM
     m_func_tabs->SetPageBitmap( 5, GetTabIcon(  downloads_icon_png , sizeof (downloads_icon_png) ) );
 #endif

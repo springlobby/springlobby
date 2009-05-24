@@ -49,7 +49,7 @@ bool abstract_panel::settingsChanged = false;
 
 const Control intControls[] = {
 		// RO_SLI[8]
-		RO_SLI[0],RO_SLI[1],RO_SLI[2],RO_SLI[3],RO_SLI[4],RO_SLI[5],RO_SLI[6],RO_SLI[7],
+		RO_SLI[0],RO_SLI[1],RO_SLI[2],RO_SLI[3],RO_SLI[4],RO_SLI[5],RO_SLI[6],RO_SLI[7],RO_SLI[8],
 		// VO_CBOX[3]
 		VO_CBOX[0],VO_CBOX[1],VO_CBOX[2],
 		//VO_RBUT[2] <- only one key
@@ -59,7 +59,7 @@ const Control intControls[] = {
 		//VO_SLI_EXT[1]
 		VO_SLI_EXT[0],
 		// AO_SLI[3]
-		AO_SLI[0],AO_SLI[1],AO_SLI[2],
+		AO_SLI[0],AO_SLI[1],AO_SLI[2],AO_SLI[3],AO_SLI[4],AO_SLI[5],
 		// QA_CBOX[10]
 		QA_CBOX[0],QA_CBOX[1],QA_CBOX[2],QA_CBOX[3],QA_CBOX[4],QA_CBOX[5],QA_CBOX[6],QA_CBOX[7],QA_CBOX[8],
 		QA_CBOX[9],QA_CBOX[10],QA_CBOX[11],
@@ -72,8 +72,8 @@ const Control intControls[] = {
 		MO_SLI_EXT[0],MO_SLI_EXT[1],MO_SLI_EXT[2],MO_SLI_EXT[3],MO_SLI_EXT[4],
 		//DO_SLI[1]
 		DO_SLI[0],
-		//DO_CBOX[2]
-		DO_CBOX[0],DO_CBOX[1],
+		//DO_CBOX[1]
+		DO_CBOX[0],
 		//WR_COMBOX[1]
 		WR_COMBOX[0],
 		//MO_CBOX[2]
@@ -216,6 +216,7 @@ void abstract_panel::OnSliderMove(wxCommandEvent& event) {
 	wxSlider* slider = (wxSlider*) event.GetEventObject();
 
     int value = slider->GetValue();
+    int id = event.GetId();
 
 	switch (event.GetId()) {
 		case ID_RO_SLI_0: {
@@ -240,23 +241,34 @@ void abstract_panel::OnSliderMove(wxCommandEvent& event) {
 			}
 		} break;
 
-		case ID_RO_SLI_1: { (intSettings)[RO_SLI[1].key]= value; } break;
-		case ID_RO_SLI_2: { (intSettings)[RO_SLI[2].key]= value; } break;
-		case ID_RO_SLI_3: { (intSettings)[RO_SLI[3].key]= value; } break;
-		case ID_RO_SLI_4: { (intSettings)[RO_SLI[4].key]= value; } break;
-		case ID_RO_SLI_5: { (intSettings)[RO_SLI[5].key]= value; } break;
-		case ID_RO_SLI_6: { (intSettings)[RO_SLI[6].key]= value; } break;
-		case ID_RO_SLI_7: { (intSettings)[RO_SLI[7].key]= value; } break;
-		//case ID_RO_SLI_8: { (intSettings)[RO_SLI[8].key]= value; } break;
+		case ID_RO_SLI_1:
+		case ID_RO_SLI_2:
+		case ID_RO_SLI_3:
+		case ID_RO_SLI_4:
+		case ID_RO_SLI_5:
+		case ID_RO_SLI_6:
+		case ID_RO_SLI_7:
+		case ID_RO_SLI_8: {
+			int i = id - RO_SLI[0].id;
+			(intSettings)[RO_SLI[i].key]= value;
+		} break;
+
 
 		case ID_VO_SLI_0: {
 			(intSettings)[VO_SLI_EXT[0].key]= (value > 0)? 1: 0;
 			(intSettings)[VO_SLI[0].key]= value;
 		} break;
 
-		case ID_AO_SLI_0: { (intSettings)[AO_SLI[0].key]= value; } break;
-		case ID_AO_SLI_1: { (intSettings)[AO_SLI[1].key]= value; } break;
-		case ID_AO_SLI_2: { (intSettings)[AO_SLI[2].key]= value; } break;
+		case ID_AO_SLI_0:
+		case ID_AO_SLI_1:
+		case ID_AO_SLI_2:
+		case ID_AO_SLI_3:
+		case ID_AO_SLI_4:
+		case ID_AO_SLI_5: {
+			int i = id - AO_SLI[0].id;
+			(intSettings)[AO_SLI[i].key]= value;
+		} break;
+
 
 		case ID_DO_SLI_0: { (intSettings)[DO_SLI[0].key]= value; } break;
 
@@ -380,7 +392,7 @@ void abstract_panel::OnCheckBoxTick(wxCommandEvent& event) {
 
 
 		case ID_WINDOWP_DO_CBOX_0: { (intSettings)[DO_CBOX[0].key]= checked; } break;
-		case ID_WINDOWP_DO_CBOX_1: { (intSettings)[DO_CBOX[1].key]= checked; } break;
+
 
 		case ID_WINDOWC_MO_CBOX_0: { (intSettings)[MO_CBOX[0].key]= checked; } break;
 		case ID_WINDOWC_MO_CBOX_1: { (intSettings)[MO_CBOX[1].key]= checked; } break;
