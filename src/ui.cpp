@@ -55,7 +55,7 @@ Ui::Ui() :
         m_upd_counter_torrent(0),
         m_upd_counter_battlelist(0),
         m_upd_counter_chat(0),
-        m_checked_for_update(false),
+        m_first_update_trigger(true),
         m_ingame(false)
 {
     m_main_win = new MainWindow( *this );
@@ -556,9 +556,12 @@ void Ui::OnUpdate( int mselapsed )
 		}
 		m_upd_counter_chat++;
 
-    if ( !m_checked_for_update )
+    if ( m_first_update_trigger )
     {
-        m_checked_for_update = true;
+        m_first_update_trigger = false;
+
+        if ( sett().GetAutoConnect() )
+            Connect();
 #ifdef __WXMSW__
         if ( sett().GetAutoUpdate() )Updater().CheckForUpdates();
 #endif

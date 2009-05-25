@@ -164,7 +164,7 @@ class Ui
     unsigned int m_upd_counter_battlelist;
     unsigned int m_upd_counter_chat;
 
-    bool m_checked_for_update;
+    bool m_first_update_trigger;
 
     bool m_ingame;
 
