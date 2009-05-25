@@ -138,6 +138,7 @@ m_debug_dont_catch( false ),
 m_id_transmission( false ),
 m_buffer(_T("")),
 m_last_udp_ping(0),
+m_last_net_packet(0),
 m_last_id(0),
 m_udp_private_port(0),
 m_battle_id(-1),
@@ -299,6 +300,7 @@ void TASServer::Connect( const wxString& servername ,const wxString& addr, const
 		m_server_name = servername;
     m_addr=addr;
 		m_buffer = _T("");
+		m_buffer = _T("");
     m_sock->Connect( addr, port );
     if ( IsConnected() )
     {
@@ -310,6 +312,7 @@ void TASServer::Connect( const wxString& servername ,const wxString& addr, const
     m_online = false;
     m_agreement = _T("");
 		m_crc.ResetCRC();
+		m_last_net_packet = time( 0 );
 		wxString handle = m_sock->GetHandle();
 		if ( !handle.IsEmpty() ) m_crc.UpdateData( STD_STRING( wxString( handle + m_addr ) ) );
 }
@@ -443,6 +446,12 @@ void TASServer::Update( int mselapsed )
         if ( !IsConnected() ) return;
 
         time_t now = time( 0 );
+
+        if ( ( m_last_net_packet > 0 ) && ( ( now - m_last_net_packet ) > PING_TIMEOUT ) )
+        {
+					 m_se->OnServerMessage( _("Timeout assumed, disconnecting") );
+        	 Disconnect();
+        }
 
         // joining battle with nat traversal:
         // if we havent finalized joining yet, and udp_reply_timeout seconds has passed since
@@ -2086,7 +2095,7 @@ void TASServer::OnDisconnected( Socket* sock )
 void TASServer::OnDataReceived( Socket* sock )
 {
 		if ( sock == 0 ) return;
-
+		m_last_net_packet = time( 0 );
     wxString data = sock->Receive();
 		m_buffer << data;
 		m_buffer.Replace( _T("\r\n"), _T("\n") );

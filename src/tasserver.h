@@ -154,6 +154,7 @@ class TASServer : public Server
     bool m_id_transmission;
     wxString m_buffer;
     time_t m_last_udp_ping;
+    time_t m_last_net_packet;
     unsigned int m_last_id;
     std::list<TASPingListItem> m_pinglist;
 

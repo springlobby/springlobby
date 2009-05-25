@@ -201,7 +201,7 @@ class Server : public iNetClass
     Battle& _AddBattle( const int& id );
     void _RemoveBattle( const int& id );
 
-    static const unsigned int PING_TIMEOUT = 30;
+    static const unsigned int PING_TIMEOUT = 40;
 
     virtual void SendCmd( const wxString& command, const wxString& param ) = 0;
     virtual void RelayCmd( const wxString& command, const wxString& param ) = 0;
