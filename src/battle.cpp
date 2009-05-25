@@ -183,7 +183,7 @@ User& Battle::OnUserAdded( User& user )
     {
         if ( CheckBan( user ) ) return user;
 
-        if ( ( !user.BattleStatus().IsBot() ) && ( m_opts.rankneeded > UserStatus::RANK_1 ) && ( user.GetStatus().rank < m_opts.rankneeded ))
+        if ( ( &user != &GetMe() ) && !user.BattleStatus().IsBot() && ( m_opts.rankneeded > UserStatus::RANK_1 ) && ( user.GetStatus().rank < m_opts.rankneeded ))
         {
             switch ( m_opts.ranklimittype )
             {
@@ -218,7 +218,7 @@ void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
     }
     if ( IsFounderMe() )
     {
-        if ( ( m_opts.rankneeded > UserStatus::RANK_1 ) && ( user.GetStatus().rank < m_opts.rankneeded ))
+        if ( ( &user != &GetMe() ) && !status.IsBot() && ( m_opts.rankneeded > UserStatus::RANK_1 ) && ( user.GetStatus().rank < m_opts.rankneeded ))
         {
             switch ( m_opts.ranklimittype )
             {

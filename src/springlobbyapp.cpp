@@ -230,6 +230,7 @@ bool SpringLobbyApp::OnInit()
 
 		if ( !wxDirExists( wxStandardPaths::Get().GetUserDataDir() ) ) wxMkdir( wxStandardPaths::Get().GetUserDataDir() );
 
+		sett().RefreshSpringVersionList();
     ui().ReloadUnitSync(); // first time load of unitsync
     ui().ShowMainWindow();
 
