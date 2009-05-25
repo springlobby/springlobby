@@ -710,12 +710,11 @@ int BattleroomListCtrl::CompareHandicap(const DataType user1, const DataType use
 
 void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint position)
 {
-    long item = GetItemData(item_hit);
 
-    if ( item < 0 || item >= (long)m_data.size() )
+    if ( item_hit < 0 || item_hit >= (long)m_data.size() )
         return;
 
-    const User& user = *GetDataFromIndex( item );
+    const User& user = *GetDataFromIndex( item_hit );
 
     int coloumn = getColoumnFromPosition( position );
     if (coloumn > (int)m_colinfovec.size() || coloumn < 0)
