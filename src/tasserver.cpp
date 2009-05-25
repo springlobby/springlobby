@@ -298,7 +298,7 @@ void TASServer::Connect( const wxString& servername ,const wxString& addr, const
 {
 		m_server_name = servername;
     m_addr=addr;
-
+		m_buffer = _T("");
     m_sock->Connect( addr, port );
     if ( IsConnected() )
     {
