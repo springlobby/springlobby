@@ -400,7 +400,7 @@ void ChatPanel::CreatePopup()
 			displayjoinitem->Check( sett().GetDisplayJoinLeave( m_channel->GetName() ) );
 		}
 
-    wxMenuItem* mutelistitem = new wxMenuItem( m_popup_menu, CHAT_MENU_SHOW_MUTELIST, _( "Show mute list" ), wxEmptyString, wxITEM_NORMAL );
+        wxMenuItem* mutelistitem = new wxMenuItem( m_popup_menu, CHAT_MENU_SHOW_MUTELIST, _( "Show mute list" ), wxEmptyString, wxITEM_NORMAL );
 		m_popup_menu->Append( mutelistitem );
 
 		m_popup_menu->AppendSeparator();
@@ -441,7 +441,8 @@ void ChatPanel::CreatePopup()
 		m_chanserv->Append( -1, _( "Spam protection" ), m_spam );
 		m_popup_menu->Append( -1, _( "ChanServ" ), m_chanserv );
 
-	} else if ( m_type == CPT_Server ) {
+	}
+	else if ( m_type == CPT_Server ) {
 
 		wxLogMessage( _T( "server" ) );
 
@@ -469,7 +470,9 @@ void ChatPanel::CreatePopup()
 		m_user_menu->Append( broadcastitem );
 		m_popup_menu->Append( -1, _( "Admin" ), m_user_menu );
 	}
+	else if ( m_type == CPT_User ) {
 
+	}
 }
 
 
