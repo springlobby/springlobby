@@ -62,7 +62,7 @@ void WidgetDownloadListctrl::AddWidget( const Widget widget )
 {
     m_data.push_back( widget );
     SetItemCount( m_data.size() );
-    RefreshItem( m_data.size() );
+    RefreshItem( m_data.size() - 1);
     //RefreshVisibleItems();
 }
 

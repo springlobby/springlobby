@@ -97,8 +97,8 @@ void NickListCtrl::RemoveUser( const User& user )
     if ( index != -1 ) {
         m_data.erase( m_data.begin() + index );
         SetItemCount( m_data.size() );
-        SetColumnWidth( 3, wxLIST_AUTOSIZE );
-        RefreshVisibleItems( );
+        //SetColumnWidth( 3, wxLIST_AUTOSIZE );
+        RefreshItems( index, m_data.size() -1 );
         return;
     }
     wxLogError( _T("Didn't find the user to remove.") );
@@ -110,14 +110,12 @@ void NickListCtrl::UserUpdated( const User& user )
     int index = GetIndexFromData( &user );
     if ( index != -1 ) {
         m_data[index] = &user;
-        HighlightItemUser( user.GetNick() );
         MarkDirtySort();
         RefreshItem( index );
     }
     else {
         wxLogWarning(_T("NickListCtrl::UserUpdated error, index == -1 ."));
     }
-    HighlightItem( index );
 }
 
 void NickListCtrl::ClearUsers()
