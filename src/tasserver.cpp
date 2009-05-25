@@ -2076,6 +2076,7 @@ void TASServer::OnDisconnected( Socket* sock )
     m_connected = false;
     m_online = false;
 		m_token_transmission = false;
+		m_buffer = _T("");
 		m_relay_host_manager_list.Clear();
     m_se->OnDisconnected( connectionwaspresent );
     Server::OnDisconnected();

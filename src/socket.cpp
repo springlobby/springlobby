@@ -140,7 +140,8 @@ void Socket::Disconnect( )
   m_net_class.OnDisconnected( this );
   _EnablePingThread( false );
 
-  if ( m_sock ) {
+  if ( m_sock )
+  {
     m_sock->Destroy();
     m_sock = 0;
   }
