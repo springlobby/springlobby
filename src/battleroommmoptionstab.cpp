@@ -126,7 +126,7 @@ BattleroomMMOptionsTab<BattleType>::~BattleroomMMOptionsTab()
 template < class BattleType >
 void BattleroomMMOptionsTab<BattleType>::setupOptionsSizer( wxBoxSizer* parent_sizer, OptionsWrapper::GameOption optFlag )
 {
-    const IUnitSync::OptionMapSection& sections = m_battle.CustomBattleOptions().opts[optFlag].section_map;
+    const IUnitSync::OptionMapSection& sections = m_battle.CustomBattleOptions().m_opts[optFlag].section_map;
 
     unsigned int num_options = 0;
     IUnitSync::OptionMapSectionConstIter it = sections.begin();
@@ -184,7 +184,7 @@ int BattleroomMMOptionsTab<BattleType>::setupOptionsSectionSizer(const mmOptionS
 
     int total_count = 0;
 	int ctrl_count = 0;
-	for (IUnitSync::OptionMapBoolIter i = optWrap.opts[optFlag].bool_map.begin(); i != optWrap.opts[optFlag].bool_map.end();++i)
+	for (IUnitSync::OptionMapBoolIter i = optWrap.m_opts[optFlag].bool_map.begin(); i != optWrap.m_opts[optFlag].bool_map.end();++i)
     {
         if ( i->second.section == section.key )
         {
@@ -206,7 +206,7 @@ int BattleroomMMOptionsTab<BattleType>::setupOptionsSectionSizer(const mmOptionS
 
     total_count += ctrl_count;
 	ctrl_count = 0;
-	for ( IUnitSync::OptionMapFloatIter it = optWrap.opts[optFlag].float_map.begin(); it != optWrap.opts[optFlag].float_map.end(); ++it)
+	for ( IUnitSync::OptionMapFloatIter it = optWrap.m_opts[optFlag].float_map.begin(); it != optWrap.m_opts[optFlag].float_map.end(); ++it)
 	{
 	    wxString seckey = it->second.section;
 	    wxString kkey = section.key ;
@@ -235,7 +235,7 @@ int BattleroomMMOptionsTab<BattleType>::setupOptionsSectionSizer(const mmOptionS
 
     total_count += ctrl_count;
 	ctrl_count = 0;
-	for ( IUnitSync::OptionMapListIter it = optWrap.opts[optFlag].list_map.begin(); it != optWrap.opts[optFlag].list_map.end(); ++it)
+	for ( IUnitSync::OptionMapListIter it = optWrap.m_opts[optFlag].list_map.begin(); it != optWrap.m_opts[optFlag].list_map.end(); ++it)
 	{
 	    if ( it->second.section == section.key )
         {
@@ -269,7 +269,7 @@ int BattleroomMMOptionsTab<BattleType>::setupOptionsSectionSizer(const mmOptionS
 
     total_count += ctrl_count;
 	ctrl_count = 0;
-	for ( IUnitSync::OptionMapStringIter it = optWrap.opts[optFlag].string_map.begin(); it != optWrap.opts[optFlag].string_map.end(); ++it)
+	for ( IUnitSync::OptionMapStringIter it = optWrap.m_opts[optFlag].string_map.begin(); it != optWrap.m_opts[optFlag].string_map.end(); ++it)
 	{
 	    if ( it->second.section == section.key )
         {

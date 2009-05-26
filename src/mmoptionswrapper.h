@@ -82,7 +82,7 @@ public:
 	 * \param optType will contain the corresponding OptionType if key is found, opt_undefined otherwise
 	 * \return true if key is found, false otherwise
 	 */
-	bool keyExists(wxString key,GameOption flag,bool showError, OptionType& optType);
+	bool keyExists(wxString key,GameOption flag,bool showError, OptionType& optType) const;
 	//! given a vector of key/value pairs sets the appropiate options to new values
 	/*!	Every new value is tested for meeting boundary conditions, type, etc.
 	 * If test fails error is logged and false is returned.
@@ -97,9 +97,9 @@ public:
 	 * \param triples this will contain the options after the function
 	 * \param flag which OptionType is to be processed
 	 */
-	wxStringTripleVec getOptions( GameOption flag );
+	wxStringTripleVec getOptions( GameOption flag ) const;
 	//! similar to getOptions, instead of vector a map is used and the name is not stored
-	std::map<wxString,wxString> getOptionsMap(GameOption);
+	std::map<wxString,wxString> getOptionsMap(GameOption) const;
 	//! recreates ALL containers
 	void unLoadOptions();
 	//! recreates the containers of corresponding flag
@@ -109,15 +109,15 @@ public:
 	/*! searches all containers for key
 	 * \return value of key if key found, "" otherwise
 	 */
-	wxString getSingleValue(wxString key);
+	wxString getSingleValue(wxString key) const;
 	//! returns value of specified key
 	/*! searches containers of type flag for key
 	 * \return value of key if key found, "" otherwise
 	 */
 
-	wxString getSingleValue(wxString key, GameOption flag);
+	wxString getSingleValue(wxString key, GameOption flag) const;
 
-	wxString getDefaultValue(wxString key, GameOption flag);
+	wxString getDefaultValue(wxString key, GameOption flag) const;
 
 	//! sets a single option in specified container
 	/*! \return true if success, false otherwise */
@@ -126,15 +126,15 @@ public:
 	bool setSingleOption(wxString key, wxString value);
 
 	//! returns the option type of specified key (all containers are tried)
-	OptionType GetSingleOptionType (wxString key);
+	OptionType GetSingleOptionType (wxString key) const;
 
 	//!returns the cbx_choice associated w current listoption
-	wxString GetNameListOptValue(wxString key, GameOption flag);
+	wxString GetNameListOptValue(wxString key, GameOption flag) const;
 
 	//! returns the listitem key associated with listitem name
-	wxString GetNameListOptItemKey(wxString optkey, wxString itemname, GameOption flag);
+	wxString GetNameListOptItemKey(wxString optkey, wxString itemname, GameOption flag) const;
 
-	GameOptionsMap opts;
+	GameOptionsMap m_opts;
 
 	//! after loading sections into map, parse them into tree
 	void ParseSectionMap( mmSectionTree& section_tree, const IUnitSync::OptionMapSection& section_map );
@@ -143,6 +143,9 @@ protected:
 	bool setSingleOptionTypeSwitch(wxString key, wxString value, GameOption modmapFlag, OptionType optType);
 
 	mmSectionTreeMap m_sections;
+
+	typedef GameOptionsMap::const_iterator
+        GameOptionsMapCIter;
 
 };
 

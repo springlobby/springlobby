@@ -28,7 +28,7 @@ void OptionsWrapper::unLoadOptions()
 void OptionsWrapper::unLoadOptions(GameOption i)
 {
   GameOptions empty;
-  opts[i] = empty;
+  m_opts[i] = empty;
 
 	mmSectionTreeMap::iterator itor = m_sections.find( i );
 	if ( itor != m_sections.end() ) m_sections.erase( itor );
@@ -43,7 +43,7 @@ bool OptionsWrapper::loadMapOptions(wxString mapname)
 	return loadOptions(MapOption,mapname);
 }
 
-OptionType OptionsWrapper::GetSingleOptionType (wxString key)
+OptionType OptionsWrapper::GetSingleOptionType (wxString key) const
 {
 	OptionType type = opt_undefined;
 	for ( int g = 0; g < LastOption; g++ )
@@ -105,17 +105,20 @@ bool OptionsWrapper::loadOptions(GameOption modmapFlag, const wxString& name)
         break;
     }
 	}
-	opts[modmapFlag] = opt;
+	m_opts[modmapFlag] = opt;
 	return true;
 }
 
-bool OptionsWrapper::keyExists(wxString key, GameOption modmapFlag, bool showError, OptionType& optType)
+bool OptionsWrapper::keyExists(wxString key, GameOption modmapFlag, bool showError, OptionType& optType) const
 {
 	wxString duplicateKeyError = _T("Please contact the mod's author and tell him\n"
 										"to use unique keys in his ModOptions.lua");
 	bool exists = false;
 	optType = opt_undefined;
-	GameOptions& gameoptions = opts[(int)modmapFlag];
+    GameOptionsMap::const_iterator optIt = m_opts.find((int)modmapFlag);
+    if ( optIt == m_opts.end() )
+        return false;
+	const GameOptions& gameoptions = optIt->second;
 	if (  gameoptions.list_map.find(key) !=  gameoptions.list_map.end())
 	{
 		optType = opt_list;
@@ -175,57 +178,53 @@ bool  OptionsWrapper::setOptions(wxStringPairVec* options, GameOption modmapFlag
 	return true;
 }
 
-OptionsWrapper::wxStringTripleVec OptionsWrapper::getOptions( GameOption modmapFlag)
+OptionsWrapper::wxStringTripleVec OptionsWrapper::getOptions( GameOption modmapFlag) const
 {
-  wxStringTripleVec list;
-  GameOptions& gameoptions = opts[(int)modmapFlag];
-	for (IUnitSync::OptionMapBoolConstIter it = gameoptions.bool_map.begin(); it != gameoptions.bool_map.end(); ++it)
-	{
-		list.push_back( wxStringTriple( (*it).first, wxStringPair ( it->second.name , i2s(it->second.value) ) ) );
-	}
+    wxStringTripleVec list;
+    GameOptionsMapCIter optIt = m_opts.find((int)modmapFlag);
+    if ( optIt != m_opts.end() ) {
+        const GameOptions& gameoptions = optIt->second;
+        for (IUnitSync::OptionMapBoolConstIter it = gameoptions.bool_map.begin(); it != gameoptions.bool_map.end(); ++it) {
+            list.push_back( wxStringTriple( (*it).first, wxStringPair ( it->second.name , i2s(it->second.value) ) ) );
+        }
 
-	for (IUnitSync::OptionMapStringConstIter it = gameoptions.string_map.begin(); it != gameoptions.string_map.end(); ++it)
-	{
-		list.push_back( wxStringTriple( (*it).first, wxStringPair ( it->second.name, it->second.value) ) );
-	}
+        for (IUnitSync::OptionMapStringConstIter it = gameoptions.string_map.begin(); it != gameoptions.string_map.end(); ++it) {
+            list.push_back( wxStringTriple( (*it).first, wxStringPair ( it->second.name, it->second.value) ) );
+        }
 
-	for (IUnitSync::OptionMapFloatConstIter it = gameoptions.float_map.begin(); it != gameoptions.float_map.end(); ++it)
-	{
-		list.push_back( wxStringTriple( (*it).first, wxStringPair ( it->second.name, f2s(it->second.value) ) ) );
-	}
+        for (IUnitSync::OptionMapFloatConstIter it = gameoptions.float_map.begin(); it != gameoptions.float_map.end(); ++it) {
+            list.push_back( wxStringTriple( (*it).first, wxStringPair ( it->second.name, f2s(it->second.value) ) ) );
+        }
 
-	for (IUnitSync::OptionMapListConstIter it = gameoptions.list_map.begin(); it != gameoptions.list_map.end(); ++it)
-	{
-		list.push_back( wxStringTriple( (*it).first, wxStringPair ( it->second.name, it->second.value ) ) );
-	}
-
+        for (IUnitSync::OptionMapListConstIter it = gameoptions.list_map.begin(); it != gameoptions.list_map.end(); ++it) {
+            list.push_back( wxStringTriple( (*it).first, wxStringPair ( it->second.name, it->second.value ) ) );
+        }
+    }
 	return list;
 }
 
-std::map<wxString,wxString> OptionsWrapper::getOptionsMap( GameOption modmapFlag )
+std::map<wxString,wxString> OptionsWrapper::getOptionsMap( GameOption modmapFlag ) const
 {
-  std::map<wxString,wxString> map;
-  GameOptions& gameoptions = opts[(int)modmapFlag];
-	for (IUnitSync::OptionMapBoolConstIter it = gameoptions.bool_map.begin(); it != gameoptions.bool_map.end(); ++it)
-	{
-		map[it->first] =  i2s(it->second.value);
-	}
+    std::map<wxString,wxString> map;
+    GameOptionsMapCIter optIt = m_opts.find((int)modmapFlag);
+    if ( optIt != m_opts.end() ) {
+        const GameOptions& gameoptions = optIt->second;
+        for (IUnitSync::OptionMapBoolConstIter it = gameoptions.bool_map.begin(); it != gameoptions.bool_map.end(); ++it) {
+            map[it->first] =  i2s(it->second.value);
+        }
 
-	for (IUnitSync::OptionMapStringConstIter it = gameoptions.string_map.begin(); it != gameoptions.string_map.end(); ++it)
-	{
-		map[it->first] = it->second.value;
-	}
+        for (IUnitSync::OptionMapStringConstIter it = gameoptions.string_map.begin(); it != gameoptions.string_map.end(); ++it) {
+            map[it->first] = it->second.value;
+        }
 
-	for (IUnitSync::OptionMapFloatConstIter it = gameoptions.float_map.begin(); it != gameoptions.float_map.end(); ++it)
-	{
-		map[it->first] = f2s(it->second.value);
-	}
+        for (IUnitSync::OptionMapFloatConstIter it = gameoptions.float_map.begin(); it != gameoptions.float_map.end(); ++it) {
+            map[it->first] = f2s(it->second.value);
+        }
 
-	for (IUnitSync::OptionMapListConstIter it = gameoptions.list_map.begin(); it != gameoptions.list_map.end(); ++it)
-	{
-		map[it->first] = it->second.value;
-	}
-
+        for (IUnitSync::OptionMapListConstIter it = gameoptions.list_map.begin(); it != gameoptions.list_map.end(); ++it) {
+            map[it->first] = it->second.value;
+        }
+    }
 	return map;
 }
 
@@ -247,7 +246,7 @@ bool OptionsWrapper::setSingleOption(wxString key,wxString value)
 		return false;
 }
 
-wxString OptionsWrapper::getSingleValue(wxString key)
+wxString OptionsWrapper::getSingleValue(wxString key) const
 {
 	for ( int g = 0; g < LastOption; g++ )
 	{
@@ -258,14 +257,19 @@ wxString OptionsWrapper::getSingleValue(wxString key)
 	return wxEmptyString;
 }
 
-wxString OptionsWrapper::getSingleValue(wxString key, GameOption modmapFlag)
+wxString OptionsWrapper::getSingleValue(wxString key, GameOption modmapFlag) const
 {
 	OptionType optType = opt_undefined;
 
 	if ( keyExists(key,modmapFlag,false,optType) )
 	{
 	    //purposefully create a copy, no better idea
-	    GameOptions tempOpt = opts[modmapFlag];
+//	    GameOptions tempOpt = m_opts[modmapFlag];
+        GameOptionsMapCIter optIt = m_opts.find((int)modmapFlag);
+        if ( optIt == m_opts.end() )
+            return wxEmptyString;
+
+        GameOptions tempOpt = optIt->second;
 		switch (optType)
 		{
 		case opt_float:
@@ -285,14 +289,18 @@ wxString OptionsWrapper::getSingleValue(wxString key, GameOption modmapFlag)
 	return wxEmptyString;
 }
 
-wxString OptionsWrapper::getDefaultValue(wxString key, GameOption modmapFlag)
+wxString OptionsWrapper::getDefaultValue(wxString key, GameOption modmapFlag) const
 {
 	OptionType optType = opt_undefined;
 	wxString ret;
 	if ( keyExists(key,modmapFlag,false,optType) )
 	{
 			//purposefully create a copy, no better idea
-	    GameOptions tempOpt = opts[(int)modmapFlag];
+        GameOptionsMapCIter optIt = m_opts.find((int)modmapFlag);
+        if ( optIt == m_opts.end() )
+            return wxEmptyString;
+
+        GameOptions tempOpt = optIt->second;
 		switch ( optType )
 		{
 			{
@@ -326,7 +334,7 @@ wxString OptionsWrapper::getDefaultValue(wxString key, GameOption modmapFlag)
 
 bool  OptionsWrapper::setSingleOptionTypeSwitch(wxString key, wxString value, GameOption modmapFlag, OptionType optType)
 {
-	GameOptions& gameoptions = opts[modmapFlag];
+	GameOptions& gameoptions = m_opts[modmapFlag];
 	switch (optType)
 	{
 		case opt_float :
@@ -404,14 +412,18 @@ bool  OptionsWrapper::setSingleOptionTypeSwitch(wxString key, wxString value, Ga
 	return true;
 }
 
-wxString OptionsWrapper::GetNameListOptValue(wxString key, GameOption flag)
+wxString OptionsWrapper::GetNameListOptValue(wxString key, GameOption flag) const
 {
 	OptionType optType;
 	if ( keyExists(key,flag,false, optType) )
 	{
 		if ( optType == opt_list)
 		{
-		    GameOptions tempOpt = opts[(int)flag];
+            GameOptionsMapCIter optIt = m_opts.find((int)flag);
+            if ( optIt == m_opts.end() )
+                return wxEmptyString;
+
+            GameOptions tempOpt = optIt->second;
 			return ( (tempOpt.list_map)[key].cbx_choices[ (tempOpt.list_map)[key].cur_choice_index ] );
 		}
 	}
@@ -420,14 +432,18 @@ wxString OptionsWrapper::GetNameListOptValue(wxString key, GameOption flag)
 	return wxEmptyString;
 }
 
-wxString OptionsWrapper::GetNameListOptItemKey(wxString optkey, wxString itemname, GameOption flag)
+wxString OptionsWrapper::GetNameListOptItemKey(wxString optkey, wxString itemname, GameOption flag) const
 {
 	OptionType optType;
 	if ( keyExists(optkey,flag,false, optType) )
 	{
 		if ( optType == opt_list)
 		{
-		    GameOptions tempOpt = opts[(int)flag];
+            GameOptionsMapCIter optIt = m_opts.find((int)flag);
+            if ( optIt == m_opts.end() )
+                return wxEmptyString;
+
+            GameOptions tempOpt = optIt->second;
 			for (ListItemVec::iterator it = (tempOpt.list_map)[optkey].listitems.begin(); it != (tempOpt.list_map)[optkey].listitems.end(); ++it)
 			{
 				if (it->name == itemname)
