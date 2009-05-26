@@ -33,7 +33,7 @@
 
 void tab_render_detail::initRendererSizer(wxFlexGridSizer* sizerL,wxFlexGridSizer* sizerR ) {
 	const int extrema[] = {
-		1024, 8192,   600, 3000,   20, 120,   100, 600,   0, 10,   0, 1,   100, 1000,   0, 20000,   0, 20000
+		1024, 8192,   600, 3000,   20, 120,   100, 600,   0, 10,   0, 5,   100, 1000,   0, 20000,   0, 20000
 	};
 
 	for (int i = 0; i < ctrl_detail_sliders_size/2; i++) {
