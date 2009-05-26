@@ -100,7 +100,7 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_AUINOTEBOOK_PAGE_CHANGED( MAIN_TABS, MainWindow::OnTabsChanged )
 END_EVENT_TABLE()
 
-
+MainWindow::TabNames MainWindow::m_tab_names;
 
 MainWindow::MainWindow( Ui& ui )
     : wxFrame( (wxFrame*)0, -1, _("SpringLobby"), wxPoint(50, 50), wxSize(450, 340) ),
@@ -179,13 +179,13 @@ MainWindow::MainWindow( Ui& ui )
   m_torrent_tab = new MainTorrentTab( m_func_tabs, m_ui);
 #endif
 
-  m_func_tabs->AddPage( m_chat_tab, _("Chat"), true );
-  m_func_tabs->AddPage( m_join_tab, _("Multiplayer"), false );
-  m_func_tabs->AddPage( m_sp_tab, _("Singleplayer"), false );
-  m_func_tabs->AddPage( m_opts_tab, _("Options"), false );
-  m_func_tabs->AddPage( m_replay_tab, _("Replays"), false );
+  m_func_tabs->AddPage( m_chat_tab,     m_tab_names[0], true  );
+  m_func_tabs->AddPage( m_join_tab,     m_tab_names[1], false );
+  m_func_tabs->AddPage( m_sp_tab,       m_tab_names[2], false );
+  m_func_tabs->AddPage( m_opts_tab,     m_tab_names[3], false );
+  m_func_tabs->AddPage( m_replay_tab,   m_tab_names[4], false );
 #ifndef NO_TORRENT_SYSTEM
-  m_func_tabs->AddPage( m_torrent_tab, _("Downloads"), false );
+  m_func_tabs->AddPage( m_torrent_tab,  m_tab_names[5], false );
 #endif
   SetTabIcons();
   m_main_sizer->Add( m_func_tabs, 1, wxEXPAND | wxALL, 0 );
@@ -347,7 +347,7 @@ MainOptionsTab& MainWindow::GetOptionsTab()
 void MainWindow::OpenChannelChat( Channel& channel )
 {
   ASSERT_LOGIC( m_chat_tab != 0, _T("m_chat_tab") );
-  m_func_tabs->SetSelection( 0 );
+  m_func_tabs->SetSelection( PAGE_CHAT );
   m_chat_tab->AddChatPannel( channel );
 }
 
@@ -368,9 +368,16 @@ void MainWindow::OpenPrivateChat( const User& user, bool doFocus )
 //! @brief Displays the lobby singleplayer tab.
 void MainWindow::ShowSingleplayer()
 {
-  m_func_tabs->SetSelection( PAGE_SINGLE );
+    ShowTab( PAGE_SINGLE );
 }
 
+void MainWindow::ShowTab( const int idx )
+{
+    if ( -1 < idx && idx <m_tab_names.GetCount() )
+        m_func_tabs->SetSelection( idx );
+    else
+        wxLogError( _T("tab selection oob: %d"), idx );
+}
 
 //! @brief Displays the lobby configuration.
 void MainWindow::ShowConfigure( const unsigned int page )
@@ -618,4 +625,9 @@ void MainWindow::OnMenuDefaultLayout( wxCommandEvent& event )
 	unsigned int result = wxGetSingleChoiceIndex( _("Which profile do you want to be default?"), _("Layout manager"), layouts );
 	if ( ( result < 0  ) || ( result > layouts.GetCount() ) ) return;
 	sett().SetDefaultLayout( layouts[result] );
+}
+
+const MainWindow::TabNames& MainWindow::GetTabNames()
+{
+    return m_tab_names;
 }

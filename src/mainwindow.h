@@ -36,6 +36,8 @@ class WidgetDownloadDialog;
 // FIXME shouldn't copy this here
 typedef wxWindow wxNotebookPage;
 
+
+
 //! @brief wxFrame that contains the main window of the client.
 class MainWindow : public wxFrame
 {
@@ -48,6 +50,7 @@ class MainWindow : public wxFrame
     void OpenPrivateChat( const User& user, bool doFocus = false );
 
     void ShowConfigure( const unsigned int page = OPT_PAGE_SPRING );
+    void ShowTab( const int idx );
     void ShowSingleplayer();
 
     /** Show the channel list dialog. */
@@ -150,6 +153,23 @@ class MainWindow : public wxFrame
         MENU_SCREENSHOTS
     };
 
+        class TabNames : public wxArrayString
+        {
+            public:
+                TabNames ()
+                {
+                    Add( _("Chat") );
+                    Add( _("Multiplayer") );
+                    Add( _("Singleplayer") );
+                    Add( _("Options") );
+                    Add( _("Replays") );
+                #ifndef NO_TORRENT_SYSTEM
+                    Add( _("Downloads") );
+                #endif
+                }
+        };
+        static TabNames m_tab_names;
+
     public:
         // Page indexes
         static const unsigned int PAGE_CHAT    = 0;
@@ -167,7 +187,12 @@ class MainWindow : public wxFrame
         static const unsigned int OPT_PAGE_GENERAL  = 2;
         static const unsigned int OPT_PAGE_GROUPS   = 3;
         #endif
+
+        static const TabNames& GetTabNames();
+
     protected:
+
+
         DECLARE_EVENT_TABLE()
 };
 

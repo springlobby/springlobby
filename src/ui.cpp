@@ -560,8 +560,9 @@ void Ui::OnUpdate( int mselapsed )
     {
         m_first_update_trigger = false;
 
-        if ( sett().GetAutoConnect() )
-            Connect();
+        if ( sett().GetAutoConnect() ) {
+            Connect(); //the start tab is set from UI::onLoggedin
+        }
 #ifdef __WXMSW__
         if ( sett().GetAutoUpdate() )Updater().CheckForUpdates();
 #endif
@@ -643,7 +644,8 @@ void Ui::OnLoggedIn( )
 {
     if ( m_main_win == 0 ) return;
     mw().GetChatTab().RejoinChannels();
-
+    if ( sett().GetAutoConnect() )
+        mw().ShowTab( sett().GetStartTab() );
 }
 
 
