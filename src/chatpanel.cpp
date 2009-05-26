@@ -134,6 +134,7 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Channel& chan, wxImageList* imag
   m_type( CPT_Channel ),
   m_popup_menu( 0 ),
   m_chat_log(sett().GetDefaultServer(), chan_prefix + chan.GetName()),
+  m_usermenu( 0 ),
   m_icon_index( 2 ),
   m_imagelist( imaglist ),
   m_disable_append( false )
@@ -161,6 +162,7 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, const User& user, wxImageList* i
   m_type( CPT_User ),
   m_popup_menu( 0 ),
   m_chat_log(sett().GetDefaultServer(), user.GetNick()),
+  m_usermenu( 0 ),
   m_icon_index( 3 ),
   m_imagelist( imaglist ),
   m_disable_append( false )
@@ -186,6 +188,7 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Server& serv, wxImageList* imagl
   m_type( CPT_Server ),
   m_popup_menu( 0 ),
   m_chat_log(sett().GetDefaultServer(), _T( "_SERVER" )),
+  m_usermenu( 0 ),
   m_icon_index( 1 ),
   m_imagelist( imaglist ),
   m_disable_append( false )
@@ -213,6 +216,7 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Battle& battle ):
   m_type( CPT_Battle ),
   m_popup_menu( 0 ),
   m_chat_log(sett().GetDefaultServer(), _T( "_BATTLE_" ) + wxDateTime::Now().Format( _T( "%Y_%m_%d__%H_%M_%S" ) )),
+  m_usermenu( 0 ),
   m_disable_append( false )
 {
 	wxLogDebugFunc( _T( "wxWindow* parent, Battle& battle" ) );
@@ -471,7 +475,13 @@ void ChatPanel::CreatePopup()
 		m_popup_menu->Append( -1, _( "Admin" ), m_user_menu );
 	}
 	else if ( m_type == CPT_User ) {
+        if ( m_usermenu  )
+            delete m_usermenu ;
 
+        m_usermenu = CreateNickListMenu();
+        if ( m_user )
+            m_usermenu->EnableItems( true, m_user->GetNick() );
+        m_popup_menu->AppendSubMenu( m_usermenu, _("User") );
 	}
 }
 
@@ -480,8 +490,10 @@ ChatPanel::UserMenu* ChatPanel::CreateNickListMenu()
 {
 	ChatPanel::UserMenu* m_user_menu;
 	m_user_menu = new ChatPanel::UserMenu( this );
-	wxMenuItem* chatitem = new wxMenuItem( m_user_menu, CHAT_MENU_US_CHAT,  _( "Open Chat" ) , wxEmptyString, wxITEM_NORMAL );
-	m_user_menu->Append( chatitem );
+    if ( m_type != CPT_User ) {
+        wxMenuItem* chatitem = new wxMenuItem( m_user_menu, CHAT_MENU_US_CHAT,  _( "Open Chat" ) , wxEmptyString, wxITEM_NORMAL );
+        m_user_menu->Append( chatitem );
+    }
     wxMenuItem* joinbattleitem = new wxMenuItem( m_user_menu, CHAT_MENU_US_JOIN,  _( "Join same battle" ) , wxEmptyString, wxITEM_NORMAL );
     m_user_menu->Append( joinbattleitem );
 
@@ -532,23 +544,25 @@ ChatPanel::UserMenu* ChatPanel::CreateNickListMenu()
 		m_user_menu->Append( slapitem );
 	}
 
-	m_user_menu->AppendSeparator();
-	wxMenu* m_chanserv;
-	m_chanserv = new wxMenu();
-	wxMenuItem* chmuteitem = new wxMenuItem( m_chanserv, CHAT_MENU_US_MUTE, _( "Mute..." ), wxEmptyString, wxITEM_NORMAL );
-	m_chanserv->Append( chmuteitem );
-	wxMenuItem* chunmuteitem = new wxMenuItem( m_chanserv, CHAT_MENU_US_UNMUTE, _( "Unmute" ), wxEmptyString, wxITEM_NORMAL );
-	m_chanserv->Append( chunmuteitem );
-	m_chanserv->AppendSeparator();
-	wxMenuItem* chkickitem = new wxMenuItem( m_chanserv, CHAT_MENU_US_KICK, _( "Kick..." ), wxEmptyString, wxITEM_NORMAL );
-	m_chanserv->Append( chkickitem );
+    if ( m_type != CPT_User ) {
+        m_user_menu->AppendSeparator();
+        wxMenu* m_chanserv;
+        m_chanserv = new wxMenu();
+        wxMenuItem* chmuteitem = new wxMenuItem( m_chanserv, CHAT_MENU_US_MUTE, _( "Mute..." ), wxEmptyString, wxITEM_NORMAL );
+        m_chanserv->Append( chmuteitem );
+        wxMenuItem* chunmuteitem = new wxMenuItem( m_chanserv, CHAT_MENU_US_UNMUTE, _( "Unmute" ), wxEmptyString, wxITEM_NORMAL );
+        m_chanserv->Append( chunmuteitem );
+        m_chanserv->AppendSeparator();
+        wxMenuItem* chkickitem = new wxMenuItem( m_chanserv, CHAT_MENU_US_KICK, _( "Kick..." ), wxEmptyString, wxITEM_NORMAL );
+        m_chanserv->Append( chkickitem );
 
-	m_chanserv->AppendSeparator();
-	wxMenuItem* chopitem = new wxMenuItem( m_chanserv, CHAT_MENU_US_OP, _( "Op" ), wxEmptyString, wxITEM_NORMAL );
-	m_chanserv->Append( chopitem );
-	wxMenuItem* chdeopitem = new wxMenuItem( m_chanserv, CHAT_MENU_US_DEOP, _( "DeOp" ), wxEmptyString, wxITEM_NORMAL );
-	m_chanserv->Append( chdeopitem );
-	m_user_menu->Append( -1, _( "ChanServ" ), m_chanserv );
+        m_chanserv->AppendSeparator();
+        wxMenuItem* chopitem = new wxMenuItem( m_chanserv, CHAT_MENU_US_OP, _( "Op" ), wxEmptyString, wxITEM_NORMAL );
+        m_chanserv->Append( chopitem );
+        wxMenuItem* chdeopitem = new wxMenuItem( m_chanserv, CHAT_MENU_US_DEOP, _( "DeOp" ), wxEmptyString, wxITEM_NORMAL );
+        m_chanserv->Append( chdeopitem );
+        m_user_menu->Append( -1, _( "ChanServ" ), m_chanserv );
+    }
 
 	return m_user_menu;
 }
