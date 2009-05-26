@@ -344,11 +344,12 @@ MainOptionsTab& MainWindow::GetOptionsTab()
 //! @param channel The channel name
 //! @note This does NOT join the chatt.
 //! @sa Server::JoinChannel OpenPrivateChat
-void MainWindow::OpenChannelChat( Channel& channel )
+void MainWindow::OpenChannelChat( Channel& channel, bool doFocus )
 {
-  ASSERT_LOGIC( m_chat_tab != 0, _T("m_chat_tab") );
-  m_func_tabs->SetSelection( PAGE_CHAT );
-  m_chat_tab->AddChatPannel( channel );
+    ASSERT_LOGIC( m_chat_tab != 0, _T("m_chat_tab") );
+    if ( doFocus )
+        m_func_tabs->SetSelection( PAGE_CHAT );
+    m_chat_tab->AddChatPannel( channel );
 }
 
 

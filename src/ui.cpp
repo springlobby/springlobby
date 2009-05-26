@@ -718,6 +718,19 @@ void Ui::SwitchToNextServer()
 		sett().SetDefaultServer( previous_server ); // don't save the new server as default when switched this way
 }
 
+static inline bool IsAutoJoinChannel( Channel& chan )
+{
+    typedef std::vector<ChannelJoinInfo>
+        Vec;
+    typedef Vec::const_iterator
+        VecIt;
+    const Vec chans = sett().GetChannelsJoin();
+    for ( VecIt it = chans.begin(); it != chans.end(); ++it ) {
+        if ( it->name == chan.GetName() )
+            return true;
+    }
+    return false;
+}
 //! @brief Called when client has joined a channel
 //!
 //! @todo Check if a pannel allready exists for this channel
@@ -727,7 +740,8 @@ void Ui::OnJoinedChannelSuccessful( Channel& chan )
     wxLogDebugFunc( _T("") );
 
     chan.uidata.panel = 0;
-    mw().OpenChannelChat( chan );
+
+    mw().OpenChannelChat( chan, !sett().GetAutoConnect() || !IsAutoJoinChannel( chan ) );
 }
 
 
