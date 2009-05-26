@@ -27,7 +27,7 @@ class Spring: public wxEvtHandler
     /*!
      * \param filename the full path for the replayfile
      */
-    bool RunReplay ( wxString& filename );
+    bool RunReplay ( const wxString& filename );
 
     wxString WriteScriptTxt( IBattle& battle );
     void OnTerminated( wxCommandEvent& event );

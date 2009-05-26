@@ -1256,7 +1256,7 @@ void Ui::ReloadPresetList()
 }
 
 
-void Ui::WatchReplay ( wxString& filename )
+void Ui::WatchReplay ( const wxString& filename )
 {
     OnSpringStarting();
     m_spring->RunReplay( filename );

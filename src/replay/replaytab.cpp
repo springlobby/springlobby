@@ -272,7 +272,8 @@ void ReplayTab::OnWatch( wxCommandEvent& event )
             if ( versionlist.size() == 0 )
             {
               wxLogWarning( _T("can't get spring version from any unitsync") );
-              customMessageBoxNoModal(SL_MAIN_ICON,  _("Couldn't get your spring versions from any unitsync library."), _("Spring error"), wxICON_EXCLAMATION|wxOK );
+              customMessageBox(SL_MAIN_ICON,  _("Couldn't get your spring versions from any unitsync library."), _("Spring error"), wxICON_EXCLAMATION|wxOK );
+              AskForceWatch( rep.Filename );
               return;
             }
             bool versionfound = false;
@@ -294,8 +295,9 @@ void ReplayTab::OnWatch( wxCommandEvent& event )
               wxString message = wxString::Format( _("No compatible installed spring version has been found, this replay requires version: %s\n"), rep.SpringVersion.c_str() );
               message << _("Your current installed versions are:");
               for ( std::map<wxString, wxString>::iterator itor = versionlist.begin(); itor != versionlist.end(); itor++ ) message << _T(" ") << itor->second;
-              customMessageBoxNoModal (SL_MAIN_ICON, message, _("Spring error"), wxICON_EXCLAMATION|wxOK );
+              customMessageBox(SL_MAIN_ICON, message, _("Spring error"), wxICON_EXCLAMATION|wxOK );
               wxLogWarning ( _T("no spring version supported by this replay found") );
+              AskForceWatch( rep.Filename );
               return;
             }
 
@@ -317,6 +319,9 @@ void ReplayTab::OnWatch( wxCommandEvent& event )
                         wxString modname = battle.GetHostModName();
                         m_ui.DownloadMod ( modhash, modname );
                     }
+                    else {
+                        AskForceWatch( rep.Filename );
+                    }
                     return;
                 }
 
@@ -326,6 +331,9 @@ void ReplayTab::OnWatch( wxCommandEvent& event )
                         wxString mapname = battle.GetHostMapName();
                         m_ui.DownloadMap ( maphash, mapname );
                     }
+                    else {
+                        AskForceWatch( rep.Filename );
+                    }
                 }
             }
         }catch(std::runtime_error){
@@ -333,6 +341,13 @@ void ReplayTab::OnWatch( wxCommandEvent& event )
         }
     }else{
         Deselected();
+    }
+}
+
+void ReplayTab::AskForceWatch( const wxString& filename ) const
+{
+    if (customMessageBox(SL_MAIN_ICON, _("I don't think you will be able to watch this replay.\nTry anyways? (MIGHT CRASH!)") , _("invalid replay"), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
+        m_ui.WatchReplay( filename );
     }
 }
 
