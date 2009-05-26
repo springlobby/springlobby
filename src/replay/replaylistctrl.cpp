@@ -89,7 +89,7 @@ void ReplayListCtrl::AddReplay( const Replay& replay )
     }
     m_data.push_back( &replay );
     SetItemCount( m_data.size() );
-    RefreshItem( m_data.size() );
+    RefreshItem( m_data.size() - 1);
 }
 
 void ReplayListCtrl::RemoveReplay( const Replay& replay )

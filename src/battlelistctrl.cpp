@@ -164,8 +164,8 @@ void BattleListCtrl::AddBattle( IBattle& battle )
     }
     m_data.push_back( &battle );
     SetItemCount( m_data.size() );
-    RefreshItem( m_data.size() );
-//    MarkDirtySort();
+    RefreshItem( m_data.size() -1 );
+    MarkDirtySort();
 }
 
 void BattleListCtrl::RemoveBattle( IBattle& battle )
@@ -175,7 +175,7 @@ void BattleListCtrl::RemoveBattle( IBattle& battle )
     if ( index != -1 ) {
         m_data.erase( m_data.begin() + index );
         SetItemCount( m_data.size() );
-        RefreshVisibleItems( );
+        RefreshItems( index, m_data.size() -1 );
         return;
     }
     wxLogError( _T("Didn't find the battle to remove.") );

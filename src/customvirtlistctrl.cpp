@@ -183,7 +183,9 @@ template < class T >
 void CustomVirtListCtrl<T>::RefreshVisibleItems()
 {
     long topItemIndex = GetTopItem();
-    RefreshItems( topItemIndex, topItemIndex + GetCountPerPage() );
+    long range = topItemIndex + GetCountPerPage();
+    //RefreshItems( topItemIndex,  clamp( range, topItemIndex, (long) m_data.size() ) );
+    RefreshItems( topItemIndex,  range );
 }
 
 template < class T >
@@ -401,9 +403,9 @@ void CustomVirtListCtrl<T>::SortList( bool force )
     if ( !m_dirty_sort && !force )
         return;
 
-//    Freeze();
+    Freeze();
     Sort();
-//    Thaw();
+    Thaw();
     m_dirty_sort = false;
     RefreshVisibleItems();
 }

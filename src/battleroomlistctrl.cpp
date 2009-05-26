@@ -179,8 +179,8 @@ void BattleroomListCtrl::AddUser( User& user )
     }
     m_data.push_back( &user );
     SetItemCount( m_data.size() );
-    RefreshItem( m_data.size() );
-    SetColumnWidth( 5, wxLIST_AUTOSIZE ); //! TODO does this really work?
+    RefreshItem( m_data.size() - 1 );
+    //SetColumnWidth( 5, wxLIST_AUTOSIZE ); //! TODO does this really work?
     MarkDirtySort();
 }
 
@@ -191,8 +191,8 @@ void BattleroomListCtrl::RemoveUser( User& user )
     if ( index != -1 ) {
         m_data.erase( m_data.begin() + index );
         SetItemCount( m_data.size() );
-        RefreshVisibleItems( );
-        SetColumnWidth( 5, wxLIST_AUTOSIZE );
+        RefreshItems( index, m_data.size() -1 );
+        //SetColumnWidth( 5, wxLIST_AUTOSIZE );
         return;
     }
     wxLogError( _T("Didn't find the user to remove in battleroomlistctrl.") );
@@ -330,7 +330,9 @@ wxString BattleroomListCtrl::OnGetItemText(long item, long column) const
 
 void BattleroomListCtrl::UpdateUser( const int& index )
 {
+    Freeze();
     RefreshItem( index );
+    Thaw();
     MarkDirtySort();
 }
 
@@ -708,12 +710,11 @@ int BattleroomListCtrl::CompareHandicap(const DataType user1, const DataType use
 
 void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint position)
 {
-    long item = GetItemData(item_hit);
 
-    if ( item < 0 || item >= (long)m_data.size() )
+    if ( item_hit < 0 || item_hit >= (long)m_data.size() )
         return;
 
-    const User& user = *GetDataFromIndex( item );
+    const User& user = *GetDataFromIndex( item_hit );
 
     int coloumn = getColoumnFromPosition( position );
     if (coloumn > (int)m_colinfovec.size() || coloumn < 0)
