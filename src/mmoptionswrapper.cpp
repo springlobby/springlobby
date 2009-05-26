@@ -256,6 +256,15 @@ wxString OptionsWrapper::getSingleValue(wxString key) const
 	}
 	return wxEmptyString;
 }
+template < class MapType >
+static inline typename MapType::mapped_type GetItem( const MapType map, const typename MapType::key_type& key )
+{
+    typename MapType::const_iterator mapIt = map.find(key);
+    if ( mapIt != map.end() )
+        return mapIt->second;
+    else
+        return typename MapType::mapped_type();
+}
 
 wxString OptionsWrapper::getSingleValue(wxString key, GameOption modmapFlag) const
 {
@@ -263,23 +272,21 @@ wxString OptionsWrapper::getSingleValue(wxString key, GameOption modmapFlag) con
 
 	if ( keyExists(key,modmapFlag,false,optType) )
 	{
-	    //purposefully create a copy, no better idea
-//	    GameOptions tempOpt = m_opts[modmapFlag];
         GameOptionsMapCIter optIt = m_opts.find((int)modmapFlag);
         if ( optIt == m_opts.end() )
             return wxEmptyString;
 
-        GameOptions tempOpt = optIt->second;
+        const GameOptions& tempOpt = optIt->second;
 		switch (optType)
 		{
 		case opt_float:
-			return f2s( tempOpt.float_map[key].value );
+			return f2s( GetItem( tempOpt.float_map, key ).value );
 		case opt_bool:
-			return i2s( tempOpt.bool_map[key].value );
+			return i2s( GetItem( tempOpt.bool_map, key ).value );
 		case opt_string:
-			return  tempOpt.string_map[key].value ;
+			return  GetItem( tempOpt.string_map, key ).value ;
 		case opt_list:
-			return tempOpt.list_map[key].value;
+			return GetItem( tempOpt.list_map, key ).value;
         case opt_undefined:
         default:
             return wxEmptyString;
@@ -300,27 +307,27 @@ wxString OptionsWrapper::getDefaultValue(wxString key, GameOption modmapFlag) co
         if ( optIt == m_opts.end() )
             return wxEmptyString;
 
-        GameOptions tempOpt = optIt->second;
+        const GameOptions& tempOpt = optIt->second;
 		switch ( optType )
 		{
 			{
 			case opt_bool:
-				ret = TowxString( tempOpt.bool_map[key].def );
+				ret = TowxString( GetItem( tempOpt.bool_map, key ).def );
 				break;
 			}
 			case opt_float:
 			{
-				ret = TowxString( tempOpt.float_map[key].def );
+				ret = TowxString( GetItem( tempOpt.float_map, key ).def );
 				break;
 			}
 			case opt_string:
 			{
-				ret = tempOpt.string_map[key].def;
+				ret = GetItem( tempOpt.string_map, key ).def;
 				break;
 			}
 			case opt_list:
 			{
-				ret = tempOpt.list_map[key].def;
+				ret = GetItem( tempOpt.list_map, key ).def;
 				break;
 			}
 			default:
