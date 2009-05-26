@@ -283,6 +283,9 @@ class Settings
      * @{
      */
 
+     void SetStartTab( const int idx );
+     unsigned int GetStartTab( );
+
      void SaveCustomColors( const wxColourData& cdata, const wxString& paletteName = _T("Default") );
      wxColourData GetCustomColors( const wxString& paletteName = _T("Default") );
 

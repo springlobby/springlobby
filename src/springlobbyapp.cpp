@@ -73,8 +73,9 @@ BEGIN_EVENT_TABLE(SpringLobbyApp, wxApp)
 END_EVENT_TABLE()
 
 SpringLobbyApp::SpringLobbyApp()
-    :m_translationhelper( NULL ),
-    quit_called( false )
+    : quit_called( false ),
+    m_translationhelper( NULL )
+
 {
     m_timer = new wxTimer(this, TIMER_ID);
     SetAppName( _T("springlobby") );

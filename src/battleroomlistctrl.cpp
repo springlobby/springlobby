@@ -790,7 +790,7 @@ void BattleroomListCtrl::OnUserMenuCreateGroup( wxCommandEvent& event )
 
         useractions().AddGroup( name );
         useractions().AddUserToGroup( name, nick );
-        ui().mw().ShowConfigure( OPT_PAGE_GROUPS );
+        ui().mw().ShowConfigure( MainWindow::OPT_PAGE_GROUPS );
     }
 }
 

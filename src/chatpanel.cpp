@@ -1665,7 +1665,7 @@ void ChatPanel::OnUserMenuCreateGroup( wxCommandEvent& event )
         if ( user ) {
             useractions().AddGroup( name );
             useractions().AddUserToGroup( name, user->GetNick() );
-            ui().mw().ShowConfigure( OPT_PAGE_GROUPS );
+            ui().mw().ShowConfigure( MainWindow::OPT_PAGE_GROUPS );
         }
         else
             customMessageBoxNoModal( SL_MAIN_ICON, _("couldn't add user"), _("Error") );

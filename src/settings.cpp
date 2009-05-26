@@ -33,6 +33,7 @@
 #include "customlistctrl.h"
 #include "settings++/presets.h"
 #include "Helper/sortutil.h"
+#include "mainwindow.h"
 
 const wxColor defaultHLcolor (255,0,0);
 
@@ -2237,5 +2238,15 @@ int Settings::GetSashPosition( const wxString& window_name )
 void Settings::SetSashPosition( const wxString& window_name, const int pos )
 {
     m_config->Write(_T("/GUI/SashPostion/") + window_name , pos );
+}
+
+void Settings::SetStartTab( const int idx )
+{
+    m_config->Write( _T("/GUI/StartTab") , idx );
+}
+
+unsigned int Settings::GetStartTab( )
+{
+    return m_config->Read( _T("/GUI/StartTab") , MainWindow::PAGE_SINGLE ); //default is SP tab
 }
 

@@ -36,25 +36,6 @@ class WidgetDownloadDialog;
 // FIXME shouldn't copy this here
 typedef wxWindow wxNotebookPage;
 
-
-// Page indexes
-const unsigned int PAGE_CHAT    = 0;
-const unsigned int PAGE_JOIN    = 1;
-const unsigned int PAGE_SINGLE  = 2;
-const unsigned int PAGE_OPTOS   = 3;
-
-static const unsigned int OPT_PAGE_SPRING   = 0;
-static const unsigned int OPT_PAGE_CHAT     = 1;
-#ifndef NO_TORRENT_SYSTEN
-static const unsigned int OPT_PAGE_TORRENT  = 2;
-static const unsigned int OPT_PAGE_GENERAL  = 3;
-static const unsigned int OPT_PAGE_GROUPS   = 4;
-#else
-static const unsigned int OPT_PAGE_GENERAL  = 2;
-static const unsigned int OPT_PAGE_GROUPS   = 3;
-#endif
-
-
 //! @brief wxFrame that contains the main window of the client.
 class MainWindow : public wxFrame
 {
@@ -169,7 +150,25 @@ class MainWindow : public wxFrame
         MENU_SCREENSHOTS
     };
 
-    DECLARE_EVENT_TABLE()
+    public:
+        // Page indexes
+        static const unsigned int PAGE_CHAT    = 0;
+        static const unsigned int PAGE_JOIN    = 1;
+        static const unsigned int PAGE_SINGLE  = 2;
+        static const unsigned int PAGE_OPTOS   = 3;
+
+        static const unsigned int OPT_PAGE_SPRING   = 0;
+        static const unsigned int OPT_PAGE_CHAT     = 1;
+        #ifndef NO_TORRENT_SYSTEN
+        static const unsigned int OPT_PAGE_TORRENT  = 2;
+        static const unsigned int OPT_PAGE_GENERAL  = 3;
+        static const unsigned int OPT_PAGE_GROUPS   = 4;
+        #else
+        static const unsigned int OPT_PAGE_GENERAL  = 2;
+        static const unsigned int OPT_PAGE_GROUPS   = 3;
+        #endif
+    protected:
+        DECLARE_EVENT_TABLE()
 };
 
 //ChatPanel& servwin();
