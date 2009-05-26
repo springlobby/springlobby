@@ -368,20 +368,20 @@ bool TASServer::Register( const wxString& addr, const int port, const wxString& 
 }
 
 
-bool TASServer::IsPasswordHash( const wxString& pass )
+bool TASServer::IsPasswordHash( const wxString& pass ) const
 {
     return pass.length() == 24 && pass[22] == '=' && pass[23] == '=';
 }
 
 
-wxString TASServer::GetPasswordHash( const wxString& pass )
+wxString TASServer::GetPasswordHash( const wxString& pass ) const
 {
     if ( IsPasswordHash(pass) ) return pass;
     return wxBase64::Encode(boost::md5(pass.mb_str()).digest().value(), 16);
 }
 
 
-User& TASServer::GetMe()
+User& TASServer::GetMe() const
 {
     return GetUser( m_user );
 }
@@ -405,7 +405,7 @@ void TASServer::Logout()
     Disconnect();
 }
 
-bool TASServer::IsOnline()
+bool TASServer::IsOnline() const
 {
     if ( !m_connected ) return false;
     return m_online;

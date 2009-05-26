@@ -568,7 +568,7 @@ ChatPanel::UserMenu* ChatPanel::CreateNickListMenu()
 }
 
 
-const User* ChatPanel::GetSelectedUser()
+const User* ChatPanel::GetSelectedUser() const
 {
 	if ( !m_show_nick_list || ( m_nicklist == 0 ) ) return 0;
 
@@ -576,7 +576,7 @@ const User* ChatPanel::GetSelectedUser()
 }
 
 
-User& ChatPanel::GetMe()
+const User& ChatPanel::GetMe()  const
 {
 	return m_ui.GetServer().GetMe();
 }
@@ -745,7 +745,7 @@ void ChatPanel::Said( const wxString& who, const wxString& message )
 }
 
 
-bool ChatPanel::ContainsWordToHighlight( const wxString& message )
+bool ChatPanel::ContainsWordToHighlight( const wxString& message ) const
 {
     //get list of words to highlight
     wxArrayString words = sett().GetHighlightedWords();
@@ -811,7 +811,7 @@ void ChatPanel::UnknownCommand( const wxString& command, const wxString& params 
 }
 
 
-wxString ChatPanel::GetChatTypeStr()
+wxString ChatPanel::GetChatTypeStr() const
 {
 	if ( m_type == CPT_Channel ) return _( "channel" );
 	else if ( m_type == CPT_Battle ) return _( "battle" );
@@ -921,7 +921,7 @@ void ChatPanel::UserStatusUpdated( User& who )
 }
 
 
-Channel* ChatPanel::GetChannel()
+const Channel* ChatPanel::GetChannel() const
 {
 	return m_channel;
 }
@@ -949,8 +949,7 @@ void ChatPanel::SetChannel( Channel* chan )
 	m_channel = chan;
 }
 
-
-Server* ChatPanel::GetServer()
+const Server* ChatPanel::GetServer()  const
 {
 	return m_server;
 }
@@ -998,13 +997,13 @@ void ChatPanel::SetUser( const User* usr )
 }
 
 
-bool ChatPanel::IsServerPanel()
+bool ChatPanel::IsServerPanel() const
 {
 	return ( m_type == CPT_Server );
 }
 
 
-int ChatPanel::GetPanelType()
+int ChatPanel::GetPanelType() const
 {
 	return m_type;
 }
@@ -1139,7 +1138,7 @@ void ChatPanel::Part()
 }
 
 
-bool ChatPanel::IsOk()
+bool ChatPanel::IsOk() const
 {
 	if ( m_type == CPT_Channel ) return ( m_channel != 0 );
 	if ( m_type == CPT_Server ) return ( m_server != 0 );

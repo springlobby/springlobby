@@ -37,7 +37,7 @@ class TASServer : public Server
 
     void Login();
     void Logout();
-    bool IsOnline();
+    bool IsOnline() const;
 
     void Update( int mselapsed );
 
@@ -52,7 +52,7 @@ class TASServer : public Server
     void UdpPingTheServer( const wxString &message );/// used for nat travelsal. pings the server.
     void UdpPingAllClients();/// used when hosting with nat holepunching
 
-    User& GetMe();
+    User& GetMe() const;
 
     void JoinChannel( const wxString& channel, const wxString& key );
     void PartChannel( const wxString& channel );
@@ -127,8 +127,8 @@ class TASServer : public Server
     void OnDisconnected( Socket* sock );
     void OnDataReceived( Socket* sock );
 
-    bool IsPasswordHash( const wxString& pass );
-    wxString GetPasswordHash( const wxString& pass );
+    bool IsPasswordHash( const wxString& pass )  const;
+    wxString GetPasswordHash( const wxString& pass ) const;
 
     int TestOpenPort( unsigned int port );
 

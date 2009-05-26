@@ -19,7 +19,7 @@ class Spring: public wxEvtHandler
     Spring( Ui& ui);
     ~Spring();
 
-    bool IsRunning();
+    bool IsRunning() const;
     bool Run( Battle& battle );
     bool Run( SinglePlayerBattle& battle );
 
@@ -29,7 +29,7 @@ class Spring: public wxEvtHandler
      */
     bool RunReplay ( const wxString& filename );
 
-    wxString WriteScriptTxt( IBattle& battle );
+    wxString WriteScriptTxt( IBattle& battle ) const;
     void OnTerminated( wxCommandEvent& event );
 
   protected:

@@ -63,7 +63,7 @@ class Server : public iNetClass
 
     virtual void Login() = 0;
     virtual void Logout() = 0;
-    virtual bool IsOnline() = 0;
+    virtual bool IsOnline()  const = 0;
 
     virtual void Update( int mselapsed ) = 0;
 
@@ -134,8 +134,8 @@ class Server : public iNetClass
 
     virtual void SetUsername( const wxString& username ) { m_user = username; }
     virtual void SetPassword( const wxString& password ) { m_pass = password; }
-    virtual bool IsPasswordHash( const wxString& pass ) = 0;
-    virtual wxString GetPasswordHash( const wxString& pass ) = 0;
+    virtual bool IsPasswordHash( const wxString& pass ) const = 0;
+    virtual wxString GetPasswordHash( const wxString& pass ) const = 0;
 
     wxString GetRequiredSpring() const { return m_required_spring_ver; }
 
@@ -151,7 +151,7 @@ class Server : public iNetClass
 
     BattleList_Iter* const battles_iter;
 
-    virtual User& GetMe() = 0;
+    virtual User& GetMe() const = 0;
     User& GetUser( const wxString& nickname ) const;
     bool UserExists( const wxString& nickname ) const;
 

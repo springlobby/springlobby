@@ -12,8 +12,8 @@ class SDLSound
   SDLSound();
   ~SDLSound();
 
-  void ring();
-  void pm();
+  void ring() const;
+  void pm() const;
 
  private:
 

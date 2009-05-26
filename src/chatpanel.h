@@ -87,31 +87,31 @@ class ChatPanel : public wxPanel
     void UserStatusUpdated( User& who );
     void OnChannelJoin( User& who );
 
-    Channel* GetChannel();
+    const Channel* GetChannel() const;
     void SetChannel( Channel* chan );
 
-    Server* GetServer();
+    const Server* GetServer()  const;
     void SetServer( Server* serv );
 
     const User* GetUser() const ;
     void SetUser( const User* usr );
 
-    bool IsServerPanel();
-    int GetPanelType();
+    bool IsServerPanel() const;
+    int GetPanelType() const;
 
     void Say( const wxString& message );
     void Part();
     void FocusInputBox();
 
-    wxString GetChatTypeStr();
+    wxString GetChatTypeStr()  const;
 
-    size_t GetIconIndex() { return m_icon_index; }
+    size_t GetIconIndex()  const { return m_icon_index; }
     void SetIconIndex( size_t index ) { m_icon_index = index; }
 
-    User& GetMe();
-    const User* GetSelectedUser();
+    const User& GetMe()  const;
+    const User* GetSelectedUser() const;
 
-    bool IsOk();
+    bool IsOk() const;
 
     void OnUserDisconnected();
     void OnUserConnected();
@@ -191,7 +191,7 @@ class ChatPanel : public wxPanel
     void SetIconHighlight( HighlightType highlight );
     wxString FindUrl( const long pos ) const ;
 
-    bool ContainsWordToHighlight( const wxString& message );
+    bool ContainsWordToHighlight( const wxString& message ) const;
 
     bool m_show_nick_list;      //!< If the nicklist should be shown or not.
 

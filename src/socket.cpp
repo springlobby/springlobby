@@ -310,14 +310,14 @@ SockState Socket::State( )
 
 //! @brief Get socket error code
 //! @todo Implement
-SockError Socket::Error( )
+SockError Socket::Error( ) const
 {
   return (SockError)-1;
 }
 
 
 //! @brief used to retrieve local ip address behind NAT to communicate to the server on login
-wxString Socket::GetLocalAddress()
+wxString Socket::GetLocalAddress() const
 {
   if ( !m_sock || !m_sock->IsConnected() )
     return wxEmptyString;
@@ -367,7 +367,7 @@ void Socket::_EnablePingThread( bool enable )
 
 //! @brief Check if we should enable or dsable the ping htread.
 //! @see Socket::_EnablePingThread
-bool Socket::_ShouldEnablePingThread()
+bool Socket::_ShouldEnablePingThread() const
 {
   return ( (m_ping_msg != wxEmptyString) );
 }

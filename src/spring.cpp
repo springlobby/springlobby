@@ -54,7 +54,7 @@ Spring::~Spring()
 }
 
 
-bool Spring::IsRunning()
+bool Spring::IsRunning() const
 {
     return m_process != 0;
 }
@@ -191,7 +191,7 @@ void Spring::OnTerminated( wxCommandEvent& event )
 }
 
 
-wxString Spring::WriteScriptTxt( IBattle& battle )
+wxString Spring::WriteScriptTxt( IBattle& battle ) const
 {
     wxLogMessage(_T("0 WriteScriptTxt called "));
 

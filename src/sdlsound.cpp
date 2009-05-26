@@ -49,13 +49,13 @@ SDLSound::~SDLSound()
   SDL_Quit();
 }
 
-void SDLSound::ring()
+void SDLSound::ring() const
 {
   if ( ring_sound ) Mix_PlayChannel(-1, ring_sound, 0);
 }
 
 
-void SDLSound::pm()
+void SDLSound::pm() const
 {
   if ( pm_sound ) Mix_PlayChannel(-1, pm_sound, 0);
 }
