@@ -178,6 +178,7 @@ User& Battle::OnUserAdded( User& user )
 {
 		user = IBattle::OnUserAdded( user );
     user.SetBattle( this );
+    user.BattleStatus().isfromdemo = false;
 
     if ( IsFounderMe() )
     {
