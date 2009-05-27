@@ -290,7 +290,6 @@ void SinglePlayerTab::OnAddBot( wxCommandEvent& event )
         bs.colour = m_battle.GetNewColour();
         User& bot = m_battle.OnBotAdded( _T("Bot") + TowxString( bs.team ), bs  );
         ASSERT_LOGIC( &bot != 0, _T("bot == 0") );
-
         m_minimap->UpdateMinimap();
     }
 }

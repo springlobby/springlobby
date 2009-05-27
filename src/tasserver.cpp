@@ -881,9 +881,18 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         color.data = GetIntParam( params );
         bstatus.colour = wxColour( color.color.red, color.color.green, color.color.blue );
         wxString ai = GetSentenceParam( params );
-        if( usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) ) bstatus.aishortname = ai.BeforeFirst( _T('|') );
-        else bstatus.aishortname = ai;
-        bstatus.aiversion = ai.AfterFirst( _T('|') );
+        if( usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) )
+        {
+					 bstatus.aitype = TowxString( ai.AfterLast( _T('|') ) );
+					 ai = ai.BeforeLast( _T('|') );
+					 bstatus.aiversion = ai.AfterLast( _T('|') );
+					 ai = ai.BeforeLast( _T('|') );
+        	 bstatus.aishortname = ai;
+        }
+        else
+        {
+        	 bstatus.aishortname = ai;
+        }
         bstatus.owner =owner;
         m_se->OnBattleAddBot( id, nick, bstatus );
     }
@@ -2007,7 +2016,7 @@ void TASServer::AddBot( int battleid, const wxString& nick, UserBattleStatus& st
     wxString msg;
     wxString ailib;
     ailib += status.aishortname;
-    if ( usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) ) ailib += _T("|") + status.aiversion;
+    if ( usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) ) ailib += _T("|") + status.aiversion + _T("|") + TowxString(status.aitype);
     SendCmd( _T("ADDBOT"), nick + wxString::Format( _T(" %d %d "), tasbs.data, tascl.data ) + ailib );
 }
 
