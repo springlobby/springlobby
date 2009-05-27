@@ -61,7 +61,8 @@ EXTRA_DIST = \
 	src/battleroommmoptionstab.cpp \
 	src/customvirtlistctrl.cpp \
 	src/playback/playbacktab.cpp \
-	src/playback/playbackfilter.cpp 
+	src/playback/playbackfilter.cpp \
+	src/playback/playbackthread.cpp
 
 springsettings_LDADD = \
 	$(WX_LIBS)
@@ -500,7 +501,6 @@ springlobby_SOURCES = \
 	src/nicklistctrl.h \
 	src/playback/playbacktab.h \
 	src/playback/playbackthread.h \
-	src/playback/playbackthread.cpp \
 	src/playback/playbackfilter.h \
 	src/playback/replaylist.cpp \
 	src/playback/replaylist.h \
