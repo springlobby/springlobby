@@ -933,7 +933,9 @@ void IBattle::GetBattleFromScript( bool loadmapmod )
                 user.BattleStatus().team = player->GetInt( _T("Team") );
                 user.BattleStatus().sync = true;
                 user.BattleStatus().ready = true;
-                user.Status().rank = (UserStatus::ServerRankContainer)player->GetInt( _T("Rank"), -1 );
+                //! (koshi) changed this from ServerRankContainer to RankContainer
+                user.Status().rank = (UserStatus::RankContainer)player->GetInt( _T("Rank"), -1 );
+
                 if ( bot.ok() )
                 {
                 	user.BattleStatus().aishortname = bot->GetString( _T("ShortName" ) );

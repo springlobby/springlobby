@@ -179,16 +179,22 @@ MainWindow::MainWindow( Ui& ui )
 #ifndef NO_TORRENT_SYSTEM
   m_torrent_tab = new MainTorrentTab( m_func_tabs, m_ui);
 #endif
+  m_opts_tab = new MainOptionsTab( m_func_tabs, m_ui );
 
-  m_func_tabs->AddPage( m_chat_tab,     m_tab_names[0], true  );
-  m_func_tabs->AddPage( m_join_tab,     m_tab_names[1], false );
-  m_func_tabs->AddPage( m_sp_tab,       m_tab_names[2], false );
-  m_func_tabs->AddPage( m_opts_tab,     m_tab_names[3], false );
-  m_func_tabs->AddPage( m_replay_tab,   m_tab_names[4], false );
+    m_func_tabs->AddPage( m_chat_tab,     m_tab_names[0], true  );
+    m_func_tabs->AddPage( m_join_tab,     m_tab_names[1], false );
+    m_func_tabs->AddPage( m_sp_tab,       m_tab_names[2], false );
+    m_func_tabs->AddPage( m_savegame_tab, m_tab_names[3], false );
+    m_func_tabs->AddPage( m_replay_tab,   m_tab_names[4], false );
 #ifndef NO_TORRENT_SYSTEM
-  m_func_tabs->AddPage( m_torrent_tab,  m_tab_names[5], false );
+    m_func_tabs->AddPage( m_torrent_tab,  m_tab_names[5], false );
+    m_func_tabs->AddPage( m_opts_tab,     m_tab_names[6], false );
+#else
+    m_func_tabs->AddPage( m_opts_tab,     m_tab_names[5], false );
 #endif
-	m_func_tabs->AddPage( m_opts_tab, _("Options"), false );
+
+
+
   SetTabIcons();
   m_main_sizer->Add( m_func_tabs, 1, wxEXPAND | wxALL, 0 );
 
@@ -221,7 +227,7 @@ void MainWindow::SetTabIcons()
     m_func_tabs->SetPageBitmap( count++, GetTabIcon( chat_icon_png, sizeof(chat_icon_png)  ) );
     m_func_tabs->SetPageBitmap( count++, GetTabIcon( join_icon_png, sizeof(join_icon_png) ) );
     m_func_tabs->SetPageBitmap( count++, GetTabIcon( single_player_icon_png , sizeof (single_player_icon_png) ) );
-    m_func_tabs->SetPageBitmap( count++, GetTabIcon( replay_icon_png , sizeof (replay_icon_png) ) );
+    m_func_tabs->SetPageBitmap( count++, GetTabIcon( floppy_icon_png , sizeof (floppy_icon_png) ) );
     m_func_tabs->SetPageBitmap( count++, GetTabIcon( replay_icon_png , sizeof (replay_icon_png) ) );
 #ifndef NO_TORRENT_SYSTEM
     m_func_tabs->SetPageBitmap( count++, GetTabIcon(  downloads_icon_png , sizeof (downloads_icon_png) ) );
@@ -367,7 +373,7 @@ void MainWindow::OpenChannelChat( Channel& channel, bool doFocus )
 void MainWindow::OpenPrivateChat( const User& user, bool doFocus )
 {
   ASSERT_LOGIC( m_chat_tab != 0, _T("m_chat_tab") );
-  m_func_tabs->SetSelection( 0 );
+  m_func_tabs->SetSelection( PAGE_CHAT );
   ChatPanel* cp = m_chat_tab->AddChatPannel( user );
   if ( doFocus )
     cp->FocusInputBox();

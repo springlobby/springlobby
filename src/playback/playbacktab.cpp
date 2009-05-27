@@ -288,7 +288,7 @@ void PlaybackTab<PlaybackTraits>::OnWatch( wxCommandEvent& event )
             {
               wxLogWarning( _T("can't get spring version from any unitsync") );
               customMessageBox(SL_MAIN_ICON,  _("Couldn't get your spring versions from any unitsync library."), _("Spring error"), wxICON_EXCLAMATION|wxOK );
-              AskForceWatch( rep.Filename );
+              AskForceWatch( rep );
               return;
             }
             bool versionfound = false;
@@ -313,7 +313,7 @@ void PlaybackTab<PlaybackTraits>::OnWatch( wxCommandEvent& event )
               for ( std::map<wxString, wxString>::iterator itor = versionlist.begin(); itor != versionlist.end(); itor++ ) message << _T(" ") << itor->second;
               customMessageBox(SL_MAIN_ICON, message, _("Spring error"), wxICON_EXCLAMATION|wxOK );
               wxLogWarning ( _T("no spring version supported by this replay found") );
-              AskForceWatch( rep.Filename );
+              AskForceWatch( rep );
               return;
             }
 						rep.battle.GetMe().SetNick( usync().GetDefaultNick() );
@@ -336,7 +336,7 @@ void PlaybackTab<PlaybackTraits>::OnWatch( wxCommandEvent& event )
                         m_ui.DownloadMod ( modhash, modname );
                     }
                     else {
-                        AskForceWatch( rep.Filename );
+                        AskForceWatch( rep );
                     }
                     return;
                 }
@@ -348,7 +348,7 @@ void PlaybackTab<PlaybackTraits>::OnWatch( wxCommandEvent& event )
                         m_ui.DownloadMap ( maphash, mapname );
                     }
                     else {
-                        AskForceWatch( rep.Filename );
+                        AskForceWatch( rep );
                     }
                 }
             }
@@ -360,10 +360,11 @@ void PlaybackTab<PlaybackTraits>::OnWatch( wxCommandEvent& event )
     }
 }
 
-void ReplayTab::AskForceWatch( const wxString& filename ) const
+template < class PlaybackTraits >
+void PlaybackTab<PlaybackTraits>::AskForceWatch( typename PlaybackTab<PlaybackTraits>::PlaybackType& rep ) const
 {
     if (customMessageBox(SL_MAIN_ICON, _("I don't think you will be able to watch this replay.\nTry anyways? (MIGHT CRASH!)") , _("invalid replay"), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
-        m_ui.WatchReplay( filename );
+        m_ui.WatchPlayback( rep.battle );
     }
 }
 

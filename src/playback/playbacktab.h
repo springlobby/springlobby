@@ -115,7 +115,7 @@ class PlaybackTab : public wxPanel
 
     Ui& m_ui;
 
-    void AskForceWatch( const wxString& filename ) const;
+    void AskForceWatch( PlaybackType& rep  ) const;
 
     DECLARE_EVENT_TABLE();
 };

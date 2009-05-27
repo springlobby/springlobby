@@ -171,11 +171,12 @@ class MainWindow : public wxFrame
                     Add( _("Chat") );
                     Add( _("Multiplayer") );
                     Add( _("Singleplayer") );
-                    Add( _("Options") );
+                    Add( _("Savegames") );
                     Add( _("Replays") );
                 #ifndef NO_TORRENT_SYSTEM
                     Add( _("Downloads") );
                 #endif
+                    Add( _("Options") );
                 }
         };
         static TabNames m_tab_names;
@@ -185,7 +186,15 @@ class MainWindow : public wxFrame
         static const unsigned int PAGE_CHAT    = 0;
         static const unsigned int PAGE_JOIN    = 1;
         static const unsigned int PAGE_SINGLE  = 2;
-        static const unsigned int PAGE_OPTOS   = 3;
+        static const unsigned int PAGE_REPLAY  = 3;
+        static const unsigned int PAGE_SAVEGAME = 4;
+
+        #ifndef NO_TORRENT_SYSTEM
+        static const unsigned int PAGE_TORRENT = 5;
+        static const unsigned int PAGE_OPTOS = 6;
+        #else
+        static const unsigned int PAGE_OPTOS   = 5;
+        #endif
 
         static const unsigned int OPT_PAGE_SPRING   = 0;
         static const unsigned int OPT_PAGE_CHAT     = 1;
