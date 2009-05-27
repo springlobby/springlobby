@@ -183,7 +183,7 @@ User& Battle::OnUserAdded( User& user )
     {
         if ( CheckBan( user ) ) return user;
 
-        if ( ( !user.BattleStatus().IsBot() ) && ( m_opts.rankneeded > UserStatus::RANK_1 ) && ( user.GetStatus().rank < m_opts.rankneeded ))
+        if ( ( &user != &GetMe() ) && !user.BattleStatus().IsBot() && ( m_opts.rankneeded > UserStatus::RANK_1 ) && ( user.GetStatus().rank < m_opts.rankneeded ))
         {
             switch ( m_opts.ranklimittype )
             {
@@ -218,7 +218,7 @@ void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
     }
     if ( IsFounderMe() )
     {
-        if ( ( m_opts.rankneeded > UserStatus::RANK_1 ) && ( user.GetStatus().rank < m_opts.rankneeded ))
+        if ( ( &user != &GetMe() ) && !status.IsBot() && ( m_opts.rankneeded > UserStatus::RANK_1 ) && ( user.GetStatus().rank < m_opts.rankneeded ))
         {
             switch ( m_opts.ranklimittype )
             {
@@ -444,20 +444,12 @@ void Battle::SetHandicap( User& user, int handicap)
     m_serv.SetHandicap ( m_opts.battleid, user, handicap );
 }
 
-class PlayerRankCompareFunction
+bool PlayerRankCompareFunction( User *a, User *b ) // should never operate on nulls. Hence, ASSERT_LOGIC is appropriate here.
 {
-	public:
-		PlayerRankCompareFunction( const wxString& modshortname ): m_mod_shortname( modshortname ) {}
-		bool operator()( User *a, User *b ) // should never operate on nulls. Hence, ASSERT_LOGIC is appropriate here.
-		{
-				ASSERT_LOGIC( a, _T("fail in Autobalance, NULL player") );
-				ASSERT_LOGIC( b, _T("fail in Autobalance, NULL player") );
-				return ( a->GetBalanceRank(m_mod_shortname) > b->GetBalanceRank(m_mod_shortname) );
-		}
-	private:
-		wxString m_mod_shortname;
-
-};
+    ASSERT_LOGIC( a, _T("fail in Autobalance, NULL player") );
+    ASSERT_LOGIC( b, _T("fail in Autobalance, NULL player") );
+    return ( a->GetBalanceRank() > b->GetBalanceRank() );
+}
 
 bool PlayerTeamCompareFunction( User *a, User *b ) // should never operate on nulls. Hence, ASSERT_LOGIC is appropriate here.
 {
@@ -471,15 +463,14 @@ struct Alliance
     std::vector<User *>players;
     float ranksum;
     int allynum;
-    wxString shortname;
     Alliance(): ranksum(0) {}
-    Alliance(int i, const wxString& modshortname): ranksum(0), allynum(i), shortname( modshortname ) {}
+    Alliance(int i): ranksum(0), allynum(i) {}
     void AddPlayer( User *player )
     {
         if ( player )
         {
             players.push_back( player );
-            ranksum += player->GetBalanceRank(shortname);
+            ranksum += player->GetBalanceRank();
         }
     }
     void AddAlliance( Alliance &other )
@@ -497,15 +488,14 @@ struct ControlTeam
     std::vector<User*> players;
     float ranksum;
     int teamnum;
-    wxString shortname;
     ControlTeam(): ranksum(0) {}
-    ControlTeam( int i, const wxString& modshortname ): ranksum(0), teamnum(i), shortname( modshortname ) {}
+    ControlTeam( int i ): ranksum(0), teamnum(i) {}
     void AddPlayer( User *player )
     {
         if ( player )
         {
             players.push_back( player );
-            ranksum += player->GetBalanceRank(shortname);
+            ranksum += player->GetBalanceRank();
         }
     }
     void AddTeam( ControlTeam &other )
@@ -568,20 +558,20 @@ void Battle::Autobalance( BalanceType balance_type, bool support_clans, bool str
             if ( sr.IsOk() )
             {
                 ally=i;
-                alliances.push_back( Alliance( ally, m_local_mod.shortname ) );
+                alliances.push_back( Alliance( ally ) );
                 ally++;
             }
         }
         // make at least two alliances
         while ( alliances.size() < 2 )
         {
-            alliances.push_back( Alliance( ally, m_local_mod.shortname ) );
+            alliances.push_back( Alliance( ally ) );
             ally++;
         }
     }
     else
     {
-        for ( int i = 0; i < numallyteams; i++ ) alliances.push_back( Alliance( i, m_local_mod.shortname ) );
+        for ( int i = 0; i < numallyteams; i++ ) alliances.push_back( Alliance( i ) );
     }
 
     //for(i=0;i<alliances.size();++i)alliances[i].allynum=i;
@@ -628,7 +618,7 @@ void Battle::Autobalance( BalanceType balance_type, bool support_clans, bool str
         }
     };
 
-    if ( balance_type != balance_random ) std::sort( players_sorted.begin(), players_sorted.end(), PlayerRankCompareFunction(m_local_mod.shortname) );
+    if ( balance_type != balance_random ) std::sort( players_sorted.begin(), players_sorted.end(), PlayerRankCompareFunction );
 
     if ( support_clans )
     {
@@ -760,7 +750,7 @@ void Battle::FixTeamIDs( BalanceType balance_type, bool support_clans, bool stro
       return;
     }
     DoAction(_T("is auto-balancing control teams ..."));
-    for ( int i = 0; i < numcontrolteams; i++ ) teams.push_back( ControlTeam( i, m_local_mod.shortname ) );
+    for ( int i = 0; i < numcontrolteams; i++ ) teams.push_back( ControlTeam( i ) );
 
     wxLogMessage(_T("number of teams: %u"), teams.size() );
 
@@ -795,7 +785,7 @@ void Battle::FixTeamIDs( BalanceType balance_type, bool support_clans, bool stro
         }
     };
 
-    if ( balance_type != balance_random ) std::sort( players_sorted.begin(), players_sorted.end(), PlayerRankCompareFunction(m_local_mod.shortname) );
+    if ( balance_type != balance_random ) std::sort( players_sorted.begin(), players_sorted.end(), PlayerRankCompareFunction );
 
     if ( support_clans )
     {

@@ -74,7 +74,9 @@ BEGIN_EVENT_TABLE(SpringLobbyApp, wxApp)
 END_EVENT_TABLE()
 
 SpringLobbyApp::SpringLobbyApp()
-    :m_translationhelper( NULL )
+    : quit_called( false ),
+    m_translationhelper( NULL )
+
 {
     m_timer = new wxTimer(this, TIMER_ID);
     SetAppName( _T("springlobby") );
@@ -209,7 +211,11 @@ bool SpringLobbyApp::OnInit()
 					long value;
 					if( UACpath.QueryValue( _T("EnableLUA"), &value ) ) // reg key not present -> not vista
 					{
-						if( value != 0 ) usync().SetSpringDataPath(_T("")); // UAC is on, fix the spring data path
+						if( value != 0 )
+						{
+							usync().ReloadUnitSyncLib();
+							if ( usync().IsLoaded() ) usync().SetSpringDataPath(_T("")); // UAC is on, fix the spring data path
+						}
 					}
 				}
 			#endif
@@ -226,6 +232,7 @@ bool SpringLobbyApp::OnInit()
 
 		if ( !wxDirExists( wxStandardPaths::Get().GetUserDataDir() ) ) wxMkdir( wxStandardPaths::Get().GetUserDataDir() );
 
+		sett().RefreshSpringVersionList();
     ui().ReloadUnitSync(); // first time load of unitsync
     ui().ShowMainWindow();
 
@@ -313,6 +320,8 @@ bool SpringLobbyApp::OnInit()
 //! @brief Finalizes the application
 int SpringLobbyApp::OnExit()
 {
+		if ( quit_called ) return 0;
+		quit_called = true;
     wxLogDebugFunc( _T("") );
 
     if(m_translationhelper)

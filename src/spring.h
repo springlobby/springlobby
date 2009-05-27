@@ -20,12 +20,18 @@ class Spring: public wxEvtHandler
     Spring( Ui& ui);
     ~Spring();
 
-    bool IsRunning();
+    bool IsRunning() const;
     bool Run( Battle& battle );
     bool Run( SinglePlayerBattle& battle );
     bool Run( OfflineBattle& battle );
 
-    wxString WriteScriptTxt( IBattle& battle );
+    //! executes spring with replay as parameter
+    /*!
+     * \param filename the full path for the replayfile
+     */
+    bool RunReplay ( const wxString& filename );
+
+    wxString WriteScriptTxt( IBattle& battle ) const;
     void OnTerminated( wxCommandEvent& event );
 
   protected:

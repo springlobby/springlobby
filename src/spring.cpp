@@ -55,11 +55,17 @@ Spring::~Spring()
 }
 
 
-bool Spring::IsRunning()
+bool Spring::IsRunning() const
 {
     return m_process != 0;
 }
 
+bool Spring::RunReplay ( const wxString& filename )
+{
+  wxLogMessage( _T("launching spring with replay: ") + filename );
+
+  return LaunchSpring( _T("\"") + filename + _T("\"") );
+}
 
 bool Spring::Run( Battle& battle )
 {
@@ -175,10 +181,10 @@ bool Spring::LaunchSpring( const wxString& params  )
   wxString configfileflags = sett().GetCurrentUsedSpringConfigFilePath();
   if ( !configfileflags.IsEmpty() )
   {
-		#ifndef __WXMSW__
+
 		configfileflags = _T("--config=\"") + configfileflags + _T("\" ");
-		#else
-		configfileflags = _T(""); // _T("/config \"") + configfileflags + _T("\" ");
+		#ifdef __WXMSW__
+		if ( usync().GetSpringVersion().Contains(_T("0.78.") ) ) configfileflags = _T("");
 		#endif
   }
   wxString cmd =  _T("\"") + sett().GetCurrentUsedSpringBinary() + _T("\" ") + configfileflags + params;
@@ -213,7 +219,7 @@ void Spring::OnTerminated( wxCommandEvent& event )
 }
 
 
-wxString Spring::WriteScriptTxt( IBattle& battle )
+wxString Spring::WriteScriptTxt( IBattle& battle ) const
 {
     wxLogMessage(_T("0 WriteScriptTxt called "));
 
@@ -338,20 +344,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 
 			unsigned int NumUsers = battle.GetNumUsers();
 
-			std::map<int, int> m_ally_map; // spring wants consegutive allies, this maps non consegutive allies to consegutive
 
-			for ( unsigned int i = 0; i < NumUsers; i++ )
-			{
-					User& usr = battle.GetUser( i );
-					if ( usr.BattleStatus().spectator ) continue; // skip spectators
-					m_ally_map[ usr.BattleStatus().ally ] = usr.BattleStatus().ally;
-			}
-			int progressive_ally = 0;
-			for ( std::map<int, int>::iterator itor = m_ally_map.begin(); itor != m_ally_map.end(); itor++ ) // fill the map with numers in cosegutive progression
-			{
-				itor->second = progressive_ally;
-				progressive_ally++;
-			}
 			std::map<User*, int> player_to_number; // player -> ordernumber
 
 			for ( unsigned int i = 0; i < NumUsers; i++ )
@@ -407,16 +400,16 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 
 
 			wxArrayString sides = usync().GetSides( battle.GetHostModName() );
-			int PreviousTeam = -1;
+			std::set<int> parsedteams;
 			for ( unsigned int i = 0; i < NumUsers; i++ )
 			{
 					User& usr = battle.GetUser( i );
 					UserBattleStatus& status = usr.BattleStatus();
 					if ( status.spectator ) continue;
-					if ( PreviousTeam == status.team ) continue; // skip duplicates
-					PreviousTeam = status.team;
+					if ( parsedteams.find( status.team ) != parsedteams.end() ) continue; // skip duplicates
+					parsedteams.insert( status.team );
 
-					tdf.EnterSection( _T("TEAM") + i2s( PreviousTeam ) );
+					tdf.EnterSection( _T("TEAM") + i2s( status.team ) );
 						if ( !usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) && status.IsBot() )
 						{
 								tdf.Append( _T("AIDLL"), status.aishortname );
@@ -440,7 +433,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 								tdf.Append(_T("StartPosZ"), status.pos.y );
 						}
 
-						tdf.Append( _T("AllyTeam"), m_ally_map[status.ally] );
+						tdf.Append( _T("AllyTeam"),status.ally );
 
 						wxString colourstring =
 								TowxString( status.colour.Red()/255.0 ) + _T(' ') +
@@ -455,13 +448,24 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 			}
 
 			tdf.AppendLineBreak();
+
+
 			int maxiter = std::max( NumUsers, battle.GetNumRects() );
+			std::set<int> parsedallys;
 			for ( unsigned int i = 0; i < maxiter; i++ )
 			{
-					BattleStartRect sr = battle.GetStartRect( i );
-					if ( !sr.IsOk() && ( i > progressive_ally ) ) continue;
 
-					tdf.EnterSection( _T("ALLYTEAM") + i2s( i ) );
+					User& usr = battle.GetUser( i );
+					UserBattleStatus& status = usr.BattleStatus();
+					BattleStartRect sr = battle.GetStartRect( i );
+					if ( status.spectator && !sr.IsOk() ) continue;
+					int ally = status.ally;
+					if ( status.spectator ) ally = i;
+					if ( parsedallys.find( ally ) != parsedallys.end() ) continue; // skip duplicates
+					sr = battle.GetStartRect( ally );
+					parsedallys.insert( status.ally );
+
+					tdf.EnterSection( _T("ALLYTEAM") + i2s( ally ) );
 						tdf.Append( _T("NumAllies"), 0 );
 						if ( sr.IsOk() )
 						{

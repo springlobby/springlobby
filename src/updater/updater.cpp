@@ -5,6 +5,8 @@
 #include "updater.h"
 #include "../settings.h"
 #include "../globalsmanager.h"
+#include "../ui.h"
+#include "../mainwindow.h"
 
 #include <wx/stdpaths.h>
 #include <wx/filefn.h>
@@ -29,6 +31,8 @@ UpdaterClass::~UpdaterClass()
 
 void UpdaterClass::CheckForUpdates()
 {
+    m_cur_mw_title = ui().mw().GetTitle();
+
   wxString latestVersion = GetLatestVersion();
   // Need to replace crap chars or versions will always be inequal
   latestVersion.Replace(_T(" "), _T(""), true);
@@ -48,6 +52,7 @@ void UpdaterClass::CheckForUpdates()
       int answer = customMessageBox(SL_MAIN_ICON, _("Your SpringLobby version is not up to date.\n\n") + msg + _("\n\nWould you like for me to autodownload the new version? Changes will take effect next you launch the lobby again."), _("Not up to date"), wxYES_NO);
       if (answer == wxYES)
       {
+          ui().mw().SetTitle( _("SpringLobby -- downloading update") );
         wxString sep = wxFileName::GetPathSeparator();
         wxString currentexe = wxStandardPaths::Get().GetExecutablePath();
         if ( !wxFileName::IsDirWritable( currentexe.BeforeLast( wxFileName::GetPathSeparator() ) + wxFileName::GetPathSeparator() ) )
@@ -85,6 +90,7 @@ void UpdaterClass::OnDownloadEvent( int code )
         wxRmdir( m_newexe );
     }
   }
+    ui().mw().SetTitle( m_cur_mw_title );
 }
 
 bool UpdaterClass::UpdateLocale( const wxString& tempdir, bool WaitForReboot )

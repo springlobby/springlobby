@@ -37,7 +37,7 @@ class TASServer : public Server
 
     void Login();
     void Logout();
-    bool IsOnline();
+    bool IsOnline() const;
 
     void Update( int mselapsed );
 
@@ -52,7 +52,7 @@ class TASServer : public Server
     void UdpPingTheServer( const wxString &message );/// used for nat travelsal. pings the server.
     void UdpPingAllClients();/// used when hosting with nat holepunching
 
-    User& GetMe();
+    User& GetMe() const;
 
     void JoinChannel( const wxString& channel, const wxString& key );
     void PartChannel( const wxString& channel );
@@ -122,14 +122,13 @@ class TASServer : public Server
     void ExecuteCommand( const wxString& cmd, const wxString& inparams, int replyid = -1 );
 
     void HandlePong( int replyid );
-    void HandlePinglist();
 
     void OnConnected( Socket* sock );
     void OnDisconnected( Socket* sock );
     void OnDataReceived( Socket* sock );
 
-    bool IsPasswordHash( const wxString& pass );
-    wxString GetPasswordHash( const wxString& pass );
+    bool IsPasswordHash( const wxString& pass )  const;
+    wxString GetPasswordHash( const wxString& pass ) const;
 
     int TestOpenPort( unsigned int port );
 
@@ -154,9 +153,11 @@ class TASServer : public Server
     bool m_connected;
     bool m_online;
     bool m_debug_dont_catch;
+    bool m_id_transmission;
     wxString m_buffer;
     time_t m_last_udp_ping;
-    int m_ping_id;
+    time_t m_last_net_packet;
+    unsigned int m_last_id;
     std::list<TASPingListItem> m_pinglist;
 
     unsigned long m_udp_private_port;

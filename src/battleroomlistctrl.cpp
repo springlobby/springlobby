@@ -69,9 +69,9 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, IBattle* battle, Ui& u
 
 #if defined(__WXMAC__)
 /// on mac, autosize does not work at all
-    const int widths[13] = {20,20,20,170,140,130,110,28,28,28, 100, 100, 100}; //!TODO revise plox
+    const int widths[10] = {20,20,20,170,140,130,110,28,28,28}; //!TODO revise plox
 #else
-    const int widths[13] = {hd,hd,hd,hd,hd,170,hd,hd,80,130, 100, 110, 70};
+    const int widths[10] = {hd,hd,hd,hd,hd,170,hd,hd,80,130};
 #endif
 
     AddColumn( 0, widths[0], _T("r"), _T("Player/Bot") );
@@ -84,10 +84,6 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, IBattle* battle, Ui& u
     AddColumn( 7, widths[7], _("a"), _T("Ally number") );
     AddColumn( 8, widths[8], _("cpu"), _T("CPU speed (might not be accurate)") );
     AddColumn( 9, widths[9], _("Resource Bonus"), _T("Resource Bonus") );
-    AddColumn( 10, widths[10], _("Custom Rank"), _T("Custom Rank") );
-    AddColumn( 11, widths[11], _("Rank Accuracy"), _T("Custom Rank Accuracy") );
-    AddColumn( 12, widths[12], _("Trust"), _T("Trust") );
-
 
     if ( m_sortorder.size() == 0 ) {
         m_sortorder[0].col = 6;
@@ -101,29 +97,6 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, IBattle* battle, Ui& u
   	if ( !m_ro )
 	{
 		m_popup = new UserMenu(this);
-
-		m_popup->AppendSeparator();
-		wxMenu* m_rank = new wxMenu();
-
-		for ( unsigned int i = (unsigned int)UserStatus::USER_RANK_UNKNOWN; i < (unsigned int)UserStatus::USER_RANK_10; i++ )
-		{
-			wxMenuItem* rank = new wxMenuItem( m_rank, BRLIST_RANK + i, wxString::Format( _T("%d"), i+1 ) , wxEmptyString, wxITEM_NORMAL );
-			m_rank->Append( rank );
-			Connect( BRLIST_RANK + i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnSetRank ) );
-		}
-		m_popup->Append( -1, _("Set Rank"), m_rank );
-
-		wxMenu* m_trust = new wxMenu();
-
-		for ( unsigned int i = (unsigned int)UserStatus::USER_TRUST_UNKNOWN; i < (unsigned int)UserStatus::USER_TRUST_10; i++ )
-		{
-			wxMenuItem* trust = new wxMenuItem( m_trust, BRLIST_TRUST + i, wxString::Format( _T("%d"), i+1 ) , wxEmptyString, wxITEM_NORMAL );
-			m_trust->Append( trust );
-			Connect( BRLIST_TRUST + i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnSetTrust ) );
-		}
-		m_popup->Append( -1, _("Set Trust"), m_trust );
-
-		m_popup->AppendSeparator();
 		wxMenu* m_teams;
 		m_teams = new wxMenu();
 
@@ -206,8 +179,8 @@ void BattleroomListCtrl::AddUser( User& user )
     }
     m_data.push_back( &user );
     SetItemCount( m_data.size() );
-    RefreshItem( m_data.size() );
-    SetColumnWidth( 5, wxLIST_AUTOSIZE ); //! TODO does this really work?
+    RefreshItem( m_data.size() - 1 );
+    //SetColumnWidth( 5, wxLIST_AUTOSIZE ); //! TODO does this really work?
     MarkDirtySort();
 }
 
@@ -218,8 +191,8 @@ void BattleroomListCtrl::RemoveUser( User& user )
     if ( index != -1 ) {
         m_data.erase( m_data.begin() + index );
         SetItemCount( m_data.size() );
-        RefreshVisibleItems( );
-        SetColumnWidth( 5, wxLIST_AUTOSIZE );
+        RefreshItems( index, m_data.size() -1 );
+        //SetColumnWidth( 5, wxLIST_AUTOSIZE );
         return;
     }
     wxLogError( _T("Didn't find the user to remove in battleroomlistctrl.") );
@@ -228,8 +201,7 @@ void BattleroomListCtrl::RemoveUser( User& user )
 void BattleroomListCtrl::UpdateUser( User& user )
 {
     int index = GetIndexFromData( &user );
-    RefreshItem( index );
-    MarkDirtySort();
+    UpdateUser( index );
 }
 
 wxListItemAttr * BattleroomListCtrl::OnGetItemAttr(long item) const
@@ -307,7 +279,7 @@ wxString BattleroomListCtrl::OnGetItemText(long item, long column) const
     if ( item == -1 || item >= (long)m_data.size())
         return _T("");
 
-    User& user = *GetDataFromIndex( item );
+    const User& user = *GetDataFromIndex( item );
     bool is_bot = user.BattleStatus().IsBot();
     bool is_spec = user.BattleStatus().spectator;
 
@@ -345,21 +317,6 @@ wxString BattleroomListCtrl::OnGetItemText(long item, long column) const
             }
         }
         case 9: return is_spec ? _T("") : wxString::Format( _T("%d%%"), user.BattleStatus().handicap );
-        case 10:
-        {
-        	 if ( is_bot) return _T("");
-        	 UserStatus::UserRankContainer rank = user.GetCustomRank( m_battle->GetModShortName() );
-					 if ( rank == UserStatus::USER_RANK_UNKNOWN ) return _("Unknown");
-					 return wxString::Format( _T("%d"), rank + 1 );
-        }
-        case 11: return is_bot ? _T("") : wxString::Format( _T("%d%%"), user.GetCustomRankAccuracy( m_battle->GetModShortName() ) );
-        case 12:
-        {
-        	 if ( is_bot) return _T("");
-        	 UserStatus::UserTrustContainer trust = user.GetTrust();
-					 if ( trust == UserStatus::USER_TRUST_UNKNOWN ) return _("Unknown");
-					 return wxString::Format( _T("%d"), trust + 1 );
-        }
         case 0:
         case 2:
         case 3:
@@ -373,7 +330,9 @@ wxString BattleroomListCtrl::OnGetItemText(long item, long column) const
 
 void BattleroomListCtrl::UpdateUser( const int& index )
 {
+    Freeze();
     RefreshItem( index );
+    Thaw();
     MarkDirtySort();
 }
 
@@ -470,23 +429,6 @@ void BattleroomListCtrl::OnSpecSelect( wxCommandEvent& event )
   if ( m_sel_user ) ((Battle*)m_battle)->ForceSpectator( *m_sel_user, m_spec_item->IsChecked() );
 }
 
-void BattleroomListCtrl::OnSetRank( wxCommandEvent& event )
-{
-  wxLogDebugFunc( _T("") );
-  if ( !m_sel_user ) return;
-  if ( m_sel_user->BattleStatus().IsBot() ) return;
-	int rank = event.GetId() - BRLIST_RANK;
-	m_battle->SetRank( *m_sel_user, (UserStatus::UserRankContainer)rank );
-}
-
-void BattleroomListCtrl::OnSetTrust( wxCommandEvent& event )
-{
-  wxLogDebugFunc( _T("") );
-  if ( !m_sel_user ) return;
-  if ( m_sel_user->BattleStatus().IsBot() ) return;
-  int trust = event.GetId() - BRLIST_TRUST;
-	m_battle->SetTrust( *m_sel_user, (UserStatus::UserTrustContainer)trust );
-}
 
 void BattleroomListCtrl::OnKickPlayer( wxCommandEvent& event )
 {
@@ -525,9 +467,6 @@ int BattleroomListCtrl::CompareOneCrit(DataType u1, DataType u2, int col, int di
         case 7: return dir * CompareAlly( u1, u2 );
         case 8: return dir * CompareCpu( u1, u2 );
         case 9: return dir * CompareHandicap( u1, u2 );
-        case 10: return dir * CompareCustomRank( u1, u2 );
-        case 11: return dir * CompareAccuracy( u1, u2 );
-        case 12: return dir * CompareTrust( u1, u2 );
         default: return 0;
     }
 }
@@ -769,92 +708,13 @@ int BattleroomListCtrl::CompareHandicap(const DataType user1, const DataType use
   return 0;
 }
 
-int BattleroomListCtrl::CompareCustomRank(const DataType user1, const DataType user2)
-{
-	if ( !user1 && !user2 ) return 0;
-	else if ( !user1 ) return 1;
-	else if ( !user2 ) return -1;
-
-  int rank1;
-  if ( user1->BattleStatus().IsBot() )
-    rank1 = 1000;
-  else
-    rank1 = user1->GetCustomRank( s_battle->GetModShortName() );
-
-  int rank2;
-  if ( user2->BattleStatus().IsBot() )
-    rank2 = 1000;
-  else
-    rank2 = user2->GetCustomRank( s_battle->GetModShortName() );
-
-  if ( rank1 < rank2 )
-      return -1;
-  if ( rank1 > rank2 )
-      return 1;
-
-  return 0;
-}
-
-int BattleroomListCtrl::CompareAccuracy(const DataType user1, const DataType user2)
-{
-	if ( !user1 && !user2 ) return 0;
-	else if ( !user1 ) return 1;
-	else if ( !user2 ) return -1;
-
-  int accuracy1;
-  if ( user1->BattleStatus().IsBot() )
-    accuracy1 = 1000;
-  else
-    accuracy1 = user1->GetCustomRankAccuracy( s_battle->GetModShortName() );
-
-  int accuracy2;
-  if ( user2->BattleStatus().IsBot() )
-    accuracy2 = 1000;
-  else
-    accuracy2 = user2->GetCustomRankAccuracy( s_battle->GetModShortName() );
-
-  if ( accuracy1 < accuracy2 )
-      return -1;
-  if ( accuracy1 > accuracy2 )
-      return 1;
-
-  return 0;
-}
-
-int BattleroomListCtrl::CompareTrust(const DataType user1, const DataType user2)
-{
-	if ( !user1 && !user2 ) return 0;
-	else if ( !user1 ) return 1;
-	else if ( !user2 ) return -1;
-
-  int trust1;
-  if ( user1->BattleStatus().IsBot() )
-    trust1 = 1000;
-  else
-    trust1 = user1->GetTrust();
-
-  int trust2;
-  if ( user2->BattleStatus().IsBot() )
-    trust2 = 1000;
-  else
-    trust2 = user2->GetTrust();
-
-  if ( trust1 < trust2 )
-      return -1;
-  if ( trust1 > trust2 )
-      return 1;
-
-  return 0;
-}
-
 void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint position)
 {
-    long item = GetItemData(item_hit);
 
-    if ( item < 0 || item >= (long)m_data.size() )
+    if ( item_hit < 0 || item_hit >= (long)m_data.size() )
         return;
 
-    const User& user = *GetDataFromIndex( item );
+    const User& user = *GetDataFromIndex( item_hit );
 
     int coloumn = getColoumnFromPosition( position );
     if (coloumn > (int)m_colinfovec.size() || coloumn < 0)
@@ -930,7 +790,7 @@ void BattleroomListCtrl::OnUserMenuCreateGroup( wxCommandEvent& event )
 
         useractions().AddGroup( name );
         useractions().AddUserToGroup( name, nick );
-        ui().mw().ShowConfigure( OPT_PAGE_GROUPS );
+        ui().mw().ShowConfigure( MainWindow::OPT_PAGE_GROUPS );
     }
 }
 

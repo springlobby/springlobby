@@ -244,13 +244,13 @@ macro(KWWidgets_CREATE_GETTEXT_TARGETS)
 
   # Fix some defaults
 
-  if(${target_basename} STREQUAL ${notset_value})
+  if("${target_basename}" STREQUAL ${notset_value})
     set(target_basename ${domain_name})
-  endif(${target_basename} STREQUAL ${notset_value})
+  endif("${target_basename}" STREQUAL ${notset_value})
 
-  if(${po_prefix} STREQUAL ${notset_value})
+  if("${po_prefix}" STREQUAL ${notset_value})
     set(po_prefix "${domain_name}_")
-  endif(${po_prefix} STREQUAL ${notset_value})
+  endif("${po_prefix}" STREQUAL ${notset_value})
 
   # Create the targets
 
@@ -513,7 +513,7 @@ macro(KWWidgets_CREATE_POT_TARGET
       COMMAND ${CMAKE_COMMAND} 
       ARGS -E chdir "${po_dir}" ${CMAKE_COMMAND} -DCMAKE_BACKWARDS_COMPATIBILITY:STRING=${CMAKE_BACKWARDS_COMPATIBILITY} -Dpot_build_file:STRING=${pot_build_file} -Dpot_uptodate_file:STRING=${pot_uptodate_file} -Dpo_dir:STRING=${po_dir} -Doptions:STRING="${options}" -Dkeywords:STRING="${keywords}" -Dcopyright_holder:STRING="${copyright_holder}" -Dmsgid_bugs_address:STRING="${msgid_bugs_address}" -Dfiles_from:STRING=${files_from} -DGETTEXT_XGETTEXT_EXECUTABLE:STRING=${GETTEXT_XGETTEXT_EXECUTABLE} -P "${CMAKE_SOURCE_DIR}/cmake/KWWidgetsGettextExtract.cmake")
     if(create_pot_target)
-      add_custom_target(${target_basename}_pot DEPENDS ${pot_build_file})
+      add_custom_target(${target_basename}_pot DEPENDS "${pot_build_file}")
     endif(create_pot_target)
   endif(NOT "${GETTEXT_XGETTEXT_EXECUTABLE}" STREQUAL "")
 
@@ -665,8 +665,8 @@ macro(KWWidgets_CREATE_MO_TARGETS
       endif(create_mo_locale_targets)
       
       if(NOT "${mo_install_dir}" STREQUAL "")
-        install_files(
-          "${mo_install_dir}/${locale}/LC_MESSAGES" FILES ${mo_file})
+        install (FILES ${mo_file} DESTINATION 
+		"${CMAKE_INSTALL_PREFIX}/${mo_install_dir}/${locale}/LC_MESSAGES" )
       endif(NOT "${mo_install_dir}" STREQUAL "")
     endforeach(locale ${locale_list})
 

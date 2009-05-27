@@ -14,10 +14,9 @@ extern const wxEventType UnitSyncAsyncOperationCompletedEvt;
 
 struct UnitSyncMod
 {
-  UnitSyncMod() : name(_T("")),hash(_T("")),shortname(_T("")) { }
+  UnitSyncMod() : name(_T("")),hash(_T("")) { }
   wxString name;
   wxString hash;
-  wxString shortname;
 };
 
 struct StartPos

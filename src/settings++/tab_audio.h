@@ -42,13 +42,12 @@ class audio_panel : public abstract_panel
         void OnClose(wxCloseEvent& event);
 		void CreateGUIControls();
 
-		wxSlider* slider0;
-		wxSlider* slider1;
-		wxSlider* slider2;
+        wxSlider** ctrl_audio_sliders;
+		static const int ctrl_audio_sliders_size = 6;
 
 		wxSizer* parentSizer ;	// main window sizer (three columns)
-			wxSizer* childLSizer;
-			wxStaticBoxSizer* audioSizer;
+        wxSizer* childLSizer;
+        wxStaticBoxSizer* audioSizer;
 
 		DECLARE_EVENT_TABLE()
 };

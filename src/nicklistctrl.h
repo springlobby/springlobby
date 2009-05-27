@@ -25,9 +25,6 @@ class NickListCtrl : public CustomVirtListCtrl<const User*>
 
     void UserUpdated( const User& user );
 
-    void GetSelectedUsers( UserList& users ) ;
-    wxArrayString GetSelectedUserNicks( ) ;
-
     void ClearUsers();
 
     void OnActivateItem( wxListEvent& event );

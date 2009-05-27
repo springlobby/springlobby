@@ -91,7 +91,7 @@ void PlaybackListCtrl<PlaybackType>::AddPlayback( const PlaybackType& replay )
     }
     m_data.push_back( &replay );
     SetItemCount( m_data.size() );
-    RefreshItem( m_data.size() );
+    RefreshItem( m_data.size() - 1);
 }
 
 template <class PlaybackType>

@@ -953,6 +953,7 @@ springlobby_SOURCES = \
 	src/userrank.h \
 	src/playback/savegamelist.cpp \
 	src/playback/savegamelist.h 
+	src/images/floppy_icon.png.h
 
 
 if USE_WINDRES

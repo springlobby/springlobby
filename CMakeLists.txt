@@ -117,7 +117,6 @@ ENDIF ( OPTION_SOUND )
 if( OPTION_TRANSLATION_SUPPORT )
     set(Gettext_DIR "po" )
     INCLUDE(cmake/FindGettext.cmake)
-    FIND_PACKAGE( Gettext )
     if(GETTEXT_FOUND)
 	    set(SpringLobby_INCLUDE_PATH ${SpringLobby_INCLUDE_PATH}
 		${GETTEXT_INCLUDE_DIR} CACHE INTERNAL "" FORCE)
@@ -262,7 +261,6 @@ SET(SpringLobbySrc
 	src/useractions.cpp
 	src/userlist.cpp
 	src/userlistctrl.cpp
-	src/userrankdb.cpp
 	src/utils.cpp
 	src/widgets/downloadlistctrl.cpp
 	src/widgets/downloaddialog.cpp
@@ -327,19 +325,20 @@ ENDIF(WIN32)
 
 if( OPTION_TRANSLATION_SUPPORT )
     set ( GETTEXT_XGETTEXT_EXECUTABLE "/usr/bin/xgettext" )
-  kwwidgets_create_gettext_targets(
-    DOMAIN_NAME "springlobby"
-    TARGET_BASENAME "springlobby"
-    LOCALE_LIST "ar;cs;da;de;el;es;fi;fr;it;pl;pt;ro;ru;sv;uk;zh_CN"
-    COPYRIGHT_HOLDER "The SpringLobby team"
-    SOURCES "${SpringLobbySrc};${SettingsSrc};${StandAloneSettings}"
-    PO_DIR "${CMAKE_SOURCE_DIR}/po"
-    POT_BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/po"
-    PO_BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/po"
-    MO_INSTALL_DIR " locale"
-    CREATE_POT_TARGET 1
-    CREATE_PO_TARGET 1
-    #ADD_MO_TARGET_TO_ALL
+    kwwidgets_create_gettext_targets(
+	    DOMAIN_NAME "springlobby"
+	    TARGET_BASENAME "springlobby"
+	    LOCALE_LIST "ar;cs;da;de;el;es;fi;fr;it;pl;pt;ro;ru;sv;uk;zh_CN"
+	    COPYRIGHT_HOLDER "The SpringLobby team"
+	    SOURCES "${SpringLobbySrc};${SettingsSrc};${StandAloneSettings}"
+	    PO_DIR "${CMAKE_SOURCE_DIR}/po"
+	    PO_PREFIX ""
+	    POT_BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/po"
+	    PO_BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/po"
+	    MO_INSTALL_DIR "/share/locale"
+	    CREATE_POT_TARGET 1
+	    CREATE_PO_TARGET 1
+	    ADD_MO_TARGET_TO_ALL
     )
 endif( OPTION_TRANSLATION_SUPPORT )
 
@@ -362,11 +361,13 @@ TARGET_LINK_LIBRARIES(springlobby ${wxWidgets_LIBRARIES}  )
 TARGET_LINK_LIBRARIES(springsettings ${wxWidgets_LIBRARIES}  )
 
 IF (WIN32)
-    install(TARGETS springlobby springsettings RUNTIME DESTINATION . )
-    install(FILES AUTHORS COPYING NEWS README THANKS DESTINATION . )
-    #install( DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/locale DESTINATION . )
+    install(TARGETS springlobby springsettings RUNTIME DESTINATION .)
+    install(FILES AUTHORS COPYING NEWS README THANKS DESTINATION .)
 ELSE (WIN32)
-    install(TARGETS springlobby springsettings RUNTIME DESTINATION bin )
-    #install( DIRECTORY locale DESTINATION locale )
-    #install( FILES CMakeLists.txt config.h AUTHORS COPYING NEWS README THANKS DESTINATION . )
+    install(TARGETS springlobby springsettings RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin )
+    install(FILES AUTHORS COPYING NEWS README THANKS DESTINATION ${CMAKE_INSTALL_PREFIX}/share/doc/springlobby )
+    install(FILES src/images/springlobby.svg DESTINATION
+	    ${CMAKE_INSTALL_PREFIX}/share/icons/hicolor/scalable/apps)
+    install(FILES src/springlobby.desktop DESTINATION
+	    ${CMAKE_INSTALL_PREFIX}/share/applications)
 ENDIF (WIN32)

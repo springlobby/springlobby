@@ -31,6 +31,8 @@ class SpringLobbyApp : public wxApp
 
     wxTimer* m_timer;
 
+    bool quit_called;
+
     wxTranslationHelper* m_translationhelper;
 
     DECLARE_EVENT_TABLE()

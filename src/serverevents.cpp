@@ -20,7 +20,6 @@
 #include "torrentwrapper.h"
 #endif
 #include "globalsmanager.h"
-#include "userrankdb.h"
 
 void ServerEvents::OnConnected( const wxString& server_name, const wxString& server_ver, bool supported, const wxString& server_spring_ver, bool lanmode )
 {
@@ -51,7 +50,6 @@ void ServerEvents::OnDisconnected( bool wasonline )
 void ServerEvents::OnLogin()
 {
 	wxString nick = m_serv.GetMe().GetNick();
-	CustomRankDB().SetOwner( nick );
 	wxArrayString highlights = sett().GetHighlightedWords();
 	if ( highlights.Index( nick ) == -1 )
 	{
@@ -66,10 +64,9 @@ void ServerEvents::OnLoginInfoComplete()
     wxLogDebugFunc( _T("") );
     //m_serv.RequestChannels();
     std::vector<ChannelJoinInfo> autojoin = sett().GetChannelsJoin();
-    for ( unsigned int i= 0; i < autojoin.size(); i++ )
+    for ( std::vector<ChannelJoinInfo>::iterator itor = autojoin.begin(); itor != autojoin.end(); itor++ )
     {
-        ChannelJoinInfo channel = autojoin[i];
-        m_serv.JoinChannel( channel.name, channel.password );
+        m_serv.JoinChannel( itor->name, itor->password );
     }
 #ifndef NO_TORRENT_SYSTEM
     if ( sett().GetTorrentSystemAutoStartMode() == 0 ) torrent().ConnectToP2PSystem();
@@ -112,11 +109,7 @@ void ServerEvents::OnMotd( const wxString& msg )
 
 void ServerEvents::OnPong( int ping_time )
 {
-    if ( ping_time == -1 )
-    {
-        wxLogWarning( _T("Ping Timeout!") );
-        if ( m_serv.IsConnected() ) m_serv.Disconnect();
-    }
+    ui().OnServerMessage( m_serv, wxString::Format( _("ping reply took %d seconds"), ping_time ) );
 }
 
 

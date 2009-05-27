@@ -20,6 +20,8 @@ protected:
     wxString m_newexe;
     ExeDownloader* m_exedownloader;
 
+    wxString m_cur_mw_title;
+
 };
 
 UpdaterClass& Updater();

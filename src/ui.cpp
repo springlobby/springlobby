@@ -55,7 +55,7 @@ Ui::Ui() :
         m_upd_counter_torrent(0),
         m_upd_counter_battlelist(0),
         m_upd_counter_chat(0),
-        m_checked_for_update(false),
+        m_first_update_trigger(true),
         m_ingame(false)
 {
     m_main_win = new MainWindow( *this );
@@ -556,9 +556,13 @@ void Ui::OnUpdate( int mselapsed )
 		}
 		m_upd_counter_chat++;
 
-    if ( !m_checked_for_update )
+    if ( m_first_update_trigger )
     {
-        m_checked_for_update = true;
+        m_first_update_trigger = false;
+
+        if ( sett().GetAutoConnect() ) {
+            Connect(); //the start tab is set from UI::onLoggedin
+        }
 #ifdef __WXMSW__
         if ( sett().GetAutoUpdate() )Updater().CheckForUpdates();
 #endif
@@ -640,7 +644,8 @@ void Ui::OnLoggedIn( )
 {
     if ( m_main_win == 0 ) return;
     mw().GetChatTab().RejoinChannels();
-
+    if ( sett().GetAutoConnect() )
+        mw().ShowTab( sett().GetStartTab() );
 }
 
 
@@ -713,6 +718,19 @@ void Ui::SwitchToNextServer()
 		sett().SetDefaultServer( previous_server ); // don't save the new server as default when switched this way
 }
 
+static inline bool IsAutoJoinChannel( Channel& chan )
+{
+    typedef std::vector<ChannelJoinInfo>
+        Vec;
+    typedef Vec::const_iterator
+        VecIt;
+    const Vec chans = sett().GetChannelsJoin();
+    for ( VecIt it = chans.begin(); it != chans.end(); ++it ) {
+        if ( it->name == chan.GetName() )
+            return true;
+    }
+    return false;
+}
 //! @brief Called when client has joined a channel
 //!
 //! @todo Check if a pannel allready exists for this channel
@@ -722,7 +740,8 @@ void Ui::OnJoinedChannelSuccessful( Channel& chan )
     wxLogDebugFunc( _T("") );
 
     chan.uidata.panel = 0;
-    mw().OpenChannelChat( chan );
+
+    mw().OpenChannelChat( chan, !sett().GetAutoConnect() || !IsAutoJoinChannel( chan ) );
 }
 
 

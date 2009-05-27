@@ -10,6 +10,7 @@ class wxRadioButton;
 class wxTextCtrl;
 class wxButton;
 class wxStaticBoxSizer;
+class wxChoice;
 
 class LobbyOptionsTab : public wxScrolledWindow
 {
@@ -51,6 +52,8 @@ class LobbyOptionsTab : public wxScrolledWindow
         wxBoxSizer* m_main_sizer;
         wxStaticBoxSizer* m_web_box_sizer;
         wxBoxSizer* m_web_loc_sizer;
+
+        wxChoice* m_start_tab;
 
     enum
     {

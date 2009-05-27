@@ -64,14 +64,14 @@ class Socket
 
     void Ping();
     void SetPingInfo( const wxString& msg = wxEmptyString, unsigned int interval = 10000 );
-    unsigned int GetPingInterval() { return m_ping_int; }
-    bool GetPingEnabled() { return m_ping_msg != wxEmptyString; }
+    unsigned int GetPingInterval() const { return m_ping_int; }
+    bool GetPingEnabled() const { return m_ping_msg != wxEmptyString; }
 
-    wxString GetLocalAddress();
+    wxString GetLocalAddress() const;
     wxString GetHandle();
 
     SockState State( );
-    SockError Error( );
+    SockError Error( ) const;
 
     void SetSendRateLimit( int Bps = -1 );
     void OnTimer( int mselapsed );
@@ -105,7 +105,7 @@ class Socket
 
     bool _Send( const wxString& data );
     void _EnablePingThread( bool enable = true );
-    bool _ShouldEnablePingThread();
+    bool _ShouldEnablePingThread() const;
 };
 
 
