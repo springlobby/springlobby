@@ -507,7 +507,7 @@ springlobby_SOURCES = \
 	src/playback/replaylist.h \
 	src/playback/replaylist.cpp \
 	src/playback/playbacklistctrl.h \
-	src/playback/playbacklistfiltervalues.h \
+	src/playback/playbackfiltervalues.h \
 	src/sdlsound.h \
 	src/sdlsound.cpp \
 	src/server.cpp \
