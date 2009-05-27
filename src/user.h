@@ -43,7 +43,7 @@ struct UserPosition
 struct UserBattleStatus
 {
   // when adding something to this struct, also modify User::UpdateBattleStatus()
-  // total 16 members here
+  // total 17 members here
   int team;
   int ally;
   wxColour colour;
@@ -59,18 +59,19 @@ struct UserBattleStatus
 	wxString owner;
 	wxString aishortname;
 	wxString aiversion;
+	int aitype;
   // for nat holepunching
   wxString ip;
   unsigned int udpport;
   bool IsBot() const { return !aishortname.IsEmpty(); }
-  UserBattleStatus(): team(0),ally(0),colour(wxColour(0,0,0)),color_index(-1),handicap(0),side(0),sync(SYNC_UNKNOWN),spectator(false),ready(false), isfromdemo(false), udpport(0) {}
+  UserBattleStatus(): team(0),ally(0),colour(wxColour(0,0,0)),color_index(-1),handicap(0),side(0),sync(SYNC_UNKNOWN),spectator(false),ready(false), isfromdemo(false), udpport(0),aitype(-1) {}
   bool operator == ( const UserBattleStatus& s ) const
   {
-    return ( ( team == s.team ) && ( colour == s.colour ) && ( handicap == s.handicap ) && ( side == s.side ) && ( sync == s.sync ) && ( spectator == s.spectator ) && ( ready == s.ready ) && ( owner == s.owner ) && ( aishortname == s.aishortname ) && ( isfromdemo == s.isfromdemo ) );
+    return ( ( team == s.team ) && ( colour == s.colour ) && ( handicap == s.handicap ) && ( side == s.side ) && ( sync == s.sync ) && ( spectator == s.spectator ) && ( ready == s.ready ) && ( owner == s.owner ) && ( aishortname == s.aishortname ) && ( isfromdemo == s.isfromdemo ) && ( aitype == s.aitype ) );
   }
   bool operator != ( const UserBattleStatus& s ) const
   {
-    return ( ( team != s.team ) || ( colour != s.colour ) || ( handicap != s.handicap ) || ( side != s.side ) || ( sync != s.sync ) || ( spectator != s.spectator ) || ( ready != s.ready ) || ( owner != s.owner ) || ( aishortname != s.aishortname ) || ( isfromdemo != isfromdemo ) );
+    return ( ( team != s.team ) || ( colour != s.colour ) || ( handicap != s.handicap ) || ( side != s.side ) || ( sync != s.sync ) || ( spectator != s.spectator ) || ( ready != s.ready ) || ( owner != s.owner ) || ( aishortname != s.aishortname ) || ( isfromdemo != s.isfromdemo )  || ( aitype != s.aitype ) );
   }
 };
 
