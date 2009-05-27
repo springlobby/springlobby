@@ -1006,9 +1006,10 @@ int SpringUnitSyncLib::GetModOptionCount( const wxString& name )
 }
 
 
-int SpringUnitSyncLib::GetAIOptionCount( int aiIndex )
+int SpringUnitSyncLib::GetAIOptionCount( const wxString& modname, int aiIndex )
 {
 	InitLib( m_get_skirmish_ai_option_count );
+	_SetCurrentMod( modname );
 	ASSERT_EXCEPTION( m_get_skirmish_ai_count , _T("Function was not in unitsync library.") );
 
 	UNITSYNC_EXCEPTION( ( aiIndex >= 0 ) && ( aiIndex < m_get_skirmish_ai_count() ), _T("aiIndex out of bounds") );
