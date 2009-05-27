@@ -283,8 +283,16 @@ void ServerEvents::OnHostedBattle( int battleid )
     {
         Battle& battle = m_serv.GetBattle( battleid );
 
-        battle.CustomBattleOptions().loadOptions( OptionsWrapper::MapOption, battle.GetHostMapName() );
-        battle.CustomBattleOptions().loadOptions( OptionsWrapper::ModOption, battle.GetHostModName() );
+				if ( battle.GetBattleType() == BT_Played )
+				{
+					battle.CustomBattleOptions().loadOptions( OptionsWrapper::MapOption, battle.GetHostMapName() );
+					battle.CustomBattleOptions().loadOptions( OptionsWrapper::ModOption, battle.GetHostModName() );
+				}
+				else
+				{
+					battle.GetBattleFromScript( true );
+				}
+
 
         wxString presetname = sett().GetModDefaultPresetName( battle.GetHostModName() );
         if ( !presetname.IsEmpty() )
