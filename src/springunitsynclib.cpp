@@ -126,6 +126,7 @@ void SpringUnitSyncLib::_Load( const wxString& path )
     m_get_side_name = (GetSideNamePtr)_GetLibFuncPtr(_T("GetSideName"));
 
     m_add_all_archives = (AddAllArchivesPtr)_GetLibFuncPtr(_T("AddAllArchives"));
+    m_remove_all_archives = (RemoveAllArchivesPtr)_GetLibFuncPtr(_T("RemoveAllArchives"));
 
     m_get_unit_count = (GetUnitCountPtr)_GetLibFuncPtr(_T("GetUnitCount"));
     m_get_unit_name = (GetUnitNamePtr)_GetLibFuncPtr(_T("GetUnitName"));
@@ -285,6 +286,15 @@ void SpringUnitSyncLib::_Init()
 }
 
 
+void SpringUnitSyncLib::_RemoveAllArchives()
+{
+  if (m_remove_all_archives)
+  	m_remove_all_archives();
+  else
+    _Init();
+}
+
+
 void SpringUnitSyncLib::Unload()
 {
   if ( !_IsLoaded() ) return;// dont even lock anything if unloaded.
@@ -419,7 +429,7 @@ void SpringUnitSyncLib::_SetCurrentMod( const wxString& modname )
   if ( m_current_mod != modname )
   {
     wxLogDebugFunc( modname );
-		if ( !m_current_mod.IsEmpty() ) _Init();
+    if ( !m_current_mod.IsEmpty() ) _RemoveAllArchives();
     m_add_all_archives( m_get_mod_archive( m_get_mod_index( modname.mb_str( wxConvUTF8 ) ) ) );
     m_current_mod = modname;
   }
@@ -429,7 +439,7 @@ void SpringUnitSyncLib::_SetCurrentMod( const wxString& modname )
 void SpringUnitSyncLib::UnSetCurrentMod( )
 {
   LOCK_UNITSYNC;
-  if ( !m_current_mod.IsEmpty() ) _Init();
+  if ( !m_current_mod.IsEmpty() ) _RemoveAllArchives();
   m_current_mod = wxEmptyString;
 }
 

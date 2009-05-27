@@ -72,6 +72,7 @@ typedef int (USYNC_CALL_CONV *GetSideCountPtr)();
 typedef const char* (USYNC_CALL_CONV *GetSideNamePtr)(int);
 
 typedef void (USYNC_CALL_CONV *AddAllArchivesPtr)(const char*);
+typedef void (USYNC_CALL_CONV *RemoveAllArchivesPtr)();
 
 typedef const char * (USYNC_CALL_CONV *GetFullUnitNamePtr)(int);
 typedef const char * (USYNC_CALL_CONV *GetUnitNamePtr)(int);
@@ -494,6 +495,11 @@ class SpringUnitSyncLib
      */
     void _Init();
 
+	/**
+	 * Calls RemoveAllArchives if available, _Init() otherwise.
+	 */
+	void _RemoveAllArchives();
+
     /**
      * Internal Unload() function.
      * @note this function is not threadsafe if called from code not locked.
@@ -538,6 +544,7 @@ class SpringUnitSyncLib
     GetSideNamePtr m_get_side_name;
 
     AddAllArchivesPtr m_add_all_archives;
+    RemoveAllArchivesPtr m_remove_all_archives;
 
     GetUnitCountPtr m_get_unit_count;
     GetUnitNamePtr m_get_unit_name;
