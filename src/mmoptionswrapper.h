@@ -68,6 +68,8 @@ public:
 
 	bool loadAIOptions( const wxString& modname, int aiindex, const wxString& ainick );
 
+	int GetAIOptionIndex( const wxString& nick );
+
 	//! load corresponding options through unitsync calls
 	/*!
 	 * the containers for corresponding flag are recreated and then gets the number of options from unitsync

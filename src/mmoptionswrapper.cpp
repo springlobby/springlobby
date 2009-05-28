@@ -71,6 +71,12 @@ bool OptionsWrapper::loadAIOptions( const wxString& modname, int aiindex,const w
 	return true;
 }
 
+int OptionsWrapper::GetAIOptionIndex( const wxString& nick )
+{
+	std::map<wxString,int>::iterator itor = m_ais_indexes.find(nick);
+	if ( itor != m_ais_indexes.end() ) return itor->second;
+	return -1;
+}
 
 bool OptionsWrapper::loadOptions(GameOption modmapFlag, const wxString& name)
 {
