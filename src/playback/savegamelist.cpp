@@ -49,7 +49,7 @@ bool SavegameList::GetSavegameInfos ( const wxString& SavegamePath, Savegame& re
     //TODO extract moar info
     ret.Filename = SavegamePath;
 		ret.battle.SetPlayBackFilePath( SavegamePath );
-
+		if ( SavegamePath.IsEmpty() ) return false;
     ret.battle.SetScript( GetScriptFromSavegame( SavegamePath ) );
     //wxLogMessage(_T("Script: %s"), script.c_str());
 
