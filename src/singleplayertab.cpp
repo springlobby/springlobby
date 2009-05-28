@@ -284,12 +284,12 @@ void SinglePlayerTab::OnAddBot( wxCommandEvent& event )
         bs.owner = m_battle.GetMe().GetNick();
         bs.aishortname = dlg.GetAIShortName();
         bs.aiversion = dlg.GetAIVersion();
+        bs.aitype = dlg.GetAIType();
         bs.team = m_battle.GetFreeTeamNum();
         bs.ally = m_battle.GetFreeAlly();
         bs.colour = m_battle.GetNewColour();
         User& bot = m_battle.OnBotAdded( _T("Bot") + TowxString( bs.team ), bs  );
         ASSERT_LOGIC( &bot != 0, _T("bot == 0") );
-
         m_minimap->UpdateMinimap();
     }
 }

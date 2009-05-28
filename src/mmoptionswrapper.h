@@ -66,6 +66,8 @@ public:
 	//! just calls loadOptions(MapOption,mapname)
 	bool loadMapOptions(wxString mapname);
 
+	bool loadAIOptions( const wxString& modname, int aiindex, const wxString ainick );
+
 	//! load corresponding options through unitsync calls
 	/*!
 	 * the containers for corresponding flag are recreated and then gets the number of options from unitsync
@@ -143,6 +145,9 @@ protected:
 	bool setSingleOptionTypeSwitch(wxString key, wxString value, GameOption modmapFlag, OptionType optType);
 
 	mmSectionTreeMap m_sections;
+
+	//! a map that connects the ai nick with it's set of options
+	std::map<wxString, int> m_ais_indexes;
 
 	typedef GameOptionsMap::const_iterator
         GameOptionsMapCIter;

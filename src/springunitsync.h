@@ -163,6 +163,8 @@ class SpringUnitSync : public IUnitSync
 
     wxArrayString GetAIList( const wxString& modname );
     wxArrayString GetAIInfos( int index );
+    GameOptions GetAIOptions( const wxString& modname, int index );
+
 
     int GetNumUnits( const wxString& modname );
     wxArrayString GetUnitsList( const wxString& modname );

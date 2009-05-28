@@ -391,6 +391,17 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 								tdf.Append( _T("Version"), status.aiversion ); // AI libtype version
 								tdf.Append( _T("Team"), status.team );
 								tdf.Append( _T("Host"), player_to_number[&battle.GetUser( status.owner )] );
+								tdf.EnterSection( _T("Options") );
+									int optionmapindex = battle.CustomBattleOptions().GetAIOptionIndex( user.GetNick() );
+									if ( index > 0 )
+									{
+										OptionsWrapper::wxStringTripleVec optlistMod = battle.CustomBattleOptions().getOptions( mapindex );
+										for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistMod.begin(); it != optlistMod.end(); ++it)
+										{
+												tdf.Append(it->first,it->second.second);
+										}
+									}
+								tdf.LeaveSection();
 						tdf.LeaveSection();
 						player_to_number[&user] = i;
 				}

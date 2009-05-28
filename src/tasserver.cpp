@@ -883,9 +883,16 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         color.data = GetIntParam( params );
         bstatus.colour = wxColour( color.color.red, color.color.green, color.color.blue );
         wxString ai = GetSentenceParam( params );
-        if( usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) ) bstatus.aishortname = ai.BeforeFirst( _T('|') );
-        else bstatus.aishortname = ai;
-        bstatus.aiversion = ai.AfterFirst( _T('|') );
+        if( usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) )
+        {
+					 bstatus.aiversion = ai.AfterLast( _T('|') );
+					 ai = ai.BeforeLast( _T('|') );
+        	 bstatus.aishortname = ai;
+        }
+        else
+        {
+        	 bstatus.aishortname = ai;
+        }
         bstatus.owner =owner;
         m_se->OnBattleAddBot( id, nick, bstatus );
     }
