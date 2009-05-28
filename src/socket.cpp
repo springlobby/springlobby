@@ -116,6 +116,7 @@ void Socket::Connect( const wxString& addr, const int port )
 
   wxIPV4address wxaddr;
   m_connecting = true;
+  m_buffer = "";
 
   wxaddr.Hostname( addr );
   wxaddr.Service( port );
@@ -139,6 +140,7 @@ void Socket::Disconnect( )
   if ( m_sock ) m_sock->SetTimeout( 0 );
   m_net_class.OnDisconnected( this );
   _EnablePingThread( false );
+  m_buffer = "";
 
   if ( m_sock )
   {
