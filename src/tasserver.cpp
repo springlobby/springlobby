@@ -883,8 +883,6 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         wxString ai = GetSentenceParam( params );
         if( usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) )
         {
-					 bstatus.aitype = TowxString( ai.AfterLast( _T('|') ) );
-					 ai = ai.BeforeLast( _T('|') );
 					 bstatus.aiversion = ai.AfterLast( _T('|') );
 					 ai = ai.BeforeLast( _T('|') );
         	 bstatus.aishortname = ai;
@@ -2016,7 +2014,7 @@ void TASServer::AddBot( int battleid, const wxString& nick, UserBattleStatus& st
     wxString msg;
     wxString ailib;
     ailib += status.aishortname;
-    if ( usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) ) ailib += _T("|") + status.aiversion + _T("|") + TowxString(status.aitype);
+    if ( usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) ) ailib += _T("|") + status.aiversion;
     SendCmd( _T("ADDBOT"), nick + wxString::Format( _T(" %d %d "), tasbs.data, tascl.data ) + ailib );
 }
 
