@@ -136,6 +136,7 @@ m_connected(false),
 m_online(false),
 m_debug_dont_catch( false ),
 m_id_transmission( false ),
+m_redirecting( false ),
 m_buffer(_T("")),
 m_last_udp_ping(0),
 m_last_net_packet(0),
@@ -310,6 +311,7 @@ void TASServer::Connect( const wxString& servername ,const wxString& addr, const
     m_sock->SetPingInfo( _T("PING\n"), 10000 );
     m_sock->SetSendRateLimit( 800 ); // 1250 is the server limit but 800 just to make sure :)
     m_online = false;
+    m_redirecting = false;
     m_agreement = _T("");
 		m_crc.ResetCRC();
 		m_last_net_packet = time( 0 );
@@ -1029,6 +1031,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         unsigned int port = GetIntParam( params );
         if ( address.IsEmpty() ) return;
         if ( port == 0 ) port = DEFSETT_DEFAULT_SERVER_PORT;
+        m_redirecting = true;
         m_se->OnRedirect( address, port, m_user, m_pass );
     }
     else if ( cmd == _T("MUTELISTBEGIN") )
@@ -2107,10 +2110,11 @@ void TASServer::OnConnected( Socket* sock )
 void TASServer::OnDisconnected( Socket* sock )
 {
     wxLogDebugFunc( TowxString(m_connected) );
-    bool connectionwaspresent = m_online || !m_last_denied.IsEmpty();
+    bool connectionwaspresent = m_online || !m_last_denied.IsEmpty() || m_redirecting;
     m_last_denied = _T("");
     m_connected = false;
     m_online = false;
+    m_redirecting = false;
 		m_token_transmission = false;
 		m_buffer = _T("");
 		m_relay_host_manager_list.Clear();
