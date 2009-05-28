@@ -66,7 +66,7 @@ public:
 	//! just calls loadOptions(MapOption,mapname)
 	bool loadMapOptions(wxString mapname);
 
-	bool loadAIOptions( const wxString& modname, int aiindex, const wxString ainick );
+	bool loadAIOptions( const wxString& modname, int aiindex, const wxString& ainick );
 
 	//! load corresponding options through unitsync calls
 	/*!

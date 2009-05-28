@@ -58,16 +58,16 @@ bool OptionsWrapper::loadAIOptions( const wxString& modname, int aiindex,const w
 {
 	int mapindex = m_ais_indexes[ainame];
 	if ( mapindex == 0 ) mapindex = m_ais_indexes.size() + LastOption;
-	unLoadOptions(mapindex);
+	unLoadOptions((GameOption)mapindex);
 	try
 	{
 		GameOptions opt = usync().GetAIOptions( modname, aiindex );
 		ParseSectionMap( m_sections[mapindex], opt.section_map );
+		m_opts[mapindex] = opt;
 	} catch (...)
 	{
 		return false;
 	}
-	m_opts[mapindex] = opt;
 	return true;
 }
 
