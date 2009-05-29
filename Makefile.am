@@ -63,7 +63,11 @@ EXTRA_DIST = \
 	src/playback/playbacktab.cpp \
 	src/playback/playbackfilter.cpp \
 	src/playback/playbackthread.cpp \
-	src/playback/playbacklistctrl.cpp 
+	src/playback/playbacklistctrl.cpp \
+	src/playback/playbacktraits.h \
+	src/playback/playbackstructs.h \
+	src/playback/playbacklist.h \
+	src/playback/playbacklist.cpp
 	
 
 springsettings_LDADD = \
@@ -950,7 +954,9 @@ springlobby_SOURCES = \
 	src/mmoptionwindows.h \
 	src/playback/savegamelist.cpp \
 	src/playback/savegamelist.h \
-	src/images/floppy_icon.png.h
+	src/images/floppy_icon.png.h \
+	src/images/replay_icon.png.h \
+	src/images/replay_icon_text.png.h
 
 
 if USE_WINDRES
