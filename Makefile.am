@@ -604,8 +604,6 @@ springlobby_SOURCES = \
 	src/images/rank_unknown.xpm \
 	src/images/ready_q.xpm \
 	src/images/ready_unsync.xpm \
-	src/images/playback_icon.png.h \
-	src/images/playback_icon_text.png.h \
 	src/images/downloads_icon.png.h \
 	src/images/single_player_icon.png.h \
 	src/images/downloads_icon_text.png.h \
