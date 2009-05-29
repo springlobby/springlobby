@@ -153,15 +153,14 @@ void MainChatTab::LeaveChannels()
 {
     for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ ) {
     ChatPanel* tmp = (ChatPanel*)m_chat_tabs->GetPage(i);
-    if ( tmp->GetPanelType() == CPT_Channel ) {
-
+    if ( tmp->GetPanelType() == CPT_Channel )
+    {
+			tmp->StatusMessage( _("Disconnected from server, chat closed.") );
       tmp->SetChannel( 0 );
-
-
-    } else if (tmp->GetPanelType() == CPT_User ) {
-
-        tmp->SetUser( 0 );
-
+    } else if (tmp->GetPanelType() == CPT_User )
+    {
+			tmp->StatusMessage( _("Disconnected from server, chat closed.") );
+			tmp->SetUser( 0 );
     }
   }
 }

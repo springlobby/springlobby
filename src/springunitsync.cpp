@@ -562,6 +562,18 @@ wxArrayString SpringUnitSync::GetAIInfos( int index )
 	return ret;
 }
 
+GameOptions SpringUnitSync::GetAIOptions( const wxString& modname, int index )
+{
+  wxLogDebugFunc( TowxString(index) );
+  GameOptions ret;
+	int count = susynclib().GetAIOptionCount(modname, index);
+	for (int i = 0; i < count; ++i)
+	{
+		GetOptionEntry( i, ret );
+	}
+  return ret;
+}
+
 int SpringUnitSync::GetNumUnits( const wxString& modname )
 {
   wxLogDebugFunc( _T("") );

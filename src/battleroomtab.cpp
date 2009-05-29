@@ -635,6 +635,7 @@ void BattleRoomTab::OnAddBot( wxCommandEvent& event )
         bs.colour = m_battle.GetNewColour();
         bs.aishortname = dlg.GetAIShortName();
         bs.aiversion = dlg.GetAIVersion();
+        bs.aitype = dlg.GetAIType();
         bs.owner = m_battle.GetMe().GetNick();
         m_ui.GetServer().AddBot( m_battle.GetBattleId(), dlg.GetNick(), bs );
     }

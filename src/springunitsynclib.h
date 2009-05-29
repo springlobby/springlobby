@@ -368,7 +368,7 @@ class SpringUnitSyncLib
 
     int GetMapOptionCount( const wxString& name );
     int GetModOptionCount( const wxString& name );
-    int GetAIOptionCount( int index );
+    int GetAIOptionCount( const wxString& modname, int index );
     wxString GetOptionKey( int optIndex );
     wxString GetOptionName( int optIndex );
     wxString GetOptionDesc( int optIndex );

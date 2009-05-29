@@ -54,6 +54,29 @@ OptionType OptionsWrapper::GetSingleOptionType (wxString key) const
 	return opt_undefined;
 }
 
+bool OptionsWrapper::loadAIOptions( const wxString& modname, int aiindex,const wxString& ainame )
+{
+	int mapindex = m_ais_indexes[ainame];
+	if ( mapindex == 0 ) mapindex = m_ais_indexes.size() + LastOption;
+	unLoadOptions((GameOption)mapindex);
+	try
+	{
+		GameOptions opt = usync().GetAIOptions( modname, aiindex );
+		ParseSectionMap( m_sections[mapindex], opt.section_map );
+		m_opts[mapindex] = opt;
+	} catch (...)
+	{
+		return false;
+	}
+	return true;
+}
+
+int OptionsWrapper::GetAIOptionIndex( const wxString& nick )
+{
+	std::map<wxString,int>::iterator itor = m_ais_indexes.find(nick);
+	if ( itor != m_ais_indexes.end() ) return itor->second;
+	return -1;
+}
 
 bool OptionsWrapper::loadOptions(GameOption modmapFlag, const wxString& name)
 {

@@ -145,6 +145,11 @@ wxString AddBotDialog::GetAIVersion()
 	return infos[namepos +1];
 }
 
+int AddBotDialog::GetAIType()
+{
+	return m_ai->GetSelection();
+}
+
 wxString AddBotDialog::RefineAIName( const wxString& name )
 {
   wxString ret = name;
