@@ -7,6 +7,7 @@ src/battlelisttab.cpp
 src/battlemaptab.cpp
 src/battleoptionstab.cpp
 src/battleroomlistctrl.cpp
+src/battleroommmoptionstab.cpp
 src/battleroomtab.cpp
 src/channel/autojoinchanneldialog.cpp
 src/channel/channelchooser.cpp
@@ -23,7 +24,9 @@ src/filelister/filelistdialog.cpp
 src/filelister/filelistfilter.cpp
 src/globalevents.cpp
 src/groupoptionspanel.cpp
+src/Helper/imageviewer.cpp
 src/Helper/wxtextctrlhist.h
+src/Helper/wxTranslationHelper.cpp
 src/hostbattledialog.cpp
 src/httpdownloader.cpp
 src/lobbyoptionstab.cpp
@@ -33,17 +36,19 @@ src/mainoptionstab.cpp
 src/mainsingleplayertab.cpp
 src/maintorrenttab.cpp
 src/mainwindow.cpp
+src/mainwindow.h
 src/mapctrl.cpp
+src/mapselectdialog.cpp
 src/mmoptionswrapper.cpp
+src/mmoptionwindows.cpp
 src/nicklistctrl.cpp
 src/nonportable.h
-src/replay/replayfilter.cpp
-src/replay/replaylistctrl.cpp
-src/replay/replaytab.cpp
+src/playback/playbackfilter.cpp
+src/playback/playbacklistctrl.cpp
+src/playback/playbacktab.cpp
 src/selectusersdialog.cpp
 src/selectusersdialog.h
 src/serverevents.cpp
-src/settings.cpp
 src/settings++/Defs.hpp
 src/settings++/frame.cpp
 src/settings++/helpmenufunctions.cpp
@@ -58,6 +63,7 @@ src/settings++/tab_quality_video.cpp
 src/settings++/tab_render_detail.cpp
 src/settings++/tab_simple.cpp
 src/settings++/tab_ui.cpp
+src/singleplayerbattle.cpp
 src/singleplayertab.cpp
 src/springlobbyapp.cpp
 src/springoptionstab.cpp
@@ -76,3 +82,6 @@ src/user.cpp
 src/userlistctrl.cpp
 src/usermenu.h
 src/utils.cpp
+src/widgets/downloaddialog.cpp
+src/widgets/downloadlistctrl.cpp
+src/widgets/infopanel.cpp
