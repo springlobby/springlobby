@@ -393,7 +393,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 								tdf.Append( _T("Host"), player_to_number[&battle.GetUser( status.owner )] );
 								tdf.EnterSection( _T("Options") );
 									int optionmapindex = battle.CustomBattleOptions().GetAIOptionIndex( user.GetNick() );
-									if ( index > 0 )
+									if ( optionmapindex > 0 )
 									{
 										OptionsWrapper::wxStringTripleVec optlistMod = battle.CustomBattleOptions().getOptions( (OptionsWrapper::GameOption)optionmapindex );
 										for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistMod.begin(); it != optlistMod.end(); ++it)
