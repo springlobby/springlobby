@@ -74,7 +74,7 @@ wxString SavegameList::GetScriptFromSavegame ( const wxString& SavegamePath  )
 		{
 			file.read(&c,sizeof(char));
 			if (c) script += c;
-		} while ( ( c != 0 ) || !file.eof() );
+		} while ( ( c != 0 ) && !file.eof() );
 	}
 	return WX_STRING( script );
 }
