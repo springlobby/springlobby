@@ -342,7 +342,7 @@ void PlaybackTab<PlaybackTraits>::OnWatch( wxCommandEvent& event )
                 }
 
                 if ( !battle.MapExists() ) {
-                    if (customMessageBox(SL_MAIN_ICON, _("You need to download the map to be able to watch this replay.\n\n") + downloadProc, _("Map not available"), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
+                    if (customMessageBox(SL_MAIN_ICON, _(" I couldn't find the map to be able to watch this replay\nThis can be caused by tasclient writing broken map hash value\nIf you're sure you have the map, press no\nYou need to download the map to be able to watch this replay.\n\n") + downloadProc, _("Map not available"), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
                         wxString maphash = battle.GetHostMapHash();
                         wxString mapname = battle.GetHostMapName();
                         m_ui.DownloadMap ( maphash, mapname );
