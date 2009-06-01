@@ -148,7 +148,7 @@ bool ChatLog::OpenLogFile(const wxString& server,const wxString& room)
       #ifdef __WXMSW__
       text << _T("\r");
       #endif
-      text << _T("\n")
+      text << _T("\n");
       return WriteLine( text );
 
     }
