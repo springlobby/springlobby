@@ -144,11 +144,11 @@ bool ChatLog::OpenLogFile(const wxString& server,const wxString& room)
     }
     else {
       wxDateTime now = wxDateTime::Now();
-      wxString text = _T("### Session Start at [") + now.Format( _T("%Y-%m-%d %H:%M") + _T("]") );
+      wxString text = _T("### Session Start at [") + now.Format( _T("%Y-%m-%d %H:%M") ) + _T("]");
       #ifdef __WXMSW__
       text << _T("\r");
       #endif
-      text <<  + _T("\n")
+      text << _T("\n")
       return WriteLine( text );
 
     }
