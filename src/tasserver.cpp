@@ -88,12 +88,29 @@ unsigned int :
     4;
 };
 
-
 //! @brief Union used internally by the TASServer class to get battle status information.
 union UTASBattleStatus
 {
     int data;
     TASBattleStatus tasdata;
+};
+
+//! @brief struct used internallby by tasserver to convert offer file bitfields
+struct OfferFileData
+{
+	bool autoopen :
+		1;
+	bool closelobbyondownload :
+		1;
+	bool disconnectonrefuse :
+		1;
+};
+
+//! @brief Union used internally by the TASServer class to get battle status information.
+union UTASOfferFileData
+{
+    int data;
+    OfferFileData tasdata;
 };
 
 
@@ -1061,13 +1078,12 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     // OFFERFILE options {filename} {url} {description}
     else if ( cmd == _T("OFFERFILE") )
     {
-				int options = GetIntParam( params );
+				UTASOfferFileData parsingdata;
+				parsingdata.data = GetIntParam( params );
 				wxString FileName = GetSentenceParam( params );
 				wxString url = GetSentenceParam( params );
 				wxString description = GetSentenceParam( params );
-				bool autolaunch;
-				bool autoclose;
-				m_se->OnFileDownload( autolaunch, autoclose, FileName, url, description );
+				m_se->OnFileDownload( parsingdata.tasdata.autoopen, parsingdata.tasdata.closelobbyondownload, parsingdata.tasdata.disconnectonrefuse, FileName, url, description );
     }
     else
     {

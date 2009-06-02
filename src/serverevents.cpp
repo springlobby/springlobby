@@ -919,7 +919,7 @@ void ServerEvents::OnScriptEnd( int battleid )
 }
 
 
-void ServerEvents::OnFileDownload( bool autolaunch, bool autoclose, const wxString& FileName, const wxString& url, const wxString& description )
+void ServerEvents::OnFileDownload( bool autolaunch, bool autoclose, bool disconnectonrefuse, const wxString& FileName, const wxString& url, const wxString& description )
 {
 	bool result = ui().Ask( _("Download update"), wxString::Format( _("Would you like to download %s ? The file offers the following updates:\n%s"), FileName.c_str(), description.c_str() ) );
 	if ( result )
@@ -929,6 +929,14 @@ void ServerEvents::OnFileDownload( bool autolaunch, bool autoclose, const wxStri
 		m_savepath = sett().GetCurrentUsedDataDir() + FileName;
 		customMessageBox(SL_MAIN_ICON, _("Download started in the background, please be patient\nyou will be notified on operation completed."), _("Download started"));
 		new HttpDownloaderThread( url, m_savepath, *this, wxID_HIGHEST + 100, true, false );
+	}
+	else
+	{
+		if ( disconnectonrefuse )
+		{
+			customMessageBox(SL_MAIN_ICON, _("You refused a mandatory update, you will be disconnected now."), _("Disconnecting"));
+			m_serv.Disconnect();
+		}
 	}
 }
 void ServerEvents::OnSpringDownloadEvent( wxCommandEvent& event )
