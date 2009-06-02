@@ -563,6 +563,9 @@ void Ui::OnUpdate( int mselapsed )
         if ( sett().GetAutoConnect() ) {
             Connect(); //the start tab is set from UI::onLoggedin
         }
+        else {
+            mw().ShowTab( sett().GetStartTab() );
+        }
 #ifdef __WXMSW__
         if ( sett().GetAutoUpdate() )Updater().CheckForUpdates();
 #endif
