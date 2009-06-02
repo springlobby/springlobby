@@ -3,11 +3,13 @@
 
 //almost only needed for NAtType enum def
 #include "battle.h"
+#include <wx/event.h>
 
 class Ui;
 struct UserStatus;
 struct UserBattleStatus;
 class Server;
+class HttpDownloaderThread;
 
 // FIXME this is defined elsewhere, should use a different kind of type so we could use forward decl
 typedef int Sockerror;
@@ -23,7 +25,7 @@ struct MessageSpamCheck
 class Battle;
 
 //! @brief Class that implements server event behaviour.
-class ServerEvents
+class ServerEvents : public wxEvtHandler
 {
   public:
     ServerEvents( Server& serv) : m_serv(serv) {}
@@ -124,11 +126,18 @@ class ServerEvents
     void OnScriptEnd( int battleid );
 
     void OnFileDownload( bool autolaunch, bool autoclose, const wxString& FileName, const wxString& url, const wxString& description );
+    void OnSpringDownloadEvent( wxCommandEvent& event );
 
   protected:
     Server& m_serv;
-
     std::map<wxString,MessageSpamCheck> m_spam_check;
+
+    DECLARE_EVENT_TABLE()
+
+		/// spring autoupdate stuff
+    bool m_autolaunch;
+    bool m_autoclose;
+    wxString m_savepath;
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_SERVEREVENTS_H

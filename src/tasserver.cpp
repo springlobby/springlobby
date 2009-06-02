@@ -2306,7 +2306,7 @@ int TASServer::TestOpenPort( unsigned int port )
 
 void TASServer::RequestSpringUpdate()
 {
-	SendCmd( _T("REQUESTUPDATEFILE"), _T("Spring") + _T(" ") + m_required_spring_ver );
+	SendCmd( _T("REQUESTUPDATEFILE"), _T("Spring ") + m_required_spring_ver );
 }
 
 ////////////////////////
