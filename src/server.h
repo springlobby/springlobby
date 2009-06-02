@@ -176,6 +176,8 @@ class Server : public iNetClass
 
     wxString GetServerName() { return m_server_name; }
 
+    virtual void RequestSpringUpdate();
+
   protected:
     Socket* m_sock;
     int m_keepalive;

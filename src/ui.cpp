@@ -596,7 +596,12 @@ void Ui::OnConnected( Server& server, const wxString& server_name, const wxStrin
     {
 			 sett().SetDefaultServer( server_name );
     }
-    IsSpringCompatible();
+    if ( !IsSpringCompatible() )
+    {
+    	#ifdef __WXMSW__
+    	server.RequestSpringUpdate();
+    	#endif
+    }
 
     if ( server.uidata.panel ) server.uidata.panel->StatusMessage( _T("Connected to ") + server_name + _T(".") );
     mw().GetJoinTab().OnConnected();

@@ -123,6 +123,8 @@ class ServerEvents
     void OnScriptLine( int battleid, const wxString& line );
     void OnScriptEnd( int battleid );
 
+    void OnFileDownload( bool autolaunch, bool autoclose, const wxString& FileName, const wxString& url, const wxString& description );
+
   protected:
     Server& m_serv;
 

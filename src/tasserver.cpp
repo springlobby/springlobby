@@ -1058,6 +1058,17 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         m_se->OnMutelistEnd( m_current_chan_name_mutelist );
         m_current_chan_name_mutelist = _T("");
     }
+    // OFFERFILE options {filename} {url} {description}
+    else if ( cmd == _T("OFFERFILE") )
+    {
+				int options = GetIntParam( params );
+				wxString FileName = GetSentenceParam( params );
+				wxString url = GetSentenceParam( params );
+				wxString description = GetSentenceParam( params );
+				bool autolaunch;
+				bool autoclose;
+				m_se->OnFileDownload( autolaunch, autoclose, FileName, url, description );
+    }
     else
     {
         wxLogMessage( _T("??? Cmd: %s params: %s"), cmd.c_str(), params.c_str() );
@@ -2293,6 +2304,10 @@ int TASServer::TestOpenPort( unsigned int port )
     return porttest_pass;
 }
 
+void TASServer::RequestSpringUpdate()
+{
+	SendCmd( _T("REQUESTUPDATEFILE"), _T("Spring") + _T(" ") + m_required_spring_ver );
+}
 
 ////////////////////////
 // Utility functions

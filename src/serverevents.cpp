@@ -911,3 +911,13 @@ void ServerEvents::OnScriptEnd( int battleid )
 	}
 	m_serv.GetBattle( battleid ).GetBattleFromScript( true );
 }
+
+
+void ServerEvents::OnFileDownload( bool autolaunch, bool autoclose, const wxString& FileName, const wxString& url, const wxString& description )
+{
+	bool result = ui().Ask( _("Download update"), wxString::Format( _("Would you like to download %s ? The file offers the following updates:\n%s"), FileName, description ) );
+	if ( result )
+	{
+
+	}
+}
