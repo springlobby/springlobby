@@ -497,12 +497,19 @@ void BattleRoomTab::UpdateUser( User& user )
     m_ally_sel->SetSelection( bs.ally );
     m_side_sel->SetSelection( bs.side );
     m_spec_chk->SetValue( bs.spectator );
-
+		if ( IsHosted() && !m_battle.IsProxy() && !bs.ready ) m_battle.SetImReady( true );
     // Enable or disable widgets' sensitivity as appropriate.
     if ( bs.spectator )
     {
-        m_ready_chk->SetValue ( true );
-        m_ready_chk->Disable();
+				if ( m_battle.GetBattleType() == BT_Played )
+				{
+					m_ready_chk->SetValue ( true );
+					m_ready_chk->Disable();
+				}
+				else
+				{
+					m_ready_chk->Enable();
+				}
         m_side_sel->Disable();
         m_ally_sel->Disable();
         m_team_sel->Disable();
@@ -513,7 +520,6 @@ void BattleRoomTab::UpdateUser( User& user )
         {
             m_ready_chk->Enable();
         }
-
         m_ready_chk->SetValue( bs.ready );
         m_side_sel->Enable();
         m_ally_sel->Enable();
