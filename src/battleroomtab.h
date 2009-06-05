@@ -125,7 +125,7 @@ class BattleRoomTab : public wxScrolledWindow
 
     MapCtrl * m_minimap;
 
-    wxPanel* m_player_panel;
+    wxScrolledWindow* m_player_panel;
 
 		wxComboBox* m_map_combo;
 
