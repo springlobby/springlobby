@@ -712,7 +712,8 @@ void Ui::SwitchToNextServer()
 		position = ( position + 1) % serverlist.GetCount(); // switch to next in the list
 		m_last_used_backup_server = serverlist[position];
 		sett().SetDefaultServer( m_last_used_backup_server );
-		m_con_win->ReloadServerList();
+		if ( m_con_win ) // we don't necessarily have that constructed yet (autojoin)
+            m_con_win->ReloadServerList();
 		sett().SetDefaultServer( previous_server ); // don't save the new server as default when switched this way
 }
 
