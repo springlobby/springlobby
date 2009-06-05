@@ -1,11 +1,19 @@
 PROJECT(SpringLobby)
 
 #set minimum cmake version
-cmake_minimum_required(VERSION 2.4)
+cmake_minimum_required(VERSION 2.6)
 SET(CMAKE_COLOR_MAKEFILE ON)
 
 # Add Definitions, Compiler-Switches, etc.: -Wall -O2 -g3 ...
-ADD_DEFINITIONS(-Wall -Wno-strict-aliasing)
+# MSVC compiler (cl.exe) does not accept the same switches as gcc, although preprocessor definitions in the -D form will work for both
+IF(NOT MSVC)
+	ADD_DEFINITIONS(-Wall -Wno-strict-aliasing)
+ENDIF(NOT MSVC)
+IF(WIN32)
+	ADD_DEFINITIONS( -DWXUSINGDLL -D_WIN32_WINNT=0x0501)
+ENDIF(WIN32)
+
+
 
 #----------------------------------------------------------------------------------------------------
 # General Settings
@@ -45,26 +53,42 @@ SET( OPTION_TRANSLATION_SUPPORT
 
 # Here you can define, what Libraries of wxWidgets you need for your Application. You can figure out what Libraries you need here:
 # http://www.wxwidgets.org/manuals/2.8/wx_librarieslist.html
-SET(wxWidgets_USE_LIBS base core gl net adv aui html xml )
+SET(wxWidgets_USE_LIBS base core net adv aui html xml )
 
 # We need the Find package for wxWidgets to work
-IF (NOT WIN32)
-    INCLUDE(FindwxWidgets)
-    FIND_PACKAGE(wxWidgets)
-    # Did we find wxWidgets ? This condition will fail for as long as the internal Vars do not point to the proper wxWidgets Configuration.
-    IF(wxWidgets_FOUND)
-	    # Include wxWidgets macros
-	    INCLUDE(${wxWidgets_USE_FILE})
-	    INCLUDE_DIRECTORIES( ${wxWidgets_INCLUDE_DIRS} )
-    ELSE(wxWidgets_FOUND)
-	    # For Convenience. If we cannot continue, inform the User.
-	    MESSAGE( FATAL_ERROR "wxWidgets library is not found! Please install the package to continue")
-    ENDIF(wxWidgets_FOUND)
-ELSE (NOT WIN32)
-    INCLUDE_DIRECTORIES( ${wxWidgets_INCLUDE_DIRS} )
-    SET(wxWidgets_LIBRARIES wx_baseu-2.8-i586-mingw32msvc wx_mswu_core-2.8-i586-mingw32msvc wx_baseu_net-2.8-i586-mingw32msvc wx_mswu_adv-2.8-i586-mingw32msvc  wx_mswu_aui-2.8-i586-mingw32msvc )
-    link_directories( ${wxWidgets_LIB_DIR} )
-ENDIF(NOT WIN32)
+#IF (NOT WIN32)
+#INCLUDE(FindwxWidgets)
+FIND_PACKAGE(wxWidgets REQUIRED base core net adv aui html xml qa xrc richtext media)
+
+#INCOMPLETE workaround for the case that the wxpack is installed - better solution is probably to query user for path
+#IF(WIN32 AND NOT wxWidgets_FOUND)
+#	IF(EXISTS C:/SourceCode/Libraries/wxWidgets2.8)
+#		SET(wxWidgets_FOUND 1)
+#		SET(wxWidgets_ROOT_DIR C:/SourceCode/Libraries/wxWidgets2.8)
+#	ENDIF(EXISTS C:/SourceCode/Libraries/wxWidgets2.8)
+#ENDIF(WIN32 AND NOT wxWidgets_FOUND)
+
+# Did we find wxWidgets ? This condition will fail for as long as the internal Vars do not point to the proper wxWidgets Configuration.
+IF(wxWidgets_FOUND)
+	# Include wxWidgets macros
+	INCLUDE(${wxWidgets_USE_FILE})
+	IF(MSVC)
+		INCLUDE_DIRECTORIES( ${wxWidgets_ROOT_DIR}/include/msvc )
+		LINK_DIRECTORIES(${wxWidgets_ROOT_DIR}/vc_dll)
+	ELSEIF(MINGW)
+		LINK_DIRECTORIES(${wxWidgets_ROOT_DIR}/gcc_dll)
+	ENDIF(MSVC)
+	INCLUDE_DIRECTORIES( ${wxWidgets_INCLUDE_DIRS} )
+	
+ELSE(wxWidgets_FOUND)
+	# For Convenience. If we cannot continue, inform the User.
+	MESSAGE( FATAL_ERROR "wxWidgets library is not found! Please install the package to continue")
+ENDIF(wxWidgets_FOUND)
+#ELSE (NOT WIN32)
+#    INCLUDE_DIRECTORIES( ${wxWidgets_INCLUDE_DIRS} )
+#    SET(wxWidgets_LIBRARIES wx_baseu-2.8-i586-mingw32msvc wx_mswu_core-2.8-i586-mingw32msvc wx_baseu_net-2.8-i586-mingw32msvc wx_mswu_adv-2.8-i586-mingw32msvc  wx_mswu_aui-2.8-i586-mingw32msvc )
+#    link_directories( ${wxWidgets_LIB_DIR} )
+#ENDIF(NOT WIN32)
 
 #----------------------------------------------------------------------------------------------------
 # SDL libs dependency check
@@ -304,15 +328,17 @@ SET(SLSharedWithSettings
 
 # If we build for windows Systems, we also include the Resource-File containing the Manifest, Icon and other Resources.
 IF(WIN32)
-    FIND_PROGRAM(WINDRES NAMES windres i586-mingw32msvc-windres i686-mingw32-windres DOC "path to mingw's windres executable")
-
-    ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/sl_icon.o COMMAND ${WINDRES} -I${SpringLobby_SOURCE_DIR}/src -I${wxWidgets_RC_DIR} -i${SpringLobby_SOURCE_DIR}/src/springlobby.rc -o ${CMAKE_CURRENT_BINARY_DIR}/sl_icon.o)
-    ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/ss_icon.o COMMAND ${WINDRES} -I${SpringLobby_SOURCE_DIR}/src -I${wxWidgets_RC_DIR} -i${SpringLobby_SOURCE_DIR}/src/settings++/settings.rc -o ${CMAKE_CURRENT_BINARY_DIR}/ss_icon.o)
-
-
-    SET(SpringLobby_RC_FILE ${CMAKE_CURRENT_BINARY_DIR}/sl_icon.o )
-    SET(SpringSettings_RC_FILE ${CMAKE_CURRENT_BINARY_DIR}/ss_icon.o )
+	
+	IF(MINGW)
+		FIND_PROGRAM(WINDRES NAMES windres i586-mingw32msvc-windres i686-mingw32-windres DOC "path to mingw's windres executable")
+		ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/sl_icon.o COMMAND ${WINDRES} -I${SpringLobby_SOURCE_DIR}/src -I${wxWidgets_ROOT_DIR}/include -i${SpringLobby_SOURCE_DIR}/src/springlobby.rc -o ${CMAKE_CURRENT_BINARY_DIR}/sl_icon.o)
+		ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/ss_icon.o COMMAND ${WINDRES} -I${SpringLobby_SOURCE_DIR}/src -I${wxWidgets_ROOT_DIR}/include -i${SpringLobby_SOURCE_DIR}/src/settings++/settings.rc -o ${CMAKE_CURRENT_BINARY_DIR}/ss_icon.o)
+		SET(SpringLobby_RC_FILE ${CMAKE_CURRENT_BINARY_DIR}/sl_icon.o )
+		SET(SpringSettings_RC_FILE ${CMAKE_CURRENT_BINARY_DIR}/ss_icon.o )
+	ENDIF(MINGW)
+	
     SET(SpringLobbySrc ${SpringLobbySrc} src/Helper/listctrl.cpp)
+	SET(SpringLobbySrc ${SpringLobbySrc} src/springlobby.rc)
     SET(StandAloneSettings ${StandAloneSettings} src/settings++/settings.rc)
 ELSE(WIN32)
 # If we don't build for windows, include some source code checks as pre-build step.
@@ -357,8 +383,12 @@ ADD_EXECUTABLE(springsettings WIN32 MACOSX_BUNDLE ${StandAloneSettings} ${Spring
 
 
 # Here the wxWidgets Libraries are added. These are set for us by the FIND Script. If you need other Libraries, you can add them here as well.
-TARGET_LINK_LIBRARIES(springlobby ${wxWidgets_LIBRARIES}  )
-TARGET_LINK_LIBRARIES(springsettings ${wxWidgets_LIBRARIES}  )
+TARGET_LINK_LIBRARIES(springlobby ${wxWidgets_LIBRARIES} iphlpapi.lib )
+TARGET_LINK_LIBRARIES(springsettings ${wxWidgets_LIBRARIES} iphlpapi.lib )
+IF(MINGW)
+	TARGET_LINK_LIBRARIES(springlobby iphlpapi.lib )
+	TARGET_LINK_LIBRARIES(springsettings iphlpapi.lib )
+ENDIF(MINGW)
 
 IF (WIN32)
     install(TARGETS springlobby springsettings RUNTIME DESTINATION .)
