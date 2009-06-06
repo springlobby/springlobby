@@ -19,11 +19,7 @@ BEGIN_EVENT_TABLE_TEMPLATE1(PlaybackListCtrl, CustomVirtListCtrl<const PlaybackT
   EVT_MENU                 ( RLIST_DLMAP, PlaybackListCtrl::OnDLMap )
   EVT_MENU                 ( RLIST_DLMOD, PlaybackListCtrl::OnDLMod )
   EVT_LIST_COL_CLICK       ( RLIST_LIST, ParentType::OnColClick )
-#if wxUSE_TIPWINDOW
-#ifndef __WXMSW__ //disables tooltips on win
-  EVT_MOTION(PlaybackListCtrl::OnMouseMotion)
-#endif
-#endif
+
 END_EVENT_TABLE()
 
 template<class PlaybackType> SortOrder CustomVirtListCtrl<PlaybackType>::m_sortorder = SortOrder();
@@ -119,7 +115,7 @@ void PlaybackListCtrl<PlaybackType>::OnDLMod( wxCommandEvent& event )
 }
 
 template <class PlaybackType>
-void PlaybackListCtrl<PlaybackType>::Sort()//needs adjusting when column order etc is stable
+void PlaybackListCtrl<PlaybackType>::Sort()
 {
     if ( m_data.size() > 0 ) {
         SaveSelection();
@@ -145,50 +141,44 @@ int PlaybackListCtrl<PlaybackType>::CompareOneCrit( DataType u1, DataType u2, in
 }
 
 template <class PlaybackType>
-void PlaybackListCtrl<PlaybackType>::OnMouseMotion(wxMouseEvent& event)
+void PlaybackListCtrl<PlaybackType>::SetTipWindowText( const long item_hit, const wxPoint position)
 {
-#if wxUSE_TIPWINDOW
-	wxPoint position = event.GetPosition();
+    if ( item_hit < 0 || item_hit >= (long)m_data.size() )
+        return;
 
-	try{
-		m_tiptimer.Start(m_tooltip_delay, wxTIMER_ONE_SHOT);
-		int flag = wxLIST_HITTEST_ONITEM;
-		long *ptrSubItem = new long;
-		long item_hit = HitTest(position, flag, ptrSubItem);
+    const PlaybackType& replay = *GetDataFromIndex( item_hit );
 
-		if (item_hit != wxNOT_FOUND)
-		{
+    int coloumn = getColoumnFromPosition( position );
+    if (coloumn > (int)m_colinfovec.size() || coloumn < 0)
+    {
+        m_tiptext = _T("");
+    }
+    else
+    {
+        switch (coloumn) {
+            case 0: // date
+            m_tiptext = replay.date;
+                break;
+            case 1: // modname
+                m_tiptext = replay.ModName;
+                break;
+            case 2: // mapname
+                m_tiptext = replay.MapName;
+                break;
+            case 3: //playernum
+                m_tiptext = RefineModname(replay.ModName);
+                break;
+            case 4: // spring version
+                m_tiptext = replay.SpringVersion;
+                break;
+            case 5: // filenam
+                m_tiptext = replay.Filename;
+                break;
 
-			const PlaybackType& replay = *GetDataFromIndex(item_hit);
-			int coloumn = getColoumnFromPosition(position);
-			switch (coloumn)
-			{
-			case 0: // date
-			m_tiptext = replay.date;
-				break;
-			case 1: // modname
-				m_tiptext = replay.ModName;
-				break;
-			case 2: // mapname
-				m_tiptext = replay.MapName;
-				break;
-			case 3: //playernum
-				m_tiptext = RefineModname(replay.ModName);
-				break;
-			case 4: // spring version
-				m_tiptext = replay.SpringVersion;
-				break;
-			case 5: // filenam
-				m_tiptext = replay.Filename;
-				break;
-
-			default: m_tiptext = _T("");
-				break;
-			}
-		}
-	}
-	catch(...){}
-#endif
+            default: m_tiptext = _T("");
+            break;
+        }
+    }
 }
 
 template <class PlaybackType>
