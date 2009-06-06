@@ -1,11 +1,14 @@
 
-#include "utils.h"
-#include "settings.h"
 #include <wx/colour.h>
 #include <wx/log.h>
+
+#include "utils.h"
+#include "settings.h"
 #include "iconimagelist.h"
 #include "settings++/custom_dialogs.h"
 #include "uiutils.h"
+
+#include <algorithm>
 
 
 BEGIN_EVENT_TABLE_TEMPLATE1(CustomVirtListCtrl, ListBaseType, T)
@@ -451,6 +454,8 @@ void CustomVirtListCtrl<T>::OnColClick( wxListEvent& event )
     if ( event.GetColumn() == -1 )
         return;
 
+    int old_sort_col = m_sortorder[0].col;
+
     wxListItem col;
     GetColumn( m_sortorder[0].col, col );
     col.SetImage( icons().ICON_NONE );
@@ -481,5 +486,10 @@ void CustomVirtListCtrl<T>::OnColClick( wxListEvent& event )
     col.SetImage( ( m_sortorder[0].direction > 0 )?icons().ICON_UP:icons().ICON_DOWN );
     SetColumn( m_sortorder[0].col, col );
 
-    SortList( true );
+    if ( old_sort_col != m_sortorder[0].col )
+        SortList( true );
+    else { // O(n) instead of guaranteed worst case O(n*n)
+        std::reverse( m_data.begin(), m_data.end() );
+        RefreshVisibleItems();
+    }
 }
