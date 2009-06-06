@@ -816,29 +816,32 @@ void BattleroomListCtrl::OnActivateItem( wxListEvent& event )
 
 int BattleroomListCtrl::GetIndexFromData(const DataType& data) const
 {
-    const User* user = data;
-    static long seekpos = 0;
-    seekpos = clamp( seekpos, 0l , (long)m_data.size() );
-    DataCIter f_it = m_data.begin();
-        std::advance( f_it, seekpos );
+	const User* user = data;
+	 static long seekpos;
+   seekpos = clamp( seekpos, 0l , (long)m_data.size() );
+   int index = seekpos;
 
-    for ( int f_idx = seekpos; f_it != m_data.end() ; ++f_idx ) {
-        if ( user == *f_it ) {
-            seekpos = f_idx;
-            return f_idx;
+    for ( DataCIter f_idx = m_data.begin() + seekpos; f_it != m_data.end() ; ++f_idx )
+    {
+        if ( user == *f_idx )
+        {
+            seekpos = index;
+            return seekpos;
         }
-        ++f_it;
+        index++;
     }
     //it's ok to init with seekpos, if it had changed this would not be reached
-    DataVector::const_reverse_iterator r_it = m_data.rbegin();
-    std::advance( r_it, m_data.size() - seekpos );
-    for ( int r_idx = seekpos; r_it != m_data.rend() ; --r_idx ) {
-        if ( user == *r_it ) {
-            seekpos = r_idx;
-            return r_idx;
+    int r_index = seekpos;
+    for ( DataCIter r_idx = m_data.begin() + seekpos; r_idx != m_data.begin() ; --r_idx )
+    {
+        if ( user == *r_idx )
+        {
+            seekpos = r_index;
+            return seekpos;
         }
-        ++r_it;
+        r_index--;
     }
+		wxLogError( _T("didn't find the user.") );
 
     return -1;
 }

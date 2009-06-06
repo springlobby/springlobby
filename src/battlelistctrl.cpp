@@ -356,27 +356,29 @@ void BattleListCtrl::SetTipWindowText( const long item_hit, const wxPoint positi
 
 int BattleListCtrl::GetIndexFromData( const DataType& data ) const
 {
-    static long seekpos = 0;
-    seekpos = clamp( seekpos, 0l , (long)m_data.size() );
-    DataCIter f_it = m_data.begin();
-        std::advance( f_it, seekpos );
+	 static long seekpos;
+   seekpos = clamp( seekpos, 0l , (long)m_data.size() );
+   int index = seekpos;
 
-    for ( int f_idx = seekpos; f_it != m_data.end() ; ++f_idx ) {
-        if ( *f_it != 0 && data->Equals( *(*f_it) ) ) {
-            seekpos = f_idx;
-            return f_idx;
+    for ( DataCIter f_idx = m_data.begin() + seekpos; f_it != m_data.end() ; ++f_idx )
+    {
+        if ( *f_it != 0 && data->Equals( *(*f_it) ) )
+        {
+            seekpos = index;
+            return seekpos;
         }
-        ++f_it;
+        index++;
     }
     //it's ok to init with seekpos, if it had changed this would not be reached
-    DataVector::const_reverse_iterator r_it = m_data.rbegin();
-    std::advance( r_it, m_data.size() - seekpos );
-    for ( int r_idx = seekpos; r_it != m_data.rend() ; --r_idx ) {
-        if ( *r_it != 0 && data->Equals( *(*r_it) ) ) {
-            seekpos = r_idx;
-            return r_idx;
+    int r_index = seekpos;
+    for ( DataCIter r_idx = m_data.begin() + seekpos; r_idx != m_data.begin() ; --r_idx )
+    {
+        if ( *r_it != 0 && data->Equals( *(*r_it) ) )
+        {
+            seekpos = r_index;
+            return seekpos;
         }
-        ++r_it;
+        r_index--;
     }
 
     wxLogError( _T("didn't find the battle.") );
