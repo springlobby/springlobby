@@ -817,7 +817,8 @@ void BattleroomListCtrl::OnActivateItem( wxListEvent& event )
 int BattleroomListCtrl::GetIndexFromData(const DataType& data) const
 {
     const User* user = data;
-    static unsigned long seekpos = 0;
+    static long seekpos = 0;
+    seekpos = clamp( seekpos, 0l , (long)m_data.size() );
     DataCIter f_it = m_data.begin();
         std::advance( f_it, seekpos );
 

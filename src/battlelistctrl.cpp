@@ -356,7 +356,8 @@ void BattleListCtrl::SetTipWindowText( const long item_hit, const wxPoint positi
 
 int BattleListCtrl::GetIndexFromData( const DataType& data ) const
 {
-    static unsigned long seekpos = 0;
+    static long seekpos = 0;
+    seekpos = clamp( seekpos, 0l , (long)m_data.size() );
     DataCIter f_it = m_data.begin();
         std::advance( f_it, seekpos );
 
