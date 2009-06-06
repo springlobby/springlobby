@@ -503,6 +503,20 @@ void CustomVirtListCtrl<T>::ReverseOrder()
 }
 
 template < class T >
+bool CustomVirtListCtrl<T>::AddItem( const T item )
+{
+    if ( GetIndexFromData( item ) != -1 )
+        return false;
+
+    m_data.push_back( item );
+    SetItemCount( m_data.size() );
+    RefreshItem( m_data.size() - 1 );
+    //SetColumnWidth( 5, wxLIST_AUTOSIZE ); //! TODO does this really work?
+    MarkDirtySort();
+    return true;
+}
+
+template < class T >
 bool CustomVirtListCtrl<T>::RemoveItem( const T item )
 {
     int index = GetIndexFromData( item );

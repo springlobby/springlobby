@@ -156,16 +156,10 @@ wxListItemAttr* BattleListCtrl::OnGetItemAttr(long item) const
 
 void BattleListCtrl::AddBattle( IBattle& battle )
 {
-    //assert(&battle);
-
-    if ( GetIndexFromData( &battle ) != -1 ) {
-        wxLogWarning( _T("Battle already in list.") );
+    if ( AddItem( &battle ) )
         return;
-    }
-    m_data.push_back( &battle );
-    SetItemCount( m_data.size() );
-    RefreshItem( m_data.size() -1 );
-    MarkDirtySort();
+
+    wxLogWarning( _T("Battle already in list.") );
 }
 
 void BattleListCtrl::RemoveBattle( IBattle& battle )

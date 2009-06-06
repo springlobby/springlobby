@@ -173,15 +173,10 @@ IBattle& BattleroomListCtrl::GetBattle()
 
 void BattleroomListCtrl::AddUser( User& user )
 {
-    if ( GetIndexFromData( &user ) != -1 ) {
-        wxLogWarning( _T("user already in battleroom list.") );
+    if ( AddItem( &user ) )
         return;
-    }
-    m_data.push_back( &user );
-    SetItemCount( m_data.size() );
-    RefreshItem( m_data.size() - 1 );
-    //SetColumnWidth( 5, wxLIST_AUTOSIZE ); //! TODO does this really work?
-    MarkDirtySort();
+
+    wxLogWarning( _T("user already in battleroom list.") );
 }
 
 void BattleroomListCtrl::RemoveUser( User& user )

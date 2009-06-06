@@ -77,13 +77,10 @@ NickListCtrl::~NickListCtrl()
 
 void NickListCtrl::AddUser( const User& user )
 {
-    wxLogDebugFunc(_T(""));
-    assert(&user);
+    if ( AddItem( &user ) )
+        return;
 
-    m_data.push_back( &user );
-    SetItemCount( m_data.size() );
-    RefreshItem( m_data.size() -1 );
-    MarkDirtySort();
+    wxLogWarning( _T("Useralready in list.") );
 }
 
 void NickListCtrl::RemoveUser( const User& user )

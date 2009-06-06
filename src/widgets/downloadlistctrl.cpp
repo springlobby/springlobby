@@ -60,10 +60,10 @@ int WidgetDownloadListctrl::CompareOneCrit( DataType u1, DataType u2, int col, i
 
 void WidgetDownloadListctrl::AddWidget( const Widget widget )
 {
-    m_data.push_back( widget );
-    SetItemCount( m_data.size() );
-    RefreshItem( m_data.size() - 1);
-    //RefreshVisibleItems();
+    if ( AddItem( widget ) )
+        return;
+
+    wxLogWarning( _T("Widget already in list.") );
 }
 
 wxString WidgetDownloadListctrl::OnGetItemText(long item, long column) const

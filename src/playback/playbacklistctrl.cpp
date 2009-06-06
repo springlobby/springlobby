@@ -85,13 +85,10 @@ void PlaybackListCtrl<PlaybackType>::OnListRightClick( wxListEvent& event )
 template <class PlaybackType>
 void PlaybackListCtrl<PlaybackType>::AddPlayback( const PlaybackType& replay )
 {
-    if ( GetIndexFromData( &replay ) != -1 ) {
-        wxLogWarning( _T("Replay already in list.") );
+    if ( AddItem( &replay ) )
         return;
-    }
-    m_data.push_back( &replay );
-    SetItemCount( m_data.size() );
-    RefreshItem( m_data.size() - 1);
+
+    wxLogWarning( _T("Replay already in list.") );
 }
 
 template <class PlaybackType>
