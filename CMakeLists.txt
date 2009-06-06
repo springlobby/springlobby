@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 2.4)
 SET(CMAKE_COLOR_MAKEFILE ON)
 
 # Add Definitions, Compiler-Switches, etc.: -Wall -O2 -g3 ...
-ADD_DEFINITIONS(-Wall -Wno-strict-aliasing -O2)
+ADD_DEFINITIONS(-Wall -Wno-strict-aliasing)
 
 #----------------------------------------------------------------------------------------------------
 # General Settings

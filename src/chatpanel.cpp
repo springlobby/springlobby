@@ -590,11 +590,15 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const 
 	wxTextAttr timestyle( sett().GetChatColorTime(), sett().GetChatColorBackground(), sett().GetChatFont() );
 	wxTextAttr chatstyle( col, sett().GetChatColorBackground(), fon );
 
-  ChatLine newline;
-  newline.chat = message;
-  newline.time = _T( "[" ) + now.Format( _T( "%H:%M:%S" ) ) + _T( "]" );
-  newline.chatstyle = chatstyle;
-  newline.timestyle = timestyle;
+    ChatLine newline;
+#ifdef __WXMSW__
+    newline.chat = wxString( message.c_str() );
+#else
+    newline.chat = message;
+#endif
+    newline.time = _T( "[" ) + now.Format( _T( "%H:%M:%S" ) ) + _T( "]" );
+    newline.chatstyle = chatstyle;
+    newline.timestyle = timestyle;
 
   if ( m_disable_append )
   {

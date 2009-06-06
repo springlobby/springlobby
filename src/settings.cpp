@@ -2240,6 +2240,16 @@ void Settings::SetSashPosition( const wxString& window_name, const int pos )
     m_config->Write(_T("/GUI/SashPostion/") + window_name , pos );
 }
 
+bool Settings::GetSplitBRoomHorizontally()
+{
+    return m_config->Read(_T("/GUI/SplitBRoomHorizontally") , 1l );
+}
+
+void Settings::SetSplitBRoomHorizontally( const bool vertical )
+{
+    m_config->Write(_T("/GUI/SplitBRoomHorizontally") , vertical );
+}
+
 void Settings::SetStartTab( const int idx )
 {
     m_config->Write( _T("/GUI/StartTab") , idx );

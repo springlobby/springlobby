@@ -113,7 +113,8 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
 
     UserBattleStatus& myself = m_battle.GetMe().BattleStatus();
 
-    m_player_panel = new wxPanel( m_splitter , -1 );
+    m_player_panel = new wxScrolledWindow( m_splitter , -1 );
+    m_player_panel->SetScrollRate( 3, 3 );
     m_team_sel = new wxComboBox( m_player_panel, BROOM_TEAMSEL, _T("1"), wxDefaultPosition, wxSize(50,CONTROL_HEIGHT), team_choices );
     m_team_sel->SetToolTip(TE(_("Players with the same team number share control of their units.")));
     m_ally_sel = new wxComboBox( m_player_panel, BROOM_ALLYSEL, _T("1"), wxDefaultPosition, wxSize(50,CONTROL_HEIGHT), ally_choices );
@@ -289,7 +290,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
 
     m_player_panel->SetSizer( m_players_sizer );
 
-    m_splitter->SplitHorizontally( m_player_panel, m_chat );
+    SplitSizerHorizontally( sett().GetSplitBRoomHorizontally() );
 
     //m_info1_sizer->Add( m_wind_lbl, 1, wxEXPAND );
     //m_info1_sizer->Add( m_size_lbl, 1, wxEXPAND );
@@ -370,6 +371,15 @@ BattleRoomTab::~BattleRoomTab()
     if (GetAui().manager)GetAui().manager->DetachPane( this );
 }
 
+void BattleRoomTab::SplitSizerHorizontally( const bool horizontal )
+{
+    if ( m_splitter->IsSplit() )
+        m_splitter->Unsplit();
+    if ( horizontal )
+        m_splitter->SplitHorizontally( m_player_panel, m_chat );
+    else
+        m_splitter->SplitVertically( m_player_panel, m_chat );
+}
 
 bool BattleRoomTab::IsHosted()
 {

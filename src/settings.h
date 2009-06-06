@@ -330,6 +330,9 @@ class Settings
     int GetSashPosition( const wxString& window_name );
     void SetSashPosition( const wxString& window_name, const int pos );
 
+    bool GetSplitBRoomHorizontally();
+    void SetSplitBRoomHorizontally( const bool vertical );
+
     /*@}*/
 
     /* ================================================================ */

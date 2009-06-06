@@ -37,7 +37,6 @@ class PlaybackListCtrl : public CustomVirtListCtrl< const PlaybackImp* >
     using ParentType::DataVector;
     typedef typename ParentType::DataVector::const_iterator
         DataCIter; //! TODO (koshi) i'd be mighty thankful if some could explain to me why the import with using ParentType::DataCIter doesn't work here;
-    using ParentType::GetDataFromIndex;
     using ParentType::getColoumnFromPosition;
 
   public:
@@ -63,6 +62,7 @@ class PlaybackListCtrl : public CustomVirtListCtrl< const PlaybackImp* >
     int GetIndexFromData( const DataType& data ) const;
 
     using ParentType::RefreshVisibleItems;
+    using ParentType::GetDataFromIndex;
 
   protected:
     static int CompareOneCrit( DataType u1, DataType u2, int col, int dir ) ;
