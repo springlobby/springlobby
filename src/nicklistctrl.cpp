@@ -83,11 +83,10 @@ void NickListCtrl::AddUser( const User& user )
     m_data.push_back( &user );
     SetItemCount( m_data.size() );
     RefreshItem( m_data.size() -1 );
-
-    SetColumnWidth( 3, wxLIST_AUTOSIZE );
-    SetColumnWidth( 0, wxLIST_AUTOSIZE );
+//
+//    SetColumnWidth( 3, wxLIST_AUTOSIZE );
+//    SetColumnWidth( 0, wxLIST_AUTOSIZE );
     MarkDirtySort();
-    HighlightItem( m_data.size() -1 );
 }
 
 void NickListCtrl::RemoveUser( const User& user )
@@ -226,7 +225,7 @@ int NickListCtrl::GetIndexFromData( const DataType& data ) const
    seekpos = clamp( seekpos, 0l , (long)m_data.size() );
    int index = seekpos;
 
-    for ( DataCIter f_idx = m_data.begin() + seekpos; f_it != m_data.end() ; ++f_idx )
+    for ( DataCIter f_idx = m_data.begin() + seekpos; f_idx != m_data.end() ; ++f_idx )
     {
         if ( user == *f_idx )
         {

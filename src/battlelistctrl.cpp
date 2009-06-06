@@ -360,9 +360,9 @@ int BattleListCtrl::GetIndexFromData( const DataType& data ) const
    seekpos = clamp( seekpos, 0l , (long)m_data.size() );
    int index = seekpos;
 
-    for ( DataCIter f_idx = m_data.begin() + seekpos; f_it != m_data.end() ; ++f_idx )
+    for ( DataCIter f_idx = m_data.begin() + seekpos; f_idx != m_data.end() ; ++f_idx )
     {
-        if ( *f_it != 0 && data->Equals( *(*f_it) ) )
+        if ( *f_idx != 0 && data->Equals( *(*f_idx) ) )
         {
             seekpos = index;
             return seekpos;
@@ -373,7 +373,7 @@ int BattleListCtrl::GetIndexFromData( const DataType& data ) const
     int r_index = seekpos;
     for ( DataCIter r_idx = m_data.begin() + seekpos; r_idx != m_data.begin() ; --r_idx )
     {
-        if ( *r_it != 0 && data->Equals( *(*r_it) ) )
+        if ( *r_idx != 0 && data->Equals( *(*r_idx) ) )
         {
             seekpos = r_index;
             return seekpos;
