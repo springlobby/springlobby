@@ -287,7 +287,11 @@ public:
 
      virtual int GetIndexFromData( const DataType& data ) const = 0;
 
+     void ReverseOrder();
+
 protected:
+    typedef CustomVirtListCtrl< DataImp >
+        ThisType;
     typedef std::vector< DataImp >
         DataVector;
     typedef typename DataVector::iterator
@@ -307,6 +311,19 @@ protected:
 
 public:
     DECLARE_EVENT_TABLE()
+};
+
+template < class ListCtrlType >
+class SelectionSaver {
+    ListCtrlType* m_list;
+
+public:
+    SelectionSaver( ListCtrlType* list  )
+        : m_list( list )
+    { m_list->SaveSelection(); }
+
+    ~SelectionSaver()
+    { m_list->RestoreSelection(); }
 };
 
 #include "customvirtlistctrl.cpp"

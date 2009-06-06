@@ -405,7 +405,7 @@ void CustomVirtListCtrl<T>::SortList( bool force )
 {
     if ( !m_dirty_sort && !force )
         return;
-
+    SelectionSaver<ThisType>(this);
     Freeze();
     Sort();
     Thaw();
@@ -489,7 +489,15 @@ void CustomVirtListCtrl<T>::OnColClick( wxListEvent& event )
     if ( old_sort_col != m_sortorder[0].col )
         SortList( true );
     else { // O(n) instead of guaranteed worst case O(n*n)
-        std::reverse( m_data.begin(), m_data.end() );
-        RefreshVisibleItems();
+        ReverseOrder();
     }
+}
+
+template < class T >
+void CustomVirtListCtrl<T>::ReverseOrder()
+{
+    SaveSelection();
+    std::reverse( m_data.begin(), m_data.end() );
+    RefreshVisibleItems();
+    RestoreSelection();
 }
