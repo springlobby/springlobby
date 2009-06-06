@@ -170,14 +170,9 @@ void BattleListCtrl::AddBattle( IBattle& battle )
 
 void BattleListCtrl::RemoveBattle( IBattle& battle )
 {
-    int index = GetIndexFromData( &battle );
-
-    if ( index != -1 ) {
-        m_data.erase( m_data.begin() + index );
-        SetItemCount( m_data.size() );
-        RefreshItems( index, m_data.size() -1 );
+    if ( RemoveItem( &battle ) )
         return;
-    }
+
     wxLogError( _T("Didn't find the battle to remove.") );
 }
 

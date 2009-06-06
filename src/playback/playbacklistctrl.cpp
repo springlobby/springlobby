@@ -97,14 +97,9 @@ void PlaybackListCtrl<PlaybackType>::AddPlayback( const PlaybackType& replay )
 template <class PlaybackType>
 void PlaybackListCtrl<PlaybackType>::RemovePlayback( const PlaybackType& replay )
 {
-    int index = GetIndexFromData( &replay );
-
-    if ( index != -1 ) {
-        m_data.erase( m_data.begin() + index );
-        SetItemCount( m_data.size() );
-        RefreshVisibleItems( );
+    if ( RemoveItem( &replay) )
         return;
-    }
+
     wxLogError( _T("Didn't find the replay to remove.") );
 }
 

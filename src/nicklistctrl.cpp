@@ -83,23 +83,14 @@ void NickListCtrl::AddUser( const User& user )
     m_data.push_back( &user );
     SetItemCount( m_data.size() );
     RefreshItem( m_data.size() -1 );
-//
-//    SetColumnWidth( 3, wxLIST_AUTOSIZE );
-//    SetColumnWidth( 0, wxLIST_AUTOSIZE );
     MarkDirtySort();
 }
 
 void NickListCtrl::RemoveUser( const User& user )
 {
-    int index = GetIndexFromData( &user );
-
-    if ( index != -1 ) {
-        m_data.erase( m_data.begin() + index );
-        SetItemCount( m_data.size() );
-        //SetColumnWidth( 3, wxLIST_AUTOSIZE );
-        RefreshItems( index, m_data.size() -1 );
+    if ( RemoveItem( &user ) )
         return;
-    }
+
     wxLogError( _T("Didn't find the user to remove.") );
 }
 

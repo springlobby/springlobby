@@ -501,3 +501,18 @@ void CustomVirtListCtrl<T>::ReverseOrder()
     RefreshVisibleItems();
     RestoreSelection();
 }
+
+template < class T >
+bool CustomVirtListCtrl<T>::RemoveItem( const T item )
+{
+    int index = GetIndexFromData( item );
+
+    if ( index != -1 ) {
+        SelectionSaver<ThisType>(this);
+        m_data.erase( m_data.begin() + index );
+        SetItemCount( m_data.size() );
+        RefreshItems( index, m_data.size() -1 );
+        return true;
+    }
+    return false;
+}

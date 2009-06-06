@@ -186,15 +186,9 @@ void BattleroomListCtrl::AddUser( User& user )
 
 void BattleroomListCtrl::RemoveUser( User& user )
 {
-    int index = GetIndexFromData( &user );
-
-    if ( index != -1 ) {
-        m_data.erase( m_data.begin() + index );
-        SetItemCount( m_data.size() );
-        RefreshItems( index, m_data.size() -1 );
-        //SetColumnWidth( 5, wxLIST_AUTOSIZE );
+    if ( RemoveItem( &user ) )
         return;
-    }
+
     wxLogError( _T("Didn't find the user to remove in battleroomlistctrl.") );
 }
 

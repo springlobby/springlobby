@@ -309,6 +309,9 @@ protected:
     //! the Comparator object passed to the SLInsertionSort function
     ItemComparator<DataType> m_comparator;
 
+    bool RemoveItem( const DataImp item );
+    bool AddItem( const DataImp item );
+
 public:
     DECLARE_EVENT_TABLE()
 };
