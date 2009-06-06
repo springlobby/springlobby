@@ -817,11 +817,28 @@ void BattleroomListCtrl::OnActivateItem( wxListEvent& event )
 int BattleroomListCtrl::GetIndexFromData(const DataType& data) const
 {
     const User* user = data;
-    int i = 0;
-    for ( DataCIter it = m_data.begin(); it != m_data.end(); ++it, ++i ) {
-        if ( user == *it )
-            return i;
+    static unsigned long seekpos = 0;
+    DataCIter f_it = m_data.begin();
+        std::advance( f_it, seekpos );
+
+    for ( int f_idx = seekpos; f_it != m_data.end() ; ++f_idx ) {
+        if ( user == *f_it ) {
+            seekpos = f_idx;
+            return f_idx;
+        }
+        ++f_it;
     }
+    //it's ok to init with seekpos, if it had changed this would not be reached
+    DataVector::const_reverse_iterator r_it = m_data.rbegin();
+    std::advance( r_it, m_data.size() - seekpos );
+    for ( int r_idx = seekpos; r_it != m_data.rend() ; --r_idx ) {
+        if ( user == *r_it ) {
+            seekpos = r_idx;
+            return r_idx;
+        }
+        ++r_it;
+    }
+
     return -1;
 }
 
