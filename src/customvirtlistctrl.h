@@ -14,6 +14,7 @@
 
 #include <wx/timer.h>
 #define IDD_TIP_TIMER 696
+#define IDD_SORT_TIMER 697
 
 #include <vector>
 
@@ -42,6 +43,8 @@ protected:
     typedef UserActions::ActionType ActionType;
     //! used to display tooltips for a certain amount of time
     wxTimer m_tiptimer;
+    //! used to block sorting while mouse is moving
+    wxTimer m_sort_timer;
     //! always set to the currrently displayed tooltip text
     wxString m_tiptext;
     #if wxUSE_TIPWINDOW
@@ -72,6 +75,7 @@ protected:
      */
     static const unsigned int m_tooltip_delay    = 1000;
     static const unsigned int m_tooltip_duration = 2000;
+    static const unsigned int m_sort_block_time  = 1500;
 
 /*** these are only meaningful in single selection lists ***/
     //! index of curently selected data
