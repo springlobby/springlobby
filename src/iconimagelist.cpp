@@ -350,8 +350,8 @@ int IconImageList::GetSideIcon( const wxString& modname, int side )
       if ( side == 0 ) m_cached_side_icons[cachestring] = ICON_SIDEPIC_0;
       else if ( side == 1 ) m_cached_side_icons[cachestring] = ICON_SIDEPIC_1;
     }
-  } else return m_cached_side_icons[cachestring];
-  return -1;
+  }
+  return m_cached_side_icons[cachestring];
 }
 
 int IconImageList::GetReadyIcon( const bool& spectator,const bool& ready, const unsigned int& sync, const bool& bot )
