@@ -189,6 +189,11 @@ void BattleroomListCtrl::RemoveUser( User& user )
 
 void BattleroomListCtrl::UpdateUser( User& user )
 {
+    if ( !user.BattleStatus().spectator )
+        icons().SetColourIcon( user.BattleStatus().team, user.BattleStatus().colour );
+    wxArrayString sides = usync().GetSides( m_battle->GetHostModName() );
+    ASSERT_EXCEPTION( user.BattleStatus().side < (long)sides.GetCount(), _T("Side index too high") );
+    user.SetSideiconIndex( icons().GetSideIcon( m_battle->GetHostModName(), user.BattleStatus().side ) );
     int index = GetIndexFromData( &user );
     UpdateUser( index );
 }
@@ -217,18 +222,14 @@ int BattleroomListCtrl::OnGetItemColumnImage(long item, long column) const
     bool is_bot = user.BattleStatus().IsBot();
     bool is_spec = user.BattleStatus().spectator;
 
-    if ( !is_spec )
-        icons().SetColourIcon( user.BattleStatus().team, user.BattleStatus().colour );
-
     switch ( column ) {
         case 0: {
             if ( !is_bot ) {
                 if ( m_battle->IsFounder( user ) ) {
-
-                    return icons().GetHostIcon( user.BattleStatus().spectator );
+                    return icons().GetHostIcon( is_spec );
                 }
                 else {
-                    return icons().GetReadyIcon( user.BattleStatus().spectator, user.BattleStatus().ready, user.BattleStatus().sync, user.BattleStatus().IsBot() );
+                    return icons().GetReadyIcon( is_spec, user.BattleStatus().ready, user.BattleStatus().sync, is_bot );
                 }
             }
             else
@@ -237,20 +238,7 @@ int BattleroomListCtrl::OnGetItemColumnImage(long item, long column) const
         case 2: return is_spec ? -1: icons().GetColourIcon( user.BattleStatus().team );
         case 3: return is_bot ? -1 : icons().GetFlagIcon( user.GetCountry() );
         case 4: return is_bot ? -1 : icons().GetRankIcon( user.GetStatus().rank );
-        case 1:
-        {
-        	if ( is_spec ) return -1;
-            try {
-                wxArrayString sides = usync().GetSides( m_battle->GetHostModName() );
-                ASSERT_EXCEPTION( user.BattleStatus().side < (long)sides.GetCount(), _T("Side index too high") );
-                int sideimg = icons().GetSideIcon( m_battle->GetHostModName(), user.BattleStatus().side );
-                if ( sideimg >= 0 )
-                    return sideimg;
-            }
-            catch ( ... ) {}
-
-            return -1;
-        }
+        case 1: return is_spec ? -1 : user.GetSideiconIndex();
         case 6:
         case 7:
         case 8:
