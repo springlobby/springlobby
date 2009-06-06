@@ -457,6 +457,8 @@ void CustomVirtListCtrl<T>::OnColClick( wxListEvent& event )
     if ( event.GetColumn() == -1 )
         return;
 
+    m_sort_timer.Stop();//otherwise sorting will be way delayed
+
     int old_sort_col = m_sortorder[0].col;
 
     wxListItem col;
