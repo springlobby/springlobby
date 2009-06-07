@@ -38,6 +38,7 @@ const bool DEFSETT_WEB_BROWSER_USE_DEFAULT = true;
 
 class wxWindow;
 class wxConfigBase;
+class wxFileConfig;
 class wxFont;
 struct BattleListFilterValues;
 struct PlaybackListFilterValues;
@@ -671,6 +672,8 @@ class Settings
 
     #ifdef __WXMSW__
     SL_WinConf* m_config; //!< wxConfig object to store and restore  all settings in.
+    #elif defined(__WXMAC__)
+    wxFileConfig* m_config; //!< wxConfig object to store and restore  all settings in.
     #else
     wxConfigBase* m_config; //!< wxConfig object to store and restore  all settings in.
     #endif
