@@ -286,7 +286,6 @@ wxString BattleroomListCtrl::OnGetItemText(long item, long column) const
             try {
                 wxArrayString sides = usync().GetSides( m_battle->GetHostModName() );
                 ASSERT_EXCEPTION( user.BattleStatus().side < (long)sides.GetCount(), _T("Side index too high") );
-								return sides[user.BattleStatus().side];
             }
             catch ( ... ) {
                 return wxString::Format( _T("s%d"), user.BattleStatus().side + 1 );
