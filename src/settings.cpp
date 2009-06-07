@@ -55,7 +55,7 @@ bool SL_WinConf::DoWriteLong(const wxString& key, long lValue)
 
 Settings::Settings()
 {
-  #if defined(__WXMSW__)
+  #if defined(__WXMSW__) || defined(__WXMAC__)
   wxString userfilepath = wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator() + _T("springlobby.conf");
   wxString globalfilepath =  GetExecutableFolder() + wxFileName::GetPathSeparator() + _T("springlobby.conf");
 
@@ -91,9 +91,11 @@ Settings::Settings()
   {
       // TODO: error handling
   }
-
+	#ifdef __WXMSW__
   m_config = new SL_WinConf( instream );
-
+  #else
+  m_config = new wxFileConfig( instream );
+  #endif
   #else
   //removed temporarily because it's suspected to cause a bug with userdir creation
  // m_config = new wxConfig( _T("SpringLobby"), wxEmptyString, _T(".springlobby/springlobby.conf"), _T("springlobby.global.conf"), wxCONFIG_USE_LOCAL_FILE | wxCONFIG_USE_GLOBAL_FILE  );
@@ -114,7 +116,7 @@ void Settings::SaveSettings()
   SetCacheVersion();
   SetSettingsVersion();
   m_config->Flush();
-  #if defined(__WXMSW__)
+  #if defined(__WXMSW__) || defined(__WXMAC__)
   wxFileOutputStream outstream( m_chosed_path );
 
   if ( !outstream.IsOk() )
