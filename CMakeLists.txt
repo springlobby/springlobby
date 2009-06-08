@@ -28,9 +28,11 @@ SET(CMAKE_FIND_LIBRARY_SUFFIXES ".so" ".lib" ".a")
 FIND_PACKAGE( PkgConfig )
 INCLUDE(cmake/package_config.cmake)
 INCLUDE(CPack)
-INCLUDE(cmake/FindSDL.cmake)
-INCLUDE(cmake/FindSDL_sound.cmake)
-INCLUDE(cmake/FindSDL_mixer.cmake)
+IF(NOT WIN32)
+	INCLUDE(cmake/FindSDL.cmake)
+	INCLUDE(cmake/FindSDL_sound.cmake)
+	INCLUDE(cmake/FindSDL_mixer.cmake)
+ENDIF(NOT WIN32)
 
 
 
@@ -94,38 +96,47 @@ ENDIF(wxWidgets_FOUND)
 # SDL libs dependency check
 #----------------------------------------------------------------------------------------------------
 IF ( OPTION_SOUND )
-    FIND_PACKAGE(SDL REQUIRED)
-    FIND_PACKAGE(SDL_mixer REQUIRED)
-    FIND_PACKAGE(SDL_sound REQUIRED)
 
-    # Throw an error to the user if SDL is not found
-    if ( NOT SDL_FOUND )
-	 message ( FATAL_ERROR "SDL library was not found! Please install the package or toggle OPTION_SOUND to OFF" )
-    endif( NOT SDL_FOUND )
+	IF (NOT WIN32)
+		FIND_PACKAGE(SDL REQUIRED)
+		FIND_PACKAGE(SDL_mixer REQUIRED)
+		FIND_PACKAGE(SDL_sound REQUIRED)
 
-    # Throw an error to the user if SDL_mixer is not found
-    if ( NOT SDLMIXER_FOUND )
-	message ( FATAL_ERROR "SDL_mixer library was not found! Please install the package or toggle OPTION_SOUND to OFF" )
-    endif(NOT SDLMIXER_FOUND)
+		# Throw an error to the user if SDL is not found
+		if ( NOT SDL_FOUND )
+		message ( FATAL_ERROR "SDL library was not found! Please install the package or toggle OPTION_SOUND to OFF" )
+		endif( NOT SDL_FOUND )
 
-    # Throw an error to the user if SDL_sound is not found
-    if ( NOT SDL_SOUND_FOUND )
-	message ( FATAL_ERROR "SDL_sound library was not found! Please install the package or toggle OPTION_SOUND to OFF" )
-    endif( NOT SDL_SOUND_FOUND )
+		# Throw an error to the user if SDL_mixer is not found
+		if ( NOT SDLMIXER_FOUND )
+		message ( FATAL_ERROR "SDL_mixer library was not found! Please install the package or toggle OPTION_SOUND to OFF" )
+		endif(NOT SDLMIXER_FOUND)
 
-    # MESSAGE("sound inc dir: ${SDL_SOUND_INCLUDE_DIR}")
-    # MESSAGE("mixer inc dir: ${SDLMIXER_INCLUDE_DIR}")
-    # MESSAGE("sound libs: ${SDL_SOUND_LIBRARIES}")
-    # MESSAGE("mixer libs: ${SDLMIXER_LIBRARY}")
+		# Throw an error to the user if SDL_sound is not found
+		if ( NOT SDL_SOUND_FOUND )
+		message ( FATAL_ERROR "SDL_sound library was not found! Please install the package or toggle OPTION_SOUND to OFF" )
+		endif( NOT SDL_SOUND_FOUND )
 
-    # Set include paths and libraries to link.
-    IF (NOT WIN32)
-	INCLUDE_DIRECTORIES( ${SDL_SOUND_INCLUDE_DIR} ${SDLMIXER_INCLUDE_DIR} )
-	LINK_LIBRARIES( # ${SDL_SOUND_LIBRARIES}
-	    ${SDLMIXER_LIBRARY}  )
+		# MESSAGE("sound inc dir: ${SDL_SOUND_INCLUDE_DIR}")
+		# MESSAGE("mixer inc dir: ${SDLMIXER_INCLUDE_DIR}")
+		# MESSAGE("sound libs: ${SDL_SOUND_LIBRARIES}")
+		# MESSAGE("mixer libs: ${SDLMIXER_LIBRARY}")
+
+		# Set include paths and libraries to link.
+		INCLUDE_DIRECTORIES( ${SDL_SOUND_INCLUDE_DIR} ${SDLMIXER_INCLUDE_DIR} )
+		LINK_LIBRARIES( # ${SDL_SOUND_LIBRARIES}
+			${SDLMIXER_LIBRARY}  )
     ELSE(NOT WIN32)
-	INCLUDE_DIRECTORIES( ${sdl_INCLUDE_DIR} )
-	LINK_LIBRARIES(SDLmain SDL SDL_mixer)
+		SET(SDL_INCLUDE_DIR "SDL_INCLUDE_DIR_NOT_SET" CACHE PATH "Path to SDL header files (sdl_mixer.h should be in the same dir as well)")
+		SET(SDLMAIN_LIBRARY "SDLMAIN_LIBRARY_NOT_SET" CACHE FILEPATH "Filepath to SDLmain.lib or libsdlmain.a, depending on whether you're using MSVC or MingW")
+		SET(SDL_LIBRARY "SDL_LIBRARY_NOT_SET" CACHE FILEPATH "Filepath to SDL.lib or libsdl.dll.a, depending on whether you're using MSVC or MingW")
+		SET(SDLMIXER_LIBRARY "SDLMIXER_LIBRARY_NOT_SET" CACHE FILEPATH "Filepath to SDL_mixer.lib or libSDL_mixer.dll.a, depending on whether you're using MSVC or MingW")
+		IF(EXISTS ${SDL_INCLUDE_DIR} AND EXISTS ${SDLMAIN_LIBRARY} AND EXISTS ${SDL_LIBRARY} AND EXISTS ${SDLMIXER_LIBRARY})
+			INCLUDE_DIRECTORIES( ${SDL_INCLUDE_DIR})
+			LINK_LIBRARIES(${SDLMAIN_LIBRARY} ${SDL_LIBRARY} ${SDLMIXER_LIBRARY})
+		ELSE (EXISTS ${SDL_INCLUDE_DIR} AND EXISTS ${SDLMAIN_LIBRARY} AND EXISTS ${SDL_LIBRARY} AND EXISTS ${SDLMIXER_LIBRARY})
+			message ( FATAL_ERROR "SDL files not found! Please install the package or toggle OPTION_SOUND to OFF" )
+		ENDIF (EXISTS ${SDL_INCLUDE_DIR} AND EXISTS ${SDLMAIN_LIBRARY} AND EXISTS ${SDL_LIBRARY} AND EXISTS ${SDLMIXER_LIBRARY})
     ENDIF (NOT WIN32)
 
 ELSE ( OPTION_SOUND )
@@ -166,22 +177,29 @@ IF( OPTION_TORRENT_SYSTEM )
 		    MESSAGE(FATAL_ERROR "libtorrent-rasterbar library is not found! Please install the package or toggle OPTION_TORRENT_SYSTEM to OFF")
 	    ENDIF()
 	ELSE( NOT WIN32)
+		SET(Boost_DEBUG ON)
+		SET(Boost_USE_STATIC_LIBS OFF)
+		SET(Boost_USE_MULTITHREADED ON)
+		SET(Boost_ADDITIONAL_VERSIONS 1.35 1.35.0 1.38 1.38.0)
+		FIND_PACKAGE(Boost COMPONENTS system thread filesystem date_time)	
 	    INCLUDE_DIRECTORIES(${SpringLobby_SOURCE_DIR}/src/libtorrent/include
 				${SpringLobby_SOURCE_DIR}/src/libtorrent/zlib
 				${SpringLobby_SOURCE_DIR}/src/libtorrent/ )
 	    INCLUDE ( ${SpringLobby_SOURCE_DIR}/cmake/libtorrent.cmake )
-	    ADD_DEFINITIONS( -D_WIN32_WINNT=0x0501 -DBOOST_WINDOWS -DTORRENT_DISABLE_ENCRYPTION )
-	    LINK_LIBRARIES( boost_thread-mt boost_filesystem-mt  ws2_32 mswsock boost_date_time-mt )
-	    link_directories( ${boost_LIB_DIR} )
+	    ADD_DEFINITIONS( -DBOOST_WINDOWS -DTORRENT_DISABLE_ENCRYPTION )
+		INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIRS} )
+		LINK_LIBRARIES( ${Boost_LIBRARIES} ws2_32 mswsock )
+	    #LINK_LIBRARIES( boost_thread-mt boost_filesystem-mt  ws2_32 mswsock boost_date_time-mt )
+	    #link_directories( ${boost_LIB_DIR} )
 	ENDIF( NOT WIN32)
 ELSE( OPTION_TORRENT_SYSTEM )
 	ADD_DEFINITIONS( -DNO_TORRENT_SYSTEM )
 ENDIF( OPTION_TORRENT_SYSTEM )
 
 # boost and others needed on win
-IF ( WIN32 )
-    INCLUDE_DIRECTORIES( ${boost_INCLUDE_DIR} )
-ENDIF ( WIN32 )
+#IF ( WIN32 )
+ #   INCLUDE_DIRECTORIES( ${boost_INCLUDE_DIR} )
+#ENDIF ( WIN32 )
 
 #----------------------------------------------------------------------------------------------------
 # Source listing
@@ -328,7 +346,6 @@ SET(SLSharedWithSettings
 
 # If we build for windows Systems, we also include the Resource-File containing the Manifest, Icon and other Resources.
 IF(WIN32)
-	
 	IF(MINGW)
 		FIND_PROGRAM(WINDRES NAMES windres i586-mingw32msvc-windres i686-mingw32-windres DOC "path to mingw's windres executable")
 		ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/sl_icon.o COMMAND ${WINDRES} -I${SpringLobby_SOURCE_DIR}/src -I${wxWidgets_ROOT_DIR}/include -i${SpringLobby_SOURCE_DIR}/src/springlobby.rc -o ${CMAKE_CURRENT_BINARY_DIR}/sl_icon.o)
@@ -336,10 +353,10 @@ IF(WIN32)
 		SET(SpringLobby_RC_FILE ${CMAKE_CURRENT_BINARY_DIR}/sl_icon.o )
 		SET(SpringSettings_RC_FILE ${CMAKE_CURRENT_BINARY_DIR}/ss_icon.o )
 	ENDIF(MINGW)
-	
-    SET(SpringLobbySrc ${SpringLobbySrc} src/Helper/listctrl.cpp)
+
+	SET(SpringLobbySrc ${SpringLobbySrc} src/Helper/listctrl.cpp)
 	SET(SpringLobbySrc ${SpringLobbySrc} src/springlobby.rc)
-    SET(StandAloneSettings ${StandAloneSettings} src/settings++/settings.rc)
+	SET(StandAloneSettings ${StandAloneSettings} src/settings++/settings.rc)
 ELSE(WIN32)
 # If we don't build for windows, include some source code checks as pre-build step.
     ADD_CUSTOM_TARGET(test_susynclib ALL COMMAND tools/test-susynclib.awk src/springunitsynclib.cpp WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
@@ -376,6 +393,7 @@ endif( OPTION_TRANSLATION_SUPPORT )
 
 #auto-remove whitespaces before/after lib paths
 cmake_policy(SET CMP0004 OLD)
+cmake_policy(SET CMP0006 OLD)
 
 #libtsource is empty if "NOT WIN32"
 ADD_EXECUTABLE(springlobby WIN32 MACOSX_BUNDLE ${SpringLobbySrc} ${SettingsSrc} ${SpringLobby_RC_FILE} ${libtorrent_SRC})
@@ -383,11 +401,11 @@ ADD_EXECUTABLE(springsettings WIN32 MACOSX_BUNDLE ${StandAloneSettings} ${Spring
 
 
 # Here the wxWidgets Libraries are added. These are set for us by the FIND Script. If you need other Libraries, you can add them here as well.
-TARGET_LINK_LIBRARIES(springlobby ${wxWidgets_LIBRARIES} iphlpapi.lib )
-TARGET_LINK_LIBRARIES(springsettings ${wxWidgets_LIBRARIES} iphlpapi.lib )
+TARGET_LINK_LIBRARIES(springlobby ${wxWidgets_LIBRARIES})
+TARGET_LINK_LIBRARIES(springsettings ${wxWidgets_LIBRARIES})
 IF(MINGW)
-	TARGET_LINK_LIBRARIES(springlobby iphlpapi.lib )
-	TARGET_LINK_LIBRARIES(springsettings iphlpapi.lib )
+	TARGET_LINK_LIBRARIES( springlobby iphlpapi.lib )
+	TARGET_LINK_LIBRARIES( springsettings iphlpapi.lib )
 ENDIF(MINGW)
 
 IF (WIN32)

@@ -14,8 +14,9 @@
 
 // FIXME this does not work on linux+mingw build for windows
 #ifdef _MSC_VER
-#include <windows.h>
-#include <wx/msw/winundef.h>
+//#include <windows.h>
+//#include <wx/msw/winundef.h>
+typedef __int64 int64_t;
 #endif
 
 //for cpu detection
@@ -262,11 +263,6 @@ const wxChar* TooltipEnable(const wxChar* input)
     return sett().GetShowTooltips() ? input : _("");
 }
 
-template<typename T>
-T min(T a, T b, T c)
-{
-    return std::min(a, std::min(b, c));
-}
 
 double LevenshteinDistance(wxString s, wxString t)
 {
