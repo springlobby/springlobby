@@ -18,9 +18,9 @@
 #include "Helper/sortutil.h"
 #include "aui/auimanager.h"
 
-template<> SortOrder CustomVirtListCtrl<IBattle*>::m_sortorder = SortOrder();
+template<> SortOrder CustomVirtListCtrl<IBattle*,BattleListCtrl>::m_sortorder = SortOrder();
 
-BEGIN_EVENT_TABLE(BattleListCtrl, CustomVirtListCtrl< IBattle *>)
+BEGIN_EVENT_TABLE(BattleListCtrl, BattleListCtrl::BaseType )
 
   EVT_LIST_ITEM_RIGHT_CLICK( BLIST_LIST, BattleListCtrl::OnListRightClick )
   EVT_MENU                 ( BLIST_DLMAP, BattleListCtrl::OnDLMap )
@@ -33,7 +33,7 @@ BEGIN_EVENT_TABLE(BattleListCtrl, CustomVirtListCtrl< IBattle *>)
 END_EVENT_TABLE()
 
 BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui )
-    : CustomVirtListCtrl< IBattle *>(parent, BLIST_LIST, wxDefaultPosition, wxDefaultSize,
+    : CustomVirtListCtrl< IBattle *,BattleListCtrl>(parent, BLIST_LIST, wxDefaultPosition, wxDefaultSize,
             wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("BattleListCtrl"), 10, 4, &CompareOneCrit),
     m_popup( 0 ),
     m_ui(ui)

@@ -10,7 +10,7 @@ class Ui;
 class ChatPanel;
 class UserMenu;
 
-class NickListCtrl : public CustomVirtListCtrl<const User*>
+class NickListCtrl : public CustomVirtListCtrl< const User* ,NickListCtrl >
 {
   protected:
     typedef SL_GENERIC::UserMenu<ChatPanel> UserMenu;

@@ -5,16 +5,16 @@
 #include <algorithm>
 #include "../Helper/sortutil.h"
 
-template<> SortOrder CustomVirtListCtrl<ChannelInfo>::m_sortorder = SortOrder();
+template<> SortOrder CustomVirtListCtrl<ChannelInfo,ChannelListctrl>::m_sortorder = SortOrder();
 
-BEGIN_EVENT_TABLE( ChannelListctrl, CustomVirtListCtrl<ChannelInfo> )
+BEGIN_EVENT_TABLE( ChannelListctrl, ChannelListctrl::BaseType )
   EVT_LIST_ITEM_ACTIVATED( CHANNELLIST, ChannelListctrl::OnActivateItem )
 END_EVENT_TABLE()
 
 
 ChannelListctrl::ChannelListctrl(wxWindow* parent, wxWindowID id, const wxString& name,
                     long style, const wxPoint& pt, const wxSize& sz)
-    :CustomVirtListCtrl<ChannelInfo>(parent, CHANNELLIST, wxDefaultPosition, wxDefaultSize,
+    :CustomVirtListCtrl<ChannelInfo,ChannelListctrl>(parent, CHANNELLIST, wxDefaultPosition, wxDefaultSize,
             wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("ChannelListCtrl"), 3, 3, &CompareOneCrit)
 {
 #if defined(__WXMSW__)

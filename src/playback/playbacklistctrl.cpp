@@ -13,7 +13,7 @@
 #include "../ui.h"
 
 
-BEGIN_EVENT_TABLE_TEMPLATE1(PlaybackListCtrl, CustomVirtListCtrl<const PlaybackType*>, PlaybackType)
+BEGIN_EVENT_TABLE_TEMPLATE1(PlaybackListCtrl, PlaybackListCtrl::BaseType, PlaybackType )
 
   EVT_LIST_ITEM_RIGHT_CLICK( RLIST_LIST, PlaybackListCtrl::OnListRightClick )
   EVT_MENU                 ( RLIST_DLMAP, PlaybackListCtrl::OnDLMap )
@@ -22,11 +22,11 @@ BEGIN_EVENT_TABLE_TEMPLATE1(PlaybackListCtrl, CustomVirtListCtrl<const PlaybackT
 
 END_EVENT_TABLE()
 
-template<class PlaybackType> SortOrder CustomVirtListCtrl<PlaybackType>::m_sortorder = SortOrder();
+template<class T,class L> SortOrder CustomVirtListCtrl<T,L>::m_sortorder = SortOrder();
 
 template <class PlaybackType>
 PlaybackListCtrl<PlaybackType>::PlaybackListCtrl( wxWindow* parent  ):
-  CustomVirtListCtrl<const PlaybackType*>(parent, RLIST_LIST, wxDefaultPosition, wxDefaultSize,
+  PlaybackListCtrl::BaseType(parent, RLIST_LIST, wxDefaultPosition, wxDefaultSize,
                 wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT,
                 _T("PlaybackListCtrl"), 8, 4, &CompareOneCrit )
 {

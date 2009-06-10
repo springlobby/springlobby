@@ -30,11 +30,11 @@
 #include "settings++/custom_dialogs.h"
 #include "settings.h"
 
-template<> SortOrder CustomVirtListCtrl<User*>::m_sortorder = SortOrder();
+template<> SortOrder CustomVirtListCtrl<User*,BattleroomListCtrl>::m_sortorder = SortOrder();
 
 IBattle* BattleroomListCtrl::s_battle = 0;
 
-BEGIN_EVENT_TABLE( BattleroomListCtrl,  CustomVirtListCtrl< User *>)
+BEGIN_EVENT_TABLE( BattleroomListCtrl,  BattleroomListCtrl::BaseType )
 
   EVT_LIST_ITEM_RIGHT_CLICK( BRLIST_LIST, BattleroomListCtrl::OnListRightClick )
   EVT_MENU                 ( BRLIST_SPEC, BattleroomListCtrl::OnSpecSelect )
@@ -54,7 +54,7 @@ END_EVENT_TABLE()
 
 
 BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, IBattle* battle, Ui& ui, bool readonly ) :
-	CustomVirtListCtrl< User *>(parent, BRLIST_LIST, wxDefaultPosition, wxDefaultSize,
+	CustomVirtListCtrl< User *,BattleroomListCtrl>(parent, BRLIST_LIST, wxDefaultPosition, wxDefaultSize,
                 wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL, _T("BattleroomListCtrl"), 10, 3, &CompareOneCrit ),
 	m_battle(battle),m_popup(0),
   m_sel_user(0), m_sides(0),m_spec_item(0),m_handicap_item(0),

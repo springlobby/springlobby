@@ -27,7 +27,7 @@
 
 
 
-BEGIN_EVENT_TABLE( NickListCtrl, CustomVirtListCtrl<const User*> )
+BEGIN_EVENT_TABLE( NickListCtrl, NickListCtrl::BaseType )
   EVT_LIST_ITEM_ACTIVATED( NICK_LIST, NickListCtrl::OnActivateItem )
   EVT_CONTEXT_MENU( NickListCtrl::OnShowMenu )
 #if wxUSE_TIPWINDOW
@@ -37,11 +37,11 @@ BEGIN_EVENT_TABLE( NickListCtrl, CustomVirtListCtrl<const User*> )
 #endif
 END_EVENT_TABLE()
 
-template<> SortOrder CustomVirtListCtrl<const User*>::m_sortorder = SortOrder( ) ;
+template<> SortOrder NickListCtrl::BaseType::m_sortorder = SortOrder( ) ;
 
 NickListCtrl::NickListCtrl( wxWindow* parent, bool show_header, NickListCtrl::UserMenu* popup, bool singleSelectList,
                             const wxString& name, bool highlight):
-  CustomVirtListCtrl<const User*>( parent, NICK_LIST, wxDefaultPosition, wxDefaultSize,
+  NickListCtrl::BaseType( parent, NICK_LIST, wxDefaultPosition, wxDefaultSize,
               wxLC_VIRTUAL | wxSUNKEN_BORDER | wxLC_REPORT | (int)(!show_header) * wxLC_NO_HEADER | (int)(singleSelectList) * wxLC_SINGLE_SEL,
               name, 4, 3, &CompareOneCrit, highlight ),
   m_menu(popup)
