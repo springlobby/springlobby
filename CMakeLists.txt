@@ -45,9 +45,19 @@ SET( OPTION_TORRENT_SYSTEM
 SET( OPTION_SOUND
 	1 CACHE BOOL
 	"Enables sound notification functionality (requires SDL and SDL_sound libraries)" )
+SET( BUILD_SHARED_LIBS
+	1 CACHE BOOL
+	"Chooses whether to link dynamic or static libraries. Recommend keeping this activated unless you know what you're doing." )
+#disable gettext support by default on windows, if you need it and have built gettext on mingw you can activate this option.
+IF(WIN32)
+SET( OPTION_TRANSLATION_SUPPORT
+	0 CACHE BOOL
+	"Enables translation support to the programs and adds facilities for helping translators (requires GNU Gettext)" )
+ELSE(WIN32)
 SET( OPTION_TRANSLATION_SUPPORT
 	1 CACHE BOOL
 	"Enables translation support to the programs and adds facilities for helping translators (requires GNU Gettext)" )
+ENDIF(WIN32)
 
 #----------------------------------------------------------------------------------------------------
 # wxWidgets lib dependency check
@@ -58,17 +68,7 @@ SET( OPTION_TRANSLATION_SUPPORT
 SET(wxWidgets_USE_LIBS base core net adv aui html xml )
 
 # We need the Find package for wxWidgets to work
-#IF (NOT WIN32)
-#INCLUDE(FindwxWidgets)
 FIND_PACKAGE(wxWidgets REQUIRED base core net adv aui html xml qa xrc richtext media)
-
-#INCOMPLETE workaround for the case that the wxpack is installed - better solution is probably to query user for path
-#IF(WIN32 AND NOT wxWidgets_FOUND)
-#	IF(EXISTS C:/SourceCode/Libraries/wxWidgets2.8)
-#		SET(wxWidgets_FOUND 1)
-#		SET(wxWidgets_ROOT_DIR C:/SourceCode/Libraries/wxWidgets2.8)
-#	ENDIF(EXISTS C:/SourceCode/Libraries/wxWidgets2.8)
-#ENDIF(WIN32 AND NOT wxWidgets_FOUND)
 
 # Did we find wxWidgets ? This condition will fail for as long as the internal Vars do not point to the proper wxWidgets Configuration.
 IF(wxWidgets_FOUND)
@@ -188,9 +188,7 @@ IF( OPTION_TORRENT_SYSTEM )
 	    INCLUDE ( ${SpringLobby_SOURCE_DIR}/cmake/libtorrent.cmake )
 	    ADD_DEFINITIONS( -DBOOST_WINDOWS -DTORRENT_DISABLE_ENCRYPTION )
 		INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIRS} )
-		LINK_LIBRARIES( ${Boost_LIBRARIES} ws2_32 mswsock )
-	    #LINK_LIBRARIES( boost_thread-mt boost_filesystem-mt  ws2_32 mswsock boost_date_time-mt )
-	    #link_directories( ${boost_LIB_DIR} )
+		
 	ENDIF( NOT WIN32)
 ELSE( OPTION_TORRENT_SYSTEM )
 	ADD_DEFINITIONS( -DNO_TORRENT_SYSTEM )
@@ -395,8 +393,13 @@ endif( OPTION_TRANSLATION_SUPPORT )
 cmake_policy(SET CMP0004 OLD)
 cmake_policy(SET CMP0006 OLD)
 
+IF(WIN32)
+ADD_LIBRARY(libtorrent STATIC ${libtorrent_SRC})
+SET_TARGET_PROPERTIES(libtorrent PROPERTIES COMPILE_FLAGS -DWIN32_LEAN_AND_MEAN)
+TARGET_LINK_LIBRARIES( libtorrent ${Boost_LIBRARIES} ws2_32 mswsock )
+ENDIF(WIN32)
 #libtsource is empty if "NOT WIN32"
-ADD_EXECUTABLE(springlobby WIN32 MACOSX_BUNDLE ${SpringLobbySrc} ${SettingsSrc} ${SpringLobby_RC_FILE} ${libtorrent_SRC})
+ADD_EXECUTABLE(springlobby WIN32 MACOSX_BUNDLE ${SpringLobbySrc} ${SettingsSrc} ${SpringLobby_RC_FILE})
 ADD_EXECUTABLE(springsettings WIN32 MACOSX_BUNDLE ${StandAloneSettings} ${SpringSettings_RC_FILE} ${SettingsSrc} ${SLSharedWithSettings} )
 
 
@@ -404,11 +407,12 @@ ADD_EXECUTABLE(springsettings WIN32 MACOSX_BUNDLE ${StandAloneSettings} ${Spring
 TARGET_LINK_LIBRARIES(springlobby ${wxWidgets_LIBRARIES})
 TARGET_LINK_LIBRARIES(springsettings ${wxWidgets_LIBRARIES})
 IF(MINGW)
-	TARGET_LINK_LIBRARIES( springlobby iphlpapi.lib )
-	TARGET_LINK_LIBRARIES( springsettings iphlpapi.lib )
+	TARGET_LINK_LIBRARIES( springlobby iphlpapi )
+	TARGET_LINK_LIBRARIES( springsettings iphlpapi )
 ENDIF(MINGW)
 
 IF (WIN32)
+	TARGET_LINK_LIBRARIES( springlobby libtorrent )
     install(TARGETS springlobby springsettings RUNTIME DESTINATION .)
     install(FILES AUTHORS COPYING NEWS README THANKS DESTINATION .)
 ELSE (WIN32)
