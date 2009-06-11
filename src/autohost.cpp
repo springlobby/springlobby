@@ -56,7 +56,7 @@ void AutoHost::OnSaidBattle( const wxString& nick, const wxString& msg )
   }
   else if ( command == _T("!help")) {
     m_battle.DoAction( _T( "The following commands are available ( <> = mandatory value, {} = optional value ):" ) );
-    m_battle.DoAction( _T( "!addbox <allynumber> <topx> <topy> <bottomx> <bottomy>: adds a <allynumber> start restriction to the given coordinates, coordinates range from 0 to 100." ) );
+    m_battle.DoAction( _T( "!addbox <allynumber> <topx> <topy> <bottomx> <bottomy>: adds a <allynumber> start restriction to the given coordinates, coordinates range from 0 to 200." ) );
     m_battle.DoAction( _T( "!balance {number}: tries to put players into allyteams by how many start boxes there are, uses {number} allyteams if present.") );
     m_battle.DoAction( _T( "!cbalance {number}: see !balance but tries to put clanmates together first." ) );
     m_battle.DoAction( _T( "!fixcolors: changes players duplicate colours so they are unique." ) );
@@ -193,10 +193,10 @@ void AutoHost::OnSaidBattle( const wxString& nick, const wxString& msg )
 			valueok = valueok && values[3].ToLong(&bottomrightx);
 			valueok = valueok && values[4].ToLong(&bottomrighty);
 			valueok = valueok && ( allynumber > 0 );
-			valueok = valueok && ( topleftx >= 0 ) && ( topleftx <= 100 );
-			valueok = valueok && ( toplefty >= 0 ) && ( toplefty <= 100 );
-			valueok = valueok && ( bottomrightx >= 0 ) && ( bottomrightx <= 100 );
-			valueok = valueok && ( bottomrighty >= 0 ) && ( bottomrighty <= 100 );
+			valueok = valueok && ( topleftx >= 0 ) && ( topleftx <= 200 );
+			valueok = valueok && ( toplefty >= 0 ) && ( toplefty <= 200 );
+			valueok = valueok && ( bottomrightx >= 0 ) && ( bottomrightx <= 200 );
+			valueok = valueok && ( bottomrighty >= 0 ) && ( bottomrighty <= 200 );
 			if ( valueok )
 			{
 				allynumber = allynumber - 1;
@@ -207,10 +207,6 @@ void AutoHost::OnSaidBattle( const wxString& nick, const wxString& msg )
 				}
 				else
 				{
-					topleftx = topleftx * 2;
-					toplefty = toplefty * 2;
-					bottomrightx = bottomrightx * 2;
-					bottomrighty = bottomrighty * 2;
 					m_battle.AddStartRect( allynumber, topleftx, toplefty, bottomrightx, bottomrighty );
 					m_battle.SendHostInfo( IBattle::HI_StartRects );
 					m_battle.DoAction( _T("has added start box for allyteam ") + TowxString(allynumber) );
