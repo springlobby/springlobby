@@ -529,6 +529,10 @@ void IBattle::SetLocalMap(const UnitSyncMap& map)
     #ifndef __WXMSW__
     if ( m_map_exists && !ui().IsSpringRunning() ) usync().PrefetchMap( m_host_map.name );
     #endif
+    if ( IsFounderMe() ) // save all rects infos
+    {
+
+    }
   }
 }
 
@@ -712,9 +716,9 @@ bool IBattle::LoadOptionsPreset( const wxString& name )
             sett().SetHostingPreset( m_preset, i, options );
         }
       }
-      unsigned int localrectcount = GetNumRects();
-      for( unsigned int localrect = 0 ; localrect < localrectcount; ++localrect) if ( GetStartRect( localrect ).exist ) RemoveStartRect( localrect );
-      SendHostInfo( HI_StartRects );
+
+			for( unsigned int i = 0; i < GetNumRects(); ++i ) if ( GetStartRect( i ).exist ) RemoveStartRect(i); // remove all rects that might come from map presets
+			SendHostInfo( IBattle::HI_StartRects );
 
       unsigned int rectcount = s2l( options[_T("numrects")] );
       for ( unsigned int loadrect = 0; loadrect < rectcount; loadrect++)

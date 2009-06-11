@@ -151,8 +151,6 @@ void AutoHost::OnSaidBattle( const wxString& nick, const wxString& msg )
 				m_battle.SetLocalMap( map );
 				m_battle.DoAction( _T( "is switching to map " ) + mapname );
 				m_battle.SendHostInfo( IBattle::HI_Map );
-				for( unsigned int i=0; i < m_battle.GetNumRects(); ++i ) if ( m_battle.GetStartRect( i ).exist ) m_battle.RemoveStartRect(i);
-				m_battle.SendHostInfo( IBattle::HI_StartRects );
 			} catch (...)
 			{
 				m_battle.DoAction( _T( "cannot switch to map " ) + mapname );
@@ -293,6 +291,27 @@ void AutoHost::StartBattle()
 
   m_battle.DoAction(_T("is starting game ..."));
   m_battle.GetServer().StartHostedBattle();
+
+	// save map preset
+	wxString mapname = m_battle.LoadMap().name;
+	wxString startpostype = m_battle.CustomBattleOptions().getSingleValue( _T("startpostype"), OptionsWrapper::EngineOption );
+	sett().SetMapLastStartPosType( mapname, startpostype);
+	std::vector<Settings::SettStartBox> rects;
+	for( unsigned int i=0;i<m_battle.GetNumRects();++i)
+	{
+		 BattleStartRect rect = m_battle.GetStartRect( i );
+		 if ( rect.exist )
+		 {
+			 Settings::SettStartBox box;
+			 box.ally = rect.ally;
+			 box.topx = rect.top;
+			 box.topy = rect.left;
+			 box.bottomx = rect.bottom;
+			 box.bottomy = rect.right;
+			 rects.push_back( box );
+		 }
+	}
+	sett().SetMapLastRectPreset( mapname, rects );
 
   // todo: copied from Ui::StartHostedBattle
   sett().SetLastHostMap( m_battle.GetHostMapName() );

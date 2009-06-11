@@ -542,6 +542,21 @@ class Settings
     wxString GetLastBattleFilterProfileName();
     void SetBattleFilterActivState( const bool state );
     bool GetBattleFilterActivState( ) const;
+
+    struct SettStartBox
+    {
+    	int ally;
+    	int topx;
+    	int topy;
+    	int bottomx;
+    	int bottomy;
+    };
+
+    void SetMapLastStartPosType( const wxString& mapname, const wxString& startpostype );
+		void SetMapLastRectPreset( const wxString& mapname, std::vector<Settings::SettStartBox> rects );
+
+		wxString GetMapLastStartPosType( const wxString& mapname );
+		std::vector<Settings::SettStartBox> GetMapLastRectPreset( const wxString& mapname );
     /**@}*/
 
     /** @name Replay filters

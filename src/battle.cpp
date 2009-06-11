@@ -167,6 +167,25 @@ void Battle::DoAction( const wxString& msg )
     m_serv.DoActionBattle( m_opts.battleid, msg );
 }
 
+void Battle::SetLocalMap( const UnitSyncMap& map )
+{
+	IBattle::SetLocalMap( map );
+	if ( IsFounderMe() )
+	{
+		CustomBattleOptions().setSingleOption( _T("startpostype"), sett().GetMapLastStartPosType( map.name ), OptionsWrapper::EngineOption );
+		SendHostInfo( wxString::Format( _T("%d_startpostype"), OptionsWrapper::EngineOption ) );
+
+    for( unsigned int i = 0; i < GetNumRects(); ++i ) if ( GetStartRect( i ).exist ) RemoveStartRect(i); // remove all rects
+    SendHostInfo( IBattle::HI_StartRects );
+
+    std::vector<Settings::SettStartBox> savedrects = sett().GetMapLastRectPreset( map.name );
+		for ( std::vector<Settings::SettStartBox>::iterator itor = savedrects.begin(); itor != savedrects.end(); itor++ )
+		{
+			AddStartRect( itor->ally, itor->topx, itor->topy, itor->bottomx, itor->bottomy );
+		}
+		SendHostInfo( IBattle::HI_StartRects );
+	}
+}
 
 User& Battle::GetMe()
 {
