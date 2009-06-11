@@ -90,6 +90,8 @@ class Battle : public IBattle
 
     int GetID() { return m_id; }
 
+    void SaveMapDefaults();
+
   protected:
     // Battle variables
 

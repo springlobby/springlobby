@@ -192,6 +192,29 @@ User& Battle::GetMe()
     return m_serv.GetMe();
 }
 
+void Battle::SaveMapDefaults()
+{
+    // save map preset
+		wxString mapname = LoadMap().name;
+		wxString startpostype = CustomBattleOptions().getSingleValue( _T("startpostype"), OptionsWrapper::EngineOption );
+		sett().SetMapLastStartPosType( mapname, startpostype);
+		std::vector<Settings::SettStartBox> rects;
+		for( unsigned int i = 0; i < GetNumRects(); ++i )
+		{
+			 BattleStartRect rect = GetStartRect( i );
+			 if ( rect.exist )
+			 {
+				 Settings::SettStartBox box;
+				 box.ally = rect.ally;
+				 box.topx = rect.left;
+				 box.topy = rect.top;
+				 box.bottomx = rect.right;
+				 box.bottomy = rect.bottom;
+				 rects.push_back( box );
+			 }
+		}
+		sett().SetMapLastRectPreset( mapname, rects );
+}
 
 User& Battle::OnUserAdded( User& user )
 {

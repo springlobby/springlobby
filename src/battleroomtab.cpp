@@ -565,26 +565,7 @@ void BattleRoomTab::OnStart( wxCommandEvent& event )
         if ( answer == wxNO ) return;
     }
 
-    // save map preset
-		wxString mapname = m_battle.LoadMap().name;
-		wxString startpostype = m_battle.CustomBattleOptions().getSingleValue( _T("startpostype"), OptionsWrapper::EngineOption );
-		sett().SetMapLastStartPosType( mapname, startpostype);
-		std::vector<Settings::SettStartBox> rects;
-		for( unsigned int i=0;i<m_battle.GetNumRects();++i)
-		{
-			 BattleStartRect rect = m_battle.GetStartRect( i );
-			 if ( rect.exist )
-			 {
-				 Settings::SettStartBox box;
-				 box.ally = rect.ally;
-				 box.topx = rect.top;
-				 box.topy = rect.left;
-				 box.bottomx = rect.bottom;
-				 box.bottomy = rect.right;
-				 rects.push_back( box );
-			 }
-		}
-		sett().SetMapLastRectPreset( mapname, rects );
+		m_battle.SaveMapDefaults(); // save map presets
 
     m_ui.StartHostedBattle();
 }
