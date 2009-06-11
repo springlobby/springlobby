@@ -209,20 +209,13 @@ void AutoHost::OnSaidBattle( const wxString& nick, const wxString& msg )
 				}
 				else
 				{
-					try
-					{
-						UnitSyncMap map = m_battle.LoadMap();
-						topleftx = topleftx / 100 * map.info.width;
-						toplefty = toplefty / 100 * map.info.height;
-						bottomrightx = bottomrightx / 100 * map.info.width;
-						bottomrighty = bottomrighty / 100 * map.info.height;
-						m_battle.AddStartRect( allynumber, topleftx, toplefty, bottomrightx, bottomrighty );
-						m_battle.SendHostInfo( IBattle::HI_StartRects );
-						m_battle.DoAction( _T("has added start box for allyteam ") + TowxString(allynumber) );
-					}
-					catch(...)
-					{
-					}
+					topleftx = topleftx * 2;
+					toplefty = toplefty * 2;
+					bottomrightx = bottomrightx * 2;
+					bottomrighty = bottomrighty * 2;
+					m_battle.AddStartRect( allynumber, topleftx, toplefty, bottomrightx, bottomrighty );
+					m_battle.SendHostInfo( IBattle::HI_StartRects );
+					m_battle.DoAction( _T("has added start box for allyteam ") + TowxString(allynumber) );
 				}
 			}
 			else
