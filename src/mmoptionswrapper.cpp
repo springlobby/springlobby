@@ -132,16 +132,17 @@ bool OptionsWrapper::loadOptions(GameOption modmapFlag, const wxString& name)
 	return true;
 }
 
-GameOption OptionsWrapper::GetSection( wxString& key ) const
+OptionsWrapper::GameOption OptionsWrapper::GetSection( wxString& key ) const
 {
 	GameOption ret = LastOption;
+	bool found = false;
 	for ( int flag = 0; flag < PrivateOptions; flag++ )
 	{
 		OptionType optType = opt_undefined;
 		found = keyExists( key, (GameOption)flag, false, optType );
 		if ( found )
 		{
-			 ret = flag;
+			 ret = (GameOption)flag;
 			 break;
 		}
 	}
