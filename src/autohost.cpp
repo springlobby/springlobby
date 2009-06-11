@@ -210,6 +210,7 @@ void AutoHost::OnSaidBattle( const wxString& nick, const wxString& msg )
 					bottomrightx = bottomrightx / 100 * map.info.width;
 					bottomrighty = bottomrighty / 100 * map.info.height;
 					m_battle.AddStartRect( allynumber, topleftx, toplefty, bottomrightx, bottomrighty );
+					m_battle.SendHostInfo( IBattle::HI_StartRects );
 					m_battle.DoAction( _T("has added start box for allyteam ") + TowxString(allynumber) );
 				}
 				catch(...)
@@ -226,10 +227,13 @@ void AutoHost::OnSaidBattle( const wxString& nick, const wxString& msg )
   	bool numberok = params.ToLong( &boxnumber );
   	if ( numberok )
   	{
+  		boxnumber = boxnumber + 1;
   		BattleStartRect rect = m_battle.GetStartRect( boxnumber );
   		if ( rect.IsOk() )
   		{
   			m_battle.RemoveStartRect( boxnumber );
+  			m_battle.SendHostInfo( IBattle::HI_StartRects );
+  			m_battle.DoAction( _T("has removed the start box for allyteam ") + TowxString(boxnumber) );
   		}
   		else
   		{
