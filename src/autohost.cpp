@@ -201,20 +201,29 @@ void AutoHost::OnSaidBattle( const wxString& nick, const wxString& msg )
 			valueok = valueok && ( bottomrighty >= 0 ) && ( bottomrighty <= 100 );
 			if ( valueok )
 			{
-				try
+				allynumber = allynumber - 1;
+				BattleStartRect rect = m_battle.GetStartRect( allynumber );
+				if ( rect.IsOk() )
 				{
-					UnitSyncMap map = m_battle.LoadMap();
-					allynumber = allynumber - 1;
-					topleftx = topleftx / 100 * map.info.width;
-					toplefty = toplefty / 100 * map.info.height;
-					bottomrightx = bottomrightx / 100 * map.info.width;
-					bottomrighty = bottomrighty / 100 * map.info.height;
-					m_battle.AddStartRect( allynumber, topleftx, toplefty, bottomrightx, bottomrighty );
-					m_battle.SendHostInfo( IBattle::HI_StartRects );
-					m_battle.DoAction( _T("has added start box for allyteam ") + TowxString(allynumber) );
+					m_battle.DoAction( _T("cannot add a startbox for allyteam ") + TowxString(allynumber) + _T(" because one is already present.") );
 				}
-				catch(...)
-				{}
+				else
+				{
+					try
+					{
+						UnitSyncMap map = m_battle.LoadMap();
+						topleftx = topleftx / 100 * map.info.width;
+						toplefty = toplefty / 100 * map.info.height;
+						bottomrightx = bottomrightx / 100 * map.info.width;
+						bottomrighty = bottomrighty / 100 * map.info.height;
+						m_battle.AddStartRect( allynumber, topleftx, toplefty, bottomrightx, bottomrighty );
+						m_battle.SendHostInfo( IBattle::HI_StartRects );
+						m_battle.DoAction( _T("has added start box for allyteam ") + TowxString(allynumber) );
+					}
+					catch(...)
+					{
+					}
+				}
 			}
 			else
 			{
@@ -227,7 +236,7 @@ void AutoHost::OnSaidBattle( const wxString& nick, const wxString& msg )
   	bool numberok = params.ToLong( &boxnumber );
   	if ( numberok )
   	{
-  		boxnumber = boxnumber + 1;
+  		boxnumber = boxnumber - 1;
   		BattleStartRect rect = m_battle.GetStartRect( boxnumber );
   		if ( rect.IsOk() )
   		{
