@@ -132,6 +132,18 @@ bool OptionsWrapper::loadOptions(GameOption modmapFlag, const wxString& name)
 	return true;
 }
 
+bool OptionsWrapper::keyExists(wxString key ) const
+{
+	bool found = false;
+	for ( int flag = 0; flag < PrivateOptions; flag++ )
+	{
+		OptionType optType = opt_undefined;
+		found = keyExists( key, (GameOption)flag, false, optType );
+		if ( found ) break;
+	}
+	return found;
+}
+
 bool OptionsWrapper::keyExists(wxString key, GameOption modmapFlag, bool showError, OptionType& optType) const
 {
 	wxString duplicateKeyError = _T("Please contact the mod's author and tell him\n"

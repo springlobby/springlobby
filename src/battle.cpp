@@ -256,10 +256,16 @@ void Battle::RingNotReadyPlayers()
     for (user_map_t::size_type i = 0; i < GetNumUsers(); i++)
     {
         User& u = GetUser(i);
-        if ( u.BattleStatus().IsBot() ) continue;
         UserBattleStatus& bs = u.BattleStatus();
+        if ( bs.IsBot() ) continue;
         if ( !bs.ready && !bs.spectator ) m_serv.Ring( u.GetNick() );
     }
+}
+
+void Battle::RingPlayer( const User& u )
+{
+	if ( u.BattleStatus().IsBot() ) return;
+	m_serv.Ring( u.GetNick() );
 }
 
 bool Battle::ExecuteSayCommand( const wxString& cmd )

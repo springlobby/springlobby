@@ -87,6 +87,12 @@ public:
 	 * \return true if key is found, false otherwise
 	 */
 	bool keyExists(wxString key,GameOption flag,bool showError, OptionType& optType) const;
+	//! checks if given key can be found in all containers
+	/*!
+	 * \param key the key that should be checked for existance in containers
+	 * \return true if key is found, false otherwise
+	 */
+	bool keyExists(wxString key ) const;
 	//! given a vector of key/value pairs sets the appropiate options to new values
 	/*!	Every new value is tested for meeting boundary conditions, type, etc.
 	 * If test fails error is logged and false is returned.

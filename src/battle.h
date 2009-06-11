@@ -40,6 +40,7 @@ class Battle : public IBattle
     void KickPlayer( User& user );
 
     void RingNotReadyPlayers();
+    void RingPlayer( const User& u );
 
     void Say( const wxString& msg );
     void DoAction( const wxString& msg );
