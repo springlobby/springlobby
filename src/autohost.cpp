@@ -43,17 +43,14 @@ void AutoHost::OnSaidBattle( const wxString& nick, const wxString& msg )
 
   if (msg == _T("!start")) {
     StartBattle();
-    m_lastActionTime = currentTime;
   }
   else if ( msg.StartsWith( _T("!balance") ) ) {
     unsigned int num = s2l( msg.AfterFirst( _T(' ') ) );
     m_battle.Autobalance(IBattle::balance_random, false, false, num);
-    m_lastActionTime = currentTime;
   }
   else if ( msg.StartsWith( _T("!cbalance") ) ) {
     unsigned int num = s2l( msg.AfterFirst( _T(' ') ) );
     m_battle.Autobalance(IBattle::balance_random, true, false, num);
-    m_lastActionTime = currentTime;
   }
   else if (msg == _T("!help")) {
     m_battle.DoAction( _T( "The following commands are available:" ) );
@@ -69,12 +66,10 @@ void AutoHost::OnSaidBattle( const wxString& nick, const wxString& msg )
     m_battle.DoAction( _T( "!ring: rings players that are not ready." ) );
     m_battle.DoAction( _T( "!lock: prevents more people to join." ) );
     m_battle.DoAction( _T( "!unlock: opens the battle again." ) );
-    m_lastActionTime = currentTime;
   }
   else if ( msg == _T("!ring") ) {
     m_battle.RingNotReadyPlayers();
     m_battle.DoAction( _T( "is ringing players not ready ..." ) );
-    m_lastActionTime = currentTime;
   }
   else if ( msg == _T("!listprofiles") ) {
     wxArrayString profilelist = m_battle.GetPresetList();
@@ -88,47 +83,53 @@ void AutoHost::OnSaidBattle( const wxString& nick, const wxString& msg )
         m_battle.DoAction( profilelist[i] );
       }
     }
-    m_lastActionTime = currentTime;
   }
   else if ( msg.BeforeFirst( _T(' ') ) == _T("!loadprofile") ) {
     wxString profilename = GetBestMatch( m_battle.GetPresetList(), msg.AfterFirst(_T(' ')) );
     if ( !m_battle.LoadOptionsPreset( profilename ) )
       m_battle.DoAction( _T( "Profile not found, use !listprofiles for a list of available profiles." ) );
     else m_battle.DoAction( _T("has loaded profile: ") + profilename );
-    m_lastActionTime = currentTime;
   }
   else if ( msg == _T("!fixcolors") ) {
     m_battle.FixColours();
     m_battle.DoAction( _T( "is fixing colors." ) );
-    m_lastActionTime = currentTime;
   }
   else if ( msg == _T("!lock") ) {
     m_battle.SetIsLocked( true );
     m_battle.DoAction( _T( "has locked the battle." ) );
     m_battle.SendHostInfo( IBattle::HI_Locked );
-    m_lastActionTime = currentTime;
   }
   else if ( msg == _T("!unlock") ) {
     m_battle.SetIsLocked( false );
     m_battle.DoAction( _T( "has unlocked the battle." ) );
     m_battle.SendHostInfo( IBattle::HI_Locked );
-    m_lastActionTime = currentTime;
   }
   else if ( msg.StartsWith( _T("!fixids") ) ) {
     unsigned int num = s2l( msg.AfterFirst( _T(' ') ) );
     m_battle.FixTeamIDs( IBattle::balance_divide, false, false, num );
-    m_lastActionTime = currentTime;
   }
   else if ( msg.StartsWith( _T("!cfixids") ) ) {
     unsigned int num = s2l( msg.AfterFirst( _T(' ') ) );
     m_battle.FixTeamIDs( IBattle::balance_divide, true, true, num );
-    m_lastActionTime = currentTime;
   }
   else if ( msg == _T("!spectunsynced") ) {
     m_battle.ForceUnsyncedToSpectate();
     m_battle.DoAction( _T( "is forcing unsynced players to be spectators." ) );
-    m_lastActionTime = currentTime;
   }
+  else if ( msg == _T("!map") ) {
+    wxString mapname = GetBestMatch( usync().GetMapList(), msg.AfterFirst(_T(' ')) );
+		try
+		{
+			UnitSyncMap map = usync().GetMap( index );
+			m_battle.SetLocalMap( map );
+			m_battle.DoAction( _T( "is switching to map " ) + mapname );
+			m_battle.SendHostInfo( IBattle::HI_Map );
+			for( unsigned int i=0; i < m_battle.GetNumRects(); ++i ) if ( m_battle.GetStartRect( i ).exist ) m_battle.RemoveStartRect(i);
+			m_battle.SendHostInfo( IBattle::HI_StartRects );
+		} catch (...) {}
+  }
+  else return;
+  m_lastActionTime = currentTime;
 }
 
 
