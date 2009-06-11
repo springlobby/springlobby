@@ -41,6 +41,7 @@ class SavegameTraits;
 template < class Traits >
 class SavegameTab;
 
+int VISTASUCKS();
 
 //! @brief wxFrame that contains the main window of the client.
 class MainWindow : public wxFrame
