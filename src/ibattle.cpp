@@ -717,7 +717,7 @@ bool IBattle::LoadOptionsPreset( const wxString& name )
         }
       }
 
-			for( unsigned int i = 0; i < GetNumRects(); ++i ) if ( GetStartRect( i ).exist ) RemoveStartRect(i); // remove all rects that might come from map presets
+			for( unsigned int i = 0; i < GetNumRects(); ++i ) if ( GetStartRect( i ).IsOk() ) RemoveStartRect(i); // remove all rects that might come from map presets
 			SendHostInfo( IBattle::HI_StartRects );
 
       unsigned int rectcount = s2l( options[_T("numrects")] );

@@ -175,7 +175,7 @@ void Battle::SetLocalMap( const UnitSyncMap& map )
 		CustomBattleOptions().setSingleOption( _T("startpostype"), sett().GetMapLastStartPosType( map.name ), OptionsWrapper::EngineOption );
 		SendHostInfo( wxString::Format( _T("%d_startpostype"), OptionsWrapper::EngineOption ) );
 
-    for( unsigned int i = 0; i < GetNumRects(); ++i ) if ( GetStartRect( i ).exist ) RemoveStartRect(i); // remove all rects
+    for( unsigned int i = 0; i < GetNumRects(); ++i ) if ( GetStartRect( i ).IsOk() ) RemoveStartRect(i); // remove all rects
     SendHostInfo( IBattle::HI_StartRects );
 
     std::vector<Settings::SettStartBox> savedrects = sett().GetMapLastRectPreset( map.name );
@@ -202,7 +202,7 @@ void Battle::SaveMapDefaults()
 		for( unsigned int i = 0; i < GetNumRects(); ++i )
 		{
 			 BattleStartRect rect = GetStartRect( i );
-			 if ( rect.exist )
+			 if ( rect.IsOk() )
 			 {
 				 Settings::SettStartBox box;
 				 box.ally = rect.ally;
