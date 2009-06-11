@@ -6,7 +6,8 @@
 #include "settings.h"
 #include "user.h"
 #include "utils.h"
-#include <wx/log.h>
+
+#include <wx/tokenzr.h>
 
 
 AutoHost::AutoHost( Battle& battle )
@@ -55,20 +56,22 @@ void AutoHost::OnSaidBattle( const wxString& nick, const wxString& msg )
   }
   else if ( command == _T("!help")) {
     m_battle.DoAction( _T( "The following commands are available ( <> = mandatory value, {} = optional value ):" ) );
-    m_battle.DoAction( _T( "!help: this guide." ) );
-    m_battle.DoAction( _T( "!start: starts the battle." ) );
+    m_battle.DoAction( _T( "!addbox <allynumber> <topx> <topy> <bottomx> <bottomy>: adds a <allynumber> start restriction to the given coordinates, coordinates range from 0 to 100." ) );
     m_battle.DoAction( _T( "!balance {number}: tries to put players into allyteams by how many start boxes there are, uses {number} allyteams if present.") );
     m_battle.DoAction( _T( "!cbalance {number}: see !balance but tries to put clanmates together first." ) );
     m_battle.DoAction( _T( "!fixcolors: changes players duplicate colours so they are unique." ) );
-    m_battle.DoAction( _T( "!fixids {number}: tries to put players into control teams by number, if number is omitted it assignes as different controlteam per player" ) );
+    m_battle.DoAction( _T( "!fixids {number}: tries to put players into control teams by number, if number is omitted it assignes as different controlteam per player." ) );
     m_battle.DoAction( _T( "!cfixids {number}: see !fixids but tries to put clanmates together first." ) );
+    m_battle.DoAction( _T( "!help: this guide." ) );
     m_battle.DoAction( _T( "!listprofiles: lists the available battle profiles." ) );
     m_battle.DoAction( _T( "!loadprofile profilename: loads an available battle profile." ) );
     m_battle.DoAction( _T( "!lock: prevents more people to join." ) );
-    m_battle.DoAction( _T( "!map <name>: switches to <name>" ) );
+    m_battle.DoAction( _T( "!map <name>: switches to <name>." ) );
+    m_battle.DoAction( _T( "!removebox <allynumber>: deletes <allynumber> start restriction's box." ) );
 		m_battle.DoAction( _T( "!ring {name}: rings players that are not ready or {name} if specified." ) );
-    m_battle.DoAction( _T( "!spectunsynced: sets all players with unsynced status to be spectators." ) );
 		m_battle.DoAction( _T( "!set <optionname> <value>: sets battle option <optionname> to <value>" ) );
+    m_battle.DoAction( _T( "!spectunsynced: sets all players with unsynced status to be spectators." ) );
+    m_battle.DoAction( _T( "!start: starts the battle." ) );
     m_battle.DoAction( _T( "!unlock: opens the battle again." ) );
   }
   else if ( command == _T("!ring") ) {
@@ -138,19 +141,23 @@ void AutoHost::OnSaidBattle( const wxString& nick, const wxString& msg )
     m_battle.DoAction( _T( "is forcing unsynced players to be spectators." ) );
   }
   else if ( command == _T("!map") ) {
-    wxString mapname = GetBestMatch( usync().GetMapList(), params );
-		try
-		{
-			UnitSyncMap map = usync().GetMap( mapname );
-			m_battle.SetLocalMap( map );
-			m_battle.DoAction( _T( "is switching to map " ) + mapname );
-			m_battle.SendHostInfo( IBattle::HI_Map );
-			for( unsigned int i=0; i < m_battle.GetNumRects(); ++i ) if ( m_battle.GetStartRect( i ).exist ) m_battle.RemoveStartRect(i);
-			m_battle.SendHostInfo( IBattle::HI_StartRects );
-		} catch (...)
-		{
-			m_battle.DoAction( _T( "cannot switch to map " ) + mapname );
-		}
+  	if ( params.IsEmpty() ) m_battle.DoAction( _T( "cannot switch to void mapname" ) );
+  	else
+  	{
+			wxString mapname = GetBestMatch( usync().GetMapList(), params );
+			try
+			{
+				UnitSyncMap map = usync().GetMap( mapname );
+				m_battle.SetLocalMap( map );
+				m_battle.DoAction( _T( "is switching to map " ) + mapname );
+				m_battle.SendHostInfo( IBattle::HI_Map );
+				for( unsigned int i=0; i < m_battle.GetNumRects(); ++i ) if ( m_battle.GetStartRect( i ).exist ) m_battle.RemoveStartRect(i);
+				m_battle.SendHostInfo( IBattle::HI_StartRects );
+			} catch (...)
+			{
+				m_battle.DoAction( _T( "cannot switch to map " ) + mapname );
+			}
+  	}
   }
   else if ( command == _T("!set") ) {
   	wxString key = params.BeforeFirst(_T(' '));
@@ -165,6 +172,68 @@ void AutoHost::OnSaidBattle( const wxString& nick, const wxString& msg )
   	else
   	{
   		m_battle.DoAction( _T( "cannot find option entry " ) + key );
+  	}
+  }
+  else if ( command == _T("!addbox") ) {
+		long allynumber;
+		long topleftx;
+		long toplefty;
+		long bottomrightx;
+		long bottomrighty;
+		wxArrayString values = wxStringTokenize( params, _T(" ") );
+		if ( values.GetCount() != 5 ) m_battle.DoAction( _T("has recieved an invalid number of params for !addbox") );
+		else
+		{
+			bool valueok = values[0].ToLong(&allynumber);
+			valueok = valueok && values[1].ToLong(&topleftx);
+			valueok = valueok && values[2].ToLong(&toplefty);
+			valueok = valueok && values[3].ToLong(&bottomrightx);
+			valueok = valueok && values[4].ToLong(&bottomrighty);
+			valueok = valueok && ( allynumber > 0 );
+			valueok = valueok && ( topleftx >= 0 ) && ( topleftx <= 100 );
+			valueok = valueok && ( toplefty >= 0 ) && ( toplefty <= 100 );
+			valueok = valueok && ( bottomrightx >= 0 ) && ( bottomrightx <= 100 );
+			valueok = valueok && ( bottomrighty >= 0 ) && ( bottomrighty <= 100 );
+			if ( valueok )
+			{
+				try
+				{
+					UnitSyncMap map = m_battle.LoadMap();
+					allynumber = allynumber - 1;
+					topleftx = topleftx / 100 * map.info.width;
+					toplefty = toplefty / 100 * map.info.height;
+					bottomrightx = bottomrightx / 100 * map.info.width;
+					bottomrighty = bottomrighty / 100 * map.info.height;
+					m_battle.AddStartRect( allynumber, topleftx, toplefty, bottomrightx, bottomrighty );
+					m_battle.DoAction( _T("has added start box for allyteam ") + TowxString(allynumber) );
+				}
+				catch(...)
+				{}
+			}
+			else
+			{
+				m_battle.DoAction( _T("has recieved an invalid param for !addbox") );
+			}
+		}
+  }
+  else if ( command == _T("!removebox") ) {
+  	long boxnumber;
+  	bool numberok = params.ToLong( &boxnumber );
+  	if ( numberok )
+  	{
+  		BattleStartRect rect = m_battle.GetStartRect( boxnumber );
+  		if ( rect.IsOk() )
+  		{
+  			m_battle.RemoveStartRect( boxnumber );
+  		}
+  		else
+  		{
+  			m_battle.DoAction( _T("cannot find start box ") + params );
+  		}
+  	}
+  	else
+  	{
+  		m_battle.DoAction( _T("has recieved an invalid param to !removebox command") );
   	}
   }
   else return;
