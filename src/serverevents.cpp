@@ -306,6 +306,8 @@ void ServerEvents::OnHostedBattle( int battleid )
             battle.LoadOptionsPreset( presetname );
         }
 
+        battle.LoadMapDefaults( battle.GetHostMapName() );
+
         m_serv.SendHostInfo( IBattle::HI_Send_All_opts );
 
         ui().OnHostedBattle( battle );

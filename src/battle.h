@@ -91,6 +91,7 @@ class Battle : public IBattle
     int GetID() { return m_id; }
 
     void SaveMapDefaults();
+    void LoadMapDefaults( const wxString& mapname );
 
   protected:
     // Battle variables
