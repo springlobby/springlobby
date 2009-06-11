@@ -166,7 +166,12 @@ void AutoHost::OnSaidBattle( const wxString& nick, const wxString& msg )
   	if ( exists )
   	{
 			bool result = m_battle.CustomBattleOptions().setSingleOption( key, value );
-			if ( result ) m_battle.DoAction( _T("has set option ") + key + _T(" to value ") + value );
+			if ( result )
+			{
+				 OptionsWrapper::GameOption section = m_battle.CustomBattleOptions().GetSection( key );
+				 m_battle.SendHostInfo( wxString::Format(_T("%d_%s"), section, key.c_str() ) );
+				 m_battle.DoAction( _T("has set option ") + key + _T(" to value ") + value );
+			}
 			else m_battle.DoAction( _T( "cannot set option " ) + key + _T(" to value ") + value + _T(", reason: invalid value.") );
   	}
   	else
