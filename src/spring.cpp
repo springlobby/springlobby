@@ -187,7 +187,12 @@ bool Spring::LaunchSpring( const wxString& params  )
 		if ( usync().GetSpringVersion().Contains(_T("0.78.") ) ) configfileflags = _T("");
 		#endif
   }
-  wxString cmd =  _T("\"") + sett().GetCurrentUsedSpringBinary() + _T("\" ") + configfileflags + params;
+  wxChar sep = wxFileName::GetPathSeparator();
+  wxString cmd =  _T("\"") + sett().GetCurrentUsedSpringBinary();
+  #ifdef __WXMAC__
+	if ( sett().GetCurrentUsedSpringBinary().AfterLast(_T('.')) == _T("app") ) cmd += sep + wxString(_T("Contents")) + sep + wxString(_T("MacOS")) + sep + wxString(_T("spring")); // append app bundle inner path
+  #endif
+  cmd += _T("\" ") + configfileflags + params;
   wxLogMessage( _T("spring call params: %s"), cmd.c_str() );
   wxSetWorkingDirectory( sett().GetCurrentUsedDataDir() );
   if ( sett().UseOldSpringLaunchMethod() )

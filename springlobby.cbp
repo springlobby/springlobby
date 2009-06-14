@@ -317,6 +317,8 @@
 		<Unit filename="src/playback/replaylist.h" />
 		<Unit filename="src/playback/savegamelist.cpp" />
 		<Unit filename="src/playback/savegamelist.h" />
+		<Unit filename="src/poolmanager.cpp" />
+		<Unit filename="src/poolmanager.h" />
 		<Unit filename="src/sdlsound.cpp" />
 		<Unit filename="src/sdlsound.h" />
 		<Unit filename="src/selectusersdialog.cpp" />
@@ -399,8 +401,6 @@
 		<Unit filename="src/uiutils.h" />
 		<Unit filename="src/unitsyncthread.cpp" />
 		<Unit filename="src/unitsyncthread.h" />
-		<Unit filename="src/updater/exedownloader.cpp" />
-		<Unit filename="src/updater/exedownloader.h" />
 		<Unit filename="src/updater/updater.cpp" />
 		<Unit filename="src/updater/updater.h" />
 		<Unit filename="src/updater/versionchecker.cpp" />

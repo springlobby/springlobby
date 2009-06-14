@@ -280,8 +280,21 @@ void SpringUnitSyncLib::_Init()
 {
   if ( _IsLoaded() && m_init != NULL )
   {
+    wxLog *currentarget = wxLog::GetActiveTarget();
+    wxLog *templogger = new wxLogGui();
+    wxLog::SetActiveTarget( templogger );
+
     m_current_mod = wxEmptyString;
     m_init( true, 1 );
+
+    wxArrayString errors = GetUnitsyncErrors();
+    for ( unsigned int i = 0; i < errors.GetCount(); i++ )
+    {
+    	wxLogError( _T("%s"), errors[i].c_str() );
+    }
+
+    wxLog::SetActiveTarget( currentarget );
+    delete templogger;
   }
 }
 
@@ -339,8 +352,8 @@ bool SpringUnitSyncLib::_IsLoaded()
 
 void SpringUnitSyncLib::AssertUnitsyncOk()
 {
-  InitLib( m_get_next_error );
-
+	UNITSYNC_EXCEPTION( m_loaded, _T("Unitsync not loaded.") );
+	UNITSYNC_EXCEPTION( m_get_next_error, _T("Function was not in unitsync library.") );
   UNITSYNC_EXCEPTION( false, WX_STRINGC( m_get_next_error() ) );
 }
 
@@ -350,7 +363,8 @@ wxArrayString SpringUnitSyncLib::GetUnitsyncErrors()
   wxArrayString ret;
   try
   {
-    InitLib( m_get_next_error );
+		UNITSYNC_EXCEPTION( m_loaded, _T("Unitsync not loaded.") );
+		UNITSYNC_EXCEPTION( m_get_next_error, _T("Function was not in unitsync library.") );
 
     wxString msg = WX_STRINGC( m_get_next_error() );
     while ( !msg.IsEmpty() )

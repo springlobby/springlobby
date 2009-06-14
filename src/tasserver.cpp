@@ -88,12 +88,29 @@ unsigned int :
     4;
 };
 
-
 //! @brief Union used internally by the TASServer class to get battle status information.
 union UTASBattleStatus
 {
     int data;
     TASBattleStatus tasdata;
+};
+
+//! @brief struct used internallby by tasserver to convert offer file bitfields
+struct OfferFileData
+{
+	bool autoopen :
+		1;
+	bool closelobbyondownload :
+		1;
+	bool disconnectonrefuse :
+		1;
+};
+
+//! @brief Union used internally by the TASServer class to get battle status information.
+union UTASOfferFileData
+{
+    int data;
+    OfferFileData tasdata;
 };
 
 
@@ -662,8 +679,8 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
 					wxString reportstring = _T("stats.report ") + version + _T(" ") + wxversion + _T(" ") + os + aux;
 					if ( UserExists( _T("insanebot") ) ) SayPrivate( _T("insanebot"), reportstring );
 					if ( UserExists( _T("SL_bot") ) ) SayPrivate( _T("SL_bot"), reportstring );
-					if ( UserExists( _T("RelayHostManagerList") ) ) SayPrivate( _T("RelayHostManagerList"), _T("!listmanagers") );
 				}
+				if ( UserExists( _T("RelayHostManagerList") ) ) SayPrivate( _T("RelayHostManagerList"), _T("!listmanagers") );
         m_se->OnLoginInfoComplete();
     }
     else if ( cmd == _T("REMOVEUSER") )
@@ -1057,6 +1074,16 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     {
         m_se->OnMutelistEnd( m_current_chan_name_mutelist );
         m_current_chan_name_mutelist = _T("");
+    }
+    // OFFERFILE options {filename} {url} {description}
+    else if ( cmd == _T("OFFERFILE") )
+    {
+				UTASOfferFileData parsingdata;
+				parsingdata.data = GetIntParam( params );
+				wxString FileName = GetSentenceParam( params );
+				wxString url = GetSentenceParam( params );
+				wxString description = GetSentenceParam( params );
+				m_se->OnFileDownload( parsingdata.tasdata.autoopen, parsingdata.tasdata.closelobbyondownload, parsingdata.tasdata.disconnectonrefuse, FileName, url, description );
     }
     else
     {
@@ -2293,6 +2320,10 @@ int TASServer::TestOpenPort( unsigned int port )
     return porttest_pass;
 }
 
+void TASServer::RequestSpringUpdate()
+{
+	SendCmd( _T("REQUESTUPDATEFILE"), _T("Spring ") + m_required_spring_ver );
+}
 
 ////////////////////////
 // Utility functions

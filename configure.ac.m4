@@ -20,19 +20,19 @@ PKG_PROG_PKG_CONFIG
 usetorrent=yes
 AC_ARG_ENABLE(torrent-system,
  [  --disable-torrent-system  Disable automatic content downloads via torrent (avoids libtorrent dependency)],
- [ usetorrent=no
+ [ usetorrent=$enableval
  ])
 
 sound=yes
 AC_ARG_ENABLE(sound,
  [  --disable-sound Enable sound using SDL, needs SDL],
- [ sound=no
+ [ sound=$enableval
  ])
 
 debug=no
 AC_ARG_ENABLE(debug,
  [  --enable-debug Enable debugging],
- [ debug=yes
+ [ debug=$enableval
  ])
 
 AC_ARG_WITH(sdl-config,[  --with-sdl-config=/path/to/sdl-config (optional) for finding right sdl includes],

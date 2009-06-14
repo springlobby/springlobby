@@ -933,8 +933,6 @@ springlobby_SOURCES = \
 	src/aui/artprovider.cpp \
 	src/updater/updater.h \
 	src/updater/updater.cpp \
-	src/updater/exedownloader.h \
-	src/updater/exedownloader.cpp \
 	src/widgets/downloadlistctrl.cpp \
 	src/widgets/downloadlistctrl.h \
 	src/widgets/downloaddialog.cpp \
