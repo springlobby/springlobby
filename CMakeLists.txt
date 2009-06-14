@@ -28,10 +28,11 @@ SET(CMAKE_FIND_LIBRARY_SUFFIXES ".so" ".lib" ".a")
 FIND_PACKAGE( PkgConfig )
 INCLUDE(cmake/package_config.cmake)
 INCLUDE(CPack)
-INCLUDE(cmake/FindSDL.cmake)
-INCLUDE(cmake/FindSDL_sound.cmake)
-INCLUDE(cmake/FindSDL_mixer.cmake)
-
+IF(CMAKE_CROSSCOMPILING OR NOT WIN32)
+	INCLUDE(cmake/FindSDL.cmake)
+	INCLUDE(cmake/FindSDL_sound.cmake)
+	INCLUDE(cmake/FindSDL_mixer.cmake)
+ENDIF(CMAKE_CROSSCOMPILING OR NOT WIN32)
 
 
 #----------------------------------------------------------------------------------------------------
@@ -88,7 +89,7 @@ ENDIF(NOT CMAKE_CROSSCOMPILING)
 #----------------------------------------------------------------------------------------------------
 IF ( OPTION_SOUND )
 
-	IF (NOT WIN32)
+	IF (CMAKE_CROSSCOMPILING OR NOT WIN32)
 		FIND_PACKAGE(SDL REQUIRED)
 		FIND_PACKAGE(SDL_mixer REQUIRED)
 		FIND_PACKAGE(SDL_sound REQUIRED)
@@ -112,12 +113,14 @@ IF ( OPTION_SOUND )
 		# MESSAGE("mixer inc dir: ${SDLMIXER_INCLUDE_DIR}")
 		# MESSAGE("sound libs: ${SDL_SOUND_LIBRARIES}")
 		# MESSAGE("mixer libs: ${SDLMIXER_LIBRARY}")
-
+	ENDIF(CMAKE_CROSSCOMPILING OR NOT WIN32)
+	
+	IF(NOT WIN32)
 		# Set include paths and libraries to link.
 		INCLUDE_DIRECTORIES( ${SDL_SOUND_INCLUDE_DIR} ${SDLMIXER_INCLUDE_DIR} )
 		LINK_LIBRARIES( # ${SDL_SOUND_LIBRARIES}
 			${SDLMIXER_LIBRARY}  )
-    ELSE(NOT WIN32)
+	ELSE(NOT WIN32)
 		SET(SDL_INCLUDE_DIR "SDL_INCLUDE_DIR_NOT_SET" CACHE PATH "Path to SDL header files (sdl_mixer.h should be in the same dir as well)")
 		SET(SDLMAIN_LIBRARY "SDLMAIN_LIBRARY_NOT_SET" CACHE FILEPATH "Filepath to SDLmain.lib or libsdlmain.a, depending on whether you're using MSVC or MingW")
 		SET(SDL_LIBRARY "SDL_LIBRARY_NOT_SET" CACHE FILEPATH "Filepath to SDL.lib or libsdl.dll.a, depending on whether you're using MSVC or MingW")
@@ -129,7 +132,7 @@ IF ( OPTION_SOUND )
 			INCLUDE_DIRECTORIES( ${sdl_INCLUDE_DIR} )
 			LINK_LIBRARIES(SDLmain SDL SDL_mixer)
 		ENDIF(NOT CMAKE_CROSSCOMPILING)
-    ENDIF (NOT WIN32)
+    ENDIF(NOT WIN32)
 
 ELSE ( OPTION_SOUND )
     # Disable sound.
