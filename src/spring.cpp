@@ -187,7 +187,12 @@ bool Spring::LaunchSpring( const wxString& params  )
 		if ( usync().GetSpringVersion().Contains(_T("0.78.") ) ) configfileflags = _T("");
 		#endif
   }
-  wxString cmd =  _T("\"") + sett().GetCurrentUsedSpringBinary() + _T("\" ") + configfileflags + params;
+  wxChar sep = wxFileName::GetPathSeparator();
+  wxString cmd =  _T("\"") + sett().GetCurrentUsedSpringBinary();
+  #ifdef __WXMAC__
+	if ( sett().GetCurrentUsedSpringBinary().AfterLast(_T('.')) == _T("app") ) cmd += sep + wxString(_T("Contents")) + sep + wxString(_T("MacOS")) + sep + wxString(_T("spring")); // append app bundle inner path
+  #endif
+  cmd += _T("\" ") + configfileflags + params;
   wxLogMessage( _T("spring call params: %s"), cmd.c_str() );
   wxSetWorkingDirectory( sett().GetCurrentUsedDataDir() );
   if ( sett().UseOldSpringLaunchMethod() )
@@ -241,7 +246,13 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 			{
 					tdf.Append( _T("HostIP"), battle.GetHostIp() );
 					tdf.Append( _T("HostPort"), battle.GetHostPort() );
-					if ( battle.GetNatType() == NAT_Hole_punching ) tdf.Append( _T("SourcePort"), battle.GetMyInternalUdpSourcePort() );
+					if ( battle.GetNatType() == NAT_Hole_punching )
+					{
+						tdf.Append( _T("SourcePort"), battle.GetMyInternalUdpSourcePort() );
+					}
+					else if ( sett().GetClientPort() != 0){ /// this allows to play with broken router by setting SourcePort to some forwarded port.
+						tdf.Append( _T("SourcePort"), sett().GetClientPort() );
+					}
 			}
 			tdf.Append( _T("IsHost"), battle.IsFounderMe() );
 

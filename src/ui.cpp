@@ -307,7 +307,9 @@ void Ui::DownloadMap( const wxString& hash, const wxString& name )
 #ifndef NO_TORRENT_SYSTEM
     DownloadFileP2P( hash, name );
 #else
-    wxString url = _T("http://spring.jobjol.nl/search.php");
+		wxString newname = name;
+		newname = name.Replace( _T(" "), _T("+") );
+    wxString url = _T(" http://spring.jobjol.nl/search_result.php?search_cat=1&select_select=select_file_subject&Submit=Search&search=") + newname;
     OpenWebBrowser ( url );
 #endif
 }
@@ -318,7 +320,9 @@ void Ui::DownloadMod( const wxString& hash, const wxString& name )
 #ifndef NO_TORRENT_SYSTEM
     DownloadFileP2P( hash, name );
 #else
-    wxString url = _T("http://spring.jobjol.nl/search.php");
+		wxString newname = name;
+		newname = name.Replace( _T(" "), _T("+") );
+    wxString url = _T(" http://spring.jobjol.nl/search_result.php?search_cat=1&select_select=select_file_subject&Submit=Search&search=") + newname;
     OpenWebBrowser ( url );
 #endif
 }
@@ -563,6 +567,9 @@ void Ui::OnUpdate( int mselapsed )
         if ( sett().GetAutoConnect() ) {
             Connect(); //the start tab is set from UI::onLoggedin
         }
+        else {
+            mw().ShowTab( sett().GetStartTab() );
+        }
 #ifdef __WXMSW__
         if ( sett().GetAutoUpdate() )Updater().CheckForUpdates();
 #endif
@@ -596,7 +603,12 @@ void Ui::OnConnected( Server& server, const wxString& server_name, const wxStrin
     {
 			 sett().SetDefaultServer( server_name );
     }
-    IsSpringCompatible();
+    if ( !IsSpringCompatible() )
+    {
+    	#ifdef __WXMSW__
+    	server.RequestSpringUpdate();
+    	#endif
+    }
 
     if ( server.uidata.panel ) server.uidata.panel->StatusMessage( _T("Connected to ") + server_name + _T(".") );
     mw().GetJoinTab().OnConnected();
@@ -709,7 +721,8 @@ void Ui::SwitchToNextServer()
 		position = ( position + 1) % serverlist.GetCount(); // switch to next in the list
 		m_last_used_backup_server = serverlist[position];
 		sett().SetDefaultServer( m_last_used_backup_server );
-		m_con_win->ReloadServerList();
+		if ( m_con_win ) // we don't necessarily have that constructed yet (autojoin)
+            m_con_win->ReloadServerList();
 		sett().SetDefaultServer( previous_server ); // don't save the new server as default when switched this way
 }
 

@@ -229,8 +229,6 @@ void BattleMapTab::SetMap( int index )
     m_battle.SetLocalMap( map );
 
     m_battle.SendHostInfo( IBattle::HI_Map );
-    for( unsigned int i=0;i<m_battle.GetNumRects();++i) if ( m_battle.GetStartRect( i ).exist ) m_battle.RemoveStartRect(i);
-    m_battle.SendHostInfo( IBattle::HI_StartRects );
   } catch (...) {}
 }
 

@@ -136,6 +136,8 @@ class TASServer : public Server
 
     void SendScriptToClients( const wxString& script );
 
+    void RequestSpringUpdate();
+
   protected:
 
     //! @brief Struct used internally by the TASServer class to calculate ping roundtimes.

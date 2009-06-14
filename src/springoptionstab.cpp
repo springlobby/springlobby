@@ -185,6 +185,11 @@ void SpringOptionsTab::OnBrowseExec( wxCommandEvent& event )
 
 void SpringOptionsTab::OnBrowseSync( wxCommandEvent& event )
 {
+	wxString filefilter = wxString(_("Library")) << _T("(*") << GetLibExtension() << _T(")|*") + GetLibExtension();
+	#ifdef __WXMAC__
+	filefilter << _T("|") << _("Library") << _T("(*.dylib)|*.dylib");
+	#endif
+	filefilter << _T("|")  << wxString(_("Any File")) << _T(" (*.*)|*.*");
   wxFileDialog pick( this, _("Choose UnitSync library"),
 		    wxPathOnly( sett().GetCurrentUsedSpringBinary() ),
 		    _T("unitsync") + GetLibExtension(),

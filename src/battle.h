@@ -40,10 +40,12 @@ class Battle : public IBattle
     void KickPlayer( User& user );
 
     void RingNotReadyPlayers();
+    void RingPlayer( const User& u );
 
     void Say( const wxString& msg );
     void DoAction( const wxString& msg );
 
+    void SetLocalMap( const UnitSyncMap& map );
 
     void OnRequestBattleStatus();
     void SendMyBattleStatus();
@@ -87,6 +89,9 @@ class Battle : public IBattle
     void UserPositionChanged( const User& user );
 
     int GetID() { return m_id; }
+
+    void SaveMapDefaults();
+    void LoadMapDefaults( const wxString& mapname );
 
   protected:
     // Battle variables

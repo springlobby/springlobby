@@ -339,7 +339,7 @@ int IconImageList::GetSideIcon( const wxString& modname, int side )
 	wxString sidename;
 	if( side < (int)sides.GetCount() ) sidename = sides[side];
   wxString cachestring = modname + _T("_") + sidename;
-  if (m_cached_side_icons[cachestring] == 0){
+  if (m_cached_side_icons.find(cachestring)  == m_cached_side_icons.end()){
     try
     {
       int IconPosition = Add(wxBitmap( usync().GetSidePicture( modname , sidename ) ), wxNullBitmap);
@@ -348,10 +348,10 @@ int IconImageList::GetSideIcon( const wxString& modname, int side )
     } catch (...)
     {
       if ( side == 0 ) m_cached_side_icons[cachestring] = ICON_SIDEPIC_0;
-      else if ( side == 1 ) m_cached_side_icons[cachestring] = ICON_SIDEPIC_1;
+      else m_cached_side_icons[cachestring] = ICON_SIDEPIC_1;
     }
-  } else return m_cached_side_icons[cachestring];
-  return -1;
+  }
+  return m_cached_side_icons[cachestring];
 }
 
 int IconImageList::GetReadyIcon( const bool& spectator,const bool& ready, const unsigned int& sync, const bool& bot )

@@ -1,11 +1,14 @@
 
-#include "utils.h"
-#include "settings.h"
 #include <wx/colour.h>
 #include <wx/log.h>
+
+#include "utils.h"
+#include "settings.h"
 #include "iconimagelist.h"
 #include "settings++/custom_dialogs.h"
 #include "uiutils.h"
+
+#include <algorithm>
 
 
 BEGIN_EVENT_TABLE_TEMPLATE1(CustomVirtListCtrl, ListBaseType, T)
@@ -29,6 +32,7 @@ CustomVirtListCtrl<T>::CustomVirtListCtrl(wxWindow* parent, wxWindowID id, const
                 CompareFunction func, bool highlight, UserActions::ActionType hlaction ):
   ListBaseType(parent, id, pt, sz, style | wxLC_VIRTUAL),
   m_tiptimer(this, IDD_TIP_TIMER),
+  m_sort_timer(this, IDD_SORT_TIMER),
   m_tiptext(_T("")),
 #if wxUSE_TIPWINDOW
   m_tipwindow( 0 ),
@@ -221,6 +225,8 @@ void CustomVirtListCtrl<T>::OnTimer(wxTimerEvent& event)
 template < class T >
 void CustomVirtListCtrl<T>::OnMouseMotion(wxMouseEvent& event)
 {
+    m_sort_timer.Stop();
+    m_sort_timer.Start( m_sort_block_time  , wxTIMER_ONE_SHOT );
 #if wxUSE_TIPWINDOW
   //we don't want to display the tooltip again until mouse has moved
   if ( m_last_mouse_pos == event.GetPosition() )
@@ -400,7 +406,7 @@ bool CustomVirtListCtrl<T>::PopupMenu(wxMenu* menu, const wxPoint& pos )
 template < class T >
 void CustomVirtListCtrl<T>::SortList( bool force )
 {
-    if ( !m_dirty_sort && !force )
+    if ( m_sort_timer.IsRunning() ||  ( !m_dirty_sort && !force ) )
         return;
 
     Freeze();
@@ -451,6 +457,10 @@ void CustomVirtListCtrl<T>::OnColClick( wxListEvent& event )
     if ( event.GetColumn() == -1 )
         return;
 
+    m_sort_timer.Stop();//otherwise sorting will be way delayed
+
+    int old_sort_col = m_sortorder[0].col;
+
     wxListItem col;
     GetColumn( m_sortorder[0].col, col );
     col.SetImage( icons().ICON_NONE );
@@ -481,5 +491,10 @@ void CustomVirtListCtrl<T>::OnColClick( wxListEvent& event )
     col.SetImage( ( m_sortorder[0].direction > 0 )?icons().ICON_UP:icons().ICON_DOWN );
     SetColumn( m_sortorder[0].col, col );
 
-    SortList( true );
+    if ( old_sort_col != m_sortorder[0].col )
+        SortList( true );
+    else { // O(n) instead of guaranteed worst case O(n*n)
+        std::reverse( m_data.begin(), m_data.end() );
+        RefreshVisibleItems();
+    }
 }

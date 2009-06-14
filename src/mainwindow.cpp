@@ -117,8 +117,10 @@ MainWindow::MainWindow( Ui& ui )
   menuFile->Append(MENU_CONNECT, _("&Connect..."));
   menuFile->Append(MENU_DISCONNECT, _("&Disconnect"));
   menuFile->AppendSeparator();
+#ifndef NDEBUG
   menuFile->Append(MENU_SAVE_OPTIONS, _("&Save options"));
   menuFile->AppendSeparator();
+#endif
   menuFile->Append(MENU_QUIT, _("&Quit"));
 
   //m_menuEdit = new wxMenu;
