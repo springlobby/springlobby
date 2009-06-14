@@ -67,14 +67,6 @@ const wxSize user_box_icon_size ( USER_BOX_ICON_WIDTH + 2 * USER_BOX_ICON_PADDIN
 
 const wxSize user_box_expanded_size ( USER_BOX_EXPANDED_WIDTH, USER_BOX_EXPANDED_HEIGHT );
 
-// i think this is ok as temp measure to avoid warnings
-// until we drop support for wx26
-#ifdef HAVE_WX28
-#define CONTAINS Contains
-#else
-#define CONTAINS Inside
-#endif
-
 BEGIN_EVENT_TABLE( MapCtrl, wxPanel )
     EVT_PAINT( MapCtrl::OnPaint )
     EVT_SIZE( MapCtrl::OnResize )
@@ -841,23 +833,22 @@ MapCtrl::RectangleArea MapCtrl::GetUserRectArea( const wxRect& userrect, int x, 
     y = y - userrect.y;
     wxRect close = GetUserCloseRect();
 
-//TODO when wx26 support dropped remove macros
-    if ( close.CONTAINS( x, y ) ) return Close;
+    if ( close.Contains( x, y ) ) return Close;
     wxRect side = GetUserSideRect();
-    if ( side.CONTAINS( x, y ) ) return Side;
+    if ( side.Contains( x, y ) ) return Side;
     wxRect AllyUp = GetUserUpAllyButtonRect();
-    if ( AllyUp.CONTAINS( x, y ) ) return UpAllyButton;
+    if ( AllyUp.Contains( x, y ) ) return UpAllyButton;
     wxRect AllyDown = GetUserDownAllyButtonRect();
-    if ( AllyDown.CONTAINS( x, y ) ) return DownAllyButton;
+    if ( AllyDown.Contains( x, y ) ) return DownAllyButton;
     wxRect handicap = GetUserHandicapRect();
-    if ( handicap.CONTAINS( x, y ) ) return Handicap;
+    if ( handicap.Contains( x, y ) ) return Handicap;
     wxRect HandicapUp = GetUserUpHandicapButtonRect();
-    if ( HandicapUp.CONTAINS( x, y ) ) return UpHandicapButton;
+    if ( HandicapUp.Contains( x, y ) ) return UpHandicapButton;
     wxRect HandicapDown = GetUserDownHandicapButtonRect();
-    if ( HandicapDown.CONTAINS( x, y ) ) return DownHandicapButton;
+    if ( HandicapDown.Contains( x, y ) ) return DownHandicapButton;
 
     wxRect bot( 0, 0, USER_BOX_ICON_WIDTH, USER_BOX_ICON_HEIGHT );
-    if ( bot.CONTAINS( x, y ) ) return Move;
+    if ( bot.Contains( x, y ) ) return Move;
 
     return Main;
 }
@@ -1135,7 +1126,7 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
                 return;
             }
             wxRect r = GetUserRect( user, true );
-            if ( r.CONTAINS( event.GetX(), event.GetY() )  )
+            if ( r.Contains( event.GetX(), event.GetY() )  )
             {
                 RectangleArea last = m_rect_area;
                 m_rect_area = GetUserRectArea( r, event.GetX(), event.GetY() );
@@ -1154,7 +1145,7 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
                 User& user = m_battle->GetUser(i);
                 if ( &user == 0 ) continue;
                 wxRect r = GetUserRect( user, false );
-                if ( r.CONTAINS( event.GetX(), event.GetY() )  )
+                if ( r.Contains( event.GetX(), event.GetY() )  )
                 {
                     m_rect_area = GetUserRectArea( r, event.GetX(), event.GetY() );
                     m_user_expanded = &user;
@@ -1171,11 +1162,11 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
         wxRect r = GetRefreshRect();
         wxRect d = GetDownloadRect();
         RectangleArea old = m_rect_area;
-        if ( r.CONTAINS( event.GetX(), event.GetY() ) )
+        if ( r.Contains( event.GetX(), event.GetY() ) )
         {
             m_rect_area = Refreshing;
         }
-        else if ( d.CONTAINS( event.GetX(), event.GetY() ) )
+        else if ( d.Contains( event.GetX(), event.GetY() ) )
         {
             m_rect_area = Download;
         }
@@ -1262,7 +1253,7 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
     }
 
     // Make sure point is inside minimap
-    if ( GetMinimapRect().CONTAINS( p ) )
+    if ( GetMinimapRect().Contains( p ) )
     {
 
         // Check if point is in a startrect.
@@ -1272,15 +1263,15 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
             wxRect r = GetStartRect( i );
             if ( r.IsEmpty() ) continue;
 
-            if ( r.CONTAINS( p ) )
+            if ( r.Contains( p ) )
             {
 
                 if ( !m_ro )
                 {
-                    if      ( (wxRect( r.x + r.width - m_close_img->GetWidth(), r.y + 1, m_close_img->GetWidth(), m_close_img->GetWidth() )).CONTAINS( p ) ) m_rect_area = UpRight;
-                    else if ( (wxRect( r.x, r.y, boxsize, boxsize )).CONTAINS( p ) ) m_rect_area = UpLeft;
-                    else if ( (wxRect( r.x + r.width - boxsize, r.y + r.height - boxsize, boxsize, boxsize )).CONTAINS( p ) ) m_rect_area = DownRight;
-                    //else if ( (wxRect( r.x, r.y + r.height - boxsize, boxsize, boxsize )).CONTAINS( p ) ) m_rect_area = DownLeft;
+                    if      ( (wxRect( r.x + r.width - m_close_img->GetWidth(), r.y + 1, m_close_img->GetWidth(), m_close_img->GetWidth() )).Contains( p ) ) m_rect_area = UpRight;
+                    else if ( (wxRect( r.x, r.y, boxsize, boxsize )).Contains( p ) ) m_rect_area = UpLeft;
+                    else if ( (wxRect( r.x + r.width - boxsize, r.y + r.height - boxsize, boxsize, boxsize )).Contains( p ) ) m_rect_area = DownRight;
+                    //else if ( (wxRect( r.x, r.y + r.height - boxsize, boxsize, boxsize )).Contains( p ) ) m_rect_area = DownLeft;
                     else m_rect_area = Main;
                 }
                 SetMouseOverRect( i );
