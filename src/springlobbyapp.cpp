@@ -204,21 +204,11 @@ bool SpringLobbyApp::OnInit()
 			}
 			if ( sett().GetSettingsVersion() < 11 )
 			{
-		  #ifdef __WXMSW__
-				wxRegKey UACpath( _T("HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System") ); // check if UAC is on, skip dialog if not
-				if( UACpath.Exists() )
-				{
-					long value;
-					if( UACpath.QueryValue( _T("EnableLUA"), &value ) ) // reg key not present -> not vista
-					{
-						if( value != 0 )
-						{
-							usync().ReloadUnitSyncLib();
-							if ( usync().IsLoaded() ) usync().SetSpringDataPath(_T("")); // UAC is on, fix the spring data path
-						}
-					}
-				}
-			#endif
+                if( IsUACenabled() )
+                {
+                    usync().ReloadUnitSyncLib();
+                    if ( usync().IsLoaded() ) usync().SetSpringDataPath(_T("")); // UAC is on, fix the spring data path
+                }
 			}
 			if ( sett().GetSettingsVersion() < 12 )
 			{

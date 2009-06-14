@@ -606,9 +606,7 @@ void MainWindow::OnMenuSelectLocale( wxCommandEvent& event )
 
 void MainWindow::OnShowChannelChooser( wxCommandEvent& event )
 {
-//    ShowChannelChooser();
-    VISTASUCKS();
-
+    ShowChannelChooser();
 }
 
 void MainWindow::OnChannelList( const wxString& channel, const int& numusers, const wxString& topic )
@@ -651,28 +649,3 @@ const MainWindow::TabNames& MainWindow::GetTabNames()
     return m_tab_names;
 }
 
-#ifdef __WXMSW__
-//#include <stdafx.h>
-#include <windows.h>
-#include <shellapi.h>
-
-int VISTASUCKS()
-{
-      SHELLEXECUTEINFO shExecInfo;
-
-      shExecInfo.cbSize = sizeof(SHELLEXECUTEINFO);
-
-      shExecInfo.fMask = NULL;
-      shExecInfo.hwnd = NULL;
-      shExecInfo.lpVerb = L"runas";
-      shExecInfo.lpFile = L"notepad.exe";
-      shExecInfo.lpParameters = NULL;
-      shExecInfo.lpDirectory = NULL;
-      shExecInfo.nShow = SW_MAXIMIZE;
-      shExecInfo.hInstApp = NULL;
-
-      ShellExecuteEx(&shExecInfo);
-
-      return 0;
-}
-#endif

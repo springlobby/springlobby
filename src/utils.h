@@ -199,6 +199,12 @@ int ConvertWXArrayToC(const wxArrayString& aChoices, wxString **choices);
     \return true if successful
 */
 bool CopyDir( wxString origin, wxString destination, bool overwrite = true);
+
+/** \brief execute command with admin temp eleveation **/
+int WinExecuteAdmin( const wxString& command, const wxString& params );
+
+//! returns false on !win, checks for regkey on win
+bool IsUACenabled();
 #endif // SPRINGLOBBY_HEADERGUARD_UTILS_H
 
 /**

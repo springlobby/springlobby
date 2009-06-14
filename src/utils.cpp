@@ -373,3 +373,48 @@ bool CopyDir( wxString from, wxString to, bool overwrite )
     }
     return true;
 }
+
+bool IsUACenabled()
+{
+#ifdef __WXMSW__
+    wxRegKey UACpath( _T("HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System") ); // check if UAC is on, skip dialog if not
+    if( UACpath.Exists() )
+    {
+        long value;
+        if( UACpath.QueryValue( _T("EnableLUA"), &value ) ) // reg key not present -> not vista
+        {
+            if( value != 0 )
+            {
+                return true;
+            }
+        }
+    }
+#endif
+    return false;
+}
+
+#ifdef __WXMSW__
+#include <windows.h>
+#include <shellapi.h>
+
+int WinExecuteAdmin( const wxString& command, const wxString& params )
+{
+      SHELLEXECUTEINFO shExecInfo;
+
+      shExecInfo.cbSize = sizeof(SHELLEXECUTEINFO);
+
+      shExecInfo.fMask = NULL;
+      shExecInfo.hwnd = NULL;
+      shExecInfo.lpVerb = L"runas";
+      shExecInfo.lpFile = L"notepad.exe";
+      shExecInfo.lpParameters = NULL;
+      shExecInfo.lpDirectory = NULL;
+      shExecInfo.nShow = SW_MAXIMIZE;
+      shExecInfo.hInstApp = NULL;
+
+      ShellExecuteEx(&shExecInfo);
+
+      return 0;
+}
+
+#endif
