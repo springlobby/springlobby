@@ -10,7 +10,7 @@ IF(NOT MSVC)
 	ADD_DEFINITIONS(-Wall -Wno-strict-aliasing)
 ENDIF(NOT MSVC)
 IF(WIN32)
-	ADD_DEFINITIONS( -DWXUSINGDLL -D_WIN32_WINNT=0x0501)
+	ADD_DEFINITIONS( -DWXUSINGDLL -D__WXMSW__ -D_WIN32_WINNT=0x0501)
 ENDIF(WIN32)
 
 
@@ -28,11 +28,9 @@ SET(CMAKE_FIND_LIBRARY_SUFFIXES ".so" ".lib" ".a")
 FIND_PACKAGE( PkgConfig )
 INCLUDE(cmake/package_config.cmake)
 INCLUDE(CPack)
-IF(NOT WIN32)
-	INCLUDE(cmake/FindSDL.cmake)
-	INCLUDE(cmake/FindSDL_sound.cmake)
-	INCLUDE(cmake/FindSDL_mixer.cmake)
-ENDIF(NOT WIN32)
+INCLUDE(cmake/FindSDL.cmake)
+INCLUDE(cmake/FindSDL_sound.cmake)
+INCLUDE(cmake/FindSDL_mixer.cmake)
 
 
 
@@ -45,19 +43,13 @@ SET( OPTION_TORRENT_SYSTEM
 SET( OPTION_SOUND
 	1 CACHE BOOL
 	"Enables sound notification functionality (requires SDL and SDL_sound libraries)" )
+SET( OPTION_TRANSLATION_SUPPORT
+	1 CACHE BOOL
+	"Enables translation support to the programs and adds facilities for helping translators (requires GNU Gettext)" )
 SET( BUILD_SHARED_LIBS
 	1 CACHE BOOL
 	"Chooses whether to link dynamic or static libraries. Recommend keeping this activated unless you know what you're doing." )
-#disable gettext support by default on windows, if you need it and have built gettext on mingw you can activate this option.
-IF(WIN32)
-SET( OPTION_TRANSLATION_SUPPORT
-	0 CACHE BOOL
-	"Enables translation support to the programs and adds facilities for helping translators (requires GNU Gettext)" )
-ELSE(WIN32)
-SET( OPTION_TRANSLATION_SUPPORT
-	1 CACHE BOOL
-	"Enables translation support to the programs and adds facilities for helping translators (requires GNU Gettext)" )
-ENDIF(WIN32)
+
 
 #----------------------------------------------------------------------------------------------------
 # wxWidgets lib dependency check
@@ -65,6 +57,7 @@ ENDIF(WIN32)
 
 # Here you can define, what Libraries of wxWidgets you need for your Application. You can figure out what Libraries you need here:
 # http://www.wxwidgets.org/manuals/2.8/wx_librarieslist.html
+IF(NOT CMAKE_CROSSCOMPILING)
 SET(wxWidgets_USE_LIBS base core net adv aui html xml )
 
 # We need the Find package for wxWidgets to work
@@ -76,21 +69,19 @@ IF(wxWidgets_FOUND)
 	INCLUDE(${wxWidgets_USE_FILE})
 	IF(MSVC)
 		INCLUDE_DIRECTORIES( ${wxWidgets_ROOT_DIR}/include/msvc )
-		LINK_DIRECTORIES(${wxWidgets_ROOT_DIR}/vc_dll)
-	ELSEIF(MINGW)
-		LINK_DIRECTORIES(${wxWidgets_ROOT_DIR}/gcc_dll)
 	ENDIF(MSVC)
+	IF(MINGW)
+		SET(wxWidgets_RC_DIR ${wxWidgets_ROOT_DIR}/include)
+	ENDIF(MINGW)
 	INCLUDE_DIRECTORIES( ${wxWidgets_INCLUDE_DIRS} )
-	
 ELSE(wxWidgets_FOUND)
 	# For Convenience. If we cannot continue, inform the User.
 	MESSAGE( FATAL_ERROR "wxWidgets library is not found! Please install the package to continue")
 ENDIF(wxWidgets_FOUND)
-#ELSE (NOT WIN32)
-#    INCLUDE_DIRECTORIES( ${wxWidgets_INCLUDE_DIRS} )
-#    SET(wxWidgets_LIBRARIES wx_baseu-2.8-i586-mingw32msvc wx_mswu_core-2.8-i586-mingw32msvc wx_baseu_net-2.8-i586-mingw32msvc wx_mswu_adv-2.8-i586-mingw32msvc  wx_mswu_aui-2.8-i586-mingw32msvc )
-#    link_directories( ${wxWidgets_LIB_DIR} )
-#ENDIF(NOT WIN32)
+ELSE (NOT CMAKE_CROSSCOMPILING)
+    INCLUDE_DIRECTORIES( ${wxWidgets_INCLUDE_DIRS} )
+    link_directories( ${wxWidgets_LIB_DIR} )
+ENDIF(NOT CMAKE_CROSSCOMPILING)
 
 #----------------------------------------------------------------------------------------------------
 # SDL libs dependency check
@@ -131,12 +122,13 @@ IF ( OPTION_SOUND )
 		SET(SDLMAIN_LIBRARY "SDLMAIN_LIBRARY_NOT_SET" CACHE FILEPATH "Filepath to SDLmain.lib or libsdlmain.a, depending on whether you're using MSVC or MingW")
 		SET(SDL_LIBRARY "SDL_LIBRARY_NOT_SET" CACHE FILEPATH "Filepath to SDL.lib or libsdl.dll.a, depending on whether you're using MSVC or MingW")
 		SET(SDLMIXER_LIBRARY "SDLMIXER_LIBRARY_NOT_SET" CACHE FILEPATH "Filepath to SDL_mixer.lib or libSDL_mixer.dll.a, depending on whether you're using MSVC or MingW")
-		IF(EXISTS ${SDL_INCLUDE_DIR} AND EXISTS ${SDLMAIN_LIBRARY} AND EXISTS ${SDL_LIBRARY} AND EXISTS ${SDLMIXER_LIBRARY})
+		IF(NOT CMAKE_CROSSCOMPILING)
 			INCLUDE_DIRECTORIES( ${SDL_INCLUDE_DIR})
 			LINK_LIBRARIES(${SDLMAIN_LIBRARY} ${SDL_LIBRARY} ${SDLMIXER_LIBRARY})
-		ELSE (EXISTS ${SDL_INCLUDE_DIR} AND EXISTS ${SDLMAIN_LIBRARY} AND EXISTS ${SDL_LIBRARY} AND EXISTS ${SDLMIXER_LIBRARY})
-			message ( FATAL_ERROR "SDL files not found! Please install the package or toggle OPTION_SOUND to OFF" )
-		ENDIF (EXISTS ${SDL_INCLUDE_DIR} AND EXISTS ${SDLMAIN_LIBRARY} AND EXISTS ${SDL_LIBRARY} AND EXISTS ${SDLMIXER_LIBRARY})
+		ELSE(NOT CMAKE_CROSSCOMPILING)
+			INCLUDE_DIRECTORIES( ${sdl_INCLUDE_DIR} )
+			LINK_LIBRARIES(SDLmain SDL SDL_mixer)
+		ENDIF(NOT CMAKE_CROSSCOMPILING)
     ENDIF (NOT WIN32)
 
 ELSE ( OPTION_SOUND )
@@ -177,27 +169,26 @@ IF( OPTION_TORRENT_SYSTEM )
 		    MESSAGE(FATAL_ERROR "libtorrent-rasterbar library is not found! Please install the package or toggle OPTION_TORRENT_SYSTEM to OFF")
 	    ENDIF()
 	ELSE( NOT WIN32)
-		SET(Boost_DEBUG ON)
-		SET(Boost_USE_STATIC_LIBS OFF)
-		SET(Boost_USE_MULTITHREADED ON)
-		SET(Boost_ADDITIONAL_VERSIONS 1.35 1.35.0 1.38 1.38.0)
-		FIND_PACKAGE(Boost COMPONENTS system thread filesystem date_time)	
 	    INCLUDE_DIRECTORIES(${SpringLobby_SOURCE_DIR}/src/libtorrent/include
 				${SpringLobby_SOURCE_DIR}/src/libtorrent/zlib
 				${SpringLobby_SOURCE_DIR}/src/libtorrent/ )
 	    INCLUDE ( ${SpringLobby_SOURCE_DIR}/cmake/libtorrent.cmake )
 	    ADD_DEFINITIONS( -DBOOST_WINDOWS -DTORRENT_DISABLE_ENCRYPTION )
-		INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIRS} )
-		
+		IF(NOT CMAKE_CROSSCOMPILING)
+			SET(Boost_USE_STATIC_LIBS OFF)
+			SET(Boost_USE_MULTITHREADED ON)
+			SET(Boost_ADDITIONAL_VERSIONS 1.35 1.35.0 1.38 1.38.0)
+			FIND_PACKAGE(Boost COMPONENTS system thread filesystem date_time)
+			INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIRS} )
+		ELSE(NOT CMAKE_CROSSCOMPILING)
+			link_directories( ${boost_LIB_DIR} )
+			INCLUDE_DIRECTORIES( ${boost_INCLUDE_DIR} )
+		ENDIF(NOT CMAKE_CROSSCOMPILING)
 	ENDIF( NOT WIN32)
 ELSE( OPTION_TORRENT_SYSTEM )
 	ADD_DEFINITIONS( -DNO_TORRENT_SYSTEM )
 ENDIF( OPTION_TORRENT_SYSTEM )
 
-# boost and others needed on win
-#IF ( WIN32 )
- #   INCLUDE_DIRECTORIES( ${boost_INCLUDE_DIR} )
-#ENDIF ( WIN32 )
 
 #----------------------------------------------------------------------------------------------------
 # Source listing
@@ -344,13 +335,13 @@ SET(SLSharedWithSettings
 
 # If we build for windows Systems, we also include the Resource-File containing the Manifest, Icon and other Resources.
 IF(WIN32)
-	IF(MINGW)
+	IF(MINGW OR CMAKE_CROSSCOMPILING)
 		FIND_PROGRAM(WINDRES NAMES windres i586-mingw32msvc-windres i686-mingw32-windres DOC "path to mingw's windres executable")
-		ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/sl_icon.o COMMAND ${WINDRES} -I${SpringLobby_SOURCE_DIR}/src -I${wxWidgets_ROOT_DIR}/include -i${SpringLobby_SOURCE_DIR}/src/springlobby.rc -o ${CMAKE_CURRENT_BINARY_DIR}/sl_icon.o)
-		ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/ss_icon.o COMMAND ${WINDRES} -I${SpringLobby_SOURCE_DIR}/src -I${wxWidgets_ROOT_DIR}/include -i${SpringLobby_SOURCE_DIR}/src/settings++/settings.rc -o ${CMAKE_CURRENT_BINARY_DIR}/ss_icon.o)
+		ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/sl_icon.o COMMAND ${WINDRES} -I${SpringLobby_SOURCE_DIR}/src -I${wxWidgets_RC_DIR} -i${SpringLobby_SOURCE_DIR}/src/springlobby.rc -o ${CMAKE_CURRENT_BINARY_DIR}/sl_icon.o)
+		ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/ss_icon.o COMMAND ${WINDRES} -I${SpringLobby_SOURCE_DIR}/src -I${wxWidgets_RC_DIR} -i${SpringLobby_SOURCE_DIR}/src/settings++/settings.rc -o ${CMAKE_CURRENT_BINARY_DIR}/ss_icon.o)
 		SET(SpringLobby_RC_FILE ${CMAKE_CURRENT_BINARY_DIR}/sl_icon.o )
 		SET(SpringSettings_RC_FILE ${CMAKE_CURRENT_BINARY_DIR}/ss_icon.o )
-	ENDIF(MINGW)
+	ENDIF(MINGW OR CMAKE_CROSSCOMPILING)
 
 	SET(SpringLobbySrc ${SpringLobbySrc} src/Helper/listctrl.cpp)
 	SET(SpringLobbySrc ${SpringLobbySrc} src/springlobby.rc)
@@ -391,16 +382,20 @@ endif( OPTION_TRANSLATION_SUPPORT )
 
 #auto-remove whitespaces before/after lib paths
 cmake_policy(SET CMP0004 OLD)
+#ignore warnings about macosx app bundle output dir
 cmake_policy(SET CMP0006 OLD)
 
-IF(WIN32)
+
+ADD_EXECUTABLE(springlobby WIN32 MACOSX_BUNDLE ${SpringLobbySrc} ${SettingsSrc} ${SpringLobby_RC_FILE})
+ADD_EXECUTABLE(springsettings WIN32 MACOSX_BUNDLE ${StandAloneSettings} ${SpringSettings_RC_FILE} ${SettingsSrc} ${SLSharedWithSettings} )
+
+#build libtorrent as a static lib to link in on windows
+IF(WIN32 AND OPTION_TORRENT_SYSTEM)
 ADD_LIBRARY(libtorrent STATIC ${libtorrent_SRC})
 SET_TARGET_PROPERTIES(libtorrent PROPERTIES COMPILE_FLAGS -DWIN32_LEAN_AND_MEAN)
 TARGET_LINK_LIBRARIES( libtorrent ${Boost_LIBRARIES} ws2_32 mswsock )
-ENDIF(WIN32)
-#libtsource is empty if "NOT WIN32"
-ADD_EXECUTABLE(springlobby WIN32 MACOSX_BUNDLE ${SpringLobbySrc} ${SettingsSrc} ${SpringLobby_RC_FILE})
-ADD_EXECUTABLE(springsettings WIN32 MACOSX_BUNDLE ${StandAloneSettings} ${SpringSettings_RC_FILE} ${SettingsSrc} ${SLSharedWithSettings} )
+TARGET_LINK_LIBRARIES( springlobby libtorrent )
+ENDIF(WIN32 AND OPTION_TORRENT_SYSTEM)
 
 
 # Here the wxWidgets Libraries are added. These are set for us by the FIND Script. If you need other Libraries, you can add them here as well.
@@ -412,7 +407,6 @@ IF(MINGW)
 ENDIF(MINGW)
 
 IF (WIN32)
-	TARGET_LINK_LIBRARIES( springlobby libtorrent )
     install(TARGETS springlobby springsettings RUNTIME DESTINATION .)
     install(FILES AUTHORS COPYING NEWS README THANKS DESTINATION .)
 ELSE (WIN32)
