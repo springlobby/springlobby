@@ -246,7 +246,13 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 			{
 					tdf.Append( _T("HostIP"), battle.GetHostIp() );
 					tdf.Append( _T("HostPort"), battle.GetHostPort() );
-					if ( battle.GetNatType() == NAT_Hole_punching ) tdf.Append( _T("SourcePort"), battle.GetMyInternalUdpSourcePort() );
+					if ( battle.GetNatType() == NAT_Hole_punching )
+					{
+						tdf.Append( _T("SourcePort"), battle.GetMyInternalUdpSourcePort() );
+					}
+					else if ( sett().GetClientPort() != 0){ /// this allows to play with broken router by setting SourcePort to some forwarded port.
+						tdf.Append( _T("SourcePort"), sett().GetClientPort() );
+					}
 			}
 			tdf.Append( _T("IsHost"), battle.IsFounderMe() );
 

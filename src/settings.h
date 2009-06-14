@@ -129,7 +129,7 @@ class Settings
     bool GetNoUDP();
     void SetNoUDP(bool value);
 
-    int GetClientPort();
+    int GetClientPort();/// use zero to pick port automatically, nonzero to override. This allows to play if you have broken router, by setting SourcePort to some forwarded port.
     void SetClientPort(int value);
 
     bool GetShowIPAddresses();
