@@ -888,7 +888,6 @@ springlobby_SOURCES = \
 	src/globalevents.h \
 	src/globalevents.cpp \
 	src/httpdownloader.h \
-	src/httpdownloader.cpp \
 	src/Helper/TextCompletionDatabase.hpp \
 	src/Helper/TextCompletionDatabase.cpp \
 	src/Helper/wxTranslationHelper.h \
