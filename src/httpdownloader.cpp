@@ -14,12 +14,12 @@
 #include <wx/log.h>
 #include <memory>
 
-#include "httpdownloader.h"
+
 #include "utils.h"
 #include "globalevents.h"
 
 template <class ParentClass>
-HttpDownloaderThread::HttpDownloaderThread(  const wxString& FileUrl, const wxString& DestPath, ParentClass& parent, int code, const bool notify, const bool unzip, const wxString& noticeErr, const wxString& noticeOk   ) :
+HttpDownloaderThread<ParentClass>::HttpDownloaderThread(  const wxString& FileUrl, const wxString& DestPath, ParentClass& parent, int code, const bool notify, const bool unzip, const wxString& noticeErr, const wxString& noticeOk   ) :
        // m_calling_class(CallingClass),
         m_destroy(false),
         m_destpath(DestPath),
@@ -35,19 +35,20 @@ HttpDownloaderThread::HttpDownloaderThread(  const wxString& FileUrl, const wxSt
     Init();
 }
 
-
-HttpDownloaderThread::~HttpDownloaderThread()
+template <class ParentClass>
+HttpDownloaderThread<ParentClass>::~HttpDownloaderThread()
 {
 }
 
-void HttpDownloaderThread::Init()
+template <class ParentClass>
+void HttpDownloaderThread<ParentClass>::Init()
 {
     Create();
     Run();
 }
 
 template <class ParentClass>
-void* HttpDownloaderThread::Entry()
+void* HttpDownloaderThread<ParentClass>::Entry()
 {
     wxHTTP FileDownloading;
     // normal timeout is 10 minutes.. set to 10 secs.
@@ -106,7 +107,8 @@ void* HttpDownloaderThread::Entry()
     return NULL;
 }
 
-bool HttpDownloaderThread::Unzip()
+template <class ParentClass>
+bool HttpDownloaderThread<ParentClass>::Unzip()
 {
     try
     {
@@ -148,13 +150,14 @@ bool HttpDownloaderThread::Unzip()
 
 }
 
-bool HttpDownloaderThread::TestDestroy()
+template <class ParentClass>
+bool HttpDownloaderThread<ParentClass>::TestDestroy()
 {
     return m_destroy;
 }
 
-
-void HttpDownloaderThread::CloseThread()
+template <class ParentClass>
+void HttpDownloaderThread<ParentClass>::CloseThread()
 {
     m_destroy = true;
 }

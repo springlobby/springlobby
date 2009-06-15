@@ -7,7 +7,7 @@
 const wxEventType httpDownloadEvtComplete = wxNewEventType();
 const wxEventType httpDownloadEvtFailed = wxNewEventType();
 
-template <class ParentClass>
+template < class ParentClass >
 class HttpDownloaderThread : public Thread
 		{
 		public:
