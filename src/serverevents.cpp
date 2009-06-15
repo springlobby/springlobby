@@ -930,7 +930,7 @@ void ServerEvents::OnFileDownload( bool autolaunch, bool autoclose, bool disconn
 		m_autolaunch = autolaunch;
 		m_savepath = sett().GetCurrentUsedDataDir() + FileName;
 		customMessageBox(SL_MAIN_ICON, _("Download started in the background, please be patient\nyou will be notified on operation completed."), _("Download started"));
-		//new HttpDownloaderThread( url, m_savepath, *this, wxID_HIGHEST + 100, true, false );
+		new HttpDownloaderThread<ServerEvents>( url, m_savepath, *this, wxID_HIGHEST + 100, true, false );
 	}
 	else
 	{
