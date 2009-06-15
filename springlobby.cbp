@@ -233,7 +233,6 @@
 		<Unit filename="src/groupoptionspanel.h" />
 		<Unit filename="src/hostbattledialog.cpp" />
 		<Unit filename="src/hostbattledialog.h" />
-		<Unit filename="src/httpdownloader.cpp" />
 		<Unit filename="src/httpdownloader.h" />
 		<Unit filename="src/ibattle.cpp" />
 		<Unit filename="src/ibattle.h" />
