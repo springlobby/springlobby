@@ -9,7 +9,6 @@ class Ui;
 struct UserStatus;
 struct UserBattleStatus;
 class Server;
-class HttpDownloaderThread;
 
 // FIXME this is defined elsewhere, should use a different kind of type so we could use forward decl
 typedef int Sockerror;
