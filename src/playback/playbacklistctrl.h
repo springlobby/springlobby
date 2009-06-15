@@ -32,6 +32,7 @@ class PlaybackListCtrl : public CustomVirtListCtrl< const PlaybackImp* >
     using ParentType::m_comparator;
     using ParentType::m_tiptimer;
     using ParentType::m_tiptext;
+    using ParentType::m_colinfovec;
     using ParentType::m_tooltip_delay;
     using ParentType::m_tooltip_duration;
     using ParentType::DataVector;
@@ -49,8 +50,9 @@ class PlaybackListCtrl : public CustomVirtListCtrl< const PlaybackImp* >
     void OnListRightClick( wxListEvent& event );
     void OnDLMap( wxCommandEvent& event );
     void OnDLMod( wxCommandEvent& event );
-    void OnMouseMotion(wxMouseEvent& event);
     void OnColClick( wxListEvent& event );
+
+    virtual void SetTipWindowText( const long item_hit, const wxPoint position);
 
     virtual void HighlightItem( long item ){};
 

@@ -93,6 +93,8 @@ class BattleRoomTab : public wxScrolledWindow
 
     long AddMMOptionsToList( long pos, OptionsWrapper::GameOption optFlag );
 
+    void SplitSizerHorizontally( const bool horizontal );
+
     Ui& m_ui;
     Battle& m_battle;
     UnitSyncMap m_map;
@@ -125,7 +127,7 @@ class BattleRoomTab : public wxScrolledWindow
 
     MapCtrl * m_minimap;
 
-    wxPanel* m_player_panel;
+    wxScrolledWindow* m_player_panel;
 
 		wxComboBox* m_map_combo;
 

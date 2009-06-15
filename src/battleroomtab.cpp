@@ -113,7 +113,8 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
 
     UserBattleStatus& myself = m_battle.GetMe().BattleStatus();
 
-    m_player_panel = new wxPanel( m_splitter , -1 );
+    m_player_panel = new wxScrolledWindow( m_splitter , -1 );
+    m_player_panel->SetScrollRate( 3, 3 );
     m_team_sel = new wxComboBox( m_player_panel, BROOM_TEAMSEL, _T("1"), wxDefaultPosition, wxSize(50,CONTROL_HEIGHT), team_choices );
     m_team_sel->SetToolTip(TE(_("Players with the same team number share control of their units.")));
     m_ally_sel = new wxComboBox( m_player_panel, BROOM_ALLYSEL, _T("1"), wxDefaultPosition, wxSize(50,CONTROL_HEIGHT), ally_choices );
@@ -289,7 +290,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
 
     m_player_panel->SetSizer( m_players_sizer );
 
-    m_splitter->SplitHorizontally( m_player_panel, m_chat );
+    SplitSizerHorizontally( sett().GetSplitBRoomHorizontally() );
 
     //m_info1_sizer->Add( m_wind_lbl, 1, wxEXPAND );
     //m_info1_sizer->Add( m_size_lbl, 1, wxEXPAND );
@@ -370,6 +371,15 @@ BattleRoomTab::~BattleRoomTab()
     if (GetAui().manager)GetAui().manager->DetachPane( this );
 }
 
+void BattleRoomTab::SplitSizerHorizontally( const bool horizontal )
+{
+    if ( m_splitter->IsSplit() )
+        m_splitter->Unsplit();
+    if ( horizontal )
+        m_splitter->SplitHorizontally( m_player_panel, m_chat );
+    else
+        m_splitter->SplitVertically( m_player_panel, m_chat );
+}
 
 bool BattleRoomTab::IsHosted()
 {
@@ -497,12 +507,19 @@ void BattleRoomTab::UpdateUser( User& user )
     m_ally_sel->SetSelection( bs.ally );
     m_side_sel->SetSelection( bs.side );
     m_spec_chk->SetValue( bs.spectator );
-
+		if ( IsHosted() && !m_battle.IsProxy() && !bs.ready ) m_battle.SetImReady( true );
     // Enable or disable widgets' sensitivity as appropriate.
     if ( bs.spectator )
     {
-        m_ready_chk->SetValue ( true );
-        m_ready_chk->Disable();
+				if ( m_battle.GetBattleType() == BT_Played )
+				{
+					m_ready_chk->SetValue ( true );
+					m_ready_chk->Disable();
+				}
+				else
+				{
+					m_ready_chk->Enable();
+				}
         m_side_sel->Disable();
         m_ally_sel->Disable();
         m_team_sel->Disable();
@@ -513,7 +530,6 @@ void BattleRoomTab::UpdateUser( User& user )
         {
             m_ready_chk->Enable();
         }
-
         m_ready_chk->SetValue( bs.ready );
         m_side_sel->Enable();
         m_ally_sel->Enable();
@@ -545,15 +561,12 @@ void BattleRoomTab::OnStart( wxCommandEvent& event )
 
     if ( !m_battle.IsEveryoneReady() )
     {
-        int answer = customMessageBox( SL_MAIN_ICON, _("Some players are not ready yet.\nRing these players?"), _("Not ready"), wxYES_NO );
-        if ( answer == wxYES )
-        {
-            m_battle.RingNotReadyPlayers();
-            return;
-        }
-        answer = customMessageBox( SL_MAIN_ICON, _("Force start?"), _("Not ready"), wxYES_NO );
+        int answer = customMessageBox( SL_MAIN_ICON, _("Some Players are not ready yet\nDo you want to force start?"), _("Not ready"), wxYES_NO );
         if ( answer == wxNO ) return;
     }
+
+		m_battle.SaveMapDefaults(); // save map presets
+
     m_ui.StartHostedBattle();
 }
 
@@ -847,10 +860,7 @@ void BattleRoomTab::SetMap( int index )
   {
     UnitSyncMap map = usync().GetMapEx( index );
     m_battle.SetLocalMap( map );
-
     m_battle.SendHostInfo( IBattle::HI_Map );
-    for( unsigned int i=0;i<m_battle.GetNumRects();++i) if ( m_battle.GetStartRect( i ).exist ) m_battle.RemoveStartRect(i);
-    m_battle.SendHostInfo( IBattle::HI_StartRects );
   } catch (...) {}
 }
 

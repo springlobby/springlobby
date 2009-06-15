@@ -55,7 +55,7 @@ bool SL_WinConf::DoWriteLong(const wxString& key, long lValue)
 
 Settings::Settings()
 {
-  #if defined(__WXMSW__)
+  #if defined(__WXMSW__) || defined(__WXMAC__)
   wxString userfilepath = wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator() + _T("springlobby.conf");
   wxString globalfilepath =  GetExecutableFolder() + wxFileName::GetPathSeparator() + _T("springlobby.conf");
 
@@ -91,9 +91,11 @@ Settings::Settings()
   {
       // TODO: error handling
   }
-
+	#ifdef __WXMSW__
   m_config = new SL_WinConf( instream );
-
+  #else
+  m_config = new wxFileConfig( instream );
+  #endif
   #else
   //removed temporarily because it's suspected to cause a bug with userdir creation
  // m_config = new wxConfig( _T("SpringLobby"), wxEmptyString, _T(".springlobby/springlobby.conf"), _T("springlobby.global.conf"), wxCONFIG_USE_LOCAL_FILE | wxCONFIG_USE_GLOBAL_FILE  );
@@ -114,7 +116,7 @@ void Settings::SaveSettings()
   SetCacheVersion();
   SetSettingsVersion();
   m_config->Flush();
-  #if defined(__WXMSW__)
+  #if defined(__WXMSW__) || defined(__WXMAC__)
   wxFileOutputStream outstream( m_chosed_path );
 
   if ( !outstream.IsOk() )
@@ -1612,6 +1614,51 @@ void Settings::SetBattleFilterActivState(const bool state)
     m_config->Write( _T("/BattleFilter/Active") , state );
 }
 
+void Settings::SetMapLastStartPosType( const wxString& mapname, const wxString& startpostype )
+{
+		m_config->Write( _T("/Hosting/MapLastValues/") + mapname + _T("/startpostype"), startpostype );
+}
+
+void Settings::SetMapLastRectPreset( const wxString& mapname, std::vector<Settings::SettStartBox> rects )
+{
+	wxString basepath = _T("/Hosting/MapLastValues/") + mapname + _T("/Rects");
+	m_config->DeleteGroup( basepath );
+	for ( std::vector<Settings::SettStartBox>::iterator itor = rects.begin(); itor != rects.end(); itor++ )
+	{
+		SettStartBox box = *itor;
+		wxString additionalpath = basepath + _T("/Rect") + TowxString(box.ally) + _T("/");
+		m_config->Write( additionalpath + _T("TopLeftX"), box.topx );
+		m_config->Write( additionalpath + _T("TopLeftY"), box.topy );
+		m_config->Write( additionalpath + _T("BottomRightX"), box.bottomx );
+		m_config->Write( additionalpath + _T("BottomRightY"), box.bottomy );
+		m_config->Write( additionalpath + _T("AllyTeam"), box.ally );
+	}
+}
+
+wxString Settings::GetMapLastStartPosType( const wxString& mapname )
+{
+	return m_config->Read( _T("/Hosting/MapLastValues/") + mapname + _T("/startpostype"), _T("") );
+}
+
+std::vector<Settings::SettStartBox> Settings::GetMapLastRectPreset( const wxString& mapname )
+{
+	wxString basepath = _T("/Hosting/MapLastValues/") + mapname + _T("/Rects");
+	wxArrayString boxes = GetGroupList( basepath );
+	std::vector<Settings::SettStartBox> ret;
+	for ( unsigned int i = 0; i < boxes.GetCount(); i++ )
+	{
+		wxString additionalpath = basepath + _T("/") + boxes[i] + _T("/");
+		SettStartBox box;
+		box.topx = m_config->Read( additionalpath + _T("TopLeftX"), -1 );
+		box.topy = m_config->Read( additionalpath + _T("TopLeftY"), -1 );
+		box.bottomx = m_config->Read( additionalpath + _T("BottomRightX"), -1 );
+		box.bottomy = m_config->Read( additionalpath + _T("BottomRightY"), -1 );
+		box.ally = m_config->Read( additionalpath + _T("AllyTeam"), -1 );
+		ret.push_back( box );
+	}
+	return ret;
+}
+
 bool Settings::GetDisableSpringVersionCheck()
 {
     bool ret;
@@ -2238,6 +2285,16 @@ int Settings::GetSashPosition( const wxString& window_name )
 void Settings::SetSashPosition( const wxString& window_name, const int pos )
 {
     m_config->Write(_T("/GUI/SashPostion/") + window_name , pos );
+}
+
+bool Settings::GetSplitBRoomHorizontally()
+{
+    return m_config->Read(_T("/GUI/SplitBRoomHorizontally") , 1l );
+}
+
+void Settings::SetSplitBRoomHorizontally( const bool vertical )
+{
+    m_config->Write(_T("/GUI/SplitBRoomHorizontally") , vertical );
 }
 
 void Settings::SetStartTab( const int idx )

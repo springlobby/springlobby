@@ -38,6 +38,7 @@ const bool DEFSETT_WEB_BROWSER_USE_DEFAULT = true;
 
 class wxWindow;
 class wxConfigBase;
+class wxFileConfig;
 class wxFont;
 struct BattleListFilterValues;
 struct PlaybackListFilterValues;
@@ -128,7 +129,7 @@ class Settings
     bool GetNoUDP();
     void SetNoUDP(bool value);
 
-    int GetClientPort();
+    int GetClientPort();/// use zero to pick port automatically, nonzero to override. This allows to play if you have broken router, by setting SourcePort to some forwarded port.
     void SetClientPort(int value);
 
     bool GetShowIPAddresses();
@@ -329,6 +330,9 @@ class Settings
 
     int GetSashPosition( const wxString& window_name );
     void SetSashPosition( const wxString& window_name, const int pos );
+
+    bool GetSplitBRoomHorizontally();
+    void SetSplitBRoomHorizontally( const bool vertical );
 
     /*@}*/
 
@@ -538,6 +542,21 @@ class Settings
     wxString GetLastBattleFilterProfileName();
     void SetBattleFilterActivState( const bool state );
     bool GetBattleFilterActivState( ) const;
+
+    struct SettStartBox
+    {
+    	int ally;
+    	int topx;
+    	int topy;
+    	int bottomx;
+    	int bottomy;
+    };
+
+    void SetMapLastStartPosType( const wxString& mapname, const wxString& startpostype );
+		void SetMapLastRectPreset( const wxString& mapname, std::vector<Settings::SettStartBox> rects );
+
+		wxString GetMapLastStartPosType( const wxString& mapname );
+		std::vector<Settings::SettStartBox> GetMapLastRectPreset( const wxString& mapname );
     /**@}*/
 
     /** @name Replay filters
@@ -668,6 +687,8 @@ class Settings
 
     #ifdef __WXMSW__
     SL_WinConf* m_config; //!< wxConfig object to store and restore  all settings in.
+    #elif defined(__WXMAC__)
+    wxFileConfig* m_config; //!< wxConfig object to store and restore  all settings in.
     #else
     wxConfigBase* m_config; //!< wxConfig object to store and restore  all settings in.
     #endif

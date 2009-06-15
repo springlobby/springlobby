@@ -254,9 +254,7 @@ int BattleroomListCtrl::OnGetItemColumnImage(long item, long column) const
             try {
                 wxArrayString sides = usync().GetSides( m_battle->GetHostModName() );
                 ASSERT_EXCEPTION( user.BattleStatus().side < (long)sides.GetCount(), _T("Side index too high") );
-                int sideimg = icons().GetSideIcon( m_battle->GetHostModName(), user.BattleStatus().side );
-                if ( sideimg >= 0 )
-                    return sideimg;
+                return icons().GetSideIcon( m_battle->GetHostModName(), user.BattleStatus().side );
             }
             catch ( ... ) {}
 
@@ -288,9 +286,6 @@ wxString BattleroomListCtrl::OnGetItemText(long item, long column) const
             try {
                 wxArrayString sides = usync().GetSides( m_battle->GetHostModName() );
                 ASSERT_EXCEPTION( user.BattleStatus().side < (long)sides.GetCount(), _T("Side index too high") );
-                int sideimg = icons().GetSideIcon( m_battle->GetHostModName(), user.BattleStatus().side );
-                if ( sideimg < 0 )
-                    return sides[user.BattleStatus().side];
             }
             catch ( ... ) {
                 return wxString::Format( _T("s%d"), user.BattleStatus().side + 1 );
@@ -710,7 +705,6 @@ int BattleroomListCtrl::CompareHandicap(const DataType user1, const DataType use
 
 void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint position)
 {
-
     if ( item_hit < 0 || item_hit >= (long)m_data.size() )
         return;
 
