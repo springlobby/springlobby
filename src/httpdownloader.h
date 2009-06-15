@@ -7,10 +7,11 @@
 const wxEventType httpDownloadEvtComplete = wxNewEventType();
 const wxEventType httpDownloadEvtFailed = wxNewEventType();
 
+template <class ParentClass>
 class HttpDownloaderThread : public Thread
 		{
 		public:
-				HttpDownloaderThread(  const wxString& FileUrl, const wxString& DestPath, wxEvtHandler& parent, int code = 0, const bool notify = true, const bool unzip = true, const wxString& noticeErr = wxEmptyString, const wxString& noticeOk = wxEmptyString );
+				HttpDownloaderThread(  const wxString& FileUrl, const wxString& DestPath, ParentClass& parent, int code = 0, const bool notify = true, const bool unzip = true, const wxString& noticeErr = wxEmptyString, const wxString& noticeOk = wxEmptyString );
 				~HttpDownloaderThread();
 				void Init();
 				void* Entry();
@@ -30,10 +31,11 @@ class HttpDownloaderThread : public Thread
 
 				int m_id_code;
 
-				wxEvtHandler& m_parent;
+				ParentClass& m_parent;
 
 };
 
+#include "httpdownloader.cpp"
 
 #endif // SPRINGLOBBY_HEADERGUARD_HTTPDOWNLOADER
 

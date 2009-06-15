@@ -18,8 +18,8 @@
 #include "utils.h"
 #include "globalevents.h"
 
-
-HttpDownloaderThread::HttpDownloaderThread(  const wxString& FileUrl, const wxString& DestPath, wxEvtHandler& parent, int code, const bool notify, const bool unzip, const wxString& noticeErr, const wxString& noticeOk   ) :
+template <class ParentClass>
+HttpDownloaderThread::HttpDownloaderThread(  const wxString& FileUrl, const wxString& DestPath, ParentClass& parent, int code, const bool notify, const bool unzip, const wxString& noticeErr, const wxString& noticeOk   ) :
        // m_calling_class(CallingClass),
         m_destroy(false),
         m_destpath(DestPath),
@@ -35,6 +35,7 @@ HttpDownloaderThread::HttpDownloaderThread(  const wxString& FileUrl, const wxSt
     Init();
 }
 
+
 HttpDownloaderThread::~HttpDownloaderThread()
 {
 }
@@ -45,7 +46,7 @@ void HttpDownloaderThread::Init()
     Run();
 }
 
-
+template <class ParentClass>
 void* HttpDownloaderThread::Entry()
 {
     wxHTTP FileDownloading;
@@ -79,7 +80,7 @@ void* HttpDownloaderThread::Entry()
 								}
 								if ( m_noticeOk != wxEmptyString ) notice.SetString(m_noticeOk);
 								notice.SetInt( FileDownloading.GetError() );
-                wxPostEvent( &m_parent, notice );
+								wxPostEvent( &m_parent, notice );
             }
             return NULL;
         }
