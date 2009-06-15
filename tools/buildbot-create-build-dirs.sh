@@ -53,3 +53,5 @@ if [ -e /usr/bin/g++-4.4 ] ; then
 else
 	create-build-dir-cmake build-cmake "-DCMAKE_CXX_FLAGS:STRING=-O0"	
 fi
+
+create-build-dir-cmake build-cmake-win "-DCMAKE_TOOLCHAIN_FILE:STRING=../cmake/Toolchain-mingw32.cmake -DCMAKE_CXX_FLAGS:STRING=-O0"
