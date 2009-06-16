@@ -14,6 +14,7 @@
 
 #include <wx/timer.h>
 #define IDD_TIP_TIMER 696
+#define IDD_SORT_TIMER 697
 
 #include <vector>
 
@@ -42,6 +43,8 @@ protected:
     typedef UserActions::ActionType ActionType;
     //! used to display tooltips for a certain amount of time
     wxTimer m_tiptimer;
+    //! used to block sorting while mouse is moving
+    wxTimer m_sort_timer;
     //! always set to the currrently displayed tooltip text
     wxString m_tiptext;
     #if wxUSE_TIPWINDOW
@@ -54,6 +57,7 @@ protected:
     struct colInfo {
         colInfo(int n, wxString l, wxString t, bool c, int s):
             col_num(n),label(l),tip(t),can_resize(c),size(s) {}
+        colInfo(){}
 
         int col_num;
         wxString label;
@@ -71,6 +75,7 @@ protected:
      */
     static const unsigned int m_tooltip_delay    = 1000;
     static const unsigned int m_tooltip_duration = 2000;
+    static const unsigned int m_sort_block_time  = 1500;
 
 /*** these are only meaningful in single selection lists ***/
     //! index of curently selected data
@@ -183,6 +188,7 @@ protected:
 
     //! must be implemented in derived classes, should call the actual sorting on data and refreshitems
     virtual void Sort( ) = 0;
+
 public:
     /** only sorts if data is marked dirty, or force is true
      * calls Freeze(), Sort(), Thaw() */
@@ -207,6 +213,7 @@ public:
     long GetSelectedIndex();
     void SetSelectedIndex(const long newindex);
     DataType GetDataFromIndex ( const  long index );
+    const DataType GetDataFromIndex ( const  long index ) const;
     DataType GetSelectedData();
     /** @}
      */
@@ -246,7 +253,7 @@ public:
     // funcs that should make things easier for group highlighting
     ///all that needs to be implemented in child class for UpdateHighlights to work
 
-    wxListItemAttr* HighlightItemUser( long item, const wxString& name ) const;
+    wxListItemAttr* HighlightItemUser( const wxString& name ) const;
 
     void SetHighLightAction( UserActions::ActionType action );
     void RefreshVisibleItems();
@@ -272,7 +279,6 @@ public:
       * @{
      */
     virtual wxString OnGetItemText(long item, long column) const = 0;
-    virtual int OnGetItemImage(long item) const = 0;
     virtual int OnGetItemColumnImage(long item, long column) const = 0;
     /** @}
      */
@@ -283,17 +289,22 @@ public:
      //! handle sort order updates
      void OnColClick( wxListEvent& event );
 
+     virtual int GetIndexFromData( const DataType& data ) const = 0;
+
 protected:
-    typedef std::vector< DataImp > DataVector;
-    typedef typename DataVector::iterator DataIter;
-    typedef typename DataVector::const_iterator DataCIter;
+    typedef std::vector< DataImp >
+        DataVector;
+    typedef typename DataVector::iterator
+        DataIter;
+    typedef typename DataVector::const_iterator
+        DataCIter;
     DataVector m_data;
 
-    typedef DataType SelectedDataType;
-    typedef std::vector< SelectedDataType > SelectedDataVector;
+    typedef DataType
+        SelectedDataType;
+    typedef std::vector< SelectedDataType >
+        SelectedDataVector;
     SelectedDataVector m_selected_data;
-
-    virtual int GetIndexFromData( const DataType& data ) const = 0;
 
     //! the Comparator object passed to the SLInsertionSort function
     ItemComparator<DataType> m_comparator;
@@ -305,3 +316,21 @@ public:
 #include "customvirtlistctrl.cpp"
 
 #endif /*CUSTOMLISTITEM_H_*/
+
+/**
+    This file is part of SpringLobby,
+    Copyright (C) 2007-09
+
+    springsettings is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License version 2 as published by
+    the Free Software Foundation.
+
+    springsettings is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SpringLobby.  If not, see <http://www.gnu.org/licenses/>.
+**/
+

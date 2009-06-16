@@ -22,6 +22,7 @@
 #include "userlist.h"
 #include "battle.h"
 #include "singleplayerbattle.h"
+#include "offlinebattle.h"
 #include "user.h"
 #include "iunitsync.h"
 #include "nonportable.h"
@@ -54,12 +55,12 @@ Spring::~Spring()
 }
 
 
-bool Spring::IsRunning()
+bool Spring::IsRunning() const
 {
     return m_process != 0;
 }
 
-bool Spring::RunReplay ( wxString& filename )
+bool Spring::RunReplay ( const wxString& filename )
 {
   wxLogMessage( _T("launching spring with replay: ") + filename );
 
@@ -143,6 +144,33 @@ bool Spring::Run( SinglePlayerBattle& battle )
   return LaunchSpring( _T("\"") + path + _T("\"") );
 }
 
+bool Spring::Run( OfflineBattle& battle )
+{
+
+  wxString path = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("script.txt");
+
+  try
+  {
+
+    if ( !wxFile::Access( path, wxFile::write ) )
+    {
+      wxLogError( _T("Access denied to script.txt.") );
+    }
+
+    wxFile f( path, wxFile::write );
+    f.Write( WriteScriptTxt(battle) );
+    f.Close();
+
+  } catch (...)
+  {
+    wxLogError( _T("Couldn't write script.txt") );
+    return false;
+  }
+
+  return LaunchSpring( _T("\"") + path + _T("\"") );
+}
+
+
 bool Spring::LaunchSpring( const wxString& params  )
 {
   if ( m_running )
@@ -153,13 +181,18 @@ bool Spring::LaunchSpring( const wxString& params  )
   wxString configfileflags = sett().GetCurrentUsedSpringConfigFilePath();
   if ( !configfileflags.IsEmpty() )
   {
-		#ifndef __WXMSW__
+
 		configfileflags = _T("--config=\"") + configfileflags + _T("\" ");
-		#else
-		configfileflags = _T(""); // _T("/config \"") + configfileflags + _T("\" ");
+		#ifdef __WXMSW__
+		if ( usync().GetSpringVersion().Contains(_T("0.78.") ) ) configfileflags = _T("");
 		#endif
   }
-  wxString cmd =  _T("\"") + sett().GetCurrentUsedSpringBinary() + _T("\" ") + configfileflags + params;
+  wxChar sep = wxFileName::GetPathSeparator();
+  wxString cmd =  _T("\"") + sett().GetCurrentUsedSpringBinary();
+  #ifdef __WXMAC__
+	if ( sett().GetCurrentUsedSpringBinary().AfterLast(_T('.')) == _T("app") ) cmd += sep + wxString(_T("Contents")) + sep + wxString(_T("MacOS")) + sep + wxString(_T("spring")); // append app bundle inner path
+  #endif
+  cmd += _T("\" ") + configfileflags + params;
   wxLogMessage( _T("spring call params: %s"), cmd.c_str() );
   wxSetWorkingDirectory( sett().GetCurrentUsedDataDir() );
   if ( sett().UseOldSpringLaunchMethod() )
@@ -191,7 +224,7 @@ void Spring::OnTerminated( wxCommandEvent& event )
 }
 
 
-wxString Spring::WriteScriptTxt( IBattle& battle )
+wxString Spring::WriteScriptTxt( IBattle& battle ) const
 {
     wxLogMessage(_T("0 WriteScriptTxt called "));
 
@@ -213,7 +246,13 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 			{
 					tdf.Append( _T("HostIP"), battle.GetHostIp() );
 					tdf.Append( _T("HostPort"), battle.GetHostPort() );
-					if ( battle.GetNatType() == NAT_Hole_punching ) tdf.Append( _T("SourcePort"), battle.GetMyInternalUdpSourcePort() );
+					if ( battle.GetNatType() == NAT_Hole_punching )
+					{
+						tdf.Append( _T("SourcePort"), battle.GetMyInternalUdpSourcePort() );
+					}
+					else if ( sett().GetClientPort() != 0){ /// this allows to play with broken router by setting SourcePort to some forwarded port.
+						tdf.Append( _T("SourcePort"), sett().GetClientPort() );
+					}
 			}
 			tdf.Append( _T("IsHost"), battle.IsFounderMe() );
 
@@ -239,11 +278,34 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 
 			tdf.AppendLineBreak();
 
-			tdf.Append(_T("ModHash"), battle.LoadMod().hash);
-			tdf.Append(_T("MapHash"), battle.LoadMap().hash);
+			tdf.Append(_T("ModHash"), battle.LoadMod().hash );
+			tdf.Append(_T("MapHash"), battle.LoadMap().hash );
 
 			tdf.Append( _T("Mapname"), battle.GetHostMapName() );
 			tdf.Append( _T("GameType"), battle.GetHostModName() );
+
+			tdf.AppendLineBreak();
+
+			switch ( battle.GetBattleType() )
+			{
+				case BT_Played: break;
+				case BT_Replay:
+				{
+					wxString path = battle.GetPlayBackFilePath();
+					if ( path.Contains(_T("/")) ) path.BeforeLast(_T('/'));
+					tdf.Append( _T("DemoFile"), path );
+					tdf.AppendLineBreak();
+					break;
+				}
+				case BT_Savegame:
+				{
+					wxString path = battle.GetPlayBackFilePath();
+					if ( path.Contains(_T("/")) ) path.BeforeLast(_T('/'));
+					tdf.Append( _T("Savefile"), path );
+					tdf.AppendLineBreak();
+					break;
+				}
+			}
 
 			long startpostype;
 			battle.CustomBattleOptions().getSingleValue( _T("startpostype"), OptionsWrapper::EngineOption ).ToLong( &startpostype );
@@ -293,20 +355,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 
 			unsigned int NumUsers = battle.GetNumUsers();
 
-			std::map<int, int> m_ally_map; // spring wants consegutive allies, this maps non consegutive allies to consegutive
 
-			for ( unsigned int i = 0; i < NumUsers; i++ )
-			{
-					User& usr = battle.GetUser( i );
-					if ( usr.BattleStatus().spectator ) continue; // skip spectators
-					m_ally_map[ usr.BattleStatus().ally ] = usr.BattleStatus().ally;
-			}
-			int progressive_ally = 0;
-			for ( std::map<int, int>::iterator itor = m_ally_map.begin(); itor != m_ally_map.end(); itor++ ) // fill the map with numers in cosegutive progression
-			{
-				itor->second = progressive_ally;
-				progressive_ally++;
-			}
 			std::map<User*, int> player_to_number; // player -> ordernumber
 
 			for ( unsigned int i = 0; i < NumUsers; i++ )
@@ -318,7 +367,8 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 							tdf.Append( _T("Name"), user.GetNick() );
 							tdf.Append( _T("CountryCode"), user.GetCountry().Lower());
 							tdf.Append( _T("Spectator"), status.spectator );
-							tdf.Append( _T("Rank"), user.GetRank() );
+							tdf.Append( _T("Rank"), (int)user.GetRank() );
+							tdf.Append( _T("IsFromDemo"), int(status.isfromdemo) );
 							if ( !status.spectator )
 							{
 								tdf.Append( _T("Team"), status.team );
@@ -352,6 +402,17 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 								tdf.Append( _T("Version"), status.aiversion ); // AI libtype version
 								tdf.Append( _T("Team"), status.team );
 								tdf.Append( _T("Host"), player_to_number[&battle.GetUser( status.owner )] );
+								tdf.EnterSection( _T("Options") );
+									int optionmapindex = battle.CustomBattleOptions().GetAIOptionIndex( user.GetNick() );
+									if ( optionmapindex > 0 )
+									{
+										OptionsWrapper::wxStringTripleVec optlistMod = battle.CustomBattleOptions().getOptions( (OptionsWrapper::GameOption)optionmapindex );
+										for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistMod.begin(); it != optlistMod.end(); ++it)
+										{
+												tdf.Append(it->first,it->second.second);
+										}
+									}
+								tdf.LeaveSection();
 						tdf.LeaveSection();
 						player_to_number[&user] = i;
 				}
@@ -361,16 +422,16 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 
 
 			wxArrayString sides = usync().GetSides( battle.GetHostModName() );
-			int PreviousTeam = -1;
+			std::set<int> parsedteams;
 			for ( unsigned int i = 0; i < NumUsers; i++ )
 			{
 					User& usr = battle.GetUser( i );
 					UserBattleStatus& status = usr.BattleStatus();
 					if ( status.spectator ) continue;
-					if ( PreviousTeam == status.team ) continue; // skip duplicates
-					PreviousTeam = status.team;
+					if ( parsedteams.find( status.team ) != parsedteams.end() ) continue; // skip duplicates
+					parsedteams.insert( status.team );
 
-					tdf.EnterSection( _T("TEAM") + i2s( PreviousTeam ) );
+					tdf.EnterSection( _T("TEAM") + i2s( status.team ) );
 						if ( !usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) && status.IsBot() )
 						{
 								tdf.Append( _T("AIDLL"), status.aishortname );
@@ -394,7 +455,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 								tdf.Append(_T("StartPosZ"), status.pos.y );
 						}
 
-						tdf.Append( _T("AllyTeam"), m_ally_map[status.ally] );
+						tdf.Append( _T("AllyTeam"),status.ally );
 
 						wxString colourstring =
 								TowxString( status.colour.Red()/255.0 ) + _T(' ') +
@@ -410,32 +471,34 @@ wxString Spring::WriteScriptTxt( IBattle& battle )
 
 			tdf.AppendLineBreak();
 
-			int PreviousAlly = -1;
-			for ( unsigned int i = 0; i < NumUsers; i++ )
+
+			int maxiter = std::max( NumUsers, battle.GetNumRects() );
+			std::set<int> parsedallys;
+			for ( unsigned int i = 0; i < maxiter; i++ )
 			{
+
 					User& usr = battle.GetUser( i );
 					UserBattleStatus& status = usr.BattleStatus();
-					if ( status.spectator ) continue;
-					if ( PreviousAlly == status.ally ) continue; // skip duplicates
-					PreviousAlly = status.ally;
+					BattleStartRect sr = battle.GetStartRect( i );
+					if ( status.spectator && !sr.IsOk() ) continue;
+					int ally = status.ally;
+					if ( status.spectator ) ally = i;
+					if ( parsedallys.find( ally ) != parsedallys.end() ) continue; // skip duplicates
+					sr = battle.GetStartRect( ally );
+					parsedallys.insert( status.ally );
 
-					tdf.EnterSection( _T("ALLYTEAM") + i2s( m_ally_map[PreviousAlly] ) );
+					tdf.EnterSection( _T("ALLYTEAM") + i2s( ally ) );
 						tdf.Append( _T("NumAllies"), 0 );
-
-						if ( startpostype == IBattle::ST_Choose )
+						if ( sr.IsOk() )
 						{
-								BattleStartRect sr = battle.GetStartRect( status.ally );
-								if ( sr.IsOk() )
-								{
-										const char* old_locale = std::setlocale(LC_NUMERIC, "C");
+								const char* old_locale = std::setlocale(LC_NUMERIC, "C");
 
-										tdf.Append( _T("StartRectLeft"), wxString::Format( _T("%.3f"), sr.left / 200.0 ) );
-										tdf.Append( _T("StartRectTop"), wxString::Format( _T("%.3f"), sr.top / 200.0 ) );
-										tdf.Append( _T("StartRectRight"), wxString::Format( _T("%.3f"), sr.right / 200.0 ) );
-										tdf.Append( _T("StartRectBottom"), wxString::Format( _T("%.3f"), sr.bottom / 200.0 ) );
+								tdf.Append( _T("StartRectLeft"), wxString::Format( _T("%.3f"), sr.left / 200.0 ) );
+								tdf.Append( _T("StartRectTop"), wxString::Format( _T("%.3f"), sr.top / 200.0 ) );
+								tdf.Append( _T("StartRectRight"), wxString::Format( _T("%.3f"), sr.right / 200.0 ) );
+								tdf.Append( _T("StartRectBottom"), wxString::Format( _T("%.3f"), sr.bottom / 200.0 ) );
 
-										std::setlocale(LC_NUMERIC, old_locale);
-								}
+								std::setlocale(LC_NUMERIC, old_locale);
 						}
 					tdf.LeaveSection();
 			}

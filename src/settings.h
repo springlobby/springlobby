@@ -2,9 +2,10 @@
 #define SPRINGLOBBY_HEADERGUARD_SETTINGS_H
 
 #include <wx/string.h>
+#include <vector>
 
 const int CACHE_VERSION     = 9;
-const int SETTINGS_VERSION  = 11;
+const int SETTINGS_VERSION  = 13;
 
 const wxString DEFSETT_DEFAULT_SERVER_NAME= _T("Official server");
 const wxString DEFSETT_DEFAULT_SERVER_HOST = _T("taspringmaster.clan-sy.com");
@@ -37,9 +38,10 @@ const bool DEFSETT_WEB_BROWSER_USE_DEFAULT = true;
 
 class wxWindow;
 class wxConfigBase;
+class wxFileConfig;
 class wxFont;
 struct BattleListFilterValues;
-struct ReplayListFilterValues;
+struct PlaybackListFilterValues;
 class wxFileInputStream;
 class wxFileName;
 class wxColor;
@@ -50,6 +52,12 @@ class wxPoint;
 class wxPathList;
 
 typedef std::map<unsigned int,unsigned int> ColumnMap;
+
+struct ChannelJoinInfo
+{
+	wxString name;
+	wxString password;
+};
 
 class SL_WinConf : public wxFileConfig
 {
@@ -91,6 +99,8 @@ class Settings
     wxArrayString GetGroupList( const wxString& base_key );
     /// list all groups subkeys of a parent group
     wxArrayString GetEntryList( const wxString& base_key );
+    /// counts all groups subkeys of a parent group
+		unsigned int GetGroupCount( const wxString& base_key );
 
     bool IsPortableMode();
     void SetPortableMode( bool mode );
@@ -124,7 +134,7 @@ class Settings
     bool GetNoUDP();
     void SetNoUDP(bool value);
 
-    int GetClientPort();
+    int GetClientPort();/// use zero to pick port automatically, nonzero to override. This allows to play if you have broken router, by setting SourcePort to some forwarded port.
     void SetClientPort(int value);
 
     bool GetShowIPAddresses();
@@ -240,17 +250,6 @@ class Settings
     int GetNumChannelsJoin();
 
 
-    /** Set the number of channels currently in the autojoin list.  This
-     * function is not intended for direct use, and will probably go away soon.
-     *
-     * @internal
-     *
-     * @param num The new maximum number of channels we think are in the
-     * autojoin list.
-     */
-    void SetNumChannelsJoin( int num );
-
-
     /** Add a channel to the autojoin list.
      */
     void AddChannelJoin( const wxString& channel , const wxString& key );
@@ -262,32 +261,36 @@ class Settings
     void RemoveChannelJoin( const wxString& channel );
 
 
-    /** Determine the index of a channel name in the autojoin list.
+    /** Returns the list of channels to autojoin
      *
-     * @param channel A channel name
-     *
-     * @returns The channel's autojoin list index, or @c -1 if it was not found.
+     * @returns std::vector of ChannelJoinInfo struct, don't break ordering index!
      */
-    int GetChannelJoinIndex( const wxString& channel );
+    std::vector<ChannelJoinInfo> GetChannelsJoin();
 
 
-    /** Fetch the name corresponding to the given index in the autojoin list.
+    /** Deletes all autojoined channels
      *
-     * @param index A channel index
-     *
-     * @returns The name corresponding to @c index, or an empty string if it was
-     * not found.
      */
-    wxString GetChannelJoinName( int index );
-    /**@}*/
+    void RemoveAllChannelsJoin();
+
+    /** Returns the join order of a channel
+     *
+     * @returns the order of the channel during autojoin or -1 if not found
+     */
+		int GetChannelJoinIndex( const wxString& name );
+
+    void ConvertOldChannelSettings();
 
     bool ShouldAddDefaultChannelSettings();
-
+		/**@}*/
 
     /* ================================================================ */
     /** @name UI
      * @{
      */
+
+     void SetStartTab( const int idx );
+     unsigned int GetStartTab( );
 
      void SaveCustomColors( const wxColourData& cdata, const wxString& paletteName = _T("Default") );
      wxColourData GetCustomColors( const wxString& paletteName = _T("Default") );
@@ -330,6 +333,12 @@ class Settings
     void SetLanguageID ( const long id );
     long GetLanguageID ( );
 
+    int GetSashPosition( const wxString& window_name );
+    void SetSashPosition( const wxString& window_name, const int pos );
+
+    bool GetSplitBRoomHorizontally();
+    void SetSplitBRoomHorizontally( const bool vertical );
+
     /*@}*/
 
     /* ================================================================ */
@@ -362,10 +371,15 @@ class Settings
 
     void ConvertOldSpringDirsOptions();
 
+		void RefreshSpringVersionList();
     std::map<wxString, wxString> GetSpringVersionList(); /// index -> version
     wxString GetCurrentUsedSpringIndex();
     void SetUsedSpringIndex( const wxString& index );
     void DeleteSpringVersionbyIndex( const wxString& index );
+
+    /// when this mode is enabled in windows SL will search for spring files only in the current executable folder
+    void SetSearchSpringOnlyInSLPath( bool value );
+    bool GetSearchSpringOnlyInSLPath();
 
     /// convenience wrappers to get current used version paths
     wxString GetCurrentUsedDataDir();
@@ -434,9 +448,8 @@ class Settings
     void SetDisplayJoinLeave( bool display, const wxString& channel  );
     bool GetDisplayJoinLeave( const wxString& channel );
 
-    //!@brief expects words to be a ; seperated list
-    void SetHighlightedWords( const wxString& words );
-    wxString GetHighlightedWords( );
+    void SetHighlightedWords( const wxArrayString& words );
+    wxArrayString GetHighlightedWords( );
 
     //!\brief controls if user attention is requested when highlighting a line
     void SetRequestAttOnHighlight( const bool req );
@@ -449,6 +462,7 @@ class Settings
     bool GetAlwaysAutoScrollOnFocusLost();
     void SetAlwaysAutoScrollOnFocusLost(bool value);
 
+		void ConvertOldHiglightSettings();
 
     /* ================================================================ */
     /** @name Hosting
@@ -533,13 +547,28 @@ class Settings
     wxString GetLastBattleFilterProfileName();
     void SetBattleFilterActivState( const bool state );
     bool GetBattleFilterActivState( ) const;
+
+    struct SettStartBox
+    {
+    	int ally;
+    	int topx;
+    	int topy;
+    	int bottomx;
+    	int bottomy;
+    };
+
+    void SetMapLastStartPosType( const wxString& mapname, const wxString& startpostype );
+		void SetMapLastRectPreset( const wxString& mapname, std::vector<Settings::SettStartBox> rects );
+
+		wxString GetMapLastStartPosType( const wxString& mapname );
+		std::vector<Settings::SettStartBox> GetMapLastRectPreset( const wxString& mapname );
     /**@}*/
 
     /** @name Replay filters
      * @{
      */
-    ReplayListFilterValues GetReplayFilterValues(const wxString& profile_name = (_T("default")));
-    void SetReplayFilterValues(const ReplayListFilterValues& blfValues, const wxString& profile_name = _T("default"));
+    PlaybackListFilterValues GetReplayFilterValues(const wxString& profile_name = (_T("default")));
+    void SetReplayFilterValues(const PlaybackListFilterValues& blfValues, const wxString& profile_name = _T("default"));
     wxString GetLastReplayFilterProfileName();
     void SetReplayFilterActivState( const bool state );
     bool GetReplayFilterActivState( ) const;
@@ -663,6 +692,8 @@ class Settings
 
     #ifdef __WXMSW__
     SL_WinConf* m_config; //!< wxConfig object to store and restore  all settings in.
+    #elif defined(__WXMAC__)
+    wxFileConfig* m_config; //!< wxConfig object to store and restore  all settings in.
     #else
     wxConfigBase* m_config; //!< wxConfig object to store and restore  all settings in.
     #endif
@@ -670,8 +701,28 @@ class Settings
     wxString m_chosed_path;
     bool m_portable_mode;
 
+    std::map<wxString, wxString> m_spring_versions;
+
 };
 
 Settings& sett();
 
 #endif // SPRINGLOBBY_HEADERGUARD_SETTINGS_H
+
+/**
+    This file is part of SpringLobby,
+    Copyright (C) 2007-09
+
+    springsettings is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License version 2 as published by
+    the Free Software Foundation.
+
+    springsettings is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SpringLobby.  If not, see <http://www.gnu.org/licenses/>.
+**/
+

@@ -5,6 +5,7 @@
 
 //including this header is only really needed for time_t ..
 #include <wx/string.h>
+#include <wx/arrstr.h>
 
 class Battle;
 class User;
@@ -31,6 +32,25 @@ class AutoHost
 
     bool m_enabled;
     time_t m_lastActionTime;
+    wxArrayString m_userlist;
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_AUTOHOST_H
+
+/**
+    This file is part of SpringLobby,
+    Copyright (C) 2007-09
+
+    springsettings is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License version 2 as published by
+    the Free Software Foundation.
+
+    springsettings is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SpringLobby.  If not, see <http://www.gnu.org/licenses/>.
+**/
+

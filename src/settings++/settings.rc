@@ -1,2 +1,2 @@
-springsettings ICON "images/springsettings.ico"
+springsettings ICON "../images/springsettings.ico"
 #include <wx/msw/wx.rc>

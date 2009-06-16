@@ -63,7 +63,7 @@ MapSelectDialog::MapSelectDialog(wxWindow* parent,Ui& ui)
 	wxBoxSizer* boxSizerVertical;
 	wxStdDialogButtonSizer* StdDialogButtonSizer1;
 
-	Create(parent, wxID_ANY, _("Select map"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX, _T("wxID_ANY"));
+	Create(parent, wxID_ANY, _("Select map (click and drag to scroll)"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX, _T("wxID_ANY"));
 	BoxSizer1 = new wxBoxSizer(wxHORIZONTAL);
 	BoxSizer2 = new wxBoxSizer(wxVERTICAL);
 	StaticText2 = new wxStaticText(this, ID_STATICTEXT2, _("Vertical sort key"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT2"));
@@ -201,7 +201,7 @@ void MapSelectDialog::OnInit( wxInitDialogEvent& event )
     m_vertical_direction_button->SetLabel( m_vertical_direction ? _T("ᴧ") : _T("ᴠ") );
 
 	m_maps = usync().GetMapList();
-	usync().GetReplayList( m_replays );
+	m_replays = usync().GetPlaybackList( true ); //true meaning replays, flase meaning savegames
 
     const unsigned int lastFilter = sett().GetMapSelectorFilterRadio();
 	m_filter_popular->Enable( m_ui.IsConnected() );
@@ -401,8 +401,9 @@ void MapSelectDialog::LoadRecent()
 	for ( int i = 0; i < count; ++i ) {
 		// prefix and suffix with underscore to prevent most common partial matches
 		const wxString mapname = _T("_") + m_maps[i].BeforeLast( '.' ) + _T("_");
-		for (std::vector< wxString >::const_iterator it = m_replays.begin(); it != m_replays.end(); ++it) {
-			if ( it->Contains( mapname ) )
+		unsigned int replaycount = m_replays.GetCount();
+		for ( int replaynum = 0; replaynum < replaycount; replaynum++ ) {
+			if ( m_replays[replaynum].Contains( mapname ) )
 				m_mapgrid->AddMap( m_maps[i] );
 		}
 	}

@@ -14,6 +14,7 @@
 #include "utils.h"
 #include "Helper/colorbutton.h"
 #include "filelister/filelistdialog.h"
+#include "widgets/downloaddialog.h"
 #include "aui/auimanager.h"
 
 BEGIN_EVENT_TABLE(MainTorrentTab,wxPanel)
@@ -21,10 +22,13 @@ BEGIN_EVENT_TABLE(MainTorrentTab,wxPanel)
 	//*)
   EVT_BUTTON      ( ID_BUTTON_CANCEL, MainTorrentTab::OnCancelButton )
   EVT_BUTTON      ( ID_DOWNLOAD_DIALOG, MainTorrentTab::OnDownloadDialog )
+  EVT_BUTTON      ( ID_BUTTON_WIDGETS, MainTorrentTab::OnDLWidgets )
 END_EVENT_TABLE()
 
 MainTorrentTab::MainTorrentTab(wxWindow* parent, Ui& ui)
-    : wxScrolledWindow(parent), m_ui(ui)
+    : wxScrolledWindow(parent),
+    m_widgets_dialog(NULL),
+    m_ui(ui)
 {
     GetAui().manager->AddPane( this, wxLEFT, _T("maintorrenttab") );
 
@@ -64,7 +68,8 @@ MainTorrentTab::MainTorrentTab(wxWindow* parent, Ui& ui)
 	m_buttonbox->Add( m_but_publish, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_BOTTOM, 5);
 	m_but_download = new wxButton(this, ID_DOWNLOAD_DIALOG, _("Search file") );
 	m_buttonbox->Add( m_but_download, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_BOTTOM, 5);
-
+	m_but_widgets = new wxButton(this, ID_BUTTON_WIDGETS, _("Download Lua widgets") );
+    m_buttonbox->Add( m_but_widgets, 1, wxALL|wxALIGN_RIGHT|wxALIGN_BOTTOM, 5);
 
 	m_mainbox->Add(m_buttonbox, 0, wxALL, 5);
 
@@ -90,6 +95,17 @@ MainTorrentTab::~MainTorrentTab()
     {
         delete m_download_dialog;
         m_download_dialog = 0;
+    }
+}
+
+void MainTorrentTab::OnDLWidgets( wxCommandEvent& event )
+{
+    if ( m_widgets_dialog && m_widgets_dialog->IsShown() ) {
+        m_widgets_dialog->SetFocus();
+    }
+    else {
+        m_widgets_dialog = new WidgetDownloadDialog( this, wxID_ANY, _("Lua widget downloader") );
+        m_widgets_dialog->Show( true );
     }
 }
 

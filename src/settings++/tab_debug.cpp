@@ -36,15 +36,14 @@
 
 void debug_panel::initDebugSizer(wxStaticBoxSizer* sizer) {
 	checkBox0 = new wxCheckBox(this, DO_CBOX[0].id, (DO_CBOX[0].lbl));
-	checkBox1 = new wxCheckBox(this, DO_CBOX[1].id, (DO_CBOX[1].lbl));
 	slider = new wxSlider(this, DO_SLI[0].id, 0, 0, 10, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
 
 	slider->SetToolTip( DO_SLI[0].tTip[0]);
 	checkBox0->SetToolTip(DO_CBOX[0].tTip[0]);
-	checkBox1->SetToolTip(DO_CBOX[1].tTip[0]);
+
 	sizer->Add(0, 10, 0);
 	sizer->Add(checkBox0, 0, wxTOP, 5);
-	sizer->Add(checkBox1, 0, wxTOP, 5);
+
 	sizer->Add(0, 10, 0);
 	sizer->Add(new wxStaticText(this, -1, (DO_SLI[0].lbl)), 0, wxTOP, 15);
 	sizer->Add(slider, 0, wxTOP, 5);
@@ -76,7 +75,7 @@ debug_panel::debug_panel(wxWindow *parent, wxWindowID id , const wxString &title
 void debug_panel::updateControls(int what_to_update)
 {
 	checkBox0->SetValue(intSettings[DO_CBOX[0].key]);
-	checkBox1->SetValue(intSettings[DO_CBOX[1].key]);
+
 	slider->SetValue(intSettings[DO_SLI[0].key]);
 }
 debug_panel::~debug_panel(void) {

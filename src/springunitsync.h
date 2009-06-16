@@ -149,7 +149,7 @@ class SpringUnitSync : public IUnitSync
 
     int GetMapIndex( const wxString& name );
 
-		wxArrayString GetSides( const wxString& modname  );
+    wxArrayString GetSides( const wxString& modname  );
     wxImage GetSidePicture( const wxString& modname, const wxString& SideName );
 
     bool LoadUnitSyncLib( const wxString& unitsyncloc );
@@ -163,6 +163,8 @@ class SpringUnitSync : public IUnitSync
 
     wxArrayString GetAIList( const wxString& modname );
     wxArrayString GetAIInfos( int index );
+    GameOptions GetAIOptions( const wxString& modname, int index );
+
 
     int GetNumUnits( const wxString& modname );
     wxArrayString GetUnitsList( const wxString& modname );
@@ -184,7 +186,7 @@ class SpringUnitSync : public IUnitSync
 
     void SetSpringDataPath( const wxString& path );
 
-    void GetReplayList(std::vector<wxString> &ret);
+    wxArrayString GetPlaybackList( bool ReplayType = true ); //savegames otehrwise
 
     bool FileExists( const wxString& name );
 
@@ -204,6 +206,8 @@ class SpringUnitSync : public IUnitSync
     void GetHeightmapAsync( const wxString& mapname, int evtHandlerId );
     void GetHeightmapAsync( const wxString& mapname, int width, int height, int evtHandlerId );
     void GetMapExAsync( const wxString& mapname, int evtHandlerId );
+
+    wxArrayString GetScreenshotFilenames();
 
   private:
 
@@ -263,3 +267,21 @@ class SpringUnitSync : public IUnitSync
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_SPRINGUNITSYNC_H
+
+/**
+    This file is part of SpringLobby,
+    Copyright (C) 2007-09
+
+    springsettings is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License version 2 as published by
+    the Free Software Foundation.
+
+    springsettings is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SpringLobby.  If not, see <http://www.gnu.org/licenses/>.
+**/
+

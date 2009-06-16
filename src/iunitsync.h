@@ -179,10 +179,11 @@ class IUnitSync
 
     virtual wxArrayString GetAIList( const wxString& modname ) = 0;
     virtual wxArrayString GetAIInfos( int index ) = 0;
+    virtual GameOptions GetAIOptions( const wxString& modname, int index ) = 0;
 
     virtual bool ReloadUnitSyncLib() = 0;
 
-    virtual void GetReplayList(std::vector<wxString> &ret) = 0;
+    virtual wxArrayString GetPlaybackList( bool ReplayType = true ) = 0; //savegames otherwise
 
     virtual void SetSpringDataPath( const wxString& path ) = 0;
 
@@ -202,6 +203,8 @@ class IUnitSync
     virtual void GetHeightmapAsync( const wxString& mapname, int evtHandlerId ) = 0;
     virtual void GetHeightmapAsync( const wxString& mapname, int width, int height, int evtHandlerId ) = 0;
     virtual void GetMapExAsync( const wxString& mapname, int evtHandlerId ) = 0;
+
+    virtual wxArrayString GetScreenshotFilenames() = 0;
 };
 
 IUnitSync& usync();
@@ -239,3 +242,21 @@ class UnitSyncAsyncOps
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_IUNITSYNC_H
+
+/**
+    This file is part of SpringLobby,
+    Copyright (C) 2007-09
+
+    springsettings is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License version 2 as published by
+    the Free Software Foundation.
+
+    springsettings is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SpringLobby.  If not, see <http://www.gnu.org/licenses/>.
+**/
+

@@ -31,27 +31,15 @@ class wxMenu;
 class ChannelChooserDialog;
 class ReplayTab;
 class AutojoinChannelDialog;
+class WidgetDownloadDialog;
 
-// FIXME shouldn't copy this here
-typedef wxWindow wxNotebookPage;
+class ReplayTraits;
+template < class Traits >
+class PlaybackTab;
 
-
-// Page indexes
-const unsigned int PAGE_CHAT    = 0;
-const unsigned int PAGE_JOIN    = 1;
-const unsigned int PAGE_SINGLE  = 2;
-const unsigned int PAGE_OPTOS   = 3;
-
-static const unsigned int OPT_PAGE_SPRING   = 0;
-static const unsigned int OPT_PAGE_CHAT     = 1;
-#ifndef NO_TORRENT_SYSTEN
-static const unsigned int OPT_PAGE_TORRENT  = 2;
-static const unsigned int OPT_PAGE_GENERAL  = 3;
-static const unsigned int OPT_PAGE_GROUPS   = 4;
-#else
-static const unsigned int OPT_PAGE_GENERAL  = 2;
-static const unsigned int OPT_PAGE_GROUPS   = 3;
-#endif
+class SavegameTraits;
+template < class Traits >
+class SavegameTab;
 
 
 //! @brief wxFrame that contains the main window of the client.
@@ -61,11 +49,18 @@ class MainWindow : public wxFrame
     MainWindow( Ui& ui );
     virtual ~MainWindow();
 
+    typedef PlaybackTab<ReplayTraits>
+        ReplayTab;
+    typedef PlaybackTab<SavegameTraits>
+        SavegameTab;
+
     // MainWindow interface
-    void OpenChannelChat( Channel& channel );
+    void OpenChannelChat( Channel& channel, bool doFocus = true );
     void OpenPrivateChat( const User& user, bool doFocus = false );
 
     void ShowConfigure( const unsigned int page = OPT_PAGE_SPRING );
+    void ShowTab( const int idx );
+    void ShowSingleplayer();
 
     /** Show the channel list dialog. */
     void ShowChannelChooser();
@@ -91,6 +86,7 @@ class MainWindow : public wxFrame
     void OnShowSettingsPP( wxCommandEvent& event );
     void OnMenuSelectLocale( wxCommandEvent& event );
     void OnShowChannelChooser( wxCommandEvent& event );
+    void OnShowScreenshots( wxCommandEvent& event );
     void forceSettingsFrameClose();
     void OnUnitSyncReloaded();
     void OnChannelList( const wxString& channel, const int& numusers, const wxString& topic );
@@ -102,6 +98,7 @@ class MainWindow : public wxFrame
     MainJoinBattleTab& GetJoinTab();
     MainSinglePlayerTab& GetSPTab();
     ReplayTab& GetReplayTab();
+    SavegameTab& GetSavegameTab();
     #ifndef NO_TORRENT_SYSTEM
     MainTorrentTab& GetTorrentTab();
     #endif
@@ -121,7 +118,6 @@ class MainWindow : public wxFrame
 
     wxBoxSizer* m_main_sizer;
     wxAuiNotebook* m_func_tabs;
-    wxNotebookPage* m_chat_page;
 
     MainChatTab* m_chat_tab;
     MainJoinBattleTab* m_join_tab;
@@ -137,6 +133,7 @@ class MainWindow : public wxFrame
     ChannelChooserDialog* m_channel_chooser;
 
     ReplayTab* m_replay_tab;
+    SavegameTab* m_savegame_tab;
 
     wxBitmap GetTabIcon( const unsigned char* data, size_t size  );
 
@@ -162,13 +159,60 @@ class MainWindow : public wxFrame
         MENU_CHANNELCHOOSER,
         MENU_SAVE_LAYOUT,
         MENU_LOAD_LAYOUT,
-        MENU_DEFAULT_LAYOUT
-
-
-
+        MENU_DEFAULT_LAYOUT,
+        MENU_SCREENSHOTS
     };
 
-    DECLARE_EVENT_TABLE()
+        class TabNames : public wxArrayString
+        {
+            public:
+                TabNames ()
+                {
+                    Add( _("Chat") );
+                    Add( _("Multiplayer") );
+                    Add( _("Singleplayer") );
+                    Add( _("Savegames") );
+                    Add( _("Replays") );
+                #ifndef NO_TORRENT_SYSTEM
+                    Add( _("Downloads") );
+                #endif
+                    Add( _("Options") );
+                }
+        };
+        static TabNames m_tab_names;
+
+    public:
+        // Page indexes
+        static const unsigned int PAGE_CHAT    = 0;
+        static const unsigned int PAGE_JOIN    = 1;
+        static const unsigned int PAGE_SINGLE  = 2;
+        static const unsigned int PAGE_REPLAY  = 3;
+        static const unsigned int PAGE_SAVEGAME = 4;
+
+        #ifndef NO_TORRENT_SYSTEM
+        static const unsigned int PAGE_TORRENT = 5;
+        static const unsigned int PAGE_OPTOS = 6;
+        #else
+        static const unsigned int PAGE_OPTOS   = 5;
+        #endif
+
+        static const unsigned int OPT_PAGE_SPRING   = 0;
+        static const unsigned int OPT_PAGE_CHAT     = 1;
+        #ifndef NO_TORRENT_SYSTEN
+        static const unsigned int OPT_PAGE_TORRENT  = 2;
+        static const unsigned int OPT_PAGE_GENERAL  = 3;
+        static const unsigned int OPT_PAGE_GROUPS   = 4;
+        #else
+        static const unsigned int OPT_PAGE_GENERAL  = 2;
+        static const unsigned int OPT_PAGE_GROUPS   = 3;
+        #endif
+
+        static const TabNames& GetTabNames();
+
+    protected:
+
+
+        DECLARE_EVENT_TABLE()
 };
 
 //ChatPanel& servwin();
@@ -177,3 +221,21 @@ class MainWindow : public wxFrame
 
 
 #endif // SPRINGLOBBY_HEADERGUARD_MAINWINDOW_H
+
+/**
+    This file is part of SpringLobby,
+    Copyright (C) 2007-09
+
+    springsettings is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License version 2 as published by
+    the Free Software Foundation.
+
+    springsettings is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SpringLobby.  If not, see <http://www.gnu.org/licenses/>.
+**/
+

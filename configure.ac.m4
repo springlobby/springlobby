@@ -20,19 +20,19 @@ PKG_PROG_PKG_CONFIG
 usetorrent=yes
 AC_ARG_ENABLE(torrent-system,
  [  --disable-torrent-system  Disable automatic content downloads via torrent (avoids libtorrent dependency)],
- [ usetorrent=no
+ [ usetorrent=$enableval
  ])
 
 sound=yes
 AC_ARG_ENABLE(sound,
  [  --disable-sound Enable sound using SDL, needs SDL],
- [ sound=no
+ [ sound=$enableval
  ])
 
 debug=no
 AC_ARG_ENABLE(debug,
  [  --enable-debug Enable debugging],
- [ debug=yes
+ [ debug=$enableval
  ])
 
 AC_ARG_WITH(sdl-config,[  --with-sdl-config=/path/to/sdl-config (optional) for finding right sdl includes],
@@ -66,7 +66,7 @@ AM_PATH_WXCONFIG([2.8.2], [],
            where wxWidgets libraries are installed (returned by
            'wx-config --libs' command) is in LD_LIBRARY_PATH or
            equivalent variable and wxWidgets version is 2.8.2 or above.
-   ])], [base,core,net,adv,aui])
+   ])], [base,core,net,adv,aui,xml,html])
 win_build=0
 AC_ARG_VAR([WINDRES], [Windows resource file compiler command])
 if test x$host_os = xmingw32msvc ; then

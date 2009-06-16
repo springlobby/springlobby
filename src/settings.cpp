@@ -20,18 +20,20 @@
 #include <wx/log.h>
 #include <wx/wfstream.h>
 #include <wx/settings.h>
+#include <wx/tokenzr.h>
 
 #include "nonportable.h"
 #include "settings.h"
 #include "utils.h"
 #include "uiutils.h"
 #include "battlelistfiltervalues.h"
-#include "replay/replaylistfiltervalues.h"
+#include "playback/playbackfiltervalues.h"
 #include "globalsmanager.h"
 #include "springunitsynclib.h"
 #include "customlistctrl.h"
 #include "settings++/presets.h"
 #include "Helper/sortutil.h"
+#include "mainwindow.h"
 
 bool Settings::m_user_defined_config = false;
 wxString Settings::m_user_defined_config_path = wxEmptyString;
@@ -57,11 +59,11 @@ bool SL_WinConf::DoWriteLong(const wxString& key, long lValue)
 
 Settings::Settings()
 {
-  #if defined(__WXMSW__)
+  #if defined(__WXMSW__) || defined(__WXMAC__)
   wxString userfilepath = wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator() + _T("springlobby.conf");
   wxString globalfilepath =  GetExecutableFolder() + wxFileName::GetPathSeparator() + _T("springlobby.conf");
 
-  if (  wxFileName::FileExists( userfilepath ) || !wxFileName::FileExists( globalfilepath ) || !wxFileName::IsFileWritable( globalfilepath ) )
+  if ( !wxFileName::FileExists( globalfilepath ) || !wxFileName::IsFileWritable( globalfilepath ) )
   {
      m_chosed_path = userfilepath;
      SetPortableMode( false );
@@ -99,9 +101,11 @@ Settings::Settings()
             exit(-1);
          }
   }
-
+	#ifdef __WXMSW__
   m_config = new SL_WinConf( instream );
-
+  #else
+  m_config = new wxFileConfig( instream );
+  #endif
   #else
   //removed temporarily because it's suspected to cause a bug with userdir creation
  // m_config = new wxConfig( _T("SpringLobby"), wxEmptyString, _T(".springlobby/springlobby.conf"), _T("springlobby.global.conf"), wxCONFIG_USE_LOCAL_FILE | wxCONFIG_USE_GLOBAL_FILE  );
@@ -123,7 +127,7 @@ void Settings::SaveSettings()
   SetCacheVersion();
   SetSettingsVersion();
   m_config->Flush();
-  #if defined(__WXMSW__)
+  #if defined(__WXMSW__) || defined(__WXMAC__)
   wxFileOutputStream outstream( m_chosed_path );
 
   if ( !outstream.IsOk() )
@@ -219,6 +223,15 @@ wxArrayString Settings::GetEntryList( const wxString& base_key )
   }
   m_config->SetPath( old_path );
   return ret;
+}
+
+unsigned int Settings::GetGroupCount( const wxString& base_key )
+{
+		wxString currentpath = m_config->GetPath();
+		m_config->SetPath( base_key );
+    unsigned int count = m_config->GetNumberOfGroups( false );
+    m_config->SetPath( currentpath );
+    return count;
 }
 
 bool Settings::IsPortableMode()
@@ -578,23 +591,15 @@ void Settings::SetServerAccountSavePass( const wxString& server_name, const bool
 
 int Settings::GetNumChannelsJoin()
 {
-    return m_config->Read( _T("/Channels/Count"), (long)0 );
-}
-
-void Settings::SetNumChannelsJoin( int num )
-{
-    m_config->Write( _T("/Channels/Count"), num );
+	return GetGroupCount( _T("/Channels/AutoJoin") );
 }
 
 void Settings::AddChannelJoin( const wxString& channel , const wxString& key )
 {
-    int index = GetChannelJoinIndex( channel );
-    if ( index != -1 ) return;
+    int index = GetNumChannelsJoin();
 
-    index = GetNumChannelsJoin();
-    SetNumChannelsJoin( index + 1 );
-
-    m_config->Write( wxString::Format( _T("/Channels/Channel%d"), index ), channel + _T(" ") + key );
+    m_config->Write( wxString::Format( _T("/Channels/AutoJoin/Channel%d/Name"), index ), channel );
+    m_config->Write( wxString::Format( _T("/Channels/AutoJoin/Channel%d/Password"), index ), key );
 }
 
 
@@ -603,29 +608,52 @@ void Settings::RemoveChannelJoin( const wxString& channel )
     int index = GetChannelJoinIndex( channel );
     if ( index == -1 ) return;
     int total = GetNumChannelsJoin();
-    wxString LastEntry;
-    m_config->Read( _T("/Channels/Channel") +  wxString::Format( _T("%d"), total - 1 ), &LastEntry);
-    m_config->Write( _T("/Channels/Channel") + wxString::Format( _T("%d"), index ), LastEntry );
-    m_config->DeleteEntry( _T("/Channels/Channel") + wxString::Format( _T("%d"), total - 1 ) );
-    SetNumChannelsJoin( total -1 );
+    m_config->DeleteGroup( _T("/Channels/AutoJoin/Channel") + TowxString( index ) );
+    m_config->RenameGroup( _T("/Channels/AutoJoin/Channel") + TowxString(total - 1), _T("/Channels/AutoJoin/Channel") + TowxString( index ) );
+}
+
+void Settings::RemoveAllChannelsJoin()
+{
+	m_config->DeleteGroup( _T("/Channels/AutoJoin") );
 }
 
 
-int Settings::GetChannelJoinIndex( const wxString& server_name )
+int Settings::GetChannelJoinIndex( const wxString& name )
 {
+	int numchannels = GetNumChannelsJoin();
+	int ret = -1;
+	for ( int i = 0; i < numchannels; i++ )
+	{
+		if ( m_config->Read( wxString::Format( _T("/Channels/AutoJoin/Channel%d/Name"), i ), _T("") ) == name ) ret = i;
+	}
+	return ret;
+}
+
+std::vector<ChannelJoinInfo> Settings::GetChannelsJoin()
+{
+		std::vector<ChannelJoinInfo> ret;
     int num = GetNumChannelsJoin();
     for ( int i= 0; i < num; i++ )
     {
-        wxString name = GetChannelJoinName( i );
-        name = name.BeforeFirst( ' ' );
-        if ( name == server_name ) return i;
+    	  ChannelJoinInfo info;
+    	  info.name = m_config->Read( wxString::Format( _T("/Channels/AutoJoin/Channel%d/Name"), i ), _T("") );
+    	  info.password = m_config->Read( wxString::Format( _T("/Channels/AutoJoin/Channel%d/Password"), i ), _T("") );
+        ret.push_back( info );
     }
-    return -1;
+    return ret;
 }
 
-wxString Settings::GetChannelJoinName( int index )
+void Settings::ConvertOldChannelSettings()
 {
-    return m_config->Read( wxString::Format( _T("/Channels/Channel%d"), index ), _T("") );
+	int numchannels = m_config->Read( _T("/Channels/Count"), 0l);
+	m_config->DeleteEntry( _T("/Channels/Count") );
+	for ( int i = 0; i < numchannels; i++ )
+	{
+		wxString channelinfo = m_config->Read( _T("/Channels/Channel") + TowxString( i ), _T("") );
+		m_config->DeleteEntry( _T("/Channels/Channel") + TowxString( i ) );
+		if ( channelinfo.Contains(_T(" ") ) ) AddChannelJoin( channelinfo.BeforeFirst(_T(' ')), channelinfo.AfterLast(_T(' ')) );
+		else AddChannelJoin( channelinfo, _T("") );
+	}
 }
 
 bool Settings::ShouldAddDefaultChannelSettings()
@@ -842,6 +870,11 @@ void Settings::ConvertOldSpringDirsOptions()
 
 std::map<wxString, wxString> Settings::GetSpringVersionList()
 {
+	return m_spring_versions;
+}
+
+void Settings::RefreshSpringVersionList()
+{
   wxLogDebugFunc(_T(""));
   wxArrayString list = GetGroupList( _T("/Spring/Paths") );
   int count = list.GetCount();
@@ -851,7 +884,7 @@ std::map<wxString, wxString> Settings::GetSpringVersionList()
   	wxString groupname = list[i];
     usync_paths[groupname] = m_config->Read( _T("/Spring/Paths/") + groupname + _T("/UnitSyncPath"), _T("") );
   }
-  return susynclib().GetSpringVersionList(usync_paths);
+  m_spring_versions = susynclib().GetSpringVersionList(usync_paths);
 }
 
 wxString Settings::GetCurrentUsedSpringIndex()
@@ -864,6 +897,19 @@ void Settings::SetUsedSpringIndex( const wxString& index )
   m_config->Write( _T("/Spring/CurrentIndex"), index );
 }
 
+bool Settings::GetSearchSpringOnlyInSLPath()
+{
+	bool defaultval = false;
+	#ifdef __WXMSW__
+	defaultval = true;
+	#endif
+	return m_config->Read( _T("/Spring/SearchSpringOnlyInSLPath"), defaultval );
+}
+
+void Settings::SetSearchSpringOnlyInSLPath( bool value )
+{
+	m_config->Write( _T("/Spring/SearchSpringOnlyInSLPath"), value );
+}
 
 void Settings::DeleteSpringVersionbyIndex( const wxString& index )
 {
@@ -891,13 +937,21 @@ wxString Settings::GetCurrentUsedDataDir()
 
 wxString Settings::GetCurrentUsedSpringBinary()
 {
-    return GetSpringBinary( GetCurrentUsedSpringIndex() );
+		if ( IsPortableMode() ) return GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("spring.exe");
+		#ifdef __WXMSW__
+		else if ( GetSearchSpringOnlyInSLPath() ) return GetExecutableFolder() + wxFileName::GetPathSeparator() + _T("spring.exe");
+		#endif
+    else return GetSpringBinary( GetCurrentUsedSpringIndex() );
 }
 
 
 wxString Settings::GetCurrentUsedUnitSync()
 {
-    return GetUnitSync( GetCurrentUsedSpringIndex() );
+		if ( IsPortableMode() ) return GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("unitsync") + GetLibExtension();
+		#ifdef __WXMSW__
+		else if ( GetSearchSpringOnlyInSLPath() ) return GetExecutableFolder() + wxFileName::GetPathSeparator() + _T("unitsync") + GetLibExtension();
+		#endif
+    else return GetUnitSync( GetCurrentUsedSpringIndex() );
 }
 
 wxString Settings::GetCurrentUsedSpringConfigFilePath()
@@ -913,15 +967,13 @@ wxString Settings::GetCurrentUsedSpringConfigFilePath()
 
 wxString Settings::GetUnitSync( const wxString& index )
 {
-  if ( IsPortableMode() ) return GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("unitsync") + GetLibExtension();
-  else return m_config->Read( _T("/Spring/Paths/") + index + _T("/UnitSyncPath"), AutoFindUnitSync() );
+  return m_config->Read( _T("/Spring/Paths/") + index + _T("/UnitSyncPath"), AutoFindUnitSync() );
 }
 
 
 wxString Settings::GetSpringBinary( const wxString& index )
 {
-    if ( IsPortableMode() ) return GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("spring.exe");
-    else return m_config->Read( _T("/Spring/Paths/") + index + _T("/SpringBinPath"), AutoFindSpringBin() );
+    return m_config->Read( _T("/Spring/Paths/") + index + _T("/SpringBinPath"), AutoFindSpringBin() );
 }
 
 void Settings::SetUnitSync( const wxString& index, const wxString& path )
@@ -1484,14 +1536,22 @@ void Settings::SetAlwaysAutoScrollOnFocusLost(bool value)
   m_config->Write( _T("/Chat/AlwaysAutoScrollOnFocusLost"), value);
 }
 
-void Settings::SetHighlightedWords( const wxString& words )
+void Settings::ConvertOldHiglightSettings()
 {
-  m_config->Write( _T("/Chat/HighlightedWords"), words );
+	SetHighlightedWords( wxStringTokenize( m_config->Read( _T("/Chat/HighlightedWords"), _T("") ), _T(";") ) );
 }
 
-wxString Settings::GetHighlightedWords( )
+void Settings::SetHighlightedWords( const wxArrayString& words )
 {
-  return m_config->Read( _T("/Chat/HighlightedWords"), wxEmptyString );
+	for ( unsigned int i = 0; i < words.GetCount(); i++ )
+	{
+		m_config->Write( _T("/Chat/HighlightedWords/") + words[i], words[i] );
+	}
+}
+
+wxArrayString Settings::GetHighlightedWords()
+{
+	return GetEntryList( _T("/Chat/HighlightedWords") );
 }
 
 void Settings::SetRequestAttOnHighlight( const bool req )
@@ -1563,6 +1623,51 @@ bool Settings::GetBattleFilterActivState() const
 void Settings::SetBattleFilterActivState(const bool state)
 {
     m_config->Write( _T("/BattleFilter/Active") , state );
+}
+
+void Settings::SetMapLastStartPosType( const wxString& mapname, const wxString& startpostype )
+{
+		m_config->Write( _T("/Hosting/MapLastValues/") + mapname + _T("/startpostype"), startpostype );
+}
+
+void Settings::SetMapLastRectPreset( const wxString& mapname, std::vector<Settings::SettStartBox> rects )
+{
+	wxString basepath = _T("/Hosting/MapLastValues/") + mapname + _T("/Rects");
+	m_config->DeleteGroup( basepath );
+	for ( std::vector<Settings::SettStartBox>::iterator itor = rects.begin(); itor != rects.end(); itor++ )
+	{
+		SettStartBox box = *itor;
+		wxString additionalpath = basepath + _T("/Rect") + TowxString(box.ally) + _T("/");
+		m_config->Write( additionalpath + _T("TopLeftX"), box.topx );
+		m_config->Write( additionalpath + _T("TopLeftY"), box.topy );
+		m_config->Write( additionalpath + _T("BottomRightX"), box.bottomx );
+		m_config->Write( additionalpath + _T("BottomRightY"), box.bottomy );
+		m_config->Write( additionalpath + _T("AllyTeam"), box.ally );
+	}
+}
+
+wxString Settings::GetMapLastStartPosType( const wxString& mapname )
+{
+	return m_config->Read( _T("/Hosting/MapLastValues/") + mapname + _T("/startpostype"), _T("") );
+}
+
+std::vector<Settings::SettStartBox> Settings::GetMapLastRectPreset( const wxString& mapname )
+{
+	wxString basepath = _T("/Hosting/MapLastValues/") + mapname + _T("/Rects");
+	wxArrayString boxes = GetGroupList( basepath );
+	std::vector<Settings::SettStartBox> ret;
+	for ( unsigned int i = 0; i < boxes.GetCount(); i++ )
+	{
+		wxString additionalpath = basepath + _T("/") + boxes[i] + _T("/");
+		SettStartBox box;
+		box.topx = m_config->Read( additionalpath + _T("TopLeftX"), -1 );
+		box.topy = m_config->Read( additionalpath + _T("TopLeftY"), -1 );
+		box.bottomx = m_config->Read( additionalpath + _T("BottomRightX"), -1 );
+		box.bottomy = m_config->Read( additionalpath + _T("BottomRightY"), -1 );
+		box.ally = m_config->Read( additionalpath + _T("AllyTeam"), -1 );
+		ret.push_back( box );
+	}
+	return ret;
 }
 
 bool Settings::GetDisableSpringVersionCheck()
@@ -1945,9 +2050,9 @@ bool Settings::GetAutoUpdate()
     return m_config->Read( _T("/General/AutoUpdate"), true );
 }
 
-ReplayListFilterValues Settings::GetReplayFilterValues(const wxString& profile_name)
+PlaybackListFilterValues Settings::GetReplayFilterValues(const wxString& profile_name)
 {
-    ReplayListFilterValues filtervalues;
+    PlaybackListFilterValues filtervalues;
     filtervalues.duration =         m_config->Read( _T("/ReplayFilter/")+profile_name + _T("/duration"), _T("") );
     filtervalues.map=               m_config->Read( _T("/ReplayFilter/")+profile_name + _T("/map"), _T("") );
     filtervalues.map_show =         m_config->Read( _T("/ReplayFilter/")+profile_name + _T("/map_show"), 0L );
@@ -1962,7 +2067,7 @@ ReplayListFilterValues Settings::GetReplayFilterValues(const wxString& profile_n
     return filtervalues;
 }
 
-void Settings::SetReplayFilterValues(const ReplayListFilterValues& filtervalues, const wxString& profile_name)
+void Settings::SetReplayFilterValues(const PlaybackListFilterValues& filtervalues, const wxString& profile_name)
 {
     m_config->Write( _T("/ReplayFilter/")+profile_name + _T("/duration"),filtervalues.duration);
     m_config->Write( _T("/ReplayFilter/")+profile_name + _T("/map"),filtervalues.map );
@@ -2182,3 +2287,34 @@ void Settings::SetUseTabIcons( bool use )
 {
     m_config->Write(_T("/GUI/UseTabIcons"), use );
 }
+
+int Settings::GetSashPosition( const wxString& window_name )
+{
+    return m_config->Read(_T("/GUI/SashPostion/") + window_name , 200l);
+}
+
+void Settings::SetSashPosition( const wxString& window_name, const int pos )
+{
+    m_config->Write(_T("/GUI/SashPostion/") + window_name , pos );
+}
+
+bool Settings::GetSplitBRoomHorizontally()
+{
+    return m_config->Read(_T("/GUI/SplitBRoomHorizontally") , 1l );
+}
+
+void Settings::SetSplitBRoomHorizontally( const bool vertical )
+{
+    m_config->Write(_T("/GUI/SplitBRoomHorizontally") , vertical );
+}
+
+void Settings::SetStartTab( const int idx )
+{
+    m_config->Write( _T("/GUI/StartTab") , idx );
+}
+
+unsigned int Settings::GetStartTab( )
+{
+    return m_config->Read( _T("/GUI/StartTab") , MainWindow::PAGE_SINGLE ); //default is SP tab
+}
+

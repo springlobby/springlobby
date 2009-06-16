@@ -14,6 +14,7 @@ struct TorrentInfos;
 class wxBoxSizer;
 class FileListDialog;
 class ColorButton;
+class WidgetDownloadDialog;
 
 typedef std::map<int,TorrentInfos> map_infos;
 typedef map_infos::iterator map_infos_iter;
@@ -34,8 +35,10 @@ class MainTorrentTab: public wxScrolledWindow
 		wxButton* m_but_cancel;
 		wxButton* m_but_publish;
 		wxButton* m_but_download;
+		wxButton* m_but_widgets;
 		ColorButton* m_status_color;
 		TorrentListCtrl* m_torrent_list;
+        WidgetDownloadDialog* m_widgets_dialog;
 
 		Ui& m_ui;
         void OnUpdate();
@@ -51,7 +54,8 @@ class MainTorrentTab: public wxScrolledWindow
             ID_INCOMING,
             ID_OUTGOING_LBL,
             ID_INCOMING_LBL,
-            ID_DOWNLOAD_DIALOG
+            ID_DOWNLOAD_DIALOG,
+            ID_BUTTON_WIDGETS
 
         };
 
@@ -61,6 +65,7 @@ class MainTorrentTab: public wxScrolledWindow
         void SetInfo(int index,  TorrentInfos& info );
         void OnCancelButton( wxCommandEvent& event );
         void OnDownloadDialog( wxCommandEvent& event );
+        void OnDLWidgets( wxCommandEvent& event );
 
         wxBoxSizer* m_mainbox;
         FileListDialog* m_download_dialog;
@@ -76,3 +81,21 @@ class MainTorrentTab: public wxScrolledWindow
 #endif
 
 #endif
+
+/**
+    This file is part of SpringLobby,
+    Copyright (C) 2007-09
+
+    springsettings is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License version 2 as published by
+    the Free Software Foundation.
+
+    springsettings is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SpringLobby.  If not, see <http://www.gnu.org/licenses/>.
+**/
+

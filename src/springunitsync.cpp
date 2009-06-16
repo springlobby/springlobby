@@ -108,7 +108,7 @@ void SpringUnitSync::PopulateArchiveList()
     try
     {
      name = susynclib().GetPrimaryModName( i );
-     hash = i2s(susynclib().GetPrimaryModChecksum( i ));
+     hash = susynclib().GetPrimaryModChecksum( i );
     } catch (...) { continue; }
     try
     {
@@ -232,7 +232,7 @@ UnitSyncMod SpringUnitSync::GetMod( int index )
   UnitSyncMod m;
   susynclib().GetPrimaryModCount();
   m.name = susynclib().GetPrimaryModName( index );
-  m.hash = i2s( susynclib().GetPrimaryModChecksum( index ) );
+  m.hash = susynclib().GetPrimaryModChecksum( index );
 
   return m;
  }
@@ -514,34 +514,27 @@ wxArrayString SpringUnitSync::GetAIList( const wxString& modname )
 		for ( int i = 0; i < total; i++ )
 		{
 			wxArrayString infos = susynclib().GetAIInfo( i );
-			int namepos = infos.Index( _T("shortName") ) + 1;
-			int versionpos = infos.Index( _T("version") ) + 1;
+			int namepos = infos.Index( _T("shortName") );
+			int versionpos = infos.Index( _T("version") );
 			wxString ainame;
-			if ( namepos > 0 ) ainame += infos[namepos];
-			if ( versionpos > 0 ) ainame += _T(" ") + infos[versionpos];
+			if ( namepos != wxNOT_FOUND ) ainame += infos[namepos +1];
+			if ( versionpos != wxNOT_FOUND ) ainame += _T(" ") + infos[versionpos +1];
 			ret.Add( ainame );
 		}
 	}
 	else
 	{
 		// list dynamic link libraries
-		int dllini = susynclib().InitFindVFS(  wxDynamicLibrary::CanonicalizeName(_T("AI/Bot-libs/*"), wxDL_MODULE) );
-
-		wxString FileName;
-		dllini = susynclib().FindFilesVFS( dllini, FileName );
-		while ( dllini )
+		wxArrayString dlllist = susynclib().FindFilesVFS( wxDynamicLibrary::CanonicalizeName(_T("AI/Bot-libs/*"), wxDL_MODULE) );
+		for( int i = 0; i < dlllist.GetCount(); i++ )
 		{
-			if ( ret.Index( FileName.BeforeLast( '/') ) == wxNOT_FOUND ) ret.Add ( FileName ); // don't add duplicates
-			dllini = susynclib().FindFilesVFS( dllini, FileName );
+			if ( ret.Index( dlllist[i].BeforeLast( '/') ) == wxNOT_FOUND ) ret.Add ( dlllist[i] ); // don't add duplicates
 		}
 		// list jar files (java AIs)
-		int jarini = susynclib().InitFindVFS(  _T("AI/Bot-libs/*.jar") );
-
-		jarini = susynclib().FindFilesVFS( jarini, FileName );
-		while ( jarini )
+		wxArrayString jarlist = susynclib().FindFilesVFS( _T("AI/Bot-libs/*.jar") );
+		for( int i = 0; i < jarlist.GetCount(); i++ )
 		{
-			if ( ret.Index( FileName.BeforeLast( '/') ) == wxNOT_FOUND ) ret.Add ( FileName ); // don't add duplicates
-			jarini = susynclib().FindFilesVFS( jarini, FileName );
+			if ( ret.Index( jarlist[i].BeforeLast( '/') ) == wxNOT_FOUND ) ret.Add ( jarlist[i] ); // don't add duplicates
 		}
 
 		// luaai
@@ -567,6 +560,18 @@ wxArrayString SpringUnitSync::GetAIInfos( int index )
 	}
 	catch ( unitsync_assert ) {}
 	return ret;
+}
+
+GameOptions SpringUnitSync::GetAIOptions( const wxString& modname, int index )
+{
+  wxLogDebugFunc( TowxString(index) );
+  GameOptions ret;
+	int count = susynclib().GetAIOptionCount(modname, index);
+	for (int i = 0; i < count; ++i)
+	{
+		GetOptionEntry( i, ret );
+	}
+  return ret;
 }
 
 int SpringUnitSync::GetNumUnits( const wxString& modname )
@@ -737,62 +742,69 @@ MapInfo SpringUnitSync::_GetMapInfoEx( const wxString& mapname )
   if ( m_mapinfo_cache.TryGet( mapname, info ) ) return info;
 
   wxArrayString cache;
-  try
-  {
-    cache = GetCacheFile( GetFileCachePath( mapname, _T(""), false ) + _T(".infoex") );
+  try {
+      try
+      {
+        cache = GetCacheFile( GetFileCachePath( mapname, _T(""), false ) + _T(".infoex") );
 
-    ASSERT_EXCEPTION( cache.GetCount() >= 11, _T("not enough lines found in cache info ex") );
-    info.author = cache[0];
-    info.tidalStrength =  s2l( cache[1] );
-    info.gravity = s2l( cache[2] );
-    info.maxMetal = s2d( cache[3] );
-    info.extractorRadius = s2d( cache[4] );
-    info.minWind = s2l( cache[5] );
-    info.maxWind = s2l( cache[6] );
-    info.width = s2l( cache[7] );
-    info.height = s2l( cache[8] );
-    info.posCount = s2l( cache[9] );
+        ASSERT_EXCEPTION( cache.GetCount() >= 11, _T("not enough lines found in cache info ex") );
+        info.author = cache[0];
+        info.tidalStrength =  s2l( cache[1] );
+        info.gravity = s2l( cache[2] );
+        info.maxMetal = s2d( cache[3] );
+        info.extractorRadius = s2d( cache[4] );
+        info.minWind = s2l( cache[5] );
+        info.maxWind = s2l( cache[6] );
+        info.width = s2l( cache[7] );
+        info.height = s2l( cache[8] );
+        info.posCount = s2l( cache[9] );
 
-    wxArrayString posinfo = wxStringTokenize( cache[10], _T(' '), wxTOKEN_RET_EMPTY );
-    for ( int i = 0; i < info.posCount; i++)
-    {
-       StartPos position;
-       position.x = s2l( posinfo[i].BeforeFirst( _T('-') ) );
-       position.y = s2l( posinfo[i].AfterFirst( _T('-') ) );
-       info.positions[i] = position;
-    }
+        wxArrayString posinfo = wxStringTokenize( cache[10], _T(' '), wxTOKEN_RET_EMPTY );
+        for ( int i = 0; i < info.posCount; i++)
+        {
+           StartPos position;
+           position.x = s2l( posinfo[i].BeforeFirst( _T('-') ) );
+           position.y = s2l( posinfo[i].AfterFirst( _T('-') ) );
+           info.positions[i] = position;
+        }
 
-    unsigned int LineCount = cache.GetCount();
-    for ( unsigned int i = 11; i < LineCount; i++ ) info.description << cache[i] << _T('\n');
+        unsigned int LineCount = cache.GetCount();
+        for ( unsigned int i = 11; i < LineCount; i++ ) info.description << cache[i] << _T('\n');
 
+      }
+      catch (...)
+      {
+        info = susynclib().GetMapInfoEx( mapname, 1 );
+
+        cache.Add ( info.author );
+        cache.Add( TowxString( info.tidalStrength ) );
+        cache.Add( TowxString( info.gravity ) );
+        cache.Add( TowxString( info.maxMetal ) );
+        cache.Add( TowxString( info.extractorRadius ) );
+        cache.Add( TowxString( info.minWind ) );
+        cache.Add( TowxString( info.maxWind )  );
+        cache.Add( TowxString( info.width ) );
+        cache.Add( TowxString( info.height ) );
+        cache.Add( TowxString( info.posCount ) );
+
+        wxString postring;
+        for ( int i = 0; i < info.posCount; i++)
+        {
+           postring << TowxString( info.positions[i].x ) << _T('-') << TowxString( info.positions[i].y ) << _T(' ');
+        }
+        cache.Add( postring );
+
+        wxArrayString descrtoken = wxStringTokenize( info.description, _T('\n') );
+        unsigned int desclinecount = descrtoken.GetCount();
+        for ( unsigned int count = 0; count < desclinecount; count++ ) cache.Add( descrtoken[count] );
+
+        SetCacheFile( GetFileCachePath( mapname, _T(""), false ) + _T(".infoex"), cache );
+      }
   }
-  catch (...)
-  {
-    info = susynclib().GetMapInfoEx( mapname, 1 );
-
-    cache.Add ( info.author );
-    cache.Add( TowxString( info.tidalStrength ) );
-    cache.Add( TowxString( info.gravity ) );
-    cache.Add( TowxString( info.maxMetal ) );
-    cache.Add( TowxString( info.extractorRadius ) );
-    cache.Add( TowxString( info.minWind ) );
-    cache.Add( TowxString( info.maxWind )  );
-    cache.Add( TowxString( info.width ) );
-    cache.Add( TowxString( info.height ) );
-    cache.Add( TowxString( info.posCount ) );
-
-    wxString postring;
-    for ( int i = 0; i < info.posCount; i++)
-    {
-       postring << TowxString( info.positions[i].x ) << _T('-') << TowxString( info.positions[i].y ) << _T(' ');
-    }
-    cache.Add( postring );
-
-    wxArrayString descrtoken = wxStringTokenize( info.description, _T('\n') );
-    unsigned int desclinecount = descrtoken.GetCount();
-    for ( unsigned int count = 0; count < desclinecount; count++ ) cache.Add( descrtoken[count] );
-
-    SetCacheFile( GetFileCachePath( mapname, _T(""), false ) + _T(".infoex"), cache );
+  catch ( ... ) {
+      info.posCount = 0;
+      info.width = 1;
+      info.height = 1;
   }
 
   m_mapinfo_cache.Add( mapname, info );
@@ -860,32 +872,17 @@ void SpringUnitSync::SetCacheFile( const wxString& path, const wxArrayString& da
   file.Close();
 }
 
-void SpringUnitSync::GetReplayList(std::vector<wxString> &ret)
+wxArrayString  SpringUnitSync::GetPlaybackList( bool ReplayType )
 {
-  ret.clear();
   wxLogDebug( _T("") );
 
-  if ( !IsLoaded() ) return;
+	wxArrayString ret;
+  if ( !IsLoaded() ) return ret;
 
-  int ini = susynclib().InitFindVFS( _T("demos/*.sdf") );
-
-  wxString FilePath ;
-  //wxArrayString ret;
-  do
-  {
-    ini = susynclib().FindFilesVFS ( ini, FilePath );
-    wxString FileName = wxString ( FilePath, wxConvUTF8 );
-    //ret.Add ( FileName );
-    ret.push_back(FileName);
-  } while (ini != 0);
-
-    int kol = ret.size();
-
-  std::sort(ret.begin(),ret.end());
-  std::vector<wxString>::iterator i=std::unique(ret.begin(),ret.end());
-  ret.resize(i - ret.begin());
-
-  kol = ret.size();
+    if ( ReplayType )
+        return susynclib().FindFilesVFS( _T("demos/*.sdf") );
+    else
+        return susynclib().FindFilesVFS( _T("Saves/*.ssf") );
 }
 
 bool SpringUnitSync::FileExists( const wxString& name )
@@ -902,6 +899,19 @@ wxString SpringUnitSync::GetArchivePath( const wxString& name )
   wxLogDebugFunc( name );
 
   return susynclib().GetArchivePath( name );
+}
+
+wxArrayString SpringUnitSync::GetScreenshotFilenames()
+{
+    wxSortedArrayString ret;
+    if ( !IsLoaded() ) return ret;
+
+    ret = susynclib().FindFilesVFS( _T("screenshots/*.*") );
+    for ( int i = 0; i < ret.Count() - 1; ++i ) {
+            if ( ret[i] == ret[i+1] )
+                ret.RemoveAt( i+1 );
+    }
+    return ret;
 }
 
 wxString SpringUnitSync::GetDefaultNick()

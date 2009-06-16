@@ -1,7 +1,7 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_BATTLEROOMLISTCTRL_H
 #define SPRINGLOBBY_HEADERGUARD_BATTLEROOMLISTCTRL_H
 
-#include "customlistctrl.h"
+#include "customvirtlistctrl.h"
 #include "usermenu.h"
 
 class User;
@@ -13,16 +13,14 @@ class wxIcon;
 
 /** \brief display participants of battle and their info (ally,team,color,cpu...)
  * \todo DOCMEMORE */
-class BattleroomListCtrl : public CustomListCtrl
+class BattleroomListCtrl : public CustomVirtListCtrl< User *>
 {
   public:
     BattleroomListCtrl( wxWindow* parent, IBattle* battle, Ui& ui, bool readonly );
      ~BattleroomListCtrl();
 
-	  void SetBattle( IBattle* battle );
-	  IBattle& GetBattle();
-
-    void Sort();
+    void SetBattle( IBattle* battle );
+    IBattle& GetBattle();
 
     void AddUser( User& user );
     void RemoveUser( User& user );
@@ -30,9 +28,7 @@ class BattleroomListCtrl : public CustomListCtrl
     void UpdateUser( User& user );
     void UpdateList();
 
-    int GetUserIndex( User& user );
-
-    void SortList();
+    int GetIndexFromData( const DataType& data ) const;
 
     void OnListRightClick( wxListEvent& event );
     void OnColClick( wxListEvent& event );
@@ -50,50 +46,45 @@ class BattleroomListCtrl : public CustomListCtrl
     void OnUserMenuDeleteFromGroup( wxCommandEvent& event );
     void OnUserMenuAddToGroup( wxCommandEvent& event );
     virtual void SetTipWindowText( const long item_hit, const wxPoint position);
-    virtual void HighlightItem( long item );
+
+    virtual wxString OnGetItemText(long item, long column) const;
+    virtual int OnGetItemColumnImage(long item, long column) const;
+    wxListItemAttr * OnGetItemAttr(long item) const;
 
   protected:
-    static int wxCALLBACK CompareStatusUP(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareStatusDOWN(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareSideUP(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareSideDOWN(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareColorUP(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareColorDOWN(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareCountryUP(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareCountryDOWN(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareRankUP(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareRankDOWN(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareNicknameUP(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareNicknameDOWN(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareTeamUP(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareTeamDOWN(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareAllyUP(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareAllyDOWN(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareCpuUP(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareCpuDOWN(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareHandicapUP(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareHandicapDOWN(long item1, long item2, long sortData);
-    wxString GetCellContentsString( long row_number, int column );
+    static int CompareStatus(const DataType user1, const DataType user2, const IBattle* m_battle );
+    static int CompareSide(const DataType user1, const DataType user2);
+    static int CompareColor(const DataType user1, const DataType user2);
+    static int CompareRank(const DataType user1, const DataType user2);
+    static int CompareTeam(const DataType user1, const DataType user2);
+    static int CompareAlly(const DataType user1, const DataType user2);
+    static int CompareCpu(const DataType user1, const DataType user2);
+    static int CompareHandicap(const DataType user1, const DataType user2);
+
+//    wxString GetCellContentsString( long row_number, int column );
 
     wxString GetSelectedUserNick();
 
     IBattle* m_battle;
+    static IBattle* s_battle;
 
     typedef SL_GENERIC::UserMenu<BattleroomListCtrl> UserMenu;
     UserMenu* m_popup;
 
     User* m_sel_user;
-    std::vector<User*> items;
 
     wxMenu* m_sides;
     wxMenuItem* m_spec_item;
 
     wxMenuItem* m_handicap_item;
 
-    Ui& m_ui;
-    static Ui* m_ui_for_sort;
+    static int CompareOneCrit( DataType u1, DataType u2, int col, int dir ) ;
 
-		bool m_ro;
+    Ui& m_ui;
+
+    virtual void Sort();
+
+    bool m_ro;
 
     enum {
       BRLIST_LIST = wxID_HIGHEST,
@@ -115,3 +106,21 @@ class BattleroomListCtrl : public CustomListCtrl
 
 
 #endif // SPRINGLOBBY_HEADERGUARD_BATTLEROOMLISTCTRL_H
+
+/**
+    This file is part of SpringLobby,
+    Copyright (C) 2007-09
+
+    springsettings is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License version 2 as published by
+    the Free Software Foundation.
+
+    springsettings is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SpringLobby.  If not, see <http://www.gnu.org/licenses/>.
+**/
+

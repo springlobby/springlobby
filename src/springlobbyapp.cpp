@@ -24,6 +24,7 @@
 #include <wx/utils.h>
 #include <wx/wfstream.h>
 
+#include "useractions.h"
 #include "springlobbyapp.h"
 #include "mainwindow.h"
 #include "settings.h"
@@ -38,10 +39,11 @@
 #include "torrentwrapper.h"
 #endif
 #include "updater/updater.h"
-#include "replay/replaytab.h"
 #include "globalsmanager.h"
 #include "Helper/wxTranslationHelper.h"
 #include "Helper/tasclientimport.h"
+#include "playback/playbacktraits.h"
+#include "playback/playbacktab.h"
 
 const unsigned int TIMER_ID         = 101;
 const unsigned int TIMER_INTERVAL   = 100;
@@ -77,8 +79,8 @@ SpringLobbyApp::SpringLobbyApp()
     : 	m_translationhelper( NULL ),
     m_log_console( false ),
     m_log_window_show( false ),
-    m_crash_handle_disable( false )
-
+    m_crash_handle_disable( false ),
+	quit_called( false )
 {
 	m_timer = new wxTimer(this, TIMER_ID);
     SetAppName( _T("springlobby") );
@@ -177,14 +179,14 @@ bool SpringLobbyApp::OnInit()
 			{
 				wxArrayString list = sett().GetServers();
 				int count = list.GetCount();
-				wxString wordlist = sett().GetHighlightedWords();
+				wxArrayString wordlist = sett().GetHighlightedWords();
 				for ( int i= 0; i < count; i++ )
 				{
 					wxString nick = sett().GetServerAccountNick( list[i] );
-					if ( !wordlist.Contains( nick ) )
+					if ( wordlist.Index( nick ) == -1 )
 					{
-						 if ( !wordlist.IsEmpty() && !wordlist.EndsWith( _T(";") ) ) wordlist += _T(";");
-					}  wordlist += nick;
+						wordlist.Add( nick );
+					}
 				}
 				sett().SetHighlightedWords( wordlist );
 			}
@@ -216,15 +218,52 @@ bool SpringLobbyApp::OnInit()
 					long value;
 					if( UACpath.QueryValue( _T("EnableLUA"), &value ) ) // reg key not present -> not vista
 					{
-						if( value != 0 ) usync().SetSpringDataPath(_T("")); // UAC is on, fix the spring data path
+						if( value != 0 )
+						{
+							usync().ReloadUnitSyncLib();
+							if ( usync().IsLoaded() ) usync().SetSpringDataPath(_T("")); // UAC is on, fix the spring data path
+						}
 					}
 				}
 			#endif
 			}
+			if ( sett().GetSettingsVersion() < 12 )
+			{
+				sett().ConvertOldChannelSettings();
+			}
+			if ( sett().GetSettingsVersion() < 13 )
+			{
+				sett().ConvertOldHiglightSettings();
+			}
     }
 
+		if ( !wxDirExists( wxStandardPaths::Get().GetUserDataDir() ) ) wxMkdir( wxStandardPaths::Get().GetUserDataDir() );
+
+		sett().RefreshSpringVersionList();
     ui().ReloadUnitSync(); // first time load of unitsync
     ui().ShowMainWindow();
+
+		if ( sett().ShouldAddDefaultServerSettings() ) sett().SetDefaultServerSettings();
+		if ( sett().ShouldAddDefaultChannelSettings() )
+		{
+			sett().AddChannelJoin( _T("main"), _T("") );
+			sett().AddChannelJoin( _T("newbies"), _T("") );
+		}
+		if ( sett().ShouldAddDefaultGroupSettings() )
+		{
+			 sett().AddGroup( _("Default") );
+			 sett().AddGroup( _("Ignore PM") );
+			 useractions().ChangeAction( _("Ignore PM"), UserActions::ActIgnorePM );
+			 sett().AddGroup( _("Ignore chat") );
+			 useractions().ChangeAction( _("Ignore chat"), UserActions::ActIgnoreChat );
+			 sett().AddGroup( _("Battle Autokick") );
+			 useractions().ChangeAction( _("Battle Autokick"), UserActions::ActAutokick );
+			 sett().AddGroup( _("Friends") );
+			 useractions().ChangeAction( _("Friends"), UserActions::ActNotifBattle );
+			 useractions().ChangeAction( _("Friends"), UserActions::ActHighlight );
+			 useractions().ChangeAction( _("Friends"), UserActions::ActNotifLogin );
+			 useractions().SetGroupColor( _("Friends"), wxColor( 0, 0, 255 ) );
+		}
 
     if ( sett().IsFirstRun() )
     {
@@ -235,19 +274,9 @@ bool SpringLobbyApp::OnInit()
         wxLogMessage( _T("first time startup"));
         wxMessageBox(_("Hi ") + wxGetUserName() + _(",\nIt looks like this is your first time using SpringLobby. I have guessed a configuration that I think will work for you but you should review it, especially the Spring configuration. \n\nWhen you are done you can go to the File menu, connect to a server, and enjoy a nice game of Spring :)"), _("Welcome"),
                      wxOK | wxICON_INFORMATION, &ui().mw() );
-        SetupUserFolders();
 
-				if ( sett().ShouldAddDefaultServerSettings() ) sett().SetDefaultServerSettings();
-				if ( sett().ShouldAddDefaultChannelSettings() )
-				{
-					sett().AddChannelJoin( _T("main"), _T("") );
-					sett().AddChannelJoin( _T("newbies"), _T("") );
-				}
-				if ( sett().ShouldAddDefaultGroupSettings() ) sett().AddGroup( _("Default") );
 
-        if ( !wxDirExists( wxStandardPaths::Get().GetUserDataDir() ) ) wxMkdir( wxStandardPaths::Get().GetUserDataDir() );
-
-        customMessageBoxNoModal(SL_MAIN_ICON, _("By default SpringLobby reports some statistics.\nYou can disable that on options tab --> General."),_("Notice"),wxOK );
+        customMessageBoxNoModal(SL_MAIN_ICON, _("By default SpringLobby reports some usage statistics.\nYou can disable that on options tab --> General."),_("Notice"),wxOK );
 
 
 				// copy uikeys.txt
@@ -273,21 +302,23 @@ bool SpringLobbyApp::OnInit()
     }
     else
     {
-        ui().Connect();
+        ui().mw().ShowSingleplayer();
     }
 
   #ifndef NO_TORRENT_SYSTEM
   if( sett().GetTorrentSystemAutoStartMode() == 1 ) torrent().ConnectToP2PSystem();
   #endif
 
+    //starts the replay loading process in a thread
+    ui().mw().GetReplayTab().ReloadList();
+    ui().mw().GetSavegameTab().ReloadList();
+    wxLogMessage( _T("Replaytab updated") );
+
   m_timer->Start( TIMER_INTERVAL );
 
 //  #ifdef __WXMSW__
 //  if ( sett().GetAutoUpdate() )Updater().CheckForUpdates();
 //  #endif
-
-
-  ui().mw().GetReplayTab().AddAllReplays();
 
     return true;
 }
@@ -296,6 +327,8 @@ bool SpringLobbyApp::OnInit()
 //! @brief Finalizes the application
 int SpringLobbyApp::OnExit()
 {
+		if ( quit_called ) return 0;
+		quit_called = true;
     wxLogDebugFunc( _T("") );
 
     if(m_translationhelper)
@@ -320,6 +353,8 @@ int SpringLobbyApp::OnExit()
 
   DestroyGlobals();
 
+  exit(0);/// Must fix crashes on close, except those in destroyglobals.
+
   return 0;
 }
 
@@ -338,72 +373,6 @@ void SpringLobbyApp::OnFatalException()
 void SpringLobbyApp::OnTimer( wxTimerEvent& event )
 {
     ui().OnUpdate( event.GetInterval() );
-}
-
-
-/** Try to create the named directory, if it doesn't exist.
- *
- * @param name Path to directory that should exist or be created.
- *
- * @param perm Value of @p perm parameter for wxFileName::Mkdir.
- *
- * @param flags Value of @p flags parameter for wxFileName::Mkdir.
- *
- * @return @c true if the directory already exists, or the return
- * value of wxFileName::Mkdir if it does not.
- */
-inline bool
-tryCreateDirectory(const wxString& name, int perm = 0775, int flags = 0)
-{
-    if ( wxFileName::DirExists(name) )
-	return true;
-    else
-	return wxFileName::Mkdir(name, perm, flags);
-}
-
-void SpringLobbyApp::SetupUserFolders()
-{
-      wxString sep = wxFileName::GetPathSeparator();
-      wxString defaultdir = wxFileName::GetHomeDir() + sep +_T("spring");
-      wxArrayString choices;
-
-      int donothing = choices.Add( _("Do nothing") );
-      int createcustompath = choices.Add( _("Create a folder in a custom path (you'll get prompted for the path)") );
-      int choseexisting = choices.Add( _("I have already a SpringData folder, i want to browse manually for it") );
-
-      int result = wxGetSingleChoiceIndex(
-                       _("Looks like you don't have yet a user SpringData folder structure\nWhat would you like to do? (leave default choice if you don't know what this is for)"),
-                       _("First time wizard"),
-                       choices );
-
-      wxString dir;
-      bool createdirs = true;
-      if ( result == choseexisting ) createdirs = false;
-      else if ( result == donothing ) return;
-
-      if ( result == createcustompath || result == choseexisting ) dir = wxDirSelector( _("Choose a folder"), defaultdir );
-
-      if ( createdirs )
-      {
-				if ( dir.IsEmpty() ||
-	       ( !tryCreateDirectory( dir, 0775 ) ||
-				 ( !tryCreateDirectory( dir + sep + _T("mods"), 0775 ) ||
-		       !tryCreateDirectory( dir + sep + _T("maps"), 0775 ) ||
-		       !tryCreateDirectory( dir + sep + _T("base"), 0775 ) ||
-		       !tryCreateDirectory( dir + sep + _T("demos"), 0775 ) ||
-					 !tryCreateDirectory( dir + sep + _T("screenshots"), 0775  ) )
-				 )
-	       )
-				{
-					if ( dir.IsEmpty() ) dir = defaultdir;
-					wxMessageBox( _("Something went wrong when creating the directories\nPlease create manually the following folders:") + wxString(_T("\n")) + dir +  _T("\n") + dir + sep + _T("mods\n") + dir + sep + _T("maps\n") + dir + sep + _T("base\n") );
-				return;
-				}
-      }
-      if ( usync().IsLoaded() )
-      {
-				usync().SetSpringDataPath(dir);
-      }
 }
 
 bool SpringLobbyApp::SelectLanguage()

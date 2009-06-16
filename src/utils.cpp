@@ -14,8 +14,9 @@
 
 // FIXME this does not work on linux+mingw build for windows
 #ifdef _MSC_VER
-#include <windows.h>
-#include <wx/msw/winundef.h>
+//#include <windows.h>
+//#include <wx/msw/winundef.h>
+typedef __int64 int64_t;
 #endif
 
 //for cpu detection
@@ -175,59 +176,36 @@ double s2d( const wxString& arg )
 
 wxString GetWordParam( wxString& params )
 {
-    wxString param;
-
-    param = params.BeforeFirst( ' ' );
-    if ( param.IsEmpty() )
-    {
-        param = params;
-        params = _T("");
-        return param;
-    }
-    else
-    {
-        params = params.AfterFirst( ' ' );
-        return param;
-    }
+	return GetParamByChar( params, _T(' ') );
 }
 
 
 wxString GetSentenceParam( wxString& params )
 {
-    wxString param;
-
-    param = params.BeforeFirst( '\t' );
-    if ( param.IsEmpty() )
-    {
-        param = params;
-        params = _T("");
-        return param;
-    }
-    else
-    {
-        params = params.AfterFirst( '\t' );
-        return param;
-    }
+   return GetParamByChar( params, _T('\t') );
 }
 
 
 long GetIntParam( wxString& params )
 {
-    wxString param;
-    long ret;
+   return s2l( GetParamByChar( params, _T(' ') ) );
+}
 
-    param = params.BeforeFirst( ' ' );
-    if ( param.IsEmpty() )
-    {
-        params.ToLong( &ret );
-        params = _T("");
-    }
-    else
-    {
-        params = params.AfterFirst( ' ' );
-        param.ToLong( &ret );
-    }
-    return ret;
+wxString GetParamByChar( wxString& params, const wxChar& sep )
+{
+	int pos = params.Find( sep );
+	wxString ret;
+	if ( pos != -1 )
+	{
+		ret = params.Left( pos );
+		params = params.Mid( pos + 1 );
+	}
+	else
+	{
+		ret = params;
+		params = _T("");
+	}
+	return ret;
 }
 
 
@@ -252,6 +230,24 @@ wxString GetExecutableFolder()
 	return wxStandardPathsBase::Get().GetExecutablePath().BeforeLast( wxFileName::GetPathSeparator() );
 }
 
+template<class T>
+T FromwxString(const wxString& arg){
+  std::stringstream s;
+  s << STD_STRING(arg);
+  int64_t ret;
+  s >> ret;
+  return (T)ret;
+}
+
+wxString MakeHashUnsigned( const wxString& hash )
+{
+	return TowxString( FromwxString<unsigned int>( hash ) );
+}
+
+wxString MakeHashSigned( const wxString& hash )
+{
+	return TowxString( FromwxString<int>( hash ) );
+}
 
 // ------------------------------------------------------------------------------------------------------------------------
 ///
@@ -331,11 +327,6 @@ const wxChar* TooltipEnable(const wxChar* input)
     return sett().GetShowTooltips() ? input : _("");
 }
 
-template<typename T>
-T min(T a, T b, T c)
-{
-    return std::min(a, std::min(b, c));
-}
 
 double LevenshteinDistance(wxString s, wxString t)
 {

@@ -14,9 +14,9 @@
 
 #include <stdexcept>
 
-#include "replaytab.h"
-#include "replaylistctrl.h"
+#include "playbacklistctrl.h"
 #include "replaylist.h"
+#include "playbackthread.h"
 #include "../ui.h"
 #include "../chatpanel.h"
 #include "../utils.h"
@@ -26,40 +26,40 @@
 #include "../mapctrl.h"
 #include "../battleroomlistctrl.h"
 
-#include "replayfilter.h"
+#include "playbackfilter.h"
 #include "../iconimagelist.h"
 
 #include "../settings++/custom_dialogs.h"
 
 
-const unsigned int REPLAYLIST_COLOUMNCOUNT = 10;
+BEGIN_EVENT_TABLE_TEMPLATE1(PlaybackTab, wxPanel, PlaybackTraits)
 
-BEGIN_EVENT_TABLE(ReplayTab, wxPanel)
-
-  EVT_BUTTON              ( REPLAY_WATCH             , ReplayTab::OnWatch        )
-  EVT_BUTTON              ( REPLAY_RELOAD             , ReplayTab::OnReload        )
-  EVT_BUTTON              ( REPLAY_DELETE            , ReplayTab::OnDelete    )
-  EVT_LIST_ITEM_SELECTED  ( RLIST_LIST               , ReplayTab::OnSelect      )
+  EVT_BUTTON              ( PLAYBACK_WATCH             , PlaybackTab::OnWatch        )
+  EVT_BUTTON              ( PLAYBACK_RELOAD             , PlaybackTab::OnReload        )
+  EVT_BUTTON              ( PLAYBACK_DELETE            , PlaybackTab::OnDelete    )
+  EVT_LIST_ITEM_SELECTED  ( RLIST_LIST               , PlaybackTab::OnSelect      )
 // this doesn't get triggered (?)
-  EVT_LIST_ITEM_DESELECTED( wxID_ANY               , ReplayTab::OnDeselect      )
-  EVT_CHECKBOX            ( REPLAY_LIST_FILTER_ACTIV , ReplayTab::OnFilterActiv )
+  EVT_LIST_ITEM_DESELECTED( wxID_ANY               , PlaybackTab::OnDeselect      )
+  EVT_CHECKBOX            ( PLAYBACK_LIST_FILTER_ACTIV , PlaybackTab::OnFilterActiv )
+  EVT_COMMAND             ( wxID_ANY, PlaybacksLoadedEvt, PlaybackTab::AddAllPlaybacks  )
 #if  wxUSE_TOGGLEBTN
-  EVT_TOGGLEBUTTON        ( REPLAY_LIST_FILTER_BUTTON, ReplayTab::OnFilter  )
+  EVT_TOGGLEBUTTON        ( PLAYBACK_LIST_FILTER_BUTTON, PlaybackTab::OnFilter  )
 #else
-  EVT_CHECKBOX            ( REPLAY_LIST_FILTER_BUTTON , ReplayTab::OnFilter )
+  EVT_CHECKBOX            ( PLAYBACK_LIST_FILTER_BUTTON , PlaybackTab::OnFilter )
 #endif
 
 
 END_EVENT_TABLE()
 
-ReplayTab::ReplayTab( wxWindow* parent, Ui& ui ) :
+template < class PlaybackTraits >
+PlaybackTab<PlaybackTraits>::PlaybackTab( wxWindow* parent, Ui& ui ) :
   wxPanel( parent, -1 ),
-  m_ui(ui),
-  m_sel_replay_id(-1)
+  m_replay_loader ( 0 ),
+  m_ui(ui)
 {
-    wxLogMessage(_T("ReplayTab::ReplayTab()"));
+    wxLogMessage(_T("PlaybackTab::PlaybackTab()"));
 
-    m_replays = new ReplayList ( *this );
+    m_replay_loader = new LoaderType( this );
 
     wxBoxSizer* m_main_sizer;
     m_main_sizer = new wxBoxSizer( wxVERTICAL );
@@ -70,7 +70,7 @@ ReplayTab::ReplayTab( wxWindow* parent, Ui& ui ) :
     wxBoxSizer* m_replaylist_sizer;
     m_replaylist_sizer = new wxBoxSizer( wxVERTICAL );
 
-    m_replay_listctrl = new ReplayListCtrl( this, *m_replays );
+    m_replay_listctrl = new ListCtrlType( this );
     m_replaylist_sizer->Add( m_replay_listctrl, 1, wxALL|wxEXPAND, 5 );
 
     m_main_sizer->Add( m_replaylist_sizer, 1, wxEXPAND, 5 );;
@@ -110,7 +110,7 @@ ReplayTab::ReplayTab( wxWindow* parent, Ui& ui ) :
     m_main_sizer->Add( m_info_sizer, 0, wxEXPAND, 5 );
 
 
-    m_filter = new ReplayListFilter( this , wxID_ANY, this ,wxDefaultPosition, wxSize( -1,-1 ), wxEXPAND );
+    m_filter = new PlaybackListFilter<ThisType>( this , wxID_ANY, this ,wxDefaultPosition, wxSize( -1,-1 ), wxEXPAND );
     m_filter_sizer->Add( m_filter, 0, wxEXPAND, 5);
 
     m_main_sizer->Add( m_filter_sizer, 0, wxEXPAND, 5);
@@ -122,25 +122,25 @@ ReplayTab::ReplayTab( wxWindow* parent, Ui& ui ) :
     m_buttons_sizer = new wxBoxSizer( wxHORIZONTAL );
 
     #if  wxUSE_TOGGLEBTN
-        m_filter_show = new wxToggleButton( this, REPLAY_LIST_FILTER_BUTTON , wxT(" Filter "), wxDefaultPosition , wxSize( -1,28 ), 0 );
+        m_filter_show = new wxToggleButton( this, PLAYBACK_LIST_FILTER_BUTTON , wxT(" Filter "), wxDefaultPosition , wxSize( -1,28 ), 0 );
     #else
-        m_filter_show = new wxCheckBox( this, REPLAY_LIST_FILTER_BUTTON , wxT(" Filter "), wxDefaultPosition , wxSize( -1,28 ), 0 );
+        m_filter_show = new wxCheckBox( this, PLAYBACK_LIST_FILTER_BUTTON , wxT(" Filter "), wxDefaultPosition , wxSize( -1,28 ), 0 );
     #endif
 
     m_buttons_sizer->Add( m_filter_show, 0, 0, 5 );
 
-    m_filter_activ = new wxCheckBox( this, REPLAY_LIST_FILTER_ACTIV , wxT("Activated"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_filter_activ = new wxCheckBox( this, PLAYBACK_LIST_FILTER_ACTIV , wxT("Activated"), wxDefaultPosition, wxDefaultSize, 0 );
     m_buttons_sizer->Add( m_filter_activ, 1, wxALL|wxEXPAND, 5 );
 
     m_buttons_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
 
-    m_watch_btn = new wxButton( this, REPLAY_WATCH, _("Watch"), wxDefaultPosition, wxSize( -1,28 ), 0 );
+    m_watch_btn = new wxButton( this, PLAYBACK_WATCH, _("Watch"), wxDefaultPosition, wxSize( -1,28 ), 0 );
     m_buttons_sizer->Add( m_watch_btn, 0, wxBOTTOM|wxLEFT|wxRIGHT, 5 );
 
-    m_delete_btn = new wxButton( this, REPLAY_DELETE, _("Delete"), wxDefaultPosition, wxSize( -1,28 ), 0 );
+    m_delete_btn = new wxButton( this, PLAYBACK_DELETE, _("Delete"), wxDefaultPosition, wxSize( -1,28 ), 0 );
     m_buttons_sizer->Add( m_delete_btn, 0, wxBOTTOM|wxRIGHT, 5 );
 
-    m_reload_btn = new wxButton( this, REPLAY_RELOAD, _("Reload list"), wxDefaultPosition, wxSize( -1,28 ), 0 );
+    m_reload_btn = new wxButton( this, PLAYBACK_RELOAD, _("Reload list"), wxDefaultPosition, wxSize( -1,28 ), 0 );
     m_buttons_sizer->Add( m_reload_btn, 0, wxBOTTOM|wxRIGHT, 5 );
 
     m_main_sizer->Add( m_buttons_sizer, 0, wxEXPAND, 5 );
@@ -150,134 +150,117 @@ ReplayTab::ReplayTab( wxWindow* parent, Ui& ui ) :
     this->SetSizer( m_main_sizer );
     this->Layout();
 
+		ReloadList();
+
     //none selected --> shouldn't watch/delete that
     Deselect();
-
 }
 
-
-ReplayTab::~ReplayTab()
+template < class PlaybackTraits >
+PlaybackTab<PlaybackTraits>::~PlaybackTab()
 {
-  m_minimap->SetBattle( NULL );
-  if (m_filter != 0)
-      m_filter->SaveFilterValues();
-  if(m_replays)delete m_replays;
-  wxLogMessage(_T("ReplayTab::!ReplayTab()"));
+    m_minimap->SetBattle( NULL );
+    if (m_filter != 0)
+        m_filter->SaveFilterValues();
+
+    wxLogMessage(_T("PlaybackTab::!PlaybackTab()"));
 }
 
-void ReplayTab::AddAllReplays()
+template < class PlaybackTraits >
+void PlaybackTab<PlaybackTraits>::AddAllPlaybacks( wxCommandEvent& evt )
 {
-    m_replays->LoadReplays();
+   const typename ListType::playback_map_t& replays =
+                    playbacklist<ListType>().GetPlaybacksMap();
+
+    for( typename ListType::playback_const_iter_t i=replays.begin();i!=replays.end();++i){
+        AddPlayback( i->second  );
+    }
+    m_replay_listctrl->RefreshVisibleItems();
 }
 
-void ReplayTab::AddReplay( Replay& replay ) {
+template < class PlaybackTraits >
+void PlaybackTab<PlaybackTraits>::AddPlayback( const PlaybackType& replay ) {
 
-    if ( m_filter->GetActiv() && !m_filter->FilterReplay( replay ) ) {
+    if ( m_filter->GetActiv() && !m_filter->FilterPlayback( replay ) ) {
         return;
     }
 
-    int index = m_replay_listctrl->InsertItem( 0, replay.date );
-    ASSERT_LOGIC( index != -1, _T("index = -1") );
-//    long replayid = (long)replay.id ;
-    m_replay_listctrl->SetItemData(index, (long)replay.id );
-
-    if (index != -1)
-        UpdateReplay( replay, index );
-    else
-        wxLogMessage( _T("Replay index == -1 at update") );
-
+    m_replay_listctrl->AddPlayback( replay );
 }
 
-
-void ReplayTab::RemoveReplay( Replay& replay ) {
-    try{
-    for (int i = 0; i < m_replay_listctrl->GetItemCount() ; i++ ) {
-        if ( replay.id == (int)m_replay_listctrl->GetItemData( i ) ) {
-            m_replay_listctrl->DeleteItem( i );
-            if ( m_replay_listctrl->GetSelectedIndex() == i ){
-                Deselect();
-            }
-            break;
-        }
-    }
-    } catch (...) {
-        wxLogMessage( _T("exception on remove replay") );
-    }
-}
-
-void ReplayTab::UpdateReplay( Replay& replay )
+template < class PlaybackTraits >
+void PlaybackTab<PlaybackTraits>::RemovePlayback( const PlaybackType& replay )
 {
+    int index = m_replay_listctrl->GetIndexFromData( &replay );
 
-    if ( m_filter->GetActiv() && !m_filter->FilterReplay( replay ) ) {
-        RemoveReplay( replay );
+    if ( index == -1 )
+        return;
+
+    if ( index == m_replay_listctrl->GetSelectedIndex() )
+        Deselect();
+
+    m_replay_listctrl->RemovePlayback( replay );
+}
+
+template < class PlaybackTraits >
+void PlaybackTab<PlaybackTraits>::RemovePlayback( const int index )
+{
+    if ( index == -1 )
+        return;
+
+    if ( index == m_replay_listctrl->GetSelectedIndex() )
+        Deselect();
+
+    m_replay_listctrl->RemovePlayback( index );
+}
+
+template < class PlaybackTraits >
+void PlaybackTab<PlaybackTraits>::UpdatePlayback( const PlaybackType& replay )
+{
+    if ( m_filter->GetActiv() && !m_filter->FilterPlayback( replay ) ) {
+        RemovePlayback( replay );
         return;
     }
 
-    int index = -1;
-    for (int i = 0; i < m_replay_listctrl->GetItemCount() ; i++ ) {
-        if ( replay.id == (int)m_replay_listctrl->GetItemData( i ) ) {
-          index = i;
-          break;
-        }
-    }
+    int index = m_replay_listctrl->GetIndexFromData( &replay );
 
     if (index != -1)
-        UpdateReplay( replay, index );
+        m_replay_listctrl->RefreshItem( index );
     else
-        AddReplay( replay );
+        AddPlayback( replay );
 
 }
 
-void ReplayTab::UpdateReplay( Replay& replay, const int index )
+template < class PlaybackTraits >
+void PlaybackTab<PlaybackTraits>::RemoveAllPlaybacks()
 {
-
-    ASSERT_LOGIC( index != -1, _T("index = -1") );
-     m_replay_listctrl->SetItemData(index, (long)replay.id );
-    wxString duration = wxString::Format(_T("%02ld:%02ld:%02ld"), replay.duration / 3600,
-                        (replay.duration%3600)/60, (replay.duration%60)/60 ) ;
-    m_replay_listctrl->SetItem( index, 0, replay.date );
-    m_replay_listctrl->SetItem( index, 1, replay.battle.GetHostModName() );
-    m_replay_listctrl->SetItem( index, 2, replay.battle.GetHostMapName() );
-    m_replay_listctrl->SetItem( index, 3, wxString::Format(_T("%d"),replay.battle.GetNumUsers() - replay.battle.GetSpectators() ) );
-    m_replay_listctrl->SetItem( index, 4, duration );
-    m_replay_listctrl->SetItem( index, 5, replay.SpringVersion );
-    m_replay_listctrl->SetItem( index, 6, wxString::Format( _T("%d KB"),replay.size/1024 ) );
-    m_replay_listctrl->SetItem( index, 7, replay.Filename.AfterLast( wxFileName::GetPathSeparator() ) );
-
-    //  if ( &replay == m_sel_replay ) SelectReplay( m_sel_replay );
-    //  m_replay_listctrl->Sort();
-
+    m_replay_listctrl->Clear();
+    //shouldn't list be cleared too here? (koshi)
 }
 
 
-void ReplayTab::RemoveAllReplays() {
-    m_replay_listctrl->DeleteAllItems();
-    m_replay_listctrl->SetUnsorted();
+template < class PlaybackTraits >
+void PlaybackTab<PlaybackTraits>::UpdateList()
+{
+    const typename ListType::playback_map_t& replays =
+        playbacklist<ListType>().GetPlaybacksMap();
+
+    for( typename ListType::playback_const_iter_t i = replays.begin(); i != replays.end(); ++i){
+        UpdatePlayback(i->second);
+    }
+    m_replay_listctrl->RefreshVisibleItems();
 }
 
 
-void ReplayTab::UpdateList() {
-/*
-  for (unsigned int i = 0; i < m_replays->GetNumReplays(); ++i) {
-    Replay b = m_replays->GetReplay(i);
-
-    UpdateReplay(b);
-  }
-  */
-  replay_map_t &replays=m_replays->GetReplaysMap();
-  for(replay_iter_t i=replays.begin();i!=replays.end();++i){
-    UpdateReplay(i->second);
-  }
-}
-
-
-void ReplayTab::SetFilterActiv( bool activ )
+template < class PlaybackTraits >
+void PlaybackTab<PlaybackTraits>::SetFilterActiv( bool activ )
 {
   m_filter->SetActiv( activ );
   m_filter_activ->SetValue( activ );
 }
 
-void ReplayTab::OnFilter( wxCommandEvent& event )
+template < class PlaybackTraits >
+void PlaybackTab<PlaybackTraits>::OnFilter( wxCommandEvent& event )
 {
   if (m_filter_show->GetValue()) {
     m_filter->Show(  );
@@ -289,18 +272,23 @@ void ReplayTab::OnFilter( wxCommandEvent& event )
   }
 }
 
-void ReplayTab::OnWatch( wxCommandEvent& event )
+template < class PlaybackTraits >
+void PlaybackTab<PlaybackTraits>::OnWatch( wxCommandEvent& event )
 {
-    if (m_replay_listctrl->GetSelectedIndex() != -1 && m_sel_replay_id!=-1 ) {
+    if (m_replay_listctrl->GetSelectedIndex() != -1 ) {
+         int m_sel_replay_id = m_replay_listctrl->GetSelectedData()->id;
+
+
         wxLogMessage(_T("Watching replay %d "),m_sel_replay_id);
         try{
-            Replay rep = m_replays->GetReplayById(m_sel_replay_id);
+            PlaybackType& rep = playbacklist<ListType>().GetPlaybackById( m_sel_replay_id );
 
             std::map<wxString, wxString> versionlist = sett().GetSpringVersionList();
             if ( versionlist.size() == 0 )
             {
               wxLogWarning( _T("can't get spring version from any unitsync") );
-              customMessageBoxNoModal(SL_MAIN_ICON,  _("Couldn't get your spring versions from any unitsync library."), _("Spring error"), wxICON_EXCLAMATION|wxOK );
+              customMessageBox(SL_MAIN_ICON,  _("Couldn't get your spring versions from any unitsync library."), _("Spring error"), wxICON_EXCLAMATION|wxOK );
+              AskForceWatch( rep );
               return;
             }
             bool versionfound = false;
@@ -317,19 +305,21 @@ void ReplayTab::OnWatch( wxCommandEvent& event )
                 versionfound = true;
               }
             }
+            if ( !ReplayTraits::IsReplayType ) versionfound = true; // quick hack to bypass spring version check
             if ( !versionfound )
             {
               wxString message = wxString::Format( _("No compatible installed spring version has been found, this replay requires version: %s\n"), rep.SpringVersion.c_str() );
               message << _("Your current installed versions are:");
               for ( std::map<wxString, wxString>::iterator itor = versionlist.begin(); itor != versionlist.end(); itor++ ) message << _T(" ") << itor->second;
-              customMessageBoxNoModal (SL_MAIN_ICON, message, _("Spring error"), wxICON_EXCLAMATION|wxOK );
+              customMessageBox(SL_MAIN_ICON, message, _("Spring error"), wxICON_EXCLAMATION|wxOK );
               wxLogWarning ( _T("no spring version supported by this replay found") );
+              AskForceWatch( rep );
               return;
             }
-
+						rep.battle.GetMe().SetNick( usync().GetDefaultNick() );
             bool watchable = rep.battle.MapExists() && rep.battle.ModExists();
             if ( watchable )
-                m_ui.WatchReplay( rep.Filename );
+                m_ui.WatchPlayback( rep.battle );
             else {
                 #ifdef NO_TORRENT_SYSTEM
                     wxString downloadProc = _("Do you want me to take you to the download page?");
@@ -345,14 +335,20 @@ void ReplayTab::OnWatch( wxCommandEvent& event )
                         wxString modname = battle.GetHostModName();
                         m_ui.DownloadMod ( modhash, modname );
                     }
+                    else {
+                        AskForceWatch( rep );
+                    }
                     return;
                 }
 
                 if ( !battle.MapExists() ) {
-                    if (customMessageBox(SL_MAIN_ICON, _("You need to download the map to be able to watch this replay.\n\n") + downloadProc, _("Map not available"), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
+                    if (customMessageBox(SL_MAIN_ICON, _(" I couldn't find the map to be able to watch this replay\nThis can be caused by tasclient writing broken map hash value\nIf you're sure you have the map, press no\nYou need to download the map to be able to watch this replay.\n\n") + downloadProc, _("Map not available"), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
                         wxString maphash = battle.GetHostMapHash();
                         wxString mapname = battle.GetHostMapName();
                         m_ui.DownloadMap ( maphash, mapname );
+                    }
+                    else {
+                        AskForceWatch( rep );
                     }
                 }
             }
@@ -364,20 +360,30 @@ void ReplayTab::OnWatch( wxCommandEvent& event )
     }
 }
 
-void ReplayTab::OnDelete( wxCommandEvent& event )
+template < class PlaybackTraits >
+void PlaybackTab<PlaybackTraits>::AskForceWatch( typename PlaybackTab<PlaybackTraits>::PlaybackType& rep ) const
+{
+    if (customMessageBox(SL_MAIN_ICON, _("I don't think you will be able to watch this replay.\nTry anyways? (MIGHT CRASH!)") , _("invalid replay"), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
+        m_ui.WatchPlayback( rep.battle );
+    }
+}
+
+template < class PlaybackTraits >
+void PlaybackTab<PlaybackTraits>::OnDelete( wxCommandEvent& event )
 {
     int sel_index=m_replay_listctrl->GetSelectedIndex();
-    if (sel_index >=0 && m_sel_replay_id !=-1) {
-        wxLogMessage(_T("Deleting replay %d "),m_sel_replay_id);
+    if ( sel_index >=0 ) {
         try{
-            Replay rep = m_replays->GetReplayById(m_sel_replay_id);
+            const PlaybackType& rep = *m_replay_listctrl->GetSelectedData();
+            int m_sel_replay_id = rep.id;
+            int index = m_replay_listctrl->GetIndexFromData( &rep );
+            wxLogMessage(_T("Deleting replay %d "),m_sel_replay_id);
             wxString fn = rep.Filename;
-            if ( !m_replays->DeleteReplay( m_sel_replay_id ) )
+            if ( !playbacklist<ListType>().DeletePlayback( m_sel_replay_id ) )
                 customMessageBoxNoModal(SL_MAIN_ICON, _("Could not delete Replay: ") + fn,
                     _("Error") );
             else{
-                RemoveReplay( rep );
-                Deselect();
+                RemovePlayback( index ); // Deselect is called in there too
             }
         }catch(std::runtime_error){
             return;
@@ -387,16 +393,17 @@ void ReplayTab::OnDelete( wxCommandEvent& event )
     }
 }
 
-void ReplayTab::OnFilterActiv( wxCommandEvent& event )
+template < class PlaybackTraits >
+void PlaybackTab<PlaybackTraits>::OnFilterActiv( wxCommandEvent& event )
 {
     m_filter->SetActiv( m_filter_activ->GetValue() );
 }
 
-void ReplayTab::OnSelect( wxListEvent& event )
+template < class PlaybackTraits >
+void PlaybackTab<PlaybackTraits>::OnSelect( wxListEvent& event )
 {
     wxLogDebugFunc( _T("") );
-    if ( event.GetIndex() == -1 )
-		{
+    if ( event.GetIndex() == -1 ) {
         Deselect();
     }
     else
@@ -407,9 +414,11 @@ void ReplayTab::OnSelect( wxListEvent& event )
             m_delete_btn->Enable( true );
             int index = event.GetIndex();
             m_replay_listctrl->SetSelectedIndex( index );
-            long data = m_replay_listctrl->GetItemData( index );
-            Replay& rep = m_replays->GetReplayById( data );
-            m_sel_replay_id = data;
+
+            //this might seem a bit backwards, but it's currently the only way that doesn't involve casting away constness
+            int m_sel_replay_id = m_replay_listctrl->GetDataFromIndex( index )->id;
+            PlaybackType& rep = playbacklist<ListType>().GetPlaybackById( m_sel_replay_id );
+
 
             wxLogMessage(_T("Selected replay %d "),m_sel_replay_id);
 
@@ -418,21 +427,8 @@ void ReplayTab::OnSelect( wxListEvent& event )
             m_mod_text->SetLabel(rep.battle.GetHostModName());
             m_minimap->SetBattle( &(rep.battle) );
             m_minimap->UpdateMinimap();
-            try
-            {
-							IBattle& oldbattle = m_players->GetBattle();
-							for ( size_t i = 0; i < oldbattle.GetNumUsers(); ++i )
-							{
-									try
-									{
-										User& usr = oldbattle.GetUser( i );
-										m_players->RemoveUser( usr );
-									}
-									catch(...)
-									{}
-							}
-            } catch ( assert_exception ) {}
-            m_players->DeleteAllItems();
+
+            m_players->Clear();
             m_players->SetBattle( (IBattle*)&rep.battle );
             for ( size_t i = 0; i < rep.battle.GetNumUsers(); ++i )
             {
@@ -448,42 +444,54 @@ void ReplayTab::OnSelect( wxListEvent& event )
         catch ( ... ) {
           Deselect();
         }
+        event.Skip();
     }
 }
 
-void ReplayTab::OnDeselect( wxListEvent& event )
+template < class PlaybackTraits >
+void PlaybackTab<PlaybackTraits>::OnDeselect( wxListEvent& event )
 {
-    wxLogMessage(_T("ReplayTab::OnDeselect"));
     Deselected();
 }
 
-void ReplayTab::Deselect()
+template < class PlaybackTraits >
+void PlaybackTab<PlaybackTraits>::Deselect()
 {
     m_replay_listctrl->SelectNone();
     Deselected();
 }
 
-void ReplayTab::Deselected()
+template < class PlaybackTraits >
+void PlaybackTab<PlaybackTraits>::Deselected()
 {
-    m_sel_replay_id = -1;
     m_watch_btn->Enable( false );
     m_delete_btn->Enable( false );
+    m_players_text->SetLabel( _T("") );
+    m_map_text->SetLabel( _T("") );
+    m_mod_text->SetLabel( _T("") );
     m_minimap->SetBattle( NULL );
+    m_minimap->UpdateMinimap();
+    m_minimap->Refresh();
+    m_players->Clear();
+    m_players->SetBattle( NULL );
 }
 
-void ReplayTab::ReloadList()
+template < class PlaybackTraits >
+void PlaybackTab<PlaybackTraits>::ReloadList()
 {
     wxDateTime dt = wxDateTime::UNow();
     Deselect();
-    m_replays->RemoveAll();
-    m_replays->LoadReplays();
+    m_replay_listctrl->Clear();
+		m_replay_loader->Run();
 
-    long sec = (wxDateTime::UNow() - dt).GetMilliseconds().ToLong();
-    if ( sec > 0 )
-        customMessageBoxNoModal(SL_MAIN_ICON, wxString::Format( _T("List reloaded in %d milli seconds"),sec ) );
+
+//    long sec = (wxDateTime::UNow() - dt).GetMilliseconds().ToLong();
+//    if ( sec > 0 )
+//        customMessageBoxNoModal(SL_MAIN_ICON, wxString::Format( _T("List reloaded in %d milli seconds"),sec ) );
 }
 
-void ReplayTab::OnReload( wxCommandEvent& event )
+template < class PlaybackTraits >
+void PlaybackTab<PlaybackTraits>::OnReload( wxCommandEvent& event )
 {
     ReloadList();
 }

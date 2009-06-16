@@ -36,6 +36,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include <boost/shared_ptr.hpp>
 #include <boost/intrusive_ptr.hpp>
 #include <boost/function.hpp>
+#include <boost/version.hpp>
 #include <boost/bind.hpp>
 #include <boost/integer_traits.hpp>
 #include <boost/thread/mutex.hpp>
@@ -107,7 +108,7 @@ struct bandwidth_manager
 		TORRENT_ASSERT(limit >= 0);
 		m_limit = limit;
 	}
-	
+
 	int throttle() const throw()
 	{
 		mutex_t::scoped_lock l(m_mutex);
@@ -225,7 +226,7 @@ private:
 		}
 		catch (std::exception&) {}
 	}
-	
+
 	void on_history_expire(asio::error_code const& e)
 	{
 		try {
@@ -251,7 +252,7 @@ private:
 			if (t) t->expire_bandwidth(m_channel, e.amount);
 			l.lock();
 		}
-		
+
 		// now, wait for the next chunk to expire
 		if (!m_history.empty() && !m_abort)
 		{

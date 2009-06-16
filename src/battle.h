@@ -40,10 +40,12 @@ class Battle : public IBattle
     void KickPlayer( User& user );
 
     void RingNotReadyPlayers();
+    void RingPlayer( const User& u );
 
     void Say( const wxString& msg );
     void DoAction( const wxString& msg );
 
+    void SetLocalMap( const UnitSyncMap& map );
 
     void OnRequestBattleStatus();
     void SendMyBattleStatus();
@@ -74,6 +76,8 @@ class Battle : public IBattle
     void SetLockExternalBalanceChanges( bool value );
     bool GetLockExternalBalanceChanges();
 
+    void SendScriptToClients();
+
     ///< quick hotfix for bans
     bool CheckBan(User &user);
     ///>
@@ -85,6 +89,9 @@ class Battle : public IBattle
     void UserPositionChanged( const User& user );
 
     int GetID() { return m_id; }
+
+    void SaveMapDefaults();
+    void LoadMapDefaults( const wxString& mapname );
 
   protected:
     // Battle variables
@@ -102,3 +109,21 @@ class Battle : public IBattle
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_BATTLE_H
+
+/**
+    This file is part of SpringLobby,
+    Copyright (C) 2007-09
+
+    springsettings is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License version 2 as published by
+    the Free Software Foundation.
+
+    springsettings is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SpringLobby.  If not, see <http://www.gnu.org/licenses/>.
+**/
+

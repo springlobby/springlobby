@@ -36,7 +36,7 @@ create-build-dir ()
 	(
 	cd $1
 	if [ ! -f Makefile ] ; then
-		../configure CXXFLAGS="-O0" --config-cache $2
+		../configure  --config-cache $2
 		echo done
 	else
 		# regenerate Makefile with current config options
@@ -46,7 +46,12 @@ create-build-dir ()
 	)
 }
 
-create-build-dir build "--with-opt-level=0"
-create-build-dir build-linux-wx28 "--with-wx-config=/var/lib/buildbot/lib/linux/wx/2.8/bin/wx-config --with-opt-level=0"
-create-build-dir build-mingw-wx28 "--build=i686-pc-linux-gnu --host=i586-mingw32msvc --with-wx-config=/var/lib/buildbot/lib/mingw/wx/2.8/bin/wx-config  --with-boost-prefix=/var/lib/buildbot/lib/mingw/include/  --with-sdl-config=/var/lib/buildbot/lib/mingw/bin/sdl-config"
-create-build-dir-cmake build-cmake
+create-build-dir build "--with-wx-config=/var/lib/buildbot/lib/linux/wx/2.8/bin/wx-config --with-opt-level=0"
+create-build-dir build-mingw-wx28 "--build=i686-pc-linux-gnu --host=i586-mingw32msvc --with-wx-config=/var/lib/buildbot/lib/mingw/wx/2.8/bin/wx-config  --with-boost-prefix=/var/lib/buildbot/lib/mingw/include/  --with-sdl-config=/var/lib/buildbot/lib/mingw/bin/sdl-config --with-opt-level=2"
+if [ -e /usr/bin/g++-4.4 ] ; then
+	create-build-dir-cmake build-cmake "-DCMAKE_CXX_COMPILER:STRING=g++-4.4 -DCMAKE_CXX_FLAGS:STRING=-O0"
+else
+	create-build-dir-cmake build-cmake "-DCMAKE_CXX_FLAGS:STRING=-O0"	
+fi
+
+create-build-dir-cmake build-cmake-win "-DCMAKE_TOOLCHAIN_FILE:STRING=../cmake/Toolchain-mingw32.cmake -DCMAKE_CXX_FLAGS:STRING=-O0"

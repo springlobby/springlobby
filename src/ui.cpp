@@ -23,7 +23,6 @@
 #include "chatpanel.h"
 #include "battlelisttab.h"
 #include "battleroomtab.h"
-#include "socket.h"
 #include "battle.h"
 #include "mainchattab.h"
 #include "mainjoinbattletab.h"
@@ -56,12 +55,13 @@ Ui::Ui() :
         m_upd_counter_torrent(0),
         m_upd_counter_battlelist(0),
         m_upd_counter_chat(0),
-        m_checked_for_update(false),
+        m_first_update_trigger(true),
         m_ingame(false)
 {
     m_main_win = new MainWindow( *this );
     CustomMessageBoxBase::setLobbypointer(m_main_win);
     m_spring = new Spring(*this);
+    m_serv = new TASServer();
 }
 
 Ui::~Ui()
@@ -70,6 +70,7 @@ Ui::~Ui()
 
     delete m_main_win;
     delete m_spring;
+    delete m_serv;
 }
 
 Server& Ui::GetServer()
@@ -124,6 +125,7 @@ void Ui::ShowConnectWindow()
     }
     m_con_win->CenterOnParent();
     m_con_win->Show(true);
+    m_con_win->Raise();
 }
 
 
@@ -159,7 +161,7 @@ void Ui::Reconnect()
         pass = pass2;
     }
 
-    if ( IsConnected() ) Disconnect();
+    Disconnect();
     DoConnect( servname, sett().GetServerAccountNick(servname), pass );
 }
 
@@ -168,13 +170,10 @@ void Ui::Disconnect()
 {
     if ( m_serv != 0 )
     {
-        m_serv->Disconnect();
-        Socket* sock = m_serv->GetSocket();
-        m_serv->SetSocket( 0 );
-        delete sock;
-        sock = 0;
-        delete m_serv;
-        m_serv = 0;
+				if ( IsConnected() ) {
+				    GetServer().Disconnect();
+
+				}
     }
 }
 
@@ -184,7 +183,6 @@ void Ui::DoConnect( const wxString& servername, const wxString& username, const 
 {
     wxString host;
     int port;
-    Socket* sock;
 
     if ( !sett().ServerExists( servername ) )
     {
@@ -194,19 +192,13 @@ void Ui::DoConnect( const wxString& servername, const wxString& username, const 
 
     Disconnect();
 
-    // Create new Server object
-    m_serv = new TASServer( );
-    sock = new Socket( *m_serv );
-    m_serv->SetSocket( sock );
-    //m_serv->SetServerEvents( &se() );
-
-    m_serv->SetUsername( username );
-    m_serv->SetPassword( password );
+    GetServer().SetUsername( username );
+    GetServer().SetPassword( password );
 
     if ( sett().GetServerAccountSavePass( servername ) )
     {
-        if ( m_serv->IsPasswordHash(password) ) sett().SetServerAccountPass( servername, password );
-        else sett().SetServerAccountPass( servername, m_serv->GetPasswordHash( password ) );
+        if ( GetServer().IsPasswordHash(password) ) sett().SetServerAccountPass( servername, password );
+        else sett().SetServerAccountPass( servername, GetServer().GetPasswordHash( password ) );
     }
     else
     {
@@ -217,11 +209,11 @@ void Ui::DoConnect( const wxString& servername, const wxString& username, const 
     host = sett().GetServerHost( servername );
     port = sett().GetServerPort( servername );
 
-    m_serv->uidata.panel = m_main_win->GetChatTab().AddChatPannel( *m_serv, servername );
-    m_serv->uidata.panel->StatusMessage( _T("Connecting to server ") + servername + _T("...") );
+    GetServer().uidata.panel = m_main_win->GetChatTab().AddChatPannel( *m_serv, servername );
+    GetServer().uidata.panel->StatusMessage( _T("Connecting to server ") + servername + _T("...") );
 
     // Connect
-    m_serv->Connect( host, port );
+    GetServer().Connect( servername, host, port );
 
 }
 
@@ -237,38 +229,41 @@ bool Ui::DoRegister( const wxString& servername, const wxString& username, const
         return false;
     }
 
-    // Create new Server object
-    TASServer* serv = new TASServer( );
-    Socket* sock = new Socket( *serv, true );
-    serv->SetSocket( sock );
-
     host = sett().GetServerHost( servername );
     port = sett().GetServerPort( servername );
-
-    return serv->Register( host, port, username, password,reason );
+    bool success = GetServer().Register( host, port, username, password,reason );
+    if ( success )
+    {
+			customMessageBox(SL_MAIN_ICON, _("Registration successful,\nyou should now be able to login."), _("Registration successful"), wxOK );
+    }
+    else
+    {
+			wxLogWarning( _T("registration failed, reason: %s"), reason.c_str()  );
+			if ( reason == _("Connection timed out") || reason.IsEmpty() ) ConnectionFailurePrompt();
+			else	customMessageBox(SL_MAIN_ICON,_("Registration failed, the reason was:\n")+ reason , _("Registration failed."), wxOK );
+    }
+    return success;
 
 }
 
 
 bool Ui::IsConnected() const
 {
-    if ( m_serv != 0 )
-        return m_serv->IsConnected();
+    if ( m_serv != 0 ) return m_serv->IsConnected();
     return false;
 }
 
 void Ui::JoinChannel( const wxString& name, const wxString& password )
 {
-    if ( m_serv != 0 )
-        m_serv->JoinChannel( name, password );
+    if ( m_serv != 0 ) GetServer().JoinChannel( name, password );
 }
 
 
 void Ui::StartHostedBattle()
 {
     ASSERT_LOGIC( m_serv != 0, _T("m_serv = 0") );
-    m_serv->StartHostedBattle();
-    sett().SetLastHostMap( m_serv->GetCurrentBattle()->GetHostMapName() );
+    GetServer().StartHostedBattle();
+    sett().SetLastHostMap( GetServer().GetCurrentBattle()->GetHostMapName() );
     sett().SaveSettings();
 }
 
@@ -290,13 +285,13 @@ bool Ui::IsSpringRunning()
 void Ui::Quit()
 {
     ASSERT_LOGIC( m_main_win != 0, _T("m_main_win = 0") );
+    Disconnect();
     sett().SaveSettings();
     mw().forceSettingsFrameClose();
 
     mw().Close();
     if ( m_con_win != 0 )
         m_con_win->Close();
-    if (m_serv != 0 ) m_serv->Disconnect();
 }
 
 
@@ -312,7 +307,9 @@ void Ui::DownloadMap( const wxString& hash, const wxString& name )
 #ifndef NO_TORRENT_SYSTEM
     DownloadFileP2P( hash, name );
 #else
-    wxString url = _T("http://spring.jobjol.nl/search.php");
+		wxString newname = name;
+		newname = name.Replace( _T(" "), _T("+") );
+    wxString url = _T(" http://spring.jobjol.nl/search_result.php?search_cat=1&select_select=select_file_subject&Submit=Search&search=") + newname;
     OpenWebBrowser ( url );
 #endif
 }
@@ -323,7 +320,9 @@ void Ui::DownloadMod( const wxString& hash, const wxString& name )
 #ifndef NO_TORRENT_SYSTEM
     DownloadFileP2P( hash, name );
 #else
-    wxString url = _T("http://spring.jobjol.nl/search.php");
+		wxString newname = name;
+		newname = name.Replace( _T(" "), _T("+") );
+    wxString url = _T(" http://spring.jobjol.nl/search_result.php?search_cat=1&select_select=select_file_subject&Submit=Search&search=") + newname;
     OpenWebBrowser ( url );
 #endif
 }
@@ -432,28 +431,28 @@ bool Ui::ExecuteSayCommand( const wxString& cmd )
         wxString pass = channel.AfterFirst(' ');
         if ( !pass.IsEmpty() ) channel = channel.BeforeFirst(' ');
         if ( channel.StartsWith(_T("#")) ) channel.Remove( 0, 1 );
-        m_serv->JoinChannel( channel, pass );
+        GetServer().JoinChannel( channel, pass );
         return true;
     }
     else if ( cmd.BeforeFirst(' ').Lower() == _T("/away") )
     {
-        m_serv->GetMe().Status().away = true;
-        m_serv->GetMe().SendMyUserStatus();
+        GetServer().GetMe().Status().away = true;
+        GetServer().GetMe().SendMyUserStatus();
         return true;
     }
     else if ( cmd.BeforeFirst(' ').Lower() == _T("/back") )
     {
         if ( IsConnected() )
         {
-            m_serv->GetMe().Status().away = false;
-            m_serv->GetMe().SendMyUserStatus();
+            GetServer().GetMe().Status().away = false;
+            GetServer().GetMe().SendMyUserStatus();
             return true;
         }
     }
     else if ( cmd.BeforeFirst(' ').Lower() == _T("/ingame") )
     {
         wxString nick = cmd.AfterFirst(' ');
-        m_serv->RequestInGameTime( nick );
+        GetServer().RequestInGameTime( nick );
         return true;
     }
     else if ( cmd.BeforeFirst(' ').Lower() == _T("/help") )
@@ -466,13 +465,13 @@ bool Ui::ExecuteSayCommand( const wxString& cmd )
     {
         wxString user = cmd.AfterFirst(' ').BeforeFirst(' ');
         wxString msg = cmd.AfterFirst(' ').AfterFirst(' ');
-        m_serv->SayPrivate( user, msg );
+        GetServer().SayPrivate( user, msg );
         return true;
     }
     else if ( cmd.BeforeFirst(' ').Lower() == _T("/channels") )
     {
-	mw().ShowChannelChooser();
-	return true;
+        mw().ShowChannelChooser();
+        return true;
     }
     return false;
 }
@@ -506,6 +505,7 @@ void Ui::ConsoleHelp( const wxString& topic )
         panel->ClientMessage( _("  \"/sayver\" - Say what version of springlobby you have in chat.") );
         panel->ClientMessage( _("  \"/testmd5 text\" - Returns md5-b64 hash of given text.") );
         panel->ClientMessage( _("  \"/ver\" - Display what version of SpringLobby you have.") );
+        panel->ClientMessage( _("  \"/clear\" - clear all text from current chat panel") );
         panel->ClientMessage( _T("") );
         panel->ClientMessage( _("Chat commands:") );
         panel->ClientMessage( _("  \"/me action\" - Say IRC style action message.") );
@@ -539,7 +539,7 @@ void Ui::OnUpdate( int mselapsed )
 {
     if ( GetServerStatus() )
     {
-        m_serv->Update( mselapsed );
+        GetServer().Update( mselapsed );
     }
 
 		if ( m_upd_counter_battlelist % 50 == 0  )
@@ -560,9 +560,16 @@ void Ui::OnUpdate( int mselapsed )
 		}
 		m_upd_counter_chat++;
 
-    if ( !m_checked_for_update )
+    if ( m_first_update_trigger )
     {
-        m_checked_for_update = true;
+        m_first_update_trigger = false;
+
+        if ( sett().GetAutoConnect() ) {
+            Connect(); //the start tab is set from UI::onLoggedin
+        }
+        else {
+            mw().ShowTab( sett().GetStartTab() );
+        }
 #ifdef __WXMSW__
         if ( sett().GetAutoUpdate() )Updater().CheckForUpdates();
 #endif
@@ -572,8 +579,8 @@ void Ui::OnUpdate( int mselapsed )
     if (m_upd_counter_torrent % 20 == 0 )
     {
         if ( sett().GetTorrentSystemAutoStartMode() == 1 && !torrent().IsConnectedToP2PSystem() ) torrent().ConnectToP2PSystem();
-        else if ( GetServerStatus() && m_serv->IsOnline() && !torrent().IsConnectedToP2PSystem() && sett().GetTorrentSystemAutoStartMode() == 0 ) torrent().ConnectToP2PSystem();
-        if ( ( !GetServerStatus() || !m_serv->IsOnline() ) && torrent().IsConnectedToP2PSystem() && sett().GetTorrentSystemAutoStartMode() == 0 ) torrent().DisconnectFromP2PSystem();
+        else if ( GetServerStatus() && GetServer().IsOnline() && !torrent().IsConnectedToP2PSystem() && sett().GetTorrentSystemAutoStartMode() == 0 ) torrent().ConnectToP2PSystem();
+        if ( ( !GetServerStatus() || !GetServer().IsOnline() ) && torrent().IsConnectedToP2PSystem() && sett().GetTorrentSystemAutoStartMode() == 0 ) torrent().DisconnectFromP2PSystem();
         mw().GetTorrentTab().OnUpdate();
     }
     torrent().UpdateFromTimer( mselapsed );
@@ -588,7 +595,20 @@ void Ui::OnUpdate( int mselapsed )
 void Ui::OnConnected( Server& server, const wxString& server_name, const wxString& server_ver, bool supported )
 {
     wxLogDebugFunc( _T("") );
-    IsSpringCompatible();
+    if ( !m_last_used_backup_server.IsEmpty() )
+    {
+    	 m_last_used_backup_server = _T("");
+    }
+    else // connect successful & it's not a backup server fallback -> save as default
+    {
+			 sett().SetDefaultServer( server_name );
+    }
+    if ( !IsSpringCompatible() )
+    {
+    	#ifdef __WXMSW__
+    	server.RequestSpringUpdate();
+    	#endif
+    }
 
     if ( server.uidata.panel ) server.uidata.panel->StatusMessage( _T("Connected to ") + server_name + _T(".") );
     mw().GetJoinTab().OnConnected();
@@ -599,7 +619,7 @@ void Ui::OnConnected( Server& server, const wxString& server_name, const wxStrin
 bool Ui::IsSpringCompatible()
 {
     if ( sett().GetDisableSpringVersionCheck() ) return true;
-    wxString neededversion = m_serv->GetRequiredSpring();
+    wxString neededversion = GetServer().GetRequiredSpring();
     if ( neededversion == _T("*") ) return true; // Server accepts any version.
     else if ( neededversion.IsEmpty() ) return false;
     std::map<wxString, wxString> versionlist = sett().GetSpringVersionList();
@@ -636,11 +656,12 @@ void Ui::OnLoggedIn( )
 {
     if ( m_main_win == 0 ) return;
     mw().GetChatTab().RejoinChannels();
-
+    if ( sett().GetAutoConnect() )
+        mw().ShowTab( sett().GetStartTab() );
 }
 
 
-void Ui::OnDisconnected( Server& server )
+void Ui::OnDisconnected( Server& server, bool wasonline )
 {
     if ( m_main_win == 0 ) return;
     wxLogDebugFunc( _T("") );
@@ -653,21 +674,71 @@ void Ui::OnDisconnected( Server& server )
     mw().GetJoinTab().LeaveCurrentBattle();
     mw().GetJoinTab().GetBattleListTab().RemoveAllBattles();
 
+    mw().GetChatTab().LeaveChannels();
+
     if ( server.uidata.panel )
     {
         server.uidata.panel->StatusMessage( _("Disconnected from server.") );
 
         server.uidata.panel->SetServer( 0 );
-        // leads to crash. Disabled for now
-        //server.uidata.panel = 0;
     }
-		customMessageBoxNoModal( SL_MAIN_ICON, _("Disconnected from server"), _("Not online"), wxICON_EXCLAMATION|wxOK );
-    // Crashes. Disabled for now.
-    //mw().GetChatTab().CloseAllChats();
-
+		if ( !wasonline ) // couldn't even estabilish a socket, prompt the user to switch to another server
+		{
+			ConnectionFailurePrompt();
+		}
 }
 
+void Ui::ConnectionFailurePrompt()
+{
+	wxMessageDialog dlg( &mw(), _("A connection couldn't be established with the server\nWould you like to try again with the same server?\nNo to switch to next server in the list"), _("Connection failure"), wxYES_NO | wxCANCEL | wxNO_DEFAULT );
+	switch ( dlg.ShowModal() )
+	{
+		case wxID_YES: // try again with the same server/settings
+		{
+			Reconnect();
+			break;
+		}
+		case wxID_NO: // switch to next server in the list
+		{
+			SwitchToNextServer();
+			ShowConnectWindow();
+			break;
+		}
+		case wxID_CANCEL: // do nothing
+		{
+			return;
+		}
+	}
+}
 
+void Ui::SwitchToNextServer()
+{
+		wxString previous_server = m_last_used_backup_server;
+		if ( previous_server.IsEmpty() ) previous_server = sett().GetDefaultServer();
+		wxArrayString serverlist = sett().GetServers();
+		int position = serverlist.Index( previous_server );
+		if ( position == wxNOT_FOUND ) position = -1;
+		position = ( position + 1) % serverlist.GetCount(); // switch to next in the list
+		m_last_used_backup_server = serverlist[position];
+		sett().SetDefaultServer( m_last_used_backup_server );
+		if ( m_con_win ) // we don't necessarily have that constructed yet (autojoin)
+            m_con_win->ReloadServerList();
+		sett().SetDefaultServer( previous_server ); // don't save the new server as default when switched this way
+}
+
+static inline bool IsAutoJoinChannel( Channel& chan )
+{
+    typedef std::vector<ChannelJoinInfo>
+        Vec;
+    typedef Vec::const_iterator
+        VecIt;
+    const Vec chans = sett().GetChannelsJoin();
+    for ( VecIt it = chans.begin(); it != chans.end(); ++it ) {
+        if ( it->name == chan.GetName() )
+            return true;
+    }
+    return false;
+}
 //! @brief Called when client has joined a channel
 //!
 //! @todo Check if a pannel allready exists for this channel
@@ -677,7 +748,8 @@ void Ui::OnJoinedChannelSuccessful( Channel& chan )
     wxLogDebugFunc( _T("") );
 
     chan.uidata.panel = 0;
-    mw().OpenChannelChat( chan );
+
+    mw().OpenChannelChat( chan, !sett().GetAutoConnect() || !IsAutoJoinChannel( chan ) );
 }
 
 
@@ -817,9 +889,9 @@ void Ui::OnUserOffline( User& user )
 void Ui::OnUserStatusChanged( User& user )
 {
     if ( m_main_win == 0 ) return;
-    for ( int i = 0; i < m_serv->GetNumChannels(); i++ )
+    for ( int i = 0; i < GetServer().GetNumChannels(); i++ )
     {
-        Channel& chan = m_serv->GetChannel( i );
+        Channel& chan = GetServer().GetChannel( i );
         if ( ( chan.UserExists(user.GetNick()) ) && ( chan.uidata.panel != 0 ) )
         {
             chan.uidata.panel->UserStatusUpdated( user );
@@ -858,7 +930,7 @@ void Ui::OnUserSaid( User& user, const wxString& message, bool fromme )
     {
         mw().OpenPrivateChat( user );
     }
-    if ( fromme ) user.uidata.panel->Said( m_serv->GetMe().GetNick(), message );
+    if ( fromme ) user.uidata.panel->Said( GetServer().GetMe().GetNick(), message );
     else user.uidata.panel->Said( user.GetNick(), message );
 }
 
@@ -868,9 +940,9 @@ void Ui::OnBattleOpened( IBattle& battle )
     if ( m_main_win == 0 ) return;
     mw().GetJoinTab().GetBattleListTab().AddBattle( battle );
     User& user = battle.GetFounder();
-    for ( int i = 0; i < m_serv->GetNumChannels(); i++ )
+    for ( int i = 0; i < GetServer().GetNumChannels(); i++ )
     {
-        Channel& chan = m_serv->GetChannel( i );
+        Channel& chan = GetServer().GetChannel( i );
         if ( ( chan.UserExists(user.GetNick()) ) && ( chan.uidata.panel != 0 ) )
         {
             chan.uidata.panel->UserStatusUpdated( user );
@@ -897,9 +969,9 @@ void Ui::OnBattleClosed( IBattle& battle )
     {
         User& user = battle.GetUser( b );
         user.SetBattle(0);
-        for ( int i = 0; i < m_serv->GetNumChannels(); i++ )
+        for ( int i = 0; i < GetServer().GetNumChannels(); i++ )
         {
-            Channel& chan = m_serv->GetChannel( i );
+            Channel& chan = GetServer().GetChannel( i );
             if ( ( chan.UserExists(user.GetNick()) ) && ( chan.uidata.panel != 0 ) )
             {
                 chan.uidata.panel->UserStatusUpdated( user );
@@ -924,9 +996,9 @@ void Ui::OnUserJoinedBattle( IBattle& battle, User& user )
     }
     catch (...){}
 
-    for ( int i = 0; i < m_serv->GetNumChannels(); i++ )
+    for ( int i = 0; i < GetServer().GetNumChannels(); i++ )
     {
-        Channel& chan = m_serv->GetChannel( i );
+        Channel& chan = GetServer().GetChannel( i );
         if ( ( chan.UserExists(user.GetNick()) ) && ( chan.uidata.panel != 0 ) )
         {
             chan.uidata.panel->UserStatusUpdated( user );
@@ -945,18 +1017,17 @@ void Ui::OnUserLeftBattle( IBattle& battle, User& user )
         {
             mw().GetJoinTab().GetBattleRoomTab().OnUserLeft( user );
 						OnBattleInfoUpdated( battle );
-            if ( &user == &m_serv->GetMe() )
+            if ( &user == &GetServer().GetMe() )
             {
                 mw().GetJoinTab().LeaveCurrentBattle();
-                battle.OnSelfLeftBattle();
             }
         }
     }
     catch (...) {}
     if ( user.BattleStatus().IsBot() ) return;
-    for ( int i = 0; i < m_serv->GetNumChannels(); i++ )
+    for ( int i = 0; i < GetServer().GetNumChannels(); i++ )
     {
-        Channel& chan = m_serv->GetChannel( i );
+        Channel& chan = GetServer().GetChannel( i );
         if ( ( chan.UserExists(user.GetNick()) ) && ( chan.uidata.panel != 0 ) )
         {
             chan.uidata.panel->UserStatusUpdated( user );
@@ -1050,7 +1121,7 @@ void Ui::OnBattleStarted( Battle& battle )
 								f.Close();
 
 							} catch (...) {}
-              m_serv->SendScriptToProxy( hostscript );
+              GetServer().SendScriptToProxy( hostscript );
             }
             battle.GetMe().BattleStatus().ready = false;
             battle.SendMyBattleStatus();
@@ -1108,17 +1179,16 @@ void Ui::OnSpringTerminated( long exit_code )
 #endif
     if ( !m_serv ) return;
 
-    m_serv->GetMe().Status().in_game = false;
-    m_serv->GetMe().SendMyUserStatus();
-    try
-    {
-    Battle *battle = m_serv->GetCurrentBattle();
-    if ( !battle ) return;
-    if( battle->IsFounderMe() && battle->GetAutoLockOnStart() )
-    {
-      battle->SetIsLocked( false );
-      battle->SendHostInfo( IBattle::HI_Locked );
-    }
+    try {
+        GetServer().GetMe().Status().in_game = false;
+        GetServer().GetMe().SendMyUserStatus();
+        Battle *battle = GetServer().GetCurrentBattle();
+        if ( !battle )
+            return;
+        if( battle->IsFounderMe() && battle->GetAutoLockOnStart() ) {
+          battle->SetIsLocked( false );
+          battle->SendHostInfo( IBattle::HI_Locked );
+        }
     } catch ( assert_exception ){}
 }
 
@@ -1128,8 +1198,8 @@ void Ui::OnAcceptAgreement( const wxString& agreement )
     AgreementDialog dlg( m_main_win, agreement );
     if ( dlg.ShowModal() == 1 )
     {
-        m_serv->AcceptAgreement();
-        m_serv->Login();
+        GetServer().AcceptAgreement();
+        GetServer().Login();
     }
 }
 
@@ -1166,7 +1236,6 @@ void Ui::OnModUnitsCached( const wxString& modname )
 {
 }
 
-
 void Ui::OnMainWindowDestruct()
 {
     m_main_win = 0;
@@ -1188,12 +1257,12 @@ bool Ui::IsThisMe(const wxString& other)
     if (!IsConnected() || m_serv==0)
         return false;
     else
-        return ( other == m_serv->GetMe().GetNick() );
+        return ( other == GetServer().GetMe().GetNick() );
 }
 
 int Ui::TestHostPort( unsigned int port )
 {
-    return m_serv->TestOpenPort( port );
+    return GetServer().TestOpenPort( port );
 }
 
 void Ui::ReloadPresetList()
@@ -1210,11 +1279,10 @@ void Ui::ReloadPresetList()
     catch (...) {}
 }
 
-
-void Ui::WatchReplay ( wxString& filename )
+void Ui::WatchPlayback( OfflineBattle& battle )
 {
     OnSpringStarting();
-    m_spring->RunReplay( filename );
+    m_spring->Run( battle );
 }
 
 bool Ui::OnPresetRequiringMap( const wxString& mapname )
@@ -1231,3 +1299,4 @@ bool Ui::OnPresetRequiringMap( const wxString& mapname )
     }
     return false;
 }
+

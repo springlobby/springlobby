@@ -167,23 +167,68 @@ void Battle::DoAction( const wxString& msg )
     m_serv.DoActionBattle( m_opts.battleid, msg );
 }
 
+void Battle::SetLocalMap( const UnitSyncMap& map )
+{
+	IBattle::SetLocalMap( map );
+	if ( IsFounderMe() )  LoadMapDefaults( map.name );
+}
 
 User& Battle::GetMe()
 {
     return m_serv.GetMe();
 }
 
+void Battle::SaveMapDefaults()
+{
+    // save map preset
+		wxString mapname = LoadMap().name;
+		wxString startpostype = CustomBattleOptions().getSingleValue( _T("startpostype"), OptionsWrapper::EngineOption );
+		sett().SetMapLastStartPosType( mapname, startpostype);
+		std::vector<Settings::SettStartBox> rects;
+		for( unsigned int i = 0; i < GetNumRects(); ++i )
+		{
+			 BattleStartRect rect = GetStartRect( i );
+			 if ( rect.IsOk() )
+			 {
+				 Settings::SettStartBox box;
+				 box.ally = rect.ally;
+				 box.topx = rect.left;
+				 box.topy = rect.top;
+				 box.bottomx = rect.right;
+				 box.bottomy = rect.bottom;
+				 rects.push_back( box );
+			 }
+		}
+		sett().SetMapLastRectPreset( mapname, rects );
+}
+
+void Battle::LoadMapDefaults( const wxString& mapname )
+{
+	CustomBattleOptions().setSingleOption( _T("startpostype"), sett().GetMapLastStartPosType( mapname ), OptionsWrapper::EngineOption );
+	SendHostInfo( wxString::Format( _T("%d_startpostype"), OptionsWrapper::EngineOption ) );
+
+	for( unsigned int i = 0; i < GetNumRects(); ++i ) if ( GetStartRect( i ).IsOk() ) RemoveStartRect(i); // remove all rects
+	SendHostInfo( IBattle::HI_StartRects );
+
+	std::vector<Settings::SettStartBox> savedrects = sett().GetMapLastRectPreset( mapname );
+	for ( std::vector<Settings::SettStartBox>::iterator itor = savedrects.begin(); itor != savedrects.end(); itor++ )
+	{
+		AddStartRect( itor->ally, itor->topx, itor->topy, itor->bottomx, itor->bottomy );
+	}
+	SendHostInfo( IBattle::HI_StartRects );
+}
 
 User& Battle::OnUserAdded( User& user )
 {
 		user = IBattle::OnUserAdded( user );
     user.SetBattle( this );
+    user.BattleStatus().isfromdemo = false;
 
     if ( IsFounderMe() )
     {
         if ( CheckBan( user ) ) return user;
 
-        if ( ( m_opts.rankneeded > UserStatus::RANK_1 ) && ( user.GetStatus().rank < m_opts.rankneeded ))
+        if ( ( &user != &GetMe() ) && !user.BattleStatus().IsBot() && ( m_opts.rankneeded > UserStatus::RANK_1 ) && ( user.GetStatus().rank < m_opts.rankneeded ))
         {
             switch ( m_opts.ranklimittype )
             {
@@ -218,7 +263,7 @@ void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
     }
     if ( IsFounderMe() )
     {
-        if ( ( m_opts.rankneeded > UserStatus::RANK_1 ) && ( user.GetStatus().rank < m_opts.rankneeded ))
+        if ( ( &user != &GetMe() ) && !status.IsBot() && ( m_opts.rankneeded > UserStatus::RANK_1 ) && ( user.GetStatus().rank < m_opts.rankneeded ))
         {
             switch ( m_opts.ranklimittype )
             {
@@ -255,10 +300,16 @@ void Battle::RingNotReadyPlayers()
     for (user_map_t::size_type i = 0; i < GetNumUsers(); i++)
     {
         User& u = GetUser(i);
-        if ( u.BattleStatus().IsBot() ) continue;
         UserBattleStatus& bs = u.BattleStatus();
+        if ( bs.IsBot() ) continue;
         if ( !bs.ready && !bs.spectator ) m_serv.Ring( u.GetNick() );
     }
+}
+
+void Battle::RingPlayer( const User& u )
+{
+	if ( u.BattleStatus().IsBot() ) return;
+	m_serv.Ring( u.GetNick() );
 }
 
 bool Battle::ExecuteSayCommand( const wxString& cmd )
@@ -877,4 +928,10 @@ void Battle::ForceUnsyncedToSpectate()
 void Battle::UserPositionChanged( const User& user )
 {
 	  m_serv.SendUserPosition( user );
+}
+
+
+void Battle::SendScriptToClients()
+{
+	m_serv.SendScriptToClients( GetScript() );
 }

@@ -77,9 +77,10 @@ Socket::Socket( iNetClass& netclass, bool blocking ):
 //! @brief Destructor
 Socket::~Socket()
 {
-  Disconnect();
+  _EnablePingThread( false );
+
   LOCK_SOCKET;
-  if ( m_sock != 0 ) m_sock->Destroy();
+	if ( m_sock ) m_sock->Destroy();
   delete m_events;
 }
 
@@ -115,6 +116,7 @@ void Socket::Connect( const wxString& addr, const int port )
 
   wxIPV4address wxaddr;
   m_connecting = true;
+  m_buffer = "";
 
   wxaddr.Hostname( addr );
   wxaddr.Service( port );
@@ -138,8 +140,10 @@ void Socket::Disconnect( )
   if ( m_sock ) m_sock->SetTimeout( 0 );
   m_net_class.OnDisconnected( this );
   _EnablePingThread( false );
+  m_buffer = "";
 
-  if ( m_sock ) {
+  if ( m_sock )
+  {
     m_sock->Destroy();
     m_sock = 0;
   }
@@ -309,18 +313,21 @@ SockState Socket::State( )
 
 //! @brief Get socket error code
 //! @todo Implement
-SockError Socket::Error( )
+SockError Socket::Error( ) const
 {
   return (SockError)-1;
 }
 
 
 //! @brief used to retrieve local ip address behind NAT to communicate to the server on login
-wxString Socket::GetLocalAddress()
+wxString Socket::GetLocalAddress() const
 {
-  if ( m_sock || !m_sock->IsConnected() ) return wxEmptyString;
+  if ( !m_sock || !m_sock->IsConnected() )
+    return wxEmptyString;
+
   wxIPV4address localaddr;
   m_sock->GetLocal( localaddr );
+
   return localaddr.IPAddress();
 }
 
@@ -363,7 +370,7 @@ void Socket::_EnablePingThread( bool enable )
 
 //! @brief Check if we should enable or dsable the ping htread.
 //! @see Socket::_EnablePingThread
-bool Socket::_ShouldEnablePingThread()
+bool Socket::_ShouldEnablePingThread() const
 {
   return ( (m_ping_msg != wxEmptyString) );
 }

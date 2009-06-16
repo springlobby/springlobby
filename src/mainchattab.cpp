@@ -149,19 +149,47 @@ void MainChatTab::OnUserDisconnected( User& user )
   }
 }
 
+void MainChatTab::LeaveChannels()
+{
+    for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ ) {
+    ChatPanel* tmp = (ChatPanel*)m_chat_tabs->GetPage(i);
+    if ( tmp->GetPanelType() == CPT_Channel )
+    {
+			tmp->StatusMessage( _("Disconnected from server, chat closed.") );
+      tmp->SetChannel( 0 );
+    } else if (tmp->GetPanelType() == CPT_User )
+    {
+			tmp->StatusMessage( _("Disconnected from server, chat closed.") );
+			tmp->SetUser( 0 );
+    }
+  }
+}
 
 void MainChatTab::RejoinChannels()
 {
-  for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ ) {
+  for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ )
+  {
     ChatPanel* tmp = (ChatPanel*)m_chat_tabs->GetPage(i);
-    if ( tmp->GetPanelType() == CPT_Channel ) {
+    if ( tmp->GetPanelType() == CPT_Channel )
+    {
 
       // TODO: This will not rejoin passworded channels.
       wxString name = m_chat_tabs->GetPageText(i);
-      // #springlobby is joined automatically
-      if ( name != _T("springlobby") ) m_ui.GetServer().JoinChannel( name, _T("") );
+      bool alreadyin = false;
+      try
+      {
+				ui().GetServer().GetChannel( name ).GetMe();
+				alreadyin = true;
+      }
+      catch (...) {}
+      if ( !alreadyin )
+      {
+          m_ui.GetServer().JoinChannel( name, _T("") );
+          tmp->SetChannel( &m_ui.GetServer().GetChannel( name ) );
+			}
 
-    } else if (tmp->GetPanelType() == CPT_User ) {
+    } else if (tmp->GetPanelType() == CPT_User )
+    {
 
       wxString name = m_chat_tabs->GetPageText(i);
       if ( m_ui.GetServer().UserExists( name ) ) tmp->SetUser( &m_ui.GetServer().GetUser( name ) );
