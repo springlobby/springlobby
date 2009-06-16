@@ -25,7 +25,7 @@ map_infos* TorrentListCtrl::m_info_map = 0;
 
 TorrentListCtrl::TorrentListCtrl( wxWindow* parent, Ui& ui ):
 		CustomListCtrl( parent, TLIST_CLICK, wxDefaultPosition, wxDefaultSize,
-                wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("TorrentListCtrl") )
+                wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("TorrentListCtrl"), 10 )
 
 {
 	wxListItem col;
@@ -71,7 +71,6 @@ TorrentListCtrl::TorrentListCtrl( wxWindow* parent, Ui& ui ):
 	InsertColumn( 9, col, _T( "Filesize" ), true );
 
 // sortorder: name --> percent completed --> mb donwloaded
-	memset( m_sortorder, 0, sizeof( m_sortorder ) );
 
 	m_sortorder[0].col = 0;
 	m_sortorder[0].direction = true;

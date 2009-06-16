@@ -18,7 +18,6 @@ enum OptionType {
 	opt_list       = 2,
 	opt_float      = 3,
 	opt_string     = 4,
-	opt_int        = 6, //! did this never actually exist?
 	opt_section    = 5
 };
 
@@ -147,23 +146,6 @@ struct mmOptionList : public mmOptionModel
 
 };
 
-//! Holds a long integer option
-struct mmOptionInt : public mmOptionModel
-{
-	//! sets members accordingly
-	mmOptionInt(wxString name_, wxString key_, wxString description_, int def_, int stepping_, int min_, int max_,
-                wxString section_ = SLGlobals::nosection_name, wxString style_ = SLGlobals::nostyle_name);
-	//! sets wxstring member to "" and int members to 0
-	mmOptionInt();
-
-	long def;
-	//! this will always represent the current value, also the only member that should change after creation
-	long value;
-
-	//! the increment with that value may change in min,max boundaries
-	long stepping;
-	long min, max;
-};
 
 struct mmOptionSection : public mmOptionModel{
     mmOptionSection (wxString name_, wxString key_, wxString description_,
@@ -173,3 +155,21 @@ struct mmOptionSection : public mmOptionModel{
 
 
 #endif /*MMOPTIONMODEL_H_*/
+
+/**
+    This file is part of SpringLobby,
+    Copyright (C) 2007-09
+
+    springsettings is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License version 2 as published by
+    the Free Software Foundation.
+
+    springsettings is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SpringLobby.  If not, see <http://www.gnu.org/licenses/>.
+**/
+

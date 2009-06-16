@@ -1,5 +1,5 @@
-#ifndef SPRINGLOBBY_REPLAYFILTER_H_INCLUDED
-#define SPRINGLOBBY_REPLAYFILTER_H_INCLUDED
+#ifndef SPRINGLOBBY_PLAYBACKFILTER_H_INCLUDED
+#define SPRINGLOBBY_PLAYBACKFILTER_H_INCLUDED
 
 #include <wx/panel.h>
 
@@ -14,15 +14,19 @@ class wxChoice;
 class wxButton;
 class wxRegEx;
 class wxStaticText;
-struct Replay;
 
 
 /** \brief The panel contained in BattleListTab used to filter for diff info of battles
  * \todo DOCMEMORE */
-class ReplayListFilter : public wxPanel
+template <class PlaybackTabType>
+class PlaybackListFilter : public wxPanel
 {
+    protected:
+        typedef typename PlaybackTabType::PlaybackType
+            PlaybackType;
+
 	public:
-    ReplayListFilter( wxWindow* parent, wxWindowID id, ReplayTab* parentTab, const wxPoint& pos, const wxSize& size, long style );
+    PlaybackListFilter ( wxWindow* parent, wxWindowID id, PlaybackTabType* parentTab, const wxPoint& pos, const wxSize& size, long style );
 
     void OnPlayerButton   ( wxCommandEvent& event );
     void OnFilesizeButton ( wxCommandEvent& event );
@@ -40,7 +44,7 @@ class ReplayListFilter : public wxPanel
 
     void OnPlayerChange      ( wxCommandEvent& event );
 
-    bool FilterReplay(Replay& replay);
+    bool FilterPlayback( const PlaybackType& playback );
     bool GetActiv() const;
 
     void SetFilterHighlighted( bool state );
@@ -57,7 +61,7 @@ class ReplayListFilter : public wxPanel
 
         bool m_activ;
 
-		ReplayTab* m_parent_tab;
+		PlaybackTabType* m_parent_tab;
 #if wxUSE_TOGGLEBTN
 		wxToggleButton* m_filter_show;
 #else
@@ -106,16 +110,35 @@ class ReplayListFilter : public wxPanel
 
 enum
 {
-    REPLAY_FILTER_MAP_EDIT,
-    REPLAY_FILTER_MOD_EDIT,
-    REPLAY_FILTER_FILESIZE_EDIT,
-    REPLAY_FILTER_DURATION_EDIT,
-    REPLAY_FILTER_PLAYER_CHOICE,
-    REPLAY_FILTER_MAP_SHOW,
-    REPLAY_FILTER_MOD_SHOW,
-    REPLAY_FILTER_PLAYER_BUTTON,
-    REPLAY_FILTER_DURATION_BUTTON,
-    REPLAY_FILTER_FILESIZE_BUTTON
+    PLAYBACK_FILTER_MAP_EDIT,
+    PLAYBACK_FILTER_MOD_EDIT,
+    PLAYBACK_FILTER_FILESIZE_EDIT,
+    PLAYBACK_FILTER_DURATION_EDIT,
+    PLAYBACK_FILTER_PLAYER_CHOICE,
+    PLAYBACK_FILTER_MAP_SHOW,
+    PLAYBACK_FILTER_MOD_SHOW,
+    PLAYBACK_FILTER_PLAYER_BUTTON,
+    PLAYBACK_FILTER_DURATION_BUTTON,
+    PLAYBACK_FILTER_FILESIZE_BUTTON
 };
 
-#endif // SPRINGLOBBY_REPLAYFILTER_H_INCLUDED
+#include "playbackfilter.cpp"
+#endif // SPRINGLOBBY_PLAYBACKFILTER_H_INCLUDED
+
+/**
+    This file is part of SpringLobby,
+    Copyright (C) 2007-09
+
+    springsettings is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License version 2 as published by
+    the Free Software Foundation.
+
+    springsettings is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SpringLobby.  If not, see <http://www.gnu.org/licenses/>.
+**/
+

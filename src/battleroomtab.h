@@ -26,6 +26,7 @@ class ColorButton;
 class wxBitmapComboBox;
 struct UnitSyncMap;
 class wxToggleButton;
+class wxChoice;
 
 typedef std::map<wxString,long> OptionListMap;
 
@@ -67,11 +68,20 @@ class BattleRoomTab : public wxScrolledWindow
     void OnAutoLock( wxCommandEvent& event );
     void OnLockBalance( wxCommandEvent& event );
     void OnShowManagePlayersMenu( wxCommandEvent& event );
+		void OnLoadPreset( wxCommandEvent& event );
+		void OnSavePreset( wxCommandEvent& event );
+		void OnDeletePreset( wxCommandEvent& event );
+		void OnSetModDefaultPreset( wxCommandEvent& event );
+		void OnMapBrowse( wxCommandEvent& event );
+		void OnMapSelect( wxCommandEvent& event );
+		void OnOptionActivate( wxListEvent& event );
 
     void OnUserJoined( User& user );
     void OnUserLeft( User& user );
 
     void OnUnitSyncReloaded();
+		void ReloadMaplist();
+		void SetMap( int index );
 
     void UpdateHighlights();
 
@@ -82,6 +92,8 @@ class BattleRoomTab : public wxScrolledWindow
   protected:
 
     long AddMMOptionsToList( long pos, OptionsWrapper::GameOption optFlag );
+
+    void SplitSizerHorizontally( const bool horizontal );
 
     Ui& m_ui;
     Battle& m_battle;
@@ -109,15 +121,15 @@ class BattleRoomTab : public wxScrolledWindow
     wxStaticText* m_ally_lbl;
     wxStaticText* m_side_lbl;
     wxStaticText* m_color_lbl;
-    wxStaticText* m_map_lbl;
     wxStaticText* m_wind_lbl;
     wxStaticText* m_tidal_lbl;
     wxStaticText* m_size_lbl;
 
     MapCtrl * m_minimap;
 
-    wxPanel* m_player_panel;
+    wxScrolledWindow* m_player_panel;
 
+		wxComboBox* m_map_combo;
 
     BattleroomListCtrl* m_players;
     ChatPanel* m_chat;
@@ -129,19 +141,21 @@ class BattleRoomTab : public wxScrolledWindow
     wxButton* m_start_btn;
     wxButton* m_addbot_btn;
     wxButton* m_manage_players_btn;
+		wxButton* m_save_btn;
+		wxButton* m_delete_btn;
+		wxButton* m_default_btn;
+		wxButton* m_browse_map_btn;
 
     wxMenu* m_manage_users_mnu;
     wxMenuItem* m_lock_balance_mnu;
+    wxMenuItem* m_autohost_mnu;
 
     wxCheckBox* m_ready_chk;
     wxCheckBox* m_spec_chk;
+    wxCheckBox* m_lock_chk;
     #if wxUSE_TOGGLEBTN
-    wxToggleButton* m_lock_chk;
-    wxToggleButton* m_autohost_chk;
     wxToggleButton* m_autolock_chk;
     #else
-    wxCheckBox* m_lock_chk;
-    wxCheckBox* m_autohost_chk;
     wxCheckBox* m_autolock_chk;
     #endif
 
@@ -165,10 +179,34 @@ class BattleRoomTab : public wxScrolledWindow
         BROOM_FIXCOLOURS,
         BROOM_PRESETSEL,
         BROOM_AUTOHOST,
-        BROOM_AUTOLOCK
+        BROOM_AUTOLOCK,
+				BROOM_SAVEPRES,
+				BROOM_DELETEPRES,
+				BROOM_SETDEFAULTPRES,
+				BROOM_MAP_BROWSE,
+				BROOM_MAP_SEL,
+				BROOM_OPTIONLIST
     };
 
     DECLARE_EVENT_TABLE();
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_BATTLEROOMTAB_H
+
+/**
+    This file is part of SpringLobby,
+    Copyright (C) 2007-09
+
+    springsettings is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License version 2 as published by
+    the Free Software Foundation.
+
+    springsettings is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SpringLobby.  If not, see <http://www.gnu.org/licenses/>.
+**/
+

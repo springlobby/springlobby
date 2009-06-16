@@ -83,12 +83,12 @@ void UnitSyncThread::UnitSyncThreadImpl::Init()
 
 void* UnitSyncThread::MapCacheThread::Entry()
 {
-  /// crashes - here for test to see why
+  // crashes - here for test to see why
   susynclib().GetMapCount();
   while ( !TestDestroy() )
   {
     if(!Sleep( 20000 ))break;
-    /// cache map infos
+    // cache map infos
     if( usync().IsLoaded() )
     {
       wxArrayString totalmaps = usync().GetMapList();
@@ -112,7 +112,7 @@ void* UnitSyncThread::ModCacheThread::Entry()
   while ( !TestDestroy() )
   {
     if(!Sleep( 67000 ))break;
-    /// cache mod infos
+    // cache mod infos
     if( usync().IsLoaded() )
     {
       wxArrayString totalmods = usync().GetModList();

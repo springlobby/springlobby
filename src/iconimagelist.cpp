@@ -19,6 +19,7 @@
 #include "images/bot.xpm"
 #include "images/bot_broom.png.h"
 #include "images/bot_ingame.png.h"
+#include "images/bot_away.xpm"
 
 #include "images/admin.png.h"
 #include "images/admin_away.png.h"
@@ -72,9 +73,10 @@
 #include "images/warning_small.png.h"
 
 #include "images/colourbox.xpm"
-//#include "images/fixcolours_palette.xpm"
 
 #include "images/unknown_flag.xpm"
+
+#include "images/channel_options.xpm"
 
 #include "flagimages.h"
 
@@ -91,6 +93,7 @@ IconImageList::IconImageList() : wxImageList(16,16,true)
     ICON_BOT = Add( wxBitmap(bot_xpm) );
     ICON_BOT_BROOM = Add( charArr2wxBitmap( bot_broom_png, sizeof( bot_broom_png ) )  );
     ICON_BOT_INGAME = Add( charArr2wxBitmap( bot_ingame_png, sizeof( bot_ingame_png ) ) );
+    ICON_BOT_AWAY = Add( wxBitmap(bot_away_xpm) );
 
     ICON_AWAY = Add( charArr2wxBitmap( away_png, sizeof( away_png ) ) );
     ICON_BROOM = Add( charArr2wxBitmap(broom_png, sizeof(broom_png) ) );
@@ -141,6 +144,8 @@ IconImageList::IconImageList() : wxImageList(16,16,true)
     ICON_SIDEPIC_0 = Add( charArr2wxBitmap(no1_icon_png, sizeof(no1_icon_png) ) );
     ICON_SIDEPIC_1 = Add( charArr2wxBitmap(no2_icon_png, sizeof(no2_icon_png) ) );
 
+    ICON_CHANNEL_OPTIONS = Add( wxBitmap(channel_options_xpm) );
+
     SetColourIcon( 0, wxColour( 255,   0,   0 ) );
     SetColourIcon( 1, wxColour(   0, 255,   0 ) );
     SetColourIcon( 2, wxColour(   0,   0, 255 ) );
@@ -178,6 +183,7 @@ int IconImageList::GetUserListStateIcon( const UserStatus& us, bool chanop, bool
     {
         if ( us.in_game ) return ICON_BOT_INGAME;
         if ( inbroom ) return ICON_BOT_BROOM;
+        if ( us.away ) return ICON_BOT_AWAY;
         return ICON_BOT;
     }
     if (us.moderator )
@@ -225,7 +231,6 @@ int IconImageList::GetRankIcon( const unsigned int& rank, const bool& showlowest
     if ( !showlowest && rank == UserStatus::RANK_1 ) return ICON_RANK_NONE;
     switch (rank)
     {
-      case UserStatus::RANK_UNKNOWN: return ICON_RANK1;
       case UserStatus::RANK_1: return ICON_RANK1;
       case UserStatus::RANK_2: return ICON_RANK2;
       case UserStatus::RANK_3: return ICON_RANK3;
@@ -332,9 +337,9 @@ int IconImageList::GetSideIcon( const wxString& modname, int side )
 {
 	wxArrayString sides = usync().GetSides( modname );
 	wxString sidename;
-	if( side < sides.GetCount() ) sidename = sides[side];
+	if( side < (int)sides.GetCount() ) sidename = sides[side];
   wxString cachestring = modname + _T("_") + sidename;
-  if (m_cached_side_icons[cachestring] == 0){
+  if (m_cached_side_icons.find(cachestring)  == m_cached_side_icons.end()){
     try
     {
       int IconPosition = Add(wxBitmap( usync().GetSidePicture( modname , sidename ) ), wxNullBitmap);
@@ -343,17 +348,17 @@ int IconImageList::GetSideIcon( const wxString& modname, int side )
     } catch (...)
     {
       if ( side == 0 ) m_cached_side_icons[cachestring] = ICON_SIDEPIC_0;
-      else if ( side == 1 ) m_cached_side_icons[cachestring] = ICON_SIDEPIC_1;
+      else m_cached_side_icons[cachestring] = ICON_SIDEPIC_1;
     }
-  } else return m_cached_side_icons[cachestring];
-  return -1;
+  }
+  return m_cached_side_icons[cachestring];
 }
 
-int IconImageList::GetReadyIcon( const bool& spectator,const bool& ready, const int& sync, const bool& bot )
+int IconImageList::GetReadyIcon( const bool& spectator,const bool& ready, const unsigned int& sync, const bool& bot )
 {
     int index;
     if ( bot )
-				index = ICON_BOT;
+        index = ICON_BOT;
     else if ( spectator )
         index = ICON_SPECTATOR;
     else if ( ready )
@@ -361,13 +366,24 @@ int IconImageList::GetReadyIcon( const bool& spectator,const bool& ready, const 
     else
         index = ICON_NREADY;
 
-    if ( sync == SYNC_SYNCED )
+    if ( sync == SYNC_SYNCED ) //could this cause #674 ??
         return index;
+
     else
     {
         if ( m_state_index_map.find(index) == m_state_index_map.end() )
         {
-            m_state_index_map[index] = Add( BlendBitmaps( GetBitmap( index ), GetBitmap( ICON_WARNING_OVERLAY ) ) );
+            wxBitmap bg;
+            if ( index == ICON_NREADY )
+                bg = charArr2wxBitmap(closed_game_png, sizeof(closed_game_png) ); // ICON_NREADY
+            else if ( index == ICON_READY )
+                bg = charArr2wxBitmap(open_game_png, sizeof(open_game_png) ); // ICON_READY
+            else if ( index == ICON_SPECTATOR )
+                bg = charArr2wxBitmap( spectator_png, sizeof(spectator_png) ); // ICON_SPECTATOR
+            else
+                bg = wxBitmap(bot_xpm); // ICON_BOT
+
+            m_state_index_map[index] = Add( BlendBitmaps( bg, charArr2wxBitmap(warning_small_png, sizeof(warning_small_png) ) ) );
         }
         return m_state_index_map[index];
     }

@@ -12,6 +12,7 @@ class User;
 class IBattle;
 class Battle;
 class SinglePlayerBattle;
+class OfflineBattle;
 class ChatPanel;
 
 //this removes the necessity to drag wx/event.h into almost every other file for a single type
@@ -20,20 +21,9 @@ class ChatPanel;
 typedef int wxEventType;
 #endif
 
-
-typedef int HostInfo;
-
 typedef int AlertEventType;
 
 extern const wxEventType torrentSystemStatusUpdateEvt;
-
-//these seem to be completely obsolete (koshi)
-//#define AE_MESSAGE 1
-//#define AE_HIGHLIGHT_MESSAGE 2
-//#define AE_PM 4
-//#define AE_ERROR 8
-//#define AE_DISCONNECT 16
-//#define AE_BATTLE_MESSAGE 32
 
 
 //! @brief UI main class
@@ -43,6 +33,11 @@ class Ui
 
     Ui();
     ~Ui();
+
+    enum PlaybackEnum {
+        ReplayPlayback,
+        SavegamePlayback
+    };
 
     Server& GetServer();
     bool    GetServerStatus();
@@ -59,6 +54,9 @@ class Ui
     void Reconnect();
     void DoConnect( const wxString& servername, const wxString& username, const wxString& password );
 
+    void ConnectionFailurePrompt();
+    void SwitchToNextServer();
+
     bool DoRegister( const wxString& servername, const wxString& username, const wxString& password, wxString& reason );
 
     bool IsConnected() const;
@@ -68,7 +66,7 @@ class Ui
 
     bool IsSpringRunning();
 
-    void WatchReplay ( wxString& filename );
+    void WatchPlayback ( OfflineBattle& battle );
 
     void StartHostedBattle();
     void StartSinglePlayerGame( SinglePlayerBattle& battle );
@@ -97,7 +95,7 @@ class Ui
 
     void OnConnected( Server& server, const wxString& server_name, const wxString& server_ver, bool supported );
     void OnLoggedIn( );
-    void OnDisconnected( Server& server );
+    void OnDisconnected( Server& server, bool wasonline );
 
     void OnJoinedChannelSuccessful( Channel& chan );
     void OnUserJoinedChannel( Channel& chan, User& user );
@@ -166,11 +164,13 @@ class Ui
     MainWindow* m_main_win;
     ConnectWindow* m_con_win;
 
+    wxString m_last_used_backup_server;
+
     unsigned int m_upd_counter_torrent;
     unsigned int m_upd_counter_battlelist;
     unsigned int m_upd_counter_chat;
 
-    bool m_checked_for_update;
+    bool m_first_update_trigger;
 
     bool m_ingame;
 
@@ -183,3 +183,21 @@ Ui& ui();
 
 
 #endif // SPRINGLOBBY_HEADERGUARD_UI_H
+
+/**
+    This file is part of SpringLobby,
+    Copyright (C) 2007-09
+
+    springsettings is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License version 2 as published by
+    the Free Software Foundation.
+
+    springsettings is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SpringLobby.  If not, see <http://www.gnu.org/licenses/>.
+**/
+

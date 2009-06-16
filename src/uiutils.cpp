@@ -8,15 +8,17 @@
 #include <wx/bitmap.h>
 #include <wx/log.h>
 #include <wx/image.h>
-
-#include <cmath>
+#include <wx/clipbrd.h>
 #include <wx/cmndata.h>
 #include <wx/colordlg.h>
+#include <wx/dataobj.h>
+
+#include <cmath>
+
 #include "uiutils.h"
 #include "utils.h"
 #include "settings++/custom_dialogs.h"
 #include "settings.h"
-
 
 wxString RefineMapname( const wxString& mapname )
 {
@@ -139,34 +141,15 @@ wxColour ColourDelta( const wxColour& colour, const int& delta )
 
 
 
-wxString GetColorString( const wxColour& color )
-{
-    return wxString::Format( _T("%d %d %d"), color.Red(), color.Green(), color.Blue() );
-
-}
-
-wxColour GetColorFromStrng( const wxString color )
-{
-    wxString c = color;
-    long r = 0, g = 0, b = 0;
-    c.BeforeFirst( ' ' ).ToLong( &r );
-    c = c.AfterFirst( ' ' );
-    c.BeforeFirst( ' ' ).ToLong( &g );
-    c = c.AfterFirst( ' ' );
-    c.BeforeFirst( ' ' ).ToLong( &b );
-    return wxColour( r%256, g%256, b%256 );
-}
-
-
 wxColour GetColorFromFloatStrng( const wxString color )
 {
     wxString c = color;
-    double r = 0, g = 0, b = 0;
-    c.BeforeFirst( ' ' ).ToDouble( &r );
+    float r = 0, g = 0, b = 0;
+    r = s2d(c.BeforeFirst( ' ' ));
     c = c.AfterFirst( ' ' );
-    c.BeforeFirst( ' ' ).ToDouble( &g );
+    g = s2d( c.BeforeFirst( ' ' ));
     c = c.AfterFirst( ' ' );
-    c.BeforeFirst( ' ' ).ToDouble( &b );
+    b = s2d(c.BeforeFirst( ' ' ));
     CLAMP( r, 0, 1  );
     CLAMP( g, 0, 1  );
     CLAMP( b, 0, 1  );
@@ -408,6 +391,21 @@ wxImage ReplaceChannelStatusColour( wxBitmap img, const wxColour& colour )
 
 }
 
+wxSize MakeFit(const wxSize &original, const wxSize &bounds)
+{
+  if( ( bounds.GetWidth() <= 0 ) || ( bounds.GetHeight() <= 0 ) ) return wxSize(0,0);
+  int sizex = ( original.GetWidth() * bounds.GetHeight() ) / original.GetHeight();
+  if( sizex <= bounds.GetWidth() )
+  {
+    return wxSize( sizex, bounds.GetHeight() );
+  }
+  else
+  {
+    int sizey = ( original.GetHeight() * bounds.GetWidth() ) / original.GetWidth();
+    return wxSize( bounds.GetWidth(), sizey );
+  }
+}
+
 #if wxUSE_TIPWINDOW
 BEGIN_EVENT_TABLE(SLTipWindow, wxTipWindow)
   EVT_MOUSEWHEEL(SLTipWindow::Cancel)
@@ -418,3 +416,14 @@ void SLTipWindow::Cancel(wxMouseEvent& event)
   wxTipWindow::Close();
 }
 #endif
+
+void CopyToClipboard( const wxString& text )
+{
+    if ( wxTheClipboard->Open() ) {
+        // This data objects are held by the clipboard,
+        // so do not delete them in the app.
+        wxTheClipboard->SetData( new wxTextDataObject( text ) );
+        wxTheClipboard->Close();
+    }
+}
+

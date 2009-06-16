@@ -19,6 +19,7 @@ class MapCtrl;
 class wxListCtrl;
 class wxChoice;
 class wxRadioBox;
+class wxMouseEvent;
 
 /** \brief select map, draw startboxes (in sp define startpos)
  * \todo DOCMEMORE */
@@ -37,6 +38,7 @@ class BattleMapTab : public wxScrolledWindow
      void OnMapSelect( wxCommandEvent& event );
      void OnMapBrowse( wxCommandEvent& event );
      void OnStartTypeSelect( wxCommandEvent& event );
+     void OnMouseWheel( wxMouseEvent& event );
 
     void OnUnitSyncReloaded();
 
@@ -64,3 +66,21 @@ class BattleMapTab : public wxScrolledWindow
 
 
 #endif // SPRINGLOBBY_HEADERGUARD_BATTLEMAPTAB_H
+
+/**
+    This file is part of SpringLobby,
+    Copyright (C) 2007-09
+
+    springsettings is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License version 2 as published by
+    the Free Software Foundation.
+
+    springsettings is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SpringLobby.  If not, see <http://www.gnu.org/licenses/>.
+**/
+

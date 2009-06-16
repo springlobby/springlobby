@@ -20,6 +20,47 @@ class BattleRoomTab;
 
 class MapCtrl : public wxPanel
 {
+
+	enum RectangleArea
+	{
+		Main = -1,
+		UpLeft,
+		UpRight,
+		DownRight,
+		DownLeft,
+		UpAllyButton,
+		DownAllyButton,
+		Side,
+		UpHandicapButton,
+		DownHandicapButton,
+		Handicap,
+		Close,
+		Move,
+		Download,
+		Refreshing
+	};
+
+	enum MouseAction
+	{
+		None,
+		Add,
+		Delete,
+		Moved,
+		ResizeUpLeft,
+		ResizeUpRight,
+		ResizeDownLeft,
+		ResizeDownRight
+	};
+
+	enum UserRectOrientation
+	{
+		TopLeft,
+		BottomLeft,
+		TopRight,
+		BottomRight
+	};
+
+
   public:
     MapCtrl( wxWindow* parent, int size, IBattle* battle, Ui& ui, bool readonly, bool fixed_size, bool draw_start_types, bool singleplayer );
     ~MapCtrl();
@@ -40,15 +81,25 @@ class MapCtrl : public wxPanel
 
    protected:
 
-    typedef int RectArea;
-    typedef int MouseAction;
-    typedef int UserRectOrient;
-
     void LoadMinimap();
     void FreeMinimap();
 
     BattleStartRect GetBattleRect( int x1, int y1, int x2, int y2, int ally = -1 );
-    wxRect GetMinimapRect();
+
+    /** Get the rect occupied by the minimap.
+     *
+     * @see GetDrawableRect
+     */
+    wxRect GetMinimapRect() const;
+
+    /** Get the widget-drawable area as a wxRect.  This is similar to
+     * GetMinimapRect, but includes the area not filled by the minimap.
+     *
+     * @return The wxRect corresponding {0, 0, ClientWidth, ClientHeight}.
+     *
+     * @see GetMinimapRect, wxWindow::GetClientSize
+     */
+    wxRect GetDrawableRect() const;
 
     wxRect GetStartRect( int index );
     wxRect GetStartRect( const BattleStartRect& sr );
@@ -58,8 +109,20 @@ class MapCtrl : public wxPanel
 
     void DrawOutlinedText( wxDC& dc, const wxString& str, int x, int y, const wxColour& outline, const wxColour& font );
 
-    wxRect GetUserRect( User& user, bool selected );
-    RectArea GetUserRectArea( const wxRect& userrect, int x, int y );
+    /** Get the relative (range: [0.0,1.0]) x- and y- coordinates of
+     * the user's start position.
+     */
+    wxRealPoint GetUserMapPositionAsReal(const User& user) const;
+
+    /** Get an absolute (relative to the client's [*this* MapCtrl
+     * widget's] drawable area) user map position.
+     *
+     * The returned point is as would be used with wxDC methods.
+     */
+    wxPoint GetTranslatedScaledUserMapPosition(const User& user) const;
+
+    wxRect GetUserRect( const User& user, bool selected );
+    RectangleArea GetUserRectArea( const wxRect& userrect, int x, int y );
 
     wxRect GetUserSideRect() { return wxRect( 37, 20, 16, 16 ); }
     wxRect GetUserHandicapRect() { return wxRect( 40, 55, 16, 16 ); }
@@ -81,11 +144,11 @@ class MapCtrl : public wxPanel
     void GetClosestStartPos( int fromx, int fromy, int& index, int& x, int& y, int& range );
 
     void DrawUser( wxDC& dc, User& user, bool selected, bool moving );
-    void DrawSinglePlayer( wxDC& dc );
+    void DrawUserPositions( wxDC& dc );
     void DrawBackground( wxDC& dc );
     void DrawStartRects( wxDC& dc );
     void DrawStartPositions( wxDC& dc );
-    void DrawStartRect( wxDC& dc, int index, wxRect& sr, const wxColour& col, bool mouseover, int alphalevel = 70 );
+    void DrawStartRect( wxDC& dc, int index, wxRect& sr, const wxColour& col, bool mouseover, int alphalevel = 70, bool forceInsideMinimap = true );
 
     void SetMouseOverRect( int index );
 
@@ -111,10 +174,10 @@ class MapCtrl : public wxPanel
     int m_mover_rect;
     int m_mdown_rect;
 
-    RectArea m_rect_area;
-    RectArea m_last_rect_area;
+    RectangleArea m_rect_area;
+    RectangleArea m_last_rect_area;
 
-    RectArea m_mdown_area;
+    RectangleArea m_mdown_area;
     BattleStartRect m_tmp_brect;
 
     MouseAction m_maction;
@@ -155,3 +218,21 @@ class MapCtrl : public wxPanel
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_MAPCTRL_H
+
+/**
+    This file is part of SpringLobby,
+    Copyright (C) 2007-09
+
+    springsettings is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License version 2 as published by
+    the Free Software Foundation.
+
+    springsettings is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SpringLobby.  If not, see <http://www.gnu.org/licenses/>.
+**/
+

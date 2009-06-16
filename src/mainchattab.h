@@ -30,18 +30,15 @@ class MainChatTab : public wxScrolledWindow
 
     ChatPanel* AddChatPannel( Channel& channel );
     ChatPanel* AddChatPannel( Server& server, const wxString& name );
-    ChatPanel* AddChatPannel( User& user );
+    ChatPanel* AddChatPannel( const User& user );
     /** \brief this is only used if channel is left via raw command in server tab */
     bool RemoveChatPanel( ChatPanel* panel );
 
     void RejoinChannels();
+    void LeaveChannels();
 
-    #ifdef HAVE_WX26
-    void OnTabsChanged( wxListbookEvent& event );
-    #else
     void OnTabsChanged( wxAuiNotebookEvent& event );
     void OnTabClose( wxAuiNotebookEvent& event );
-    #endif
     void OnUserConnected( User& user );
     void OnUserDisconnected( User& user );
 
@@ -58,11 +55,7 @@ class MainChatTab : public wxScrolledWindow
     Ui& m_ui;
 
     wxWindow* m_close_window;
-    #ifdef HAVE_WX26
-    wxNotebook* m_chat_tabs;
-    #else
     wxAuiNotebook* m_chat_tabs;
-    #endif
     wxBoxSizer* m_main_sizer;
     wxImageList* m_imagelist;
     ChatPanel* m_server_chat;
@@ -79,3 +72,21 @@ class MainChatTab : public wxScrolledWindow
 
 
 #endif // SPRINGLOBBY_HEADERGUARD_MAINCHATTAB_H
+
+/**
+    This file is part of SpringLobby,
+    Copyright (C) 2007-09
+
+    springsettings is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License version 2 as published by
+    the Free Software Foundation.
+
+    springsettings is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SpringLobby.  If not, see <http://www.gnu.org/licenses/>.
+**/
+

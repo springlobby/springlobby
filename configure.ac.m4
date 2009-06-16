@@ -20,19 +20,19 @@ PKG_PROG_PKG_CONFIG
 usetorrent=yes
 AC_ARG_ENABLE(torrent-system,
  [  --disable-torrent-system  Disable automatic content downloads via torrent (avoids libtorrent dependency)],
- [ usetorrent=no
+ [ usetorrent=$enableval
  ])
 
 sound=yes
 AC_ARG_ENABLE(sound,
  [  --disable-sound Enable sound using SDL, needs SDL],
- [ sound=no
+ [ sound=$enableval
  ])
 
 debug=no
 AC_ARG_ENABLE(debug,
  [  --enable-debug Enable debugging],
- [ debug=yes
+ [ debug=$enableval
  ])
 
 AC_ARG_WITH(sdl-config,[  --with-sdl-config=/path/to/sdl-config (optional) for finding right sdl includes],
@@ -57,7 +57,7 @@ AC_PROG_CXX
 AM_OPTIONS_WXCONFIG
 
 
-AM_PATH_WXCONFIG([2.6.3], [],
+AM_PATH_WXCONFIG([2.8.2], [],
     [AC_MSG_ERROR([
            wxWidgets must be installed on your system
            but wx-config script couldn't be found.
@@ -65,8 +65,8 @@ AM_PATH_WXCONFIG([2.6.3], [],
            Please check that wx-config is in path, the directory
            where wxWidgets libraries are installed (returned by
            'wx-config --libs' command) is in LD_LIBRARY_PATH or
-           equivalent variable and wxWidgets version is 2.6.3 or above.
-   ])], [base,core,net,adv,qa,aui])
+           equivalent variable and wxWidgets version is 2.8.2 or above.
+   ])], [base,core,net,adv,aui,xml,html])
 win_build=0
 AC_ARG_VAR([WINDRES], [Windows resource file compiler command])
 if test x$host_os = xmingw32msvc ; then
@@ -122,7 +122,7 @@ if test "$win_build" = 0 ; then
     fi
 else
     if test x$usetorrent = xyes ; then
-        CXXFLAGS="$CXXFLAGS  -D_WIN32_WINNT=0x0501 -DBOOST_WINDOWS -DTORRENT_DISABLE_ENCRYPTION  "
+        CXXFLAGS="$CXXFLAGS  -D_WIN32_WINNT=0x0500 -DBOOST_WINDOWS -DTORRENT_DISABLE_ENCRYPTION  "
         LIBS="$LIBS -mthreads -Wl,-allow-multiple-definition -L/var/lib/buildbot/lib/mingw/lib -lboost_thread-mt -lboost_filesystem-mt  -lws2_32 -lmswsock -lboost_date_time-mt"
     else
        	CXXFLAGS="$CXXFLAGS -DNO_TORRENT_SYSTEM"
@@ -161,7 +161,7 @@ else
 fi
 
 AM_GNU_GETTEXT([external])
-AM_GNU_GETTEXT_VERSION([0.14])
+AM_GNU_GETTEXT_VERSION([0.17])
 
 
 

@@ -64,6 +64,45 @@ getDataSubdirForType(const IUnitSync::MediaType type)
     }
 }
 
+TorrentMaintenanceThread::TorrentMaintenanceThread( TorrentWrapper* parent ):
+m_stop_thread( false ),
+m_parent( *parent )
+{
+}
+
+void TorrentMaintenanceThread::Init()
+{
+	Create();
+	SetPriority( WXTHREAD_MIN_PRIORITY );
+	Run();
+}
+
+void TorrentMaintenanceThread::Stop()
+{
+	m_stop_thread = true;
+}
+
+void* TorrentMaintenanceThread::Entry()
+{
+	while ( !TestDestroy() )
+	{
+		if( !Sleep( 2000 ) ) break;
+		if ( m_parent.IsConnectedToP2PSystem() )
+		{
+				//  DON'T alter function call order here or bad things may happend like locust, earthquakes or raptor attack
+				m_parent.JoinRequestedTorrents();
+				m_parent.RemoveUnneededTorrents();
+				m_parent.TryToJoinQueuedTorrents();
+				m_parent.SearchAndGetQueuedDependencies();
+		}
+	}
+	return 0;
+}
+
+bool TorrentMaintenanceThread::TestDestroy()
+{
+	return Thread::TestDestroy() || m_stop_thread;
+}
 
 /** Get the wxFileName of a wxTorrentFile given its wxHash (where a
  * wxHash is a wxString).
@@ -73,7 +112,7 @@ getDataSubdirForType(const IUnitSync::MediaType type)
 inline wxFileName
 torrentFileName(const wxString& hash)
 {
-    return sett().GetTorrentDir().GetPathWithSep() + hash + _T(".torrent");
+    return sett().GetTorrentDir().GetPathWithSep() + MakeHashSigned(hash) + _T(".torrent");
 }
 
 bool TorrentTable::IsConsistent()
@@ -87,6 +126,23 @@ bool TorrentTable::IsConsistent()
     }
 #endif
     return true;
+}
+
+void TorrentTable::FlushData()
+{
+#ifdef TorrentTable_validate
+    all_torrents.clear();
+#endif
+    hash_index.clear();
+    name_index.clear();
+    handle_index.clear();
+    seed_requests.clear();
+    queued_torrents.clear();
+    seed_sent_data.clear();
+		dep_check_queue.clear();
+
+    m_seed_count = 0;
+    m_leech_count = 0;
 }
 
 void TorrentTable::InsertRow(TorrentTable::PRow row)
@@ -148,34 +204,61 @@ void TorrentTable::SetRowHandle(TorrentTable::PRow row, const libtorrent::torren
     if (row->handle!=libtorrent::torrent_handle())handle_index[row->handle]=row;
 }
 
+void TorrentTable::AddRowToDependencyCheckQueue(PRow row)
+{
+	if (!row.ok())return;
+	dep_check_queue.insert( row );
+}
+
+void TorrentTable::RemoveRowFromDependencyCheckQueue( PRow row )
+{
+	if (!row.ok())return;
+	dep_check_queue.erase( row );
+}
+
 void TorrentTable::RemoveRowHandle( PRow row )
 {
+		if (!row.ok())return;
     handle_index.erase(row->handle);
     row->handle= libtorrent::torrent_handle();
 }
 
 void TorrentTable::SetRowStatus( TorrentTable::PRow row, P2P::FileStatus status )
 {
+		if (!row.ok())return;
+		if ( row->status != P2P::seeding && status == P2P::seeding ) m_seed_count++;
+		if ( row->status != P2P::leeching && status == P2P::leeching ) m_leech_count++;
+		if ( row->status == P2P::seeding && status != P2P::seeding ) m_seed_count--;
+		if ( row->status == P2P::leeching && status != P2P::leeching ) m_leech_count--;
+    if ( row->status != P2P::queued && status == P2P::queued ) queued_torrents.insert( row );
+		if ( row->status == P2P::queued && status != P2P::queued ) queued_torrents.erase( row );
     if ( row->status == P2P::seeding || row->status == P2P::leeching )
     {
         if ( status != P2P::seeding && status != P2P::leeching ) RemoveRowHandle( row );
     }
-    if ( row->status == P2P::queued && status != P2P::queued ) queued_torrents.erase( row );
-    if ( status == P2P::queued ) queued_torrents.insert( row );
     row->status = status;
+}
+
+void TorrentTable::SetRowTransferredData( PRow row, TransferredData data )
+{
+	if (!row.ok())return;
+	seed_sent_data[row] = data;
 }
 
 void TorrentTable::AddSeedRequest(TorrentTable::PRow row)
 {
+		if (!row.ok())return;
     seed_requests.insert(row);
 }
 void TorrentTable::RemoveSeedRequest(TorrentTable::PRow row)
 {
+		if (!row.ok())return;
     seed_requests.erase(row);
 }
 
 bool TorrentTable::IsSeedRequest(TorrentTable::PRow row)
 {
+		if (!row.ok()) return false;
     return seed_requests.count(row)>0;
 }
 
@@ -218,6 +301,26 @@ std::set<TorrentTable::PRow> TorrentTable::QueuedTorrentsByRow()
     return queued_torrents;
 }
 
+std::map<TorrentTable::PRow, TorrentTable::TransferredData> TorrentTable::TransferredDataByRow()
+{
+	return seed_sent_data;
+}
+
+std::set<TorrentTable::PRow> TorrentTable::DependencyCheckQueuebyRow()
+{
+	return dep_check_queue;
+}
+
+unsigned int TorrentTable::GetOpenSeedsCount()
+{
+	return m_seed_count;
+}
+
+unsigned int TorrentTable::GetOpenLeechsCount()
+{
+	return m_leech_count;
+}
+
 
 TorrentWrapper& torrent()
 {
@@ -228,9 +331,8 @@ TorrentWrapper& torrent()
 
 TorrentWrapper::TorrentWrapper():
         ingame(false),
-        m_seed_count(0),
-        m_leech_count(0),
         m_timer_count(0),
+        m_maintenance_thread(this),
         m_is_connecting(false),
         m_started(false)
 {
@@ -287,6 +389,7 @@ TorrentWrapper::TorrentWrapper():
 TorrentWrapper::~TorrentWrapper()
 {
     wxLogMessage(_T("TorrentWrapper::~TorrentWrapper()"));
+    m_maintenance_thread.Stop();
     try
     {
         m_torr->stop_upnp();
@@ -311,6 +414,7 @@ TorrentWrapper::~TorrentWrapper()
     {
         wxLogError( WX_STRINGC( e.what() ) );
     }
+    m_socket_class->SetTimeout( 1 );
     DisconnectFromP2PSystem();
     delete m_torr;
     delete m_socket_class;
@@ -391,13 +495,13 @@ void TorrentWrapper::UpdateSettings()
 
 bool TorrentWrapper::IsFileInSystem( const wxString& hash )
 {
-    return m_torrent_table.RowByHash(hash).ok();
+    return GetTorrentTable().RowByHash(hash).ok();
 }
 
 
 bool TorrentWrapper::RemoveTorrentByHash( const wxString& hash )
 {
-    TorrentTable::PRow row=m_torrent_table.RowByHash(hash);
+    TorrentTable::PRow row=GetTorrentTable().RowByHash(hash);
     if (!row.ok())return false;
     return RemoveTorrentByRow( row );
 }
@@ -426,17 +530,17 @@ HashToTorrentData& TorrentWrapper::GetSystemFileList()
 
 TorrentWrapper::DownloadRequestStatus TorrentWrapper::RequestFileByHash( const wxString& hash )
 {
-    TorrentTable::PRow row=m_torrent_table.RowByHash(hash);
+    TorrentTable::PRow row=GetTorrentTable().RowByHash(hash);
     if ( !row.ok() ) return missing_in_table;
-    return RequestFileByRow( row );
+    return QueueFileByRow( row );
 }
 
 
 TorrentWrapper::DownloadRequestStatus TorrentWrapper::RequestFileByName( const wxString& name )
 {
-    TorrentTable::PRow row=m_torrent_table.RowByName(name);
+    TorrentTable::PRow row=GetTorrentTable().RowByName(name);
     if ( !row.ok() ) return missing_in_table;
-    return RequestFileByRow( row );
+    return QueueFileByRow( row );
 }
 
 
@@ -444,6 +548,8 @@ void TorrentWrapper::SetIngameStatus( bool status )
 {
     if ( status == ingame ) return; // no change needed
     ingame = status;
+    if ( ingame ) m_maintenance_thread.Pause();
+    else m_maintenance_thread.Resume();
     if ( !IsConnectedToP2PSystem() ) return;
     try
     {
@@ -488,16 +594,6 @@ void TorrentWrapper::UpdateFromTimer( int mselapsed )
         else
             ConnectToP2PSystem( m_connected_tracker_index +1 );
     }
-
-    if (!ingame && IsConnectedToP2PSystem() )
-    {
-        //  DON'T alter function call order here or bad things may happend like locust, earthquakes or raptor attack
-        JoinRequestedTorrents();
-        RemoveUnneededTorrents();
-        TryToJoinQueuedTorrents();
-        ResumeFromList();
-        SearchAndGetQueuedDependencies();
-    }
 }
 
 void TorrentWrapper::ResumeFromList()
@@ -510,7 +606,7 @@ void TorrentWrapper::ResumeFromList()
         std::vector<int> successfulIndices;
         for ( unsigned int i = 0; i < ResumeCount; i++ )
         {
-            if (success == RequestFileByHash( TorrentsToResume[i] ) ) // resume all open leeched files when system as disconnected last time
+            if (scheduled_in_cue == RequestFileByHash( TorrentsToResume[i] ) ) // resume all open leeched files when system as disconnected last time
                 successfulIndices.push_back(i);
         }
 
@@ -528,8 +624,7 @@ void TorrentWrapper::ResumeFromList()
 //// private functions to interface with the system ////
 ////////////////////////////////////////////////////////
 
-
-TorrentWrapper::DownloadRequestStatus TorrentWrapper::RequestFileByRow( const TorrentTable::PRow& row )
+TorrentWrapper::DownloadRequestStatus TorrentWrapper::QueueFileByRow( const TorrentTable::PRow& row )
 {
     if (ingame) return paused_ingame;
     if ( !IsConnectedToP2PSystem()  ) return not_connected;
@@ -538,15 +633,30 @@ TorrentWrapper::DownloadRequestStatus TorrentWrapper::RequestFileByRow( const To
 
     if (row->status==P2P::leeching||(row->status&P2P::stored) || (row->status == P2P::queued) ) return duplicate_request;
 
-    if ( m_leech_count > 4 )
+		GetTorrentTable().SetRowStatus( row, P2P::queued );
+		return scheduled_in_cue;
+}
+
+TorrentWrapper::DownloadRequestStatus TorrentWrapper::RequestFileByRow( const TorrentTable::PRow& row )
+{
+    if (ingame) return paused_ingame;
+    if ( !IsConnectedToP2PSystem()  ) return not_connected;
+
+    if (!row.ok())return file_not_found;
+
+    if (row->status==P2P::leeching||(row->status&P2P::stored) ) return duplicate_request;
+
+    if ( GetTorrentTable().GetOpenLeechsCount() > 4 )
     {
-        GetTorrentTable().SetRowStatus( row, P2P::queued );
-        return scheduled_in_cue;
+    	 GetTorrentTable().SetRowStatus( row, P2P::queued );
+    	 return scheduled_in_cue;
     }
 
-    if ( !JoinTorrent( row, false ) ) return torrent_join_failed;
-
-    SendMessageToCoordinator( wxString::Format( _T("N+|%s\n"), row->hash.c_str() ) ); // request for seeders for the file
+    if ( !JoinTorrent( row, false ) )
+    {
+    	 GetTorrentTable().SetRowStatus( row, P2P::not_stored ); // remove from queue list or it will keep failing
+    	 return torrent_join_failed;
+    }
     return success;
 }
 
@@ -555,16 +665,22 @@ bool TorrentWrapper::RemoveTorrentByRow( const TorrentTable::PRow& row )
 {
     if (!row.ok())return false;
     wxLogDebugFunc( row->name );
+    if ( row->status==P2P::queued )
+    {
+    	TorrentTable().SetRowStatus( row, P2P::not_stored );
+    	return true;
+    }
     try
     {
         bool filecompleted = row->handle.is_seed();
         m_torr->remove_torrent( row->handle );
 
-        if (row->status==P2P::seeding) m_seed_count--;
-        else if (row->status==P2P::leeching) m_leech_count--;
-
         if ( filecompleted ) GetTorrentTable().SetRowStatus( row, P2P::stored ); // fix the file status and automatically remove row handle
-        else GetTorrentTable().SetRowStatus( row, P2P::not_stored );
+        else
+        {
+        	 GetTorrentTable().SetRowStatus( row, P2P::not_stored );
+        	 SendMessageToCoordinator( _T("N-|")  + MakeHashSigned(row->hash) + _T("\n") );  //notify the system we don't need the file anymore
+        }
     }
     catch (std::exception& e)
     {
@@ -608,7 +724,7 @@ std::map<int,TorrentInfos> TorrentWrapper::CollectGuiInfos()
             CurrentTorrent.numcopies = s.distributed_copies;
             CurrentTorrent.filesize = i->get_torrent_info().total_size();
 
-            TorrentTable::PRow row=m_torrent_table.RowByHandle(*i);
+            TorrentTable::PRow row=GetTorrentTable().RowByHandle(*i);
             if (!row.ok()) continue;
             CurrentTorrent.hash=row->hash;
             CurrentTorrent.downloadstatus = row->status;
@@ -624,7 +740,7 @@ std::map<int,TorrentInfos> TorrentWrapper::CollectGuiInfos()
     // display infos about queued torrents
 
     std::set<TorrentTable::PRow> queuedrequests = GetTorrentTable().QueuedTorrentsByRow();
-    for ( std::set<TorrentTable::PRow>::iterator it = queuedrequests.begin(); ( it != queuedrequests.end() ) && ( m_leech_count < 4 ); it++ )
+    for ( std::set<TorrentTable::PRow>::iterator it = queuedrequests.begin(); ( it != queuedrequests.end() ) && ( GetTorrentTable().GetOpenLeechsCount() < 4 ); it++ )
     {
         TorrentInfos QueuedTorrent;
         QueuedTorrent.numcopies = -1;
@@ -735,7 +851,11 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
 
 
     wxLogMessage(_T("(3) Joining torrent: downloading info file"));
-    if (!DownloadTorrentFileFromTracker( row->hash )) return false;
+    if (!DownloadTorrentFileFromTracker( MakeHashSigned( row->hash ) ))
+    {
+    	 wxLogError(_T("(3) info file download failed"));
+    	 return false;
+    }
 
 		#if LIBTORRENT_VERSION_MINOR < 14
 			// read torrent from file
@@ -826,10 +946,10 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
     try
     {
 				#if LIBTORRENT_VERSION_MINOR < 14
-					m_torrent_table.SetRowHandle(row, m_torr->add_torrent( t_info, boost::filesystem::path(path.GetFullPath().mb_str())));
+					GetTorrentTable().SetRowHandle(row, m_torr->add_torrent( t_info, boost::filesystem::path(path.GetFullPath().mb_str())));
 				#else
 					p.save_path = path.GetFullPath().mb_str();
-					m_torrent_table.SetRowHandle(row, m_torr->add_torrent(p));
+					GetTorrentTable().SetRowHandle(row, m_torr->add_torrent(p));
 				#endif
 
     }
@@ -863,15 +983,11 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
         wxLogError(_T("%s"),WX_STRINGC( e.what()).c_str()); // TODO (BrainDamage#1#): add message to user on failure
     }
 
-    if ( IsSeed )
-    {
-        GetTorrentTable().SetRowStatus( row, P2P::seeding );
-        m_seed_count++;
-    }
+    if ( IsSeed ) GetTorrentTable().SetRowStatus( row, P2P::seeding );
     else
     {
         GetTorrentTable().SetRowStatus( row, P2P::leeching );
-        m_leech_count++;
+				SendMessageToCoordinator( wxString::Format( _T("N+|%s\n"), MakeHashSigned(row->hash).c_str() ) ); // request for seeders for the file
     }
 
     wxLogMessage(_T("(5) Joining torrent: done"));
@@ -968,8 +1084,8 @@ bool TorrentWrapper::DownloadTorrentFileFromTracker( const wxString& hash )
 
     wxHTTP fileRequest;
     //versionRequest.SetHeader(_T("Content-type"), _T(""));
-    // normal timeout is 10 minutes.. set to 10 secs.
-    fileRequest.SetTimeout(10);
+    // normal timeout is 10 minutes.. set to 2 secs.
+    fileRequest.SetTimeout(2);
     fileRequest.Connect( m_tracker_urls[m_connected_tracker_index], 80);
     wxInputStream *stream = fileRequest.GetInputStream(  _T("/torrents/") + hash + _T(".torrent") );
     bool ret = false;
@@ -1000,11 +1116,11 @@ void TorrentWrapper::JoinRequestedTorrents()
     {
         if (!it->ok())continue;
 
-        if ( m_seed_count > 9 ) break; // too many seeds open
+        if ( GetTorrentTable().GetOpenSeedsCount() > 9 ) break; // too many seeds open
 
         if ( (*it)->status != P2P::stored ) continue; // torrent must be present locally and not seeding/leeching
 
-        JoinTorrent( *it, true );
+        if ( !JoinTorrent( *it, true ) ) GetTorrentTable().RemoveSeedRequest( *it );
 
     }
 
@@ -1013,11 +1129,24 @@ void TorrentWrapper::JoinRequestedTorrents()
 void TorrentWrapper::RemoveUnneededTorrents()
 {
     std::map<libtorrent::torrent_handle, TorrentTable::PRow> torrenthandles = GetTorrentTable().RowByTorrentHandles();
+    std::map<TorrentTable::PRow, TorrentTable::TransferredData> transfer_data_map = GetTorrentTable().TransferredDataByRow();
     for (std::map<libtorrent::torrent_handle, TorrentTable::PRow>::iterator  it = torrenthandles.begin(); it != torrenthandles.end(); ++it)
     {
 				if ( !it->first.is_valid() ) continue;
         if ( !it->first.is_seed() ) continue;
 
+				// save how much the torrent has seeded
+				unsigned int payload_upload = it->first.status().total_payload_upload;
+
+				TorrentTable::TransferredData old_data = transfer_data_map[it->second];
+				if ( payload_upload == old_data.sentdata )
+				{
+					old_data.failed_check_counts = old_data.failed_check_counts + 1;
+				}
+				else old_data.sentdata = payload_upload;
+				GetTorrentTable().SetRowTransferredData( it->second, old_data );
+				// if the torrent didn't seed any data in the last 2 minutes, remove it from the request list
+				if ( old_data.failed_check_counts > 60 ) GetTorrentTable().RemoveSeedRequest( it->second );
 
         if ( it->second->status == P2P::leeching ) // if torrent was opened in leech mode but now it's seeding it means it was requested from the user but now it's completed
         {
@@ -1038,10 +1167,7 @@ void TorrentWrapper::RemoveUnneededTorrents()
                 if ( ! wxRenameFile(sourceName, targetName, false) ) wxLogError(wxString::Format(_T("torrent: Failed to move \"%s\" to \"%s\""), sourceName.c_str(), targetName.c_str()));
                 else wxLogMessage(wxString::Format(_T("torrent: Moved \"%s\" to \"%s\""), sourceName.c_str(), targetName.c_str()));
 
-                SendMessageToCoordinator( _T("N-|")  + it->second->hash + _T("\n") ); //notify the system we don't need the file anymore
-
-                TorrentTable::Row fileinfo( *it->second );
-                m_dep_check_queue.push_back( fileinfo );
+                GetTorrentTable().AddRowToDependencyCheckQueue( it->second );
 
                 wxCommandEvent refreshevt(UnitSyncReloadRequest); // request an unitsync reload
                 wxPostEvent( &SL_GlobalEvtHandler::GetSL_GlobalEvtHandler(), refreshevt );
@@ -1071,11 +1197,11 @@ void TorrentWrapper::RemoveUnneededTorrents()
 void TorrentWrapper::TryToJoinQueuedTorrents()
 {
 
-    if ( m_leech_count < 5 )
+    if ( GetTorrentTable().GetOpenLeechsCount() < 5 )
     {
         // join queued files if there are available slots
         std::set<TorrentTable::PRow> queuedrequests = GetTorrentTable().QueuedTorrentsByRow();
-        for ( std::set<TorrentTable::PRow>::iterator it = queuedrequests.begin(); ( it != queuedrequests.end() ) && ( m_leech_count < 4 ); it++ )
+        for ( std::set<TorrentTable::PRow>::iterator it = queuedrequests.begin(); ( it != queuedrequests.end() ) && ( GetTorrentTable().GetOpenLeechsCount() < 4 ); it++ )
         {
             if ( !it->ok() ) continue;
             RequestFileByRow( *it );
@@ -1086,42 +1212,36 @@ void TorrentWrapper::TryToJoinQueuedTorrents()
 
 void TorrentWrapper::SearchAndGetQueuedDependencies()
 {
-	std::vector<TorrentTable::Row> listcopy = m_dep_check_queue;
-	int position = 0;
-	for ( std::vector<TorrentTable::Row>::iterator itor = listcopy.begin(); itor != listcopy.end(); itor++ )
+	std::set<TorrentTable::PRow> listcopy = GetTorrentTable().DependencyCheckQueuebyRow();
+	for ( std::set<TorrentTable::PRow>::iterator itor = listcopy.begin(); itor != listcopy.end(); itor++ )
 	{
-
-		if ( itor->type == IUnitSync::map )
+		TorrentTable::PRow row = *itor;
+		if ( row->type == IUnitSync::map )
 		{
-			if ( usync().MapExists( itor->name, itor->hash ) )
+			if ( usync().MapExists( row->name, row->hash ) )
 			{
-				wxArrayString deps = usync().GetMapDeps( itor->name );
+				wxArrayString deps = usync().GetMapDeps( row->name );
 				int count = deps.GetCount();
 				for ( int i = 0; i < count; i++ )
 				{
 					RequestFileByName( deps[i] );
 				}
-				std::vector<TorrentTable::Row>::iterator toremove = m_dep_check_queue.begin();
-				m_dep_check_queue.erase(toremove+position);
-				position--;
+				GetTorrentTable().RemoveRowFromDependencyCheckQueue( row );
 			}
 		}
-		else if ( itor->type == IUnitSync::mod )
+		else if ( row->type == IUnitSync::mod )
 		{
-			if ( usync().ModExists( itor->name, itor->hash ) )
+			if ( usync().ModExists( row->name, row->hash ) )
 			{
-				wxArrayString deps = usync().GetModDeps( itor->name );
+				wxArrayString deps = usync().GetModDeps( row->name );
 				int count = deps.GetCount();
 				for ( int i = 0; i < count; i++ )
 				{
 					RequestFileByName( deps[i] );
 				}
-				std::vector<TorrentTable::Row>::iterator toremove = m_dep_check_queue.begin();
-				m_dep_check_queue.erase(toremove+position);
-				position--;
+				GetTorrentTable().RemoveRowFromDependencyCheckQueue( row );
 			}
 		}
-		position++;
 	}
 
 }
@@ -1139,17 +1259,17 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
 
         TorrentTable::PRow newtorrent = new TorrentTable::Row;
 
-        newtorrent->hash = data[1];
+        newtorrent->hash = MakeHashUnsigned(data[1]);
         newtorrent->name = data[2];
         if ( data[3] == _T("MAP") )
         {
             newtorrent->type = IUnitSync::map;
-            if ( usync().MapExists( data[2], data[1] ) ) newtorrent->status = P2P::stored;
+            if ( usync().MapExists( newtorrent->name, newtorrent->hash ) ) newtorrent->status = P2P::stored;
         }
         else if ( data[3] == _T("MOD") )
         {
             newtorrent->type = IUnitSync::mod;
-            if ( usync().ModExists( data[2], data[1] ) ) newtorrent->status = P2P::stored;
+            if ( usync().ModExists( newtorrent->name, newtorrent->hash ) ) newtorrent->status = P2P::stored;
         }
 
         GetTorrentTable().InsertRow( newtorrent );
@@ -1161,7 +1281,7 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
     else if ( data[0] == _T("T-") && data.GetCount() > 1 )
     {
 
-        TorrentTable::PRow row = GetTorrentTable().RowByHash( data[1] );
+        TorrentTable::PRow row = GetTorrentTable().RowByHash( MakeHashUnsigned(data[1]) );
         if ( !row.ok() ) return;
         GetTorrentTable().RemoveRow( row );
 
@@ -1170,7 +1290,7 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
     else if ( data.GetCount() > 1 && data[0] == _T("S+") )
     {
 
-        TorrentTable::PRow row = GetTorrentTable().RowByHash( data[1] );
+        TorrentTable::PRow row = GetTorrentTable().RowByHash( MakeHashUnsigned(data[1]) );
         if ( !row.ok() ) return;
         GetTorrentTable().AddSeedRequest( row );
 
@@ -1184,7 +1304,7 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
     else if ( data.GetCount() > 1 && data[0] == _T("S-") )
     {
 
-        TorrentTable::PRow row = GetTorrentTable().RowByHash( data[1] );
+        TorrentTable::PRow row = GetTorrentTable().RowByHash( MakeHashUnsigned(data[1]) );
         if ( !row.ok() ) return;
         GetTorrentTable().RemoveSeedRequest( row );
 
@@ -1193,7 +1313,7 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
     else if ( data[0] == _T("M+") && data.GetCount() > 2 )
     {
 
-        TorrentTable::PRow row = GetTorrentTable().RowByHash( data[1] );
+        TorrentTable::PRow row = GetTorrentTable().RowByHash( MakeHashUnsigned(data[1]) );
         if ( !row.ok() ) return;
 
         for ( unsigned int index = 2; index < data.GetCount(); index++ )
@@ -1218,11 +1338,35 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
     else if ( data.GetCount() > 2 && data[0] == _T("IH") )
     {
 
-        TorrentTable::PRow row = GetTorrentTable().RowByHash( data[1] );
+        TorrentTable::PRow row = GetTorrentTable().RowByHash( MakeHashUnsigned(data[1]) );
         if ( !row.ok() ) return;
 
         row->infohash = data[2];
-
+				// QH|query tag|type|name 	 queries clients for spring hashes of given map/mod
+    }
+    else if ( data[0] == _T("QH") && data.GetCount() > 3  )
+    {
+				wxString query_tag = data[1];
+				wxString file_type = data[2];
+				wxString unitsync_name = data[3];
+				wxString hash;
+				if ( file_type == _T("MAP") )
+				{
+					hash = usync().GetMap( unitsync_name ).hash;
+				}
+				else if ( file_type == _T("MOD") )
+				{
+					hash = usync().GetMod( unitsync_name ).hash;
+				}
+				if ( !hash.IsEmpty() )
+				{
+					hash = MakeHashSigned( hash );
+					SendMessageToCoordinator( _T("QH|") + query_tag + _T("|") + hash );
+				}
+    }
+    else if ( data[0] == _T("TLISTDONE") )
+    {
+        ResumeFromList(); // resume download of files
     }
 }
 
@@ -1241,11 +1385,8 @@ void TorrentWrapper::OnConnected( Socket* sock )
         wxLogError( WX_STRINGC( e.what() ) ); // TODO (BrainDamage#1#): add message to user on failure
     }
 
-    m_torrent_table = TorrentTable(); // flush the torrent data
-
-    m_seed_count = 0;
-    m_leech_count = 0;
-
+    GetTorrentTable().FlushData(); // flush the torrent data
+		m_maintenance_thread.Init();
 
 }
 
@@ -1259,15 +1400,13 @@ void TorrentWrapper::OnDisconnected( Socket* sock )
     for ( std::set<TorrentTable::PRow>::iterator it = queued.begin(); it != queued.end(); it++ ) TorrentsToResume.Add( (*it)->hash );
 
     std::map<libtorrent::torrent_handle, TorrentTable::PRow> handles =  GetTorrentTable().RowByTorrentHandles();
-
-    for ( std::map<libtorrent::torrent_handle, TorrentTable::PRow>::iterator i = handles.begin(); i != handles.end(); i++)
+		for ( std::map<libtorrent::torrent_handle, TorrentTable::PRow>::iterator it = handles.begin(); it != handles.end(); it++ )
     {
-        if ( !i->first.is_seed() ) TorrentsToResume.Add( i->second->hash ); // save leeching torrents for resume on next connection
+        if ( !it->first.is_seed() ) TorrentsToResume.Add( it->second->hash ); // save leeching torrents for resume on next connection
 
-        SendMessageToCoordinator( wxString::Format( _T("N-|%s\n"), i->second->hash.c_str() ) ); // release all files requests
         try
         {
-            m_torr->remove_torrent(i->first); //remove all torrents upon disconnect
+            m_torr->remove_torrent(it->first); //remove all torrents upon disconnect
         }
         catch (std::exception& e)
         {
@@ -1285,10 +1424,8 @@ void TorrentWrapper::OnDisconnected( Socket* sock )
     }
 
 
-    m_torrent_table = TorrentTable(); // flush the torrent data
+    GetTorrentTable().FlushData(); // flush the torrent data
 
-    m_seed_count = 0;
-    m_leech_count = 0;
     try
     {
         sett().SetTorrentListToResume( TorrentsToResume );
@@ -1297,32 +1434,24 @@ void TorrentWrapper::OnDisconnected( Socket* sock )
     {
     }
     m_started = false;
+    m_maintenance_thread.Stop();
 }
 
 
 void TorrentWrapper::OnDataReceived( Socket* sock )
 {
-    if ( sock == 0 ) return;
+		if ( sock == 0 ) return;
 
-    wxString data;
-
-
-    do
-    {
-
-        data = _T("");
-        if ( sock->Receive( data ) )
-        {
-            m_buffer += data;
-            wxString cmd;
-            if ( ( cmd = m_buffer.BeforeFirst( '\n' ) ) != _T("") )
-            {
-                m_buffer = m_buffer.AfterFirst( '\n' );
-                ReceiveandExecute( cmd );
-            }
-        }
-    }
-    while ( !data.IsEmpty() );
+    wxString data = sock->Receive();
+		m_buffer << data;
+		int returnpos = m_buffer.Find( _T("\n") );
+		while ( returnpos != -1 )
+		{
+			wxString cmd = m_buffer.Left( returnpos );
+			m_buffer = m_buffer.Mid( returnpos + 1 );
+			ReceiveandExecute( cmd );
+			returnpos = m_buffer.Find( _T("\n") );
+		}
 }
 
 #endif

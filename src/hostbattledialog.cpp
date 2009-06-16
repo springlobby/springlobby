@@ -118,6 +118,7 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent ): wxDialog( parent, -1, _(
 	wxBoxSizer* m_relayed_sizer;
 	m_relayed_sizer = new wxBoxSizer( wxHORIZONTAL );
 	m_relayed_host_check = new wxCheckBox( this, wxID_ANY, _("Relay battle to an Autohost"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_relayed_host_check->SetToolTip( TE(_("host and control game on remote server, helps if you have trouble hosting")) );
   m_relayed_host_check->SetValue( sett().GetLastHostRelayedMode() );
   m_relayed_sizer->Add(  m_relayed_host_check, 1, wxALL|wxEXPAND, 5 );
   m_main_sizer->Add( m_relayed_sizer, 0, wxEXPAND, 5 );
@@ -126,7 +127,7 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent ): wxDialog( parent, -1, _(
 	m_players_box = new wxStaticBoxSizer( new wxStaticBox( this, -1, _("Number of players") ), wxVERTICAL );
 
 	m_players_box->SetMinSize( wxSize( -1,60 ) );
-	m_players_slide = new wxSlider( this, wxID_ANY, sett().GetLastHostPlayerNum(), 2, 32, wxDefaultPosition, wxDefaultSize, wxSL_AUTOTICKS|wxSL_BOTH|wxSL_HORIZONTAL|wxSL_LABELS );
+	m_players_slide = new wxSlider( this, wxID_ANY, sett().GetLastHostPlayerNum(), 2, SPRING_MAX_USERS, wxDefaultPosition, wxDefaultSize, wxSL_AUTOTICKS|wxSL_BOTH|wxSL_HORIZONTAL|wxSL_LABELS );
 	m_players_slide->SetToolTip( TE(_("The maximum number of players to allow in the battle.")) );
 	m_players_box->Add( m_players_slide, 0, wxALL|wxEXPAND, 5 );
 
@@ -279,13 +280,13 @@ void HostBattleDialog::OnCancel( wxCommandEvent& event )
 
 int HostBattleDialog::GetSelectedRank()
 {
-  if ( m_rank0_radio->GetValue() ) return 000;
-  if ( m_rank1_radio->GetValue() ) return 100;
-  if ( m_rank2_radio->GetValue() ) return 200;
-  if ( m_rank3_radio->GetValue() ) return 300;
-  if ( m_rank4_radio->GetValue() ) return 400;
-  if ( m_rank5_radio->GetValue() ) return 500;
-  if ( m_rank6_radio->GetValue() ) return 600;
+  if ( m_rank0_radio->GetValue() ) return 0;
+  if ( m_rank1_radio->GetValue() ) return 1;
+  if ( m_rank2_radio->GetValue() ) return 2;
+  if ( m_rank3_radio->GetValue() ) return 3;
+  if ( m_rank4_radio->GetValue() ) return 4;
+  if ( m_rank5_radio->GetValue() ) return 5;
+  if ( m_rank6_radio->GetValue() ) return 6;
   return 000;
 }
 

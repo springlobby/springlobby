@@ -5,11 +5,6 @@
 
 #include <vector>
 
-// If this isn't included errors result when trying to pass the MainWindow*
-// to MapSelectDialog constructor as wxWindow* (because compiler doesn't know
-// MainWindow inherits wxWindow in that case.)
-#include "mainwindow.h"
-
 //(*Headers(MapSelectDialog)
 #include <wx/dialog.h>
 class wxStdDialogButtonSizer;
@@ -81,6 +76,7 @@ class MapSelectDialog: public wxDialog
 		//*)
 
 		void OnMapSelected( wxCommandEvent& event );
+		void OnMapLoadingCompleted( wxCommandEvent& event );
 		void OnVerticalDirectionClicked( wxCommandEvent& event );
 		void OnHorizontalDirectionClicked( wxCommandEvent& event );
 
@@ -95,9 +91,32 @@ class MapSelectDialog: public wxDialog
 		bool m_horizontal_direction;
 		bool m_vertical_direction;
 		wxArrayString m_maps;
-		std::vector< wxString > m_replays;
+		wxArrayString m_replays;
+
+		static const wxString m_dialog_name;
+		static const unsigned int m_filter_all_sett = 0;
+		static const unsigned int m_filter_recent_sett = 1;
+		static const unsigned int m_filter_popular_sett = 2;
 
 		DECLARE_EVENT_TABLE()
 };
 
 #endif
+
+/**
+    This file is part of SpringLobby,
+    Copyright (C) 2007-09
+
+    springsettings is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License version 2 as published by
+    the Free Software Foundation.
+
+    springsettings is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SpringLobby.  If not, see <http://www.gnu.org/licenses/>.
+**/
+

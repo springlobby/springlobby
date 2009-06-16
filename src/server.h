@@ -47,26 +47,23 @@ class Server : public iNetClass
     UiServerData uidata;
 
 
-    Server(): battles_iter(new BattleList_Iter(&m_battles)),m_sock(0),m_keepalive(15) {  }
+    Server();
     virtual ~Server( );
 
     // Server interface
 
     virtual bool ExecuteSayCommand( const wxString& cmd ) = 0;
 
-    virtual void SetSocket( Socket* sock );
-    virtual Socket* GetSocket( ) { return m_sock; }
-
     virtual bool Register( const wxString& addr, const int port, const wxString& nick, const wxString& password,wxString& reason ) = 0;
     virtual void AcceptAgreement() = 0;
 
-    virtual void Connect( const wxString& addr, const int port ) = 0;
+    virtual void Connect( const wxString& servername, const wxString& addr, const int port ) = 0;
     virtual void Disconnect() = 0;
     virtual bool IsConnected() = 0;
 
     virtual void Login() = 0;
     virtual void Logout() = 0;
-    virtual bool IsOnline() = 0;
+    virtual bool IsOnline()  const = 0;
 
     virtual void Update( int mselapsed ) = 0;
 
@@ -121,6 +118,7 @@ class Server : public iNetClass
     virtual void SendHostInfo( HostInfo update ) = 0;
     virtual void SendHostInfo( const wxString& Tag ) = 0;
     virtual void SendRaw( const wxString& raw ) = 0;
+    virtual void SendUserPosition( const User& usr ) = 0;
 
     virtual void RequestInGameTime( const wxString& nick ) = 0;
 
@@ -136,8 +134,8 @@ class Server : public iNetClass
 
     virtual void SetUsername( const wxString& username ) { m_user = username; }
     virtual void SetPassword( const wxString& password ) { m_pass = password; }
-    virtual bool IsPasswordHash( const wxString& pass ) = 0;
-    virtual wxString GetPasswordHash( const wxString& pass ) = 0;
+    virtual bool IsPasswordHash( const wxString& pass ) const = 0;
+    virtual wxString GetPasswordHash( const wxString& pass ) const = 0;
 
     wxString GetRequiredSpring() const { return m_required_spring_ver; }
 
@@ -149,9 +147,11 @@ class Server : public iNetClass
     virtual void OnDisconnected( Socket* sock ) = 0;
     virtual void OnDataReceived( Socket* sock ) = 0;
 
+    virtual void OnDisconnected();
+
     BattleList_Iter* const battles_iter;
 
-    virtual User& GetMe() = 0;
+    virtual User& GetMe() const = 0;
     User& GetUser( const wxString& nickname ) const;
     bool UserExists( const wxString& nickname ) const;
 
@@ -167,16 +167,23 @@ class Server : public iNetClass
 
     virtual void SendScriptToProxy( const wxString& script ) = 0;
 
+    virtual void SendScriptToClients( const wxString& script ) = 0;
+
     std::map<wxString,wxString> m_channel_pw;  /// channel name -> password, filled on channel join
 
     ///used to fill userlist in groupuserdialog
     const UserList& GetUserList(){return m_users;}
+
+    wxString GetServerName() { return m_server_name; }
+
+    virtual void RequestSpringUpdate();
 
   protected:
     Socket* m_sock;
     int m_keepalive;
     wxString m_user;
     wxString m_pass;
+    wxString m_server_name;
     bool m_pass_hash;
     wxString m_required_spring_ver;
 
@@ -198,10 +205,28 @@ class Server : public iNetClass
     Battle& _AddBattle( const int& id );
     void _RemoveBattle( const int& id );
 
-    static const unsigned int PING_TIMEOUT = 30;
+    static const unsigned int PING_TIMEOUT = 40;
 
     virtual void SendCmd( const wxString& command, const wxString& param ) = 0;
     virtual void RelayCmd( const wxString& command, const wxString& param ) = 0;
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_SERVER_H
+
+/**
+    This file is part of SpringLobby,
+    Copyright (C) 2007-09
+
+    springsettings is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License version 2 as published by
+    the Free Software Foundation.
+
+    springsettings is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SpringLobby.  If not, see <http://www.gnu.org/licenses/>.
+**/
+

@@ -16,6 +16,7 @@
 #include "inetclass.h"
 #include "mutexwrapper.h"
 #include "iunitsync.h"
+#include "thread.h"
 
 #include "autopointers.h"
 
@@ -25,6 +26,7 @@
 namespace libtorrent{ class session; };
 namespace libtorrent { struct torrent_handle; };
 */
+class TorrentWrapper;
 
 namespace P2P {
 enum FileStatus
@@ -56,11 +58,32 @@ struct TorrentInfos
 
 #define TorrentTable_validate
 
+class TorrentMaintenanceThread : public Thread
+{
+	public:
+		TorrentMaintenanceThread( TorrentWrapper* parent );
+		void Init();
+		void Stop();
+		void* Entry();
+
+	protected:
+		bool TestDestroy();
+
+		bool m_stop_thread;
+		TorrentWrapper& m_parent;
+};
+
 class TorrentTable
 {
 public:
 
     bool IsConsistent();
+
+    TorrentTable():
+    m_seed_count(0),
+    m_leech_count(0)
+    {
+    }
 
 class Row: public RefcountedContainer
     {
@@ -102,6 +125,16 @@ class Row: public RefcountedContainer
     typedef RefcountedPointer<Row> PRow;
 
 
+		struct TransferredData
+		{
+			unsigned int failed_check_counts;
+			unsigned int sentdata;
+			TransferredData(): failed_check_counts(0), sentdata(0) {}
+		};
+
+		// deletes all stored infos
+		void FlushData();
+
     void InsertRow(PRow row);
     void RemoveRow(PRow row);
 
@@ -109,8 +142,11 @@ class Row: public RefcountedContainer
     void AddSeedRequest(PRow row);
     void RemoveSeedRequest(PRow row);
     void SetRowHandle(PRow row, const libtorrent::torrent_handle &handle);
+    void AddRowToDependencyCheckQueue(PRow row);
+    void RemoveRowFromDependencyCheckQueue(PRow row);
     void RemoveRowHandle( PRow row );
     void SetRowStatus( PRow row, P2P::FileStatus status );
+    void SetRowTransferredData( PRow row, TransferredData data );
 
     bool IsSeedRequest(PRow row);
 
@@ -122,6 +158,11 @@ class Row: public RefcountedContainer
     std::set<PRow> SeedRequestsByRow();
     std::map<libtorrent::torrent_handle, PRow> RowByTorrentHandles();
     std::set<PRow> QueuedTorrentsByRow();
+    std::map<TorrentTable::PRow, TransferredData> TransferredDataByRow();
+    std::set<TorrentTable::PRow> DependencyCheckQueuebyRow();
+
+    unsigned int GetOpenSeedsCount();
+    unsigned int GetOpenLeechsCount();
 
 private:
 
@@ -134,6 +175,11 @@ private:
     std::map<libtorrent::torrent_handle, PRow> handle_index;
     std::set<PRow> seed_requests;
     std::set<PRow> queued_torrents;
+    std::map<TorrentTable::PRow, TorrentTable::TransferredData>  seed_sent_data;
+		std::set<TorrentTable::PRow> dep_check_queue;
+
+    unsigned int m_seed_count;
+    unsigned int m_leech_count;
 };
 
 class TorrentWrapper : public iNetClass
@@ -175,23 +221,27 @@ public:
     std::map<int,TorrentInfos> CollectGuiInfos();
     void SendMessageToCoordinator( const wxString& message );
 
+    /// threaded maintenance tasks
+    void JoinRequestedTorrents();
+    void RemoveUnneededTorrents();
+    void TryToJoinQueuedTorrents();
+    void SearchAndGetQueuedDependencies();
+		void ResumeFromList();
+
     TorrentTable &GetTorrentTable()
     {
-        return m_torrent_table;
+				ScopedLocker<TorrentTable> l_torrent_table(m_torrent_table);
+        return l_torrent_table.Get();
     }
 
 private:
 
     void CreateTorrent( const wxString& uhash, const wxString& name, IUnitSync::MediaType type );
     DownloadRequestStatus RequestFileByRow( const TorrentTable::PRow& row );
+    DownloadRequestStatus QueueFileByRow( const TorrentTable::PRow& row );
     bool RemoveTorrentByRow( const TorrentTable::PRow& row );
     bool JoinTorrent( const TorrentTable::PRow& row, bool IsSeed );
     bool DownloadTorrentFileFromTracker( const wxString& hash );
-    void JoinRequestedTorrents();
-    void RemoveUnneededTorrents();
-    void TryToJoinQueuedTorrents();
-    void SearchAndGetQueuedDependencies();
-    void ResumeFromList();
 
     void ReceiveandExecute( const wxString& msg );
     void OnConnected( Socket* sock );
@@ -201,18 +251,17 @@ private:
     wxString m_buffer;
 
     bool ingame;
-    unsigned int m_seed_count;
-    unsigned int m_leech_count;
     unsigned int m_timer_count;
 
     wxArrayString m_tracker_urls;
 
-    TorrentTable m_torrent_table;
+    MutexWrapper<TorrentTable> m_torrent_table;
+
+    TorrentMaintenanceThread m_maintenance_thread;
 
     libtorrent::session* m_torr;
     Socket* m_socket_class;
 
-    std::vector<TorrentTable::Row> m_dep_check_queue;
 
     //!we set this when trying a tracker and waiting for connection to be established
     bool m_is_connecting;
@@ -229,3 +278,21 @@ TorrentWrapper& torrent();
 #endif
 
 #endif // SPRINGLOBBY_HEADERGUARD_TORRENTWRAPPER_H
+
+/**
+    This file is part of SpringLobby,
+    Copyright (C) 2007-09
+
+    springsettings is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License version 2 as published by
+    the Free Software Foundation.
+
+    springsettings is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SpringLobby.  If not, see <http://www.gnu.org/licenses/>.
+**/
+

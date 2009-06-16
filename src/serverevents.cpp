@@ -14,12 +14,18 @@
 #include "utils.h"
 #include "server.h"
 #include "battle.h"
+#include "httpdownloader.h"
 #include "settings.h"
 #include "settings++/custom_dialogs.h"
 #ifndef NO_TORRENT_SYSTEM
 #include "torrentwrapper.h"
 #endif
 #include "globalsmanager.h"
+
+BEGIN_EVENT_TABLE(ServerEvents, wxEvtHandler)
+    EVT_COMMAND(wxID_ANY, httpDownloadEvtComplete,  ServerEvents::OnSpringDownloadEvent)
+    EVT_COMMAND(wxID_ANY, httpDownloadEvtFailed,    ServerEvents::OnSpringDownloadEvent)
+END_EVENT_TABLE()
 
 void ServerEvents::OnConnected( const wxString& server_name, const wxString& server_ver, bool supported, const wxString& server_spring_ver, bool lanmode )
 {
@@ -30,13 +36,13 @@ void ServerEvents::OnConnected( const wxString& server_name, const wxString& ser
 }
 
 
-void ServerEvents::OnDisconnected()
+void ServerEvents::OnDisconnected( bool wasonline )
 {
     wxLogDebugFunc( _T("") );
     m_serv.SetRequiredSpring (_T(""));
-    ui().OnDisconnected( m_serv );
+    ui().OnDisconnected( m_serv, wasonline );
 #ifndef NO_TORRENT_SYSTEM
-    try /// settings may be already destroyed
+    try // settings may be already destroyed
     {
         if ( sett().GetTorrentSystemAutoStartMode() == 0 ) torrent().DisconnectFromP2PSystem();
     }
@@ -49,7 +55,13 @@ void ServerEvents::OnDisconnected()
 
 void ServerEvents::OnLogin()
 {
-
+	wxString nick = m_serv.GetMe().GetNick();
+	wxArrayString highlights = sett().GetHighlightedWords();
+	if ( highlights.Index( nick ) == -1 )
+	{
+		highlights.Add( nick );
+		sett().SetHighlightedWords( highlights );
+	}
 }
 
 
@@ -57,13 +69,10 @@ void ServerEvents::OnLoginInfoComplete()
 {
     wxLogDebugFunc( _T("") );
     //m_serv.RequestChannels();
-    int num = sett().GetNumChannelsJoin();
-    for ( int i= 0; i < num; i++ )
+    std::vector<ChannelJoinInfo> autojoin = sett().GetChannelsJoin();
+    for ( std::vector<ChannelJoinInfo>::iterator itor = autojoin.begin(); itor != autojoin.end(); itor++ )
     {
-        wxString channel = sett().GetChannelJoinName(i);
-        wxString pass = channel.AfterFirst(' ');
-        if ( !pass.IsEmpty() ) channel = channel.BeforeFirst(' ');
-        m_serv.JoinChannel( channel, pass );
+        m_serv.JoinChannel( itor->name, itor->password );
     }
 #ifndef NO_TORRENT_SYSTEM
     if ( sett().GetTorrentSystemAutoStartMode() == 0 ) torrent().ConnectToP2PSystem();
@@ -106,11 +115,7 @@ void ServerEvents::OnMotd( const wxString& msg )
 
 void ServerEvents::OnPong( int ping_time )
 {
-    if ( ping_time == -1 )
-    {
-        wxLogWarning( _T("Ping Timeout!") );
-        if ( m_serv.IsConnected() ) m_serv.Disconnect();
-    }
+    ui().OnServerMessage( m_serv, wxString::Format( _("ping reply took %d seconds"), ping_time ) );
 }
 
 
@@ -183,6 +188,21 @@ void ServerEvents::OnUserQuit( const wxString& nick )
     try
     {
         User &user=m_serv.GetUser( nick );
+				Battle* userbattle = user.GetBattle();
+				if ( userbattle )
+				{
+					int battleid = userbattle->GetID();
+					if ( &userbattle->GetFounder() == &user )
+					{
+						for ( int i = 0; i < userbattle->GetNumUsers(); i ++ )
+						{
+							User& battleuser = userbattle->GetUser( i );
+							OnUserLeftBattle( battleid, battleuser.GetNick() );
+						}
+						 OnBattleClosed( battleid );
+					}
+					else OnUserLeftBattle( battleid, user.GetNick() );
+				}
         ui().OnUserOffline( user );
         m_serv._RemoveUser( nick );
         if ( useractions().DoActionOnUser( UserActions::ActNotifLogin, nick ) )
@@ -194,7 +214,7 @@ void ServerEvents::OnUserQuit( const wxString& nick )
 }
 
 
-void ServerEvents::OnBattleOpened( int id, bool replay, NatType nat, const wxString& nick,
+void ServerEvents::OnBattleOpened( int id, BattleType type, NatType nat, const wxString& nick,
                                    const wxString& host, int port, int maxplayers,
                                    bool haspass, int rank, const wxString& maphash, const wxString& map,
                                    const wxString& title, const wxString& mod )
@@ -208,14 +228,14 @@ void ServerEvents::OnBattleOpened( int id, bool replay, NatType nat, const wxStr
         User& user = m_serv.GetUser( nick );
         battle.OnUserAdded( user );
 
-        battle.SetIsReplay( replay );
+        battle.SetBattleType( type );
         battle.SetNatType( nat );
         battle.SetFounder( nick );
         battle.SetHostIp( host );
         battle.SetHostPort( port );
         battle.SetMaxPlayers( maxplayers );
         battle.SetIsPassworded( haspass );
-        battle.SetRankNeeded( ( rank / 100 ) +1 );
+        battle.SetRankNeeded( rank );
         battle.SetHostMap( map, maphash );
         battle.SetDescription( title );
         battle.SetHostMod( mod, wxEmptyString );
@@ -269,14 +289,24 @@ void ServerEvents::OnHostedBattle( int battleid )
     {
         Battle& battle = m_serv.GetBattle( battleid );
 
-        battle.CustomBattleOptions().loadOptions( OptionsWrapper::MapOption, battle.GetHostMapName() );
-        battle.CustomBattleOptions().loadOptions( OptionsWrapper::ModOption, battle.GetHostModName() );
+				if ( battle.GetBattleType() == BT_Played )
+				{
+					battle.CustomBattleOptions().loadOptions( OptionsWrapper::MapOption, battle.GetHostMapName() );
+					battle.CustomBattleOptions().loadOptions( OptionsWrapper::ModOption, battle.GetHostModName() );
+				}
+				else
+				{
+					battle.GetBattleFromScript( true );
+				}
+
 
         wxString presetname = sett().GetModDefaultPresetName( battle.GetHostModName() );
         if ( !presetname.IsEmpty() )
         {
             battle.LoadOptionsPreset( presetname );
         }
+
+        battle.LoadMapDefaults( battle.GetHostMapName() );
 
         m_serv.SendHostInfo( IBattle::HI_Send_All_opts );
 
@@ -331,12 +361,6 @@ void ServerEvents::OnUserJoinedBattle( int battleid, const wxString& nick )
                 battle.SetInGame( true );
                 ui().OnBattleStarted( battle );
             }
-        }
-        if ( battle.IsFounderMe() &&  ( battle.GetNumUsers() > 31 ) )
-        {
-          battle.DoAction( _T("is locking the battle because Spring does not support more than 32 players (including spectators)" ) );
-          battle.SetIsLocked( true );
-          battle.SendHostInfo( IBattle::HI_Locked );
         }
     }
     catch (std::runtime_error &except)
@@ -411,6 +435,42 @@ void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const w
 								battle.CustomBattleOptions().setSingleOption( key, value, OptionsWrapper::ModOption );
                 battle.Update(  wxString::Format(_T("%d_%s"), OptionsWrapper::ModOption,  key.c_str() ) );
             }
+            else if ( key.Left( 8 ) == _T( "restrict" ) )
+            {
+            	OnBattleDisableUnit( battleid, key.AfterFirst(_T('/')), s2l(value) );
+            }
+            else if ( key.Left( 4 ) == _T( "team" ) && key.Contains( _T("startpos") ) )
+            {
+            	 int team = s2l( key.BeforeFirst(_T('/')).Mid( 4 ) );
+							 if ( key.Contains( _T("startposx") ) )
+							 {
+							 	 int numusers = battle.GetNumUsers();
+							 	 for ( int i = 0; i < numusers; i++ )
+							 	 {
+							 	 	 User& usr = battle.GetUser( i );
+							 	 	 UserBattleStatus& status = usr.BattleStatus();
+							 	 	 if ( status.team == team )
+							 	 	 {
+							 	 	 	 status.pos.x = s2l( value );
+										 battle.OnUserBattleStatusUpdated( usr, status );
+							 	 	 }
+							 	 }
+							 }
+							 else if ( key.Contains( _T("startposy") ) )
+							 {
+							 	 int numusers = battle.GetNumUsers();
+							 	 for ( int i = 0; i < numusers; i++ )
+							 	 {
+							 	 	 User& usr = battle.GetUser( i );
+							 	 	 UserBattleStatus& status = usr.BattleStatus();
+							 	 	 if ( status.team == team )
+							 	 	 {
+							 	 	 	 status.pos.y = s2l( value );
+							 	 	 	 battle.OnUserBattleStatusUpdated( usr, status );
+							 	 	 }
+							 	 }
+							 }
+            }
             else
             {
 							battle.CustomBattleOptions().setSingleOption( key,  value, OptionsWrapper::EngineOption );
@@ -449,13 +509,13 @@ void ServerEvents::OnBattleClosed( int battleid )
 }
 
 
-void ServerEvents::OnBattleDisableUnit( int battleid, const wxString& unitname )
+void ServerEvents::OnBattleDisableUnit( int battleid, const wxString& unitname, int count )
 {
     wxLogDebugFunc( _T("") );
     try
     {
         Battle& battle = m_serv.GetBattle( battleid );
-        battle.DisableUnit( unitname );
+        battle.RestrictUnit( unitname, count );
         battle.Update( wxString::Format( _T("%d_restrictions"), OptionsWrapper::PrivateOptions ) );
     }
     catch ( assert_exception ) {}
@@ -468,7 +528,7 @@ void ServerEvents::OnBattleEnableUnit( int battleid, const wxString& unitname )
     try
     {
         Battle& battle = m_serv.GetBattle( battleid );
-        battle.EnableUnit( unitname );
+        battle.UnrestrictUnit( unitname );
         battle.Update( wxString::Format( _T("%d_restrictions"), OptionsWrapper::PrivateOptions ) );
     }
     catch ( assert_exception ) {}
@@ -481,7 +541,7 @@ void ServerEvents::OnBattleEnableAllUnits( int battleid )
     try
     {
         Battle& battle = m_serv.GetBattle( battleid );
-        battle.EnableAllUnits();
+        battle.UnrestrictAllUnits();
         battle.Update( wxString::Format( _T("%d_restrictions"), OptionsWrapper::PrivateOptions ) );
     }
     catch ( assert_exception ) {}
@@ -770,8 +830,8 @@ void ServerEvents::OnClientIPPort( const wxString &username, const wxString &ip,
 
         if (m_serv.GetCurrentBattle()->GetNatType() != NAT_None && (udpport==0))
         {
-            /// todo: better warning message
-            ///something.OutputLine( _T(" ** ") + who.GetNick() + _(" does not support nat traversal! ") + GetChatTypeStr() + _T("."), sett().GetChatColorJoinPart(), sett().GetChatFont() );
+            // todo: better warning message
+            //something.OutputLine( _T(" ** ") + who.GetNick() + _(" does not support nat traversal! ") + GetChatTypeStr() + _T("."), sett().GetChatColorJoinPart(), sett().GetChatFont() );
             ui().OnBattleAction(*m_serv.GetCurrentBattle(),username,_(" does not really support nat traversal"));
         }
         m_serv.GetCurrentBattle()->CheckBan(user);
@@ -831,4 +891,74 @@ void ServerEvents::OnMutelistItem( const wxString& channel, const wxString& mute
 void ServerEvents::OnMutelistEnd( const wxString& channel )
 {
     mutelistWindow( _("End mutelist for ") + channel );
+}
+
+void ServerEvents::OnScriptStart( int battleid )
+{
+	if ( !m_serv.BattleExists( battleid ) )
+	{
+			return;
+	}
+	m_serv.GetBattle( battleid ).ClearScript();
+}
+
+void ServerEvents::OnScriptLine( int battleid, const wxString& line )
+{
+	if ( !m_serv.BattleExists( battleid ) )
+	{
+			return;
+	}
+	m_serv.GetBattle( battleid ).AppendScriptLine( line );
+}
+
+void ServerEvents::OnScriptEnd( int battleid )
+{
+	if ( !m_serv.BattleExists( battleid ) )
+	{
+			return;
+	}
+	m_serv.GetBattle( battleid ).GetBattleFromScript( true );
+}
+
+
+void ServerEvents::OnFileDownload( bool autolaunch, bool autoclose, bool disconnectonrefuse, const wxString& FileName, const wxString& url, const wxString& description )
+{
+	bool result = ui().Ask( _("Download update"), wxString::Format( _("Would you like to download %s ? The file offers the following updates:\n%s"), FileName.c_str(), description.c_str() ) );
+	if ( result )
+	{
+		m_autoclose = autoclose;
+		m_autolaunch = autolaunch;
+		m_savepath = sett().GetCurrentUsedDataDir() + FileName;
+		customMessageBox(SL_MAIN_ICON, _("Download started in the background, please be patient\nyou will be notified on operation completed."), _("Download started"));
+		new HttpDownloaderThread<ServerEvents>( url, m_savepath, *this, wxID_HIGHEST + 100, true, false );
+	}
+	else
+	{
+		if ( disconnectonrefuse )
+		{
+			customMessageBox(SL_MAIN_ICON, _("You refused a mandatory update, you will be disconnected now."), _("Disconnecting"));
+			m_serv.Disconnect();
+		}
+	}
+}
+void ServerEvents::OnSpringDownloadEvent( wxCommandEvent& event )
+{
+	int code = event.GetInt();
+  if ( code != 0) customMessageBox(SL_MAIN_ICON, _("There was an error downloading for the latest version.\nPlease update manually from http://springrts.com"), _("Error"));
+  else
+  {
+			if ( m_autolaunch )
+			{
+				if ( !wxExecute ( m_savepath, wxEXEC_ASYNC ) )
+				{
+						customMessageBoxNoModal(SL_MAIN_ICON, _("Couldn't launch installer. File location is: ") + m_savepath, _("Couldn't launch installer.")  );
+				}
+			}
+			else
+			{
+				customMessageBoxNoModal(SL_MAIN_ICON, _("Download complete, location is: ") + m_savepath, _("Download complete.")  );
+			}
+			if ( m_autoclose ) ui().Quit();
+
+  }
 }

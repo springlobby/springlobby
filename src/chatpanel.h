@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "usermenu.h"
+#include "chatlog.h"
 #include "Helper/TextCompletionDatabase.hpp"
 
 class wxCommandEvent;
@@ -17,6 +18,7 @@ class wxTextCtrlHist;
 class wxTextUrlEvent;
 class wxComboBox;
 class wxButton;
+class wxBitmapButton;
 class NickListCtrl;
 class Channel;
 class User;
@@ -24,6 +26,7 @@ class ChatLog;
 class Server;
 class Battle;
 class Ui;
+class wxStaticText;
 
 class wxMouseEvent;
 class wxAuiNotebook;
@@ -65,7 +68,7 @@ class ChatPanel : public wxPanel
   public:
 
     ChatPanel( wxWindow* parent, Ui& ui, Channel& chan, wxImageList* imaglist );
-    ChatPanel( wxWindow* parent, Ui& ui, User& user, wxImageList* imaglist  );
+    ChatPanel( wxWindow* parent, Ui& ui, const User& user, wxImageList* imaglist  );
     ChatPanel( wxWindow* parent, Ui& ui, Server& serv, wxImageList* imaglist  );
     ChatPanel( wxWindow* parent, Ui& ui, Battle& battle );
     ~ChatPanel();
@@ -84,39 +87,38 @@ class ChatPanel : public wxPanel
     void UserStatusUpdated( User& who );
     void OnChannelJoin( User& who );
 
-    Channel* GetChannel();
+    const Channel* GetChannel() const;
     void SetChannel( Channel* chan );
 
-    Server* GetServer();
+    const Server* GetServer()  const;
     void SetServer( Server* serv );
 
-    User* GetUser();
-    void SetUser( User* usr );
+    const User* GetUser() const ;
+    void SetUser( const User* usr );
 
-    bool IsServerPanel();
-    ChatPanelType GetPanelType();
+    bool IsServerPanel() const;
+    int GetPanelType() const;
 
     void Say( const wxString& message );
     void Part();
     void FocusInputBox();
 
-    wxString GetChatTypeStr();
+    wxString GetChatTypeStr()  const;
 
-    size_t GetIconIndex() { return m_icon_index; }
+    size_t GetIconIndex()  const { return m_icon_index; }
     void SetIconIndex( size_t index ) { m_icon_index = index; }
 
-    User& GetMe();
-    User* GetSelectedUser();
+    const User& GetMe()  const;
+    const User* GetSelectedUser() const;
 
-    bool IsOk();
+    bool IsOk() const;
 
     void OnUserDisconnected();
     void OnUserConnected();
 
+    void OnChanOpts( wxCommandEvent& event );
     void OnSay( wxCommandEvent& event );
     void OnPaste( wxClipboardTextEvent& event );
-
-    void OnResize( wxSizeEvent& event );
 
     void OnLinkEvent( wxTextUrlEvent& event );
     void OnMouseDown( wxMouseEvent& event );
@@ -167,23 +169,29 @@ class ChatPanel : public wxPanel
     void OnUserMenuModeratorUnmute( wxCommandEvent& event );
     void OnUserMenuModeratorRing( wxCommandEvent& event );
 
-	void OnKeyPressed( wxKeyEvent& keyevent );
-	void OnKeyReleased( wxKeyEvent& keyevent );
+    void OnUserMenuCopyLink( wxCommandEvent& event );
 
-	void OnUserMenuAddToGroup( wxCommandEvent& event );
-	void OnUserMenuDeleteFromGroup( wxCommandEvent& event );
-	void OnUserMenuCreateGroup( wxCommandEvent& event );
-	void UpdateNicklistHighlights();
+    void OnKeyPressed( wxKeyEvent& keyevent );
+    void OnKeyReleased( wxKeyEvent& keyevent );
 
-	void SortNickList();
+    void OnUserMenuAddToGroup( wxCommandEvent& event );
+    void OnUserMenuDeleteFromGroup( wxCommandEvent& event );
+    void OnUserMenuCreateGroup( wxCommandEvent& event );
+    void UpdateNicklistHighlights();
+
+    void SortNickList();
+
+    void ClearContents( wxCommandEvent& event );
 
   protected:
+
     void _SetChannel( Channel* channel );
     void OutputLine( const wxString& message, const wxColour& col, const wxFont& fon );
     void OutputLine( const ChatLine& line );
     void SetIconHighlight( HighlightType highlight );
+    wxString FindUrl( const long pos ) const ;
 
-    bool ContainsWordToHighlight( const wxString& message );
+    bool ContainsWordToHighlight( const wxString& message ) const;
 
     bool m_show_nick_list;      //!< If the nicklist should be shown or not.
 
@@ -198,30 +206,29 @@ class ChatPanel : public wxPanel
 
     wxTextCtrl* m_chatlog_text; //!< The chat log textcontrol.
     wxTextCtrlHist* m_say_text;     //!< The say textcontrol.
+    wxBitmapButton* m_chan_opts_button; //!< The channel options button.
 
     NickListCtrl* m_nicklist;   //!< The nicklist.
     wxComboBox* m_nick_filter;  //!< The filter combo.
 
     wxButton* m_say_button;     //!< The say button.
-    #ifdef HAVE_WX26
-    wxNotebook* m_chat_tabs;
-    #else
     wxAuiNotebook* m_chat_tabs;
-    #endif
     Ui& m_ui;
     Channel* m_channel;         //!< Channel object.
     Server* m_server;           //!< Server object.
-    User* m_user;               //!< User object.
+    const User* m_user;               //!< User object.
     Battle* m_battle;           //!< User object.
 
-    ChatPanelType m_type;       //!< Channel object.
+    wxStaticText* m_usercount_label;
+
+    int m_type;       //!< Channel object.
 
     wxString m_chan_pass;
 
     wxMenu* m_popup_menu;
     wxMenuItem* m_autorejoin;
     wxMenuItem* m_append_menu;
-    ChatLog* m_chat_log;
+    ChatLog m_chat_log;
     wxMenuItem* displayjoinitem;
     typedef SL_GENERIC::UserMenu<ChatPanel> UserMenu;
     UserMenu* m_usermenu;
@@ -243,6 +250,8 @@ class ChatPanel : public wxPanel
     std::vector<ChatLine> m_buffer;
     bool m_disable_append;
 
+    wxString m_url_at_pos; //! the mouse event sink sets this
+
     DECLARE_EVENT_TABLE();
 };
 
@@ -251,6 +260,7 @@ enum
     CHAT_SEND = wxID_HIGHEST,
     CHAT_TEXT,
     CHAT_LOG,
+    CHAT_CHAN_OPTS,
 
     CHAT_MENU_DISABLE_APPEND,
 
@@ -299,8 +309,28 @@ enum
     CHAT_MENU_US_MODERATOR_UNMUTE,
     CHAT_MENU_US_MODERATOR_RING,
 
+    CHAT_MENU_COPYLINK,
+
     CHAT_MENU_SHOW_MUTELIST
 };
 
 
 #endif // SPRINGLOBBY_HEADERGUARD_CHATPANEL_H
+
+/**
+    This file is part of SpringLobby,
+    Copyright (C) 2007-09
+
+    springsettings is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License version 2 as published by
+    the Free Software Foundation.
+
+    springsettings is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SpringLobby.  If not, see <http://www.gnu.org/licenses/>.
+**/
+

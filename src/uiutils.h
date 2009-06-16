@@ -34,9 +34,10 @@ bool AreColoursSimilar( const wxColour& col1, const wxColour& col2, int mindiff 
 void ColourDelta( int& r, int& g, int& b, const int& delta );
 wxColour ColourDelta( const wxColour& colour, const int& delta );
 
-wxString GetColorString( const wxColour& color );
-wxColour GetColorFromStrng( const wxString color );
 wxColour GetColorFromFloatStrng( const wxString color );
+
+//! takes best fitting size of original inside bounds keeping aspect ratio
+wxSize MakeFit(const wxSize &original, const wxSize &bounds);
 
 //! apply standard alpha blending to images
 wxImage BlendImage( const wxImage& foreground, const wxImage& background, bool blend_alpha = true );
@@ -72,7 +73,27 @@ class SLTipWindow : public wxTipWindow{
 };
 #endif
 
+void CopyToClipboard( const wxString& text );
+
 #endif
 // SPRINGLOBBY_HEADERGUARD_UIUTILS_H
 
+
+
+/**
+    This file is part of SpringLobby,
+    Copyright (C) 2007-09
+
+    springsettings is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License version 2 as published by
+    the Free Software Foundation.
+
+    springsettings is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SpringLobby.  If not, see <http://www.gnu.org/licenses/>.
+**/
 

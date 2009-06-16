@@ -15,7 +15,10 @@ class MapGridCtrl : public wxPanel
 {
 	public:
 
+		/// this event is raised each time when a new map is selected
 		static const wxEventType MapSelectedEvt;
+		/// this event is raised after the loading of map infos finished
+		static const wxEventType LoadingCompletedEvt;
 
 		enum SortKey
 		{
@@ -55,7 +58,6 @@ class MapGridCtrl : public wxPanel
 			m_grid.clear();
 			m_mouseover_map = NULL; // can't be sure pointer will stay valid
 			m_selected_map = NULL;
-
 
 			for (MapMap::iterator it = m_maps_filtered.begin(); it != m_maps_filtered.end(); ++it) {
 				if ( pred( it->second ) ) maps.push_back( it->first );
@@ -191,3 +193,21 @@ class MapGridCtrl : public wxPanel
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_MAPGRIDCTRL_H
+
+/**
+    This file is part of SpringLobby,
+    Copyright (C) 2007-09
+
+    springsettings is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License version 2 as published by
+    the Free Software Foundation.
+
+    springsettings is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SpringLobby.  If not, see <http://www.gnu.org/licenses/>.
+**/
+

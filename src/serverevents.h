@@ -3,6 +3,7 @@
 
 //almost only needed for NAtType enum def
 #include "battle.h"
+#include <wx/event.h>
 
 class Ui;
 struct UserStatus;
@@ -23,7 +24,7 @@ struct MessageSpamCheck
 class Battle;
 
 //! @brief Class that implements server event behaviour.
-class ServerEvents
+class ServerEvents : public wxEvtHandler
 {
   public:
     ServerEvents( Server& serv) : m_serv(serv) {}
@@ -32,7 +33,7 @@ class ServerEvents
   // Uicontrol interface
 
     void OnConnected( const wxString& server_name, const wxString& server_ver, bool supported, const wxString& server_spring_ver, bool lanmode );
-    void OnDisconnected();
+    void OnDisconnected( bool wasonline );
 
     void OnLogin();
     void OnLoginInfoComplete();
@@ -48,7 +49,7 @@ class ServerEvents
     void OnUserStatus( const wxString& nick, UserStatus status );
     void OnUserQuit( const wxString& nick );
 
-    void OnBattleOpened( int id, bool replay, NatType nat, const wxString& nick,
+    void OnBattleOpened( int id, BattleType type, NatType nat, const wxString& nick,
                          const wxString& host, int port, int maxplayers,
                          bool haspass, int rank, const wxString& maphash, const wxString& map,
                          const wxString& title, const wxString& mod );
@@ -73,7 +74,7 @@ class ServerEvents
     void OnBattleUpdateBot( int battleid, const wxString& nick, UserBattleStatus status );
     void OnBattleRemoveBot( int battleid, const wxString& nick );
 
-    void OnBattleDisableUnit( int battleid, const wxString& unitname );
+    void OnBattleDisableUnit( int battleid, const wxString& unitname, int count = 0 );
     void OnBattleEnableUnit( int battleid, const wxString& unitname );
     void OnBattleEnableAllUnits( int battleid );
 
@@ -119,10 +120,41 @@ class ServerEvents
     void OnMutelistItem( const wxString& channel, const wxString& mutee, const wxString& description );
     void OnMutelistEnd( const wxString& channel );
 
+    void OnScriptStart( int battleid );
+    void OnScriptLine( int battleid, const wxString& line );
+    void OnScriptEnd( int battleid );
+
+    void OnFileDownload( bool autolaunch, bool autoclose, bool disconnectonrefuse, const wxString& FileName, const wxString& url, const wxString& description );
+    void OnSpringDownloadEvent( wxCommandEvent& event );
+
   protected:
     Server& m_serv;
-
     std::map<wxString,MessageSpamCheck> m_spam_check;
+
+    DECLARE_EVENT_TABLE()
+
+		/// spring autoupdate stuff
+    bool m_autolaunch;
+    bool m_autoclose;
+    wxString m_savepath;
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_SERVEREVENTS_H
+
+/**
+    This file is part of SpringLobby,
+    Copyright (C) 2007-09
+
+    springsettings is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License version 2 as published by
+    the Free Software Foundation.
+
+    springsettings is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SpringLobby.  If not, see <http://www.gnu.org/licenses/>.
+**/
+

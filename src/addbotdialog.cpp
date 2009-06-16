@@ -25,7 +25,7 @@ END_EVENT_TABLE()
 
 
 AddBotDialog::AddBotDialog( wxWindow* parent, IBattle& battle , bool singleplayer):
-  wxDialog( parent, wxID_ANY, _("Add bot"), wxDefaultPosition, wxSize( 360,155 ) ),
+  wxDialog( parent, wxID_ANY, _("Add bot"), wxDefaultPosition, wxDefaultSize ),
   m_battle( battle ),
   m_sp(singleplayer)
 {
@@ -63,39 +63,56 @@ AddBotDialog::AddBotDialog( wxWindow* parent, IBattle& battle , bool singleplaye
 
   m_main_sizer->Add( m_ai_sizer, 0, wxEXPAND, 5 );
 
-  m_ai_infos_lst = new wxListCtrl( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL );
-  wxListItem col;
-  col.SetText( _("property") );
-  col.SetImage( -1 );
-  m_ai_infos_lst->InsertColumn( 0, col );
-  wxListItem col2;
-  col2.SetText( _("value") );
-  col2.SetImage( -1 );
-  m_ai_infos_lst->InsertColumn( 1, col2 );
+	if ( usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) )
+	{
+		m_ai_infos_lst = new wxListCtrl( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_NO_HEADER );
+		wxListItem col;
+		col.SetText( _("property") );
+		col.SetImage( -1 );
+		m_ai_infos_lst->InsertColumn( 0, col );
+		wxListItem col2;
+		col2.SetText( _("value") );
+		col2.SetImage( -1 );
+		m_ai_infos_lst->InsertColumn( 1, col2 );
 
+		m_ai_infos_lst->DeleteAllItems();
+		wxArrayString info = usync().GetAIInfos( m_ai->GetSelection() );
+		int count = info.GetCount();
+		for ( int i = 0; i < count; i = i + 3 )
+		{
+			long index = m_ai_infos_lst->InsertItem( i, info[i] );
+			m_ai_infos_lst->SetItem( index, 0,  info[i] );
+			m_ai_infos_lst->SetItem( index, 1,  info[i+1] );
+		}
+		m_ai_infos_lst->SetColumnWidth( 0, wxLIST_AUTOSIZE );
+		m_ai_infos_lst->SetColumnWidth( 1, wxLIST_AUTOSIZE );
 
-	m_info_sizer = new wxBoxSizer(wxVERTICAL);
-	m_info_sizer->Add( m_ai_infos_lst, 0, wxALL|wxEXPAND, 5 );
-	m_main_sizer->Add( m_info_sizer, 0, wxEXPAND, 5 );
-	m_main_sizer->Hide( m_info_sizer );
+		m_info_sizer = new wxBoxSizer(wxVERTICAL);
+		m_info_sizer->Add( m_ai_infos_lst, 1, wxALL|wxEXPAND );
+		m_main_sizer->Add( m_info_sizer, 1, wxALL|wxEXPAND );
+	}
+	else
+	{
+		 this->SetSize( wxSize(-1, 155) );
+		 m_main_sizer->AddStretchSpacer();
+	}
 
-  m_main_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
 
   m_buttons_sep = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
-  m_main_sizer->Add( m_buttons_sep, 0, wxALL|wxEXPAND, 5 );
+  m_main_sizer->Add( m_buttons_sep, 0, wxALL|wxEXPAND );
 
   wxBoxSizer* m_buttons_sizer;
   m_buttons_sizer = new wxBoxSizer( wxHORIZONTAL );
 
   m_cancel_btn = new wxButton( this, ADDBOT_CANCEL, _("Cancel"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT), 0 );
-  m_buttons_sizer->Add( m_cancel_btn, 0, wxALL, 5 );
+  m_buttons_sizer->Add( m_cancel_btn, 0, wxALL );
 
-  m_buttons_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
+  m_buttons_sizer->Add( 0, 0, 1, wxEXPAND );
 
   m_add_btn = new wxButton( this, ADDBOT_ADD, _("Add Bot"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT), 0 );
-  m_buttons_sizer->Add( m_add_btn, 0, wxALL, 5 );
+  m_buttons_sizer->Add( m_add_btn, 0, wxALL );
 
-  m_main_sizer->Add( m_buttons_sizer, 0, wxEXPAND, 5 );
+  m_main_sizer->Add( m_buttons_sizer, 0, wxEXPAND );
 
   this->SetSizer( m_main_sizer );
   this->Layout();
@@ -115,23 +132,22 @@ wxString AddBotDialog::GetNick()
 wxString AddBotDialog::GetAIShortName()
 {
 	wxArrayString infos = usync().GetAIInfos( m_ai->GetSelection() );
-	if ( infos.GetCount() == 0 ) return m_ais[ m_ai->GetSelection() ];
-  else
-  {
-		int namepos = infos.Index( _T("shortName") ) + 1;
-		return infos[namepos];
-  }
+	int namepos = infos.Index( _T("shortName") );
+	if ( namepos == wxNOT_FOUND ) return m_ais[ m_ai->GetSelection() ];
+	return infos[namepos +1];
 }
 
 wxString AddBotDialog::GetAIVersion()
 {
 	wxArrayString infos = usync().GetAIInfos( m_ai->GetSelection() );
-	if ( infos.GetCount() == 0 ) return _T("");
-  else
-  {
-		int namepos = infos.Index( _T("version") ) + 1;
-		return infos[namepos];
-  }
+	int namepos = infos.Index( _T("version") );
+	if ( namepos == wxNOT_FOUND ) return _T("");
+	return infos[namepos +1];
+}
+
+int AddBotDialog::GetAIType()
+{
+	return m_ai->GetSelection();
 }
 
 wxString AddBotDialog::RefineAIName( const wxString& name )
@@ -174,6 +190,7 @@ void AddBotDialog::ReloadAIList()
     customMessageBox(SL_MAIN_ICON, _("No AI bots found in your Spring installation."), _("No bot-libs found"), wxOK );
   }
   m_add_btn->Enable( m_ai->GetStringSelection() != wxEmptyString );
+  ShowAIInfo();
 }
 
 
@@ -192,12 +209,16 @@ void AddBotDialog::OnAddBot( wxCommandEvent& event )
 
 void AddBotDialog::OnSelectBot( wxCommandEvent& event )
 {
+	ShowAIInfo();
+}
+
+void AddBotDialog::ShowAIInfo()
+{
   m_add_btn->Enable( m_ai->GetStringSelection() != wxEmptyString );
+  if ( !usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) ) return;
   m_ai_infos_lst->DeleteAllItems();
   wxArrayString info = usync().GetAIInfos( m_ai->GetSelection() );
   int count = info.GetCount();
-  if ( count > 0 ) m_main_sizer->Show( m_info_sizer );
-  else m_main_sizer->Hide( m_info_sizer );
 	for ( int i = 0; i < count; i = i + 3 )
 	{
 		long index = m_ai_infos_lst->InsertItem( i, info[i] );
@@ -207,5 +228,5 @@ void AddBotDialog::OnSelectBot( wxCommandEvent& event )
 	m_ai_infos_lst->SetColumnWidth( 0, wxLIST_AUTOSIZE );
 	m_ai_infos_lst->SetColumnWidth( 1, wxLIST_AUTOSIZE );
 	Layout();
-
+	SetSize( wxDefaultSize );
 }

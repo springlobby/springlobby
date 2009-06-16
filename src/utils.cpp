@@ -3,41 +3,44 @@
 // File: utils.h
 //
 
-#include <wx/dynlib.h>
-#include <iostream>
-#include <wx/log.h>
-
-#include "utils.h"
-#include "crashreport.h"
-
-#include "settings++/custom_dialogs.h"
-
-// FIXME this does not work on linux+mingw build for windows
-#ifdef _MSC_VER
-#include <windows.h>
-#include <wx/msw/winundef.h>
-#endif
-//#endif
-
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
 
-#include <exception>
-#include <stdexcept>
+#include "utils.h"
+#include "crashreport.h"
+#include "settings.h"
+#include "settings++/custom_dialogs.h"
+
+// FIXME this does not work on linux+mingw build for windows
+#ifdef _MSC_VER
+//#include <windows.h>
+//#include <wx/msw/winundef.h>
+typedef __int64 int64_t;
+#endif
 
 //for cpu detection
 #include <wx/tokenzr.h>
-#include <string>
-#include <algorithm>
-#include <fstream>
 #include <wx/regex.h>
 #ifdef __WXMSW__
 #include <wx/msw/registry.h>
 #endif
 #include <wx/intl.h>
-#include "settings.h"
+#include <wx/filefn.h>
+#include <wx/dir.h>
+#include <wx/dynlib.h>
+#include <wx/log.h>
+#include <wx/stdpaths.h>
+#include <wx/filename.h>
+
+#include <string>
+#include <algorithm>
+#include <fstream>
 #include <vector>
+#include <iostream>
+#include <exception>
+#include <stdexcept>
+
 
 wxString GetLibExtension()
 {
@@ -51,25 +54,25 @@ void InitializeLoggingTargets()
 
 {
 #if defined ( USE_LOG_WINDOW )
-    ///gui window fallback logging if console/stream output not available
+    //gui window fallback logging if console/stream output not available
     wxLog *loggerwin = new wxLogWindow(0, _T("SpringLobby error console")  );
     loggerwin->SetLogLevel( wxLOG_Trace );
     loggerwin->SetVerbose( true );
 #elif wxUSE_STD_IOSTREAM
 	#if wxUSE_DEBUGREPORT && defined(HAVE_WX28) && defined(ENABLE_DEBUG_REPORT)
-			///hidden stream logging for crash reports
+			//hidden stream logging for crash reports
 			wxLog *loggercrash = new wxLogStream( &crashreport().crashlog );
 			wxLogChain *logCrashChain = new wxLogChain( loggercrash );
 			logCrashChain->SetLogLevel( wxLOG_Trace );
 			logCrashChain->SetVerbose( true );
 	#endif
-    ///std::cout logging
+    //std::cout logging
     wxLog *loggerconsole = new wxLogStream( &std::cout );
     wxLogChain *logChain = new wxLogChain( loggerconsole );
     logChain->SetLogLevel( wxLOG_Trace );
     logChain->SetVerbose( true );
 #else
-    /// if all fails, no log is better than msg box spam :P
+    // if all fails, no log is better than msg box spam :P
     new wxLogNull();
 #endif
 }
@@ -109,59 +112,36 @@ double s2d( const wxString& arg )
 
 wxString GetWordParam( wxString& params )
 {
-    wxString param;
-
-    param = params.BeforeFirst( ' ' );
-    if ( param.IsEmpty() )
-    {
-        param = params;
-        params = _T("");
-        return param;
-    }
-    else
-    {
-        params = params.AfterFirst( ' ' );
-        return param;
-    }
+	return GetParamByChar( params, _T(' ') );
 }
 
 
 wxString GetSentenceParam( wxString& params )
 {
-    wxString param;
-
-    param = params.BeforeFirst( '\t' );
-    if ( param.IsEmpty() )
-    {
-        param = params;
-        params = _T("");
-        return param;
-    }
-    else
-    {
-        params = params.AfterFirst( '\t' );
-        return param;
-    }
+   return GetParamByChar( params, _T('\t') );
 }
 
 
 long GetIntParam( wxString& params )
 {
-    wxString param;
-    long ret;
+   return s2l( GetParamByChar( params, _T(' ') ) );
+}
 
-    param = params.BeforeFirst( ' ' );
-    if ( param.IsEmpty() )
-    {
-        params.ToLong( &ret );
-        params = _T("");
-    }
-    else
-    {
-        params = params.AfterFirst( ' ' );
-        param.ToLong( &ret );
-    }
-    return ret;
+wxString GetParamByChar( wxString& params, const wxChar& sep )
+{
+	int pos = params.Find( sep );
+	wxString ret;
+	if ( pos != -1 )
+	{
+		ret = params.Left( pos );
+		params = params.Mid( pos + 1 );
+	}
+	else
+	{
+		ret = params;
+		params = _T("");
+	}
+	return ret;
 }
 
 
@@ -181,6 +161,29 @@ wxString GetSpringLobbyVersion()
 
 }
 
+wxString GetExecutableFolder()
+{
+	return wxStandardPathsBase::Get().GetExecutablePath().BeforeLast( wxFileName::GetPathSeparator() );
+}
+
+template<class T>
+T FromwxString(const wxString& arg){
+  std::stringstream s;
+  s << STD_STRING(arg);
+  int64_t ret;
+  s >> ret;
+  return (T)ret;
+}
+
+wxString MakeHashUnsigned( const wxString& hash )
+{
+	return TowxString( FromwxString<unsigned int>( hash ) );
+}
+
+wxString MakeHashSigned( const wxString& hash )
+{
+	return TowxString( FromwxString<int>( hash ) );
+}
 
 // ------------------------------------------------------------------------------------------------------------------------
 ///
@@ -250,6 +253,8 @@ bool IsValidNickname( const wxString& _name )
     name.Replace( _T("["), _T("") );
     name.Replace( _T("]"), _T("") );
 
+    if ( name.IsEmpty() ) return false;
+
     return !regex.Matches( name );
 }
 
@@ -258,11 +263,6 @@ const wxChar* TooltipEnable(const wxChar* input)
     return sett().GetShowTooltips() ? input : _("");
 }
 
-template<typename T>
-T min(T a, T b, T c)
-{
-    return std::min(a, std::min(b, c));
-}
 
 double LevenshteinDistance(wxString s, wxString t)
 {
@@ -309,4 +309,63 @@ wxString GetBestMatch(const wxArrayString& a, const wxString& s, double* distanc
     if (distance != NULL) *distance = minDistance;
     if (minDistanceIndex == -1) return _T("");
     return a[minDistanceIndex];
+}
+
+int ConvertWXArrayToC(const wxArrayString& aChoices, wxString **choices)
+{
+    int n = aChoices.GetCount();
+    *choices = new wxString[n];
+
+    for ( int i = 0; i < n; i++ )
+    {
+        (*choices)[i] = aChoices[i];
+    }
+
+    return n;
+}
+
+// copied from http://wxforum.shadonet.com/viewtopic.php?t=2080
+//slightly modified
+bool CopyDir( wxString from, wxString to, bool overwrite )
+{
+    wxString sep = wxFileName::GetPathSeparator();
+
+    // append a slash if there is not one (for easier parsing)
+    // because who knows what people will pass to the function.
+    if ( !to.EndsWith( sep ) ) {
+            to += sep;
+    }
+    // for both dirs
+    if ( !from.EndsWith( sep ) ) {
+            from += sep;
+    }
+
+    // first make sure that the source dir exists
+    if(!wxDir::Exists(from)) {
+            wxLogError(from + _T(" does not exist.  Can not copy directory.") );
+            return false;
+    }
+
+    if (!wxDirExists(to))
+        wxMkdir(to);
+
+    wxDir dir(from);
+    wxString filename;
+    bool bla = dir.GetFirst(&filename);
+
+    if (bla){
+        do {
+
+            if (wxDirExists(from + filename) )
+            {
+                wxMkdir(to + filename);
+                CopyDir(from + filename, to + filename, overwrite);
+            }
+            else{
+                wxCopyFile(from + filename, to + filename, overwrite);
+            }
+        }
+        while (dir.GetNext(&filename) );
+    }
+    return true;
 }
