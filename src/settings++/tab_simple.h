@@ -1,15 +1,10 @@
 /**
     This file is part of springsettings,
-    Copyright (C) 2007
-    Original work by Kloot
-    cross-plattform/UI adaptation and currently maintained by koshi (Ren� Milk)
-    visit http://spring.clan-sy.com/phpbb/viewtopic.php?t=12104
-    for more info/help
+    Copyright (C) 2007-09
 
     springsettings is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+    it under the terms of the GNU General Public License version 2 as published by
+    the Free Software Foundation.
 
     springsettings is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -44,13 +39,13 @@ class settings_frame;
 
 class tab_simple : public abstract_panel
 {
- 	
+
 	public:
-		tab_simple(settings_frame* _origin, wxWindow *parent, wxWindowID id = 1, const wxString &title = wxT("Project2"), 
+		tab_simple(settings_frame* _origin, wxWindow *parent, wxWindowID id = 1, const wxString &title = wxT("Project2"),
 				const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = 0);
 		virtual ~tab_simple();
 
-		
+
 		void updateControls(int);
 		void saveCbxChoices();
 		void setTabs(abstract_panel* ,abstract_panel* );
@@ -70,25 +65,25 @@ class tab_simple : public abstract_panel
 		wxSlider* audioVolume_SLI;
 		wxButton* goExpert_BUT;
 		wxStaticText* infoText;
-		
+
 		//dirty
 		abstract_panel* detailTab;
 		abstract_panel* qualityTab;
-		
-		wxSizer* parentSizer;	
-		
+
+		wxSizer* parentSizer;
+
 		wxFlexGridSizer* leftSizer ;
 		wxFlexGridSizer* rightSizer;
 		wxFlexGridSizer* Sizer_CBX ;
 		wxFlexGridSizer* Sizer_info;
 		wxSizer* Sizer_BUT;
-		
+
 		wxStaticBoxSizer* boxA ;
 		wxStaticBoxSizer* boxB ;
 		settings_frame* origin;
-		
+
 		DECLARE_EVENT_TABLE()
-};   
-    
-#endif    
+};
+
+#endif
 

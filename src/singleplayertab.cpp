@@ -9,102 +9,109 @@
 #include <wx/statline.h>
 #include <wx/stattext.h>
 #include <wx/checkbox.h>
+#include <wx/colordlg.h>
 
 #include "singleplayertab.h"
 #include "mapctrl.h"
+#include "mapselectdialog.h"
 #include "utils.h"
 #include "uiutils.h"
 #include "ui.h"
 #include "iunitsync.h"
 #include "addbotdialog.h"
 #include "server.h"
-
-#ifndef HAVE_WX26
+#include "settings.h"
+#include "Helper/colorbutton.h"
 #include "aui/auimanager.h"
-#endif
-
 #include "settings++/custom_dialogs.h"
-
 #include "springunitsynclib.h"
 
 BEGIN_EVENT_TABLE(SinglePlayerTab, wxPanel)
 
-  EVT_CHOICE( SP_MAP_PICK, SinglePlayerTab::OnMapSelect )
-  EVT_CHOICE( SP_MOD_PICK, SinglePlayerTab::OnModSelect )
-  EVT_BUTTON( SP_ADD_BOT , SinglePlayerTab::OnAddBot )
-  EVT_BUTTON( SP_START , SinglePlayerTab::OnStart )
-  EVT_BUTTON( SP_RESET , SinglePlayerTab::OnReset )
-  EVT_CHECKBOX( SP_RANDOM, SinglePlayerTab::OnRandomCheck )
+    EVT_CHOICE( SP_MAP_PICK, SinglePlayerTab::OnMapSelect )
+    EVT_CHOICE( SP_MOD_PICK, SinglePlayerTab::OnModSelect )
+    EVT_BUTTON( SP_BROWSE_MAP, SinglePlayerTab::OnMapBrowse )
+    EVT_BUTTON( SP_ADD_BOT, SinglePlayerTab::OnAddBot )
+    EVT_BUTTON( SP_RESET, SinglePlayerTab::OnReset )
+    EVT_BUTTON( SP_START, SinglePlayerTab::OnStart )
+    EVT_CHECKBOX( SP_RANDOM, SinglePlayerTab::OnRandomCheck )
+    EVT_CHECKBOX( SP_SPECTATE, SinglePlayerTab::OnSpectatorCheck )
+    EVT_BUTTON( SP_COLOUR, SinglePlayerTab::OnColorButton )
+    EVT_MOUSEWHEEL( SinglePlayerTab::OnMouseWheel )
 
 END_EVENT_TABLE()
 
 
 SinglePlayerTab::SinglePlayerTab(wxWindow* parent, Ui& ui, MainSinglePlayerTab& msptab):
-  wxScrolledWindow( parent, -1 ),
-  m_ui( ui ),
-  m_battle( ui, msptab )
+        wxScrolledWindow( parent, -1 ),
+        m_ui( ui ),
+        m_battle( ui, msptab )
 {
-  #ifndef HAVE_WX26
-  GetAui().manager->AddPane( this, wxLEFT, _T("singleplayertab") );
-  #endif
+    GetAui().manager->AddPane( this, wxLEFT, _T("singleplayertab") );
 
-  wxBoxSizer* m_main_sizer = new wxBoxSizer( wxVERTICAL );
+    wxBoxSizer* m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
-  m_minimap = new MapCtrl( this, 100, &m_battle, ui, false, false, true, true );
-  m_minimap->SetToolTip( TE(_("You can drag the sun/bot icon around to define start position.\n "
-                           "Hover over the icon for a popup that lets you change side, ally and bonus." )) );
-  m_main_sizer->Add( m_minimap, 1, wxALL|wxEXPAND, 5 );
+    m_minimap = new MapCtrl( this, 100, &m_battle, ui, false, false, true, true );
+    m_minimap->SetToolTip( TE(_("You can drag the sun/bot icon around to define start position.\n "
+                                "Hover over the icon for a popup that lets you change side, ally and bonus." )) );
+    m_main_sizer->Add( m_minimap, 1, wxALL|wxEXPAND, 5 );
 
-  wxBoxSizer* m_ctrl_sizer = new wxBoxSizer( wxHORIZONTAL );
+    wxBoxSizer* m_ctrl_sizer = new wxBoxSizer( wxHORIZONTAL );
 
-  m_map_lbl = new wxStaticText( this, -1, _("Map:") );
-  m_ctrl_sizer->Add( m_map_lbl, 0, wxALL, 5 );
+    m_map_lbl = new wxStaticText( this, -1, _("Map:") );
+    m_ctrl_sizer->Add( m_map_lbl, 0, wxALL, 5 );
 
-  m_map_pick = new wxChoice( this, SP_MAP_PICK );
-  m_ctrl_sizer->Add( m_map_pick, 1, wxALL, 5 );
+    m_map_pick = new wxChoice( this, SP_MAP_PICK );
+    m_ctrl_sizer->Add( m_map_pick, 1, wxALL, 5 );
 
-//  m_select_btn = new wxButton( this, SP_BROWSE_MAP, _T("..."), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
-//  m_ctrl_sizer->Add( m_select_btn, 0, wxBOTTOM|wxRIGHT|wxTOP, 5 );
+    m_select_btn = new wxButton( this, SP_BROWSE_MAP, _T("..."), wxDefaultPosition, wxSize(CONTROL_HEIGHT, CONTROL_HEIGHT), wxBU_EXACTFIT );
+    m_ctrl_sizer->Add( m_select_btn, 0, wxBOTTOM|wxRIGHT|wxTOP, 5 );
 
-  m_mod_lbl = new wxStaticText( this, -1, _("Mod:") );
-  m_ctrl_sizer->Add( m_mod_lbl, 0, wxALL, 5 );
+    m_mod_lbl = new wxStaticText( this, -1, _("Mod:") );
+    m_ctrl_sizer->Add( m_mod_lbl, 0, wxALL, 5 );
 
-  m_mod_pick = new wxChoice( this, SP_MOD_PICK );
-  m_ctrl_sizer->Add( m_mod_pick, 1, wxALL, 5 );
+    m_mod_pick = new wxChoice( this, SP_MOD_PICK );
+    m_ctrl_sizer->Add( m_mod_pick, 1, wxALL, 5 );
 
 
 //  m_ctrl_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
 
-  m_addbot_btn = new wxButton( this, SP_ADD_BOT, _("Add bot..."), wxDefaultPosition, wxSize(80, CONTROL_HEIGHT), 0 );
-  m_ctrl_sizer->Add( m_addbot_btn, 0, wxALL, 5 );
+    m_addbot_btn = new wxButton( this, SP_ADD_BOT, _("Add bot..."), wxDefaultPosition, wxSize(80, CONTROL_HEIGHT), 0 );
+    m_ctrl_sizer->Add( m_addbot_btn, 0, wxALL, 5 );
 
-  m_main_sizer->Add( m_ctrl_sizer, 0, wxEXPAND, 5 );
+    m_main_sizer->Add( m_ctrl_sizer, 0, wxEXPAND, 5 );
 
-  m_buttons_sep = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
-  m_main_sizer->Add( m_buttons_sep, 0, wxLEFT|wxRIGHT|wxEXPAND, 5 );
+    m_buttons_sep = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
+    m_main_sizer->Add( m_buttons_sep, 0, wxLEFT|wxRIGHT|wxEXPAND, 5 );
 
-  wxBoxSizer* m_buttons_sizer = new wxBoxSizer( wxHORIZONTAL );
+    wxBoxSizer* m_buttons_sizer = new wxBoxSizer( wxHORIZONTAL );
 
 // see http://trac.springlobby.info/ticket/649
 //  m_reset_btn = new wxButton( this, SP_RESET, _("Reset"), wxDefaultPosition, wxSize(80, CONTROL_HEIGHT), 0 );
 //  m_buttons_sizer->Add( m_reset_btn, 0, wxALL, 5 );
 
-  m_buttons_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
+    m_buttons_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
 
-  m_random_check = new wxCheckBox( this, SP_RANDOM, _("Random start positions") );
-  m_buttons_sizer->Add( m_random_check, 0, wxALL, 5 );
+    m_color_btn = new  ColorButton( this, SP_COLOUR, sett().GetBattleLastColour(), wxDefaultPosition, wxSize(30, CONTROL_HEIGHT) );
+    m_buttons_sizer->Add( m_color_btn, 0, wxALL, 0 );
 
-  m_start_btn = new wxButton( this, SP_START, _("Start"), wxDefaultPosition, wxSize(80, CONTROL_HEIGHT), 0 );
-  m_buttons_sizer->Add( m_start_btn, 0, wxALL, 5 );
+    m_spectator_check = new wxCheckBox( this, SP_SPECTATE, _("Spectate only") );
+    m_buttons_sizer->Add( m_spectator_check, 0, wxALL, 5 );
 
-  m_main_sizer->Add( m_buttons_sizer, 0, wxEXPAND, 5 );
+    m_random_check = new wxCheckBox( this, SP_RANDOM, _("Random start positions") );
+    m_buttons_sizer->Add( m_random_check, 0, wxALL, 5 );
 
-  SetScrollRate( 3, 3 );
-  this->SetSizer( m_main_sizer );
-  this->Layout();
+    m_start_btn = new wxButton( this, SP_START, _("Start"), wxDefaultPosition, wxSize(80, CONTROL_HEIGHT), 0 );
+    m_buttons_sizer->Add( m_start_btn, 0, wxALL, 5 );
 
-  ReloadMaplist();
-  ReloadModlist();
+    m_main_sizer->Add( m_buttons_sizer, 0, wxEXPAND, 5 );
+
+    SetScrollRate( 3, 3 );
+    this->SetSizer( m_main_sizer );
+    this->Layout();
+
+    ReloadMaplist();
+    ReloadModlist();
 
 }
 
@@ -117,49 +124,55 @@ SinglePlayerTab::~SinglePlayerTab()
 
 void SinglePlayerTab::UpdateMinimap()
 {
-  m_minimap->UpdateMinimap();
+    m_minimap->UpdateMinimap();
 }
 
 
 void SinglePlayerTab::ReloadMaplist()
 {
-  m_map_pick->Clear();
+    m_map_pick->Clear();
 
-  wxArrayString maplist= usync().GetMapList();
-  //maplist.Sort(CompareStringIgnoreCase);
+    wxArrayString maplist= usync().GetMapList();
+    //maplist.Sort(CompareStringIgnoreCase);
 
-  size_t nummaps = maplist.Count();
-  for ( size_t i = 0; i < nummaps; i++ ) m_map_pick->Insert( RefineMapname(maplist[i]), i );
+    size_t nummaps = maplist.Count();
+    for ( size_t i = 0; i < nummaps; i++ ) m_map_pick->Insert( RefineMapname(maplist[i]), i );
 
-  m_map_pick->Insert( _("-- Select one --"), m_map_pick->GetCount() );
-  if ( m_battle.GetHostMapName() != wxEmptyString ) {
-    m_map_pick->SetStringSelection( RefineMapname( m_battle.GetHostMapName() ) );
-    if ( m_map_pick->GetStringSelection() == wxEmptyString ) SetMap( m_mod_pick->GetCount()-1 );
-  } else {
-    m_map_pick->SetSelection( m_map_pick->GetCount()-1 );
-    m_addbot_btn->Enable(false);
-  }
+    m_map_pick->Insert( _("-- Select one --"), m_map_pick->GetCount() );
+    if ( m_battle.GetHostMapName() != wxEmptyString )
+    {
+        m_map_pick->SetStringSelection( RefineMapname( m_battle.GetHostMapName() ) );
+        if ( m_map_pick->GetStringSelection() == wxEmptyString ) SetMap( m_mod_pick->GetCount()-1 );
+    }
+    else
+    {
+        m_map_pick->SetSelection( m_map_pick->GetCount()-1 );
+        m_addbot_btn->Enable(false);
+    }
 }
 
 
 void SinglePlayerTab::ReloadModlist()
 {
-  m_mod_pick->Clear();
+    m_mod_pick->Clear();
 
-  wxArrayString modlist= usync().GetModList();
-  //modlist.Sort(CompareStringIgnoreCase);
+    wxArrayString modlist= usync().GetModList();
+    //modlist.Sort(CompareStringIgnoreCase);
 
-  size_t nummods = modlist.Count();
-  for ( size_t i = 0; i < nummods; i++ ) m_mod_pick->Insert( modlist[i], i );
+    size_t nummods = modlist.Count();
+    for ( size_t i = 0; i < nummods; i++ ) m_mod_pick->Insert( modlist[i], i );
 
-  m_mod_pick->Insert( _("-- Select one --"), m_mod_pick->GetCount() );
+    m_mod_pick->Insert( _("-- Select one --"), m_mod_pick->GetCount() );
 
-  if ( !m_battle.GetHostModName().IsEmpty() ) {
-    m_mod_pick->SetStringSelection( m_battle.GetHostModName() );
-    if ( m_mod_pick->GetStringSelection() == wxEmptyString ) SetMod( m_mod_pick->GetCount()-1 );
-  } else {
-    m_mod_pick->SetSelection( m_mod_pick->GetCount()-1 );
-  }
+    if ( !m_battle.GetHostModName().IsEmpty() )
+    {
+        m_mod_pick->SetStringSelection( m_battle.GetHostModName() );
+        if ( m_mod_pick->GetStringSelection() == wxEmptyString ) SetMod( m_mod_pick->GetCount()-1 );
+    }
+    else
+    {
+        m_mod_pick->SetSelection( m_mod_pick->GetCount()-1 );
+    }
 }
 
 
@@ -184,108 +197,141 @@ void SinglePlayerTab::SetMap( unsigned int index )
 
 void SinglePlayerTab::SetMod( unsigned int index )
 {
-	//m_ui.ReloadUnitSync();
-  if ( index >= m_mod_pick->GetCount()-1 ) {
-    m_battle.SetHostMod( wxEmptyString, wxEmptyString );
-  } else {
-    try {
-      UnitSyncMod mod = usync().GetMod( index );
-      m_battle.SetLocalMod( mod );
-      m_battle.SetHostMod( mod.name, mod.hash );
-    } catch (...) {}
-  }
-  m_minimap->UpdateMinimap();
-  m_battle.SendHostInfo( IBattle::HI_Restrictions ); // Update restrictions in options.
-  m_battle.SendHostInfo( IBattle::HI_Mod_Changed ); // reload mod options
-  m_mod_pick->SetSelection( index );
+    //m_ui.ReloadUnitSync();
+    if ( index >= m_mod_pick->GetCount()-1 )
+    {
+        m_battle.SetHostMod( wxEmptyString, wxEmptyString );
+    }
+    else
+    {
+        try
+        {
+            UnitSyncMod mod = usync().GetMod( index );
+            m_battle.SetLocalMod( mod );
+            m_battle.SetHostMod( mod.name, mod.hash );
+        }
+        catch (...) {}
+    }
+    m_minimap->UpdateMinimap();
+    m_battle.SendHostInfo( IBattle::HI_Restrictions ); // Update restrictions in options.
+    m_battle.SendHostInfo( IBattle::HI_Mod_Changed ); // reload mod options
+    m_mod_pick->SetSelection( index );
 }
 
 
 bool SinglePlayerTab::ValidSetup()
 {
-  if ( (unsigned int)m_mod_pick->GetSelection() >= m_mod_pick->GetCount()-1 ) {
-    wxLogWarning( _T("no mod selected") );
-    customMessageBox(SL_MAIN_ICON, _("You have to select a mod first."), _("Gamesetup error") );
-    return false;
-  }
-
-  if ( (unsigned int)m_map_pick->GetSelection() >= m_map_pick->GetCount()-1 ) {
-    wxLogWarning( _T("no map selected") );
-    customMessageBox(SL_MAIN_ICON, _("You have to select a map first."), _("Gamesetup error") );
-    return false;
-  }
-
-  if ( m_battle.GetNumUsers() == 1 )
-  {
-      wxLogWarning(_T("trying to start sp game without bot"));
-      if ( customMessageBox(SL_MAIN_ICON, _("Continue without adding a bot first?.\n The game will be over pretty fast.\n "),
-                _("No Bot added"), wxYES_NO) == wxNO )
+    if ( (unsigned int)m_mod_pick->GetSelection() >= m_mod_pick->GetCount()-1 )
+    {
+        wxLogWarning( _T("no mod selected") );
+        customMessageBox(SL_MAIN_ICON, _("You have to select a mod first."), _("Gamesetup error") );
         return false;
-  }
-  return true;
+    }
+
+    if ( (unsigned int)m_map_pick->GetSelection() >= m_map_pick->GetCount()-1 )
+    {
+        wxLogWarning( _T("no map selected") );
+        customMessageBox(SL_MAIN_ICON, _("You have to select a map first."), _("Gamesetup error") );
+        return false;
+    }
+
+    if ( m_battle.GetNumUsers() == 1 )
+    {
+        wxLogWarning(_T("trying to start sp game without bot"));
+        if ( customMessageBox(SL_MAIN_ICON, _("Continue without adding a bot first?.\n The game will be over pretty fast.\n "),
+                              _("No Bot added"), wxYES_NO) == wxNO )
+            return false;
+    }
+    return true;
 }
 
 
 void SinglePlayerTab::OnMapSelect( wxCommandEvent& event )
 {
-  unsigned int index = (unsigned int)m_map_pick->GetCurrentSelection();
-  SetMap( index );
+    unsigned int index = (unsigned int)m_map_pick->GetCurrentSelection();
+    SetMap( index );
 }
 
 
 void SinglePlayerTab::OnModSelect( wxCommandEvent& event )
 {
-  unsigned int index = (unsigned int)m_mod_pick->GetCurrentSelection();
-  SetMod( index );
+    unsigned int index = (unsigned int)m_mod_pick->GetCurrentSelection();
+    SetMod( index );
+}
+
+
+void SinglePlayerTab::OnMapBrowse( wxCommandEvent& event )
+{
+    wxLogDebugFunc( _T("") );
+    MapSelectDialog dlg( (wxWindow*)&m_ui.mw(), m_ui );
+
+    if ( dlg.ShowModal() == wxID_OK && dlg.GetSelectedMap() != NULL )
+    {
+        wxLogDebugFunc( dlg.GetSelectedMap()->name );
+        const wxString mapname = RefineMapname( dlg.GetSelectedMap()->name );
+        const int idx = m_map_pick->FindString( mapname, true /*case sensitive*/ );
+        if ( idx != wxNOT_FOUND ) SetMap( idx );
+    }
 }
 
 
 void SinglePlayerTab::OnAddBot( wxCommandEvent& event )
 {
-  if ( m_battle.GetNumUsers() > 15 )
-  {
-    customMessageBoxNoModal( SL_MAIN_ICON, _("Spring only supports up to 16 different teams"), _("Num players error"), wxICON_EXCLAMATION );
-    return;
-  }
-  AddBotDialog dlg( this, m_battle, true );
-  if ( dlg.ShowModal() == wxID_OK ) {
-    int x = 0, y = 0;
-    m_battle.GetFreePosition( x, y );
-    UserBattleStatus bs;
-		bs.colour = m_battle.GetFreeColour();
-    bs.posx = x;
-    bs.posy = y;
-    bs.ally = m_battle.GetFreeAlly();
-    bs.team = m_battle.GetFreeTeamNum( false );
-    bs.owner = m_battle.GetMe().GetNick();
-    bs.ailib = dlg.GetAI();
-    User& bot = m_battle.OnBotAdded( _T("Bot") + TowxString( bs.team ), bs  );
-    ASSERT_LOGIC( &bot != 0, _T("bot == 0") );
-
-    m_minimap->UpdateMinimap();
-  }
+    AddBotDialog dlg( this, m_battle, true );
+    if ( dlg.ShowModal() == wxID_OK )
+    {
+        UserBattleStatus bs;
+        bs.owner = m_battle.GetMe().GetNick();
+        bs.aishortname = dlg.GetAIShortName();
+        bs.aiversion = dlg.GetAIVersion();
+        bs.aitype = dlg.GetAIType();
+        bs.team = m_battle.GetFreeTeamNum();
+        bs.ally = m_battle.GetFreeAlly();
+        bs.colour = m_battle.GetNewColour();
+        User& bot = m_battle.OnBotAdded( _T("Bot") + TowxString( bs.team ), bs  );
+        ASSERT_LOGIC( &bot != 0, _T("bot == 0") );
+        m_minimap->UpdateMinimap();
+    }
 }
 
 
 void SinglePlayerTab::OnStart( wxCommandEvent& event )
 {
-  if ( m_ui.IsSpringRunning() ) {
-    wxLogWarning(_T("trying to start spring while another instance is running") );
-    customMessageBoxNoModal(SL_MAIN_ICON, _("You cannot start a spring instance while another is already running"), _("Spring error"), wxICON_EXCLAMATION );
-    return;
-  }
+    wxString nick = usync().GetDefaultNick();
+    if ( !nick.IsEmpty() ) m_battle.GetMe().SetNick( nick );
+    if ( m_ui.IsSpringRunning() )
+    {
+        wxLogWarning(_T("trying to start spring while another instance is running") );
+        customMessageBoxNoModal(SL_MAIN_ICON, _("You cannot start a spring instance while another is already running"), _("Spring error"), wxICON_EXCLAMATION );
+        return;
+    }
 
-  if ( ValidSetup() ) m_ui.StartSinglePlayerGame( m_battle );
+    if ( ValidSetup() ) m_ui.StartSinglePlayerGame( m_battle );
 }
 
 
 void SinglePlayerTab::OnRandomCheck( wxCommandEvent& event )
 {
-
     if ( m_random_check->IsChecked() ) m_battle.CustomBattleOptions().setSingleOption( _T("startpostype"), i2s(IBattle::ST_Random), OptionsWrapper::EngineOption );
     else m_battle.CustomBattleOptions().setSingleOption( _T("startpostype"), i2s(IBattle::ST_Pick), OptionsWrapper::EngineOption );
     m_battle.SendHostInfo( IBattle::HI_StartType );
+}
 
+void SinglePlayerTab::OnSpectatorCheck( wxCommandEvent& event )
+{
+    m_battle.GetMe().BattleStatus().spectator = m_spectator_check->IsChecked();
+    UpdateMinimap();
+}
+
+void SinglePlayerTab::OnColorButton( wxCommandEvent& event )
+{
+    User& u = m_battle.GetMe();
+    wxColour CurrentColour = u.BattleStatus().colour;
+    CurrentColour = GetColourFromUser(this, CurrentColour);
+    if ( !CurrentColour.IsColourOk() ) return;
+    sett().SetBattleLastColour( CurrentColour );
+    m_battle.ForceColour( u, CurrentColour );
+    UpdateMinimap();
 }
 
 void SinglePlayerTab::Update( const wxString& Tag )
@@ -300,15 +346,19 @@ void SinglePlayerTab::Update( const wxString& Tag )
   {
     if ( key == _T("mapname") )
     {
-      m_addbot_btn->Enable( false );
-      try
-      {
-        m_map_pick->SetSelection( usync().GetMapIndex( m_battle.GetHostMapName() ) );
-        UpdateMinimap();
-        m_addbot_btn->Enable( true );
-      } catch (...) {}
+        if ( key == _T("mapname") )
+        {
+            m_addbot_btn->Enable( false );
+            try
+            {
+                m_map_pick->SetSelection( usync().GetMapIndex( m_battle.GetHostMapName() ) );
+                UpdateMinimap();
+                m_addbot_btn->Enable( true );
+            }
+            catch (...) {}
+        }
     }
-  }
+	}
 }
 
 void SinglePlayerTab::UpdatePresetList()
@@ -318,4 +368,18 @@ void SinglePlayerTab::UpdatePresetList()
 void SinglePlayerTab::OnReset( wxCommandEvent& event )
 {
 
+}
+
+void SinglePlayerTab::OnMouseWheel( wxMouseEvent& event )
+{
+    if ( m_minimap )
+    {
+        wxRect map_rect = m_minimap->GetRect();
+        if ( map_rect.Contains( event.GetPosition() ) )
+        {
+            m_minimap->OnMouseWheel( event );
+            return;
+        }
+    }
+    event.Skip();
 }

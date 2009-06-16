@@ -59,7 +59,17 @@ class assert_exception : public std::runtime_error
 {wxLogMessage(_T("runtime assertion ( %s:%d ): %s"), TowxString(__FILE__).c_str(),__LINE__ , wxString(msg).c_str() );throw assert_exception(std::string(wxString(msg).mb_str()));}
 
 
-#define CLAMP(var,min,max) ((var)=((var)<(min))?(min):((var)>(max))?(max):(var))
+/** @todo convert to a templated function */
+#define CLAMP(var,min,max)    \
+  ( (var) =		      \
+    ( (var) < (min)	      \
+      ? (min)		      \
+      : ( (var) > (max)	      \
+	  ? (max)	      \
+	  : (var)	      \
+	)		      \
+    )			      \
+  )
 
 #ifdef __WXMSW__
 #define CONTROL_HEIGHT 22
@@ -67,11 +77,7 @@ class assert_exception : public std::runtime_error
 #define CONTROL_HEIGHT 28
 #endif
 
-#ifdef HAVE_WX26
-#define IsColourOk() Ok()
-#else
 #define IsColourOk() IsOk()
-#endif
 
 /** \name Type conversions
  * @{ */
@@ -91,6 +97,7 @@ wxString TowxString(T arg){
   s << arg;
   return WX_STRING( s.str() );
 }
+
 inline wxString TowxString(wxString arg){
   return arg;
 }
@@ -105,13 +112,23 @@ inline wxString TowxString(std::string arg){
 template <typename T> T clamp(const T var,const T min,const T max)
 { return ( (var < min) ? min : ( var > max ) ? max : var ); }
 
+template<typename T>
+T min(T a, T b, T c)
+{
+    return std::min(a, std::min(b, c));
+}
+
 wxString GetLibExtension();
 void InitializeLoggingTargets();
 wxString GetWordParam( wxString& params );
 wxString GetSentenceParam( wxString& params );
 long GetIntParam( wxString& params );
 bool GetBoolParam( wxString& params );
+wxString GetParamByChar( wxString& params, const wxChar& sep );
 wxString GetSpringLobbyVersion();
+wxString GetExecutableFolder();
+wxString MakeHashUnsigned( const wxString& hash );
+wxString MakeHashSigned( const wxString& hash );
 
 //! matches against regex for printable ascii chars, excluding space
 bool IsValidNickname( const wxString& name );
@@ -179,4 +196,31 @@ class wxArrayString;
  */
 wxString GetBestMatch(const wxArrayString& a, const wxString& s, double* distance = NULL);
 
+//! convert wxArrayString into a wxString[] which must be delete[]d by caller
+int ConvertWXArrayToC(const wxArrayString& aChoices, wxString **choices);
+
+/**
+    let origin be /path/to/some/dir and destination /some/other/path
+    this will copy dir (and everything below that recursively to /some/other/path/dir
+    \return true if successful
+*/
+bool CopyDir( wxString origin, wxString destination, bool overwrite = true);
 #endif // SPRINGLOBBY_HEADERGUARD_UTILS_H
+
+/**
+    This file is part of SpringLobby,
+    Copyright (C) 2007-09
+
+    springsettings is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License version 2 as published by
+    the Free Software Foundation.
+
+    springsettings is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SpringLobby.  If not, see <http://www.gnu.org/licenses/>.
+**/
+

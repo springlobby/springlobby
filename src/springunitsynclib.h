@@ -72,6 +72,7 @@ typedef int (USYNC_CALL_CONV *GetSideCountPtr)();
 typedef const char* (USYNC_CALL_CONV *GetSideNamePtr)(int);
 
 typedef void (USYNC_CALL_CONV *AddAllArchivesPtr)(const char*);
+typedef void (USYNC_CALL_CONV *RemoveAllArchivesPtr)();
 
 typedef const char * (USYNC_CALL_CONV *GetFullUnitNamePtr)(int);
 typedef const char * (USYNC_CALL_CONV *GetUnitNamePtr)(int);
@@ -288,6 +289,7 @@ class SpringUnitSyncLib
     wxString GetMapName( int index );
     int GetMapArchiveCount( int index );
     wxString GetMapArchiveName( int arnr );
+    wxArrayString GetMapDeps( int index );
 
     /**
      * @brief Get information about a map.
@@ -314,7 +316,7 @@ class SpringUnitSyncLib
      */
     wxImage GetHeightmap( const wxString& mapFileName );
 
-    int GetPrimaryModChecksum( int index );
+    wxString GetPrimaryModChecksum( int index );
     int GetPrimaryModIndex( const wxString& modName );
     wxString GetPrimaryModName( int index );
     int GetPrimaryModCount();
@@ -327,7 +329,8 @@ class SpringUnitSyncLib
     wxString GetPrimaryModDescription( int index );
     int GetPrimaryModArchiveCount( int index );
     wxString GetPrimaryModArchiveList( int arnr );
-    int GetPrimaryModChecksumFromName( const wxString& name );
+    wxString GetPrimaryModChecksumFromName( const wxString& name );
+    wxArrayString GetModDeps( int index );
 
     wxArrayString GetSides( const wxString& modName );
 
@@ -346,18 +349,11 @@ class SpringUnitSyncLib
     int ProcessUnitsNoChecksum();
 
     /**
-     * Initialize a search.
-     * @return always 0.
+     * Search for a file pattern.
+     * @param the search patterns
+     * @return wxarraystring of results
      */
-    int InitFindVFS( const wxString& pattern );
-
-    /**
-     * Get next search result.
-     * @param handle the handle returned by InitFindVFS().
-     * @param name the returned name.
-     * @return new handle or 0 if no more results.
-     */
-    int FindFilesVFS( int handle, wxString& name );
+    wxArrayString FindFilesVFS( const wxString& name );
     int OpenFileVFS( const wxString& name );
     int FileSizeVFS( int handle );
     int ReadFileVFS( int handle, void* buffer, int bufferLength );
@@ -372,7 +368,7 @@ class SpringUnitSyncLib
 
     int GetMapOptionCount( const wxString& name );
     int GetModOptionCount( const wxString& name );
-    int GetAIOptionCount( int index );
+    int GetAIOptionCount( const wxString& modname, int index );
     wxString GetOptionKey( int optIndex );
     wxString GetOptionName( int optIndex );
     wxString GetOptionDesc( int optIndex );
@@ -409,7 +405,7 @@ class SpringUnitSyncLib
     void SetSpringConfigFloat( const wxString& key, const float value );
 
     /// AI info
-    int GetSkirmishAICount();
+    int GetSkirmishAICount( const wxString& modname );
     /**
      * Get next search result.
      * @param the AI index within range of GetSkirmishAIInfoCount
@@ -499,6 +495,11 @@ class SpringUnitSyncLib
      */
     void _Init();
 
+	/**
+	 * Calls RemoveAllArchives if available, _Init() otherwise.
+	 */
+	void _RemoveAllArchives();
+
     /**
      * Internal Unload() function.
      * @note this function is not threadsafe if called from code not locked.
@@ -543,6 +544,7 @@ class SpringUnitSyncLib
     GetSideNamePtr m_get_side_name;
 
     AddAllArchivesPtr m_add_all_archives;
+    RemoveAllArchivesPtr m_remove_all_archives;
 
     GetUnitCountPtr m_get_unit_count;
     GetUnitNamePtr m_get_unit_name;
@@ -681,3 +683,21 @@ class SpringUnitSyncLib
 SpringUnitSyncLib& susynclib();
 
 #endif //SPRINGLOBBY_HEADERGUARD_SPRINGUNITSYNCLIB_H
+
+/**
+    This file is part of SpringLobby,
+    Copyright (C) 2007-09
+
+    springsettings is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License version 2 as published by
+    the Free Software Foundation.
+
+    springsettings is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SpringLobby.  If not, see <http://www.gnu.org/licenses/>.
+**/
+

@@ -59,22 +59,24 @@ class Socket
     void Disconnect( );
 
     bool Send( const wxString& data );
-    bool Receive( wxString& data );
+    wxString Receive();
 
 
     void Ping();
     void SetPingInfo( const wxString& msg = wxEmptyString, unsigned int interval = 10000 );
-    unsigned int GetPingInterval() { return m_ping_int; }
-    bool GetPingEnabled() { return m_ping_msg != wxEmptyString; }
+    unsigned int GetPingInterval() const { return m_ping_int; }
+    bool GetPingEnabled() const { return m_ping_msg != wxEmptyString; }
 
-    wxString GetLocalAddress();
+    wxString GetLocalAddress() const;
     wxString GetHandle();
 
     SockState State( );
-    SockError Error( );
+    SockError Error( ) const;
 
     void SetSendRateLimit( int Bps = -1 );
     void OnTimer( int mselapsed );
+
+    void SetTimeout( const int seconds );
 
     protected:
 
@@ -97,14 +99,13 @@ class Socket
     unsigned int m_udp_private_port;
     int m_rate;
     int m_sent;
-    wxString m_buffer;
-    wxString m_rcv_buffer;
+    std::string m_buffer;
 
     wxSocketClient* _CreateSocket();
 
     bool _Send( const wxString& data );
     void _EnablePingThread( bool enable = true );
-    bool _ShouldEnablePingThread();
+    bool _ShouldEnablePingThread() const;
 };
 
 
@@ -142,3 +143,21 @@ class PingThread: public Thread
 
 
 #endif // SPRINGLOBBY_HEADERGUARD_SOCKET_H
+
+/**
+    This file is part of SpringLobby,
+    Copyright (C) 2007-09
+
+    springsettings is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License version 2 as published by
+    the Free Software Foundation.
+
+    springsettings is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SpringLobby.  If not, see <http://www.gnu.org/licenses/>.
+**/
+

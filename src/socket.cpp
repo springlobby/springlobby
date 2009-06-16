@@ -5,6 +5,7 @@
 #include <wx/string.h>
 #include <wx/log.h>
 #include <stdexcept>
+#include <algorithm>
 
 #include "socket.h"
 #include "server.h"
@@ -76,9 +77,10 @@ Socket::Socket( iNetClass& netclass, bool blocking ):
 //! @brief Destructor
 Socket::~Socket()
 {
-  Disconnect();
+  _EnablePingThread( false );
+
   LOCK_SOCKET;
-  if ( m_sock != 0 ) m_sock->Destroy();
+	if ( m_sock ) m_sock->Destroy();
   delete m_events;
 }
 
@@ -114,6 +116,7 @@ void Socket::Connect( const wxString& addr, const int port )
 
   wxIPV4address wxaddr;
   m_connecting = true;
+  m_buffer = "";
 
   wxaddr.Hostname( addr );
   wxaddr.Service( port );
@@ -124,6 +127,11 @@ void Socket::Connect( const wxString& addr, const int port )
   m_sock->SetTimeout( 40 );
 }
 
+void Socket::SetTimeout( const int seconds )
+{
+    if ( m_sock != 0 )
+        m_sock->SetTimeout( seconds );
+}
 
 //! @brief Disconnect from remote host if connected.
 //! @note This turns off the ping thread.
@@ -132,8 +140,10 @@ void Socket::Disconnect( )
   if ( m_sock ) m_sock->SetTimeout( 0 );
   m_net_class.OnDisconnected( this );
   _EnablePingThread( false );
+  m_buffer = "";
 
-  if ( m_sock ) {
+  if ( m_sock )
+  {
     m_sock->Destroy();
     m_sock = 0;
   }
@@ -152,91 +162,90 @@ bool Socket::Send( const wxString& data )
 //! @note Does not lock the criticalsection.
 bool Socket::_Send( const wxString& data )
 {
-  if ( !m_sock ) {
+  if ( !m_sock )
+  {
     wxLogError( _T("Socket NULL") );
     return false;
   }
 
-  if ( m_rate > 0 ) {
-    m_buffer += data;
-    int max = m_rate - m_sent;
-    if ( max > 0 ) {
-      wxString send = m_buffer.substr( 0, max );
-      m_buffer.erase( 0, max );
-      //wxLogMessage( _T("send: %d  sent: %d  max: %d   :  buff: %d"), send.length() , m_sent, max, m_buffer.length() );
-      std::string s = (const char*)send.mb_str(wxConvUTF8);
-      m_sock->Write( s.c_str(), s.length() );
-      m_sent += s.length();
-    }
-  } else {
-    if ( data.length() <= 0) return true;
-    std::string s = (const char*)data.mb_str(wxConvUTF8);
-    m_sock->Write( s.c_str(), s.length() );
+	m_buffer += (const char*)data.mb_str(wxConvUTF8);
+	int crop = m_buffer.length();
+  if ( m_rate > 0 )
+  {
+  	 int max = m_rate - m_sent;
+  	 if ( crop > 0 ) crop = max;
   }
+  std::string send = m_buffer.substr( 0, crop );
+	//wxLogMessage( _T("send: %d  sent: %d  max: %d   :  buff: %d"), send.length() , m_sent, max, m_buffer.length() );
+	m_sock->Write( send.c_str(), send.length() );
+	if ( !m_sock->Error() )
+	{
+		wxUint32 sentdata = m_sock->LastCount();
+		m_buffer.erase( 0, sentdata );
+		m_sent += sentdata;
+	}
   return !m_sock->Error();
 }
 
 
 //! @brief Receive data from connection
-bool Socket::Receive( wxString& data )
+wxString Socket::Receive()
 {
-  if ( m_sock == 0 ) {
+	wxString ret;
+  if ( m_sock == 0 )
+  {
     wxLogError( _T("Socket NULL") );
-    return false;
+    return ret;
   }
 
   LOCK_SOCKET;
 
-  const int buff_size = 1337;
+  const int chunk_size = 1337;
 
-  char buff[buff_size+2] = { 0 };
-  int readnum;
+  std::vector<char> buff;
+  int readnum = 0;
+  int totalbytes = 0;
 
-  buff[buff_size+1] = '\0';
-
-  do {
-    m_sock->Read( &buff[0], buff_size );
+  do
+  {
+  	buff.resize( totalbytes + chunk_size ); // increase buffer capacity to fit incoming chunk
+    m_sock->Read( &buff[totalbytes], chunk_size );
     readnum = m_sock->LastCount();
-    buff[readnum] = '\0';
+    totalbytes += readnum;
+  } while ( readnum >= chunk_size );
 
-    if ( readnum > 0 ) {
-      wxString d = wxString( &buff[0], wxConvUTF8 );
-      if ( d.IsEmpty() )
-      {
-        d = wxString( &buff[0], wxConvLocal );
-        #ifndef HAVE_WX26
-        if ( d.IsEmpty() ) d = wxString( &buff[0], wxCSConv(_T("latin-1")) );
-        #endif
-      }
-      m_rcv_buffer << d;
-    }
-  } while ( readnum >= buff_size );
+	if ( totalbytes > 0 )
+	{
+		ret = wxString( &buff[0], wxConvUTF8, totalbytes );
+		if ( ret.IsEmpty() )
+		{
+			ret = wxString( &buff[0], wxConvLocal, totalbytes );
+			if ( ret.IsEmpty() )
+			{
+				 ret = wxString( &buff[0], wxCSConv(_T("latin-1")), totalbytes );
+			}
+		}
+	}
 
-  if ( m_rcv_buffer.Contains(_T("\n")) ) {
-    data = m_rcv_buffer.BeforeFirst('\n');
-    m_rcv_buffer = m_rcv_buffer.AfterFirst('\n');
-    return true;
-  } else {
-    return false;
-  }
+	return ret;
 }
 
 wxString Socket::GetHandle()
 {
 	wxString handle;
-	#ifdef __WXMSW
+	#ifdef __WXMSW__
 
     IP_ADAPTER_INFO AdapterInfo[16];       // Allocate information for 16 cards
     DWORD dwBufLen = sizeof(AdapterInfo);  // Save memory size of buffer
 
     DWORD dwStatus = GetAdaptersInfo ( AdapterInfo, &dwBufLen); // Get info
 		if (dwStatus != NO_ERROR) return _T(""); // Check status
-    for (unsigned int i=0; i<MIN(6, AdapterInfo[0].AddressLength); i++)
+    for (unsigned int i=0; i<std::min( (unsigned int)6, (unsigned int)AdapterInfo[0].AddressLength); i++)
     {
         handle += TowxString(((unsigned int)AdapterInfo[0].Address[i])&255);
         if (i != 5) handle += _T(':');
     }
-	#elif defined(__WXGTK__)
+	#elif defined(__WXGTK__) && defined(linux)
 	int sock = socket (AF_INET, SOCK_DGRAM, 0);
 	if (sock < 0)
 	{
@@ -304,18 +313,21 @@ SockState Socket::State( )
 
 //! @brief Get socket error code
 //! @todo Implement
-SockError Socket::Error( )
+SockError Socket::Error( ) const
 {
   return (SockError)-1;
 }
 
 
 //! @brief used to retrieve local ip address behind NAT to communicate to the server on login
-wxString Socket::GetLocalAddress()
+wxString Socket::GetLocalAddress() const
 {
-  if ( m_sock || !m_sock->IsConnected() ) return wxEmptyString;
+  if ( !m_sock || !m_sock->IsConnected() )
+    return wxEmptyString;
+
   wxIPV4address localaddr;
   m_sock->GetLocal( localaddr );
+
   return localaddr.IPAddress();
 }
 
@@ -358,7 +370,7 @@ void Socket::_EnablePingThread( bool enable )
 
 //! @brief Check if we should enable or dsable the ping htread.
 //! @see Socket::_EnablePingThread
-bool Socket::_ShouldEnablePingThread()
+bool Socket::_ShouldEnablePingThread() const
 {
   return ( (m_ping_msg != wxEmptyString) );
 }
@@ -375,7 +387,7 @@ void Socket::SetSendRateLimit( int Bps )
 //! @note Called from separate thread
 void Socket::Ping()
 {
-  /// Dont log here, else it may crash.
+  // Dont log here, else it may crash.
   // wxLogMessage( _T("Sent ping.") );
   if ( m_ping_msg != wxEmptyString ) Send( m_ping_msg );
 }
@@ -417,7 +429,7 @@ void* PingThread::Entry()
   {
     if ( !m_sock.GetPingEnabled() ) break;
     m_sock.Ping();
-    /// break if woken
+    // break if woken
     if(!Sleep(milliseconds))break;
   }
   return 0;

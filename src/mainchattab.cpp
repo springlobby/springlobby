@@ -1,4 +1,4 @@
-/* Copyright (C) 2007, 2008 The SpringLobby Team. All rights reserved. */
+/* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
 //
 // Class: MainChatTab
 //
@@ -11,12 +11,7 @@
 #include <wx/image.h>
 #include <wx/log.h>
 
-#ifndef HAVE_WX26
 #include "aui/auimanager.h"
-#else
-#include <wx/listbook.h>
-#endif
-
 #include "mainchattab.h"
 #include "utils.h"
 #include "mainwindow.h"
@@ -35,34 +30,23 @@
 
 BEGIN_EVENT_TABLE(MainChatTab, wxPanel)
 
-  #ifdef HAVE_WX26
-  EVT_NOTEBOOK_PAGE_CHANGED( CHAT_TABS, MainChatTab::OnTabsChanged )
-  #else
   EVT_AUINOTEBOOK_PAGE_CHANGED( CHAT_TABS, MainChatTab::OnTabsChanged )
   EVT_AUINOTEBOOK_PAGE_CLOSE ( CHAT_TABS, MainChatTab::OnTabClose )
-  #endif
 END_EVENT_TABLE()
 
 
 MainChatTab::MainChatTab( wxWindow* parent, Ui& ui )
 : wxScrolledWindow( parent, -1, wxDefaultPosition, wxDefaultSize, 0, wxPanelNameStr ),m_ui(ui)
 {
-
-  #ifndef HAVE_WX26
   GetAui().manager->AddPane( this, wxLEFT, _T("mainchattab") );
-  #endif
 
   m_newtab_sel = -1;
   m_server_chat = 0;
 
   m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
-  #ifdef HAVE_WX26
-  m_chat_tabs = new wxNotebook( this, CHAT_TABS, wxDefaultPosition, wxDefaultSize, wxLB_TOP );
-  #else
   m_chat_tabs = new wxAuiNotebook( this, CHAT_TABS, wxDefaultPosition, wxDefaultSize, wxAUI_NB_DEFAULT_STYLE | wxAUI_NB_TOP | wxAUI_NB_TAB_EXTERNAL_MOVE | wxAUI_NB_WINDOWLIST_BUTTON );
   m_chat_tabs ->SetArtProvider(new SLArtProvider);
-  #endif
 
   wxBitmap userchat (userchat_xpm); //*charArr2wxBitmap(userchat_png, sizeof(userchat_png) );
   m_imagelist = new wxImageList( 12, 12 );
@@ -71,29 +55,16 @@ MainChatTab::MainChatTab( wxWindow* parent, Ui& ui )
   m_imagelist->Add( wxBitmap(channel_xpm) );
   m_imagelist->Add( wxBitmap(userchat_xpm) );
 
-  m_imagelist->Add( wxBitmap ( ReplaceChannelStatusColour( wxBitmap( channel_xpm ), sett().GetChatColor(_T("JoinPart")) ) ) );
-  m_imagelist->Add( wxBitmap ( ReplaceChannelStatusColour( wxBitmap(userchat_xpm ), sett().GetChatColor(_T("JoinPart")) ) ) );
+  m_imagelist->Add( wxBitmap ( ReplaceChannelStatusColour( wxBitmap( channel_xpm ), sett().GetChatColorJoinPart() ) ) );
+  m_imagelist->Add( wxBitmap ( ReplaceChannelStatusColour( wxBitmap(userchat_xpm ), sett().GetChatColorJoinPart() ) ) );
 
-  m_imagelist->Add( wxBitmap ( ReplaceChannelStatusColour( wxBitmap( channel_xpm ), sett().GetChatColor(_T("Mine")) ) ) );
-  m_imagelist->Add( wxBitmap ( ReplaceChannelStatusColour( wxBitmap( userchat_xpm ), sett().GetChatColor(_T("Mine")) ) ) );
+  m_imagelist->Add( wxBitmap ( ReplaceChannelStatusColour( wxBitmap( channel_xpm ), sett().GetChatColorMine() ) ) );
+  m_imagelist->Add( wxBitmap ( ReplaceChannelStatusColour( wxBitmap( userchat_xpm ), sett().GetChatColorMine() ) ) );
 
-  m_imagelist->Add( wxBitmap ( ReplaceChannelStatusColour( wxBitmap( channel_xpm ), sett().GetChatColor(_T("Highlight")) ) ) );
-  m_imagelist->Add( wxBitmap ( ReplaceChannelStatusColour( wxBitmap( userchat_xpm ), sett().GetChatColor(_T("Highlight")) ) ) );
+  m_imagelist->Add( wxBitmap ( ReplaceChannelStatusColour( wxBitmap( channel_xpm ), sett().GetChatColorHighlight() ) ) );
+  m_imagelist->Add( wxBitmap ( ReplaceChannelStatusColour( wxBitmap( userchat_xpm ), sett().GetChatColorHighlight() ) ) );
 
-  m_imagelist->Add( wxBitmap ( ReplaceChannelStatusColour( wxBitmap( server_xpm ), sett().GetChatColor(_T("Error")) ) ) );
-
-  #ifdef HAVE_WX26
-  m_chat_tabs->AssignImageList( m_imagelist );
-  #endif
-
-//  m_server_chat = new ChatPanel( m_chat_tabs, serv );
-//  m_chat_tabs->AddPage( m_server_chat, _("Server"), true, 1 );
-
-
-  #ifdef HAVE_WX26
-  m_close_window = new wxWindow( m_chat_tabs, -1 );
-  m_chat_tabs->AddPage( m_close_window, _T(""), false, 0 );
-  #endif
+  m_imagelist->Add( wxBitmap ( ReplaceChannelStatusColour( wxBitmap( server_xpm ), sett().GetChatColorError() ) ) );
 
   m_main_sizer->Add( m_chat_tabs, 1, wxEXPAND );
 
@@ -118,11 +89,7 @@ ChatPanel& MainChatTab::ServerChat()
 
 ChatPanel* MainChatTab::GetActiveChatPanel()
 {
-  #ifdef HAVE_WX26
-  return (ChatPanel*)m_chat_tabs->GetCurrentPage();
-  #else
   return (ChatPanel*)m_chat_tabs->GetPage(m_chat_tabs->GetSelection());
-  #endif
 }
 
 
@@ -182,19 +149,47 @@ void MainChatTab::OnUserDisconnected( User& user )
   }
 }
 
+void MainChatTab::LeaveChannels()
+{
+    for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ ) {
+    ChatPanel* tmp = (ChatPanel*)m_chat_tabs->GetPage(i);
+    if ( tmp->GetPanelType() == CPT_Channel )
+    {
+			tmp->StatusMessage( _("Disconnected from server, chat closed.") );
+      tmp->SetChannel( 0 );
+    } else if (tmp->GetPanelType() == CPT_User )
+    {
+			tmp->StatusMessage( _("Disconnected from server, chat closed.") );
+			tmp->SetUser( 0 );
+    }
+  }
+}
 
 void MainChatTab::RejoinChannels()
 {
-  for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ ) {
+  for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ )
+  {
     ChatPanel* tmp = (ChatPanel*)m_chat_tabs->GetPage(i);
-    if ( tmp->GetPanelType() == CPT_Channel ) {
+    if ( tmp->GetPanelType() == CPT_Channel )
+    {
 
       // TODO: This will not rejoin passworded channels.
       wxString name = m_chat_tabs->GetPageText(i);
-      // #springlobby is joined automatically
-      if ( name != _T("springlobby") ) m_ui.GetServer().JoinChannel( name, _T("") );
+      bool alreadyin = false;
+      try
+      {
+				ui().GetServer().GetChannel( name ).GetMe();
+				alreadyin = true;
+      }
+      catch (...) {}
+      if ( !alreadyin )
+      {
+          m_ui.GetServer().JoinChannel( name, _T("") );
+          tmp->SetChannel( &m_ui.GetServer().GetChannel( name ) );
+			}
 
-    } else if (tmp->GetPanelType() == CPT_User ) {
+    } else if (tmp->GetPanelType() == CPT_User )
+    {
 
       wxString name = m_chat_tabs->GetPageText(i);
       if ( m_ui.GetServer().UserExists( name ) ) tmp->SetUser( &m_ui.GetServer().GetUser( name ) );
@@ -219,11 +214,7 @@ ChatPanel* MainChatTab::AddChatPannel( Channel& channel )
   }
 
   ChatPanel* chat = new ChatPanel( m_chat_tabs, m_ui, channel, m_imagelist );
-  #ifdef HAVE_WX26
-  m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, channel.GetName(), true, 2 );
-  #else
   m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, channel.GetName(), true, wxBitmap(channel_xpm) );
-  #endif
   chat->FocusInputBox();
   return chat;
 }
@@ -243,15 +234,11 @@ ChatPanel* MainChatTab::AddChatPannel( Server& server, const wxString& name )
   }
 
   ChatPanel* chat = new ChatPanel( m_chat_tabs, m_ui, server, m_imagelist );
-  #ifdef HAVE_WX26
-  m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, name, true, 1 );
-  #else
   m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, name, true, wxBitmap(server_xpm) );
-  #endif
   return chat;
 }
 
-ChatPanel* MainChatTab::AddChatPannel( User& user )
+ChatPanel* MainChatTab::AddChatPannel( const User& user )
 {
   for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ ) {
     if ( m_chat_tabs->GetPageText(i) == user.GetNick() ) {
@@ -263,18 +250,13 @@ ChatPanel* MainChatTab::AddChatPannel( User& user )
       }
     }
   }
-
+	int selection = m_chat_tabs->GetSelection();
   ChatPanel* chat = new ChatPanel( m_chat_tabs, m_ui, user, m_imagelist );
-  #ifdef HAVE_WX26
-  m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, user.GetNick(), true, 3 );
-  #else
   m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, user.GetNick(), true, wxBitmap(userchat_xpm) );
-  #endif
-  chat->FocusInputBox();
+  if ( selection > 0 ) m_chat_tabs->SetSelection( selection );
   return chat;
 }
 
-#ifndef HAVE_WX26
 void MainChatTab::OnTabClose( wxAuiNotebookEvent& event )
 {
     int selection = event.GetSelection();
@@ -284,13 +266,8 @@ void MainChatTab::OnTabClose( wxAuiNotebookEvent& event )
         panel->Part();
     }
 }
-#endif
 
-#ifdef HAVE_WX26
-void MainChatTab::OnTabsChanged( wxListbookEvent& event )
-#else
 void MainChatTab::OnTabsChanged( wxAuiNotebookEvent& event )
-#endif
 {
   wxLogDebugFunc( _T("") );
 
@@ -304,29 +281,17 @@ void MainChatTab::OnTabsChanged( wxAuiNotebookEvent& event )
   if ( ImageIndex == 4 || ImageIndex == 6 || ImageIndex == 8 )
   {
      GetActiveChatPanel()->SetIconIndex(2);
-     #ifdef HAVE_WX26
-     m_chat_tabs->SetPageImage( newsel, 2);
-     #else
      m_chat_tabs->SetPageBitmap( newsel, wxBitmap(channel_xpm));
-     #endif
   }
   else if ( ImageIndex == 5 || ImageIndex == 7 || ImageIndex == 9 )
   {
      GetActiveChatPanel()->SetIconIndex(3);
-     #ifdef HAVE_WX26
-     m_chat_tabs->SetPageImage( newsel, 3);
-     #else
      m_chat_tabs->SetPageBitmap( newsel, wxBitmap(userchat_xpm) );
-     #endif
   }
   else if ( ImageIndex == 10 )
   {
      GetActiveChatPanel()->SetIconIndex(1);
-     #ifdef HAVE_WX26
-     m_chat_tabs->SetPageImage( newsel, 1);
-     #else
      m_chat_tabs->SetPageBitmap( newsel, wxBitmap(server_xpm));
-     #endif
   }
 
   wxWindow* newpage = m_chat_tabs->GetPage( newsel );
@@ -393,7 +358,7 @@ void MainChatTab::Update()
     for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ )
     {
         ChatPanel* tmp = (ChatPanel*)m_chat_tabs->GetPage(i);
-        if ( m_close_window == m_chat_tabs->GetPage( i ) ) continue; ///skip the close button
+        if ( m_close_window == m_chat_tabs->GetPage( i ) ) continue; //skip the close button
         if ( ( tmp != 0 ) && ( tmp->GetPanelType() == CPT_Channel ) )
         {
             tmp->SortNickList();

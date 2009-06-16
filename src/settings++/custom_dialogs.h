@@ -161,6 +161,32 @@ private:
 	wxTextCtrl* text_ctrl;
 };
 
-
+//! extends the wx method by allowing to set selection
+int GetSingleChoiceIndex( const wxString& message,
+                            const wxString& caption,
+                            const wxArrayString& aChoices,
+                            const int selected,
+                            wxWindow *parent = NULL,
+                            int x = wxDefaultCoord,
+                            int y = wxDefaultCoord,
+                            bool centre = true );
 
 #endif /*CUSTOM_MSG_DLG_H_*/
+
+/**
+    This file is part of SpringLobby,
+    Copyright (C) 2007-09
+
+    springsettings is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License version 2 as published by
+    the Free Software Foundation.
+
+    springsettings is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SpringLobby.  If not, see <http://www.gnu.org/licenses/>.
+**/
+

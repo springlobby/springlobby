@@ -1,5 +1,3 @@
-#include "lobbyoptionstab.h"
-#include "nonportable.h"
 #include <wx/sizer.h>
 #include <wx/statbox.h>
 #include <wx/intl.h>
@@ -10,13 +8,18 @@
 #include <wx/textctrl.h>
 #include <wx/button.h>
 #include <wx/filedlg.h>
+#include <wx/choice.h>
 
+#include "lobbyoptionstab.h"
+#include "nonportable.h"
 #include "settings.h"
+#include "springlobbyapp.h"
+#include "settings++/custom_dialogs.h"
 #include "utils.h"
-
-#ifndef HAVE_WX26
 #include "aui/auimanager.h"
-#endif
+#include "ui.h"
+#include "mainwindow.h"
+
 
 BEGIN_EVENT_TABLE(LobbyOptionsTab, wxPanel)
     EVT_BUTTON ( SPRING_WEBBROWSE, LobbyOptionsTab::OnBrowseWeb )
@@ -24,11 +27,11 @@ BEGIN_EVENT_TABLE(LobbyOptionsTab, wxPanel)
 END_EVENT_TABLE()
 
 LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
-    : wxScrolledWindow( parent, -1 )
+    : wxScrolledWindow( parent, -1 ),
+    m_show_tooltips_label( 0 )
 {
-    #ifndef HAVE_WX26
     GetAui().manager->AddPane( this, wxLEFT, _T("lobbyoptionstab") );
-    #endif
+
     m_main_sizer = new wxBoxSizer ( wxVERTICAL );
 
 /* ================================
@@ -54,7 +57,7 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
     else m_web_spec_radio->SetValue( true );
 
     m_web_loc_sizer = new wxBoxSizer( wxHORIZONTAL );
-    m_web_loc_sizer->Add( m_web_loc_text, 0, wxALL, 2 );
+    m_web_loc_sizer->Add( m_web_loc_text, 0, wxALL | wxALIGN_CENTER_VERTICAL, 2 );
     m_web_loc_sizer->Add( m_web_edit, 1, wxEXPAND );
     m_web_loc_sizer->Add( m_web_browse_btn );
 
@@ -78,9 +81,9 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
     m_reportstats_sizer->Add( m_reportstats_label, 1, wxEXPAND|wxALL, 5);
     m_reportstats_sizer->Add( m_reportstats, 0, wxEXPAND|wxALL, 5);
 
-    m_main_sizer->Add( m_web_box_sizer, 0, wxEXPAND | wxALL, 15 );
-    m_main_sizer->Add( m_autojoin_sizer, 0, wxALL, 15 );
-    m_main_sizer->Add( m_reportstats_sizer, 0, wxALL, 15 );
+    m_main_sizer->Add( m_web_box_sizer, 0, wxEXPAND | wxALL, 5 );
+    m_main_sizer->Add( m_autojoin_sizer, 0, wxALL, 5 );
+    m_main_sizer->Add( m_reportstats_sizer, 0, wxALL, 5 );
 
 #ifdef __WXMSW__
     wxStaticBoxSizer* m_updater_sizer = new wxStaticBoxSizer ( wxVERTICAL, this, _("Automatic updates") );
@@ -90,19 +93,19 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
     m_updater_sizer->Add( m_updater_label, 1, wxEXPAND|wxALL, 5);
     m_updater_sizer->Add( m_updater, 0, wxEXPAND|wxALL, 5);
 
-    m_main_sizer->Add( m_updater_sizer, 0, wxALL, 15 );
+    m_main_sizer->Add( m_updater_sizer, 0, wxALL, 5 );
 #endif
 
     wxStaticBoxSizer* m_show_tooltips_sizer = new wxStaticBoxSizer ( wxVERTICAL, this, _("Tooltips") );
-    m_show_tooltips_label = new wxStaticText ( this, -1, _("Requires SpringLobby restart to take effect.") );
     m_show_tooltips = new wxCheckBox( this, -1, _("Show Tooltips?"), wxDefaultPosition, wxDefaultSize, 0 );
     m_show_tooltips->SetValue( sett().GetShowTooltips() );
 #ifndef __WXMSW__ // on windows this change is immediate
+    m_show_tooltips_label = new wxStaticText ( this, -1, _("Requires SpringLobby restart to take effect.") );
     m_show_tooltips_sizer->Add( m_show_tooltips_label, 1, wxEXPAND|wxALL, 5);
 #endif
     m_show_tooltips_sizer->Add( m_show_tooltips, 0, wxEXPAND|wxALL, 5);
 
-    m_main_sizer->Add( m_show_tooltips_sizer, 0, wxALL, 15 );
+    m_main_sizer->Add( m_show_tooltips_sizer, 0, wxALL, 5 );
 
     wxStaticBoxSizer* m_complete_method_sizer = new wxStaticBoxSizer ( wxVERTICAL, this, _("Tab completion method") );
     m_complete_method_label = new wxStaticText ( this, -1, _("\"Match exact\" will complete a word if there is one and only one match.\n"
@@ -115,7 +118,21 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
     m_complete_method_sizer->Add( m_complete_method_old, 0, wxEXPAND|wxALL, 5);
     m_complete_method_sizer->Add( m_complete_method_new, 0, wxEXPAND|wxALL, 5);
 
-    m_main_sizer->Add( m_complete_method_sizer, 0, wxALL, 15 );
+    m_main_sizer->Add( m_complete_method_sizer, 0, wxALL, 5 );
+
+    wxStaticBoxSizer* m_use_tabicons_sizer = new wxStaticBoxSizer ( wxVERTICAL, this, _("Tab icons") );
+    m_use_tabicons = new wxCheckBox( this, -1, _("Show big icons in mainwindow tabs?"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_use_tabicons->SetValue( sett().GetUseTabIcons() );
+    m_use_tabicons_sizer->Add( m_use_tabicons , 0, wxEXPAND | wxALL, 5 );
+    m_main_sizer->Add( m_use_tabicons_sizer , 0, wxALL, 5 );
+
+    wxStaticBoxSizer* m_start_tab_sizer = new wxStaticBoxSizer ( wxHORIZONTAL, this, _("Start tab") );
+    m_start_tab = new wxChoice( this, -1,  wxDefaultPosition, wxDefaultSize, MainWindow::GetTabNames() );
+    m_start_tab->SetSelection( sett().GetStartTab() );
+    wxStaticText* m_start_tab_label = new wxStaticText ( this, -1, _("Select which tab to show at startup") );
+    m_start_tab_sizer->Add( m_start_tab_label  , 0, wxALIGN_CENTER_VERTICAL | wxEXPAND | wxALL, 5 );
+    m_start_tab_sizer->Add( m_start_tab , 0,  wxALIGN_CENTER_VERTICAL , 5 );
+    m_main_sizer->Add( m_start_tab_sizer, 0, wxALL, 5 );
 
     SetScrollRate( 10, 10 );
     SetSizer( m_main_sizer );
@@ -141,6 +158,10 @@ void LobbyOptionsTab::OnApply(wxCommandEvent& event)
     sett().SetShowTooltips(show);
 
     sett().SetCompletionMethod( m_complete_method_new->GetValue() ? Settings::MatchNearest: Settings::MatchExact );
+
+    sett().SetUseTabIcons( m_use_tabicons->IsChecked() );
+    ui().mw().SetTabIcons();
+    sett().SetStartTab( m_start_tab->GetSelection() );
 }
 
 
@@ -159,6 +180,9 @@ void LobbyOptionsTab::OnRestore(wxCommandEvent& event)
     m_complete_method_new->SetValue( sett().GetCompletionMethod() == Settings::MatchNearest );
 
     HandleWebloc( sett().GetWebBrowserUseDefault() );
+    m_use_tabicons->SetValue( sett().GetUseTabIcons()  );
+
+    m_start_tab->SetSelection( sett().GetStartTab() );
 }
 
 void LobbyOptionsTab::HandleWebloc( bool defloc )
@@ -188,3 +212,5 @@ void LobbyOptionsTab::OnDefaultWeb( wxCommandEvent& event )
 {
   HandleWebloc( m_web_def_radio->GetValue() );
 }
+
+

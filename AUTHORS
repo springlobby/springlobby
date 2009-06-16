@@ -4,13 +4,17 @@ tc
 
   Original author, responsible for basically all features.
 
-semi
+koshi
 
-  Responsible for services, site, build and packaging, portability etc. Mostly fixed bugs and refactored the code.
+  Responsible for services, site, build and packaging, portability, springsettings etc. (also BD's GUI-goto-guy ;-) )
 
 braindamage
 
   Some features and rpm maintenance.
+
+Tobi
+
+  map selector, threaded unitsync
 
 Retired Team Members
 
@@ -18,3 +22,6 @@ tronic
 
   C++ and design mentor, refactoring.
 
+semi
+
+ 

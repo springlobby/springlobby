@@ -8,15 +8,70 @@
 #include "server.h"
 #include "utils.h"
 #include "chatpanel.h"
+#include "iconimagelist.h"
 
 #include <wx/string.h>
 #include <wx/intl.h>
+
+User::User( Server& serv )
+    : CommonUser( _T(""),_T(""),0 ),
+    m_serv(&serv),
+    m_battle(0),
+    m_flagicon_idx( icons().GetFlagIcon( _T("") ) ),
+    m_rankicon_idx( icons().GetRankIcon( 0 ) ),
+    m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) )
+{}
+
+User::User( const wxString& nick, Server& serv )
+    : CommonUser( nick,_T(""),0 ),
+    m_serv(&serv),
+    m_battle(0),
+    m_flagicon_idx( icons().GetFlagIcon( _T("") ) ),
+    m_rankicon_idx( icons().GetRankIcon( 0 ) ),
+    m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) )
+{}
+
+User::User( const wxString& nick, const wxString& country, const int& cpu, Server& serv)
+    : CommonUser( nick,country,cpu ),
+    m_serv(&serv),
+    m_battle(0),
+    m_flagicon_idx( icons().GetFlagIcon( country ) ),
+    m_rankicon_idx( icons().GetRankIcon( 0 ) ),
+    m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) )
+{}
+
+User::User( const wxString& nick )
+    : CommonUser( nick, wxEmptyString, 0 ),
+    m_serv(0),
+    m_battle(0),
+    m_flagicon_idx( icons().GetFlagIcon( _T("") ) ),
+    m_rankicon_idx( icons().GetRankIcon( 0 ) ),
+    m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) )
+{}
+
+User::User( const wxString& nick, const wxString& country, const int& cpu )
+    : CommonUser( nick,country,cpu ) ,
+    m_serv(0),
+    m_battle(0),
+    m_flagicon_idx( icons().GetFlagIcon( country ) ),
+    m_rankicon_idx( icons().GetRankIcon( 0 ) ),
+    m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) )
+{}
+
+User::User()
+    : CommonUser( wxEmptyString, wxEmptyString, 0 ),
+    m_serv(0),
+    m_battle(0),
+    m_flagicon_idx( icons().GetFlagIcon( _T("") ) ),
+    m_rankicon_idx( icons().GetRankIcon( 0 ) ),
+    m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) )
+{}
 
 User::~User(){
   if(uidata.panel)uidata.panel->SetUser( 0 );
 }
 
-wxString UserStatus::GetDiffString ( const UserStatus& old )
+wxString UserStatus::GetDiffString ( const UserStatus& old ) const
 {
     if ( old.away != away )
         return ( away ? _("away") : _("back") );
@@ -26,18 +81,18 @@ wxString UserStatus::GetDiffString ( const UserStatus& old )
         wxEmptyString;
 }
 
-void User::Said( const wxString& message )
+void User::Said( const wxString& message ) const
 {
 }
 
 
-void User::Say( const wxString& message )
+void User::Say( const wxString& message ) const
 {
   GetServer().SayPrivate( m_nick, message );
 }
 
 
-void User::DoAction( const wxString& message )
+void User::DoAction( const wxString& message ) const
 {
   GetServer().DoActionPrivate( m_nick, message );
 }
@@ -52,6 +107,7 @@ Battle* User::GetBattle() const
 void User::SetBattle( Battle* battle )
 {
   m_battle = battle;
+  m_statusicon_idx = icons().GetUserListStateIcon( m_status, false, m_battle != 0 );
 }
 
 void User::SetStatus( const UserStatus& status )
@@ -65,13 +121,20 @@ void User::SetStatus( const UserStatus& status )
     }
   }
 
+  m_statusicon_idx = icons().GetUserListStateIcon( m_status, false, m_battle != 0 );
+  m_rankicon_idx =  icons().GetRankIcon( m_status.rank );
 }
 
+void User::SetCountry( const wxString& country )
+{
+    m_country = country;
+    m_flagicon_idx = icons().GetFlagIcon( country );
+};
 
 void CommonUser::UpdateBattleStatus( const UserBattleStatus& status )
 {
 
-  // total 15 members to update.
+  // total 16 members to update.
 
   m_bstatus.team = status.team;
   m_bstatus.ally = status.ally;
@@ -82,24 +145,26 @@ void CommonUser::UpdateBattleStatus( const UserBattleStatus& status )
   m_bstatus.sync = status.sync;
   m_bstatus.spectator = status.spectator;
   m_bstatus.ready = status.ready;
-  if( !status.ailib.IsEmpty() ) m_bstatus.ailib = status.ailib;
-  if( !status.ailib.IsEmpty() ) m_bstatus.owner = status.owner;
-  if( status.posx > 0 ) m_bstatus.posx = status.posx;
-  if( status.posy > 0 ) m_bstatus.posy = status.posy;
+  if( !status.aishortname.IsEmpty() ) m_bstatus.aishortname = status.aishortname;
+  if( !status.aiversion.IsEmpty() ) m_bstatus.aiversion = status.aiversion;
+  if( !status.aitype > 0 ) m_bstatus.aitype = status.aitype;
+  if( !status.owner.IsEmpty() ) m_bstatus.owner = status.owner;
+  if( status.pos.x > 0 ) m_bstatus.pos.x = status.pos.x;
+  if( status.pos.y > 0 ) m_bstatus.pos.y = status.pos.y;
 
   // update ip and port if those were set.
   if( !status.ip.IsEmpty() ) m_bstatus.ip = status.ip;
-  if( status.udpport != 0 ) m_bstatus.udpport = status.udpport;// 14
+  if( status.udpport != 0 ) m_bstatus.udpport = status.udpport;// 15
 }
 
 
-void User::SendMyUserStatus()
+void User::SendMyUserStatus() const
 {
   GetServer().SendMyUserStatus();
 }
 
 
-bool User::ExecuteSayCommand( const wxString& cmd )
+bool User::ExecuteSayCommand( const wxString& cmd ) const
 {
   if ( cmd.BeforeFirst(' ').Lower() == _T("/me") ) {
     GetServer().DoActionPrivate( m_nick, cmd.AfterFirst(' ') );
@@ -115,8 +180,8 @@ UserStatus::RankContainer User::GetRank()
 wxString User::GetRankName(UserStatus::RankContainer rank)
 {
   //TODO: better interface to ranks?
-      switch(rank) {
-          case UserStatus::RANK_UNKNOWN: return _("Newbie");
+      switch( rank )
+      {
           case UserStatus::RANK_1: return _("Newbie");
           case UserStatus::RANK_2: return _("Beginner");
           case UserStatus::RANK_3: return _("Average");
@@ -125,23 +190,45 @@ wxString User::GetRankName(UserStatus::RankContainer rank)
           case UserStatus::RANK_6: return _("Highly experienced");
           case UserStatus::RANK_7: return _("Veteran");
       }
-      return _("no rank");
+			return _("Unknown");
 }
 
-float User::GetBalanceRank(){
-  return 1.0+0.1*float(GetStatus().rank-UserStatus::RANK_1)/float(UserStatus::RANK_7-UserStatus::RANK_1);
+float User::GetBalanceRank()
+{
+  return 1.0 + 0.1 * float( GetStatus().rank - UserStatus::RANK_1 ) / float( UserStatus::RANK_7 - UserStatus::RANK_1 );
 }
 
-wxString User::GetClan(){
-  wxString tmp=m_nick.AfterFirst('[');
-  if(tmp!=m_nick){
-    wxString clan=tmp.BeforeFirst(']');
-    if(clan!=tmp)return clan;
+wxString User::GetClan()
+{
+  wxString tmp = m_nick.AfterFirst('[');
+  if ( tmp != m_nick )
+  {
+    wxString clan = tmp.BeforeFirst(']');
+    if ( clan != tmp ) return clan;
   }
-  return wxString();
+  return _T("");
 }
 
 void CommonUser::SetStatus( const UserStatus& status )
 {
   m_status = status;
 }
+
+//User& User::operator= ( const User& other )
+//{
+//    if( this != &other ) {
+//        //m_serv = (other.GetServer());
+//        m_status = other.GetStatus();
+//        m_battle = other.GetBattle();
+//        m_nick = other.GetNick();
+//        m_cpu = other.GetCpu();
+//        m_country = other.GetCountry();
+//        m_bstatus = other.GetBattleStatus();
+//        uidata = other.uidata;
+//
+//
+//    }
+//    return *this;
+//}
+
+

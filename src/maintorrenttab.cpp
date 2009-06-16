@@ -14,24 +14,23 @@
 #include "utils.h"
 #include "Helper/colorbutton.h"
 #include "filelister/filelistdialog.h"
-
-#ifndef HAVE_WX26
+#include "widgets/downloaddialog.h"
 #include "aui/auimanager.h"
-#endif
 
 BEGIN_EVENT_TABLE(MainTorrentTab,wxPanel)
 	//(*EventTable(MainTorrentTab)
 	//*)
   EVT_BUTTON      ( ID_BUTTON_CANCEL, MainTorrentTab::OnCancelButton )
   EVT_BUTTON      ( ID_DOWNLOAD_DIALOG, MainTorrentTab::OnDownloadDialog )
+  EVT_BUTTON      ( ID_BUTTON_WIDGETS, MainTorrentTab::OnDLWidgets )
 END_EVENT_TABLE()
 
 MainTorrentTab::MainTorrentTab(wxWindow* parent, Ui& ui)
-    : wxScrolledWindow(parent), m_ui(ui)
+    : wxScrolledWindow(parent),
+    m_widgets_dialog(NULL),
+    m_ui(ui)
 {
-  #ifndef HAVE_WX26
-  GetAui().manager->AddPane( this, wxLEFT, _T("maintorrenttab") );
-  #endif
+    GetAui().manager->AddPane( this, wxLEFT, _T("maintorrenttab") );
 
 	m_mainbox = new wxBoxSizer (wxVERTICAL);
 
@@ -42,10 +41,10 @@ MainTorrentTab::MainTorrentTab(wxWindow* parent, Ui& ui)
 	wxBoxSizer* m_firstrow_box = new wxBoxSizer( wxHORIZONTAL );
 
     wxStaticText* m_list_lbl = new wxStaticText( this, ID_OUTGOING_LBL, _("Transfers in progress: ") );
-    m_listbox->Add(m_list_lbl, 0, wxBOTTOM, 5);
+    m_listbox->Add(m_list_lbl, 0, wxALL, 5);
 	m_torrent_list = new TorrentListCtrl(this, m_ui);
 	m_listbox->Add( m_torrent_list, 2, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL, 5);
-	m_mainbox->Add(m_listbox, 2, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL, 5);
+	m_mainbox->Add(m_listbox, 2, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL, 0);
 
 	m_outgoing_lbl = new wxStaticText( this, ID_OUTGOING_LBL, _("Total Outgoing: ") );
     m_incoming_lbl = new wxStaticText( this, ID_INCOMING_LBL, _("Total Incoming: ") );
@@ -69,7 +68,8 @@ MainTorrentTab::MainTorrentTab(wxWindow* parent, Ui& ui)
 	m_buttonbox->Add( m_but_publish, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_BOTTOM, 5);
 	m_but_download = new wxButton(this, ID_DOWNLOAD_DIALOG, _("Search file") );
 	m_buttonbox->Add( m_but_download, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_BOTTOM, 5);
-
+	m_but_widgets = new wxButton(this, ID_BUTTON_WIDGETS, _("Download Lua widgets") );
+    m_buttonbox->Add( m_but_widgets, 1, wxALL|wxALIGN_RIGHT|wxALIGN_BOTTOM, 5);
 
 	m_mainbox->Add(m_buttonbox, 0, wxALL, 5);
 
@@ -95,6 +95,17 @@ MainTorrentTab::~MainTorrentTab()
     {
         delete m_download_dialog;
         m_download_dialog = 0;
+    }
+}
+
+void MainTorrentTab::OnDLWidgets( wxCommandEvent& event )
+{
+    if ( m_widgets_dialog && m_widgets_dialog->IsShown() ) {
+        m_widgets_dialog->SetFocus();
+    }
+    else {
+        m_widgets_dialog = new WidgetDownloadDialog( this, wxID_ANY, _("Lua widget downloader") );
+        m_widgets_dialog->Show( true );
     }
 }
 
@@ -205,7 +216,7 @@ void MainTorrentTab::OnUpdate()
     m_torrent_list->DeleteAllItems();
     for (map_infos_iter iter = info_map.begin(); iter != info_map.end(); ++iter)
     {
-      if (iter->first == 0) continue; ///skip global torrent stats
+      if (iter->first == 0) continue; //skip global torrent stats
       AddTorrentInfo(iter->second);
 
     }

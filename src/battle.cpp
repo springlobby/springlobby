@@ -2,9 +2,6 @@
 //
 // Class: Battle
 //
-#include <wx/log.h>
-#include <stdexcept>
-
 #include "battle.h"
 #include "ui.h"
 #include "iunitsync.h"
@@ -15,18 +12,16 @@
 #include "settings.h"
 #include "useractions.h"
 #include "settings++/custom_dialogs.h"
-
+#include "springunitsynclib.h"
 #include "iconimagelist.h"
 
 #include <algorithm>
-#include <math.h>
+#include <cmath>
+#include <stdexcept>
 
 #include <wx/image.h>
 #include <wx/string.h>
-
-#include "images/fixcolours_palette.xpm"
-#include "springunitsynclib.h"
-
+#include <wx/log.h>
 
 
 Battle::Battle( Server& serv, int id ) :
@@ -172,23 +167,68 @@ void Battle::DoAction( const wxString& msg )
     m_serv.DoActionBattle( m_opts.battleid, msg );
 }
 
+void Battle::SetLocalMap( const UnitSyncMap& map )
+{
+	IBattle::SetLocalMap( map );
+	if ( IsFounderMe() )  LoadMapDefaults( map.name );
+}
 
 User& Battle::GetMe()
 {
     return m_serv.GetMe();
 }
 
+void Battle::SaveMapDefaults()
+{
+    // save map preset
+		wxString mapname = LoadMap().name;
+		wxString startpostype = CustomBattleOptions().getSingleValue( _T("startpostype"), OptionsWrapper::EngineOption );
+		sett().SetMapLastStartPosType( mapname, startpostype);
+		std::vector<Settings::SettStartBox> rects;
+		for( unsigned int i = 0; i < GetNumRects(); ++i )
+		{
+			 BattleStartRect rect = GetStartRect( i );
+			 if ( rect.IsOk() )
+			 {
+				 Settings::SettStartBox box;
+				 box.ally = rect.ally;
+				 box.topx = rect.left;
+				 box.topy = rect.top;
+				 box.bottomx = rect.right;
+				 box.bottomy = rect.bottom;
+				 rects.push_back( box );
+			 }
+		}
+		sett().SetMapLastRectPreset( mapname, rects );
+}
+
+void Battle::LoadMapDefaults( const wxString& mapname )
+{
+	CustomBattleOptions().setSingleOption( _T("startpostype"), sett().GetMapLastStartPosType( mapname ), OptionsWrapper::EngineOption );
+	SendHostInfo( wxString::Format( _T("%d_startpostype"), OptionsWrapper::EngineOption ) );
+
+	for( unsigned int i = 0; i < GetNumRects(); ++i ) if ( GetStartRect( i ).IsOk() ) RemoveStartRect(i); // remove all rects
+	SendHostInfo( IBattle::HI_StartRects );
+
+	std::vector<Settings::SettStartBox> savedrects = sett().GetMapLastRectPreset( mapname );
+	for ( std::vector<Settings::SettStartBox>::iterator itor = savedrects.begin(); itor != savedrects.end(); itor++ )
+	{
+		AddStartRect( itor->ally, itor->topx, itor->topy, itor->bottomx, itor->bottomy );
+	}
+	SendHostInfo( IBattle::HI_StartRects );
+}
 
 User& Battle::OnUserAdded( User& user )
 {
 		user = IBattle::OnUserAdded( user );
     user.SetBattle( this );
+    user.BattleStatus().isfromdemo = false;
 
     if ( IsFounderMe() )
     {
         if ( CheckBan( user ) ) return user;
 
-        if ( ( m_opts.rankneeded > 1 ) && ( user.GetStatus().rank < m_opts.rankneeded ))
+        if ( ( &user != &GetMe() ) && !user.BattleStatus().IsBot() && ( m_opts.rankneeded > UserStatus::RANK_1 ) && ( user.GetStatus().rank < m_opts.rankneeded ))
         {
             switch ( m_opts.ranklimittype )
             {
@@ -223,7 +263,7 @@ void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
     }
     if ( IsFounderMe() )
     {
-        if ( ( m_opts.rankneeded > 1 ) && ( user.GetStatus().rank < m_opts.rankneeded ))
+        if ( ( &user != &GetMe() ) && !status.IsBot() && ( m_opts.rankneeded > UserStatus::RANK_1 ) && ( user.GetStatus().rank < m_opts.rankneeded ))
         {
             switch ( m_opts.ranklimittype )
             {
@@ -244,6 +284,7 @@ void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
         }
 
     }
+		ui().OnUserBattleStatus( *this, user );
 }
 
 
@@ -259,10 +300,16 @@ void Battle::RingNotReadyPlayers()
     for (user_map_t::size_type i = 0; i < GetNumUsers(); i++)
     {
         User& u = GetUser(i);
-        if ( u.BattleStatus().IsBot() ) continue;
         UserBattleStatus& bs = u.BattleStatus();
+        if ( bs.IsBot() ) continue;
         if ( !bs.ready && !bs.spectator ) m_serv.Ring( u.GetNick() );
     }
+}
+
+void Battle::RingPlayer( const User& u )
+{
+	if ( u.BattleStatus().IsBot() ) return;
+	m_serv.Ring( u.GetNick() );
 }
 
 bool Battle::ExecuteSayCommand( const wxString& cmd )
@@ -385,16 +432,6 @@ bool Battle::GetAutoLockOnStart()
     return m_autolock_on_start;
 }
 
-void Battle::SetIsProxy( bool value )
-{
-    m_opts.isproxy = value;
-}
-
-bool Battle::IsProxy()
-{
-    return m_opts.isproxy;
-}
-
 void Battle::SetLockExternalBalanceChanges( bool value )
 {
     if ( value ) DoAction( _T("has locked player balance changes") );
@@ -408,16 +445,15 @@ bool Battle::GetLockExternalBalanceChanges()
 }
 
 
-void Battle::AddBot( const wxString& nick, const wxString& owner, UserBattleStatus status, const wxString& aidll )
+void Battle::AddBot( const wxString& nick, UserBattleStatus status )
 {
-    m_serv.AddBot( m_opts.battleid, nick, owner, status, aidll );
+    m_serv.AddBot( m_opts.battleid, nick, status );
 }
 
 
 
 void Battle::ForceSide( User& user, int side )
 {
-		if ( user.BattleStatus().IsBot() ) IBattle::ForceSide( user, side );
 		m_serv.ForceSide( m_opts.battleid, user, side );
 }
 
@@ -565,7 +601,7 @@ void Battle::Autobalance( BalanceType balance_type, bool support_clans, bool str
     std::vector<Alliance>alliances;
     if ( numallyteams == 0 ) // 0 == use num start rects
     {
-        int tmp = GetNumRects();
+//        int tmp = GetNumRects();
         int ally = 0;
         for ( int i = 0; i < numallyteams; ++i )
         {
@@ -696,7 +732,7 @@ void Battle::Autobalance( BalanceType balance_type, bool support_clans, bool str
         alliances[my_random( rnd_k )].AddPlayer( players_sorted[i] );
     }
 
-    int totalplayers = GetNumUsers();
+    UserList::user_map_t::size_type totalplayers = GetNumUsers();
     for ( size_t i = 0; i < alliances.size(); ++i )
     {
         for ( size_t j = 0; j < alliances[i].players.size(); ++j )
@@ -732,7 +768,7 @@ void Battle::FixTeamIDs( BalanceType balance_type, bool support_clans, bool stro
     }
     numcontrolteams = std::min( numcontrolteams, 16 ); // clamp to 16 (max spring supports)
 
-    if ( numcontrolteams >= ( GetNumUsers() - GetSpectators() ) ) // autobalance behaves weird when trying to put one player per team and i CBA to fix it, so i'll reuse the old code :P
+    if ( numcontrolteams >= (int)( GetNumUsers() - GetSpectators() ) ) // autobalance behaves weird when trying to put one player per team and i CBA to fix it, so i'll reuse the old code :P
     {
       DoAction(_T("is making control teams unique..."));
       // apparently tasserver doesnt like when i fix/force ids of everyone.
@@ -888,13 +924,14 @@ void Battle::ForceUnsyncedToSpectate()
     }
 }
 
-bool Battle::IsFounderMe()
+
+void Battle::UserPositionChanged( const User& user )
 {
-    return ( ( m_opts.founder == GetMe().GetNick() ) || ( m_opts.isproxy  && !m_generating_script ) );
+	  m_serv.SendUserPosition( user );
 }
 
-int Battle::GetMyPlayerNum()
-{
-    return GetPlayerNum( GetMe() );
-}
 
+void Battle::SendScriptToClients()
+{
+	m_serv.SendScriptToClients( GetScript() );
+}

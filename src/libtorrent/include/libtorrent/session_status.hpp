@@ -33,8 +33,6 @@ POSSIBILITY OF SUCH DAMAGE.
 #ifndef TORRENT_SESSION_STATUS_HPP_INCLUDED
 #define TORRENT_SESSION_STATUS_HPP_INCLUDED
 
-#include "libtorrent/config.hpp"
-#include "libtorrent/size_type.hpp"
 
 namespace libtorrent
 {
@@ -55,12 +53,7 @@ namespace libtorrent
 		size_type total_payload_download;
 		size_type total_payload_upload;
 
-		size_type total_redundant_bytes;
-		size_type total_failed_bytes;
-
 		int num_peers;
-		int num_unchoked;
-		int allowed_upload_slots;
 
 		int up_bandwidth_queue;
 		int down_bandwidth_queue;

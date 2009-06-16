@@ -11,6 +11,7 @@ class wxButton;
 class wxTextCtrl;
 class wxBoxSizer;
 class Ui;
+class wxCheckBox;
 
 class SpringOptionsTab : public wxScrolledWindow
 {
@@ -30,7 +31,13 @@ class SpringOptionsTab : public wxScrolledWindow
     void OnFindExec( wxCommandEvent& event );
     void OnFindSync( wxCommandEvent& event );
 
+    void OnDataDir( wxCommandEvent& event );
+
+    void OnDontSearch( wxCommandEvent& event );
+
   protected:
+
+		void SetupUserFolders();
 
     wxStaticText* m_exec_loc_text;
     wxStaticText* m_sync_loc_text;
@@ -39,6 +46,7 @@ class SpringOptionsTab : public wxScrolledWindow
     wxButton* m_exec_find_btn;
     wxButton* m_sync_browse_btn;
     wxButton* m_sync_find_btn;
+    wxButton* m_datadir_btn;
 
     wxButton* m_auto_btn;
 
@@ -62,6 +70,8 @@ class SpringOptionsTab : public wxScrolledWindow
     wxBoxSizer* m_exec_loc_sizer;
     wxBoxSizer* m_sync_loc_sizer;
 
+    wxCheckBox* m_dontsearch_chkbox;
+
     Ui& m_ui;
 
     enum {
@@ -74,9 +84,29 @@ class SpringOptionsTab : public wxScrolledWindow
         SPRING_AUTOCONF,
         SPRING_EXECFIND,
         SPRING_SYNCFIND,
+        SPRING_DATADIR,
+        SPRING_DONTSEARCH
     };
 
     DECLARE_EVENT_TABLE()
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_SPRINGOPTIONSTAB_H
+
+/**
+    This file is part of SpringLobby,
+    Copyright (C) 2007-09
+
+    springsettings is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License version 2 as published by
+    the Free Software Foundation.
+
+    springsettings is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SpringLobby.  If not, see <http://www.gnu.org/licenses/>.
+**/
+

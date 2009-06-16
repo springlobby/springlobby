@@ -1,7 +1,7 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_NICKLISTCTRL_H
 #define SPRINGLOBBY_HEADERGUARD_NICKLISTCTRL_H
 
-#include "customlistctrl.h"
+#include "customvirtlistctrl.h"
 #include "usermenu.h"
 
 class User;
@@ -10,7 +10,7 @@ class Ui;
 class ChatPanel;
 class UserMenu;
 
-class NickListCtrl : public CustomListCtrl
+class NickListCtrl : public CustomVirtListCtrl<const User*>
 {
   protected:
     typedef SL_GENERIC::UserMenu<ChatPanel> UserMenu;
@@ -18,57 +18,66 @@ class NickListCtrl : public CustomListCtrl
   public:
     NickListCtrl( wxWindow* parent, bool show_header = true, UserMenu* popup = 0,
         bool singleSelectList = true, const wxString& name = _T("NickListCtrl"), bool highlight = true  );
-    ~NickListCtrl();
+    virtual ~NickListCtrl();
 
     virtual void AddUser( const User& user );
-    void AddUser( const UserList& userlist );
     void RemoveUser( const User& user );
 
-    void UserUpdated( User& user );
-    void UserUpdated( const int& index );
-
-    int GetUserIndex( const User& user ) const;
-
-    void GetSelectedUsers( UserList& users ) ;
-    wxArrayString GetSelectedUserNicks( ) ;
+    void UserUpdated( const User& user );
 
     void ClearUsers();
 
     void OnActivateItem( wxListEvent& event );
-    void OnColClick( wxListEvent& event );
     void OnShowMenu( wxContextMenuEvent& event );
     virtual void SetTipWindowText( const long item_hit, const wxPoint position);
 
     void HighlightItem( long item );
 
-    void SortList();
+    //these are overloaded to use list in virtual style
+    virtual wxString OnGetItemText(long item, long column) const;
+    virtual int OnGetItemImage(long item) const;
+    virtual int OnGetItemColumnImage(long item, long column) const;
+    wxListItemAttr * OnGetItemAttr(long item) const;
 
   protected:
-    static int wxCALLBACK ComparePlayernameUP(long item1, long item2, long sortData);
-    static int wxCALLBACK ComparePlayernameDOWN(long item1, long item2, long sortData);
-    static int wxCALLBACK ComparePlayerstatusUP(long item1, long item2, long sortData);
-    static int wxCALLBACK ComparePlayerstatusDOWN(long item1, long item2, long sortData);
-    static int wxCALLBACK ComparePlayerrankUP(long item1, long item2, long sortData);
-    static int wxCALLBACK ComparePlayerrankDOWN(long item1, long item2, long sortData);
-    static int wxCALLBACK ComparePlayercountryUP(long item1, long item2, long sortData);
-    static int wxCALLBACK ComparePlayercountryDOWN(long item1, long item2, long sortData);
-    virtual void Sort();
 
-    UserList* m_users;
+    //! passed as callback to generic ItemComparator, returns -1,0,1 as per defined ordering
+    static int CompareOneCrit( DataType u1, DataType u2, int col, int dir );
+    //! utils func for comparing user status, so the CompareOneCrit doesn't get too crowded
+    static int CompareUserStatus( DataType u1, DataType u2 );
+    //! required per base clase
+    virtual void Sort( );
+
+    int GetIndexFromData( const DataType& data ) const;
 
     UserMenu* m_menu;
-
-    struct {
-      int col;
-      bool direction;
-    } m_sortorder[4];
 
     enum {
       NICK_LIST = 31765 //wxID_HIGHEST
       //wxID_HIGHEST is used by BattleListCTRL. The cant be in the same Tab like BattleTab
     };
 
+
     DECLARE_EVENT_TABLE()
 };
 
+
 #endif // SPRINGLOBBY_HEADERGUARD_NICKLISTCTRL_H
+
+/**
+    This file is part of SpringLobby,
+    Copyright (C) 2007-09
+
+    springsettings is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License version 2 as published by
+    the Free Software Foundation.
+
+    springsettings is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SpringLobby.  If not, see <http://www.gnu.org/licenses/>.
+**/
+

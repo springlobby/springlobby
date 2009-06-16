@@ -73,7 +73,9 @@ PathOptionPanel::PathOptionPanel(wxWindow* parent,settings_frame* _origin) : wxP
 void PathOptionPanel::SetUsyncPath(wxCommandEvent& event)
 {
   wxString lib_ext = wxDynamicLibrary::CanonicalizeName(_T(""), wxDL_MODULE);
-  wxFileDialog pic( this, _("Choose an unitsync library"), sett().AutoFindSpringBin(), _T("unitsync") + lib_ext, wxString(_T("Library")) + _T("(*") + lib_ext + _T(")|*") + lib_ext + _T("|") + wxString(_("Any File")) + _T(" (*.*)|*.*")  );
+  wxFileDialog pic( this, _("Choose an unitsync library"),
+                wxPathOnly( sett().AutoFindSpringBin() ),
+                _T("unitsync") + lib_ext, wxString(_T("Library")) + _T("(*") + lib_ext + _T(")|*") + lib_ext + _T("|") + wxString(_("Any File")) + _T(" (*.*)|*.*")  );
 	  if ( pic.ShowModal() == wxID_OK )
 		  usync_ctrl->SetValue( pic.GetPath() );
 }

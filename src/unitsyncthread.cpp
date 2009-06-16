@@ -1,6 +1,7 @@
 /* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
 
 
+/*
 #include <wx/image.h>
 
 #include "unitsyncthread.h"
@@ -21,69 +22,55 @@ UnitSyncThread& CacheThread()
 
 UnitSyncThread::UnitSyncThread()
 {
- // LoadSettingsFromFile();
+  LoadSettingsFromFile();
 }
 
 
 UnitSyncThread::~UnitSyncThread()
 {
-  /*
   sett().SetMapCachingThreadProgress( m_map_thread.GetCurrentIndex() );
   sett().SetModCachingThreadProgress( m_mod_thread.GetCurrentIndex() );
   Stop();
-  */
 }
 
 
 void UnitSyncThread::Pause()
 {
-  /*
   if ( m_map_thread.IsRunning() ) m_map_thread.Pause();
   if ( m_mod_thread.IsRunning() ) m_mod_thread.Pause();
   wxLogMessage( _T("caching thread paused") );
-  */
 }
 
 
 void UnitSyncThread::Resume()
 {
-  /*
   if ( !m_map_thread.IsRunning() ) m_map_thread.Resume();
   if ( !m_mod_thread.IsRunning() ) m_mod_thread.Resume();
   wxLogMessage( _T("caching thread resumed") );
-  */
 }
 
 
 void UnitSyncThread::Start()
 {
-  /*
   m_map_thread.Init();
   m_mod_thread.Init();
   wxLogMessage( _T("caching thread started") );
-  */
 }
 
 
 void UnitSyncThread::Stop()
 {
-  /*
   if( m_map_thread.IsAlive() ) m_map_thread.Stop();
   if( m_mod_thread.IsAlive() ) m_mod_thread.Stop();
   wxLogMessage( _T("caching thread stopped") );
-  */
 }
-
 
 
 void UnitSyncThread::LoadSettingsFromFile()
 {
-  /*
   m_map_thread.SetCurrentIndex( sett().GetModCachingThreadProgress() );
   m_mod_thread.SetCurrentIndex( sett().GetMapCachingThreadProgress() );
-  */
 }
-
 
 
 void UnitSyncThread::UnitSyncThreadImpl::Init()
@@ -93,14 +80,15 @@ void UnitSyncThread::UnitSyncThreadImpl::Init()
   Run();
 }
 
+
 void* UnitSyncThread::MapCacheThread::Entry()
 {
-  /// crashes - here for test to see why
+  // crashes - here for test to see why
   susynclib().GetMapCount();
   while ( !TestDestroy() )
   {
     if(!Sleep( 20000 ))break;
-    /// cache map infos
+    // cache map infos
     if( usync().IsLoaded() )
     {
       wxArrayString totalmaps = usync().GetMapList();
@@ -124,7 +112,7 @@ void* UnitSyncThread::ModCacheThread::Entry()
   while ( !TestDestroy() )
   {
     if(!Sleep( 67000 ))break;
-    /// cache mod infos
+    // cache mod infos
     if( usync().IsLoaded() )
     {
       wxArrayString totalmods = usync().GetModList();
@@ -149,7 +137,7 @@ void UnitSyncThread::UnitSyncThreadImpl::Stop()
 
 bool UnitSyncThread::UnitSyncThreadImpl::TestDestroy()
 {
-  return m_stop_thread;
+  return Thread::TestDestroy() || m_stop_thread;
 }
 
 
@@ -164,3 +152,4 @@ void UnitSyncThread::UnitSyncThreadImpl::SetCurrentIndex( unsigned int index )
   m_current_index = index;
 }
 
+*/

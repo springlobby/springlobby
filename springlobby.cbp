@@ -17,7 +17,6 @@
 					<Add option="-Wall" />
 					<Add option="-g" />
 					<Add option="`wx-config --cflags`" />
-					<Add option="`sdl-config --cflags`" />
 					<Add option="`pkg-config --cflags libtorrent-rasterbar`" />
 					<Add option="-Wno-strict-aliasing" />
 					<Add option='-DVERSION=\\&quot;cb-Unix-Debug\\&quot;' />
@@ -27,12 +26,8 @@
 				<Linker>
 					<Add option="`wx-config --libs`" />
 					<Add option="`pkg-config --libs libtorrent-rasterbar`" />
-					<Add option="`sdl-config --libs`" />
-					<Add library="SDL_mixer" />
-					<Add library="SDL_sound" />
 				</Linker>
 				<ExtraCommands>
-					<Add before="chmod +x tools/test-susynclib.awk" />
 					<Add before="tools/test-susynclib.awk src/springunitsynclib.cpp" />
 				</ExtraCommands>
 			</Target>
@@ -44,24 +39,23 @@
 				<Option compiler="gcc" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
+					<Add option="-O2" />
 					<Add option="-Wall" />
 					<Add option="-pg" />
 					<Add option="-g" />
 					<Add option="`wx-config --cflags`" />
-					<Add option="`pkg-config --cflags libtorrent`" />
-					<Add option="`sdl-config --cflags`" />
-					<Add option='-DVERSION=\\&quot;0.0.1-svn-cb\\&quot;' />
+					<Add option="`pkg-config --cflags libtorrent-rasterbar`" />
+					<Add option="-Wno-strict-aliasing" />
+					<Add option='-DVERSION=\\&quot;cb-Unix-Profile\\&quot;' />
 					<Add option="-DNO_DEBUG_REPORT_UPLOAD" />
+					<Add option="-DDISABLE_SOUND" />
 				</Compiler>
 				<Linker>
 					<Add option="-pg" />
 					<Add option="`wx-config --libs`" />
-					<Add option="`pkg-config --libs libtorrent`" />
-					<Add option="`sdl-config --libs`" />
-					<Add library="SDL_mixer" />
+					<Add option="`pkg-config --libs libtorrent-rasterbar`" />
 				</Linker>
 				<ExtraCommands>
-					<Add before="chmod +x tools/test-susynclib.awk" />
 					<Add before="tools/test-susynclib.awk src/springunitsynclib.cpp" />
 				</ExtraCommands>
 			</Target>
@@ -146,6 +140,15 @@
 		<Unit filename="src/Helper/TextCompletionDatabase.hpp" />
 		<Unit filename="src/Helper/colorbutton.cpp" />
 		<Unit filename="src/Helper/colorbutton.h" />
+		<Unit filename="src/Helper/imageviewer.cpp" />
+		<Unit filename="src/Helper/imageviewer.h" />
+		<Unit filename="src/Helper/slhtmlwindow.cpp" />
+		<Unit filename="src/Helper/slhtmlwindow.h" />
+		<Unit filename="src/Helper/sortutil.h" />
+		<Unit filename="src/Helper/tasclientimport.cpp" />
+		<Unit filename="src/Helper/tasclientimport.h" />
+		<Unit filename="src/Helper/wxTranslationHelper.cpp" />
+		<Unit filename="src/Helper/wxTranslationHelper.h" />
 		<Unit filename="src/Helper/wxtextctrlhist.cpp" />
 		<Unit filename="src/Helper/wxtextctrlhist.h" />
 		<Unit filename="src/addbotdialog.cpp" />
@@ -179,7 +182,6 @@
 		<Unit filename="src/battleoptionstab.h" />
 		<Unit filename="src/battleroomlistctrl.cpp" />
 		<Unit filename="src/battleroomlistctrl.h" />
-		<Unit filename="src/battleroommmoptionstab.cpp" />
 		<Unit filename="src/battleroommmoptionstab.h" />
 		<Unit filename="src/battleroomtab.cpp" />
 		<Unit filename="src/battleroomtab.h" />
@@ -213,6 +215,7 @@
 		<Unit filename="src/crc.h" />
 		<Unit filename="src/customlistctrl.cpp" />
 		<Unit filename="src/customlistctrl.h" />
+		<Unit filename="src/customvirtlistctrl.h" />
 		<Unit filename="src/filelister/filelistctrl.cpp" />
 		<Unit filename="src/filelister/filelistctrl.h" />
 		<Unit filename="src/filelister/filelistdialog.cpp" />
@@ -230,7 +233,6 @@
 		<Unit filename="src/groupoptionspanel.h" />
 		<Unit filename="src/hostbattledialog.cpp" />
 		<Unit filename="src/hostbattledialog.h" />
-		<Unit filename="src/httpdownloader.cpp" />
 		<Unit filename="src/httpdownloader.h" />
 		<Unit filename="src/ibattle.cpp" />
 		<Unit filename="src/ibattle.h" />
@@ -289,22 +291,33 @@
 		<Unit filename="src/mainwindow.h" />
 		<Unit filename="src/mapctrl.cpp" />
 		<Unit filename="src/mapctrl.h" />
+		<Unit filename="src/mapgridctrl.cpp" />
+		<Unit filename="src/mapgridctrl.h" />
+		<Unit filename="src/mapselectdialog.cpp" />
+		<Unit filename="src/mapselectdialog.h" />
 		<Unit filename="src/mmoptionmodel.cpp" />
 		<Unit filename="src/mmoptionmodel.h" />
 		<Unit filename="src/mmoptionswrapper.cpp" />
 		<Unit filename="src/mmoptionswrapper.h" />
+		<Unit filename="src/mmoptionwindows.cpp" />
+		<Unit filename="src/mmoptionwindows.h" />
 		<Unit filename="src/nicklistctrl.cpp" />
 		<Unit filename="src/nicklistctrl.h" />
 		<Unit filename="src/nonportable.h" />
-		<Unit filename="src/replay/replayfilter.cpp" />
-		<Unit filename="src/replay/replayfilter.h" />
-		<Unit filename="src/replay/replaylist.cpp" />
-		<Unit filename="src/replay/replaylist.h" />
-		<Unit filename="src/replay/replaylistctrl.cpp" />
-		<Unit filename="src/replay/replaylistctrl.h" />
-		<Unit filename="src/replay/replaylistfiltervalues.h" />
-		<Unit filename="src/replay/replaytab.cpp" />
-		<Unit filename="src/replay/replaytab.h" />
+		<Unit filename="src/playback/playbackfilter.h" />
+		<Unit filename="src/playback/playbackfiltervalues.h" />
+		<Unit filename="src/playback/playbacklist.h" />
+		<Unit filename="src/playback/playbacklistctrl.h" />
+		<Unit filename="src/playback/playbackstructs.h" />
+		<Unit filename="src/playback/playbacktab.h" />
+		<Unit filename="src/playback/playbackthread.h" />
+		<Unit filename="src/playback/playbacktraits.h" />
+		<Unit filename="src/playback/replaylist.cpp" />
+		<Unit filename="src/playback/replaylist.h" />
+		<Unit filename="src/playback/savegamelist.cpp" />
+		<Unit filename="src/playback/savegamelist.h" />
+		<Unit filename="src/poolmanager.cpp" />
+		<Unit filename="src/poolmanager.h" />
 		<Unit filename="src/sdlsound.cpp" />
 		<Unit filename="src/sdlsound.h" />
 		<Unit filename="src/selectusersdialog.cpp" />
@@ -322,7 +335,6 @@
 		<Unit filename="src/settings++/helpmenufunctions.h" />
 		<Unit filename="src/settings++/panel_pathoption.cpp" />
 		<Unit filename="src/settings++/panel_pathoption.h" />
-		<Unit filename="src/settings++/presets.cpp" />
 		<Unit filename="src/settings++/presets.h" />
 		<Unit filename="src/settings++/se_utils.cpp" />
 		<Unit filename="src/settings++/se_utils.h" />
@@ -371,6 +383,7 @@
 		<Unit filename="src/springunitsynclib.h" />
 		<Unit filename="src/tasserver.cpp" />
 		<Unit filename="src/tasserver.h" />
+		<Unit filename="src/tasservertokentable.h" />
 		<Unit filename="src/tdfcontainer.cpp" />
 		<Unit filename="src/tdfcontainer.h" />
 		<Unit filename="src/thread.cpp" />
@@ -387,8 +400,6 @@
 		<Unit filename="src/uiutils.h" />
 		<Unit filename="src/unitsyncthread.cpp" />
 		<Unit filename="src/unitsyncthread.h" />
-		<Unit filename="src/updater/exedownloader.cpp" />
-		<Unit filename="src/updater/exedownloader.h" />
 		<Unit filename="src/updater/updater.cpp" />
 		<Unit filename="src/updater/updater.h" />
 		<Unit filename="src/updater/versionchecker.cpp" />
@@ -403,7 +414,19 @@
 		<Unit filename="src/userlistctrl.h" />
 		<Unit filename="src/utils.cpp" />
 		<Unit filename="src/utils.h" />
+		<Unit filename="src/widgets/downloaddialog.cpp" />
+		<Unit filename="src/widgets/downloaddialog.h" />
+		<Unit filename="src/widgets/downloadlistctrl.cpp" />
+		<Unit filename="src/widgets/downloadlistctrl.h" />
+		<Unit filename="src/widgets/downloadpanel.cpp" />
+		<Unit filename="src/widgets/downloadpanel.h" />
+		<Unit filename="src/widgets/infopanel.cpp" />
+		<Unit filename="src/widgets/infopanel.h" />
+		<Unit filename="src/widgets/widget.cpp" />
+		<Unit filename="src/widgets/widget.h" />
 		<Unit filename="wxsmith/AutoBalanceDialog.wxs" />
+		<Unit filename="wxsmith/MainTorrentTab.wxs" />
+		<Unit filename="wxsmith/MapSelectDialog.wxs" />
 		<Extensions>
 			<code_completion />
 			<envvars />
@@ -412,6 +435,7 @@
 				<resources>
 					<wxDialog wxs="wxsmith/AutoBalanceDialog.wxs" src="src/autobalancedialog.cpp" hdr="src/autobalancedialog.h" name="AutoBalanceDialog" language="CPP" />
 					<wxFrame wxs="wxsmith/MainTorrentTab.wxs" src="MainTorrentTab.cpp" hdr="MainTorrentTab.h" name="MainTorrentTab" language="CPP" />
+					<wxDialog wxs="wxsmith/MapSelectDialog.wxs" src="src/mapselectdialog.cpp" hdr="src/mapselectdialog.h" fwddecl="1" name="MapSelectDialog" language="CPP" />
 				</resources>
 			</wxsmith>
 			<debugger />

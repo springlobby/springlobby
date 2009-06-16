@@ -1,15 +1,10 @@
 /**
     This file is part of springsettings,
-    Copyright (C) 2007
-    Original work by Kloot
-    cross-plattform/UI adaptation and currently maintained by koshi (Ren� Milk)
-    visit http://spring.clan-sy.com/phpbb/viewtopic.php?t=12104
-    for more info/help
+    Copyright (C) 2007-09
 
     springsettings is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+    it under the terms of the GNU General Public License version 2 as published by
+    the Free Software Foundation.
 
     springsettings is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -69,7 +64,7 @@
 #define ID_RO_SLI_5 105
 #define ID_RO_SLI_6 106
 #define ID_RO_SLI_7 107
-//#define ID_RO_SLI_8 108
+#define ID_RO_SLI_8 108
 
 // ParentWin Video Options checkbox IDs
 #define ID_WINDOWP_VO_CBOX_0 250
@@ -133,10 +128,13 @@
 #define ID_AO_SLI_0 400
 #define ID_AO_SLI_1 401
 #define ID_AO_SLI_2 402
+#define ID_AO_SLI_3 403
+#define ID_AO_SLI_4 404
+#define ID_AO_SLI_5 405
 
 // ParentWin Debug Options checkbox IDs
 #define ID_WINDOWP_DO_CBOX_0 540
-#define ID_WINDOWP_DO_CBOX_1 541
+
 
 // ParentWin Debug Options slider IDs
 #define ID_DO_SLI_0 500
@@ -226,12 +224,13 @@ const Control RO_SLI[] = {
 																								"possible values: 1024, 2048, 4096, 8192")}	},
 	{_("Tree view-distance"),           _T("TreeRadius"),          ID_RO_SLI_1,	_T("1000"), {_("sets the maximum distance at which trees will still be rendered")}	},
 	{_("Terrain detail"),               _T("GroundDetail"),        ID_RO_SLI_2,	_T("80"), {_("higher value = more terrain details")}	},
-	{_("Unit detail"),                  _T("UnitLodDist"),         ID_RO_SLI_3,	_T("300"), {_("higher value = more detailed units")}	},
+	{_("Unit LOD distance"),                  _T("UnitLodDist"),         ID_RO_SLI_3,	_T("300"), {_("higher value = units will remain detailed even when zooming out")}	},
 	{_("Grass detail"),                 _T("GrassDetail"),         ID_RO_SLI_4,	_T("3"), {_("higher value = more detailed grass")}	},
-	{_("Ground decals"),                _T("GroundDecals"),        ID_RO_SLI_5,	_T("0"), {_("only on/off available at this time")}	},
+	{_("Ground decals"),                _T("GroundDecals"),        ID_RO_SLI_5,	_T("0"), {_("settings higher than 1 might have unwelcome side-effects / be very resource hungry")}	},
 	{_("Unit icon distance"),           _T("UnitIconDist"),        ID_RO_SLI_6,	_T("350"), {_("determines at which range units are still fully rendered\n"
 																								"higher value = greater range = more units rendered at the same time")}	},
-	{_("Max simultaneous particles"),     _T("MaxParticles"),        ID_RO_SLI_7,	_T("5000")	, {_("limits how many particles are displayed at the same time")}}
+	{_("Max simultaneous particles"),     _T("MaxParticles"),        ID_RO_SLI_7,	_T("4000")	, {_("limits how many particles are displayed at the same time")}},
+	{_("Max nano simultaneous particles"),     _T("MaxNanoParticles"),        ID_RO_SLI_8,	_T("10000")	, {_("limits how many particles are displayed at the same time")}}
 	//{_("Max texture stages (SM3)"), _T("SM3MaxTextureStages"), ID_RO_SLI_8,	"6"	, {_("Decrease this if you are having bad perfomance on maps in sm3 format,\n"
 	// not needed atm																				"increase if sm3 maps look ugly.")}}
 };
@@ -269,8 +268,11 @@ const category_sizes_map_type VO_SLI_EXT_entry ( _T("VO_SLI_EXT"), sizeof(VO_SLI
 const Control AO_SLI[] = {
 	{_("Maximum simultaneous sounds"), _T("MaxSounds"),            ID_AO_SLI_0,	_T("32") , {_("maximum different sounds played at the same time\n"
 																								"Set this to zero to disable sound completely.")}},
-	{_("Global sound volume"),   _T("SoundVolume"),                ID_AO_SLI_1,	_T("100"), {_("overall sound volume")}},
-	{_("Unit reply volume"),     _T("UnitReplyVolume"),       ID_AO_SLI_2,	_T("100") , {_("reply volume relative to global volume")}}
+	{_("Master sound volume"),   _T("snd_volmaster"),                ID_AO_SLI_1,	_T("60"), {_("master sound volume")}},
+	{_("General sound volume"),   _T("snd_general"),                ID_AO_SLI_2,	_T("100"), {_("general volume relative to master volume")}},
+	{_("Unit reply volume"),     _T("snd_volunitreply"),       ID_AO_SLI_3,	_T("100") , {_("reply volume relative to master volume")}},
+	{_("Battle volume"),     _T("snd_volbattle"),       ID_AO_SLI_4,	_T("100") , {_("battle volume relative to global volume")}},
+	{_("User interface volume"),     _T("snd_volui"),       ID_AO_SLI_5,	_T("100") , {_("ui volume relative to global volume")}}
 
 };
 
@@ -297,7 +299,6 @@ const Control QA_CBOX[] = {
 const category_sizes_map_type QA_CBOX_entry ( _T("QA_CBOX"), sizeof(QA_CBOX) / Control_size );
 
 const Control UI_CBOX[] = {
-	{_("Enable LuaUI widgets"),                            _T("LuaUI"),               ID_WINDOWP_UI_CBOX_1,	_T("1"), {_("mark to be able to use")}},
 
     {_("Issue commands on mini-map"),                       _T("MiniMapFullProxy"), ID_WINDOWP_UI_CBOX_2, _T("1"), {_("Issue orders on the mini-map like you would ")}},
 	{_("Show commands on mini-map"),                       _T("MiniMapDrawCommands"), ID_WINDOWP_UI_CBOX_3,	_T("1"), {_("default value is \"on\"")}},
@@ -362,8 +363,7 @@ const Control DO_SLI[] = {
 const category_sizes_map_type DO_SLI_entry ( _T("DO_SLI"), sizeof(DO_SLI) / Control_size );
 
 const Control DO_CBOX[] = {
-	{_("Catch AI exceptions"),        _T("CatchAIExceptions"), ID_WINDOWP_DO_CBOX_0,	_T("1"), {_("disable for AI debugging")}},
-	{_("Send debug info to console"), _T("StdoutDebug"),       ID_WINDOWP_DO_CBOX_1,	_T("0"), {_("if disabled these will only be logged")}}
+	{_("Catch AI exceptions"),        _T("CatchAIExceptions"), ID_WINDOWP_DO_CBOX_0,	_T("1"), {_("disable for AI debugging")}}
 };
 
 const category_sizes_map_type DO_CBOX_entry ( _T("DO_CBOX"), sizeof(DO_CBOX) / Control_size );

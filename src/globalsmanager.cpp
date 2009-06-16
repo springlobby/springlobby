@@ -1,5 +1,6 @@
 #include "globalsmanager.h"
 #include <assert.h>
+#include <vector>
 #include "utils.h"
 
 class GlobalsManager

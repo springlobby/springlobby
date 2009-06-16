@@ -22,10 +22,6 @@
 
 #if defined(ASIO_HAS_IOCP)
 
-#include "asio/detail/push_options.hpp"
-#include <boost/cstdint.hpp>
-#include "asio/detail/pop_options.hpp"
-
 #include "asio/buffer.hpp"
 #include "asio/error.hpp"
 #include "asio/io_service.hpp"
@@ -158,7 +154,7 @@ public:
 
   // Destroy a handle implementation.
   asio::error_code close(implementation_type& impl,
-      asio::error_code& ec)
+                                  asio::error_code& ec)
   {
     if (is_open(impl))
     {
@@ -179,7 +175,7 @@ public:
   }
 
   // Get the native handle representation.
-  native_type native(const implementation_type& impl) const
+  native_type native(implementation_type& impl)
   {
     return impl.handle_;
   }
@@ -286,18 +282,9 @@ public:
     }
   };
 
-  // Write the given data. Returns the number of bytes written.
+  // Write the given data. Returns the number of bytes sent.
   template <typename ConstBufferSequence>
   size_t write_some(implementation_type& impl,
-      const ConstBufferSequence& buffers, asio::error_code& ec)
-  {
-    return write_some_at(impl, 0, buffers, ec);
-  }
-
-  // Write the given data at the specified offset. Returns the number of bytes
-  // written.
-  template <typename ConstBufferSequence>
-  size_t write_some_at(implementation_type& impl, boost::uint64_t offset,
       const ConstBufferSequence& buffers, asio::error_code& ec)
   {
     if (!is_open(impl))
@@ -317,7 +304,7 @@ public:
         break;
     }
 
-    // A request to write 0 bytes on a handle is a no-op.
+    // A request to write 0 bytes on a stream handle is a no-op.
     if (asio::buffer_size(buffer) == 0)
     {
       ec = asio::error_code();
@@ -331,8 +318,6 @@ public:
     }
 
     // Write the data. 
-    overlapped.Offset = offset & 0xFFFFFFFF;
-    overlapped.OffsetHigh = (offset >> 32) & 0xFFFFFFFF;
     BOOL ok = ::WriteFile(impl.handle_,
         asio::buffer_cast<LPCVOID>(buffer),
         static_cast<DWORD>(asio::buffer_size(buffer)), 0, &overlapped);
@@ -423,16 +408,6 @@ public:
       op_type* handler_op(static_cast<op_type*>(op));
       typedef handler_alloc_traits<Handler, op_type> alloc_traits;
       handler_ptr<alloc_traits> ptr(handler_op->handler_, handler_op);
-
-      // A sub-object of the handler may be the true owner of the memory
-      // associated with the handler. Consequently, a local copy of the handler
-      // is required to ensure that any owning sub-object remains valid until
-      // after we have deallocated the memory here.
-      Handler handler(handler_op->handler_);
-      (void)handler;
-
-      // Free the memory associated with the handler.
-      ptr.reset();
     }
 
     asio::io_service::work work_;
@@ -444,15 +419,6 @@ public:
   // lifetime of the asynchronous operation.
   template <typename ConstBufferSequence, typename Handler>
   void async_write_some(implementation_type& impl,
-      const ConstBufferSequence& buffers, Handler handler)
-  {
-    async_write_some_at(impl, 0, buffers, handler);
-  }
-
-  // Start an asynchronous write at a specified offset. The data being written
-  // must be valid for the lifetime of the asynchronous operation.
-  template <typename ConstBufferSequence, typename Handler>
-  void async_write_some_at(implementation_type& impl, boost::uint64_t offset,
       const ConstBufferSequence& buffers, Handler handler)
   {
     if (!is_open(impl))
@@ -485,7 +451,7 @@ public:
         break;
     }
 
-    // A request to write 0 bytes on a handle is a no-op.
+    // A request to write 0 bytes on a stream handle is a no-op.
     if (asio::buffer_size(buffer) == 0)
     {
       asio::io_service::work work(this->get_io_service());
@@ -497,8 +463,6 @@ public:
 
     // Write the data.
     DWORD bytes_transferred = 0;
-    ptr.get()->Offset = offset & 0xFFFFFFFF;
-    ptr.get()->OffsetHigh = (offset >> 32) & 0xFFFFFFFF;
     BOOL ok = ::WriteFile(impl.handle_,
         asio::buffer_cast<LPCVOID>(buffer),
         static_cast<DWORD>(asio::buffer_size(buffer)),
@@ -523,14 +487,6 @@ public:
   // Read some data. Returns the number of bytes received.
   template <typename MutableBufferSequence>
   size_t read_some(implementation_type& impl,
-      const MutableBufferSequence& buffers, asio::error_code& ec)
-  {
-    return read_some_at(impl, 0, buffers, ec);
-  }
-
-  // Read some data at a specified offset. Returns the number of bytes received.
-  template <typename MutableBufferSequence>
-  size_t read_some_at(implementation_type& impl, boost::uint64_t offset,
       const MutableBufferSequence& buffers, asio::error_code& ec)
   {
     if (!is_open(impl))
@@ -563,9 +519,7 @@ public:
       return 0;
     }
 
-    // Read some data.
-    overlapped.Offset = offset & 0xFFFFFFFF;
-    overlapped.OffsetHigh = (offset >> 32) & 0xFFFFFFFF;
+    // Write the data. 
     BOOL ok = ::ReadFile(impl.handle_,
         asio::buffer_cast<LPVOID>(buffer),
         static_cast<DWORD>(asio::buffer_size(buffer)), 0, &overlapped);
@@ -680,16 +634,6 @@ public:
         Handler, op_type> alloc_traits;
       asio::detail::handler_ptr<alloc_traits> ptr(
         handler_op->handler_, handler_op);
-
-      // A sub-object of the handler may be the true owner of the memory
-      // associated with the handler. Consequently, a local copy of the handler
-      // is required to ensure that any owning sub-object remains valid until
-      // after we have deallocated the memory here.
-      Handler handler(handler_op->handler_);
-      (void)handler;
-
-      // Free the memory associated with the handler.
-      ptr.reset();
     }
 
     asio::io_service::work work_;
@@ -701,16 +645,6 @@ public:
   // valid for the lifetime of the asynchronous operation.
   template <typename MutableBufferSequence, typename Handler>
   void async_read_some(implementation_type& impl,
-      const MutableBufferSequence& buffers, Handler handler)
-  {
-    async_read_some_at(impl, 0, buffers, handler);
-  }
-
-  // Start an asynchronous read at a specified offset. The buffer for the data
-  // being received must be valid for the lifetime of the asynchronous
-  // operation.
-  template <typename MutableBufferSequence, typename Handler>
-  void async_read_some_at(implementation_type& impl, boost::uint64_t offset,
       const MutableBufferSequence& buffers, Handler handler)
   {
     if (!is_open(impl))
@@ -755,8 +689,6 @@ public:
 
     // Read some data.
     DWORD bytes_transferred = 0;
-    ptr.get()->Offset = offset & 0xFFFFFFFF;
-    ptr.get()->OffsetHigh = (offset >> 32) & 0xFFFFFFFF;
     BOOL ok = ::ReadFile(impl.handle_,
         asio::buffer_cast<LPVOID>(buffer),
         static_cast<DWORD>(asio::buffer_size(buffer)),
@@ -780,23 +712,13 @@ private:
   // Prevent the use of the null_buffers type with this service.
   size_t write_some(implementation_type& impl,
       const null_buffers& buffers, asio::error_code& ec);
-  size_t write_some_at(implementation_type& impl, boost::uint64_t offset,
-      const null_buffers& buffers, asio::error_code& ec);
   template <typename Handler>
   void async_write_some(implementation_type& impl,
       const null_buffers& buffers, Handler handler);
-  template <typename Handler>
-  void async_write_some_at(implementation_type& impl, boost::uint64_t offset,
-      const null_buffers& buffers, Handler handler);
   size_t read_some(implementation_type& impl,
-      const null_buffers& buffers, asio::error_code& ec);
-  size_t read_some_at(implementation_type& impl, boost::uint64_t offset,
       const null_buffers& buffers, asio::error_code& ec);
   template <typename Handler>
   void async_read_some(implementation_type& impl,
-      const null_buffers& buffers, Handler handler);
-  template <typename Handler>
-  void async_read_some_at(implementation_type& impl, boost::uint64_t offset,
       const null_buffers& buffers, Handler handler);
 
   // Helper function to close a handle when the associated object is being

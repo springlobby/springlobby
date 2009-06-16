@@ -6,8 +6,9 @@
     typedef wxListCtrl ListBaseType;
 #else
 //disabled until further fixes
-//    #include "Helper/listctrl.h"
-//    typedef SL_Extern::wxGenericListCtrl ListBaseType;
+    #include <wx/msw/winundef.h>
+ //   #include "Helper/listctrl.h"
+ //   typedef SL_Extern::wxGenericListCtrl ListBaseType;
     #include <wx/listctrl.h>
     typedef wxListCtrl ListBaseType;
 #endif
@@ -17,10 +18,12 @@
 
 #include <vector>
 #include <utility>
+#include <map>
 
 #include "useractions.h"
 
 class SLTipWindow;
+
 
 /** \brief Used as base class for all ListCtrls throughout SL
  * Provides generic functionality, such as column tooltips, possiblity to prohibit coloumn resizing and selection modifiers. \n
@@ -38,12 +41,15 @@ protected:
     #if wxUSE_TIPWINDOW
     //! some wx implementations do not support this yet
     SLTipWindow* m_tipwindow;
-    SLTipWindow** controlPointer;
+    SLTipWindow** m_controlPointer;
     #endif
-    int coloumnCount;
+    unsigned int m_coloumnCount;
 
     typedef std::pair<wxString,bool> colInfo;
     typedef std::vector<colInfo> colInfoVec;
+
+    //! maps outward column index to internal
+    typedef std::map<unsigned int,unsigned int> ColumnMap;
 
     /** global Tooltip thingies (ms)
      */
@@ -84,9 +90,18 @@ protected:
 
     virtual void SetTipWindowText( const long item_hit, const wxPoint position);
 
+    ColumnMap m_column_map;
+
+    struct SortOrderItem {
+        int col;
+        int direction;
+    };
+    typedef std::map<int,SortOrderItem> SortOrder;
+    SortOrder m_sortorder;
+
 public:
     CustomListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pt,
-                    const wxSize& sz,long style, wxString name, bool highlight = true,
+                    const wxSize& sz,long style, wxString name, unsigned int column_count, bool highlight = true,
                     UserActions::ActionType hlaction = UserActions::ActHighlight);
 
     virtual ~CustomListCtrl(){}
@@ -112,6 +127,7 @@ public:
 
     //! intermediate function to add info to m_colinfovec after calling base class function
     void InsertColumn(long i, wxListItem item, wxString tip, bool = true);
+    void AddColumn(long i, int width, const wxString& label, const wxString& tip, bool = true);
     //! this event is triggered when delay timer (set in mousemotion) ended
     virtual void OnTimer(wxTimerEvent& event);
     //! prohibits resizin if so set in columnInfo
@@ -158,3 +174,21 @@ public:
 
 
 #endif /*CUSTOMLISTITEM_H_*/
+
+/**
+    This file is part of SpringLobby,
+    Copyright (C) 2007-09
+
+    springsettings is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License version 2 as published by
+    the Free Software Foundation.
+
+    springsettings is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SpringLobby.  If not, see <http://www.gnu.org/licenses/>.
+**/
+

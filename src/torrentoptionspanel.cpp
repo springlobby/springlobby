@@ -1,13 +1,5 @@
 #ifndef NO_TORRENT_SYSTEM
 
-//don't ever move this include after torrentoptionspanel.h
-//you'll get a strange error, the cause of which remains in the dark
-#ifndef HAVE_WX26
-#include "aui/auimanager.h"
-#endif
-
-#include "torrentoptionspanel.h"
-
 #include <wx/textctrl.h>
 #include <wx/checkbox.h>
 #include <wx/sizer.h>
@@ -17,23 +9,21 @@
 #include <wx/radiobut.h>
 #include <wx/button.h>
 
+#include "torrentoptionspanel.h"
+#include "aui/auimanager.h"
 #include "settings.h"
 #include "ui.h"
 #include "torrentwrapper.h"
 #include "utils.h"
 
 
-
-BEGIN_EVENT_TABLE( TorrentOptionsPanel, wxPanel )
+BEGIN_EVENT_TABLE( TorrentOptionsPanel, wxScrolledWindow )
 END_EVENT_TABLE()
 
 TorrentOptionsPanel::TorrentOptionsPanel( wxWindow* parent, Ui& ui)
     : wxScrolledWindow( parent, -1), m_ui(ui)
 {
-
-    #ifndef HAVE_WX26
     GetAui().manager->AddPane( this, wxLEFT, _T("torrentoptionspanel") );
-    #endif
 
     wxBoxSizer* mainboxsizer = new wxBoxSizer( wxVERTICAL );
 
@@ -104,6 +94,9 @@ TorrentOptionsPanel::TorrentOptionsPanel( wxWindow* parent, Ui& ui)
 
     mainboxsizer->Add( m_numbers_box_sizer, 0, wxALL, 5 );
 
+    //the lazy man's solution to options not being set correctly at panel creation
+    wxCommandEvent dummy;
+    OnRestore( dummy );
 
     SetSizer( mainboxsizer );
     SetScrollRate( 3, 3 );
@@ -165,7 +158,7 @@ void TorrentOptionsPanel::SetAutoStartRadio()
     switch ( sett().GetTorrentSystemAutoStartMode() )
     {
         case 1:
-            m_autostart_logon->SetValue( true );
+            m_autostart_start->SetValue( true );
             break;
         case 2:
             m_autostart_manual->SetValue( true );

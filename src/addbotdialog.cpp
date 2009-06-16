@@ -8,6 +8,7 @@
 #include <wx/statline.h>
 #include <wx/filename.h>
 #include <wx/dir.h>
+#include <wx/listctrl.h>
 
 #include "settings.h"
 #include "utils.h"
@@ -24,17 +25,17 @@ END_EVENT_TABLE()
 
 
 AddBotDialog::AddBotDialog( wxWindow* parent, IBattle& battle , bool singleplayer):
-  wxDialog( parent, wxID_ANY, _("Add bot"), wxDefaultPosition, wxSize( 360,155 ) ),
+  wxDialog( parent, wxID_ANY, _("Add bot"), wxDefaultPosition, wxDefaultSize ),
   m_battle( battle ),
   m_sp(singleplayer)
 {
 
   this->SetSizeHints( wxDefaultSize, wxDefaultSize );
 
-  wxBoxSizer* m_main_sizer;
   m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
-  if ( !m_sp ) {
+  if ( !m_sp )
+  {
     wxBoxSizer* m_nick_sizer;
     m_nick_sizer = new wxBoxSizer( wxHORIZONTAL );
 
@@ -62,23 +63,56 @@ AddBotDialog::AddBotDialog( wxWindow* parent, IBattle& battle , bool singleplaye
 
   m_main_sizer->Add( m_ai_sizer, 0, wxEXPAND, 5 );
 
-  m_main_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
+	if ( usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) )
+	{
+		m_ai_infos_lst = new wxListCtrl( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_NO_HEADER );
+		wxListItem col;
+		col.SetText( _("property") );
+		col.SetImage( -1 );
+		m_ai_infos_lst->InsertColumn( 0, col );
+		wxListItem col2;
+		col2.SetText( _("value") );
+		col2.SetImage( -1 );
+		m_ai_infos_lst->InsertColumn( 1, col2 );
+
+		m_ai_infos_lst->DeleteAllItems();
+		wxArrayString info = usync().GetAIInfos( m_ai->GetSelection() );
+		int count = info.GetCount();
+		for ( int i = 0; i < count; i = i + 3 )
+		{
+			long index = m_ai_infos_lst->InsertItem( i, info[i] );
+			m_ai_infos_lst->SetItem( index, 0,  info[i] );
+			m_ai_infos_lst->SetItem( index, 1,  info[i+1] );
+		}
+		m_ai_infos_lst->SetColumnWidth( 0, wxLIST_AUTOSIZE );
+		m_ai_infos_lst->SetColumnWidth( 1, wxLIST_AUTOSIZE );
+
+		m_info_sizer = new wxBoxSizer(wxVERTICAL);
+		m_info_sizer->Add( m_ai_infos_lst, 1, wxALL|wxEXPAND );
+		m_main_sizer->Add( m_info_sizer, 1, wxALL|wxEXPAND );
+	}
+	else
+	{
+		 this->SetSize( wxSize(-1, 155) );
+		 m_main_sizer->AddStretchSpacer();
+	}
+
 
   m_buttons_sep = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
-  m_main_sizer->Add( m_buttons_sep, 0, wxALL|wxEXPAND, 5 );
+  m_main_sizer->Add( m_buttons_sep, 0, wxALL|wxEXPAND );
 
   wxBoxSizer* m_buttons_sizer;
   m_buttons_sizer = new wxBoxSizer( wxHORIZONTAL );
 
   m_cancel_btn = new wxButton( this, ADDBOT_CANCEL, _("Cancel"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT), 0 );
-  m_buttons_sizer->Add( m_cancel_btn, 0, wxALL, 5 );
+  m_buttons_sizer->Add( m_cancel_btn, 0, wxALL );
 
-  m_buttons_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
+  m_buttons_sizer->Add( 0, 0, 1, wxEXPAND );
 
   m_add_btn = new wxButton( this, ADDBOT_ADD, _("Add Bot"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT), 0 );
-  m_buttons_sizer->Add( m_add_btn, 0, wxALL, 5 );
+  m_buttons_sizer->Add( m_add_btn, 0, wxALL );
 
-  m_main_sizer->Add( m_buttons_sizer, 0, wxEXPAND, 5 );
+  m_main_sizer->Add( m_buttons_sizer, 0, wxEXPAND );
 
   this->SetSizer( m_main_sizer );
   this->Layout();
@@ -95,19 +129,37 @@ wxString AddBotDialog::GetNick()
 }
 
 
-wxString AddBotDialog::GetAI()
+wxString AddBotDialog::GetAIShortName()
 {
-  return m_ais[ m_ai->GetSelection() ];
+	wxArrayString infos = usync().GetAIInfos( m_ai->GetSelection() );
+	int namepos = infos.Index( _T("shortName") );
+	if ( namepos == wxNOT_FOUND ) return m_ais[ m_ai->GetSelection() ];
+	return infos[namepos +1];
 }
 
+wxString AddBotDialog::GetAIVersion()
+{
+	wxArrayString infos = usync().GetAIInfos( m_ai->GetSelection() );
+	int namepos = infos.Index( _T("version") );
+	if ( namepos == wxNOT_FOUND ) return _T("");
+	return infos[namepos +1];
+}
+
+int AddBotDialog::GetAIType()
+{
+	return m_ai->GetSelection();
+}
 
 wxString AddBotDialog::RefineAIName( const wxString& name )
 {
   wxString ret = name;
-  if (ret.Contains(_T('.')) ) ret = ret.BeforeLast(_T('.'));
-  if ( ret.Contains(_T('/')) ) ret = ret.AfterLast(_T('/'));
-  if ( ret.Contains(_T('\\')) ) ret = ret.AfterLast(_T('\\'));
-  if ( ret.Contains(_T("LuaAI:")) ) ret = ret.AfterFirst(_T(':'));
+  if ( !usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) )
+  {
+		if ( ret.Contains(_T('.')) ) ret = ret.BeforeLast(_T('.'));
+		if ( ret.Contains(_T('/')) ) ret = ret.AfterLast(_T('/'));
+		if ( ret.Contains(_T('\\')) ) ret = ret.AfterLast(_T('\\'));
+		if ( ret.Contains(_T("LuaAI:")) ) ret = ret.AfterFirst(_T(':'));
+  }
   if ( m_ai->FindString( ret ) == wxNOT_FOUND ) return ret;
   wxString ret2;
   int i = 2;
@@ -121,20 +173,24 @@ wxString AddBotDialog::RefineAIName( const wxString& name )
 
 void AddBotDialog::ReloadAIList()
 {
-  try {
+  try
+  {
     m_ais = usync().GetAIList( m_battle.GetHostModName() );
   } catch (...) {}
 
   m_ai->Clear();
   for ( unsigned int i = 0; i < m_ais.GetCount(); i++ ) m_ai->Append( RefineAIName(m_ais[i]) );
-
-  if ( m_ais.GetCount() > 0 ) {
+  if ( m_ais.GetCount() > 0 )
+  {
     m_ai->SetStringSelection( sett().GetLastAI() );
     if ( m_ai->GetStringSelection() == wxEmptyString ) m_ai->SetSelection( 0 );
-  } else {
+  }
+  else
+  {
     customMessageBox(SL_MAIN_ICON, _("No AI bots found in your Spring installation."), _("No bot-libs found"), wxOK );
   }
   m_add_btn->Enable( m_ai->GetStringSelection() != wxEmptyString );
+  ShowAIInfo();
 }
 
 
@@ -153,5 +209,24 @@ void AddBotDialog::OnAddBot( wxCommandEvent& event )
 
 void AddBotDialog::OnSelectBot( wxCommandEvent& event )
 {
+	ShowAIInfo();
+}
+
+void AddBotDialog::ShowAIInfo()
+{
   m_add_btn->Enable( m_ai->GetStringSelection() != wxEmptyString );
+  if ( !usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) ) return;
+  m_ai_infos_lst->DeleteAllItems();
+  wxArrayString info = usync().GetAIInfos( m_ai->GetSelection() );
+  int count = info.GetCount();
+	for ( int i = 0; i < count; i = i + 3 )
+	{
+		long index = m_ai_infos_lst->InsertItem( i, info[i] );
+		m_ai_infos_lst->SetItem( index, 0,  info[i] );
+		m_ai_infos_lst->SetItem( index, 1,  info[i+1] );
+	}
+	m_ai_infos_lst->SetColumnWidth( 0, wxLIST_AUTOSIZE );
+	m_ai_infos_lst->SetColumnWidth( 1, wxLIST_AUTOSIZE );
+	Layout();
+	SetSize( wxDefaultSize );
 }

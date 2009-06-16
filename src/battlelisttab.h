@@ -74,6 +74,7 @@ class BattleListTab : public wxScrolledWindow
     wxStaticText* m_players_text;
     wxStaticText* m_spec_lbl;
     wxStaticText* m_spec_text;
+    wxStaticText* m_battle_num;
     NickListCtrl* m_players;
     wxStaticLine* m_buttons_sep;
     wxButton* m_host_btn;
@@ -97,6 +98,8 @@ class BattleListTab : public wxScrolledWindow
 
     IBattle* m_sel_battle;
 
+    void SetNumDisplayed();
+
     enum {
         BATTLE_JOIN = wxID_HIGHEST,
         BATTLE_HOST,
@@ -111,3 +114,21 @@ class BattleListTab : public wxScrolledWindow
 
 
 #endif // SPRINGLOBBY_HEADERGUARD_BATTLELISTTAB_H
+
+/**
+    This file is part of SpringLobby,
+    Copyright (C) 2007-09
+
+    springsettings is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License version 2 as published by
+    the Free Software Foundation.
+
+    springsettings is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SpringLobby.  If not, see <http://www.gnu.org/licenses/>.
+**/
+

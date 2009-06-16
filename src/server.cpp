@@ -14,41 +14,21 @@
 #include "utils.h"
 #include "chatpanel.h"
 
+Server::Server():
+battles_iter(new BattleList_Iter(&m_battles)),
+m_sock(0),
+m_keepalive(15)
+{
+	m_sock = new Socket( *this, false );
+}
 
 Server::~Server()
 {
-  while ( battles_iter->GetNumBattles() > 0 ) {
-    battles_iter->IteratorBegin();
-    Battle* b = battles_iter->GetBattle();
-    if (b!=0)
-    {
-        m_battles.RemoveBattle( b->GetBattleId() );
-        delete b;
-    }
-  }
-  while ( m_users.GetNumUsers() > 0 ) {
-    try{
-    User* u = &m_users.GetUser( 0 );
-    m_users.RemoveUser( u->GetNick() );
-    delete u;
-    }catch(std::runtime_error){
-    }
-  }
-  while ( m_channels.GetNumChannels() > 0 ) {
-    Channel* c = &m_channels.GetChannel( 0 );
-    m_channels.RemoveChannel( c->GetName() );
-    delete c;
-  }
-  delete battles_iter;
+	delete battles_iter;
   if(uidata.panel)uidata.panel->SetServer(NULL);
+  delete m_sock;
 }
 
-
-void Server::SetSocket( Socket* sock )
-{
-  ASSERT_LOGIC( (!IsConnected()) || (sock == 0), _T("Not connected") );
-  m_sock = sock;
-}
 
 User& Server::GetUser( const wxString& nickname ) const
 {
@@ -113,6 +93,12 @@ void Server::_RemoveUser( const wxString& nickname )
   try{
     User* u = &m_users.GetUser( nickname );
     m_users.RemoveUser( nickname );
+    int numchannels = m_channels.GetNumChannels();
+    for ( int i = 0; i < numchannels; i++ )
+    {
+    	Channel& chan = m_channels.GetChannel( i );
+    	if ( chan.UserExists( nickname ) ) chan.Left( *u, _T("server idiocy") );
+    }
     delete u;
   }catch(std::runtime_error){
   }
@@ -154,4 +140,42 @@ void Server::_RemoveBattle( const int& id )
   m_battles.RemoveBattle( id );
   ASSERT_LOGIC( b != 0, _T("Server::_RemoveBattle(): GetBattle returned NULL pointer"));
   delete b;
+}
+
+
+void Server::OnDisconnected()
+{
+  while ( battles_iter->GetNumBattles() > 0 )
+  {
+    battles_iter->IteratorBegin();
+    Battle* b = battles_iter->GetBattle();
+    if (b!=0)
+    {
+        m_battles.RemoveBattle( b->GetBattleId() );
+        delete b;
+    }
+  }
+  while ( m_users.GetNumUsers() > 0 )
+  {
+    try
+    {
+			User* u = &m_users.GetUser( 0 );
+			m_users.RemoveUser( u->GetNick() );
+			delete u;
+    }
+    catch(std::runtime_error)
+    {
+    }
+  }
+  while ( m_channels.GetNumChannels() > 0 )
+  {
+    Channel* c = &m_channels.GetChannel( 0 );
+    m_channels.RemoveChannel( c->GetName() );
+    delete c;
+  }
+
+}
+
+void Server::RequestSpringUpdate()
+{
 }

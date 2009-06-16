@@ -1,9 +1,12 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_SPRINGUNITSYNC_H
 #define SPRINGLOBBY_HEADERGUARD_SPRINGUNITSYNC_H
 
+#include <list>
 #include <map>
 
 #include "iunitsync.h"
+#include "thread.h"
+#include "utils.h"
 
 class wxCriticalSection;
 class wxDynamicLibrary;
@@ -13,6 +16,98 @@ struct SpringMapInfo;
 class SpringUnitSyncLib;
 
 typedef std::map<wxString,wxString> LocalArchivesVector;
+
+
+/// Thread safe MRU cache (works like a std::map but has maximum size)
+template<typename TKey, typename TValue>
+class MostRecentlyUsedCache
+{
+  public:
+    MostRecentlyUsedCache(int max_size)
+    : m_size(0), m_max_size(max_size), m_cache_hits(0), m_cache_misses(0)
+    {
+    }
+
+    ~MostRecentlyUsedCache()
+    {
+      wxLogDebugFunc( _T("cache hits: ") + TowxString( m_cache_hits ) );
+      wxLogDebugFunc( _T("cache misses: ") + TowxString( m_cache_misses ) );
+    }
+
+    void Add( const TKey& name, const TValue& img )
+    {
+      wxCriticalSectionLocker lock(m_lock);
+      while ( m_size >= m_max_size ) {
+        --m_size;
+        m_iterator_map.erase( m_items.back().first );
+        m_items.pop_back();
+      }
+      ++m_size;
+      m_items.push_front( CacheItem( name, img ) );
+      m_iterator_map[name] = m_items.begin();
+    }
+
+    bool TryGet( const TKey& name, TValue& img )
+    {
+      wxCriticalSectionLocker lock(m_lock);
+      typename IteratorMap::iterator it = m_iterator_map.find( name );
+      if ( it == m_iterator_map.end() ) {
+        ++m_cache_misses;
+        return false;
+      }
+      // reinsert at front, so that most recently used items are always at front
+      m_items.push_front( *it->second );
+      m_items.erase( it->second );
+      it->second = m_items.begin();
+      // return image
+      img = it->second->second;
+      ++m_cache_hits;
+      return true;
+    }
+
+    void Clear()
+    {
+      wxCriticalSectionLocker lock(m_lock);
+      m_size = 0;
+      m_items.clear();
+      m_iterator_map.clear();
+    }
+
+  private:
+    typedef std::pair<TKey, TValue> CacheItem;
+    typedef std::list<CacheItem> CacheItemList;
+    typedef std::map<TKey, typename CacheItemList::iterator> IteratorMap;
+
+    mutable wxCriticalSection m_lock;
+    CacheItemList m_items;
+    IteratorMap m_iterator_map;
+    int m_size;
+    const int m_max_size;
+    int m_cache_hits;
+    int m_cache_misses;
+};
+
+typedef MostRecentlyUsedCache<wxString,wxImage> MostRecentlyUsedImageCache;
+typedef MostRecentlyUsedCache<wxString,MapInfo> MostRecentlyUsedMapInfoCache;
+
+
+/// Thread safe mapping from evtHandlerId to wxEvtHandler*
+class EvtHandlerCollection
+{
+  public:
+    EvtHandlerCollection() : m_last_id(0) {}
+
+    int Add( wxEvtHandler* evtHandler );
+    void Remove( int evtHandlerId );
+    void PostEvent( int evtHandlerId, wxEvent& evt );
+
+  private:
+    typedef std::map<int, wxEvtHandler*> EvtHandlerMap;
+
+    mutable wxCriticalSection m_lock;
+    EvtHandlerMap m_items;
+    int m_last_id;
+};
 
 
 class SpringUnitSync : public IUnitSync
@@ -31,6 +126,7 @@ class SpringUnitSync : public IUnitSync
     int GetModIndex( const wxString& name );
     wxString GetModArchive( int index );
     GameOptions GetModOptions( const wxString& name );
+    wxArrayString GetModDeps( const wxString& name );
 
     int GetNumMaps();
     wxArrayString GetMapList();
@@ -44,10 +140,16 @@ class SpringUnitSync : public IUnitSync
     UnitSyncMap GetMapEx( int index );
     wxString GetMapArchive( int index );
     GameOptions GetMapOptions( const wxString& name );
+    wxArrayString GetMapDeps( const wxString& name );
+
+    //! function to fetch default singplayer/replay/savegame's default nick
+		wxString GetDefaultNick();
+		//! function to set default singplayer/replay/savegame's default nick
+		void SetDefaultNick( const wxString& nick );
 
     int GetMapIndex( const wxString& name );
 
-		wxArrayString GetSides( const wxString& modname  );
+    wxArrayString GetSides( const wxString& modname  );
     wxImage GetSidePicture( const wxString& modname, const wxString& SideName );
 
     bool LoadUnitSyncLib( const wxString& unitsyncloc );
@@ -60,6 +162,9 @@ class SpringUnitSync : public IUnitSync
     bool VersionSupports( GameFeature feature );
 
     wxArrayString GetAIList( const wxString& modname );
+    wxArrayString GetAIInfos( int index );
+    GameOptions GetAIOptions( const wxString& modname, int index );
+
 
     int GetNumUnits( const wxString& modname );
     wxArrayString GetUnitsList( const wxString& modname );
@@ -81,11 +186,28 @@ class SpringUnitSync : public IUnitSync
 
     void SetSpringDataPath( const wxString& path );
 
-    void GetReplayList(std::vector<wxString> &ret);
+    wxArrayString GetPlaybackList( bool ReplayType = true ); //savegames otehrwise
 
     bool FileExists( const wxString& name );
 
     wxString GetArchivePath( const wxString& name );
+
+    /// schedule a map for prefetching
+    void PrefetchMap( const wxString& mapname );
+
+    int RegisterEvtHandler( wxEvtHandler* evtHandler );
+    void UnregisterEvtHandler( int evtHandlerId );
+    void PostEvent( int evtHandlerId, wxEvent& evt ); // helper for WorkItems
+
+    void GetMinimapAsync( const wxString& mapname, int evtHandlerId );
+    void GetMinimapAsync( const wxString& mapname, int width, int height, int evtHandlerId );
+    void GetMetalmapAsync( const wxString& mapname, int evtHandlerId );
+    void GetMetalmapAsync( const wxString& mapname, int width, int height, int evtHandlerId );
+    void GetHeightmapAsync( const wxString& mapname, int evtHandlerId );
+    void GetHeightmapAsync( const wxString& mapname, int width, int height, int evtHandlerId );
+    void GetMapExAsync( const wxString& mapname, int evtHandlerId );
+
+    wxArrayString GetScreenshotFilenames();
 
   private:
 
@@ -94,10 +216,23 @@ class SpringUnitSync : public IUnitSync
     wxArrayString m_map_array;
     wxArrayString m_mod_array;
 
-    wxCriticalSection m_lock;
+    /// caches sett().GetCachePath(), because that method calls back into
+    /// susynclib(), there's a good chance main thread blocks on some
+    /// WorkerThread operation... cache is invalidated on reload.
+    wxString m_cache_path;
 
+    mutable wxCriticalSection m_lock;
+    WorkerThread m_cache_thread;
+    EvtHandlerCollection m_evt_handlers;
 
-//    void* _GetLibFuncPtr( const wxString& name );
+    /// this cache facilitates async image fetching (image is stored in cache
+    /// in background thread, then main thread gets it from cache)
+    MostRecentlyUsedImageCache m_map_image_cache;
+    /// this cache is a real cache, it stores minimaps with max size 100x100
+    MostRecentlyUsedImageCache m_tiny_minimap_cache;
+
+    /// this caches MapInfo to facilitate GetMapExAsync
+    MostRecentlyUsedMapInfoCache m_mapinfo_cache;
 
     //! this function returns only the cache path without the file extension,
     //! the extension itself would be added in the function as needed
@@ -125,9 +260,28 @@ class SpringUnitSync : public IUnitSync
 
     double _GetSpringVersion();
 
-    wxImage _GetMapImage( const wxString& mapname, const wxString& imagename, wxImage (SpringUnitSyncLib::*loadMethod)(const wxString& mapname) );
-    wxImage _GetScaledMapImage( const wxString& mapname, wxImage (SpringUnitSync::*loadMethod)(const wxString& mapname), int width, int height );
+    wxImage _GetMapImage( const wxString& mapname, const wxString& imagename, wxImage (SpringUnitSyncLib::*loadMethod)(const wxString&) );
+    wxImage _GetScaledMapImage( const wxString& mapname, wxImage (SpringUnitSync::*loadMethod)(const wxString&), int width, int height );
+
+    void _GetMapImageAsync( const wxString& mapname, wxImage (SpringUnitSync::*loadMethod)(const wxString&), int evtHandlerId );
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_SPRINGUNITSYNC_H
+
+/**
+    This file is part of SpringLobby,
+    Copyright (C) 2007-09
+
+    springsettings is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License version 2 as published by
+    the Free Software Foundation.
+
+    springsettings is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SpringLobby.  If not, see <http://www.gnu.org/licenses/>.
+**/
 

@@ -36,20 +36,23 @@ wxTextCtrlHist::wxTextCtrlHist(TextCompletionDatabase& textDb, wxWindow* parent,
 
 void wxTextCtrlHist::OnSendMessage( wxCommandEvent &event )
 {
+    Historical.Add(GetLineText(0));
+    current_pos = Historical.GetCount();
 
-  Historical.Add(GetLineText(0));
-        current_pos = Historical.GetCount();
-        if(current_pos > history_max)
-        {
-                Historical.RemoveAt(0);
-                --current_pos;
-        }
-  event.Skip();
+    if(current_pos > history_max) {
+            Historical.RemoveAt(0);
+            --current_pos;
+    }
+    event.Skip();
 }
 
 void wxTextCtrlHist::OnChar(wxKeyEvent & event)
 {
         int keyCode = event.GetKeyCode();
+
+        if ( current_pos == Historical.GetCount() ) {
+            m_original = GetValue();
+        }
 
         if(keyCode == WXK_UP)
         {
@@ -59,7 +62,6 @@ void wxTextCtrlHist::OnChar(wxKeyEvent & event)
                     SetValue(Historical[current_pos]);
                     SetInsertionPointEnd();
             }
-            event.Skip();
         }
         else
         if(keyCode == WXK_DOWN)
@@ -72,15 +74,13 @@ void wxTextCtrlHist::OnChar(wxKeyEvent & event)
             else
             {
                 current_pos = Historical.GetCount();
-                SetValue(wxT(""));
+                SetValue( m_original );
                 SetInsertionPointEnd();
             }
-            event.Skip();
         }
         else
         if(keyCode == WXK_TAB)
         {
-         #ifndef HAVE_WX26
             wxString text = this->GetValue();
             long pos_Cursor = this->GetInsertionPoint();
             wxString selection_Begin_InsertPos = this->GetRange( 0, pos_Cursor );
@@ -155,7 +155,6 @@ void wxTextCtrlHist::OnChar(wxKeyEvent & event)
                 this->SetInsertionPoint( selection_Begin_InsertPos.length() );
                 wxBell();
             }
-            #endif
         }
         else
             event.Skip();

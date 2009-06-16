@@ -534,7 +534,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\maplistctrl.h"
+				RelativePath=".\src\mapgridctrl.h"
 				>
 			</File>
 			<File
@@ -1124,7 +1124,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\maplistctrl.cpp"
+				RelativePath=".\src\mapgridctrl.cpp"
 				>
 			</File>
 			<File

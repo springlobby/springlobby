@@ -4,9 +4,10 @@
 #include <wx/app.h>
 
 class wxTimer;
+class wxTimerEvent;
 class wxIcon;
 class wxLocale;
-class HttpDownloader;
+class wxTranslationHelper;
 
 //! @brief SpringLobby wxApp
 class SpringLobbyApp : public wxApp
@@ -22,16 +23,17 @@ class SpringLobbyApp : public wxApp
 
     // System Events
     void OnTimer( wxTimerEvent& event );
+    bool SelectLanguage();
 
   protected:
 
-    void SetupUserFolders();
     void InitCacheDir();
 
     wxTimer* m_timer;
 
-    wxLocale* m_locale;
-    HttpDownloader* m_otadownloader ;
+    bool quit_called;
+
+    wxTranslationHelper* m_translationhelper;
 
     DECLARE_EVENT_TABLE()
 };
@@ -39,3 +41,21 @@ class SpringLobbyApp : public wxApp
 DECLARE_APP(SpringLobbyApp)
 
 #endif // SPRINGLOBBY_HEADERGUARD_SPRINGLOBBYAPP_H
+
+/**
+    This file is part of SpringLobby,
+    Copyright (C) 2007-09
+
+    springsettings is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License version 2 as published by
+    the Free Software Foundation.
+
+    springsettings is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SpringLobby.  If not, see <http://www.gnu.org/licenses/>.
+**/
+

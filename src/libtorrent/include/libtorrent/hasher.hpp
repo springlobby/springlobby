@@ -38,7 +38,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "libtorrent/peer_id.hpp"
 #include "libtorrent/config.hpp"
 #include "libtorrent/assert.hpp"
-#include "zlib.h"
+#include "../zlib/zlib.h"
 
 #ifdef TORRENT_USE_OPENSSL
 extern "C"

@@ -8,15 +8,17 @@
 #include <wx/bitmap.h>
 #include <wx/log.h>
 #include <wx/image.h>
-
-#include <cmath>
+#include <wx/clipbrd.h>
 #include <wx/cmndata.h>
 #include <wx/colordlg.h>
+#include <wx/dataobj.h>
+
+#include <cmath>
+
 #include "uiutils.h"
 #include "utils.h"
 #include "settings++/custom_dialogs.h"
 #include "settings.h"
-
 
 wxString RefineMapname( const wxString& mapname )
 {
@@ -139,50 +141,60 @@ wxColour ColourDelta( const wxColour& colour, const int& delta )
 
 
 
-wxString GetColorString( const wxColour& color )
-{
-    return wxString::Format( _T("%d %d %d"), color.Red(), color.Green(), color.Blue() );
-
-}
-
-wxColour GetColorFromStrng( const wxString color )
+wxColour GetColorFromFloatStrng( const wxString color )
 {
     wxString c = color;
-    long r = 0, g = 0, b = 0;
-    c.BeforeFirst( ' ' ).ToLong( &r );
+    float r = 0, g = 0, b = 0;
+    r = s2d(c.BeforeFirst( ' ' ));
     c = c.AfterFirst( ' ' );
-    c.BeforeFirst( ' ' ).ToLong( &g );
+    g = s2d( c.BeforeFirst( ' ' ));
     c = c.AfterFirst( ' ' );
-    c.BeforeFirst( ' ' ).ToLong( &b );
-    return wxColour( r%256, g%256, b%256 );
+    b = s2d(c.BeforeFirst( ' ' ));
+    CLAMP( r, 0, 1  );
+    CLAMP( g, 0, 1  );
+    CLAMP( b, 0, 1  );
+    return wxColour( (unsigned char)(r*256), (unsigned char)(g*256), (unsigned char)(b*256) );
 }
 
-wxImage BlendImage( const wxImage& foreground, const wxImage&  background )
+/**
+ @brief Blends two images based on alpha channel present in foreground image.
+ @param foreground Foreground image, must have an alpha channel
+ @param background Background image, may have an alpha channel
+ @param blend_alpha Whether the returned image will have an alpha channel.
+ @return A copy of the background image with the foreground image blended on
+ top of it. The returned image will have an alpha channel iff the background
+ image has an alpha channel. In that case the alpha channel is blended
+ identical to the red/green/blue channels.
+*/
+wxImage BlendImage( const wxImage& foreground, const wxImage& background, bool blend_alpha )
 {
-    unsigned char* background_data = background.GetData();
-    unsigned char* foreground_data = foreground.GetData();
-
     if ( ( foreground.GetWidth()  != background.GetWidth() ) || ( background.GetHeight() != foreground.GetHeight() ) )
     {
         wxLogDebugFunc(_T("size mismatch while blending"));
         return background;
     }
 
-    wxImage ret( background.GetWidth(), foreground.GetHeight() );
-    ret.InitAlpha();
-    unsigned char* result_data = ret.GetData();
-
-    bool zhu = background.HasAlpha();
-    if (  zhu && foreground.HasAlpha() )
+    bool zhu = blend_alpha && background.HasAlpha();
+    if ( foreground.HasAlpha() )
     {
-        unsigned char* background_alpha = background.GetAlpha();
-        unsigned char* foreground_alpha = foreground.GetAlpha();
-        unsigned char* result_alpha = ret.GetAlpha();
+        wxImage ret( background.GetWidth(), foreground.GetHeight() );
+        const unsigned char* background_data = background.GetData();
+        const unsigned char* foreground_data = foreground.GetData();
+        const unsigned char* background_alpha = NULL;
+        const unsigned char* foreground_alpha = foreground.GetAlpha();
+        unsigned char* result_data = ret.GetData();
+        unsigned char* result_alpha = NULL;
         unsigned int pixel_count = background.GetWidth() * background.GetHeight();
+
+        if ( zhu )
+        {
+          background_alpha = background.GetAlpha();
+          ret.InitAlpha();
+          result_alpha = ret.GetAlpha();
+        }
 
         for ( unsigned int i = 0, i_a = 0; i < pixel_count * 3; i+=3,  i_a++ )
         {
-            unsigned char back_alpha = background_alpha[i_a] ;
             unsigned char fore_alpha = foreground_alpha[i_a] ;
             float back_blend_fac = ( 255 - fore_alpha)/255.0;
             float fore_blend_fac = fore_alpha/255.0 ;
@@ -190,7 +202,12 @@ wxImage BlendImage( const wxImage& foreground, const wxImage&  background )
             result_data[i]    = foreground_data[i]   * fore_blend_fac + background_data[i]   * back_blend_fac ;
             result_data[i+1]  = foreground_data[i+1] * fore_blend_fac + background_data[i+1] * back_blend_fac ;
             result_data[i+2]  = foreground_data[i+2] * fore_blend_fac + background_data[i+2] * back_blend_fac ;
-            result_alpha[i_a] = fore_alpha           * fore_blend_fac + back_alpha           * back_blend_fac ;
+
+            if ( zhu )
+            {
+              unsigned char back_alpha = background_alpha[i_a] ;
+              result_alpha[i_a] = fore_alpha           * fore_blend_fac + back_alpha           * back_blend_fac ;
+            }
         }
         return ret;
     }
@@ -200,28 +217,27 @@ wxImage BlendImage( const wxImage& foreground, const wxImage&  background )
 
 wxBitmap charArr2wxBitmap(const unsigned char * arg, int size)
 {
-    wxMemoryInputStream istream( arg, size );
-    wxImage temp( istream, wxBITMAP_TYPE_PNG );
-    return wxBitmap(temp );
+    return wxBitmap( charArr2wxImage( arg, size) );
 }
 
 //wxBitmap charArr2wxBitmap(const unsigned char * arg, int size)
 //{
-//    wxMemoryInputStream istream( arg, size );
-//     wxImage temp( istream, wxBITMAP_TYPE_PNG );
-//    return wxBitmap(temp );
+//    return wxBitmap( charArr2wxImage( arg, size) );
 //}
+
+wxImage charArr2wxImage(const unsigned char * arg, int size)
+{
+    wxMemoryInputStream istream( arg, size );
+    return wxImage( istream, wxBITMAP_TYPE_PNG );
+}
 
 wxBitmap charArr2wxBitmapWithBlending(const unsigned char * dest, int dest_size, const unsigned char * text, int text_size )
 {
-    wxMemoryInputStream istream1( dest, dest_size );
-    wxImage dest_img( istream1, wxBITMAP_TYPE_PNG );
-    wxMemoryInputStream istream2( text, text_size );
-    wxImage text_img( istream2, wxBITMAP_TYPE_PNG );
+    wxImage dest_img( charArr2wxImage( dest, dest_size ) );
+    wxImage text_img( charArr2wxImage( text, text_size ) );
     wxImage ret = BlendImage(text_img, dest_img );
 
     return wxBitmap( ret );
-
 }
 
 wxBitmap BlendBitmaps( const wxBitmap& background, const wxBitmap& overlay, const int dim )
@@ -231,6 +247,99 @@ wxBitmap BlendBitmaps( const wxBitmap& background, const wxBitmap& overlay, cons
     wxImage ret = BlendImage( front, back );
     return wxBitmap( ret );
 }
+
+
+namespace {
+struct Resizer
+{
+	// Helper class for BorderInvariantResizeImage
+	// Author: Tobi Vollebregt
+
+	Resizer( wxImage& result, const wxImage& image, bool alpha )
+		: width( result.GetWidth() )
+		, height( result.GetHeight() )
+		, imwidth( image.GetWidth() )
+		, imheight( image.GetHeight() )
+		, half_min_width( (std::min(width, imwidth) + 1) / 2 )    // round up to cover middle pixel
+		, half_min_height( (std::min(height, imheight) + 1) / 2 ) // if new width/height is uneven.
+		, bytes_per_pixel( alpha ? 1 : 3 )
+		, image_data( alpha ? image.GetAlpha() : image.GetData() )
+		, result_data( alpha ? result.GetAlpha() : result.GetData() )
+	{
+	}
+
+	void CopyRow( int result_y, int image_y )
+	{
+		unsigned char* result_row = result_data + bytes_per_pixel * result_y * width;
+		const unsigned char* image_row = image_data + bytes_per_pixel * image_y * imwidth;
+		const int bytes = bytes_per_pixel * half_min_width;
+
+		memcpy( result_row, image_row, bytes );
+		memcpy( result_row + bytes_per_pixel * width - bytes, image_row + bytes_per_pixel * imwidth - bytes, bytes );
+
+		if ( width > imwidth )
+		{
+			unsigned char* result_pixel = result_row + bytes;
+			const unsigned char* image_pixel = image_row + bytes;
+
+			for (int x = half_min_width; x < width - half_min_width; ++x, result_pixel += bytes_per_pixel)
+			{
+				memcpy( result_pixel, image_pixel, bytes_per_pixel );
+			}
+		}
+	}
+
+	void CopyTopAndBottomRows()
+	{
+		for (int y = 0; y < half_min_height; ++y)
+		{
+			CopyRow( y, y );
+			CopyRow( height - 1 - y, imheight - 1 - y );
+		}
+	}
+
+	void CopyCenterRows()
+	{
+		for (int y = half_min_height; y < height - half_min_height; ++y)
+		{
+			CopyRow( y, half_min_height - 1 );
+		}
+	}
+
+	void operator () ()
+	{
+		CopyTopAndBottomRows();
+		CopyCenterRows();
+	}
+
+	const int width, height;
+	const int imwidth, imheight;
+	const int half_min_width, half_min_height;
+	const int bytes_per_pixel;
+	const unsigned char* const image_data;
+	unsigned char* const result_data;
+};
+}
+
+wxImage BorderInvariantResizeImage(  const wxImage& image, int width, int height )
+{
+	if ( !image.IsOk() || (width == image.GetWidth() && height == image.GetHeight()) )
+		return image;
+
+	wxImage ret( width, height );
+	Resizer data_resize( ret, image, false );
+	data_resize();
+
+	if ( image.HasAlpha() )
+	{
+		ret.InitAlpha();
+		Resizer alpha_resize( ret, image, true );
+		alpha_resize();
+	}
+
+	return ret;
+}
+
 
 wxColour GetColourFromUser(wxWindow *parent, const wxColour& colInit, const wxString& caption, const wxString& palette)
 {
@@ -282,6 +391,21 @@ wxImage ReplaceChannelStatusColour( wxBitmap img, const wxColour& colour )
 
 }
 
+wxSize MakeFit(const wxSize &original, const wxSize &bounds)
+{
+  if( ( bounds.GetWidth() <= 0 ) || ( bounds.GetHeight() <= 0 ) ) return wxSize(0,0);
+  int sizex = ( original.GetWidth() * bounds.GetHeight() ) / original.GetHeight();
+  if( sizex <= bounds.GetWidth() )
+  {
+    return wxSize( sizex, bounds.GetHeight() );
+  }
+  else
+  {
+    int sizey = ( original.GetHeight() * bounds.GetWidth() ) / original.GetWidth();
+    return wxSize( bounds.GetWidth(), sizey );
+  }
+}
+
 #if wxUSE_TIPWINDOW
 BEGIN_EVENT_TABLE(SLTipWindow, wxTipWindow)
   EVT_MOUSEWHEEL(SLTipWindow::Cancel)
@@ -292,3 +416,14 @@ void SLTipWindow::Cancel(wxMouseEvent& event)
   wxTipWindow::Close();
 }
 #endif
+
+void CopyToClipboard( const wxString& text )
+{
+    if ( wxTheClipboard->Open() ) {
+        // This data objects are held by the clipboard,
+        // so do not delete them in the app.
+        wxTheClipboard->SetData( new wxTextDataObject( text ) );
+        wxTheClipboard->Close();
+    }
+}
+

@@ -48,6 +48,8 @@ public:
     typedef std::vector<wxStringPair> wxStringPairVec;
     typedef std::vector<wxStringTriple> wxStringTripleVec;
     typedef std::map<wxString,wxString> wxStringMap;
+    typedef std::map<int, GameOptions> GameOptionsMap;
+    typedef std::map<int, mmSectionTree> mmSectionTreeMap;
 
     //! enum to differentiate option category easily at runtime
     enum GameOption{
@@ -64,6 +66,10 @@ public:
 	//! just calls loadOptions(MapOption,mapname)
 	bool loadMapOptions(wxString mapname);
 
+	bool loadAIOptions( const wxString& modname, int aiindex, const wxString& ainick );
+
+	int GetAIOptionIndex( const wxString& nick );
+
 	//! load corresponding options through unitsync calls
 	/*!
 	 * the containers for corresponding flag are recreated and then gets the number of options from unitsync
@@ -71,7 +77,7 @@ public:
 	 * \param flag decides which type of option to load
 	 * \return true if load successful, false otherwise
 	 */
-	bool loadOptions(GameOption flag, wxString name = _T(""));
+	bool loadOptions(GameOption flag, const wxString& name );
 	//! checks if given key can be found in specified container
 	/*!
 	 * \param key the key that should be checked for existance in containers
@@ -80,7 +86,19 @@ public:
 	 * \param optType will contain the corresponding OptionType if key is found, opt_undefined otherwise
 	 * \return true if key is found, false otherwise
 	 */
-	bool keyExists(wxString key,GameOption flag,bool showError, OptionType& optType) const ;
+	bool keyExists(wxString key,GameOption flag,bool showError, OptionType& optType) const;
+	//! checks if given key can be found in all containers
+	/*!
+	 * \param key the key that should be checked for existance in containers
+	 * \return true if key is found, false otherwise
+	 */
+	bool keyExists(wxString key ) const;
+	//! checks which container this key belongs to
+	/*!
+	 * \param key the key that should be checked for existance in containers
+	 * \return they container section
+	 */
+	GameOption GetSection( wxString& key ) const;
 	//! given a vector of key/value pairs sets the appropiate options to new values
 	/*!	Every new value is tested for meeting boundary conditions, type, etc.
 	 * If test fails error is logged and false is returned.
@@ -95,9 +113,9 @@ public:
 	 * \param triples this will contain the options after the function
 	 * \param flag which OptionType is to be processed
 	 */
-	wxStringTripleVec getOptions( GameOption flag ) const ;
+	wxStringTripleVec getOptions( GameOption flag ) const;
 	//! similar to getOptions, instead of vector a map is used and the name is not stored
-	std::map<wxString,wxString> getOptionsMap(GameOption) const ;
+	std::map<wxString,wxString> getOptionsMap(GameOption) const;
 	//! recreates ALL containers
 	void unLoadOptions();
 	//! recreates the containers of corresponding flag
@@ -107,13 +125,15 @@ public:
 	/*! searches all containers for key
 	 * \return value of key if key found, "" otherwise
 	 */
-	wxString getSingleValue(wxString key) const ;
+	wxString getSingleValue(wxString key) const;
 	//! returns value of specified key
 	/*! searches containers of type flag for key
 	 * \return value of key if key found, "" otherwise
 	 */
 
 	wxString getSingleValue(wxString key, GameOption flag) const;
+
+	wxString getDefaultValue(wxString key, GameOption flag) const;
 
 	//! sets a single option in specified container
 	/*! \return true if success, false otherwise */
@@ -122,16 +142,15 @@ public:
 	bool setSingleOption(wxString key, wxString value);
 
 	//! returns the option type of specified key (all containers are tried)
-	OptionType GetSingleOptionType (wxString key) const ;
+	OptionType GetSingleOptionType (wxString key) const;
 
 	//!returns the cbx_choice associated w current listoption
 	wxString GetNameListOptValue(wxString key, GameOption flag) const;
 
 	//! returns the listitem key associated with listitem name
-	wxString GetNameListOptItemKey(wxString optkey, wxString itemname, GameOption flag) const ;
+	wxString GetNameListOptItemKey(wxString optkey, wxString itemname, GameOption flag) const;
 
-	const static int optionCategoriesCount = 4;
-	GameOptions opts[optionCategoriesCount];
+	GameOptionsMap m_opts;
 
 	//! after loading sections into map, parse them into tree
 	void ParseSectionMap( mmSectionTree& section_tree, const IUnitSync::OptionMapSection& section_map );
@@ -139,9 +158,32 @@ protected:
 	//! used for code clarity in setOptions()
 	bool setSingleOptionTypeSwitch(wxString key, wxString value, GameOption modmapFlag, OptionType optType);
 
-	mmSectionTree m_mod_sections;
-	mmSectionTree m_map_sections;
+	mmSectionTreeMap m_sections;
+
+	//! a map that connects the ai nick with it's set of options
+	std::map<wxString, int> m_ais_indexes;
+
+	typedef GameOptionsMap::const_iterator
+        GameOptionsMapCIter;
 
 };
 
 #endif /*MMOPTIONSORAPPER_H_*/
+
+/**
+    This file is part of SpringLobby,
+    Copyright (C) 2007-09
+
+    springsettings is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License version 2 as published by
+    the Free Software Foundation.
+
+    springsettings is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SpringLobby.  If not, see <http://www.gnu.org/licenses/>.
+**/
+

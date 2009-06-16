@@ -3,19 +3,12 @@
 
 #include "../userlist.h"
 #include <set>
-#include <vector>
-#include <utility>
 #include <wx/regex.h>
 
 class Channel;
 class Server;
 class Ui;
 class ChatPanel;
-
-//! wtf is this even? commenting it makes no error (koshi)
-typedef void(*channel_msg_callback)(Channel&,User&,const wxString&);
-typedef void(*channel_cmd_callback)(Channel&);
-typedef void(*channel_whocmd_callback)(Channel&,User&);
 
 struct UiChannelData {
   UiChannelData(): panel(0) {}
@@ -72,7 +65,7 @@ class Channel : public UserList
     Ui& m_ui;
 
     std::set<wxString> m_banned_users;
-    //std::string ban_regex;
+
     bool m_do_ban_regex;
     wxRegEx m_ban_regex;
 
@@ -94,3 +87,21 @@ class Channel : public UserList
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_CHANNEL_H
+
+/**
+    This file is part of SpringLobby,
+    Copyright (C) 2007-09
+
+    springsettings is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License version 2 as published by
+    the Free Software Foundation.
+
+    springsettings is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SpringLobby.  If not, see <http://www.gnu.org/licenses/>.
+**/
+

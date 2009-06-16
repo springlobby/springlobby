@@ -10,6 +10,8 @@ class wxStaticLine;
 class wxButton;
 class wxCommandEvent;
 class IBattle;
+class wxListCtrl;
+class wxBoxSizer;
 
 /** \brief used in SP/MP BattletAB to present choice of AIs to add
  * \todo DOCMEMORE */
@@ -20,9 +22,12 @@ class AddBotDialog : public wxDialog
     AddBotDialog( wxWindow* parent, IBattle& battle, bool singleplayer = false );
 
     wxString GetNick();
-    wxString GetAI();
+    wxString GetAIShortName();
+    wxString GetAIVersion();
+    int GetAIType();
 
     void ReloadAIList();
+    void ShowAIInfo();
 
     void OnClose( wxCommandEvent& event );
     void OnAddBot( wxCommandEvent& event );
@@ -36,6 +41,11 @@ class AddBotDialog : public wxDialog
     wxStaticLine* m_buttons_sep;
     wxButton* m_cancel_btn;
     wxButton* m_add_btn;
+    wxListCtrl* m_ai_infos_lst;
+
+    wxBoxSizer* m_main_sizer;
+    wxBoxSizer* m_info_sizer;
+
 
     IBattle& m_battle;
 
@@ -58,3 +68,21 @@ class AddBotDialog : public wxDialog
 
 
 #endif // SPRINGLOBBY_HEADERGUARD_ADDBOTDIALOG_H
+
+/**
+    This file is part of SpringLobby,
+    Copyright (C) 2007-09
+
+    springsettings is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License version 2 as published by
+    the Free Software Foundation.
+
+    springsettings is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SpringLobby.  If not, see <http://www.gnu.org/licenses/>.
+**/
+

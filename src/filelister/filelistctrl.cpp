@@ -28,7 +28,7 @@ FileListDialog* FileListCtrl::s_parent_dialog = 0;
 
 FileListCtrl::FileListCtrl( wxWindow* parent, FileListDialog* fld  ):
 		CustomListCtrl( parent, FILELIST_COL_CLICK, wxDefaultPosition, wxDefaultSize,
-                wxSUNKEN_BORDER | wxLC_REPORT | wxLC_ALIGN_LEFT, _T("FileListCtrl") ),
+                wxSUNKEN_BORDER | wxLC_REPORT | wxLC_ALIGN_LEFT, _T("FileListCtrl"), 3 ),
         m_parent_dialog( fld )
 {
     wxListItem col;
@@ -63,7 +63,7 @@ FileListCtrl::FileListCtrl( wxWindow* parent, FileListDialog* fld  ):
 void FileListCtrl::SetColumnWidths()
 {
 #if defined(__WXMAC__)
-/// on mac, autosize does not work at all
+// on mac, autosize does not work at all
 	SetColumnWidth( 0, 250 );
 	SetColumnWidth( 1, 60 );
 	SetColumnWidth( 2, 150 );
@@ -117,7 +117,7 @@ void FileListCtrl::GetSelectedHashes(HashVector& hashes)
 		item = GetNextItem( item, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED );
 		if ( item == -1 ) // means nothing was found
             return;
-		hashes.push_back( TowxString<long>( GetItemData(item) ) );
+		hashes.push_back( TowxString<unsigned int>( GetItemData(item) ) );
 	}
 }
 
