@@ -507,12 +507,19 @@ void BattleRoomTab::UpdateUser( User& user )
     m_ally_sel->SetSelection( bs.ally );
     m_side_sel->SetSelection( bs.side );
     m_spec_chk->SetValue( bs.spectator );
-
+		if ( IsHosted() && !m_battle.IsProxy() && !bs.ready ) m_battle.SetImReady( true );
     // Enable or disable widgets' sensitivity as appropriate.
     if ( bs.spectator )
     {
-        m_ready_chk->SetValue ( true );
-        m_ready_chk->Disable();
+				if ( m_battle.GetBattleType() == BT_Played )
+				{
+					m_ready_chk->SetValue ( true );
+					m_ready_chk->Disable();
+				}
+				else
+				{
+					m_ready_chk->Enable();
+				}
         m_side_sel->Disable();
         m_ally_sel->Disable();
         m_team_sel->Disable();
@@ -523,7 +530,6 @@ void BattleRoomTab::UpdateUser( User& user )
         {
             m_ready_chk->Enable();
         }
-
         m_ready_chk->SetValue( bs.ready );
         m_side_sel->Enable();
         m_ally_sel->Enable();
@@ -555,15 +561,12 @@ void BattleRoomTab::OnStart( wxCommandEvent& event )
 
     if ( !m_battle.IsEveryoneReady() )
     {
-        int answer = customMessageBox( SL_MAIN_ICON, _("Some players are not ready yet.\nRing these players?"), _("Not ready"), wxYES_NO );
-        if ( answer == wxYES )
-        {
-            m_battle.RingNotReadyPlayers();
-            return;
-        }
-        answer = customMessageBox( SL_MAIN_ICON, _("Force start?"), _("Not ready"), wxYES_NO );
+        int answer = customMessageBox( SL_MAIN_ICON, _("Some Players are not ready yet\nDo you want to force start?"), _("Not ready"), wxYES_NO );
         if ( answer == wxNO ) return;
     }
+
+		m_battle.SaveMapDefaults(); // save map presets
+
     m_ui.StartHostedBattle();
 }
 
@@ -857,10 +860,7 @@ void BattleRoomTab::SetMap( int index )
   {
     UnitSyncMap map = usync().GetMapEx( index );
     m_battle.SetLocalMap( map );
-
     m_battle.SendHostInfo( IBattle::HI_Map );
-    for( unsigned int i=0;i<m_battle.GetNumRects();++i) if ( m_battle.GetStartRect( i ).exist ) m_battle.RemoveStartRect(i);
-    m_battle.SendHostInfo( IBattle::HI_StartRects );
   } catch (...) {}
 }
 

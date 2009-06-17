@@ -74,7 +74,7 @@ src/torrentoptionspanel.cpp
 src/torrentwrapper.cpp
 src/ui.cpp
 src/uiutils.h
-src/updater/exedownloader.cpp
+src/httpdownloader.cpp
 src/updater/updater.cpp
 src/useractions.cpp
 src/useractions.h

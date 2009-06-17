@@ -112,6 +112,12 @@ inline wxString TowxString(std::string arg){
 template <typename T> T clamp(const T var,const T min,const T max)
 { return ( (var < min) ? min : ( var > max ) ? max : var ); }
 
+template<typename T>
+T min(T a, T b, T c)
+{
+    return std::min(a, std::min(b, c));
+}
+
 wxString GetLibExtension();
 void InitializeLoggingTargets();
 wxString GetWordParam( wxString& params );

@@ -5,6 +5,7 @@
 
 //including this header is only really needed for time_t ..
 #include <wx/string.h>
+#include <wx/arrstr.h>
 
 class Battle;
 class User;
@@ -31,6 +32,7 @@ class AutoHost
 
     bool m_enabled;
     time_t m_lastActionTime;
+    wxArrayString m_userlist;
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_AUTOHOST_H

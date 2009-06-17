@@ -1,16 +1,16 @@
 #ifndef SPRINGLOBBY_UPDATER_H_INCLUDED
 #define SPRINGLOBBY_UPDATER_H_INCLUDED
 
-class ExeDownloader;
-#include <wx/string.h>
+#include <wx/event.h>
 
-class UpdaterClass
+
+class UpdaterClass : public wxEvtHandler
 {
   public:
     UpdaterClass();
     ~UpdaterClass();
     void CheckForUpdates();
-    void OnDownloadEvent( int code );
+    void OnDownloadEvent( wxCommandEvent& event );
 
 protected:
 
@@ -18,7 +18,8 @@ protected:
     bool UpdateLocale( const wxString& newdir, bool WaitForReboot );
 
     wxString m_newexe;
-    ExeDownloader* m_exedownloader;
+
+    DECLARE_EVENT_TABLE()
 
     wxString m_cur_mw_title;
 

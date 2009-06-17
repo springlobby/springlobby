@@ -175,3 +175,7 @@ void Server::OnDisconnected()
   }
 
 }
+
+void Server::RequestSpringUpdate()
+{
+}

@@ -307,7 +307,9 @@ void Ui::DownloadMap( const wxString& hash, const wxString& name )
 #ifndef NO_TORRENT_SYSTEM
     DownloadFileP2P( hash, name );
 #else
-    wxString url = _T("http://spring.jobjol.nl/search.php");
+		wxString newname = name;
+		newname = name.Replace( _T(" "), _T("+") );
+    wxString url = _T(" http://spring.jobjol.nl/search_result.php?search_cat=1&select_select=select_file_subject&Submit=Search&search=") + newname;
     OpenWebBrowser ( url );
 #endif
 }
@@ -318,7 +320,9 @@ void Ui::DownloadMod( const wxString& hash, const wxString& name )
 #ifndef NO_TORRENT_SYSTEM
     DownloadFileP2P( hash, name );
 #else
-    wxString url = _T("http://spring.jobjol.nl/search.php");
+		wxString newname = name;
+		newname = name.Replace( _T(" "), _T("+") );
+    wxString url = _T(" http://spring.jobjol.nl/search_result.php?search_cat=1&select_select=select_file_subject&Submit=Search&search=") + newname;
     OpenWebBrowser ( url );
 #endif
 }
@@ -466,8 +470,8 @@ bool Ui::ExecuteSayCommand( const wxString& cmd )
     }
     else if ( cmd.BeforeFirst(' ').Lower() == _T("/channels") )
     {
-	mw().ShowChannelChooser();
-	return true;
+        mw().ShowChannelChooser();
+        return true;
     }
     return false;
 }
@@ -599,7 +603,12 @@ void Ui::OnConnected( Server& server, const wxString& server_name, const wxStrin
     {
 			 sett().SetDefaultServer( server_name );
     }
-    IsSpringCompatible();
+    if ( !IsSpringCompatible() )
+    {
+    	#ifdef __WXMSW__
+    	server.RequestSpringUpdate();
+    	#endif
+    }
 
     if ( server.uidata.panel ) server.uidata.panel->StatusMessage( _T("Connected to ") + server_name + _T(".") );
     mw().GetJoinTab().OnConnected();
