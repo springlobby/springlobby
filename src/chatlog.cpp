@@ -42,7 +42,11 @@ ChatLog::~ChatLog()
   if ( m_active && m_logfile.IsOpened() ) {
     wxDateTime now = wxDateTime::Now();
     WriteLine( _("### Session Closed at [") + now.Format( _T("%Y-%m-%d %H:%M") ) + _("]") );
+    #ifndef __WXMSW__
     WriteLine( _T(" \n \n \n") );
+    #else
+    WriteLine( _T(" \r\n \r\n \r\n") );
+    #endif
     // crashes right there on close.
     m_logfile.Flush();
     m_logfile.Close();
@@ -61,7 +65,16 @@ bool ChatLog::AddMessage(const wxString& text)
   else if ( !m_logfile.IsOpened() ) {
     m_active = OpenLogFile(m_server,m_room);
   }
-  return (m_active)? WriteLine(LogTime()+_T(" ")+text+_T("\n")) : false;
+  if (m_active)
+  {
+  	wxString text = LogTime()+_T(" ")+text;
+  	#ifdef __WXMSW__
+  	text << _T("\r");
+  	#endif
+  	text << _T("\n");
+  	return WriteLine(text);
+	}
+	else return false;
 }
 
 
@@ -131,7 +144,12 @@ bool ChatLog::OpenLogFile(const wxString& server,const wxString& room)
     }
     else {
       wxDateTime now = wxDateTime::Now();
-      return WriteLine( _T("### Session Start at [") + now.Format( _T("%Y-%m-%d %H:%M") ) + _T("]\n") );
+      wxString text = _T("### Session Start at [") + now.Format( _T("%Y-%m-%d %H:%M") ) + _T("]");
+      #ifdef __WXMSW__
+      text << _T("\r");
+      #endif
+      text << _T("\n");
+      return WriteLine( text );
 
     }
   }

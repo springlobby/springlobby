@@ -1,4 +1,5 @@
 #include "tasclientimport.h"
+#include <wx/platform.h>
 
 #ifdef __WXMSW__
 

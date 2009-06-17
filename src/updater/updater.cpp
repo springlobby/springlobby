@@ -1,16 +1,22 @@
 #include "versionchecker.h"
 #include "../settings++/custom_dialogs.h"
 #include "../utils.h"
-#include "exedownloader.h"
 #include "updater.h"
 #include "../settings.h"
 #include "../globalsmanager.h"
 #include "../ui.h"
 #include "../mainwindow.h"
+#include "../httpdownloader.h"
 
 #include <wx/stdpaths.h>
 #include <wx/filefn.h>
 #include <wx/filename.h>
+
+
+BEGIN_EVENT_TABLE(UpdaterClass, wxEvtHandler)
+    EVT_COMMAND(wxID_ANY, httpDownloadEvtComplete,  UpdaterClass::OnDownloadEvent)
+    EVT_COMMAND(wxID_ANY, httpDownloadEvtFailed,    UpdaterClass::OnDownloadEvent)
+END_EVENT_TABLE()
 
 UpdaterClass& Updater()
 {
@@ -26,7 +32,6 @@ UpdaterClass::UpdaterClass()
 
 UpdaterClass::~UpdaterClass()
 {
-  delete m_exedownloader;
 }
 
 void UpdaterClass::CheckForUpdates()
@@ -63,7 +68,7 @@ void UpdaterClass::CheckForUpdates()
         m_newexe = sett().GetLobbyWriteDir() + _T("update") + sep;
         wxMkdir( m_newexe );
         wxString url = _T("springlobby.info/windows/springlobby-") + latestVersion + _T("-win32.zip");
-        m_exedownloader = new ExeDownloader( url, m_newexe + _T("temp.zip") );
+				new HttpDownloaderThread<UpdaterClass>( url, m_newexe + _T("temp.zip"), *this, wxID_HIGHEST + 10000, true, true );
       }
     #else
     customMessageBox(SL_MAIN_ICON, _("Your SpringLobby version is not up to date.\n\n") + msg, _("Not up to Date") );
@@ -71,8 +76,9 @@ void UpdaterClass::CheckForUpdates()
   }
 }
 
-void UpdaterClass::OnDownloadEvent( int code )
+void UpdaterClass::OnDownloadEvent( wxCommandEvent& event )
 {
+	int code = event.GetInt();
   if ( code != 0) customMessageBox(SL_MAIN_ICON, _("There was an error downloading for the latest version.\nPlease try again later.\nIf the problem persists, please use Help->Report Bug to report this bug."), _("Error"));
   else
   {

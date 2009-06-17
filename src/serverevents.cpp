@@ -14,12 +14,18 @@
 #include "utils.h"
 #include "server.h"
 #include "battle.h"
+#include "httpdownloader.h"
 #include "settings.h"
 #include "settings++/custom_dialogs.h"
 #ifndef NO_TORRENT_SYSTEM
 #include "torrentwrapper.h"
 #endif
 #include "globalsmanager.h"
+
+BEGIN_EVENT_TABLE(ServerEvents, wxEvtHandler)
+    EVT_COMMAND(wxID_ANY, httpDownloadEvtComplete,  ServerEvents::OnSpringDownloadEvent)
+    EVT_COMMAND(wxID_ANY, httpDownloadEvtFailed,    ServerEvents::OnSpringDownloadEvent)
+END_EVENT_TABLE()
 
 void ServerEvents::OnConnected( const wxString& server_name, const wxString& server_ver, bool supported, const wxString& server_spring_ver, bool lanmode )
 {
@@ -299,6 +305,8 @@ void ServerEvents::OnHostedBattle( int battleid )
         {
             battle.LoadOptionsPreset( presetname );
         }
+
+        battle.LoadMapDefaults( battle.GetHostMapName() );
 
         m_serv.SendHostInfo( IBattle::HI_Send_All_opts );
 
@@ -910,4 +918,47 @@ void ServerEvents::OnScriptEnd( int battleid )
 			return;
 	}
 	m_serv.GetBattle( battleid ).GetBattleFromScript( true );
+}
+
+
+void ServerEvents::OnFileDownload( bool autolaunch, bool autoclose, bool disconnectonrefuse, const wxString& FileName, const wxString& url, const wxString& description )
+{
+	bool result = ui().Ask( _("Download update"), wxString::Format( _("Would you like to download %s ? The file offers the following updates:\n%s"), FileName.c_str(), description.c_str() ) );
+	if ( result )
+	{
+		m_autoclose = autoclose;
+		m_autolaunch = autolaunch;
+		m_savepath = sett().GetCurrentUsedDataDir() + FileName;
+		customMessageBox(SL_MAIN_ICON, _("Download started in the background, please be patient\nyou will be notified on operation completed."), _("Download started"));
+		new HttpDownloaderThread<ServerEvents>( url, m_savepath, *this, wxID_HIGHEST + 100, true, false );
+	}
+	else
+	{
+		if ( disconnectonrefuse )
+		{
+			customMessageBox(SL_MAIN_ICON, _("You refused a mandatory update, you will be disconnected now."), _("Disconnecting"));
+			m_serv.Disconnect();
+		}
+	}
+}
+void ServerEvents::OnSpringDownloadEvent( wxCommandEvent& event )
+{
+	int code = event.GetInt();
+  if ( code != 0) customMessageBox(SL_MAIN_ICON, _("There was an error downloading for the latest version.\nPlease update manually from http://springrts.com"), _("Error"));
+  else
+  {
+			if ( m_autolaunch )
+			{
+				if ( !wxExecute ( m_savepath, wxEXEC_ASYNC ) )
+				{
+						customMessageBoxNoModal(SL_MAIN_ICON, _("Couldn't launch installer. File location is: ") + m_savepath, _("Couldn't launch installer.")  );
+				}
+			}
+			else
+			{
+				customMessageBoxNoModal(SL_MAIN_ICON, _("Download complete, location is: ") + m_savepath, _("Download complete.")  );
+			}
+			if ( m_autoclose ) ui().Quit();
+
+  }
 }

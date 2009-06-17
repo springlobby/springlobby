@@ -68,10 +68,13 @@ wxString SavegameList::GetScriptFromSavegame ( const wxString& SavegamePath  )
 	std::ifstream file(SavegamePath.mb_str(), std::ios::in|std::ios::binary);
 	std::string script;
 	char c;
-	do
+	if ( file.is_open() )
 	{
-		file.read(&c,sizeof(char));
-		if (c) script += c;
-	} while (c != 0);
+		do
+		{
+			file.read(&c,sizeof(char));
+			if (c) script += c;
+		} while ( ( c != 0 ) && !file.eof() );
+	}
 	return WX_STRING( script );
 }

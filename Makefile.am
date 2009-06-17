@@ -67,7 +67,8 @@ EXTRA_DIST = \
 	src/playback/playbacktraits.h \
 	src/playback/playbackstructs.h \
 	src/playback/playbacklist.h \
-	src/playback/playbacklist.cpp
+	src/playback/playbacklist.cpp \
+	src/httpdownloader.cpp
 	
 
 springsettings_LDADD = \
@@ -888,7 +889,6 @@ springlobby_SOURCES = \
 	src/globalevents.h \
 	src/globalevents.cpp \
 	src/httpdownloader.h \
-	src/httpdownloader.cpp \
 	src/Helper/TextCompletionDatabase.hpp \
 	src/Helper/TextCompletionDatabase.cpp \
 	src/Helper/wxTranslationHelper.h \
@@ -933,8 +933,6 @@ springlobby_SOURCES = \
 	src/aui/artprovider.cpp \
 	src/updater/updater.h \
 	src/updater/updater.cpp \
-	src/updater/exedownloader.h \
-	src/updater/exedownloader.cpp \
 	src/widgets/downloadlistctrl.cpp \
 	src/widgets/downloadlistctrl.h \
 	src/widgets/downloaddialog.cpp \

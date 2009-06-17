@@ -6,8 +6,9 @@
     typedef wxListCtrl ListBaseType;
 #else
 //disabled until further fixes
-//    #include "Helper/listctrl.h"
-//    typedef SL_Extern::wxGenericListCtrl ListBaseType;
+    #include <wx/msw/winundef.h>
+ //   #include "Helper/listctrl.h"
+ //   typedef SL_Extern::wxGenericListCtrl ListBaseType;
     #include <wx/listctrl.h>
     typedef wxListCtrl ListBaseType;
 #endif
