@@ -985,7 +985,7 @@ wxString Settings::GetForcedSpringConfigFilePath()
 
 bool Settings::GetChatLogEnable()
 {
-    if (!m_config->Exists(_T("/ChatLog/chatlog_enable"))) SetChatLogEnable( false );
+    if (!m_config->Exists(_T("/ChatLog/chatlog_enable"))) SetChatLogEnable( true );
     return m_config->Read( _T("/ChatLog/chatlog_enable"), true );
 }
 
