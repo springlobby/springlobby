@@ -640,7 +640,7 @@ void ChatPanel::OutputLine( const ChatLine& line )
   m_chatlog_text->SetDefaultStyle( line.chatstyle );
 
 
-	if ( true )
+	if ( sett().GetUseIrcColors() )
 	{
 		wxString m1;
 		wxString m2;

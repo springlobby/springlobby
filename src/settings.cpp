@@ -1530,6 +1530,17 @@ void Settings::ConvertOldHiglightSettings()
 	SetHighlightedWords( wxStringTokenize( m_config->Read( _T("/Chat/HighlightedWords"), _T("") ), _T(";") ) );
 }
 
+void Settings::SetUseIrcColors( bool value )
+{
+	m_config->Write( _T("/Chat/UseIrcColors"), value);
+}
+
+bool Settings::GetUseIrcColors()
+{
+	return m_config->Read( _T("/Chat/UseIrcColors"), true );
+}
+
+
 void Settings::SetHighlightedWords( const wxArrayString& words )
 {
 	for ( unsigned int i = 0; i < words.GetCount(); i++ )
