@@ -1,5 +1,13 @@
 /* Copyright (C) 2007-2009 The SpringLobby Team. All rights reserved. */
 
+
+#ifdef _MSC_VER
+#ifndef NOMINMAX
+    #define NOMINMAX
+#endif // NOMINMAX
+#include <winsock2.h>
+#endif // _MSC_VER
+
 #include <wx/string.h>
 #include <wx/regex.h>
 #include <wx/intl.h>
