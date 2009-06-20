@@ -55,7 +55,6 @@ protected:
     unsigned int m_coloumnCount;
 
     struct colInfo {
-				colInfo(){}
         colInfo(int n, wxString l, wxString t, bool c, int s):
             col_num(n),label(l),tip(t),can_resize(c),size(s) {}
         colInfo(){}
