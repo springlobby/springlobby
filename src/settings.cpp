@@ -1532,6 +1532,9 @@ void Settings::ConvertOldHiglightSettings()
 
 void Settings::SetHighlightedWords( const wxArrayString& words )
 {
+	if(m_config->Exists( _T("/Chat/HighlightedWords"))) // flush existing entries
+		m_config->DeleteGroup(_T("/Chat/HighlightedWords"));
+
 	for ( unsigned int i = 0; i < words.GetCount(); i++ )
 	{
 		m_config->Write( _T("/Chat/HighlightedWords/") + words[i], words[i] );
