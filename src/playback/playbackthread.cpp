@@ -51,7 +51,7 @@ wxArrayString PlaybackLoader<PlaybackTabImp>::GetPlaybackFilenames()
 }
 
 template <class PlaybackTabImp >
-PlaybackLoader<PlaybackTabImp>::ThreadType::PlaybackLoaderThread():
+PlaybackLoader<PlaybackTabImp>::PlaybackLoaderThread::PlaybackLoaderThread():
 m_parent(0)
 {
 }
@@ -69,7 +69,7 @@ void* PlaybackLoader<PlaybackTabImp>::ThreadType::Entry()
 }
 
 template <class PlaybackTabImp >
-void PlaybackLoader<PlaybackTabImp>::ThreadType::SetParent( ParentType* parent )
+void PlaybackLoader<PlaybackTabImp>::PlaybackLoaderThread::SetParent( ParentType* parent )
 {
 	m_parent = parent;
 }

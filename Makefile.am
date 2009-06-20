@@ -67,7 +67,8 @@ EXTRA_DIST = \
 	src/playback/playbacktraits.h \
 	src/playback/playbackstructs.h \
 	src/playback/playbacklist.h \
-	src/playback/playbacklist.cpp
+	src/playback/playbacklist.cpp \
+	src/httpdownloader.cpp
 	
 
 springsettings_LDADD = \
