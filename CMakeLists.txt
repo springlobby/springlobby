@@ -36,7 +36,7 @@ SET( OPTION_SOUND
 	1 CACHE BOOL
 	"Enables sound notification functionality (requires SDL and SDL_sound libraries)" )
 SET( OPTION_TRANSLATION_SUPPORT
-	1 CACHE BOOL
+	0 CACHE BOOL
 	"Enables translation support to the programs and adds facilities for helping translators (requires GNU Gettext)" )
 
 #----------------------------------------------------------------------------------------------------
