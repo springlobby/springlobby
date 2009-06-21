@@ -120,9 +120,9 @@ void ServerEvents::OnMotd( const wxString& msg )
 }
 
 
-void ServerEvents::OnPong( int ping_time )
+void ServerEvents::OnPong( wxLongLong ping_time )
 {
-    ui().OnServerMessage( m_serv, wxString::Format( _("ping reply took %d seconds"), ping_time ) );
+    ui().OnServerMessage( m_serv, wxString::Format( _("ping reply took %d ms"), ping_time ) );
 }
 
 

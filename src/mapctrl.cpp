@@ -435,14 +435,12 @@ void MapCtrl::GetClosestStartPos( int fromx, int fromy, int& index, int& x, int&
 }
 
 
-void MapCtrl::LoadMinimap()
+int MapCtrl::LoadMinimap()
 {
     wxLogDebugFunc( _T("") );
-    if ( m_battle == 0 ) return;
-    if ( m_minimap ) return;
-    if ( !m_battle->MapExists() ) return;
-    long longval;
-    m_battle->CustomBattleOptions().getSingleValue( _T("startpostype") , OptionsWrapper::EngineOption ).ToLong( &longval );
+    if ( m_battle == 0 ) return -1;
+    if ( m_minimap ) return -1;
+    if ( !m_battle->MapExists() ) return -1;
 
     wxString map = m_battle->GetHostMapName();
 
@@ -454,7 +452,7 @@ void MapCtrl::LoadMinimap()
         {
             m_mapname = _T("");
             m_lastsize = wxSize( -1, -1 );
-            return;
+            return -2;
         }
 
         // start chain of asynchronous map image fetches
@@ -469,8 +467,9 @@ void MapCtrl::LoadMinimap()
     catch (...)
     {
         FreeMinimap();
+		return -3;
     }
-    if ( longval == IBattle::ST_Pick ) RelocateUsers();
+	return 0;
 }
 
 
@@ -494,10 +493,18 @@ void MapCtrl::UpdateMinimap()
     GetClientSize( &w, &h );
     if ( m_battle )  //needs to be looked into, crahses with replaytab (koshi)
     {
-        if ( (m_mapname != m_battle->GetHostMapName() ) || ( m_lastsize != wxSize(w, h) ) )
+		bool just_resize = ( m_lastsize != wxSize(-1,-1) && m_lastsize != wxSize(w, h) );
+        if ( (m_mapname != m_battle->GetHostMapName() ) || just_resize )
         {
             FreeMinimap();
-            LoadMinimap();
+            int loaded_ok = LoadMinimap();
+
+			if(!just_resize && loaded_ok == 0) // if a new map is loaded, reset start positions
+			{
+				long longval;
+				m_battle->CustomBattleOptions().getSingleValue( _T("startpostype") , OptionsWrapper::EngineOption ).ToLong( &longval );
+				if ( longval == IBattle::ST_Pick ) RelocateUsers();
+			}
         }
     }
     Refresh();
