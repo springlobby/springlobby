@@ -478,7 +478,7 @@ bool BattleListFilter::FilterBattle(IBattle& battle)
   if ( m_filter_rank_choice_value != -1 /* don't have "all" selected */
        && !nonsenserank			/* Nonsensical `nonsenserank' flag isn't set. */
        && !_IntCompare( battle.GetRankNeeded(),
-			m_filter_rank_choice_value +1,
+			m_filter_rank_choice_value,
 			m_filter_rank_mode ) )
       return false;
 
