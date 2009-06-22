@@ -985,7 +985,7 @@ wxString Settings::GetForcedSpringConfigFilePath()
 
 bool Settings::GetChatLogEnable()
 {
-    if (!m_config->Exists(_T("/ChatLog/chatlog_enable"))) SetChatLogEnable( false );
+    if (!m_config->Exists(_T("/ChatLog/chatlog_enable"))) SetChatLogEnable( true );
     return m_config->Read( _T("/ChatLog/chatlog_enable"), true );
 }
 
@@ -1529,6 +1529,17 @@ void Settings::ConvertOldHiglightSettings()
 {
 	SetHighlightedWords( wxStringTokenize( m_config->Read( _T("/Chat/HighlightedWords"), _T("") ), _T(";") ) );
 }
+
+void Settings::SetUseIrcColors( bool value )
+{
+	m_config->Write( _T("/Chat/UseIrcColors"), value);
+}
+
+bool Settings::GetUseIrcColors()
+{
+	return m_config->Read( _T("/Chat/UseIrcColors"), true );
+}
+
 
 void Settings::SetHighlightedWords( const wxArrayString& words )
 {

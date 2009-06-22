@@ -459,6 +459,9 @@ class Settings
 
 		void ConvertOldHiglightSettings();
 
+		void SetUseIrcColors( bool value );
+		bool GetUseIrcColors();
+
     /* ================================================================ */
     /** @name Hosting
      *
