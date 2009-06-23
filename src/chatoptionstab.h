@@ -104,7 +104,7 @@ class ChatOptionsTab : public wxScrolledWindow
 
     wxTextCtrl* m_highlight_words;
 
-    wxCheckBox* m_smart_scroll;
+    wxCheckBox* m_irc_colors;
 
     wxFont m_chat_font;
 

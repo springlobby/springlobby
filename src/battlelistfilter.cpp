@@ -1,4 +1,4 @@
-/* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
+/* Copyright (C) 2007-2009 The SpringLobby Team. All rights reserved. */
 //
 // Class: BattleOptionsTab
 //
@@ -363,31 +363,41 @@ BattleListFilter::BattleListFilter( wxWindow* parent, wxWindowID id, BattleListT
 
 }
 
-BattleListFilter::m_button_mode BattleListFilter::_GetButtonMode(wxString sign)
+BattleListFilter::ButtonMode BattleListFilter::_GetButtonMode(const wxString sign)
 {
     if ( sign == _T("<") )
-        return m_smaller;
+        return BattleListFilter::BUTTON_MODE_SMALLER;
     if ( sign == _T(">") )
-        return m_bigger;
-    return m_equal;
+        return BattleListFilter::BUTTON_MODE_BIGGER;
+    return BattleListFilter::BUTTON_MODE_EQUAL;
 }
 
-wxString BattleListFilter::_GetButtonSign(m_button_mode value)
+wxString BattleListFilter::_GetButtonSign(const BattleListFilter::ButtonMode value)
+{
+    switch (value) {
+    case BUTTON_MODE_EQUAL   : return _T("=");
+    case BUTTON_MODE_SMALLER : return _T("<");
+    default        : return _T(">");
+    }
+}
+
+
+BattleListFilter::ButtonMode BattleListFilter::_GetNextMode(const BattleListFilter::ButtonMode value)
 {
   switch (value) {
-    case m_equal   : return _T("=");
-    case m_smaller : return _T("<");
-    default        : return _T(">");
+    case BUTTON_MODE_EQUAL   : return BUTTON_MODE_SMALLER;
+    case BUTTON_MODE_SMALLER : return BUTTON_MODE_BIGGER;
+    default        : return BUTTON_MODE_EQUAL;
   }
 }
 
-
-BattleListFilter::m_button_mode BattleListFilter::_GetNextMode(m_button_mode value)
+bool BattleListFilter::_IntCompare(const int a, const int b, const BattleListFilter::ButtonMode mode)
 {
-  switch (value) {
-    case m_equal   : return m_smaller;
-    case m_smaller : return m_bigger;
-    default        : return m_equal;
+    switch (mode) {
+    case BUTTON_MODE_EQUAL   : return (a == b);
+    case BUTTON_MODE_SMALLER : return (a <  b);
+    case BUTTON_MODE_BIGGER  : return (a >  b);
+    default        : return false;
   }
 }
 
@@ -429,16 +439,6 @@ void BattleListFilter::SetActiv( bool state )
   }
 }
 
-bool BattleListFilter::_IntCompare(int a,int b,m_button_mode mode)
-{
-  switch (mode) {
-    case m_equal   : return (a == b);
-    case m_smaller : return (a <  b);
-    case m_bigger  : return (a >  b);
-    default        : return false;
-  }
-}
-
 bool BattleListFilter::FilterBattle(IBattle& battle)
 {
 
@@ -465,9 +465,22 @@ bool BattleListFilter::FilterBattle(IBattle& battle)
   if ( !m_filter_status_open->GetValue() && !battle.IsPassworded() && !battle.IsLocked() && !battle.GetInGame() && !battle.IsFull() ) return false;
 
   //Rank Check
-  bool nonsenserank = ( m_filter_rank_mode == m_smaller ) && ( battle.GetRankNeeded() == 100) ;
-  if ( (m_filter_rank_choice_value != -1) && !nonsenserank &&
-            !_IntCompare( int( battle.GetRankNeeded()*0.01), m_filter_rank_choice_value +1, m_filter_rank_mode ) ) return false;
+
+  /** @fixme Is `nonsenserank' useful, or can it be removed?  Why is
+   * it here in the first place?
+   */
+  /* `Nonsense', in this context, apparently means that the battle
+   * requires rank 100, exactly, AND we're filtering for values less
+   * than some number.
+   */
+  bool nonsenserank = ( m_filter_rank_mode == BUTTON_MODE_SMALLER ) && ( battle.GetRankNeeded() == 100) ;
+
+  if ( m_filter_rank_choice_value != -1 /* don't have "all" selected */
+       && !nonsenserank			/* Nonsensical `nonsenserank' flag isn't set. */
+       && !_IntCompare( battle.GetRankNeeded(),
+			m_filter_rank_choice_value,
+			m_filter_rank_mode ) )
+      return false;
 
   //Player Check
   if ( (m_filter_player_choice_value != -1) && !_IntCompare( battle.GetNumUsers() - battle.GetSpectators() , m_filter_player_choice_value , m_filter_player_mode ) ) return false;
@@ -581,15 +594,15 @@ void  BattleListFilter::SaveFilterValues()
     filtervalues.map = m_filter_map_edit->GetValue();
     filtervalues.map_show = m_filter_map_show->GetValue();
     filtervalues.map = m_filter_map_edit->GetValue();
-    filtervalues.maxplayer = wxString::Format(_("%d%"),m_filter_maxplayer_choice->GetSelection());
+    filtervalues.maxplayer = wxString::Format(_("%d"),m_filter_maxplayer_choice->GetSelection());
     filtervalues.maxplayer_mode = _GetButtonSign(m_filter_maxplayer_mode);
     filtervalues.mod = m_filter_mod_edit->GetValue();
     filtervalues.mod_show = m_filter_mod_show->GetValue();
     filtervalues.player_mode = _GetButtonSign(m_filter_player_mode);
-    filtervalues.player_num = wxString::Format(_("%d%"),m_filter_player_choice->GetSelection());
-    filtervalues.rank = wxString::Format(_("%d%"),m_filter_rank_choice->GetSelection());
+    filtervalues.player_num = wxString::Format(_("%d"),m_filter_player_choice->GetSelection());
+    filtervalues.rank = wxString::Format(_("%d"),m_filter_rank_choice->GetSelection());
     filtervalues.rank_mode = _GetButtonSign(m_filter_rank_mode);
-    filtervalues.spectator = wxString::Format(_("%d%"),m_filter_spectator_choice->GetSelection());
+    filtervalues.spectator = wxString::Format(_("%d"),m_filter_spectator_choice->GetSelection());
     filtervalues.spectator_mode = _GetButtonSign(m_filter_spectator_mode);
     filtervalues.status_full = m_filter_status_full->IsChecked();
     filtervalues.status_locked = m_filter_status_locked->IsChecked();
