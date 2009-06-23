@@ -339,12 +339,6 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
         m_autolock_chk->Disable();
     }
 
-    if ( IsHosted() && !m_battle.IsProxy() )
-    {
-        m_battle.SetImReady ( true );
-        m_ready_chk->Disable();
-    }
-
     if ( battle.IsProxy() )
     {
 			m_battle.CustomBattleOptions().setSingleOption( _T("startpostype"), _T("3"), OptionsWrapper::EngineOption ); // set start position type to chose before game
@@ -507,33 +501,22 @@ void BattleRoomTab::UpdateUser( User& user )
     m_ally_sel->SetSelection( bs.ally );
     m_side_sel->SetSelection( bs.side );
     m_spec_chk->SetValue( bs.spectator );
-		if ( IsHosted() && !m_battle.IsProxy() && !bs.ready ) m_battle.SetImReady( true );
     // Enable or disable widgets' sensitivity as appropriate.
     if ( bs.spectator )
     {
-				if ( m_battle.GetBattleType() == BT_Played )
-				{
-					m_ready_chk->SetValue ( true );
-					m_ready_chk->Disable();
-				}
-				else
-				{
-					m_ready_chk->Enable();
-				}
         m_side_sel->Disable();
         m_ally_sel->Disable();
         m_team_sel->Disable();
+        if ( m_battle.GetBattleType != BT_Replay ) m_ready_chk->Disable();
+        else m_ready_chk->Enable();
     }
     else
     {
-        if ( !IsHosted() || m_battle.IsProxy() )
-        {
-            m_ready_chk->Enable();
-        }
-        m_ready_chk->SetValue( bs.ready );
         m_side_sel->Enable();
         m_ally_sel->Enable();
         m_team_sel->Enable();
+        if ( m_battle.GetBattleType != BT_Replay ) m_ready_chk->Enable();
+        else m_ready_chk->Enable();
     }
 
     icons().SetColourIcon( bs.team, user.BattleStatus().colour );
