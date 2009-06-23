@@ -107,7 +107,7 @@ bool SpringLobbyApp::OnInit()
 {
 
 
-  if ( !ParseCmdLine() ) return false; ///command line parsing failed, close the app
+//  if ( !ParseCmdLine() ) return false; ///command line parsing failed, close the app
 
 #if wxUSE_ON_FATAL_EXCEPTION
   if (!m_crash_handle_disable) wxHandleFatalExceptions( true );
@@ -394,25 +394,28 @@ bool SpringLobbyApp::SelectLanguage()
     return ret;
 }
 
-
-//! @brief parses the command line and sets global app options like log verbosity or log target
-bool SpringLobbyApp::ParseCmdLine()
+void SpringLobbyApp::OnInitCmdLine(wxCmdLineParser& parser)
 {
-  #if wxUSE_CMDLINE_PARSER
-
     wxCmdLineEntryDesc cmdLineDesc[] =
     {
-      { wxCMD_LINE_SWITCH, _T("h"), _T("help"), _("show this help message"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_OPTION_HELP },
+        { wxCMD_LINE_SWITCH, _T("h"), _T("help"), _("show this help message"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_OPTION_HELP },
 //      { wxCMD_LINE_SWITCH, _T("nc"), _T("no-crash-handler"), _("don't use the crash handler (useful for debugging)"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
 //      { wxCMD_LINE_SWITCH, _T("cl"), _T("console-logging"),  _("shows application log to the console(if available)"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
 //      { wxCMD_LINE_SWITCH, _T("gl"), _T("gui-logging"),  _("enables application log window"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
 //      { wxCMD_LINE_OPTION, _T("c"), _T("config-file"),  _("override default choice for config-file"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL | wxCMD_LINE_NEEDS_SEPARATOR },
-      { wxCMD_LINE_OPTION, _T("l"), _T("log-verbosity"),  _("overrides default logging verbosity, can be:\n                                0: no log\n                                1: critical errors\n                                2: errors\n                                3: warnings (default)\n                                4: messages\n                                5: function trace"), wxCMD_LINE_VAL_NUMBER, wxCMD_LINE_PARAM_OPTIONAL },
+        { wxCMD_LINE_OPTION, _T("l"), _T("log-verbosity"),  _("overrides default logging verbosity, can be:\n                                0: no log\n                                1: critical errors\n                                2: errors\n                                3: warnings (default)\n                                4: messages\n                                5: function trace"), wxCMD_LINE_VAL_NUMBER, wxCMD_LINE_PARAM_OPTIONAL },
+        { wxCMD_LINE_NONE }
+
     };
 
-    wxCmdLineParser parser( cmdLineDesc, argc, argv );
+    parser.SetDesc( cmdLineDesc );
     parser.SetSwitchChars (wxT("-"));
+}
 
+//! @brief parses the command line and sets global app options like log verbosity or log target
+bool SpringLobbyApp::OnCmdLineParsed(wxCmdLineParser& parser)
+{
+  #if wxUSE_CMDLINE_PARSER
     if ( !parser.Parse(true) )
     {
 //        m_log_console = parser.Found(_T("console-logging"));
@@ -437,3 +440,4 @@ bool SpringLobbyApp::ParseCmdLine()
   return true;
   #endif
 }
+

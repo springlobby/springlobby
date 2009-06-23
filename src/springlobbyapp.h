@@ -25,7 +25,9 @@ class SpringLobbyApp : public wxApp
     void OnTimer( wxTimerEvent& event );
     bool SelectLanguage();
 
-    bool ParseCmdLine();
+    virtual void OnInitCmdLine(wxCmdLineParser& parser);
+    virtual bool OnCmdLineParsed(wxCmdLineParser& parser);
+
 
   protected:
 
