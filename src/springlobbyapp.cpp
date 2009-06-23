@@ -106,7 +106,7 @@ SpringLobbyApp::~SpringLobbyApp()
 //! It will open the main window and connect default to server or open the connect window.
 bool SpringLobbyApp::OnInit()
 {
-    // call default behaviour (mandatory)
+    //this triggers the Cli Parser amongst other stuff
     if (!wxApp::OnInit())
         return false;
 
@@ -114,7 +114,13 @@ bool SpringLobbyApp::OnInit()
   if (!m_crash_handle_disable) wxHandleFatalExceptions( true );
 #endif
     //initialize all loggers
+//    InitializeLoggingTargets( 0, m_log_console, m_log_window_show, !m_crash_handle_disable, m_log_verbosity );
+
+    //nasty hack to not have gui debug alerts popup during init of MainWindow
+    { wxLogNull nulllog; ui().mw(); }
+    // w/o above hack, this'll make gui debug alarms popup, no matter what logchain is set...
     InitializeLoggingTargets( (wxFrame*) &(ui().mw()), m_log_console, m_log_window_show, !m_crash_handle_disable, m_log_verbosity );
+
 
     //this needs to called _before_ mainwindow instance is created
     wxInitAllImageHandlers();
@@ -407,7 +413,7 @@ void SpringLobbyApp::OnInitCmdLine(wxCmdLineParser& parser)
 //      { wxCMD_LINE_SWITCH, _T("gl"), _T("gui-logging"),  _("enables application log window"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
 //      { wxCMD_LINE_OPTION, _T("c"), _T("config-file"),  _("override default choice for config-file"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL | wxCMD_LINE_NEEDS_SEPARATOR },
         { wxCMD_LINE_OPTION, _T("l"), _T("log-verbosity"),  _("overrides default logging verbosity, can be:\n                                0: no log\n                                1: critical errors\n                                2: errors\n                                3: warnings (default)\n                                4: messages\n                                5: function trace"), wxCMD_LINE_VAL_NUMBER, wxCMD_LINE_PARAM_OPTIONAL },
-//        { wxCMD_LINE_NONE }
+        { wxCMD_LINE_NONE }
 
     };
 
