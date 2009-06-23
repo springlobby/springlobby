@@ -16,6 +16,7 @@
 #include <wx/log.h>
 #include <wx/tokenzr.h>
 #include <wx/platinfo.h>
+#include <wx/stopwatch.h>
 
 #include <stdexcept>
 #include <algorithm>
@@ -1143,7 +1144,7 @@ void TASServer::Ping()
 		m_id_transmission = false;
     TASPingListItem pli;
     pli.id = m_last_id;
-    pli.t = time( 0 );
+    pli.t = wxGetLocalTimeMillis(); 
     m_pinglist.push_back ( pli );
 }
 
@@ -1164,7 +1165,7 @@ void TASServer::HandlePong( int replyid )
 
     if ( found )
     {
-        m_se->OnPong( (time( 0 ) - it->t) );
+        m_se->OnPong( (wxGetLocalTimeMillis() - it->t) );
         m_pinglist.erase( it );
     }
 }
