@@ -96,18 +96,18 @@ void InitializeLoggingTargets( wxFrame* parent, bool console, bool showgui, bool
     switch (verbosity)
     {
       case 1:
-        lastlog->SetLogLevel( wxLOG_FatalError );
+        lastlog->SetLogLevel( wxLOG_FatalError ); break;
       case 2:
-        lastlog->SetLogLevel( wxLOG_Error );
+        lastlog->SetLogLevel( wxLOG_Error ); break;
       case 3:
-        lastlog->SetLogLevel( wxLOG_Warning );
+        lastlog->SetLogLevel( wxLOG_Warning ); break;
       case 4:
-        lastlog->SetLogLevel( wxLOG_Message );
+        lastlog->SetLogLevel( wxLOG_Message ); break;
       case 5:
-        lastlog->SetLogLevel( wxLOG_Trace );
-        lastlog->SetVerbose( true );
+        lastlog->SetLogLevel( wxLOG_Trace ); break;
+        lastlog->SetVerbose( true ); break;
       default:
-        lastlog->SetLogLevel( wxLOG_Warning );
+        lastlog->SetLogLevel( wxLOG_Warning ); break;
     }
   }
   else if ( verbosity == 0 ){
