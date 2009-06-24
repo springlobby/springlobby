@@ -501,6 +501,7 @@ void BattleRoomTab::UpdateUser( User& user )
     m_ally_sel->SetSelection( bs.ally );
     m_side_sel->SetSelection( bs.side );
     m_spec_chk->SetValue( bs.spectator );
+    m_ready_chk->SetValue( bs.ready );
     // Enable or disable widgets' sensitivity as appropriate.
     if ( bs.spectator )
     {
