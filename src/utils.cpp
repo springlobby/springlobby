@@ -50,14 +50,14 @@ wxString GetLibExtension()
 
 //! @brief Initializes the logging functions.
 ///initializes logging in an hidden stream and std::cout/gui messages
-void InitializeLoggingTargets( wxFrame* parent, bool console, bool showgui, bool logcrash, int verbosity )
+wxLogWindow* InitializeLoggingTargets( wxFrame* parent, bool console, bool showgui, bool logcrash, int verbosity )
 {
-
+    wxLogWindow* loggerwin = 0;
   wxLogChain *lastlog;
   if ( showgui && verbosity != 0 )
   {
     ///gui window logging
-    wxLog *loggerwin = new wxLogWindow( (wxWindow*) parent, _T("SpringLobby error console"), showgui );
+    loggerwin = new wxLogWindow( (wxWindow*) parent, _T("SpringLobby error console"), showgui );
     wxLogChain *logGuiChain = new wxLogChain( loggerwin );
     lastlog = logGuiChain;
   }
@@ -114,31 +114,7 @@ void InitializeLoggingTargets( wxFrame* parent, bool console, bool showgui, bool
     new wxLogNull;
   }
 
-//old
-/*
-#if defined ( USE_LOG_WINDOW )
-    //gui window fallback logging if console/stream output not available
-    wxLog *loggerwin = new wxLogWindow(0, _T("SpringLobby error console")  );
-    loggerwin->SetLogLevel( wxLOG_Trace );
-    loggerwin->SetVerbose( true );
-#elif wxUSE_STD_IOSTREAM
-	#if wxUSE_DEBUGREPORT && defined(HAVE_WX28) && defined(ENABLE_DEBUG_REPORT)
-			//hidden stream logging for crash reports
-			wxLog *loggercrash = new wxLogStream( &crashreport().crashlog );
-			wxLogChain *logCrashChain = new wxLogChain( loggercrash );
-			logCrashChain->SetLogLevel( wxLOG_Trace );
-			logCrashChain->SetVerbose( true );
-	#endif
-    //std::cout logging
-    wxLog *loggerconsole = new wxLogStream( &std::cout );
-    wxLogChain *logChain = new wxLogChain( loggerconsole );
-    logChain->SetLogLevel( wxLOG_Trace );
-    logChain->SetVerbose( true );
-#else
-    // if all fails, no log is better than msg box spam :P
-    new wxLogNull();
-#endif
-*/
+    return loggerwin;
 }
 
 

@@ -32,6 +32,7 @@
 #include <wx/intl.h>
 #include <wx/log.h>
 #include <wx/cmdline.h>
+#include <wx/frame.h>
 
 #include "../springunitsynclib.h"
 
@@ -58,7 +59,7 @@ bool Springsettings::OnInit()
 
     //initialize all loggers
 	//TODO non-constant parameters
-    InitializeLoggingTargets( 0, m_log_console, m_log_window_show, !m_crash_handle_disable, m_log_verbosity );
+    wxLogWindow* loggerwin = InitializeLoggingTargets( 0, m_log_console, m_log_window_show, !m_crash_handle_disable, m_log_verbosity );
 
     #ifdef __WXMSW__
 		sett().SetPortableMode( true );
@@ -69,6 +70,11 @@ bool Springsettings::OnInit()
     		wxDefaultSize);
     SetTopWindow(frame);
     frame->Show();
+
+    if ( loggerwin ) { // we got a logwindow, lets set proper parent win
+        loggerwin->GetFrame()->SetParent( frame );
+    }
+
     return true;
 }
 

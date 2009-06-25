@@ -113,13 +113,9 @@ bool SpringLobbyApp::OnInit()
 #if wxUSE_ON_FATAL_EXCEPTION
   if (!m_crash_handle_disable) wxHandleFatalExceptions( true );
 #endif
-    //initialize all loggers
-//    InitializeLoggingTargets( 0, m_log_console, m_log_window_show, !m_crash_handle_disable, m_log_verbosity );
 
-    //nasty hack to not have gui debug alerts popup during init of MainWindow
-    { wxLogNull nulllog; ui().mw(); }
-    // w/o above hack, this'll make gui debug alarms popup, no matter what logchain is set...
-    InitializeLoggingTargets( (wxFrame*) &(ui().mw()), m_log_console, m_log_window_show, !m_crash_handle_disable, m_log_verbosity );
+    //initialize all loggers, we'll use the returned pointer to set correct parent window later
+    wxLogWindow* loggerwin = InitializeLoggingTargets( 0, m_log_console, m_log_window_show, !m_crash_handle_disable, m_log_verbosity );
 
 
     //this needs to called _before_ mainwindow instance is created
@@ -334,6 +330,10 @@ bool SpringLobbyApp::OnInit()
 //  #ifdef __WXMSW__
 //  if ( sett().GetAutoUpdate() )Updater().CheckForUpdates();
 //  #endif
+
+    if ( loggerwin ) { // we got a logwindow, lets set proper parent win
+        loggerwin->GetFrame()->SetParent( &(ui().mw()) );
+    }
 
     return true;
 }

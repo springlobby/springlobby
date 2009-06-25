@@ -119,7 +119,14 @@ T min(T a, T b, T c)
 }
 
 wxString GetLibExtension();
-void InitializeLoggingTargets( wxFrame* parent, bool console, bool showgui, bool logcrash, int verbosity );
+
+class wxLogWindow;
+
+/** \brief initialize logchain
+
+    \return Logwindow pointer (may be 0), useful if parent frame should be created _after_ logging is set up
+**/
+wxLogWindow* InitializeLoggingTargets( wxFrame* parent, bool console, bool showgui, bool logcrash, int verbosity );
 wxString GetWordParam( wxString& params );
 wxString GetSentenceParam( wxString& params );
 long GetIntParam( wxString& params );
