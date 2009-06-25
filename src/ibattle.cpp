@@ -375,7 +375,10 @@ void IBattle::StartRectAdded( unsigned int allyno )
 
 BattleStartRect IBattle::GetStartRect( unsigned int allyno )
 {
-    return m_rects[allyno];
+	std::map<unsigned int,BattleStartRect>::iterator rect_it = m_rects.find(allyno);
+	if( rect_it != m_rects.end() )
+		return (*rect_it).second;
+	return BattleStartRect();
 }
 
 unsigned int IBattle::GetNumRects()

@@ -282,15 +282,19 @@ double MapCtrl::GetStartRectMetalFraction( const BattleStartRect& sr )
 }
 
 
-int MapCtrl::GetNewRectIndex()
+unsigned int MapCtrl::GetNewRectIndex()
 {
     ASSERT_LOGIC ( m_battle, _T("getting a rectangle index not in a battle"));
-    for ( std::vector<BattleStartRect*>::size_type i = 0; i < m_battle->GetNumRects() ; i++ )
+	//lolwtf
+    /*for ( std::vector<BattleStartRect*>::size_type i = 0; i < m_battle->GetNumRects() ; i++ )
     {
         wxRect r = GetStartRect( i );
         if ( r.IsEmpty() ) return i;
     }
     return -1;
+	*/
+	return m_battle->GetNumRects(); //return first available index
+
 }
 
 

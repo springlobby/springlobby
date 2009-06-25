@@ -413,6 +413,8 @@ class SpringUnitSyncLib
      */
     wxArrayString GetAIInfo( int index );
 
+    wxString GetArchiveChecksum( const wxString& VFSPath );
+
     /// lua parser
 
     void CloseParser();

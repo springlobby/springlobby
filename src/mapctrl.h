@@ -135,7 +135,7 @@ class MapCtrl : public wxPanel
     wxRect GetRefreshRect();
     wxRect GetDownloadRect();
 
-    int GetNewRectIndex();
+    unsigned int GetNewRectIndex();
 
     void RequireImages();
 
