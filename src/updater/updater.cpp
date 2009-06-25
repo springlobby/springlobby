@@ -39,10 +39,7 @@ void UpdaterClass::CheckForUpdates()
     m_cur_mw_title = ui().mw().GetTitle();
 
   wxString latestVersion = GetLatestVersion();
-  // Need to replace crap chars or versions will always be inequal
-  latestVersion.Replace(_T(" "), _T(""), true);
-  latestVersion.Replace(_T("\n"), _T(""), true);
-  latestVersion.Replace(_T("\t"), _T(""), true);
+
   if (latestVersion == _T("-1"))
   {
     customMessageBoxNoModal(SL_MAIN_ICON, _("There was an error checking for the latest version.\nPlease try again later.\nIf the problem persists, please use Help->Report Bug to report this bug."), _("Error"));
@@ -58,17 +55,12 @@ void UpdaterClass::CheckForUpdates()
       if (answer == wxYES)
       {
           ui().mw().SetTitle( _("SpringLobby -- downloading update") );
-        wxString sep = wxFileName::GetPathSeparator();
-        wxString currentexe = wxStandardPaths::Get().GetExecutablePath();
-        if ( !wxFileName::IsDirWritable( currentexe.BeforeLast( wxFileName::GetPathSeparator() ) + wxFileName::GetPathSeparator() ) )
-        {
-          customMessageBoxNoModal(SL_MAIN_ICON, _("Unable to write to the lobby installation directory.\nPlease update manually or enable write permissions for the current user."), _("Error"));
-          return;
-        }
-        m_newexe = sett().GetLobbyWriteDir() + _T("update") + sep;
-        wxMkdir( m_newexe );
-        wxString url = _T("springlobby.info/windows/springlobby-") + latestVersion + _T("-win32.zip");
-				new HttpDownloaderThread<UpdaterClass>( url, m_newexe + _T("temp.zip"), *this, wxID_HIGHEST + 10000, true, true );
+          if ( IsUACenabled() ) {
+            WinExecuteAdmin( wxStandardPaths::Get().GetExecutablePath(), _T("-u") );
+          }
+          else
+            StartUpdate( latestVersion );
+
       }
     #else
     customMessageBox(SL_MAIN_ICON, _("Your SpringLobby version is not up to date.\n\n") + msg, _("Not up to Date") );
@@ -76,27 +68,67 @@ void UpdaterClass::CheckForUpdates()
   }
 }
 
+#ifdef __WXMSW__
+void UpdaterClass::StartUpdate( const wxString& latestVersion, bool fromCli )
+{
+    m_fromCli = fromCli;
+    wxString sep = wxFileName::GetPathSeparator();
+    wxString currentexe = wxStandardPaths::Get().GetExecutablePath();
+    if ( !wxFileName::IsDirWritable( currentexe.BeforeLast( wxFileName::GetPathSeparator() ) + wxFileName::GetPathSeparator() ) )
+    {
+      customMessageBoxNoModal(SL_MAIN_ICON, _("Unable to write to the lobby installation directory.\nPlease update manually or enable write permissions for the current user."), _("Error"));
+      return;
+    }
+    m_newexe = sett().GetLobbyWriteDir() + _T("update") + sep;
+    wxMkdir( m_newexe );
+    wxString url = _T("springlobby.info/windows/springlobby-") + latestVersion + _T("-win32.zip");
+    new HttpDownloaderThread<UpdaterClass>( url, m_newexe + _T("temp.zip"), *this, wxID_HIGHEST + 10000, true, true );
+}
+#endif
+
 void UpdaterClass::OnDownloadEvent( wxCommandEvent& event )
 {
 	int code = event.GetInt();
   if ( code != 0) customMessageBox(SL_MAIN_ICON, _("There was an error downloading for the latest version.\nPlease try again later.\nIf the problem persists, please use Help->Report Bug to report this bug."), _("Error"));
   else
   {
-    if ( !UpdateExe( m_newexe , false ) )
-        customMessageBoxNoModal(SL_MAIN_ICON, wxString::Format( _("There was an error while trying to replace the current executable version\n manual copy is necessary from: %s\n to: %s\nPlease use Help->Report Bug to report this bug."), m_newexe.c_str(), wxStandardPaths::Get().GetExecutablePath().c_str() ), _("Error"));
+    if ( !UpdateExe( m_newexe , false ) ) {
+        if ( !m_fromCli ) {
+            customMessageBoxNoModal(SL_MAIN_ICON, wxString::Format( _("There was an error while trying to replace the current executable version\n manual copy is necessary from: %s\n to: %s\nPlease use Help->Report Bug to report this bug."), m_newexe.c_str(), wxStandardPaths::Get().GetExecutablePath().c_str() ), _("Error"));
+        }
+        else {
+            customMessageBox(SL_MAIN_ICON, wxString::Format( _("There was an error while trying to replace the current executable version\n manual copy is necessary from: %s\n to: %s\nPlease use Help->Report Bug to report this bug."), m_newexe.c_str(), wxStandardPaths::Get().GetExecutablePath().c_str() ), _("Error"));
+        }
+    }
     else
     {
         bool locale_ok = UpdateLocale( m_newexe, false );
         if ( locale_ok ) {
-            customMessageBoxNoModal(SL_MAIN_ICON, _("Update complete. The changes will be available next lobby start."), _("Success"));
+            if ( !m_fromCli ) {
+                customMessageBoxNoModal(SL_MAIN_ICON, _("Update complete. The changes will be available next lobby start."), _("Success"));
+            }
+            else {
+                customMessageBox(SL_MAIN_ICON, _("Update complete. The changes will be available next lobby start."), _("Success"));
+                wxRmdir( m_newexe );
+                wxTheApp->ExitMainLoop();
+            }
         }
         else {
-            customMessageBoxNoModal(SL_MAIN_ICON, _("Binary updated successfully. \nSome translation files could not be updated.\nPlease report this in #springlobby after restarting."), _("Partial success"));
+            if ( !m_fromCli ) {
+                customMessageBoxNoModal(SL_MAIN_ICON, _("Binary updated successfully. \nSome translation files could not be updated.\nPlease report this in #springlobby after restarting."), _("Partial success"));
+            }
+            else {
+                customMessageBox(SL_MAIN_ICON, _("Binary updated successfully. \nSome translation files could not be updated.\nPlease report this in #springlobby after restarting."), _("Partial success"));
+                wxRmdir( m_newexe );
+                wxTheApp->ExitMainLoop();
+            }
         }
         wxRmdir( m_newexe );
     }
   }
-    ui().mw().SetTitle( m_cur_mw_title );
+
+    if ( !m_fromCli )
+        ui().mw().SetTitle( m_cur_mw_title );
 }
 
 bool UpdaterClass::UpdateLocale( const wxString& tempdir, bool WaitForReboot )

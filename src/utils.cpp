@@ -442,8 +442,8 @@ int WinExecuteAdmin( const wxString& command, const wxString& params )
       shExecInfo.fMask = NULL;
       shExecInfo.hwnd = NULL;
       shExecInfo.lpVerb = L"runas";
-      shExecInfo.lpFile = L"notepad.exe";
-      shExecInfo.lpParameters = NULL;
+      shExecInfo.lpFile = command.wc_str();
+      shExecInfo.lpParameters = params.wc_str();
       shExecInfo.lpDirectory = NULL;
       shExecInfo.nShow = SW_MAXIMIZE;
       shExecInfo.hInstApp = NULL;

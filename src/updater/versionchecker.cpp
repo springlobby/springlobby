@@ -75,5 +75,10 @@ wxString GetLatestVersion()
   wxDELETE(stream);
   versionRequest.Close();
 
+    // Need to replace crap chars or versions will always be inequal
+  result.Replace(_T(" "), _T(""), true);
+  result.Replace(_T("\n"), _T(""), true);
+  result.Replace(_T("\t"), _T(""), true);
+
   return result;
 }
