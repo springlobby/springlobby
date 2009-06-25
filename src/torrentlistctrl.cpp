@@ -2,6 +2,13 @@
 
 #ifndef NO_TORRENT_SYSTEM
 
+#ifdef _MSC_VER
+#ifndef NOMINMAX
+    #define NOMINMAX
+#endif // NOMINMAX
+#include <winsock2.h>
+#endif // _MSC_VER
+
 #include <wx/intl.h>
 #include <wx/menu.h>
 

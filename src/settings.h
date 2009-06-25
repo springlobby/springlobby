@@ -4,7 +4,7 @@
 #include <wx/string.h>
 #include <vector>
 
-const int CACHE_VERSION     = 9;
+const int CACHE_VERSION     = 10;
 const int SETTINGS_VERSION  = 13;
 
 const wxString DEFSETT_DEFAULT_SERVER_NAME= _T("Official server");
@@ -82,6 +82,11 @@ class Settings
    */
     Settings();
     ~Settings();
+
+    /** used for passing config file at command line
+    */
+    static bool m_user_defined_config;
+    static wxString m_user_defined_config_path;
 
 		/// used to import default configs from a file in windows
 		#ifdef __WXMSW__
@@ -458,6 +463,9 @@ class Settings
     void SetAlwaysAutoScrollOnFocusLost(bool value);
 
 		void ConvertOldHiglightSettings();
+
+		void SetUseIrcColors( bool value );
+		bool GetUseIrcColors();
 
     /* ================================================================ */
     /** @name Hosting

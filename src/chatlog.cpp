@@ -67,12 +67,12 @@ bool ChatLog::AddMessage(const wxString& text)
   }
   if (m_active)
   {
-  	wxString text = LogTime()+_T(" ")+text;
+  	wxString line = LogTime()+_T(" ")+text;
   	#ifdef __WXMSW__
-  	text << _T("\r");
+  	line << _T("\r");
   	#endif
-  	text << _T("\n");
-  	return WriteLine(text);
+  	line << _T("\n");
+  	return WriteLine(line);
 	}
 	else return false;
 }

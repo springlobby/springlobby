@@ -48,11 +48,6 @@ void CrashReport::GenerateReport(wxDebugReport::Context ctx)
 
   bool online = true; // TODO (BrainDamage#1#): check if being online
 
-  //! @brief forcefully disables uploading debug reports in favour to local zipped storage
-  #ifdef NO_DEBUG_REPORT_UPLOAD
-  online = false;
-  #endif
-
   wxDebugReportCompress *report = online   ? new NetDebugReport
                                            : new wxDebugReportCompress;
 

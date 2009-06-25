@@ -3,12 +3,21 @@
 // Class: SpringLobbyApp
 //
 
+#ifdef _MSC_VER
+#ifndef NOMINMAX
+    #define NOMINMAX
+#endif // NOMINMAX
+#include <winsock2.h>
+#endif // _MSC_VER
+
 #include <wx/intl.h>
 #include <wx/msgdlg.h>
 #include <wx/timer.h>
 #include <wx/stdpaths.h>
 #include <wx/filefn.h>
 #include <wx/image.h>
+#include <wx/cmdline.h>
+#include <wx/choicdlg.h>
 #include <wx/filename.h>
 #include <wx/dirdlg.h>
 #include <wx/tooltip.h>
@@ -71,14 +80,18 @@ BEGIN_EVENT_TABLE(SpringLobbyApp, wxApp)
 
     EVT_TIMER(TIMER_ID, SpringLobbyApp::OnTimer)
 
+
 END_EVENT_TABLE()
 
 SpringLobbyApp::SpringLobbyApp()
-    : quit_called( false ),
-    m_translationhelper( NULL )
-
+    : 	m_timer ( new wxTimer(this, TIMER_ID) ),
+    quit_called( false ),
+    m_translationhelper( NULL ),
+    m_log_verbosity( 3 ),
+    m_log_console( true ),
+    m_log_window_show( false ),
+    m_crash_handle_disable( false )
 {
-    m_timer = new wxTimer(this, TIMER_ID);
     SetAppName( _T("springlobby") );
 }
 
@@ -87,27 +100,32 @@ SpringLobbyApp::~SpringLobbyApp()
     delete m_timer;
 }
 
+
 //! @brief Initializes the application.
 //!
 //! It will open the main window and connect default to server or open the connect window.
 bool SpringLobbyApp::OnInit()
 {
+    //this triggers the Cli Parser amongst other stuff
+    if (!wxApp::OnInit())
+        return false;
 
-
-#if wxUSE_ON_FATAL_EXCEPTION && wxUSE_DEBUGREPORT && defined(HAVE_WX28) && defined(ENABLE_DEBUG_REPORT)
-    wxHandleFatalExceptions( true );
+#if wxUSE_ON_FATAL_EXCEPTION
+  if (!m_crash_handle_disable) wxHandleFatalExceptions( true );
 #endif
 
-    //initialize all loggers
-    InitializeLoggingTargets();
-    wxSocketBase::Initialize();
+    //initialize all loggers, we'll use the returned pointer to set correct parent window later
+    wxLogWindow* loggerwin = InitializeLoggingTargets( 0, m_log_console, m_log_window_show, !m_crash_handle_disable, m_log_verbosity );
 
-    wxLogDebugFunc( _T("") );
+
+    //this needs to called _before_ mainwindow instance is created
     wxInitAllImageHandlers();
-
      //TODO needed?
     wxImage::AddHandler(new wxPNGHandler);
     wxFileSystem::AddHandler(new wxZipFSHandler);
+
+
+    wxSocketBase::Initialize();
 
 
 #ifdef __WXMSW__
@@ -303,6 +321,10 @@ bool SpringLobbyApp::OnInit()
 //  if ( sett().GetAutoUpdate() )Updater().CheckForUpdates();
 //  #endif
 
+    if ( loggerwin ) { // we got a logwindow, lets set proper parent win
+        loggerwin->GetFrame()->SetParent( &(ui().mw()) );
+    }
+
     return true;
 }
 
@@ -310,8 +332,10 @@ bool SpringLobbyApp::OnInit()
 //! @brief Finalizes the application
 int SpringLobbyApp::OnExit()
 {
-		if ( quit_called ) return 0;
-		quit_called = true;
+    if ( quit_called )
+        return 0;
+
+    quit_called = true;
     wxLogDebugFunc( _T("") );
 
     if(m_translationhelper)
@@ -368,3 +392,51 @@ bool SpringLobbyApp::SelectLanguage()
     if ( ret ) m_translationhelper->Save();
     return ret;
 }
+
+void SpringLobbyApp::OnInitCmdLine(wxCmdLineParser& parser)
+{
+    wxCmdLineEntryDesc cmdLineDesc[] =
+    {
+        { wxCMD_LINE_SWITCH, _T("h"), _T("help"), _("show this help message"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_OPTION_HELP },
+      { wxCMD_LINE_SWITCH, _T("nc"), _T("no-crash-handler"), _("don't use the crash handler (useful for debugging)"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
+      { wxCMD_LINE_SWITCH, _T("cl"), _T("console-logging"),  _("shows application log to the console(if available)"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
+      { wxCMD_LINE_SWITCH, _T("gl"), _T("gui-logging"),  _("enables application log window"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
+//      { wxCMD_LINE_OPTION, _T("c"), _T("config-file"),  _("override default choice for config-file"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL | wxCMD_LINE_NEEDS_SEPARATOR },
+        { wxCMD_LINE_OPTION, _T("l"), _T("log-verbosity"),  _("overrides default logging verbosity, can be:\n                                0: no log\n                                1: critical errors\n                                2: errors\n                                3: warnings (default)\n                                4: messages\n                                5: function trace"), wxCMD_LINE_VAL_NUMBER, wxCMD_LINE_PARAM_OPTIONAL },
+        { wxCMD_LINE_NONE }
+
+    };
+
+    parser.SetDesc( cmdLineDesc );
+    parser.SetSwitchChars (wxT("-"));
+}
+
+//! @brief parses the command line and sets global app options like log verbosity or log target
+bool SpringLobbyApp::OnCmdLineParsed(wxCmdLineParser& parser)
+{
+  #if wxUSE_CMDLINE_PARSER
+    if ( !parser.Parse(true) )
+    {
+        m_log_console = parser.Found(_T("console-logging"));
+        m_log_window_show = parser.Found(_T("gui-logging"));
+        m_crash_handle_disable = parser.Found(_T("no-crash-handler"));
+
+//        Settings::m_user_defined_config = parser.Found( _T("config-file"), &Settings::m_user_defined_config_path );
+
+        if ( !parser.Found(_T("log-verbosity"), &m_log_verbosity ) )
+            m_log_verbosity = 3;
+
+        if ( parser.Found(_T("help")) )
+            return false; // not a syntax error, but program should stop if user asked for command line usage
+
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+  #else // wxUSE_CMDLINE_PARSER
+  return true;
+  #endif
+}
+
