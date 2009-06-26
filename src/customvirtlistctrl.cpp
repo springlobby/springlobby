@@ -186,10 +186,14 @@ void CustomVirtListCtrl<T,L>::SetSelectedIndex(const long newindex)
 template < class T, class L >
 void CustomVirtListCtrl<T,L>::RefreshVisibleItems()
 {
+#ifndef __WXMSW__
     long topItemIndex = GetTopItem();
     long range = topItemIndex + GetCountPerPage();
     //RefreshItems( topItemIndex,  clamp( range, topItemIndex, (long) m_data.size() ) );
     RefreshItems( topItemIndex,  range );
+#else
+    RefreshItems( 0,  m_data.size() -1 );
+#endif
 }
 
 template < class T, class L >
