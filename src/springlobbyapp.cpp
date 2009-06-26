@@ -107,16 +107,16 @@ SpringLobbyApp::~SpringLobbyApp()
 //! It will open the main window and connect default to server or open the connect window.
 bool SpringLobbyApp::OnInit()
 {
-    //this triggers the Cli Parser amongst other stuff
-    if (!wxApp::OnInit())
-        return false;
+    //initialize all loggers, we'll use the returned pointer to set correct parent window later
+    wxLogWindow* loggerwin = InitializeLoggingTargets( 0, m_log_console, m_log_window_show, !m_crash_handle_disable, m_log_verbosity );
 
 #if wxUSE_ON_FATAL_EXCEPTION
   if (!m_crash_handle_disable) wxHandleFatalExceptions( true );
 #endif
 
-    //initialize all loggers, we'll use the returned pointer to set correct parent window later
-    wxLogWindow* loggerwin = InitializeLoggingTargets( 0, m_log_console, m_log_window_show, !m_crash_handle_disable, m_log_verbosity );
+    //this triggers the Cli Parser amongst other stuff
+    if (!wxApp::OnInit())
+        return false;
 
 
     //this needs to called _before_ mainwindow instance is created
