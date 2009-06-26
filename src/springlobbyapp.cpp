@@ -432,13 +432,13 @@ bool SpringLobbyApp::OnCmdLineParsed(wxCmdLineParser& parser)
 
         if ( parser.Found(_T("help")) )
             return false; // not a syntax error, but program should stop if user asked for command line usage
-
+#ifdef __WXMSW__
         if ( parser.Found(_T("update")) ) {
             wxString latestVersion = GetLatestVersion();
             Updater().StartUpdate( latestVersion );
-            return false;
+            return true;//???
         }
-
+#endif
         return true;
     }
     else
