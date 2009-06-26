@@ -2,6 +2,7 @@
 #define SPRINGLOBBY_HEADERGUARD_TASSERVER_H
 
 #include <wx/string.h>
+#include <wx/longlong.h>
 #include <list>
 
 #include "server.h"
@@ -143,7 +144,7 @@ class TASServer : public Server
     //! @brief Struct used internally by the TASServer class to calculate ping roundtimes.
     struct TASPingListItem {
       int id;
-      time_t t;
+      wxLongLong t;
     };
 
     CRC m_crc;

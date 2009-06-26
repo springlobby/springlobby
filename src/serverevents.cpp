@@ -3,6 +3,13 @@
 // Class: ServerEvents
 //
 
+#ifdef _MSC_VER
+#ifndef NOMINMAX
+    #define NOMINMAX
+#endif // NOMINMAX
+#include <winsock2.h>
+#endif // _MSC_VER
+
 #include <wx/intl.h>
 #include <stdexcept>
 
@@ -113,9 +120,10 @@ void ServerEvents::OnMotd( const wxString& msg )
 }
 
 
-void ServerEvents::OnPong( int ping_time )
+void ServerEvents::OnPong( wxLongLong ping_time )
 {
-    ui().OnServerMessage( m_serv, wxString::Format( _("ping reply took %d seconds"), ping_time ) );
+    //wxLongLong is non-POD and cannot be passed to wxFormat as such. use c-string rep instead. converting to long might loose precision
+    ui().OnServerMessage( m_serv, wxString::Format( _("ping reply took %s ms"), ping_time.ToString().c_str() ) );
 }
 
 
