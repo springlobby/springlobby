@@ -1537,8 +1537,8 @@ void TASServer::SendHostInfo( HostInfo update )
 
     if ( (update & IBattle::HI_StartRects) > 0 )   // Startrects should be updated.
     {
-        unsigned int numrects =  battle.GetNumRects();
-        for ( unsigned int i = 0; i < numrects; i++ )   // Loop through all, and remove updated or deleted.
+        unsigned int numrects = battle.GetLastRectIdx();
+        for ( unsigned int i = 0; i <= numrects; i++ )   // Loop through all, and remove updated or deleted.
         {
             wxString cmd;
             BattleStartRect sr = battle.GetStartRect( i );

@@ -332,44 +332,63 @@ void IBattle::AddStartRect( unsigned int allyno, unsigned int left, unsigned int
 
 void IBattle::RemoveStartRect( unsigned int allyno )
 {
-    if ( allyno >= m_rects.size() ) return;
-    BattleStartRect sr = m_rects[allyno];
-    sr.todelete = true;
-    m_rects[allyno] = sr;
+    std::map<unsigned int,BattleStartRect>::iterator rect_it = m_rects.find(allyno);
+	if( rect_it == m_rects.end() )
+		return;
+
+	rect_it->second.todelete = true;
+    //BattleStartRect sr = m_rects[allyno];
+    //sr.todelete = true;
+    //m_rects[allyno] = sr;
 }
 
 
 void IBattle::ResizeStartRect( unsigned int allyno )
 {
-    if ( allyno >= m_rects.size() ) return;
-    BattleStartRect sr = m_rects[allyno];
-    sr.toresize = true;
-    m_rects[allyno] = sr;
+    std::map<unsigned int,BattleStartRect>::iterator rect_it = m_rects.find(allyno);
+	if( rect_it == m_rects.end() )
+		return;
+
+	rect_it->second.toresize = true;
+    //BattleStartRect sr = m_rects[allyno];
+    //&&sr.toresize = true;
+    //m_rects[allyno] = sr;
 }
 
 
 void IBattle::StartRectRemoved( unsigned int allyno )
 {
-    if ( allyno >= m_rects.size() ) return;
-    if ( m_rects[allyno].todelete ) m_rects.erase(allyno);
+	std::map<unsigned int,BattleStartRect>::iterator rect_it = m_rects.find(allyno);
+	if( rect_it == m_rects.end() )
+		return;
+
+	if ( rect_it->second.todelete ) m_rects.erase(allyno);
 }
 
 
 void IBattle::StartRectResized( unsigned int allyno )
 {
-    if ( allyno >= m_rects.size() ) return;
-    BattleStartRect sr = m_rects[allyno];
-    sr.toresize = false;
-    m_rects[allyno] = sr;
+    std::map<unsigned int,BattleStartRect>::iterator rect_it = m_rects.find(allyno);
+	if( rect_it == m_rects.end() )
+		return;
+
+	rect_it->second.toresize = false;
+    //BattleStartRect sr = m_rects[allyno];
+    //sr.toresize = false;
+    //m_rects[allyno] = sr;
 }
 
 
 void IBattle::StartRectAdded( unsigned int allyno )
 {
-    if ( allyno >= m_rects.size() ) return;
-    BattleStartRect sr = m_rects[allyno];
-    sr.toadd = false;
-    m_rects[allyno] = sr;
+    std::map<unsigned int,BattleStartRect>::iterator rect_it = m_rects.find(allyno);
+	if( rect_it == m_rects.end() )
+		return;
+
+	rect_it->second.toadd = false;
+    //BattleStartRect sr = m_rects[allyno];
+    //sr.toadd = false;
+    //m_rects[allyno] = sr;
 }
 
 
@@ -381,9 +400,32 @@ BattleStartRect IBattle::GetStartRect( unsigned int allyno )
 	return BattleStartRect();
 }
 
+//total number of start rects
 unsigned int IBattle::GetNumRects()
 {
     return m_rects.size();
+}
+
+//key of last start rect in the map
+unsigned int IBattle::GetLastRectIdx()
+{
+	if(GetNumRects() > 0)
+		return m_rects.rbegin()->first;
+
+	return 0;
+
+}
+
+//return  the lowest currently unused key in the map of rects.
+unsigned int IBattle::GetNextFreeRectIdx()
+{
+	//check for unused allyno keys 
+	for(unsigned int i = 0; i <= GetLastRectIdx(); i++)
+	{
+		if(!GetStartRect(i).IsOk())
+			return i;
+	}
+	return GetNumRects(); //if all rects are in use, or no elements exist, return first possible available allyno.
 }
 
 void IBattle::ClearStartRects()
@@ -720,7 +762,7 @@ bool IBattle::LoadOptionsPreset( const wxString& name )
         }
       }
 
-			for( unsigned int i = 0; i < GetNumRects(); ++i ) if ( GetStartRect( i ).IsOk() ) RemoveStartRect(i); // remove all rects that might come from map presets
+			for( unsigned int i = 0; i <= GetLastRectIdx(); ++i ) if ( GetStartRect( i ).IsOk() ) RemoveStartRect(i); // remove all rects that might come from map presets
 			SendHostInfo( IBattle::HI_StartRects );
 
       unsigned int rectcount = s2l( options[_T("numrects")] );
@@ -768,8 +810,8 @@ void IBattle::SaveOptionsPreset( const wxString& name )
       unsigned int validrectcount = 0;
       if ( s2l (CustomBattleOptions().getSingleValue( _T("startpostype"), OptionsWrapper::EngineOption ) ) == ST_Choose )
       {
-        unsigned int boxcount = GetNumRects();
-        for ( unsigned int boxnum = 0; boxnum < boxcount; boxnum++ )
+        unsigned int boxcount = GetLastRectIdx();
+        for ( unsigned int boxnum = 0; boxnum <= boxcount; boxnum++ )
         {
           BattleStartRect rect = GetStartRect( boxnum );
           if ( rect.IsOk() )
