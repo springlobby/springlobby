@@ -1322,6 +1322,12 @@ wxArrayString SpringUnitSyncLib::GetAIInfo( int aiIndex )
 	return ret;
 }
 
+wxString SpringUnitSyncLib::GetArchiveChecksum( const wxString& VFSPath )
+{
+	InitLib( m_get_archive_checksum );
+	return TowxString( m_get_archive_checksum( VFSPath.mb_str() ) );
+}
+
 /// lua parser
 
 void SpringUnitSyncLib::CloseParser()

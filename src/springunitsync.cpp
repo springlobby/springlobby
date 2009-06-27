@@ -85,16 +85,24 @@ void SpringUnitSync::PopulateArchiveList()
   int numMaps = susynclib().GetMapCount();
   for ( int i = 0; i < numMaps; i++ )
   {
-    wxString name, hash;
+    wxString name, hash, archivename, unchainedhash;
     try
     {
      name = susynclib().GetMapName( i );
      hash = susynclib().GetMapChecksum( i );
+		 int count = susynclib().GetMapArchiveCount( i );
+		 if ( count > 0 )
+		 {
+			 archivename =  susynclib().GetMapArchiveName( 0 );
+			 unchainedhash = susynclib().GetArchiveChecksum( archivename );
+		 }
      //PrefetchMap( name ); // DEBUG
     } catch (...) { continue; }
     try
     {
       m_maps_list[name] = hash;
+      if ( !unchainedhash.IsEmpty() ) m_maps_unchained_hash[name] = unchainedhash;
+      if ( !archivename.IsEmpty() ) m_maps_archive_name[name] = archivename;
       m_map_array.Add( name );
     } catch (...)
     {
@@ -104,15 +112,23 @@ void SpringUnitSync::PopulateArchiveList()
   int numMods = susynclib().GetPrimaryModCount();
   for ( int i = 0; i < numMods; i++ )
   {
-    wxString name, hash;
+    wxString name, hash, archivename, unchainedhash;
     try
     {
      name = susynclib().GetPrimaryModName( i );
      hash = susynclib().GetPrimaryModChecksum( i );
+		 int count = susynclib().GetPrimaryModArchiveCount( i );
+		 if ( count > 0 )
+		 {
+		   archivename = susynclib().GetPrimaryModArchive( 0 );
+			 unchainedhash = susynclib().GetArchiveChecksum( archivename );
+		 }
     } catch (...) { continue; }
     try
     {
       m_mods_list[name] = hash;
+      if ( !unchainedhash.IsEmpty() )  m_mods_unchained_hash[name] = unchainedhash;
+      if ( !archivename.IsEmpty() ) m_mods_archive_name[name] = archivename;
       m_mod_array.Add( name );
     } catch (...)
     {
@@ -692,7 +708,7 @@ wxImage SpringUnitSync::_GetMapImage( const wxString& mapname, const wxString& i
 
   if ( m_map_image_cache.TryGet( mapname + imagename, img ) ) return img;
 
-  wxString originalsizepath = GetFileCachePath( mapname, _T(""), false ) + imagename;
+  wxString originalsizepath = GetFileCachePath( mapname, m_maps_unchained_hash[mapname], false ) + imagename;
 
   try
   {
@@ -745,7 +761,7 @@ MapInfo SpringUnitSync::_GetMapInfoEx( const wxString& mapname )
   try {
       try
       {
-        cache = GetCacheFile( GetFileCachePath( mapname, _T(""), false ) + _T(".infoex") );
+        cache = GetCacheFile( GetFileCachePath( mapname, m_maps_unchained_hash[mapname], false ) + _T(".infoex") );
 
         ASSERT_EXCEPTION( cache.GetCount() >= 11, _T("not enough lines found in cache info ex") );
         info.author = cache[0];
@@ -798,7 +814,7 @@ MapInfo SpringUnitSync::_GetMapInfoEx( const wxString& mapname )
         unsigned int desclinecount = descrtoken.GetCount();
         for ( unsigned int count = 0; count < desclinecount; count++ ) cache.Add( descrtoken[count] );
 
-        SetCacheFile( GetFileCachePath( mapname, _T(""), false ) + _T(".infoex"), cache );
+        SetCacheFile( GetFileCachePath( mapname, m_maps_unchained_hash[mapname], false ) + _T(".infoex"), cache );
       }
   }
   catch ( ... ) {
@@ -832,7 +848,7 @@ wxString SpringUnitSync::GetFileCachePath( const wxString& name, const wxString&
   wxString ret = m_cache_path;
   if ( !name.IsEmpty() ) ret << name;
   else return wxEmptyString;
-  if ( !hash.IsEmpty() ) ret << hash;
+  if ( !hash.IsEmpty() ) ret << _T("-") << hash;
   else
   {
     if ( IsMod ) ret <<  _T("-") << m_mods_list[name];
