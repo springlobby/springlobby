@@ -185,7 +185,7 @@ void Battle::SaveMapDefaults()
 		wxString startpostype = CustomBattleOptions().getSingleValue( _T("startpostype"), OptionsWrapper::EngineOption );
 		sett().SetMapLastStartPosType( mapname, startpostype);
 		std::vector<Settings::SettStartBox> rects;
-		for( unsigned int i = 0; i < GetNumRects(); ++i )
+		for( unsigned int i = 0; i <= GetLastRectIdx(); ++i )
 		{
 			 BattleStartRect rect = GetStartRect( i );
 			 if ( rect.IsOk() )
@@ -207,7 +207,7 @@ void Battle::LoadMapDefaults( const wxString& mapname )
 	CustomBattleOptions().setSingleOption( _T("startpostype"), sett().GetMapLastStartPosType( mapname ), OptionsWrapper::EngineOption );
 	SendHostInfo( wxString::Format( _T("%d_startpostype"), OptionsWrapper::EngineOption ) );
 
-	for( unsigned int i = 0; i < GetNumRects(); ++i ) if ( GetStartRect( i ).IsOk() ) RemoveStartRect(i); // remove all rects
+	for( unsigned int i = 0; i <= GetLastRectIdx(); ++i ) if ( GetStartRect( i ).IsOk() ) RemoveStartRect(i); // remove all rects
 	SendHostInfo( IBattle::HI_StartRects );
 
 	std::vector<Settings::SettStartBox> savedrects = sett().GetMapLastRectPreset( mapname );
@@ -605,7 +605,7 @@ void Battle::Autobalance( BalanceType balance_type, bool support_clans, bool str
         int ally = 0;
         for ( int i = 0; i < numallyteams; ++i )
         {
-            BattleStartRect sr = m_rects[i];
+            BattleStartRect sr = GetStartRect(i);
             if ( sr.IsOk() )
             {
                 ally=i;

@@ -479,7 +479,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 			tdf.AppendLineBreak();
 
 
-			int maxiter = std::max( NumUsers, battle.GetNumRects() );
+			int maxiter = std::max( NumUsers, battle.GetLastRectIdx() + 1 );
 			std::set<int> parsedallys;
 			for ( unsigned int i = 0; i < maxiter; i++ )
 			{
