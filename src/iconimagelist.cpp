@@ -278,22 +278,22 @@ wxString IconImageList::GetBattleStatus( const IBattle& battle ) const
 {
     unsigned idx = battle.GetInGame() << 3 | battle.IsLocked() << 2 | battle.IsFull() << 1 | battle.IsPassworded() << 0;
     static const wxString states[16] = {
-        /* -                                 */ _T("Game is open."),
-        /* passworded                        */ _T("Game is password-protected."),
-        /* full                              */ _T("Game is full."),
-        /* full, passworded                  */ _T("Game is full and password-protected."),
-        /* locked                            */ _T("Game is closed."),
-        /* locked, passworded                */ _T("Game is closed and password-protected."),
-        /* locked, full                      */ _T("Game is closed and full."),
-        /* locked, full, passworded          */ _T("Game is closed, full and password-protected."),
-        /* in game                           */ _T("Game is in progress."),
-        /* in game, passworded               */ _T("Game is in progress and password-protected."),
-        /* in game, full                     */ _T("Game is in progress and full."),
-        /* in game, full, passworded         */ _T("Game is in progress, full and password-protected."),
-        /* in game, locked                   */ _T("Game is in progress and closed."),
-        /* in game, locked, passworded       */ _T("Game is in progress, closed and password-protected."),
-        /* in game, locked, full             */ _T("Game is in progress, closed and full."),
-        /* in game, locked, full, passworded */ _T("Game is in progress, closed, full and password-protected."),
+        /* -                                 */ _("Game is open."),
+        /* passworded                        */ _("Game is password-protected."),
+        /* full                              */ _("Game is full."),
+        /* full, passworded                  */ _("Game is full and password-protected."),
+        /* locked                            */ _("Game is closed."),
+        /* locked, passworded                */ _("Game is closed and password-protected."),
+        /* locked, full                      */ _("Game is closed and full."),
+        /* locked, full, passworded          */ _("Game is closed, full and password-protected."),
+        /* in game                           */ _("Game is in progress."),
+        /* in game, passworded               */ _("Game is in progress and password-protected."),
+        /* in game, full                     */ _("Game is in progress and full."),
+        /* in game, full, passworded         */ _("Game is in progress, full and password-protected."),
+        /* in game, locked                   */ _("Game is in progress and closed."),
+        /* in game, locked, passworded       */ _("Game is in progress, closed and password-protected."),
+        /* in game, locked, full             */ _("Game is in progress, closed and full."),
+        /* in game, locked, full, passworded */ _("Game is in progress, closed, full and password-protected."),
     };
     return states[idx];
     // return _T("Game has unknown status");
