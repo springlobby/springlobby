@@ -91,7 +91,8 @@ SpringLobbyApp::SpringLobbyApp()
     m_log_verbosity( 3 ),
     m_log_console( true ),
     m_log_window_show( false ),
-    m_crash_handle_disable( false )
+    m_crash_handle_disable( false ),
+    m_updateing_only( false )
 {
     SetAppName( _T("springlobby") );
 }
@@ -111,161 +112,43 @@ bool SpringLobbyApp::OnInit()
     wxLogWindow* loggerwin = InitializeLoggingTargets( 0, m_log_console, m_log_window_show, !m_crash_handle_disable, m_log_verbosity );
 
 #if wxUSE_ON_FATAL_EXCEPTION
-  if (!m_crash_handle_disable) wxHandleFatalExceptions( true );
+    if (!m_crash_handle_disable) wxHandleFatalExceptions( true );
 #endif
 
     //this triggers the Cli Parser amongst other stuff
     if (!wxApp::OnInit())
         return false;
 
-
     //this needs to called _before_ mainwindow instance is created
     wxInitAllImageHandlers();
      //TODO needed?
     wxImage::AddHandler(new wxPNGHandler);
     wxFileSystem::AddHandler(new wxZipFSHandler);
-
-
     wxSocketBase::Initialize();
 
 
 #ifdef __WXMSW__
     wxString path = wxPathOnly( wxStandardPaths::Get().GetExecutablePath() ) + wxFileName::GetPathSeparator() + _T("locale");
 #else
+    // use a dummy name here, we're only interested in the base path
     wxString path = wxStandardPaths::Get().GetLocalizedResourcesDir(_T("noneWH"),wxStandardPaths::ResourceCat_Messages);
     path = path.Left( path.First(_T("noneWH") ) );
 #endif
-
-
     m_translationhelper = new wxTranslationHelper( *( (wxApp*)this ), path );
     m_translationhelper->Load();
 
+    if ( !wxDirExists( wxStandardPaths::Get().GetUserDataDir() ) )
+        wxMkdir( wxStandardPaths::Get().GetUserDataDir() );
 
-		if( sett().IsFirstRun() )
-		{
-			wxString defaultconfigpath = GetExecutableFolder() + wxFileName::GetPathSeparator() + _T("springlobby.global.conf");
-			if (  wxFileName::FileExists( defaultconfigpath ) )
-			{
-				wxFileInputStream instream( defaultconfigpath );
-
-				if ( instream.IsOk() )
-				{
-					#ifdef __WXMSW__
-					SL_WinConf defaultconf( instream );
-					#else
-					wxConfig defaultconf( instream );
-					#endif
-					sett().SetDefaultConfigs( defaultconf );
-				}
-			}
-		}
-
-    SetSettingsStandAlone( false );
-
-    if ( sett().IsFirstRun() && !wxDirExists( wxStandardPaths::Get().GetUserDataDir() ) ) wxMkdir( wxStandardPaths::Get().GetUserDataDir() );
-
-    if ( (sett().GetCacheVersion() < CACHE_VERSION) && !sett().IsFirstRun() )
-    {
-        sett().SetMapCachingThreadProgress( 0 ); // reset map cache thread
-        sett().SetModCachingThreadProgress( 0 ); // reset mod cache thread
-        if ( wxDirExists( sett().GetCachePath() )  )
-        {
-            wxLogWarning( _T("erasing old cache ver %d (app cache ver %d)"), sett().GetCacheVersion(), CACHE_VERSION );
-            wxString file = wxFindFirstFile( sett().GetCachePath() + wxFILE_SEP_PATH + _T("*") );
-            while ( !file.empty() )
-            {
-                wxRemoveFile( file );
-                file = wxFindNextFile();
-            }
-        }
-    }
-
-    if ( !sett().IsFirstRun() )
-    {
-    	if ( sett().GetSettingsVersion() < 3 ) sett().ConvertOldSpringDirsOptions();
-			if ( sett().GetSettingsVersion() < 4 )
-			{
-				if ( sett().GetTorrentPort() == DEFSETT_SPRING_PORT ) sett().SetTorrentPort( DEFSETT_SPRING_PORT + 1 );
-			}
-			if ( sett().GetSettingsVersion() < 5 )
-			{
-				wxArrayString list = sett().GetServers();
-				int count = list.GetCount();
-				wxArrayString wordlist = sett().GetHighlightedWords();
-				for ( int i= 0; i < count; i++ )
-				{
-					wxString nick = sett().GetServerAccountNick( list[i] );
-					if ( wordlist.Index( nick ) == -1 )
-					{
-						wordlist.Add( nick );
-					}
-				}
-				sett().SetHighlightedWords( wordlist );
-			}
-			if ( sett().GetSettingsVersion() < 6 )
-			{
-				sett().ConvertOldServerSettings();
-			}
-			if ( sett().GetSettingsVersion() < 7 )
-			{
-				sett().AddChannelJoin( _T("springlobby"), _T("") );
-			}
-			if ( sett().GetSettingsVersion() < 8 )
-			{
-				 sett().DeleteServer( _T("Backup server") );
-				 sett().SetServer( _T("Backup server 1"), _T("springbackup1.servegame.com"), 8200 );
-				 sett().SetServer( _T("Backup server 2"), _T("springbackup2.servegame.org"), 8200 );
-				 sett().SetServer( _T("Test server"), _T("taspringmaster.servegame.com"), 8300 );
-			}
-			if ( sett().GetSettingsVersion() < 10 )
-			{
-				sett().ConvertOldColorSettings();
-			}
-			if ( sett().GetSettingsVersion() < 11 )
-			{
-                if( IsUACenabled() )
-                {
-                    usync().ReloadUnitSyncLib();
-                    if ( usync().IsLoaded() ) usync().SetSpringDataPath(_T("")); // UAC is on, fix the spring data path
-                }
-			}
-			if ( sett().GetSettingsVersion() < 12 )
-			{
-				sett().ConvertOldChannelSettings();
-			}
-			if ( sett().GetSettingsVersion() < 13 )
-			{
-				sett().ConvertOldHiglightSettings();
-			}
-    }
-
-		if ( !wxDirExists( wxStandardPaths::Get().GetUserDataDir() ) ) wxMkdir( wxStandardPaths::Get().GetUserDataDir() );
-
-		sett().RefreshSpringVersionList();
+    sett().RefreshSpringVersionList();
     ui().ReloadUnitSync(); // first time load of unitsync
-    ui().ShowMainWindow();
 
-		if ( sett().ShouldAddDefaultServerSettings() ) sett().SetDefaultServerSettings();
-		if ( sett().ShouldAddDefaultChannelSettings() )
-		{
-			sett().AddChannelJoin( _T("main"), _T("") );
-			sett().AddChannelJoin( _T("newbies"), _T("") );
-		}
-		if ( sett().ShouldAddDefaultGroupSettings() )
-		{
-			 sett().AddGroup( _("Default") );
-			 sett().AddGroup( _("Ignore PM") );
-			 useractions().ChangeAction( _("Ignore PM"), UserActions::ActIgnorePM );
-			 sett().AddGroup( _("Ignore chat") );
-			 useractions().ChangeAction( _("Ignore chat"), UserActions::ActIgnoreChat );
-			 sett().AddGroup( _("Battle Autokick") );
-			 useractions().ChangeAction( _("Battle Autokick"), UserActions::ActAutokick );
-			 sett().AddGroup( _("Friends") );
-			 useractions().ChangeAction( _("Friends"), UserActions::ActNotifBattle );
-			 useractions().ChangeAction( _("Friends"), UserActions::ActHighlight );
-			 useractions().ChangeAction( _("Friends"), UserActions::ActNotifLogin );
-			 useractions().SetGroupColor( _("Friends"), wxColor( 0, 0, 255 ) );
-		}
+    //everything below should not be executing when updating, so we can ensure no GUI window is created, torrent system isn't started, etc.
+    // NOTE: this assumes no one will try to update at firstRun
+    if ( m_updateing_only )
+        return true;
+
+    ui().ShowMainWindow();
 
     if ( sett().IsFirstRun() )
     {
@@ -281,16 +164,16 @@ bool SpringLobbyApp::OnInit()
         customMessageBoxNoModal(SL_MAIN_ICON, _("By default SpringLobby reports some usage statistics.\nYou can disable that on options tab --> General."),_("Notice"),wxOK );
 
 
-				// copy uikeys.txt
-				wxPathList pl;
-				pl.AddEnvList( _T("%ProgramFiles%") );
-				pl.AddEnvList( _T("XDG_DATA_DIRS") );
-				pl = sett().GetAdditionalSearchPaths( pl );
-				wxString uikeyslocation = pl.FindValidPath( _T("uikeys.txt") );
-				if ( !uikeyslocation.IsEmpty() )
-				{
-					wxCopyFile( uikeyslocation, sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("uikeys.txt"), false );
-				}
+                // copy uikeys.txt
+                wxPathList pl;
+                pl.AddEnvList( _T("%ProgramFiles%") );
+                pl.AddEnvList( _T("XDG_DATA_DIRS") );
+                pl = sett().GetAdditionalSearchPaths( pl );
+                wxString uikeyslocation = pl.FindValidPath( _T("uikeys.txt") );
+                if ( !uikeyslocation.IsEmpty() )
+                {
+                    wxCopyFile( uikeyslocation, sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("uikeys.txt"), false );
+                }
 
     #ifdef __WXMSW__
         if ( TASClientPresent() &&
@@ -307,20 +190,16 @@ bool SpringLobbyApp::OnInit()
         ui().mw().ShowSingleplayer();
     }
 
-  #ifndef NO_TORRENT_SYSTEM
-  if( sett().GetTorrentSystemAutoStartMode() == 1 ) torrent().ConnectToP2PSystem();
-  #endif
+#ifndef NO_TORRENT_SYSTEM
+    if( sett().GetTorrentSystemAutoStartMode() == 1 ) torrent().ConnectToP2PSystem();
+#endif
 
     //starts the replay loading process in a thread
     ui().mw().GetReplayTab().ReloadList();
     ui().mw().GetSavegameTab().ReloadList();
     wxLogMessage( _T("Replaytab updated") );
 
-  m_timer->Start( TIMER_INTERVAL );
-
-//  #ifdef __WXMSW__
-//  if ( sett().GetAutoUpdate() )Updater().CheckForUpdates();
-//  #endif
+    m_timer->Start( TIMER_INTERVAL );
 
     if ( loggerwin ) { // we got a logwindow, lets set proper parent win
         loggerwin->GetFrame()->SetParent( &(ui().mw()) );
@@ -434,9 +313,10 @@ bool SpringLobbyApp::OnCmdLineParsed(wxCmdLineParser& parser)
             return false; // not a syntax error, but program should stop if user asked for command line usage
 #ifdef __WXMSW__
         if ( parser.Found(_T("update")) ) {
+            m_updateing_only = true;
             wxString latestVersion = GetLatestVersion();
             Updater().StartUpdate( latestVersion );
-            return true;//???
+            return true;
         }
 #endif
         return true;
@@ -450,3 +330,130 @@ bool SpringLobbyApp::OnCmdLineParsed(wxCmdLineParser& parser)
   #endif
 }
 
+void SpringLobbyApp::CacheAndSettingsSetup()
+{
+    if( sett().IsFirstRun() )
+    {
+        wxString defaultconfigpath = GetExecutableFolder() + wxFileName::GetPathSeparator() + _T("springlobby.global.conf");
+        if (  wxFileName::FileExists( defaultconfigpath ) )
+        {
+            wxFileInputStream instream( defaultconfigpath );
+
+            if ( instream.IsOk() )
+            {
+                #ifdef __WXMSW__
+                SL_WinConf defaultconf( instream );
+                #else
+                wxConfig defaultconf( instream );
+                #endif
+                sett().SetDefaultConfigs( defaultconf );
+            }
+        }
+    }
+
+    SetSettingsStandAlone( false );
+
+    if ( sett().IsFirstRun() && !wxDirExists( wxStandardPaths::Get().GetUserDataDir() ) )
+        wxMkdir( wxStandardPaths::Get().GetUserDataDir() );
+
+    if ( (sett().GetCacheVersion() < CACHE_VERSION) && !sett().IsFirstRun() )
+    {
+        sett().SetMapCachingThreadProgress( 0 ); // reset map cache thread
+        sett().SetModCachingThreadProgress( 0 ); // reset mod cache thread
+        if ( wxDirExists( sett().GetCachePath() )  )
+        {
+            wxLogWarning( _T("erasing old cache ver %d (app cache ver %d)"), sett().GetCacheVersion(), CACHE_VERSION );
+            wxString file = wxFindFirstFile( sett().GetCachePath() + wxFILE_SEP_PATH + _T("*") );
+            while ( !file.empty() )
+            {
+                wxRemoveFile( file );
+                file = wxFindNextFile();
+            }
+        }
+    }
+
+    if ( !sett().IsFirstRun() )
+    {
+    	if ( sett().GetSettingsVersion() < 3 ) sett().ConvertOldSpringDirsOptions();
+			if ( sett().GetSettingsVersion() < 4 )
+			{
+				if ( sett().GetTorrentPort() == DEFSETT_SPRING_PORT ) sett().SetTorrentPort( DEFSETT_SPRING_PORT + 1 );
+			}
+			if ( sett().GetSettingsVersion() < 5 )
+			{
+				wxArrayString list = sett().GetServers();
+				int count = list.GetCount();
+				wxArrayString wordlist = sett().GetHighlightedWords();
+				for ( int i= 0; i < count; i++ )
+				{
+					wxString nick = sett().GetServerAccountNick( list[i] );
+					if ( wordlist.Index( nick ) == -1 )
+					{
+						wordlist.Add( nick );
+					}
+				}
+				sett().SetHighlightedWords( wordlist );
+			}
+			if ( sett().GetSettingsVersion() < 6 )
+			{
+				sett().ConvertOldServerSettings();
+			}
+			if ( sett().GetSettingsVersion() < 7 )
+			{
+				sett().AddChannelJoin( _T("springlobby"), _T("") );
+			}
+			if ( sett().GetSettingsVersion() < 8 )
+			{
+				 sett().DeleteServer( _T("Backup server") );
+				 sett().SetServer( _T("Backup server 1"), _T("springbackup1.servegame.com"), 8200 );
+				 sett().SetServer( _T("Backup server 2"), _T("springbackup2.servegame.org"), 8200 );
+				 sett().SetServer( _T("Test server"), _T("taspringmaster.servegame.com"), 8300 );
+			}
+			if ( sett().GetSettingsVersion() < 10 )
+			{
+				sett().ConvertOldColorSettings();
+			}
+			if ( sett().GetSettingsVersion() < 11 )
+			{
+                if( IsUACenabled() )
+                {
+                    usync().ReloadUnitSyncLib();
+                    if ( usync().IsLoaded() )
+                        usync().SetSpringDataPath(_T("")); // UAC is on, fix the spring data path
+                }
+			}
+			if ( sett().GetSettingsVersion() < 12 )
+			{
+				sett().ConvertOldChannelSettings();
+			}
+			if ( sett().GetSettingsVersion() < 13 )
+			{
+				sett().ConvertOldHiglightSettings();
+			}
+    }
+
+    if ( sett().ShouldAddDefaultServerSettings() )
+        sett().SetDefaultServerSettings();
+
+    if ( sett().ShouldAddDefaultChannelSettings() )
+    {
+        sett().AddChannelJoin( _T("main"), _T("") );
+        sett().AddChannelJoin( _T("newbies"), _T("") );
+    }
+
+    if ( sett().ShouldAddDefaultGroupSettings() )
+    {
+         sett().AddGroup( _("Default") );
+         sett().AddGroup( _("Ignore PM") );
+         useractions().ChangeAction( _("Ignore PM"), UserActions::ActIgnorePM );
+         sett().AddGroup( _("Ignore chat") );
+         useractions().ChangeAction( _("Ignore chat"), UserActions::ActIgnoreChat );
+         sett().AddGroup( _("Battle Autokick") );
+         useractions().ChangeAction( _("Battle Autokick"), UserActions::ActAutokick );
+         sett().AddGroup( _("Friends") );
+         useractions().ChangeAction( _("Friends"), UserActions::ActNotifBattle );
+         useractions().ChangeAction( _("Friends"), UserActions::ActHighlight );
+         useractions().ChangeAction( _("Friends"), UserActions::ActNotifLogin );
+         useractions().SetGroupColor( _("Friends"), wxColor( 0, 0, 255 ) );
+    }
+}

@@ -31,7 +31,7 @@ class SpringLobbyApp : public wxApp
 
   protected:
 
-    void InitCacheDir();
+    void CacheAndSettingsSetup();
 
     wxTimer* m_timer;
 
@@ -45,6 +45,7 @@ class SpringLobbyApp : public wxApp
     bool m_log_console;
     bool m_log_window_show;
     bool m_crash_handle_disable;
+    bool m_updateing_only;
 };
 
 DECLARE_APP(SpringLobbyApp)
