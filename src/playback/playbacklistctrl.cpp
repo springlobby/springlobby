@@ -13,7 +13,7 @@
 #include "../ui.h"
 
 
-BEGIN_EVENT_TABLE_TEMPLATE1(PlaybackListCtrl, CustomVirtListCtrl<const PlaybackType*>, PlaybackType)
+BEGIN_EVENT_TABLE_TEMPLATE1(PlaybackListCtrl, PlaybackListCtrl::BaseType, PlaybackType )
 
   EVT_LIST_ITEM_RIGHT_CLICK( RLIST_LIST, PlaybackListCtrl::OnListRightClick )
   EVT_MENU                 ( RLIST_DLMAP, PlaybackListCtrl::OnDLMap )
@@ -22,11 +22,11 @@ BEGIN_EVENT_TABLE_TEMPLATE1(PlaybackListCtrl, CustomVirtListCtrl<const PlaybackT
 
 END_EVENT_TABLE()
 
-template<class PlaybackType> SortOrder CustomVirtListCtrl<PlaybackType>::m_sortorder = SortOrder();
+template<class T,class L> SortOrder CustomVirtListCtrl<T,L>::m_sortorder = SortOrder();
 
 template <class PlaybackType>
 PlaybackListCtrl<PlaybackType>::PlaybackListCtrl( wxWindow* parent  ):
-  CustomVirtListCtrl<const PlaybackType*>(parent, RLIST_LIST, wxDefaultPosition, wxDefaultSize,
+  PlaybackListCtrl::BaseType(parent, RLIST_LIST, wxDefaultPosition, wxDefaultSize,
                 wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT,
                 _T("PlaybackListCtrl"), 8, 4, &CompareOneCrit )
 {
@@ -81,26 +81,18 @@ void PlaybackListCtrl<PlaybackType>::OnListRightClick( wxListEvent& event )
 template <class PlaybackType>
 void PlaybackListCtrl<PlaybackType>::AddPlayback( const PlaybackType& replay )
 {
-    if ( GetIndexFromData( &replay ) != -1 ) {
-        wxLogWarning( _T("Replay already in list.") );
+    if ( AddItem( &replay ) )
         return;
-    }
-    m_data.push_back( &replay );
-    SetItemCount( m_data.size() );
-    RefreshItem( m_data.size() - 1);
+
+    wxLogWarning( _T("Replay already in list.") );
 }
 
 template <class PlaybackType>
 void PlaybackListCtrl<PlaybackType>::RemovePlayback( const PlaybackType& replay )
 {
-    int index = GetIndexFromData( &replay );
-
-    if ( index != -1 ) {
-        m_data.erase( m_data.begin() + index );
-        SetItemCount( m_data.size() );
-        RefreshVisibleItems( );
+    if ( RemoveItem( &replay) )
         return;
-    }
+
     wxLogError( _T("Didn't find the replay to remove.") );
 }
 

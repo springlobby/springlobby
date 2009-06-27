@@ -18,9 +18,9 @@
 #include "Helper/sortutil.h"
 #include "aui/auimanager.h"
 
-template<> SortOrder CustomVirtListCtrl<IBattle*>::m_sortorder = SortOrder();
+template<> SortOrder CustomVirtListCtrl<IBattle*,BattleListCtrl>::m_sortorder = SortOrder();
 
-BEGIN_EVENT_TABLE(BattleListCtrl, CustomVirtListCtrl< IBattle *>)
+BEGIN_EVENT_TABLE(BattleListCtrl, BattleListCtrl::BaseType )
 
   EVT_LIST_ITEM_RIGHT_CLICK( BLIST_LIST, BattleListCtrl::OnListRightClick )
   EVT_MENU                 ( BLIST_DLMAP, BattleListCtrl::OnDLMap )
@@ -33,7 +33,7 @@ BEGIN_EVENT_TABLE(BattleListCtrl, CustomVirtListCtrl< IBattle *>)
 END_EVENT_TABLE()
 
 BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui )
-    : CustomVirtListCtrl< IBattle *>(parent, BLIST_LIST, wxDefaultPosition, wxDefaultSize,
+    : CustomVirtListCtrl< IBattle *,BattleListCtrl>(parent, BLIST_LIST, wxDefaultPosition, wxDefaultSize,
             wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("BattleListCtrl"), 10, 4, &CompareOneCrit),
     m_popup( 0 ),
     m_ui(ui)
@@ -156,28 +156,17 @@ wxListItemAttr* BattleListCtrl::OnGetItemAttr(long item) const
 
 void BattleListCtrl::AddBattle( IBattle& battle )
 {
-    //assert(&battle);
-
-    if ( GetIndexFromData( &battle ) != -1 ) {
-        wxLogWarning( _T("Battle already in list.") );
+    if ( AddItem( &battle ) )
         return;
-    }
-    m_data.push_back( &battle );
-    SetItemCount( m_data.size() );
-    RefreshItem( m_data.size() -1 );
-    MarkDirtySort();
+
+    wxLogWarning( _T("Battle already in list.") );
 }
 
 void BattleListCtrl::RemoveBattle( IBattle& battle )
 {
-    int index = GetIndexFromData( &battle );
-
-    if ( index != -1 ) {
-        m_data.erase( m_data.begin() + index );
-        SetItemCount( m_data.size() );
-        RefreshItems( index, m_data.size() -1 );
+    if ( RemoveItem( &battle ) )
         return;
-    }
+
     wxLogError( _T("Didn't find the battle to remove.") );
 }
 
@@ -356,11 +345,31 @@ void BattleListCtrl::SetTipWindowText( const long item_hit, const wxPoint positi
 
 int BattleListCtrl::GetIndexFromData( const DataType& data ) const
 {
-    DataCIter it = m_data.begin();
-    for ( int i = 0; it != m_data.end(); ++it, ++i ) {
-        if ( *it != 0 && data->Equals( *(*it) ) )
-            return i;
+	 static long seekpos;
+   seekpos = clamp( seekpos, 0l , (long)m_data.size() );
+   int index = seekpos;
+
+    for ( DataCIter f_idx = m_data.begin() + seekpos; f_idx != m_data.end() ; ++f_idx )
+    {
+        if ( *f_idx != 0 && data->Equals( *(*f_idx) ) )
+        {
+            seekpos = index;
+            return seekpos;
+        }
+        index++;
     }
+    //it's ok to init with seekpos, if it had changed this would not be reached
+    int r_index = seekpos;
+    for ( DataCIter r_idx = m_data.begin() + seekpos; r_idx != m_data.begin() ; --r_idx )
+    {
+        if ( *r_idx != 0 && data->Equals( *(*r_idx) ) )
+        {
+            seekpos = r_index;
+            return seekpos;
+        }
+        r_index--;
+    }
+
     wxLogError( _T("didn't find the battle.") );
     return -1;
 }

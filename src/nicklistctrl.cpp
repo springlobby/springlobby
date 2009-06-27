@@ -27,7 +27,7 @@
 
 
 
-BEGIN_EVENT_TABLE( NickListCtrl, CustomVirtListCtrl<const User*> )
+BEGIN_EVENT_TABLE( NickListCtrl, NickListCtrl::BaseType )
   EVT_LIST_ITEM_ACTIVATED( NICK_LIST, NickListCtrl::OnActivateItem )
   EVT_CONTEXT_MENU( NickListCtrl::OnShowMenu )
 #if wxUSE_TIPWINDOW
@@ -37,11 +37,11 @@ BEGIN_EVENT_TABLE( NickListCtrl, CustomVirtListCtrl<const User*> )
 #endif
 END_EVENT_TABLE()
 
-template<> SortOrder CustomVirtListCtrl<const User*>::m_sortorder = SortOrder( ) ;
+template<> SortOrder NickListCtrl::BaseType::m_sortorder = SortOrder( ) ;
 
 NickListCtrl::NickListCtrl( wxWindow* parent, bool show_header, NickListCtrl::UserMenu* popup, bool singleSelectList,
                             const wxString& name, bool highlight):
-  CustomVirtListCtrl<const User*>( parent, NICK_LIST, wxDefaultPosition, wxDefaultSize,
+  NickListCtrl::BaseType( parent, NICK_LIST, wxDefaultPosition, wxDefaultSize,
               wxLC_VIRTUAL | wxSUNKEN_BORDER | wxLC_REPORT | (int)(!show_header) * wxLC_NO_HEADER | (int)(singleSelectList) * wxLC_SINGLE_SEL,
               name, 4, 3, &CompareOneCrit, highlight ),
   m_menu(popup)
@@ -77,30 +77,17 @@ NickListCtrl::~NickListCtrl()
 
 void NickListCtrl::AddUser( const User& user )
 {
-    wxLogDebugFunc(_T(""));
-    assert(&user);
+    if ( AddItem( &user ) )
+        return;
 
-    m_data.push_back( &user );
-    SetItemCount( m_data.size() );
-    RefreshItem( m_data.size() -1 );
-
-    SetColumnWidth( 3, wxLIST_AUTOSIZE );
-    SetColumnWidth( 0, wxLIST_AUTOSIZE );
-    MarkDirtySort();
-    HighlightItem( m_data.size() -1 );
+    wxLogWarning( _T("Useralready in list.") );
 }
 
 void NickListCtrl::RemoveUser( const User& user )
 {
-    int index = GetIndexFromData( &user );
-
-    if ( index != -1 ) {
-        m_data.erase( m_data.begin() + index );
-        SetItemCount( m_data.size() );
-        //SetColumnWidth( 3, wxLIST_AUTOSIZE );
-        RefreshItems( index, m_data.size() -1 );
+    if ( RemoveItem( &user ) )
         return;
-    }
+
     wxLogError( _T("Didn't find the user to remove.") );
 }
 
@@ -221,11 +208,32 @@ void NickListCtrl::HighlightItem( long item )
 
 int NickListCtrl::GetIndexFromData( const DataType& data ) const
 {
-    DataCIter it = m_data.begin();
-    for ( int i = 0; it != m_data.end(); ++it, ++i ) {
-        if ( *it != 0 && data->Equals( *(*it) ) )
-            return i;
+	const User* user = data;
+	 static long seekpos;
+   seekpos = clamp( seekpos, 0l , (long)m_data.size() );
+   int index = seekpos;
+
+    for ( DataCIter f_idx = m_data.begin() + seekpos; f_idx != m_data.end() ; ++f_idx )
+    {
+        if ( user == *f_idx )
+        {
+            seekpos = index;
+            return seekpos;
+        }
+        index++;
     }
+    //it's ok to init with seekpos, if it had changed this would not be reached
+    int r_index = seekpos;
+    for ( DataCIter r_idx = m_data.begin() + seekpos; r_idx != m_data.begin() ; --r_idx )
+    {
+        if ( user == *r_idx )
+        {
+            seekpos = r_index;
+            return seekpos;
+        }
+        r_index--;
+    }
+
     wxLogError( _T("didn't find the user.") );
     return -1;
 }

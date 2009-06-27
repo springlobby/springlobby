@@ -1018,6 +1018,7 @@ void Ui::OnUserJoinedBattle( IBattle& battle, User& user )
 void Ui::OnUserLeftBattle( IBattle& battle, User& user )
 {
     if ( m_main_win == 0 ) return;
+    user.SetSideiconIndex( -1 ); //just making sure he's not running around with some icon still set
     mw().GetJoinTab().GetBattleListTab().UpdateBattle( battle );
     try
     {

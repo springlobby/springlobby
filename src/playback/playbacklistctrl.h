@@ -8,12 +8,12 @@ class wxListEvent;
 class wxCommandEvent;
 
 template <class PlaybackImp>
-class PlaybackListCtrl : public CustomVirtListCtrl< const PlaybackImp* >
+class PlaybackListCtrl : public CustomVirtListCtrl< const PlaybackImp*, PlaybackListCtrl<PlaybackImp> >
 {
     protected:
         typedef PlaybackListCtrl<PlaybackImp>
             ThisType;
-        typedef CustomVirtListCtrl< const PlaybackImp* >
+        typedef CustomVirtListCtrl< const PlaybackImp*,PlaybackListCtrl<PlaybackImp> >
             ParentType;
         typedef typename ParentType::DataType
             DataType;
