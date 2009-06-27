@@ -35,6 +35,10 @@
 #include "Helper/sortutil.h"
 #include "mainwindow.h"
 
+bool Settings::m_user_defined_config = false;
+wxString Settings::m_user_defined_config_path = wxEmptyString;
+
+
 const wxColor defaultHLcolor (255,0,0);
 
 Settings& sett()
@@ -81,7 +85,10 @@ Settings::Settings()
 
      if ( !outstream.IsOk() )
      {
-         // TODO: error handling
+         if ( m_user_defined_config ) {
+            wxLogError( _T("unable to use specified config file") );
+            exit(-1);
+         }
      }
   }
 
@@ -89,7 +96,10 @@ Settings::Settings()
 
   if ( !instream.IsOk() )
   {
-      // TODO: error handling
+      if ( m_user_defined_config ) {
+            wxLogError( _T("unable to use specified config file") );
+            exit(-1);
+         }
   }
 	#ifdef __WXMSW__
   m_config = new SL_WinConf( instream );
@@ -99,7 +109,8 @@ Settings::Settings()
   #else
   //removed temporarily because it's suspected to cause a bug with userdir creation
  // m_config = new wxConfig( _T("SpringLobby"), wxEmptyString, _T(".springlobby/springlobby.conf"), _T("springlobby.global.conf"), wxCONFIG_USE_LOCAL_FILE | wxCONFIG_USE_GLOBAL_FILE  );
-  m_config = new wxConfig( _T("SpringLobby"), wxEmptyString, _T(".springlobby/springlobby.conf"), _T("springlobby.global.conf") );
+  wxString path = m_user_defined_config ? m_user_defined_config_path : _T(".springlobby/springlobby.conf");
+  m_config = new wxConfig( _T("SpringLobby"), wxEmptyString, path, _T("springlobby.global.conf") );
   SetPortableMode ( false );
   #endif
 	m_config->SetRecordDefaults( true );

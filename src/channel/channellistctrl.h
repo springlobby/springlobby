@@ -15,7 +15,7 @@ struct ChannelInfo
     wxString topic;
 };
 
-class ChannelListctrl : public CustomVirtListCtrl<ChannelInfo>
+class ChannelListctrl : public CustomVirtListCtrl< ChannelInfo, ChannelListctrl >
 {
     public:
         ChannelListctrl(wxWindow* parent, wxWindowID id, const wxString& name = _T("ChannelListCtrl"),
@@ -48,8 +48,6 @@ class ChannelListctrl : public CustomVirtListCtrl<ChannelInfo>
         };
 
         int GetIndexFromData( const DataType& data ) const;
-
-        CustomVirtListCtrl<ChannelInfo>::m_sortorder;
 
         //! passed as callback to generic ItemComparator, returns -1,0,1 as per defined ordering
         static int CompareOneCrit( DataType u1, DataType u2, int col, int dir ) ;

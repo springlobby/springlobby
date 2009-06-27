@@ -14,7 +14,7 @@ class Ui;
 
 /** \brief The ListCtrll contained in BattleListTab dispalying all currently active battles with their infos
  * \todo DOCMEMORE */
-class BattleListCtrl : public CustomVirtListCtrl< IBattle *>
+class BattleListCtrl : public CustomVirtListCtrl< IBattle *, BattleListCtrl>
 {
   public:
     BattleListCtrl( wxWindow* parent, Ui& ui );

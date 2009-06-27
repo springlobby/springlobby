@@ -1,17 +1,17 @@
 #include "downloadlistctrl.h"
 
-template<> SortOrder CustomVirtListCtrl<Widget>::m_sortorder = SortOrder();
+template<> SortOrder WidgetDownloadListctrl::BaseType::m_sortorder = SortOrder();
 
 const unsigned int column_count = 6;
 
-BEGIN_EVENT_TABLE( WidgetDownloadListctrl, CustomVirtListCtrl<Widget> )
+BEGIN_EVENT_TABLE( WidgetDownloadListctrl, WidgetDownloadListctrl::BaseType )
   EVT_LIST_ITEM_ACTIVATED( WIDGETLISTCTRL_ID, WidgetDownloadListctrl::OnActivateItem )
   EVT_LIST_COL_CLICK( WIDGETLISTCTRL_ID, WidgetDownloadListctrl::OnColClick )
 END_EVENT_TABLE()
 
 WidgetDownloadListctrl::WidgetDownloadListctrl(wxWindow* parent, wxWindowID id, const wxString& name,
                     long style, const wxPoint& pt, const wxSize& sz)
-    :CustomVirtListCtrl<Widget>(parent, WIDGETLISTCTRL_ID, wxDefaultPosition, wxDefaultSize,
+    : WidgetDownloadListctrl::BaseType(parent, WIDGETLISTCTRL_ID, wxDefaultPosition, wxDefaultSize,
             wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("WidgetDownloadListCtrl"), column_count, 3, &CompareOneCrit)
 {
     const int as = wxLIST_AUTOSIZE;
@@ -60,10 +60,10 @@ int WidgetDownloadListctrl::CompareOneCrit( DataType u1, DataType u2, int col, i
 
 void WidgetDownloadListctrl::AddWidget( const Widget widget )
 {
-    m_data.push_back( widget );
-    SetItemCount( m_data.size() );
-    RefreshItem( m_data.size() - 1);
-    //RefreshVisibleItems();
+    if ( AddItem( widget ) )
+        return;
+
+    wxLogWarning( _T("Widget already in list.") );
 }
 
 wxString WidgetDownloadListctrl::OnGetItemText(long item, long column) const

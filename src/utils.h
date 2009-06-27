@@ -119,7 +119,14 @@ T min(T a, T b, T c)
 }
 
 wxString GetLibExtension();
-void InitializeLoggingTargets();
+
+class wxLogWindow;
+
+/** \brief initialize logchain
+
+    \return Logwindow pointer (may be 0), useful if parent frame should be created _after_ logging is set up
+**/
+wxLogWindow* InitializeLoggingTargets( wxFrame* parent, bool console, bool showgui, bool logcrash, int verbosity );
 wxString GetWordParam( wxString& params );
 wxString GetSentenceParam( wxString& params );
 long GetIntParam( wxString& params );
@@ -205,6 +212,12 @@ int ConvertWXArrayToC(const wxArrayString& aChoices, wxString **choices);
     \return true if successful
 */
 bool CopyDir( wxString origin, wxString destination, bool overwrite = true);
+
+/** \brief execute command with admin temp eleveation **/
+int WinExecuteAdmin( const wxString& command, const wxString& params );
+
+//! returns false on !win, checks for regkey on win
+bool IsUACenabled();
 #endif // SPRINGLOBBY_HEADERGUARD_UTILS_H
 
 /**

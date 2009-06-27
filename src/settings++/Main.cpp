@@ -23,7 +23,7 @@
 #include "frame.h"
 
 #include "../crashreport.h"
-//#include "../utils.h"
+#include "../utils.h"
 #include "../settings.h"
 #include "se_utils.h"
 
@@ -31,52 +31,50 @@
 #include <wx/msgdlg.h>
 #include <wx/intl.h>
 #include <wx/log.h>
+#include <wx/cmdline.h>
+#include <wx/frame.h>
+
 #include "../springunitsynclib.h"
 
 IMPLEMENT_APP(Springsettings)
 
-//! @brief Initializes the logging functions.
-///initializes logging in an hidden stream and std::cout/gui messages
-void Springsettings::InitializeLoggingTargets()
-
+Springsettings::Springsettings()
+    :  m_log_verbosity( 3 ),
+    m_log_console( true ),
+    m_log_window_show( false ),
+    m_crash_handle_disable( false )
 {
-	#if wxUSE_STD_IOSTREAM
-    #if wxUSE_DEBUGREPORT && defined(HAVE_WX28) && defined(ENABLE_DEBUG_REPORT)
-      ///hidden stream logging for crash reports
-      wxLog *loggercrash = new wxLogStream( &crashreport().crashlog );
-      wxLogChain *logCrashChain = new wxLogChain( loggercrash );
-      logCrashChain->SetLogLevel( wxLOG_Trace );
-      logCrashChain->SetVerbose( true );
-    #endif
-    ///std::cout logging
-    wxLog *loggerconsole = new wxLogStream( &std::cout );
-    wxLogChain *logChain = new wxLogChain( loggerconsole );
-    logChain->SetLogLevel( wxLOG_Trace );
-    logChain->SetVerbose( true );
-  #elif defined ( USE_LOG_WINDOW )
-    ///gui window fallback logging if console/stream output not available
-    wxLog *loggerwin = new wxLogWindow(0, _T("SpringLobby error console")  );
-    wxLogChain *logChain = new wxLogChain( loggerwin );
-    logChain->SetLogLevel( wxLOG_Trace );
-    logChain->SetVerbose( true );
-    logChain->GetOldLog()->SetLogLevel( wxLOG_Warning );
-  #else
-    /// if all fails, no log is better than msg box spam :P
-    new wxLogNull();
-  #endif
+    SetAppName( _T("springsettings") );
 }
-
 
 bool Springsettings::OnInit()
 {
-	//initialize all loggers
-    InitializeLoggingTargets();
+    //this triggers the Cli Parser amongst other stuff
+    if (!wxApp::OnInit())
+        return false;
+
+    #if wxUSE_ON_FATAL_EXCEPTION
+      if (!m_crash_handle_disable) wxHandleFatalExceptions( true );
+    #endif
+
+    //initialize all loggers
+	//TODO non-constant parameters
+    wxLogWindow* loggerwin = InitializeLoggingTargets( 0, m_log_console, m_log_window_show, !m_crash_handle_disable, m_log_verbosity );
+
+    #ifdef __WXMSW__
+		sett().SetPortableMode( true );
+    #endif
 
     SetSettingsStandAlone( true );
     settings_frame* frame = new settings_frame(NULL,wxID_ANY,wxT("SpringSettings"),wxDefaultPosition,
     		wxDefaultSize);
     SetTopWindow(frame);
     frame->Show();
+
+    if ( loggerwin ) { // we got a logwindow, lets set proper parent win
+        loggerwin->GetFrame()->SetParent( frame );
+    }
+
     return true;
 }
 
@@ -93,5 +91,49 @@ void Springsettings::OnFatalException()
   crashreport().GenerateReport(wxDebugReport::Context_Exception);
   #else
   wxMessageBox( _("The application has generated a fatal error and will be terminated\nGenerating a bug report is not possible\n\nplease enable wxUSE_DEBUGREPORT"),_("Critical error"), wxICON_ERROR );
+  #endif
+}
+
+void Springsettings::OnInitCmdLine(wxCmdLineParser& parser)
+{
+    wxCmdLineEntryDesc cmdLineDesc[] =
+    {
+        { wxCMD_LINE_SWITCH, _T("h"), _T("help"), _("show this help message"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_OPTION_HELP },
+      { wxCMD_LINE_SWITCH, _T("nc"), _T("no-crash-handler"), _("don't use the crash handler (useful for debugging)"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
+      { wxCMD_LINE_SWITCH, _T("cl"), _T("console-logging"),  _("shows application log to the console(if available)"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
+      { wxCMD_LINE_SWITCH, _T("gl"), _T("gui-logging"),  _("enables application log window"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
+        { wxCMD_LINE_OPTION, _T("l"), _T("log-verbosity"),  _("overrides default logging verbosity, can be:\n                                0: no log\n                                1: critical errors\n                                2: errors\n                                3: warnings (default)\n                                4: messages\n                                5: function trace"), wxCMD_LINE_VAL_NUMBER, wxCMD_LINE_PARAM_OPTIONAL },
+        { wxCMD_LINE_NONE }
+
+    };
+
+    parser.SetDesc( cmdLineDesc );
+    parser.SetSwitchChars (wxT("-"));
+}
+
+//! @brief parses the command line and sets global app options like log verbosity or log target
+bool Springsettings::OnCmdLineParsed(wxCmdLineParser& parser)
+{
+  #if wxUSE_CMDLINE_PARSER
+    if ( !parser.Parse(true) )
+    {
+        m_log_console = parser.Found(_T("console-logging"));
+        m_log_window_show = parser.Found(_T("gui-logging"));
+        m_crash_handle_disable = parser.Found(_T("no-crash-handler"));
+
+        if ( !parser.Found(_T("log-verbosity"), &m_log_verbosity ) )
+            m_log_verbosity = 3;
+
+        if ( parser.Found(_T("help")) )
+            return false; // not a syntax error, but program should stop if user asked for command line usage
+
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+  #else // wxUSE_CMDLINE_PARSER
+  return true;
   #endif
 }

@@ -655,3 +655,4 @@ const MainWindow::TabNames& MainWindow::GetTabNames()
 {
     return m_tab_names;
 }
+

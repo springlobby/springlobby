@@ -42,9 +42,10 @@ IUnitSync& usync()
 
 
 SpringUnitSync::SpringUnitSync()
-  : m_map_image_cache( 3 )      // may take about 3M per image ( 1024x1024 24 bpp minimap )
-  , m_tiny_minimap_cache( 200 ) // takes at most 30k per image (   100x100 24 bpp minimap )
-  , m_mapinfo_cache( 1000000 )  // this one is just misused as thread safe std::map ...
+  : m_map_image_cache( 3, _T("m_map_image_cache") )         // may take about 3M per image ( 1024x1024 24 bpp minimap )
+  , m_tiny_minimap_cache( 200, _T("m_tiny_minimap_cache") ) // takes at most 30k per image (   100x100 24 bpp minimap )
+  , m_mapinfo_cache( 1000000, _T("m_mapinfo_cache") )       // this one is just misused as thread safe std::map ...
+  , m_sides_cache( 200, _T("m_sides_cache") )               // another misuse
 {
   m_cache_thread.Create();
   m_cache_thread.SetPriority( WXTHREAD_MIN_PRIORITY );
@@ -55,7 +56,6 @@ SpringUnitSync::SpringUnitSync()
 SpringUnitSync::~SpringUnitSync()
 {
   m_cache_thread.Wait();
-  FreeUnitSyncLib();
 }
 
 
@@ -474,11 +474,14 @@ wxArrayString SpringUnitSync::GetModDeps( const wxString& modname )
 wxArrayString SpringUnitSync::GetSides( const wxString& modname )
 {
 	wxArrayString ret;
-	try
-	{
-		ret = susynclib().GetSides( modname );
+	if ( ! m_sides_cache.TryGet( modname, ret ) ) {
+        try
+        {
+            ret = susynclib().GetSides( modname );
+            m_sides_cache.Add( modname, ret );
+        }
+        catch( unitsync_assert ) {}
 	}
-	catch( unitsync_assert ) {}
 	return ret;
 }
 

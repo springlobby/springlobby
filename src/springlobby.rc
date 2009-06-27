@@ -1,2 +1,3 @@
-springlobby ICON "images/SpringLobby.ico"
 #include <wx/msw/wx.rc>
+springlobby ICON "images/SpringLobby.ico"
+CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "springlobby.exe.manifest"

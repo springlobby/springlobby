@@ -30,11 +30,11 @@
 #include "settings++/custom_dialogs.h"
 #include "settings.h"
 
-template<> SortOrder CustomVirtListCtrl<User*>::m_sortorder = SortOrder();
+template<> SortOrder CustomVirtListCtrl<User*,BattleroomListCtrl>::m_sortorder = SortOrder();
 
 IBattle* BattleroomListCtrl::s_battle = 0;
 
-BEGIN_EVENT_TABLE( BattleroomListCtrl,  CustomVirtListCtrl< User *>)
+BEGIN_EVENT_TABLE( BattleroomListCtrl,  BattleroomListCtrl::BaseType )
 
   EVT_LIST_ITEM_RIGHT_CLICK( BRLIST_LIST, BattleroomListCtrl::OnListRightClick )
   EVT_MENU                 ( BRLIST_SPEC, BattleroomListCtrl::OnSpecSelect )
@@ -54,7 +54,7 @@ END_EVENT_TABLE()
 
 
 BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, IBattle* battle, Ui& ui, bool readonly ) :
-	CustomVirtListCtrl< User *>(parent, BRLIST_LIST, wxDefaultPosition, wxDefaultSize,
+	CustomVirtListCtrl< User *,BattleroomListCtrl>(parent, BRLIST_LIST, wxDefaultPosition, wxDefaultSize,
                 wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL, _T("BattleroomListCtrl"), 10, 3, &CompareOneCrit ),
 	m_battle(battle),m_popup(0),
   m_sel_user(0), m_sides(0),m_spec_item(0),m_handicap_item(0),
@@ -173,33 +173,27 @@ IBattle& BattleroomListCtrl::GetBattle()
 
 void BattleroomListCtrl::AddUser( User& user )
 {
-    if ( GetIndexFromData( &user ) != -1 ) {
-        wxLogWarning( _T("user already in battleroom list.") );
+    if ( AddItem( &user ) )
         return;
-    }
-    m_data.push_back( &user );
-    SetItemCount( m_data.size() );
-    RefreshItem( m_data.size() - 1 );
-    //SetColumnWidth( 5, wxLIST_AUTOSIZE ); //! TODO does this really work?
-    MarkDirtySort();
+
+    wxLogWarning( _T("user already in battleroom list.") );
 }
 
 void BattleroomListCtrl::RemoveUser( User& user )
 {
-    int index = GetIndexFromData( &user );
-
-    if ( index != -1 ) {
-        m_data.erase( m_data.begin() + index );
-        SetItemCount( m_data.size() );
-        RefreshItems( index, m_data.size() -1 );
-        //SetColumnWidth( 5, wxLIST_AUTOSIZE );
+    if ( RemoveItem( &user ) )
         return;
-    }
+
     wxLogError( _T("Didn't find the user to remove in battleroomlistctrl.") );
 }
 
 void BattleroomListCtrl::UpdateUser( User& user )
 {
+    if ( !user.BattleStatus().spectator )
+        icons().SetColourIcon( user.BattleStatus().team, user.BattleStatus().colour );
+    wxArrayString sides = usync().GetSides( m_battle->GetHostModName() );
+    ASSERT_EXCEPTION( user.BattleStatus().side < (long)sides.GetCount(), _T("Side index too high") );
+    user.SetSideiconIndex( icons().GetSideIcon( m_battle->GetHostModName(), user.BattleStatus().side ) );
     int index = GetIndexFromData( &user );
     UpdateUser( index );
 }
@@ -228,18 +222,14 @@ int BattleroomListCtrl::OnGetItemColumnImage(long item, long column) const
     bool is_bot = user.BattleStatus().IsBot();
     bool is_spec = user.BattleStatus().spectator;
 
-    if ( !is_spec )
-        icons().SetColourIcon( user.BattleStatus().team, user.BattleStatus().colour );
-
     switch ( column ) {
         case 0: {
             if ( !is_bot ) {
                 if ( m_battle->IsFounder( user ) ) {
-
-                    return icons().GetHostIcon( user.BattleStatus().spectator );
+                    return icons().GetHostIcon( is_spec );
                 }
                 else {
-                    return icons().GetReadyIcon( user.BattleStatus().spectator, user.BattleStatus().ready, user.BattleStatus().sync, user.BattleStatus().IsBot() );
+                    return icons().GetReadyIcon( is_spec, user.BattleStatus().ready, user.BattleStatus().sync, is_bot );
                 }
             }
             else
@@ -248,18 +238,7 @@ int BattleroomListCtrl::OnGetItemColumnImage(long item, long column) const
         case 2: return is_spec ? -1: icons().GetColourIcon( user.BattleStatus().team );
         case 3: return is_bot ? -1 : icons().GetFlagIcon( user.GetCountry() );
         case 4: return is_bot ? -1 : icons().GetRankIcon( user.GetStatus().rank );
-        case 1:
-        {
-        	if ( is_spec ) return -1;
-            try {
-                wxArrayString sides = usync().GetSides( m_battle->GetHostModName() );
-                ASSERT_EXCEPTION( user.BattleStatus().side < (long)sides.GetCount(), _T("Side index too high") );
-                return icons().GetSideIcon( m_battle->GetHostModName(), user.BattleStatus().side );
-            }
-            catch ( ... ) {}
-
-            return -1;
-        }
+        case 1: return is_spec ? -1 : user.GetSideiconIndex();
         case 6:
         case 7:
         case 8:
@@ -810,12 +789,33 @@ void BattleroomListCtrl::OnActivateItem( wxListEvent& event )
 
 int BattleroomListCtrl::GetIndexFromData(const DataType& data) const
 {
-    const User* user = data;
-    int i = 0;
-    for ( DataCIter it = m_data.begin(); it != m_data.end(); ++it, ++i ) {
-        if ( user == *it )
-            return i;
+	const User* user = data;
+	 static long seekpos;
+   seekpos = clamp( seekpos, 0l , (long)m_data.size() );
+   int index = seekpos;
+
+    for ( DataCIter f_idx = m_data.begin() + seekpos; f_idx != m_data.end() ; ++f_idx )
+    {
+        if ( user == *f_idx )
+        {
+            seekpos = index;
+            return seekpos;
+        }
+        index++;
     }
+    //it's ok to init with seekpos, if it had changed this would not be reached
+    int r_index = seekpos;
+    for ( DataCIter r_idx = m_data.begin() + seekpos; r_idx != m_data.begin() ; --r_idx )
+    {
+        if ( user == *r_idx )
+        {
+            seekpos = r_index;
+            return seekpos;
+        }
+        r_index--;
+    }
+		wxLogError( _T("didn't find the user.") );
+
     return -1;
 }
 

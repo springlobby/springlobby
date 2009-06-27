@@ -30,14 +30,16 @@ class SLTipWindow;
 /** \brief Used as base class for some ListCtrls throughout SL
  * Provides generic functionality, such as column tooltips, possiblity to prohibit coloumn resizing and selection modifiers. \n
  * Some of the provided functionality only makes sense for single-select lists (see grouping) \n
+ * Note: the second template param is actually just a dummy to ensure the compiler generates distinct code in case we have different listctrls with same datatype
  * Note: Tooltips are a bitch and anyone should feel free to revise them (koshi)
  * \tparam the type of stored data
  */
-template < class DataImp >
+template < class DataImp, class ListCtrlImp >
 class CustomVirtListCtrl : public ListBaseType
 {
 public:
-    typedef DataImp DataType;
+    typedef DataImp
+        DataType;
 
 protected:
     typedef UserActions::ActionType ActionType;
@@ -291,7 +293,11 @@ public:
 
      virtual int GetIndexFromData( const DataType& data ) const = 0;
 
+     void ReverseOrder();
+
 protected:
+    typedef CustomVirtListCtrl< DataImp, ListCtrlImp >
+        BaseType;
     typedef std::vector< DataImp >
         DataVector;
     typedef typename DataVector::iterator
@@ -309,8 +315,28 @@ protected:
     //! the Comparator object passed to the SLInsertionSort function
     ItemComparator<DataType> m_comparator;
 
+    bool RemoveItem( const DataImp item );
+    bool AddItem( const DataImp item );
+
 public:
     DECLARE_EVENT_TABLE()
+
+private:
+    typedef BaseType
+        ThisType;
+};
+
+template < class ListCtrlType >
+class SelectionSaver {
+    ListCtrlType* m_list;
+
+public:
+    SelectionSaver( ListCtrlType* list  )
+        : m_list( list )
+    { m_list->SaveSelection(); }
+
+    ~SelectionSaver()
+    { m_list->RestoreSelection(); }
 };
 
 #include "customvirtlistctrl.cpp"

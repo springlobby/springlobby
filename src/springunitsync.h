@@ -23,15 +23,16 @@ template<typename TKey, typename TValue>
 class MostRecentlyUsedCache
 {
   public:
-    MostRecentlyUsedCache(int max_size)
-    : m_size(0), m_max_size(max_size), m_cache_hits(0), m_cache_misses(0)
+    //! name parameter might be used to identify stats in dgb output
+    MostRecentlyUsedCache(int max_size, const wxString& name = _T("") )
+    : m_size(0), m_max_size(max_size), m_cache_hits(0), m_cache_misses(0), m_name(name)
     {
     }
 
     ~MostRecentlyUsedCache()
     {
-      wxLogDebugFunc( _T("cache hits: ") + TowxString( m_cache_hits ) );
-      wxLogDebugFunc( _T("cache misses: ") + TowxString( m_cache_misses ) );
+      wxLogDebugFunc( m_name + _T("cache hits: ") + TowxString( m_cache_hits ) );
+      wxLogDebugFunc( m_name + _T("cache misses: ") + TowxString( m_cache_misses ) );
     }
 
     void Add( const TKey& name, const TValue& img )
@@ -85,10 +86,12 @@ class MostRecentlyUsedCache
     const int m_max_size;
     int m_cache_hits;
     int m_cache_misses;
+    const wxString m_name;
 };
 
 typedef MostRecentlyUsedCache<wxString,wxImage> MostRecentlyUsedImageCache;
 typedef MostRecentlyUsedCache<wxString,MapInfo> MostRecentlyUsedMapInfoCache;
+typedef MostRecentlyUsedCache<wxString,wxArrayString> MostRecentlyUsedArrayStringCache;
 
 
 /// Thread safe mapping from evtHandlerId to wxEvtHandler*
@@ -237,6 +240,8 @@ class SpringUnitSync : public IUnitSync
 
     /// this caches MapInfo to facilitate GetMapExAsync
     MostRecentlyUsedMapInfoCache m_mapinfo_cache;
+
+    MostRecentlyUsedArrayStringCache m_sides_cache;
 
     //! this function returns only the cache path without the file extension,
     //! the extension itself would be added in the function as needed

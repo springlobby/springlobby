@@ -5,7 +5,7 @@
 #include "widget.h"
 
 
-class WidgetDownloadListctrl : public CustomVirtListCtrl<Widget>
+class WidgetDownloadListctrl : public CustomVirtListCtrl<Widget,WidgetDownloadListctrl >
 {
     public:
         WidgetDownloadListctrl(wxWindow* parent, wxWindowID id, const wxString& name = _T("WidgetDownloadListCtrl"),
