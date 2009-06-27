@@ -56,7 +56,6 @@ SpringUnitSync::SpringUnitSync()
 SpringUnitSync::~SpringUnitSync()
 {
   m_cache_thread.Wait();
-  FreeUnitSyncLib();
 }
 
 

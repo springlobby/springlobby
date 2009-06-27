@@ -233,14 +233,7 @@ int SpringLobbyApp::OnExit()
 
   sett().SaveSettings(); // to make sure that cache path gets saved before destroying unitsync
 
-	if ( usync().IsLoaded() )
-	{
-		usync().FreeUnitSyncLib();
-	}
-
   DestroyGlobals();
-
-  exit(0);/// Must fix crashes on close, except those in destroyglobals.
 
   return 0;
 }
