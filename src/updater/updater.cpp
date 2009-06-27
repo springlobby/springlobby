@@ -54,12 +54,13 @@ void UpdaterClass::CheckForUpdates()
       int answer = customMessageBox(SL_MAIN_ICON, _("Your SpringLobby version is not up to date.\n\n") + msg + _("\n\nWould you like for me to autodownload the new version? Changes will take effect next you launch the lobby again."), _("Not up to date"), wxYES_NO);
       if (answer == wxYES)
       {
-          ui().mw().SetTitle( _("SpringLobby -- downloading update") );
           if ( IsUACenabled() ) {
             WinExecuteAdmin( wxStandardPaths::Get().GetExecutablePath(), _T("-u") );
           }
-          else
+          else {
+            ui().mw().SetTitle( _("SpringLobby -- downloading update") ); // doesn't make sense when launching the new instance, since we never get the return code atm
             StartUpdate( latestVersion );
+          }
 
       }
     #else
@@ -69,6 +70,7 @@ void UpdaterClass::CheckForUpdates()
 }
 
 #ifdef __WXMSW__
+//! DO NOT use mw() global unless fromCli is false !
 void UpdaterClass::StartUpdate( const wxString& latestVersion, bool fromCli )
 {
     m_fromCli = fromCli;
@@ -86,6 +88,7 @@ void UpdaterClass::StartUpdate( const wxString& latestVersion, bool fromCli )
 }
 #endif
 
+//! DO NOT use mw() global unless fromCli is false !
 void UpdaterClass::OnDownloadEvent( wxCommandEvent& event )
 {
 	int code = event.GetInt();
@@ -131,6 +134,7 @@ void UpdaterClass::OnDownloadEvent( wxCommandEvent& event )
         ui().mw().SetTitle( m_cur_mw_title );
 }
 
+//! DO NOT use mw() global unless fromCli is false !
 bool UpdaterClass::UpdateLocale( const wxString& tempdir, bool WaitForReboot )
 {
     wxString target = wxPathOnly( wxStandardPaths::Get().GetExecutablePath() ) + wxFileName::GetPathSeparator() + _T("locale");
@@ -138,6 +142,7 @@ bool UpdaterClass::UpdateLocale( const wxString& tempdir, bool WaitForReboot )
     return CopyDir( origin, target );
 }
 
+//! DO NOT use mw() global unless fromCli is false !
 bool UpdaterClass::UpdateExe( const wxString& newexe, bool WaitForReboot )
 {
     //this always returns false on msw
