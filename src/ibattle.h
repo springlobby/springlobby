@@ -238,6 +238,8 @@ public:
     virtual void StartRectAdded( unsigned int allyno );
     virtual void ClearStartRects();
     virtual unsigned int GetNumRects();
+	virtual unsigned int GetLastRectIdx();
+	virtual unsigned int GetNextFreeRectIdx();
 
     virtual int GetFreeTeamNum( bool excludeme = false );
 

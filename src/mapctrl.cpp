@@ -286,16 +286,7 @@ double MapCtrl::GetStartRectMetalFraction( const BattleStartRect& sr )
 unsigned int MapCtrl::GetNewRectIndex()
 {
     ASSERT_LOGIC ( m_battle, _T("getting a rectangle index not in a battle"));
-	//lolwtf
-    /*for ( std::vector<BattleStartRect*>::size_type i = 0; i < m_battle->GetNumRects() ; i++ )
-    {
-        wxRect r = GetStartRect( i );
-        if ( r.IsEmpty() ) return i;
-    }
-    return -1;
-	*/
-	return m_battle->GetNumRects(); //return first available index
-
+	return m_battle->GetNextFreeRectIdx();
 }
 
 
@@ -728,7 +719,7 @@ void MapCtrl::DrawBackground( wxDC& dc )
 
 void MapCtrl::DrawStartRects( wxDC& dc )
 {
-    for ( int i = 0; i < int(m_battle->GetNumRects()); i++ )
+    for ( int i = 0; i <= int(m_battle->GetLastRectIdx()); i++ )
     {
         wxRect sr = GetStartRect( i );
         if ( sr.IsEmpty() ) continue;
@@ -1251,7 +1242,7 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
     {
 
         // Check if point is in a startrect.
-        for ( int i = m_battle->GetNumRects(); i >= 0; i-- )
+        for ( int i = m_battle->GetLastRectIdx(); i >= 0; i-- )
         {
 
             wxRect r = GetStartRect( i );

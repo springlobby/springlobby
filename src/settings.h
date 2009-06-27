@@ -24,7 +24,7 @@ const unsigned int DEFSETT_SW_HEIGHT = 580;
 const unsigned int DEFSETT_SW_TOP = 50;
 const unsigned int DEFSETT_SW_LEFT = 50;
 
-const unsigned int SPRING_MAX_USERS = 32;
+const unsigned int SPRING_MAX_USERS = 64;
 const unsigned int SPRING_MAX_TEAMS = 16;
 const unsigned int SPRING_MAX_ALLIES = 16;
 
