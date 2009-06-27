@@ -76,7 +76,7 @@ m_textctrl(0)
 		{
 			mmOptionList opt = optWrap.m_opts[optFlag].list_map[key];
 			int temp = int(opt.cbx_choices.GetCount()-1);
-			int index = CLAMP(opt.cur_choice_index,0,temp);
+			int index = clamp(opt.cur_choice_index,0,temp);
 			m_combobox = new wxComboBox(this, wxID_ANY, opt.cbx_choices[index], wxDefaultPosition, wxDefaultSize, opt.cbx_choices, wxCB_READONLY, wxDefaultValidator);
 			wxString tooltip = opt.description + _T("\n");
 			for ( ListItemVec::iterator itor = opt.listitems.begin(); itor != opt.listitems.end(); itor++ )

@@ -33,6 +33,7 @@
 #include "ui.h"
 #include "iunitsync.h"
 #include "utils.h"
+#include "uiutils.h"
 #include "settings.h"
 #include "mainwindow.h"
 

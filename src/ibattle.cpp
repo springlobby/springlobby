@@ -495,8 +495,8 @@ UserPosition IBattle::GetFreePosition()
     }
     if ( !taken )
     {
-      ret.x = CLAMP(map.info.positions[i].x, 0, map.info.width);
-      ret.y = CLAMP(map.info.positions[i].y, 0, map.info.height);
+      ret.x = clamp(map.info.positions[i].x, 0, map.info.width);
+      ret.y = clamp(map.info.positions[i].y, 0, map.info.height);
       return ret;
     }
   }

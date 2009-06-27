@@ -59,26 +59,6 @@ class assert_exception : public std::runtime_error
 {wxLogMessage(_T("runtime assertion ( %s:%d ): %s"), TowxString(__FILE__).c_str(),__LINE__ , wxString(msg).c_str() );throw assert_exception(std::string(wxString(msg).mb_str()));}
 
 
-/** @todo convert to a templated function */
-#define CLAMP(var,min,max)    \
-  ( (var) =		      \
-    ( (var) < (min)	      \
-      ? (min)		      \
-      : ( (var) > (max)	      \
-	  ? (max)	      \
-	  : (var)	      \
-	)		      \
-    )			      \
-  )
-
-#ifdef __WXMSW__
-#define CONTROL_HEIGHT 22
-#else
-#define CONTROL_HEIGHT 28
-#endif
-
-#define IsColourOk() IsOk()
-
 /** \name Type conversions
  * @{ */
 //!@brief converts integers to wxString
@@ -141,12 +121,6 @@ wxString MakeHashSigned( const wxString& hash );
 bool IsValidNickname( const wxString& name );
 
 wxString GetHostCPUSpeed();
-
-static inline int CompareStringIgnoreCase(const wxString& first, const wxString& second)
-{
-    return (first.Upper() > second.Upper() );
-}
-
 
 /** @brief Array with runtime determined size which is not initialized on creation.
 

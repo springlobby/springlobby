@@ -12,6 +12,7 @@
 
 #include "settings.h"
 #include "utils.h"
+#include "uiutils.h"
 #include "battle.h"
 #include "iunitsync.h"
 

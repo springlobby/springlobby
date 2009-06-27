@@ -10,9 +10,17 @@ class wxImage;
 class wxBitmap;
 class wxWindow;
 
+#ifdef __WXMSW__
+#define CONTROL_HEIGHT 22
+#else
+#define CONTROL_HEIGHT 28
+#endif
+
 #define bool2yn(b) ((b)?_("Yes"):_("No"))
 
 #define wxDefaultBitmap wxBitmap()
+
+#define IsColourOk() IsOk()
 
 #ifdef __WXMSW__
     const wxString DEFAULT_COLORDLG_TITLE = _("Choose color");

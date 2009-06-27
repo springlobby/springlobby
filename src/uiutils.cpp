@@ -150,9 +150,9 @@ wxColour GetColorFromFloatStrng( const wxString color )
     g = s2d( c.BeforeFirst( ' ' ));
     c = c.AfterFirst( ' ' );
     b = s2d(c.BeforeFirst( ' ' ));
-    CLAMP( r, 0, 1  );
-    CLAMP( g, 0, 1  );
-    CLAMP( b, 0, 1  );
+    r = clamp( r, 0.f, 1.f  );
+    g = clamp( g, 0.f, 1.f  );
+    b = clamp( b, 0.f, 1.f  );
     return wxColour( (unsigned char)(r*256), (unsigned char)(g*256), (unsigned char)(b*256) );
 }
 
@@ -371,10 +371,10 @@ wxImage ReplaceChannelStatusColour( wxBitmap img, const wxColour& colour )
   wxImage::HSVValue origcolour = wxImage::RGBtoHSV( wxImage::RGBValue::RGBValue( colour.Red(), colour.Green(), colour.Blue() ) );
 
   double bright = origcolour.value - 0.1*origcolour.value;
-  CLAMP(bright,0,1);
+  bright = clamp( bright, 0.0, 1.0 );
   wxImage::HSVValue hsvdarker1( origcolour.hue, origcolour.saturation, bright );
   bright = origcolour.value - 0.5*origcolour.value;
-  CLAMP(bright,0,1);
+  bright = clamp( bright, 0.0, 1.0 );
   wxImage::HSVValue hsvdarker2( origcolour.hue, origcolour.saturation, bright );
 
   wxImage::RGBValue rgbdarker1 = wxImage::HSVtoRGB( hsvdarker1 );
