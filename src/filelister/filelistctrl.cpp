@@ -15,7 +15,7 @@
 
 #include "filelistctrl.h"
 #include "filelistdialog.h"
-#include "../utils.h"
+#include "../utils/conversion.h"
 #include "../iconimagelist.h"
 #include "../uiutils.h"
 
@@ -250,4 +250,3 @@ void FileListCtrl::HighlightItem( long item )
 }
 
 #endif
-

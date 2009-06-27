@@ -2,11 +2,14 @@
 #include <wx/colour.h>
 #include <wx/log.h>
 
-#include "utils.h"
+//#include "utils.h"
 #include "settings.h"
 #include "iconimagelist.h"
 #include "settings++/custom_dialogs.h"
 #include "uiutils.h"
+#include "utils/sltipwin.h"
+#include "utils/math.h"
+#include "utils/controls.h"
 
 #include <algorithm>
 

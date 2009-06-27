@@ -13,7 +13,8 @@
 #include <wx/tooltip.h>
 #include <map>
 
-#include "utils.h"
+#include "utils/controls.h"
+#include "utils/math.h"
 #include "mmoptionswrapper.h"
 #include "battle.h"
 #include "spinctld.h"

@@ -5,7 +5,8 @@
 
 #include "userlist.h"
 #include "user.h"
-#include "utils.h"
+#include "utils/debug.h"
+#include "utils/conversion.h"
 
 const UserList::user_map_t::size_type SEEKPOS_INVALID = UserList::user_map_t::size_type(-1);
 

@@ -5,7 +5,9 @@
 #include <sstream>
 
 #include "ibattle.h"
-#include "utils.h"
+#include "utils/debug.h"
+#include "utils/conversion.h"
+#include "utils/math.h"
 #include "uiutils.h"
 #include "settings.h"
 #include "ui.h"
@@ -933,8 +935,8 @@ void IBattle::GetBattleFromScript( bool loadmapmod )
         //[PLAYERX] sections
         for ( int i = 0; i < playernum ; ++i )
         {
-            PDataList player ( replayNode->Find( _T("PLAYER") + i2s(i) ) );
-            PDataList bot ( replayNode->Find( _T("AI") + i2s(i) ) );
+            PDataList player ( replayNode->Find( _T("PLAYER") + TowxString(i) ) );
+            PDataList bot ( replayNode->Find( _T("AI") + TowxString(i) ) );
             if ( player.ok() || bot.ok() )
             {
 								if ( bot.ok() ) player = bot;
@@ -953,7 +955,7 @@ void IBattle::GetBattleFromScript( bool loadmapmod )
                 	user.BattleStatus().aishortname = bot->GetString( _T("ShortName" ) );
                 	user.BattleStatus().aiversion = bot->GetString( _T("Version" ) );
                 	int ownerindex = bot->GetInt( _T("Host" ) );
-                	PDataList aiowner ( replayNode->Find( _T("PLAYER") + i2s(ownerindex) ) );
+                	PDataList aiowner ( replayNode->Find( _T("PLAYER") + TowxString(ownerindex) ) );
                 	if ( aiowner.ok() )
                 	{
                 		user.BattleStatus().owner = aiowner->GetString( _T("Name") );
@@ -963,7 +965,7 @@ void IBattle::GetBattleFromScript( bool loadmapmod )
                 IBattle::TeamInfoContainer teaminfos = parsed_teams[user.BattleStatus().team];
                 if ( !teaminfos.exist )
                 {
-									PDataList team( replayNode->Find( _T("TEAM") + i2s( user.BattleStatus().team ) ) );
+									PDataList team( replayNode->Find( _T("TEAM") + TowxString( user.BattleStatus().team ) ) );
 									if ( team.ok() )
 									{
 											teaminfos.exist = true;
@@ -990,7 +992,7 @@ void IBattle::GetBattleFromScript( bool loadmapmod )
 										IBattle::AllyInfoContainer allyinfos = parsed_allies[user.BattleStatus().ally];
 										if ( !allyinfos.exist )
 										{
-												PDataList ally( replayNode->Find( _T("ALLYTEAM") + i2s( user.BattleStatus().ally ) ) );
+												PDataList ally( replayNode->Find( _T("ALLYTEAM") + TowxString( user.BattleStatus().ally ) ) );
 												if ( ally.ok() )
 												{
 													allyinfos.exist = true;

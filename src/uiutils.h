@@ -8,25 +8,12 @@
 class wxColour;
 class wxImage;
 class wxBitmap;
-class wxWindow;
 
-#ifdef __WXMSW__
-#define CONTROL_HEIGHT 22
-#else
-#define CONTROL_HEIGHT 28
-#endif
-
-#define bool2yn(b) ((b)?_("Yes"):_("No"))
 
 #define wxDefaultBitmap wxBitmap()
 
 #define IsColourOk() IsOk()
 
-#ifdef __WXMSW__
-    const wxString DEFAULT_COLORDLG_TITLE = _("Choose color");
-#else
-    const wxString DEFAULT_COLORDLG_TITLE = _("Choose color (only first 16 will be saved)");
-#endif
 
 
 const int colour_values[][3] = { {240,210,0}, {128, 128, 128}, {0, 0, 128}, {0, 0, 255},
@@ -61,25 +48,8 @@ wxBitmap charArr2wxBitmapWithBlending(const unsigned char * arg, int size,
 wxImage BorderInvariantResizeImage(  const wxImage& image, int width, int height );
 
 
-//! when querying for a color, always use this (it'll autosave/retrieve custom defined colors)
-wxColour GetColourFromUser(wxWindow *parent, const wxColour& colInit,
-        const wxString& caption = DEFAULT_COLORDLG_TITLE, const wxString& palette = _T("Default") );
-
 wxImage ReplaceChannelStatusColour( wxBitmap img, const wxColour& colour );
 
-
-#if wxUSE_TIPWINDOW
-#include <wx/tipwin.h>
-
-class SLTipWindow : public wxTipWindow{
-    public:
-        SLTipWindow(wxWindow *parent, const wxString &text)
-            :wxTipWindow(parent,text){};
-        void Cancel(wxMouseEvent& event);
-
-        DECLARE_EVENT_TABLE()
-};
-#endif
 
 void CopyToClipboard( const wxString& text );
 

@@ -24,7 +24,10 @@
 
 #include "nonportable.h"
 #include "settings.h"
-#include "utils.h"
+#include "utils/conversion.h"
+#include "utils/debug.h"
+#include "utils/math.h"
+#include "utils/platform.h"
 #include "uiutils.h"
 #include "battlelistfiltervalues.h"
 #include "playback/playbackfiltervalues.h"

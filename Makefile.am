@@ -396,6 +396,22 @@ libtorrent_headers = \
 
 
 springlobby_SOURCES = \
+	src/utils/math.cpp \
+	src/utils/math.h \
+	src/utils/misc.cpp \
+	src/utils/misc.h \
+	src/utils/debug.cpp \
+	src/utils/debug.h \
+	src/utils/platform.cpp \
+	src/utils/platform.h \
+	src/utils/conversion.cpp \
+	src/utils/conversion.h \
+	src/utils/tasutil.cpp \
+	src/utils/tasutil.h \
+	src/utils/sltipwin.cpp \
+	src/utils/sltipwin.h \
+	src/utils/controls.cpp \
+	src/utils/controls.h \
 	src/updater/versionchecker.cpp \
 	src/updater/versionchecker.h \
 	src/sounds/ring_sound.h \

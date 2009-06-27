@@ -22,6 +22,7 @@
 #include <wx/choicdlg.h>
 #include <wx/aui/auibook.h>
 #include <wx/tooltip.h>
+#include <wx/aboutdlg.h>
 
 #include <stdexcept>
 
@@ -32,7 +33,8 @@
 #include "settings.h"
 #include "ui.h"
 #include "server.h"
-#include "utils.h"
+#include "utils/debug.h"
+#include "utils/platform.h"
 #include "battlelisttab.h"
 #include "mainchattab.h"
 #include "mainjoinbattletab.h"

@@ -8,7 +8,9 @@
 #include <cmath>
 
 #include "springunitsynclib.h"
-#include "utils.h"
+#include "utils/debug.h"
+#include "utils/conversion.h"
+#include "utils/misc.h"
 #include "globalsmanager.h"
 
 #define LOCK_UNITSYNC wxCriticalSectionLocker lock_criticalsection(m_lock)

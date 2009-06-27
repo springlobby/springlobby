@@ -15,7 +15,9 @@
 #include "mmoptionswrapper.h"
 #include "ui.h"
 #include "battle.h"
-#include "utils.h"
+#include "utils/controls.h"
+#include "utils/math.h"
+#include "utils/conversion.h"
 #include "spinctld.h"
 
 BEGIN_EVENT_TABLE(SingleOptionDialog,wxDialog)

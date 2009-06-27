@@ -11,7 +11,7 @@
 #include <wx/listctrl.h>
 
 #include "settings.h"
-#include "utils.h"
+#include "utils/controls.h"
 #include "uiutils.h"
 #include "battle.h"
 #include "iunitsync.h"

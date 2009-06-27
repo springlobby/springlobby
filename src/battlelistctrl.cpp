@@ -4,7 +4,7 @@
 #include <wx/menu.h>
 
 #include "battlelistctrl.h"
-#include "utils.h"
+#include "utils/sltipwin.h"
 #include "user.h"
 #include "iconimagelist.h"
 #include "battle.h"

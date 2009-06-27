@@ -24,7 +24,8 @@
 #include "spring.h"
 #include "springprocess.h"
 #include "ui.h"
-#include "utils.h"
+#include "utils/debug.h"
+#include "utils/conversion.h"
 #include "settings.h"
 #include "userlist.h"
 #include "battle.h"
@@ -103,7 +104,7 @@ bool Spring::Run( Battle& battle )
   wxString CommandForAutomaticTeamSpeak = _T("SCRIPT|") + battle.GetFounder().GetNick() + _T("|");
   for ( UserList::user_map_t::size_type i = 0; i < battle.GetNumUsers(); i++ )
   {
-    CommandForAutomaticTeamSpeak << u2s( battle.GetUser(i).BattleStatus().ally) << _T("|") << battle.GetUser(i).GetNick() << _T("|");
+    CommandForAutomaticTeamSpeak << TowxString<unsigned int>( battle.GetUser(i).BattleStatus().ally) << _T("|") << battle.GetUser(i).GetNick() << _T("|");
   }
   torrent().SendMessageToCoordinator(CommandForAutomaticTeamSpeak);
   #endif
@@ -346,8 +347,8 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 				int restrictcount = 0;
 				for ( std::map<wxString, int>::iterator itor = units.begin(); itor != units.end(); itor++ )
 				{
-						tdf.Append(_T("Unit") + i2s( restrictcount ), itor->first );
-						tdf.Append(_T("Limit") + i2s( restrictcount ), itor->second );
+						tdf.Append(_T("Unit") + TowxString( restrictcount ), itor->first );
+						tdf.Append(_T("Limit") + TowxString( restrictcount ), itor->second );
 						restrictcount++;
 				}
 			tdf.LeaveSection();
@@ -370,7 +371,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 					User& user = battle.GetUser( i );
 					UserBattleStatus& status = user.BattleStatus();
 					if ( status.IsBot() ) continue;
-					tdf.EnterSection( _T("PLAYER") + i2s( i ) );
+					tdf.EnterSection( _T("PLAYER") + TowxString( i ) );
 							tdf.Append( _T("Name"), user.GetNick() );
 							tdf.Append( _T("CountryCode"), user.GetCountry().Lower());
 							tdf.Append( _T("Spectator"), status.spectator );
@@ -403,7 +404,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 						User& user = battle.GetUser( i );
 						UserBattleStatus& status = user.BattleStatus();
 						if ( !status.IsBot() ) continue;
-						tdf.EnterSection( _T("AI") + i2s( i ) );
+						tdf.EnterSection( _T("AI") + TowxString( i ) );
 								tdf.Append( _T("Name"), user.GetNick() ); // AI's nick;
 								tdf.Append( _T("ShortName"), status.aishortname ); // AI libtype
 								tdf.Append( _T("Version"), status.aiversion ); // AI libtype version
@@ -438,7 +439,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 					if ( parsedteams.find( status.team ) != parsedteams.end() ) continue; // skip duplicates
 					parsedteams.insert( status.team );
 
-					tdf.EnterSection( _T("TEAM") + i2s( status.team ) );
+					tdf.EnterSection( _T("TEAM") + TowxString( status.team ) );
 						if ( !usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) && status.IsBot() )
 						{
 								tdf.Append( _T("AIDLL"), status.aishortname );
@@ -494,7 +495,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 					sr = battle.GetStartRect( ally );
 					parsedallys.insert( status.ally );
 
-					tdf.EnterSection( _T("ALLYTEAM") + i2s( ally ) );
+					tdf.EnterSection( _T("ALLYTEAM") + TowxString( ally ) );
 						tdf.Append( _T("NumAllies"), 0 );
 						if ( sr.IsOk() )
 						{

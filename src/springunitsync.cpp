@@ -1,5 +1,7 @@
 /* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
 
+#include "springunitsync.h"
+
 #include <algorithm>
 #include <wx/dynlib.h>
 #include <wx/filefn.h>
@@ -20,13 +22,15 @@
 #include <stdexcept>
 #include <clocale>
 
-#include "springunitsync.h"
 #include "settings.h"
 #include "springunitsynclib.h"
 #include "settings++/custom_dialogs.h"
 #include "unitsyncthread.h"
 #include "globalsmanager.h"
 #include "uiutils.h"
+#include "utils/debug.h"
+#include "utils/conversion.h"
+#include "utils/misc.h"
 
 
 #define LOCK_UNITSYNC wxCriticalSectionLocker lock_criticalsection(m_lock)

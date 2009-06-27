@@ -24,7 +24,7 @@
 #include "battlelistctrl.h"
 #include "battle.h"
 #include "uiutils.h"
-#include "utils.h"
+#include "utils/tasutil.h"
 #include "settings.h"
 #include "aui/auimanager.h"
 #include "useractions.h"

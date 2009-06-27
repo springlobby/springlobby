@@ -16,7 +16,9 @@
 #include <cmath>
 
 #include "uiutils.h"
-#include "utils.h"
+#include "utils/math.h"
+#include "utils/conversion.h"
+#include "utils/debug.h"
 #include "settings++/custom_dialogs.h"
 #include "settings.h"
 
@@ -145,11 +147,11 @@ wxColour GetColorFromFloatStrng( const wxString color )
 {
     wxString c = color;
     float r = 0, g = 0, b = 0;
-    r = s2d(c.BeforeFirst( ' ' ));
+    r = FromwxString<double>(c.BeforeFirst( ' ' ));
     c = c.AfterFirst( ' ' );
-    g = s2d( c.BeforeFirst( ' ' ));
+    g = FromwxString<double>( c.BeforeFirst( ' ' ));
     c = c.AfterFirst( ' ' );
-    b = s2d(c.BeforeFirst( ' ' ));
+    b = FromwxString<double>(c.BeforeFirst( ' ' ));
     r = clamp( r, 0.f, 1.f  );
     g = clamp( g, 0.f, 1.f  );
     b = clamp( b, 0.f, 1.f  );
@@ -405,17 +407,6 @@ wxSize MakeFit(const wxSize &original, const wxSize &bounds)
     return wxSize( bounds.GetWidth(), sizey );
   }
 }
-
-#if wxUSE_TIPWINDOW
-BEGIN_EVENT_TABLE(SLTipWindow, wxTipWindow)
-  EVT_MOUSEWHEEL(SLTipWindow::Cancel)
-END_EVENT_TABLE()
-
-void SLTipWindow::Cancel(wxMouseEvent& event)
-{
-  wxTipWindow::Close();
-}
-#endif
 
 void CopyToClipboard( const wxString& text )
 {

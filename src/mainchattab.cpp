@@ -13,7 +13,9 @@
 
 #include "aui/auimanager.h"
 #include "mainchattab.h"
-#include "utils.h"
+#include "utils/debug.h"
+#include "utils/conversion.h"
+#include "utils/math.h"
 #include "mainwindow.h"
 #include "channel/channel.h"
 #include "user.h"

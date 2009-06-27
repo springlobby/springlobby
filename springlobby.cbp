@@ -2,6 +2,22 @@
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="6" />
 	<Project>
+	<Unit filename="src/utils/math.cpp" />
+	<Unit filename="src/utils/math.h" />
+	<Unit filename="src/utils/misc.cpp" />
+	<Unit filename="src/utils/misc.h" />
+	<Unit filename="src/utils/debug.cpp" />
+	<Unit filename="src/utils/debug.h" />
+	<Unit filename="src/utils/platform.cpp" />
+	<Unit filename="src/utils/platform.h" />
+	<Unit filename="src/utils/conversion.cpp" />
+	<Unit filename="src/utils/conversion.h" />
+	<Unit filename="src/utils/server.cpp" />
+	<Unit filename="src/utils/server.h" />
+	<Unit filename="src/utils/tipwin.cpp" />
+	<Unit filename="src/utils/tipwin.h" />
+	<Unit filename="src/utils/controls.cpp" />
+	<Unit filename="src/utils/controls.h" />
 		<Option title="springlobby" />
 		<Option pch_mode="0" />
 		<Option compiler="gcc" />

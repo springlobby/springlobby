@@ -18,7 +18,7 @@
 #include "ui.h"
 #include "channel/channel.h"
 #include "user.h"
-#include "utils.h"
+#include "utils/debug.h"
 #include "server.h"
 #include "battle.h"
 #include "httpdownloader.h"

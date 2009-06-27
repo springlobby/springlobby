@@ -21,7 +21,7 @@
 #include "ui.h"
 #include "iunitsync.h"
 #include "ibattle.h"
-#include "utils.h"
+#include "utils/controls.h"
 #include "server.h"
 #include "mmoptionswrapper.h"
 #include "aui/auimanager.h"

@@ -18,7 +18,6 @@ exts=$*
 add_sourcefile_to_project () {
   echo adding $1
   sed -i 's,^springlobby_SOURCES = \\$,&\n\t'$1' \\,' Makefile.am
-  echo $2
   if [ $2 = cpp ] ; then
 	sed -i 's,^SET(SpringLobbySrc$,&\n\t'$1',' CMakeLists.txt
 	git add CMakeLists.txt

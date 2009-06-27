@@ -1,7 +1,8 @@
+
+#include "updater.h"
 #include "versionchecker.h"
 #include "../settings++/custom_dialogs.h"
-#include "../utils.h"
-#include "updater.h"
+#include "../utils/platform.h"
 #include "../settings.h"
 #include "../globalsmanager.h"
 #include "../ui.h"

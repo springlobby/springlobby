@@ -2,7 +2,8 @@
 
 #include "springprocess.h"
 #include "spring.h"
-#include "utils.h"
+#include "utils/debug.h"
+#include "utils/conversion.h"
 #include <wx/log.h>
 
 

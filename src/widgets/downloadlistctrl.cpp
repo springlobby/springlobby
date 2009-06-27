@@ -1,5 +1,7 @@
 #include "downloadlistctrl.h"
 
+#include "../utils/conversion.h"
+
 template<> SortOrder WidgetDownloadListctrl::BaseType::m_sortorder = SortOrder();
 
 const unsigned int column_count = 6;
@@ -78,7 +80,7 @@ wxString WidgetDownloadListctrl::OnGetItemText(long item, long column) const
 //        case 1: return widget.short_description;
         case 1: return widget.author;
         case 2: return widget.mods;
-        case 3: return i2s( widget.num_downloads );
+        case 3: return TowxString( widget.num_downloads );
 //        case 5: return widget.date;
     }
 

@@ -13,12 +13,13 @@
 #include "config.h"
 #endif
 
-#include "utils.h"
+#include "utils/debug.h"
+#include "utils/conversion.h"
+#include "utils/math.h"
 #include "uiutils.h"
 #include "mapctrl.h"
 #include "iunitsync.h"
 #include "user.h"
-#include "utils.h"
 #include "ui.h"
 #include "server.h"
 #include "ibattle.h"

@@ -4,7 +4,8 @@
 #include <wx/log.h>
 
 #include "customlistctrl.h"
-#include "utils.h"
+#include "utils/sltipwin.h"
+#include "utils/controls.h"
 #include "settings.h"
 #include "iconimagelist.h"
 #include "settings++/custom_dialogs.h"
