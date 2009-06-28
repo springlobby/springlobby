@@ -23,6 +23,7 @@
 #include "server.h"
 #include "ibattle.h"
 #include "settings.h"
+#include "iconimagelist.h"
 
 #include "images/close.xpm"
 #include "images/close_hi.xpm"
@@ -898,26 +899,8 @@ void MapCtrl::DrawUser( wxDC& dc, User& user, bool selected, bool moving )
             DrawStartRect( dc, -1, tmp, col, false );
         }
 
-        wxBitmap* bmp = 0;
-        try
-        {
-            wxString mod = m_battle->GetHostModName();
-            wxArrayString sides = usync().GetSides( mod );
-            int scount = sides.GetCount();
-            ASSERT_EXCEPTION( scount > 0, _T("Mod has no sides.") );
-            ASSERT_EXCEPTION( user.BattleStatus().side < scount, _T("Side index out of bounds") );
-            wxString side = sides[user.BattleStatus().side];
-            bmp = new wxBitmap( usync().GetSidePicture( mod, side ) );
-        }
-        catch (...)
-        {
-            delete bmp;
-            if ( user.BattleStatus().side == 0 ) bmp = new wxBitmap( charArr2wxBitmap(no1_icon_png, sizeof(no1_icon_png) ) );
-            else bmp = new wxBitmap( charArr2wxBitmap(no2_icon_png, sizeof(no2_icon_png) ) );
-        }
-
-        dc.DrawBitmap( *bmp, r.x+siderect.x, r.y+siderect.y, true );
-        delete bmp;
+        wxBitmap bmp = icons().GetBitmap( icons().GetSideIcon( m_battle->GetHostModName(), user.BattleStatus().side ) );
+        dc.DrawBitmap( bmp, r.x+siderect.x, r.y+siderect.y, true );
 
         /* Draw the Ally Number numeric select */
         wxRect updownallyrect = GetUserUpAllyButtonRect();

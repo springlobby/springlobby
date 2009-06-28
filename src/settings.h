@@ -83,6 +83,11 @@ class Settings
     Settings();
     ~Settings();
 
+    /** used for passing config file at command line
+    */
+    static bool m_user_defined_config;
+    static wxString m_user_defined_config_path;
+
 		/// used to import default configs from a file in windows
 		#ifdef __WXMSW__
     void SetDefaultConfigs( SL_WinConf& conf );

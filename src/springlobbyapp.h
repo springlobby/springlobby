@@ -25,9 +25,13 @@ class SpringLobbyApp : public wxApp
     void OnTimer( wxTimerEvent& event );
     bool SelectLanguage();
 
+    virtual void OnInitCmdLine(wxCmdLineParser& parser);
+    virtual bool OnCmdLineParsed(wxCmdLineParser& parser);
+
+
   protected:
 
-    void InitCacheDir();
+    void CacheAndSettingsSetup();
 
     wxTimer* m_timer;
 
@@ -36,6 +40,12 @@ class SpringLobbyApp : public wxApp
     wxTranslationHelper* m_translationhelper;
 
     DECLARE_EVENT_TABLE()
+
+    long m_log_verbosity;
+    bool m_log_console;
+    bool m_log_window_show;
+    bool m_crash_handle_disable;
+    bool m_updateing_only;
 };
 
 DECLARE_APP(SpringLobbyApp)

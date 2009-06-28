@@ -90,6 +90,8 @@ class CommonUser
         CommonUser(const wxString& nick, const wxString& country, const int& cpu)
            : m_nick(nick), m_country(country), m_cpu(cpu)  {};
 
+        virtual ~CommonUser(){}
+
         wxString GetNick() const { return m_nick; }
         virtual void SetNick( const wxString& nick ) { m_nick = nick; }
 
@@ -180,6 +182,9 @@ class User : public CommonUser
     //bool operator< ( const User& other ) const { return m_nick < other.GetNick() ; }
     //User& operator= ( const User& other );
 
+    int GetSideiconIndex() const { return m_sideicon_idx; }
+    void SetSideiconIndex( const int idx ) { m_sideicon_idx = idx; }
+
   protected:
     // User variables
 
@@ -188,6 +193,7 @@ class User : public CommonUser
     int m_flagicon_idx;
     int m_rankicon_idx;
     int m_statusicon_idx;
+    int m_sideicon_idx;
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_USER_H

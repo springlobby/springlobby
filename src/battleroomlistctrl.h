@@ -10,10 +10,9 @@ class Ui;
 struct BattleBot;
 class wxIcon;
 
-
 /** \brief display participants of battle and their info (ally,team,color,cpu...)
  * \todo DOCMEMORE */
-class BattleroomListCtrl : public CustomVirtListCtrl< User *>
+class BattleroomListCtrl : public CustomVirtListCtrl< User *, BattleroomListCtrl >
 {
   public:
     BattleroomListCtrl( wxWindow* parent, IBattle* battle, Ui& ui, bool readonly );

@@ -12,6 +12,7 @@
 				<Option object_output="obj/GNU/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
+				<Option parameters="-cl" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
 					<Add option="-Wall" />
@@ -44,11 +45,9 @@
 					<Add option="-pg" />
 					<Add option="-g" />
 					<Add option="`wx-config --cflags`" />
-					<Add option="`pkg-config --cflags libtorrent-rasterbar`" />
-					<Add option="-Wno-strict-aliasing" />
-					<Add option='-DVERSION=\\&quot;cb-Unix-Profile\\&quot;' />
-					<Add option="-DNO_DEBUG_REPORT_UPLOAD" />
-					<Add option="-DDISABLE_SOUND" />
+					<Add option="`pkg-config --cflags libtorrent`" />
+					<Add option="`sdl-config --cflags`" />
+					<Add option='-DVERSION=\\&quot;0.0.1-git-cb\\&quot;' />
 				</Compiler>
 				<Linker>
 					<Add option="-pg" />
@@ -90,6 +89,7 @@
 				<Environment>
 					<Variable name="WX_DIR" value="C:/wxWidgets-2.8.4" />
 				</Environment>
+
 			</Target>
 			<Target title="Win32 | Profile">
 				<Option output="bin/Win32/Profile/springlobby" prefix_auto="0" extension_auto="1" />
@@ -113,23 +113,50 @@
 					<Add directory="$(WX_DIR)/include" />
 					<Add directory="$(WX_DIR)/lib/gcc_dll/mswd" />
 					<Add directory="$(WX_DIR)/contrib/include" />
+
 				</Compiler>
+
 				<ResourceCompiler>
 					<Add directory="$(WX_DIR)/include" />
 				</ResourceCompiler>
+
 				<Linker>
 					<Add option="-pg" />
+<<<<<<< HEAD:springlobby.cbp
+					<Add library="libwxregexd.a" />
+					<Add library="libwxzlibd.a" />
+					<Add library="libwxpngd.a" />
+					<Add library="libwxjpegd.a" />
+					<Add library="libwxtiffd.a" />
+					<Add library="libwxexpatd.a" />
+					<Add library="libwxmsw28d.a" />
+					<Add library="libwxbase28d.a" />
+					<Add library="libwxbase28d_net.a" />
+					<Add library="libwxmsw28d_core.a" />
+					<Add library="libwxmsw28d_adv.a" />
+					<Add library="libwxmsw28d_media.a" />
+					<Add library="libwxmsw28d_html.a" />
+					<Add library="libwxbase28d_xml.a" />
+					<Add library="libwxmsw28d_xrc.a" />
+					<Add library="libwxmsw28d_aui.a" />
+					<Add library="libwxmsw28d_richtext.a" />
+
+=======
 					<Add library="wx_based-2.8" />
 					<Add library="wx_mswd_core-2.8" />
 					<Add library="wx_mswd_richtext-2.8" />
 					<Add library="wx_based_net-2.8" />
 					<Add library="wx_mswd_adv-2.8" />
 					<Add library="wx_mswd_qa-2.8" />
+>>>>>>> master:springlobby.cbp
 					<Add directory="$(WX_DIR)/lib/gcc_dll" />
+
 				</Linker>
+
 				<Environment>
 					<Variable name="WX_DIR" value="C:/wxWidgets-2.8.4" />
 				</Environment>
+
 			</Target>
 		</Build>
 		<Compiler>
