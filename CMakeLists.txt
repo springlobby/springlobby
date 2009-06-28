@@ -313,6 +313,11 @@ SET(SpringLobbySrc
 )
 
 SET(SettingsSrc
+	src/utils/debug.cpp
+	src/utils/platform.cpp
+	src/utils/conversion.cpp
+	src/utils/sltipwin.cpp
+	src/utils/controls.cpp
 	src/settings++/custom_dialogs.cpp
 	src/settings++/frame.cpp
 	src/settings++/helpmenufunctions.cpp

@@ -1018,6 +1018,16 @@ springlobby_SOURCES += \
 	src/settings++/helpmenufunctions.cpp
 
 springsettings_SOURCES = \
+	src/utils/debug.cpp \
+	src/utils/debug.h \
+	src/utils/platform.cpp \
+	src/utils/platform.h \
+	src/utils/conversion.cpp \
+	src/utils/conversion.h \
+	src/utils/sltipwin.cpp \
+	src/utils/sltipwin.h \
+	src/utils/controls.cpp \
+	src/utils/controls.h \
 	src/crashreport.cpp \
 	src/crashreport.h \
 	src/spinctld.h \
