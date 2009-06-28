@@ -359,8 +359,8 @@ int BattleListCtrl::GetIndexFromData( const DataType& data ) const
         index++;
     }
     //it's ok to init with seekpos, if it had changed this would not be reached
-    int r_index = seekpos;
-    for ( DataCIter r_idx = m_data.begin() + seekpos; r_idx != m_data.begin() ; --r_idx )
+    int r_index = seekpos - 1;
+    for ( DataRevCIter r_idx = m_data.rbegin() + ( m_data.size() - seekpos ); r_idx != m_data.rend() ; ++r_idx )
     {
         if ( *r_idx != 0 && data->Equals( *(*r_idx) ) )
         {
