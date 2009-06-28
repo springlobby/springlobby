@@ -35,7 +35,7 @@ CustomListCtrl::CustomListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& p
   m_tipwindow( 0 ),
   m_controlPointer( 0 ),
 #endif
-  m_coloumnCount( column_count ),
+  m_columnCount( column_count ),
   m_selected(-1),
   m_selected_index(-1),
   m_prev_selected(-1),
@@ -48,7 +48,7 @@ CustomListCtrl::CustomListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& p
   m_dirty_sort(false)
 {
     //dummy init , will later be replaced with loading from settings
-    for ( unsigned int i = 0; i < m_coloumnCount; ++i) {
+    for ( unsigned int i = 0; i < m_columnCount; ++i) {
         m_column_map[i] = i;
 
     }
@@ -245,19 +245,19 @@ void CustomListCtrl::OnMouseMotion(wxMouseEvent& event)
 
 void CustomListCtrl::SetTipWindowText( const long item_hit, const wxPoint position)
 {
-  int coloumn = getColoumnFromPosition(position);
-  if (coloumn >= int(m_colinfovec.size()) || coloumn < 0)
+  int column = getColumnFromPosition(position);
+  if (column >= int(m_colinfovec.size()) || column < 0)
   {
     m_tiptext = _T("");
   }
   else
   {
     m_tiptimer.Start(m_tooltip_delay, wxTIMER_ONE_SHOT);
-    m_tiptext = TE(m_colinfovec[coloumn].first);
+    m_tiptext = TE(m_colinfovec[column].first);
   }
 }
 
-int CustomListCtrl::getColoumnFromPosition(wxPoint pos)
+int CustomListCtrl::getColumnFromPosition(wxPoint pos)
 {
     int x_pos = 0;
     for (int i = 0; i < int(m_colinfovec.size());++i)
