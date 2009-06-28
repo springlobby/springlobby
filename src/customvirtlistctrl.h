@@ -304,6 +304,10 @@ protected:
         DataIter;
     typedef typename DataVector::const_iterator
         DataCIter;
+    typedef typename DataVector::reverse_iterator
+        DataRevIter;
+    typedef typename DataVector::const_reverse_iterator
+        DataRevCIter;
     DataVector m_data;
 
     typedef DataType
