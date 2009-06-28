@@ -431,6 +431,7 @@ bool IsUACenabled()
 
 #ifdef __WXMSW__
 #include <windows.h>
+#include <wx/msw/winundef.h> //needs to always be included after windows.h
 #include <shellapi.h>
 
 int WinExecuteAdmin( const wxString& command, const wxString& params )
@@ -441,9 +442,14 @@ int WinExecuteAdmin( const wxString& command, const wxString& params )
 
       shExecInfo.fMask = NULL;
       shExecInfo.hwnd = NULL;
-      shExecInfo.lpVerb = L"runas";
-      shExecInfo.lpFile = command.wc_str();
+      shExecInfo.lpVerb = _T("runas");
+#ifdef _MSC_VER //some strange compiler stupidity going on here
+      shExecInfo.lpFile = command.c_str();
+      shExecInfo.lpParameters = params.c_str();
+#else
+	  shExecInfo.lpFile = command.wc_str();
       shExecInfo.lpParameters = params.wc_str();
+#endif
       shExecInfo.lpDirectory = NULL;
       shExecInfo.nShow = SW_MAXIMIZE;
       shExecInfo.hInstApp = NULL;
