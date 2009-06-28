@@ -15,10 +15,6 @@ class wxString;
 #endif
 
 
-#ifndef VERSION
-	#define VERSION "unknown"
-#endif
-
 /**
     let origin be /path/to/some/dir and destination /some/other/path
     this will copy dir (and everything below that recursively to /some/other/path/dir

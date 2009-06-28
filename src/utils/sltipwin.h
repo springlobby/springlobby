@@ -1,6 +1,7 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_UTIL_TIPWIN_H
 #define SPRINGLOBBY_HEADERGUARD_UTIL_TIPWIN_H
 
+#include <wx/setup.h>
 #if wxUSE_TIPWINDOW
 #include <wx/tipwin.h>
 
@@ -12,19 +13,6 @@ class SLTipWindow : public wxTipWindow{
 
         DECLARE_EVENT_TABLE()
 };
-
-BEGIN_EVENT_TABLE(SLTipWindow, wxTipWindow)
-    EVT_MOUSEWHEEL(SLTipWindow::Cancel)
-END_EVENT_TABLE()
-
-SLTipWindow::SLTipWindow(wxWindow *parent, const wxString &text)
-    : wxTipWindow(parent,text)
-{}
-
-void SLTipWindow::Cancel(wxMouseEvent& event)
-{
-    wxTipWindow::Close();
-}
 
 #endif
 

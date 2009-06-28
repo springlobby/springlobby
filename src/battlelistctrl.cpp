@@ -1,10 +1,10 @@
 /* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
 
+#include "battlelistctrl.h"
+
 #include <wx/intl.h>
 #include <wx/menu.h>
 
-#include "battlelistctrl.h"
-#include "utils/sltipwin.h"
 #include "user.h"
 #include "iconimagelist.h"
 #include "battle.h"

@@ -2,22 +2,6 @@
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="6" />
 	<Project>
-	<Unit filename="src/utils/math.cpp" />
-	<Unit filename="src/utils/math.h" />
-	<Unit filename="src/utils/misc.cpp" />
-	<Unit filename="src/utils/misc.h" />
-	<Unit filename="src/utils/debug.cpp" />
-	<Unit filename="src/utils/debug.h" />
-	<Unit filename="src/utils/platform.cpp" />
-	<Unit filename="src/utils/platform.h" />
-	<Unit filename="src/utils/conversion.cpp" />
-	<Unit filename="src/utils/conversion.h" />
-	<Unit filename="src/utils/server.cpp" />
-	<Unit filename="src/utils/server.h" />
-	<Unit filename="src/utils/tipwin.cpp" />
-	<Unit filename="src/utils/tipwin.h" />
-	<Unit filename="src/utils/controls.cpp" />
-	<Unit filename="src/utils/controls.h" />
 		<Option title="springlobby" />
 		<Option pch_mode="0" />
 		<Option compiler="gcc" />
@@ -105,7 +89,6 @@
 				<Environment>
 					<Variable name="WX_DIR" value="C:/wxWidgets-2.8.4" />
 				</Environment>
-
 			</Target>
 			<Target title="Win32 | Profile">
 				<Option output="bin/Win32/Profile/springlobby" prefix_auto="0" extension_auto="1" />
@@ -129,17 +112,12 @@
 					<Add directory="$(WX_DIR)/include" />
 					<Add directory="$(WX_DIR)/lib/gcc_dll/mswd" />
 					<Add directory="$(WX_DIR)/contrib/include" />
-
 				</Compiler>
-
 				<ResourceCompiler>
 					<Add directory="$(WX_DIR)/include" />
 				</ResourceCompiler>
-
 				<Linker>
 					<Add option="-pg" />
-<<<<<<< HEAD:springlobby.cbp
-					<Add library="libwxregexd.a" />
 					<Add library="libwxzlibd.a" />
 					<Add library="libwxpngd.a" />
 					<Add library="libwxjpegd.a" />
@@ -156,23 +134,17 @@
 					<Add library="libwxmsw28d_xrc.a" />
 					<Add library="libwxmsw28d_aui.a" />
 					<Add library="libwxmsw28d_richtext.a" />
-
-=======
 					<Add library="wx_based-2.8" />
 					<Add library="wx_mswd_core-2.8" />
 					<Add library="wx_mswd_richtext-2.8" />
 					<Add library="wx_based_net-2.8" />
 					<Add library="wx_mswd_adv-2.8" />
 					<Add library="wx_mswd_qa-2.8" />
->>>>>>> master:springlobby.cbp
 					<Add directory="$(WX_DIR)/lib/gcc_dll" />
-
 				</Linker>
-
 				<Environment>
 					<Variable name="WX_DIR" value="C:/wxWidgets-2.8.4" />
 				</Environment>
-
 			</Target>
 		</Build>
 		<Compiler>
@@ -455,8 +427,22 @@
 		<Unit filename="src/userlist.h" />
 		<Unit filename="src/userlistctrl.cpp" />
 		<Unit filename="src/userlistctrl.h" />
-		<Unit filename="src/utils.cpp" />
-		<Unit filename="src/utils.h" />
+		<Unit filename="src/utils/controls.cpp" />
+		<Unit filename="src/utils/controls.h" />
+		<Unit filename="src/utils/conversion.cpp" />
+		<Unit filename="src/utils/conversion.h" />
+		<Unit filename="src/utils/debug.cpp" />
+		<Unit filename="src/utils/debug.h" />
+		<Unit filename="src/utils/math.cpp" />
+		<Unit filename="src/utils/math.h" />
+		<Unit filename="src/utils/misc.cpp" />
+		<Unit filename="src/utils/misc.h" />
+		<Unit filename="src/utils/platform.cpp" />
+		<Unit filename="src/utils/platform.h" />
+		<Unit filename="src/utils/sltipwin.cpp" />
+		<Unit filename="src/utils/sltipwin.h" />
+		<Unit filename="src/utils/tasutil.cpp" />
+		<Unit filename="src/utils/tasutil.h" />
 		<Unit filename="src/widgets/downloaddialog.cpp" />
 		<Unit filename="src/widgets/downloaddialog.h" />
 		<Unit filename="src/widgets/downloadlistctrl.cpp" />
