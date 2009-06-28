@@ -1889,14 +1889,14 @@ wxString Settings::GetDefaultLayout()
 	return m_config->Read( _T("/GUI/DefaultLayout"), _T("") );
 }
 
-void Settings::SetColumnWidth( const wxString& list_name, const int coloumn_ind, const int coloumn_width )
+void Settings::SetColumnWidth( const wxString& list_name, const int column_ind, const int column_width )
 {
-    m_config->Write(_T("GUI/ColoumnWidths/") + list_name + _T("/") + TowxString(coloumn_ind), coloumn_width );
+    m_config->Write(_T("GUI/ColumnWidths/") + list_name + _T("/") + TowxString(column_ind), column_width );
 }
 
-int Settings::GetColumnWidth( const wxString& list_name, const int coloumn )
+int Settings::GetColumnWidth( const wxString& list_name, const int column )
 {
-    return m_config->Read(_T("GUI/ColoumnWidths/") + list_name + _T("/") + TowxString(coloumn), columnWidthUnset);
+    return m_config->Read(_T("GUI/ColumnWidths/") + list_name + _T("/") + TowxString(column), columnWidthUnset);
 }
 
 void Settings::SetPeopleList( const wxArrayString& friends, const wxString& group  )

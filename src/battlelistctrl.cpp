@@ -295,8 +295,8 @@ void BattleListCtrl::SetTipWindowText( const long item_hit, const wxPoint positi
 
     const IBattle& battle= *m_data[item_hit];
 
-    int coloumn = getColoumnFromPosition(position);
-    switch (coloumn)
+    int column = getColumnFromPosition(position);
+    switch (column)
     {
         case 0: // status
         m_tiptext = icons().GetBattleStatus(battle);
@@ -305,7 +305,7 @@ void BattleListCtrl::SetTipWindowText( const long item_hit, const wxPoint positi
             m_tiptext = GetFlagNameFromCountryCode(battle.GetFounder().GetCountry());
             break;
         case 2: // rank_min
-            m_tiptext = m_colinfovec[coloumn].tip;
+            m_tiptext = m_colinfovec[column].tip;
             break;
         case 3: // descrp
             m_tiptext = battle.GetDescription();
@@ -334,7 +334,7 @@ void BattleListCtrl::SetTipWindowText( const long item_hit, const wxPoint positi
             }
             break;
         case 9: //may player
-            m_tiptext = (m_colinfovec[coloumn].tip);
+            m_tiptext = (m_colinfovec[column].tip);
             break;
 
         default: m_tiptext = _T("");

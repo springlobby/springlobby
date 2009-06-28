@@ -38,7 +38,7 @@ class PlaybackListCtrl : public CustomVirtListCtrl< const PlaybackImp*, Playback
     using ParentType::DataVector;
     typedef typename ParentType::DataVector::const_iterator
         DataCIter; //! TODO (koshi) i'd be mighty thankful if some could explain to me why the import with using ParentType::DataCIter doesn't work here;
-    using ParentType::getColoumnFromPosition;
+    using ParentType::getColumnFromPosition;
 
   public:
     PlaybackListCtrl( wxWindow* parent );

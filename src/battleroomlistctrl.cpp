@@ -245,7 +245,7 @@ int BattleroomListCtrl::OnGetItemColumnImage(long item, long column) const
         case 9:
         case 5: return -1;
         default: {
-            wxLogWarning( _T("coloumn oob in battelroomlistctrl OnGetItemColoumnImage") );
+            wxLogWarning( _T("column oob in BattleroomListCtrl::OnGetItemColumnImage") );
             return -1;
         }
     }
@@ -296,7 +296,7 @@ wxString BattleroomListCtrl::OnGetItemText(long item, long column) const
         case 3:
         case 4: return _T("");
         default: {
-            wxLogWarning( _T("coloumn oob in battelroomlistctrl OnGetItemText") );
+            wxLogWarning( _T("column oob in BattleroomListCtrl::OnGetItemText") );
             return _T("");
         }
     }
@@ -689,14 +689,14 @@ void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint po
 
     const User& user = *GetDataFromIndex( item_hit );
 
-    int coloumn = getColoumnFromPosition( position );
-    if (coloumn > (int)m_colinfovec.size() || coloumn < 0)
+    int column = getColumnFromPosition( position );
+    if (column > (int)m_colinfovec.size() || column < 0)
     {
         m_tiptext = _T("");
     }
     else
     {
-        switch (coloumn)
+        switch (column)
         {
         case 0: // is bot?
             if ( user.BattleStatus().IsBot() )
@@ -718,7 +718,7 @@ void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint po
             break;
 
         case 3: // country
-            m_tiptext = user.BattleStatus().IsBot() ? _T("This bot is from nowhere particluar") : GetFlagNameFromCountryCode(user.GetCountry());
+            m_tiptext = user.BattleStatus().IsBot() ? _T("This bot is from nowhere particular") : GetFlagNameFromCountryCode(user.GetCountry());
             break;
         case 4: // rank
             m_tiptext = user.BattleStatus().IsBot() ? _T("This bot has no rank") : user.GetRankName(user.GetStatus().rank);
@@ -729,11 +729,11 @@ void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint po
             break;
 
         case 8: // cpu
-            m_tiptext = user.BattleStatus().IsBot() ? ( user.BattleStatus().aishortname + _T(" ") + user.BattleStatus().aiversion ) : m_colinfovec[coloumn].tip;
+            m_tiptext = user.BattleStatus().IsBot() ? ( user.BattleStatus().aishortname + _T(" ") + user.BattleStatus().aiversion ) : m_colinfovec[column].tip;
             break;
 
         default:
-            m_tiptext =m_colinfovec[coloumn].tip;
+            m_tiptext =m_colinfovec[column].tip;
             break;
         }
     }

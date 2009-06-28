@@ -143,8 +143,8 @@ void NickListCtrl::OnShowMenu( wxContextMenuEvent& event )
 void NickListCtrl::SetTipWindowText( const long item_hit, const wxPoint position)
 {
 
-    int coloumn = getColoumnFromPosition(position);
-    if (coloumn > (int)m_colinfovec.size() || coloumn < 0 || item_hit < 0 || item_hit > (long) m_data.size() || m_data[item_hit]==NULL )
+    int column = getColumnFromPosition(position);
+    if (column > (int)m_colinfovec.size() || column < 0 || item_hit < 0 || item_hit > (long) m_data.size() || m_data[item_hit]==NULL )
     {
         m_tiptext = _T("");
     }
@@ -152,7 +152,7 @@ void NickListCtrl::SetTipWindowText( const long item_hit, const wxPoint position
     {
         const User& user = *m_data[item_hit];
         {
-            switch (coloumn)
+            switch (column)
             {
             case 0: // status
                 m_tiptext = _T("This ");
@@ -184,7 +184,7 @@ void NickListCtrl::SetTipWindowText( const long item_hit, const wxPoint position
                 break;
 
             default:
-                m_tiptext = m_colinfovec[coloumn].tip;
+                m_tiptext = m_colinfovec[column].tip;
                 break;
             }
         }

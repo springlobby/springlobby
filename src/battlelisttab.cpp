@@ -36,7 +36,7 @@
 #include "useractions.h"
 #include "settings++/custom_dialogs.h"
 
-const unsigned int BATTLELIST_COLOUMNCOUNT = 10;
+const unsigned int BATTLELIST_COLUMNCOUNT = 10;
 
 BEGIN_EVENT_TABLE(BattleListTab, wxPanel)
 
