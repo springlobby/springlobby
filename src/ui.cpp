@@ -614,7 +614,7 @@ void Ui::OnConnected( Server& server, const wxString& server_name, const wxStrin
     if ( !IsSpringCompatible() )
     {
     	#ifdef __WXMSW__
-    	server.RequestSpringUpdate();
+    	if ( Ask( _T("Request update"), _T("Would you like to query the server for a spring update?\n The server is totally demential and will disconnect you if no automatic update will be available") ) ) server.RequestSpringUpdate();
     	#endif
     }
 
