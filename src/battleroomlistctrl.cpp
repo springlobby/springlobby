@@ -699,12 +699,32 @@ void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint po
         switch (column)
         {
         case 0: // is bot?
+            m_tiptext = _("");
+
             if ( user.BattleStatus().IsBot() )
-                m_tiptext = _T("This is an AI controlled Player (bot)");
-            else if  ( user.BattleStatus().spectator )
-                m_tiptext = _T("Spectator");
+                m_tiptext += _("AI (bot)\n");
             else
-                m_tiptext =  _T("Human Player");
+                m_tiptext += _("Human\n");
+
+            if ( user.BattleStatus().spectator )
+                m_tiptext += _("Spectator\n");
+            else
+                m_tiptext += _("Player\n");
+
+            if ( m_battle->IsFounder( user ) )
+                m_tiptext += _("Host\n");
+            else
+                m_tiptext += _("Client\n");
+
+            if ( user.BattleStatus().ready )
+                m_tiptext += _("Ready\n");
+            else
+                m_tiptext += _("Not ready\n");
+
+            if  ( user.BattleStatus().sync == SYNC_SYNCED )
+                m_tiptext += _("In sync");
+            else
+                m_tiptext += _("Not in sync");
             break;
         case 1: // icon
             if ( user.BattleStatus().spectator )
