@@ -810,10 +810,10 @@ void BattleroomListCtrl::OnActivateItem( wxListEvent& event )
 
 int BattleroomListCtrl::GetIndexFromData(const DataType& data) const
 {
-	const User* user = data;
-	 static long seekpos;
-   seekpos = clamp( seekpos, 0l , (long)m_data.size() );
-   int index = seekpos;
+    const User* user = data;
+    static long seekpos;
+    seekpos = clamp( seekpos, 0l , (long)m_data.size() );
+    int index = seekpos;
 
     for ( DataCIter f_idx = m_data.begin() + seekpos; f_idx != m_data.end() ; ++f_idx )
     {
@@ -835,7 +835,6 @@ int BattleroomListCtrl::GetIndexFromData(const DataType& data) const
         }
         r_index--;
     }
-		wxLogError( _T("didn't find the user.") );
 
     return -1;
 }
