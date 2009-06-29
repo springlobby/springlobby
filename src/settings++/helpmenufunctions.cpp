@@ -12,24 +12,18 @@
 #include "se_utils.h"
 #include <string>
 
-#ifdef HAVE_WX28
 #include <wx/aboutdlg.h>
-#endif
 
 void showAbout()
 {
-#ifdef HAVE_WX28
-
-	std::string ver = std::string("0.2.1 revision ") + VERSION;
-	 wxAboutDialogInfo info;
-	 info.SetName(_T("SpringSettings"));
-	 info.SetVersion(_T("0.2.1"));//WX_STRING(ver));
-	 info.SetDescription(_("SpringSettings is a graphical frontend to the Settings of the Spring engine"));
-	 info.SetCopyright(_T("(C) 2007-2008 koshi <koshi@springlobby.info>"));
-	 info.SetIcon(wxIcon(springsettings_xpm));
-	 wxAboutBox(info);
-
-#endif
+    std::string ver = std::string("0.2.1 revision ") + VERSION;
+    wxAboutDialogInfo info;
+    info.SetName(_T("SpringSettings"));
+    info.SetVersion(_T("0.2.1"));//WX_STRING(ver));
+    info.SetDescription(_("SpringSettings is a graphical frontend to the Settings of the Spring engine"));
+    info.SetCopyright(_T("(C) 2007-2008 koshi <koshi@springlobby.info>"));
+    info.SetIcon(wxIcon(springsettings_xpm));
+    wxAboutBox(info);
 }
 
 void showCredits()

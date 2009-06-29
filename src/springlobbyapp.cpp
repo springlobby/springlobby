@@ -242,7 +242,7 @@ int SpringLobbyApp::OnExit()
 //! @brief is called when the app crashes
 void SpringLobbyApp::OnFatalException()
 {
-#if wxUSE_DEBUGREPORT && defined(HAVE_WX28) && defined(ENABLE_DEBUG_REPORT)
+#if wxUSE_DEBUGREPORT && defined(ENABLE_DEBUG_REPORT)
     crashreport().GenerateReport(wxDebugReport::Context_Exception);
 #else
     wxMessageBox( _("The application has generated a fatal error and will be terminated\nGenerating a bug report is not possible\n\nplease get a wxWidgets library that supports wxUSE_DEBUGREPORT"),_("Critical error"), wxICON_ERROR | wxOK );

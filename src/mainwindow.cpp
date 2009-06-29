@@ -75,12 +75,10 @@
 #include "channel/channelchooserdialog.h"
 #include "Helper/imageviewer.h"
 
-#ifdef HAVE_WX28
-    #if defined(__WXMSW__)
-        #include <wx/msw/winundef.h>
-    #endif
-    #include <wx/aboutdlg.h>
+#if defined(__WXMSW__)
+    #include <wx/msw/winundef.h>
 #endif
+#include <wx/aboutdlg.h>
 
 BEGIN_EVENT_TABLE(MainWindow, wxFrame)
 

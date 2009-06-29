@@ -222,12 +222,8 @@ void CustomListCtrl::OnMouseMotion(wxMouseEvent& event)
 
     int flag = wxLIST_HITTEST_ONITEM;
 
-#ifdef HAVE_WX28
     long subItem;
     long item_hit = HitTest(position, flag, &subItem);
-#else
-    long item_hit = HitTest(position, flag);
-#endif
     if (item_hit != wxNOT_FOUND && item_hit>=0 && item_hit<GetItemCount())
     {
         // we don't really need to recover from this if it fails

@@ -1,7 +1,7 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_UTIL_TIPWIN_H
 #define SPRINGLOBBY_HEADERGUARD_UTIL_TIPWIN_H
 
-#include <wx/setup.h>
+#include <wx/platform.h>
 #if wxUSE_TIPWINDOW
 #include <wx/tipwin.h>
 

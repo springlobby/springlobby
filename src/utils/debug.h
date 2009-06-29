@@ -15,7 +15,7 @@ class assert_exception : public std::runtime_error
 #define wxLogDebugFunc( params ) wxLogTrace(_T("function calls"), params )
 #endif
 
-#if wxUSE_DEBUGREPORT && defined(HAVE_WX28)
+#if wxUSE_DEBUGREPORT
 #define ASSERT_LOGIC(cond,msg) if(!(cond))\
 {\
   wxLogError(_T("logic error ( %s:%d ): %s"), TowxString(__FILE__).c_str(),__LINE__ , wxString(msg).c_str() );\
