@@ -40,7 +40,11 @@
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
-#endif
+#endif //HAVE_CONFIG_H
+
+#ifndef VERSION 
+	#define VERSION "unknown"
+#endif //VERSION 
 
 // for SL_MAIN_ICON
 #include "settings++/custom_dialogs.h"

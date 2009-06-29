@@ -239,6 +239,7 @@ bool IsUACenabled()
 
 #ifdef __WXMSW__
 #include <windows.h>
+#include <wx/msw/winundef.h>
 #include <shellapi.h>
 
 int WinExecuteAdmin( const wxString& command, const wxString& params )

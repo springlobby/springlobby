@@ -883,7 +883,7 @@ void ServerEvents::AutoCheckCommandSpam( Battle& battle, User& user )
 
 void ServerEvents::OnMutelistBegin( const wxString& channel )
 {
-    mutelistWindow( _("Begin mutelist for ") + channel, wxString::Format( _("%s mutelist"), channel.wc_str() ) );
+    mutelistWindow( _("Begin mutelist for ") + channel, wxString::Format( _("%s mutelist"), channel.c_str() ) );
 }
 
 void ServerEvents::OnMutelistItem( const wxString& channel, const wxString& mutee, const wxString& description )
