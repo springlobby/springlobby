@@ -21,13 +21,13 @@ template<class T>
 static inline wxString TowxString(T arg){
   std::stringstream s;
   s << arg;
-  return TowxString( s.str() );
+  return wxString(s.str().c_str(),wxConvUTF8);
 }
 
-template<>
-inline wxString TowxString(const std::string& arg){
-  return wxString( arg.c_str(), wxConvUTF8 );
-}
+//template<>
+//inline wxString TowxString(const std::string& arg){
+//  return wxString( arg.c_str(), wxConvUTF8 );
+//}
 
 template<>
 inline wxString TowxString(wxString arg){
