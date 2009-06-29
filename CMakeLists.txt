@@ -306,7 +306,6 @@ SET(SpringLobbySrc
 	src/useractions.cpp
 	src/userlist.cpp
 	src/userlistctrl.cpp
-	src/utils.cpp
 	src/widgets/downloadlistctrl.cpp
 	src/widgets/downloaddialog.cpp
 	src/widgets/downloadpanel.cpp
@@ -339,7 +338,6 @@ SET(SettingsSrc
 
 SET(StandAloneSettings
 	src/settings.cpp
-	src/utils.cpp
 	src/uiutils.cpp
 	src/settings++/Main.cpp
 )
