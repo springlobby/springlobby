@@ -12,7 +12,7 @@
 #include <wx/sizer.h>
 #include <wx/splitter.h>
 
-#include "../utils.h"
+#include "../utils/conversion.h"
 #include "downloadlistctrl.h"
 #include "infopanel.h"
 
@@ -94,7 +94,7 @@ bool WidgetDownloadPanel::PopulateList()
 		wxXmlNode *node = xml.GetRoot()->GetChildren();
 		while (node)
 		{
-		    int id = s2l( node->GetPropVal( _T("ID"), i2s( invalid_id ) ) );
+		    int id = FromwxString<long>( node->GetPropVal( _T("ID"), TowxString( invalid_id ) ) );
             if ( id != invalid_id ) {
                 Widget w;
                 w.w_id = id;

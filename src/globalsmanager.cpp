@@ -1,7 +1,10 @@
 #include "globalsmanager.h"
 #include <assert.h>
 #include <vector>
-#include "utils.h"
+#include <wx/log.h>
+
+#include "utils/conversion.h"
+#include "utils/debug.h"
 
 class GlobalsManager
 {

@@ -26,7 +26,7 @@ class SLTipWindow;
 
 
 /** \brief Used as base class for all ListCtrls throughout SL
- * Provides generic functionality, such as column tooltips, possiblity to prohibit coloumn resizing and selection modifiers. \n
+ * Provides generic functionality, such as column tooltips, possiblity to prohibit column resizing and selection modifiers. \n
  * Some of the provided functionality only makes sense for single-select lists (see grouping) \n
  * Note: Tooltips are a bitch and anyone shoudl feel to revise them (koshi)
  */
@@ -43,7 +43,7 @@ protected:
     SLTipWindow* m_tipwindow;
     SLTipWindow** m_controlPointer;
     #endif
-    unsigned int m_coloumnCount;
+    unsigned int m_columnCount;
 
     typedef std::pair<wxString,bool> colInfo;
     typedef std::vector<colInfo> colInfoVec;
@@ -70,7 +70,7 @@ protected:
     //! stores info about the columns (wxString name,bool isResizable) - pairs
     colInfoVec m_colinfovec;
     //! primarily used to get coulumn index in mousevents (from cur. mouse pos)
-    int getColoumnFromPosition(wxPoint pos);
+    int getColumnFromPosition(wxPoint pos);
 
     wxPoint m_last_mouse_pos;
 

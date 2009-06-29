@@ -6,7 +6,7 @@
 #include "singleplayerbattle.h"
 #include "mainsingleplayertab.h"
 #include "server.h"
-#include "utils.h"
+//#include "utils.h"
 #include "uiutils.h"
 #include "ui.h"
 #include "settings.h"

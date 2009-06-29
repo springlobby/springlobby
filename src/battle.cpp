@@ -7,7 +7,10 @@
 #include "iunitsync.h"
 #include "server.h"
 #include "user.h"
-#include "utils.h"
+#include "utils/misc.h"
+#include "utils/debug.h"
+#include "utils/conversion.h"
+#include "utils/math.h"
 #include "uiutils.h"
 #include "settings.h"
 #include "useractions.h"
@@ -597,7 +600,7 @@ void Battle::Autobalance( BalanceType balance_type, bool support_clans, bool str
     DoAction(_T("is auto-balancing alliances ..."));
     //size_t i;
     //int num_alliances;
-    CLAMP( numallyteams, 0, 16 ); // 16 max ally teams currently supported by spring
+    numallyteams = clamp( numallyteams, 0, 16 ); // 16 max ally teams currently supported by spring
     std::vector<Alliance>alliances;
     if ( numallyteams == 0 ) // 0 == use num start rects
     {

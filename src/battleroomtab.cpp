@@ -33,7 +33,8 @@
 #include "iunitsync.h"
 #include "user.h"
 #include "battle.h"
-#include "utils.h"
+#include "utils/conversion.h"
+#include "utils/debug.h"
 #include "battleroomlistctrl.h"
 #include "chatpanel.h"
 #include "mapctrl.h"
@@ -793,7 +794,7 @@ void BattleRoomTab::OnSavePreset( wxCommandEvent& event )
 void BattleRoomTab::OnDeletePreset( wxCommandEvent& event )
 {
   wxArrayString choices = m_battle.GetPresetList();
-	int result = wxGetSingleChoiceIndex(_("Pick an existing option set from the list"),_("Set delete preset"), choices );
+	int result = wxGetSingleChoiceIndex(_("Pick an existing option set from the list"),_("Delete preset"), choices );
 	if ( result < 0 ) return;
   m_battle.DeletePreset( choices[result] );
 }

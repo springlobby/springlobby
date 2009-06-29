@@ -7,7 +7,8 @@
 #include "settings.h"
 #include "ui.h"
 #include "uiutils.h"
-#include "utils.h"
+#include "utils/controls.h"
+#include "utils/debug.h"
 #include "settings.h"
 #include <wx/settings.h>
 

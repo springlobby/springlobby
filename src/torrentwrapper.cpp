@@ -13,7 +13,8 @@
 #endif // _MSC_VER
 
 #include "settings.h"
-#include "utils.h"
+#include "utils/conversion.h"
+#include "utils/debug.h"
 #include "socket.h"
 #include "base64.h"
 #include "globalevents.h"
@@ -116,7 +117,7 @@ bool TorrentMaintenanceThread::TestDestroy()
  *
  * This is a wxConvienceFunction. wxEnjoy!
  */
-inline wxFileName
+static inline wxFileName
 torrentFileName(const wxString& hash)
 {
     return sett().GetTorrentDir().GetPathWithSep() + MakeHashSigned(hash) + _T(".torrent");
@@ -354,7 +355,7 @@ TorrentWrapper::TorrentWrapper():
     }
     catch (std::exception& e)
     {
-        wxLogError( WX_STRINGC( e.what() ) );
+        wxLogError( TowxString( e.what() ) );
     }
     try
     {
@@ -362,7 +363,7 @@ TorrentWrapper::TorrentWrapper():
     }
     catch (std::exception& e)
     {
-        wxLogError( WX_STRINGC( e.what() ) );
+        wxLogError( TowxString( e.what() ) );
     }
     try
     {
@@ -370,7 +371,7 @@ TorrentWrapper::TorrentWrapper():
     }
     catch (std::exception& e)
     {
-        wxLogError( WX_STRINGC( e.what() ) );
+        wxLogError( TowxString( e.what() ) );
     }
     try
     {
@@ -378,7 +379,7 @@ TorrentWrapper::TorrentWrapper():
     }
     catch (std::exception& e)
     {
-        wxLogError( WX_STRINGC( e.what() ) );
+        wxLogError( TowxString( e.what() ) );
     }
     try
     {
@@ -386,7 +387,7 @@ TorrentWrapper::TorrentWrapper():
     }
     catch (std::exception& e)
     {
-        wxLogError( WX_STRINGC( e.what() ) );
+        wxLogError( TowxString( e.what() ) );
     }
     m_socket_class = new Socket( *this );
     UpdateSettings();
@@ -403,7 +404,7 @@ TorrentWrapper::~TorrentWrapper()
     }
     catch (std::exception& e)
     {
-        wxLogError( WX_STRINGC( e.what() ) );
+        wxLogError( TowxString( e.what() ) );
     }
     try
     {
@@ -411,7 +412,7 @@ TorrentWrapper::~TorrentWrapper()
     }
     catch (std::exception& e)
     {
-        wxLogError( WX_STRINGC( e.what() ) );
+        wxLogError( TowxString( e.what() ) );
     }
     try
     {
@@ -419,7 +420,7 @@ TorrentWrapper::~TorrentWrapper()
     }
     catch (std::exception& e)
     {
-        wxLogError( WX_STRINGC( e.what() ) );
+        wxLogError( TowxString( e.what() ) );
     }
     m_socket_class->SetTimeout( 1 );
     DisconnectFromP2PSystem();
@@ -495,7 +496,7 @@ void TorrentWrapper::UpdateSettings()
     }
     catch (std::exception& e)
     {
-        wxLogError( WX_STRINGC( e.what() ) ); // TODO (BrainDamage#1#): add message to user on failure
+        wxLogError( TowxString( e.what() ) ); // TODO (BrainDamage#1#): add message to user on failure
     }
 }
 
@@ -584,7 +585,7 @@ void TorrentWrapper::SetIngameStatus( bool status )
     }
     catch (std::exception& e)
     {
-        wxLogError( WX_STRINGC( e.what() ) ); // TODO (BrainDamage#1#): add message to user on failure
+        wxLogError( TowxString( e.what() ) ); // TODO (BrainDamage#1#): add message to user on failure
     }
 }
 
@@ -691,7 +692,7 @@ bool TorrentWrapper::RemoveTorrentByRow( const TorrentTable::PRow& row )
     }
     catch (std::exception& e)
     {
-        wxLogError( WX_STRINGC( e.what() ) );
+        wxLogError( TowxString( e.what() ) );
         return false;
     }
     return true;
@@ -722,7 +723,7 @@ std::map<int,TorrentInfos> TorrentWrapper::CollectGuiInfos()
         {
             TorrentInfos CurrentTorrent;
             libtorrent::torrent_status s = i->status();
-            CurrentTorrent.name = WX_STRING(i->name()).BeforeFirst(_T('|'));
+            CurrentTorrent.name = TowxString(i->name()).BeforeFirst(_T('|'));
             CurrentTorrent.progress = s.progress;
             CurrentTorrent.downloaded = s.total_payload_download;
             CurrentTorrent.uploaded = s.total_payload_upload;
@@ -741,7 +742,7 @@ std::map<int,TorrentInfos> TorrentWrapper::CollectGuiInfos()
     }
     catch (std::exception& e)
     {
-        wxLogError(_T("%s"), WX_STRINGC(e.what()).c_str());
+        wxLogError(_T("%s"), TowxString(e.what()).c_str());
     }
 
     // display infos about queued torrents
@@ -842,7 +843,7 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
         }
         catch (std::exception& e)
         {
-            wxLogError( WX_STRINGC( e.what() ) );
+            wxLogError( TowxString( e.what() ) );
             wxLogMessage( _T("Local filepath couldn't be determined") );
             return false;
         }
@@ -889,7 +890,7 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
 					return false;
 			}
 
-			wxString torrentfilename = WX_STRING( t_info.begin_files()->path.string() ); // get the file name in the torrent infos
+			wxString torrentfilename = TowxString( t_info.begin_files()->path.string() ); // get the file name in the torrent infos
 
     #else
 			libtorrent::add_torrent_params p;
@@ -915,7 +916,7 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
 					return false;
 			}
 
-			wxString torrentfilename = WX_STRING( t_info->file_at(0).path.string() ); // get the file name in the torrent infos
+			wxString torrentfilename = TowxString( t_info->file_at(0).path.string() ); // get the file name in the torrent infos
     #endif
 
 
@@ -962,7 +963,7 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
     }
     catch (std::exception& e)
     {
-       wxLogError(_T("%s"),WX_STRINGC( e.what()).c_str()); // TODO (BrainDamage#1#): add message to user on failure
+       wxLogError(_T("%s"),TowxString( e.what()).c_str()); // TODO (BrainDamage#1#): add message to user on failure
        return false;
     }
      try
@@ -987,7 +988,7 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
     }
     catch (std::exception& e)
     {
-        wxLogError(_T("%s"),WX_STRINGC( e.what()).c_str()); // TODO (BrainDamage#1#): add message to user on failure
+        wxLogError(_T("%s"),TowxString( e.what()).c_str()); // TODO (BrainDamage#1#): add message to user on failure
     }
 
     if ( IsSeed ) GetTorrentTable().SetRowStatus( row, P2P::seeding );
@@ -1181,7 +1182,7 @@ void TorrentWrapper::RemoveUnneededTorrents()
             }
             catch (std::exception& e)
             {
-                wxLogError( WX_STRINGC( e.what() ) );
+                wxLogError( TowxString( e.what() ) );
             }
         }
 
@@ -1193,7 +1194,7 @@ void TorrentWrapper::RemoveUnneededTorrents()
             }
             catch (std::exception& e)
             {
-                wxLogError( WX_STRINGC( e.what() ) );
+                wxLogError( TowxString( e.what() ) );
             }
         }
     }
@@ -1389,7 +1390,7 @@ void TorrentWrapper::OnConnected( Socket* sock )
     }
     catch (std::exception& e)
     {
-        wxLogError( WX_STRINGC( e.what() ) ); // TODO (BrainDamage#1#): add message to user on failure
+        wxLogError( TowxString( e.what() ) ); // TODO (BrainDamage#1#): add message to user on failure
     }
 
     GetTorrentTable().FlushData(); // flush the torrent data
@@ -1417,7 +1418,7 @@ void TorrentWrapper::OnDisconnected( Socket* sock )
         }
         catch (std::exception& e)
         {
-            wxLogError( WX_STRINGC( e.what() ) ); // TODO (BrainDamage#1#): add message to user on failure
+            wxLogError( TowxString( e.what() ) ); // TODO (BrainDamage#1#): add message to user on failure
         }
     }
 
@@ -1427,7 +1428,7 @@ void TorrentWrapper::OnDisconnected( Socket* sock )
     }
     catch (std::exception& e)
     {
-        wxLogError( WX_STRINGC( e.what() ) ); // TODO (BrainDamage#1#): add message to user on failure
+        wxLogError( TowxString( e.what() ) ); // TODO (BrainDamage#1#): add message to user on failure
     }
 
 

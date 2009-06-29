@@ -24,7 +24,10 @@
 
 #include "nonportable.h"
 #include "settings.h"
-#include "utils.h"
+#include "utils/conversion.h"
+#include "utils/debug.h"
+#include "utils/math.h"
+#include "utils/platform.h"
 #include "uiutils.h"
 #include "battlelistfiltervalues.h"
 #include "playback/playbackfiltervalues.h"
@@ -779,24 +782,13 @@ wxPathList Settings::GetAdditionalSearchPaths( wxPathList& pl )
 	wxStandardPathsBase& sp = wxStandardPathsBase::Get();
 
   pl.Add( wxFileName::GetCwd() );
-
-#ifdef HAVE_WX28
   pl.Add( sp.GetExecutablePath() );
-#endif
-
   pl.Add( wxFileName::GetCwd() );
-
-#ifdef HAVE_WX28
   pl.Add( sp.GetExecutablePath() );
-#endif
-
   pl.Add( wxFileName::GetHomeDir() );
   pl.Add( sp.GetUserDataDir().BeforeLast( sep ) );
   pl.Add( sp.GetDataDir().BeforeLast( sep ) );
-
-#ifdef HAVE_WX28
   pl.Add( sp.GetResourcesDir().BeforeLast( sep ) );
-#endif
 
 	pl.Add( wxGetOSDirectory() );
 
@@ -1889,14 +1881,14 @@ wxString Settings::GetDefaultLayout()
 	return m_config->Read( _T("/GUI/DefaultLayout"), _T("") );
 }
 
-void Settings::SetColumnWidth( const wxString& list_name, const int coloumn_ind, const int coloumn_width )
+void Settings::SetColumnWidth( const wxString& list_name, const int column_ind, const int column_width )
 {
-    m_config->Write(_T("GUI/ColoumnWidths/") + list_name + _T("/") + TowxString(coloumn_ind), coloumn_width );
+    m_config->Write(_T("GUI/ColumnWidths/") + list_name + _T("/") + TowxString(column_ind), column_width );
 }
 
-int Settings::GetColumnWidth( const wxString& list_name, const int coloumn )
+int Settings::GetColumnWidth( const wxString& list_name, const int column )
 {
-    return m_config->Read(_T("GUI/ColoumnWidths/") + list_name + _T("/") + TowxString(coloumn), columnWidthUnset);
+    return m_config->Read(_T("GUI/ColumnWidths/") + list_name + _T("/") + TowxString(column), columnWidthUnset);
 }
 
 void Settings::SetPeopleList( const wxArrayString& friends, const wxString& group  )
@@ -2250,9 +2242,7 @@ void Settings::setSimpleDetail(wxString det)
 bool Settings::IsSpringBin( const wxString& path )
 {
   if ( !wxFile::Exists( path ) ) return false;
-#ifdef HAVE_WX28
   if ( !wxFileName::IsFileExecutable( path ) ) return false;
-#endif
   return true;
 }
 

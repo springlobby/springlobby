@@ -25,7 +25,7 @@
 #include "iunitsync.h"
 #include "user.h"
 #include "battle.h"
-#include "utils.h"
+#include "utils/debug.h"
 #include "chatpanel.h"
 #include "mapctrl.h"
 #include "mapselectdialog.h"

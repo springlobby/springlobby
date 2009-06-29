@@ -4,7 +4,7 @@
 //
 
 
-#if wxUSE_DEBUGREPORT && defined(HAVE_WX28) && defined(ENABLE_DEBUG_REPORT)
+#if wxUSE_DEBUGREPORT && defined(ENABLE_DEBUG_REPORT)
 #include "utils.h"
 #include "crashreport.h"
 #include <wx/intl.h>

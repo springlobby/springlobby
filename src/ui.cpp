@@ -24,10 +24,11 @@
 #include "server.h"
 #include "spring.h"
 #include "channel/channel.h"
-#include "utils.h"
 #include "connectwindow.h"
 #include "mainwindow.h"
 #include "user.h"
+#include "utils/debug.h"
+#include "utils/conversion.h"
 #include "chatpanel.h"
 #include "battlelisttab.h"
 #include "battleroomtab.h"
@@ -503,17 +504,17 @@ void Ui::ConsoleHelp( const wxString& topic )
         panel->ClientMessage( _("  \"/changepassword oldpassword newpassword\" - Changes the current active account's password.") );
         panel->ClientMessage( _("  \"/channels\" - Lists currently active channels.") );
         panel->ClientMessage( _("  \"/help [topic]\" - Put topic if you want to know more specific information about a command.") );
-        panel->ClientMessage( _("  \"/join channel [password] [,channel2 [password2]]\" - Join a channel.") );
+        panel->ClientMessage( _("  \"/join channel [password] [,channel2 [password2]]\" - Joins a channel.") );
         panel->ClientMessage( _("  \"/j\" - Alias to /join.") );
-        panel->ClientMessage( _("  \"/ingame\" - Show how much time you have in game.") );
-        panel->ClientMessage( _("  \"/msg username [text]\" - sends a private message containing text to username.") );
-        panel->ClientMessage( _("  \"/part - Leaves current channel.") );
-        panel->ClientMessage( _("  \"/p - alias to /part.") );
+        panel->ClientMessage( _("  \"/ingame\" - Shows how much time you have in game.") );
+        panel->ClientMessage( _("  \"/msg username [text]\" - Sends a private message containing text to username.") );
+        panel->ClientMessage( _("  \"/part\" - Leaves current channel.") );
+        panel->ClientMessage( _("  \"/p\" - Alias to /part.") );
         panel->ClientMessage( _("  \"/rename newalias\" - Changes your nickname to newalias.") );
-        panel->ClientMessage( _("  \"/sayver\" - Say what version of springlobby you have in chat.") );
+        panel->ClientMessage( _("  \"/sayver\" - Says what version of springlobby you have in chat.") );
         panel->ClientMessage( _("  \"/testmd5 text\" - Returns md5-b64 hash of given text.") );
-        panel->ClientMessage( _("  \"/ver\" - Display what version of SpringLobby you have.") );
-        panel->ClientMessage( _("  \"/clear\" - clear all text from current chat panel") );
+        panel->ClientMessage( _("  \"/ver\" - Displays what version of SpringLobby you have.") );
+        panel->ClientMessage( _("  \"/clear\" - Clears all text from current chat panel") );
         panel->ClientMessage( _T("") );
         panel->ClientMessage( _("Chat commands:") );
         panel->ClientMessage( _("  \"/me action\" - Say IRC style action message.") );
@@ -614,7 +615,7 @@ void Ui::OnConnected( Server& server, const wxString& server_name, const wxStrin
     if ( !IsSpringCompatible() )
     {
     	#ifdef __WXMSW__
-    	server.RequestSpringUpdate();
+    	if ( Ask( _T("Request update"), _T("Would you like to query the server for a spring update?\n The server is totally demential and will disconnect you if no automatic update will be available") ) ) server.RequestSpringUpdate();
     	#endif
     }
 

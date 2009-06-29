@@ -1,10 +1,10 @@
 /* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
 
+#include "battlelistctrl.h"
+
 #include <wx/intl.h>
 #include <wx/menu.h>
 
-#include "battlelistctrl.h"
-#include "utils.h"
 #include "user.h"
 #include "iconimagelist.h"
 #include "battle.h"
@@ -50,16 +50,16 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui )
     const int widths[10] = {hd,hd,hd,170,140,130,110,hd,hd,hd};
 #endif
 
-    AddColumn( 0, widths[0], _T("s"), _T("Status") );
-    AddColumn( 1, widths[1], _T("c"), _T("Country") );
-    AddColumn( 2, widths[2], _T("r"), _T("Minimum rank to join") );
+    AddColumn( 0, widths[0], _T("status"), _T("Status") );
+    AddColumn( 1, widths[1], _T("country"), _T("Country") );
+    AddColumn( 2, widths[2], _T("rank"), _T("Minimum rank to join") );
     AddColumn( 3, widths[3], _("Description"), _T("Game description") );
     AddColumn( 4, widths[4], _("Map"), _T("Mapname") );
     AddColumn( 5, widths[5], _("Mod"), _T("Modname") );
     AddColumn( 6, widths[6], _("Host"), _T("Name of the Host") );
-    AddColumn( 7, widths[7], _("a"), _T("Number of Spectators") );
-    AddColumn( 8, widths[8], _("p"), _T("Number of Players joined") );
-    AddColumn( 9, widths[9], _("m"), _T("Maximum number of Players that can join") );
+    AddColumn( 7, widths[7], _("spectators"), _T("Number of Spectators") );
+    AddColumn( 8, widths[8], _("players"), _T("Number of Players joined") );
+    AddColumn( 9, widths[9], _("max"), _T("Maximum number of Players that can join") );
 
     if ( m_sortorder.size() == 0 ) {
         m_sortorder[0].col = 0;
@@ -295,8 +295,8 @@ void BattleListCtrl::SetTipWindowText( const long item_hit, const wxPoint positi
 
     const IBattle& battle= *m_data[item_hit];
 
-    int coloumn = getColoumnFromPosition(position);
-    switch (coloumn)
+    int column = getColumnFromPosition(position);
+    switch (column)
     {
         case 0: // status
         m_tiptext = icons().GetBattleStatus(battle);
@@ -305,7 +305,7 @@ void BattleListCtrl::SetTipWindowText( const long item_hit, const wxPoint positi
             m_tiptext = GetFlagNameFromCountryCode(battle.GetFounder().GetCountry());
             break;
         case 2: // rank_min
-            m_tiptext = m_colinfovec[coloumn].tip;
+            m_tiptext = m_colinfovec[column].tip;
             break;
         case 3: // descrp
             m_tiptext = battle.GetDescription();
@@ -334,7 +334,7 @@ void BattleListCtrl::SetTipWindowText( const long item_hit, const wxPoint positi
             }
             break;
         case 9: //may player
-            m_tiptext = (m_colinfovec[coloumn].tip);
+            m_tiptext = (m_colinfovec[column].tip);
             break;
 
         default: m_tiptext = _T("");

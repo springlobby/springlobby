@@ -28,7 +28,10 @@
 #include "tasserver.h"
 #include "iunitsync.h"
 #include "user.h"
-#include "utils.h"
+#include "utils/debug.h"
+#include "utils/tasutil.h"
+#include "utils/conversion.h"
+#include "utils/platform.h"
 #include "battle.h"
 #include "serverevents.h"
 #include "socket.h"
@@ -1144,7 +1147,7 @@ void TASServer::Ping()
 		m_id_transmission = false;
     TASPingListItem pli;
     pli.id = m_last_id;
-    pli.t = wxGetLocalTimeMillis(); 
+    pli.t = wxGetLocalTimeMillis();
     m_pinglist.push_back ( pli );
 }
 

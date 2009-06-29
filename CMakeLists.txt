@@ -67,7 +67,7 @@ IF(NOT CMAKE_CROSSCOMPILING)
 SET(wxWidgets_USE_LIBS base core net adv aui html xml )
 
 # We need the Find package for wxWidgets to work
-FIND_PACKAGE(wxWidgets REQUIRED base core net adv aui html xml qa xrc richtext media)
+FIND_PACKAGE(wxWidgets REQUIRED base core net adv aui html xml)
 
 # Did we find wxWidgets ? This condition will fail for as long as the internal Vars do not point to the proper wxWidgets Configuration.
 IF(wxWidgets_FOUND)
@@ -207,6 +207,14 @@ ENDIF( OPTION_TORRENT_SYSTEM )
 INCLUDE_DIRECTORIES(${SpringLobby_SOURCE_DIR} ${Settings_SOURCE_DIR} )
 
 SET(SpringLobbySrc
+	src/utils/math.cpp
+	src/utils/misc.cpp
+	src/utils/debug.cpp
+	src/utils/platform.cpp
+	src/utils/conversion.cpp
+	src/utils/tasutil.cpp
+	src/utils/sltipwin.cpp
+	src/utils/controls.cpp
 	src/boost/md5.cpp
 	src/updater/updater.cpp
 	src/updater/versionchecker.cpp
@@ -310,6 +318,11 @@ SET(SpringLobbySrc
 )
 
 SET(SettingsSrc
+	src/utils/debug.cpp
+	src/utils/platform.cpp
+	src/utils/conversion.cpp
+	src/utils/sltipwin.cpp
+	src/utils/controls.cpp
 	src/settings++/custom_dialogs.cpp
 	src/settings++/frame.cpp
 	src/settings++/helpmenufunctions.cpp

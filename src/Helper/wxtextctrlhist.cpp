@@ -14,7 +14,7 @@
 #include "wxtextctrlhist.h"
 #include "TextCompletionDatabase.hpp"
 #include <wx/regex.h>
-#include "../utils.h"
+#include "../utils/misc.h"
 #include "../settings.h"
 
 BEGIN_EVENT_TABLE(wxTextCtrlHist, wxTextCtrl)

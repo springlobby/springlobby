@@ -23,7 +23,8 @@
 #include "frame.h"
 
 #include "../crashreport.h"
-#include "../utils.h"
+#include "../utils/conversion.h"
+#include "../utils/platform.h"
 #include "../settings.h"
 #include "se_utils.h"
 

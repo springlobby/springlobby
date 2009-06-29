@@ -6,7 +6,10 @@
 
 #include "iunitsync.h"
 #include "thread.h"
-#include "utils.h"
+
+#include "utils/conversion.h" //remove after MRU impl moved to cpp
+#include "utils/debug.h" //remove after MRU impl moved to cpp
+#include <wx/log.h>//remove after MRU impl moved to cpp
 
 class wxCriticalSection;
 class wxDynamicLibrary;

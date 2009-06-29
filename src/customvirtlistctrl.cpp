@@ -2,11 +2,14 @@
 #include <wx/colour.h>
 #include <wx/log.h>
 
-#include "utils.h"
+//#include "utils.h"
 #include "settings.h"
 #include "iconimagelist.h"
 #include "settings++/custom_dialogs.h"
 #include "uiutils.h"
+#include "utils/sltipwin.h"
+#include "utils/math.h"
+#include "utils/controls.h"
 
 #include <algorithm>
 
@@ -38,7 +41,7 @@ CustomVirtListCtrl<T,L>::CustomVirtListCtrl(wxWindow* parent, wxWindowID id, con
   m_tipwindow( 0 ),
   m_controlPointer( 0 ),
 #endif
-  m_coloumnCount( column_count ),
+  m_columnCount( column_count ),
   m_selected_index(-1),
   m_prev_selected_index(-1),
   m_last_mouse_pos( wxPoint(-1,-1) ),
@@ -51,7 +54,7 @@ CustomVirtListCtrl<T,L>::CustomVirtListCtrl(wxWindow* parent, wxWindowID id, con
   m_comparator( m_sortorder, func )
 {
     //dummy init , will later be replaced with loading from settings
-    for ( unsigned int i = 0; i < m_coloumnCount; ++i) {
+    for ( unsigned int i = 0; i < m_columnCount; ++i) {
         m_column_map[i] = i;
 
     }
@@ -284,20 +287,20 @@ void CustomVirtListCtrl<T,L>::OnMouseMotion(wxMouseEvent& event)
 template < class T, class L >
 void CustomVirtListCtrl<T,L>::SetTipWindowText( const long item_hit, const wxPoint position)
 {
-  int coloumn = getColoumnFromPosition(position);
-  if (coloumn >= int(m_colinfovec.size()) || coloumn < 0)
+  int column = getColumnFromPosition(position);
+  if (column >= int(m_colinfovec.size()) || column < 0)
   {
     m_tiptext = _T("");
   }
   else
   {
     m_tiptimer.Start(m_tooltip_delay, wxTIMER_ONE_SHOT);
-    m_tiptext = TE(m_colinfovec[coloumn].tip);
+    m_tiptext = TE(m_colinfovec[column].tip);
   }
 }
 
 template < class T, class L >
-int CustomVirtListCtrl<T,L>::getColoumnFromPosition(wxPoint pos)
+int CustomVirtListCtrl<T,L>::getColumnFromPosition(wxPoint pos)
 {
     int x_pos = 0;
     for (int i = 0; i < int(m_colinfovec.size());++i)

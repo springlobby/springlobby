@@ -5,7 +5,8 @@
 #include "server.h"
 #include "settings.h"
 #include "user.h"
-#include "utils.h"
+#include "utils/conversion.h"
+#include "utils/misc.h"
 
 #include <wx/tokenzr.h>
 

@@ -14,7 +14,7 @@
 
 #include "torrentlistctrl.h"
 #include "torrentwrapper.h"
-#include "utils.h"
+//#include "utils/.h"
 #include "iconimagelist.h"
 
 BEGIN_EVENT_TABLE( TorrentListCtrl, CustomListCtrl )
