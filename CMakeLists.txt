@@ -62,7 +62,7 @@ IF(NOT CMAKE_CROSSCOMPILING)
 SET(wxWidgets_USE_LIBS base core net adv aui html xml )
 
 # We need the Find package for wxWidgets to work
-FIND_PACKAGE(wxWidgets REQUIRED base core net adv aui html xml xrc media)
+FIND_PACKAGE(wxWidgets REQUIRED base core net adv aui html xml)
 
 # Did we find wxWidgets ? This condition will fail for as long as the internal Vars do not point to the proper wxWidgets Configuration.
 IF(wxWidgets_FOUND)
