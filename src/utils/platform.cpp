@@ -17,6 +17,11 @@
 #include <wx/textfile.h>
 #include <wx/filename.h>
 #include <wx/dir.h>
+
+#ifdef __WXMSW__
+ #include <wx/msw/registry.h>
+#endif
+
 #include <iostream>
 
 #include "conversion.h"
