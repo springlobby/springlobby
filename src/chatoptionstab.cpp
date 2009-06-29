@@ -286,7 +286,7 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( p
   wxStaticBoxSizer* sbBehaviorSizer;
   sbBehaviorSizer = new wxStaticBoxSizer( new wxStaticBox( this, -1, _("Behavior") ), wxHORIZONTAL );
 
-  m_irc_colors = new wxCheckBox( this, wxID_ANY, _("Enable Irc color highlights in messages"), wxDefaultPosition, wxDefaultSize, 0 );
+  m_irc_colors = new wxCheckBox( this, wxID_ANY, _("Enable Irc colors in chat messages"), wxDefaultPosition, wxDefaultSize, 0 );
   m_irc_colors->SetValue( sett().GetUseIrcColors() );
 
   sbBehaviorSizer->Add( m_irc_colors, 0, wxALL, 5 );

@@ -49,7 +49,7 @@ AutoBalanceDialog::AutoBalanceDialog( wxWindow* parent, const BalanceOptions& de
 	m_clans_choice->Append(_("Always"));
 	m_clans_choice->SetToolTip(TE(_("Put members of same clan ( users having same clantag, like \'[smurfzor]Alice\' and \'[smurfzor]Bob\' ) together into same alliance. \nNone: nothing special for clans.\nFair: put clanmembers into alliance, unless this makes alliances unfair.\nAlways: always put clanmembers into alliance, even if that alliance is unfair.")));
 	m_choices_sizer->Add(m_clans_choice, 0, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 0);
-  StaticText2 = new wxStaticText(this, ID_STATICTEXT3, _("Grouping size"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT3"));
+  StaticText2 = new wxStaticText(this, ID_STATICTEXT3, _("Number of allies"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT3"));
 	m_choices_sizer->Add(StaticText2, 0, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 0);
 	m_group_choice = new wxChoice(this, ID_CHOICE2, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, _T("ID_CHOICE2"));
 	m_group_choice->Append( _("Auto select") );

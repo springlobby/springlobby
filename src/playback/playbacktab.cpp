@@ -363,7 +363,7 @@ void PlaybackTab<PlaybackTraits>::OnWatch( wxCommandEvent& event )
 template < class PlaybackTraits >
 void PlaybackTab<PlaybackTraits>::AskForceWatch( typename PlaybackTab<PlaybackTraits>::PlaybackType& rep ) const
 {
-    if (customMessageBox(SL_MAIN_ICON, _("I don't think you will be able to watch this replay.\nTry anyways? (MIGHT CRASH!)") , _("invalid replay"), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
+    if (customMessageBox(SL_MAIN_ICON, _("I don't think you will be able to watch this replay.\nTry anyways? (MIGHT CRASH!)") , _("Invalid replay"), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
         m_ui.WatchPlayback( rep.battle );
     }
 }

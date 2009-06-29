@@ -300,7 +300,7 @@ bool IsValidNickname( const wxString& _name )
 
 const wxChar* TooltipEnable(const wxChar* input)
 {
-    return sett().GetShowTooltips() ? input : _("");
+    return sett().GetShowTooltips() ? input : _T("");
 }
 
 
