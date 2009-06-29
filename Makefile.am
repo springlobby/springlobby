@@ -567,8 +567,6 @@ springlobby_SOURCES = \
 	src/userlist.h \
 	src/userlistctrl.cpp \
 	src/userlistctrl.h \
-	src/utils.cpp \
-	src/utils.h \
 	src/torrentlistctrl.cpp \
 	src/torrentlistctrl.h \
 	src/torrentoptionspanel.cpp \
@@ -1036,8 +1034,6 @@ springsettings_SOURCES = \
 	src/springunitsynclib.h \
 	src/settings.cpp \
 	src/settings.h \
-	src/utils.cpp \
-	src/utils.h \
 	src/uiutils.cpp \
 	src/uiutils.h \
 	src/globalsmanager.cpp \
