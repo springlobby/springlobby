@@ -52,8 +52,8 @@ wxString GetLibExtension()
 ///initializes logging in an hidden stream and std::cout/gui messages
 wxLogWindow* InitializeLoggingTargets( wxFrame* parent, bool console, bool showgui, bool logcrash, int verbosity )
 {
-    wxLogWindow* loggerwin = 0;
-  wxLogChain *lastlog;
+  wxLogWindow *loggerwin = 0;
+  wxLogChain *lastlog = new wxLogChain(0);
   if ( showgui && verbosity != 0 )
   {
     ///gui window logging
