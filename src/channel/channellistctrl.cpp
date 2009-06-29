@@ -1,6 +1,6 @@
 #include "channellistctrl.h"
 #include "../iconimagelist.h"
-#include "../utils.h"
+#include "../utils/conversion.h"
 #include "../ui.h"
 #include <algorithm>
 #include "../Helper/sortutil.h"

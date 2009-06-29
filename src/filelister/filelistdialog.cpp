@@ -10,7 +10,7 @@
 #include "filelistdialog.h"
 #include "filelistctrl.h"
 #include "../iunitsync.h"
-#include "../utils.h"
+#include "../utils/conversion.h"
 #include <wx/sizer.h>
 #include <wx/stattext.h>
 #include <wx/button.h>
@@ -125,7 +125,7 @@ bool FileListDialog::AddTorrentRow(TorrentTable::PRow data)
       m_filelistctrl->SetItemText( index, data->name );
 
       //setting hash as item's data means we can retrieve it later for download
-      m_filelistctrl->SetItemData( index, (unsigned int)s2l(data->hash) );
+      m_filelistctrl->SetItemData( index, (unsigned int)FromwxString<long>(data->hash) );
       m_filelistctrl->SetItem( index, 0, data->name );
       m_filelistctrl->SetItem( index, 1, data->type == IUnitSync::map ? _("Map") : _("Mod") );
       m_filelistctrl->SetItem( index, 2, data->hash );

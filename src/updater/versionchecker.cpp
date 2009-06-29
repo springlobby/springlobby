@@ -9,7 +9,7 @@
 #include <wx/protocol/http.h>
 #include <wx/log.h>
 
-#include "../utils.h"
+#include "../utils/debug.h"
 #include "../settings++/custom_dialogs.h"
 
 

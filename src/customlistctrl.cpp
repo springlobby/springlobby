@@ -4,7 +4,8 @@
 #include <wx/log.h>
 
 #include "customlistctrl.h"
-#include "utils.h"
+#include "utils/sltipwin.h"
+#include "utils/controls.h"
 #include "settings.h"
 #include "iconimagelist.h"
 #include "settings++/custom_dialogs.h"
@@ -221,12 +222,8 @@ void CustomListCtrl::OnMouseMotion(wxMouseEvent& event)
 
     int flag = wxLIST_HITTEST_ONITEM;
 
-#ifdef HAVE_WX28
     long subItem;
     long item_hit = HitTest(position, flag, &subItem);
-#else
-    long item_hit = HitTest(position, flag);
-#endif
     if (item_hit != wxNOT_FOUND && item_hit>=0 && item_hit<GetItemCount())
     {
         // we don't really need to recover from this if it fails

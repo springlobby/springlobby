@@ -22,9 +22,10 @@
 
 #include "hostbattledialog.h"
 #include "settings.h"
-#include "utils.h"
+//#include "utils/.h"
 #include "iunitsync.h"
 #include "user.h"
+#include "utils/controls.h"
 
 #include "images/rank0.xpm"
 #include "images/rank1.xpm"

@@ -1,7 +1,7 @@
 #include "mmoptionswrapper.h"
 
 #include "iunitsync.h"
-#include "utils.h"
+#include "utils/conversion.h"
 #include "settings++/custom_dialogs.h"
 
 #include <stdexcept>
@@ -237,7 +237,7 @@ OptionsWrapper::wxStringTripleVec OptionsWrapper::getOptions( GameOption modmapF
     if ( optIt != m_opts.end() ) {
         const GameOptions& gameoptions = optIt->second;
         for (IUnitSync::OptionMapBoolConstIter it = gameoptions.bool_map.begin(); it != gameoptions.bool_map.end(); ++it) {
-            list.push_back( wxStringTriple( (*it).first, wxStringPair ( it->second.name , i2s(it->second.value) ) ) );
+            list.push_back( wxStringTriple( (*it).first, wxStringPair ( it->second.name , TowxString(it->second.value) ) ) );
         }
 
         for (IUnitSync::OptionMapStringConstIter it = gameoptions.string_map.begin(); it != gameoptions.string_map.end(); ++it) {
@@ -245,7 +245,7 @@ OptionsWrapper::wxStringTripleVec OptionsWrapper::getOptions( GameOption modmapF
         }
 
         for (IUnitSync::OptionMapFloatConstIter it = gameoptions.float_map.begin(); it != gameoptions.float_map.end(); ++it) {
-            list.push_back( wxStringTriple( (*it).first, wxStringPair ( it->second.name, f2s(it->second.value) ) ) );
+            list.push_back( wxStringTriple( (*it).first, wxStringPair ( it->second.name, TowxString(it->second.value) ) ) );
         }
 
         for (IUnitSync::OptionMapListConstIter it = gameoptions.list_map.begin(); it != gameoptions.list_map.end(); ++it) {
@@ -262,7 +262,7 @@ std::map<wxString,wxString> OptionsWrapper::getOptionsMap( GameOption modmapFlag
     if ( optIt != m_opts.end() ) {
         const GameOptions& gameoptions = optIt->second;
         for (IUnitSync::OptionMapBoolConstIter it = gameoptions.bool_map.begin(); it != gameoptions.bool_map.end(); ++it) {
-            map[it->first] =  i2s(it->second.value);
+            map[it->first] =  TowxString(it->second.value);
         }
 
         for (IUnitSync::OptionMapStringConstIter it = gameoptions.string_map.begin(); it != gameoptions.string_map.end(); ++it) {
@@ -270,7 +270,7 @@ std::map<wxString,wxString> OptionsWrapper::getOptionsMap( GameOption modmapFlag
         }
 
         for (IUnitSync::OptionMapFloatConstIter it = gameoptions.float_map.begin(); it != gameoptions.float_map.end(); ++it) {
-            map[it->first] = f2s(it->second.value);
+            map[it->first] = TowxString(it->second.value);
         }
 
         for (IUnitSync::OptionMapListConstIter it = gameoptions.list_map.begin(); it != gameoptions.list_map.end(); ++it) {
@@ -332,9 +332,9 @@ wxString OptionsWrapper::getSingleValue(wxString key, GameOption modmapFlag) con
 		switch (optType)
 		{
 		case opt_float:
-			return f2s( GetItem( tempOpt.float_map, key ).value );
+			return TowxString( GetItem( tempOpt.float_map, key ).value );
 		case opt_bool:
-			return i2s( GetItem( tempOpt.bool_map, key ).value );
+			return TowxString( GetItem( tempOpt.bool_map, key ).value );
 		case opt_string:
 			return  GetItem( tempOpt.string_map, key ).value ;
 		case opt_list:

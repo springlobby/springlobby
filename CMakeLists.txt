@@ -207,6 +207,14 @@ ENDIF( OPTION_TORRENT_SYSTEM )
 INCLUDE_DIRECTORIES(${SpringLobby_SOURCE_DIR} ${Settings_SOURCE_DIR} )
 
 SET(SpringLobbySrc
+	src/utils/math.cpp
+	src/utils/misc.cpp
+	src/utils/debug.cpp
+	src/utils/platform.cpp
+	src/utils/conversion.cpp
+	src/utils/tasutil.cpp
+	src/utils/sltipwin.cpp
+	src/utils/controls.cpp
 	src/boost/md5.cpp
 	src/updater/updater.cpp
 	src/updater/versionchecker.cpp
@@ -310,6 +318,11 @@ SET(SpringLobbySrc
 )
 
 SET(SettingsSrc
+	src/utils/debug.cpp
+	src/utils/platform.cpp
+	src/utils/conversion.cpp
+	src/utils/sltipwin.cpp
+	src/utils/controls.cpp
 	src/settings++/custom_dialogs.cpp
 	src/settings++/frame.cpp
 	src/settings++/helpmenufunctions.cpp

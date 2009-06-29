@@ -13,7 +13,9 @@
 #include <algorithm>
 
 #include "nicklistctrl.h"
-#include "utils.h"
+#include "utils/math.h"
+#include "utils/debug.h"
+#include "utils/conversion.h"
 #include "iconimagelist.h"
 #include "user.h"
 #include "settings.h"

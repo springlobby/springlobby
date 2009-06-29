@@ -14,7 +14,7 @@
 #include <wx/protocol/http.h>
 #include <wx/xml/xml.h>
 
-#include "../utils.h"
+//#include "../utils/.h"
 #include "../settings.h"
 #include "../springunitsync.h"
 
@@ -63,7 +63,7 @@ bool Widget::GetImageInfos()
 		wxXmlNode *node = xml.GetRoot()->GetChildren();
 		while (node)
 		{
-		    int id = s2l( node->GetPropVal( _T("ID"), i2s( invalid_id ) ) );
+		    int id = FromwxString<long>( node->GetPropVal( _T("ID"), TowxString( invalid_id ) ) );
             if ( id != invalid_id ) {
                 WidgetImage file;
                 file.id = id;
@@ -157,7 +157,7 @@ bool Widget::GetFileInfos()
 		wxXmlNode *node = xml.GetRoot()->GetChildren();
 		while (node)
 		{
-		    int id = s2l( node->GetPropVal( _T("ID"), i2s( invalid_id ) ) );
+		    int id = FromwxString<long>( node->GetPropVal( _T("ID"), TowxString( invalid_id ) ) );
             if ( id != invalid_id ) {
                 WidgetFile file;
                 file.id = id;
