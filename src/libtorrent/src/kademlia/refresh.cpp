@@ -47,8 +47,6 @@ using boost::bind;
 namespace libtorrent { namespace dht
 {
 
-using asio::ip::udp;
-
 #ifdef TORRENT_DHT_VERBOSE_LOGGING
 TORRENT_DEFINE_LOG(refresh)
 #endif
@@ -103,9 +101,10 @@ void ping_observer::timeout()
 
 void refresh::invoke(node_id const& nid, udp::endpoint addr)
 {
+	TORRENT_ASSERT(m_rpc.allocation_size() >= sizeof(refresh_observer));
 	observer_ptr o(new (m_rpc.allocator().malloc()) refresh_observer(
 		this, nid, m_target));
-#ifndef NDEBUG
+#ifdef TORRENT_DEBUG
 	o->m_in_constructor = false;
 #endif
 
@@ -157,9 +156,10 @@ void refresh::invoke_pings_or_finish(bool prevent_request)
 
 			try
 			{
+				TORRENT_ASSERT(m_rpc.allocation_size() >= sizeof(ping_observer));
 				observer_ptr o(new (m_rpc.allocator().malloc()) ping_observer(
 					this, node.id));
-#ifndef NDEBUG
+#ifdef TORRENT_DEBUG
 				o->m_in_constructor = false;
 #endif
 				m_rpc.invoke(messages::ping, node.addr, o);
