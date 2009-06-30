@@ -42,14 +42,13 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "libtorrent/config.hpp"
 #include "libtorrent/assert.hpp"
+#include "libtorrent/escape_string.hpp"
 
 namespace libtorrent
 {
 
 	class TORRENT_EXPORT big_number
 	{
-		// private type
-		struct private_pointer {};
 		// the number of bytes of the number
 		enum { number_size = 20 };
 	public:
@@ -57,15 +56,25 @@ namespace libtorrent
 
 		big_number() {}
 
-		big_number(std::string const& s)
+		explicit big_number(char const* s)
+		{
+			if (s == 0) clear();
+			else std::memcpy(m_number, s, size);
+		}
+
+		explicit big_number(std::string const& s)
 		{
 			TORRENT_ASSERT(s.size() >= 20);
 			int sl = int(s.size()) < size ? int(s.size()) : size;
 			std::memcpy(m_number, &s[0], sl);
 		}
 
-		// when initialized with 0
-		big_number(private_pointer*) { clear(); }
+		void assign(std::string const& s)
+		{
+			TORRENT_ASSERT(s.size() >= 20);
+			int sl = int(s.size()) < size ? int(s.size()) : size;
+			std::memcpy(m_number, &s[0], sl);
+		}
 
 		void clear()
 		{
@@ -141,6 +150,9 @@ namespace libtorrent
 		iterator begin() { return m_number; }
 		iterator end() { return m_number+number_size; }
 
+		std::string to_string() const
+		{ return std::string((char const*)&m_number[0], number_size); }
+
 	private:
 
 		unsigned char m_number[number_size];
@@ -164,8 +176,6 @@ namespace libtorrent
 
 	inline std::istream& operator>>(std::istream& is, big_number& peer)
 	{
-		using namespace std;
-
 		for (big_number::iterator i = peer.begin();
 			i != peer.end(); ++i)
 		{
@@ -178,11 +188,11 @@ namespace libtorrent
 				|| ((c[1] < '0' || c[1] > '9') && (c[1] < 'a' || c[1] > 'f'))
 				|| is.fail())
 			{
-				is.setstate(ios_base::failbit);
+				is.setstate(std::ios_base::failbit);
 				return is;
 			}
-			*i = ((isdigit(c[0])?c[0]-'0':c[0]-'a'+10) << 4)
-				+ (isdigit(c[1])?c[1]-'0':c[1]-'a'+10);
+			*i = ((is_digit(c[0])?c[0]-'0':c[0]-'a'+10) << 4)
+				+ (is_digit(c[1])?c[1]-'0':c[1]-'a'+10);
 		}
 		return is;
 	}

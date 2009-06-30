@@ -43,7 +43,6 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "libtorrent/random_sample.hpp"
 #include "libtorrent/kademlia/node_id.hpp"
 #include "libtorrent/kademlia/rpc_manager.hpp"
-#include "libtorrent/kademlia/packet_iterator.hpp"
 #include "libtorrent/kademlia/routing_table.hpp"
 #include "libtorrent/kademlia/node.hpp"
 
@@ -65,8 +64,6 @@ namespace
 
 // TODO: configurable?
 enum { announce_interval = 30 };
-
-using asio::ip::udp;
 
 #ifdef TORRENT_DHT_VERBOSE_LOGGING
 TORRENT_DEFINE_LOG(node)
@@ -94,9 +91,10 @@ void purge_peers(std::set<peer_entry>& peers)
 void nop() {}
 
 node_impl::node_impl(boost::function<void(msg const&)> const& f
-	, dht_settings const& settings, boost::optional<node_id> node_id)
+	, dht_settings const& settings
+	, boost::optional<node_id> nid)
 	: m_settings(settings)
-	, m_id(node_id ? *node_id : generate_id())
+	, m_id(nid ? *nid : generate_id())
 	, m_table(m_id, 8, settings)
 	, m_rpc(bind(&node_impl::incoming_request, this, _1)
 		, m_id, m_table, f)
@@ -125,7 +123,9 @@ bool node_impl::verify_token(msg const& m)
 	}
 
 	hasher h1;
-	std::string address = m.addr.address().to_string();
+	error_code ec;
+	std::string address = m.addr.address().to_string(ec);
+	if (ec) return false;
 	h1.update(&address[0], address.length());
 	h1.update((char*)&m_secret[0], sizeof(m_secret[0]));
 	h1.update((char*)&m.info_hash[0], sha1_hash::size);
@@ -149,7 +149,9 @@ entry node_impl::generate_token(msg const& m)
 	std::string token;
 	token.resize(4);
 	hasher h;
-	std::string address = m.addr.address().to_string();
+	error_code ec;
+	std::string address = m.addr.address().to_string(ec);
+	TORRENT_ASSERT(!ec);
 	h.update(&address[0], address.length());
 	h.update((char*)&m_secret[0], sizeof(m_secret[0]));
 	h.update((char*)&m.info_hash[0], sha1_hash::size);
@@ -246,6 +248,11 @@ void node_impl::refresh_bucket(int bucket) try
 }
 catch (std::exception&) {}
 
+void node_impl::unreachable(udp::endpoint const& ep)
+{
+	m_rpc.unreachable(ep);
+}
+
 void node_impl::incoming(msg const& m)
 {
 	if (m_rpc.incoming(m))
@@ -270,8 +277,11 @@ namespace
 		for (std::vector<node_entry>::const_iterator i = v.begin()
 			, end(v.end()); i != end; ++i)
 		{
+#ifdef TORRENT_DHT_VERBOSE_LOGGING
+			TORRENT_LOG(node) << "  distance: " << (160 - distance_exp(ih, i->id));
+#endif
 			observer_ptr o(new (rpc.allocator().malloc()) get_peers_observer(ih, listen_port, rpc, f));
-#ifndef NDEBUG
+#ifdef TORRENT_DEBUG
 			o->m_in_constructor = false;
 #endif
 			rpc.invoke(messages::get_peers, i->addr, o);
@@ -293,7 +303,7 @@ void node_impl::add_node(udp::endpoint node)
 	// ping the node, and if we get a reply, it
 	// will be added to the routing table
 	observer_ptr o(new (m_rpc.allocator().malloc()) null_observer(m_rpc.allocator()));
-#ifndef NDEBUG
+#ifdef TORRENT_DEBUG
 	o->m_in_constructor = false;
 #endif
 	m_rpc.invoke(messages::ping, node, o);
@@ -403,7 +413,7 @@ void node_impl::on_announce(msg const& m, msg& reply)
 
 	torrent_entry& v = m_map[m.info_hash];
 	peer_entry e;
-	e.addr = tcp::endpoint(m.addr.address(), m.addr.port());
+	e.addr = tcp::endpoint(m.addr.address(), m.port);
 	e.added = time_now();
 	std::set<peer_entry>::iterator i = v.peers.find(e);
 	if (i != v.peers.end()) v.peers.erase(i++);

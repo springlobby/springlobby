@@ -69,7 +69,6 @@ POSSIBILITY OF SUCH DAMAGE.
 #pragma warning(push, 1)
 #endif
 
-#include <boost/lexical_cast.hpp>
 #include <boost/static_assert.hpp>
 
 #ifdef _MSC_VER
@@ -80,17 +79,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "libtorrent/config.hpp"
 
 #include "libtorrent/assert.hpp"
-
-#if defined(_MSC_VER)
-namespace std
-{
-	using ::isdigit;
-	using ::atoi;
-};
-
-#define for if (false) {}  else for
-#endif
-
+#include "libtorrent/escape_string.hpp"
 
 namespace libtorrent
 {
@@ -103,28 +92,33 @@ namespace libtorrent
 	namespace detail
 	{
 		template <class OutIt>
-		void write_string(OutIt& out, const std::string& val)
+		int write_string(OutIt& out, const std::string& val)
 		{
-			std::string::const_iterator end = val.begin() + val.length();
-			std::copy(val.begin(), end, out);
+			for (std::string::const_iterator i = val.begin()
+				, end(val.end()); i != end; ++i)
+				*out++ = *i;
+			return val.length();
 		}
 
 		TORRENT_EXPORT char const* integer_to_str(char* buf, int size, entry::integer_type val);
 
 		template <class OutIt>
-		void write_integer(OutIt& out, entry::integer_type val)
+		int write_integer(OutIt& out, entry::integer_type val)
 		{
 			// the stack allocated buffer for keeping the
 			// decimal representation of the number can
 			// not hold number bigger than this:
 			BOOST_STATIC_ASSERT(sizeof(entry::integer_type) <= 8);
 			char buf[21];
+			int ret = 0;
 			for (char const* str = integer_to_str(buf, 21, val);
 				*str != 0; ++str)
 			{
 				*out = *str;
 				++out;
+				++ret;
 			}
+			return ret;
 		}	
 		
 		template <class OutIt>
@@ -172,26 +166,31 @@ namespace libtorrent
 			}
 		}
 
+		// returns the number of bytes written
 		template<class OutIt>
-		void bencode_recursive(OutIt& out, const entry& e)
+		int bencode_recursive(OutIt& out, const entry& e)
 		{
+			int ret = 0;
 			switch(e.type())
 			{
 			case entry::int_t:
 				write_char(out, 'i');
-				write_integer(out, e.integer());
+				ret += write_integer(out, e.integer());
 				write_char(out, 'e');
+				ret += 2;
 				break;
 			case entry::string_t:
-				write_integer(out, e.string().length());
+				ret += write_integer(out, e.string().length());
 				write_char(out, ':');
-				write_string(out, e.string());
+				ret += write_string(out, e.string());
+				ret += 1;
 				break;
 			case entry::list_t:
 				write_char(out, 'l');
 				for (entry::list_type::const_iterator i = e.list().begin(); i != e.list().end(); ++i)
-					bencode_recursive(out, *i);
+					ret += bencode_recursive(out, *i);
 				write_char(out, 'e');
+				ret += 2;
 				break;
 			case entry::dictionary_t:
 				write_char(out, 'd');
@@ -199,18 +198,21 @@ namespace libtorrent
 					i != e.dict().end(); ++i)
 				{
 					// write key
-					write_integer(out, i->first.length());
+					ret += write_integer(out, i->first.length());
 					write_char(out, ':');
-					write_string(out, i->first);
+					ret += write_string(out, i->first);
 					// write value
-					bencode_recursive(out, i->second);
+					ret += bencode_recursive(out, i->second);
+					ret += 1;
 				}
 				write_char(out, 'e');
+				ret += 2;
 				break;
 			default:
 				// do nothing
 				break;
 			}
+			return ret;
 		}
 
 		template<class InIt>
@@ -225,6 +227,9 @@ namespace libtorrent
 			if (in == end)
 			{
 				err = true;
+#ifdef TORRENT_DEBUG
+				ret.m_type_queried = false;
+#endif
 				return;
 			}
 			switch (*in)
@@ -240,7 +245,20 @@ namespace libtorrent
 				TORRENT_ASSERT(*in == 'e');
 				++in; // 'e' 
 				ret = entry(entry::int_t);
-				ret.integer() = boost::lexical_cast<entry::integer_type>(val);
+				char* end_pointer;
+#ifdef  _MSC_VER
+				ret.integer() = _strtoi64(val.c_str(), &end_pointer, 10);
+#else
+				ret.integer() = strtoll(val.c_str(), &end_pointer, 10);
+#endif
+#ifdef TORRENT_DEBUG
+				ret.m_type_queried = false;
+#endif
+				if (end_pointer == val.c_str())
+				{
+					err = true;
+					return;
+				}
 				} break;
 
 			// ----------------------------------------------
@@ -254,13 +272,25 @@ namespace libtorrent
 					ret.list().push_back(entry());
 					entry& e = ret.list().back();
 					bdecode_recursive(in, end, e, err, depth + 1);
-					if (err) return;
+					if (err)
+					{
+#ifdef TORRENT_DEBUG
+						ret.m_type_queried = false;
+#endif
+						return;
+					}
 					if (in == end)
 					{
 						err = true;
+#ifdef TORRENT_DEBUG
+						ret.m_type_queried = false;
+#endif
 						return;
 					}
 				}
+#ifdef TORRENT_DEBUG
+				ret.m_type_queried = false;
+#endif
 				TORRENT_ASSERT(*in == 'e');
 				++in; // 'e'
 				} break;
@@ -275,16 +305,34 @@ namespace libtorrent
 				{
 					entry key;
 					bdecode_recursive(in, end, key, err, depth + 1);
-					if (err) return;
+					if (err || key.type() != entry::string_t)
+					{	
+#ifdef TORRENT_DEBUG
+						ret.m_type_queried = false;
+#endif
+						return;
+					}
 					entry& e = ret[key.string()];
 					bdecode_recursive(in, end, e, err, depth + 1);
-					if (err) return;
+					if (err)
+					{
+#ifdef TORRENT_DEBUG
+						ret.m_type_queried = false;
+#endif
+						return;
+					}
 					if (in == end)
 					{
 						err = true;
+#ifdef TORRENT_DEBUG
+						ret.m_type_queried = false;
+#endif
 						return;
 					}
 				}
+#ifdef TORRENT_DEBUG
+				ret.m_type_queried = false;
+#endif
 				TORRENT_ASSERT(*in == 'e');
 				++in; // 'e'
 				} break;
@@ -292,30 +340,48 @@ namespace libtorrent
 			// ----------------------------------------------
 			// string
 			default:
-				if (isdigit((unsigned char)*in))
+				if (is_digit((unsigned char)*in))
 				{
 					std::string len_s = read_until(in, end, ':', err);
-					if (err) return;
+					if (err)
+					{
+#ifdef TORRENT_DEBUG
+						ret.m_type_queried = false;
+#endif
+						return;
+					}
 					TORRENT_ASSERT(*in == ':');
 					++in; // ':'
 					int len = std::atoi(len_s.c_str());
 					ret = entry(entry::string_t);
 					read_string(in, end, len, ret.string(), err);
-					if (err) return;
+					if (err)
+					{
+#ifdef TORRENT_DEBUG
+						ret.m_type_queried = false;
+#endif
+						return;
+					}
 				}
 				else
 				{
 					err = true;
+#ifdef TORRENT_DEBUG
+					ret.m_type_queried = false;
+#endif
 					return;
 				}
+#ifdef TORRENT_DEBUG
+				ret.m_type_queried = false;
+#endif
 			}
 		}
 	}
 
 	template<class OutIt>
-	void bencode(OutIt out, const entry& e)
+	int bencode(OutIt out, const entry& e)
 	{
-		detail::bencode_recursive(out, e);
+		return detail::bencode_recursive(out, e);
 	}
 
 	template<class InIt>
@@ -324,17 +390,25 @@ namespace libtorrent
 		entry e;
 		bool err = false;
 		detail::bdecode_recursive(start, end, e, err, 0);
-		if (err)
-		{
-#ifdef BOOST_NO_EXCEPTIONS
-			return entry();
-#else
-			throw invalid_encoding();
+#ifdef TORRENT_DEBUG
+		TORRENT_ASSERT(e.m_type_queried == false);
 #endif
-		}
+		if (err) return entry();
 		return e;
 	}
 
+	template<class InIt>
+	entry bdecode(InIt start, InIt end, int& len)
+	{
+		entry e;
+		bool err = false;
+		InIt s = start;
+		detail::bdecode_recursive(start, end, e, err, 0);
+		len = std::distance(s, start);
+		TORRENT_ASSERT(len >= 0);
+		if (err) return entry();
+		return e;
+	}
 }
 
 #endif // TORRENT_BENCODE_HPP_INCLUDED
