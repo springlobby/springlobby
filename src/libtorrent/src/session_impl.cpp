@@ -605,7 +605,7 @@ namespace aux {
 		if (ep.protocol() == tcp::v6())
 		{
 			s.sock->set_option(v6only(v6_only), ec);
-#ifdef TORRENT_WINDOWS
+#ifdef _MSC_VER
 			// enable Teredo on windows
 			s.sock->set_option(v6_protection_level(PROTECTION_LEVEL_UNRESTRICTED), ec);
 #endif
