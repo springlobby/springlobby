@@ -255,7 +255,7 @@ void ServerEvents::OnBattleOpened( int id, BattleType type, NatType nat, const w
         if ( user.Status().in_game )
         {
             battle.SetInGame( true );
-            ui().OnBattleStarted( battle );
+            battle.StartSpring();
         }
     }
     catch (std::runtime_error &except)
