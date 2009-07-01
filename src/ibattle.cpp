@@ -421,8 +421,8 @@ void IBattle::FixColours()
         if ( &user == &GetMe() ) continue; // skip founder ( yourself )
         UserBattleStatus& status = user.BattleStatus();
         if ( status.spectator ) continue;
-        if ( parsedteams.find( status.team ) != parsedteams.end() ) continue; // skip duplicates
-        parsedteams.insert( status.team );
+        if ( parsed_teams.find( status.team ) != parsed_teams.end() ) continue; // skip duplicates
+        parsed_teams.insert( status.team );
 
         wxColour &user_col=status.colour;
         int user_diff=0;
