@@ -256,11 +256,6 @@ User& Battle::OnUserAdded( User& user )
 
 void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 {
-		IBattle::OnUserBattleStatusUpdated( user, status );
-    if ( status.handicap != 0 )
-    {
-        ui().OnBattleAction( *this, wxString(_T(" ")) , ( _T("Warning: user ") + user.GetNick() + _T(" got bonus ") ) << status.handicap );
-    }
     if ( IsFounderMe() )
     {
         if ( ( &user != &GetMe() ) && !status.IsBot() && ( m_opts.rankneeded > UserStatus::RANK_1 ) && ( user.GetStatus().rank < m_opts.rankneeded ))
@@ -270,7 +265,7 @@ void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
             case rank_limit_none:
                 break;
             case rank_limit_autospec:
-                if ( !user.BattleStatus().spectator )
+                if ( !status.spectator )
                 {
                     DoAction( _T("Rank limit autospec: ") + user.GetNick() );
                     ForceSpectator( user, true );
@@ -283,6 +278,11 @@ void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
             }
         }
 
+    }
+		IBattle::OnUserBattleStatusUpdated( user, status );
+    if ( status.handicap != 0 )
+    {
+        ui().OnBattleAction( *this, wxString(_T(" ")) , ( _T("Warning: user ") + user.GetNick() + _T(" got bonus ") ) << status.handicap );
     }
 		ui().OnUserBattleStatus( *this, user );
 }

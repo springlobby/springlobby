@@ -402,6 +402,11 @@ protected:
 
 		std::map<unsigned int,BattleStartRect> m_rects;
 
+		int m_players_ready;
+		int m_players_sync;
+		std::map<int, int> m_teams_sizes; // controlteam -> number of people in
+		std::map<int, int> m_ally_sizes; // allyteam -> number of people in
+
     wxString m_preset;
 
     bool m_is_self_in;
