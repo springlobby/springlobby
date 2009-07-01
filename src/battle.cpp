@@ -16,11 +16,13 @@
 #include "iconimagelist.h"
 #include "spring.h"
 
+#include <wx/timer.h>
 #include <wx/image.h>
 #include <wx/string.h>
 #include <wx/log.h>
 #include <wx/filename.h>
 
+const unsigned int TIMER_INTERVAL         = 1000;
 
 Battle::Battle( Server& serv, int id ) :
         m_serv(serv),
@@ -189,6 +191,7 @@ void Battle::LoadMapDefaults( const wxString& mapname )
 User& Battle::OnUserAdded( User& user )
 {
 		user = IBattle::OnUserAdded( user );
+		if ( &user == &GetMe() ) m_timer->Start( TIMER_INTERVAL );
     user.SetBattle( this );
     user.BattleStatus().isfromdemo = false;
 

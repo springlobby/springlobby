@@ -715,7 +715,7 @@ void BattleRoomTab::OnAutoSpec( wxCommandEvent& event )
 	if ( trigger < 0 ) trigger = 0;
 	trigger = trigger * 60;
 	m_autospec_mnu->Check( trigger > 0 );
-	sett().SetBattleLastAutoStartState( trigger );
+	sett().SetBattleLastAutoSpectTime( trigger );
 }
 
 void BattleRoomTab::OnImSpec( wxCommandEvent& event )

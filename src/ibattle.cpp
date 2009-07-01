@@ -19,7 +19,6 @@
 #include <set>
 
 const unsigned int TIMER_ID         = 101;
-const unsigned int TIMER_INTERVAL         = 1000;
 
 BEGIN_EVENT_TABLE(IBattle, wxEvtHandler)
     EVT_TIMER(TIMER_ID, IBattle::OnTimer)
@@ -243,7 +242,6 @@ User& IBattle::OnUserAdded( User& user )
 		if ( bs.spectator ) m_opts.spectators++;
 		if ( bs.ready && !bs.IsBot() ) m_players_ready++;
 		if ( bs.sync && !bs.IsBot() ) m_players_sync++;
-		if ( &user == &GetMe() ) m_timer->Start( TIMER_INTERVAL );
 		if ( !bs.spectator && !bs.IsBot() && ( !bs.ready || !bs.sync ) ) m_ready_up_map[user.GetNick()] = time(0);
     return user;
 }
