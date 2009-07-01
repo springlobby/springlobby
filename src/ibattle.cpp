@@ -236,6 +236,7 @@ User& IBattle::OnUserAdded( User& user )
 			m_teams_sizes[bs.team] = m_teams_sizes[bs.team] + 1;
 			m_ally_sizes[bs.ally] = m_ally_sizes[bs.ally] + 1;
 		}
+		if ( bs.spectator ) m_opts.spectators++;
 		if ( bs.ready && !bs.IsBot() ) m_players_ready++;
 		if ( bs.sync && !bs.IsBot() ) m_players_sync++;
 		if ( &user == &GetMe() ) m_timer->Start();
