@@ -319,7 +319,7 @@ void PlaybackTab<PlaybackTraits>::OnWatch( wxCommandEvent& event )
 						rep.battle.GetMe().SetNick( usync().GetDefaultNick() );
             bool watchable = rep.battle.MapExists() && rep.battle.ModExists();
             if ( watchable )
-                m_ui.WatchPlayback( rep.battle );
+                rep.battle.StartSpring();
             else {
                 #ifdef NO_TORRENT_SYSTEM
                     wxString downloadProc = _("Do you want me to take you to the download page?");
@@ -364,7 +364,7 @@ template < class PlaybackTraits >
 void PlaybackTab<PlaybackTraits>::AskForceWatch( typename PlaybackTab<PlaybackTraits>::PlaybackType& rep ) const
 {
     if (customMessageBox(SL_MAIN_ICON, _("I don't think you will be able to watch this replay.\nTry anyways? (MIGHT CRASH!)") , _("Invalid replay"), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
-        m_ui.WatchPlayback( rep.battle );
+				rep.battle.StartSpring();
     }
 }
 

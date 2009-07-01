@@ -66,10 +66,7 @@ class Ui
 
     bool IsSpringRunning();
 
-    void WatchPlayback ( OfflineBattle& battle );
-
     void StartHostedBattle();
-    void StartSinglePlayerGame( SinglePlayerBattle& battle );
     //void SendHostInfo( HostInfo update );
 
     void Quit();
@@ -158,8 +155,6 @@ class Ui
     void ReloadPresetList();
 
   protected:
-    Spring* m_spring;
-
     Server* m_serv;
     MainWindow* m_main_win;
     ConnectWindow* m_con_win;

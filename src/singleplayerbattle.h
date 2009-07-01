@@ -30,6 +30,8 @@ class SinglePlayerBattle: public IBattle
 
     void Update( const wxString& Tag );
 
+    void StartSpring();
+
   protected:
 
     Ui& m_ui;

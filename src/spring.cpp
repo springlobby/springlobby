@@ -37,6 +37,7 @@
 #ifndef NO_TORRENT_SYSTEM
 #include "torrentwrapper.h"
 #endif
+#include "globalsmanager.h"
 
 BEGIN_EVENT_TABLE( Spring, wxEvtHandler )
 
@@ -46,9 +47,13 @@ END_EVENT_TABLE();
 
 #define FIRST_UDP_SOURCEPORT 8300
 
+Spring& spring()
+{
+	static GlobalObjectHolder<Spring> m_spring;
+	return m_spring;
+}
 
-Spring::Spring( Ui& ui ) :
-        m_ui(ui),
+Spring::Spring() :
         m_process(0),
         m_wx_process(0),
         m_running(false)
@@ -227,7 +232,7 @@ void Spring::OnTerminated( wxCommandEvent& event )
     m_running = false;
     m_process = 0; // NOTE I'm not sure if this should be deleted or not, according to wx docs it shouldn't.
     m_wx_process = 0;
-    m_ui.OnSpringTerminated( true );
+    ui().OnSpringTerminated( true );
 }
 
 

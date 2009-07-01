@@ -93,6 +93,8 @@ class Battle : public IBattle
     void SaveMapDefaults();
     void LoadMapDefaults( const wxString& mapname );
 
+    void StartSpring();
+
   protected:
     // Battle variables
 

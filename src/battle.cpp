@@ -14,10 +14,12 @@
 #include "settings++/custom_dialogs.h"
 #include "springunitsynclib.h"
 #include "iconimagelist.h"
+#include "spring.h"
 
 #include <wx/image.h>
 #include <wx/string.h>
 #include <wx/log.h>
+#include <wx/filename.h>
 
 
 Battle::Battle( Server& serv, int id ) :
@@ -531,4 +533,39 @@ void Battle::UserPositionChanged( const User& user )
 void Battle::SendScriptToClients()
 {
 	m_serv.SendScriptToClients( GetScript() );
+}
+
+
+void Battle::StartSpring()
+{
+	if ( UserExists( GetMe().GetNick() ) )
+	{
+		if ( IsProxy() )
+		{
+			wxString hostscript = spring().WriteScriptTxt( *this );
+			try
+			{
+				wxString path = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("relayhost_script.txt");
+				if ( !wxFile::Access( path, wxFile::write ) ) wxLogError( _T("Access denied to script.txt.") );
+
+				wxFile f( path, wxFile::write );
+				f.Write( hostscript );
+				f.Close();
+
+			} catch (...) {}
+			m_serv.SendScriptToProxy( hostscript );
+		}
+		GetMe().BattleStatus().ready = false;
+		SendMyBattleStatus();
+		GetMe().Status().in_game = true;
+		GetMe().SendMyUserStatus();
+		if( IsFounderMe() && GetAutoLockOnStart() )
+		{
+			SetIsLocked( true );
+			SendHostInfo( IBattle::HI_Locked );
+		}
+		ui().OnSpringStarting();
+		spring().Run( *this );
+	}
+	ui().OnBattleStarted( *this );
 }

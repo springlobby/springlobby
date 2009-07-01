@@ -323,7 +323,9 @@ void IBattle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 			 else m_players_sync--;
 		}
 	}
-
+	if ( m_autocontrol_autospec )
+	{
+	}
 	if ( m_autocontrol_balance )
 	{
 		if ( ShouldAutoStart() )
@@ -332,6 +334,10 @@ void IBattle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 			Autobalance( (IBattle::BalanceType)sett().GetBalanceMethod(), sett().GetBalanceClans(), sett().GetBalanceStrongClans(), sett().GetBalanceGrouping() );
 			FixColours();
 		}
+	}
+	if ( m_autocontrol_autostart )
+	{
+		if ( ShouldAutoStart() ) StartSpring();
 	}
 }
 

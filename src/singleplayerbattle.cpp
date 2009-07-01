@@ -10,6 +10,7 @@
 #include "uiutils.h"
 #include "ui.h"
 #include "settings.h"
+#include "spring.h"
 
 
 SinglePlayerBattle::SinglePlayerBattle(Ui& ui, MainSinglePlayerTab& msptab):
@@ -71,3 +72,8 @@ void SinglePlayerBattle::Update( const wxString& Tag )
   m_sptab.Update( Tag );
 }
 
+void SinglePlayerBattle::StartSpring()
+{
+	spring().Run( *this );
+	ui().OnSpringStarting();
+}

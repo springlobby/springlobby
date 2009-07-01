@@ -329,7 +329,7 @@ void ServerEvents::OnStartHostedBattle( int battleid )
     wxLogDebugFunc( _T("") );
     Battle& battle = m_serv.GetBattle( battleid );
     battle.SetInGame( true );
-    ui().OnBattleStarted( battle );
+    battle.StartSpring();
 }
 
 
@@ -367,7 +367,7 @@ void ServerEvents::OnUserJoinedBattle( int battleid, const wxString& nick )
             if ( user.Status().in_game )
             {
                 battle.SetInGame( true );
-                ui().OnBattleStarted( battle );
+                battle.StartSpring();
             }
         }
     }
