@@ -271,7 +271,7 @@ void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 				}
 				if ( sett().GetBattleLastAutoStartState() )
 				{
-					StartSpring();
+					ui().StartHostedBattle();
 				}
 			}
 		}
