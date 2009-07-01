@@ -95,6 +95,8 @@ class Battle : public IBattle
 
     void StartSpring();
 
+    void OnTimer( wxTimerEvent& event );
+
   protected:
     // Battle variables
 

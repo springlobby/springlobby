@@ -259,6 +259,22 @@ void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
     {
         ui().OnBattleAction( *this, wxString(_T(" ")) , ( _T("Warning: user ") + user.GetNick() + _T(" got bonus ") ) << status.handicap );
     }
+		if ( IsFounderMe() )
+		{
+			if ( ShouldAutoStart() )
+			{
+				if ( sett().GetBattleLastAutoControlState() )
+				{
+					FixTeamIDs( (IBattle::BalanceType)sett().GetFixIDMethod(), sett().GetFixIDClans(), sett().GetFixIDStrongClans(), sett().GetFixIDGrouping() );
+					Autobalance( (IBattle::BalanceType)sett().GetBalanceMethod(), sett().GetBalanceClans(), sett().GetBalanceStrongClans(), sett().GetBalanceGrouping() );
+					FixColours();
+				}
+				if ( sett().GetBattleLastAutoStartState() )
+				{
+					StartSpring();
+				}
+			}
+		}
 		ui().OnUserBattleStatus( *this, user );
 }
 
@@ -575,4 +591,28 @@ void Battle::StartSpring()
 		spring().Run( *this );
 	}
 	ui().OnBattleStarted( *this );
+}
+
+void Battle::OnTimer( wxTimerEvent& event )
+{
+	if ( !IsFounderMe() ) return;
+	int autospect_trigger_time = sett().GetBattleLastAutoSpectTime();
+	if ( autospect_trigger_time == 0 ) return;
+	time_t now = time(0);
+	for ( unsigned int i = 0; i < GetNumUsers(); i++)
+	{
+		User& usr = GetUser( i );
+		UserBattleStatus& status = usr.BattleStatus();
+		if ( status.IsBot() || status.spectator ) continue;
+		if ( status.sync && status.ready ) continue;
+		if ( &usr == &GetMe() ) continue;
+		std::map<wxString, time_t>::iterator itor = m_ready_up_map.find( usr.GetNick() );
+		if ( itor != m_ready_up_map.end() )
+		{
+			if ( ( now - itor->second ) > autospect_trigger_time )
+			{
+				ForceSpectator( usr, true );
+			}
+		}
+	}
 }
