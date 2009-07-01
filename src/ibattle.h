@@ -394,6 +394,7 @@ protected:
 		void LoadScriptMMOpts( const wxString& sectionname, const PDataList& node );
 		void LoadScriptMMOpts( const PDataList& node );
 
+
     bool m_map_loaded;
     bool m_mod_loaded;
     bool m_map_exists;
