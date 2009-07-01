@@ -376,7 +376,7 @@ bool IBattle::ShouldAutoStart()
 		User& usr = GetUser( i );
 		UserBattleStatus& status = usr.BattleStatus();
 		if ( status.IsBot() ) continue;
-		if ( !status.spectator && ( !status.sync || status.ready ) ) return false;
+		if ( !status.spectator && ( !status.sync || !status.ready ) ) return false;
 	}
 	return true;
 }
