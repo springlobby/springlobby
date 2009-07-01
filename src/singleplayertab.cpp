@@ -14,7 +14,9 @@
 #include "singleplayertab.h"
 #include "mapctrl.h"
 #include "mapselectdialog.h"
-#include "utils.h"
+#include "utils/controls.h"
+#include "utils/debug.h"
+#include "utils/conversion.h"
 #include "uiutils.h"
 #include "ui.h"
 #include "iunitsync.h"
@@ -312,8 +314,8 @@ void SinglePlayerTab::OnStart( wxCommandEvent& event )
 
 void SinglePlayerTab::OnRandomCheck( wxCommandEvent& event )
 {
-    if ( m_random_check->IsChecked() ) m_battle.CustomBattleOptions().setSingleOption( _T("startpostype"), i2s(IBattle::ST_Random), OptionsWrapper::EngineOption );
-    else m_battle.CustomBattleOptions().setSingleOption( _T("startpostype"), i2s(IBattle::ST_Pick), OptionsWrapper::EngineOption );
+    if ( m_random_check->IsChecked() ) m_battle.CustomBattleOptions().setSingleOption( _T("startpostype"), TowxString<int>(IBattle::ST_Random), OptionsWrapper::EngineOption );
+    else m_battle.CustomBattleOptions().setSingleOption( _T("startpostype"), TowxString<int>(IBattle::ST_Pick), OptionsWrapper::EngineOption );
     m_battle.SendHostInfo( IBattle::HI_StartType );
 }
 

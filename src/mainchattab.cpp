@@ -13,7 +13,9 @@
 
 #include "aui/auimanager.h"
 #include "mainchattab.h"
-#include "utils.h"
+#include "utils/debug.h"
+#include "utils/conversion.h"
+#include "utils/math.h"
 #include "mainwindow.h"
 #include "channel/channel.h"
 #include "user.h"
@@ -309,10 +311,10 @@ wxImage MainChatTab::ReplaceChannelStatusColour( wxBitmap img, const wxColour& c
   wxImage::HSVValue origcolour = wxImage::RGBtoHSV( wxImage::RGBValue::RGBValue( colour.Red(), colour.Green(), colour.Blue() ) );
 
   double bright = origcolour.value - 0.1*origcolour.value;
-  CLAMP(bright,0,1);
+  bright = clamp(bright,0.0,1.0);
   wxImage::HSVValue hsvdarker1( origcolour.hue, origcolour.saturation, bright );
   bright = origcolour.value - 0.5*origcolour.value;
-  CLAMP(bright,0,1);
+  bright = clamp(bright,0.0,1.0);
   wxImage::HSVValue hsvdarker2( origcolour.hue, origcolour.saturation, bright );
 
   wxImage::RGBValue rgbdarker1 = wxImage::HSVtoRGB( hsvdarker1 );

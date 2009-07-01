@@ -1,10 +1,10 @@
 /* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
 
+#include "battlelistctrl.h"
+
 #include <wx/intl.h>
 #include <wx/menu.h>
 
-#include "battlelistctrl.h"
-#include "utils.h"
 #include "user.h"
 #include "iconimagelist.h"
 #include "battle.h"
@@ -295,8 +295,8 @@ void BattleListCtrl::SetTipWindowText( const long item_hit, const wxPoint positi
 
     const IBattle& battle= *m_data[item_hit];
 
-    int coloumn = getColoumnFromPosition(position);
-    switch (coloumn)
+    int column = getColumnFromPosition(position);
+    switch (column)
     {
         case 0: // status
         m_tiptext = icons().GetBattleStatus(battle);
@@ -305,7 +305,7 @@ void BattleListCtrl::SetTipWindowText( const long item_hit, const wxPoint positi
             m_tiptext = GetFlagNameFromCountryCode(battle.GetFounder().GetCountry());
             break;
         case 2: // rank_min
-            m_tiptext = m_colinfovec[coloumn].tip;
+            m_tiptext = m_colinfovec[column].tip;
             break;
         case 3: // descrp
             m_tiptext = battle.GetDescription();
@@ -334,7 +334,7 @@ void BattleListCtrl::SetTipWindowText( const long item_hit, const wxPoint positi
             }
             break;
         case 9: //may player
-            m_tiptext = (m_colinfovec[coloumn].tip);
+            m_tiptext = (m_colinfovec[column].tip);
             break;
 
         default: m_tiptext = _T("");
@@ -345,9 +345,9 @@ void BattleListCtrl::SetTipWindowText( const long item_hit, const wxPoint positi
 
 int BattleListCtrl::GetIndexFromData( const DataType& data ) const
 {
-	 static long seekpos;
-   seekpos = clamp( seekpos, 0l , (long)m_data.size() );
-   int index = seekpos;
+    static long seekpos;
+    seekpos = clamp( seekpos, 0l , (long)m_data.size() );
+    int index = seekpos;
 
     for ( DataCIter f_idx = m_data.begin() + seekpos; f_idx != m_data.end() ; ++f_idx )
     {
@@ -370,6 +370,5 @@ int BattleListCtrl::GetIndexFromData( const DataType& data ) const
         r_index--;
     }
 
-    wxLogError( _T("didn't find the battle.") );
     return -1;
 }

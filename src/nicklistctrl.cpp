@@ -13,7 +13,9 @@
 #include <algorithm>
 
 #include "nicklistctrl.h"
-#include "utils.h"
+#include "utils/math.h"
+#include "utils/debug.h"
+#include "utils/conversion.h"
 #include "iconimagelist.h"
 #include "user.h"
 #include "settings.h"
@@ -143,8 +145,8 @@ void NickListCtrl::OnShowMenu( wxContextMenuEvent& event )
 void NickListCtrl::SetTipWindowText( const long item_hit, const wxPoint position)
 {
 
-    int coloumn = getColoumnFromPosition(position);
-    if (coloumn > (int)m_colinfovec.size() || coloumn < 0 || item_hit < 0 || item_hit > (long) m_data.size() || m_data[item_hit]==NULL )
+    int column = getColumnFromPosition(position);
+    if (column > (int)m_colinfovec.size() || column < 0 || item_hit < 0 || item_hit > (long) m_data.size() || m_data[item_hit]==NULL )
     {
         m_tiptext = _T("");
     }
@@ -152,7 +154,7 @@ void NickListCtrl::SetTipWindowText( const long item_hit, const wxPoint position
     {
         const User& user = *m_data[item_hit];
         {
-            switch (coloumn)
+            switch (column)
             {
             case 0: // status
                 m_tiptext = _T("This ");
@@ -184,7 +186,7 @@ void NickListCtrl::SetTipWindowText( const long item_hit, const wxPoint position
                 break;
 
             default:
-                m_tiptext = m_colinfovec[coloumn].tip;
+                m_tiptext = m_colinfovec[column].tip;
                 break;
             }
         }
@@ -209,9 +211,9 @@ void NickListCtrl::HighlightItem( long item )
 int NickListCtrl::GetIndexFromData( const DataType& data ) const
 {
 	const User* user = data;
-	 static long seekpos;
-   seekpos = clamp( seekpos, 0l , (long)m_data.size() );
-   int index = seekpos;
+    static long seekpos;
+    seekpos = clamp( seekpos, 0l , (long)m_data.size() );
+    int index = seekpos;
 
     for ( DataCIter f_idx = m_data.begin() + seekpos; f_idx != m_data.end() ; ++f_idx )
     {
@@ -234,7 +236,6 @@ int NickListCtrl::GetIndexFromData( const DataType& data ) const
         r_index--;
     }
 
-    wxLogError( _T("didn't find the user.") );
     return -1;
 }
 

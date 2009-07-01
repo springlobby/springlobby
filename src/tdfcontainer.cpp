@@ -1,5 +1,7 @@
 #include "tdfcontainer.h"
-#include "utils.h"
+
+#include "utils/conversion.h"
+#include "utils/debug.h"
 #include <wx/intl.h>
 #include <wx/tokenzr.h>
 #include <wx/log.h>

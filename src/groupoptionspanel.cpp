@@ -16,6 +16,7 @@
 #include "useractions.h"
 #include "settings.h"
 #include "uiutils.h"
+#include "utils/controls.h"
 #include "Helper/colorbutton.h"
 #include "selectusersdialog.h"
 

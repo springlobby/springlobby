@@ -22,7 +22,8 @@
 #include "ui.h"
 #include "user.h"
 #include "server.h"
-#include "utils.h"
+#include "utils/debug.h"
+#include "utils/conversion.h"
 #include "uiutils.h"
 #include "countrycodes.h"
 #include "mainwindow.h"
@@ -245,7 +246,7 @@ int BattleroomListCtrl::OnGetItemColumnImage(long item, long column) const
         case 9:
         case 5: return -1;
         default: {
-            wxLogWarning( _T("coloumn oob in battelroomlistctrl OnGetItemColoumnImage") );
+            wxLogWarning( _T("column oob in BattleroomListCtrl::OnGetItemColumnImage") );
             return -1;
         }
     }
@@ -296,7 +297,7 @@ wxString BattleroomListCtrl::OnGetItemText(long item, long column) const
         case 3:
         case 4: return _T("");
         default: {
-            wxLogWarning( _T("coloumn oob in battelroomlistctrl OnGetItemText") );
+            wxLogWarning( _T("column oob in BattleroomListCtrl::OnGetItemText") );
             return _T("");
         }
     }
@@ -689,22 +690,42 @@ void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint po
 
     const User& user = *GetDataFromIndex( item_hit );
 
-    int coloumn = getColoumnFromPosition( position );
-    if (coloumn > (int)m_colinfovec.size() || coloumn < 0)
+    int column = getColumnFromPosition( position );
+    if (column > (int)m_colinfovec.size() || column < 0)
     {
         m_tiptext = _T("");
     }
     else
     {
-        switch (coloumn)
+        switch (column)
         {
         case 0: // is bot?
+            m_tiptext = _("");
+
             if ( user.BattleStatus().IsBot() )
-                m_tiptext = _T("This is an AI controlled Player (bot)");
-            else if  ( user.BattleStatus().spectator )
-                m_tiptext = _T("Spectator");
+                m_tiptext += _("AI (bot)\n");
             else
-                m_tiptext =  _T("Human Player");
+                m_tiptext += _("Human\n");
+
+            if ( user.BattleStatus().spectator )
+                m_tiptext += _("Spectator\n");
+            else
+                m_tiptext += _("Player\n");
+
+            if ( m_battle->IsFounder( user ) )
+                m_tiptext += _("Host\n");
+            else
+                m_tiptext += _("Client\n");
+
+            if ( user.BattleStatus().ready )
+                m_tiptext += _("Ready\n");
+            else
+                m_tiptext += _("Not ready\n");
+
+            if  ( user.BattleStatus().sync == SYNC_SYNCED )
+                m_tiptext += _("In sync");
+            else
+                m_tiptext += _("Not in sync");
             break;
         case 1: // icon
             if ( user.BattleStatus().spectator )
@@ -718,7 +739,7 @@ void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint po
             break;
 
         case 3: // country
-            m_tiptext = user.BattleStatus().IsBot() ? _T("This bot is from nowhere particluar") : GetFlagNameFromCountryCode(user.GetCountry());
+            m_tiptext = user.BattleStatus().IsBot() ? _T("This bot is from nowhere particular") : GetFlagNameFromCountryCode(user.GetCountry());
             break;
         case 4: // rank
             m_tiptext = user.BattleStatus().IsBot() ? _T("This bot has no rank") : user.GetRankName(user.GetStatus().rank);
@@ -729,11 +750,11 @@ void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint po
             break;
 
         case 8: // cpu
-            m_tiptext = user.BattleStatus().IsBot() ? ( user.BattleStatus().aishortname + _T(" ") + user.BattleStatus().aiversion ) : m_colinfovec[coloumn].tip;
+            m_tiptext = user.BattleStatus().IsBot() ? ( user.BattleStatus().aishortname + _T(" ") + user.BattleStatus().aiversion ) : m_colinfovec[column].tip;
             break;
 
         default:
-            m_tiptext =m_colinfovec[coloumn].tip;
+            m_tiptext =m_colinfovec[column].tip;
             break;
         }
     }
@@ -789,10 +810,10 @@ void BattleroomListCtrl::OnActivateItem( wxListEvent& event )
 
 int BattleroomListCtrl::GetIndexFromData(const DataType& data) const
 {
-	const User* user = data;
-	 static long seekpos;
-   seekpos = clamp( seekpos, 0l , (long)m_data.size() );
-   int index = seekpos;
+    const User* user = data;
+    static long seekpos;
+    seekpos = clamp( seekpos, 0l , (long)m_data.size() );
+    int index = seekpos;
 
     for ( DataCIter f_idx = m_data.begin() + seekpos; f_idx != m_data.end() ; ++f_idx )
     {
@@ -814,7 +835,6 @@ int BattleroomListCtrl::GetIndexFromData(const DataType& data) const
         }
         r_index--;
     }
-		wxLogError( _T("didn't find the user.") );
 
     return -1;
 }

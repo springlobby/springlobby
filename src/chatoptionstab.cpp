@@ -34,7 +34,7 @@
 #include "chatoptionstab.h"
 #include "ui.h"
 #include "iunitsync.h"
-#include "utils.h"
+#include "utils/controls.h"
 #include "uiutils.h"
 #include "settings.h"
 #include "spring.h"

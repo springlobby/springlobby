@@ -325,8 +325,8 @@ class Settings
     SortOrder GetSortOrder( const wxString& list_name );
     void SetSortOrder( const wxString& list_name, const SortOrder& order  );
 
-    void SetColumnWidth( const wxString& list_name, const int coloumn_ind, const int coloumn_width );
-    int GetColumnWidth( const wxString& list_name, const int coloumn );
+    void SetColumnWidth( const wxString& list_name, const int column_ind, const int column_width );
+    int GetColumnWidth( const wxString& list_name, const int column );
     //! used to signal unset column width in Get...
     enum { columnWidthUnset };
 

@@ -16,11 +16,13 @@
 
 #include "socket.h"
 #include "server.h"
-#include "utils.h"
+#include "utils/debug.h"
+#include "utils/conversion.h"
 
 #ifdef __WXMSW__
 #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
 #include <windows.h>
+#include <wx/msw/winundef.h>
 #include <iphlpapi.h>
 #pragma comment(lib, "iphlpapi.lib")
 #else

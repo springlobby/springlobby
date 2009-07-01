@@ -22,7 +22,8 @@
 #include "settings.h"
 #include "ui.h"
 #include "images/connect.xpm"
-#include "utils.h"
+#include "utils/controls.h"
+#include "utils/tasutil.h"
 
 #include "settings++/custom_dialogs.h"
 

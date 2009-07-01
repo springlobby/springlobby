@@ -5,11 +5,13 @@
 
 #include "settings.h"
 #include "uiutils.h"
-#include "utils.h"
+#include "utils/debug.h"
+#include "utils/conversion.h"
 #include <wx/dcbuffer.h>
 #include <wx/geometry.h>
 #include <wx/settings.h>
 #include <algorithm>
+#include <wx/log.h>
 
 #include "images/map_select_1.png.h"
 #include "images/map_select_2.png.h"

@@ -8,7 +8,7 @@
 #include <wx/filefn.h>
 
 #include "replaylist.h"
-#include "../utils.h"
+//#include "../utils/.h"
 #include "../settings++/custom_dialogs.h"
 #include "playbacktab.h"
 #include "playbackstructs.h"
@@ -76,5 +76,5 @@ wxString SavegameList::GetScriptFromSavegame ( const wxString& SavegamePath  )
 			if (c) script += c;
 		} while ( ( c != 0 ) && !file.eof() );
 	}
-	return WX_STRING( script );
+	return TowxString( script );
 }

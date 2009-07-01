@@ -1,46 +1,31 @@
-/* Copyright (C) 2007, 2008 The SpringLobby Team. All rights reserved. */
-//
-// File: utils.h
-//
+/* Copyright (C) 2007-2009 The SpringLobby Team. All rights reserved. */
+
+#include "platform.h"
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
 
-#include "utils.h"
-#include "crashreport.h"
-#include "settings.h"
-#include "settings++/custom_dialogs.h"
-
-// FIXME this does not work on linux+mingw build for windows
-#ifdef _MSC_VER
-//#include <windows.h>
-//#include <wx/msw/winundef.h>
-typedef __int64 int64_t;
+#ifndef VERSION
+	#define VERSION "unknown"
 #endif
 
-//for cpu detection
-#include <wx/tokenzr.h>
-#include <wx/regex.h>
-#ifdef __WXMSW__
-#include <wx/msw/registry.h>
-#endif
-#include <wx/intl.h>
-#include <wx/filefn.h>
-#include <wx/dir.h>
-#include <wx/dynlib.h>
+#include <wx/string.h>
 #include <wx/log.h>
+#include <wx/dynlib.h>
 #include <wx/stdpaths.h>
+#include <wx/textfile.h>
 #include <wx/filename.h>
+#include <wx/dir.h>
 
-#include <string>
-#include <algorithm>
-#include <fstream>
-#include <vector>
+#ifdef __WXMSW__
+ #include <wx/msw/registry.h>
+#endif
+
 #include <iostream>
-#include <exception>
-#include <stdexcept>
 
+#include "conversion.h"
+#include "math.h"
 
 wxString GetLibExtension()
 {
@@ -79,7 +64,7 @@ wxLogWindow* InitializeLoggingTargets( wxFrame* parent, bool console, bool showg
             lastlog = logCrashChain;
           }
 
-            #if wxUSE_DEBUGREPORT && defined(HAVE_WX28) && defined(ENABLE_DEBUG_REPORT)
+            #if wxUSE_DEBUGREPORT && defined(ENABLE_DEBUG_REPORT)
               ///hidden stream logging for crash reports
               wxLog *loggercrash = new wxLogStream( &crashreport().crashlog );
               wxLogChain *logCrashChain = new wxLogChain( loggercrash );
@@ -118,85 +103,13 @@ wxLogWindow* InitializeLoggingTargets( wxFrame* parent, bool console, bool showg
 }
 
 
-wxString i2s( int arg )
-{
-    return TowxString(arg);
-}
-
-
-wxString u2s( unsigned int arg )
-{
-    return TowxString(arg);
-}
-
-
-wxString f2s( float arg )
-{
-    return TowxString(arg);
-}
-
-
-long s2l( const wxString& arg )
-{
-    long ret;
-    arg.ToLong(&ret);
-    return ret;
-}
-
-double s2d( const wxString& arg )
-{
-    double ret;
-    arg.ToDouble(&ret);
-    return ret;
-}
-
-wxString GetWordParam( wxString& params )
-{
-	return GetParamByChar( params, _T(' ') );
-}
-
-
-wxString GetSentenceParam( wxString& params )
-{
-   return GetParamByChar( params, _T('\t') );
-}
-
-
-long GetIntParam( wxString& params )
-{
-   return s2l( GetParamByChar( params, _T(' ') ) );
-}
-
-wxString GetParamByChar( wxString& params, const wxChar& sep )
-{
-	int pos = params.Find( sep );
-	wxString ret;
-	if ( pos != -1 )
-	{
-		ret = params.Left( pos );
-		params = params.Mid( pos + 1 );
-	}
-	else
-	{
-		ret = params;
-		params = _T("");
-	}
-	return ret;
-}
-
-
-bool GetBoolParam( wxString& params )
-{
-    return (bool)GetIntParam( params );
-}
-
 
 wxString GetSpringLobbyVersion()
 {
 #ifndef AUX_VERSION
-    return (WX_STRINGC(VERSION)).BeforeFirst( _T(' ') );
+    return (TowxString(VERSION)).BeforeFirst( _T(' ') );
 #else
-    return (WX_STRINGC(VERSION)).BeforeFirst( _T(' ') ) + WX_STRINGC(AUX_VERSION);
+    return (TowxString(VERSION)).BeforeFirst( _T(' ') ) + TowxString(AUX_VERSION);
 #endif
 
 }
@@ -206,24 +119,6 @@ wxString GetExecutableFolder()
 	return wxStandardPathsBase::Get().GetExecutablePath().BeforeLast( wxFileName::GetPathSeparator() );
 }
 
-template<class T>
-T FromwxString(const wxString& arg){
-  std::stringstream s;
-  s << STD_STRING(arg);
-  int64_t ret;
-  s >> ret;
-  return (T)ret;
-}
-
-wxString MakeHashUnsigned( const wxString& hash )
-{
-	return TowxString( FromwxString<unsigned int>( hash ) );
-}
-
-wxString MakeHashSigned( const wxString& hash )
-{
-	return TowxString( FromwxString<int>( hash ) );
-}
 
 // ------------------------------------------------------------------------------------------------------------------------
 ///
@@ -273,96 +168,9 @@ wxString GetHostCPUSpeed()
       }
     }
 #endif
-    return i2s( clamp( max_cpu_speed,0,max_cpu_speed ) );
+    return TowxString( clamp( max_cpu_speed,0,max_cpu_speed ) );
 }
 
-
-//int CompareStringIgnoreCase(const wxString& first, const wxString& second)
-//{
-//    return (first.Upper() > second.Upper() );
-//}
-
-bool IsValidNickname( const wxString& _name )
-{
-    wxString name = _name;
-    // The Regex Container
-    //wxRegEx regex( wxT("[:graph:]") );
-    wxRegEx regex( wxT("[ \t\r\n\v\föäüß, .:<>\\!§$%&+-]" ));
-
-    // We need to escape all regular Expression Characters, that have a special Meaning
-    name.Replace( _T("["), _T("") );
-    name.Replace( _T("]"), _T("") );
-
-    if ( name.IsEmpty() ) return false;
-
-    return !regex.Matches( name );
-}
-
-const wxChar* TooltipEnable(const wxChar* input)
-{
-    return sett().GetShowTooltips() ? input : _T("");
-}
-
-
-double LevenshteinDistance(wxString s, wxString t)
-{
-    s.MakeLower(); // case insensitive edit distance
-    t.MakeLower();
-
-    const int m = s.length(), n = t.length(), _w = m + 1;
-    std::vector<unsigned char> _d((m + 1) * (n + 1));
-#define D(x, y) _d[(y) * _w + (x)]
-
-    for (int i = 0; i <= m; ++i) D(i,0) = i;
-    for (int j = 0; j <= n; ++j) D(0,j) = j;
-
-    for (int i = 1; i <= m; ++i)
-    {
-        for (int j = 1; j <= n; ++j)
-        {
-            const int cost = (s[i - 1] != t[j - 1]);
-            D(i,j) = min(D(i-1,j) + 1, // deletion
-                         D(i,j-1) + 1, // insertion
-                         D(i-1,j-1) + cost); // substitution
-        }
-    }
-    double d = (double) D(m,n) / std::max(m, n);
-    wxLogMessage( _T("LevenshteinDistance('%s', '%s') = %g"), s.c_str(), t.c_str(), d );
-    return d;
-#undef D
-}
-
-wxString GetBestMatch(const wxArrayString& a, const wxString& s, double* distance )
-{
-    const unsigned int count = a.GetCount();
-    double minDistance = 1.0;
-    int minDistanceIndex = -1;
-    for (unsigned int i = 0; i < count; ++i)
-    {
-        const double distance = LevenshteinDistance(a[i], s);
-        if (distance < minDistance)
-        {
-            minDistance = distance;
-            minDistanceIndex = i;
-        }
-    }
-    if (distance != NULL) *distance = minDistance;
-    if (minDistanceIndex == -1) return _T("");
-    return a[minDistanceIndex];
-}
-
-int ConvertWXArrayToC(const wxArrayString& aChoices, wxString **choices)
-{
-    int n = aChoices.GetCount();
-    *choices = new wxString[n];
-
-    for ( int i = 0; i < n; i++ )
-    {
-        (*choices)[i] = aChoices[i];
-    }
-
-    return n;
-}
 
 // copied from http://wxforum.shadonet.com/viewtopic.php?t=2080
 //slightly modified
@@ -431,6 +239,7 @@ bool IsUACenabled()
 
 #ifdef __WXMSW__
 #include <windows.h>
+#include <wx/msw/winundef.h>
 #include <shellapi.h>
 
 int WinExecuteAdmin( const wxString& command, const wxString& params )
@@ -441,9 +250,14 @@ int WinExecuteAdmin( const wxString& command, const wxString& params )
 
       shExecInfo.fMask = NULL;
       shExecInfo.hwnd = NULL;
-      shExecInfo.lpVerb = L"runas";
-      shExecInfo.lpFile = command.wc_str();
+      shExecInfo.lpVerb = _T("runas");
+#ifdef _MSC_VER //some strange compiler stupidity going on here
+      shExecInfo.lpFile = command.c_str();
+      shExecInfo.lpParameters = params.c_str();
+#else
+	  shExecInfo.lpFile = command.wc_str();
       shExecInfo.lpParameters = params.wc_str();
+#endif
       shExecInfo.lpDirectory = NULL;
       shExecInfo.nShow = SW_MAXIMIZE;
       shExecInfo.hInstApp = NULL;
@@ -452,5 +266,4 @@ int WinExecuteAdmin( const wxString& command, const wxString& params )
 
       return 0;
 }
-
 #endif

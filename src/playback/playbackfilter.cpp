@@ -21,7 +21,8 @@
 #include "../battlelistctrl.h"
 #include "../battle.h"
 #include "../uiutils.h"
-#include "../utils.h"
+#include "../utils/tasutil.h"
+#include "../utils/conversion.h"
 #include "../settings.h"
 
 

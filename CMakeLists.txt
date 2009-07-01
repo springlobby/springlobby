@@ -12,6 +12,11 @@ ENDIF(NOT MSVC)
 IF(WIN32)
 	ADD_DEFINITIONS( -DWXUSINGDLL -D__WXMSW__ -D_WIN32_WINNT=0x0501)
 ENDIF(WIN32)
+IF(MSVC)
+	ADD_DEFINITIONS(-D_RC_MSVC)
+ENDIF(MSVC)
+
+
 
 
 
@@ -202,6 +207,14 @@ ENDIF( OPTION_TORRENT_SYSTEM )
 INCLUDE_DIRECTORIES(${SpringLobby_SOURCE_DIR} ${Settings_SOURCE_DIR} )
 
 SET(SpringLobbySrc
+	src/utils/math.cpp
+	src/utils/misc.cpp
+	src/utils/debug.cpp
+	src/utils/platform.cpp
+	src/utils/conversion.cpp
+	src/utils/tasutil.cpp
+	src/utils/sltipwin.cpp
+	src/utils/controls.cpp
 	src/boost/md5.cpp
 	src/updater/updater.cpp
 	src/updater/versionchecker.cpp
@@ -294,7 +307,6 @@ SET(SpringLobbySrc
 	src/useractions.cpp
 	src/userlist.cpp
 	src/userlistctrl.cpp
-	src/utils.cpp
 	src/widgets/downloadlistctrl.cpp
 	src/widgets/downloaddialog.cpp
 	src/widgets/downloadpanel.cpp
@@ -306,6 +318,11 @@ SET(SpringLobbySrc
 )
 
 SET(SettingsSrc
+	src/utils/debug.cpp
+	src/utils/platform.cpp
+	src/utils/conversion.cpp
+	src/utils/sltipwin.cpp
+	src/utils/controls.cpp
 	src/settings++/custom_dialogs.cpp
 	src/settings++/frame.cpp
 	src/settings++/helpmenufunctions.cpp
@@ -322,7 +339,6 @@ SET(SettingsSrc
 
 SET(StandAloneSettings
 	src/settings.cpp
-	src/utils.cpp
 	src/uiutils.cpp
 	src/settings++/Main.cpp
 )

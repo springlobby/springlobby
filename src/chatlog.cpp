@@ -14,7 +14,7 @@
 
 #include "chatlog.h"
 #include "settings.h"
-#include "utils.h"
+#include "utils/conversion.h"
 
 #include "settings++/custom_dialogs.h"
 

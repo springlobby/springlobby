@@ -13,12 +13,13 @@
 #include "config.h"
 #endif
 
-#include "utils.h"
+#include "utils/debug.h"
+#include "utils/conversion.h"
+#include "utils/math.h"
 #include "uiutils.h"
 #include "mapctrl.h"
 #include "iunitsync.h"
 #include "user.h"
-#include "utils.h"
 #include "ui.h"
 #include "server.h"
 #include "ibattle.h"
@@ -1080,8 +1081,8 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
 
             user.BattleStatus().pos.x = (int)( ( (double)(event.GetX() - mr.x) / (double)mr.width ) * (double)m_map.info.width );
             user.BattleStatus().pos.y = (int)( ( (double)(event.GetY() - mr.y) / (double)mr.height ) * (double)m_map.info.height );
-            CLAMP( user.BattleStatus().pos.x, 0, m_map.info.width );
-            CLAMP( user.BattleStatus().pos.y, 0, m_map.info.height );
+            user.BattleStatus().pos.x = clamp( user.BattleStatus().pos.x, 0, m_map.info.width );
+            user.BattleStatus().pos.y = clamp( user.BattleStatus().pos.y, 0, m_map.info.height );
 
             int x, y, index, range;
             GetClosestStartPos( user.BattleStatus().pos.x, user.BattleStatus().pos.y, index, x, y, range );

@@ -13,7 +13,7 @@
 #include "iconimagelist.h"
 #include "user.h"
 #include "battle.h"
-#include "utils.h"
+//#include "utils.h"
 #include "iunitsync.h"
 
 #include "images/bot.xpm"

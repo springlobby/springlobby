@@ -6,7 +6,7 @@
 #include <wx/log.h>
 
 #include "playbackstructs.h"
-#include "../utils.h"
+//#include "../utils.h"
 #include "../user.h"
 #include "../iconimagelist.h"
 #include "../uiutils.h"
@@ -148,14 +148,14 @@ void PlaybackListCtrl<PlaybackType>::SetTipWindowText( const long item_hit, cons
 
     const PlaybackType& replay = *GetDataFromIndex( item_hit );
 
-    int coloumn = getColoumnFromPosition( position );
-    if (coloumn > (int)m_colinfovec.size() || coloumn < 0)
+    int column = getColumnFromPosition( position );
+    if (column > (int)m_colinfovec.size() || column < 0)
     {
         m_tiptext = _T("");
     }
     else
     {
-        switch (coloumn) {
+        switch (column) {
             case 0: // date
             m_tiptext = replay.date;
                 break;

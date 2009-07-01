@@ -20,7 +20,8 @@
 #include "settings.h"
 #include "uiutils.h"
 #include "groupoptionspanel.h"
-#include "utils.h"
+#include "utils/debug.h"
+#include "utils/conversion.h"
 
 #ifndef NO_TORRENT_SYSTEM
 #include "torrentoptionspanel.h"

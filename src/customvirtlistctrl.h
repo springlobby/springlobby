@@ -28,7 +28,7 @@ class SLTipWindow;
 
 
 /** \brief Used as base class for some ListCtrls throughout SL
- * Provides generic functionality, such as column tooltips, possiblity to prohibit coloumn resizing and selection modifiers. \n
+ * Provides generic functionality, such as column tooltips, possiblity to prohibit column resizing and selection modifiers. \n
  * Some of the provided functionality only makes sense for single-select lists (see grouping) \n
  * Note: the second template param is actually just a dummy to ensure the compiler generates distinct code in case we have different listctrls with same datatype
  * Note: Tooltips are a bitch and anyone should feel free to revise them (koshi)
@@ -54,7 +54,7 @@ protected:
     SLTipWindow* m_tipwindow;
     SLTipWindow** m_controlPointer;
     #endif
-    unsigned int m_coloumnCount;
+    unsigned int m_columnCount;
 
     struct colInfo {
         colInfo(int n, wxString l, wxString t, bool c, int s):
@@ -90,7 +90,7 @@ protected:
     //! stores info about the columns (wxString name,bool isResizable) - pairs
     colInfoVec m_colinfovec;
     //! primarily used to get coulumn index in mousevents (from cur. mouse pos)
-    int getColoumnFromPosition(wxPoint pos);
+    int getColumnFromPosition(wxPoint pos);
 
     //! map: index in visible list <--> index in data vector
     typedef std::map<int,int> VisibilityMap;
@@ -249,7 +249,7 @@ public:
     void noOp(wxMouseEvent& event);
     //! automatically get saved column width if already saved, otherwise use parameter and save new width
     virtual bool SetColumnWidth(int col, int width);
-    //! reset columns with current set size (only effects coloumns with auto-size)
+    //! reset columns with current set size (only effects columns with auto-size)
     void ResetColumnSizes();
 
     // funcs that should make things easier for group highlighting

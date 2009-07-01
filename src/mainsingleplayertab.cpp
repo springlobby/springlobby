@@ -16,7 +16,8 @@
 #include "mainsingleplayertab.h"
 #include "battleroommmoptionstab.h"
 #include "ui.h"
-#include "utils.h"
+#include "utils/debug.h"
+#include "utils/conversion.h"
 
 #include "images/battle.xpm"
 #include "images/battle_settings.xpm"

@@ -16,7 +16,9 @@
 #include <cmath>
 
 #include "uiutils.h"
-#include "utils.h"
+#include "utils/math.h"
+#include "utils/conversion.h"
+#include "utils/debug.h"
 #include "settings++/custom_dialogs.h"
 #include "settings.h"
 
@@ -145,14 +147,14 @@ wxColour GetColorFromFloatStrng( const wxString color )
 {
     wxString c = color;
     float r = 0, g = 0, b = 0;
-    r = s2d(c.BeforeFirst( ' ' ));
+    r = FromwxString<double>(c.BeforeFirst( ' ' ));
     c = c.AfterFirst( ' ' );
-    g = s2d( c.BeforeFirst( ' ' ));
+    g = FromwxString<double>( c.BeforeFirst( ' ' ));
     c = c.AfterFirst( ' ' );
-    b = s2d(c.BeforeFirst( ' ' ));
-    CLAMP( r, 0, 1  );
-    CLAMP( g, 0, 1  );
-    CLAMP( b, 0, 1  );
+    b = FromwxString<double>(c.BeforeFirst( ' ' ));
+    r = clamp( r, 0.f, 1.f  );
+    g = clamp( g, 0.f, 1.f  );
+    b = clamp( b, 0.f, 1.f  );
     return wxColour( (unsigned char)(r*256), (unsigned char)(g*256), (unsigned char)(b*256) );
 }
 
@@ -371,10 +373,10 @@ wxImage ReplaceChannelStatusColour( wxBitmap img, const wxColour& colour )
   wxImage::HSVValue origcolour = wxImage::RGBtoHSV( wxImage::RGBValue::RGBValue( colour.Red(), colour.Green(), colour.Blue() ) );
 
   double bright = origcolour.value - 0.1*origcolour.value;
-  CLAMP(bright,0,1);
+  bright = clamp( bright, 0.0, 1.0 );
   wxImage::HSVValue hsvdarker1( origcolour.hue, origcolour.saturation, bright );
   bright = origcolour.value - 0.5*origcolour.value;
-  CLAMP(bright,0,1);
+  bright = clamp( bright, 0.0, 1.0 );
   wxImage::HSVValue hsvdarker2( origcolour.hue, origcolour.saturation, bright );
 
   wxImage::RGBValue rgbdarker1 = wxImage::HSVtoRGB( hsvdarker1 );
@@ -405,17 +407,6 @@ wxSize MakeFit(const wxSize &original, const wxSize &bounds)
     return wxSize( bounds.GetWidth(), sizey );
   }
 }
-
-#if wxUSE_TIPWINDOW
-BEGIN_EVENT_TABLE(SLTipWindow, wxTipWindow)
-  EVT_MOUSEWHEEL(SLTipWindow::Cancel)
-END_EVENT_TABLE()
-
-void SLTipWindow::Cancel(wxMouseEvent& event)
-{
-  wxTipWindow::Close();
-}
-#endif
 
 void CopyToClipboard( const wxString& text )
 {
