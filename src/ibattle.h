@@ -417,11 +417,6 @@ protected:
 		bool m_autocontrol_balance;
 		bool m_autocontrol_autostart;
 		bool m_autocontrol_autospec;
-		int m_autocontrol_team_sizes;
-		int m_autocontrol_ally_sizes;
-		BalanceType m_autocontrol_balance_mode;
-		bool m_autocontrol_support_clans;
-		bool m_autocontrol_support_strong_clans;
 
     wxString m_preset;
 

@@ -323,6 +323,16 @@ void IBattle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 			 else m_players_sync--;
 		}
 	}
+
+	if ( m_autocontrol_balance )
+	{
+		if ( ShouldAutoStart() )
+		{
+			FixTeamIDs( (IBattle::BalanceType)sett().GetFixIDMethod(), sett().GetFixIDClans(), sett().GetFixIDStrongClans(), sett().GetFixIDGrouping() );
+			Autobalance( (IBattle::BalanceType)sett().GetBalanceMethod(), sett().GetBalanceClans(), sett().GetBalanceStrongClans(), sett().GetBalanceGrouping() );
+			FixColours();
+		}
+	}
 }
 
 bool IBattle::ShouldAutoStart()
