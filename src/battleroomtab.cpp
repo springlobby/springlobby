@@ -712,7 +712,7 @@ void BattleRoomTab::OnAutoStart( wxCommandEvent& event )
 
 void BattleRoomTab::OnAutoSpec( wxCommandEvent& event )
 {
-	int trigger = wxGetNumberFromUser( _("Enter timeout before autospeccing a player in minutes"), _("Set Timeout"), _T(""), sett().GetBattleLastAutoSpectTime(), 1, 60, (wxWindow*)&ui().mw(), wxDefaultPosition );
+	int trigger = wxGetNumberFromUser( _("Enter timeout before autospeccing a player in minutes"), _("Set Timeout"), _T(""), sett().GetBattleLastAutoSpectTime() / 60, 1, 60, (wxWindow*)&ui().mw(), wxDefaultPosition );
 	if ( trigger < 0 ) trigger = 0;
 	trigger = trigger * 60;
 	m_autospec_mnu->Check( trigger > 0 );
