@@ -319,6 +319,7 @@
 		<Unit filename="src/nicklistctrl.cpp" />
 		<Unit filename="src/nicklistctrl.h" />
 		<Unit filename="src/nonportable.h" />
+		<Unit filename="src/offlinebattle.cpp" />
 		<Unit filename="src/playback/playbackfilter.h" />
 		<Unit filename="src/playback/playbackfiltervalues.h" />
 		<Unit filename="src/playback/playbacklist.h" />
