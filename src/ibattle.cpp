@@ -342,7 +342,7 @@ void IBattle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 				m_ready_up_map.erase( itor );
 			}
 		}
-		else
+		if ( ( !status.ready || !status.sync ) && !status.spectator )
 		{
 			std::map<wxString, time_t>::iterator itor = m_ready_up_map.find( user.GetNick() );
 			if ( itor == m_ready_up_map.end() )
@@ -556,7 +556,6 @@ void IBattle::Autobalance( BalanceType balance_type, bool support_clans, bool st
     wxLogMessage(_T("Autobalancing alliances, type=%d, clans=%d, strong_clans=%d, numallyteams=%d"),balance_type, support_clans,strong_clans, numallyteams);
     //size_t i;
     //int num_alliances;
-    CLAMP( numallyteams, 0, 16 ); // 16 max ally teams currently supported by spring
     std::vector<Alliance>alliances;
     if ( numallyteams == 0 ) // 0 == use num start rects
     {
@@ -725,7 +724,6 @@ void IBattle::FixTeamIDs( BalanceType balance_type, bool support_clans, bool str
       }
       catch( assert_exception ) {}
     }
-    numcontrolteams = std::min( numcontrolteams, 16 ); // clamp to 16 (max spring supports)
 
     if ( numcontrolteams >= (int)( GetNumUsers() - GetSpectators() ) ) // autobalance behaves weird when trying to put one player per team and i CBA to fix it, so i'll reuse the old code :P
     {
@@ -1642,27 +1640,25 @@ void IBattle::GetBattleFromScript( bool loadmapmod )
 
 void IBattle::OnTimer( wxTimerEvent& event )
 {
+	if ( !IsFounderMe() ) return;
 	int autospect_trigger_time = sett().GetBattleLastAutoSpectTime();
 	if ( autospect_trigger_time == 0 ) return;
 	time_t now = time(0);
 	for ( unsigned int i = 0; i < GetNumUsers(); i++)
 	{
-		try
+		User& usr = GetUser( i );
+		UserBattleStatus& status = usr.BattleStatus();
+		if ( status.IsBot() || status.spectator ) continue;
+		if ( status.sync && status.ready ) continue;
+		if ( &usr == &GetMe() ) continue;
+		std::map<wxString, time_t>::iterator itor = m_ready_up_map.find( usr.GetNick() );
+		if ( itor != m_ready_up_map.end() )
 		{
-			User& usr = GetUser( i );
-			UserBattleStatus& status = usr.BattleStatus();
-			if ( status.IsBot() || status.spectator ) continue;
-			if ( status.sync && status.ready ) continue;
-			if ( &usr == &GetMe() ) continue;
-			std::map<wxString, time_t>::iterator itor = m_ready_up_map.find( usr.GetNick() );
-			if ( itor != m_ready_up_map.end() )
+			if ( ( now - itor->second ) > autospect_trigger_time )
 			{
-				if ( ( now - itor->second ) > autospect_trigger_time )
-				{
-					ForceSpectator( usr, true );
-				}
+				ForceSpectator( usr, true );
 			}
 		}
-		catch(...){}
 	}
 }
+
