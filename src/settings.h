@@ -560,6 +560,9 @@ class Settings
 		int GetBattleLastAutoSpectTime();
     void SetBattleLastAutoSpectTime( int value );
 
+    bool GetBattleLastAutoAnnounceDescription();
+    void SetBattleLastAutoAnnounceDescription( bool value );
+
     struct SettStartBox
     {
     	int ally;

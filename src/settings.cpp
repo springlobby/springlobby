@@ -1669,6 +1669,16 @@ void Settings::SetBattleLastAutoSpectTime( int value )
 	m_config->Write( _T("/Hosting/AutoSpectTime") ,value );
 }
 
+bool Settings::GetBattleLastAutoAnnounceDescription()
+{
+	return m_config->Read( _T("/Hosting/AutoAnnounceDescription") , 0l );
+}
+
+void Settings::SetBattleLastAutoAnnounceDescription( bool value )
+{
+	m_config->Write( _T("/Hosting/AutoAnnounceDescription") , value );
+}
+
 void Settings::SetMapLastStartPosType( const wxString& mapname, const wxString& startpostype )
 {
 		m_config->Write( _T("/Hosting/MapLastValues/") + mapname + _T("/startpostype"), startpostype );
