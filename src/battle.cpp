@@ -306,6 +306,28 @@ void Battle::RingNotReadyPlayers()
     }
 }
 
+void Battle::RingNotSyncedPlayers()
+{
+    for (user_map_t::size_type i = 0; i < GetNumUsers(); i++)
+    {
+        User& u = GetUser(i);
+        UserBattleStatus& bs = u.BattleStatus();
+        if ( bs.IsBot() ) continue;
+        if ( !bs.sync && !bs.spectator ) m_serv.Ring( u.GetNick() );
+    }
+}
+
+void Battle::RingNotSyncedAndNotReadyPlayers()
+{
+    for (user_map_t::size_type i = 0; i < GetNumUsers(); i++)
+    {
+        User& u = GetUser(i);
+        UserBattleStatus& bs = u.BattleStatus();
+        if ( bs.IsBot() ) continue;
+        if ( ( !bs.sync || !bs.ready ) && !bs.spectator ) m_serv.Ring( u.GetNick() );
+    }
+}
+
 void Battle::RingPlayer( const User& u )
 {
 	if ( u.BattleStatus().IsBot() ) return;
@@ -920,7 +942,33 @@ void Battle::ForceUnsyncedToSpectate()
     for ( size_t i = 0; i < numusers; ++i )
     {
         User &user = GetUser(i);
-        if ( !user.BattleStatus().spectator && !user.BattleStatus().sync ) ForceSpectator( user, true );
+        UserBattleStatus& bs = user.BattleStatus();
+        if ( bs.IsBot() ) continue;
+        if ( !bs.spectator && !bs.sync ) ForceSpectator( user, true );
+    }
+}
+
+void Battle::ForceUnReadyToSpectate()
+{
+    size_t numusers = GetNumUsers();
+    for ( size_t i = 0; i < numusers; ++i )
+    {
+        User &user = GetUser(i);
+        UserBattleStatus& bs = user.BattleStatus();
+        if ( bs.IsBot() ) continue;
+        if ( !bs.spectator && !bs.ready ) ForceSpectator( user, true );
+    }
+}
+
+void Battle::ForceUnsyncedAndUnreadyToSpectate()
+{
+    size_t numusers = GetNumUsers();
+    for ( size_t i = 0; i < numusers; ++i )
+    {
+        User &user = GetUser(i);
+        UserBattleStatus& bs = user.BattleStatus();
+        if ( bs.IsBot() ) continue;
+				if ( !bs.spectator && ( !bs.sync || !bs.ready ) ) ForceSpectator( user, true );
     }
 }
 

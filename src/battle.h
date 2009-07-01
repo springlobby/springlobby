@@ -40,6 +40,8 @@ class Battle : public IBattle
     void KickPlayer( User& user );
 
     void RingNotReadyPlayers();
+    void RingNotSyncedPlayers();
+    void RingNotSyncedAndNotReadyPlayers();
     void RingPlayer( const User& u );
 
     void Say( const wxString& msg );
@@ -68,7 +70,10 @@ class Battle : public IBattle
 
     void Autobalance( BalanceType balance_type = balance_divide, bool clans = true, bool strong_clans = true, int allyteamsize = 0 );
     void FixTeamIDs( BalanceType balance_type = balance_divide, bool clans = true, bool strong_clans = true, int controlteamsize = 0 );
+
     void ForceUnsyncedToSpectate();
+    void ForceUnReadyToSpectate();
+    void ForceUnsyncedAndUnreadyToSpectate();
 
     void SetAutoLockOnStart( bool value );
     bool GetAutoLockOnStart();

@@ -80,6 +80,15 @@ BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
     EVT_BUTTON( BROOM_MANAGE_MENU, BattleRoomTab::OnShowManagePlayersMenu )
 
 		EVT_MENU( BROOM_AUTOHOST, BattleRoomTab::OnAutoHost )
+
+		EVT_MENU( BROOM_RING_UNREADY, BattleRoomTab::OnRingUnready )
+		EVT_MENU( BROOM_RING_UNSYNC, BattleRoomTab::OnRingUnsynced )
+		EVT_MENU( BROOM_RING_UNREADY_UNSYNC, BattleRoomTab::OnRingUnreadyUnsynced )
+
+		EVT_MENU( BROOM_SPECT_UNREADY, BattleRoomTab::OnSpectUnready )
+		EVT_MENU( BROOM_SPECT_UNSYNC, BattleRoomTab::OnSpectUnsynced )
+		EVT_MENU( BROOM_SPECT_UNREADY_UNSYNC, BattleRoomTab::OnSpectUnreadyUnsynced )
+
     EVT_MENU( BROOM_LOCK_BALANCE, BattleRoomTab::OnLockBalance )
     EVT_MENU ( BROOM_BALANCE, BattleRoomTab::OnBalance )
     EVT_MENU ( BROOM_FIXID, BattleRoomTab::OnFixTeams )
@@ -190,6 +199,24 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
     m_lock_balance_mnu = new wxMenuItem( m_manage_users_mnu, BROOM_LOCK_BALANCE, _( "Lock Balance" ), _("When activated, prevents anyone but the host to change team and ally"), wxITEM_CHECK );
     m_manage_users_mnu->Append( m_lock_balance_mnu );
     m_lock_balance_mnu->Check( false );
+
+    wxMenu* ring_menu = new wxMenu;
+    wxMenuItem* ring_unready = new wxMenuItem( ring_menu, BROOM_RING_UNREADY, _( "Ring unready" ), _("Rings all players that don't have ready status and aren't spectators") );
+    ring_menu->Append( ring_unready );
+    wxMenuItem* ring_unsynced = new wxMenuItem( ring_menu, BROOM_RING_UNSYNC, _( "Ring unsynced" ), _("Rings all players that don't have sync status and aren't spectators") );
+    ring_menu->Append( ring_unsynced );
+    wxMenuItem* ring_unready_unsynced = new wxMenuItem( ring_menu, BROOM_RING_UNREADY_UNSYNC, _( "Ring unready and unsynced" ), _("Rings all players that don't have sync status or don't have ready status and aren't spectators") );
+    ring_menu->Append( ring_unready_unsynced );
+    m_manage_users_mnu->Append( wxID_ANY, _("Ring ..."), ring_menu );
+
+    wxMenu* spect_menu = new wxMenu;
+    wxMenuItem* spect_unready = new wxMenuItem( spect_menu, BROOM_SPECT_UNREADY, _( "Spect unready" ), _("Force to spectate all players that don't have ready status") );
+    spect_menu->Append( spect_unready );
+    wxMenuItem* spect_unsynced = new wxMenuItem( spect_menu, BROOM_SPECT_UNSYNC, _( "Spect unsynced" ), _("Force to spectate all players that don't have sync status") );
+    spect_menu->Append( spect_unsynced );
+    wxMenuItem* spect_unready_unsynced = new wxMenuItem( spect_menu, BROOM_SPECT_UNREADY_UNSYNC, _( "Force to spectate unready and unsynced" ), _("Rings all players that don't have sync status or don't have ready status") );
+    spect_menu->Append( spect_unready_unsynced );
+    m_manage_users_mnu->Append( wxID_ANY, _("Force spectate ..."), spect_menu );
 
     wxMenuItem* m_balance_mnu = new wxMenuItem( m_manage_users_mnu, BROOM_BALANCE, _( "Balance alliances" ), _("Automatically balance players into two or more alliances") );
     m_manage_users_mnu->Append( m_balance_mnu );
@@ -717,6 +744,36 @@ void BattleRoomTab::OnLockBalance( wxCommandEvent& event )
   bool locked = m_lock_balance_mnu->IsChecked();
   m_battle.SetLockExternalBalanceChanges( locked );
 }
+
+void BattleRoomTab::OnSpectUnsynced( wxCommandEvent& event )
+{
+	m_battle.ForceUnsyncedToSpectate();
+}
+
+void BattleRoomTab::OnSpectUnready( wxCommandEvent& event )
+{
+	m_battle.ForceUnReadyToSpectate();
+}
+void BattleRoomTab::OnSpectUnreadyUnsynced( wxCommandEvent& event )
+{
+	m_battle.ForceUnsyncedAndUnreadyToSpectate();
+}
+
+void BattleRoomTab::OnRingUnready( wxCommandEvent& event )
+{
+	m_battle.RingNotReadyPlayers();
+}
+
+void BattleRoomTab::OnRingUnsynced( wxCommandEvent& event )
+{
+	m_battle.RingNotSyncedPlayers();
+}
+
+void BattleRoomTab::OnRingUnreadyUnsynced( wxCommandEvent& event )
+{
+	m_battle.RingNotSyncedAndNotReadyPlayers();
+}
+
 
 void BattleRoomTab::OnShowManagePlayersMenu( wxCommandEvent& event )
 {

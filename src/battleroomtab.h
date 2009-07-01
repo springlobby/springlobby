@@ -76,6 +76,15 @@ class BattleRoomTab : public wxScrolledWindow
 		void OnMapSelect( wxCommandEvent& event );
 		void OnOptionActivate( wxListEvent& event );
 
+		void OnSpectUnsynced( wxCommandEvent& event );
+		void OnSpectUnready( wxCommandEvent& event );
+		void OnSpectUnreadyUnsynced( wxCommandEvent& event );
+
+		void OnRingUnready( wxCommandEvent& event );
+		void OnRingUnsynced( wxCommandEvent& event );
+		void OnRingUnreadyUnsynced( wxCommandEvent& event );
+
+
     void OnUserJoined( User& user );
     void OnUserLeft( User& user );
 
@@ -185,7 +194,13 @@ class BattleRoomTab : public wxScrolledWindow
 				BROOM_SETDEFAULTPRES,
 				BROOM_MAP_BROWSE,
 				BROOM_MAP_SEL,
-				BROOM_OPTIONLIST
+				BROOM_OPTIONLIST,
+				BROOM_RING_UNREADY,
+				BROOM_RING_UNSYNC,
+				BROOM_RING_UNREADY_UNSYNC,
+				BROOM_SPECT_UNREADY,
+				BROOM_SPECT_UNSYNC,
+				BROOM_SPECT_UNREADY_UNSYNC
     };
 
     DECLARE_EVENT_TABLE();
