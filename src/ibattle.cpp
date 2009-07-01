@@ -3,6 +3,7 @@
 #include <wx/tokenzr.h>
 #include <wx/image.h>
 #include <sstream>
+#include <wx/timer.h>
 
 #include "ibattle.h"
 #include "utils.h"
@@ -17,6 +18,12 @@
 #include <cmath>
 #include <set>
 
+const unsigned int TIMER_ID         = 101;
+
+BEGIN_EVENT_TABLE(IBattle, wxEvtHandler)
+    EVT_TIMER(TIMER_ID, IBattle::OnTimer)
+END_EVENT_TABLE()
+
 IBattle::IBattle():
   m_map_loaded(false),
   m_mod_loaded(false),
@@ -24,14 +31,18 @@ IBattle::IBattle():
   m_mod_exists(false),
   m_ingame(false),
   m_generating_script(false),
-  m_is_self_in(false)
-
+	m_players_ready(0),
+	m_players_sync(0),
+  m_is_self_in(false),
+	m_timer ( new wxTimer(this, TIMER_ID) )
 {
 }
 
 
 IBattle::~IBattle()
 {
+	m_timer->Stop();
+	delete m_timer;
 }
 
 bool IBattle::IsSynced()
@@ -228,8 +239,10 @@ User& IBattle::OnUserAdded( User& user )
 			m_teams_sizes[bs.team] = m_teams_sizes[bs.team] + 1;
 			m_ally_sizes[bs.ally] = m_ally_sizes[bs.ally] + 1;
 		}
+		if ( bs.spectator ) m_opts.spectators++;
 		if ( bs.ready && !bs.IsBot() ) m_players_ready++;
 		if ( bs.sync && !bs.IsBot() ) m_players_sync++;
+		if ( !bs.spectator && !bs.IsBot() && ( !bs.ready || !bs.sync ) ) m_ready_up_map[user.GetNick()] = time(0);
     return user;
 }
 
@@ -270,14 +283,10 @@ void IBattle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 					if ( status.spectator )
 					{
 							m_opts.spectators++;
-							if ( previousstatus.ready && !status.IsBot() ) m_players_ready--;
-							if ( previousstatus.sync && !status.IsBot() ) m_players_sync--;
 					}
 					else
 					{
 							m_opts.spectators--;
-							if ( status.ready && !status.IsBot() ) m_players_sync++;
-							if ( status.sync && !status.IsBot() ) m_players_sync++;
 					}
 					SendHostInfo( HI_Spectators );
 			}
@@ -286,29 +295,30 @@ void IBattle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 				if ( previousstatus.team != status.team ) ForceTeam( user, previousstatus.team );
 				if ( previousstatus.ally != status.ally ) ForceAlly( user, previousstatus.ally );
 			}
-			else
-			{
-				if ( status.spectator != previousstatus.spectator )
-				{
-					if ( !status.spectator )
-					{
-						m_teams_sizes[status.team] = m_teams_sizes[status.team] + 1;
-						m_ally_sizes[status.ally] = m_ally_sizes[status.ally] + 1;
-					}
-					else
-					{
-						m_teams_sizes[status.team] = m_teams_sizes[status.team] - 1;
-						m_ally_sizes[status.ally] = m_ally_sizes[status.ally] - 1;
-					}
-				}
-				else
-				{
-					m_teams_sizes[previousstatus.team] = m_teams_sizes[previousstatus.team] - 1;
-					m_teams_sizes[status.team] = m_teams_sizes[status.team] + 1;
-					m_ally_sizes[previousstatus.ally] = m_ally_sizes[previousstatus.ally] - 1;
-					m_ally_sizes[status.ally] = m_ally_sizes[status.ally] + 1;
-				}
-			}
+	}
+	if ( status.spectator != previousstatus.spectator )
+	{
+		if ( !status.spectator )
+		{
+			if ( status.ready && !status.IsBot() ) m_players_sync++;
+			if ( status.sync && !status.IsBot() ) m_players_sync++;
+			m_teams_sizes[status.team] = m_teams_sizes[status.team] + 1;
+			m_ally_sizes[status.ally] = m_ally_sizes[status.ally] + 1;
+		}
+		else
+		{
+			if ( previousstatus.ready && !status.IsBot() ) m_players_ready--;
+			if ( previousstatus.sync && !status.IsBot() ) m_players_sync--;
+			m_teams_sizes[status.team] = m_teams_sizes[status.team] - 1;
+			m_ally_sizes[status.ally] = m_ally_sizes[status.ally] - 1;
+		}
+	}
+	else
+	{
+		m_teams_sizes[previousstatus.team] = m_teams_sizes[previousstatus.team] - 1;
+		m_teams_sizes[status.team] = m_teams_sizes[status.team] + 1;
+		m_ally_sizes[previousstatus.ally] = m_ally_sizes[previousstatus.ally] - 1;
+		m_ally_sizes[status.ally] = m_ally_sizes[status.ally] + 1;
 	}
 	if ( !status.IsBot() )
 	{
@@ -322,28 +332,51 @@ void IBattle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 			 if ( status.sync ) m_players_sync++;
 			 else m_players_sync--;
 		}
+		if ( ( status.ready && status.sync ) || status.spectator )
+		{
+			std::map<wxString, time_t>::iterator itor = m_ready_up_map.find( user.GetNick() );
+			if ( itor != m_ready_up_map.end() )
+			{
+				m_ready_up_map.erase( itor );
+			}
+		}
+		if ( ( !status.ready || !status.sync ) && !status.spectator )
+		{
+			std::map<wxString, time_t>::iterator itor = m_ready_up_map.find( user.GetNick() );
+			if ( itor == m_ready_up_map.end() )
+			{
+				m_ready_up_map[user.GetNick()] = time(0);
+			}
+		}
 	}
-	if ( m_autocontrol_autospec )
-	{
-	}
-	if ( m_autocontrol_balance )
+	if ( IsFounderMe() )
 	{
 		if ( ShouldAutoStart() )
 		{
-			FixTeamIDs( (IBattle::BalanceType)sett().GetFixIDMethod(), sett().GetFixIDClans(), sett().GetFixIDStrongClans(), sett().GetFixIDGrouping() );
-			Autobalance( (IBattle::BalanceType)sett().GetBalanceMethod(), sett().GetBalanceClans(), sett().GetBalanceStrongClans(), sett().GetBalanceGrouping() );
-			FixColours();
+			if ( sett().GetBattleLastAutoControlState() )
+			{
+				FixTeamIDs( (IBattle::BalanceType)sett().GetFixIDMethod(), sett().GetFixIDClans(), sett().GetFixIDStrongClans(), sett().GetFixIDGrouping() );
+				Autobalance( (IBattle::BalanceType)sett().GetBalanceMethod(), sett().GetBalanceClans(), sett().GetBalanceStrongClans(), sett().GetBalanceGrouping() );
+				FixColours();
+			}
+			if ( sett().GetBattleLastAutoStartState() )
+			{
+				StartSpring();
+			}
 		}
-	}
-	if ( m_autocontrol_autostart )
-	{
-		if ( ShouldAutoStart() ) StartSpring();
 	}
 }
 
 bool IBattle::ShouldAutoStart()
 {
-	return ( GetNumPlayers() - m_opts.spectators - m_players_ready < 1 ) && ( GetNumPlayers() - m_opts.spectators - m_players_sync < 1 );
+	for ( unsigned int i = 0; i < GetNumUsers(); i++ )
+	{
+		User& usr = GetUser( i );
+		UserBattleStatus& status = usr.BattleStatus();
+		if ( status.IsBot() ) continue;
+		if ( !status.spectator && ( !status.sync || !status.ready ) ) return false;
+	}
+	return true;
 }
 
 void IBattle::OnUserRemoved( User& user )
@@ -361,7 +394,11 @@ void IBattle::OnUserRemoved( User& user )
       m_opts.spectators--;
       SendHostInfo( HI_Spectators );
     }
-    if ( &user == &GetMe() ) OnSelfLeftBattle();
+    if ( &user == &GetMe() )
+    {
+    	 m_timer->Stop();
+    	 OnSelfLeftBattle();
+    }
     UserList::RemoveUser( user.GetNick() );
     if ( !bs.IsBot() ) user.SetBattle( 0 );
     else
@@ -408,7 +445,7 @@ void IBattle::FixColours()
 							User &usr=GetUser(j);
 							if ( usr.BattleStatus().team == status.team )
 							{
-								 ForceColour( user, palette[user_col_i]);
+								 ForceColour( usr, palette[user_col_i]);
 							}
 						}
         }
@@ -517,7 +554,6 @@ void IBattle::Autobalance( BalanceType balance_type, bool support_clans, bool st
     wxLogMessage(_T("Autobalancing alliances, type=%d, clans=%d, strong_clans=%d, numallyteams=%d"),balance_type, support_clans,strong_clans, numallyteams);
     //size_t i;
     //int num_alliances;
-    CLAMP( numallyteams, 0, 16 ); // 16 max ally teams currently supported by spring
     std::vector<Alliance>alliances;
     if ( numallyteams == 0 ) // 0 == use num start rects
     {
@@ -686,7 +722,6 @@ void IBattle::FixTeamIDs( BalanceType balance_type, bool support_clans, bool str
       }
       catch( assert_exception ) {}
     }
-    numcontrolteams = std::min( numcontrolteams, 16 ); // clamp to 16 (max spring supports)
 
     if ( numcontrolteams >= (int)( GetNumUsers() - GetSpectators() ) ) // autobalance behaves weird when trying to put one player per team and i CBA to fix it, so i'll reuse the old code :P
     {
@@ -1599,5 +1634,29 @@ void IBattle::GetBattleFromScript( bool loadmapmod )
 
     }
     SetBattleOptions( opts );
+}
+
+void IBattle::OnTimer( wxTimerEvent& event )
+{
+	if ( !IsFounderMe() ) return;
+	int autospect_trigger_time = sett().GetBattleLastAutoSpectTime();
+	if ( autospect_trigger_time == 0 ) return;
+	time_t now = time(0);
+	for ( unsigned int i = 0; i < GetNumUsers(); i++)
+	{
+		User& usr = GetUser( i );
+		UserBattleStatus& status = usr.BattleStatus();
+		if ( status.IsBot() || status.spectator ) continue;
+		if ( status.sync && status.ready ) continue;
+		if ( &usr == &GetMe() ) continue;
+		std::map<wxString, time_t>::iterator itor = m_ready_up_map.find( usr.GetNick() );
+		if ( itor != m_ready_up_map.end() )
+		{
+			if ( ( now - itor->second ) > autospect_trigger_time )
+			{
+				ForceSpectator( usr, true );
+			}
+		}
+	}
 }
 
