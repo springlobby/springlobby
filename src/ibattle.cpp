@@ -436,7 +436,7 @@ void IBattle::FixColours()
 							User &usr=GetUser(j);
 							if ( usr.BattleStatus().team == status.team )
 							{
-								 ForceColour( user, palette[user_col_i]);
+								 ForceColour( usr, palette[user_col_i]);
 							}
 						}
         }
