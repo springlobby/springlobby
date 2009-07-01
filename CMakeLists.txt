@@ -263,6 +263,7 @@ SET(SpringLobbySrc
 	src/mmoptionmodel.cpp
 	src/mmoptionswrapper.cpp
 	src/nicklistctrl.cpp
+	src/offlinebattle.cpp
 	src/playback/replaylist.cpp
 	src/playback/savegamelist.cpp
 	src/sdlsound.cpp
