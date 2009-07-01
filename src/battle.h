@@ -29,8 +29,6 @@ class Battle : public IBattle
 
     int GetMyPlayerNum() const;
 
-    void FixColours( );
-
     void Update();
     void Update( const wxString& Tag );
 
@@ -67,9 +65,6 @@ class Battle : public IBattle
     User& OnUserAdded( User& user );
     void OnUserBattleStatusUpdated( User &user, UserBattleStatus status );
     void OnUserRemoved( User& user );
-
-    void Autobalance( BalanceType balance_type = balance_divide, bool clans = true, bool strong_clans = true, int allyteamsize = 0 );
-    void FixTeamIDs( BalanceType balance_type = balance_divide, bool clans = true, bool strong_clans = true, int controlteamsize = 0 );
 
     void ForceUnsyncedToSpectate();
     void ForceUnReadyToSpectate();

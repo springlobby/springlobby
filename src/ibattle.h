@@ -376,6 +376,13 @@ public:
 
 		virtual void GetBattleFromScript( bool loadmapmod );
 
+		virtual bool ShouldAutoStart();
+
+		virtual void FixColours();
+    virtual void Autobalance( BalanceType balance_type = balance_divide, bool clans = true, bool strong_clans = true, int allyteamsize = 0 );
+    virtual void FixTeamIDs( BalanceType balance_type = balance_divide, bool clans = true, bool strong_clans = true, int controlteamsize = 0 );
+
+
 protected:
 
 		void LoadScriptMMOpts( const wxString& sectionname, const PDataList& node );
@@ -406,6 +413,15 @@ protected:
 		int m_players_sync;
 		std::map<int, int> m_teams_sizes; // controlteam -> number of people in
 		std::map<int, int> m_ally_sizes; // allyteam -> number of people in
+
+		bool m_autocontrol_balance;
+		bool m_autocontrol_autostart;
+		bool m_autocontrol_autospec;
+		int m_autocontrol_team_sizes;
+		int m_autocontrol_ally_sizes;
+		BalanceType m_autocontrol_balance_mode;
+		bool m_autocontrol_support_clans;
+		bool m_autocontrol_support_strong_clans;
 
     wxString m_preset;
 
