@@ -281,14 +281,10 @@ void IBattle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 					if ( status.spectator )
 					{
 							m_opts.spectators++;
-							if ( previousstatus.ready && !status.IsBot() ) m_players_ready--;
-							if ( previousstatus.sync && !status.IsBot() ) m_players_sync--;
 					}
 					else
 					{
 							m_opts.spectators--;
-							if ( status.ready && !status.IsBot() ) m_players_sync++;
-							if ( status.sync && !status.IsBot() ) m_players_sync++;
 					}
 					SendHostInfo( HI_Spectators );
 			}
@@ -297,29 +293,30 @@ void IBattle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 				if ( previousstatus.team != status.team ) ForceTeam( user, previousstatus.team );
 				if ( previousstatus.ally != status.ally ) ForceAlly( user, previousstatus.ally );
 			}
-			else
-			{
-				if ( status.spectator != previousstatus.spectator )
-				{
-					if ( !status.spectator )
-					{
-						m_teams_sizes[status.team] = m_teams_sizes[status.team] + 1;
-						m_ally_sizes[status.ally] = m_ally_sizes[status.ally] + 1;
-					}
-					else
-					{
-						m_teams_sizes[status.team] = m_teams_sizes[status.team] - 1;
-						m_ally_sizes[status.ally] = m_ally_sizes[status.ally] - 1;
-					}
-				}
-				else
-				{
-					m_teams_sizes[previousstatus.team] = m_teams_sizes[previousstatus.team] - 1;
-					m_teams_sizes[status.team] = m_teams_sizes[status.team] + 1;
-					m_ally_sizes[previousstatus.ally] = m_ally_sizes[previousstatus.ally] - 1;
-					m_ally_sizes[status.ally] = m_ally_sizes[status.ally] + 1;
-				}
-			}
+	}
+	if ( status.spectator != previousstatus.spectator )
+	{
+		if ( !status.spectator )
+		{
+			if ( status.ready && !status.IsBot() ) m_players_sync++;
+			if ( status.sync && !status.IsBot() ) m_players_sync++;
+			m_teams_sizes[status.team] = m_teams_sizes[status.team] + 1;
+			m_ally_sizes[status.ally] = m_ally_sizes[status.ally] + 1;
+		}
+		else
+		{
+			if ( previousstatus.ready && !status.IsBot() ) m_players_ready--;
+			if ( previousstatus.sync && !status.IsBot() ) m_players_sync--;
+			m_teams_sizes[status.team] = m_teams_sizes[status.team] - 1;
+			m_ally_sizes[status.ally] = m_ally_sizes[status.ally] - 1;
+		}
+	}
+	else
+	{
+		m_teams_sizes[previousstatus.team] = m_teams_sizes[previousstatus.team] - 1;
+		m_teams_sizes[status.team] = m_teams_sizes[status.team] + 1;
+		m_ally_sizes[previousstatus.ally] = m_ally_sizes[previousstatus.ally] - 1;
+		m_ally_sizes[status.ally] = m_ally_sizes[status.ally] + 1;
 	}
 	if ( !status.IsBot() )
 	{
@@ -350,18 +347,21 @@ void IBattle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 			}
 		}
 	}
-	if ( sett().GetBattleLastAutoControlState() )
+	if ( IsFounderMe() )
 	{
-		if ( ShouldAutoStart() )
+		if ( sett().GetBattleLastAutoControlState() )
 		{
-			FixTeamIDs( (IBattle::BalanceType)sett().GetFixIDMethod(), sett().GetFixIDClans(), sett().GetFixIDStrongClans(), sett().GetFixIDGrouping() );
-			Autobalance( (IBattle::BalanceType)sett().GetBalanceMethod(), sett().GetBalanceClans(), sett().GetBalanceStrongClans(), sett().GetBalanceGrouping() );
-			FixColours();
+			if ( ShouldAutoStart() )
+			{
+				FixTeamIDs( (IBattle::BalanceType)sett().GetFixIDMethod(), sett().GetFixIDClans(), sett().GetFixIDStrongClans(), sett().GetFixIDGrouping() );
+				Autobalance( (IBattle::BalanceType)sett().GetBalanceMethod(), sett().GetBalanceClans(), sett().GetBalanceStrongClans(), sett().GetBalanceGrouping() );
+				FixColours();
+			}
 		}
-	}
-	if ( sett().GetBattleLastAutoStartState() )
-	{
-		if ( ShouldAutoStart() ) StartSpring();
+		if ( sett().GetBattleLastAutoStartState() )
+		{
+			if ( ShouldAutoStart() ) StartSpring();
+		}
 	}
 }
 
