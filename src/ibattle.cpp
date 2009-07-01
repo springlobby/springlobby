@@ -307,7 +307,19 @@ void IBattle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 				}
 			}
     }
-
+    if ( !status.IsBot() )
+    {
+			if ( ( previousstatus.ready != status.ready ) && !status.spectator && !previousstatus.spectator )
+			{
+				 if ( status.ready ) m_players_ready++;
+				 else m_players_ready--;
+			}
+			if ( ( previousstatus.sync != status.sync ) && !status.spectator && !previousstatus.spectator )
+			{
+				 if ( status.sync ) m_players_sync++;
+				 else m_players_sync--;
+			}
+    }
 
 }
 
