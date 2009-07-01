@@ -351,13 +351,7 @@ void IBattle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 			}
 		}
 	}
-	if ( !IsFounderMe() )
-	{
-		if ( IsFounder( user ) )
-		{
-			if ( !user.Status().in_game && user.Status().in_game ) StartSpring();
-		}
-	}
+
 	if ( IsFounderMe() )
 	{
 		if ( ShouldAutoStart() )

@@ -177,7 +177,7 @@ void ServerEvents::OnUserStatus( const wxString& nick, UserStatus status )
                 if ( status.in_game != battle.GetInGame() )
                 {
                     battle.SetInGame( status.in_game );
-                    if ( status.in_game ) ui().OnBattleStarted( battle );
+                    if ( status.in_game ) battle.StartSpring();
                     else ui().OnBattleInfoUpdated( battle );
                 }
             }
