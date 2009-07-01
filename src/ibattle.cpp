@@ -349,18 +349,18 @@ void IBattle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 	}
 	if ( IsFounderMe() )
 	{
-		if ( sett().GetBattleLastAutoControlState() )
+		if ( ShouldAutoStart() )
 		{
-			if ( ShouldAutoStart() )
+			if ( sett().GetBattleLastAutoControlState() )
 			{
 				FixTeamIDs( (IBattle::BalanceType)sett().GetFixIDMethod(), sett().GetFixIDClans(), sett().GetFixIDStrongClans(), sett().GetFixIDGrouping() );
 				Autobalance( (IBattle::BalanceType)sett().GetBalanceMethod(), sett().GetBalanceClans(), sett().GetBalanceStrongClans(), sett().GetBalanceGrouping() );
 				FixColours();
 			}
-		}
-		if ( sett().GetBattleLastAutoStartState() )
-		{
-			if ( ShouldAutoStart() ) StartSpring();
+			if ( sett().GetBattleLastAutoStartState() )
+			{
+				StartSpring();
+			}
 		}
 	}
 }
