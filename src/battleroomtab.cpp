@@ -714,7 +714,7 @@ void BattleRoomTab::OnAutoSpec( wxCommandEvent& event )
 	int trigger = wxGetNumberFromUser( _("Enter timeout before autospeccing a player in minutes, 0 to disable"), _("Set Timeout"), _T(""), 3, 1, 60, (wxWindow*)&ui().mw(), wxDefaultPosition );
 	if ( trigger < 0 ) trigger = 0;
 	trigger = trigger * 60;
-	m_autostart_mnu->Check( trigger > 0 );
+	m_autospec_mnu->Check( trigger > 0 );
 	sett().SetBattleLastAutoStartState( trigger );
 }
 
