@@ -25,6 +25,7 @@
 #if wxUSE_TOGGLEBTN
 #include <wx/tglbtn.h>
 #endif
+#include <wx/numdlg.h>
 
 #include <stdexcept>
 
@@ -80,6 +81,9 @@ BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
     EVT_BUTTON( BROOM_MANAGE_MENU, BattleRoomTab::OnShowManagePlayersMenu )
 
 		EVT_MENU( BROOM_AUTOHOST, BattleRoomTab::OnAutoHost )
+		EVT_MENU( BROOM_AUTOSPECT, BattleRoomTab::OnAutoSpec )
+		EVT_MENU( BROOM_AUTOSTART, BattleRoomTab::OnAutoStart )
+		EVT_MENU( BROOM_AUTOCONTROL, BattleRoomTab::OnAutoControl )
 
 		EVT_MENU( BROOM_RING_UNREADY, BattleRoomTab::OnRingUnready )
 		EVT_MENU( BROOM_RING_UNSYNC, BattleRoomTab::OnRingUnsynced )
@@ -195,6 +199,16 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
     m_autohost_mnu = new wxMenuItem( m_manage_users_mnu, BROOM_AUTOHOST, _( "Autohost" ), _("Toggle autohost mode.  This allows players to control your battle using commands like '!balance' and '!start'."), wxITEM_CHECK );
 		m_manage_users_mnu->Append( m_autohost_mnu );
     m_autohost_mnu->Check( false );
+
+    m_autospec_mnu = new wxMenuItem( m_manage_users_mnu, BROOM_AUTOSPECT, _( "AutoSpect" ), _("Automatically spectate players that don't ready up or become synced within x seconds."), wxITEM_CHECK );
+		m_manage_users_mnu->Append( m_autospec_mnu );
+    m_autospec_mnu->Check( sett().GetBattleLastAutoSpectTime() > 0 );
+    m_autocontrol_mnu = new wxMenuItem( m_manage_users_mnu, BROOM_AUTOCONTROL, _( "AutoControlBalance" ), _("Automatically balance teams and allies and fix colors when all players are ready and synced"), wxITEM_CHECK );
+		m_manage_users_mnu->Append( m_autocontrol_mnu );
+    m_autocontrol_mnu->Check( sett().GetBattleLastAutoControlState() );
+    m_autostart_mnu = new wxMenuItem( m_manage_users_mnu, BROOM_AUTOSTART, _( "AutoStart" ), _("Automatically start the battle when all players are ready and synced"), wxITEM_CHECK );
+		m_manage_users_mnu->Append( m_autostart_mnu );
+    m_autostart_mnu->Check( sett().GetBattleLastAutoStartState() );
 
     m_lock_balance_mnu = new wxMenuItem( m_manage_users_mnu, BROOM_LOCK_BALANCE, _( "Lock Balance" ), _("When activated, prevents anyone but the host to change team and ally"), wxITEM_CHECK );
     m_manage_users_mnu->Append( m_lock_balance_mnu );
@@ -684,6 +698,25 @@ void BattleRoomTab::OnAutoHost( wxCommandEvent& event )
     m_battle.GetAutoHost().SetEnabled( m_autohost_mnu->IsChecked() );
 }
 
+
+void BattleRoomTab::OnAutoControl( wxCommandEvent& event )
+{
+	sett().SetBattleLastAutoControlState( m_autocontrol_mnu->IsChecked() );
+}
+
+void BattleRoomTab::OnAutoStart( wxCommandEvent& event )
+{
+	sett().SetBattleLastAutoStartState( m_autostart_mnu->IsChecked() );
+}
+
+void BattleRoomTab::OnAutoSpec( wxCommandEvent& event )
+{
+	int trigger = wxGetNumberFromUser( _("Enter timeout before autospeccing a player in minutes, 0 to disable"), _("Set Timeout"), _T(""), 3, 1, 60, (wxWindow*)&ui().mw(), wxDefaultPosition );
+	if ( trigger < 0 ) trigger = 0;
+	trigger = trigger * 60;
+	m_autostart_mnu->Check( trigger > 0 );
+	sett().SetBattleLastAutoStartState( trigger );
+}
 
 void BattleRoomTab::OnImSpec( wxCommandEvent& event )
 {

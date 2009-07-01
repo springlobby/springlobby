@@ -551,6 +551,15 @@ class Settings
     void SetBattleFilterActivState( const bool state );
     bool GetBattleFilterActivState( ) const;
 
+    bool GetBattleLastAutoStartState();
+    void SetBattleLastAutoStartState( bool value );
+
+    bool GetBattleLastAutoControlState();
+    void SetBattleLastAutoControlState( bool value );
+
+		int GetBattleLastAutoSpectTime();
+    void SetBattleLastAutoSpectTime( int value );
+
     struct SettStartBox
     {
     	int ally;

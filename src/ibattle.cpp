@@ -3,6 +3,7 @@
 #include <wx/tokenzr.h>
 #include <wx/image.h>
 #include <sstream>
+#include <wx/timer.h>
 
 #include "ibattle.h"
 #include "utils.h"
@@ -17,6 +18,13 @@
 #include <cmath>
 #include <set>
 
+const unsigned int TIMER_ID         = 101;
+const unsigned int TIMER_INTERVAL         = 1000;
+
+BEGIN_EVENT_TABLE(IBattle, wxEvtHandler)
+    EVT_TIMER(TIMER_ID, IBattle::OnTimer)
+END_EVENT_TABLE()
+
 IBattle::IBattle():
   m_map_loaded(false),
   m_mod_loaded(false),
@@ -24,8 +32,8 @@ IBattle::IBattle():
   m_mod_exists(false),
   m_ingame(false),
   m_generating_script(false),
-  m_is_self_in(false)
-
+  m_is_self_in(false),
+	m_timer ( new wxTimer(this, TIMER_ID) )
 {
 }
 
@@ -230,6 +238,8 @@ User& IBattle::OnUserAdded( User& user )
 		}
 		if ( bs.ready && !bs.IsBot() ) m_players_ready++;
 		if ( bs.sync && !bs.IsBot() ) m_players_sync++;
+		if ( &user == &GetMe() ) m_timer->Start();
+		if ( !bs.spectator && !bs.IsBot() && ( !bs.ready || !bs.sync ) ) m_ready_up_map[user.GetNick()] = time(0);
     return user;
 }
 
@@ -322,11 +332,24 @@ void IBattle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 			 if ( status.sync ) m_players_sync++;
 			 else m_players_sync--;
 		}
+		if ( ( status.ready && status.sync ) || status.spectator )
+		{
+			std::map<wxString, time_t>::iterator itor = m_ready_up_map.find( user.GetNick() );
+			if ( itor != m_ready_up_map.end() )
+			{
+				m_ready_up_map.erase( itor );
+			}
+		}
+		else
+		{
+			std::map<wxString, time_t>::iterator itor = m_ready_up_map.find( user.GetNick() );
+			if ( itor == m_ready_up_map.end() )
+			{
+				m_ready_up_map[user.GetNick()] = time(0);
+			}
+		}
 	}
-	if ( m_autocontrol_autospec )
-	{
-	}
-	if ( m_autocontrol_balance )
+	if ( sett().GetBattleLastAutoControlState() )
 	{
 		if ( ShouldAutoStart() )
 		{
@@ -335,7 +358,7 @@ void IBattle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 			FixColours();
 		}
 	}
-	if ( m_autocontrol_autostart )
+	if ( sett().GetBattleLastAutoStartState() )
 	{
 		if ( ShouldAutoStart() ) StartSpring();
 	}
@@ -361,7 +384,11 @@ void IBattle::OnUserRemoved( User& user )
       m_opts.spectators--;
       SendHostInfo( HI_Spectators );
     }
-    if ( &user == &GetMe() ) OnSelfLeftBattle();
+    if ( &user == &GetMe() )
+    {
+    	 m_timer->Stop();
+    	 OnSelfLeftBattle();
+    }
     UserList::RemoveUser( user.GetNick() );
     if ( !bs.IsBot() ) user.SetBattle( 0 );
     else
@@ -1590,3 +1617,29 @@ void IBattle::GetBattleFromScript( bool loadmapmod )
     SetBattleOptions( opts );
 }
 
+void IBattle::OnTimer( wxTimerEvent& event )
+{
+	int autospect_trigger_time = sett().GetBattleLastAutoSpectTime();
+	if ( autospect_trigger_time == 0 ) return;
+	time_t now = time(0);
+	for ( unsigned int i = 0; i < GetNumUsers(); i++)
+	{
+		try
+		{
+			User& usr = GetUser( i );
+			UserBattleStatus& status = usr.BattleStatus();
+			if ( status.IsBot() || status.spectator ) continue;
+			if ( status.sync && status.ready ) continue;
+			if ( &usr == &GetMe() ) continue;
+			std::map<wxString, time_t>::iterator itor = m_ready_up_map.find( usr.GetNick() );
+			if ( itor != m_ready_up_map.end() )
+			{
+				if ( ( now - itor->second ) > autospect_trigger_time )
+				{
+					ForceSpectator( usr, true );
+				}
+			}
+		}
+		catch(...){}
+	}
+}

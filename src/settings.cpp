@@ -1639,6 +1639,36 @@ void Settings::SetBattleFilterActivState(const bool state)
     m_config->Write( _T("/BattleFilter/Active") , state );
 }
 
+bool Settings::GetBattleLastAutoStartState()
+{
+	return m_config->Read( _T("/Hosting/AutoStart") , 0l );
+}
+
+void Settings::SetBattleLastAutoStartState( bool value )
+{
+	m_config->Write( _T("/Hosting/AutoStart") value );
+}
+
+bool Settings::GetBattleLastAutoControlState()
+{
+	return m_config->Read( _T("/Hosting/AutoControl") , 0l );
+}
+
+void Settings::SetBattleLastAutoControlState( bool value )
+{
+	m_config->Write( _T("/Hosting/AutoControl") value );
+}
+
+int Settings::GetBattleLastAutoSpectTime()
+{
+	return m_config->Read( _T("/Hosting/AutoSpectTime") , 0l );
+}
+
+void SetBattleLastAutoSpectTime( int value )
+{
+	m_config->Write( _T("/Hosting/AutoSpectTime") ,value );
+}
+
 void Settings::SetMapLastStartPosType( const wxString& mapname, const wxString& startpostype )
 {
 		m_config->Write( _T("/Hosting/MapLastValues/") + mapname + _T("/startpostype"), startpostype );
