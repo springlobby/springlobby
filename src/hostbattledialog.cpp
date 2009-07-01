@@ -221,8 +221,7 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent ): wxDialog( parent, -1, _(
 
 	m_main_sizer->Add( m_buttons_sizer, 0, wxEXPAND, 5 );
 
-	m_port_test_check->Enable( m_nat_radios->GetSelection() == 0 );
-  m_port_text->Enable( m_nat_radios->GetSelection() == 0 );
+	m_port_test_check->Disable();
 
 	this->SetSizer( m_main_sizer );
 	this->Layout();
