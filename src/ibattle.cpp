@@ -42,6 +42,8 @@ IBattle::IBattle():
 
 IBattle::~IBattle()
 {
+	m_timer->Stop();
+	delete m_timer;
 }
 
 bool IBattle::IsSynced()
@@ -241,7 +243,7 @@ User& IBattle::OnUserAdded( User& user )
 		if ( bs.spectator ) m_opts.spectators++;
 		if ( bs.ready && !bs.IsBot() ) m_players_ready++;
 		if ( bs.sync && !bs.IsBot() ) m_players_sync++;
-		if ( &user == &GetMe() ) m_timer->Start();
+		if ( &user == &GetMe() ) m_timer->Start( TIMER_INTERVAL );
 		if ( !bs.spectator && !bs.IsBot() && ( !bs.ready || !bs.sync ) ) m_ready_up_map[user.GetNick()] = time(0);
     return user;
 }
@@ -369,7 +371,14 @@ void IBattle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 
 bool IBattle::ShouldAutoStart()
 {
-	return ( GetNumPlayers() - m_opts.spectators - m_players_ready < 1 ) && ( GetNumPlayers() - m_opts.spectators - m_players_sync < 1 );
+	for ( unsigned int i = 0; i < GetNumUsers(); i++ )
+	{
+		User& usr = GetUser( i );
+		UserBattleStatus& status = usr.BattleStatus();
+		if ( status.IsBot() ) continue;
+		if ( !status.spectator && ( !status.sync || status.ready ) ) return false;
+	}
+	return true;
 }
 
 void IBattle::OnUserRemoved( User& user )
