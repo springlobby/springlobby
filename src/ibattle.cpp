@@ -32,6 +32,8 @@ IBattle::IBattle():
   m_mod_exists(false),
   m_ingame(false),
   m_generating_script(false),
+	m_players_ready(0),
+	m_players_sync(0),
   m_is_self_in(false),
 	m_timer ( new wxTimer(this, TIMER_ID) )
 {
