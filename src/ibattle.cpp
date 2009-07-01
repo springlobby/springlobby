@@ -408,26 +408,37 @@ void IBattle::FixColours()
     if ( !IsFounderMe() )return;
     std::vector<wxColour> &palette = GetFixColoursPalette();
     std::vector<int> palette_use( palette.size(), 0 );
-    user_map_t::size_type max_fix_users = std::min( GetNumUsers(), palette.size() );
 
     wxColour my_col = GetMe().BattleStatus().colour; // Never changes color of founder (me) :-)
     int my_diff = 0;
     int my_col_i = GetClosestFixColour( my_col, palette_use,my_diff );
     palette_use[my_col_i]++;
+    std::set<int> parsed_teams;
 
-    for ( user_map_t::size_type i = 0; i < max_fix_users; i++ )
+    for ( user_map_t::size_type i = 0; i < GetNumUsers(); i++ )
     {
-        if ( &GetUser( i ) == &GetMe() ) continue;
         User &user=GetUser(i);
-        wxColour &user_col=user.BattleStatus().colour;
+        if ( &user == &GetMe() ) continue; // skip founder ( yourself )
+        UserBattleStatus& status = user.BattleStatus();
+        if ( status.spectator ) continue;
+        if ( parsedteams.find( status.team ) != parsedteams.end() ) continue; // skip duplicates
+        parsedteams.insert( status.team );
+
+        wxColour &user_col=status.colour;
         int user_diff=0;
         int user_col_i=GetClosestFixColour(user_col,palette_use,user_diff);
         palette_use[user_col_i]++;
         if ( user_diff > 60 )
         {
-            ForceColour( user, palette[user_col_i]);
-            wxLogMessage(_T("Forcing colour on fix. diff=%d"),user_diff);
-
+						wxLogMessage(_T("Forcing colour on fix. diff=%d"),user_diff);
+						for ( user_map_t::size_type j = 0; j < GetNumUsers(); j++ )
+						{
+							User &usr=GetUser(j);
+							if ( usr.BattleStatus().team == status.team )
+							{
+								 ForceColour( user, palette[user_col_i]);
+							}
+						}
         }
     }
 }
