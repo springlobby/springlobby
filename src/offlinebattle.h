@@ -8,6 +8,8 @@ class OfflineBattle : public IBattle
 	public:
 			OfflineBattle ( const int id );
 			OfflineBattle ( );
+			OfflineBattle ( const OfflineBattle&  ) {assert(false); }
+			OfflineBattle& operator = ( const OfflineBattle&  ) {assert(false); }
 			~OfflineBattle (){};
 			User& GetMe() { return m_me; }
 			bool IsFounderMe() { return true; }

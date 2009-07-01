@@ -1646,7 +1646,7 @@ bool Settings::GetBattleLastAutoStartState()
 
 void Settings::SetBattleLastAutoStartState( bool value )
 {
-	m_config->Write( _T("/Hosting/AutoStart") value );
+	m_config->Write( _T("/Hosting/AutoStart"), value );
 }
 
 bool Settings::GetBattleLastAutoControlState()
@@ -1656,7 +1656,7 @@ bool Settings::GetBattleLastAutoControlState()
 
 void Settings::SetBattleLastAutoControlState( bool value )
 {
-	m_config->Write( _T("/Hosting/AutoControl") value );
+	m_config->Write( _T("/Hosting/AutoControl"), value );
 }
 
 int Settings::GetBattleLastAutoSpectTime()
@@ -1664,7 +1664,7 @@ int Settings::GetBattleLastAutoSpectTime()
 	return m_config->Read( _T("/Hosting/AutoSpectTime") , 0l );
 }
 
-void SetBattleLastAutoSpectTime( int value )
+void Settings::SetBattleLastAutoSpectTime( int value )
 {
 	m_config->Write( _T("/Hosting/AutoSpectTime") ,value );
 }
