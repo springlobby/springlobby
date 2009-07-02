@@ -179,7 +179,6 @@ libtorrent_headers = \
 	$(libt_dir)/include/libtorrent/enum_net.hpp \
 	$(libt_dir)/include/libtorrent/escape_string.hpp \
 	$(libt_dir)/include/libtorrent/extensions.hpp \
-	$(libt_dir)/include/libtorrent/extensions/metadata_transfer.hpp \
 	$(libt_dir)/include/libtorrent/extensions/logger.hpp \
 	$(libt_dir)/include/libtorrent/extensions/ut_pex.hpp \
 	$(libt_dir)/include/libtorrent/file.hpp \
@@ -239,11 +238,9 @@ libtorrent_headers = \
 	$(libt_dir)/include/libtorrent/kademlia/node_entry.hpp \
 	$(libt_dir)/include/libtorrent/kademlia/node_id.hpp \
 	$(libt_dir)/include/libtorrent/kademlia/observer.hpp \
-	$(libt_dir)/include/libtorrent/kademlia/packet_iterator.hpp \
 	$(libt_dir)/include/libtorrent/kademlia/refresh.hpp \
 	$(libt_dir)/include/libtorrent/kademlia/routing_table.hpp \
 	$(libt_dir)/include/libtorrent/kademlia/rpc_manager.hpp \
-	$(libt_dir)/include/libtorrent/kademlia/traversal_algorithm.hpp  \
 	\
 	$(libt_dir)/asio.hpp \
 	$(libt_dir)/asio/basic_datagram_socket.hpp \
