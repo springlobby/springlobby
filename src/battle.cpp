@@ -488,6 +488,7 @@ void Battle::ForceAlly( User& user, int ally )
 
 void Battle::ForceColour( User& user, const wxColour& col )
 {
+		IBattle::ForceColour( user, col );
     m_serv.ForceColour( m_opts.battleid, user, col );
 }
 
