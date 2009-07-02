@@ -561,7 +561,7 @@ void Battle::SendScriptToClients()
 
 void Battle::StartSpring()
 {
-	if ( m_is_self_in )
+	if ( UserExists( GetMe().GetNick() ) )
 	{
 		if ( IsProxy() )
 		{
