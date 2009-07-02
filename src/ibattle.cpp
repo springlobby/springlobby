@@ -545,7 +545,7 @@ void IBattle::Autobalance( BalanceType balance_type, bool support_clans, bool st
     {
 //        int tmp = GetNumRects();
         int ally = 0;
-        for ( int i = 0; i < numallyteams; ++i )
+        for ( int i = 0; i < GetNumRects(); ++i )
         {
             BattleStartRect sr = GetStartRect(i);
             if ( sr.IsOk() )
