@@ -355,6 +355,7 @@ void IBattle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 
 bool IBattle::ShouldAutoStart()
 {
+	if ( !IsLocked() && (  ( GetNumPlayers() - m_opts.spectators ) ) < m_opts.maxplayers ) return false; // proceed checking for ready players only if the battle is full or locked
 	for ( unsigned int i = 0; i < GetNumUsers(); i++ )
 	{
 		User& usr = GetUser( i );
@@ -543,7 +544,6 @@ void IBattle::Autobalance( BalanceType balance_type, bool support_clans, bool st
     std::vector<Alliance>alliances;
     if ( numallyteams == 0 ) // 0 == use num start rects
     {
-//        int tmp = GetNumRects();
         int ally = 0;
         for ( int i = 0; i < GetNumRects(); ++i )
         {
