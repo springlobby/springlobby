@@ -3,18 +3,18 @@
 # This file is distributed under the same license as the springlobby package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
 #
-#: src/filelister/filelistfilter.cpp:52 src/Helper/wxtextctrlhist.h:13
-#: src/settings++/Defs.hpp:264 src/settings++/Defs.hpp:344
-#: src/settings++/Defs.hpp:346 src/settings++/Defs.hpp:348
-#: src/settings++/Defs.hpp:350 src/settings++/Defs.hpp:352
-#: src/settings++/Defs.hpp:404 src/settings++/Defs.hpp:405
-#: src/settings++/Defs.hpp:413 src/settings++/Defs.hpp:418
-#: src/settings++/Defs.hpp:421 src/utils.cpp:265
+#: src/battleroomlistctrl.cpp:703 src/settings++/Defs.hpp:263
+#: src/settings++/Defs.hpp:345 src/settings++/Defs.hpp:347
+#: src/settings++/Defs.hpp:349 src/settings++/Defs.hpp:351
+#: src/settings++/Defs.hpp:353 src/settings++/Defs.hpp:404
+#: src/settings++/Defs.hpp:405 src/settings++/Defs.hpp:413
+#: src/settings++/Defs.hpp:418 src/settings++/Defs.hpp:421
+#: src/utils/controls.cpp:7
 msgid ""
 msgstr ""
 "Project-Id-Version: springlobby\n"
 "Report-Msgid-Bugs-To: devel@www.springlobby.info\n"
-"POT-Creation-Date: 2009-02-18 14:06+0100\n"
+"POT-Creation-Date: 2009-07-03 00:47+0200\n"
 "PO-Revision-Date: 2008-07-30 23:38+0000\n"
 "Last-Translator: SpringLobby_Buildbot <Unknown>\n"
 "Language-Team: Arabic <ar@li.org>\n"
@@ -24,45 +24,46 @@ msgstr ""
 "X-Launchpad-Export-Date: 2008-09-20 21:32+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
-#: src/addbotdialog.cpp:28
+#: src/addbotdialog.cpp:29
 msgid "Add bot"
 msgstr "إضافة بوت"
 
-#: src/addbotdialog.cpp:42
+#: src/addbotdialog.cpp:43
 msgid "Nickname:"
 msgstr "الكنية:"
 
-#: src/addbotdialog.cpp:56
+#: src/addbotdialog.cpp:57
 msgid "AI:"
 msgstr "الذكاء الاصطناعي:"
 
-#: src/addbotdialog.cpp:60
+#: src/addbotdialog.cpp:61
 msgid "Choose the AI library to use with this bot."
 msgstr "اختار مكتبة الذكاء الاصطناعي لاستخدامها مع البوت."
 
-#: src/addbotdialog.cpp:68
+#: src/addbotdialog.cpp:71
 msgid "property"
 msgstr ""
 
-#: src/addbotdialog.cpp:72
+#: src/addbotdialog.cpp:75
 #, fuzzy
 msgid "value"
 msgstr "قيمة"
 
-#: src/addbotdialog.cpp:90 src/autobalancedialog.cpp:64
-#: src/connectwindow.cpp:86 src/hostbattledialog.cpp:212
+#: src/addbotdialog.cpp:108 src/autobalancedialog.cpp:65
+#: src/connectwindow.cpp:87 src/hostbattledialog.cpp:219
+#: src/mmoptionwindows.cpp:105
 msgid "Cancel"
 msgstr "إلغاء"
 
-#: src/addbotdialog.cpp:95
+#: src/addbotdialog.cpp:113
 msgid "Add Bot"
 msgstr "إضافة بوت"
 
-#: src/addbotdialog.cpp:174
+#: src/addbotdialog.cpp:191
 msgid "No AI bots found in your Spring installation."
 msgstr "لم يتم العثور على أي بوتات ذكاء اصطناعي على نسختك من Spring."
 
-#: src/addbotdialog.cpp:174
+#: src/addbotdialog.cpp:191
 msgid "No bot-libs found"
 msgstr "لم يتم العثور على مكتبات البوت"
 
@@ -74,48 +75,48 @@ msgstr "قبول الاتفاق"
 msgid "Do you accept the terms of this agreement?"
 msgstr "هل تقبل شروط هذا الاتفاق؟"
 
-#: src/agreementdialog.cpp:41 src/uiutils.h:13
+#: src/agreementdialog.cpp:41 src/utils/controls.h:15
 msgid "Yes"
 msgstr "نعم"
 
-#: src/agreementdialog.cpp:46 src/uiutils.h:13
+#: src/agreementdialog.cpp:46 src/utils/controls.h:15
 msgid "No"
 msgstr "لا"
 
-#: src/autobalancedialog.cpp:35
+#: src/autobalancedialog.cpp:36
 msgid "Autobalance players into teams"
 msgstr ""
 
-#: src/autobalancedialog.cpp:38
+#: src/autobalancedialog.cpp:39
 msgid "Method"
 msgstr "طريقة"
 
-#: src/autobalancedialog.cpp:41
+#: src/autobalancedialog.cpp:42
 msgid "Divide ranks evenly"
 msgstr ""
 
-#: src/autobalancedialog.cpp:42 src/battlemaptab.cpp:104
-#: src/battleroomtab.cpp:387 src/mmoptionswrapper.cpp:104
+#: src/autobalancedialog.cpp:43 src/battlemaptab.cpp:109
+#: src/battleroomtab.cpp:432 src/mmoptionswrapper.cpp:118
 msgid "Random"
 msgstr "عشوائي"
 
-#: src/autobalancedialog.cpp:44
+#: src/autobalancedialog.cpp:45
 msgid "Clans"
 msgstr "فرق"
 
-#: src/autobalancedialog.cpp:47 src/hostbattledialog.cpp:138
+#: src/autobalancedialog.cpp:48 src/hostbattledialog.cpp:145
 msgid "None"
 msgstr "لا شيء"
 
-#: src/autobalancedialog.cpp:48
+#: src/autobalancedialog.cpp:49
 msgid "Fair"
 msgstr "معتدل"
 
-#: src/autobalancedialog.cpp:49
+#: src/autobalancedialog.cpp:50
 msgid "Always"
 msgstr "دائماً"
 
-#: src/autobalancedialog.cpp:50
+#: src/autobalancedialog.cpp:51
 msgid ""
 "Put members of same clan ( users having same clantag, like '[smurfzor]Alice' "
 "and '[smurfzor]Bob' ) together into same alliance. \n"
@@ -125,233 +126,246 @@ msgid ""
 "unfair."
 msgstr ""
 
-#: src/autobalancedialog.cpp:52
-#, fuzzy
-msgid "Grouping size"
-msgstr "اجراء"
+#: src/autobalancedialog.cpp:53
+msgid "Number of allies"
+msgstr ""
 
-#: src/autobalancedialog.cpp:55
+#: src/autobalancedialog.cpp:56
 #, fuzzy
 msgid "Auto select"
 msgstr "إعادة الاتصال"
 
-#: src/autobalancedialog.cpp:67 src/connectwindow.cpp:85
+#: src/autobalancedialog.cpp:68 src/connectwindow.cpp:86
+#: src/mmoptionwindows.cpp:108
 msgid "Ok"
 msgstr "موافق"
 
-#: src/battlelistctrl.cpp:62 src/hostbattledialog.cpp:58
+#: src/battlelistctrl.cpp:56 src/hostbattledialog.cpp:59
+#: src/widgets/infopanel.cpp:120
 msgid "Description"
 msgstr "وصف"
 
-#: src/battlelistctrl.cpp:66 src/battleroomtab.cpp:157
-#: src/filelister/filelistctrl.cpp:174 src/filelister/filelistctrl.cpp:175
-#: src/filelister/filelistctrl.cpp:186 src/filelister/filelistctrl.cpp:187
-#: src/filelister/filelistdialog.cpp:123 src/mainjoinbattletab.cpp:157
-#: src/mainjoinbattletab.cpp:162
+#: src/battlelistctrl.cpp:57 src/battleroomtab.cpp:169
+#: src/filelister/filelistctrl.cpp:181 src/filelister/filelistctrl.cpp:182
+#: src/filelister/filelistctrl.cpp:193 src/filelister/filelistctrl.cpp:194
+#: src/filelister/filelistdialog.cpp:130 src/mainjoinbattletab.cpp:137
+#: src/playback/playbacklistctrl.cpp:43
 msgid "Map"
 msgstr "خارطة"
 
-#: src/battlelistctrl.cpp:70 src/filelister/filelistctrl.cpp:174
-#: src/filelister/filelistctrl.cpp:175 src/filelister/filelistctrl.cpp:186
-#: src/filelister/filelistctrl.cpp:187 src/filelister/filelistdialog.cpp:123
-#: src/hostbattledialog.cpp:72
+#: src/battlelistctrl.cpp:58 src/filelister/filelistctrl.cpp:181
+#: src/filelister/filelistctrl.cpp:182 src/filelister/filelistctrl.cpp:193
+#: src/filelister/filelistctrl.cpp:194 src/filelister/filelistdialog.cpp:130
+#: src/hostbattledialog.cpp:78 src/playback/playbacklistctrl.cpp:42
 msgid "Mod"
 msgstr ""
 
-#: src/battlelistctrl.cpp:74 src/hostbattledialog.cpp:216
+#: src/battlelistctrl.cpp:59 src/hostbattledialog.cpp:223
 msgid "Host"
 msgstr "مستضيف"
 
-#: src/battlelistctrl.cpp:78 src/battleroomlistctrl.cpp:97
-msgid "a"
-msgstr "أ"
+#: src/battlelistctrl.cpp:60
+#, fuzzy
+msgid "spectators"
+msgstr "المتابعون:"
 
-#: src/battlelistctrl.cpp:82
-msgid "p"
+#: src/battlelistctrl.cpp:61
+#, fuzzy
+msgid "players"
+msgstr "اللّاعبون:"
+
+#: src/battlelistctrl.cpp:62
+msgid "max"
 msgstr ""
 
-#: src/battlelistctrl.cpp:86
-msgid "m"
-msgstr "م"
-
-#: src/battlelistctrl.cpp:125 src/replay/replaylistctrl.cpp:107
+#: src/battlelistctrl.cpp:192 src/playback/playbacklistctrl.cpp:65
 msgid "Download &map"
 msgstr "تنزيل ال&خارطة"
 
-#: src/battlelistctrl.cpp:126 src/replay/replaylistctrl.cpp:108
+#: src/battlelistctrl.cpp:195 src/playback/playbacklistctrl.cpp:66
 msgid "Download m&od"
 msgstr ""
 
-#: src/battlelistctrl.cpp:549 src/battlelisttab.cpp:113
+#: src/battlelistctrl.cpp:323 src/battlelisttab.cpp:107
 msgid "Spectators:"
 msgstr "المتابعون:"
 
-#: src/battlelistctrl.cpp:556
+#: src/battlelistctrl.cpp:330
 #, fuzzy
 msgid "Active Players:"
 msgstr "اللّاعبون:"
 
-#: src/battlelistfilter.cpp:90
+#: src/battlelistfilter.cpp:83
 msgid "Host:"
 msgstr "المستضيف:"
 
-#: src/battlelistfilter.cpp:109 src/battlelistfilter.cpp:184
+#: src/battlelistfilter.cpp:102 src/battlelistfilter.cpp:177
 msgid "Status:"
 msgstr "الحالة:"
 
-#: src/battlelistfilter.cpp:113 src/battleroomtab.cpp:184
-#: src/battleroomtab.cpp:186
+#: src/battlelistfilter.cpp:106 src/battleroomtab.cpp:195
 msgid "Locked"
 msgstr "مقفل"
 
-#: src/battlelistfilter.cpp:118
+#: src/battlelistfilter.cpp:111
 msgid "Passworded"
 msgstr "مقفل بكلمة سرّ"
 
-#: src/battlelistfilter.cpp:123
+#: src/battlelistfilter.cpp:116
 msgid "Highlighted only"
 msgstr ""
 
-#: src/battlelistfilter.cpp:133
+#: src/battlelistfilter.cpp:126
 msgid "Rank Limit:"
 msgstr "حدّ الترتيب:"
 
-#: src/battlelistfilter.cpp:167
+#: src/battlelistfilter.cpp:160
 msgid "Description:"
 msgstr "وصف:"
 
-#: src/battlelistfilter.cpp:188
+#: src/battlelistfilter.cpp:181
 msgid "Started"
 msgstr "بدئت"
 
-#: src/battlelistfilter.cpp:193
+#: src/battlelistfilter.cpp:186
 msgid "Full"
 msgstr "كاملة"
 
-#: src/battlelistfilter.cpp:198
+#: src/battlelistfilter.cpp:191
 msgid "Open"
 msgstr "فتح"
 
-#: src/battlelistfilter.cpp:208 src/replay/replayfilter.cpp:71
+#: src/battlelistfilter.cpp:201 src/playback/playbackfilter.cpp:68
 msgid "Player:"
 msgstr "لاعب:"
 
-#: src/battlelistfilter.cpp:217 src/replay/replayfilter.cpp:78
+#: src/battlelistfilter.cpp:210 src/playback/playbackfilter.cpp:75
 msgid "All"
 msgstr "الكل"
 
-#: src/battlelistfilter.cpp:236 src/battlelisttab.cpp:95
-#: src/replay/replayfilter.cpp:99 src/replay/replaytab.cpp:87
-#: src/singleplayertab.cpp:66
+#: src/battlelistfilter.cpp:229 src/battlelisttab.cpp:89
+#: src/playback/playbackfilter.cpp:96 src/playback/playbacktab.cpp:88
+#: src/singleplayertab.cpp:63
 msgid "Map:"
 msgstr "الخارطة:"
 
-#: src/battlelistfilter.cpp:253 src/replay/replayfilter.cpp:116
+#: src/battlelistfilter.cpp:246 src/playback/playbackfilter.cpp:113
 msgid "Only maps i have"
 msgstr "فقط الخرائطي التي أملكها"
 
-#: src/battlelistfilter.cpp:264
+#: src/battlelistfilter.cpp:257
 msgid "Max.Player:"
 msgstr "الحدّ الأعلى للاعبين:"
 
-#: src/battlelistfilter.cpp:291 src/battlelisttab.cpp:101
-#: src/replay/replayfilter.cpp:132 src/replay/replaytab.cpp:93
-#: src/singleplayertab.cpp:75
+#: src/battlelistfilter.cpp:284 src/battlelisttab.cpp:95
+#: src/playback/playbackfilter.cpp:129 src/playback/playbacktab.cpp:94
+#: src/singleplayertab.cpp:72
 msgid "Mod:"
 msgstr ""
 
-#: src/battlelistfilter.cpp:308 src/replay/replayfilter.cpp:149
+#: src/battlelistfilter.cpp:301 src/playback/playbackfilter.cpp:146
 msgid "Only mods i have"
 msgstr ""
 
-#: src/battlelistfilter.cpp:319
+#: src/battlelistfilter.cpp:312
 msgid "    Spectator:"
 msgstr "    متابع:"
 
-#: src/battlelistfilter.cpp:591 src/battlelistfilter.cpp:596
-#: src/battlelistfilter.cpp:597 src/battlelistfilter.cpp:599
-#: src/replay/replayfilter.cpp:401
-msgid "%d%"
-msgstr "%d%"
+#: src/battlelistfilter.cpp:597 src/battlelistfilter.cpp:602
+#: src/battlelistfilter.cpp:603 src/battlelistfilter.cpp:605
+#: src/playback/playbackfilter.cpp:412 src/settings++/tab_quality_video.cpp:87
+#: src/settings++/tab_quality_video.cpp:88
+#, c-format
+msgid "%d"
+msgstr ""
 
-#: src/battlelisttab.cpp:107 src/replay/replaytab.cpp:99
+#: src/battlelisttab.cpp:101 src/playback/playbacktab.cpp:100
 msgid "Players:"
 msgstr "اللّاعبون:"
 
-#: src/battlelisttab.cpp:139 src/battlelisttab.cpp:141
+#: src/battlelisttab.cpp:133 src/battlelisttab.cpp:135
 msgid " Filter "
 msgstr ""
 
-#: src/battlelisttab.cpp:146 src/battlelisttab.cpp:148
+#: src/battlelisttab.cpp:140 src/battlelisttab.cpp:142
 msgid " Battle infos "
 msgstr ""
 
-#: src/battlelisttab.cpp:152
+#: src/battlelisttab.cpp:146
 #, fuzzy
 msgid "Activated"
 msgstr "بدئت"
 
-#: src/battlelisttab.cpp:161
+#: src/battlelisttab.cpp:151
+msgid "0 battles displayed"
+msgstr ""
+
+#: src/battlelisttab.cpp:155
 msgid "Host new..."
 msgstr "استضافة جديدة..."
 
-#: src/battlelisttab.cpp:164
+#: src/battlelisttab.cpp:158
 msgid "Join"
 msgstr "انضمام"
 
-#: src/battlelisttab.cpp:396
+#: src/battlelisttab.cpp:181
+#, c-format
+msgid "%d battles displayed"
+msgstr ""
+
+#: src/battlelisttab.cpp:303
 msgid ""
 "You cannot host a game while being offline. Please connect to a lobby server."
 msgstr ""
 
-#: src/battlelisttab.cpp:396
+#: src/battlelisttab.cpp:303
 msgid "Not Online."
 msgstr "غير متصل."
 
-#: src/battlelisttab.cpp:403
+#: src/battlelisttab.cpp:310
 msgid "Hosting is disabled due to the incompatible version you're using"
 msgstr ""
 
-#: src/battlelisttab.cpp:403 src/battlelisttab.cpp:409
-#: src/battlelisttab.cpp:580 src/battlelisttab.cpp:600
-#: src/replay/replaytab.cpp:307 src/replay/replaytab.cpp:329
-#: src/settings++/panel_pathoption.cpp:91 src/singleplayertab.cpp:298
-#: src/springoptionstab.cpp:190 src/ui.cpp:606 src/ui.cpp:626
+#: src/battlelisttab.cpp:310 src/battlelisttab.cpp:316
+#: src/battlelisttab.cpp:489 src/battlelisttab.cpp:524
+#: src/playback/playbacktab.cpp:291 src/playback/playbacktab.cpp:315
+#: src/settings++/panel_pathoption.cpp:93 src/singleplayertab.cpp:307
+#: src/springoptionstab.cpp:219 src/ui.cpp:629 src/ui.cpp:649
 msgid "Spring error"
 msgstr "خطأ Spring"
 
-#: src/battlelisttab.cpp:409
+#: src/battlelisttab.cpp:316
 msgid ""
 "You already are running a Spring instance, close it first in order to be "
 "able to host a new game"
 msgstr ""
 
-#: src/battlelisttab.cpp:415 src/battlelisttab.cpp:587
+#: src/battlelisttab.cpp:322
 msgid "Already in a battle"
 msgstr ""
 
-#: src/battlelisttab.cpp:415
+#: src/battlelisttab.cpp:322
 msgid ""
 "You are already in a battle.\n"
 "\n"
 "Do you want to leave current battle to start a new?"
 msgstr ""
 
-#: src/battlelisttab.cpp:440
+#: src/battlelisttab.cpp:347
 msgid ""
 "Your using wxWidgets prior to version 2.8,\n"
 " port testing is not supported.\n"
 " Hosting may or may not work."
 msgstr ""
 
-#: src/battlelisttab.cpp:447
+#: src/battlelisttab.cpp:354
 #, c-format
 msgid ""
 "The server used for testing your port %d is unreachable. \n"
 "Hosting may or may not work with this setting."
 msgstr ""
 
-#: src/battlelisttab.cpp:455 src/battlelisttab.cpp:465
+#: src/battlelisttab.cpp:362 src/battlelisttab.cpp:372
 #, c-format
 msgid ""
 "Battle not started because the port you selected (%d) is unable to recieve "
@@ -363,511 +377,705 @@ msgid ""
 " option in the hosting settings."
 msgstr ""
 
-#: src/battlelisttab.cpp:481
+#: src/battlelisttab.cpp:388
 msgid "Battle not started beacuse the mod you selected could not be found. "
 msgstr ""
 
-#: src/battlelisttab.cpp:481
+#: src/battlelisttab.cpp:388
 msgid "Error starting battle."
 msgstr "خطأ في بدأ المعركة."
 
-#: src/battlelisttab.cpp:493 src/battlelisttab.cpp:504
+#: src/battlelisttab.cpp:400 src/battlelisttab.cpp:411
 msgid ""
 "Couldn't find any maps in your spring installation. This could happen when "
 "you set the Spring settings incorrectly."
 msgstr ""
 
-#: src/battlelisttab.cpp:493 src/battlelisttab.cpp:504
+#: src/battlelisttab.cpp:400 src/battlelisttab.cpp:411
 msgid "No maps found"
 msgstr "لم يتم العثور على أي خريطة"
 
-#: src/battlelisttab.cpp:580
+#: src/battlelisttab.cpp:489
 msgid ""
 "Joining battles is disabled due to the incompatible spring version you're "
 "using."
 msgstr ""
 
-#: src/battlelisttab.cpp:587
+#: src/battlelisttab.cpp:497
+msgid "Already in this battle"
+msgstr ""
+
+#: src/battlelisttab.cpp:497
+msgid ""
+"You are already in this battle.\n"
+"\n"
+"Do you want to leave it?"
+msgstr ""
+
+#: src/battlelisttab.cpp:511
+msgid "Already in another battle"
+msgstr ""
+
+#: src/battlelisttab.cpp:511
 msgid ""
 "You are already in a battle.\n"
 "\n"
-"Do you want to leave current battle to and join this one?"
+"Do you want to leave your current battle and join this one?"
 msgstr ""
 
-#: src/battlelisttab.cpp:600
+#: src/battlelisttab.cpp:524
 msgid ""
 "You already are running a Spring instance, close it first in order to be "
 "able to join another battle."
 msgstr ""
 
-#: src/battlelisttab.cpp:605 src/replay/replaytab.cpp:339
+#: src/battlelisttab.cpp:529 src/playback/playbacktab.cpp:326
 msgid "Do you want me to take you to the download page?"
 msgstr ""
 
-#: src/battlelisttab.cpp:607 src/replay/replaytab.cpp:341
+#: src/battlelisttab.cpp:531 src/playback/playbacktab.cpp:328
 msgid ""
 "Should i try to download it for you?\n"
 "You can see the progress in the \"Download Manager\" tab."
 msgstr ""
 
-#: src/battlelisttab.cpp:612
+#: src/battlelisttab.cpp:536
 msgid ""
 "You need to download the mod before you can join this game.\n"
 "\n"
 msgstr ""
 
-#: src/battlelisttab.cpp:612 src/replay/replaytab.cpp:347
+#: src/battlelisttab.cpp:536 src/playback/playbacktab.cpp:334
 msgid "Mod not available"
 msgstr ""
 
-#: src/battlelisttab.cpp:622
+#: src/battlelisttab.cpp:546
 msgid ""
 "You need to download the map to be able to play in this game.\n"
 "\n"
 msgstr ""
 
-#: src/battlelisttab.cpp:622 src/replay/replaytab.cpp:356
+#: src/battlelisttab.cpp:546 src/playback/playbacktab.cpp:346
 msgid "Map not available"
 msgstr ""
 
-#: src/battlelisttab.cpp:631 src/chatpanel.cpp:1383
+#: src/battlelisttab.cpp:555 src/chatpanel.cpp:1499
 msgid "Battle password"
 msgstr ""
 
-#: src/battlelisttab.cpp:631
+#: src/battlelisttab.cpp:555
 msgid "Enter password"
 msgstr "أدخل كلمة السرّ"
 
-#: src/battlemaptab.cpp:71
+#: src/battlemaptab.cpp:66
 #, fuzzy
 msgid "Select"
 msgstr "إنتقاء..."
 
-#: src/battlemaptab.cpp:88 src/battleroomtab.cpp:246
+#: src/battlemaptab.cpp:83 src/battleroomtab.cpp:280
+#: src/mapselectdialog.cpp:149
 msgid "Option"
 msgstr "خيار"
 
-#: src/battlemaptab.cpp:90 src/battleroomtab.cpp:248
+#: src/battlemaptab.cpp:85 src/battleroomtab.cpp:282
+#: src/mapselectdialog.cpp:151
 msgid "Value"
 msgstr "قيمة"
 
-#: src/battlemaptab.cpp:95 src/battleroomtab.cpp:253 src/battleroomtab.cpp:254
-#: src/battleroomtab.cpp:452 src/battleroomtab.cpp:460
+#: src/battlemaptab.cpp:90 src/battleroomtab.cpp:287 src/battleroomtab.cpp:288
+#: src/battleroomtab.cpp:496 src/battleroomtab.cpp:503
+#: src/mapselectdialog.cpp:156
 msgid "Size"
 msgstr "حجم"
 
-#: src/battlemaptab.cpp:96 src/battleroomtab.cpp:255 src/battleroomtab.cpp:256
-#: src/battleroomtab.cpp:453 src/battleroomtab.cpp:461
+#: src/battlemaptab.cpp:91 src/battleroomtab.cpp:289 src/battleroomtab.cpp:290
+#: src/battleroomtab.cpp:497 src/battleroomtab.cpp:504
+#: src/mapselectdialog.cpp:157
 msgid "Windspeed"
 msgstr ""
 
-#: src/battlemaptab.cpp:97 src/battleroomtab.cpp:257 src/battleroomtab.cpp:258
-#: src/battleroomtab.cpp:454 src/battleroomtab.cpp:462
+#: src/battlemaptab.cpp:92 src/battleroomtab.cpp:291 src/battleroomtab.cpp:292
+#: src/battleroomtab.cpp:498 src/battleroomtab.cpp:505
+#: src/mapselectdialog.cpp:158 src/mapselectdialog.cpp:261
 msgid "Tidal strength"
 msgstr ""
 
-#: src/battlemaptab.cpp:98
+#: src/battlemaptab.cpp:93 src/mapselectdialog.cpp:159
+#: src/mapselectdialog.cpp:262
 msgid "Gravity"
 msgstr "الجاذبيّة"
 
-#: src/battlemaptab.cpp:99
+#: src/battlemaptab.cpp:94 src/mapselectdialog.cpp:160
+#: src/mapselectdialog.cpp:264
 msgid "Extractor radius"
 msgstr ""
 
-#: src/battlemaptab.cpp:100
+#: src/battlemaptab.cpp:95 src/mapselectdialog.cpp:161
+#: src/mapselectdialog.cpp:263
 msgid "Max metal"
 msgstr ""
 
-#: src/battlemaptab.cpp:104 src/battleroomtab.cpp:385
-#: src/mmoptionswrapper.cpp:103
-msgid "Fixed"
-msgstr "ثابت"
-
-#: src/battlemaptab.cpp:104
+#: src/battlemaptab.cpp:102 src/battlemaptab.cpp:109
 msgid "Choose in game"
 msgstr "اختار في اللعبة"
 
-#: src/battlemaptab.cpp:104 src/mmoptionswrapper.cpp:106
+#: src/battlemaptab.cpp:102 src/battlemaptab.cpp:109
+#: src/mmoptionswrapper.cpp:120
 #, fuzzy
 msgid "Chose before game"
 msgstr "اختار في اللعبة"
 
-#: src/battlemaptab.cpp:107
+#: src/battlemaptab.cpp:105 src/battlemaptab.cpp:112
 msgid "Startpositions"
 msgstr "مواقع البدء"
 
-#: src/battleoptionstab.cpp:57
+#: src/battlemaptab.cpp:109 src/battleroomtab.cpp:430
+#: src/mmoptionswrapper.cpp:117
+msgid "Fixed"
+msgstr "ثابت"
+
+#: src/battleoptionstab.cpp:52
 msgid "Unit restrictions"
 msgstr ""
 
-#: src/battleoptionstab.cpp:65
+#: src/battleoptionstab.cpp:60
 msgid "Allowed units"
 msgstr ""
 
-#: src/battleoptionstab.cpp:69
+#: src/battleoptionstab.cpp:64
 msgid "Units in this list will be available in the game."
 msgstr ""
 
-#: src/battleoptionstab.cpp:81
+#: src/battleoptionstab.cpp:76
 #, fuzzy
 msgid "Disable selected units."
 msgstr "تفعيل كل الوحدات."
 
-#: src/battleoptionstab.cpp:85
+#: src/battleoptionstab.cpp:80
 #, fuzzy
 msgid "Re-enable selected units."
 msgstr "تفعيل كل الوحدات."
 
-#: src/battleoptionstab.cpp:88
+#: src/battleoptionstab.cpp:83
 msgid "<<"
 msgstr ""
 
-#: src/battleoptionstab.cpp:89
+#: src/battleoptionstab.cpp:84
 msgid "Enable all units."
 msgstr "تفعيل كل الوحدات."
 
-#: src/battleoptionstab.cpp:98
+#: src/battleoptionstab.cpp:93
 msgid "Restricted units"
 msgstr ""
 
-#: src/battleoptionstab.cpp:102
+#: src/battleoptionstab.cpp:97
 msgid "Units in this list will not be available in the game."
 msgstr ""
 
-#: src/battleroomlistctrl.cpp:89 src/connectwindow.cpp:69
-#: src/nicklistctrl.cpp:58 src/selectusersdialog.cpp:105
+#: src/battleoptionstab.cpp:238
+msgid "How many units of this type do you wish to allow?"
+msgstr ""
+
+#: src/battleoptionstab.cpp:238
+msgid "Unit restriction"
+msgstr ""
+
+#: src/battleroomlistctrl.cpp:83 src/connectwindow.cpp:70
+#: src/nicklistctrl.cpp:61 src/selectusersdialog.cpp:106
 #: src/userlistctrl.cpp:20
 msgid "Nickname"
 msgstr "الكنية"
 
-#: src/battleroomlistctrl.cpp:93
-msgid "t"
-msgstr ""
+#: src/battleroomlistctrl.cpp:84
+#, fuzzy
+msgid "team"
+msgstr "فريق"
 
-#: src/battleroomlistctrl.cpp:101
+#: src/battleroomlistctrl.cpp:85
+#, fuzzy
+msgid "ally"
+msgstr "حليف"
+
+#: src/battleroomlistctrl.cpp:86
 msgid "cpu"
 msgstr ""
 
-#: src/battleroomlistctrl.cpp:105
+#: src/battleroomlistctrl.cpp:87
 msgid "Resource Bonus"
 msgstr ""
 
-#: src/battleroomlistctrl.cpp:138 src/battleroomtab.cpp:144
+#: src/battleroomlistctrl.cpp:110 src/battleroomtab.cpp:155
 msgid "Team"
 msgstr "فريق"
 
-#: src/battleroomlistctrl.cpp:146 src/battleroomtab.cpp:145
+#: src/battleroomlistctrl.cpp:119 src/battleroomtab.cpp:156
 msgid "Ally"
 msgstr "حليف"
 
-#: src/battleroomlistctrl.cpp:159 src/battleroomtab.cpp:147
+#: src/battleroomlistctrl.cpp:132 src/battleroomtab.cpp:158
 msgid "Side"
 msgstr "جهة"
 
-#: src/battleroomlistctrl.cpp:163
+#: src/battleroomlistctrl.cpp:136
 msgid "Set color"
 msgstr "تعيين اللون"
 
-#: src/battleroomlistctrl.cpp:168 src/battleroomlistctrl.cpp:418
+#: src/battleroomlistctrl.cpp:141 src/battleroomlistctrl.cpp:393
 msgid "Set Resource Bonus"
 msgstr ""
 
-#: src/battleroomlistctrl.cpp:173 src/battleroomlistctrl.cpp:355
-#: src/battleroomlistctrl.cpp:364 src/battleroomtab.cpp:129
+#: src/battleroomlistctrl.cpp:146 src/battleroomlistctrl.cpp:329
+#: src/battleroomlistctrl.cpp:338 src/battleroomtab.cpp:140
 msgid "Spectator"
 msgstr "متابع"
 
-#: src/battleroomlistctrl.cpp:178 src/battleroomlistctrl.cpp:359
-#: src/battleroomlistctrl.cpp:369
+#: src/battleroomlistctrl.cpp:151 src/battleroomlistctrl.cpp:333
+#: src/battleroomlistctrl.cpp:343
 msgid "Kick"
 msgstr "طرد"
 
-#: src/battleroomlistctrl.cpp:180 src/battleroomlistctrl.cpp:358
-#: src/battleroomlistctrl.cpp:367 src/chatpanel.cpp:510
+#: src/battleroomlistctrl.cpp:153 src/battleroomlistctrl.cpp:332
+#: src/battleroomlistctrl.cpp:341 src/chatpanel.cpp:555
 msgid "Ring"
 msgstr ""
 
-#: src/battleroomlistctrl.cpp:418
+#: src/battleroomlistctrl.cpp:393
 msgid "Please enter a value between 0 and 100"
 msgstr "رجاء إدخال رقم بين 0 و100"
 
-#: src/battleroomlistctrl.cpp:423
-msgid "Not a number"
-msgstr "هذا ليس رقم"
+#: src/battleroomlistctrl.cpp:706
+#, fuzzy
+msgid "AI (bot)\n"
+msgstr "إضافة بوت"
 
-#: src/battleroomlistctrl.cpp:423 src/battleroomlistctrl.cpp:428
-msgid "Invalid number"
-msgstr "رقم غير صالح"
-
-#: src/battleroomlistctrl.cpp:428
-msgid ""
-"Value out of range.\n"
-" Enter an integer between 0 & 100."
+#: src/battleroomlistctrl.cpp:708
+msgid "Human\n"
 msgstr ""
 
-#: src/battleroomlistctrl.cpp:974 src/chatpanel.cpp:1610
+#: src/battleroomlistctrl.cpp:711
+#, fuzzy
+msgid "Spectator\n"
+msgstr "متابع"
+
+#: src/battleroomlistctrl.cpp:713
+#, fuzzy
+msgid "Player\n"
+msgstr "لاعب:"
+
+#: src/battleroomlistctrl.cpp:716
+#, fuzzy
+msgid "Host\n"
+msgstr "مستضيف"
+
+#: src/battleroomlistctrl.cpp:718
+#, fuzzy
+msgid "Client\n"
+msgstr "العميل"
+
+#: src/battleroomlistctrl.cpp:721
+#, fuzzy
+msgid "Ready\n"
+msgstr "دائماً"
+
+#: src/battleroomlistctrl.cpp:723
+#, fuzzy
+msgid "Not ready\n"
+msgstr "غير جاهز"
+
+#: src/battleroomlistctrl.cpp:726
+msgid "In sync"
+msgstr ""
+
+#: src/battleroomlistctrl.cpp:728
+msgid "Not in sync"
+msgstr ""
+
+#: src/battleroomlistctrl.cpp:780 src/chatpanel.cpp:1726
 msgid "Enter name"
 msgstr ""
 
-#: src/battleroomlistctrl.cpp:975 src/chatpanel.cpp:1611
+#: src/battleroomlistctrl.cpp:781 src/chatpanel.cpp:1727
 msgid ""
 "Please enter the name for the new group.\n"
 "After clicking ok you will be taken to adjust its settings."
 msgstr ""
 
-#: src/battleroomtab.cpp:122
-msgid "Players with the same team number share control of their units."
-msgstr ""
-
-#: src/battleroomtab.cpp:124
-msgid "Players with the same ally number work together to achieve victory."
-msgstr ""
-
-#: src/battleroomtab.cpp:126
-msgid "Select a color to identify your units in-game"
-msgstr ""
-
-#: src/battleroomtab.cpp:128
-msgid "Select your faction"
-msgstr ""
-
-#: src/battleroomtab.cpp:130
-msgid "Spectate (watch) the battle instead of playing"
-msgstr ""
-
-#: src/battleroomtab.cpp:131
-msgid "I'm ready"
-msgstr "أنا جاهز"
-
-#: src/battleroomtab.cpp:132
-msgid "Click this if you are content with the battle settings."
-msgstr ""
-
-#: src/battleroomtab.cpp:146
-msgid "Color"
-msgstr "اللون"
-
-#: src/battleroomtab.cpp:155
-msgid ""
-"A preview of the selected map.  You can see the starting positions, or (if "
-"set) starting boxes."
-msgstr ""
-
-#: src/battleroomtab.cpp:165 src/chatpanel.cpp:380
-msgid "Leave"
-msgstr "مغادرة"
-
-#: src/battleroomtab.cpp:166
-msgid "Leave the battle and return to the battle list"
-msgstr ""
-
-#: src/battleroomtab.cpp:167 src/singleplayertab.cpp:109
-msgid "Start"
-msgstr "بدء"
-
-#: src/battleroomtab.cpp:168
-msgid "Start the battle"
-msgstr ""
-
-#: src/battleroomtab.cpp:170
-msgid "Player Management"
-msgstr ""
-
-#: src/battleroomtab.cpp:171
-msgid "Various functions to make team games simplers to setup"
-msgstr ""
-
-#: src/battleroomtab.cpp:173
-msgid "Add Bot..."
-msgstr "إضافة بوت..."
-
-#: src/battleroomtab.cpp:174
-msgid "Add a computer-controlled player to the game"
-msgstr ""
-
-#: src/battleroomtab.cpp:176 src/battleroomtab.cpp:178
-msgid "Autolock on start"
-msgstr ""
-
-#: src/battleroomtab.cpp:180
-msgid ""
-"Automatically locks the battle when the game starts and unlock when it's "
-"finished."
-msgstr ""
-
-#: src/battleroomtab.cpp:188
-msgid "Prevent additional players from joining the battle"
-msgstr ""
-
-#: src/battleroomtab.cpp:190 src/battleroomtab.cpp:192
-msgid "Autohost"
-msgstr ""
-
-#: src/battleroomtab.cpp:194
-msgid ""
-"Toggle autohost mode.  This allows players to control your battle using "
-"commands like '!balance' and '!start'."
-msgstr ""
-
-#: src/battleroomtab.cpp:198
-msgid "Lock Balance"
-msgstr ""
-
-#: src/battleroomtab.cpp:198
-msgid "When activated, prevents anyone but the host to change team and ally"
-msgstr ""
-
-#: src/battleroomtab.cpp:202
-msgid "Balance alliances"
-msgstr ""
-
-#: src/battleroomtab.cpp:202
-msgid "Automatically balance players into two or more alliances"
-msgstr ""
-
-#: src/battleroomtab.cpp:205
-msgid "Fix colours"
-msgstr "تثبيت الألوان"
-
-#: src/battleroomtab.cpp:205
-msgid "Make player colors unique"
-msgstr ""
-
-#: src/battleroomtab.cpp:208
-msgid "Balance teams"
-msgstr ""
-
-#: src/battleroomtab.cpp:208
-msgid ""
-"Automatically balance players into control teams, by default none shares "
-"control"
-msgstr ""
-
-#: src/battleroomtab.cpp:212
+#: src/battleroommmoptionstab.cpp:55 src/battleroomtab.cpp:246
 msgid "Manage Presets"
 msgstr ""
 
-#: src/battleroomtab.cpp:218
-msgid "Load battle preset"
+#: src/battleroommmoptionstab.cpp:58
+msgid "Set name."
 msgstr ""
 
-#: src/battleroomtab.cpp:222
+#: src/battleroommmoptionstab.cpp:62
+msgid "Load..."
+msgstr "تحميل..."
+
+#: src/battleroommmoptionstab.cpp:63
+msgid "Load a saved set of options."
+msgstr ""
+
+#: src/battleroommmoptionstab.cpp:67
 #, fuzzy
-msgid "Save"
+msgid "Save..."
 msgstr "حفظ..."
 
-#: src/battleroomtab.cpp:223
+#: src/battleroommmoptionstab.cpp:68 src/battleroomtab.cpp:257
 msgid "Save a set of options."
 msgstr ""
 
-#: src/battleroomtab.cpp:227 src/replay/replaytab.cpp:144
-msgid "Delete"
-msgstr ""
+#: src/battleroommmoptionstab.cpp:72
+#, fuzzy
+msgid "Delete..."
+msgstr "إنتقاء..."
 
-#: src/battleroomtab.cpp:228
+#: src/battleroommmoptionstab.cpp:73 src/battleroomtab.cpp:262
 msgid "Delete a set of options."
 msgstr ""
 
-#: src/battleroomtab.cpp:232
+#: src/battleroommmoptionstab.cpp:77
 #, fuzzy
-msgid "Set default"
+msgid "Set default..."
 msgstr "المبدئي"
 
-#: src/battleroomtab.cpp:233
+#: src/battleroommmoptionstab.cpp:78 src/battleroomtab.cpp:267
 msgid "Use the current set of options as mod's default."
 msgstr ""
 
-#: src/battleroomtab.cpp:243
-msgid "Activate an element to quickly change it"
+#: src/battleroommmoptionstab.cpp:86
+#, fuzzy
+msgid "Mod Options"
+msgstr "خيارات الخارطة"
+
+#: src/battleroommmoptionstab.cpp:91
+msgid "Map Options"
+msgstr "خيارات الخارطة"
+
+#: src/battleroommmoptionstab.cpp:152
+msgid "no options available"
 msgstr ""
 
-#: src/battleroomtab.cpp:389
-msgid "Boxes"
-msgstr ""
-
-#: src/battleroomtab.cpp:391
-msgid "Pick"
-msgstr ""
-
-#: src/battleroomtab.cpp:403
-msgid "Continue"
-msgstr ""
-
-#: src/battleroomtab.cpp:405
-msgid "End"
-msgstr ""
-
-#: src/battleroomtab.cpp:407
-msgid "Lineage"
-msgstr ""
-
-#: src/battleroomtab.cpp:449
-msgid "Map does not exist."
-msgstr ""
-
-#: src/battleroomtab.cpp:545
+#: src/battleroommmoptionstab.cpp:494
 msgid ""
-"There are two or more bots on the same team.  Because bots don't know how to "
-"share, this won't work."
+"Cannot load an options set without a name\n"
+"Please select one from the list and try again."
 msgstr ""
 
-#: src/battleroomtab.cpp:545
-msgid "Bot team sharing."
+#: src/battleroommmoptionstab.cpp:494 src/battleroommmoptionstab.cpp:511
+#: src/battleroomtab.cpp:877 src/ui.cpp:854
+msgid "error"
 msgstr ""
 
-#: src/battleroomtab.cpp:553
-msgid ""
-"Some players are not ready yet.\n"
-"Ring these players?"
-msgstr ""
-
-#: src/battleroomtab.cpp:553 src/battleroomtab.cpp:559
-msgid "Not ready"
-msgstr "غير جاهز"
-
-#: src/battleroomtab.cpp:559
-msgid "Force start?"
-msgstr ""
-
-#: src/battleroomtab.cpp:564
-msgid ""
-"You have more than 32 players (including spectators) in your battle\n"
-"Spring supports maximum 32"
-msgstr ""
-
-#: src/battleroomtab.cpp:564 src/singleplayertab.cpp:273
-msgid "Num players error"
-msgstr ""
-
-#: src/battleroomtab.cpp:794
+#: src/battleroommmoptionstab.cpp:507 src/battleroomtab.cpp:874
 msgid "Enter preset name"
 msgstr ""
 
-#: src/battleroomtab.cpp:794
+#: src/battleroommmoptionstab.cpp:507 src/battleroomtab.cpp:874
 msgid ""
 "Enter a name to save the current set of options\n"
 "If a preset with the same name already exist, it will be overwritten"
 msgstr ""
 
-#: src/battleroomtab.cpp:797
+#: src/battleroommmoptionstab.cpp:511 src/battleroomtab.cpp:877
 msgid "Cannot save an options set without a name."
 msgstr ""
 
-#: src/battleroomtab.cpp:797 src/ui.cpp:779
-msgid "error"
-msgstr ""
-
-#: src/battleroomtab.cpp:807 src/battleroomtab.cpp:815
+#: src/battleroommmoptionstab.cpp:522 src/battleroommmoptionstab.cpp:531
+#: src/battleroomtab.cpp:887 src/battleroomtab.cpp:895
 msgid "Pick an existing option set from the list"
 msgstr ""
 
-#: src/battleroomtab.cpp:807
-msgid "Set delete preset"
+#: src/battleroommmoptionstab.cpp:522 src/battleroomtab.cpp:887
+msgid "Delete preset"
 msgstr ""
 
-#: src/battleroomtab.cpp:815
+#: src/battleroommmoptionstab.cpp:531 src/battleroomtab.cpp:895
 #, fuzzy
 msgid "Set mod default preset"
+msgstr "المبدئي"
+
+#: src/battleroomtab.cpp:133
+msgid "Players with the same team number share control of their units."
+msgstr ""
+
+#: src/battleroomtab.cpp:135
+msgid "Players with the same ally number work together to achieve victory."
+msgstr ""
+
+#: src/battleroomtab.cpp:137
+msgid "Select a color to identify your units in-game"
+msgstr ""
+
+#: src/battleroomtab.cpp:139
+msgid "Select your faction"
+msgstr ""
+
+#: src/battleroomtab.cpp:141
+msgid "Spectate (watch) the battle instead of playing"
+msgstr ""
+
+#: src/battleroomtab.cpp:142
+msgid "I'm ready"
+msgstr "أنا جاهز"
+
+#: src/battleroomtab.cpp:143
+msgid "Click this if you are content with the battle settings."
+msgstr ""
+
+#: src/battleroomtab.cpp:157
+msgid "Color"
+msgstr "اللون"
+
+#: src/battleroomtab.cpp:167
+msgid ""
+"A preview of the selected map.  You can see the starting positions, or (if "
+"set) starting boxes."
+msgstr ""
+
+#: src/battleroomtab.cpp:177 src/chatpanel.cpp:414
+msgid "Leave"
+msgstr "مغادرة"
+
+#: src/battleroomtab.cpp:178
+msgid "Leave the battle and return to the battle list"
+msgstr ""
+
+#: src/battleroomtab.cpp:179 src/singleplayertab.cpp:106
+msgid "Start"
+msgstr "بدء"
+
+#: src/battleroomtab.cpp:180
+msgid "Start the battle"
+msgstr ""
+
+#: src/battleroomtab.cpp:182
+msgid "Player Management"
+msgstr ""
+
+#: src/battleroomtab.cpp:183
+msgid "Various functions to make team games simplers to setup"
+msgstr ""
+
+#: src/battleroomtab.cpp:185
+msgid "Add Bot..."
+msgstr "إضافة بوت..."
+
+#: src/battleroomtab.cpp:186
+msgid "Add a computer-controlled player to the game"
+msgstr ""
+
+#: src/battleroomtab.cpp:188 src/battleroomtab.cpp:190
+msgid "Autolock on start"
+msgstr ""
+
+#: src/battleroomtab.cpp:192
+msgid ""
+"Automatically locks the battle when the game starts and unlock when it's "
+"finished."
+msgstr ""
+
+#: src/battleroomtab.cpp:196
+msgid "Prevent additional players from joining the battle"
+msgstr ""
+
+#: src/battleroomtab.cpp:200
+msgid "Autohost"
+msgstr ""
+
+#: src/battleroomtab.cpp:200
+msgid ""
+"Toggle autohost mode.  This allows players to control your battle using "
+"commands like '!balance' and '!start'."
+msgstr ""
+
+#: src/battleroomtab.cpp:204
+#, fuzzy
+msgid "AutoSpect"
+msgstr "إعادة الاتصال"
+
+#: src/battleroomtab.cpp:204
+msgid ""
+"Automatically spectate players that don't ready up or become synced within x "
+"seconds."
+msgstr ""
+
+#: src/battleroomtab.cpp:207
+msgid "AutoControlBalance"
+msgstr ""
+
+#: src/battleroomtab.cpp:207
+msgid ""
+"Automatically balance teams and allies and fix colors when all players are "
+"ready and synced"
+msgstr ""
+
+#: src/battleroomtab.cpp:210
+#, fuzzy
+msgid "AutoStart"
+msgstr "بدء"
+
+#: src/battleroomtab.cpp:210
+msgid "Automatically start the battle when all players are ready and synced"
+msgstr ""
+
+#: src/battleroomtab.cpp:214
+msgid "Lock Balance"
+msgstr ""
+
+#: src/battleroomtab.cpp:214
+msgid "When activated, prevents anyone but the host to change team and ally"
+msgstr ""
+
+#: src/battleroomtab.cpp:219
+msgid "Ring unready"
+msgstr ""
+
+#: src/battleroomtab.cpp:219
+msgid "Rings all players that don't have ready status and aren't spectators"
+msgstr ""
+
+#: src/battleroomtab.cpp:221
+msgid "Ring unsynced"
+msgstr ""
+
+#: src/battleroomtab.cpp:221
+msgid "Rings all players that don't have sync status and aren't spectators"
+msgstr ""
+
+#: src/battleroomtab.cpp:223
+msgid "Ring unready and unsynced"
+msgstr ""
+
+#: src/battleroomtab.cpp:223
+msgid ""
+"Rings all players that don't have sync status or don't have ready status and "
+"aren't spectators"
+msgstr ""
+
+#: src/battleroomtab.cpp:225
+msgid "Ring ..."
+msgstr ""
+
+#: src/battleroomtab.cpp:228
+#, fuzzy
+msgid "Spect unready"
+msgstr "غير جاهز"
+
+#: src/battleroomtab.cpp:228
+msgid "Force to spectate all players that don't have ready status"
+msgstr ""
+
+#: src/battleroomtab.cpp:230
+msgid "Spect unsynced"
+msgstr ""
+
+#: src/battleroomtab.cpp:230
+msgid "Force to spectate all players that don't have sync status"
+msgstr ""
+
+#: src/battleroomtab.cpp:232
+msgid "Force to spectate unready and unsynced"
+msgstr ""
+
+#: src/battleroomtab.cpp:232
+msgid ""
+"Rings all players that don't have sync status or don't have ready status"
+msgstr ""
+
+#: src/battleroomtab.cpp:234
+msgid "Force spectate ..."
+msgstr ""
+
+#: src/battleroomtab.cpp:236
+msgid "Balance alliances"
+msgstr ""
+
+#: src/battleroomtab.cpp:236
+msgid "Automatically balance players into two or more alliances"
+msgstr ""
+
+#: src/battleroomtab.cpp:239
+msgid "Fix colours"
+msgstr "تثبيت الألوان"
+
+#: src/battleroomtab.cpp:239
+msgid "Make player colors unique"
+msgstr ""
+
+#: src/battleroomtab.cpp:242
+msgid "Balance teams"
+msgstr ""
+
+#: src/battleroomtab.cpp:242
+msgid ""
+"Automatically balance players into control teams, by default none shares "
+"control"
+msgstr ""
+
+#: src/battleroomtab.cpp:252
+msgid "Load battle preset"
+msgstr ""
+
+#: src/battleroomtab.cpp:256
+#, fuzzy
+msgid "Save"
+msgstr "حفظ..."
+
+#: src/battleroomtab.cpp:261 src/playback/playbacktab.cpp:141
+msgid "Delete"
+msgstr ""
+
+#: src/battleroomtab.cpp:266
+#, fuzzy
+msgid "Set default"
+msgstr "المبدئي"
+
+#: src/battleroomtab.cpp:277
+msgid "Activate an element to quickly change it"
+msgstr ""
+
+#: src/battleroomtab.cpp:434
+msgid "Boxes"
+msgstr ""
+
+#: src/battleroomtab.cpp:436
+msgid "Pick"
+msgstr ""
+
+#: src/battleroomtab.cpp:448
+msgid "Continue"
+msgstr ""
+
+#: src/battleroomtab.cpp:450
+msgid "End"
+msgstr ""
+
+#: src/battleroomtab.cpp:452
+msgid "Lineage"
+msgstr ""
+
+#: src/battleroomtab.cpp:494
+msgid "Map does not exist."
+msgstr ""
+
+#: src/battleroomtab.cpp:590
+msgid ""
+"Some Players are not ready yet\n"
+"Do you want to force start?"
+msgstr ""
+
+#: src/battleroomtab.cpp:590
+msgid "Not ready"
+msgstr "غير جاهز"
+
+#: src/battleroomtab.cpp:715
+msgid "Enter timeout before autospeccing a player in minutes"
+msgstr ""
+
+#: src/battleroomtab.cpp:715
+#, fuzzy
+msgid "Set Timeout"
 msgstr "المبدئي"
 
 #: src/channel/autojoinchanneldialog.cpp:25
@@ -890,126 +1098,126 @@ msgstr ""
 msgid "Find channel:"
 msgstr "قناة"
 
-#: src/channel/channelchooserdialog.cpp:13 src/mainwindow.cpp:229
+#: src/channel/channelchooserdialog.cpp:13 src/mainwindow.cpp:221
 msgid "Choose channels to join"
 msgstr ""
 
-#: src/channel/channellistctrl.cpp:20
+#: src/channel/channellistctrl.cpp:28
 #, fuzzy
-msgid "Channel name"
-msgstr "معلومات القناة"
+msgid "Channel"
+msgstr "قناة"
 
-#: src/channel/channellistctrl.cpp:24
+#: src/channel/channellistctrl.cpp:29
 msgid "# users"
 msgstr ""
 
-#: src/channel/channellistctrl.cpp:28
-msgid "topic"
-msgstr ""
-
-#: src/channel/channellistctrl.cpp:203
+#: src/channel/channellistctrl.cpp:114
 #, c-format
 msgid "Displaying %d out of %d channels"
 msgstr ""
 
-#: src/chatlog.cpp:43
+#: src/chatlog.cpp:44
 msgid "### Session Closed at ["
 msgstr ""
 
-#: src/chatlog.cpp:43
+#: src/chatlog.cpp:44
 msgid "]"
 msgstr "]"
 
-#: src/chatlog.cpp:82 src/chatlog.cpp:88
+#: src/chatlog.cpp:97 src/chatlog.cpp:103
 msgid ""
 "Couldn't create folder. \n"
 "Be sure that there isn't a write protection.\n"
 msgstr ""
 
-#: src/chatlog.cpp:82 src/chatlog.cpp:88
+#: src/chatlog.cpp:97 src/chatlog.cpp:103
 msgid "Log function is disabled until restart SpringLobby."
 msgstr ""
 
-#: src/chatlog.cpp:82 src/chatlog.cpp:105 src/chatlog.cpp:127
+#: src/chatlog.cpp:97 src/chatlog.cpp:120 src/chatlog.cpp:142
 msgid "Log Warning"
 msgstr ""
 
-#: src/chatlog.cpp:105
+#: src/chatlog.cpp:120
 msgid ""
 "Couldn't write message to log.\n"
 "Logging will be disabled for room "
 msgstr ""
 
-#: src/chatlog.cpp:105
+#: src/chatlog.cpp:120
 msgid ""
 ".\n"
 "\n"
 "Rejoin room to reactivate logging."
 msgstr ""
 
-#: src/chatlog.cpp:127
+#: src/chatlog.cpp:142
 msgid ""
 "Can't open log file. \n"
 "Be sure that there isn't a write protection.\n"
 msgstr ""
 
-#: src/chatoptionstab.cpp:75
+#: src/chatoptionstab.cpp:70
 msgid "Colors and font"
 msgstr ""
 
-#: src/chatoptionstab.cpp:80
+#: src/chatoptionstab.cpp:75
 msgid "Use system colors"
 msgstr ""
 
-#: src/chatoptionstab.cpp:106
+#: src/chatoptionstab.cpp:101
 msgid "Normal"
 msgstr ""
 
-#: src/chatoptionstab.cpp:120
+#: src/chatoptionstab.cpp:115
 msgid "Background"
 msgstr "خلفيَّة"
 
-#: src/chatoptionstab.cpp:134
+#: src/chatoptionstab.cpp:129
 msgid "Action"
 msgstr "اجراء"
 
-#: src/chatoptionstab.cpp:148 src/groupoptionspanel.cpp:124
+#: src/chatoptionstab.cpp:143 src/groupoptionspanel.cpp:125
 msgid "Highlight"
 msgstr ""
 
-#: src/chatoptionstab.cpp:162
+#: src/chatoptionstab.cpp:157
 msgid "Join/Leave"
 msgstr ""
 
-#: src/chatoptionstab.cpp:176
+#: src/chatoptionstab.cpp:171
 msgid "My messages"
 msgstr "راسالتي"
 
-#: src/chatoptionstab.cpp:195 src/connectwindow.cpp:63
+#: src/chatoptionstab.cpp:190 src/connectwindow.cpp:64
 msgid "Server"
 msgstr "الخادوم"
 
-#: src/chatoptionstab.cpp:209
+#: src/chatoptionstab.cpp:204
 msgid "Client"
 msgstr "العميل"
 
-#: src/chatoptionstab.cpp:223 src/chatpanel.cpp:1347 src/chatpanel.cpp:1521
-#: src/chatpanel.cpp:1527 src/chatpanel.cpp:1620 src/replay/replaytab.cpp:381
-#: src/settings++/tab_abstract.cpp:127 src/tasserver.cpp:465
-#: src/updater/updater.cpp:39 src/updater/updater.cpp:55
-#: src/updater/updater.cpp:71 src/updater/updater.cpp:75
+#: src/chatoptionstab.cpp:218 src/chatpanel.cpp:1463 src/chatpanel.cpp:1637
+#: src/chatpanel.cpp:1643 src/chatpanel.cpp:1736
+#: src/Helper/imageviewer.cpp:146 src/Helper/imageviewer.cpp:170
+#: src/playback/playbacktab.cpp:385 src/serverevents.cpp:955
+#: src/settings++/tab_abstract.cpp:127 src/tasserver.cpp:498
+#: src/updater/updater.cpp:46 src/updater/updater.cpp:82
+#: src/updater/updater.cpp:96 src/updater/updater.cpp:101
+#: src/updater/updater.cpp:104 src/widgets/infopanel.cpp:161
+#: src/widgets/infopanel.cpp:173
 msgid "Error"
 msgstr "خطأ"
 
-#: src/chatoptionstab.cpp:237
+#: src/chatoptionstab.cpp:232
 msgid "Timestamp"
 msgstr ""
 
-#: src/chatoptionstab.cpp:251
+#: src/chatoptionstab.cpp:246
 msgid "Notification"
 msgstr "اشعار"
 
-#: src/chatoptionstab.cpp:261
+#: src/chatoptionstab.cpp:256
 msgid ""
 "[19:35] ** Server ** Connected to Server.\n"
 "[22:30] <Dude> hi everyone\n"
@@ -1019,519 +1227,538 @@ msgid ""
 "[22:46] <Dude2> But could be better, should tweak them some more...\n"
 msgstr ""
 
-#: src/chatoptionstab.cpp:272
+#: src/chatoptionstab.cpp:267
 msgid "Font:"
 msgstr "الخطّ:"
 
-#: src/chatoptionstab.cpp:276
+#: src/chatoptionstab.cpp:271
 msgid "default"
 msgstr "المبدئي"
 
-#: src/chatoptionstab.cpp:280
+#: src/chatoptionstab.cpp:275
 msgid "Select..."
 msgstr "إنتقاء..."
 
-#: src/chatoptionstab.cpp:292
+#: src/chatoptionstab.cpp:287
 msgid "Behavior"
 msgstr "سلوك"
 
-#: src/chatoptionstab.cpp:294
-msgid "Use smart scrolling"
+#: src/chatoptionstab.cpp:289
+msgid "Enable Irc colors in chat messages"
 msgstr ""
 
-#: src/chatoptionstab.cpp:299
+#: src/chatoptionstab.cpp:294
 msgid "Play notification sounds"
 msgstr ""
 
-#: src/chatoptionstab.cpp:312
+#: src/chatoptionstab.cpp:305
 msgid "Chat logs"
 msgstr "سجلّات الدردشة"
 
-#: src/chatoptionstab.cpp:315
+#: src/chatoptionstab.cpp:308
 msgid "Save chat logs"
 msgstr "حفظ سجلّات الدردشة"
 
-#: src/chatoptionstab.cpp:323
+#: src/chatoptionstab.cpp:316
 msgid "Highlight words"
 msgstr ""
 
-#: src/chatoptionstab.cpp:325
+#: src/chatoptionstab.cpp:318
 msgid "Words to highlight in chat:"
 msgstr ""
 
-#: src/chatoptionstab.cpp:334
+#: src/chatoptionstab.cpp:327
 msgid "enter a ; seperated list"
 msgstr ""
 
-#: src/chatoptionstab.cpp:338
+#: src/chatoptionstab.cpp:331
 msgid "Additionally play sound/flash titlebar "
 msgstr ""
 
-#: src/chatpanel.cpp:143
+#: src/chatpanel.cpp:121
 msgid "channel_"
 msgstr ""
 
-#: src/chatpanel.cpp:145
+#: src/chatpanel.cpp:123
 msgid "#"
 msgstr ""
 
-#: src/chatpanel.cpp:315
+#: src/chatpanel.cpp:297 src/chatpanel.cpp:899 src/chatpanel.cpp:915
+#: src/chatpanel.cpp:940
+#, c-format
+msgid "%d users"
+msgstr ""
+
+#: src/chatpanel.cpp:325
 msgid "right click for options (like autojoin)"
 msgstr ""
 
-#: src/chatpanel.cpp:318
+#: src/chatpanel.cpp:333
 msgid "Send"
 msgstr "إرسال"
 
-#: src/chatpanel.cpp:366
+#: src/chatpanel.cpp:387
 msgid "Disable text appending (workaround for autoscroll)"
 msgstr ""
 
-#: src/chatpanel.cpp:373
+#: src/chatpanel.cpp:391
+msgid "Copy"
+msgstr "نسخ"
+
+#: src/chatpanel.cpp:397
+msgid "Copy link location"
+msgstr ""
+
+#: src/chatpanel.cpp:401
+msgid "Clear"
+msgstr "مسح"
+
+#: src/chatpanel.cpp:407
 msgid "Auto join this channel"
 msgstr ""
 
-#: src/chatpanel.cpp:383
+#: src/chatpanel.cpp:417
 msgid "Display Join/Leave Messages"
 msgstr ""
 
-#: src/chatpanel.cpp:389
+#: src/chatpanel.cpp:423
 msgid "Show mute list"
 msgstr ""
 
-#: src/chatpanel.cpp:395
+#: src/chatpanel.cpp:429
 msgid "Channel info"
 msgstr "معلومات القناة"
 
-#: src/chatpanel.cpp:399 src/chatpanel.cpp:1184
+#: src/chatpanel.cpp:433 src/chatpanel.cpp:1299
 msgid "Set topic..."
 msgstr "تعيين الموضوع..."
 
-#: src/chatpanel.cpp:401 src/chatpanel.cpp:1200
+#: src/chatpanel.cpp:435 src/chatpanel.cpp:1316
 msgid "Channel message..."
 msgstr "رسالة القناة..."
 
-#: src/chatpanel.cpp:405
+#: src/chatpanel.cpp:439
 msgid "Lock..."
 msgstr "قفل..."
 
-#: src/chatpanel.cpp:407
+#: src/chatpanel.cpp:441
 msgid "Unlock"
 msgstr "إلغاء القفل"
 
-#: src/chatpanel.cpp:411
+#: src/chatpanel.cpp:445
 msgid "Register..."
 msgstr "تسجيل..."
 
-#: src/chatpanel.cpp:413
+#: src/chatpanel.cpp:447
 msgid "Unregister"
 msgstr "إلغاء التسجيل"
 
-#: src/chatpanel.cpp:419
+#: src/chatpanel.cpp:453
 msgid "On"
 msgstr ""
 
-#: src/chatpanel.cpp:421
+#: src/chatpanel.cpp:455
 msgid "Off"
 msgstr ""
 
-#: src/chatpanel.cpp:425
+#: src/chatpanel.cpp:459
 msgid "Is on?"
 msgstr ""
 
-#: src/chatpanel.cpp:427
+#: src/chatpanel.cpp:461
 msgid "Spam protection"
 msgstr ""
 
-#: src/chatpanel.cpp:428 src/chatpanel.cpp:534
+#: src/chatpanel.cpp:462 src/chatpanel.cpp:580
 msgid "ChanServ"
 msgstr ""
 
-#: src/chatpanel.cpp:434
+#: src/chatpanel.cpp:469
 msgid "Disconnect"
 msgstr ""
 
-#: src/chatpanel.cpp:436
+#: src/chatpanel.cpp:471
 msgid "Reconnect"
 msgstr "إعادة الاتصال"
 
-#: src/chatpanel.cpp:445
+#: src/chatpanel.cpp:480
 msgid "Remove..."
 msgstr ""
 
-#: src/chatpanel.cpp:447
+#: src/chatpanel.cpp:482
 msgid "Change password..."
 msgstr "تغيير كلمة السرّ"
 
-#: src/chatpanel.cpp:449
+#: src/chatpanel.cpp:484
 msgid "Set access..."
 msgstr ""
 
-#: src/chatpanel.cpp:451
+#: src/chatpanel.cpp:486
 msgid "Accounts"
 msgstr "حسابات"
 
-#: src/chatpanel.cpp:454
+#: src/chatpanel.cpp:489
 msgid "Broadcast..."
 msgstr "إذاعة..."
 
-#: src/chatpanel.cpp:456
+#: src/chatpanel.cpp:491
 msgid "Admin"
 msgstr "الإداري"
 
-#: src/chatpanel.cpp:466
+#: src/chatpanel.cpp:500
+#, fuzzy
+msgid "User"
+msgstr "خادوم"
+
+#: src/chatpanel.cpp:510
 msgid "Open Chat"
 msgstr "فتح الدردشة"
 
-#: src/chatpanel.cpp:468
+#: src/chatpanel.cpp:513
 msgid "Join same battle"
 msgstr ""
 
-#: src/chatpanel.cpp:474
+#: src/chatpanel.cpp:519
 msgid "Ingame time"
 msgstr ""
 
-#: src/chatpanel.cpp:476
+#: src/chatpanel.cpp:521
 msgid "Retrieve IP and Smurfs"
 msgstr ""
 
-#: src/chatpanel.cpp:483 src/chatpanel.cpp:521
+#: src/chatpanel.cpp:528 src/chatpanel.cpp:567
 msgid "Mute..."
 msgstr ""
 
-#: src/chatpanel.cpp:485
+#: src/chatpanel.cpp:530
 msgid "Mute for 5 minutes"
 msgstr ""
 
-#: src/chatpanel.cpp:487
+#: src/chatpanel.cpp:532
 msgid "Mute for 10 minutes"
 msgstr ""
 
-#: src/chatpanel.cpp:489
+#: src/chatpanel.cpp:534
 msgid "Mute for 30 minutes"
 msgstr ""
 
-#: src/chatpanel.cpp:491
+#: src/chatpanel.cpp:536
 msgid "Mute for 2 hours"
 msgstr ""
 
-#: src/chatpanel.cpp:493
+#: src/chatpanel.cpp:538
 msgid "Mute for 1 day"
 msgstr ""
 
-#: src/chatpanel.cpp:496 src/chatpanel.cpp:523
+#: src/chatpanel.cpp:541 src/chatpanel.cpp:569
 msgid "Unmute"
 msgstr ""
 
-#: src/chatpanel.cpp:498
+#: src/chatpanel.cpp:543
 msgid "Mute"
 msgstr ""
 
-#: src/chatpanel.cpp:500 src/chatpanel.cpp:526
+#: src/chatpanel.cpp:545 src/chatpanel.cpp:572
 msgid "Kick..."
 msgstr "طرد..."
 
-#: src/chatpanel.cpp:504
+#: src/chatpanel.cpp:549
 msgid "Ban..."
 msgstr "منع..."
 
-#: src/chatpanel.cpp:506
+#: src/chatpanel.cpp:551
 msgid "Unban"
 msgstr "رفع المنع"
 
-#: src/chatpanel.cpp:514
+#: src/chatpanel.cpp:559
 msgid "Slap!"
 msgstr "صفع!"
 
-#: src/chatpanel.cpp:530
+#: src/chatpanel.cpp:576
 msgid "Op"
 msgstr ""
 
-#: src/chatpanel.cpp:532
+#: src/chatpanel.cpp:578
 msgid "DeOp"
 msgstr ""
 
-#: src/chatpanel.cpp:777
+#: src/chatpanel.cpp:875
 msgid " !! Command: \""
 msgstr " !! أمر: \""
 
-#: src/chatpanel.cpp:777
+#: src/chatpanel.cpp:875
 msgid "\" params: \""
 msgstr ""
 
-#: src/chatpanel.cpp:783
+#: src/chatpanel.cpp:881
 msgid "channel"
 msgstr "قناة"
 
-#: src/chatpanel.cpp:784
+#: src/chatpanel.cpp:882
 msgid "battle"
 msgstr "معركة"
 
-#: src/chatpanel.cpp:785
+#: src/chatpanel.cpp:883
 msgid "server"
 msgstr "خادوم"
 
-#: src/chatpanel.cpp:797 src/chatpanel.cpp:802
+#: src/chatpanel.cpp:895 src/chatpanel.cpp:903
 msgid " joined the "
 msgstr ""
 
-#: src/chatpanel.cpp:831 src/chatpanel.cpp:836
+#: src/chatpanel.cpp:936 src/chatpanel.cpp:945
 msgid " left the "
 msgstr ""
 
-#: src/chatpanel.cpp:859
+#: src/chatpanel.cpp:968
 #, fuzzy
 msgid " ** Channel topic:"
 msgstr "معلومات القناة"
 
-#: src/chatpanel.cpp:866
+#: src/chatpanel.cpp:975
 msgid " ** Set by "
 msgstr ""
 
-#: src/chatpanel.cpp:893 src/chatpanel.cpp:922 src/chatpanel.cpp:951
+#: src/chatpanel.cpp:1002 src/chatpanel.cpp:1027 src/chatpanel.cpp:1053
 msgid "Chat closed."
 msgstr "قد أغلقت الدردشة."
 
-#: src/chatpanel.cpp:934
-msgid "_SERVER"
-msgstr "_خادوم"
-
-#: src/chatpanel.cpp:999
+#: src/chatpanel.cpp:1100
 #, c-format
 msgid "Are you sure you want to paste %d lines?"
 msgstr ""
 
-#: src/chatpanel.cpp:999
+#: src/chatpanel.cpp:1100
 msgid "Flood warning"
 msgstr ""
 
-#: src/chatpanel.cpp:1011
+#: src/chatpanel.cpp:1112
 msgid " You have SpringLobby v"
 msgstr ""
 
-#: src/chatpanel.cpp:1018
+#: src/chatpanel.cpp:1125
 msgid " You are not in channel or channel does not exist."
 msgstr ""
 
-#: src/chatpanel.cpp:1024 src/chatpanel.cpp:1038 src/chatpanel.cpp:1052
-#: src/chatpanel.cpp:1062
+#: src/chatpanel.cpp:1131 src/chatpanel.cpp:1145 src/chatpanel.cpp:1159
+#: src/chatpanel.cpp:1169
 #, c-format
 msgid ""
 " Error: Command (%s) does not exist, use /help for a list of available "
 "commands."
 msgstr ""
 
-#: src/chatpanel.cpp:1032
+#: src/chatpanel.cpp:1139
 msgid ""
 " You are not in battle or battle does not exist, use /help for a list of "
 "available commands."
 msgstr ""
 
-#: src/chatpanel.cpp:1046
+#: src/chatpanel.cpp:1153
 msgid " User is offline."
 msgstr ""
 
-#: src/chatpanel.cpp:1073
+#: src/chatpanel.cpp:1187
 msgid " Sent: \""
 msgstr ""
 
-#: src/chatpanel.cpp:1073
+#: src/chatpanel.cpp:1187
 msgid "\""
 msgstr ""
 
-#: src/chatpanel.cpp:1164 src/chatpanel.cpp:1178 src/chatpanel.cpp:1194
-#: src/chatpanel.cpp:1211 src/chatpanel.cpp:1228 src/chatpanel.cpp:1244
-#: src/chatpanel.cpp:1261 src/chatpanel.cpp:1277 src/chatpanel.cpp:1291
-#: src/chatpanel.cpp:1305 src/chatpanel.cpp:1408 src/chatpanel.cpp:1430
-#: src/chatpanel.cpp:1447 src/chatpanel.cpp:1469 src/chatpanel.cpp:1486
+#: src/chatpanel.cpp:1279 src/chatpanel.cpp:1293 src/chatpanel.cpp:1310
+#: src/chatpanel.cpp:1327 src/chatpanel.cpp:1344 src/chatpanel.cpp:1360
+#: src/chatpanel.cpp:1377 src/chatpanel.cpp:1393 src/chatpanel.cpp:1407
+#: src/chatpanel.cpp:1421 src/chatpanel.cpp:1524 src/chatpanel.cpp:1546
+#: src/chatpanel.cpp:1563 src/chatpanel.cpp:1585 src/chatpanel.cpp:1602
 msgid "ChanServ error"
 msgstr ""
 
-#: src/chatpanel.cpp:1164 src/chatpanel.cpp:1178 src/chatpanel.cpp:1194
-#: src/chatpanel.cpp:1211 src/chatpanel.cpp:1228 src/chatpanel.cpp:1277
-#: src/chatpanel.cpp:1291 src/chatpanel.cpp:1305 src/chatpanel.cpp:1408
-#: src/chatpanel.cpp:1430 src/chatpanel.cpp:1447 src/chatpanel.cpp:1469
-#: src/chatpanel.cpp:1486
+#: src/chatpanel.cpp:1279 src/chatpanel.cpp:1293 src/chatpanel.cpp:1310
+#: src/chatpanel.cpp:1327 src/chatpanel.cpp:1344 src/chatpanel.cpp:1393
+#: src/chatpanel.cpp:1407 src/chatpanel.cpp:1421 src/chatpanel.cpp:1524
+#: src/chatpanel.cpp:1546 src/chatpanel.cpp:1563 src/chatpanel.cpp:1585
+#: src/chatpanel.cpp:1602
 msgid "ChanServ is not in this channel."
 msgstr ""
 
-#: src/chatpanel.cpp:1184
+#: src/chatpanel.cpp:1299
 msgid "What should be the new topic?"
 msgstr ""
 
-#: src/chatpanel.cpp:1200
+#: src/chatpanel.cpp:1316
 msgid "Message:"
 msgstr ""
 
-#: src/chatpanel.cpp:1217
+#: src/chatpanel.cpp:1333
 msgid "Lock channel..."
 msgstr ""
 
-#: src/chatpanel.cpp:1217
+#: src/chatpanel.cpp:1333
 msgid "What should the new password be?"
 msgstr ""
 
-#: src/chatpanel.cpp:1233
+#: src/chatpanel.cpp:1349
 msgid "Unlock Channel"
 msgstr ""
 
-#: src/chatpanel.cpp:1233
+#: src/chatpanel.cpp:1349
 msgid "Are you sure you want to unlock this channel?"
 msgstr ""
 
-#: src/chatpanel.cpp:1244 src/chatpanel.cpp:1261
+#: src/chatpanel.cpp:1360 src/chatpanel.cpp:1377
 msgid "ChanServ is not on this server."
 msgstr ""
 
-#: src/chatpanel.cpp:1250
+#: src/chatpanel.cpp:1366
 msgid "Register Channel"
 msgstr ""
 
-#: src/chatpanel.cpp:1250
+#: src/chatpanel.cpp:1366
 msgid "Who should be appointed founder of this channel?"
 msgstr ""
 
-#: src/chatpanel.cpp:1266
+#: src/chatpanel.cpp:1382
 msgid "Unregister Channel"
 msgstr ""
 
-#: src/chatpanel.cpp:1266
+#: src/chatpanel.cpp:1382
 msgid "Are you sure you want to unregister this channel?"
 msgstr ""
 
-#: src/chatpanel.cpp:1330
+#: src/chatpanel.cpp:1446
 msgid "Remove User Acount"
 msgstr ""
 
-#: src/chatpanel.cpp:1330
+#: src/chatpanel.cpp:1446
 msgid "What user account do you want to remove today?"
 msgstr ""
 
-#: src/chatpanel.cpp:1331
+#: src/chatpanel.cpp:1447
 msgid "Remove Account"
 msgstr ""
 
-#: src/chatpanel.cpp:1331
+#: src/chatpanel.cpp:1447
 msgid "Are you sure you want to remove the account "
 msgstr ""
 
-#: src/chatpanel.cpp:1339 src/chatpanel.cpp:1340
+#: src/chatpanel.cpp:1455 src/chatpanel.cpp:1456
 msgid "Change User Acount Password"
 msgstr ""
 
-#: src/chatpanel.cpp:1339
+#: src/chatpanel.cpp:1455
 msgid "What user account do you want to change the password for?"
 msgstr ""
 
-#: src/chatpanel.cpp:1340
+#: src/chatpanel.cpp:1456
 msgid "What would be the new password?"
 msgstr ""
 
-#: src/chatpanel.cpp:1347 src/chatpanel.cpp:1521 src/chatpanel.cpp:1527
+#: src/chatpanel.cpp:1463 src/chatpanel.cpp:1637 src/chatpanel.cpp:1643
 msgid "Not Implemented"
 msgstr ""
 
-#: src/chatpanel.cpp:1354
+#: src/chatpanel.cpp:1470
 msgid "Broadcast Message"
 msgstr ""
 
-#: src/chatpanel.cpp:1354
+#: src/chatpanel.cpp:1470
 msgid "Message to be broadcasted:"
 msgstr ""
 
-#: src/chatpanel.cpp:1376
+#: src/chatpanel.cpp:1492
 msgid "You don't have the mod "
 msgstr ""
 
-#: src/chatpanel.cpp:1377
+#: src/chatpanel.cpp:1493
 msgid " . Please download it first"
 msgstr ""
 
-#: src/chatpanel.cpp:1377
+#: src/chatpanel.cpp:1493
 msgid "Mod unavailable"
 msgstr ""
 
-#: src/chatpanel.cpp:1383
+#: src/chatpanel.cpp:1499
 msgid "This battle is password protected, enter the password."
 msgstr ""
 
-#: src/chatpanel.cpp:1413
+#: src/chatpanel.cpp:1529
 msgid "Mute User"
 msgstr ""
 
-#: src/chatpanel.cpp:1413
+#: src/chatpanel.cpp:1529
 msgid "For how many minutes should the user be muted?"
 msgstr ""
 
-#: src/chatpanel.cpp:1455
+#: src/chatpanel.cpp:1571
 msgid "Kick User"
 msgstr ""
 
-#: src/chatpanel.cpp:1455 src/chatpanel.cpp:1514
+#: src/chatpanel.cpp:1571 src/chatpanel.cpp:1630
 msgid "Reason:"
 msgstr ""
 
-#: src/chatpanel.cpp:1514
+#: src/chatpanel.cpp:1630
 msgid "Kick user"
 msgstr ""
 
-#: src/chatpanel.cpp:1534
+#: src/chatpanel.cpp:1650
 msgid "Mute user"
 msgstr ""
 
-#: src/chatpanel.cpp:1534
+#: src/chatpanel.cpp:1650
 msgid "Duration:"
 msgstr ""
 
-#: src/chatpanel.cpp:1620
+#: src/chatpanel.cpp:1736
 msgid "couldn't add user"
 msgstr ""
 
-#: src/connectwindow.cpp:42
+#: src/connectwindow.cpp:43
 msgid "Connect to lobby server"
 msgstr ""
 
-#: src/connectwindow.cpp:65
+#: src/connectwindow.cpp:66
 msgid ""
 "Server to connect to. You can connect to any server you like by typing in "
 "hostaddress:port format."
 msgstr ""
 
-#: src/connectwindow.cpp:71 src/connectwindow.cpp:158
-#: src/hostbattledialog.cpp:87 src/ui.cpp:157
+#: src/connectwindow.cpp:72 src/connectwindow.cpp:159
+#: src/hostbattledialog.cpp:93 src/ui.cpp:167
 msgid "Password"
 msgstr ""
 
-#: src/connectwindow.cpp:73
+#: src/connectwindow.cpp:74
 msgid "Remember password"
 msgstr ""
 
-#: src/connectwindow.cpp:74
+#: src/connectwindow.cpp:75
 msgid "Autoconnect next time"
 msgstr ""
 
-#: src/connectwindow.cpp:75
+#: src/connectwindow.cpp:76
 msgid ""
 "remember connection details and automatically connect to server on next "
 "lobby startup"
 msgstr ""
 
-#: src/connectwindow.cpp:83
+#: src/connectwindow.cpp:84
 msgid ""
 "Note: If you do not have an account, you\n"
 " can register one for free under the\n"
 "\"Register\" tab."
 msgstr ""
 
-#: src/connectwindow.cpp:89
+#: src/connectwindow.cpp:90
 msgid "Login"
 msgstr ""
 
-#: src/connectwindow.cpp:90
+#: src/connectwindow.cpp:91
 msgid "Register"
 msgstr ""
 
-#: src/connectwindow.cpp:145
+#: src/connectwindow.cpp:146
 msgid "Nick"
 msgstr ""
 
@@ -1575,22 +1802,8 @@ msgid ""
 "Password / confirmation mismatch (or empty passwort)"
 msgstr ""
 
-#: src/connectwindow.cpp:300 src/connectwindow.cpp:314
+#: src/connectwindow.cpp:300 src/ui.cpp:250
 msgid "Registration failed."
-msgstr ""
-
-#: src/connectwindow.cpp:308
-msgid ""
-"Registration successful,\n"
-"you should now be able to login."
-msgstr ""
-
-#: src/connectwindow.cpp:308
-msgid "Registration successful"
-msgstr ""
-
-#: src/connectwindow.cpp:314
-msgid "Registration failed, the reason was:\n"
 msgstr ""
 
 #: src/countrycodes.cpp:11
@@ -2569,278 +2782,426 @@ msgstr ""
 msgid "(Full country name not found)"
 msgstr ""
 
-#: src/crashreport.cpp:71
+#: src/crashreport.cpp:66
 msgid "System informations"
 msgstr ""
 
-#: src/crashreport.cpp:73
+#: src/crashreport.cpp:68
 msgid "Application verbose log"
 msgstr ""
 
-#: src/crashreport.cpp:75
+#: src/crashreport.cpp:70
 msgid "Last generated spring launching script"
 msgstr ""
 
-#: src/filelister/filelistctrl.cpp:36 src/filelister/filelistctrl.cpp:38
-#: src/selectusersdialog.cpp:72 src/torrentlistctrl.cpp:33
+#: src/filelister/filelistctrl.cpp:43 src/filelister/filelistctrl.cpp:45
+#: src/mapselectdialog.cpp:260 src/selectusersdialog.cpp:73
+#: src/torrentlistctrl.cpp:40 src/widgets/downloadlistctrl.cpp:28
+#: src/widgets/infopanel.cpp:59
 #, fuzzy
 msgid "Name"
 msgstr "الكنية"
 
-#: src/filelister/filelistctrl.cpp:40 src/filelister/filelistctrl.cpp:42
+#: src/filelister/filelistctrl.cpp:47 src/filelister/filelistctrl.cpp:49
 msgid "Type"
 msgstr ""
 
-#: src/filelister/filelistctrl.cpp:44 src/filelister/filelistctrl.cpp:46
+#: src/filelister/filelistctrl.cpp:51 src/filelister/filelistctrl.cpp:53
 msgid "Hash"
 msgstr ""
 
-#: src/filelister/filelistdialog.cpp:23
+#: src/filelister/filelistdialog.cpp:30
 msgid "Search and download files"
 msgstr ""
 
-#: src/filelister/filelistdialog.cpp:26
+#: src/filelister/filelistdialog.cpp:33
 msgid "Files displayed"
 msgstr ""
 
-#: src/filelister/filelistdialog.cpp:51
+#: src/filelister/filelistdialog.cpp:58
 #, fuzzy
 msgid "Download selected"
 msgstr "تنزيل ال&خارطة"
 
-#: src/filelister/filelistdialog.cpp:97
+#: src/filelister/filelistdialog.cpp:104
 #, c-format
 msgid "%u files displayed"
 msgstr ""
 
-#: src/filelister/filelistdialog.cpp:139
+#: src/filelister/filelistdialog.cpp:146
 msgid "unknown hash "
 msgstr ""
 
-#: src/globalevents.cpp:33
-msgid "Download complete"
-msgstr ""
-
-#: src/globalevents.cpp:38
-msgid "Download failed"
-msgstr ""
-
-#: src/groupoptionspanel.cpp:54 src/groupoptionspanel.cpp:167
+#: src/groupoptionspanel.cpp:55 src/groupoptionspanel.cpp:168
+#: src/widgets/infopanel.cpp:93
 msgid "Remove"
 msgstr ""
 
-#: src/groupoptionspanel.cpp:56
+#: src/groupoptionspanel.cpp:57
 msgid "Remove an existing group"
 msgstr ""
 
-#: src/groupoptionspanel.cpp:60
+#: src/groupoptionspanel.cpp:61
 msgid "Rename.."
 msgstr ""
 
-#: src/groupoptionspanel.cpp:62
+#: src/groupoptionspanel.cpp:63
 msgid "Rename an existing group"
 msgstr ""
 
-#: src/groupoptionspanel.cpp:69
+#: src/groupoptionspanel.cpp:70
 #, fuzzy
 msgid "Add New.."
 msgstr "إضافة بوت..."
 
-#: src/groupoptionspanel.cpp:70
+#: src/groupoptionspanel.cpp:71
 msgid "Add new group"
 msgstr ""
 
-#: src/groupoptionspanel.cpp:83
+#: src/groupoptionspanel.cpp:84
 #, fuzzy
 msgid "Group Actions"
 msgstr "اجراء"
 
-#: src/groupoptionspanel.cpp:88
+#: src/groupoptionspanel.cpp:89
 msgid "Notify login/logout"
 msgstr ""
 
-#: src/groupoptionspanel.cpp:90
+#: src/groupoptionspanel.cpp:91
 msgid "Notify when users of this group go online or offline"
 msgstr ""
 
-#: src/groupoptionspanel.cpp:94
+#: src/groupoptionspanel.cpp:95
 #, fuzzy
 msgid "Ignore Chat"
 msgstr "فتح الدردشة"
 
-#: src/groupoptionspanel.cpp:96
+#: src/groupoptionspanel.cpp:97
 msgid "Ignore anything said in channel by any of the users in this group"
 msgstr ""
 
-#: src/groupoptionspanel.cpp:100
+#: src/groupoptionspanel.cpp:101
 msgid "Notify Hosted Battles"
 msgstr ""
 
-#: src/groupoptionspanel.cpp:102
+#: src/groupoptionspanel.cpp:103
 msgid "Notify when users of this group hosts a battle"
 msgstr ""
 
-#: src/groupoptionspanel.cpp:106
+#: src/groupoptionspanel.cpp:107 src/springlobbyapp.cpp:441
+#: src/springlobbyapp.cpp:442
 msgid "Ignore PM"
 msgstr ""
 
-#: src/groupoptionspanel.cpp:108
+#: src/groupoptionspanel.cpp:109
 msgid "Ignore anything said in private chat by any of the users in this group"
 msgstr ""
 
-#: src/groupoptionspanel.cpp:112
+#: src/groupoptionspanel.cpp:113
 msgid "Notify Status Change"
 msgstr ""
 
-#: src/groupoptionspanel.cpp:114
+#: src/groupoptionspanel.cpp:115
 msgid "Notify when the status of a users in this group changes"
 msgstr ""
 
-#: src/groupoptionspanel.cpp:118
+#: src/groupoptionspanel.cpp:119
 msgid "Autokick"
 msgstr ""
 
-#: src/groupoptionspanel.cpp:120
+#: src/groupoptionspanel.cpp:121
 msgid "Auto kick any of the users in this group from battles hosted"
 msgstr ""
 
-#: src/groupoptionspanel.cpp:126
+#: src/groupoptionspanel.cpp:127
 msgid "Highlight battles and the names of users in this group"
 msgstr ""
 
-#: src/groupoptionspanel.cpp:133
+#: src/groupoptionspanel.cpp:134
 msgid "Highlight Color"
 msgstr ""
 
-#: src/groupoptionspanel.cpp:138 src/groupoptionspanel.cpp:140
+#: src/groupoptionspanel.cpp:139 src/groupoptionspanel.cpp:141
 msgid "Select highlight color"
 msgstr ""
 
-#: src/groupoptionspanel.cpp:151
+#: src/groupoptionspanel.cpp:152
 msgid "Users in group"
 msgstr ""
 
-#: src/groupoptionspanel.cpp:162
+#: src/groupoptionspanel.cpp:163
 #, fuzzy
 msgid "Add.."
 msgstr "إضافة بوت..."
 
-#: src/groupoptionspanel.cpp:163
+#: src/groupoptionspanel.cpp:164
 msgid "Add users to group"
 msgstr ""
 
-#: src/groupoptionspanel.cpp:169
+#: src/groupoptionspanel.cpp:170
 msgid "Remove users from group"
 msgstr ""
 
-#: src/groupoptionspanel.cpp:263
+#: src/groupoptionspanel.cpp:264
 msgid "Name of new group:"
 msgstr ""
 
-#: src/groupoptionspanel.cpp:263
+#: src/groupoptionspanel.cpp:264
 msgid "Add New Group"
 msgstr ""
 
-#: src/hostbattledialog.cpp:47
+#: src/Helper/imageviewer.cpp:85
+msgid "previous"
+msgstr ""
+
+#: src/Helper/imageviewer.cpp:88
+msgid "next"
+msgstr ""
+
+#: src/Helper/imageviewer.cpp:92
+#, fuzzy
+msgid "delete"
+msgstr "إنتقاء..."
+
+#: src/Helper/imageviewer.cpp:96
+msgid "save as"
+msgstr ""
+
+#: src/Helper/imageviewer.cpp:146
+msgid "couldn't remove file"
+msgstr ""
+
+#: src/Helper/imageviewer.cpp:160
+#, fuzzy
+msgid "Choose a filename"
+msgstr "اختار في اللعبة"
+
+#: src/Helper/imageviewer.cpp:167
+msgid "File successfully saved"
+msgstr ""
+
+#: src/Helper/imageviewer.cpp:167 src/updater/updater.cpp:112
+#: src/updater/updater.cpp:115 src/widgets/infopanel.cpp:158
+#: src/widgets/infopanel.cpp:170
+msgid "Success"
+msgstr ""
+
+#: src/Helper/imageviewer.cpp:170
+msgid "Couldn't save file"
+msgstr ""
+
+#: src/Helper/wxTranslationHelper.cpp:96 src/springlobbyapp.cpp:440
+#, fuzzy
+msgid "Default"
+msgstr "المبدئي"
+
+#: src/Helper/wxTranslationHelper.cpp:127
+#, c-format
+msgid "SEARCHING FOR %s"
+msgstr ""
+
+#: src/Helper/wxTranslationHelper.cpp:144
+msgid "Array of language names and identifiers should have the same size."
+msgstr ""
+
+#: src/Helper/wxTranslationHelper.cpp:145
+#, fuzzy
+msgid "Select the language"
+msgstr "معلومات القناة"
+
+#: src/Helper/wxTranslationHelper.cpp:146
+msgid "Language"
+msgstr ""
+
+#: src/Helper/wxTranslationHelper.cpp:156
+#, c-format
+msgid "wxTranslationHelper: Path Prefix = \"%s\""
+msgstr ""
+
+#: src/Helper/wxTranslationHelper.cpp:159
+#, c-format
+msgid "wxTranslationHelper: Catalog Name = \"%s\""
+msgstr ""
+
+#: src/hostbattledialog.cpp:48
 msgid "Host new battle"
 msgstr ""
 
-#: src/hostbattledialog.cpp:63
+#: src/hostbattledialog.cpp:64
 msgid "A short description of the game, this will show up in the battle list."
 msgstr ""
 
-#: src/hostbattledialog.cpp:78
+#: src/hostbattledialog.cpp:66
+#, fuzzy
+msgid "Autopaste description"
+msgstr "وصف"
+
+#: src/hostbattledialog.cpp:68
+msgid "Automatically write the battle description when a user joins."
+msgstr ""
+
+#: src/hostbattledialog.cpp:84
 msgid "Select the mod to play with."
 msgstr ""
 
-#: src/hostbattledialog.cpp:92
+#: src/hostbattledialog.cpp:98
 msgid "Password needed to join game. Keep empty for no password"
 msgstr ""
 
-#: src/hostbattledialog.cpp:102
+#: src/hostbattledialog.cpp:108
 msgid "Port"
 msgstr ""
 
-#: src/hostbattledialog.cpp:107
+#: src/hostbattledialog.cpp:113
 msgid "UDP port to host game on. Default is 8452."
 msgstr ""
 
-#: src/hostbattledialog.cpp:111
+#: src/hostbattledialog.cpp:117
 msgid "Test firewall"
 msgstr ""
 
-#: src/hostbattledialog.cpp:120
+#: src/hostbattledialog.cpp:126
 msgid "Relay battle to an Autohost"
 msgstr ""
 
-#: src/hostbattledialog.cpp:126
+#: src/hostbattledialog.cpp:127
+msgid ""
+"host and control game on remote server, helps if you have trouble hosting"
+msgstr ""
+
+#: src/hostbattledialog.cpp:133 src/playback/playbacklistctrl.cpp:44
 msgid "Number of players"
 msgstr ""
 
-#: src/hostbattledialog.cpp:130
+#: src/hostbattledialog.cpp:137
 msgid "The maximum number of players to allow in the battle."
 msgstr ""
 
-#: src/hostbattledialog.cpp:138
+#: src/hostbattledialog.cpp:145
 msgid "Hole punching"
 msgstr ""
 
-#: src/hostbattledialog.cpp:140 src/ui.cpp:997
+#: src/hostbattledialog.cpp:147
 msgid "NAT traversal"
 msgstr ""
 
-#: src/hostbattledialog.cpp:146
+#: src/hostbattledialog.cpp:153
 msgid "NAT traversal to use."
 msgstr ""
 
-#: src/hostbattledialog.cpp:151
+#: src/hostbattledialog.cpp:158
 msgid "Minimum Rank needed"
 msgstr ""
 
-#: src/hostbattledialog.cpp:217
+#: src/hostbattledialog.cpp:224
 msgid "Start hosting the battle."
 msgstr ""
 
-#: src/hostbattledialog.cpp:254 src/singleplayertab.cpp:220
+#: src/hostbattledialog.cpp:260 src/singleplayertab.cpp:229
 msgid "You have to select a mod first."
 msgstr ""
 
-#: src/hostbattledialog.cpp:254
+#: src/hostbattledialog.cpp:260
 msgid "No mod selected."
 msgstr ""
 
-#: src/httpdownloader.cpp:84
-msgid ""
-"\n"
-"successfully unzipped in:\n"
-msgstr ""
-
-#: src/httpdownloader.cpp:86
+#: src/httpdownloader.cpp:72
 msgid ""
 "\n"
 "successfully saved to:\n"
 msgstr ""
 
-#: src/httpdownloader.cpp:87
+#: src/httpdownloader.cpp:78
+msgid ""
+"\n"
+"successfully unzipped in:\n"
+msgstr ""
+
+#: src/httpdownloader.cpp:79
 msgid ""
 "\n"
 " unzipping failed, please correct manually"
 msgstr ""
 
-#: src/httpdownloader.cpp:105
+#: src/httpdownloader.cpp:99
 msgid "Could not save\n"
 msgstr ""
 
-#: src/httpdownloader.cpp:105
+#: src/httpdownloader.cpp:99
 msgid ""
 "\n"
 "to:\n"
 msgstr ""
 
-#: src/httpdownloader.cpp:108
+#: src/httpdownloader.cpp:102
 msgid ""
 "\n"
 "Error number: "
+msgstr ""
+
+#: src/iconimagelist.cpp:281
+msgid "Game is open."
+msgstr ""
+
+#: src/iconimagelist.cpp:282
+msgid "Game is password-protected."
+msgstr ""
+
+#: src/iconimagelist.cpp:283
+msgid "Game is full."
+msgstr ""
+
+#: src/iconimagelist.cpp:284
+msgid "Game is full and password-protected."
+msgstr ""
+
+#: src/iconimagelist.cpp:285
+#, fuzzy
+msgid "Game is closed."
+msgstr "قد أغلقت الدردشة."
+
+#: src/iconimagelist.cpp:286
+msgid "Game is closed and password-protected."
+msgstr ""
+
+#: src/iconimagelist.cpp:287
+msgid "Game is closed and full."
+msgstr ""
+
+#: src/iconimagelist.cpp:288
+msgid "Game is closed, full and password-protected."
+msgstr ""
+
+#: src/iconimagelist.cpp:289
+msgid "Game is in progress."
+msgstr ""
+
+#: src/iconimagelist.cpp:290
+msgid "Game is in progress and password-protected."
+msgstr ""
+
+#: src/iconimagelist.cpp:291
+msgid "Game is in progress and full."
+msgstr ""
+
+#: src/iconimagelist.cpp:292
+msgid "Game is in progress, full and password-protected."
+msgstr ""
+
+#: src/iconimagelist.cpp:293
+msgid "Game is in progress and closed."
+msgstr ""
+
+#: src/iconimagelist.cpp:294
+msgid "Game is in progress, closed and password-protected."
+msgstr ""
+
+#: src/iconimagelist.cpp:295
+msgid "Game is in progress, closed and full."
+msgstr ""
+
+#: src/iconimagelist.cpp:296
+msgid "Game is in progress, closed, full and password-protected."
 msgstr ""
 
 #: src/lobbyoptionstab.cpp:41 src/lobbyoptionstab.cpp:42
@@ -2864,7 +3225,7 @@ msgid "Specify the web browser you want to use"
 msgstr ""
 
 #: src/lobbyoptionstab.cpp:53 src/settings++/panel_pathoption.cpp:42
-#: src/springoptionstab.cpp:58 src/springoptionstab.cpp:68
+#: src/springoptionstab.cpp:69 src/springoptionstab.cpp:79
 msgid "Browse"
 msgstr ""
 
@@ -2922,11 +3283,11 @@ msgid "Tooltips"
 msgstr ""
 
 #: src/lobbyoptionstab.cpp:100
-msgid "Requires SpringLobby restart to take effect."
+msgid "Show Tooltips?"
 msgstr ""
 
-#: src/lobbyoptionstab.cpp:101
-msgid "Show Tooltips?"
+#: src/lobbyoptionstab.cpp:103
+msgid "Requires SpringLobby restart to take effect."
 msgstr ""
 
 #: src/lobbyoptionstab.cpp:110
@@ -2948,321 +3309,455 @@ msgstr ""
 msgid "Match nearest"
 msgstr ""
 
-#: src/lobbyoptionstab.cpp:186
+#: src/lobbyoptionstab.cpp:123
+#, fuzzy
+msgid "Tab icons"
+msgstr "خيارات الخارطة"
+
+#: src/lobbyoptionstab.cpp:124
+msgid "Show big icons in mainwindow tabs?"
+msgstr ""
+
+#: src/lobbyoptionstab.cpp:129
+#, fuzzy
+msgid "Start tab"
+msgstr "بدء"
+
+#: src/lobbyoptionstab.cpp:132
+msgid "Select which tab to show at startup"
+msgstr ""
+
+#: src/lobbyoptionstab.cpp:207
 msgid "Choose a web browser executable"
 msgstr ""
 
-#: src/mainjoinbattletab.cpp:67 src/mainjoinbattletab.cpp:69
+#: src/mainchattab.cpp:160 src/mainchattab.cpp:164
+msgid "Disconnected from server, chat closed."
+msgstr ""
+
+#: src/mainjoinbattletab.cpp:52
 msgid "Battle list"
 msgstr ""
 
-#: src/mainjoinbattletab.cpp:156 src/mainjoinbattletab.cpp:161
+#: src/mainjoinbattletab.cpp:134
 msgid "Battleroom"
 msgstr ""
 
-#: src/mainjoinbattletab.cpp:158 src/mainjoinbattletab.cpp:163
-#: src/mainsingleplayertab.cpp:54 src/mainsingleplayertab.cpp:56
-#: src/mainwindow.cpp:209 src/settings++/tab_simple.cpp:134
+#: src/mainjoinbattletab.cpp:140 src/mainsingleplayertab.cpp:42
+#: src/mainwindow.h:180 src/settings++/tab_simple.cpp:134
 msgid "Options"
 msgstr "خيارات"
 
-#: src/mainjoinbattletab.cpp:159 src/mainjoinbattletab.cpp:164
-#: src/mainsingleplayertab.cpp:60 src/mainsingleplayertab.cpp:62
+#: src/mainjoinbattletab.cpp:143 src/mainsingleplayertab.cpp:44
 msgid "Unit Restrictions"
 msgstr ""
 
-#: src/mainoptionstab.cpp:76 src/mainoptionstab.cpp:78
+#: src/mainoptionstab.cpp:62
 msgid "Spring"
 msgstr ""
 
-#: src/mainoptionstab.cpp:84 src/mainoptionstab.cpp:86
+#: src/mainoptionstab.cpp:66
 msgid "P2P"
 msgstr ""
 
-#: src/mainoptionstab.cpp:92 src/mainoptionstab.cpp:94 src/mainwindow.cpp:206
+#: src/mainoptionstab.cpp:70 src/mainwindow.h:172
 msgid "Chat"
 msgstr ""
 
-#: src/mainoptionstab.cpp:100 src/mainoptionstab.cpp:102
+#: src/mainoptionstab.cpp:73
 msgid "General"
 msgstr ""
 
-#: src/mainoptionstab.cpp:108 src/mainoptionstab.cpp:110
+#: src/mainoptionstab.cpp:76
 msgid "Groups"
 msgstr ""
 
-#: src/mainoptionstab.cpp:114
+#: src/mainoptionstab.cpp:78
 msgid "Restore"
 msgstr ""
 
-#: src/mainoptionstab.cpp:115
+#: src/mainoptionstab.cpp:79
 msgid "Apply"
 msgstr ""
 
-#: src/mainsingleplayertab.cpp:51
+#: src/mainsingleplayertab.cpp:40
 msgid "Game"
 msgstr ""
 
-#: src/maintorrenttab.cpp:44
+#: src/maintorrenttab.cpp:51
 msgid "Transfers in progress: "
 msgstr ""
 
-#: src/maintorrenttab.cpp:50
+#: src/maintorrenttab.cpp:57
 msgid "Total Outgoing: "
 msgstr ""
 
-#: src/maintorrenttab.cpp:51
+#: src/maintorrenttab.cpp:58
 msgid "Total Incoming: "
 msgstr ""
 
-#: src/maintorrenttab.cpp:58
+#: src/maintorrenttab.cpp:65
 msgid "unknown"
 msgstr ""
 
-#: src/maintorrenttab.cpp:65
+#: src/maintorrenttab.cpp:72
 msgid "Cancel Download"
 msgstr ""
 
-#: src/maintorrenttab.cpp:68
+#: src/maintorrenttab.cpp:75
 msgid "Publish new file"
 msgstr ""
 
-#: src/maintorrenttab.cpp:70
+#: src/maintorrenttab.cpp:77
 msgid "Search file"
 msgstr ""
 
-#: src/maintorrenttab.cpp:134
+#: src/maintorrenttab.cpp:79
+#, fuzzy
+msgid "Download Lua widgets"
+msgstr "تنزيل ال&خارطة"
+
+#: src/maintorrenttab.cpp:115
+msgid "Lua widget downloader"
+msgstr ""
+
+#: src/maintorrenttab.cpp:153
 msgid "not available"
 msgstr ""
 
-#: src/maintorrenttab.cpp:137
+#: src/maintorrenttab.cpp:156
 msgid "seeding"
 msgstr ""
 
-#: src/maintorrenttab.cpp:138
+#: src/maintorrenttab.cpp:157
 msgid "leeching"
 msgstr ""
 
-#: src/maintorrenttab.cpp:139
+#: src/maintorrenttab.cpp:158
 msgid "queued"
 msgstr ""
 
-#: src/maintorrenttab.cpp:185
+#: src/maintorrenttab.cpp:204
 msgid "Status: not connected"
 msgstr ""
 
-#: src/maintorrenttab.cpp:189
+#: src/maintorrenttab.cpp:208
 msgid "Status: connected"
 msgstr ""
 
-#: src/maintorrenttab.cpp:193
+#: src/maintorrenttab.cpp:212
 msgid "Status: throttled or paused (ingame)"
 msgstr ""
 
-#: src/maintorrenttab.cpp:197
+#: src/maintorrenttab.cpp:216
 msgid "Status: unknown"
 msgstr ""
 
-#: src/maintorrenttab.cpp:203
+#: src/maintorrenttab.cpp:222
 #, c-format
 msgid "Total Outgoing: %.2f KB/s"
 msgstr ""
 
-#: src/maintorrenttab.cpp:204
+#: src/maintorrenttab.cpp:223
 #, c-format
 msgid "Total Incoming: %.2f KB/s"
 msgstr ""
 
-#: src/mainwindow.cpp:110
+#: src/mainwindow.cpp:114
 msgid "SpringLobby"
 msgstr ""
 
-#: src/mainwindow.cpp:120
+#: src/mainwindow.cpp:124
 msgid "&Connect..."
 msgstr ""
 
-#: src/mainwindow.cpp:121
+#: src/mainwindow.cpp:125
 msgid "&Disconnect"
 msgstr ""
 
-#: src/mainwindow.cpp:123
+#: src/mainwindow.cpp:128
 #, fuzzy
 msgid "&Save options"
 msgstr "خيارات الخارطة"
 
-#: src/mainwindow.cpp:125
+#: src/mainwindow.cpp:131
 msgid "&Quit"
 msgstr ""
 
-#: src/mainwindow.cpp:140
+#: src/mainwindow.cpp:145
 msgid "&Join channel..."
 msgstr ""
 
-#: src/mainwindow.cpp:141
+#: src/mainwindow.cpp:146
 #, fuzzy
 msgid "Channel &list"
 msgstr "معلومات القناة"
 
-#: src/mainwindow.cpp:142
+#: src/mainwindow.cpp:147
 msgid "Open private &chat..."
 msgstr ""
 
-#: src/mainwindow.cpp:143
+#: src/mainwindow.cpp:148
 msgid "&Autojoin channels..."
 msgstr ""
 
-#: src/mainwindow.cpp:145
-msgid "&Reload maps/mods"
+#: src/mainwindow.cpp:149
+msgid "&View screenshots"
 msgstr ""
 
 #: src/mainwindow.cpp:151
-msgid "Check for new Version"
-msgstr ""
-
-#: src/mainwindow.cpp:152
-msgid "SpringSettings"
-msgstr ""
-
-#: src/mainwindow.cpp:156
-msgid "&About"
+msgid "&Reload maps/mods"
 msgstr ""
 
 #: src/mainwindow.cpp:157
+msgid "Check for new Version"
+msgstr ""
+
+#: src/mainwindow.cpp:158
+msgid "SpringSettings"
+msgstr ""
+
+#: src/mainwindow.cpp:162
+msgid "&About"
+msgstr ""
+
+#: src/mainwindow.cpp:163
 #, fuzzy
 msgid "&Change language"
 msgstr "معلومات القناة"
 
-#: src/mainwindow.cpp:158
+#: src/mainwindow.cpp:164
 msgid "&Report a bug..."
 msgstr ""
 
-#: src/mainwindow.cpp:159
+#: src/mainwindow.cpp:165
 msgid "&Documentation"
 msgstr ""
 
-#: src/mainwindow.cpp:162
+#: src/mainwindow.cpp:168
 msgid "&File"
 msgstr ""
 
-#: src/mainwindow.cpp:167
+#: src/mainwindow.cpp:173
 msgid "&Tools"
 msgstr ""
 
-#: src/mainwindow.cpp:168
+#: src/mainwindow.cpp:174
 msgid "&Help"
 msgstr ""
 
-#: src/mainwindow.cpp:207
-msgid "Multiplayer"
-msgstr ""
-
-#: src/mainwindow.cpp:208
-msgid "Singleplayer"
-msgstr ""
-
-#: src/mainwindow.cpp:210
-#, fuzzy
-msgid "Replays"
-msgstr "دائماً"
-
-#: src/mainwindow.cpp:212
-#, fuzzy
-msgid "Downloads"
-msgstr "تنزيل ال&خارطة"
-
-#: src/mainwindow.cpp:388
+#: src/mainwindow.cpp:420
 msgid "You need to be connected to server to view channel list"
 msgstr ""
 
-#: src/mainwindow.cpp:388
+#: src/mainwindow.cpp:420
 #, fuzzy
 msgid "Not connected"
 msgstr "إعادة الاتصال"
 
-#: src/mainwindow.cpp:402
+#: src/mainwindow.cpp:434
 msgid "Join channel..."
 msgstr ""
 
-#: src/mainwindow.cpp:402
+#: src/mainwindow.cpp:434
 msgid "Name of channel to join"
 msgstr ""
 
-#: src/mainwindow.cpp:414
+#: src/mainwindow.cpp:446
 msgid "Open Private Chat..."
 msgstr ""
 
-#: src/mainwindow.cpp:414
+#: src/mainwindow.cpp:446
 msgid "Name of user"
 msgstr ""
 
-#: src/mainwindow.cpp:428
+#: src/mainwindow.cpp:460
 msgid "SpringLobby is a cross-plattform lobby client for the RTS Spring engine"
 msgstr ""
 
-#: src/mainwindow.cpp:510
+#: src/mainwindow.cpp:515
+msgid "There were no screenshots found in your spring data directory."
+msgstr ""
+
+#: src/mainwindow.cpp:515
+#, fuzzy
+msgid "No files found"
+msgstr "لم يتم العثور على أي خريطة"
+
+#: src/mainwindow.cpp:547
 msgid "Manually &Start Torrent System"
 msgstr ""
 
-#: src/mainwindow.cpp:514
+#: src/mainwindow.cpp:551
 msgid "Manually &Stop Torrent System"
 msgstr ""
 
-#: src/mainwindow.cpp:580
+#: src/mainwindow.cpp:609
 msgid "You need to restart SpringLobby for the language change to take effect."
 msgstr ""
 
-#: src/mainwindow.cpp:581
+#: src/mainwindow.cpp:610
 msgid "Restart required"
 msgstr ""
 
-#: src/mainwindow.cpp:604 src/mainwindow.cpp:614 src/mainwindow.cpp:625
+#: src/mainwindow.cpp:632 src/mainwindow.cpp:640 src/mainwindow.cpp:649
 msgid "Layout manager"
 msgstr ""
 
-#: src/mainwindow.cpp:604
+#: src/mainwindow.cpp:632
 msgid "Enter a profile name"
 msgstr ""
 
-#: src/mainwindow.cpp:614
+#: src/mainwindow.cpp:640
 msgid "Which profile fo you want to load?"
 msgstr ""
 
-#: src/mainwindow.cpp:625
+#: src/mainwindow.cpp:649
 msgid "Which profile do you want to be default?"
 msgstr ""
 
-#: src/mapctrl.cpp:580
+#: src/mainwindow.h:173
+msgid "Multiplayer"
+msgstr ""
+
+#: src/mainwindow.h:174
+msgid "Singleplayer"
+msgstr ""
+
+#: src/mainwindow.h:175
+#, fuzzy
+msgid "Savegames"
+msgstr "حفظ..."
+
+#: src/mainwindow.h:176
+#, fuzzy
+msgid "Replays"
+msgstr "دائماً"
+
+#: src/mainwindow.h:178
+#, fuzzy
+msgid "Downloads"
+msgstr "تنزيل ال&خارطة"
+
+#: src/mapctrl.cpp:587
 #, c-format
 msgid "Metal: %.1f%%"
 msgstr ""
 
-#: src/mapctrl.cpp:678 src/mapctrl.cpp:679
+#: src/mapctrl.cpp:692 src/mapctrl.cpp:693
 msgid "Refresh"
 msgstr ""
 
-#: src/mapctrl.cpp:680 src/mapctrl.cpp:681
+#: src/mapctrl.cpp:694 src/mapctrl.cpp:695 src/widgets/infopanel.cpp:91
 msgid "Download"
 msgstr ""
 
-#: src/mapctrl.cpp:880
+#: src/mapctrl.cpp:895
 msgid "side:"
 msgstr ""
 
-#: src/mapctrl.cpp:910
+#: src/mapctrl.cpp:908
 #, c-format
 msgid "ally:   %d"
 msgstr ""
 
-#: src/mapctrl.cpp:921
+#: src/mapctrl.cpp:919
 #, c-format
 msgid "bonus: %d%%"
 msgstr ""
 
-#: src/mmoptionswrapper.cpp:102
+#: src/mapselectdialog.cpp:67
+msgid "Select map (click and drag to scroll)"
+msgstr ""
+
+#: src/mapselectdialog.cpp:70
+msgid "Vertical sort key"
+msgstr ""
+
+#: src/mapselectdialog.cpp:76
+msgid "Horizontal sort key"
+msgstr ""
+
+#: src/mapselectdialog.cpp:82
+msgid "Show"
+msgstr ""
+
+#: src/mapselectdialog.cpp:83
+msgid "All maps"
+msgstr ""
+
+#: src/mapselectdialog.cpp:84
+msgid "Shows all available maps"
+msgstr ""
+
+#: src/mapselectdialog.cpp:86
+msgid "Popular maps"
+msgstr ""
+
+#: src/mapselectdialog.cpp:87
+msgid ""
+"Shows only maps which are currently being player on the server. You must be "
+"online to use this."
+msgstr ""
+
+#: src/mapselectdialog.cpp:89
+msgid "Recently played maps"
+msgstr ""
+
+#: src/mapselectdialog.cpp:91
+msgid "Shows only maps you played recently. (Based on your replays.)"
+msgstr ""
+
+#: src/mapselectdialog.cpp:94
+#, fuzzy
+msgid "Filter"
+msgstr "معتدل"
+
+#: src/mapselectdialog.cpp:96
+msgid "Shows only maps which contain this text in their name or description."
+msgstr ""
+
+#: src/mapselectdialog.cpp:99
+#, fuzzy
+msgid "Map details"
+msgstr "خيارات الخارطة"
+
+#: src/mapselectdialog.cpp:162
+#, fuzzy
+msgid "Start positions"
+msgstr "مواقع البدء"
+
+#: src/mapselectdialog.cpp:265
+msgid "Minimum wind"
+msgstr ""
+
+#: src/mapselectdialog.cpp:266
+msgid "Maximum wind"
+msgstr ""
+
+#: src/mapselectdialog.cpp:267
+msgid "Average wind"
+msgstr ""
+
+#: src/mapselectdialog.cpp:268
+msgid "Size (map area)"
+msgstr ""
+
+#: src/mapselectdialog.cpp:269
+#, fuzzy
+msgid "Aspect ratio"
+msgstr "متابع"
+
+#: src/mapselectdialog.cpp:270
+#, fuzzy
+msgid "Number of start positions"
+msgstr "مواقع البدء"
+
+#: src/mmoptionswrapper.cpp:116
 msgid "Start Position Type"
 msgstr ""
 
-#: src/mmoptionswrapper.cpp:102
+#: src/mmoptionswrapper.cpp:116
 msgid ""
 "How players will select where to be spawned in the map\n"
 "0: fixed map positions\n"
@@ -3271,28 +3766,33 @@ msgid ""
 "3: chose in the lobby before starting"
 msgstr ""
 
-#: src/mmoptionswrapper.cpp:105
+#: src/mmoptionswrapper.cpp:119
 #, fuzzy
 msgid "Chose in game"
 msgstr "اختار في اللعبة"
 
-#: src/mmoptionswrapper.cpp:112
+#: src/mmoptionswrapper.cpp:126
 msgid "List of restricted units"
 msgstr ""
 
-#: src/mmoptionswrapper.cpp:114
+#: src/mmoptionswrapper.cpp:127
 msgid "Map name"
 msgstr ""
 
-#: src/nicklistctrl.cpp:49
+#: src/mmoptionwindows.cpp:38
+#, fuzzy
+msgid "Change option"
+msgstr "خيارات الخارطة"
+
+#: src/nicklistctrl.cpp:58
 msgid "s"
 msgstr ""
 
-#: src/nicklistctrl.cpp:52
+#: src/nicklistctrl.cpp:59
 msgid "c"
 msgstr ""
 
-#: src/nicklistctrl.cpp:55
+#: src/nicklistctrl.cpp:60
 msgid "r"
 msgstr ""
 
@@ -3308,85 +3808,122 @@ msgstr ""
 msgid "App Bundles (*.app)|*.app|Any File (*.*)|*.*"
 msgstr ""
 
-#: src/replay/replayfilter.cpp:63
+#: src/playback/playbackfilter.cpp:60
 msgid "Filter settings"
 msgstr ""
 
-#: src/replay/replayfilter.cpp:167
+#: src/playback/playbackfilter.cpp:164
 msgid "Filesize in KB:"
 msgstr ""
 
-#: src/replay/replayfilter.cpp:193
+#: src/playback/playbackfilter.cpp:190
 msgid "Duration (hh:mm:ss):"
 msgstr ""
 
-#: src/replay/replaylistctrl.cpp:57
+#: src/playback/playbacklistctrl.cpp:41
+#, fuzzy
+msgid "Date"
+msgstr "معركة"
+
+#: src/playback/playbacklistctrl.cpp:41
+msgid "Date of recording"
+msgstr ""
+
+#: src/playback/playbacklistctrl.cpp:42
+#, fuzzy
+msgid "Modname"
+msgstr "الكنية"
+
+#: src/playback/playbacklistctrl.cpp:43
+#, fuzzy
+msgid "Mapname"
+msgstr "الكنية"
+
+#: src/playback/playbacklistctrl.cpp:44
 #, fuzzy
 msgid "Players"
 msgstr "اللّاعبون:"
 
-#: src/replay/replaylistctrl.cpp:61
+#: src/playback/playbacklistctrl.cpp:45
 #, fuzzy
 msgid "Duration"
 msgstr "وصف"
 
-#: src/replay/replaylistctrl.cpp:65
+#: src/playback/playbacklistctrl.cpp:46
 #, fuzzy
 msgid "Spring Version"
 msgstr "خطأ Spring"
 
-#: src/replay/replaylistctrl.cpp:69
+#: src/playback/playbacklistctrl.cpp:47
 msgid "Filesize"
 msgstr ""
 
-#: src/replay/replaylistctrl.cpp:73 src/settings++/frame.cpp:228
+#: src/playback/playbacklistctrl.cpp:47
+msgid "Filesize in kilobyte"
+msgstr ""
+
+#: src/playback/playbacklistctrl.cpp:48 src/settings++/frame.cpp:228
 msgid "File"
 msgstr ""
 
-#: src/replay/replaytab.cpp:141
+#: src/playback/playbacktab.cpp:138
 msgid "Watch"
 msgstr ""
 
-#: src/replay/replaytab.cpp:147
+#: src/playback/playbacktab.cpp:144
 msgid "Reload list"
 msgstr ""
 
-#: src/replay/replaytab.cpp:307
+#: src/playback/playbacktab.cpp:291
 msgid "Couldn't get your spring versions from any unitsync library."
 msgstr ""
 
-#: src/replay/replaytab.cpp:326
+#: src/playback/playbacktab.cpp:312
 #, c-format
 msgid ""
 "No compatible installed spring version has been found, this replay requires "
 "version: %s\n"
 msgstr ""
 
-#: src/replay/replaytab.cpp:327 src/ui.cpp:623
+#: src/playback/playbacktab.cpp:313 src/ui.cpp:646
 msgid "Your current installed versions are:"
 msgstr ""
 
-#: src/replay/replaytab.cpp:347
+#: src/playback/playbacktab.cpp:334
 msgid ""
 "You need to download the mod before you can watch this replay.\n"
 "\n"
 msgstr ""
 
-#: src/replay/replaytab.cpp:356
+#: src/playback/playbacktab.cpp:346
 msgid ""
+" I couldn't find the map to be able to watch this replay\n"
+"This can be caused by tasclient writing broken map hash value\n"
+"If you're sure you have the map, press no\n"
 "You need to download the map to be able to watch this replay.\n"
 "\n"
 msgstr ""
 
-#: src/replay/replaytab.cpp:380
+#: src/playback/playbacktab.cpp:367
+msgid ""
+"I don't think you will be able to watch this replay.\n"
+"Try anyways? (MIGHT CRASH!)"
+msgstr ""
+
+#: src/playback/playbacktab.cpp:367
+#, fuzzy
+msgid "Invalid replay"
+msgstr "رقم غير صالح"
+
+#: src/playback/playbacktab.cpp:384
 msgid "Could not delete Replay: "
 msgstr ""
 
-#: src/selectusersdialog.cpp:50
+#: src/selectusersdialog.cpp:51
 msgid "Filter names"
 msgstr ""
 
-#: src/selectusersdialog.cpp:55
+#: src/selectusersdialog.cpp:56
 msgid "Enter text filter to filter the online users list"
 msgstr ""
 
@@ -3395,219 +3932,294 @@ msgstr ""
 msgid "Select Users"
 msgstr "إنتقاء الكل"
 
-#: src/serverevents.cpp:130
+#: src/serverevents.cpp:126
+#, c-format
+msgid "ping reply took %s ms"
+msgstr ""
+
+#: src/serverevents.cpp:143
 msgid " is online"
 msgstr ""
 
-#: src/serverevents.cpp:152
+#: src/serverevents.cpp:165
 msgid " is now "
 msgstr ""
 
-#: src/serverevents.cpp:175
+#: src/serverevents.cpp:188
 msgid "OnUserStatus() failed ! (exception)"
 msgstr ""
 
-#: src/serverevents.cpp:189
+#: src/serverevents.cpp:217
 msgid " just went offline"
 msgstr ""
 
-#: src/serverevents.cpp:224
+#: src/serverevents.cpp:252
 msgid " opened battle "
 msgstr ""
 
-#: src/serverevents.cpp:536
+#: src/serverevents.cpp:572
 msgid "Join channel failed"
 msgstr ""
 
-#: src/serverevents.cpp:536
+#: src/serverevents.cpp:572
 msgid "Could not join channel "
 msgstr ""
 
-#: src/serverevents.cpp:536
+#: src/serverevents.cpp:572
 msgid " because: "
 msgstr ""
 
-#: src/serverevents.cpp:755
+#: src/serverevents.cpp:791
 msgid "Server Message"
 msgstr ""
 
-#: src/serverevents.cpp:801
+#: src/serverevents.cpp:837
 #, c-format
 msgid " has ip=%s"
 msgstr ""
 
-#: src/serverevents.cpp:807
+#: src/serverevents.cpp:843
 msgid " does not really support nat traversal"
 msgstr ""
 
-#: src/serverevents.cpp:820
+#: src/serverevents.cpp:856
 msgid "You were kicked from the battle!"
 msgstr ""
 
-#: src/serverevents.cpp:820
+#: src/serverevents.cpp:856
 msgid "Kicked by Host"
 msgstr ""
 
-#: src/serverevents.cpp:850
+#: src/serverevents.cpp:886
 msgid "Begin mutelist for "
 msgstr ""
 
-#: src/serverevents.cpp:850
-msgid " mutelist"
+#: src/serverevents.cpp:886
+#, c-format
+msgid "%s mutelist"
 msgstr ""
 
-#: src/serverevents.cpp:857
+#: src/serverevents.cpp:893
 msgid " indefinite time remaining"
 msgstr ""
 
-#: src/serverevents.cpp:859
+#: src/serverevents.cpp:895
 #, c-format
 msgid " %d minutes remaining"
 msgstr ""
 
-#: src/serverevents.cpp:865
+#: src/serverevents.cpp:901
 msgid "End mutelist for "
 msgstr ""
 
-#: src/settings++/Defs.hpp:214
+#: src/serverevents.cpp:934
+#, fuzzy
+msgid "Download update"
+msgstr "تنزيل ال&خارطة"
+
+#: src/serverevents.cpp:934
+#, c-format
+msgid ""
+"Would you like to download %s ? The file offers the following updates:\n"
+"%s"
+msgstr ""
+
+#: src/serverevents.cpp:940
+msgid ""
+"Download started in the background, please be patient\n"
+"you will be notified on operation completed."
+msgstr ""
+
+#: src/serverevents.cpp:940
+#, fuzzy
+msgid "Download started"
+msgstr "تنزيل ال&خارطة"
+
+#: src/serverevents.cpp:947
+msgid "You refused a mandatory update, you will be disconnected now."
+msgstr ""
+
+#: src/serverevents.cpp:947
+#, fuzzy
+msgid "Disconnecting"
+msgstr "إعادة الاتصال"
+
+#: src/serverevents.cpp:955
+msgid ""
+"There was an error downloading for the latest version.\n"
+"Please update manually from http://springrts.com"
+msgstr ""
+
+#: src/serverevents.cpp:962
+msgid "Couldn't launch installer. File location is: "
+msgstr ""
+
+#: src/serverevents.cpp:962
+msgid "Couldn't launch installer."
+msgstr ""
+
+#: src/serverevents.cpp:967
+msgid "Download complete, location is: "
+msgstr ""
+
+#: src/serverevents.cpp:967
+#, fuzzy
+msgid "Download complete."
+msgstr "تنزيل ال&خارطة"
+
+#: src/settings++/Defs.hpp:212
 msgid "Scrollwheel speed"
 msgstr ""
 
-#: src/settings++/Defs.hpp:215
+#: src/settings++/Defs.hpp:213
 msgid ""
 "Higher values mean faster zoom with mouse wheel.\n"
 "Negative values will invert zoom direction.\n"
 "Results may vary depending on camera mode!"
 msgstr ""
 
-#: src/settings++/Defs.hpp:225
+#: src/settings++/Defs.hpp:223
 msgid "Shadow-map size"
 msgstr ""
 
-#: src/settings++/Defs.hpp:225
+#: src/settings++/Defs.hpp:223
 msgid ""
 "higher value = better looking shadows\n"
 "possible values: 1024, 2048, 4096, 8192"
 msgstr ""
 
-#: src/settings++/Defs.hpp:227
+#: src/settings++/Defs.hpp:225
 msgid "Tree view-distance"
 msgstr ""
 
-#: src/settings++/Defs.hpp:227
+#: src/settings++/Defs.hpp:225
 msgid "sets the maximum distance at which trees will still be rendered"
 msgstr ""
 
-#: src/settings++/Defs.hpp:228
+#: src/settings++/Defs.hpp:226
 msgid "Terrain detail"
 msgstr ""
 
-#: src/settings++/Defs.hpp:228
+#: src/settings++/Defs.hpp:226
 msgid "higher value = more terrain details"
 msgstr ""
 
-#: src/settings++/Defs.hpp:229
-msgid "Unit detail"
+#: src/settings++/Defs.hpp:227
+msgid "Unit LOD distance"
 msgstr ""
 
-#: src/settings++/Defs.hpp:229
-msgid "higher value = more detailed units"
+#: src/settings++/Defs.hpp:227
+msgid "higher value = units will remain detailed even when zooming out"
 msgstr ""
 
-#: src/settings++/Defs.hpp:230
+#: src/settings++/Defs.hpp:228
 msgid "Grass detail"
 msgstr ""
 
-#: src/settings++/Defs.hpp:230
+#: src/settings++/Defs.hpp:228
 msgid "higher value = more detailed grass"
 msgstr ""
 
-#: src/settings++/Defs.hpp:231
+#: src/settings++/Defs.hpp:229
 msgid "Ground decals"
 msgstr ""
 
-#: src/settings++/Defs.hpp:231
-msgid "only on/off available at this time"
+#: src/settings++/Defs.hpp:229
+msgid ""
+"settings higher than 1 might have unwelcome side-effects / be very resource "
+"hungry"
 msgstr ""
 
-#: src/settings++/Defs.hpp:232
+#: src/settings++/Defs.hpp:230
 msgid "Unit icon distance"
 msgstr ""
 
-#: src/settings++/Defs.hpp:232
+#: src/settings++/Defs.hpp:230
 msgid ""
 "determines at which range units are still fully rendered\n"
 "higher value = greater range = more units rendered at the same time"
 msgstr ""
 
-#: src/settings++/Defs.hpp:234
+#: src/settings++/Defs.hpp:232
 msgid "Max simultaneous particles"
 msgstr ""
 
-#: src/settings++/Defs.hpp:234
+#: src/settings++/Defs.hpp:232 src/settings++/Defs.hpp:233
 msgid "limits how many particles are displayed at the same time"
 msgstr ""
 
-#: src/settings++/Defs.hpp:242
+#: src/settings++/Defs.hpp:233
+msgid "Max nano simultaneous particles"
+msgstr ""
+
+#: src/settings++/Defs.hpp:241
 msgid "Run full-screen"
 msgstr ""
 
-#: src/settings++/Defs.hpp:242
+#: src/settings++/Defs.hpp:241
 msgid "run fullscreen or in a window?"
 msgstr ""
 
-#: src/settings++/Defs.hpp:243
+#: src/settings++/Defs.hpp:242
 msgid "Dual-screen mode"
 msgstr ""
 
-#: src/settings++/Defs.hpp:243
+#: src/settings++/Defs.hpp:242
 msgid "if you have two monitors you can use both"
 msgstr ""
 
-#: src/settings++/Defs.hpp:244
+#: src/settings++/Defs.hpp:243
 msgid "Enable v-sync"
 msgstr ""
 
-#: src/settings++/Defs.hpp:244
+#: src/settings++/Defs.hpp:243
 msgid "V-Sync on/off"
 msgstr ""
 
-#: src/settings++/Defs.hpp:250
+#: src/settings++/Defs.hpp:249
 msgid "16-bit Z-buffer"
 msgstr ""
 
-#: src/settings++/Defs.hpp:250 src/settings++/Defs.hpp:251
+#: src/settings++/Defs.hpp:249 src/settings++/Defs.hpp:250
 msgid "placeholder"
 msgstr ""
 
-#: src/settings++/Defs.hpp:251
+#: src/settings++/Defs.hpp:250
 msgid "24-bit Z-buffer"
 msgstr ""
 
-#: src/settings++/Defs.hpp:258
+#: src/settings++/Defs.hpp:257
 msgid "Full-scene anti-aliasing samples"
 msgstr ""
 
-#: src/settings++/Defs.hpp:258
+#: src/settings++/Defs.hpp:257
 msgid "how much anti-aliasing should be applied"
 msgstr ""
 
-#: src/settings++/Defs.hpp:270
+#: src/settings++/Defs.hpp:269
 msgid "Maximum simultaneous sounds"
 msgstr ""
 
-#: src/settings++/Defs.hpp:270
+#: src/settings++/Defs.hpp:269
 msgid ""
 "maximum different sounds played at the same time\n"
 "Set this to zero to disable sound completely."
 msgstr ""
 
-#: src/settings++/Defs.hpp:272
-msgid "Global sound volume"
+#: src/settings++/Defs.hpp:271
+msgid "Master sound volume"
+msgstr ""
+
+#: src/settings++/Defs.hpp:271
+msgid "master sound volume"
 msgstr ""
 
 #: src/settings++/Defs.hpp:272
-msgid "overall sound volume"
+msgid "General sound volume"
+msgstr ""
+
+#: src/settings++/Defs.hpp:272
+msgid "general volume relative to master volume"
 msgstr ""
 
 #: src/settings++/Defs.hpp:273
@@ -3615,301 +4227,301 @@ msgid "Unit reply volume"
 msgstr ""
 
 #: src/settings++/Defs.hpp:273
-msgid "reply volume relative to global volume"
+msgid "reply volume relative to master volume"
 msgstr ""
 
-#: src/settings++/Defs.hpp:280
+#: src/settings++/Defs.hpp:274
+msgid "Battle volume"
+msgstr ""
+
+#: src/settings++/Defs.hpp:274
+msgid "battle volume relative to global volume"
+msgstr ""
+
+#: src/settings++/Defs.hpp:275
+msgid "User interface volume"
+msgstr ""
+
+#: src/settings++/Defs.hpp:275
+msgid "ui volume relative to global volume"
+msgstr ""
+
+#: src/settings++/Defs.hpp:282
 msgid "Shadows (slow)"
 msgstr ""
 
-#: src/settings++/Defs.hpp:280
+#: src/settings++/Defs.hpp:282
 msgid "enable shadows?"
 msgstr ""
 
-#: src/settings++/Defs.hpp:281
+#: src/settings++/Defs.hpp:283
 msgid "3D trees"
 msgstr ""
 
-#: src/settings++/Defs.hpp:281
+#: src/settings++/Defs.hpp:283
 msgid ""
 "want better looking trees?\n"
 "needs Geforce 2/Radeon 8500/Intel 830 or later class graphic card"
 msgstr ""
 
-#: src/settings++/Defs.hpp:283
+#: src/settings++/Defs.hpp:285
 msgid "High-resolution clouds"
 msgstr ""
 
-#: src/settings++/Defs.hpp:283
+#: src/settings++/Defs.hpp:285
 msgid ""
 "want better looking sky?\n"
 "needs Geforce 5/Radeon 9500/Intel 915 or later class graphic card"
 msgstr ""
 
-#: src/settings++/Defs.hpp:285
+#: src/settings++/Defs.hpp:287
 msgid "Dynamic clouds (slow)"
 msgstr ""
 
-#: src/settings++/Defs.hpp:285
+#: src/settings++/Defs.hpp:287
 msgid "want moving clouds in the sky?"
 msgstr ""
 
-#: src/settings++/Defs.hpp:286
+#: src/settings++/Defs.hpp:288
 msgid "Reflective units"
 msgstr ""
 
-#: src/settings++/Defs.hpp:286
+#: src/settings++/Defs.hpp:288
 msgid ""
 "shiny units?\n"
 "needs Geforce 5/Radeon 9500/Intel 915 or later class graphic card"
 msgstr ""
 
-#: src/settings++/Defs.hpp:288
+#: src/settings++/Defs.hpp:290
 msgid "Never use shaders when rendering SM3 maps"
 msgstr ""
 
-#: src/settings++/Defs.hpp:288
+#: src/settings++/Defs.hpp:290
 msgid "problems with sm3 maps? enable this"
 msgstr ""
 
-#: src/settings++/Defs.hpp:289
+#: src/settings++/Defs.hpp:291
 msgid "Enable LuaShaders support"
 msgstr ""
 
-#: src/settings++/Defs.hpp:289
+#: src/settings++/Defs.hpp:291
 msgid "makes for some cool effects"
 msgstr ""
 
-#: src/settings++/Defs.hpp:290
+#: src/settings++/Defs.hpp:292
 msgid "Use Pixelbuffer objects"
 msgstr ""
 
-#: src/settings++/Defs.hpp:290
+#: src/settings++/Defs.hpp:292
 msgid ""
 "If supported, it speeds up the dynamic loading of terrain textures -> "
 "smoother camera movement"
 msgstr ""
 
-#: src/settings++/Defs.hpp:291
+#: src/settings++/Defs.hpp:293
 msgid "Compress textures"
 msgstr ""
 
-#: src/settings++/Defs.hpp:291
+#: src/settings++/Defs.hpp:293
 msgid ""
 "Runtime texture compression. (Ideal for graphic cards with small amount of "
 "vram)"
 msgstr ""
 
-#: src/settings++/Defs.hpp:292
+#: src/settings++/Defs.hpp:294
 msgid "High-resolution LOS textures"
 msgstr ""
 
-#: src/settings++/Defs.hpp:292
+#: src/settings++/Defs.hpp:294
 msgid "smoother Line of Sight overlays"
 msgstr ""
 
-#: src/settings++/Defs.hpp:293
+#: src/settings++/Defs.hpp:295
 msgid "Draw smooth points"
 msgstr ""
 
-#: src/settings++/Defs.hpp:293
+#: src/settings++/Defs.hpp:295
 msgid "should points be anti-aliased"
 msgstr ""
 
-#: src/settings++/Defs.hpp:294
+#: src/settings++/Defs.hpp:296
 msgid "Draw smooth lines"
 msgstr ""
 
-#: src/settings++/Defs.hpp:294
+#: src/settings++/Defs.hpp:296
 msgid "should lines be anti-aliased"
 msgstr ""
 
-#: src/settings++/Defs.hpp:300
-msgid "Enable LuaUI widgets"
-msgstr ""
-
-#: src/settings++/Defs.hpp:300
-msgid "mark to be able to use"
-msgstr ""
-
-#: src/settings++/Defs.hpp:302
+#: src/settings++/Defs.hpp:303
 msgid "Issue commands on mini-map"
 msgstr ""
 
-#: src/settings++/Defs.hpp:302
+#: src/settings++/Defs.hpp:303
 msgid "Issue orders on the mini-map like you would "
 msgstr ""
 
-#: src/settings++/Defs.hpp:303
+#: src/settings++/Defs.hpp:304
 msgid "Show commands on mini-map"
 msgstr ""
 
-#: src/settings++/Defs.hpp:303 src/settings++/Defs.hpp:304
-#: src/settings++/Defs.hpp:305
+#: src/settings++/Defs.hpp:304 src/settings++/Defs.hpp:305
+#: src/settings++/Defs.hpp:306
 msgid "default value is \"on\""
 msgstr ""
 
-#: src/settings++/Defs.hpp:304
+#: src/settings++/Defs.hpp:305
 msgid "Draw icons on mini-map"
 msgstr ""
 
-#: src/settings++/Defs.hpp:305
+#: src/settings++/Defs.hpp:306
 msgid "Draw markers on mini-map"
 msgstr ""
 
-#: src/settings++/Defs.hpp:306
+#: src/settings++/Defs.hpp:307
 msgid "Mini-map on left (single screen)"
 msgstr ""
 
-#: src/settings++/Defs.hpp:306 src/settings++/Defs.hpp:307
+#: src/settings++/Defs.hpp:307 src/settings++/Defs.hpp:308
 msgid "left is the default"
 msgstr ""
 
-#: src/settings++/Defs.hpp:307
+#: src/settings++/Defs.hpp:308
 msgid "Mini-map on left (dual screen)"
 msgstr ""
 
-#: src/settings++/Defs.hpp:308
+#: src/settings++/Defs.hpp:309
 msgid "Simplified mini-map colors"
 msgstr ""
 
-#: src/settings++/Defs.hpp:308
+#: src/settings++/Defs.hpp:309
 msgid "Use less colors"
 msgstr ""
 
-#: src/settings++/Defs.hpp:310
+#: src/settings++/Defs.hpp:311
 msgid "Team-colored nanospray"
 msgstr ""
 
-#: src/settings++/Defs.hpp:311
+#: src/settings++/Defs.hpp:312
 msgid "Should nano particels be the color of your team?"
 msgstr ""
 
-#: src/settings++/Defs.hpp:312
+#: src/settings++/Defs.hpp:313
 msgid "Colorized elevation map"
 msgstr ""
 
-#: src/settings++/Defs.hpp:312
+#: src/settings++/Defs.hpp:313
 msgid "makes differences in height clearer"
 msgstr ""
 
-#: src/settings++/Defs.hpp:314
+#: src/settings++/Defs.hpp:315
 msgid "Show in-game clock"
 msgstr ""
 
-#: src/settings++/Defs.hpp:315 src/settings++/Defs.hpp:317
-#: src/settings++/Defs.hpp:319
+#: src/settings++/Defs.hpp:316 src/settings++/Defs.hpp:318
+#: src/settings++/Defs.hpp:320
 msgid ""
 "requires \"Enable LuaWidgets\" to be set.\n"
 "Will be displayed in the bottom right corner"
 msgstr ""
 
-#: src/settings++/Defs.hpp:316
+#: src/settings++/Defs.hpp:317
 msgid "Show in-game player information"
 msgstr ""
 
-#: src/settings++/Defs.hpp:318
+#: src/settings++/Defs.hpp:319
 msgid "Show in-game framerate"
 msgstr ""
 
-#: src/settings++/Defs.hpp:321
+#: src/settings++/Defs.hpp:322
 msgid "Fix rendering on alt-tab"
 msgstr ""
 
-#: src/settings++/Defs.hpp:321
+#: src/settings++/Defs.hpp:322
 msgid "Do not change if not needed"
 msgstr ""
 
-#: src/settings++/Defs.hpp:322
+#: src/settings++/Defs.hpp:323
 msgid "Disallow helper AI's"
 msgstr ""
 
-#: src/settings++/Defs.hpp:322
+#: src/settings++/Defs.hpp:323
 msgid ""
 "Disables Economy AI, etc.\n"
 "If enabled might screw with LuaUi."
 msgstr ""
 
-#: src/settings++/Defs.hpp:324
+#: src/settings++/Defs.hpp:325
 msgid "Enable scroll on window edge"
 msgstr ""
 
-#: src/settings++/Defs.hpp:324
+#: src/settings++/Defs.hpp:325
 msgid "Scroll the screen when mouse reaches the screen's edge."
 msgstr ""
 
-#: src/settings++/Defs.hpp:325
+#: src/settings++/Defs.hpp:326
 msgid "Invert Mouse"
 msgstr ""
 
-#: src/settings++/Defs.hpp:325
+#: src/settings++/Defs.hpp:326
 msgid "Inverts the Mouse Y-axis in FPS mode"
 msgstr ""
 
-#: src/settings++/Defs.hpp:326
+#: src/settings++/Defs.hpp:327
 msgid "Use Hardware Cursor"
 msgstr ""
 
-#: src/settings++/Defs.hpp:326
+#: src/settings++/Defs.hpp:327
 msgid "Use native OS mouse cursor (hardware accelerated)"
 msgstr ""
 
-#: src/settings++/Defs.hpp:334
+#: src/settings++/Defs.hpp:335
 msgid "Overhead camera"
 msgstr ""
 
-#: src/settings++/Defs.hpp:334 src/settings++/Defs.hpp:335
-#: src/settings++/Defs.hpp:336 src/settings++/Defs.hpp:337
-#: src/settings++/Defs.hpp:338
+#: src/settings++/Defs.hpp:335 src/settings++/Defs.hpp:336
+#: src/settings++/Defs.hpp:337 src/settings++/Defs.hpp:338
+#: src/settings++/Defs.hpp:339
 msgid "set the scroll speed (mouse + keyboard) for this mode"
 msgstr ""
 
-#: src/settings++/Defs.hpp:335
+#: src/settings++/Defs.hpp:336
 msgid "Rotatable overhead camera"
 msgstr ""
 
-#: src/settings++/Defs.hpp:336
+#: src/settings++/Defs.hpp:337
 msgid "Total war camera"
 msgstr ""
 
-#: src/settings++/Defs.hpp:337
+#: src/settings++/Defs.hpp:338
 msgid "First person camera"
 msgstr ""
 
-#: src/settings++/Defs.hpp:338 src/settings++/Defs.hpp:398
+#: src/settings++/Defs.hpp:339 src/settings++/Defs.hpp:398
 msgid "Free camera"
 msgstr ""
 
-#: src/settings++/Defs.hpp:344 src/settings++/Defs.hpp:346
-#: src/settings++/Defs.hpp:348 src/settings++/Defs.hpp:350
-#: src/settings++/Defs.hpp:352
+#: src/settings++/Defs.hpp:345 src/settings++/Defs.hpp:347
+#: src/settings++/Defs.hpp:349 src/settings++/Defs.hpp:351
+#: src/settings++/Defs.hpp:353
 msgid ""
 "Make this the default view when startins Spring.\n"
 "Can be changed ingame."
 msgstr ""
 
-#: src/settings++/Defs.hpp:359
+#: src/settings++/Defs.hpp:360
 msgid "Console verbose level (0=min,10=max)"
 msgstr ""
 
-#: src/settings++/Defs.hpp:359
+#: src/settings++/Defs.hpp:360
 msgid "How much information should be outputted?"
 msgstr ""
 
-#: src/settings++/Defs.hpp:365
+#: src/settings++/Defs.hpp:366
 msgid "Catch AI exceptions"
 msgstr ""
 
-#: src/settings++/Defs.hpp:365
+#: src/settings++/Defs.hpp:366
 msgid "disable for AI debugging"
-msgstr ""
-
-#: src/settings++/Defs.hpp:366
-msgid "Send debug info to console"
-msgstr ""
-
-#: src/settings++/Defs.hpp:366
-msgid "if disabled these will only be logged"
 msgstr ""
 
 #: src/settings++/Defs.hpp:372 src/settings++/Defs.hpp:383
@@ -4181,29 +4793,29 @@ msgstr ""
 msgid "Hint"
 msgstr ""
 
-#: src/settings++/helpmenufunctions.cpp:27
+#: src/settings++/helpmenufunctions.cpp:28
 msgid ""
 "SpringSettings is a graphical frontend to the Settings of the Spring engine"
 msgstr ""
 
-#: src/settings++/helpmenufunctions.cpp:38
+#: src/settings++/helpmenufunctions.cpp:37
 msgid "Kloot"
 msgstr ""
 
-#: src/settings++/helpmenufunctions.cpp:39
+#: src/settings++/helpmenufunctions.cpp:38
 msgid "The SpringLobby team"
 msgstr ""
 
-#: src/settings++/helpmenufunctions.cpp:39
+#: src/settings++/helpmenufunctions.cpp:38
 msgid ""
 "thanks for inviting me in, code to re-use, infrastructure and help in general"
 msgstr ""
 
-#: src/settings++/helpmenufunctions.cpp:40
+#: src/settings++/helpmenufunctions.cpp:39
 msgid "everyone reporting bugs/suggestions"
 msgstr ""
 
-#: src/settings++/Main.cpp:95
+#: src/settings++/Main.cpp:94
 msgid ""
 "The application has generated a fatal error and will be terminated\n"
 "Generating a bug report is not possible\n"
@@ -4211,8 +4823,35 @@ msgid ""
 "please enable wxUSE_DEBUGREPORT"
 msgstr ""
 
-#: src/settings++/Main.cpp:95 src/springlobbyapp.cpp:341
+#: src/settings++/Main.cpp:94 src/springlobbyapp.cpp:248
 msgid "Critical error"
+msgstr ""
+
+#: src/settings++/Main.cpp:102 src/springlobbyapp.cpp:274
+msgid "show this help message"
+msgstr ""
+
+#: src/settings++/Main.cpp:103 src/springlobbyapp.cpp:275
+msgid "don't use the crash handler (useful for debugging)"
+msgstr ""
+
+#: src/settings++/Main.cpp:104 src/springlobbyapp.cpp:276
+msgid "shows application log to the console(if available)"
+msgstr ""
+
+#: src/settings++/Main.cpp:105 src/springlobbyapp.cpp:277
+msgid "enables application log window"
+msgstr ""
+
+#: src/settings++/Main.cpp:106 src/springlobbyapp.cpp:282
+msgid ""
+"overrides default logging verbosity, can be:\n"
+"                                0: no log\n"
+"                                1: critical errors\n"
+"                                2: errors\n"
+"                                3: warnings (default)\n"
+"                                4: messages\n"
+"                                5: function trace"
 msgstr ""
 
 #: src/settings++/panel_pathoption.cpp:33
@@ -4243,11 +4882,12 @@ msgstr ""
 msgid "Choose an unitsync library"
 msgstr ""
 
-#: src/settings++/panel_pathoption.cpp:76 src/springoptionstab.cpp:173
+#: src/settings++/panel_pathoption.cpp:78 src/springoptionstab.cpp:194
+#: src/springoptionstab.cpp:198
 msgid "Any File"
 msgstr ""
 
-#: src/settings++/panel_pathoption.cpp:88
+#: src/settings++/panel_pathoption.cpp:90
 msgid ""
 "SpringSettings is unable to load your unitsync library.\n"
 "You might want to take another look at your unitsync setting.\n"
@@ -4255,23 +4895,23 @@ msgid ""
 "this will fail in any case."
 msgstr ""
 
-#: src/settings++/presets.h:46 src/settings++/presets.h:47
+#: src/settings++/presets.h:44 src/settings++/presets.h:45
 msgid "low"
 msgstr ""
 
-#: src/settings++/presets.h:46 src/settings++/presets.h:47
+#: src/settings++/presets.h:44 src/settings++/presets.h:45
 msgid "medium"
 msgstr ""
 
-#: src/settings++/presets.h:46 src/settings++/presets.h:47
+#: src/settings++/presets.h:44 src/settings++/presets.h:45
 msgid "high"
 msgstr ""
 
-#: src/settings++/presets.h:47
+#: src/settings++/presets.h:45
 msgid "very low"
 msgstr ""
 
-#: src/settings++/presets.h:47
+#: src/settings++/presets.h:45
 msgid "very high"
 msgstr ""
 
@@ -4291,30 +4931,24 @@ msgstr ""
 msgid "Could not access your settings.\n"
 msgstr ""
 
-#: src/settings++/tab_abstract.cpp:555
+#: src/settings++/tab_abstract.cpp:567
 msgid "Could not save, unitsync not properly loaded"
 msgstr ""
 
-#: src/settings++/tab_abstract.cpp:555
+#: src/settings++/tab_abstract.cpp:567
 msgid "SpringSettings Error"
 msgstr ""
 
-#: src/settings++/tab_audio.cpp:61
+#: src/settings++/tab_audio.cpp:55
 msgid "Audio Options"
 msgstr ""
 
-#: src/settings++/tab_debug.cpp:61
+#: src/settings++/tab_debug.cpp:60
 msgid "Debug Options"
 msgstr ""
 
 #: src/settings++/tab_quality_video.cpp:64
 msgid "Screen Resolution"
-msgstr ""
-
-#: src/settings++/tab_quality_video.cpp:87
-#: src/settings++/tab_quality_video.cpp:88
-#, c-format
-msgid "%d"
 msgstr ""
 
 #: src/settings++/tab_quality_video.cpp:160
@@ -4433,62 +5067,63 @@ msgstr ""
 msgid "Zoom"
 msgstr ""
 
-#: src/singleplayertab.cpp:60
+#: src/singleplayerbattle.cpp:19
+#, fuzzy
+msgid "Player"
+msgstr "لاعب:"
+
+#: src/singleplayertab.cpp:57
 msgid ""
 "You can drag the sun/bot icon around to define start position.\n"
 " Hover over the icon for a popup that lets you change side, ally and bonus."
 msgstr ""
 
-#: src/singleplayertab.cpp:84
+#: src/singleplayertab.cpp:81
 msgid "Add bot..."
 msgstr ""
 
-#: src/singleplayertab.cpp:103
+#: src/singleplayertab.cpp:100
 #, fuzzy
 msgid "Spectate only"
 msgstr "متابع"
 
-#: src/singleplayertab.cpp:106
+#: src/singleplayertab.cpp:103
 #, fuzzy
 msgid "Random start positions"
 msgstr "مواقع البدء"
 
-#: src/singleplayertab.cpp:146 src/singleplayertab.cpp:167
+#: src/singleplayertab.cpp:143 src/singleplayertab.cpp:167
 msgid "-- Select one --"
 msgstr ""
 
-#: src/singleplayertab.cpp:220 src/singleplayertab.cpp:226
+#: src/singleplayertab.cpp:229 src/singleplayertab.cpp:236
 msgid "Gamesetup error"
 msgstr ""
 
-#: src/singleplayertab.cpp:226
+#: src/singleplayertab.cpp:236
 msgid "You have to select a map first."
 msgstr ""
 
-#: src/singleplayertab.cpp:233
+#: src/singleplayertab.cpp:243
 msgid ""
 "Continue without adding a bot first?.\n"
 " The game will be over pretty fast.\n"
 " "
 msgstr ""
 
-#: src/singleplayertab.cpp:234
+#: src/singleplayertab.cpp:244
 msgid "No Bot added"
 msgstr ""
 
-#: src/singleplayertab.cpp:273
-msgid "Spring only supports up to 16 different teams"
-msgstr ""
-
-#: src/singleplayertab.cpp:298
+#: src/singleplayertab.cpp:307
 msgid "You cannot start a spring instance while another is already running"
 msgstr ""
 
-#: src/springlobbyapp.cpp:216
+#: src/springlobbyapp.cpp:161
 msgid "Hi "
 msgstr ""
 
-#: src/springlobbyapp.cpp:216
+#: src/springlobbyapp.cpp:161
 msgid ""
 ",\n"
 "It looks like this is your first time using SpringLobby. I have guessed a "
@@ -4499,58 +5134,30 @@ msgid ""
 "enjoy a nice game of Spring :)"
 msgstr ""
 
-#: src/springlobbyapp.cpp:216
+#: src/springlobbyapp.cpp:161
 msgid "Welcome"
 msgstr ""
 
-#: src/springlobbyapp.cpp:219
+#: src/springlobbyapp.cpp:165
 msgid ""
-"You're using a wxwidgets library of the 2.6.x series\n"
-" battle filtering, advanced gui and joining/hosting games using nat "
-"traversal\n"
-" won't be available"
-msgstr ""
-
-#: src/springlobbyapp.cpp:219
-msgid "Missing Functionality"
-msgstr ""
-
-#: src/springlobbyapp.cpp:230
-#, fuzzy
-msgid "Default"
-msgstr "المبدئي"
-
-#: src/springlobbyapp.cpp:248
-msgid ""
-"Do you want to download OTA content?\n"
-"You need this to be able to play TA based mods.\n"
-"You need to own a copy of Total Annihilation do legally download it."
-msgstr ""
-
-#: src/springlobbyapp.cpp:250
-msgid "Download OTA content?"
-msgstr ""
-
-#: src/springlobbyapp.cpp:256
-msgid ""
-"By default SpringLobby reports some statistics.\n"
+"By default SpringLobby reports some usage statistics.\n"
 "You can disable that on options tab --> General."
 msgstr ""
 
-#: src/springlobbyapp.cpp:256
+#: src/springlobbyapp.cpp:165
 #, fuzzy
 msgid "Notice"
 msgstr "لا شيء"
 
-#: src/springlobbyapp.cpp:272
+#: src/springlobbyapp.cpp:181
 msgid "Should I try to import (some) TASClient settings?\n"
 msgstr ""
 
-#: src/springlobbyapp.cpp:272
+#: src/springlobbyapp.cpp:181
 msgid "Import settings?"
 msgstr ""
 
-#: src/springlobbyapp.cpp:341
+#: src/springlobbyapp.cpp:248
 msgid ""
 "The application has generated a fatal error and will be terminated\n"
 "Generating a bug report is not possible\n"
@@ -4558,209 +5165,239 @@ msgid ""
 "please get a wxWidgets library that supports wxUSE_DEBUGREPORT"
 msgstr ""
 
-#: src/springlobbyapp.cpp:386
-msgid "Create a spring directory in my documents folder"
+#: src/springlobbyapp.cpp:279
+msgid "only run update, quit immediately afterwards"
 msgstr ""
 
-#: src/springlobbyapp.cpp:389
-msgid "Do nothing"
+#: src/springlobbyapp.cpp:443 src/springlobbyapp.cpp:444
+#, fuzzy
+msgid "Ignore chat"
+msgstr "فتح الدردشة"
+
+#: src/springlobbyapp.cpp:445 src/springlobbyapp.cpp:446
+msgid "Battle Autokick"
 msgstr ""
 
-#: src/springlobbyapp.cpp:390
-msgid "Create a folder in a custom path (you'll get prompted for the path)"
+#: src/springlobbyapp.cpp:447 src/springlobbyapp.cpp:448
+#: src/springlobbyapp.cpp:449 src/springlobbyapp.cpp:450
+#: src/springlobbyapp.cpp:451
+#, fuzzy
+msgid "Friends"
+msgstr "ثابت"
+
+#: src/springoptionstab.cpp:57
+msgid "Search only in current installed path"
 msgstr ""
 
-#: src/springlobbyapp.cpp:391
-msgid "I have already a SpringData folder, i want to browse manually for it"
-msgstr ""
-
-#: src/springlobbyapp.cpp:394
-msgid ""
-"Looks like you don't have yet a user SpringData folder structure\n"
-"What would you like to do? (leave default choice if you don't know what this "
-"is for)"
-msgstr ""
-
-#: src/springlobbyapp.cpp:395
-msgid "First time wizard"
-msgstr ""
-
-#: src/springlobbyapp.cpp:406
-msgid "Choose a folder"
-msgstr ""
-
-#: src/springlobbyapp.cpp:421
-msgid ""
-"Something went wrong when creating the directories\n"
-"Please create manually the following folders:"
-msgstr ""
-
-#: src/springoptionstab.cpp:54
+#: src/springoptionstab.cpp:65
 msgid "Spring executable"
 msgstr ""
 
-#: src/springoptionstab.cpp:56 src/springoptionstab.cpp:67
+#: src/springoptionstab.cpp:67 src/springoptionstab.cpp:78
 msgid "Location"
 msgstr ""
 
-#: src/springoptionstab.cpp:59 src/springoptionstab.cpp:69
+#: src/springoptionstab.cpp:70 src/springoptionstab.cpp:80
 msgid "Find"
 msgstr ""
 
-#: src/springoptionstab.cpp:64
+#: src/springoptionstab.cpp:75
 msgid "UnitSync library"
 msgstr ""
 
-#: src/springoptionstab.cpp:71
+#: src/springoptionstab.cpp:82
 msgid "Auto Configure"
 msgstr ""
 
-#: src/springoptionstab.cpp:162
+#: src/springoptionstab.cpp:83
+msgid "Change Datadir path"
+msgstr ""
+
+#: src/springoptionstab.cpp:182
 msgid "Choose a Spring executable"
 msgstr ""
 
-#: src/springoptionstab.cpp:170
-msgid "Choose UnitSync library"
-msgstr ""
-
-#: src/springoptionstab.cpp:173
+#: src/springoptionstab.cpp:190 src/springoptionstab.cpp:192
+#: src/springoptionstab.cpp:198
 msgid "Library"
 msgstr ""
 
-#: src/springoptionstab.cpp:189
+#: src/springoptionstab.cpp:195
+msgid "Choose UnitSync library"
+msgstr ""
+
+#: src/springoptionstab.cpp:218
 msgid ""
 "SpringLobby is unable to load your UnitSync library.\n"
 "\n"
 "You might want to take another look at your unitsync setting."
 msgstr ""
 
-#: src/tasserver.cpp:351
+#: src/springoptionstab.cpp:279
+msgid ""
+"Do you want to change spring's datadir location? (select yes only if you "
+"know what you're doing)"
+msgstr ""
+
+#: src/springoptionstab.cpp:279
+msgid "Data dir wizard"
+msgstr ""
+
+#: src/springoptionstab.cpp:283
+msgid "Choose a folder"
+msgstr ""
+
+#: src/springoptionstab.cpp:296
+msgid ""
+"Something went wrong when creating the directories\n"
+"Please create manually the following folders:"
+msgstr ""
+
+#: src/tasserver.cpp:391 src/ui.cpp:249
 msgid "Connection timed out"
 msgstr ""
 
-#: src/tasserver.cpp:364
+#: src/tasserver.cpp:404
 msgid "Unknown answer from server"
 msgstr ""
 
-#: src/tasserver.cpp:465
+#: src/tasserver.cpp:487
+msgid "Timeout assumed, disconnecting"
+msgstr ""
+
+#: src/tasserver.cpp:498
 msgid ""
 "Failed to punch through NAT, playing this battle might not work for you or "
 "for other players."
 msgstr ""
 
-#: src/tdfcontainer.cpp:126
+#: src/tdfcontainer.cpp:128
 msgid "line "
 msgstr ""
 
-#: src/tdfcontainer.cpp:126
+#: src/tdfcontainer.cpp:128
 msgid " , column "
 msgstr ""
 
-#: src/torrentlistctrl.cpp:37
+#: src/torrentlistctrl.cpp:44
 msgid "numcopies"
 msgstr ""
 
-#: src/torrentlistctrl.cpp:41
+#: src/torrentlistctrl.cpp:48
 msgid "MB downloaded"
 msgstr ""
 
-#: src/torrentlistctrl.cpp:45
+#: src/torrentlistctrl.cpp:52
 msgid "MB uploaded"
 msgstr ""
 
-#: src/torrentlistctrl.cpp:49
+#: src/torrentlistctrl.cpp:56
 msgid "status"
 msgstr ""
 
-#: src/torrentlistctrl.cpp:53
+#: src/torrentlistctrl.cpp:60
 #, c-format
 msgid "% complete"
 msgstr ""
 
-#: src/torrentlistctrl.cpp:57
+#: src/torrentlistctrl.cpp:64
 msgid "KB/s up"
 msgstr ""
 
-#: src/torrentlistctrl.cpp:61
+#: src/torrentlistctrl.cpp:68
 msgid "KB/s down"
 msgstr ""
 
-#: src/torrentlistctrl.cpp:65
+#: src/torrentlistctrl.cpp:72
 msgid "ETA (s)"
 msgstr ""
 
-#: src/torrentlistctrl.cpp:69
+#: src/torrentlistctrl.cpp:76
 msgid "Filesize (MB)"
 msgstr ""
 
-#: src/torrentoptionspanel.cpp:40
+#: src/torrentoptionspanel.cpp:37
 msgid "Torrent system autostart"
 msgstr ""
 
-#: src/torrentoptionspanel.cpp:42
+#: src/torrentoptionspanel.cpp:39
 msgid "at lobby connection (default)"
 msgstr ""
 
-#: src/torrentoptionspanel.cpp:43
+#: src/torrentoptionspanel.cpp:40
 msgid "at lobby start"
 msgstr ""
 
-#: src/torrentoptionspanel.cpp:44
+#: src/torrentoptionspanel.cpp:41
 msgid "manual"
 msgstr ""
 
-#: src/torrentoptionspanel.cpp:54
+#: src/torrentoptionspanel.cpp:51
 msgid "At game start suspend mode"
 msgstr ""
 
-#: src/torrentoptionspanel.cpp:56
+#: src/torrentoptionspanel.cpp:53
 msgid "Pause all torrents"
 msgstr ""
 
-#: src/torrentoptionspanel.cpp:57
+#: src/torrentoptionspanel.cpp:54
 msgid "Throttle speeds:"
 msgstr ""
 
-#: src/torrentoptionspanel.cpp:60
+#: src/torrentoptionspanel.cpp:57
 msgid "upload (KB/s)"
 msgstr ""
 
-#: src/torrentoptionspanel.cpp:62
+#: src/torrentoptionspanel.cpp:59
 msgid "download (KB/s)"
 msgstr ""
 
-#: src/torrentoptionspanel.cpp:75
+#: src/torrentoptionspanel.cpp:72
 msgid "Numbers"
 msgstr ""
 
-#: src/torrentoptionspanel.cpp:79
+#: src/torrentoptionspanel.cpp:76
 msgid "maximum upload speed in KB/sec(-1 for infinite)"
 msgstr ""
 
-#: src/torrentoptionspanel.cpp:86
+#: src/torrentoptionspanel.cpp:83
 msgid "maximum download speed in KB/sec (-1 for infinite)"
 msgstr ""
 
-#: src/torrentoptionspanel.cpp:93
+#: src/torrentoptionspanel.cpp:90
 msgid "port used for torrent connections"
 msgstr ""
 
-#: src/torrentoptionspanel.cpp:100
+#: src/torrentoptionspanel.cpp:97
 msgid "maximum number of concurrent connections"
 msgstr ""
 
-#: src/torrentwrapper.cpp:376
+#: src/torrentwrapper.cpp:443
 msgid ""
 "Tried all known trackers for torrent system. No connection could be "
 "established"
 msgstr ""
 
-#: src/torrentwrapper.cpp:377
+#: src/torrentwrapper.cpp:444
 msgid "Torrent system failure"
 msgstr ""
 
-#: src/ui.cpp:157
+#: src/ui.cpp:167
 msgid "Server password"
+msgstr ""
+
+#: src/ui.cpp:244
+msgid ""
+"Registration successful,\n"
+"you should now be able to login."
+msgstr ""
+
+#: src/ui.cpp:244
+msgid "Registration successful"
+msgstr ""
+
+#: src/ui.cpp:250
+msgid "Registration failed, the reason was:\n"
 msgstr ""
 
 #: src/ui.cpp:376
@@ -4811,7 +5448,7 @@ msgstr ""
 
 #: src/ui.cpp:498
 msgid ""
-"  \"/join channel [password] [,channel2 [password2]]\" - Join a channel."
+"  \"/join channel [password] [,channel2 [password2]]\" - Joins a channel."
 msgstr ""
 
 #: src/ui.cpp:499
@@ -4819,134 +5456,139 @@ msgid "  \"/j\" - Alias to /join."
 msgstr ""
 
 #: src/ui.cpp:500
-msgid "  \"/ingame\" - Show how much time you have in game."
+msgid "  \"/ingame\" - Shows how much time you have in game."
 msgstr ""
 
 #: src/ui.cpp:501
 msgid ""
-"  \"/msg username [text]\" - sends a private message containing text to "
+"  \"/msg username [text]\" - Sends a private message containing text to "
 "username."
 msgstr ""
 
 #: src/ui.cpp:502
-msgid "  \"/rename newalias\" - Changes your nickname to newalias."
+msgid "  \"/part\" - Leaves current channel."
 msgstr ""
 
 #: src/ui.cpp:503
-msgid "  \"/sayver\" - Say what version of springlobby you have in chat."
+msgid "  \"/p\" - Alias to /part."
 msgstr ""
 
 #: src/ui.cpp:504
-msgid "  \"/testmd5 text\" - Returns md5-b64 hash of given text."
+msgid "  \"/rename newalias\" - Changes your nickname to newalias."
 msgstr ""
 
 #: src/ui.cpp:505
-msgid "  \"/ver\" - Display what version of SpringLobby you have."
+msgid "  \"/sayver\" - Says what version of springlobby you have in chat."
+msgstr ""
+
+#: src/ui.cpp:506
+msgid "  \"/testmd5 text\" - Returns md5-b64 hash of given text."
 msgstr ""
 
 #: src/ui.cpp:507
-msgid "Chat commands:"
+msgid "  \"/ver\" - Displays what version of SpringLobby you have."
 msgstr ""
 
 #: src/ui.cpp:508
-msgid "  \"/me action\" - Say IRC style action message."
+msgid "  \"/clear\" - Clears all text from current chat panel"
 msgstr ""
 
 #: src/ui.cpp:510
+msgid "Chat commands:"
+msgstr ""
+
+#: src/ui.cpp:511
+msgid "  \"/me action\" - Say IRC style action message."
+msgstr ""
+
+#: src/ui.cpp:513
 msgid ""
 "If you are missing any commands, go to #springlobby and try to type it "
 "there :)"
 msgstr ""
 
-#: src/ui.cpp:515
+#: src/ui.cpp:518
 msgid "No topics written yet."
 msgstr ""
 
-#: src/ui.cpp:519
+#: src/ui.cpp:522
 msgid "The topic \""
 msgstr ""
 
-#: src/ui.cpp:519
+#: src/ui.cpp:522
 msgid "\" was not found. Type \"/help topics\" only for available topics."
 msgstr ""
 
-#: src/ui.cpp:606
+#: src/ui.cpp:629
 msgid ""
 "Couldn't get your spring versions from any unitsync library.\n"
 "\n"
 "Online play is currently disabled."
 msgstr ""
 
-#: src/ui.cpp:622
+#: src/ui.cpp:645
 #, c-format
 msgid ""
 "No compatible installed spring version has been found, this server requires "
 "version: %s\n"
 msgstr ""
 
-#: src/ui.cpp:625
+#: src/ui.cpp:648
 msgid "Online play is currently disabled."
 msgstr ""
 
-#: src/ui.cpp:655
+#: src/ui.cpp:681
 msgid "Disconnected from server."
 msgstr ""
 
-#: src/ui.cpp:661
-msgid "Disconnected from server"
+#: src/ui.cpp:693
+msgid ""
+"A connection couldn't be established with the server\n"
+"Would you like to try again with the same server?\n"
+"No to switch to next server in the list"
 msgstr ""
 
-#: src/ui.cpp:661
-#, fuzzy
-msgid "Not online"
-msgstr "غير متصل."
+#: src/ui.cpp:693
+msgid "Connection failure"
+msgstr ""
 
-#: src/ui.cpp:779
+#: src/ui.cpp:854
 msgid "no active chat panels open."
 msgstr ""
 
-#: src/ui.cpp:782
+#: src/ui.cpp:857
 #, c-format
 msgid "(%d users)"
 msgstr ""
 
-#: src/ui.cpp:846
+#: src/ui.cpp:921
 msgid "Server message"
 msgstr ""
 
-#: src/ui.cpp:888
+#: src/ui.cpp:963
 msgid "The current battle was closed by the host."
 msgstr ""
 
-#: src/ui.cpp:888
+#: src/ui.cpp:963
 msgid "Battle closed"
 msgstr ""
 
-#: src/ui.cpp:991
+#: src/ui.cpp:1066
 msgid ""
 "Your spring settings are probably not configured correctly,\n"
 "you should take another look at your settings before trying\n"
 "to play online."
 msgstr ""
 
-#: src/ui.cpp:991
+#: src/ui.cpp:1066
 msgid "Spring settings error"
 msgstr ""
 
-#: src/ui.cpp:997
-msgid ""
-"This game uses NAT traversal that is not supported by wx 2.6 build of "
-"springlobby. \n"
-"\n"
-"You will not be able to play in this battle. \n"
-"Update your wxwidgets to 2.8 or newer to enable NAT traversal support."
-msgstr ""
-
-#: src/ui.cpp:1213
+#: src/ui.cpp:1253
 msgid "The selected preset requires the map "
 msgstr ""
 
-#: src/ui.cpp:1213
+#: src/ui.cpp:1253
 msgid ""
 ". Should it be downloaded?                                     \n"
 " Selecting \"no\" will remove the missing map from the preset.\n"
@@ -4954,41 +5596,32 @@ msgid ""
 "download finished"
 msgstr ""
 
-#: src/ui.cpp:1216
+#: src/ui.cpp:1256
 msgid "Map missing"
 msgstr ""
 
-#: src/uiutils.h:18
-#, fuzzy
-msgid "Choose color"
-msgstr "تعيين اللون"
-
-#: src/uiutils.h:20
-msgid "Choose color (only first 16 will be saved)"
-msgstr ""
-
-#: src/updater/updater.cpp:39
+#: src/updater/updater.cpp:46
 msgid ""
 "There was an error checking for the latest version.\n"
 "Please try again later.\n"
 "If the problem persists, please use Help->Report Bug to report this bug."
 msgstr ""
 
-#: src/updater/updater.cpp:44
+#: src/updater/updater.cpp:51
 msgid "Your Version: "
 msgstr ""
 
-#: src/updater/updater.cpp:44
+#: src/updater/updater.cpp:51
 msgid "Latest Version: "
 msgstr ""
 
-#: src/updater/updater.cpp:48 src/updater/updater.cpp:64
+#: src/updater/updater.cpp:55 src/updater/updater.cpp:68
 msgid ""
 "Your SpringLobby version is not up to date.\n"
 "\n"
 msgstr ""
 
-#: src/updater/updater.cpp:48
+#: src/updater/updater.cpp:55
 msgid ""
 "\n"
 "\n"
@@ -4996,28 +5629,32 @@ msgid ""
 "effect next you launch the lobby again."
 msgstr ""
 
-#: src/updater/updater.cpp:48
+#: src/updater/updater.cpp:55
 msgid "Not up to date"
 msgstr ""
 
-#: src/updater/updater.cpp:55
+#: src/updater/updater.cpp:62
+msgid "SpringLobby -- downloading update"
+msgstr ""
+
+#: src/updater/updater.cpp:68
+msgid "Not up to Date"
+msgstr ""
+
+#: src/updater/updater.cpp:82
 msgid ""
 "Unable to write to the lobby installation directory.\n"
 "Please update manually or enable write permissions for the current user."
 msgstr ""
 
-#: src/updater/updater.cpp:64
-msgid "Not up to Date"
-msgstr ""
-
-#: src/updater/updater.cpp:71
+#: src/updater/updater.cpp:96
 msgid ""
 "There was an error downloading for the latest version.\n"
 "Please try again later.\n"
 "If the problem persists, please use Help->Report Bug to report this bug."
 msgstr ""
 
-#: src/updater/updater.cpp:75
+#: src/updater/updater.cpp:101 src/updater/updater.cpp:104
 #, c-format
 msgid ""
 "There was an error while trying to replace the current executable version\n"
@@ -5026,22 +5663,18 @@ msgid ""
 "Please use Help->Report Bug to report this bug."
 msgstr ""
 
-#: src/updater/updater.cpp:80
+#: src/updater/updater.cpp:112 src/updater/updater.cpp:115
 msgid "Update complete. The changes will be available next lobby start."
 msgstr ""
 
-#: src/updater/updater.cpp:80
-msgid "Success"
-msgstr ""
-
-#: src/updater/updater.cpp:83
+#: src/updater/updater.cpp:122 src/updater/updater.cpp:125
 msgid ""
 "Binary updated successfully. \n"
 "Some translation files could not be updated.\n"
 "Please report this in #springlobby after restarting."
 msgstr ""
 
-#: src/updater/updater.cpp:83
+#: src/updater/updater.cpp:122 src/updater/updater.cpp:125
 msgid "Partial success"
 msgstr ""
 
@@ -5114,53 +5747,53 @@ msgstr ""
 msgid "popup a message box when user changes away status"
 msgstr ""
 
-#: src/user.cpp:22
+#: src/user.cpp:77
 #, fuzzy
 msgid "away"
 msgstr "دائماً"
 
-#: src/user.cpp:22
+#: src/user.cpp:77
 msgid "back"
 msgstr ""
 
-#: src/user.cpp:24
+#: src/user.cpp:79
 #, fuzzy
 msgid "ingame"
 msgstr "الكنية"
 
-#: src/user.cpp:24
+#: src/user.cpp:79
 msgid "back from game"
 msgstr ""
 
-#: src/user.cpp:121
+#: src/user.cpp:185
 msgid "Newbie"
 msgstr ""
 
-#: src/user.cpp:122
+#: src/user.cpp:186
 msgid "Beginner"
 msgstr ""
 
-#: src/user.cpp:123
+#: src/user.cpp:187
 msgid "Average"
 msgstr ""
 
-#: src/user.cpp:124
+#: src/user.cpp:188
 msgid "Above average"
 msgstr ""
 
-#: src/user.cpp:125
+#: src/user.cpp:189
 msgid "Experienced"
 msgstr ""
 
-#: src/user.cpp:126
+#: src/user.cpp:190
 msgid "Highly experienced"
 msgstr ""
 
-#: src/user.cpp:127
+#: src/user.cpp:191
 msgid "Veteran"
 msgstr ""
 
-#: src/user.cpp:129
+#: src/user.cpp:193
 msgid "Unknown"
 msgstr ""
 
@@ -5177,25 +5810,102 @@ msgstr "إضافة بوت..."
 msgid "Remove from group"
 msgstr ""
 
-#~ msgid "Map Options"
-#~ msgstr "خيارات الخارطة"
+#: src/utils/controls.h:18
+#, fuzzy
+msgid "Choose color"
+msgstr "تعيين اللون"
 
-#~ msgid "Load..."
-#~ msgstr "تحميل..."
+#: src/utils/controls.h:20
+msgid "Choose color (only first 16 will be saved)"
+msgstr ""
+
+#: src/widgets/downloaddialog.cpp:14
+msgid "widgets"
+msgstr ""
+
+#: src/widgets/infopanel.cpp:35
+msgid "getting infos"
+msgstr ""
+
+#: src/widgets/infopanel.cpp:64
+msgid "Author"
+msgstr ""
+
+#: src/widgets/infopanel.cpp:69
+msgid "Suitable mods"
+msgstr ""
+
+#: src/widgets/infopanel.cpp:74
+#, fuzzy
+msgid "Current version"
+msgstr "خطأ Spring"
+
+#: src/widgets/infopanel.cpp:79
+#, fuzzy
+msgid "# downloaded"
+msgstr "تنزيل ال&خارطة"
+
+#: src/widgets/infopanel.cpp:84
+msgid "Published on"
+msgstr ""
+
+#: src/widgets/infopanel.cpp:121
+#, fuzzy
+msgid "Changelog"
+msgstr "إلغاء"
+
+#: src/widgets/infopanel.cpp:126
+msgid "Screenshots"
+msgstr ""
+
+#: src/widgets/infopanel.cpp:158
+msgid "Widget files have been installed."
+msgstr ""
+
+#: src/widgets/infopanel.cpp:161
+msgid "Widget files have not been installed."
+msgstr ""
+
+#: src/widgets/infopanel.cpp:170
+msgid "Widget files have been removed."
+msgstr ""
+
+#: src/widgets/infopanel.cpp:173
+msgid "Widget files have not been removed."
+msgstr ""
 
 #, fuzzy
-#~ msgid "Delete..."
-#~ msgstr "إنتقاء..."
+#~ msgid "Grouping size"
+#~ msgstr "اجراء"
+
+#~ msgid "a"
+#~ msgstr "أ"
+
+#~ msgid "m"
+#~ msgstr "م"
+
+#~ msgid "%d%"
+#~ msgstr "%d%"
+
+#~ msgid "Not a number"
+#~ msgstr "هذا ليس رقم"
+
+#~ msgid "Invalid number"
+#~ msgstr "رقم غير صالح"
+
+#, fuzzy
+#~ msgid "Channel name"
+#~ msgstr "معلومات القناة"
+
+#~ msgid "_SERVER"
+#~ msgstr "_خادوم"
+
+#, fuzzy
+#~ msgid "Not online"
+#~ msgstr "غير متصل."
 
 #~ msgid "Select all"
 #~ msgstr "إنتقاء الكل"
-
-#~ msgid "Copy"
-#~ msgstr "نسخ"
-
-#, fuzzy
-#~ msgid "Invalid usernames"
-#~ msgstr "رقم غير صالح"
 
 #, fuzzy
 #~ msgid "Unitsync error"
@@ -5206,9 +5916,6 @@ msgstr ""
 
 #~ msgid "Resources"
 #~ msgstr "الموارد"
-
-#~ msgid "Clear"
-#~ msgstr "مسح"
 
 #~ msgid "Save to:"
 #~ msgstr "حفظ في:"
