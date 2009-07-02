@@ -76,6 +76,18 @@ class BattleRoomTab : public wxScrolledWindow
 		void OnMapSelect( wxCommandEvent& event );
 		void OnOptionActivate( wxListEvent& event );
 
+		void OnSpectUnsynced( wxCommandEvent& event );
+		void OnSpectUnready( wxCommandEvent& event );
+		void OnSpectUnreadyUnsynced( wxCommandEvent& event );
+
+		void OnRingUnready( wxCommandEvent& event );
+		void OnRingUnsynced( wxCommandEvent& event );
+		void OnRingUnreadyUnsynced( wxCommandEvent& event );
+
+		void OnAutoControl( wxCommandEvent& event );
+		void OnAutoStart( wxCommandEvent& event );
+		void OnAutoSpec( wxCommandEvent& event );
+
     void OnUserJoined( User& user );
     void OnUserLeft( User& user );
 
@@ -149,6 +161,9 @@ class BattleRoomTab : public wxScrolledWindow
     wxMenu* m_manage_users_mnu;
     wxMenuItem* m_lock_balance_mnu;
     wxMenuItem* m_autohost_mnu;
+    wxMenuItem* m_autostart_mnu;
+    wxMenuItem* m_autospec_mnu;
+    wxMenuItem* m_autocontrol_mnu;
 
     wxCheckBox* m_ready_chk;
     wxCheckBox* m_spec_chk;
@@ -185,7 +200,16 @@ class BattleRoomTab : public wxScrolledWindow
 				BROOM_SETDEFAULTPRES,
 				BROOM_MAP_BROWSE,
 				BROOM_MAP_SEL,
-				BROOM_OPTIONLIST
+				BROOM_OPTIONLIST,
+				BROOM_RING_UNREADY,
+				BROOM_RING_UNSYNC,
+				BROOM_RING_UNREADY_UNSYNC,
+				BROOM_SPECT_UNREADY,
+				BROOM_SPECT_UNSYNC,
+				BROOM_SPECT_UNREADY_UNSYNC,
+				BROOM_AUTOSPECT,
+				BROOM_AUTOSTART,
+				BROOM_AUTOCONTROL
     };
 
     DECLARE_EVENT_TABLE();

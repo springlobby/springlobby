@@ -69,7 +69,6 @@ Ui::Ui() :
 {
     m_main_win = new MainWindow( *this );
     CustomMessageBoxBase::setLobbypointer(m_main_win);
-    m_spring = new Spring(*this);
     m_serv = new TASServer();
 }
 
@@ -78,7 +77,6 @@ Ui::~Ui()
     Disconnect();
 
     delete m_main_win;
-    delete m_spring;
     delete m_serv;
 }
 
@@ -277,16 +275,9 @@ void Ui::StartHostedBattle()
 }
 
 
-void Ui::StartSinglePlayerGame( SinglePlayerBattle& battle )
-{
-    OnSpringStarting();
-    m_spring->Run( battle );
-}
-
-
 bool Ui::IsSpringRunning()
 {
-    return m_spring->IsRunning();
+    return spring().IsRunning();
 }
 
 
@@ -1114,39 +1105,6 @@ void Ui::OnBattleStarted( Battle& battle )
 {
     if ( m_main_win == 0 ) return;
     wxLogDebugFunc( _T("") );
-    try
-    {
-        if ( &mw().GetJoinTab().GetBattleRoomTab().GetBattle() == &battle )
-        {
-            if ( battle.IsProxy() )
-            {
-              wxString hostscript = m_spring->WriteScriptTxt( battle );
-							try
-							{
-								wxString path = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("relayhost_script.txt");
-								if ( !wxFile::Access( path, wxFile::write ) ) wxLogError( _T("Access denied to script.txt.") );
-
-								wxFile f( path, wxFile::write );
-								f.Write( hostscript );
-								f.Close();
-
-							} catch (...) {}
-              GetServer().SendScriptToProxy( hostscript );
-            }
-            battle.GetMe().BattleStatus().ready = false;
-            battle.SendMyBattleStatus();
-            battle.GetMe().Status().in_game = true;
-            battle.GetMe().SendMyUserStatus();
-            if( battle.IsFounderMe() && battle.GetAutoLockOnStart() )
-            {
-              battle.SetIsLocked( true );
-              battle.SendHostInfo( IBattle::HI_Locked );
-            }
-            OnSpringStarting();
-            m_spring->Run( battle );
-        }
-    }
-    catch (...) {}
     mw().GetJoinTab().GetBattleListTab().UpdateBattle( battle );
 }
 
@@ -1287,12 +1245,6 @@ void Ui::ReloadPresetList()
         mw().GetJoinTab().ReloadPresetList();
     }
     catch (...) {}
-}
-
-void Ui::WatchPlayback( OfflineBattle& battle )
-{
-    OnSpringStarting();
-    m_spring->Run( battle );
 }
 
 bool Ui::OnPresetRequiringMap( const wxString& mapname )

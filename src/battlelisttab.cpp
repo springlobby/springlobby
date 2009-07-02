@@ -491,9 +491,24 @@ void BattleListTab::DoJoin( Battle& battle )
   }
 
   Battle* curbattle = m_ui.mw().GetJoinTab().GetCurrentBattle();
+
+  if ( curbattle != 0 && curbattle->GetID() == battle.GetID() )
+  {
+	if ( m_ui.Ask( _("Already in this battle"), _("You are already in this battle.\n\nDo you want to leave it?")) )
+	{
+	  curbattle->Leave();
+      m_ui.mw().GetJoinTab().LeaveCurrentBattle();
+	  return;
+	}
+	else
+	{
+	  return;
+	}
+  }
+
   if ( curbattle != 0 )
   {
-    if ( m_ui.Ask( _("Already in a battle"), _("You are already in a battle.\n\nDo you want to leave current battle to and join this one?") ) ) {
+    if ( m_ui.Ask( _("Already in another battle"), _("You are already in a battle.\n\nDo you want to leave your current battle and join this one?") ) ) {
       curbattle->Leave();
       m_ui.mw().GetJoinTab().LeaveCurrentBattle();
     }

@@ -308,7 +308,7 @@ void SinglePlayerTab::OnStart( wxCommandEvent& event )
         return;
     }
 
-    if ( ValidSetup() ) m_ui.StartSinglePlayerGame( m_battle );
+    if ( ValidSetup() ) m_battle.StartSpring();
 }
 
 

@@ -29,8 +29,6 @@ class Battle : public IBattle
 
     int GetMyPlayerNum() const;
 
-    void FixColours( );
-
     void Update();
     void Update( const wxString& Tag );
 
@@ -40,6 +38,8 @@ class Battle : public IBattle
     void KickPlayer( User& user );
 
     void RingNotReadyPlayers();
+    void RingNotSyncedPlayers();
+    void RingNotSyncedAndNotReadyPlayers();
     void RingPlayer( const User& u );
 
     void Say( const wxString& msg );
@@ -66,9 +66,9 @@ class Battle : public IBattle
     void OnUserBattleStatusUpdated( User &user, UserBattleStatus status );
     void OnUserRemoved( User& user );
 
-    void Autobalance( BalanceType balance_type = balance_divide, bool clans = true, bool strong_clans = true, int allyteamsize = 0 );
-    void FixTeamIDs( BalanceType balance_type = balance_divide, bool clans = true, bool strong_clans = true, int controlteamsize = 0 );
     void ForceUnsyncedToSpectate();
+    void ForceUnReadyToSpectate();
+    void ForceUnsyncedAndUnreadyToSpectate();
 
     void SetAutoLockOnStart( bool value );
     bool GetAutoLockOnStart();
@@ -92,6 +92,10 @@ class Battle : public IBattle
 
     void SaveMapDefaults();
     void LoadMapDefaults( const wxString& mapname );
+
+    void StartSpring();
+
+    void OnTimer( wxTimerEvent& event );
 
   protected:
     // Battle variables
