@@ -16,6 +16,8 @@ fi
 grep -lR \
     --exclude-dir=libtorrent \
     --exclude=\*.xpm \
+    --exclude=\*~ \
+    --exclude=\*.orig \
     --exclude=\*.png.h \
     '_(' "${SPRINGLOBBY_BASE_DIR}/src/" \
     | sort -u \
