@@ -38,66 +38,68 @@ wxString GetLibExtension()
 wxLogWindow* InitializeLoggingTargets( wxFrame* parent, bool console, bool showgui, bool logcrash, int verbosity )
 {
     wxLogWindow* loggerwin = 0;
-  wxLogChain *lastlog;
-  if ( showgui && verbosity != 0 )
-  {
-    ///gui window logging
-    loggerwin = new wxLogWindow( (wxWindow*) parent, _T("SpringLobby error console"), showgui );
-    wxLogChain *logGuiChain = new wxLogChain( loggerwin );
-    lastlog = logGuiChain;
-  }
-	#if wxUSE_STD_IOSTREAM
+    wxLogChain *lastlog = 0;
+    if ( showgui && verbosity != 0 )
+    {
+        ///gui window logging
+        loggerwin = new wxLogWindow( (wxWindow*) parent, _T("SpringLobby error console"), showgui );
+        wxLogChain *logGuiChain = new wxLogChain( loggerwin );
+        lastlog = logGuiChain;
+    }
+#if wxUSE_STD_IOSTREAM
 
     if (  console && verbosity != 0 )
     {
-      ///std::cout logging
-      wxLog *loggerconsole = new wxLogStream( &std::cout );
-      wxLogChain *logConsoleChain = new wxLogChain( loggerconsole );
-      lastlog = logConsoleChain;
+        ///std::cout logging
+        wxLog *loggerconsole = new wxLogStream( &std::cout );
+        wxLogChain *logConsoleChain = new wxLogChain( loggerconsole );
+        lastlog = logConsoleChain;
     }
-        #if 0 //TODO reenable wxUSE_DEBUGREPORT
-          if ( logcrash )
-          {
+
+    #if 0 //TODO reenable wxUSE_DEBUGREPORT
+        if ( logcrash )
+        {
             ///hidden stream logging for crash reports, verbosity ignores command line params
             wxLog *loggercrash = new wxLogStream( &crashreport().crashlog );
             wxLogChain *logCrashChain = new wxLogChain( loggercrash );
             lastlog = logCrashChain;
-          }
+        }
 
-            #if wxUSE_DEBUGREPORT && defined(ENABLE_DEBUG_REPORT)
-              ///hidden stream logging for crash reports
-              wxLog *loggercrash = new wxLogStream( &crashreport().crashlog );
-              wxLogChain *logCrashChain = new wxLogChain( loggercrash );
-              logCrashChain->SetLogLevel( wxLOG_Trace );
-              logCrashChain->SetVerbose( true );
-
-            #endif
-
+        #if wxUSE_DEBUGREPORT && defined(ENABLE_DEBUG_REPORT)
+            ///hidden stream logging for crash reports
+            wxLog *loggercrash = new wxLogStream( &crashreport().crashlog );
+            wxLogChain *logCrashChain = new wxLogChain( loggercrash );
+            logCrashChain->SetLogLevel( wxLOG_Trace );
+            logCrashChain->SetVerbose( true );
         #endif
-    #endif
 
-  if ( lastlog != 0 )
-  {
-    switch (verbosity)
-    {
-      case 1:
-        lastlog->SetLogLevel( wxLOG_FatalError ); break;
-      case 2:
-        lastlog->SetLogLevel( wxLOG_Error ); break;
-      case 3:
-        lastlog->SetLogLevel( wxLOG_Warning ); break;
-      case 4:
-        lastlog->SetLogLevel( wxLOG_Message ); break;
-      case 5:
-        lastlog->SetLogLevel( wxLOG_Trace ); break;
-        lastlog->SetVerbose( true ); break;
-      default:
-        lastlog->SetLogLevel( wxLOG_Warning ); break;
+    #endif
+#endif
+
+    if ( !(  console || showgui ) || verbosity == 0 ){
+        new wxLogNull;
+        return loggerwin;
     }
-  }
-  else if ( verbosity == 0 ){
-    new wxLogNull;
-  }
+
+    if ( lastlog )
+    {
+        switch (verbosity)
+        {
+            case 1:
+                lastlog->SetLogLevel( wxLOG_FatalError ); break;
+            case 2:
+                lastlog->SetLogLevel( wxLOG_Error ); break;
+            case 3:
+                lastlog->SetLogLevel( wxLOG_Warning ); break;
+            case 4:
+                lastlog->SetLogLevel( wxLOG_Message ); break;
+            case 5:
+                lastlog->SetLogLevel( wxLOG_Trace ); break;
+                lastlog->SetVerbose( true ); break;
+            default:
+                lastlog->SetLogLevel( wxLOG_Warning ); break;
+        }
+    }
 
     return loggerwin;
 }
