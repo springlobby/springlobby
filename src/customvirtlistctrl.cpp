@@ -83,22 +83,6 @@ CustomVirtListCtrl<T,L>::~CustomVirtListCtrl()
 }
 
 template < class T, class L >
-void CustomVirtListCtrl<T,L>::InsertColumn(long i, wxListItem item, wxString tip, bool modifiable)
-{
-//#ifdef __WXMSW__ //this fixes header text misalignement
-//    item.m_mask = wxLIST_MASK_FORMAT | wxLIST_MASK_TEXT;
-//    if ( item.m_image != icons().ICON_EMPTY || item.m_image != -1 )
-//        item.m_mask = item.m_mask | wxLIST_MASK_IMAGE;
-//
-//    item.m_format = wxLIST_FORMAT_LEFT;
-//#endif
-    assert (false );
-    ListBaseType::InsertColumn(i,item);
-    colInfo temp(tip,modifiable);
-    m_colinfovec.push_back(temp);
-}
-
-template < class T, class L >
 void CustomVirtListCtrl<T,L>::AddColumn(long i, int width, const wxString& label, const wxString& tip, bool modifiable)
 {
     #ifdef SL_DUMMY_COL

@@ -233,7 +233,6 @@ public:
      */
 
     //! intermediate function to add info to m_colinfovec after calling base class function
-    void InsertColumn(long i, wxListItem item, wxString tip, bool = true);
     void AddColumn(long i, int width, const wxString& label, const wxString& tip, bool = true);
     //! this event is triggered when delay timer (set in mousemotion) ended
     virtual void OnTimer(wxTimerEvent& event);
