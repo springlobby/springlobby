@@ -413,7 +413,7 @@ bool CustomVirtListCtrl<T,L>::PopupMenu(wxMenu* menu, const wxPoint& pos )
 template < class T, class L >
 void CustomVirtListCtrl<T,L>::SortList( bool force )
 {
-    if ( m_sort_timer.IsRunning() ||  ( !m_dirty_sort && !force ) )
+    if ( ( m_sort_timer.IsRunning() ||  !m_dirty_sort ) && !force )
         return;
     SelectionSaver<ThisType>(this);
     Freeze();
