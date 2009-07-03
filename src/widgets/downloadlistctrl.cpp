@@ -113,7 +113,32 @@ void WidgetDownloadListctrl::Sort()
 
 int WidgetDownloadListctrl::GetIndexFromData( const DataType& data ) const
 {
-    return 0;
+    static long seekpos;
+    seekpos = clamp( seekpos, 0l , (long)m_data.size() );
+    int index = seekpos;
+
+    for ( DataCIter f_idx = m_data.begin() + seekpos; f_idx != m_data.end() ; ++f_idx )
+    {
+        if ( data.Equals( *f_idx ) )
+        {
+            seekpos = index;
+            return seekpos;
+        }
+        index++;
+    }
+    //it's ok to init with seekpos, if it had changed this would not be reached
+    int r_index = seekpos - 1;
+    for ( DataRevCIter r_idx = m_data.rbegin() + ( m_data.size() - seekpos ); r_idx != m_data.rend() ; ++r_idx )
+    {
+        if ( data.Equals( *r_idx ) )
+        {
+            seekpos = r_index;
+            return seekpos;
+        }
+        r_index--;
+    }
+
+    return -1;
 }
 
 Widget& WidgetDownloadListctrl::GetSelectedWidget()
