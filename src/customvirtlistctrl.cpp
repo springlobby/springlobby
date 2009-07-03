@@ -41,7 +41,11 @@ CustomVirtListCtrl<T,L>::CustomVirtListCtrl(wxWindow* parent, wxWindowID id, con
   m_tipwindow( 0 ),
   m_controlPointer( 0 ),
 #endif
+#ifndef SL_DUMMY_COL
   m_columnCount( column_count ),
+#else
+  m_columnCount( column_count + 1 ),
+#endif
   m_selected_index(-1),
   m_prev_selected_index(-1),
   m_last_mouse_pos( wxPoint(-1,-1) ),
@@ -63,6 +67,12 @@ CustomVirtListCtrl<T,L>::CustomVirtListCtrl(wxWindow* parent, wxWindowID id, con
     SetImageList( &icons(), wxIMAGE_LIST_SMALL );
     SetImageList( &icons(), wxIMAGE_LIST_STATE );
     m_sortorder = sett().GetSortOrder( name );
+    #ifdef SL_DUMMY_COL //a little duplication here, but the AddColumn method will be altered when this is defined
+        ListBaseType::InsertColumn( 0, wxEmptyString, wxLIST_FORMAT_LEFT, 0 );
+        ListBaseType::SetColumnWidth( 0, 0 );
+        colInfo temp( 0, wxEmptyString, wxEmptyString, false, 0 );
+        m_colinfovec.push_back( temp );
+    #endif
 
 }
 
@@ -82,6 +92,7 @@ void CustomVirtListCtrl<T,L>::InsertColumn(long i, wxListItem item, wxString tip
 //
 //    item.m_format = wxLIST_FORMAT_LEFT;
 //#endif
+    assert (false );
     ListBaseType::InsertColumn(i,item);
     colInfo temp(tip,modifiable);
     m_colinfovec.push_back(temp);
@@ -90,6 +101,9 @@ void CustomVirtListCtrl<T,L>::InsertColumn(long i, wxListItem item, wxString tip
 template < class T, class L >
 void CustomVirtListCtrl<T,L>::AddColumn(long i, int width, const wxString& label, const wxString& tip, bool modifiable)
 {
+    #ifdef SL_DUMMY_COL
+        i++;
+    #endif
     ListBaseType::InsertColumn( i, label, wxLIST_FORMAT_LEFT, width);
     SetColumnWidth( i, width );
     colInfo temp( i, label, tip, modifiable, width );
@@ -333,6 +347,9 @@ void CustomVirtListCtrl<T,L>::OnEndResizeCol(wxListEvent& event)
 template < class T, class L >
 bool CustomVirtListCtrl<T,L>::SetColumnWidth(int col, int width)
 {
+    #ifdef SL_DUMMY_COL
+        col++;
+    #endif
     if ( sett().GetColumnWidth( m_name, col) != Settings::columnWidthUnset)
     {
         return ListBaseType::SetColumnWidth( col, sett().GetColumnWidth( m_name, col) );
@@ -356,22 +373,6 @@ void CustomVirtListCtrl<T,L>::noOp(wxMouseEvent& event)
 //            }
     event.Skip();
 }
-
-//template < class T, class L >
-//void CustomVirtListCtrl<T,L>::UpdateHighlights()
-//{
-//  Freeze();
-//  try {
-//      long item = -1;
-//      while ( true ) {
-//        item = GetNextItem(item, wxLIST_NEXT_ALL, wxLIST_STATE_DONTCARE);
-//        if ( item == -1 )
-//          break;
-//        HighlightItem( item );
-//      }
-//  } catch(...) {}
-//  Thaw();
-//}
 
 template < class T, class L >
 wxListItemAttr* CustomVirtListCtrl<T,L>::HighlightItemUser( const wxString& name ) const
@@ -464,6 +465,11 @@ void CustomVirtListCtrl<T,L>::OnColClick( wxListEvent& event )
     if ( event.GetColumn() == -1 )
         return;
 
+    #ifdef SL_DUMMY_COL
+        if ( event.GetColumn() == 0 )
+            return;
+    #endif
+
     m_sort_timer.Stop();//otherwise sorting will be way delayed
 
     int old_sort_col = m_sortorder[0].col;
@@ -546,12 +552,22 @@ bool CustomVirtListCtrl<T,L>::RemoveItem( const T item )
 template < class T, class L >
 wxString CustomVirtListCtrl<T,L>::OnGetItemText(long item, long column) const
 {
+    #ifdef SL_DUMMY_COL
+    if ( column < 1 )
+        return wxEmptyString;
+    column--;
+    #endif
     return asImp().GetItemText(item, column);
 }
 
 template < class T, class L >
 int CustomVirtListCtrl<T,L>::OnGetItemColumnImage(long item, long column) const
 {
+    #ifdef SL_DUMMY_COL
+    if ( column < 1 )
+        return -1;
+    column--;
+    #endif
     return asImp().GetItemColumnImage(item, column);
 }
 
