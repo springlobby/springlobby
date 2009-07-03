@@ -328,7 +328,7 @@ class Settings
     void SetColumnWidth( const wxString& list_name, const int column_ind, const int column_width );
     int GetColumnWidth( const wxString& list_name, const int column );
     //! used to signal unset column width in Get...
-    enum { columnWidthUnset };
+    static const int columnWidthUnset = -3;
 
     void SetLanguageID ( const long id );
     long GetLanguageID ( );

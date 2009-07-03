@@ -199,7 +199,7 @@ void BattleroomListCtrl::UpdateUser( User& user )
     UpdateUser( index );
 }
 
-wxListItemAttr * BattleroomListCtrl::OnGetItemAttr(long item) const
+wxListItemAttr * BattleroomListCtrl::GetItemAttr(long item) const
 {
     if ( item == -1 || item >= (long)m_data.size())
         return NULL;
@@ -214,7 +214,7 @@ wxListItemAttr * BattleroomListCtrl::OnGetItemAttr(long item) const
     return NULL;
 }
 
-int BattleroomListCtrl::OnGetItemColumnImage(long item, long column) const
+int BattleroomListCtrl::GetItemColumnImage(long item, long column) const
 {
     if ( item == -1 || item >= (long)m_data.size())
         return -1;
@@ -252,7 +252,7 @@ int BattleroomListCtrl::OnGetItemColumnImage(long item, long column) const
     }
 }
 
-wxString BattleroomListCtrl::OnGetItemText(long item, long column) const
+wxString BattleroomListCtrl::GetItemText(long item, long column) const
 {
     if ( item == -1 || item >= (long)m_data.size())
         return _T("");

@@ -68,7 +68,7 @@ void WidgetDownloadListctrl::AddWidget( const Widget widget )
     wxLogWarning( _T("Widget already in list.") );
 }
 
-wxString WidgetDownloadListctrl::OnGetItemText(long item, long column) const
+wxString WidgetDownloadListctrl::GetItemText(long item, long column) const
 {
     if ( item > m_data.size() || item < 0 )
         return wxEmptyString;
@@ -86,12 +86,12 @@ wxString WidgetDownloadListctrl::OnGetItemText(long item, long column) const
 
 }
 
-int WidgetDownloadListctrl::OnGetItemImage(long item) const
+int WidgetDownloadListctrl::GetItemImage(long item) const
 {
     return -1;
 }
 
-int WidgetDownloadListctrl::OnGetItemColumnImage(long item, long column) const
+int WidgetDownloadListctrl::GetItemColumnImage(long item, long column) const
 {
     return -1;
 }
