@@ -26,7 +26,6 @@
 #include "Helper/sortutil.h"
 
 class SLTipWindow;
-#define SL_DUMMY_COL
 
 
 /** \brief Used as base class for some ListCtrls throughout SL
