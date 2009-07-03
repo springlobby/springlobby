@@ -544,7 +544,19 @@ bool CustomVirtListCtrl<T,L>::RemoveItem( const T item )
 }
 
 template < class T, class L >
-int CustomVirtListCtrl<T,L>::OnGetItemImage(long item) const
+wxString CustomVirtListCtrl<T,L>::OnGetItemText(long item, long column) const
 {
-    return -1; //the default, meaning no image
+    return asImp().GetItemText(item, column);
+}
+
+template < class T, class L >
+int CustomVirtListCtrl<T,L>::OnGetItemColumnImage(long item, long column) const
+{
+    return asImp().GetItemColumnImage(item, column);
+}
+
+template < class T, class L >
+wxListItemAttr* CustomVirtListCtrl<T,L>::OnGetItemAttr(long item) const
+{
+    return asImp().GetItemAttr(item);
 }

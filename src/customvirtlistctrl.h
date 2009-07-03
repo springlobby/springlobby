@@ -280,9 +280,9 @@ public:
       * these are used to display items in virtual lists
       * @{
      */
-    virtual wxString OnGetItemText(long item, long column) const = 0;
-    virtual int OnGetItemColumnImage(long item, long column) const = 0;
-    virtual int OnGetItemImage(long item) const =0;
+    wxString OnGetItemText(long item, long column) const;
+    int OnGetItemColumnImage(long item, long column) const;
+    wxListItemAttr* OnGetItemAttr(long item) const;
     /** @}
      */
 
@@ -329,6 +329,9 @@ public:
 private:
     typedef BaseType
         ThisType;
+
+    ListCtrlImp& asImp() { return static_cast<ListCtrlImp&>(*this); }
+    const ListCtrlImp& asImp() const { return static_cast<const ListCtrlImp&>(*this); }
 };
 
 template < class ListCtrlType >

@@ -81,7 +81,7 @@ BattleListCtrl::~BattleListCtrl()
         delete m_popup;
 }
 
-wxString BattleListCtrl::OnGetItemText(long item, long column) const
+wxString BattleListCtrl::GetItemText(long item, long column) const
 {
     if ( m_data[item] == NULL )
         return wxEmptyString;
@@ -105,7 +105,7 @@ wxString BattleListCtrl::OnGetItemText(long item, long column) const
     }
 }
 
-int BattleListCtrl::OnGetItemImage(long item) const
+int BattleListCtrl::GetItemImage(long item) const
 {
     if ( m_data[item] == NULL )
         return -1;
@@ -113,7 +113,7 @@ int BattleListCtrl::OnGetItemImage(long item) const
     return icons().GetBattleStatusIcon( *m_data[item] );
 }
 
-int BattleListCtrl::OnGetItemColumnImage(long item, long column) const
+int BattleListCtrl::GetItemColumnImage(long item, long column) const
 {
     if ( m_data[item] == NULL )
         return -1;
@@ -131,7 +131,7 @@ int BattleListCtrl::OnGetItemColumnImage(long item, long column) const
     }
 }
 
-wxListItemAttr* BattleListCtrl::OnGetItemAttr(long item) const
+wxListItemAttr* BattleListCtrl::GetItemAttr(long item) const
 {
     if ( item < (long)m_data.size() && item > -1 ) {
         const IBattle& b = *m_data[item];
