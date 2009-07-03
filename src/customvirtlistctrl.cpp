@@ -457,6 +457,9 @@ void CustomVirtListCtrl<T,L>::OnColClick( wxListEvent& event )
     #ifdef SL_DUMMY_COL
         if ( event.GetColumn() == 0 )
             return;
+        const int evt_col = event.GetColumn()-1;
+    #else
+        const int evt_col = event.GetColumn();
     #endif
 
     m_sort_timer.Stop();//otherwise sorting will be way delayed
@@ -467,7 +470,6 @@ void CustomVirtListCtrl<T,L>::OnColClick( wxListEvent& event )
     GetColumn( m_sortorder[0].col, col );
     col.SetImage( icons().ICON_NONE );
     SetColumn( m_sortorder[0].col, col );
-    int evt_col = event.GetColumn();
 
     unsigned int i = 0;
     SortOrder::const_iterator it = m_sortorder.begin();
@@ -484,7 +486,7 @@ void CustomVirtListCtrl<T,L>::OnColClick( wxListEvent& event )
         m_sortorder[i] = m_sortorder[i-1];
     }
 
-    m_sortorder[0].col = event.GetColumn();
+    m_sortorder[0].col = evt_col;
     m_sortorder[0].direction *= -1;
 
 
@@ -498,6 +500,24 @@ void CustomVirtListCtrl<T,L>::OnColClick( wxListEvent& event )
     else { // O(n) instead of guaranteed worst case O(n*n)
         ReverseOrder();
     }
+}
+
+template < class T, class L >
+bool CustomVirtListCtrl<T,L>::GetColumn(int col, wxListItem& item) const
+{
+    #ifdef SL_DUMMY_COL
+        col--;
+    #endif
+    return ListBaseType::GetColumn( col, item );
+}
+
+template < class T, class L >
+bool CustomVirtListCtrl<T,L>::SetColumn(int col, wxListItem& item)
+{
+    #ifdef SL_DUMMY_COL
+        col--;
+    #endif
+    return ListBaseType::SetColumn( col, item );
 }
 
 template < class T, class L >

@@ -284,6 +284,10 @@ public:
     wxString OnGetItemText(long item, long column) const;
     int OnGetItemColumnImage(long item, long column) const;
     wxListItemAttr* OnGetItemAttr(long item) const;
+
+    //! when using the dummy column, we provide diff impl that adjust for that
+    bool GetColumn(int col, wxListItem& item) const;
+    bool SetColumn(int col, wxListItem& item);
     /** @}
      */
 
