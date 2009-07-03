@@ -606,6 +606,7 @@ void Battle::StartSpring()
 void Battle::OnTimer( wxTimerEvent& event )
 {
 	if ( !IsFounderMe() ) return;
+	if ( m_ingame ) return;
 	int autospect_trigger_time = sett().GetBattleLastAutoSpectTime();
 	if ( autospect_trigger_time == 0 ) return;
 	time_t now = time(0);
@@ -625,4 +626,21 @@ void Battle::OnTimer( wxTimerEvent& event )
 			}
 		}
 	}
+}
+
+void Battle::SetInGame( bool value )
+{
+	time_t now = time(0);
+	if ( m_ingame && !value )
+	{
+		for ( int i = 0; i < GetNumUsers(); i++ )
+		{
+			User& user = GetUser( i );
+			UserBattleStatus& status = user.BattleStatus();
+			if ( status.IsBot() || status.spectator ) continue;
+			if ( status.ready && status.sync ) continue;
+			m_ready_up_map[user.GetNick()] = now;
+		}
+	}
+	IBattle::SetInGame( value );
 }

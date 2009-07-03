@@ -98,6 +98,8 @@ class Battle : public IBattle
 
     void OnTimer( wxTimerEvent& event );
 
+		void SetInGame( bool ingame );
+
   protected:
     // Battle variables
 
