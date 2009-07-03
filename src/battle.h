@@ -77,6 +77,10 @@ class Battle : public IBattle
     void SetLockExternalBalanceChanges( bool value );
     bool GetLockExternalBalanceChanges();
 
+		void FixColours();
+    void Autobalance( BalanceType balance_type = balance_divide, bool clans = true, bool strong_clans = true, int allyteamsize = 0 );
+    void FixTeamIDs( BalanceType balance_type = balance_divide, bool clans = true, bool strong_clans = true, int controlteamsize = 0 );
+
     void SendScriptToClients();
 
     ///< quick hotfix for bans
