@@ -282,6 +282,7 @@ public:
      */
     virtual wxString OnGetItemText(long item, long column) const = 0;
     virtual int OnGetItemColumnImage(long item, long column) const = 0;
+    virtual int OnGetItemImage(long item) const =0;
     /** @}
      */
 

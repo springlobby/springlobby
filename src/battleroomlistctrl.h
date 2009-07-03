@@ -49,6 +49,7 @@ class BattleroomListCtrl : public CustomVirtListCtrl< User *, BattleroomListCtrl
     virtual wxString OnGetItemText(long item, long column) const;
     virtual int OnGetItemColumnImage(long item, long column) const;
     wxListItemAttr * OnGetItemAttr(long item) const;
+    virtual int OnGetItemImage(long item) const {return -1;}
 
   protected:
     static int CompareStatus(const DataType user1, const DataType user2, const IBattle* m_battle );

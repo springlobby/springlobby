@@ -542,3 +542,9 @@ bool CustomVirtListCtrl<T,L>::RemoveItem( const T item )
     }
     return false;
 }
+
+template < class T, class L >
+int CustomVirtListCtrl<T,L>::OnGetItemImage(long item) const
+{
+    return -1; //the default, meaning no image
+}
