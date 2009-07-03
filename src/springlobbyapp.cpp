@@ -150,6 +150,7 @@ bool SpringLobbyApp::OnInit()
     if ( m_updateing_only )
         return true;
 
+    CacheAndSettingsSetup();
     ui().ShowMainWindow();
 
     if ( sett().IsFirstRun() )
@@ -427,7 +428,7 @@ void SpringLobbyApp::CacheAndSettingsSetup()
 			}
     }
 
-    if ( sett().ShouldAddDefaultServerSettings() )
+    if ( sett().ShouldAddDefaultServerSettings() || ( sett().GetSettingsVersion() < 14 && sett().GetServers().Count() < 2  ) )
         sett().SetDefaultServerSettings();
 
     if ( sett().ShouldAddDefaultChannelSettings() )
