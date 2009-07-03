@@ -20,12 +20,6 @@
 #include <cmath>
 #include <set>
 
-const unsigned int TIMER_ID         = 101;
-
-BEGIN_EVENT_TABLE(IBattle, wxEvtHandler)
-    EVT_TIMER(TIMER_ID, IBattle::OnTimer)
-END_EVENT_TABLE()
-
 IBattle::IBattle():
   m_map_loaded(false),
   m_mod_loaded(false),
@@ -36,14 +30,14 @@ IBattle::IBattle():
 	m_players_ready(0),
 	m_players_sync(0),
   m_is_self_in(false),
-	m_timer ( new wxTimer(this, TIMER_ID) )
+	m_timer ( 0 )
 {
 }
 
 
 IBattle::~IBattle()
 {
-	m_timer->Stop();
+	if ( m_timer ) m_timer->Stop();
 	delete m_timer;
 }
 
@@ -383,7 +377,9 @@ void IBattle::OnUserRemoved( User& user )
     }
     if ( &user == &GetMe() )
     {
-    	 m_timer->Stop();
+    	 if ( m_timer ) m_timer->Stop();
+    	 delete m_timer;
+    	 m_timer = 0;
     	 OnSelfLeftBattle();
     }
     UserList::RemoveUser( user.GetNick() );
@@ -1622,27 +1618,4 @@ void IBattle::GetBattleFromScript( bool loadmapmod )
     SetBattleOptions( opts );
 }
 
-void IBattle::OnTimer( wxTimerEvent& event )
-{
-	if ( !IsFounderMe() ) return;
-	int autospect_trigger_time = sett().GetBattleLastAutoSpectTime();
-	if ( autospect_trigger_time == 0 ) return;
-	time_t now = time(0);
-	for ( unsigned int i = 0; i < GetNumUsers(); i++)
-	{
-		User& usr = GetUser( i );
-		UserBattleStatus& status = usr.BattleStatus();
-		if ( status.IsBot() || status.spectator ) continue;
-		if ( status.sync && status.ready ) continue;
-		if ( &usr == &GetMe() ) continue;
-		std::map<wxString, time_t>::iterator itor = m_ready_up_map.find( usr.GetNick() );
-		if ( itor != m_ready_up_map.end() )
-		{
-			if ( ( now - itor->second ) > autospect_trigger_time )
-			{
-				ForceSpectator( usr, true );
-			}
-		}
-	}
-}
 

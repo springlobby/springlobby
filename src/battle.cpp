@@ -26,6 +26,11 @@
 #include <wx/filename.h>
 
 const unsigned int TIMER_INTERVAL         = 1000;
+const unsigned int TIMER_ID               = 101;
+
+BEGIN_EVENT_TABLE(Battle, wxEvtHandler)
+    EVT_TIMER(TIMER_ID, Battle::OnTimer)
+END_EVENT_TABLE()
 
 Battle::Battle( Server& serv, int id ) :
         m_serv(serv),
@@ -194,7 +199,11 @@ void Battle::LoadMapDefaults( const wxString& mapname )
 User& Battle::OnUserAdded( User& user )
 {
 		user = IBattle::OnUserAdded( user );
-		if ( &user == &GetMe() ) m_timer->Start( TIMER_INTERVAL );
+		if ( &user == &GetMe() )
+		{
+			 m_timer = new wxTimer(this,TIMER_ID);
+			 m_timer->Start( TIMER_INTERVAL );
+		}
     user.SetBattle( this );
     user.BattleStatus().isfromdemo = false;
 
