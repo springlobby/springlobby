@@ -101,7 +101,7 @@ SpringLobbyApp::SpringLobbyApp()
 SpringLobbyApp::~SpringLobbyApp()
 {
     delete m_timer;
-//    delete m_loggerwin;
+    //delete m_loggerwin;
 }
 
 
@@ -206,6 +206,7 @@ bool SpringLobbyApp::OnInit()
 
     if ( m_loggerwin ) { // we got a logwindow, lets set proper parent win
         m_loggerwin->GetFrame()->SetParent( &(ui().mw()) );
+		ui().mw().setLogWindow(m_loggerwin);
     }
 
     return true;
