@@ -272,12 +272,6 @@ void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 		{
 			if ( ShouldAutoStart() )
 			{
-				if ( sett().GetBattleLastAutoControlState() )
-				{
-					FixTeamIDs( (IBattle::BalanceType)sett().GetFixIDMethod(), sett().GetFixIDClans(), sett().GetFixIDStrongClans(), sett().GetFixIDGrouping() );
-					Autobalance( (IBattle::BalanceType)sett().GetBalanceMethod(), sett().GetBalanceClans(), sett().GetBalanceStrongClans(), sett().GetBalanceGrouping() );
-					FixColours();
-				}
 				if ( sett().GetBattleLastAutoStartState() )
 				{
 					ui().StartHostedBattle();
@@ -573,6 +567,15 @@ void Battle::StartSpring()
 {
 	if ( UserExists( GetMe().GetNick() ) )
 	{
+		if ( IsFounderMe() )
+		{
+			if ( sett().GetBattleLastAutoControlState() )
+			{
+				FixTeamIDs( (IBattle::BalanceType)sett().GetFixIDMethod(), sett().GetFixIDClans(), sett().GetFixIDStrongClans(), sett().GetFixIDGrouping() );
+				Autobalance( (IBattle::BalanceType)sett().GetBalanceMethod(), sett().GetBalanceClans(), sett().GetBalanceStrongClans(), sett().GetBalanceGrouping() );
+				FixColours();
+			}
+		}
 		if ( IsProxy() )
 		{
 			wxString hostscript = spring().WriteScriptTxt( *this );
