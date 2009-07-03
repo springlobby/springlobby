@@ -22,10 +22,6 @@
 
 const unsigned int TIMER_ID         = 102;
 
-BEGIN_EVENT_TABLE(IBattle, wxEvtHandler)
-    EVT_TIMER(TIMER_ID, IBattle::OnTimer)
-END_EVENT_TABLE()
-
 IBattle::IBattle():
   m_map_loaded(false),
   m_mod_loaded(false),
