@@ -330,6 +330,7 @@ void CustomVirtListCtrl<T,L>::OnEndResizeCol(wxListEvent& event)
     int column = event.GetColumn();
     int new_size = GetColumnWidth( column );
     sett().SetColumnWidth( m_name, column, new_size );
+    sett().SaveSettings();
 
     //let the event go further
     event.Skip();
@@ -338,9 +339,6 @@ void CustomVirtListCtrl<T,L>::OnEndResizeCol(wxListEvent& event)
 template < class T, class L >
 bool CustomVirtListCtrl<T,L>::SetColumnWidth(int col, int width)
 {
-    #ifdef SL_DUMMY_COL
-        col++;
-    #endif
     if ( sett().GetColumnWidth( m_name, col) != Settings::columnWidthUnset)
     {
         return ListBaseType::SetColumnWidth( col, sett().GetColumnWidth( m_name, col) );

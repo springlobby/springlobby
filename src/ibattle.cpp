@@ -20,7 +20,7 @@
 #include <cmath>
 #include <set>
 
-const unsigned int TIMER_ID         = 101;
+const unsigned int TIMER_ID         = 102;
 
 BEGIN_EVENT_TABLE(IBattle, wxEvtHandler)
     EVT_TIMER(TIMER_ID, IBattle::OnTimer)
