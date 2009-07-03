@@ -286,6 +286,9 @@ template < class T, class L >
 void CustomVirtListCtrl<T,L>::SetTipWindowText( const long item_hit, const wxPoint position)
 {
   int column = getColumnFromPosition(position);
+  #ifdef SL_DUMMY_COL
+    column++;
+  #endif
   if (column >= int(m_colinfovec.size()) || column < 0)
   {
     m_tiptext = _T("");
@@ -305,7 +308,11 @@ int CustomVirtListCtrl<T,L>::getColumnFromPosition(wxPoint pos)
     {
         x_pos += GetColumnWidth(i);
         if (pos.x < x_pos)
+        #ifdef SL_DUMMY_COL
+            return i-1;
+        #else
             return i;
+        #endif
     }
     return -1;
 }
