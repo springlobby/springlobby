@@ -17,7 +17,6 @@ const unsigned int DEFAULT_EXTERNAL_UDP_SOURCE_PORT = 16941;
 
 class IBattle;
 class wxTimer;
-class wxTimerEvent;
 
 struct BattleStartRect
 {
@@ -387,8 +386,6 @@ public:
 
 		virtual void StartSpring() = 0;
 
-		virtual void OnTimer( wxTimerEvent& event );
-
 protected:
 
 		void LoadScriptMMOpts( const wxString& sectionname, const PDataList& node );
@@ -436,8 +433,6 @@ protected:
 		UserVec m_internal_user_list; /// to store users from savegame/replay
 
 		wxTimer* m_timer;
-
-		DECLARE_EVENT_TABLE()
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_IBATTLE_H

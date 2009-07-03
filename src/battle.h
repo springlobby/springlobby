@@ -9,6 +9,7 @@
 class Ui;
 class Server;
 class User;
+class wxTimerEvent;
 
 
 /** \brief model of a sp/mp battle
@@ -97,6 +98,8 @@ class Battle : public IBattle
 
     void OnTimer( wxTimerEvent& event );
 
+		void SetInGame( bool ingame );
+
   protected:
     // Battle variables
 
@@ -110,6 +113,8 @@ class Battle : public IBattle
     bool m_autolock_on_start;
 
     const int m_id;
+
+		DECLARE_EVENT_TABLE()
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_BATTLE_H

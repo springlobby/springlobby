@@ -26,6 +26,11 @@
 #include <wx/filename.h>
 
 const unsigned int TIMER_INTERVAL         = 1000;
+const unsigned int TIMER_ID               = 101;
+
+BEGIN_EVENT_TABLE(Battle, wxEvtHandler)
+    EVT_TIMER(TIMER_ID, Battle::OnTimer)
+END_EVENT_TABLE()
 
 Battle::Battle( Server& serv, int id ) :
         m_serv(serv),
@@ -194,7 +199,11 @@ void Battle::LoadMapDefaults( const wxString& mapname )
 User& Battle::OnUserAdded( User& user )
 {
 		user = IBattle::OnUserAdded( user );
-		if ( &user == &GetMe() ) m_timer->Start( TIMER_INTERVAL );
+		if ( &user == &GetMe() )
+		{
+			 m_timer = new wxTimer(this,TIMER_ID);
+			 m_timer->Start( TIMER_INTERVAL );
+		}
     user.SetBattle( this );
     user.BattleStatus().isfromdemo = false;
 
@@ -597,6 +606,7 @@ void Battle::StartSpring()
 void Battle::OnTimer( wxTimerEvent& event )
 {
 	if ( !IsFounderMe() ) return;
+	if ( m_ingame ) return;
 	int autospect_trigger_time = sett().GetBattleLastAutoSpectTime();
 	if ( autospect_trigger_time == 0 ) return;
 	time_t now = time(0);
@@ -616,4 +626,21 @@ void Battle::OnTimer( wxTimerEvent& event )
 			}
 		}
 	}
+}
+
+void Battle::SetInGame( bool value )
+{
+	time_t now = time(0);
+	if ( m_ingame && !value )
+	{
+		for ( int i = 0; i < GetNumUsers(); i++ )
+		{
+			User& user = GetUser( i );
+			UserBattleStatus& status = user.BattleStatus();
+			if ( status.IsBot() || status.spectator ) continue;
+			if ( status.ready && status.sync ) continue;
+			m_ready_up_map[user.GetNick()] = now;
+		}
+	}
+	IBattle::SetInGame( value );
 }
