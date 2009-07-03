@@ -114,7 +114,8 @@ MainWindow::MainWindow( Ui& ui )
     : wxFrame( (wxFrame*)0, -1, _("SpringLobby"), wxPoint(50, 50), wxSize(450, 340) ),
     m_ui(ui),
     m_autojoin_dialog(NULL),
-    m_channel_chooser(NULL)
+    m_channel_chooser(NULL),
+	m_loggerwin(NULL)
 {
   SetIcon( wxIcon(springlobby_xpm) );
 
@@ -264,6 +265,11 @@ MainWindow::~MainWindow()
   sett().SetWindowSize( name, GetSize() );
   sett().SetWindowPos( name, GetPosition() );
   sett().SaveSettings();
+  if(m_loggerwin)
+  {
+	wxLog::SetActiveTarget(NULL);
+	delete m_loggerwin;
+  }
   m_ui.Quit();
   m_ui.OnMainWindowDestruct();
   freeStaticBox();
@@ -656,3 +662,7 @@ const MainWindow::TabNames& MainWindow::GetTabNames()
     return m_tab_names;
 }
 
+void MainWindow::setLogWindow(wxLogWindow *loggerwin)
+{
+	m_loggerwin = loggerwin;
+}

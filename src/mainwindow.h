@@ -28,6 +28,7 @@ class settings_frame;
 class wxMenuItem;
 class wxMenuBar;
 class wxMenu;
+class wxLogWindow;
 class ChannelChooserDialog;
 class ReplayTab;
 class AutojoinChannelDialog;
@@ -92,6 +93,8 @@ class MainWindow : public wxFrame
     void OnUnitSyncReloaded();
     void OnChannelList( const wxString& channel, const int& numusers, const wxString& topic );
     void OnChannelListStart( );
+	void setLogWindow(wxLogWindow* loggerwin);
+
 
 
     void OnTabsChanged( wxAuiNotebookEvent& event );
@@ -119,6 +122,7 @@ class MainWindow : public wxFrame
 
     wxBoxSizer* m_main_sizer;
     wxAuiNotebook* m_func_tabs;
+	wxLogWindow* m_loggerwin;
 
     MainChatTab* m_chat_tab;
     MainJoinBattleTab* m_join_tab;
