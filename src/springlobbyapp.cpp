@@ -101,7 +101,6 @@ SpringLobbyApp::SpringLobbyApp()
 SpringLobbyApp::~SpringLobbyApp()
 {
     delete m_timer;
-    //delete m_loggerwin;
 }
 
 
@@ -115,7 +114,7 @@ bool SpringLobbyApp::OnInit()
         return false;
 
     //initialize all loggers, we'll use the returned pointer to set correct parent window later
-    m_loggerwin = InitializeLoggingTargets( 0, m_log_console, m_log_window_show, !m_crash_handle_disable, m_log_verbosity );
+    wxLogWindow *loggerwin = InitializeLoggingTargets( 0, m_log_console, m_log_window_show, !m_crash_handle_disable, m_log_verbosity );
 
 #if wxUSE_ON_FATAL_EXCEPTION
     if (!m_crash_handle_disable) wxHandleFatalExceptions( true );
@@ -204,9 +203,8 @@ bool SpringLobbyApp::OnInit()
 
     m_timer->Start( TIMER_INTERVAL );
 
-    if ( m_loggerwin ) { // we got a logwindow, lets set proper parent win
-        m_loggerwin->GetFrame()->SetParent( &(ui().mw()) );
-		ui().mw().setLogWindow(m_loggerwin);
+    if ( loggerwin ) { // we got a logwindow, lets set proper parent win
+        loggerwin->GetFrame()->SetParent( &(ui().mw()) );
     }
 
     return true;

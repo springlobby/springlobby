@@ -8,7 +8,6 @@ class wxTimerEvent;
 class wxIcon;
 class wxLocale;
 class wxTranslationHelper;
-class wxLogWindow;
 
 //! @brief SpringLobby wxApp
 class SpringLobbyApp : public wxApp
@@ -47,8 +46,6 @@ class SpringLobbyApp : public wxApp
     bool m_log_window_show;
     bool m_crash_handle_disable;
     bool m_updateing_only;
-
-    wxLogWindow* m_loggerwin;
 };
 
 DECLARE_APP(SpringLobbyApp)
