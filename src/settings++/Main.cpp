@@ -60,7 +60,8 @@ bool Springsettings::OnInit()
 
     //initialize all loggers
 	//TODO non-constant parameters
-    wxLogWindow* loggerwin = InitializeLoggingTargets( 0, m_log_console, m_log_window_show, !m_crash_handle_disable, m_log_verbosity );
+	wxLogChain* logchain  = 0;
+    wxLogWindow* loggerwin = InitializeLoggingTargets( 0, m_log_console, m_log_window_show, !m_crash_handle_disable, m_log_verbosity, logchain );
 
     #ifdef __WXMSW__
 		sett().SetPortableMode( true );
