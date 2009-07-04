@@ -405,7 +405,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 								if ( itor == teams_to_sorted_teams.end() )
 								{
 									srand ( time(NULL) );
-									speccteam = rand() % teams_to_sorted_teams.size();
+									if ( teams_to_sorted_teams.size() != 0 ) speccteam = rand() % teams_to_sorted_teams.size();
 								}
 								else speccteam = itor->second;
 								tdf.Append( _T("Team"), speccteam );
