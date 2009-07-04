@@ -35,22 +35,23 @@ wxString GetLibExtension()
 
 //! @brief Initializes the logging functions.
 ///initializes logging in an hidden stream and std::cout/gui messages
-wxLogWindow* InitializeLoggingTargets( wxFrame* parent, bool console, bool showgui, bool logcrash, int verbosity )
+wxLogWindow* InitializeLoggingTargets( wxFrame* parent, bool console, bool showgui, bool logcrash, int verbosity, wxLogChain* logChain )
 {
     wxLogWindow* loggerwin = 0;
+
+#if wxUSE_STD_IOSTREAM
+    if (  console && verbosity != 0 )
+    {
+        ///std::cout logging
+        logChain = new wxLogChain( new wxLogStream( &std::cout ) );
+    }
+#endif
+
     if ( showgui && verbosity != 0 )
     {
         ///gui window logging
         loggerwin = new wxLogWindow( (wxWindow*) parent, _T("SpringLobby error console"), showgui );
-    }
-#if wxUSE_STD_IOSTREAM
-
-    if (  console && verbosity != 0 )
-    {
-        ///std::cout logging
-        wxLog *loggerconsole = new wxLogStream( &std::cout );
-        wxLogChain *logConsoleChain = new wxLogChain( loggerconsole );
-        lastlog = logConsoleChain;
+        logChain = new wxLogChain( loggerwin );
     }
 
     #if 0 //TODO reenable wxUSE_DEBUGREPORT
@@ -71,30 +72,30 @@ wxLogWindow* InitializeLoggingTargets( wxFrame* parent, bool console, bool showg
         #endif
 
     #endif
-#endif
+
 
     if ( !(  console || showgui ) || verbosity == 0 ){
         new wxLogNull;
         return loggerwin;
     }
 
-    if ( loggerwin )
+    if ( logChain )
     {
         switch (verbosity)
         {
             case 1:
-                loggerwin->SetLogLevel( wxLOG_FatalError ); break;
+                logChain->SetLogLevel( wxLOG_FatalError ); break;
             case 2:
-                loggerwin->SetLogLevel( wxLOG_Error ); break;
+                logChain->SetLogLevel( wxLOG_Error ); break;
             case 3:
-                loggerwin->SetLogLevel( wxLOG_Warning ); break;
+                logChain->SetLogLevel( wxLOG_Warning ); break;
             case 4:
-                loggerwin->SetLogLevel( wxLOG_Message ); break;
+                logChain->SetLogLevel( wxLOG_Message ); break;
             case 5:
-                loggerwin->SetLogLevel( wxLOG_Trace ); break;
-                loggerwin->SetVerbose( true ); break;
-            default:
-                loggerwin->SetLogLevel( wxLOG_Warning ); break;
+                logChain->SetLogLevel( wxLOG_Trace );
+                logChain->SetVerbose( true ); break;
+            default://meaning loglevel < 0 or > 5 , == 0 is handled seperately
+                logChain->SetLogLevel( wxLOG_Warning ); break;
         }
     }
 

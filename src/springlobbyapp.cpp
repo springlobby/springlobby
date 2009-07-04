@@ -114,7 +114,8 @@ bool SpringLobbyApp::OnInit()
         return false;
 
     //initialize all loggers, we'll use the returned pointer to set correct parent window later
-    wxLogWindow *loggerwin = InitializeLoggingTargets( 0, m_log_console, m_log_window_show, !m_crash_handle_disable, m_log_verbosity );
+    wxLogChain* logchain = 0;
+    wxLogWindow *loggerwin = InitializeLoggingTargets( 0, m_log_console, m_log_window_show, !m_crash_handle_disable, m_log_verbosity, logchain );
 
 #if wxUSE_ON_FATAL_EXCEPTION
     if (!m_crash_handle_disable) wxHandleFatalExceptions( true );
@@ -151,6 +152,7 @@ bool SpringLobbyApp::OnInit()
 
     CacheAndSettingsSetup();
     ui().ShowMainWindow();
+    SetTopWindow( &ui().mw() );
 
     if ( sett().IsFirstRun() )
     {
@@ -203,9 +205,7 @@ bool SpringLobbyApp::OnInit()
 
     m_timer->Start( TIMER_INTERVAL );
 
-    if ( loggerwin ) { // we got a logwindow, lets set proper parent win
-        loggerwin->GetFrame()->SetParent( &(ui().mw()) );
-    }
+    ui().mw().SetLogWin( loggerwin, logchain );
 
     return true;
 }
@@ -225,11 +225,6 @@ int SpringLobbyApp::OnExit()
         wxDELETE(m_translationhelper);
     }
 
-
-  #ifndef NO_TORRENT_SYSTEM
-  //if( sett().GetTorrentSystemAutoStartMode() == 1 )
-  torrent().DisconnectFromP2PSystem();// Cant hurt to disconnect unconditionally.
-  #endif
 
   m_timer->Stop();
 
@@ -274,7 +269,9 @@ void SpringLobbyApp::OnInitCmdLine(wxCmdLineParser& parser)
     {
         { wxCMD_LINE_SWITCH, _T("h"), _T("help"), _("show this help message"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_OPTION_HELP },
         { wxCMD_LINE_SWITCH, _T("nc"), _T("no-crash-handler"), _("don't use the crash handler (useful for debugging)"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
+#if wxUSE_STD_IOSTREAM
         { wxCMD_LINE_SWITCH, _T("cl"), _T("console-logging"),  _("shows application log to the console(if available)"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
+#endif
         { wxCMD_LINE_SWITCH, _T("gl"), _T("gui-logging"),  _("enables application log window"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
 #ifdef __WXMSW__
         { wxCMD_LINE_SWITCH, _T("u"), _T("update"),  _("only run update, quit immediately afterwards"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },

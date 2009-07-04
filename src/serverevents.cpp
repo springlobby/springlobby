@@ -966,7 +966,8 @@ void ServerEvents::OnSpringDownloadEvent( wxCommandEvent& event )
 			{
 				customMessageBoxNoModal(SL_MAIN_ICON, _("Download complete, location is: ") + m_savepath, _("Download complete.")  );
 			}
-			if ( m_autoclose ) ui().Quit();
+			if ( m_autoclose )
+                ui().mw().Close();
 
   }
 }
