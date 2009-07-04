@@ -301,7 +301,7 @@ bool SpringLobbyApp::OnCmdLineParsed(wxCmdLineParser& parser)
 //        Settings::m_user_defined_config = parser.Found( _T("config-file"), &Settings::m_user_defined_config_path );
 
         if ( !parser.Found(_T("log-verbosity"), &m_log_verbosity ) )
-            m_log_verbosity = 3;
+            m_log_verbosity = 5;
 
         if ( parser.Found(_T("help")) )
             return false; // not a syntax error, but program should stop if user asked for command line usage
