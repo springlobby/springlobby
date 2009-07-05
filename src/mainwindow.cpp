@@ -296,7 +296,9 @@ void MainWindow::OnClose( wxCloseEvent& evt )
     if ( m_log_chain ) // if logwin was created, it's the current "top" log
         m_log_chain->DetachOldLog();  //so we need to tellwx not to delete it on its own
         //since we absolutely need to destroy the logwin here, set a fallback for the time until app cleanup
+#if(wxUSE_STD_IOSTREAM) 
         wxLog::SetActiveTarget( new wxLogStream( &std::cout ) );
+#endif
   }
 
   Destroy();
@@ -398,7 +400,7 @@ void MainWindow::OpenChannelChat( Channel& channel, bool doFocus )
     ASSERT_LOGIC( m_chat_tab != 0, _T("m_chat_tab") );
     if ( doFocus )
         m_func_tabs->SetSelection( PAGE_CHAT );
-    m_chat_tab->AddChatPannel( channel );
+    m_chat_tab->AddChatPanel( channel );
 }
 
 
@@ -409,7 +411,7 @@ void MainWindow::OpenPrivateChat( const User& user, bool doFocus )
 {
   ASSERT_LOGIC( m_chat_tab != 0, _T("m_chat_tab") );
   m_func_tabs->SetSelection( PAGE_CHAT );
-  ChatPanel* cp = m_chat_tab->AddChatPannel( user );
+  ChatPanel* cp = m_chat_tab->AddChatPanel( user );
   if ( doFocus )
     cp->FocusInputBox();
 

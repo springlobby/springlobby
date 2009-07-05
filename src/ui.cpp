@@ -212,7 +212,7 @@ void Ui::DoConnect( const wxString& servername, const wxString& username, const 
     host = sett().GetServerHost( servername );
     port = sett().GetServerPort( servername );
 
-    GetServer().uidata.panel = m_main_win->GetChatTab().AddChatPannel( *m_serv, servername );
+    GetServer().uidata.panel = m_main_win->GetChatTab().AddChatPanel( *m_serv, servername );
     GetServer().uidata.panel->StatusMessage( _T("Connecting to server ") + servername + _T("...") );
 
     // Connect

@@ -201,7 +201,7 @@ void MainChatTab::RejoinChannels()
 }
 
 
-ChatPanel* MainChatTab::AddChatPannel( Channel& channel )
+ChatPanel* MainChatTab::AddChatPanel( Channel& channel )
 {
 
   for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ ) {
@@ -221,7 +221,7 @@ ChatPanel* MainChatTab::AddChatPannel( Channel& channel )
   return chat;
 }
 
-ChatPanel* MainChatTab::AddChatPannel( Server& server, const wxString& name )
+ChatPanel* MainChatTab::AddChatPanel( Server& server, const wxString& name )
 {
 
   for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ ) {
@@ -240,7 +240,7 @@ ChatPanel* MainChatTab::AddChatPannel( Server& server, const wxString& name )
   return chat;
 }
 
-ChatPanel* MainChatTab::AddChatPannel( const User& user )
+ChatPanel* MainChatTab::AddChatPanel( const User& user )
 {
   for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ ) {
     if ( m_chat_tabs->GetPageText(i) == user.GetNick() ) {
