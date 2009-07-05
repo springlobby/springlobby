@@ -37,6 +37,9 @@
 #include "settings++/presets.h"
 #include "Helper/sortutil.h"
 #include "mainwindow.h"
+#ifdef SL_DUMMY_COL
+    #include "settings++/custom_dialogs.h"
+#endif
 
 bool Settings::m_user_defined_config = false;
 wxString Settings::m_user_defined_config_path = wxEmptyString;
@@ -2388,5 +2391,6 @@ void Settings::TranslateSavedColumWidths()
 
     m_config->SetPath( old_path );
     m_config->SetRecordDefaults( old_record );
+    customMessageBoxNoModal( SL_MAIN_ICON, _("The way column widths are saved has changed, you may need to re-adjust your col widths manually once."), _("Important") );
     #endif
 }
