@@ -41,7 +41,7 @@ TorrentListCtrl::TorrentListCtrl( wxWindow* parent, Ui& ui ):
 	col.SetImage( icons().ICON_NONE );
 	InsertColumn( 0, col, _T( "Name" ), true );
 
-	col.SetText( _( "numcopies" ) );
+	col.SetText( _( "Numcopies" ) );
 	col.SetImage( icons().ICON_NONE );
 	InsertColumn( 1, col, _T( "complete numcopies" ), true );
 
@@ -53,9 +53,9 @@ TorrentListCtrl::TorrentListCtrl( wxWindow* parent, Ui& ui ):
 	col.SetImage( icons().ICON_NONE );
 	InsertColumn( 3, col, _T( "MB uploaded" ) );
 
-	col.SetText( _( "status" ) );
+	col.SetText( _( "Status" ) );
 	col.SetImage( icons().ICON_NONE );
-	InsertColumn( 4, col, _T( "status" ) );
+	InsertColumn( 4, col, _T( "Status" ) );
 
 	col.SetText( _( "% complete" ) );
 	col.SetImage( icons().ICON_NONE );
