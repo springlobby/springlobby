@@ -70,13 +70,6 @@ NickListCtrl::NickListCtrl( wxWindow* parent, bool show_header, NickListCtrl::Us
         m_sortorder[3].col = 1;
         m_sortorder[3].direction = 1;
     }
-
-//    if ( m_periodic_sort )
-//    {
-//        bool started = m_periodic_sort_timer->Start( m_periodic_sort_interval );
-//        assert( started );
-//        Connect( wxID_ANY, wxTimerEventHandler( NickListCtrl::OnPeriodicSort ), 0, this );
-//    }
 }
 
 NickListCtrl::~NickListCtrl()
@@ -324,3 +317,4 @@ int NickListCtrl::CompareUserStatus( DataType user1, DataType user2 )
 
     return 0;
 }
+

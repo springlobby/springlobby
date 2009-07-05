@@ -325,9 +325,9 @@ protected:
     bool RemoveItem( const DataImp item );
     bool AddItem( const DataImp item );
 
-    wxTimer* m_periodic_sort_timer;
+    long m_periodic_sort_timer_id;
+    wxTimer m_periodic_sort_timer;
     bool m_periodic_sort;
-    long m_periodic_id;
     unsigned int m_periodic_sort_interval;
     void OnPeriodicSort( wxTimerEvent& evt );
 

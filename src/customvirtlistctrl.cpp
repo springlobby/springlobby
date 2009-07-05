@@ -17,7 +17,7 @@
 BEGIN_EVENT_TABLE_TEMPLATE2(CustomVirtListCtrl, ListBaseType, T,L)
 #if wxUSE_TIPWINDOW
   EVT_MOTION(CustomVirtListCtrl::OnMouseMotion)
-  EVT_TIMER(IDD_TIP_TIMER, CustomVirtListCtrl::OnTimer)
+  EVT_TIMER(wxID_ANY, CustomVirtListCtrl::OnTimer)
 #endif
   EVT_LIST_COL_BEGIN_DRAG(wxID_ANY, CustomVirtListCtrl::OnStartResizeCol)
   EVT_LIST_COL_END_DRAG(wxID_ANY, CustomVirtListCtrl::OnEndResizeCol)
@@ -56,7 +56,8 @@ CustomVirtListCtrl<T,L>::CustomVirtListCtrl(wxWindow* parent, wxWindowID id, con
     m_dirty_sort(false),
     m_sort_criteria_count( sort_criteria_count ),
     m_comparator( m_sortorder, func ),
-    m_periodic_sort_timer( 0 ),
+    m_periodic_sort_timer_id( wxNewId() ),
+    m_periodic_sort_timer( this, m_periodic_sort_timer_id ),
     m_periodic_sort( periodic_sort ),
     m_periodic_sort_interval( periodic_sort_interval )
 {
@@ -79,11 +80,11 @@ CustomVirtListCtrl<T,L>::CustomVirtListCtrl(wxWindow* parent, wxWindowID id, con
 
     if ( m_periodic_sort )
     {
-        m_periodic_id = wxNewId();
-        m_periodic_sort_timer = new wxTimer( this, id );
-        bool started = m_periodic_sort_timer->Start( m_periodic_sort_interval );
+        wxTimerEvent a;
+        wxEventType evt_type = a.GetEventType();
+        Connect( m_periodic_sort_timer_id, evt_type,   wxTimerEventHandler( ThisType::OnPeriodicSort ) );
+        bool started = m_periodic_sort_timer.Start( m_periodic_sort_interval );
         assert( started );
-        Connect( wxID_ANY, wxTimerEventHandler( ThisType::OnPeriodicSort ), 0, this );
     }
 
 }
@@ -601,6 +602,5 @@ wxListItemAttr* CustomVirtListCtrl<T,L>::OnGetItemAttr(long item) const
 template < class T, class L >
 void CustomVirtListCtrl<T,L>::OnPeriodicSort( wxTimerEvent& evt )
 {
-    assert( false );
     SortList();
 }
