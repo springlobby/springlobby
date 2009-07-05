@@ -28,9 +28,9 @@ class MainChatTab : public wxScrolledWindow
 
     ChatPanel& ServerChat();
 
-    ChatPanel* AddChatPannel( Channel& channel );
-    ChatPanel* AddChatPannel( Server& server, const wxString& name );
-    ChatPanel* AddChatPannel( const User& user );
+    ChatPanel* AddChatPanel( Channel& channel );
+    ChatPanel* AddChatPanel( Server& server, const wxString& name );
+    ChatPanel* AddChatPanel( const User& user );
     /** \brief this is only used if channel is left via raw command in server tab */
     bool RemoveChatPanel( ChatPanel* panel );
 

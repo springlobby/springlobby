@@ -398,7 +398,7 @@ void MainWindow::OpenChannelChat( Channel& channel, bool doFocus )
     ASSERT_LOGIC( m_chat_tab != 0, _T("m_chat_tab") );
     if ( doFocus )
         m_func_tabs->SetSelection( PAGE_CHAT );
-    m_chat_tab->AddChatPannel( channel );
+    m_chat_tab->AddChatPanel( channel );
 }
 
 
@@ -409,7 +409,7 @@ void MainWindow::OpenPrivateChat( const User& user, bool doFocus )
 {
   ASSERT_LOGIC( m_chat_tab != 0, _T("m_chat_tab") );
   m_func_tabs->SetSelection( PAGE_CHAT );
-  ChatPanel* cp = m_chat_tab->AddChatPannel( user );
+  ChatPanel* cp = m_chat_tab->AddChatPanel( user );
   if ( doFocus )
     cp->FocusInputBox();
 
