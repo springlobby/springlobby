@@ -193,7 +193,7 @@ void NickListCtrl::SetTipWindowText( const long item_hit, const wxPoint position
     }
 }
 
-wxListItemAttr* NickListCtrl::OnGetItemAttr(long item) const
+wxListItemAttr* NickListCtrl::GetItemAttr(long item) const
 {
     if ( item < (long) m_data.size() && item > -1 ) {
         const User& u = *m_data[item];
@@ -249,7 +249,7 @@ void NickListCtrl::Sort()
     }
 }
 
-wxString NickListCtrl::OnGetItemText(long item, long column) const
+wxString NickListCtrl::GetItemText(long item, long column) const
 {
     switch ( column ) {
         case 0:
@@ -261,7 +261,7 @@ wxString NickListCtrl::OnGetItemText(long item, long column) const
     }
 }
 
-int NickListCtrl::OnGetItemColumnImage(long item, long column) const
+int NickListCtrl::GetItemColumnImage(long item, long column) const
 {
     if ( m_data[item] ) {
         const User& user = *m_data[item];
@@ -274,11 +274,6 @@ int NickListCtrl::OnGetItemColumnImage(long item, long column) const
             default: return -1;
         }
     }
-    return -1;
-}
-
-int NickListCtrl::OnGetItemImage(long item) const
-{
     return -1;
 }
 

@@ -17,7 +17,6 @@ const unsigned int DEFAULT_EXTERNAL_UDP_SOURCE_PORT = 16941;
 
 class IBattle;
 class wxTimer;
-class wxTimerEvent;
 
 struct BattleStartRect
 {
@@ -381,13 +380,7 @@ public:
 
 		virtual bool ShouldAutoStart();
 
-		virtual void FixColours();
-    virtual void Autobalance( BalanceType balance_type = balance_divide, bool clans = true, bool strong_clans = true, int allyteamsize = 0 );
-    virtual void FixTeamIDs( BalanceType balance_type = balance_divide, bool clans = true, bool strong_clans = true, int controlteamsize = 0 );
-
 		virtual void StartSpring() = 0;
-
-		virtual void OnTimer( wxTimerEvent& event );
 
 protected:
 
@@ -436,8 +429,6 @@ protected:
 		UserVec m_internal_user_list; /// to store users from savegame/replay
 
 		wxTimer* m_timer;
-
-		DECLARE_EVENT_TABLE()
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_IBATTLE_H

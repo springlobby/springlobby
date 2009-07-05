@@ -4,6 +4,7 @@
 class wxLogWindow;
 class wxFrame;
 class wxString;
+class wxLogChain;
 
 /**
     let origin be /path/to/some/dir and destination /some/other/path
@@ -22,7 +23,7 @@ bool IsUACenabled();
 
     \return Logwindow pointer (may be 0), useful if parent frame should be created _after_ logging is set up
 **/
-wxLogWindow* InitializeLoggingTargets( wxFrame* parent, bool console, bool showgui, bool logcrash, int verbosity );
+wxLogWindow* InitializeLoggingTargets( wxFrame* parent, bool console, bool showgui, bool logcrash, int verbosity, wxLogChain* logChain );
 
 wxString GetSpringLobbyVersion();
 wxString GetExecutableFolder();

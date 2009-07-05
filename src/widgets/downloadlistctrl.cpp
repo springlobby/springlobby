@@ -68,7 +68,7 @@ void WidgetDownloadListctrl::AddWidget( const Widget widget )
     wxLogWarning( _T("Widget already in list.") );
 }
 
-wxString WidgetDownloadListctrl::OnGetItemText(long item, long column) const
+wxString WidgetDownloadListctrl::GetItemText(long item, long column) const
 {
     if ( item > m_data.size() || item < 0 )
         return wxEmptyString;
@@ -86,12 +86,12 @@ wxString WidgetDownloadListctrl::OnGetItemText(long item, long column) const
 
 }
 
-int WidgetDownloadListctrl::OnGetItemImage(long item) const
+int WidgetDownloadListctrl::GetItemImage(long item) const
 {
     return -1;
 }
 
-int WidgetDownloadListctrl::OnGetItemColumnImage(long item, long column) const
+int WidgetDownloadListctrl::GetItemColumnImage(long item, long column) const
 {
     return -1;
 }
@@ -113,7 +113,32 @@ void WidgetDownloadListctrl::Sort()
 
 int WidgetDownloadListctrl::GetIndexFromData( const DataType& data ) const
 {
-    return 0;
+    static long seekpos;
+    seekpos = clamp( seekpos, 0l , (long)m_data.size() );
+    int index = seekpos;
+
+    for ( DataCIter f_idx = m_data.begin() + seekpos; f_idx != m_data.end() ; ++f_idx )
+    {
+        if ( data.Equals( *f_idx ) )
+        {
+            seekpos = index;
+            return seekpos;
+        }
+        index++;
+    }
+    //it's ok to init with seekpos, if it had changed this would not be reached
+    int r_index = seekpos - 1;
+    for ( DataRevCIter r_idx = m_data.rbegin() + ( m_data.size() - seekpos ); r_idx != m_data.rend() ; ++r_idx )
+    {
+        if ( data.Equals( *r_idx ) )
+        {
+            seekpos = r_index;
+            return seekpos;
+        }
+        r_index--;
+    }
+
+    return -1;
 }
 
 Widget& WidgetDownloadListctrl::GetSelectedWidget()

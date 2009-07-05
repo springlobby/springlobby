@@ -132,17 +132,17 @@ void ChannelListctrl::FilterChannel( const wxString& partial )
 }
 
 
-int ChannelListctrl::OnGetItemColumnImage(long item, long column) const
+int ChannelListctrl::GetItemColumnImage(long item, long column) const
 {
     return -1;
 }
 
-int ChannelListctrl::OnGetItemImage(long item) const
+int ChannelListctrl::GetItemImage(long item) const
 {
     return -1;
 }
 
-wxString ChannelListctrl::OnGetItemText(long item, long column) const
+wxString ChannelListctrl::GetItemText(long item, long column) const
 {
     int idx = m_visible_idxs.find(item)->second;
     const DataType& chan = m_data[ idx ];

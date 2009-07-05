@@ -378,11 +378,14 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 			{
 					User& user = battle.GetUser( i );
 					UserBattleStatus& status = user.BattleStatus();
-					ProgressiveTeamsVecIter itor = teams_to_sorted_teams.find ( status.team );
-					if ( itor == teams_to_sorted_teams.end() )
+					if ( !status.spectator )
 					{
-						teams_to_sorted_teams[status.team] = free_team;
-						free_team++;
+						ProgressiveTeamsVecIter itor = teams_to_sorted_teams.find ( status.team );
+						if ( itor == teams_to_sorted_teams.end() )
+						{
+							teams_to_sorted_teams[status.team] = free_team;
+							free_team++;
+						}
 					}
 					if ( status.IsBot() ) continue;
 					tdf.EnterSection( _T("PLAYER") + TowxString( i ) );
@@ -394,6 +397,18 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 							if ( !status.spectator )
 							{
 								tdf.Append( _T("Team"), teams_to_sorted_teams[status.team] );
+							}
+							else
+							{
+								int speccteam = 0;
+								ProgressiveTeamsVecIter itor = teams_to_sorted_teams.find ( status.team );
+								if ( itor == teams_to_sorted_teams.end() )
+								{
+									srand ( time(NULL) );
+									if ( teams_to_sorted_teams.size() != 0 ) speccteam = rand() % teams_to_sorted_teams.size();
+								}
+								else speccteam = itor->second;
+								tdf.Append( _T("Team"), speccteam );
 							}
 					tdf.LeaveSection();
 					player_to_number[&user] = i;

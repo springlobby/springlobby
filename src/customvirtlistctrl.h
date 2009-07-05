@@ -4,6 +4,7 @@
 #ifndef __WXMSW__
     #include <wx/listctrl.h>
     typedef wxListCtrl ListBaseType;
+    #define SL_DUMMY_COL
 #else
 //disabled until further fixes
 //    #include "Helper/listctrl.h"
@@ -231,7 +232,6 @@ public:
      */
 
     //! intermediate function to add info to m_colinfovec after calling base class function
-    void InsertColumn(long i, wxListItem item, wxString tip, bool = true);
     void AddColumn(long i, int width, const wxString& label, const wxString& tip, bool = true);
     //! this event is triggered when delay timer (set in mousemotion) ended
     virtual void OnTimer(wxTimerEvent& event);
@@ -280,8 +280,13 @@ public:
       * these are used to display items in virtual lists
       * @{
      */
-    virtual wxString OnGetItemText(long item, long column) const = 0;
-    virtual int OnGetItemColumnImage(long item, long column) const = 0;
+    wxString OnGetItemText(long item, long column) const;
+    int OnGetItemColumnImage(long item, long column) const;
+    wxListItemAttr* OnGetItemAttr(long item) const;
+
+    //! when using the dummy column, we provide diff impl that adjust for that
+    bool GetColumn(int col, wxListItem& item) const;
+    bool SetColumn(int col, wxListItem& item);
     /** @}
      */
 
@@ -328,6 +333,9 @@ public:
 private:
     typedef BaseType
         ThisType;
+
+    ListCtrlImp& asImp() { return static_cast<ListCtrlImp&>(*this); }
+    const ListCtrlImp& asImp() const { return static_cast<const ListCtrlImp&>(*this); }
 };
 
 template < class ListCtrlType >

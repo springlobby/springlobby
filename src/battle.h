@@ -9,6 +9,7 @@
 class Ui;
 class Server;
 class User;
+class wxTimerEvent;
 
 
 /** \brief model of a sp/mp battle
@@ -76,6 +77,10 @@ class Battle : public IBattle
     void SetLockExternalBalanceChanges( bool value );
     bool GetLockExternalBalanceChanges();
 
+		void FixColours();
+    void Autobalance( BalanceType balance_type = balance_divide, bool clans = true, bool strong_clans = true, int allyteamsize = 0 );
+    void FixTeamIDs( BalanceType balance_type = balance_divide, bool clans = true, bool strong_clans = true, int controlteamsize = 0 );
+
     void SendScriptToClients();
 
     ///< quick hotfix for bans
@@ -97,6 +102,8 @@ class Battle : public IBattle
 
     void OnTimer( wxTimerEvent& event );
 
+		void SetInGame( bool ingame );
+
   protected:
     // Battle variables
 
@@ -110,6 +117,8 @@ class Battle : public IBattle
     bool m_autolock_on_start;
 
     const int m_id;
+
+		DECLARE_EVENT_TABLE()
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_BATTLE_H

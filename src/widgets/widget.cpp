@@ -271,3 +271,7 @@ bool Widget::Remove()
     return false;
 }
 
+bool Widget::Equals( const Widget& other ) const
+{
+    return w_id == other.w_id && ( rev.CmpNoCase( other.rev ) == 0 );
+}

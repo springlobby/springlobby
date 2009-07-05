@@ -76,7 +76,6 @@ Ui::~Ui()
 {
     Disconnect();
 
-    delete m_main_win;
     delete m_serv;
 }
 
@@ -177,10 +176,9 @@ void Ui::Disconnect()
 {
     if ( m_serv != 0 )
     {
-				if ( IsConnected() ) {
-				    GetServer().Disconnect();
-
-				}
+        if ( IsConnected() ) {
+            GetServer().Disconnect();
+        }
     }
 }
 
@@ -284,12 +282,12 @@ bool Ui::IsSpringRunning()
 //! @brief Quits the entire application
 void Ui::Quit()
 {
-    ASSERT_LOGIC( m_main_win != 0, _T("m_main_win = 0") );
     Disconnect();
-    sett().SaveSettings();
-    mw().forceSettingsFrameClose();
 
-    mw().Close();
+    #ifndef NO_TORRENT_SYSTEM
+        torrent().DisconnectFromP2PSystem();// Cant hurt to disconnect unconditionally.
+    #endif
+
     if ( m_con_win != 0 )
         m_con_win->Close();
 }
@@ -1206,7 +1204,8 @@ void Ui::OnModUnitsCached( const wxString& modname )
 
 void Ui::OnMainWindowDestruct()
 {
-    m_main_win = 0;
+    //this is rather ugly and therefore disabled
+    //m_main_win = 0;
 }
 
 bool Ui::IsThisMe(User& other)
