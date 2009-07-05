@@ -302,6 +302,8 @@ void MainChatTab::OnTabsChanged( wxAuiNotebookEvent& event )
     return;
   }
 
+  GetActiveChatPanel()->FocusInputBox();
+
 }
 
 

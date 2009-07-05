@@ -4,7 +4,6 @@
 #ifndef __WXMSW__
     #include <wx/listctrl.h>
     typedef wxListCtrl ListBaseType;
-    #define SL_DUMMY_COL
 #else
 //disabled until further fixes
 //    #include "Helper/listctrl.h"
