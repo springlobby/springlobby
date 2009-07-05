@@ -26,8 +26,8 @@ ChannelListctrl::ChannelListctrl(wxWindow* parent, wxWindowID id, const wxString
 #endif
 
     AddColumn( 0, widths[0], _("Channel"), _T("Channelname") );
-    AddColumn( 1, widths[1], _("# users"), _T("users") );
-    AddColumn( 2, widths[2], _T("topic"), _T("topic") );
+    AddColumn( 1, widths[1], _("# users"), _T("Users") );
+    AddColumn( 2, widths[2], _T("Topic"), _T("Topic") );
 
     if ( m_sortorder.size() == 0 ) {
         m_sortorder[2].col = 2;
