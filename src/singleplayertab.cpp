@@ -299,6 +299,7 @@ void SinglePlayerTab::OnAddBot( wxCommandEvent& event )
 
 void SinglePlayerTab::OnStart( wxCommandEvent& event )
 {
+    wxLogDebugFunc( _T("") );
     wxString nick = usync().GetDefaultNick();
     if ( !nick.IsEmpty() ) m_battle.GetMe().SetNick( nick );
     if ( m_ui.IsSpringRunning() )
