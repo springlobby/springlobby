@@ -63,7 +63,6 @@ BEGIN_EVENT_TABLE( ChatPanel, wxPanel )
 	EVT_BUTTON( CHAT_CHAN_OPTS, ChatPanel::OnChanOpts )
 	EVT_BUTTON( CHAT_SEND, ChatPanel::OnSay )
 	EVT_TEXT_URL( CHAT_LOG,  ChatPanel::OnLinkEvent )
-	EVT_SET_FOCUS( ChatPanel::OnFocus)
 
 	EVT_MENU( CHAT_MENU_DISABLE_APPEND, ChatPanel::OnMenuToggleAppend )
 
@@ -1873,9 +1872,4 @@ void ChatPanel::OnChannelMenuShowMutelist( wxCommandEvent& event )
 void ChatPanel::ClearContents( wxCommandEvent& event )
 {
     m_chatlog_text->SetValue( _T("") );
-}
-
-void ChatPanel::OnFocus( wxFocusEvent& event )
-{
-    FocusInputBox();
 }
