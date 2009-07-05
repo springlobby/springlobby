@@ -42,11 +42,11 @@ END_EVENT_TABLE()
 template<> SortOrder NickListCtrl::BaseType::m_sortorder = SortOrder( ) ;
 
 NickListCtrl::NickListCtrl( wxWindow* parent, bool show_header, NickListCtrl::UserMenu* popup, bool singleSelectList,
-                            const wxString& name, bool highlight):
-  NickListCtrl::BaseType( parent, NICK_LIST, wxDefaultPosition, wxDefaultSize,
+                            const wxString& name, bool highlight)
+    : NickListCtrl::BaseType( parent, NICK_LIST, wxDefaultPosition, wxDefaultSize,
               wxLC_VIRTUAL | wxSUNKEN_BORDER | wxLC_REPORT | (int)(!show_header) * wxLC_NO_HEADER | (int)(singleSelectList) * wxLC_SINGLE_SEL,
-              name, 4, 3, &CompareOneCrit, highlight ),
-  m_menu(popup)
+              name, 4, 3, &CompareOneCrit, highlight, UserActions::ActHighlight, true /*periodic sort*/ ),
+    m_menu(popup)
 {
 
 #if defined(__WXMAC__)
@@ -70,6 +70,13 @@ NickListCtrl::NickListCtrl( wxWindow* parent, bool show_header, NickListCtrl::Us
         m_sortorder[3].col = 1;
         m_sortorder[3].direction = 1;
     }
+
+//    if ( m_periodic_sort )
+//    {
+//        bool started = m_periodic_sort_timer->Start( m_periodic_sort_interval );
+//        assert( started );
+//        Connect( wxID_ANY, wxTimerEventHandler( NickListCtrl::OnPeriodicSort ), 0, this );
+//    }
 }
 
 NickListCtrl::~NickListCtrl()
