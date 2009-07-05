@@ -31,6 +31,7 @@
 #include "utils/debug.h"
 #include "utils/conversion.h"
 #include "utils/misc.h"
+#include "utils/globalevents.h"
 
 
 #define LOCK_UNITSYNC wxCriticalSectionLocker lock_criticalsection(m_lock)
@@ -72,6 +73,7 @@ bool SpringUnitSync::LoadUnitSyncLib( const wxString& unitsyncloc )
    {
       m_cache_path = sett().GetCachePath();
       PopulateArchiveList();
+      GetGlobalEventSender(OnUnitsyncReloaded).SendEvent( 0 );
    }
    return ret;
 }

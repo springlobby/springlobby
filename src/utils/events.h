@@ -84,6 +84,7 @@ class EventReceiverFunc: public EventReceiverFuncBase<TParamType>
 {
   TReceiverType *receiver_obj;
   public:
+  EventReceiverFunc(){}
   EventReceiverFunc(TReceiverType *receiver_obj_, EventSender<TParamType> *sender):
   receiver_obj(receiver_obj_)
   {

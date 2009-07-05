@@ -412,6 +412,11 @@ springlobby_SOURCES = \
 	src/utils/sltipwin.h \
 	src/utils/controls.cpp \
 	src/utils/controls.h \
+	src/utils/globalevents.cpp \
+	src/utils/globalevents.h \
+	src/utils/networkevents.cpp \
+	src/utils/networkevents.h \
+	src/utils/events.h \
 	src/updater/versionchecker.cpp \
 	src/updater/versionchecker.h \
 	src/sounds/ring_sound.h \

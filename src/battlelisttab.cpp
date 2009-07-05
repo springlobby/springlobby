@@ -61,7 +61,8 @@ END_EVENT_TABLE()
 
 BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( parent, -1 ),
   m_ui(ui),
-  m_sel_battle(0)
+  m_sel_battle(0),
+  OnUsync_reload( this, &GetGlobalEventSender( OnUnitsyncReloaded ) )
 {
   GetAui().manager->AddPane( this, wxLEFT, _T("battlelisttab") );
 
@@ -576,7 +577,7 @@ void BattleListTab::OnSelect( wxListEvent& event )
 }
 
 
-void BattleListTab::OnUnitSyncReloaded()
+void BattleListTab::OnUnitSyncReloaded( GlobalEventData /*data*/ )
 {
   if ( ! m_ui.GetServerStatus() ) { return; }
 
