@@ -179,6 +179,8 @@ class ChatPanel : public wxPanel
     void OnUserMenuCreateGroup( wxCommandEvent& event );
     void UpdateNicklistHighlights();
 
+    void OnFocus( wxFocusEvent& event );
+
     void SortNickList();
 
     void ClearContents( wxCommandEvent& event );
