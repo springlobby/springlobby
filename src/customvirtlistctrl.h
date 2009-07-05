@@ -8,7 +8,6 @@
 //disabled until further fixes
 //    #include "Helper/listctrl.h"
 //    typedef SL_Extern::wxGenericListCtrl ListBaseType;
-    #define SL_DUMMY_COL
     #include <wx/listctrl.h>
     typedef wxListCtrl ListBaseType;
 #endif

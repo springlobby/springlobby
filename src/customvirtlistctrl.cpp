@@ -2,7 +2,7 @@
 #include <wx/colour.h>
 #include <wx/log.h>
 
-//#include "utils.h"
+#include "nonportable.h" //pulls in the SL_DUMMY_COL define if applicable
 #include "settings.h"
 #include "iconimagelist.h"
 #include "settings++/custom_dialogs.h"

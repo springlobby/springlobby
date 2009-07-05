@@ -5,7 +5,7 @@
 #include <vector>
 
 const int CACHE_VERSION     = 10;
-const int SETTINGS_VERSION  = 14;
+const int SETTINGS_VERSION  = 15;
 
 const wxString DEFSETT_DEFAULT_SERVER_NAME= _T("Official server");
 const wxString DEFSETT_DEFAULT_SERVER_HOST = _T("taspringmaster.clan-sy.com");
@@ -339,6 +339,7 @@ class Settings
     bool GetSplitBRoomHorizontally();
     void SetSplitBRoomHorizontally( const bool vertical );
 
+    void TranslateSavedColumWidths();
     /*@}*/
 
     /* ================================================================ */
