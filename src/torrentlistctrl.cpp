@@ -11,13 +11,18 @@
 
 #include <wx/intl.h>
 #include <wx/menu.h>
+#include <wx/datetime.h>
 
 #include "torrentlistctrl.h"
 #include "torrentwrapper.h"
 //#include "utils/.h"
 #include "iconimagelist.h"
 
-BEGIN_EVENT_TABLE( TorrentListCtrl, CustomListCtrl )
+#include "utils/conversion.h"
+
+template<> SortOrder TorrentListCtrl::BaseType::m_sortorder = SortOrder();
+
+BEGIN_EVENT_TABLE( TorrentListCtrl, TorrentListCtrl::BaseType )
 
 	EVT_LIST_ITEM_RIGHT_CLICK( TLIST_CLICK, TorrentListCtrl::OnListRightClick )
 	EVT_LIST_COL_CLICK( TLIST_CLICK, TorrentListCtrl::OnColClick )
@@ -28,68 +33,41 @@ BEGIN_EVENT_TABLE( TorrentListCtrl, CustomListCtrl )
 	#endif
 END_EVENT_TABLE()
 
-map_infos* TorrentListCtrl::m_info_map = 0;
-
 TorrentListCtrl::TorrentListCtrl( wxWindow* parent, Ui& ui ):
-		CustomListCtrl( parent, TLIST_CLICK, wxDefaultPosition, wxDefaultSize,
-                wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("TorrentListCtrl"), 10 )
+		TorrentListCtrl::BaseType( parent, TLIST_CLICK, wxDefaultPosition, wxDefaultSize,
+                wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("TorrentListCtrl"), 10, 10, &CompareOneCrit )
 
 {
-	wxListItem col;
+	const int widths [3] = { wxLIST_AUTOSIZE, wxLIST_AUTOSIZE, wxLIST_AUTOSIZE };
 
-	col.SetText( _( "Name" ) );
-	col.SetImage( icons().ICON_NONE );
-	InsertColumn( 0, col, _T( "Name" ), true );
+	AddColumn(0, widths[0], _T("Name"), _T("Name"));
+	AddColumn(1, widths[0], _T("Numcopies"), _T("# complete copies"));
+	AddColumn(2, widths[0], _T("MB downloaded"), _T("MB downloaded"));
+	AddColumn(3, widths[0], _T("MB uploaded"), _T("MB uploade"));
+	AddColumn(4, widths[0], _T("Status"), _T("Status"));
+	AddColumn(5, widths[0], _T("% complete"), _T("% complete"));
+	AddColumn(6, widths[0], _T("KB/s up"), _T("KB/s upload"));
+	AddColumn(7, widths[0], _T("KB/s down"), _T("KB/s download"));
+	AddColumn(8, widths[0], _T("ETA"), _T("Estimated time remaining"));
+	AddColumn(9, widths[0], _T("Filesize (MB)"), _T("Filesize"));
 
-	col.SetText( _( "Numcopies" ) );
-	col.SetImage( icons().ICON_NONE );
-	InsertColumn( 1, col, _T( "complete numcopies" ), true );
-
-	col.SetText( _( "MB downloaded" ) );
-	col.SetImage( icons().ICON_NONE );
-	InsertColumn( 2, col, _T( "MB downloaded" ), true );
-
-	col.SetText( _( "MB uploaded" ) );
-	col.SetImage( icons().ICON_NONE );
-	InsertColumn( 3, col, _T( "MB uploaded" ) );
-
-	col.SetText( _( "Status" ) );
-	col.SetImage( icons().ICON_NONE );
-	InsertColumn( 4, col, _T( "Status" ) );
-
-	col.SetText( _( "% complete" ) );
-	col.SetImage( icons().ICON_NONE );
-	InsertColumn( 5, col, _T( "% complete" ) );
-
-	col.SetText( _( "KB/s up" ) );
-	col.SetImage( icons().ICON_NONE );
-	InsertColumn( 6, col, _T( "KB/s upload" ) );
-
-	col.SetText( _( "KB/s down" ) );
-	col.SetImage( icons().ICON_NONE );
-	InsertColumn( 7, col, _T( "KB/s download" ), true );
-
-	col.SetText( _( "ETA (s)" ) );
-	col.SetImage( icons().ICON_NONE );
-	InsertColumn( 8, col, _T( "Estimated time of arrival" ), true );
-
-	col.SetText( _( "Filesize (MB)" ) );
-	col.SetImage( icons().ICON_NONE );
-	InsertColumn( 9, col, _T( "Filesize" ), true );
 
 // sortorder: name --> percent completed --> mb donwloaded
 
-	m_sortorder[0].col = 0;
-	m_sortorder[0].direction = true;
-	m_sortorder[1].col = 5;
-	m_sortorder[1].direction = true;
-	m_sortorder[2].col = 2;
-	m_sortorder[2].direction = true;
+	if ( m_sortorder.size() == 0 ) 
+	{
+		m_sortorder[0].col = 0;
+		m_sortorder[0].direction = 1;
+		m_sortorder[1].col = 5;
+		m_sortorder[1].direction = 1;
+		m_sortorder[2].col = 2;
+		m_sortorder[2].direction = 1;
+	}
 
 	Sort( );
 
 	//TODO this'll need fixing on win i assume [koshi]
-	SetColumnWidth( 0, 250 );
+	/*SetColumnWidth( 0, 250 );
 	SetColumnWidth( 1, wxLIST_AUTOSIZE_USEHEADER );
 	SetColumnWidth( 2, wxLIST_AUTOSIZE_USEHEADER );
 	SetColumnWidth( 7, 80 );
@@ -100,21 +78,57 @@ TorrentListCtrl::TorrentListCtrl( wxWindow* parent, Ui& ui ):
 	SetColumnWidth( 3, 100 );
 	SetColumnWidth( 4, 70 );
 	SetColumnWidth( 5, 100 );
-	SetColumnWidth( 6, 70 );
+	SetColumnWidth( 6, 70 );*/
 
 //  m_popup = new wxMenu( _T("") );
 //  // &m enables shortcout "alt + m" and underlines m
 //  m_popup->Append( BLIST_DLMAP, _("Download &map") );
 //  m_popup->Append( BLIST_DLMOD, _("Download m&od") );
 }
-void TorrentListCtrl::SetInfoMap( map_infos* map )
-{
-	m_info_map = map;
-}
+
 
 TorrentListCtrl::~TorrentListCtrl()
 {
 //  delete m_popup;
+}
+
+
+bool TorrentListCtrl::AddTorrentInfo(const DataType& info)
+{
+	if(AddItem(info))
+		return true;
+	return false;
+}
+
+
+bool TorrentListCtrl::RemoveTorrentInfo(const DataType& info)
+{
+	if(RemoveItem(info))
+		return true;
+	return false;
+}
+
+void TorrentListCtrl::UpdateTorrentInfo(const DataType& info)
+{
+	int index = GetIndexFromData(info);
+
+	if( index < 0)
+	{
+		if(IsTorrentActive(info))
+			AddTorrentInfo(info);
+		return;
+	}
+	else
+	{
+		if(!IsTorrentActive(info))
+		{
+			RemoveTorrentInfo(info);
+			return;
+		}
+
+		RefreshItem( index );
+		MarkDirtySort();
+	}
 }
 
 
@@ -124,373 +138,18 @@ void TorrentListCtrl::OnListRightClick( wxListEvent& event )
 }
 
 
-void TorrentListCtrl::OnColClick( wxListEvent& event )
-{
-	if ( event.GetColumn() == -1 ) return;
-	wxListItem col;
-	GetColumn( m_sortorder[0].col, col );
-	col.SetImage( icons().ICON_NONE );
-	SetColumn( m_sortorder[0].col, col );
-
-	int i;
-	for ( i = 0; m_sortorder[i].col != event.GetColumn() && i < 4; ++i ) {}
-	if ( i > 3 ) { i = 3; }
-	for ( ; i > 0; i-- ) { m_sortorder[i] = m_sortorder[i-1]; }
-	m_sortorder[0].col = event.GetColumn();
-	m_sortorder[0].direction = !m_sortorder[0].direction;
-
-
-	GetColumn( m_sortorder[0].col, col );
-//  col.SetImage( ( m_sortorder[0].direction )?ICON_UP:ICON_DOWN );
-	SetColumn( m_sortorder[0].col, col );
-
-	Sort();
-}
 
 
 void TorrentListCtrl::Sort()
 {
-	for ( int i = 3; i >= 0; i-- )
-	{
-		switch ( m_sortorder[ i ].col )
-		{
-			case 0 :
-				SortItems(( m_sortorder[ i ].direction )?&CompareNameUP:&CompareNameDOWN , 0 );
-				break;
-			case 1 :
-				SortItems(( m_sortorder[ i ].direction )?&CompareCopiesUP:&CompareCopiesDOWN , 0 );
-				break;
-			case 2 :
-				SortItems(( m_sortorder[ i ].direction )?&CompareDownSizeUP:&CompareDownSizeDOWN , 0 );
-				break;
-			case 3 :
-				SortItems(( m_sortorder[ i ].direction )?&CompareUpSizeUP:&CompareUpSizeDOWN , 0 );
-				break;
-			case 4 :
-				SortItems(( m_sortorder[ i ].direction )?&CompareLeechUP:&CompareLeechDOWN , 0 );
-				break;
-			case 5 :
-				SortItems(( m_sortorder[ i ].direction )?&CompareCompletedUP:&CompareCompletedDOWN , 0 );
-				break;
-			case 6 :
-				SortItems(( m_sortorder[ i ].direction )?&CompareUpSpeedUP:&CompareUpSpeedDOWN , 0 );
-				break;
-			case 7 :
-				SortItems(( m_sortorder[ i ].direction )?&CompareDownSpeedUP:&CompareDownSpeedDOWN , 0 );
-				break;
-			case 8 :
-				SortItems(( m_sortorder[ i ].direction )?&CompareEtaUP:&CompareEtaDOWN , 0 );
-				break;
-            case 9 :
-				SortItems(( m_sortorder[ i ].direction )?&CompareFileSizeUP:&CompareFileSizeDOWN , 0 );
-				break;
-		}
-	}
+	if ( m_data.size() > 0 )
+    {
+        SaveSelection();
+        SLInsertionSort( m_data, m_comparator );
+        RestoreSelection();
+    }
 }
 
-
-int wxCALLBACK TorrentListCtrl::CompareNameUP( long item1, long item2, long sortData )
-{
-	map_infos info_map = *m_info_map;
-	TorrentInfos& info1 = info_map[item1];
-	TorrentInfos& info2 = info_map[item2];
-
-	if ( info1.name < info2.name )
-		return -1;
-	if ( info1.name > info2.name )
-		return 1;
-
-	return 0;
-}
-
-
-int wxCALLBACK TorrentListCtrl::CompareNameDOWN( long item1, long item2, long sortData )
-{
-	map_infos info_map = *m_info_map;
-	TorrentInfos& info1 = info_map[item1];
-	TorrentInfos& info2 = info_map[item2];
-
-	if ( info1.name < info2.name )
-		return -1;
-	if ( info1.name > info2.name )
-		return 1;
-
-	return 0;
-}
-
-
-int wxCALLBACK TorrentListCtrl::CompareDownSizeUP( long item1, long item2, long sortData )
-{
-	map_infos info_map = *m_info_map;
-	TorrentInfos& info1 = info_map[item1];
-	TorrentInfos& info2 = info_map[item2];
-
-	if ( info1.downloaded > info2.downloaded )
-		return -1;
-	if ( info1.downloaded < info2.downloaded )
-		return 1;
-
-	return 0;
-}
-
-
-int wxCALLBACK TorrentListCtrl::CompareDownSizeDOWN( long item1, long item2, long sortData )
-{
-	map_infos info_map = *m_info_map;
-	TorrentInfos& info1 = info_map[item1];
-	TorrentInfos& info2 = info_map[item2];
-
-	if ( info1.downloaded < info2.downloaded )
-		return 1;
-	if ( info1.downloaded > info2.downloaded )
-		return -1;
-
-	return 0;
-}
-
-
-int wxCALLBACK TorrentListCtrl::CompareCopiesUP( long item1, long item2, long sortData )
-{
-	map_infos info_map = *m_info_map;
-	TorrentInfos& info1 = info_map[item1];
-	TorrentInfos& info2 = info_map[item2];
-
-	if ( info1.numcopies < info2.numcopies )
-		return -1;
-	if ( info1.numcopies > info2.numcopies )
-		return 1;
-
-	return 0;
-}
-
-
-
-int wxCALLBACK TorrentListCtrl::CompareCopiesDOWN( long item1, long item2, long sortData )
-{
-	map_infos info_map = *m_info_map;
-	TorrentInfos& info1 = info_map[item1];
-	TorrentInfos& info2 = info_map[item2];
-
-	if ( info1.numcopies < info2.numcopies )
-		return 1;
-	if ( info1.numcopies > info2.numcopies )
-		return -1;
-
-	return 0;
-}
-
-
-int wxCALLBACK TorrentListCtrl::CompareUpSizeUP( long item1, long item2, long sortData )
-{
-	map_infos info_map = *m_info_map;
-	TorrentInfos& info1 = info_map[item1];
-	TorrentInfos& info2 = info_map[item2];
-
-	if ( info1.uploaded < info2.uploaded )
-		return -1;
-	if ( info1.uploaded > info2.uploaded )
-		return 1;
-
-	return 0;
-}
-
-
-int wxCALLBACK TorrentListCtrl::CompareUpSizeDOWN( long item1, long item2, long sortData )
-{
-	map_infos info_map = *m_info_map;
-	TorrentInfos& info1 = info_map[item1];
-	TorrentInfos& info2 = info_map[item2];
-
-	if ( info1.uploaded <  info2.uploaded )
-	{
-		return 1;
-	}
-	if ( info1.uploaded > info2.uploaded )
-	{
-		return -1;
-	}
-
-	return 0;
-}
-
-
-int wxCALLBACK TorrentListCtrl::CompareLeechUP( long item1, long item2, long sortData )
-{
-	map_infos info_map = *m_info_map;
-	TorrentInfos& info1 = info_map[item1];
-	TorrentInfos& info2 = info_map[item2];
-
-	if ( info1.downloadstatus <  info2.downloadstatus )
-		return -1;
-	if ( info1.downloadstatus >  info2.downloadstatus )
-		return 1;
-
-	return 0;
-}
-
-
-int wxCALLBACK TorrentListCtrl::CompareLeechDOWN( long item1, long item2, long sortData )
-{
-	map_infos info_map = *m_info_map;
-	TorrentInfos& info1 = info_map[item1];
-	TorrentInfos& info2 = info_map[item2];
-
-	if ( info1.downloadstatus <  info2.downloadstatus )
-		return 1;
-	if ( info1.downloadstatus >  info2.downloadstatus )
-		return -1;
-
-	return 0;
-}
-
-
-int wxCALLBACK TorrentListCtrl::CompareCompletedUP( long item1, long item2, long sortData )
-{
-	map_infos info_map = *m_info_map;
-	TorrentInfos& info1 = info_map[item1];
-	TorrentInfos& info2 = info_map[item2];
-
-	if ( info1.progress <  info2.progress )
-		return -1;
-	if ( info1.progress >  info2.progress )
-		return 1;
-
-	return 0;
-}
-
-
-int wxCALLBACK TorrentListCtrl::CompareCompletedDOWN( long item1, long item2, long sortData )
-{
-	map_infos info_map = *m_info_map;
-	TorrentInfos& info1 = info_map[item1];
-	TorrentInfos& info2 = info_map[item2];
-
-	if ( info1.progress <  info2.progress )
-		return 1;
-	if ( info1.progress >  info2.progress )
-		return -1;
-
-	return 0;
-}
-
-
-int wxCALLBACK TorrentListCtrl::CompareUpSpeedUP( long item1, long item2, long sortData )
-{
-	map_infos info_map = *m_info_map;
-	TorrentInfos& info1 = info_map[item1];
-	TorrentInfos& info2 = info_map[item2];
-
-	if ( info1.outspeed < info2.outspeed )
-		return -1;
-	if ( info1.outspeed > info2.outspeed )
-		return 1;
-
-	return 0;
-}
-
-
-int wxCALLBACK TorrentListCtrl::CompareUpSpeedDOWN( long item1, long item2, long sortData )
-{
-	map_infos info_map = *m_info_map;
-	TorrentInfos& info1 = info_map[item1];
-	TorrentInfos& info2 = info_map[item2];
-
-	if ( info1.outspeed < info2.outspeed )
-		return 1;
-	if ( info1.outspeed > info2.outspeed )
-		return -1;
-
-	return 0;
-}
-
-
-int wxCALLBACK TorrentListCtrl::CompareDownSpeedUP( long item1, long item2, long sortData )
-{
-	map_infos info_map = *m_info_map;
-	TorrentInfos& info1 = info_map[item1];
-	TorrentInfos& info2 = info_map[item2];
-
-	if ( info1.inspeed < info2.inspeed )
-		return -1;
-	if ( info1.inspeed > info2.inspeed )
-		return 1;
-
-	return 0;
-}
-
-
-int wxCALLBACK TorrentListCtrl::CompareDownSpeedDOWN( long item1, long item2, long sortData )
-{
-	map_infos info_map = *m_info_map;
-	TorrentInfos& info1 = info_map[item1];
-	TorrentInfos& info2 = info_map[item2];
-
-	if ( info1.inspeed < info2.inspeed )
-		return 1;
-	if ( info1.inspeed > info2.inspeed )
-		return -1;
-
-	return 0;
-}
-
-
-int wxCALLBACK TorrentListCtrl::CompareEtaUP( long item1, long item2, long sortData )
-{
-	map_infos info_map = *m_info_map;
-	TorrentInfos& info1 = info_map[item1];
-	TorrentInfos& info2 = info_map[item2];
-
-	if ( info1.eta < info2.eta )
-		return -1;
-	if ( info1.eta > info2.eta )
-		return 1;
-
-	return 0;
-}
-
-
-
-int wxCALLBACK TorrentListCtrl::CompareEtaDOWN( long item1, long item2, long sortData )
-{
-	map_infos info_map = *m_info_map;
-	TorrentInfos& info1 = info_map[item1];
-	TorrentInfos& info2 = info_map[item2];
-
-	if ( info1.eta < info2.eta )
-		return 1;
-	if ( info1.eta > info2.eta )
-		return -1;
-
-	return 0;
-}
-
-int wxCALLBACK TorrentListCtrl::CompareFileSizeUP( long item1, long item2, long sortData )
-{
-	map_infos info_map = *m_info_map;
-	TorrentInfos& info1 = info_map[item1];
-	TorrentInfos& info2 = info_map[item2];
-
-	if ( info1.filesize < info2.filesize )
-		return -1;
-	if ( info1.filesize > info2.filesize )
-		return 1;
-
-	return 0;
-}
-
-int wxCALLBACK TorrentListCtrl::CompareFileSizeDOWN( long item1, long item2, long sortData )
-{
-	map_infos info_map = *m_info_map;
-	TorrentInfos& info1 = info_map[item1];
-	TorrentInfos& info2 = info_map[item2];
-
-	if ( info1.filesize < info2.filesize )
-		return 1;
-	if ( info1.filesize > info2.filesize )
-		return -1;
-
-	return 0;
-}
 
 void TorrentListCtrl::SetTipWindowText( const long item_hit, const wxPoint position)
 {
@@ -500,6 +159,81 @@ void TorrentListCtrl::SetTipWindowText( const long item_hit, const wxPoint posit
 void TorrentListCtrl::HighlightItem( long item )
 {
 
+}
+
+int TorrentListCtrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir )
+{
+    switch ( col ) {
+        case 0: return dir * u1.name.CmpNoCase( u2.name );
+        case 1: return dir * compareSimple( u1.numcopies, u2.numcopies );
+        case 2: return dir * compareSimple( u1.downloaded, u2.downloaded );
+		case 3: return dir * compareSimple( u1.uploaded, u2.uploaded );
+		case 4: return dir * compareSimple( u1.downloadstatus, u2.downloadstatus );
+		case 5: return dir * compareSimple( u1.progress, u2.progress );
+		case 6: return dir * compareSimple( u1.outspeed, u2.outspeed );
+		case 7: return dir * compareSimple( u1.inspeed, u2.inspeed );
+		case 8: return dir * compareSimple( u1.eta, u2.eta );
+		case 9: return dir * compareSimple( u1.filesize, u2.filesize );
+        default: return 0;
+    }
+}
+
+int TorrentListCtrl::GetItemColumnImage(long item, long column) const
+{
+    return -1;
+}
+
+int TorrentListCtrl::GetItemImage(long item) const
+{
+    return -1;
+}
+
+
+wxString TorrentListCtrl::GetItemText(long item, long column) const
+{
+
+    if ( item > m_data.size() || item < 0 )
+        return wxEmptyString;
+
+	float kfactor = 1/float(1024);
+	float mfactor = 1/float(1024*1024);
+
+	const TorrentInfos& infos = m_data[item];
+
+	switch ( column ) {
+        default: return wxEmptyString;
+        case 0: return infos.name;
+        case 1: return infos.numcopies > 0 ? wxString::Format(_T("%.2f"), infos.numcopies ) : _("not available");
+        case 2: return wxString::Format(_T("%.2f"), infos.downloaded*mfactor );
+        case 3: return wxString::Format(_T("%.2f"), infos.uploaded*mfactor );
+		case 4:
+			if(infos.downloadstatus == P2P::seeding) return _("seeding");
+			else if(infos.downloadstatus == P2P::leeching) return _("leeching");
+			else if(infos.downloadstatus == P2P::queued) return _("queued");
+			else return wxEmptyString;
+		case 5: return wxString::Format(_T("%.2f"), infos.progress * 100 );
+		case 6: return wxString::Format(_T("%.2f"), infos.outspeed*kfactor );
+		case 7: return wxString::Format(_T("%.2f"), infos.inspeed*kfactor );
+		case 8: return infos.eta > -1 ? wxTimeSpan::Seconds(infos.eta).Format("%H:%M:%S") : _T("inf.") ;
+		case 9: return wxString::Format(_T("%.2f"), infos.filesize*mfactor);
+	}
+}
+
+int TorrentListCtrl::GetIndexFromData( const DataType& data ) const
+{
+    DataCIter it = m_data.begin();
+    for ( int i = 0; it != m_data.end(); ++it , ++i) {
+        if ( it->hash == data.hash )
+            return i;
+    }
+    return -1;
+}
+
+bool TorrentListCtrl::IsTorrentActive(const DataType& info)
+{
+	 return (info.downloadstatus == P2P::seeding 
+		  || info.downloadstatus == P2P::leeching 
+		  || info.downloadstatus == P2P::queued);
 }
 
 #endif

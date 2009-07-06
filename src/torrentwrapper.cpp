@@ -732,6 +732,12 @@ std::map<int,TorrentInfos> TorrentWrapper::CollectGuiInfos()
             CurrentTorrent.numcopies = s.distributed_copies;
             CurrentTorrent.filesize = i->get_torrent_info().total_size();
 
+			int eta_seconds = -1;
+			if ( CurrentTorrent.progress > 0 && CurrentTorrent.inspeed > 0)
+				eta_seconds = int (  (CurrentTorrent.filesize - CurrentTorrent.downloaded ) / CurrentTorrent.inspeed );
+
+			CurrentTorrent.eta = eta_seconds;
+
             TorrentTable::PRow row=GetTorrentTable().RowByHandle(*i);
             if (!row.ok()) continue;
             CurrentTorrent.hash=row->hash;

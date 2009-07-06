@@ -60,9 +60,9 @@ class MainTorrentTab: public wxScrolledWindow
         };
 
         map_infos info_map;
-        void AddTorrentInfo(  TorrentInfos& info );
+        void AddTorrentInfo( TorrentInfos& info );
+		void RemoveTorrentInfo( TorrentInfos& info );
         void UpdateInfo(  TorrentInfos& info );
-        void SetInfo(int index,  TorrentInfos& info );
         void OnCancelButton( wxCommandEvent& event );
         void OnDownloadDialog( wxCommandEvent& event );
         void OnDLWidgets( wxCommandEvent& event );
