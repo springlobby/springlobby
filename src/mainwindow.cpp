@@ -280,7 +280,6 @@ void MainWindow::OnClose( wxCloseEvent& evt )
   sett().SetWindowPos( name, GetPosition() );
 
   m_ui.Quit();
-  m_ui.OnMainWindowDestruct();
   forceSettingsFrameClose();
   freeStaticBox();
 
@@ -603,17 +602,6 @@ void MainWindow::OnTabsChanged( wxAuiNotebookEvent& event )
   {
     if ( !m_ui.IsConnected() && m_ui.IsMainWindowCreated() ) m_ui.Connect();
   }
-}
-
-void MainWindow::OnUnitSyncReloaded()
-{
-  wxLogDebugFunc( _T("") );
-  wxLogMessage( _T("Reloading join tab") );
-
-  wxLogMessage( _T("Join tab updated") );
-  wxLogMessage( _T("Reloading Singleplayer tab") );
-  GetSPTab().OnUnitSyncReloaded();
-  wxLogMessage( _T("Singleplayer tab updated") );
 }
 
 void MainWindow::OnShowSettingsPP( wxCommandEvent& event )

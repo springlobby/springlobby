@@ -26,7 +26,6 @@ class AddBotDialog : public wxDialog
     wxString GetAIVersion();
     int GetAIType();
 
-    void ReloadAIList();
     void ShowAIInfo();
 
     void OnClose( wxCommandEvent& event );
@@ -34,6 +33,9 @@ class AddBotDialog : public wxDialog
     void OnSelectBot( wxCommandEvent& event );
 
   protected:
+
+    void ReloadAIList();
+
     wxStaticText* m_nick_lbl;
     wxTextCtrl* m_nick;
     wxStaticText* m_ai_lbl;

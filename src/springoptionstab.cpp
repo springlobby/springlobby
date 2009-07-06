@@ -218,8 +218,6 @@ void SpringOptionsTab::OnApply( wxCommandEvent& event )
     _("SpringLobby is unable to load your UnitSync library.\n\nYou might want to take another look at your unitsync setting."),
     _("Spring error"), wxOK );
   }
-
-  m_ui.mw().OnUnitSyncReloaded();
 }
 
 

@@ -41,8 +41,6 @@ class MainJoinBattleTab : public wxScrolledWindow
 
     void ReloadPresetList();
 
-    void OnUnitSyncReloaded();
-
     void OnConnected();
 
   protected:

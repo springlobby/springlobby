@@ -294,7 +294,6 @@ void Ui::Quit()
 void Ui::ReloadUnitSync()
 {
     usync().ReloadUnitSyncLib();
-    if ( m_main_win != 0 ) mw().OnUnitSyncReloaded();
 }
 
 
@@ -1161,31 +1160,6 @@ void Ui::OnRing( const wxString& from )
 #else
     wxBell();
 #endif
-}
-
-
-void Ui::OnMapInfoCached( const wxString& mapname )
-{
-    if ( m_main_win == 0 ) return;
-    mw().OnUnitSyncReloaded();
-}
-
-
-void Ui::OnMinimapCached( const wxString& mapname )
-{
-    if ( m_main_win == 0 ) return;
-    mw().OnUnitSyncReloaded();
-}
-
-
-void Ui::OnModUnitsCached( const wxString& modname )
-{
-}
-
-void Ui::OnMainWindowDestruct()
-{
-    //this is rather ugly and therefore disabled
-    //m_main_win = 0;
 }
 
 bool Ui::IsThisMe(User& other)

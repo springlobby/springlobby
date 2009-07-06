@@ -190,11 +190,6 @@ void MainJoinBattleTab::BattleUserUpdated( User& user )
 }
 
 
-void MainJoinBattleTab::OnUnitSyncReloaded()
-{
-    assert (false );
-}
-
 void MainJoinBattleTab::OnConnected()
 {
     if ( m_list_tab ) {

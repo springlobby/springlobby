@@ -105,7 +105,7 @@ struct BattleOptions
 	bool guilistactiv;
 };
 
-class IBattle: public UserList, public wxEvtHandler
+class IBattle: public UserList, public wxEvtHandler, public UnitsyncReloadedSink< IBattle >
 {
 public:
 
