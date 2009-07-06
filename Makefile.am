@@ -908,8 +908,8 @@ springlobby_SOURCES = \
 	src/autobalancedialog.h \
 	src/tdfcontainer.cpp \
 	src/tdfcontainer.h \
-	src/globalevents.h \
-	src/globalevents.cpp \
+	src/globaleventshandler.h \
+	src/globaleventshandler.cpp \
 	src/httpdownloader.h \
 	src/Helper/TextCompletionDatabase.hpp \
 	src/Helper/TextCompletionDatabase.cpp \

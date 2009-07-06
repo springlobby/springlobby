@@ -232,7 +232,7 @@ SET(SpringLobbySrc
 	src/filelister/filelistdialog.cpp
 	src/filelister/filelistfilter.cpp
 	src/aui/auimanager.cpp
-        src/aui/artprovider.cpp
+	src/aui/artprovider.cpp
 	src/autobalancedialog.cpp
 	src/autohost.cpp
 	src/channel/autojoinchanneldialog.cpp
@@ -260,7 +260,7 @@ SET(SpringLobbySrc
 	src/crashreport.cpp
 	src/customlistctrl.cpp
 	src/flagimages.cpp
-	src/globalevents.cpp
+	src/globaleventshandler.cpp
 	src/groupoptionspanel.cpp
 	src/hostbattledialog.cpp
 	src/ibattle.cpp
