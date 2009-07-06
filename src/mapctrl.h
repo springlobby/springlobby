@@ -62,7 +62,7 @@ class MapCtrl : public wxPanel
 
 
   public:
-    MapCtrl( wxWindow* parent, int size, IBattle* battle, Ui& ui, bool readonly, bool fixed_size, bool draw_start_types, bool singleplayer );
+    MapCtrl( wxWindow* parent, int size, IBattle* battle, bool readonly, bool fixed_size, bool draw_start_types, bool singleplayer );
     ~MapCtrl();
 
     void SetBattle( IBattle* battle );
@@ -163,7 +163,6 @@ class MapCtrl : public wxPanel
 
     IBattle* m_battle;
 
-    Ui& m_ui;
     wxString m_mapname;
 
     bool m_draw_start_types;

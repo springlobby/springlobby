@@ -19,7 +19,7 @@ class wxNotebook;
 class MainJoinBattleTab : public wxScrolledWindow
 {
   public:
-    MainJoinBattleTab( wxWindow* parent, Ui& ui );
+    MainJoinBattleTab( wxWindow* parent );
      ~MainJoinBattleTab();
 
     BattleListTab& GetBattleListTab();
@@ -56,7 +56,6 @@ class MainJoinBattleTab : public wxScrolledWindow
     BattleMapTab* m_map_tab;
     BattleOptionsTab* m_opts_tab;
     BattleroomMMOptionsTab<Battle>* m_mm_opts_tab;
-    Ui& m_ui;
 
     enum {
         BATTLE_TABS = wxID_HIGHEST

@@ -29,7 +29,7 @@ class BattleListTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 {
   friend class BattleListFilter;
   public:
-    BattleListTab( wxWindow* parent, Ui& ui );
+    BattleListTab( wxWindow* parent );
      ~BattleListTab();
 
     void AddBattle( IBattle& battle );
@@ -94,8 +94,6 @@ class BattleListTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 		wxCheckBox* m_filter_show;
 		wxCheckBox* m_info_show;
 #endif
-
-    Ui& m_ui;
 
     IBattle* m_sel_battle;
 

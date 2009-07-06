@@ -22,7 +22,7 @@ typedef std::map<int,TorrentInfos> map_infos;
 class TorrentListCtrl : public CustomListCtrl
 {
   public:
-    TorrentListCtrl( wxWindow* parent, Ui& ui );
+    TorrentListCtrl( wxWindow* parent );
     ~TorrentListCtrl();
 
     void Sort();

@@ -27,7 +27,7 @@ class MapSelectDialog: public wxDialog
 {
 	public:
 
-		MapSelectDialog( wxWindow* parent, Ui& ui );
+		MapSelectDialog( wxWindow* parent );
 		virtual ~MapSelectDialog();
 
 		UnitSyncMap* GetSelectedMap() const;
@@ -87,7 +87,6 @@ class MapSelectDialog: public wxDialog
 		void LoadPopular();
 		void LoadRecent();
 
-		Ui& m_ui;
 		bool m_horizontal_direction;
 		bool m_vertical_direction;
 		wxArrayString m_maps;

@@ -24,7 +24,7 @@ class SinglePlayerTab: public  wxScrolledWindow , public UnitsyncReloadedSink< S
 {
   public:
 
-    SinglePlayerTab( wxWindow* parent, Ui& ui, MainSinglePlayerTab& msptab );
+    SinglePlayerTab( wxWindow* parent, MainSinglePlayerTab& msptab );
     ~SinglePlayerTab();
 
     void UpdateMinimap();
@@ -55,7 +55,6 @@ class SinglePlayerTab: public  wxScrolledWindow , public UnitsyncReloadedSink< S
 
   protected:
 
-    Ui& m_ui;
     SinglePlayerBattle m_battle;
 
     MapCtrl* m_minimap;

@@ -23,7 +23,7 @@ class Channel : public UserList
     UiChannelData uidata;
 
     //Channel(): m_serv(0),m_userdata(0) {}
-    Channel( Server& serv, Ui& ui ): m_serv(serv),m_ui(ui),m_do_ban_regex(false), m_do_unban_regex(false) {}
+    Channel( Server& serv );
     virtual ~Channel();
 
     Server& GetServer() { return m_serv; }
@@ -61,8 +61,6 @@ class Channel : public UserList
 
   protected:
     Server& m_serv;
-
-    Ui& m_ui;
 
     std::set<wxString> m_banned_users;
 

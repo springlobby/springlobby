@@ -15,7 +15,6 @@
 #include "battleoptionstab.h"
 #include "mainsingleplayertab.h"
 #include "battleroommmoptionstab.h"
-#include "ui.h"
 #include "utils/debug.h"
 #include "utils/conversion.h"
 
@@ -23,9 +22,8 @@
 #include "images/battle_settings.xpm"
 
 
-MainSinglePlayerTab::MainSinglePlayerTab( wxWindow* parent, Ui& ui ):
-wxScrolledWindow( parent, -1 ),
-m_ui(ui)
+MainSinglePlayerTab::MainSinglePlayerTab( wxWindow* parent )
+    : wxScrolledWindow( parent, -1 )
 {
   m_main_sizer = new wxBoxSizer( wxVERTICAL );
   GetAui().manager->AddPane( this, wxLEFT, _T("mainsingleplayertab") );
@@ -36,11 +34,11 @@ m_ui(ui)
   m_imagelist->Add( wxIcon(battle_xpm) );
   m_imagelist->Add( wxIcon(battle_settings_xpm) );
 
-  m_sp_tab = new SinglePlayerTab( m_tabs, m_ui, *this );
+  m_sp_tab = new SinglePlayerTab( m_tabs, *this );
   m_tabs->AddPage( m_sp_tab, _("Game"), true, 0 );
   m_mm_opts_tab = new BattleroomMMOptionsTab<SinglePlayerBattle>( m_sp_tab->GetBattle(), m_tabs);
   m_tabs->InsertPage( 1, m_mm_opts_tab, _("Options"), false, wxIcon(battle_settings_xpm) );
-  m_opts_tab = new BattleOptionsTab( m_tabs, m_ui, m_sp_tab->GetBattle() );
+  m_opts_tab = new BattleOptionsTab( m_tabs, m_sp_tab->GetBattle() );
   m_tabs->InsertPage( 2, m_opts_tab, _("Unit Restrictions"), false, wxIcon(battle_settings_xpm) );
 
   m_main_sizer->Add( m_tabs, 1, wxEXPAND );

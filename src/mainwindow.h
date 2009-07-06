@@ -50,7 +50,7 @@ class SavegameTab;
 class MainWindow : public wxFrame
 {
   public:
-    MainWindow( Ui& ui );
+    MainWindow( );
     virtual ~MainWindow();
 
     typedef PlaybackTab<ReplayTraits>
@@ -117,8 +117,6 @@ class MainWindow : public wxFrame
     void SetLogWin( wxLogWindow* log, wxLogChain* logchain );
 
   protected:
-    // MainWindow variables
-    Ui& m_ui;
 
     wxMenuItem* m_settings_menu;
     wxMenuBar* m_menubar;

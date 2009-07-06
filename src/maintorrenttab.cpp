@@ -18,7 +18,6 @@
 
 #include "torrentlistctrl.h"
 #include "torrentwrapper.h"
-#include "ui.h"
 #include "utils/conversion.h"
 #include "Helper/colorbutton.h"
 #include "filelister/filelistdialog.h"
@@ -33,10 +32,9 @@ BEGIN_EVENT_TABLE(MainTorrentTab,wxPanel)
   EVT_BUTTON      ( ID_BUTTON_WIDGETS, MainTorrentTab::OnDLWidgets )
 END_EVENT_TABLE()
 
-MainTorrentTab::MainTorrentTab(wxWindow* parent, Ui& ui)
+MainTorrentTab::MainTorrentTab(wxWindow* parent )
     : wxScrolledWindow(parent),
-    m_widgets_dialog(NULL),
-    m_ui(ui)
+    m_widgets_dialog(NULL)
 {
     GetAui().manager->AddPane( this, wxLEFT, _T("maintorrenttab") );
 
@@ -50,7 +48,7 @@ MainTorrentTab::MainTorrentTab(wxWindow* parent, Ui& ui)
 
     wxStaticText* m_list_lbl = new wxStaticText( this, ID_OUTGOING_LBL, _("Transfers in progress: ") );
     m_listbox->Add(m_list_lbl, 0, wxALL, 5);
-	m_torrent_list = new TorrentListCtrl(this, m_ui);
+	m_torrent_list = new TorrentListCtrl(this);
 	m_listbox->Add( m_torrent_list, 2, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL, 5);
 	m_mainbox->Add(m_listbox, 2, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL, 0);
 

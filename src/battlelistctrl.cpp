@@ -32,12 +32,11 @@ BEGIN_EVENT_TABLE(BattleListCtrl, BattleListCtrl::BaseType )
 #endif
 END_EVENT_TABLE()
 
-BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui )
+BattleListCtrl::BattleListCtrl( wxWindow* parent )
     : CustomVirtListCtrl< IBattle *,BattleListCtrl>(parent, BLIST_LIST, wxDefaultPosition, wxDefaultSize,
             wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("BattleListCtrl"), 10, 4, &CompareOneCrit,
             true /*highlight*/, UserActions::ActHighlight, true /*periodic sort*/ ),
-    m_popup( 0 ),
-    m_ui(ui)
+    m_popup( 0 )
 {
     GetAui().manager->AddPane( this, wxLEFT, _T("battlelistctrl") );
 
@@ -204,7 +203,7 @@ void BattleListCtrl::OnDLMap( wxCommandEvent& event )
 {
     if ( m_selected_index > 0 &&  (long)m_data.size() > m_selected_index ) {
         DataType dt = m_data[m_selected_index];
-        m_ui.DownloadMap( dt->GetHostMapHash(), dt->GetHostMapName() );
+        ui().DownloadMap( dt->GetHostMapHash(), dt->GetHostMapName() );
     }
 }
 
@@ -212,7 +211,7 @@ void BattleListCtrl::OnDLMod( wxCommandEvent& event )
 {
     if ( m_selected_index > 0 &&  (long)m_data.size() > m_selected_index ) {
         DataType dt = m_data[m_selected_index];
-        m_ui.DownloadMod( dt->GetHostModHash(), dt->GetHostModName() );
+        ui().DownloadMod( dt->GetHostModHash(), dt->GetHostModName() );
     }
 }
 

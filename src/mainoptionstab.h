@@ -25,7 +25,7 @@ class LobbyOptionsTab;
 class MainOptionsTab : public wxScrolledWindow
 {
 public:
-    MainOptionsTab( wxWindow* parent, Ui& ui );
+    MainOptionsTab( wxWindow* parent );
     ~MainOptionsTab();
 
     /** \brief delegate the data setting to memeber panels */
@@ -54,8 +54,6 @@ protected:
     wxButton* m_apply_btn;
 
     wxBoxSizer* m_button_sizer;
-
-    Ui& m_ui;
 
     enum {
         OPTIONS_TABS = wxID_HIGHEST,

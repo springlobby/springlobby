@@ -37,8 +37,8 @@ BEGIN_EVENT_TABLE(MainChatTab, wxPanel)
 END_EVENT_TABLE()
 
 
-MainChatTab::MainChatTab( wxWindow* parent, Ui& ui )
-: wxScrolledWindow( parent, -1, wxDefaultPosition, wxDefaultSize, 0, wxPanelNameStr ),m_ui(ui)
+MainChatTab::MainChatTab( wxWindow* parent )
+: wxScrolledWindow( parent, -1, wxDefaultPosition, wxDefaultSize, 0, wxPanelNameStr )
 {
   GetAui().manager->AddPane( this, wxLEFT, _T("mainchattab") );
 
@@ -186,15 +186,15 @@ void MainChatTab::RejoinChannels()
       catch (...) {}
       if ( !alreadyin )
       {
-          m_ui.GetServer().JoinChannel( name, _T("") );
-          tmp->SetChannel( &m_ui.GetServer().GetChannel( name ) );
+          ui().GetServer().JoinChannel( name, _T("") );
+          tmp->SetChannel( &ui().GetServer().GetChannel( name ) );
 			}
 
     } else if (tmp->GetPanelType() == CPT_User )
     {
 
       wxString name = m_chat_tabs->GetPageText(i);
-      if ( m_ui.GetServer().UserExists( name ) ) tmp->SetUser( &m_ui.GetServer().GetUser( name ) );
+      if ( ui().GetServer().UserExists( name ) ) tmp->SetUser( &ui().GetServer().GetUser( name ) );
 
     }
   }
@@ -215,7 +215,7 @@ ChatPanel* MainChatTab::AddChatPanel( Channel& channel )
     }
   }
 
-  ChatPanel* chat = new ChatPanel( m_chat_tabs, m_ui, channel, m_imagelist );
+  ChatPanel* chat = new ChatPanel( m_chat_tabs,  channel, m_imagelist );
   m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, channel.GetName(), true, wxBitmap(channel_xpm) );
   chat->FocusInputBox();
   return chat;
@@ -235,7 +235,7 @@ ChatPanel* MainChatTab::AddChatPanel( Server& server, const wxString& name )
     }
   }
 
-  ChatPanel* chat = new ChatPanel( m_chat_tabs, m_ui, server, m_imagelist );
+  ChatPanel* chat = new ChatPanel( m_chat_tabs,  server, m_imagelist );
   m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, name, true, wxBitmap(server_xpm) );
   return chat;
 }
@@ -253,7 +253,7 @@ ChatPanel* MainChatTab::AddChatPanel( const User& user )
     }
   }
 	int selection = m_chat_tabs->GetSelection();
-  ChatPanel* chat = new ChatPanel( m_chat_tabs, m_ui, user, m_imagelist );
+  ChatPanel* chat = new ChatPanel( m_chat_tabs,  user, m_imagelist );
   m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, user.GetNick(), true, wxBitmap(userchat_xpm) );
   if ( selection > 0 ) m_chat_tabs->SetSelection( selection );
   return chat;

@@ -65,7 +65,7 @@ Ui::Ui() :
         m_first_update_trigger(true),
         m_ingame(false)
 {
-    m_main_win = new MainWindow( *this );
+    m_main_win = new MainWindow( );
     CustomMessageBoxBase::setLobbypointer(m_main_win);
     m_serv = new TASServer();
 }

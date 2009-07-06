@@ -15,7 +15,7 @@ class BattleOptionsTab;
 class MainSinglePlayerTab : public wxScrolledWindow
 {
   public:
-    MainSinglePlayerTab( wxWindow* parent, Ui& ui );
+    MainSinglePlayerTab( wxWindow* parent );
     ~MainSinglePlayerTab();
 
     void UpdateMinimap();
@@ -32,8 +32,6 @@ class MainSinglePlayerTab : public wxScrolledWindow
     BattleroomMMOptionsTab<SinglePlayerBattle>& GetMMOptionsTab();
 
   protected:
-
-    Ui& m_ui;
 
     wxBoxSizer* m_main_sizer;
     wxImageList* m_imagelist;

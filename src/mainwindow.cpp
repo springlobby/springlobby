@@ -112,9 +112,8 @@ END_EVENT_TABLE()
 
 MainWindow::TabNames MainWindow::m_tab_names;
 
-MainWindow::MainWindow( Ui& ui )
+MainWindow::MainWindow( )
     : wxFrame( (wxFrame*)0, -1, _("SpringLobby"), wxPoint(50, 50), wxSize(450, 340) ),
-    m_ui(ui),
     m_autojoin_dialog(NULL),
     m_channel_chooser(NULL),
     m_log_win(NULL)
@@ -183,15 +182,15 @@ MainWindow::MainWindow( Ui& ui )
   m_func_tabs->SetArtProvider(new SLArtProvider);
 
 
-  m_chat_tab = new MainChatTab( m_func_tabs, m_ui );
-  m_join_tab = new MainJoinBattleTab( m_func_tabs, m_ui );
-  m_sp_tab = new MainSinglePlayerTab( m_func_tabs, m_ui );
-  m_replay_tab = new ReplayTab ( m_func_tabs, m_ui );
-  m_savegame_tab = new SavegameTab( m_func_tabs, m_ui );
+  m_chat_tab = new MainChatTab( m_func_tabs );
+  m_join_tab = new MainJoinBattleTab( m_func_tabs );
+  m_sp_tab = new MainSinglePlayerTab( m_func_tabs );
+  m_replay_tab = new ReplayTab ( m_func_tabs );
+  m_savegame_tab = new SavegameTab( m_func_tabs );
 #ifndef NO_TORRENT_SYSTEM
-  m_torrent_tab = new MainTorrentTab( m_func_tabs, m_ui);
+  m_torrent_tab = new MainTorrentTab( m_func_tabs);
 #endif
-  m_opts_tab = new MainOptionsTab( m_func_tabs, m_ui );
+  m_opts_tab = new MainOptionsTab( m_func_tabs );
 
     m_func_tabs->AddPage( m_chat_tab,     m_tab_names[0], true  );
     m_func_tabs->AddPage( m_join_tab,     m_tab_names[1], false );
@@ -279,7 +278,7 @@ void MainWindow::OnClose( wxCloseEvent& evt )
   sett().SetWindowSize( name, GetSize() );
   sett().SetWindowPos( name, GetPosition() );
 
-  m_ui.Quit();
+  ui().Quit();
   forceSettingsFrameClose();
   freeStaticBox();
 
@@ -326,7 +325,7 @@ void DrawBmpOnBmp( wxBitmap& canvas, wxBitmap& object, int x, int y )
 //! @brief Get the ChatPanel dedicated to server output and input
 ChatPanel& servwin()
 {
-  return m_ui.mw().GetChatTab().ServerChat();
+  return ui().mw().GetChatTab().ServerChat();
 }
 */
 
@@ -456,10 +455,10 @@ void MainWindow::ShowChannelChooser()
 void MainWindow::OnMenuJoin( wxCommandEvent& event )
 {
 
-  if ( !m_ui.IsConnected() ) return;
+  if ( !ui().IsConnected() ) return;
   wxString answer;
-  if ( m_ui.AskText( _("Join channel..."), _("Name of channel to join"), answer ) ) {
-    m_ui.JoinChannel( answer, _T("") );
+  if ( ui().AskText( _("Join channel..."), _("Name of channel to join"), answer ) ) {
+    ui().JoinChannel( answer, _T("") );
   }
 
 }
@@ -468,12 +467,12 @@ void MainWindow::OnMenuJoin( wxCommandEvent& event )
 void MainWindow::OnMenuChat( wxCommandEvent& event )
 {
 
-  if ( !m_ui.IsConnected() ) return;
+  if ( !ui().IsConnected() ) return;
   wxString answer;
-  if ( m_ui.AskText( _("Open Private Chat..."), _("Name of user"), answer ) ) {
-    if (m_ui.GetServer().UserExists( answer ) ) {
+  if ( ui().AskText( _("Open Private Chat..."), _("Name of user"), answer ) ) {
+    if (ui().GetServer().UserExists( answer ) ) {
         //true puts focus on new tab
-      OpenPrivateChat( m_ui.GetServer().GetUser( answer ), true  );
+      OpenPrivateChat( ui().GetServer().GetUser( answer ), true  );
     }
   }
 
@@ -504,13 +503,13 @@ void MainWindow::OnMenuAbout( wxCommandEvent& event )
 
 void MainWindow::OnMenuConnect( wxCommandEvent& event )
 {
-  m_ui.ShowConnectWindow();
+  ui().ShowConnectWindow();
 }
 
 
 void MainWindow::OnMenuDisconnect( wxCommandEvent& event )
 {
-  m_ui.Disconnect();
+  ui().Disconnect();
 }
 
 void MainWindow::OnMenuSaveOptions( wxCommandEvent& event )
@@ -531,7 +530,7 @@ void MainWindow::OnMenuVersion( wxCommandEvent& event )
 
 void MainWindow::OnUnitSyncReload( wxCommandEvent& event )
 {
-    m_ui.ReloadUnitSync();
+    ui().ReloadUnitSync();
 }
 
 void MainWindow::OnShowScreenshots( wxCommandEvent& event )
@@ -583,15 +582,15 @@ void MainWindow::OnMenuOpen( wxMenuEvent& event )
 void MainWindow::OnReportBug( wxCommandEvent& event )
 {
     wxString reporter = wxEmptyString;
-    if (m_ui.IsConnected() )
-        reporter = _T("?reporter=") + m_ui.GetServer().GetMe().GetNick();
-  m_ui.OpenWebBrowser( _T("http://trac.springlobby.info/newticket") + reporter);
+    if (ui().IsConnected() )
+        reporter = _T("?reporter=") + ui().GetServer().GetMe().GetNick();
+  ui().OpenWebBrowser( _T("http://trac.springlobby.info/newticket") + reporter);
 }
 
 
 void MainWindow::OnShowDocs( wxCommandEvent& event )
 {
-  m_ui.OpenWebBrowser( _T("http://springlobby.info") );
+  ui().OpenWebBrowser( _T("http://springlobby.info") );
 }
 
 void MainWindow::OnTabsChanged( wxAuiNotebookEvent& event )
@@ -600,7 +599,7 @@ void MainWindow::OnTabsChanged( wxAuiNotebookEvent& event )
 
   if ( newsel == 0 || newsel == 1 )
   {
-    if ( !m_ui.IsConnected() && m_ui.IsMainWindowCreated() ) m_ui.Connect();
+    if ( !ui().IsConnected() && ui().IsMainWindowCreated() ) ui().Connect();
   }
 }
 

@@ -16,7 +16,7 @@ class SingleOptionDialog: public wxDialog
 {
 
 	public:
-			SingleOptionDialog( Battle& battle, const wxString& optiontag );
+			SingleOptionDialog( wxWindow* parent, Battle& battle, const wxString& optiontag );
 
 			void OnOk(wxCommandEvent& event);
 			void OnCancel(wxCommandEvent& event);

@@ -137,12 +137,11 @@ static wxColor m_irc_colors[9]  =
 	wxColor(61,204,61)
 };
 
-ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Channel& chan, wxImageList* imaglist ):
+ChatPanel::ChatPanel( wxWindow* parent, Channel& chan, wxImageList* imaglist ):
   wxPanel( parent, -1 ),
   m_show_nick_list( true ),
   m_nicklist(0),
   m_chat_tabs(( wxAuiNotebook* )parent ),
-  m_ui( ui ),
   m_channel( &chan ),
   m_server( 0 ),
   m_user( 0 ),
@@ -165,12 +164,11 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Channel& chan, wxImageList* imag
 }
 
 
-ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, const User& user, wxImageList* imaglist  ):
+ChatPanel::ChatPanel( wxWindow* parent, const User& user, wxImageList* imaglist  ):
   wxPanel( parent, -1 ),
   m_show_nick_list( false ),
   m_nicklist(0),
   m_chat_tabs(( wxAuiNotebook* )parent ),
-  m_ui( ui ),
   m_channel( 0 ),
   m_server( 0 ),
   m_user( &user ),
@@ -191,12 +189,11 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, const User& user, wxImageList* i
 }
 
 
-ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Server& serv, wxImageList* imaglist  ):
+ChatPanel::ChatPanel( wxWindow* parent, Server& serv, wxImageList* imaglist  ):
   wxPanel( parent, -1 ),
   m_show_nick_list( false ),
   m_nicklist(0),
   m_chat_tabs(( wxAuiNotebook* )parent ),
-  m_ui( ui ),
   m_channel( 0 ),
   m_server( &serv ),
   m_user( 0 ),
@@ -219,12 +216,11 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Server& serv, wxImageList* imagl
 }
 
 
-ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Battle& battle ):
+ChatPanel::ChatPanel( wxWindow* parent, Battle& battle ):
   wxPanel( parent, -1 ),
   m_show_nick_list( false ),
   m_nicklist( 0 ),
   m_chat_tabs( 0 ),
-  m_ui( ui ),
   m_channel( 0 ),
   m_server( 0 ),
   m_user( 0 ),
@@ -594,7 +590,7 @@ const User* ChatPanel::GetSelectedUser() const
 
 const User& ChatPanel::GetMe()  const
 {
-	return m_ui.GetServer().GetMe();
+	return ui().GetServer().GetMe();
 }
 
 void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const wxFont& fon )
@@ -708,7 +704,7 @@ void ChatPanel::OnLinkEvent( wxTextUrlEvent& event )
         return;
 
     wxString url = m_chatlog_text->GetRange( event.GetURLStart(), event.GetURLEnd());
-    m_ui.OpenWebBrowser( url );
+    ui().OpenWebBrowser( url );
 }
 
 void ChatPanel::OnUserMenuCopyLink( wxCommandEvent& event )
@@ -801,9 +797,9 @@ void ChatPanel::Said( const wxString& who, const wxString& message )
 
 
 	if ( req_user ) {
-     m_ui.mw().RequestUserAttention();
+     ui().mw().RequestUserAttention();
      #ifndef DISABLE_SOUND
-     if ( sett().GetChatPMSoundNotificationEnabled() && ( m_ui.GetActiveChatPanel() != this  || !wxTheApp->IsActive() ) )
+     if ( sett().GetChatPMSoundNotificationEnabled() && ( ui().GetActiveChatPanel() != this  || !wxTheApp->IsActive() ) )
         sound().pm();
      #endif
 	}
@@ -1105,7 +1101,7 @@ void ChatPanel::Say( const wxString& message )
 		wxLogMessage( _T( "line: %s" ), line.c_str() );
 
 		if ( line.Find( '/' ) == 0 ) {
-			if ( m_ui.ExecuteSayCommand( line ) ) return;
+			if ( ui().ExecuteSayCommand( line ) ) return;
 		}
 
 		if ( line == _T( "/ver" ) ) {
@@ -1276,7 +1272,7 @@ void ChatPanel::OnChannelMenuInfo( wxCommandEvent& event )
 {
 	if ( m_channel == 0 ) return;
 	if ( !m_channel->UserExists( _T( "ChanServ" ) ) ) {
-		m_ui.ShowMessage( _( "ChanServ error" ), _( "ChanServ is not in this channel." ) );
+		ui().ShowMessage( _( "ChanServ error" ), _( "ChanServ is not in this channel." ) );
 		return;
 	}
 	User& cs = m_channel->GetUser( _T( "ChanServ" ) );
@@ -1290,13 +1286,13 @@ void ChatPanel::OnChannelMenuTopic( wxCommandEvent& event )
 {
 	if ( m_channel == 0 ) return;
 	if ( !m_channel->UserExists( _T( "ChanServ" ) ) ) {
-		m_ui.ShowMessage( _( "ChanServ error" ), _( "ChanServ is not in this channel." ) );
+		ui().ShowMessage( _( "ChanServ error" ), _( "ChanServ is not in this channel." ) );
 		return;
 	}
 	User& cs = m_channel->GetUser( _T( "ChanServ" ) );
 
 	wxString topic = m_channel->GetTopic();
-	if ( !m_ui.AskText( _( "Set topic..." ), _( "What should be the new topic?" ), topic, wxOK | wxCANCEL | wxCENTRE | wxTE_MULTILINE ) ) return;
+	if ( !ui().AskText( _( "Set topic..." ), _( "What should be the new topic?" ), topic, wxOK | wxCANCEL | wxCENTRE | wxTE_MULTILINE ) ) return;
 	topic.Replace( _T("\n"), _T("\\n") );
 	cs.Say( _T( "!TOPIC #" ) + m_channel->GetName() + _T( " " ) + topic );
 	//TOPIC /<channame>/ {topic}
@@ -1307,13 +1303,13 @@ void ChatPanel::OnChannelMenuMessage( wxCommandEvent& event )
 {
 	if ( m_channel == 0 ) return;
 	if ( !m_channel->UserExists( _T( "ChanServ" ) ) ) {
-		m_ui.ShowMessage( _( "ChanServ error" ), _( "ChanServ is not in this channel." ) );
+		ui().ShowMessage( _( "ChanServ error" ), _( "ChanServ is not in this channel." ) );
 		return;
 	}
 	User& cs = m_channel->GetUser( _T( "ChanServ" ) );
 
 	wxString text;
-if ( !m_ui.AskText( _( "Channel message..." ), _( "Message:" ), text ) ) return;
+if ( !ui().AskText( _( "Channel message..." ), _( "Message:" ), text ) ) return;
 
 	cs.Say( _T( "!CHANMSG #" ) + m_channel->GetName() + _T( " " ) + text );
 	//CHANMSG /<channame>/ {message}
@@ -1324,13 +1320,13 @@ void ChatPanel::OnChannelMenuLock( wxCommandEvent& event )
 {
 	if ( m_channel == 0 ) return;
 	if ( !m_channel->UserExists( _T( "ChanServ" ) ) ) {
-		m_ui.ShowMessage( _( "ChanServ error" ), _( "ChanServ is not in this channel." ) );
+		ui().ShowMessage( _( "ChanServ error" ), _( "ChanServ is not in this channel." ) );
 		return;
 	}
 	User& cs = m_channel->GetUser( _T( "ChanServ" ) );
 
 	wxString text;
-	if ( !m_ui.AskText( _( "Lock channel..." ), _( "What should the new password be?" ), text ) ) return;
+	if ( !ui().AskText( _( "Lock channel..." ), _( "What should the new password be?" ), text ) ) return;
 
 	cs.Say( _T( "!LOCK #" ) + m_channel->GetName() + _T( " " ) + text );
 	//LOCK /<channame>/ <key>
@@ -1341,12 +1337,12 @@ void ChatPanel::OnChannelMenuUnlock( wxCommandEvent& event )
 {
 	if ( m_channel == 0 ) return;
 	if ( !m_channel->UserExists( _T( "ChanServ" ) ) ) {
-		m_ui.ShowMessage( _( "ChanServ error" ), _( "ChanServ is not in this channel." ) );
+		ui().ShowMessage( _( "ChanServ error" ), _( "ChanServ is not in this channel." ) );
 		return;
 	}
 	User& cs = m_channel->GetUser( _T( "ChanServ" ) );
 
-	if ( !m_ui.Ask( _( "Unlock Channel" ), _( "Are you sure you want to unlock this channel?" ) ) ) return;
+	if ( !ui().Ask( _( "Unlock Channel" ), _( "Are you sure you want to unlock this channel?" ) ) ) return;
 
 	cs.Say( _T( "!UNLOCK #" ) + m_channel->GetName() );
 	//UNLOCK /<channame>/
@@ -1357,13 +1353,13 @@ void ChatPanel::OnChannelMenuRegister( wxCommandEvent& event )
 {
 	if ( m_channel == 0 ) return;
 	if ( !m_channel->GetServer().UserExists( _T( "ChanServ" ) ) ) {
-		m_ui.ShowMessage( _( "ChanServ error" ), _( "ChanServ is not on this server." ) );
+		ui().ShowMessage( _( "ChanServ error" ), _( "ChanServ is not on this server." ) );
 		return;
 	}
 	User& cs = m_channel->GetServer().GetUser( _T( "ChanServ" ) );
 
 	wxString text = m_channel->GetMe().GetNick();
-	if ( !m_ui.AskText( _( "Register Channel" ), _( "Who should be appointed founder of this channel?" ), text ) ) return;
+	if ( !ui().AskText( _( "Register Channel" ), _( "Who should be appointed founder of this channel?" ), text ) ) return;
 
 	cs.Say( _T( "!REGISTER #" ) + m_channel->GetName() + _T( " " ) + text );
 	//REGISTER <channame> <founder>
@@ -1374,12 +1370,12 @@ void ChatPanel::OnChannelMenuUnregister( wxCommandEvent& event )
 {
 	if ( m_channel == 0 ) return;
 	if ( !m_channel->GetServer().UserExists( _T( "ChanServ" ) ) ) {
-		m_ui.ShowMessage( _( "ChanServ error" ), _( "ChanServ is not on this server." ) );
+		ui().ShowMessage( _( "ChanServ error" ), _( "ChanServ is not on this server." ) );
 		return;
 	}
 	User& cs = m_channel->GetServer().GetUser( _T( "ChanServ" ) );
 
-	if ( !m_ui.Ask( _( "Unregister Channel" ), _( "Are you sure you want to unregister this channel?" ) ) ) return;
+	if ( !ui().Ask( _( "Unregister Channel" ), _( "Are you sure you want to unregister this channel?" ) ) ) return;
 
 	cs.Say( _T( "!UNREGISTER #" ) + m_channel->GetName() );
 	//UNREGISTER <channame>
@@ -1390,7 +1386,7 @@ void ChatPanel::OnChannelMenuSpamOn( wxCommandEvent& event )
 {
 	if ( m_channel == 0 ) return;
 	if ( !m_channel->UserExists( _T( "ChanServ" ) ) ) {
-		m_ui.ShowMessage( _( "ChanServ error" ), _( "ChanServ is not in this channel." ) );
+		ui().ShowMessage( _( "ChanServ error" ), _( "ChanServ is not in this channel." ) );
 		return;
 	}
 	User& cs = m_channel->GetUser( _T( "ChanServ" ) );
@@ -1404,7 +1400,7 @@ void ChatPanel::OnChannelMenuSpanOff( wxCommandEvent& event )
 {
 	if ( m_channel == 0 ) return;
 	if ( !m_channel->UserExists( _T( "ChanServ" ) ) ) {
-		m_ui.ShowMessage( _( "ChanServ error" ), _( "ChanServ is not in this channel." ) );
+		ui().ShowMessage( _( "ChanServ error" ), _( "ChanServ is not in this channel." ) );
 		return;
 	}
 	User& cs = m_channel->GetUser( _T( "ChanServ" ) );
@@ -1418,7 +1414,7 @@ void ChatPanel::OnChannelMenuSpamIsOn( wxCommandEvent& event )
 {
 	if ( m_channel == 0 ) return;
 	if ( !m_channel->UserExists( _T( "ChanServ" ) ) ) {
-		m_ui.ShowMessage( _( "ChanServ error" ), _( "ChanServ is not in this channel." ) );
+		ui().ShowMessage( _( "ChanServ error" ), _( "ChanServ is not in this channel." ) );
 		return;
 	}
 	User& cs = m_channel->GetUser( _T( "ChanServ" ) );
@@ -1430,21 +1426,21 @@ void ChatPanel::OnChannelMenuSpamIsOn( wxCommandEvent& event )
 
 void ChatPanel::OnServerMenuDisconnect( wxCommandEvent& event )
 {
-	m_ui.Disconnect();
+	ui().Disconnect();
 }
 
 
 void ChatPanel::OnServerMenuReconnect( wxCommandEvent& event )
 {
-	m_ui.Reconnect();
+	ui().Reconnect();
 }
 
 
 void ChatPanel::OnServerMenuRemove( wxCommandEvent& event )
 {
 	wxString user;
-	if ( !m_ui.AskText( _( "Remove User Acount" ), _( "What user account do you want to remove today?" ), user ) ) return;
-	if ( !m_ui.Ask( _( "Remove Account" ), _( "Are you sure you want to remove the account " ) + user + _T( "?" ) ) ) return;
+	if ( !ui().AskText( _( "Remove User Acount" ), _( "What user account do you want to remove today?" ), user ) ) return;
+	if ( !ui().Ask( _( "Remove Account" ), _( "Are you sure you want to remove the account " ) + user + _T( "?" ) ) ) return;
 	Say( _T( "removeaccount " ) + user );
 }
 
@@ -1452,22 +1448,22 @@ void ChatPanel::OnServerMenuRemove( wxCommandEvent& event )
 void ChatPanel::OnServerMenuChangePassword( wxCommandEvent& event )
 {
 	wxString user, password;
-	if ( !m_ui.AskText( _( "Change User Acount Password" ), _( "What user account do you want to change the password for?" ), user ) ) return;
-	if ( !m_ui.AskPassword( _( "Change User Acount Password" ), _( "What would be the new password?" ), password ) ) return;
+	if ( !ui().AskText( _( "Change User Acount Password" ), _( "What user account do you want to change the password for?" ), user ) ) return;
+	if ( !ui().AskPassword( _( "Change User Acount Password" ), _( "What would be the new password?" ), password ) ) return;
 	Say( _T( "changeaccountpass " ) + user + _T( " " ) + password );
 }
 
 
 void ChatPanel::OnServerMenuSetAccess( wxCommandEvent& event )
 {
-	m_ui.ShowMessage( _( "Error" ), _( "Not Implemented" ) );
+	ui().ShowMessage( _( "Error" ), _( "Not Implemented" ) );
 }
 
 
 void ChatPanel::OnServerMenuBroadcast( wxCommandEvent& event )
 {
 	wxString msg;
-	if ( !m_ui.AskText( _( "Broadcast Message" ), _( "Message to be broadcasted:" ), msg ) ) return;
+	if ( !ui().AskText( _( "Broadcast Message" ), _( "Message to be broadcasted:" ), msg ) ) return;
 	Say( _T( "broadcast " ) + msg );
 }
 
@@ -1477,7 +1473,7 @@ void ChatPanel::OnUserMenuOpenChat( wxCommandEvent& event )
 	const User* user = GetSelectedUser();
 	if ( user == 0 ) return;
 
-	m_ui.mw().OpenPrivateChat( *user );
+	ui().mw().OpenPrivateChat( *user );
 }
 
 
@@ -1496,7 +1492,7 @@ void ChatPanel::OnUserMenuJoinSame( wxCommandEvent& event )
 
 	wxString password;
 	if ( battle->IsPassworded() ) {
-		if ( !m_ui.AskPassword( _( "Battle password" ), _( "This battle is password protected, enter the password." ), password ) ) return;
+		if ( !ui().AskPassword( _( "Battle password" ), _( "This battle is password protected, enter the password." ), password ) ) return;
 	}
 	battle->Join( password );
 }
@@ -1521,12 +1517,12 @@ void ChatPanel::OnUserMenuMute( wxCommandEvent& event )
 {
 	if ( m_channel == 0 ) return;
 	if ( !m_channel->UserExists( _T( "ChanServ" ) ) ) {
-		m_ui.ShowMessage( _( "ChanServ error" ), _( "ChanServ is not in this channel." ) );
+		ui().ShowMessage( _( "ChanServ error" ), _( "ChanServ is not in this channel." ) );
 		return;
 	}
 
 	wxString mutetime = _T( "5" );
-	if ( !m_ui.AskText( _( "Mute User" ), _( "For how many minutes should the user be muted?" ), mutetime ) ) return;
+	if ( !ui().AskText( _( "Mute User" ), _( "For how many minutes should the user be muted?" ), mutetime ) ) return;
 
 	User& cs = m_channel->GetUser( _T( "ChanServ" ) );
 
@@ -1543,7 +1539,7 @@ void ChatPanel::OnUserMenuUnmute( wxCommandEvent& event )
 {
 	if ( m_channel == 0 ) return;
 	if ( !m_channel->UserExists( _T( "ChanServ" ) ) ) {
-		m_ui.ShowMessage( _( "ChanServ error" ), _( "ChanServ is not in this channel." ) );
+		ui().ShowMessage( _( "ChanServ error" ), _( "ChanServ is not in this channel." ) );
 		return;
 	}
 	User& cs = m_channel->GetUser( _T( "ChanServ" ) );
@@ -1560,7 +1556,7 @@ void ChatPanel::OnUserMenuKick( wxCommandEvent& event )
 {
 	if ( m_channel == 0 ) return;
 	if ( !m_channel->UserExists( _T( "ChanServ" ) ) ) {
-		m_ui.ShowMessage( _( "ChanServ error" ), _( "ChanServ is not in this channel." ) );
+		ui().ShowMessage( _( "ChanServ error" ), _( "ChanServ is not in this channel." ) );
 		return;
 	}
 
@@ -1568,7 +1564,7 @@ void ChatPanel::OnUserMenuKick( wxCommandEvent& event )
 	if ( user == 0 ) return;
 
 	wxString msg;
-	if ( !m_ui.AskText( _( "Kick User" ), _( "Reason:" ), msg ) ) return;
+	if ( !ui().AskText( _( "Kick User" ), _( "Reason:" ), msg ) ) return;
 
 	User& cs = m_channel->GetUser( _T( "ChanServ" ) );
 
@@ -1582,7 +1578,7 @@ void ChatPanel::OnUserMenuOp( wxCommandEvent& event )
 {
 	if ( m_channel == 0 ) return;
 	if ( !m_channel->UserExists( _T( "ChanServ" ) ) ) {
-		m_ui.ShowMessage( _( "ChanServ error" ), _( "ChanServ is not in this channel." ) );
+		ui().ShowMessage( _( "ChanServ error" ), _( "ChanServ is not in this channel." ) );
 		return;
 	}
 
@@ -1599,7 +1595,7 @@ void ChatPanel::OnUserMenuDeop( wxCommandEvent& event )
 {
 	if ( m_channel == 0 ) return;
 	if ( !m_channel->UserExists( _T( "ChanServ" ) ) ) {
-		m_ui.ShowMessage( _( "ChanServ error" ), _( "ChanServ is not in this channel." ) );
+		ui().ShowMessage( _( "ChanServ error" ), _( "ChanServ is not in this channel." ) );
 		return;
 	}
 
@@ -1614,86 +1610,86 @@ void ChatPanel::OnUserMenuDeop( wxCommandEvent& event )
 
 void ChatPanel::OnUserMenuModeratorIngame( wxCommandEvent& event )
 {
-	m_ui.GetServer().RequestInGameTime( GetSelectedUser()->GetNick() );
+	ui().GetServer().RequestInGameTime( GetSelectedUser()->GetNick() );
 }
 
 
 void ChatPanel::OnUserMenuModeratorCurrentIP( wxCommandEvent& event )
 {
-	m_ui.GetServer().ModeratorGetIP( GetSelectedUser()->GetNick() );
+	ui().GetServer().ModeratorGetIP( GetSelectedUser()->GetNick() );
 }
 
 
 void ChatPanel::OnUserMenuModeratorKick( wxCommandEvent& event )
 {
 	wxString reason;
-	if ( !m_ui.AskText( _( "Kick user" ), _( "Reason:" ), reason ) ) return;
-	m_ui.GetServer().ModeratorKick( GetSelectedUser()->GetNick(), reason );
+	if ( !ui().AskText( _( "Kick user" ), _( "Reason:" ), reason ) ) return;
+	ui().GetServer().ModeratorKick( GetSelectedUser()->GetNick(), reason );
 }
 
 
 void ChatPanel::OnUserMenuModeratorBan( wxCommandEvent& event )
 {
-	m_ui.ShowMessage( _( "Error" ), _( "Not Implemented" ) );
+	ui().ShowMessage( _( "Error" ), _( "Not Implemented" ) );
 }
 
 
 void ChatPanel::OnUserMenuModeratorUnban( wxCommandEvent& event )
 {
-	m_ui.ShowMessage( _( "Error" ), _( "Not Implemented" ) );
+	ui().ShowMessage( _( "Error" ), _( "Not Implemented" ) );
 }
 
 
 void ChatPanel::OnUserMenuModeratorMute( wxCommandEvent& event )
 {
 	wxString duration;
-	if ( !m_ui.AskText( _( "Mute user" ), _( "Duration:" ), duration ) ) return;
+	if ( !ui().AskText( _( "Mute user" ), _( "Duration:" ), duration ) ) return;
 	long int dur = 0;
 	duration.ToLong( &dur, dur );
-	m_ui.GetServer().ModeratorMute( m_channel->GetName(), GetSelectedUser()->GetNick(), ( int ) dur, true );
+	ui().GetServer().ModeratorMute( m_channel->GetName(), GetSelectedUser()->GetNick(), ( int ) dur, true );
 }
 
 
 void ChatPanel::OnUserMenuModeratorMute5( wxCommandEvent& event )
 {
-	m_ui.GetServer().ModeratorMute( m_channel->GetName(), GetSelectedUser()->GetNick(), 5, true );
+	ui().GetServer().ModeratorMute( m_channel->GetName(), GetSelectedUser()->GetNick(), 5, true );
 }
 
 
 void ChatPanel::OnUserMenuModeratorMute10( wxCommandEvent& event )
 {
-	m_ui.GetServer().ModeratorMute( m_channel->GetName(), GetSelectedUser()->GetNick(), 10, true );
+	ui().GetServer().ModeratorMute( m_channel->GetName(), GetSelectedUser()->GetNick(), 10, true );
 }
 
 
 void ChatPanel::OnUserMenuModeratorMute30( wxCommandEvent& event )
 {
-	m_ui.GetServer().ModeratorMute( m_channel->GetName(), GetSelectedUser()->GetNick(), 30, true );
+	ui().GetServer().ModeratorMute( m_channel->GetName(), GetSelectedUser()->GetNick(), 30, true );
 }
 
 
 void ChatPanel::OnUserMenuModeratorMute120( wxCommandEvent& event )
 {
-	m_ui.GetServer().ModeratorMute( m_channel->GetName(), GetSelectedUser()->GetNick(), 120, true );
+	ui().GetServer().ModeratorMute( m_channel->GetName(), GetSelectedUser()->GetNick(), 120, true );
 }
 
 
 void ChatPanel::OnUserMenuModeratorMute1440( wxCommandEvent& event )
 {
-	m_ui.GetServer().ModeratorMute( m_channel->GetName(), GetSelectedUser()->GetNick(), 1440, true );
+	ui().GetServer().ModeratorMute( m_channel->GetName(), GetSelectedUser()->GetNick(), 1440, true );
 }
 
 
 
 void ChatPanel::OnUserMenuModeratorUnmute( wxCommandEvent& event )
 {
-	m_ui.GetServer().ModeratorUnmute( m_channel->GetName(), GetSelectedUser()->GetNick() );
+	ui().GetServer().ModeratorUnmute( m_channel->GetName(), GetSelectedUser()->GetNick() );
 }
 
 
 void ChatPanel::OnUserMenuModeratorRing( wxCommandEvent& event )
 {
-	m_ui.GetServer().Ring( GetSelectedUser()->GetNick() );
+	ui().GetServer().Ring( GetSelectedUser()->GetNick() );
 }
 
 void ChatPanel::FocusInputBox()
@@ -1801,7 +1797,7 @@ void ChatPanel::SortNickList()
 
 void ChatPanel::SetIconHighlight( HighlightType highlight )
 {
-  if (  m_ui.GetActiveChatPanel() != this && m_chat_tabs )
+  if (  ui().GetActiveChatPanel() != this && m_chat_tabs )
   {
     for ( unsigned int i = 0; i <  m_chat_tabs->GetPageCount( ); ++i )
     {

@@ -18,7 +18,6 @@
 #include <wx/numdlg.h>
 
 #include "battleoptionstab.h"
-#include "ui.h"
 #include "iunitsync.h"
 #include "ibattle.h"
 #include "utils/controls.h"
@@ -37,8 +36,9 @@ BEGIN_EVENT_TABLE(BattleOptionsTab, wxPanel)
 END_EVENT_TABLE()
 
 
-BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle ):
-  wxScrolledWindow( parent, -1 ), m_ui(ui), m_battle(battle)
+BattleOptionsTab::BattleOptionsTab( wxWindow* parent, IBattle& battle )
+    : wxScrolledWindow( parent, -1 ),
+    m_battle(battle)
 {
   GetAui().manager->AddPane( this, wxLEFT, _T("battleoptionstab") );
 

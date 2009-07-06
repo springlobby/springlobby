@@ -44,16 +44,15 @@ BEGIN_EVENT_TABLE(SinglePlayerTab, wxPanel)
 END_EVENT_TABLE()
 
 
-SinglePlayerTab::SinglePlayerTab(wxWindow* parent, Ui& ui, MainSinglePlayerTab& msptab):
+SinglePlayerTab::SinglePlayerTab(wxWindow* parent, MainSinglePlayerTab& msptab):
         wxScrolledWindow( parent, -1 ),
-        m_ui( ui ),
-        m_battle( ui, msptab )
+        m_battle( msptab )
 {
     GetAui().manager->AddPane( this, wxLEFT, _T("singleplayertab") );
 
     wxBoxSizer* m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
-    m_minimap = new MapCtrl( this, 100, &m_battle, ui, false, false, true, true );
+    m_minimap = new MapCtrl( this, 100, &m_battle, false, false, true, true );
     m_minimap->SetToolTip( TE(_("You can drag the sun/bot icon around to define start position.\n "
                                 "Hover over the icon for a popup that lets you change side, ally and bonus." )) );
     m_main_sizer->Add( m_minimap, 1, wxALL|wxEXPAND, 5 );
@@ -180,7 +179,7 @@ void SinglePlayerTab::ReloadModlist()
 
 void SinglePlayerTab::SetMap( unsigned int index )
 {
-	//m_ui.ReloadUnitSync();
+	//ui().ReloadUnitSync();
   m_addbot_btn->Enable( false );
   if ( index >= m_map_pick->GetCount()-1 ) {
     m_battle.SetHostMap( wxEmptyString, wxEmptyString );
@@ -199,7 +198,7 @@ void SinglePlayerTab::SetMap( unsigned int index )
 
 void SinglePlayerTab::SetMod( unsigned int index )
 {
-    //m_ui.ReloadUnitSync();
+    //ui().ReloadUnitSync();
     if ( index >= m_mod_pick->GetCount()-1 )
     {
         m_battle.SetHostMod( wxEmptyString, wxEmptyString );
@@ -265,7 +264,7 @@ void SinglePlayerTab::OnModSelect( wxCommandEvent& event )
 void SinglePlayerTab::OnMapBrowse( wxCommandEvent& event )
 {
     wxLogDebugFunc( _T("") );
-    MapSelectDialog dlg( (wxWindow*)&m_ui.mw(), m_ui );
+    MapSelectDialog dlg( (wxWindow*)&ui().mw() );
 
     if ( dlg.ShowModal() == wxID_OK && dlg.GetSelectedMap() != NULL )
     {
@@ -309,7 +308,7 @@ void SinglePlayerTab::OnStart( wxCommandEvent& event )
     wxLogDebugFunc( _T("") );
     wxString nick = usync().GetDefaultNick();
     if ( !nick.IsEmpty() ) m_battle.GetMe().SetNick( nick );
-    if ( m_ui.IsSpringRunning() )
+    if ( ui().IsSpringRunning() )
     {
         wxLogWarning(_T("trying to start spring while another instance is running") );
         customMessageBoxNoModal(SL_MAIN_ICON, _("You cannot start a spring instance while another is already running"), _("Spring error"), wxICON_EXCLAMATION );

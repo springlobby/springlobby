@@ -36,7 +36,7 @@ typedef std::map<wxString,long> OptionListMap;
 class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<BattleRoomTab>
 {
   public:
-    BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle );
+    BattleRoomTab( wxWindow* parent, Battle& battle );
      ~BattleRoomTab();
 
     BattleroomListCtrl& GetPlayersListCtrl();
@@ -108,7 +108,6 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 
     void SplitSizerHorizontally( const bool horizontal );
 
-    Ui& m_ui;
     Battle& m_battle;
     UnitSyncMap m_map;
 

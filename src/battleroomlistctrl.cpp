@@ -54,7 +54,7 @@ BEGIN_EVENT_TABLE( BattleroomListCtrl,  BattleroomListCtrl::BaseType )
 END_EVENT_TABLE()
 
 
-BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, IBattle* battle, Ui& ui, bool readonly )
+BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, IBattle* battle, bool readonly )
     : CustomVirtListCtrl< User *,BattleroomListCtrl>(parent, BRLIST_LIST, wxDefaultPosition, wxDefaultSize,
                 wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL, _T("BattleroomListCtrl"), 10, 3, &CompareOneCrit,
                 true /*highlight*/, UserActions::ActHighlight, !readonly /*periodic sort*/ ),
@@ -64,7 +64,6 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, IBattle* battle, Ui& u
     m_sides(0),
     m_spec_item(0),
     m_handicap_item(0),
-    m_ui(ui),
     m_ro(readonly)
 {
   GetAui().manager->AddPane( this, wxLEFT, _T("battleroomlistctrl") );
@@ -344,7 +343,7 @@ void BattleroomListCtrl::OnListRightClick( wxListEvent& event )
         m_popup->Check( item, m_sel_user->BattleStatus().spectator );
         m_popup->Enable( item, true );
         m_popup->Enable( m_popup->FindItem( _("Ring") ), true );
-        bool isSelUserMe =  ( m_ui.IsThisMe(user) );
+        bool isSelUserMe =  ( ui().IsThisMe(user) );
         m_popup->Enable( m_popup->FindItem( _("Kick") ),!isSelUserMe);
     }
 

@@ -23,7 +23,7 @@ class MainTorrentTab: public wxScrolledWindow
 {
 	public:
 
-		MainTorrentTab(wxWindow* parent,Ui& ui);
+		MainTorrentTab( wxWindow* parent );
 		~MainTorrentTab();
 
 		wxStaticText* m_incoming;
@@ -40,7 +40,6 @@ class MainTorrentTab: public wxScrolledWindow
 		TorrentListCtrl* m_torrent_list;
         WidgetDownloadDialog* m_widgets_dialog;
 
-		Ui& m_ui;
         void OnUpdate();
 
 	protected:

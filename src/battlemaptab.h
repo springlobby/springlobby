@@ -27,7 +27,7 @@ class wxMouseEvent;
 class BattleMapTab : public wxScrolledWindow, public UnitsyncReloadedSink< BattleMapTab >
 {
   public:
-    BattleMapTab( wxWindow* parent, Ui& ui, Battle& battle );
+    BattleMapTab( wxWindow* parent, Battle& battle );
      ~BattleMapTab();
 
      void UpdateUser( User& user );
@@ -46,7 +46,6 @@ class BattleMapTab : public wxScrolledWindow, public UnitsyncReloadedSink< Battl
     void SetMap( int index );
 
   protected:
-    Ui& m_ui;
     Battle& m_battle;
     //UnitSyncMap m_map;
 

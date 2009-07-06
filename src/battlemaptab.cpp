@@ -21,7 +21,6 @@
 #include <stdexcept>
 
 #include "battlemaptab.h"
-#include "ui.h"
 #include "iunitsync.h"
 #include "user.h"
 #include "battle.h"
@@ -44,8 +43,9 @@ BEGIN_EVENT_TABLE(BattleMapTab, wxPanel)
 END_EVENT_TABLE()
 
 
-BattleMapTab::BattleMapTab( wxWindow* parent, Ui& ui, Battle& battle ):
-  wxScrolledWindow( parent, -1 ), m_ui(ui), m_battle(battle)
+BattleMapTab::BattleMapTab( wxWindow* parent, Battle& battle )
+    : wxScrolledWindow( parent, -1 ),
+    m_battle(battle)
 {
   GetAui().manager->AddPane( this, wxLEFT, _T("battlemaptab") );
 
@@ -53,7 +53,7 @@ BattleMapTab::BattleMapTab( wxWindow* parent, Ui& ui, Battle& battle ):
   wxBoxSizer* m_map_sizer = new wxBoxSizer( wxVERTICAL );
 
   m_map_sizer->SetMinSize(wxSize( 352,-1 ));
-  m_minimap = new MapCtrl( this, 352, &m_battle, m_ui, !battle.IsFounderMe(), false, true, false );
+  m_minimap = new MapCtrl( this, 352, &m_battle, !battle.IsFounderMe(), false, true, false );
   m_minimap->SetMinSize( wxSize( 352,352 ) );
 
   m_map_sizer->Add( m_minimap, 1, wxALL|wxEXPAND, 2 );
@@ -253,7 +253,7 @@ void BattleMapTab::OnMapSelect( wxCommandEvent& event )
 void BattleMapTab::OnMapBrowse( wxCommandEvent& event )
 {
 	wxLogDebugFunc( _T("") );
-	MapSelectDialog dlg( (wxWindow*)&m_ui.mw(), m_ui );
+	MapSelectDialog dlg( this->GetParent() );
 
 	if ( dlg.ShowModal() == wxID_OK && dlg.GetSelectedMap() != NULL )
 	{

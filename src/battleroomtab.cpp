@@ -117,8 +117,9 @@ class MyStrings : public wxArrayString
 const MyStrings<SPRING_MAX_TEAMS> team_choices;
 const MyStrings<SPRING_MAX_ALLIES> ally_choices;
 
-BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
-        wxScrolledWindow( parent, -1 ),m_ui(ui), m_battle(battle)
+BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle& battle )
+    : wxScrolledWindow( parent, -1 ),
+    m_battle(battle)
 {
     GetAui().manager->AddPane( this, wxLEFT, _T("battleroomtab") );
 
@@ -163,14 +164,14 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
 
     m_map_combo = new wxComboBox( this, BROOM_MAP_SEL, _T(""), wxDefaultPosition, wxDefaultSize );
 
-    m_minimap = new MapCtrl( this, 162, &m_battle, m_ui, true, true, true, false );
+    m_minimap = new MapCtrl( this, 162, &m_battle, true, true, true, false );
     m_minimap->SetToolTip(TE(_("A preview of the selected map.  You can see the starting positions, or (if set) starting boxes.")));
 
     m_browse_map_btn = new wxButton( this, BROOM_MAP_BROWSE, _("Map"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
     m_browse_map_btn->SetSize( m_browse_map_btn->GetSize().GetWidth() * 2 , m_browse_map_btn->GetSize().GetHeight() ) ; // has 0 effect
 
-    m_players = new BattleroomListCtrl( m_player_panel, (IBattle*)&battle, m_ui, false );
-    m_chat = new ChatPanel( m_splitter, m_ui, battle );
+    m_players = new BattleroomListCtrl( m_player_panel, (IBattle*)&battle, false );
+    m_chat = new ChatPanel( m_splitter, battle );
 
     m_command_line = new wxStaticLine( this, -1, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
 
@@ -593,7 +594,7 @@ void BattleRoomTab::OnStart( wxCommandEvent& event )
 
 		m_battle.SaveMapDefaults(); // save map presets
 
-    m_ui.StartHostedBattle();
+    ui().StartHostedBattle();
 }
 
 
@@ -676,7 +677,7 @@ void BattleRoomTab::OnAddBot( wxCommandEvent& event )
         bs.aiversion = dlg.GetAIVersion();
         bs.aitype = dlg.GetAIType();
         bs.owner = m_battle.GetMe().GetNick();
-        m_ui.GetServer().AddBot( m_battle.GetBattleId(), dlg.GetNick(), bs );
+        ui().GetServer().AddBot( m_battle.GetBattleId(), dlg.GetNick(), bs );
     }
 }
 
@@ -901,7 +902,7 @@ void BattleRoomTab::OnSetModDefaultPreset( wxCommandEvent& event )
 void BattleRoomTab::OnMapBrowse( wxCommandEvent& event )
 {
 	wxLogDebugFunc( _T("") );
-	MapSelectDialog dlg( (wxWindow*)&m_ui.mw(), m_ui );
+	MapSelectDialog dlg( (wxWindow*)&ui().mw() );
 
 	if ( dlg.ShowModal() == wxID_OK && dlg.GetSelectedMap() != NULL )
 	{
@@ -974,7 +975,7 @@ void BattleRoomTab::OnOptionActivate( wxListEvent& event )
 	wxString key = tag.AfterFirst( '_' );
 	OptionType type = optWrap.GetSingleOptionType( key );
 	if ( !optWrap.keyExists( key, optFlag, false, type ) ) return;
-	SingleOptionDialog dlg( m_battle, tag );
+	SingleOptionDialog dlg( this, m_battle, tag );
 	dlg.ShowModal();
 }
 

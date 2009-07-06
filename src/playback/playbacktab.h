@@ -51,7 +51,7 @@ class PlaybackTab : public wxPanel
 
   public:
     //! loads all replays into list and adds them to listctrl
-    PlaybackTab( wxWindow* parent, Ui& ui );
+    PlaybackTab( wxWindow* parent );
      ~PlaybackTab();
 
     //! adds a single replay to listctrl
@@ -112,8 +112,6 @@ class PlaybackTab : public wxPanel
 #else
 		wxCheckBox* m_filter_show;
 #endif
-
-    Ui& m_ui;
 
     void AskForceWatch( PlaybackType& rep  ) const;
 

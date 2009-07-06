@@ -15,7 +15,7 @@ class wxIcon;
 class BattleroomListCtrl : public CustomVirtListCtrl< User *, BattleroomListCtrl >
 {
   public:
-    BattleroomListCtrl( wxWindow* parent, IBattle* battle, Ui& ui, bool readonly );
+    BattleroomListCtrl( wxWindow* parent, IBattle* battle, bool readonly );
      ~BattleroomListCtrl();
 
     void SetBattle( IBattle* battle );
@@ -78,8 +78,6 @@ class BattleroomListCtrl : public CustomVirtListCtrl< User *, BattleroomListCtrl
     wxMenuItem* m_handicap_item;
 
     static int CompareOneCrit( DataType u1, DataType u2, int col, int dir ) ;
-
-    Ui& m_ui;
 
     virtual void Sort();
 
