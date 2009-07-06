@@ -5,10 +5,11 @@
 #include <wx/arrstr.h>
 #include <map>
 
-typedef wxString UiEventsTypes;
+namespace UiEvents {
+    typedef wxString UiEventsTypes;
 
-typedef wxArrayString UiEventData;
+    typedef wxArrayString UiEventData;
 
-EventSender<UiEventData> &GetUiEventSender( UiEventsTypes cmd );
-
+    EventSender<UiEventData> &GetUiEventSender( UiEventsTypes cmd );
+}
 #endif // SPRINGLOBBY_HEADERGUARD_UIEVENTS_H

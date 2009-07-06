@@ -5,16 +5,16 @@
 
 #include <map>
 namespace GlobalEvents {
-enum GlobalEventsTypes
-{
-  OnUnitsyncFirstTimeLoad,
-  OnUnitsyncReloaded,
+    enum GlobalEventsTypes
+    {
+      OnUnitsyncFirstTimeLoad,
+      OnUnitsyncReloaded,
 
-  OnTimerUpdates
-};
+      OnTimerUpdates
+    };
 
-typedef int GlobalEventData;
+    typedef int GlobalEventData;
 
-EventSender<GlobalEventData> &GetGlobalEventSender( GlobalEventsTypes cmd );
+    EventSender<GlobalEventData> &GetGlobalEventSender( GlobalEventsTypes cmd );
 }
 #endif // SPRINGLOBBY_HEADERGUARD_GLOBALEVENTS_H

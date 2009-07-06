@@ -5,12 +5,12 @@
 
 #include <map>
 #include <wx/arrstr.h>
+namespace NetworkEvents {
+    typedef wxString NetworkEventsTypes;
 
-typedef wxString NetworkEventsTypes;
+    typedef wxArrayString NetworkEventData;
 
-typedef wxArrayString NetworkEventData;
-
-EventSender<NetworkEventData> &GetNetworkEventSender( NetworkEventsTypes cmd );
-
+    EventSender<NetworkEventData> &GetNetworkEventSender( NetworkEventsTypes cmd );
+}
 #endif // SPRINGLOBBY_HEADERGUARD_NETWORKEVENTS_H
 
