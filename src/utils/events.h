@@ -2,7 +2,6 @@
 #define EVENTS_H_INCLUDED
 
 #include <assert.h>
-#include <unistd.h>
 
 #ifndef my_assert
 #define my_assert(x) assert(x)
@@ -31,8 +30,8 @@ class ListNodeBare {
 		};
 		inline void Disconnect() {
 			if ( prev != this ) {//if we're connected
-				my_assert( prev != NULL );
-				my_assert( next != NULL );
+				my_assert( prev );
+				my_assert( next );
 				my_assert( next != this );
 				next->prev = prev;
 				prev->next = next;
