@@ -17,7 +17,7 @@
 #include "utils/debug.h"
 #include "socket.h"
 #include "base64.h"
-#include "globalevents.h"
+#include "globaleventshandler.h"
 
 #include <libtorrent/entry.hpp>
 #include <libtorrent/session.hpp>

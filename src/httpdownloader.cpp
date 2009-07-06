@@ -16,7 +16,7 @@
 
 
 #include "utils/conversion.h"
-#include "globalevents.h"
+#include "globaleventshandler.h"
 
 template <class ParentClass>
 HttpDownloaderThread<ParentClass>::HttpDownloaderThread(  const wxString& FileUrl, const wxString& DestPath, ParentClass& parent, int code, const bool notify, const bool unzip, const wxString& noticeErr, const wxString& noticeOk   ) :

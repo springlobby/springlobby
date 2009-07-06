@@ -1,7 +1,7 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_NETWORKEVENTS_H
 #define SPRINGLOBBY_HEADERGUARD_NETWORKEVENTS_H
 
-#include "../common/events.h"
+#include "events.h"
 
 #include <map>
 #include <wx/arrstr.h>

@@ -440,6 +440,8 @@
 		<Unit filename="src/utils/math.h" />
 		<Unit filename="src/utils/misc.cpp" />
 		<Unit filename="src/utils/misc.h" />
+		<Unit filename="src/utils/networkevents.cpp" />
+		<Unit filename="src/utils/networkevents.h" />
 		<Unit filename="src/utils/platform.cpp" />
 		<Unit filename="src/utils/platform.h" />
 		<Unit filename="src/utils/sltipwin.cpp" />

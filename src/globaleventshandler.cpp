@@ -1,4 +1,4 @@
-#include "globalevents.h"
+#include "globaleventshandler.h"
 #include "settings++/custom_dialogs.h"
 #include "ui.h"
 #include "updater/updater.h"
