@@ -2,7 +2,7 @@
 #define SPRINGLOBBY_HEADERGUARD_BATTLELISTTAB_H
 
 #include <wx/scrolwin.h>
-#include "utils/globalevents.h"
+#include "utils/isink.h"
 
 class User;
 class Ui;
@@ -25,7 +25,7 @@ class wxToggleButton;
 class wxFlexGridSizer;
 /** \brief The panel containing a BattleListCtrl and a BattleListFilter
  * \todo DOCME */
-class BattleListTab : public wxScrolledWindow
+class BattleListTab : public wxScrolledWindow, public UnitsyncReloadedSink<BattleListTab>
 {
   friend class BattleListFilter;
   public:
@@ -57,7 +57,7 @@ class BattleListTab : public wxScrolledWindow
     void DoJoin( Battle& battle );
 
     void OnSelect( wxListEvent& event );
-    void OnUnitSyncReloaded( GlobalEventData data );
+    void OnUnitsyncReloaded( GlobalEventData data );
 
     void UpdateHighlights();
 
@@ -100,8 +100,6 @@ class BattleListTab : public wxScrolledWindow
     IBattle* m_sel_battle;
 
     void SetNumDisplayed();
-
-    EventReceiverFunc<BattleListTab, GlobalEventData, &BattleListTab::OnUnitSyncReloaded> OnUsync_reload;
 
     enum {
         BATTLE_JOIN = wxID_HIGHEST,
