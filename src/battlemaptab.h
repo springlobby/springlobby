@@ -41,7 +41,7 @@ class BattleMapTab : public wxScrolledWindow, public UnitsyncReloadedSink< Battl
      void OnStartTypeSelect( wxCommandEvent& event );
      void OnMouseWheel( wxMouseEvent& event );
 
-    void OnUnitsyncReloaded( GlobalEvents::GlobalEventData data );
+    void OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ );
 
     void SetMap( int index );
 
