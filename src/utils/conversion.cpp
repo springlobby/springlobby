@@ -15,3 +15,9 @@ int ConvertWXArrayToC(const wxArrayString& aChoices, wxString **choices)
 
     return n;
 }
+
+TransformedArrayString::TransformedArrayString( const wxArrayString& original, wxString trans_op (const wxString& ) )
+{
+    for ( size_t i = 0; i < original.Count(); i++ )
+        Add( trans_op( original[i] ) );
+}

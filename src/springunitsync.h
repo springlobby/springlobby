@@ -189,9 +189,7 @@ class SpringUnitSync : public IUnitSync
     wxImage GetHeightmap( const wxString& mapname, int width, int height );
 
     bool ReloadUnitSyncLib(  );
-    void ReloadUnitSyncLib( GlobalEvents::GlobalEventData /*data*/ )
-    {
-        ReloadUnitSyncLib(); } ;
+    void ReloadUnitSyncLib( GlobalEvents::GlobalEventData /*data*/ ){ ReloadUnitSyncLib(); } ;
 
     void SetSpringDataPath( const wxString& path );
 
