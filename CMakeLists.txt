@@ -217,6 +217,7 @@ SET(SpringLobbySrc
 	src/utils/controls.cpp
 	src/utils/globalevents.cpp
 	src/utils/networkevents.cpp
+	src/utils/uievents.cpp
 	src/boost/md5.cpp
 	src/updater/updater.cpp
 	src/updater/versionchecker.cpp

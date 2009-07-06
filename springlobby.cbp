@@ -434,6 +434,8 @@
 		<Unit filename="src/utils/conversion.h" />
 		<Unit filename="src/utils/debug.cpp" />
 		<Unit filename="src/utils/debug.h" />
+		<Unit filename="src/utils/globalevents.cpp" />
+		<Unit filename="src/utils/globalevents.h" />
 		<Unit filename="src/utils/math.cpp" />
 		<Unit filename="src/utils/math.h" />
 		<Unit filename="src/utils/misc.cpp" />
@@ -444,6 +446,8 @@
 		<Unit filename="src/utils/sltipwin.h" />
 		<Unit filename="src/utils/tasutil.cpp" />
 		<Unit filename="src/utils/tasutil.h" />
+		<Unit filename="src/utils/uievents.cpp" />
+		<Unit filename="src/utils/uievents.h" />
 		<Unit filename="src/widgets/downloaddialog.cpp" />
 		<Unit filename="src/widgets/downloaddialog.h" />
 		<Unit filename="src/widgets/downloadlistctrl.cpp" />

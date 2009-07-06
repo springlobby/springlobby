@@ -416,6 +416,8 @@ springlobby_SOURCES = \
 	src/utils/globalevents.h \
 	src/utils/networkevents.cpp \
 	src/utils/networkevents.h \
+	src/utils/uievents.cpp \
+	src/utils/uievents.h \
 	src/utils/events.h \
 	src/updater/versionchecker.cpp \
 	src/updater/versionchecker.h \
