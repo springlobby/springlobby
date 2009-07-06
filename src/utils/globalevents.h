@@ -4,7 +4,7 @@
 #include "events.h"
 
 #include <map>
-
+namespace GlobalEvents {
 enum GlobalEventsTypes
 {
   OnUnitsyncFirstTimeLoad,
@@ -16,5 +16,5 @@ enum GlobalEventsTypes
 typedef int GlobalEventData;
 
 EventSender<GlobalEventData> &GetGlobalEventSender( GlobalEventsTypes cmd );
-
+}
 #endif // SPRINGLOBBY_HEADERGUARD_GLOBALEVENTS_H

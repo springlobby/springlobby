@@ -4,7 +4,7 @@
 #include "globalevents.h"
 
 
-template <class Derived, class EventDataType = GlobalEventData >
+template <class Derived, class EventDataType = GlobalEvents::GlobalEventData >
 class UnitsyncReloadedSink {
 	protected:
 		Derived& asImp () { return static_cast<Derived&>(*this); }
@@ -14,21 +14,17 @@ class UnitsyncReloadedSink {
 			BaseType;
 
 	public:
-		void OnUnitSyncReloaded( EventDataType data ) { asImp().OnUnitSyncReloaded( data ); }
+		void OnUnitsyncReloaded( EventDataType data ) { asImp().OnUnitsyncReloaded( data ); }
 
     protected:
-        typedef EventReceiverFunc<UnitsyncReloadedSink, EventDataType, &UnitsyncReloadedSink::OnUnitSyncReloaded>
-            Rec;
-        Rec OnUsync_reload;
+        typedef EventReceiverFunc<UnitsyncReloadedSink, EventDataType, &UnitsyncReloadedSink::OnUnitsyncReloaded>
+            EventReceiverFunction;
+        EventReceiverFunction OnUsync_reload;
 
     public:
 		UnitsyncReloadedSink ()
-			: OnUsync_reload( this, &GetGlobalEventSender( OnUnitsyncReloaded ) )
+			: OnUsync_reload( this, &GetGlobalEventSender( GlobalEvents::OnUnitsyncReloaded ) )
 		{}
-
-
-//        Sink<UnitsyncReloadedSink> m_sink;
-
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_ISINK_H

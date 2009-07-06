@@ -73,7 +73,7 @@ bool SpringUnitSync::LoadUnitSyncLib( const wxString& unitsyncloc )
    {
       m_cache_path = sett().GetCachePath();
       PopulateArchiveList();
-      GetGlobalEventSender(OnUnitsyncReloaded).SendEvent( 0 );
+      GetGlobalEventSender(GlobalEvents::OnUnitsyncReloaded).SendEvent( 0 );
    }
    return ret;
 }
