@@ -17,7 +17,6 @@
 #include "utils/debug.h"
 #include "socket.h"
 #include "base64.h"
-#include "globaleventshandler.h"
 
 #include <libtorrent/entry.hpp>
 #include <libtorrent/session.hpp>
@@ -53,6 +52,7 @@
 #include "torrentwrapper.h"
 #include "settings++/custom_dialogs.h"
 #include "globalsmanager.h"
+#include "utils/globalevents.h"
 
 
 /** Get the name of the Spring data subdirectory that corresponds to a
@@ -1177,8 +1177,7 @@ void TorrentWrapper::RemoveUnneededTorrents()
 
                 GetTorrentTable().AddRowToDependencyCheckQueue( it->second );
 
-                wxCommandEvent refreshevt(UnitSyncReloadRequest); // request an unitsync reload
-                wxPostEvent( &SL_GlobalEvtHandler::GetSL_GlobalEvtHandler(), refreshevt );
+                GetGlobalEventSender(GlobalEvents::UnitSyncReloadRequest).SendEvent( 0 ); // request an unitsync reload
             }
             catch (std::exception& e)
             {

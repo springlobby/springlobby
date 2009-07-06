@@ -137,13 +137,16 @@ void SinglePlayerTab::ReloadMaplist()
     //maplist.Sort(CompareStringIgnoreCase);
 
     size_t nummaps = maplist.Count();
-    for ( size_t i = 0; i < nummaps; i++ ) m_map_pick->Insert( RefineMapname(maplist[i]), i );
+    for ( size_t i = 0; i < nummaps; i++ )
+        m_map_pick->Insert( RefineMapname(maplist[i]), i );
 
     m_map_pick->Insert( _("-- Select one --"), m_map_pick->GetCount() );
+
     if ( m_battle.GetHostMapName() != wxEmptyString )
     {
         m_map_pick->SetStringSelection( RefineMapname( m_battle.GetHostMapName() ) );
-        if ( m_map_pick->GetStringSelection() == wxEmptyString ) SetMap( m_mod_pick->GetCount()-1 );
+        if ( m_map_pick->GetStringSelection() == wxEmptyString )
+            SetMap( m_mod_pick->GetCount()-1 );
     }
     else
     {
