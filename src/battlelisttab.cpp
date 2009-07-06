@@ -584,7 +584,7 @@ void BattleListTab::OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ )
   while (! m_ui.GetServer().battles_iter->EOL() )
   {
     Battle* b = m_ui.GetServer().battles_iter->GetBattle();
-    if (b!=0) b->OnUnitSyncReloaded();
+    if (b!=0) b->OnUnitsyncReloaded( GlobalEvents::GlobalEventData() );
   }
   UpdateList();
   m_minimap->UpdateMinimap();

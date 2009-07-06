@@ -192,18 +192,7 @@ void MainJoinBattleTab::BattleUserUpdated( User& user )
 
 void MainJoinBattleTab::OnUnitSyncReloaded()
 {
-  wxLogDebugFunc( _T("") );
-
-  wxLogMessage( _T("Battle list tab reloaded") );
-  try
-  {
-    GetBattleRoomTab().OnUnitSyncReloaded();
-  } catch (...) {}
-  try
-  {
-    GetBattleMapTab().OnUnitSyncReloaded();
-  } catch(...) {}
-  wxLogMessage( _T("Battle list tab reloaded") );
+    assert (false );
 }
 
 void MainJoinBattleTab::OnConnected()

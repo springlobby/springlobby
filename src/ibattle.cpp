@@ -808,7 +808,7 @@ void IBattle::OnSelfLeftBattle()
     ClearStartRects();
 }
 
-void IBattle::OnUnitSyncReloaded()
+void IBattle::OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ )
 {
   if ( !m_host_mod.hash.IsEmpty() ) m_mod_exists = usync().ModExists( m_host_mod.name, m_host_mod.hash);
   else m_mod_exists = usync().ModExists( m_host_mod.name );

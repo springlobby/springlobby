@@ -27,6 +27,7 @@ class UnitsyncReloadedSink {
 		{}
 };
 
+
 #endif // SPRINGLOBBY_HEADERGUARD_ISINK_H
 
 /**

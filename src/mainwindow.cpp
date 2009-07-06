@@ -296,7 +296,7 @@ void MainWindow::OnClose( wxCloseEvent& evt )
     if ( m_log_chain ) // if logwin was created, it's the current "top" log
         m_log_chain->DetachOldLog();  //so we need to tellwx not to delete it on its own
         //since we absolutely need to destroy the logwin here, set a fallback for the time until app cleanup
-#if(wxUSE_STD_IOSTREAM) 
+#if(wxUSE_STD_IOSTREAM)
         wxLog::SetActiveTarget( new wxLogStream( &std::cout ) );
 #endif
   }
@@ -609,7 +609,7 @@ void MainWindow::OnUnitSyncReloaded()
 {
   wxLogDebugFunc( _T("") );
   wxLogMessage( _T("Reloading join tab") );
-  GetJoinTab().OnUnitSyncReloaded();
+
   wxLogMessage( _T("Join tab updated") );
   wxLogMessage( _T("Reloading Singleplayer tab") );
   GetSPTab().OnUnitSyncReloaded();
