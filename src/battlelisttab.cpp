@@ -576,7 +576,7 @@ void BattleListTab::OnSelect( wxListEvent& event )
 }
 
 
-void BattleListTab::OnUnitsyncReloaded( GlobalEventData /*data*/ )
+void BattleListTab::OnUnitSyncReloaded( GlobalEventData /*data*/ )
 {
   if ( ! m_ui.GetServerStatus() ) { return; }
 

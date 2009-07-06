@@ -3,23 +3,31 @@
 
 #include "globalevents.h"
 
-template <class Derived>
+
+template <class Derived, class EventDataType = GlobalEventData >
 class UnitsyncReloadedSink {
 	protected:
 		Derived& asImp () { return static_cast<Derived&>(*this); }
 		const Derived& asImp () const { return static_cast<const Derived&>(*this); }
 
-		typedef UnitsyncReloadedSink<Derived>
+		typedef UnitsyncReloadedSink<Derived,EventDataType>
 			BaseType;
 
-		EventReceiverFunc<BattleListTab, GlobalEventData, &BaseType::OnUnitsyncReloaded> OnUsync_reload;
-
 	public:
-		void OnUnitsyncReloaded( GlobalEventData data ) { asImp().OnUnitsyncReloaded( data ); }
+		void OnUnitSyncReloaded( EventDataType data ) { asImp().OnUnitSyncReloaded( data ); }
 
+    protected:
+        typedef EventReceiverFunc<UnitsyncReloadedSink, EventDataType, &UnitsyncReloadedSink::OnUnitSyncReloaded>
+            Rec;
+        Rec OnUsync_reload;
+
+    public:
 		UnitsyncReloadedSink ()
 			: OnUsync_reload( this, &GetGlobalEventSender( OnUnitsyncReloaded ) )
 		{}
+
+
+//        Sink<UnitsyncReloadedSink> m_sink;
 
 };
 

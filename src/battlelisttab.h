@@ -57,7 +57,7 @@ class BattleListTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
     void DoJoin( Battle& battle );
 
     void OnSelect( wxListEvent& event );
-    void OnUnitsyncReloaded( GlobalEventData data );
+    void OnUnitSyncReloaded( GlobalEventData data );
 
     void UpdateHighlights();
 
