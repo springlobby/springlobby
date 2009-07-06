@@ -260,7 +260,6 @@ SET(SpringLobbySrc
 	src/crashreport.cpp
 	src/customlistctrl.cpp
 	src/flagimages.cpp
-	src/globaleventshandler.cpp
 	src/groupoptionspanel.cpp
 	src/hostbattledialog.cpp
 	src/ibattle.cpp

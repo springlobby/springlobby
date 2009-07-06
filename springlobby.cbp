@@ -2,7 +2,6 @@
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="6" />
 	<Project>
-	<Unit filename="src/utils/isink.h" />
 		<Option title="springlobby" />
 		<Option pch_mode="0" />
 		<Option compiler="gcc" />
@@ -241,8 +240,6 @@
 		<Unit filename="src/flagimagedata.h" />
 		<Unit filename="src/flagimages.cpp" />
 		<Unit filename="src/flagimages.h" />
-		<Unit filename="src/globaleventshandler.cpp" />
-		<Unit filename="src/globaleventshandler.h" />
 		<Unit filename="src/globalsmanager.cpp" />
 		<Unit filename="src/globalsmanager.h" />
 		<Unit filename="src/groupoptionspanel.cpp" />
@@ -435,8 +432,10 @@
 		<Unit filename="src/utils/conversion.h" />
 		<Unit filename="src/utils/debug.cpp" />
 		<Unit filename="src/utils/debug.h" />
+		<Unit filename="src/utils/events.h" />
 		<Unit filename="src/utils/globalevents.cpp" />
 		<Unit filename="src/utils/globalevents.h" />
+		<Unit filename="src/utils/isink.h" />
 		<Unit filename="src/utils/math.cpp" />
 		<Unit filename="src/utils/math.h" />
 		<Unit filename="src/utils/misc.cpp" />
