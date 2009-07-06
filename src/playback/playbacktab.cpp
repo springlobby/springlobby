@@ -300,7 +300,7 @@ void PlaybackTab<PlaybackTraits>::OnWatch( wxCommandEvent& event )
                 {
                   wxLogMessage(_T("replay requires version: %s, switching to profile: %s"), rep.SpringVersion.c_str(), itor->first.c_str() );
                   sett().SetUsedSpringIndex( itor->first );
-                  ui().ReloadUnitSync();
+                  GetGlobalEventSender(GlobalEvents::UnitSyncReloadRequest).SendEvent( 0 ); // request an unitsync reload
                 }
                 versionfound = true;
               }

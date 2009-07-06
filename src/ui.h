@@ -71,8 +71,6 @@ class Ui
 
     void Quit();
 
-    void ReloadUnitSync();
-
     void DownloadMap( const wxString& hash, const wxString& name );
     void DownloadMod( const wxString& hash, const wxString& name );
 

@@ -5,26 +5,21 @@
 #include <wx/intl.h>
 
 #include "globalsmanager.h"
+//
+//const wxEventType UnitSyncReloadRequest = wxNewEventType();
+//const wxEventType ExeDownloadEvt = wxNewEventType();
+//
+//BEGIN_EVENT_TABLE(SL_GlobalEvtHandler, wxEvtHandler)
+//    EVT_COMMAND(wxID_ANY, UnitSyncReloadRequest,    SL_GlobalEvtHandler::OnUnitSyncReload)
+//END_EVENT_TABLE()
+//
+//SL_GlobalEvtHandler& SL_GlobalEvtHandler::GetSL_GlobalEvtHandler()
+//{
+//    static GlobalObjectHolder<SL_GlobalEvtHandler> slGlobalEvtHandler;
+//    return slGlobalEvtHandler;
+//}
+//
+//SL_GlobalEvtHandler::SL_GlobalEvtHandler()
+//{
+//}
 
-const wxEventType UnitSyncReloadRequest = wxNewEventType();
-const wxEventType ExeDownloadEvt = wxNewEventType();
-
-BEGIN_EVENT_TABLE(SL_GlobalEvtHandler, wxEvtHandler)
-    EVT_COMMAND(wxID_ANY, UnitSyncReloadRequest,    SL_GlobalEvtHandler::OnUnitSyncReload)
-END_EVENT_TABLE()
-
-SL_GlobalEvtHandler& SL_GlobalEvtHandler::GetSL_GlobalEvtHandler()
-{
-    static GlobalObjectHolder<SL_GlobalEvtHandler> slGlobalEvtHandler;
-    return slGlobalEvtHandler;
-}
-
-SL_GlobalEvtHandler::SL_GlobalEvtHandler()
-{
-}
-
-
-void SL_GlobalEvtHandler::OnUnitSyncReload(wxCommandEvent& event)
-{
-    ui().ReloadUnitSync();
-}

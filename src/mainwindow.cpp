@@ -535,7 +535,7 @@ void MainWindow::OnMenuVersion( wxCommandEvent& event )
 
 void MainWindow::OnUnitSyncReload( wxCommandEvent& event )
 {
-    ui().ReloadUnitSync();
+    GetGlobalEventSender(GlobalEvents::UnitSyncReloadRequest).SendEvent( 0 ); // request an unitsync reload
 }
 
 void MainWindow::OnShowScreenshots( wxCommandEvent& event )

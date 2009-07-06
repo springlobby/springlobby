@@ -290,13 +290,6 @@ void Ui::Quit()
         m_con_win->Close();
 }
 
-
-void Ui::ReloadUnitSync()
-{
-    usync().ReloadUnitSyncLib();
-}
-
-
 void Ui::DownloadMap( const wxString& hash, const wxString& name )
 {
 #ifndef NO_TORRENT_SYSTEM
@@ -614,7 +607,7 @@ bool Ui::IsSpringCompatible()
         {
           wxLogMessage(_T("server enforce usage of version: %s, switching to profile: %s"), neededversion.c_str(), itor->first.c_str() );
           sett().SetUsedSpringIndex( itor->first );
-          ReloadUnitSync();
+          GetGlobalEventSender(GlobalEvents::UnitSyncReloadRequest).SendEvent( 0 ); // request an unitsync reload
         }
         return true;
       }
