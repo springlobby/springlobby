@@ -181,6 +181,8 @@ MainWindow::MainWindow( )
         wxAUI_NB_WINDOWLIST_BUTTON | wxAUI_NB_TAB_SPLIT | wxAUI_NB_TAB_MOVE | wxAUI_NB_TAB_EXTERNAL_MOVE | wxAUI_NB_SCROLL_BUTTONS | wxAUI_NB_LEFT );
   m_func_tabs->SetArtProvider(new SLArtProvider);
 
+    //IMPORTANT: event handling needs to be disabled while constructing, otherwise deadlock occurs
+    SetEvtHandlerEnabled( false );
 
   m_chat_tab = new MainChatTab( m_func_tabs );
   m_join_tab = new MainJoinBattleTab( m_func_tabs );
@@ -192,16 +194,17 @@ MainWindow::MainWindow( )
 #endif
   m_opts_tab = new MainOptionsTab( m_func_tabs );
 
-    m_func_tabs->AddPage( m_chat_tab,     m_tab_names[0], true  );
-    m_func_tabs->AddPage( m_join_tab,     m_tab_names[1], false );
-    m_func_tabs->AddPage( m_sp_tab,       m_tab_names[2], false );
-    m_func_tabs->AddPage( m_savegame_tab, m_tab_names[3], false );
-    m_func_tabs->AddPage( m_replay_tab,   m_tab_names[4], false );
+    //use Insert so no Changepage events are triggered
+    m_func_tabs->InsertPage( PAGE_CHAT,     m_chat_tab,     m_tab_names[PAGE_CHAT],     true  );
+    m_func_tabs->InsertPage( PAGE_JOIN,     m_join_tab,     m_tab_names[PAGE_JOIN],     false );
+    m_func_tabs->InsertPage( PAGE_SINGLE,   m_sp_tab,       m_tab_names[PAGE_SINGLE],   false );
+    m_func_tabs->InsertPage( PAGE_SAVEGAME, m_savegame_tab, m_tab_names[PAGE_SAVEGAME], false );
+    m_func_tabs->InsertPage( PAGE_REPLAY,   m_replay_tab,   m_tab_names[PAGE_REPLAY],   false );
 #ifndef NO_TORRENT_SYSTEM
-    m_func_tabs->AddPage( m_torrent_tab,  m_tab_names[5], false );
-    m_func_tabs->AddPage( m_opts_tab,     m_tab_names[6], false );
+    m_func_tabs->InsertPage( PAGE_TORRENT,  m_torrent_tab,  m_tab_names[PAGE_TORRENT],  false );
+    m_func_tabs->InsertPage( PAGE_OPTOS,    m_opts_tab,     m_tab_names[PAGE_OPTOS],    false );
 #else
-    m_func_tabs->AddPage( m_opts_tab,     m_tab_names[5], false );
+    m_func_tabs->InsertPage( PAGE_OPTOS,    m_opts_tab,     m_tab_names[PAGE_OPTOS],    false );
 #endif
 
 
@@ -222,6 +225,8 @@ MainWindow::MainWindow( )
 
   m_channel_chooser = new ChannelChooserDialog( this, -1, _("Choose channels to join") );
 
+    // re-enable eventhandling
+    SetEvtHandlerEnabled( true );
 }
 
 wxBitmap MainWindow::GetTabIcon( const unsigned char* data, size_t size )
