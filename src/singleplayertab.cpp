@@ -133,12 +133,10 @@ void SinglePlayerTab::ReloadMaplist()
 {
     m_map_pick->Clear();
 
+    //applies RefineMapname to every new element
     TransformedArrayString maplist ( usync().GetMapList(), &RefineMapname ) ;
     //maplist.Sort(CompareStringIgnoreCase);
-//
-//    size_t nummaps = maplist.Count();
-//    for ( size_t i = 0; i < nummaps; i++ )
-//        m_map_pick->Insert( RefineMapname(maplist[i]), i );
+
     m_map_pick->Append( maplist );
 
     m_map_pick->Insert( _("-- Select one --"), m_map_pick->GetCount() );
@@ -301,9 +299,16 @@ void SinglePlayerTab::OnAddBot( wxCommandEvent& event )
 
 void SinglePlayerTab::OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ )
 {
-    ReloadMaplist();
-    ReloadModlist();
-
+    try {
+        ReloadMaplist();
+        ReloadModlist();
+        UpdateMinimap();
+    }
+    catch ( ... )
+    {
+        wxLogDebugFunc( _T("") );
+        wxLogError( _T("unitsync reload sink failed") );
+    }
 }
 
 

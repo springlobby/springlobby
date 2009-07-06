@@ -835,7 +835,7 @@ void BattleRoomTab::OnUserLeft( User& user )
 
 void BattleRoomTab::OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ )
 {
-//    m_minimap->UpdateMinimap(); //should happen automagically now
+    m_minimap->UpdateMinimap(); //should happen automagically now
     ReloadMaplist();
     UpdateBattleInfo();
     m_battle.SendMyBattleStatus(); // This should reset sync status.

@@ -503,8 +503,12 @@ void MapCtrl::UpdateMinimap()
 			}
         }
     }
-    Refresh();
-    Update();
+    //without this test aborts happen when unit sync is reloaded from torrent complete
+    //if ( IsShownOnScreen() ) //meh, doesn't actually help
+    {
+        Refresh();
+        Update();
+    }
 }
 
 
