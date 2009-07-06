@@ -10,92 +10,98 @@
 
 /// Double linked cyclic list implementation.
 /// Beware! When a node is copied (duplicated), the list of a copy is empty!
-class ListNodeBare{
-public:
+class ListNodeBare {
+	public:
 
-	ListNodeBare * prev;
-	ListNodeBare * next;// first and last for holder.
-	inline void ConnectNextTo(ListNodeBare *a){
-		Disconnect();
-		next = a->next;
-		prev = a;
-		next->prev = this;
-		prev->next = this;
-	};
-	inline void ConnectPrevTo(ListNodeBare *a){
-		Disconnect();
-		next = a;
-		prev = a->prev;
-		next->prev = this;
-		prev->next = this;
-	};
-	inline void Disconnect(){
-		if(prev!=this){//if we're connected
-			my_assert(prev!=NULL);
-			my_assert(next!=NULL);
-			my_assert(next!=this);
-			next->prev=prev;
-			prev->next=next;
-			// short itself.
-			prev=this;
-			next=this;
-		}else{
-			// we're not connected,must be so on both ends.
-			my_assert(next==this);
+		ListNodeBare * prev;
+		ListNodeBare * next;// first and last for holder.
+		inline void ConnectNextTo( ListNodeBare *a ) {
+			Disconnect();
+			next = a->next;
+			prev = a;
+			next->prev = this;
+			prev->next = this;
 		};
-	};
-	ListNodeBare(){prev=this;next=this;};
-	~ListNodeBare(){Disconnect();}
+		inline void ConnectPrevTo( ListNodeBare *a ) {
+			Disconnect();
+			next = a;
+			prev = a->prev;
+			next->prev = this;
+			prev->next = this;
+		};
+		inline void Disconnect() {
+			if ( prev != this ) {//if we're connected
+				my_assert( prev != NULL );
+				my_assert( next != NULL );
+				my_assert( next != this );
+				next->prev = prev;
+				prev->next = next;
+				// short itself.
+				prev = this;
+				next = this;
+			} else {
+				// we're not connected,must be so on both ends.
+				my_assert( next == this );
+			};
+		};
+		ListNodeBare() {
+			prev = this;
+			next = this;
+		};
+		~ListNodeBare() {
+			Disconnect();
+		}
 
-  ListNodeBare(const ListNodeBare &other){
-    prev=this;next=this;
-  }
+		ListNodeBare( const ListNodeBare &other ) {
+			prev = this;
+			next = this;
+		}
 };
 
 
 /// A base class for event receivers
 template<class TParamType>
-class EventReceiverFuncBase: public ListNodeBare{
-  public:
-  virtual void OnEvent(TParamType param)=0;
-  /// compiler bug workarounds:
+class EventReceiverFuncBase: public ListNodeBare {
+	public:
+		virtual void OnEvent( TParamType param ) = 0;
+		/// compiler bug workarounds:
 };
 
 /// use EventSender::SendEvent to send events.
 template<class TParamType>
-class EventSender: public ListNodeBare{
-  public:
-  void SendEvent(TParamType param){
-    //std::cout<<"SendEvent called "<<std::endl;
-    ListNodeBare *pt=next;
-    ListNodeBare *end=static_cast<ListNodeBare *>(this);
-    my_assert(pt->prev==end);
-    while(pt!=end){
-      my_assert(pt->next->prev==pt);
-      (static_cast<EventReceiverFuncBase<TParamType> *>(pt))->OnEvent(param);
-      pt=pt->next;
-    }
-  }
+class EventSender: public ListNodeBare {
+	public:
+		void SendEvent( TParamType param ) {
+			//std::cout<<"SendEvent called "<<std::endl;
+			ListNodeBare *pt = next;
+			ListNodeBare *end = static_cast<ListNodeBare *>( this );
+			my_assert( pt->prev == end );
+			while ( pt != end ) {
+				my_assert( pt->next->prev == pt );
+				( static_cast<EventReceiverFuncBase<TParamType> *>( pt ) )->OnEvent( param );
+				pt = pt->next;
+			}
+		}
 };
 
 /// Use EventReceiverFunc<base_class, parameter_type, &base_class::method> to make event receiver adaptor
-template<class TReceiverType, class TParamType, void (TReceiverType::*TMethod)(TParamType)>
+template < class TReceiverType, class TParamType, void ( TReceiverType::*TMethod )( TParamType ) >
 class EventReceiverFunc: public EventReceiverFuncBase<TParamType>
 {
-  TReceiverType *receiver_obj;
-  public:
-  EventReceiverFunc(){}
-  EventReceiverFunc(TReceiverType *receiver_obj_, EventSender<TParamType> *sender):
-  receiver_obj(receiver_obj_)
-  {
-    ListNodeBare *a=static_cast<ListNodeBare *>(sender);
-    ListNodeBare::ConnectPrevTo(a);
-  }
-  virtual void OnEvent(TParamType param){
-    if(receiver_obj){
-      (receiver_obj->*TMethod)(param);/// TMethod is constant here at compile time, so chances are the call is inlined. It is faster than standard pointer-to-member function call.
-    }
-  }
+		TReceiverType *receiver_obj;
+	public:
+		EventReceiverFunc() {}
+		EventReceiverFunc( TReceiverType *receiver_obj_, EventSender<TParamType> *sender ):
+				receiver_obj( receiver_obj_ )
+		{
+			ListNodeBare *a = static_cast<ListNodeBare *>( sender );
+			ListNodeBare::ConnectPrevTo( a );
+		}
+		virtual void OnEvent( TParamType param ) {
+			if ( receiver_obj ) {
+				( receiver_obj->*TMethod )( param );/// TMethod is constant here at compile time, so chances are the call is inlined. It is faster than standard pointer-to-member function call.
+			}
+		}
 };
 
 
