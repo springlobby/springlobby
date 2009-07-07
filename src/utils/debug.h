@@ -32,6 +32,9 @@ class assert_exception : public std::runtime_error
 #define ASSERT_EXCEPTION(cond,msg) if(!(cond))\
 {wxLogMessage(_T("runtime assertion ( %s:%d ): %s"), TowxString(__FILE__).c_str(),__LINE__ , wxString(msg).c_str() );throw assert_exception(std::string(wxString(msg).mb_str()));}
 
+#define CATCH_ANY catch(...)\
+{wxLogMessage(_T("%s-%d: undiff exception"),TowxString(__FILE__).c_str(),__LINE__ );}
+
 
 
 #endif // SPRINGLOBBY_HEADERGUARD_DEBUG_H

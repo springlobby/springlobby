@@ -99,7 +99,14 @@ bool Spring::Run( Battle& battle )
     battle.DisableHostStatusInProxyMode( false );
     f.Close();
 
-  } catch (...)
+  }
+    catch ( std::exception& e )
+    {
+        wxLogError( wxString::Format( _T("Couldn't write script.txt, exception caught:\n %s"), TowxString( e.what() ).c_str() ) );
+        return false;
+    }
+
+  catch (...)
   {
     wxLogError( _T("Couldn't write script.txt") );
     return false;
@@ -148,7 +155,13 @@ bool Spring::Run( SinglePlayerBattle& battle )
     f.Write( WriteScriptTxt(battle) );
     f.Close();
 
-  } catch (...)
+  }
+  catch ( std::exception& e )
+  {
+    wxLogError( wxString::Format( _T("Couldn't write script.txt, exception caught:\n %s"), TowxString( e.what() ).c_str() ) );
+    return false;
+  }
+  catch (...)
   {
     wxLogError( _T("Couldn't write script.txt") );
     return false;
