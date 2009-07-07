@@ -17,7 +17,7 @@
 BEGIN_EVENT_TABLE_TEMPLATE2(CustomVirtListCtrl, ListBaseType, T,L)
 #if wxUSE_TIPWINDOW
   EVT_MOTION(CustomVirtListCtrl::OnMouseMotion)
-  EVT_TIMER(wxID_ANY, CustomVirtListCtrl::OnTimer)
+  EVT_TIMER(IDD_TIP_TIMER, CustomVirtListCtrl::OnTimer)
 #endif
   EVT_LIST_COL_BEGIN_DRAG(wxID_ANY, CustomVirtListCtrl::OnStartResizeCol)
   EVT_LIST_COL_END_DRAG(wxID_ANY, CustomVirtListCtrl::OnEndResizeCol)
