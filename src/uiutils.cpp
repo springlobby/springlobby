@@ -323,6 +323,32 @@ struct Resizer
 };
 }
 
+std::vector<wxColour>& GetBigFixColoursPalette( int numteams )
+{
+    static std::vector<wxColour> result;
+    for ( int i = result.size(); i < numteams; i++ )
+    {
+    	double hue = ( i % 20 )  * 0.05;
+    	double saturation = 1;
+    	double value = 1;
+			int switccolors = i % 3;
+			if ( switccolors == 1 )
+			{
+				saturation = saturation / 2;
+			}
+			else if ( switccolors == 2 )
+			{
+				value = value / 2;
+			}
+			wxImage::HSVValue hsvcolor( hue, saturation, value );
+			wxImage::RGBValue rgbvalue = wxImage::HSVtoRGB( hsvcolor );
+			wxColor col( rgbvalue.red, rgbvalue.green, rgbvalue.blue );
+			result.push_back( col );
+    }
+    return result;
+}
+
+
 wxImage BorderInvariantResizeImage(  const wxImage& image, int width, int height )
 {
 	if ( !image.IsOk() || (width == image.GetWidth() && height == image.GetHeight()) )
