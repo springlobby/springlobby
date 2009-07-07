@@ -234,8 +234,12 @@ User& IBattle::OnUserAdded( User& user )
     }
 		if ( !bs.spectator )
 		{
-			m_teams_sizes[bs.team] = m_teams_sizes[bs.team] + 1;
-			m_ally_sizes[bs.ally] = m_ally_sizes[bs.ally] + 1;
+			std::map<int, int>::iterator itor = m_teams_sizes.find( bs.team );
+			if ( itor == m_teams_sizes.end() ) m_teams_sizes[bs.team] = 1;
+			else m_teams_sizes[bs.team] = m_teams_sizes[bs.team] + 1;
+			std::map<int, int>::iterator iter = m_ally_sizes.find( bs.ally );
+			if ( iter == m_ally_sizes.end() ) m_ally_sizes[bs.ally] = 1;
+			else m_ally_sizes[bs.ally] = m_ally_sizes[bs.ally] + 1;
 		}
 		if ( bs.spectator ) m_opts.spectators++;
 		if ( bs.ready && !bs.IsBot() ) m_players_ready++;
@@ -298,25 +302,62 @@ void IBattle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 	{
 		if ( !status.spectator )
 		{
-			if ( status.ready && !status.IsBot() ) m_players_sync++;
-			if ( status.sync && !status.IsBot() ) m_players_sync++;
-			m_teams_sizes[status.team] = m_teams_sizes[status.team] + 1;
-			m_ally_sizes[status.ally] = m_ally_sizes[status.ally] + 1;
+			std::map<int, int>::iterator itor = m_teams_sizes.find( status.team );
+			if ( itor == m_teams_sizes.end() ) m_teams_sizes[status.team] = 1;
+			else m_teams_sizes[status.team] = m_teams_sizes[status.team] + 1;
+			std::map<int, int>::iterator iter = m_ally_sizes.find( status.ally );
+			if ( iter == m_ally_sizes.end() ) m_ally_sizes[status.ally] = 1;
+			else m_ally_sizes[status.ally] = m_ally_sizes[status.ally] + 1;
 		}
 		else
 		{
-			if ( previousstatus.ready && !status.IsBot() ) m_players_ready--;
-			if ( previousstatus.sync && !status.IsBot() ) m_players_sync--;
-			m_teams_sizes[status.team] = m_teams_sizes[status.team] - 1;
-			m_ally_sizes[status.ally] = m_ally_sizes[status.ally] - 1;
+			std::map<int, int>::iterator itor = m_teams_sizes.find( status.team );
+			if ( itor != m_teams_sizes.end() )
+			{
+				 itor->second = itor->second -1;
+				if ( itor->second == 0 )
+				{
+					m_teams_sizes.erase( itor );
+				}
+			}
+			std::map<int, int>::iterator iter = m_ally_sizes.find( status.ally );
+			if ( iter != m_ally_sizes.end() )
+			{
+				iter->second = iter->second - 1;
+				if ( iter->second == 0 )
+				{
+					m_ally_sizes.erase( iter );
+				}
+			}
 		}
 	}
 	else
 	{
-		m_teams_sizes[previousstatus.team] = m_teams_sizes[previousstatus.team] - 1;
-		m_teams_sizes[status.team] = m_teams_sizes[status.team] + 1;
-		m_ally_sizes[previousstatus.ally] = m_ally_sizes[previousstatus.ally] - 1;
-		m_ally_sizes[status.ally] = m_ally_sizes[status.ally] + 1;
+		std::map<int, int>::iterator itor = m_teams_sizes.find( previousstatus.team );
+		if ( itor != m_teams_sizes.end() )
+		{
+			 itor->second = itor->second -1;
+			if ( itor->second == 0 )
+			{
+				m_teams_sizes.erase( itor );
+			}
+		}
+		itor = m_teams_sizes.find( status.team );
+		if ( itor != m_teams_sizes.end() ) itor->second = itor->second + 1;
+		else m_teams_sizes[status.team] = 1;
+
+		std::map<int, int>::iterator iter = m_ally_sizes.find( previousstatus.ally );
+		if ( iter != m_ally_sizes.end() )
+		{
+			 iter->second = iter->second - 1;
+				if ( iter->second == 0 )
+				{
+					m_ally_sizes.erase( iter );
+				}
+		}
+		iter = m_ally_sizes.find( status.ally );
+		if ( iter != m_ally_sizes.end() ) iter->second = iter->second + 1;
+		else m_ally_sizes[status.ally] = 1;
 	}
 	if ( !status.IsBot() )
 	{
@@ -368,8 +409,25 @@ void IBattle::OnUserRemoved( User& user )
 		UserBattleStatus& bs = user.BattleStatus();
 		if ( !bs.spectator )
 		{
-			m_teams_sizes[bs.team] = m_teams_sizes[bs.team] - 1;
-			m_ally_sizes[bs.ally] = m_ally_sizes[bs.ally] - 1;
+			std::map<int, int>::iterator itor = m_teams_sizes.find( status.team );
+			if ( itor != m_teams_sizes.end() )
+			{
+				 itor->second = itor->second -1;
+				if ( itor->second == 0 )
+				{
+					m_teams_sizes.erase( itor );
+				}
+			}
+			std::map<int, int>::iterator iter = m_ally_sizes.find( status.ally );
+			if ( iter != m_ally_sizes.end() )
+			{
+				iter->second = iter->second - 1;
+				if ( iter->second == 0 )
+				{
+					m_ally_sizes.erase( iter );
+				}
+			}
+ 		}
 		}
 		if ( bs.ready && !bs.IsBot() ) m_players_ready--;
 		if ( bs.sync && !bs.IsBot() ) m_players_sync--;
