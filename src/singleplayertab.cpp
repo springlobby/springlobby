@@ -301,9 +301,8 @@ void SinglePlayerTab::OnAddBot( wxCommandEvent& event )
 
 void SinglePlayerTab::OnStart( wxCommandEvent& event )
 {
-    wxLogDebugFunc( _T("") );
-    wxString nick = usync().GetDefaultNick();
-    if ( !nick.IsEmpty() ) m_battle.GetMe().SetNick( nick );
+    wxLogDebugFunc( _T("SP: ") );
+
     if ( m_ui.IsSpringRunning() )
     {
         wxLogWarning(_T("trying to start spring while another instance is running") );
