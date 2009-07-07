@@ -51,7 +51,7 @@ wxImage BorderInvariantResizeImage(  const wxImage& image, int width, int height
 
 wxImage ReplaceChannelStatusColour( wxBitmap img, const wxColour& colour );
 
-std::vector<wxColour> GetBigFixColoursPalette( int numteams );
+std::vector<wxColour>& GetBigFixColoursPalette( int numteams );
 
 
 void CopyToClipboard( const wxString& text );

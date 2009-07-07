@@ -83,15 +83,9 @@ std::vector<wxColour> &IBattle::GetFixColoursPalette()
 
 wxColour IBattle::GetFixColour(int i)
 {
-    std::vector<wxColour> palette = GetFixColoursPalette();
-    if (((unsigned int)i)<palette.size())
-    {
-        return palette[i];
-    }
-    else
-    {
-        return wxColour(127,127,127);
-    }
+    std::vector<wxColour>& palette = GetFixColoursPalette();
+    if ( m_teams_sizes.size() > palette.size() ) palette = GetBigFixColoursPalette( m_teams_sizes.size() );
+		return palette[i];
 }
 
 int IBattle::GetPlayerNum( const User& user )
@@ -177,8 +171,8 @@ int IBattle::GetFreeTeamNum( bool excludeme )
 
 int IBattle::GetClosestFixColour(const wxColour &col, const std::vector<int> &excludes, int &difference)
 {
-    std::vector<wxColour> palette = GetFixColoursPalette();
-    int mindiff=1024;
+    std::vector<wxColour>& palette = GetFixColoursPalette();
+    if ( m_teams_sizes.size() > palette.size() ) palette = GetBigFixColoursPalette( m_teams_sizes.size() );
     int result=0;
     int t1=palette.size();
     int t2=excludes.size();
@@ -187,16 +181,12 @@ int IBattle::GetClosestFixColour(const wxColour &col, const std::vector<int> &ex
     {
         if ((i>=excludes.size()) || (!excludes[i]))
         {
-            int diff=ColourDifference(palette[i],col);
-            if (diff<mindiff)
+            if (AreColoursSimilar( palette[i],col, difference ))
             {
-                mindiff=diff;
                 result=i;
             }
         }
     }
-    difference=mindiff;
-    wxLogMessage(_T("GetClosestFixColour result=%d diff=%d"),result,difference);
     return result;
 }
 
@@ -409,7 +399,7 @@ void IBattle::OnUserRemoved( User& user )
 		UserBattleStatus& bs = user.BattleStatus();
 		if ( !bs.spectator )
 		{
-			std::map<int, int>::iterator itor = m_teams_sizes.find( status.team );
+			std::map<int, int>::iterator itor = m_teams_sizes.find( bs.team );
 			if ( itor != m_teams_sizes.end() )
 			{
 				 itor->second = itor->second -1;
@@ -418,7 +408,7 @@ void IBattle::OnUserRemoved( User& user )
 					m_teams_sizes.erase( itor );
 				}
 			}
-			std::map<int, int>::iterator iter = m_ally_sizes.find( status.ally );
+			std::map<int, int>::iterator iter = m_ally_sizes.find( bs.ally );
 			if ( iter != m_ally_sizes.end() )
 			{
 				iter->second = iter->second - 1;
@@ -428,7 +418,6 @@ void IBattle::OnUserRemoved( User& user )
 				}
 			}
  		}
-		}
 		if ( bs.ready && !bs.IsBot() ) m_players_ready--;
 		if ( bs.sync && !bs.IsBot() ) m_players_sync--;
     if ( IsFounderMe() && bs.spectator )

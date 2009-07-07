@@ -323,10 +323,10 @@ struct Resizer
 };
 }
 
-std::vector<wxColour> GetBigFixColoursPalette( int numteams )
+std::vector<wxColour>& GetBigFixColoursPalette( int numteams )
 {
-    std::vector<wxColour> result;
-    for ( int i = 0; i < numteams; i++ )
+    static std::vector<wxColour> result;
+    for ( int i = result.size(); i < numteams; i++ )
     {
     	double hue = ( i % 20 )  * 0.05;
     	double saturation = 1;
