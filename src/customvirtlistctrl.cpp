@@ -519,7 +519,7 @@ template < class T, class L >
 bool CustomVirtListCtrl<T,L>::GetColumn(int col, wxListItem& item) const
 {
     #ifdef SL_DUMMY_COL
-        col--;
+        col++;
     #endif
     return ListBaseType::GetColumn( col, item );
 }
@@ -528,7 +528,7 @@ template < class T, class L >
 bool CustomVirtListCtrl<T,L>::SetColumn(int col, wxListItem& item)
 {
     #ifdef SL_DUMMY_COL
-        col--;
+        col++;
     #endif
     return ListBaseType::SetColumn( col, item );
 }
