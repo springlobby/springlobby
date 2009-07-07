@@ -188,8 +188,8 @@ class SpringUnitSync : public IUnitSync
     /// get heightmap rescaled to given width x height
     wxImage GetHeightmap( const wxString& mapname, int width, int height );
 
-    bool ReloadUnitSyncLib(  );
-    void ReloadUnitSyncLib( GlobalEvents::GlobalEventData /*data*/ ){ ReloadUnitSyncLib(); } ;
+	bool ReloadUnitSyncLib(  );
+	void ReloadUnitSyncLib( GlobalEvents::GlobalEventData data ) { ReloadUnitSyncLib(); }
 
     void SetSpringDataPath( const wxString& path );
 
@@ -215,6 +215,9 @@ class SpringUnitSync : public IUnitSync
     void GetMapExAsync( const wxString& mapname, int evtHandlerId );
 
     wxArrayString GetScreenshotFilenames();
+
+  protected:
+	  EventReceiverFunc< SpringUnitSync, GlobalEvents::GlobalEventData, &SpringUnitSync::ReloadUnitSyncLib > m_UnitsyncReloadRequestSink;
 
   private:
 

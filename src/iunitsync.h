@@ -60,7 +60,6 @@ class IUnitSync
 {
   public:
     IUnitSync()
-        : m_UnitsyncReloadRequestSink( this, &GetGlobalEventSender( GlobalEvents::UnitSyncReloadRequest ) )
     { }
 
     virtual ~IUnitSync() { }
@@ -187,7 +186,7 @@ class IUnitSync
     virtual GameOptions GetAIOptions( const wxString& modname, int index ) = 0;
 
     virtual bool ReloadUnitSyncLib(  ) = 0;
-    virtual void ReloadUnitSyncLib( GlobalEvents::GlobalEventData /*data*/ ) = 0;
+    virtual void ReloadUnitSyncLib( GlobalEvents::GlobalEventData data ) = 0;
 
     virtual wxArrayString GetPlaybackList( bool ReplayType = true ) = 0; //savegames otherwise
 
@@ -212,8 +211,6 @@ class IUnitSync
 
     virtual wxArrayString GetScreenshotFilenames() = 0;
 
-    protected:
-        EventReceiverFunc< IUnitSync, GlobalEvents::GlobalEventData, &IUnitSync::ReloadUnitSyncLib > m_UnitsyncReloadRequestSink;
 };
 
 IUnitSync& usync();
