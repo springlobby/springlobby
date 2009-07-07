@@ -14,7 +14,7 @@
 SinglePlayerBattle::SinglePlayerBattle(Ui& ui, MainSinglePlayerTab& msptab):
   m_ui(ui),
   m_sptab(msptab),
-  m_me( User( usync().GetDefaultNick() ) )
+  m_me( User( usync().IsLoaded() ? usync().GetDefaultNick() : _T("invalid") ) )
 {
 	OnUserAdded( m_me );
 	m_me.BattleStatus().colour = sett().GetBattleLastColour();

@@ -198,6 +198,10 @@ void SinglePlayerTab::SetMap( unsigned int index )
   m_map_pick->SetSelection( index );
 }
 
+void SinglePlayerTab::ResetUsername()
+{
+    m_battle.GetMe().SetNick( usync().GetDefaultNick() );
+}
 
 void SinglePlayerTab::SetMod( unsigned int index )
 {

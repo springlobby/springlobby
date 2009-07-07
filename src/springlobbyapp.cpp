@@ -143,7 +143,7 @@ bool SpringLobbyApp::OnInit()
         wxMkdir( wxStandardPaths::Get().GetUserDataDir() );
 
     sett().RefreshSpringVersionList();
-    ui().ReloadUnitSync(); // first time load of unitsync
+    usync().ReloadUnitSyncLib(); // first time load of unitsync
 
     //everything below should not be executing when updating, so we can ensure no GUI window is created, torrent system isn't started, etc.
     // NOTE: this assumes no one will try to update at firstRun
