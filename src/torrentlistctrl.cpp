@@ -118,17 +118,19 @@ void TorrentListCtrl::UpdateTorrentInfo(const DataType& info)
 			AddTorrentInfo(info);
 		return;
 	}
+	
+	if(!IsTorrentActive(info))
+	{
+		RemoveTorrentInfo(info);
+		return;
+	}
 	else
 	{
-		if(!IsTorrentActive(info))
-		{
-			RemoveTorrentInfo(info);
-			return;
-		}
-
-		RefreshItem( index );
-		MarkDirtySort();
+		m_data[index] = info;
 	}
+
+	RefreshItem( index );
+	MarkDirtySort();
 }
 
 
