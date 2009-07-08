@@ -326,20 +326,55 @@ struct Resizer
 std::vector<wxColour>& GetBigFixColoursPalette( int numteams )
 {
     static std::vector<wxColour> result;
+    static int huebifurcatepos;
+    static std::vector<double> huesplittings;
+    if ( huesplittings.empty() ) // insert ranges to bifurcate
+    {
+    	huesplittings.push_back( 1 );
+    	huesplittings.push_back( 0 );
+    	huebifurcatepos = 0;
+    }
+    static int satvalbifurcatepos;
+    static std::vector<double> satvalsplittings;
+    if ( satvalsplittings.empty() ) // insert ranges to bifurcate
+    {
+    	satvalsplittings.push_back( 1 );
+    	satvalsplittings.push_back( 0 );
+    	satvalbifurcatepos = 0;
+    }
+
+    int bisectionlimit = 20;
     for ( int i = result.size(); i < numteams; i++ )
     {
-    	double hue = ( i % 20 )  * 0.05;
+    	double hue = 1;
     	double saturation = 1;
     	double value = 1;
-			int switccolors = i % 3;
+			int switccolors = i % 3; // why only 3 and not all combinations? because it's easy, plus the bisection limit cannot be divided integer by it
+
+			huebifurcatepos = huebifurcatepos % ( huesplittings.size() -1 );
+			std::vector<double>::iterator toinsert = huesplittings.begin() + huebifurcatepos + 1;
+			huesplittings.insert( toinsert, ( huesplittings[huebifurcatepos] - huesplittings[huebifurcatepos + 1] ) / 2 + huesplittings[huebifurcatepos + 1] );
+			hue = huesplittings[huebifurcatepos+1];
+			huebifurcatepos += 2;
+
+			if ( ( i % bisectionlimit ) == 0 )
+			{
+				satvalbifurcatepos = satvalbifurcatepos % ( satvalsplittings.size() -1 );
+				std::vector<double>::iterator toinsert = satvalsplittings.begin() + satvalbifurcatepos + 1;
+				satvalsplittings.insert( toinsert, ( satvalsplittings[satvalbifurcatepos] - satvalsplittings[satvalbifurcatepos + 1] ) / 2 + satvalsplittings[satvalbifurcatepos + 1] );
+				satvalbifurcatepos += 2;
+			}
+
 			if ( switccolors == 1 )
 			{
-				saturation = saturation / 2;
+				saturation = satvalsplittings[satvalbifurcatepos -1];
 			}
 			else if ( switccolors == 2 )
 			{
-				value = value / 2;
+				value = satvalsplittings[satvalbifurcatepos -1];
 			}
+			hue += 0.17; // use as starting point a zone where color band is narrow so that small variations means high change in visual effect
+			if ( hue > 1 ) hue-= 1;
 			wxImage::HSVValue hsvcolor( hue, saturation, value );
 			wxImage::RGBValue rgbvalue = wxImage::HSVtoRGB( hsvcolor );
 			wxColor col( rgbvalue.red, rgbvalue.green, rgbvalue.blue );

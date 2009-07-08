@@ -59,7 +59,7 @@ bool IBattle::IsSynced()
 
 
 
-std::vector<wxColour> &IBattle::GetFixColoursPalette()
+std::vector<wxColour> &IBattle::GetFixColoursPalette( int numteams )
 {
     static std::vector<wxColour> result;
     if (result.empty())
@@ -78,13 +78,14 @@ std::vector<wxColour> &IBattle::GetFixColoursPalette()
             }
         }
     }
-    return result;
+    if ( result.size() < numteams ) return result;
+    return GetBigFixColoursPalette( numteams );
 }
 
 wxColour IBattle::GetFixColour(int i)
 {
-    std::vector<wxColour>& palette = GetFixColoursPalette();
-    if ( m_teams_sizes.size() > palette.size() ) palette = GetBigFixColoursPalette( m_teams_sizes.size() );
+		int size = m_teams_sizes.size();
+    std::vector<wxColour> palette = GetFixColoursPalette( size );
 		return palette[i];
 }
 
@@ -98,48 +99,58 @@ int IBattle::GetPlayerNum( const User& user )
     return -1;
 }
 
-wxColour IBattle::GetFreeColour( User &for_whom ) const
+wxColour IBattle::GetFreeColour( User &for_whom )
 {
     int lowest = 0;
     bool changed = true;
+    std::vector<wxColour>& fixcolourspalette = GetFixColoursPalette( m_teams_sizes.size() + 1 );
     while ( changed )
     {
         changed = false;
+        std::set<int> parsed_teams;
         for ( user_map_t::size_type i = 0; i < GetNumUsers(); i++ )
         {
             if ( &GetUser( i ) == &for_whom ) continue;
             UserBattleStatus& bs = GetUser( i ).BattleStatus();
             if ( bs.spectator ) continue;
-            if ( AreColoursSimilar( bs.colour, wxColour(colour_values[lowest][0], colour_values[lowest][1], colour_values[lowest][2]) ) )
+						if ( parsed_teams.find( bs.team ) != parsed_teams.end() ) continue; // skip duplicates
+						parsed_teams.insert( bs.team );
+            if ( AreColoursSimilar( bs.colour, fixcolourspalette[lowest] ) )
             {
                 lowest++;
+                if ( lowest > fixcolourspalette.size() ) fixcolourspalette = GetFixColoursPalette( lowest + 1 );
                 changed = true;
             }
         }
     }
-    return wxColour( colour_values[lowest][0], colour_values[lowest][1], colour_values[lowest][2] );
+    return fixcolourspalette[lowest];
 }
 
 
-wxColour IBattle::GetNewColour() const
+wxColour IBattle::GetNewColour()
 {
     int lowest = 0;
     bool changed = true;
+    std::vector<wxColour>& fixcolourspalette = GetFixColoursPalette( m_teams_sizes.size() + 1 );
     while ( changed )
     {
         changed = false;
+        std::set<int> parsed_teams;
         for ( user_map_t::size_type i = 0; i < GetNumUsers(); i++ )
         {
             UserBattleStatus& bs = GetUser( i ).BattleStatus();
             if ( bs.spectator ) continue;
-            if ( AreColoursSimilar( bs.colour, wxColour(colour_values[lowest][0], colour_values[lowest][1], colour_values[lowest][2]) ) )
+						if ( parsed_teams.find( bs.team ) != parsed_teams.end() ) continue; // skip duplicates
+						parsed_teams.insert( bs.team );
+            if ( AreColoursSimilar( bs.colour, fixcolourspalette[lowest] ) )
             {
                 lowest++;
+                if ( lowest > fixcolourspalette.size() ) fixcolourspalette = GetFixColoursPalette( lowest + 1 );
                 changed = true;
             }
         }
     }
-    return wxColour( colour_values[lowest][0], colour_values[lowest][1], colour_values[lowest][2] );
+    return fixcolourspalette[lowest];
 }
 
 int IBattle::ColourDifference(const wxColour &a, const wxColour &b) // returns max difference of r,g,b.
@@ -171,8 +182,7 @@ int IBattle::GetFreeTeamNum( bool excludeme )
 
 int IBattle::GetClosestFixColour(const wxColour &col, const std::vector<int> &excludes, int &difference)
 {
-    std::vector<wxColour>& palette = GetFixColoursPalette();
-    if ( m_teams_sizes.size() > palette.size() ) palette = GetBigFixColoursPalette( m_teams_sizes.size() );
+    std::vector<wxColour> palette = GetFixColoursPalette( m_teams_sizes.size() );
     int result=0;
     int t1=palette.size();
     int t2=excludes.size();
