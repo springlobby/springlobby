@@ -203,27 +203,22 @@ void customMessageBoxNoModal( int whichIcon , const wxString& message,const wxSt
 		s_nonmodbox->Show(true);
 }
 
+template <class T>
+void closeAndDestroy( T* win )
+{
+    if ( win ) {
+        win->Show(false);
+        win->Destroy();
+        win = 0;
+    }
+}
+
 void freeStaticBox()
 {
-    if (s_nonmodbox!=0)
-    {
-        s_nonmodbox->Show(false);
-         s_nonmodbox->Destroy();
-         s_nonmodbox = 0;
-    }
-    if (s_serverMsgBox!=0)
-    {
-        s_serverMsgBox->Show(false);
-         s_serverMsgBox->Destroy();
-         s_serverMsgBox = 0;
-    }
-    if (s_actNotifBox!=0)
-    {
-        s_actNotifBox->Show(false);
-         s_actNotifBox->Destroy();
-         s_actNotifBox = 0;
-    }
-
+    closeAndDestroy( s_nonmodbox );
+    closeAndDestroy( s_serverMsgBox );
+    closeAndDestroy( s_actNotifBox );
+    closeAndDestroy( s_mutelistWindow );
 }
 
 CreditsDialog::CreditsDialog(wxWindow* parent,wxString title,int whichIcon) : wxDialog(parent,-1,title,wxDefaultPosition,
