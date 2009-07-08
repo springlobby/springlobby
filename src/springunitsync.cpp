@@ -145,7 +145,6 @@ void SpringUnitSync::PopulateArchiveList()
 
 bool SpringUnitSync::_LoadUnitSyncLib( const wxString& unitsyncloc )
 {
-  ActivityNoticeContainer act_notice( NULL, _("Loading unitsync"), _T("%s") );
   try {
     susynclib().Load( unitsyncloc, sett().GetForcedSpringConfigFilePath() );
   } catch (...) {
@@ -748,7 +747,6 @@ wxImage SpringUnitSync::_GetMapImage( const wxString& mapname, const wxString& i
 
 wxImage SpringUnitSync::_GetScaledMapImage( const wxString& mapname, wxImage (SpringUnitSync::*loadMethod)(const wxString&), int width, int height )
 {
-	ActivityNoticeContainer act_notice( NULL, mapname, _T("Loading metalmap %s") );
   wxImage img = (this->*loadMethod) ( mapname );
 
   if (img.GetWidth() > 1 && img.GetHeight() > 1)
