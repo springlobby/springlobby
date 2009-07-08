@@ -46,7 +46,6 @@ class MainChatTab : public wxScrolledWindow
     void ChangeUnreadPMColour( const wxColour& colour );
 
     void UpdateNicklistHighlights();
-    void Update();
 
     wxImage ReplaceChannelStatusColour( wxBitmap img, const wxColour& colour );
 

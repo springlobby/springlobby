@@ -54,13 +54,18 @@ BEGIN_EVENT_TABLE( BattleroomListCtrl,  BattleroomListCtrl::BaseType )
 END_EVENT_TABLE()
 
 
-BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, IBattle* battle, Ui& ui, bool readonly ) :
-	CustomVirtListCtrl< User *,BattleroomListCtrl>(parent, BRLIST_LIST, wxDefaultPosition, wxDefaultSize,
-                wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL, _T("BattleroomListCtrl"), 10, 3, &CompareOneCrit ),
-	m_battle(battle),m_popup(0),
-  m_sel_user(0), m_sides(0),m_spec_item(0),m_handicap_item(0),
-  m_ui(ui),
-  m_ro(readonly)
+BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, IBattle* battle, Ui& ui, bool readonly )
+    : CustomVirtListCtrl< User *,BattleroomListCtrl>(parent, BRLIST_LIST, wxDefaultPosition, wxDefaultSize,
+                wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL, _T("BattleroomListCtrl"), 10, 3, &CompareOneCrit,
+                true /*highlight*/, UserActions::ActHighlight, !readonly /*periodic sort*/ ),
+	m_battle(battle),
+	m_popup(0),
+    m_sel_user(0),
+    m_sides(0),
+    m_spec_item(0),
+    m_handicap_item(0),
+    m_ui(ui),
+    m_ro(readonly)
 {
   GetAui().manager->AddPane( this, wxLEFT, _T("battleroomlistctrl") );
 
