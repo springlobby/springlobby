@@ -939,7 +939,7 @@ wxArrayString SpringUnitSync::GetScreenshotFilenames()
 
 wxString SpringUnitSync::GetDefaultNick()
 {
-	return susynclib().GetSpringConfigString( _T("name"), _T("") );
+	return susynclib().GetSpringConfigString( _T("name"), _T("Player") );
 }
 
 void SpringUnitSync::SetDefaultNick( const wxString& nick )
