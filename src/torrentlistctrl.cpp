@@ -38,18 +38,18 @@ TorrentListCtrl::TorrentListCtrl( wxWindow* parent, Ui& ui ):
                 wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("TorrentListCtrl"), 10, 10, &CompareOneCrit )
 
 {
-	const int widths [3] = { wxLIST_AUTOSIZE, wxLIST_AUTOSIZE, wxLIST_AUTOSIZE };
+	const int widths[10] = { 250, wxLIST_AUTOSIZE_USEHEADER, wxLIST_AUTOSIZE_USEHEADER, 100, 70, 100, 70, 80, wxLIST_AUTOSIZE_USEHEADER, wxLIST_AUTOSIZE_USEHEADER };
 
 	AddColumn(0, widths[0], _T("Name"), _T("Name"));
-	AddColumn(1, widths[0], _T("Numcopies"), _T("# complete copies"));
-	AddColumn(2, widths[0], _T("MB downloaded"), _T("MB downloaded"));
-	AddColumn(3, widths[0], _T("MB uploaded"), _T("MB uploade"));
-	AddColumn(4, widths[0], _T("Status"), _T("Status"));
-	AddColumn(5, widths[0], _T("% complete"), _T("% complete"));
-	AddColumn(6, widths[0], _T("KB/s up"), _T("KB/s upload"));
-	AddColumn(7, widths[0], _T("KB/s down"), _T("KB/s download"));
-	AddColumn(8, widths[0], _T("ETA"), _T("Estimated time remaining"));
-	AddColumn(9, widths[0], _T("Filesize (MB)"), _T("Filesize"));
+	AddColumn(1, widths[1], _T("Numcopies"), _T("# complete copies"));
+	AddColumn(2, widths[2], _T("MB downloaded"), _T("MB downloaded"));
+	AddColumn(3, widths[3], _T("MB uploaded"), _T("MB uploaded"));
+	AddColumn(4, widths[4], _T("Status"), _T("Status"));
+	AddColumn(5, widths[5], _T("% complete"), _T("% complete"));
+	AddColumn(6, widths[6], _T("KB/s up"), _T("KB/s upload"));
+	AddColumn(7, widths[7], _T("KB/s down"), _T("KB/s download"));
+	AddColumn(8, widths[8], _T("ETA"), _T("Estimated time remaining"));
+	AddColumn(9, widths[9], _T("Filesize (MB)"), _T("Filesize"));
 
 
 // sortorder: name --> percent completed --> mb donwloaded
@@ -65,20 +65,6 @@ TorrentListCtrl::TorrentListCtrl( wxWindow* parent, Ui& ui ):
 	}
 
 	Sort( );
-
-	//TODO this'll need fixing on win i assume [koshi]
-	/*SetColumnWidth( 0, 250 );
-	SetColumnWidth( 1, wxLIST_AUTOSIZE_USEHEADER );
-	SetColumnWidth( 2, wxLIST_AUTOSIZE_USEHEADER );
-	SetColumnWidth( 7, 80 );
-	SetColumnWidth( 8, wxLIST_AUTOSIZE_USEHEADER );
-	SetColumnWidth( 9, wxLIST_AUTOSIZE_USEHEADER );
-
-
-	SetColumnWidth( 3, 100 );
-	SetColumnWidth( 4, 70 );
-	SetColumnWidth( 5, 100 );
-	SetColumnWidth( 6, 70 );*/
 
 //  m_popup = new wxMenu( _T("") );
 //  // &m enables shortcout "alt + m" and underlines m

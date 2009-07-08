@@ -92,7 +92,7 @@ MainTorrentTab::MainTorrentTab(wxWindow* parent, Ui& ui)
 	for (map_infos_iter iter = info_map.begin(); iter != info_map.end(); ++iter)
 	{
 		if (iter->first == 0) continue;
-        AddTorrentInfo(iter->second);
+        m_torrent_list->AddTorrentInfo(iter->second);
 	}
 }
 
@@ -114,30 +114,6 @@ void MainTorrentTab::OnDLWidgets( wxCommandEvent& event )
         m_widgets_dialog = new WidgetDownloadDialog( this, wxID_ANY, _("Lua widget downloader") );
         m_widgets_dialog->Show( true );
     }
-}
-
-
-void MainTorrentTab::AddTorrentInfo(  TorrentInfos& info )
-{
-	if(!m_torrent_list->AddTorrentInfo(info))
-		  return;
-	m_torrent_list->MarkDirtySort();
-
-}
-
-
-void MainTorrentTab::RemoveTorrentInfo(  TorrentInfos& info )
-{
-	if(!m_torrent_list->RemoveTorrentInfo(info))
-		  return;
-	m_torrent_list->MarkDirtySort();
-
-}
-
-
-void MainTorrentTab::UpdateInfo(  TorrentInfos& info )
-{
-	m_torrent_list->UpdateTorrentInfo(info);	
 }
 
 
@@ -184,7 +160,7 @@ void MainTorrentTab::OnUpdate()
     for (map_infos_iter iter = info_map.begin(); iter != info_map.end(); ++iter)
     {
 		if (iter->first == 0) continue; //skip global torrent stats
-		UpdateInfo(iter->second);
+		m_torrent_list->UpdateTorrentInfo(iter->second);
     }
     Layout();
     m_torrent_list->RestoreSelection();
