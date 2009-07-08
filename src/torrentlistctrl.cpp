@@ -205,7 +205,7 @@ wxString TorrentListCtrl::GetItemText(long item, long column) const
 	switch ( column ) {
         default: return wxEmptyString;
         case 0: return infos.name;
-        case 1: return infos.numcopies > 0 ? wxString::Format(_T("%.2f"), infos.numcopies ) : _("not available");
+        case 1: return infos.numcopies > 0 ? wxString::Format(_T("%.2f"), infos.numcopies ) : _("N/A");
         case 2: return wxString::Format(_T("%.2f"), infos.downloaded*mfactor );
         case 3: return wxString::Format(_T("%.2f"), infos.uploaded*mfactor );
 		case 4:
