@@ -323,17 +323,38 @@ struct Resizer
 };
 }
 
+typedef std::vector<double> huevec;
+
+
+void hue(huevec& out, int amount, int level)
+{
+	if (level <= 1) {
+		if (out.size() < amount) out.push_back(0.0);
+		if (out.size() < amount) out.push_back(0.5);
+	}
+	else {
+		hue(out, amount, level - 1);
+		const int lower = out.size();
+		hue(out, amount, level - 1);
+		const int upper = out.size();
+		for (int i = lower; i < upper; ++i)
+			out.at(i) += 1.0 / (1 << level);
+	}
+}
+
+void hue(huevec& out, int amount)
+{
+	int level = 0;
+	while ((1 << level) < amount) ++level;
+
+	out.reserve(amount);
+	hue(out, amount, level);
+}
+
 std::vector<wxColour>& GetBigFixColoursPalette( int numteams )
 {
     static std::vector<wxColour> result;
-    static int huebifurcatepos;
-    static std::vector<double> huesplittings;
-    if ( huesplittings.empty() ) // insert ranges to bifurcate
-    {
-    	huesplittings.push_back( 1 );
-    	huesplittings.push_back( 0 );
-    	huebifurcatepos = 0;
-    }
+		huevec huevector;
     static int satvalbifurcatepos;
     static std::vector<double> satvalsplittings;
     if ( satvalsplittings.empty() ) // insert ranges to bifurcate
@@ -342,20 +363,14 @@ std::vector<wxColour>& GetBigFixColoursPalette( int numteams )
     	satvalsplittings.push_back( 0 );
     	satvalbifurcatepos = 0;
     }
-
+		hue( huevector, numteams );
     int bisectionlimit = 20;
     for ( int i = result.size(); i < numteams; i++ )
     {
-    	double hue = 1;
+    	double hue = huevector[i];
     	double saturation = 1;
     	double value = 1;
 			int switccolors = i % 3; // why only 3 and not all combinations? because it's easy, plus the bisection limit cannot be divided integer by it
-
-			huebifurcatepos = huebifurcatepos % ( huesplittings.size() -1 );
-			std::vector<double>::iterator toinsert = huesplittings.begin() + huebifurcatepos + 1;
-			huesplittings.insert( toinsert, ( huesplittings[huebifurcatepos] - huesplittings[huebifurcatepos + 1] ) / 2 + huesplittings[huebifurcatepos + 1] );
-			hue = huesplittings[huebifurcatepos+1];
-			huebifurcatepos += 2;
 
 			if ( ( i % bisectionlimit ) == 0 )
 			{
