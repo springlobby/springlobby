@@ -54,7 +54,7 @@ TorrentListCtrl::TorrentListCtrl( wxWindow* parent, Ui& ui ):
 
 // sortorder: name --> percent completed --> mb donwloaded
 
-	if ( m_sortorder.size() == 0 ) 
+	if ( m_sortorder.size() == 0 )
 	{
 		m_sortorder[0].col = 0;
 		m_sortorder[0].direction = 1;
@@ -118,7 +118,7 @@ void TorrentListCtrl::UpdateTorrentInfo(const DataType& info)
 			AddTorrentInfo(info);
 		return;
 	}
-	
+
 	if(!IsTorrentActive(info))
 	{
 		RemoveTorrentInfo(info);
@@ -205,7 +205,7 @@ wxString TorrentListCtrl::GetItemText(long item, long column) const
 	switch ( column ) {
         default: return wxEmptyString;
         case 0: return infos.name;
-        case 1: return infos.numcopies > 0 ? wxString::Format(_T("%.2f"), infos.numcopies ) : _("N/A");
+        case 1: return infos.numcopies > 0 ? wxString::Format(_T("%.2f"), infos.numcopies ) : wxString( _("N/A") );
         case 2: return wxString::Format(_T("%.2f"), infos.downloaded*mfactor );
         case 3: return wxString::Format(_T("%.2f"), infos.uploaded*mfactor );
 		case 4:
@@ -216,7 +216,7 @@ wxString TorrentListCtrl::GetItemText(long item, long column) const
 		case 5: return wxString::Format(_T("%.2f"), infos.progress * 100 );
 		case 6: return wxString::Format(_T("%.2f"), infos.outspeed*kfactor );
 		case 7: return wxString::Format(_T("%.2f"), infos.inspeed*kfactor );
-		case 8: return infos.eta > -1 ? wxTimeSpan::Seconds(infos.eta).Format("%H:%M:%S") : _T("inf.") ;
+		case 8: return infos.eta > -1 ? wxTimeSpan::Seconds(infos.eta).Format( _T("%H:%M:%S") ) : _T("inf.") ;
 		case 9: return wxString::Format(_T("%.2f"), infos.filesize*mfactor);
 	}
 }
@@ -233,8 +233,8 @@ int TorrentListCtrl::GetIndexFromData( const DataType& data ) const
 
 bool TorrentListCtrl::IsTorrentActive(const DataType& info)
 {
-	 return (info.downloadstatus == P2P::seeding 
-		  || info.downloadstatus == P2P::leeching 
+	 return (info.downloadstatus == P2P::seeding
+		  || info.downloadstatus == P2P::leeching
 		  || info.downloadstatus == P2P::queued);
 }
 
