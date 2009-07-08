@@ -275,7 +275,7 @@ public:
     virtual void DeletePreset( const wxString& name );
     virtual wxArrayString GetPresetList();
 
-    virtual std::vector<wxColour> &GetFixColoursPalette();
+    virtual std::vector<wxColour> &GetFixColoursPalette( int numteams );
     virtual int GetClosestFixColour(const wxColour &col, const std::vector<int> &excludes, int &difference);
     virtual wxColour GetFixColour(int i);
     virtual wxColour GetFreeColour( User &for_whom ) const;

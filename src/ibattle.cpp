@@ -59,7 +59,7 @@ bool IBattle::IsSynced()
 
 
 
-std::vector<wxColour> &IBattle::GetFixColoursPalette()
+std::vector<wxColour> &IBattle::GetFixColoursPalette( int numteams )
 {
     static std::vector<wxColour> result;
     if (result.empty())
@@ -78,13 +78,13 @@ std::vector<wxColour> &IBattle::GetFixColoursPalette()
             }
         }
     }
-    return result;
+    if ( result.size < numteams ) return result;
+    else return GetBigFixColoursPalette( numteams );
 }
 
 wxColour IBattle::GetFixColour(int i)
 {
-    std::vector<wxColour>& palette = GetFixColoursPalette();
-    if ( m_teams_sizes.size() > palette.size() ) palette = GetBigFixColoursPalette( m_teams_sizes.size() );
+    std::vector<wxColour>& palette = GetFixColoursPalette(m_teams_sizes.size());
 		return palette[i];
 }
 
@@ -171,8 +171,7 @@ int IBattle::GetFreeTeamNum( bool excludeme )
 
 int IBattle::GetClosestFixColour(const wxColour &col, const std::vector<int> &excludes, int &difference)
 {
-    std::vector<wxColour>& palette = GetFixColoursPalette();
-    if ( m_teams_sizes.size() > palette.size() ) palette = GetBigFixColoursPalette( m_teams_sizes.size() );
+    std::vector<wxColour>& palette = GetFixColoursPalette( m_teams_sizes.size() );
     int result=0;
     int t1=palette.size();
     int t2=excludes.size();

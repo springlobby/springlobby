@@ -653,8 +653,7 @@ void Battle::SetInGame( bool value )
 void Battle::FixColours()
 {
     if ( !IsFounderMe() )return;
-    std::vector<wxColour> &palette = GetFixColoursPalette();
-		if ( m_teams_sizes.size() > palette.size() ) palette = GetBigFixColoursPalette( m_teams_sizes.size() );
+    std::vector<wxColour> &palette = GetFixColoursPalette( m_teams_sizes.size() );
     std::vector<int> palette_use( palette.size(), 0 );
 
     wxColour my_col = GetMe().BattleStatus().colour; // Never changes color of founder (me) :-)
