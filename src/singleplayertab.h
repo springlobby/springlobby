@@ -49,6 +49,7 @@ class SinglePlayerTab: public  wxScrolledWindow
     void OnMouseWheel( wxMouseEvent& event );
 
     void OnUnitSyncReloaded();
+    void ResetUsername();
 
     void SetMap( unsigned int index );
     void SetMod( unsigned int index );

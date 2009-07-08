@@ -62,8 +62,6 @@ Ui::Ui() :
         m_main_win(0),
         m_con_win(0),
         m_upd_counter_torrent(0),
-        m_upd_counter_battlelist(0),
-        m_upd_counter_chat(0),
         m_first_update_trigger(true),
         m_ingame(false)
 {
@@ -214,7 +212,7 @@ void Ui::DoConnect( const wxString& servername, const wxString& username, const 
     host = sett().GetServerHost( servername );
     port = sett().GetServerPort( servername );
 
-    GetServer().uidata.panel = m_main_win->GetChatTab().AddChatPannel( *m_serv, servername );
+    GetServer().uidata.panel = m_main_win->GetChatTab().AddChatPanel( *m_serv, servername );
     GetServer().uidata.panel->StatusMessage( _T("Connecting to server ") + servername + _T("...") );
 
     // Connect
@@ -539,24 +537,6 @@ void Ui::OnUpdate( int mselapsed )
     {
         GetServer().Update( mselapsed );
     }
-
-		if ( m_upd_counter_battlelist % 50 == 0  )
-		{
-			try
-			{
-				mw().GetJoinTab().Update();
-			} catch ( assert_exception &e ) {}
-		}
-		m_upd_counter_battlelist++;
-
-		if ( m_upd_counter_chat % 47 == 0  )
-		{
-			try
-			{
-				mw().GetChatTab().Update();
-			} catch ( assert_exception &e ) {}
-		}
-		m_upd_counter_chat++;
 
     if ( m_first_update_trigger )
     {

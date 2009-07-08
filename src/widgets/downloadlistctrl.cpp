@@ -4,7 +4,7 @@
 
 template<> SortOrder WidgetDownloadListctrl::BaseType::m_sortorder = SortOrder();
 
-const unsigned int column_count = 6;
+const unsigned int column_count = 4;
 
 BEGIN_EVENT_TABLE( WidgetDownloadListctrl, WidgetDownloadListctrl::BaseType )
   EVT_LIST_ITEM_ACTIVATED( WIDGETLISTCTRL_ID, WidgetDownloadListctrl::OnActivateItem )
@@ -18,19 +18,17 @@ WidgetDownloadListctrl::WidgetDownloadListctrl(wxWindow* parent, wxWindowID id, 
 {
     const int as = wxLIST_AUTOSIZE;
 #if defined(__WXMSW__)
-    const int widths [column_count] = { as, as, as, as, as, as };
+    const int widths [column_count] = { as, as, as, as };
 #elif defined(__WXMAC__)
-    const int widths [column_count] = { as, as, as, as, as, as };
+    const int widths [column_count] = { as, as, as, as };
 #else
-    const int widths [column_count] = { as, as, as, as, as, as };
+    const int widths [column_count] = { as, as, as, as };
 #endif
-    int i = 0;
-    AddColumn( i++, widths[0], _("Name"), _T("Name") );
-//    AddColumn( i++, widths[1], _("Description"), _T("Description") );
-    AddColumn( i++, widths[2], _T("Author"), _T("Author") );
-    AddColumn( i++, widths[3], _T("Mods"), _T("Compatible mods") );
-    AddColumn( i++, widths[4], _T("Downloads"), _T("Downloads") );
-//    AddColumn( i++, widths[5], _T("Date"), _T("Date") );
+
+    AddColumn( 0, widths[0], _("Name"), _T("Name") );
+    AddColumn( 1, widths[1], _T("Author"), _T("Author") );
+    AddColumn( 2, widths[2], _T("Mods"), _T("Compatible mods") );
+    AddColumn( 3, widths[3], _T("Downloads"), _T("Downloads") );
 
     if ( m_sortorder.size() == 0 ) {
         m_sortorder[2].col = 2;

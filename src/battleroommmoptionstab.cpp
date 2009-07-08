@@ -559,6 +559,7 @@ void BattleroomMMOptionsTab<BattleType>::OnButton( wxCommandEvent& event )
 template < class BattleType >
 void BattleroomMMOptionsTab<BattleType>::OnInfoButton( wxCommandEvent& event )
 {
+    #ifdef wxUSE_TIPWINDOW
     wxWindow* button = (wxWindow*) event.GetEventObject();
     if ( button ) {
         nameInfoMap::const_iterator iter = m_name_info_map.find( button->GetName() );
@@ -569,5 +570,6 @@ void BattleroomMMOptionsTab<BattleType>::OnInfoButton( wxCommandEvent& event )
             tip->Move( pos.x, pos.y - tip->GetSize().GetHeight() );
         }
     }
+    #endif
 }
 

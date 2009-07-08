@@ -162,8 +162,6 @@ class Ui
     wxString m_last_used_backup_server;
 
     unsigned int m_upd_counter_torrent;
-    unsigned int m_upd_counter_battlelist;
-    unsigned int m_upd_counter_chat;
 
     bool m_first_update_trigger;
 
