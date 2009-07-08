@@ -462,7 +462,7 @@ void ActivityNoticePanel::OnTimer(wxTimerEvent& event)
 
  ActivityNoticeContainer::ActivityNoticeContainer(wxWindow* parent_,const wxString& file,const wxString& format )
 {
-    wxWindow* parent = ( parent_ != 0 ) ? parent_ : ( wxTheApp->GetTopWindow() ) ;
+    wxWindow* parent = ( parent_ ) ? parent_ : ( wxTheApp->GetTopWindow() ) ;
     m_window = new ActivityNotice( parent, file, format);
     m_window->Show(true);
 }
@@ -500,3 +500,7 @@ MutelistWindow::MutelistWindow(wxIcon* icon ,wxWindow *parent, const wxString& m
 MutelistWindow::~MutelistWindow ()
 {}
 
+ScopedActivityNotice scopedActivityNotice(wxWindow* parent,const wxString& file, const wxString& format )
+{
+    return ScopedActivityNotice( new ActivityNoticeContainer( parent, file, format ) );
+}

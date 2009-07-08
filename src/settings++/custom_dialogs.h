@@ -218,6 +218,11 @@ class ActivityNoticeContainer
         ActivityNotice* m_window;
 };
 
+typedef std::auto_ptr<ActivityNoticeContainer>
+    ScopedActivityNotice;
+
+ScopedActivityNotice scopedActivityNotice(wxWindow* parent,const wxString& file, const wxString& format = _("Caching file %s please wait"));
+
 #endif /*CUSTOM_MSG_DLG_H_*/
 
 /**

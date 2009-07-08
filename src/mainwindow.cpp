@@ -296,7 +296,7 @@ void MainWindow::OnClose( wxCloseEvent& evt )
     if ( m_log_chain ) // if logwin was created, it's the current "top" log
         m_log_chain->DetachOldLog();  //so we need to tellwx not to delete it on its own
         //since we absolutely need to destroy the logwin here, set a fallback for the time until app cleanup
-#if(wxUSE_STD_IOSTREAM) 
+#if(wxUSE_STD_IOSTREAM)
         wxLog::SetActiveTarget( new wxLogStream( &std::cout ) );
 #endif
   }
@@ -628,9 +628,6 @@ void MainWindow::OnMenuAutojoinChannels( wxCommandEvent& event )
 {
     m_autojoin_dialog = new AutojoinChannelDialog (this);
     m_autojoin_dialog->Show();
-
-    ActivityNotice axct (this, _T("amazing mod.sd7") );
-    axct.ShowModal();
 }
 
 void MainWindow::OnMenuSelectLocale( wxCommandEvent& event )
