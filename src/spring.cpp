@@ -3,6 +3,13 @@
 // Class: Spring
 //
 
+#ifdef _MSC_VER
+#ifndef NOMINMAX
+    #define NOMINMAX
+#endif // NOMINMAX
+#include <winsock2.h>
+#endif // _MSC_VER
+
 #include <wx/file.h>
 #include <wx/intl.h>
 #include <wx/arrstr.h>
@@ -17,7 +24,8 @@
 #include "spring.h"
 #include "springprocess.h"
 #include "ui.h"
-#include "utils.h"
+#include "utils/debug.h"
+#include "utils/conversion.h"
 #include "settings.h"
 #include "userlist.h"
 #include "battle.h"
@@ -30,6 +38,7 @@
 #ifndef NO_TORRENT_SYSTEM
 #include "torrentwrapper.h"
 #endif
+#include "globalsmanager.h"
 
 BEGIN_EVENT_TABLE( Spring, wxEvtHandler )
 
@@ -39,9 +48,13 @@ END_EVENT_TABLE();
 
 #define FIRST_UDP_SOURCEPORT 8300
 
+Spring& spring()
+{
+	static GlobalObjectHolder<Spring> m_spring;
+	return m_spring;
+}
 
-Spring::Spring( Ui& ui ) :
-        m_ui(ui),
+Spring::Spring() :
         m_process(0),
         m_wx_process(0),
         m_running(false)
@@ -96,7 +109,7 @@ bool Spring::Run( Battle& battle )
   wxString CommandForAutomaticTeamSpeak = _T("SCRIPT|") + battle.GetFounder().GetNick() + _T("|");
   for ( UserList::user_map_t::size_type i = 0; i < battle.GetNumUsers(); i++ )
   {
-    CommandForAutomaticTeamSpeak << u2s( battle.GetUser(i).BattleStatus().ally) << _T("|") << battle.GetUser(i).GetNick() << _T("|");
+    CommandForAutomaticTeamSpeak << TowxString<unsigned int>( battle.GetUser(i).BattleStatus().ally) << _T("|") << battle.GetUser(i).GetNick() << _T("|");
   }
   torrent().SendMessageToCoordinator(CommandForAutomaticTeamSpeak);
   #endif
@@ -220,7 +233,7 @@ void Spring::OnTerminated( wxCommandEvent& event )
     m_running = false;
     m_process = 0; // NOTE I'm not sure if this should be deleted or not, according to wx docs it shouldn't.
     m_wx_process = 0;
-    m_ui.OnSpringTerminated( true );
+    ui().OnSpringTerminated( true );
 }
 
 
@@ -339,8 +352,8 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 				int restrictcount = 0;
 				for ( std::map<wxString, int>::iterator itor = units.begin(); itor != units.end(); itor++ )
 				{
-						tdf.Append(_T("Unit") + i2s( restrictcount ), itor->first );
-						tdf.Append(_T("Limit") + i2s( restrictcount ), itor->second );
+						tdf.Append(_T("Unit") + TowxString( restrictcount ), itor->first );
+						tdf.Append(_T("Limit") + TowxString( restrictcount ), itor->second );
 						restrictcount++;
 				}
 			tdf.LeaveSection();
@@ -355,15 +368,27 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 
 			unsigned int NumUsers = battle.GetNumUsers();
 
-
+			typedef std::map<int, int> ProgressiveTeamsVec;
+			typedef ProgressiveTeamsVec::iterator ProgressiveTeamsVecIter;
+			ProgressiveTeamsVec teams_to_sorted_teams; // original team -> progressive team
+			int free_team = 0;
 			std::map<User*, int> player_to_number; // player -> ordernumber
 
 			for ( unsigned int i = 0; i < NumUsers; i++ )
 			{
 					User& user = battle.GetUser( i );
 					UserBattleStatus& status = user.BattleStatus();
+					if ( !status.spectator )
+					{
+						ProgressiveTeamsVecIter itor = teams_to_sorted_teams.find ( status.team );
+						if ( itor == teams_to_sorted_teams.end() )
+						{
+							teams_to_sorted_teams[status.team] = free_team;
+							free_team++;
+						}
+					}
 					if ( status.IsBot() ) continue;
-					tdf.EnterSection( _T("PLAYER") + i2s( i ) );
+					tdf.EnterSection( _T("PLAYER") + TowxString( i ) );
 							tdf.Append( _T("Name"), user.GetNick() );
 							tdf.Append( _T("CountryCode"), user.GetCountry().Lower());
 							tdf.Append( _T("Spectator"), status.spectator );
@@ -371,21 +396,20 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 							tdf.Append( _T("IsFromDemo"), int(status.isfromdemo) );
 							if ( !status.spectator )
 							{
-								tdf.Append( _T("Team"), status.team );
+								tdf.Append( _T("Team"), teams_to_sorted_teams[status.team] );
 							}
 							else
 							{
-								 for ( unsigned int j = 0; j < NumUsers; j++ ) // spectate a random player to spring won't complain about a missing team
-								 {
-								 	UserBattleStatus& stat = battle.GetUser( j ).BattleStatus();
-								 	if ( !stat.spectator )
-								 	{
-								 		 tdf.Append( _T("Team"), stat.team );
-								 		 break;
-								 	}
-								 }
+								int speccteam = 0;
+								ProgressiveTeamsVecIter itor = teams_to_sorted_teams.find ( status.team );
+								if ( itor == teams_to_sorted_teams.end() )
+								{
+									srand ( time(NULL) );
+									if ( teams_to_sorted_teams.size() != 0 ) speccteam = rand() % teams_to_sorted_teams.size();
+								}
+								else speccteam = itor->second;
+								tdf.Append( _T("Team"), speccteam );
 							}
-
 					tdf.LeaveSection();
 					player_to_number[&user] = i;
 			}
@@ -396,11 +420,11 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 						User& user = battle.GetUser( i );
 						UserBattleStatus& status = user.BattleStatus();
 						if ( !status.IsBot() ) continue;
-						tdf.EnterSection( _T("AI") + i2s( i ) );
+						tdf.EnterSection( _T("AI") + TowxString( i ) );
 								tdf.Append( _T("Name"), user.GetNick() ); // AI's nick;
 								tdf.Append( _T("ShortName"), status.aishortname ); // AI libtype
 								tdf.Append( _T("Version"), status.aiversion ); // AI libtype version
-								tdf.Append( _T("Team"), status.team );
+								tdf.Append( _T("Team"), teams_to_sorted_teams[status.team] );
 								tdf.Append( _T("Host"), player_to_number[&battle.GetUser( status.owner )] );
 								tdf.EnterSection( _T("Options") );
 									int optionmapindex = battle.CustomBattleOptions().GetAIOptionIndex( user.GetNick() );
@@ -420,9 +444,8 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 
 			tdf.AppendLineBreak();
 
-
-			wxArrayString sides = usync().GetSides( battle.GetHostModName() );
 			std::set<int> parsedteams;
+			wxArrayString sides = usync().GetSides( battle.GetHostModName() );
 			for ( unsigned int i = 0; i < NumUsers; i++ )
 			{
 					User& usr = battle.GetUser( i );
@@ -431,7 +454,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 					if ( parsedteams.find( status.team ) != parsedteams.end() ) continue; // skip duplicates
 					parsedteams.insert( status.team );
 
-					tdf.EnterSection( _T("TEAM") + i2s( status.team ) );
+					tdf.EnterSection( _T("TEAM") + TowxString( teams_to_sorted_teams[status.team] ) );
 						if ( !usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) && status.IsBot() )
 						{
 								tdf.Append( _T("AIDLL"), status.aishortname );
@@ -472,7 +495,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 			tdf.AppendLineBreak();
 
 
-			int maxiter = std::max( NumUsers, battle.GetNumRects() );
+			int maxiter = std::max( NumUsers, battle.GetLastRectIdx() + 1 );
 			std::set<int> parsedallys;
 			for ( unsigned int i = 0; i < maxiter; i++ )
 			{
@@ -487,7 +510,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 					sr = battle.GetStartRect( ally );
 					parsedallys.insert( status.ally );
 
-					tdf.EnterSection( _T("ALLYTEAM") + i2s( ally ) );
+					tdf.EnterSection( _T("ALLYTEAM") + TowxString( ally ) );
 						tdf.Append( _T("NumAllies"), 0 );
 						if ( sr.IsOk() )
 						{

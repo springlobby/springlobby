@@ -6,14 +6,14 @@
 #include <wx/log.h>
 
 #include "playbackstructs.h"
-#include "../utils.h"
+//#include "../utils.h"
 #include "../user.h"
 #include "../iconimagelist.h"
 #include "../uiutils.h"
 #include "../ui.h"
 
 
-BEGIN_EVENT_TABLE_TEMPLATE1(PlaybackListCtrl, CustomVirtListCtrl<const PlaybackType*>, PlaybackType)
+BEGIN_EVENT_TABLE_TEMPLATE1(PlaybackListCtrl, PlaybackListCtrl::BaseType, PlaybackType )
 
   EVT_LIST_ITEM_RIGHT_CLICK( RLIST_LIST, PlaybackListCtrl::OnListRightClick )
   EVT_MENU                 ( RLIST_DLMAP, PlaybackListCtrl::OnDLMap )
@@ -22,11 +22,11 @@ BEGIN_EVENT_TABLE_TEMPLATE1(PlaybackListCtrl, CustomVirtListCtrl<const PlaybackT
 
 END_EVENT_TABLE()
 
-template<class PlaybackType> SortOrder CustomVirtListCtrl<PlaybackType>::m_sortorder = SortOrder();
+template<class T,class L> SortOrder CustomVirtListCtrl<T,L>::m_sortorder = SortOrder();
 
 template <class PlaybackType>
 PlaybackListCtrl<PlaybackType>::PlaybackListCtrl( wxWindow* parent  ):
-  CustomVirtListCtrl<const PlaybackType*>(parent, RLIST_LIST, wxDefaultPosition, wxDefaultSize,
+  PlaybackListCtrl::BaseType(parent, RLIST_LIST, wxDefaultPosition, wxDefaultSize,
                 wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT,
                 _T("PlaybackListCtrl"), 8, 4, &CompareOneCrit )
 {
@@ -81,26 +81,18 @@ void PlaybackListCtrl<PlaybackType>::OnListRightClick( wxListEvent& event )
 template <class PlaybackType>
 void PlaybackListCtrl<PlaybackType>::AddPlayback( const PlaybackType& replay )
 {
-    if ( GetIndexFromData( &replay ) != -1 ) {
-        wxLogWarning( _T("Replay already in list.") );
+    if ( AddItem( &replay ) )
         return;
-    }
-    m_data.push_back( &replay );
-    SetItemCount( m_data.size() );
-    RefreshItem( m_data.size() - 1);
+
+    wxLogWarning( _T("Replay already in list.") );
 }
 
 template <class PlaybackType>
 void PlaybackListCtrl<PlaybackType>::RemovePlayback( const PlaybackType& replay )
 {
-    int index = GetIndexFromData( &replay );
-
-    if ( index != -1 ) {
-        m_data.erase( m_data.begin() + index );
-        SetItemCount( m_data.size() );
-        RefreshVisibleItems( );
+    if ( RemoveItem( &replay) )
         return;
-    }
+
     wxLogError( _T("Didn't find the replay to remove.") );
 }
 
@@ -156,14 +148,14 @@ void PlaybackListCtrl<PlaybackType>::SetTipWindowText( const long item_hit, cons
 
     const PlaybackType& replay = *GetDataFromIndex( item_hit );
 
-    int coloumn = getColoumnFromPosition( position );
-    if (coloumn > (int)m_colinfovec.size() || coloumn < 0)
+    int column = getColumnFromPosition( position );
+    if (column > (int)m_colinfovec.size() || column < 0)
     {
         m_tiptext = _T("");
     }
     else
     {
-        switch (coloumn) {
+        switch (column) {
             case 0: // date
             m_tiptext = replay.date;
                 break;
@@ -190,7 +182,7 @@ void PlaybackListCtrl<PlaybackType>::SetTipWindowText( const long item_hit, cons
 }
 
 template <class PlaybackType>
-wxString PlaybackListCtrl<PlaybackType>::OnGetItemText(long item, long column) const
+wxString PlaybackListCtrl<PlaybackType>::GetItemText(long item, long column) const
 {
     if ( m_data[item] == NULL )
         return wxEmptyString;
@@ -214,7 +206,7 @@ wxString PlaybackListCtrl<PlaybackType>::OnGetItemText(long item, long column) c
 }
 
 template <class PlaybackType>
-int PlaybackListCtrl<PlaybackType>::OnGetItemImage(long item) const
+int PlaybackListCtrl<PlaybackType>::GetItemImage(long item) const
 {
     if ( m_data[item] == NULL )
         return -1;
@@ -223,7 +215,7 @@ int PlaybackListCtrl<PlaybackType>::OnGetItemImage(long item) const
 }
 
 template <class PlaybackType>
-int PlaybackListCtrl<PlaybackType>::OnGetItemColumnImage(long item, long column) const
+int PlaybackListCtrl<PlaybackType>::GetItemColumnImage(long item, long column) const
 {
     if ( m_data[item] == NULL )
         return -1;
@@ -236,7 +228,7 @@ int PlaybackListCtrl<PlaybackType>::OnGetItemColumnImage(long item, long column)
 }
 
 template <class PlaybackType>
-wxListItemAttr* PlaybackListCtrl<PlaybackType>::OnGetItemAttr(long item) const
+wxListItemAttr* PlaybackListCtrl<PlaybackType>::GetItemAttr(long item) const
 {
     //not neded atm
 //    if ( item < m_data.size() && item > -1 ) {

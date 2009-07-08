@@ -10,7 +10,7 @@ class Ui;
 class ChatPanel;
 class UserMenu;
 
-class NickListCtrl : public CustomVirtListCtrl<const User*>
+class NickListCtrl : public CustomVirtListCtrl< const User* ,NickListCtrl >
 {
   protected:
     typedef SL_GENERIC::UserMenu<ChatPanel> UserMenu;
@@ -34,10 +34,9 @@ class NickListCtrl : public CustomVirtListCtrl<const User*>
     void HighlightItem( long item );
 
     //these are overloaded to use list in virtual style
-    virtual wxString OnGetItemText(long item, long column) const;
-    virtual int OnGetItemImage(long item) const;
-    virtual int OnGetItemColumnImage(long item, long column) const;
-    wxListItemAttr * OnGetItemAttr(long item) const;
+    wxString GetItemText(long item, long column) const;
+    int GetItemColumnImage(long item, long column) const;
+    wxListItemAttr * GetItemAttr(long item) const;
 
   protected:
 

@@ -7,7 +7,7 @@
 
 #include <map>
 
-class TorrentInfos;
+struct TorrentInfos;
 class wxMenu;
 class Battle;
 class wxListEvent;

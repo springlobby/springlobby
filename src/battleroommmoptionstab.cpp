@@ -13,7 +13,8 @@
 #include <wx/tooltip.h>
 #include <map>
 
-#include "utils.h"
+#include "utils/controls.h"
+#include "utils/math.h"
 #include "mmoptionswrapper.h"
 #include "battle.h"
 #include "spinctld.h"
@@ -242,7 +243,7 @@ int BattleroomMMOptionsTab<BattleType>::setupOptionsSectionSizer(const mmOptionS
             mmOptionList current = it->second;
 
             int temp = int(current.cbx_choices.GetCount()-1);
-            int index = CLAMP(current.cur_choice_index,0,temp);
+            int index = clamp(current.cur_choice_index,0,temp);
             wxComboBox* tempchoice = new wxComboBox(this, LIST_START_ID+ctrl_count, current.cbx_choices[index], wxDefaultPosition,
                     wxDefaultSize, current.cbx_choices, wxCB_READONLY, wxDefaultValidator);
 						wxString tooltip = current.description + _T("\n");
@@ -518,7 +519,7 @@ template < class BattleType >
 void BattleroomMMOptionsTab<BattleType>::OnDeletePreset( wxCommandEvent& event )
 {
   wxArrayString choices = m_battle.GetPresetList();
-	int result = wxGetSingleChoiceIndex(_("Pick an existing option set from the list"),_("Set delete preset"), choices );
+	int result = wxGetSingleChoiceIndex(_("Pick an existing option set from the list"),_("Delete preset"), choices );
 	if ( result < 0 ) return;
   m_battle.DeletePreset( choices[result] );
 }
@@ -558,6 +559,7 @@ void BattleroomMMOptionsTab<BattleType>::OnButton( wxCommandEvent& event )
 template < class BattleType >
 void BattleroomMMOptionsTab<BattleType>::OnInfoButton( wxCommandEvent& event )
 {
+    #ifdef wxUSE_TIPWINDOW
     wxWindow* button = (wxWindow*) event.GetEventObject();
     if ( button ) {
         nameInfoMap::const_iterator iter = m_name_info_map.find( button->GetName() );
@@ -568,5 +570,6 @@ void BattleroomMMOptionsTab<BattleType>::OnInfoButton( wxCommandEvent& event )
             tip->Move( pos.x, pos.y - tip->GetSize().GetHeight() );
         }
     }
+    #endif
 }
 

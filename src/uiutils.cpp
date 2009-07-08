@@ -16,7 +16,9 @@
 #include <cmath>
 
 #include "uiutils.h"
-#include "utils.h"
+#include "utils/math.h"
+#include "utils/conversion.h"
+#include "utils/debug.h"
 #include "settings++/custom_dialogs.h"
 #include "settings.h"
 
@@ -145,14 +147,14 @@ wxColour GetColorFromFloatStrng( const wxString color )
 {
     wxString c = color;
     float r = 0, g = 0, b = 0;
-    r = s2d(c.BeforeFirst( ' ' ));
+    r = FromwxString<double>(c.BeforeFirst( ' ' ));
     c = c.AfterFirst( ' ' );
-    g = s2d( c.BeforeFirst( ' ' ));
+    g = FromwxString<double>( c.BeforeFirst( ' ' ));
     c = c.AfterFirst( ' ' );
-    b = s2d(c.BeforeFirst( ' ' ));
-    CLAMP( r, 0, 1  );
-    CLAMP( g, 0, 1  );
-    CLAMP( b, 0, 1  );
+    b = FromwxString<double>(c.BeforeFirst( ' ' ));
+    r = clamp( r, 0.f, 1.f  );
+    g = clamp( g, 0.f, 1.f  );
+    b = clamp( b, 0.f, 1.f  );
     return wxColour( (unsigned char)(r*256), (unsigned char)(g*256), (unsigned char)(b*256) );
 }
 
@@ -321,6 +323,67 @@ struct Resizer
 };
 }
 
+std::vector<wxColour>& GetBigFixColoursPalette( int numteams )
+{
+    static std::vector<wxColour> result;
+    static int huebifurcatepos;
+    static std::vector<double> huesplittings;
+    if ( huesplittings.empty() ) // insert ranges to bifurcate
+    {
+    	huesplittings.push_back( 1 );
+    	huesplittings.push_back( 0 );
+    	huebifurcatepos = 0;
+    }
+    static int satvalbifurcatepos;
+    static std::vector<double> satvalsplittings;
+    if ( satvalsplittings.empty() ) // insert ranges to bifurcate
+    {
+    	satvalsplittings.push_back( 1 );
+    	satvalsplittings.push_back( 0 );
+    	satvalbifurcatepos = 0;
+    }
+
+    int bisectionlimit = 20;
+    for ( int i = result.size(); i < numteams; i++ )
+    {
+    	double hue = 1;
+    	double saturation = 1;
+    	double value = 1;
+			int switccolors = i % 3; // why only 3 and not all combinations? because it's easy, plus the bisection limit cannot be divided integer by it
+
+			huebifurcatepos = huebifurcatepos % ( huesplittings.size() -1 );
+			std::vector<double>::iterator toinsert = huesplittings.begin() + huebifurcatepos + 1;
+			huesplittings.insert( toinsert, ( huesplittings[huebifurcatepos] - huesplittings[huebifurcatepos + 1] ) / 2 + huesplittings[huebifurcatepos + 1] );
+			hue = huesplittings[huebifurcatepos+1];
+			huebifurcatepos += 2;
+
+			if ( ( i % bisectionlimit ) == 0 )
+			{
+				satvalbifurcatepos = satvalbifurcatepos % ( satvalsplittings.size() -1 );
+				std::vector<double>::iterator toinsert = satvalsplittings.begin() + satvalbifurcatepos + 1;
+				satvalsplittings.insert( toinsert, ( satvalsplittings[satvalbifurcatepos] - satvalsplittings[satvalbifurcatepos + 1] ) / 2 + satvalsplittings[satvalbifurcatepos + 1] );
+				satvalbifurcatepos += 2;
+			}
+
+			if ( switccolors == 1 )
+			{
+				saturation = satvalsplittings[satvalbifurcatepos -1];
+			}
+			else if ( switccolors == 2 )
+			{
+				value = satvalsplittings[satvalbifurcatepos -1];
+			}
+			hue += 0.17; // use as starting point a zone where color band is narrow so that small variations means high change in visual effect
+			if ( hue > 1 ) hue-= 1;
+			wxImage::HSVValue hsvcolor( hue, saturation, value );
+			wxImage::RGBValue rgbvalue = wxImage::HSVtoRGB( hsvcolor );
+			wxColor col( rgbvalue.red, rgbvalue.green, rgbvalue.blue );
+			result.push_back( col );
+    }
+    return result;
+}
+
+
 wxImage BorderInvariantResizeImage(  const wxImage& image, int width, int height )
 {
 	if ( !image.IsOk() || (width == image.GetWidth() && height == image.GetHeight()) )
@@ -371,10 +434,10 @@ wxImage ReplaceChannelStatusColour( wxBitmap img, const wxColour& colour )
   wxImage::HSVValue origcolour = wxImage::RGBtoHSV( wxImage::RGBValue::RGBValue( colour.Red(), colour.Green(), colour.Blue() ) );
 
   double bright = origcolour.value - 0.1*origcolour.value;
-  CLAMP(bright,0,1);
+  bright = clamp( bright, 0.0, 1.0 );
   wxImage::HSVValue hsvdarker1( origcolour.hue, origcolour.saturation, bright );
   bright = origcolour.value - 0.5*origcolour.value;
-  CLAMP(bright,0,1);
+  bright = clamp( bright, 0.0, 1.0 );
   wxImage::HSVValue hsvdarker2( origcolour.hue, origcolour.saturation, bright );
 
   wxImage::RGBValue rgbdarker1 = wxImage::HSVtoRGB( hsvdarker1 );
@@ -405,17 +468,6 @@ wxSize MakeFit(const wxSize &original, const wxSize &bounds)
     return wxSize( bounds.GetWidth(), sizey );
   }
 }
-
-#if wxUSE_TIPWINDOW
-BEGIN_EVENT_TABLE(SLTipWindow, wxTipWindow)
-  EVT_MOUSEWHEEL(SLTipWindow::Cancel)
-END_EVENT_TABLE()
-
-void SLTipWindow::Cancel(wxMouseEvent& event)
-{
-  wxTipWindow::Close();
-}
-#endif
 
 void CopyToClipboard( const wxString& text )
 {

@@ -15,7 +15,7 @@
 #include <memory>
 
 
-#include "utils.h"
+#include "utils/conversion.h"
 #include "globalevents.h"
 
 template <class ParentClass>

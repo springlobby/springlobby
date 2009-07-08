@@ -1,5 +1,13 @@
 /* Copyright (C) 2007-2009 The SpringLobby Team. All rights reserved. */
 
+
+#ifdef _MSC_VER
+#ifndef NOMINMAX
+    #define NOMINMAX
+#endif // NOMINMAX
+#include <winsock2.h>
+#endif // _MSC_VER
+
 #include <wx/string.h>
 #include <wx/regex.h>
 #include <wx/intl.h>
@@ -8,6 +16,7 @@
 #include <wx/log.h>
 #include <wx/tokenzr.h>
 #include <wx/platinfo.h>
+#include <wx/stopwatch.h>
 
 #include <stdexcept>
 #include <algorithm>
@@ -19,7 +28,10 @@
 #include "tasserver.h"
 #include "iunitsync.h"
 #include "user.h"
-#include "utils.h"
+#include "utils/debug.h"
+#include "utils/tasutil.h"
+#include "utils/conversion.h"
+#include "utils/platform.h"
 #include "battle.h"
 #include "serverevents.h"
 #include "socket.h"
@@ -28,7 +40,11 @@
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
-#endif
+#endif //HAVE_CONFIG_H
+
+#ifndef VERSION 
+	#define VERSION "unknown"
+#endif //VERSION 
 
 // for SL_MAIN_ICON
 #include "settings++/custom_dialogs.h"
@@ -1135,7 +1151,7 @@ void TASServer::Ping()
 		m_id_transmission = false;
     TASPingListItem pli;
     pli.id = m_last_id;
-    pli.t = time( 0 );
+    pli.t = wxGetLocalTimeMillis();
     m_pinglist.push_back ( pli );
 }
 
@@ -1156,7 +1172,7 @@ void TASServer::HandlePong( int replyid )
 
     if ( found )
     {
-        m_se->OnPong( (time( 0 ) - it->t) );
+        m_se->OnPong( (wxGetLocalTimeMillis() - it->t) );
         m_pinglist.erase( it );
     }
 }
@@ -1528,8 +1544,8 @@ void TASServer::SendHostInfo( HostInfo update )
 
     if ( (update & IBattle::HI_StartRects) > 0 )   // Startrects should be updated.
     {
-        unsigned int numrects =  battle.GetNumRects();
-        for ( unsigned int i = 0; i < numrects; i++ )   // Loop through all, and remove updated or deleted.
+        unsigned int numrects = battle.GetLastRectIdx();
+        for ( unsigned int i = 0; i <= numrects; i++ )   // Loop through all, and remove updated or deleted.
         {
             wxString cmd;
             BattleStartRect sr = battle.GetStartRect( i );

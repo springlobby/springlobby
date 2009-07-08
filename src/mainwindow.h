@@ -32,6 +32,9 @@ class ChannelChooserDialog;
 class ReplayTab;
 class AutojoinChannelDialog;
 class WidgetDownloadDialog;
+class wxLogWindow;
+class wxLogChain;
+class wxCloseEvent;
 
 class ReplayTraits;
 template < class Traits >
@@ -40,6 +43,7 @@ class PlaybackTab;
 class SavegameTraits;
 template < class Traits >
 class SavegameTab;
+
 
 
 //! @brief wxFrame that contains the main window of the client.
@@ -91,6 +95,8 @@ class MainWindow : public wxFrame
     void OnUnitSyncReloaded();
     void OnChannelList( const wxString& channel, const int& numusers, const wxString& topic );
     void OnChannelListStart( );
+    void OnClose( wxCloseEvent& evt );
+
 
 
     void OnTabsChanged( wxAuiNotebookEvent& event );
@@ -107,6 +113,8 @@ class MainWindow : public wxFrame
     MainOptionsTab& GetOptionsTab();
 
     void SetTabIcons();
+
+    void SetLogWin( wxLogWindow* log, wxLogChain* logchain );
 
   protected:
     // MainWindow variables
@@ -136,6 +144,9 @@ class MainWindow : public wxFrame
     SavegameTab* m_savegame_tab;
 
     wxBitmap GetTabIcon( const unsigned char* data, size_t size  );
+
+    wxLogWindow* m_log_win;
+    wxLogChain* m_log_chain;
 
     enum {
         MENU_SETTINGSPP,

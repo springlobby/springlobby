@@ -10,6 +10,10 @@ class UpdaterClass : public wxEvtHandler
     UpdaterClass();
     ~UpdaterClass();
     void CheckForUpdates();
+
+#ifdef __WXMSW__
+    void StartUpdate( const wxString& rev, bool fromCli = false );
+#endif
     void OnDownloadEvent( wxCommandEvent& event );
 
 protected:
@@ -22,6 +26,8 @@ protected:
     DECLARE_EVENT_TABLE()
 
     wxString m_cur_mw_title;
+
+    bool m_fromCli;
 
 };
 

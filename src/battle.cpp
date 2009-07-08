@@ -7,22 +7,30 @@
 #include "iunitsync.h"
 #include "server.h"
 #include "user.h"
-#include "utils.h"
+#include "utils/misc.h"
+#include "utils/debug.h"
+#include "utils/conversion.h"
+#include "utils/math.h"
 #include "uiutils.h"
 #include "settings.h"
 #include "useractions.h"
 #include "settings++/custom_dialogs.h"
 #include "springunitsynclib.h"
 #include "iconimagelist.h"
+#include "spring.h"
 
-#include <algorithm>
-#include <cmath>
-#include <stdexcept>
-
+#include <wx/timer.h>
 #include <wx/image.h>
 #include <wx/string.h>
 #include <wx/log.h>
+#include <wx/filename.h>
 
+const unsigned int TIMER_INTERVAL         = 1000;
+const unsigned int TIMER_ID               = 101;
+
+BEGIN_EVENT_TABLE(Battle, wxEvtHandler)
+    EVT_TIMER(TIMER_ID, Battle::OnTimer)
+END_EVENT_TABLE()
 
 Battle::Battle( Server& serv, int id ) :
         m_serv(serv),
@@ -78,36 +86,6 @@ void Battle::Leave()
     m_serv.LeaveBattle( m_opts.battleid );
     m_is_self_in = false;
     susynclib().UnSetCurrentMod( );
-}
-
-
-void Battle::FixColours( )
-{
-    if ( !IsFounderMe() )return;
-    std::vector<wxColour> &palette = GetFixColoursPalette();
-    std::vector<int> palette_use( palette.size(), 0 );
-    user_map_t::size_type max_fix_users = std::min( GetNumUsers(), palette.size() );
-
-    wxColour my_col = GetMe().BattleStatus().colour; // Never changes color of founder (me) :-)
-    int my_diff = 0;
-    int my_col_i = GetClosestFixColour( my_col, palette_use,my_diff );
-    palette_use[my_col_i]++;
-
-    for ( user_map_t::size_type i = 0; i < max_fix_users; i++ )
-    {
-        if ( &GetUser( i ) == &GetMe() ) continue;
-        User &user=GetUser(i);
-        wxColour &user_col=user.BattleStatus().colour;
-        int user_diff=0;
-        int user_col_i=GetClosestFixColour(user_col,palette_use,user_diff);
-        palette_use[user_col_i]++;
-        if ( user_diff > 60 )
-        {
-            ForceColour( user, palette[user_col_i]);
-            wxLogMessage(_T("Forcing colour on fix. diff=%d"),user_diff);
-
-        }
-    }
 }
 
 
@@ -185,7 +163,7 @@ void Battle::SaveMapDefaults()
 		wxString startpostype = CustomBattleOptions().getSingleValue( _T("startpostype"), OptionsWrapper::EngineOption );
 		sett().SetMapLastStartPosType( mapname, startpostype);
 		std::vector<Settings::SettStartBox> rects;
-		for( unsigned int i = 0; i < GetNumRects(); ++i )
+		for( unsigned int i = 0; i <= GetLastRectIdx(); ++i )
 		{
 			 BattleStartRect rect = GetStartRect( i );
 			 if ( rect.IsOk() )
@@ -207,7 +185,7 @@ void Battle::LoadMapDefaults( const wxString& mapname )
 	CustomBattleOptions().setSingleOption( _T("startpostype"), sett().GetMapLastStartPosType( mapname ), OptionsWrapper::EngineOption );
 	SendHostInfo( wxString::Format( _T("%d_startpostype"), OptionsWrapper::EngineOption ) );
 
-	for( unsigned int i = 0; i < GetNumRects(); ++i ) if ( GetStartRect( i ).IsOk() ) RemoveStartRect(i); // remove all rects
+	for( unsigned int i = 0; i <= GetLastRectIdx(); ++i ) if ( GetStartRect( i ).IsOk() ) RemoveStartRect(i); // remove all rects
 	SendHostInfo( IBattle::HI_StartRects );
 
 	std::vector<Settings::SettStartBox> savedrects = sett().GetMapLastRectPreset( mapname );
@@ -221,6 +199,11 @@ void Battle::LoadMapDefaults( const wxString& mapname )
 User& Battle::OnUserAdded( User& user )
 {
 		user = IBattle::OnUserAdded( user );
+		if ( &user == &GetMe() )
+		{
+			 m_timer = new wxTimer(this,TIMER_ID);
+			 m_timer->Start( TIMER_INTERVAL );
+		}
     user.SetBattle( this );
     user.BattleStatus().isfromdemo = false;
 
@@ -249,6 +232,7 @@ User& Battle::OnUserAdded( User& user )
         }
 
         m_ah.OnUserAdded( user );
+        if ( !user.BattleStatus().IsBot() && sett().GetBattleLastAutoAnnounceDescription() ) DoAction( m_opts.description );
     }
     // any code here may be skipped if the user was autokicked
     return user;
@@ -256,11 +240,6 @@ User& Battle::OnUserAdded( User& user )
 
 void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 {
-		IBattle::OnUserBattleStatusUpdated( user, status );
-    if ( status.handicap != 0 )
-    {
-        ui().OnBattleAction( *this, wxString(_T(" ")) , ( _T("Warning: user ") + user.GetNick() + _T(" got bonus ") ) << status.handicap );
-    }
     if ( IsFounderMe() )
     {
         if ( ( &user != &GetMe() ) && !status.IsBot() && ( m_opts.rankneeded > UserStatus::RANK_1 ) && ( user.GetStatus().rank < m_opts.rankneeded ))
@@ -270,7 +249,7 @@ void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
             case rank_limit_none:
                 break;
             case rank_limit_autospec:
-                if ( !user.BattleStatus().spectator )
+                if ( !status.spectator )
                 {
                     DoAction( _T("Rank limit autospec: ") + user.GetNick() );
                     ForceSpectator( user, true );
@@ -284,6 +263,21 @@ void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
         }
 
     }
+		IBattle::OnUserBattleStatusUpdated( user, status );
+    if ( status.handicap != 0 )
+    {
+        ui().OnBattleAction( *this, wxString(_T(" ")) , ( _T("Warning: user ") + user.GetNick() + _T(" got bonus ") ) << status.handicap );
+    }
+		if ( IsFounderMe() )
+		{
+			if ( ShouldAutoStart() )
+			{
+				if ( sett().GetBattleLastAutoStartState() )
+				{
+					if ( !ui().IsSpringRunning() ) ui().StartHostedBattle();
+				}
+			}
+		}
 		ui().OnUserBattleStatus( *this, user );
 }
 
@@ -303,6 +297,28 @@ void Battle::RingNotReadyPlayers()
         UserBattleStatus& bs = u.BattleStatus();
         if ( bs.IsBot() ) continue;
         if ( !bs.ready && !bs.spectator ) m_serv.Ring( u.GetNick() );
+    }
+}
+
+void Battle::RingNotSyncedPlayers()
+{
+    for (user_map_t::size_type i = 0; i < GetNumUsers(); i++)
+    {
+        User& u = GetUser(i);
+        UserBattleStatus& bs = u.BattleStatus();
+        if ( bs.IsBot() ) continue;
+        if ( !bs.sync && !bs.spectator ) m_serv.Ring( u.GetNick() );
+    }
+}
+
+void Battle::RingNotSyncedAndNotReadyPlayers()
+{
+    for (user_map_t::size_type i = 0; i < GetNumUsers(); i++)
+    {
+        User& u = GetUser(i);
+        UserBattleStatus& bs = u.BattleStatus();
+        if ( bs.IsBot() ) continue;
+        if ( ( !bs.sync || !bs.ready ) && !bs.spectator ) m_serv.Ring( u.GetNick() );
     }
 }
 
@@ -475,6 +491,7 @@ void Battle::ForceAlly( User& user, int ally )
 
 void Battle::ForceColour( User& user, const wxColour& col )
 {
+		IBattle::ForceColour( user, col );
     m_serv.ForceColour( m_opts.battleid, user, col );
 }
 
@@ -494,6 +511,185 @@ void Battle::SetHandicap( User& user, int handicap)
 {
     m_serv.SetHandicap ( m_opts.battleid, user, handicap );
 }
+
+
+
+void Battle::ForceUnsyncedToSpectate()
+{
+    size_t numusers = GetNumUsers();
+    for ( size_t i = 0; i < numusers; ++i )
+    {
+        User &user = GetUser(i);
+        UserBattleStatus& bs = user.BattleStatus();
+        if ( bs.IsBot() ) continue;
+        if ( !bs.spectator && !bs.sync ) ForceSpectator( user, true );
+    }
+}
+
+void Battle::ForceUnReadyToSpectate()
+{
+    size_t numusers = GetNumUsers();
+    for ( size_t i = 0; i < numusers; ++i )
+    {
+        User &user = GetUser(i);
+        UserBattleStatus& bs = user.BattleStatus();
+        if ( bs.IsBot() ) continue;
+        if ( !bs.spectator && !bs.ready ) ForceSpectator( user, true );
+    }
+}
+
+void Battle::ForceUnsyncedAndUnreadyToSpectate()
+{
+    size_t numusers = GetNumUsers();
+    for ( size_t i = 0; i < numusers; ++i )
+    {
+        User &user = GetUser(i);
+        UserBattleStatus& bs = user.BattleStatus();
+        if ( bs.IsBot() ) continue;
+				if ( !bs.spectator && ( !bs.sync || !bs.ready ) ) ForceSpectator( user, true );
+    }
+}
+
+
+void Battle::UserPositionChanged( const User& user )
+{
+	  m_serv.SendUserPosition( user );
+}
+
+
+void Battle::SendScriptToClients()
+{
+	m_serv.SendScriptToClients( GetScript() );
+}
+
+
+void Battle::StartSpring()
+{
+	if ( UserExists( GetMe().GetNick() ) )
+	{
+		if ( IsFounderMe() )
+		{
+			if ( sett().GetBattleLastAutoControlState() )
+			{
+				FixTeamIDs( (IBattle::BalanceType)sett().GetFixIDMethod(), sett().GetFixIDClans(), sett().GetFixIDStrongClans(), sett().GetFixIDGrouping() );
+				Autobalance( (IBattle::BalanceType)sett().GetBalanceMethod(), sett().GetBalanceClans(), sett().GetBalanceStrongClans(), sett().GetBalanceGrouping() );
+				FixColours();
+			}
+		}
+		if ( IsProxy() )
+		{
+			wxString hostscript = spring().WriteScriptTxt( *this );
+			try
+			{
+				wxString path = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("relayhost_script.txt");
+				if ( !wxFile::Access( path, wxFile::write ) ) wxLogError( _T("Access denied to script.txt.") );
+
+				wxFile f( path, wxFile::write );
+				f.Write( hostscript );
+				f.Close();
+
+			} catch (...) {}
+			m_serv.SendScriptToProxy( hostscript );
+		}
+		GetMe().BattleStatus().ready = false;
+		SendMyBattleStatus();
+		GetMe().Status().in_game = true;
+		GetMe().SendMyUserStatus();
+		if( IsFounderMe() && GetAutoLockOnStart() )
+		{
+			SetIsLocked( true );
+			SendHostInfo( IBattle::HI_Locked );
+		}
+		ui().OnSpringStarting();
+		spring().Run( *this );
+	}
+	ui().OnBattleStarted( *this );
+}
+
+void Battle::OnTimer( wxTimerEvent& event )
+{
+	if ( !IsFounderMe() ) return;
+	if ( m_ingame ) return;
+	int autospect_trigger_time = sett().GetBattleLastAutoSpectTime();
+	if ( autospect_trigger_time == 0 ) return;
+	time_t now = time(0);
+	for ( unsigned int i = 0; i < GetNumUsers(); i++)
+	{
+		User& usr = GetUser( i );
+		UserBattleStatus& status = usr.BattleStatus();
+		if ( status.IsBot() || status.spectator ) continue;
+		if ( status.sync && status.ready ) continue;
+		if ( &usr == &GetMe() ) continue;
+		std::map<wxString, time_t>::iterator itor = m_ready_up_map.find( usr.GetNick() );
+		if ( itor != m_ready_up_map.end() )
+		{
+			if ( ( now - itor->second ) > autospect_trigger_time )
+			{
+				ForceSpectator( usr, true );
+			}
+		}
+	}
+}
+
+void Battle::SetInGame( bool value )
+{
+	time_t now = time(0);
+	if ( m_ingame && !value )
+	{
+		for ( int i = 0; i < GetNumUsers(); i++ )
+		{
+			User& user = GetUser( i );
+			UserBattleStatus& status = user.BattleStatus();
+			if ( status.IsBot() || status.spectator ) continue;
+			if ( status.ready && status.sync ) continue;
+			m_ready_up_map[user.GetNick()] = now;
+		}
+	}
+	IBattle::SetInGame( value );
+}
+
+
+
+void Battle::FixColours()
+{
+    if ( !IsFounderMe() )return;
+    std::vector<wxColour> &palette = GetFixColoursPalette( m_teams_sizes.size() );
+    std::vector<int> palette_use( palette.size(), 0 );
+
+    wxColour my_col = GetMe().BattleStatus().colour; // Never changes color of founder (me) :-)
+    int my_diff = 0;
+    int my_col_i = GetClosestFixColour( my_col, palette_use,my_diff );
+    palette_use[my_col_i]++;
+    std::set<int> parsed_teams;
+
+    for ( user_map_t::size_type i = 0; i < GetNumUsers(); i++ )
+    {
+        User &user=GetUser(i);
+        if ( &user == &GetMe() ) continue; // skip founder ( yourself )
+        UserBattleStatus& status = user.BattleStatus();
+        if ( status.spectator ) continue;
+        if ( parsed_teams.find( status.team ) != parsed_teams.end() ) continue; // skip duplicates
+        parsed_teams.insert( status.team );
+
+        wxColour &user_col=status.colour;
+        int user_diff=0;
+        int user_col_i=GetClosestFixColour(user_col,palette_use,user_diff);
+        palette_use[user_col_i]++;
+        if ( user_diff > 60 )
+        {
+						wxLogMessage(_T("Forcing colour on fix. diff=%d"),user_diff);
+						for ( user_map_t::size_type j = 0; j < GetNumUsers(); j++ )
+						{
+							User &usr=GetUser(j);
+							if ( usr.BattleStatus().team == status.team )
+							{
+								 ForceColour( usr, palette[user_col_i]);
+							}
+						}
+        }
+    }
+}
+
 
 bool PlayerRankCompareFunction( User *a, User *b ) // should never operate on nulls. Hence, ASSERT_LOGIC is appropriate here.
 {
@@ -594,18 +790,15 @@ struct ClannersRemovalPredicate{
 void Battle::Autobalance( BalanceType balance_type, bool support_clans, bool strong_clans, int numallyteams )
 {
     wxLogMessage(_T("Autobalancing alliances, type=%d, clans=%d, strong_clans=%d, numallyteams=%d"),balance_type, support_clans,strong_clans, numallyteams);
-    DoAction(_T("is auto-balancing alliances ..."));
     //size_t i;
     //int num_alliances;
-    CLAMP( numallyteams, 0, 16 ); // 16 max ally teams currently supported by spring
     std::vector<Alliance>alliances;
     if ( numallyteams == 0 ) // 0 == use num start rects
     {
-//        int tmp = GetNumRects();
         int ally = 0;
-        for ( int i = 0; i < numallyteams; ++i )
+        for ( int i = 0; i < GetNumRects(); ++i )
         {
-            BattleStartRect sr = m_rects[i];
+            BattleStartRect sr = GetStartRect(i);
             if ( sr.IsOk() )
             {
                 ally=i;
@@ -766,11 +959,9 @@ void Battle::FixTeamIDs( BalanceType balance_type, bool support_clans, bool stro
       }
       catch( assert_exception ) {}
     }
-    numcontrolteams = std::min( numcontrolteams, 16 ); // clamp to 16 (max spring supports)
 
     if ( numcontrolteams >= (int)( GetNumUsers() - GetSpectators() ) ) // autobalance behaves weird when trying to put one player per team and i CBA to fix it, so i'll reuse the old code :P
     {
-      DoAction(_T("is making control teams unique..."));
       // apparently tasserver doesnt like when i fix/force ids of everyone.
       std::set<int> allteams;
       size_t numusers = GetNumUsers();
@@ -800,7 +991,6 @@ void Battle::FixTeamIDs( BalanceType balance_type, bool support_clans, bool stro
       }
       return;
     }
-    DoAction(_T("is auto-balancing control teams ..."));
     for ( int i = 0; i < numcontrolteams; i++ ) teams.push_back( ControlTeam( i ) );
 
     wxLogMessage(_T("number of teams: %u"), teams.size() );
@@ -911,27 +1101,4 @@ void Battle::FixTeamIDs( BalanceType balance_type, bool support_clans, bool stro
             ForceAlly( *teams[i].players[j], teams[i].teamnum );
         }
     }
-}
-
-
-void Battle::ForceUnsyncedToSpectate()
-{
-    size_t numusers = GetNumUsers();
-    for ( size_t i = 0; i < numusers; ++i )
-    {
-        User &user = GetUser(i);
-        if ( !user.BattleStatus().spectator && !user.BattleStatus().sync ) ForceSpectator( user, true );
-    }
-}
-
-
-void Battle::UserPositionChanged( const User& user )
-{
-	  m_serv.SendUserPosition( user );
-}
-
-
-void Battle::SendScriptToClients()
-{
-	m_serv.SendScriptToClients( GetScript() );
 }

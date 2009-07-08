@@ -1,20 +1,20 @@
 #include "channellistctrl.h"
 #include "../iconimagelist.h"
-#include "../utils.h"
+#include "../utils/conversion.h"
 #include "../ui.h"
 #include <algorithm>
 #include "../Helper/sortutil.h"
 
-template<> SortOrder CustomVirtListCtrl<ChannelInfo>::m_sortorder = SortOrder();
+template<> SortOrder CustomVirtListCtrl<ChannelInfo,ChannelListctrl>::m_sortorder = SortOrder();
 
-BEGIN_EVENT_TABLE( ChannelListctrl, CustomVirtListCtrl<ChannelInfo> )
+BEGIN_EVENT_TABLE( ChannelListctrl, ChannelListctrl::BaseType )
   EVT_LIST_ITEM_ACTIVATED( CHANNELLIST, ChannelListctrl::OnActivateItem )
 END_EVENT_TABLE()
 
 
 ChannelListctrl::ChannelListctrl(wxWindow* parent, wxWindowID id, const wxString& name,
                     long style, const wxPoint& pt, const wxSize& sz)
-    :CustomVirtListCtrl<ChannelInfo>(parent, CHANNELLIST, wxDefaultPosition, wxDefaultSize,
+    :CustomVirtListCtrl<ChannelInfo,ChannelListctrl>(parent, CHANNELLIST, wxDefaultPosition, wxDefaultSize,
             wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("ChannelListCtrl"), 3, 3, &CompareOneCrit)
 {
 #if defined(__WXMSW__)
@@ -26,8 +26,8 @@ ChannelListctrl::ChannelListctrl(wxWindow* parent, wxWindowID id, const wxString
 #endif
 
     AddColumn( 0, widths[0], _("Channel"), _T("Channelname") );
-    AddColumn( 1, widths[1], _("# users"), _T("users") );
-    AddColumn( 2, widths[2], _T("topic"), _T("topic") );
+    AddColumn( 1, widths[1], _("# users"), _T("Users") );
+    AddColumn( 2, widths[2], _T("Topic"), _T("Topic") );
 
     if ( m_sortorder.size() == 0 ) {
         m_sortorder[2].col = 2;
@@ -132,17 +132,17 @@ void ChannelListctrl::FilterChannel( const wxString& partial )
 }
 
 
-int ChannelListctrl::OnGetItemColumnImage(long item, long column) const
+int ChannelListctrl::GetItemColumnImage(long item, long column) const
 {
     return -1;
 }
 
-int ChannelListctrl::OnGetItemImage(long item) const
+int ChannelListctrl::GetItemImage(long item) const
 {
     return -1;
 }
 
-wxString ChannelListctrl::OnGetItemText(long item, long column) const
+wxString ChannelListctrl::GetItemText(long item, long column) const
 {
     int idx = m_visible_idxs.find(item)->second;
     const DataType& chan = m_data[ idx ];
@@ -157,8 +157,8 @@ wxString ChannelListctrl::OnGetItemText(long item, long column) const
 
 void ChannelListctrl::SetTipWindowText(const long item_hit, const wxPoint position)
 {
-    int coloumn = getColoumnFromPosition(position);
-    if (coloumn > (int)m_colinfovec.size() || coloumn < 0 || item_hit < 0 || item_hit > (long)m_data.size() )
+    int column = getColumnFromPosition(position);
+    if (column > (int)m_colinfovec.size() || column < 0 || item_hit < 0 || item_hit > (long)m_data.size() )
     {
         m_tiptext = _T("");
     }
@@ -166,7 +166,7 @@ void ChannelListctrl::SetTipWindowText(const long item_hit, const wxPoint positi
     {
         const DataType& channel = m_data[item_hit];
         {
-            switch (coloumn)
+            switch (column)
             {
             case 2: // status
                 m_tiptext = channel.topic;

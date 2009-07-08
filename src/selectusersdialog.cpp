@@ -21,7 +21,7 @@
 #include "userlist.h"
 #include "server.h"
 #include "user.h"
-#include "utils.h"
+#include "utils/conversion.h"
 #include "useractions.h"
 
 
@@ -236,7 +236,7 @@ wxWindowUpdateLocker noUpdates(m_user_list);
       int flag = listItem.GetImage();
       name = m_user_list->GetItemText(item); // Preserve case
       del.Add(name);
-      m_filtered_users.Add( name +_T(" ") + i2s(flag) );
+      m_filtered_users.Add( name +_T(" ") + TowxString(flag) );
     }
 
   }
@@ -258,7 +258,7 @@ wxWindowUpdateLocker noUpdates(m_user_list);
     int sep = line.Find(' ');
     wxString name = line.Mid(0, sep);
     if ( name.Contains(filter) || (filter == wxEmptyString) ) {
-      int flag = (int)s2l( line.Mid(sep+1) ); // Flag is never < 0 or > intmax
+      int flag = (int)FromwxString<long>( line.Mid(sep+1) ); // Flag is never < 0 or > intmax
       AddUserToList( name, flag );
       m_filtered_users.RemoveAt(i);
     }

@@ -2,12 +2,19 @@
 
 #ifndef NO_TORRENT_SYSTEM
 
+#ifdef _MSC_VER
+#ifndef NOMINMAX
+    #define NOMINMAX
+#endif // NOMINMAX
+#include <winsock2.h>
+#endif // _MSC_VER
+
 #include <wx/intl.h>
 #include <wx/menu.h>
 
 #include "torrentlistctrl.h"
 #include "torrentwrapper.h"
-#include "utils.h"
+//#include "utils/.h"
 #include "iconimagelist.h"
 
 BEGIN_EVENT_TABLE( TorrentListCtrl, CustomListCtrl )
@@ -34,7 +41,7 @@ TorrentListCtrl::TorrentListCtrl( wxWindow* parent, Ui& ui ):
 	col.SetImage( icons().ICON_NONE );
 	InsertColumn( 0, col, _T( "Name" ), true );
 
-	col.SetText( _( "numcopies" ) );
+	col.SetText( _( "Numcopies" ) );
 	col.SetImage( icons().ICON_NONE );
 	InsertColumn( 1, col, _T( "complete numcopies" ), true );
 
@@ -46,9 +53,9 @@ TorrentListCtrl::TorrentListCtrl( wxWindow* parent, Ui& ui ):
 	col.SetImage( icons().ICON_NONE );
 	InsertColumn( 3, col, _T( "MB uploaded" ) );
 
-	col.SetText( _( "status" ) );
+	col.SetText( _( "Status" ) );
 	col.SetImage( icons().ICON_NONE );
-	InsertColumn( 4, col, _T( "status" ) );
+	InsertColumn( 4, col, _T( "Status" ) );
 
 	col.SetText( _( "% complete" ) );
 	col.SetImage( icons().ICON_NONE );

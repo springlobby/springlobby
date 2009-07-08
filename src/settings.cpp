@@ -24,7 +24,10 @@
 
 #include "nonportable.h"
 #include "settings.h"
-#include "utils.h"
+#include "utils/conversion.h"
+#include "utils/debug.h"
+#include "utils/math.h"
+#include "utils/platform.h"
 #include "uiutils.h"
 #include "battlelistfiltervalues.h"
 #include "playback/playbackfiltervalues.h"
@@ -34,6 +37,13 @@
 #include "settings++/presets.h"
 #include "Helper/sortutil.h"
 #include "mainwindow.h"
+#ifdef SL_DUMMY_COL
+    #include "settings++/custom_dialogs.h"
+#endif
+
+bool Settings::m_user_defined_config = false;
+wxString Settings::m_user_defined_config_path = wxEmptyString;
+
 
 const wxColor defaultHLcolor (255,0,0);
 
@@ -81,7 +91,10 @@ Settings::Settings()
 
      if ( !outstream.IsOk() )
      {
-         // TODO: error handling
+         if ( m_user_defined_config ) {
+            wxLogError( _T("unable to use specified config file") );
+            exit(-1);
+         }
      }
   }
 
@@ -89,7 +102,10 @@ Settings::Settings()
 
   if ( !instream.IsOk() )
   {
-      // TODO: error handling
+      if ( m_user_defined_config ) {
+            wxLogError( _T("unable to use specified config file") );
+            exit(-1);
+         }
   }
 	#ifdef __WXMSW__
   m_config = new SL_WinConf( instream );
@@ -99,7 +115,8 @@ Settings::Settings()
   #else
   //removed temporarily because it's suspected to cause a bug with userdir creation
  // m_config = new wxConfig( _T("SpringLobby"), wxEmptyString, _T(".springlobby/springlobby.conf"), _T("springlobby.global.conf"), wxCONFIG_USE_LOCAL_FILE | wxCONFIG_USE_GLOBAL_FILE  );
-  m_config = new wxConfig( _T("SpringLobby"), wxEmptyString, _T(".springlobby/springlobby.conf"), _T("springlobby.global.conf") );
+  wxString path = m_user_defined_config ? m_user_defined_config_path : _T(".springlobby/springlobby.conf");
+  m_config = new wxConfig( _T("SpringLobby"), wxEmptyString, path, _T("springlobby.global.conf") );
   SetPortableMode ( false );
   #endif
 	m_config->SetRecordDefaults( true );
@@ -768,24 +785,13 @@ wxPathList Settings::GetAdditionalSearchPaths( wxPathList& pl )
 	wxStandardPathsBase& sp = wxStandardPathsBase::Get();
 
   pl.Add( wxFileName::GetCwd() );
-
-#ifdef HAVE_WX28
   pl.Add( sp.GetExecutablePath() );
-#endif
-
   pl.Add( wxFileName::GetCwd() );
-
-#ifdef HAVE_WX28
   pl.Add( sp.GetExecutablePath() );
-#endif
-
   pl.Add( wxFileName::GetHomeDir() );
   pl.Add( sp.GetUserDataDir().BeforeLast( sep ) );
   pl.Add( sp.GetDataDir().BeforeLast( sep ) );
-
-#ifdef HAVE_WX28
   pl.Add( sp.GetResourcesDir().BeforeLast( sep ) );
-#endif
 
 	pl.Add( wxGetOSDirectory() );
 
@@ -985,7 +991,7 @@ wxString Settings::GetForcedSpringConfigFilePath()
 
 bool Settings::GetChatLogEnable()
 {
-    if (!m_config->Exists(_T("/ChatLog/chatlog_enable"))) SetChatLogEnable( false );
+    if (!m_config->Exists(_T("/ChatLog/chatlog_enable"))) SetChatLogEnable( true );
     return m_config->Read( _T("/ChatLog/chatlog_enable"), true );
 }
 
@@ -1530,8 +1536,22 @@ void Settings::ConvertOldHiglightSettings()
 	SetHighlightedWords( wxStringTokenize( m_config->Read( _T("/Chat/HighlightedWords"), _T("") ), _T(";") ) );
 }
 
+void Settings::SetUseIrcColors( bool value )
+{
+	m_config->Write( _T("/Chat/UseIrcColors"), value);
+}
+
+bool Settings::GetUseIrcColors()
+{
+	return m_config->Read( _T("/Chat/UseIrcColors"), true );
+}
+
+
 void Settings::SetHighlightedWords( const wxArrayString& words )
 {
+	if(m_config->Exists( _T("/Chat/HighlightedWords"))) // flush existing entries
+		m_config->DeleteGroup(_T("/Chat/HighlightedWords"));
+
 	for ( unsigned int i = 0; i < words.GetCount(); i++ )
 	{
 		m_config->Write( _T("/Chat/HighlightedWords/") + words[i], words[i] );
@@ -1612,6 +1632,46 @@ bool Settings::GetBattleFilterActivState() const
 void Settings::SetBattleFilterActivState(const bool state)
 {
     m_config->Write( _T("/BattleFilter/Active") , state );
+}
+
+bool Settings::GetBattleLastAutoStartState()
+{
+	return m_config->Read( _T("/Hosting/AutoStart") , 0l );
+}
+
+void Settings::SetBattleLastAutoStartState( bool value )
+{
+	m_config->Write( _T("/Hosting/AutoStart"), value );
+}
+
+bool Settings::GetBattleLastAutoControlState()
+{
+	return m_config->Read( _T("/Hosting/AutoControl") , 0l );
+}
+
+void Settings::SetBattleLastAutoControlState( bool value )
+{
+	m_config->Write( _T("/Hosting/AutoControl"), value );
+}
+
+int Settings::GetBattleLastAutoSpectTime()
+{
+	return m_config->Read( _T("/Hosting/AutoSpectTime") , 0l );
+}
+
+void Settings::SetBattleLastAutoSpectTime( int value )
+{
+	m_config->Write( _T("/Hosting/AutoSpectTime") ,value );
+}
+
+bool Settings::GetBattleLastAutoAnnounceDescription()
+{
+	return m_config->Read( _T("/Hosting/AutoAnnounceDescription") , 0l );
+}
+
+void Settings::SetBattleLastAutoAnnounceDescription( bool value )
+{
+	m_config->Write( _T("/Hosting/AutoAnnounceDescription") , value );
 }
 
 void Settings::SetMapLastStartPosType( const wxString& mapname, const wxString& startpostype )
@@ -1864,14 +1924,14 @@ wxString Settings::GetDefaultLayout()
 	return m_config->Read( _T("/GUI/DefaultLayout"), _T("") );
 }
 
-void Settings::SetColumnWidth( const wxString& list_name, const int coloumn_ind, const int coloumn_width )
+void Settings::SetColumnWidth( const wxString& list_name, const int column_ind, const int column_width )
 {
-    m_config->Write(_T("GUI/ColoumnWidths/") + list_name + _T("/") + TowxString(coloumn_ind), coloumn_width );
+    m_config->Write(_T("GUI/ColumnWidths/") + list_name + _T("/") + TowxString(column_ind), column_width );
 }
 
-int Settings::GetColumnWidth( const wxString& list_name, const int coloumn )
+int Settings::GetColumnWidth( const wxString& list_name, const int column )
 {
-    return m_config->Read(_T("GUI/ColoumnWidths/") + list_name + _T("/") + TowxString(coloumn), columnWidthUnset);
+    return m_config->Read(_T("GUI/ColumnWidths/") + list_name + _T("/") + TowxString(column), columnWidthUnset);
 }
 
 void Settings::SetPeopleList( const wxArrayString& friends, const wxString& group  )
@@ -2225,9 +2285,7 @@ void Settings::setSimpleDetail(wxString det)
 bool Settings::IsSpringBin( const wxString& path )
 {
   if ( !wxFile::Exists( path ) ) return false;
-#ifdef HAVE_WX28
   if ( !wxFileName::IsFileExecutable( path ) ) return false;
-#endif
   return true;
 }
 
@@ -2307,3 +2365,32 @@ unsigned int Settings::GetStartTab( )
     return m_config->Read( _T("/GUI/StartTab") , MainWindow::PAGE_SINGLE ); //default is SP tab
 }
 
+//! simply move saved col size +1 to account for dummy col, force dummy col width to 0
+void Settings::TranslateSavedColumWidths()
+{
+    #ifdef SL_DUMMY_COL
+    wxString old_path = m_config->GetPath();
+    bool old_record = m_config->IsRecordingDefaults( );
+    m_config->SetRecordDefaults( false );
+    std::vector<wxString> ctrls;
+    ctrls.push_back( _T("NickListCtrl") );
+    ctrls.push_back( _T("BattleroomListCtrl") );
+    ctrls.push_back( _T("BattleListCtrl") );
+    ctrls.push_back( _T("WidgetDownloadListCtrl") );
+    ctrls.push_back( _T("ChannelListCtrl") );
+    ctrls.push_back( _T("PlaybackListCtrl") );
+    for ( std::vector<wxString>::const_iterator it = ctrls.begin(); it != ctrls.end(); ++it ) {
+        m_config->SetPath( _T("/GUI/ColumnWidths/") + *it );
+        unsigned int entries  = m_config->GetNumberOfEntries( false ); //do not recurse
+        for ( unsigned int i = entries; i > 0 ; --i )
+        {
+            m_config->Write( TowxString(i), m_config->Read( TowxString(i-1) , -1 ) );
+        }
+        m_config->Write( TowxString(0), 0 );
+    }
+
+    m_config->SetPath( old_path );
+    m_config->SetRecordDefaults( old_record );
+    customMessageBoxNoModal( SL_MAIN_ICON, _("The way column widths are saved has changed, you may need to re-adjust your col widths manually once."), _("Important") );
+    #endif
+}

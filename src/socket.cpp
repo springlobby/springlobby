@@ -1,5 +1,12 @@
 /* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
 
+#ifdef _MSC_VER
+#ifndef NOMINMAX
+    #define NOMINMAX
+#endif // NOMINMAX
+#include <winsock2.h>
+#endif // _MSC_VER
+
 #include <wx/socket.h>
 #include <wx/thread.h>
 #include <wx/string.h>
@@ -9,11 +16,13 @@
 
 #include "socket.h"
 #include "server.h"
-#include "utils.h"
+#include "utils/debug.h"
+#include "utils/conversion.h"
 
 #ifdef __WXMSW__
 #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
 #include <windows.h>
+#include <wx/msw/winundef.h>
 #include <iphlpapi.h>
 #pragma comment(lib, "iphlpapi.lib")
 #else

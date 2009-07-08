@@ -1,5 +1,7 @@
 /* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
 
+#include "springunitsync.h"
+
 #include <algorithm>
 #include <wx/dynlib.h>
 #include <wx/filefn.h>
@@ -20,13 +22,15 @@
 #include <stdexcept>
 #include <clocale>
 
-#include "springunitsync.h"
 #include "settings.h"
 #include "springunitsynclib.h"
 #include "settings++/custom_dialogs.h"
 #include "unitsyncthread.h"
 #include "globalsmanager.h"
 #include "uiutils.h"
+#include "utils/debug.h"
+#include "utils/conversion.h"
+#include "utils/misc.h"
 
 
 #define LOCK_UNITSYNC wxCriticalSectionLocker lock_criticalsection(m_lock)
@@ -42,9 +46,10 @@ IUnitSync& usync()
 
 
 SpringUnitSync::SpringUnitSync()
-  : m_map_image_cache( 3 )      // may take about 3M per image ( 1024x1024 24 bpp minimap )
-  , m_tiny_minimap_cache( 200 ) // takes at most 30k per image (   100x100 24 bpp minimap )
-  , m_mapinfo_cache( 1000000 )  // this one is just misused as thread safe std::map ...
+  : m_map_image_cache( 3, _T("m_map_image_cache") )         // may take about 3M per image ( 1024x1024 24 bpp minimap )
+  , m_tiny_minimap_cache( 200, _T("m_tiny_minimap_cache") ) // takes at most 30k per image (   100x100 24 bpp minimap )
+  , m_mapinfo_cache( 1000000, _T("m_mapinfo_cache") )       // this one is just misused as thread safe std::map ...
+  , m_sides_cache( 200, _T("m_sides_cache") )               // another misuse
 {
   m_cache_thread.Create();
   m_cache_thread.SetPriority( WXTHREAD_MIN_PRIORITY );
@@ -55,7 +60,6 @@ SpringUnitSync::SpringUnitSync()
 SpringUnitSync::~SpringUnitSync()
 {
   m_cache_thread.Wait();
-  FreeUnitSyncLib();
 }
 
 
@@ -85,16 +89,24 @@ void SpringUnitSync::PopulateArchiveList()
   int numMaps = susynclib().GetMapCount();
   for ( int i = 0; i < numMaps; i++ )
   {
-    wxString name, hash;
+    wxString name, hash, archivename, unchainedhash;
     try
     {
      name = susynclib().GetMapName( i );
      hash = susynclib().GetMapChecksum( i );
+		 int count = susynclib().GetMapArchiveCount( i );
+		 if ( count > 0 )
+		 {
+			 archivename =  susynclib().GetMapArchiveName( 0 );
+			 unchainedhash = susynclib().GetArchiveChecksum( archivename );
+		 }
      //PrefetchMap( name ); // DEBUG
     } catch (...) { continue; }
     try
     {
       m_maps_list[name] = hash;
+      if ( !unchainedhash.IsEmpty() ) m_maps_unchained_hash[name] = unchainedhash;
+      if ( !archivename.IsEmpty() ) m_maps_archive_name[name] = archivename;
       m_map_array.Add( name );
     } catch (...)
     {
@@ -104,15 +116,23 @@ void SpringUnitSync::PopulateArchiveList()
   int numMods = susynclib().GetPrimaryModCount();
   for ( int i = 0; i < numMods; i++ )
   {
-    wxString name, hash;
+    wxString name, hash, archivename, unchainedhash;
     try
     {
      name = susynclib().GetPrimaryModName( i );
      hash = susynclib().GetPrimaryModChecksum( i );
+		 int count = susynclib().GetPrimaryModArchiveCount( i );
+		 if ( count > 0 )
+		 {
+		   archivename = susynclib().GetPrimaryModArchive( 0 );
+			 unchainedhash = susynclib().GetArchiveChecksum( archivename );
+		 }
     } catch (...) { continue; }
     try
     {
       m_mods_list[name] = hash;
+      if ( !unchainedhash.IsEmpty() )  m_mods_unchained_hash[name] = unchainedhash;
+      if ( !archivename.IsEmpty() ) m_mods_archive_name[name] = archivename;
       m_mod_array.Add( name );
     } catch (...)
     {
@@ -460,11 +480,14 @@ wxArrayString SpringUnitSync::GetModDeps( const wxString& modname )
 wxArrayString SpringUnitSync::GetSides( const wxString& modname )
 {
 	wxArrayString ret;
-	try
-	{
-		ret = susynclib().GetSides( modname );
+	if ( ! m_sides_cache.TryGet( modname, ret ) ) {
+        try
+        {
+            ret = susynclib().GetSides( modname );
+            m_sides_cache.Add( modname, ret );
+        }
+        catch( unitsync_assert ) {}
 	}
-	catch( unitsync_assert ) {}
 	return ret;
 }
 
@@ -694,7 +717,7 @@ wxImage SpringUnitSync::_GetMapImage( const wxString& mapname, const wxString& i
 
   if ( m_map_image_cache.TryGet( mapname + imagename, img ) ) return img;
 
-  wxString originalsizepath = GetFileCachePath( mapname, _T(""), false ) + imagename;
+  wxString originalsizepath = GetFileCachePath( mapname, m_maps_unchained_hash[mapname], false ) + imagename;
 
   try
   {
@@ -748,7 +771,7 @@ MapInfo SpringUnitSync::_GetMapInfoEx( const wxString& mapname )
   try {
       try
       {
-        cache = GetCacheFile( GetFileCachePath( mapname, _T(""), false ) + _T(".infoex") );
+        cache = GetCacheFile( GetFileCachePath( mapname, m_maps_unchained_hash[mapname], false ) + _T(".infoex") );
 
         ASSERT_EXCEPTION( cache.GetCount() >= 11, _T("not enough lines found in cache info ex") );
         info.author = cache[0];
@@ -801,7 +824,7 @@ MapInfo SpringUnitSync::_GetMapInfoEx( const wxString& mapname )
         unsigned int desclinecount = descrtoken.GetCount();
         for ( unsigned int count = 0; count < desclinecount; count++ ) cache.Add( descrtoken[count] );
 
-        SetCacheFile( GetFileCachePath( mapname, _T(""), false ) + _T(".infoex"), cache );
+        SetCacheFile( GetFileCachePath( mapname, m_maps_unchained_hash[mapname], false ) + _T(".infoex"), cache );
       }
   }
   catch ( ... ) {
@@ -835,7 +858,7 @@ wxString SpringUnitSync::GetFileCachePath( const wxString& name, const wxString&
   wxString ret = m_cache_path;
   if ( !name.IsEmpty() ) ret << name;
   else return wxEmptyString;
-  if ( !hash.IsEmpty() ) ret << hash;
+  if ( !hash.IsEmpty() ) ret << _T("-") << hash;
   else
   {
     if ( IsMod ) ret <<  _T("-") << m_mods_list[name];
@@ -919,7 +942,12 @@ wxArrayString SpringUnitSync::GetScreenshotFilenames()
 
 wxString SpringUnitSync::GetDefaultNick()
 {
-	return susynclib().GetSpringConfigString( _T("name"), _T("") );
+    wxString name = susynclib().GetSpringConfigString( _T("name"), _T("Player") );
+    if ( name.IsEmpty() ) {
+        susynclib().SetSpringConfigString( _T("name"), _T("Player") );
+        return _T("Player");
+    }
+    return name;
 }
 
 void SpringUnitSync::SetDefaultNick( const wxString& nick )

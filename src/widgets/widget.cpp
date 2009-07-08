@@ -1,3 +1,10 @@
+#ifdef _MSC_VER
+#ifndef NOMINMAX
+    #define NOMINMAX
+#endif // NOMINMAX
+#include <winsock2.h>
+#endif // _MSC_VER
+
 #include "widget.h"
 
 #include <wx/arrstr.h>
@@ -7,7 +14,7 @@
 #include <wx/protocol/http.h>
 #include <wx/xml/xml.h>
 
-#include "../utils.h"
+//#include "../utils/.h"
 #include "../settings.h"
 #include "../springunitsync.h"
 
@@ -56,7 +63,7 @@ bool Widget::GetImageInfos()
 		wxXmlNode *node = xml.GetRoot()->GetChildren();
 		while (node)
 		{
-		    int id = s2l( node->GetPropVal( _T("ID"), i2s( invalid_id ) ) );
+		    int id = FromwxString<long>( node->GetPropVal( _T("ID"), TowxString( invalid_id ) ) );
             if ( id != invalid_id ) {
                 WidgetImage file;
                 file.id = id;
@@ -150,7 +157,7 @@ bool Widget::GetFileInfos()
 		wxXmlNode *node = xml.GetRoot()->GetChildren();
 		while (node)
 		{
-		    int id = s2l( node->GetPropVal( _T("ID"), i2s( invalid_id ) ) );
+		    int id = FromwxString<long>( node->GetPropVal( _T("ID"), TowxString( invalid_id ) ) );
             if ( id != invalid_id ) {
                 WidgetFile file;
                 file.id = id;
@@ -264,3 +271,7 @@ bool Widget::Remove()
     return false;
 }
 
+bool Widget::Equals( const Widget& other ) const
+{
+    return w_id == other.w_id && ( rev.CmpNoCase( other.rev ) == 0 );
+}

@@ -8,12 +8,12 @@ class wxListEvent;
 class wxCommandEvent;
 
 template <class PlaybackImp>
-class PlaybackListCtrl : public CustomVirtListCtrl< const PlaybackImp* >
+class PlaybackListCtrl : public CustomVirtListCtrl< const PlaybackImp*, PlaybackListCtrl<PlaybackImp> >
 {
     protected:
         typedef PlaybackListCtrl<PlaybackImp>
             ThisType;
-        typedef CustomVirtListCtrl< const PlaybackImp* >
+        typedef CustomVirtListCtrl< const PlaybackImp*,PlaybackListCtrl<PlaybackImp> >
             ParentType;
         typedef typename ParentType::DataType
             DataType;
@@ -38,7 +38,7 @@ class PlaybackListCtrl : public CustomVirtListCtrl< const PlaybackImp* >
     using ParentType::DataVector;
     typedef typename ParentType::DataVector::const_iterator
         DataCIter; //! TODO (koshi) i'd be mighty thankful if some could explain to me why the import with using ParentType::DataCIter doesn't work here;
-    using ParentType::getColoumnFromPosition;
+    using ParentType::getColumnFromPosition;
 
   public:
     PlaybackListCtrl( wxWindow* parent );
@@ -57,10 +57,10 @@ class PlaybackListCtrl : public CustomVirtListCtrl< const PlaybackImp* >
     virtual void HighlightItem( long item ){};
 
     //these are overloaded to use list in virtual style
-    virtual wxString OnGetItemText(long item, long column) const;
-    virtual int OnGetItemImage(long item) const;
-    virtual int OnGetItemColumnImage(long item, long column) const;
-    wxListItemAttr * OnGetItemAttr(long item) const;
+    wxString GetItemText(long item, long column) const;
+    int GetItemImage(long item) const;
+    int GetItemColumnImage(long item, long column) const;
+    wxListItemAttr * GetItemAttr(long item) const;
     int GetIndexFromData( const DataType& data ) const;
 
     using ParentType::RefreshVisibleItems;

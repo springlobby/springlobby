@@ -3,6 +3,13 @@
 // Class: ServerEvents
 //
 
+#ifdef _MSC_VER
+#ifndef NOMINMAX
+    #define NOMINMAX
+#endif // NOMINMAX
+#include <winsock2.h>
+#endif // _MSC_VER
+
 #include <wx/intl.h>
 #include <stdexcept>
 
@@ -11,7 +18,7 @@
 #include "ui.h"
 #include "channel/channel.h"
 #include "user.h"
-#include "utils.h"
+#include "utils/debug.h"
 #include "server.h"
 #include "battle.h"
 #include "httpdownloader.h"
@@ -113,9 +120,10 @@ void ServerEvents::OnMotd( const wxString& msg )
 }
 
 
-void ServerEvents::OnPong( int ping_time )
+void ServerEvents::OnPong( wxLongLong ping_time )
 {
-    ui().OnServerMessage( m_serv, wxString::Format( _("ping reply took %d seconds"), ping_time ) );
+    //wxLongLong is non-POD and cannot be passed to wxFormat as such. use c-string rep instead. converting to long might loose precision
+    ui().OnServerMessage( m_serv, wxString::Format( _("ping reply took %s ms"), ping_time.ToString().c_str() ) );
 }
 
 
@@ -169,7 +177,7 @@ void ServerEvents::OnUserStatus( const wxString& nick, UserStatus status )
                 if ( status.in_game != battle.GetInGame() )
                 {
                     battle.SetInGame( status.in_game );
-                    if ( status.in_game ) ui().OnBattleStarted( battle );
+                    if ( status.in_game ) battle.StartSpring();
                     else ui().OnBattleInfoUpdated( battle );
                 }
             }
@@ -247,7 +255,7 @@ void ServerEvents::OnBattleOpened( int id, BattleType type, NatType nat, const w
         if ( user.Status().in_game )
         {
             battle.SetInGame( true );
-            ui().OnBattleStarted( battle );
+            battle.StartSpring();
         }
     }
     catch (std::runtime_error &except)
@@ -321,7 +329,7 @@ void ServerEvents::OnStartHostedBattle( int battleid )
     wxLogDebugFunc( _T("") );
     Battle& battle = m_serv.GetBattle( battleid );
     battle.SetInGame( true );
-    ui().OnBattleStarted( battle );
+    battle.StartSpring();
 }
 
 
@@ -359,7 +367,7 @@ void ServerEvents::OnUserJoinedBattle( int battleid, const wxString& nick )
             if ( user.Status().in_game )
             {
                 battle.SetInGame( true );
-                ui().OnBattleStarted( battle );
+                battle.StartSpring();
             }
         }
     }
@@ -875,7 +883,7 @@ void ServerEvents::AutoCheckCommandSpam( Battle& battle, User& user )
 
 void ServerEvents::OnMutelistBegin( const wxString& channel )
 {
-    mutelistWindow( _("Begin mutelist for ") + channel, channel + _(" mutelist") );
+    mutelistWindow( _("Begin mutelist for ") + channel, wxString::Format( _("%s mutelist"), channel.c_str() ) );
 }
 
 void ServerEvents::OnMutelistItem( const wxString& channel, const wxString& mutee, const wxString& description )
@@ -958,7 +966,8 @@ void ServerEvents::OnSpringDownloadEvent( wxCommandEvent& event )
 			{
 				customMessageBoxNoModal(SL_MAIN_ICON, _("Download complete, location is: ") + m_savepath, _("Download complete.")  );
 			}
-			if ( m_autoclose ) ui().Quit();
+			if ( m_autoclose )
+                ui().mw().Close();
 
   }
 }

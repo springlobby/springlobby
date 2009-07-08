@@ -1,7 +1,7 @@
 #include "mmoptionswrapper.h"
 
 #include "iunitsync.h"
-#include "utils.h"
+#include "utils/conversion.h"
 #include "settings++/custom_dialogs.h"
 
 #include <stdexcept>
@@ -113,11 +113,11 @@ bool OptionsWrapper::loadOptions(GameOption modmapFlag, const wxString& name)
     case EngineOption:
     {
 
-        mmOptionList startpos( _("Start Position Type"),_T("startpostype"), _("How players will select where to be spawned in the map\n0: fixed map positions\n1: random map positions\n2: chose in game\n3: chose in the lobby before starting"), _T("0") );
-        startpos.addItem( _T("0"), _("Fixed"), _T("Use the map defined start positions, the positions will be assigned incrementally from the team with lowest number to highest") );
-        startpos.addItem( _T("1"), _("Random"), _T("Use the map defined start positions, the positions will be assigned randomly, only the first positions will be used to rotate between the players") );
-        startpos.addItem( _T("2"), _("Chose in game"), _T("Each player will be able to pick it's own starting point right before the game will start, the range can be limited using bounding boxes for allies from the host") );
-        startpos.addItem( _T("3"), _("Chose before game"), _T("The host will positionate the players start positions in the map preview before the game will be launched") );
+        mmOptionList startpos( _("Start Position Type"),_T("startpostype"), _("How players will select where to be spawned in the map\n0: fixed map positions\n1: random map positions\n2: choose in game\n3: choose in the lobby before starting"), _T("0") );
+        startpos.addItem( _T("0"), _("Fixed"), _T("Use the start positions defined in the map, the positions will be assigned incrementally from the team with lowest number to highest") );
+        startpos.addItem( _T("1"), _("Random"), _T("Use the start positions defined in the map, the positions will be assigned randomly") );
+        startpos.addItem( _T("2"), _("Choose in-game"), _T("Players will be able to pick their own starting point right before the game starts, optionally limited by a bounding box defined by the host") );
+        startpos.addItem( _T("3"), _("Choose before game"), _T("The host will place each player's start position in the map preview before the game is launched") );
         opt.list_map[_T("startpostype")] = startpos;
         break;
     }
@@ -237,7 +237,7 @@ OptionsWrapper::wxStringTripleVec OptionsWrapper::getOptions( GameOption modmapF
     if ( optIt != m_opts.end() ) {
         const GameOptions& gameoptions = optIt->second;
         for (IUnitSync::OptionMapBoolConstIter it = gameoptions.bool_map.begin(); it != gameoptions.bool_map.end(); ++it) {
-            list.push_back( wxStringTriple( (*it).first, wxStringPair ( it->second.name , i2s(it->second.value) ) ) );
+            list.push_back( wxStringTriple( (*it).first, wxStringPair ( it->second.name , TowxString(it->second.value) ) ) );
         }
 
         for (IUnitSync::OptionMapStringConstIter it = gameoptions.string_map.begin(); it != gameoptions.string_map.end(); ++it) {
@@ -245,7 +245,7 @@ OptionsWrapper::wxStringTripleVec OptionsWrapper::getOptions( GameOption modmapF
         }
 
         for (IUnitSync::OptionMapFloatConstIter it = gameoptions.float_map.begin(); it != gameoptions.float_map.end(); ++it) {
-            list.push_back( wxStringTriple( (*it).first, wxStringPair ( it->second.name, f2s(it->second.value) ) ) );
+            list.push_back( wxStringTriple( (*it).first, wxStringPair ( it->second.name, TowxString(it->second.value) ) ) );
         }
 
         for (IUnitSync::OptionMapListConstIter it = gameoptions.list_map.begin(); it != gameoptions.list_map.end(); ++it) {
@@ -262,7 +262,7 @@ std::map<wxString,wxString> OptionsWrapper::getOptionsMap( GameOption modmapFlag
     if ( optIt != m_opts.end() ) {
         const GameOptions& gameoptions = optIt->second;
         for (IUnitSync::OptionMapBoolConstIter it = gameoptions.bool_map.begin(); it != gameoptions.bool_map.end(); ++it) {
-            map[it->first] =  i2s(it->second.value);
+            map[it->first] =  TowxString(it->second.value);
         }
 
         for (IUnitSync::OptionMapStringConstIter it = gameoptions.string_map.begin(); it != gameoptions.string_map.end(); ++it) {
@@ -270,7 +270,7 @@ std::map<wxString,wxString> OptionsWrapper::getOptionsMap( GameOption modmapFlag
         }
 
         for (IUnitSync::OptionMapFloatConstIter it = gameoptions.float_map.begin(); it != gameoptions.float_map.end(); ++it) {
-            map[it->first] = f2s(it->second.value);
+            map[it->first] = TowxString(it->second.value);
         }
 
         for (IUnitSync::OptionMapListConstIter it = gameoptions.list_map.begin(); it != gameoptions.list_map.end(); ++it) {
@@ -332,9 +332,9 @@ wxString OptionsWrapper::getSingleValue(wxString key, GameOption modmapFlag) con
 		switch (optType)
 		{
 		case opt_float:
-			return f2s( GetItem( tempOpt.float_map, key ).value );
+			return TowxString( GetItem( tempOpt.float_map, key ).value );
 		case opt_bool:
-			return i2s( GetItem( tempOpt.bool_map, key ).value );
+			return TowxString( GetItem( tempOpt.bool_map, key ).value );
 		case opt_string:
 			return  GetItem( tempOpt.string_map, key ).value ;
 		case opt_list:

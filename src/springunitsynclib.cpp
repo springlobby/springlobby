@@ -8,7 +8,9 @@
 #include <cmath>
 
 #include "springunitsynclib.h"
-#include "utils.h"
+#include "utils/debug.h"
+#include "utils/conversion.h"
+#include "utils/misc.h"
 #include "globalsmanager.h"
 
 #define LOCK_UNITSYNC wxCriticalSectionLocker lock_criticalsection(m_lock)
@@ -1320,6 +1322,12 @@ wxArrayString SpringUnitSyncLib::GetAIInfo( int aiIndex )
 		ret.Add( WX_STRINGC( m_get_skirmish_ai_info_description( i ) ) );
 	}
 	return ret;
+}
+
+wxString SpringUnitSyncLib::GetArchiveChecksum( const wxString& VFSPath )
+{
+	InitLib( m_get_archive_checksum );
+	return TowxString( m_get_archive_checksum( VFSPath.mb_str() ) );
 }
 
 /// lua parser

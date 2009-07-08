@@ -18,8 +18,9 @@ class SinglePlayerBattle: public IBattle
     SinglePlayerBattle( Ui& ui, MainSinglePlayerTab& msptab );
     ~SinglePlayerBattle();
 
-    unsigned int AddBot( int ally, int posx, int posy, int handicap, const wxString& aidll );
-    void UpdateBot( unsigned int index, int ally, int posx, int posy, int side );
+// (koshi) these are never called
+//    unsigned int AddBot( int ally, int posx, int posy, int handicap, const wxString& aidll );
+//    void UpdateBot( unsigned int index, int ally, int posx, int posy, int side );
 
     bool IsFounderMe() { return true; }
 
@@ -29,6 +30,8 @@ class SinglePlayerBattle: public IBattle
     void SendHostInfo( const wxString& Tag ){}
 
     void Update( const wxString& Tag );
+
+    void StartSpring();
 
   protected:
 

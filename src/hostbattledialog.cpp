@@ -22,9 +22,10 @@
 
 #include "hostbattledialog.h"
 #include "settings.h"
-#include "utils.h"
+//#include "utils/.h"
 #include "iunitsync.h"
 #include "user.h"
+#include "utils/controls.h"
 
 #include "images/rank0.xpm"
 #include "images/rank1.xpm"
@@ -62,9 +63,14 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent ): wxDialog( parent, -1, _(
 	m_desc_text = new wxTextCtrl( this, wxID_ANY, sett().GetLastHostDescription(), wxDefaultPosition, wxDefaultSize, 0 );
 	m_desc_text->SetToolTip( TE(_("A short description of the game, this will show up in the battle list.")) );
 
+	m_desc_check = new wxCheckBox( this, wxID_ANY, _("Autopaste description") );
+	m_desc_check->SetValue( sett().GetBattleLastAutoAnnounceDescription() );
+	m_desc_check->SetToolTip( TE(_("Automatically write the battle description when a user joins.")) );
+
 	m_desc_sizer->Add( m_desc_text, 2, wxALL, 5 );
 
 	m_main_sizer->Add( m_desc_sizer, 0, wxEXPAND, 5 );
+	m_main_sizer->Add(m_desc_check, 0);
 
 	wxBoxSizer* m_mod_sizer;
 	m_mod_sizer = new wxBoxSizer( wxHORIZONTAL );
@@ -221,8 +227,7 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent ): wxDialog( parent, -1, _(
 
 	m_main_sizer->Add( m_buttons_sizer, 0, wxEXPAND, 5 );
 
-	m_port_test_check->Enable( m_nat_radios->GetSelection() == 0 );
-  m_port_text->Enable( m_nat_radios->GetSelection() == 0 );
+	m_port_test_check->Disable();
 
 	this->SetSizer( m_main_sizer );
 	this->Layout();
@@ -267,6 +272,7 @@ void HostBattleDialog::OnOk( wxCommandEvent& event )
   sett().SetLastHostNATSetting( m_nat_radios->GetSelection() );
   sett().SetLastRankLimit( GetSelectedRank() );
   sett().SetLastHostRelayedMode( m_relayed_host_check->GetValue() );
+  sett().SetBattleLastAutoAnnounceDescription( m_desc_check->GetValue() );
   sett().SaveSettings();
   EndModal( wxID_OK );
 }

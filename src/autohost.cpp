@@ -5,7 +5,8 @@
 #include "server.h"
 #include "settings.h"
 #include "user.h"
-#include "utils.h"
+#include "utils/conversion.h"
+#include "utils/misc.h"
 
 #include <wx/tokenzr.h>
 
@@ -49,10 +50,12 @@ void AutoHost::OnSaidBattle( const wxString& nick, const wxString& msg )
   else if ( command == _T("!balance") ) {
     unsigned int num = s2l( params );
     m_battle.Autobalance(IBattle::balance_random, false, false, num);
+		m_battle.DoAction(_T("is auto-balancing alliances ..."));
   }
   else if ( command == _T("!cbalance") ) {
     unsigned int num = s2l( params );
     m_battle.Autobalance(IBattle::balance_random, true, false, num);
+    m_battle.DoAction(_T("is auto-balancing alliances ..."));
   }
   else if ( command == _T("!help")) {
     m_battle.DoAction( _T( "The following commands are available ( <> = mandatory value, {} = optional value ):" ) );
@@ -131,10 +134,12 @@ void AutoHost::OnSaidBattle( const wxString& nick, const wxString& msg )
   else if ( command == _T("!fixids") ) {
     unsigned int num = s2l( params );
     m_battle.FixTeamIDs( IBattle::balance_divide, false, false, num );
+    m_battle.DoAction(_T("is auto-balancing control teams ..."));
   }
   else if ( command == _T("!cfixids") ) {
     unsigned int num = s2l( params );
     m_battle.FixTeamIDs( IBattle::balance_divide, true, true, num );
+    m_battle.DoAction(_T("is auto-balancing control teams ..."));
   }
   else if ( command == _T("!spectunsynced") ) {
     m_battle.ForceUnsyncedToSpectate();

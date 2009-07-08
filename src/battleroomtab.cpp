@@ -25,6 +25,7 @@
 #if wxUSE_TOGGLEBTN
 #include <wx/tglbtn.h>
 #endif
+#include <wx/numdlg.h>
 
 #include <stdexcept>
 
@@ -33,7 +34,8 @@
 #include "iunitsync.h"
 #include "user.h"
 #include "battle.h"
-#include "utils.h"
+#include "utils/conversion.h"
+#include "utils/debug.h"
 #include "battleroomlistctrl.h"
 #include "chatpanel.h"
 #include "mapctrl.h"
@@ -80,6 +82,18 @@ BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
     EVT_BUTTON( BROOM_MANAGE_MENU, BattleRoomTab::OnShowManagePlayersMenu )
 
 		EVT_MENU( BROOM_AUTOHOST, BattleRoomTab::OnAutoHost )
+		EVT_MENU( BROOM_AUTOSPECT, BattleRoomTab::OnAutoSpec )
+		EVT_MENU( BROOM_AUTOSTART, BattleRoomTab::OnAutoStart )
+		EVT_MENU( BROOM_AUTOCONTROL, BattleRoomTab::OnAutoControl )
+
+		EVT_MENU( BROOM_RING_UNREADY, BattleRoomTab::OnRingUnready )
+		EVT_MENU( BROOM_RING_UNSYNC, BattleRoomTab::OnRingUnsynced )
+		EVT_MENU( BROOM_RING_UNREADY_UNSYNC, BattleRoomTab::OnRingUnreadyUnsynced )
+
+		EVT_MENU( BROOM_SPECT_UNREADY, BattleRoomTab::OnSpectUnready )
+		EVT_MENU( BROOM_SPECT_UNSYNC, BattleRoomTab::OnSpectUnsynced )
+		EVT_MENU( BROOM_SPECT_UNREADY_UNSYNC, BattleRoomTab::OnSpectUnreadyUnsynced )
+
     EVT_MENU( BROOM_LOCK_BALANCE, BattleRoomTab::OnLockBalance )
     EVT_MENU ( BROOM_BALANCE, BattleRoomTab::OnBalance )
     EVT_MENU ( BROOM_FIXID, BattleRoomTab::OnFixTeams )
@@ -187,9 +201,37 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
 		m_manage_users_mnu->Append( m_autohost_mnu );
     m_autohost_mnu->Check( false );
 
+    m_autospec_mnu = new wxMenuItem( m_manage_users_mnu, BROOM_AUTOSPECT, _( "AutoSpect" ), _("Automatically spectate players that don't ready up or become synced within x seconds."), wxITEM_CHECK );
+		m_manage_users_mnu->Append( m_autospec_mnu );
+    m_autospec_mnu->Check( sett().GetBattleLastAutoSpectTime() > 0 );
+    m_autocontrol_mnu = new wxMenuItem( m_manage_users_mnu, BROOM_AUTOCONTROL, _( "AutoControlBalance" ), _("Automatically balance teams and allies and fix colors when all players are ready and synced"), wxITEM_CHECK );
+		m_manage_users_mnu->Append( m_autocontrol_mnu );
+    m_autocontrol_mnu->Check( sett().GetBattleLastAutoControlState() );
+    m_autostart_mnu = new wxMenuItem( m_manage_users_mnu, BROOM_AUTOSTART, _( "AutoStart" ), _("Automatically start the battle when all players are ready and synced"), wxITEM_CHECK );
+		m_manage_users_mnu->Append( m_autostart_mnu );
+    m_autostart_mnu->Check( sett().GetBattleLastAutoStartState() );
+
     m_lock_balance_mnu = new wxMenuItem( m_manage_users_mnu, BROOM_LOCK_BALANCE, _( "Lock Balance" ), _("When activated, prevents anyone but the host to change team and ally"), wxITEM_CHECK );
     m_manage_users_mnu->Append( m_lock_balance_mnu );
     m_lock_balance_mnu->Check( false );
+
+    wxMenu* ring_menu = new wxMenu;
+    wxMenuItem* ring_unready = new wxMenuItem( ring_menu, BROOM_RING_UNREADY, _( "Ring unready" ), _("Rings all players that don't have ready status and aren't spectators") );
+    ring_menu->Append( ring_unready );
+    wxMenuItem* ring_unsynced = new wxMenuItem( ring_menu, BROOM_RING_UNSYNC, _( "Ring unsynced" ), _("Rings all players that don't have sync status and aren't spectators") );
+    ring_menu->Append( ring_unsynced );
+    wxMenuItem* ring_unready_unsynced = new wxMenuItem( ring_menu, BROOM_RING_UNREADY_UNSYNC, _( "Ring unready and unsynced" ), _("Rings all players that don't have sync status or don't have ready status and aren't spectators") );
+    ring_menu->Append( ring_unready_unsynced );
+    m_manage_users_mnu->Append( wxID_ANY, _("Ring ..."), ring_menu );
+
+    wxMenu* spect_menu = new wxMenu;
+    wxMenuItem* spect_unready = new wxMenuItem( spect_menu, BROOM_SPECT_UNREADY, _( "Spect unready" ), _("Force to spectate all players that don't have ready status") );
+    spect_menu->Append( spect_unready );
+    wxMenuItem* spect_unsynced = new wxMenuItem( spect_menu, BROOM_SPECT_UNSYNC, _( "Spect unsynced" ), _("Force to spectate all players that don't have sync status") );
+    spect_menu->Append( spect_unsynced );
+    wxMenuItem* spect_unready_unsynced = new wxMenuItem( spect_menu, BROOM_SPECT_UNREADY_UNSYNC, _( "Force to spectate unready and unsynced" ), _("Rings all players that don't have sync status or don't have ready status") );
+    spect_menu->Append( spect_unready_unsynced );
+    m_manage_users_mnu->Append( wxID_ANY, _("Force spectate ..."), spect_menu );
 
     wxMenuItem* m_balance_mnu = new wxMenuItem( m_manage_users_mnu, BROOM_BALANCE, _( "Balance alliances" ), _("Automatically balance players into two or more alliances") );
     m_manage_users_mnu->Append( m_balance_mnu );
@@ -337,12 +379,6 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
         m_manage_players_btn->Disable();
         m_lock_chk->Disable();
         m_autolock_chk->Disable();
-    }
-
-    if ( IsHosted() && !m_battle.IsProxy() )
-    {
-        m_battle.SetImReady ( true );
-        m_ready_chk->Disable();
     }
 
     if ( battle.IsProxy() )
@@ -507,33 +543,23 @@ void BattleRoomTab::UpdateUser( User& user )
     m_ally_sel->SetSelection( bs.ally );
     m_side_sel->SetSelection( bs.side );
     m_spec_chk->SetValue( bs.spectator );
-		if ( IsHosted() && !m_battle.IsProxy() && !bs.ready ) m_battle.SetImReady( true );
+    m_ready_chk->SetValue( bs.ready );
     // Enable or disable widgets' sensitivity as appropriate.
     if ( bs.spectator )
     {
-				if ( m_battle.GetBattleType() == BT_Played )
-				{
-					m_ready_chk->SetValue ( true );
-					m_ready_chk->Disable();
-				}
-				else
-				{
-					m_ready_chk->Enable();
-				}
         m_side_sel->Disable();
         m_ally_sel->Disable();
         m_team_sel->Disable();
+        if ( m_battle.GetBattleType() != BT_Replay ) m_ready_chk->Disable();
+        else m_ready_chk->Enable();
     }
     else
     {
-        if ( !IsHosted() || m_battle.IsProxy() )
-        {
-            m_ready_chk->Enable();
-        }
-        m_ready_chk->SetValue( bs.ready );
         m_side_sel->Enable();
         m_ally_sel->Enable();
         m_team_sel->Enable();
+        if ( m_battle.GetBattleType() != BT_Replay ) m_ready_chk->Enable();
+        else m_ready_chk->Enable();
     }
 
     icons().SetColourIcon( bs.team, user.BattleStatus().colour );
@@ -674,6 +700,25 @@ void BattleRoomTab::OnAutoHost( wxCommandEvent& event )
 }
 
 
+void BattleRoomTab::OnAutoControl( wxCommandEvent& event )
+{
+	sett().SetBattleLastAutoControlState( m_autocontrol_mnu->IsChecked() );
+}
+
+void BattleRoomTab::OnAutoStart( wxCommandEvent& event )
+{
+	sett().SetBattleLastAutoStartState( m_autostart_mnu->IsChecked() );
+}
+
+void BattleRoomTab::OnAutoSpec( wxCommandEvent& event )
+{
+	int trigger = wxGetNumberFromUser( _("Enter timeout before autospeccing a player in minutes"), _("Set Timeout"), _T(""), sett().GetBattleLastAutoSpectTime() / 60, 1, 60, (wxWindow*)&ui().mw(), wxDefaultPosition );
+	if ( trigger < 0 ) trigger = 0;
+	trigger = trigger * 60;
+	m_autospec_mnu->Check( trigger > 0 );
+	sett().SetBattleLastAutoSpectTime( trigger );
+}
+
 void BattleRoomTab::OnImSpec( wxCommandEvent& event )
 {
     m_battle.ForceSpectator( m_battle.GetMe(), m_spec_chk->GetValue() );
@@ -733,6 +778,36 @@ void BattleRoomTab::OnLockBalance( wxCommandEvent& event )
   bool locked = m_lock_balance_mnu->IsChecked();
   m_battle.SetLockExternalBalanceChanges( locked );
 }
+
+void BattleRoomTab::OnSpectUnsynced( wxCommandEvent& event )
+{
+	m_battle.ForceUnsyncedToSpectate();
+}
+
+void BattleRoomTab::OnSpectUnready( wxCommandEvent& event )
+{
+	m_battle.ForceUnReadyToSpectate();
+}
+void BattleRoomTab::OnSpectUnreadyUnsynced( wxCommandEvent& event )
+{
+	m_battle.ForceUnsyncedAndUnreadyToSpectate();
+}
+
+void BattleRoomTab::OnRingUnready( wxCommandEvent& event )
+{
+	m_battle.RingNotReadyPlayers();
+}
+
+void BattleRoomTab::OnRingUnsynced( wxCommandEvent& event )
+{
+	m_battle.RingNotSyncedPlayers();
+}
+
+void BattleRoomTab::OnRingUnreadyUnsynced( wxCommandEvent& event )
+{
+	m_battle.RingNotSyncedAndNotReadyPlayers();
+}
+
 
 void BattleRoomTab::OnShowManagePlayersMenu( wxCommandEvent& event )
 {
@@ -809,7 +884,7 @@ void BattleRoomTab::OnSavePreset( wxCommandEvent& event )
 void BattleRoomTab::OnDeletePreset( wxCommandEvent& event )
 {
   wxArrayString choices = m_battle.GetPresetList();
-	int result = wxGetSingleChoiceIndex(_("Pick an existing option set from the list"),_("Set delete preset"), choices );
+	int result = wxGetSingleChoiceIndex(_("Pick an existing option set from the list"),_("Delete preset"), choices );
 	if ( result < 0 ) return;
   m_battle.DeletePreset( choices[result] );
 }

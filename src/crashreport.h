@@ -5,7 +5,7 @@
 
 #include <wx/debugrpt.h>
 #include "utils.h"
-#if wxUSE_DEBUGREPORT && defined(HAVE_WX28)
+#if wxUSE_DEBUGREPORT
 
 #include <sstream>
 #include <wx/arrstr.h>

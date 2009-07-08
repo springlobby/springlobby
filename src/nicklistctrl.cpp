@@ -13,7 +13,9 @@
 #include <algorithm>
 
 #include "nicklistctrl.h"
-#include "utils.h"
+#include "utils/math.h"
+#include "utils/debug.h"
+#include "utils/conversion.h"
 #include "iconimagelist.h"
 #include "user.h"
 #include "settings.h"
@@ -27,7 +29,7 @@
 
 
 
-BEGIN_EVENT_TABLE( NickListCtrl, CustomVirtListCtrl<const User*> )
+BEGIN_EVENT_TABLE( NickListCtrl, NickListCtrl::BaseType )
   EVT_LIST_ITEM_ACTIVATED( NICK_LIST, NickListCtrl::OnActivateItem )
   EVT_CONTEXT_MENU( NickListCtrl::OnShowMenu )
 #if wxUSE_TIPWINDOW
@@ -37,14 +39,14 @@ BEGIN_EVENT_TABLE( NickListCtrl, CustomVirtListCtrl<const User*> )
 #endif
 END_EVENT_TABLE()
 
-template<> SortOrder CustomVirtListCtrl<const User*>::m_sortorder = SortOrder( ) ;
+template<> SortOrder NickListCtrl::BaseType::m_sortorder = SortOrder( ) ;
 
 NickListCtrl::NickListCtrl( wxWindow* parent, bool show_header, NickListCtrl::UserMenu* popup, bool singleSelectList,
-                            const wxString& name, bool highlight):
-  CustomVirtListCtrl<const User*>( parent, NICK_LIST, wxDefaultPosition, wxDefaultSize,
+                            const wxString& name, bool highlight)
+    : NickListCtrl::BaseType( parent, NICK_LIST, wxDefaultPosition, wxDefaultSize,
               wxLC_VIRTUAL | wxSUNKEN_BORDER | wxLC_REPORT | (int)(!show_header) * wxLC_NO_HEADER | (int)(singleSelectList) * wxLC_SINGLE_SEL,
-              name, 4, 3, &CompareOneCrit, highlight ),
-  m_menu(popup)
+              name, 4, 3, &CompareOneCrit, highlight, UserActions::ActHighlight, true /*periodic sort*/ ),
+    m_menu(popup)
 {
 
 #if defined(__WXMAC__)
@@ -77,30 +79,17 @@ NickListCtrl::~NickListCtrl()
 
 void NickListCtrl::AddUser( const User& user )
 {
-    wxLogDebugFunc(_T(""));
-    assert(&user);
+    if ( AddItem( &user ) )
+        return;
 
-    m_data.push_back( &user );
-    SetItemCount( m_data.size() );
-    RefreshItem( m_data.size() -1 );
-
-    SetColumnWidth( 3, wxLIST_AUTOSIZE );
-    SetColumnWidth( 0, wxLIST_AUTOSIZE );
-    MarkDirtySort();
-    HighlightItem( m_data.size() -1 );
+    wxLogWarning( _T("Useralready in list.") );
 }
 
 void NickListCtrl::RemoveUser( const User& user )
 {
-    int index = GetIndexFromData( &user );
-
-    if ( index != -1 ) {
-        m_data.erase( m_data.begin() + index );
-        SetItemCount( m_data.size() );
-        //SetColumnWidth( 3, wxLIST_AUTOSIZE );
-        RefreshItems( index, m_data.size() -1 );
+    if ( RemoveItem( &user ) )
         return;
-    }
+
     wxLogError( _T("Didn't find the user to remove.") );
 }
 
@@ -156,8 +145,8 @@ void NickListCtrl::OnShowMenu( wxContextMenuEvent& event )
 void NickListCtrl::SetTipWindowText( const long item_hit, const wxPoint position)
 {
 
-    int coloumn = getColoumnFromPosition(position);
-    if (coloumn > (int)m_colinfovec.size() || coloumn < 0 || item_hit < 0 || item_hit > (long) m_data.size() || m_data[item_hit]==NULL )
+    int column = getColumnFromPosition(position);
+    if (column > (int)m_colinfovec.size() || column < 0 || item_hit < 0 || item_hit > (long) m_data.size() || m_data[item_hit]==NULL )
     {
         m_tiptext = _T("");
     }
@@ -165,7 +154,7 @@ void NickListCtrl::SetTipWindowText( const long item_hit, const wxPoint position
     {
         const User& user = *m_data[item_hit];
         {
-            switch (coloumn)
+            switch (column)
             {
             case 0: // status
                 m_tiptext = _T("This ");
@@ -197,14 +186,14 @@ void NickListCtrl::SetTipWindowText( const long item_hit, const wxPoint position
                 break;
 
             default:
-                m_tiptext = m_colinfovec[coloumn].tip;
+                m_tiptext = m_colinfovec[column].tip;
                 break;
             }
         }
     }
 }
 
-wxListItemAttr* NickListCtrl::OnGetItemAttr(long item) const
+wxListItemAttr* NickListCtrl::GetItemAttr(long item) const
 {
     if ( item < (long) m_data.size() && item > -1 ) {
         const User& u = *m_data[item];
@@ -221,12 +210,32 @@ void NickListCtrl::HighlightItem( long item )
 
 int NickListCtrl::GetIndexFromData( const DataType& data ) const
 {
-    DataCIter it = m_data.begin();
-    for ( int i = 0; it != m_data.end(); ++it, ++i ) {
-        if ( *it != 0 && data->Equals( *(*it) ) )
-            return i;
+	const User* user = data;
+    static long seekpos;
+    seekpos = clamp( seekpos, 0l , (long)m_data.size() );
+    int index = seekpos;
+
+    for ( DataCIter f_idx = m_data.begin() + seekpos; f_idx != m_data.end() ; ++f_idx )
+    {
+        if ( user == *f_idx )
+        {
+            seekpos = index;
+            return seekpos;
+        }
+        index++;
     }
-    wxLogError( _T("didn't find the user.") );
+    //it's ok to init with seekpos, if it had changed this would not be reached
+    int r_index = seekpos - 1;
+    for ( DataRevCIter r_idx = m_data.rbegin() + ( m_data.size() - seekpos ); r_idx != m_data.rend() ; ++r_idx )
+    {
+        if ( user == *r_idx )
+        {
+            seekpos = r_index;
+            return seekpos;
+        }
+        r_index--;
+    }
+
     return -1;
 }
 
@@ -240,7 +249,7 @@ void NickListCtrl::Sort()
     }
 }
 
-wxString NickListCtrl::OnGetItemText(long item, long column) const
+wxString NickListCtrl::GetItemText(long item, long column) const
 {
     switch ( column ) {
         case 0:
@@ -252,7 +261,7 @@ wxString NickListCtrl::OnGetItemText(long item, long column) const
     }
 }
 
-int NickListCtrl::OnGetItemColumnImage(long item, long column) const
+int NickListCtrl::GetItemColumnImage(long item, long column) const
 {
     if ( m_data[item] ) {
         const User& user = *m_data[item];
@@ -265,11 +274,6 @@ int NickListCtrl::OnGetItemColumnImage(long item, long column) const
             default: return -1;
         }
     }
-    return -1;
-}
-
-int NickListCtrl::OnGetItemImage(long item) const
-{
     return -1;
 }
 
@@ -313,3 +317,4 @@ int NickListCtrl::CompareUserStatus( DataType user1, DataType user2 )
 
     return 0;
 }
+

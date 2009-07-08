@@ -4,8 +4,8 @@
 #include <wx/string.h>
 #include <vector>
 
-const int CACHE_VERSION     = 9;
-const int SETTINGS_VERSION  = 13;
+const int CACHE_VERSION     = 10;
+const int SETTINGS_VERSION  = 15;
 
 const wxString DEFSETT_DEFAULT_SERVER_NAME= _T("Official server");
 const wxString DEFSETT_DEFAULT_SERVER_HOST = _T("taspringmaster.clan-sy.com");
@@ -24,7 +24,7 @@ const unsigned int DEFSETT_SW_HEIGHT = 580;
 const unsigned int DEFSETT_SW_TOP = 50;
 const unsigned int DEFSETT_SW_LEFT = 50;
 
-const unsigned int SPRING_MAX_USERS = 32;
+const unsigned int SPRING_MAX_USERS = 64;
 const unsigned int SPRING_MAX_TEAMS = 16;
 const unsigned int SPRING_MAX_ALLIES = 16;
 
@@ -82,6 +82,11 @@ class Settings
    */
     Settings();
     ~Settings();
+
+    /** used for passing config file at command line
+    */
+    static bool m_user_defined_config;
+    static wxString m_user_defined_config_path;
 
 		/// used to import default configs from a file in windows
 		#ifdef __WXMSW__
@@ -320,10 +325,10 @@ class Settings
     SortOrder GetSortOrder( const wxString& list_name );
     void SetSortOrder( const wxString& list_name, const SortOrder& order  );
 
-    void SetColumnWidth( const wxString& list_name, const int coloumn_ind, const int coloumn_width );
-    int GetColumnWidth( const wxString& list_name, const int coloumn );
+    void SetColumnWidth( const wxString& list_name, const int column_ind, const int column_width );
+    int GetColumnWidth( const wxString& list_name, const int column );
     //! used to signal unset column width in Get...
-    enum { columnWidthUnset };
+    static const int columnWidthUnset = -3;
 
     void SetLanguageID ( const long id );
     long GetLanguageID ( );
@@ -334,6 +339,7 @@ class Settings
     bool GetSplitBRoomHorizontally();
     void SetSplitBRoomHorizontally( const bool vertical );
 
+    void TranslateSavedColumWidths();
     /*@}*/
 
     /* ================================================================ */
@@ -459,6 +465,9 @@ class Settings
 
 		void ConvertOldHiglightSettings();
 
+		void SetUseIrcColors( bool value );
+		bool GetUseIrcColors();
+
     /* ================================================================ */
     /** @name Hosting
      *
@@ -542,6 +551,18 @@ class Settings
     wxString GetLastBattleFilterProfileName();
     void SetBattleFilterActivState( const bool state );
     bool GetBattleFilterActivState( ) const;
+
+    bool GetBattleLastAutoStartState();
+    void SetBattleLastAutoStartState( bool value );
+
+    bool GetBattleLastAutoControlState();
+    void SetBattleLastAutoControlState( bool value );
+
+		int GetBattleLastAutoSpectTime();
+    void SetBattleLastAutoSpectTime( int value );
+
+    bool GetBattleLastAutoAnnounceDescription();
+    void SetBattleLastAutoAnnounceDescription( bool value );
 
     struct SettStartBox
     {

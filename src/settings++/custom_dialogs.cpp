@@ -21,7 +21,7 @@
 
 #include "../images/springsettings.xpm"
 #include "../images/springlobby.xpm"
-#include "../utils.h"
+#include "../utils/conversion.h"
 
 BEGIN_EVENT_TABLE(CustomMessageBox ,wxDialog)
   EVT_BUTTON(wxID_NO, CustomMessageBox::OnOptionsNo)

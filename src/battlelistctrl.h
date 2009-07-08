@@ -14,7 +14,7 @@ class Ui;
 
 /** \brief The ListCtrll contained in BattleListTab dispalying all currently active battles with their infos
  * \todo DOCMEMORE */
-class BattleListCtrl : public CustomVirtListCtrl< IBattle *>
+class BattleListCtrl : public CustomVirtListCtrl< IBattle *, BattleListCtrl>
 {
   public:
     BattleListCtrl( wxWindow* parent, Ui& ui );
@@ -31,10 +31,10 @@ class BattleListCtrl : public CustomVirtListCtrl< IBattle *>
     virtual void SetTipWindowText( const long item_hit, const wxPoint position);
 
     //these are overloaded to use list in virtual style
-    virtual wxString OnGetItemText(long item, long column) const;
-    virtual int OnGetItemImage(long item) const;
-    virtual int OnGetItemColumnImage(long item, long column) const;
-    wxListItemAttr * OnGetItemAttr(long item) const;
+    wxString GetItemText(long item, long column) const;
+    int GetItemImage(long item) const;
+    int GetItemColumnImage(long item, long column) const;
+    wxListItemAttr * GetItemAttr(long item) const;
 
     enum {
         BLIST_LIST = wxID_HIGHEST,

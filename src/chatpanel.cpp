@@ -29,7 +29,9 @@
 #include "aui/auimanager.h"
 #include "channel/channel.h"
 #include "chatpanel.h"
-#include "utils.h"
+#include "utils/debug.h"
+#include "utils/conversion.h"
+#include "utils/platform.h"
 #include "ui.h"
 #include "server.h"
 #include "user.h"
@@ -120,6 +122,20 @@ END_EVENT_TABLE()
     #else
         wxString chan_prefix = _("#");
     #endif
+
+/// table for irc colors
+static wxColor m_irc_colors[9]  =
+{
+	wxColor(0,0,0),
+	wxColor(54,54,178),
+	wxColor(40,140,42),
+	wxColor(255,255,255),
+	wxColor(199,50,50),
+	wxColor(128,38,127),
+	wxColor(102,54,31),
+	wxColor(217,166,65),
+	wxColor(61,204,61)
+};
 
 ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Channel& chan, wxImageList* imaglist ):
   wxPanel( parent, -1 ),
@@ -624,7 +640,52 @@ void ChatPanel::OutputLine( const ChatLine& line )
   m_chatlog_text->AppendText( line.time );
 
   m_chatlog_text->SetDefaultStyle( line.chatstyle );
-  m_chatlog_text->AppendText( line.chat + _T( "\n" ) );
+
+
+	if ( sett().GetUseIrcColors() )
+	{
+		wxString m1;
+		wxString m2;
+		wxString m3;
+		wxTextAttr at;
+		char c;
+		char c2;
+		m1 = line.chat;
+		while ( 1 )
+		{
+			m3 = m1.BeforeFirst('\003');
+			m_chatlog_text->AppendText( m3 );
+			m2 = m1.AfterFirst('\003');
+			if ( m2.Len() >= 1 )
+			{
+				c = m2.GetChar(0);
+				c2 = m2.GetChar(1);
+
+				if ( ( c >= 48 ) && ( c <= 58 ) )
+				{
+					c = c - 48;
+					if ( ( c2 >= 48 ) && ( c2 <= 58 )  ) c = 10*c + c2 - 48;
+					at = line.chatstyle;
+					wxColor dummy(0,0,0);
+					if ( ( c > 0 ) && ( c <= ( sizeof( m_irc_colors ) / sizeof( dummy ) ) ) ) at.SetTextColour( m_irc_colors[c-1] );
+
+					m_chatlog_text->SetDefaultStyle(at);
+
+					m1 = m2.AfterFirst(c+48);
+				}
+			}
+			else
+			{
+				break;
+			}
+		}
+	}
+	else
+	{
+		m_chatlog_text->AppendText( line.chat );
+	}
+
+  m_chatlog_text->AppendText( _T( "\n" ) );
 
   // crop lines from history that exceeds limit
   int maxlenght = sett().GetChatHistoryLenght();

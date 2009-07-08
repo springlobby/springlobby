@@ -81,7 +81,6 @@ src/useractions.h
 src/user.cpp
 src/userlistctrl.cpp
 src/usermenu.h
-src/utils.cpp
 src/widgets/downloaddialog.cpp
 src/widgets/downloadlistctrl.cpp
 src/widgets/infopanel.cpp

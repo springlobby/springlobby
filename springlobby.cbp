@@ -12,6 +12,7 @@
 				<Option object_output="obj/GNU/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
+				<Option parameters="-cl -nc" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
 					<Add option="-Wall" />
@@ -44,11 +45,9 @@
 					<Add option="-pg" />
 					<Add option="-g" />
 					<Add option="`wx-config --cflags`" />
-					<Add option="`pkg-config --cflags libtorrent-rasterbar`" />
-					<Add option="-Wno-strict-aliasing" />
-					<Add option='-DVERSION=\\&quot;cb-Unix-Profile\\&quot;' />
-					<Add option="-DNO_DEBUG_REPORT_UPLOAD" />
-					<Add option="-DDISABLE_SOUND" />
+					<Add option="`pkg-config --cflags libtorrent`" />
+					<Add option="`sdl-config --cflags`" />
+					<Add option='-DVERSION=\\&quot;0.0.1-git-cb\\&quot;' />
 				</Compiler>
 				<Linker>
 					<Add option="-pg" />
@@ -119,6 +118,22 @@
 				</ResourceCompiler>
 				<Linker>
 					<Add option="-pg" />
+					<Add library="libwxzlibd.a" />
+					<Add library="libwxpngd.a" />
+					<Add library="libwxjpegd.a" />
+					<Add library="libwxtiffd.a" />
+					<Add library="libwxexpatd.a" />
+					<Add library="libwxmsw28d.a" />
+					<Add library="libwxbase28d.a" />
+					<Add library="libwxbase28d_net.a" />
+					<Add library="libwxmsw28d_core.a" />
+					<Add library="libwxmsw28d_adv.a" />
+					<Add library="libwxmsw28d_media.a" />
+					<Add library="libwxmsw28d_html.a" />
+					<Add library="libwxbase28d_xml.a" />
+					<Add library="libwxmsw28d_xrc.a" />
+					<Add library="libwxmsw28d_aui.a" />
+					<Add library="libwxmsw28d_richtext.a" />
 					<Add library="wx_based-2.8" />
 					<Add library="wx_mswd_core-2.8" />
 					<Add library="wx_mswd_richtext-2.8" />
@@ -304,6 +319,7 @@
 		<Unit filename="src/nicklistctrl.cpp" />
 		<Unit filename="src/nicklistctrl.h" />
 		<Unit filename="src/nonportable.h" />
+		<Unit filename="src/offlinebattle.cpp" />
 		<Unit filename="src/playback/playbackfilter.h" />
 		<Unit filename="src/playback/playbackfiltervalues.h" />
 		<Unit filename="src/playback/playbacklist.h" />
@@ -412,8 +428,22 @@
 		<Unit filename="src/userlist.h" />
 		<Unit filename="src/userlistctrl.cpp" />
 		<Unit filename="src/userlistctrl.h" />
-		<Unit filename="src/utils.cpp" />
-		<Unit filename="src/utils.h" />
+		<Unit filename="src/utils/controls.cpp" />
+		<Unit filename="src/utils/controls.h" />
+		<Unit filename="src/utils/conversion.cpp" />
+		<Unit filename="src/utils/conversion.h" />
+		<Unit filename="src/utils/debug.cpp" />
+		<Unit filename="src/utils/debug.h" />
+		<Unit filename="src/utils/math.cpp" />
+		<Unit filename="src/utils/math.h" />
+		<Unit filename="src/utils/misc.cpp" />
+		<Unit filename="src/utils/misc.h" />
+		<Unit filename="src/utils/platform.cpp" />
+		<Unit filename="src/utils/platform.h" />
+		<Unit filename="src/utils/sltipwin.cpp" />
+		<Unit filename="src/utils/sltipwin.h" />
+		<Unit filename="src/utils/tasutil.cpp" />
+		<Unit filename="src/utils/tasutil.h" />
 		<Unit filename="src/widgets/downloaddialog.cpp" />
 		<Unit filename="src/widgets/downloaddialog.h" />
 		<Unit filename="src/widgets/downloadlistctrl.cpp" />

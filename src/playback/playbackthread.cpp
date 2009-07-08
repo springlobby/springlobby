@@ -5,7 +5,7 @@
 #include <wx/app.h>
 #include <wx/log.h>
 
-#include "../utils.h"
+//#include "../utils.h"
 #include "replaylist.h"
 #include "savegamelist.h"
 #include "../iunitsync.h"

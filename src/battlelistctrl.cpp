@@ -1,10 +1,10 @@
 /* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
 
+#include "battlelistctrl.h"
+
 #include <wx/intl.h>
 #include <wx/menu.h>
 
-#include "battlelistctrl.h"
-#include "utils.h"
 #include "user.h"
 #include "iconimagelist.h"
 #include "battle.h"
@@ -18,9 +18,9 @@
 #include "Helper/sortutil.h"
 #include "aui/auimanager.h"
 
-template<> SortOrder CustomVirtListCtrl<IBattle*>::m_sortorder = SortOrder();
+template<> SortOrder CustomVirtListCtrl<IBattle*,BattleListCtrl>::m_sortorder = SortOrder();
 
-BEGIN_EVENT_TABLE(BattleListCtrl, CustomVirtListCtrl< IBattle *>)
+BEGIN_EVENT_TABLE(BattleListCtrl, BattleListCtrl::BaseType )
 
   EVT_LIST_ITEM_RIGHT_CLICK( BLIST_LIST, BattleListCtrl::OnListRightClick )
   EVT_MENU                 ( BLIST_DLMAP, BattleListCtrl::OnDLMap )
@@ -33,8 +33,9 @@ BEGIN_EVENT_TABLE(BattleListCtrl, CustomVirtListCtrl< IBattle *>)
 END_EVENT_TABLE()
 
 BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui )
-    : CustomVirtListCtrl< IBattle *>(parent, BLIST_LIST, wxDefaultPosition, wxDefaultSize,
-            wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("BattleListCtrl"), 10, 4, &CompareOneCrit),
+    : CustomVirtListCtrl< IBattle *,BattleListCtrl>(parent, BLIST_LIST, wxDefaultPosition, wxDefaultSize,
+            wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("BattleListCtrl"), 10, 4, &CompareOneCrit,
+            true /*highlight*/, UserActions::ActHighlight, true /*periodic sort*/ ),
     m_popup( 0 ),
     m_ui(ui)
 {
@@ -50,16 +51,16 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui )
     const int widths[10] = {hd,hd,hd,170,140,130,110,hd,hd,hd};
 #endif
 
-    AddColumn( 0, widths[0], _T("s"), _T("Status") );
-    AddColumn( 1, widths[1], _T("c"), _T("Country") );
-    AddColumn( 2, widths[2], _T("r"), _T("Minimum rank to join") );
+    AddColumn( 0, widths[0], _T("Status"), _T("Status") );
+    AddColumn( 1, widths[1], _T("Country"), _T("Country") );
+    AddColumn( 2, widths[2], _T("Rank"), _T("Minimum rank to join") );
     AddColumn( 3, widths[3], _("Description"), _T("Game description") );
     AddColumn( 4, widths[4], _("Map"), _T("Mapname") );
     AddColumn( 5, widths[5], _("Mod"), _T("Modname") );
     AddColumn( 6, widths[6], _("Host"), _T("Name of the Host") );
-    AddColumn( 7, widths[7], _("a"), _T("Number of Spectators") );
-    AddColumn( 8, widths[8], _("p"), _T("Number of Players joined") );
-    AddColumn( 9, widths[9], _("m"), _T("Maximum number of Players that can join") );
+    AddColumn( 7, widths[7], _("Spectators"), _T("Number of Spectators") );
+    AddColumn( 8, widths[8], _("Players"), _T("Number of Players joined") );
+    AddColumn( 9, widths[9], _("Max"), _T("Maximum number of Players that can join") );
 
     if ( m_sortorder.size() == 0 ) {
         m_sortorder[0].col = 0;
@@ -81,7 +82,7 @@ BattleListCtrl::~BattleListCtrl()
         delete m_popup;
 }
 
-wxString BattleListCtrl::OnGetItemText(long item, long column) const
+wxString BattleListCtrl::GetItemText(long item, long column) const
 {
     if ( m_data[item] == NULL )
         return wxEmptyString;
@@ -105,7 +106,7 @@ wxString BattleListCtrl::OnGetItemText(long item, long column) const
     }
 }
 
-int BattleListCtrl::OnGetItemImage(long item) const
+int BattleListCtrl::GetItemImage(long item) const
 {
     if ( m_data[item] == NULL )
         return -1;
@@ -113,7 +114,7 @@ int BattleListCtrl::OnGetItemImage(long item) const
     return icons().GetBattleStatusIcon( *m_data[item] );
 }
 
-int BattleListCtrl::OnGetItemColumnImage(long item, long column) const
+int BattleListCtrl::GetItemColumnImage(long item, long column) const
 {
     if ( m_data[item] == NULL )
         return -1;
@@ -131,7 +132,7 @@ int BattleListCtrl::OnGetItemColumnImage(long item, long column) const
     }
 }
 
-wxListItemAttr* BattleListCtrl::OnGetItemAttr(long item) const
+wxListItemAttr* BattleListCtrl::GetItemAttr(long item) const
 {
     if ( item < (long)m_data.size() && item > -1 ) {
         const IBattle& b = *m_data[item];
@@ -156,28 +157,17 @@ wxListItemAttr* BattleListCtrl::OnGetItemAttr(long item) const
 
 void BattleListCtrl::AddBattle( IBattle& battle )
 {
-    //assert(&battle);
-
-    if ( GetIndexFromData( &battle ) != -1 ) {
-        wxLogWarning( _T("Battle already in list.") );
+    if ( AddItem( &battle ) )
         return;
-    }
-    m_data.push_back( &battle );
-    SetItemCount( m_data.size() );
-    RefreshItem( m_data.size() -1 );
-    MarkDirtySort();
+
+    wxLogWarning( _T("Battle already in list.") );
 }
 
 void BattleListCtrl::RemoveBattle( IBattle& battle )
 {
-    int index = GetIndexFromData( &battle );
-
-    if ( index != -1 ) {
-        m_data.erase( m_data.begin() + index );
-        SetItemCount( m_data.size() );
-        RefreshItems( index, m_data.size() -1 );
+    if ( RemoveItem( &battle ) )
         return;
-    }
+
     wxLogError( _T("Didn't find the battle to remove.") );
 }
 
@@ -306,8 +296,8 @@ void BattleListCtrl::SetTipWindowText( const long item_hit, const wxPoint positi
 
     const IBattle& battle= *m_data[item_hit];
 
-    int coloumn = getColoumnFromPosition(position);
-    switch (coloumn)
+    int column = getColumnFromPosition(position);
+    switch (column)
     {
         case 0: // status
         m_tiptext = icons().GetBattleStatus(battle);
@@ -316,7 +306,7 @@ void BattleListCtrl::SetTipWindowText( const long item_hit, const wxPoint positi
             m_tiptext = GetFlagNameFromCountryCode(battle.GetFounder().GetCountry());
             break;
         case 2: // rank_min
-            m_tiptext = m_colinfovec[coloumn].tip;
+            m_tiptext = m_colinfovec[column].tip;
             break;
         case 3: // descrp
             m_tiptext = battle.GetDescription();
@@ -345,7 +335,7 @@ void BattleListCtrl::SetTipWindowText( const long item_hit, const wxPoint positi
             }
             break;
         case 9: //may player
-            m_tiptext = (m_colinfovec[coloumn].tip);
+            m_tiptext = (m_colinfovec[column].tip);
             break;
 
         default: m_tiptext = _T("");
@@ -356,11 +346,30 @@ void BattleListCtrl::SetTipWindowText( const long item_hit, const wxPoint positi
 
 int BattleListCtrl::GetIndexFromData( const DataType& data ) const
 {
-    DataCIter it = m_data.begin();
-    for ( int i = 0; it != m_data.end(); ++it, ++i ) {
-        if ( *it != 0 && data->Equals( *(*it) ) )
-            return i;
+    static long seekpos;
+    seekpos = clamp( seekpos, 0l , (long)m_data.size() );
+    int index = seekpos;
+
+    for ( DataCIter f_idx = m_data.begin() + seekpos; f_idx != m_data.end() ; ++f_idx )
+    {
+        if ( *f_idx != 0 && data->Equals( *(*f_idx) ) )
+        {
+            seekpos = index;
+            return seekpos;
+        }
+        index++;
     }
-    wxLogError( _T("didn't find the battle.") );
+    //it's ok to init with seekpos, if it had changed this would not be reached
+    int r_index = seekpos - 1;
+    for ( DataRevCIter r_idx = m_data.rbegin() + ( m_data.size() - seekpos ); r_idx != m_data.rend() ; ++r_idx )
+    {
+        if ( *r_idx != 0 && data->Equals( *(*r_idx) ) )
+        {
+            seekpos = r_index;
+            return seekpos;
+        }
+        r_index--;
+    }
+
     return -1;
 }

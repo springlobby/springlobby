@@ -42,6 +42,7 @@ class HostBattleDialog : public wxDialog
 		wxTextCtrl* m_port_text;
     wxCheckBox* m_port_test_check;
     wxCheckBox* m_relayed_host_check;
+    wxCheckBox* m_desc_check;
 		wxSlider* m_players_slide;
 		wxRadioBox* m_nat_radios;
 		wxRadioButton* m_rank0_radio;

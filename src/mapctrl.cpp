@@ -13,16 +13,18 @@
 #include "config.h"
 #endif
 
-#include "utils.h"
+#include "utils/debug.h"
+#include "utils/conversion.h"
+#include "utils/math.h"
 #include "uiutils.h"
 #include "mapctrl.h"
 #include "iunitsync.h"
 #include "user.h"
-#include "utils.h"
 #include "ui.h"
 #include "server.h"
 #include "ibattle.h"
 #include "settings.h"
+#include "iconimagelist.h"
 
 #include "images/close.xpm"
 #include "images/close_hi.xpm"
@@ -282,15 +284,10 @@ double MapCtrl::GetStartRectMetalFraction( const BattleStartRect& sr )
 }
 
 
-int MapCtrl::GetNewRectIndex()
+unsigned int MapCtrl::GetNewRectIndex()
 {
     ASSERT_LOGIC ( m_battle, _T("getting a rectangle index not in a battle"));
-    for ( std::vector<BattleStartRect*>::size_type i = 0; i < m_battle->GetNumRects() ; i++ )
-    {
-        wxRect r = GetStartRect( i );
-        if ( r.IsEmpty() ) return i;
-    }
-    return -1;
+	return m_battle->GetNextFreeRectIdx();
 }
 
 
@@ -435,14 +432,12 @@ void MapCtrl::GetClosestStartPos( int fromx, int fromy, int& index, int& x, int&
 }
 
 
-void MapCtrl::LoadMinimap()
+int MapCtrl::LoadMinimap()
 {
     wxLogDebugFunc( _T("") );
-    if ( m_battle == 0 ) return;
-    if ( m_minimap ) return;
-    if ( !m_battle->MapExists() ) return;
-    long longval;
-    m_battle->CustomBattleOptions().getSingleValue( _T("startpostype") , OptionsWrapper::EngineOption ).ToLong( &longval );
+    if ( m_battle == 0 ) return -1;
+    if ( m_minimap ) return -1;
+    if ( !m_battle->MapExists() ) return -1;
 
     wxString map = m_battle->GetHostMapName();
 
@@ -454,7 +449,7 @@ void MapCtrl::LoadMinimap()
         {
             m_mapname = _T("");
             m_lastsize = wxSize( -1, -1 );
-            return;
+            return -2;
         }
 
         // start chain of asynchronous map image fetches
@@ -469,8 +464,9 @@ void MapCtrl::LoadMinimap()
     catch (...)
     {
         FreeMinimap();
+		return -3;
     }
-    if ( longval == IBattle::ST_Pick ) RelocateUsers();
+	return 0;
 }
 
 
@@ -494,10 +490,18 @@ void MapCtrl::UpdateMinimap()
     GetClientSize( &w, &h );
     if ( m_battle )  //needs to be looked into, crahses with replaytab (koshi)
     {
-        if ( (m_mapname != m_battle->GetHostMapName() ) || ( m_lastsize != wxSize(w, h) ) )
+		bool just_resize = ( m_lastsize != wxSize(-1,-1) && m_lastsize != wxSize(w, h) );
+        if ( (m_mapname != m_battle->GetHostMapName() ) || just_resize )
         {
             FreeMinimap();
-            LoadMinimap();
+            int loaded_ok = LoadMinimap();
+
+			if(!just_resize && loaded_ok == 0) // if a new map is loaded, reset start positions
+			{
+				long longval;
+				m_battle->CustomBattleOptions().getSingleValue( _T("startpostype") , OptionsWrapper::EngineOption ).ToLong( &longval );
+				if ( longval == IBattle::ST_Pick ) RelocateUsers();
+			}
         }
     }
     Refresh();
@@ -716,7 +720,7 @@ void MapCtrl::DrawBackground( wxDC& dc )
 
 void MapCtrl::DrawStartRects( wxDC& dc )
 {
-    for ( int i = 0; i < int(m_battle->GetNumRects()); i++ )
+    for ( int i = 0; i <= int(m_battle->GetLastRectIdx()); i++ )
     {
         wxRect sr = GetStartRect( i );
         if ( sr.IsEmpty() ) continue;
@@ -896,26 +900,8 @@ void MapCtrl::DrawUser( wxDC& dc, User& user, bool selected, bool moving )
             DrawStartRect( dc, -1, tmp, col, false );
         }
 
-        wxBitmap* bmp = 0;
-        try
-        {
-            wxString mod = m_battle->GetHostModName();
-            wxArrayString sides = usync().GetSides( mod );
-            int scount = sides.GetCount();
-            ASSERT_EXCEPTION( scount > 0, _T("Mod has no sides.") );
-            ASSERT_EXCEPTION( user.BattleStatus().side < scount, _T("Side index out of bounds") );
-            wxString side = sides[user.BattleStatus().side];
-            bmp = new wxBitmap( usync().GetSidePicture( mod, side ) );
-        }
-        catch (...)
-        {
-            delete bmp;
-            if ( user.BattleStatus().side == 0 ) bmp = new wxBitmap( charArr2wxBitmap(no1_icon_png, sizeof(no1_icon_png) ) );
-            else bmp = new wxBitmap( charArr2wxBitmap(no2_icon_png, sizeof(no2_icon_png) ) );
-        }
-
-        dc.DrawBitmap( *bmp, r.x+siderect.x, r.y+siderect.y, true );
-        delete bmp;
+        wxBitmap bmp = icons().GetBitmap( icons().GetSideIcon( m_battle->GetHostModName(), user.BattleStatus().side ) );
+        dc.DrawBitmap( bmp, r.x+siderect.x, r.y+siderect.y, true );
 
         /* Draw the Ally Number numeric select */
         wxRect updownallyrect = GetUserUpAllyButtonRect();
@@ -1095,8 +1081,8 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
 
             user.BattleStatus().pos.x = (int)( ( (double)(event.GetX() - mr.x) / (double)mr.width ) * (double)m_map.info.width );
             user.BattleStatus().pos.y = (int)( ( (double)(event.GetY() - mr.y) / (double)mr.height ) * (double)m_map.info.height );
-            CLAMP( user.BattleStatus().pos.x, 0, m_map.info.width );
-            CLAMP( user.BattleStatus().pos.y, 0, m_map.info.height );
+            user.BattleStatus().pos.x = clamp( user.BattleStatus().pos.x, 0, m_map.info.width );
+            user.BattleStatus().pos.y = clamp( user.BattleStatus().pos.y, 0, m_map.info.height );
 
             int x, y, index, range;
             GetClosestStartPos( user.BattleStatus().pos.x, user.BattleStatus().pos.y, index, x, y, range );
@@ -1257,7 +1243,7 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
     {
 
         // Check if point is in a startrect.
-        for ( int i = m_battle->GetNumRects(); i >= 0; i-- )
+        for ( int i = m_battle->GetLastRectIdx(); i >= 0; i-- )
         {
 
             wxRect r = GetStartRect( i );

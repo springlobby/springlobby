@@ -1,34 +1,34 @@
 #include "downloadlistctrl.h"
 
-template<> SortOrder CustomVirtListCtrl<Widget>::m_sortorder = SortOrder();
+#include "../utils/conversion.h"
 
-const unsigned int column_count = 6;
+template<> SortOrder WidgetDownloadListctrl::BaseType::m_sortorder = SortOrder();
 
-BEGIN_EVENT_TABLE( WidgetDownloadListctrl, CustomVirtListCtrl<Widget> )
+const unsigned int column_count = 4;
+
+BEGIN_EVENT_TABLE( WidgetDownloadListctrl, WidgetDownloadListctrl::BaseType )
   EVT_LIST_ITEM_ACTIVATED( WIDGETLISTCTRL_ID, WidgetDownloadListctrl::OnActivateItem )
   EVT_LIST_COL_CLICK( WIDGETLISTCTRL_ID, WidgetDownloadListctrl::OnColClick )
 END_EVENT_TABLE()
 
 WidgetDownloadListctrl::WidgetDownloadListctrl(wxWindow* parent, wxWindowID id, const wxString& name,
                     long style, const wxPoint& pt, const wxSize& sz)
-    :CustomVirtListCtrl<Widget>(parent, WIDGETLISTCTRL_ID, wxDefaultPosition, wxDefaultSize,
+    : WidgetDownloadListctrl::BaseType(parent, WIDGETLISTCTRL_ID, wxDefaultPosition, wxDefaultSize,
             wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("WidgetDownloadListCtrl"), column_count, 3, &CompareOneCrit)
 {
     const int as = wxLIST_AUTOSIZE;
 #if defined(__WXMSW__)
-    const int widths [column_count] = { as, as, as, as, as, as };
+    const int widths [column_count] = { as, as, as, as };
 #elif defined(__WXMAC__)
-    const int widths [column_count] = { as, as, as, as, as, as };
+    const int widths [column_count] = { as, as, as, as };
 #else
-    const int widths [column_count] = { as, as, as, as, as, as };
+    const int widths [column_count] = { as, as, as, as };
 #endif
-    int i = 0;
-    AddColumn( i++, widths[0], _("Name"), _T("Name") );
-//    AddColumn( i++, widths[1], _("Description"), _T("Description") );
-    AddColumn( i++, widths[2], _T("Author"), _T("Author") );
-    AddColumn( i++, widths[3], _T("Mods"), _T("Compatible mods") );
-    AddColumn( i++, widths[4], _T("Downloads"), _T("Downloads") );
-//    AddColumn( i++, widths[5], _T("Date"), _T("Date") );
+
+    AddColumn( 0, widths[0], _("Name"), _T("Name") );
+    AddColumn( 1, widths[1], _T("Author"), _T("Author") );
+    AddColumn( 2, widths[2], _T("Mods"), _T("Compatible mods") );
+    AddColumn( 3, widths[3], _T("Downloads"), _T("Downloads") );
 
     if ( m_sortorder.size() == 0 ) {
         m_sortorder[2].col = 2;
@@ -60,13 +60,13 @@ int WidgetDownloadListctrl::CompareOneCrit( DataType u1, DataType u2, int col, i
 
 void WidgetDownloadListctrl::AddWidget( const Widget widget )
 {
-    m_data.push_back( widget );
-    SetItemCount( m_data.size() );
-    RefreshItem( m_data.size() - 1);
-    //RefreshVisibleItems();
+    if ( AddItem( widget ) )
+        return;
+
+    wxLogWarning( _T("Widget already in list.") );
 }
 
-wxString WidgetDownloadListctrl::OnGetItemText(long item, long column) const
+wxString WidgetDownloadListctrl::GetItemText(long item, long column) const
 {
     if ( item > m_data.size() || item < 0 )
         return wxEmptyString;
@@ -78,18 +78,18 @@ wxString WidgetDownloadListctrl::OnGetItemText(long item, long column) const
 //        case 1: return widget.short_description;
         case 1: return widget.author;
         case 2: return widget.mods;
-        case 3: return i2s( widget.num_downloads );
+        case 3: return TowxString( widget.num_downloads );
 //        case 5: return widget.date;
     }
 
 }
 
-int WidgetDownloadListctrl::OnGetItemImage(long item) const
+int WidgetDownloadListctrl::GetItemImage(long item) const
 {
     return -1;
 }
 
-int WidgetDownloadListctrl::OnGetItemColumnImage(long item, long column) const
+int WidgetDownloadListctrl::GetItemColumnImage(long item, long column) const
 {
     return -1;
 }
@@ -111,7 +111,32 @@ void WidgetDownloadListctrl::Sort()
 
 int WidgetDownloadListctrl::GetIndexFromData( const DataType& data ) const
 {
-    return 0;
+    static long seekpos;
+    seekpos = clamp( seekpos, 0l , (long)m_data.size() );
+    int index = seekpos;
+
+    for ( DataCIter f_idx = m_data.begin() + seekpos; f_idx != m_data.end() ; ++f_idx )
+    {
+        if ( data.Equals( *f_idx ) )
+        {
+            seekpos = index;
+            return seekpos;
+        }
+        index++;
+    }
+    //it's ok to init with seekpos, if it had changed this would not be reached
+    int r_index = seekpos - 1;
+    for ( DataRevCIter r_idx = m_data.rbegin() + ( m_data.size() - seekpos ); r_idx != m_data.rend() ; ++r_idx )
+    {
+        if ( data.Equals( *r_idx ) )
+        {
+            seekpos = r_index;
+            return seekpos;
+        }
+        r_index--;
+    }
+
+    return -1;
 }
 
 Widget& WidgetDownloadListctrl::GetSelectedWidget()

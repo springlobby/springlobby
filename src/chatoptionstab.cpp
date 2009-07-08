@@ -34,7 +34,7 @@
 #include "chatoptionstab.h"
 #include "ui.h"
 #include "iunitsync.h"
-#include "utils.h"
+#include "utils/controls.h"
 #include "uiutils.h"
 #include "settings.h"
 #include "spring.h"
@@ -286,19 +286,17 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( p
   wxStaticBoxSizer* sbBehaviorSizer;
   sbBehaviorSizer = new wxStaticBoxSizer( new wxStaticBox( this, -1, _("Behavior") ), wxHORIZONTAL );
 
-  m_smart_scroll = new wxCheckBox( this, ID_SYSCOLS, _("Use smart scrolling"), wxDefaultPosition, wxDefaultSize, 0 );
-  m_smart_scroll->SetValue( sett().GetSmartScrollEnabled() );
+  m_irc_colors = new wxCheckBox( this, wxID_ANY, _("Enable Irc colors in chat messages"), wxDefaultPosition, wxDefaultSize, 0 );
+  m_irc_colors->SetValue( sett().GetUseIrcColors() );
 
-  sbBehaviorSizer->Add( m_smart_scroll, 0, wxALL, 5 );
+  sbBehaviorSizer->Add( m_irc_colors, 0, wxALL, 5 );
 #ifndef DISABLE_SOUND
   m_play_sounds = new wxCheckBox( this, ID_PLAY_SOUNDS, _("Play notification sounds"), wxDefaultPosition, wxDefaultSize, 0 );
   m_play_sounds->SetValue( sett().GetChatPMSoundNotificationEnabled() );
   sbBehaviorSizer->Add( m_play_sounds, 0, wxALL, 5 );
 #endif
 
-
   bMainSizerV->Add( sbBehaviorSizer, 0, wxEXPAND|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
-
 
   wxBoxSizer* bBotomSizer;
   bBotomSizer = new wxBoxSizer( wxHORIZONTAL );
@@ -428,7 +426,7 @@ void ChatOptionsTab::DoRestore()
   m_chat_font = sett().GetChatFont();
   m_fontname->SetLabel( m_chat_font.GetFaceName() );
   m_save_logs->SetValue(  sett().GetChatLogEnable() );
-  m_smart_scroll->SetValue(sett().GetSmartScrollEnabled());
+  m_irc_colors->SetValue( sett().GetUseIrcColors() );
   wxString highlightstring;
   wxArrayString highlights = sett().GetHighlightedWords();
   for ( unsigned int i = 0; i < highlights.GetCount(); i++) highlightstring << highlights[i] <<_T(";");
@@ -453,6 +451,7 @@ void ChatOptionsTab::OnApply( wxCommandEvent& event )
   sett().SetChatColorError( m_error_color->GetColor() );
   sett().SetChatColorTime( m_ts_color->GetColor() );
   sett().SetChatFont( m_chat_font );
+  sett().SetUseIrcColors( m_irc_colors->IsChecked() );
   //m_ui.mw().GetChatTab().ChangeUnreadChannelColour( m_note_color->GetBackgroundColour() );
   //m_ui.mw().GetChatTab().ChangeUnreadPMColour( m_note_color->GetBackgroundColour() );
   sett().SetHighlightedWords( wxStringTokenize( m_highlight_words->GetValue(), _T(";") ) );
@@ -462,7 +461,6 @@ void ChatOptionsTab::OnApply( wxCommandEvent& event )
   sett().SetChatLogEnable( m_save_logs->GetValue());
 
   // Behavior
-  sett().SetSmartScrollEnabled(m_smart_scroll->GetValue());
   #ifndef DISABLE_SOUND
     sett().SetChatPMSoundNotificationEnabled( m_play_sounds->IsChecked() );
   #endif

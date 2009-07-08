@@ -81,7 +81,7 @@ class MapCtrl : public wxPanel
 
    protected:
 
-    void LoadMinimap();
+    int LoadMinimap();
     void FreeMinimap();
 
     BattleStartRect GetBattleRect( int x1, int y1, int x2, int y2, int ally = -1 );
@@ -135,7 +135,7 @@ class MapCtrl : public wxPanel
     wxRect GetRefreshRect();
     wxRect GetDownloadRect();
 
-    int GetNewRectIndex();
+    unsigned int GetNewRectIndex();
 
     void RequireImages();
 

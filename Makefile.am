@@ -396,6 +396,22 @@ libtorrent_headers = \
 
 
 springlobby_SOURCES = \
+	src/utils/math.cpp \
+	src/utils/math.h \
+	src/utils/misc.cpp \
+	src/utils/misc.h \
+	src/utils/debug.cpp \
+	src/utils/debug.h \
+	src/utils/platform.cpp \
+	src/utils/platform.h \
+	src/utils/conversion.cpp \
+	src/utils/conversion.h \
+	src/utils/tasutil.cpp \
+	src/utils/tasutil.h \
+	src/utils/sltipwin.cpp \
+	src/utils/sltipwin.h \
+	src/utils/controls.cpp \
+	src/utils/controls.h \
 	src/updater/versionchecker.cpp \
 	src/updater/versionchecker.h \
 	src/sounds/ring_sound.h \
@@ -504,6 +520,7 @@ springlobby_SOURCES = \
 	src/mapctrl.h \
 	src/mutexwrapper.h \
 	src/offlinebattle.h \
+	src/offlinebattle.cpp \
 	src/nicklistctrl.cpp \
 	src/nicklistctrl.h \
 	src/playback/playbacktab.h \
@@ -551,8 +568,6 @@ springlobby_SOURCES = \
 	src/userlist.h \
 	src/userlistctrl.cpp \
 	src/userlistctrl.h \
-	src/utils.cpp \
-	src/utils.h \
 	src/torrentlistctrl.cpp \
 	src/torrentlistctrl.h \
 	src/torrentoptionspanel.cpp \
@@ -1002,6 +1017,16 @@ springlobby_SOURCES += \
 	src/settings++/helpmenufunctions.cpp
 
 springsettings_SOURCES = \
+	src/utils/debug.cpp \
+	src/utils/debug.h \
+	src/utils/platform.cpp \
+	src/utils/platform.h \
+	src/utils/conversion.cpp \
+	src/utils/conversion.h \
+	src/utils/sltipwin.cpp \
+	src/utils/sltipwin.h \
+	src/utils/controls.cpp \
+	src/utils/controls.h \
 	src/crashreport.cpp \
 	src/crashreport.h \
 	src/spinctld.h \
@@ -1010,8 +1035,6 @@ springsettings_SOURCES = \
 	src/springunitsynclib.h \
 	src/settings.cpp \
 	src/settings.h \
-	src/utils.cpp \
-	src/utils.h \
 	src/uiutils.cpp \
 	src/uiutils.h \
 	src/globalsmanager.cpp \

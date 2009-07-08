@@ -26,18 +26,19 @@
 
 class SLTipWindow;
 
-
 /** \brief Used as base class for some ListCtrls throughout SL
- * Provides generic functionality, such as column tooltips, possiblity to prohibit coloumn resizing and selection modifiers. \n
+ * Provides generic functionality, such as column tooltips, possiblity to prohibit column resizing and selection modifiers. \n
  * Some of the provided functionality only makes sense for single-select lists (see grouping) \n
+ * Note: the second template param is actually just a dummy to ensure the compiler generates distinct code in case we have different listctrls with same datatype
  * Note: Tooltips are a bitch and anyone should feel free to revise them (koshi)
  * \tparam the type of stored data
  */
-template < class DataImp >
+template < class DataImp, class ListCtrlImp >
 class CustomVirtListCtrl : public ListBaseType
 {
 public:
-    typedef DataImp DataType;
+    typedef DataImp
+        DataType;
 
 protected:
     typedef UserActions::ActionType ActionType;
@@ -52,7 +53,7 @@ protected:
     SLTipWindow* m_tipwindow;
     SLTipWindow** m_controlPointer;
     #endif
-    unsigned int m_coloumnCount;
+    unsigned int m_columnCount;
 
     struct colInfo {
         colInfo(int n, wxString l, wxString t, bool c, int s):
@@ -88,7 +89,7 @@ protected:
     //! stores info about the columns (wxString name,bool isResizable) - pairs
     colInfoVec m_colinfovec;
     //! primarily used to get coulumn index in mousevents (from cur. mouse pos)
-    int getColoumnFromPosition(wxPoint pos);
+    int getColumnFromPosition(wxPoint pos);
 
     //! map: index in visible list <--> index in data vector
     typedef std::map<int,int> VisibilityMap;
@@ -199,7 +200,7 @@ public:
 public:
     CustomVirtListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pt,
                     const wxSize& sz,long style, const wxString& name, unsigned int column_count, unsigned int sort_criteria_count, CompareFunction func, bool highlight = true,
-                    UserActions::ActionType hlaction = UserActions::ActHighlight);
+                    UserActions::ActionType hlaction = UserActions::ActHighlight, bool periodic_sort = false, unsigned int periodic_sort_interval = 5000 /*miliseconds*/);
 
     virtual ~CustomVirtListCtrl();
 
@@ -229,7 +230,6 @@ public:
      */
 
     //! intermediate function to add info to m_colinfovec after calling base class function
-    void InsertColumn(long i, wxListItem item, wxString tip, bool = true);
     void AddColumn(long i, int width, const wxString& label, const wxString& tip, bool = true);
     //! this event is triggered when delay timer (set in mousemotion) ended
     virtual void OnTimer(wxTimerEvent& event);
@@ -247,7 +247,7 @@ public:
     void noOp(wxMouseEvent& event);
     //! automatically get saved column width if already saved, otherwise use parameter and save new width
     virtual bool SetColumnWidth(int col, int width);
-    //! reset columns with current set size (only effects coloumns with auto-size)
+    //! reset columns with current set size (only effects columns with auto-size)
     void ResetColumnSizes();
 
     // funcs that should make things easier for group highlighting
@@ -278,8 +278,13 @@ public:
       * these are used to display items in virtual lists
       * @{
      */
-    virtual wxString OnGetItemText(long item, long column) const = 0;
-    virtual int OnGetItemColumnImage(long item, long column) const = 0;
+    wxString OnGetItemText(long item, long column) const;
+    int OnGetItemColumnImage(long item, long column) const;
+    wxListItemAttr* OnGetItemAttr(long item) const;
+
+    //! when using the dummy column, we provide diff impl that adjust for that
+    bool GetColumn(int col, wxListItem& item) const;
+    bool SetColumn(int col, wxListItem& item);
     /** @}
      */
 
@@ -291,13 +296,21 @@ public:
 
      virtual int GetIndexFromData( const DataType& data ) const = 0;
 
+     void ReverseOrder();
+
 protected:
+    typedef CustomVirtListCtrl< DataImp, ListCtrlImp >
+        BaseType;
     typedef std::vector< DataImp >
         DataVector;
     typedef typename DataVector::iterator
         DataIter;
     typedef typename DataVector::const_iterator
         DataCIter;
+    typedef typename DataVector::reverse_iterator
+        DataRevIter;
+    typedef typename DataVector::const_reverse_iterator
+        DataRevCIter;
     DataVector m_data;
 
     typedef DataType
@@ -309,8 +322,37 @@ protected:
     //! the Comparator object passed to the SLInsertionSort function
     ItemComparator<DataType> m_comparator;
 
+    bool RemoveItem( const DataImp item );
+    bool AddItem( const DataImp item );
+
+    long m_periodic_sort_timer_id;
+    wxTimer m_periodic_sort_timer;
+    bool m_periodic_sort;
+    unsigned int m_periodic_sort_interval;
+    void OnPeriodicSort( wxTimerEvent& evt );
+
 public:
     DECLARE_EVENT_TABLE()
+
+private:
+    typedef BaseType
+        ThisType;
+
+    ListCtrlImp& asImp() { return static_cast<ListCtrlImp&>(*this); }
+    const ListCtrlImp& asImp() const { return static_cast<const ListCtrlImp&>(*this); }
+};
+
+template < class ListCtrlType >
+class SelectionSaver {
+    ListCtrlType* m_list;
+
+public:
+    SelectionSaver( ListCtrlType* list  )
+        : m_list( list )
+    { m_list->SaveSelection(); }
+
+    ~SelectionSaver()
+    { m_list->RestoreSelection(); }
 };
 
 #include "customvirtlistctrl.cpp"

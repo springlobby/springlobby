@@ -8,7 +8,6 @@ class IBattle;
 class SinglePlayerBattle;
 class OfflineBattle;
 class Battle;
-class Ui;
 class SpringProcess;
 class wxSpringProcess;
 class wxString;
@@ -17,7 +16,7 @@ class wxString;
 class Spring: public wxEvtHandler
 {
   public:
-    Spring( Ui& ui);
+    Spring();
     ~Spring();
 
     bool IsRunning() const;
@@ -37,13 +36,14 @@ class Spring: public wxEvtHandler
   protected:
 		bool LaunchSpring( const wxString& params );
 
-    Ui& m_ui;
     SpringProcess* m_process;
     wxSpringProcess* m_wx_process;
     bool m_running;
 
     DECLARE_EVENT_TABLE()
 };
+
+Spring& spring();
 
 #endif // SPRINGLOBBY_HEADERGUARD_SPRING_H
 

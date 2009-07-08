@@ -32,7 +32,9 @@
 #include "springoptionstab.h"
 #include "ui.h"
 #include "iunitsync.h"
-#include "utils.h"
+#include "utils/controls.h"
+#include "utils/platform.h"
+#include "uiutils.h"
 #include "settings.h"
 #include "mainwindow.h"
 

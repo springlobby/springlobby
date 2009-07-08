@@ -21,7 +21,8 @@
 #include "../battlelistctrl.h"
 #include "../battle.h"
 #include "../uiutils.h"
-#include "../utils.h"
+#include "../utils/tasutil.h"
+#include "../utils/conversion.h"
 #include "../settings.h"
 
 
@@ -408,7 +409,7 @@ void  PlaybackListFilter<PlaybackTabType>::SaveFilterValues()
     filtervalues.mod = m_filter_mod_edit->GetValue();
     filtervalues.mod_show = m_filter_mod_show->GetValue();
     filtervalues.player_mode = _GetButtonSign(m_filter_player_mode);
-    filtervalues.player_num = wxString::Format(_("%d%"),m_filter_player_choice->GetSelection());
+    filtervalues.player_num = wxString::Format(_("%d"),m_filter_player_choice->GetSelection());
     filtervalues.duration_mode = _GetButtonSign(m_filter_duration_mode);
     filtervalues.filesize = m_filter_filesize_edit->GetValue();
     filtervalues.filesize_mode= _GetButtonSign(m_filter_filesize_mode);

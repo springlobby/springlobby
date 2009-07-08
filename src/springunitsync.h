@@ -6,7 +6,10 @@
 
 #include "iunitsync.h"
 #include "thread.h"
-#include "utils.h"
+
+#include "utils/conversion.h" //remove after MRU impl moved to cpp
+#include "utils/debug.h" //remove after MRU impl moved to cpp
+#include <wx/log.h>//remove after MRU impl moved to cpp
 
 class wxCriticalSection;
 class wxDynamicLibrary;
@@ -23,15 +26,16 @@ template<typename TKey, typename TValue>
 class MostRecentlyUsedCache
 {
   public:
-    MostRecentlyUsedCache(int max_size)
-    : m_size(0), m_max_size(max_size), m_cache_hits(0), m_cache_misses(0)
+    //! name parameter might be used to identify stats in dgb output
+    MostRecentlyUsedCache(int max_size, const wxString& name = _T("") )
+    : m_size(0), m_max_size(max_size), m_cache_hits(0), m_cache_misses(0), m_name(name)
     {
     }
 
     ~MostRecentlyUsedCache()
     {
-      wxLogDebugFunc( _T("cache hits: ") + TowxString( m_cache_hits ) );
-      wxLogDebugFunc( _T("cache misses: ") + TowxString( m_cache_misses ) );
+      wxLogDebugFunc( m_name + _T("cache hits: ") + TowxString( m_cache_hits ) );
+      wxLogDebugFunc( m_name + _T("cache misses: ") + TowxString( m_cache_misses ) );
     }
 
     void Add( const TKey& name, const TValue& img )
@@ -85,10 +89,12 @@ class MostRecentlyUsedCache
     const int m_max_size;
     int m_cache_hits;
     int m_cache_misses;
+    const wxString m_name;
 };
 
 typedef MostRecentlyUsedCache<wxString,wxImage> MostRecentlyUsedImageCache;
 typedef MostRecentlyUsedCache<wxString,MapInfo> MostRecentlyUsedMapInfoCache;
+typedef MostRecentlyUsedCache<wxString,wxArrayString> MostRecentlyUsedArrayStringCache;
 
 
 /// Thread safe mapping from evtHandlerId to wxEvtHandler*
@@ -211,8 +217,12 @@ class SpringUnitSync : public IUnitSync
 
   private:
 
-    LocalArchivesVector m_maps_list; /// maphash -> mapname
-    LocalArchivesVector m_mods_list; /// modhash -> modname
+    LocalArchivesVector m_maps_list; /// mapname -> hash
+    LocalArchivesVector m_mods_list; /// modname -> hash
+    LocalArchivesVector m_mods_unchained_hash; /// modname -> unchained hash
+    LocalArchivesVector m_maps_unchained_hash; /// mapname -> unchained hash
+    LocalArchivesVector m_mods_archive_name; /// modname -> archive name
+    LocalArchivesVector m_maps_archive_name; /// mapname -> archive name
     wxArrayString m_map_array;
     wxArrayString m_mod_array;
 
@@ -233,6 +243,8 @@ class SpringUnitSync : public IUnitSync
 
     /// this caches MapInfo to facilitate GetMapExAsync
     MostRecentlyUsedMapInfoCache m_mapinfo_cache;
+
+    MostRecentlyUsedArrayStringCache m_sides_cache;
 
     //! this function returns only the cache path without the file extension,
     //! the extension itself would be added in the function as needed

@@ -1,5 +1,7 @@
 #include "colorbutton.h"
-#include "../utils.h"
+
+#include "../uiutils.h"
+#include "../utils/controls.h"
 #include <wx/image.h>
 
 #ifdef __WXMSW__

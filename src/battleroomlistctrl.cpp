@@ -22,7 +22,8 @@
 #include "ui.h"
 #include "user.h"
 #include "server.h"
-#include "utils.h"
+#include "utils/debug.h"
+#include "utils/conversion.h"
 #include "uiutils.h"
 #include "countrycodes.h"
 #include "mainwindow.h"
@@ -30,11 +31,11 @@
 #include "settings++/custom_dialogs.h"
 #include "settings.h"
 
-template<> SortOrder CustomVirtListCtrl<User*>::m_sortorder = SortOrder();
+template<> SortOrder CustomVirtListCtrl<User*,BattleroomListCtrl>::m_sortorder = SortOrder();
 
 IBattle* BattleroomListCtrl::s_battle = 0;
 
-BEGIN_EVENT_TABLE( BattleroomListCtrl,  CustomVirtListCtrl< User *>)
+BEGIN_EVENT_TABLE( BattleroomListCtrl,  BattleroomListCtrl::BaseType )
 
   EVT_LIST_ITEM_RIGHT_CLICK( BRLIST_LIST, BattleroomListCtrl::OnListRightClick )
   EVT_MENU                 ( BRLIST_SPEC, BattleroomListCtrl::OnSpecSelect )
@@ -53,13 +54,18 @@ BEGIN_EVENT_TABLE( BattleroomListCtrl,  CustomVirtListCtrl< User *>)
 END_EVENT_TABLE()
 
 
-BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, IBattle* battle, Ui& ui, bool readonly ) :
-	CustomVirtListCtrl< User *>(parent, BRLIST_LIST, wxDefaultPosition, wxDefaultSize,
-                wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL, _T("BattleroomListCtrl"), 10, 3, &CompareOneCrit ),
-	m_battle(battle),m_popup(0),
-  m_sel_user(0), m_sides(0),m_spec_item(0),m_handicap_item(0),
-  m_ui(ui),
-  m_ro(readonly)
+BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, IBattle* battle, Ui& ui, bool readonly )
+    : CustomVirtListCtrl< User *,BattleroomListCtrl>(parent, BRLIST_LIST, wxDefaultPosition, wxDefaultSize,
+                wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL, _T("BattleroomListCtrl"), 10, 3, &CompareOneCrit,
+                true /*highlight*/, UserActions::ActHighlight, !readonly /*periodic sort*/ ),
+	m_battle(battle),
+	m_popup(0),
+    m_sel_user(0),
+    m_sides(0),
+    m_spec_item(0),
+    m_handicap_item(0),
+    m_ui(ui),
+    m_ro(readonly)
 {
   GetAui().manager->AddPane( this, wxLEFT, _T("battleroomlistctrl") );
 
@@ -74,15 +80,15 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, IBattle* battle, Ui& u
     const int widths[10] = {hd,hd,hd,hd,hd,170,hd,hd,80,130};
 #endif
 
-    AddColumn( 0, widths[0], _T("r"), _T("Player/Bot") );
-    AddColumn( 1, widths[1], _T("s"), _T("Faction icon") );
-    AddColumn( 2, widths[2], _T("c"), _T("Teamcolour") );
-    AddColumn( 3, widths[3], _T("f"), _T("Country") );
-    AddColumn( 4, widths[4], _T("r"), _T("Rank") );
+    AddColumn( 0, widths[0], _T("Status"), _T("Player/Bot") );
+    AddColumn( 1, widths[1], _T("Faction"), _T("Faction icon") );
+    AddColumn( 2, widths[2], _T("Colour"), _T("Teamcolour") );
+    AddColumn( 3, widths[3], _T("Country"), _T("Country") );
+    AddColumn( 4, widths[4], _T("Rank"), _T("Rank") );
     AddColumn( 5, widths[5], _("Nickname"), _T("Ingame name"));
-    AddColumn( 6, widths[6], _("t"), _T("Team number") );
-    AddColumn( 7, widths[7], _("a"), _T("Ally number") );
-    AddColumn( 8, widths[8], _("cpu"), _T("CPU speed (might not be accurate)") );
+    AddColumn( 6, widths[6], _("Team"), _T("Team number") );
+    AddColumn( 7, widths[7], _("Ally"), _T("Ally number") );
+    AddColumn( 8, widths[8], _("CPU"), _T("CPU speed (might not be accurate)") );
     AddColumn( 9, widths[9], _("Resource Bonus"), _T("Resource Bonus") );
 
     if ( m_sortorder.size() == 0 ) {
@@ -173,38 +179,32 @@ IBattle& BattleroomListCtrl::GetBattle()
 
 void BattleroomListCtrl::AddUser( User& user )
 {
-    if ( GetIndexFromData( &user ) != -1 ) {
-        wxLogWarning( _T("user already in battleroom list.") );
+    if ( AddItem( &user ) )
         return;
-    }
-    m_data.push_back( &user );
-    SetItemCount( m_data.size() );
-    RefreshItem( m_data.size() - 1 );
-    //SetColumnWidth( 5, wxLIST_AUTOSIZE ); //! TODO does this really work?
-    MarkDirtySort();
+
+    wxLogWarning( _T("user already in battleroom list.") );
 }
 
 void BattleroomListCtrl::RemoveUser( User& user )
 {
-    int index = GetIndexFromData( &user );
-
-    if ( index != -1 ) {
-        m_data.erase( m_data.begin() + index );
-        SetItemCount( m_data.size() );
-        RefreshItems( index, m_data.size() -1 );
-        //SetColumnWidth( 5, wxLIST_AUTOSIZE );
+    if ( RemoveItem( &user ) )
         return;
-    }
+
     wxLogError( _T("Didn't find the user to remove in battleroomlistctrl.") );
 }
 
 void BattleroomListCtrl::UpdateUser( User& user )
 {
+    if ( !user.BattleStatus().spectator )
+        icons().SetColourIcon( user.BattleStatus().team, user.BattleStatus().colour );
+    wxArrayString sides = usync().GetSides( m_battle->GetHostModName() );
+    ASSERT_EXCEPTION( user.BattleStatus().side < (long)sides.GetCount(), _T("Side index too high") );
+    user.SetSideiconIndex( icons().GetSideIcon( m_battle->GetHostModName(), user.BattleStatus().side ) );
     int index = GetIndexFromData( &user );
     UpdateUser( index );
 }
 
-wxListItemAttr * BattleroomListCtrl::OnGetItemAttr(long item) const
+wxListItemAttr * BattleroomListCtrl::GetItemAttr(long item) const
 {
     if ( item == -1 || item >= (long)m_data.size())
         return NULL;
@@ -219,7 +219,7 @@ wxListItemAttr * BattleroomListCtrl::OnGetItemAttr(long item) const
     return NULL;
 }
 
-int BattleroomListCtrl::OnGetItemColumnImage(long item, long column) const
+int BattleroomListCtrl::GetItemColumnImage(long item, long column) const
 {
     if ( item == -1 || item >= (long)m_data.size())
         return -1;
@@ -228,18 +228,14 @@ int BattleroomListCtrl::OnGetItemColumnImage(long item, long column) const
     bool is_bot = user.BattleStatus().IsBot();
     bool is_spec = user.BattleStatus().spectator;
 
-    if ( !is_spec )
-        icons().SetColourIcon( user.BattleStatus().team, user.BattleStatus().colour );
-
     switch ( column ) {
         case 0: {
             if ( !is_bot ) {
                 if ( m_battle->IsFounder( user ) ) {
-
-                    return icons().GetHostIcon( user.BattleStatus().spectator );
+                    return icons().GetHostIcon( is_spec );
                 }
                 else {
-                    return icons().GetReadyIcon( user.BattleStatus().spectator, user.BattleStatus().ready, user.BattleStatus().sync, user.BattleStatus().IsBot() );
+                    return icons().GetReadyIcon( is_spec, user.BattleStatus().ready, user.BattleStatus().sync, is_bot );
                 }
             }
             else
@@ -248,31 +244,20 @@ int BattleroomListCtrl::OnGetItemColumnImage(long item, long column) const
         case 2: return is_spec ? -1: icons().GetColourIcon( user.BattleStatus().team );
         case 3: return is_bot ? -1 : icons().GetFlagIcon( user.GetCountry() );
         case 4: return is_bot ? -1 : icons().GetRankIcon( user.GetStatus().rank );
-        case 1:
-        {
-        	if ( is_spec ) return -1;
-            try {
-                wxArrayString sides = usync().GetSides( m_battle->GetHostModName() );
-                ASSERT_EXCEPTION( user.BattleStatus().side < (long)sides.GetCount(), _T("Side index too high") );
-                return icons().GetSideIcon( m_battle->GetHostModName(), user.BattleStatus().side );
-            }
-            catch ( ... ) {}
-
-            return -1;
-        }
+        case 1: return is_spec ? -1 : user.GetSideiconIndex();
         case 6:
         case 7:
         case 8:
         case 9:
         case 5: return -1;
         default: {
-            wxLogWarning( _T("coloumn oob in battelroomlistctrl OnGetItemColoumnImage") );
+            wxLogWarning( _T("column oob in BattleroomListCtrl::OnGetItemColumnImage") );
             return -1;
         }
     }
 }
 
-wxString BattleroomListCtrl::OnGetItemText(long item, long column) const
+wxString BattleroomListCtrl::GetItemText(long item, long column) const
 {
     if ( item == -1 || item >= (long)m_data.size())
         return _T("");
@@ -317,7 +302,7 @@ wxString BattleroomListCtrl::OnGetItemText(long item, long column) const
         case 3:
         case 4: return _T("");
         default: {
-            wxLogWarning( _T("coloumn oob in battelroomlistctrl OnGetItemText") );
+            wxLogWarning( _T("column oob in BattleroomListCtrl::OnGetItemText") );
             return _T("");
         }
     }
@@ -710,22 +695,42 @@ void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint po
 
     const User& user = *GetDataFromIndex( item_hit );
 
-    int coloumn = getColoumnFromPosition( position );
-    if (coloumn > (int)m_colinfovec.size() || coloumn < 0)
+    int column = getColumnFromPosition( position );
+    if (column > (int)m_colinfovec.size() || column < 0)
     {
         m_tiptext = _T("");
     }
     else
     {
-        switch (coloumn)
+        switch (column)
         {
         case 0: // is bot?
+            m_tiptext = _("");
+
             if ( user.BattleStatus().IsBot() )
-                m_tiptext = _T("This is an AI controlled Player (bot)");
-            else if  ( user.BattleStatus().spectator )
-                m_tiptext = _T("Spectator");
+                m_tiptext += _("AI (bot)\n");
             else
-                m_tiptext =  _T("Human Player");
+                m_tiptext += _("Human\n");
+
+            if ( user.BattleStatus().spectator )
+                m_tiptext += _("Spectator\n");
+            else
+                m_tiptext += _("Player\n");
+
+            if ( m_battle->IsFounder( user ) )
+                m_tiptext += _("Host\n");
+            else
+                m_tiptext += _("Client\n");
+
+            if ( user.BattleStatus().ready )
+                m_tiptext += _("Ready\n");
+            else
+                m_tiptext += _("Not ready\n");
+
+            if  ( user.BattleStatus().sync == SYNC_SYNCED )
+                m_tiptext += _("In sync");
+            else
+                m_tiptext += _("Not in sync");
             break;
         case 1: // icon
             if ( user.BattleStatus().spectator )
@@ -739,7 +744,7 @@ void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint po
             break;
 
         case 3: // country
-            m_tiptext = user.BattleStatus().IsBot() ? _T("This bot is from nowhere particluar") : GetFlagNameFromCountryCode(user.GetCountry());
+            m_tiptext = user.BattleStatus().IsBot() ? _T("This bot is from nowhere particular") : GetFlagNameFromCountryCode(user.GetCountry());
             break;
         case 4: // rank
             m_tiptext = user.BattleStatus().IsBot() ? _T("This bot has no rank") : user.GetRankName(user.GetStatus().rank);
@@ -750,11 +755,11 @@ void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint po
             break;
 
         case 8: // cpu
-            m_tiptext = user.BattleStatus().IsBot() ? ( user.BattleStatus().aishortname + _T(" ") + user.BattleStatus().aiversion ) : m_colinfovec[coloumn].tip;
+            m_tiptext = user.BattleStatus().IsBot() ? ( user.BattleStatus().aishortname + _T(" ") + user.BattleStatus().aiversion ) : m_colinfovec[column].tip;
             break;
 
         default:
-            m_tiptext =m_colinfovec[coloumn].tip;
+            m_tiptext =m_colinfovec[column].tip;
             break;
         }
     }
@@ -811,11 +816,31 @@ void BattleroomListCtrl::OnActivateItem( wxListEvent& event )
 int BattleroomListCtrl::GetIndexFromData(const DataType& data) const
 {
     const User* user = data;
-    int i = 0;
-    for ( DataCIter it = m_data.begin(); it != m_data.end(); ++it, ++i ) {
-        if ( user == *it )
-            return i;
+    static long seekpos;
+    seekpos = clamp( seekpos, 0l , (long)m_data.size() );
+    int index = seekpos;
+
+    for ( DataCIter f_idx = m_data.begin() + seekpos; f_idx != m_data.end() ; ++f_idx )
+    {
+        if ( user == *f_idx )
+        {
+            seekpos = index;
+            return seekpos;
+        }
+        index++;
     }
+    //it's ok to init with seekpos, if it had changed this would not be reached
+    int r_index = seekpos - 1;
+    for ( DataRevCIter r_idx = m_data.rbegin() + ( m_data.size() - seekpos ); r_idx != m_data.rend() ; ++r_idx )
+    {
+        if ( user == *r_idx )
+        {
+            seekpos = r_index;
+            return seekpos;
+        }
+        r_index--;
+    }
+
     return -1;
 }
 

@@ -7,7 +7,9 @@
 #include "../ui.h"
 #include "../server.h"
 #include "../user.h"
-#include "../utils.h"
+#include "../utils/tasutil.h"
+#include "../utils/debug.h"
+#include "../utils/platform.h"
 #include <wx/regex.h>
 #include <wx/log.h>
 #include "../chatpanel.h"

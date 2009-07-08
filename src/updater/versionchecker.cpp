@@ -1,10 +1,15 @@
-
+#ifdef _MSC_VER
+#ifndef NOMINMAX
+    #define NOMINMAX
+#endif // NOMINMAX
+#include <winsock2.h>
+#endif // _MSC_VER
 
 #include <wx/sstream.h>
 #include <wx/protocol/http.h>
 #include <wx/log.h>
 
-#include "../utils.h"
+#include "../utils/debug.h"
 #include "../settings++/custom_dialogs.h"
 
 
@@ -69,6 +74,11 @@ wxString GetLatestVersion()
 
   wxDELETE(stream);
   versionRequest.Close();
+
+    // Need to replace crap chars or versions will always be inequal
+  result.Replace(_T(" "), _T(""), true);
+  result.Replace(_T("\n"), _T(""), true);
+  result.Replace(_T("\t"), _T(""), true);
 
   return result;
 }

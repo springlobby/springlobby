@@ -12,6 +12,11 @@ ENDIF(NOT MSVC)
 IF(WIN32)
 	ADD_DEFINITIONS( -DWXUSINGDLL -D__WXMSW__ -D_WIN32_WINNT=0x0501)
 ENDIF(WIN32)
+IF(MSVC)
+	ADD_DEFINITIONS(-D_RC_MSVC)
+ENDIF(MSVC)
+
+
 
 
 
@@ -45,7 +50,7 @@ SET( OPTION_SOUND
 	1 CACHE BOOL
 	"Enables sound notification functionality (requires SDL and SDL_sound libraries)" )
 SET( OPTION_TRANSLATION_SUPPORT
-	1 CACHE BOOL
+	0 CACHE BOOL
 	"Enables translation support to the programs and adds facilities for helping translators (requires GNU Gettext)" )
 SET( BUILD_SHARED_LIBS
 	1 CACHE BOOL
@@ -62,7 +67,7 @@ IF(NOT CMAKE_CROSSCOMPILING)
 SET(wxWidgets_USE_LIBS base core net adv aui html xml )
 
 # We need the Find package for wxWidgets to work
-FIND_PACKAGE(wxWidgets REQUIRED base core net adv aui html xml qa xrc richtext media)
+FIND_PACKAGE(wxWidgets REQUIRED base core net adv aui html xml)
 
 # Did we find wxWidgets ? This condition will fail for as long as the internal Vars do not point to the proper wxWidgets Configuration.
 IF(wxWidgets_FOUND)
@@ -202,6 +207,14 @@ ENDIF( OPTION_TORRENT_SYSTEM )
 INCLUDE_DIRECTORIES(${SpringLobby_SOURCE_DIR} ${Settings_SOURCE_DIR} )
 
 SET(SpringLobbySrc
+	src/utils/math.cpp
+	src/utils/misc.cpp
+	src/utils/debug.cpp
+	src/utils/platform.cpp
+	src/utils/conversion.cpp
+	src/utils/tasutil.cpp
+	src/utils/sltipwin.cpp
+	src/utils/controls.cpp
 	src/boost/md5.cpp
 	src/updater/updater.cpp
 	src/updater/versionchecker.cpp
@@ -263,6 +276,7 @@ SET(SpringLobbySrc
 	src/mmoptionmodel.cpp
 	src/mmoptionswrapper.cpp
 	src/nicklistctrl.cpp
+	src/offlinebattle.cpp
 	src/playback/replaylist.cpp
 	src/playback/savegamelist.cpp
 	src/sdlsound.cpp
@@ -293,7 +307,6 @@ SET(SpringLobbySrc
 	src/useractions.cpp
 	src/userlist.cpp
 	src/userlistctrl.cpp
-	src/utils.cpp
 	src/widgets/downloadlistctrl.cpp
 	src/widgets/downloaddialog.cpp
 	src/widgets/downloadpanel.cpp
@@ -321,12 +334,16 @@ SET(SettingsSrc
 
 SET(StandAloneSettings
 	src/settings.cpp
-	src/utils.cpp
 	src/uiutils.cpp
 	src/settings++/Main.cpp
 )
 
 SET(SLSharedWithSettings
+	src/utils/debug.cpp
+	src/utils/platform.cpp
+	src/utils/conversion.cpp
+	src/utils/sltipwin.cpp
+	src/utils/controls.cpp
 	src/updater/versionchecker.cpp
 	src/crashreport.cpp
 	src/springunitsynclib.cpp

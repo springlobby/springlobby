@@ -5,7 +5,8 @@
 #include <wx/filefn.h>
 
 #include "replaylist.h"
-#include "../utils.h"
+#include "../utils/math.h"
+#include "../utils/conversion.h"
 #include "../settings++/custom_dialogs.h"
 #include "playbacktab.h"
 #include "playbackstructs.h"
@@ -85,7 +86,7 @@ wxString ReplayList::GetScriptFromReplay ( const wxString& ReplayPath  )
         replay.Seek( headerSize );
         std::string script_a(scriptSize,0);
         replay.Read( &script_a[0], scriptSize );
-        script = WX_STRING( script_a ) ;//(script_a,scriptSize);
+        script = TowxString( script_a ) ;//(script_a,scriptSize);
 
     }
     catch (...)
