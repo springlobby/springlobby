@@ -154,10 +154,7 @@ bool SpringLobbyApp::OnInit()
     if ( m_updateing_only ) {
         wxString latestVersion = GetLatestVersion();
         m_updater_window = new UpdaterMainwindow( latestVersion );
-        m_updater_window->SetSize( 450, 120 );
-        m_updater_window->ShowFullScreen(false );
         m_updater_window->Show( true );
-        m_updater_window->Maximize( false );
         SetTopWindow( m_updater_window );
         Updater().StartUpdate( latestVersion );
         return true;

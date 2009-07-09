@@ -31,11 +31,14 @@ END_EVENT_TABLE()
   * @todo: document this function
   */
  UpdaterMainwindow::UpdaterMainwindow( const wxString& rev_string )
-    : wxFrame( (wxFrame*)0, -1, _("SpringLobby"), wxPoint(150, 150), wxSize(450, 120) ),
+    : wxFrame( (wxFrame*)0, -1, _("SpringLobby"), wxPoint(150, 150), wxSize(450, 160) ),
 //                wxMINIMIZE_BOX | wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN  ),
     m_onDownloadComplete( this, &GetGlobalEventSender( GlobalEvents::UpdateFinished) )
 {
     SetIcon( wxIcon(springlobby_xpm) );
+
+    wxBoxSizer* top_sizer = new wxBoxSizer( wxVERTICAL ); //not inserting a pnel to put stuff onto gives ugly background
+    wxPanel* panel = new wxPanel( this, -1 );
 
     m_main_sizer = new wxBoxSizer( wxVERTICAL );
     m_activity_panel = new ActivityNoticePanel( this,
@@ -46,10 +49,13 @@ END_EVENT_TABLE()
     m_changelog = new wxButton( this, ID_BUT_CHANGELOG,_("Open changelog in browser") );
     m_main_sizer->Add( m_changelog, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
 
-    SetSizer( m_main_sizer );
-    SetSize( 450, 120 );
-    Layout();
+    panel->SetSizer( m_main_sizer);
 
+    top_sizer->Add( panel, 1, wxEXPAND|wxALL, 0 );
+
+    SetSizer( top_sizer );
+    Layout();
+    Center();
     CustomMessageBoxBase::setLobbypointer( this );
 }
 
