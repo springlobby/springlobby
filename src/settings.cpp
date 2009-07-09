@@ -37,6 +37,9 @@
 #include "settings++/presets.h"
 #include "Helper/sortutil.h"
 #include "mainwindow.h"
+#ifdef SL_DUMMY_COL
+    #include "settings++/custom_dialogs.h"
+#endif
 
 bool Settings::m_user_defined_config = false;
 wxString Settings::m_user_defined_config_path = wxEmptyString;
@@ -343,7 +346,7 @@ wxString Settings::GetWebBrowserPath()
 }
 
 
-void Settings::SetWebBrowserPath( const wxString path )
+void Settings::SetWebBrowserPath( const wxString& path )
 {
     m_config->Write( _T("/General/WebBrowserPath"), path );
 }
@@ -1928,7 +1931,11 @@ void Settings::SetColumnWidth( const wxString& list_name, const int column_ind, 
 
 int Settings::GetColumnWidth( const wxString& list_name, const int column )
 {
-    return m_config->Read(_T("GUI/ColumnWidths/") + list_name + _T("/") + TowxString(column), columnWidthUnset);
+    const int orgwidth = m_config->Read(_T("GUI/ColumnWidths/") + list_name + _T("/") + TowxString(column), columnWidthUnset );
+    int width = orgwidth;
+    if ( orgwidth > -1 ) //-3 is unset, -2 and -1 used for auto size by wx
+        width = std::max ( width, int( Settings::columnWidthMinimum ) ); //removing the temporary creation here gives me undefined ref error (koshi)
+    return width;
 }
 
 void Settings::SetPeopleList( const wxArrayString& friends, const wxString& group  )
@@ -2362,3 +2369,32 @@ unsigned int Settings::GetStartTab( )
     return m_config->Read( _T("/GUI/StartTab") , MainWindow::PAGE_SINGLE ); //default is SP tab
 }
 
+//! simply move saved col size +1 to account for dummy col, force dummy col width to 0
+void Settings::TranslateSavedColumWidths()
+{
+    #ifdef SL_DUMMY_COL
+    wxString old_path = m_config->GetPath();
+    bool old_record = m_config->IsRecordingDefaults( );
+    m_config->SetRecordDefaults( false );
+    std::vector<wxString> ctrls;
+    ctrls.push_back( _T("NickListCtrl") );
+    ctrls.push_back( _T("BattleroomListCtrl") );
+    ctrls.push_back( _T("BattleListCtrl") );
+    ctrls.push_back( _T("WidgetDownloadListCtrl") );
+    ctrls.push_back( _T("ChannelListCtrl") );
+    ctrls.push_back( _T("PlaybackListCtrl") );
+    for ( std::vector<wxString>::const_iterator it = ctrls.begin(); it != ctrls.end(); ++it ) {
+        m_config->SetPath( _T("/GUI/ColumnWidths/") + *it );
+        unsigned int entries  = m_config->GetNumberOfEntries( false ); //do not recurse
+        for ( unsigned int i = entries; i > 0 ; --i )
+        {
+            m_config->Write( TowxString(i), m_config->Read( TowxString(i-1) , -1 ) );
+        }
+        m_config->Write( TowxString(0), 0 );
+    }
+
+    m_config->SetPath( old_path );
+    m_config->SetRecordDefaults( old_record );
+    customMessageBoxNoModal( SL_MAIN_ICON, _("The way column widths are saved has changed, you may need to re-adjust your col widths manually once."), _("Important") );
+    #endif
+}

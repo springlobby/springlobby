@@ -113,11 +113,11 @@ bool OptionsWrapper::loadOptions(GameOption modmapFlag, const wxString& name)
     case EngineOption:
     {
 
-        mmOptionList startpos( _("Start Position Type"),_T("startpostype"), _("How players will select where to be spawned in the map\n0: fixed map positions\n1: random map positions\n2: chose in game\n3: chose in the lobby before starting"), _T("0") );
-        startpos.addItem( _T("0"), _("Fixed"), _T("Use the map defined start positions, the positions will be assigned incrementally from the team with lowest number to highest") );
-        startpos.addItem( _T("1"), _("Random"), _T("Use the map defined start positions, the positions will be assigned randomly, only the first positions will be used to rotate between the players") );
-        startpos.addItem( _T("2"), _("Chose in game"), _T("Each player will be able to pick it's own starting point right before the game will start, the range can be limited using bounding boxes for allies from the host") );
-        startpos.addItem( _T("3"), _("Chose before game"), _T("The host will positionate the players start positions in the map preview before the game will be launched") );
+        mmOptionList startpos( _("Start Position Type"),_T("startpostype"), _("How players will select where to be spawned in the map\n0: fixed map positions\n1: random map positions\n2: choose in game\n3: choose in the lobby before starting"), _T("0") );
+        startpos.addItem( _T("0"), _("Fixed"), _T("Use the start positions defined in the map, the positions will be assigned incrementally from the team with lowest number to highest") );
+        startpos.addItem( _T("1"), _("Random"), _T("Use the start positions defined in the map, the positions will be assigned randomly") );
+        startpos.addItem( _T("2"), _("Choose in-game"), _T("Players will be able to pick their own starting point right before the game starts, optionally limited by a bounding box defined by the host") );
+        startpos.addItem( _T("3"), _("Choose before game"), _T("The host will place each player's start position in the map preview before the game is launched") );
         opt.list_map[_T("startpostype")] = startpos;
         break;
     }
@@ -309,7 +309,7 @@ wxString OptionsWrapper::getSingleValue(wxString key) const
 	return wxEmptyString;
 }
 template < class MapType >
-static inline typename MapType::mapped_type GetItem( const MapType map, const typename MapType::key_type& key )
+static inline typename MapType::mapped_type GetItem( const MapType& map, const typename MapType::key_type& key )
 {
     typename MapType::const_iterator mapIt = map.find(key);
     if ( mapIt != map.end() )

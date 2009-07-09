@@ -27,7 +27,7 @@ BEGIN_EVENT_TABLE( WidgetDownloadPanel , wxScrolledWindow)
 
 END_EVENT_TABLE()
 
-WidgetDownloadPanel::WidgetDownloadPanel(wxWindow* parent, wxWindowID id, const wxString& title,
+WidgetDownloadPanel::WidgetDownloadPanel(wxWindow* parent, wxWindowID id, const wxString& /*unused*/,
     const wxPoint& pos , const wxSize& size , long style )
     : wxScrolledWindow (parent,  id, pos, size, style, _T("widget-dl") )
 {

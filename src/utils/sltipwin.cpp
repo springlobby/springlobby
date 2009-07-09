@@ -11,7 +11,7 @@ SLTipWindow::SLTipWindow(wxWindow *parent, const wxString &text)
     : wxTipWindow(parent,text)
 {}
 
-void SLTipWindow::Cancel(wxMouseEvent& event)
+void SLTipWindow::Cancel(wxMouseEvent& /*unused*/)
 {
     wxTipWindow::Close();
 }

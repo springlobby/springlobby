@@ -394,8 +394,8 @@ bool SpringUnitSyncLib::VersionSupports( IUnitSync::GameFeature feature )
     case IUnitSync::USYNC_GetInfoMap:   return m_get_infomap_size;
     case IUnitSync::USYNC_GetDataDir:   return m_get_writeable_data_dir;
     case IUnitSync::USYNC_GetSkirmishAI:   return m_get_skirmish_ai_count;
+    default: return false;
   }
-  return false;
 }
 
 

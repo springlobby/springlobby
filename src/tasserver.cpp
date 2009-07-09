@@ -42,9 +42,9 @@
 #include "config.h"
 #endif //HAVE_CONFIG_H
 
-#ifndef VERSION 
+#ifndef VERSION
 	#define VERSION "unknown"
-#endif //VERSION 
+#endif //VERSION
 
 // for SL_MAIN_ICON
 #include "settings++/custom_dialogs.h"
@@ -80,6 +80,7 @@ union UTASClientStatus
 
 
 //! @brief Struct used internally by the TASServer class to get battle status information.
+//!TODO is that last member necessary? throws a warning baout bein used uninited
 struct TASBattleStatus
 {
 unsigned int :
@@ -1234,7 +1235,7 @@ void TASServer::DoActionPrivate( const wxString& nick, const wxString& msg )
 }
 
 
-void TASServer::SayBattle( int battleid, const wxString& msg )
+void TASServer::SayBattle( int /*unused*/, const wxString& msg )
 {
     wxLogDebugFunc( _T("") );
 
@@ -1242,7 +1243,7 @@ void TASServer::SayBattle( int battleid, const wxString& msg )
 }
 
 
-void TASServer::DoActionBattle( int battleid, const wxString& msg )
+void TASServer::DoActionBattle( int /*unused*/, const wxString& msg )
 {
     wxLogDebugFunc( _T("") );
 
@@ -1292,13 +1293,13 @@ void TASServer::ModeratorKick( const wxString& channel, const wxString& reason )
 }
 
 
-void TASServer::ModeratorBan( const wxString& nick, bool byip )
+void TASServer::ModeratorBan( const wxString& /*unused*/, bool /*unused*/ )
 {
     // FIXME TASServer::ModeratorBan not yet implemented
 }
 
 
-void TASServer::ModeratorUnban( const wxString& nick )
+void TASServer::ModeratorUnban( const wxString& /*unused*/ )
 {
     // FIXME TASServer::ModeratorUnban not yet implemented
 }
@@ -1328,13 +1329,13 @@ void TASServer::ModeratorFindByIP( const wxString& ipadress )
 }
 
 
-void TASServer::AdminGetAccountAccess( const wxString& nick )
+void TASServer::AdminGetAccountAccess( const wxString& /*unused*/ )
 {
     // FIXME TASServer::AdminGetAccountAccess not yet implemented
 }
 
 
-void TASServer::AdminChangeAccountAccess( const wxString& nick, const wxString& accesscode )
+void TASServer::AdminChangeAccountAccess( const wxString& /*unused*/, const wxString& /*unused*/ )
 {
     // FIXME TASServer::AdminChangeAccountAccess not yet implemented
 }
@@ -1473,7 +1474,7 @@ void TASServer::FinalizeJoinBattle()
 }
 
 
-void TASServer::LeaveBattle( const int& battleid )
+void TASServer::LeaveBattle( const int& /*unused*/ )
 {
     //LEAVEBATTLE
     wxLogDebugFunc( _T("") );
@@ -2144,7 +2145,7 @@ void TASServer::SendScriptToClients( const wxString& script )
   SendCmd( _T("SCRIPTEND") );
 }
 
-void TASServer::OnConnected( Socket* sock )
+void TASServer::OnConnected( Socket* /*unused*/ )
 {
     wxLogDebugFunc( _T("") );
     //TASServer* serv = (TASServer*)sock->GetUserdata();
@@ -2157,7 +2158,7 @@ void TASServer::OnConnected( Socket* sock )
 }
 
 
-void TASServer::OnDisconnected( Socket* sock )
+void TASServer::OnDisconnected( Socket* /*unused*/ )
 {
     wxLogDebugFunc( TowxString(m_connected) );
     bool connectionwaspresent = m_online || !m_last_denied.IsEmpty() || m_redirecting;

@@ -54,13 +54,18 @@ BEGIN_EVENT_TABLE( BattleroomListCtrl,  BattleroomListCtrl::BaseType )
 END_EVENT_TABLE()
 
 
-BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, IBattle* battle, Ui& ui, bool readonly ) :
-	CustomVirtListCtrl< User *,BattleroomListCtrl>(parent, BRLIST_LIST, wxDefaultPosition, wxDefaultSize,
-                wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL, _T("BattleroomListCtrl"), 10, 3, &CompareOneCrit ),
-	m_battle(battle),m_popup(0),
-  m_sel_user(0), m_sides(0),m_spec_item(0),m_handicap_item(0),
-  m_ui(ui),
-  m_ro(readonly)
+BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, IBattle* battle, Ui& ui, bool readonly )
+    : CustomVirtListCtrl< User *,BattleroomListCtrl>(parent, BRLIST_LIST, wxDefaultPosition, wxDefaultSize,
+                wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL, _T("BattleroomListCtrl"), 10, 3, &CompareOneCrit,
+                true /*highlight*/, UserActions::ActHighlight, !readonly /*periodic sort*/ ),
+	m_battle(battle),
+	m_popup(0),
+    m_sel_user(0),
+    m_sides(0),
+    m_spec_item(0),
+    m_handicap_item(0),
+    m_ui(ui),
+    m_ro(readonly)
 {
   GetAui().manager->AddPane( this, wxLEFT, _T("battleroomlistctrl") );
 
@@ -75,15 +80,15 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, IBattle* battle, Ui& u
     const int widths[10] = {hd,hd,hd,hd,hd,170,hd,hd,80,130};
 #endif
 
-    AddColumn( 0, widths[0], _T("rank"), _T("Player/Bot") );
-    AddColumn( 1, widths[1], _T("faction"), _T("Faction icon") );
-    AddColumn( 2, widths[2], _T("colour"), _T("Teamcolour") );
-    AddColumn( 3, widths[3], _T("country"), _T("Country") );
-    AddColumn( 4, widths[4], _T("rank"), _T("Rank") );
+    AddColumn( 0, widths[0], _T("Status"), _T("Player/Bot") );
+    AddColumn( 1, widths[1], _T("Faction"), _T("Faction icon") );
+    AddColumn( 2, widths[2], _T("Colour"), _T("Teamcolour") );
+    AddColumn( 3, widths[3], _T("Country"), _T("Country") );
+    AddColumn( 4, widths[4], _T("Rank"), _T("Rank") );
     AddColumn( 5, widths[5], _("Nickname"), _T("Ingame name"));
-    AddColumn( 6, widths[6], _("team"), _T("Team number") );
-    AddColumn( 7, widths[7], _("ally"), _T("Ally number") );
-    AddColumn( 8, widths[8], _("cpu"), _T("CPU speed (might not be accurate)") );
+    AddColumn( 6, widths[6], _("Team"), _T("Team number") );
+    AddColumn( 7, widths[7], _("Ally"), _T("Ally number") );
+    AddColumn( 8, widths[8], _("CPU"), _T("CPU speed (might not be accurate)") );
     AddColumn( 9, widths[9], _("Resource Bonus"), _T("Resource Bonus") );
 
     if ( m_sortorder.size() == 0 ) {
@@ -366,7 +371,7 @@ void BattleroomListCtrl::OnAllySelect( wxCommandEvent& event )
 }
 
 
-void BattleroomListCtrl::OnColourSelect( wxCommandEvent& event )
+void BattleroomListCtrl::OnColourSelect( wxCommandEvent& /*unused*/ )
 {
   wxLogDebugFunc( _T("") );
 
@@ -386,7 +391,7 @@ void BattleroomListCtrl::OnSideSelect( wxCommandEvent& event )
 }
 
 
-void BattleroomListCtrl::OnHandicapSelect( wxCommandEvent& event )
+void BattleroomListCtrl::OnHandicapSelect( wxCommandEvent& /*unused*/ )
 {
   wxLogDebugFunc( _T("") );
   if( !m_sel_user ) return;
@@ -398,21 +403,21 @@ void BattleroomListCtrl::OnHandicapSelect( wxCommandEvent& event )
 }
 
 
-void BattleroomListCtrl::OnSpecSelect( wxCommandEvent& event )
+void BattleroomListCtrl::OnSpecSelect( wxCommandEvent& /*unused*/ )
 {
   wxLogDebugFunc( _T("") );
   if ( m_sel_user ) ((Battle*)m_battle)->ForceSpectator( *m_sel_user, m_spec_item->IsChecked() );
 }
 
 
-void BattleroomListCtrl::OnKickPlayer( wxCommandEvent& event )
+void BattleroomListCtrl::OnKickPlayer( wxCommandEvent& /*unused*/ )
 {
   wxLogDebugFunc( _T("") );
 	if ( m_sel_user ) ((Battle*)m_battle)->KickPlayer( *m_sel_user );
 }
 
 
-void BattleroomListCtrl::OnRingPlayer( wxCommandEvent& event )
+void BattleroomListCtrl::OnRingPlayer( wxCommandEvent& /*unused*/ )
 {
   wxLogDebugFunc( _T("") );
   if ( m_sel_user ) ((Battle*)m_battle)->GetServer().Ring( m_sel_user->GetNick() );
@@ -683,7 +688,7 @@ int BattleroomListCtrl::CompareHandicap(const DataType user1, const DataType use
   return 0;
 }
 
-void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint position)
+void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint& position)
 {
     if ( item_hit < 0 || item_hit >= (long)m_data.size() )
         return;
@@ -768,13 +773,13 @@ void BattleroomListCtrl::OnUserMenuAddToGroup( wxCommandEvent& event )
     useractions().AddUserToGroup( groupname, nick );
 }
 
-void BattleroomListCtrl::OnUserMenuDeleteFromGroup( wxCommandEvent& event )
+void BattleroomListCtrl::OnUserMenuDeleteFromGroup( wxCommandEvent& /*unused*/ )
 {
     wxString nick = GetSelectedUserNick();
     useractions().RemoveUser( nick );
 }
 
-void BattleroomListCtrl::OnUserMenuCreateGroup( wxCommandEvent& event )
+void BattleroomListCtrl::OnUserMenuCreateGroup( wxCommandEvent& /*unused*/ )
 {
     wxString name;
     if ( ui().AskText( _("Enter name"),
@@ -796,7 +801,7 @@ wxString BattleroomListCtrl::GetSelectedUserNick()
         return m_data[m_selected_index]->GetNick();
 }
 
-void BattleroomListCtrl::OnActivateItem( wxListEvent& event )
+void BattleroomListCtrl::OnActivateItem( wxListEvent& /*unused*/ )
 {
     if ( m_ro )
         return;

@@ -162,8 +162,6 @@ class Ui
     wxString m_last_used_backup_server;
 
     unsigned int m_upd_counter_torrent;
-    unsigned int m_upd_counter_battlelist;
-    unsigned int m_upd_counter_chat;
 
     bool m_first_update_trigger;
 
@@ -171,6 +169,9 @@ class Ui
 
     //! does actual work, called from downloadmap/mod
     void DownloadFileP2P( const wxString& hash, const wxString& name );
+
+    private:
+        Ui( const Ui& );
 
 };
 

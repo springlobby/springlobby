@@ -28,7 +28,7 @@ void GetArrayStringFromHashMap( const HashMap_String_String& hm , wxArrayString&
         matches.Add( it->second );
 }
 
-wxTextCtrlHist::wxTextCtrlHist(TextCompletionDatabase& textDb, wxWindow* parent, wxWindowID id, const wxString& value, const wxPoint& pos, const wxSize& size, long style )
+wxTextCtrlHist::wxTextCtrlHist(TextCompletionDatabase& textDb, wxWindow* parent, wxWindowID id, const wxString& value, const wxPoint& pos, const wxSize& size, long /*unused*/ )
     : wxTextCtrl(parent, id, value, pos, size, wxTE_PROCESS_ENTER | wxTE_PROCESS_TAB ),
     textcompletiondatabase(textDb), current_pos(0), history_max(32)
 {

@@ -201,7 +201,7 @@ void md5::update(std::istream& a_istream)
     }
 }
 
-void md5::update(std::istream& a_istream, uint32_t a_size)
+void md5::update(std::istream& /*unused*/, uint32_t /*unused*/)
 {
     // TODO
 }

@@ -81,7 +81,7 @@ wxString UserStatus::GetDiffString ( const UserStatus& old ) const
         wxEmptyString;
 }
 
-void User::Said( const wxString& message ) const
+void User::Said( const wxString& /*message*/ ) const
 {
 }
 
@@ -189,8 +189,8 @@ wxString User::GetRankName(UserStatus::RankContainer rank)
           case UserStatus::RANK_5: return _("Experienced");
           case UserStatus::RANK_6: return _("Highly experienced");
           case UserStatus::RANK_7: return _("Veteran");
+          default:                 return _("Unknown");
       }
-			return _("Unknown");
 }
 
 float User::GetBalanceRank()

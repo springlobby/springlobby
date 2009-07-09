@@ -228,6 +228,9 @@ User& Battle::OnUserAdded( User& user )
                 DoAction( _T("Rank limit autokick: ") + user.GetNick() );
                 KickPlayer( user );
                 return user;
+            default:
+                wxLogError( _T("unknown ranklimittype in Battle::OnUserAdded") );
+                break;
             }
         }
 
@@ -653,7 +656,7 @@ void Battle::SetInGame( bool value )
 void Battle::FixColours()
 {
     if ( !IsFounderMe() )return;
-    std::vector<wxColour> &palette = GetFixColoursPalette();
+    std::vector<wxColour> &palette = GetFixColoursPalette( m_teams_sizes.size() );
     std::vector<int> palette_use( palette.size(), 0 );
 
     wxColour my_col = GetMe().BattleStatus().colour; // Never changes color of founder (me) :-)

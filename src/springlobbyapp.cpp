@@ -143,7 +143,7 @@ bool SpringLobbyApp::OnInit()
         wxMkdir( wxStandardPaths::Get().GetUserDataDir() );
 
     sett().RefreshSpringVersionList();
-    ui().ReloadUnitSync(); // first time load of unitsync
+    usync().ReloadUnitSyncLib(); // first time load of unitsync
 
     //everything below should not be executing when updating, so we can ensure no GUI window is created, torrent system isn't started, etc.
     // NOTE: this assumes no one will try to update at firstRun
@@ -366,62 +366,68 @@ void SpringLobbyApp::CacheAndSettingsSetup()
 
     if ( !sett().IsFirstRun() )
     {
-    	if ( sett().GetSettingsVersion() < 3 ) sett().ConvertOldSpringDirsOptions();
-			if ( sett().GetSettingsVersion() < 4 )
-			{
-				if ( sett().GetTorrentPort() == DEFSETT_SPRING_PORT ) sett().SetTorrentPort( DEFSETT_SPRING_PORT + 1 );
-			}
-			if ( sett().GetSettingsVersion() < 5 )
-			{
-				wxArrayString list = sett().GetServers();
-				int count = list.GetCount();
-				wxArrayString wordlist = sett().GetHighlightedWords();
-				for ( int i= 0; i < count; i++ )
-				{
-					wxString nick = sett().GetServerAccountNick( list[i] );
-					if ( wordlist.Index( nick ) == -1 )
-					{
-						wordlist.Add( nick );
-					}
-				}
-				sett().SetHighlightedWords( wordlist );
-			}
-			if ( sett().GetSettingsVersion() < 6 )
-			{
-				sett().ConvertOldServerSettings();
-			}
-			if ( sett().GetSettingsVersion() < 7 )
-			{
-				sett().AddChannelJoin( _T("springlobby"), _T("") );
-			}
-			if ( sett().GetSettingsVersion() < 8 )
-			{
-				 sett().DeleteServer( _T("Backup server") );
-				 sett().SetServer( _T("Backup server 1"), _T("springbackup1.servegame.com"), 8200 );
-				 sett().SetServer( _T("Backup server 2"), _T("springbackup2.servegame.org"), 8200 );
-				 sett().SetServer( _T("Test server"), _T("taspringmaster.servegame.com"), 8300 );
-			}
-			if ( sett().GetSettingsVersion() < 10 )
-			{
-				sett().ConvertOldColorSettings();
-			}
-			if ( sett().GetSettingsVersion() < 11 )
-			{
-                if( IsUACenabled() )
+    	if ( sett().GetSettingsVersion() < 3 )
+            sett().ConvertOldSpringDirsOptions();
+        if ( sett().GetSettingsVersion() < 4 )
+        {
+            if ( sett().GetTorrentPort() == DEFSETT_SPRING_PORT )
+                sett().SetTorrentPort( DEFSETT_SPRING_PORT + 1 );
+        }
+        if ( sett().GetSettingsVersion() < 5 )
+        {
+            wxArrayString list = sett().GetServers();
+            int count = list.GetCount();
+            wxArrayString wordlist = sett().GetHighlightedWords();
+            for ( int i= 0; i < count; i++ )
+            {
+                wxString nick = sett().GetServerAccountNick( list[i] );
+                if ( wordlist.Index( nick ) == -1 )
                 {
-                    usync().ReloadUnitSyncLib();
-                    if ( usync().IsLoaded() )
-                        usync().SetSpringDataPath(_T("")); // UAC is on, fix the spring data path
+                    wordlist.Add( nick );
                 }
-			}
-			if ( sett().GetSettingsVersion() < 12 )
-			{
-				sett().ConvertOldChannelSettings();
-			}
-			if ( sett().GetSettingsVersion() < 13 )
-			{
-				sett().ConvertOldHiglightSettings();
-			}
+            }
+            sett().SetHighlightedWords( wordlist );
+        }
+        if ( sett().GetSettingsVersion() < 6 )
+        {
+            sett().ConvertOldServerSettings();
+        }
+        if ( sett().GetSettingsVersion() < 7 )
+        {
+            sett().AddChannelJoin( _T("springlobby"), _T("") );
+        }
+        if ( sett().GetSettingsVersion() < 8 )
+        {
+             sett().DeleteServer( _T("Backup server") );
+             sett().SetServer( _T("Backup server 1"), _T("springbackup1.servegame.com"), 8200 );
+             sett().SetServer( _T("Backup server 2"), _T("springbackup2.servegame.org"), 8200 );
+             sett().SetServer( _T("Test server"), _T("taspringmaster.servegame.com"), 8300 );
+        }
+        if ( sett().GetSettingsVersion() < 10 )
+        {
+            sett().ConvertOldColorSettings();
+        }
+        if ( sett().GetSettingsVersion() < 11 )
+        {
+            if( IsUACenabled() )
+            {
+                usync().ReloadUnitSyncLib();
+                if ( usync().IsLoaded() )
+                    usync().SetSpringDataPath(_T("")); // UAC is on, fix the spring data path
+            }
+        }
+        if ( sett().GetSettingsVersion() < 12 )
+        {
+            sett().ConvertOldChannelSettings();
+        }
+        if ( sett().GetSettingsVersion() < 13 )
+        {
+            sett().ConvertOldHiglightSettings();
+        }
+        if ( sett().GetSettingsVersion() < 15 )
+        {
+            sett().TranslateSavedColumWidths();
+        }
     }
 
     if ( sett().ShouldAddDefaultServerSettings() || ( sett().GetSettingsVersion() < 14 && sett().GetServers().Count() < 2  ) )

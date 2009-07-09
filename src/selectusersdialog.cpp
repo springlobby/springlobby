@@ -210,7 +210,7 @@ int SelectUsersDialog::ShowModal()
   return wxDialog::ShowModal();
 }
 
-void SelectUsersDialog::OnNameFilterChange( wxCommandEvent& event )
+void SelectUsersDialog::OnNameFilterChange( wxCommandEvent& /*unused*/ )
 {
   long item = -1;
   wxString filter = m_name_filter_text->GetValue();
@@ -298,12 +298,12 @@ void SelectUsersDialog::OnNameSelected( wxListEvent& event )
   UpdateSelection();
 }
 
-void SelectUsersDialog::OnCancel( wxCommandEvent& event )
+void SelectUsersDialog::OnCancel( wxCommandEvent& /*unused*/ )
 {
   EndModal(wxID_CANCEL);
 }
 
-void SelectUsersDialog::OnOk( wxCommandEvent& event )
+void SelectUsersDialog::OnOk( wxCommandEvent& /*unused*/ )
 {
   EndModal(wxID_OK);
 }
@@ -314,7 +314,7 @@ wxSortedArrayString SelectUsersDialog::GetSelection()
   return GetSelectionFromText();
 }
 
-int wxCALLBACK SelectUsersDialog::CompareName(long item1, long item2, long sortData )
+int wxCALLBACK SelectUsersDialog::CompareName(long item1, long item2, long /*unused*/ )
 {
   //wxListCtrl* user_list = (wxListCtrl*)sortData;
   wxString* s1 = (wxString*)item1;

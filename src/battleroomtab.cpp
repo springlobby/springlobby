@@ -581,7 +581,7 @@ ChatPanel& BattleRoomTab::GetChatPanel()
 }
 
 
-void BattleRoomTab::OnStart( wxCommandEvent& event )
+void BattleRoomTab::OnStart( wxCommandEvent& /*unused*/ )
 {
     m_battle.GetMe().BattleStatus().ready = true;
 
@@ -597,14 +597,14 @@ void BattleRoomTab::OnStart( wxCommandEvent& event )
 }
 
 
-void BattleRoomTab::OnLeave( wxCommandEvent& event )
+void BattleRoomTab::OnLeave( wxCommandEvent& /*unused*/ )
 {
     m_battle.Leave();
 }
 
 
 
-void BattleRoomTab::OnBalance( wxCommandEvent& event )
+void BattleRoomTab::OnBalance( wxCommandEvent& /*unused*/ )
 {
     AutoBalanceDialog::BalanceOptions defaultval;
     defaultval.type = (IBattle::BalanceType)sett().GetBalanceMethod();
@@ -624,7 +624,7 @@ void BattleRoomTab::OnBalance( wxCommandEvent& event )
 }
 
 
-void BattleRoomTab::OnFixTeams( wxCommandEvent& event )
+void BattleRoomTab::OnFixTeams( wxCommandEvent& /*unused*/ )
 {
     AutoBalanceDialog::BalanceOptions defaultval;
     defaultval.type = (IBattle::BalanceType)sett().GetFixIDMethod();
@@ -644,7 +644,7 @@ void BattleRoomTab::OnFixTeams( wxCommandEvent& event )
 }
 
 
-void BattleRoomTab::OnFixColours( wxCommandEvent& event )
+void BattleRoomTab::OnFixColours( wxCommandEvent& /*unused*/ )
 {
     wxLogMessage(_T(""));
     if (!IsHosted()) // Works with autohosts, and human hosts knows what it mean.
@@ -657,7 +657,7 @@ void BattleRoomTab::OnFixColours( wxCommandEvent& event )
 }
 
 
-void BattleRoomTab::OnAddBot( wxCommandEvent& event )
+void BattleRoomTab::OnAddBot( wxCommandEvent& /*unused*/ )
 {
     //customMessageBox(SL_MAIN_ICON,_T("Max players reached"),_T("Cannot add bot, maximum number of players already reached.") );
     AddBotDialog dlg( this, m_battle );
@@ -681,36 +681,36 @@ void BattleRoomTab::OnAddBot( wxCommandEvent& event )
 }
 
 
-void BattleRoomTab::OnImReady( wxCommandEvent& event )
+void BattleRoomTab::OnImReady( wxCommandEvent& /*unused*/ )
 {
     m_battle.SetImReady( m_ready_chk->GetValue() );
 }
 
 
-void BattleRoomTab::OnLock( wxCommandEvent& event )
+void BattleRoomTab::OnLock( wxCommandEvent& /*unused*/ )
 {
     m_battle.SetIsLocked( m_lock_chk->GetValue() );
     m_battle.SendHostInfo( IBattle::HI_Locked );
 }
 
 
-void BattleRoomTab::OnAutoHost( wxCommandEvent& event )
+void BattleRoomTab::OnAutoHost( wxCommandEvent& /*unused*/ )
 {
     m_battle.GetAutoHost().SetEnabled( m_autohost_mnu->IsChecked() );
 }
 
 
-void BattleRoomTab::OnAutoControl( wxCommandEvent& event )
+void BattleRoomTab::OnAutoControl( wxCommandEvent& /*unused*/ )
 {
 	sett().SetBattleLastAutoControlState( m_autocontrol_mnu->IsChecked() );
 }
 
-void BattleRoomTab::OnAutoStart( wxCommandEvent& event )
+void BattleRoomTab::OnAutoStart( wxCommandEvent& /*unused*/ )
 {
 	sett().SetBattleLastAutoStartState( m_autostart_mnu->IsChecked() );
 }
 
-void BattleRoomTab::OnAutoSpec( wxCommandEvent& event )
+void BattleRoomTab::OnAutoSpec( wxCommandEvent& /*unused*/ )
 {
 	int trigger = wxGetNumberFromUser( _("Enter timeout before autospeccing a player in minutes"), _("Set Timeout"), _T(""), sett().GetBattleLastAutoSpectTime() / 60, 1, 60, (wxWindow*)&ui().mw(), wxDefaultPosition );
 	if ( trigger < 0 ) trigger = 0;
@@ -719,13 +719,13 @@ void BattleRoomTab::OnAutoSpec( wxCommandEvent& event )
 	sett().SetBattleLastAutoSpectTime( trigger );
 }
 
-void BattleRoomTab::OnImSpec( wxCommandEvent& event )
+void BattleRoomTab::OnImSpec( wxCommandEvent& /*unused*/ )
 {
     m_battle.ForceSpectator( m_battle.GetMe(), m_spec_chk->GetValue() );
 }
 
 
-void BattleRoomTab::OnTeamSel( wxCommandEvent& event )
+void BattleRoomTab::OnTeamSel( wxCommandEvent& /*unused*/ )
 {
 		unsigned long team;
     m_team_sel->GetValue().ToULong( &team );
@@ -733,7 +733,7 @@ void BattleRoomTab::OnTeamSel( wxCommandEvent& event )
 }
 
 
-void BattleRoomTab::OnAllySel( wxCommandEvent& event )
+void BattleRoomTab::OnAllySel( wxCommandEvent& /*unused*/ )
 {
 		unsigned long ally;
     m_ally_sel->GetValue().ToULong( &ally );
@@ -741,7 +741,7 @@ void BattleRoomTab::OnAllySel( wxCommandEvent& event )
 }
 
 
-void BattleRoomTab::OnColourSel( wxCommandEvent& event )
+void BattleRoomTab::OnColourSel( wxCommandEvent& /*unused*/ )
 {
     User& u = m_battle.GetMe();
     wxColour CurrentColour = u.BattleStatus().colour;
@@ -752,13 +752,13 @@ void BattleRoomTab::OnColourSel( wxCommandEvent& event )
 }
 
 
-void BattleRoomTab::OnSideSel( wxCommandEvent& event )
+void BattleRoomTab::OnSideSel( wxCommandEvent& /*unused*/ )
 {
     m_battle.ForceSide( m_battle.GetMe(), m_side_sel->GetSelection() );
 }
 
 
-void BattleRoomTab::OnPresetSel( wxCommandEvent& event )
+void BattleRoomTab::OnPresetSel( wxCommandEvent& /*unused*/ )
 {
     wxString presetname = m_options_preset_sel->GetValue();
     if ( presetname.IsEmpty() ) return;
@@ -766,50 +766,50 @@ void BattleRoomTab::OnPresetSel( wxCommandEvent& event )
     m_battle.SendHostInfo( IBattle::HI_Send_All_opts );
 }
 
-void BattleRoomTab::OnAutoLock( wxCommandEvent& event )
+void BattleRoomTab::OnAutoLock( wxCommandEvent& /*unused*/ )
 {
     m_battle.SetAutoLockOnStart( m_autolock_chk->GetValue() );
     sett().SetLastAutolockStatus( m_autolock_chk->GetValue() );
 }
 
 
-void BattleRoomTab::OnLockBalance( wxCommandEvent& event )
+void BattleRoomTab::OnLockBalance( wxCommandEvent& /*unused*/ )
 {
   bool locked = m_lock_balance_mnu->IsChecked();
   m_battle.SetLockExternalBalanceChanges( locked );
 }
 
-void BattleRoomTab::OnSpectUnsynced( wxCommandEvent& event )
+void BattleRoomTab::OnSpectUnsynced( wxCommandEvent& /*unused*/ )
 {
 	m_battle.ForceUnsyncedToSpectate();
 }
 
-void BattleRoomTab::OnSpectUnready( wxCommandEvent& event )
+void BattleRoomTab::OnSpectUnready( wxCommandEvent& /*unused*/ )
 {
 	m_battle.ForceUnReadyToSpectate();
 }
-void BattleRoomTab::OnSpectUnreadyUnsynced( wxCommandEvent& event )
+void BattleRoomTab::OnSpectUnreadyUnsynced( wxCommandEvent& /*unused*/ )
 {
 	m_battle.ForceUnsyncedAndUnreadyToSpectate();
 }
 
-void BattleRoomTab::OnRingUnready( wxCommandEvent& event )
+void BattleRoomTab::OnRingUnready( wxCommandEvent& /*unused*/ )
 {
 	m_battle.RingNotReadyPlayers();
 }
 
-void BattleRoomTab::OnRingUnsynced( wxCommandEvent& event )
+void BattleRoomTab::OnRingUnsynced( wxCommandEvent& /*unused*/ )
 {
 	m_battle.RingNotSyncedPlayers();
 }
 
-void BattleRoomTab::OnRingUnreadyUnsynced( wxCommandEvent& event )
+void BattleRoomTab::OnRingUnreadyUnsynced( wxCommandEvent& /*unused*/ )
 {
 	m_battle.RingNotSyncedAndNotReadyPlayers();
 }
 
 
-void BattleRoomTab::OnShowManagePlayersMenu( wxCommandEvent& event )
+void BattleRoomTab::OnShowManagePlayersMenu( wxCommandEvent& /*unused*/ )
 {
   PopupMenu( m_manage_users_mnu );
 }
@@ -868,7 +868,7 @@ void BattleRoomTab::UpdatePresetList()
 }
 
 
-void BattleRoomTab::OnSavePreset( wxCommandEvent& event )
+void BattleRoomTab::OnSavePreset( wxCommandEvent& /*unused*/ )
 {
   wxString presetname;
 	if ( ui().AskText( _("Enter preset name"), _("Enter a name to save the current set of options\nIf a preset with the same name already exist, it will be overwritten"), presetname ) ) return;
@@ -881,7 +881,7 @@ void BattleRoomTab::OnSavePreset( wxCommandEvent& event )
 }
 
 
-void BattleRoomTab::OnDeletePreset( wxCommandEvent& event )
+void BattleRoomTab::OnDeletePreset( wxCommandEvent& /*unused*/ )
 {
   wxArrayString choices = m_battle.GetPresetList();
 	int result = wxGetSingleChoiceIndex(_("Pick an existing option set from the list"),_("Delete preset"), choices );
@@ -889,7 +889,7 @@ void BattleRoomTab::OnDeletePreset( wxCommandEvent& event )
   m_battle.DeletePreset( choices[result] );
 }
 
-void BattleRoomTab::OnSetModDefaultPreset( wxCommandEvent& event )
+void BattleRoomTab::OnSetModDefaultPreset( wxCommandEvent& /*unused*/ )
 {
   wxArrayString choices = m_battle.GetPresetList();
 	int result = wxGetSingleChoiceIndex(_("Pick an existing option set from the list"),_("Set mod default preset"), choices );
@@ -898,7 +898,7 @@ void BattleRoomTab::OnSetModDefaultPreset( wxCommandEvent& event )
 }
 
 
-void BattleRoomTab::OnMapBrowse( wxCommandEvent& event )
+void BattleRoomTab::OnMapBrowse( wxCommandEvent& /*unused*/ )
 {
 	wxLogDebugFunc( _T("") );
 	MapSelectDialog dlg( (wxWindow*)&m_ui.mw(), m_ui );
@@ -939,7 +939,7 @@ void BattleRoomTab::SetMap( int index )
   } catch (...) {}
 }
 
-void BattleRoomTab::OnMapSelect( wxCommandEvent& event )
+void BattleRoomTab::OnMapSelect( wxCommandEvent& /*unused*/ )
 {
 	if ( !m_battle.IsFounderMe() )
 	{

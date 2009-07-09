@@ -29,7 +29,7 @@ class NickListCtrl : public CustomVirtListCtrl< const User* ,NickListCtrl >
 
     void OnActivateItem( wxListEvent& event );
     void OnShowMenu( wxContextMenuEvent& event );
-    virtual void SetTipWindowText( const long item_hit, const wxPoint position);
+    virtual void SetTipWindowText( const long item_hit, const wxPoint& position);
 
     void HighlightItem( long item );
 

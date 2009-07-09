@@ -58,6 +58,7 @@ struct GameOptions;
 class IUnitSync
 {
   public:
+    IUnitSync() { }
     virtual ~IUnitSync() { }
 
     enum GameFeature
@@ -205,6 +206,9 @@ class IUnitSync
     virtual void GetMapExAsync( const wxString& mapname, int evtHandlerId ) = 0;
 
     virtual wxArrayString GetScreenshotFilenames() = 0;
+
+    private:
+        IUnitSync( const IUnitSync& );
 };
 
 IUnitSync& usync();

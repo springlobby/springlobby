@@ -18,15 +18,16 @@ class SinglePlayerBattle: public IBattle
     SinglePlayerBattle( Ui& ui, MainSinglePlayerTab& msptab );
     ~SinglePlayerBattle();
 
-    unsigned int AddBot( int ally, int posx, int posy, int handicap, const wxString& aidll );
-    void UpdateBot( unsigned int index, int ally, int posx, int posy, int side );
+// (koshi) these are never called
+//    unsigned int AddBot( int ally, int posx, int posy, int handicap, const wxString& aidll );
+//    void UpdateBot( unsigned int index, int ally, int posx, int posy, int side );
 
     bool IsFounderMe() { return true; }
 
     User& GetMe() { return m_me; }
 
     void SendHostInfo( HostInfo update );
-    void SendHostInfo( const wxString& Tag ){}
+    void SendHostInfo( const wxString& /*unused*/ ){}
 
     void Update( const wxString& Tag );
 

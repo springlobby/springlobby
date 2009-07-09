@@ -26,6 +26,7 @@
 #include <wx/event.h>
 #include <wx/defs.h>
 #include <wx/slider.h>
+#include <wx/log.h>
 #include <wx/checkbox.h>
 #include <wx/radiobut.h>
 #include <wx/combobox.h>
@@ -39,6 +40,7 @@
 #include "../settings.h"
 #include "presets.h"
 #include "../spinctld.h"
+#include "../utils/debug.h"
 
 intMap abstract_panel::intSettings;
 //stringMap abstract_panel::stringSettings;
@@ -292,7 +294,9 @@ void abstract_panel::OnSliderMove(wxCommandEvent& event) {
 			(intSettings)[MO_SLI[4].key]= value;
 			(intSettings)[MO_SLI_EXT[4].key]= ( value > 0 ? 1 : 0);
 			} break;
-
+        default:
+            wxLogDebugFunc( _T("unhandled case val") );
+            break;
 	}
 }
 
@@ -320,6 +324,10 @@ void abstract_panel::OnTextUpdate(wxCommandEvent& event) {
     	    			if (success)
     	    			     (intSettings)[RC_TEXT[1].key]= int((*res));
     	    		} break;
+
+                    default:
+                        wxLogDebugFunc( _T("unhandled case val") );
+                        break;
     	    	}
     }
 
@@ -396,6 +404,10 @@ void abstract_panel::OnCheckBoxTick(wxCommandEvent& event) {
 
 		case ID_WINDOWC_MO_CBOX_0: { (intSettings)[MO_CBOX[0].key]= checked; } break;
 		case ID_WINDOWC_MO_CBOX_1: { (intSettings)[MO_CBOX[1].key]= checked; } break;
+
+        default:
+            wxLogDebugFunc( _T("unhandled case val") );
+            break;
 	}
 }
 
@@ -416,6 +428,10 @@ void abstract_panel::OnRadioButtonToggle(wxCommandEvent& event) {
 		case ID_WINDOWC_MO_RBUT_2: { (intSettings)[MO_RBUT[2].key]= 2; } break;	// TW button (CamMode 3)
 		case ID_WINDOWC_MO_RBUT_3: { (intSettings)[MO_RBUT[3].key]= 0; } break;	// FPS button (CamMode 0)
 		case ID_WINDOWC_MO_RBUT_4: { (intSettings)[MO_RBUT[4].key]= 4; } break;	// FC button (CamMode 4)
+
+        default:
+            wxLogDebugFunc( _T("unhandled case val") );
+            break;
 	}
 }
 
@@ -442,6 +458,10 @@ void abstract_panel::OnComboBoxChange(wxCommandEvent& event) {
 				case 2: { (intSettings)[WR_COMBOX[0].key]= 3; } break;	// Refl + Refr
 				case 3: { (intSettings)[WR_COMBOX[0].key]= 2; } break;	// Dyna
 				case 4: { (intSettings)[WR_COMBOX[0].key]= 4; } break;	// BumpWater
+
+                default:
+                    wxLogDebugFunc( _T("unhandled case val") );
+                    break;
 			}
 			break;
 		}
@@ -529,6 +549,10 @@ void abstract_panel::OnComboBoxChange(wxCommandEvent& event) {
 			}
 			break;
 		}
+
+        default:
+            wxLogDebugFunc( _T("unhandled case val") );
+            break;
 	}
 }
 void abstract_panel::OnSpinControlChange(wxSpinEvent& event)
@@ -571,7 +595,7 @@ bool abstract_panel::saveSettings() {
     return true;
 }
 
-void abstract_panel::updateControls(int what_to_update)
+void abstract_panel::updateControls(int /*unused*/)
 {}
 
 BEGIN_EVENT_TABLE(abstract_panel, wxPanel)
@@ -582,4 +606,4 @@ BEGIN_EVENT_TABLE(abstract_panel, wxPanel)
 //	EVT_IDLE(                       abstract_panel::update)
 	EVT_SPINCTRL(wxID_ANY, 				abstract_panel::OnSpinControlChange)
 	EVT_COMBOBOX(wxID_ANY, 		abstract_panel::OnComboBoxChange)
-END_EVENT_TABLE()
+ END_EVENT_TABLE()

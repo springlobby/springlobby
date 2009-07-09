@@ -245,7 +245,7 @@ wxString GroupOptionsPanel::GetFirstGroupName()
   return groupnames[0];
 }
 
-void GroupOptionsPanel::OnRemoveGroup( wxCommandEvent& event )
+void GroupOptionsPanel::OnRemoveGroup( wxCommandEvent& /*unused*/ )
 {
   if (m_current_group == _T("Default")) return;
   useractions().DeleteGroup( m_current_group );
@@ -254,12 +254,12 @@ void GroupOptionsPanel::OnRemoveGroup( wxCommandEvent& event )
 }
 
 
-void GroupOptionsPanel::OnRenameGroup( wxCommandEvent& event )
+void GroupOptionsPanel::OnRenameGroup( wxCommandEvent& /*unused*/ )
 {
 }
 
 
-void GroupOptionsPanel::OnAddNewGroup( wxCommandEvent& event )
+void GroupOptionsPanel::OnAddNewGroup( wxCommandEvent& /*unused*/ )
 {
   wxTextEntryDialog* ted = new wxTextEntryDialog(this, _("Name of new group:"), _("Add New Group"));
   if ( ted->ShowModal() == wxID_OK ) {
@@ -273,7 +273,7 @@ void GroupOptionsPanel::OnAddNewGroup( wxCommandEvent& event )
 }
 
 
-void GroupOptionsPanel::OnGroupListSelectionChange( wxCommandEvent& event )
+void GroupOptionsPanel::OnGroupListSelectionChange( wxCommandEvent& /*unused*/ )
 {
   wxString newgroup = m_group_list->GetStringSelection();
   wxSortedArrayString groupnames = useractions().GetGroupNames();
@@ -308,7 +308,7 @@ void GroupOptionsPanel::OnHighlightColorClick( wxCommandEvent& event )
 }
 
 
-void GroupOptionsPanel::OnUsersListSelectionChange( wxCommandEvent& event )
+void GroupOptionsPanel::OnUsersListSelectionChange( wxCommandEvent& /*unused*/ )
 {
   wxArrayInt sel;
   m_user_list->GetSelections( sel );
@@ -316,7 +316,7 @@ void GroupOptionsPanel::OnUsersListSelectionChange( wxCommandEvent& event )
 }
 
 
-void GroupOptionsPanel::OnAddUsers( wxCommandEvent& event )
+void GroupOptionsPanel::OnAddUsers( wxCommandEvent& /*unused*/ )
 {
   wxSortedArrayString users = SelectUsersDialog::GetUsers(this);
   for ( unsigned int i = 0; i < users.Count(); i++ ) {
@@ -326,7 +326,7 @@ void GroupOptionsPanel::OnAddUsers( wxCommandEvent& event )
 }
 
 
-void GroupOptionsPanel::OnRemoveUser( wxCommandEvent& event )
+void GroupOptionsPanel::OnRemoveUser( wxCommandEvent& /*unused*/ )
 {
   wxArrayInt sel;
   int num = m_user_list->GetSelections( sel );

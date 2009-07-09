@@ -437,7 +437,7 @@ void ChatOptionsTab::DoRestore()
   #endif
 }
 
-void ChatOptionsTab::OnApply( wxCommandEvent& event )
+void ChatOptionsTab::OnApply( wxCommandEvent& /*unused*/ )
 {
   sett().SetChatColorNormal ( m_normal_color->GetColor() );
   sett().SetChatColorBackground( m_bg_color->GetColor() );
@@ -468,13 +468,13 @@ void ChatOptionsTab::OnApply( wxCommandEvent& event )
 }
 
 
-void ChatOptionsTab::OnRestore( wxCommandEvent& event )
+void ChatOptionsTab::OnRestore( wxCommandEvent& /*unused*/ )
 {
   DoRestore();
 }
 
 
-void ChatOptionsTab::OnSelectFont( wxCommandEvent& event )
+void ChatOptionsTab::OnSelectFont( wxCommandEvent& /*unused*/ )
 {
   wxFontData data;
   data.SetChosenFont( m_chat_font );
@@ -488,7 +488,7 @@ void ChatOptionsTab::OnSelectFont( wxCommandEvent& event )
 }
 
 
-void ChatOptionsTab::OnUseSystemColors( wxCommandEvent& event )
+void ChatOptionsTab::OnUseSystemColors( wxCommandEvent& /*unused*/ )
 {
 }
 
@@ -501,57 +501,57 @@ void ChatOptionsTab::OnColorChange( ColorButton* button )
   UpdateTextSample();
 }
 
-void ChatOptionsTab::OnNormalSelect( wxCommandEvent& event )
+void ChatOptionsTab::OnNormalSelect( wxCommandEvent& /*unused*/ )
 {
   OnColorChange( m_normal_color );
 }
 
-void ChatOptionsTab::OnBGSelect( wxCommandEvent& event )
+void ChatOptionsTab::OnBGSelect( wxCommandEvent& /*unused*/ )
 {
   OnColorChange( m_bg_color );
 }
 
-void ChatOptionsTab::OnActionSelect( wxCommandEvent& event )
+void ChatOptionsTab::OnActionSelect( wxCommandEvent& /*unused*/ )
 {
   OnColorChange( m_action_color );
 }
 
-void ChatOptionsTab::OnHighlightSelect( wxCommandEvent& event )
+void ChatOptionsTab::OnHighlightSelect( wxCommandEvent& /*unused*/ )
 {
   OnColorChange( m_highlight_color );
 }
 
-void ChatOptionsTab::OnJoinLeaveSelect( wxCommandEvent& event )
+void ChatOptionsTab::OnJoinLeaveSelect( wxCommandEvent& /*unused*/ )
 {
   OnColorChange( m_joinleave_color );
 }
 
-void ChatOptionsTab::OnNotificationSelect( wxCommandEvent& event )
+void ChatOptionsTab::OnNotificationSelect( wxCommandEvent& /*unused*/ )
 {
   OnColorChange( m_note_color );
 }
 
-void ChatOptionsTab::OnMyMessSelect( wxCommandEvent& event )
+void ChatOptionsTab::OnMyMessSelect( wxCommandEvent& /*unused*/ )
 {
   OnColorChange( m_my_color );
 }
 
-void ChatOptionsTab::OnServerSelect( wxCommandEvent& event )
+void ChatOptionsTab::OnServerSelect( wxCommandEvent& /*unused*/ )
 {
   OnColorChange( m_server_color );
 }
 
-void ChatOptionsTab::OnClientSelect( wxCommandEvent& event )
+void ChatOptionsTab::OnClientSelect( wxCommandEvent& /*unused*/ )
 {
   OnColorChange( m_client_color );
 }
 
-void ChatOptionsTab::OnErrorSelect( wxCommandEvent& event )
+void ChatOptionsTab::OnErrorSelect( wxCommandEvent& /*unused*/ )
 {
   OnColorChange( m_error_color );
 }
 
-void ChatOptionsTab::OnTimestampSelect( wxCommandEvent& event )
+void ChatOptionsTab::OnTimestampSelect( wxCommandEvent& /*unused*/ )
 {
   OnColorChange( m_ts_color );
 }

@@ -42,11 +42,11 @@ END_EVENT_TABLE()
 template<> SortOrder NickListCtrl::BaseType::m_sortorder = SortOrder( ) ;
 
 NickListCtrl::NickListCtrl( wxWindow* parent, bool show_header, NickListCtrl::UserMenu* popup, bool singleSelectList,
-                            const wxString& name, bool highlight):
-  NickListCtrl::BaseType( parent, NICK_LIST, wxDefaultPosition, wxDefaultSize,
+                            const wxString& name, bool highlight)
+    : NickListCtrl::BaseType( parent, NICK_LIST, wxDefaultPosition, wxDefaultSize,
               wxLC_VIRTUAL | wxSUNKEN_BORDER | wxLC_REPORT | (int)(!show_header) * wxLC_NO_HEADER | (int)(singleSelectList) * wxLC_SINGLE_SEL,
-              name, 4, 3, &CompareOneCrit, highlight ),
-  m_menu(popup)
+              name, 4, 3, &CompareOneCrit, highlight, UserActions::ActHighlight, true /*periodic sort*/ ),
+    m_menu(popup)
 {
 
 #if defined(__WXMAC__)
@@ -126,7 +126,7 @@ void NickListCtrl::OnActivateItem( wxListEvent& event )
 }
 
 
-void NickListCtrl::OnShowMenu( wxContextMenuEvent& event )
+void NickListCtrl::OnShowMenu( wxContextMenuEvent& /*unused*/ )
 {
   wxLogDebugFunc( _T("") );
   if ( m_menu != 0 )
@@ -142,7 +142,7 @@ void NickListCtrl::OnShowMenu( wxContextMenuEvent& event )
   }
 }
 
-void NickListCtrl::SetTipWindowText( const long item_hit, const wxPoint position)
+void NickListCtrl::SetTipWindowText( const long item_hit, const wxPoint& position)
 {
 
     int column = getColumnFromPosition(position);
@@ -203,7 +203,7 @@ wxListItemAttr* NickListCtrl::GetItemAttr(long item) const
     return NULL;
 }
 
-void NickListCtrl::HighlightItem( long item )
+void NickListCtrl::HighlightItem( long /*unused*/ )
 {
 
 }
@@ -317,3 +317,4 @@ int NickListCtrl::CompareUserStatus( DataType user1, DataType user2 )
 
     return 0;
 }
+

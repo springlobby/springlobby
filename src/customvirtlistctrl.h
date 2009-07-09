@@ -4,7 +4,6 @@
 #ifndef __WXMSW__
     #include <wx/listctrl.h>
     typedef wxListCtrl ListBaseType;
-    #define SL_DUMMY_COL
 #else
 //disabled until further fixes
 //    #include "Helper/listctrl.h"
@@ -26,7 +25,6 @@
 #include "Helper/sortutil.h"
 
 class SLTipWindow;
-
 
 /** \brief Used as base class for some ListCtrls throughout SL
  * Provides generic functionality, such as column tooltips, possiblity to prohibit column resizing and selection modifiers. \n
@@ -121,7 +119,7 @@ protected:
     //! list should be sorted
     bool m_dirty_sort;
 
-    virtual void SetTipWindowText( const long item_hit, const wxPoint position);
+    virtual void SetTipWindowText( const long item_hit, const wxPoint& position);
 
     ColumnMap m_column_map;
 
@@ -202,7 +200,7 @@ public:
 public:
     CustomVirtListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pt,
                     const wxSize& sz,long style, const wxString& name, unsigned int column_count, unsigned int sort_criteria_count, CompareFunction func, bool highlight = true,
-                    UserActions::ActionType hlaction = UserActions::ActHighlight);
+                    UserActions::ActionType hlaction = UserActions::ActHighlight, bool periodic_sort = false, unsigned int periodic_sort_interval = 5000 /*miliseconds*/);
 
     virtual ~CustomVirtListCtrl();
 
@@ -327,6 +325,12 @@ protected:
     bool RemoveItem( const DataImp item );
     bool AddItem( const DataImp item );
 
+    long m_periodic_sort_timer_id;
+    wxTimer m_periodic_sort_timer;
+    bool m_periodic_sort;
+    unsigned int m_periodic_sort_interval;
+    void OnPeriodicSort( wxTimerEvent& evt );
+
 public:
     DECLARE_EVENT_TABLE()
 
@@ -340,15 +344,15 @@ private:
 
 template < class ListCtrlType >
 class SelectionSaver {
-    ListCtrlType* m_list;
+    ListCtrlType& m_list;
 
 public:
-    SelectionSaver( ListCtrlType* list  )
+    SelectionSaver( ListCtrlType& list  )
         : m_list( list )
-    { m_list->SaveSelection(); }
+    { m_list.SaveSelection(); }
 
     ~SelectionSaver()
-    { m_list->RestoreSelection(); }
+    { m_list.RestoreSelection(); }
 };
 
 #include "customvirtlistctrl.cpp"

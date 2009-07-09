@@ -4,6 +4,7 @@
 #define SPRINGLOBBY_HEADERGUARD_UIUTILS_H
 
 #include <wx/intl.h>
+#include <vector>
 
 class wxColour;
 class wxImage;
@@ -15,12 +16,6 @@ class wxBitmap;
 #define IsColourOk() IsOk()
 
 
-
-const int colour_values[][3] = { {240,210,0}, {128, 128, 128}, {0, 0, 128}, {0, 0, 255},
-      {0, 128, 0}, {0, 255, 0}, {0, 128, 128}, {0, 255, 255}, {128, 0, 0}, {255, 0, 0},
-      {128, 0, 128}, {255, 0, 255}, {128, 128, 0}, {255, 255, 0}, {192, 192, 192}, {0, 220, 250}
-};
-
 wxString RefineMapname( const wxString& mapname );
 wxString RefineModname( const wxString& modname );
 wxString RTFtoText( const wxString& rtfinput );
@@ -29,7 +24,7 @@ bool AreColoursSimilar( const wxColour& col1, const wxColour& col2, int mindiff 
 void ColourDelta( int& r, int& g, int& b, const int& delta );
 wxColour ColourDelta( const wxColour& colour, const int& delta );
 
-wxColour GetColorFromFloatStrng( const wxString color );
+wxColour GetColorFromFloatStrng( const wxString& color );
 
 //! takes best fitting size of original inside bounds keeping aspect ratio
 wxSize MakeFit(const wxSize &original, const wxSize &bounds);
@@ -49,6 +44,8 @@ wxImage BorderInvariantResizeImage(  const wxImage& image, int width, int height
 
 
 wxImage ReplaceChannelStatusColour( wxBitmap img, const wxColour& colour );
+
+std::vector<wxColour>& GetBigFixColoursPalette( int numteams );
 
 
 void CopyToClipboard( const wxString& text );

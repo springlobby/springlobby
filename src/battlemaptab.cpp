@@ -233,7 +233,7 @@ void BattleMapTab::SetMap( int index )
 }
 
 
-void BattleMapTab::OnMapSelect( wxCommandEvent& event )
+void BattleMapTab::OnMapSelect( wxCommandEvent& /*unused*/ )
 {
 	if ( !m_battle.IsFounderMe() )
 	{
@@ -250,7 +250,7 @@ void BattleMapTab::OnMapSelect( wxCommandEvent& event )
 }
 
 
-void BattleMapTab::OnMapBrowse( wxCommandEvent& event )
+void BattleMapTab::OnMapBrowse( wxCommandEvent& /*unused*/ )
 {
 	wxLogDebugFunc( _T("") );
 	MapSelectDialog dlg( (wxWindow*)&m_ui.mw(), m_ui );
@@ -270,7 +270,7 @@ void BattleMapTab::OnMapBrowse( wxCommandEvent& event )
 }
 
 
-void BattleMapTab::OnStartTypeSelect( wxCommandEvent& event )
+void BattleMapTab::OnStartTypeSelect( wxCommandEvent& /*unused*/ )
 {
   wxString pos = wxString::Format( _T("%d"), m_start_radios->GetSelection());
   if ( m_battle.IsProxy() ) pos = wxString::Format( _T("%d"), m_start_radios->GetSelection() + 2);

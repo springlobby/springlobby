@@ -209,6 +209,9 @@ class Server : public iNetClass
 
     virtual void SendCmd( const wxString& command, const wxString& param ) = 0;
     virtual void RelayCmd( const wxString& command, const wxString& param ) = 0;
+
+    private:
+        Server( const Server& );
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_SERVER_H

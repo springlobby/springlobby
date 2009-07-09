@@ -164,20 +164,20 @@ void SpringOptionsTab::OnAutoConf( wxCommandEvent& event )
 }
 
 
-void SpringOptionsTab::OnFindExec( wxCommandEvent& event )
+void SpringOptionsTab::OnFindExec( wxCommandEvent& /*unused*/ )
 {
   wxString found = sett().AutoFindSpringBin();
   if ( !found.IsEmpty() ) m_exec_edit->SetValue( found );
 }
 
 
-void SpringOptionsTab::OnFindSync( wxCommandEvent& event )
+void SpringOptionsTab::OnFindSync( wxCommandEvent& /*unused*/ )
 {
   wxString found = sett().AutoFindUnitSync();
   if( !found.IsEmpty() ) m_sync_edit->SetValue( found );
 }
 
-void SpringOptionsTab::OnBrowseExec( wxCommandEvent& event )
+void SpringOptionsTab::OnBrowseExec( wxCommandEvent& /*unused*/ )
 {
   wxFileDialog pick( this, _("Choose a Spring executable"),
 		    wxPathOnly( sett().GetCurrentUsedSpringBinary() ),
@@ -185,7 +185,7 @@ void SpringOptionsTab::OnBrowseExec( wxCommandEvent& event )
   if ( pick.ShowModal() == wxID_OK ) m_exec_edit->SetValue( pick.GetPath() );
 }
 
-void SpringOptionsTab::OnBrowseSync( wxCommandEvent& event )
+void SpringOptionsTab::OnBrowseSync( wxCommandEvent& /*unused*/ )
 {
 	wxString filefilter = wxString(_("Library")) << _T("(*") << GetLibExtension() << _T(")|*") + GetLibExtension();
 	#ifdef __WXMAC__
@@ -200,7 +200,7 @@ void SpringOptionsTab::OnBrowseSync( wxCommandEvent& event )
 }
 
 
-void SpringOptionsTab::OnApply( wxCommandEvent& event )
+void SpringOptionsTab::OnApply( wxCommandEvent& /*unused*/ )
 {
   sett().SetSpringBinary( sett().GetCurrentUsedSpringIndex(), m_exec_edit->GetValue() );
   sett().SetUnitSync( sett().GetCurrentUsedSpringIndex(), m_sync_edit->GetValue() );
@@ -223,17 +223,17 @@ void SpringOptionsTab::OnApply( wxCommandEvent& event )
 }
 
 
-void SpringOptionsTab::OnRestore( wxCommandEvent& event )
+void SpringOptionsTab::OnRestore( wxCommandEvent& /*unused*/ )
 {
   DoRestore();
 }
 
-void SpringOptionsTab::OnDataDir( wxCommandEvent& event )
+void SpringOptionsTab::OnDataDir( wxCommandEvent& /*unused*/ )
 {
   SetupUserFolders();
 }
 
-void SpringOptionsTab::OnDontSearch( wxCommandEvent& event )
+void SpringOptionsTab::OnDontSearch( wxCommandEvent& /*unused*/ )
 {
   if ( m_dontsearch_chkbox->IsChecked() )
   {
