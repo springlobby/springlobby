@@ -3,6 +3,8 @@
 
 #include <wx/frame.h>
 
+#include "../utils/globalevents.h"
+
 class ActivityNoticePanel;
 class wxCloseEvent;
 class wxBoxSizer;
@@ -17,6 +19,8 @@ class UpdaterMainwindow : public wxFrame {
         void OnClose( wxCloseEvent& evt );
         void OnChangelog( wxCommandEvent& event );
 
+        void OnDownloadComplete( GlobalEvents::GlobalEventData /*data*/ );
+
     protected:
         wxBoxSizer* m_main_sizer;
         ActivityNoticePanel* m_activity_panel;
@@ -25,6 +29,10 @@ class UpdaterMainwindow : public wxFrame {
         enum {
             ID_BUT_CHANGELOG = wxID_HIGHEST
         };
+
+        typedef EventReceiverFunc<UpdaterMainwindow, GlobalEvents::GlobalEventData, &UpdaterMainwindow::OnDownloadComplete>
+            EventReceiverFunction;
+        EventReceiverFunction m_onDownloadComplete;
 
         DECLARE_EVENT_TABLE()
 };

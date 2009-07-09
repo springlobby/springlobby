@@ -10,6 +10,7 @@ namespace GlobalEvents {
       OnUnitsyncFirstTimeLoad,
       OnUnitsyncReloaded,
       UnitSyncReloadRequest,
+      UpdateFinished,
 
       OnTimerUpdates
     };

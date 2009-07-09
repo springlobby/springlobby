@@ -3,6 +3,7 @@
 #include "versionchecker.h"
 #include "../utils/customdialogs.h"
 #include "../utils/platform.h"
+#include "../utils/globalevents.h"
 #include "../settings.h"
 #include "../globalsmanager.h"
 #include "../ui.h"
@@ -62,7 +63,6 @@ void UpdaterClass::CheckForUpdates()
 }
 
 #ifdef __WXMSW__
-//! DO NOT use mw() global unless fromCli is false !
 void UpdaterClass::StartUpdate( const wxString& latestVersion )
 {
     wxString sep = wxFileName::GetPathSeparator();
@@ -79,7 +79,7 @@ void UpdaterClass::StartUpdate( const wxString& latestVersion )
 }
 #endif
 
-//! DO NOT use mw() global unless fromCli is false !
+//all messageboxes need to be modal, updater closes immeadiately when receiving the UpdateFinished event
 void UpdaterClass::OnDownloadEvent( wxCommandEvent& event )
 {
 	int code = event.GetInt();
@@ -100,7 +100,7 @@ void UpdaterClass::OnDownloadEvent( wxCommandEvent& event )
                 customMessageBox(SL_MAIN_ICON, _("Binary updated successfully. \nSome translation files could not be updated.\nPlease report this in #springlobby after restarting."), _("Partial success"));
         }
         wxRmdir( m_newexe );
-        //!TODO send finished event
+        GetGlobalEventSender( GlobalEvents::UpdateFinished ).SendEvent( 0 );
     }
   }
 }

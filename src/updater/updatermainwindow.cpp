@@ -31,7 +31,9 @@ END_EVENT_TABLE()
   * @todo: document this function
   */
  UpdaterMainwindow::UpdaterMainwindow( const wxString& rev_string )
-    : wxFrame( (wxFrame*)0, -1, _("SpringLobby"), wxPoint(50, 50), wxSize(450, 120) )
+    : wxFrame( (wxFrame*)0, -1, _("SpringLobby"), wxPoint(50, 50), wxSize(450, 120),
+                wxMINIMIZE_BOX | wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN  ),
+    m_onDownloadComplete( this, &GetGlobalEventSender( GlobalEvents::UpdateFinished) )
 {
     SetIcon( wxIcon(springlobby_xpm) );
 
@@ -69,3 +71,9 @@ void UpdaterMainwindow::OnChangelog( wxCommandEvent& event )
     OpenWebBrowser( _T("http://springlobby.info/embedded/springlobby/index.html") );
 }
 
+
+void UpdaterMainwindow::OnDownloadComplete( GlobalEvents::GlobalEventData /*data*/ )
+{
+    freeStaticBox();
+    Destroy();
+}
