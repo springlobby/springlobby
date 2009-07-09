@@ -23,7 +23,6 @@ class ActivityNoticePanel: public wxPanel
         wxString m_format;
         wxGauge* m_gauge;
         wxStaticText* m_message;
-//        wxStaticText* m_format;
         wxTimer m_timer;
 
         void OnTimer(wxTimerEvent& event);

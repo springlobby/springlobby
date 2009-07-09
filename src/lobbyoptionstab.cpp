@@ -13,7 +13,6 @@
 #include "lobbyoptionstab.h"
 #include "nonportable.h"
 #include "settings.h"
-#include "springlobbyapp.h"
 #include "utils/customdialogs.h"
 #include "utils/controls.h"
 #include "aui/auimanager.h"
