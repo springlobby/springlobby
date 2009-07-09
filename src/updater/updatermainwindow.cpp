@@ -56,8 +56,12 @@ END_EVENT_TABLE()
   */
 void UpdaterMainwindow::OnClose(wxCloseEvent& evt)
 {
-    freeStaticBox();
-    Destroy();
+    if ( timedMessageBox( SL_MAIN_ICON, _("Closing this window will abort the update, you may end up with a broken client.\nAbort?"), _("Warning"), 4000, wxYES_NO | wxICON_WARNING )
+                        == wxYES )
+    {
+        freeStaticBox();
+        Destroy();
+    }
 }
 
 void UpdaterMainwindow::OnChangelog( wxCommandEvent& event )

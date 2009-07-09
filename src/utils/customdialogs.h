@@ -67,6 +67,13 @@ void mutelistWindow( const wxString& message,
         const wxString& caption = _T("Mutelist"),
         long style = wxOK|wxICON_INFORMATION,  const int x = -1, const int y = -1 );
 
+/** \brief utlity function to display modal messagebox, closing is denied until timer ran down
+ * \return wxOK|wxCANCEL|wxYES|wxNO according to option chosen
+ */
+int timedMessageBox(int whichIcon , const wxString& message,
+        const wxString& caption = wxMessageBoxCaptionStr, unsigned int delay = 3000, // miliseconds
+        long style = wxOK|wxICON_INFORMATION,  const int x = -1, const int y = -1 );
+
 //! cleanup
 void freeStaticBox();
 
@@ -88,6 +95,37 @@ public:
 protected:
 
      DECLARE_EVENT_TABLE()
+
+};
+
+/** \brief MessageBox variant with timer
+ */
+class TimedMessageBox : public wxDialog
+{
+public:
+	TimedMessageBox(wxIcon* icon ,wxWindow *parent, const wxString& message,
+	        const wxString& caption = wxMessageBoxCaptionStr,
+	        unsigned int delay = 3000, // miliseconds
+	        long style = wxOK|wxICON_INFORMATION, const wxPoint& pos = wxDefaultPosition);
+	virtual ~TimedMessageBox();
+
+    void OnOptionsNo(wxCommandEvent& event);
+
+protected:
+    const int m_delay;
+    wxSizer* sizerBtn;
+    wxSizer* topsizer;
+    wxSizer* m_delay_sizer;
+    wxStaticText* m_delay_notif;
+    wxTimer m_delay_timer;
+    wxTimer m_display_timer;
+    unsigned int m_display_hits;
+    static const unsigned int m_update_interval = 500;
+    void OnUpdate( wxTimerEvent& evt );
+    void OnUnlock( wxTimerEvent& evt );
+    void OnClose( wxCloseEvent& evt );
+
+    DECLARE_EVENT_TABLE()
 
 };
 

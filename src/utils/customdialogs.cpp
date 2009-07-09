@@ -176,6 +176,40 @@ int customMessageBox( int whichIcon , const wxString& message,const wxString& ca
 		return -1;
 }
 
+int timedMessageBox(int whichIcon , const wxString& message,
+        const wxString& caption, unsigned int delay, // miliseconds
+        long style ,  const int x , const int y )
+{
+		wxWindow* parent;
+		wxIcon* icon;
+		switch (whichIcon)
+		{
+			case SL_MAIN_ICON:
+				icon = new wxIcon(springlobby_xpm);
+				parent = CustomMessageBoxBase::getLobbypointer();
+				break;
+			case SS_MAIN_ICON:
+				icon = new wxIcon(springsettings_xpm);
+				parent = CustomMessageBoxBase::getSettingspointer();
+				break;
+			default:
+				icon = new wxIcon(wxNullIcon);
+				parent = 0;
+				break;
+
+		}
+		TimedMessageBox dlg(icon,parent,message,caption,delay,style,wxPoint(x,y));
+		int re = dlg.ShowModal();
+		switch (re)
+		{
+			case wxID_OK: return wxOK;
+			case wxID_CANCEL: return wxCANCEL;
+			case wxID_YES: return wxYES;
+			case wxID_NO: return wxNO;
+		}
+		return -1;
+}
+
 void customMessageBoxNoModal( int whichIcon , const wxString& message,const wxString& caption,
 		long style , int x, int y )
 {
@@ -430,3 +464,134 @@ MutelistWindow::MutelistWindow(wxIcon* icon ,wxWindow *parent, const wxString& m
 
 MutelistWindow::~MutelistWindow ()
 {}
+
+BEGIN_EVENT_TABLE( TimedMessageBox, wxDialog )
+    EVT_CLOSE( TimedMessageBox::OnClose )
+    EVT_BUTTON(wxID_NO, TimedMessageBox::OnOptionsNo)
+END_EVENT_TABLE()
+
+TimedMessageBox::TimedMessageBox(wxIcon* icon ,wxWindow *parent, const wxString& message,
+        const wxString& caption ,
+        unsigned int delay,
+        long style, const wxPoint& pos )
+			: wxDialog(parent,-1,caption,pos,wxDefaultSize,style|wxFRAME_FLOAT_ON_PARENT|wxDEFAULT_DIALOG_STYLE),
+            m_delay( delay ),
+            m_display_hits(0)
+{
+	SetIcon(*icon);
+
+//******** copied from wxsource/generic/msgdlgg.cpp with small modifications***********************************************************
+
+
+    topsizer = new wxBoxSizer( wxVERTICAL );
+
+    wxBoxSizer *icon_text = new wxBoxSizer( wxHORIZONTAL );
+
+
+    // 1) icon
+
+    wxBitmap bitmap;
+    switch ( style & wxICON_MASK )
+    {
+        default:
+            bitmap = wxArtProvider::GetIcon(wxART_INFORMATION, wxART_MESSAGE_BOX);
+            break;
+
+        case wxICON_ERROR:
+            bitmap = wxArtProvider::GetIcon(wxART_ERROR, wxART_MESSAGE_BOX);
+            break;
+
+        case wxICON_INFORMATION:
+            bitmap = wxArtProvider::GetIcon(wxART_INFORMATION, wxART_MESSAGE_BOX);
+            break;
+
+        case wxICON_WARNING:
+            bitmap = wxArtProvider::GetIcon(wxART_WARNING, wxART_MESSAGE_BOX);
+            break;
+
+        case wxICON_QUESTION:
+            bitmap = wxArtProvider::GetIcon(wxART_QUESTION, wxART_MESSAGE_BOX);
+            break;
+    }
+
+    wxStaticBitmap *info_icon = new wxStaticBitmap(this, wxID_ANY, bitmap);
+    icon_text->Add( info_icon, 0, wxCENTER );
+
+    // 2) text
+    icon_text->Add( CreateTextSizer( message ), 0, wxALIGN_TOP| wxLEFT, 10 );
+
+    topsizer->Add( icon_text, 1, wxCENTER | wxLEFT|wxRIGHT|wxTOP, 10 );
+    topsizer->Add(0,10);
+
+    // 3) buttons
+    int center_flag = wxEXPAND;
+    if (style & wxYES_NO)
+        center_flag = wxALIGN_CENTRE;
+    sizerBtn = CreateButtonSizer(style & ButtonSizerFlags);
+    if ( sizerBtn ) {
+        topsizer->Add(sizerBtn, 0, center_flag | wxALL, 10 );
+        sizerBtn->Show( false );
+    }
+
+    m_delay_sizer = new wxBoxSizer( wxHORIZONTAL);
+    m_delay_notif = new wxStaticText( this, -1, wxString::Format( _("Please standby %d seconds"), delay / 1000 ) );
+    m_delay_sizer->Add( m_delay_notif, 0, center_flag | wxALL, 10 );
+    topsizer-> Add( m_delay_sizer );
+
+
+    SetAutoLayout( true );
+    SetSizer( topsizer );
+
+    topsizer->SetSizeHints( this );
+    topsizer->Fit( this );
+    /*
+    wxSize size( GetSize() );
+    if (size.x > size.y*3/2)
+    {
+        size.x = size.y*3/2;
+        SetSize( size );
+    }
+    */
+    Centre( wxBOTH | wxCENTER_FRAME);
+
+    wxWindowID delay_timerID = wxNewId();
+    wxWindowID display_timerID = wxNewId();
+    m_delay_timer.SetOwner( this, delay_timerID );
+    m_display_timer.SetOwner( this, display_timerID );
+    Connect( delay_timerID, wxEVT_TIMER, wxTimerEventHandler( TimedMessageBox::OnUnlock) );
+    Connect( display_timerID, wxEVT_TIMER, wxTimerEventHandler( TimedMessageBox::OnUpdate ) );
+    m_delay_timer.Start( m_delay, wxTIMER_ONE_SHOT );
+    m_display_timer.Start( m_update_interval, wxTIMER_CONTINUOUS );
+/***************************************************************************************************/
+}
+
+TimedMessageBox::~TimedMessageBox()
+{
+}
+
+void TimedMessageBox::OnOptionsNo(wxCommandEvent& event)
+{
+   EndModal(wxID_NO);
+}
+
+void TimedMessageBox::OnUpdate( wxTimerEvent& evt )
+{
+    m_display_hits++;
+    int remainder = ( m_delay - ( m_display_hits * m_update_interval ) ) / 1000;
+    m_delay_notif->SetLabel( wxString::Format( _("Please standby %d seconds"), remainder ) );
+}
+
+void TimedMessageBox::OnClose( wxCloseEvent& evt )
+{
+    if ( !m_delay_timer.IsRunning() )
+        Close();
+}
+
+void TimedMessageBox::OnUnlock( wxTimerEvent& evt )
+{
+    m_delay_sizer->Show( false );
+    sizerBtn->Show( true );
+    topsizer->SetSizeHints( this );
+    topsizer->Fit( this );
+    Layout();
+}
