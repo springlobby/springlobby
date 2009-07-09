@@ -8,7 +8,8 @@
 #endif
 
 /// Double linked cyclic list implementation.
-/// Beware! When a node is copied (duplicated), the list of a copy is empty!
+/// Beware! When a node is copied (duplicated), the copy is inserted after original into the list!
+/// This is done to make it work when you're storing nodes in some container which invokes copy constructor on components.
 class ListNodeBare {
 	public:
 
@@ -89,64 +90,6 @@ class ListNodeBare {
 		}
 };
 
-template<class T>
-class ListNode {
-	public:
-		ListNode * prev;
-		ListNode * next;// first and last for holder.
-		T data;
-		void ConnectNextTo( ListNode *a ) {
-			Disconnect();
-			next = a->next;
-			prev = a;
-			next->prev = this;
-			prev->next = this;
-		};
-		void ConnectPrevTo( ListNode *a ) {
-			Disconnect();
-			next = a;
-			prev = a->prev;
-			next->prev = this;
-			prev->next = this;
-		};
-		void Disconnect() {
-			if ( prev != this ) {//if we're connected
-				my_assert( prev != 0 );
-				my_assert( next != 0 );
-				my_assert( next != this );
-				next->prev = prev;
-				prev->next = next;
-				// short itself.
-				prev = this;
-				next = this;
-			} else {
-				// we're not connected,must be so on both ends.
-				my_assert( next == this );
-			};
-		};
-		ListNode(): data( 0 ) {
-			prev = this;
-			next = this;
-		};
-		ListNode( T _data ): data( _data ) {
-			prev = this;
-			next = this;
-		};
-		~ListNode() {
-			Disconnect();
-		}
-		ListNode( const ListNode &a ) {
-			next = a.next;
-			prev = const_cast<ListNodeBare *>( &a );
-			next->prev = this;
-			prev->next = this;
-			data = a.data;
-		}
-};
-
-
-
-
 /// A base class for event receivers
 template<class TParamType>
 class EventReceiverFuncBase: public ListNodeBare {
@@ -156,8 +99,13 @@ class EventReceiverFuncBase: public ListNodeBare {
 
 /// use EventSender::SendEvent to send events.
 template<class TParamType>
-class EventSender: public ListNodeBare {
+class EventSender: public EventReceiverFuncBase<TParamType> {
 	public:
+		void OnEvent( TParamType param ) {
+			/// you may want to put assert(0) here, or log a message.
+			/// This method is only called when you have multiple senders sharing same event list.
+			/// Which happens when you unnecessarily make a copy of sender.
+		};
 		void SendEvent( TParamType param ) {
 			//std::cout<<"SendEvent called "<<std::endl;
 			//ListNodeBare *pt=next;
