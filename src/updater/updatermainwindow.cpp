@@ -25,6 +25,7 @@ END_EVENT_TABLE()
   * @todo: document this function
   */
  UpdaterMainwindow::UpdaterMainwindow()
+    : wxFrame( (wxFrame*)0, -1, _("SpringLobby"), wxPoint(50, 50), wxSize(450, 340) )
 {
     m_main_sizer = new wxBoxSizer( wxVERTICAL );
     m_activity_panel = new ActivityNoticePanel( this, _T("") );

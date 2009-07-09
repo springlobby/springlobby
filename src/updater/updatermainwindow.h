@@ -7,7 +7,7 @@ class ActivityNoticePanel;
 class wxCloseEvent;
 class wxBoxSizer;
 
-class UpdaterMainwindow : public wxFrameBase{
+class UpdaterMainwindow : public wxFrame {
 
     public:
         UpdaterMainwindow();

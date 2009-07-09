@@ -53,6 +53,7 @@
 #include "playback/playbacktraits.h"
 #include "playback/playbacktab.h"
 #include "updater/versionchecker.h"
+#include "updater/updatermainwindow.h"
 
 const unsigned int TIMER_ID         = 101;
 const unsigned int TIMER_INTERVAL   = 100;
@@ -129,6 +130,10 @@ bool SpringLobbyApp::OnInit()
     wxFileSystem::AddHandler(new wxZipFSHandler);
     wxSocketBase::Initialize();
 
+    m_updater_window = new UpdaterMainwindow();
+    SetTopWindow( m_updater_window );
+    m_updater_window->Show( true );
+    return true;
 
 #ifdef __WXMSW__
     wxString path = wxPathOnly( wxStandardPaths::Get().GetExecutablePath() ) + wxFileName::GetPathSeparator() + _T("locale");
