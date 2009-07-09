@@ -251,7 +251,7 @@ int TorrentListCtrl::GetIndexFromData( const DataType& data ) const
 
 bool TorrentListCtrl::IsTorrentActive(const DataType& info)
 {
-	 return (info.downloadstatus == P2P::seeding
+	 return ((info.downloadstatus == P2P::seeding && info.outspeed > 0.001)
 		  || info.downloadstatus == P2P::leeching
 		  || info.downloadstatus == P2P::queued);
 }
