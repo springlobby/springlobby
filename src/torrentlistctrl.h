@@ -14,7 +14,6 @@ class wxListEvent;
 class wxCommandEvent;
 class Ui;
 
-typedef std::map<int,TorrentInfos> map_infos;
 
 /** \brief list all currently active (queued,lecching,seeding) torrents with their infos
  * the list is newly populated every n-seconds from Ui::OnUpdate()
@@ -33,6 +32,7 @@ class TorrentListCtrl : public CustomVirtListCtrl<TorrentInfos, TorrentListCtrl>
 	bool AddTorrentInfo(const DataType& info);
 	bool RemoveTorrentInfo(const DataType& info);
 	void UpdateTorrentInfo(const DataType& info);
+	void RefreshTorrentStatus();
 
     virtual void HighlightItem( long item );
 

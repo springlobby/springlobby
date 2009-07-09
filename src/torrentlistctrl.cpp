@@ -38,7 +38,7 @@ TorrentListCtrl::TorrentListCtrl( wxWindow* parent, Ui& ui ):
                 wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("TorrentListCtrl"), 10, 10, &CompareOneCrit )
 
 {
-	const int widths[10] = { 250, wxLIST_AUTOSIZE_USEHEADER, wxLIST_AUTOSIZE_USEHEADER, 100, 70, 100, 70, 80, wxLIST_AUTOSIZE_USEHEADER, wxLIST_AUTOSIZE_USEHEADER };
+	const int widths[10] = { 250, wxLIST_AUTOSIZE_USEHEADER, wxLIST_AUTOSIZE_USEHEADER, 100, 70, 70, 70, 80, wxLIST_AUTOSIZE_USEHEADER, wxLIST_AUTOSIZE_USEHEADER };
 
 	AddColumn(0, widths[0], _T("Name"), _T("Name"));
 	AddColumn(1, widths[1], _T("Numcopies"), _T("# complete copies"));
@@ -94,6 +94,7 @@ bool TorrentListCtrl::RemoveTorrentInfo(const DataType& info)
 	return false;
 }
 
+
 void TorrentListCtrl::UpdateTorrentInfo(const DataType& info)
 {
 	int index = GetIndexFromData(info);
@@ -119,6 +120,35 @@ void TorrentListCtrl::UpdateTorrentInfo(const DataType& info)
 	MarkDirtySort();
 }
 
+
+void TorrentListCtrl::RefreshTorrentStatus()
+{
+	BaseType::DataIter it = m_data.begin();
+	for(it; it != m_data.end(); it++)
+	{
+		P2P::FileStatus currentStatus = torrent().GetTorrentStatusByHash(it->hash);
+		if(it->downloadstatus != currentStatus)
+		{
+			it->downloadstatus = currentStatus;
+			if(currentStatus == P2P::not_stored || currentStatus == P2P::stored)
+			{
+				it->inspeed = 0.f;
+				it->outspeed = 0.f;
+				it->eta = -1;
+				if(currentStatus == P2P::stored)
+				{
+					it->progress = 1.f;
+					it->downloaded = it->filesize; //ugly - assuming downloaded == filesize
+				}
+				else
+					it->progress = 0.f;
+			}
+			RefreshItem(GetIndexFromData(*it));
+			MarkDirtySort();
+		}
+
+	}
+}
 
 void TorrentListCtrl::OnListRightClick( wxListEvent& event )
 {
@@ -192,18 +222,20 @@ wxString TorrentListCtrl::GetItemText(long item, long column) const
         default: return wxEmptyString;
         case 0: return infos.name;
         case 1: return infos.numcopies > 0 ? wxString::Format(_T("%.2f"), infos.numcopies ) : wxString( _("N/A") );
-        case 2: return wxString::Format(_T("%.2f"), infos.downloaded*mfactor );
-        case 3: return wxString::Format(_T("%.2f"), infos.uploaded*mfactor );
+        case 2: return (int)infos.downloaded >= 0 ? wxString::Format(_T("%.2f"), infos.downloaded*mfactor ) : wxString( _("N/A") );
+		case 3: return (int)infos.uploaded >= 0 ? wxString::Format(_T("%.2f"), infos.uploaded*mfactor ) : wxString( _("N/A") );
 		case 4:
-			if(infos.downloadstatus == P2P::seeding) return _("seeding");
-			else if(infos.downloadstatus == P2P::leeching) return _("leeching");
+			if(infos.downloadstatus == P2P::not_stored) return _("not found");
 			else if(infos.downloadstatus == P2P::queued) return _("queued");
+			else if(infos.downloadstatus == P2P::leeching) return _("leeching");
+			else if(infos.downloadstatus == P2P::stored) return _("complete");
+			else if(infos.downloadstatus == P2P::seeding) return _("seeding");			
 			else return wxEmptyString;
-		case 5: return wxString::Format(_T("%.2f"), infos.progress * 100 );
-		case 6: return wxString::Format(_T("%.2f"), infos.outspeed*kfactor );
-		case 7: return wxString::Format(_T("%.2f"), infos.inspeed*kfactor );
+		case 5: return infos.progress > -0.01 ? wxString::Format(_T("%.2f"), infos.progress * 100 ) : wxString( _("N/A") );
+		case 6: return infos.outspeed > -0.01 ? wxString::Format(_T("%.2f"), infos.outspeed*kfactor ) : wxString( _("N/A") );
+		case 7: return infos.inspeed >= -0.01 ? wxString::Format(_T("%.2f"), infos.inspeed*kfactor ) : wxString( _("N/A") );
 		case 8: return infos.eta > -1 ? wxTimeSpan::Seconds(infos.eta).Format( _T("%H:%M:%S") ) : _T("inf.") ;
-		case 9: return wxString::Format(_T("%.2f"), infos.filesize*mfactor);
+		case 9: return (int)infos.filesize > 0 ? wxString::Format(_T("%.2f"), infos.filesize*mfactor) : wxString( _("N/A") );
 	}
 }
 

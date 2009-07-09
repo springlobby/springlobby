@@ -52,7 +52,10 @@ struct TorrentInfos
     float outspeed;
     unsigned int filesize;
     wxString hash;
-    int eta; //is set in update function of maintorrenttab
+    int eta; 
+
+	//default constructor
+	TorrentInfos() : numcopies(-1.f), downloaded(0), uploaded(0), downloadstatus(P2P::not_stored), progress(0.f), inspeed(0.f), outspeed(0.f), eta(0) {}
 };
 
 
@@ -208,6 +211,7 @@ public:
     bool IsConnectedToP2PSystem();
     bool IsFileInSystem( const wxString& hash );
     bool RemoveTorrentByHash( const wxString& hash );
+	P2P::FileStatus GetTorrentStatusByHash(const wxString& hash);
     int GetTorrentSystemStatus();
 
     ///HashToTorrentData& GetSystemFileList();
@@ -218,7 +222,7 @@ public:
     DownloadRequestStatus RequestFileByName( const wxString& name );
     void UpdateSettings();
     void UpdateFromTimer( int mselapsed );
-    std::map<int,TorrentInfos> CollectGuiInfos();
+    std::map<wxString,TorrentInfos> CollectGuiInfos();
     void SendMessageToCoordinator( const wxString& message );
 
     /// threaded maintenance tasks

@@ -16,7 +16,7 @@ class FileListDialog;
 class ColorButton;
 class WidgetDownloadDialog;
 
-typedef std::map<int,TorrentInfos> map_infos;
+typedef std::map<wxString,TorrentInfos> map_infos;
 typedef map_infos::iterator map_infos_iter;
 
 class MainTorrentTab: public wxScrolledWindow

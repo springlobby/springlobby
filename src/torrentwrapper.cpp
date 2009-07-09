@@ -515,6 +515,16 @@ bool TorrentWrapper::RemoveTorrentByHash( const wxString& hash )
 }
 
 
+P2P::FileStatus TorrentWrapper::GetTorrentStatusByHash(const wxString &hash)
+{
+	TorrentTable::PRow row=GetTorrentTable().RowByHash(hash);
+    if (!row.ok())
+		return P2P::not_stored;
+
+	libtorrent::torrent_handle handle = row->handle;
+	return row->status;
+}
+
 
 int TorrentWrapper::GetTorrentSystemStatus()
 {
@@ -699,9 +709,9 @@ bool TorrentWrapper::RemoveTorrentByRow( const TorrentTable::PRow& row )
 }
 
 
-std::map<int,TorrentInfos> TorrentWrapper::CollectGuiInfos()
+std::map<wxString,TorrentInfos> TorrentWrapper::CollectGuiInfos()
 {
-    std::map<int,TorrentInfos> ret;
+    std::map<wxString,TorrentInfos> ret;
     try
     {
         TorrentInfos globalinfos;
@@ -714,7 +724,7 @@ std::map<int,TorrentInfos> TorrentWrapper::CollectGuiInfos()
         globalinfos.inspeed = s.download_rate;
         globalinfos.numcopies = 0.0f;
         globalinfos.filesize = 0;
-        ret[0] = globalinfos;
+        ret[wxString(_T("global"))] = globalinfos;
 
         if ( ingame || !IsConnectedToP2PSystem()  ) return ret; // stop updating the gui if disconneted
 
@@ -743,7 +753,7 @@ std::map<int,TorrentInfos> TorrentWrapper::CollectGuiInfos()
             CurrentTorrent.hash=row->hash;
             CurrentTorrent.downloadstatus = row->status;
 
-            ret[s2l(CurrentTorrent.hash)] = CurrentTorrent;
+            ret[CurrentTorrent.hash] = CurrentTorrent;
         }
     }
     catch (std::exception& e)
@@ -761,7 +771,8 @@ std::map<int,TorrentInfos> TorrentWrapper::CollectGuiInfos()
         QueuedTorrent.hash = (*it)->hash;
         QueuedTorrent.downloadstatus = P2P::queued;
         QueuedTorrent.name=(*it)->name;
-        ret[s2l(QueuedTorrent.hash)] = QueuedTorrent;
+		QueuedTorrent.eta = -1;
+        ret[QueuedTorrent.hash] = QueuedTorrent;
     }
 
     return ret;

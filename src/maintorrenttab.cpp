@@ -91,7 +91,7 @@ MainTorrentTab::MainTorrentTab(wxWindow* parent, Ui& ui)
 
 	for (map_infos_iter iter = info_map.begin(); iter != info_map.end(); ++iter)
 	{
-		if (iter->first == 0) continue;
+		if (iter->first == wxString(_T("global"))) continue;
         m_torrent_list->AddTorrentInfo(iter->second);
 	}
 }
@@ -155,13 +155,15 @@ void MainTorrentTab::OnUpdate()
 
     m_torrent_list->SaveSelection();
     info_map = torrent().CollectGuiInfos();
-    m_outgoing_lbl->SetLabel( wxString::Format(_("Total Outgoing: %.2f KB/s"), (info_map[0].outspeed/float(1024)) ) );
-    m_incoming_lbl->SetLabel( wxString::Format(_("Total Incoming: %.2f KB/s"), (info_map[0].inspeed/ float(1024)) ) );
+    m_outgoing_lbl->SetLabel( wxString::Format(_("Total Outgoing: %.2f KB/s"), (info_map[wxString(_T("global"))].outspeed/float(1024)) ) );
+    m_incoming_lbl->SetLabel( wxString::Format(_("Total Incoming: %.2f KB/s"), (info_map[wxString(_T("global"))].inspeed/ float(1024)) ) );
     for (map_infos_iter iter = info_map.begin(); iter != info_map.end(); ++iter)
     {
-		if (iter->first == 0) continue; //skip global torrent stats
+		if (iter->first == wxString(_T("global"))) continue; //skip global torrent stats
 		m_torrent_list->UpdateTorrentInfo(iter->second);
     }
+	m_torrent_list->RefreshTorrentStatus();
+
     Layout();
     m_torrent_list->RestoreSelection();
 
@@ -170,7 +172,8 @@ void MainTorrentTab::OnUpdate()
 
 void MainTorrentTab::OnCancelButton( wxCommandEvent& event )
 {
-  torrent().RemoveTorrentByHash( TowxString(m_torrent_list->GetSelectedData().hash) );
+  torrent().RemoveTorrentByHash(m_torrent_list->GetSelectedData().hash);
+  m_torrent_list->RemoveTorrentInfo(m_torrent_list->GetSelectedData());
 }
 
 void MainTorrentTab::OnDownloadDialog( wxCommandEvent& event )
