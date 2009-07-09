@@ -31,6 +31,7 @@
 #include "utils/debug.h"
 #include "utils/conversion.h"
 #include "utils/misc.h"
+#include "utils/globalevents.h"
 
 
 #define LOCK_UNITSYNC wxCriticalSectionLocker lock_criticalsection(m_lock)
@@ -46,7 +47,8 @@ IUnitSync& usync()
 
 
 SpringUnitSync::SpringUnitSync()
-  : m_map_image_cache( 3, _T("m_map_image_cache") )         // may take about 3M per image ( 1024x1024 24 bpp minimap )
+  : m_UnitsyncReloadRequestSink( this, &GetGlobalEventSender( GlobalEvents::UnitSyncReloadRequest ) )
+  , m_map_image_cache( 3, _T("m_map_image_cache") )         // may take about 3M per image ( 1024x1024 24 bpp minimap )
   , m_tiny_minimap_cache( 200, _T("m_tiny_minimap_cache") ) // takes at most 30k per image (   100x100 24 bpp minimap )
   , m_mapinfo_cache( 1000000, _T("m_mapinfo_cache") )       // this one is just misused as thread safe std::map ...
   , m_sides_cache( 200, _T("m_sides_cache") )               // another misuse
@@ -72,6 +74,7 @@ bool SpringUnitSync::LoadUnitSyncLib( const wxString& unitsyncloc )
    {
       m_cache_path = sett().GetCachePath();
       PopulateArchiveList();
+      GetGlobalEventSender(GlobalEvents::OnUnitsyncReloaded).SendEvent( 0 );
    }
    return ret;
 }

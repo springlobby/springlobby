@@ -215,6 +215,9 @@ SET(SpringLobbySrc
 	src/utils/tasutil.cpp
 	src/utils/sltipwin.cpp
 	src/utils/controls.cpp
+	src/utils/globalevents.cpp
+	src/utils/networkevents.cpp
+	src/utils/uievents.cpp
 	src/boost/md5.cpp
 	src/updater/updater.cpp
 	src/updater/versionchecker.cpp
@@ -229,7 +232,7 @@ SET(SpringLobbySrc
 	src/filelister/filelistdialog.cpp
 	src/filelister/filelistfilter.cpp
 	src/aui/auimanager.cpp
-        src/aui/artprovider.cpp
+	src/aui/artprovider.cpp
 	src/autobalancedialog.cpp
 	src/autohost.cpp
 	src/channel/autojoinchanneldialog.cpp
@@ -257,7 +260,6 @@ SET(SpringLobbySrc
 	src/crashreport.cpp
 	src/customlistctrl.cpp
 	src/flagimages.cpp
-	src/globalevents.cpp
 	src/groupoptionspanel.cpp
 	src/hostbattledialog.cpp
 	src/ibattle.cpp

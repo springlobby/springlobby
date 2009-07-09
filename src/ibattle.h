@@ -10,7 +10,7 @@
 #include "mmoptionswrapper.h"
 #include "userlist.h"
 #include "tdfcontainer.h"
-
+#include "utils/isink.h"
 
 const unsigned int DEFAULT_SERVER_PORT = 8452;
 const unsigned int DEFAULT_EXTERNAL_UDP_SOURCE_PORT = 16941;
@@ -105,7 +105,7 @@ struct BattleOptions
 	bool guilistactiv;
 };
 
-class IBattle: public UserList, public wxEvtHandler
+class IBattle: public UserList, public wxEvtHandler, public UnitsyncReloadedSink< IBattle >
 {
 public:
 
@@ -262,7 +262,7 @@ public:
     virtual void UnrestrictAllUnits();
     virtual std::map<wxString,int> RestrictedUnits();
 
-    virtual void OnUnitSyncReloaded();
+    virtual void OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ );
 
     virtual OptionsWrapper& CustomBattleOptions()
     {

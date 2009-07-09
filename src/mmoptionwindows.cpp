@@ -13,7 +13,6 @@
 
 #include "mmoptionwindows.h"
 #include "mmoptionswrapper.h"
-#include "ui.h"
 #include "battle.h"
 #include "utils/controls.h"
 #include "utils/math.h"
@@ -23,19 +22,19 @@
 BEGIN_EVENT_TABLE(SingleOptionDialog,wxDialog)
 END_EVENT_TABLE()
 
-SingleOptionDialog::SingleOptionDialog( Battle& battle, const wxString& optiontag ):
-m_battle( battle ),
-m_tag( optiontag ),
-m_checkbox(0),
-m_combobox(0),
-m_spinctrl(0),
+SingleOptionDialog::SingleOptionDialog( wxWindow* parent, Battle& battle, const wxString& optiontag )
+    :  m_battle( battle ),
+    m_tag( optiontag ),
+    m_checkbox(0),
+    m_combobox(0),
+    m_spinctrl(0),
 m_textctrl(0)
 {
 	OptionsWrapper& optWrap = m_battle.CustomBattleOptions();
 	OptionsWrapper::GameOption optFlag = (OptionsWrapper::GameOption)s2l(optiontag.BeforeFirst( '_' ));
 	wxString key = optiontag.AfterFirst( '_' );
 	OptionType type = optWrap.GetSingleOptionType( key );
-	Create( (wxWindow*)&ui().mw(), wxID_ANY, _("Change option"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE, _T("OptionDialog") );
+	Create( parent, wxID_ANY, _("Change option"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE, _T("OptionDialog") );
 	if ( !optWrap.keyExists( key, optFlag, false, type ) )
 	{
 		 EndModal( wxID_CANCEL );

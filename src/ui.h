@@ -71,8 +71,6 @@ class Ui
 
     void Quit();
 
-    void ReloadUnitSync();
-
     void DownloadMap( const wxString& hash, const wxString& name );
     void DownloadMod( const wxString& hash, const wxString& name );
 
@@ -140,9 +138,6 @@ class Ui
 
     void OnRing( const wxString& from );
 
-    void OnMapInfoCached( const wxString& mapname );
-    void OnMinimapCached( const wxString& mapname );
-    void OnModUnitsCached( const wxString& modname );
     //! ask to download missing map, return true if download attempted
     bool OnPresetRequiringMap( const wxString& mapname );
 
@@ -169,7 +164,6 @@ class Ui
 
     //! does actual work, called from downloadmap/mod
     void DownloadFileP2P( const wxString& hash, const wxString& name );
-
 };
 
 Ui& ui();

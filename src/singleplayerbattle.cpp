@@ -11,8 +11,7 @@
 #include "spring.h"
 
 
-SinglePlayerBattle::SinglePlayerBattle(Ui& ui, MainSinglePlayerTab& msptab):
-  m_ui(ui),
+SinglePlayerBattle::SinglePlayerBattle( MainSinglePlayerTab& msptab ):
   m_sptab(msptab),
   m_me( User( usync().IsLoaded() ? usync().GetDefaultNick() : _T("invalid") ) )
 {

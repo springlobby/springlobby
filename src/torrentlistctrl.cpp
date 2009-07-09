@@ -30,7 +30,7 @@ END_EVENT_TABLE()
 
 map_infos* TorrentListCtrl::m_info_map = 0;
 
-TorrentListCtrl::TorrentListCtrl( wxWindow* parent, Ui& ui ):
+TorrentListCtrl::TorrentListCtrl( wxWindow* parent ):
 		CustomListCtrl( parent, TLIST_CLICK, wxDefaultPosition, wxDefaultSize,
                 wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("TorrentListCtrl"), 10 )
 

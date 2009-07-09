@@ -18,7 +18,7 @@ class ColorButton;
 class ChatOptionsTab : public wxScrolledWindow
 {
   public:
-    ChatOptionsTab( wxWindow* parent, Ui& ui );
+    ChatOptionsTab( wxWindow* parent );
     ~ChatOptionsTab();
 
     void UpdateTextSample();
@@ -107,8 +107,6 @@ class ChatOptionsTab : public wxScrolledWindow
     wxCheckBox* m_irc_colors;
 
     wxFont m_chat_font;
-
-    Ui& m_ui;
 
     /// generic func used in all handlers
     void OnColorChange( ColorButton* button );

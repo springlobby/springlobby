@@ -59,9 +59,9 @@ BEGIN_EVENT_TABLE(BattleListTab, wxPanel)
 END_EVENT_TABLE()
 
 
-BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( parent, -1 ),
-  m_ui(ui),
-  m_sel_battle(0)
+BattleListTab::BattleListTab( wxWindow* parent )
+    : wxScrolledWindow( parent, -1 ),
+    m_sel_battle(0)
 {
   GetAui().manager->AddPane( this, wxLEFT, _T("battlelisttab") );
 
@@ -73,7 +73,7 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( par
 
   m_battlelist_sizer = new wxBoxSizer( wxVERTICAL );
 
-  m_battle_list = new BattleListCtrl( this, m_ui );
+  m_battle_list = new BattleListCtrl( this );
   m_battle_list->SetHighLightAction ( UserActions::ActHighlight );
   m_battlelist_sizer->Add( m_battle_list, 1, wxALL|wxEXPAND, 5 );
 
@@ -81,7 +81,7 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( par
 
   m_info_sizer = new wxBoxSizer( wxHORIZONTAL );
 
-  m_minimap = new MapCtrl( this, 100, 0, m_ui, true, true, false, false );
+  m_minimap = new MapCtrl( this, 100, 0, true, true, false, false );
   m_info_sizer->Add( m_minimap, 0, wxALL, 5 );
 
   m_data_sizer = new wxFlexGridSizer( 4, 2, 0, 0 );
@@ -263,10 +263,10 @@ void BattleListTab::UpdateBattle( IBattle& battle )
 void BattleListTab::RemoveAllBattles()
 {
   SelectBattle( 0 );
-  m_ui.GetServer().battles_iter->IteratorBegin();
-  while (! m_ui.GetServer().battles_iter->EOL() )
+  ui().GetServer().battles_iter->IteratorBegin();
+  while (! ui().GetServer().battles_iter->EOL() )
   {
-    Battle* temp_battle = m_ui.GetServer().battles_iter->GetBattle();
+    Battle* temp_battle = ui().GetServer().battles_iter->GetBattle();
     if (temp_battle != 0)
         temp_battle->SetGUIListActiv( false );
   }
@@ -276,9 +276,9 @@ void BattleListTab::RemoveAllBattles()
 
 
 void BattleListTab::UpdateList() {
-    m_ui.GetServer().battles_iter->IteratorBegin();
-    while (! m_ui.GetServer().battles_iter->EOL() ) {
-        Battle* b = m_ui.GetServer().battles_iter->GetBattle();
+    ui().GetServer().battles_iter->IteratorBegin();
+    while (! ui().GetServer().battles_iter->EOL() ) {
+        Battle* b = ui().GetServer().battles_iter->GetBattle();
         if (b!=0)
             UpdateBattle(*b);
     }
@@ -297,31 +297,31 @@ void BattleListTab::SetFilterActiv( bool activ )
 
 void BattleListTab::OnHost( wxCommandEvent& event )
 {
-  if ( !m_ui.IsConnected() )
+  if ( !ui().IsConnected() )
   {
     wxLogWarning( _T("Trying to host while offline") );
     customMessageBoxNoModal(SL_MAIN_ICON, _("You cannot host a game while being offline. Please connect to a lobby server."), _("Not Online."), wxOK );
-    m_ui.ShowConnectWindow();
+    ui().ShowConnectWindow();
     return;
   }
-  if ( !m_ui.IsSpringCompatible() )
+  if ( !ui().IsSpringCompatible() )
   {
     wxLogWarning(_T("Hosting is disabled due to the incompatible version ") );
     customMessageBoxNoModal(SL_MAIN_ICON,_("Hosting is disabled due to the incompatible version you're using"), _("Spring error"), wxICON_EXCLAMATION|wxOK);
     return;
   }
-  if ( m_ui.IsSpringRunning() )
+  if ( ui().IsSpringRunning() )
   {
     wxLogWarning(_T("trying to host while spring is running") );
     customMessageBoxNoModal(SL_MAIN_ICON,_("You already are running a Spring instance, close it first in order to be able to host a new game"), _("Spring error"), wxICON_EXCLAMATION|wxOK );
     return;
   }
-  Battle* battle = m_ui.mw().GetJoinTab().GetCurrentBattle();
+  Battle* battle = ui().mw().GetJoinTab().GetCurrentBattle();
   if ( battle != 0 )
    {
-    if ( m_ui.Ask( _("Already in a battle"), _("You are already in a battle.\n\nDo you want to leave current battle to start a new?") ) ) {
+    if ( ui().Ask( _("Already in a battle"), _("You are already in a battle.\n\nDo you want to leave current battle to start a new?") ) ) {
       battle->Leave();
-      m_ui.mw().GetJoinTab().LeaveCurrentBattle();
+      ui().mw().GetJoinTab().LeaveCurrentBattle();
     }
     else
     {
@@ -339,7 +339,7 @@ void BattleListTab::OnHost( wxCommandEvent& event )
 
     if ( bo.nattype == NAT_None && sett().GetTestHostPort() )
     {
-        switch ( m_ui.TestHostPort( bo.port ) )
+        switch ( ui().TestHostPort( bo.port ) )
         {
             case Server::porttest_pass : break; // success
             case Server::porttest_pass_WX26 :
@@ -366,7 +366,7 @@ void BattleListTab::OnHost( wxCommandEvent& event )
                 return;
 
         }
-      if ( !m_ui.TestHostPort( bo.port ) )
+      if ( !ui().TestHostPort( bo.port ) )
       {
         wxLogWarning(_T("hosting port %d: test unsuccessful, closing battle"),bo.port  );
         customMessageBoxNoModal( SL_MAIN_ICON, wxString::Format( _("Battle not started because the port you selected (%d) is unable to recieve incoming packets\n checks your router & firewall configuration again or change port in the dialog.\n\nIf everything else fails, enable the Hole Punching NAT Traversal\n option in the hosting settings."), bo.port ) );
@@ -420,7 +420,7 @@ void BattleListTab::OnHost( wxCommandEvent& event )
 
     bo.isproxy = sett().GetLastHostRelayedMode();
 
-    m_ui.GetServer().HostBattle( bo, sett().GetLastHostPassword() );
+    ui().GetServer().HostBattle( bo, sett().GetLastHostPassword() );
   }
 }
 
@@ -443,7 +443,7 @@ void BattleListTab::OnFilter( wxCommandEvent& event )
 void BattleListTab::OnFilterActiv( wxCommandEvent& event )
 {
   bool active = m_filter_activ->GetValue();
-  if ( !m_ui.IsConnected() )
+  if ( !ui().IsConnected() )
   {
     m_filter_activ->SetValue( !active );
     return;
@@ -464,7 +464,7 @@ void BattleListTab::OnJoin( wxCommandEvent& event )
     if ( m_battle_list->GetSelectedIndex() < 0 ) return;
 
     int id = m_battle_list->GetSelectedData()->GetBattleId();
-    DoJoin( m_ui.GetServer().battles_iter->GetBattle( id ) );
+    DoJoin( ui().GetServer().battles_iter->GetBattle( id ) );
 }
 
 
@@ -477,27 +477,27 @@ void BattleListTab::OnListJoin( wxListEvent& event )
     if ( event.GetIndex() < 0 ) return;
 
     int id = m_battle_list->GetSelectedData()->GetBattleId();
-    DoJoin( m_ui.GetServer().battles_iter->GetBattle( id ) );
+    DoJoin( ui().GetServer().battles_iter->GetBattle( id ) );
 }
 
 
 void BattleListTab::DoJoin( Battle& battle )
 {
-  if ( !m_ui.IsSpringCompatible() )
+  if ( !ui().IsSpringCompatible() )
   {
     wxLogWarning(_T("trying to join battles with imcompatible spring version") );
     customMessageBox(SL_MAIN_ICON,_("Joining battles is disabled due to the incompatible spring version you're using."), _("Spring error"), wxICON_EXCLAMATION|wxOK);
     return;
   }
 
-  Battle* curbattle = m_ui.mw().GetJoinTab().GetCurrentBattle();
+  Battle* curbattle = ui().mw().GetJoinTab().GetCurrentBattle();
 
   if ( curbattle != 0 && curbattle->GetID() == battle.GetID() )
   {
-	if ( m_ui.Ask( _("Already in this battle"), _("You are already in this battle.\n\nDo you want to leave it?")) )
+	if ( ui().Ask( _("Already in this battle"), _("You are already in this battle.\n\nDo you want to leave it?")) )
 	{
 	  curbattle->Leave();
-      m_ui.mw().GetJoinTab().LeaveCurrentBattle();
+      ui().mw().GetJoinTab().LeaveCurrentBattle();
 	  return;
 	}
 	else
@@ -508,9 +508,9 @@ void BattleListTab::DoJoin( Battle& battle )
 
   if ( curbattle != 0 )
   {
-    if ( m_ui.Ask( _("Already in another battle"), _("You are already in a battle.\n\nDo you want to leave your current battle and join this one?") ) ) {
+    if ( ui().Ask( _("Already in another battle"), _("You are already in a battle.\n\nDo you want to leave your current battle and join this one?") ) ) {
       curbattle->Leave();
-      m_ui.mw().GetJoinTab().LeaveCurrentBattle();
+      ui().mw().GetJoinTab().LeaveCurrentBattle();
     }
     else
     {
@@ -518,7 +518,7 @@ void BattleListTab::DoJoin( Battle& battle )
     }
   }
 
-  if ( m_ui.IsSpringRunning() )
+  if ( ui().IsSpringRunning() )
   {
     wxLogWarning(_T("trying to join a battle while spring is running") );
     customMessageBox(SL_MAIN_ICON,_("You already are running a Spring instance, close it first in order to be able to join another battle."), _("Spring error"), wxICON_EXCLAMATION|wxOK );
@@ -536,7 +536,7 @@ void BattleListTab::DoJoin( Battle& battle )
     if (customMessageBox( SL_MAIN_ICON, _("You need to download the mod before you can join this game.\n\n") + downloadProc, _("Mod not available"), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
       wxString modhash = battle.GetHostModHash();
       wxString modname = battle.GetHostModName();
-      m_ui.DownloadMod ( modhash, modname );
+      ui().DownloadMod ( modhash, modname );
     }
     return;
   }
@@ -546,7 +546,7 @@ void BattleListTab::DoJoin( Battle& battle )
     if (customMessageBox(SL_MAIN_ICON, _("You need to download the map to be able to play in this game.\n\n") + downloadProc, _("Map not available"), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
       wxString maphash = battle.GetHostMapHash();
       wxString mapname = battle.GetHostMapName();
-      m_ui.DownloadMap ( maphash, mapname );
+      ui().DownloadMap ( maphash, mapname );
     }
   }
 
@@ -576,18 +576,11 @@ void BattleListTab::OnSelect( wxListEvent& event )
 }
 
 
-void BattleListTab::OnUnitSyncReloaded()
+void BattleListTab::OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ )
 {
-  if ( ! m_ui.GetServerStatus() ) { return; }
+  if ( ! ui().GetServerStatus() ) { return; }
 
-  m_ui.GetServer().battles_iter->IteratorBegin();
-  while (! m_ui.GetServer().battles_iter->EOL() )
-  {
-    Battle* b = m_ui.GetServer().battles_iter->GetBattle();
-    if (b!=0) b->OnUnitSyncReloaded();
-  }
   UpdateList();
-  m_minimap->UpdateMinimap();
 }
 
 void BattleListTab::UpdateHighlights()

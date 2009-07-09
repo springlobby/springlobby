@@ -20,11 +20,11 @@ class wxCheckBox;
 class wxMouseEvent;
 class ColorButton;
 
-class SinglePlayerTab: public  wxScrolledWindow
+class SinglePlayerTab: public  wxScrolledWindow , public UnitsyncReloadedSink< SinglePlayerTab >
 {
   public:
 
-    SinglePlayerTab( wxWindow* parent, Ui& ui, MainSinglePlayerTab& msptab );
+    SinglePlayerTab( wxWindow* parent, MainSinglePlayerTab& msptab );
     ~SinglePlayerTab();
 
     void UpdateMinimap();
@@ -48,15 +48,14 @@ class SinglePlayerTab: public  wxScrolledWindow
     void OnReset( wxCommandEvent& event );
     void OnMouseWheel( wxMouseEvent& event );
 
-    void OnUnitSyncReloaded();
-    void ResetUsername();
+    void OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ );
+	void ResetUsername();	
 
     void SetMap( unsigned int index );
     void SetMod( unsigned int index );
 
   protected:
 
-    Ui& m_ui;
     SinglePlayerBattle m_battle;
 
     MapCtrl* m_minimap;

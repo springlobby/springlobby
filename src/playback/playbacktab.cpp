@@ -53,10 +53,9 @@ BEGIN_EVENT_TABLE_TEMPLATE1(PlaybackTab, wxPanel, PlaybackTraits)
 END_EVENT_TABLE()
 
 template < class PlaybackTraits >
-PlaybackTab<PlaybackTraits>::PlaybackTab( wxWindow* parent, Ui& ui ) :
+PlaybackTab<PlaybackTraits>::PlaybackTab( wxWindow* parent ) :
   wxPanel( parent, -1 ),
-  m_replay_loader ( 0 ),
-  m_ui(ui)
+  m_replay_loader ( 0 )
 {
     wxLogMessage(_T("PlaybackTab::PlaybackTab()"));
 
@@ -79,7 +78,7 @@ PlaybackTab<PlaybackTraits>::PlaybackTab( wxWindow* parent, Ui& ui ) :
     wxBoxSizer* m_info_sizer;
     m_info_sizer = new wxBoxSizer( wxHORIZONTAL );
 
-    m_minimap = new MapCtrl( this, 100, 0, m_ui, true, true, false, false );
+    m_minimap = new MapCtrl( this, 100, 0,  true, true, false, false );
     m_info_sizer->Add( m_minimap, 0, wxALL, 5 );
 
     wxFlexGridSizer* m_data_sizer;
@@ -105,7 +104,7 @@ PlaybackTab<PlaybackTraits>::PlaybackTab( wxWindow* parent, Ui& ui ) :
 
     m_info_sizer->Add( m_data_sizer, 1, wxEXPAND|wxALL, 0 );
 
-    m_players = new BattleroomListCtrl( this, 0, m_ui, true );
+    m_players = new BattleroomListCtrl( this, 0,  true );
     m_info_sizer->Add( m_players , 2, wxALL|wxEXPAND, 0 );
 
     m_main_sizer->Add( m_info_sizer, 0, wxEXPAND, 5 );
@@ -301,7 +300,7 @@ void PlaybackTab<PlaybackTraits>::OnWatch( wxCommandEvent& event )
                 {
                   wxLogMessage(_T("replay requires version: %s, switching to profile: %s"), rep.SpringVersion.c_str(), itor->first.c_str() );
                   sett().SetUsedSpringIndex( itor->first );
-                  ui().ReloadUnitSync();
+                  GetGlobalEventSender(GlobalEvents::UnitSyncReloadRequest).SendEvent( 0 ); // request an unitsync reload
                 }
                 versionfound = true;
               }
@@ -334,7 +333,7 @@ void PlaybackTab<PlaybackTraits>::OnWatch( wxCommandEvent& event )
                     if (customMessageBox( SL_MAIN_ICON, _("You need to download the mod before you can watch this replay.\n\n") + downloadProc, _("Mod not available"), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
                         wxString modhash = battle.GetHostModHash();
                         wxString modname = battle.GetHostModName();
-                        m_ui.DownloadMod ( modhash, modname );
+                        ui().DownloadMod ( modhash, modname );
                     }
                     else {
                         AskForceWatch( rep );
@@ -346,7 +345,7 @@ void PlaybackTab<PlaybackTraits>::OnWatch( wxCommandEvent& event )
                     if (customMessageBox(SL_MAIN_ICON, _(" I couldn't find the map to be able to watch this replay\nThis can be caused by tasclient writing broken map hash value\nIf you're sure you have the map, press no\nYou need to download the map to be able to watch this replay.\n\n") + downloadProc, _("Map not available"), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
                         wxString maphash = battle.GetHostMapHash();
                         wxString mapname = battle.GetHostMapName();
-                        m_ui.DownloadMap ( maphash, mapname );
+                        ui().DownloadMap ( maphash, mapname );
                     }
                     else {
                         AskForceWatch( rep );

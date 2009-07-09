@@ -16,7 +16,7 @@ class wxStaticText;
 class TorrentOptionsPanel: public wxScrolledWindow
 {
     public:
-        TorrentOptionsPanel( wxWindow* parent, Ui& ui);
+        TorrentOptionsPanel( wxWindow* parent );
         ~TorrentOptionsPanel();
 
         //void OnEnableP2P( wxCommandEvent& event );
@@ -43,9 +43,6 @@ class TorrentOptionsPanel: public wxScrolledWindow
         wxTextCtrl* m_gamestart_throttle_down;
         wxStaticText* m_gamestart_throttle_up_lbl;
         wxStaticText* m_gamestart_throttle_down_lbl;
-
-        Ui& m_ui;
-
 
         void EnableSettings( bool enable);
         void SetStatusDisplay();

@@ -14,6 +14,12 @@
 #include <wx/log.h>
 #include "../chatpanel.h"
 
+Channel::Channel( Server& serv )
+    : m_serv(serv),
+    m_do_ban_regex(false),
+    m_do_unban_regex(false)
+{}
+
 Channel::~Channel() {
   if(uidata.panel)uidata.panel->SetChannel(NULL);
 }
@@ -38,7 +44,7 @@ User& Channel::GetMe()
 
 void Channel::Said( User& who, const wxString& message )
 {
-  m_ui.OnChannelSaid( *this , who, message );
+  ui().OnChannelSaid( *this , who, message );
 }
 
 
@@ -51,7 +57,7 @@ void Channel::Say( const wxString& message )
 
 void Channel::DidAction( User& who, const wxString& action )
 {
-  m_ui.OnChannelDidAction( *this, who, action );
+  ui().OnChannelDidAction( *this, who, action );
 }
 
 
@@ -65,7 +71,7 @@ void Channel::DoAction( const wxString& action )
 void Channel::Left( User& who, const wxString& reason )
 {
   RemoveUser( who.GetNick() );
-  m_ui.OnUserLeftChannel( *this, who, reason );
+  ui().OnUserLeftChannel( *this, who, reason );
 }
 
 
@@ -79,14 +85,14 @@ void Channel::Leave()
 void Channel::Joined( User& who )
 {
   AddUser( who );
-  m_ui.OnUserJoinedChannel( *this, who );
+  ui().OnUserJoinedChannel( *this, who );
 }
 
 
 void Channel::OnChannelJoin( User& who )
 {
   AddUser( who );
-  m_ui.OnChannelJoin( *this, who );
+  ui().OnChannelJoin( *this, who );
 }
 
 
@@ -95,7 +101,7 @@ void Channel::SetTopic( const wxString& topic, const wxString& who )
   m_topic = topic;
   m_topic_nick = who;
 
-  m_ui.OnChannelTopic( *this, who, topic );
+  ui().OnChannelTopic( *this, who, topic );
 }
 
 wxString Channel::GetTopicSetBy()
@@ -173,7 +179,7 @@ bool Channel::ExecuteSayCommand( const wxString& in )
     m_banned_users.erase(params);
     return true;
   } else if(subcmd==_T("/banregex")){
-    m_ui.OnChannelMessage(m_name,_T("/banregex ")+params);
+    ui().OnChannelMessage(m_name,_T("/banregex ")+params);
     m_do_ban_regex=!params.empty();
     if(m_do_ban_regex){
       #ifdef wxHAS_REGEX_ADVANCED
@@ -181,11 +187,11 @@ bool Channel::ExecuteSayCommand( const wxString& in )
       #else
       m_ban_regex.Compile(params, wxRE_EXTENDED);
       #endif
-      if(!m_ban_regex.IsValid())m_ui.OnChannelMessage(m_name,_T("Invalid regular expression"));
+      if(!m_ban_regex.IsValid())ui().OnChannelMessage(m_name,_T("Invalid regular expression"));
     }
     return true;
   } else if(subcmd==_T("/unbanregex")){
-    m_ui.OnChannelMessage(m_name,_T("/unbanregex ")+params);
+    ui().OnChannelMessage(m_name,_T("/unbanregex ")+params);
     m_do_unban_regex=!params.empty();
     if(m_do_unban_regex){
       #ifdef wxHAS_REGEX_ADVANCED
@@ -193,21 +199,21 @@ bool Channel::ExecuteSayCommand( const wxString& in )
       #else
       m_unban_regex.Compile(params, wxRE_EXTENDED);
       #endif
-      if(!m_unban_regex.IsValid())m_ui.OnChannelMessage(m_name,_T("Invalid regular expression"));
+      if(!m_unban_regex.IsValid())ui().OnChannelMessage(m_name,_T("Invalid regular expression"));
     }
     return true;
   }else if(subcmd==_T("/checkban")){
     if(IsBanned(params)){
-      m_ui.OnChannelMessage(m_name,params+_T(" is banned"));
+      ui().OnChannelMessage(m_name,params+_T(" is banned"));
     }else{
-      m_ui.OnChannelMessage(m_name,params+_T(" is not banned"));
+      ui().OnChannelMessage(m_name,params+_T(" is not banned"));
     }
     return true;
   }
 
 
   else if(subcmd==_T("/banregexmsg")){
-    m_ui.OnChannelMessage(m_name,_T("/banregexmsg ")+params);
+    ui().OnChannelMessage(m_name,_T("/banregexmsg ")+params);
     m_ban_regex_msg=params;
     return true;
   }

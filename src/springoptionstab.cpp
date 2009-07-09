@@ -52,7 +52,8 @@ BEGIN_EVENT_TABLE(SpringOptionsTab, wxPanel)
 END_EVENT_TABLE()
 
 
-SpringOptionsTab::SpringOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( parent, -1 ),m_ui(ui)
+SpringOptionsTab::SpringOptionsTab( wxWindow* parent )
+    : wxScrolledWindow( parent, -1 )
 {
 	m_dontsearch_chkbox = new wxCheckBox( this, SPRING_DONTSEARCH, _("Search only in current installed path"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
 	m_dontsearch_chkbox->SetValue( sett().GetSearchSpringOnlyInSLPath() );
@@ -218,8 +219,6 @@ void SpringOptionsTab::OnApply( wxCommandEvent& event )
     _("SpringLobby is unable to load your UnitSync library.\n\nYou might want to take another look at your unitsync setting."),
     _("Spring error"), wxOK );
   }
-
-  m_ui.mw().OnUnitSyncReloaded();
 }
 
 

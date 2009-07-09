@@ -19,7 +19,7 @@ class wxString;
 class MainChatTab : public wxScrolledWindow
 {
   public:
-    MainChatTab( wxWindow* parent, Ui& ui );
+    MainChatTab( wxWindow* parent );
     ~MainChatTab();
 
     ChatPanel* GetActiveChatPanel();
@@ -50,8 +50,6 @@ class MainChatTab : public wxScrolledWindow
     wxImage ReplaceChannelStatusColour( wxBitmap img, const wxColour& colour );
 
   protected:
-
-    Ui& m_ui;
 
     wxWindow* m_close_window;
     wxAuiNotebook* m_chat_tabs;

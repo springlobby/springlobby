@@ -44,16 +44,15 @@ BEGIN_EVENT_TABLE(SinglePlayerTab, wxPanel)
 END_EVENT_TABLE()
 
 
-SinglePlayerTab::SinglePlayerTab(wxWindow* parent, Ui& ui, MainSinglePlayerTab& msptab):
+SinglePlayerTab::SinglePlayerTab(wxWindow* parent, MainSinglePlayerTab& msptab):
         wxScrolledWindow( parent, -1 ),
-        m_ui( ui ),
-        m_battle( ui, msptab )
+        m_battle( msptab )
 {
     GetAui().manager->AddPane( this, wxLEFT, _T("singleplayertab") );
 
     wxBoxSizer* m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
-    m_minimap = new MapCtrl( this, 100, &m_battle, ui, false, false, true, true );
+    m_minimap = new MapCtrl( this, 100, &m_battle, false, false, true, true );
     m_minimap->SetToolTip( TE(_("You can drag the sun/bot icon around to define start position.\n "
                                 "Hover over the icon for a popup that lets you change side, ally and bonus." )) );
     m_main_sizer->Add( m_minimap, 1, wxALL|wxEXPAND, 5 );
@@ -134,19 +133,19 @@ void SinglePlayerTab::ReloadMaplist()
 {
     m_map_pick->Clear();
 
+    //applies RefineMapname to every new element
     TransformedArrayString maplist ( usync().GetMapList(), &RefineMapname ) ;
     //maplist.Sort(CompareStringIgnoreCase);
-//
-//    size_t nummaps = maplist.Count();
-//    for ( size_t i = 0; i < nummaps; i++ )
-//        m_map_pick->Insert( RefineMapname(maplist[i]), i );
+
     m_map_pick->Append( maplist );
 
     m_map_pick->Insert( _("-- Select one --"), m_map_pick->GetCount() );
+
     if ( m_battle.GetHostMapName() != wxEmptyString )
     {
         m_map_pick->SetStringSelection( RefineMapname( m_battle.GetHostMapName() ) );
-        if ( m_map_pick->GetStringSelection() == wxEmptyString ) SetMap( m_mod_pick->GetCount()-1 );
+        if ( m_map_pick->GetStringSelection() == wxEmptyString )
+            SetMap( m_mod_pick->GetCount()-1 );
     }
     else
     {
@@ -182,7 +181,7 @@ void SinglePlayerTab::ReloadModlist()
 
 void SinglePlayerTab::SetMap( unsigned int index )
 {
-	//m_ui.ReloadUnitSync();
+	//ui().ReloadUnitSync();
   m_addbot_btn->Enable( false );
   if ( index >= m_map_pick->GetCount()-1 ) {
     m_battle.SetHostMap( wxEmptyString, wxEmptyString );
@@ -205,7 +204,7 @@ void SinglePlayerTab::ResetUsername()
 
 void SinglePlayerTab::SetMod( unsigned int index )
 {
-    //m_ui.ReloadUnitSync();
+    //ui().ReloadUnitSync();
     if ( index >= m_mod_pick->GetCount()-1 )
     {
         m_battle.SetHostMod( wxEmptyString, wxEmptyString );
@@ -271,7 +270,7 @@ void SinglePlayerTab::OnModSelect( wxCommandEvent& event )
 void SinglePlayerTab::OnMapBrowse( wxCommandEvent& event )
 {
     wxLogDebugFunc( _T("") );
-    MapSelectDialog dlg( (wxWindow*)&m_ui.mw(), m_ui );
+    MapSelectDialog dlg( (wxWindow*)&ui().mw() );
 
     if ( dlg.ShowModal() == wxID_OK && dlg.GetSelectedMap() != NULL )
     {
@@ -299,6 +298,20 @@ void SinglePlayerTab::OnAddBot( wxCommandEvent& event )
         User& bot = m_battle.OnBotAdded( _T("Bot") + TowxString( bs.team ), bs  );
         ASSERT_LOGIC( &bot != 0, _T("bot == 0") );
         m_minimap->UpdateMinimap();
+    }
+}
+
+void SinglePlayerTab::OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ )
+{
+    try {
+        ReloadMaplist();
+        ReloadModlist();
+        UpdateMinimap();
+    }
+    catch ( ... )
+    {
+        wxLogDebugFunc( _T("") );
+        wxLogError( _T("unitsync reload sink failed") );
     }
 }
 

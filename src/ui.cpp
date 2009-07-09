@@ -65,7 +65,7 @@ Ui::Ui() :
         m_first_update_trigger(true),
         m_ingame(false)
 {
-    m_main_win = new MainWindow( *this );
+    m_main_win = new MainWindow( );
     CustomMessageBoxBase::setLobbypointer(m_main_win);
     m_serv = new TASServer();
 }
@@ -289,14 +289,6 @@ void Ui::Quit()
     if ( m_con_win != 0 )
         m_con_win->Close();
 }
-
-
-void Ui::ReloadUnitSync()
-{
-    usync().ReloadUnitSyncLib();
-    if ( m_main_win != 0 ) mw().OnUnitSyncReloaded();
-}
-
 
 void Ui::DownloadMap( const wxString& hash, const wxString& name )
 {
@@ -615,7 +607,7 @@ bool Ui::IsSpringCompatible()
         {
           wxLogMessage(_T("server enforce usage of version: %s, switching to profile: %s"), neededversion.c_str(), itor->first.c_str() );
           sett().SetUsedSpringIndex( itor->first );
-          ReloadUnitSync();
+          GetGlobalEventSender(GlobalEvents::UnitSyncReloadRequest).SendEvent( 0 ); // request an unitsync reload
         }
         return true;
       }
@@ -1161,31 +1153,6 @@ void Ui::OnRing( const wxString& from )
 #else
     wxBell();
 #endif
-}
-
-
-void Ui::OnMapInfoCached( const wxString& mapname )
-{
-    if ( m_main_win == 0 ) return;
-    mw().OnUnitSyncReloaded();
-}
-
-
-void Ui::OnMinimapCached( const wxString& mapname )
-{
-    if ( m_main_win == 0 ) return;
-    mw().OnUnitSyncReloaded();
-}
-
-
-void Ui::OnModUnitsCached( const wxString& modname )
-{
-}
-
-void Ui::OnMainWindowDestruct()
-{
-    //this is rather ugly and therefore disabled
-    //m_main_win = 0;
 }
 
 bool Ui::IsThisMe(User& other)

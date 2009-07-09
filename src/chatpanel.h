@@ -67,10 +67,10 @@ class ChatPanel : public wxPanel
 {
   public:
 
-    ChatPanel( wxWindow* parent, Ui& ui, Channel& chan, wxImageList* imaglist );
-    ChatPanel( wxWindow* parent, Ui& ui, const User& user, wxImageList* imaglist  );
-    ChatPanel( wxWindow* parent, Ui& ui, Server& serv, wxImageList* imaglist  );
-    ChatPanel( wxWindow* parent, Ui& ui, Battle& battle );
+    ChatPanel( wxWindow* parent, Channel& chan, wxImageList* imaglist );
+    ChatPanel( wxWindow* parent, const User& user, wxImageList* imaglist  );
+    ChatPanel( wxWindow* parent, Server& serv, wxImageList* imaglist  );
+    ChatPanel( wxWindow* parent, Battle& battle );
     ~ChatPanel();
 
     void Said( const wxString& who, const wxString& message );
@@ -213,7 +213,7 @@ class ChatPanel : public wxPanel
 
     wxButton* m_say_button;     //!< The say button.
     wxAuiNotebook* m_chat_tabs;
-    Ui& m_ui;
+
     Channel* m_channel;         //!< Channel object.
     Server* m_server;           //!< Server object.
     const User* m_user;               //!< User object.

@@ -45,9 +45,8 @@ const wxEventType MapGridCtrl::MapSelectedEvt = wxNewEventType();
 const wxEventType MapGridCtrl::LoadingCompletedEvt = wxNewEventType();
 
 
-MapGridCtrl::MapGridCtrl( wxWindow* parent, Ui& ui, wxSize size, wxWindowID id )
+MapGridCtrl::MapGridCtrl( wxWindow* parent, wxSize size, wxWindowID id )
 	: wxPanel( parent, id, wxDefaultPosition, size, wxSIMPLE_BORDER|wxFULL_REPAINT_ON_RESIZE )
-	, m_ui( ui )
 	, m_async( this )
 	, m_selection_follows_mouse( sett().GetMapSelectorFollowsMouse() )
 	, m_size( 0, 0 )

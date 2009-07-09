@@ -15,7 +15,7 @@ class SinglePlayerBattle: public IBattle
 {
   public:
 
-    SinglePlayerBattle( Ui& ui, MainSinglePlayerTab& msptab );
+    SinglePlayerBattle( MainSinglePlayerTab& msptab );
     ~SinglePlayerBattle();
 
 // (koshi) these are never called
@@ -35,7 +35,6 @@ class SinglePlayerBattle: public IBattle
 
   protected:
 
-    Ui& m_ui;
     MainSinglePlayerTab& m_sptab;
 
     User m_me;

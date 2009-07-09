@@ -4,6 +4,7 @@
 #include <wx/scrolwin.h>
 
 #include "mmoptionswrapper.h"
+#include "utils/isink.h"
 #include <map>
 
 class Ui;
@@ -32,10 +33,10 @@ typedef std::map<wxString,long> OptionListMap;
 
 /** \brief container for BattleroomListCtrl, battle specific ChatPanel. Also displaying battle info summary
  * \todo DOCMEMORE */
-class BattleRoomTab : public wxScrolledWindow
+class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<BattleRoomTab>
 {
   public:
-    BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle );
+    BattleRoomTab( wxWindow* parent, Battle& battle );
      ~BattleRoomTab();
 
     BattleroomListCtrl& GetPlayersListCtrl();
@@ -68,32 +69,32 @@ class BattleRoomTab : public wxScrolledWindow
     void OnAutoLock( wxCommandEvent& event );
     void OnLockBalance( wxCommandEvent& event );
     void OnShowManagePlayersMenu( wxCommandEvent& event );
-		void OnLoadPreset( wxCommandEvent& event );
-		void OnSavePreset( wxCommandEvent& event );
-		void OnDeletePreset( wxCommandEvent& event );
-		void OnSetModDefaultPreset( wxCommandEvent& event );
-		void OnMapBrowse( wxCommandEvent& event );
-		void OnMapSelect( wxCommandEvent& event );
-		void OnOptionActivate( wxListEvent& event );
+    void OnLoadPreset( wxCommandEvent& event );
+    void OnSavePreset( wxCommandEvent& event );
+    void OnDeletePreset( wxCommandEvent& event );
+    void OnSetModDefaultPreset( wxCommandEvent& event );
+    void OnMapBrowse( wxCommandEvent& event );
+    void OnMapSelect( wxCommandEvent& event );
+    void OnOptionActivate( wxListEvent& event );
 
-		void OnSpectUnsynced( wxCommandEvent& event );
-		void OnSpectUnready( wxCommandEvent& event );
-		void OnSpectUnreadyUnsynced( wxCommandEvent& event );
+    void OnSpectUnsynced( wxCommandEvent& event );
+    void OnSpectUnready( wxCommandEvent& event );
+    void OnSpectUnreadyUnsynced( wxCommandEvent& event );
 
-		void OnRingUnready( wxCommandEvent& event );
-		void OnRingUnsynced( wxCommandEvent& event );
-		void OnRingUnreadyUnsynced( wxCommandEvent& event );
+    void OnRingUnready( wxCommandEvent& event );
+    void OnRingUnsynced( wxCommandEvent& event );
+    void OnRingUnreadyUnsynced( wxCommandEvent& event );
 
-		void OnAutoControl( wxCommandEvent& event );
-		void OnAutoStart( wxCommandEvent& event );
-		void OnAutoSpec( wxCommandEvent& event );
+    void OnAutoControl( wxCommandEvent& event );
+    void OnAutoStart( wxCommandEvent& event );
+    void OnAutoSpec( wxCommandEvent& event );
 
     void OnUserJoined( User& user );
     void OnUserLeft( User& user );
 
-    void OnUnitSyncReloaded();
-		void ReloadMaplist();
-		void SetMap( int index );
+    void OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ );
+    void ReloadMaplist();
+    void SetMap( int index );
 
     void UpdateHighlights();
 
@@ -107,7 +108,6 @@ class BattleRoomTab : public wxScrolledWindow
 
     void SplitSizerHorizontally( const bool horizontal );
 
-    Ui& m_ui;
     Battle& m_battle;
     UnitSyncMap m_map;
 

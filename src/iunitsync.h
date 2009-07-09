@@ -7,6 +7,7 @@
 #include <map>
 
 #include "mmoptionmodel.h"
+#include "utils/globalevents.h"
 
 class wxImage;
 
@@ -58,6 +59,9 @@ struct GameOptions;
 class IUnitSync
 {
   public:
+    IUnitSync()
+    { }
+
     virtual ~IUnitSync() { }
 
     enum GameFeature
@@ -181,7 +185,8 @@ class IUnitSync
     virtual wxArrayString GetAIInfos( int index ) = 0;
     virtual GameOptions GetAIOptions( const wxString& modname, int index ) = 0;
 
-    virtual bool ReloadUnitSyncLib() = 0;
+    virtual bool ReloadUnitSyncLib(  ) = 0;
+    virtual void ReloadUnitSyncLib( GlobalEvents::GlobalEventData data ) = 0;
 
     virtual wxArrayString GetPlaybackList( bool ReplayType = true ) = 0; //savegames otherwise
 
@@ -205,6 +210,7 @@ class IUnitSync
     virtual void GetMapExAsync( const wxString& mapname, int evtHandlerId ) = 0;
 
     virtual wxArrayString GetScreenshotFilenames() = 0;
+
 };
 
 IUnitSync& usync();

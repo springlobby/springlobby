@@ -95,14 +95,13 @@ static inline int ReadInt24(const unsigned char* p)
     return p[0] | (p[1] << 8) | (p[2] << 16);
 }
 
-MapCtrl::MapCtrl( wxWindow* parent, int size, IBattle* battle, Ui& ui, bool readonly, bool fixed_size, bool draw_start_types, bool singleplayer ):
+MapCtrl::MapCtrl( wxWindow* parent, int size, IBattle* battle, bool readonly, bool fixed_size, bool draw_start_types, bool singleplayer ):
         wxPanel( parent, -1, wxDefaultPosition, wxSize(size, size), wxSIMPLE_BORDER|wxFULL_REPAINT_ON_RESIZE ),
         m_async(this),
         m_minimap(0),
         m_metalmap(0),
         m_heightmap(0),
         m_battle(battle),
-        m_ui(ui),
         m_mapname(_T("")),
         m_draw_start_types(draw_start_types),
         m_fixed_size(fixed_size),
@@ -504,8 +503,12 @@ void MapCtrl::UpdateMinimap()
 			}
         }
     }
-    Refresh();
-    Update();
+    //without this test aborts happen when unit sync is reloaded from torrent complete
+    //if ( IsShownOnScreen() ) //meh, doesn't actually help
+    {
+        Refresh();
+        Update();
+    }
 }
 
 
@@ -1461,13 +1464,13 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
         {
             if ( m_mdown_area == Refreshing )
             {
-                m_ui.ReloadUnitSync();
+                GetGlobalEventSender(GlobalEvents::UnitSyncReloadRequest).SendEvent( 0 ); // request an unitsync reload
                 m_battle->Update( wxString::Format( _T("%d_mapname"), OptionsWrapper::PrivateOptions ) );
                 UpdateMinimap();
             }
             else if ( m_mdown_area == Download )
             {
-                m_ui.DownloadMap( m_battle->GetHostMapHash(),  m_battle->GetHostMapName() );
+                ui().DownloadMap( m_battle->GetHostMapHash(),  m_battle->GetHostMapName() );
             }
         }
         m_mdown_area = Main;

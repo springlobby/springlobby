@@ -14,7 +14,6 @@
 #include "aui/auimanager.h"
 #include "aui/artprovider.h"
 #include "mainoptionstab.h"
-#include "ui.h"
 #include "springoptionstab.h"
 #include "chatoptionstab.h"
 #include "settings.h"
@@ -46,7 +45,8 @@ END_EVENT_TABLE()
  * rather then those having to implement (and duplicate) this functionality. \n
  * See SpringOptionsTab, TorrentOptionsPanel, ChatOptionsTab
  */
-MainOptionsTab::MainOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( parent, -1 ),m_ui(ui)
+MainOptionsTab::MainOptionsTab( wxWindow* parent )
+    : wxScrolledWindow( parent, -1 )
 {
     GetAui().manager->AddPane( this, wxLEFT, _T("mainoptionstab") );
     m_tabs = new wxAuiNotebook( this, OPTIONS_TABS, wxDefaultPosition, wxDefaultSize, wxAUI_NB_TAB_SPLIT | wxAUI_NB_TAB_MOVE | wxAUI_NB_SCROLL_BUTTONS | wxAUI_NB_TOP | wxAUI_NB_TAB_EXTERNAL_MOVE );
@@ -58,15 +58,15 @@ MainOptionsTab::MainOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( p
     m_imagelist->Add( wxIcon(userchat_xpm) );
     m_imagelist->Add( wxIcon(springlobby_xpm) );
 
-    m_spring_opts = new SpringOptionsTab( m_tabs, m_ui );
+    m_spring_opts = new SpringOptionsTab( m_tabs );
     m_tabs->AddPage( m_spring_opts, _("Spring"), true, wxIcon(spring_xpm) );
 
 #ifndef NO_TORRENT_SYSTEM
-    m_torrent_opts = new TorrentOptionsPanel( m_tabs, m_ui );
+    m_torrent_opts = new TorrentOptionsPanel( m_tabs );
     m_tabs->AddPage( m_torrent_opts, _("P2P"), true, charArr2wxBitmap( torrentoptionspanel_icon_png, sizeof(torrentoptionspanel_icon_png) ) );
 #endif
 
-    m_chat_opts = new ChatOptionsTab( m_tabs, m_ui );
+    m_chat_opts = new ChatOptionsTab( m_tabs );
     m_tabs->AddPage( m_chat_opts, _("Chat"), true, wxIcon(userchat_xpm) );
 
     m_lobby_opts = new LobbyOptionsTab( m_tabs );

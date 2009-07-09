@@ -11,7 +11,6 @@
 #include <wx/wupdlock.h>
 #include <wx/log.h>
 
-#include "ui.h"
 #include "settings.h"
 #include "battle.h"
 #include "mainjoinbattletab.h"
@@ -32,8 +31,12 @@
 
 #include <stdexcept>
 
-MainJoinBattleTab::MainJoinBattleTab( wxWindow* parent, Ui& ui ) :
-    wxScrolledWindow( parent, -1 ),m_battle_tab(0),m_map_tab(0),m_opts_tab(0),m_mm_opts_tab(0),m_ui(ui)
+MainJoinBattleTab::MainJoinBattleTab( wxWindow* parent )
+    : wxScrolledWindow( parent, -1 ),
+    m_battle_tab(0),
+    m_map_tab(0),
+    m_opts_tab(0),
+    m_mm_opts_tab(0)
 {
   GetAui().manager->AddPane( this, wxLEFT, _T("mainjoinbattletab") );
 
@@ -48,7 +51,7 @@ MainJoinBattleTab::MainJoinBattleTab( wxWindow* parent, Ui& ui ) :
   m_imagelist->Add( wxIcon(battle_map_xpm) );
   m_imagelist->Add( wxIcon(battle_settings_xpm) );
 
-  m_list_tab = new BattleListTab( m_tabs, m_ui );
+  m_list_tab = new BattleListTab( m_tabs );
   m_tabs->AddPage( m_list_tab, _("Battle list"), true, wxIcon(battle_list_xpm) );
 
   m_main_sizer->Add( m_tabs, 1, wxEXPAND );
@@ -130,16 +133,16 @@ void MainJoinBattleTab::JoinBattle( Battle& battle )
 {
   LeaveCurrentBattle();
 
-  m_battle_tab = new BattleRoomTab( m_tabs, m_ui, battle );
+  m_battle_tab = new BattleRoomTab( m_tabs, battle );
   m_tabs->InsertPage( 1, m_battle_tab, _("Battleroom"), true, wxIcon(battle_xpm) );
 
-  m_map_tab = new BattleMapTab( m_tabs, m_ui, battle );
+  m_map_tab = new BattleMapTab( m_tabs, battle );
   m_tabs->InsertPage( 2, m_map_tab, _("Map"), false, wxIcon(battle_map_xpm) );
 
   m_mm_opts_tab = new BattleroomMMOptionsTab<Battle>( battle, m_tabs);
   m_tabs->InsertPage( 3, m_mm_opts_tab, _("Options"), false, wxIcon(battle_settings_xpm) );
 
-  m_opts_tab = new BattleOptionsTab( m_tabs, m_ui, battle );
+  m_opts_tab = new BattleOptionsTab( m_tabs, battle );
   m_tabs->InsertPage( 4, m_opts_tab, _("Unit Restrictions"), false, wxIcon(battle_settings_xpm) );
 
   #ifdef __WXMSW__
@@ -189,22 +192,6 @@ void MainJoinBattleTab::BattleUserUpdated( User& user )
   } catch(...) {}
 }
 
-
-void MainJoinBattleTab::OnUnitSyncReloaded()
-{
-  wxLogDebugFunc( _T("") );
-  GetBattleListTab().OnUnitSyncReloaded();
-  wxLogMessage( _T("Battle list tab reloaded") );
-  try
-  {
-    GetBattleRoomTab().OnUnitSyncReloaded();
-  } catch (...) {}
-  try
-  {
-    GetBattleMapTab().OnUnitSyncReloaded();
-  } catch(...) {}
-  wxLogMessage( _T("Battle list tab reloaded") );
-}
 
 void MainJoinBattleTab::OnConnected()
 {
