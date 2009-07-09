@@ -589,13 +589,13 @@ void MainWindow::OnReportBug( wxCommandEvent& event )
     wxString reporter = wxEmptyString;
     if (ui().IsConnected() )
         reporter = _T("?reporter=") + ui().GetServer().GetMe().GetNick();
-  ui().OpenWebBrowser( _T("http://trac.springlobby.info/newticket") + reporter);
+    OpenWebBrowser( _T("http://trac.springlobby.info/newticket") + reporter);
 }
 
 
 void MainWindow::OnShowDocs( wxCommandEvent& event )
 {
-  ui().OpenWebBrowser( _T("http://springlobby.info") );
+    OpenWebBrowser( _T("http://springlobby.info") );
 }
 
 void MainWindow::OnTabsChanged( wxAuiNotebookEvent& event )

@@ -130,7 +130,7 @@ bool SpringLobbyApp::OnInit()
     wxFileSystem::AddHandler(new wxZipFSHandler);
     wxSocketBase::Initialize();
 
-    m_updater_window = new UpdaterMainwindow();
+    m_updater_window = new UpdaterMainwindow( _T("0.4") );
     SetTopWindow( m_updater_window );
     m_updater_window->Show( true );
     return true;

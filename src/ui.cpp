@@ -343,31 +343,6 @@ void Ui::DownloadFileP2P( const wxString& hash, const wxString& name )
 }
 
 
-void Ui::OpenWebBrowser( const wxString& url )
-{
-    if ( sett().GetWebBrowserUseDefault()
-            // These shouldn't happen, but if they do we use the default browser anyway.
-            || sett().GetWebBrowserPath() == wxEmptyString
-            || sett().GetWebBrowserPath() == _T("use default") )
-    {
-        if ( !wxLaunchDefaultBrowser( url ) )
-        {
-            wxLogWarning( _T("can't launch default browser") );
-            customMessageBoxNoModal(SL_MAIN_ICON, _("Couldn't launch browser. URL is: ") + url, _("Couldn't launch browser.")  );
-        }
-    }
-    else
-    {
-        if ( !wxExecute ( sett().GetWebBrowserPath() + _T(" ") + url, wxEXEC_ASYNC ) )
-        {
-            wxLogWarning( _T("can't launch browser: %s"), sett().GetWebBrowserPath().c_str() );
-            customMessageBoxNoModal(SL_MAIN_ICON, _("Couldn't launch browser. URL is: ") + url + _("\nBroser path is: ") + sett().GetWebBrowserPath(), _("Couldn't launch browser.")  );
-        }
-
-    }
-}
-
-
 //! @brief Display a dialog asking a question with OK and Canel buttons
 //!
 //! @return true if OK button was pressed

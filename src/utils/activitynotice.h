@@ -13,14 +13,13 @@ class wxStaticText;
 class ActivityNoticePanel: public wxPanel
 {
     public:
-        ActivityNoticePanel(wxWindow* parent,const wxString& file,const wxString& format = _("Caching file %s please wait") );
+        ActivityNoticePanel(wxWindow* parent,const wxString& notice, const wxSize& panel_size = wxSize(190,6), const wxSize& gauge_size = wxSize(80,5) );
         virtual ~ActivityNoticePanel() {}
 
         void SetString(const wxString& file);
         virtual bool Show(bool show = true);
     protected:
-        wxString m_filename;
-        wxString m_format;
+        wxString m_notice;
         wxGauge* m_gauge;
         wxStaticText* m_message;
         wxTimer m_timer;
@@ -33,7 +32,7 @@ class ActivityNoticePanel: public wxPanel
 class ActivityNotice: public wxDialog
 {
     public:
-        ActivityNotice(wxWindow* parent,const wxString& file, const wxString& format = _("Caching file %s please wait"));
+        ActivityNotice(wxWindow* parent,const wxString& notice, const wxSize& gauge_size = wxSize(80,5)  );
         virtual ~ActivityNotice() {}
     protected:
         ActivityNoticePanel* m_panel;
@@ -43,7 +42,7 @@ class ActivityNotice: public wxDialog
 class ActivityNoticeContainer
 {
     public:
-        ActivityNoticeContainer(wxWindow* parent,const wxString& file, const wxString& format = _("Caching file %s please wait"));
+        ActivityNoticeContainer(wxWindow* parent,const wxString& notice, const wxSize& gauge_size = wxSize(80,5)  );
         ~ActivityNoticeContainer();
 
     protected:
@@ -53,7 +52,7 @@ class ActivityNoticeContainer
 typedef std::auto_ptr<ActivityNoticeContainer>
     ScopedActivityNotice;
 
-ScopedActivityNotice scopedActivityNotice(wxWindow* parent,const wxString& file, const wxString& format = _("Caching file %s please wait"));
+ScopedActivityNotice scopedActivityNotice(wxWindow* parent,const wxString& notice, const wxSize& gauge_size = wxSize(80,5) );
 
 #endif // SPRINGLOBBY_HEADERGUARD_ACTIVITYNOTICE_H
 

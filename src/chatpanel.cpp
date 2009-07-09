@@ -32,6 +32,7 @@
 #include "utils/debug.h"
 #include "utils/conversion.h"
 #include "utils/platform.h"
+#include "utils/misc.h"
 #include "ui.h"
 #include "server.h"
 #include "user.h"
@@ -704,7 +705,7 @@ void ChatPanel::OnLinkEvent( wxTextUrlEvent& event )
         return;
 
     wxString url = m_chatlog_text->GetRange( event.GetURLStart(), event.GetURLEnd());
-    ui().OpenWebBrowser( url );
+    OpenWebBrowser( url );
 }
 
 void ChatPanel::OnUserMenuCopyLink( wxCommandEvent& event )

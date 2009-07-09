@@ -50,6 +50,9 @@ std::vector<wxColour>& GetBigFixColoursPalette( int numteams );
 
 void CopyToClipboard( const wxString& text );
 
+//! open either plattform default browser or binary saved in settings with given url
+void OpenWebBrowser( const wxString& url );
+
 #endif
 // SPRINGLOBBY_HEADERGUARD_UIUTILS_H
 

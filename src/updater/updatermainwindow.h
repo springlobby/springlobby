@@ -6,18 +6,25 @@
 class ActivityNoticePanel;
 class wxCloseEvent;
 class wxBoxSizer;
+class wxButton;
 
 class UpdaterMainwindow : public wxFrame {
 
     public:
-        UpdaterMainwindow();
+        UpdaterMainwindow( const wxString& rev_string );
         virtual ~UpdaterMainwindow();
 
         void OnClose( wxCloseEvent& evt );
+        void OnChangelog( wxCommandEvent& event );
 
     protected:
         wxBoxSizer* m_main_sizer;
         ActivityNoticePanel* m_activity_panel;
+        wxButton* m_changelog;
+
+        enum {
+            ID_BUT_CHANGELOG = wxID_HIGHEST
+        };
 
         DECLARE_EVENT_TABLE()
 };

@@ -4,7 +4,9 @@
 #include <algorithm>
 
 template <typename T> T clamp(const T var,const T min,const T max)
-{ return ( (var < min) ? min : ( var > max ) ? max : var ); }
+{
+    return ( (var < min) ? min : ( var > max ) ? max : var );
+}
 
 template<typename T>
 T min(T a, T b, T c)

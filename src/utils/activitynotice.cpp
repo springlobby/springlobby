@@ -12,37 +12,39 @@ BEGIN_EVENT_TABLE(ActivityNoticePanel,wxPanel)
 END_EVENT_TABLE()
 
 
- ActivityNotice::ActivityNotice(wxWindow* parent,const wxString& file,const wxString& format )
-    :wxDialog ( parent,wxID_ANY,_T(""),wxDefaultPosition, wxSize(190,60),wxBORDER_NONE|wxSTAY_ON_TOP)
+ ActivityNotice::ActivityNotice(wxWindow* parent,const wxString& notice, const wxSize& gauge_size )
+    : wxDialog ( parent,wxID_ANY,_T(""),wxDefaultPosition, wxSize(190,60),wxBORDER_NONE|wxSTAY_ON_TOP)
 {
     wxBoxSizer* m_main_sizer = new wxBoxSizer( wxVERTICAL );
-    m_panel = new ActivityNoticePanel(this,file,format);
+    m_panel = new ActivityNoticePanel( this, notice, gauge_size );
     m_main_sizer->Add( m_panel, 1 , wxALL|wxEXPAND, 0 );
     SetSizer(m_main_sizer);
     Layout();
 }
 
- ActivityNoticePanel::ActivityNoticePanel(wxWindow* parent,const wxString& file,const wxString& format )
-    :wxPanel ( parent,wxID_ANY,wxDefaultPosition, wxSize(190,60),wxBORDER_NONE),
-    m_filename(file),m_format(format)
+ ActivityNoticePanel::ActivityNoticePanel(wxWindow* parent,const wxString& notice, const wxSize& panel_size, const wxSize& gauge_size )
+    : wxPanel ( parent,wxID_ANY,wxDefaultPosition, panel_size, wxBORDER_NONE),
+    m_notice(notice)
 {
     static int timer_inc = 0;
     m_timer.SetOwner(this,timer_inc++);
     wxBoxSizer* m_main_sizer = new wxBoxSizer( wxVERTICAL );
-    m_gauge = new wxGauge(this, wxID_ANY,120,wxDefaultPosition,wxSize(80,5) );
-    m_gauge->Pulse();
     m_message = new wxStaticText(this,wxID_ANY,_T("") );
     m_main_sizer->Add( m_message, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL, 5 );
+
+    m_gauge = new wxGauge(this, wxID_ANY,120,wxDefaultPosition, gauge_size );
+    m_gauge->Pulse();
     m_main_sizer->Add( m_gauge, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
+
     SetSizer( m_main_sizer );
-    SetString( m_filename );
+    SetString( m_notice );
     Show(true);
 }
 
 void ActivityNoticePanel::SetString(const wxString& file)
 {
-    m_filename = file;
-    m_message->SetLabel(wxString::Format( m_format, m_filename.c_str() ) );
+    m_notice = file;
+    m_message->SetLabel( m_notice );
     Layout();
 }
 
@@ -62,10 +64,10 @@ void ActivityNoticePanel::OnTimer(wxTimerEvent& event)
     m_gauge->Pulse();
 }
 
- ActivityNoticeContainer::ActivityNoticeContainer(wxWindow* parent_,const wxString& file,const wxString& format )
+ ActivityNoticeContainer::ActivityNoticeContainer(wxWindow* parent_,const wxString& notice, const wxSize& gauge_size )
 {
     wxWindow* parent = ( parent_ ) ? parent_ : ( wxTheApp->GetTopWindow() ) ;
-    m_window = new ActivityNotice( parent, file, format);
+    m_window = new ActivityNotice( parent, notice, gauge_size );
     m_window->Show(true);
 }
 
@@ -74,7 +76,7 @@ void ActivityNoticePanel::OnTimer(wxTimerEvent& event)
     m_window->Destroy();
 }
 
-ScopedActivityNotice scopedActivityNotice(wxWindow* parent,const wxString& file, const wxString& format )
+ScopedActivityNotice scopedActivityNotice(wxWindow* parent,const wxString& notice, const wxSize& gauge_size )
 {
-    return ScopedActivityNotice( new ActivityNoticeContainer( parent, file, format ) );
+    return ScopedActivityNotice( new ActivityNoticeContainer( parent, notice, gauge_size ) );
 }

@@ -1,6 +1,6 @@
 #include "slhtmlwindow.h"
 
-#include "../ui.h"
+#include "../uiutils.h"
 
 BEGIN_EVENT_TABLE( slHtmlWindow, wxHtmlWindow )
     EVT_HTML_LINK_CLICKED(wxID_ANY, slHtmlWindow::OnLinkClicked)
@@ -22,5 +22,5 @@ slHtmlWindow::~slHtmlWindow()
 void slHtmlWindow::OnLinkClicked( wxHtmlLinkEvent& evt )
 {
     wxString url = evt.GetLinkInfo().GetHref();
-    ui().OpenWebBrowser( url );
+    OpenWebBrowser( url );
 }
