@@ -31,7 +31,7 @@
 #include <wx/combobox.h>
 #include <wx/spinctrl.h>
 
-#include "custom_dialogs.h"
+#include "../utils/customdialogs.h"
 #include "../springunitsynclib.h"
 
 #include "Defs.hpp"

@@ -28,7 +28,7 @@
 #include "countrycodes.h"
 #include "mainwindow.h"
 #include "aui/auimanager.h"
-#include "settings++/custom_dialogs.h"
+#include "utils/customdialogs.h"
 #include "settings.h"
 
 template<> SortOrder CustomVirtListCtrl<User*,BattleroomListCtrl>::m_sortorder = SortOrder();

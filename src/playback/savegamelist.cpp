@@ -9,7 +9,7 @@
 
 #include "replaylist.h"
 //#include "../utils/.h"
-#include "../settings++/custom_dialogs.h"
+#include "../utils/customdialogs.h"
 #include "playbacktab.h"
 #include "playbackstructs.h"
 #include "../uiutils.h"

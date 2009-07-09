@@ -320,7 +320,7 @@ SET(SpringLobbySrc
 )
 
 SET(SettingsSrc
-	src/settings++/custom_dialogs.cpp
+	src/utils/customdialogs.cpp
 	src/settings++/frame.cpp
 	src/settings++/helpmenufunctions.cpp
 	src/settings++/panel_pathoption.cpp

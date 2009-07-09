@@ -30,7 +30,7 @@
 #include "playbackfilter.h"
 #include "../iconimagelist.h"
 
-#include "../settings++/custom_dialogs.h"
+#include "../utils/customdialogs.h"
 
 
 BEGIN_EVENT_TABLE_TEMPLATE1(PlaybackTab, wxPanel, PlaybackTraits)

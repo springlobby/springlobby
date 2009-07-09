@@ -23,7 +23,7 @@
 #include "battle.h"
 #include "httpdownloader.h"
 #include "settings.h"
-#include "settings++/custom_dialogs.h"
+#include "utils/customdialogs.h"
 #ifndef NO_TORRENT_SYSTEM
 #include "torrentwrapper.h"
 #endif

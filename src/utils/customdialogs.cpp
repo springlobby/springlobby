@@ -1,4 +1,4 @@
-#include "custom_dialogs.h"
+#include "../utils/customdialogs.h"
 
 #include <wx/icon.h>
 #include <wx/string.h>

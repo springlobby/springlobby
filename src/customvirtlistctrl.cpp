@@ -5,7 +5,7 @@
 #include "nonportable.h" //pulls in the SL_DUMMY_COL define if applicable
 #include "settings.h"
 #include "iconimagelist.h"
-#include "settings++/custom_dialogs.h"
+#include "utils/customdialogs.h"
 #include "uiutils.h"
 #include "utils/sltipwin.h"
 #include "utils/math.h"

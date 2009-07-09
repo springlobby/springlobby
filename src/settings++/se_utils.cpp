@@ -10,7 +10,7 @@
 
 #include "se_utils.h"
 
-#include "custom_dialogs.h"
+#include "../utils/customdialogs.h"
 #include "../settings.h"
 #include "../springunitsynclib.h"
 //#include "../utils/.h"

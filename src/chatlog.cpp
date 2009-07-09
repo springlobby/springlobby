@@ -16,7 +16,7 @@
 #include "settings.h"
 #include "utils/conversion.h"
 
-#include "settings++/custom_dialogs.h"
+#include "utils/customdialogs.h"
 
 bool ChatLog::m_parent_dir_exists = true;
 

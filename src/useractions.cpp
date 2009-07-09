@@ -4,7 +4,7 @@
 #include <wx/colour.h>
 #include "settings.h"
 #include <cmath>
-#include "settings++/custom_dialogs.h"
+#include "utils/customdialogs.h"
 
 //for updating ui, anybody feel free to replace with fancy events stuff :P
 #include "ui.h"

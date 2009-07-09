@@ -18,7 +18,7 @@
 #include "mmoptionswrapper.h"
 #include "battle.h"
 #include "spinctld.h"
-#include "settings++/custom_dialogs.h"
+#include "utils/customdialogs.h"
 #include "server.h"
 #include "settings.h"
 #include "ui.h"

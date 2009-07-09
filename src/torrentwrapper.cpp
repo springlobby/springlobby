@@ -50,7 +50,7 @@
 #include <wx/event.h>
 
 #include "torrentwrapper.h"
-#include "settings++/custom_dialogs.h"
+#include "utils/customdialogs.h"
 #include "globalsmanager.h"
 #include "utils/globalevents.h"
 

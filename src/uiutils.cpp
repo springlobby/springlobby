@@ -19,7 +19,7 @@
 #include "utils/math.h"
 #include "utils/conversion.h"
 #include "utils/debug.h"
-#include "settings++/custom_dialogs.h"
+#include "utils/customdialogs.h"
 #include "settings.h"
 
 wxString RefineMapname( const wxString& mapname )

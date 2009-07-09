@@ -25,7 +25,7 @@
 #include "settings.h"
 #include "Helper/colorbutton.h"
 #include "aui/auimanager.h"
-#include "settings++/custom_dialogs.h"
+#include "utils/customdialogs.h"
 #include "springunitsynclib.h"
 
 BEGIN_EVENT_TABLE(SinglePlayerTab, wxPanel)
@@ -320,7 +320,7 @@ void SinglePlayerTab::OnStart( wxCommandEvent& event )
 {
     wxLogDebugFunc( _T("SP: ") );
 
-    if ( m_ui.IsSpringRunning() )
+    if ( ui().IsSpringRunning() )
     {
         wxLogWarning(_T("trying to start spring while another instance is running") );
         customMessageBoxNoModal(SL_MAIN_ICON, _("You cannot start a spring instance while another is already running"), _("Spring error"), wxICON_EXCLAMATION );

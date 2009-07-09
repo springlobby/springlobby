@@ -13,7 +13,7 @@
 #include "server.h"
 #include "countrycodes.h"
 #include "settings.h"
-#include "settings++/custom_dialogs.h"
+#include "utils/customdialogs.h"
 #include "useractions.h"
 #include "Helper/sortutil.h"
 #include "aui/auimanager.h"

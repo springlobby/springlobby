@@ -14,7 +14,7 @@
 #include "uiutils.h"
 #include "settings.h"
 #include "useractions.h"
-#include "settings++/custom_dialogs.h"
+#include "utils/customdialogs.h"
 #include "springunitsynclib.h"
 #include "iconimagelist.h"
 #include "spring.h"

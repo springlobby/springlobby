@@ -26,7 +26,7 @@
 #include "se_utils.h"
 
 
-#include "custom_dialogs.h"
+#include "../utils/customdialogs.h"
 
 PathOptionPanel::PathOptionPanel(wxWindow* parent,settings_frame* _origin) : wxPanel(parent,-1),origin(_origin)
 {

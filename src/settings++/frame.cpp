@@ -36,7 +36,7 @@
 #include "tab_simple.h"
 #include "Defs.hpp"
 #include "panel_pathoption.h"
-#include "custom_dialogs.h"
+#include "../utils/customdialogs.h"
 #include "../images/springsettings.xpm"
 #include "helpmenufunctions.h"
 #include "se_utils.h"

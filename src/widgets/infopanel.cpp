@@ -16,7 +16,7 @@
 #include "widget.h"
 #include "../aui/artprovider.h"
 #include "../utils/conversion.h"
-#include "../settings++/custom_dialogs.h"
+#include "../utils/customdialogs.h"
 #include "../Helper/imageviewer.h"
 #include "../Helper/slhtmlwindow.h"
 

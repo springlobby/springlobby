@@ -35,7 +35,7 @@
 #include "battlelistfilter.h"
 #include "iconimagelist.h"
 #include "useractions.h"
-#include "settings++/custom_dialogs.h"
+#include "utils/customdialogs.h"
 
 const unsigned int BATTLELIST_COLUMNCOUNT = 10;
 

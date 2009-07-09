@@ -43,7 +43,7 @@
 #include "addbotdialog.h"
 #include "server.h"
 #include "iconimagelist.h"
-#include "settings++/custom_dialogs.h"
+#include "utils/customdialogs.h"
 #include "autobalancedialog.h"
 #include "settings.h"
 #include "Helper/colorbutton.h"

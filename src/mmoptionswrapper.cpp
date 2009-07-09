@@ -2,7 +2,7 @@
 
 #include "iunitsync.h"
 #include "utils/conversion.h"
-#include "settings++/custom_dialogs.h"
+#include "utils/customdialogs.h"
 
 #include <stdexcept>
 #include <wx/intl.h>

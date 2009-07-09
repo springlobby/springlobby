@@ -39,7 +39,7 @@
 #include "nicklistctrl.h"
 #include "mainwindow.h"
 #include "chatlog.h"
-#include "settings++/custom_dialogs.h"
+#include "utils/customdialogs.h"
 #include "settings.h"
 #include "uiutils.h"
 #include "Helper/wxtextctrlhist.h"

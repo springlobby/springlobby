@@ -35,7 +35,7 @@
 #include "images/rank5.xpm"
 #include "images/rank6.xpm"
 
-#include "settings++/custom_dialogs.h"
+#include "utils/customdialogs.h"
 
 BEGIN_EVENT_TABLE( HostBattleDialog, wxDialog )
 

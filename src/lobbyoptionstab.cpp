@@ -14,7 +14,7 @@
 #include "nonportable.h"
 #include "settings.h"
 #include "springlobbyapp.h"
-#include "settings++/custom_dialogs.h"
+#include "utils/customdialogs.h"
 #include "utils/controls.h"
 #include "aui/auimanager.h"
 #include "ui.h"

@@ -4,15 +4,15 @@
 #include "config.h"
 #endif //HAVE_CONFIG_H
 
-#ifndef VERSION 
+#ifndef VERSION
 	#define VERSION "unknown"
-#endif //VERSION 
+#endif //VERSION
 
 
 #include <wx/icon.h>
 #include "../images/springsettings.xpm"
 
-#include "custom_dialogs.h"
+#include "../utils/customdialogs.h"
 #include <wx/intl.h>
 #include "se_utils.h"
 #include <string>

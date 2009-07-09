@@ -341,8 +341,6 @@
 		<Unit filename="src/serverevents.cpp" />
 		<Unit filename="src/serverevents.h" />
 		<Unit filename="src/settings++/Defs.hpp" />
-		<Unit filename="src/settings++/custom_dialogs.cpp" />
-		<Unit filename="src/settings++/custom_dialogs.h" />
 		<Unit filename="src/settings++/frame.cpp" />
 		<Unit filename="src/settings++/frame.h" />
 		<Unit filename="src/settings++/helpmenufunctions.cpp" />
@@ -430,6 +428,8 @@
 		<Unit filename="src/utils/controls.h" />
 		<Unit filename="src/utils/conversion.cpp" />
 		<Unit filename="src/utils/conversion.h" />
+		<Unit filename="src/utils/customdialogs.cpp" />
+		<Unit filename="src/utils/customdialogs.h" />
 		<Unit filename="src/utils/debug.cpp" />
 		<Unit filename="src/utils/debug.h" />
 		<Unit filename="src/utils/events.h" />

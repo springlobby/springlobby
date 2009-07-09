@@ -25,7 +25,7 @@
 #include "utils/controls.h"
 #include "utils/tasutil.h"
 
-#include "settings++/custom_dialogs.h"
+#include "utils/customdialogs.h"
 
 // Define events.
 BEGIN_EVENT_TABLE(ConnectWindow, wxDialog)

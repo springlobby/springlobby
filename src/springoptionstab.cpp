@@ -38,7 +38,7 @@
 #include "settings.h"
 #include "mainwindow.h"
 
-#include "settings++/custom_dialogs.h"
+#include "utils/customdialogs.h"
 
 BEGIN_EVENT_TABLE(SpringOptionsTab, wxPanel)
 

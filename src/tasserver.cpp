@@ -42,12 +42,12 @@
 #include "config.h"
 #endif //HAVE_CONFIG_H
 
-#ifndef VERSION 
+#ifndef VERSION
 	#define VERSION "unknown"
-#endif //VERSION 
+#endif //VERSION
 
 // for SL_MAIN_ICON
-#include "settings++/custom_dialogs.h"
+#include "utils/customdialogs.h"
 
 #include "settings.h"
 

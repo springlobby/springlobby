@@ -41,7 +41,7 @@
 #include "ui.h"
 #include "iunitsync.h"
 #include "channel/channel.h"
-#include "settings++/custom_dialogs.h"
+#include "utils/customdialogs.h"
 #include "settings++/se_utils.h"
 #ifndef NO_TORRENT_SYSTEM
 #include "torrentwrapper.h"

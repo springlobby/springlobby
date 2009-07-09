@@ -7,6 +7,7 @@
 #include <wx/timer.h>
 #include <wx/panel.h>
 
+
 const unsigned SL_MAIN_ICON = 1;
 const unsigned SS_MAIN_ICON = 2;
 
@@ -217,6 +218,8 @@ class ActivityNoticeContainer
     protected:
         ActivityNotice* m_window;
 };
+
+#include <memory>
 
 typedef std::auto_ptr<ActivityNoticeContainer>
     ScopedActivityNotice;

@@ -69,7 +69,7 @@
 #include "images/floppy_icon.png.h"
 
 #include "settings++/frame.h"
-#include "settings++/custom_dialogs.h"
+#include "utils/customdialogs.h"
 
 #include "updater/updater.h"
 #include "channel/autojoinchanneldialog.h"

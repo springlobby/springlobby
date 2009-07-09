@@ -8,7 +8,7 @@
 #include "utils/controls.h"
 #include "settings.h"
 #include "iconimagelist.h"
-#include "settings++/custom_dialogs.h"
+#include "utils/customdialogs.h"
 #include "uiutils.h"
 
 

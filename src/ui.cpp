@@ -46,7 +46,7 @@
 #include "updater/updater.h"
 #endif
 
-#include "settings++/custom_dialogs.h"
+#include "utils/customdialogs.h"
 
 #include "sdlsound.h"
 #include "globalsmanager.h"

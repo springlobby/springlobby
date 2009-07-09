@@ -38,7 +38,7 @@
 #include "Helper/sortutil.h"
 #include "mainwindow.h"
 #ifdef SL_DUMMY_COL
-    #include "settings++/custom_dialogs.h"
+    #include "utils/customdialogs.h"
 #endif
 
 bool Settings::m_user_defined_config = false;
