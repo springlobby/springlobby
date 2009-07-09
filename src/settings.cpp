@@ -346,7 +346,7 @@ wxString Settings::GetWebBrowserPath()
 }
 
 
-void Settings::SetWebBrowserPath( const wxString path )
+void Settings::SetWebBrowserPath( const wxString& path )
 {
     m_config->Write( _T("/General/WebBrowserPath"), path );
 }
@@ -2226,7 +2226,7 @@ void Settings::SetMapSelectorFilterRadio( const unsigned int val )
 //////////////////////////////////////////////////////////////////////////////
 
 
-int Settings::getMode()
+unsigned int Settings::getMode()
 {
 	int mode;
 	m_config->Read( _T("/SpringSettings/mode"), &mode, SET_MODE_SIMPLE );

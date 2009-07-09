@@ -296,7 +296,7 @@ void CustomVirtListCtrl<T,L>::OnMouseMotion(wxMouseEvent& event)
 }
 
 template < class T, class L >
-void CustomVirtListCtrl<T,L>::SetTipWindowText( const long item_hit, const wxPoint position)
+void CustomVirtListCtrl<T,L>::SetTipWindowText( const long item_hit, const wxPoint& position)
 {
   int column = getColumnFromPosition(position);
   #ifdef SL_DUMMY_COL

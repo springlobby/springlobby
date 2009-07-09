@@ -287,7 +287,7 @@ int BattleListCtrl::ComparePlayer( DataType u1, DataType u2 )
     return compareSimple( n1, n2 );
 }
 
-void BattleListCtrl::SetTipWindowText( const long item_hit, const wxPoint position)
+void BattleListCtrl::SetTipWindowText( const long item_hit, const wxPoint& position)
 {
     if ( (long)m_data.size() < item_hit ) {
         m_tiptext = _T("");

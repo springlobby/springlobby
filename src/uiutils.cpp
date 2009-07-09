@@ -143,7 +143,7 @@ wxColour ColourDelta( const wxColour& colour, const int& delta )
 
 
 
-wxColour GetColorFromFloatStrng( const wxString color )
+wxColour GetColorFromFloatStrng( const wxString& color )
 {
     wxString c = color;
     float r = 0, g = 0, b = 0;

@@ -155,7 +155,7 @@ wxString ChannelListctrl::GetItemText(long item, long column) const
     }
 }
 
-void ChannelListctrl::SetTipWindowText(const long item_hit, const wxPoint position)
+void ChannelListctrl::SetTipWindowText(const long item_hit, const wxPoint& position)
 {
     int column = getColumnFromPosition(position);
     if (column > (int)m_colinfovec.size() || column < 0 || item_hit < 0 || item_hit > (long)m_data.size() )

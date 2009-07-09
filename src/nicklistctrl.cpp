@@ -142,7 +142,7 @@ void NickListCtrl::OnShowMenu( wxContextMenuEvent& event )
   }
 }
 
-void NickListCtrl::SetTipWindowText( const long item_hit, const wxPoint position)
+void NickListCtrl::SetTipWindowText( const long item_hit, const wxPoint& position)
 {
 
     int column = getColumnFromPosition(position);

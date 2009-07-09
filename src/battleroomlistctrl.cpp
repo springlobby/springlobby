@@ -688,7 +688,7 @@ int BattleroomListCtrl::CompareHandicap(const DataType user1, const DataType use
   return 0;
 }
 
-void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint position)
+void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint& position)
 {
     if ( item_hit < 0 || item_hit >= (long)m_data.size() )
         return;

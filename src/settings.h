@@ -176,7 +176,7 @@ class Settings
      *
      * @param path A path to a web browser
      */
-    void SetWebBrowserPath( const wxString path );
+    void SetWebBrowserPath( const wxString& path );
 
     /**@}*/
 
