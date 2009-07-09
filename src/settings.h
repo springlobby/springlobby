@@ -720,6 +720,8 @@ class Settings
 
     std::map<wxString, wxString> m_spring_versions;
 
+    Settings( const Settings& );
+
 };
 
 Settings& sett();

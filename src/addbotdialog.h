@@ -34,6 +34,8 @@ class AddBotDialog : public wxDialog
     void OnSelectBot( wxCommandEvent& event );
 
   protected:
+    AddBotDialog( const AddBotDialog& );
+
     wxStaticText* m_nick_lbl;
     wxTextCtrl* m_nick;
     wxStaticText* m_ai_lbl;
