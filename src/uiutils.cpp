@@ -242,7 +242,7 @@ wxBitmap charArr2wxBitmapWithBlending(const unsigned char * dest, int dest_size,
     return wxBitmap( ret );
 }
 
-wxBitmap BlendBitmaps( const wxBitmap& background, const wxBitmap& overlay, const int dim )
+wxBitmap BlendBitmaps( const wxBitmap& background, const wxBitmap& overlay, const int /*dim*/ )
 {
     wxImage back = background.ConvertToImage();
     wxImage front = overlay.ConvertToImage();

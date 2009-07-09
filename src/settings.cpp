@@ -2226,7 +2226,7 @@ void Settings::SetMapSelectorFilterRadio( const unsigned int val )
 //////////////////////////////////////////////////////////////////////////////
 
 
-unsigned int Settings::getMode()
+int Settings::getMode()
 {
 	int mode;
 	m_config->Read( _T("/SpringSettings/mode"), &mode, SET_MODE_SIMPLE );

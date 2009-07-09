@@ -228,7 +228,8 @@ int IconImageList::GetUserBattleStateIcon( const UserStatus& us )
 
 int IconImageList::GetRankIcon( const unsigned int& rank, const bool& showlowest )
 {
-    if ( !showlowest && rank == UserStatus::RANK_1 ) return ICON_RANK_NONE;
+    if ( !showlowest && rank == UserStatus::RANK_1 )
+        return ICON_RANK_NONE;
     switch (rank)
     {
       case UserStatus::RANK_1: return ICON_RANK1;
@@ -238,8 +239,8 @@ int IconImageList::GetRankIcon( const unsigned int& rank, const bool& showlowest
       case UserStatus::RANK_5: return ICON_RANK5;
       case UserStatus::RANK_6: return ICON_RANK6;
       case UserStatus::RANK_7: return ICON_RANK7;
+      default: return ICON_RANK_UNKNOWN;
     }
-    return ICON_RANK_UNKNOWN;
 }
 
 

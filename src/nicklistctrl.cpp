@@ -126,7 +126,7 @@ void NickListCtrl::OnActivateItem( wxListEvent& event )
 }
 
 
-void NickListCtrl::OnShowMenu( wxContextMenuEvent& event )
+void NickListCtrl::OnShowMenu( wxContextMenuEvent& /*unused*/ )
 {
   wxLogDebugFunc( _T("") );
   if ( m_menu != 0 )
@@ -203,7 +203,7 @@ wxListItemAttr* NickListCtrl::GetItemAttr(long item) const
     return NULL;
 }
 
-void NickListCtrl::HighlightItem( long item )
+void NickListCtrl::HighlightItem( long /*unused*/ )
 {
 
 }

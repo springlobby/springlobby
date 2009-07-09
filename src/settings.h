@@ -62,7 +62,7 @@ struct ChannelJoinInfo
 class SL_WinConf : public wxFileConfig
 {
     public:
-			SL_WinConf ( const wxString& appName, const wxString& vendorName, const wxString& strLocal, const wxString& strGlobal, long style, const wxMBConv& conv):
+			SL_WinConf ( const wxString& appName, const wxString& vendorName, const wxString& strLocal, const wxString& strGlobal, long style, const wxMBConv& /*conv*/):
 			wxFileConfig( appName, vendorName, strLocal, strGlobal, style)
 			{
 			}

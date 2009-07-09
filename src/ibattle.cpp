@@ -201,15 +201,15 @@ int IBattle::GetClosestFixColour(const wxColour &col, const std::vector<int> &ex
 }
 
 
-void IBattle::SendHostInfo( HostInfo update )
+void IBattle::SendHostInfo( HostInfo /*unused*/ )
 {
 }
 
-void IBattle::SendHostInfo( const wxString& Tag )
+void IBattle::SendHostInfo( const wxString& /*unused*/ )
 {
 }
 
-void IBattle::Update ( const wxString& Tag )
+void IBattle::Update ( const wxString& /*unused*/)
 {
 }
 
@@ -1019,7 +1019,7 @@ wxArrayString IBattle::GetPresetList()
   return sett().GetPresetList();
 }
 
-void IBattle::UserPositionChanged( const User& user )
+void IBattle::UserPositionChanged( const User& /*unused*/ )
 {
 }
 

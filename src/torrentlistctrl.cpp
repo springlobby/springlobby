@@ -118,7 +118,7 @@ TorrentListCtrl::~TorrentListCtrl()
 }
 
 
-void TorrentListCtrl::OnListRightClick( wxListEvent& event )
+void TorrentListCtrl::OnListRightClick( wxListEvent& /*unused*/ )
 {
 //  PopupMenu( m_popup );
 }
@@ -184,6 +184,8 @@ void TorrentListCtrl::Sort()
             case 9 :
 				SortItems(( m_sortorder[ i ].direction )?&CompareFileSizeUP:&CompareFileSizeDOWN , 0 );
 				break;
+            default:
+                break;
 		}
 	}
 }
@@ -497,7 +499,7 @@ void TorrentListCtrl::SetTipWindowText( const long item_hit, const wxPoint posit
     m_tiptext = _T("");
 }
 
-void TorrentListCtrl::HighlightItem( long item )
+void TorrentListCtrl::HighlightItem( long /*unused*/ )
 {
 
 }

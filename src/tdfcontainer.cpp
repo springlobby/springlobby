@@ -283,10 +283,10 @@ bool Node::SetName(const wxString &name_){
   return true;
 }
 
-void Node::Save(TDFWriter &f){
+void Node::Save(TDFWriter &/*unused*/){
   /// nothing to save there.
 }
-void Node::Load(Tokenizer &f){
+void Node::Load(Tokenizer &/*unused*/){
   /// nothing to load there.
   //ASSERT_LOGIC(0,_T("this function should not be called."));
 }

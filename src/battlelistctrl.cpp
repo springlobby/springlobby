@@ -200,7 +200,7 @@ void BattleListCtrl::OnListRightClick( wxListEvent& event )
     }
 }
 
-void BattleListCtrl::OnDLMap( wxCommandEvent& event )
+void BattleListCtrl::OnDLMap( wxCommandEvent& /*unused*/  )
 {
     if ( m_selected_index > 0 &&  (long)m_data.size() > m_selected_index ) {
         DataType dt = m_data[m_selected_index];
@@ -208,7 +208,7 @@ void BattleListCtrl::OnDLMap( wxCommandEvent& event )
     }
 }
 
-void BattleListCtrl::OnDLMod( wxCommandEvent& event )
+void BattleListCtrl::OnDLMod( wxCommandEvent& /*unused*/  )
 {
     if ( m_selected_index > 0 &&  (long)m_data.size() > m_selected_index ) {
         DataType dt = m_data[m_selected_index];

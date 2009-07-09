@@ -258,6 +258,7 @@ wxString PlaybackListFilter<PlaybackTabType>::_GetButtonSign(m_button_mode value
   switch (value) {
     case m_equal   : return _T("=");
     case m_smaller : return _T("<");
+    case m_bigger  :
     default        : return _T(">");
   }
 }
@@ -268,6 +269,7 @@ typename PlaybackListFilter<PlaybackTabType>::m_button_mode PlaybackListFilter<P
   switch (value) {
     case m_equal   : return m_smaller;
     case m_smaller : return m_bigger;
+    case m_bigger  :
     default        : return m_equal;
   }
 }
@@ -332,7 +334,7 @@ bool PlaybackListFilter<PlaybackTabType>::FilterPlayback( const typename Playbac
 }
 
 template <class PlaybackTabType>
-void PlaybackListFilter<PlaybackTabType>::OnChange   ( wxCommandEvent& event )
+void PlaybackListFilter<PlaybackTabType>::OnChange   ( wxCommandEvent& /*unused*/ )
 {
   if (!m_activ) return;
   m_parent_tab->UpdateList();

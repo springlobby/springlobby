@@ -147,6 +147,7 @@ void settings_frame::handleExit() {
         	break;
 
         case wxCANCEL:
+        default:
         	break;
         }
     }
@@ -175,6 +176,7 @@ void settings_frame::CreateGUIControls()
 								notebook->AddPage(debugTab, debugTabCap);
 
 						break;
+                    default:
 					case SET_MODE_SIMPLE:
 						simpleTab = new tab_simple(this,notebook,ID_SIMPLE);
 						 uiTab = new tab_ui(notebook,ID_UI);
@@ -219,6 +221,7 @@ void settings_frame::initMenuBar() {
 			menuMode->Check(ID_MENUITEM_EXPERT,true);
 		}
 			break;
+        default:
 		case SET_MODE_SIMPLE: {
 			menuMode->Check(ID_MENUITEM_SIMPLE,true);
 		}
@@ -348,7 +351,7 @@ void settings_frame::updateAllControls()
 	if (audioTab)
 		audioTab->updateControls(UPDATE_ALL);
 }
-void settings_frame::OnClose(wxCloseEvent& event)
+void settings_frame::OnClose(wxCloseEvent& /*unused*/)
 {
 	if ( !alreadyCalled ){
         wxString name = _T("SETTINGSFRAME");

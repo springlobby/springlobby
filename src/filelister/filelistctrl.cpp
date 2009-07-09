@@ -88,7 +88,7 @@ FileListCtrl::~FileListCtrl()
 }
 
 
-void FileListCtrl::OnListRightClick( wxListEvent& event )
+void FileListCtrl::OnListRightClick( wxListEvent& /*unused*/ )
 {
 	//PopupMenu( m_popup );
 }
@@ -148,12 +148,14 @@ void FileListCtrl::Sort()
 			case 2 :
 				changed = SortItems(( m_sortorder[ i ].direction )?&CompareHashUP:&CompareHashDOWN , 0 );
 				break;
+            default:
+                break;
 		}
 	}
 }
 
 
-int wxCALLBACK FileListCtrl::CompareNameUP( long item1, long item2, long sortData )
+int wxCALLBACK FileListCtrl::CompareNameUP( long item1, long item2, long /*unused*/ )
 {
   TorrentTable::PRow row1=s_parent_dialog->RowByHash(TowxString<long>(item1));
   TorrentTable::PRow row2=s_parent_dialog->RowByHash(TowxString<long>(item2));
@@ -163,7 +165,7 @@ int wxCALLBACK FileListCtrl::CompareNameUP( long item1, long item2, long sortDat
 }
 
 
-int wxCALLBACK FileListCtrl::CompareNameDOWN( long item1, long item2, long sortData )
+int wxCALLBACK FileListCtrl::CompareNameDOWN( long item1, long item2, long /*unused*/ )
 {
     TorrentTable::PRow row1=s_parent_dialog->RowByHash(TowxString<long>(item1));
     TorrentTable::PRow row2=s_parent_dialog->RowByHash(TowxString<long>(item2));
@@ -173,7 +175,7 @@ int wxCALLBACK FileListCtrl::CompareNameDOWN( long item1, long item2, long sortD
 }
 
 
-int wxCALLBACK FileListCtrl::CompareTypeUP( long item1, long item2, long sortData )
+int wxCALLBACK FileListCtrl::CompareTypeUP( long item1, long item2, long /*unused*/ )
 {
     TorrentTable::PRow row1=s_parent_dialog->RowByHash(TowxString<long>(item1));
     TorrentTable::PRow row2=s_parent_dialog->RowByHash(TowxString<long>(item2));
@@ -185,7 +187,7 @@ int wxCALLBACK FileListCtrl::CompareTypeUP( long item1, long item2, long sortDat
 }
 
 
-int wxCALLBACK FileListCtrl::CompareTypeDOWN( long item1, long item2, long sortData )
+int wxCALLBACK FileListCtrl::CompareTypeDOWN( long item1, long item2, long /*unused*/ )
 {
     TorrentTable::PRow row1=s_parent_dialog->RowByHash(TowxString<long>(item1));
     TorrentTable::PRow row2=s_parent_dialog->RowByHash(TowxString<long>(item2));
@@ -197,7 +199,7 @@ int wxCALLBACK FileListCtrl::CompareTypeDOWN( long item1, long item2, long sortD
 }
 
 
-int wxCALLBACK FileListCtrl::CompareHashUP( long item1, long item2, long sortData )
+int wxCALLBACK FileListCtrl::CompareHashUP( long item1, long item2, long /*unused*/ )
 {
   if ( item1 < item2 )
 		return -1;
@@ -209,7 +211,7 @@ int wxCALLBACK FileListCtrl::CompareHashUP( long item1, long item2, long sortDat
 
 
 
-int wxCALLBACK FileListCtrl::CompareHashDOWN( long item1, long item2, long sortData )
+int wxCALLBACK FileListCtrl::CompareHashDOWN( long item1, long item2, long /*unused*/ )
 {
   if ( item1 > item2 )
     return -1;
@@ -219,7 +221,7 @@ int wxCALLBACK FileListCtrl::CompareHashDOWN( long item1, long item2, long sortD
 	return 0;
 }
 
-void FileListCtrl::SetTipWindowText( const long item_hit, const wxPoint position)
+void FileListCtrl::SetTipWindowText( const long /*unused*/, const wxPoint position)
 {
 //    long item = GetItemData( item_hit );
 //			Ui* ui = m_ui_for_sort;
@@ -244,7 +246,7 @@ void FileListCtrl::SetTipWindowText( const long item_hit, const wxPoint position
     }
 }
 
-void FileListCtrl::HighlightItem( long item )
+void FileListCtrl::HighlightItem( long /*unused*/ )
 {
 
 }

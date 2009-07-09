@@ -106,7 +106,7 @@ MainTorrentTab::~MainTorrentTab()
     }
 }
 
-void MainTorrentTab::OnDLWidgets( wxCommandEvent& event )
+void MainTorrentTab::OnDLWidgets( wxCommandEvent& /*unused*/ )
 {
     if ( m_widgets_dialog && m_widgets_dialog->IsShown() ) {
         m_widgets_dialog->SetFocus();
@@ -234,12 +234,12 @@ void MainTorrentTab::OnUpdate()
 }
 
 
-void MainTorrentTab::OnCancelButton( wxCommandEvent& event )
+void MainTorrentTab::OnCancelButton( wxCommandEvent& /*unused*/ )
 {
   torrent().RemoveTorrentByHash( TowxString(m_torrent_list->GetSelectedData()) );
 }
 
-void MainTorrentTab::OnDownloadDialog( wxCommandEvent& event )
+void MainTorrentTab::OnDownloadDialog( wxCommandEvent& /*unused*/ )
 {
     m_download_dialog = new FileListDialog( this );
     m_download_dialog->Show();

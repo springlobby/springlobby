@@ -12,8 +12,8 @@ BEGIN_EVENT_TABLE( ChannelListctrl, ChannelListctrl::BaseType )
 END_EVENT_TABLE()
 
 
-ChannelListctrl::ChannelListctrl(wxWindow* parent, wxWindowID id, const wxString& name,
-                    long style, const wxPoint& pt, const wxSize& sz)
+ChannelListctrl::ChannelListctrl(wxWindow* parent, wxWindowID /*unused*/, const wxString& /*unused*/,
+                    long /*unused*/, const wxPoint& /*unused*/, const wxSize& /*unused*/)
     :CustomVirtListCtrl<ChannelInfo,ChannelListctrl>(parent, CHANNELLIST, wxDefaultPosition, wxDefaultSize,
             wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("ChannelListCtrl"), 3, 3, &CompareOneCrit)
 {
@@ -132,12 +132,12 @@ void ChannelListctrl::FilterChannel( const wxString& partial )
 }
 
 
-int ChannelListctrl::GetItemColumnImage(long item, long column) const
+int ChannelListctrl::GetItemColumnImage(long /*unused*/, long column) const
 {
     return -1;
 }
 
-int ChannelListctrl::GetItemImage(long item) const
+int ChannelListctrl::GetItemImage(long /*unused*/) const
 {
     return -1;
 }

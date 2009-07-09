@@ -211,7 +211,7 @@ void CustomVirtListCtrl<T,L>::RefreshVisibleItems()
 }
 
 template < class T, class L >
-void CustomVirtListCtrl<T,L>::OnTimer(wxTimerEvent& event)
+void CustomVirtListCtrl<T,L>::OnTimer(wxTimerEvent& /*unused*/ )
 {
 #if wxUSE_TIPWINDOW
 
@@ -296,7 +296,7 @@ void CustomVirtListCtrl<T,L>::OnMouseMotion(wxMouseEvent& event)
 }
 
 template < class T, class L >
-void CustomVirtListCtrl<T,L>::SetTipWindowText( const long item_hit, const wxPoint& position)
+void CustomVirtListCtrl<T,L>::SetTipWindowText( const long /*unused*/ , const wxPoint& position)
 {
   int column = getColumnFromPosition(position);
   #ifdef SL_DUMMY_COL
@@ -600,7 +600,7 @@ wxListItemAttr* CustomVirtListCtrl<T,L>::OnGetItemAttr(long item) const
 }
 
 template < class T, class L >
-void CustomVirtListCtrl<T,L>::OnPeriodicSort( wxTimerEvent& evt )
+void CustomVirtListCtrl<T,L>::OnPeriodicSort( wxTimerEvent& /*unused*/  )
 {
     SortList();
 }
