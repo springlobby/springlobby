@@ -148,10 +148,21 @@ bool SpringLobbyApp::OnInit()
     usync(); //init object, sink needs to exist before event is posted. next line would do both object(sink) creation and Event posting
     GetGlobalEventSender(GlobalEvents::UnitSyncReloadRequest).SendEvent( 0 ); // request an unitsync reload
 
+#ifdef __WXMSW__
     //everything below should not be executing when updating, so we can ensure no MainWindow window is created, torrent system isn't started, etc.
     // NOTE: this assumes no one will try to update at firstRun
-    if ( m_updateing_only )
+    if ( m_updateing_only ) {
+        wxString latestVersion = GetLatestVersion();
+        m_updater_window = new UpdaterMainwindow( latestVersion );
+        m_updater_window->SetSize( 450, 120 );
+        m_updater_window->ShowFullScreen(false );
+        m_updater_window->Show( true );
+        m_updater_window->Maximize( false );
+        SetTopWindow( m_updater_window );
+        Updater().StartUpdate( latestVersion );
         return true;
+    }
+#endif
 
     CacheAndSettingsSetup();
     ui().ShowMainWindow();
@@ -309,11 +320,6 @@ bool SpringLobbyApp::OnCmdLineParsed(wxCmdLineParser& parser)
 #ifdef __WXMSW__
         if ( parser.Found(_T("update")) ) {
             m_updateing_only = true;
-            wxString latestVersion = GetLatestVersion();
-            m_updater_window = new UpdaterMainwindow( latestVersion );
-            SetTopWindow( m_updater_window );
-            m_updater_window->Show( true );
-            Updater().StartUpdate( latestVersion );
             return true;
         }
 #endif
