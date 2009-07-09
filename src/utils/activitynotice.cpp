@@ -2,7 +2,6 @@
 
 #include "activitynotice.h"
 
-#include <wx/gauge.h>
 #include <wx/sizer.h>
 #include <wx/stattext.h>
 #include <wx/app.h>

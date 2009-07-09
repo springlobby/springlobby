@@ -6,8 +6,8 @@
 #include <wx/panel.h>
 #include <wx/timer.h>
 #include <wx/dialog.h>
+#include <wx/gauge.h> //cannot forward this cause msw mixes up the types otherwise
 
-class wxGauge;
 class wxStaticText;
 
 class ActivityNoticePanel: public wxPanel
