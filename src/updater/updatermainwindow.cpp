@@ -10,7 +10,7 @@
 #include "../utils/activitynotice.h"
 #include "../uiutils.h"
 
-#include "images/springlobby.xpm"
+#include "../images/springlobby.xpm"
 
 BEGIN_EVENT_TABLE( UpdaterMainwindow, wxFrame )
     EVT_CLOSE( UpdaterMainwindow::OnClose )

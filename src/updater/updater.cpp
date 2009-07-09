@@ -37,8 +37,6 @@ UpdaterClass::~UpdaterClass()
 
 void UpdaterClass::CheckForUpdates()
 {
-    m_cur_mw_title = ui().mw().GetTitle();
-
   wxString latestVersion = GetLatestVersion();
 
   if (latestVersion == _T("-1"))
@@ -55,14 +53,7 @@ void UpdaterClass::CheckForUpdates()
       int answer = customMessageBox(SL_MAIN_ICON, _("Your SpringLobby version is not up to date.\n\n") + msg + _("\n\nWould you like for me to autodownload the new version? Changes will take effect next you launch the lobby again."), _("Not up to date"), wxYES_NO);
       if (answer == wxYES)
       {
-          if ( IsUACenabled() ) {
             WinExecuteAdmin( wxStandardPaths::Get().GetExecutablePath(), _T("-u") );
-          }
-          else {
-            ui().mw().SetTitle( _("SpringLobby -- downloading update") ); // doesn't make sense when launching the new instance, since we never get the return code atm
-            StartUpdate( latestVersion );
-          }
-
       }
     #else
     customMessageBox(SL_MAIN_ICON, _("Your SpringLobby version is not up to date.\n\n") + msg, _("Not up to Date") );
@@ -72,9 +63,8 @@ void UpdaterClass::CheckForUpdates()
 
 #ifdef __WXMSW__
 //! DO NOT use mw() global unless fromCli is false !
-void UpdaterClass::StartUpdate( const wxString& latestVersion, bool fromCli )
+void UpdaterClass::StartUpdate( const wxString& latestVersion )
 {
-    m_fromCli = fromCli;
     wxString sep = wxFileName::GetPathSeparator();
     wxString currentexe = wxStandardPaths::Get().GetExecutablePath();
     if ( !wxFileName::IsDirWritable( currentexe.BeforeLast( wxFileName::GetPathSeparator() ) + wxFileName::GetPathSeparator() ) )
@@ -93,46 +83,26 @@ void UpdaterClass::StartUpdate( const wxString& latestVersion, bool fromCli )
 void UpdaterClass::OnDownloadEvent( wxCommandEvent& event )
 {
 	int code = event.GetInt();
-  if ( code != 0) customMessageBox(SL_MAIN_ICON, _("There was an error downloading for the latest version.\nPlease try again later.\nIf the problem persists, please use Help->Report Bug to report this bug."), _("Error"));
+  if ( code != 0)
+    customMessageBox(SL_MAIN_ICON, _("There was an error downloading for the latest version.\nPlease try again later.\nIf the problem persists, please use Help->Report Bug to report this bug."), _("Error"));
   else
   {
     if ( !UpdateExe( m_newexe , false ) ) {
-        if ( !m_fromCli ) {
-            customMessageBoxNoModal(SL_MAIN_ICON, wxString::Format( _("There was an error while trying to replace the current executable version\n manual copy is necessary from: %s\n to: %s\nPlease use Help->Report Bug to report this bug."), m_newexe.c_str(), wxStandardPaths::Get().GetExecutablePath().c_str() ), _("Error"));
-        }
-        else {
             customMessageBox(SL_MAIN_ICON, wxString::Format( _("There was an error while trying to replace the current executable version\n manual copy is necessary from: %s\n to: %s\nPlease use Help->Report Bug to report this bug."), m_newexe.c_str(), wxStandardPaths::Get().GetExecutablePath().c_str() ), _("Error"));
-        }
     }
     else
     {
         bool locale_ok = UpdateLocale( m_newexe, false );
         if ( locale_ok ) {
-            if ( !m_fromCli ) {
-                customMessageBoxNoModal(SL_MAIN_ICON, _("Update complete. The changes will be available next lobby start."), _("Success"));
-            }
-            else {
                 customMessageBox(SL_MAIN_ICON, _("Update complete. The changes will be available next lobby start."), _("Success"));
-                wxRmdir( m_newexe );
-                wxTheApp->ExitMainLoop();
-            }
         }
         else {
-            if ( !m_fromCli ) {
-                customMessageBoxNoModal(SL_MAIN_ICON, _("Binary updated successfully. \nSome translation files could not be updated.\nPlease report this in #springlobby after restarting."), _("Partial success"));
-            }
-            else {
                 customMessageBox(SL_MAIN_ICON, _("Binary updated successfully. \nSome translation files could not be updated.\nPlease report this in #springlobby after restarting."), _("Partial success"));
-                wxRmdir( m_newexe );
-                wxTheApp->ExitMainLoop();
-            }
         }
         wxRmdir( m_newexe );
+        //!TODO send finished event
     }
   }
-
-    if ( !m_fromCli )
-        ui().mw().SetTitle( m_cur_mw_title );
 }
 
 //! DO NOT use mw() global unless fromCli is false !
