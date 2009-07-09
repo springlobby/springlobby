@@ -263,7 +263,6 @@ int WinExecuteAdmin( const wxString& command, const wxString& params )
       shExecInfo.lpParameters = params.wc_str();
 #endif
       shExecInfo.lpDirectory = NULL;
-//      shExecInfo.nShow = SW_MAXIMIZE;
       shExecInfo.hInstApp = NULL;
 
       ShellExecuteEx(&shExecInfo);
