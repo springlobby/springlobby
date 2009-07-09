@@ -74,6 +74,13 @@ int timedMessageBox(int whichIcon , const wxString& message,
         const wxString& caption = wxMessageBoxCaptionStr, unsigned int delay = 3000, // miliseconds
         long style = wxOK|wxICON_INFORMATION,  const int x = -1, const int y = -1 );
 
+/** \brief same as timedMessageBox, but not Modal --> no return val
+ * \return wxOK|wxCANCEL|wxYES|wxNO according to option chosen
+ */
+void timedMessageBoxNoModal(int whichIcon , const wxString& message,
+        const wxString& caption = wxMessageBoxCaptionStr, unsigned int delay = 3000, // miliseconds
+        long style = wxOK|wxICON_INFORMATION,  const int x = -1, const int y = -1 );
+
 //! cleanup
 void freeStaticBox();
 

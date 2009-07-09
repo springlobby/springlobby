@@ -32,6 +32,7 @@ static CustomMessageBox* s_nonmodbox = 0;
 static ServerMessageBox* s_serverMsgBox = 0;
 static ActNotifBox* s_actNotifBox = 0;
 static MutelistWindow* s_mutelistWindow = 0;
+static TimedMessageBox* s_timedMessageBox = 0;
 
 CustomMessageBox::CustomMessageBox(wxIcon* icon ,wxWindow *parent, const wxString& message,
         const wxString& caption ,
@@ -210,6 +211,32 @@ int timedMessageBox(int whichIcon , const wxString& message,
 		return -1;
 }
 
+void timedMessageBoxNoModal(int whichIcon , const wxString& message,
+        const wxString& caption, unsigned int delay, // miliseconds
+        long style ,  const int x , const int y )
+{
+		wxWindow* parent;
+		wxIcon* icon;
+		switch (whichIcon)
+		{
+			case SL_MAIN_ICON:
+				icon = new wxIcon(springlobby_xpm);
+				parent = CustomMessageBoxBase::getLobbypointer();
+				break;
+			case SS_MAIN_ICON:
+				icon = new wxIcon(springsettings_xpm);
+				parent = CustomMessageBoxBase::getSettingspointer();
+				break;
+			default:
+				icon = new wxIcon(wxNullIcon);
+				parent = 0;
+				break;
+
+		}
+		s_timedMessageBox = new TimedMessageBox(icon,parent,message,caption,delay,style,wxPoint(x,y));
+		s_timedMessageBox->Show( true );
+}
+
 void customMessageBoxNoModal( int whichIcon , const wxString& message,const wxString& caption,
 		long style , int x, int y )
 {
@@ -252,6 +279,7 @@ void freeStaticBox()
     closeAndDestroy( s_serverMsgBox );
     closeAndDestroy( s_actNotifBox );
     closeAndDestroy( s_mutelistWindow );
+    closeAndDestroy( s_timedMessageBox );
 }
 
 CreditsDialog::CreditsDialog(wxWindow* parent,wxString title,int whichIcon) : wxDialog(parent,-1,title,wxDefaultPosition,
