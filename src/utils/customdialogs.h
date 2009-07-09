@@ -178,53 +178,6 @@ int GetSingleChoiceIndex( const wxString& message,
                             int y = wxDefaultCoord,
                             bool centre = true );
 
-class ActivityNoticePanel: public wxPanel
-{
-    public:
-        ActivityNoticePanel(wxWindow* parent,const wxString& file,const wxString& format = _("Caching file %s please wait") );
-        virtual ~ActivityNoticePanel() {}
-
-        void SetString(const wxString& file);
-        virtual bool Show(bool show = true);
-    protected:
-        wxString m_filename;
-        wxString m_format;
-        wxGauge* m_gauge;
-        wxStaticText* m_message;
-//        wxStaticText* m_format;
-        wxTimer m_timer;
-
-        void OnTimer(wxTimerEvent& event);
-
-        DECLARE_EVENT_TABLE()
-};
-
-class ActivityNotice: public wxDialog
-{
-    public:
-        ActivityNotice(wxWindow* parent,const wxString& file, const wxString& format = _("Caching file %s please wait"));
-        virtual ~ActivityNotice() {}
-    protected:
-        ActivityNoticePanel* m_panel;
-};
-
-//! use this for a notice that closes automatically when going out of scope
-class ActivityNoticeContainer
-{
-    public:
-        ActivityNoticeContainer(wxWindow* parent,const wxString& file, const wxString& format = _("Caching file %s please wait"));
-        ~ActivityNoticeContainer();
-
-    protected:
-        ActivityNotice* m_window;
-};
-
-#include <memory>
-
-typedef std::auto_ptr<ActivityNoticeContainer>
-    ScopedActivityNotice;
-
-ScopedActivityNotice scopedActivityNotice(wxWindow* parent,const wxString& file, const wxString& format = _("Caching file %s please wait"));
 
 #endif /*CUSTOM_MSG_DLG_H_*/
 
