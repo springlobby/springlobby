@@ -145,8 +145,6 @@ bool SpringLobbyApp::OnInit()
         wxMkdir( wxStandardPaths::Get().GetUserDataDir() );
 
     sett().RefreshSpringVersionList();
-    usync(); //init object, sink needs to exist before event is posted. next line would do both object(sink) creation and Event posting
-    GetGlobalEventSender(GlobalEvents::UnitSyncReloadRequest).SendEvent( 0 ); // request an unitsync reload
 
 #ifdef __WXMSW__
     //everything below should not be executing when updating, so we can ensure no MainWindow window is created, torrent system isn't started, etc.
@@ -160,6 +158,8 @@ bool SpringLobbyApp::OnInit()
         return true;
     }
 #endif
+    usync(); //init object, sink needs to exist before event is posted. next line would do both object(sink) creation and Event posting
+    GetGlobalEventSender(GlobalEvents::UnitSyncReloadRequest).SendEvent( 0 ); // request an unitsync reload
 
     CacheAndSettingsSetup();
     ui().ShowMainWindow();
