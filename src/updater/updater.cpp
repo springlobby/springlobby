@@ -136,7 +136,7 @@ void UpdaterClass::OnDownloadEvent( wxCommandEvent& event )
 }
 
 //! DO NOT use mw() global unless fromCli is false !
-bool UpdaterClass::UpdateLocale( const wxString& tempdir, bool WaitForReboot )
+bool UpdaterClass::UpdateLocale( const wxString& tempdir, bool /*unused*/ )
 {
     wxString target = wxPathOnly( wxStandardPaths::Get().GetExecutablePath() ) + wxFileName::GetPathSeparator() + _T("locale");
     wxString origin = tempdir + _T("locale") + wxFileName::GetPathSeparator() ;
@@ -144,7 +144,7 @@ bool UpdaterClass::UpdateLocale( const wxString& tempdir, bool WaitForReboot )
 }
 
 //! DO NOT use mw() global unless fromCli is false !
-bool UpdaterClass::UpdateExe( const wxString& newexe, bool WaitForReboot )
+bool UpdaterClass::UpdateExe( const wxString& newexe, bool /*unused*/ )
 {
     //this always returns false on msw
 //  if ( !wxFileName::IsFileExecutable( newexe + _T("springlobby.exe") ) )

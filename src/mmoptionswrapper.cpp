@@ -309,7 +309,7 @@ wxString OptionsWrapper::getSingleValue(wxString key) const
 	return wxEmptyString;
 }
 template < class MapType >
-static inline typename MapType::mapped_type GetItem( const MapType map, const typename MapType::key_type& key )
+static inline typename MapType::mapped_type GetItem( const MapType& map, const typename MapType::key_type& key )
 {
     typename MapType::const_iterator mapIt = map.find(key);
     if ( mapIt != map.end() )

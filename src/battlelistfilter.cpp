@@ -377,6 +377,7 @@ wxString BattleListFilter::_GetButtonSign(const BattleListFilter::ButtonMode val
     switch (value) {
     case BUTTON_MODE_EQUAL   : return _T("=");
     case BUTTON_MODE_SMALLER : return _T("<");
+    case BUTTON_MODE_BIGGER  :
     default        : return _T(">");
     }
 }
@@ -387,6 +388,7 @@ BattleListFilter::ButtonMode BattleListFilter::_GetNextMode(const BattleListFilt
   switch (value) {
     case BUTTON_MODE_EQUAL   : return BUTTON_MODE_SMALLER;
     case BUTTON_MODE_SMALLER : return BUTTON_MODE_BIGGER;
+    case BUTTON_MODE_BIGGER  :
     default        : return BUTTON_MODE_EQUAL;
   }
 }
@@ -514,7 +516,7 @@ bool BattleListFilter::FilterBattle(IBattle& battle)
   return true;
 }
 
-void BattleListFilter::OnChange   ( wxCommandEvent& event )
+void BattleListFilter::OnChange   ( wxCommandEvent& /*unused*/ )
 {
   if (!m_activ) return;
   m_parent_battlelisttab->UpdateList();

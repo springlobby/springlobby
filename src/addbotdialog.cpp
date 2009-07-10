@@ -195,20 +195,20 @@ void AddBotDialog::ReloadAIList()
 }
 
 
-void AddBotDialog::OnClose( wxCommandEvent& event )
+void AddBotDialog::OnClose( wxCommandEvent& /*event*/ )
 {
   EndModal( wxID_CANCEL );
 }
 
 
-void AddBotDialog::OnAddBot( wxCommandEvent& event )
+void AddBotDialog::OnAddBot( wxCommandEvent& /*event*/ )
 {
   sett().SetLastAI(  m_ai->GetStringSelection() );
   EndModal( wxID_OK );
 }
 
 
-void AddBotDialog::OnSelectBot( wxCommandEvent& event )
+void AddBotDialog::OnSelectBot( wxCommandEvent& /*unused*/ )
 {
 	ShowAIInfo();
 }

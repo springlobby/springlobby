@@ -707,13 +707,13 @@ void ChatPanel::OnLinkEvent( wxTextUrlEvent& event )
     ui().OpenWebBrowser( url );
 }
 
-void ChatPanel::OnUserMenuCopyLink( wxCommandEvent& event )
+void ChatPanel::OnUserMenuCopyLink( wxCommandEvent& /*unused*/ )
 {
     CopyToClipboard( m_url_at_pos );
     m_url_at_pos = _T("");
 }
 
-void ChatPanel::OnChanOpts( wxCommandEvent& event )
+void ChatPanel::OnChanOpts( wxCommandEvent& /*unused*/ )
 {
   CreatePopup();
   if ( (m_chan_opts_button == 0) || (m_popup_menu == 0)) return;
@@ -721,7 +721,7 @@ void ChatPanel::OnChanOpts( wxCommandEvent& event )
 }
 
 
-void ChatPanel::OnSay( wxCommandEvent& event )
+void ChatPanel::OnSay( wxCommandEvent& /*unused*/ )
 {
 	Say( m_say_text->GetValue() );
   m_say_text->SetValue( _T( "" ) );
@@ -1232,7 +1232,7 @@ void ChatPanel::OnUserConnected()
 
 
 
-void ChatPanel::OnChannelMenuLeave( wxCommandEvent& event )
+void ChatPanel::OnChannelMenuLeave( wxCommandEvent& /*unused*/ )
 {
 	if ( m_channel == 0 ) return;
 	Part();
@@ -1240,7 +1240,7 @@ void ChatPanel::OnChannelMenuLeave( wxCommandEvent& event )
 }
 
 
-void ChatPanel::OnChannelMenuDisplayJoinLeave( wxCommandEvent& event )
+void ChatPanel::OnChannelMenuDisplayJoinLeave( wxCommandEvent& /*unused*/ )
 {
 	if ( m_channel == 0 ) return;
 	if ( !displayjoinitem->IsChecked() ) {
@@ -1253,7 +1253,7 @@ void ChatPanel::OnChannelMenuDisplayJoinLeave( wxCommandEvent& event )
 }
 
 
-void ChatPanel::OnChannelAutoJoin( wxCommandEvent& event )
+void ChatPanel::OnChannelAutoJoin( wxCommandEvent& /*unused*/ )
 {
 	if ( m_channel == 0 ) return;
 	if ( m_autorejoin == 0 ) return;
@@ -1268,7 +1268,7 @@ void ChatPanel::OnChannelAutoJoin( wxCommandEvent& event )
 }
 
 
-void ChatPanel::OnChannelMenuInfo( wxCommandEvent& event )
+void ChatPanel::OnChannelMenuInfo( wxCommandEvent& /*unused*/ )
 {
 	if ( m_channel == 0 ) return;
 	if ( !m_channel->UserExists( _T( "ChanServ" ) ) ) {
@@ -1282,7 +1282,7 @@ void ChatPanel::OnChannelMenuInfo( wxCommandEvent& event )
 }
 
 
-void ChatPanel::OnChannelMenuTopic( wxCommandEvent& event )
+void ChatPanel::OnChannelMenuTopic( wxCommandEvent& /*unused*/ )
 {
 	if ( m_channel == 0 ) return;
 	if ( !m_channel->UserExists( _T( "ChanServ" ) ) ) {
@@ -1299,7 +1299,7 @@ void ChatPanel::OnChannelMenuTopic( wxCommandEvent& event )
 }
 
 
-void ChatPanel::OnChannelMenuMessage( wxCommandEvent& event )
+void ChatPanel::OnChannelMenuMessage( wxCommandEvent& /*unused*/ )
 {
 	if ( m_channel == 0 ) return;
 	if ( !m_channel->UserExists( _T( "ChanServ" ) ) ) {
@@ -1316,7 +1316,7 @@ if ( !ui().AskText( _( "Channel message..." ), _( "Message:" ), text ) ) return;
 }
 
 
-void ChatPanel::OnChannelMenuLock( wxCommandEvent& event )
+void ChatPanel::OnChannelMenuLock( wxCommandEvent& /*unused*/ )
 {
 	if ( m_channel == 0 ) return;
 	if ( !m_channel->UserExists( _T( "ChanServ" ) ) ) {
@@ -1333,7 +1333,7 @@ void ChatPanel::OnChannelMenuLock( wxCommandEvent& event )
 }
 
 
-void ChatPanel::OnChannelMenuUnlock( wxCommandEvent& event )
+void ChatPanel::OnChannelMenuUnlock( wxCommandEvent& /*unused*/ )
 {
 	if ( m_channel == 0 ) return;
 	if ( !m_channel->UserExists( _T( "ChanServ" ) ) ) {
@@ -1349,7 +1349,7 @@ void ChatPanel::OnChannelMenuUnlock( wxCommandEvent& event )
 }
 
 
-void ChatPanel::OnChannelMenuRegister( wxCommandEvent& event )
+void ChatPanel::OnChannelMenuRegister( wxCommandEvent& /*unused*/ )
 {
 	if ( m_channel == 0 ) return;
 	if ( !m_channel->GetServer().UserExists( _T( "ChanServ" ) ) ) {
@@ -1366,7 +1366,7 @@ void ChatPanel::OnChannelMenuRegister( wxCommandEvent& event )
 }
 
 
-void ChatPanel::OnChannelMenuUnregister( wxCommandEvent& event )
+void ChatPanel::OnChannelMenuUnregister( wxCommandEvent& /*unused*/ )
 {
 	if ( m_channel == 0 ) return;
 	if ( !m_channel->GetServer().UserExists( _T( "ChanServ" ) ) ) {
@@ -1382,7 +1382,7 @@ void ChatPanel::OnChannelMenuUnregister( wxCommandEvent& event )
 }
 
 
-void ChatPanel::OnChannelMenuSpamOn( wxCommandEvent& event )
+void ChatPanel::OnChannelMenuSpamOn( wxCommandEvent& /*unused*/ )
 {
 	if ( m_channel == 0 ) return;
 	if ( !m_channel->UserExists( _T( "ChanServ" ) ) ) {
@@ -1396,7 +1396,7 @@ void ChatPanel::OnChannelMenuSpamOn( wxCommandEvent& event )
 }
 
 
-void ChatPanel::OnChannelMenuSpanOff( wxCommandEvent& event )
+void ChatPanel::OnChannelMenuSpanOff( wxCommandEvent& /*unused*/ )
 {
 	if ( m_channel == 0 ) return;
 	if ( !m_channel->UserExists( _T( "ChanServ" ) ) ) {
@@ -1410,7 +1410,7 @@ void ChatPanel::OnChannelMenuSpanOff( wxCommandEvent& event )
 }
 
 
-void ChatPanel::OnChannelMenuSpamIsOn( wxCommandEvent& event )
+void ChatPanel::OnChannelMenuSpamIsOn( wxCommandEvent& /*unused*/ )
 {
 	if ( m_channel == 0 ) return;
 	if ( !m_channel->UserExists( _T( "ChanServ" ) ) ) {
@@ -1424,19 +1424,19 @@ void ChatPanel::OnChannelMenuSpamIsOn( wxCommandEvent& event )
 }
 
 
-void ChatPanel::OnServerMenuDisconnect( wxCommandEvent& event )
+void ChatPanel::OnServerMenuDisconnect( wxCommandEvent& /*unused*/ )
 {
 	ui().Disconnect();
 }
 
 
-void ChatPanel::OnServerMenuReconnect( wxCommandEvent& event )
+void ChatPanel::OnServerMenuReconnect( wxCommandEvent& /*unused*/ )
 {
 	ui().Reconnect();
 }
 
 
-void ChatPanel::OnServerMenuRemove( wxCommandEvent& event )
+void ChatPanel::OnServerMenuRemove( wxCommandEvent& /*unused*/ )
 {
 	wxString user;
 	if ( !ui().AskText( _( "Remove User Acount" ), _( "What user account do you want to remove today?" ), user ) ) return;
@@ -1445,7 +1445,7 @@ void ChatPanel::OnServerMenuRemove( wxCommandEvent& event )
 }
 
 
-void ChatPanel::OnServerMenuChangePassword( wxCommandEvent& event )
+void ChatPanel::OnServerMenuChangePassword( wxCommandEvent& /*unused*/ )
 {
 	wxString user, password;
 	if ( !ui().AskText( _( "Change User Acount Password" ), _( "What user account do you want to change the password for?" ), user ) ) return;
@@ -1454,13 +1454,13 @@ void ChatPanel::OnServerMenuChangePassword( wxCommandEvent& event )
 }
 
 
-void ChatPanel::OnServerMenuSetAccess( wxCommandEvent& event )
+void ChatPanel::OnServerMenuSetAccess( wxCommandEvent& /*unused*/ )
 {
 	ui().ShowMessage( _( "Error" ), _( "Not Implemented" ) );
 }
 
 
-void ChatPanel::OnServerMenuBroadcast( wxCommandEvent& event )
+void ChatPanel::OnServerMenuBroadcast( wxCommandEvent& /*unused*/ )
 {
 	wxString msg;
 	if ( !ui().AskText( _( "Broadcast Message" ), _( "Message to be broadcasted:" ), msg ) ) return;
@@ -1468,7 +1468,7 @@ void ChatPanel::OnServerMenuBroadcast( wxCommandEvent& event )
 }
 
 
-void ChatPanel::OnUserMenuOpenChat( wxCommandEvent& event )
+void ChatPanel::OnUserMenuOpenChat( wxCommandEvent& /*unused*/ )
 {
 	const User* user = GetSelectedUser();
 	if ( user == 0 ) return;
@@ -1477,7 +1477,7 @@ void ChatPanel::OnUserMenuOpenChat( wxCommandEvent& event )
 }
 
 
-void ChatPanel::OnUserMenuJoinSame( wxCommandEvent& event )
+void ChatPanel::OnUserMenuJoinSame( wxCommandEvent& /*unused*/ )
 {
 	const User* user = GetSelectedUser();
 	if ( user == 0 ) return;
@@ -1498,7 +1498,7 @@ void ChatPanel::OnUserMenuJoinSame( wxCommandEvent& event )
 }
 
 
-void ChatPanel::OnUserMenuSlap( wxCommandEvent& event )
+void ChatPanel::OnUserMenuSlap( wxCommandEvent& /*unused*/ )
 {
 	const User* user = GetSelectedUser();
 	if ( user == 0 ) return;
@@ -1513,7 +1513,7 @@ void ChatPanel::OnUserMenuSlap( wxCommandEvent& event )
 }
 
 
-void ChatPanel::OnUserMenuMute( wxCommandEvent& event )
+void ChatPanel::OnUserMenuMute( wxCommandEvent& /*unused*/ )
 {
 	if ( m_channel == 0 ) return;
 	if ( !m_channel->UserExists( _T( "ChanServ" ) ) ) {
@@ -1535,7 +1535,7 @@ void ChatPanel::OnUserMenuMute( wxCommandEvent& event )
 }
 
 
-void ChatPanel::OnUserMenuUnmute( wxCommandEvent& event )
+void ChatPanel::OnUserMenuUnmute( wxCommandEvent& /*unused*/ )
 {
 	if ( m_channel == 0 ) return;
 	if ( !m_channel->UserExists( _T( "ChanServ" ) ) ) {
@@ -1552,7 +1552,7 @@ void ChatPanel::OnUserMenuUnmute( wxCommandEvent& event )
 }
 
 
-void ChatPanel::OnUserMenuKick( wxCommandEvent& event )
+void ChatPanel::OnUserMenuKick( wxCommandEvent& /*unused*/ )
 {
 	if ( m_channel == 0 ) return;
 	if ( !m_channel->UserExists( _T( "ChanServ" ) ) ) {
@@ -1574,7 +1574,7 @@ void ChatPanel::OnUserMenuKick( wxCommandEvent& event )
 }
 
 
-void ChatPanel::OnUserMenuOp( wxCommandEvent& event )
+void ChatPanel::OnUserMenuOp( wxCommandEvent& /*unused*/ )
 {
 	if ( m_channel == 0 ) return;
 	if ( !m_channel->UserExists( _T( "ChanServ" ) ) ) {
@@ -1591,7 +1591,7 @@ void ChatPanel::OnUserMenuOp( wxCommandEvent& event )
 }
 
 
-void ChatPanel::OnUserMenuDeop( wxCommandEvent& event )
+void ChatPanel::OnUserMenuDeop( wxCommandEvent& /*unused*/ )
 {
 	if ( m_channel == 0 ) return;
 	if ( !m_channel->UserExists( _T( "ChanServ" ) ) ) {
@@ -1608,19 +1608,19 @@ void ChatPanel::OnUserMenuDeop( wxCommandEvent& event )
 }
 
 
-void ChatPanel::OnUserMenuModeratorIngame( wxCommandEvent& event )
+void ChatPanel::OnUserMenuModeratorIngame( wxCommandEvent& /*unused*/ )
 {
 	ui().GetServer().RequestInGameTime( GetSelectedUser()->GetNick() );
 }
 
 
-void ChatPanel::OnUserMenuModeratorCurrentIP( wxCommandEvent& event )
+void ChatPanel::OnUserMenuModeratorCurrentIP( wxCommandEvent& /*unused*/ )
 {
 	ui().GetServer().ModeratorGetIP( GetSelectedUser()->GetNick() );
 }
 
 
-void ChatPanel::OnUserMenuModeratorKick( wxCommandEvent& event )
+void ChatPanel::OnUserMenuModeratorKick( wxCommandEvent& /*unused*/ )
 {
 	wxString reason;
 	if ( !ui().AskText( _( "Kick user" ), _( "Reason:" ), reason ) ) return;
@@ -1628,19 +1628,19 @@ void ChatPanel::OnUserMenuModeratorKick( wxCommandEvent& event )
 }
 
 
-void ChatPanel::OnUserMenuModeratorBan( wxCommandEvent& event )
+void ChatPanel::OnUserMenuModeratorBan( wxCommandEvent& /*unused*/ )
 {
 	ui().ShowMessage( _( "Error" ), _( "Not Implemented" ) );
 }
 
 
-void ChatPanel::OnUserMenuModeratorUnban( wxCommandEvent& event )
+void ChatPanel::OnUserMenuModeratorUnban( wxCommandEvent& /*unused*/ )
 {
 	ui().ShowMessage( _( "Error" ), _( "Not Implemented" ) );
 }
 
 
-void ChatPanel::OnUserMenuModeratorMute( wxCommandEvent& event )
+void ChatPanel::OnUserMenuModeratorMute( wxCommandEvent& /*unused*/ )
 {
 	wxString duration;
 	if ( !ui().AskText( _( "Mute user" ), _( "Duration:" ), duration ) ) return;
@@ -1650,44 +1650,44 @@ void ChatPanel::OnUserMenuModeratorMute( wxCommandEvent& event )
 }
 
 
-void ChatPanel::OnUserMenuModeratorMute5( wxCommandEvent& event )
+void ChatPanel::OnUserMenuModeratorMute5( wxCommandEvent& /*unused*/ )
 {
 	ui().GetServer().ModeratorMute( m_channel->GetName(), GetSelectedUser()->GetNick(), 5, true );
 }
 
 
-void ChatPanel::OnUserMenuModeratorMute10( wxCommandEvent& event )
+void ChatPanel::OnUserMenuModeratorMute10( wxCommandEvent& /*unused*/ )
 {
 	ui().GetServer().ModeratorMute( m_channel->GetName(), GetSelectedUser()->GetNick(), 10, true );
 }
 
 
-void ChatPanel::OnUserMenuModeratorMute30( wxCommandEvent& event )
+void ChatPanel::OnUserMenuModeratorMute30( wxCommandEvent& /*unused*/ )
 {
 	ui().GetServer().ModeratorMute( m_channel->GetName(), GetSelectedUser()->GetNick(), 30, true );
 }
 
 
-void ChatPanel::OnUserMenuModeratorMute120( wxCommandEvent& event )
+void ChatPanel::OnUserMenuModeratorMute120( wxCommandEvent& /*unused*/ )
 {
 	ui().GetServer().ModeratorMute( m_channel->GetName(), GetSelectedUser()->GetNick(), 120, true );
 }
 
 
-void ChatPanel::OnUserMenuModeratorMute1440( wxCommandEvent& event )
+void ChatPanel::OnUserMenuModeratorMute1440( wxCommandEvent& /*unused*/ )
 {
 	ui().GetServer().ModeratorMute( m_channel->GetName(), GetSelectedUser()->GetNick(), 1440, true );
 }
 
 
 
-void ChatPanel::OnUserMenuModeratorUnmute( wxCommandEvent& event )
+void ChatPanel::OnUserMenuModeratorUnmute( wxCommandEvent& /*unused*/ )
 {
 	ui().GetServer().ModeratorUnmute( m_channel->GetName(), GetSelectedUser()->GetNick() );
 }
 
 
-void ChatPanel::OnUserMenuModeratorRing( wxCommandEvent& event )
+void ChatPanel::OnUserMenuModeratorRing( wxCommandEvent& /*unused*/ )
 {
 	ui().GetServer().Ring( GetSelectedUser()->GetNick() );
 }
@@ -1708,7 +1708,7 @@ void ChatPanel::OnUserMenuAddToGroup( wxCommandEvent& event )
 }
 
 
-void ChatPanel::OnUserMenuDeleteFromGroup( wxCommandEvent& event )
+void ChatPanel::OnUserMenuDeleteFromGroup( wxCommandEvent& /*unused*/ )
 {
     const User* user = GetSelectedUser();
     if ( user )
@@ -1716,7 +1716,7 @@ void ChatPanel::OnUserMenuDeleteFromGroup( wxCommandEvent& event )
 }
 
 
-void ChatPanel::OnUserMenuCreateGroup( wxCommandEvent& event )
+void ChatPanel::OnUserMenuCreateGroup( wxCommandEvent& /*unused*/ )
 {
     wxString name;
     if ( ui().AskText( _("Enter name"),
@@ -1770,7 +1770,7 @@ void ChatPanel::OnMouseDown( wxMouseEvent& event )
 }
 
 
-void ChatPanel::OnMenuToggleAppend( wxCommandEvent& event )
+void ChatPanel::OnMenuToggleAppend( wxCommandEvent& /*unused*/ )
 {
   m_disable_append = m_append_menu->IsChecked();
   if ( !m_disable_append )
@@ -1801,7 +1801,7 @@ void ChatPanel::SetIconHighlight( HighlightType highlight )
   {
     for ( unsigned int i = 0; i <  m_chat_tabs->GetPageCount( ); ++i )
     {
-      if ( m_chat_tabs->GetPage( i ) == this )
+      if ( m_chat_tabs->GetPage( i ) == this )//!TODO: return afterwards?
       {
         switch ( highlight )
         {
@@ -1852,20 +1852,21 @@ void ChatPanel::SetIconHighlight( HighlightType highlight )
             }
             break;
           }
+          default: break;
         }
       }
     }
   }
 }
 
-void ChatPanel::OnChannelMenuShowMutelist( wxCommandEvent& event )
+void ChatPanel::OnChannelMenuShowMutelist( wxCommandEvent& /*unused*/ )
 {
     if ( m_channel && ( m_type == CPT_Channel ) ) {
        m_channel->GetServer().SendRaw( _T("MUTELIST ") + m_channel->GetName() );
     }
 }
 
-void ChatPanel::ClearContents( wxCommandEvent& event )
+void ChatPanel::ClearContents( wxCommandEvent& /*unused*/ )
 {
     m_chatlog_text->SetValue( _T("") );
 }

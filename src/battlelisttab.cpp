@@ -295,7 +295,7 @@ void BattleListTab::SetFilterActiv( bool activ )
 }
 
 
-void BattleListTab::OnHost( wxCommandEvent& event )
+void BattleListTab::OnHost( wxCommandEvent& /*unused*/ )
 {
   if ( !ui().IsConnected() )
   {
@@ -364,6 +364,9 @@ void BattleListTab::OnHost( wxCommandEvent& event )
                     "in the dialog.\n\nIf everything else fails, enable the Hole Punching NAT Traversal\n "
                     "option in the hosting settings."), bo.port ) );
                 return;
+            default:
+                wxLogWarning( _T("unknonw port forward test result") );
+                break;
 
         }
       if ( !ui().TestHostPort( bo.port ) )
@@ -425,7 +428,7 @@ void BattleListTab::OnHost( wxCommandEvent& event )
 }
 
 
-void BattleListTab::OnFilter( wxCommandEvent& event )
+void BattleListTab::OnFilter( wxCommandEvent& /*unused*/ )
 {
   if (m_filter_show->GetValue())
 	{
@@ -440,7 +443,7 @@ void BattleListTab::OnFilter( wxCommandEvent& event )
 }
 
 
-void BattleListTab::OnFilterActiv( wxCommandEvent& event )
+void BattleListTab::OnFilterActiv( wxCommandEvent& /*unused*/ )
 {
   bool active = m_filter_activ->GetValue();
   if ( !ui().IsConnected() )
@@ -454,7 +457,7 @@ void BattleListTab::OnFilterActiv( wxCommandEvent& event )
 }
 
 
-void BattleListTab::OnJoin( wxCommandEvent& event )
+void BattleListTab::OnJoin( wxCommandEvent& /*unused*/ )
 {
     try
     {
@@ -603,7 +606,7 @@ void BattleListTab::ShowExtendedInfos( bool show )
     Layout();
 }
 
-void BattleListTab::OnInfoShow( wxCommandEvent& event )
+void BattleListTab::OnInfoShow( wxCommandEvent& /*unused*/ )
 {
     ShowExtendedInfos( m_info_show->GetValue() );
 }

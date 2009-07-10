@@ -116,13 +116,13 @@ TorrentOptionsPanel::~TorrentOptionsPanel()
 
 
 //TODO wtf did i add these for
-void TorrentOptionsPanel::OnMaxUp( wxCommandEvent& event ){}
-void TorrentOptionsPanel::OnMaxDown( wxCommandEvent& event ){}
-void TorrentOptionsPanel::OnP2PPort( wxCommandEvent& event ){}
-void TorrentOptionsPanel::OnMaxConnections( wxCommandEvent& event ){}
+void TorrentOptionsPanel::OnMaxUp( wxCommandEvent& /*unused*/ ){}
+void TorrentOptionsPanel::OnMaxDown( wxCommandEvent& /*unused*/ ){}
+void TorrentOptionsPanel::OnP2PPort( wxCommandEvent& /*unused*/ ){}
+void TorrentOptionsPanel::OnMaxConnections( wxCommandEvent& /*unused*/ ){}
 
 
-void TorrentOptionsPanel::OnApply( wxCommandEvent& event )
+void TorrentOptionsPanel::OnApply( wxCommandEvent& /*unused*/ )
 {
 
     sett().SetTorrentSystemAutoStartMode( 0 );
@@ -147,7 +147,7 @@ void TorrentOptionsPanel::OnApply( wxCommandEvent& event )
     torrent().UpdateSettings();
 }
 
-void TorrentOptionsPanel::OnRestore( wxCommandEvent& event )
+void TorrentOptionsPanel::OnRestore( wxCommandEvent& /*unused*/ )
 {
     m_maxConnections->SetValue( TowxString( sett().GetTorrentMaxConnections() ) );
     m_p2pport->SetValue( TowxString( sett().GetTorrentPort() ) );

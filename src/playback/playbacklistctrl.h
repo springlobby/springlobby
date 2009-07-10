@@ -54,7 +54,7 @@ class PlaybackListCtrl : public CustomVirtListCtrl< const PlaybackImp*, Playback
 
     virtual void SetTipWindowText( const long item_hit, const wxPoint position);
 
-    virtual void HighlightItem( long item ){};
+    virtual void HighlightItem( long /*unused*/ ){};
 
     //these are overloaded to use list in virtual style
     wxString GetItemText(long item, long column) const;

@@ -69,6 +69,7 @@ void MainSinglePlayerTab::OnUnitSyncReloaded()
   wxLogDebugFunc( _T("") );
   try
   {
+      GetSinglePlayerTab().ResetUsername();
     wxLogMessage( _T("Reloading map list") );
     GetSinglePlayerTab().ReloadMaplist();
     wxLogMessage( _T("Reloading mod list") );

@@ -17,7 +17,7 @@
 BEGIN_EVENT_TABLE_TEMPLATE2(CustomVirtListCtrl, ListBaseType, T,L)
 #if wxUSE_TIPWINDOW
   EVT_MOTION(CustomVirtListCtrl::OnMouseMotion)
-  EVT_TIMER(wxID_ANY, CustomVirtListCtrl::OnTimer)
+  EVT_TIMER(IDD_TIP_TIMER, CustomVirtListCtrl::OnTimer)
 #endif
   EVT_LIST_COL_BEGIN_DRAG(wxID_ANY, CustomVirtListCtrl::OnStartResizeCol)
   EVT_LIST_COL_END_DRAG(wxID_ANY, CustomVirtListCtrl::OnEndResizeCol)
@@ -211,7 +211,7 @@ void CustomVirtListCtrl<T,L>::RefreshVisibleItems()
 }
 
 template < class T, class L >
-void CustomVirtListCtrl<T,L>::OnTimer(wxTimerEvent& event)
+void CustomVirtListCtrl<T,L>::OnTimer(wxTimerEvent& /*unused*/ )
 {
 #if wxUSE_TIPWINDOW
 
@@ -296,7 +296,7 @@ void CustomVirtListCtrl<T,L>::OnMouseMotion(wxMouseEvent& event)
 }
 
 template < class T, class L >
-void CustomVirtListCtrl<T,L>::SetTipWindowText( const long item_hit, const wxPoint position)
+void CustomVirtListCtrl<T,L>::SetTipWindowText( const long /*unused*/ , const wxPoint& position)
 {
   int column = getColumnFromPosition(position);
   #ifdef SL_DUMMY_COL
@@ -418,7 +418,7 @@ void CustomVirtListCtrl<T,L>::SortList( bool force )
 {
     if ( ( m_sort_timer.IsRunning() ||  !m_dirty_sort ) && !force )
         return;
-    SelectionSaver<ThisType>(this);
+    SelectionSaver<ThisType>(*this);
     Freeze();
     Sort();
     Thaw();
@@ -519,7 +519,7 @@ template < class T, class L >
 bool CustomVirtListCtrl<T,L>::GetColumn(int col, wxListItem& item) const
 {
     #ifdef SL_DUMMY_COL
-        col--;
+        col++;
     #endif
     return ListBaseType::GetColumn( col, item );
 }
@@ -528,7 +528,7 @@ template < class T, class L >
 bool CustomVirtListCtrl<T,L>::SetColumn(int col, wxListItem& item)
 {
     #ifdef SL_DUMMY_COL
-        col--;
+        col++;
     #endif
     return ListBaseType::SetColumn( col, item );
 }
@@ -562,7 +562,7 @@ bool CustomVirtListCtrl<T,L>::RemoveItem( const T item )
     int index = GetIndexFromData( item );
 
     if ( index != -1 ) {
-        SelectionSaver<ThisType>(this);
+        SelectionSaver<ThisType>(*this);
         m_data.erase( m_data.begin() + index );
         SetItemCount( m_data.size() );
         RefreshItems( index, m_data.size() -1 );
@@ -600,7 +600,7 @@ wxListItemAttr* CustomVirtListCtrl<T,L>::OnGetItemAttr(long item) const
 }
 
 template < class T, class L >
-void CustomVirtListCtrl<T,L>::OnPeriodicSort( wxTimerEvent& evt )
+void CustomVirtListCtrl<T,L>::OnPeriodicSort( wxTimerEvent& /*unused*/  )
 {
     SortList();
 }

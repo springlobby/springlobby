@@ -59,7 +59,7 @@ bool IBattle::IsSynced()
 
 
 
-std::vector<wxColour> &IBattle::GetFixColoursPalette()
+std::vector<wxColour> &IBattle::GetFixColoursPalette( int numteams )
 {
     static std::vector<wxColour> result;
     if (result.empty())
@@ -78,20 +78,15 @@ std::vector<wxColour> &IBattle::GetFixColoursPalette()
             }
         }
     }
-    return result;
+    if ( result.size() < numteams ) return result;
+    return GetBigFixColoursPalette( numteams );
 }
 
 wxColour IBattle::GetFixColour(int i)
 {
-    std::vector<wxColour> palette = GetFixColoursPalette();
-    if (((unsigned int)i)<palette.size())
-    {
-        return palette[i];
-    }
-    else
-    {
-        return wxColour(127,127,127);
-    }
+		int size = m_teams_sizes.size();
+    std::vector<wxColour> palette = GetFixColoursPalette( size );
+		return palette[i];
 }
 
 int IBattle::GetPlayerNum( const User& user )
@@ -104,48 +99,58 @@ int IBattle::GetPlayerNum( const User& user )
     return -1;
 }
 
-wxColour IBattle::GetFreeColour( User &for_whom ) const
+wxColour IBattle::GetFreeColour( User &for_whom )
 {
     int lowest = 0;
     bool changed = true;
+    std::vector<wxColour>& fixcolourspalette = GetFixColoursPalette( m_teams_sizes.size() + 1 );
     while ( changed )
     {
         changed = false;
+        std::set<int> parsed_teams;
         for ( user_map_t::size_type i = 0; i < GetNumUsers(); i++ )
         {
             if ( &GetUser( i ) == &for_whom ) continue;
             UserBattleStatus& bs = GetUser( i ).BattleStatus();
             if ( bs.spectator ) continue;
-            if ( AreColoursSimilar( bs.colour, wxColour(colour_values[lowest][0], colour_values[lowest][1], colour_values[lowest][2]) ) )
+						if ( parsed_teams.find( bs.team ) != parsed_teams.end() ) continue; // skip duplicates
+						parsed_teams.insert( bs.team );
+            if ( AreColoursSimilar( bs.colour, fixcolourspalette[lowest] ) )
             {
                 lowest++;
+                if ( lowest > fixcolourspalette.size() ) fixcolourspalette = GetFixColoursPalette( lowest + 1 );
                 changed = true;
             }
         }
     }
-    return wxColour( colour_values[lowest][0], colour_values[lowest][1], colour_values[lowest][2] );
+    return fixcolourspalette[lowest];
 }
 
 
-wxColour IBattle::GetNewColour() const
+wxColour IBattle::GetNewColour()
 {
     int lowest = 0;
     bool changed = true;
+    std::vector<wxColour>& fixcolourspalette = GetFixColoursPalette( m_teams_sizes.size() + 1 );
     while ( changed )
     {
         changed = false;
+        std::set<int> parsed_teams;
         for ( user_map_t::size_type i = 0; i < GetNumUsers(); i++ )
         {
             UserBattleStatus& bs = GetUser( i ).BattleStatus();
             if ( bs.spectator ) continue;
-            if ( AreColoursSimilar( bs.colour, wxColour(colour_values[lowest][0], colour_values[lowest][1], colour_values[lowest][2]) ) )
+						if ( parsed_teams.find( bs.team ) != parsed_teams.end() ) continue; // skip duplicates
+						parsed_teams.insert( bs.team );
+            if ( AreColoursSimilar( bs.colour, fixcolourspalette[lowest] ) )
             {
                 lowest++;
+                if ( lowest > fixcolourspalette.size() ) fixcolourspalette = GetFixColoursPalette( lowest + 1 );
                 changed = true;
             }
         }
     }
-    return wxColour( colour_values[lowest][0], colour_values[lowest][1], colour_values[lowest][2] );
+    return fixcolourspalette[lowest];
 }
 
 int IBattle::ColourDifference(const wxColour &a, const wxColour &b) // returns max difference of r,g,b.
@@ -177,8 +182,7 @@ int IBattle::GetFreeTeamNum( bool excludeme )
 
 int IBattle::GetClosestFixColour(const wxColour &col, const std::vector<int> &excludes, int &difference)
 {
-    std::vector<wxColour> palette = GetFixColoursPalette();
-    int mindiff=1024;
+    std::vector<wxColour> palette = GetFixColoursPalette( m_teams_sizes.size() );
     int result=0;
     int t1=palette.size();
     int t2=excludes.size();
@@ -187,29 +191,25 @@ int IBattle::GetClosestFixColour(const wxColour &col, const std::vector<int> &ex
     {
         if ((i>=excludes.size()) || (!excludes[i]))
         {
-            int diff=ColourDifference(palette[i],col);
-            if (diff<mindiff)
+            if (AreColoursSimilar( palette[i],col, difference ))
             {
-                mindiff=diff;
                 result=i;
             }
         }
     }
-    difference=mindiff;
-    wxLogMessage(_T("GetClosestFixColour result=%d diff=%d"),result,difference);
     return result;
 }
 
 
-void IBattle::SendHostInfo( HostInfo update )
+void IBattle::SendHostInfo( HostInfo /*unused*/ )
 {
 }
 
-void IBattle::SendHostInfo( const wxString& Tag )
+void IBattle::SendHostInfo( const wxString& /*unused*/ )
 {
 }
 
-void IBattle::Update ( const wxString& Tag )
+void IBattle::Update ( const wxString& /*unused*/)
 {
 }
 
@@ -234,8 +234,12 @@ User& IBattle::OnUserAdded( User& user )
     }
 		if ( !bs.spectator )
 		{
-			m_teams_sizes[bs.team] = m_teams_sizes[bs.team] + 1;
-			m_ally_sizes[bs.ally] = m_ally_sizes[bs.ally] + 1;
+			std::map<int, int>::iterator itor = m_teams_sizes.find( bs.team );
+			if ( itor == m_teams_sizes.end() ) m_teams_sizes[bs.team] = 1;
+			else m_teams_sizes[bs.team] = m_teams_sizes[bs.team] + 1;
+			std::map<int, int>::iterator iter = m_ally_sizes.find( bs.ally );
+			if ( iter == m_ally_sizes.end() ) m_ally_sizes[bs.ally] = 1;
+			else m_ally_sizes[bs.ally] = m_ally_sizes[bs.ally] + 1;
 		}
 		if ( bs.spectator ) m_opts.spectators++;
 		if ( bs.ready && !bs.IsBot() ) m_players_ready++;
@@ -298,25 +302,62 @@ void IBattle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 	{
 		if ( !status.spectator )
 		{
-			if ( status.ready && !status.IsBot() ) m_players_sync++;
-			if ( status.sync && !status.IsBot() ) m_players_sync++;
-			m_teams_sizes[status.team] = m_teams_sizes[status.team] + 1;
-			m_ally_sizes[status.ally] = m_ally_sizes[status.ally] + 1;
+			std::map<int, int>::iterator itor = m_teams_sizes.find( status.team );
+			if ( itor == m_teams_sizes.end() ) m_teams_sizes[status.team] = 1;
+			else m_teams_sizes[status.team] = m_teams_sizes[status.team] + 1;
+			std::map<int, int>::iterator iter = m_ally_sizes.find( status.ally );
+			if ( iter == m_ally_sizes.end() ) m_ally_sizes[status.ally] = 1;
+			else m_ally_sizes[status.ally] = m_ally_sizes[status.ally] + 1;
 		}
 		else
 		{
-			if ( previousstatus.ready && !status.IsBot() ) m_players_ready--;
-			if ( previousstatus.sync && !status.IsBot() ) m_players_sync--;
-			m_teams_sizes[status.team] = m_teams_sizes[status.team] - 1;
-			m_ally_sizes[status.ally] = m_ally_sizes[status.ally] - 1;
+			std::map<int, int>::iterator itor = m_teams_sizes.find( status.team );
+			if ( itor != m_teams_sizes.end() )
+			{
+				 itor->second = itor->second -1;
+				if ( itor->second == 0 )
+				{
+					m_teams_sizes.erase( itor );
+				}
+			}
+			std::map<int, int>::iterator iter = m_ally_sizes.find( status.ally );
+			if ( iter != m_ally_sizes.end() )
+			{
+				iter->second = iter->second - 1;
+				if ( iter->second == 0 )
+				{
+					m_ally_sizes.erase( iter );
+				}
+			}
 		}
 	}
 	else
 	{
-		m_teams_sizes[previousstatus.team] = m_teams_sizes[previousstatus.team] - 1;
-		m_teams_sizes[status.team] = m_teams_sizes[status.team] + 1;
-		m_ally_sizes[previousstatus.ally] = m_ally_sizes[previousstatus.ally] - 1;
-		m_ally_sizes[status.ally] = m_ally_sizes[status.ally] + 1;
+		std::map<int, int>::iterator itor = m_teams_sizes.find( previousstatus.team );
+		if ( itor != m_teams_sizes.end() )
+		{
+			 itor->second = itor->second -1;
+			if ( itor->second == 0 )
+			{
+				m_teams_sizes.erase( itor );
+			}
+		}
+		itor = m_teams_sizes.find( status.team );
+		if ( itor != m_teams_sizes.end() ) itor->second = itor->second + 1;
+		else m_teams_sizes[status.team] = 1;
+
+		std::map<int, int>::iterator iter = m_ally_sizes.find( previousstatus.ally );
+		if ( iter != m_ally_sizes.end() )
+		{
+			 iter->second = iter->second - 1;
+				if ( iter->second == 0 )
+				{
+					m_ally_sizes.erase( iter );
+				}
+		}
+		iter = m_ally_sizes.find( status.ally );
+		if ( iter != m_ally_sizes.end() ) iter->second = iter->second + 1;
+		else m_ally_sizes[status.ally] = 1;
 	}
 	if ( !status.IsBot() )
 	{
@@ -368,9 +409,25 @@ void IBattle::OnUserRemoved( User& user )
 		UserBattleStatus& bs = user.BattleStatus();
 		if ( !bs.spectator )
 		{
-			m_teams_sizes[bs.team] = m_teams_sizes[bs.team] - 1;
-			m_ally_sizes[bs.ally] = m_ally_sizes[bs.ally] - 1;
-		}
+			std::map<int, int>::iterator itor = m_teams_sizes.find( bs.team );
+			if ( itor != m_teams_sizes.end() )
+			{
+				 itor->second = itor->second -1;
+				if ( itor->second == 0 )
+				{
+					m_teams_sizes.erase( itor );
+				}
+			}
+			std::map<int, int>::iterator iter = m_ally_sizes.find( bs.ally );
+			if ( iter != m_ally_sizes.end() )
+			{
+				iter->second = iter->second - 1;
+				if ( iter->second == 0 )
+				{
+					m_ally_sizes.erase( iter );
+				}
+			}
+ 		}
 		if ( bs.ready && !bs.IsBot() ) m_players_ready--;
 		if ( bs.sync && !bs.IsBot() ) m_players_sync--;
     if ( IsFounderMe() && bs.spectator )
@@ -962,7 +1019,7 @@ wxArrayString IBattle::GetPresetList()
   return sett().GetPresetList();
 }
 
-void IBattle::UserPositionChanged( const User& user )
+void IBattle::UserPositionChanged( const User& /*unused*/ )
 {
 }
 

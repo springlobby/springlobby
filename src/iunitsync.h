@@ -59,9 +59,7 @@ struct GameOptions;
 class IUnitSync
 {
   public:
-    IUnitSync()
-    { }
-
+    IUnitSync() { }
     virtual ~IUnitSync() { }
 
     enum GameFeature
@@ -211,6 +209,8 @@ class IUnitSync
 
     virtual wxArrayString GetScreenshotFilenames() = 0;
 
+    private:
+        IUnitSync( const IUnitSync& );
 };
 
 IUnitSync& usync();

@@ -134,7 +134,7 @@ bool FileListDialog::AddTorrentRow(TorrentTable::PRow data)
   return true;
 }
 
-void FileListDialog::OnDownload( wxCommandEvent& event )
+void FileListDialog::OnDownload( wxCommandEvent& /*unused*/ )
 {
     typedef FileListCtrl::HashVector HashVector;
     HashVector hashs;
@@ -149,22 +149,22 @@ void FileListDialog::OnDownload( wxCommandEvent& event )
 
 }
 
-void FileListDialog::OnRefreshList( wxCommandEvent& event )
+void FileListDialog::OnRefreshList( wxCommandEvent& /*unused*/ )
 {
 
 }
 
-void FileListDialog::OnSelectAll( wxCommandEvent& event )
+void FileListDialog::OnSelectAll( wxCommandEvent& /*unused*/ )
 {
     m_filelistctrl->SelectAll();
 }
 
-void FileListDialog::OnSelectNone( wxCommandEvent& event )
+void FileListDialog::OnSelectNone( wxCommandEvent& /*unused*/ )
 {
     m_filelistctrl->SelectNone();
 }
 
-void FileListDialog::OnSelectInv( wxCommandEvent& event )
+void FileListDialog::OnSelectInv( wxCommandEvent& /*unused*/ )
 {
     m_filelistctrl->SelectInverse();
 }

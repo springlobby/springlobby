@@ -27,7 +27,7 @@ bool AutoHost::GetEnabled()
 	return m_enabled;
 }
 
-void AutoHost::OnSaidBattle( const wxString& nick, const wxString& msg )
+void AutoHost::OnSaidBattle( const wxString& /*unused*/, const wxString& msg )
 {
   // do nothing if autohost functionality is disabled
 

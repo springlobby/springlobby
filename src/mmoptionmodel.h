@@ -57,7 +57,7 @@ struct mmOptionModel
     mmOptionModel(wxString name_, wxString key_, wxString description_, OptionType type_ = opt_undefined,
                 wxString section_ = SLGlobals::nosection_name, ControlType style_ = ct_undefined);
 
-	~mmOptionModel();
+	virtual ~mmOptionModel();
 	//! all members are set to empty strings, type to opt_undefined
 	mmOptionModel();
 

@@ -56,7 +56,7 @@ AutojoinChannelDialog::~AutojoinChannelDialog()
 }
 
 
-void AutojoinChannelDialog::OnOk( wxCommandEvent& event )
+void AutojoinChannelDialog::OnOk( wxCommandEvent& /*unused*/ )
 {
 	wxString newChannels = m_channel_list->GetValue();
 
@@ -77,7 +77,7 @@ void AutojoinChannelDialog::OnOk( wxCommandEvent& event )
 	this->Show( false );
 }
 
-void AutojoinChannelDialog::OnCancel( wxCommandEvent& event )
+void AutojoinChannelDialog::OnCancel( wxCommandEvent& /*unused*/ )
 {
 	this->Show( false );
 }

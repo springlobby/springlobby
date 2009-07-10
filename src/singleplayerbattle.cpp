@@ -6,8 +6,6 @@
 #include "singleplayerbattle.h"
 #include "mainsingleplayertab.h"
 #include "server.h"
-//#include "utils.h"
-#include "uiutils.h"
 #include "ui.h"
 #include "settings.h"
 #include "spring.h"
@@ -15,7 +13,7 @@
 
 SinglePlayerBattle::SinglePlayerBattle( MainSinglePlayerTab& msptab ):
   m_sptab(msptab),
-  m_me( User( _("Player") ) )
+  m_me( User( usync().IsLoaded() ? usync().GetDefaultNick() : _T("invalid") ) )
 {
 	OnUserAdded( m_me );
 	m_me.BattleStatus().colour = sett().GetBattleLastColour();

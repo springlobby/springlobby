@@ -199,7 +199,7 @@ void BattleListCtrl::OnListRightClick( wxListEvent& event )
     }
 }
 
-void BattleListCtrl::OnDLMap( wxCommandEvent& event )
+void BattleListCtrl::OnDLMap( wxCommandEvent& /*unused*/  )
 {
     if ( m_selected_index > 0 &&  (long)m_data.size() > m_selected_index ) {
         DataType dt = m_data[m_selected_index];
@@ -207,7 +207,7 @@ void BattleListCtrl::OnDLMap( wxCommandEvent& event )
     }
 }
 
-void BattleListCtrl::OnDLMod( wxCommandEvent& event )
+void BattleListCtrl::OnDLMod( wxCommandEvent& /*unused*/  )
 {
     if ( m_selected_index > 0 &&  (long)m_data.size() > m_selected_index ) {
         DataType dt = m_data[m_selected_index];
@@ -286,7 +286,7 @@ int BattleListCtrl::ComparePlayer( DataType u1, DataType u2 )
     return compareSimple( n1, n2 );
 }
 
-void BattleListCtrl::SetTipWindowText( const long item_hit, const wxPoint position)
+void BattleListCtrl::SetTipWindowText( const long item_hit, const wxPoint& position)
 {
     if ( (long)m_data.size() < item_hit ) {
         m_tiptext = _T("");

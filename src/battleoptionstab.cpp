@@ -221,7 +221,7 @@ void BattleOptionsTab::Allow( int index)
 //////////////////////////////////////////////////////////////////////////
 
 
-void BattleOptionsTab::OnRestrict( wxCommandEvent& event )
+void BattleOptionsTab::OnRestrict( wxCommandEvent& /*unused*/ )
 {
   wxArrayInt sel;
   wxArrayString names;
@@ -242,7 +242,7 @@ void BattleOptionsTab::OnRestrict( wxCommandEvent& event )
 }
 
 
-void BattleOptionsTab::OnAllow( wxCommandEvent& event )
+void BattleOptionsTab::OnAllow( wxCommandEvent& /*unused*/ )
 {
   wxArrayInt sel;
   wxArrayString names;
@@ -263,7 +263,7 @@ void BattleOptionsTab::OnAllow( wxCommandEvent& event )
 }
 
 
-void BattleOptionsTab::OnClearRestrictions( wxCommandEvent& event )
+void BattleOptionsTab::OnClearRestrictions( wxCommandEvent& /*unused*/ )
 {
   m_battle.UnrestrictAllUnits();
   ReloadRestrictions();

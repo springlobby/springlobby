@@ -370,7 +370,7 @@ void BattleroomListCtrl::OnAllySelect( wxCommandEvent& event )
 }
 
 
-void BattleroomListCtrl::OnColourSelect( wxCommandEvent& event )
+void BattleroomListCtrl::OnColourSelect( wxCommandEvent& /*unused*/ )
 {
   wxLogDebugFunc( _T("") );
 
@@ -390,7 +390,7 @@ void BattleroomListCtrl::OnSideSelect( wxCommandEvent& event )
 }
 
 
-void BattleroomListCtrl::OnHandicapSelect( wxCommandEvent& event )
+void BattleroomListCtrl::OnHandicapSelect( wxCommandEvent& /*unused*/ )
 {
   wxLogDebugFunc( _T("") );
   if( !m_sel_user ) return;
@@ -402,21 +402,21 @@ void BattleroomListCtrl::OnHandicapSelect( wxCommandEvent& event )
 }
 
 
-void BattleroomListCtrl::OnSpecSelect( wxCommandEvent& event )
+void BattleroomListCtrl::OnSpecSelect( wxCommandEvent& /*unused*/ )
 {
   wxLogDebugFunc( _T("") );
   if ( m_sel_user ) ((Battle*)m_battle)->ForceSpectator( *m_sel_user, m_spec_item->IsChecked() );
 }
 
 
-void BattleroomListCtrl::OnKickPlayer( wxCommandEvent& event )
+void BattleroomListCtrl::OnKickPlayer( wxCommandEvent& /*unused*/ )
 {
   wxLogDebugFunc( _T("") );
 	if ( m_sel_user ) ((Battle*)m_battle)->KickPlayer( *m_sel_user );
 }
 
 
-void BattleroomListCtrl::OnRingPlayer( wxCommandEvent& event )
+void BattleroomListCtrl::OnRingPlayer( wxCommandEvent& /*unused*/ )
 {
   wxLogDebugFunc( _T("") );
   if ( m_sel_user ) ((Battle*)m_battle)->GetServer().Ring( m_sel_user->GetNick() );
@@ -687,7 +687,7 @@ int BattleroomListCtrl::CompareHandicap(const DataType user1, const DataType use
   return 0;
 }
 
-void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint position)
+void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint& position)
 {
     if ( item_hit < 0 || item_hit >= (long)m_data.size() )
         return;
@@ -772,13 +772,13 @@ void BattleroomListCtrl::OnUserMenuAddToGroup( wxCommandEvent& event )
     useractions().AddUserToGroup( groupname, nick );
 }
 
-void BattleroomListCtrl::OnUserMenuDeleteFromGroup( wxCommandEvent& event )
+void BattleroomListCtrl::OnUserMenuDeleteFromGroup( wxCommandEvent& /*unused*/ )
 {
     wxString nick = GetSelectedUserNick();
     useractions().RemoveUser( nick );
 }
 
-void BattleroomListCtrl::OnUserMenuCreateGroup( wxCommandEvent& event )
+void BattleroomListCtrl::OnUserMenuCreateGroup( wxCommandEvent& /*unused*/ )
 {
     wxString name;
     if ( ui().AskText( _("Enter name"),
@@ -800,7 +800,7 @@ wxString BattleroomListCtrl::GetSelectedUserNick()
         return m_data[m_selected_index]->GetNick();
 }
 
-void BattleroomListCtrl::OnActivateItem( wxListEvent& event )
+void BattleroomListCtrl::OnActivateItem( wxListEvent& /*unused*/ )
 {
     if ( m_ro )
         return;
