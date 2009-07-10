@@ -789,16 +789,19 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
 
     switch (row->type)
     {
-    case IUnitSync::map:
-    {
-        torrent_name = torrent_name + _T("|MAP");
-        break;
-    }
-    case IUnitSync::mod:
-    {
-        torrent_name = torrent_name + _T("|MOD");
-        break;
-    }
+        case IUnitSync::map:
+        {
+            torrent_name = torrent_name + _T("|MAP");
+            break;
+        }
+        case IUnitSync::mod:
+        {
+            torrent_name = torrent_name + _T("|MOD");
+            break;
+        }
+        default:
+            wxLogDebugFunc( _T("row-type unhandled") );
+            break;
     }
 
     if ( IsSeed )
@@ -806,22 +809,25 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
         wxString archivename;
         switch ( row->type ) // if file is not present locally you can't seed it
         {
-        case IUnitSync::map:
-        {
-            if ( !usync().MapExists( row->name, row->hash ) ) return false;
-            int index = usync().GetMapIndex( row->name );
-            if ( index == -1 ) return false;
-            archivename = usync().GetMapArchive( index );
-            break;
-        }
-        case IUnitSync::mod:
-        {
-            if ( !usync().ModExists( row->name, row->hash ) ) return false;
-            int index = usync().GetModIndex( row->name );
-            if ( index == -1 ) return false;
-            archivename = usync().GetModArchive( index );
-            break;
-        }
+            case IUnitSync::map:
+            {
+                if ( !usync().MapExists( row->name, row->hash ) ) return false;
+                int index = usync().GetMapIndex( row->name );
+                if ( index == -1 ) return false;
+                archivename = usync().GetMapArchive( index );
+                break;
+            }
+            case IUnitSync::mod:
+            {
+                if ( !usync().ModExists( row->name, row->hash ) ) return false;
+                int index = usync().GetModIndex( row->name );
+                if ( index == -1 ) return false;
+                archivename = usync().GetModArchive( index );
+                break;
+            }
+            default:
+                wxLogDebugFunc( _T("row-type unhandled") );
+                break;
         }
 
         try
@@ -1018,22 +1024,25 @@ void TorrentWrapper::CreateTorrent( const wxString& hash, const wxString& name, 
 
     switch ( type )
     {
-    case IUnitSync::map :
-    {
-        if ( !usync().MapExists( name, hash ) ) return;
-        int index = usync().GetMapIndex( name );
-        if ( index == -1 ) return;
-        archivename = usync().GetMapArchive( index );
-        break;
-    }
-    case IUnitSync::mod :
-    {
-        if ( !usync().ModExists( name, hash ) ) return;
-        int index = usync().GetModIndex( name );
-        if ( index == -1 ) return;
-        archivename = usync().GetModArchive( index );
-        break;
-    }
+        case IUnitSync::map :
+        {
+            if ( !usync().MapExists( name, hash ) ) return;
+            int index = usync().GetMapIndex( name );
+            if ( index == -1 ) return;
+            archivename = usync().GetMapArchive( index );
+            break;
+        }
+        case IUnitSync::mod :
+        {
+            if ( !usync().ModExists( name, hash ) ) return;
+            int index = usync().GetModIndex( name );
+            if ( index == -1 ) return;
+            archivename = usync().GetModArchive( index );
+            break;
+        }
+        default:
+            wxLogDebugFunc( _T("row-type unhandled") );
+            break;
     }
 
     wxString archivepath = usync().GetArchivePath( archivename );
@@ -1064,10 +1073,15 @@ void TorrentWrapper::CreateTorrent( const wxString& hash, const wxString& name, 
 
     switch (type)
     {
-    case IUnitSync::map:
-        newtorrent.set_comment( wxString( name + _T("|MAP") ).mb_str() );
-    case IUnitSync::mod:
-        newtorrent.set_comment( wxString( name + _T("|MOD") ).mb_str() );
+        case IUnitSync::map:
+            newtorrent.set_comment( wxString( name + _T("|MAP") ).mb_str() );
+            break;
+        case IUnitSync::mod:
+            newtorrent.set_comment( wxString( name + _T("|MOD") ).mb_str() );
+            break;
+        default:
+            wxLogDebugFunc( _T("row-type unhandled") );
+            break;
     }
 
     libtorrent::entry e = newtorrent.generate();
@@ -1378,7 +1392,7 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
 }
 
 
-void TorrentWrapper::OnConnected( Socket* sock )
+void TorrentWrapper::OnConnected( Socket* /*unused*/ )
 {
     wxLogMessage(_T("torrent system connected") );
     m_started = true;
@@ -1398,7 +1412,7 @@ void TorrentWrapper::OnConnected( Socket* sock )
 }
 
 
-void TorrentWrapper::OnDisconnected( Socket* sock )
+void TorrentWrapper::OnDisconnected( Socket* /*unused*/ )
 {
     wxLogMessage(_T("torrent system disconnected") );
 

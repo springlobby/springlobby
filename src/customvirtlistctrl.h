@@ -119,7 +119,7 @@ protected:
     //! list should be sorted
     bool m_dirty_sort;
 
-    virtual void SetTipWindowText( const long item_hit, const wxPoint position);
+    virtual void SetTipWindowText( const long item_hit, const wxPoint& position);
 
     ColumnMap m_column_map;
 
@@ -344,15 +344,15 @@ private:
 
 template < class ListCtrlType >
 class SelectionSaver {
-    ListCtrlType* m_list;
+    ListCtrlType& m_list;
 
 public:
-    SelectionSaver( ListCtrlType* list  )
+    SelectionSaver( ListCtrlType& list  )
         : m_list( list )
-    { m_list->SaveSelection(); }
+    { m_list.SaveSelection(); }
 
     ~SelectionSaver()
-    { m_list->RestoreSelection(); }
+    { m_list.RestoreSelection(); }
 };
 
 #include "customvirtlistctrl.cpp"

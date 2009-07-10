@@ -30,8 +30,8 @@ PlaybackListCtrl<PlaybackType>::PlaybackListCtrl( wxWindow* parent  ):
                 wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT,
                 _T("PlaybackListCtrl"), 8, 4, &CompareOneCrit )
 {
-    const int hd = wxLIST_AUTOSIZE_USEHEADER;
 #ifdef __WXMSW__
+    const int hd = wxLIST_AUTOSIZE_USEHEADER;
     const int widths[8] = {80,140,141,hd,160,hd,70,180};
 #else
     const int widths[8] = {80,140,141,50,160,50,70,180};
@@ -73,7 +73,7 @@ PlaybackListCtrl<PlaybackType>::~PlaybackListCtrl()
 }
 
 template <class PlaybackType>
-void PlaybackListCtrl<PlaybackType>::OnListRightClick( wxListEvent& event )
+void PlaybackListCtrl<PlaybackType>::OnListRightClick( wxListEvent& /*unused*/ )
 {
   PopupMenu( m_popup );
 }
@@ -97,7 +97,7 @@ void PlaybackListCtrl<PlaybackType>::RemovePlayback( const PlaybackType& replay 
 }
 
 template <class PlaybackType>
-void PlaybackListCtrl<PlaybackType>::OnDLMap( wxCommandEvent& event )
+void PlaybackListCtrl<PlaybackType>::OnDLMap( wxCommandEvent& /*unused*/ )
 {
     if ( m_selected_index > 0 &&  (long)m_data.size() > m_selected_index ) {
         OfflineBattle battle = m_data[m_selected_index]->battle;
@@ -106,7 +106,7 @@ void PlaybackListCtrl<PlaybackType>::OnDLMap( wxCommandEvent& event )
 }
 
 template <class PlaybackType>
-void PlaybackListCtrl<PlaybackType>::OnDLMod( wxCommandEvent& event )
+void PlaybackListCtrl<PlaybackType>::OnDLMod( wxCommandEvent& /*unused*/ )
 {
     if ( m_selected_index > 0 &&  (long)m_data.size() > m_selected_index ) {
         OfflineBattle battle = m_data[m_selected_index]->battle;
@@ -217,18 +217,21 @@ int PlaybackListCtrl<PlaybackType>::GetItemImage(long item) const
 template <class PlaybackType>
 int PlaybackListCtrl<PlaybackType>::GetItemColumnImage(long item, long column) const
 {
-    if ( m_data[item] == NULL )
-        return -1;
+    //nothing's been done here atm
+    return -1;
 
-    const PlaybackType& replay = *m_data[item];
-
-    switch ( column ) {
-        default: return -1;
-    }
+//    if ( m_data[item] == NULL )
+//        return -1;
+//
+//    const PlaybackType& replay = *m_data[item];
+//
+//    switch ( column ) {
+//        default: return -1;
+//    }
 }
 
 template <class PlaybackType>
-wxListItemAttr* PlaybackListCtrl<PlaybackType>::GetItemAttr(long item) const
+wxListItemAttr* PlaybackListCtrl<PlaybackType>::GetItemAttr(long /*unused*/) const
 {
     //not neded atm
 //    if ( item < m_data.size() && item > -1 ) {

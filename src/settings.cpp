@@ -346,7 +346,7 @@ wxString Settings::GetWebBrowserPath()
 }
 
 
-void Settings::SetWebBrowserPath( const wxString path )
+void Settings::SetWebBrowserPath( const wxString& path )
 {
     m_config->Write( _T("/General/WebBrowserPath"), path );
 }

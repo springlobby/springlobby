@@ -62,7 +62,7 @@ struct ChannelJoinInfo
 class SL_WinConf : public wxFileConfig
 {
     public:
-			SL_WinConf ( const wxString& appName, const wxString& vendorName, const wxString& strLocal, const wxString& strGlobal, long style, const wxMBConv& conv):
+			SL_WinConf ( const wxString& appName, const wxString& vendorName, const wxString& strLocal, const wxString& strGlobal, long style, const wxMBConv& /*conv*/):
 			wxFileConfig( appName, vendorName, strLocal, strGlobal, style)
 			{
 			}
@@ -176,7 +176,7 @@ class Settings
      *
      * @param path A path to a web browser
      */
-    void SetWebBrowserPath( const wxString path );
+    void SetWebBrowserPath( const wxString& path );
 
     /**@}*/
 
@@ -719,6 +719,8 @@ class Settings
     bool m_portable_mode;
 
     std::map<wxString, wxString> m_spring_versions;
+
+    Settings( const Settings& );
 
 };
 

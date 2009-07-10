@@ -142,7 +142,7 @@ LobbyOptionsTab::~LobbyOptionsTab()
     //dtor
 }
 
-void LobbyOptionsTab::OnApply(wxCommandEvent& event)
+void LobbyOptionsTab::OnApply(wxCommandEvent& /*unused*/)
 {
     if ( !m_web_def_radio->GetValue() ) sett().SetWebBrowserPath( m_web_edit->GetValue() );
     sett().SetWebBrowserUseDefault( m_web_def_radio->GetValue() );
@@ -164,7 +164,7 @@ void LobbyOptionsTab::OnApply(wxCommandEvent& event)
 }
 
 
-void LobbyOptionsTab::OnRestore(wxCommandEvent& event)
+void LobbyOptionsTab::OnRestore(wxCommandEvent& /*unused*/)
 {
     m_autojoin->SetValue( sett().GetAutoConnect() );
     m_reportstats->SetValue( sett().GetReportStats() );
@@ -201,13 +201,13 @@ void LobbyOptionsTab::HandleWebloc( bool defloc )
   }
 }
 
-void LobbyOptionsTab::OnBrowseWeb( wxCommandEvent& event )
+void LobbyOptionsTab::OnBrowseWeb( wxCommandEvent& /*unused*/ )
 {
   wxFileDialog pick( this, _("Choose a web browser executable"), _T(""), _T("*"), CHOOSE_EXE );
   if ( pick.ShowModal() == wxID_OK ) m_web_edit->SetValue( pick.GetPath() );
 }
 
-void LobbyOptionsTab::OnDefaultWeb( wxCommandEvent& event )
+void LobbyOptionsTab::OnDefaultWeb( wxCommandEvent& /*unused*/ )
 {
   HandleWebloc( m_web_def_radio->GetValue() );
 }

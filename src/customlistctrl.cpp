@@ -163,7 +163,7 @@ long CustomListCtrl::GetSelectedData()
   return m_selected ;
 }
 
-void CustomListCtrl::OnTimer(wxTimerEvent& event)
+void CustomListCtrl::OnTimer(wxTimerEvent& /*unused*/)
 {
 #if wxUSE_TIPWINDOW
 
@@ -240,7 +240,7 @@ void CustomListCtrl::OnMouseMotion(wxMouseEvent& event)
 #endif
 }
 
-void CustomListCtrl::SetTipWindowText( const long item_hit, const wxPoint position)
+void CustomListCtrl::SetTipWindowText( const long /*unused*/, const wxPoint position)
 {
   int column = getColumnFromPosition(position);
   if (column >= int(m_colinfovec.size()) || column < 0)

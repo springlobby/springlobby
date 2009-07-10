@@ -875,7 +875,7 @@ void MapCtrl::DrawOutlinedText( wxDC& dc, const wxString& str, int x, int y, con
 
 }
 
-void MapCtrl::DrawUser( wxDC& dc, User& user, bool selected, bool moving )
+void MapCtrl::DrawUser( wxDC& dc, User& user, bool selected, bool /*unused*/ )
 {
     wxBitmap* img;
     if ( !user.BattleStatus().IsBot() ) img = m_player_img;
@@ -1048,7 +1048,7 @@ void MapCtrl::OnPaint( wxPaintEvent& WXUNUSED(event) )
 }
 
 
-void MapCtrl::OnResize( wxSizeEvent& event )
+void MapCtrl::OnResize( wxSizeEvent& /*unused*/ )
 {
     UpdateMinimap();
 }

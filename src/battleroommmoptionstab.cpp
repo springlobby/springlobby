@@ -486,7 +486,7 @@ void BattleroomMMOptionsTab<BattleType>::OnReloadControls()
 }
 
 template < class BattleType >
-void BattleroomMMOptionsTab<BattleType>::OnLoadPreset( wxCommandEvent& event )
+void BattleroomMMOptionsTab<BattleType>::OnLoadPreset( wxCommandEvent& /*unused*/ )
 {
   wxString presetname = m_options_preset_sel->GetValue();
   if ( presetname.IsEmpty() )
@@ -501,7 +501,7 @@ void BattleroomMMOptionsTab<BattleType>::OnLoadPreset( wxCommandEvent& event )
 
 
 template < class BattleType >
-void BattleroomMMOptionsTab<BattleType>::OnSavePreset( wxCommandEvent& event )
+void BattleroomMMOptionsTab<BattleType>::OnSavePreset( wxCommandEvent& /*unused*/ )
 {
     wxString presetname;
 	if ( !ui().AskText( _("Enter preset name"), _("Enter a name to save the current set of options\nIf a preset with the same name already exist, it will be overwritten"), presetname ) )
@@ -516,7 +516,7 @@ void BattleroomMMOptionsTab<BattleType>::OnSavePreset( wxCommandEvent& event )
 
 
 template < class BattleType >
-void BattleroomMMOptionsTab<BattleType>::OnDeletePreset( wxCommandEvent& event )
+void BattleroomMMOptionsTab<BattleType>::OnDeletePreset( wxCommandEvent& /*unused*/ )
 {
   wxArrayString choices = m_battle.GetPresetList();
 	int result = wxGetSingleChoiceIndex(_("Pick an existing option set from the list"),_("Delete preset"), choices );
@@ -525,7 +525,7 @@ void BattleroomMMOptionsTab<BattleType>::OnDeletePreset( wxCommandEvent& event )
 }
 
 template < class BattleType >
-void BattleroomMMOptionsTab<BattleType>::OnSetModDefaultPreset( wxCommandEvent& event )
+void BattleroomMMOptionsTab<BattleType>::OnSetModDefaultPreset( wxCommandEvent& /*unused*/ )
 {
   wxArrayString choices = m_battle.GetPresetList();
 	int result = wxGetSingleChoiceIndex(_("Pick an existing option set from the list"),_("Set mod default preset"), choices );

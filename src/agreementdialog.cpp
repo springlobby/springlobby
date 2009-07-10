@@ -55,13 +55,13 @@ AgreementDialog::AgreementDialog( wxWindow* parent, const wxString& agreement ):
 }
 
 
-void AgreementDialog::OnYes( wxCommandEvent& event )
+void AgreementDialog::OnYes( wxCommandEvent& /*unused*/ )
 {
   EndModal( 1 );
 }
 
 
-void AgreementDialog::OnNo( wxCommandEvent& event )
+void AgreementDialog::OnNo( wxCommandEvent& /*unused*/ )
 {
   EndModal( 0 );
 }

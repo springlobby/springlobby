@@ -253,7 +253,7 @@ void HostBattleDialog::ReloadModList()
 }
 
 
-void HostBattleDialog::OnOk( wxCommandEvent& event )
+void HostBattleDialog::OnOk( wxCommandEvent& /*unused*/ )
 {
   if ( m_mod_pic->GetSelection() == wxNOT_FOUND ) {
     wxLogWarning( _T("no mod selected") );
@@ -278,7 +278,7 @@ void HostBattleDialog::OnOk( wxCommandEvent& event )
 }
 
 
-void HostBattleDialog::OnCancel( wxCommandEvent& event )
+void HostBattleDialog::OnCancel( wxCommandEvent& /*unused*/ )
 {
   EndModal( wxID_CANCEL );
 }
@@ -296,7 +296,7 @@ int HostBattleDialog::GetSelectedRank()
   return 000;
 }
 
-void HostBattleDialog::OnNatChange( wxCommandEvent& event  )
+void HostBattleDialog::OnNatChange( wxCommandEvent& /*unused*/  )
 {
   m_port_test_check->Enable( m_nat_radios->GetSelection() == 0 );
   m_port_text->Enable( m_nat_radios->GetSelection() == 0 );

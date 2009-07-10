@@ -536,6 +536,7 @@ void SLArtProvider::DrawButton(wxDC& dc,
                  else
                 bmp = m_active_windowlist_bmp;
             break;
+        default: break;
     }
 
 

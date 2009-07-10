@@ -85,12 +85,12 @@ AutoBalanceDialog::~AutoBalanceDialog()
 }
 
 
-void AutoBalanceDialog::OnCancel(wxCommandEvent& event)
+void AutoBalanceDialog::OnCancel(wxCommandEvent& /*unused*/)
 {
   EndModal( wxID_CANCEL );
 }
 
-void AutoBalanceDialog::OnOk(wxCommandEvent& event)
+void AutoBalanceDialog::OnOk(wxCommandEvent& /*unused*/)
 {
   EndModal( wxID_OK );
 }

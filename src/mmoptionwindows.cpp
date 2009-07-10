@@ -119,12 +119,12 @@ m_textctrl(0)
 	Connect(ID_OK,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&SingleOptionDialog::OnOk);
 }
 
-void SingleOptionDialog::OnCancel(wxCommandEvent& event)
+void SingleOptionDialog::OnCancel(wxCommandEvent& /*unused*/)
 {
   EndModal( wxID_CANCEL );
 }
 
-void SingleOptionDialog::OnOk(wxCommandEvent& event)
+void SingleOptionDialog::OnOk(wxCommandEvent& /*unused*/)
 {
 	OptionsWrapper::GameOption optFlag = (OptionsWrapper::GameOption)s2l(m_tag.BeforeFirst( '_' ));
 	wxString key = m_tag.AfterFirst( '_' );

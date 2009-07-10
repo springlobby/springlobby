@@ -37,6 +37,7 @@ private:
 	wxLocale * m_Locale;
 	bool m_UseNativeConfig;
 
+    wxTranslationHelper( const wxTranslationHelper& );
 };
 
 #endif

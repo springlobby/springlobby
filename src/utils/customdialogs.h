@@ -153,6 +153,8 @@ protected:
 	wxBoxSizer* topsizer;
 	wxListCtrl* m_messages;
 
+	ServerMessageBox( const ServerMessageBox& );
+
 };
 
 /** \brief displays user action notifications */
@@ -211,6 +213,8 @@ public:
 
 private:
 	wxTextCtrl* text_ctrl;
+
+	CreditsDialog( const CreditsDialog& );
 };
 
 //! extends the wx method by allowing to set selection

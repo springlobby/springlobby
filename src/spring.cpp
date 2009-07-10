@@ -318,6 +318,8 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 					tdf.AppendLineBreak();
 					break;
 				}
+				default:
+                    wxLogDebugFunc( _T("") ); break;
 			}
 
 			long startpostype;

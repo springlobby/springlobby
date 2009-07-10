@@ -143,7 +143,7 @@ wxColour ColourDelta( const wxColour& colour, const int& delta )
 
 
 
-wxColour GetColorFromFloatStrng( const wxString color )
+wxColour GetColorFromFloatStrng( const wxString& color )
 {
     wxString c = color;
     float r = 0, g = 0, b = 0;
@@ -242,7 +242,7 @@ wxBitmap charArr2wxBitmapWithBlending(const unsigned char * dest, int dest_size,
     return wxBitmap( ret );
 }
 
-wxBitmap BlendBitmaps( const wxBitmap& background, const wxBitmap& overlay, const int dim )
+wxBitmap BlendBitmaps( const wxBitmap& background, const wxBitmap& overlay, const int /*dim*/ )
 {
     wxImage back = background.ConvertToImage();
     wxImage front = overlay.ConvertToImage();

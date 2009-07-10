@@ -26,7 +26,7 @@ BEGIN_EVENT_TABLE( WidgetInfoPanel, wxPanel)
     EVT_BUTTON( WidgetInfoPanel::BUT_UPDATE, WidgetInfoPanel::OnUpdate )
 END_EVENT_TABLE()
 
-WidgetInfoPanel::WidgetInfoPanel( Widget& widget, wxWindow* parent, wxWindowID id, const wxString& title,
+WidgetInfoPanel::WidgetInfoPanel( Widget& widget, wxWindow* parent, wxWindowID id, const wxString& /*unused*/,
     const wxPoint& pos , const wxSize& size , long style )
     : wxScrolledWindow (parent,  id, pos, size, style),
     m_widget( widget )
@@ -152,7 +152,7 @@ WidgetInfoPanel::~WidgetInfoPanel()
     //dtor
 }
 
-void WidgetInfoPanel::OnDownload( wxCommandEvent& evt )
+void WidgetInfoPanel::OnDownload( wxCommandEvent& /*unused*/ )
 {
     if ( m_widget.Install() ) {
         customMessageBoxNoModal( SL_MAIN_ICON, _("Widget files have been installed."), _("Success") );
@@ -164,7 +164,7 @@ void WidgetInfoPanel::OnDownload( wxCommandEvent& evt )
 }
 
 
-void WidgetInfoPanel::OnRemove( wxCommandEvent& evt )
+void WidgetInfoPanel::OnRemove( wxCommandEvent& /*unused*/ )
 {
     if ( m_widget.Remove() ) {
         customMessageBoxNoModal( SL_MAIN_ICON, _("Widget files have been removed."), _("Success") );
@@ -175,7 +175,7 @@ void WidgetInfoPanel::OnRemove( wxCommandEvent& evt )
     SetButtonStates();
 }
 
-void WidgetInfoPanel::OnUpdate( wxCommandEvent& evt )
+void WidgetInfoPanel::OnUpdate( wxCommandEvent& /*unused*/ )
 {
 
 }

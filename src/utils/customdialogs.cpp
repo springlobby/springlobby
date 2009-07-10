@@ -115,7 +115,7 @@ CustomMessageBox::~CustomMessageBox()
 }
 
 
-void CustomMessageBox::OnOptionsNo(wxCommandEvent& event)
+void CustomMessageBox::OnOptionsNo(wxCommandEvent& /*unused*/)
 {
    EndModal(wxID_NO);
 }
@@ -173,8 +173,8 @@ int customMessageBox( int whichIcon , const wxString& message,const wxString& ca
 			case wxID_CANCEL: return wxCANCEL;
 			case wxID_YES: return wxYES;
 			case wxID_NO: return wxNO;
+			default: return -1;
 		}
-		return -1;
 }
 
 int timedMessageBox(int whichIcon , const wxString& message,
@@ -445,9 +445,9 @@ int GetSingleChoiceIndex( const wxString& message,
                             const wxArrayString& aChoices,
                             const int selected,
                             wxWindow *parent ,
-                            int x ,
-                            int y ,
-                            bool centre )
+                            int /*unused*/ ,
+                            int /*unused*/ ,
+                            bool /*unused*/ )
 {
     wxString *choices;
     int n = ConvertWXArrayToC(aChoices, &choices);

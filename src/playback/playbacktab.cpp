@@ -167,7 +167,7 @@ PlaybackTab<PlaybackTraits>::~PlaybackTab()
 }
 
 template < class PlaybackTraits >
-void PlaybackTab<PlaybackTraits>::AddAllPlaybacks( wxCommandEvent& evt )
+void PlaybackTab<PlaybackTraits>::AddAllPlaybacks( wxCommandEvent& /*unused*/ )
 {
    const typename ListType::playback_map_t& replays =
                     playbacklist<ListType>().GetPlaybacksMap();
@@ -260,7 +260,7 @@ void PlaybackTab<PlaybackTraits>::SetFilterActiv( bool activ )
 }
 
 template < class PlaybackTraits >
-void PlaybackTab<PlaybackTraits>::OnFilter( wxCommandEvent& event )
+void PlaybackTab<PlaybackTraits>::OnFilter( wxCommandEvent& /*unused*/ )
 {
   if (m_filter_show->GetValue()) {
     m_filter->Show(  );
@@ -273,7 +273,7 @@ void PlaybackTab<PlaybackTraits>::OnFilter( wxCommandEvent& event )
 }
 
 template < class PlaybackTraits >
-void PlaybackTab<PlaybackTraits>::OnWatch( wxCommandEvent& event )
+void PlaybackTab<PlaybackTraits>::OnWatch( wxCommandEvent& /*unused*/ )
 {
     if (m_replay_listctrl->GetSelectedIndex() != -1 ) {
          int m_sel_replay_id = m_replay_listctrl->GetSelectedData()->id;
@@ -369,7 +369,7 @@ void PlaybackTab<PlaybackTraits>::AskForceWatch( typename PlaybackTab<PlaybackTr
 }
 
 template < class PlaybackTraits >
-void PlaybackTab<PlaybackTraits>::OnDelete( wxCommandEvent& event )
+void PlaybackTab<PlaybackTraits>::OnDelete( wxCommandEvent& /*unused*/ )
 {
     int sel_index=m_replay_listctrl->GetSelectedIndex();
     if ( sel_index >=0 ) {
@@ -394,7 +394,7 @@ void PlaybackTab<PlaybackTraits>::OnDelete( wxCommandEvent& event )
 }
 
 template < class PlaybackTraits >
-void PlaybackTab<PlaybackTraits>::OnFilterActiv( wxCommandEvent& event )
+void PlaybackTab<PlaybackTraits>::OnFilterActiv( wxCommandEvent& /*unused*/ )
 {
     m_filter->SetActiv( m_filter_activ->GetValue() );
 }
@@ -449,7 +449,7 @@ void PlaybackTab<PlaybackTraits>::OnSelect( wxListEvent& event )
 }
 
 template < class PlaybackTraits >
-void PlaybackTab<PlaybackTraits>::OnDeselect( wxListEvent& event )
+void PlaybackTab<PlaybackTraits>::OnDeselect( wxListEvent& /*unused*/ )
 {
     Deselected();
 }
@@ -491,7 +491,7 @@ void PlaybackTab<PlaybackTraits>::ReloadList()
 }
 
 template < class PlaybackTraits >
-void PlaybackTab<PlaybackTraits>::OnReload( wxCommandEvent& event )
+void PlaybackTab<PlaybackTraits>::OnReload( wxCommandEvent& /*unused*/ )
 {
     ReloadList();
 }

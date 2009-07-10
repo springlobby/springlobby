@@ -228,6 +228,9 @@ User& Battle::OnUserAdded( User& user )
                 DoAction( _T("Rank limit autokick: ") + user.GetNick() );
                 KickPlayer( user );
                 return user;
+            default:
+                wxLogError( _T("unknown ranklimittype in Battle::OnUserAdded") );
+                break;
             }
         }
 
