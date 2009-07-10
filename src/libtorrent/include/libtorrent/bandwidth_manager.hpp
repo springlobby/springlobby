@@ -36,11 +36,14 @@ POSSIBILITY OF SUCH DAMAGE.
 #include <boost/shared_ptr.hpp>
 #include <boost/intrusive_ptr.hpp>
 #include <boost/function.hpp>
-#include <boost/version.hpp>
 #include <boost/bind.hpp>
 #include <boost/integer_traits.hpp>
 #include <boost/thread/mutex.hpp>
 #include <deque>
+
+#ifdef TORRENT_VERBOSE_BANDWIDTH_LIMIT
+#include <fstream>
+#endif
 
 #include "libtorrent/socket.hpp"
 #include "libtorrent/invariant_check.hpp"
@@ -53,7 +56,6 @@ using boost::shared_ptr;
 using boost::intrusive_ptr;
 using boost::bind;
 
-//#define TORRENT_VERBOSE_BANDWIDTH_LIMIT
 
 namespace libtorrent {
 
@@ -74,6 +76,8 @@ struct history_entry
 	history_entry(intrusive_ptr<PeerConnection> p, weak_ptr<Torrent> t
 		, int a, ptime exp)
 		: expires_at(exp), amount(a), peer(p), tor(t) {}
+	history_entry(int a, ptime exp)
+		: expires_at(exp), amount(a), peer(), tor() {}
 	ptime expires_at;
 	int amount;
 	intrusive_ptr<PeerConnection> peer;
@@ -81,7 +85,7 @@ struct history_entry
 };
 
 template<class T>
-T clamp(T val, T ceiling, T floor) throw()
+T clamp(T val, T ceiling, T floor)
 {
 	TORRENT_ASSERT(ceiling >= floor);
 	if (val >= ceiling) return ceiling;
@@ -89,27 +93,55 @@ T clamp(T val, T ceiling, T floor) throw()
 	return val;
 }
 
+template<class T>
+struct assign_at_exit
+{
+	assign_at_exit(T& var, T val): var_(var), val_(val) {}
+	~assign_at_exit() { var_ = val_; }
+	T& var_;
+	T val_;
+};
+
 template<class PeerConnection, class Torrent>
 struct bandwidth_manager
 {
-	bandwidth_manager(io_service& ios, int channel) throw()
+	bandwidth_manager(io_service& ios, int channel
+#ifdef TORRENT_VERBOSE_BANDWIDTH_LIMIT
+		, bool log = false
+#endif		
+		)
 		: m_ios(ios)
 		, m_history_timer(m_ios)
 		, m_limit(bandwidth_limit::inf)
+		, m_drain_quota(0)
 		, m_current_quota(0)
 		, m_channel(channel)
 		, m_in_hand_out_bandwidth(false)
 		, m_abort(false)
-	{}
+	{
+#ifdef TORRENT_VERBOSE_BANDWIDTH_LIMIT
+		if (log)
+			m_log.open("bandwidth_limiter.log", std::ios::trunc);
+		m_start = time_now();
+#endif
+	}
 
-	void throttle(int limit) throw()
+	void drain(int bytes)
+	{
+		mutex_t::scoped_lock l(m_mutex);
+		TORRENT_ASSERT(bytes >= 0);
+		m_drain_quota += bytes;
+		if (m_drain_quota > m_limit * 5) m_drain_quota = m_limit * 5;
+	}
+
+	void throttle(int limit)
 	{
 		mutex_t::scoped_lock l(m_mutex);
 		TORRENT_ASSERT(limit >= 0);
 		m_limit = limit;
 	}
-
-	int throttle() const throw()
+	
+	int throttle() const
 	{
 		mutex_t::scoped_lock l(m_mutex);
 		return m_limit;
@@ -117,14 +149,32 @@ struct bandwidth_manager
 
 	void close()
 	{
+		mutex_t::scoped_lock l(m_mutex);
 		m_abort = true;
 		m_queue.clear();
 		m_history.clear();
 		m_current_quota = 0;
-		m_history_timer.cancel();
+		error_code ec;
+		m_history_timer.cancel(ec);
 	}
 
-#ifndef NDEBUG
+#ifdef TORRENT_DEBUG
+	bool is_queued(PeerConnection const* peer) const
+	{
+		mutex_t::scoped_lock l(m_mutex);
+		return is_queued(peer);
+	}
+
+	bool is_queued(PeerConnection const* peer, boost::mutex::scoped_lock& l) const
+	{
+		for (typename queue_t::const_iterator i = m_queue.begin()
+			, end(m_queue.end()); i != end; ++i)
+		{
+			if (i->peer.get() == peer) return true;
+		}
+		return false;
+	}
+
 	bool is_in_history(PeerConnection const* peer) const
 	{
 		mutex_t::scoped_lock l(m_mutex);
@@ -133,11 +183,6 @@ struct bandwidth_manager
 
 	bool is_in_history(PeerConnection const* peer, boost::mutex::scoped_lock& l) const
 	{
-#if BOOST_VERSION >= 103500
-		TORRENT_ASSERT(l.owns_lock());
-#else
-		TORRENT_ASSERT(l.locked());
-#endif
 		for (typename history_t::const_iterator i
 			= m_history.begin(), end(m_history.end()); i != end; ++i)
 		{
@@ -147,45 +192,39 @@ struct bandwidth_manager
 	}
 #endif
 
- 	int queue_size() const
- 	{
- 		mutex_t::scoped_lock l(m_mutex);
- 		return m_queue.size();
- 	}
-
+	int queue_size() const
+	{
+		mutex_t::scoped_lock l(m_mutex);
+		return m_queue.size();
+	}
+	
 	// non prioritized means that, if there's a line for bandwidth,
 	// others will cut in front of the non-prioritized peers.
 	// this is used by web seeds
-	void request_bandwidth(intrusive_ptr<PeerConnection> peer
- 		, int blk, int priority)
+	void request_bandwidth(intrusive_ptr<PeerConnection> const& peer
+		, int blk, int priority)
 	{
 		mutex_t::scoped_lock l(m_mutex);
 		INVARIANT_CHECK;
 		if (m_abort) return;
 		TORRENT_ASSERT(blk > 0);
+		TORRENT_ASSERT(!is_queued(peer.get(), l));
 
 		// make sure this peer isn't already in line
 		// waiting for bandwidth
-#ifndef NDEBUG
-		for (typename queue_t::iterator i = m_queue.begin()
-			, end(m_queue.end()); i != end; ++i)
-		{
-			TORRENT_ASSERT(i->peer < peer || peer < i->peer);
-		}
-#endif
- 		TORRENT_ASSERT(peer->max_assignable_bandwidth(m_channel) > 0);
+		TORRENT_ASSERT(peer->max_assignable_bandwidth(m_channel) > 0);
 
- 		typename queue_t::reverse_iterator i(m_queue.rbegin());
- 		while (i != m_queue.rend() && priority > i->priority)
- 		{
- 			++i->priority;
- 			++i;
- 		}
- 		m_queue.insert(i.base(), bw_queue_entry<PeerConnection, Torrent>(peer, blk, priority));
+		typename queue_t::reverse_iterator i(m_queue.rbegin());
+		while (i != m_queue.rend() && priority > i->priority)
+		{
+			++i->priority;
+			++i;
+		}
+		m_queue.insert(i.base(), bw_queue_entry<PeerConnection, Torrent>(peer, blk, priority));
 		if (!m_queue.empty()) hand_out_bandwidth(l);
 	}
 
-#ifndef NDEBUG
+#ifdef TORRENT_DEBUG
 	void check_invariant() const
 	{
 		int current_quota = 0;
@@ -211,30 +250,38 @@ private:
 
 	void add_history_entry(history_entry<PeerConnection, Torrent> const& e)
 	{
-		try {
 		INVARIANT_CHECK;
+
 		m_history.push_front(e);
 		m_current_quota += e.amount;
 		// in case the size > 1 there is already a timer
 		// active that will be invoked, no need to set one up
+
+#ifdef TORRENT_VERBOSE_BANDWIDTH_LIMIT
+		m_log << std::setw(7) << total_milliseconds(time_now() - m_start) << " + "
+			" queue: " << std::setw(3) << m_queue.size()
+			<< " used: " << std::setw(7) << m_current_quota
+			<< " limit: " << std::setw(7) << m_limit
+			<< " history: " << std::setw(3) << m_history.size()
+			<< std::endl;
+#endif
 		if (m_history.size() > 1) return;
 
 		if (m_abort) return;
 
-		m_history_timer.expires_at(e.expires_at);
+		error_code ec;
+//		TORRENT_ASSERT(e.expires_at > time_now());
+		m_history_timer.expires_at(e.expires_at, ec);
 		m_history_timer.async_wait(bind(&bandwidth_manager::on_history_expire, this, _1));
-		}
-		catch (std::exception&) {}
 	}
-
-	void on_history_expire(asio::error_code const& e)
+	
+	void on_history_expire(error_code const& e)
 	{
-		try {
 		if (e) return;
 
 		mutex_t::scoped_lock l(m_mutex);
-		INVARIANT_CHECK;
 		if (m_abort) return;
+		INVARIANT_CHECK;
 
 		TORRENT_ASSERT(!m_history.empty());
 
@@ -245,18 +292,30 @@ private:
 			m_history.pop_back();
 			m_current_quota -= e.amount;
 			TORRENT_ASSERT(m_current_quota >= 0);
+
+#ifdef TORRENT_VERBOSE_BANDWIDTH_LIMIT
+			m_log << std::setw(7) << total_milliseconds(time_now() - m_start) << " - "
+				" queue: " << std::setw(3) << m_queue.size()
+				<< " used: " << std::setw(7) << m_current_quota
+				<< " limit: " << std::setw(7) << m_limit
+				<< " history: " << std::setw(3) << m_history.size()
+				<< std::endl;
+#endif
 			intrusive_ptr<PeerConnection> c = e.peer;
+			if (!c) continue;
 			shared_ptr<Torrent> t = e.tor.lock();
 			l.unlock();
 			if (!c->is_disconnecting()) c->expire_bandwidth(m_channel, e.amount);
 			if (t) t->expire_bandwidth(m_channel, e.amount);
 			l.lock();
 		}
-
+		
 		// now, wait for the next chunk to expire
 		if (!m_history.empty() && !m_abort)
 		{
-			m_history_timer.expires_at(m_history.back().expires_at);
+			error_code ec;
+			TORRENT_ASSERT(m_history.back().expires_at > now);
+			m_history_timer.expires_at(m_history.back().expires_at, ec);
 			m_history_timer.async_wait(bind(&bandwidth_manager::on_history_expire, this, _1));
 		}
 
@@ -264,23 +323,17 @@ private:
 		// means we can hand out more (in case there
 		// are still consumers in line)
 		if (!m_queue.empty()) hand_out_bandwidth(l);
-		}
-		catch (std::exception&) {}
 	}
 
 	void hand_out_bandwidth(boost::mutex::scoped_lock& l)
 	{
-#if BOOST_VERSION >= 103500
-		TORRENT_ASSERT(l.owns_lock());
-#else
-		TORRENT_ASSERT(l.locked());
-#endif
 		// if we're already handing out bandwidth, just return back
 		// to the loop further down on the callstack
 		if (m_in_hand_out_bandwidth) return;
 		m_in_hand_out_bandwidth = true;
+		// set it to false when exiting function
+		assign_at_exit<bool> sg(m_in_hand_out_bandwidth, false);
 
-		try {
 		INVARIANT_CHECK;
 
 		ptime now(time_now());
@@ -290,17 +343,15 @@ private:
 		// available bandwidth to hand out
 		int amount = limit - m_current_quota;
 
-#ifdef TORRENT_VERBOSE_BANDWIDTH_LIMIT
-		std::cerr << " hand_out_bandwidht. m_queue.size() = " << m_queue.size()
-			<< " amount = " << amount
-			<< " limit = " << limit
-			<< " m_current_quota = " << m_current_quota << std::endl;
-#endif
+		if (amount <= 0) return;
 
-		if (amount <= 0)
+		if (m_drain_quota > 0)
 		{
-			m_in_hand_out_bandwidth = false;
-			return;
+			int drain_amount = (std::min)(m_drain_quota, amount);
+			m_drain_quota -= drain_amount;
+			amount -= drain_amount;
+			add_history_entry(history_entry<PeerConnection, Torrent>(
+				drain_amount, now + bw_window_size));
 		}
 
 		queue_t tmp;
@@ -367,9 +418,12 @@ private:
 			}
 			if (block_size > qe.max_block_size) block_size = qe.max_block_size;
 
-#ifdef TORRENT_VERBOSE_BANDWIDTH_LIMIT
-			std::cerr << " block_size = " << block_size << " amount = " << amount << std::endl;
-#endif
+			if (amount < block_size / 4)
+			{
+				tmp.push_back(qe);
+//				m_queue.push_front(qe);
+				break;
+			}
 
 			// so, hand out max_assignable, but no more than
 			// the available bandwidth (amount) and no more
@@ -386,14 +440,7 @@ private:
 			add_history_entry(history_entry<PeerConnection, Torrent>(
 				qe.peer, t, hand_out_amount, now + bw_window_size));
 		}
- 		if (!tmp.empty()) m_queue.insert(m_queue.begin(), tmp.begin(), tmp.end());
-		}
-		catch (std::exception&)
-		{
-			m_in_hand_out_bandwidth = false;
-			throw;
-		}
-		m_in_hand_out_bandwidth = false;
+		if (!tmp.empty()) m_queue.insert(m_queue.begin(), tmp.begin(), tmp.end());
 	}
 
 
@@ -410,6 +457,10 @@ private:
 
 	// the rate limit (bytes per second)
 	int m_limit;
+
+	// bytes to drain without handing out to a peer
+	// used to deduct the IP overhead
+	int m_drain_quota;
 
 	// the sum of all recently handed out bandwidth blocks
 	int m_current_quota;
@@ -432,6 +483,11 @@ private:
 	bool m_in_hand_out_bandwidth;
 
 	bool m_abort;
+
+#ifdef TORRENT_VERBOSE_BANDWIDTH_LIMIT
+	std::ofstream m_log;
+	ptime m_start;
+#endif
 };
 
 }

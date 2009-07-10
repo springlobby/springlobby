@@ -82,7 +82,7 @@ void intrusive_ptr_release(observer const* o)
 	if (--o->m_refs == 0)
 	{
 		boost::pool<>& p = o->pool_allocator;
-		o->~observer();
+		(const_cast<observer*>(o))->~observer();
 		p.free(const_cast<observer*>(o));
 	}
 }
@@ -106,7 +106,7 @@ typedef mpl::max_element<
 rpc_manager::rpc_manager(fun const& f, node_id const& our_id
 	, routing_table& table, send_fun const& sf)
 	: m_pool_allocator(sizeof(mpl::deref<max_observer_type_iter::base>::type))
-	, m_next_transaction_id(rand() % max_transactions)
+	, m_next_transaction_id(std::rand() % max_transactions)
 	, m_oldest_transaction_id(m_next_transaction_id)
 	, m_incoming(f)
 	, m_send(sf)
@@ -121,6 +121,7 @@ rpc_manager::rpc_manager(fun const& f, node_id const& our_id
 
 rpc_manager::~rpc_manager()
 {
+	TORRENT_ASSERT(!m_destructing);
 	m_destructing = true;
 #ifdef TORRENT_DHT_VERBOSE_LOGGING
 	TORRENT_LOG(rpc) << "Destructing";
@@ -135,7 +136,13 @@ rpc_manager::~rpc_manager()
 	}
 }
 
-#ifndef NDEBUG
+#ifdef TORRENT_DEBUG
+size_t rpc_manager::allocation_size() const
+{
+	size_t s = sizeof(mpl::deref<max_observer_type_iter::base>::type);
+	return s;
+}
+
 void rpc_manager::check_invariant() const
 {
 	TORRENT_ASSERT(m_oldest_transaction_id >= 0);
@@ -151,6 +158,39 @@ void rpc_manager::check_invariant() const
 	}
 }
 #endif
+
+void rpc_manager::unreachable(udp::endpoint const& ep)
+{
+#ifdef TORRENT_DHT_VERBOSE_LOGGING
+	TORRENT_LOG(rpc) << time_now_string() << " PORT_UNREACHABLE [ ip: " << ep << " ]";
+#endif
+	int num_active = m_oldest_transaction_id < m_next_transaction_id
+		? m_next_transaction_id - m_oldest_transaction_id
+		: max_transactions - m_oldest_transaction_id + m_next_transaction_id;
+	TORRENT_ASSERT((m_oldest_transaction_id + num_active) % max_transactions
+		== m_next_transaction_id);
+	int tid = m_oldest_transaction_id;
+	for (int i = 0; i < num_active; ++i, ++tid)
+	{
+		if (tid >= max_transactions) tid = 0;
+		observer_ptr const& o = m_transactions[tid];
+		if (!o) continue;
+		if (o->target_addr != ep) continue;
+		observer_ptr ptr = m_transactions[tid];
+		m_transactions[tid] = 0;
+		if (tid == m_oldest_transaction_id)
+		{
+			++m_oldest_transaction_id;
+			if (m_oldest_transaction_id >= max_transactions)
+				m_oldest_transaction_id = 0;
+		}
+#ifdef TORRENT_DHT_VERBOSE_LOGGING
+		TORRENT_LOG(rpc) << "  found transaction [ tid: " << tid << " ]";
+#endif
+		ptr->timeout();
+		return;
+	}
+}
 
 bool rpc_manager::incoming(msg const& m)
 {
@@ -223,7 +263,7 @@ bool rpc_manager::incoming(msg const& m)
 		}
 
 #ifdef TORRENT_DHT_VERBOSE_LOGGING
-		std::ofstream reply_stats("libtorrent_logs/round_trip_ms.log", std::ios::app);
+		std::ofstream reply_stats("round_trip_ms.log", std::ios::app);
 		reply_stats << m.addr << "\t" << total_milliseconds(time_now() - o->sent)
 			<< std::endl;
 #endif
@@ -267,7 +307,9 @@ time_duration rpc_manager::tick()
 
 	if (m_next_transaction_id == m_oldest_transaction_id) return milliseconds(timeout_ms);
 
-	std::vector<observer_ptr > timeouts;
+	std::vector<observer_ptr> timeouts;
+
+	time_duration ret = milliseconds(timeout_ms);
 
 	for (;m_next_transaction_id != m_oldest_transaction_id;
 		m_oldest_transaction_id = (m_oldest_transaction_id + 1) % max_transactions)
@@ -281,8 +323,16 @@ time_duration rpc_manager::tick()
 		time_duration diff = o->sent + milliseconds(timeout_ms) - time_now();
 		if (diff > seconds(0))
 		{
-			if (diff < seconds(1)) return seconds(1);
-			return diff;
+			if (diff < seconds(1))
+			{
+				ret = seconds(1);
+				break;
+			}
+			else
+			{
+				ret = diff;
+				break;	
+			}
 		}
 		
 		try
@@ -302,8 +352,8 @@ time_duration rpc_manager::tick()
 	// clear the aborted transactions, will likely
 	// generate new requests. We need to swap, since the
 	// destrutors may add more observers to the m_aborted_transactions
-	std::vector<observer_ptr >().swap(m_aborted_transactions);
-	return milliseconds(timeout_ms);
+	std::vector<observer_ptr>().swap(m_aborted_transactions);
+	return ret;
 }
 
 unsigned int rpc_manager::new_transaction_id(observer_ptr o)
@@ -373,7 +423,7 @@ void rpc_manager::invoke(int message_id, udp::endpoint target_addr
 	m.id = m_our_id;
 	m.addr = target_addr;
 	TORRENT_ASSERT(!m_transactions[m_next_transaction_id]);
-#ifndef NDEBUG
+#ifdef TORRENT_DEBUG
 	int potential_new_id = m_next_transaction_id;
 #endif
 	try
@@ -429,8 +479,9 @@ void rpc_manager::reply_with_ping(msg& m)
 	std::back_insert_iterator<std::string> out(m.ping_transaction_id);
 	io::write_uint16(m_next_transaction_id, out);
 
+	TORRENT_ASSERT(allocation_size() >= sizeof(null_observer));
 	observer_ptr o(new (allocator().malloc()) null_observer(allocator()));
-#ifndef NDEBUG
+#ifdef TORRENT_DEBUG
 	o->m_in_constructor = false;
 #endif
 	TORRENT_ASSERT(!m_transactions[m_next_transaction_id]);

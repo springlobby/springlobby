@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2006, Arvid Norberg
+Copyright (c) 2008, Arvid Norberg
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -30,66 +30,30 @@ POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#ifndef PACKET_ITERATOR_HPP
-#define PACKET_ITERATOR_HPP
+#ifndef TORRENT_PARSE_URL_HPP_INCLUDED
+#define TORRENT_PARSE_URL_HPP_INCLUDED
 
-#include <boost/iterator/iterator_facade.hpp>
-#include <vector>
-#include <stdexcept>
+#ifdef _MSC_VER
+#pragma warning(push, 1)
+#endif
 
-namespace libtorrent { namespace dht
+#include <boost/tuple/tuple.hpp>
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
+
+#include <string>
+#include "libtorrent/config.hpp"
+
+namespace libtorrent
 {
 
-class packet_iterator: public boost::iterator_facade<
-	packet_iterator, const char, boost::forward_traversal_tag>
-{
-public:
-	typedef std::vector<char>::const_iterator base_iterator;
+	TORRENT_EXPORT boost::tuple<std::string, std::string
+		, std::string, int, std::string, char const*>
+		parse_url_components(std::string url);
 
-	packet_iterator() {}
-	
-	packet_iterator(std::vector<char>::const_iterator start
-		, std::vector<char>::const_iterator end
-		, std::string const& error_msg = "")
-		: m_base(start)
-		, m_end(end)
-		, m_msg(error_msg)
-	{}
+}
 
-	base_iterator base() const
-	{ return m_base; }
-	
-	base_iterator end() const
-	{ return m_end; }
-
-	int left() const { return int(m_end - m_base); }
-
-private:
-	friend class boost::iterator_core_access;
-
-	bool equal(packet_iterator const& other) const
-	{ return m_base == other.m_base; }
-
-	void advance(int n)
-	{
-		m_base += n;
-	}
-
-	void increment()
-	{ ++m_base; }
-
-	char const& dereference() const
-	{
-		if (m_base == m_end) throw std::runtime_error(m_msg);
-		return *m_base;
-	}
-
-	base_iterator m_base;
-	base_iterator m_end;
-	std::string m_msg;
-};
-
-} } // namespace libtorrent::dht
-
-#endif // PACKET_ITERATOR_HPP
+#endif
 

@@ -70,8 +70,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "libtorrent/config.hpp"
 // parse_url
 #include "libtorrent/tracker_manager.hpp"
-// http_parser
-#include "libtorrent/http_tracker_connection.hpp"
+#include "libtorrent/http_parser.hpp"
 
 namespace libtorrent
 {
@@ -103,9 +102,9 @@ namespace libtorrent
 
 		// called from the main loop when this connection has any
 		// work to do.
-		void on_sent(asio::error_code const& error
+		void on_sent(error_code const& error
 			, std::size_t bytes_transferred);
-		void on_receive(asio::error_code const& error
+		void on_receive(error_code const& error
 			, std::size_t bytes_transferred);
 			
 		std::string const& url() const { return m_url; }
@@ -123,13 +122,13 @@ namespace libtorrent
 		void write_cancel(peer_request const& r)
 		{ incoming_reject_request(r); }
 		void write_have(int index) {}
-		void write_piece(peer_request const& r, char* buffer) { TORRENT_ASSERT(false); }
+		void write_piece(peer_request const& r, disk_buffer_holder& buffer) { TORRENT_ASSERT(false); }
 		void write_keepalive() {}
 		void on_connected();
 		void write_reject_request(peer_request const&) {}
 		void write_allow_fast(int) {}
 
-#ifndef NDEBUG
+#ifdef TORRENT_DEBUG
 		void check_invariant() const;
 #endif
 
@@ -174,6 +173,9 @@ namespace libtorrent
 		// response. used to know where in the buffer the
 		// next response starts
 		int m_received_body;
+
+		// position in the current range response
+		int m_range_pos;
 	};
 }
 
