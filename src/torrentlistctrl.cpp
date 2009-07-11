@@ -26,8 +26,10 @@ template<> SortOrder TorrentListCtrl::BaseType::m_sortorder = SortOrder();
 
 BEGIN_EVENT_TABLE( TorrentListCtrl, TorrentListCtrl::BaseType )
 
-	EVT_LIST_ITEM_RIGHT_CLICK( TLIST_CLICK, TorrentListCtrl::OnListRightClick )
-	EVT_LIST_COL_CLICK( TLIST_CLICK, TorrentListCtrl::OnColClick )
+	EVT_LIST_ITEM_RIGHT_CLICK	( TLIST_CLICK, TorrentListCtrl::OnListRightClick )
+	//EVT_LIST_COL_CLICK			( TLIST_CLICK, TorrentListCtrl::OnColClick )
+	EVT_MENU					( TLIST_CANCEL, TorrentListCtrl::OnCancel )
+	EVT_MENU					( TLIST_RETRY, TorrentListCtrl::OnRetry )
 	#if wxUSE_TIPWINDOW
 	#ifndef __WXMSW__ //disables tooltips on win
 	EVT_MOTION( TorrentListCtrl::OnMouseMotion )
@@ -35,10 +37,9 @@ BEGIN_EVENT_TABLE( TorrentListCtrl, TorrentListCtrl::BaseType )
 	#endif
 END_EVENT_TABLE()
 
-TorrentListCtrl::TorrentListCtrl( wxWindow* parent, Ui& ui ):
-		TorrentListCtrl::BaseType( parent, TLIST_CLICK, wxDefaultPosition, wxDefaultSize,
-                wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("TorrentListCtrl"), 10, 10, &CompareOneCrit )
-
+TorrentListCtrl::TorrentListCtrl( wxWindow* parent, Ui& ui )
+:	TorrentListCtrl::BaseType( parent, TLIST_CLICK, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("TorrentListCtrl"), 10, 10, &CompareOneCrit )
+, m_popup(0)
 {
 #if defined(__WXMAC__)
 /// on mac, autosize does not work at all
@@ -73,16 +74,13 @@ TorrentListCtrl::TorrentListCtrl( wxWindow* parent, Ui& ui ):
 
 	Sort( );
 
-//  m_popup = new wxMenu( _T("") );
-//  // &m enables shortcout "alt + m" and underlines m
-//  m_popup->Append( BLIST_DLMAP, _("Download &map") );
-//  m_popup->Append( BLIST_DLMOD, _("Download m&od") );
 }
 
 
 TorrentListCtrl::~TorrentListCtrl()
 {
-//  delete m_popup;
+  delete m_popup;
+  m_popup = 0;
 }
 
 
@@ -97,7 +95,11 @@ bool TorrentListCtrl::AddTorrentInfo(const DataType& info)
 bool TorrentListCtrl::RemoveTorrentInfo(const DataType& info)
 {
 	if(RemoveItem(info))
+	{
+		if(m_data.size() == 0)
+			Refresh();
 		return true;
+	}
 	return false;
 }
 
@@ -159,10 +161,37 @@ void TorrentListCtrl::RefreshTorrentStatus()
 
 void TorrentListCtrl::OnListRightClick( wxListEvent& event )
 {
-//  PopupMenu( m_popup );
+	int idx = event.GetIndex();
+    if ( idx < (long)m_data.size() && idx > -1 ) {
+
+        DataType dt = m_data[idx];
+		delete m_popup;
+        m_popup = new wxMenu( _T("") );
+		if(dt.downloadstatus == P2P::not_stored)
+		{
+			m_popup->Append( TLIST_CANCEL, _("Cancel torrent") );
+			m_popup->Append( TLIST_RETRY, _("Retry torrent") );
+		}
+		else if(dt.downloadstatus == P2P::queued || dt.downloadstatus == P2P::leeching)
+			m_popup->Append( TLIST_CANCEL, _("Cancel torrent") );
+		else if(dt.downloadstatus == P2P::stored || dt.downloadstatus == P2P::seeding)
+			m_popup->Append( TLIST_CANCEL, _("Cancel torrent (keeping downloaded file)") );
+
+        PopupMenu( m_popup );
+    }
+}
+
+void TorrentListCtrl::OnCancel(wxCommandEvent &event)
+{
+	torrent().RemoveTorrentByHash(GetSelectedData().hash);
+	RemoveTorrentInfo(GetSelectedData());
 }
 
 
+void TorrentListCtrl::OnRetry(wxCommandEvent &event)
+{
+	torrent().RequestFileByHash(GetSelectedData().hash);
+}
 
 
 void TorrentListCtrl::Sort()
@@ -217,7 +246,7 @@ int TorrentListCtrl::GetItemImage(long item) const
 wxString TorrentListCtrl::GetItemText(long item, long column) const
 {
 
-    if ( item > m_data.size() || item < 0 )
+    if ( item > (long)m_data.size() || item < 0 )
         return wxEmptyString;
 
 	float kfactor = 1/float(1024);
@@ -240,7 +269,7 @@ wxString TorrentListCtrl::GetItemText(long item, long column) const
 			else return wxEmptyString;
 		case 5: return infos.progress > -0.01 ? wxString::Format(_T("%.2f"), infos.progress * 100 ) : na_str;
 		case 6: return infos.outspeed > -0.01 ? wxString::Format(_T("%.2f"), infos.outspeed*kfactor ) : na_str;
-		case 7: return infos.inspeed >= -0.01 ? wxString::Format(_T("%.2f"), infos.inspeed*kfactor ) : na_str;
+		case 7: return infos.inspeed > -0.01 ? wxString::Format(_T("%.2f"), infos.inspeed*kfactor ) : na_str;
 		case 8: return infos.eta > -1 ? wxTimeSpan::Seconds(infos.eta).Format( _T("%H:%M:%S") ) : _T("inf.") ;
 		case 9: return infos.filesize > 0 ? wxString::Format(_T("%.2f"), infos.filesize*mfactor) : na_str;
 	}

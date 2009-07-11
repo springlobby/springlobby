@@ -36,6 +36,9 @@ class TorrentListCtrl : public CustomVirtListCtrl<TorrentInfos, TorrentListCtrl>
 
     virtual void HighlightItem( long item );
 
+    void OnCancel( wxCommandEvent& event );
+    void OnRetry( wxCommandEvent& event );
+
 	//these are overloaded to use list in virtual style
     wxString GetItemText(long item, long column) const;
     int GetItemImage(long item) const;
@@ -48,8 +51,12 @@ class TorrentListCtrl : public CustomVirtListCtrl<TorrentInfos, TorrentListCtrl>
 
 	bool IsTorrentActive(const DataType& info);
 
+	wxMenu* m_popup;
+
     enum {
-        TLIST_CLICK
+        TLIST_CLICK,
+		TLIST_CANCEL,
+		TLIST_RETRY
     };
 
     DECLARE_EVENT_TABLE()
