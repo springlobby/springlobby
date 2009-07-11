@@ -458,11 +458,18 @@ bool BattleListFilter::FilterBattle(IBattle& battle)
   }
 
   //Battle Status Check
-  if ( !m_filter_status_start->GetValue() && battle.GetInGame() ) return false;
-  if ( !m_filter_status_locked->GetValue() && battle.IsLocked() ) return false;
-  if ( !m_filter_status_pass->GetValue() && battle.IsPassworded() ) return false;
-  if ( !m_filter_status_full->GetValue()  && battle.IsFull() ) return false;
-  if ( !m_filter_status_open->GetValue() && !battle.IsPassworded() && !battle.IsLocked() && !battle.GetInGame() && !battle.IsFull() ) return false;
+  if ( m_filter_status_start->IsChecked() && ! battle.GetInGame() ) return false;
+  if ( m_filter_status_locked->IsChecked() && ! battle.IsLocked() ) return false;
+  if ( m_filter_status_pass->IsChecked() && ! battle.IsPassworded() ) return false;
+  if ( m_filter_status_full->IsChecked()  && ! battle.IsFull() ) return false;
+
+  /* "Open": Can we get in, without a password? */
+  if ( m_filter_status_open->IsChecked() &&
+       ( battle.IsPassworded()
+	 || battle.IsLocked()
+	 || battle.GetInGame()
+	 || battle.IsFull() ) )
+    return false;
 
   //Rank Check
 
