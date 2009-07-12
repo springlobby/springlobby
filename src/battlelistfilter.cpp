@@ -403,6 +403,38 @@ bool BattleListFilter::_IntCompare(const int a, const int b, const BattleListFil
   }
 }
 
+bool BattleListFilter::StringMatches(const wxString& input, const wxString& filter_string, const wxRegEx* filter_regex, StringTransformFunction additional_transform, bool case_sensitive)
+{
+    if ( filter_string.Length() < 1 || filter_string == _T("") )
+	return true;
+
+    wxString input_cased ( input );
+    wxString filter_cased ( filter_string );
+    bool use_regex ( filter_regex && filter_regex->IsValid() );
+
+    /* Case-(in)sensitivize the input and filter strings. */
+    if ( ! case_sensitive )
+    {
+	input_cased.MakeUpper();
+	filter_cased.MakeUpper();
+    }
+
+    if ( input_cased.Contains(filter_cased) || ( use_regex && filter_regex->Matches(input) ) )
+	return true;
+    else if ( additional_transform )
+    {
+	/* Try matching using a transformed input string. */
+	wxString input_generated ( additional_transform(input) );
+	if ( ! case_sensitive )
+	    input_generated.MakeUpper();
+
+	if ( input_generated.Contains(filter_cased) || ( use_regex && filter_regex->Matches(input_generated) ) )
+	    return true;
+    }
+
+    return false;
+}
+
 void BattleListFilter::OnRankButton   ( wxCommandEvent& event )
 {
   m_filter_rank_mode = _GetNextMode(m_filter_rank_mode);
@@ -460,11 +492,18 @@ bool BattleListFilter::FilterBattle(IBattle& battle)
   }
 
   //Battle Status Check
-  if ( !m_filter_status_start->GetValue() && battle.GetInGame() ) return false;
-  if ( !m_filter_status_locked->GetValue() && battle.IsLocked() ) return false;
-  if ( !m_filter_status_pass->GetValue() && battle.IsPassworded() ) return false;
-  if ( !m_filter_status_full->GetValue()  && battle.IsFull() ) return false;
-  if ( !m_filter_status_open->GetValue() && !battle.IsPassworded() && !battle.IsLocked() && !battle.GetInGame() && !battle.IsFull() ) return false;
+  if ( m_filter_status_start->IsChecked() && ! battle.GetInGame() ) return false;
+  if ( m_filter_status_locked->IsChecked() && ! battle.IsLocked() ) return false;
+  if ( m_filter_status_pass->IsChecked() && ! battle.IsPassworded() ) return false;
+  if ( m_filter_status_full->IsChecked()  && ! battle.IsFull() ) return false;
+
+  /* "Open": Can we get in, without a password? */
+  if ( m_filter_status_open->IsChecked() &&
+       ( battle.IsPassworded()
+	 || battle.IsLocked()
+	 || battle.GetInGame()
+	 || battle.IsFull() ) )
+    return false;
 
   //Rank Check
 
@@ -502,16 +541,30 @@ bool BattleListFilter::FilterBattle(IBattle& battle)
   //Strings Plain Text & RegEx Check (Case insensitiv)
 
   //Description:
-  if ( !battle.GetDescription().Upper().Contains( m_filter_description_edit->GetValue().Upper() ) && !m_filter_description_expression->Matches(battle.GetDescription()) ) return false;
+  if ( ! StringMatches(battle.GetDescription(),
+		       m_filter_description_edit->GetValue(),
+		       m_filter_description_expression) )
+      return false;
 
   //Host:
-  if ( !battle.GetFounder().GetNick().Upper().Contains( m_filter_host_edit->GetValue().Upper() ) && !m_filter_host_expression->Matches(battle.GetFounder().GetNick()) ) return false;
+  if ( ! StringMatches(battle.GetFounder().GetNick(),
+		       m_filter_host_edit->GetValue(),
+		       m_filter_host_expression) )
+      return false;
 
   //Map:
-  if ( !RefineMapname(battle.GetHostMapName() ).Upper().Contains( m_filter_map_edit->GetValue().Upper() ) && !m_filter_map_expression->Matches(RefineMapname(battle.GetHostMapName() )) ) return false;
+  if ( ! StringMatches(battle.GetHostMapName(),
+		       m_filter_map_edit->GetValue(),
+		       m_filter_map_expression,
+		       RefineMapname) )
+      return false;
 
   //Mod:
-  if ( !battle.GetHostModName().Upper().Contains( m_filter_mod_edit->GetValue().Upper() ) &&  !RefineModname( battle.GetHostModName() ).Upper().Contains( m_filter_mod_edit->GetValue().Upper() ) && !m_filter_mod_expression->Matches(RefineModname(battle.GetHostModName())) ) return false;
+  if ( ! StringMatches(battle.GetHostModName(),
+		       m_filter_mod_edit->GetValue(),
+		       m_filter_mod_expression,
+		       RefineModname) )
+      return false;
 
   return true;
 }
@@ -525,32 +578,48 @@ void BattleListFilter::OnChange   ( wxCommandEvent& /*unused*/ )
 void BattleListFilter::OnChangeMap ( wxCommandEvent& event )
 {
   if ( m_filter_map_edit == NULL ) return;
-  if (m_filter_map_expression != NULL) { delete m_filter_map_expression; }
-  m_filter_map_expression = new wxRegEx(m_filter_map_edit->GetValue(),wxRE_ICASE);
+
+  if ( m_filter_map_expression == NULL )
+      m_filter_map_expression = new wxRegEx(m_filter_map_edit->GetValue(), wxRE_ICASE);
+  else
+      m_filter_map_expression->Compile(m_filter_map_edit->GetValue(), wxRE_ICASE);
+
   OnChange(event);
 }
 
 void BattleListFilter::OnChangeMod ( wxCommandEvent& event )
 {
   if ( m_filter_mod_edit == NULL ) return;
-  if (m_filter_mod_expression != NULL) { delete m_filter_mod_expression; }
-  m_filter_mod_expression = new wxRegEx(m_filter_mod_edit->GetValue(),wxRE_ICASE);
+
+  if ( m_filter_mod_expression == NULL )
+      m_filter_mod_expression = new wxRegEx(m_filter_mod_edit->GetValue(), wxRE_ICASE);
+  else
+      m_filter_mod_expression->Compile(m_filter_mod_edit->GetValue(), wxRE_ICASE);
+
   OnChange(event);
 }
 
 void BattleListFilter::OnChangeDescription ( wxCommandEvent& event )
 {
   if ( m_filter_description_edit == NULL ) return;
-  if (m_filter_description_expression != NULL) { delete m_filter_description_expression; }
-  m_filter_description_expression = new wxRegEx(m_filter_description_edit->GetValue(),wxRE_ICASE);
+
+  if ( m_filter_description_expression == NULL )
+      m_filter_description_expression = new wxRegEx(m_filter_description_edit->GetValue(), wxRE_ICASE);
+  else
+      m_filter_description_expression->Compile(m_filter_description_edit->GetValue(), wxRE_ICASE);
+
   OnChange(event);
 }
 
 void BattleListFilter::OnChangeHost ( wxCommandEvent& event )
 {
   if ( m_filter_host_edit == NULL ) return;
-  if (m_filter_host_expression != NULL) { delete m_filter_host_expression; }
-  m_filter_host_expression = new wxRegEx(m_filter_host_edit->GetValue(),wxRE_ICASE);
+
+  if ( m_filter_host_expression == NULL )
+      m_filter_host_expression = new wxRegEx(m_filter_host_edit->GetValue(), wxRE_ICASE);
+  else
+      m_filter_host_expression->Compile(m_filter_host_edit->GetValue(), wxRE_ICASE);
+
   OnChange(event);
 }
 
