@@ -29,10 +29,10 @@ class ChannelListctrl : public CustomVirtListCtrl< ChannelInfo, ChannelListctrl 
         void FilterChannel( const wxString& partial );
 
         //these are overloaded to use list in virtual style
-        virtual wxString OnGetItemText(long item, long column) const;
-        virtual int OnGetItemImage(long item) const;
-        virtual int OnGetItemColumnImage(long item, long column) const;
-
+        wxString GetItemText(long item, long column) const;
+        int GetItemImage(long item) const;
+        int GetItemColumnImage(long item, long column) const;
+        wxListItemAttr* GetItemAttr(long item) const {return 0;}
 
     protected:
         void Sort();

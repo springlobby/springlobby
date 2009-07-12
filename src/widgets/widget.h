@@ -62,6 +62,8 @@ struct Widget
     bool GetFileInfos();
     bool Install();
     bool Remove();
+
+    bool Equals( const Widget& other ) const ;
 };
 
 #endif // SPRINGLOBBY_WIDGET_H_INCLUDED

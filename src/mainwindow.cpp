@@ -18,6 +18,7 @@
 #include <wx/icon.h>
 #include <wx/sizer.h>
 #include <wx/menu.h>
+#include <wx/log.h>
 #include <wx/dcmemory.h>
 #include <wx/choicdlg.h>
 #include <wx/aui/auibook.h>
@@ -106,6 +107,7 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU( MENU_SCREENSHOTS, MainWindow::OnShowScreenshots )
   EVT_MENU_OPEN( MainWindow::OnMenuOpen )
   EVT_AUINOTEBOOK_PAGE_CHANGED( MAIN_TABS, MainWindow::OnTabsChanged )
+  EVT_CLOSE( MainWindow::OnClose )
 END_EVENT_TABLE()
 
 MainWindow::TabNames MainWindow::m_tab_names;
@@ -114,7 +116,8 @@ MainWindow::MainWindow( Ui& ui )
     : wxFrame( (wxFrame*)0, -1, _("SpringLobby"), wxPoint(50, 50), wxSize(450, 340) ),
     m_ui(ui),
     m_autojoin_dialog(NULL),
-    m_channel_chooser(NULL)
+    m_channel_chooser(NULL),
+    m_log_win(NULL)
 {
   SetIcon( wxIcon(springlobby_xpm) );
 
@@ -251,7 +254,19 @@ void MainWindow::forceSettingsFrameClose()
 		se_frame->handleExternExit();
 }
 
+void MainWindow::SetLogWin( wxLogWindow* log, wxLogChain* logchain  )
+{
+    m_log_win = log;
+    m_log_chain = logchain;
+    if ( m_log_win )
+        m_log_win->GetFrame()->SetParent( this );
+}
+
 MainWindow::~MainWindow()
+{
+}
+
+void MainWindow::OnClose( wxCloseEvent& evt )
 {
   wxAuiManager* manager=GetAui().manager;
   if(manager){
@@ -263,9 +278,10 @@ MainWindow::~MainWindow()
   wxString name = _T("MAINWINDOW");
   sett().SetWindowSize( name, GetSize() );
   sett().SetWindowPos( name, GetPosition() );
-  sett().SaveSettings();
+
   m_ui.Quit();
   m_ui.OnMainWindowDestruct();
+  forceSettingsFrameClose();
   freeStaticBox();
 
   if ( m_autojoin_dialog  != 0 )
@@ -274,8 +290,20 @@ MainWindow::~MainWindow()
     m_autojoin_dialog = 0;
   }
 
-}
+  sett().SaveSettings();
+  if ( m_log_win ) {
+    m_log_win->GetFrame()->Destroy();
+    if ( m_log_chain ) // if logwin was created, it's the current "top" log
+        m_log_chain->DetachOldLog();  //so we need to tellwx not to delete it on its own
+        //since we absolutely need to destroy the logwin here, set a fallback for the time until app cleanup
+#if(wxUSE_STD_IOSTREAM) 
+        wxLog::SetActiveTarget( new wxLogStream( &std::cout ) );
+#endif
+  }
 
+  Destroy();
+
+}
 
 void DrawBmpOnBmp( wxBitmap& canvas, wxBitmap& object, int x, int y )
 {
@@ -372,7 +400,7 @@ void MainWindow::OpenChannelChat( Channel& channel, bool doFocus )
     ASSERT_LOGIC( m_chat_tab != 0, _T("m_chat_tab") );
     if ( doFocus )
         m_func_tabs->SetSelection( PAGE_CHAT );
-    m_chat_tab->AddChatPannel( channel );
+    m_chat_tab->AddChatPanel( channel );
 }
 
 
@@ -383,7 +411,7 @@ void MainWindow::OpenPrivateChat( const User& user, bool doFocus )
 {
   ASSERT_LOGIC( m_chat_tab != 0, _T("m_chat_tab") );
   m_func_tabs->SetSelection( PAGE_CHAT );
-  ChatPanel* cp = m_chat_tab->AddChatPannel( user );
+  ChatPanel* cp = m_chat_tab->AddChatPanel( user );
   if ( doFocus )
     cp->FocusInputBox();
 
@@ -491,10 +519,9 @@ void MainWindow::OnMenuSaveOptions( wxCommandEvent& event )
   sett().SaveSettings();
 }
 
-
 void MainWindow::OnMenuQuit( wxCommandEvent& event )
 {
-  m_ui.Quit();
+  Close();
 }
 
 
@@ -655,4 +682,3 @@ const MainWindow::TabNames& MainWindow::GetTabNames()
 {
     return m_tab_names;
 }
-

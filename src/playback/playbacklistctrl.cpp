@@ -182,7 +182,7 @@ void PlaybackListCtrl<PlaybackType>::SetTipWindowText( const long item_hit, cons
 }
 
 template <class PlaybackType>
-wxString PlaybackListCtrl<PlaybackType>::OnGetItemText(long item, long column) const
+wxString PlaybackListCtrl<PlaybackType>::GetItemText(long item, long column) const
 {
     if ( m_data[item] == NULL )
         return wxEmptyString;
@@ -206,7 +206,7 @@ wxString PlaybackListCtrl<PlaybackType>::OnGetItemText(long item, long column) c
 }
 
 template <class PlaybackType>
-int PlaybackListCtrl<PlaybackType>::OnGetItemImage(long item) const
+int PlaybackListCtrl<PlaybackType>::GetItemImage(long item) const
 {
     if ( m_data[item] == NULL )
         return -1;
@@ -215,7 +215,7 @@ int PlaybackListCtrl<PlaybackType>::OnGetItemImage(long item) const
 }
 
 template <class PlaybackType>
-int PlaybackListCtrl<PlaybackType>::OnGetItemColumnImage(long item, long column) const
+int PlaybackListCtrl<PlaybackType>::GetItemColumnImage(long item, long column) const
 {
     if ( m_data[item] == NULL )
         return -1;
@@ -228,7 +228,7 @@ int PlaybackListCtrl<PlaybackType>::OnGetItemColumnImage(long item, long column)
 }
 
 template <class PlaybackType>
-wxListItemAttr* PlaybackListCtrl<PlaybackType>::OnGetItemAttr(long item) const
+wxListItemAttr* PlaybackListCtrl<PlaybackType>::GetItemAttr(long item) const
 {
     //not neded atm
 //    if ( item < m_data.size() && item > -1 ) {

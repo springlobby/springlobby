@@ -276,6 +276,7 @@ SET(SpringLobbySrc
 	src/mmoptionmodel.cpp
 	src/mmoptionswrapper.cpp
 	src/nicklistctrl.cpp
+	src/offlinebattle.cpp
 	src/playback/replaylist.cpp
 	src/playback/savegamelist.cpp
 	src/sdlsound.cpp
@@ -317,11 +318,6 @@ SET(SpringLobbySrc
 )
 
 SET(SettingsSrc
-	src/utils/debug.cpp
-	src/utils/platform.cpp
-	src/utils/conversion.cpp
-	src/utils/sltipwin.cpp
-	src/utils/controls.cpp
 	src/settings++/custom_dialogs.cpp
 	src/settings++/frame.cpp
 	src/settings++/helpmenufunctions.cpp
@@ -343,6 +339,11 @@ SET(StandAloneSettings
 )
 
 SET(SLSharedWithSettings
+	src/utils/debug.cpp
+	src/utils/platform.cpp
+	src/utils/conversion.cpp
+	src/utils/sltipwin.cpp
+	src/utils/controls.cpp
 	src/updater/versionchecker.cpp
 	src/crashreport.cpp
 	src/springunitsynclib.cpp

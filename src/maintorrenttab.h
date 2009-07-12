@@ -16,7 +16,7 @@ class FileListDialog;
 class ColorButton;
 class WidgetDownloadDialog;
 
-typedef std::map<int,TorrentInfos> map_infos;
+typedef std::map<wxString,TorrentInfos> map_infos;
 typedef map_infos::iterator map_infos_iter;
 
 class MainTorrentTab: public wxScrolledWindow
@@ -60,9 +60,6 @@ class MainTorrentTab: public wxScrolledWindow
         };
 
         map_infos info_map;
-        void AddTorrentInfo(  TorrentInfos& info );
-        void UpdateInfo(  TorrentInfos& info );
-        void SetInfo(int index,  TorrentInfos& info );
         void OnCancelButton( wxCommandEvent& event );
         void OnDownloadDialog( wxCommandEvent& event );
         void OnDLWidgets( wxCommandEvent& event );

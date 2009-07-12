@@ -46,9 +46,9 @@ class BattleroomListCtrl : public CustomVirtListCtrl< User *, BattleroomListCtrl
     void OnUserMenuAddToGroup( wxCommandEvent& event );
     virtual void SetTipWindowText( const long item_hit, const wxPoint position);
 
-    virtual wxString OnGetItemText(long item, long column) const;
-    virtual int OnGetItemColumnImage(long item, long column) const;
-    wxListItemAttr * OnGetItemAttr(long item) const;
+    wxString GetItemText(long item, long column) const;
+    int GetItemColumnImage(long item, long column) const;
+    wxListItemAttr * GetItemAttr(long item) const;
 
   protected:
     static int CompareStatus(const DataType user1, const DataType user2, const IBattle* m_battle );

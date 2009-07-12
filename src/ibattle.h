@@ -3,6 +3,7 @@
 
 
 #include <wx/string.h>
+#include <wx/event.h>
 
 #include "iunitsync.h"
 #include "user.h"
@@ -15,6 +16,7 @@ const unsigned int DEFAULT_SERVER_PORT = 8452;
 const unsigned int DEFAULT_EXTERNAL_UDP_SOURCE_PORT = 16941;
 
 class IBattle;
+class wxTimer;
 
 struct BattleStartRect
 {
@@ -103,7 +105,7 @@ struct BattleOptions
 	bool guilistactiv;
 };
 
-class IBattle: public UserList
+class IBattle: public UserList, public wxEvtHandler
 {
 public:
 
@@ -376,10 +378,15 @@ public:
 
 		virtual void GetBattleFromScript( bool loadmapmod );
 
+		virtual bool ShouldAutoStart();
+
+		virtual void StartSpring() = 0;
+
 protected:
 
 		void LoadScriptMMOpts( const wxString& sectionname, const PDataList& node );
 		void LoadScriptMMOpts( const PDataList& node );
+
 
     bool m_map_loaded;
     bool m_mod_loaded;
@@ -402,6 +409,13 @@ protected:
 
 		std::map<unsigned int,BattleStartRect> m_rects;
 
+		std::map<wxString, time_t> m_ready_up_map; // player name -> time counting from join/unspect
+
+		int m_players_ready;
+		int m_players_sync;
+		std::map<int, int> m_teams_sizes; // controlteam -> number of people in
+		std::map<int, int> m_ally_sizes; // allyteam -> number of people in
+
     wxString m_preset;
 
     bool m_is_self_in;
@@ -414,7 +428,7 @@ protected:
     AllyVec m_parsed_allies;
 		UserVec m_internal_user_list; /// to store users from savegame/replay
 
-
+		wxTimer* m_timer;
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_IBATTLE_H

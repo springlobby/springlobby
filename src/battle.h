@@ -9,6 +9,7 @@
 class Ui;
 class Server;
 class User;
+class wxTimerEvent;
 
 
 /** \brief model of a sp/mp battle
@@ -29,8 +30,6 @@ class Battle : public IBattle
 
     int GetMyPlayerNum() const;
 
-    void FixColours( );
-
     void Update();
     void Update( const wxString& Tag );
 
@@ -40,6 +39,8 @@ class Battle : public IBattle
     void KickPlayer( User& user );
 
     void RingNotReadyPlayers();
+    void RingNotSyncedPlayers();
+    void RingNotSyncedAndNotReadyPlayers();
     void RingPlayer( const User& u );
 
     void Say( const wxString& msg );
@@ -66,15 +67,19 @@ class Battle : public IBattle
     void OnUserBattleStatusUpdated( User &user, UserBattleStatus status );
     void OnUserRemoved( User& user );
 
-    void Autobalance( BalanceType balance_type = balance_divide, bool clans = true, bool strong_clans = true, int allyteamsize = 0 );
-    void FixTeamIDs( BalanceType balance_type = balance_divide, bool clans = true, bool strong_clans = true, int controlteamsize = 0 );
     void ForceUnsyncedToSpectate();
+    void ForceUnReadyToSpectate();
+    void ForceUnsyncedAndUnreadyToSpectate();
 
     void SetAutoLockOnStart( bool value );
     bool GetAutoLockOnStart();
 
     void SetLockExternalBalanceChanges( bool value );
     bool GetLockExternalBalanceChanges();
+
+		void FixColours();
+    void Autobalance( BalanceType balance_type = balance_divide, bool clans = true, bool strong_clans = true, int allyteamsize = 0 );
+    void FixTeamIDs( BalanceType balance_type = balance_divide, bool clans = true, bool strong_clans = true, int controlteamsize = 0 );
 
     void SendScriptToClients();
 
@@ -93,6 +98,12 @@ class Battle : public IBattle
     void SaveMapDefaults();
     void LoadMapDefaults( const wxString& mapname );
 
+    void StartSpring();
+
+    void OnTimer( wxTimerEvent& event );
+
+		void SetInGame( bool ingame );
+
   protected:
     // Battle variables
 
@@ -106,6 +117,8 @@ class Battle : public IBattle
     bool m_autolock_on_start;
 
     const int m_id;
+
+		DECLARE_EVENT_TABLE()
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_BATTLE_H

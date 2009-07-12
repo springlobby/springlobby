@@ -62,14 +62,11 @@ Ui::Ui() :
         m_main_win(0),
         m_con_win(0),
         m_upd_counter_torrent(0),
-        m_upd_counter_battlelist(0),
-        m_upd_counter_chat(0),
         m_first_update_trigger(true),
         m_ingame(false)
 {
     m_main_win = new MainWindow( *this );
     CustomMessageBoxBase::setLobbypointer(m_main_win);
-    m_spring = new Spring(*this);
     m_serv = new TASServer();
 }
 
@@ -77,8 +74,6 @@ Ui::~Ui()
 {
     Disconnect();
 
-    delete m_main_win;
-    delete m_spring;
     delete m_serv;
 }
 
@@ -179,10 +174,9 @@ void Ui::Disconnect()
 {
     if ( m_serv != 0 )
     {
-				if ( IsConnected() ) {
-				    GetServer().Disconnect();
-
-				}
+        if ( IsConnected() ) {
+            GetServer().Disconnect();
+        }
     }
 }
 
@@ -218,7 +212,7 @@ void Ui::DoConnect( const wxString& servername, const wxString& username, const 
     host = sett().GetServerHost( servername );
     port = sett().GetServerPort( servername );
 
-    GetServer().uidata.panel = m_main_win->GetChatTab().AddChatPannel( *m_serv, servername );
+    GetServer().uidata.panel = m_main_win->GetChatTab().AddChatPanel( *m_serv, servername );
     GetServer().uidata.panel->StatusMessage( _T("Connecting to server ") + servername + _T("...") );
 
     // Connect
@@ -277,28 +271,21 @@ void Ui::StartHostedBattle()
 }
 
 
-void Ui::StartSinglePlayerGame( SinglePlayerBattle& battle )
-{
-    OnSpringStarting();
-    m_spring->Run( battle );
-}
-
-
 bool Ui::IsSpringRunning()
 {
-    return m_spring->IsRunning();
+    return spring().IsRunning();
 }
 
 
 //! @brief Quits the entire application
 void Ui::Quit()
 {
-    ASSERT_LOGIC( m_main_win != 0, _T("m_main_win = 0") );
     Disconnect();
-    sett().SaveSettings();
-    mw().forceSettingsFrameClose();
 
-    mw().Close();
+    #ifndef NO_TORRENT_SYSTEM
+        torrent().DisconnectFromP2PSystem();// Cant hurt to disconnect unconditionally.
+    #endif
+
     if ( m_con_win != 0 )
         m_con_win->Close();
 }
@@ -550,24 +537,6 @@ void Ui::OnUpdate( int mselapsed )
     {
         GetServer().Update( mselapsed );
     }
-
-		if ( m_upd_counter_battlelist % 50 == 0  )
-		{
-			try
-			{
-				mw().GetJoinTab().Update();
-			} catch ( assert_exception &e ) {}
-		}
-		m_upd_counter_battlelist++;
-
-		if ( m_upd_counter_chat % 47 == 0  )
-		{
-			try
-			{
-				mw().GetChatTab().Update();
-			} catch ( assert_exception &e ) {}
-		}
-		m_upd_counter_chat++;
 
     if ( m_first_update_trigger )
     {
@@ -1114,39 +1083,6 @@ void Ui::OnBattleStarted( Battle& battle )
 {
     if ( m_main_win == 0 ) return;
     wxLogDebugFunc( _T("") );
-    try
-    {
-        if ( &mw().GetJoinTab().GetBattleRoomTab().GetBattle() == &battle )
-        {
-            if ( battle.IsProxy() )
-            {
-              wxString hostscript = m_spring->WriteScriptTxt( battle );
-							try
-							{
-								wxString path = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("relayhost_script.txt");
-								if ( !wxFile::Access( path, wxFile::write ) ) wxLogError( _T("Access denied to script.txt.") );
-
-								wxFile f( path, wxFile::write );
-								f.Write( hostscript );
-								f.Close();
-
-							} catch (...) {}
-              GetServer().SendScriptToProxy( hostscript );
-            }
-            battle.GetMe().BattleStatus().ready = false;
-            battle.SendMyBattleStatus();
-            battle.GetMe().Status().in_game = true;
-            battle.GetMe().SendMyUserStatus();
-            if( battle.IsFounderMe() && battle.GetAutoLockOnStart() )
-            {
-              battle.SetIsLocked( true );
-              battle.SendHostInfo( IBattle::HI_Locked );
-            }
-            OnSpringStarting();
-            m_spring->Run( battle );
-        }
-    }
-    catch (...) {}
     mw().GetJoinTab().GetBattleListTab().UpdateBattle( battle );
 }
 
@@ -1248,7 +1184,8 @@ void Ui::OnModUnitsCached( const wxString& modname )
 
 void Ui::OnMainWindowDestruct()
 {
-    m_main_win = 0;
+    //this is rather ugly and therefore disabled
+    //m_main_win = 0;
 }
 
 bool Ui::IsThisMe(User& other)
@@ -1287,12 +1224,6 @@ void Ui::ReloadPresetList()
         mw().GetJoinTab().ReloadPresetList();
     }
     catch (...) {}
-}
-
-void Ui::WatchPlayback( OfflineBattle& battle )
-{
-    OnSpringStarting();
-    m_spring->Run( battle );
 }
 
 bool Ui::OnPresetRequiringMap( const wxString& mapname )

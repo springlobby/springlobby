@@ -26,8 +26,8 @@ ChannelListctrl::ChannelListctrl(wxWindow* parent, wxWindowID id, const wxString
 #endif
 
     AddColumn( 0, widths[0], _("Channel"), _T("Channelname") );
-    AddColumn( 1, widths[1], _("# users"), _T("users") );
-    AddColumn( 2, widths[2], _T("topic"), _T("topic") );
+    AddColumn( 1, widths[1], _("# users"), _T("Users") );
+    AddColumn( 2, widths[2], _T("Topic"), _T("Topic") );
 
     if ( m_sortorder.size() == 0 ) {
         m_sortorder[2].col = 2;
@@ -132,17 +132,17 @@ void ChannelListctrl::FilterChannel( const wxString& partial )
 }
 
 
-int ChannelListctrl::OnGetItemColumnImage(long item, long column) const
+int ChannelListctrl::GetItemColumnImage(long item, long column) const
 {
     return -1;
 }
 
-int ChannelListctrl::OnGetItemImage(long item) const
+int ChannelListctrl::GetItemImage(long item) const
 {
     return -1;
 }
 
-wxString ChannelListctrl::OnGetItemText(long item, long column) const
+wxString ChannelListctrl::GetItemText(long item, long column) const
 {
     int idx = m_visible_idxs.find(item)->second;
     const DataType& chan = m_data[ idx ];

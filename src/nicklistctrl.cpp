@@ -42,11 +42,11 @@ END_EVENT_TABLE()
 template<> SortOrder NickListCtrl::BaseType::m_sortorder = SortOrder( ) ;
 
 NickListCtrl::NickListCtrl( wxWindow* parent, bool show_header, NickListCtrl::UserMenu* popup, bool singleSelectList,
-                            const wxString& name, bool highlight):
-  NickListCtrl::BaseType( parent, NICK_LIST, wxDefaultPosition, wxDefaultSize,
+                            const wxString& name, bool highlight)
+    : NickListCtrl::BaseType( parent, NICK_LIST, wxDefaultPosition, wxDefaultSize,
               wxLC_VIRTUAL | wxSUNKEN_BORDER | wxLC_REPORT | (int)(!show_header) * wxLC_NO_HEADER | (int)(singleSelectList) * wxLC_SINGLE_SEL,
-              name, 4, 3, &CompareOneCrit, highlight ),
-  m_menu(popup)
+              name, 4, 3, &CompareOneCrit, highlight, UserActions::ActHighlight, true /*periodic sort*/ ),
+    m_menu(popup)
 {
 
 #if defined(__WXMAC__)
@@ -193,7 +193,7 @@ void NickListCtrl::SetTipWindowText( const long item_hit, const wxPoint position
     }
 }
 
-wxListItemAttr* NickListCtrl::OnGetItemAttr(long item) const
+wxListItemAttr* NickListCtrl::GetItemAttr(long item) const
 {
     if ( item < (long) m_data.size() && item > -1 ) {
         const User& u = *m_data[item];
@@ -249,7 +249,7 @@ void NickListCtrl::Sort()
     }
 }
 
-wxString NickListCtrl::OnGetItemText(long item, long column) const
+wxString NickListCtrl::GetItemText(long item, long column) const
 {
     switch ( column ) {
         case 0:
@@ -261,7 +261,7 @@ wxString NickListCtrl::OnGetItemText(long item, long column) const
     }
 }
 
-int NickListCtrl::OnGetItemColumnImage(long item, long column) const
+int NickListCtrl::GetItemColumnImage(long item, long column) const
 {
     if ( m_data[item] ) {
         const User& user = *m_data[item];
@@ -274,11 +274,6 @@ int NickListCtrl::OnGetItemColumnImage(long item, long column) const
             default: return -1;
         }
     }
-    return -1;
-}
-
-int NickListCtrl::OnGetItemImage(long item) const
-{
     return -1;
 }
 
@@ -322,3 +317,4 @@ int NickListCtrl::CompareUserStatus( DataType user1, DataType user2 )
 
     return 0;
 }
+

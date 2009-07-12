@@ -18,7 +18,7 @@ typedef __int64 int64_t;
 #include <wx/string.h>
 #include <sstream>
 
-class wxArrayString;
+#include <wx/arrstr.h>
 
 template<class T>
 static inline wxString TowxString(T arg){
@@ -86,6 +86,12 @@ static inline wxString MakeHashSigned( const wxString& hash )
 
 //! convert wxArrayString into a wxString[] which must be delete[]d by caller
 int ConvertWXArrayToC(const wxArrayString& aChoices, wxString **choices);
+
+
+class TransformedArrayString : public wxArrayString {
+    public:
+        TransformedArrayString( const wxArrayString& original, wxString trans_op (const wxString& ) );
+};
 
 #endif // SPRINGLOBBY_HEADERGUARD_CONVERSION_H
 

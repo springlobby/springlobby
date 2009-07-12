@@ -177,7 +177,7 @@ void ServerEvents::OnUserStatus( const wxString& nick, UserStatus status )
                 if ( status.in_game != battle.GetInGame() )
                 {
                     battle.SetInGame( status.in_game );
-                    if ( status.in_game ) ui().OnBattleStarted( battle );
+                    if ( status.in_game ) battle.StartSpring();
                     else ui().OnBattleInfoUpdated( battle );
                 }
             }
@@ -255,7 +255,7 @@ void ServerEvents::OnBattleOpened( int id, BattleType type, NatType nat, const w
         if ( user.Status().in_game )
         {
             battle.SetInGame( true );
-            ui().OnBattleStarted( battle );
+            battle.StartSpring();
         }
     }
     catch (std::runtime_error &except)
@@ -329,7 +329,7 @@ void ServerEvents::OnStartHostedBattle( int battleid )
     wxLogDebugFunc( _T("") );
     Battle& battle = m_serv.GetBattle( battleid );
     battle.SetInGame( true );
-    ui().OnBattleStarted( battle );
+    battle.StartSpring();
 }
 
 
@@ -367,7 +367,7 @@ void ServerEvents::OnUserJoinedBattle( int battleid, const wxString& nick )
             if ( user.Status().in_game )
             {
                 battle.SetInGame( true );
-                ui().OnBattleStarted( battle );
+                battle.StartSpring();
             }
         }
     }
@@ -966,7 +966,8 @@ void ServerEvents::OnSpringDownloadEvent( wxCommandEvent& event )
 			{
 				customMessageBoxNoModal(SL_MAIN_ICON, _("Download complete, location is: ") + m_savepath, _("Download complete.")  );
 			}
-			if ( m_autoclose ) ui().Quit();
+			if ( m_autoclose )
+                ui().mw().Close();
 
   }
 }

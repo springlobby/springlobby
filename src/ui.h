@@ -66,10 +66,7 @@ class Ui
 
     bool IsSpringRunning();
 
-    void WatchPlayback ( OfflineBattle& battle );
-
     void StartHostedBattle();
-    void StartSinglePlayerGame( SinglePlayerBattle& battle );
     //void SendHostInfo( HostInfo update );
 
     void Quit();
@@ -158,8 +155,6 @@ class Ui
     void ReloadPresetList();
 
   protected:
-    Spring* m_spring;
-
     Server* m_serv;
     MainWindow* m_main_win;
     ConnectWindow* m_con_win;
@@ -167,8 +162,6 @@ class Ui
     wxString m_last_used_backup_server;
 
     unsigned int m_upd_counter_torrent;
-    unsigned int m_upd_counter_battlelist;
-    unsigned int m_upd_counter_chat;
 
     bool m_first_update_trigger;
 

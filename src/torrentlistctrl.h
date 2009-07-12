@@ -3,23 +3,22 @@
 
 #ifndef NO_TORRENT_SYSTEM
 
-#include "customlistctrl.h"
-
+#include "customvirtlistctrl.h"
+#include "torrentwrapper.h"
 #include <map>
 
-struct TorrentInfos;
+//struct TorrentInfos;
 class wxMenu;
 class Battle;
 class wxListEvent;
 class wxCommandEvent;
 class Ui;
 
-typedef std::map<int,TorrentInfos> map_infos;
 
 /** \brief list all currently active (queued,lecching,seeding) torrents with their infos
  * the list is newly populated every n-seconds from Ui::OnUpdate()
  */
-class TorrentListCtrl : public CustomListCtrl
+class TorrentListCtrl : public CustomVirtListCtrl<TorrentInfos, TorrentListCtrl>
 {
   public:
     TorrentListCtrl( wxWindow* parent, Ui& ui );
@@ -30,36 +29,34 @@ class TorrentListCtrl : public CustomListCtrl
     void OnListRightClick( wxListEvent& event );
 
     virtual void SetTipWindowText( const long item_hit, const wxPoint position);
-    void OnColClick( wxListEvent& event );
-    void SetInfoMap( map_infos* map);
+	bool AddTorrentInfo(const DataType& info);
+	bool RemoveTorrentInfo(const DataType& info);
+	void UpdateTorrentInfo(const DataType& info);
+	void RefreshTorrentStatus();
+
     virtual void HighlightItem( long item );
 
-  protected:
-    static int wxCALLBACK CompareNameUP(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareNameDOWN(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareCompletedUP(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareCompletedDOWN(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareDownSizeUP(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareDownSizeDOWN(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareUpSizeUP(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareUpSizeDOWN(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareDownSpeedUP(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareDownSpeedDOWN(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareUpSpeedUP(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareUpSpeedDOWN(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareLeechUP(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareLeechDOWN(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareEtaUP(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareEtaDOWN(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareCopiesUP(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareCopiesDOWN(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareFileSizeUP(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareFileSizeDOWN(long item1, long item2, long sortData);
-    static map_infos* m_info_map;
+    void OnCancel( wxCommandEvent& event );
+    void OnRetry( wxCommandEvent& event );
 
+	//these are overloaded to use list in virtual style
+    wxString GetItemText(long item, long column) const;
+    int GetItemImage(long item) const;
+    int GetItemColumnImage(long item, long column) const;
+    wxListItemAttr* GetItemAttr(long item) const {return 0;}
+
+  protected:
+	static int CompareOneCrit( DataType u1, DataType u2, int col, int dir ) ;
+	int GetIndexFromData( const DataType& data ) const;
+
+	bool IsTorrentActive(const DataType& info);
+
+	wxMenu* m_popup;
 
     enum {
-        TLIST_CLICK
+        TLIST_CLICK,
+		TLIST_CANCEL,
+		TLIST_RETRY
     };
 
     DECLARE_EVENT_TABLE()

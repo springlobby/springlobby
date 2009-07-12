@@ -2,7 +2,7 @@
 #include <wx/colour.h>
 #include <wx/log.h>
 
-//#include "utils.h"
+#include "nonportable.h" //pulls in the SL_DUMMY_COL define if applicable
 #include "settings.h"
 #include "iconimagelist.h"
 #include "settings++/custom_dialogs.h"
@@ -32,26 +32,34 @@ END_EVENT_TABLE()
 template < class T, class L >
 CustomVirtListCtrl<T,L>::CustomVirtListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pt, const wxSize& sz,
                 long style, const wxString& name, unsigned int column_count, unsigned int sort_criteria_count,
-                CompareFunction func, bool highlight, UserActions::ActionType hlaction ):
-  ListBaseType(parent, id, pt, sz, style | wxLC_VIRTUAL),
-  m_tiptimer(this, IDD_TIP_TIMER),
-  m_sort_timer(this, IDD_SORT_TIMER),
-  m_tiptext(_T("")),
+                CompareFunction func, bool highlight, UserActions::ActionType hlaction, bool periodic_sort, unsigned int periodic_sort_interval  )
+    : ListBaseType(parent, id, pt, sz, style | wxLC_VIRTUAL),
+    m_tiptimer(this, IDD_TIP_TIMER),
+    m_sort_timer(this, IDD_SORT_TIMER),
+    m_tiptext(_T("")),
 #if wxUSE_TIPWINDOW
-  m_tipwindow( 0 ),
-  m_controlPointer( 0 ),
+    m_tipwindow( 0 ),
+    m_controlPointer( 0 ),
 #endif
-  m_columnCount( column_count ),
-  m_selected_index(-1),
-  m_prev_selected_index(-1),
-  m_last_mouse_pos( wxPoint(-1,-1) ),
-  m_name(name),
-  m_highlight(highlight),
-  m_highlightAction(hlaction),
-  m_bg_color( GetBackgroundColour() ),
-  m_dirty_sort(false),
-  m_sort_criteria_count( sort_criteria_count ),
-  m_comparator( m_sortorder, func )
+#ifndef SL_DUMMY_COL
+    m_columnCount( column_count ),
+#else
+    m_columnCount( column_count + 1 ),
+#endif
+    m_selected_index(-1),
+    m_prev_selected_index(-1),
+    m_last_mouse_pos( wxPoint(-1,-1) ),
+    m_name(name),
+    m_highlight(highlight),
+    m_highlightAction(hlaction),
+    m_bg_color( GetBackgroundColour() ),
+    m_dirty_sort(false),
+    m_sort_criteria_count( sort_criteria_count ),
+    m_comparator( m_sortorder, func ),
+    m_periodic_sort_timer_id( wxNewId() ),
+    m_periodic_sort_timer( this, m_periodic_sort_timer_id ),
+    m_periodic_sort( periodic_sort ),
+    m_periodic_sort_interval( periodic_sort_interval )
 {
     //dummy init , will later be replaced with loading from settings
     for ( unsigned int i = 0; i < m_columnCount; ++i) {
@@ -63,6 +71,21 @@ CustomVirtListCtrl<T,L>::CustomVirtListCtrl(wxWindow* parent, wxWindowID id, con
     SetImageList( &icons(), wxIMAGE_LIST_SMALL );
     SetImageList( &icons(), wxIMAGE_LIST_STATE );
     m_sortorder = sett().GetSortOrder( name );
+    #ifdef SL_DUMMY_COL //a little duplication here, but the AddColumn method will be altered when this is defined
+        ListBaseType::InsertColumn( 0, wxEmptyString, wxLIST_FORMAT_LEFT, 0 );
+        ListBaseType::SetColumnWidth( 0, 0 );
+        colInfo temp( 0, wxEmptyString, wxEmptyString, false, 0 );
+        m_colinfovec.push_back( temp );
+    #endif
+
+    if ( m_periodic_sort )
+    {
+        wxTimerEvent a;
+        wxEventType evt_type = a.GetEventType();
+        Connect( m_periodic_sort_timer_id, evt_type,   wxTimerEventHandler( ThisType::OnPeriodicSort ) );
+        bool started = m_periodic_sort_timer.Start( m_periodic_sort_interval );
+        assert( started );
+    }
 
 }
 
@@ -73,23 +96,11 @@ CustomVirtListCtrl<T,L>::~CustomVirtListCtrl()
 }
 
 template < class T, class L >
-void CustomVirtListCtrl<T,L>::InsertColumn(long i, wxListItem item, wxString tip, bool modifiable)
-{
-//#ifdef __WXMSW__ //this fixes header text misalignement
-//    item.m_mask = wxLIST_MASK_FORMAT | wxLIST_MASK_TEXT;
-//    if ( item.m_image != icons().ICON_EMPTY || item.m_image != -1 )
-//        item.m_mask = item.m_mask | wxLIST_MASK_IMAGE;
-//
-//    item.m_format = wxLIST_FORMAT_LEFT;
-//#endif
-    ListBaseType::InsertColumn(i,item);
-    colInfo temp(tip,modifiable);
-    m_colinfovec.push_back(temp);
-}
-
-template < class T, class L >
 void CustomVirtListCtrl<T,L>::AddColumn(long i, int width, const wxString& label, const wxString& tip, bool modifiable)
 {
+    #ifdef SL_DUMMY_COL
+        i++;
+    #endif
     ListBaseType::InsertColumn( i, label, wxLIST_FORMAT_LEFT, width);
     SetColumnWidth( i, width );
     colInfo temp( i, label, tip, modifiable, width );
@@ -288,6 +299,9 @@ template < class T, class L >
 void CustomVirtListCtrl<T,L>::SetTipWindowText( const long item_hit, const wxPoint position)
 {
   int column = getColumnFromPosition(position);
+  #ifdef SL_DUMMY_COL
+    column++;
+  #endif
   if (column >= int(m_colinfovec.size()) || column < 0)
   {
     m_tiptext = _T("");
@@ -307,7 +321,11 @@ int CustomVirtListCtrl<T,L>::getColumnFromPosition(wxPoint pos)
     {
         x_pos += GetColumnWidth(i);
         if (pos.x < x_pos)
+        #ifdef SL_DUMMY_COL
+            return i-1;
+        #else
             return i;
+        #endif
     }
     return -1;
 }
@@ -325,6 +343,7 @@ void CustomVirtListCtrl<T,L>::OnEndResizeCol(wxListEvent& event)
     int column = event.GetColumn();
     int new_size = GetColumnWidth( column );
     sett().SetColumnWidth( m_name, column, new_size );
+    sett().SaveSettings();
 
     //let the event go further
     event.Skip();
@@ -356,22 +375,6 @@ void CustomVirtListCtrl<T,L>::noOp(wxMouseEvent& event)
 //            }
     event.Skip();
 }
-
-//template < class T, class L >
-//void CustomVirtListCtrl<T,L>::UpdateHighlights()
-//{
-//  Freeze();
-//  try {
-//      long item = -1;
-//      while ( true ) {
-//        item = GetNextItem(item, wxLIST_NEXT_ALL, wxLIST_STATE_DONTCARE);
-//        if ( item == -1 )
-//          break;
-//        HighlightItem( item );
-//      }
-//  } catch(...) {}
-//  Thaw();
-//}
 
 template < class T, class L >
 wxListItemAttr* CustomVirtListCtrl<T,L>::HighlightItemUser( const wxString& name ) const
@@ -413,7 +416,7 @@ bool CustomVirtListCtrl<T,L>::PopupMenu(wxMenu* menu, const wxPoint& pos )
 template < class T, class L >
 void CustomVirtListCtrl<T,L>::SortList( bool force )
 {
-    if ( m_sort_timer.IsRunning() ||  ( !m_dirty_sort && !force ) )
+    if ( ( m_sort_timer.IsRunning() ||  !m_dirty_sort ) && !force )
         return;
     SelectionSaver<ThisType>(this);
     Freeze();
@@ -464,6 +467,14 @@ void CustomVirtListCtrl<T,L>::OnColClick( wxListEvent& event )
     if ( event.GetColumn() == -1 )
         return;
 
+    #ifdef SL_DUMMY_COL
+        if ( event.GetColumn() == 0 )
+            return;
+        const int evt_col = event.GetColumn()-1;
+    #else
+        const int evt_col = event.GetColumn();
+    #endif
+
     m_sort_timer.Stop();//otherwise sorting will be way delayed
 
     int old_sort_col = m_sortorder[0].col;
@@ -472,7 +483,6 @@ void CustomVirtListCtrl<T,L>::OnColClick( wxListEvent& event )
     GetColumn( m_sortorder[0].col, col );
     col.SetImage( icons().ICON_NONE );
     SetColumn( m_sortorder[0].col, col );
-    int evt_col = event.GetColumn();
 
     unsigned int i = 0;
     SortOrder::const_iterator it = m_sortorder.begin();
@@ -489,7 +499,7 @@ void CustomVirtListCtrl<T,L>::OnColClick( wxListEvent& event )
         m_sortorder[i] = m_sortorder[i-1];
     }
 
-    m_sortorder[0].col = event.GetColumn();
+    m_sortorder[0].col = evt_col;
     m_sortorder[0].direction *= -1;
 
 
@@ -503,6 +513,24 @@ void CustomVirtListCtrl<T,L>::OnColClick( wxListEvent& event )
     else { // O(n) instead of guaranteed worst case O(n*n)
         ReverseOrder();
     }
+}
+
+template < class T, class L >
+bool CustomVirtListCtrl<T,L>::GetColumn(int col, wxListItem& item) const
+{
+    #ifdef SL_DUMMY_COL
+        col++;
+    #endif
+    return ListBaseType::GetColumn( col, item );
+}
+
+template < class T, class L >
+bool CustomVirtListCtrl<T,L>::SetColumn(int col, wxListItem& item)
+{
+    #ifdef SL_DUMMY_COL
+        col++;
+    #endif
+    return ListBaseType::SetColumn( col, item );
 }
 
 template < class T, class L >
@@ -541,4 +569,38 @@ bool CustomVirtListCtrl<T,L>::RemoveItem( const T item )
         return true;
     }
     return false;
+}
+
+template < class T, class L >
+wxString CustomVirtListCtrl<T,L>::OnGetItemText(long item, long column) const
+{
+    #ifdef SL_DUMMY_COL
+    if ( column < 1 )
+        return wxEmptyString;
+    column--;
+    #endif
+    return asImp().GetItemText(item, column);
+}
+
+template < class T, class L >
+int CustomVirtListCtrl<T,L>::OnGetItemColumnImage(long item, long column) const
+{
+    #ifdef SL_DUMMY_COL
+    if ( column < 1 )
+        return -1;
+    column--;
+    #endif
+    return asImp().GetItemColumnImage(item, column);
+}
+
+template < class T, class L >
+wxListItemAttr* CustomVirtListCtrl<T,L>::OnGetItemAttr(long item) const
+{
+    return asImp().GetItemAttr(item);
+}
+
+template < class T, class L >
+void CustomVirtListCtrl<T,L>::OnPeriodicSort( wxTimerEvent& evt )
+{
+    SortList();
 }

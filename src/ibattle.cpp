@@ -3,6 +3,7 @@
 #include <wx/tokenzr.h>
 #include <wx/image.h>
 #include <sstream>
+#include <wx/timer.h>
 
 #include "ibattle.h"
 #include "utils/debug.h"
@@ -15,6 +16,11 @@
 #include "images/fixcolours_palette.xpm"
 
 #include <list>
+#include <algorithm>
+#include <cmath>
+#include <set>
+
+const unsigned int TIMER_ID         = 102;
 
 IBattle::IBattle():
   m_map_loaded(false),
@@ -23,14 +29,18 @@ IBattle::IBattle():
   m_mod_exists(false),
   m_ingame(false),
   m_generating_script(false),
-  m_is_self_in(false)
-
+	m_players_ready(0),
+	m_players_sync(0),
+  m_is_self_in(false),
+	m_timer ( 0 )
 {
 }
 
 
 IBattle::~IBattle()
 {
+	if ( m_timer ) m_timer->Stop();
+	delete m_timer;
 }
 
 bool IBattle::IsSynced()
@@ -73,15 +83,9 @@ std::vector<wxColour> &IBattle::GetFixColoursPalette()
 
 wxColour IBattle::GetFixColour(int i)
 {
-    std::vector<wxColour> palette = GetFixColoursPalette();
-    if (((unsigned int)i)<palette.size())
-    {
-        return palette[i];
-    }
-    else
-    {
-        return wxColour(127,127,127);
-    }
+    std::vector<wxColour>& palette = GetFixColoursPalette();
+    if ( m_teams_sizes.size() > palette.size() ) palette = GetBigFixColoursPalette( m_teams_sizes.size() );
+		return palette[i];
 }
 
 int IBattle::GetPlayerNum( const User& user )
@@ -167,8 +171,8 @@ int IBattle::GetFreeTeamNum( bool excludeme )
 
 int IBattle::GetClosestFixColour(const wxColour &col, const std::vector<int> &excludes, int &difference)
 {
-    std::vector<wxColour> palette = GetFixColoursPalette();
-    int mindiff=1024;
+    std::vector<wxColour>& palette = GetFixColoursPalette();
+    if ( m_teams_sizes.size() > palette.size() ) palette = GetBigFixColoursPalette( m_teams_sizes.size() );
     int result=0;
     int t1=palette.size();
     int t2=excludes.size();
@@ -177,16 +181,12 @@ int IBattle::GetClosestFixColour(const wxColour &col, const std::vector<int> &ex
     {
         if ((i>=excludes.size()) || (!excludes[i]))
         {
-            int diff=ColourDifference(palette[i],col);
-            if (diff<mindiff)
+            if (AreColoursSimilar( palette[i],col, difference ))
             {
-                mindiff=diff;
                 result=i;
             }
         }
     }
-    difference=mindiff;
-    wxLogMessage(_T("GetClosestFixColour result=%d diff=%d"),result,difference);
     return result;
 }
 
@@ -206,22 +206,35 @@ void IBattle::Update ( const wxString& Tag )
 User& IBattle::OnUserAdded( User& user )
 {
     UserList::AddUser( user );
-
-    user.BattleStatus().spectator = false;
-    user.BattleStatus().ready = false;
-    user.BattleStatus().sync = SYNC_UNKNOWN;
-    if ( !user.BattleStatus().IsBot() )
+		UserBattleStatus& bs = user.BattleStatus();
+    bs.spectator = false;
+    bs.ready = false;
+    bs.sync = SYNC_UNKNOWN;
+    if ( !bs.IsBot() )
     {
-			user.BattleStatus().team = GetFreeTeamNum( &user == &GetMe() );
-			user.BattleStatus().ally = GetFreeAlly( &user == &GetMe() );
-			user.BattleStatus().colour = GetFreeColour( user );
+			bs.team = GetFreeTeamNum( &user == &GetMe() );
+			bs.ally = GetFreeAlly( &user == &GetMe() );
+			bs.colour = GetFreeColour( user );
     }
-    if ( IsFounderMe() && ( ( user.BattleStatus().pos.x < 0 ) || ( user.BattleStatus().pos.y < 0 ) ) )
+    if ( IsFounderMe() && ( ( bs.pos.x < 0 ) || ( bs.pos.y < 0 ) ) )
     {
-    	 UserPosition& pos = user.BattleStatus().pos;
+    	 UserPosition& pos = bs.pos;
     	 pos = GetFreePosition();
     	 UserPositionChanged( user );
     }
+		if ( !bs.spectator )
+		{
+			std::map<int, int>::iterator itor = m_teams_sizes.find( bs.team );
+			if ( itor == m_teams_sizes.end() ) m_teams_sizes[bs.team] = 1;
+			else m_teams_sizes[bs.team] = m_teams_sizes[bs.team] + 1;
+			std::map<int, int>::iterator iter = m_ally_sizes.find( bs.ally );
+			if ( iter == m_ally_sizes.end() ) m_ally_sizes[bs.ally] = 1;
+			else m_ally_sizes[bs.ally] = m_ally_sizes[bs.ally] + 1;
+		}
+		if ( bs.spectator ) m_opts.spectators++;
+		if ( bs.ready && !bs.IsBot() ) m_players_ready++;
+		if ( bs.sync && !bs.IsBot() ) m_players_sync++;
+		if ( !bs.spectator && !bs.IsBot() && ( !bs.ready || !bs.sync ) ) m_ready_up_map[user.GetNick()] = time(0);
     return user;
 }
 
@@ -251,15 +264,13 @@ unsigned int IBattle::GetNumPlayers() const
 void IBattle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 {
 
-    bool previousspectatorstatus = user.BattleStatus().spectator;
-    int previousteam = user.BattleStatus().team;
-    int previousally = user.BattleStatus().ally;
+    UserBattleStatus previousstatus = user.BattleStatus();
 
     user.UpdateBattleStatus( status );
 
     if ( IsFounderMe() )
     {
-			if ( status.spectator != previousspectatorstatus )
+			if ( status.spectator != previousstatus.spectator )
 			{
 					if ( status.spectator )
 					{
@@ -273,22 +284,156 @@ void IBattle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 			}
 			if ( m_opts.lockexternalbalancechanges )
 			{
-				if ( previousteam != user.BattleStatus().team ) ForceTeam( user, previousteam );
-				if ( previousally != user.BattleStatus().ally ) ForceAlly( user, previousally );
+				if ( previousstatus.team != status.team ) ForceTeam( user, previousstatus.team );
+				if ( previousstatus.ally != status.ally ) ForceAlly( user, previousstatus.ally );
 			}
-    }
+	}
+	if ( status.spectator != previousstatus.spectator )
+	{
+		if ( !status.spectator )
+		{
+			std::map<int, int>::iterator itor = m_teams_sizes.find( status.team );
+			if ( itor == m_teams_sizes.end() ) m_teams_sizes[status.team] = 1;
+			else m_teams_sizes[status.team] = m_teams_sizes[status.team] + 1;
+			std::map<int, int>::iterator iter = m_ally_sizes.find( status.ally );
+			if ( iter == m_ally_sizes.end() ) m_ally_sizes[status.ally] = 1;
+			else m_ally_sizes[status.ally] = m_ally_sizes[status.ally] + 1;
+		}
+		else
+		{
+			std::map<int, int>::iterator itor = m_teams_sizes.find( status.team );
+			if ( itor != m_teams_sizes.end() )
+			{
+				 itor->second = itor->second -1;
+				if ( itor->second == 0 )
+				{
+					m_teams_sizes.erase( itor );
+				}
+			}
+			std::map<int, int>::iterator iter = m_ally_sizes.find( status.ally );
+			if ( iter != m_ally_sizes.end() )
+			{
+				iter->second = iter->second - 1;
+				if ( iter->second == 0 )
+				{
+					m_ally_sizes.erase( iter );
+				}
+			}
+		}
+	}
+	else
+	{
+		std::map<int, int>::iterator itor = m_teams_sizes.find( previousstatus.team );
+		if ( itor != m_teams_sizes.end() )
+		{
+			 itor->second = itor->second -1;
+			if ( itor->second == 0 )
+			{
+				m_teams_sizes.erase( itor );
+			}
+		}
+		itor = m_teams_sizes.find( status.team );
+		if ( itor != m_teams_sizes.end() ) itor->second = itor->second + 1;
+		else m_teams_sizes[status.team] = 1;
+
+		std::map<int, int>::iterator iter = m_ally_sizes.find( previousstatus.ally );
+		if ( iter != m_ally_sizes.end() )
+		{
+			 iter->second = iter->second - 1;
+				if ( iter->second == 0 )
+				{
+					m_ally_sizes.erase( iter );
+				}
+		}
+		iter = m_ally_sizes.find( status.ally );
+		if ( iter != m_ally_sizes.end() ) iter->second = iter->second + 1;
+		else m_ally_sizes[status.ally] = 1;
+	}
+	if ( !status.IsBot() )
+	{
+		if ( ( previousstatus.ready != status.ready ) && !status.spectator && !previousstatus.spectator )
+		{
+			 if ( status.ready ) m_players_ready++;
+			 else m_players_ready--;
+		}
+		if ( ( previousstatus.sync != status.sync ) && !status.spectator && !previousstatus.spectator )
+		{
+			 if ( status.sync ) m_players_sync++;
+			 else m_players_sync--;
+		}
+		if ( ( status.ready && status.sync ) || status.spectator )
+		{
+			std::map<wxString, time_t>::iterator itor = m_ready_up_map.find( user.GetNick() );
+			if ( itor != m_ready_up_map.end() )
+			{
+				m_ready_up_map.erase( itor );
+			}
+		}
+		if ( ( !status.ready || !status.sync ) && !status.spectator )
+		{
+			std::map<wxString, time_t>::iterator itor = m_ready_up_map.find( user.GetNick() );
+			if ( itor == m_ready_up_map.end() )
+			{
+				m_ready_up_map[user.GetNick()] = time(0);
+			}
+		}
+	}
+}
+
+bool IBattle::ShouldAutoStart()
+{
+	if ( GetInGame() ) return false;
+	if ( !IsLocked() && (  ( GetNumPlayers() - m_opts.spectators ) ) < m_opts.maxplayers ) return false; // proceed checking for ready players only if the battle is full or locked
+	for ( unsigned int i = 0; i < GetNumUsers(); i++ )
+	{
+		User& usr = GetUser( i );
+		UserBattleStatus& status = usr.BattleStatus();
+		if ( status.IsBot() ) continue;
+		if ( !status.spectator && ( !status.sync || !status.ready ) ) return false;
+	}
+	return true;
 }
 
 void IBattle::OnUserRemoved( User& user )
 {
-    if ( IsFounderMe() && user.BattleStatus().spectator )
+		UserBattleStatus& bs = user.BattleStatus();
+		if ( !bs.spectator )
+		{
+			std::map<int, int>::iterator itor = m_teams_sizes.find( bs.team );
+			if ( itor != m_teams_sizes.end() )
+			{
+				 itor->second = itor->second -1;
+				if ( itor->second == 0 )
+				{
+					m_teams_sizes.erase( itor );
+				}
+			}
+			std::map<int, int>::iterator iter = m_ally_sizes.find( bs.ally );
+			if ( iter != m_ally_sizes.end() )
+			{
+				iter->second = iter->second - 1;
+				if ( iter->second == 0 )
+				{
+					m_ally_sizes.erase( iter );
+				}
+			}
+ 		}
+		if ( bs.ready && !bs.IsBot() ) m_players_ready--;
+		if ( bs.sync && !bs.IsBot() ) m_players_sync--;
+    if ( IsFounderMe() && bs.spectator )
     {
       m_opts.spectators--;
       SendHostInfo( HI_Spectators );
     }
-    if ( &user == &GetMe() ) OnSelfLeftBattle();
+    if ( &user == &GetMe() )
+    {
+    	 if ( m_timer ) m_timer->Stop();
+    	 delete m_timer;
+    	 m_timer = 0;
+    	 OnSelfLeftBattle();
+    }
     UserList::RemoveUser( user.GetNick() );
-    if ( !user.BattleStatus().IsBot() ) user.SetBattle( 0 );
+    if ( !bs.IsBot() ) user.SetBattle( 0 );
     else
     {
     	UserVecIter itor = m_internal_bot_list.find( user.GetNick() );
@@ -298,6 +443,7 @@ void IBattle::OnUserRemoved( User& user )
 			}
     }
 }
+
 
 bool IBattle::IsEveryoneReady()
 {
@@ -421,7 +567,7 @@ unsigned int IBattle::GetLastRectIdx()
 //return  the lowest currently unused key in the map of rects.
 unsigned int IBattle::GetNextFreeRectIdx()
 {
-	//check for unused allyno keys 
+	//check for unused allyno keys
 	for(unsigned int i = 0; i <= GetLastRectIdx(); i++)
 	{
 		if(!GetStartRect(i).IsOk())
@@ -1068,4 +1214,5 @@ void IBattle::GetBattleFromScript( bool loadmapmod )
     }
     SetBattleOptions( opts );
 }
+
 

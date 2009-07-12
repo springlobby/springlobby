@@ -109,16 +109,17 @@ SpringLobbyApp::~SpringLobbyApp()
 //! It will open the main window and connect default to server or open the connect window.
 bool SpringLobbyApp::OnInit()
 {
+    //this triggers the Cli Parser amongst other stuff
+    if (!wxApp::OnInit())
+        return false;
+
     //initialize all loggers, we'll use the returned pointer to set correct parent window later
-    wxLogWindow* loggerwin = InitializeLoggingTargets( 0, m_log_console, m_log_window_show, !m_crash_handle_disable, m_log_verbosity );
+    wxLogChain* logchain = 0;
+    wxLogWindow *loggerwin = InitializeLoggingTargets( 0, m_log_console, m_log_window_show, !m_crash_handle_disable, m_log_verbosity, logchain );
 
 #if wxUSE_ON_FATAL_EXCEPTION
     if (!m_crash_handle_disable) wxHandleFatalExceptions( true );
 #endif
-
-    //this triggers the Cli Parser amongst other stuff
-    if (!wxApp::OnInit())
-        return false;
 
     //this needs to called _before_ mainwindow instance is created
     wxInitAllImageHandlers();
@@ -142,14 +143,16 @@ bool SpringLobbyApp::OnInit()
         wxMkdir( wxStandardPaths::Get().GetUserDataDir() );
 
     sett().RefreshSpringVersionList();
-    ui().ReloadUnitSync(); // first time load of unitsync
+    usync().ReloadUnitSyncLib(); // first time load of unitsync
 
     //everything below should not be executing when updating, so we can ensure no GUI window is created, torrent system isn't started, etc.
     // NOTE: this assumes no one will try to update at firstRun
     if ( m_updateing_only )
         return true;
 
+    CacheAndSettingsSetup();
     ui().ShowMainWindow();
+    SetTopWindow( &ui().mw() );
 
     if ( sett().IsFirstRun() )
     {
@@ -202,9 +205,7 @@ bool SpringLobbyApp::OnInit()
 
     m_timer->Start( TIMER_INTERVAL );
 
-    if ( loggerwin ) { // we got a logwindow, lets set proper parent win
-        loggerwin->GetFrame()->SetParent( &(ui().mw()) );
-    }
+    ui().mw().SetLogWin( loggerwin, logchain );
 
     return true;
 }
@@ -224,11 +225,6 @@ int SpringLobbyApp::OnExit()
         wxDELETE(m_translationhelper);
     }
 
-
-  #ifndef NO_TORRENT_SYSTEM
-  //if( sett().GetTorrentSystemAutoStartMode() == 1 )
-  torrent().DisconnectFromP2PSystem();// Cant hurt to disconnect unconditionally.
-  #endif
 
   m_timer->Stop();
 
@@ -273,7 +269,9 @@ void SpringLobbyApp::OnInitCmdLine(wxCmdLineParser& parser)
     {
         { wxCMD_LINE_SWITCH, _T("h"), _T("help"), _("show this help message"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_OPTION_HELP },
         { wxCMD_LINE_SWITCH, _T("nc"), _T("no-crash-handler"), _("don't use the crash handler (useful for debugging)"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
+#if wxUSE_STD_IOSTREAM
         { wxCMD_LINE_SWITCH, _T("cl"), _T("console-logging"),  _("shows application log to the console(if available)"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
+#endif
         { wxCMD_LINE_SWITCH, _T("gl"), _T("gui-logging"),  _("enables application log window"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
 #ifdef __WXMSW__
         { wxCMD_LINE_SWITCH, _T("u"), _T("update"),  _("only run update, quit immediately afterwards"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
@@ -301,7 +299,7 @@ bool SpringLobbyApp::OnCmdLineParsed(wxCmdLineParser& parser)
 //        Settings::m_user_defined_config = parser.Found( _T("config-file"), &Settings::m_user_defined_config_path );
 
         if ( !parser.Found(_T("log-verbosity"), &m_log_verbosity ) )
-            m_log_verbosity = 3;
+            m_log_verbosity = 5;
 
         if ( parser.Found(_T("help")) )
             return false; // not a syntax error, but program should stop if user asked for command line usage
@@ -368,65 +366,71 @@ void SpringLobbyApp::CacheAndSettingsSetup()
 
     if ( !sett().IsFirstRun() )
     {
-    	if ( sett().GetSettingsVersion() < 3 ) sett().ConvertOldSpringDirsOptions();
-			if ( sett().GetSettingsVersion() < 4 )
-			{
-				if ( sett().GetTorrentPort() == DEFSETT_SPRING_PORT ) sett().SetTorrentPort( DEFSETT_SPRING_PORT + 1 );
-			}
-			if ( sett().GetSettingsVersion() < 5 )
-			{
-				wxArrayString list = sett().GetServers();
-				int count = list.GetCount();
-				wxArrayString wordlist = sett().GetHighlightedWords();
-				for ( int i= 0; i < count; i++ )
-				{
-					wxString nick = sett().GetServerAccountNick( list[i] );
-					if ( wordlist.Index( nick ) == -1 )
-					{
-						wordlist.Add( nick );
-					}
-				}
-				sett().SetHighlightedWords( wordlist );
-			}
-			if ( sett().GetSettingsVersion() < 6 )
-			{
-				sett().ConvertOldServerSettings();
-			}
-			if ( sett().GetSettingsVersion() < 7 )
-			{
-				sett().AddChannelJoin( _T("springlobby"), _T("") );
-			}
-			if ( sett().GetSettingsVersion() < 8 )
-			{
-				 sett().DeleteServer( _T("Backup server") );
-				 sett().SetServer( _T("Backup server 1"), _T("springbackup1.servegame.com"), 8200 );
-				 sett().SetServer( _T("Backup server 2"), _T("springbackup2.servegame.org"), 8200 );
-				 sett().SetServer( _T("Test server"), _T("taspringmaster.servegame.com"), 8300 );
-			}
-			if ( sett().GetSettingsVersion() < 10 )
-			{
-				sett().ConvertOldColorSettings();
-			}
-			if ( sett().GetSettingsVersion() < 11 )
-			{
-                if( IsUACenabled() )
+    	if ( sett().GetSettingsVersion() < 3 )
+            sett().ConvertOldSpringDirsOptions();
+        if ( sett().GetSettingsVersion() < 4 )
+        {
+            if ( sett().GetTorrentPort() == DEFSETT_SPRING_PORT )
+                sett().SetTorrentPort( DEFSETT_SPRING_PORT + 1 );
+        }
+        if ( sett().GetSettingsVersion() < 5 )
+        {
+            wxArrayString list = sett().GetServers();
+            int count = list.GetCount();
+            wxArrayString wordlist = sett().GetHighlightedWords();
+            for ( int i= 0; i < count; i++ )
+            {
+                wxString nick = sett().GetServerAccountNick( list[i] );
+                if ( wordlist.Index( nick ) == -1 )
                 {
-                    usync().ReloadUnitSyncLib();
-                    if ( usync().IsLoaded() )
-                        usync().SetSpringDataPath(_T("")); // UAC is on, fix the spring data path
+                    wordlist.Add( nick );
                 }
-			}
-			if ( sett().GetSettingsVersion() < 12 )
-			{
-				sett().ConvertOldChannelSettings();
-			}
-			if ( sett().GetSettingsVersion() < 13 )
-			{
-				sett().ConvertOldHiglightSettings();
-			}
+            }
+            sett().SetHighlightedWords( wordlist );
+        }
+        if ( sett().GetSettingsVersion() < 6 )
+        {
+            sett().ConvertOldServerSettings();
+        }
+        if ( sett().GetSettingsVersion() < 7 )
+        {
+            sett().AddChannelJoin( _T("springlobby"), _T("") );
+        }
+        if ( sett().GetSettingsVersion() < 8 )
+        {
+             sett().DeleteServer( _T("Backup server") );
+             sett().SetServer( _T("Backup server 1"), _T("springbackup1.servegame.com"), 8200 );
+             sett().SetServer( _T("Backup server 2"), _T("springbackup2.servegame.org"), 8200 );
+             sett().SetServer( _T("Test server"), _T("taspringmaster.servegame.com"), 8300 );
+        }
+        if ( sett().GetSettingsVersion() < 10 )
+        {
+            sett().ConvertOldColorSettings();
+        }
+        if ( sett().GetSettingsVersion() < 11 )
+        {
+            if( IsUACenabled() )
+            {
+                usync().ReloadUnitSyncLib();
+                if ( usync().IsLoaded() )
+                    usync().SetSpringDataPath(_T("")); // UAC is on, fix the spring data path
+            }
+        }
+        if ( sett().GetSettingsVersion() < 12 )
+        {
+            sett().ConvertOldChannelSettings();
+        }
+        if ( sett().GetSettingsVersion() < 13 )
+        {
+            sett().ConvertOldHiglightSettings();
+        }
+        if ( sett().GetSettingsVersion() < 15 )
+        {
+            sett().TranslateSavedColumWidths();
+        }
     }
 
-    if ( sett().ShouldAddDefaultServerSettings() )
+    if ( sett().ShouldAddDefaultServerSettings() || ( sett().GetSettingsVersion() < 14 && sett().GetServers().Count() < 2  ) )
         sett().SetDefaultServerSettings();
 
     if ( sett().ShouldAddDefaultChannelSettings() )

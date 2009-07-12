@@ -5,7 +5,7 @@
 #include <vector>
 
 const int CACHE_VERSION     = 10;
-const int SETTINGS_VERSION  = 13;
+const int SETTINGS_VERSION  = 15;
 
 const wxString DEFSETT_DEFAULT_SERVER_NAME= _T("Official server");
 const wxString DEFSETT_DEFAULT_SERVER_HOST = _T("taspringmaster.clan-sy.com");
@@ -328,7 +328,7 @@ class Settings
     void SetColumnWidth( const wxString& list_name, const int column_ind, const int column_width );
     int GetColumnWidth( const wxString& list_name, const int column );
     //! used to signal unset column width in Get...
-    enum { columnWidthUnset };
+    static const int columnWidthUnset = -3;
 
     void SetLanguageID ( const long id );
     long GetLanguageID ( );
@@ -339,6 +339,7 @@ class Settings
     bool GetSplitBRoomHorizontally();
     void SetSplitBRoomHorizontally( const bool vertical );
 
+    void TranslateSavedColumWidths();
     /*@}*/
 
     /* ================================================================ */
@@ -550,6 +551,18 @@ class Settings
     wxString GetLastBattleFilterProfileName();
     void SetBattleFilterActivState( const bool state );
     bool GetBattleFilterActivState( ) const;
+
+    bool GetBattleLastAutoStartState();
+    void SetBattleLastAutoStartState( bool value );
+
+    bool GetBattleLastAutoControlState();
+    void SetBattleLastAutoControlState( bool value );
+
+		int GetBattleLastAutoSpectTime();
+    void SetBattleLastAutoSpectTime( int value );
+
+    bool GetBattleLastAutoAnnounceDescription();
+    void SetBattleLastAutoAnnounceDescription( bool value );
 
     struct SettStartBox
     {

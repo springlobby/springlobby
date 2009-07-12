@@ -134,11 +134,13 @@ void SinglePlayerTab::ReloadMaplist()
 {
     m_map_pick->Clear();
 
-    wxArrayString maplist= usync().GetMapList();
+    TransformedArrayString maplist ( usync().GetMapList(), &RefineMapname ) ;
     //maplist.Sort(CompareStringIgnoreCase);
-
-    size_t nummaps = maplist.Count();
-    for ( size_t i = 0; i < nummaps; i++ ) m_map_pick->Insert( RefineMapname(maplist[i]), i );
+//
+//    size_t nummaps = maplist.Count();
+//    for ( size_t i = 0; i < nummaps; i++ )
+//        m_map_pick->Insert( RefineMapname(maplist[i]), i );
+    m_map_pick->Append( maplist );
 
     m_map_pick->Insert( _("-- Select one --"), m_map_pick->GetCount() );
     if ( m_battle.GetHostMapName() != wxEmptyString )
@@ -196,6 +198,10 @@ void SinglePlayerTab::SetMap( unsigned int index )
   m_map_pick->SetSelection( index );
 }
 
+void SinglePlayerTab::ResetUsername()
+{
+    m_battle.GetMe().SetNick( usync().GetDefaultNick() );
+}
 
 void SinglePlayerTab::SetMod( unsigned int index )
 {
@@ -299,8 +305,8 @@ void SinglePlayerTab::OnAddBot( wxCommandEvent& event )
 
 void SinglePlayerTab::OnStart( wxCommandEvent& event )
 {
-    wxString nick = usync().GetDefaultNick();
-    if ( !nick.IsEmpty() ) m_battle.GetMe().SetNick( nick );
+    wxLogDebugFunc( _T("SP: ") );
+
     if ( m_ui.IsSpringRunning() )
     {
         wxLogWarning(_T("trying to start spring while another instance is running") );
@@ -308,7 +314,7 @@ void SinglePlayerTab::OnStart( wxCommandEvent& event )
         return;
     }
 
-    if ( ValidSetup() ) m_ui.StartSinglePlayerGame( m_battle );
+    if ( ValidSetup() ) m_battle.StartSpring();
 }
 
 
