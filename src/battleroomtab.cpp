@@ -558,8 +558,7 @@ void BattleRoomTab::UpdateUser( User& user )
         m_side_sel->Enable();
         m_ally_sel->Enable();
         m_team_sel->Enable();
-        if ( m_battle.GetBattleType() != BT_Replay ) m_ready_chk->Enable();
-        else m_ready_chk->Enable();
+        m_ready_chk->Enable();
     }
 
     icons().SetColourIcon( bs.team, user.BattleStatus().colour );
