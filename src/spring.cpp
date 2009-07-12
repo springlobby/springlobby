@@ -425,6 +425,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 								tdf.Append( _T("ShortName"), status.aishortname ); // AI libtype
 								tdf.Append( _T("Version"), status.aiversion ); // AI libtype version
 								tdf.Append( _T("Team"), teams_to_sorted_teams[status.team] );
+								tdf.Append( _T("IsFromDemo"), int(status.isfromdemo) );
 								tdf.Append( _T("Host"), player_to_number[&battle.GetUser( status.owner )] );
 								tdf.EnterSection( _T("Options") );
 									int optionmapindex = battle.CustomBattleOptions().GetAIOptionIndex( user.GetNick() );
