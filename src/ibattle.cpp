@@ -115,7 +115,7 @@ wxColour IBattle::GetFreeColour( User &for_whom )
             if ( bs.spectator ) continue;
 						if ( parsed_teams.find( bs.team ) != parsed_teams.end() ) continue; // skip duplicates
 						parsed_teams.insert( bs.team );
-            if ( AreColoursSimilar( bs.colour, fixcolourspalette[lowest] ) )
+            if ( AreColoursSimilar( bs.colour, fixcolourspalette[lowest] ), 50 )
             {
                 lowest++;
                 if ( lowest > fixcolourspalette.size() ) fixcolourspalette = GetFixColoursPalette( lowest + 1 );
@@ -142,7 +142,7 @@ wxColour IBattle::GetNewColour()
             if ( bs.spectator ) continue;
 						if ( parsed_teams.find( bs.team ) != parsed_teams.end() ) continue; // skip duplicates
 						parsed_teams.insert( bs.team );
-            if ( AreColoursSimilar( bs.colour, fixcolourspalette[lowest] ) )
+            if ( AreColoursSimilar( bs.colour, fixcolourspalette[lowest] ), 50 )
             {
                 lowest++;
                 if ( lowest > fixcolourspalette.size() ) fixcolourspalette = GetFixColoursPalette( lowest + 1 );
