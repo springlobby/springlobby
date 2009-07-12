@@ -2,13 +2,20 @@
 
 #ifndef NO_TORRENT_SYSTEM
 
+#ifdef _MSC_VER
+#ifndef NOMINMAX
+    #define NOMINMAX
+#endif // NOMINMAX
+#include <winsock2.h>
+#endif // _MSC_VER
+
 #include <wx/intl.h>
 #include <wx/menu.h>
 #include <wx/string.h>
 
 #include "filelistctrl.h"
 #include "filelistdialog.h"
-#include "../utils.h"
+#include "../utils/conversion.h"
 #include "../iconimagelist.h"
 #include "../uiutils.h"
 
@@ -117,7 +124,7 @@ void FileListCtrl::GetSelectedHashes(HashVector& hashes)
 		item = GetNextItem( item, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED );
 		if ( item == -1 ) // means nothing was found
             return;
-		hashes.push_back( TowxString<long>( GetItemData(item) ) );
+		hashes.push_back( TowxString<unsigned int>( GetItemData(item) ) );
 	}
 }
 
@@ -217,8 +224,8 @@ void FileListCtrl::SetTipWindowText( const long item_hit, const wxPoint position
 //    long item = GetItemData( item_hit );
 //			Ui* ui = m_ui_for_sort;
 //			Battle& battle = ui->GetServer().battles_iter->GetBattle(item);
-    int coloumn = getColoumnFromPosition( position );
-    switch ( coloumn )
+    int column = getColumnFromPosition( position );
+    switch ( column )
     {
 //			case 0: // status
 //			m_tiptext = icons().GetBattleStatus(battle);
@@ -227,7 +234,7 @@ void FileListCtrl::SetTipWindowText( const long item_hit, const wxPoint position
 //				m_tiptext = GetFlagNameFromCountryCode(battle.GetFounder().GetCountry());
 //				break;
 //			case 2: // rank_min
-//				m_tiptext = m_colinfovec[coloumn].first;
+//				m_tiptext = m_colinfovec[column].first;
 //				break;
 
 
@@ -243,4 +250,3 @@ void FileListCtrl::HighlightItem( long item )
 }
 
 #endif
-

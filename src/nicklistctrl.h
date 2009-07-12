@@ -10,7 +10,7 @@ class Ui;
 class ChatPanel;
 class UserMenu;
 
-class NickListCtrl : public CustomVirtListCtrl<const User*>
+class NickListCtrl : public CustomVirtListCtrl< const User* ,NickListCtrl >
 {
   protected:
     typedef SL_GENERIC::UserMenu<ChatPanel> UserMenu;
@@ -25,9 +25,6 @@ class NickListCtrl : public CustomVirtListCtrl<const User*>
 
     void UserUpdated( const User& user );
 
-    void GetSelectedUsers( UserList& users ) ;
-    wxArrayString GetSelectedUserNicks( ) ;
-
     void ClearUsers();
 
     void OnActivateItem( wxListEvent& event );
@@ -37,10 +34,9 @@ class NickListCtrl : public CustomVirtListCtrl<const User*>
     void HighlightItem( long item );
 
     //these are overloaded to use list in virtual style
-    virtual wxString OnGetItemText(long item, long column) const;
-    virtual int OnGetItemImage(long item) const;
-    virtual int OnGetItemColumnImage(long item, long column) const;
-    wxListItemAttr * OnGetItemAttr(long item) const;
+    wxString GetItemText(long item, long column) const;
+    int GetItemColumnImage(long item, long column) const;
+    wxListItemAttr * GetItemAttr(long item) const;
 
   protected:
 
@@ -66,3 +62,21 @@ class NickListCtrl : public CustomVirtListCtrl<const User*>
 
 
 #endif // SPRINGLOBBY_HEADERGUARD_NICKLISTCTRL_H
+
+/**
+    This file is part of SpringLobby,
+    Copyright (C) 2007-09
+
+    springsettings is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License version 2 as published by
+    the Free Software Foundation.
+
+    springsettings is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SpringLobby.  If not, see <http://www.gnu.org/licenses/>.
+**/
+

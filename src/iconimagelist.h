@@ -37,6 +37,7 @@ class IconImageList : public wxImageList
     int ICON_BOT;
     int ICON_BOT_BROOM;
     int ICON_BOT_INGAME;
+    int ICON_BOT_AWAY;
 
     int ICON_NOSTATE;
     int ICON_AWAY;
@@ -113,3 +114,21 @@ class IconImageList : public wxImageList
 IconImageList& icons();
 
 #endif // SPRINGLOBBY_HEADERGUARD_ICONIMAGELIST_H
+
+/**
+    This file is part of SpringLobby,
+    Copyright (C) 2007-09
+
+    springsettings is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License version 2 as published by
+    the Free Software Foundation.
+
+    springsettings is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SpringLobby.  If not, see <http://www.gnu.org/licenses/>.
+**/
+

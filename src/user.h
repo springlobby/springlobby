@@ -30,7 +30,7 @@ struct UserStatus
   bool moderator;
   bool bot;
   UserStatus(): in_game(false), away(false), rank(RANK_1), moderator(false), bot(false) {}
-  wxString GetDiffString ( const UserStatus& other );
+  wxString GetDiffString ( const UserStatus& other ) const;
 };
 
 struct UserPosition
@@ -43,7 +43,7 @@ struct UserPosition
 struct UserBattleStatus
 {
   // when adding something to this struct, also modify User::UpdateBattleStatus()
-  // total 16 members here
+  // total 17 members here
   int team;
   int ally;
   wxColour colour;
@@ -53,23 +53,25 @@ struct UserBattleStatus
   unsigned int sync;
   bool spectator;
   bool ready;
+  bool isfromdemo;
 	UserPosition pos; // for startpos = 4
 	// bot-only stuff
 	wxString owner;
 	wxString aishortname;
 	wxString aiversion;
+	int aitype;
   // for nat holepunching
   wxString ip;
   unsigned int udpport;
-  bool IsBot() { return !aishortname.IsEmpty(); }
-  UserBattleStatus(): team(0),ally(0),colour(wxColour(0,0,0)),color_index(-1),handicap(0),side(0),sync(SYNC_UNKNOWN),spectator(false),ready(false), udpport(0) {}
-  bool operator == ( const UserBattleStatus& s )
+  bool IsBot() const { return !aishortname.IsEmpty(); }
+  UserBattleStatus(): team(0),ally(0),colour(wxColour(0,0,0)),color_index(-1),handicap(0),side(0),sync(SYNC_UNKNOWN),spectator(false),ready(false), isfromdemo(false), aitype(-1), udpport(0) {}
+  bool operator == ( const UserBattleStatus& s ) const
   {
-    return ( ( team == s.team ) && ( colour == s.colour ) && ( handicap == s.handicap ) && ( side == s.side ) && ( sync == s.sync ) && ( spectator == s.spectator ) && ( ready == s.ready ) && ( owner == s.owner ) && ( aishortname == s.aishortname ) );
+    return ( ( team == s.team ) && ( colour == s.colour ) && ( handicap == s.handicap ) && ( side == s.side ) && ( sync == s.sync ) && ( spectator == s.spectator ) && ( ready == s.ready ) && ( owner == s.owner ) && ( aishortname == s.aishortname ) && ( isfromdemo == s.isfromdemo ) && ( aitype == s.aitype ) );
   }
-  bool operator != ( const UserBattleStatus& s )
+  bool operator != ( const UserBattleStatus& s ) const
   {
-    return ( ( team != s.team ) || ( colour != s.colour ) || ( handicap != s.handicap ) || ( side != s.side ) || ( sync != s.sync ) || ( spectator != s.spectator ) || ( ready != s.ready ) || ( owner != s.owner ) || ( aishortname != s.aishortname ) );
+    return ( ( team != s.team ) || ( colour != s.colour ) || ( handicap != s.handicap ) || ( side != s.side ) || ( sync != s.sync ) || ( spectator != s.spectator ) || ( ready != s.ready ) || ( owner != s.owner ) || ( aishortname != s.aishortname ) || ( isfromdemo != s.isfromdemo )  || ( aitype != s.aitype ) );
   }
 };
 
@@ -87,6 +89,8 @@ class CommonUser
     public:
         CommonUser(const wxString& nick, const wxString& country, const int& cpu)
            : m_nick(nick), m_country(country), m_cpu(cpu)  {};
+
+        virtual ~CommonUser(){}
 
         wxString GetNick() const { return m_nick; }
         virtual void SetNick( const wxString& nick ) { m_nick = nick; }
@@ -178,6 +182,9 @@ class User : public CommonUser
     //bool operator< ( const User& other ) const { return m_nick < other.GetNick() ; }
     //User& operator= ( const User& other );
 
+    int GetSideiconIndex() const { return m_sideicon_idx; }
+    void SetSideiconIndex( const int idx ) { m_sideicon_idx = idx; }
+
   protected:
     // User variables
 
@@ -186,6 +193,25 @@ class User : public CommonUser
     int m_flagicon_idx;
     int m_rankicon_idx;
     int m_statusicon_idx;
+    int m_sideicon_idx;
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_USER_H
+
+/**
+    This file is part of SpringLobby,
+    Copyright (C) 2007-09
+
+    springsettings is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License version 2 as published by
+    the Free Software Foundation.
+
+    springsettings is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SpringLobby.  If not, see <http://www.gnu.org/licenses/>.
+**/
+

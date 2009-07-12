@@ -6,8 +6,8 @@
 class wxCommandEvent;
 class IBattle;
 class SinglePlayerBattle;
+class OfflineBattle;
 class Battle;
-class Ui;
 class SpringProcess;
 class wxSpringProcess;
 class wxString;
@@ -16,26 +16,26 @@ class wxString;
 class Spring: public wxEvtHandler
 {
   public:
-    Spring( Ui& ui);
+    Spring();
     ~Spring();
 
-    bool IsRunning();
+    bool IsRunning() const;
     bool Run( Battle& battle );
     bool Run( SinglePlayerBattle& battle );
+    bool Run( OfflineBattle& battle );
 
     //! executes spring with replay as parameter
     /*!
      * \param filename the full path for the replayfile
      */
-    bool RunReplay ( wxString& filename );
+    bool RunReplay ( const wxString& filename );
 
-    wxString WriteScriptTxt( IBattle& battle );
+    wxString WriteScriptTxt( IBattle& battle ) const;
     void OnTerminated( wxCommandEvent& event );
 
   protected:
 		bool LaunchSpring( const wxString& params );
 
-    Ui& m_ui;
     SpringProcess* m_process;
     wxSpringProcess* m_wx_process;
     bool m_running;
@@ -43,4 +43,24 @@ class Spring: public wxEvtHandler
     DECLARE_EVENT_TABLE()
 };
 
+Spring& spring();
+
 #endif // SPRINGLOBBY_HEADERGUARD_SPRING_H
+
+/**
+    This file is part of SpringLobby,
+    Copyright (C) 2007-09
+
+    springsettings is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License version 2 as published by
+    the Free Software Foundation.
+
+    springsettings is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SpringLobby.  If not, see <http://www.gnu.org/licenses/>.
+**/
+

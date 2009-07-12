@@ -4,7 +4,7 @@
 //
 
 
-#if wxUSE_DEBUGREPORT && defined(HAVE_WX28) && defined(ENABLE_DEBUG_REPORT)
+#if wxUSE_DEBUGREPORT && defined(ENABLE_DEBUG_REPORT)
 #include "utils.h"
 #include "crashreport.h"
 #include <wx/intl.h>
@@ -47,11 +47,6 @@ void CrashReport::GenerateReport(wxDebugReport::Context ctx)
   wxSetWorkingDirectory( wxFileName::GetTempDir() );
 
   bool online = true; // TODO (BrainDamage#1#): check if being online
-
-  //! @brief forcefully disables uploading debug reports in favour to local zipped storage
-  #ifdef NO_DEBUG_REPORT_UPLOAD
-  online = false;
-  #endif
 
   wxDebugReportCompress *report = online   ? new NetDebugReport
                                            : new wxDebugReportCompress;

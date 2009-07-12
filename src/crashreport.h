@@ -5,7 +5,7 @@
 
 #include <wx/debugrpt.h>
 #include "utils.h"
-#if wxUSE_DEBUGREPORT && defined(HAVE_WX28)
+#if wxUSE_DEBUGREPORT
 
 #include <sstream>
 #include <wx/arrstr.h>
@@ -40,3 +40,21 @@ CrashReport& crashreport();
 #endif //ENABLE_DEBUG_REPORT
 
 #endif // SPRINGLOBBY_HEADERGUARD_CRASHREPORT_H_INCLUDED
+
+/**
+    This file is part of SpringLobby,
+    Copyright (C) 2007-09
+
+    springsettings is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License version 2 as published by
+    the Free Software Foundation.
+
+    springsettings is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SpringLobby.  If not, see <http://www.gnu.org/licenses/>.
+**/
+

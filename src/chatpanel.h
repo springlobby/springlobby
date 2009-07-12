@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "usermenu.h"
+#include "chatlog.h"
 #include "Helper/TextCompletionDatabase.hpp"
 
 class wxCommandEvent;
@@ -25,6 +26,7 @@ class ChatLog;
 class Server;
 class Battle;
 class Ui;
+class wxStaticText;
 
 class wxMouseEvent;
 class wxAuiNotebook;
@@ -85,31 +87,31 @@ class ChatPanel : public wxPanel
     void UserStatusUpdated( User& who );
     void OnChannelJoin( User& who );
 
-    Channel* GetChannel();
+    const Channel* GetChannel() const;
     void SetChannel( Channel* chan );
 
-    Server* GetServer();
+    const Server* GetServer()  const;
     void SetServer( Server* serv );
 
     const User* GetUser() const ;
     void SetUser( const User* usr );
 
-    bool IsServerPanel();
-    int GetPanelType();
+    bool IsServerPanel() const;
+    int GetPanelType() const;
 
     void Say( const wxString& message );
     void Part();
     void FocusInputBox();
 
-    wxString GetChatTypeStr();
+    wxString GetChatTypeStr()  const;
 
-    size_t GetIconIndex() { return m_icon_index; }
+    size_t GetIconIndex()  const { return m_icon_index; }
     void SetIconIndex( size_t index ) { m_icon_index = index; }
 
-    User& GetMe();
-    const User* GetSelectedUser();
+    const User& GetMe()  const;
+    const User* GetSelectedUser() const;
 
-    bool IsOk();
+    bool IsOk() const;
 
     void OnUserDisconnected();
     void OnUserConnected();
@@ -117,8 +119,6 @@ class ChatPanel : public wxPanel
     void OnChanOpts( wxCommandEvent& event );
     void OnSay( wxCommandEvent& event );
     void OnPaste( wxClipboardTextEvent& event );
-
-    void OnResize( wxSizeEvent& event );
 
     void OnLinkEvent( wxTextUrlEvent& event );
     void OnMouseDown( wxMouseEvent& event );
@@ -169,6 +169,8 @@ class ChatPanel : public wxPanel
     void OnUserMenuModeratorUnmute( wxCommandEvent& event );
     void OnUserMenuModeratorRing( wxCommandEvent& event );
 
+    void OnUserMenuCopyLink( wxCommandEvent& event );
+
     void OnKeyPressed( wxKeyEvent& keyevent );
     void OnKeyReleased( wxKeyEvent& keyevent );
 
@@ -179,14 +181,17 @@ class ChatPanel : public wxPanel
 
     void SortNickList();
 
+    void ClearContents( wxCommandEvent& event );
+
   protected:
 
     void _SetChannel( Channel* channel );
     void OutputLine( const wxString& message, const wxColour& col, const wxFont& fon );
     void OutputLine( const ChatLine& line );
     void SetIconHighlight( HighlightType highlight );
+    wxString FindUrl( const long pos ) const ;
 
-    bool ContainsWordToHighlight( const wxString& message );
+    bool ContainsWordToHighlight( const wxString& message ) const;
 
     bool m_show_nick_list;      //!< If the nicklist should be shown or not.
 
@@ -214,6 +219,8 @@ class ChatPanel : public wxPanel
     const User* m_user;               //!< User object.
     Battle* m_battle;           //!< User object.
 
+    wxStaticText* m_usercount_label;
+
     int m_type;       //!< Channel object.
 
     wxString m_chan_pass;
@@ -221,7 +228,7 @@ class ChatPanel : public wxPanel
     wxMenu* m_popup_menu;
     wxMenuItem* m_autorejoin;
     wxMenuItem* m_append_menu;
-    ChatLog* m_chat_log;
+    ChatLog m_chat_log;
     wxMenuItem* displayjoinitem;
     typedef SL_GENERIC::UserMenu<ChatPanel> UserMenu;
     UserMenu* m_usermenu;
@@ -242,6 +249,8 @@ class ChatPanel : public wxPanel
 
     std::vector<ChatLine> m_buffer;
     bool m_disable_append;
+
+    wxString m_url_at_pos; //! the mouse event sink sets this
 
     DECLARE_EVENT_TABLE();
 };
@@ -300,8 +309,28 @@ enum
     CHAT_MENU_US_MODERATOR_UNMUTE,
     CHAT_MENU_US_MODERATOR_RING,
 
+    CHAT_MENU_COPYLINK,
+
     CHAT_MENU_SHOW_MUTELIST
 };
 
 
 #endif // SPRINGLOBBY_HEADERGUARD_CHATPANEL_H
+
+/**
+    This file is part of SpringLobby,
+    Copyright (C) 2007-09
+
+    springsettings is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License version 2 as published by
+    the Free Software Foundation.
+
+    springsettings is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SpringLobby.  If not, see <http://www.gnu.org/licenses/>.
+**/
+

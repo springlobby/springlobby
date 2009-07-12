@@ -24,6 +24,7 @@
 #include <wx/colordlg.h>
 #include <wx/fontdlg.h>
 #include <wx/checkbox.h>
+#include <wx/tokenzr.h>
 
 #ifdef __WXMSW__
 #include <wx/msw/registry.h>
@@ -33,7 +34,7 @@
 #include "chatoptionstab.h"
 #include "ui.h"
 #include "iunitsync.h"
-#include "utils.h"
+#include "utils/controls.h"
 #include "uiutils.h"
 #include "settings.h"
 #include "spring.h"
@@ -285,19 +286,17 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( p
   wxStaticBoxSizer* sbBehaviorSizer;
   sbBehaviorSizer = new wxStaticBoxSizer( new wxStaticBox( this, -1, _("Behavior") ), wxHORIZONTAL );
 
-  m_smart_scroll = new wxCheckBox( this, ID_SYSCOLS, _("Use smart scrolling"), wxDefaultPosition, wxDefaultSize, 0 );
-  m_smart_scroll->SetValue( sett().GetSmartScrollEnabled() );
+  m_irc_colors = new wxCheckBox( this, wxID_ANY, _("Enable Irc colors in chat messages"), wxDefaultPosition, wxDefaultSize, 0 );
+  m_irc_colors->SetValue( sett().GetUseIrcColors() );
 
-  sbBehaviorSizer->Add( m_smart_scroll, 0, wxALL, 5 );
+  sbBehaviorSizer->Add( m_irc_colors, 0, wxALL, 5 );
 #ifndef DISABLE_SOUND
   m_play_sounds = new wxCheckBox( this, ID_PLAY_SOUNDS, _("Play notification sounds"), wxDefaultPosition, wxDefaultSize, 0 );
   m_play_sounds->SetValue( sett().GetChatPMSoundNotificationEnabled() );
   sbBehaviorSizer->Add( m_play_sounds, 0, wxALL, 5 );
 #endif
 
-
   bMainSizerV->Add( sbBehaviorSizer, 0, wxEXPAND|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
-
 
   wxBoxSizer* bBotomSizer;
   bBotomSizer = new wxBoxSizer( wxHORIZONTAL );
@@ -359,53 +358,53 @@ ChatOptionsTab::~ChatOptionsTab()
 
 void ChatOptionsTab::UpdateTextSample()
 {
+	m_test_text->Clear();
   m_test_text->SetFont( m_chat_font );
-  m_test_text->SetBackgroundColour( m_bg_color->GetBackgroundColour() );
-  m_test_text->Clear();
+  m_test_text->SetBackgroundColour( m_bg_color->GetColor() );
 
-  m_test_text->SetDefaultStyle(wxTextAttr( m_ts_color->GetColor(), m_bg_color->GetBackgroundColour(), m_chat_font ));
+  m_test_text->SetDefaultStyle(wxTextAttr( m_ts_color->GetColor(), m_bg_color->GetColor(), m_chat_font ));
   m_test_text->AppendText( _T("[19:35]") );
-  m_test_text->SetDefaultStyle(wxTextAttr( m_server_color->GetColor(), m_bg_color->GetBackgroundColour(), m_chat_font ));
+  m_test_text->SetDefaultStyle(wxTextAttr( m_server_color->GetColor(), m_bg_color->GetColor(), m_chat_font ));
   m_test_text->AppendText( _T(" ** Server ** Connected to Server.\n") );
 
-  m_test_text->SetDefaultStyle(wxTextAttr( m_ts_color->GetColor(), m_bg_color->GetBackgroundColour(), m_chat_font ));
+  m_test_text->SetDefaultStyle(wxTextAttr( m_ts_color->GetColor(), m_bg_color->GetColor(), m_chat_font ));
   m_test_text->AppendText( _T("[22:30]") );
-  m_test_text->SetDefaultStyle(wxTextAttr( m_normal_color->GetColor(), m_bg_color->GetBackgroundColour(), m_chat_font ));
+  m_test_text->SetDefaultStyle(wxTextAttr( m_normal_color->GetColor(), m_bg_color->GetColor(), m_chat_font ));
   m_test_text->AppendText( _T(" <Dude> hi everyone\n") );
 
-  m_test_text->SetDefaultStyle(wxTextAttr( m_ts_color->GetColor(), m_bg_color->GetBackgroundColour(), m_chat_font ));
+  m_test_text->SetDefaultStyle(wxTextAttr( m_ts_color->GetColor(), m_bg_color->GetColor(), m_chat_font ));
   m_test_text->AppendText( _T("[22:30]") );
-  m_test_text->SetDefaultStyle(wxTextAttr( m_joinleave_color->GetColor(), m_bg_color->GetBackgroundColour(), m_chat_font ));
+  m_test_text->SetDefaultStyle(wxTextAttr( m_joinleave_color->GetColor(), m_bg_color->GetColor(), m_chat_font ));
   m_test_text->AppendText( _T(" ** Dude2 joined the channel.\n") );
 
-  m_test_text->SetDefaultStyle(wxTextAttr( m_ts_color->GetColor(), m_bg_color->GetBackgroundColour(), m_chat_font ));
+  m_test_text->SetDefaultStyle(wxTextAttr( m_ts_color->GetColor(), m_bg_color->GetColor(), m_chat_font ));
   m_test_text->AppendText( _T("[22:31]") );
-  m_test_text->SetDefaultStyle(wxTextAttr( m_action_color->GetColor(), m_bg_color->GetBackgroundColour(), m_chat_font ));
+  m_test_text->SetDefaultStyle(wxTextAttr( m_action_color->GetColor(), m_bg_color->GetColor(), m_chat_font ));
   m_test_text->AppendText( _T(" * Dude2 thinks his colors looks nice\n") );
 
-  m_test_text->SetDefaultStyle(wxTextAttr( m_ts_color->GetColor(), m_bg_color->GetBackgroundColour(), m_chat_font ));
+  m_test_text->SetDefaultStyle(wxTextAttr( m_ts_color->GetColor(), m_bg_color->GetColor(), m_chat_font ));
   m_test_text->AppendText( _T("[22:33]") );
-  m_test_text->SetDefaultStyle(wxTextAttr( m_note_color->GetColor(), m_bg_color->GetBackgroundColour(), m_chat_font ));
+  m_test_text->SetDefaultStyle(wxTextAttr( m_note_color->GetColor(), m_bg_color->GetColor(), m_chat_font ));
   m_test_text->AppendText( _T("<Dude> Dude2: orl?\n") );
 
-  m_test_text->SetDefaultStyle(wxTextAttr( m_ts_color->GetColor(), m_bg_color->GetBackgroundColour(), m_chat_font ));
+  m_test_text->SetDefaultStyle(wxTextAttr( m_ts_color->GetColor(), m_bg_color->GetColor(), m_chat_font ));
   m_test_text->AppendText( _T("[22:33]") );
-  m_test_text->SetDefaultStyle(wxTextAttr( m_my_color->GetColor(), m_bg_color->GetBackgroundColour(), m_chat_font ));
+  m_test_text->SetDefaultStyle(wxTextAttr( m_my_color->GetColor(), m_bg_color->GetColor(), m_chat_font ));
   m_test_text->AppendText( _T(" <Dude2> Yeah, but could be better, should tweak them some more...\n") );
 
-  m_test_text->SetDefaultStyle(wxTextAttr( m_ts_color->GetColor(), m_bg_color->GetBackgroundColour(), m_chat_font ));
+  m_test_text->SetDefaultStyle(wxTextAttr( m_ts_color->GetColor(), m_bg_color->GetColor(), m_chat_font ));
   m_test_text->AppendText( _T("[22:33]") );
-  m_test_text->SetDefaultStyle(wxTextAttr( m_highlight_color->GetColor(), m_bg_color->GetBackgroundColour(), m_chat_font ));
+  m_test_text->SetDefaultStyle(wxTextAttr( m_highlight_color->GetColor(), m_bg_color->GetColor(), m_chat_font ));
   m_test_text->AppendText( _T(" <Dude> bla bla bla Highlighted word bla bla.\n") );
 
-  m_test_text->SetDefaultStyle(wxTextAttr( m_ts_color->GetColor(), m_bg_color->GetBackgroundColour(), m_chat_font ));
+  m_test_text->SetDefaultStyle(wxTextAttr( m_ts_color->GetColor(), m_bg_color->GetColor(), m_chat_font ));
   m_test_text->AppendText( _T("[22:33]") );
-  m_test_text->SetDefaultStyle(wxTextAttr( m_error_color->GetColor(), m_bg_color->GetBackgroundColour(), m_chat_font ));
+  m_test_text->SetDefaultStyle(wxTextAttr( m_error_color->GetColor(), m_bg_color->GetColor(), m_chat_font ));
   m_test_text->AppendText( _T(" !! Error error.\n") );
 
-  m_test_text->SetDefaultStyle(wxTextAttr( m_ts_color->GetColor(), m_bg_color->GetBackgroundColour(), m_chat_font ));
+  m_test_text->SetDefaultStyle(wxTextAttr( m_ts_color->GetColor(), m_bg_color->GetColor(), m_chat_font ));
   m_test_text->AppendText( _T("[22:33]") );
-  m_test_text->SetDefaultStyle(wxTextAttr( m_client_color->GetColor(), m_bg_color->GetBackgroundColour(), m_chat_font ));
+  m_test_text->SetDefaultStyle(wxTextAttr( m_client_color->GetColor(), m_bg_color->GetColor(), m_chat_font ));
   m_test_text->AppendText( _T(" ** Client message.") );
 
 }
@@ -427,8 +426,11 @@ void ChatOptionsTab::DoRestore()
   m_chat_font = sett().GetChatFont();
   m_fontname->SetLabel( m_chat_font.GetFaceName() );
   m_save_logs->SetValue(  sett().GetChatLogEnable() );
-  m_smart_scroll->SetValue(sett().GetSmartScrollEnabled());
-  m_highlight_words->SetValue( sett().GetHighlightedWords() );
+  m_irc_colors->SetValue( sett().GetUseIrcColors() );
+  wxString highlightstring;
+  wxArrayString highlights = sett().GetHighlightedWords();
+  for ( unsigned int i = 0; i < highlights.GetCount(); i++) highlightstring << highlights[i] <<_T(";");
+  m_highlight_words->SetValue( highlightstring );
   m_highlight_req->SetValue( sett().GetRequestAttOnHighlight() );
   #ifndef DISABLE_SOUND
     m_play_sounds->SetValue( sett().GetChatPMSoundNotificationEnabled() );
@@ -449,16 +451,16 @@ void ChatOptionsTab::OnApply( wxCommandEvent& event )
   sett().SetChatColorError( m_error_color->GetColor() );
   sett().SetChatColorTime( m_ts_color->GetColor() );
   sett().SetChatFont( m_chat_font );
+  sett().SetUseIrcColors( m_irc_colors->IsChecked() );
   //m_ui.mw().GetChatTab().ChangeUnreadChannelColour( m_note_color->GetBackgroundColour() );
   //m_ui.mw().GetChatTab().ChangeUnreadPMColour( m_note_color->GetBackgroundColour() );
-  sett().SetHighlightedWords( m_highlight_words->GetValue() );
+  sett().SetHighlightedWords( wxStringTokenize( m_highlight_words->GetValue(), _T(";") ) );
   sett().SetRequestAttOnHighlight( m_highlight_req->IsChecked() );
 
   //Chat Log
   sett().SetChatLogEnable( m_save_logs->GetValue());
 
   // Behavior
-  sett().SetSmartScrollEnabled(m_smart_scroll->GetValue());
   #ifndef DISABLE_SOUND
     sett().SetChatPMSoundNotificationEnabled( m_play_sounds->IsChecked() );
   #endif

@@ -1,10 +1,11 @@
 /* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
 #include "flagimages.h"
 #include "flagimagedata.h"
-#include "utils.h"
 
 #include <wx/imaglist.h>
 #include <wx/log.h>
+
+#include "utils/conversion.h"
 
 int GetFlagIndex( const wxString& flag )
 {
@@ -12,7 +13,7 @@ int GetFlagIndex( const wxString& flag )
     return FLAG_NONE;
 
   for (int i = 0; flag_str[i]; ++i) {
-    if ( flag == WX_STRINGC(flag_str[i]) ) {
+    if ( flag == TowxString(flag_str[i]) ) {
       return i;
     }
   }

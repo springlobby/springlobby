@@ -15,7 +15,9 @@
 #include "mmoptionswrapper.h"
 #include "ui.h"
 #include "battle.h"
-#include "utils.h"
+#include "utils/controls.h"
+#include "utils/math.h"
+#include "utils/conversion.h"
 #include "spinctld.h"
 
 BEGIN_EVENT_TABLE(SingleOptionDialog,wxDialog)
@@ -48,7 +50,7 @@ m_textctrl(0)
 	{
 		case opt_bool:
 		{
-			mmOptionBool opt = optWrap.opts[optFlag].bool_map[key];
+			mmOptionBool opt = optWrap.m_opts[optFlag].bool_map[key];
 			m_checkbox = new wxCheckBox(this, wxID_ANY, opt.name );
 			m_checkbox->SetToolTip(TE(opt.description));
 			m_checkbox->SetValue(opt.value);
@@ -57,7 +59,7 @@ m_textctrl(0)
 		}
 		case opt_float:
 		{
-			mmOptionFloat opt = optWrap.opts[optFlag].float_map[key];
+			mmOptionFloat opt = optWrap.m_opts[optFlag].float_map[key];
 			m_spinctrl = new wxSpinCtrlDbl();
 			m_spinctrl->Create(this, wxID_ANY, _T(""), wxDefaultPosition, wxDefaultSize, 0, double(opt.min), double(opt.max), double(opt.value),double(opt.stepping), wxSPINCTRLDBL_AUTODIGITS, opt.key);
 			m_spinctrl->SetToolTip(TE(opt.description));
@@ -66,7 +68,7 @@ m_textctrl(0)
 		}
 		case opt_string:
 		{
-			mmOptionString opt = optWrap.opts[optFlag].string_map[key];
+			mmOptionString opt = optWrap.m_opts[optFlag].string_map[key];
             m_textctrl = new wxTextCtrl(this, wxID_ANY, opt.value, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, opt.key);
 			m_textctrl->SetToolTip(TE(opt.description));
 			m_main_sizer->Add( m_textctrl, 0, wxEXPAND );
@@ -74,9 +76,9 @@ m_textctrl(0)
 		}
 		case opt_list:
 		{
-			mmOptionList opt = optWrap.opts[optFlag].list_map[key];
+			mmOptionList opt = optWrap.m_opts[optFlag].list_map[key];
 			int temp = int(opt.cbx_choices.GetCount()-1);
-			int index = CLAMP(opt.cur_choice_index,0,temp);
+			int index = clamp(opt.cur_choice_index,0,temp);
 			m_combobox = new wxComboBox(this, wxID_ANY, opt.cbx_choices[index], wxDefaultPosition, wxDefaultSize, opt.cbx_choices, wxCB_READONLY, wxDefaultValidator);
 			wxString tooltip = opt.description + _T("\n");
 			for ( ListItemVec::iterator itor = opt.listitems.begin(); itor != opt.listitems.end(); itor++ )

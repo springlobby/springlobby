@@ -1,5 +1,12 @@
 /* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
 
+#ifdef _MSC_VER
+#ifndef NOMINMAX
+    #define NOMINMAX
+#endif // NOMINMAX
+#include <winsock2.h>
+#endif // _MSC_VER
+
 #include <wx/socket.h>
 #include <wx/thread.h>
 #include <wx/string.h>
@@ -9,11 +16,13 @@
 
 #include "socket.h"
 #include "server.h"
-#include "utils.h"
+#include "utils/debug.h"
+#include "utils/conversion.h"
 
 #ifdef __WXMSW__
 #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
 #include <windows.h>
+#include <wx/msw/winundef.h>
 #include <iphlpapi.h>
 #pragma comment(lib, "iphlpapi.lib")
 #else
@@ -77,9 +86,10 @@ Socket::Socket( iNetClass& netclass, bool blocking ):
 //! @brief Destructor
 Socket::~Socket()
 {
-  Disconnect();
+  _EnablePingThread( false );
+
   LOCK_SOCKET;
-  if ( m_sock != 0 ) m_sock->Destroy();
+	if ( m_sock ) m_sock->Destroy();
   delete m_events;
 }
 
@@ -115,6 +125,7 @@ void Socket::Connect( const wxString& addr, const int port )
 
   wxIPV4address wxaddr;
   m_connecting = true;
+  m_buffer = "";
 
   wxaddr.Hostname( addr );
   wxaddr.Service( port );
@@ -138,8 +149,10 @@ void Socket::Disconnect( )
   if ( m_sock ) m_sock->SetTimeout( 0 );
   m_net_class.OnDisconnected( this );
   _EnablePingThread( false );
+  m_buffer = "";
 
-  if ( m_sock ) {
+  if ( m_sock )
+  {
     m_sock->Destroy();
     m_sock = 0;
   }
@@ -185,45 +198,45 @@ bool Socket::_Send( const wxString& data )
 
 
 //! @brief Receive data from connection
-bool Socket::Receive( wxString& data )
+wxString Socket::Receive()
 {
-  if ( m_sock == 0 ) {
+	wxString ret;
+  if ( m_sock == 0 )
+  {
     wxLogError( _T("Socket NULL") );
-    return false;
+    return ret;
   }
 
   LOCK_SOCKET;
 
-  const int buff_size = 1337;
+  const int chunk_size = 1337;
 
-  char buff[buff_size+2] = { 0 };
-  int readnum;
+  std::vector<char> buff;
+  int readnum = 0;
+  int totalbytes = 0;
 
-  buff[buff_size+1] = '\0';
-
-  do {
-    m_sock->Read( &buff[0], buff_size );
+  do
+  {
+  	buff.resize( totalbytes + chunk_size ); // increase buffer capacity to fit incoming chunk
+    m_sock->Read( &buff[totalbytes], chunk_size );
     readnum = m_sock->LastCount();
-    buff[readnum] = '\0';
+    totalbytes += readnum;
+  } while ( readnum >= chunk_size );
 
-    if ( readnum > 0 ) {
-      wxString d = wxString( &buff[0], wxConvUTF8 );
-      if ( d.IsEmpty() )
-      {
-        d = wxString( &buff[0], wxConvLocal );
-        if ( d.IsEmpty() ) d = wxString( &buff[0], wxCSConv(_T("latin-1")) );
-      }
-      m_rcv_buffer << d;
-    }
-  } while ( readnum >= buff_size );
+	if ( totalbytes > 0 )
+	{
+		ret = wxString( &buff[0], wxConvUTF8, totalbytes );
+		if ( ret.IsEmpty() )
+		{
+			ret = wxString( &buff[0], wxConvLocal, totalbytes );
+			if ( ret.IsEmpty() )
+			{
+				 ret = wxString( &buff[0], wxCSConv(_T("latin-1")), totalbytes );
+			}
+		}
+	}
 
-  if ( m_rcv_buffer.Contains(_T("\n")) ) {
-    data = m_rcv_buffer.BeforeFirst('\n');
-    m_rcv_buffer = m_rcv_buffer.AfterFirst('\n');
-    return true;
-  } else {
-    return false;
-  }
+	return ret;
 }
 
 wxString Socket::GetHandle()
@@ -309,18 +322,21 @@ SockState Socket::State( )
 
 //! @brief Get socket error code
 //! @todo Implement
-SockError Socket::Error( )
+SockError Socket::Error( ) const
 {
   return (SockError)-1;
 }
 
 
 //! @brief used to retrieve local ip address behind NAT to communicate to the server on login
-wxString Socket::GetLocalAddress()
+wxString Socket::GetLocalAddress() const
 {
-  if ( m_sock || !m_sock->IsConnected() ) return wxEmptyString;
+  if ( !m_sock || !m_sock->IsConnected() )
+    return wxEmptyString;
+
   wxIPV4address localaddr;
   m_sock->GetLocal( localaddr );
+
   return localaddr.IPAddress();
 }
 
@@ -363,7 +379,7 @@ void Socket::_EnablePingThread( bool enable )
 
 //! @brief Check if we should enable or dsable the ping htread.
 //! @see Socket::_EnablePingThread
-bool Socket::_ShouldEnablePingThread()
+bool Socket::_ShouldEnablePingThread() const
 {
   return ( (m_ping_msg != wxEmptyString) );
 }

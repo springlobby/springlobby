@@ -1,3 +1,11 @@
+
+#ifdef _MSC_VER
+#ifndef NOMINMAX
+    #define NOMINMAX
+#endif // NOMINMAX
+#include <winsock2.h>
+#endif // _MSC_VER
+
 #include "maintorrenttab.h"
 
 #ifndef NO_TORRENT_SYSTEM
@@ -11,9 +19,10 @@
 #include "torrentlistctrl.h"
 #include "torrentwrapper.h"
 #include "ui.h"
-#include "utils.h"
+#include "utils/conversion.h"
 #include "Helper/colorbutton.h"
 #include "filelister/filelistdialog.h"
+#include "widgets/downloaddialog.h"
 #include "aui/auimanager.h"
 
 BEGIN_EVENT_TABLE(MainTorrentTab,wxPanel)
@@ -21,10 +30,13 @@ BEGIN_EVENT_TABLE(MainTorrentTab,wxPanel)
 	//*)
   EVT_BUTTON      ( ID_BUTTON_CANCEL, MainTorrentTab::OnCancelButton )
   EVT_BUTTON      ( ID_DOWNLOAD_DIALOG, MainTorrentTab::OnDownloadDialog )
+  EVT_BUTTON      ( ID_BUTTON_WIDGETS, MainTorrentTab::OnDLWidgets )
 END_EVENT_TABLE()
 
 MainTorrentTab::MainTorrentTab(wxWindow* parent, Ui& ui)
-    : wxScrolledWindow(parent), m_ui(ui)
+    : wxScrolledWindow(parent),
+    m_widgets_dialog(NULL),
+    m_ui(ui)
 {
     GetAui().manager->AddPane( this, wxLEFT, _T("maintorrenttab") );
 
@@ -64,7 +76,8 @@ MainTorrentTab::MainTorrentTab(wxWindow* parent, Ui& ui)
 	m_buttonbox->Add( m_but_publish, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_BOTTOM, 5);
 	m_but_download = new wxButton(this, ID_DOWNLOAD_DIALOG, _("Search file") );
 	m_buttonbox->Add( m_but_download, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_BOTTOM, 5);
-
+	m_but_widgets = new wxButton(this, ID_BUTTON_WIDGETS, _("Download Lua widgets") );
+    m_buttonbox->Add( m_but_widgets, 1, wxALL|wxALIGN_RIGHT|wxALIGN_BOTTOM, 5);
 
 	m_mainbox->Add(m_buttonbox, 0, wxALL, 5);
 
@@ -93,11 +106,22 @@ MainTorrentTab::~MainTorrentTab()
     }
 }
 
+void MainTorrentTab::OnDLWidgets( wxCommandEvent& event )
+{
+    if ( m_widgets_dialog && m_widgets_dialog->IsShown() ) {
+        m_widgets_dialog->SetFocus();
+    }
+    else {
+        m_widgets_dialog = new WidgetDownloadDialog( this, wxID_ANY, _("Lua widget downloader") );
+        m_widgets_dialog->Show( true );
+    }
+}
+
 void MainTorrentTab::UpdateInfo(  TorrentInfos& info )
 {
  int index = -1;
   for (int i = 0; i < m_torrent_list->GetItemCount() ; i++ ) {
-    if ( info.hash == i2s((int)m_torrent_list->GetItemData( i ) ) ) {
+    if ( info.hash == TowxString((int)m_torrent_list->GetItemData( i ) ) ) {
       index = i;
       break;
     }
@@ -126,16 +150,16 @@ void MainTorrentTab::SetInfo(int index,  TorrentInfos& info )
 
  // m_torrent_list->SetItemImage( index, icons().GetBattleStatusIcon( battle ) );
   m_torrent_list->SetItem( index, 0, info.name );
-  m_torrent_list->SetItem( index, 1, info.numcopies > 0 ? f2s( info.numcopies ) : wxString(_("not available")));
-  m_torrent_list->SetItem( index, 2, f2s( info.downloaded*mfactor ) );
-  m_torrent_list->SetItem( index, 3, f2s( info.uploaded*mfactor ) );
+  m_torrent_list->SetItem( index, 1, info.numcopies > 0 ? TowxString( info.numcopies ) : wxString(_("not available")));
+  m_torrent_list->SetItem( index, 2, TowxString( info.downloaded*mfactor ) );
+  m_torrent_list->SetItem( index, 3, TowxString( info.uploaded*mfactor ) );
   if ( info.downloadstatus  == P2P::seeding ) m_torrent_list->SetItem( index, 4, _("seeding") );
   else if ( info.downloadstatus  == P2P::leeching ) m_torrent_list->SetItem( index, 4, _("leeching") );
   else if ( info.downloadstatus  == P2P::queued ) m_torrent_list->SetItem( index, 4, _("queued") );
-  m_torrent_list->SetItem( index, 5, f2s( info.progress * 100 ) );
-  m_torrent_list->SetItem( index, 6, f2s( info.outspeed*kfactor ) );
-  m_torrent_list->SetItem( index, 7, f2s( info.inspeed*kfactor ) );
-  m_torrent_list->SetItem( index, 8, (eta_seconds > -1 ? i2s(eta_seconds) : _T("inf.") ) + _T(" s") );
+  m_torrent_list->SetItem( index, 5, TowxString( info.progress * 100 ) );
+  m_torrent_list->SetItem( index, 6, TowxString( info.outspeed*kfactor ) );
+  m_torrent_list->SetItem( index, 7, TowxString( info.inspeed*kfactor ) );
+  m_torrent_list->SetItem( index, 8, (eta_seconds > -1 ? TowxString(eta_seconds) : _T("inf.") ) + _T(" s") );
   m_torrent_list->SetItem( index, 9, wxString::Format(_T("%.3f"),info.filesize*mfactor) );
 
   m_torrent_list->Sort();
@@ -146,7 +170,7 @@ void MainTorrentTab::AddTorrentInfo(  TorrentInfos& info )
   int index = m_torrent_list->InsertItem( m_torrent_list->GetItemCount(), info.name );
 
 //  ASSERT_LOGIC( index != -1, _T("index = -1") );
-  m_torrent_list->SetItemData(index, s2l(info.hash) );
+  m_torrent_list->SetItemData(index, FromwxString<long>(info.hash) );
 
 
   //ASSERT_LOGIC( index != -1, _T("index = -1") );

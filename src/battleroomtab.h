@@ -76,6 +76,18 @@ class BattleRoomTab : public wxScrolledWindow
 		void OnMapSelect( wxCommandEvent& event );
 		void OnOptionActivate( wxListEvent& event );
 
+		void OnSpectUnsynced( wxCommandEvent& event );
+		void OnSpectUnready( wxCommandEvent& event );
+		void OnSpectUnreadyUnsynced( wxCommandEvent& event );
+
+		void OnRingUnready( wxCommandEvent& event );
+		void OnRingUnsynced( wxCommandEvent& event );
+		void OnRingUnreadyUnsynced( wxCommandEvent& event );
+
+		void OnAutoControl( wxCommandEvent& event );
+		void OnAutoStart( wxCommandEvent& event );
+		void OnAutoSpec( wxCommandEvent& event );
+
     void OnUserJoined( User& user );
     void OnUserLeft( User& user );
 
@@ -92,6 +104,8 @@ class BattleRoomTab : public wxScrolledWindow
   protected:
 
     long AddMMOptionsToList( long pos, OptionsWrapper::GameOption optFlag );
+
+    void SplitSizerHorizontally( const bool horizontal );
 
     Ui& m_ui;
     Battle& m_battle;
@@ -125,7 +139,7 @@ class BattleRoomTab : public wxScrolledWindow
 
     MapCtrl * m_minimap;
 
-    wxPanel* m_player_panel;
+    wxScrolledWindow* m_player_panel;
 
 		wxComboBox* m_map_combo;
 
@@ -146,16 +160,17 @@ class BattleRoomTab : public wxScrolledWindow
 
     wxMenu* m_manage_users_mnu;
     wxMenuItem* m_lock_balance_mnu;
+    wxMenuItem* m_autohost_mnu;
+    wxMenuItem* m_autostart_mnu;
+    wxMenuItem* m_autospec_mnu;
+    wxMenuItem* m_autocontrol_mnu;
 
     wxCheckBox* m_ready_chk;
     wxCheckBox* m_spec_chk;
+    wxCheckBox* m_lock_chk;
     #if wxUSE_TOGGLEBTN
-    wxToggleButton* m_lock_chk;
-    wxToggleButton* m_autohost_chk;
     wxToggleButton* m_autolock_chk;
     #else
-    wxCheckBox* m_lock_chk;
-    wxCheckBox* m_autohost_chk;
     wxCheckBox* m_autolock_chk;
     #endif
 
@@ -185,10 +200,37 @@ class BattleRoomTab : public wxScrolledWindow
 				BROOM_SETDEFAULTPRES,
 				BROOM_MAP_BROWSE,
 				BROOM_MAP_SEL,
-				BROOM_OPTIONLIST
+				BROOM_OPTIONLIST,
+				BROOM_RING_UNREADY,
+				BROOM_RING_UNSYNC,
+				BROOM_RING_UNREADY_UNSYNC,
+				BROOM_SPECT_UNREADY,
+				BROOM_SPECT_UNSYNC,
+				BROOM_SPECT_UNREADY_UNSYNC,
+				BROOM_AUTOSPECT,
+				BROOM_AUTOSTART,
+				BROOM_AUTOCONTROL
     };
 
     DECLARE_EVENT_TABLE();
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_BATTLEROOMTAB_H
+
+/**
+    This file is part of SpringLobby,
+    Copyright (C) 2007-09
+
+    springsettings is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License version 2 as published by
+    the Free Software Foundation.
+
+    springsettings is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SpringLobby.  If not, see <http://www.gnu.org/licenses/>.
+**/
+

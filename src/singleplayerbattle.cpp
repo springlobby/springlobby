@@ -6,16 +6,15 @@
 #include "singleplayerbattle.h"
 #include "mainsingleplayertab.h"
 #include "server.h"
-#include "utils.h"
-#include "uiutils.h"
 #include "ui.h"
 #include "settings.h"
+#include "spring.h"
 
 
 SinglePlayerBattle::SinglePlayerBattle(Ui& ui, MainSinglePlayerTab& msptab):
   m_ui(ui),
   m_sptab(msptab),
-  m_me( User( _("Player") ) )
+  m_me( User( usync().IsLoaded() ? usync().GetDefaultNick() : _T("invalid") ) )
 {
 	OnUserAdded( m_me );
 	m_me.BattleStatus().colour = sett().GetBattleLastColour();
@@ -71,3 +70,8 @@ void SinglePlayerBattle::Update( const wxString& Tag )
   m_sptab.Update( Tag );
 }
 
+void SinglePlayerBattle::StartSpring()
+{
+	spring().Run( *this );
+	ui().OnSpringStarting();
+}

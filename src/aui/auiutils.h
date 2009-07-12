@@ -15,7 +15,7 @@
 
 
 
-double wxAuiBlendColour(double fg, double bg, double alpha)
+static double wxAuiBlendColour(double fg, double bg, double alpha)
 {
     double result = bg + (alpha * (fg - bg));
     if (result < 0.0)
@@ -29,7 +29,7 @@ double wxAuiBlendColour(double fg, double bg, double alpha)
 // or lightens a color, based on the specified percentage
 // ialpha of 0 would be completely black, 100 completely white
 // an ialpha of 100 returns the same colour
-wxColor wxAuiStepColour(const wxColor& c, int ialpha)
+static wxColor wxAuiStepColour(const wxColor& c, int ialpha)
 {
     if (ialpha == 100)
         return c;
@@ -65,7 +65,7 @@ wxColor wxAuiStepColour(const wxColor& c, int ialpha)
 }
 
 
-wxColor wxAuiLightContrastColour(const wxColour& c)
+static wxColor wxAuiLightContrastColour(const wxColour& c)
 {
     int amount = 120;
 
@@ -79,7 +79,7 @@ wxColor wxAuiLightContrastColour(const wxColour& c)
 
 // wxAuiBitmapFromBits() is a utility function that creates a
 // masked bitmap from raw bits (XBM format)
-wxBitmap wxAuiBitmapFromBits(const unsigned char bits[], int w, int h,
+static wxBitmap wxAuiBitmapFromBits(const unsigned char bits[], int w, int h,
                              const wxColour& color)
 {
     wxImage img = wxBitmap((const char*)bits, w, h).ConvertToImage();
@@ -123,7 +123,7 @@ static unsigned char list_bits[] = {
    0x0f, 0xf8, 0xff, 0xff, 0x0f, 0xf8, 0x1f, 0xfc, 0x3f, 0xfe, 0x7f, 0xff,
    0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
 
-wxString wxAuiChopText(wxDC& dc, const wxString& text, int max_size)
+static wxString wxAuiChopText(wxDC& dc, const wxString& text, int max_size)
 {
     wxCoord x,y;
 
@@ -237,3 +237,21 @@ private:
 };
 
 #endif // AUIUITLS_H_INCLUDED
+
+/**
+    This file is part of SpringLobby,
+    Copyright (C) 2007-09
+
+    springsettings is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License version 2 as published by
+    the Free Software Foundation.
+
+    springsettings is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SpringLobby.  If not, see <http://www.gnu.org/licenses/>.
+**/
+

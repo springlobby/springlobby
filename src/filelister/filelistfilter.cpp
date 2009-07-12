@@ -3,6 +3,13 @@
 
 #ifndef NO_TORRENT_SYSTEM
 
+#ifdef _MSC_VER
+#ifndef NOMINMAX
+    #define NOMINMAX
+#endif // NOMINMAX
+#include <winsock2.h>
+#endif // _MSC_VER
+
 #include <wx/stattext.h>
 #include <wx/sizer.h>
 #include <wx/textctrl.h>
@@ -17,7 +24,7 @@
 #include "filelistctrl.h"
 #include "filelistdialog.h"
 #include "../uiutils.h"
-#include "../utils.h"
+//#include "../utils.h"
 #include "../torrentwrapper.h"
 
 ///////////////////////////////////////////////////////////////////////////
@@ -49,7 +56,7 @@ FileListFilter::FileListFilter( wxWindow* parent, wxWindowID id, FileListDialog*
 
 	m_filter_body_row1_sizer->Add( m_filter_name_text, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
-	m_filter_name_edit = new wxTextCtrl( this, FILE_FILTER_NAME_EDIT, _( "" ), wxDefaultPosition, wxSize( -1,-1 ), 0|wxSIMPLE_BORDER );
+	m_filter_name_edit = new wxTextCtrl( this, FILE_FILTER_NAME_EDIT, _T( "" ), wxDefaultPosition, wxSize( -1,-1 ), 0|wxSIMPLE_BORDER );
 	m_filter_name_edit->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), 70, 90, 90, false, wxEmptyString ) );
 	m_filter_name_edit->SetMinSize( wxSize( 220,-1 ) );
 	m_filter_name_expression = new wxRegEx( m_filter_name_edit->GetValue(),wxRE_ICASE );

@@ -13,12 +13,13 @@
 #include "iconimagelist.h"
 #include "user.h"
 #include "battle.h"
-#include "utils.h"
+//#include "utils.h"
 #include "iunitsync.h"
 
 #include "images/bot.xpm"
 #include "images/bot_broom.png.h"
 #include "images/bot_ingame.png.h"
+#include "images/bot_away.xpm"
 
 #include "images/admin.png.h"
 #include "images/admin_away.png.h"
@@ -92,6 +93,7 @@ IconImageList::IconImageList() : wxImageList(16,16,true)
     ICON_BOT = Add( wxBitmap(bot_xpm) );
     ICON_BOT_BROOM = Add( charArr2wxBitmap( bot_broom_png, sizeof( bot_broom_png ) )  );
     ICON_BOT_INGAME = Add( charArr2wxBitmap( bot_ingame_png, sizeof( bot_ingame_png ) ) );
+    ICON_BOT_AWAY = Add( wxBitmap(bot_away_xpm) );
 
     ICON_AWAY = Add( charArr2wxBitmap( away_png, sizeof( away_png ) ) );
     ICON_BROOM = Add( charArr2wxBitmap(broom_png, sizeof(broom_png) ) );
@@ -181,6 +183,7 @@ int IconImageList::GetUserListStateIcon( const UserStatus& us, bool chanop, bool
     {
         if ( us.in_game ) return ICON_BOT_INGAME;
         if ( inbroom ) return ICON_BOT_BROOM;
+        if ( us.away ) return ICON_BOT_AWAY;
         return ICON_BOT;
     }
     if (us.moderator )
@@ -248,53 +251,52 @@ int IconImageList::GetFlagIcon( const wxString& flagname )
 
 int IconImageList::GetBattleStatusIcon( const IBattle& battle ) const
 {
-    if ( battle.GetInGame() ) {
-      return battle.IsLocked()?ICON_STARTED_GAME_LOCKED:ICON_STARTED_GAME;
-    }
-    if ( !battle.IsLocked() )
-    {
-        if ( battle.IsFull() )
-        {
-            if ( battle.IsPassworded() )
-                return ICON_OPEN_FULL_PW_GAME;
-            else
-                return ICON_OPEN_FULL_GAME;
-        }
-        if ( !battle.IsPassworded() ) return ICON_OPEN_GAME;
-        else return ICON_OPEN_PW_GAME;
-    }
-    else
-    {
-        if ( battle.IsFull() )
-        {
-            if ( battle.IsPassworded() )
-                return ICON_CLOSED_FULL_PW_GAME;
-            else
-                return ICON_CLOSED_FULL_GAME;
-        }
-        if ( !battle.IsPassworded() ) return ICON_CLOSED_GAME;
-        else return ICON_CLOSED_PW_GAME;
-    }
-
-
-    return ICON_GAME_UNKNOWN;
+    unsigned idx = battle.GetInGame() << 3 | battle.IsLocked() << 2 | battle.IsFull() << 1 | battle.IsPassworded() << 0;
+    static const int icons[16] = {
+        /* -                                 */ ICON_OPEN_GAME,
+        /* passworded                        */ ICON_OPEN_PW_GAME,
+        /* full                              */ ICON_OPEN_FULL_GAME,
+        /* full, passworded                  */ ICON_OPEN_FULL_PW_GAME,
+        /* locked                            */ ICON_CLOSED_GAME,
+        /* locked, passworded                */ ICON_CLOSED_PW_GAME,
+        /* locked, full                      */ ICON_CLOSED_FULL_GAME,
+        /* locked, full, passworded          */ ICON_CLOSED_FULL_PW_GAME,
+        /* in game                           */ ICON_STARTED_GAME,
+        /* in game, passworded               */ ICON_STARTED_GAME,
+        /* in game, full                     */ ICON_STARTED_GAME,
+        /* in game, full, passworded         */ ICON_STARTED_GAME,
+        /* in game, locked                   */ ICON_STARTED_GAME_LOCKED,
+        /* in game, locked, passworded       */ ICON_STARTED_GAME_LOCKED,
+        /* in game, locked, full             */ ICON_STARTED_GAME_LOCKED,
+        /* in game, locked, full, passworded */ ICON_STARTED_GAME_LOCKED,
+    };
+    return icons[idx];
+    // return ICON_GAME_UNKNOWN;
 }
 
 wxString IconImageList::GetBattleStatus( const IBattle& battle ) const
 {
-    if ( battle.GetInGame() ) return _T("Game has already started");
-    if ( !battle.IsLocked() )
-    {
-        if ( !battle.IsPassworded() ) return _T("Game is open for players");
-        else return _T("You need a password to join");
-    }
-    else
-    {
-        if ( !battle.IsPassworded() ) return _T("Game is closed");
-        else return _T("Game is closed (and passworded)");
-    }
-
-    return _T("Game has unknown status");
+    unsigned idx = battle.GetInGame() << 3 | battle.IsLocked() << 2 | battle.IsFull() << 1 | battle.IsPassworded() << 0;
+    static const wxString states[16] = {
+        /* -                                 */ _("Game is open."),
+        /* passworded                        */ _("Game is password-protected."),
+        /* full                              */ _("Game is full."),
+        /* full, passworded                  */ _("Game is full and password-protected."),
+        /* locked                            */ _("Game is closed."),
+        /* locked, passworded                */ _("Game is closed and password-protected."),
+        /* locked, full                      */ _("Game is closed and full."),
+        /* locked, full, passworded          */ _("Game is closed, full and password-protected."),
+        /* in game                           */ _("Game is in progress."),
+        /* in game, passworded               */ _("Game is in progress and password-protected."),
+        /* in game, full                     */ _("Game is in progress and full."),
+        /* in game, full, passworded         */ _("Game is in progress, full and password-protected."),
+        /* in game, locked                   */ _("Game is in progress and closed."),
+        /* in game, locked, passworded       */ _("Game is in progress, closed and password-protected."),
+        /* in game, locked, full             */ _("Game is in progress, closed and full."),
+        /* in game, locked, full, passworded */ _("Game is in progress, closed, full and password-protected."),
+    };
+    return states[idx];
+    // return _T("Game has unknown status");
 }
 
 
@@ -336,7 +338,7 @@ int IconImageList::GetSideIcon( const wxString& modname, int side )
 	wxString sidename;
 	if( side < (int)sides.GetCount() ) sidename = sides[side];
   wxString cachestring = modname + _T("_") + sidename;
-  if (m_cached_side_icons[cachestring] == 0){
+  if (m_cached_side_icons.find(cachestring)  == m_cached_side_icons.end()){
     try
     {
       int IconPosition = Add(wxBitmap( usync().GetSidePicture( modname , sidename ) ), wxNullBitmap);
@@ -345,10 +347,10 @@ int IconImageList::GetSideIcon( const wxString& modname, int side )
     } catch (...)
     {
       if ( side == 0 ) m_cached_side_icons[cachestring] = ICON_SIDEPIC_0;
-      else if ( side == 1 ) m_cached_side_icons[cachestring] = ICON_SIDEPIC_1;
+      else m_cached_side_icons[cachestring] = ICON_SIDEPIC_1;
     }
-  } else return m_cached_side_icons[cachestring];
-  return -1;
+  }
+  return m_cached_side_icons[cachestring];
 }
 
 int IconImageList::GetReadyIcon( const bool& spectator,const bool& ready, const unsigned int& sync, const bool& bot )

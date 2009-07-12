@@ -1,5 +1,7 @@
 /* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
 
+#include "springunitsync.h"
+
 #include <algorithm>
 #include <wx/dynlib.h>
 #include <wx/filefn.h>
@@ -20,13 +22,15 @@
 #include <stdexcept>
 #include <clocale>
 
-#include "springunitsync.h"
 #include "settings.h"
 #include "springunitsynclib.h"
 #include "settings++/custom_dialogs.h"
 #include "unitsyncthread.h"
 #include "globalsmanager.h"
 #include "uiutils.h"
+#include "utils/debug.h"
+#include "utils/conversion.h"
+#include "utils/misc.h"
 
 
 #define LOCK_UNITSYNC wxCriticalSectionLocker lock_criticalsection(m_lock)
@@ -42,9 +46,10 @@ IUnitSync& usync()
 
 
 SpringUnitSync::SpringUnitSync()
-  : m_map_image_cache( 3 )      // may take about 3M per image ( 1024x1024 24 bpp minimap )
-  , m_tiny_minimap_cache( 200 ) // takes at most 30k per image (   100x100 24 bpp minimap )
-  , m_mapinfo_cache( 1000000 )  // this one is just misused as thread safe std::map ...
+  : m_map_image_cache( 3, _T("m_map_image_cache") )         // may take about 3M per image ( 1024x1024 24 bpp minimap )
+  , m_tiny_minimap_cache( 200, _T("m_tiny_minimap_cache") ) // takes at most 30k per image (   100x100 24 bpp minimap )
+  , m_mapinfo_cache( 1000000, _T("m_mapinfo_cache") )       // this one is just misused as thread safe std::map ...
+  , m_sides_cache( 200, _T("m_sides_cache") )               // another misuse
 {
   m_cache_thread.Create();
   m_cache_thread.SetPriority( WXTHREAD_MIN_PRIORITY );
@@ -55,7 +60,6 @@ SpringUnitSync::SpringUnitSync()
 SpringUnitSync::~SpringUnitSync()
 {
   m_cache_thread.Wait();
-  FreeUnitSyncLib();
 }
 
 
@@ -85,16 +89,24 @@ void SpringUnitSync::PopulateArchiveList()
   int numMaps = susynclib().GetMapCount();
   for ( int i = 0; i < numMaps; i++ )
   {
-    wxString name, hash;
+    wxString name, hash, archivename, unchainedhash;
     try
     {
      name = susynclib().GetMapName( i );
      hash = susynclib().GetMapChecksum( i );
+		 int count = susynclib().GetMapArchiveCount( i );
+		 if ( count > 0 )
+		 {
+			 archivename =  susynclib().GetMapArchiveName( 0 );
+			 unchainedhash = susynclib().GetArchiveChecksum( archivename );
+		 }
      //PrefetchMap( name ); // DEBUG
     } catch (...) { continue; }
     try
     {
       m_maps_list[name] = hash;
+      if ( !unchainedhash.IsEmpty() ) m_maps_unchained_hash[name] = unchainedhash;
+      if ( !archivename.IsEmpty() ) m_maps_archive_name[name] = archivename;
       m_map_array.Add( name );
     } catch (...)
     {
@@ -104,15 +116,23 @@ void SpringUnitSync::PopulateArchiveList()
   int numMods = susynclib().GetPrimaryModCount();
   for ( int i = 0; i < numMods; i++ )
   {
-    wxString name, hash;
+    wxString name, hash, archivename, unchainedhash;
     try
     {
      name = susynclib().GetPrimaryModName( i );
-     hash = i2s(susynclib().GetPrimaryModChecksum( i ));
+     hash = susynclib().GetPrimaryModChecksum( i );
+		 int count = susynclib().GetPrimaryModArchiveCount( i );
+		 if ( count > 0 )
+		 {
+		   archivename = susynclib().GetPrimaryModArchive( 0 );
+			 unchainedhash = susynclib().GetArchiveChecksum( archivename );
+		 }
     } catch (...) { continue; }
     try
     {
       m_mods_list[name] = hash;
+      if ( !unchainedhash.IsEmpty() )  m_mods_unchained_hash[name] = unchainedhash;
+      if ( !archivename.IsEmpty() ) m_mods_archive_name[name] = archivename;
       m_mod_array.Add( name );
     } catch (...)
     {
@@ -232,7 +252,7 @@ UnitSyncMod SpringUnitSync::GetMod( int index )
   UnitSyncMod m;
   susynclib().GetPrimaryModCount();
   m.name = susynclib().GetPrimaryModName( index );
-  m.hash = i2s( susynclib().GetPrimaryModChecksum( index ) );
+  m.hash = susynclib().GetPrimaryModChecksum( index );
 
   return m;
  }
@@ -314,15 +334,13 @@ UnitSyncMap SpringUnitSync::GetMapEx( int index )
   return m;
 }
 
-void GetOptionCachefileEntry( const int i, wxArrayString& entry, GameOptions& ret)
+void GetOptionEntry( const int i, GameOptions& ret)
 {
     //all section values for options are converted to lower case
     //since usync returns the key of section type keys lower case
     //otherwise comapring would be a real hassle
     wxString key = susynclib().GetOptionKey(i);
-      entry.Add( key );
       wxString name = susynclib().GetOptionName(i);
-      entry.Add( TowxString( susynclib().GetOptionType(i) ) );
       switch (susynclib().GetOptionType(i))
       {
       case opt_float:
@@ -332,17 +350,6 @@ void GetOptionCachefileEntry( const int i, wxArrayString& entry, GameOptions& re
             susynclib().GetOptionNumberStep(i),
             susynclib().GetOptionNumberMin(i), susynclib().GetOptionNumberMax(i),
             susynclib().GetOptionSection(i).Lower(), susynclib().GetOptionStyle(i) );
-
-        entry.Add( ret.float_map[key].name );
-        wxString descr = ret.float_map[key].description;
-        descr.Replace( _T("\n"), _T("\\n") );
-        entry.Add( descr );
-        entry.Add( TowxString( ret.float_map[key].def ) );
-        entry.Add( TowxString( ret.float_map[key].stepping ) );
-        entry.Add( TowxString( ret.float_map[key].min ) );
-        entry.Add( TowxString( ret.float_map[key].max) );
-        entry.Add( ret.float_map[key].section );
-        entry.Add( ret.float_map[key].ct_type_string );
         break;
       }
       case opt_bool:
@@ -350,14 +357,6 @@ void GetOptionCachefileEntry( const int i, wxArrayString& entry, GameOptions& re
         ret.bool_map[key] = mmOptionBool( name, key,
             susynclib().GetOptionDesc(i), susynclib().GetOptionBoolDef(i),
             susynclib().GetOptionSection(i).Lower(), susynclib().GetOptionStyle(i) );
-
-        entry.Add( susynclib().GetOptionName(i) );
-        wxString descr = ret.bool_map[key].description;
-        descr.Replace( _T("\n"), _T("\\n") );
-        entry.Add( descr );
-        entry.Add( TowxString( ret.bool_map[key].def ) );
-        entry.Add( ret.bool_map[key].section );
-        entry.Add( ret.bool_map[key].ct_type_string );
         break;
       }
       case opt_string:
@@ -366,15 +365,6 @@ void GetOptionCachefileEntry( const int i, wxArrayString& entry, GameOptions& re
             susynclib().GetOptionDesc(i), susynclib().GetOptionStringDef(i),
             susynclib().GetOptionStringMaxLen(i),
             susynclib().GetOptionSection(i).Lower(), susynclib().GetOptionStyle(i) );
-
-        entry.Add( ret.string_map[key].name );
-        wxString descr = ret.string_map[key].description;
-        descr.Replace( _T("\n"), _T("\\n") );
-        entry.Add( descr );
-        entry.Add( ret.string_map[key].def );
-        entry.Add( TowxString( ret.string_map[key].max_len ) );
-        entry.Add( ret.string_map[key].section );
-        entry.Add( ret.string_map[key].ct_type_string );
         break;
       }
       case opt_list:
@@ -383,119 +373,31 @@ void GetOptionCachefileEntry( const int i, wxArrayString& entry, GameOptions& re
             susynclib().GetOptionDesc(i),susynclib().GetOptionListDef(i),
             susynclib().GetOptionSection(i).Lower(),susynclib().GetOptionStyle(i));
 
-        entry.Add( ret.list_map[key].name );
-        wxString descr = ret.list_map[key].description;
-        descr.Replace( _T("\n"), _T("\\n") );
-        entry.Add( descr );
-        entry.Add( ret.list_map[key].def );
         int listItemCount = susynclib().GetOptionListCount(i);
-        entry.Add( TowxString( listItemCount ) );
          for (int j = 0; j < listItemCount; ++j)
          {
            wxString descr = susynclib().GetOptionListItemDesc(i,j);
-           descr.Replace( _T("\n"), _T("\\n") );
            ret.list_map[key].addItem(susynclib().GetOptionListItemKey(i,j),susynclib().GetOptionListItemName(i,j), descr);
-           entry.Add( susynclib().GetOptionListItemKey(i,j) );
-           entry.Add( susynclib().GetOptionListItemName(i,j) );
-           entry.Add( descr );
          }
-        entry.Add( ret.list_map[key].section );
-        entry.Add( ret.list_map[key].ct_type_string );
         break;
       }
       case opt_section:
       {
         ret.section_map[key] = mmOptionSection( name, key, susynclib().GetOptionDesc(i),
             susynclib().GetOptionSection(i).Lower(), susynclib().GetOptionStyle(i) );
-        wxString section = susynclib().GetOptionSection(i);
-
-        entry.Add( ret.section_map[key].name );
-        wxString descr = ret.section_map[key].description;
-        descr.Replace( _T("\n"), _T("\\n") );
-        entry.Add( descr );
-        entry.Add( ret.section_map[key].section );
-        entry.Add( ret.section_map[key].ct_type_string );
       }
       }
 }
 
-void ParseOptionCacheFile( wxArrayString& cache, GameOptions& ret )
-{
-    unsigned int count = cache.GetCount();
-    for (unsigned int i = 0; i < count; ++i)
-    {
-      // key  type
-      wxArrayString params = wxStringTokenize( cache[i], _T("\t"), wxTOKEN_RET_EMPTY);
-      wxString key = params[0];
-      wxString description = params[3];
-      description.Replace( _T("\\n"), _T("\n") );
-      switch ( s2l( params[1] ) )
-      {
-      case opt_float:
-        // name description default_value step_size min_value max_value
-        ret.float_map[key] = mmOptionFloat( params[2], key,
-            description, (float)s2d( params[4] ), (float)s2d( params[5] ),
-            (float)s2d( params[6] ), (float)s2d( params[7] ), params[8],params[9] );
-        break;
-      case opt_bool:
-        // name description default_value
-        ret.bool_map[key] = mmOptionBool( params[2], key,
-            description, (bool)s2l( params[4] ), params[5],params[6] );
-        break;
-      case opt_string:
-        // name description default_value max_lenght
-        ret.string_map[key] = mmOptionString( params[2], key,
-            description, params[4], (unsigned int) s2l( params[5] ), params[6],params[7] );
-        break;
-      case opt_list:
-      {
-         unsigned int last_item_index = ( (unsigned int)s2l(params[5]) * 3 + 6);
-         //be sure to check index alignement
-         ret.list_map[key] = mmOptionList( params[2],key,
-            description, params[4], params[last_item_index],params[last_item_index +1] );
-            //there's 3 members per item, therefor the 3 + params[5] (which is listitemcount)
-         for (unsigned int j = 6; j < last_item_index; j = j + 3)
-         {
-         	 wxString item_description = params[j+2];
-         	 item_description.Replace( _T("\\n"), _T("\n") );
-           ret.list_map[key].addItem( params[j], params[j+1], item_description );
-         }
-         break;
-      }
-      case opt_section:
-        ret.section_map[key] = mmOptionSection( params[2], key,
-            description, params[4], params[5] );
-        break;
-      }
-    }
-}
 
 GameOptions SpringUnitSync::GetMapOptions( const wxString& name )
 {
   wxLogDebugFunc( name );
   GameOptions ret;
-  wxArrayString cache;
-  try
-  {
-    cache = GetCacheFile( GetFileCachePath( name, _T(""), false ) + _T(".mapoptions") );
-    ParseOptionCacheFile( cache, ret );
-  }
-  catch (...)
-  {
-    int count = susynclib().GetMapOptionCount(name);
-    for (int i = 0; i < count; ++i)
-    {
-      wxArrayString entry;
-      GetOptionCachefileEntry( i, entry, ret );
-      wxString optiontoken;
-
-      unsigned int entrycount = entry.GetCount();
-      for ( unsigned int pos = 0; pos < entrycount; pos++ )
-        optiontoken << entry[pos] << _T('\t');
-
-      cache.Add( optiontoken );
-    }
-    SetCacheFile( GetFileCachePath( name, _T(""), false ) + _T(".mapoptions"), cache );
+	int count = susynclib().GetMapOptionCount(name);
+	for (int i = 0; i < count; ++i)
+	{
+      GetOptionEntry( i, ret );
   }
   return ret;
 }
@@ -554,29 +456,11 @@ GameOptions SpringUnitSync::GetModOptions( const wxString& name )
 {
   wxLogDebugFunc( name );
   GameOptions ret;
-  wxArrayString cache;
-  try
-  {
-    cache = GetCacheFile( GetFileCachePath( name, _T(""), true ) + _T(".modoptions") );
-    ParseOptionCacheFile( cache, ret );
-  }
-  catch (...)
-  {
-    int count = susynclib().GetModOptionCount(name);
-    for (int i = 0; i < count; ++i)
-    {
-      wxArrayString entry;
-      GetOptionCachefileEntry( i, entry, ret );
-      wxString optiontoken;
-
-      unsigned int entrycount = entry.GetCount();
-      for ( unsigned int pos = 0; pos < entrycount; pos++ )
-        optiontoken << entry[pos] << _T('\t');
-
-      cache.Add( optiontoken );
-    }
-    SetCacheFile( GetFileCachePath( name, _T(""), true ) + _T(".modoptions"), cache );
-  }
+	int count = susynclib().GetModOptionCount(name);
+	for (int i = 0; i < count; ++i)
+	{
+		GetOptionEntry( i, ret );
+	}
   return ret;
 }
 
@@ -594,11 +478,14 @@ wxArrayString SpringUnitSync::GetModDeps( const wxString& modname )
 wxArrayString SpringUnitSync::GetSides( const wxString& modname )
 {
 	wxArrayString ret;
-	try
-	{
-		ret = susynclib().GetSides( modname );
+	if ( ! m_sides_cache.TryGet( modname, ret ) ) {
+        try
+        {
+            ret = susynclib().GetSides( modname );
+            m_sides_cache.Add( modname, ret );
+        }
+        catch( unitsync_assert ) {}
 	}
-	catch( unitsync_assert ) {}
 	return ret;
 }
 
@@ -650,34 +537,27 @@ wxArrayString SpringUnitSync::GetAIList( const wxString& modname )
 		for ( int i = 0; i < total; i++ )
 		{
 			wxArrayString infos = susynclib().GetAIInfo( i );
-			int namepos = infos.Index( _T("shortName") ) + 1;
-			int versionpos = infos.Index( _T("version") ) + 1;
+			int namepos = infos.Index( _T("shortName") );
+			int versionpos = infos.Index( _T("version") );
 			wxString ainame;
-			if ( namepos > 0 ) ainame += infos[namepos];
-			if ( versionpos > 0 ) ainame += _T(" ") + infos[versionpos];
+			if ( namepos != wxNOT_FOUND ) ainame += infos[namepos +1];
+			if ( versionpos != wxNOT_FOUND ) ainame += _T(" ") + infos[versionpos +1];
 			ret.Add( ainame );
 		}
 	}
 	else
 	{
 		// list dynamic link libraries
-		int dllini = susynclib().InitFindVFS(  wxDynamicLibrary::CanonicalizeName(_T("AI/Bot-libs/*"), wxDL_MODULE) );
-
-		wxString FileName;
-		dllini = susynclib().FindFilesVFS( dllini, FileName );
-		while ( dllini )
+		wxArrayString dlllist = susynclib().FindFilesVFS( wxDynamicLibrary::CanonicalizeName(_T("AI/Bot-libs/*"), wxDL_MODULE) );
+		for( int i = 0; i < dlllist.GetCount(); i++ )
 		{
-			if ( ret.Index( FileName.BeforeLast( '/') ) == wxNOT_FOUND ) ret.Add ( FileName ); // don't add duplicates
-			dllini = susynclib().FindFilesVFS( dllini, FileName );
+			if ( ret.Index( dlllist[i].BeforeLast( '/') ) == wxNOT_FOUND ) ret.Add ( dlllist[i] ); // don't add duplicates
 		}
 		// list jar files (java AIs)
-		int jarini = susynclib().InitFindVFS(  _T("AI/Bot-libs/*.jar") );
-
-		jarini = susynclib().FindFilesVFS( jarini, FileName );
-		while ( jarini )
+		wxArrayString jarlist = susynclib().FindFilesVFS( _T("AI/Bot-libs/*.jar") );
+		for( int i = 0; i < jarlist.GetCount(); i++ )
 		{
-			if ( ret.Index( FileName.BeforeLast( '/') ) == wxNOT_FOUND ) ret.Add ( FileName ); // don't add duplicates
-			jarini = susynclib().FindFilesVFS( jarini, FileName );
+			if ( ret.Index( jarlist[i].BeforeLast( '/') ) == wxNOT_FOUND ) ret.Add ( jarlist[i] ); // don't add duplicates
 		}
 
 		// luaai
@@ -703,6 +583,18 @@ wxArrayString SpringUnitSync::GetAIInfos( int index )
 	}
 	catch ( unitsync_assert ) {}
 	return ret;
+}
+
+GameOptions SpringUnitSync::GetAIOptions( const wxString& modname, int index )
+{
+  wxLogDebugFunc( TowxString(index) );
+  GameOptions ret;
+	int count = susynclib().GetAIOptionCount(modname, index);
+	for (int i = 0; i < count; ++i)
+	{
+		GetOptionEntry( i, ret );
+	}
+  return ret;
 }
 
 int SpringUnitSync::GetNumUnits( const wxString& modname )
@@ -823,7 +715,7 @@ wxImage SpringUnitSync::_GetMapImage( const wxString& mapname, const wxString& i
 
   if ( m_map_image_cache.TryGet( mapname + imagename, img ) ) return img;
 
-  wxString originalsizepath = GetFileCachePath( mapname, _T(""), false ) + imagename;
+  wxString originalsizepath = GetFileCachePath( mapname, m_maps_unchained_hash[mapname], false ) + imagename;
 
   try
   {
@@ -873,62 +765,69 @@ MapInfo SpringUnitSync::_GetMapInfoEx( const wxString& mapname )
   if ( m_mapinfo_cache.TryGet( mapname, info ) ) return info;
 
   wxArrayString cache;
-  try
-  {
-    cache = GetCacheFile( GetFileCachePath( mapname, _T(""), false ) + _T(".infoex") );
+  try {
+      try
+      {
+        cache = GetCacheFile( GetFileCachePath( mapname, m_maps_unchained_hash[mapname], false ) + _T(".infoex") );
 
-    ASSERT_EXCEPTION( cache.GetCount() >= 11, _T("not enough lines found in cache info ex") );
-    info.author = cache[0];
-    info.tidalStrength =  s2l( cache[1] );
-    info.gravity = s2l( cache[2] );
-    info.maxMetal = s2d( cache[3] );
-    info.extractorRadius = s2d( cache[4] );
-    info.minWind = s2l( cache[5] );
-    info.maxWind = s2l( cache[6] );
-    info.width = s2l( cache[7] );
-    info.height = s2l( cache[8] );
-    info.posCount = s2l( cache[9] );
+        ASSERT_EXCEPTION( cache.GetCount() >= 11, _T("not enough lines found in cache info ex") );
+        info.author = cache[0];
+        info.tidalStrength =  s2l( cache[1] );
+        info.gravity = s2l( cache[2] );
+        info.maxMetal = s2d( cache[3] );
+        info.extractorRadius = s2d( cache[4] );
+        info.minWind = s2l( cache[5] );
+        info.maxWind = s2l( cache[6] );
+        info.width = s2l( cache[7] );
+        info.height = s2l( cache[8] );
+        info.posCount = s2l( cache[9] );
 
-    wxArrayString posinfo = wxStringTokenize( cache[10], _T(' '), wxTOKEN_RET_EMPTY );
-    for ( int i = 0; i < info.posCount; i++)
-    {
-       StartPos position;
-       position.x = s2l( posinfo[i].BeforeFirst( _T('-') ) );
-       position.y = s2l( posinfo[i].AfterFirst( _T('-') ) );
-       info.positions[i] = position;
-    }
+        wxArrayString posinfo = wxStringTokenize( cache[10], _T(' '), wxTOKEN_RET_EMPTY );
+        for ( int i = 0; i < info.posCount; i++)
+        {
+           StartPos position;
+           position.x = s2l( posinfo[i].BeforeFirst( _T('-') ) );
+           position.y = s2l( posinfo[i].AfterFirst( _T('-') ) );
+           info.positions[i] = position;
+        }
 
-    unsigned int LineCount = cache.GetCount();
-    for ( unsigned int i = 11; i < LineCount; i++ ) info.description << cache[i] << _T('\n');
+        unsigned int LineCount = cache.GetCount();
+        for ( unsigned int i = 11; i < LineCount; i++ ) info.description << cache[i] << _T('\n');
 
+      }
+      catch (...)
+      {
+        info = susynclib().GetMapInfoEx( mapname, 1 );
+
+        cache.Add ( info.author );
+        cache.Add( TowxString( info.tidalStrength ) );
+        cache.Add( TowxString( info.gravity ) );
+        cache.Add( TowxString( info.maxMetal ) );
+        cache.Add( TowxString( info.extractorRadius ) );
+        cache.Add( TowxString( info.minWind ) );
+        cache.Add( TowxString( info.maxWind )  );
+        cache.Add( TowxString( info.width ) );
+        cache.Add( TowxString( info.height ) );
+        cache.Add( TowxString( info.posCount ) );
+
+        wxString postring;
+        for ( int i = 0; i < info.posCount; i++)
+        {
+           postring << TowxString( info.positions[i].x ) << _T('-') << TowxString( info.positions[i].y ) << _T(' ');
+        }
+        cache.Add( postring );
+
+        wxArrayString descrtoken = wxStringTokenize( info.description, _T('\n') );
+        unsigned int desclinecount = descrtoken.GetCount();
+        for ( unsigned int count = 0; count < desclinecount; count++ ) cache.Add( descrtoken[count] );
+
+        SetCacheFile( GetFileCachePath( mapname, m_maps_unchained_hash[mapname], false ) + _T(".infoex"), cache );
+      }
   }
-  catch (...)
-  {
-    info = susynclib().GetMapInfoEx( mapname, 1 );
-
-    cache.Add ( info.author );
-    cache.Add( TowxString( info.tidalStrength ) );
-    cache.Add( TowxString( info.gravity ) );
-    cache.Add( TowxString( info.maxMetal ) );
-    cache.Add( TowxString( info.extractorRadius ) );
-    cache.Add( TowxString( info.minWind ) );
-    cache.Add( TowxString( info.maxWind )  );
-    cache.Add( TowxString( info.width ) );
-    cache.Add( TowxString( info.height ) );
-    cache.Add( TowxString( info.posCount ) );
-
-    wxString postring;
-    for ( int i = 0; i < info.posCount; i++)
-    {
-       postring << TowxString( info.positions[i].x ) << _T('-') << TowxString( info.positions[i].y ) << _T(' ');
-    }
-    cache.Add( postring );
-
-    wxArrayString descrtoken = wxStringTokenize( info.description, _T('\n') );
-    unsigned int desclinecount = descrtoken.GetCount();
-    for ( unsigned int count = 0; count < desclinecount; count++ ) cache.Add( descrtoken[count] );
-
-    SetCacheFile( GetFileCachePath( mapname, _T(""), false ) + _T(".infoex"), cache );
+  catch ( ... ) {
+      info.posCount = 0;
+      info.width = 1;
+      info.height = 1;
   }
 
   m_mapinfo_cache.Add( mapname, info );
@@ -956,7 +855,7 @@ wxString SpringUnitSync::GetFileCachePath( const wxString& name, const wxString&
   wxString ret = m_cache_path;
   if ( !name.IsEmpty() ) ret << name;
   else return wxEmptyString;
-  if ( !hash.IsEmpty() ) ret << hash;
+  if ( !hash.IsEmpty() ) ret << _T("-") << hash;
   else
   {
     if ( IsMod ) ret <<  _T("-") << m_mods_list[name];
@@ -996,32 +895,17 @@ void SpringUnitSync::SetCacheFile( const wxString& path, const wxArrayString& da
   file.Close();
 }
 
-void SpringUnitSync::GetReplayList(std::vector<wxString> &ret)
+wxArrayString  SpringUnitSync::GetPlaybackList( bool ReplayType )
 {
-  ret.clear();
   wxLogDebug( _T("") );
 
-  if ( !IsLoaded() ) return;
+	wxArrayString ret;
+  if ( !IsLoaded() ) return ret;
 
-  int ini = susynclib().InitFindVFS( _T("demos/*.sdf") );
-
-  wxString FilePath ;
-  //wxArrayString ret;
-  do
-  {
-    ini = susynclib().FindFilesVFS ( ini, FilePath );
-    wxString FileName = wxString ( FilePath, wxConvUTF8 );
-    //ret.Add ( FileName );
-    ret.push_back(FileName);
-  } while (ini != 0);
-
-    int kol = ret.size();
-
-  std::sort(ret.begin(),ret.end());
-  std::vector<wxString>::iterator i=std::unique(ret.begin(),ret.end());
-  ret.resize(i - ret.begin());
-
-  kol = ret.size();
+    if ( ReplayType )
+        return susynclib().FindFilesVFS( _T("demos/*.sdf") );
+    else
+        return susynclib().FindFilesVFS( _T("Saves/*.ssf") );
 }
 
 bool SpringUnitSync::FileExists( const wxString& name )
@@ -1040,9 +924,22 @@ wxString SpringUnitSync::GetArchivePath( const wxString& name )
   return susynclib().GetArchivePath( name );
 }
 
+wxArrayString SpringUnitSync::GetScreenshotFilenames()
+{
+    wxSortedArrayString ret;
+    if ( !IsLoaded() ) return ret;
+
+    ret = susynclib().FindFilesVFS( _T("screenshots/*.*") );
+    for ( int i = 0; i < ret.Count() - 1; ++i ) {
+            if ( ret[i] == ret[i+1] )
+                ret.RemoveAt( i+1 );
+    }
+    return ret;
+}
+
 wxString SpringUnitSync::GetDefaultNick()
 {
-	return susynclib().GetSpringConfigString( _T("name"), _T("") );
+	return susynclib().GetSpringConfigString( _T("name"), _T("Player") );
 }
 
 void SpringUnitSync::SetDefaultNick( const wxString& nick )

@@ -8,13 +8,14 @@
 #include <wx/textctrl.h>
 #include <wx/button.h>
 #include <wx/filedlg.h>
+#include <wx/choice.h>
 
 #include "lobbyoptionstab.h"
 #include "nonportable.h"
 #include "settings.h"
 #include "springlobbyapp.h"
 #include "settings++/custom_dialogs.h"
-#include "utils.h"
+#include "utils/controls.h"
 #include "aui/auimanager.h"
 #include "ui.h"
 #include "mainwindow.h"
@@ -125,6 +126,14 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
     m_use_tabicons_sizer->Add( m_use_tabicons , 0, wxEXPAND | wxALL, 5 );
     m_main_sizer->Add( m_use_tabicons_sizer , 0, wxALL, 5 );
 
+    wxStaticBoxSizer* m_start_tab_sizer = new wxStaticBoxSizer ( wxHORIZONTAL, this, _("Start tab") );
+    m_start_tab = new wxChoice( this, -1,  wxDefaultPosition, wxDefaultSize, MainWindow::GetTabNames() );
+    m_start_tab->SetSelection( sett().GetStartTab() );
+    wxStaticText* m_start_tab_label = new wxStaticText ( this, -1, _("Select which tab to show at startup") );
+    m_start_tab_sizer->Add( m_start_tab_label  , 0, wxALIGN_CENTER_VERTICAL | wxEXPAND | wxALL, 5 );
+    m_start_tab_sizer->Add( m_start_tab , 0,  wxALIGN_CENTER_VERTICAL , 5 );
+    m_main_sizer->Add( m_start_tab_sizer, 0, wxALL, 5 );
+
     SetScrollRate( 10, 10 );
     SetSizer( m_main_sizer );
 }
@@ -152,6 +161,7 @@ void LobbyOptionsTab::OnApply(wxCommandEvent& event)
 
     sett().SetUseTabIcons( m_use_tabicons->IsChecked() );
     ui().mw().SetTabIcons();
+    sett().SetStartTab( m_start_tab->GetSelection() );
 }
 
 
@@ -171,6 +181,8 @@ void LobbyOptionsTab::OnRestore(wxCommandEvent& event)
 
     HandleWebloc( sett().GetWebBrowserUseDefault() );
     m_use_tabicons->SetValue( sett().GetUseTabIcons()  );
+
+    m_start_tab->SetSelection( sett().GetStartTab() );
 }
 
 void LobbyOptionsTab::HandleWebloc( bool defloc )

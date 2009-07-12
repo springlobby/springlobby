@@ -6,8 +6,9 @@
     typedef wxListCtrl ListBaseType;
 #else
 //disabled until further fixes
-//    #include "Helper/listctrl.h"
-//    typedef SL_Extern::wxGenericListCtrl ListBaseType;
+    #include <wx/msw/winundef.h>
+ //   #include "Helper/listctrl.h"
+ //   typedef SL_Extern::wxGenericListCtrl ListBaseType;
     #include <wx/listctrl.h>
     typedef wxListCtrl ListBaseType;
 #endif
@@ -25,7 +26,7 @@ class SLTipWindow;
 
 
 /** \brief Used as base class for all ListCtrls throughout SL
- * Provides generic functionality, such as column tooltips, possiblity to prohibit coloumn resizing and selection modifiers. \n
+ * Provides generic functionality, such as column tooltips, possiblity to prohibit column resizing and selection modifiers. \n
  * Some of the provided functionality only makes sense for single-select lists (see grouping) \n
  * Note: Tooltips are a bitch and anyone shoudl feel to revise them (koshi)
  */
@@ -42,7 +43,7 @@ protected:
     SLTipWindow* m_tipwindow;
     SLTipWindow** m_controlPointer;
     #endif
-    unsigned int m_coloumnCount;
+    unsigned int m_columnCount;
 
     typedef std::pair<wxString,bool> colInfo;
     typedef std::vector<colInfo> colInfoVec;
@@ -69,7 +70,7 @@ protected:
     //! stores info about the columns (wxString name,bool isResizable) - pairs
     colInfoVec m_colinfovec;
     //! primarily used to get coulumn index in mousevents (from cur. mouse pos)
-    int getColoumnFromPosition(wxPoint pos);
+    int getColumnFromPosition(wxPoint pos);
 
     wxPoint m_last_mouse_pos;
 
@@ -173,3 +174,21 @@ public:
 
 
 #endif /*CUSTOMLISTITEM_H_*/
+
+/**
+    This file is part of SpringLobby,
+    Copyright (C) 2007-09
+
+    springsettings is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License version 2 as published by
+    the Free Software Foundation.
+
+    springsettings is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SpringLobby.  If not, see <http://www.gnu.org/licenses/>.
+**/
+

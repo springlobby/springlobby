@@ -3,17 +3,20 @@
 
 
 #include <wx/string.h>
+#include <wx/event.h>
 
 #include "iunitsync.h"
 #include "user.h"
 #include "mmoptionswrapper.h"
 #include "userlist.h"
+#include "tdfcontainer.h"
 
 
 const unsigned int DEFAULT_SERVER_PORT = 8452;
 const unsigned int DEFAULT_EXTERNAL_UDP_SOURCE_PORT = 16941;
 
 class IBattle;
+class wxTimer;
 
 struct BattleStartRect
 {
@@ -56,16 +59,25 @@ enum RankLimitType
 		rank_limit_autokick
 };
 
+
+enum BattleType
+{
+		BT_Played,
+		BT_Replay,
+		BT_Savegame
+};
+
+
 struct BattleOptions
 {
 	BattleOptions() :
-		battleid(-1),islocked(false),isreplay(false),ispassworded(false),rankneeded(0),isproxy(false),lockexternalbalancechanges(false),ranklimittype(rank_limit_autospec),
+		battleid(-1),islocked(false),battletype(BT_Played),ispassworded(false),rankneeded(0),isproxy(false),lockexternalbalancechanges(false),ranklimittype(rank_limit_autospec),
 		nattype(NAT_None),port(DEFAULT_SERVER_PORT),externaludpsourceport(DEFAULT_EXTERNAL_UDP_SOURCE_PORT),internaludpsourceport(DEFAULT_EXTERNAL_UDP_SOURCE_PORT),maxplayers(0),spectators(0),
 		guilistactiv(false) {}
 
 	int battleid;
 	bool islocked;
-	bool isreplay;
+	BattleType battletype;
 	bool ispassworded;
 	int rankneeded;
 	bool isproxy;
@@ -93,7 +105,7 @@ struct BattleOptions
 	bool guilistactiv;
 };
 
-class IBattle: public UserList
+class IBattle: public UserList, public wxEvtHandler
 {
 public:
 
@@ -135,8 +147,6 @@ public:
         balance_random
     };
 
-    typedef int HostInfo;
-
     enum StartType
     {
         ST_Fixed = 0,
@@ -152,13 +162,6 @@ public:
         GT_Lineage = 2
     };
 
-
-    enum BattleType
-    {
-        BT_Unknown = 0,
-        BT_Multi = 1,
-        BT_Single = 2
-    };
 
 		struct TeamInfoContainer
 		{
@@ -198,6 +201,7 @@ public:
     virtual bool IsSynced();
 
     virtual bool IsFounderMe();
+    virtual bool IsFounder( const User& user ) const;
 
     virtual int GetMyPlayerNum();
 
@@ -236,6 +240,8 @@ public:
     virtual void StartRectAdded( unsigned int allyno );
     virtual void ClearStartRects();
     virtual unsigned int GetNumRects();
+	virtual unsigned int GetLastRectIdx();
+	virtual unsigned int GetNextFreeRectIdx();
 
     virtual int GetFreeTeamNum( bool excludeme = false );
 
@@ -269,15 +275,15 @@ public:
     virtual void DeletePreset( const wxString& name );
     virtual wxArrayString GetPresetList();
 
-    virtual std::vector<wxColour> &GetFixColoursPalette();
+    virtual std::vector<wxColour> &GetFixColoursPalette( int numteams );
     virtual int GetClosestFixColour(const wxColour &col, const std::vector<int> &excludes, int &difference);
     virtual wxColour GetFixColour(int i);
-    virtual wxColour GetFreeColour( User &for_whom ) const;
-    virtual wxColour GetFreeColour() const;
+    virtual wxColour GetFreeColour( User &for_whom );
+    wxColour GetNewColour();
 
     virtual int ColourDifference(const wxColour &a, const wxColour &b);
 
-		User& GetFounder() const { return GetUser( m_opts.founder ); }
+	User& GetFounder() const { return GetUser( m_opts.founder ); }
 
 		bool IsFull() const { return GetMaxPlayers() == ( GetNumUsers() - GetSpectators() ); }
 
@@ -291,7 +297,9 @@ public:
 		virtual void SetInGame( bool ingame ) { m_ingame = ingame; }
 		virtual bool GetInGame() const { return m_ingame; }
 
-		virtual void SetIsReplay( const bool isreplay ) { m_opts.isreplay = isreplay; }
+		virtual void SetBattleType( BattleType type ) { m_opts.battletype = type; }
+		virtual BattleType GetBattleType() { return m_opts.battletype; }
+
 		virtual void SetIsLocked( const bool islocked ) { m_opts.islocked = islocked; }
 		virtual bool IsLocked() const { return m_opts.islocked; }
 		virtual void SetIsPassworded( const bool ispassworded ) { m_opts.ispassworded = ispassworded; }
@@ -358,7 +366,27 @@ public:
 
 		virtual void UserPositionChanged( const User& usr );
 
+		virtual void SetScript( const wxString& script ) { m_script = script; }
+		virtual void AppendScriptLine( const wxString& line ) { m_script << line; }
+		virtual void ClearScript() { m_script.Clear(); }
+		virtual wxString GetScript() { return m_script; }
+
+		virtual void SetPlayBackFilePath( const wxString& path ) { m_playback_file_path = path; }
+		virtual wxString GetPlayBackFilePath() { return m_playback_file_path; }
+
+		virtual void AddUserFromDemo( User& user );
+
+		virtual void GetBattleFromScript( bool loadmapmod );
+
+		virtual bool ShouldAutoStart();
+
+		virtual void StartSpring() = 0;
+
 protected:
+
+		void LoadScriptMMOpts( const wxString& sectionname, const PDataList& node );
+		void LoadScriptMMOpts( const PDataList& node );
+
 
     bool m_map_loaded;
     bool m_mod_loaded;
@@ -381,17 +409,44 @@ protected:
 
 		std::map<unsigned int,BattleStartRect> m_rects;
 
+		std::map<wxString, time_t> m_ready_up_map; // player name -> time counting from join/unspect
+
+		int m_players_ready;
+		int m_players_sync;
+		std::map<int, int> m_teams_sizes; // controlteam -> number of people in
+		std::map<int, int> m_ally_sizes; // allyteam -> number of people in
+
     wxString m_preset;
 
     bool m_is_self_in;
     UserVec m_internal_bot_list;
 
     /// replay&savegame stuff
-    // wxString m_script; -- not sure if to include this
+    wxString m_script;
+    wxString m_playback_file_path;
     TeamVec m_parsed_teams;
     AllyVec m_parsed_allies;
+		UserVec m_internal_user_list; /// to store users from savegame/replay
 
-
+		wxTimer* m_timer;
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_IBATTLE_H
+
+/**
+    This file is part of SpringLobby,
+    Copyright (C) 2007-09
+
+    springsettings is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License version 2 as published by
+    the Free Software Foundation.
+
+    springsettings is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SpringLobby.  If not, see <http://www.gnu.org/licenses/>.
+**/
+

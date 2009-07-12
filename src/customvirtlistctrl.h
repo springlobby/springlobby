@@ -14,6 +14,7 @@
 
 #include <wx/timer.h>
 #define IDD_TIP_TIMER 696
+#define IDD_SORT_TIMER 697
 
 #include <vector>
 
@@ -25,23 +26,26 @@
 
 class SLTipWindow;
 
-
 /** \brief Used as base class for some ListCtrls throughout SL
- * Provides generic functionality, such as column tooltips, possiblity to prohibit coloumn resizing and selection modifiers. \n
+ * Provides generic functionality, such as column tooltips, possiblity to prohibit column resizing and selection modifiers. \n
  * Some of the provided functionality only makes sense for single-select lists (see grouping) \n
+ * Note: the second template param is actually just a dummy to ensure the compiler generates distinct code in case we have different listctrls with same datatype
  * Note: Tooltips are a bitch and anyone should feel free to revise them (koshi)
  * \tparam the type of stored data
  */
-template < class DataImp >
+template < class DataImp, class ListCtrlImp >
 class CustomVirtListCtrl : public ListBaseType
 {
 public:
-    typedef DataImp DataType;
+    typedef DataImp
+        DataType;
 
 protected:
     typedef UserActions::ActionType ActionType;
     //! used to display tooltips for a certain amount of time
     wxTimer m_tiptimer;
+    //! used to block sorting while mouse is moving
+    wxTimer m_sort_timer;
     //! always set to the currrently displayed tooltip text
     wxString m_tiptext;
     #if wxUSE_TIPWINDOW
@@ -49,11 +53,12 @@ protected:
     SLTipWindow* m_tipwindow;
     SLTipWindow** m_controlPointer;
     #endif
-    unsigned int m_coloumnCount;
+    unsigned int m_columnCount;
 
     struct colInfo {
         colInfo(int n, wxString l, wxString t, bool c, int s):
             col_num(n),label(l),tip(t),can_resize(c),size(s) {}
+        colInfo(){}
 
         int col_num;
         wxString label;
@@ -71,6 +76,7 @@ protected:
      */
     static const unsigned int m_tooltip_delay    = 1000;
     static const unsigned int m_tooltip_duration = 2000;
+    static const unsigned int m_sort_block_time  = 1500;
 
 /*** these are only meaningful in single selection lists ***/
     //! index of curently selected data
@@ -83,7 +89,7 @@ protected:
     //! stores info about the columns (wxString name,bool isResizable) - pairs
     colInfoVec m_colinfovec;
     //! primarily used to get coulumn index in mousevents (from cur. mouse pos)
-    int getColoumnFromPosition(wxPoint pos);
+    int getColumnFromPosition(wxPoint pos);
 
     //! map: index in visible list <--> index in data vector
     typedef std::map<int,int> VisibilityMap;
@@ -183,6 +189,7 @@ protected:
 
     //! must be implemented in derived classes, should call the actual sorting on data and refreshitems
     virtual void Sort( ) = 0;
+
 public:
     /** only sorts if data is marked dirty, or force is true
      * calls Freeze(), Sort(), Thaw() */
@@ -193,7 +200,7 @@ public:
 public:
     CustomVirtListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pt,
                     const wxSize& sz,long style, const wxString& name, unsigned int column_count, unsigned int sort_criteria_count, CompareFunction func, bool highlight = true,
-                    UserActions::ActionType hlaction = UserActions::ActHighlight);
+                    UserActions::ActionType hlaction = UserActions::ActHighlight, bool periodic_sort = false, unsigned int periodic_sort_interval = 5000 /*miliseconds*/);
 
     virtual ~CustomVirtListCtrl();
 
@@ -207,6 +214,7 @@ public:
     long GetSelectedIndex();
     void SetSelectedIndex(const long newindex);
     DataType GetDataFromIndex ( const  long index );
+    const DataType GetDataFromIndex ( const  long index ) const;
     DataType GetSelectedData();
     /** @}
      */
@@ -222,7 +230,6 @@ public:
      */
 
     //! intermediate function to add info to m_colinfovec after calling base class function
-    void InsertColumn(long i, wxListItem item, wxString tip, bool = true);
     void AddColumn(long i, int width, const wxString& label, const wxString& tip, bool = true);
     //! this event is triggered when delay timer (set in mousemotion) ended
     virtual void OnTimer(wxTimerEvent& event);
@@ -240,13 +247,13 @@ public:
     void noOp(wxMouseEvent& event);
     //! automatically get saved column width if already saved, otherwise use parameter and save new width
     virtual bool SetColumnWidth(int col, int width);
-    //! reset columns with current set size (only effects coloumns with auto-size)
+    //! reset columns with current set size (only effects columns with auto-size)
     void ResetColumnSizes();
 
     // funcs that should make things easier for group highlighting
     ///all that needs to be implemented in child class for UpdateHighlights to work
 
-    wxListItemAttr* HighlightItemUser( long item, const wxString& name ) const;
+    wxListItemAttr* HighlightItemUser( const wxString& name ) const;
 
     void SetHighLightAction( UserActions::ActionType action );
     void RefreshVisibleItems();
@@ -271,9 +278,13 @@ public:
       * these are used to display items in virtual lists
       * @{
      */
-    virtual wxString OnGetItemText(long item, long column) const = 0;
-    virtual int OnGetItemImage(long item) const = 0;
-    virtual int OnGetItemColumnImage(long item, long column) const = 0;
+    wxString OnGetItemText(long item, long column) const;
+    int OnGetItemColumnImage(long item, long column) const;
+    wxListItemAttr* OnGetItemAttr(long item) const;
+
+    //! when using the dummy column, we provide diff impl that adjust for that
+    bool GetColumn(int col, wxListItem& item) const;
+    bool SetColumn(int col, wxListItem& item);
     /** @}
      */
 
@@ -283,25 +294,85 @@ public:
      //! handle sort order updates
      void OnColClick( wxListEvent& event );
 
+     virtual int GetIndexFromData( const DataType& data ) const = 0;
+
+     void ReverseOrder();
+
 protected:
-    typedef std::vector< DataImp > DataVector;
-    typedef typename DataVector::iterator DataIter;
-    typedef typename DataVector::const_iterator DataCIter;
+    typedef CustomVirtListCtrl< DataImp, ListCtrlImp >
+        BaseType;
+    typedef std::vector< DataImp >
+        DataVector;
+    typedef typename DataVector::iterator
+        DataIter;
+    typedef typename DataVector::const_iterator
+        DataCIter;
+    typedef typename DataVector::reverse_iterator
+        DataRevIter;
+    typedef typename DataVector::const_reverse_iterator
+        DataRevCIter;
     DataVector m_data;
 
-    typedef DataType SelectedDataType;
-    typedef std::vector< SelectedDataType > SelectedDataVector;
+    typedef DataType
+        SelectedDataType;
+    typedef std::vector< SelectedDataType >
+        SelectedDataVector;
     SelectedDataVector m_selected_data;
-
-    virtual int GetIndexFromData( const DataType& data ) const = 0;
 
     //! the Comparator object passed to the SLInsertionSort function
     ItemComparator<DataType> m_comparator;
 
+    bool RemoveItem( const DataImp item );
+    bool AddItem( const DataImp item );
+
+    long m_periodic_sort_timer_id;
+    wxTimer m_periodic_sort_timer;
+    bool m_periodic_sort;
+    unsigned int m_periodic_sort_interval;
+    void OnPeriodicSort( wxTimerEvent& evt );
+
 public:
     DECLARE_EVENT_TABLE()
+
+private:
+    typedef BaseType
+        ThisType;
+
+    ListCtrlImp& asImp() { return static_cast<ListCtrlImp&>(*this); }
+    const ListCtrlImp& asImp() const { return static_cast<const ListCtrlImp&>(*this); }
+};
+
+template < class ListCtrlType >
+class SelectionSaver {
+    ListCtrlType* m_list;
+
+public:
+    SelectionSaver( ListCtrlType* list  )
+        : m_list( list )
+    { m_list->SaveSelection(); }
+
+    ~SelectionSaver()
+    { m_list->RestoreSelection(); }
 };
 
 #include "customvirtlistctrl.cpp"
 
 #endif /*CUSTOMLISTITEM_H_*/
+
+/**
+    This file is part of SpringLobby,
+    Copyright (C) 2007-09
+
+    springsettings is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License version 2 as published by
+    the Free Software Foundation.
+
+    springsettings is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SpringLobby.  If not, see <http://www.gnu.org/licenses/>.
+**/
+

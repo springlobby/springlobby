@@ -6,23 +6,36 @@
 class OfflineBattle : public IBattle
 {
 	public:
-			OfflineBattle ( const int id ): m_id( id ), m_me( User(_T("")) ) {}
-			OfflineBattle ( ): m_id( 0 ), m_me( User(_T("")) ) {}
+			OfflineBattle ( const int id );
+			OfflineBattle ( );
+			OfflineBattle ( const OfflineBattle&  );
+			OfflineBattle& operator = ( const OfflineBattle&  );
 			~OfflineBattle (){};
-
 			User& GetMe() { return m_me; }
-			bool IsFounderMe() {return true;}
-			void OnOfflineAddUser( const User& user )
-			{
-				m_internal_user_list[user.GetNick()] = user;
-				UserList::AddUser( m_internal_user_list[user.GetNick()] );
-			}
+			bool IsFounderMe() { return true; }
+			void StartSpring();
 
 	protected:
-
 			int m_id;
 			User m_me;
-			UserVec m_internal_user_list;
 };
 
 #endif // OFFLINEBATTLE_H_INCLUDED
+
+/**
+    This file is part of SpringLobby,
+    Copyright (C) 2007-09
+
+    springsettings is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License version 2 as published by
+    the Free Software Foundation.
+
+    springsettings is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SpringLobby.  If not, see <http://www.gnu.org/licenses/>.
+**/
+

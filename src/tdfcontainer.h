@@ -4,7 +4,7 @@
 #include <wx/string.h>
 #include <wx/colour.h>
 #include <wx/log.h>
-#include "utils.h"
+//#include "utils.h"
 
 class wxColour;
 /// Todo: add TDFContainer class.
@@ -20,26 +20,18 @@ class TDFWriter
     void Indent();
     wxString GetCurrentPath();
     void Append(const wxString &name, wxString value);
-    template<class T> void Append(const wxString &name, T value){
-      Append(name,TowxString(value));
-    }
-    /// works like algorithms such as std::sort
     template<class T>
-    void Append(const wxString &name, T begin, T end){
-      Indent();
-      m_stream<<name<<_T("=");
-      for(T it=begin;it!=end;++it){
-        if(it!=begin)m_stream<<_T(" ");
-        m_stream<<(*it);
-      }
-      m_stream<<_T(";\n");
-    }
+    void Append(const wxString &name, T value);
+
+    /// works like algorithms such as std::sort
+    template<class T> void Append(const wxString &name, T begin, T end);
+
     void AppendLineBreak();
     void Close();
   protected:
   private:
-  wxString &m_stream;
-  int m_depth;
+    wxString &m_stream;
+    int m_depth;
 };
 
 ///
@@ -283,4 +275,39 @@ inline Tokenizer &operator >>(Tokenizer &tokenizer, Token &token){
 
 PDataList ParseTDF(std::istream &s, int *error_count=NULL);
 
+//Defintions to not clutter up the class declaration
+template<class T> void TDFWriter:: Append(const wxString &name, T value)
+{
+    Append(name,TowxString(value));
+}
+
+template<class T>
+void TDFWriter::Append(const wxString &name, T begin, T end){
+  Indent();
+  m_stream<<name<<_T("=");
+  for(T it=begin;it!=end;++it){
+    if(it!=begin)m_stream<<_T(" ");
+    m_stream<<(*it);
+  }
+  m_stream<<_T(";\n");
+}
+
 #endif // TDFCONTAINER_H
+
+/**
+    This file is part of SpringLobby,
+    Copyright (C) 2007-09
+
+    springsettings is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License version 2 as published by
+    the Free Software Foundation.
+
+    springsettings is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SpringLobby.  If not, see <http://www.gnu.org/licenses/>.
+**/
+

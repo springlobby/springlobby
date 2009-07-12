@@ -14,7 +14,7 @@ class Ui;
 
 /** \brief The ListCtrll contained in BattleListTab dispalying all currently active battles with their infos
  * \todo DOCMEMORE */
-class BattleListCtrl : public CustomVirtListCtrl< IBattle *>
+class BattleListCtrl : public CustomVirtListCtrl< IBattle *, BattleListCtrl>
 {
   public:
     BattleListCtrl( wxWindow* parent, Ui& ui );
@@ -31,10 +31,10 @@ class BattleListCtrl : public CustomVirtListCtrl< IBattle *>
     virtual void SetTipWindowText( const long item_hit, const wxPoint position);
 
     //these are overloaded to use list in virtual style
-    virtual wxString OnGetItemText(long item, long column) const;
-    virtual int OnGetItemImage(long item) const;
-    virtual int OnGetItemColumnImage(long item, long column) const;
-    wxListItemAttr * OnGetItemAttr(long item) const;
+    wxString GetItemText(long item, long column) const;
+    int GetItemImage(long item) const;
+    int GetItemColumnImage(long item, long column) const;
+    wxListItemAttr * GetItemAttr(long item) const;
 
     enum {
         BLIST_LIST = wxID_HIGHEST,
@@ -63,3 +63,21 @@ class BattleListCtrl : public CustomVirtListCtrl< IBattle *>
 
 
 #endif // SPRINGLOBBY_HEADERGUARD_BATTLELISTCTRL_H
+
+/**
+    This file is part of SpringLobby,
+    Copyright (C) 2007-09
+
+    springsettings is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License version 2 as published by
+    the Free Software Foundation.
+
+    springsettings is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SpringLobby.  If not, see <http://www.gnu.org/licenses/>.
+**/
+

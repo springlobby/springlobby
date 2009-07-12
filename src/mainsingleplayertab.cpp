@@ -16,7 +16,8 @@
 #include "mainsingleplayertab.h"
 #include "battleroommmoptionstab.h"
 #include "ui.h"
-#include "utils.h"
+#include "utils/debug.h"
+#include "utils/conversion.h"
 
 #include "images/battle.xpm"
 #include "images/battle_settings.xpm"
@@ -70,6 +71,7 @@ void MainSinglePlayerTab::OnUnitSyncReloaded()
   wxLogDebugFunc( _T("") );
   try
   {
+      GetSinglePlayerTab().ResetUsername();
     wxLogMessage( _T("Reloading map list") );
     GetSinglePlayerTab().ReloadMaplist();
     wxLogMessage( _T("Reloading mod list") );

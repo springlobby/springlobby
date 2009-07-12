@@ -19,7 +19,8 @@
 #include "battleroomtab.h"
 #include "battlemaptab.h"
 #include "battleoptionstab.h"
-#include "utils.h"
+#include "utils/debug.h"
+#include "utils/conversion.h"
 #include "battleroommmoptionstab.h"
 #include "aui/auimanager.h"
 #include "aui/artprovider.h"
@@ -255,13 +256,3 @@ BattleroomMMOptionsTab<Battle>& MainJoinBattleTab::GetMMOptionsTab()
   return *m_mm_opts_tab;
 }
 
-
-void MainJoinBattleTab::Update()
-{
-  m_list_tab->SortBattleList();
-  if ( !m_battle_tab ) return;
-  try
-  {
-    GetBattleRoomTab().SortPlayerList();
-  } catch( assert_exception& e ) {}
-}

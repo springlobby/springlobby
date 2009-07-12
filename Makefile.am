@@ -25,7 +25,7 @@ AM_CPPFLAGS = \
 # strict aliasing check is disabled, because wxWidgets headers have problems
 AM_CXXFLAGS = \
 	-Wall \
-	-Wno-strict-aliasing
+	-Wno-strict-aliasing 
 
 desktopdir = $(datadir)/applications
 dist_desktop_DATA = \
@@ -59,7 +59,17 @@ springlobby_LDADD = \
 #put template source files here (those need to be present in tarball, but not compiled)
 EXTRA_DIST = \
 	src/battleroommmoptionstab.cpp \
-	src/customvirtlistctrl.cpp
+	src/customvirtlistctrl.cpp \
+	src/playback/playbacktab.cpp \
+	src/playback/playbackfilter.cpp \
+	src/playback/playbackthread.cpp \
+	src/playback/playbacklistctrl.cpp \
+	src/playback/playbacktraits.h \
+	src/playback/playbackstructs.h \
+	src/playback/playbacklist.h \
+	src/playback/playbacklist.cpp \
+	src/httpdownloader.cpp
+	
 
 springsettings_LDADD = \
 	$(WX_LIBS)
@@ -386,6 +396,22 @@ libtorrent_headers = \
 
 
 springlobby_SOURCES = \
+	src/utils/math.cpp \
+	src/utils/math.h \
+	src/utils/misc.cpp \
+	src/utils/misc.h \
+	src/utils/debug.cpp \
+	src/utils/debug.h \
+	src/utils/platform.cpp \
+	src/utils/platform.h \
+	src/utils/conversion.cpp \
+	src/utils/conversion.h \
+	src/utils/tasutil.cpp \
+	src/utils/tasutil.h \
+	src/utils/sltipwin.cpp \
+	src/utils/sltipwin.h \
+	src/utils/controls.cpp \
+	src/utils/controls.h \
 	src/updater/versionchecker.cpp \
 	src/updater/versionchecker.h \
 	src/sounds/ring_sound.h \
@@ -404,6 +430,7 @@ springlobby_SOURCES = \
 	src/images/broom.png.h \
 	src/images/bot_ingame.png.h \
 	src/images/bot_broom.png.h \
+	src/images/channel_options.xpm \
 	src/images/chanop_ingame.xpm \
 	src/images/chanop_away.xpm \
 	src/images/chanop_broom.xpm \
@@ -493,17 +520,16 @@ springlobby_SOURCES = \
 	src/mapctrl.h \
 	src/mutexwrapper.h \
 	src/offlinebattle.h \
+	src/offlinebattle.cpp \
 	src/nicklistctrl.cpp \
 	src/nicklistctrl.h \
-	src/replay/replaytab.h \
-	src/replay/replaytab.cpp \
-	src/replay/replayfilter.h \
-	src/replay/replayfilter.cpp \
-	src/replay/replaylist.cpp \
-	src/replay/replaylist.h \
-	src/replay/replaylistctrl.h \
-	src/replay/replaylistctrl.cpp \
-	src/replay/replaylistfiltervalues.h \
+	src/playback/playbacktab.h \
+	src/playback/playbackthread.h \
+	src/playback/playbackfilter.h \
+	src/playback/replaylist.h \
+	src/playback/replaylist.cpp \
+	src/playback/playbacklistctrl.h \
+	src/playback/playbackfiltervalues.h \
 	src/sdlsound.h \
 	src/sdlsound.cpp \
 	src/server.cpp \
@@ -542,8 +568,6 @@ springlobby_SOURCES = \
 	src/userlist.h \
 	src/userlistctrl.cpp \
 	src/userlistctrl.h \
-	src/utils.cpp \
-	src/utils.h \
 	src/torrentlistctrl.cpp \
 	src/torrentlistctrl.h \
 	src/torrentoptionspanel.cpp \
@@ -562,6 +586,7 @@ springlobby_SOURCES = \
 	src/images/battle_settings.xpm \
 	src/images/battle.xpm \
 	src/images/bot.xpm \
+	src/images/bot_away.xpm \
 	src/images/channel.xpm \
 	src/images/chat_icon.png.h \
 	src/images/chat_icon_text.png.h \
@@ -599,8 +624,6 @@ springlobby_SOURCES = \
 	src/images/rank_unknown.xpm \
 	src/images/ready_q.xpm \
 	src/images/ready_unsync.xpm \
-	src/images/replay_icon.png.h \
-	src/images/replay_icon_text.png.h \
 	src/images/downloads_icon.png.h \
 	src/images/single_player_icon.png.h \
 	src/images/downloads_icon_text.png.h \
@@ -881,13 +904,14 @@ springlobby_SOURCES = \
 	src/globalevents.h \
 	src/globalevents.cpp \
 	src/httpdownloader.h \
-	src/httpdownloader.cpp \
 	src/Helper/TextCompletionDatabase.hpp \
 	src/Helper/TextCompletionDatabase.cpp \
 	src/Helper/wxTranslationHelper.h \
 	src/Helper/wxTranslationHelper.cpp \
 	src/Helper/tasclientimport.h \
 	src/Helper/tasclientimport.cpp \
+	src/Helper/slhtmlwindow.cpp \
+	src/Helper/slhtmlwindow.h \
 	src/channel/channelchooser.cpp \
 	src/channel/channelchooser.h \
 	src/channel/channelchooserdialog.cpp \
@@ -897,6 +921,8 @@ springlobby_SOURCES = \
         src/Helper/wxtextctrlhist.cpp \
 	src/Helper/wxtextctrlhist.h \
 	src/Helper/sortutil.h \
+	src/Helper/imageviewer.h \
+	src/Helper/imageviewer.cpp \
 	src/filelister/filelistctrl.h \
 	src/filelister/filelistdialog.h \
 	src/filelister/filelistfilter.h \
@@ -922,16 +948,28 @@ springlobby_SOURCES = \
 	src/aui/artprovider.cpp \
 	src/updater/updater.h \
 	src/updater/updater.cpp \
-	src/updater/exedownloader.h \
-	src/updater/exedownloader.cpp \
+	src/widgets/downloadlistctrl.cpp \
+	src/widgets/downloadlistctrl.h \
+	src/widgets/downloaddialog.cpp \
+	src/widgets/downloaddialog.h \
+	src/widgets/downloadpanel.cpp \
+	src/widgets/downloadpanel.h \
+	src/widgets/infopanel.cpp \
+	src/widgets/infopanel.h \
+	src/widgets/widget.cpp \
+	src/widgets/widget.h \
 	src/usermenu.h \
 	src/thread.cpp \
 	src/thread.h \
 	src/globalsmanager.cpp \
 	src/globalsmanager.h \
 	src/mmoptionwindows.cpp \
-	src/mmoptionwindows.h
-
+	src/mmoptionwindows.h \
+	src/playback/savegamelist.cpp \
+	src/playback/savegamelist.h \
+	src/images/floppy_icon.png.h \
+	src/images/replay_icon.png.h \
+	src/images/replay_icon_text.png.h
 
 
 if USE_WINDRES
@@ -962,7 +1000,6 @@ springlobby_SOURCES += \
 	src/settings++/tab_debug.h \
 	src/settings++/tab_audio.cpp \
 	src/settings++/presets.h \
-	src/settings++/presets.cpp \
 	src/settings++/tab_abstract.cpp \
 	src/settings++/Defs.hpp \
 	src/settings++/tab_simple.cpp \
@@ -980,6 +1017,16 @@ springlobby_SOURCES += \
 	src/settings++/helpmenufunctions.cpp
 
 springsettings_SOURCES = \
+	src/utils/debug.cpp \
+	src/utils/debug.h \
+	src/utils/platform.cpp \
+	src/utils/platform.h \
+	src/utils/conversion.cpp \
+	src/utils/conversion.h \
+	src/utils/sltipwin.cpp \
+	src/utils/sltipwin.h \
+	src/utils/controls.cpp \
+	src/utils/controls.h \
 	src/crashreport.cpp \
 	src/crashreport.h \
 	src/spinctld.h \
@@ -988,8 +1035,6 @@ springsettings_SOURCES = \
 	src/springunitsynclib.h \
 	src/settings.cpp \
 	src/settings.h \
-	src/utils.cpp \
-	src/utils.h \
 	src/uiutils.cpp \
 	src/uiutils.h \
 	src/globalsmanager.cpp \
@@ -1006,7 +1051,6 @@ springsettings_SOURCES = \
 	src/settings++/tab_debug.h \
 	src/settings++/tab_audio.cpp \
 	src/settings++/presets.h \
-	src/settings++/presets.cpp \
 	src/settings++/tab_abstract.cpp \
 	src/settings++/Main.cpp \
 	src/settings++/Defs.hpp \

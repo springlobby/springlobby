@@ -52,13 +52,17 @@ class BattleListFilter : public wxPanel
 
     void SaveFilterValues();
 
+  enum ButtonMode {
+    BUTTON_MODE_EQUAL,
+    BUTTON_MODE_BIGGER,
+    BUTTON_MODE_SMALLER
+  };
 	protected:
-        enum m_button_mode {m_equal,m_bigger,m_smaller};
 
-    wxString _GetButtonSign(m_button_mode value);
-		m_button_mode _GetNextMode(m_button_mode value);
-		m_button_mode _GetButtonMode(wxString sign);
-		bool _IntCompare(int a,int b,m_button_mode mode);
+    wxString _GetButtonSign(ButtonMode value);
+		ButtonMode _GetNextMode(ButtonMode value);
+		ButtonMode _GetButtonMode(wxString sign);
+		bool _IntCompare(int a,int b,ButtonMode mode);
 
     bool m_activ;
 
@@ -88,7 +92,7 @@ class BattleListFilter : public wxPanel
 
         //Rank
 		wxStaticText* m_filter_rank_text;
-		m_button_mode m_filter_rank_mode;
+		ButtonMode m_filter_rank_mode;
 		wxButton* m_filter_rank_button;
 		wxChoice* m_filter_rank_choice;
 		int m_filter_rank_choice_value;
@@ -101,7 +105,7 @@ class BattleListFilter : public wxPanel
         //Player
 		wxStaticText* m_filter_player_text;
 		wxButton* m_filter_player_button;
-		m_button_mode m_filter_player_mode;
+		ButtonMode m_filter_player_mode;
 		wxChoice* m_filter_player_choice;
 		int m_filter_player_choice_value;
 
@@ -114,7 +118,7 @@ class BattleListFilter : public wxPanel
         //Max Player
 		wxStaticText* m_filter_maxplayer_text;
 		wxButton* m_filter_maxplayer_button;
-		m_button_mode m_filter_maxplayer_mode;
+		ButtonMode m_filter_maxplayer_mode;
 		wxChoice* m_filter_maxplayer_choice;
 		int m_filter_maxplayer_choice_value;
 
@@ -127,7 +131,7 @@ class BattleListFilter : public wxPanel
         //Spectator
 		wxStaticText* m_filter_spectator_text;
 		wxButton* m_filter_spectator_button;
-		m_button_mode m_filter_spectator_mode;
+		ButtonMode m_filter_spectator_mode;
 		wxChoice* m_filter_spectator_choice;
 		int m_filter_spectator_choice_value;
 
@@ -161,3 +165,21 @@ enum
 };
 
 #endif //SPRINGLOBBY_HEADERGUARD_BATTLELISTFILTER_H
+
+/**
+    This file is part of SpringLobby,
+    Copyright (C) 2007-09
+
+    springsettings is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License version 2 as published by
+    the Free Software Foundation.
+
+    springsettings is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with SpringLobby.  If not, see <http://www.gnu.org/licenses/>.
+**/
+

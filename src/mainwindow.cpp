@@ -3,6 +3,13 @@
 // Class: MainWindow
 //
 
+#ifdef _MSC_VER
+#ifndef NOMINMAX
+    #define NOMINMAX
+#endif // NOMINMAX
+#include <winsock2.h>
+#endif // _MSC_VER
+
 #include <wx/frame.h>
 #include <wx/intl.h>
 #include <wx/textdlg.h>
@@ -11,10 +18,12 @@
 #include <wx/icon.h>
 #include <wx/sizer.h>
 #include <wx/menu.h>
+#include <wx/log.h>
 #include <wx/dcmemory.h>
 #include <wx/choicdlg.h>
 #include <wx/aui/auibook.h>
 #include <wx/tooltip.h>
+#include <wx/aboutdlg.h>
 
 #include <stdexcept>
 
@@ -25,7 +34,8 @@
 #include "settings.h"
 #include "ui.h"
 #include "server.h"
-#include "utils.h"
+#include "utils/debug.h"
+#include "utils/platform.h"
 #include "battlelisttab.h"
 #include "mainchattab.h"
 #include "mainjoinbattletab.h"
@@ -34,7 +44,8 @@
 #include "iunitsync.h"
 #include "uiutils.h"
 #include "chatpanel.h"
-#include "replay/replaytab.h"
+#include "playback/playbacktraits.h"
+#include "playback/playbacktab.h"
 #ifndef NO_TORRENT_SYSTEM
 #include "maintorrenttab.h"
 #include "torrentwrapper.h"
@@ -55,6 +66,7 @@
 #include "images/downloads_icon_text.png.h"
 #include "images/replay_icon.png.h"
 #include "images/replay_icon_text.png.h"
+#include "images/floppy_icon.png.h"
 
 #include "settings++/frame.h"
 #include "settings++/custom_dialogs.h"
@@ -62,13 +74,12 @@
 #include "updater/updater.h"
 #include "channel/autojoinchanneldialog.h"
 #include "channel/channelchooserdialog.h"
+#include "Helper/imageviewer.h"
 
-#ifdef HAVE_WX28
-    #if defined(__WXMSW__)
-        #include <wx/msw/winundef.h>
-    #endif
-    #include <wx/aboutdlg.h>
+#if defined(__WXMSW__)
+    #include <wx/msw/winundef.h>
 #endif
+#include <wx/aboutdlg.h>
 
 BEGIN_EVENT_TABLE(MainWindow, wxFrame)
 
@@ -93,15 +104,20 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU( MENU_AUTOJOIN_CHANNELS, MainWindow::OnMenuAutojoinChannels )
   EVT_MENU( MENU_SELECT_LOCALE, MainWindow::OnMenuSelectLocale )
   EVT_MENU( MENU_CHANNELCHOOSER, MainWindow::OnShowChannelChooser )
+  EVT_MENU( MENU_SCREENSHOTS, MainWindow::OnShowScreenshots )
   EVT_MENU_OPEN( MainWindow::OnMenuOpen )
   EVT_AUINOTEBOOK_PAGE_CHANGED( MAIN_TABS, MainWindow::OnTabsChanged )
+  EVT_CLOSE( MainWindow::OnClose )
 END_EVENT_TABLE()
 
+MainWindow::TabNames MainWindow::m_tab_names;
 
-
-MainWindow::MainWindow( Ui& ui ) :
-  wxFrame( (wxFrame*)0, -1, _("SpringLobby"), wxPoint(50, 50), wxSize(450, 340) ),
-  m_ui(ui),m_autojoin_dialog(NULL),m_channel_chooser(NULL)
+MainWindow::MainWindow( Ui& ui )
+    : wxFrame( (wxFrame*)0, -1, _("SpringLobby"), wxPoint(50, 50), wxSize(450, 340) ),
+    m_ui(ui),
+    m_autojoin_dialog(NULL),
+    m_channel_chooser(NULL),
+    m_log_win(NULL)
 {
   SetIcon( wxIcon(springlobby_xpm) );
 
@@ -111,8 +127,10 @@ MainWindow::MainWindow( Ui& ui ) :
   menuFile->Append(MENU_CONNECT, _("&Connect..."));
   menuFile->Append(MENU_DISCONNECT, _("&Disconnect"));
   menuFile->AppendSeparator();
+#ifndef NDEBUG
   menuFile->Append(MENU_SAVE_OPTIONS, _("&Save options"));
   menuFile->AppendSeparator();
+#endif
   menuFile->Append(MENU_QUIT, _("&Quit"));
 
   //m_menuEdit = new wxMenu;
@@ -131,6 +149,7 @@ MainWindow::MainWindow( Ui& ui ) :
   m_menuTools->Append(MENU_CHANNELCHOOSER, _("Channel &list"));
   m_menuTools->Append(MENU_CHAT, _("Open private &chat..."));
   m_menuTools->Append(MENU_AUTOJOIN_CHANNELS, _("&Autojoin channels..."));
+  m_menuTools->Append(MENU_SCREENSHOTS, _("&View screenshots"));
   m_menuTools->AppendSeparator();
   m_menuTools->Append(MENU_USYNC, _("&Reload maps/mods"));
 
@@ -167,20 +186,27 @@ MainWindow::MainWindow( Ui& ui ) :
   m_chat_tab = new MainChatTab( m_func_tabs, m_ui );
   m_join_tab = new MainJoinBattleTab( m_func_tabs, m_ui );
   m_sp_tab = new MainSinglePlayerTab( m_func_tabs, m_ui );
-  m_opts_tab = new MainOptionsTab( m_func_tabs, m_ui );
   m_replay_tab = new ReplayTab ( m_func_tabs, m_ui );
+  m_savegame_tab = new SavegameTab( m_func_tabs, m_ui );
 #ifndef NO_TORRENT_SYSTEM
   m_torrent_tab = new MainTorrentTab( m_func_tabs, m_ui);
 #endif
+  m_opts_tab = new MainOptionsTab( m_func_tabs, m_ui );
 
-  m_func_tabs->AddPage( m_chat_tab, _("Chat"), true );
-  m_func_tabs->AddPage( m_join_tab, _("Multiplayer"), false );
-  m_func_tabs->AddPage( m_sp_tab, _("Singleplayer"), false );
-  m_func_tabs->AddPage( m_opts_tab, _("Options"), false );
-  m_func_tabs->AddPage( m_replay_tab, _("Replays"), false );
+    m_func_tabs->AddPage( m_chat_tab,     m_tab_names[0], true  );
+    m_func_tabs->AddPage( m_join_tab,     m_tab_names[1], false );
+    m_func_tabs->AddPage( m_sp_tab,       m_tab_names[2], false );
+    m_func_tabs->AddPage( m_savegame_tab, m_tab_names[3], false );
+    m_func_tabs->AddPage( m_replay_tab,   m_tab_names[4], false );
 #ifndef NO_TORRENT_SYSTEM
-  m_func_tabs->AddPage( m_torrent_tab, _("Downloads"), false );
+    m_func_tabs->AddPage( m_torrent_tab,  m_tab_names[5], false );
+    m_func_tabs->AddPage( m_opts_tab,     m_tab_names[6], false );
+#else
+    m_func_tabs->AddPage( m_opts_tab,     m_tab_names[5], false );
 #endif
+
+
+
   SetTabIcons();
   m_main_sizer->Add( m_func_tabs, 1, wxEXPAND | wxALL, 0 );
 
@@ -209,14 +235,16 @@ wxBitmap MainWindow::GetTabIcon( const unsigned char* data, size_t size )
 
 void MainWindow::SetTabIcons()
 {
-    m_func_tabs->SetPageBitmap( 0, GetTabIcon( chat_icon_png, sizeof(chat_icon_png)  ) );
-    m_func_tabs->SetPageBitmap( 1, GetTabIcon( join_icon_png, sizeof(join_icon_png) ) );
-    m_func_tabs->SetPageBitmap( 2, GetTabIcon( single_player_icon_png , sizeof (single_player_icon_png) ) );
-    m_func_tabs->SetPageBitmap( 3, GetTabIcon( options_icon_png , sizeof (options_icon_png) ) );
-    m_func_tabs->SetPageBitmap( 4, GetTabIcon( replay_icon_png , sizeof (replay_icon_png) ) );
+		unsigned int count = 0;
+    m_func_tabs->SetPageBitmap( count++, GetTabIcon( chat_icon_png, sizeof(chat_icon_png)  ) );
+    m_func_tabs->SetPageBitmap( count++, GetTabIcon( join_icon_png, sizeof(join_icon_png) ) );
+    m_func_tabs->SetPageBitmap( count++, GetTabIcon( single_player_icon_png , sizeof (single_player_icon_png) ) );
+    m_func_tabs->SetPageBitmap( count++, GetTabIcon( floppy_icon_png , sizeof (floppy_icon_png) ) );
+    m_func_tabs->SetPageBitmap( count++, GetTabIcon( replay_icon_png , sizeof (replay_icon_png) ) );
 #ifndef NO_TORRENT_SYSTEM
-    m_func_tabs->SetPageBitmap( 5, GetTabIcon(  downloads_icon_png , sizeof (downloads_icon_png) ) );
+    m_func_tabs->SetPageBitmap( count++, GetTabIcon(  downloads_icon_png , sizeof (downloads_icon_png) ) );
 #endif
+		m_func_tabs->SetPageBitmap( count++, GetTabIcon( options_icon_png , sizeof (options_icon_png) ) );
     Refresh();
 }
 
@@ -226,7 +254,19 @@ void MainWindow::forceSettingsFrameClose()
 		se_frame->handleExternExit();
 }
 
+void MainWindow::SetLogWin( wxLogWindow* log, wxLogChain* logchain  )
+{
+    m_log_win = log;
+    m_log_chain = logchain;
+    if ( m_log_win )
+        m_log_win->GetFrame()->SetParent( this );
+}
+
 MainWindow::~MainWindow()
+{
+}
+
+void MainWindow::OnClose( wxCloseEvent& evt )
 {
   wxAuiManager* manager=GetAui().manager;
   if(manager){
@@ -238,9 +278,10 @@ MainWindow::~MainWindow()
   wxString name = _T("MAINWINDOW");
   sett().SetWindowSize( name, GetSize() );
   sett().SetWindowPos( name, GetPosition() );
-  sett().SaveSettings();
+
   m_ui.Quit();
   m_ui.OnMainWindowDestruct();
+  forceSettingsFrameClose();
   freeStaticBox();
 
   if ( m_autojoin_dialog  != 0 )
@@ -249,8 +290,20 @@ MainWindow::~MainWindow()
     m_autojoin_dialog = 0;
   }
 
-}
+  sett().SaveSettings();
+  if ( m_log_win ) {
+    m_log_win->GetFrame()->Destroy();
+    if ( m_log_chain ) // if logwin was created, it's the current "top" log
+        m_log_chain->DetachOldLog();  //so we need to tellwx not to delete it on its own
+        //since we absolutely need to destroy the logwin here, set a fallback for the time until app cleanup
+#if(wxUSE_STD_IOSTREAM) 
+        wxLog::SetActiveTarget( new wxLogStream( &std::cout ) );
+#endif
+  }
 
+  Destroy();
+
+}
 
 void DrawBmpOnBmp( wxBitmap& canvas, wxBitmap& object, int x, int y )
 {
@@ -298,10 +351,16 @@ MainSinglePlayerTab& MainWindow::GetSPTab()
   return *m_sp_tab;
 }
 
-ReplayTab& MainWindow::GetReplayTab()
+MainWindow::ReplayTab& MainWindow::GetReplayTab()
 {
     ASSERT_EXCEPTION( m_replay_tab != 0, _T("m_replay_tab = 0") );
     return *m_replay_tab;
+}
+
+MainWindow::SavegameTab& MainWindow::GetSavegameTab()
+{
+    ASSERT_EXCEPTION( m_replay_tab != 0, _T("m_replay_tab = 0") );
+    return *m_savegame_tab;
 }
 
 #ifndef NO_TORRENT_SYSTEM
@@ -336,11 +395,12 @@ MainOptionsTab& MainWindow::GetOptionsTab()
 //! @param channel The channel name
 //! @note This does NOT join the chatt.
 //! @sa Server::JoinChannel OpenPrivateChat
-void MainWindow::OpenChannelChat( Channel& channel )
+void MainWindow::OpenChannelChat( Channel& channel, bool doFocus )
 {
-  ASSERT_LOGIC( m_chat_tab != 0, _T("m_chat_tab") );
-  m_func_tabs->SetSelection( 0 );
-  m_chat_tab->AddChatPannel( channel );
+    ASSERT_LOGIC( m_chat_tab != 0, _T("m_chat_tab") );
+    if ( doFocus )
+        m_func_tabs->SetSelection( PAGE_CHAT );
+    m_chat_tab->AddChatPanel( channel );
 }
 
 
@@ -350,13 +410,26 @@ void MainWindow::OpenChannelChat( Channel& channel )
 void MainWindow::OpenPrivateChat( const User& user, bool doFocus )
 {
   ASSERT_LOGIC( m_chat_tab != 0, _T("m_chat_tab") );
-  m_func_tabs->SetSelection( 0 );
-  ChatPanel* cp = m_chat_tab->AddChatPannel( user );
+  m_func_tabs->SetSelection( PAGE_CHAT );
+  ChatPanel* cp = m_chat_tab->AddChatPanel( user );
   if ( doFocus )
     cp->FocusInputBox();
 
 }
 
+//! @brief Displays the lobby singleplayer tab.
+void MainWindow::ShowSingleplayer()
+{
+    ShowTab( PAGE_SINGLE );
+}
+
+void MainWindow::ShowTab( const int idx )
+{
+    if ( -1 < idx && idx <m_tab_names.GetCount() )
+        m_func_tabs->SetSelection( idx );
+    else
+        wxLogError( _T("tab selection oob: %d"), idx );
+}
 
 //! @brief Displays the lobby configuration.
 void MainWindow::ShowConfigure( const unsigned int page )
@@ -400,7 +473,8 @@ void MainWindow::OnMenuChat( wxCommandEvent& event )
   wxString answer;
   if ( m_ui.AskText( _("Open Private Chat..."), _("Name of user"), answer ) ) {
     if (m_ui.GetServer().UserExists( answer ) ) {
-      OpenPrivateChat( m_ui.GetServer().GetUser( answer ) );
+        //true puts focus on new tab
+      OpenPrivateChat( m_ui.GetServer().GetUser( answer ), true  );
     }
   }
 
@@ -445,10 +519,9 @@ void MainWindow::OnMenuSaveOptions( wxCommandEvent& event )
   sett().SaveSettings();
 }
 
-
 void MainWindow::OnMenuQuit( wxCommandEvent& event )
 {
-  m_ui.Quit();
+  Close();
 }
 
 
@@ -459,9 +532,19 @@ void MainWindow::OnMenuVersion( wxCommandEvent& event )
 
 void MainWindow::OnUnitSyncReload( wxCommandEvent& event )
 {
-  m_ui.ReloadUnitSync();
+    m_ui.ReloadUnitSync();
 }
 
+void MainWindow::OnShowScreenshots( wxCommandEvent& event )
+{
+    wxSortedArrayString ar = usync().GetScreenshotFilenames();
+    if ( ar.Count() == 0 ) {
+        customMessageBoxNoModal( SL_MAIN_ICON, _("There were no screenshots found in your spring data directory."), _("No files found") );
+        return;
+    }
+    ImageViewerDialog* img  = new ImageViewerDialog( ar, true, this, -1, _T("Screenshots") );
+    img->Show( true );
+}
 
 void MainWindow::OnMenuStartTorrent( wxCommandEvent& event )
 {
@@ -593,4 +676,9 @@ void MainWindow::OnMenuDefaultLayout( wxCommandEvent& event )
 	unsigned int result = wxGetSingleChoiceIndex( _("Which profile do you want to be default?"), _("Layout manager"), layouts );
 	if ( ( result < 0  ) || ( result > layouts.GetCount() ) ) return;
 	sett().SetDefaultLayout( layouts[result] );
+}
+
+const MainWindow::TabNames& MainWindow::GetTabNames()
+{
+    return m_tab_names;
 }

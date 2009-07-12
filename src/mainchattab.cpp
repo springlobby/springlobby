@@ -13,7 +13,9 @@
 
 #include "aui/auimanager.h"
 #include "mainchattab.h"
-#include "utils.h"
+#include "utils/debug.h"
+#include "utils/conversion.h"
+#include "utils/math.h"
 #include "mainwindow.h"
 #include "channel/channel.h"
 #include "user.h"
@@ -149,19 +151,47 @@ void MainChatTab::OnUserDisconnected( User& user )
   }
 }
 
+void MainChatTab::LeaveChannels()
+{
+    for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ ) {
+    ChatPanel* tmp = (ChatPanel*)m_chat_tabs->GetPage(i);
+    if ( tmp->GetPanelType() == CPT_Channel )
+    {
+			tmp->StatusMessage( _("Disconnected from server, chat closed.") );
+      tmp->SetChannel( 0 );
+    } else if (tmp->GetPanelType() == CPT_User )
+    {
+			tmp->StatusMessage( _("Disconnected from server, chat closed.") );
+			tmp->SetUser( 0 );
+    }
+  }
+}
 
 void MainChatTab::RejoinChannels()
 {
-  for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ ) {
+  for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ )
+  {
     ChatPanel* tmp = (ChatPanel*)m_chat_tabs->GetPage(i);
-    if ( tmp->GetPanelType() == CPT_Channel ) {
+    if ( tmp->GetPanelType() == CPT_Channel )
+    {
 
       // TODO: This will not rejoin passworded channels.
       wxString name = m_chat_tabs->GetPageText(i);
-      // #springlobby is joined automatically
-      if ( name != _T("springlobby") ) m_ui.GetServer().JoinChannel( name, _T("") );
+      bool alreadyin = false;
+      try
+      {
+				ui().GetServer().GetChannel( name ).GetMe();
+				alreadyin = true;
+      }
+      catch (...) {}
+      if ( !alreadyin )
+      {
+          m_ui.GetServer().JoinChannel( name, _T("") );
+          tmp->SetChannel( &m_ui.GetServer().GetChannel( name ) );
+			}
 
-    } else if (tmp->GetPanelType() == CPT_User ) {
+    } else if (tmp->GetPanelType() == CPT_User )
+    {
 
       wxString name = m_chat_tabs->GetPageText(i);
       if ( m_ui.GetServer().UserExists( name ) ) tmp->SetUser( &m_ui.GetServer().GetUser( name ) );
@@ -171,7 +201,7 @@ void MainChatTab::RejoinChannels()
 }
 
 
-ChatPanel* MainChatTab::AddChatPannel( Channel& channel )
+ChatPanel* MainChatTab::AddChatPanel( Channel& channel )
 {
 
   for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ ) {
@@ -191,7 +221,7 @@ ChatPanel* MainChatTab::AddChatPannel( Channel& channel )
   return chat;
 }
 
-ChatPanel* MainChatTab::AddChatPannel( Server& server, const wxString& name )
+ChatPanel* MainChatTab::AddChatPanel( Server& server, const wxString& name )
 {
 
   for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ ) {
@@ -210,7 +240,7 @@ ChatPanel* MainChatTab::AddChatPannel( Server& server, const wxString& name )
   return chat;
 }
 
-ChatPanel* MainChatTab::AddChatPannel( const User& user )
+ChatPanel* MainChatTab::AddChatPanel( const User& user )
 {
   for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ ) {
     if ( m_chat_tabs->GetPageText(i) == user.GetNick() ) {
@@ -272,6 +302,8 @@ void MainChatTab::OnTabsChanged( wxAuiNotebookEvent& event )
     return;
   }
 
+  GetActiveChatPanel()->FocusInputBox();
+
 }
 
 
@@ -281,10 +313,10 @@ wxImage MainChatTab::ReplaceChannelStatusColour( wxBitmap img, const wxColour& c
   wxImage::HSVValue origcolour = wxImage::RGBtoHSV( wxImage::RGBValue::RGBValue( colour.Red(), colour.Green(), colour.Blue() ) );
 
   double bright = origcolour.value - 0.1*origcolour.value;
-  CLAMP(bright,0,1);
+  bright = clamp(bright,0.0,1.0);
   wxImage::HSVValue hsvdarker1( origcolour.hue, origcolour.saturation, bright );
   bright = origcolour.value - 0.5*origcolour.value;
-  CLAMP(bright,0,1);
+  bright = clamp(bright,0.0,1.0);
   wxImage::HSVValue hsvdarker2( origcolour.hue, origcolour.saturation, bright );
 
   wxImage::RGBValue rgbdarker1 = wxImage::HSVtoRGB( hsvdarker1 );
@@ -324,16 +356,3 @@ bool MainChatTab::RemoveChatPanel( ChatPanel* panel )
     return false;
 }
 
-
-void MainChatTab::Update()
-{
-    for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ )
-    {
-        ChatPanel* tmp = (ChatPanel*)m_chat_tabs->GetPage(i);
-        if ( m_close_window == m_chat_tabs->GetPage( i ) ) continue; //skip the close button
-        if ( ( tmp != 0 ) && ( tmp->GetPanelType() == CPT_Channel ) )
-        {
-            tmp->SortNickList();
-        }
-    }
-}
