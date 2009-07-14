@@ -585,7 +585,9 @@ void Battle::StartSpring()
 			try
 			{
 				wxString path = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("relayhost_script.txt");
-				if ( !wxFile::Access( path, wxFile::write ) ) wxLogError( _T("Access denied to script.txt.") );
+				if ( !wxFile::Access( path, wxFile::write ) ) {
+				    wxLogError( _T("Access denied to script.txt.") );
+				}
 
 				wxFile f( path, wxFile::write );
 				f.Write( hostscript );
