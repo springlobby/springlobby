@@ -15,7 +15,7 @@ protected:
         private:
             typedef PlaybackLoader<PlaybackTabImp>
                 ParentType;
-            friend class ParentType;//lets the parent type use ProcessEvent
+            friend class PlaybackLoader<PlaybackTabImp>;//lets the parent type use ProcessEvent
 
         public:
             PlaybackLoaderThread();
