@@ -29,6 +29,7 @@
 #include "user.h"
 #include "utils/debug.h"
 #include "utils/conversion.h"
+#include "uiutils.h"
 #include "chatpanel.h"
 #include "battlelisttab.h"
 #include "battleroomtab.h"
