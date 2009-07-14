@@ -407,6 +407,7 @@ libtorrent_headers = \
 
 
 springlobby_SOURCES = \
+	src/defines.h \
 	src/updater/updatermainwindow.cpp \
 	src/updater/updatermainwindow.h \
 	src/utils/activitynotice.cpp \

@@ -36,6 +36,7 @@
 #include "battle.h"
 #include "utils/conversion.h"
 #include "utils/debug.h"
+#include "defines.h"
 #include "battleroomlistctrl.h"
 #include "chatpanel.h"
 #include "mapctrl.h"
@@ -311,7 +312,11 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle& battle )
     //m_info1_sizer = new wxBoxSizer( wxHORIZONTAL );
     m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
-    int side_sel_width = m_side_sel->GetWidestItemWidth();
+    #ifdef HAVE_WX29
+        int side_sel_width = 150; //! FIXME
+    #else
+        int side_sel_width = m_side_sel->GetWidestItemWidth();
+    #endif
     wxBoxSizer* m_side_sel_sizer = new wxBoxSizer( wxHORIZONTAL );
     m_side_sel_sizer->SetMinSize( side_sel_width, CONTROL_HEIGHT );
     m_side_sel_sizer->Add( m_side_sel, 1, wxEXPAND );

@@ -2,6 +2,7 @@
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="6" />
 	<Project>
+	<Unit filename="src/defines.h" />
 	<Unit filename="src/updater/updatermainwindow.cpp" />
 	<Unit filename="src/updater/updatermainwindow.h" />
 	<Unit filename="src/utils/activitynotice.cpp" />

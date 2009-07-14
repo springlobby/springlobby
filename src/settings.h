@@ -32,6 +32,7 @@ const unsigned int SPRING_MAX_ALLIES = 16;
  */
 const bool DEFSETT_WEB_BROWSER_USE_DEFAULT = true;
 
+#include <wx/config.h>
 #include <wx/fileconf.h>
 #include "useractions.h"
 #include "Helper/sortutil.h"

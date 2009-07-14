@@ -11,6 +11,7 @@
 #include <wx/button.h>
 #include <wx/tipwin.h>
 #include <wx/tooltip.h>
+#include <wx/textctrl.h>
 #include <map>
 
 #include "utils/controls.h"
