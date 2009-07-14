@@ -99,7 +99,7 @@ int IBattle::GetPlayerNum( const User& user )
     return -1;
 }
 
-wxColour IBattle::GetFreeColour( User &for_whom )
+wxColour IBattle::GetFreeColour( User *for_whom )
 {
     int lowest = 0;
     bool changed = true;
@@ -110,12 +110,12 @@ wxColour IBattle::GetFreeColour( User &for_whom )
         std::set<int> parsed_teams;
         for ( user_map_t::size_type i = 0; i < GetNumUsers(); i++ )
         {
-            if ( &GetUser( i ) == &for_whom ) continue;
+            if ( (for_whom != NULL) && (&GetUser( i ) == for_whom) ) continue;
             UserBattleStatus& bs = GetUser( i ).BattleStatus();
             if ( bs.spectator ) continue;
 						if ( parsed_teams.find( bs.team ) != parsed_teams.end() ) continue; // skip duplicates
 						parsed_teams.insert( bs.team );
-            if ( AreColoursSimilar( bs.colour, fixcolourspalette[lowest] ), 50 )
+            if ( AreColoursSimilar( bs.colour, fixcolourspalette[lowest], 20 ) )
             {
                 lowest++;
                 if ( lowest > fixcolourspalette.size() ) fixcolourspalette = GetFixColoursPalette( lowest + 1 );
@@ -126,31 +126,15 @@ wxColour IBattle::GetFreeColour( User &for_whom )
     return fixcolourspalette[lowest];
 }
 
+wxColour IBattle::GetFreeColour( User &for_whom )
+{
+    return GetFreeColour( &for_whom );
+}
+
 
 wxColour IBattle::GetNewColour()
 {
-    int lowest = 0;
-    bool changed = true;
-    std::vector<wxColour>& fixcolourspalette = GetFixColoursPalette( m_teams_sizes.size() + 1 );
-    while ( changed )
-    {
-        changed = false;
-        std::set<int> parsed_teams;
-        for ( user_map_t::size_type i = 0; i < GetNumUsers(); i++ )
-        {
-            UserBattleStatus& bs = GetUser( i ).BattleStatus();
-            if ( bs.spectator ) continue;
-						if ( parsed_teams.find( bs.team ) != parsed_teams.end() ) continue; // skip duplicates
-						parsed_teams.insert( bs.team );
-            if ( AreColoursSimilar( bs.colour, fixcolourspalette[lowest] ), 50 )
-            {
-                lowest++;
-                if ( lowest > fixcolourspalette.size() ) fixcolourspalette = GetFixColoursPalette( lowest + 1 );
-                changed = true;
-            }
-        }
-    }
-    return fixcolourspalette[lowest];
+    return GetFreeColour();
 }
 
 int IBattle::ColourDifference(const wxColour &a, const wxColour &b) // returns max difference of r,g,b.
