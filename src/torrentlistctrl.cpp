@@ -37,7 +37,7 @@ BEGIN_EVENT_TABLE( TorrentListCtrl, TorrentListCtrl::BaseType )
 	#endif
 END_EVENT_TABLE()
 
-TorrentListCtrl::TorrentListCtrl( wxWindow* parent, Ui& ui )
+TorrentListCtrl::TorrentListCtrl( wxWindow* parent )
 :	TorrentListCtrl::BaseType( parent, TLIST_CLICK, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("TorrentListCtrl"), 10, 10, &CompareOneCrit )
 , m_popup(0)
 {
@@ -133,7 +133,7 @@ void TorrentListCtrl::UpdateTorrentInfo(const DataType& info)
 void TorrentListCtrl::RefreshTorrentStatus()
 {
 	BaseType::DataIter it = m_data.begin();
-	for(it; it != m_data.end(); it++)
+	for(; it != m_data.end(); ++it)
 	{
 		P2P::FileStatus currentStatus = torrent().GetTorrentStatusByHash(it->hash);
 		if(it->downloadstatus != currentStatus)
@@ -181,14 +181,14 @@ void TorrentListCtrl::OnListRightClick( wxListEvent& event )
     }
 }
 
-void TorrentListCtrl::OnCancel(wxCommandEvent &event)
+void TorrentListCtrl::OnCancel(wxCommandEvent &/*event*/)
 {
 	torrent().RemoveTorrentByHash(GetSelectedData().hash);
 	RemoveTorrentInfo(GetSelectedData());
 }
 
 
-void TorrentListCtrl::OnRetry(wxCommandEvent &event)
+void TorrentListCtrl::OnRetry(wxCommandEvent &/*event*/)
 {
 	torrent().RequestFileByHash(GetSelectedData().hash);
 }
@@ -205,12 +205,12 @@ void TorrentListCtrl::Sort()
 }
 
 
-void TorrentListCtrl::SetTipWindowText( const long item_hit, const wxPoint position)
+void TorrentListCtrl::SetTipWindowText( const long /*item_hit*/, const wxPoint /*position*/)
 {
     m_tiptext = _T("");
 }
 
-void TorrentListCtrl::HighlightItem( long item )
+void TorrentListCtrl::HighlightItem( long /*item*/ )
 {
 
 }
@@ -232,12 +232,12 @@ int TorrentListCtrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir 
     }
 }
 
-int TorrentListCtrl::GetItemColumnImage(long item, long column) const
+int TorrentListCtrl::GetItemColumnImage(long /*item*/, long /*column*/) const
 {
     return -1;
 }
 
-int TorrentListCtrl::GetItemImage(long item) const
+int TorrentListCtrl::GetItemImage(long /*item*/) const
 {
     return -1;
 }
