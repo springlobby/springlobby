@@ -408,11 +408,11 @@ bool Settings::ShouldAddDefaultServerSettings()
 //! @brief Restores default settings
 void Settings::SetDefaultServerSettings()
 {
-    SetServer( WX_STRINGC(DEFSETT_DEFAULT_SERVER_NAME), WX_STRINGC(DEFSETT_DEFAULT_SERVER_HOST), DEFSETT_DEFAULT_SERVER_PORT );
+    SetServer( DEFSETT_DEFAULT_SERVER_NAME, DEFSETT_DEFAULT_SERVER_HOST, DEFSETT_DEFAULT_SERVER_PORT );
 		SetServer( _T("Backup server 1"), _T("springbackup1.servegame.com"), 8200 );
 		SetServer( _T("Backup server 2"), _T("springbackup2.servegame.org"), 8200 );
 		SetServer( _T("Test server"), _T("taspringmaster.servegame.com"), 8300 );
-    SetDefaultServer( WX_STRINGC(DEFSETT_DEFAULT_SERVER_NAME) );
+    SetDefaultServer( DEFSETT_DEFAULT_SERVER_NAME );
 }
 
 
@@ -429,7 +429,7 @@ void Settings::ConvertOldServerSettings()
 		for ( int i = 0; i < count; i++ )
 		{
 			wxString server_name = m_config->Read( wxString::Format( _T("/Servers/Server%d"), i ), _T("") );
-			if ( server_name == _T("TAS Server") ) server_name = WX_STRINGC( DEFSETT_DEFAULT_SERVER_NAME );
+			if ( server_name == _T("TAS Server") ) server_name = DEFSETT_DEFAULT_SERVER_NAME;
 			servers.Add( server_name );
 			m_saved_nicks[server_name] = m_config->Read( _T("/Server/")+ server_name +_T("/nick"), _T("") );
 			m_saved_pass[server_name] = m_config->Read( _T("/Server/")+ server_name +_T("/pass"), _T("") );
@@ -464,7 +464,7 @@ bool Settings::ServerExists( const wxString& server_name )
 //! @note Normally this will be the previously selected server. But at first run it will be a server that is set as the default.
 wxString Settings::GetDefaultServer()
 {
-    wxString serv = WX_STRINGC(DEFSETT_DEFAULT_SERVER_NAME);
+    wxString serv = DEFSETT_DEFAULT_SERVER_NAME;
     return m_config->Read( _T("/Server/Default"), serv );
 }
 
@@ -494,7 +494,7 @@ void   Settings::SetDefaultServer( const wxString& server_name )
 //! @param server_name the server name/alias
 wxString Settings::GetServerHost( const wxString& server_name )
 {
-    wxString host = WX_STRINGC(DEFSETT_DEFAULT_SERVER_HOST);
+    wxString host = DEFSETT_DEFAULT_SERVER_HOST;
     return m_config->Read( _T("/Server/Servers/")+ server_name +_T("/Host"), host );
 }
 

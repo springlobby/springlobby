@@ -10,6 +10,7 @@
 #include <wx/combobox.h>
 #include <wx/tipwin.h>
 #include <wx/tooltip.h>
+#include <wx/textctrl.h>
 
 #include "mmoptionwindows.h"
 #include "mmoptionswrapper.h"

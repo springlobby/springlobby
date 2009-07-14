@@ -32,6 +32,8 @@ c    This file is part of springsettings,
 #include <wx/checkbox.h>
 #include <wx/radiobut.h>
 #include <wx/combobox.h>
+#include <wx/textctrl.h>
+
 #include "../spinctld.h"
 
 #include "Defs.hpp"

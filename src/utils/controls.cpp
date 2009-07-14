@@ -1,8 +1,13 @@
 /* Copyright (C) 2007-2009 The SpringLobby Team. All rights reserved. */
 #include "controls.h"
 #include "../settings.h"
+#include "../defines.h"
 
 const wxChar* TooltipEnable(const wxChar* input)
 {
-    return sett().GetShowTooltips() ? input : _("");
+    #ifndef HAVE_WX29
+        return sett().GetShowTooltips() ? input : _("");
+    #else
+        return sett().GetShowTooltips() ? input : _("").wc_str();
+    #endif
 }

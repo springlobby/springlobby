@@ -1099,9 +1099,9 @@ void SpringUnitSync::PrefetchMap( const wxString& mapname )
   // 50% hits without, 80% hits with this code.  (cache size 20 images)
 
   const int length = std::max(0, int(mapname.length()) - 4);
-  const int hash = (mapname[length * 1/4] << 16)
-                 | (mapname[length * 2/4] << 8)
-                 | (mapname[length * 3/4]);
+  const int hash = ( wxChar(mapname[length * 1/4]) << 16 )
+                 | ( wxChar(mapname[length * 2/4]) << 8  )
+                 | wxChar(mapname[length * 3/4]);
   const int priority = -hash;
 
   {

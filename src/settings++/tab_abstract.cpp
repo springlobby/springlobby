@@ -31,6 +31,7 @@
 #include <wx/radiobut.h>
 #include <wx/combobox.h>
 #include <wx/spinctrl.h>
+#include <wx/textctrl.h>
 
 #include "../utils/customdialogs.h"
 #include "../springunitsynclib.h"

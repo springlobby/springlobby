@@ -54,6 +54,7 @@
 #include "playback/playbacktab.h"
 #include "updater/versionchecker.h"
 #include "updater/updatermainwindow.h"
+#include "defines.h"
 
 const unsigned int TIMER_ID         = 101;
 const unsigned int TIMER_INTERVAL   = 100;
@@ -276,25 +277,42 @@ bool SpringLobbyApp::SelectLanguage()
 
 void SpringLobbyApp::OnInitCmdLine(wxCmdLineParser& parser)
 {
-    wxCmdLineEntryDesc cmdLineDesc[] =
-    {
-        { wxCMD_LINE_SWITCH, _T("h"), _T("help"), _("show this help message"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_OPTION_HELP },
-        { wxCMD_LINE_SWITCH, _T("nc"), _T("no-crash-handler"), _("don't use the crash handler (useful for debugging)"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
-#if wxUSE_STD_IOSTREAM
-        { wxCMD_LINE_SWITCH, _T("cl"), _T("console-logging"),  _("shows application log to the console(if available)"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
-#endif
-        { wxCMD_LINE_SWITCH, _T("gl"), _T("gui-logging"),  _("enables application log window"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
-#ifdef __WXMSW__
-        { wxCMD_LINE_SWITCH, _T("u"), _T("update"),  _("only run update, quit immediately afterwards"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
-#endif
-//      { wxCMD_LINE_OPTION, _T("c"), _T("config-file"),  _("override default choice for config-file"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL | wxCMD_LINE_NEEDS_SEPARATOR },
-        { wxCMD_LINE_OPTION, _T("l"), _T("log-verbosity"),  _("overrides default logging verbosity, can be:\n                                0: no log\n                                1: critical errors\n                                2: errors\n                                3: warnings (default)\n                                4: messages\n                                5: function trace"), wxCMD_LINE_VAL_NUMBER, wxCMD_LINE_PARAM_OPTIONAL },
-        { wxCMD_LINE_NONE }
-
-    };
+    #ifndef HAVE_WX29
+        wxCmdLineEntryDesc cmdLineDesc[] =
+        {
+            { wxCMD_LINE_SWITCH, _T("h"), _T("help"), _("show this help message"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_OPTION_HELP },
+            { wxCMD_LINE_SWITCH, _T("nc"), _T("no-crash-handler"), _("don't use the crash handler (useful for debugging)"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
+        #if wxUSE_STD_IOSTREAM
+            { wxCMD_LINE_SWITCH, _T("cl"), _T("console-logging"),  _("shows application log to the console(if available)"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
+        #endif
+            { wxCMD_LINE_SWITCH, _T("gl"), _T("gui-logging"),  _("enables application log window"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
+        #ifdef __WXMSW__
+            { wxCMD_LINE_SWITCH, _T("u"), _T("update"),  _("only run update, quit immediately afterwards"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
+        #endif
+            //{ wxCMD_LINE_OPTION, _T("c"), _T("config-file"),  _("override default choice for config-file"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL | wxCMD_LINE_NEEDS_SEPARATOR },
+            { wxCMD_LINE_OPTION, _T("l"), _T("log-verbosity"),  _("overrides default logging verbosity, can be:\n                                0: no log\n                                1: critical errors\n                                2: errors\n                                3: warnings (default)\n                                4: messages\n                                5: function trace"), wxCMD_LINE_VAL_NUMBER, wxCMD_LINE_PARAM_OPTIONAL },
+            { wxCMD_LINE_NONE }
+        };
+    #else
+        wxCmdLineEntryDesc cmdLineDesc[] =
+        {
+            { wxCMD_LINE_SWITCH, "h", "help", _("show this help message"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_OPTION_HELP },
+            { wxCMD_LINE_SWITCH, "nc", "no-crash-handler", _("don't use the crash handler (useful for debugging)"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
+        #if wxUSE_STD_IOSTREAM
+            { wxCMD_LINE_SWITCH, "cl", "console-logging",  _("shows application log to the console(if available)"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
+        #endif
+            { wxCMD_LINE_SWITCH, "gl", "gui-logging",  _("enables application log window"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
+        #ifdef __WXMSW__
+            { wxCMD_LINE_SWITCH, "u", "update",  _("only run update, quit immediately afterwards"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
+        #endif
+            //{ wxCMD_LINE_OPTION, _T("c"), _T("config-file"),  _("override default choice for config-file"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL | wxCMD_LINE_NEEDS_SEPARATOR },
+            { wxCMD_LINE_OPTION, "l", "log-verbosity",  _("overrides default logging verbosity, can be:\n                                0: no log\n                                1: critical errors\n                                2: errors\n                                3: warnings (default)\n                                4: messages\n                                5: function trace"), wxCMD_LINE_VAL_NUMBER, wxCMD_LINE_PARAM_OPTIONAL },
+            { wxCMD_LINE_NONE }
+        };
+    #endif
 
     parser.SetDesc( cmdLineDesc );
-    parser.SetSwitchChars (wxT("-"));
+    parser.SetSwitchChars (_T("-"));
 }
 
 //! @brief parses the command line and sets global app options like log verbosity or log target

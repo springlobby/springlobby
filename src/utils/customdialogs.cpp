@@ -21,6 +21,12 @@
 #include "../images/springsettings.xpm"
 #include "../images/springlobby.xpm"
 #include "../utils/conversion.h"
+#include "../defines.h"
+
+#ifdef HAVE_WX29
+    //in < 29 this is defined in wxDialogBase, which seems to have disappeared
+    enum { ButtonSizerFlags = wxOK|wxCANCEL|wxYES|wxNO|wxHELP|wxNO_DEFAULT };
+#endif
 
 BEGIN_EVENT_TABLE(CustomMessageBox ,wxDialog)
   EVT_BUTTON(wxID_NO, CustomMessageBox::OnOptionsNo)
