@@ -27,7 +27,7 @@
 #include "../utils/platform.h"
 #include "../settings.h"
 #include "se_utils.h"
-#include "defines.h"
+#include "../defines.h"
 
 #include <iostream>
 #include <wx/msgdlg.h>
