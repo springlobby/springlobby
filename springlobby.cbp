@@ -2,11 +2,6 @@
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="6" />
 	<Project>
-	<Unit filename="src/defines.h" />
-	<Unit filename="src/updater/updatermainwindow.cpp" />
-	<Unit filename="src/updater/updatermainwindow.h" />
-	<Unit filename="src/utils/activitynotice.cpp" />
-	<Unit filename="src/utils/activitynotice.h" />
 		<Option title="springlobby" />
 		<Option pch_mode="0" />
 		<Option compiler="gcc" />
@@ -151,6 +146,32 @@
 					<Variable name="WX_DIR" value="C:/wxWidgets-2.8.4" />
 				</Environment>
 			</Target>
+			<Target title="GNU | Debug (wx29)">
+				<Option output="bin/GNU/Debug/springlobby" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="bin/GNU/Debug/" />
+				<Option object_output="obj/GNU/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option parameters="-cl -nc" />
+				<Option projectLinkerOptionsRelation="2" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-g" />
+					<Add option="`/share/sources/wxsource/wxWidgets-svn/build-linux/wx-config --cflags`" />
+					<Add option="`pkg-config --cflags libtorrent-rasterbar`" />
+					<Add option="-Wno-strict-aliasing" />
+					<Add option='-DVERSION=\\&quot;cb-Unix-Debug\\&quot;' />
+					<Add option="-DNO_DEBUG_REPORT_UPLOAD" />
+					<Add option="-DDISABLE_SOUND" />
+				</Compiler>
+				<Linker>
+					<Add option="`/share/sources/wxsource/wxWidgets-svn/build-linux/wx-config --libs aui xml adv core base html net`" />
+					<Add option="`pkg-config --libs libtorrent-rasterbar`" />
+				</Linker>
+				<ExtraCommands>
+					<Add before="tools/test-susynclib.awk src/springunitsynclib.cpp" />
+				</ExtraCommands>
+			</Target>
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
@@ -236,6 +257,7 @@
 		<Unit filename="src/customlistctrl.cpp" />
 		<Unit filename="src/customlistctrl.h" />
 		<Unit filename="src/customvirtlistctrl.h" />
+		<Unit filename="src/defines.h" />
 		<Unit filename="src/filelister/filelistctrl.cpp" />
 		<Unit filename="src/filelister/filelistctrl.h" />
 		<Unit filename="src/filelister/filelistdialog.cpp" />
@@ -419,6 +441,8 @@
 		<Unit filename="src/unitsyncthread.h" />
 		<Unit filename="src/updater/updater.cpp" />
 		<Unit filename="src/updater/updater.h" />
+		<Unit filename="src/updater/updatermainwindow.cpp" />
+		<Unit filename="src/updater/updatermainwindow.h" />
 		<Unit filename="src/updater/versionchecker.cpp" />
 		<Unit filename="src/updater/versionchecker.h" />
 		<Unit filename="src/user.cpp" />
@@ -429,6 +453,8 @@
 		<Unit filename="src/userlist.h" />
 		<Unit filename="src/userlistctrl.cpp" />
 		<Unit filename="src/userlistctrl.h" />
+		<Unit filename="src/utils/activitynotice.cpp" />
+		<Unit filename="src/utils/activitynotice.h" />
 		<Unit filename="src/utils/controls.cpp" />
 		<Unit filename="src/utils/controls.h" />
 		<Unit filename="src/utils/conversion.cpp" />
