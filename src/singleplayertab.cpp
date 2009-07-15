@@ -254,21 +254,21 @@ bool SinglePlayerTab::ValidSetup()
 }
 
 
-void SinglePlayerTab::OnMapSelect( wxCommandEvent& event )
+void SinglePlayerTab::OnMapSelect( wxCommandEvent& /*unused*/ )
 {
     unsigned int index = (unsigned int)m_map_pick->GetCurrentSelection();
     SetMap( index );
 }
 
 
-void SinglePlayerTab::OnModSelect( wxCommandEvent& event )
+void SinglePlayerTab::OnModSelect( wxCommandEvent& /*unused*/ )
 {
     unsigned int index = (unsigned int)m_mod_pick->GetCurrentSelection();
     SetMod( index );
 }
 
 
-void SinglePlayerTab::OnMapBrowse( wxCommandEvent& event )
+void SinglePlayerTab::OnMapBrowse( wxCommandEvent& /*unused*/ )
 {
     wxLogDebugFunc( _T("") );
     MapSelectDialog dlg( (wxWindow*)&m_ui.mw(), m_ui );
@@ -283,7 +283,7 @@ void SinglePlayerTab::OnMapBrowse( wxCommandEvent& event )
 }
 
 
-void SinglePlayerTab::OnAddBot( wxCommandEvent& event )
+void SinglePlayerTab::OnAddBot( wxCommandEvent& /*unused*/ )
 {
     AddBotDialog dlg( this, m_battle, true );
     if ( dlg.ShowModal() == wxID_OK )
@@ -303,7 +303,7 @@ void SinglePlayerTab::OnAddBot( wxCommandEvent& event )
 }
 
 
-void SinglePlayerTab::OnStart( wxCommandEvent& event )
+void SinglePlayerTab::OnStart( wxCommandEvent& /*unused*/ )
 {
     wxLogDebugFunc( _T("SP: ") );
 
@@ -318,20 +318,20 @@ void SinglePlayerTab::OnStart( wxCommandEvent& event )
 }
 
 
-void SinglePlayerTab::OnRandomCheck( wxCommandEvent& event )
+void SinglePlayerTab::OnRandomCheck( wxCommandEvent& /*unused*/ )
 {
     if ( m_random_check->IsChecked() ) m_battle.CustomBattleOptions().setSingleOption( _T("startpostype"), TowxString<int>(IBattle::ST_Random), OptionsWrapper::EngineOption );
     else m_battle.CustomBattleOptions().setSingleOption( _T("startpostype"), TowxString<int>(IBattle::ST_Pick), OptionsWrapper::EngineOption );
     m_battle.SendHostInfo( IBattle::HI_StartType );
 }
 
-void SinglePlayerTab::OnSpectatorCheck( wxCommandEvent& event )
+void SinglePlayerTab::OnSpectatorCheck( wxCommandEvent& /*unused*/ )
 {
     m_battle.GetMe().BattleStatus().spectator = m_spectator_check->IsChecked();
     UpdateMinimap();
 }
 
-void SinglePlayerTab::OnColorButton( wxCommandEvent& event )
+void SinglePlayerTab::OnColorButton( wxCommandEvent& /*unused*/ )
 {
     User& u = m_battle.GetMe();
     wxColour CurrentColour = u.BattleStatus().colour;
@@ -373,7 +373,7 @@ void SinglePlayerTab::UpdatePresetList()
 {
 }
 
-void SinglePlayerTab::OnReset( wxCommandEvent& event )
+void SinglePlayerTab::OnReset( wxCommandEvent& /*unused*/ )
 {
 
 }

@@ -21,11 +21,14 @@
 **/
 
 #include "tab_ui.h"
-#include "se_utils.h"
+
 #include <wx/wx.h>
 #include <wx/spinctrl.h>
-#include "Defs.hpp"
+#include <wx/log.h>
 
+#include "Defs.hpp"
+#include "../utils/debug.h"
+#include "se_utils.h"
 
 //TODO maybe use only one chkbox for minimap on left
 void tab_ui::initScrollSpeedSizer(wxStaticBoxSizer* sizer) {
@@ -89,7 +92,7 @@ void tab_ui::initZoomSizer(wxStaticBoxSizer* sizer)
 	sizer->Add(0,5,0);
 }
 
-void tab_ui::updateControls(int what_to_update)
+void tab_ui::updateControls(int /*what_to_update*/)
 {
 	for (int i = 0; i < ctrl_ui_chkb_size; i++) {
 				ctrl_ui_chkb[i]->SetValue(intSettings[UI_CBOX[i].key]);
@@ -101,6 +104,9 @@ void tab_ui::updateControls(int what_to_update)
 		case 3: { ctrl_cam_radio1->SetValue(1); } break;	// CamMode 2: ROH
 		case 2: { ctrl_cam_radio2->SetValue(1); } break;	// CamMode 3: TW
 		case 4: { ctrl_cam_radio4->SetValue(1); } break;	// CamMode 4: FC
+        default:
+            wxLogDebugFunc( _T("unhandled case val") );
+            break;
 	}
 
 	for (int i = 0; i < ctrl_scroll_slider_size; i++) {

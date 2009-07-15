@@ -34,7 +34,7 @@ BEGIN_EVENT_TABLE(ServerEvents, wxEvtHandler)
     EVT_COMMAND(wxID_ANY, httpDownloadEvtFailed,    ServerEvents::OnSpringDownloadEvent)
 END_EVENT_TABLE()
 
-void ServerEvents::OnConnected( const wxString& server_name, const wxString& server_ver, bool supported, const wxString& server_spring_ver, bool lanmode )
+void ServerEvents::OnConnected( const wxString& server_name, const wxString& server_ver, bool supported, const wxString& server_spring_ver, bool /*unused*/ )
 {
     wxLogDebugFunc( server_ver + _T(" ") + server_spring_ver );
     m_serv.SetRequiredSpring( server_spring_ver );
@@ -101,13 +101,13 @@ void ServerEvents::OnUnknownCommand( const wxString& command, const wxString& pa
 }
 
 
-void ServerEvents::OnSocketError( const Sockerror& error )
+void ServerEvents::OnSocketError( const Sockerror& /*unused*/ )
 {
     //wxLogDebugFunc( _T("") );
 }
 
 
-void ServerEvents::OnProtocolError( const Protocolerror error )
+void ServerEvents::OnProtocolError( const Protocolerror /*unused*/ )
 {
     //wxLogDebugFunc( _T("") );
 }
@@ -614,7 +614,7 @@ void ServerEvents::OnChannelPart( const wxString& channel, const wxString& who, 
 }
 
 
-void ServerEvents::OnChannelTopic( const wxString& channel, const wxString& who, const wxString& message, int when )
+void ServerEvents::OnChannelTopic( const wxString& channel, const wxString& who, const wxString& message, int /*unused*/ )
 {
     wxLogDebugFunc( _T("") );
     try
@@ -886,7 +886,7 @@ void ServerEvents::OnMutelistBegin( const wxString& channel )
     mutelistWindow( _("Begin mutelist for ") + channel, wxString::Format( _("%s mutelist"), channel.c_str() ) );
 }
 
-void ServerEvents::OnMutelistItem( const wxString& channel, const wxString& mutee, const wxString& description )
+void ServerEvents::OnMutelistItem( const wxString& /*unused*/, const wxString& mutee, const wxString& description )
 {
     wxString message = mutee;
     if ( description == _T("indefinite") )

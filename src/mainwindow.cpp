@@ -266,7 +266,7 @@ MainWindow::~MainWindow()
 {
 }
 
-void MainWindow::OnClose( wxCloseEvent& evt )
+void MainWindow::OnClose( wxCloseEvent& /*unused*/ )
 {
   wxAuiManager* manager=GetAui().manager;
   if(manager){
@@ -296,7 +296,7 @@ void MainWindow::OnClose( wxCloseEvent& evt )
     if ( m_log_chain ) // if logwin was created, it's the current "top" log
         m_log_chain->DetachOldLog();  //so we need to tellwx not to delete it on its own
         //since we absolutely need to destroy the logwin here, set a fallback for the time until app cleanup
-#if(wxUSE_STD_IOSTREAM) 
+#if(wxUSE_STD_IOSTREAM)
         wxLog::SetActiveTarget( new wxLogStream( &std::cout ) );
 #endif
   }
@@ -454,7 +454,7 @@ void MainWindow::ShowChannelChooser()
 }
 
 //! @brief Called when join channel menuitem is clicked
-void MainWindow::OnMenuJoin( wxCommandEvent& event )
+void MainWindow::OnMenuJoin( wxCommandEvent& /*unused*/ )
 {
 
   if ( !m_ui.IsConnected() ) return;
@@ -466,7 +466,7 @@ void MainWindow::OnMenuJoin( wxCommandEvent& event )
 }
 
 
-void MainWindow::OnMenuChat( wxCommandEvent& event )
+void MainWindow::OnMenuChat( wxCommandEvent& /*unused*/ )
 {
 
   if ( !m_ui.IsConnected() ) return;
@@ -480,7 +480,7 @@ void MainWindow::OnMenuChat( wxCommandEvent& event )
 
 }
 
-void MainWindow::OnMenuAbout( wxCommandEvent& event )
+void MainWindow::OnMenuAbout( wxCommandEvent& /*unused*/ )
 {
     wxAboutDialogInfo info;
 	info.SetName(_T("SpringLobby"));
@@ -503,39 +503,39 @@ void MainWindow::OnMenuAbout( wxCommandEvent& event )
 	wxAboutBox(info);
 }
 
-void MainWindow::OnMenuConnect( wxCommandEvent& event )
+void MainWindow::OnMenuConnect( wxCommandEvent& /*unused*/ )
 {
   m_ui.ShowConnectWindow();
 }
 
 
-void MainWindow::OnMenuDisconnect( wxCommandEvent& event )
+void MainWindow::OnMenuDisconnect( wxCommandEvent& /*unused*/ )
 {
   m_ui.Disconnect();
 }
 
-void MainWindow::OnMenuSaveOptions( wxCommandEvent& event )
+void MainWindow::OnMenuSaveOptions( wxCommandEvent& /*unused*/ )
 {
   sett().SaveSettings();
 }
 
-void MainWindow::OnMenuQuit( wxCommandEvent& event )
+void MainWindow::OnMenuQuit( wxCommandEvent& /*unused*/ )
 {
   Close();
 }
 
 
-void MainWindow::OnMenuVersion( wxCommandEvent& event )
+void MainWindow::OnMenuVersion( wxCommandEvent& /*unused*/ )
 {
   Updater().CheckForUpdates();
 }
 
-void MainWindow::OnUnitSyncReload( wxCommandEvent& event )
+void MainWindow::OnUnitSyncReload( wxCommandEvent& /*unused*/ )
 {
     m_ui.ReloadUnitSync();
 }
 
-void MainWindow::OnShowScreenshots( wxCommandEvent& event )
+void MainWindow::OnShowScreenshots( wxCommandEvent& /*unused*/ )
 {
     wxSortedArrayString ar = usync().GetScreenshotFilenames();
     if ( ar.Count() == 0 ) {
@@ -546,7 +546,7 @@ void MainWindow::OnShowScreenshots( wxCommandEvent& event )
     img->Show( true );
 }
 
-void MainWindow::OnMenuStartTorrent( wxCommandEvent& event )
+void MainWindow::OnMenuStartTorrent( wxCommandEvent& /*unused*/ )
 {
   #ifndef NO_TORRENT_SYSTEM
   sett().SetTorrentSystemAutoStartMode( 2 ); // switch operation to manual mode
@@ -555,7 +555,7 @@ void MainWindow::OnMenuStartTorrent( wxCommandEvent& event )
 }
 
 
-void MainWindow::OnMenuStopTorrent( wxCommandEvent& event )
+void MainWindow::OnMenuStopTorrent( wxCommandEvent& /*unused*/ )
 {
   #ifndef NO_TORRENT_SYSTEM
   sett().SetTorrentSystemAutoStartMode( 2 ); // switch operation to manual mode
@@ -564,7 +564,7 @@ void MainWindow::OnMenuStopTorrent( wxCommandEvent& event )
 }
 
 
-void MainWindow::OnMenuOpen( wxMenuEvent& event )
+void MainWindow::OnMenuOpen( wxMenuEvent& /*unused*/ )
 {
   #ifndef NO_TORRENT_SYSTEM
   m_menuTools->Delete(MENU_STOP_TORRENT);
@@ -581,7 +581,7 @@ void MainWindow::OnMenuOpen( wxMenuEvent& event )
 }
 
 
-void MainWindow::OnReportBug( wxCommandEvent& event )
+void MainWindow::OnReportBug( wxCommandEvent& /*unused*/ )
 {
     wxString reporter = wxEmptyString;
     if (m_ui.IsConnected() )
@@ -590,7 +590,7 @@ void MainWindow::OnReportBug( wxCommandEvent& event )
 }
 
 
-void MainWindow::OnShowDocs( wxCommandEvent& event )
+void MainWindow::OnShowDocs( wxCommandEvent& /*unused*/ )
 {
   m_ui.OpenWebBrowser( _T("http://springlobby.info") );
 }
@@ -616,7 +616,7 @@ void MainWindow::OnUnitSyncReloaded()
   wxLogMessage( _T("Singleplayer tab updated") );
 }
 
-void MainWindow::OnShowSettingsPP( wxCommandEvent& event )
+void MainWindow::OnShowSettingsPP( wxCommandEvent& /*unused*/ )
 {
 	se_frame = new settings_frame(this,wxID_ANY,wxT("Settings++"),wxDefaultPosition,
 	  	    		wxDefaultSize);
@@ -624,13 +624,13 @@ void MainWindow::OnShowSettingsPP( wxCommandEvent& event )
 	se_frame->Show();
 }
 
-void MainWindow::OnMenuAutojoinChannels( wxCommandEvent& event )
+void MainWindow::OnMenuAutojoinChannels( wxCommandEvent& /*unused*/ )
 {
     m_autojoin_dialog = new AutojoinChannelDialog (this);
     m_autojoin_dialog->Show();
 }
 
-void MainWindow::OnMenuSelectLocale( wxCommandEvent& event )
+void MainWindow::OnMenuSelectLocale( wxCommandEvent& /*unused*/ )
 {
     if ( wxGetApp().SelectLanguage() ) {
         customMessageBoxNoModal( SL_MAIN_ICON, _("You need to restart SpringLobby for the language change to take effect."),
@@ -638,7 +638,7 @@ void MainWindow::OnMenuSelectLocale( wxCommandEvent& event )
     }
 }
 
-void MainWindow::OnShowChannelChooser( wxCommandEvent& event )
+void MainWindow::OnShowChannelChooser( wxCommandEvent& /*unused*/ )
 {
     ShowChannelChooser();
 }
@@ -653,7 +653,7 @@ void MainWindow::OnChannelListStart( )
     m_channel_chooser->ClearChannels();
 }
 
-void MainWindow::OnMenuSaveLayout( wxCommandEvent& event )
+void MainWindow::OnMenuSaveLayout( wxCommandEvent& /*unused*/ )
 {
 	wxString answer;
 	if ( !ui().AskText( _("Layout manager"),_("Enter a profile name"), answer ) ) return;
@@ -661,7 +661,7 @@ void MainWindow::OnMenuSaveLayout( wxCommandEvent& event )
 	sett().SaveLayout( answer, layout );
 }
 
-void MainWindow::OnMenuLoadLayout( wxCommandEvent& event )
+void MainWindow::OnMenuLoadLayout( wxCommandEvent& /*unused*/ )
 {
 	wxArrayString layouts = sett().GetLayoutList();
 	unsigned int result = wxGetSingleChoiceIndex( _("Which profile fo you want to load?"), _("Layout manager"), layouts );
@@ -670,7 +670,7 @@ void MainWindow::OnMenuLoadLayout( wxCommandEvent& event )
 }
 
 
-void MainWindow::OnMenuDefaultLayout( wxCommandEvent& event )
+void MainWindow::OnMenuDefaultLayout( wxCommandEvent& /*unused*/ )
 {
 	wxArrayString layouts = sett().GetLayoutList();
 	unsigned int result = wxGetSingleChoiceIndex( _("Which profile do you want to be default?"), _("Layout manager"), layouts );

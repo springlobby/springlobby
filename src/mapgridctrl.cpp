@@ -350,6 +350,9 @@ void MapGridCtrl::DrawMap( wxDC& dc, MapData& map, int x, int y )
 				dc.DrawRectangle( x - 1, y - 1, map.minimap.GetWidth() + 2, map.minimap.GetHeight() + 2 );
 			}
 			break;
+        default:
+            wxLogError( _T("unknonw map.state in MapGridCtrl::DrawMap") );
+            break;
 	}
 }
 
@@ -366,7 +369,7 @@ void MapGridCtrl::DrawBackground( wxDC& dc )
 }
 
 
-void MapGridCtrl::OnPaint( wxPaintEvent& event )
+void MapGridCtrl::OnPaint( wxPaintEvent& /*unused*/ )
 {
 	// This line must come first, to avoid an endless succession of paint messages.
 	// OnPaint handlers must always create a wxPaintDC.

@@ -44,6 +44,7 @@ struct SpringMapInfo
 
 /**
  * \defgroup DllPointerTypes Pointer types used with the unitsync library.
+ * \TODO move from global namespace
  */
 /** @{ */
 
@@ -464,7 +465,7 @@ class SpringUnitSyncLib
 
 
   protected:
-
+    SpringUnitSyncLib( const SpringUnitSyncLib& );
     //! Keeps track if unitsync is loaded or not.
     bool m_loaded;
 

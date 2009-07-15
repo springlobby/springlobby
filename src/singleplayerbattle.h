@@ -27,7 +27,7 @@ class SinglePlayerBattle: public IBattle
     User& GetMe() { return m_me; }
 
     void SendHostInfo( HostInfo update );
-    void SendHostInfo( const wxString& Tag ){}
+    void SendHostInfo( const wxString& /*unused*/ ){}
 
     void Update( const wxString& Tag );
 

@@ -16,6 +16,7 @@ class UserList
     typedef user_map_t::const_iterator user_const_iter_t;
 
     UserList();
+    virtual ~UserList() {}
     void AddUser( User& user );
     void RemoveUser( wxString const& nick );
     User& GetUser( wxString const& nick ) const;

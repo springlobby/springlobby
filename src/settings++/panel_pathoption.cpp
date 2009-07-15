@@ -70,7 +70,7 @@ PathOptionPanel::PathOptionPanel(wxWindow* parent,settings_frame* _origin) : wxP
 	SetSizer(parentSizer);
 }
 
-void PathOptionPanel::SetUsyncPath(wxCommandEvent& event)
+void PathOptionPanel::SetUsyncPath(wxCommandEvent& /*unused*/)
 {
   wxString lib_ext = wxDynamicLibrary::CanonicalizeName(_T(""), wxDL_MODULE);
   wxFileDialog pic( this, _("Choose an unitsync library"),
@@ -80,7 +80,7 @@ void PathOptionPanel::SetUsyncPath(wxCommandEvent& event)
 		  usync_ctrl->SetValue( pic.GetPath() );
 }
 
-void PathOptionPanel::UsePaths(wxCommandEvent& event)
+void PathOptionPanel::UsePaths(wxCommandEvent& /*unused*/)
 {
 	sett().SetUnitSync( sett().GetCurrentUsedSpringIndex(),  usync_ctrl->GetValue() );
 	loadUnitsync();

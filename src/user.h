@@ -194,6 +194,8 @@ class User : public CommonUser
     int m_rankicon_idx;
     int m_statusicon_idx;
     int m_sideicon_idx;
+
+    //! copy-semantics?
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_USER_H

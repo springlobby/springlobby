@@ -126,7 +126,7 @@ void NickListCtrl::OnActivateItem( wxListEvent& event )
 }
 
 
-void NickListCtrl::OnShowMenu( wxContextMenuEvent& event )
+void NickListCtrl::OnShowMenu( wxContextMenuEvent& /*unused*/ )
 {
   wxLogDebugFunc( _T("") );
   if ( m_menu != 0 )
@@ -142,7 +142,7 @@ void NickListCtrl::OnShowMenu( wxContextMenuEvent& event )
   }
 }
 
-void NickListCtrl::SetTipWindowText( const long item_hit, const wxPoint position)
+void NickListCtrl::SetTipWindowText( const long item_hit, const wxPoint& position)
 {
 
     int column = getColumnFromPosition(position);
@@ -203,7 +203,7 @@ wxListItemAttr* NickListCtrl::GetItemAttr(long item) const
     return NULL;
 }
 
-void NickListCtrl::HighlightItem( long item )
+void NickListCtrl::HighlightItem( long /*unused*/ )
 {
 
 }

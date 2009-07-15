@@ -570,7 +570,7 @@ void Ui::OnUpdate( int mselapsed )
 //! @brief Called when connected to a server
 //!
 //! @todo Display in servertab
-void Ui::OnConnected( Server& server, const wxString& server_name, const wxString& server_ver, bool supported )
+void Ui::OnConnected( Server& server, const wxString& server_name, const wxString& /*unused*/, bool supported )
 {
     wxLogDebugFunc( _T("") );
     if ( !m_last_used_backup_server.IsEmpty() )
@@ -682,6 +682,7 @@ void Ui::ConnectionFailurePrompt()
 			ShowConnectWindow();
 			break;
 		}
+		default:
 		case wxID_CANCEL: // do nothing
 		{
 			return;
@@ -1087,7 +1088,7 @@ void Ui::OnBattleStarted( Battle& battle )
 }
 
 
-void Ui::OnSaidBattle( IBattle& battle, const wxString& nick, const wxString& msg )
+void Ui::OnSaidBattle( IBattle& /*battle*/, const wxString& nick, const wxString& msg )
 {
     if ( m_main_win == 0 ) return;
     try
@@ -1098,7 +1099,7 @@ void Ui::OnSaidBattle( IBattle& battle, const wxString& nick, const wxString& ms
 }
 
 
-void Ui::OnBattleAction( IBattle& battle, const wxString& nick, const wxString& msg )
+void Ui::OnBattleAction( IBattle& /*battle*/, const wxString& nick, const wxString& msg )
 {
     if ( m_main_win == 0 ) return;
     try
@@ -1117,7 +1118,7 @@ void Ui::OnSpringStarting()
 }
 
 
-void Ui::OnSpringTerminated( long exit_code )
+void Ui::OnSpringTerminated( long /*exit_code*/ )
 {
     m_ingame = false;
 #ifndef NO_TORRENT_SYSTEM
@@ -1150,7 +1151,7 @@ void Ui::OnAcceptAgreement( const wxString& agreement )
 }
 
 
-void Ui::OnRing( const wxString& from )
+void Ui::OnRing( const wxString& /*from */)
 {
     if ( m_main_win == 0 ) return;
     m_main_win->RequestUserAttention();
@@ -1164,21 +1165,21 @@ void Ui::OnRing( const wxString& from )
 }
 
 
-void Ui::OnMapInfoCached( const wxString& mapname )
+void Ui::OnMapInfoCached( const wxString& /*unused*/ )
 {
     if ( m_main_win == 0 ) return;
     mw().OnUnitSyncReloaded();
 }
 
 
-void Ui::OnMinimapCached( const wxString& mapname )
+void Ui::OnMinimapCached( const wxString& /*unused*/ )
 {
     if ( m_main_win == 0 ) return;
     mw().OnUnitSyncReloaded();
 }
 
 
-void Ui::OnModUnitsCached( const wxString& modname )
+void Ui::OnModUnitsCached( const wxString& /*unused*/ )
 {
 }
 
