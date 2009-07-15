@@ -158,10 +158,10 @@ bool Channel::ExecuteSayCommand( const wxString& in )
   if ( param == _T("/me") ) {
     DoAction( cmdline );
     return true;
-	} else if ( in == _T("/part") || in == _T("/p") ) {
-		Leave();
-		uidata.panel = 0;
-		return true;
+  } else if ( in == _T("/part") || in == _T("/p") ) {
+    Leave();
+    uidata.panel = 0;
+    return true;
   } else if ( param == _T("/sayver") ) {
     DoAction( _T("is using SpringLobby v") + GetSpringLobbyVersion() );
     return true;
@@ -196,17 +196,14 @@ bool Channel::ExecuteSayCommand( const wxString& in )
       if(!m_unban_regex.IsValid())m_ui.OnChannelMessage(m_name,_T("Invalid regular expression"));
     }
     return true;
-  }else if(subcmd==_T("/checkban")){
+  } else if (subcmd==_T("/checkban")) {
     if(IsBanned(params)){
       m_ui.OnChannelMessage(m_name,params+_T(" is banned"));
-    }else{
+    } else {
       m_ui.OnChannelMessage(m_name,params+_T(" is not banned"));
     }
     return true;
-  }
-
-
-  else if(subcmd==_T("/banregexmsg")){
+  } else if (subcmd==_T("/banregexmsg")) {
     m_ui.OnChannelMessage(m_name,_T("/banregexmsg ")+params);
     m_ban_regex_msg=params;
     return true;
