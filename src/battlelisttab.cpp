@@ -1,4 +1,4 @@
-/* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
+/* Copyright (C) 2007-2009 The SpringLobby Team. All rights reserved. */
 
 #include <wx/intl.h>
 #include <wx/stattext.h>
@@ -39,7 +39,7 @@
 
 const unsigned int BATTLELIST_COLUMNCOUNT = 10;
 
-BEGIN_EVENT_TABLE(BattleListTab, wxPanel)
+BEGIN_EVENT_TABLE(BattleListTab, wxScrolledWindow)
 
   EVT_BUTTON              ( BattleListTab::BATTLE_JOIN , BattleListTab::OnJoin        )
   EVT_BUTTON              ( BattleListTab::BATTLE_HOST , BattleListTab::OnHost        )
