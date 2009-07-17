@@ -9,11 +9,10 @@ m_id( id ),
 m_me( User(_T("Spectator")) )
 {
 	m_opts.founder = m_me.GetNick();
-	OnUserAdded( m_me );
-	UserBattleStatus newstatus = m_me.BattleStatus();
+	UserList::AddUser( m_me );
+	UserBattleStatus& newstatus = m_me.BattleStatus();
 	newstatus.spectator = true;
 	newstatus.sync = true;
-	OnUserBattleStatusUpdated( m_me, newstatus );
 }
 
 OfflineBattle::OfflineBattle():
@@ -21,11 +20,10 @@ m_id( 0 ),
 m_me( User(_T("Spectator")) )
 {
 	m_opts.founder = m_me.GetNick();
-	OnUserAdded( m_me );
-	UserBattleStatus newstatus = m_me.BattleStatus();
+	UserList::AddUser( m_me );
+	UserBattleStatus& newstatus = m_me.BattleStatus();
 	newstatus.spectator = true;
 	newstatus.sync = true;
-	OnUserBattleStatusUpdated( m_me, newstatus );
 }
 
 void OfflineBattle::StartSpring()
