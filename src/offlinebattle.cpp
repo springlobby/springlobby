@@ -6,10 +6,9 @@
 
 OfflineBattle::OfflineBattle(  const int id  ):
 m_id( id ),
-m_me( User(_T("")) )
+m_me( User(_T("Spectator")) )
 {
 	m_opts.founder = m_me.GetNick();
-	AddUser( m_me );
 	OnUserAdded( m_me );
 	UserBattleStatus newstatus = m_me.BattleStatus();
 	newstatus.spectator = true;
@@ -19,10 +18,9 @@ m_me( User(_T("")) )
 
 OfflineBattle::OfflineBattle():
 m_id( 0 ),
-m_me( User(_T("")) )
+m_me( User(_T("Spectator")) )
 {
 	m_opts.founder = m_me.GetNick();
-	AddUser( m_me );
 	OnUserAdded( m_me );
 	UserBattleStatus newstatus = m_me.BattleStatus();
 	newstatus.spectator = true;
