@@ -1154,7 +1154,7 @@ void IBattle::GetBattleFromScript( bool loadmapmod )
 											teaminfos.TeamLeader = team->GetInt( _T("TeamLeader"), 0 );
 											teaminfos.StartPosX = team->GetInt( _T("StartPosX"), -1 );
 											teaminfos.StartPosY = team->GetInt( _T("StartPosY"), -1 );
-											teaminfos.TeamLeader = team->GetInt( _T("AllyTeam"), 0 );
+											teaminfos.AllyTeam = team->GetInt( _T("AllyTeam"), 0 );
 											teaminfos.RGBColor = GetColorFromFloatStrng( team->GetString( _T("RGBColor") ) );
 											teaminfos.SideName = team->GetString( _T("Side"), _T("") );
 											teaminfos.Handicap = team->GetInt( _T("Handicap"), 0 );
