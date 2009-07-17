@@ -511,7 +511,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 					if ( status.spectator ) ally = i;
 					if ( parsedallys.find( ally ) != parsedallys.end() ) continue; // skip duplicates
 					sr = battle.GetStartRect( ally );
-					parsedallys.insert( status.ally );
+					parsedallys.insert( ally );
 
 					tdf.EnterSection( _T("ALLYTEAM") + TowxString( ally ) );
 						tdf.Append( _T("NumAllies"), 0 );
