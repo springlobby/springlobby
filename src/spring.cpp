@@ -269,15 +269,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 			}
 			tdf.Append( _T("IsHost"), battle.IsFounderMe() );
 
-			if ( !battle.IsProxy() )
-			{
-				 tdf.Append(_T("MyPlayerName"), battle.GetMe().GetNick() );
-			}
-			else
-			{
-				if ( battle.IsFounderMe() ) tdf.Append( _T("MyPlayerName"), battle.GetFounder().GetNick() );
-				else  tdf.Append(_T("MyPlayerName"), battle.GetMe().GetNick() );
-			}
+			tdf.Append(_T("MyPlayerName"), battle.GetMe().GetNick() );
 
 			if ( !battle.IsFounderMe() )
 			{
