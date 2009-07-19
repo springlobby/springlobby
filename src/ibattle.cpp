@@ -204,7 +204,7 @@ User& IBattle::OnUserAdded( User& user )
     bs.spectator = false;
     bs.ready = false;
     bs.sync = SYNC_UNKNOWN;
-    if ( !bs.IsBot() )
+    if ( !bs.IsBot() && IsFounderMe() )
     {
 			bs.team = GetFreeTeamNum( &user == &GetMe() );
 			bs.ally = GetFreeAlly( &user == &GetMe() );
