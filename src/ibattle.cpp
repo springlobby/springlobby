@@ -99,7 +99,7 @@ int IBattle::GetPlayerNum( const User& user )
     return -1;
 }
 
-wxColour IBattle::GetFreeColour( User &for_whom )
+wxColour IBattle::GetFreeColour( User *for_whom )
 {
     int lowest = 0;
     bool changed = true;
@@ -110,15 +110,15 @@ wxColour IBattle::GetFreeColour( User &for_whom )
         std::set<int> parsed_teams;
         for ( user_map_t::size_type i = 0; i < GetNumUsers(); i++ )
         {
-            if ( &GetUser( i ) == &for_whom ) continue;
+            if ( (for_whom != NULL) && (&GetUser( i ) == for_whom) ) continue;
             UserBattleStatus& bs = GetUser( i ).BattleStatus();
             if ( bs.spectator ) continue;
 						if ( parsed_teams.find( bs.team ) != parsed_teams.end() ) continue; // skip duplicates
 						parsed_teams.insert( bs.team );
-            if ( AreColoursSimilar( bs.colour, fixcolourspalette[lowest] ), 50 )
+						if ( lowest >= fixcolourspalette.size() ) fixcolourspalette = GetFixColoursPalette( lowest + 1 );
+            if ( AreColoursSimilar( bs.colour, fixcolourspalette[lowest], 20 ) )
             {
                 lowest++;
-                if ( lowest > fixcolourspalette.size() ) fixcolourspalette = GetFixColoursPalette( lowest + 1 );
                 changed = true;
             }
         }
@@ -126,31 +126,15 @@ wxColour IBattle::GetFreeColour( User &for_whom )
     return fixcolourspalette[lowest];
 }
 
+wxColour IBattle::GetFreeColour( User &for_whom )
+{
+    return GetFreeColour( &for_whom );
+}
+
 
 wxColour IBattle::GetNewColour()
 {
-    int lowest = 0;
-    bool changed = true;
-    std::vector<wxColour>& fixcolourspalette = GetFixColoursPalette( m_teams_sizes.size() + 1 );
-    while ( changed )
-    {
-        changed = false;
-        std::set<int> parsed_teams;
-        for ( user_map_t::size_type i = 0; i < GetNumUsers(); i++ )
-        {
-            UserBattleStatus& bs = GetUser( i ).BattleStatus();
-            if ( bs.spectator ) continue;
-						if ( parsed_teams.find( bs.team ) != parsed_teams.end() ) continue; // skip duplicates
-						parsed_teams.insert( bs.team );
-            if ( AreColoursSimilar( bs.colour, fixcolourspalette[lowest] ), 50 )
-            {
-                lowest++;
-                if ( lowest > fixcolourspalette.size() ) fixcolourspalette = GetFixColoursPalette( lowest + 1 );
-                changed = true;
-            }
-        }
-    }
-    return fixcolourspalette[lowest];
+    return GetFreeColour();
 }
 
 int IBattle::ColourDifference(const wxColour &a, const wxColour &b) // returns max difference of r,g,b.
@@ -220,7 +204,7 @@ User& IBattle::OnUserAdded( User& user )
     bs.spectator = false;
     bs.ready = false;
     bs.sync = SYNC_UNKNOWN;
-    if ( !bs.IsBot() )
+    if ( !bs.IsBot() && IsFounderMe() )
     {
 			bs.team = GetFreeTeamNum( &user == &GetMe() );
 			bs.ally = GetFreeAlly( &user == &GetMe() );
@@ -1139,24 +1123,35 @@ void IBattle::GetBattleFromScript( bool loadmapmod )
             {
 								if ( bot.ok() ) player = bot;
                 User user ( player->GetString( _T("Name") ), (player->GetString( _T("CountryCode")).Upper() ), 0);
-                user.BattleStatus().isfromdemo = true;
-                user.BattleStatus().spectator = player->GetInt( _T("Spectator"), 0 );
+                UserBattleStatus& status = user.BattleStatus();
+                status.isfromdemo = true;
+                status.spectator = player->GetInt( _T("Spectator"), 0 );
                 opts.spectators += user.BattleStatus().spectator;
-                user.BattleStatus().team = player->GetInt( _T("Team") );
-                user.BattleStatus().sync = true;
-                user.BattleStatus().ready = true;
+                status.team = player->GetInt( _T("Team") );
+								if ( !status.spectator )
+								{
+									std::map<int, int>::iterator itor = m_teams_sizes.find( status.team );
+									if ( itor == m_teams_sizes.end() ) m_teams_sizes[status.team] = 1;
+									else m_teams_sizes[status.team] = m_teams_sizes[status.team] + 1;
+								}
+                status.sync = true;
+                status.ready = true;
+                if ( status.spectator ) m_opts.spectators++;
+								if ( status.ready && !bot.ok() ) m_players_ready++;
+								if ( status.sync && !bot.ok() ) m_players_sync++;
+
                 //! (koshi) changed this from ServerRankContainer to RankContainer
                 user.Status().rank = (UserStatus::RankContainer)player->GetInt( _T("Rank"), -1 );
 
                 if ( bot.ok() )
                 {
-                	user.BattleStatus().aishortname = bot->GetString( _T("ShortName" ) );
-                	user.BattleStatus().aiversion = bot->GetString( _T("Version" ) );
+                	status.aishortname = bot->GetString( _T("ShortName" ) );
+                	status.aiversion = bot->GetString( _T("Version" ) );
                 	int ownerindex = bot->GetInt( _T("Host" ) );
                 	PDataList aiowner ( replayNode->Find( _T("PLAYER") + TowxString(ownerindex) ) );
                 	if ( aiowner.ok() )
                 	{
-                		user.BattleStatus().owner = aiowner->GetString( _T("Name") );
+                		status.owner = aiowner->GetString( _T("Name") );
                 	}
                 }
 
@@ -1170,7 +1165,7 @@ void IBattle::GetBattleFromScript( bool loadmapmod )
 											teaminfos.TeamLeader = team->GetInt( _T("TeamLeader"), 0 );
 											teaminfos.StartPosX = team->GetInt( _T("StartPosX"), -1 );
 											teaminfos.StartPosY = team->GetInt( _T("StartPosY"), -1 );
-											teaminfos.TeamLeader = team->GetInt( _T("AllyTeam"), 0 );
+											teaminfos.AllyTeam = team->GetInt( _T("AllyTeam"), 0 );
 											teaminfos.RGBColor = GetColorFromFloatStrng( team->GetString( _T("RGBColor") ) );
 											teaminfos.SideName = team->GetString( _T("Side"), _T("") );
 											teaminfos.Handicap = team->GetInt( _T("Handicap"), 0 );
@@ -1181,12 +1176,18 @@ void IBattle::GetBattleFromScript( bool loadmapmod )
                 }
                 if ( teaminfos.exist )
                 {
-										user.BattleStatus().ally = teaminfos.AllyTeam;
-										user.BattleStatus().pos.x = teaminfos.StartPosX;
-										user.BattleStatus().pos.y = teaminfos.StartPosY;
-										user.BattleStatus().colour = teaminfos.RGBColor;
-										user.BattleStatus().handicap = teaminfos.Handicap;
-										if ( teaminfos.SideNum >= 0 ) user.BattleStatus().side = teaminfos.SideNum;
+										status.ally = teaminfos.AllyTeam;
+										status.pos.x = teaminfos.StartPosX;
+										status.pos.y = teaminfos.StartPosY;
+										status.colour = teaminfos.RGBColor;
+										status.handicap = teaminfos.Handicap;
+										if ( !status.spectator )
+										{
+											std::map<int, int>::iterator iter = m_ally_sizes.find(status.ally );
+											if ( iter == m_ally_sizes.end() ) m_ally_sizes[status.ally] = 1;
+											else m_ally_sizes[status.ally] = m_ally_sizes[status.ally] + 1;
+										}
+										if ( teaminfos.SideNum >= 0 ) status.side = teaminfos.SideNum;
 										IBattle::AllyInfoContainer allyinfos = parsed_allies[user.BattleStatus().ally];
 										if ( !allyinfos.exist )
 										{

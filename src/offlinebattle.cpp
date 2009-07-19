@@ -6,18 +6,24 @@
 
 OfflineBattle::OfflineBattle(  const int id  ):
 m_id( id ),
-m_me( User(_T("")) )
+m_me( User(_T("Spectator")) )
 {
 	m_opts.founder = m_me.GetNick();
-	AddUser( m_me );
-	m_me.BattleStatus().spectator = true;
-	m_me.BattleStatus().sync = true;
+	OnUserAdded( m_me );
+	UserBattleStatus& newstatus = m_me.BattleStatus();
+	newstatus.spectator = true;
+	newstatus.sync = true;
 }
 
 OfflineBattle::OfflineBattle():
 m_id( 0 ),
-m_me( User(_T("")) )
+m_me( User(_T("Spectator")) )
 {
+	m_opts.founder = m_me.GetNick();
+	OnUserAdded( m_me );
+	UserBattleStatus& newstatus = m_me.BattleStatus();
+	newstatus.spectator = true;
+	newstatus.sync = true;
 }
 
 void OfflineBattle::StartSpring()

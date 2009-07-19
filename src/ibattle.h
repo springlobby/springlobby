@@ -279,6 +279,7 @@ public:
     virtual int GetClosestFixColour(const wxColour &col, const std::vector<int> &excludes, int &difference);
     virtual wxColour GetFixColour(int i);
     virtual wxColour GetFreeColour( User &for_whom );
+    wxColour GetFreeColour( User *for_whom = NULL );
     wxColour GetNewColour();
 
     virtual int ColourDifference(const wxColour &a, const wxColour &b);
