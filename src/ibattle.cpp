@@ -115,10 +115,10 @@ wxColour IBattle::GetFreeColour( User *for_whom )
             if ( bs.spectator ) continue;
 						if ( parsed_teams.find( bs.team ) != parsed_teams.end() ) continue; // skip duplicates
 						parsed_teams.insert( bs.team );
+						if ( lowest >= fixcolourspalette.size() ) fixcolourspalette = GetFixColoursPalette( lowest + 1 );
             if ( AreColoursSimilar( bs.colour, fixcolourspalette[lowest], 20 ) )
             {
                 lowest++;
-                if ( lowest > fixcolourspalette.size() ) fixcolourspalette = GetFixColoursPalette( lowest + 1 );
                 changed = true;
             }
         }
@@ -204,7 +204,7 @@ User& IBattle::OnUserAdded( User& user )
     bs.spectator = false;
     bs.ready = false;
     bs.sync = SYNC_UNKNOWN;
-    if ( !bs.IsBot() )
+    if ( !bs.IsBot() && IsFounderMe() )
     {
 			bs.team = GetFreeTeamNum( &user == &GetMe() );
 			bs.ally = GetFreeAlly( &user == &GetMe() );
