@@ -1,11 +1,10 @@
 #ifndef CRASHREPORT_H_INCLUDED
 #define CRASHREPORT_H_INCLUDED
 
-#ifdef ENABLE_DEBUG_REPORT
+#if wxUSE_DEBUGREPORT && defined(ENABLE_DEBUG_REPORT)
 
 #include <wx/debugrpt.h>
-#include "utils.h"
-#if wxUSE_DEBUGREPORT
+//#include "utils.h"
 
 #include <sstream>
 #include <wx/arrstr.h>
@@ -33,11 +32,13 @@ class CrashReport
     std::ostringstream crashlog;
 };
 
-CrashReport& crashreport();
+static CrashReport& crashreport()
+{
+  static CrashReport c;
+  return c;
+}
 
-#endif // wxUSE_DEBUGREPORT
-
-#endif //ENABLE_DEBUG_REPORT
+#endif //wxUSE_DEBUGREPORT && defined(ENABLE_DEBUG_REPORT)
 
 #endif // SPRINGLOBBY_HEADERGUARD_CRASHREPORT_H_INCLUDED
 

@@ -56,7 +56,13 @@ SET( BUILD_SHARED_LIBS
 	1 CACHE BOOL
 	"Chooses whether to link dynamic or static libraries. Recommend keeping this activated unless you know what you're doing." )
 
+SET( ENABLE_DEBUG_REPORT
+	1 CACHE BOOL
+	"yYAYa" )
 
+IF( ENABLE_DEBUG_REPORT )
+	ADD_DEFINITIONS( -DENABLE_DEBUG_REPORT )
+ENDIF( ENABLE_DEBUG_REPORT )
 #----------------------------------------------------------------------------------------------------
 # wxWidgets lib dependency check
 #----------------------------------------------------------------------------------------------------

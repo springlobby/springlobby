@@ -5,7 +5,7 @@
 
 
 #if wxUSE_DEBUGREPORT && defined(ENABLE_DEBUG_REPORT)
-#include "utils.h"
+
 #include "crashreport.h"
 #include <wx/intl.h>
 #include <wx/filefn.h>
@@ -13,8 +13,6 @@
 #include <wx/stdpaths.h>
 #include <wx/dir.h>
 #include <wx/file.h>
-
-
 
 
 NetDebugReport::NetDebugReport() : wxDebugReportUpload ( _T("http://www.hd.chalmers.se/~tc/trace/"), _T("trace"), _T("upload.php") )
@@ -91,10 +89,6 @@ void CrashReport::GenerateReport(wxDebugReport::Context ctx)
   delete report;
 }
 
-CrashReport& crashreport()
-{
-  static CrashReport c;
-  return c;
-}
+
 
 #endif // wxUSE_DEBUGREPORT

@@ -26,6 +26,7 @@
 
 #include "conversion.h"
 #include "math.h"
+#include "../crashreport.h"
 
 wxString GetLibExtension()
 {
@@ -54,24 +55,15 @@ wxLogWindow* InitializeLoggingTargets( wxFrame* parent, bool console, bool showg
         logChain = new wxLogChain( loggerwin );
     }
 
-    #if 0 //TODO reenable wxUSE_DEBUGREPORT
-        if ( logcrash )
-        {
-            ///hidden stream logging for crash reports, verbosity ignores command line params
-            wxLog *loggercrash = new wxLogStream( &crashreport().crashlog );
-            wxLogChain *logCrashChain = new wxLogChain( loggercrash );
-            lastlog = logCrashChain;
-        }
-
-        #if wxUSE_DEBUGREPORT && defined(ENABLE_DEBUG_REPORT)
-            ///hidden stream logging for crash reports
-            wxLog *loggercrash = new wxLogStream( &crashreport().crashlog );
-            wxLogChain *logCrashChain = new wxLogChain( loggercrash );
-            logCrashChain->SetLogLevel( wxLOG_Trace );
-            logCrashChain->SetVerbose( true );
-        #endif
-
+    #if wxUSE_DEBUGREPORT && defined(ENABLE_DEBUG_REPORT)
+        ///hidden stream logging for crash reports
+        wxLog *loggercrash = new wxLogStream( &crashreport().crashlog );
+        wxLogChain *logCrashChain = new wxLogChain( loggercrash );
+        logCrashChain->SetLogLevel( wxLOG_Trace );
+        logCrashChain->SetVerbose( true );
     #endif
+
+
 
 
     if ( !(  console || showgui ) || verbosity == 0 ){
