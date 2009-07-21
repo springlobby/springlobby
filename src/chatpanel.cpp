@@ -699,6 +699,8 @@ void ChatPanel::OutputLine( const ChatLine& line )
   m_chatlog_text->ScrollLines( 10 ); // to prevent for weird empty space appended
   m_chatlog_text->ShowPosition( m_chatlog_text->GetLastPosition() );// scroll to the bottom
   #endif
+
+  this->Refresh();
 }
 
 
