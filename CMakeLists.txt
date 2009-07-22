@@ -70,10 +70,10 @@ ENDIF( ENABLE_DEBUG_REPORT )
 # Here you can define, what Libraries of wxWidgets you need for your Application. You can figure out what Libraries you need here:
 # http://www.wxwidgets.org/manuals/2.8/wx_librarieslist.html
 IF(NOT CMAKE_CROSSCOMPILING)
-SET(wxWidgets_USE_LIBS base core net adv aui html xml )
+SET(wxWidgets_USE_LIBS base core net adv aui html xml qa)
 
 # We need the Find package for wxWidgets to work
-FIND_PACKAGE(wxWidgets REQUIRED base core net adv aui html xml)
+FIND_PACKAGE(wxWidgets REQUIRED base core net adv aui html xml qa)
 
 # Did we find wxWidgets ? This condition will fail for as long as the internal Vars do not point to the proper wxWidgets Configuration.
 IF(wxWidgets_FOUND)

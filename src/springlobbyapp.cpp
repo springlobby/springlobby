@@ -54,6 +54,8 @@
 #include "playback/playbacktab.h"
 #include "updater/versionchecker.h"
 
+#include <wx/debugrpt.h>
+
 const unsigned int TIMER_ID         = 101;
 const unsigned int TIMER_INTERVAL   = 100;
 
@@ -103,6 +105,11 @@ SpringLobbyApp::~SpringLobbyApp()
     delete m_timer;
 }
 
+#ifdef __WXMSW__
+LONG __stdcall filter(EXCEPTION_POINTERS* p){
+    crashreport().GenerateReport();
+}
+#endif
 
 //! @brief Initializes the application.
 //!
@@ -130,6 +137,7 @@ bool SpringLobbyApp::OnInit()
 
 
 #ifdef __WXMSW__
+    SetUnhandledExceptionFilter(filter);
     wxString path = wxPathOnly( wxStandardPaths::Get().GetExecutablePath() ) + wxFileName::GetPathSeparator() + _T("locale");
 #else
     // use a dummy name here, we're only interested in the base path
@@ -239,7 +247,7 @@ int SpringLobbyApp::OnExit()
 void SpringLobbyApp::OnFatalException()
 {
 #if wxUSE_DEBUGREPORT && defined(ENABLE_DEBUG_REPORT)
-    crashreport().GenerateReport(wxDebugReport::Context_Exception);
+    crashreport().GenerateReport();
 #else
     wxMessageBox( _("The application has generated a fatal error and will be terminated\nGenerating a bug report is not possible\n\nplease get a wxWidgets library that supports wxUSE_DEBUGREPORT"),_("Critical error"), wxICON_ERROR | wxOK );
 #endif

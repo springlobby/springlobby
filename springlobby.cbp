@@ -12,7 +12,7 @@
 				<Option object_output="obj/GNU/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters="-cl -nc" />
+				<Option parameters="-cl " />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
 					<Add option="-Wall" />
@@ -21,7 +21,7 @@
 					<Add option="`pkg-config --cflags libtorrent-rasterbar`" />
 					<Add option="-Wno-strict-aliasing" />
 					<Add option='-DVERSION=\\&quot;cb-Unix-Debug\\&quot;' />
-					<Add option="-DNO_DEBUG_REPORT_UPLOAD" />
+					<Add option="-DENABLE_DEBUG_REPORT" />
 					<Add option="-DDISABLE_SOUND" />
 				</Compiler>
 				<Linker>

@@ -1,6 +1,8 @@
 #ifndef CRASHREPORT_H_INCLUDED
 #define CRASHREPORT_H_INCLUDED
 
+
+#include <wx/setup.h>
 #if wxUSE_DEBUGREPORT && defined(ENABLE_DEBUG_REPORT)
 
 #include <wx/debugrpt.h>
@@ -27,7 +29,7 @@ class CrashReport
   public:
 
     CrashReport(){}
-    void GenerateReport(wxDebugReport::Context ctx);
+    void GenerateReport();
     //! @brief is the container for the stream logging target
     std::ostringstream crashlog;
 };
