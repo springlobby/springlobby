@@ -1,13 +1,13 @@
 /*
- *	base.cpp
- *	wxCURL
- *
- *	Created by Casey O'Donnell on Tue Jun 29 2004.
- *	Copyright (c) 2004 Casey O'Donnell. All rights reserved.
- *
- *
- *	Licence: wxWidgets Licence
- */
+*	base.cpp
+*	wxCURL
+*
+*	Created by Casey O'Donnell on Tue Jun 29 2004.
+*	Copyright (c) 2004 Casey O'Donnell. All rights reserved.
+*
+*
+*	Licence: wxWidgets Licence
+*/
 
 //////////////////////////////////////////////////////////////////////
 // Headers
@@ -16,13 +16,14 @@
 #include "wx/wxprec.h"
 
 #ifndef WX_PRECOMP
-	#include "wx/wx.h"
+    #include "wx/wx.h"
 #endif
 
 #include <stdio.h>
 #include <stdarg.h>
 
-#include <wx/curl/base.h>
+#include "base.h"
+#include <wx/filename.h>
 
 //////////////////////////////////////////////////////////////////////
 // Constants
@@ -34,146 +35,219 @@
 
 extern "C"
 {
-	int wxcurl_evt_progress_func(void* ptr, double rDlTotal, double rDlNow, double rUlTotal, double rUlNow)
-	{
-		if(ptr)
-		{
-			wxCurlProgressEvent evt(rDlTotal, rDlNow, rUlTotal, rUlNow);
-
-			wxPostEvent((wxEvtHandler*)ptr, evt);
-		}
-
-		return 0;
-	}
-
-    int wxcurl_verbose_stream_write(CURL * crlptr , curl_infotype info, char * cStrMessage, size_t msgSize, void * buffer)
+    int wxcurl_evt_progress_func(void* ptr, double rDlTotal, double rDlNow,
+                                 double rUlTotal, double rUlNow)
     {
-		wxString szMessage(cStrMessage, msgSize);
-		wxString szVerboseMessage;
+        wxCurlBase *curl = wx_static_cast(wxCurlBase*, ptr);
+        if(curl)
+        {
+            if (rUlTotal == 0 || rUlNow == 0)
+            {
+                /* should be a download event */
+                wxCurlDownloadEvent evt(curl->GetId(), curl, rDlTotal, rDlNow, curl->GetURL());
+                wxPostEvent(curl->GetEvtHandler(), evt);
+            }
 
-		wxOutputStream* pBuf = (wxOutputStream*)buffer;
-
-		switch (info)
-		{
-			case CURLINFO_TEXT:
-				szVerboseMessage = wxString(_T("Text: ")) + szMessage + _T("\n");
-				break;
-			case CURLINFO_HEADER_IN:
-				szVerboseMessage = wxString(_T("Header in: ")) + szMessage + _T("\n");
-				break;
-			case CURLINFO_HEADER_OUT:
-				szVerboseMessage = wxString(_T("Header out: ")) + szMessage + _T("\n");
-				break;
-			case CURLINFO_DATA_IN:
-				szVerboseMessage = wxString(_T("Data in: ")) + szMessage + _T("\n");
-				break;
-			case CURLINFO_DATA_OUT:
-				szVerboseMessage = wxString(_T("Data out: ")) + szMessage + _T("\n");
-				break;
-			case CURLINFO_END:
-				szVerboseMessage = wxString(_T("End: ")) + szMessage + _T("\n");
-				break;
-			case CURLINFO_SSL_DATA_IN:
-				szVerboseMessage = wxString(_T("SSL Data in: ")) + szMessage + _T("\n");
-				break;
-			case CURLINFO_SSL_DATA_OUT:
-				szVerboseMessage = wxString(_T("SSL Data out: ")) + szMessage + _T("\n");
-				break;
+            if (rDlTotal == 0 || rDlNow == 0)
+            {
+                /* should be an upload event */
+                wxCurlDownloadEvent evt(curl->GetId(), curl, rUlTotal, rUlNow, curl->GetURL());
+                wxPostEvent(curl->GetEvtHandler(), evt);
+            }
         }
-        
-        pBuf->Write(szVerboseMessage, szVerboseMessage.Len() * sizeof(wxChar));
 
         return 0;
     }
-    
-	size_t wxcurl_header_func(void *ptr, size_t size, size_t nmemb, void *stream)
-	{
-		size_t iRealSize = size * nmemb;
 
-		wxString* pStr = (wxString*) stream;
+    int wxcurl_verbose_stream_write(CURL * crlptr, curl_infotype info,
+                                    char * cStrMessage, size_t msgSize, void * buffer)
+    {
+        wxString szMessage((const char*)cStrMessage, wxConvLibc, msgSize);
+        wxStringOutputStream* pBuf = (wxStringOutputStream*)buffer;
+        wxString szVerboseMessage;
 
-		if(pStr)
-		{
-			(*pStr) += ((char*)ptr);
-		}
+        switch (info)
+        {
+            case CURLINFO_TEXT:
+                szVerboseMessage = wxString(_T("Text: ")) + szMessage + _T("\n");
+                break;
+            case CURLINFO_HEADER_IN:
+                szVerboseMessage = wxString(_T("Header in: ")) + szMessage + _T("\n");
+                break;
+            case CURLINFO_HEADER_OUT:
+                szVerboseMessage = wxString(_T("Header out: ")) + szMessage + _T("\n");
+                break;
+            case CURLINFO_DATA_IN:
+                szVerboseMessage = wxString(_T("Data in: ")) + szMessage + _T("\n");
+                break;
+            case CURLINFO_DATA_OUT:
+                szVerboseMessage = wxString(_T("Data out: ")) + szMessage + _T("\n");
+                break;
+            case CURLINFO_END:
+                szVerboseMessage = wxString(_T("End: ")) + szMessage + _T("\n");
+                break;
+            case CURLINFO_SSL_DATA_IN:
+                szVerboseMessage = wxString(_T("SSL Data in: ")) + szMessage + _T("\n");
+                break;
+            case CURLINFO_SSL_DATA_OUT:
+                szVerboseMessage = wxString(_T("SSL Data out: ")) + szMessage + _T("\n");
+                break;
+        }
 
-		return iRealSize;
-	}
+        // here wxChar usage is correct as szVerboseMessage string is used:
+        pBuf->Write((const wxChar*)szVerboseMessage, szVerboseMessage.Len() * sizeof(wxChar));
 
-	size_t wxcurl_str_write(void* ptr, size_t size, size_t nmemb, void* stream)
-	{
-		size_t iRealSize = size * nmemb;
+        return 0;
+    }
 
-		wxString* pStr = (wxString*) stream;
+    size_t wxcurl_header_func(void *ptr, size_t size, size_t nmemb, void *stream)
+    {
+        size_t iRealSize = size * nmemb;
+        wxCharBuffer* pStr = (wxCharBuffer*) stream;
 
-		if(pStr)
-		{
-			*pStr += (char*)ptr;
-		}
+        if(pStr)
+        {
+            wxString str = wxCURL_BUF2STRING(*pStr) + wxString((const char*)ptr, wxConvLibc);
+            *pStr = wxCURL_STRING2BUF(str);
+        }
 
-		return iRealSize;
-	}
+        return iRealSize;
+    }
 
-	size_t wxcurl_stream_write(void* ptr, size_t size, size_t nmemb, void* stream)
-	{
-		size_t iRealSize = size * nmemb;
+    /* writes to a string */
+    size_t wxcurl_string_write(void* ptr, size_t size, size_t nmemb, void* pcharbuf)
+    {
+        size_t iRealSize = size * nmemb;
+        wxCharBuffer* pStr = (wxCharBuffer*) pcharbuf;
 
-		wxOutputStream* pBuf = (wxOutputStream*)stream;
+        if(pStr)
+        {
+            wxString str = wxCURL_BUF2STRING(*pStr) + wxString((const char*)ptr, wxConvLibc);
+            *pStr = wxCURL_STRING2BUF(str);
+        }
 
-		if(pBuf)
-		{
-			pBuf->Write(ptr, iRealSize);
+        return iRealSize;
+    }
 
-			return pBuf->LastWrite();
-		}
+    /* writes to a stream */
+    size_t wxcurl_stream_write(void* ptr, size_t size, size_t nmemb, void* stream)
+    {
+        size_t iRealSize = size * nmemb;
 
-		return 0;
-	}
+        wxOutputStream* pBuf = (wxOutputStream*)stream;
 
-	size_t wxcurl_str_read(void* ptr, size_t size, size_t nmemb, void* stream)
-	{
-		size_t iRealSize = size * nmemb;
-		size_t iRetVal = 0;
+        if(pBuf)
+        {
+            pBuf->Write(ptr, iRealSize);
 
-		wxString* pStr = (wxString*) stream;
+            return pBuf->LastWrite();
+        }
 
-		if(pStr)
-		{
-			if(pStr->Len() >= iRealSize)
-			{
-				strncpy((char*)ptr, ((const char*)(*pStr)), iRealSize);
-				iRetVal = iRealSize;
-			}
-			else
-			{
-				strncpy((char*)ptr, ((const char*)(*pStr)), pStr->Len());
-				iRetVal = pStr->Len();
-			}
+        return 0;
+    }
 
-			*pStr = pStr->Right(pStr->Len() - iRetVal);
-		}
+    /* reads from a string */
+    size_t wxcurl_string_read(void* ptr, size_t size, size_t nmemb, void* pcharbuf)
+    {
+        size_t iRealSize = size * nmemb;
+        size_t iRetVal = 0;
 
-		return iRetVal;
-	}
+        wxCharBuffer* pStr = (wxCharBuffer*) pcharbuf;
+        size_t len = strlen(*pStr);
 
-	size_t wxcurl_stream_read(void* ptr, size_t size, size_t nmemb, void* stream)
-	{
-		size_t iRealSize = size * nmemb;
+        if(pStr)
+        {
+            if(len >= iRealSize)
+            {
+                strncpy((char*)ptr, (const char*)(*pStr), iRealSize);
+                iRetVal = iRealSize;
+            }
+            else
+            {
+                strncpy((char*)ptr, (const char*)(*pStr), len);
+                iRetVal = len;
+            }
 
-		wxInputStream* pBuf = (wxInputStream*)stream;
+            wxString remaining = wxCURL_BUF2STRING(pStr).Right(len - iRetVal);
+            *pStr = wxCURL_STRING2BUF(remaining);
+        }
 
-		if(pBuf)
-		{
-			pBuf->Read(ptr, iRealSize);
+        return iRetVal;
+    }
 
-			return pBuf->LastRead();
-		}
+    /* reads from a stream */
+    size_t wxcurl_stream_read(void* ptr, size_t size, size_t nmemb, void* stream)
+    {
+        size_t iRealSize = size * nmemb;
 
-		return 0;
-	}
+        wxInputStream* pBuf = (wxInputStream*)stream;
+
+        if(pBuf)
+        {
+            pBuf->Read(ptr, iRealSize);
+
+            return pBuf->LastRead();
+        }
+
+        return 0;
+    }
 }
 
-// base.cpp: implementation of the wxCurlProgressEvent class.
+
+// base.cpp: implementation of the wxCurlProgressBaseEvent class.
+//
+//////////////////////////////////////////////////////////////////////
+
+wxTimeSpan wxCurlProgressBaseEvent::GetElapsedTime() const
+{
+    // NOTE: we cannot trust libCURL's CURLINFO_TOTAL_TIME as the transfer may have
+    //       been paused in one of libCURL's callbacks (and thus libCURL ignores it
+    //       and won't remove the paused span from the return value).
+    wxTimeSpan elapsed = m_dt - m_pCURL->GetBeginTransferSpan();
+
+    // the elapsed time offset takes in count eventually-existing previous time spans
+    // where the transfer took place (
+    return elapsed + m_pCURL->GetElapsedTimeOffset();
+}
+
+wxTimeSpan wxCurlProgressBaseEvent::GetEstimatedTime() const
+{
+    double nBytesPerSec = GetSpeed();
+    if (nBytesPerSec == 0)
+        return wxTimeSpan(0);       // avoid division by zero
+
+    // compute remaining seconds; here we assume that the current
+    // download speed will be constant also in future
+    double secs = GetTotalBytes() / nBytesPerSec;
+
+    return wxTimeSpan(int(secs/3600.0),     // hours
+                    int(secs/60) % 60,    // minutes
+                    int(secs) % 60,       // seconds
+                    0);                   // milliseconds
+}
+
+wxTimeSpan wxCurlProgressBaseEvent::GetEstimatedRemainingTime() const
+{
+    wxTimeSpan est = GetEstimatedTime(),
+            elapsed = GetElapsedTime();
+
+    if (est.IsLongerThan(elapsed))
+        return est - elapsed;
+    return wxTimeSpan(0);       // probably est==0 because GetTotalBytes()==0
+}
+
+wxString wxCurlProgressBaseEvent::GetHumanReadableSpeed(const wxString &invalid, int precision) const
+{
+    double speed = GetSpeed();
+    if (speed == 0)
+        return invalid;
+
+    wxULongLong ull((wxULongLong_t)speed);
+    return wxFileName::GetHumanReadableSize(ull, invalid, precision) + wxT("/s");
+}
+
+
+// base.cpp: implementation of the wxCurlDownloadEvent class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -181,36 +255,67 @@ extern "C"
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-DEFINE_EVENT_TYPE(wxCURL_PROGRESS_EVENT);
+DEFINE_EVENT_TYPE(wxCURL_DOWNLOAD_EVENT);
 
-IMPLEMENT_DYNAMIC_CLASS(wxCurlProgressEvent, wxEvent);
+IMPLEMENT_DYNAMIC_CLASS(wxCurlDownloadEvent, wxEvent);
 
-wxCurlProgressEvent::wxCurlProgressEvent()
-: wxEvent(-1, wxCURL_PROGRESS_EVENT),
-  m_rDownloadNow(0.0), m_rDownloadTotal(0.0),
-  m_rUploadNow(0.0), m_rUploadTotal(0.0)
+wxCurlDownloadEvent::wxCurlDownloadEvent()
+: wxCurlProgressBaseEvent(-1, wxCURL_DOWNLOAD_EVENT),
+m_rDownloadNow(0.0), m_rDownloadTotal(0.0)
 {
 }
 
-wxCurlProgressEvent::wxCurlProgressEvent(const double& rDownloadTotal, const double& rDownloadNow, const double& rUploadTotal, const double& rUploadNow, const wxString& szURL /*= wxEmptyString*/)
-: wxEvent(-1, wxCURL_PROGRESS_EVENT),
-  m_szURL(szURL),
-  m_rDownloadTotal(rDownloadTotal), m_rDownloadNow(rDownloadNow),
-  m_rUploadTotal(rUploadTotal), m_rUploadNow(rUploadNow)
+wxCurlDownloadEvent::wxCurlDownloadEvent(int id, wxCurlBase *originator,
+                                        const double& rDownloadTotal, const double& rDownloadNow,
+                                        const wxString& szURL /*= wxEmptyString*/)
+: wxCurlProgressBaseEvent(id, wxCURL_DOWNLOAD_EVENT, originator, szURL),
+m_rDownloadTotal(rDownloadTotal), m_rDownloadNow(rDownloadNow)
 {
 }
 
-wxCurlProgressEvent::wxCurlProgressEvent(const wxCurlProgressEvent& event)
-: wxEvent(event)
+wxCurlDownloadEvent::wxCurlDownloadEvent(const wxCurlDownloadEvent& event)
+: wxCurlProgressBaseEvent(event)
 {
-	m_szURL = event.m_szURL;
-
-	m_rDownloadNow = event.m_rDownloadNow;
-	m_rDownloadTotal = event.m_rDownloadTotal;
-
-	m_rUploadNow = event.m_rUploadNow;
-	m_rUploadTotal = event.m_rUploadTotal;
+    m_rDownloadNow = event.m_rDownloadNow;
+    m_rDownloadTotal = event.m_rDownloadTotal;
 }
+
+
+
+// base.cpp: implementation of the wxCurlUploadEvent class.
+//
+//////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////
+// Construction/Destruction
+//////////////////////////////////////////////////////////////////////
+
+DEFINE_EVENT_TYPE(wxCURL_UPLOAD_EVENT);
+
+IMPLEMENT_DYNAMIC_CLASS(wxCurlUploadEvent, wxEvent);
+
+wxCurlUploadEvent::wxCurlUploadEvent()
+: wxCurlProgressBaseEvent(-1, wxCURL_UPLOAD_EVENT),
+m_rUploadNow(0.0), m_rUploadTotal(0.0)
+{
+}
+
+wxCurlUploadEvent::wxCurlUploadEvent(int id, wxCurlBase *originator,
+                                        const double& rUploadTotal, const double& rUploadNow,
+                                        const wxString& szURL /*= wxEmptyString*/)
+: wxCurlProgressBaseEvent(id, wxCURL_UPLOAD_EVENT, originator, szURL),
+m_rUploadTotal(rUploadTotal), m_rUploadNow(rUploadNow)
+{
+}
+
+wxCurlUploadEvent::wxCurlUploadEvent(const wxCurlUploadEvent& event)
+: wxCurlProgressBaseEvent(event)
+{
+    m_rUploadNow = event.m_rUploadNow;
+    m_rUploadTotal = event.m_rUploadTotal;
+}
+
+
 
 // wxCurlBase.cpp: implementation of the wxCurlBeginPerformEvent class.
 //
@@ -229,16 +334,16 @@ wxCurlBeginPerformEvent::wxCurlBeginPerformEvent()
 {
 }
 
-wxCurlBeginPerformEvent::wxCurlBeginPerformEvent(const wxString& szURL)
-: wxEvent(-1, wxCURL_BEGIN_PERFORM_EVENT),
-  m_szURL(szURL)
+wxCurlBeginPerformEvent::wxCurlBeginPerformEvent(int id, const wxString& szURL)
+: wxEvent(id, wxCURL_BEGIN_PERFORM_EVENT),
+m_szURL(szURL)
 {
 }
 
 wxCurlBeginPerformEvent::wxCurlBeginPerformEvent(const wxCurlBeginPerformEvent& event)
 : wxEvent(event)
 {
-	m_szURL = event.m_szURL;
+    m_szURL = event.m_szURL;
 }
 
 // wxCurlBase.cpp: implementation of the wxCurlEndPerformEvent class.
@@ -255,22 +360,22 @@ IMPLEMENT_DYNAMIC_CLASS(wxCurlEndPerformEvent, wxEvent);
 
 wxCurlEndPerformEvent::wxCurlEndPerformEvent()
 : wxEvent(-1, wxCURL_END_PERFORM_EVENT),
-  m_iResponseCode(0)
+m_iResponseCode(0)
 {
 }
 
-wxCurlEndPerformEvent::wxCurlEndPerformEvent(const wxString& szURL, const long& iResponseCode)
-: wxEvent(-1, wxCURL_END_PERFORM_EVENT),
-  m_szURL(szURL),
-  m_iResponseCode(iResponseCode)
+wxCurlEndPerformEvent::wxCurlEndPerformEvent(int id, const wxString& szURL, const long& iResponseCode)
+: wxEvent(id, wxCURL_END_PERFORM_EVENT),
+m_szURL(szURL),
+m_iResponseCode(iResponseCode)
 {
 }
 
 wxCurlEndPerformEvent::wxCurlEndPerformEvent(const wxCurlEndPerformEvent& event)
 : wxEvent(event)
 {
-	m_szURL = event.m_szURL;
-	m_iResponseCode = event.m_iResponseCode;
+    m_szURL = event.m_szURL;
+    m_iResponseCode = event.m_iResponseCode;
 }
 
 // wxCurlBase.cpp: implementation of the wxCurlBase class.
@@ -281,23 +386,34 @@ wxCurlEndPerformEvent::wxCurlEndPerformEvent(const wxCurlEndPerformEvent& event)
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-wxCurlBase::wxCurlBase(const wxString& szURL /*= wxEmptyString*/, const wxString& szUserName /*= wxEmptyString*/, const wxString& szPassword /*= wxEmptyString*/, wxEvtHandler* pEvtHandler /*= NULL*/, const bool& bSendUpdateEvents /*= false*/, const bool& bSendBeginEndEvents /*= false*/)
-: m_szBaseURL(szURL), m_szCurrFullURL(szURL), m_szUsername(szUserName), m_szPassword(szPassword),
-  m_iHostPort(-1), m_iResponseCode(-1),
-  m_bUseProxy(false), m_iProxyPort(-1),
-  m_pCURL(NULL), m_pHeaders(NULL), m_pEvtHandler(pEvtHandler),
-  m_bSendUpdateEvts(bSendUpdateEvents), m_bSendBeginEndEvts(bSendBeginEndEvents),
-  m_bVerbose(false)
+wxCurlBase::wxCurlBase(const wxString& szURL /*= wxEmptyString*/,
+                    const wxString& szUserName /*= wxEmptyString*/,
+                    const wxString& szPassword /*= wxEmptyString*/,
+                    wxEvtHandler* pEvtHandler /*= NULL*/,
+                    int id /*= wxID_ANY*/,
+                    long flags /*=wxCURL_DEFAULT_FLAGS*/)
+: m_szBaseURL(wxCURL_STRING2BUF(szURL)),
+m_szCurrFullURL(wxCURL_STRING2BUF(szURL)),
+m_szUsername(wxCURL_STRING2BUF(szUserName)),
+m_szPassword(wxCURL_STRING2BUF(szPassword)),
+m_iHostPort(-1), m_iResponseCode(-1),
+m_bUseProxy(false), m_iProxyPort(-1),
+m_pCURL(NULL), m_pHeaders(NULL),
+m_pEvtHandler(pEvtHandler), m_nId(id),
+m_nFlags(flags),
+m_bVerbose(false)
 {
-	m_szErrorBuffer[0] = '\0';
+    m_szDetailedErrorBuffer[0] = '\0';
+    m_progressCallback = wxcurl_evt_progress_func;
+    m_progressData = this;
 
-	InitHandle();
+    InitHandle();
 }
 
 wxCurlBase::~wxCurlBase()
 {
-	CleanupHandle();
-	ResetHeaders();
+    CleanupHandle();
+    ResetHeaders();
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -307,409 +423,457 @@ wxCurlBase::~wxCurlBase()
 typedef int (*func_T)(void);
 bool wxCurlBase::SetOpt(CURLoption option, ...)
 {
-	va_list arg;
+    va_list arg;
 
-	func_T param_func = (func_T)0;
-	long param_long = 0;
-	void *param_obj = NULL;
-	curl_off_t param_offset = 0;
+    func_T param_func = (func_T)0;
+    long param_long = 0;
+    void *param_obj = NULL;
+    curl_off_t param_offset = 0;
 
-	va_start(arg, option);
+    va_start(arg, option);
 
-	CURLcode res = CURLE_OK;
+    CURLcode res = CURLE_OK;
 
-	// This code stolen from easy.c from LibCURL - It is needed to ensure that
-	// types are maintained.
-	if(option < CURLOPTTYPE_OBJECTPOINT) {
-		/* This is a LONG type */
-		param_long = va_arg(arg, long);
-		res = curl_easy_setopt(m_pCURL, option, param_long);
-	}
-	else if(option < CURLOPTTYPE_FUNCTIONPOINT) {
-		/* This is a object pointer type */
-		param_obj = va_arg(arg, void *);
-		res = curl_easy_setopt(m_pCURL, option, param_obj);
-	}
-	else if(option < CURLOPTTYPE_OFF_T) {
-		/* This is a function pointer type */
-		param_func = va_arg(arg, func_T );
-		res = curl_easy_setopt(m_pCURL, option, param_func);
-	} else {
-		/* This is a curl_off_t type */
-		param_offset = va_arg(arg, curl_off_t);
-		res = curl_easy_setopt(m_pCURL, option, param_offset);
-	}
+    // This code stolen from easy.c from LibCURL - It is needed to ensure that
+    // types are maintained.
+    if(option < CURLOPTTYPE_OBJECTPOINT) {
+        /* This is a LONG type */
+        param_long = va_arg(arg, long);
+        res = curl_easy_setopt(m_pCURL, option, param_long);
+    }
+    else if(option < CURLOPTTYPE_FUNCTIONPOINT) {
+        /* This is a object pointer type */
+        param_obj = va_arg(arg, void *);
+        res = curl_easy_setopt(m_pCURL, option, param_obj);
+    }
+    else if(option < CURLOPTTYPE_OFF_T) {
+        /* This is a function pointer type */
+        param_func = va_arg(arg, func_T );
+        res = curl_easy_setopt(m_pCURL, option, param_func);
+    } else {
+        /* This is a curl_off_t type */
+        param_offset = va_arg(arg, curl_off_t);
+        res = curl_easy_setopt(m_pCURL, option, param_offset);
+    }
 
-	va_end(arg);
+    va_end(arg);
 
-	return (res == CURLE_OK);
+    DumpErrorIfNeed(res);
+    return (res == CURLE_OK);
 }
 
-bool wxCurlBase::GetInfo(CURLINFO info, ...)
+bool wxCurlBase::SetStringOpt(CURLoption option, const wxCharBuffer &str)
 {
-	va_list arg;
-	void* pParam;
+    // VERY IMPORTANT: the caller must ensure given wxCharBuffer is valid
+    //                 for all the time it's owned by libCURL
 
-	va_start(arg, info);
-	pParam = va_arg(arg, void*);
+    /*  FIXME: converting to plain ASCII is not always the Best Thing. E.g.
+            for CURLOPT_USERPWD, we'd need to consult RFC2616 (HTTP) or
+            another RFC depending on the authentication system in use, etc etc
+            For now we convert to pure ASCII which in 99% of the cases will
+            Just Do the Work
+    */
 
-	CURLcode res = CURLE_OK;
+    return SetOpt(option, (const char*)str);
+}
 
-	res = curl_easy_getinfo(m_pCURL, info, pParam);
+bool wxCurlBase::GetInfo(CURLINFO info, ...) const
+{
+    va_list arg;
+    void* pParam;
 
-	return (res == CURLE_OK);
+    va_start(arg, info);
+    pParam = va_arg(arg, void*);
+
+    CURLcode res = CURLE_OK;
+
+    res = curl_easy_getinfo(m_pCURL, info, pParam);
+
+    DumpErrorIfNeed(res);
+    return (res == CURLE_OK);
 }
 
 bool wxCurlBase::Perform()
 {
-	CURLcode res = CURLE_OK;
+    CURLcode res = CURLE_OK;
 
-	if(m_bSendBeginEndEvts && m_pEvtHandler)
-	{
-		wxCurlBeginPerformEvent bgnEvent(m_szCurrFullURL);
+    if((m_nFlags & wxCURL_SEND_BEGINEND_EVENTS) && m_pEvtHandler)
+    {
+        wxCurlBeginPerformEvent bgnEvent(m_nId, wxCURL_BUF2STRING(m_szCurrFullURL));
+        wxPostEvent(m_pEvtHandler, bgnEvent);
+    }
 
-		wxPostEvent(m_pEvtHandler, bgnEvent);
-	}
+    // reset time-related vars:
+    m_tsElapsedOffset = 0;
+    m_dtBeginTransferSpan = wxDateTime::Now();
 
-	res = curl_easy_perform(m_pCURL);
+    // perform the operation:
+    res = curl_easy_perform(m_pCURL);
 
-	if(m_bSendBeginEndEvts && m_pEvtHandler)
-	{
-		wxCurlEndPerformEvent endEvent(m_szCurrFullURL, m_iResponseCode);
+    // get the response code of the server
+    GetInfo(CURLINFO_RESPONSE_CODE, &m_iResponseCode);
 
-		wxPostEvent(m_pEvtHandler, endEvent);
-	}
+    if((m_nFlags & wxCURL_SEND_BEGINEND_EVENTS) && m_pEvtHandler)
+    {
+        wxCurlEndPerformEvent endEvent(m_nId, wxCURL_BUF2STRING(m_szCurrFullURL), m_iResponseCode);
+        wxPostEvent(m_pEvtHandler, endEvent);
+    }
 
-	return (res == CURLE_OK);
+    DumpErrorIfNeed(res);
+    return (res == CURLE_OK);
 }
 
 bool wxCurlBase::InitHandle()
 {
-	if(m_pCURL)
-		return false;
+    if(m_pCURL)
+        return false;
 
-	m_pCURL = curl_easy_init();
+    m_pCURL = curl_easy_init();
 
-	return (m_pCURL != NULL);
+    return (m_pCURL != NULL);
 }
 
 bool wxCurlBase::ReInitHandle()
 {
-	CleanupHandle();
-	return InitHandle();
+    CleanupHandle();
+    return InitHandle();
 }
 
 bool wxCurlBase::CleanupHandle()
 {
-	if(m_pCURL)
-	{
-		curl_easy_cleanup(m_pCURL);
-		m_pCURL = NULL;
-	}
+    if(m_pCURL)
+    {
+        curl_easy_cleanup(m_pCURL);
+        m_pCURL = NULL;
+    }
 
-	return true;
+    return true;
 }
 
 bool wxCurlBase::ResetHandle()
 {
-	curl_easy_reset(m_pCURL);
+    curl_easy_reset(m_pCURL);
 
-	return true;
+    return true;
+}
+
+void wxCurlBase::DumpErrorIfNeed(CURLcode error) const
+{
+    // save the error description:
+    wx_const_cast(wxCurlBase*, this)->m_szLastError = curl_easy_strerror(error);
+
+    if (m_bVerbose && error != CURLE_OK)
+    {
+        // dump the error if needed:
+        wxLogDebug(wxT("[wxCURL] %hs"), (const char*)m_szLastError);
+    }
 }
 
 //////////////////////////////////////////////////////////////////////
 // Member Data Access Methods
 //////////////////////////////////////////////////////////////////////
 
-bool wxCurlBase::SetEvtHandler(wxEvtHandler* pEvtHandler)
+bool wxCurlBase::SetEvtHandler(wxEvtHandler* pEvtHandler, int id)
 {
-	m_pEvtHandler = pEvtHandler;
+    m_pEvtHandler = pEvtHandler;
+    m_nId = id;
 
-	return true;
+    return true;
 }
 
 wxEvtHandler* wxCurlBase::GetEvtHandler() const
 {
-	return m_pEvtHandler;
+    return m_pEvtHandler;
 }
 
-void wxCurlBase::SendUpdateEvents(const bool& bSendEvts)
+int wxCurlBase::GetId() const
 {
-	m_bSendUpdateEvts = bSendEvts;
+    return m_nId;
 }
 
-bool wxCurlBase::SendUpdateEvents() const
+void wxCurlBase::SetFlags(long flags)
 {
-	return m_bSendUpdateEvts;
+    m_nFlags = flags;
+}
+
+long wxCurlBase::GetFlags() const
+{
+    return m_nFlags;
 }
 
 void wxCurlBase::SetBaseURL(const wxString& szBaseURL)
 {
-	m_szBaseURL = szBaseURL;
+    m_szBaseURL = wxCURL_STRING2BUF(szBaseURL);
 }
 
 wxString wxCurlBase::GetBaseURL() const
 {
-	return m_szBaseURL;
+    return wxCURL_BUF2STRING(m_szBaseURL);
+}
+
+void wxCurlBase::SetURL(const wxString& szRelativeURL)
+{
+    wxString str = wxCURL_BUF2STRING(m_szCurrFullURL) + szRelativeURL;
+    m_szCurrFullURL = wxCURL_STRING2BUF(str);
+}
+
+wxString wxCurlBase::GetURL() const
+{
+    return wxCURL_BUF2STRING(m_szCurrFullURL);
 }
 
 void wxCurlBase::SetPort(const long& iPort)
 {
-	m_iHostPort = iPort;
+    m_iHostPort = iPort;
 }
 
 long wxCurlBase::GetPort() const
 {
-	return m_iHostPort;
+    return m_iHostPort;
 }
 
 void wxCurlBase::SetUsername(const wxString& szUsername)
 {
-	m_szUsername = szUsername;
+    m_szUsername = wxCURL_STRING2BUF(szUsername);
 }
 
 wxString wxCurlBase::GetUsername() const
 {
-	return m_szUsername;
+    return wxCURL_BUF2STRING(m_szUsername);
 }
 
 void wxCurlBase::SetPassword(const wxString& szPassword)
 {
-	m_szPassword = szPassword;
+    m_szPassword = wxCURL_STRING2BUF(szPassword);
 }
 
 wxString wxCurlBase::GetPassword() const
 {
-	return m_szPassword;
+    return wxCURL_BUF2STRING(m_szPassword);
 }
 
 wxString wxCurlBase::GetResponseHeader() const
 {
-	return m_szResponseHeader;
+    return wxCURL_BUF2STRING(m_szResponseHeader);
 }
 
 wxString wxCurlBase::GetResponseBody() const
 {
-	return m_szResponseBody;
+    return wxCURL_BUF2STRING(m_szResponseBody);
 }
 
 long wxCurlBase::GetResponseCode() const
 {
-	return m_iResponseCode;
+    return m_iResponseCode;
+}
+
+wxString wxCurlBase::GetDetailedErrorString() const
+{
+    return wxString((const char*)m_szDetailedErrorBuffer, wxConvLibc);
 }
 
 wxString wxCurlBase::GetErrorString() const
 {
-	return wxString(m_szErrorBuffer);
+    return wxCURL_BUF2STRING(m_szLastError);
 }
 
 void wxCurlBase::UseProxy(const bool& bUseProxy)
 {
-	m_bUseProxy = bUseProxy;
+    m_bUseProxy = bUseProxy;
 }
 
 bool wxCurlBase::UseProxy() const
 {
-	return m_bUseProxy;
+    return m_bUseProxy;
 }
 
 void wxCurlBase::SetProxyHost(const wxString& szProxyHost)
 {
-	m_szProxyHost = szProxyHost;
+    m_szProxyHost = wxCURL_STRING2BUF(szProxyHost);
 }
 
 wxString wxCurlBase::GetProxyHost() const
 {
-	return m_szProxyHost;
+    return wxCURL_BUF2STRING(m_szProxyHost);
 }
 
 void wxCurlBase::SetProxyUsername(const wxString& szProxyUsername)
 {
-	m_szProxyUsername = szProxyUsername;
+    m_szProxyUsername = wxCURL_STRING2BUF(szProxyUsername);
 }
 
 wxString wxCurlBase::GetProxyUsername() const
 {
-	return m_szProxyUsername;
+    return wxCURL_BUF2STRING(m_szProxyUsername);
 }
 
 void wxCurlBase::SetProxyPassword(const wxString& szProxyPassword)
 {
-	m_szProxyPassword = szProxyPassword;
+    m_szProxyPassword = wxCURL_STRING2BUF(szProxyPassword);
 }
 
 wxString wxCurlBase::GetProxyPassword() const
 {
-	return m_szProxyPassword;
+    return wxCURL_BUF2STRING(m_szProxyPassword);
 }
 
 void wxCurlBase::SetProxyPort(const long& iProxyPort)
 {
-	m_iProxyPort = iProxyPort;
+    m_iProxyPort = iProxyPort;
 }
 
 long wxCurlBase::GetProxyPort() const
 {
-	return m_iProxyPort;
+    return m_iProxyPort;
 }
 
-void wxCurlBase::Verbose(const bool& bVerbose)
+void wxCurlBase::SetVerbose(const bool& bVerbose)
 {
-	m_bVerbose = bVerbose;
+    m_bVerbose = bVerbose;
 }
 
 bool wxCurlBase::IsVerbose() const
 {
-	return m_bVerbose;
+    return m_bVerbose;
 }
 
-bool wxCurlBase::GetVerboseStream(wxOutputStream& destStream)
+bool wxCurlBase::GetVerboseStream(wxOutputStream& destStream) const
 {
-	if(m_bVerbose)
-	{
-		if(m_mosVerbose.IsOk())
-		{
-			char* pBuffer = new char[m_mosVerbose.GetSize()];
+    if(m_bVerbose)
+    {
+        if(m_mosVerbose.IsOk())
+        {
+            size_t sz = m_mosVerbose.GetSize();
+            wxString buffer = m_mosVerbose.GetString();
 
-			if(pBuffer)
-			{
-				m_mosVerbose.CopyTo(pBuffer, m_mosVerbose.GetSize());
+            destStream.Write(buffer.c_str(), sz);
+            return destStream.IsOk();
+        }
+    }
 
-				destStream.Write(pBuffer, m_mosVerbose.GetSize());
-
-				return destStream.IsOk();
-			}
-		}
-	}
-
-	return false;
+    return false;
 }
 
-bool wxCurlBase::GetVerboseString(wxString& szStream)
+bool wxCurlBase::GetVerboseString(wxString& szStream) const
 {
-	if(m_bVerbose)
-	{
-		char* pBuff;
-		wxString szBuff;
+    if(m_bVerbose)
+    {
+        szStream.Append(m_mosVerbose.GetString());
+        return true;
+    }
 
-		pBuff = new char[m_mosVerbose.GetSize()];
-
-		if(pBuff)
-		{
-			m_mosVerbose.CopyTo(pBuff, m_mosVerbose.GetSize());
-			szStream.Append(pBuff);
-
-			delete[] pBuff;
-
-			return true;
-		}
-	}
-
-	return false;
+    return false;
 }
 
 //////////////////////////////////////////////////////////////////////
 // Helper Methods
 //////////////////////////////////////////////////////////////////////
 
-void wxCurlBase::SetCurlHandleToDefaults()
+void wxCurlBase::SetCurlHandleToDefaults(const wxString& relativeURL)
 {
-	if(m_pCURL && ResetHandle())
-	{
-		ResetResponseVars();
+    if (!relativeURL.empty())
+        SetURL(relativeURL);        // update the m_szCurrFullURL string
 
-		SetOpt(CURLOPT_HEADERFUNCTION, wxcurl_header_func);
-		SetOpt(CURLOPT_WRITEHEADER, &m_szResponseHeader);
-		SetOpt(CURLOPT_ERRORBUFFER, m_szErrorBuffer);
+    if(m_pCURL && ResetHandle())
+    {
+        ResetResponseVars();
 
-		if(m_pEvtHandler && m_bSendUpdateEvts)
-		{
-			SetOpt(CURLOPT_NOPROGRESS, FALSE);
-			SetOpt(CURLOPT_PROGRESSFUNCTION, wxcurl_evt_progress_func);
-			SetOpt(CURLOPT_PROGRESSDATA, m_pEvtHandler);
-		}
+        SetStringOpt(CURLOPT_URL, m_szCurrFullURL);
 
-		if(!m_szUsername.IsEmpty() || !m_szPassword.IsEmpty())
-		{
-			m_szUserPass = m_szUsername + ":" + m_szPassword;
+        SetOpt(CURLOPT_HEADERFUNCTION, wxcurl_header_func);
+        SetOpt(CURLOPT_WRITEHEADER, &m_szResponseHeader);
+        SetOpt(CURLOPT_ERRORBUFFER, m_szDetailedErrorBuffer);
 
-			SetOpt(CURLOPT_USERPWD, m_szUserPass.c_str());
-			SetOpt(CURLOPT_HTTPAUTH, CURLAUTH_ANY);
-		}
+        if(m_pEvtHandler && (m_nFlags & wxCURL_SEND_PROGRESS_EVENTS))
+        {
+            SetOpt(CURLOPT_NOPROGRESS, FALSE);
+            SetOpt(CURLOPT_PROGRESSFUNCTION, m_progressCallback);
+            SetOpt(CURLOPT_PROGRESSDATA, m_progressData);
+        }
 
-		if(m_iHostPort != -1)
-		{
-			SetOpt(CURLOPT_PORT, m_iHostPort);
-		}
+        if(!wxCURL_BUF_ISEMPTY(m_szUsername) || !wxCURL_BUF_ISEMPTY(m_szPassword))
+        {
+            wxString str = wxCURL_BUF2STRING(m_szUsername) + wxT(":") + wxCURL_BUF2STRING(m_szPassword);
 
-		if(m_bUseProxy && !m_szProxyHost.IsEmpty())
-		{
-			SetOpt(CURLOPT_PROXY, m_szProxyHost.c_str());
-		}
+            m_szUserPass = wxCURL_STRING2BUF(str);
+            SetStringOpt(CURLOPT_USERPWD, m_szUserPass);
 
-		if(m_bUseProxy && (m_iProxyPort != -1))
-		{
-			SetOpt(CURLOPT_PROXYPORT, m_iProxyPort);
-		}
+            SetOpt(CURLOPT_HTTPAUTH, CURLAUTH_ANY);
+        }
 
-		if(m_bUseProxy && (!m_szProxyUsername.IsEmpty() || !m_szProxyPassword.IsEmpty()))
-		{
-			m_szProxyUserPass = m_szProxyUsername + ":" + m_szProxyPassword;
+        if(m_iHostPort != -1)
+        {
+            SetOpt(CURLOPT_PORT, m_iHostPort);
+        }
 
-			SetOpt(CURLOPT_PROXYUSERPWD, m_szProxyUserPass.c_str());
-		}
+        if(m_bUseProxy && !wxCURL_BUF_ISEMPTY(m_szProxyHost))
+        {
+            SetStringOpt(CURLOPT_PROXY, m_szProxyHost);
+        }
 
-		if(m_bVerbose)
-		{
-			SetOpt(CURLOPT_VERBOSE, TRUE);
-			SetOpt(CURLOPT_DEBUGFUNCTION, wxcurl_verbose_stream_write);
-			SetOpt(CURLOPT_DEBUGDATA, (void*) &m_mosVerbose);
-		}
-	}
+        if(m_bUseProxy && (m_iProxyPort != -1))
+        {
+            SetOpt(CURLOPT_PROXYPORT, m_iProxyPort);
+        }
+
+        if(m_bUseProxy && (!wxCURL_BUF_ISEMPTY(m_szProxyUsername) || !wxCURL_BUF_ISEMPTY(m_szProxyPassword)))
+        {
+            wxString str = wxCURL_BUF2STRING(m_szProxyUsername) + wxT(":") + wxCURL_BUF2STRING(m_szProxyPassword);
+
+            m_szProxyUserPass = wxCURL_STRING2BUF(str);
+            SetStringOpt(CURLOPT_PROXYUSERPWD, m_szProxyUserPass);
+        }
+
+        if(m_bVerbose)
+        {
+            SetOpt(CURLOPT_VERBOSE, TRUE);
+            SetOpt(CURLOPT_DEBUGFUNCTION, wxcurl_verbose_stream_write);
+            SetOpt(CURLOPT_DEBUGDATA, (void*) &m_mosVerbose);
+        }
+    }
 }
 
 void wxCurlBase::SetHeaders()
 {
-	if(!m_arrHeaders.IsEmpty())
-	{
-		if(m_pHeaders)
-		{
-			curl_slist_free_all(m_pHeaders);
+    if(!m_arrHeaders.IsEmpty())
+    {
+        if(m_pHeaders)
+        {
+            curl_slist_free_all(m_pHeaders);
 
-			m_pHeaders = NULL;
+            m_pHeaders = NULL;
 
-			SetOpt(CURLOPT_HTTPHEADER, NULL);
-		}
+            SetOpt(CURLOPT_HTTPHEADER, NULL);
+        }
 
-		for(unsigned int i = 0; i < m_arrHeaders.Count(); i++)
-		{
-			m_pHeaders = curl_slist_append(m_pHeaders, m_arrHeaders[i]);
-		}
+        for(unsigned int i = 0; i < m_arrHeaders.Count(); i++)
+        {
+            m_pHeaders = curl_slist_append(m_pHeaders, (const char*)(m_arrHeaders[i].c_str()));
+        }
 
-		SetOpt(CURLOPT_HTTPHEADER, m_pHeaders);
-	}
+        SetOpt(CURLOPT_HTTPHEADER, m_pHeaders);
+    }
 }
 
 void wxCurlBase::ResetHeaders()
 {
-	m_arrHeaders.Clear();
+    m_arrHeaders.Clear();
 
-	if(m_pHeaders)
-	{
-		curl_slist_free_all(m_pHeaders);
+    if(m_pHeaders)
+    {
+        curl_slist_free_all(m_pHeaders);
 
-		m_pHeaders = NULL;
+        m_pHeaders = NULL;
 
-		SetOpt(CURLOPT_HTTPHEADER, NULL);
-	}
+        SetOpt(CURLOPT_HTTPHEADER, NULL);
+    }
 }
 
 void wxCurlBase::ResetResponseVars()
 {
-	m_szResponseHeader = wxEmptyString;
-	m_szResponseBody = wxEmptyString;
-	m_iResponseCode = -1;
-	m_szCurrFullURL = wxEmptyString;
+    m_szResponseHeader = "";
+    m_szResponseBody = "";
+    m_iResponseCode = -1;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -718,14 +882,14 @@ void wxCurlBase::ResetResponseVars()
 
 void wxCurlBase::Init()
 {
-	// Initialize LibCURL
-	curl_global_init(CURL_GLOBAL_ALL);
+    // Initialize LibCURL
+    curl_global_init(CURL_GLOBAL_ALL);
 }
 
 void wxCurlBase::Shutdown()
 {
-	// Shutdown CurlLib
-	curl_global_cleanup();
+    // Shutdown CurlLib
+    curl_global_cleanup();
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -734,39 +898,44 @@ void wxCurlBase::Shutdown()
 
 wxDateTime wxCurlBase::GetDateFromString(const wxString& szDate)
 {
-	time_t now = wxDateTime::Now().GetTicks();
+    time_t now = wxDateTime::Now().GetTicks();
 
-	return wxDateTime(curl_getdate(szDate, &now));
+    return wxDateTime(curl_getdate((const char*)(szDate.c_str()), &now));
 }
 
 wxString wxCurlBase::GetURLEncodedString(const wxString& szData)
 {
-	char* pszRetVal = curl_escape(szData, szData.Len());
+    char* pszRetVal = curl_escape((const char*)(szData.c_str()), szData.Len());
 
-	if(pszRetVal)
-	{
-		wxString szRetVal = pszRetVal;
+    if(pszRetVal)
+    {
+        wxString szRetVal((const char*)pszRetVal, wxConvLibc);
 
-		curl_free(pszRetVal);
+        curl_free(pszRetVal);
 
-		return szRetVal;
-	}
+        return szRetVal;
+    }
 
-	return wxEmptyString;
+    return wxEmptyString;
 }
 
 wxString wxCurlBase::GetStringFromURLEncoded(const wxString& szData)
 {
-	char* pszRetVal = curl_unescape(szData, szData.Len());
+    char* pszRetVal = curl_unescape((const char*)(szData.c_str()), szData.Len());
 
-	if(pszRetVal)
-	{
-		wxString szRetVal = pszRetVal;
+    if(pszRetVal)
+    {
+        wxString szRetVal = (wxChar*)pszRetVal;
 
-		curl_free(pszRetVal);
+        curl_free(pszRetVal);
 
-		return szRetVal;
-	}
+        return szRetVal;
+    }
 
-	return wxEmptyString;
+    return wxEmptyString;
+}
+
+wxString wxCurlBase::GetCURLVersion()
+{
+    return wxString(curl_version(), wxConvUTF8);
 }
