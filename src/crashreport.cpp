@@ -5,8 +5,8 @@
 
 
 #if wxUSE_DEBUGREPORT && defined(ENABLE_DEBUG_REPORT)
-#include "utils.h"
 #include "crashreport.h"
+
 #include <wx/intl.h>
 #include <wx/filefn.h>
 #include <wx/filename.h>
@@ -14,11 +14,32 @@
 #include <wx/dir.h>
 #include <wx/file.h>
 
+#include "utils.h"
+#include "curl/http.h"
 
 
-
-NetDebugReport::NetDebugReport() : wxDebugReportUpload ( _T("http://www.hd.chalmers.se/~tc/trace/"), _T("trace"), _T("upload.php") )
+NetDebugReport::NetDebugReport()
 {
+
+}
+
+bool NetDebugReport::Process()
+{
+    wxDebugReportCompress::Process(); //compress files into zip
+    wxString filename = GetCompressedFileName();
+
+    wxCurlHTTP http( _T("http://localhost/upload.php") );
+    struct curl_forms testform[2];
+
+			wxString szValue = wxT("/tmp/pic.png");
+			testform[0].option = CURLFORM_COPYCONTENTS;
+			testform[0].value = szValue.c_str();
+			testform[1].option = CURLFORM_END;
+
+			assert(http.AddForm(false, _T(wxT("firstname")), testform));
+
+//			if(http.Post(szData.ToAscii(), szData.Len()))
+			assert(http.Post());
 }
 
 bool NetDebugReport::OnServerReply(const wxArrayString& reply)
