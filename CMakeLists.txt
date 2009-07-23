@@ -235,7 +235,7 @@ SET(SpringLobbySrc
 	src/filelister/filelistdialog.cpp
 	src/filelister/filelistfilter.cpp
 	src/aui/auimanager.cpp
-        src/aui/artprovider.cpp
+	src/aui/artprovider.cpp
 	src/autobalancedialog.cpp
 	src/autohost.cpp
 	src/channel/autojoinchanneldialog.cpp
@@ -319,6 +319,8 @@ SET(SpringLobbySrc
 	src/widgets/infopanel.cpp
 	src/widgets/widget.cpp
 	src/globalsmanager.cpp
+	src/curl/base.cpp
+	src/curl/http.cpp
 	src/Helper/wxTranslationHelper.cpp
 	src/Helper/tasclientimport.cpp
 )
@@ -423,7 +425,7 @@ ENDIF(WIN32 AND OPTION_TORRENT_SYSTEM)
 
 
 # Here the wxWidgets Libraries are added. These are set for us by the FIND Script. If you need other Libraries, you can add them here as well.
-TARGET_LINK_LIBRARIES(springlobby ${wxWidgets_LIBRARIES})
+TARGET_LINK_LIBRARIES(springlobby ${wxWidgets_LIBRARIES} curl)
 TARGET_LINK_LIBRARIES(springsettings ${wxWidgets_LIBRARIES})
 IF(MINGW)
 	TARGET_LINK_LIBRARIES( springlobby iphlpapi )

@@ -12,11 +12,12 @@
 #include <wx/arrstr.h>
 
 //! @brief uploads zipped stacktraces using curl
-class NetDebugReport : public wxDebugReportUpload
+class NetDebugReport : public wxDebugReportCompress
 {
   public:
       //! @brief class contructor that sets curl arguments
       NetDebugReport();
+      bool Process();
 
   protected:
       //! @brief gets called after server answered to the upload attempt
