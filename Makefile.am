@@ -912,6 +912,8 @@ springlobby_SOURCES = \
 	src/Helper/tasclientimport.cpp \
 	src/Helper/slhtmlwindow.cpp \
 	src/Helper/slhtmlwindow.h \
+	src/curl/base.cpp \
+	src/curl/http.cpp \
 	src/channel/channelchooser.cpp \
 	src/channel/channelchooser.h \
 	src/channel/channelchooserdialog.cpp \

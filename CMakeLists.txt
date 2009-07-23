@@ -229,7 +229,7 @@ SET(SpringLobbySrc
 	src/filelister/filelistdialog.cpp
 	src/filelister/filelistfilter.cpp
 	src/aui/auimanager.cpp
-        src/aui/artprovider.cpp
+	src/aui/artprovider.cpp
 	src/autobalancedialog.cpp
 	src/autohost.cpp
 	src/channel/autojoinchanneldialog.cpp
@@ -313,6 +313,8 @@ SET(SpringLobbySrc
 	src/widgets/infopanel.cpp
 	src/widgets/widget.cpp
 	src/globalsmanager.cpp
+	src/curl/base.cpp
+	src/curl/http.cpp
 	src/Helper/wxTranslationHelper.cpp
 	src/Helper/tasclientimport.cpp
 )
