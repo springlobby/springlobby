@@ -27,6 +27,7 @@
 				<Linker>
 					<Add option="`wx-config --libs`" />
 					<Add option="`pkg-config --libs libtorrent-rasterbar`" />
+					<Add library="curl" />
 				</Linker>
 				<ExtraCommands>
 					<Add before="tools/test-susynclib.awk src/springunitsynclib.cpp" />
@@ -228,6 +229,16 @@
 		<Unit filename="src/crashreport.h" />
 		<Unit filename="src/crc.cpp" />
 		<Unit filename="src/crc.h" />
+		<Unit filename="src/curl/base.cpp" />
+		<Unit filename="src/curl/base.h" />
+		<Unit filename="src/curl/ftp.cpp" />
+		<Unit filename="src/curl/ftp.h" />
+		<Unit filename="src/curl/http.cpp" />
+		<Unit filename="src/curl/http.h" />
+		<Unit filename="src/curl/thread.cpp" />
+		<Unit filename="src/curl/thread.h" />
+		<Unit filename="src/curl/utils.cpp" />
+		<Unit filename="src/curl/utils.h" />
 		<Unit filename="src/customlistctrl.cpp" />
 		<Unit filename="src/customlistctrl.h" />
 		<Unit filename="src/customvirtlistctrl.h" />

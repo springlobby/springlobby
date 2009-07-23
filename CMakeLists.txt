@@ -313,14 +313,16 @@ SET(SpringLobbySrc
 	src/useractions.cpp
 	src/userlist.cpp
 	src/userlistctrl.cpp
+	src/curl/base.cpp
+	src/curl/http.cpp
+	src/curl/ftp.cpp
+	src/curl/thread.cpp
 	src/widgets/downloadlistctrl.cpp
 	src/widgets/downloaddialog.cpp
 	src/widgets/downloadpanel.cpp
 	src/widgets/infopanel.cpp
 	src/widgets/widget.cpp
 	src/globalsmanager.cpp
-	src/curl/base.cpp
-	src/curl/http.cpp
 	src/Helper/wxTranslationHelper.cpp
 	src/Helper/tasclientimport.cpp
 )
@@ -357,6 +359,10 @@ SET(SLSharedWithSettings
 	src/springunitsynclib.cpp
 	src/spinctld.cpp
 	src/globalsmanager.cpp
+	src/curl/base.cpp
+	src/curl/http.cpp
+	src/curl/ftp.cpp
+	src/curl/thread.cpp
 )
 
 # If we build for windows Systems, we also include the Resource-File containing the Manifest, Icon and other Resources.
@@ -426,7 +432,7 @@ ENDIF(WIN32 AND OPTION_TORRENT_SYSTEM)
 
 # Here the wxWidgets Libraries are added. These are set for us by the FIND Script. If you need other Libraries, you can add them here as well.
 TARGET_LINK_LIBRARIES(springlobby ${wxWidgets_LIBRARIES} curl)
-TARGET_LINK_LIBRARIES(springsettings ${wxWidgets_LIBRARIES})
+TARGET_LINK_LIBRARIES(springsettings ${wxWidgets_LIBRARIES} curl)
 IF(MINGW)
 	TARGET_LINK_LIBRARIES( springlobby iphlpapi )
 	TARGET_LINK_LIBRARIES( springsettings iphlpapi )

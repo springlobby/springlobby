@@ -32,19 +32,47 @@ bool NetDebugReport::Process()
 {
     wxDebugReportCompress::Process(); //compress files into zip
     wxString filename = GetCompressedFileName();
-
+    wxSetWorkingDirectory( wxPathOnly( filename ) );
     wxCurlHTTP http( _T("http://localhost/upload.php") );
     struct curl_forms testform[2];
 
-			wxString szValue = wxT("/tmp/pic.png");
-			testform[0].option = CURLFORM_COPYCONTENTS;
-			testform[0].value = szValue.c_str();
-			testform[1].option = CURLFORM_END;
+//    testform[0].option = CURLFORM_COPYNAME;
+//    testform[0].value = "file";
+    testform[0].option = CURLFORM_FILE;
+    testform[0].value = "springlobby.zip";//filename.mb_str();
+    testform[1].option = CURLFORM_END;
 
-			assert(http.AddForm(false, _T(wxT("firstname")), testform));
+    assert(http.AddForm(true, _T("file"), testform));
 
 //			if(http.Post(szData.ToAscii(), szData.Len()))
-			assert(http.Post());
+    wxString szResponse;
+    if(http.Post())
+    {
+        wxMemoryOutputStream outStream;
+
+        wxString szVerbose;
+        http.GetVerboseString(szVerbose);
+
+        szResponse = wxT("SUCCESS!\n\n");
+        szResponse += http.GetResponseBody();
+        szResponse += wxT("\n\nVERBOSE DATA:\n");
+        szResponse += szVerbose;
+        wxLogMessage( szResponse );
+        return true;
+    }
+    else
+    {
+        szResponse = wxT("FAILURE!\n\n");
+        szResponse += wxString::Format(wxT("\nResponse Code: %d\n\n"), http.GetResponseCode());
+        szResponse += http.GetResponseHeader();
+        szResponse += wxT("\n\n");
+        szResponse += http.GetResponseBody();
+        szResponse += wxT("\n\n");
+        szResponse += http.GetErrorString();
+        wxLogMessage( szResponse );
+        return false;
+    }
+
 }
 
 bool NetDebugReport::OnServerReply( const wxArrayString& reply )
@@ -77,8 +105,9 @@ void CrashReport::GenerateReport( )
 #else
 	bool online = true; // TODO (BrainDamage#1#): check if being online
 #endif
-	wxDebugReportCompress* report = online  ? new NetDebugReport
-	                                : new wxDebugReportCompress;
+	NetDebugReport* report = new NetDebugReport;
+//	online  ? new NetDebugReport //Process() is not virtual --> THIS WAS FAIL
+//	                                : new wxDebugReportCompress;
 
 	// add all standard files: currently this means just a minidump and an
 	// XML file with system info and stack trace
@@ -99,20 +128,21 @@ void CrashReport::GenerateReport( )
 
     wxDebugReportPreviewStd* bkl = new wxDebugReportPreviewStd();
 	// calling Show() is not mandatory, but is more polite
-	if ( bkl->Show( *report ) )
-	{
-		if ( report->Process() )
-		{
-			if ( online )
-			{
+	if ( bkl->Show( *report ) ) {
+		if ( report->Process() ) {
+			if ( online ) {
 				wxLogMessage( _T( "Report successfully uploaded." ) );
 			}
-			else
-			{
+			else {
 				wxLogMessage( _T( "Report generated in \"%s\"." ),
 				              report->GetCompressedFileName().c_str() );
 				report->Reset();
 			}
+		}
+		else {
+		    wxLogMessage( _T( "Report generated in \"%s\", but failed to upload" ),
+				              report->GetCompressedFileName().c_str() );
+				report->Reset();
 		}
 	}
 	//else: user cancelled the report

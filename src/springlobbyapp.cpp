@@ -135,6 +135,8 @@ bool SpringLobbyApp::OnInit()
     wxFileSystem::AddHandler(new wxZipFSHandler);
     wxSocketBase::Initialize();
 
+    crashreport().GenerateReport();
+    return false;
 
 #ifdef __WXMSW__
     SetUnhandledExceptionFilter(filter);

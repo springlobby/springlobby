@@ -121,7 +121,6 @@ MainWindow::MainWindow( Ui& ui )
     m_log_win(NULL)
 {
 
-    int*i=0;*i=1;
   SetIcon( wxIcon(springlobby_xpm) );
 
   GetAui().manager = new wxAuiManager( this );
