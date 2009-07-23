@@ -32,7 +32,7 @@ bool NetDebugReport::Process()
 {
     wxDebugReportCompress::Process(); //compress files into zip
     wxString filename = GetCompressedFileName();
-    wxSetWorkingDirectory( wxPathOnly( filename ) );
+    CwdGuard setCwd( wxPathOnly( filename ) );
     wxCurlHTTP http( _T("http://localhost/upload.php") );
     struct curl_forms testform[2];
 

@@ -260,3 +260,13 @@ int WinExecuteAdmin( const wxString& command, const wxString& params )
       return 0;
 }
 #endif
+
+CwdGuard::CwdGuard( const wxString& new_cwd )
+    : m_old_cwd( wxGetCwd() )
+{
+    wxSetWorkingDirectory( new_cwd );
+}
+CwdGuard::~CwdGuard()
+{
+    wxSetWorkingDirectory( m_old_cwd );
+}

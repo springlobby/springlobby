@@ -849,6 +849,7 @@ void wxCurlBase::SetHeaders()
         for(unsigned int i = 0; i < m_arrHeaders.Count(); i++)
         {
             m_pHeaders = curl_slist_append(m_pHeaders, (const char*)(m_arrHeaders[i].c_str()));
+            wxLogMessage( m_arrHeaders[i] );
         }
 
         SetOpt(CURLOPT_HTTPHEADER, m_pHeaders);

@@ -207,7 +207,8 @@ bool wxCurlHTTP::Post(const wxString& szRemoteFile /*= wxEmptyString*/)
     if(m_pCURL && m_pPostHead && m_pPostTail)
     {
         SetCurlHandleToDefaults(szRemoteFile);
-
+        m_pHeaders = curl_slist_append(m_pHeaders, "Expect:" );
+        SetOpt(CURLOPT_HTTPHEADER, m_pHeaders);
         SetOpt(CURLOPT_POST, TRUE);
         SetOpt(CURLOPT_HTTPPOST, m_pPostHead);
         SetStringWriteFunction(m_szResponseBody);
