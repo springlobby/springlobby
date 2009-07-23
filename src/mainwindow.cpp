@@ -78,6 +78,7 @@
 
 #if defined(__WXMSW__)
     #include <wx/msw/winundef.h>
+    #include <iostream>
 #endif
 #include <wx/aboutdlg.h>
 
