@@ -379,7 +379,7 @@ SET( curlSRC
 	src/curl/base.cpp
 	src/curl/http.cpp
 	src/curl/ftp.cpp
-	src/curl/thread.cpp
+	src/curl/curlthread.cpp
 )
 
 # If we build for windows Systems, we also include the Resource-File containing the Manifest, Icon and other Resources.

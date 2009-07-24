@@ -11,7 +11,7 @@
 #ifndef _WX_DOWNLOAD_H_
 #define _WX_DOWNLOAD_H_
 
-#include "thread.h"
+#include "curlthread.h"
 
 
 // ----------------------------------------------------------------------------

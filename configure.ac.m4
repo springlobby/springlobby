@@ -35,6 +35,12 @@ AC_ARG_ENABLE(debug,
  [ debug=$enableval
  ])
 
+debug_report=yes
+AC_ARG_ENABLE(debug-report,
+ [  --enable-debug-report Enable automatic debug report uploading, requires libcurl],
+ [ debug_report=$enableval
+ ])
+
 AC_ARG_WITH(sdl-config,[  --with-sdl-config=/path/to/sdl-config (optional) for finding right sdl includes],
             SDL_CONFIG="$withval")
 
@@ -66,7 +72,7 @@ AM_PATH_WXCONFIG([2.8.2], [],
            where wxWidgets libraries are installed (returned by
            'wx-config --libs' command) is in LD_LIBRARY_PATH or
            equivalent variable and wxWidgets version is 2.8.2 or above.
-   ])], [base,core,net,adv,aui,xml,html])
+   ])], [base,core,net,adv,aui,xml,html,qa])
 win_build=0
 AC_ARG_VAR([WINDRES], [Windows resource file compiler command])
 if test x$host_os = xmingw32msvc ; then
@@ -147,8 +153,21 @@ if test "$win_build" = 1 ; then
     AC_DEFINE([VERSION],["<<<esyscmd(/bin/echo -n "$VERSION")>>> on Windows"]  )
 fi
 
+if test x$debug_report = xyes ; then
+	if test "$win_build" = 0 ; then
+		LIBCURL_CHECK_CONFIG( yes, 7.10.1,
+			[CXXFLAGS="$CXXFLAGS $LIBCURL_CPPFLAGS",   LIBS="$LIBS $LIBCURL"] )
+#			AC_ERROR("Debug report uplaoding requires libcurl, which could not be found. This dependency can be avoided by passing --disable-debug-report") 		)
+	else
+		CXXFLAGS="$CXXFLAGS -I/var/lib/buildbot/lib/mingw/include "
+		LIBS="$LIBS  -lws2_32 -lmswsock  -L/var/lib/buildbot/lib/mingw/lib -lcurl"
+	fi
+	CXXFLAGS="$CXXFLAGS -DENABLE_DEBUG_REPORT"
+fi
+
 AM_CONDITIONAL([USE_WINDRES], test "$win_build" = 1)
 AM_CONDITIONAL([USE_LIBT_INCLUDED], test x$usetorrent = xyes && test "$win_build" = 1)
+AM_CONDITIONAL([ENABLE_DEBUG_REPORT], test x$debug_report = xyes )
 
 AC_MSG_CHECKING([if we can enable extra features that need wxWidgets-2.8])
 dnl we probably aren't supposed to use the function below, but it is the simplest way

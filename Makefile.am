@@ -912,8 +912,6 @@ springlobby_SOURCES = \
 	src/Helper/tasclientimport.cpp \
 	src/Helper/slhtmlwindow.cpp \
 	src/Helper/slhtmlwindow.h \
-	src/curl/base.cpp \
-	src/curl/http.cpp \
 	src/channel/channelchooser.cpp \
 	src/channel/channelchooser.h \
 	src/channel/channelchooserdialog.cpp \
@@ -984,6 +982,18 @@ if USE_LIBT_INCLUDED
 springlobby_SOURCES += \
 		$(libtorrent_headers) \
  		$(libtorrent_sources)
+endif
+
+if ENABLE_DEBUG_REPORT
+springlobby_SOURCES += \
+		src/curl/base.cpp \
+		src/curl/http.cpp \
+		src/curl/ftp.cpp \
+		src/curl/curlthread.cpp \
+		src/curl/base.h \
+		src/curl/http.h \
+		src/curl/ftp.h \
+		src/curl/curlthread.h
 endif
 
 # TODO keep only a single list instead of duplicating the lists below
@@ -1075,3 +1085,16 @@ if USE_WINDRES
 springsettings_SOURCES += \
 	src/settings++/settings.rc
 endif
+
+if ENABLE_DEBUG_REPORT
+springsettings_SOURCES += \
+		src/curl/base.cpp \
+		src/curl/http.cpp \
+		src/curl/ftp.cpp \
+		src/curl/curlthread.cpp \
+		src/curl/base.h \
+		src/curl/http.h \
+		src/curl/ftp.h \
+		src/curl/curlthread.h
+endif
+

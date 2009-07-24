@@ -24,7 +24,7 @@
 #include <wx/wfstream.h>
 #include <wx/filename.h>
 
-#include "thread.h"
+#include "curlthread.h"
 #include "http.h"
 #include "ftp.h"
 
