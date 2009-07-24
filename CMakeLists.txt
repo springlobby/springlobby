@@ -451,8 +451,6 @@ TARGET_LINK_LIBRARIES( springlobby libtorrent )
 ENDIF(WIN32 AND OPTION_TORRENT_SYSTEM)
 
 IF( ENABLE_DEBUG_REPORT )
-	SET( SpringLobbySrc ${SpringLobbySrc} ${curlSRC} )
-	SET( SettingsSrc ${SettingsSrc} ${curlSRC} )
 	IF(WIN32)
 		TARGET_LINK_LIBRARIES(springlobby ws2_32 mswsock ${CURL_LIBRARIES} libtorrent )
 		TARGET_LINK_LIBRARIES(springsettings ws2_32 mswsock ${CURL_LIBRARIES} libtorrent )
