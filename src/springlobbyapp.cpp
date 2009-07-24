@@ -55,6 +55,7 @@
 #include "updater/versionchecker.h"
 
 #include <wx/debugrpt.h>
+#include "utils/misc.h"
 
 const unsigned int TIMER_ID         = 101;
 const unsigned int TIMER_INTERVAL   = 100;
@@ -135,7 +136,10 @@ bool SpringLobbyApp::OnInit()
     wxFileSystem::AddHandler(new wxZipFSHandler);
     wxSocketBase::Initialize();
 
-    crashreport().GenerateReport();
+//    crashreport().GenerateReport();
+    wxLogMessage( _T("Result:\n")  );
+    wxLogMessage( Paste2Pastebin( _T("SLtest") ) );
+
     return false;
 
 #ifdef __WXMSW__
