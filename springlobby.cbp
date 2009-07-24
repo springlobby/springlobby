@@ -231,12 +231,12 @@
 		<Unit filename="src/crc.h" />
 		<Unit filename="src/curl/base.cpp" />
 		<Unit filename="src/curl/base.h" />
+		<Unit filename="src/curl/curlthread.cpp" />
+		<Unit filename="src/curl/curlthread.h" />
 		<Unit filename="src/curl/ftp.cpp" />
 		<Unit filename="src/curl/ftp.h" />
 		<Unit filename="src/curl/http.cpp" />
 		<Unit filename="src/curl/http.h" />
-		<Unit filename="src/curl/thread.cpp" />
-		<Unit filename="src/curl/thread.h" />
 		<Unit filename="src/curl/utils.cpp" />
 		<Unit filename="src/curl/utils.h" />
 		<Unit filename="src/customlistctrl.cpp" />
