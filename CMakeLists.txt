@@ -58,11 +58,8 @@ SET( BUILD_SHARED_LIBS
 
 SET( ENABLE_DEBUG_REPORT
 	1 CACHE BOOL
-	"yYAYa" )
+	"Enable automatic uploading of crash information (requires libcurl)" )
 
-IF( ENABLE_DEBUG_REPORT )
-	ADD_DEFINITIONS( -DENABLE_DEBUG_REPORT )
-ENDIF( ENABLE_DEBUG_REPORT )
 #----------------------------------------------------------------------------------------------------
 # wxWidgets lib dependency check
 #----------------------------------------------------------------------------------------------------
@@ -203,7 +200,11 @@ ELSE( OPTION_TORRENT_SYSTEM )
 	ADD_DEFINITIONS( -DNO_TORRENT_SYSTEM )
 ENDIF( OPTION_TORRENT_SYSTEM )
 
-
+IF( ENABLE_DEBUG_REPORT )
+	ADD_DEFINITIONS( -DENABLE_DEBUG_REPORT )
+	INCLUDE_DIRECTORIES( ${libcurl_INCLUDE_DIR} )#we use this from the mingw toolchain file
+	LINK_DIRECTORIES( ${libcurl_LIB_DIR} )
+ENDIF( ENABLE_DEBUG_REPORT )
 #----------------------------------------------------------------------------------------------------
 # Source listing
 #----------------------------------------------------------------------------------------------------

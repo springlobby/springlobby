@@ -48,10 +48,10 @@
 //////////////////////////////////////////////////////////////////////
 
 BEGIN_DECLARE_EVENT_TYPES()
-    DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_CURL, wxCURL_DOWNLOAD_EVENT, 6578)
-    DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_CURL, wxCURL_UPLOAD_EVENT, 6579)
-    DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_CURL, wxCURL_BEGIN_PERFORM_EVENT, 6580)
-    DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_CURL, wxCURL_END_PERFORM_EVENT, 6581)
+    DECLARE_EVENT_TYPE( wxCURL_DOWNLOAD_EVENT, 6578)
+    DECLARE_EVENT_TYPE( wxCURL_UPLOAD_EVENT, 6579)
+    DECLARE_EVENT_TYPE( wxCURL_BEGIN_PERFORM_EVENT, 6580)
+    DECLARE_EVENT_TYPE( wxCURL_END_PERFORM_EVENT, 6581)
 END_DECLARE_EVENT_TYPES()
 
 
@@ -59,7 +59,7 @@ class WXDLLIMPEXP_CURL wxCurlBase;
 
 
 //! Private internal class used as base class for wxCurlDownloadEvent and wxCurlUploadEvent.
-class WXDLLIMPEXP_CURL wxCurlProgressBaseEvent : public wxEvent
+class  wxCurlProgressBaseEvent : public wxEvent
 {
 public:
     wxCurlProgressBaseEvent(int id, wxEventType type,
@@ -76,7 +76,7 @@ public:     // misc getters
     wxDateTime GetDateTime() const { return m_dt; }
 
     //! Returns a number in [0;100] range indicating how much has been transferred so far.
-    double GetPercent() const 
+    double GetPercent() const
         { return GetTotalBytes() == 0 ? 0 : (100.0 * (GetTransferredBytes()/GetTotalBytes())); }
 
     //! Returns the current transfer speed in bytes/second.
@@ -139,15 +139,15 @@ protected:
 
 //! This event gets posted by wxCURL with a frequent interval during operation
 //! (roughly once per second) no matter if data is being transfered or not.
-//! Unknown/unused argument values passed to the callback will be set to zero 
+//! Unknown/unused argument values passed to the callback will be set to zero
 //! (like if you only download data, the upload size will remain 0).
 //! Use the EVT_CURL_PROGRESS(id, function) macro to intercept this event.
-class WXDLLIMPEXP_CURL wxCurlDownloadEvent : public wxCurlProgressBaseEvent
+class wxCurlDownloadEvent : public wxCurlProgressBaseEvent
 {
 public:
     wxCurlDownloadEvent();
     wxCurlDownloadEvent(int id, wxCurlBase *originator,
-                        const double& rDownloadTotal, const double& rDownloadNow, 
+                        const double& rDownloadTotal, const double& rDownloadNow,
                         const wxString& szURL = wxEmptyString);
     wxCurlDownloadEvent(const wxCurlDownloadEvent& event);
 
@@ -184,15 +184,15 @@ typedef void (wxEvtHandler::*wxCurlDownloadEventFunction)(wxCurlDownloadEvent&);
 
 //! This event gets posted by wxCURL with a frequent interval during operation
 //! (roughly once per second) no matter if data is being transfered or not.
-//! Unknown/unused argument values passed to the callback will be set to zero 
+//! Unknown/unused argument values passed to the callback will be set to zero
 //! (like if you only download data, the upload size will remain 0).
 //! Use the EVT_CURL_PROGRESS(id, function) macro to intercept this event.
-class WXDLLIMPEXP_CURL wxCurlUploadEvent : public wxCurlProgressBaseEvent
+class wxCurlUploadEvent : public wxCurlProgressBaseEvent
 {
 public:
     wxCurlUploadEvent();
     wxCurlUploadEvent(int id, wxCurlBase *originator,
-                        const double& rUploadTotal, const double& rUploadNow, 
+                        const double& rUploadTotal, const double& rUploadNow,
                         const wxString& szURL = wxEmptyString);
     wxCurlUploadEvent(const wxCurlUploadEvent& event);
 
@@ -233,7 +233,7 @@ typedef void (wxEvtHandler::*wxCurlUploadEventFunction)(wxCurlUploadEvent&);
 
 //! This event get posted before the beginning of any tranfer operation.
 //! Use the EVT_CURL_BEGIN_PERFORM(id, function) macro to intercept this event.
-class WXDLLIMPEXP_CURL wxCurlBeginPerformEvent : public wxEvent
+class  wxCurlBeginPerformEvent : public wxEvent
 {
 public:
     wxCurlBeginPerformEvent();
@@ -268,7 +268,7 @@ typedef void (wxEvtHandler::*wxCurlBeginPerformEventFunction)(wxCurlBeginPerform
 
 //! This event get posted at the end of any tranfer operation.
 //! Use the EVT_CURL_END_PERFORM(id, function) macro to intercept this event.
-class WXDLLIMPEXP_CURL wxCurlEndPerformEvent : public wxEvent
+class  wxCurlEndPerformEvent : public wxEvent
 {
 public:
     wxCurlEndPerformEvent();
@@ -345,12 +345,12 @@ extern "C"
 //! - use #SetOpt to set libCURL options you're interested to
 //!   or alternatively the other various Set*() functions
 //! - call #Perform to perform the operation
-class WXDLLIMPEXP_CURL wxCurlBase
+class  wxCurlBase
 {
 public:
-    wxCurlBase(const wxString& szURL = wxEmptyString, 
+    wxCurlBase(const wxString& szURL = wxEmptyString,
                const wxString& szUserName = wxEmptyString,
-               const wxString& szPassword = wxEmptyString, 
+               const wxString& szPassword = wxEmptyString,
                wxEvtHandler* pEvtHandler = NULL, int id = wxID_ANY,
                long flags = wxCURL_DEFAULT_FLAGS);
 
@@ -382,7 +382,7 @@ public:
     //! the constructor.
     bool InitHandle();
 
-    //! Closes this libCURL session. This will effectively close all connections this handle 
+    //! Closes this libCURL session. This will effectively close all connections this handle
     //! has used and possibly has kept open until now.
     //! This function is automatically called by the destructor.
     bool CleanupHandle();

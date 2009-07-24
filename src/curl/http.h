@@ -26,7 +26,7 @@ extern "C"
 //////////////////////////////////////////////////////////////////////
 
 //! A specialized interface to HTTP derived from wxCurlBase.
-class WXDLLIMPEXP_CURL wxCurlHTTP : public wxCurlBase
+class  wxCurlHTTP : public wxCurlBase
 {
 public:
     wxCurlHTTP(const wxString& szURL = wxEmptyString,

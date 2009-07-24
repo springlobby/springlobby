@@ -26,7 +26,7 @@ extern "C"
 //////////////////////////////////////////////////////////////////////
 
 //! A specialized interface to FTP derived from wxCurlBase.
-class WXDLLIMPEXP_CURL wxCurlFTP : public wxCurlBase
+class  wxCurlFTP : public wxCurlBase
 {
 public:
 	enum TransferMode

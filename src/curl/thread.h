@@ -50,7 +50,7 @@ enum wxCurlThreadError
 // ----------------------------------------------------------------------------
 
 //! Base class for wxCurl threads.
-class WXDLLIMPEXP_CURL wxCurlBaseThread : public wxThread
+class wxCurlBaseThread : public wxThread
 {
 protected:
 
@@ -183,7 +183,7 @@ protected:
 // wxCurlDownloadThreadOutputFilter
 // ----------------------------------------------------------------------------
 
-class WXDLLIMPEXP_CURL wxCurlDownloadThread;
+class  wxCurlDownloadThread;
 
 // private class used by wxCurlDownloadThread
 class wxCurlDownloadThreadOutputFilter : public wxOutputStream
@@ -221,7 +221,7 @@ public:
 
 //! A simple joinable thread which allows downloading
 //! resources from the net without blocking the GUI of your app.
-class WXDLLIMPEXP_CURL wxCurlDownloadThread : public wxCurlBaseThread
+class  wxCurlDownloadThread : public wxCurlBaseThread
 {
     friend class wxCurlDownloadThreadOutputFilter;      // needs to access our TestDestroy()
 
@@ -282,7 +282,7 @@ protected:
 // wxCurlUploadThreadInputFilter
 // ----------------------------------------------------------------------------
 
-class WXDLLIMPEXP_CURL wxCurlUploadThread;
+class  wxCurlUploadThread;
 
 // private class
 class wxCurlUploadThreadInputFilter : public wxInputStream
@@ -320,7 +320,7 @@ public:
 
 //! A simple joinable thread which allows uploading
 //! resources to the net without blocking the GUI of your app.
-class WXDLLIMPEXP_CURL wxCurlUploadThread : public wxCurlBaseThread
+class  wxCurlUploadThread : public wxCurlBaseThread
 {
     friend class wxCurlUploadThreadInputFilter;      // needs to access our TestDestroy()
 
