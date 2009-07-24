@@ -200,11 +200,6 @@ ELSE( OPTION_TORRENT_SYSTEM )
 	ADD_DEFINITIONS( -DNO_TORRENT_SYSTEM )
 ENDIF( OPTION_TORRENT_SYSTEM )
 
-IF( ENABLE_DEBUG_REPORT )
-	ADD_DEFINITIONS( -DENABLE_DEBUG_REPORT )
-	INCLUDE_DIRECTORIES( ${libcurl_INCLUDE_DIR} )#we use this from the mingw toolchain file
-	LINK_DIRECTORIES( ${libcurl_LIB_DIR} )
-ENDIF( ENABLE_DEBUG_REPORT )
 #----------------------------------------------------------------------------------------------------
 # Source listing
 #----------------------------------------------------------------------------------------------------
@@ -430,10 +425,18 @@ TARGET_LINK_LIBRARIES( libtorrent ${Boost_LIBRARIES} ws2_32 mswsock )
 TARGET_LINK_LIBRARIES( springlobby libtorrent )
 ENDIF(WIN32 AND OPTION_TORRENT_SYSTEM)
 
+IF( ENABLE_DEBUG_REPORT )
+	ADD_DEFINITIONS( -DENABLE_DEBUG_REPORT -DCURL_STATICLIB -mno-cygwin )
+	INCLUDE_DIRECTORIES( ${libcurl_INCLUDE_DIR} )#we use this from the mingw toolchain file
+	LINK_DIRECTORIES( ${libcurl_LIB_DIR} )
+	TARGET_LINK_LIBRARIES(springlobby mswsock ws2_32 curl )
+	TARGET_LINK_LIBRARIES(springsettings mswsock ws2_32 curl libtorrent )
+ENDIF( ENABLE_DEBUG_REPORT )
+
 
 # Here the wxWidgets Libraries are added. These are set for us by the FIND Script. If you need other Libraries, you can add them here as well.
-TARGET_LINK_LIBRARIES(springlobby ${wxWidgets_LIBRARIES} curl)
-TARGET_LINK_LIBRARIES(springsettings ${wxWidgets_LIBRARIES} curl)
+TARGET_LINK_LIBRARIES(springlobby ${wxWidgets_LIBRARIES} )
+TARGET_LINK_LIBRARIES(springsettings ${wxWidgets_LIBRARIES} )
 IF(MINGW)
 	TARGET_LINK_LIBRARIES( springlobby iphlpapi )
 	TARGET_LINK_LIBRARIES( springsettings iphlpapi )
