@@ -159,8 +159,9 @@ if test x$debug_report = xyes ; then
 			[CXXFLAGS="$CXXFLAGS $LIBCURL_CPPFLAGS",   LIBS="$LIBS $LIBCURL"] )
 #			AC_ERROR("Debug report uplaoding requires libcurl, which could not be found. This dependency can be avoided by passing --disable-debug-report") 		)
 	else
-		CXXFLAGS="$CXXFLAGS -I/var/lib/buildbot/lib/mingw/include "
-		LIBS="$LIBS  -lws2_32 -lmswsock  -L/var/lib/buildbot/lib/mingw/lib -lcurl"
+		CXXFLAGS="$CXXFLAGS -I/var/lib/buildbot/lib/mingw/include -DCURL_STATICLIB -mno-cygwin "
+		#DO NOT change link order here (or anywhere else!)
+		LIBS="$LIBS  -L/var/lib/buildbot/lib/mingw/lib -lcurl -lws2_32 -lmswsock  "
 	fi
 	CXXFLAGS="$CXXFLAGS -DENABLE_DEBUG_REPORT"
 fi

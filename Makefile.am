@@ -72,7 +72,8 @@ EXTRA_DIST = \
 	
 
 springsettings_LDADD = \
-	$(WX_LIBS)
+	$(WX_LIBS) \
+	$(LIBTORRENT_LIBS)
 
 if USE_WINDRES
 RESOURCECOMPILE = $(WINDRES) -I $(srcdir)/src $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
@@ -1096,5 +1097,12 @@ springsettings_SOURCES += \
 		src/curl/http.h \
 		src/curl/ftp.h \
 		src/curl/curlthread.h
+endif
+
+#just like with cmake i got no idea why this fixes the link
+if USE_LIBT_INCLUDED
+springsettings_SOURCES += \
+		$(libtorrent_headers) \
+ 		$(libtorrent_sources)
 endif
 
