@@ -108,7 +108,12 @@ SpringLobbyApp::~SpringLobbyApp()
 
 #ifdef __WXMSW__
 LONG __stdcall filter(EXCEPTION_POINTERS* p){
-    crashreport().GenerateReport();
+    #if wxUSE_DEBUGREPORT && defined(ENABLE_DEBUG_REPORT)
+        crashreport().GenerateReport();
+    #else
+
+    #endif
+    return -1;
 }
 #endif
 
@@ -137,9 +142,10 @@ bool SpringLobbyApp::OnInit()
     wxSocketBase::Initialize();
 
 //    crashreport().GenerateReport();
+#if defined(ENABLE_DEBUG_REPORT)
     wxLogMessage( _T("Result:\n")  );
     wxLogMessage( Paste2Pastebin( _T("SLtest") ) );
-
+#endif
     return false;
 
 #ifdef __WXMSW__

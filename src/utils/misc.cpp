@@ -9,7 +9,10 @@
 #include <wx/tokenzr.h>
 
 #include <vector>
-#include "../curl/http.h"
+
+#if defined(ENABLE_DEBUG_REPORT)
+    #include "../curl/http.h"
+#endif
 
 double LevenshteinDistance(wxString s, wxString t)
 {
@@ -100,6 +103,8 @@ wxString GetBestMatch(const wxArrayString& a, const wxString& s, double* distanc
 //    return (res == CURLE_OK);
 //}
 
+#if defined(ENABLE_DEBUG_REPORT)
+
 wxString Paste2Pastebin( const wxString& message )
 {
 //    wxCurlHTTP http( _T("http://pastebin.ca/quiet-paste.php?api=rTsNvBZbuYULv8TXZKL2XZKUwh4bkU1t") );
@@ -135,3 +140,4 @@ wxString Paste2Pastebin( const wxString& message )
     return _T("");
 
 }
+#endif

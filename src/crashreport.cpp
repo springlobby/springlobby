@@ -4,7 +4,7 @@
 //
 
 
-//#if wxUSE_DEBUGREPORT && defined(ENABLE_DEBUG_REPORT)
+#if defined(ENABLE_DEBUG_REPORT)
 
 #include "crashreport.h"
 
@@ -152,4 +152,4 @@ void CrashReport::GenerateReport( )
 
 
 
-//#endif // wxUSE_DEBUGREPORT
+#endif // wxUSE_DEBUGREPORT

@@ -60,6 +60,10 @@ SET( ENABLE_DEBUG_REPORT
 	1 CACHE BOOL
 	"Enable automatic uploading of crash information (requires libcurl)" )
 
+IF( WIN32 AND ENABLE_DEBUG_REPORT AND NOT OPTION_TORRENT_SYSTEM )
+	MESSAGE( FATAL_ERROR "cross-compile with debug report enabled currently only works with torrent enabled. FIXME!!" )
+ENDIF( WIN32 AND ENABLE_DEBUG_REPORT AND NOT OPTION_TORRENT_SYSTEM )
+
 #----------------------------------------------------------------------------------------------------
 # wxWidgets lib dependency check
 #----------------------------------------------------------------------------------------------------
@@ -146,6 +150,23 @@ ELSE ( OPTION_SOUND )
     # Disable sound.
     ADD_DEFINITIONS( -DDISABLE_SOUND )
 ENDIF ( OPTION_SOUND )
+
+IF( ENABLE_DEBUG_REPORT )
+	IF(WIN32)
+		ADD_DEFINITIONS( -DENABLE_DEBUG_REPORT -DCURL_STATICLIB -mno-cygwin )
+		INCLUDE_DIRECTORIES( ${libcurl_INCLUDE_DIR} )#we use this from the mingw toolchain file
+		LINK_DIRECTORIES( ${libcurl_LIB_DIR} )
+		SET( CURL_LIBRARIES "curl" )
+	ELSE(WIN32)
+		ADD_DEFINITIONS( -DENABLE_DEBUG_REPORT )
+		FIND_PACKAGE ( CURL REQUIRED )
+		IF( NOT CURL_FOUND )
+			MESSAGE( FATAL_ERROR "libCURL not found, either install it or set ENABLE_DEBUG_REPORT to OFF" )
+		ENDIF( NOT CURL_FOUND )
+		INCLUDE_DIRECTORIES( ${CURL_INCLUDE_DIR} )#we use this from the mingw toolchain file
+		#LINK_DIRECTORIES( ??? ) #The FindCURL script does nto provide a lib dir....
+	ENDIF(WIN32)
+ENDIF( ENABLE_DEBUG_REPORT )
 
 
 #----------------------------------------------------------------------------------------------------
@@ -309,10 +330,6 @@ SET(SpringLobbySrc
 	src/useractions.cpp
 	src/userlist.cpp
 	src/userlistctrl.cpp
-	src/curl/base.cpp
-	src/curl/http.cpp
-	src/curl/ftp.cpp
-	src/curl/thread.cpp
 	src/widgets/downloadlistctrl.cpp
 	src/widgets/downloaddialog.cpp
 	src/widgets/downloadpanel.cpp
@@ -355,6 +372,9 @@ SET(SLSharedWithSettings
 	src/springunitsynclib.cpp
 	src/spinctld.cpp
 	src/globalsmanager.cpp
+)
+
+SET( curlSRC
 	src/curl/base.cpp
 	src/curl/http.cpp
 	src/curl/ftp.cpp
@@ -426,13 +446,16 @@ TARGET_LINK_LIBRARIES( springlobby libtorrent )
 ENDIF(WIN32 AND OPTION_TORRENT_SYSTEM)
 
 IF( ENABLE_DEBUG_REPORT )
-	ADD_DEFINITIONS( -DENABLE_DEBUG_REPORT -DCURL_STATICLIB -mno-cygwin )
-	INCLUDE_DIRECTORIES( ${libcurl_INCLUDE_DIR} )#we use this from the mingw toolchain file
-	LINK_DIRECTORIES( ${libcurl_LIB_DIR} )
-	TARGET_LINK_LIBRARIES(springlobby mswsock ws2_32 curl )
-	TARGET_LINK_LIBRARIES(springsettings mswsock ws2_32 curl libtorrent )
+	SET( SpringLobbySrc ${SpringLobbySrc} ${curlSRC} )
+	SET( SettingsSrc ${SettingsSrc} ${curlSRC} )
+	IF(WIN32)
+		TARGET_LINK_LIBRARIES(springlobby ws2_32 mswsock ${CURL_LIBRARIES} libtorrent )
+		TARGET_LINK_LIBRARIES(springsettings ws2_32 mswsock ${CURL_LIBRARIES} libtorrent )
+	ELSE(WIN32)
+		TARGET_LINK_LIBRARIES(springlobby ${CURL_LIBRARIES} )
+		TARGET_LINK_LIBRARIES(springsettings ${CURL_LIBRARIES} )
+	ENDIF(WIN32)
 ENDIF( ENABLE_DEBUG_REPORT )
-
 
 # Here the wxWidgets Libraries are added. These are set for us by the FIND Script. If you need other Libraries, you can add them here as well.
 TARGET_LINK_LIBRARIES(springlobby ${wxWidgets_LIBRARIES} )
