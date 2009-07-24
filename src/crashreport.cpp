@@ -33,7 +33,7 @@ bool NetDebugReport::Process()
     wxDebugReportCompress::Process(); //compress files into zip
     wxString filename = GetCompressedFileName();
     CwdGuard setCwd( wxPathOnly( filename ) );
-    wxCurlHTTP http( _T("http://localhost/upload.php") );
+    wxCurlHTTP http( _T("http://debug.springlobby.info/upload.php") );
     struct curl_forms testform[2];
 
 //    testform[0].option = CURLFORM_COPYNAME;
@@ -124,7 +124,9 @@ void CrashReport::GenerateReport( )
 #if wxUSE_STD_IOSTREAM
 	report->AddText( _T( "AppLog.txt" ), TowxString( crashlog.str() ), _( "Application verbose log" ) );
 #endif
-	report->AddFile( sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("script.txt"), _( "Last generated spring launching script" ) );
+    wxString script_file = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("script.txt");
+    if ( wxFile::Exists( script_file ) )
+        report->AddFile( script_file, _( "Last generated spring launching script" ) );
 
     wxDebugReportPreviewStd* bkl = new wxDebugReportPreviewStd();
 	// calling Show() is not mandatory, but is more polite

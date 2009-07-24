@@ -122,6 +122,10 @@ LONG __stdcall filter(EXCEPTION_POINTERS* p){
 //! It will open the main window and connect default to server or open the connect window.
 bool SpringLobbyApp::OnInit()
 {
+    #ifdef __WXMSW__
+        SetUnhandledExceptionFilter(filter);
+    #endif
+
     //this triggers the Cli Parser amongst other stuff
     if (!wxApp::OnInit())
         return false;
@@ -141,12 +145,13 @@ bool SpringLobbyApp::OnInit()
     wxFileSystem::AddHandler(new wxZipFSHandler);
     wxSocketBase::Initialize();
 
-//    crashreport().GenerateReport();
+
 #if defined(ENABLE_DEBUG_REPORT)
-    wxLogMessage( _T("Result:\n")  );
-    wxLogMessage( Paste2Pastebin( _T("SLtest") ) );
+//int*i=0;*i=1;
+        crashreport().GenerateReport();
+        return false;
 #endif
-    return false;
+
 
 #ifdef __WXMSW__
     SetUnhandledExceptionFilter(filter);
