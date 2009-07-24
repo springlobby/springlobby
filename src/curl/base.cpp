@@ -25,6 +25,7 @@
 #include "base.h"
 #include <wx/filename.h>
 
+
 //////////////////////////////////////////////////////////////////////
 // Constants
 //////////////////////////////////////////////////////////////////////
@@ -257,7 +258,7 @@ wxString wxCurlProgressBaseEvent::GetHumanReadableSpeed(const wxString &invalid,
 
 DEFINE_EVENT_TYPE(wxCURL_DOWNLOAD_EVENT);
 
-//IMPLEMENT_DYNAMIC_CLASS(wxCurlDownloadEvent, wxEvent);
+IMPLEMENT_DYNAMIC_CLASS(wxCurlDownloadEvent, wxEvent);
 
 wxCurlDownloadEvent::wxCurlDownloadEvent()
 : wxCurlProgressBaseEvent(-1, wxCURL_DOWNLOAD_EVENT),

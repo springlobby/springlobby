@@ -55,7 +55,7 @@ BEGIN_DECLARE_EVENT_TYPES()
 END_DECLARE_EVENT_TYPES()
 
 
-class WXDLLIMPEXP_CURL wxCurlBase;
+class wxCurlBase;
 
 
 //! Private internal class used as base class for wxCurlDownloadEvent and wxCurlUploadEvent.
