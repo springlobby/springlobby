@@ -99,43 +99,47 @@ int IBattle::GetPlayerNum( const User& user )
     return -1;
 }
 
+#include <algorithm>
+#include "utils/debug.h"
+class DismissColor {
+    protected:
+        typedef std::vector<wxColour>
+            ColorVec;
+        const ColorVec& m_other;
+
+    public:
+        DismissColor( const ColorVec& other )
+            : m_other( other )
+        {}
+
+    bool operator() ( wxColor to_check ) {
+        return std::find ( m_other.begin(), m_other.end(), to_check ) != m_other.end();
+    }
+};
+
 wxColour IBattle::GetFreeColour( User *for_whom )
 {
     int count = -1;
     bool changed = true;
-    std::vector<wxColour>& fixcolourspalette = GetFixColoursPalette( m_teams_sizes.size() + 1 );
+    typedef std::vector<wxColour>
+        ColorVec;
+    ColorVec fixcolourspalette = GetFixColoursPalette( m_teams_sizes.size() + 1 );
     wxColor col;
 
-    while ( changed )
-    {
-        count++;
-        if ( count > fixcolourspalette.size() )
-            fixcolourspalette = GetFixColoursPalette( count + 1 );
-        std::set<int> parsed_teams;
-        if (for_whom != NULL)
-        {
-        	if ( AreColoursSimilar( for_whom->BattleStatus().colour, fixcolourspalette[count], 20 ) )
-        	{
-        		continue;
-        	}
-        }
-        for ( user_map_t::size_type i = 0; i < GetNumUsers(); i++ )
-        {
-            UserBattleStatus& bs = GetUser( i ).BattleStatus();
-            if ( bs.spectator )
-                continue;
-            if ( parsed_teams.find( bs.team ) != parsed_teams.end() )
-                continue; // skip duplicates
+    ColorVec::iterator fixcolourspalette_new_end = std::unique( fixcolourspalette.begin(), fixcolourspalette.end(), AreColoursSimilar );
 
-            parsed_teams.insert( bs.team );
-            if ( !AreColoursSimilar( bs.colour, fixcolourspalette[count], 20 ) )
-            {
-                    changed = false;
-                    break;
-            }
-        }
+    ColorVec current_used_colors;
+    for ( user_map_t::size_type i = 0; i < GetNumUsers(); ++i ) {
+        UserBattleStatus& bs = GetUser( i ).BattleStatus();
+        current_used_colors.push_back( bs.colour );
     }
-    return fixcolourspalette[count];
+
+    fixcolourspalette_new_end = std::remove_if( fixcolourspalette.begin(), fixcolourspalette.end(), DismissColor( current_used_colors ) );
+
+    if ( fixcolourspalette_new_end == fixcolourspalette.begin() )
+        throw std::exception();
+
+    return (*fixcolourspalette.begin());
 }
 
 wxColour IBattle::GetFreeColour( User &for_whom )
