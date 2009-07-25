@@ -164,7 +164,7 @@ int IBattle::GetFreeTeamNum( bool excludeme )
     return lowest;
 }
 
-int IBattle::GetClosestFixColour(const wxColour &col, const std::vector<int> &excludes, int &difference)
+int IBattle::GetClosestFixColour(const wxColour &col, const std::vector<int> &excludes, int difference)
 {
     std::vector<wxColour> palette = GetFixColoursPalette( m_teams_sizes.size() + 1 );
     int result=0;
@@ -177,7 +177,7 @@ int IBattle::GetClosestFixColour(const wxColour &col, const std::vector<int> &ex
         {
             if (AreColoursSimilar( palette[i],col, difference ))
             {
-                result=i;
+                return i;
             }
         }
     }

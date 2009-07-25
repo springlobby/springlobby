@@ -84,8 +84,9 @@ bool AreColoursSimilar( const wxColour& col1, const wxColour& col2, int mindiff 
     r = r>0?r:-r;
     g = g>0?g:-g;
     b = b>0?b:-b;
-    if ( (r <= mindiff) && (g <= mindiff) && (b <= mindiff) ) return true;
-    return false;
+    int difference = std::min( r, g );
+    difference = std::min( difference, b );
+    return difference < mindiff;
 }
 
 
