@@ -119,14 +119,8 @@ class DismissColor {
 
 wxColour IBattle::GetFreeColour( User *for_whom )
 {
-    int count = -1;
-    bool changed = true;
     typedef std::vector<wxColour>
         ColorVec;
-    ColorVec fixcolourspalette = GetFixColoursPalette( m_teams_sizes.size() + 1 );
-    wxColor col;
-
-    ColorVec::iterator fixcolourspalette_new_end = std::unique( fixcolourspalette.begin(), fixcolourspalette.end(), AreColoursSimilar );
 
     ColorVec current_used_colors;
     for ( user_map_t::size_type i = 0; i < GetNumUsers(); ++i ) {
@@ -134,12 +128,17 @@ wxColour IBattle::GetFreeColour( User *for_whom )
         current_used_colors.push_back( bs.colour );
     }
 
-    fixcolourspalette_new_end = std::remove_if( fixcolourspalette.begin(), fixcolourspalette.end(), DismissColor( current_used_colors ) );
+    int inc = 1;
+    while ( true ) {
+        ColorVec fixcolourspalette = GetFixColoursPalette( m_teams_sizes.size() + inc++ );
 
-    if ( fixcolourspalette_new_end == fixcolourspalette.begin() )
-        throw std::exception();
+        ColorVec::iterator fixcolourspalette_new_end = std::unique( fixcolourspalette.begin(), fixcolourspalette.end(), AreColoursSimilar );
 
-    return (*fixcolourspalette.begin());
+        fixcolourspalette_new_end = std::remove_if( fixcolourspalette.begin(), fixcolourspalette.end(), DismissColor( current_used_colors ) );
+
+        if ( fixcolourspalette_new_end != fixcolourspalette.begin() )
+            return (*fixcolourspalette.begin());
+    }
 }
 
 wxColour IBattle::GetFreeColour( User &for_whom )
