@@ -112,7 +112,7 @@ wxColour IBattle::GetFreeColour( User *for_whom )
         if ( count > fixcolourspalette.size() )
             fixcolourspalette = GetFixColoursPalette( count + 1 );
         std::set<int> parsed_teams;
-        if ( (for_whom != NULL)
+        if (for_whom != NULL)
         {
         	if ( AreColoursSimilar( for_whom->BattleStatus().colour, fixcolourspalette[count], 20 ) )
         	{
