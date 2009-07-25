@@ -166,7 +166,7 @@ int IBattle::GetFreeTeamNum( bool excludeme )
 
 int IBattle::GetClosestFixColour(const wxColour &col, const std::vector<int> &excludes, int &difference)
 {
-    std::vector<wxColour> palette = GetFixColoursPalette( m_teams_sizes.size() );
+    std::vector<wxColour> palette = GetFixColoursPalette( m_teams_sizes.size() + 1 );
     int result=0;
     int t1=palette.size();
     int t2=excludes.size();
