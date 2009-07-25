@@ -105,16 +105,22 @@ wxColour IBattle::GetFreeColour( User *for_whom )
     bool changed = true;
     std::vector<wxColour>& fixcolourspalette = GetFixColoursPalette( m_teams_sizes.size() + 1 );
     wxColor col;
+
     while ( changed )
     {
         count++;
         if ( count > fixcolourspalette.size() )
             fixcolourspalette = GetFixColoursPalette( count + 1 );
         std::set<int> parsed_teams;
+        if ( (for_whom != NULL)
+        {
+        	if ( AreColoursSimilar( for_whom->BattleStatus().colour, fixcolourspalette[count], 20 ) )
+        	{
+        		continue;
+        	}
+        }
         for ( user_map_t::size_type i = 0; i < GetNumUsers(); i++ )
         {
-            if ( (for_whom != NULL) && (&GetUser( i ) == for_whom) && m_teams_sizes.size() > 1 )
-                continue;
             UserBattleStatus& bs = GetUser( i ).BattleStatus();
             if ( bs.spectator )
                 continue;
