@@ -107,22 +107,27 @@ wxColour IBattle::GetFreeColour( User *for_whom )
     wxColor col;
     while ( changed )
     {
-				count++;
-        if ( count > fixcolourspalette.size() ) fixcolourspalette = GetFixColoursPalette( count + 1 );
-				std::set<int> parsed_teams;
-				for ( user_map_t::size_type i = 0; i < GetNumUsers(); i++ )
-				{
-						if ( (for_whom != NULL) && (&GetUser( i ) == for_whom) && m_teams_sizes.size() > 1 ) continue;
-						UserBattleStatus& bs = GetUser( i ).BattleStatus();
-						if ( bs.spectator ) continue;
-						if ( parsed_teams.find( bs.team ) != parsed_teams.end() ) continue; // skip duplicates
-						parsed_teams.insert( bs.team );
-						if ( !AreColoursSimilar( bs.colour, fixcolourspalette[count], 20 ) )
-						{
-								changed = false;
-								break;
-						}
-				}
+        count++;
+        if ( count > fixcolourspalette.size() )
+            fixcolourspalette = GetFixColoursPalette( count + 1 );
+        std::set<int> parsed_teams;
+        for ( user_map_t::size_type i = 0; i < GetNumUsers(); i++ )
+        {
+            if ( (for_whom != NULL) && (&GetUser( i ) == for_whom) && m_teams_sizes.size() > 1 )
+                continue;
+            UserBattleStatus& bs = GetUser( i ).BattleStatus();
+            if ( bs.spectator )
+                continue;
+            if ( parsed_teams.find( bs.team ) != parsed_teams.end() )
+                continue; // skip duplicates
+
+            parsed_teams.insert( bs.team );
+            if ( !AreColoursSimilar( bs.colour, fixcolourspalette[count], 20 ) )
+            {
+                    changed = false;
+                    break;
+            }
+        }
     }
     return fixcolourspalette[count];
 }
