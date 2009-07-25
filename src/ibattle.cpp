@@ -100,7 +100,6 @@ int IBattle::GetPlayerNum( const User& user )
 }
 
 #include <algorithm>
-#include "utils/debug.h"
 class DismissColor {
     protected:
         typedef std::vector<wxColour>
@@ -115,6 +114,19 @@ class DismissColor {
     bool operator() ( wxColor to_check ) {
         return std::find ( m_other.begin(), m_other.end(), to_check ) != m_other.end();
     }
+};
+
+class AreColoursSimilarProxy {
+    int m_mindiff;
+
+    public:
+        AreColoursSimilarProxy( int mindiff )
+            : m_mindiff ( mindiff )
+        {}
+
+        bool operator() ( wxColor a, wxColor b ) {
+                return AreColoursSimilar( a, b, m_mindiff );
+        }
 };
 
 wxColour IBattle::GetFreeColour( User *for_whom )
@@ -132,7 +144,7 @@ wxColour IBattle::GetFreeColour( User *for_whom )
     while ( true ) {
         ColorVec fixcolourspalette = GetFixColoursPalette( m_teams_sizes.size() + inc++ );
 
-        ColorVec::iterator fixcolourspalette_new_end = std::unique( fixcolourspalette.begin(), fixcolourspalette.end(), AreColoursSimilar );
+        ColorVec::iterator fixcolourspalette_new_end = std::unique( fixcolourspalette.begin(), fixcolourspalette.end(), AreColoursSimilarProxy( 20 ) );
 
         fixcolourspalette_new_end = std::remove_if( fixcolourspalette.begin(), fixcolourspalette.end(), DismissColor( current_used_colors ) );
 
