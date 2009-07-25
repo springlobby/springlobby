@@ -101,29 +101,30 @@ int IBattle::GetPlayerNum( const User& user )
 
 wxColour IBattle::GetFreeColour( User *for_whom )
 {
-    int lowest = 0;
+    int count = -1;
     bool changed = true;
     std::vector<wxColour>& fixcolourspalette = GetFixColoursPalette( m_teams_sizes.size() + 1 );
+    wxColor col;
     while ( changed )
     {
-        changed = false;
-        std::set<int> parsed_teams;
-        for ( user_map_t::size_type i = 0; i < GetNumUsers(); i++ )
-        {
-            if ( (for_whom != NULL) && (&GetUser( i ) == for_whom) ) continue;
-            UserBattleStatus& bs = GetUser( i ).BattleStatus();
-            if ( bs.spectator ) continue;
+				count++;
+        if ( count > fixcolourspalette.size() ) fixcolourspalette = GetFixColoursPalette( count + 1 );
+				std::set<int> parsed_teams;
+				for ( user_map_t::size_type i = 0; i < GetNumUsers(); i++ )
+				{
+						if ( (for_whom != NULL) && (&GetUser( i ) == for_whom) ) continue;
+						UserBattleStatus& bs = GetUser( i ).BattleStatus();
+						if ( bs.spectator ) continue;
 						if ( parsed_teams.find( bs.team ) != parsed_teams.end() ) continue; // skip duplicates
 						parsed_teams.insert( bs.team );
-						if ( lowest >= fixcolourspalette.size() ) fixcolourspalette = GetFixColoursPalette( lowest + 1 );
-            if ( AreColoursSimilar( bs.colour, fixcolourspalette[lowest], 20 ) )
-            {
-                lowest++;
-                changed = true;
-            }
-        }
+						if ( !AreColoursSimilar( bs.colour, fixcolourspalette[count], 20 ) )
+						{
+								changed = false;
+								break;
+						}
+				}
     }
-    return fixcolourspalette[lowest];
+    return fixcolourspalette[count];
 }
 
 wxColour IBattle::GetFreeColour( User &for_whom )
@@ -204,7 +205,7 @@ User& IBattle::OnUserAdded( User& user )
     bs.spectator = false;
     bs.ready = false;
     bs.sync = SYNC_UNKNOWN;
-    if ( !bs.IsBot() && IsFounderMe() )
+    if ( !bs.IsBot() && IsFounderMe() && GetBattleType() == BT_Played )
     {
 			bs.team = GetFreeTeamNum( &user == &GetMe() );
 			bs.ally = GetFreeAlly( &user == &GetMe() );

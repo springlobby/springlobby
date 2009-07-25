@@ -355,6 +355,7 @@ void hue(huevec& out, int amount)
 std::vector<wxColour>& GetBigFixColoursPalette( int numteams )
 {
     static std::vector<wxColour> result;
+    wxLogDebugFunc( TowxString(numteams) );
 		huevec huevector;
     static int satvalbifurcatepos;
     static std::vector<double> satvalsplittings;
