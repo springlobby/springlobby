@@ -108,10 +108,10 @@ SpringLobbyApp::~SpringLobbyApp()
 
 #ifdef __WXMSW__
 LONG __stdcall filter(EXCEPTION_POINTERS* p){
-    #if wxUSE_DEBUGREPORT && defined(ENABLE_DEBUG_REPORT)
+    #if wxUSE_STACKWALKER
         crashreport().GenerateReport();
     #else
-
+        crashreport().GenerateReport(p);
     #endif
     return 0; //must return 0 here or we'll end in an inf loop of dbg reports
 }
@@ -265,7 +265,12 @@ int SpringLobbyApp::OnExit()
 void SpringLobbyApp::OnFatalException()
 {
 #if wxUSE_DEBUGREPORT && defined(ENABLE_DEBUG_REPORT)
-    crashreport().GenerateReport();
+    #if wxUSE_STACKWALKER
+        crashreport().GenerateReport();
+    #else
+        EXCEPTION_POINTERS* p = new EXCEPTION_POINTERS; //lets hope this'll never get called
+        crashreport().GenerateReport(p);
+    #endif
 #else
     wxMessageBox( _("The application has generated a fatal error and will be terminated\nGenerating a bug report is not possible\n\nplease get a wxWidgets library that supports wxUSE_DEBUGREPORT"),_("Critical error"), wxICON_ERROR | wxOK );
 #endif

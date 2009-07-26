@@ -11,6 +11,13 @@
 #include <sstream>
 #include <wx/arrstr.h>
 
+#if !defined(wxUSE_STACKWALKER) || !wxUSE_STACKWALKER
+    #include <windows.h>
+    #include <process.h>
+    #include <imagehlp.h>
+    #include <signal.h>
+#endif
+
 //! @brief uploads zipped stacktraces using curl
 class NetDebugReport : public wxDebugReportCompress
 {
@@ -30,7 +37,13 @@ class CrashReport
   public:
 
     CrashReport(){}
-    void GenerateReport();
+
+    #if wxUSE_STACKWALKER
+        void GenerateReport();
+    #else
+        void GenerateReport(EXCEPTION_POINTERS* p);
+    #endif
+
     //! @brief is the container for the stream logging target
     std::ostringstream crashlog;
 };

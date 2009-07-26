@@ -96,7 +96,12 @@ bool NetDebugReport::OnServerReply( const wxArrayString& reply )
 	return true;
 }
 
-void CrashReport::GenerateReport( )
+
+#if wxUSE_STACKWALKER
+    void CrashReport::GenerateReport()
+#else
+    void CrashReport::GenerateReport(EXCEPTION_POINTERS* p)
+#endif
 {
     wxLogMessage( _T( "Report generated in " ) );
 	wxSetWorkingDirectory( wxFileName::GetTempDir() );
@@ -127,10 +132,18 @@ void CrashReport::GenerateReport( )
     wxString script_file = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("script.txt");
     if ( wxFile::Exists( script_file ) )
         report->AddFile( script_file, _( "Last generated spring launching script" ) );
+
 #if wxUSE_STACKWALKER
     StackTrace stacktrace;
     stacktrace.Walk( 2, 20 );
     report->AddText( _T( "stacktrace.txt" ), stacktrace.GetStackTrace(), _( "StackTrace" ) );
+#else
+    wxArrayString trace = Stacktrace( p );
+    wxString trace_str;
+    for ( size_t i = 0; i < trace.Count(); ++i ) {
+        trace_str += trace[i];
+    }
+    report->AddText( _T( "stacktrace.txt" ), trace_str, _( "StackTrace" ) );
 #endif
 
     wxDebugReportPreviewStd* bkl = new wxDebugReportPreviewStd();

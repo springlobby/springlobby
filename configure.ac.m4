@@ -165,7 +165,7 @@ if test x$debug_report = xyes ; then
 	else
 		CXXFLAGS="$CXXFLAGS -I/var/lib/buildbot/lib/mingw/include -DCURL_STATICLIB -mno-cygwin "
 		#DO NOT change link order here (or anywhere else!)
-		LIBS="$LIBS  -L/var/lib/buildbot/lib/mingw/lib -lcurl -lws2_32 -lmswsock  "
+		LIBS="$LIBS  -L/var/lib/buildbot/lib/mingw/lib -lcurl -lws2_32 -lmswsock -imagehlp "
 	fi
 	CXXFLAGS="$CXXFLAGS -DENABLE_DEBUG_REPORT"
 fi
