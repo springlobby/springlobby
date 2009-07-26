@@ -23,8 +23,6 @@ class StackTrace : public wxStackWalker
 
 };
 
-StackTrace& stacktrace();
-
 #endif
 
 #endif // SPRINGLOBBY_HEADERGUARD_STACKTRACE_H_INCLUDED

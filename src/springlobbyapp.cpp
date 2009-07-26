@@ -113,7 +113,7 @@ LONG __stdcall filter(EXCEPTION_POINTERS* p){
     #else
 
     #endif
-    return -1;
+    return 0; //must return 0 here or we'll end in an inf loop of dbg reports
 }
 #endif
 
@@ -122,21 +122,24 @@ LONG __stdcall filter(EXCEPTION_POINTERS* p){
 //! It will open the main window and connect default to server or open the connect window.
 bool SpringLobbyApp::OnInit()
 {
-    #ifdef __WXMSW__
-        SetUnhandledExceptionFilter(filter);
-    #endif
-
     //this triggers the Cli Parser amongst other stuff
     if (!wxApp::OnInit())
         return false;
 
+    if (!m_crash_handle_disable) {
+    #if wxUSE_ON_FATAL_EXCEPTION
+        wxHandleFatalExceptions( true );
+    #endif
+    #ifdef __WXMSW__
+        //this undocumented function acts as a workaround for the dysfunctional
+        // wxUSE_ON_FATAL_EXCEPTION on msw when mingw is used (or any other non SEH-capable compiler )
+        SetUnhandledExceptionFilter(filter);
+    #endif
+    }
+
     //initialize all loggers, we'll use the returned pointer to set correct parent window later
     wxLogChain* logchain = 0;
     wxLogWindow *loggerwin = InitializeLoggingTargets( 0, m_log_console, m_log_window_show, !m_crash_handle_disable, m_log_verbosity, logchain );
-
-#if wxUSE_ON_FATAL_EXCEPTION
-    if (!m_crash_handle_disable) wxHandleFatalExceptions( true );
-#endif
 
     //this needs to called _before_ mainwindow instance is created
     wxInitAllImageHandlers();
@@ -147,14 +150,12 @@ bool SpringLobbyApp::OnInit()
 
 
 #if defined(ENABLE_DEBUG_REPORT)
-int*i=0;*i=1;
-//        crashreport().GenerateReport();
-        return false;
+    int*i=0;*i=1;
+    return false;
 #endif
 
 
 #ifdef __WXMSW__
-    SetUnhandledExceptionFilter(filter);
     wxString path = wxPathOnly( wxStandardPaths::Get().GetExecutablePath() ) + wxFileName::GetPathSeparator() + _T("locale");
 #else
     // use a dummy name here, we're only interested in the base path

@@ -331,6 +331,7 @@ SET(SpringLobbySrc
 	src/useractions.cpp
 	src/userlist.cpp
 	src/userlistctrl.cpp
+	src/stacktrace.cpp
 	src/widgets/downloadlistctrl.cpp
 	src/widgets/downloaddialog.cpp
 	src/widgets/downloadpanel.cpp

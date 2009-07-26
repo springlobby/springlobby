@@ -128,7 +128,9 @@ void CrashReport::GenerateReport( )
     if ( wxFile::Exists( script_file ) )
         report->AddFile( script_file, _( "Last generated spring launching script" ) );
 #if wxUSE_STACKWALKER
-    report->AddText( _T( "stacktrace.txt" ), stacktrace().GetStackTrace(), _( "StackTrace" ) );
+    StackTrace stacktrace;
+    stacktrace.Walk( 2, 20 );
+    report->AddText( _T( "stacktrace.txt" ), stacktrace.GetStackTrace(), _( "StackTrace" ) );
 #endif
 
     wxDebugReportPreviewStd* bkl = new wxDebugReportPreviewStd();
@@ -148,11 +150,13 @@ void CrashReport::GenerateReport( )
 		    wxLogMessage( _T( "Report generated in \"%s\", but failed to upload" ),
 				              report->GetCompressedFileName().c_str() );
 				report->Reset();
+				wxLogMessage( _T("report reset") );
 		}
 	}
 	//else: user cancelled the report
 
 	delete report;
+	wxLogMessage( _T("deleted report") );
 }
 
 
