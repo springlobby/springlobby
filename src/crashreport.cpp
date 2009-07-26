@@ -21,7 +21,7 @@
 #include "utils/conversion.h"
 #include "settings.h"
 #include "curl/http.h"
-
+#include "stacktrace.h"
 
 NetDebugReport::NetDebugReport()
 {
@@ -127,6 +127,9 @@ void CrashReport::GenerateReport( )
     wxString script_file = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("script.txt");
     if ( wxFile::Exists( script_file ) )
         report->AddFile( script_file, _( "Last generated spring launching script" ) );
+#if wxUSE_STACKWALKER
+    report->AddText( _T( "stacktrace.txt" ), stacktrace().GetStackTrace(), _( "StackTrace" ) );
+#endif
 
     wxDebugReportPreviewStd* bkl = new wxDebugReportPreviewStd();
 	// calling Show() is not mandatory, but is more polite

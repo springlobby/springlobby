@@ -917,9 +917,9 @@ springlobby_SOURCES = \
 	src/channel/channelchooser.h \
 	src/channel/channelchooserdialog.cpp \
 	src/channel/channelchooserdialog.h \
-        src/Helper/colorbutton.cpp \
+	src/Helper/colorbutton.cpp \
 	src/Helper/colorbutton.h \
-        src/Helper/wxtextctrlhist.cpp \
+	src/Helper/wxtextctrlhist.cpp \
 	src/Helper/wxtextctrlhist.h \
 	src/Helper/sortutil.h \
 	src/Helper/imageviewer.h \
@@ -960,6 +960,8 @@ springlobby_SOURCES = \
 	src/widgets/widget.cpp \
 	src/widgets/widget.h \
 	src/usermenu.h \
+	src/stacktrace.cpp \
+	src/stacktrace.h \
 	src/thread.cpp \
 	src/thread.h \
 	src/globalsmanager.cpp \
@@ -1042,6 +1044,8 @@ springsettings_SOURCES = \
 	src/utils/controls.h \
 	src/crashreport.cpp \
 	src/crashreport.h \
+	src/stacktrace.cpp \
+	src/stacktrace.h \
 	src/spinctld.h \
 	src/spinctld.cpp \
 	src/springunitsynclib.cpp \

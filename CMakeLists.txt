@@ -370,6 +370,7 @@ SET(SLSharedWithSettings
 	src/utils/controls.cpp
 	src/updater/versionchecker.cpp
 	src/crashreport.cpp
+	src/stacktrace.cpp 
 	src/springunitsynclib.cpp
 	src/spinctld.cpp
 	src/globalsmanager.cpp

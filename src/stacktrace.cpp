@@ -5,7 +5,6 @@
 
 
 #include "stacktrace.h"
-#include "utils.h"
 
 
 #if wxUSE_STACKWALKER

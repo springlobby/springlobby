@@ -408,6 +408,8 @@
 		<Unit filename="src/springunitsync.h" />
 		<Unit filename="src/springunitsynclib.cpp" />
 		<Unit filename="src/springunitsynclib.h" />
+		<Unit filename="src/stacktrace.cpp" />
+		<Unit filename="src/stacktrace.h" />
 		<Unit filename="src/tasserver.cpp" />
 		<Unit filename="src/tasserver.h" />
 		<Unit filename="src/tasservertokentable.h" />

@@ -147,8 +147,8 @@ bool SpringLobbyApp::OnInit()
 
 
 #if defined(ENABLE_DEBUG_REPORT)
-//int*i=0;*i=1;
-        crashreport().GenerateReport();
+int*i=0;*i=1;
+//        crashreport().GenerateReport();
         return false;
 #endif
 
