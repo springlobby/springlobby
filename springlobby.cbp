@@ -2,6 +2,8 @@
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="6" />
 	<Project>
+	<Unit filename="src/gui/wxbackgroundimage.cpp" />
+	<Unit filename="src/gui/wxbackgroundimage.h" />
 	<Unit filename="src/gui/simplefront.h" />
 	<Unit filename="src/gui/simplefront.cpp" />
 	<Unit filename="src/gui/simplefrontbase.h" />

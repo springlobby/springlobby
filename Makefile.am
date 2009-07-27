@@ -407,6 +407,8 @@ libtorrent_headers = \
 
 
 springlobby_SOURCES = \
+	src/gui/wxbackgroundimage.cpp \
+	src/gui/wxbackgroundimage.h \
 	src/gui/simplefront.h \
 	src/gui/simplefront.cpp \
 	src/gui/simplefrontbase.h \

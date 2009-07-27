@@ -135,6 +135,7 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
 
     SetScrollRate( 10, 10 );
     SetSizer( m_main_sizer );
+    Layout();
 }
 
 LobbyOptionsTab::~LobbyOptionsTab()

@@ -1,10 +1,18 @@
 #include "simplefront.h"
 
+#include "wxbackgroundimage.h"
+#include "../uiutils.h"
+#include "images/s44.png.h"
+
 SimpleFront::SimpleFront( wxWindow* parent )
 :
 SimpleFrontBase( parent )
 {
-
+    PushEventHandler(
+        new wxBackgroundBitmap(
+            charArr2wxBitmap( s44_png, sizeof( s44_png ) )
+            )
+        );
 }
 
 void SimpleFront::OnSingleplayer( wxCommandEvent& event )

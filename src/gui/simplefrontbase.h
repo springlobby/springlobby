@@ -50,7 +50,7 @@ class SimpleFrontBase : public wxFrame
 		
 	
 	public:
-		SimpleFrontBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("LALALALAUNCHER"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 346,367 ), long style = wxCAPTION|wxCLOSE_BOX|wxDEFAULT_FRAME_STYLE|wxNO_BORDER|wxTAB_TRAVERSAL );
+		SimpleFrontBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("LALALALAUNCHER"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 164,314 ), long style = wxCAPTION|wxCLOSE_BOX|wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
 		~SimpleFrontBase();
 	
 };
