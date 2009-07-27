@@ -56,6 +56,8 @@
 #include "updater/updatermainwindow.h"
 #include "defines.h"
 
+#include "gui/simplefront.h"
+
 const unsigned int TIMER_ID         = 101;
 const unsigned int TIMER_INTERVAL   = 100;
 
@@ -131,7 +133,6 @@ bool SpringLobbyApp::OnInit()
     wxFileSystem::AddHandler(new wxZipFSHandler);
     wxSocketBase::Initialize();
 
-
 #ifdef __WXMSW__
     wxString path = wxPathOnly( wxStandardPaths::Get().GetExecutablePath() ) + wxFileName::GetPathSeparator() + _T("locale");
 #else
@@ -161,6 +162,10 @@ bool SpringLobbyApp::OnInit()
 #endif
     usync(); //init object, sink needs to exist before event is posted. next line would do both object(sink) creation and Event posting
     GetGlobalEventSender(GlobalEvents::UnitSyncReloadRequest).SendEvent( 0 ); // request an unitsync reload
+
+    SimpleFront* sp = new SimpleFront( 0 );
+    sp->Show();
+    return true;
 
     CacheAndSettingsSetup();
     ui().ShowMainWindow();

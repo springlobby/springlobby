@@ -610,7 +610,7 @@ void MainWindow::OnTabsChanged( wxAuiNotebookEvent& event )
 
 void MainWindow::OnShowSettingsPP( wxCommandEvent& event )
 {
-	se_frame = new settings_frame(this,wxID_ANY,wxT("Settings++"),wxDefaultPosition,
+	se_frame = new settings_frame(this,wxID_ANY,wxT("SpringSettings"),wxDefaultPosition,
 	  	    		wxDefaultSize);
 	se_frame_active = true;
 	se_frame->Show();

@@ -2,11 +2,17 @@
 
 #include "wxbackgroundimage.h"
 #include "../uiutils.h"
-#include "images/s44.png.h"
+#include "../images/s44.png.h"
+#include "../ui.h"
+#include "../mainwindow.h"
+#include "../settings.h"
+#include "../settings++/frame.h"
+
+#include <wx/app.h>
 
 SimpleFront::SimpleFront( wxWindow* parent )
-:
-SimpleFrontBase( parent )
+: SimpleFrontBase( parent ),
+m_settings( 0 )
 {
     PushEventHandler(
         new wxBackgroundBitmap(
@@ -17,25 +23,39 @@ SimpleFrontBase( parent )
 
 void SimpleFront::OnSingleplayer( wxCommandEvent& event )
 {
-	// TODO: Implement OnSingleplayer
+	ui().mw().ShowSingleplayer();
+	Close();
 }
 
 void SimpleFront::OnMultiplayer( wxCommandEvent& event )
 {
-	// TODO: Implement OnMultiplayer
+	ui().mw().ShowTab( MainWindow::PAGE_JOIN );
+	Close();
 }
 
 void SimpleFront::OnSettings( wxCommandEvent& event )
 {
-	// TODO: Implement OnSettings
+//	if ( !m_settings ) //TODO cleanup the exit mess in SS
+        m_settings = new settings_frame( this, wxID_ANY, wxT("SpringSettings"),
+                                wxDefaultPosition, wxDefaultSize );
+
+    m_settings->Show( true );
+
 }
 
 void SimpleFront::OnExit( wxCommandEvent& event )
 {
-	// TODO: Implement OnExit
+	Destroy();
 }
 
 void SimpleFront::OnSkipChecked( wxCommandEvent& event )
 {
-	// TODO: Implement OnSkipChecked
+	// TODO: save in settings
+}
+
+void SimpleFront::Close()
+{
+    ui().ShowMainWindow();
+    wxTheApp->SetTopWindow( &ui().mw() );
+    Destroy();
 }
