@@ -98,6 +98,7 @@ SpringLobbyApp::SpringLobbyApp()
     m_log_window_show( false ),
     m_crash_handle_disable( false ),
     m_updateing_only( false ),
+    m_start_simple_interface( false ),
     m_updater_window( 0 )
 {
     SetAppName( _T("springlobby") );

@@ -7,12 +7,14 @@
 #include "../mainwindow.h"
 #include "../settings.h"
 #include "../settings++/frame.h"
+#include "skirmish_dialog.h"
 
 #include <wx/app.h>
 
 SimpleFront::SimpleFront( wxWindow* parent )
 : SimpleFrontBase( parent ),
-m_settings( 0 )
+m_settings( 0 ),
+m_skirmish( 0 )
 {
     PushEventHandler(
         new wxBackgroundBitmap(
@@ -23,8 +25,8 @@ m_settings( 0 )
 
 void SimpleFront::OnSingleplayer( wxCommandEvent& event )
 {
-	ui().mw().ShowSingleplayer();
-	Close();
+	m_skirmish = new SkirmishDialog( this );
+	m_skirmish->Show();
 }
 
 void SimpleFront::OnMultiplayer( wxCommandEvent& event )
