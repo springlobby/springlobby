@@ -157,6 +157,32 @@ bool Spring::Run( SinglePlayerBattle& battle )
   return LaunchSpring( _T("\"") + path + _T("\"") );
 }
 
+bool Spring::Run( NoGuiSinglePlayerBattle& battle )
+{
+
+  wxString path = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("script.txt");
+
+  try
+  {
+
+    if ( !wxFile::Access( path, wxFile::write ) )
+    {
+      wxLogError( _T("Access denied to script.txt.") );
+    }
+
+    wxFile f( path, wxFile::write );
+    f.Write( WriteScriptTxt(battle) );
+    f.Close();
+
+  } catch (...)
+  {
+    wxLogError( _T("Couldn't write script.txt") );
+    return false;
+  }
+
+  return LaunchSpring( _T("\"") + path + _T("\"") );
+}
+
 bool Spring::Run( OfflineBattle& battle )
 {
 
