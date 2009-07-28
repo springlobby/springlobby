@@ -173,8 +173,8 @@ class IUnitSync
 
     virtual bool IsLoaded() = 0;
 
-		virtual wxString GetDefaultNick() = 0;
-		virtual void SetDefaultNick( const wxString& nick ) = 0;
+    virtual wxString GetDefaultNick() = 0;
+    virtual void SetDefaultNick( const wxString& nick ) = 0;
 
     virtual wxString GetSpringVersion() = 0;
     virtual bool VersionSupports( GameFeature feature ) = 0;
@@ -208,6 +208,10 @@ class IUnitSync
     virtual void GetMapExAsync( const wxString& mapname, int evtHandlerId ) = 0;
 
     virtual wxArrayString GetScreenshotFilenames() = 0;
+
+    /** \param name Modname **/
+    virtual GameOptions GetModCustomizations( const wxString& modname ) = 0;
+    virtual GameOptions GetSkirmishOptions( const wxString& modname, const wxString& skirmish_name ) = 0;
 
     private:
         IUnitSync( const IUnitSync& );

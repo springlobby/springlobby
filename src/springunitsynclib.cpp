@@ -1012,12 +1012,12 @@ int SpringUnitSyncLib::GetMapOptionCount( const wxString& name )
   return m_get_map_option_count( name.mb_str( wxConvUTF8 ) );
 }
 
-int SpringUnitSyncLib::GetXXXOptionCount( const wxString& name )
+int SpringUnitSyncLib::GetXXXOptionCount( const wxString& modname, const wxString& filename )
 {
-  InitLib( m_get_xxx_option_count );
-  ASSERT_EXCEPTION( !name.IsEmpty(), _T("passing void XXXname to unitsync") );
-
-  return m_get_xxx_option_count( name.mb_str( wxConvUTF8 ) );
+    InitLib( m_get_xxx_option_count );
+    ASSERT_EXCEPTION( !modname.IsEmpty(), _T("passing void XXXname to unitsync") );
+    _SetCurrentMod( modname );
+    return m_get_xxx_option_count( filename.mb_str( wxConvUTF8 ) );
 }
 
 

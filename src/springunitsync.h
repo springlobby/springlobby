@@ -216,6 +216,9 @@ class SpringUnitSync : public IUnitSync
 
     wxArrayString GetScreenshotFilenames();
 
+    virtual GameOptions GetModCustomizations( const wxString& modname );
+    virtual GameOptions GetSkirmishOptions( const wxString& modname, const wxString& skirmish_name );
+
   protected:
 	  EventReceiverFunc< SpringUnitSync, GlobalEvents::GlobalEventData, &SpringUnitSync::ReloadUnitSyncLib > m_UnitsyncReloadRequestSink;
 

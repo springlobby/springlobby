@@ -53,11 +53,13 @@ public:
 
     //! enum to differentiate option category easily at runtime
     enum GameOption{
-      PrivateOptions  = 3,
-      EngineOption = 2,
-        MapOption    = 1,
-        ModOption    = 0,
-        LastOption = 4
+        PrivateOptions      = 3,
+        EngineOption        = 2,
+        MapOption           = 1,
+        ModOption           = 0,
+        ModCustomizations   = 4,
+        SkirmishOptions     = 5,
+        LastOption          = 6
     };// should reflect: optionCategoriesCount
 
 	//does nothing
@@ -75,9 +77,11 @@ public:
 	 * the containers for corresponding flag are recreated and then gets the number of options from unitsync
 	 * and adds them one by one  to the appropiate container
 	 * \param flag decides which type of option to load
+	 * \param name Mod/Mapname
+	 * \param extra_filename used for loading arbitrary lua tables from inside the given mod/map
 	 * \return true if load successful, false otherwise
 	 */
-	bool loadOptions(GameOption flag, const wxString& name );
+	bool loadOptions(GameOption flag, const wxString& name, const wxString& extra_filename = _T("") );
 	//! checks if given key can be found in specified container
 	/*!
 	 * \param key the key that should be checked for existance in containers

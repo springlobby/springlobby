@@ -369,7 +369,7 @@ class SpringUnitSyncLib
     wxString GetValidMapName( unsigned int MapIndex );
 
     int GetMapOptionCount( const wxString& name );
-    int GetXXXOptionCount( const wxString& name );
+    int GetXXXOptionCount( const wxString& modname, const wxString& filename );
     int GetModOptionCount( const wxString& name );
     int GetAIOptionCount( const wxString& modname, int index );
     wxString GetOptionKey( int optIndex );
