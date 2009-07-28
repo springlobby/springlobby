@@ -2,12 +2,6 @@
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="6" />
 	<Project>
-	<Unit filename="src/gui/wxbackgroundimage.cpp" />
-	<Unit filename="src/gui/wxbackgroundimage.h" />
-	<Unit filename="src/gui/simplefront.h" />
-	<Unit filename="src/gui/simplefront.cpp" />
-	<Unit filename="src/gui/simplefrontbase.h" />
-	<Unit filename="src/gui/simplefrontbase.cpp" />
 		<Option title="springlobby" />
 		<Option pch_mode="0" />
 		<Option compiler="gcc" />
@@ -277,6 +271,14 @@
 		<Unit filename="src/globalsmanager.h" />
 		<Unit filename="src/groupoptionspanel.cpp" />
 		<Unit filename="src/groupoptionspanel.h" />
+		<Unit filename="src/gui/simplefront.cpp" />
+		<Unit filename="src/gui/simplefront.h" />
+		<Unit filename="src/gui/simplefrontbase.cpp" />
+		<Unit filename="src/gui/simplefrontbase.h" />
+		<Unit filename="src/gui/skirmish_dialog.cpp" />
+		<Unit filename="src/gui/skirmish_dialog.h" />
+		<Unit filename="src/gui/wxbackgroundimage.cpp" />
+		<Unit filename="src/gui/wxbackgroundimage.h" />
 		<Unit filename="src/hostbattledialog.cpp" />
 		<Unit filename="src/hostbattledialog.h" />
 		<Unit filename="src/httpdownloader.h" />
