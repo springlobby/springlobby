@@ -92,7 +92,8 @@ void NoGuiSinglePlayerBattle::StartSpring()
  NoGuiSinglePlayerBattle::NoGuiSinglePlayerBattle()
     :  m_me( User( usync().IsLoaded() ? usync().GetDefaultNick() : _T("invalid") ) )
 {
-
+	OnUserAdded( m_me );
+	m_me.BattleStatus().colour = sett().GetBattleLastColour();
 }
 
 
