@@ -11,21 +11,25 @@
 
 #include <wx/app.h>
 
-SimpleFront::SimpleFront( wxWindow* parent )
+SimpleFront::SimpleFront( wxWindow* parent,const wxString& modname )
 : SimpleFrontBase( parent ),
 m_settings( 0 ),
-m_skirmish( 0 )
+m_skirmish( 0 ),
+m_modname( modname )
 {
+	m_mod_customs.loadOptions( OptionsWrapper::ModCustomizations, m_modname );
+
     PushEventHandler(
         new wxBackgroundBitmap(
             charArr2wxBitmap( s44_png, sizeof( s44_png ) )
             )
         );
+
 }
 
 void SimpleFront::OnSingleplayer( wxCommandEvent& event )
 {
-	m_skirmish = new SkirmishDialog( this );
+	m_skirmish = new SkirmishDialog( this, m_modname, m_mod_customs );
 	m_skirmish->Show();
 }
 

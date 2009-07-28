@@ -164,7 +164,8 @@ bool SpringLobbyApp::OnInit()
     usync(); //init object, sink needs to exist before event is posted. next line would do both object(sink) creation and Event posting
     GetGlobalEventSender(GlobalEvents::UnitSyncReloadRequest).SendEvent( 0 ); // request an unitsync reload
 
-    SimpleFront* sp = new SimpleFront( 0 );
+    wxString modname = _T("Spring: 1944 SVN");
+    SimpleFront* sp = new SimpleFront( 0, modname );
     sp->Show();
     return true;
 

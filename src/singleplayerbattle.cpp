@@ -74,3 +74,25 @@ void SinglePlayerBattle::StartSpring()
 	spring().Run( *this );
 	ui().OnSpringStarting();
 }
+
+/** @brief StartSpring
+  *
+  * @todo: document this function
+  */
+void NoGuiSinglePlayerBattle::StartSpring()
+{
+	spring().Run( *this );
+	ui().OnSpringStarting();
+}
+
+/** @brief NoGuiSinglePlayerBattle
+  *
+  * @todo: document this function
+  */
+ NoGuiSinglePlayerBattle::NoGuiSinglePlayerBattle()
+    :  m_me( User( usync().IsLoaded() ? usync().GetDefaultNick() : _T("invalid") ) )
+{
+
+}
+
+

@@ -16,7 +16,7 @@ class SinglePlayerBattle: public IBattle
   public:
 
     SinglePlayerBattle( MainSinglePlayerTab& msptab );
-    ~SinglePlayerBattle();
+    virtual ~SinglePlayerBattle();
 
 // (koshi) these are never called
 //    unsigned int AddBot( int ally, int posx, int posy, int handicap, const wxString& aidll );
@@ -39,6 +39,18 @@ class SinglePlayerBattle: public IBattle
 
     User m_me;
 
+};
+
+class NoGuiSinglePlayerBattle : public IBattle {
+    public:
+        NoGuiSinglePlayerBattle ();
+        virtual ~NoGuiSinglePlayerBattle () {}
+        void StartSpring();
+        bool IsFounderMe() { return true; }
+        User& GetMe() { return m_me; }
+
+    protected:
+        User m_me;
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_SINGLEPLAYERBATTLE_H

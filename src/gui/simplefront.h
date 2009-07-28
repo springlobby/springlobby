@@ -10,6 +10,7 @@ class settings_frame;
 class SkirmishDialog;
 
 #include "simplefrontbase.h"
+#include "../mmoptionswrapper.h"
 
 /** Implementing SimpleFrontBase */
 class SimpleFront : public SimpleFrontBase
@@ -26,10 +27,12 @@ protected:
 
 	settings_frame* m_settings;
 	SkirmishDialog* m_skirmish;
+	OptionsWrapper m_mod_customs;
+	const wxString m_modname;
 
 public:
 	/** Constructor */
-	SimpleFront( wxWindow* parent );
+	SimpleFront( wxWindow* parent, const wxString& modname );
 };
 
 #endif // __simplefront__

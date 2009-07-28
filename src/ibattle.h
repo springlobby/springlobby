@@ -163,28 +163,28 @@ public:
     };
 
 
-		struct TeamInfoContainer
-		{
-				bool exist;
-				int TeamLeader;
-				int StartPosX;
-				int StartPosY;
-				int AllyTeam;
-				wxColor RGBColor;
-				wxString SideName;
-				int Handicap;
-				int SideNum;
-		};
+    struct TeamInfoContainer
+    {
+            bool exist;
+            int TeamLeader;
+            int StartPosX;
+            int StartPosY;
+            int AllyTeam;
+            wxColor RGBColor;
+            wxString SideName;
+            int Handicap;
+            int SideNum;
+    };
 
-		struct AllyInfoContainer
-		{
-				bool exist;
-				int NumAllies;
-				int StartRectLeft;
-				int StartRectTop;
-				int StartRectRight;
-				int StartRectBottom;
-		};
+    struct AllyInfoContainer
+    {
+            bool exist;
+            int NumAllies;
+            int StartRectLeft;
+            int StartRectTop;
+            int StartRectRight;
+            int StartRectBottom;
+    };
 
 
     /**@}*/
@@ -205,7 +205,7 @@ public:
 
     virtual int GetMyPlayerNum();
 
-		virtual int GetPlayerNum( const User& user );
+    virtual int GetPlayerNum( const User& user );
 
     virtual void SetHostMod( const wxString& modname, const wxString& hash );
     virtual void SetLocalMod( const UnitSyncMod& mod );
@@ -221,15 +221,15 @@ public:
     void OnUserBattleStatusUpdated( User &user, UserBattleStatus status );
     void OnUserRemoved( User& user );
 
-		bool IsEveryoneReady();
+    bool IsEveryoneReady();
 
-		void ForceSide( User& user, int side );
-		void ForceAlly( User& user, int ally );
-		void ForceTeam( User& user, int team );
-		void ForceColour( User& user, const wxColour& col );
-		void ForceSpectator( User& user, bool spectator );
-		void SetHandicap( User& user, int handicap);
-		void KickPlayer( User& user );
+    void ForceSide( User& user, int side );
+    void ForceAlly( User& user, int ally );
+    void ForceTeam( User& user, int team );
+    void ForceColour( User& user, const wxColour& col );
+    void ForceSpectator( User& user, bool spectator );
+    void SetHandicap( User& user, int handicap);
+    void KickPlayer( User& user );
 
 
     virtual void AddStartRect( unsigned int allyno, unsigned int left, unsigned int top, unsigned int right, unsigned int bottom );
@@ -249,7 +249,7 @@ public:
 
     virtual void SendHostInfo( HostInfo update );
     virtual void SendHostInfo( const wxString& Tag );
-		virtual void Update ( const wxString& Tag );
+    virtual void Update ( const wxString& Tag );
 
     virtual unsigned int GetNumBots() const;
     virtual User& OnBotAdded( const wxString& nick, const UserBattleStatus& bs );
