@@ -407,6 +407,8 @@ libtorrent_headers = \
 
 
 springlobby_SOURCES = \
+	src/gui/skirmish_dialog.h \
+	src/gui/skirmish_dialog.cpp \
 	src/gui/wxbackgroundimage.cpp \
 	src/gui/wxbackgroundimage.h \
 	src/gui/simplefront.h \
