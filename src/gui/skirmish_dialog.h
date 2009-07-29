@@ -41,6 +41,7 @@ class SkirmishDialog : public wxFrame
 		virtual void OnBack( wxCommandEvent& event );
 		virtual void OnAdvanced( wxCommandEvent& event );
 		virtual void OnStart( wxCommandEvent& event );
+		virtual void OnRadioBox( wxCommandEvent& event );
 
         typedef std::map< wxString, OptionsWrapper >
             SkirmishMap;

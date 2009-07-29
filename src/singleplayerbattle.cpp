@@ -9,7 +9,8 @@
 #include "ui.h"
 #include "settings.h"
 #include "spring.h"
-
+#include "springunitsynclib.h"
+#include "utils/conversion.h"
 
 SinglePlayerBattle::SinglePlayerBattle( MainSinglePlayerTab& msptab ):
   m_sptab(msptab),
@@ -96,4 +97,38 @@ void NoGuiSinglePlayerBattle::StartSpring()
 	m_me.BattleStatus().colour = sett().GetBattleLastColour();
 }
 
+int NoGuiSinglePlayerBattle::GetAiIndex( const wxString& name )
+{
+    int total = susynclib().GetSkirmishAICount( m_host_mod.name );
+    for ( int i = 0; i < total; i++ )
+    {
+        wxArrayString infos = susynclib().GetAIInfo( i );
+        int namepos = infos.Index( _T("shortName") );
+        int versionpos = infos.Index( _T("version") );
+        wxString ainame;
+        if ( namepos != wxNOT_FOUND )
+            ainame += infos[namepos +1];
+        if ( ainame == name )
+            return i;
+//        if ( versionpos != wxNOT_FOUND ) ainame += _T(" ") + infos[versionpos +1];
+    }
+    return -1;
+}
 
+bool NoGuiSinglePlayerBattle::AddBot( const wxString& name, int ai_team_id )
+{
+    int ai_id = GetAiIndex( name );
+    if ( ai_id > -1 ) {
+        UserBattleStatus bs;
+        bs.owner = GetMe().GetNick();
+        bs.aishortname = name;
+        bs.aitype = ai_id;
+        bs.team = ai_team_id;
+        bs.ally = GetFreeAlly();
+        bs.colour = GetNewColour();
+        //first arg is nick
+        User& bot = OnBotAdded( name + _T("_") + TowxString( bs.team ), bs  );
+        return true;
+    }
+    return false;
+}

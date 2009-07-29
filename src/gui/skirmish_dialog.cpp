@@ -32,6 +32,7 @@ SkirmishDialog::SkirmishDialog( wxWindow* parent, const wxString& modname, Optio
     m_battle.CustomBattleOptions().loadOptions( OptionsWrapper::ModOption, m_modname );
 	const wxString sk_dir = m_mod_customs.getSingleValue( _T("skirmish_directory"), OptionsWrapper::ModCustomizations );
 
+    //this block populates the radiobox and loads the skirmish options into the map
 	OptionsWrapper::GameOption optFlag = OptionsWrapper::ModCustomizations;
     for ( IUnitSync::OptionMapListConstIter it = m_mod_customs.m_opts[optFlag].list_map.begin(); it != m_mod_customs.m_opts[optFlag].list_map.end(); ++it) {
 	    mmOptionList current = it->second;
@@ -42,7 +43,7 @@ SkirmishDialog::SkirmishDialog( wxWindow* parent, const wxString& modname, Optio
 
             wxString tooltip;
             int i = 0;
-            for ( ListItemVec::iterator itor = current.listitems.begin(); itor != current.listitems.end(); itor++ )
+            for ( ListItemVec::iterator itor = current.listitems.begin(); itor != current.listitems.end(); ++itor )
             {
                 tooltip+= _T("\n") + itor->name + _T(": ") + itor->desc;
                 OptionsWrapper temp;
@@ -57,6 +58,16 @@ SkirmishDialog::SkirmishDialog( wxWindow* parent, const wxString& modname, Optio
         }
 	}
 
+    optFlag = OptionsWrapper::SkirmishOptions;
+    mmOptionList suggested_maps;
+    OptionsWrapper map_op = m_skirmishes[m_radioBox1->GetStringSelection()];
+    for ( IUnitSync::OptionMapListConstIter it = map_op.m_opts[optFlag].list_map.begin(); it != map_op.m_opts[optFlag].list_map.end(); ++it) {
+	    mmOptionList current = it->second;
+        if ( _T("suggested_maps") == current.key ) {
+            suggested_maps = current;
+        }
+    }
+
 	wxBoxSizer* bSizer2;
 	bSizer2 = new wxBoxSizer( wxHORIZONTAL );
 
@@ -64,7 +75,7 @@ SkirmishDialog::SkirmishDialog( wxWindow* parent, const wxString& modname, Optio
 	m_map_label->Wrap( -1 );
 	bSizer2->Add( m_map_label, 0, wxALL, 5 );
 
-	wxArrayString m_mapChoices;
+	wxArrayString m_mapChoices = suggested_maps.cbx_choices.Count() > 0 ? suggested_maps.cbx_choices : usync().GetMapList() ;
 	m_map = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_mapChoices, 0 );
 	m_map->SetSelection( 0 );
 	bSizer2->Add( m_map, 0, wxALL, 5 );
@@ -99,7 +110,7 @@ SkirmishDialog::SkirmishDialog( wxWindow* parent, const wxString& modname, Optio
 	m_back->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SkirmishDialog::OnBack ), NULL, this );
 	m_advanced->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SkirmishDialog::OnAdvanced ), NULL, this );
 	m_start->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SkirmishDialog::OnStart ), NULL, this );
-
+	m_radioBox1->Connect( wxEVT_COMMAND_RADIOBOX_SELECTED, wxCommandEventHandler( SkirmishDialog::OnRadioBox ), NULL, this );
 }
 
 SkirmishDialog::~SkirmishDialog()
@@ -108,11 +119,33 @@ SkirmishDialog::~SkirmishDialog()
 	m_back->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SkirmishDialog::OnBack ), NULL, this );
 	m_advanced->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SkirmishDialog::OnAdvanced ), NULL, this );
 	m_start->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SkirmishDialog::OnStart ), NULL, this );
+	m_radioBox1->Disconnect( wxEVT_COMMAND_RADIOBOX_SELECTED, wxCommandEventHandler( SkirmishDialog::OnRadioBox ), NULL, this );
 }
 
 void SkirmishDialog::OnBack( wxCommandEvent& event )
 {
     Destroy();
+}
+
+void SkirmishDialog::OnRadioBox( wxCommandEvent& event )
+{
+    m_map->Clear();
+    OptionsWrapper::GameOption optFlag = OptionsWrapper::SkirmishOptions;
+    wxArrayString maps = usync().GetMapList();
+    OptionsWrapper map_op = m_skirmishes[m_radioBox1->GetStringSelection()];
+    for ( IUnitSync::OptionMapListConstIter it = map_op.m_opts[optFlag].list_map.begin(); it != map_op.m_opts[optFlag].list_map.end(); ++it) {
+	    mmOptionList current = it->second;
+        if ( _T("suggested_maps") == current.key ) {
+            maps = current.cbx_choices;
+            break;
+        }
+    }
+
+    for ( int i = 0; i < maps.Count() ; ++i ) {
+        m_map->Append( maps[i] );
+    }
+    m_map->SetSelection( 0 );
+
 }
 
 void SkirmishDialog::OnAdvanced( wxCommandEvent& event )
@@ -132,10 +165,24 @@ void printCO( const Cont& c )
 void SkirmishDialog::OnStart( wxCommandEvent& event )
 {
     OptionsWrapper& opts = m_skirmishes[m_radioBox1->GetStringSelection()];
-
+    // this overwrites any modoptions with those found in the skirmish definition
     m_battle.CustomBattleOptions().MergeOptions( opts, OptionsWrapper::ModOption );
 
-    UnitSyncMap map = usync().GetMapEx( 0 );
-    m_battle.SetHostMap( map.name, map.hash );
+    //now add AIs
+    wxString ai_name = m_mod_customs.getSingleValue( _T("default_ai" ) );
+    OptionsWrapper::GameOption optFlag = OptionsWrapper::SkirmishOptions;
+    for ( IUnitSync::OptionMapListConstIter it = opts.m_opts[optFlag].list_map.begin(); it != opts.m_opts[optFlag].list_map.end(); ++it) {
+        mmOptionList current = it->second;
+        if ( current.key == _T("ai_team_ids") ) {
+
+            for ( ListItemVec::iterator itor = current.listitems.begin(); itor != current.listitems.end(); itor++ ) {
+                m_battle.AddBot( ai_name, FromwxString<int>( itor->name ) );
+            }
+        break;
+        }
+    }
+
+
+    m_battle.SetHostMap( m_map->GetStringSelection() , _T("") );
     m_battle.StartSpring();
 }

@@ -12,18 +12,16 @@
 #include <wx/app.h>
 
 SimpleFront::SimpleFront( wxWindow* parent,const wxString& modname )
-: SimpleFrontBase( parent ),
+: SimpleFrontBase( parent, wxID_ANY, modname ),
 m_settings( 0 ),
 m_skirmish( 0 ),
 m_modname( modname )
 {
 	m_mod_customs.loadOptions( OptionsWrapper::ModCustomizations, m_modname );
-
-    PushEventHandler(
-        new wxBackgroundBitmap(
-            charArr2wxBitmap( s44_png, sizeof( s44_png ) )
-            )
-        );
+    wxBitmap bmp = charArr2wxBitmap( s44_png, sizeof( s44_png ) );
+    SetSize( bmp.GetWidth(), bmp.GetHeight() );
+    Layout();
+    PushEventHandler( new wxBackgroundBitmap( bmp ) );
 
 }
 
