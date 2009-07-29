@@ -41,6 +41,11 @@ class SinglePlayerBattle: public IBattle
 
 };
 
+/** A derivative used in the Simple interface
+
+    Has no GUI tie-ins like SingelPlayerBattle and provides some functions to translate from the mod customization settings to our IBattle logic.
+
+**/
 class NoGuiSinglePlayerBattle : public IBattle {
     public:
         NoGuiSinglePlayerBattle ();
@@ -49,11 +54,15 @@ class NoGuiSinglePlayerBattle : public IBattle {
         bool IsFounderMe() { return true; }
         User& GetMe() { return m_me; }
 
-        bool AddBot( const wxString& name, int team_id );
+        bool AddBot( const wxString& name, int team_id, const wxString& side );
+
+        //! returns -1 on fail, otherwise usnyc index that matches the given name
+        int GetSideIndex( const wxString& name );
 
     protected:
         //! returns -1 on fail, otherwise usnyc index that matches the given name
         int GetAiIndex( const wxString& name );
+
         User m_me;
 };
 

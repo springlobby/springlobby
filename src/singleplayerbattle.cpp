@@ -115,7 +115,17 @@ int NoGuiSinglePlayerBattle::GetAiIndex( const wxString& name )
     return -1;
 }
 
-bool NoGuiSinglePlayerBattle::AddBot( const wxString& name, int ai_team_id )
+int NoGuiSinglePlayerBattle::GetSideIndex( const wxString& name )
+{
+    wxArrayString sides = usync().GetSides( m_host_mod.name );
+    for ( int i = 0; i < (int)sides.Count(); ++i ) {
+        if ( name.CmpNoCase( sides[i] ) == 0 )
+            return i;
+    }
+    return -1;
+}
+
+bool NoGuiSinglePlayerBattle::AddBot( const wxString& name, int ai_team_id, const wxString& side )
 {
     int ai_id = GetAiIndex( name );
     if ( ai_id > -1 ) {
@@ -126,6 +136,7 @@ bool NoGuiSinglePlayerBattle::AddBot( const wxString& name, int ai_team_id )
         bs.team = ai_team_id;
         bs.ally = GetFreeAlly();
         bs.colour = GetNewColour();
+        bs.side = GetSideIndex( side );
         //first arg is nick
         User& bot = OnBotAdded( name + _T("_") + TowxString( bs.team ), bs  );
         return true;

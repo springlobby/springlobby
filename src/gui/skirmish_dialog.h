@@ -27,7 +27,9 @@ class SkirmishDialog : public wxFrame
 	protected:
 		wxRadioBox* m_radioBox1;
 		wxStaticText* m_map_label;
+		wxStaticText* m_sides_label;
 		wxChoice* m_map;
+		wxChoice* m_sides;
 		wxCheckBox* m_map_random;
 		wxButton* m_back;
 		wxButton* m_advanced;

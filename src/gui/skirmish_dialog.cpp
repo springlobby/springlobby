@@ -69,11 +69,15 @@ SkirmishDialog::SkirmishDialog( wxWindow* parent, const wxBitmap& bg_img, const 
 
     optFlag = OptionsWrapper::SkirmishOptions;
     mmOptionList suggested_maps;
+    mmOptionList suggested_sides;
     OptionsWrapper map_op = m_skirmishes[m_radioBox1->GetStringSelection()];
     for ( IUnitSync::OptionMapListConstIter it = map_op.m_opts[optFlag].list_map.begin(); it != map_op.m_opts[optFlag].list_map.end(); ++it) {
 	    mmOptionList current = it->second;
         if ( _T("suggested_maps") == current.key ) {
             suggested_maps = current;
+        }
+        else if ( _T("suggested_sides") == current.key ) {
+            suggested_sides = current;
         }
     }
 
@@ -99,6 +103,23 @@ SkirmishDialog::SkirmishDialog( wxWindow* parent, const wxBitmap& bg_img, const 
     bSizer2->Add( map_panel, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 0 );
 	bSizer1->Add( bSizer2, 1, wxALIGN_CENTER, 0 );
 
+	wxBoxSizer* bSizer4;
+	bSizer4 = new wxBoxSizer( wxHORIZONTAL );
+    wxPanel* sides_panel = new wxPanel( all_panel, -1 );
+    wxBoxSizer* sides_sizer = new wxBoxSizer( wxHORIZONTAL );
+	m_sides_label = new wxStaticText( sides_panel, wxID_ANY, _("Select faction"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_sides_label->Wrap( -1 );
+	sides_sizer->Add( m_sides_label, 0, wxALIGN_CENTER_VERTICAL| wxALL, 5 );
+
+	wxArrayString m_sidesChoices = suggested_sides.cbx_choices.Count() > 0 ? suggested_sides.cbx_choices : usync().GetSides( m_modname ) ;
+	m_sides = new wxChoice( sides_panel, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_sidesChoices, 0 );
+	m_sides->SetSelection( 0 );
+	sides_sizer->Add( m_sides, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+
+    sides_panel->SetSizer( sides_sizer );
+    sides_panel->Layout(  );
+    bSizer4->Add( sides_panel, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 0 );
+	bSizer1->Add( bSizer4, 1, wxALIGN_CENTER, 0 );
 
 	wxBoxSizer* bSizer3;
 	bSizer3 = new wxBoxSizer( wxHORIZONTAL );
@@ -162,21 +183,29 @@ void SkirmishDialog::OnBack( wxCommandEvent& event )
 void SkirmishDialog::OnRadioBox( wxCommandEvent& event )
 {
     m_map->Clear();
+    m_sides->Clear();
     OptionsWrapper::GameOption optFlag = OptionsWrapper::SkirmishOptions;
     wxArrayString maps = usync().GetMapList();
+    wxArrayString sides = usync().GetSides( m_modname );
     OptionsWrapper map_op = m_skirmishes[m_radioBox1->GetStringSelection()];
     for ( IUnitSync::OptionMapListConstIter it = map_op.m_opts[optFlag].list_map.begin(); it != map_op.m_opts[optFlag].list_map.end(); ++it) {
 	    mmOptionList current = it->second;
         if ( _T("suggested_maps") == current.key ) {
             maps = current.cbx_choices;
-            break;
+        }
+        else if ( _T("suggested_sides") == current.key ) {
+            sides = current.cbx_choices;
         }
     }
 
-    for ( int i = 0; i < maps.Count() ; ++i ) {
+    for ( size_t i = 0; i < maps.Count() ; ++i ) {
         m_map->Append( maps[i] );
     }
+    for ( size_t i = 0; i < sides.Count() ; ++i ) {
+        m_sides->Append( sides[i] );
+    }
     m_map->SetSelection( 0 );
+    m_sides->SetSelection( 0 );
 
 }
 
@@ -185,14 +214,6 @@ void SkirmishDialog::OnAdvanced( wxCommandEvent& event )
     event.Skip();
 }
 
-template <class Cont>
-void printCO( const Cont& c )
-{
-    typename Cont::const_iterator it= c.begin();
-    for( ; it != c.end(); ++it ) {
-        wxLogMessage( _T("opts:: ") + it->first + _T(" | ") + it->second.first + _T(" | ") + it->second.second );
-    }
-}
 
 void SkirmishDialog::OnStart( wxCommandEvent& event )
 {
@@ -203,17 +224,33 @@ void SkirmishDialog::OnStart( wxCommandEvent& event )
     //now add AIs
     wxString ai_name = m_mod_customs.getSingleValue( _T("default_ai" ) );
     OptionsWrapper::GameOption optFlag = OptionsWrapper::SkirmishOptions;
+    // we need to store Sides for AIs first, so we can later add them in batch w/o needing to remember a mapping
+    std::vector<wxString> ai_sides;
+    for ( IUnitSync::OptionMapListConstIter it = opts.m_opts[optFlag].list_map.begin(); it != opts.m_opts[optFlag].list_map.end(); ++it) {
+        mmOptionList current = it->second;
+        if ( current.key == _T("ai_sides") ) {
+
+            for ( ListItemVec::iterator itor = current.listitems.begin(); itor != current.listitems.end(); ++itor ) {
+                ai_sides.push_back( itor->name );
+            }
+        break;
+        }
+    }
     for ( IUnitSync::OptionMapListConstIter it = opts.m_opts[optFlag].list_map.begin(); it != opts.m_opts[optFlag].list_map.end(); ++it) {
         mmOptionList current = it->second;
         if ( current.key == _T("ai_team_ids") ) {
 
-            for ( ListItemVec::iterator itor = current.listitems.begin(); itor != current.listitems.end(); itor++ ) {
-                m_battle.AddBot( ai_name, FromwxString<int>( itor->name ) );
+            size_t i = 0;
+            for ( ListItemVec::iterator itor = current.listitems.begin(); itor != current.listitems.end(); ++itor, ++i ) {
+                ASSERT_EXCEPTION( i < ai_sides.size(), _T("The setup is listing more AI opponents than AI sides") );
+                m_battle.AddBot( ai_name, FromwxString<int>( itor->name ), ai_sides[i] );
             }
         break;
         }
     }
 
+    User& me = m_battle.GetMe();
+    me.BattleStatus().side = m_battle.GetSideIndex( m_sides->GetStringSelection() );
 
     m_battle.SetHostMap( m_map->GetStringSelection() , _T("") );
     m_battle.StartSpring();
