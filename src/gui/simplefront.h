@@ -11,6 +11,7 @@ class SkirmishDialog;
 
 #include "simplefrontbase.h"
 #include "../mmoptionswrapper.h"
+#include <wx/bitmap.h>
 
 /** Implementing SimpleFrontBase */
 class SimpleFront : public SimpleFrontBase
@@ -29,6 +30,7 @@ protected:
 	SkirmishDialog* m_skirmish;
 	OptionsWrapper m_mod_customs;
 	const wxString m_modname;
+	wxBitmap m_bg_img;
 
 public:
 	/** Constructor */

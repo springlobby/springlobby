@@ -4,12 +4,14 @@
 #include "../uiutils.h"
 #include "../images/s44.png.h"
 #include "../ui.h"
+#include "../springunitsync.h"
 #include "../mainwindow.h"
 #include "../settings.h"
 #include "../settings++/frame.h"
 #include "skirmish_dialog.h"
 
 #include <wx/app.h>
+#include <wx/image.h>
 
 SimpleFront::SimpleFront( wxWindow* parent,const wxString& modname )
 : SimpleFrontBase( parent, wxID_ANY, modname ),
@@ -18,16 +20,17 @@ m_skirmish( 0 ),
 m_modname( modname )
 {
 	m_mod_customs.loadOptions( OptionsWrapper::ModCustomizations, m_modname );
-    wxBitmap bmp = charArr2wxBitmap( s44_png, sizeof( s44_png ) );
-    SetSize( bmp.GetWidth(), bmp.GetHeight() );
+    wxString bg_img_path = m_mod_customs.getSingleValue( _T("bg_image") );
+    m_bg_img = wxBitmap( usync().GetImage( m_modname, bg_img_path ) );
+    SetSize( m_bg_img.GetWidth(), m_bg_img.GetHeight() );
     Layout();
-    PushEventHandler( new wxBackgroundBitmap( bmp ) );
+    PushEventHandler( new wxBackgroundBitmap( m_bg_img ) );
 
 }
 
 void SimpleFront::OnSingleplayer( wxCommandEvent& event )
 {
-	m_skirmish = new SkirmishDialog( this, m_modname, m_mod_customs );
+	m_skirmish = new SkirmishDialog( this, m_bg_img, m_modname, m_mod_customs );
 	m_skirmish->Show();
 }
 

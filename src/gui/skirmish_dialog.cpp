@@ -8,6 +8,7 @@
 #include <wx/checkbox.h>
 #include <wx/sizer.h>
 #include <wx/button.h>
+#include <wx/settings.h>
 
 #include "../springunitsync.h"
 #include "../springunitsynclib.h"
@@ -15,19 +16,23 @@
 #include "../utils/conversion.h"
 #include "../mmoptionswrapper.h"
 #include "../utils/controls.h"
+#include "wxbackgroundimage.h"
 
 ///////////////////////////////////////////////////////////////////////////
 
-SkirmishDialog::SkirmishDialog( wxWindow* parent, const wxString& modname, OptionsWrapper mod_customs, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style )
+SkirmishDialog::SkirmishDialog( wxWindow* parent, const wxBitmap& bg_img, const wxString& modname, OptionsWrapper mod_customs, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style )
     : wxFrame( parent, id, title, pos, size, style ),
     m_mod_customs( mod_customs ),
-    m_modname( modname )
+    m_modname( modname ),
+    m_bg_img( bg_img )
 {
+    wxPanel* all_panel = new wxPanel( this, -1 );
 	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
 
 	wxBoxSizer* bSizer1;
 	bSizer1 = new wxBoxSizer( wxVERTICAL );
 
+    wxPanel* radio_panel = new wxPanel( all_panel, -1 );
     m_battle.SetHostMod( m_modname, wxEmptyString );
     m_battle.CustomBattleOptions().loadOptions( OptionsWrapper::ModOption, m_modname );
 	const wxString sk_dir = m_mod_customs.getSingleValue( _T("skirmish_directory"), OptionsWrapper::ModCustomizations );
@@ -37,9 +42,12 @@ SkirmishDialog::SkirmishDialog( wxWindow* parent, const wxString& modname, Optio
     for ( IUnitSync::OptionMapListConstIter it = m_mod_customs.m_opts[optFlag].list_map.begin(); it != m_mod_customs.m_opts[optFlag].list_map.end(); ++it) {
 	    mmOptionList current = it->second;
 	    if ( _T("scenarios") == current.key ) {
-            m_radioBox1 = new wxRadioBox( this, wxID_ANY, _("Select skirmish setup"), wxDefaultPosition, wxDefaultSize, current.cbx_choices, 1, wxRA_SPECIFY_ROWS );
+            wxBoxSizer* temp = new wxBoxSizer( wxVERTICAL );
+            m_radioBox1 = new wxRadioBox( radio_panel, wxID_ANY, _("Select skirmish setup"), wxDefaultPosition, wxDefaultSize, current.cbx_choices, 1, wxRA_SPECIFY_ROWS );
             m_radioBox1->SetSelection( 0 );
-            bSizer1->Add( m_radioBox1, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 10 );
+            temp->Add( m_radioBox1, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 10 );
+            radio_panel->SetSizer( temp );
+            radio_panel->Layout();
 
             wxString tooltip;
             int i = 0;
@@ -57,6 +65,7 @@ SkirmishDialog::SkirmishDialog( wxWindow* parent, const wxString& modname, Optio
             m_radioBox1->SetName(current.key);
         }
 	}
+	bSizer1->Add( radio_panel, 1, wxALIGN_CENTER, 0 );
 
     optFlag = OptionsWrapper::SkirmishOptions;
     mmOptionList suggested_maps;
@@ -71,38 +80,61 @@ SkirmishDialog::SkirmishDialog( wxWindow* parent, const wxString& modname, Optio
 	wxBoxSizer* bSizer2;
 	bSizer2 = new wxBoxSizer( wxHORIZONTAL );
 
-	m_map_label = new wxStaticText( this, wxID_ANY, _("Map"), wxDefaultPosition, wxDefaultSize, 0 );
+    wxPanel* map_panel = new wxPanel( all_panel, -1 );
+    wxBoxSizer* map_sizer = new wxBoxSizer( wxHORIZONTAL );
+	m_map_label = new wxStaticText( map_panel, wxID_ANY, _("Map"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_map_label->Wrap( -1 );
-	bSizer2->Add( m_map_label, 0, wxALL, 5 );
+	map_sizer->Add( m_map_label, 0, wxALIGN_CENTER_VERTICAL| wxALL, 5 );
 
 	wxArrayString m_mapChoices = suggested_maps.cbx_choices.Count() > 0 ? suggested_maps.cbx_choices : usync().GetMapList() ;
-	m_map = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_mapChoices, 0 );
+	m_map = new wxChoice( map_panel, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_mapChoices, 0 );
 	m_map->SetSelection( 0 );
-	bSizer2->Add( m_map, 0, wxALL, 5 );
+	map_sizer->Add( m_map, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
-	m_map_random = new wxCheckBox( this, wxID_ANY, _("random"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_map_random = new wxCheckBox( map_panel, wxID_ANY, _("random"), wxDefaultPosition, wxDefaultSize, 0 );
 
-	bSizer2->Add( m_map_random, 0, wxALL, 5 );
+	map_sizer->Add( m_map_random, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+    map_panel->SetSizer( map_sizer );
+    map_panel->Layout(  );
+    bSizer2->Add( map_panel, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 0 );
+	bSizer1->Add( bSizer2, 1, wxALIGN_CENTER, 0 );
 
-	bSizer1->Add( bSizer2, 1, wxALL|wxALIGN_CENTER_HORIZONTAL, 15 );
 
 	wxBoxSizer* bSizer3;
 	bSizer3 = new wxBoxSizer( wxHORIZONTAL );
 
-	m_back = new wxButton( this, wxID_ANY, _("Back"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer3->Add( m_back, 0, wxALL, 5 );
+    wxPanel* button_panel = new wxPanel( all_panel, -1 );
+    wxBoxSizer* button_sizer = new wxBoxSizer( wxHORIZONTAL );
+	m_back = new wxButton( button_panel, wxID_ANY, _("Back"), wxDefaultPosition, wxDefaultSize, 0 );
+	button_sizer->Add( m_back, 0, wxALL, 5 );
 
-	m_advanced = new wxButton( this, wxID_ANY, _("Advanced setup"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer3->Add( m_advanced, 0, wxALL, 5 );
+	m_advanced = new wxButton( button_panel, wxID_ANY, _("Advanced setup"), wxDefaultPosition, wxDefaultSize, 0 );
+	button_sizer->Add( m_advanced, 0, wxALL, 5 );
 
-	m_start = new wxButton( this, wxID_ANY, _("Start"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_start = new wxButton( button_panel, wxID_ANY, _("Start"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_start->SetDefault();
-	bSizer3->Add( m_start, 0, wxALL, 5 );
+	button_sizer->Add( m_start, 0, wxALL, 5 );
 
-	bSizer1->Add( bSizer3, 1, wxALIGN_CENTER_HORIZONTAL, 5 );
+    button_panel->SetSizer( button_sizer );
+    button_panel->Layout();
 
-	this->SetSizer( bSizer1 );
-	this->Layout();
+	bSizer3->Add( button_panel, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
+	bSizer1->Add( bSizer3, 1, wxALIGN_CENTER, 0 );
+
+
+	all_panel->SetSizer( bSizer1 );
+	all_panel->Layout();
+	wxBoxSizer* all_sizer = new wxBoxSizer( wxVERTICAL );
+	all_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
+	all_sizer->Add( all_panel, 0 , wxALIGN_CENTER, 0 );
+	all_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
+
+	this->SetSizer( all_sizer );
+
+
+    PushEventHandler( new wxBackgroundBitmap( m_bg_img ) );
+    SetSize( m_bg_img.GetWidth(), m_bg_img.GetHeight() );
+    this->Layout();
 
 	this->Centre( wxBOTH );
 

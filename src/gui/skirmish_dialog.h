@@ -32,6 +32,7 @@ class SkirmishDialog : public wxFrame
 		wxButton* m_back;
 		wxButton* m_advanced;
 		wxButton* m_start;
+		const wxBitmap& m_bg_img;
 
 		OptionsWrapper m_mod_customs;
 		const wxString m_modname;
@@ -49,7 +50,7 @@ class SkirmishDialog : public wxFrame
         SkirmishMap m_skirmishes;
 
 	public:
-		SkirmishDialog( wxWindow* parent, const wxString& modname, OptionsWrapper mod_customs, wxWindowID id = wxID_ANY,
+		SkirmishDialog( wxWindow* parent, const wxBitmap& bg_img, const wxString& modname, OptionsWrapper mod_customs, wxWindowID id = wxID_ANY,
                         const wxString& title = _("Skirmish"), const wxPoint& pos = wxDefaultPosition,
                         const wxSize& size = wxSize( 500,300 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
 		~SkirmishDialog();
