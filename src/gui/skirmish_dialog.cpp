@@ -16,16 +16,20 @@
 #include "../utils/conversion.h"
 #include "../mmoptionswrapper.h"
 #include "../utils/controls.h"
+#include "../ui.h"
+#include "../mainwindow.h"
 #include "wxbackgroundimage.h"
 
 ///////////////////////////////////////////////////////////////////////////
 
-SkirmishDialog::SkirmishDialog( wxWindow* parent, const wxBitmap& bg_img, const wxString& modname, OptionsWrapper mod_customs, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style )
+SkirmishDialog::SkirmishDialog( wxWindow* parent, const wxIcon& app_icon, const wxBitmap& bg_img, const wxString& modname, OptionsWrapper mod_customs, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style )
     : wxFrame( parent, id, title, pos, size, style ),
     m_mod_customs( mod_customs ),
     m_modname( modname ),
     m_bg_img( bg_img )
 {
+    SetIcon( app_icon );
+
     wxPanel* all_panel = new wxPanel( this, -1 );
 	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
 
@@ -164,6 +168,7 @@ SkirmishDialog::SkirmishDialog( wxWindow* parent, const wxBitmap& bg_img, const 
 	m_advanced->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SkirmishDialog::OnAdvanced ), NULL, this );
 	m_start->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SkirmishDialog::OnStart ), NULL, this );
 	m_radioBox1->Connect( wxEVT_COMMAND_RADIOBOX_SELECTED, wxCommandEventHandler( SkirmishDialog::OnRadioBox ), NULL, this );
+	m_map_random->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SkirmishDialog::OnRandom ), NULL, this );
 }
 
 SkirmishDialog::~SkirmishDialog()
@@ -173,11 +178,17 @@ SkirmishDialog::~SkirmishDialog()
 	m_advanced->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SkirmishDialog::OnAdvanced ), NULL, this );
 	m_start->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SkirmishDialog::OnStart ), NULL, this );
 	m_radioBox1->Disconnect( wxEVT_COMMAND_RADIOBOX_SELECTED, wxCommandEventHandler( SkirmishDialog::OnRadioBox ), NULL, this );
+	m_map_random->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SkirmishDialog::OnRandom ), NULL, this );
 }
 
 void SkirmishDialog::OnBack( wxCommandEvent& event )
 {
     Destroy();
+}
+
+void SkirmishDialog::OnRandom( wxCommandEvent& event )
+{
+
 }
 
 void SkirmishDialog::OnRadioBox( wxCommandEvent& event )
@@ -211,7 +222,7 @@ void SkirmishDialog::OnRadioBox( wxCommandEvent& event )
 
 void SkirmishDialog::OnAdvanced( wxCommandEvent& event )
 {
-    event.Skip();
+    ui().mw().ShowSingleplayer();
 }
 
 
@@ -222,7 +233,6 @@ void SkirmishDialog::OnStart( wxCommandEvent& event )
     m_battle.CustomBattleOptions().MergeOptions( opts, OptionsWrapper::ModOption );
 
     //now add AIs
-    wxString ai_name = m_mod_customs.getSingleValue( _T("default_ai" ) );
     OptionsWrapper::GameOption optFlag = OptionsWrapper::SkirmishOptions;
     // we need to store Sides for AIs first, so we can later add them in batch w/o needing to remember a mapping
     std::vector<wxString> ai_sides;
@@ -236,6 +246,21 @@ void SkirmishDialog::OnStart( wxCommandEvent& event )
         break;
         }
     }
+
+    wxString default_ai = m_mod_customs.getSingleValue( _T("default_ai" ) );
+    std::vector<wxString> ai_names ( ai_sides.size(), default_ai );
+    for ( IUnitSync::OptionMapListConstIter it = opts.m_opts[optFlag].list_map.begin(); it != opts.m_opts[optFlag].list_map.end(); ++it) {
+        mmOptionList current = it->second;
+        if ( current.key == _T("ai_names") ) {
+            for ( ListItemVec::iterator itor = current.listitems.begin(); itor != current.listitems.end(); ++itor) {
+                size_t idx = FromwxString<size_t>( itor->key );
+                if ( idx < ai_sides.size() && idx >= 0 )
+                    ai_names[idx] = itor->name;
+            }
+        break;
+        }
+    }
+
     for ( IUnitSync::OptionMapListConstIter it = opts.m_opts[optFlag].list_map.begin(); it != opts.m_opts[optFlag].list_map.end(); ++it) {
         mmOptionList current = it->second;
         if ( current.key == _T("ai_team_ids") ) {
@@ -243,7 +268,8 @@ void SkirmishDialog::OnStart( wxCommandEvent& event )
             size_t i = 0;
             for ( ListItemVec::iterator itor = current.listitems.begin(); itor != current.listitems.end(); ++itor, ++i ) {
                 ASSERT_EXCEPTION( i < ai_sides.size(), _T("The setup is listing more AI opponents than AI sides") );
-                m_battle.AddBot( ai_name, FromwxString<int>( itor->name ), ai_sides[i] );
+                wxString ai = ai_names.size() > i ? ai_names[i] : default_ai;
+                m_battle.AddBot( ai, FromwxString<int>( itor->name ), ai_sides[i] );
             }
         break;
         }

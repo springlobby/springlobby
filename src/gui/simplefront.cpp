@@ -12,6 +12,7 @@
 
 #include <wx/app.h>
 #include <wx/image.h>
+#include <wx/icon.h>
 
 SimpleFront::SimpleFront( wxWindow* parent,const wxString& modname )
 : SimpleFrontBase( parent, wxID_ANY, modname ),
@@ -20,6 +21,12 @@ m_skirmish( 0 ),
 m_modname( modname )
 {
 	m_mod_customs.loadOptions( OptionsWrapper::ModCustomizations, m_modname );
+
+	wxString icon_img_path = m_mod_customs.getSingleValue( _T("icon") );
+	wxBitmap icon_bmp (usync().GetImage( m_modname, icon_img_path ) );
+	m_frame_ico.CopyFromBitmap( icon_bmp );
+    SetIcon( m_frame_ico );
+
     wxString bg_img_path = m_mod_customs.getSingleValue( _T("bg_image") );
     m_bg_img = wxBitmap( usync().GetImage( m_modname, bg_img_path ) );
     SetSize( m_bg_img.GetWidth(), m_bg_img.GetHeight() );
@@ -30,7 +37,7 @@ m_modname( modname )
 
 void SimpleFront::OnSingleplayer( wxCommandEvent& event )
 {
-	m_skirmish = new SkirmishDialog( this, m_bg_img, m_modname, m_mod_customs );
+	m_skirmish = new SkirmishDialog( this, m_frame_ico, m_bg_img, m_modname, m_mod_customs );
 	m_skirmish->Show();
 }
 

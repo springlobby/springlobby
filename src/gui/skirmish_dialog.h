@@ -45,6 +45,7 @@ class SkirmishDialog : public wxFrame
 		virtual void OnAdvanced( wxCommandEvent& event );
 		virtual void OnStart( wxCommandEvent& event );
 		virtual void OnRadioBox( wxCommandEvent& event );
+		virtual void OnRandom( wxCommandEvent& event );
 
         typedef std::map< wxString, OptionsWrapper >
             SkirmishMap;
@@ -52,7 +53,7 @@ class SkirmishDialog : public wxFrame
         SkirmishMap m_skirmishes;
 
 	public:
-		SkirmishDialog( wxWindow* parent, const wxBitmap& bg_img, const wxString& modname, OptionsWrapper mod_customs, wxWindowID id = wxID_ANY,
+		SkirmishDialog( wxWindow* parent, const wxIcon& app_icon, const wxBitmap& bg_img, const wxString& modname, OptionsWrapper mod_customs, wxWindowID id = wxID_ANY,
                         const wxString& title = _("Skirmish"), const wxPoint& pos = wxDefaultPosition,
                         const wxSize& size = wxSize( 500,300 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
 		~SkirmishDialog();
