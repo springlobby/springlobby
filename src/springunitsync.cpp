@@ -473,7 +473,7 @@ GameOptions SpringUnitSync::GetModCustomizations( const wxString& modname )
     wxLogDebugFunc( modname );
 
     GameOptions ret;
-    int count = susynclib().GetXXXOptionCount( modname, _T("SkirmishDefinitons.lua") );
+    int count = susynclib().GetCustomOptionCount( modname, _T("SkirmishDefinitons.lua") );
     for (int i = 0; i < count; ++i) {
         GetOptionEntry( i, ret );
     }
@@ -485,7 +485,7 @@ GameOptions SpringUnitSync::GetSkirmishOptions( const wxString& modname, const w
     wxLogDebugFunc( modname );
 
     GameOptions ret;
-    int count = susynclib().GetXXXOptionCount( modname, skirmish_name );
+    int count = susynclib().GetCustomOptionCount( modname, skirmish_name );
     for (int i = 0; i < count; ++i) {
         GetOptionEntry( i, ret );
     }

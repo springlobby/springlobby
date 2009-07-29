@@ -29,6 +29,7 @@ SkirmishDialog::SkirmishDialog( wxWindow* parent, const wxString& modname, Optio
 	bSizer1 = new wxBoxSizer( wxVERTICAL );
 
     m_battle.SetHostMod( m_modname, wxEmptyString );
+    m_battle.CustomBattleOptions().loadOptions( OptionsWrapper::ModOption, m_modname );
 	const wxString sk_dir = m_mod_customs.getSingleValue( _T("skirmish_directory"), OptionsWrapper::ModCustomizations );
 
 	OptionsWrapper::GameOption optFlag = OptionsWrapper::ModCustomizations;
@@ -40,13 +41,15 @@ SkirmishDialog::SkirmishDialog( wxWindow* parent, const wxString& modname, Optio
             bSizer1->Add( m_radioBox1, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 10 );
 
             wxString tooltip;
+            int i = 0;
             for ( ListItemVec::iterator itor = current.listitems.begin(); itor != current.listitems.end(); itor++ )
             {
                 tooltip+= _T("\n") + itor->name + _T(": ") + itor->desc;
                 OptionsWrapper temp;
                 wxString filename = sk_dir + _T("/") + itor->key + _T(".lua") ;
                 temp.loadOptions( OptionsWrapper::SkirmishOptions, m_modname, filename );
-                m_skirmishes[current.name] =  temp;
+                m_skirmishes[current.cbx_choices[i]] =  temp;
+                i++;
             }
             m_radioBox1->SetToolTip(TE(tooltip));
 
@@ -104,11 +107,12 @@ SkirmishDialog::~SkirmishDialog()
 	// Disconnect Events
 	m_back->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SkirmishDialog::OnBack ), NULL, this );
 	m_advanced->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SkirmishDialog::OnAdvanced ), NULL, this );
+	m_start->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SkirmishDialog::OnStart ), NULL, this );
 }
 
 void SkirmishDialog::OnBack( wxCommandEvent& event )
 {
-    event.Skip();
+    Destroy();
 }
 
 void SkirmishDialog::OnAdvanced( wxCommandEvent& event )
@@ -116,10 +120,21 @@ void SkirmishDialog::OnAdvanced( wxCommandEvent& event )
     event.Skip();
 }
 
+template <class Cont>
+void printCO( const Cont& c )
+{
+    typename Cont::const_iterator it= c.begin();
+    for( ; it != c.end(); ++it ) {
+        wxLogMessage( _T("opts:: ") + it->first + _T(" | ") + it->second.first + _T(" | ") + it->second.second );
+    }
+}
+
 void SkirmishDialog::OnStart( wxCommandEvent& event )
 {
     OptionsWrapper& opts = m_skirmishes[m_radioBox1->GetStringSelection()];
-    m_battle.CustomBattleOptions().MergeOptions( opts );
+
+    m_battle.CustomBattleOptions().MergeOptions( opts, OptionsWrapper::ModOption );
+
     UnitSyncMap map = usync().GetMapEx( 0 );
     m_battle.SetHostMap( map.name, map.hash );
     m_battle.StartSpring();

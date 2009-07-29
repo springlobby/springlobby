@@ -166,6 +166,7 @@ bool SpringLobbyApp::OnInit()
 
     wxString modname = _T("Spring: 1944 SVN");
     SimpleFront* sp = new SimpleFront( 0, modname );
+    SetTopWindow( sp );
     sp->Show();
     return true;
 

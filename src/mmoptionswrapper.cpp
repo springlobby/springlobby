@@ -144,7 +144,7 @@ bool OptionsWrapper::loadOptions( GameOption modmapFlag, const wxString& name, c
                 opt = usync().GetSkirmishOptions( name, extra_filename );
             }
             catch(...) {
-				wxLogError(_T("Could not load mod customizations"));
+				wxLogError(_T("Could not load skirmish options"));
 				return false;
 			}
 			break;
@@ -537,27 +537,27 @@ wxString OptionsWrapper::GetNameListOptItemKey(wxString optkey, wxString itemnam
 	return wxEmptyString;
 }
 
-bool OptionsWrapper::MergeOptions( const OptionsWrapper& other )
+bool OptionsWrapper::MergeOptions( const OptionsWrapper& other, GameOption merge_into )
 {
     GameOptionsMapCIter other_it = other.m_opts.begin();
     for ( ; other_it != other.m_opts.end(); ++other_it ) {
         const GameOptions& other_opts = other_it->second;
         const GameOption other_id = (const GameOption)other_it->first;
 
-        for (IUnitSync::OptionMapBoolConstIter i = other_opts.bool_map.begin(); i != other_opts.bool_map.end();++i) {
-            m_opts[other_id].bool_map[i->first] = i->second;
+        for (IUnitSync::OptionMapBoolConstIter it = other_opts.bool_map.begin(); it != other_opts.bool_map.end();++it ) {
+            m_opts[merge_into].bool_map[it->first] = it->second;
         }
 
-        for ( IUnitSync::OptionMapFloatConstIter it = other_opts.float_map.begin(); it != other_opts.float_map.end(); ++it) {
-
-        mmOptionFloat current = it->second;
+        for ( IUnitSync::OptionMapFloatConstIter it = other_opts.float_map.begin(); it != other_opts.float_map.end(); ++it ) {
+            m_opts[merge_into].float_map[it->first] = it->second;
         }
 
-        for ( IUnitSync::OptionMapListConstIter it = other_opts.list_map.begin(); it != other_opts.list_map.end(); ++it){
-            mmOptionList current = it->second;
+        for ( IUnitSync::OptionMapListConstIter it = other_opts.list_map.begin(); it != other_opts.list_map.end(); ++it ){
+            m_opts[merge_into].list_map[it->first] = it->second;
         }
 
-        for ( IUnitSync::OptionMapStringConstIter it = other_opts.string_map.begin(); it != other_opts.string_map.end(); ++it) {
+        for ( IUnitSync::OptionMapStringConstIter it = other_opts.string_map.begin(); it != other_opts.string_map.end(); ++it ) {
+            m_opts[merge_into].string_map[it->first] = it->second;
         }
     }
     return true;
