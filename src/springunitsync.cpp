@@ -522,22 +522,30 @@ wxImage SpringUnitSync::GetSidePicture( const wxString& modname, const wxString&
 {
   wxLogDebugFunc( _T("") );
 
-  wxImage cache;
-
-	susynclib().SetCurrentMod( modname );
 	wxLogDebugFunc( _T("SideName = \"") + SideName + _T("\"") );
 	wxString ImgName = _T("SidePics");
 	ImgName += _T("/");
 	ImgName += SideName.Upper();
 	ImgName += _T(".bmp");
 
-	int ini = susynclib().OpenFileVFS (ImgName );
+    return GetImage( modname, ImgName );
+}
+
+wxImage SpringUnitSync::GetImage( const wxString& modname, const wxString& image_path )
+{
+  wxLogDebugFunc( _T("") );
+
+    wxImage cache;
+
+	susynclib().SetCurrentMod( modname );
+
+	int ini = susynclib().OpenFileVFS ( image_path );
 	ASSERT_EXCEPTION( ini, _T("cannot find side image") );
 
 	int FileSize = susynclib().FileSizeVFS(ini);
 	if (FileSize == 0) {
 		susynclib().CloseFileVFS(ini);
-		ASSERT_EXCEPTION( FileSize, _T("side image has size 0") );
+		ASSERT_EXCEPTION( FileSize, _T("image has size 0") );
 	}
 
 	uninitialized_array<char> FileContent(FileSize);
@@ -548,8 +556,9 @@ wxImage SpringUnitSync::GetSidePicture( const wxString& modname, const wxString&
 	cache.InitAlpha();
 	for ( int x = 0; x < cache.GetWidth(); x++ )
 		for ( int y = 0; y < cache.GetHeight(); y++ )
-			if ( cache.GetBlue( x, y ) == 255 && cache.GetGreen( x, y ) == 255 && cache.GetRed( x, y ) == 255 ) cache.SetAlpha( x, y, 0 ); // set pixel to be transparent
-  return cache;
+			if ( cache.GetBlue( x, y ) == 255 && cache.GetGreen( x, y ) == 255 && cache.GetRed( x, y ) == 255 )
+                cache.SetAlpha( x, y, 0 ); // set pixel to be transparent
+    return cache;
 }
 
 
