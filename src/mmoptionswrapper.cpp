@@ -537,6 +537,32 @@ wxString OptionsWrapper::GetNameListOptItemKey(wxString optkey, wxString itemnam
 	return wxEmptyString;
 }
 
+bool OptionsWrapper::MergeOptions( const OptionsWrapper& other )
+{
+    GameOptionsMapCIter other_it = other.m_opts.begin();
+    for ( ; other_it != other.m_opts.end(); ++other_it ) {
+        const GameOptions& other_opts = other_it->second;
+        const GameOption other_id = (const GameOption)other_it->first;
+
+        for (IUnitSync::OptionMapBoolConstIter i = other_opts.bool_map.begin(); i != other_opts.bool_map.end();++i) {
+            m_opts[other_id].bool_map[i->first] = i->second;
+        }
+
+        for ( IUnitSync::OptionMapFloatConstIter it = other_opts.float_map.begin(); it != other_opts.float_map.end(); ++it) {
+
+        mmOptionFloat current = it->second;
+        }
+
+        for ( IUnitSync::OptionMapListConstIter it = other_opts.list_map.begin(); it != other_opts.list_map.end(); ++it){
+            mmOptionList current = it->second;
+        }
+
+        for ( IUnitSync::OptionMapStringConstIter it = other_opts.string_map.begin(); it != other_opts.string_map.end(); ++it) {
+        }
+    }
+    return true;
+}
+
 void OptionsWrapper::ParseSectionMap( mmSectionTree& section_tree, const IUnitSync::OptionMapSection& section_map )
 {
 
@@ -672,3 +698,5 @@ void mmSectionTree::Clear()
     m_section_map.clear();
     m_tree->DeleteAll();
 }
+
+

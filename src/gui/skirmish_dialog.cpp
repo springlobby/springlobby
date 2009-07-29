@@ -119,6 +119,7 @@ void SkirmishDialog::OnAdvanced( wxCommandEvent& event )
 void SkirmishDialog::OnStart( wxCommandEvent& event )
 {
     OptionsWrapper& opts = m_skirmishes[m_radioBox1->GetStringSelection()];
+    m_battle.CustomBattleOptions().MergeOptions( opts );
     UnitSyncMap map = usync().GetMapEx( 0 );
     m_battle.SetHostMap( map.name, map.hash );
     m_battle.StartSpring();

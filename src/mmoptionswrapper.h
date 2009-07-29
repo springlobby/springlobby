@@ -158,6 +158,9 @@ public:
 
 	//! after loading sections into map, parse them into tree
 	void ParseSectionMap( mmSectionTree& section_tree, const IUnitSync::OptionMapSection& section_map );
+
+	//! Merge this another wrapper's options into this one, with the other'soptions taking precendence
+	bool MergeOptions( const OptionsWrapper& other );
 protected:
 	//! used for code clarity in setOptions()
 	bool setSingleOptionTypeSwitch(wxString key, wxString value, GameOption modmapFlag, OptionType optType);
