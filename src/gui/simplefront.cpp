@@ -107,6 +107,7 @@ void SimpleFront::ShowSP( bool show )
 
 void SimpleFront::OnMultiplayer( wxCommandEvent& event )
 {
+    ui().FirstRunWelcome();
 	ui().mw().ShowTab( MainWindow::PAGE_JOIN );
 	Close();
 }
