@@ -21,7 +21,7 @@
 
 SimpleFront::SimpleFront( wxWindow* parent,const wxString& modname )
 : wxFrame( parent, wxID_ANY, modname, wxDefaultPosition, wxSize( -1,-1 ), wxCAPTION|wxCLOSE_BOX|wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL ),
-m_settings( 0 ),
+m_settings_frame( 0 ),
 m_skirmish( 0 ),
 m_modname( modname )
 {
