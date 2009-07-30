@@ -19,6 +19,7 @@
 #include "../ui.h"
 #include "../mainwindow.h"
 #include "wxbackgroundimage.h"
+#include "simplefront.h"
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -30,28 +31,21 @@ SkirmishDialog::SkirmishDialog( SimpleFront* parent, const wxIcon& app_icon, con
     m_parent( parent )
 {
 
-    wxPanel* all_panel = new wxPanel( this, -1 );
 	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
 
-	wxBoxSizer* bSizer1;
-	bSizer1 = new wxBoxSizer( wxVERTICAL );
-
-    wxPanel* radio_panel = new wxPanel( all_panel, -1 );
     m_battle.SetHostMod( m_modname, wxEmptyString );
     m_battle.CustomBattleOptions().loadOptions( OptionsWrapper::ModOption, m_modname );
 	const wxString sk_dir = m_mod_customs.getSingleValue( _T("skirmish_directory"), OptionsWrapper::ModCustomizations );
 
     //this block populates the radiobox and loads the skirmish options into the map
+    wxBoxSizer* radio_sizer = new wxBoxSizer( wxVERTICAL );
 	OptionsWrapper::GameOption optFlag = OptionsWrapper::ModCustomizations;
     for ( IUnitSync::OptionMapListConstIter it = m_mod_customs.m_opts[optFlag].list_map.begin(); it != m_mod_customs.m_opts[optFlag].list_map.end(); ++it) {
 	    mmOptionList current = it->second;
 	    if ( _T("scenarios") == current.key ) {
-            wxBoxSizer* temp = new wxBoxSizer( wxVERTICAL );
-            m_radioBox1 = new wxRadioBox( radio_panel, wxID_ANY, _("Select skirmish setup"), wxDefaultPosition, wxDefaultSize, current.cbx_choices, 1, wxRA_SPECIFY_ROWS );
+            m_radioBox1 = new wxRadioBox( this, wxID_ANY, _("Select skirmish setup"), wxDefaultPosition, wxDefaultSize, current.cbx_choices, 1, wxRA_SPECIFY_ROWS );
             m_radioBox1->SetSelection( 0 );
-            temp->Add( m_radioBox1, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 10 );
-            radio_panel->SetSizer( temp );
-            radio_panel->Layout();
+            radio_sizer->Add( m_radioBox1, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 10 );
 
             wxString tooltip;
             int i = 0;
@@ -69,7 +63,6 @@ SkirmishDialog::SkirmishDialog( SimpleFront* parent, const wxIcon& app_icon, con
             m_radioBox1->SetName(current.key);
         }
 	}
-	bSizer1->Add( radio_panel, 1, wxALIGN_CENTER, 0 );
 
     optFlag = OptionsWrapper::SkirmishOptions;
     mmOptionList suggested_maps;
@@ -85,74 +78,48 @@ SkirmishDialog::SkirmishDialog( SimpleFront* parent, const wxIcon& app_icon, con
         }
     }
 
-	wxBoxSizer* bSizer2;
-	bSizer2 = new wxBoxSizer( wxHORIZONTAL );
-
-    wxPanel* map_panel = new wxPanel( all_panel, -1 );
     wxBoxSizer* map_sizer = new wxBoxSizer( wxHORIZONTAL );
-	m_map_label = new wxStaticText( map_panel, wxID_ANY, _("Map"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_map_label = new wxStaticText( this, wxID_ANY, _("Map"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_map_label->Wrap( -1 );
 	map_sizer->Add( m_map_label, 0, wxALIGN_CENTER_VERTICAL| wxALL, 5 );
-
 	wxArrayString m_mapChoices = suggested_maps.cbx_choices.Count() > 0 ? suggested_maps.cbx_choices : usync().GetMapList() ;
-	m_map = new wxChoice( map_panel, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_mapChoices, 0 );
+	m_map = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_mapChoices, 0 );
 	m_map->SetSelection( 0 );
 	map_sizer->Add( m_map, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
-
-	m_map_random = new wxCheckBox( map_panel, wxID_ANY, _("random"), wxDefaultPosition, wxDefaultSize, 0 );
-
+	m_map_random = new wxCheckBox( this, wxID_ANY, _("random"), wxDefaultPosition, wxDefaultSize, 0 );
 	map_sizer->Add( m_map_random, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
-    map_panel->SetSizer( map_sizer );
-    map_panel->Layout(  );
-    bSizer2->Add( map_panel, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 0 );
-	bSizer1->Add( bSizer2, 1, wxALIGN_CENTER, 0 );
 
-	wxBoxSizer* bSizer4;
-	bSizer4 = new wxBoxSizer( wxHORIZONTAL );
-    wxPanel* sides_panel = new wxPanel( all_panel, -1 );
+
     wxBoxSizer* sides_sizer = new wxBoxSizer( wxHORIZONTAL );
-	m_sides_label = new wxStaticText( sides_panel, wxID_ANY, _("Select faction"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_sides_label = new wxStaticText( this, wxID_ANY, _("Select faction"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_sides_label->Wrap( -1 );
 	sides_sizer->Add( m_sides_label, 0, wxALIGN_CENTER_VERTICAL| wxALL, 5 );
 
 	wxArrayString m_sidesChoices = suggested_sides.cbx_choices.Count() > 0 ? suggested_sides.cbx_choices : usync().GetSides( m_modname ) ;
-	m_sides = new wxChoice( sides_panel, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_sidesChoices, 0 );
+	m_sides = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_sidesChoices, 0 );
 	m_sides->SetSelection( 0 );
 	sides_sizer->Add( m_sides, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
-    sides_panel->SetSizer( sides_sizer );
-    sides_panel->Layout(  );
-    bSizer4->Add( sides_panel, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 0 );
-	bSizer1->Add( bSizer4, 1, wxALIGN_CENTER, 0 );
-
-	wxBoxSizer* bSizer3;
-	bSizer3 = new wxBoxSizer( wxHORIZONTAL );
-
-    wxPanel* button_panel = new wxPanel( all_panel, -1 );
     wxBoxSizer* button_sizer = new wxBoxSizer( wxHORIZONTAL );
-	m_back = new wxButton( button_panel, wxID_ANY, _("Back"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_back = new wxButton( this, wxID_ANY, _("Back"), wxDefaultPosition, wxDefaultSize, 0 );
 	button_sizer->Add( m_back, 0, wxALL, 5 );
 
-	m_advanced = new wxButton( button_panel, wxID_ANY, _("Advanced setup"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_advanced = new wxButton( this, wxID_ANY, _("Advanced setup"), wxDefaultPosition, wxDefaultSize, 0 );
 	button_sizer->Add( m_advanced, 0, wxALL, 5 );
 
-	m_start = new wxButton( button_panel, wxID_ANY, _("Start"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_start = new wxButton( this, wxID_ANY, _("Start"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_start->SetDefault();
 	button_sizer->Add( m_start, 0, wxALL, 5 );
 
-    button_panel->SetSizer( button_sizer );
-    button_panel->Layout();
-
-	bSizer3->Add( button_panel, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
-	bSizer1->Add( bSizer3, 1, wxALIGN_CENTER, 0 );
-
-
-	all_panel->SetSizer( bSizer1 );
-	all_panel->Layout();
 	wxBoxSizer* all_sizer = new wxBoxSizer( wxVERTICAL );
-	all_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
-	all_sizer->Add( all_panel, 0 , wxALIGN_CENTER, 0 );
-	all_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
+	all_sizer->Add( radio_sizer, 0, wxALL, 0 );
+	all_sizer->Add( map_sizer, 0, wxALL, 0 );
+	all_sizer->Add( sides_sizer, 0, wxALL, 0 );
+	all_sizer->Add( button_sizer, 0, wxALL, 0 );
+
+//	all_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
+//	all_sizer->Add( all_panel, 0 , wxALIGN_CENTER, 0 );
+//	all_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
 
 	this->SetSizer( all_sizer );
 
@@ -185,7 +152,7 @@ SkirmishDialog::~SkirmishDialog()
 
 void SkirmishDialog::OnBack( wxCommandEvent& event )
 {
-    Destroy();
+    m_parent->ShowSP( false );
 }
 
 void SkirmishDialog::OnRandom( wxCommandEvent& event )

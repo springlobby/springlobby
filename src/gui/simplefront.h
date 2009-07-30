@@ -49,6 +49,8 @@ public:
 	/** Constructor */
 	SimpleFront( wxWindow* parent, const wxString& modname );
 	~SimpleFront();
+
+    void ShowSP( bool show );
 };
 
 #endif // __simplefront__

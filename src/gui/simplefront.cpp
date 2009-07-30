@@ -95,8 +95,13 @@ SimpleFront::~SimpleFront()
 
 void SimpleFront::OnSingleplayer( wxCommandEvent& event )
 {
-    m_button_sizer->Show( false );
-	m_skirmish_sizer->Show( true );
+    ShowSP( true );
+}
+
+void SimpleFront::ShowSP( bool show )
+{
+    m_button_sizer->Show( !show );
+	m_skirmish_sizer->Show( show );
 	Layout();
 }
 
