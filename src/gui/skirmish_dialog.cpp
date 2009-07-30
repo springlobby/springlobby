@@ -169,6 +169,8 @@ SkirmishDialog::SkirmishDialog( wxWindow* parent, const wxIcon& app_icon, const 
 	m_start->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SkirmishDialog::OnStart ), NULL, this );
 	m_radioBox1->Connect( wxEVT_COMMAND_RADIOBOX_SELECTED, wxCommandEventHandler( SkirmishDialog::OnRadioBox ), NULL, this );
 	m_map_random->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SkirmishDialog::OnRandom ), NULL, this );
+
+	std::srand(time(NULL));
 }
 
 SkirmishDialog::~SkirmishDialog()
@@ -188,7 +190,8 @@ void SkirmishDialog::OnBack( wxCommandEvent& event )
 
 void SkirmishDialog::OnRandom( wxCommandEvent& event )
 {
-
+    bool checked = m_map_random->IsChecked();
+    m_map->Enable( !checked );
 }
 
 void SkirmishDialog::OnRadioBox( wxCommandEvent& event )
@@ -278,6 +281,8 @@ void SkirmishDialog::OnStart( wxCommandEvent& event )
     User& me = m_battle.GetMe();
     me.BattleStatus().side = m_battle.GetSideIndex( m_sides->GetStringSelection() );
 
+    if ( m_map_random->IsChecked() )
+        m_map->SetSelection( std::rand() % ( m_map->GetCount() ) ); //if anyone complains about this not being a uniform distribution imma invoke stab-over-tcp ((c) BD )
     m_battle.SetHostMap( m_map->GetStringSelection() , _T("") );
     m_battle.StartSpring();
 }
