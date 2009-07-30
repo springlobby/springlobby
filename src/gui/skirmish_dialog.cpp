@@ -193,6 +193,7 @@ void SkirmishDialog::OnRadioBox( wxCommandEvent& event )
 void SkirmishDialog::OnAdvanced( wxCommandEvent& event )
 {
     ui().mw().ShowSingleplayer();
+    ui().mw().Show( true );
 }
 
 
