@@ -164,11 +164,12 @@ bool SpringLobbyApp::OnInit()
     usync(); //init object, sink needs to exist before event is posted. next line would do both object(sink) creation and Event posting
     GetGlobalEventSender(GlobalEvents::UnitSyncReloadRequest).SendEvent( 0 ); // request an unitsync reload
 
-    wxString modname = _T("Spring: 1944 SVN");
-    SimpleFront* sp = new SimpleFront( 0, modname );
-    SetTopWindow( sp );
-    sp->Show();
-    return true;
+    if ( m_start_simple_interface && !m_customizer_modname.IsEmpty() ) {
+        SimpleFront* sp = new SimpleFront( 0, m_customizer_modname );
+        SetTopWindow( sp );
+        sp->Show();
+        return true;
+    }
 
     CacheAndSettingsSetup();
     ui().ShowMainWindow();
@@ -299,6 +300,8 @@ void SpringLobbyApp::OnInitCmdLine(wxCmdLineParser& parser)
         #endif
             //{ wxCMD_LINE_OPTION, _T("c"), _T("config-file"),  _("override default choice for config-file"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL | wxCMD_LINE_NEEDS_SEPARATOR },
             { wxCMD_LINE_OPTION, _T("l"), _T("log-verbosity"),  _("overrides default logging verbosity, can be:\n                                0: no log\n                                1: critical errors\n                                2: errors\n                                3: warnings (default)\n                                4: messages\n                                5: function trace"), wxCMD_LINE_VAL_NUMBER, wxCMD_LINE_PARAM_OPTIONAL },
+            { wxCMD_LINE_OPTION, _T("c"), _T("customize"),  _("Load lobby customizations from game archive. Expects the shortname."), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
+            { wxCMD_LINE_SWITCH, _T("s"), _T("simple"),  _("Start with the simple interface."), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
             { wxCMD_LINE_NONE }
         };
     #else
@@ -315,6 +318,8 @@ void SpringLobbyApp::OnInitCmdLine(wxCmdLineParser& parser)
         #endif
             //{ wxCMD_LINE_OPTION, _T("c"), _T("config-file"),  _("override default choice for config-file"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL | wxCMD_LINE_NEEDS_SEPARATOR },
             { wxCMD_LINE_OPTION, "l", "log-verbosity",  _("overrides default logging verbosity, can be:\n                                0: no log\n                                1: critical errors\n                                2: errors\n                                3: warnings (default)\n                                4: messages\n                                5: function trace"), wxCMD_LINE_VAL_NUMBER, wxCMD_LINE_PARAM_OPTIONAL },
+            { wxCMD_LINE_OPTION, "c", "customize",  _("Load lobby customizations from game archive. Expects the shortname."), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
+            { wxCMD_LINE_SWITCH, "s", "simple",  _("Start with the simple interface."), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
             { wxCMD_LINE_NONE }
         };
     #endif
@@ -332,11 +337,14 @@ bool SpringLobbyApp::OnCmdLineParsed(wxCmdLineParser& parser)
         m_log_console = parser.Found(_T("console-logging"));
         m_log_window_show = parser.Found(_T("gui-logging"));
         m_crash_handle_disable = parser.Found(_T("no-crash-handler"));
+        m_start_simple_interface = parser.Found(_T("simple"));
 
 //        Settings::m_user_defined_config = parser.Found( _T("config-file"), &Settings::m_user_defined_config_path );
 
         if ( !parser.Found(_T("log-verbosity"), &m_log_verbosity ) )
             m_log_verbosity = 5;
+        if ( !parser.Found(_T("customize"), &m_customizer_modname ) )
+            m_customizer_modname = _T("");
 
         if ( parser.Found(_T("help")) )
             return false; // not a syntax error, but program should stop if user asked for command line usage
