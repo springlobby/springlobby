@@ -4,7 +4,7 @@
 
 #include <wx/intl.h>
 
-#include <wx/frame.h>
+#include <wx/panel.h>
 #include "../mmoptionswrapper.h"
 #include "../singleplayerbattle.h"
 
@@ -13,6 +13,7 @@ class wxChoice;
 class wxStaticText;
 class wxButton;
 class wxCheckBox;
+class SimpleFront;
 
 
 ///////////////////////////////////////////////////////////////////////////
@@ -20,7 +21,7 @@ class wxCheckBox;
 ///////////////////////////////////////////////////////////////////////////////
 /// Class skirmish_dialog
 ///////////////////////////////////////////////////////////////////////////////
-class SkirmishDialog : public wxFrame
+class SkirmishDialog : public wxPanel
 {
 	private:
 
@@ -34,11 +35,15 @@ class SkirmishDialog : public wxFrame
 		wxButton* m_back;
 		wxButton* m_advanced;
 		wxButton* m_start;
-		const wxBitmap& m_bg_img;
 
-		OptionsWrapper m_mod_customs;
+		OptionsWrapper& m_mod_customs;
 		const wxString m_modname;
+		const wxBitmap& m_bg_img;
+		SimpleFront* m_parent;
+
+
 		NoGuiSinglePlayerBattle m_battle;
+
 
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnBack( wxCommandEvent& event );
@@ -53,9 +58,8 @@ class SkirmishDialog : public wxFrame
         SkirmishMap m_skirmishes;
 
 	public:
-		SkirmishDialog( wxWindow* parent, const wxIcon& app_icon, const wxBitmap& bg_img, const wxString& modname, OptionsWrapper mod_customs, wxWindowID id = wxID_ANY,
-                        const wxString& title = _("Skirmish"), const wxPoint& pos = wxDefaultPosition,
-                        const wxSize& size = wxSize( 500,300 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
+		SkirmishDialog( SimpleFront* parent, const wxIcon& app_icon, const wxBitmap& bg_img,
+                        const wxString& modname, OptionsWrapper& mod_customs, wxWindowID id = wxID_ANY );
 		~SkirmishDialog();
 
 };

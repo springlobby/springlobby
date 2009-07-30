@@ -22,13 +22,13 @@
 
 ///////////////////////////////////////////////////////////////////////////
 
-SkirmishDialog::SkirmishDialog( wxWindow* parent, const wxIcon& app_icon, const wxBitmap& bg_img, const wxString& modname, OptionsWrapper mod_customs, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style )
-    : wxFrame( parent, id, title, pos, size, style ),
+SkirmishDialog::SkirmishDialog( SimpleFront* parent, const wxIcon& app_icon, const wxBitmap& bg_img, const wxString& modname, OptionsWrapper& mod_customs, wxWindowID id )
+    : wxPanel( (wxWindow*)parent, id ),
     m_mod_customs( mod_customs ),
     m_modname( modname ),
-    m_bg_img( bg_img )
+    m_bg_img( bg_img ),
+    m_parent( parent )
 {
-    SetIcon( app_icon );
 
     wxPanel* all_panel = new wxPanel( this, -1 );
 	this->SetSizeHints( wxDefaultSize, wxDefaultSize );

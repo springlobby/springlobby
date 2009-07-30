@@ -24,29 +24,26 @@
 ///////////////////////////////////////////////////////////////////////////////
 /// Class SimpleFrontBase
 ///////////////////////////////////////////////////////////////////////////////
-class SimpleFrontBase : public wxFrame 
+class SimpleFrontBase : public wxFrame
 {
 	private:
-	
+
 	protected:
-		
-		wxButton* m_sp;
-		wxButton* m_mp;
-		wxButton* m_settings;
-		wxButton* m_exit;
-		
-		
+
+
+
+
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnSingleplayer( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnMultiplayer( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnSettings( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnExit( wxCommandEvent& event ){ event.Skip(); }
-		
-	
+
+
 	public:
 		SimpleFrontBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("LALALALAUNCHER"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 703,313 ), long style = wxCAPTION|wxCLOSE_BOX|wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
 		~SimpleFrontBase();
-	
+
 };
 
 #endif //__simplefrontbase__
