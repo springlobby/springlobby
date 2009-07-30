@@ -413,8 +413,6 @@ springlobby_SOURCES = \
 	src/gui/wxbackgroundimage.h \
 	src/gui/simplefront.h \
 	src/gui/simplefront.cpp \
-	src/gui/simplefrontbase.h \
-	src/gui/simplefrontbase.cpp \
 	src/defines.h \
 	src/updater/updatermainwindow.cpp \
 	src/updater/updatermainwindow.h \

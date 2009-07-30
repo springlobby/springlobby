@@ -210,7 +210,6 @@ SET(SpringLobbySrc
 	src/gui/skirmish_dialog.cpp
 	src/gui/wxbackgroundimage.cpp
 	src/gui/simplefront.cpp
-	src/gui/simplefrontbase.cpp
 	src/updater/updatermainwindow.cpp
 	src/utils/activitynotice.cpp
 	src/utils/math.cpp
