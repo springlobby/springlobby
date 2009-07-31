@@ -11,6 +11,7 @@
 #include <wx/settings.h>
 #include <wx/dc.h>
 #include <wx/dcclient.h>
+#include <wx/combobox.h>
 
 #include "../springunitsync.h"
 #include "../springunitsynclib.h"
@@ -22,6 +23,7 @@
 #include "../mainwindow.h"
 #include "wxbackgroundimage.h"
 #include "simplefront.h"
+#include "../utils/controls.h"
 
 //BEGIN_EVENT_TABLE(SkirmishDialog,wxPanel)
 //    EVT_ERASE_BACKGROUND(SkirmishDialog::OnEraseBackground)
@@ -37,6 +39,10 @@ SkirmishDialog::SkirmishDialog( SimpleFront* parent, const wxIcon& app_icon, con
 ////    Connect(wxEVT_ERASE_BACKGROUND, wxEraseEventHandler(SkirmishDialog::OnEraseBackground), NULL, this);
 //    Connect(wxEVT_PAINT, wxPaintEventHandler(SkirmishDialog::OnPanelHeaderPaint), NULL, this);
 
+    wxFlexGridSizer* fgSizer1;
+	fgSizer1 = new wxFlexGridSizer( 3, 2, 0, 0 );
+	fgSizer1->SetFlexibleDirection( wxBOTH );
+	fgSizer1->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 
 	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
 
@@ -50,9 +56,12 @@ SkirmishDialog::SkirmishDialog( SimpleFront* parent, const wxIcon& app_icon, con
     for ( IUnitSync::OptionMapListConstIter it = m_mod_customs.m_opts[optFlag].list_map.begin(); it != m_mod_customs.m_opts[optFlag].list_map.end(); ++it) {
 	    mmOptionList current = it->second;
 	    if ( _T("scenarios") == current.key ) {
-            m_radioBox1 = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, current.cbx_choices, 0 );
-            m_radioBox1->SetSelection( 0 );
-            radio_sizer->Add( m_radioBox1, 0, wxEXPAND|wxALL|wxALIGN_CENTER, 10 );
+            m_scenario_choice = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxSize( 1.5*GetMaxStringWidth( *this, current.cbx_choices ), -1 ), current.cbx_choices, 0 );
+            m_scenario_choice->SetSelection( 0 );
+            wxStaticText* label = new wxStaticText( this, wxID_ANY, _("Scenario"), wxDefaultPosition, wxDefaultSize, 0 );
+            fgSizer1->Add( label, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+            fgSizer1->Add( m_scenario_choice, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 5 );
+
 
             wxString tooltip;
             int i = 0;
@@ -65,16 +74,18 @@ SkirmishDialog::SkirmishDialog( SimpleFront* parent, const wxIcon& app_icon, con
                 m_skirmishes[current.cbx_choices[i]] =  temp;
                 i++;
             }
-            m_radioBox1->SetToolTip(TE(tooltip));
+            m_scenario_choice->SetToolTip(TE(tooltip));
 
-            m_radioBox1->SetName(current.key);
+            m_scenario_choice->SetName(current.key);
+
+            break;
         }
 	}
 
     optFlag = OptionsWrapper::SkirmishOptions;
     mmOptionList suggested_maps;
     mmOptionList suggested_sides;
-    OptionsWrapper map_op = m_skirmishes[m_radioBox1->GetStringSelection()];
+    OptionsWrapper map_op = m_skirmishes[m_scenario_choice->GetStringSelection()];
     for ( IUnitSync::OptionMapListConstIter it = map_op.m_opts[optFlag].list_map.begin(); it != map_op.m_opts[optFlag].list_map.end(); ++it) {
 	    mmOptionList current = it->second;
         if ( _T("suggested_maps") == current.key ) {
@@ -85,35 +96,35 @@ SkirmishDialog::SkirmishDialog( SimpleFront* parent, const wxIcon& app_icon, con
         }
     }
 
-    wxBoxSizer* map_sizer = new wxBoxSizer( wxHORIZONTAL );
 	m_map_label = new wxStaticText( this, wxID_ANY, _("Map"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_map_label->Wrap( -1 );
-	map_sizer->Add( m_map_label, 0, wxALIGN_CENTER_VERTICAL| wxALL, 5 );
+	fgSizer1->Add( m_map_label, 0, wxALIGN_CENTER_VERTICAL| wxALL, 5 );
 	wxArrayString m_mapChoices = suggested_maps.cbx_choices.Count() > 0 ? suggested_maps.cbx_choices : usync().GetMapList() ;
 	m_map = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_mapChoices, 0 );
 	m_map->SetSelection( 0 );
-	map_sizer->Add( m_map, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
-	m_map_random = new wxCheckBox( this, wxID_ANY, _("random"), wxDefaultPosition, wxDefaultSize, 0 );
-	map_sizer->Add( m_map_random, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	fgSizer1->Add( m_map, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+//	m_map_random = new wxCheckBox( this, wxID_ANY, _("random"), wxDefaultPosition, wxDefaultSize, 0 );
+//	fgSizer1->Add( 0, 0, 1, wxEXPAND, 5 );
+//	fgSizer1->Add( m_map_random, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
 
     wxBoxSizer* sides_sizer = new wxBoxSizer( wxHORIZONTAL );
-	m_sides_label = new wxStaticText( this, wxID_ANY, _("Select faction"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_sides_label = new wxStaticText( this, wxID_ANY, _("Faction"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_sides_label->Wrap( -1 );
-	sides_sizer->Add( m_sides_label, 0, wxALIGN_CENTER_VERTICAL| wxALL, 5 );
+	fgSizer1->Add( m_sides_label, 0, wxALIGN_CENTER_VERTICAL| wxALL, 5 );
 
 	wxArrayString m_sidesChoices = suggested_sides.cbx_choices.Count() > 0 ? suggested_sides.cbx_choices : usync().GetSides( m_modname ) ;
 	m_sides = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_sidesChoices, 0 );
 	m_sides->SetSelection( 0 );
-	sides_sizer->Add( m_sides, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	fgSizer1->Add( m_sides, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
 
-	wxBoxSizer* all_sizer = new wxBoxSizer( wxVERTICAL );
-	all_sizer->Add( radio_sizer, 0, wxALL, 0 );
-	all_sizer->Add( map_sizer, 0, wxALL, 0 );
-	all_sizer->Add( sides_sizer, 0, wxALL, 0 );
+//	wxBoxSizer* all_sizer = new wxBoxSizer( wxVERTICAL );
+//	all_sizer->Add( radio_sizer, 0, wxALL, 0 );
+//	all_sizer->Add( map_sizer, 0, wxALL, 0 );
+//	all_sizer->Add( sides_sizer, 0, wxALL, 0 );
 
-	this->SetSizer( all_sizer );
+	this->SetSizer( fgSizer1 );
 
 
     SetSize( m_bg_img.GetWidth(), m_bg_img.GetHeight() );
@@ -122,8 +133,8 @@ SkirmishDialog::SkirmishDialog( SimpleFront* parent, const wxIcon& app_icon, con
 	this->Centre( wxBOTH );
 
 	// Connect Events
-	m_radioBox1->Connect( wxEVT_COMMAND_RADIOBOX_SELECTED, wxCommandEventHandler( SkirmishDialog::OnRadioBox ), NULL, this );
-	m_map_random->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SkirmishDialog::OnRandom ), NULL, this );
+	m_scenario_choice->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( SkirmishDialog::OnScenarioChoice ), NULL, this );
+//	m_map_random->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SkirmishDialog::OnRandom ), NULL, this );
 
 	std::srand(time(NULL));
 
@@ -132,8 +143,8 @@ SkirmishDialog::SkirmishDialog( SimpleFront* parent, const wxIcon& app_icon, con
 SkirmishDialog::~SkirmishDialog()
 {
 	// Disconnect Events
-	m_radioBox1->Disconnect( wxEVT_COMMAND_RADIOBOX_SELECTED, wxCommandEventHandler( SkirmishDialog::OnRadioBox ), NULL, this );
-	m_map_random->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SkirmishDialog::OnRandom ), NULL, this );
+	m_scenario_choice->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( SkirmishDialog::OnScenarioChoice ), NULL, this );
+//	m_map_random->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SkirmishDialog::OnRandom ), NULL, this );
 }
 
 void SkirmishDialog::OnBack( wxCommandEvent& event )
@@ -143,18 +154,18 @@ void SkirmishDialog::OnBack( wxCommandEvent& event )
 
 void SkirmishDialog::OnRandom( wxCommandEvent& event )
 {
-    bool checked = m_map_random->IsChecked();
-    m_map->Enable( !checked );
+//    bool checked = m_map_random->IsChecked();
+//    m_map->Enable( !checked );
 }
 
-void SkirmishDialog::OnRadioBox( wxCommandEvent& event )
+void SkirmishDialog::OnScenarioChoice( wxCommandEvent& event )
 {
     m_map->Clear();
     m_sides->Clear();
     OptionsWrapper::GameOption optFlag = OptionsWrapper::SkirmishOptions;
     wxArrayString maps = usync().GetMapList();
     wxArrayString sides = usync().GetSides( m_modname );
-    OptionsWrapper map_op = m_skirmishes[m_radioBox1->GetStringSelection()];
+    OptionsWrapper map_op = m_skirmishes[m_scenario_choice->GetStringSelection()];
     for ( IUnitSync::OptionMapListConstIter it = map_op.m_opts[optFlag].list_map.begin(); it != map_op.m_opts[optFlag].list_map.end(); ++it) {
 	    mmOptionList current = it->second;
         if ( _T("suggested_maps") == current.key ) {
@@ -185,7 +196,7 @@ void SkirmishDialog::OnAdvanced( wxCommandEvent& event )
 
 void SkirmishDialog::OnStart( wxCommandEvent& event )
 {
-    OptionsWrapper& opts = m_skirmishes[m_radioBox1->GetStringSelection()];
+    OptionsWrapper& opts = m_skirmishes[m_scenario_choice->GetStringSelection()];
     // this overwrites any modoptions with those found in the skirmish definition
     m_battle.CustomBattleOptions().MergeOptions( opts, OptionsWrapper::ModOption );
 
@@ -235,40 +246,8 @@ void SkirmishDialog::OnStart( wxCommandEvent& event )
     User& me = m_battle.GetMe();
     me.BattleStatus().side = m_battle.GetSideIndex( m_sides->GetStringSelection() );
 
-    if ( m_map_random->IsChecked() )
-        m_map->SetSelection( std::rand() % ( m_map->GetCount() ) ); //if anyone complains about this not being a uniform distribution imma invoke stab-over-tcp ((c) BD )
+//    if ( m_map_random->IsChecked() )
+//        m_map->SetSelection( std::rand() % ( m_map->GetCount() ) ); //if anyone complains about this not being a uniform distribution imma invoke stab-over-tcp ((c) BD )
     m_battle.SetHostMap( m_map->GetStringSelection() , _T("") );
     m_battle.StartSpring();
 }
-
-
-//void SkirmishDialog::OnEraseBackground( wxEraseEvent& event )
-//{
-//        wxDC* dc = event.GetDC();
-//        wxRect rect = GetClientRect();
-//        dc->GradientFillLinear(rect,wxColour(102,153,102), wxColour(204,255,204),wxNORTH);
-//        assert(false);
-////        int*i=0; *i=9;
-//
-//        wxFont font(12, wxSWISS, wxFONTSTYLE_ITALIC, wxFONTWEIGHT_BOLD, FALSE, wxT("Verdana"));
-//        dc->SetFont(font);
-//        dc->SetBackgroundMode(wxTRANSPARENT);
-//        dc->SetTextForeground(*wxWHITE);
-//        wxString msg = wxT("Some Text");
-////        dc->DrawText(msg, wxPoint(10, 10));
-//        RefreshRect(rect, false);
-//}
-
-//void SkirmishDialog::OnPanelHeaderPaint( wxPaintEvent& event )
-//{
-//        wxPaintDC dc(this);          // Must always do this as per documentation
-//
-//        wxRect rect = GetClientRect();
-//        dc.GradientFillLinear(rect,wxColour(0,0,0), wxColour(55,55,124),wxNORTH);
-//
-//        wxFont font(12, wxSWISS, wxFONTSTYLE_ITALIC, wxFONTWEIGHT_BOLD, FALSE, wxT("Verdana"));
-//        dc.SetFont(font);
-//        dc.SetBackgroundMode(wxTRANSPARENT);
-//        dc.SetTextForeground(*wxWHITE);
-//        event.Skip();
-//}

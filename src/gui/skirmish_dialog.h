@@ -13,6 +13,7 @@ class wxChoice;
 class wxStaticText;
 class wxButton;
 class wxCheckBox;
+class wxComboBox;
 class SimpleFront;
 
 
@@ -26,7 +27,7 @@ class SkirmishDialog : public wxGradientPanel
 	private:
 
 	protected:
-		wxChoice* m_radioBox1;
+		wxChoice* m_scenario_choice;
 		wxStaticText* m_map_label;
 		wxStaticText* m_sides_label;
 		wxChoice* m_map;
@@ -54,7 +55,7 @@ class SkirmishDialog : public wxGradientPanel
         virtual void OnBack( wxCommandEvent& event );
 		virtual void OnAdvanced( wxCommandEvent& event );
 		virtual void OnStart( wxCommandEvent& event );
-		virtual void OnRadioBox( wxCommandEvent& event );
+		virtual void OnScenarioChoice( wxCommandEvent& event );
 		virtual void OnRandom( wxCommandEvent& event );
 
 };

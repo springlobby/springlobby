@@ -3,6 +3,7 @@
 
 class wxWindow;
 class wxColour;
+class wxArrayString;
 
 #include <wx/intl.h>
 
@@ -31,6 +32,8 @@ wxColour GetColourFromUser(wxWindow *parent, const wxColour& colInit,
     it outputs empty string if tooltips are disabled in SL settings
 */
 const wxChar* TooltipEnable(const wxChar* input);
+
+int GetMaxStringWidth( const wxWindow& win, const wxArrayString& strings );
 
 #endif // SPRINGLOBBY_HEADERGUARD_CONTROLS_H
 
