@@ -207,6 +207,7 @@ ENDIF( OPTION_TORRENT_SYSTEM )
 INCLUDE_DIRECTORIES(${SpringLobby_SOURCE_DIR} ${Settings_SOURCE_DIR} )
 
 SET(SpringLobbySrc
+	src/gui/gradientpanel.cpp
 	src/gui/wxgradientbutton.cpp
 	src/gui/skirmish_dialog.cpp
 	src/gui/wxbackgroundimage.cpp

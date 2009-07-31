@@ -407,6 +407,8 @@ libtorrent_headers = \
 
 
 springlobby_SOURCES = \
+	src/gui/gradientpanel.h \
+	src/gui/gradientpanel.cpp \
 	src/gui/wxgradientbutton.cpp \
 	src/gui/wxgradientbutton.h \
 	src/gui/skirmish_dialog.h \

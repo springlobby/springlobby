@@ -4,7 +4,7 @@
 
 #include <wx/intl.h>
 
-#include <wx/panel.h>
+#include "gradientpanel.h"
 #include "../mmoptionswrapper.h"
 #include "../singleplayerbattle.h"
 
@@ -21,7 +21,7 @@ class SimpleFront;
 ///////////////////////////////////////////////////////////////////////////////
 /// Class skirmish_dialog
 ///////////////////////////////////////////////////////////////////////////////
-class SkirmishDialog : public wxPanel
+class SkirmishDialog : public wxGradientPanel
 {
 	private:
 
@@ -32,9 +32,6 @@ class SkirmishDialog : public wxPanel
 		wxChoice* m_map;
 		wxChoice* m_sides;
 		wxCheckBox* m_map_random;
-		wxButton* m_back;
-		wxButton* m_advanced;
-		wxButton* m_start;
 
 		OptionsWrapper& m_mod_customs;
 		const wxString m_modname;
@@ -43,14 +40,6 @@ class SkirmishDialog : public wxPanel
 
 
 		NoGuiSinglePlayerBattle m_battle;
-
-
-		// Virtual event handlers, overide them in your derived class
-		virtual void OnBack( wxCommandEvent& event );
-		virtual void OnAdvanced( wxCommandEvent& event );
-		virtual void OnStart( wxCommandEvent& event );
-		virtual void OnRadioBox( wxCommandEvent& event );
-		virtual void OnRandom( wxCommandEvent& event );
 
         typedef std::map< wxString, OptionsWrapper >
             SkirmishMap;
@@ -61,6 +50,12 @@ class SkirmishDialog : public wxPanel
 		SkirmishDialog( SimpleFront* parent, const wxIcon& app_icon, const wxBitmap& bg_img,
                         const wxString& modname, OptionsWrapper& mod_customs, wxWindowID id = wxID_ANY );
 		~SkirmishDialog();
+
+        virtual void OnBack( wxCommandEvent& event );
+		virtual void OnAdvanced( wxCommandEvent& event );
+		virtual void OnStart( wxCommandEvent& event );
+		virtual void OnRadioBox( wxCommandEvent& event );
+		virtual void OnRandom( wxCommandEvent& event );
 
 };
 

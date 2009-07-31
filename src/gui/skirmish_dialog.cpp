@@ -9,6 +9,8 @@
 #include <wx/sizer.h>
 #include <wx/button.h>
 #include <wx/settings.h>
+#include <wx/dc.h>
+#include <wx/dcclient.h>
 
 #include "../springunitsync.h"
 #include "../springunitsynclib.h"
@@ -21,15 +23,20 @@
 #include "wxbackgroundimage.h"
 #include "simplefront.h"
 
-///////////////////////////////////////////////////////////////////////////
+//BEGIN_EVENT_TABLE(SkirmishDialog,wxPanel)
+//    EVT_ERASE_BACKGROUND(SkirmishDialog::OnEraseBackground)
+//END_EVENT_TABLE()
 
 SkirmishDialog::SkirmishDialog( SimpleFront* parent, const wxIcon& app_icon, const wxBitmap& bg_img, const wxString& modname, OptionsWrapper& mod_customs, wxWindowID id )
-    : wxPanel( (wxWindow*)parent, id ),
+    : wxGradientPanel( (wxWindow*)parent, id ),
     m_mod_customs( mod_customs ),
     m_modname( modname ),
     m_bg_img( bg_img ),
     m_parent( parent )
 {
+////    Connect(wxEVT_ERASE_BACKGROUND, wxEraseEventHandler(SkirmishDialog::OnEraseBackground), NULL, this);
+//    Connect(wxEVT_PAINT, wxPaintEventHandler(SkirmishDialog::OnPanelHeaderPaint), NULL, this);
+
 
 	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
 
@@ -100,52 +107,31 @@ SkirmishDialog::SkirmishDialog( SimpleFront* parent, const wxIcon& app_icon, con
 	m_sides->SetSelection( 0 );
 	sides_sizer->Add( m_sides, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
-    wxBoxSizer* button_sizer = new wxBoxSizer( wxHORIZONTAL );
-	m_back = new wxButton( this, wxID_ANY, _("Back"), wxDefaultPosition, wxDefaultSize, 0 );
-	button_sizer->Add( m_back, 0, wxALL, 5 );
-
-	m_advanced = new wxButton( this, wxID_ANY, _("Advanced setup"), wxDefaultPosition, wxDefaultSize, 0 );
-	button_sizer->Add( m_advanced, 0, wxALL, 5 );
-
-	m_start = new wxButton( this, wxID_ANY, _("Start"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_start->SetDefault();
-	button_sizer->Add( m_start, 0, wxALL, 5 );
 
 	wxBoxSizer* all_sizer = new wxBoxSizer( wxVERTICAL );
 	all_sizer->Add( radio_sizer, 0, wxALL, 0 );
 	all_sizer->Add( map_sizer, 0, wxALL, 0 );
 	all_sizer->Add( sides_sizer, 0, wxALL, 0 );
-	all_sizer->Add( button_sizer, 0, wxALL, 0 );
-
-//	all_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
-//	all_sizer->Add( all_panel, 0 , wxALIGN_CENTER, 0 );
-//	all_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
 
 	this->SetSizer( all_sizer );
 
 
-    PushEventHandler( new wxBackgroundBitmap( m_bg_img ) );
     SetSize( m_bg_img.GetWidth(), m_bg_img.GetHeight() );
     this->Layout();
 
 	this->Centre( wxBOTH );
 
 	// Connect Events
-	m_back->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SkirmishDialog::OnBack ), NULL, this );
-	m_advanced->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SkirmishDialog::OnAdvanced ), NULL, this );
-	m_start->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SkirmishDialog::OnStart ), NULL, this );
 	m_radioBox1->Connect( wxEVT_COMMAND_RADIOBOX_SELECTED, wxCommandEventHandler( SkirmishDialog::OnRadioBox ), NULL, this );
 	m_map_random->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SkirmishDialog::OnRandom ), NULL, this );
 
 	std::srand(time(NULL));
+
 }
 
 SkirmishDialog::~SkirmishDialog()
 {
 	// Disconnect Events
-	m_back->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SkirmishDialog::OnBack ), NULL, this );
-	m_advanced->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SkirmishDialog::OnAdvanced ), NULL, this );
-	m_start->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SkirmishDialog::OnStart ), NULL, this );
 	m_radioBox1->Disconnect( wxEVT_COMMAND_RADIOBOX_SELECTED, wxCommandEventHandler( SkirmishDialog::OnRadioBox ), NULL, this );
 	m_map_random->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SkirmishDialog::OnRandom ), NULL, this );
 }
@@ -254,3 +240,35 @@ void SkirmishDialog::OnStart( wxCommandEvent& event )
     m_battle.SetHostMap( m_map->GetStringSelection() , _T("") );
     m_battle.StartSpring();
 }
+
+
+//void SkirmishDialog::OnEraseBackground( wxEraseEvent& event )
+//{
+//        wxDC* dc = event.GetDC();
+//        wxRect rect = GetClientRect();
+//        dc->GradientFillLinear(rect,wxColour(102,153,102), wxColour(204,255,204),wxNORTH);
+//        assert(false);
+////        int*i=0; *i=9;
+//
+//        wxFont font(12, wxSWISS, wxFONTSTYLE_ITALIC, wxFONTWEIGHT_BOLD, FALSE, wxT("Verdana"));
+//        dc->SetFont(font);
+//        dc->SetBackgroundMode(wxTRANSPARENT);
+//        dc->SetTextForeground(*wxWHITE);
+//        wxString msg = wxT("Some Text");
+////        dc->DrawText(msg, wxPoint(10, 10));
+//        RefreshRect(rect, false);
+//}
+
+//void SkirmishDialog::OnPanelHeaderPaint( wxPaintEvent& event )
+//{
+//        wxPaintDC dc(this);          // Must always do this as per documentation
+//
+//        wxRect rect = GetClientRect();
+//        dc.GradientFillLinear(rect,wxColour(0,0,0), wxColour(55,55,124),wxNORTH);
+//
+//        wxFont font(12, wxSWISS, wxFONTSTYLE_ITALIC, wxFONTWEIGHT_BOLD, FALSE, wxT("Verdana"));
+//        dc.SetFont(font);
+//        dc.SetBackgroundMode(wxTRANSPARENT);
+//        dc.SetTextForeground(*wxWHITE);
+//        event.Skip();
+//}

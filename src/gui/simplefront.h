@@ -11,6 +11,7 @@ class SkirmishDialog;
 class wxBoxSizer;
 class wxGradientButton;
 
+
 #include "../mmoptionswrapper.h"
 #include <wx/frame.h>
 #include <wx/bitmap.h>
@@ -39,6 +40,13 @@ protected:
 
     wxBoxSizer* m_button_sizer;
     wxBoxSizer* m_skirmish_sizer;
+    wxBoxSizer* m_sp_button_sizer;
+
+    wxBoxSizer* bSizer1;
+
+    wxGradientButton* m_back;
+    wxGradientButton* m_advanced;
+    wxGradientButton* m_start;
 
     wxGradientButton* m_sp;
     wxGradientButton* m_mp;

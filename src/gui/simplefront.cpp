@@ -38,10 +38,7 @@ m_modname( modname )
     this->SetSizeHints( wxDefaultSize, wxDefaultSize );
 	this->SetExtraStyle( wxFRAME_EX_METAL );
 
-	wxBoxSizer* bSizer1;
 	bSizer1 = new wxBoxSizer( wxVERTICAL );
-
-
 	bSizer1->Add( 0, 0, 1, wxEXPAND, 5 );
 
 	m_button_sizer = new wxBoxSizer( wxHORIZONTAL );
@@ -61,11 +58,23 @@ m_modname( modname )
 
 	bSizer1->Add( m_button_sizer, 0, wxALIGN_CENTER|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 
+    m_sp_button_sizer = new wxBoxSizer( wxHORIZONTAL );
+	m_back = new wxGradientButton( this, wxID_ANY, _("Back"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_sp_button_sizer->Add( m_back, 0, wxALL, 5 );
+
+	m_advanced = new wxGradientButton( this, wxID_ANY, _("Advanced setup"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_sp_button_sizer->Add( m_advanced, 0, wxALL, 5 );
+
+	m_start = new wxGradientButton( this, wxID_ANY, _("Start"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_sp_button_sizer->Add( m_start, 0, wxALL, 5 );
+    m_sp_button_sizer->Show( false );
+
+    bSizer1->Add( m_sp_button_sizer, 0, wxALIGN_CENTER|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
+
 	m_skirmish_sizer = new wxBoxSizer( wxHORIZONTAL );
 	m_skirmish = new SkirmishDialog( this, m_frame_ico, m_bg_img, m_modname, m_mod_customs );
-	m_skirmish_sizer->Add( m_skirmish, 0, wxALL, 0 );
+	m_skirmish_sizer->Add( m_skirmish, 0, wxALIGN_BOTTOM, 0 );
 	m_skirmish_sizer->Show( false );
-	bSizer1->Add( m_skirmish_sizer, 0, wxALIGN_CENTER|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	bSizer1->Add( 0, 0, 1, wxEXPAND, 5 );
 
@@ -79,6 +88,10 @@ m_modname( modname )
 	m_mp->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SimpleFront::OnMultiplayer ), NULL, this );
 	m_settings->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SimpleFront::OnSettings ), NULL, this );
 	m_exit->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SimpleFront::OnExit ), NULL, this );
+
+    m_back->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SkirmishDialog::OnBack ), NULL, m_skirmish );
+	m_advanced->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SkirmishDialog::OnAdvanced ), NULL, m_skirmish );
+	m_start->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SkirmishDialog::OnStart ), NULL, m_skirmish );
 
     wxString bg_img_path = m_mod_customs.getSingleValue( _T("bg_image") );
     m_bg_img = wxBitmap( usync().GetImage( m_modname, bg_img_path ) );
@@ -94,6 +107,11 @@ SimpleFront::~SimpleFront()
 	m_mp->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SimpleFront::OnMultiplayer ), NULL, this );
 	m_settings->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SimpleFront::OnSettings ), NULL, this );
 	m_exit->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SimpleFront::OnExit ), NULL, this );
+
+    m_back->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SkirmishDialog::OnBack ), NULL, m_skirmish );
+	m_advanced->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SkirmishDialog::OnAdvanced ), NULL, m_skirmish );
+	m_start->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SkirmishDialog::OnStart ), NULL, m_skirmish );
+
 }
 
 void SimpleFront::OnSingleplayer( wxCommandEvent& event )
@@ -105,6 +123,12 @@ void SimpleFront::ShowSP( bool show )
 {
     m_button_sizer->Show( !show );
 	m_skirmish_sizer->Show( show );
+	m_sp_button_sizer->Show( show );
+    bSizer1->Detach( 3 );
+    if ( show )
+        bSizer1->Add( m_skirmish_sizer, 1, wxALIGN_BOTTOM|wxALIGN_CENTER_HORIZONTAL, 0 );
+    else
+        bSizer1->Add( 0, 0, 1, wxEXPAND, 5 );
 	Layout();
 }
 
