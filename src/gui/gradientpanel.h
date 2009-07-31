@@ -86,12 +86,6 @@ class wxGradientPanel: public wxPanel
 /// wxEVT_ERASE_BACKGROUND event handler for ID_WXGRADIENTBUTTON
 		void OnEraseBackground( wxEraseEvent& event );
 
-/// wxEVT_LEFT_DOWN event handler for ID_WXGRADIENTBUTTON
-		void OnLeftDown( wxMouseEvent& event );
-
-/// wxEVT_LEFT_UP event handler for ID_WXGRADIENTBUTTON
-		void OnLeftUp( wxMouseEvent& event );
-
 ////@end wxGradientPanel event handler declarations
 
 ////@begin wxGradientPanel member function declarations

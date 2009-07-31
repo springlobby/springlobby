@@ -26,7 +26,7 @@ class SkirmishDialog : public wxGradientPanel
 	private:
 
 	protected:
-		wxRadioBox* m_radioBox1;
+		wxChoice* m_radioBox1;
 		wxStaticText* m_map_label;
 		wxStaticText* m_sides_label;
 		wxChoice* m_map;

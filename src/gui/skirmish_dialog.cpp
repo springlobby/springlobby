@@ -50,9 +50,9 @@ SkirmishDialog::SkirmishDialog( SimpleFront* parent, const wxIcon& app_icon, con
     for ( IUnitSync::OptionMapListConstIter it = m_mod_customs.m_opts[optFlag].list_map.begin(); it != m_mod_customs.m_opts[optFlag].list_map.end(); ++it) {
 	    mmOptionList current = it->second;
 	    if ( _T("scenarios") == current.key ) {
-            m_radioBox1 = new wxRadioBox( this, wxID_ANY, _("Select skirmish setup"), wxDefaultPosition, wxDefaultSize, current.cbx_choices, 1, wxRA_SPECIFY_ROWS );
+            m_radioBox1 = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, current.cbx_choices, 0 );
             m_radioBox1->SetSelection( 0 );
-            radio_sizer->Add( m_radioBox1, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 10 );
+            radio_sizer->Add( m_radioBox1, 0, wxEXPAND|wxALL|wxALIGN_CENTER, 10 );
 
             wxString tooltip;
             int i = 0;

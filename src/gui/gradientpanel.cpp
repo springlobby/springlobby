@@ -40,9 +40,6 @@ BEGIN_EVENT_TABLE( wxGradientPanel, wxPanel )
 	EVT_SIZE( wxGradientPanel::OnSize )
 	EVT_PAINT( wxGradientPanel::OnPaint )
 	EVT_ERASE_BACKGROUND( wxGradientPanel::OnEraseBackground )
-	EVT_LEFT_DOWN( wxGradientPanel::OnLeftDown )
-	EVT_LEFT_UP( wxGradientPanel::OnLeftUp )
-
 	////@end wxGradientPanel event table entries
 
 END_EVENT_TABLE()
@@ -202,37 +199,6 @@ void wxGradientPanel::OnPaint( wxPaintEvent& event )
 		clientRect.Offset( 1, 1 );
 	}
 
-}
-
-/*!
-* wxEVT_LEFT_DOWN event handler for ID_WXGRADIENTBUTTON
-*/
-
-void wxGradientPanel::OnLeftDown( wxMouseEvent& event )
-{
-	if ( GetCapture() != this )
-	{
-		CaptureMouse();
-		Refresh();
-	}
-}
-
-/*!
-* wxEVT_LEFT_UP event handler for ID_WXGRADIENTBUTTON
-*/
-
-void wxGradientPanel::OnLeftUp( wxMouseEvent& event )
-{
-	if ( GetCapture() == this )
-	{
-		ReleaseMouse();
-		Refresh();
-		if ( GetClientRect().Contains( event.GetPosition() ) )
-		{
-			wxCommandEvent evt( wxEVT_COMMAND_BUTTON_CLICKED, GetId() );
-			GetEventHandler()->AddPendingEvent( evt );
-		}
-	}
 }
 
 /*!
