@@ -49,7 +49,6 @@
 #include "updater/updater.h"
 #include "globalsmanager.h"
 #include "Helper/wxTranslationHelper.h"
-#include "Helper/tasclientimport.h"
 #include "playback/playbacktraits.h"
 #include "playback/playbacktab.h"
 #include "updater/versionchecker.h"

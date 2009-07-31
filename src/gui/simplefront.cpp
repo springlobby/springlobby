@@ -5,6 +5,7 @@
 #include "../images/s44.png.h"
 #include "../ui.h"
 #include "../springunitsync.h"
+#include "../springunitsynclib.h"
 #include "../mainwindow.h"
 #include "../settings.h"
 #include "../settings++/frame.h"
@@ -18,6 +19,7 @@
 #include <wx/settings.h>
 #include <wx/sizer.h>
 #include <wx/frame.h>
+#include "wxgradientbutton.h"
 
 SimpleFront::SimpleFront( wxWindow* parent,const wxString& modname )
 : wxFrame( parent, wxID_ANY, modname, wxDefaultPosition, wxSize( -1,-1 ), wxCAPTION|wxCLOSE_BOX|wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL ),
@@ -25,6 +27,7 @@ m_settings_frame( 0 ),
 m_skirmish( 0 ),
 m_modname( modname )
 {
+    susynclib().SetCurrentMod( m_modname );
     m_mod_customs.loadOptions( OptionsWrapper::ModCustomizations, m_modname );
 
 	wxString icon_img_path = m_mod_customs.getSingleValue( _T("icon") );
@@ -43,17 +46,17 @@ m_modname( modname )
 
 	m_button_sizer = new wxBoxSizer( wxHORIZONTAL );
 
-	m_sp = new wxButton( this, wxID_ANY, _("Singleplayer"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_sp->SetDefault();
+	m_sp = new wxGradientButton( this, wxID_ANY, _("Singleplayer"), wxDefaultPosition, wxDefaultSize, 0 );
+//	m_sp->SetDefault();
 	m_button_sizer->Add( m_sp, 0, wxALL, 5 );
 
-	m_mp = new wxButton( this, wxID_ANY, _("Multiplayer"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_mp = new wxGradientButton( this, wxID_ANY, _("Multiplayer"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_button_sizer->Add( m_mp, 0, wxALL, 5 );
 
-	m_settings = new wxButton( this, wxID_ANY, _("Settings"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_settings = new wxGradientButton( this, wxID_ANY, _("Settings"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_button_sizer->Add( m_settings, 0, wxALL, 5 );
 
-	m_exit = new wxButton( this, wxID_ANY, _("Exit"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_exit = new wxGradientButton( this, wxID_ANY, _("Exit"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_button_sizer->Add( m_exit, 0, wxALL, 5 );
 
 	bSizer1->Add( m_button_sizer, 0, wxALIGN_CENTER|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );

@@ -44,7 +44,8 @@
 #include "unitsyncthread.h"
 #include "agreementdialog.h"
 #ifdef __WXMSW__
-#include "updater/updater.h"
+    #include "updater/updater.h"
+    #include "Helper/tasclientimport.h"
 #endif
 
 #include "utils/customdialogs.h"
