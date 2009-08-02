@@ -168,7 +168,7 @@ void SimpleFront::Close()
 
 void SimpleFront::OnHelp( wxCommandEvent& event )
 {
-    OpenWebBrowser  (_T(""));
+    OpenWebBrowser( SLcustomizations().GetHelpUrl() );
 
 }
 
