@@ -52,6 +52,7 @@ m_skirmish( 0 )
 
     m_help = new wxGradientButton( this, wxID_ANY, _("Help"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_button_sizer->Add( m_help, 0, wxALL, 5 );
+    m_help->Show( !SLcustomizations().GetHelpUrl().IsEmpty() );
 
 	m_exit = new wxGradientButton( this, wxID_ANY, _("Exit"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_button_sizer->Add( m_exit, 0, wxALL, 5 );
