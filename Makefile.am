@@ -407,6 +407,8 @@ libtorrent_headers = \
 
 
 springlobby_SOURCES = \
+	src/customizations.h \
+	src/customizations.cpp \
 	src/gui/gradientpanel.h \
 	src/gui/gradientpanel.cpp \
 	src/gui/wxgradientbutton.cpp \

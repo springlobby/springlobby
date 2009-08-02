@@ -34,10 +34,7 @@ protected:
 
 	settings_frame* m_settings_frame;
 	SkirmishDialog* m_skirmish;
-	OptionsWrapper m_mod_customs;
 	const wxString m_modname;
-	wxBitmap m_bg_img;
-	wxIcon m_frame_ico;
 
     wxBoxSizer* m_button_sizer;
     wxBoxSizer* m_skirmish_sizer;
@@ -57,7 +54,7 @@ protected:
 
 public:
 	/** Constructor */
-	SimpleFront( wxWindow* parent, const wxString& modname );
+	SimpleFront( wxWindow* parent );
 	~SimpleFront();
 
     void ShowSP( bool show );

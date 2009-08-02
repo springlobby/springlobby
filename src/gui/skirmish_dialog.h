@@ -34,11 +34,8 @@ class SkirmishDialog : public wxGradientPanel
 		wxChoice* m_sides;
 		wxCheckBox* m_map_random;
 
-		OptionsWrapper& m_mod_customs;
-		const wxString m_modname;
-		const wxBitmap& m_bg_img;
 		SimpleFront* m_parent;
-
+        OptionsWrapper m_mod_customs;
 
 		NoGuiSinglePlayerBattle m_battle;
 
@@ -48,8 +45,7 @@ class SkirmishDialog : public wxGradientPanel
         SkirmishMap m_skirmishes;
 
 	public:
-		SkirmishDialog( SimpleFront* parent, const wxIcon& app_icon, const wxBitmap& bg_img,
-                        const wxString& modname, OptionsWrapper& mod_customs, wxWindowID id = wxID_ANY );
+		SkirmishDialog( SimpleFront* parent, wxWindowID id = wxID_ANY );
 		~SkirmishDialog();
 
         virtual void OnBack( wxCommandEvent& event );

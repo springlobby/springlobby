@@ -54,6 +54,7 @@
 #include "updater/versionchecker.h"
 #include "updater/updatermainwindow.h"
 #include "defines.h"
+#include "customizations.h"
 
 #include "gui/simplefront.h"
 
@@ -165,11 +166,14 @@ bool SpringLobbyApp::OnInit()
 
     CacheAndSettingsSetup();
 
-    if ( m_start_simple_interface && !m_customizer_modname.IsEmpty() ) {
-        SimpleFront* sp = new SimpleFront( 0, m_customizer_modname );
-        SetTopWindow( sp );
-        sp->Show();
-        return true;
+    if ( !m_customizer_modname.IsEmpty() ) {
+        SLcustomizations().Init( m_customizer_modname );
+        if ( m_start_simple_interface ) {
+            SimpleFront* sp = new SimpleFront( 0 );
+            SetTopWindow( sp );
+            sp->Show();
+            return true;
+        }
     }
 
     ui().ShowMainWindow();

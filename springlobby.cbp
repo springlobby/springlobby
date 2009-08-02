@@ -2,6 +2,8 @@
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="6" />
 	<Project>
+	<Unit filename="src/customizations.h" />
+	<Unit filename="src/customizations.cpp" />
 	<Unit filename="src/gui/gradientpanel.h" />
 	<Unit filename="src/gui/gradientpanel.cpp" />
 		<Option title="springlobby" />

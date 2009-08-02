@@ -24,21 +24,14 @@
 #include "wxbackgroundimage.h"
 #include "simplefront.h"
 #include "../utils/controls.h"
+#include "../customizations.h"
 
-//BEGIN_EVENT_TABLE(SkirmishDialog,wxPanel)
-//    EVT_ERASE_BACKGROUND(SkirmishDialog::OnEraseBackground)
-//END_EVENT_TABLE()
 
-SkirmishDialog::SkirmishDialog( SimpleFront* parent, const wxIcon& app_icon, const wxBitmap& bg_img, const wxString& modname, OptionsWrapper& mod_customs, wxWindowID id )
+SkirmishDialog::SkirmishDialog( SimpleFront* parent, wxWindowID id )
     : wxGradientPanel( (wxWindow*)parent, id ),
-    m_mod_customs( mod_customs ),
-    m_modname( modname ),
-    m_bg_img( bg_img ),
-    m_parent( parent )
+    m_parent( parent ),
+    m_mod_customs( SLcustomizations().GetCustomizations() )
 {
-////    Connect(wxEVT_ERASE_BACKGROUND, wxEraseEventHandler(SkirmishDialog::OnEraseBackground), NULL, this);
-//    Connect(wxEVT_PAINT, wxPaintEventHandler(SkirmishDialog::OnPanelHeaderPaint), NULL, this);
-
     wxFlexGridSizer* fgSizer1;
 	fgSizer1 = new wxFlexGridSizer( 3, 2, 0, 0 );
 	fgSizer1->SetFlexibleDirection( wxBOTH );
@@ -46,8 +39,8 @@ SkirmishDialog::SkirmishDialog( SimpleFront* parent, const wxIcon& app_icon, con
 
 	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
 
-    m_battle.SetHostMod( m_modname, wxEmptyString );
-    m_battle.CustomBattleOptions().loadOptions( OptionsWrapper::ModOption, m_modname );
+    m_battle.SetHostMod( SLcustomizations().GetModname(), wxEmptyString );
+    m_battle.CustomBattleOptions().loadOptions( OptionsWrapper::ModOption, SLcustomizations().GetModname() );
 	const wxString sk_dir = m_mod_customs.getSingleValue( _T("skirmish_directory"), OptionsWrapper::ModCustomizations );
 
     //this block populates the radiobox and loads the skirmish options into the map
@@ -70,7 +63,7 @@ SkirmishDialog::SkirmishDialog( SimpleFront* parent, const wxIcon& app_icon, con
                 tooltip+= _T("\n") + itor->name + _T(": ") + itor->desc;
                 OptionsWrapper temp;
                 wxString filename = sk_dir + _T("/") + itor->key + _T(".lua") ;
-                temp.loadOptions( OptionsWrapper::SkirmishOptions, m_modname, filename );
+                temp.loadOptions( OptionsWrapper::SkirmishOptions, SLcustomizations().GetModname(), filename );
                 m_skirmishes[current.cbx_choices[i]] =  temp;
                 i++;
             }
@@ -113,7 +106,7 @@ SkirmishDialog::SkirmishDialog( SimpleFront* parent, const wxIcon& app_icon, con
 	m_sides_label->Wrap( -1 );
 	fgSizer1->Add( m_sides_label, 0, wxALIGN_CENTER_VERTICAL| wxALL, 5 );
 
-	wxArrayString m_sidesChoices = suggested_sides.cbx_choices.Count() > 0 ? suggested_sides.cbx_choices : usync().GetSides( m_modname ) ;
+	wxArrayString m_sidesChoices = suggested_sides.cbx_choices.Count() > 0 ? suggested_sides.cbx_choices : usync().GetSides( SLcustomizations().GetModname() ) ;
 	m_sides = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_sidesChoices, 0 );
 	m_sides->SetSelection( 0 );
 	fgSizer1->Add( m_sides, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
@@ -127,7 +120,7 @@ SkirmishDialog::SkirmishDialog( SimpleFront* parent, const wxIcon& app_icon, con
 	this->SetSizer( fgSizer1 );
 
 
-    SetSize( m_bg_img.GetWidth(), m_bg_img.GetHeight() );
+//    SetSize( m_bg_img.GetWidth(), m_bg_img.GetHeight() );
     this->Layout();
 
 	this->Centre( wxBOTH );
@@ -164,7 +157,7 @@ void SkirmishDialog::OnScenarioChoice( wxCommandEvent& event )
     m_sides->Clear();
     OptionsWrapper::GameOption optFlag = OptionsWrapper::SkirmishOptions;
     wxArrayString maps = usync().GetMapList();
-    wxArrayString sides = usync().GetSides( m_modname );
+    wxArrayString sides = usync().GetSides( SLcustomizations().GetModname() );
     OptionsWrapper map_op = m_skirmishes[m_scenario_choice->GetStringSelection()];
     for ( IUnitSync::OptionMapListConstIter it = map_op.m_opts[optFlag].list_map.begin(); it != map_op.m_opts[optFlag].list_map.end(); ++it) {
 	    mmOptionList current = it->second;

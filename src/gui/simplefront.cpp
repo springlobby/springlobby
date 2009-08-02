@@ -10,6 +10,7 @@
 #include "../settings.h"
 #include "../settings++/frame.h"
 #include "skirmish_dialog.h"
+#include "../customizations.h"
 
 #include <wx/app.h>
 #include <wx/image.h>
@@ -20,20 +21,16 @@
 #include <wx/sizer.h>
 #include <wx/frame.h>
 #include "wxgradientbutton.h"
+#include "../customizations.h"
 
-SimpleFront::SimpleFront( wxWindow* parent,const wxString& modname )
-: wxFrame( parent, wxID_ANY, modname, wxDefaultPosition, wxSize( -1,-1 ), wxCAPTION|wxCLOSE_BOX|wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL ),
+
+SimpleFront::SimpleFront( wxWindow* parent )
+: wxFrame( parent, wxID_ANY, _T(""), wxDefaultPosition, wxSize( -1,-1 ), wxCAPTION|wxCLOSE_BOX|wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL ),
 m_settings_frame( 0 ),
-m_skirmish( 0 ),
-m_modname( modname )
+m_skirmish( 0 )
 {
-    susynclib().SetCurrentMod( m_modname );
-    m_mod_customs.loadOptions( OptionsWrapper::ModCustomizations, m_modname );
-
-	wxString icon_img_path = m_mod_customs.getSingleValue( _T("icon") );
-	wxBitmap icon_bmp (usync().GetImage( m_modname, icon_img_path ) );
-	m_frame_ico.CopyFromBitmap( icon_bmp );
-    SetIcon( m_frame_ico );
+    SetIcon( SLcustomizations().GetAppIcon() );
+    SetTitle( SLcustomizations().GetModname() );
 
     this->SetSizeHints( wxDefaultSize, wxDefaultSize );
 	this->SetExtraStyle( wxFRAME_EX_METAL );
@@ -75,7 +72,7 @@ m_modname( modname )
     bSizer1->Add( m_sp_button_sizer, 0, wxALIGN_CENTER|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	m_skirmish_sizer = new wxBoxSizer( wxHORIZONTAL );
-	m_skirmish = new SkirmishDialog( this, m_frame_ico, m_bg_img, m_modname, m_mod_customs );
+	m_skirmish = new SkirmishDialog( this, -1 );
 	m_skirmish_sizer->Add( m_skirmish, 0, wxALIGN_BOTTOM, 0 );
 	m_skirmish_sizer->Show( false );
 
@@ -97,11 +94,9 @@ m_modname( modname )
 	m_advanced->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SkirmishDialog::OnAdvanced ), NULL, m_skirmish );
 	m_start->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SkirmishDialog::OnStart ), NULL, m_skirmish );
 
-    wxString bg_img_path = m_mod_customs.getSingleValue( _T("bg_image") );
-    m_bg_img = wxBitmap( usync().GetImage( m_modname, bg_img_path ) );
-    SetSize( m_bg_img.GetWidth(), m_bg_img.GetHeight() );
+    SetSize( SLcustomizations().GetBackgroundSize() );
     Layout();
-    PushEventHandler( new wxBackgroundBitmap( m_bg_img ) );
+    PushEventHandler( new wxBackgroundBitmap( SLcustomizations().GetBackground() ) );
 
 }
 
