@@ -26,6 +26,7 @@ protected:
 	void OnSingleplayer( wxCommandEvent& event );
 	void OnMultiplayer( wxCommandEvent& event );
 	void OnSettings( wxCommandEvent& event );
+	void OnHelp( wxCommandEvent& event );
 	void OnExit( wxCommandEvent& event );
 	void OnSkipChecked( wxCommandEvent& event );
 
@@ -52,6 +53,7 @@ protected:
     wxGradientButton* m_mp;
     wxGradientButton* m_settings;
     wxGradientButton* m_exit;
+    wxGradientButton* m_help;
 
 public:
 	/** Constructor */
