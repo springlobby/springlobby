@@ -44,16 +44,22 @@ SkirmishDialog::SkirmishDialog( SimpleFront* parent, wxWindowID id )
 	const wxString sk_dir = m_mod_customs.getSingleValue( _T("skirmish_directory"), OptionsWrapper::ModCustomizations );
 
     //this block populates the radiobox and loads the skirmish options into the map
-    wxBoxSizer* radio_sizer = new wxBoxSizer( wxVERTICAL );
 	OptionsWrapper::GameOption optFlag = OptionsWrapper::ModCustomizations;
     for ( IUnitSync::OptionMapListConstIter it = m_mod_customs.m_opts[optFlag].list_map.begin(); it != m_mod_customs.m_opts[optFlag].list_map.end(); ++it) {
 	    mmOptionList current = it->second;
 	    if ( _T("scenarios") == current.key ) {
-            m_scenario_choice = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxSize( 1.5*GetMaxStringWidth( *this, current.cbx_choices ), -1 ), current.cbx_choices, 0 );
+            m_scenario_choice = new wxChoice( this, wxID_ANY, wxDefaultPosition,wxDefaultSize, current.cbx_choices, wxTRANSPARENT_WINDOW );
+            #ifdef __WXMSW__ //another msw fail: control will not size correctly when items are not added manually
+                m_scenario_choice->Clear();
+                for( size_t u = 0; u < current.cbx_choices.Count(); ++u ) {
+                        m_scenario_choice->Append( current.cbx_choices[u] );
+                }
+            #endif
             m_scenario_choice->SetSelection( 0 );
-            wxStaticText* label = new wxStaticText( this, wxID_ANY, _("Scenario"), wxDefaultPosition, wxDefaultSize, 0 );
+            wxStaticText* label = new wxStaticText( this, wxID_ANY, _("Scenario"), wxDefaultPosition, wxDefaultSize, wxTRANSPARENT_WINDOW );
             fgSizer1->Add( label, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-            fgSizer1->Add( m_scenario_choice, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 5 );
+//            m_scenario_choice->SetSize( wxSize( 1.5 * GetMaxStringWidth( *this, current.cbx_choices ), 30 ) );
+            fgSizer1->Add( m_scenario_choice, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 
             wxString tooltip;
@@ -101,7 +107,6 @@ SkirmishDialog::SkirmishDialog( SimpleFront* parent, wxWindowID id )
 //	fgSizer1->Add( m_map_random, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
 
-    wxBoxSizer* sides_sizer = new wxBoxSizer( wxHORIZONTAL );
 	m_sides_label = new wxStaticText( this, wxID_ANY, _("Faction"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_sides_label->Wrap( -1 );
 	fgSizer1->Add( m_sides_label, 0, wxALIGN_CENTER_VERTICAL| wxALL, 5 );
