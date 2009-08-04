@@ -47,8 +47,9 @@
 #include "playback/playbacktraits.h"
 #include "playback/playbacktab.h"
 #ifndef NO_TORRENT_SYSTEM
-#include "maintorrenttab.h"
-#include "torrentwrapper.h"
+	#include "maintorrenttab.h"
+	#include "torrentwrapper.h"
+	#include <iostream>
 #endif
 #include "user.h"
 
