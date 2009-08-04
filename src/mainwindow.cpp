@@ -26,6 +26,7 @@
 #include <wx/aboutdlg.h>
 
 #include <stdexcept>
+#include <iostream>
 
 #include "aui/auimanager.h"
 #include "aui/artprovider.h"
@@ -49,7 +50,6 @@
 #ifndef NO_TORRENT_SYSTEM
 	#include "maintorrenttab.h"
 	#include "torrentwrapper.h"
-	#include <iostream>
 #endif
 #include "user.h"
 
