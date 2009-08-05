@@ -122,7 +122,7 @@ MainWindow::MainWindow( Ui& ui )
 {
   SetIcon( wxIcon(springlobby_xpm) );
 
-  GetAui().manager = new wxAuiManager( this );
+  GetAui().manager = new AuiManagerContainer::ManagerType( this );
 
   wxMenu *menuFile = new wxMenu;
   menuFile->Append(MENU_CONNECT, _("&Connect..."));
@@ -269,7 +269,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::OnClose( wxCloseEvent& /*unused*/ )
 {
-  wxAuiManager* manager=GetAui().manager;
+  AuiManagerContainer::ManagerType* manager=GetAui().manager;
   if(manager){
     GetAui().manager=NULL;
     manager->UnInit();
