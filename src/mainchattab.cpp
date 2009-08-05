@@ -24,6 +24,7 @@
 #include "server.h"
 #include "settings.h"
 #include "aui/artprovider.h"
+#include "aui/slbook.h"
 
 #include "images/close.xpm"
 #include "images/server.xpm"
@@ -47,7 +48,7 @@ MainChatTab::MainChatTab( wxWindow* parent, Ui& ui )
 
   m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
-  m_chat_tabs = new wxAuiNotebook( this, CHAT_TABS, wxDefaultPosition, wxDefaultSize, wxAUI_NB_DEFAULT_STYLE | wxAUI_NB_TOP | wxAUI_NB_TAB_EXTERNAL_MOVE | wxAUI_NB_WINDOWLIST_BUTTON );
+  m_chat_tabs = new SLNotebook( this, CHAT_TABS, wxDefaultPosition, wxDefaultSize, wxAUI_NB_DEFAULT_STYLE | wxAUI_NB_TOP | wxAUI_NB_TAB_EXTERNAL_MOVE | wxAUI_NB_WINDOWLIST_BUTTON );
   m_chat_tabs ->SetArtProvider(new SLArtProvider);
 
   wxBitmap userchat (userchat_xpm); //*charArr2wxBitmap(userchat_png, sizeof(userchat_png) );

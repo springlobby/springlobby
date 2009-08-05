@@ -8,7 +8,7 @@ class wxCommandEvent;
 class wxBoxSizer;
 class wxImageList;
 class wxNotebook;
-class wxAuiNotebook;
+class SLNotebook;
 class SpringOptionsTab;
 class ChatOptionsTab;
 class wxButton;
@@ -42,7 +42,7 @@ protected:
 
     wxImageList* m_imagelist;
 
-    wxAuiNotebook* m_tabs;
+    SLNotebook* m_tabs;
 
     SpringOptionsTab* m_spring_opts;
     ChatOptionsTab* m_chat_opts;

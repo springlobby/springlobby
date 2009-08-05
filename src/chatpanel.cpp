@@ -27,6 +27,7 @@
 #include <wx/stattext.h>
 
 #include "aui/auimanager.h"
+#include "aui/slbook.h"
 #include "channel/channel.h"
 #include "chatpanel.h"
 #include "utils/debug.h"
@@ -141,7 +142,7 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Channel& chan, wxImageList* imag
   wxPanel( parent, -1 ),
   m_show_nick_list( true ),
   m_nicklist(0),
-  m_chat_tabs(( wxAuiNotebook* )parent ),
+  m_chat_tabs(( SLNotebook* )parent ),
   m_ui( ui ),
   m_channel( &chan ),
   m_server( 0 ),
@@ -169,7 +170,7 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, const User& user, wxImageList* i
   wxPanel( parent, -1 ),
   m_show_nick_list( false ),
   m_nicklist(0),
-  m_chat_tabs(( wxAuiNotebook* )parent ),
+  m_chat_tabs(( SLNotebook* )parent ),
   m_ui( ui ),
   m_channel( 0 ),
   m_server( 0 ),
@@ -195,7 +196,7 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Server& serv, wxImageList* imagl
   wxPanel( parent, -1 ),
   m_show_nick_list( false ),
   m_nicklist(0),
-  m_chat_tabs(( wxAuiNotebook* )parent ),
+  m_chat_tabs(( SLNotebook* )parent ),
   m_ui( ui ),
   m_channel( 0 ),
   m_server( &serv ),
@@ -372,7 +373,7 @@ void ChatPanel::CreateControls( )
   textcompletiondatabase.Insert_Mapping( _T("hf"), _T("Have Fun!") );
   textcompletiondatabase.Insert_Mapping( _T("glhf"), _T("Good luck, have Fun!") );
   textcompletiondatabase.Insert_Mapping( _T("kaot"), _T("Have Fun!") );
-  textcompletiondatabase.Insert_Mapping( _T("kaot_H"), _T("Der Kaot aus der Hölle.") );
+  textcompletiondatabase.Insert_Mapping( _T("kaot_H"), _T("Der Kaot aus der HĂślle.") );
 
 }
 

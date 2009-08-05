@@ -8,9 +8,8 @@ class ChatPanel;
 class Server;
 class Channel;
 class User;
-class wxNotebookEvent;
-class wxNotebook;
-class wxAuiNotebook;
+class wxAuiNotebookEvent;
+class SLNotebook;
 class wxBoxSizer;
 class wxImageList;
 class wxString;
@@ -54,7 +53,7 @@ class MainChatTab : public wxScrolledWindow
     Ui& m_ui;
 
     wxWindow* m_close_window;
-    wxAuiNotebook* m_chat_tabs;
+    SLNotebook* m_chat_tabs;
     wxBoxSizer* m_main_sizer;
     wxImageList* m_imagelist;
     ChatPanel* m_server_chat;
