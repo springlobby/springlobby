@@ -30,8 +30,6 @@ protected:
 	void OnExit( wxCommandEvent& event );
 	void OnSkipChecked( wxCommandEvent& event );
 
-	void Close();
-
 	settings_frame* m_settings_frame;
 	SkirmishDialog* m_skirmish;
 	const wxString m_modname;
@@ -58,6 +56,8 @@ public:
 	~SimpleFront();
 
     void ShowSP( bool show );
+
+    void Close();
 };
 
 #endif // __simplefront__

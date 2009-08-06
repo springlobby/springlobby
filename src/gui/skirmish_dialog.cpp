@@ -189,6 +189,7 @@ void SkirmishDialog::OnAdvanced( wxCommandEvent& event )
 {
     ui().mw().ShowSingleplayer();
     ui().mw().Show( true );
+    m_parent->Close();
 }
 
 
