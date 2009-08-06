@@ -13,7 +13,7 @@ class BattleMapTab;
 class BattleOptionsTab;
 class wxBoxSizer;
 class wxImageList;
-class wxAuiNotebook;
+class SLNotebook;
 class wxNotebook;
 
 class MainJoinBattleTab : public wxScrolledWindow
@@ -48,7 +48,7 @@ class MainJoinBattleTab : public wxScrolledWindow
 
     wxImageList* m_imagelist;
 
-    wxAuiNotebook* m_tabs;
+    SLNotebook* m_tabs;
 
     BattleListTab* m_list_tab;
 

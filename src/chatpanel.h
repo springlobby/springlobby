@@ -29,7 +29,7 @@ class Ui;
 class wxStaticText;
 
 class wxMouseEvent;
-class wxAuiNotebook;
+class SLNotebook;
 class wxNotebook;
 class wxImageList;
 
@@ -212,8 +212,7 @@ class ChatPanel : public wxPanel
     wxComboBox* m_nick_filter;  //!< The filter combo.
 
     wxButton* m_say_button;     //!< The say button.
-    wxAuiNotebook* m_chat_tabs;
-
+    SLNotebook* m_chat_tabs;
     Channel* m_channel;         //!< Channel object.
     Server* m_server;           //!< Server object.
     const User* m_user;               //!< User object.

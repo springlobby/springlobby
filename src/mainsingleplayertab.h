@@ -5,8 +5,7 @@
 #include "battleroommmoptionstab.h"
 
 class Ui;
-class wxNotebook;
-class wxAuiNotebook;
+class SLNotebook;
 class wxImageList;
 class wxBoxSizer;
 class SinglePlayerTab;
@@ -35,7 +34,7 @@ class MainSinglePlayerTab : public wxScrolledWindow
 
     wxBoxSizer* m_main_sizer;
     wxImageList* m_imagelist;
-    wxAuiNotebook* m_tabs;
+    SLNotebook* m_tabs;
 
     SinglePlayerTab* m_sp_tab;
     BattleOptionsTab* m_opts_tab;
