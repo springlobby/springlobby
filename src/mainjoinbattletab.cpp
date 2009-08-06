@@ -23,6 +23,7 @@
 #include "battleroommmoptionstab.h"
 #include "aui/auimanager.h"
 #include "aui/artprovider.h"
+#include "aui/slbook.h"
 
 #include "images/battle_list.xpm"
 #include "images/battle.xpm"
@@ -42,7 +43,7 @@ MainJoinBattleTab::MainJoinBattleTab( wxWindow* parent )
 
   m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
-  m_tabs = new wxAuiNotebook( this, BATTLE_TABS, wxDefaultPosition, wxDefaultSize, wxAUI_NB_TAB_SPLIT | wxAUI_NB_TAB_MOVE | wxAUI_NB_SCROLL_BUTTONS | wxAUI_NB_TOP | wxAUI_NB_TAB_EXTERNAL_MOVE );
+  m_tabs = new SLNotebook( this, BATTLE_TABS, wxDefaultPosition, wxDefaultSize, wxAUI_NB_TAB_SPLIT | wxAUI_NB_TAB_MOVE | wxAUI_NB_SCROLL_BUTTONS | wxAUI_NB_TOP | wxAUI_NB_TAB_EXTERNAL_MOVE );
   m_tabs->SetArtProvider(new SLArtProvider);
 
   m_imagelist = new wxImageList( 12, 12 );

@@ -13,7 +13,7 @@ class ServerMessageBox;
 class wxTextCtrl;
 class ImageViewerPanel;
 class wxHtmlWindow;
-class wxAuiNotebook;
+class SLNotebook;
 
 class WidgetInfoPanel : public wxScrolledWindow
 {
@@ -44,7 +44,7 @@ class WidgetInfoPanel : public wxScrolledWindow
         ImageViewerPanel* m_imageviewer;
         wxHtmlWindow* m_desc;
 
-        wxAuiNotebook* m_ext_info;
+        SLNotebook* m_ext_info;
         wxButton* m_update;
         wxButton* m_remove;
         wxButton* m_download;

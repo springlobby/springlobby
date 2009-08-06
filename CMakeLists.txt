@@ -215,6 +215,7 @@ SET(SpringLobbySrc
 	src/gui/simplefront.cpp
 	src/updater/updatermainwindow.cpp
 	src/utils/activitynotice.cpp
+	src/aui/slbook.cpp
 	src/utils/math.cpp
 	src/utils/misc.cpp
 	src/utils/debug.cpp

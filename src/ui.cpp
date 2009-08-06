@@ -565,6 +565,7 @@ void Ui::OnConnected( Server& server, const wxString& server_name, const wxStrin
 
 bool Ui::IsSpringCompatible()
 {
+    sett().RefreshSpringVersionList();
     if ( sett().GetDisableSpringVersionCheck() ) return true;
     wxString neededversion = GetServer().GetRequiredSpring();
     if ( neededversion == _T("*") ) return true; // Server accepts any version.

@@ -16,9 +16,7 @@ class MainSinglePlayerTab;
 class MainTorrentTab;
 #endif
 class wxBoxSizer;
-//namespace SL_Extern{
-    class wxAuiNotebook;
-//}
+class SLNotebook;
 class wxListbook;
 class MainOptionsTab;
 class wxBitmap;
@@ -123,7 +121,7 @@ class MainWindow : public wxFrame
     wxMenu* m_menuTools;
 
     wxBoxSizer* m_main_sizer;
-    wxAuiNotebook* m_func_tabs;
+    SLNotebook* m_func_tabs;
 
     MainChatTab* m_chat_tab;
     MainJoinBattleTab* m_join_tab;

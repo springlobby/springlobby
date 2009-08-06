@@ -6,6 +6,8 @@
 	<Unit filename="src/customizations.cpp" />
 	<Unit filename="src/gui/gradientpanel.h" />
 	<Unit filename="src/gui/gradientpanel.cpp" />
+	<Unit filename="src/aui/slbook.cpp" />
+	<Unit filename="src/aui/slbook.h" />
 		<Option title="springlobby" />
 		<Option pch_mode="0" />
 		<Option compiler="gcc" />

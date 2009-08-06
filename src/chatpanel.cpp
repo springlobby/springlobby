@@ -27,6 +27,7 @@
 #include <wx/stattext.h>
 
 #include "aui/auimanager.h"
+#include "aui/slbook.h"
 #include "channel/channel.h"
 #include "chatpanel.h"
 #include "utils/debug.h"
@@ -142,7 +143,7 @@ ChatPanel::ChatPanel( wxWindow* parent, Channel& chan, wxImageList* imaglist ):
   wxPanel( parent, -1 ),
   m_show_nick_list( true ),
   m_nicklist(0),
-  m_chat_tabs(( wxAuiNotebook* )parent ),
+  m_chat_tabs(( SLNotebook* )parent ),
   m_channel( &chan ),
   m_server( 0 ),
   m_user( 0 ),
@@ -169,7 +170,7 @@ ChatPanel::ChatPanel( wxWindow* parent, const User& user, wxImageList* imaglist 
   wxPanel( parent, -1 ),
   m_show_nick_list( false ),
   m_nicklist(0),
-  m_chat_tabs(( wxAuiNotebook* )parent ),
+  m_chat_tabs(( SLNotebook* )parent ),
   m_channel( 0 ),
   m_server( 0 ),
   m_user( &user ),
@@ -194,7 +195,7 @@ ChatPanel::ChatPanel( wxWindow* parent, Server& serv, wxImageList* imaglist  ):
   wxPanel( parent, -1 ),
   m_show_nick_list( false ),
   m_nicklist(0),
-  m_chat_tabs(( wxAuiNotebook* )parent ),
+  m_chat_tabs(( SLNotebook* )parent ),
   m_channel( 0 ),
   m_server( &serv ),
   m_user( 0 ),
@@ -369,7 +370,7 @@ void ChatPanel::CreateControls( )
   textcompletiondatabase.Insert_Mapping( _T("hf"), _T("Have Fun!") );
   textcompletiondatabase.Insert_Mapping( _T("glhf"), _T("Good luck, have Fun!") );
   textcompletiondatabase.Insert_Mapping( _T("kaot"), _T("Have Fun!") );
-  textcompletiondatabase.Insert_Mapping( _T("kaot_H"), _T("Der Kaot aus der Hölle.") );
+  textcompletiondatabase.Insert_Mapping( _T("kaot_H"), _T("Der Kaot aus der HĂślle.") );
 
 }
 
@@ -696,6 +697,8 @@ void ChatPanel::OutputLine( const ChatLine& line )
   m_chatlog_text->ScrollLines( 10 ); // to prevent for weird empty space appended
   m_chatlog_text->ShowPosition( m_chatlog_text->GetLastPosition() );// scroll to the bottom
   #endif
+
+  this->Refresh();
 }
 
 
