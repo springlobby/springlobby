@@ -216,7 +216,7 @@ SET(SpringLobbySrc
 	src/utils/tasutil.cpp
 	src/utils/sltipwin.cpp
 	src/utils/controls.cpp
-	src/boost/md5.cpp
+	src/utils/md5.c
 	src/updater/updater.cpp
 	src/updater/versionchecker.cpp
 	src/Helper/TextCompletionDatabase.cpp
