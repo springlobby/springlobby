@@ -24,7 +24,7 @@
 #include <map>
 
 #include "base64.h"
-#include "boost/md5.hpp"
+#include "boost/md5.h"
 #include "tasserver.h"
 #include "iunitsync.h"
 #include "user.h"
@@ -416,7 +416,24 @@ bool TASServer::IsPasswordHash( const wxString& pass ) const
 wxString TASServer::GetPasswordHash( const wxString& pass ) const
 {
     if ( IsPasswordHash(pass) ) return pass;
-    return wxBase64::Encode(boost::md5(pass.mb_str()).digest().value(), 16);
+
+    md5_state_t state;
+	md5_byte_t digest[16];
+	char hex_output[16*2 + 1];
+	int di;
+
+    std::string str = STD_STRING(pass);
+    char* cstr = new char [str.size()+1];
+    strcpy (cstr, str.c_str());
+
+	md5_init(&state);
+	md5_append(&state, (const md5_byte_t *) cstr, strlen( cstr ));
+	md5_finish(&state, digest);
+    for (di = 0; di < 16; ++di)
+	    sprintf(hex_output + di * 2, "%02x", digest[di]);
+
+    wxString coded = wxBase64::Encode( digest, 16 );
+    return coded;
 }
 
 
