@@ -167,12 +167,18 @@ bool SpringLobbyApp::OnInit()
     CacheAndSettingsSetup();
 
     if ( !m_customizer_modname.IsEmpty() ) {
-        SLcustomizations().Init( m_customizer_modname );
-        if ( m_start_simple_interface ) {
-            SimpleFront* sp = new SimpleFront( 0 );
-            SetTopWindow( sp );
-            sp->Show();
-            return true;
+        if ( SLcustomizations().Init( m_customizer_modname ) ) {
+            if ( m_start_simple_interface ) {
+                SimpleFront* sp = new SimpleFront( 0 );
+                SetTopWindow( sp );
+                sp->Show();
+                return true;
+            }
+        }
+        else {
+            customMessageBox( 0, _("Couldn't load customizations for ") + m_customizer_modname + _("\nPlease check that that is the correct name, passed in qoutation"), _("Fatal error"), wxOK );
+//            wxLogError( _("Couldn't load customizations for ") + m_customizer_modname + _("\nPlease check that that is the correct name, passed in qoutation"), _("Fatal error") );
+            exit( OnExit() );//for some twisted reason returning false here does not termiante the app
         }
     }
 

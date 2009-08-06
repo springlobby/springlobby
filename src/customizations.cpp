@@ -58,6 +58,8 @@ wxString Customizations::GetModname()
 bool Customizations::Init(const wxString& modname)
 {
     m_modname = modname;
+    if ( !usync().ModExists( m_modname ) )
+        return false;
     susynclib().SetCurrentMod( m_modname );
     bool ret = m_customs.loadOptions( OptionsWrapper::ModCustomizations, m_modname );
     if ( ret ) {
