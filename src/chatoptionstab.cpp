@@ -496,7 +496,7 @@ void ChatOptionsTab::OnUseSystemColors( wxCommandEvent& /*unused*/ )
 
 void ChatOptionsTab::OnColorChange( ColorButton* button )
 {
-	wxColor c = GetColourFromUser( this, button->GetColor() );
+	wxColour c = GetColourFromUser( this, button->GetColor() );
 	if ( c.IsOk() ) {
 		button->SetColor( c );
 	}

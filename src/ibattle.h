@@ -170,7 +170,7 @@ public:
 				int StartPosX;
 				int StartPosY;
 				int AllyTeam;
-				wxColor RGBColor;
+				wxColour RGBColor;
 				wxString SideName;
 				int Handicap;
 				int SideNum;

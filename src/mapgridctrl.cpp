@@ -63,7 +63,7 @@ MapGridCtrl::MapGridCtrl( wxWindow* parent, Ui& ui, wxSize size, wxWindowID id )
 
 	m_img_background.Create( MINIMAP_SIZE, MINIMAP_SIZE, false /*don't clear*/ );
 	wxRect rect( 0, 0, MINIMAP_SIZE, MINIMAP_SIZE );
-	wxColor color( GetBackgroundColour() );
+	wxColour color( GetBackgroundColour() );
 	m_img_background.SetRGB( rect, color.Red(), color.Green(), color.Blue() );
 
 	m_img_minimap_alpha = charArr2wxImage( map_select_1_png, sizeof(map_select_1_png) );

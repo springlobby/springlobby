@@ -200,19 +200,19 @@ void MainTorrentTab::OnUpdate()
 	switch ( torrent().GetTorrentSystemStatus() )
 	{
 		case 0:
-			m_status_color->SetColor( wxColor( 255, 0, 0 ) ); //not connected
+			m_status_color->SetColor( wxColour( 255, 0, 0 ) ); //not connected
 			m_status_color_text->SetLabel( _( "Status: not connected" ) );
 			break;
 		case 1:
-			m_status_color->SetColor( wxColor( 0, 255, 0 ) ); //connected
+			m_status_color->SetColor( wxColour( 0, 255, 0 ) ); //connected
 			m_status_color_text->SetLabel( _( "Status: connected" ) );
 			break;
 		case 2:
-			m_status_color->SetColor( wxColor( 0, 0, 255 ) ); //ingame
+			m_status_color->SetColor( wxColour( 0, 0, 255 ) ); //ingame
 			m_status_color_text->SetLabel( _( "Status: throttled or paused (ingame)" ) );
 			break;
 		default:
-			m_status_color->SetColor( wxColor( 255, 255, 255 ) ); //unknown
+			m_status_color->SetColor( wxColour( 255, 255, 255 ) ); //unknown
 			m_status_color_text->SetLabel( _( "Status: unknown" ) );
 			break;
 	}

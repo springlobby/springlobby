@@ -46,7 +46,7 @@ bool Settings::m_user_defined_config = false;
 wxString Settings::m_user_defined_config_path = wxEmptyString;
 
 
-const wxColor defaultHLcolor ( 255, 0, 0 );
+const wxColour defaultHLcolor ( 255, 0, 0 );
 
 Settings& sett()
 {
@@ -1077,7 +1077,7 @@ bool Settings::GetLastHostRelayedMode()
 
 wxColour Settings::GetBattleLastColour()
 {
-	return  wxColor( m_config->Read( _T( "/Hosting/MyLastColour" ), _T( "#FFFF00" ) ) );
+	return  wxColour( m_config->Read( _T( "/Hosting/MyLastColour" ), _T( "#FFFF00" ) ) );
 }
 
 
@@ -1334,7 +1334,7 @@ bool Settings::GetChatPMSoundNotificationEnabled()
 	return m_config->Read( _T( "/Chat/PMSound" ), 1l );
 }
 
-wxColor ConvertOldRGBFormat( wxString color )
+wxColour ConvertOldRGBFormat( wxString color )
 {
 	long R = 0, G = 0, B = 0;
 	color.BeforeFirst( _T( ' ' ) ).ToLong( &R );
@@ -1342,7 +1342,7 @@ wxColor ConvertOldRGBFormat( wxString color )
 	color.BeforeFirst( _T( ' ' ) ).ToLong( &G );
 	color = color.AfterFirst( _T( ' ' ) );
 	color.BeforeFirst( _T( ' ' ) ).ToLong( &B );
-	return wxColor( R % 256, G % 256, B % 256 );
+	return wxColour( R % 256, G % 256, B % 256 );
 }
 
 void Settings::ConvertOldColorSettings()
@@ -1367,7 +1367,7 @@ void Settings::ConvertOldColorSettings()
 		wxString paletteName = palettes[j];
 		for ( int i = 0; i < 16; ++i )
 		{
-			wxColor col( ConvertOldRGBFormat( m_config->Read( _T( "/CustomColors/" ) + paletteName + _T( "/" ) + TowxString( i ), _T( "255 255 255" ) ) ) );
+			wxColour col( ConvertOldRGBFormat( m_config->Read( _T( "/CustomColors/" ) + paletteName + _T( "/" ) + TowxString( i ), _T( "255 255 255" ) ) ) );
 			m_config->Write( _T( "/CustomColors/" ) + paletteName + _T( "/" ) + TowxString( i ), col.GetAsString( wxC2S_HTML_SYNTAX ) );
 		}
 	}
@@ -1969,9 +1969,9 @@ void Settings::SetGroupHLColor( const wxColour& color, const wxString& group )
 	m_config->Write( _T( "/Groups/" ) + group + _T( "/Opts/HLColor" ), color.GetAsString( wxC2S_HTML_SYNTAX ) );
 }
 
-wxColor Settings::GetGroupHLColor( const wxString& group  ) const
+wxColour Settings::GetGroupHLColor( const wxString& group  ) const
 {
-	return wxColor( m_config->Read( _T( "/Groups/" ) + group + _T( "/Opts/HLColor" ) , _T( "#64648C" ) ) );
+	return wxColour( m_config->Read( _T( "/Groups/" ) + group + _T( "/Opts/HLColor" ) , _T( "#64648C" ) ) );
 }
 
 wxArrayString Settings::GetGroups( )
@@ -2059,9 +2059,9 @@ void Settings::SaveCustomColors( const wxColourData& _cdata, const wxString& pal
 	wxColourData cdata = _cdata;
 	for ( int i = 0; i < 16; ++i )
 	{
-		wxColor col = cdata.GetCustomColour( i );
+		wxColour col = cdata.GetCustomColour( i );
 		if ( !col.IsOk() )
-			col = wxColor ( 255, 255, 255 );
+			col = wxColour ( 255, 255, 255 );
 		m_config->Write( _T( "/CustomColors/" ) + paletteName + _T( "/" ) + TowxString( i ),  col.GetAsString( wxC2S_HTML_SYNTAX ) ) ;
 	}
 }
@@ -2072,7 +2072,7 @@ wxColourData Settings::GetCustomColors( const wxString& paletteName )
 	//note 16 colors is wx limit
 	for ( int i = 0; i < 16; ++i )
 	{
-		wxColor col( m_config->Read( _T( "/CustomColors/" ) + paletteName + _T( "/" ) + TowxString( i ), wxColor ( 255, 255, 255 ).GetAsString( wxC2S_HTML_SYNTAX ) ) );
+		wxColour col( m_config->Read( _T( "/CustomColors/" ) + paletteName + _T( "/" ) + TowxString( i ), wxColour ( 255, 255, 255 ).GetAsString( wxC2S_HTML_SYNTAX ) ) );
 		cdata.SetCustomColour( i, col );
 	}
 
