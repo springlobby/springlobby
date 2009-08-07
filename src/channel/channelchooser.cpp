@@ -29,7 +29,7 @@ ChannelChooserPanel::ChannelChooserPanel(wxWindow* parent, wxWindowID id, const 
     wxBoxSizer* search_sizer = new wxBoxSizer( wxHORIZONTAL );
     wxStaticText* search_label = new wxStaticText( this, -1, _("Find channel:") );
     m_search_text = new wxTextCtrl ( this, ID_SEARCH_TEXT );
-    search_sizer->Add( search_label, 0, wxALL , 0 );
+    search_sizer->Add( search_label, 0, wxALIGN_CENTER_VERTICAL | wxALL , 0 );
     search_sizer->Add( m_search_text, 1, wxLEFT | wxEXPAND, 5 );
     m_main_sizer->Add( search_sizer, 0, wxALL | wxEXPAND, 5 );
 
