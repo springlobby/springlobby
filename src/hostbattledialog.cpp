@@ -114,10 +114,9 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent ): wxDialog( parent, -1, _(
 
 	m_port_sizer->Add( m_port_text, 1, wxALL, 5 );
 
-	m_port_test_check = new wxCheckBox( this, wxID_ANY, _("Test firewall"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_port_test_check->SetValue( sett().GetTestHostPort() );
-
-	m_port_sizer->Add( m_port_test_check, 1, wxALL|wxEXPAND, 5 );
+//	m_port_test_check = new wxCheckBox( this, wxID_ANY, _("Test firewall"), wxDefaultPosition, wxDefaultSize, 0 );
+//	m_port_test_check->SetValue( sett().GetTestHostPort() );
+//	m_port_sizer->Add( m_port_test_check, 1, wxALL|wxEXPAND, 5 );
 
 	m_main_sizer->Add( m_port_sizer, 0, wxEXPAND, 5 );
 
@@ -227,8 +226,6 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent ): wxDialog( parent, -1, _(
 
 	m_main_sizer->Add( m_buttons_sizer, 0, wxEXPAND, 5 );
 
-	m_port_test_check->Disable();
-
 	this->SetSizer( m_main_sizer );
 	this->Layout();
 
@@ -267,7 +264,8 @@ void HostBattleDialog::OnOk( wxCommandEvent& /*unused*/ )
   long tmp = DEFSETT_SPRING_PORT;
   m_port_text->GetValue().ToLong( &tmp );
   sett().SetLastHostPort( tmp );
-  sett().SetTestHostPort( m_port_test_check->GetValue() );
+//  sett().SetTestHostPort( m_port_test_check->GetValue() );
+  sett().SetTestHostPort( false );
   sett().SetLastHostPlayerNum( m_players_slide->GetValue() );
   sett().SetLastHostNATSetting( m_nat_radios->GetSelection() );
   sett().SetLastRankLimit( GetSelectedRank() );
@@ -298,6 +296,6 @@ int HostBattleDialog::GetSelectedRank()
 
 void HostBattleDialog::OnNatChange( wxCommandEvent& /*unused*/  )
 {
-  m_port_test_check->Enable( m_nat_radios->GetSelection() == 0 );
+//  m_port_test_check->Enable( m_nat_radios->GetSelection() == 0 );
   m_port_text->Enable( m_nat_radios->GetSelection() == 0 );
 }
