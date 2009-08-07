@@ -135,7 +135,7 @@ PlaybackTab<PlaybackTraits>::PlaybackTab( wxWindow* parent, Ui& ui ) :
 
     m_buttons_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
 
-    m_watch_btn = new wxButton( this, PLAYBACK_WATCH, _("Watch"), wxDefaultPosition, wxSize( -1,28 ), 0 );
+    m_watch_btn = new wxButton( this, PLAYBACK_WATCH, PlaybackTraits::IsReplayType ? _("Watch") : _("Load"), wxDefaultPosition, wxSize( -1,28 ), 0 );
     m_buttons_sizer->Add( m_watch_btn, 0, wxBOTTOM|wxLEFT|wxRIGHT, 5 );
 
     m_delete_btn = new wxButton( this, PLAYBACK_DELETE, _("Delete"), wxDefaultPosition, wxSize( -1,28 ), 0 );
@@ -164,7 +164,7 @@ PlaybackTab<PlaybackTraits>::~PlaybackTab()
     if (m_filter != 0)
         m_filter->SaveFilterValues();
 
-    wxLogMessage(_T("PlaybackTab::!PlaybackTab()"));
+    wxLogDebugFunc( _T("") );
 }
 
 template < class PlaybackTraits >
@@ -279,8 +279,8 @@ void PlaybackTab<PlaybackTraits>::OnWatch( wxCommandEvent& /*unused*/ )
     if (m_replay_listctrl->GetSelectedIndex() != -1 ) {
          int m_sel_replay_id = m_replay_listctrl->GetSelectedData()->id;
 
-
-        wxLogMessage(_T("Watching replay %d "),m_sel_replay_id);
+        wxString type = PlaybackTraits::IsReplayType ? _("replay") : _("savegame") ;
+        wxLogMessage(_T("Watching %s %d "),type.c_str(), m_sel_replay_id);
         try{
             PlaybackType& rep = playbacklist<ListType>().GetPlaybackById( m_sel_replay_id );
 
@@ -299,7 +299,7 @@ void PlaybackTab<PlaybackTraits>::OnWatch( wxCommandEvent& /*unused*/ )
               {
                 if ( sett().GetCurrentUsedSpringIndex() != itor->first )
                 {
-                  wxLogMessage(_T("replay requires version: %s, switching to profile: %s"), rep.SpringVersion.c_str(), itor->first.c_str() );
+                  wxLogMessage(_T("%s requires version: %s, switching to profile: %s"), type.c_str(), rep.SpringVersion.c_str(), itor->first.c_str() );
                   sett().SetUsedSpringIndex( itor->first );
                   ui().ReloadUnitSync();
                 }
@@ -309,7 +309,7 @@ void PlaybackTab<PlaybackTraits>::OnWatch( wxCommandEvent& /*unused*/ )
             if ( !ReplayTraits::IsReplayType ) versionfound = true; // quick hack to bypass spring version check
             if ( !versionfound )
             {
-              wxString message = wxString::Format( _("No compatible installed spring version has been found, this replay requires version: %s\n"), rep.SpringVersion.c_str() );
+              wxString message = wxString::Format( _("No compatible installed spring version has been found, this %s requires version: %s\n"), type.c_str(), rep.SpringVersion.c_str() );
               message << _("Your current installed versions are:");
               for ( std::map<wxString, wxString>::iterator itor = versionlist.begin(); itor != versionlist.end(); itor++ ) message << _T(" ") << itor->second;
               customMessageBox(SL_MAIN_ICON, message, _("Spring error"), wxICON_EXCLAMATION|wxOK );
