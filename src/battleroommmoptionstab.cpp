@@ -156,7 +156,9 @@ void BattleroomMMOptionsTab<BattleType>::setupOptionsSizer( wxBoxSizer* parent_s
         }
     }
     else {
-       parent_sizer->Add( section_sizer, 0 , wxALL, section_sizer->GetChildren().size() > 0 ? 5 : 0 );
+        wxStaticBoxSizer* other_section = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, _("other") ), wxVERTICAL );
+        other_section->Add( section_sizer, 0 , wxALL, section_sizer->GetChildren().size() > 0 ? 5 : 0 );
+        parent_sizer->Add( other_section, 0 , wxALL, 0 );
     }
 
 }
@@ -293,6 +295,7 @@ int BattleroomMMOptionsTab<BattleType>::setupOptionsSectionSizer(const mmOptionS
             ctrl_count++;
         }
 	}
+    total_count += ctrl_count;
 
 	parent_sizer->Add( chkSizer, 0, wxALL, chkSizer->GetChildren().size() > 0 ? 5 : 0 );
 	parent_sizer->Add( spinSizer, 0, wxALL, spinSizer->GetChildren().size() > 0 ? 5 : 0 );
