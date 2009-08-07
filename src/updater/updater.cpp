@@ -88,7 +88,7 @@ void UpdaterClass::OnDownloadEvent( wxCommandEvent& event )
   else
   {
     if ( !UpdateExe( m_newexe , false ) ) {
-            customMessageBox(SL_MAIN_ICON, wxString::Format( _("There was an error while trying to replace the current executable version\n manual copy is necessary from: %s\n to: %s\nPlease use Help->Report Bug to report this bug."), m_newexe.c_str(), wxStandardPaths::Get().GetExecutablePath().c_str() ), _("Error"));
+            customMessageBox(SL_MAIN_ICON, wxString::Format( _("There was an error while trying to replace the current executable version.\n Please manually copy springlobby.exe from: %s\n to: %s\nPlease use Help->Report Bug to report this bug."), m_newexe.c_str(), wxStandardPaths::Get().GetExecutablePath().c_str() ), _("Error"));
     }
     else
     {
