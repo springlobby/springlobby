@@ -57,7 +57,7 @@ BattleroomMMOptionsTab<BattleType>::BattleroomMMOptionsTab(  BattleType& battle,
   m_options_preset_sel = new wxComboBox( this, BOPTS_CHOSEPRES, sett().GetModDefaultPresetName( m_battle.GetHostModName() ), wxDefaultPosition, wxDefaultSize,  sett().GetPresetList(), wxCB_READONLY );
   m_options_preset_sel->SetToolTip(TE(_("Set name.")));
 
-  m_preset_sizer->Add( m_options_preset_sel, 0, wxALL, 5 );
+  m_preset_sizer->Add( m_options_preset_sel, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
   m_load_btn = new wxButton( this, BOPTS_LOADPRES, _("Load..."), wxDefaultPosition, wxDefaultSize, 0 );
   m_load_btn->SetToolTip( TE(_("Load a saved set of options.")) );
