@@ -316,13 +316,13 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle ) :
     m_side_sel_sizer->Add( m_side_sel, 1, wxEXPAND );
 
     // Put widgets in place
-    m_player_sett_sizer->Add( m_team_lbl, 0, wxEXPAND | wxALL, 2 );
+    m_player_sett_sizer->Add( m_team_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALL, 2 );
     m_player_sett_sizer->Add( m_team_sel, 0, wxEXPAND | wxALL, 2 );
-    m_player_sett_sizer->Add( m_ally_lbl, 0, wxEXPAND | wxALL, 2 );
+    m_player_sett_sizer->Add( m_ally_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALL, 2 );
     m_player_sett_sizer->Add( m_ally_sel, 0, wxEXPAND | wxALL, 2 );
-    m_player_sett_sizer->Add( m_color_lbl, 0, wxEXPAND | wxALL, 2 );
+    m_player_sett_sizer->Add( m_color_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALL, 2 );
     m_player_sett_sizer->Add( m_color_sel, 0, wxEXPAND | wxALL, 2 );
-    m_player_sett_sizer->Add( m_side_lbl, 0, wxEXPAND | wxALL, 2 );
+    m_player_sett_sizer->Add( m_side_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALL, 2 );
     m_player_sett_sizer->Add( m_side_sel_sizer, 0, wxEXPAND | wxALL, 2 );
     m_player_sett_sizer->Add( m_spec_chk, 0, wxEXPAND | wxALL, 2 );
     m_player_sett_sizer->Add( m_ready_chk, 0, wxEXPAND | wxALL, 2 );
