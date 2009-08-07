@@ -100,7 +100,7 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( p
 
   m_normal_label = new wxStaticText( m_custom_colors, wxID_ANY, _("Normal"), wxDefaultPosition, wxDefaultSize, 0 );
   m_normal_label->Wrap( -1 );
-  bNormlColorSizer->Add( m_normal_label, 1, wxALL, 5 );
+  bNormlColorSizer->Add( m_normal_label, 1, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
   bColorsSizer1->Add( bNormlColorSizer, 0, wxEXPAND, 5 );
 
@@ -114,7 +114,7 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( p
 
   m_bg_label = new wxStaticText( m_custom_colors, wxID_ANY, _("Background"), wxDefaultPosition, wxDefaultSize, 0 );
   m_bg_label->Wrap( -1 );
-  bBGColorSizer->Add( m_bg_label, 1, wxALL, 5 );
+  bBGColorSizer->Add( m_bg_label, 1, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
   bColorsSizer1->Add( bBGColorSizer, 0, wxEXPAND, 5 );
 
@@ -128,7 +128,7 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( p
 
   m_action_label = new wxStaticText( m_custom_colors, wxID_ANY, _("Action"), wxDefaultPosition, wxDefaultSize, 0 );
   m_action_label->Wrap( -1 );
-  bActionColorSizer->Add( m_action_label, 1, wxALL, 5 );
+  bActionColorSizer->Add( m_action_label, 1, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
   bColorsSizer1->Add( bActionColorSizer, 0, wxEXPAND, 5 );
 
@@ -142,7 +142,7 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( p
 
   m_highlight_label = new wxStaticText( m_custom_colors, wxID_ANY, _("Highlight"), wxDefaultPosition, wxDefaultSize, 0 );
   m_highlight_label->Wrap( -1 );
-  bHighlightColorSizer->Add( m_highlight_label, 1, wxALL, 5 );
+  bHighlightColorSizer->Add( m_highlight_label, 1, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
   bColorsSizer1->Add( bHighlightColorSizer, 0, wxEXPAND, 5 );
 
@@ -156,7 +156,7 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( p
 
   m_joinleave_label = new wxStaticText( m_custom_colors, wxID_ANY, _("Join/Leave"), wxDefaultPosition, wxDefaultSize, 0 );
   m_joinleave_label->Wrap( -1 );
-  bJoinLeaveColorSizer->Add( m_joinleave_label, 1, wxALL, 5 );
+  bJoinLeaveColorSizer->Add( m_joinleave_label, 1,wxALIGN_CENTER_VERTICAL |  wxALL, 5 );
 
   bColorsSizer1->Add( bJoinLeaveColorSizer, 0, wxEXPAND, 5 );
 
@@ -170,7 +170,7 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( p
 
   m_my_label = new wxStaticText( m_custom_colors, wxID_ANY, _("My messages"), wxDefaultPosition, wxDefaultSize, 0 );
   m_my_label->Wrap( -1 );
-  bMyColorSizer->Add( m_my_label, 1, wxALL, 5 );
+  bMyColorSizer->Add( m_my_label, 1, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
   bColorsSizer1->Add( bMyColorSizer, 1, wxEXPAND, 5 );
 
@@ -189,7 +189,7 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( p
 
   m_server_label = new wxStaticText( m_custom_colors, wxID_ANY, _("Server"), wxDefaultPosition, wxDefaultSize, 0 );
   m_server_label->Wrap( -1 );
-  bServerColorSizer->Add( m_server_label, 1, wxALL, 5 );
+  bServerColorSizer->Add( m_server_label, 1, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
   bColorSizer2->Add( bServerColorSizer, 0, wxEXPAND, 5 );
 
@@ -203,7 +203,7 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( p
 
   m_client_label = new wxStaticText( m_custom_colors, wxID_ANY, _("Client"), wxDefaultPosition, wxDefaultSize, 0 );
   m_client_label->Wrap( -1 );
-  bClientolorSizer->Add( m_client_label, 1, wxALL, 5 );
+  bClientolorSizer->Add( m_client_label, 1, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
   bColorSizer2->Add( bClientolorSizer, 0, wxEXPAND, 5 );
 
@@ -217,7 +217,7 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( p
 
   m_error_label = new wxStaticText( m_custom_colors, wxID_ANY, _("Error"), wxDefaultPosition, wxDefaultSize, 0 );
   m_error_label->Wrap( -1 );
-  bErrorColorSizer->Add( m_error_label, 1, wxALL, 5 );
+  bErrorColorSizer->Add( m_error_label, 1, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
   bColorSizer2->Add( bErrorColorSizer, 0, wxEXPAND, 5 );
 
@@ -231,7 +231,7 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( p
 
   m_ts_label = new wxStaticText( m_custom_colors, wxID_ANY, _("Timestamp"), wxDefaultPosition, wxDefaultSize, 0 );
   m_ts_label->Wrap( -1 );
-  bTSColorSizer->Add( m_ts_label, 1, wxALL, 5 );
+  bTSColorSizer->Add( m_ts_label, 1, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
   bColorSizer2->Add( bTSColorSizer, 0, wxEXPAND, 5 );
 
@@ -245,7 +245,7 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( p
 
   m_note_label = new wxStaticText( m_custom_colors, wxID_ANY, _("Notification"), wxDefaultPosition, wxDefaultSize, 0 );
   m_note_label->Wrap( -1 );
-  bNoteColorSizer->Add( m_note_label, 1, wxALL, 5 );
+  bNoteColorSizer->Add( m_note_label, 1, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
   bColorSizer2->Add( bNoteColorSizer, 0, wxEXPAND, 5 );
 
