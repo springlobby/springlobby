@@ -9,29 +9,29 @@ const wxEventType httpDownloadEvtFailed = wxNewEventType();
 
 template < class ParentClass >
 class HttpDownloaderThread : public Thread
-		{
-		public:
-				HttpDownloaderThread(  const wxString& FileUrl, const wxString& DestPath, ParentClass& parent, int code = 0, const bool notify = true, const bool unzip = true, const wxString& noticeErr = wxEmptyString, const wxString& noticeOk = wxEmptyString );
-				~HttpDownloaderThread();
-				void Init();
-				void* Entry();
-				void CloseThread();
-				bool TestDestroy();
-		private:
-				bool m_destroy;
+{
+	public:
+		HttpDownloaderThread(  const wxString& FileUrl, const wxString& DestPath, ParentClass& parent, int code = 0, const bool notify = true, const bool unzip = true, const wxString& noticeErr = wxEmptyString, const wxString& noticeOk = wxEmptyString );
+		~HttpDownloaderThread();
+		void Init();
+		void* Entry();
+		void CloseThread();
+		bool TestDestroy();
+	private:
+		bool m_destroy;
 
-				wxString m_destpath;
-				wxString m_fileurl;
-				bool Unzip();
-				bool m_do_unzip;
-				bool m_notifyOnDownloadEvent;
+		wxString m_destpath;
+		wxString m_fileurl;
+		bool Unzip();
+		bool m_do_unzip;
+		bool m_notifyOnDownloadEvent;
 
-				wxString m_noticeErr;
-				wxString m_noticeOk;
+		wxString m_noticeErr;
+		wxString m_noticeOk;
 
-				int m_id_code;
+		int m_id_code;
 
-				ParentClass& m_parent;
+		ParentClass& m_parent;
 
 };
 

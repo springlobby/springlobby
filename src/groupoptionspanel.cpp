@@ -133,7 +133,7 @@ GroupOptionsPanel::GroupOptionsPanel( wxWindow* parent, wxWindowID id, const wxP
 
 	m_highlight_colorstaticText = new wxStaticText( m_group_panel, wxID_ANY, _("Highlight Color"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_highlight_colorstaticText->Wrap( -1 );
-	colorSizer->Add( m_highlight_colorstaticText, 0, wxALL, 5 );
+	colorSizer->Add( m_highlight_colorstaticText, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
 	m_highlight_color_button = new ColorButton( m_group_panel, HIGHLIGHT_COLOR, wxColour(0,0,0), wxDefaultPosition, wxSize( 20,20 ) );
 	m_highlight_color_button->SetToolTip( _("Select highlight color") );

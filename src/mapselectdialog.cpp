@@ -26,19 +26,19 @@
 //*)
 
 //(*IdInit(MapSelectDialog)
-const long MapSelectDialog::ID_STATICTEXT2 = wxNewId();
-const long MapSelectDialog::ID_VERTICAL_CHOICE = wxNewId();
-const long MapSelectDialog::ID_STATICTEXT1 = wxNewId();
-const long MapSelectDialog::ID_HORIZONTAL_CHOICE = wxNewId();
-const long MapSelectDialog::ID_FILTER_ALL = wxNewId();
-const long MapSelectDialog::ID_FILTER_POPULAR = wxNewId();
-const long MapSelectDialog::ID_FILTER_RECENT = wxNewId();
-const long MapSelectDialog::ID_FILTER_TEXT = wxNewId();
-const long MapSelectDialog::ID_MAP_NAME = wxNewId();
-const long MapSelectDialog::ID_MAP_OPTS_LIST = wxNewId();
-const long MapSelectDialog::ID_MAPGRID = wxNewId();
+const long MapSelectDialog::ID_STATICTEXT2          = wxNewId();
+const long MapSelectDialog::ID_VERTICAL_CHOICE      = wxNewId();
+const long MapSelectDialog::ID_STATICTEXT1          = wxNewId();
+const long MapSelectDialog::ID_HORIZONTAL_CHOICE    = wxNewId();
+const long MapSelectDialog::ID_FILTER_ALL           = wxNewId();
+const long MapSelectDialog::ID_FILTER_POPULAR       = wxNewId();
+const long MapSelectDialog::ID_FILTER_RECENT        = wxNewId();
+const long MapSelectDialog::ID_FILTER_TEXT          = wxNewId();
+const long MapSelectDialog::ID_MAP_NAME             = wxNewId();
+const long MapSelectDialog::ID_MAP_OPTS_LIST        = wxNewId();
+const long MapSelectDialog::ID_MAPGRID              = wxNewId();
 //*)
-const long MapSelectDialog::ID_VERTICAL_DIRECTION = wxNewId();
+const long MapSelectDialog::ID_VERTICAL_DIRECTION   = wxNewId();
 const long MapSelectDialog::ID_HORIZONTAL_DIRECTION = wxNewId();
 
 const wxString MapSelectDialog::m_dialog_name = _T("MapSelector");

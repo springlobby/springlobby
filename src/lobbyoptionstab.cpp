@@ -21,8 +21,10 @@
 
 
 BEGIN_EVENT_TABLE(LobbyOptionsTab, wxPanel)
-    EVT_BUTTON ( SPRING_WEBBROWSE, LobbyOptionsTab::OnBrowseWeb )
-    EVT_RADIOBUTTON( SPRING_DEFWEB, LobbyOptionsTab::OnDefaultWeb )
+
+    EVT_BUTTON (        SPRING_WEBBROWSE,   LobbyOptionsTab::OnBrowseWeb    )
+    EVT_RADIOBUTTON(    SPRING_DEFWEB,      LobbyOptionsTab::OnDefaultWeb   )
+
 END_EVENT_TABLE()
 
 LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)

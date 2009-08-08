@@ -41,7 +41,7 @@ AddBotDialog::AddBotDialog( wxWindow* parent, IBattle& battle , bool singleplaye
     m_nick_sizer = new wxBoxSizer( wxHORIZONTAL );
 
     m_nick_lbl = new wxStaticText( this, wxID_ANY, _("Nickname:"), wxDefaultPosition, wxDefaultSize, 0 );
-    m_nick_sizer->Add( m_nick_lbl, 1, wxALL, 5 );
+    m_nick_sizer->Add( m_nick_lbl, 1, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
     int bot = m_battle.GetNumBots()+1;
 
@@ -55,7 +55,7 @@ AddBotDialog::AddBotDialog( wxWindow* parent, IBattle& battle , bool singleplaye
   m_ai_sizer = new wxBoxSizer( wxHORIZONTAL );
 
   m_ai_lbl = new wxStaticText( this, wxID_ANY, _("AI:"), wxDefaultPosition, wxDefaultSize, 0 );
-  m_ai_sizer->Add( m_ai_lbl, 1, wxALL, 5 );
+  m_ai_sizer->Add( m_ai_lbl, 1, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
   m_ai = new wxChoice( this, ADDBOT_AI );
   m_ai->SetToolTip( TE(_("Choose the AI library to use with this bot.") ) );

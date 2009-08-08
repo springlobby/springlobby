@@ -126,17 +126,17 @@ END_EVENT_TABLE()
     #endif
 
 /// table for irc colors
-static wxColor m_irc_colors[9]  =
+static wxColour m_irc_colors[9]  =
 {
-	wxColor(0,0,0),
-	wxColor(54,54,178),
-	wxColor(40,140,42),
-	wxColor(255,255,255),
-	wxColor(199,50,50),
-	wxColor(128,38,127),
-	wxColor(102,54,31),
-	wxColor(217,166,65),
-	wxColor(61,204,61)
+	wxColour(0,0,0),
+	wxColour(54,54,178),
+	wxColour(40,140,42),
+	wxColour(255,255,255),
+	wxColour(199,50,50),
+	wxColour(128,38,127),
+	wxColour(102,54,31),
+	wxColour(217,166,65),
+	wxColour(61,204,61)
 };
 
 ChatPanel::ChatPanel( wxWindow* parent, Channel& chan, wxImageList* imaglist ):
@@ -664,7 +664,7 @@ void ChatPanel::OutputLine( const ChatLine& line )
 					c = c - 48;
 					if ( ( c2 >= 48 ) && ( c2 <= 58 )  ) c = 10*c + c2 - 48;
 					at = line.chatstyle;
-					wxColor dummy(0,0,0);
+					wxColour dummy(0,0,0);
 					if ( ( c > 0 ) && ( c <= ( sizeof( m_irc_colors ) / sizeof( dummy ) ) ) ) at.SetTextColour( m_irc_colors[c-1] );
 
 					m_chatlog_text->SetDefaultStyle(at);

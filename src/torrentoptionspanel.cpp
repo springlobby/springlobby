@@ -60,9 +60,9 @@ TorrentOptionsPanel::TorrentOptionsPanel( wxWindow* parent )
 
     m_gamestart_box_sizer->Add(m_gamestart_pause,  0, wxALL, 5 );
     m_gamestart_box_sizer->Add(m_gamestart_throttle,  0, wxALL, 5 );
-    m_gamestart_input_box1->Add(m_gamestart_throttle_up_lbl,  0, wxALL, 5 );
+    m_gamestart_input_box1->Add(m_gamestart_throttle_up_lbl,  0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
     m_gamestart_input_box1->Add(m_gamestart_throttle_up,  0, wxALL, 5);
-    m_gamestart_input_box2->Add(m_gamestart_throttle_down_lbl,  0, wxALL, 5);
+    m_gamestart_input_box2->Add(m_gamestart_throttle_down_lbl,  0, wxALIGN_CENTER_VERTICAL | wxALL, 5);
     m_gamestart_input_box2->Add(m_gamestart_throttle_down,  0, wxALL, 5);
     m_gamestart_box_sizer->Add(m_gamestart_input_box1,  0, wxALL, 5);
     m_gamestart_box_sizer->Add(m_gamestart_input_box2,  0, wxALL, 5);
@@ -74,28 +74,28 @@ TorrentOptionsPanel::TorrentOptionsPanel( wxWindow* parent )
     m_maxUp = new wxTextCtrl( this, ID_MAXUP, TowxString( sett().GetTorrentUploadRate() ) );
     wxStaticText* m_maxUp_lbl = new wxStaticText( this, wxID_ANY, _("maximum upload speed in KB/sec(-1 for infinite)") );
     up_siter->Add( m_maxUp, 0, wxALL, 5 );
-    up_siter->Add( m_maxUp_lbl, 0, wxALL, 5 );
+    up_siter->Add( m_maxUp_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
     m_numbers_box_sizer->Add( up_siter, 0, wxALL, 5 );
 
     wxBoxSizer* down_siter = new wxBoxSizer( wxHORIZONTAL );
     m_maxDown = new wxTextCtrl( this, ID_MAXDOWN, TowxString( sett().GetTorrentDownloadRate() ) );
     wxStaticText* m_maxDown_lbl = new wxStaticText( this, wxID_ANY, _("maximum download speed in KB/sec (-1 for infinite)") );
     down_siter->Add( m_maxDown, 0, wxALL, 5 );
-    down_siter->Add( m_maxDown_lbl, 0, wxALL, 5 );
+    down_siter->Add( m_maxDown_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
     m_numbers_box_sizer->Add( down_siter, 0, wxALL, 5 );
 
     wxBoxSizer* port_siter = new wxBoxSizer( wxHORIZONTAL );
     m_p2pport = new wxTextCtrl( this, ID_P2PPORT, TowxString( sett().GetTorrentPort() ) );
     wxStaticText* m_p2pport_lbl = new wxStaticText( this, wxID_ANY, _("port used for torrent connections") );
     port_siter->Add( m_p2pport, 0, wxALL, 5 );
-    port_siter->Add( m_p2pport_lbl, 0, wxALL, 5 );
+    port_siter->Add( m_p2pport_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
     m_numbers_box_sizer->Add( port_siter, 0, wxALL, 5 );
 
     wxBoxSizer* con_siter = new wxBoxSizer( wxHORIZONTAL );
     m_maxConnections = new wxTextCtrl( this, ID_MAXUP, TowxString( sett().GetTorrentMaxConnections() ) );
     wxStaticText* m_maxConnections_lbl = new wxStaticText( this, wxID_ANY, _("maximum number of concurrent connections") );
     con_siter->Add( m_maxConnections, 0, wxALL, 5 );
-    con_siter->Add( m_maxConnections_lbl, 0, wxALL, 5 );
+    con_siter->Add( m_maxConnections_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
     m_numbers_box_sizer->Add( con_siter, 0, wxALL, 5 );
 
     mainboxsizer->Add( m_numbers_box_sizer, 0, wxALL, 5 );

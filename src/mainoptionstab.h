@@ -24,42 +24,42 @@ class LobbyOptionsTab;
  */
 class MainOptionsTab : public wxScrolledWindow
 {
-public:
-    MainOptionsTab( wxWindow* parent );
-    ~MainOptionsTab();
+	public:
+		MainOptionsTab( wxWindow* parent );
+		~MainOptionsTab();
 
-    /** \brief delegate the data setting to memeber panels */
-    void OnApply( wxCommandEvent& event );
-    void OnRestore( wxCommandEvent& event );
+		/** \brief delegate the data setting to memeber panels */
+		void OnApply( wxCommandEvent& event );
+		void OnRestore( wxCommandEvent& event );
 
-    void OnOpenGroupsTab();
-    void SetSelection( const unsigned int page );
-    GroupOptionsPanel& GetGroupOptionsPanel();
+		void OnOpenGroupsTab();
+		void SetSelection( const unsigned int page );
+		GroupOptionsPanel& GetGroupOptionsPanel();
 
 
-protected:
-    wxBoxSizer* m_main_sizer;
+	protected:
+		wxBoxSizer* m_main_sizer;
 
-    wxImageList* m_imagelist;
+		wxImageList* m_imagelist;
 
-    SLNotebook* m_tabs;
+		SLNotebook* m_tabs;
 
-    SpringOptionsTab* m_spring_opts;
-    ChatOptionsTab* m_chat_opts;
-    TorrentOptionsPanel* m_torrent_opts;
-    GroupOptionsPanel* m_groups_opts;
-    LobbyOptionsTab* m_lobby_opts;
+		SpringOptionsTab* m_spring_opts;
+		ChatOptionsTab* m_chat_opts;
+		TorrentOptionsPanel* m_torrent_opts;
+		GroupOptionsPanel* m_groups_opts;
+		LobbyOptionsTab* m_lobby_opts;
 
-    wxButton* m_restore_btn;
-    wxButton* m_apply_btn;
+		wxButton* m_restore_btn;
+		wxButton* m_apply_btn;
 
-    wxBoxSizer* m_button_sizer;
+		wxBoxSizer* m_button_sizer;
 
-    enum {
-        OPTIONS_TABS = wxID_HIGHEST,
-    };
+		enum {
+			OPTIONS_TABS = wxID_HIGHEST,
+		};
 
-    DECLARE_EVENT_TABLE()
+		DECLARE_EVENT_TABLE()
 };
 
 
