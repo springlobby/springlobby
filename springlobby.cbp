@@ -2,8 +2,6 @@
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="6" />
 	<Project>
-	<Unit filename="src/utils/stack.h" />
-	<Unit filename="src/utils/stack.cpp" />
 		<Option title="springlobby" />
 		<Option pch_mode="0" />
 		<Option compiler="gcc" />
@@ -457,6 +455,12 @@
 		<Unit filename="src/utils/platform.h" />
 		<Unit filename="src/utils/sltipwin.cpp" />
 		<Unit filename="src/utils/sltipwin.h" />
+		<Unit filename="src/utils/stack.cpp">
+			<Option target="GNU | Profile" />
+			<Option target="Win32 | Debug" />
+			<Option target="Win32 | Profile" />
+		</Unit>
+		<Unit filename="src/utils/stack.h" />
 		<Unit filename="src/utils/tasutil.cpp" />
 		<Unit filename="src/utils/tasutil.h" />
 		<Unit filename="src/widgets/downloaddialog.cpp" />
