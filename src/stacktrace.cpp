@@ -9,7 +9,6 @@
 
 #if wxUSE_STACKWALKER
 
-
 void StackTrace::OnStackFrame ( const wxStackFrame& frame )
 {
   StackTraceString += wxString::Format( _T("(%d) "), frame.GetLevel() ); // (frame_level_number)
@@ -85,6 +84,8 @@ static const char *ExceptionName(DWORD exceptionCode)
 
 
 #include <wx/arrstr.h>
+#include "utils/conversion.h"
+
 /** Print out a stacktrace. */
 wxArrayString Stacktrace(LPEXCEPTION_POINTERS e) {
 	PIMAGEHLP_SYMBOL pSym;
@@ -93,7 +94,8 @@ wxArrayString Stacktrace(LPEXCEPTION_POINTERS e) {
 	DWORD dwModBase, Disp;
 	BOOL more = FALSE;
 	int count = 0;
-	char modname[MAX_PATH] = "FUCKSHIT"; //got compile errors below
+	wchar_t wmodname[MAX_PATH] ;
+	char modname[MAX_PATH] ;
     wxArrayString out;
 
 	pSym = (PIMAGEHLP_SYMBOL)GlobalAlloc(GMEM_FIXED, 16384);
@@ -126,22 +128,26 @@ wxArrayString Stacktrace(LPEXCEPTION_POINTERS e) {
 		}
 
 		dwModBase = SymGetModuleBase(process, sf.AddrPC.Offset);
-//
-//		if(dwModBase) {
-//			GetModuleFileName((HINSTANCE)dwModBase, modname, MAX_PATH);
-//		} else {
-//			strcpy(modname, "Unknown");
-//		}
+
+		if(dwModBase) {
+			GetModuleFileName((HINSTANCE)dwModBase, wmodname, MAX_PATH);
+			wcstombs(modname, wmodname,MAX_PATH);
+		} else
+		{
+			strcpy(modname, "Unknown");
+		}
 
 		pSym->SizeOfStruct = sizeof(IMAGEHLP_SYMBOL);
 		pSym->MaxNameLength = MAX_PATH;
+		wxString name ( TowxString( modname ) );
 
 		if(SymGetSymFromAddr(process, sf.AddrPC.Offset, &Disp, pSym)) {
 			// This is the code path taken on VC if debugging syms are found.
 			out.Add( wxString::Format( _T("(%d) %s(%s+%#0x) [0x%08X]\n") , count, modname, pSym->Name, Disp, sf.AddrPC.Offset) );
-		} else {
+		} else
+		 {
 			// This is the code path taken on MinGW, and VC if no debugging syms are found.
-			out.Add( wxString::Format( _T("(%d) %s [0x%08X]\n"), count, modname, sf.AddrPC.Offset) );
+			out.Add( wxString::Format( _T("(%d) %s [0x%08X]\n"), count, name.c_str(), sf.AddrPC.Offset) );
 		}
 		++count;
 	}
