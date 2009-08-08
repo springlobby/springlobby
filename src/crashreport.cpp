@@ -23,6 +23,13 @@
 #include "curl/http.h"
 #include "stacktrace.h"
 
+#if ! wxUSE_STACKWALKER
+    #include "utils/stack.h"
+    #include <algorithm>
+    #include <iostream>
+    #include <iterator>
+#endif
+
 NetDebugReport::NetDebugReport()
 {
 
@@ -138,11 +145,11 @@ bool NetDebugReport::OnServerReply( const wxArrayString& reply )
     stacktrace.Walk( 2, 20 );
     report->AddText( _T( "stacktrace.txt" ), stacktrace.GetStackTrace(), _( "StackTrace" ) );
 #else
-    wxArrayString trace = Stacktrace( p );
-    wxString trace_str;
-    for ( size_t i = 0; i < trace.Count(); ++i ) {
-        trace_str += trace[i];
-    }
+    dbg::stack stack;
+    std::stringstream stack_str;
+    std::copy(stack.begin(), stack.end(), std::ostream_iterator<dbg::stack_frame>(stack_str, "\n"));
+
+    wxString trace_str ( TowxString( stack_str.str() ) );
     report->AddText( _T( "stacktrace.txt" ), trace_str, _( "StackTrace" ) );
 #endif
 

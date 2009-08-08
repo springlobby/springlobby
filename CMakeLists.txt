@@ -231,6 +231,7 @@ ENDIF( OPTION_TORRENT_SYSTEM )
 INCLUDE_DIRECTORIES(${SpringLobby_SOURCE_DIR} ${Settings_SOURCE_DIR} )
 
 SET(SpringLobbySrc
+	src/utils/stack.cpp
 	src/utils/math.cpp
 	src/utils/misc.cpp
 	src/utils/debug.cpp
@@ -454,8 +455,8 @@ ENDIF(WIN32 AND OPTION_TORRENT_SYSTEM)
 
 IF( ENABLE_DEBUG_REPORT )
 	IF(WIN32)
-		TARGET_LINK_LIBRARIES(springlobby ws2_32 mswsock ${CURL_LIBRARIES} libtorrent )
-		TARGET_LINK_LIBRARIES(springsettings ws2_32 mswsock ${CURL_LIBRARIES} libtorrent )
+		TARGET_LINK_LIBRARIES(springlobby ws2_32 mswsock ${CURL_LIBRARIES} libtorrent /share/sources/mingw-distro/MinGW/lib/libbfd.a iberty psapi)
+		TARGET_LINK_LIBRARIES(springsettings ws2_32 mswsock ${CURL_LIBRARIES} libtorrent /share/sources/mingw-distro/MinGW/lib/libbfd.a iberty psapi)
 	ELSE(WIN32)
 		TARGET_LINK_LIBRARIES(springlobby ${CURL_LIBRARIES} )
 		TARGET_LINK_LIBRARIES(springsettings ${CURL_LIBRARIES} )
