@@ -90,6 +90,8 @@ MainTorrentTab::MainTorrentTab( wxWindow* parent )
 
 	for ( map_infos_iter iter = info_map.begin(); iter != info_map.end(); ++iter )
 	{
+	    if (iter->first == wxString(_T("global")))
+            continue;
 		m_torrent_list->AddTorrentInfo( iter->second );
 	}
 	m_download_dialog = 0;
@@ -157,7 +159,8 @@ void MainTorrentTab::OnUpdate()
     m_incoming_lbl->SetLabel( wxString::Format(_("Total Incoming: %.2f KB/s"), (info_map[wxString(_T("global"))].inspeed/ float(1024)) ) );
     for (map_infos_iter iter = info_map.begin(); iter != info_map.end(); ++iter)
     {
-		if (iter->first == wxString(_T("global"))) continue; //skip global torrent stats
+		if (iter->first == wxString(_T("global")))
+            continue; //skip global torrent stats
 		m_torrent_list->UpdateTorrentInfo(iter->second);
     }
 	m_torrent_list->RefreshTorrentStatus();
