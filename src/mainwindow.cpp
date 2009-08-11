@@ -26,8 +26,10 @@
 #include <wx/aboutdlg.h>
 
 #include <stdexcept>
+#include <iostream>
 
 #include "aui/auimanager.h"
+#include "aui/slbook.h"
 #include "aui/artprovider.h"
 #include "springlobbyapp.h"
 #include "mainwindow.h"
@@ -47,8 +49,8 @@
 #include "playback/playbacktraits.h"
 #include "playback/playbacktab.h"
 #ifndef NO_TORRENT_SYSTEM
-#include "maintorrenttab.h"
-#include "torrentwrapper.h"
+	#include "maintorrenttab.h"
+	#include "torrentwrapper.h"
 #endif
 #include "user.h"
 
@@ -123,7 +125,7 @@ MainWindow::MainWindow( Ui& ui )
 
   SetIcon( wxIcon(springlobby_xpm) );
 
-  GetAui().manager = new wxAuiManager( this );
+  GetAui().manager = new AuiManagerContainer::ManagerType( this );
 
   wxMenu *menuFile = new wxMenu;
   menuFile->Append(MENU_CONNECT, _("&Connect..."));
@@ -180,7 +182,7 @@ MainWindow::MainWindow( Ui& ui )
   SetMenuBar(m_menubar);
 
   m_main_sizer = new wxBoxSizer( wxHORIZONTAL );
-  m_func_tabs = new wxAuiNotebook(  this, MAIN_TABS, wxDefaultPosition, wxDefaultSize,
+  m_func_tabs = new SLNotebook(  this, MAIN_TABS, wxDefaultPosition, wxDefaultSize,
         wxAUI_NB_WINDOWLIST_BUTTON | wxAUI_NB_TAB_SPLIT | wxAUI_NB_TAB_MOVE | wxAUI_NB_TAB_EXTERNAL_MOVE | wxAUI_NB_SCROLL_BUTTONS | wxAUI_NB_LEFT );
   m_func_tabs->SetArtProvider(new SLArtProvider);
 
@@ -270,7 +272,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::OnClose( wxCloseEvent& /*unused*/ )
 {
-  wxAuiManager* manager=GetAui().manager;
+  AuiManagerContainer::ManagerType* manager=GetAui().manager;
   if(manager){
     GetAui().manager=NULL;
     manager->UnInit();

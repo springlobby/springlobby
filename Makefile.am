@@ -397,6 +397,8 @@ libtorrent_headers = \
 
 
 springlobby_SOURCES = \
+	src/aui/slbook.cpp \
+	src/aui/slbook.h \
 	src/utils/math.cpp \
 	src/utils/math.h \
 	src/utils/misc.cpp \

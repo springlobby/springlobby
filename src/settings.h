@@ -44,7 +44,7 @@ struct BattleListFilterValues;
 struct PlaybackListFilterValues;
 class wxFileInputStream;
 class wxFileName;
-class wxColor;
+class wxColour;
 class wxColour;
 class wxColourData;
 class wxSize;
@@ -354,8 +354,8 @@ class Settings
     void AddGroup( const wxString& group ) ;
     void DeleteGroup( const wxString& group ) ;
 
-    void SetGroupHLColor( const wxColor& color, const wxString& group = _T("default") );
-    wxColor GetGroupHLColor( const wxString& group = _T("default") ) const;
+    void SetGroupHLColor( const wxColour& color, const wxString& group = _T("default") );
+    wxColour GetGroupHLColor( const wxString& group = _T("default") ) const;
 
     void SetGroupActions( const wxString& group, UserActions::ActionType action );
     UserActions::ActionType GetGroupActions( const wxString& group ) const;

@@ -231,6 +231,7 @@ ENDIF( OPTION_TORRENT_SYSTEM )
 INCLUDE_DIRECTORIES(${SpringLobby_SOURCE_DIR} ${Settings_SOURCE_DIR} )
 
 SET(SpringLobbySrc
+	src/aui/slbook.cpp
 	src/utils/math.cpp
 	src/utils/misc.cpp
 	src/utils/debug.cpp

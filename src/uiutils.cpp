@@ -393,7 +393,7 @@ std::vector<wxColour>& GetBigFixColoursPalette( int numteams )
 			if ( hue > 1 ) hue-= 1;
 			wxImage::HSVValue hsvcolor( hue, saturation, value );
 			wxImage::RGBValue rgbvalue = wxImage::HSVtoRGB( hsvcolor );
-			wxColor col( rgbvalue.red, rgbvalue.green, rgbvalue.blue );
+			wxColour col( rgbvalue.red, rgbvalue.green, rgbvalue.blue );
 			result.push_back( col );
     }
     return result;

@@ -27,6 +27,7 @@
 #include <wx/stattext.h>
 
 #include "aui/auimanager.h"
+#include "aui/slbook.h"
 #include "channel/channel.h"
 #include "chatpanel.h"
 #include "utils/debug.h"
@@ -124,24 +125,24 @@ END_EVENT_TABLE()
     #endif
 
 /// table for irc colors
-static wxColor m_irc_colors[9]  =
+static wxColour m_irc_colors[9]  =
 {
-	wxColor(0,0,0),
-	wxColor(54,54,178),
-	wxColor(40,140,42),
-	wxColor(255,255,255),
-	wxColor(199,50,50),
-	wxColor(128,38,127),
-	wxColor(102,54,31),
-	wxColor(217,166,65),
-	wxColor(61,204,61)
+	wxColour(0,0,0),
+	wxColour(54,54,178),
+	wxColour(40,140,42),
+	wxColour(255,255,255),
+	wxColour(199,50,50),
+	wxColour(128,38,127),
+	wxColour(102,54,31),
+	wxColour(217,166,65),
+	wxColour(61,204,61)
 };
 
 ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Channel& chan, wxImageList* imaglist ):
   wxPanel( parent, -1 ),
   m_show_nick_list( true ),
   m_nicklist(0),
-  m_chat_tabs(( wxAuiNotebook* )parent ),
+  m_chat_tabs(( SLNotebook* )parent ),
   m_ui( ui ),
   m_channel( &chan ),
   m_server( 0 ),
@@ -169,7 +170,7 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, const User& user, wxImageList* i
   wxPanel( parent, -1 ),
   m_show_nick_list( false ),
   m_nicklist(0),
-  m_chat_tabs(( wxAuiNotebook* )parent ),
+  m_chat_tabs(( SLNotebook* )parent ),
   m_ui( ui ),
   m_channel( 0 ),
   m_server( 0 ),
@@ -195,7 +196,7 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Server& serv, wxImageList* imagl
   wxPanel( parent, -1 ),
   m_show_nick_list( false ),
   m_nicklist(0),
-  m_chat_tabs(( wxAuiNotebook* )parent ),
+  m_chat_tabs(( SLNotebook* )parent ),
   m_ui( ui ),
   m_channel( 0 ),
   m_server( &serv ),
@@ -372,7 +373,7 @@ void ChatPanel::CreateControls( )
   textcompletiondatabase.Insert_Mapping( _T("hf"), _T("Have Fun!") );
   textcompletiondatabase.Insert_Mapping( _T("glhf"), _T("Good luck, have Fun!") );
   textcompletiondatabase.Insert_Mapping( _T("kaot"), _T("Have Fun!") );
-  textcompletiondatabase.Insert_Mapping( _T("kaot_H"), _T("Der Kaot aus der Hölle.") );
+  textcompletiondatabase.Insert_Mapping( _T("kaot_H"), _T("Der Kaot aus der HĂślle.") );
 
 }
 
@@ -641,46 +642,46 @@ void ChatPanel::OutputLine( const ChatLine& line )
 
   m_chatlog_text->SetDefaultStyle( line.chatstyle );
 
-
-	if ( sett().GetUseIrcColors() )
-	{
-		wxString m1;
-		wxString m2;
-		wxString m3;
-		wxTextAttr at;
-		char c;
-		char c2;
-		m1 = line.chat;
-		while ( 1 )
-		{
-			m3 = m1.BeforeFirst('\003');
-			m_chatlog_text->AppendText( m3 );
-			m2 = m1.AfterFirst('\003');
-			if ( m2.Len() >= 1 )
-			{
-				c = m2.GetChar(0);
-				c2 = m2.GetChar(1);
-
-				if ( ( c >= 48 ) && ( c <= 58 ) )
-				{
-					c = c - 48;
-					if ( ( c2 >= 48 ) && ( c2 <= 58 )  ) c = 10*c + c2 - 48;
-					at = line.chatstyle;
-					wxColor dummy(0,0,0);
-					if ( ( c > 0 ) && ( c <= ( sizeof( m_irc_colors ) / sizeof( dummy ) ) ) ) at.SetTextColour( m_irc_colors[c-1] );
-
-					m_chatlog_text->SetDefaultStyle(at);
-
-					m1 = m2.AfterFirst(c+48);
-				}
-			}
-			else
-			{
-				break;
-			}
-		}
-	}
-	else
+// disabled due to inf loop possibilty
+//	if ( sett().GetUseIrcColors() )
+//	{
+//		wxString m1;
+//		wxString m2;
+//		wxString m3;
+//		wxTextAttr at;
+//		char c;
+//		char c2;
+//		m1 = line.chat;
+//		while ( 1 )
+//		{
+//			m3 = m1.BeforeFirst('\003');
+//			m_chatlog_text->AppendText( m3 );
+//			m2 = m1.AfterFirst('\003');
+//			if ( m2.Len() >= 1 )
+//			{
+//				c = m2.GetChar(0);
+//				c2 = m2.GetChar(1);
+//
+//				if ( ( c >= 48 ) && ( c <= 58 ) )
+//				{
+//					c = c - 48;
+//					if ( ( c2 >= 48 ) && ( c2 <= 58 )  ) c = 10*c + c2 - 48;
+//					at = line.chatstyle;
+//					wxColour dummy(0,0,0);
+//					if ( ( c > 0 ) && ( c <= ( sizeof( m_irc_colors ) / sizeof( dummy ) ) ) ) at.SetTextColour( m_irc_colors[c-1] );
+//
+//					m_chatlog_text->SetDefaultStyle(at);
+//
+//					m1 = m2.AfterFirst(c+48);
+//				}
+//			}
+//			else
+//			{
+//				break;
+//			}
+//		}
+//	}
+//	else
 	{
 		m_chatlog_text->AppendText( line.chat );
 	}
