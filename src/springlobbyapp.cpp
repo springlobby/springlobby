@@ -149,11 +149,6 @@ bool SpringLobbyApp::OnInit()
     wxSocketBase::Initialize();
 
 
-#if defined(ENABLE_DEBUG_REPORT)
-    int*i=0;*i=1;
-    return false;
-#endif
-
 
 #ifdef __WXMSW__
     wxString path = wxPathOnly( wxStandardPaths::Get().GetExecutablePath() ) + wxFileName::GetPathSeparator() + _T("locale");
