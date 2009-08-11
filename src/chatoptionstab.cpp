@@ -59,8 +59,9 @@ BEGIN_EVENT_TABLE( ChatOptionsTab, wxPanel )
 END_EVENT_TABLE()
 
 
-ChatOptionsTab::ChatOptionsTab( wxWindow* parent )
-    : wxScrolledWindow( parent, -1 )
+ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui )
+    : wxScrolledWindow( parent, -1 ),
+    m_ui( ui )
 {
 	GetAui().manager->AddPane( this, wxLEFT, _T( "chatoptionstab" ) );
 
