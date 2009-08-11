@@ -59,294 +59,295 @@ BEGIN_EVENT_TABLE( ChatOptionsTab, wxPanel )
 END_EVENT_TABLE()
 
 
-ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( parent, -1 ),m_ui(ui)
+ChatOptionsTab::ChatOptionsTab( wxWindow* parent )
+    : wxScrolledWindow( parent, -1 )
 {
-  GetAui().manager->AddPane( this, wxLEFT, _T("chatoptionstab") );
+	GetAui().manager->AddPane( this, wxLEFT, _T( "chatoptionstab" ) );
 
-  wxBoxSizer* bMainSizerV;
-  bMainSizerV = new wxBoxSizer( wxVERTICAL );
+	wxBoxSizer* bMainSizerV;
+	bMainSizerV = new wxBoxSizer( wxVERTICAL );
 
-  wxStaticBoxSizer* sbColorsSizer;
-  sbColorsSizer = new wxStaticBoxSizer( new wxStaticBox( this, -1, _("Colors and font") ), wxHORIZONTAL );
+	wxStaticBoxSizer* sbColorsSizer;
+	sbColorsSizer = new wxStaticBoxSizer( new wxStaticBox( this, -1, _( "Colors and font" ) ), wxHORIZONTAL );
 
-  wxBoxSizer* bColorsVSizer;
-  bColorsVSizer = new wxBoxSizer( wxVERTICAL );
+	wxBoxSizer* bColorsVSizer;
+	bColorsVSizer = new wxBoxSizer( wxVERTICAL );
 
-  m_use_sys_colors = new wxCheckBox( this, ID_SYSCOLS, _("Use system colors"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_use_sys_colors = new wxCheckBox( this, ID_SYSCOLS, _( "Use system colors" ), wxDefaultPosition, wxDefaultSize, 0 );
 
-  m_use_sys_colors->Enable( false );
+	m_use_sys_colors->Enable( false );
 
-  bColorsVSizer->Add( m_use_sys_colors, 0, wxALL, 5 );
+	bColorsVSizer->Add( m_use_sys_colors, 0, wxALL, 5 );
 
-  m_custom_colors = new wxPanel( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
-  m_custom_colors->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_MENU ) );
+	m_custom_colors = new wxPanel( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxTAB_TRAVERSAL );
+	m_custom_colors->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_MENU ) );
 
-  wxBoxSizer* bCustomColorsSizer;
-  bCustomColorsSizer = new wxBoxSizer( wxHORIZONTAL );
+	wxBoxSizer* bCustomColorsSizer;
+	bCustomColorsSizer = new wxBoxSizer( wxHORIZONTAL );
 
-  wxBoxSizer* bColorSizer;
-  bColorSizer = new wxBoxSizer( wxHORIZONTAL );
+	wxBoxSizer* bColorSizer;
+	bColorSizer = new wxBoxSizer( wxHORIZONTAL );
 
-  wxBoxSizer* bColorsSizer1;
-  bColorsSizer1 = new wxBoxSizer( wxVERTICAL );
+	wxBoxSizer* bColorsSizer1;
+	bColorsSizer1 = new wxBoxSizer( wxVERTICAL );
 
-  wxBoxSizer* bNormlColorSizer;
-  bNormlColorSizer = new wxBoxSizer( wxHORIZONTAL );
+	wxBoxSizer* bNormlColorSizer;
+	bNormlColorSizer = new wxBoxSizer( wxHORIZONTAL );
 
-  m_normal_color = new ColorButton( m_custom_colors, ID_NORMAL, wxBitmap(), wxDefaultPosition, wxSize( 20,20 ), 0 );
-  m_normal_color->SetColor( wxColour( 0, 0, 0 ) );
+	m_normal_color = new ColorButton( m_custom_colors, ID_NORMAL, wxBitmap(), wxDefaultPosition, wxSize( 20, 20 ), 0 );
+	m_normal_color->SetColor( wxColour( 0, 0, 0 ) );
 
-  bNormlColorSizer->Add( m_normal_color, 0, wxALL, 5 );
+	bNormlColorSizer->Add( m_normal_color, 0, wxALL, 5 );
 
-  m_normal_label = new wxStaticText( m_custom_colors, wxID_ANY, _("Normal"), wxDefaultPosition, wxDefaultSize, 0 );
-  m_normal_label->Wrap( -1 );
-  bNormlColorSizer->Add( m_normal_label, 1, wxALL, 5 );
+	m_normal_label = new wxStaticText( m_custom_colors, wxID_ANY, _( "Normal" ), wxDefaultPosition, wxDefaultSize, 0 );
+	m_normal_label->Wrap( -1 );
+	bNormlColorSizer->Add( m_normal_label, 1, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
-  bColorsSizer1->Add( bNormlColorSizer, 0, wxEXPAND, 5 );
+	bColorsSizer1->Add( bNormlColorSizer, 0, wxEXPAND, 5 );
 
-  wxBoxSizer* bBGColorSizer;
-  bBGColorSizer = new wxBoxSizer( wxHORIZONTAL );
+	wxBoxSizer* bBGColorSizer;
+	bBGColorSizer = new wxBoxSizer( wxHORIZONTAL );
 
-  m_bg_color = new ColorButton( m_custom_colors, ID_BG, wxBitmap(), wxDefaultPosition, wxSize( 20,20 ), 0 );
-  m_bg_color->SetColor( wxColour( 255, 255, 255 ) );
+	m_bg_color = new ColorButton( m_custom_colors, ID_BG, wxBitmap(), wxDefaultPosition, wxSize( 20, 20 ), 0 );
+	m_bg_color->SetColor( wxColour( 255, 255, 255 ) );
 
-  bBGColorSizer->Add( m_bg_color, 0, wxALL, 5 );
+	bBGColorSizer->Add( m_bg_color, 0, wxALL, 5 );
 
-  m_bg_label = new wxStaticText( m_custom_colors, wxID_ANY, _("Background"), wxDefaultPosition, wxDefaultSize, 0 );
-  m_bg_label->Wrap( -1 );
-  bBGColorSizer->Add( m_bg_label, 1, wxALL, 5 );
+	m_bg_label = new wxStaticText( m_custom_colors, wxID_ANY, _( "Background" ), wxDefaultPosition, wxDefaultSize, 0 );
+	m_bg_label->Wrap( -1 );
+	bBGColorSizer->Add( m_bg_label, 1, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
-  bColorsSizer1->Add( bBGColorSizer, 0, wxEXPAND, 5 );
+	bColorsSizer1->Add( bBGColorSizer, 0, wxEXPAND, 5 );
 
-  wxBoxSizer* bActionColorSizer;
-  bActionColorSizer = new wxBoxSizer( wxHORIZONTAL );
+	wxBoxSizer* bActionColorSizer;
+	bActionColorSizer = new wxBoxSizer( wxHORIZONTAL );
 
-  m_action_color = new ColorButton( m_custom_colors, ID_ACTION, wxBitmap(), wxDefaultPosition, wxSize( 20,20 ), 0 );
-  m_action_color->SetColor( wxColour( 255, 0, 249 ) );
+	m_action_color = new ColorButton( m_custom_colors, ID_ACTION, wxBitmap(), wxDefaultPosition, wxSize( 20, 20 ), 0 );
+	m_action_color->SetColor( wxColour( 255, 0, 249 ) );
 
-  bActionColorSizer->Add( m_action_color, 0, wxALL, 5 );
+	bActionColorSizer->Add( m_action_color, 0, wxALL, 5 );
 
-  m_action_label = new wxStaticText( m_custom_colors, wxID_ANY, _("Action"), wxDefaultPosition, wxDefaultSize, 0 );
-  m_action_label->Wrap( -1 );
-  bActionColorSizer->Add( m_action_label, 1, wxALL, 5 );
+	m_action_label = new wxStaticText( m_custom_colors, wxID_ANY, _( "Action" ), wxDefaultPosition, wxDefaultSize, 0 );
+	m_action_label->Wrap( -1 );
+	bActionColorSizer->Add( m_action_label, 1, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
-  bColorsSizer1->Add( bActionColorSizer, 0, wxEXPAND, 5 );
+	bColorsSizer1->Add( bActionColorSizer, 0, wxEXPAND, 5 );
 
-  wxBoxSizer* bHighlightColorSizer;
-  bHighlightColorSizer = new wxBoxSizer( wxHORIZONTAL );
+	wxBoxSizer* bHighlightColorSizer;
+	bHighlightColorSizer = new wxBoxSizer( wxHORIZONTAL );
 
-  m_highlight_color = new ColorButton( m_custom_colors, ID_HIGHLIGHT, wxBitmap(), wxDefaultPosition, wxSize( 20,20 ), 0 );
-  m_highlight_color->SetColor( wxColour( 255, 0, 44 ) );
+	m_highlight_color = new ColorButton( m_custom_colors, ID_HIGHLIGHT, wxBitmap(), wxDefaultPosition, wxSize( 20, 20 ), 0 );
+	m_highlight_color->SetColor( wxColour( 255, 0, 44 ) );
 
-  bHighlightColorSizer->Add( m_highlight_color, 0, wxALL, 5 );
+	bHighlightColorSizer->Add( m_highlight_color, 0, wxALL, 5 );
 
-  m_highlight_label = new wxStaticText( m_custom_colors, wxID_ANY, _("Highlight"), wxDefaultPosition, wxDefaultSize, 0 );
-  m_highlight_label->Wrap( -1 );
-  bHighlightColorSizer->Add( m_highlight_label, 1, wxALL, 5 );
+	m_highlight_label = new wxStaticText( m_custom_colors, wxID_ANY, _( "Highlight" ), wxDefaultPosition, wxDefaultSize, 0 );
+	m_highlight_label->Wrap( -1 );
+	bHighlightColorSizer->Add( m_highlight_label, 1, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
-  bColorsSizer1->Add( bHighlightColorSizer, 0, wxEXPAND, 5 );
+	bColorsSizer1->Add( bHighlightColorSizer, 0, wxEXPAND, 5 );
 
-  wxBoxSizer* bJoinLeaveColorSizer;
-  bJoinLeaveColorSizer = new wxBoxSizer( wxHORIZONTAL );
+	wxBoxSizer* bJoinLeaveColorSizer;
+	bJoinLeaveColorSizer = new wxBoxSizer( wxHORIZONTAL );
 
-  m_joinleave_color = new ColorButton( m_custom_colors, ID_JOINLEAVE, wxBitmap(), wxDefaultPosition, wxSize( 20,20 ), 0 );
-  m_joinleave_color->SetColor( wxColour( 24, 255, 0 ) );
+	m_joinleave_color = new ColorButton( m_custom_colors, ID_JOINLEAVE, wxBitmap(), wxDefaultPosition, wxSize( 20, 20 ), 0 );
+	m_joinleave_color->SetColor( wxColour( 24, 255, 0 ) );
 
-  bJoinLeaveColorSizer->Add( m_joinleave_color, 0, wxALL, 5 );
+	bJoinLeaveColorSizer->Add( m_joinleave_color, 0, wxALL, 5 );
 
-  m_joinleave_label = new wxStaticText( m_custom_colors, wxID_ANY, _("Join/Leave"), wxDefaultPosition, wxDefaultSize, 0 );
-  m_joinleave_label->Wrap( -1 );
-  bJoinLeaveColorSizer->Add( m_joinleave_label, 1, wxALL, 5 );
+	m_joinleave_label = new wxStaticText( m_custom_colors, wxID_ANY, _( "Join/Leave" ), wxDefaultPosition, wxDefaultSize, 0 );
+	m_joinleave_label->Wrap( -1 );
+	bJoinLeaveColorSizer->Add( m_joinleave_label, 1, wxALIGN_CENTER_VERTICAL |  wxALL, 5 );
 
-  bColorsSizer1->Add( bJoinLeaveColorSizer, 0, wxEXPAND, 5 );
+	bColorsSizer1->Add( bJoinLeaveColorSizer, 0, wxEXPAND, 5 );
 
-  wxBoxSizer* bMyColorSizer;
-  bMyColorSizer = new wxBoxSizer( wxHORIZONTAL );
+	wxBoxSizer* bMyColorSizer;
+	bMyColorSizer = new wxBoxSizer( wxHORIZONTAL );
 
-  m_my_color = new ColorButton( m_custom_colors, ID_MYMESS, wxBitmap(), wxDefaultPosition, wxSize( 20,20 ), 0 );
-  m_my_color->SetColor( wxColour( 160, 160, 160 ) );
+	m_my_color = new ColorButton( m_custom_colors, ID_MYMESS, wxBitmap(), wxDefaultPosition, wxSize( 20, 20 ), 0 );
+	m_my_color->SetColor( wxColour( 160, 160, 160 ) );
 
-  bMyColorSizer->Add( m_my_color, 0, wxALL, 5 );
+	bMyColorSizer->Add( m_my_color, 0, wxALL, 5 );
 
-  m_my_label = new wxStaticText( m_custom_colors, wxID_ANY, _("My messages"), wxDefaultPosition, wxDefaultSize, 0 );
-  m_my_label->Wrap( -1 );
-  bMyColorSizer->Add( m_my_label, 1, wxALL, 5 );
+	m_my_label = new wxStaticText( m_custom_colors, wxID_ANY, _( "My messages" ), wxDefaultPosition, wxDefaultSize, 0 );
+	m_my_label->Wrap( -1 );
+	bMyColorSizer->Add( m_my_label, 1, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
-  bColorsSizer1->Add( bMyColorSizer, 1, wxEXPAND, 5 );
+	bColorsSizer1->Add( bMyColorSizer, 1, wxEXPAND, 5 );
 
-  bColorSizer->Add( bColorsSizer1, 1, wxEXPAND, 5 );
+	bColorSizer->Add( bColorsSizer1, 1, wxEXPAND, 5 );
 
-  wxBoxSizer* bColorSizer2;
-  bColorSizer2 = new wxBoxSizer( wxVERTICAL );
+	wxBoxSizer* bColorSizer2;
+	bColorSizer2 = new wxBoxSizer( wxVERTICAL );
 
-  wxBoxSizer* bServerColorSizer;
-  bServerColorSizer = new wxBoxSizer( wxHORIZONTAL );
+	wxBoxSizer* bServerColorSizer;
+	bServerColorSizer = new wxBoxSizer( wxHORIZONTAL );
 
-  m_server_color = new ColorButton( m_custom_colors, ID_SERVER, wxBitmap(), wxDefaultPosition, wxSize( 20,20 ), 0 );
-  m_server_color->SetColor( wxColour( 255, 189, 0 ) );
+	m_server_color = new ColorButton( m_custom_colors, ID_SERVER, wxBitmap(), wxDefaultPosition, wxSize( 20, 20 ), 0 );
+	m_server_color->SetColor( wxColour( 255, 189, 0 ) );
 
-  bServerColorSizer->Add( m_server_color, 0, wxALL, 5 );
+	bServerColorSizer->Add( m_server_color, 0, wxALL, 5 );
 
-  m_server_label = new wxStaticText( m_custom_colors, wxID_ANY, _("Server"), wxDefaultPosition, wxDefaultSize, 0 );
-  m_server_label->Wrap( -1 );
-  bServerColorSizer->Add( m_server_label, 1, wxALL, 5 );
+	m_server_label = new wxStaticText( m_custom_colors, wxID_ANY, _( "Server" ), wxDefaultPosition, wxDefaultSize, 0 );
+	m_server_label->Wrap( -1 );
+	bServerColorSizer->Add( m_server_label, 1, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
-  bColorSizer2->Add( bServerColorSizer, 0, wxEXPAND, 5 );
+	bColorSizer2->Add( bServerColorSizer, 0, wxEXPAND, 5 );
 
-  wxBoxSizer* bClientolorSizer;
-  bClientolorSizer = new wxBoxSizer( wxHORIZONTAL );
+	wxBoxSizer* bClientolorSizer;
+	bClientolorSizer = new wxBoxSizer( wxHORIZONTAL );
 
-  m_client_color = new ColorButton( m_custom_colors, ID_CLIENT, wxBitmap(), wxDefaultPosition, wxSize( 20,20 ), 0 );
-  m_client_color->SetColor( wxColour( 255, 189, 0 ) );
+	m_client_color = new ColorButton( m_custom_colors, ID_CLIENT, wxBitmap(), wxDefaultPosition, wxSize( 20, 20 ), 0 );
+	m_client_color->SetColor( wxColour( 255, 189, 0 ) );
 
-  bClientolorSizer->Add( m_client_color, 0, wxALL, 5 );
+	bClientolorSizer->Add( m_client_color, 0, wxALL, 5 );
 
-  m_client_label = new wxStaticText( m_custom_colors, wxID_ANY, _("Client"), wxDefaultPosition, wxDefaultSize, 0 );
-  m_client_label->Wrap( -1 );
-  bClientolorSizer->Add( m_client_label, 1, wxALL, 5 );
+	m_client_label = new wxStaticText( m_custom_colors, wxID_ANY, _( "Client" ), wxDefaultPosition, wxDefaultSize, 0 );
+	m_client_label->Wrap( -1 );
+	bClientolorSizer->Add( m_client_label, 1, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
-  bColorSizer2->Add( bClientolorSizer, 0, wxEXPAND, 5 );
+	bColorSizer2->Add( bClientolorSizer, 0, wxEXPAND, 5 );
 
-  wxBoxSizer* bErrorColorSizer;
-  bErrorColorSizer = new wxBoxSizer( wxHORIZONTAL );
+	wxBoxSizer* bErrorColorSizer;
+	bErrorColorSizer = new wxBoxSizer( wxHORIZONTAL );
 
-  m_error_color = new ColorButton( m_custom_colors, ID_ERROR, wxBitmap(), wxDefaultPosition, wxSize( 20,20 ), 0 );
-  m_error_color->SetColor( wxColour( 255, 0, 0 ) );
+	m_error_color = new ColorButton( m_custom_colors, ID_ERROR, wxBitmap(), wxDefaultPosition, wxSize( 20, 20 ), 0 );
+	m_error_color->SetColor( wxColour( 255, 0, 0 ) );
 
-  bErrorColorSizer->Add( m_error_color, 0, wxALL, 5 );
+	bErrorColorSizer->Add( m_error_color, 0, wxALL, 5 );
 
-  m_error_label = new wxStaticText( m_custom_colors, wxID_ANY, _("Error"), wxDefaultPosition, wxDefaultSize, 0 );
-  m_error_label->Wrap( -1 );
-  bErrorColorSizer->Add( m_error_label, 1, wxALL, 5 );
+	m_error_label = new wxStaticText( m_custom_colors, wxID_ANY, _( "Error" ), wxDefaultPosition, wxDefaultSize, 0 );
+	m_error_label->Wrap( -1 );
+	bErrorColorSizer->Add( m_error_label, 1, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
-  bColorSizer2->Add( bErrorColorSizer, 0, wxEXPAND, 5 );
+	bColorSizer2->Add( bErrorColorSizer, 0, wxEXPAND, 5 );
 
-  wxBoxSizer* bTSColorSizer;
-  bTSColorSizer = new wxBoxSizer( wxHORIZONTAL );
+	wxBoxSizer* bTSColorSizer;
+	bTSColorSizer = new wxBoxSizer( wxHORIZONTAL );
 
-  m_ts_color = new ColorButton( m_custom_colors, ID_TIMESTAMP, wxBitmap(), wxDefaultPosition, wxSize( 20,20 ), 0 );
-  m_ts_color->SetColor( wxColour( 160, 160, 160 ) );
+	m_ts_color = new ColorButton( m_custom_colors, ID_TIMESTAMP, wxBitmap(), wxDefaultPosition, wxSize( 20, 20 ), 0 );
+	m_ts_color->SetColor( wxColour( 160, 160, 160 ) );
 
-  bTSColorSizer->Add( m_ts_color, 0, wxALL, 5 );
+	bTSColorSizer->Add( m_ts_color, 0, wxALL, 5 );
 
-  m_ts_label = new wxStaticText( m_custom_colors, wxID_ANY, _("Timestamp"), wxDefaultPosition, wxDefaultSize, 0 );
-  m_ts_label->Wrap( -1 );
-  bTSColorSizer->Add( m_ts_label, 1, wxALL, 5 );
+	m_ts_label = new wxStaticText( m_custom_colors, wxID_ANY, _( "Timestamp" ), wxDefaultPosition, wxDefaultSize, 0 );
+	m_ts_label->Wrap( -1 );
+	bTSColorSizer->Add( m_ts_label, 1, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
-  bColorSizer2->Add( bTSColorSizer, 0, wxEXPAND, 5 );
+	bColorSizer2->Add( bTSColorSizer, 0, wxEXPAND, 5 );
 
-  wxBoxSizer* bNoteColorSizer;
-  bNoteColorSizer = new wxBoxSizer( wxHORIZONTAL );
+	wxBoxSizer* bNoteColorSizer;
+	bNoteColorSizer = new wxBoxSizer( wxHORIZONTAL );
 
-  m_note_color = new ColorButton( m_custom_colors, ID_NOTIFICATION, wxBitmap(), wxDefaultPosition, wxSize( 20,20 ), 0 );
-  m_note_color->SetColor( wxColour( 255, 191, 0 ) );
+	m_note_color = new ColorButton( m_custom_colors, ID_NOTIFICATION, wxBitmap(), wxDefaultPosition, wxSize( 20, 20 ), 0 );
+	m_note_color->SetColor( wxColour( 255, 191, 0 ) );
 
-  bNoteColorSizer->Add( m_note_color, 0, wxALL, 5 );
+	bNoteColorSizer->Add( m_note_color, 0, wxALL, 5 );
 
-  m_note_label = new wxStaticText( m_custom_colors, wxID_ANY, _("Notification"), wxDefaultPosition, wxDefaultSize, 0 );
-  m_note_label->Wrap( -1 );
-  bNoteColorSizer->Add( m_note_label, 1, wxALL, 5 );
+	m_note_label = new wxStaticText( m_custom_colors, wxID_ANY, _( "Notification" ), wxDefaultPosition, wxDefaultSize, 0 );
+	m_note_label->Wrap( -1 );
+	bNoteColorSizer->Add( m_note_label, 1, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
-  bColorSizer2->Add( bNoteColorSizer, 0, wxEXPAND, 5 );
+	bColorSizer2->Add( bNoteColorSizer, 0, wxEXPAND, 5 );
 
-  bColorSizer->Add( bColorSizer2, 1, wxEXPAND, 5 );
+	bColorSizer->Add( bColorSizer2, 1, wxEXPAND, 5 );
 
-  bCustomColorsSizer->Add( bColorSizer, 1, wxEXPAND, 5 );
+	bCustomColorsSizer->Add( bColorSizer, 1, wxEXPAND, 5 );
 
-  m_test_text = new wxTextCtrl( m_custom_colors, wxID_ANY, _("[19:35] ** Server ** Connected to Server.\n[22:30] <Dude> hi everyone\n[22:30] ** Dude2 joined the channel.\n[22:30] * Dude2 thinks his colors looks nice\n[22:45] <Dude> Dude2: orl?\n[22:46] <Dude2> But could be better, should tweak them some more...\n"), wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY|wxTE_RICH );
-  bCustomColorsSizer->Add( m_test_text, 1, wxALL|wxEXPAND, 5 );
+	m_test_text = new wxTextCtrl( m_custom_colors, wxID_ANY, _( "[19:35] ** Server ** Connected to Server.\n[22:30] <Dude> hi everyone\n[22:30] ** Dude2 joined the channel.\n[22:30] * Dude2 thinks his colors looks nice\n[22:45] <Dude> Dude2: orl?\n[22:46] <Dude2> But could be better, should tweak them some more...\n" ), wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH );
+	bCustomColorsSizer->Add( m_test_text, 1, wxALL | wxEXPAND, 5 );
 
-  m_custom_colors->SetSizer( bCustomColorsSizer );
-  m_custom_colors->Layout();
-  bCustomColorsSizer->Fit( m_custom_colors );
-  bColorsVSizer->Add( m_custom_colors, 1, wxEXPAND | wxALL, 0 );
+	m_custom_colors->SetSizer( bCustomColorsSizer );
+	m_custom_colors->Layout();
+	bCustomColorsSizer->Fit( m_custom_colors );
+	bColorsVSizer->Add( m_custom_colors, 1, wxEXPAND | wxALL, 0 );
 
-  wxBoxSizer* bFontNameSizer;
-  bFontNameSizer = new wxBoxSizer( wxHORIZONTAL );
+	wxBoxSizer* bFontNameSizer;
+	bFontNameSizer = new wxBoxSizer( wxHORIZONTAL );
 
-  m_font_label = new wxStaticText( this, wxID_ANY, _("Font:"), wxDefaultPosition, wxDefaultSize, 0 );
-  m_font_label->Wrap( -1 );
-  bFontNameSizer->Add( m_font_label, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	m_font_label = new wxStaticText( this, wxID_ANY, _( "Font:" ), wxDefaultPosition, wxDefaultSize, 0 );
+	m_font_label->Wrap( -1 );
+	bFontNameSizer->Add( m_font_label, 0, wxALL | wxALIGN_CENTER_VERTICAL, 5 );
 
-  m_fontname = new wxStaticText( this, wxID_ANY, _("default"), wxDefaultPosition, wxDefaultSize, 0 );
-  m_fontname->Wrap( -1 );
-  bFontNameSizer->Add( m_fontname, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	m_fontname = new wxStaticText( this, wxID_ANY, _( "default" ), wxDefaultPosition, wxDefaultSize, 0 );
+	m_fontname->Wrap( -1 );
+	bFontNameSizer->Add( m_fontname, 0, wxALL | wxALIGN_CENTER_VERTICAL, 5 );
 
-  m_select_font = new wxButton( this, ID_SELFONT, _("Select..."), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
-  bFontNameSizer->Add( m_select_font, 0, wxALL, 5 );
+	m_select_font = new wxButton( this, ID_SELFONT, _( "Select..." ), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+	bFontNameSizer->Add( m_select_font, 0, wxALL, 5 );
 
-  bColorsVSizer->Add( bFontNameSizer, 0, wxEXPAND, 5 );
+	bColorsVSizer->Add( bFontNameSizer, 0, wxEXPAND, 5 );
 
-  sbColorsSizer->Add( bColorsVSizer, 1, wxEXPAND, 5 );
+	sbColorsSizer->Add( bColorsVSizer, 1, wxEXPAND, 5 );
 
-  bMainSizerV->Add( sbColorsSizer, 0, wxEXPAND|wxBOTTOM|wxRIGHT|wxLEFT|wxTOP, 5 );
+	bMainSizerV->Add( sbColorsSizer, 0, wxEXPAND | wxBOTTOM | wxRIGHT | wxLEFT | wxTOP, 5 );
 
 
+	wxStaticBoxSizer* sbBehaviorSizer;
+	sbBehaviorSizer = new wxStaticBoxSizer( new wxStaticBox( this, -1, _( "Behavior" ) ), wxHORIZONTAL );
 
-  wxStaticBoxSizer* sbBehaviorSizer;
-  sbBehaviorSizer = new wxStaticBoxSizer( new wxStaticBox( this, -1, _("Behavior") ), wxHORIZONTAL );
+	m_irc_colors = new wxCheckBox( this, wxID_ANY, _( "Enable Irc colors in chat messages" ), wxDefaultPosition, wxDefaultSize, 0 );
+	m_irc_colors->SetValue( sett().GetUseIrcColors() );
+	m_irc_colors->Enable( false );
 
-  m_irc_colors = new wxCheckBox( this, wxID_ANY, _("Enable Irc colors in chat messages"), wxDefaultPosition, wxDefaultSize, 0 );
-  m_irc_colors->SetValue( sett().GetUseIrcColors() );
-
-  sbBehaviorSizer->Add( m_irc_colors, 0, wxALL, 5 );
+	sbBehaviorSizer->Add( m_irc_colors, 0, wxALL, 5 );
 #ifndef DISABLE_SOUND
   m_play_sounds = new wxCheckBox( this, ID_PLAY_SOUNDS, _("Play notification sounds"), wxDefaultPosition, wxDefaultSize, 0 );
   m_play_sounds->SetValue( sett().GetChatPMSoundNotificationEnabled() );
   sbBehaviorSizer->Add( m_play_sounds, 0, wxALL, 5 );
 #endif
 
-  bMainSizerV->Add( sbBehaviorSizer, 0, wxEXPAND|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
+	bMainSizerV->Add( sbBehaviorSizer, 0, wxEXPAND | wxBOTTOM | wxRIGHT | wxLEFT, 5 );
 
-  wxBoxSizer* bBotomSizer;
-  bBotomSizer = new wxBoxSizer( wxHORIZONTAL );
+	wxBoxSizer* bBotomSizer;
+	bBotomSizer = new wxBoxSizer( wxHORIZONTAL );
 
-  wxStaticBoxSizer* sbChatLogSizer;
-  wxStaticBox*  sbChatLog = new wxStaticBox( this, -1, _("Chat logs") );
-  sbChatLogSizer = new wxStaticBoxSizer( sbChatLog, wxVERTICAL );
+	wxStaticBoxSizer* sbChatLogSizer;
+	wxStaticBox*  sbChatLog = new wxStaticBox( this, -1, _( "Chat logs" ) );
+	sbChatLogSizer = new wxStaticBoxSizer( sbChatLog, wxVERTICAL );
 
-  m_save_logs = new wxCheckBox( this, wxID_ANY, _("Save chat logs"), wxDefaultPosition, wxDefaultSize, 0 );
-  m_save_logs->SetValue( sett().GetChatLogEnable() );
+	m_save_logs = new wxCheckBox( this, wxID_ANY, _( "Save chat logs" ), wxDefaultPosition, wxDefaultSize, 0 );
+	m_save_logs->SetValue( sett().GetChatLogEnable() );
 
-  sbChatLogSizer->Add( m_save_logs, 0, wxALL, 5 );
+	sbChatLogSizer->Add( m_save_logs, 0, wxALL, 5 );
 
-  bBotomSizer->Add( sbChatLogSizer, 1, wxEXPAND|wxRIGHT, 5 );
+	bBotomSizer->Add( sbChatLogSizer, 1, wxEXPAND | wxRIGHT, 5 );
 
-  wxStaticBoxSizer* sbHighlightSizer;
-  sbHighlightSizer = new wxStaticBoxSizer( new wxStaticBox( this, -1, _("Highlight words") ), wxVERTICAL );
+	wxStaticBoxSizer* sbHighlightSizer;
+	sbHighlightSizer = new wxStaticBoxSizer( new wxStaticBox( this, -1, _( "Highlight words" ) ), wxVERTICAL );
 
-  m_hilight_words_label = new wxStaticText( this, wxID_ANY, _("Words to highlight in chat:"), wxDefaultPosition, wxDefaultSize, 0 );
-  m_hilight_words_label->Wrap( -1 );
+	m_hilight_words_label = new wxStaticText( this, wxID_ANY, _( "Words to highlight in chat:" ), wxDefaultPosition, wxDefaultSize, 0 );
+	m_hilight_words_label->Wrap( -1 );
 
-  sbHighlightSizer->Add( m_hilight_words_label, 0, wxALL, 5 );
-
-
-  sbHighlightSizer->Add( 0, 0, 1, wxEXPAND, 5 );
-
-  m_highlight_words = new wxTextCtrl( this, ID_HIWORDS, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-  m_highlight_words->SetToolTip ( TE(_("enter a ; seperated list" )) );
-
-  sbHighlightSizer->Add( m_highlight_words, 0, wxALL|wxEXPAND, 5 );
-
-  m_highlight_req = new wxCheckBox( this, ID_HL_REQ, _("Additionally play sound/flash titlebar "), wxDefaultPosition, wxDefaultSize, 0 );
-  sbHighlightSizer->Add( m_highlight_req , 0, wxALL|wxEXPAND, 5 );
-
-  bBotomSizer->Add( sbHighlightSizer, 1, wxEXPAND, 5 );
-
-  bMainSizerV->Add( bBotomSizer, 0, wxEXPAND|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
+	sbHighlightSizer->Add( m_hilight_words_label, 0, wxALL, 5 );
 
 
-  bMainSizerV->Add( 0, 0, 1, wxEXPAND | wxALL, 5 );
+	sbHighlightSizer->Add( 0, 0, 1, wxEXPAND, 5 );
 
-  SetScrollRate( 3, 3 );
+	m_highlight_words = new wxTextCtrl( this, ID_HIWORDS, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	m_highlight_words->SetToolTip ( TE( _( "enter a ; seperated list" ) ) );
 
-  SetSizer( bMainSizerV );
-  Layout();
+	sbHighlightSizer->Add( m_highlight_words, 0, wxALL | wxEXPAND, 5 );
 
-  if ( sett().IsPortableMode() ) sbChatLog->Disable();
+	m_highlight_req = new wxCheckBox( this, ID_HL_REQ, _( "Additionally play sound/flash titlebar " ), wxDefaultPosition, wxDefaultSize, 0 );
+	sbHighlightSizer->Add( m_highlight_req , 0, wxALL | wxEXPAND, 5 );
 
-  DoRestore();
-  UpdateTextSample();
+	bBotomSizer->Add( sbHighlightSizer, 1, wxEXPAND, 5 );
+
+	bMainSizerV->Add( bBotomSizer, 0, wxEXPAND | wxBOTTOM | wxRIGHT | wxLEFT, 5 );
+
+
+	bMainSizerV->Add( 0, 0, 1, wxEXPAND | wxALL, 5 );
+
+	SetScrollRate( 3, 3 );
+
+	SetSizer( bMainSizerV );
+	Layout();
+
+	if ( sett().IsPortableMode() ) sbChatLog->Disable();
+
+	DoRestore();
+	UpdateTextSample();
 }
 
 
