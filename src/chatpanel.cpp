@@ -127,17 +127,24 @@ END_EVENT_TABLE()
     #endif
 
 /// table for irc colors
-static wxColour m_irc_colors[9]  =
+static wxColor m_irc_colors[16]  =
 {
-	wxColour(0,0,0),
-	wxColour(54,54,178),
-	wxColour(40,140,42),
-	wxColour(255,255,255),
-	wxColour(199,50,50),
-	wxColour(128,38,127),
-	wxColour(102,54,31),
-	wxColour(217,166,65),
-	wxColour(61,204,61)
+	wxColor(204,204,204),
+	wxColor(0,0,0),
+	wxColor(54,54,178),
+	wxColor(42,140,42),
+	wxColor(195,59,59),
+	wxColor(199,50,50),
+	wxColor(128,38,127),
+	wxColor(102,54,31),
+	wxColor(217,166,65),
+	wxColor(61,204,61),
+	wxColor(26,85,85),
+	wxColor(47,140,116),
+	wxColor(69,69,230),
+	wxColor(176,55,176),
+	wxColor(76,76,76),
+	wxColor(149,149,149)
 };
 
 ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Channel& chan, wxImageList* imaglist ):
@@ -623,7 +630,7 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const 
     newline.time = _T( "[" ) + now.Format( _T( "%H:%M:%S" ) ) + _T( "]" );
     newline.chatstyle = chatstyle;
     newline.timestyle = timestyle;
-
+ 
   if ( m_disable_append )
   {
     m_buffer.push_back( newline );
@@ -649,46 +656,78 @@ void ChatPanel::OutputLine( const ChatLine& line )
 
   m_chatlog_text->SetDefaultStyle( line.chatstyle );
 
-// disabled due to inf loop possibilty
-//	if ( sett().GetUseIrcColors() )
-//	{
-//		wxString m1;
-//		wxString m2;
-//		wxString m3;
-//		wxTextAttr at;
-//		char c;
-//		char c2;
-//		m1 = line.chat;
-//		while ( 1 )
-//		{
-//			m3 = m1.BeforeFirst('\003');
-//			m_chatlog_text->AppendText( m3 );
-//			m2 = m1.AfterFirst('\003');
-//			if ( m2.Len() >= 1 )
-//			{
-//				c = m2.GetChar(0);
-//				c2 = m2.GetChar(1);
-//
-//				if ( ( c >= 48 ) && ( c <= 58 ) )
-//				{
-//					c = c - 48;
-//					if ( ( c2 >= 48 ) && ( c2 <= 58 )  ) c = 10*c + c2 - 48;
-//					at = line.chatstyle;
-//					wxColour dummy(0,0,0);
-//					if ( ( c > 0 ) && ( c <= ( sizeof( m_irc_colors ) / sizeof( dummy ) ) ) ) at.SetTextColour( m_irc_colors[c-1] );
-//
-//					m_chatlog_text->SetDefaultStyle(at);
-//
-//					m1 = m2.AfterFirst(c+48);
-//				}
-//			}
-//			else
-//			{
-//				break;
-//			}
-//		}
-//	}
-//	else
+
+	if ( sett().GetUseIrcColors() )
+	{
+		wxString m1;
+		wxString m2;
+		wxString m3;
+		wxTextAttr at;
+		
+		char c;
+		int color;
+		m1 = line.chat;
+		bool _2chars = false;
+		bool bold = false;
+		wxFont font;
+		wxColor curcolor(0,0,0);
+		curcolor = line.chatstyle.GetTextColour();
+		while ( m1.Len() > 0 )
+		{
+			c = m1.GetChar(0);
+			if (c == 3 && m1.Len() > 1 && (m1.GetChar(1) >= 48 && m1.GetChar(1) <= 58)) // Color
+			{
+				if (m1.Len() > 2 && (m1.GetChar(2) >= 48 && m1.GetChar(2) <= 58))
+				{
+					color = (m1.GetChar(1) - 48)*10+(m1.GetChar(2) - 48);
+					_2chars = true;
+					m1 = m1.Mid(3);
+					}
+				else
+				{
+					color = m1.GetChar(1) -48;
+					_2chars = false;
+					m1 = m1.Mid(2);
+					}
+				
+				wxColor dummy(0,0,0);
+				if ( ( color > -1 ) && ( color < ( sizeof( m_irc_colors ) / sizeof( dummy ) ) ) ) 
+				{
+					
+					curcolor = m_irc_colors[color];
+				}
+				
+			}else if(c == 2)
+			{
+				wxLogMessage(_T("Toggle Bold"));
+				bold = not bold;
+				m1 = m1.Mid(1);
+			}else{
+				at = m_chatlog_text->GetDefaultStyle();
+				at.SetFlags(wxTEXT_ATTR_TEXT_COLOUR | wxTEXT_ATTR_FONT_WEIGHT);
+				font = at.GetFont();
+				if (bold)
+					font.SetWeight(wxFONTWEIGHT_BOLD);
+				else
+					font.SetWeight(wxFONTWEIGHT_NORMAL);
+				at.SetFont(font);
+				at.SetTextColour(curcolor);
+				
+				m_chatlog_text->SetDefaultStyle(at);
+				m_chatlog_text->AppendText( m1.Mid(0,1) );
+				m1 = m1.Mid(1);
+			}
+		}
+		if (bold)
+		{
+			font = at.GetFont();
+			font.SetWeight(wxFONTWEIGHT_NORMAL);
+			at.SetFont(font);
+			m_chatlog_text->SetDefaultStyle(at);
+		}
+			
+	}
+	else
 	{
 		m_chatlog_text->AppendText( line.chat );
 	}
@@ -707,7 +746,6 @@ void ChatPanel::OutputLine( const ChatLine& line )
   m_chatlog_text->ScrollLines( 10 ); // to prevent for weird empty space appended
   m_chatlog_text->ShowPosition( m_chatlog_text->GetLastPosition() );// scroll to the bottom
   #endif
-
   this->Refresh();
 }
 
