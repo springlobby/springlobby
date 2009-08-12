@@ -2149,12 +2149,18 @@ wxString Settings::GetLastReplayFilterProfileName()
 {
 	return  m_config->Read( _T( "/ReplayFilter/lastprofile" ), _T( "default" ) );
 }
-
+wxString Settings::GetLastRelayedHost()
+{
+    return  m_config->Read(_T("/General/RelayHost"),_T("*"));
+}
+void Settings::SetLastRelayedHost(wxString relhost)
+{
+    m_config->Write(_T("/General/RelayHost"),relhost);
+}
 void Settings::SetCompletionMethod( CompletionMethod method )
 {
 	m_config->Write( _T( "/General/CompletionMethod" ), ( int )method );
 }
-
 Settings::CompletionMethod Settings::GetCompletionMethod(  ) const
 {
 	return  ( CompletionMethod )m_config->Read( _T( "/General/CompletionMethod" ), ( int )MatchExact );

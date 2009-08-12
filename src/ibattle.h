@@ -94,7 +94,7 @@ struct BattleOptions
 
 	unsigned int maxplayers;
 	unsigned int spectators;
-
+    wxString relayhost;
 	wxString maphash;
 	wxString modhash;
 

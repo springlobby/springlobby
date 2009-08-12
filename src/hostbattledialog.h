@@ -40,7 +40,7 @@ class HostBattleDialog : public wxDialog
 
 		wxStaticText* m_port_lbl;
 		wxTextCtrl* m_port_text;
-
+        wxTextCtrl* m_relayhost_name;
 //    entirely disabled until functionality is in server
 //    wxCheckBox* m_port_test_check;
 		wxCheckBox* m_relayed_host_check;
