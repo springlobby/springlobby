@@ -663,7 +663,7 @@ void ChatPanel::OutputLine( const ChatLine& line )
 		wxString m2;
 		wxString m3;
 		wxTextAttr at;
-		
+		int oldweight;
 		char c;
 		int color;
 		m1 = line.chat;
@@ -671,7 +671,12 @@ void ChatPanel::OutputLine( const ChatLine& line )
 		bool bold = false;
 		wxFont font;
 		wxColor curcolor(0,0,0);
+		wxColor oldcolor(0,0,0);
 		curcolor = line.chatstyle.GetTextColour();
+                at = m_chatlog_text->GetDefaultStyle();
+		font = at.GetFont();
+		oldweight = font.GetWeight();
+		oldcolor = line.chatstyle.GetTextColour();
 		while ( m1.Len() > 0 )
 		{
 			c = m1.GetChar(0);
@@ -697,19 +702,24 @@ void ChatPanel::OutputLine( const ChatLine& line )
 					curcolor = m_irc_colors[color];
 				}
 				
-			}else if(c == 2)
+			}else if(c == 2)//Bold
 			{
-				wxLogMessage(_T("Toggle Bold"));
 				bold = not bold;
 				m1 = m1.Mid(1);
+			}else if(c == 0x0F) //Reset formatting
+			{
+			  bold = false;
+			  curcolor = oldcolor;
+			  m1 = m1.Mid(1);
 			}else{
+
 				at = m_chatlog_text->GetDefaultStyle();
 				at.SetFlags(wxTEXT_ATTR_TEXT_COLOUR | wxTEXT_ATTR_FONT_WEIGHT);
 				font = at.GetFont();
 				if (bold)
 					font.SetWeight(wxFONTWEIGHT_BOLD);
 				else
-					font.SetWeight(wxFONTWEIGHT_NORMAL);
+					font.SetWeight(oldweight);
 				at.SetFont(font);
 				at.SetTextColour(curcolor);
 				
@@ -721,7 +731,7 @@ void ChatPanel::OutputLine( const ChatLine& line )
 		if (bold)
 		{
 			font = at.GetFont();
-			font.SetWeight(wxFONTWEIGHT_NORMAL);
+			font.SetWeight(oldweight);
 			at.SetFont(font);
 			m_chatlog_text->SetDefaultStyle(at);
 		}
