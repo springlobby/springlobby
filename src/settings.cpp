@@ -2415,3 +2415,13 @@ void Settings::SetEditorPath( const wxString& path )
 {
     m_config->Write( _T( "/GUI/Editor" ) , path );
 }
+
+bool Settings::GetShowXallTabs()
+{
+    return m_config->Read( _T( "/GUI/CloseOnAll" ) , 0l );
+}
+
+void Settings::SetShowXallTabs( bool show )
+{
+    m_config->Write( _T( "/GUI/CloseOnAll" ) , show );
+}

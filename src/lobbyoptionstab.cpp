@@ -141,11 +141,16 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
 
     m_main_sizer->Add( m_complete_method_sizer, 0, wxALL, 5 );
 
-    wxStaticBoxSizer* m_use_tabicons_sizer = new wxStaticBoxSizer ( wxVERTICAL, this, _("Tab icons") );
+    wxStaticBoxSizer* m_misc_gui_sizer = new wxStaticBoxSizer ( wxVERTICAL, this, _("Misc GUI") );
     m_use_tabicons = new wxCheckBox( this, -1, _("Show big icons in mainwindow tabs?"), wxDefaultPosition, wxDefaultSize, 0 );
     m_use_tabicons->SetValue( sett().GetUseTabIcons() );
-    m_use_tabicons_sizer->Add( m_use_tabicons , 0, wxEXPAND | wxALL, 5 );
-    m_main_sizer->Add( m_use_tabicons_sizer , 0, wxALL, 5 );
+    m_misc_gui_sizer->Add( m_use_tabicons , 0, wxEXPAND | wxALL, 5 );
+
+
+    m_x_on_all_tabs = new wxCheckBox( this, -1, _("Show close button on all tabs? (needs restart to take effect)"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_x_on_all_tabs->SetValue( sett().GetShowXallTabs() );
+    m_misc_gui_sizer->Add( m_x_on_all_tabs , 0, wxEXPAND | wxALL, 5 );
+    m_main_sizer->Add( m_misc_gui_sizer , 0, wxALL, 5 );
 
     wxStaticBoxSizer* m_start_tab_sizer = new wxStaticBoxSizer ( wxHORIZONTAL, this, _("Start tab") );
     m_start_tab = new wxChoice( this, -1,  wxDefaultPosition, wxDefaultSize, MainWindow::GetTabNames() );
@@ -185,6 +190,8 @@ void LobbyOptionsTab::OnApply(wxCommandEvent& /*unused*/)
     sett().SetStartTab( m_start_tab->GetSelection() );
 
     sett().SetEditorPath( m_editor_edit->GetValue() );
+
+    sett().SetShowXallTabs( m_x_on_all_tabs->IsChecked() );
 }
 
 
@@ -208,6 +215,8 @@ void LobbyOptionsTab::OnRestore(wxCommandEvent& /*unused*/)
     m_start_tab->SetSelection( sett().GetStartTab() );
 
     m_editor_edit->SetValue( sett().GetEditorPath() );
+
+    m_x_on_all_tabs->SetValue( sett().GetShowXallTabs() );
 }
 
 void LobbyOptionsTab::HandleWebloc( bool defloc )

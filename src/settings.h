@@ -340,6 +340,9 @@ class Settings
     bool GetSplitBRoomHorizontally();
     void SetSplitBRoomHorizontally( const bool vertical );
 
+    bool GetShowXallTabs();
+    void SetShowXallTabs( bool show );
+
     void TranslateSavedColumWidths();
 
     wxString GetEditorPath( );
