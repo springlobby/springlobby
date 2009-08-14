@@ -2401,7 +2401,14 @@ void Settings::TranslateSavedColumWidths()
 
 wxString Settings::GetEditorPath( )
 {
-    return m_config->Read( _T( "/GUI/Editor" ) , wxEmptyString );
+    #if defined(__WXMSW__)
+        wxString def = wxGetOSDirectory() + wxFileName::GetPathSeparator() + _T("system32") + wxFileName::GetPathSeparator() + _T("notepad.exe");
+        if ( !wxFile::Exists( def ) )
+            def = wxEmptyString;
+    #else
+        wxString def = wxEmptyString;
+    #endif
+    return m_config->Read( _T( "/GUI/Editor" ) , def );
 }
 
 void Settings::SetEditorPath( const wxString& path )
