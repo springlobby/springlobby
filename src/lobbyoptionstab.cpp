@@ -149,7 +149,7 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
 
     m_x_on_all_tabs = new wxCheckBox( this, -1, _("Show close button on all tabs? (needs restart to take effect)"), wxDefaultPosition, wxDefaultSize, 0 );
     m_x_on_all_tabs->SetValue( sett().GetShowXallTabs() );
-    m_misc_gui_sizer->Add( m_x_on_all_tabs , 0, wxEXPAND | wxALL, 5 );
+    m_misc_gui_sizer->Add( m_x_on_all_tabs , 1, wxEXPAND | wxALL, 5 );
     m_main_sizer->Add( m_misc_gui_sizer , 0, wxALL, 5 );
 
     wxStaticBoxSizer* m_start_tab_sizer = new wxStaticBoxSizer ( wxHORIZONTAL, this, _("Start tab") );
