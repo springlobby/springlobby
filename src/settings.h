@@ -341,6 +341,9 @@ class Settings
     void SetSplitBRoomHorizontally( const bool vertical );
 
     void TranslateSavedColumWidths();
+
+    wxString GetEditorPath( );
+    void SetEditorPath( const wxString& path );
     /*@}*/
 
     /* ================================================================ */

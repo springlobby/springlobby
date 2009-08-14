@@ -22,6 +22,7 @@ class LobbyOptionsTab : public wxScrolledWindow
         void OnRestore( wxCommandEvent& event );
 
         void OnBrowseWeb( wxCommandEvent& event );
+        void OnBrowseEditor( wxCommandEvent& event );
         void OnDefaultWeb( wxCommandEvent& event );
         void HandleWebloc( bool defloc );
 
@@ -38,12 +39,15 @@ class LobbyOptionsTab : public wxScrolledWindow
         wxStaticText* m_updater_label;
         wxStaticText* m_show_tooltips_label;
         wxStaticText* m_web_loc_text;
+        wxStaticText* m_editor_loc_text;
         wxTextCtrl* m_web_edit;
+        wxTextCtrl* m_editor_edit;
 
         wxStaticText* m_complete_method_label;
         wxRadioButton* m_complete_method_old;
         wxRadioButton* m_complete_method_new;
         wxButton* m_web_browse_btn;
+        wxButton* m_editor_browse_btn;
         wxButton* m_select_locale;
         wxRadioButton* m_web_def_radio;
         wxRadioButton* m_web_spec_radio;
@@ -51,14 +55,17 @@ class LobbyOptionsTab : public wxScrolledWindow
 
         wxBoxSizer* m_main_sizer;
         wxStaticBoxSizer* m_web_box_sizer;
+        wxStaticBoxSizer* m_editor_box_sizer;
         wxBoxSizer* m_web_loc_sizer;
+        wxBoxSizer* m_editor_loc_sizer;
 
         wxChoice* m_start_tab;
 
     enum
     {
         SPRING_WEBBROWSE = wxID_HIGHEST,
-        SPRING_DEFWEB
+        SPRING_DEFWEB,
+        ID_BUT_EDITOR
     };
 
 

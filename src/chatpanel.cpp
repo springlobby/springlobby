@@ -1,4 +1,4 @@
-/* Copyright (C) 2007, 2008 The SpringLobby Team. All rights reserved. */
+// Copyright (C) 2007, 2008 The SpringLobby Team. All rights reserved. */
 //
 // Class: ChatPanel
 //
@@ -113,6 +113,8 @@ BEGIN_EVENT_TABLE( ChatPanel, wxPanel )
 	EVT_MENU( CHAT_MENU_US_MODERATOR_RING, ChatPanel::OnUserMenuModeratorRing )
 
 	EVT_MENU( CHAT_MENU_COPYLINK, ChatPanel::OnUserMenuCopyLink )
+
+	EVT_MENU( CHAT_MENU_LOG_OPEN, ChatPanel::OnChatMenuOpenLog )
 
 	EVT_MENU( CHAT_MENU_SHOW_MUTELIST, ChatPanel::OnChannelMenuShowMutelist )
 
@@ -500,6 +502,11 @@ void ChatPanel::CreatePopup()
             m_usermenu->EnableItems( true, m_user->GetNick() );
         m_popup_menu->AppendSubMenu( m_usermenu, _("User") );
 	}
+
+    if ( m_chat_log.LogEnabled() ) {
+        wxMenuItem* open_extern = new wxMenuItem( m_popup_menu, CHAT_MENU_LOG_OPEN, _( "Open log in editor" ), wxEmptyString, wxITEM_NORMAL );
+        m_popup_menu->Append( open_extern );
+    }
 }
 
 
@@ -1876,4 +1883,9 @@ void ChatPanel::OnChannelMenuShowMutelist( wxCommandEvent& /*unused*/ )
 void ChatPanel::ClearContents( wxCommandEvent& /*unused*/ )
 {
     m_chatlog_text->SetValue( _T("") );
+}
+
+void ChatPanel::OnChatMenuOpenLog( wxCommandEvent& event )
+{
+    m_chat_log.OpenInEditor();
 }

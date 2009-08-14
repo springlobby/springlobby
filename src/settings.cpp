@@ -2398,3 +2398,13 @@ void Settings::TranslateSavedColumWidths()
 	customMessageBoxNoModal( SL_MAIN_ICON, _( "The way column widths are saved has changed, you may need to re-adjust your col widths manually once." ), _( "Important" ) );
 #endif
 }
+
+wxString Settings::GetEditorPath( )
+{
+    return m_config->Read( _T( "/GUI/Editor" ) , wxEmptyString );
+}
+
+void Settings::SetEditorPath( const wxString& path )
+{
+    m_config->Write( _T( "/GUI/Editor" ) , path );
+}
