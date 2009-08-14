@@ -14,7 +14,7 @@ class Spring;
 class SpringProcess: public wxThread
 {
   public:
-    SpringProcess( Spring& sp );
+    SpringProcess( Spring& spring );
     ~SpringProcess();
 
     void OnExit();
@@ -24,7 +24,7 @@ class SpringProcess: public wxThread
     void* Entry();
 
   protected:
-    Spring& m_sp;
+    Spring& m_spring;
     wxString m_cmd;
     int m_exit_code;
 };
@@ -32,13 +32,13 @@ class SpringProcess: public wxThread
 class wxSpringProcess: public wxProcess
 {
   public:
-    wxSpringProcess( Spring& sp );
+    wxSpringProcess( Spring& spring );
     ~wxSpringProcess();
 
     void OnTerminate( int pid, int status );
 
   protected:
-    Spring& m_sp;
+    Spring& m_spring;
 };
 
 const int PROC_SPRING = wxID_HIGHEST;
