@@ -50,8 +50,6 @@ std::vector<wxColour>& GetBigFixColoursPalette( int numteams );
 
 void CopyToClipboard( const wxString& text );
 
-void OpenFileInEditor( const wxString& filepath );
-
 #endif
 // SPRINGLOBBY_HEADERGUARD_UIUTILS_H
 

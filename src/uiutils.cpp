@@ -21,8 +21,6 @@
 #include "utils/debug.h"
 #include "settings++/custom_dialogs.h"
 #include "settings.h"
-#include "ui.h"
-#include "mainwindow.h"
 
 wxString RefineMapname( const wxString& mapname )
 {
@@ -494,21 +492,5 @@ void CopyToClipboard( const wxString& text )
         wxTheClipboard->SetData( new wxTextDataObject( text ) );
         wxTheClipboard->Close();
     }
-}
-
-void OpenFileInEditor( const wxString& filepath )
-{
-    wxString editor_path = sett().GetEditorPath( );
-    if ( editor_path == wxEmptyString ) {
-        customMessageBoxNoModal( SL_MAIN_ICON, _T("You have not chosen an external text editor to open files with.\nPlease Select one now."), _T("No editor set") );
-        ui().mw().ShowConfigure( MainWindow::OPT_PAGE_GENERAL );
-        return;
-    }
-    bool success = ( wxExecute( editor_path + _T(" \"") + filepath + _T("\""), wxEXEC_ASYNC ) != 0 );
-    if ( !success ) {
-        customMessageBoxNoModal( SL_MAIN_ICON, _T("There was a problem launching the editor.\nPlease make sure the path is correct and the binary executable for your user.\nNote it's currently not possible to use shell-only editors like ed, vi, etc."), _T("Problem launching editor") );
-        ui().mw().ShowConfigure( MainWindow::OPT_PAGE_GENERAL );
-    }
-
 }
 

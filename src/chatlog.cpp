@@ -15,7 +15,7 @@
 #include "chatlog.h"
 #include "settings.h"
 #include "utils/conversion.h"
-#include "uiutils.h"
+#include "ui.h"
 
 #include "settings++/custom_dialogs.h"
 
@@ -166,5 +166,5 @@ wxString ChatLog::LogTime()
 
 void ChatLog::OpenInEditor()
 {
-    OpenFileInEditor( m_current_logfile_path );
+    ui().OpenFileInEditor( m_current_logfile_path );
 }
