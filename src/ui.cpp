@@ -17,8 +17,6 @@
 #include <wx/intl.h>
 #include <wx/utils.h>
 #include <wx/filename.h>
-#include <wx/debugrpt.h>
-
 
 #include "ui.h"
 #include "tasserver.h"
@@ -410,8 +408,10 @@ bool Ui::AskText( const wxString& heading, const wxString& question, wxString& a
 
 void Ui::ShowMessage( const wxString& heading, const wxString& message )
 {
+
     if ( m_main_win == 0 ) return;
     serverMessageBox( SL_MAIN_ICON, message, heading, wxOK);
+
 }
 
 
@@ -1119,7 +1119,7 @@ void Ui::OnSpringStarting()
 }
 
 
-void Ui::OnSpringTerminated( long exit_code, const wxString& output  )
+void Ui::OnSpringTerminated( long /*exit_code*/ )
 {
     m_ingame = false;
 #ifndef NO_TORRENT_SYSTEM
@@ -1138,21 +1138,6 @@ void Ui::OnSpringTerminated( long exit_code, const wxString& output  )
           battle->SendHostInfo( IBattle::HI_Locked );
         }
     } catch ( assert_exception ){}
-
-    if ( exit_code ) {
-
-            wxDebugReportCompress report;
-            report.AddFile( sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("infolog.txt"), _T("Infolog") );
-            report.AddFile( sett().GetCurrentUsedSpringConfigFilePath(), _T("Settings") );
-            wxString info;
-            info << wxGetOsDescription() << ( wxIsPlatform64Bit() ? _T(" 64bit\n") : _T(" 32bit\n") );
-            report.AddText( _T("platform.txt"), info, _T("Platform") );
-            wxDebugReportPreviewStd().Show( report );
-
-//            if ( customMessageBox( SL_MAIN_ICON, _T("The game has crashed with no additional output.\nOpen infolog.txt?"), _T("Crash"), wxYES_NO ) == wxYES )
-//                OpenFileInEditor( sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("infolog.txt") );
-
-    }
 }
 
 

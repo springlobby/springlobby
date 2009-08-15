@@ -15,7 +15,6 @@
 #include <wx/arrstr.h>
 #include <wx/filename.h>
 #include <wx/stdpaths.h>
-#include <wx/sstream.h>
 #include <stdexcept>
 #include <vector>
 #include <algorithm>
@@ -231,19 +230,10 @@ bool Spring::LaunchSpring( const wxString& params  )
 void Spring::OnTerminated( wxCommandEvent& event )
 {
     wxLogDebugFunc( _T("") );
-    wxString output;
-    if ( sett().UseOldSpringLaunchMethod() && m_wx_process ) { //means we've used wxProcess based launching
-        wxInputStream*  spring_output = m_wx_process->GetInputStream();
-        if ( spring_output ) {
-            wxStringOutputStream string_out;
-            spring_output->Read( string_out );
-            output = string_out.GetString();
-        }
-    }
     m_running = false;
     m_process = 0; // NOTE I'm not sure if this should be deleted or not, according to wx docs it shouldn't.
     m_wx_process = 0;
-    ui().OnSpringTerminated( event.GetExtraLong(), output );
+    ui().OnSpringTerminated( true );
 }
 
 
