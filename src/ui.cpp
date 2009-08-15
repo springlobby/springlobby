@@ -1141,16 +1141,16 @@ void Ui::OnSpringTerminated( long exit_code, const wxString& output  )
 
     if ( exit_code ) {
 
-//            wxDebugReportCompress report;
-//            report.AddFile( sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("infolog.txt"), _T("Infolog") );
-//            report.AddFile( sett().GetCurrentUsedSpringConfigFilePath(), _T("Settings") );
-//            wxString info;
-//            info << wxGetOsDescription() << ( wxIsPlatform64Bit() ? _T(" 64bit\n") : _T(" 32bit\n") );
-//            report.AddText( _T("platform.txt"), info, _T("Platform") );
-//            wxDebugReportPreviewStd().Show( report );
+            wxDebugReportCompress report;
+            report.AddFile( sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("infolog.txt"), _T("Infolog") );
+            report.AddFile( sett().GetCurrentUsedSpringConfigFilePath(), _T("Settings") );
+            wxString info;
+            info << wxGetOsDescription() << ( wxIsPlatform64Bit() ? _T(" 64bit\n") : _T(" 32bit\n") );
+            report.AddText( _T("platform.txt"), info, _T("Platform") );
+            wxDebugReportPreviewStd().Show( report );
 
-            if ( customMessageBox( SL_MAIN_ICON, _T("The game has crashed.\nOpen infolog.txt?"), _T("Crash"), wxYES_NO ) == wxYES )
-                OpenFileInEditor( sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("infolog.txt") );
+//            if ( customMessageBox( SL_MAIN_ICON, _T("The game has crashed with no additional output.\nOpen infolog.txt?"), _T("Crash"), wxYES_NO ) == wxYES )
+//                OpenFileInEditor( sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("infolog.txt") );
 
     }
 }
