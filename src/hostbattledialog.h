@@ -13,6 +13,7 @@ class wxRadioButton;
 class wxStaticBitmap;
 class wxStaticLine;
 class wxButton;
+class wxBitmapButton;
 class wxCheckBox;
 
 class HostBattleDialog : public wxDialog
@@ -67,10 +68,13 @@ class HostBattleDialog : public wxDialog
 
 		wxButton* m_host_btn;
 
+        wxBitmapButton* m_refresh_btn;
+
 		enum {
 			HOST_CANCEL = wxID_HIGHEST,
 			HOST_OK,
-			CHOSE_NAT
+			CHOSE_NAT,
+			BTN_REFRESH
 		};
 
 		DECLARE_EVENT_TABLE()
