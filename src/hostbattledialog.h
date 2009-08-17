@@ -26,9 +26,10 @@ class HostBattleDialog : public wxDialog
 
 	protected:
 
-		void OnOk( wxCommandEvent& event );
-		void OnCancel( wxCommandEvent& event );
-		void OnNatChange( wxCommandEvent& event  );
+		void OnOk           ( wxCommandEvent& event );
+		void OnCancel       ( wxCommandEvent& event );
+		void OnNatChange    ( wxCommandEvent& event );
+		void OnReloadMods   ( wxCommandEvent& event );
 
 		int GetSelectedRank();
 

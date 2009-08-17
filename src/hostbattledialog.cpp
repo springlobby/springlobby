@@ -44,6 +44,7 @@ BEGIN_EVENT_TABLE( HostBattleDialog, wxDialog )
 
 	EVT_BUTTON              ( HOST_CANCEL, HostBattleDialog::OnCancel    )
 	EVT_BUTTON              ( HOST_OK,     HostBattleDialog::OnOk        )
+	EVT_BUTTON              ( BTN_REFRESH, HostBattleDialog::OnReloadMods)
 	EVT_RADIOBOX            ( CHOSE_NAT,   HostBattleDialog::OnNatChange )
 
 END_EVENT_TABLE()
@@ -239,7 +240,11 @@ void HostBattleDialog::ReloadModList()
 	for ( size_t i = 0; i < nummods; i++ ) m_mod_pic->Insert( modlist[i], i );
 
 	wxString last = sett().GetLastHostMod();
-	if ( last != wxEmptyString ) m_mod_pic->SetSelection( m_mod_pic->FindString( last ) );
+	if ( last != wxEmptyString )
+        m_mod_pic->SetSelection( m_mod_pic->FindString( last ) );
+
+	if ( m_mod_pic->GetSelection() == wxNOT_FOUND )
+        m_mod_pic->SetSelection( 0 );
 }
 
 
@@ -291,4 +296,10 @@ void HostBattleDialog::OnNatChange( wxCommandEvent& /*unused*/  )
 {
 //  m_port_test_check->Enable( m_nat_radios->GetSelection() == 0 );
 	m_port_text->Enable( m_nat_radios->GetSelection() == 0 );
+}
+
+void HostBattleDialog::OnReloadMods( wxCommandEvent& event )
+{
+    usync().ReloadUnitSyncLib();
+    ReloadModList();
 }
