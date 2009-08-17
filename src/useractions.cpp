@@ -167,7 +167,7 @@ void UserActions::SetGroupColor( const wxString& group, const wxColour& color )
     UpdateUI();
 }
 
-wxColor UserActions::GetGroupColor( const wxString& group )
+wxColour UserActions::GetGroupColor( const wxString& group )
 {
     return sett().GetGroupHLColor( group );
 }

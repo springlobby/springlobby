@@ -1,4 +1,4 @@
-/* Copyright (C) 2007, 2008 The SpringLobby Team. All rights reserved. */
+// Copyright (C) 2007, 2008 The SpringLobby Team. All rights reserved. */
 //
 // Class: ChatPanel
 //
@@ -27,6 +27,7 @@
 #include <wx/stattext.h>
 
 #include "aui/auimanager.h"
+#include "aui/slbook.h"
 #include "channel/channel.h"
 #include "chatpanel.h"
 #include "utils/debug.h"
@@ -113,6 +114,8 @@ BEGIN_EVENT_TABLE( ChatPanel, wxPanel )
 
 	EVT_MENU( CHAT_MENU_COPYLINK, ChatPanel::OnUserMenuCopyLink )
 
+	EVT_MENU( CHAT_MENU_LOG_OPEN, ChatPanel::OnChatMenuOpenLog )
+
 	EVT_MENU( CHAT_MENU_SHOW_MUTELIST, ChatPanel::OnChannelMenuShowMutelist )
 
 END_EVENT_TABLE()
@@ -124,24 +127,31 @@ END_EVENT_TABLE()
     #endif
 
 /// table for irc colors
-static wxColor m_irc_colors[9]  =
+static wxColor m_irc_colors[16]  =
 {
+	wxColor(204,204,204),
 	wxColor(0,0,0),
 	wxColor(54,54,178),
-	wxColor(40,140,42),
-	wxColor(255,255,255),
+	wxColor(42,140,42),
+	wxColor(195,59,59),
 	wxColor(199,50,50),
 	wxColor(128,38,127),
 	wxColor(102,54,31),
 	wxColor(217,166,65),
-	wxColor(61,204,61)
+	wxColor(61,204,61),
+	wxColor(26,85,85),
+	wxColor(47,140,116),
+	wxColor(69,69,230),
+	wxColor(176,55,176),
+	wxColor(76,76,76),
+	wxColor(149,149,149)
 };
 
 ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Channel& chan, wxImageList* imaglist ):
   wxPanel( parent, -1 ),
   m_show_nick_list( true ),
   m_nicklist(0),
-  m_chat_tabs(( wxAuiNotebook* )parent ),
+  m_chat_tabs(( SLNotebook* )parent ),
   m_ui( ui ),
   m_channel( &chan ),
   m_server( 0 ),
@@ -169,7 +179,7 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, const User& user, wxImageList* i
   wxPanel( parent, -1 ),
   m_show_nick_list( false ),
   m_nicklist(0),
-  m_chat_tabs(( wxAuiNotebook* )parent ),
+  m_chat_tabs(( SLNotebook* )parent ),
   m_ui( ui ),
   m_channel( 0 ),
   m_server( 0 ),
@@ -195,7 +205,7 @@ ChatPanel::ChatPanel( wxWindow* parent, Ui& ui, Server& serv, wxImageList* imagl
   wxPanel( parent, -1 ),
   m_show_nick_list( false ),
   m_nicklist(0),
-  m_chat_tabs(( wxAuiNotebook* )parent ),
+  m_chat_tabs(( SLNotebook* )parent ),
   m_ui( ui ),
   m_channel( 0 ),
   m_server( &serv ),
@@ -372,7 +382,7 @@ void ChatPanel::CreateControls( )
   textcompletiondatabase.Insert_Mapping( _T("hf"), _T("Have Fun!") );
   textcompletiondatabase.Insert_Mapping( _T("glhf"), _T("Good luck, have Fun!") );
   textcompletiondatabase.Insert_Mapping( _T("kaot"), _T("Have Fun!") );
-  textcompletiondatabase.Insert_Mapping( _T("kaot_H"), _T("Der Kaot aus der Hölle.") );
+  textcompletiondatabase.Insert_Mapping( _T("kaot_H"), _T("Der Kaot aus der HĂślle.") );
 
 }
 
@@ -499,6 +509,11 @@ void ChatPanel::CreatePopup()
             m_usermenu->EnableItems( true, m_user->GetNick() );
         m_popup_menu->AppendSubMenu( m_usermenu, _("User") );
 	}
+
+    if ( m_chat_log.LogEnabled() ) {
+        wxMenuItem* open_extern = new wxMenuItem( m_popup_menu, CHAT_MENU_LOG_OPEN, _( "Open log in editor" ), wxEmptyString, wxITEM_NORMAL );
+        m_popup_menu->Append( open_extern );
+    }
 }
 
 
@@ -615,7 +630,7 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const 
     newline.time = _T( "[" ) + now.Format( _T( "%H:%M:%S" ) ) + _T( "]" );
     newline.chatstyle = chatstyle;
     newline.timestyle = timestyle;
-
+ 
   if ( m_disable_append )
   {
     m_buffer.push_back( newline );
@@ -648,37 +663,79 @@ void ChatPanel::OutputLine( const ChatLine& line )
 		wxString m2;
 		wxString m3;
 		wxTextAttr at;
+		int oldweight;
 		char c;
-		char c2;
+		int color;
 		m1 = line.chat;
-		while ( 1 )
+		bool _2chars = false;
+		bool bold = false;
+		wxFont font;
+		wxColor curcolor(0,0,0);
+		wxColor oldcolor(0,0,0);
+		curcolor = line.chatstyle.GetTextColour();
+                at = m_chatlog_text->GetDefaultStyle();
+		font = at.GetFont();
+		oldweight = font.GetWeight();
+		oldcolor = line.chatstyle.GetTextColour();
+		while ( m1.Len() > 0 )
 		{
-			m3 = m1.BeforeFirst('\003');
-			m_chatlog_text->AppendText( m3 );
-			m2 = m1.AfterFirst('\003');
-			if ( m2.Len() >= 1 )
+			c = m1.GetChar(0);
+			if (c == 3 && m1.Len() > 1 && (m1.GetChar(1) >= 48 && m1.GetChar(1) <= 58)) // Color
 			{
-				c = m2.GetChar(0);
-				c2 = m2.GetChar(1);
-
-				if ( ( c >= 48 ) && ( c <= 58 ) )
+				if (m1.Len() > 2 && (m1.GetChar(2) >= 48 && m1.GetChar(2) <= 58))
 				{
-					c = c - 48;
-					if ( ( c2 >= 48 ) && ( c2 <= 58 )  ) c = 10*c + c2 - 48;
-					at = line.chatstyle;
-					wxColor dummy(0,0,0);
-					if ( ( c > 0 ) && ( c <= ( sizeof( m_irc_colors ) / sizeof( dummy ) ) ) ) at.SetTextColour( m_irc_colors[c-1] );
-
-					m_chatlog_text->SetDefaultStyle(at);
-
-					m1 = m2.AfterFirst(c+48);
+					color = (m1.GetChar(1) - 48)*10+(m1.GetChar(2) - 48);
+					_2chars = true;
+					m1 = m1.Mid(3);
+					}
+				else
+				{
+					color = m1.GetChar(1) -48;
+					_2chars = false;
+					m1 = m1.Mid(2);
+					}
+				
+				wxColor dummy(0,0,0);
+				if ( ( color > -1 ) && ( color < ( sizeof( m_irc_colors ) / sizeof( dummy ) ) ) ) 
+				{
+					
+					curcolor = m_irc_colors[color];
 				}
-			}
-			else
+				
+			}else if(c == 2)//Bold
 			{
-				break;
+				bold = not bold;
+				m1 = m1.Mid(1);
+			}else if(c == 0x0F) //Reset formatting
+			{
+			  bold = false;
+			  curcolor = oldcolor;
+			  m1 = m1.Mid(1);
+			}else{
+
+				at = m_chatlog_text->GetDefaultStyle();
+				at.SetFlags(wxTEXT_ATTR_TEXT_COLOUR | wxTEXT_ATTR_FONT_WEIGHT);
+				font = at.GetFont();
+				if (bold)
+					font.SetWeight(wxFONTWEIGHT_BOLD);
+				else
+					font.SetWeight(oldweight);
+				at.SetFont(font);
+				at.SetTextColour(curcolor);
+				
+				m_chatlog_text->SetDefaultStyle(at);
+				m_chatlog_text->AppendText( m1.Mid(0,1) );
+				m1 = m1.Mid(1);
 			}
 		}
+		if (bold)
+		{
+			font = at.GetFont();
+			font.SetWeight(oldweight);
+			at.SetFont(font);
+			m_chatlog_text->SetDefaultStyle(at);
+		}
+			
 	}
 	else
 	{
@@ -699,6 +756,7 @@ void ChatPanel::OutputLine( const ChatLine& line )
   m_chatlog_text->ScrollLines( 10 ); // to prevent for weird empty space appended
   m_chatlog_text->ShowPosition( m_chatlog_text->GetLastPosition() );// scroll to the bottom
   #endif
+  this->Refresh();
 }
 
 
@@ -1873,4 +1931,9 @@ void ChatPanel::OnChannelMenuShowMutelist( wxCommandEvent& /*unused*/ )
 void ChatPanel::ClearContents( wxCommandEvent& /*unused*/ )
 {
     m_chatlog_text->SetValue( _T("") );
+}
+
+void ChatPanel::OnChatMenuOpenLog( wxCommandEvent& event )
+{
+    m_chat_log.OpenInEditor();
 }

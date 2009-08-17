@@ -596,6 +596,7 @@ void Ui::OnConnected( Server& server, const wxString& server_name, const wxStrin
 
 bool Ui::IsSpringCompatible()
 {
+    sett().RefreshSpringVersionList();
     if ( sett().GetDisableSpringVersionCheck() ) return true;
     wxString neededversion = GetServer().GetRequiredSpring();
     if ( neededversion == _T("*") ) return true; // Server accepts any version.
@@ -1236,9 +1237,24 @@ bool Ui::OnPresetRequiringMap( const wxString& mapname )
                         _("Map missing"),
                         wxYES_NO ) )
     {
-        ui().DownloadMap( _T("") , mapname );
+        DownloadMap( _T("") , mapname );
         return true;
     }
     return false;
 }
 
+void Ui::OpenFileInEditor( const wxString& filepath )
+{
+    wxString editor_path = sett().GetEditorPath( );
+    if ( editor_path == wxEmptyString ) {
+        customMessageBoxNoModal( SL_MAIN_ICON, _T("You have not chosen an external text editor to open files with.\nPlease Select one now."), _T("No editor set") );
+        mw().ShowConfigure( MainWindow::OPT_PAGE_GENERAL );
+        return;
+    }
+    bool success = ( wxExecute( editor_path + _T(" \"") + filepath + _T("\""), wxEXEC_ASYNC ) != 0 );
+    if ( !success ) {
+        customMessageBoxNoModal( SL_MAIN_ICON, _T("There was a problem launching the editor.\nPlease make sure the path is correct and the binary executable for your user.\nNote it's currently not possible to use shell-only editors like ed, vi, etc."), _T("Problem launching editor") );
+        mw().ShowConfigure( MainWindow::OPT_PAGE_GENERAL );
+    }
+
+}

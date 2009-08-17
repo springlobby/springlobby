@@ -13,6 +13,7 @@ class ChatLog
     bool AddMessage(const wxString& text);
     bool LogEnabled();
     wxString LogTime();
+    void OpenInEditor();
 //    void SetTarget( const wxString& server,const wxString& room );
   protected:
     bool CreateFolder(const wxString& server);
@@ -22,6 +23,7 @@ class ChatLog
     wxFile m_logfile;
     wxString m_server;
     wxString m_room;
+    wxString m_current_logfile_path;
     bool m_active;
     static bool m_parent_dir_exists;
 

@@ -483,11 +483,12 @@ void TASServer::Update( int mselapsed )
 
         time_t now = time( 0 );
 
-        if ( ( m_last_net_packet > 0 ) && ( ( now - m_last_net_packet ) > PING_TIMEOUT ) )
-        {
-					 m_se->OnServerMessage( _("Timeout assumed, disconnecting") );
-        	 Disconnect();
-        }
+//disabled until better timing is miplemented
+//        if ( ( m_last_net_packet > 0 ) && ( ( now - m_last_net_packet ) > PING_TIMEOUT ) )
+//        {
+//					 m_se->OnServerMessage( _("Timeout assumed, disconnecting") );
+//        	 Disconnect();
+//        }
 
         // joining battle with nat traversal:
         // if we havent finalized joining yet, and udp_reply_timeout seconds has passed since
@@ -917,6 +918,10 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         color.data = GetIntParam( params );
         bstatus.colour = wxColour( color.color.red, color.color.green, color.color.blue );
         wxString ai = GetSentenceParam( params );
+        if ( ai.IsEmpty() ) {
+            wxLogWarning( wxString::Format( _T("Recieved illegal ADDBOT (empty dll field) from %s for battle %d"), nick.c_str(), id ) );
+            ai = _T("INVALID|INVALID");
+        }
         if( usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) )
         {
 					 bstatus.aiversion = ai.AfterLast( _T('|') );

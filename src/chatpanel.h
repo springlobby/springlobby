@@ -29,7 +29,7 @@ class Ui;
 class wxStaticText;
 
 class wxMouseEvent;
-class wxAuiNotebook;
+class SLNotebook;
 class wxNotebook;
 class wxImageList;
 
@@ -171,6 +171,8 @@ class ChatPanel : public wxPanel
 
     void OnUserMenuCopyLink( wxCommandEvent& event );
 
+    void OnChatMenuOpenLog( wxCommandEvent& event );
+
     void OnKeyPressed( wxKeyEvent& keyevent );
     void OnKeyReleased( wxKeyEvent& keyevent );
 
@@ -212,7 +214,7 @@ class ChatPanel : public wxPanel
     wxComboBox* m_nick_filter;  //!< The filter combo.
 
     wxButton* m_say_button;     //!< The say button.
-    wxAuiNotebook* m_chat_tabs;
+    SLNotebook* m_chat_tabs;
     Ui& m_ui;
     Channel* m_channel;         //!< Channel object.
     Server* m_server;           //!< Server object.
@@ -311,7 +313,9 @@ enum
 
     CHAT_MENU_COPYLINK,
 
-    CHAT_MENU_SHOW_MUTELIST
+    CHAT_MENU_SHOW_MUTELIST,
+
+    CHAT_MENU_LOG_OPEN
 };
 
 

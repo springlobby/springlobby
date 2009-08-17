@@ -452,6 +452,6 @@ void SpringLobbyApp::CacheAndSettingsSetup()
          useractions().ChangeAction( _("Friends"), UserActions::ActNotifBattle );
          useractions().ChangeAction( _("Friends"), UserActions::ActHighlight );
          useractions().ChangeAction( _("Friends"), UserActions::ActNotifLogin );
-         useractions().SetGroupColor( _("Friends"), wxColor( 0, 0, 255 ) );
+         useractions().SetGroupColor( _("Friends"), wxColour( 0, 0, 255 ) );
     }
 }
