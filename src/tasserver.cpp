@@ -1369,10 +1369,7 @@ void TASServer::HostBattle( BattleOptions bo, const wxString& password )
 
     wxString cmd = wxString::Format( _T("0 %d "), nat_type );
     cmd += (password.IsEmpty())?_T("*"):password;
-    cmd += wxString::Format( _T(" %d %d "),
-                             bo.port,
-                             bo.maxplayers
-                           );
+    cmd += wxString::Format( _T(" %d %d "), bo.port, bo.maxplayers );
     cmd += MakeHashSigned( bo.modhash );
     cmd += wxString::Format( _T(" %d "), bo.rankneeded );
     cmd += MakeHashSigned( bo.maphash ) + _T(" ");
@@ -1401,19 +1398,21 @@ void TASServer::HostBattle( BattleOptions bo, const wxString& password )
                 wxString currentmanager = m_relay_host_manager_list[choice];
                 if ( UserExists( currentmanager ) && !GetUser( currentmanager ).GetStatus().in_game && !GetUser( currentmanager ).GetStatus().away ) // skip the PM if the manager is not connected or reports it's ingame ( no slots available ), or it's away ( functionality disabled )
                 {
-                    m_relay_host_manager = currentmanager;
-                                m_delayed_open_command = cmd;
+									m_relay_host_manager = currentmanager;
+									m_delayed_open_command = cmd;
                   SayPrivate( currentmanager, _T("!spawn") );
                   break;
                 }
                 else
                 {
                   choice = ( choice + 1 ) % numbots;
-                                if ( choice == begin ) break;
+									if ( choice == begin ) break;
                 }
               }
            }
-       }else{
+       }
+       else
+       {
            m_relay_host_manager = bo.relayhost;
            m_delayed_open_command = cmd;
            SayPrivate(bo.relayhost,_T("!spawn"));
