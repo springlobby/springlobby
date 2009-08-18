@@ -11,6 +11,27 @@ class SLNotebook : public wxAuiNotebook {
 
 };
 
+class ChatPanel;
+
+class SLChatNotebook : public SLNotebook {
+
+    public:
+        SLChatNotebook (wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxAUI_NB_DEFAULT_STYLE);
+        bool AddPage(ChatPanel* page, const wxString& caption, bool select = false, const wxBitmap& bitmap = wxNullBitmap);
+        bool InsertPage(size_t page_idx, ChatPanel* page, const wxString& caption, bool select = false, const wxBitmap& bitmap = wxNullBitmap);
+        bool RemovePage(size_t page);
+        bool DeletePage(size_t page);
+
+        void OnHeaderRightClick(wxAuiNotebookEvent &event);
+
+    protected:
+        typedef SLNotebook
+            ParentType;
+
+
+        DECLARE_EVENT_TABLE();
+};
+
 #endif // SPRINGLOBBY_HEADERGUARD_SLBOOK_H
 
 /**

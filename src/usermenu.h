@@ -4,7 +4,7 @@
 #include <wx/menu.h>
 #include <map>
 
-#define GROUP_ID 24567
+static const long GROUP_ID  = wxNewId();//!TODO wxNewID, static int
 #include "ui.h"
 #include "useractions.h"
 
@@ -13,10 +13,11 @@ template < class EventHandler_ >
 class UserMenu : public wxMenu
 {
     protected:
-        typedef EventHandler_ EventHandler;
+        typedef EventHandler_
+            EventHandler;
 
     public:
-        UserMenu(wxWindow* parent, const wxString& title = wxEmptyString, long style = 0)
+        UserMenu(EventHandler* parent, const wxString& title = wxEmptyString, long style = 0)
         : wxMenu( title, style ),m_groupsMenu(0), m_parent(parent),m_groupCounter(0)
         {
             m_groupsMenu = new wxMenu();
@@ -68,7 +69,7 @@ class UserMenu : public wxMenu
         wxMenuItem* m_groupsDeleteItem;
         wxMenuItem* m_groupsnewItem;
         wxArrayString m_oldGroups;
-        wxWindow* m_parent;
+        EventHandler* m_parent;
         unsigned int m_groupCounter;
         std::map<unsigned int, wxString> m_idNameMap;
         std::map<wxString, unsigned int> m_NameIdMap;
