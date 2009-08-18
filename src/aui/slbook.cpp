@@ -3,6 +3,7 @@
 #include "slbook.h"
 #include "../settings.h"
 #include "../chatpanel.h"
+#include "../chatpanelmenu.h"
 
 #include <wx/menu.h>
 
@@ -86,8 +87,10 @@ void SLChatNotebook::OnHeaderRightClick(wxAuiNotebookEvent &event)
     }
 
     ChatPanel* cur_page = static_cast<ChatPanel*>( GetPage( event.GetSelection() ) );
-    pop->AppendSubMenu ( cur_page->GetContextMenu() , _( "Channel" ));
+    ChatPanelMenu* ch_menu = new ChatPanelMenu( cur_page, false );
+    pop->AppendSubMenu ( ch_menu , _( "Channel" ));
     PopupMenu(pop);
+
 
 }
 
