@@ -923,9 +923,11 @@ wxString Settings::GetCurrentUsedDataDir()
 		else dir = susynclib().GetSpringConfigString( _T( "SpringData" ), _T( "" ) );
 	}
 #ifdef __WXMSW__
-	if ( dir.IsEmpty() ) dir = GetExecutableFolder(); // fallback
+	if ( dir.IsEmpty() )
+        dir = GetExecutableFolder(); // fallback
 #else
-	if ( dir.IsEmpty() ) dir = wxFileName::GetHomeDir() + wxFileName::GetPathSeparator() + _T( ".spring" ); // fallback
+	if ( dir.IsEmpty() )
+        dir = wxFileName::GetHomeDir() + wxFileName::GetPathSeparator() + _T( ".spring" ); // fallback
 #endif
 	return dir;
 }
@@ -984,8 +986,10 @@ void Settings::SetSpringBinary( const wxString& index, const wxString& path )
 
 wxString Settings::GetForcedSpringConfigFilePath()
 {
-	if ( IsPortableMode() ) return GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T( "springsettings.cfg" );
-	else return _T( "" );
+	if ( IsPortableMode() )
+        return GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T( "springsettings.cfg" );
+	else
+        return _T( "" );
 }
 
 // ===================================================
