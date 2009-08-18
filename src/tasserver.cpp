@@ -1384,31 +1384,17 @@ void TASServer::HostBattle( BattleOptions bo, const wxString& password )
     }
     else
     {
-       if (bo.relayhost == _T("*"))
+       if ( bo.relayhost.IsEmpty() )
        {
-           unsigned int numbots = m_relay_host_manager_list.GetCount();
+					 wxArrayString relaylist = GetRelayHostList();
+           unsigned int numbots = relaylist.GetCount();
            if ( numbots > 0 )
            {
               srand ( time(NULL) );
-              unsigned int begin = rand() % numbots;
-              unsigned int choice = begin;
-              m_relay_host_manager = _T("");
-              while ( true )
-              {
-                wxString currentmanager = m_relay_host_manager_list[choice];
-                if ( UserExists( currentmanager ) && !GetUser( currentmanager ).GetStatus().in_game && !GetUser( currentmanager ).GetStatus().away ) // skip the PM if the manager is not connected or reports it's ingame ( no slots available ), or it's away ( functionality disabled )
-                {
-									m_relay_host_manager = currentmanager;
-									m_delayed_open_command = cmd;
-                  SayPrivate( currentmanager, _T("!spawn") );
-                  break;
-                }
-                else
-                {
-                  choice = ( choice + 1 ) % numbots;
-									if ( choice == begin ) break;
-                }
-              }
+              unsigned int choice = rand() % numbots;
+							m_relay_host_manager = relaylist[choice];
+							m_delayed_open_command = cmd;
+							SayPrivate( m_relay_host_manager, _T("!spawn") );
            }
        }
        else

@@ -14,6 +14,7 @@ class wxStaticBitmap;
 class wxStaticLine;
 class wxButton;
 class wxCheckBox;
+class wxMenu;
 
 class HostBattleDialog : public wxDialog
 {
@@ -28,6 +29,10 @@ class HostBattleDialog : public wxDialog
 		void OnOk( wxCommandEvent& event );
 		void OnCancel( wxCommandEvent& event );
 		void OnNatChange( wxCommandEvent& event  );
+		void OnPickRelayHost( wxCommandEvent& event );
+
+		void OnRelayChoice( wxCommandEvent& event );
+
 
 		int GetSelectedRank();
 
@@ -67,11 +72,19 @@ class HostBattleDialog : public wxDialog
 
 		wxButton* m_host_btn;
 
+		wxMenu* m_relayhost_list;
+
 		enum {
 			HOST_CANCEL = wxID_HIGHEST,
 			HOST_OK,
-			CHOSE_NAT
+			CHOSE_NAT,
+			PICK_RELAYHOST,
+			AUTO_PICK_HOST,
+			MANUAL_PICK_HOST
 		};
+
+		wxString m_last_relayhost;
+		wxArrayString m_relayhost_array_list;
 
 		DECLARE_EVENT_TABLE()
 };

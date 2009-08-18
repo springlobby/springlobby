@@ -180,3 +180,21 @@ void Server::OnDisconnected()
 void Server::RequestSpringUpdate()
 {
 }
+
+wxArrayString Server::GetRelayHostList()
+{
+	wxArrayString ret;
+	for ( unsigned int i = 0; i < m_relay_host_manager_list.GetCount(); i++ )
+	{
+		if ( !UserExists( m_relay_host_manager_list[i] ) ) continue;
+		try
+		{
+			User& manager = GetUser( m_relay_host_manager_list[i] );
+			if ( manager.Status().in_game ) continue; // skip the manager is not connected or reports it's ingame ( no slots available ), or it's away ( functionality disabled )
+			if ( manager.Status().away ) continue;
+			ret.Add( m_relay_host_manager_list[i] );
+		}
+		catch(...){}
+	}
+	return ret;
+}

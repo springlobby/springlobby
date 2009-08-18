@@ -2151,7 +2151,7 @@ wxString Settings::GetLastReplayFilterProfileName()
 }
 wxString Settings::GetLastRelayedHost()
 {
-    return  m_config->Read(_T("/General/RelayHost"),_T("*"));
+    return  m_config->Read(_T("/General/RelayHost"),_T(""));
 }
 void Settings::SetLastRelayedHost(wxString relhost)
 {
