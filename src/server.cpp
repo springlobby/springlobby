@@ -186,7 +186,6 @@ wxArrayString Server::GetRelayHostList()
 	wxArrayString ret;
 	for ( unsigned int i = 0; i < m_relay_host_manager_list.GetCount(); i++ )
 	{
-		if ( !UserExists( m_relay_host_manager_list[i] ) ) continue;
 		try
 		{
 			User& manager = GetUser( m_relay_host_manager_list[i] );
