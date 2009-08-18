@@ -7,7 +7,7 @@
 //! seperating this into a friend class enables us to re-use it in the tab header right click evt
 class ChatPanelMenu: public wxMenu {
     public:
-        typedef SL_GENERIC::UserMenu<ChatPanel>
+        typedef SL_GENERIC::UserMenu<ChatPanelMenu>
             UserMenu;
 
         ChatPanelMenu(ChatPanel* parent, bool addChanServ = true, const wxString& title = wxEmptyString, long style = 0);
@@ -65,13 +65,17 @@ class ChatPanelMenu: public wxMenu {
 
         void OnChannelClearContents( wxCommandEvent& event );
 
+        void OnUserMenuAddToGroup( wxCommandEvent& event );
+        void OnUserMenuDeleteFromGroup( wxCommandEvent& event );
+        void OnUserMenuCreateGroup( wxCommandEvent& event );
+
     protected:
         void ConnectEvents();
-        UserMenu* CreateNickListMenu();
+        void CreateNickListMenu();
 
         ChatPanel* m_chatpanel;
 
-        UserMenu* m_usermenu;
+        UserMenu* m_user_menu;
 
         wxMenuItem* displayjoinitem;
         wxMenuItem* m_autorejoin;
@@ -110,7 +114,7 @@ static const long CHAT_MENU_SV_BROADCAST            = wxNewId();
 static const long CHAT_MENU_US_CHAT                 = wxNewId();
 static const long CHAT_MENU_US_JOIN                 = wxNewId();
 static const long CHAT_MENU_US_SLAP                 = wxNewId();
-static const long CHAT_MENU_US_ADD_TO_GROUP         = wxNewId();
+//static const long CHAT_MENU_US_ADD_TO_GROUP         = wxNewId();
 static const long CHAT_MENU_US_MUTE                 = wxNewId();
 static const long CHAT_MENU_US_UNMUTE               = wxNewId();
 static const long CHAT_MENU_US_KICK                 = wxNewId();

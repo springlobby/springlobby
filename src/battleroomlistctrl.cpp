@@ -102,7 +102,7 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, IBattle* battle, Ui& u
 
   	if ( !m_ro )
 	{
-		m_popup = new UserMenu(this);
+		m_popup = new UserMenu(this, this);
 		wxMenu* m_teams;
 		m_teams = new wxMenu();
 

@@ -331,7 +331,7 @@ void ChatPanel::CreatePopup()
 	wxLogDebugFunc( _T( "" ) );
 	m_popup_menu = new ChatPanelMenu( this, _("TITEL") );
 	//these need to be connected here for the fucked up reason that submenus don't fire the events to the immeadite parent
-	Connect( CHAT_MENU_CH_INFO, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChannelMenuInfo ), 0, m_popup_menu );
+	m_popup_menu->Connect( CHAT_MENU_CH_INFO, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChannelMenuInfo ), 0, m_popup_menu );
 	Connect( CHAT_MENU_CH_LOCK, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChannelMenuLock ), 0, m_popup_menu );
 	Connect( CHAT_MENU_CH_UNLOCK, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChannelMenuUnlock ), 0, m_popup_menu );
 	Connect( CHAT_MENU_CH_REG, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChannelMenuRegister ), 0, m_popup_menu );
@@ -1000,41 +1000,6 @@ void ChatPanel::OnUserConnected()
 void ChatPanel::FocusInputBox()
 {
     m_say_text->SetFocus();
-}
-
-void ChatPanel::OnUserMenuAddToGroup( wxCommandEvent& event )
-{
-    int id  = event.GetId() - GROUP_ID;
-    if ( m_popup_menu->GetUserMenu() ) {
-        wxString groupname = m_popup_menu->GetUserMenu()->GetGroupByEvtID(id);
-        const User* user = GetSelectedUser();
-        if ( user )
-            useractions().AddUserToGroup( groupname, user->GetNick() );
-    }
-}
-
-void ChatPanel::OnUserMenuDeleteFromGroup( wxCommandEvent& /*unused*/ )
-{
-    const User* user = GetSelectedUser();
-    if ( user )
-        useractions().RemoveUser( user->GetNick() );
-}
-
-void ChatPanel::OnUserMenuCreateGroup( wxCommandEvent& /*unused*/ )
-{
-    wxString name;
-    if ( ui().AskText( _("Enter name"),
-        _("Please enter the name for the new group.\nAfter clicking ok you will be taken to adjust its settings."), name ) )
-    {
-        const User* user = GetSelectedUser();
-        if ( user ) {
-            useractions().AddGroup( name );
-            useractions().AddUserToGroup( name, user->GetNick() );
-            ui().mw().ShowConfigure( MainWindow::OPT_PAGE_GROUPS );
-        }
-        else
-            customMessageBoxNoModal( SL_MAIN_ICON, _("couldn't add user"), _("Error") );
-    }
 }
 
 wxString ChatPanel::FindUrl( const long pos ) const

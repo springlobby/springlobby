@@ -4,7 +4,8 @@
 #include <wx/menu.h>
 #include <map>
 
-static const long GROUP_ID  = wxNewId();//!TODO wxNewID, static int
+static const long GROUP_ID  = wxNewId();
+static const long GROUP_ID_NEW  = wxNewId();
 #include "ui.h"
 #include "useractions.h"
 
@@ -15,22 +16,25 @@ class UserMenu : public wxMenu
     protected:
         typedef EventHandler_
             EventHandler;
+        typedef EventHandler
+            ParentType;
 
     public:
-        UserMenu(EventHandler* parent, const wxString& title = wxEmptyString, long style = 0)
+        UserMenu(wxEvtHandler * connectee, ParentType* parent, const wxString& title = wxEmptyString, long style = 0)
         : wxMenu( title, style ),m_groupsMenu(0), m_parent(parent),m_groupCounter(0)
         {
+            assert ( m_parent );
             m_groupsMenu = new wxMenu();
-            m_groupsnewItem = new wxMenuItem( m_groupsMenu, GROUP_ID - 2, _("Create new group...")  );
-            m_parent->Connect( GROUP_ID - 2, wxEVT_COMMAND_MENU_SELECTED,
-                                    wxCommandEventHandler( EventHandler::OnUserMenuCreateGroup ) );
+            m_groupsnewItem = new wxMenuItem( m_groupsMenu, GROUP_ID_NEW, _("Create new group...")  );
+//            Connect( GROUP_ID_NEW, wxEVT_COMMAND_MENU_SELECTED,
+//                                    wxCommandEventHandler( EventHandler::OnUserMenuCreateGroup ), 0, m_parent );
             m_groupsMenu->Append( m_groupsnewItem );
             m_groupsMenu->AppendSeparator();
         //    if ( !ui().IsThisMe( m_parent->GetSelectedUser() ) )
             m_groupsMenuItem = AppendSubMenu( m_groupsMenu, _("Add to group..."));
             m_groupsDeleteItem = new wxMenuItem( m_groupsMenu, GROUP_ID - 1, _("Remove from group")  );
-            m_parent->Connect( GROUP_ID - 1, wxEVT_COMMAND_MENU_SELECTED,
-                                    wxCommandEventHandler( EventHandler::OnUserMenuDeleteFromGroup ) );
+            Connect( GROUP_ID - 1, wxEVT_COMMAND_MENU_SELECTED,
+                                    wxCommandEventHandler( EventHandler::OnUserMenuDeleteFromGroup ), 0, m_parent );
             Append( m_groupsDeleteItem );
         }
 
@@ -69,7 +73,7 @@ class UserMenu : public wxMenu
         wxMenuItem* m_groupsDeleteItem;
         wxMenuItem* m_groupsnewItem;
         wxArrayString m_oldGroups;
-        EventHandler* m_parent;
+        ParentType* m_parent;
         unsigned int m_groupCounter;
         std::map<unsigned int, wxString> m_idNameMap;
         std::map<wxString, unsigned int> m_NameIdMap;
@@ -87,7 +91,7 @@ class UserMenu : public wxMenu
                     m_idNameMap[m_groupCounter] = groupNames[i];
                     wxMenuItem* addItem = new wxMenuItem( m_groupsMenu, GROUP_ID + m_groupCounter ,  groupNames[i] , wxEmptyString, wxITEM_NORMAL );
                     m_groupsMenu->Append( addItem );
-                    m_parent->Connect( GROUP_ID + m_groupCounter, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( EventHandler::OnUserMenuAddToGroup ) );
+                    Connect( GROUP_ID + m_groupCounter, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( EventHandler::OnUserMenuAddToGroup ), 0, m_parent );
                     m_oldGroups.Add( groupNames[i] );
                     m_idNameMap[GROUP_ID + m_groupCounter]  = groupNames[i];
                     m_NameIdMap[groupNames[i]]  = GROUP_ID + m_groupCounter;

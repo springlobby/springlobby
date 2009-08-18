@@ -126,9 +126,6 @@ class ChatPanel : public wxPanel
     void OnKeyPressed( wxKeyEvent& keyevent );
     void OnKeyReleased( wxKeyEvent& keyevent );
 
-    void OnUserMenuAddToGroup( wxCommandEvent& event );
-    void OnUserMenuDeleteFromGroup( wxCommandEvent& event );
-    void OnUserMenuCreateGroup( wxCommandEvent& event );
     void UpdateNicklistHighlights();
 
     void SortNickList();

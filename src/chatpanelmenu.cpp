@@ -18,11 +18,10 @@
 ChatPanelMenu::ChatPanelMenu(ChatPanel* parent, bool addChanServ, const wxString& title , long style )
     : wxMenu(  ),
     m_chatpanel(parent),
-    m_usermenu( 0 ),
     m_autorejoin( 0 ),
     m_withChanserv( addChanServ )
 {
-    m_usermenu = CreateNickListMenu();
+    CreateNickListMenu();
     m_append_menu = new wxMenuItem( this, CHAT_MENU_DISABLE_APPEND, _( "Disable text appending (workaround for autoscroll)" ), wxEmptyString, wxITEM_CHECK );
     Append( m_append_menu );
     m_append_menu->Check( m_chatpanel->m_disable_append );
@@ -114,9 +113,9 @@ ChatPanelMenu::ChatPanelMenu(ChatPanel* parent, bool addChanServ, const wxString
 		Append( reconnectitem );
 
 		AppendSeparator();
-		wxMenu* m_user_menu;
+		wxMenu* submenu_user;
 
-		m_user_menu = new wxMenu();
+		submenu_user = new wxMenu();
 		wxMenu* m_accounts;
 		m_accounts = new wxMenu();
 		wxMenuItem* removeitem = new wxMenuItem( m_accounts, CHAT_MENU_SV_REMOVE, _( "Remove..." ), wxEmptyString, wxITEM_NORMAL );
@@ -125,17 +124,17 @@ ChatPanelMenu::ChatPanelMenu(ChatPanel* parent, bool addChanServ, const wxString
 		m_accounts->Append( chpwditem );
 		wxMenuItem* setaccessitem = new wxMenuItem( m_accounts, CHAT_MENU_SV_ACCESS, _( "Set access..." ), wxEmptyString, wxITEM_NORMAL );
 		m_accounts->Append( setaccessitem );
-		m_user_menu->Append( -1, _( "Accounts" ), m_accounts );
+		submenu_user->Append( -1, _( "Accounts" ), m_accounts );
 
-		m_user_menu->AppendSeparator();
-		wxMenuItem* broadcastitem = new wxMenuItem( m_user_menu, CHAT_MENU_SV_BROADCAST, _( "Broadcast..." ), wxEmptyString, wxITEM_NORMAL );
-		m_user_menu->Append( broadcastitem );
+		submenu_user->AppendSeparator();
+		wxMenuItem* broadcastitem = new wxMenuItem( submenu_user, CHAT_MENU_SV_BROADCAST, _( "Broadcast..." ), wxEmptyString, wxITEM_NORMAL );
+		submenu_user->Append( broadcastitem );
 		Append( -1, _( "Admin" ), m_user_menu );
 	}
 	else if ( m_chatpanel->m_type == CPT_User ) {
         if ( m_chatpanel->m_user )
-            m_usermenu->EnableItems( true, m_chatpanel->m_user->GetNick() );
-        AppendSubMenu( m_usermenu, _("User") );
+            m_user_menu->EnableItems( true, m_chatpanel->m_user->GetNick() );
+        AppendSubMenu( m_user_menu, _("User") );
 	}
 
     if ( m_chatpanel->m_chat_log.LogEnabled() ) {
@@ -144,12 +143,14 @@ ChatPanelMenu::ChatPanelMenu(ChatPanel* parent, bool addChanServ, const wxString
     }
 
     ConnectEvents();
+    m_user_menu->Connect( GROUP_ID_NEW, wxEVT_COMMAND_MENU_SELECTED,
+                                    wxCommandEventHandler( ChatPanelMenu::OnUserMenuCreateGroup ), 0, this );
+
 }
 
-ChatPanelMenu::UserMenu* ChatPanelMenu::CreateNickListMenu()
+void ChatPanelMenu::CreateNickListMenu()
 {
-	ChatPanelMenu::UserMenu* m_user_menu;
-	m_user_menu = new ChatPanelMenu::UserMenu( m_chatpanel );
+	m_user_menu = new ChatPanelMenu::UserMenu( this, this );
     if ( m_chatpanel->m_type != CPT_User ) {
         wxMenuItem* chatitem = new wxMenuItem( m_user_menu, CHAT_MENU_US_CHAT,  _( "Open Chat" ) , wxEmptyString, wxITEM_NORMAL );
         m_user_menu->Append( chatitem );
@@ -223,8 +224,6 @@ ChatPanelMenu::UserMenu* ChatPanelMenu::CreateNickListMenu()
         m_chanserv->Append( chdeopitem );
         m_user_menu->Append( -1, _( "ChanServ" ), m_chanserv );
     }
-
-	return m_user_menu;
 }
 
 void ChatPanelMenu::ConnectEvents()
@@ -249,7 +248,7 @@ void ChatPanelMenu::ConnectEvents()
 	Connect( CHAT_MENU_US_JOIN, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnUserMenuJoinSame ), 0, this );
 	Connect( CHAT_MENU_US_SLAP, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnUserMenuSlap ), 0, this );
 
-	Connect( CHAT_MENU_US_ADD_TO_GROUP, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanel::OnUserMenuAddToGroup ), 0, m_chatpanel );
+////	Connect( CHAT_MENU_US_ADD_TO_GROUP, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanel::OnUserMenuAddToGroup ), 0, this );
 
 	Connect( CHAT_MENU_US_MUTE, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnUserMenuMute ), 0, this );
 	Connect( CHAT_MENU_US_UNMUTE, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnUserMenuUnmute ), 0, this );
@@ -273,11 +272,23 @@ void ChatPanelMenu::ConnectEvents()
 	Connect( CHAT_MENU_COPYLINK, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnUserMenuCopyLink ), 0, this );
 
 	Connect( CHAT_MENU_LOG_OPEN, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChatMenuOpenLog ), 0, this );
+
+
+//    Connect( CHAT_MENU_CH_INFO, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChannelMenuInfo ), 0, this );
+//	Connect( CHAT_MENU_CH_LOCK, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChannelMenuLock ), 0, this );
+//	Connect( CHAT_MENU_CH_UNLOCK, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChannelMenuUnlock ), 0, this );
+//	Connect( CHAT_MENU_CH_REG, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChannelMenuRegister ), 0, this );
+//	Connect( CHAT_MENU_CH_UNREG, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChannelMenuUnregister ), 0, this );
+//	Connect( CHAT_MENU_CH_SPAM_ON, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChannelMenuSpamOn ), 0, this );
+//	Connect( CHAT_MENU_CH_SPAM_OFF, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChannelMenuSpanOff ), 0, this );
+//	Connect( CHAT_MENU_CH_SPAM_ISON, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChannelMenuSpamIsOn ), 0, this );
+//    Connect( CHAT_MENU_CH_TOPIC, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChannelMenuTopic ), 0, this );
+//	Connect( CHAT_MENU_CH_MSG, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChannelMenuMessage ), 0, this );
 }
 
 ChatPanelMenu::UserMenu* ChatPanelMenu::GetUserMenu()
 {
-    return m_usermenu;
+    return m_user_menu;
 }
 
 
@@ -782,3 +793,39 @@ void ChatPanelMenu::OnChannelClearContents( wxCommandEvent& /*unused*/ )
 {
     m_chatpanel->m_chatlog_text->SetValue( _T("") );
 }
+
+void ChatPanelMenu::OnUserMenuAddToGroup( wxCommandEvent& event )
+{
+    int id  = event.GetId() - GROUP_ID;
+    if ( m_user_menu ) {
+        wxString groupname = m_user_menu->GetGroupByEvtID(id);
+        const User* user = m_chatpanel->GetSelectedUser();
+        if ( user )
+            useractions().AddUserToGroup( groupname, user->GetNick() );
+    }
+}
+
+void ChatPanelMenu::OnUserMenuDeleteFromGroup( wxCommandEvent& /*unused*/ )
+{
+    const User* user = m_chatpanel->GetSelectedUser();
+    if ( user )
+        useractions().RemoveUser( user->GetNick() );
+}
+
+void ChatPanelMenu::OnUserMenuCreateGroup( wxCommandEvent& /*unused*/ )
+{
+    wxString name;
+    if ( ui().AskText( _("Enter name"),
+        _("Please enter the name for the new group.\nAfter clicking ok you will be taken to adjust its settings."), name ) )
+    {
+        const User* user = m_chatpanel->GetSelectedUser();
+        if ( user ) {
+            useractions().AddGroup( name );
+            useractions().AddUserToGroup( name, user->GetNick() );
+            ui().mw().ShowConfigure( MainWindow::OPT_PAGE_GROUPS );
+        }
+        else
+            customMessageBoxNoModal( SL_MAIN_ICON, _("couldn't add user"), _("Error") );
+    }
+}
+
