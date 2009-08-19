@@ -68,6 +68,7 @@ class ChatPanelMenu : public wxEvtHandler {
         void OnUserMenuAddToGroup( wxCommandEvent& event );
         void OnUserMenuDeleteFromGroup( wxCommandEvent& event );
         void OnUserMenuCreateGroup( wxCommandEvent& event );
+
         void OnMenuItem( wxCommandEvent& event );
 
         wxMenu* GetMenu();

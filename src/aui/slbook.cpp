@@ -7,6 +7,10 @@
 
 #include <wx/menu.h>
 
+static const long ID_CLOSE_TAB          = wxNewId();
+static const long ID_CLOSE_TAB_OTHER    = wxNewId();
+static const long ID_CLOSE_TAB_ALL      = wxNewId();
+
 SLNotebook ::SLNotebook (wxWindow* parent, wxWindowID id , const wxPoint& pos , const wxSize& size , long style )
     : wxAuiNotebook( parent, id, pos, size, sett().GetShowXallTabs() ? style | wxAUI_NB_CLOSE_ON_ALL_TABS : style )
 {
@@ -23,28 +27,6 @@ BEGIN_EVENT_TABLE( SLChatNotebook, SLNotebook )
 
 END_EVENT_TABLE()
 
-/** @brief RemovePage
-  *
-  * @todo: document this function
-  */
-bool SLChatNotebook::RemovePage(size_t page)
-{
-    return ParentType::RemovePage( page );
-}
-
-/** @brief InsertPage
-  *
-  * @todo: document this function
-  */
-bool SLChatNotebook::InsertPage(size_t page_idx, ChatPanel* page, const wxString& caption, bool select, const wxBitmap& bitmap)
-{
-    return ParentType::InsertPage( page_idx, (wxWindow*)page, caption, select, bitmap);
-}
-
-/** @brief AddPage
-  *
-  * @todo: document this function
-  */
 bool SLChatNotebook::AddPage(ChatPanel* page, const wxString& caption, bool select, const wxBitmap& bitmap)
 {
     return ParentType::AddPage((wxWindow*)page, caption, select, bitmap);
@@ -60,15 +42,6 @@ bool SLChatNotebook::AddPage(ChatPanel* page, const wxString& caption, bool sele
 
 }
 
-/** @brief DeletePage
-  *
-  * @todo: document this function
-  */
-bool SLChatNotebook::DeletePage(size_t page)
-{
-    return ParentType::DeletePage( page );
-}
-
 /** @brief OnHeaderRightClick
   *
   * @todo: document this function
@@ -79,19 +52,50 @@ void SLChatNotebook::OnHeaderRightClick(wxAuiNotebookEvent &event)
         return;
 
     wxMenu* pop = new wxMenu;
-    pop->Append(0, _("Close"));
+    pop->Append( ID_CLOSE_TAB, _("Close") );
     if ( GetPageCount() > 1)
     {
-        pop->Append(0, _("Close all"));
-        pop->Append(0, _("Close all others"));
+        pop->Append( ID_CLOSE_TAB_ALL, _("Close all"));
+        pop->Append( ID_CLOSE_TAB_OTHER, _("Close all others"));
     }
 
     ChatPanel* cur_page = static_cast<ChatPanel*>( GetPage( event.GetSelection() ) );
     ChatPanelMenu* ch_menu = new ChatPanelMenu( cur_page, true );
     pop->AppendSubMenu ( ch_menu->GetMenu() , _( "Channel" ));
-    Connect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnMenuItem ), 0, ch_menu );
+    Connect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( SLChatNotebook::OnMenuItem ), cur_page, this );
     PopupMenu(pop);
-
-
 }
 
+void SLChatNotebook::OnMenuItem( wxCommandEvent& event )
+{
+    long id = event.GetId();
+    if ( id == ID_CLOSE_TAB ) {
+        DeletePage( GetSelection() );
+    }
+    else if ( id == ID_CLOSE_TAB_ALL ) {
+        for ( size_t i = 0; i < GetPageCount(); ++i ){
+                DeletePage( i );
+                i--;
+        }
+    }
+    else if ( id == ID_CLOSE_TAB_OTHER ) {
+        size_t selected = GetSelection();
+        for ( size_t i = 0; i < GetPageCount(); ++i ){
+        	if ( i == selected )
+        	    continue;
+            else {
+                DeletePage( i );
+                i--;
+                selected--;
+        	}
+        }
+    }
+    else {
+        ChatPanel* cur_page = static_cast<ChatPanel*>( GetPage( GetSelection() ) );
+        if ( cur_page ) {
+            ChatPanelMenu* ch_menu = new ChatPanelMenu( cur_page, true );
+            ch_menu->OnMenuItem( event );
+            delete ch_menu;
+        }
+    }
+}
