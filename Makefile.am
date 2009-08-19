@@ -616,6 +616,7 @@ springlobby_SOURCES = \
 	src/images/open_full_pw_game.png.h \
 	src/images/options_icon.png.h \
 	src/images/options_icon_text.png.h \
+	src/images/arrow_refresh.png.h \
 	src/images/rank0.xpm \
 	src/images/rank1.xpm \
 	src/images/rank2.xpm \
