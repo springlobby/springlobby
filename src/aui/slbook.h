@@ -9,6 +9,7 @@ class SLNotebook : public wxAuiNotebook {
         SLNotebook (wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxAUI_NB_DEFAULT_STYLE);
 //        wxAuiManager& GetAuiManager() { return m_mgr; }
 
+
 };
 
 class ChatPanel;
@@ -21,6 +22,7 @@ class SLChatNotebook : public SLNotebook {
 
         void OnHeaderRightClick(wxAuiNotebookEvent &event);
         void OnMenuItem( wxCommandEvent& event );
+        void OnAllowNotebookDnD(wxAuiNotebookEvent& evt);
 
     protected:
         typedef SLNotebook

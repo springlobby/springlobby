@@ -4,12 +4,15 @@
 #include "../settings.h"
 #include "../chatpanel.h"
 #include "../chatpanelmenu.h"
+#include "../ui.h"
+#include "../mainwindow.h"
 
 #include <wx/menu.h>
 
 static const long ID_CLOSE_TAB          = wxNewId();
 static const long ID_CLOSE_TAB_OTHER    = wxNewId();
 static const long ID_CLOSE_TAB_ALL      = wxNewId();
+static const long ID_NEW_TAB      = wxNewId();
 
 SLNotebook ::SLNotebook (wxWindow* parent, wxWindowID id , const wxPoint& pos , const wxSize& size , long style )
     : wxAuiNotebook( parent, id, pos, size, sett().GetShowXallTabs() ? style | wxAUI_NB_CLOSE_ON_ALL_TABS : style )
@@ -24,6 +27,7 @@ SLNotebook ::SLNotebook (wxWindow* parent, wxWindowID id , const wxPoint& pos , 
 BEGIN_EVENT_TABLE( SLChatNotebook, SLNotebook )
 
      EVT_AUINOTEBOOK_TAB_RIGHT_UP ( wxID_ANY, SLChatNotebook::OnHeaderRightClick )
+//     EVT_AUINOTEBOOK_ALLOW_DND(wxID_ANY, SLChatNotebook::OnAllowNotebookDnD)
 
 END_EVENT_TABLE()
 
@@ -42,6 +46,13 @@ bool SLChatNotebook::AddPage(ChatPanel* page, const wxString& caption, bool sele
 
 }
 
+//should work accroding to docs/sample, but doesn't (not even in sample)
+void SLChatNotebook::OnAllowNotebookDnD(wxAuiNotebookEvent& evt)
+{
+    evt.Veto();
+    evt.Skip();
+}
+
 /** @brief OnHeaderRightClick
   *
   * @todo: document this function
@@ -52,6 +63,7 @@ void SLChatNotebook::OnHeaderRightClick(wxAuiNotebookEvent &event)
         return;
 
     wxMenu* pop = new wxMenu;
+    pop->Append( ID_NEW_TAB, _("New Tab") );
     pop->Append( ID_CLOSE_TAB, _("Close") );
     if ( GetPageCount() > 1)
     {
@@ -69,7 +81,10 @@ void SLChatNotebook::OnHeaderRightClick(wxAuiNotebookEvent &event)
 void SLChatNotebook::OnMenuItem( wxCommandEvent& event )
 {
     long id = event.GetId();
-    if ( id == ID_CLOSE_TAB ) {
+    if ( id == ID_NEW_TAB ) {
+        ui().mw().OnMenuJoin( event );
+    }
+    else if ( id == ID_CLOSE_TAB ) {
         DeletePage( GetSelection() );
     }
     else if ( id == ID_CLOSE_TAB_ALL ) {
