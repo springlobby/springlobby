@@ -207,7 +207,7 @@ MainWindow::MainWindow( Ui& ui )
     m_func_tabs->AddPage( m_opts_tab,     m_tab_names[5], false );
 #endif
 
-    m_sp_tab->LoadPerspective();
+    LoadPerspectives();
 
 
   SetTabIcons();
@@ -658,24 +658,19 @@ void MainWindow::OnChannelListStart( )
 
 void MainWindow::OnMenuSaveLayout( wxCommandEvent& /*unused*/ )
 {
-	wxString answer;
-	if ( !ui().AskText( _("Layout manager"),_("Enter a profile name"), answer ) )
-        return;
-    //save persp in all notebooks
-//    wxString per = m_func_tabs->SavePerspective();
-//    sett().SavePerspective( per );
-
+//	wxString answer;
+//	if ( !ui().AskText( _("Layout manager"),_("Enter a profile name"), answer ) )
+//        return;
+    SavePerspectives();
 }
 
 void MainWindow::OnMenuLoadLayout( wxCommandEvent& /*unused*/ )
 {
-	wxArrayString layouts = sett().GetLayoutList();
-	unsigned int result = wxGetSingleChoiceIndex( _("Which profile fo you want to load?"), _("Layout manager"), layouts );
-	if ( ( result < 0  ) || ( result > layouts.GetCount() ) ) return;
-	GetAui().manager->LoadPerspective( sett().GetLayout( layouts[result] ) );
-//	wxString per = sett().LoadPerspective( );
-//    m_func_tabs->LoadPerspective( per );
+//	wxArrayString layouts = sett().GetLayoutList();
+//	unsigned int result = wxGetSingleChoiceIndex( _("Which profile fo you want to load?"), _("Layout manager"), layouts );
+//	if ( ( result < 0  ) || ( result > layouts.GetCount() ) ) return;
 
+    LoadPerspectives();
 }
 
 
@@ -690,4 +685,18 @@ void MainWindow::OnMenuDefaultLayout( wxCommandEvent& /*unused*/ )
 const MainWindow::TabNames& MainWindow::GetTabNames()
 {
     return m_tab_names;
+}
+
+void MainWindow::LoadPerspectives( const wxString& perspective_name )
+{
+    m_sp_tab->LoadPerspective( perspective_name );
+    m_join_tab->LoadPerspective( perspective_name );
+    m_opts_tab->LoadPerspective( perspective_name );
+}
+
+void MainWindow::SavePerspectives( const wxString& perspective_name )
+{
+    m_sp_tab->SavePerspective( perspective_name );
+    m_join_tab->SavePerspective( perspective_name );
+    m_opts_tab->SavePerspective( perspective_name );
 }

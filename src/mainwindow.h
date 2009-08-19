@@ -114,6 +114,9 @@ class MainWindow : public wxFrame
 
     void SetLogWin( wxLogWindow* log, wxLogChain* logchain );
 
+    void LoadPerspectives( const wxString& perspective_name = wxEmptyString );
+    void SavePerspectives( const wxString& perspective_name = wxEmptyString );
+
   protected:
     // MainWindow variables
     Ui& m_ui;

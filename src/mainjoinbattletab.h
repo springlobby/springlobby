@@ -29,7 +29,7 @@ class MainJoinBattleTab : public wxScrolledWindow
     //void UpdateCurrentBattle();
     void UpdateCurrentBattle();
     void UpdateCurrentBattle( const wxString& Tag );
-    void LeaveCurrentBattle();
+    void LeaveCurrentBattle( bool called_from_join = false );
     Battle* GetCurrentBattle();
     ChatPanel* GetActiveChatPanel();
 
@@ -44,6 +44,9 @@ class MainJoinBattleTab : public wxScrolledWindow
     void OnUnitSyncReloaded();
 
     void OnConnected();
+
+    void LoadPerspective( const wxString& perspective_name = wxEmptyString );
+    void SavePerspective( const wxString& perspective_name = wxEmptyString );
 
   protected:
     wxBoxSizer* m_main_sizer;

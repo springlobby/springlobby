@@ -67,7 +67,8 @@ MainJoinBattleTab::MainJoinBattleTab( wxWindow* parent, Ui& ui )
 
 MainJoinBattleTab::~MainJoinBattleTab()
 {
-
+    if ( sett().GetAutosavePerspective() )
+        SavePerspective();
 }
 
 
@@ -135,6 +136,7 @@ BattleListTab& MainJoinBattleTab::GetBattleListTab()
 void MainJoinBattleTab::JoinBattle( Battle& battle )
 {
 	LeaveCurrentBattle();
+	SavePerspective();
 
 	m_battle_tab = new BattleRoomTab( m_tabs, m_ui, battle );
 	m_tabs->InsertPage( 1, m_battle_tab, _( "Battleroom" ), true, wxIcon( battle_xpm ) );
@@ -148,6 +150,9 @@ void MainJoinBattleTab::JoinBattle( Battle& battle )
 	m_opts_tab = new BattleOptionsTab( m_tabs, m_ui, battle );
 	m_tabs->InsertPage( 4, m_opts_tab, _( "Unit Restrictions" ), false, wxIcon( battle_settings_xpm ) );
 
+    wxString pers_name = sett().GetLastPerspectiveName() + _T("_battle");
+    LoadPerspective( pers_name );
+
 #ifdef __WXMSW__
 	Refresh(); // this is needed to avoid a weird frame overlay glitch in windows
 #endif
@@ -160,8 +165,13 @@ void MainJoinBattleTab::HostBattle( Battle& battle )
 }
 
 
-void MainJoinBattleTab::LeaveCurrentBattle()
+void MainJoinBattleTab::LeaveCurrentBattle( bool called_from_join )
 {
+    if ( m_tabs->GetPageCount() > 1 ) {
+        wxString pers_name = sett().GetLastPerspectiveName() + _T("_battle");
+        SavePerspective( pers_name );
+    }
+
 	if ( m_mm_opts_tab ) {
 		m_tabs->DeletePage( 4 );
 		m_mm_opts_tab = 0;
@@ -179,6 +189,8 @@ void MainJoinBattleTab::LeaveCurrentBattle()
 		m_battle_tab = 0;
 	}
 
+    if( !called_from_join )
+        LoadPerspective();
 
 }
 
@@ -262,3 +274,12 @@ BattleroomMMOptionsTab<Battle>& MainJoinBattleTab::GetMMOptionsTab()
 	return *m_mm_opts_tab;
 }
 
+void MainJoinBattleTab::LoadPerspective( const wxString& perspective_name  )
+{
+    LoadNotebookPerspective( m_tabs, perspective_name );
+}
+
+void MainJoinBattleTab::SavePerspective( const wxString& perspective_name )
+{
+    SaveNotebookPerspective( m_tabs, perspective_name );
+}

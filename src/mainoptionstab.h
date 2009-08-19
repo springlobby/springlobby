@@ -36,6 +36,8 @@ class MainOptionsTab : public wxScrolledWindow
 		void SetSelection( const unsigned int page );
 		GroupOptionsPanel& GetGroupOptionsPanel();
 
+        void LoadPerspective( const wxString& perspective_name = wxEmptyString );
+        void SavePerspective( const wxString& perspective_name = wxEmptyString );
 
 	protected:
 		wxBoxSizer* m_main_sizer;
