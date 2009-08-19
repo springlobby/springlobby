@@ -139,12 +139,12 @@ MainWindow::MainWindow( Ui& ui )
   //TODO doesn't work atm
 
 
-  /* loading layouts currently borked
+    // loading layouts currently borked
 	wxMenu* menuView = new wxMenu;
 	menuView->Append( MENU_SAVE_LAYOUT, _("&Save Layout") );
 	menuView->Append( MENU_LOAD_LAYOUT, _("&Load layout") );
 	menuView->Append( MENU_DEFAULT_LAYOUT, _("&Set &Laoyut as default") );
-	*/
+
 
   m_menuTools = new wxMenu;
   m_menuTools->Append(MENU_JOIN, _("&Join channel..."));
@@ -173,7 +173,7 @@ MainWindow::MainWindow( Ui& ui )
   m_menubar->Append(menuFile, _("&File"));
   //m_menubar->Append(m_menuEdit, _("&Edit"));
 
-  //m_menubar->Append(menuView, _("&View")); //layout stuff --> disabled
+  m_menubar->Append(menuView, _("&View")); //layout stuff --> disabled
 
   m_menubar->Append(m_menuTools, _("&Tools"));
   m_menubar->Append(menuHelp, _("&Help"));
@@ -657,18 +657,25 @@ void MainWindow::OnChannelListStart( )
 
 void MainWindow::OnMenuSaveLayout( wxCommandEvent& /*unused*/ )
 {
-	wxString answer;
-	if ( !ui().AskText( _("Layout manager"),_("Enter a profile name"), answer ) ) return;
-	wxString layout = GetAui().manager->SavePerspective();
-	sett().SaveLayout( answer, layout );
+//	wxString answer;
+//	if ( !ui().AskText( _("Layout manager"),_("Enter a profile name"), answer ) ) return;
+//	wxString layout = GetAui().manager->SavePerspective();
+//	sett().SaveLayout( answer, layout );
+//
+    wxString per = m_func_tabs->SavePerspective();
+    sett().SavePerspective( per );
+
 }
 
 void MainWindow::OnMenuLoadLayout( wxCommandEvent& /*unused*/ )
 {
-	wxArrayString layouts = sett().GetLayoutList();
-	unsigned int result = wxGetSingleChoiceIndex( _("Which profile fo you want to load?"), _("Layout manager"), layouts );
-	if ( ( result < 0  ) || ( result > layouts.GetCount() ) ) return;
-	GetAui().manager->LoadPerspective( sett().GetLayout( layouts[result] ) );
+//	wxArrayString layouts = sett().GetLayoutList();
+//	unsigned int result = wxGetSingleChoiceIndex( _("Which profile fo you want to load?"), _("Layout manager"), layouts );
+//	if ( ( result < 0  ) || ( result > layouts.GetCount() ) ) return;
+//	GetAui().manager->LoadPerspective( sett().GetLayout( layouts[result] ) );
+	wxString per = sett().LoadPerspective( );
+    m_func_tabs->LoadPerspective( per );
+
 }
 
 
