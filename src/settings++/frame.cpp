@@ -26,7 +26,7 @@
 
 #include "frame.h"
 #include "../settings.h"
-#include "../springunitsynclib.h"
+#include "../springunitsync.h"
 #include "tab_render_detail.h"
 #include "tab_quality_video.h"
 #include "tab_abstract.h"
@@ -64,7 +64,8 @@ settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &
 	alreadyCalled = false;
 	parentWindow = parent;
 
-	if ( !susynclib().IsLoaded() ) loadUnitsync();
+	if ( !usync().IsLoaded() )
+        usync().ReloadUnitSyncLib();
 
 	notebook = new wxNotebook(this, ID_OPTIONS, wxPoint(0,0),TAB_SIZE, wxNB_TOP|wxNB_NOPAGETHEME);
 	notebook->SetFont(wxFont(8, wxSWISS, wxNORMAL,wxNORMAL, false, _T("Tahoma")));
