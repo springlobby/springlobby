@@ -91,7 +91,7 @@ class UserMenu : public wxMenu
                     m_idNameMap[m_groupCounter] = groupNames[i];
                     wxMenuItem* addItem = new wxMenuItem( m_groupsMenu, GROUP_ID + m_groupCounter ,  groupNames[i] , wxEmptyString, wxITEM_NORMAL );
                     m_groupsMenu->Append( addItem );
-                    Connect( GROUP_ID + m_groupCounter, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( EventHandler::OnUserMenuAddToGroup ), 0, m_parent );
+//                    Connect( GROUP_ID + m_groupCounter, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( EventHandler::OnUserMenuAddToGroup ), 0, m_parent );
                     m_oldGroups.Add( groupNames[i] );
                     m_idNameMap[GROUP_ID + m_groupCounter]  = groupNames[i];
                     m_NameIdMap[groupNames[i]]  = GROUP_ID + m_groupCounter;

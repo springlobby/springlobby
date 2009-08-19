@@ -15,6 +15,12 @@
 #include "mainwindow.h"
 #include "settings.h"
 
+BEGIN_EVENT_TABLE ( ChatPanelMenu, wxEvtHandler )
+
+    EVT_MENU ( wxID_ANY, ChatPanelMenu::OnMenuItem )
+
+END_EVENT_TABLE()
+
 ChatPanelMenu::ChatPanelMenu(ChatPanel* parent, bool addChanServ, const wxString& title , long style )
 
 :    m_chatpanel(parent),
@@ -33,7 +39,7 @@ wxMenu* ChatPanelMenu::GetMenu()
     wxMenuItem* copy = new wxMenuItem( m_menu_all, wxID_COPY, _( "Copy" ), wxEmptyString, wxITEM_NORMAL );
     m_menu_all->Append( copy );
     //      eventID,    eventType,                  member function pointer to be called        userData            instance on which member function is called
-    Connect( wxID_COPY, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTextCtrl::OnCopy, (wxObject*) NULL, (wxEvtHandler*)(m_chatpanel->m_chatlog_text) );
+//    Connect( wxID_COPY, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTextCtrl::OnCopy, (wxObject*) NULL, (wxEvtHandler*)(m_chatpanel->m_chatlog_text) );
 
     if ( m_chatpanel->m_url_at_pos != _T("") ) {
         wxMenuItem* copylink = new wxMenuItem( m_menu_all, CHAT_MENU_COPYLINK, _( "Copy link location" ), wxEmptyString, wxITEM_NORMAL );
@@ -146,9 +152,9 @@ wxMenu* ChatPanelMenu::GetMenu()
         m_menu_all->Append( open_extern );
     }
 
-    ConnectEvents();
-    m_user_menu->Connect( GROUP_ID_NEW, wxEVT_COMMAND_MENU_SELECTED,
-                                    wxCommandEventHandler( ChatPanelMenu::OnUserMenuCreateGroup ), 0, this );
+//    ConnectEvents();
+//    m_user_menu->Connect( GROUP_ID_NEW, wxEVT_COMMAND_MENU_SELECTED,
+//                                    wxCommandEventHandler( ChatPanelMenu::OnUserMenuCreateGroup ), 0, this );
     return m_menu_all;
 }
 
@@ -833,3 +839,9 @@ void ChatPanelMenu::OnUserMenuCreateGroup( wxCommandEvent& /*unused*/ )
     }
 }
 
+void ChatPanelMenu::OnMenuItem( wxCommandEvent& event )
+{
+    switch ( event.GetId() ) {
+        default: OnChannelMenuInfo( event );
+    }
+}

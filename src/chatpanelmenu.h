@@ -5,7 +5,7 @@
 #include "usermenu.h"
 
 //! seperating this into a friend class enables us to re-use it in the tab header right click evt
-class ChatPanelMenu: public wxEvtHandler {
+class ChatPanelMenu : public wxEvtHandler {
     public:
         typedef SL_GENERIC::UserMenu<ChatPanelMenu>
             UserMenu;
@@ -68,6 +68,7 @@ class ChatPanelMenu: public wxEvtHandler {
         void OnUserMenuAddToGroup( wxCommandEvent& event );
         void OnUserMenuDeleteFromGroup( wxCommandEvent& event );
         void OnUserMenuCreateGroup( wxCommandEvent& event );
+        void OnMenuItem( wxCommandEvent& event );
 
         wxMenu* GetMenu();
 
@@ -85,6 +86,8 @@ class ChatPanelMenu: public wxEvtHandler {
         wxMenuItem* m_append_menu;
 
         bool m_withChanserv;
+
+        DECLARE_EVENT_TABLE();
 };
 
 
