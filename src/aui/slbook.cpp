@@ -28,6 +28,9 @@ BEGIN_EVENT_TABLE( SLChatNotebook, SLNotebook )
 
      EVT_AUINOTEBOOK_TAB_RIGHT_UP ( wxID_ANY, SLChatNotebook::OnHeaderRightClick )
 //     EVT_AUINOTEBOOK_ALLOW_DND(wxID_ANY, SLChatNotebook::OnAllowNotebookDnD)
+//     EVT_AUINOTEBOOK_BEGIN_DRAG(wxID_ANY, SLChatNotebook::OnAllowNotebookDnD)
+//     EVT_AUINOTEBOOK_DRAG_DONE(wxID_ANY, SLChatNotebook::OnAllowNotebookDnD)
+//     EVT_AUINOTEBOOK_DRAG_MOTION(wxID_ANY, SLChatNotebook::OnAllowNotebookDnD)
 
 END_EVENT_TABLE()
 
@@ -50,7 +53,6 @@ bool SLChatNotebook::AddPage(ChatPanel* page, const wxString& caption, bool sele
 void SLChatNotebook::OnAllowNotebookDnD(wxAuiNotebookEvent& evt)
 {
     evt.Veto();
-    evt.Skip();
 }
 
 /** @brief OnHeaderRightClick
