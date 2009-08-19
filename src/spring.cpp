@@ -233,7 +233,7 @@ void Spring::OnTerminated( wxCommandEvent& event )
     m_running = false;
     m_process = 0; // NOTE I'm not sure if this should be deleted or not, according to wx docs it shouldn't.
     m_wx_process = 0;
-    ui().OnSpringTerminated( true );
+    ui().OnSpringTerminated( event.GetExtraLong() );
 }
 
 
