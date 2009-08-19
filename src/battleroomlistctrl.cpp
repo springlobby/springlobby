@@ -157,6 +157,7 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, IBattle* battle, Ui& u
 		m_popup->Append( kick );
 		wxMenuItem* ring = new wxMenuItem( m_popup, BRLIST_RING, wxString( _("Ring") ) , wxEmptyString, wxITEM_NORMAL );
 		m_popup->Append( ring );
+
 	}
 }
 
@@ -349,7 +350,12 @@ void BattleroomListCtrl::OnListRightClick( wxListEvent& event )
     }
 
     wxLogMessage(_T("Popup"));
-    m_popup->EnableItems( !user.BattleStatus().IsBot(), GetSelectedUserNick() );
+    m_popup->EnableItems( !user.BattleStatus().IsBot(), GetSelectedUserNick() );//this updates groups, therefore we need to update the connection to evt handlers too
+    std::vector<long> groups_ids = m_popup->GetGroupIds();
+    for (std::vector<long>::const_iterator it = groups_ids.begin(); it != groups_ids.end(); ++it) {
+        Connect( *it, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnUserMenuAddToGroup ), 0, this );
+    }
+    Connect( GROUP_ID_NEW, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnUserMenuCreateGroup), 0, this );
     PopupMenu( m_popup );
     wxLogMessage(_T("Done"));
 }
@@ -767,10 +773,11 @@ void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint& p
 
 void BattleroomListCtrl::OnUserMenuAddToGroup( wxCommandEvent& event )
 {
-    int id  = event.GetId() - GROUP_ID;
+    int id  = event.GetId();
     wxString groupname = m_popup->GetGroupByEvtID(id);
     wxString nick = GetSelectedUserNick();
     useractions().AddUserToGroup( groupname, nick );
+    Disconnect( GROUP_ID_NEW, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnUserMenuCreateGroup), 0, this );
 }
 
 void BattleroomListCtrl::OnUserMenuDeleteFromGroup( wxCommandEvent& /*unused*/ )

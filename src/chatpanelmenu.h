@@ -74,7 +74,6 @@ class ChatPanelMenu : public wxEvtHandler {
         wxMenu* GetMenu();
 
     protected:
-        void ConnectEvents();
         void CreateNickListMenu();
 
         ChatPanel* m_chatpanel;

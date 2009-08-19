@@ -76,8 +76,8 @@ void SLChatNotebook::OnHeaderRightClick(wxAuiNotebookEvent &event)
     }
 
     ChatPanel* cur_page = static_cast<ChatPanel*>( GetPage( event.GetSelection() ) );
-    ChatPanelMenu* ch_menu = new ChatPanelMenu( cur_page, true );
-    pop->AppendSubMenu ( ch_menu->GetMenu() , _( "Channel" ));
+    m_ch_menu = new ChatPanelMenu( cur_page, true );
+    pop->AppendSubMenu ( m_ch_menu->GetMenu() , _( "Channel" ));
     Connect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( SLChatNotebook::OnMenuItem ), cur_page, this );
     PopupMenu(pop);
 }
@@ -112,9 +112,7 @@ void SLChatNotebook::OnMenuItem( wxCommandEvent& event )
     else {
         ChatPanel* cur_page = static_cast<ChatPanel*>( GetPage( GetSelection() ) );
         if ( cur_page ) {
-            ChatPanelMenu* ch_menu = new ChatPanelMenu( cur_page, true );
-            ch_menu->OnMenuItem( event );
-            delete ch_menu;
+            m_ch_menu->OnMenuItem( event );
         }
     }
 }

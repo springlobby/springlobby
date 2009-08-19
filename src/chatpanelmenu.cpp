@@ -230,12 +230,9 @@ void ChatPanelMenu::CreateNickListMenu()
     }
 }
 
-void ChatPanelMenu::ConnectEvents()
-{
-}
-
 ChatPanelMenu::UserMenu* ChatPanelMenu::GetUserMenu()
 {
+    CreateNickListMenu();
     return m_user_menu;
 }
 
@@ -744,7 +741,7 @@ void ChatPanelMenu::OnChannelClearContents( wxCommandEvent& /*unused*/ )
 
 void ChatPanelMenu::OnUserMenuAddToGroup( wxCommandEvent& event )
 {
-    int id  = event.GetId() - GROUP_ID;
+    int id  = event.GetId();
     if ( m_user_menu ) {
         wxString groupname = m_user_menu->GetGroupByEvtID(id);
         const User* user = m_chatpanel->GetSelectedUser();
@@ -833,4 +830,9 @@ void ChatPanelMenu::OnMenuItem( wxCommandEvent& event )
     else if ( event.GetId() == CHAT_MENU_CH_SPAM_ISON ) OnChannelMenuSpamIsOn( event );
     else if ( event.GetId() == CHAT_MENU_CH_TOPIC ) OnChannelMenuTopic( event );
     else if ( event.GetId() == CHAT_MENU_CH_MSG ) OnChannelMenuMessage( event );
+
+    else if ( event.GetId() == GROUP_ID_NEW  ) OnUserMenuCreateGroup( event );
+    else if ( event.GetId() == GROUP_ID_REMOVE  ) OnUserMenuDeleteFromGroup( event );
+    else OnUserMenuAddToGroup( event );
+
 }

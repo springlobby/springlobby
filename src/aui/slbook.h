@@ -3,6 +3,8 @@
 
 #include <wx/aui/aui.h>
 
+class ChatPanelMenu;
+
 class SLNotebook : public wxAuiNotebook {
 
     public:
@@ -39,6 +41,8 @@ class SLChatNotebook : public SLNotebook {
 
         //prohibit adding other panels
         bool AddPage(wxWindow* page, const wxString& caption, bool select = false, const wxBitmap& bitmap = wxNullBitmap) {return false;}
+
+        ChatPanelMenu* m_ch_menu;
 
         DECLARE_EVENT_TABLE();
 };

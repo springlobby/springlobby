@@ -244,7 +244,7 @@ void ChatPanel::CreateControls( )
     m_nick_sizer = new wxBoxSizer( wxVERTICAL );
     m_usercount_label = new wxStaticText( m_nick_panel, wxID_ANY, wxString::Format( _("%d users"), GetChannel()->GetNumUsers() ) );
     CreatePopup();//ensures m_popup_menu is constructed
-//    assert ( m_popup_menu->GetUserMenu() );
+    assert ( m_popup_menu->GetUserMenu() );
     m_nicklist = new NickListCtrl( m_nick_panel, true, m_popup_menu->GetUserMenu() );
 
    // m_nick_filter = new wxComboBox( m_nick_panel, -1, _("Show all"), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT), 0, 0, wxCB_READONLY );
@@ -330,19 +330,7 @@ void ChatPanel::CreatePopup()
 	if ( m_popup_menu != 0 )
         return;
 	wxLogDebugFunc( _T( "" ) );
-	m_popup_menu = new ChatPanelMenu( this, _("TITEL") );
-	//these need to be connected here for the fucked up reason that submenus don't fire the events to the immeadite parent
-//	m_popup_menu->Connect( CHAT_MENU_CH_INFO, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChannelMenuInfo ), 0, m_popup_menu );
-//	Connect( CHAT_MENU_CH_LOCK, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChannelMenuLock ), 0, m_popup_menu );
-//	Connect( CHAT_MENU_CH_UNLOCK, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChannelMenuUnlock ), 0, m_popup_menu );
-//	Connect( CHAT_MENU_CH_REG, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChannelMenuRegister ), 0, m_popup_menu );
-//	Connect( CHAT_MENU_CH_UNREG, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChannelMenuUnregister ), 0, m_popup_menu );
-//	Connect( CHAT_MENU_CH_SPAM_ON, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChannelMenuSpamOn ), 0, m_popup_menu );
-//	Connect( CHAT_MENU_CH_SPAM_OFF, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChannelMenuSpanOff ), 0, m_popup_menu );
-//	Connect( CHAT_MENU_CH_SPAM_ISON, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChannelMenuSpamIsOn ), 0, m_popup_menu );
-//    Connect( CHAT_MENU_CH_TOPIC, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChannelMenuTopic ), 0, m_popup_menu );
-//	Connect( CHAT_MENU_CH_MSG, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChannelMenuMessage ), 0, m_popup_menu );
-
+	m_popup_menu = new ChatPanelMenu( this );
 }
 
 const User* ChatPanel::GetSelectedUser() const

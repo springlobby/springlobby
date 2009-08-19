@@ -3,9 +3,11 @@
 
 #include <wx/menu.h>
 #include <map>
+#include <vector>
 
-static const long GROUP_ID  = wxNewId();
+//static const long GROUP_ID  = wxNewId();
 static const long GROUP_ID_NEW  = wxNewId();
+static const long GROUP_ID_REMOVE  = wxNewId();
 #include "ui.h"
 #include "useractions.h"
 
@@ -32,8 +34,8 @@ class UserMenu : public wxMenu
             m_groupsMenu->AppendSeparator();
 //            if ( !ui().IsThisMe( m_parent->GetSelectedUser() ) )
             m_groupsMenuItem = AppendSubMenu( m_groupsMenu, _("Add to group..."));
-            m_groupsDeleteItem = new wxMenuItem( m_groupsMenu, GROUP_ID - 1, _("Remove from group")  );
-            Connect( GROUP_ID - 1, wxEVT_COMMAND_MENU_SELECTED,
+            m_groupsDeleteItem = new wxMenuItem( m_groupsMenu, GROUP_ID_REMOVE, _("Remove from group")  );
+            Connect( GROUP_ID_REMOVE, wxEVT_COMMAND_MENU_SELECTED,
                                     wxCommandEventHandler( EventHandler::OnUserMenuDeleteFromGroup ), 0, m_parent );
             Append( m_groupsDeleteItem );
         }
@@ -59,12 +61,21 @@ class UserMenu : public wxMenu
 
         }
 
-        wxString GetGroupByEvtID( const unsigned int id )
+        wxString GetGroupByEvtID( const long id )
         {
-            if ( id < m_idNameMap.size() )
-                return m_idNameMap[id];
-            else
-                return wxEmptyString;
+            return m_idNameMap[id];
+        }
+
+        //we need these to circumvent the submneu events not firing via connecting the events in the parent class
+        std::vector<long> GetGroupIds() {
+            std::vector<long> ids;
+            std::map<long, wxString>::const_iterator it = m_idNameMap.begin();
+            for ( ; it != m_idNameMap.end(); ++it ) {
+                long id = it->first;
+                if (  id != GROUP_ID_NEW && id != GROUP_ID_REMOVE )
+                    ids.push_back( id );
+            }
+            return ids;
         }
 
     protected:
@@ -75,8 +86,8 @@ class UserMenu : public wxMenu
         wxArrayString m_oldGroups;
         ParentType* m_parent;
         unsigned int m_groupCounter;
-        std::map<unsigned int, wxString> m_idNameMap;
-        std::map<wxString, unsigned int> m_NameIdMap;
+        std::map<long, wxString> m_idNameMap;
+        std::map<wxString, long> m_NameIdMap;
 
         void UpdateGroups()
         {
@@ -88,13 +99,14 @@ class UserMenu : public wxMenu
             {
                 if ( m_oldGroups.Index( groupNames[i] ) == wxNOT_FOUND || first )
                 {
+                    long newID = wxNewId();
                     m_idNameMap[m_groupCounter] = groupNames[i];
-                    wxMenuItem* addItem = new wxMenuItem( m_groupsMenu, GROUP_ID + m_groupCounter ,  groupNames[i] , wxEmptyString, wxITEM_NORMAL );
+                    wxMenuItem* addItem = new wxMenuItem( m_groupsMenu, newID,  groupNames[i] , wxEmptyString, wxITEM_NORMAL );
                     m_groupsMenu->Append( addItem );
-                    Connect( GROUP_ID + m_groupCounter, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( EventHandler::OnUserMenuAddToGroup ), 0, m_parent );
+//                    Connect( newID, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( EventHandler::OnUserMenuAddToGroup ), 0, m_parent );
                     m_oldGroups.Add( groupNames[i] );
-                    m_idNameMap[GROUP_ID + m_groupCounter]  = groupNames[i];
-                    m_NameIdMap[groupNames[i]]  = GROUP_ID + m_groupCounter;
+                    m_idNameMap[newID]  = groupNames[i];
+                    m_NameIdMap[groupNames[i]]  = newID;
                     m_groupCounter++;
                 }
                 else
