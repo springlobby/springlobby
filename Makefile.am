@@ -1035,10 +1035,16 @@ springsettings_SOURCES = \
 	src/spinctld.cpp \
 	src/springunitsynclib.cpp \
 	src/springunitsynclib.h \
+	src/springunitsync.cpp \
+	src/springunitsync.h \
+	src/thread.cpp \
+	src/thread.h \
 	src/settings.cpp \
 	src/settings.h \
 	src/uiutils.cpp \
 	src/uiutils.h \
+	src/mmoptionmodel.h \
+	src/mmoptionmodel.cpp \
 	src/globalsmanager.cpp \
 	src/settings++/se_utils.cpp \
 	src/settings++/se_utils.h \
