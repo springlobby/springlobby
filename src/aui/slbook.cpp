@@ -116,3 +116,252 @@ void SLChatNotebook::OnMenuItem( wxCommandEvent& event )
         }
     }
 }
+
+// wxTabFrame is an interesting case.  It's important that all child pages
+// of the multi-notebook control are all actually children of that control
+// (and not grandchildren).  wxTabFrame facilitates this.  There is one
+// instance of wxTabFrame for each tab control inside the multi-notebook.
+// It's important to know that wxTabFrame is not a real window, but it merely
+// used to capture the dimensions/positioning of the internal tab control and
+// it's managed page windows
+
+class wxTabFrame : public wxWindow
+{
+public:
+
+    wxTabFrame()
+    {
+        m_tabs = NULL;
+        m_rect = wxRect(0,0,200,200);
+        m_tab_ctrl_height = 20;
+    }
+
+    ~wxTabFrame()
+    {
+        wxDELETE(m_tabs);
+    }
+
+    void SetTabCtrlHeight(int h)
+    {
+        m_tab_ctrl_height = h;
+    }
+
+    void DoSetSize(int x, int y,
+                   int width, int height,
+                   int WXUNUSED(sizeFlags = wxSIZE_AUTO))
+    {
+        m_rect = wxRect(x, y, width, height);
+        DoSizing();
+    }
+
+    void DoGetClientSize(int* x, int* y) const
+    {
+        *x = m_rect.width;
+        *y = m_rect.height;
+    }
+
+    bool Show( bool WXUNUSED(show = true) ) { return false; }
+
+    void DoSizing()
+    {
+        if (!m_tabs)
+            return;
+
+        if (m_tabs->GetFlags() & wxAUI_NB_BOTTOM)
+        {
+            m_tab_rect = wxRect (m_rect.x, m_rect.y + m_rect.height - m_tab_ctrl_height, m_rect.width, m_tab_ctrl_height);
+            m_tabs->SetSize     (m_rect.x, m_rect.y + m_rect.height - m_tab_ctrl_height, m_rect.width, m_tab_ctrl_height);
+            m_tabs->SetRect     (wxRect(0, 0, m_rect.width, m_tab_ctrl_height));
+        }
+        else //TODO: if (GetFlags() & wxAUI_NB_TOP)
+        {
+            m_tab_rect = wxRect (m_rect.x, m_rect.y, m_rect.width, m_tab_ctrl_height);
+            m_tabs->SetSize     (m_rect.x, m_rect.y, m_rect.width, m_tab_ctrl_height);
+            m_tabs->SetRect     (wxRect(0, 0,        m_rect.width, m_tab_ctrl_height));
+        }
+        // TODO: else if (GetFlags() & wxAUI_NB_LEFT){}
+        // TODO: else if (GetFlags() & wxAUI_NB_RIGHT){}
+
+        m_tabs->Refresh();
+        m_tabs->Update();
+
+        wxAuiNotebookPageArray& pages = m_tabs->GetPages();
+        size_t i, page_count = pages.GetCount();
+
+        for (i = 0; i < page_count; ++i)
+        {
+            wxAuiNotebookPage& page = pages.Item(i);
+            if (m_tabs->GetFlags() & wxAUI_NB_BOTTOM)
+            {
+               page.window->SetSize(m_rect.x, m_rect.y,
+                                    m_rect.width, m_rect.height - m_tab_ctrl_height);
+            }
+            else //TODO: if (GetFlags() & wxAUI_NB_TOP)
+            {
+                page.window->SetSize(m_rect.x, m_rect.y + m_tab_ctrl_height,
+                                    m_rect.width, m_rect.height - m_tab_ctrl_height);
+            }
+            // TODO: else if (GetFlags() & wxAUI_NB_LEFT){}
+            // TODO: else if (GetFlags() & wxAUI_NB_RIGHT){}
+
+#if wxUSE_MDI
+            if (page.window->IsKindOf(CLASSINFO(wxAuiMDIChildFrame)))
+            {
+                wxAuiMDIChildFrame* wnd = (wxAuiMDIChildFrame*)page.window;
+                wnd->ApplyMDIChildFrameRect();
+            }
+#endif
+        }
+    }
+
+    void DoGetSize(int* x, int* y) const
+    {
+        if (x)
+            *x = m_rect.GetWidth();
+        if (y)
+            *y = m_rect.GetHeight();
+    }
+
+    void Update()
+    {
+        // does nothing
+    }
+
+public:
+
+    wxRect m_rect;
+    wxRect m_tab_rect;
+    wxAuiTabCtrl* m_tabs;
+    int m_tab_ctrl_height;
+};
+
+
+wxString SLNotebook::SavePerspective() {
+  // Build list of panes/tabs
+  wxString tabs;
+  wxAuiPaneInfoArray& all_panes = m_mgr.GetAllPanes();
+   const size_t pane_count = all_panes.GetCount();
+
+   for (size_t i = 0; i < pane_count; ++i)
+   {
+     wxAuiPaneInfo& pane = all_panes.Item(i);
+     if (pane.name == wxT("dummy"))
+           continue;
+
+       wxTabFrame* tabframe = (wxTabFrame*)pane.window;
+
+     if (!tabs.empty()) tabs += wxT("|");
+     tabs += pane.name;
+     tabs += wxT("=");
+
+     // add tab id's
+     size_t page_count = tabframe->m_tabs->GetPageCount();
+     for (size_t p = 0; p < page_count; ++p)
+     {
+        wxAuiNotebookPage& page = tabframe->m_tabs->GetPage(p);
+        const size_t page_idx = m_tabs.GetIdxFromWindow(page.window);
+
+        if (p) tabs += wxT(",");
+
+        if ((int)page_idx == m_curpage) tabs += wxT("*");
+        else if ((int)p == tabframe->m_tabs->GetActivePage()) tabs += wxT("+");
+        tabs += wxString::Format(wxT("%u"), page_idx);
+     }
+  }
+  tabs += wxT("@");
+
+  // Add frame perspective
+  tabs += m_mgr.SavePerspective();
+
+  return tabs;
+}
+
+bool SLNotebook::LoadPerspective(const wxString& layout) {
+  // Remove all tab ctrls (but still keep them in main index)
+  const size_t tab_count = m_tabs.GetPageCount();
+  for (size_t i = 0; i < tab_count; ++i) {
+     wxWindow* wnd = m_tabs.GetWindowFromIdx(i);
+
+     // find out which onscreen tab ctrl owns this tab
+     wxAuiTabCtrl* ctrl;
+     int ctrl_idx;
+     if (!FindTab(wnd, &ctrl, &ctrl_idx))
+        return false;
+
+     // remove the tab from ctrl
+     if (!ctrl->RemovePage(wnd))
+        return false;
+  }
+  RemoveEmptyTabFrames();
+
+  size_t sel_page = 0;
+
+  wxString tabs = layout.BeforeFirst(wxT('@'));
+  while (1)
+   {
+     const wxString tab_part = tabs.BeforeFirst(wxT('|'));
+
+     // if the string is empty, we're done parsing
+       if (tab_part.empty())
+           break;
+
+     // Get pane name
+     const wxString pane_name = tab_part.BeforeFirst(wxT('='));
+
+     // create a new tab frame
+     wxTabFrame* new_tabs = new wxTabFrame;
+     new_tabs->m_tabs = new wxAuiTabCtrl(this,
+                                m_tab_id_counter++,
+                                wxDefaultPosition,
+                                wxDefaultSize,
+                                wxNO_BORDER|wxWANTS_CHARS);
+     new_tabs->m_tabs->SetArtProvider(m_tabs.GetArtProvider()->Clone());
+     new_tabs->SetTabCtrlHeight(m_tab_ctrl_height);
+     new_tabs->m_tabs->SetFlags(m_flags);
+     wxAuiTabCtrl *dest_tabs = new_tabs->m_tabs;
+
+     // create a pane info structure with the information
+     // about where the pane should be added
+     wxAuiPaneInfo pane_info = wxAuiPaneInfo().Name(pane_name).Bottom().CaptionVisible(false);
+     m_mgr.AddPane(new_tabs, pane_info);
+
+     // Get list of tab id's and move them to pane
+     wxString tab_list = tab_part.AfterFirst(wxT('='));
+     while(1) {
+        wxString tab = tab_list.BeforeFirst(wxT(','));
+        if (tab.empty()) break;
+        tab_list = tab_list.AfterFirst(wxT(','));
+
+        // Check if this page has an 'active' marker
+        const wxChar c = tab[0];
+        if (c == wxT('+') || c == wxT('*')) {
+           tab = tab.Mid(1);
+        }
+
+        const size_t tab_idx = wxAtoi(tab.c_str());
+        if (tab_idx >= GetPageCount()) continue;
+
+        // Move tab to pane
+        wxAuiNotebookPage& page = m_tabs.GetPage(tab_idx);
+        const size_t newpage_idx = dest_tabs->GetPageCount();
+        dest_tabs->InsertPage(page.window, page, newpage_idx);
+
+        if (c == wxT('+')) dest_tabs->SetActivePage(newpage_idx);
+        else if ( c == wxT('*')) sel_page = tab_idx;
+     }
+     dest_tabs->DoShowHide();
+
+     tabs = tabs.AfterFirst(wxT('|'));
+  }
+
+  // Load the frame perspective
+  const wxString frames = layout.AfterFirst(wxT('@'));
+  m_mgr.LoadPerspective(frames);
+
+  // Force refresh of selection
+  m_curpage = -1;
+  SetSelection(sel_page);
+
+  return true;
+}
+

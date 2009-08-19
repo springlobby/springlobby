@@ -2429,3 +2429,13 @@ void Settings::SetShowXallTabs( bool show )
 {
     m_config->Write( _T( "/GUI/CloseOnAll" ) , show );
 }
+
+void Settings::SavePerspective( wxString& layout_string )
+{
+    m_config->Write( _T( "/GUI/ChatPerspective" ) , layout_string );
+}
+
+wxString Settings::LoadPerspective( )
+{
+    return m_config->Read( _T( "/GUI/ChatPerspective" ) , _T("") );
+}

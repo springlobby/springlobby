@@ -9,7 +9,8 @@ class SLNotebook : public wxAuiNotebook {
         SLNotebook (wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxAUI_NB_DEFAULT_STYLE);
 //        wxAuiManager& GetAuiManager() { return m_mgr; }
 
-
+        wxString SavePerspective();
+        bool LoadPerspective(const wxString& layout);
 };
 
 class ChatPanel;

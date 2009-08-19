@@ -649,6 +649,10 @@ class Settings
      */
     void SaveLayout( wxString& layout_name, wxString& layout_string );
     wxString GetLayout( wxString& layout_name );
+
+    void SavePerspective( wxString& layout_string );
+    wxString LoadPerspective( );
+
     wxArrayString GetLayoutList();
     void SetDefaultLayout( const wxString& layout_name );
     wxString GetDefaultLayout();
