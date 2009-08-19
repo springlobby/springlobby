@@ -331,16 +331,16 @@ void ChatPanel::CreatePopup()
 	wxLogDebugFunc( _T( "" ) );
 	m_popup_menu = new ChatPanelMenu( this, _("TITEL") );
 	//these need to be connected here for the fucked up reason that submenus don't fire the events to the immeadite parent
-	m_popup_menu->Connect( CHAT_MENU_CH_INFO, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChannelMenuInfo ), 0, m_popup_menu );
-	Connect( CHAT_MENU_CH_LOCK, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChannelMenuLock ), 0, m_popup_menu );
-	Connect( CHAT_MENU_CH_UNLOCK, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChannelMenuUnlock ), 0, m_popup_menu );
-	Connect( CHAT_MENU_CH_REG, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChannelMenuRegister ), 0, m_popup_menu );
-	Connect( CHAT_MENU_CH_UNREG, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChannelMenuUnregister ), 0, m_popup_menu );
-	Connect( CHAT_MENU_CH_SPAM_ON, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChannelMenuSpamOn ), 0, m_popup_menu );
-	Connect( CHAT_MENU_CH_SPAM_OFF, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChannelMenuSpanOff ), 0, m_popup_menu );
-	Connect( CHAT_MENU_CH_SPAM_ISON, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChannelMenuSpamIsOn ), 0, m_popup_menu );
-    Connect( CHAT_MENU_CH_TOPIC, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChannelMenuTopic ), 0, m_popup_menu );
-	Connect( CHAT_MENU_CH_MSG, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChannelMenuMessage ), 0, m_popup_menu );
+//	m_popup_menu->Connect( CHAT_MENU_CH_INFO, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChannelMenuInfo ), 0, m_popup_menu );
+//	Connect( CHAT_MENU_CH_LOCK, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChannelMenuLock ), 0, m_popup_menu );
+//	Connect( CHAT_MENU_CH_UNLOCK, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChannelMenuUnlock ), 0, m_popup_menu );
+//	Connect( CHAT_MENU_CH_REG, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChannelMenuRegister ), 0, m_popup_menu );
+//	Connect( CHAT_MENU_CH_UNREG, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChannelMenuUnregister ), 0, m_popup_menu );
+//	Connect( CHAT_MENU_CH_SPAM_ON, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChannelMenuSpamOn ), 0, m_popup_menu );
+//	Connect( CHAT_MENU_CH_SPAM_OFF, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChannelMenuSpanOff ), 0, m_popup_menu );
+//	Connect( CHAT_MENU_CH_SPAM_ISON, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChannelMenuSpamIsOn ), 0, m_popup_menu );
+//    Connect( CHAT_MENU_CH_TOPIC, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChannelMenuTopic ), 0, m_popup_menu );
+//	Connect( CHAT_MENU_CH_MSG, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChannelMenuMessage ), 0, m_popup_menu );
 
 }
 
@@ -518,7 +518,7 @@ void ChatPanel::OnChanOpts( wxCommandEvent& /*unused*/ )
 {
   CreatePopup();
   if ( (m_chan_opts_button == 0) || (m_popup_menu == 0)) return;
-  m_chan_opts_button->PopupMenu(m_popup_menu);
+  m_chan_opts_button->PopupMenu(m_popup_menu->GetMenu());
 }
 
 
@@ -1034,7 +1034,7 @@ void ChatPanel::OnMouseDown( wxMouseEvent& event )
         m_url_at_pos = FindUrl( pos );
 	}
 	CreatePopup();
-	if ( m_popup_menu != 0 ) PopupMenu( m_popup_menu );
+	if ( m_popup_menu != 0 ) PopupMenu( m_popup_menu->GetMenu() );
 	else event.Skip();
 }
 

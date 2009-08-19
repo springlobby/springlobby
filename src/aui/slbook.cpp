@@ -88,7 +88,7 @@ void SLChatNotebook::OnHeaderRightClick(wxAuiNotebookEvent &event)
 
     ChatPanel* cur_page = static_cast<ChatPanel*>( GetPage( event.GetSelection() ) );
     ChatPanelMenu* ch_menu = new ChatPanelMenu( cur_page, false );
-    pop->AppendSubMenu ( ch_menu , _( "Channel" ));
+    pop->AppendSubMenu ( ch_menu->GetMenu() , _( "Channel" ));
     PopupMenu(pop);
 
 
