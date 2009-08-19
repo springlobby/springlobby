@@ -59,6 +59,7 @@ BEGIN_EVENT_TABLE( ChatPanel, wxPanel )
 	EVT_BUTTON( CHAT_CHAN_OPTS, ChatPanel::OnChanOpts )
 	EVT_BUTTON( CHAT_SEND, ChatPanel::OnSay )
 	EVT_TEXT_URL( CHAT_LOG,  ChatPanel::OnLinkEvent )
+	EVT_MENU ( wxID_ANY, ChatPanel::OnMenuItem )
 
 END_EVENT_TABLE()
 
@@ -1112,4 +1113,9 @@ void ChatPanel::SetIconHighlight( HighlightType highlight )
       }
     }
   }
+}
+
+void ChatPanel::OnMenuItem( wxCommandEvent& event )
+{
+    m_popup_menu->OnMenuItem( event );
 }

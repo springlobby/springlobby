@@ -130,6 +130,8 @@ class ChatPanel : public wxPanel
 
     void SortNickList();
 
+    void OnMenuItem( wxCommandEvent& event );
+
   protected:
 
     void _SetChannel( Channel* channel );

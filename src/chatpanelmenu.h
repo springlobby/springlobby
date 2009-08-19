@@ -87,7 +87,6 @@ class ChatPanelMenu : public wxEvtHandler {
 
         bool m_withChanserv;
 
-        DECLARE_EVENT_TABLE();
 };
 
 

@@ -15,12 +15,6 @@
 #include "mainwindow.h"
 #include "settings.h"
 
-BEGIN_EVENT_TABLE ( ChatPanelMenu, wxEvtHandler )
-
-    EVT_MENU ( wxID_ANY, ChatPanelMenu::OnMenuItem )
-
-END_EVENT_TABLE()
-
 ChatPanelMenu::ChatPanelMenu(ChatPanel* parent, bool addChanServ, const wxString& title , long style )
 
 :    m_chatpanel(parent),
