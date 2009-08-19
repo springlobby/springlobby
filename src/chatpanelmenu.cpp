@@ -33,7 +33,7 @@ wxMenu* ChatPanelMenu::GetMenu()
     wxMenuItem* copy = new wxMenuItem( m_menu_all, wxID_COPY, _( "Copy" ), wxEmptyString, wxITEM_NORMAL );
     m_menu_all->Append( copy );
     //      eventID,    eventType,                  member function pointer to be called        userData            instance on which member function is called
-//    Connect( wxID_COPY, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTextCtrl::OnCopy, (wxObject*) NULL, (wxEvtHandler*)(m_chatpanel->m_chatlog_text) );
+    Connect( wxID_COPY, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTextCtrl::OnCopy, (wxObject*) NULL, (wxEvtHandler*)(m_chatpanel->m_chatlog_text) );
 
     if ( m_chatpanel->m_url_at_pos != _T("") ) {
         wxMenuItem* copylink = new wxMenuItem( m_menu_all, CHAT_MENU_COPYLINK, _( "Copy link location" ), wxEmptyString, wxITEM_NORMAL );
@@ -232,62 +232,6 @@ void ChatPanelMenu::CreateNickListMenu()
 
 void ChatPanelMenu::ConnectEvents()
 {
-    m_menu_all->Connect( CHAT_MENU_SHOW_MUTELIST, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChannelMenuShowMutelist ), 0, this );
-	m_menu_all->Connect( CHAT_MENU_DISABLE_APPEND, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnMenuToggleAppend ), 0, this );
-
-	m_menu_all->Connect( CHAT_MENU_CH_LEAVE, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChannelMenuLeave ), 0, this );
-	m_menu_all->Connect( CHAT_MENU_CH_DISPLAYJOIN, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChannelMenuDisplayJoinLeave ), 0, this );
-	m_menu_all->Connect( CHAT_MENU_CH_AUTOJOIN, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChannelAutoJoin ), 0, this );
-
-	m_menu_all->Connect( CHAT_MENU_CH_CLEAR, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChannelClearContents ), 0, this );
-
-	m_menu_all->Connect( CHAT_MENU_SV_DISCON, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnServerMenuDisconnect ), 0, this );
-	m_menu_all->Connect( CHAT_MENU_SV_RECON, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnServerMenuReconnect ), 0, this );
-	m_menu_all->Connect( CHAT_MENU_SV_REMOVE, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnServerMenuRemove ), 0, this );
-	m_menu_all->Connect( CHAT_MENU_SV_CHPWD, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnServerMenuChangePassword ), 0, this );
-	m_menu_all->Connect( CHAT_MENU_SV_ACCESS, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnServerMenuSetAccess ), 0, this );
-	m_menu_all->Connect( CHAT_MENU_SV_BROADCAST, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnServerMenuBroadcast ), 0, this );
-
-    m_menu_all->Connect( CHAT_MENU_US_CHAT, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnUserMenuOpenChat ), 0, this );
-	m_menu_all->Connect( CHAT_MENU_US_JOIN, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnUserMenuJoinSame ), 0, this );
-	m_menu_all->Connect( CHAT_MENU_US_SLAP, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnUserMenuSlap ), 0, this );
-
-////	m_menu_all->Connect( CHAT_MENU_US_ADD_TO_GROUP, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanel::OnUserMenuAddToGroup ), 0, this );
-
-	m_menu_all->Connect( CHAT_MENU_US_MUTE, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnUserMenuMute ), 0, this );
-	m_menu_all->Connect( CHAT_MENU_US_UNMUTE, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnUserMenuUnmute ), 0, this );
-	m_menu_all->Connect( CHAT_MENU_US_KICK, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnUserMenuKick ), 0, this );
-	m_menu_all->Connect( CHAT_MENU_US_OP, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnUserMenuOp ), 0, this );
-	m_menu_all->Connect( CHAT_MENU_US_DEOP, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnUserMenuDeop ), 0, this );
-	m_menu_all->Connect( CHAT_MENU_US_MODERATOR_INGAME, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnUserMenuModeratorIngame ), 0, this );
-	m_menu_all->Connect( CHAT_MENU_US_MODERATOR_CURIP, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnUserMenuModeratorCurrentIP ), 0, this );
-	m_menu_all->Connect( CHAT_MENU_US_MODERATOR_KICK, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnUserMenuModeratorKick ), 0, this );
-	m_menu_all->Connect( CHAT_MENU_US_MODERATOR_BAN, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnUserMenuModeratorBan ), 0, this );
-	m_menu_all->Connect( CHAT_MENU_US_MODERATOR_UNBAN, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnUserMenuModeratorUnban ), 0, this );
-	m_menu_all->Connect( CHAT_MENU_US_MODERATOR_MUTE, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnUserMenuModeratorMute ), 0, this );
-	m_menu_all->Connect( CHAT_MENU_US_MODERATOR_MUTE_5, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnUserMenuModeratorMute5 ), 0, this );
-	m_menu_all->Connect( CHAT_MENU_US_MODERATOR_MUTE_10, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnUserMenuModeratorMute10 ), 0, this );
-	m_menu_all->Connect( CHAT_MENU_US_MODERATOR_MUTE_30, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnUserMenuModeratorMute30 ), 0, this );
-	m_menu_all->Connect( CHAT_MENU_US_MODERATOR_MUTE_120, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnUserMenuModeratorMute120 ), 0, this );
-	m_menu_all->Connect( CHAT_MENU_US_MODERATOR_MUTE_1440, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnUserMenuModeratorMute1440 ), 0, this );
-	m_menu_all->Connect( CHAT_MENU_US_MODERATOR_UNMUTE, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnUserMenuModeratorUnmute ), 0, this );
-	m_menu_all->Connect( CHAT_MENU_US_MODERATOR_RING, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnUserMenuModeratorRing ), 0, this );
-
-	m_menu_all->Connect( CHAT_MENU_COPYLINK, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnUserMenuCopyLink ), 0, this );
-
-	m_menu_all->Connect( CHAT_MENU_LOG_OPEN, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChatMenuOpenLog ), 0, this );
-
-
-//    m_menu_all->Connect( CHAT_MENU_CH_INFO, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChannelMenuInfo ), 0, this );
-//	m_menu_all->Connect( CHAT_MENU_CH_LOCK, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChannelMenuLock ), 0, this );
-//	m_menu_all->Connect( CHAT_MENU_CH_UNLOCK, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChannelMenuUnlock ), 0, this );
-//	m_menu_all->Connect( CHAT_MENU_CH_REG, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChannelMenuRegister ), 0, this );
-//	m_menu_all->Connect( CHAT_MENU_CH_UNREG, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChannelMenuUnregister ), 0, this );
-//	m_menu_all->Connect( CHAT_MENU_CH_SPAM_ON, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChannelMenuSpamOn ), 0, this );
-//	m_menu_all->Connect( CHAT_MENU_CH_SPAM_OFF, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChannelMenuSpanOff ), 0, this );
-//	m_menu_all->Connect( CHAT_MENU_CH_SPAM_ISON, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChannelMenuSpamIsOn ), 0, this );
-//    m_menu_all->Connect( CHAT_MENU_CH_TOPIC, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChannelMenuTopic ), 0, this );
-//	m_menu_all->Connect( CHAT_MENU_CH_MSG, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ChatPanelMenu::OnChannelMenuMessage ), 0, this );
 }
 
 ChatPanelMenu::UserMenu* ChatPanelMenu::GetUserMenu()
@@ -835,7 +779,58 @@ void ChatPanelMenu::OnUserMenuCreateGroup( wxCommandEvent& /*unused*/ )
 
 void ChatPanelMenu::OnMenuItem( wxCommandEvent& event )
 {
-    switch ( event.GetId() ) {
-        default: OnChannelMenuInfo( event );
-    }
+    if ( event.GetId() == CHAT_MENU_SHOW_MUTELIST ) OnChannelMenuShowMutelist( event );
+    else if ( event.GetId() == CHAT_MENU_DISABLE_APPEND ) OnMenuToggleAppend( event );
+
+    else if ( event.GetId() == CHAT_MENU_CH_LEAVE ) OnChannelMenuLeave( event );
+    else if ( event.GetId() == CHAT_MENU_CH_DISPLAYJOIN ) OnChannelMenuDisplayJoinLeave( event );
+    else if ( event.GetId() == CHAT_MENU_CH_AUTOJOIN ) OnChannelAutoJoin( event );
+
+    else if ( event.GetId() == CHAT_MENU_CH_CLEAR ) OnChannelClearContents( event );
+
+    else if ( event.GetId() == CHAT_MENU_SV_DISCON ) OnServerMenuDisconnect( event );
+    else if ( event.GetId() == CHAT_MENU_SV_RECON ) OnServerMenuReconnect( event );
+    else if ( event.GetId() == CHAT_MENU_SV_REMOVE ) OnServerMenuRemove( event );
+    else if ( event.GetId() == CHAT_MENU_SV_CHPWD ) OnServerMenuChangePassword( event );
+    else if ( event.GetId() == CHAT_MENU_SV_ACCESS ) OnServerMenuSetAccess( event );
+    else if ( event.GetId() == CHAT_MENU_SV_BROADCAST ) OnServerMenuBroadcast( event );
+
+    else if ( event.GetId() == CHAT_MENU_US_CHAT ) OnUserMenuOpenChat( event );
+    else if ( event.GetId() == CHAT_MENU_US_JOIN ) OnUserMenuJoinSame( event );
+    else if ( event.GetId() == CHAT_MENU_US_SLAP ) OnUserMenuSlap( event );
+
+    else if ( event.GetId() == CHAT_MENU_US_MUTE ) OnUserMenuMute( event );
+    else if ( event.GetId() == CHAT_MENU_US_UNMUTE ) OnUserMenuUnmute( event );
+    else if ( event.GetId() == CHAT_MENU_US_KICK ) OnUserMenuKick( event );
+    else if ( event.GetId() == CHAT_MENU_US_OP ) OnUserMenuOp( event );
+    else if ( event.GetId() == CHAT_MENU_US_DEOP ) OnUserMenuDeop( event );
+    else if ( event.GetId() == CHAT_MENU_US_MODERATOR_INGAME ) OnUserMenuModeratorIngame( event );
+    else if ( event.GetId() == CHAT_MENU_US_MODERATOR_CURIP ) OnUserMenuModeratorCurrentIP( event );
+    else if ( event.GetId() == CHAT_MENU_US_MODERATOR_KICK ) OnUserMenuModeratorKick( event );
+    else if ( event.GetId() == CHAT_MENU_US_MODERATOR_BAN ) OnUserMenuModeratorBan( event );
+    else if ( event.GetId() == CHAT_MENU_US_MODERATOR_UNBAN ) OnUserMenuModeratorUnban( event );
+    else if ( event.GetId() == CHAT_MENU_US_MODERATOR_MUTE ) OnUserMenuModeratorMute( event );
+    else if ( event.GetId() == CHAT_MENU_US_MODERATOR_MUTE_5 ) OnUserMenuModeratorMute5( event );
+    else if ( event.GetId() == CHAT_MENU_US_MODERATOR_MUTE_10 ) OnUserMenuModeratorMute10( event );
+    else if ( event.GetId() == CHAT_MENU_US_MODERATOR_MUTE_30 ) OnUserMenuModeratorMute30( event );
+    else if ( event.GetId() == CHAT_MENU_US_MODERATOR_MUTE_120 ) OnUserMenuModeratorMute120( event );
+    else if ( event.GetId() == CHAT_MENU_US_MODERATOR_MUTE_1440 ) OnUserMenuModeratorMute1440( event );
+    else if ( event.GetId() == CHAT_MENU_US_MODERATOR_UNMUTE ) OnUserMenuModeratorUnmute( event );
+    else if ( event.GetId() == CHAT_MENU_US_MODERATOR_RING ) OnUserMenuModeratorRing( event );
+
+    else if ( event.GetId() == CHAT_MENU_COPYLINK ) OnUserMenuCopyLink( event );
+
+    else if ( event.GetId() == CHAT_MENU_LOG_OPEN ) OnChatMenuOpenLog( event );
+
+
+    else if ( event.GetId() == CHAT_MENU_CH_INFO ) OnChannelMenuInfo( event );
+    else if ( event.GetId() == CHAT_MENU_CH_LOCK ) OnChannelMenuLock( event );
+    else if ( event.GetId() == CHAT_MENU_CH_UNLOCK ) OnChannelMenuUnlock( event );
+    else if ( event.GetId() == CHAT_MENU_CH_REG ) OnChannelMenuRegister( event );
+    else if ( event.GetId() == CHAT_MENU_CH_UNREG ) OnChannelMenuUnregister( event );
+    else if ( event.GetId() == CHAT_MENU_CH_SPAM_ON ) OnChannelMenuSpamOn( event );
+    else if ( event.GetId() == CHAT_MENU_CH_SPAM_OFF ) OnChannelMenuSpanOff( event );
+    else if ( event.GetId() == CHAT_MENU_CH_SPAM_ISON ) OnChannelMenuSpamIsOn( event );
+    else if ( event.GetId() == CHAT_MENU_CH_TOPIC ) OnChannelMenuTopic( event );
+    else if ( event.GetId() == CHAT_MENU_CH_MSG ) OnChannelMenuMessage( event );
 }

@@ -26,11 +26,11 @@ class UserMenu : public wxMenu
             assert ( m_parent );
             m_groupsMenu = new wxMenu();
             m_groupsnewItem = new wxMenuItem( m_groupsMenu, GROUP_ID_NEW, _("Create new group...")  );
-//            Connect( GROUP_ID_NEW, wxEVT_COMMAND_MENU_SELECTED,
-//                                    wxCommandEventHandler( EventHandler::OnUserMenuCreateGroup ), 0, m_parent );
+            Connect( GROUP_ID_NEW, wxEVT_COMMAND_MENU_SELECTED,
+                                    wxCommandEventHandler( EventHandler::OnUserMenuCreateGroup ), 0, m_parent );
             m_groupsMenu->Append( m_groupsnewItem );
             m_groupsMenu->AppendSeparator();
-        //    if ( !ui().IsThisMe( m_parent->GetSelectedUser() ) )
+//            if ( !ui().IsThisMe( m_parent->GetSelectedUser() ) )
             m_groupsMenuItem = AppendSubMenu( m_groupsMenu, _("Add to group..."));
             m_groupsDeleteItem = new wxMenuItem( m_groupsMenu, GROUP_ID - 1, _("Remove from group")  );
             Connect( GROUP_ID - 1, wxEVT_COMMAND_MENU_SELECTED,
@@ -91,7 +91,7 @@ class UserMenu : public wxMenu
                     m_idNameMap[m_groupCounter] = groupNames[i];
                     wxMenuItem* addItem = new wxMenuItem( m_groupsMenu, GROUP_ID + m_groupCounter ,  groupNames[i] , wxEmptyString, wxITEM_NORMAL );
                     m_groupsMenu->Append( addItem );
-//                    Connect( GROUP_ID + m_groupCounter, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( EventHandler::OnUserMenuAddToGroup ), 0, m_parent );
+                    Connect( GROUP_ID + m_groupCounter, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( EventHandler::OnUserMenuAddToGroup ), 0, m_parent );
                     m_oldGroups.Add( groupNames[i] );
                     m_idNameMap[GROUP_ID + m_groupCounter]  = groupNames[i];
                     m_NameIdMap[groupNames[i]]  = GROUP_ID + m_groupCounter;
