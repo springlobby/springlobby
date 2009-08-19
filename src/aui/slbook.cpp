@@ -14,8 +14,10 @@ static const long ID_CLOSE_TAB_OTHER    = wxNewId();
 static const long ID_CLOSE_TAB_ALL      = wxNewId();
 static const long ID_NEW_TAB      = wxNewId();
 
-SLNotebook ::SLNotebook (wxWindow* parent, wxWindowID id , const wxPoint& pos , const wxSize& size , long style )
-    : wxAuiNotebook( parent, id, pos, size, sett().GetShowXallTabs() ? style | wxAUI_NB_CLOSE_ON_ALL_TABS : style )
+SLNotebook ::SLNotebook (wxWindow* parent, const wxString& name, wxWindowID id ,
+                            const wxPoint& pos , const wxSize& size , long style )
+    : wxAuiNotebook( parent, id, pos, size, sett().GetShowXallTabs() ? style | wxAUI_NB_CLOSE_ON_ALL_TABS : style ),
+    m_name( name )
 {
     m_mgr.SetFlags(wxAUI_MGR_ALLOW_FLOATING |
 
@@ -44,7 +46,7 @@ bool SLChatNotebook::AddPage(ChatPanel* page, const wxString& caption, bool sele
   * @todo: document this function
   */
  SLChatNotebook::SLChatNotebook(wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style)
-    : ParentType( parent, id, pos,  size, style )
+    : ParentType( parent, _T("chatnotebook"), id, pos,  size, style )
 {
 
 }
@@ -363,5 +365,27 @@ bool SLNotebook::LoadPerspective(const wxString& layout) {
   SetSelection(sel_page);
 
   return true;
+}
+
+void LoadNotebookPerspective( SLNotebook* notebook, const wxString& perspective_name )
+{
+    wxString pers_name = ( perspective_name.IsEmpty() ? sett().GetLastPerspectiveName() : perspective_name );
+    wxString name = notebook->GetName();
+    wxString pers = sett().LoadPerspective( name, pers_name );
+    if ( !pers.IsEmpty() ) {
+        notebook->LoadPerspective( pers );
+        wxWindow* parent = notebook->GetParent();
+        if ( parent ) {
+            parent->Layout();
+            parent->Refresh();
+        }
+    }
+}
+
+void SaveNotebookPerspective( SLNotebook* notebook, const wxString& perspective_name )
+{
+    wxString pers = ( perspective_name.IsEmpty() ? sett().GetLastPerspectiveName() : perspective_name );
+    wxString name = notebook->GetName();
+    sett().SavePerspective( name, pers, notebook->SavePerspective() );
 }
 

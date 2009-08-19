@@ -2430,12 +2430,34 @@ void Settings::SetShowXallTabs( bool show )
     m_config->Write( _T( "/GUI/CloseOnAll" ) , show );
 }
 
-void Settings::SavePerspective( wxString& layout_string )
+void Settings::SavePerspective( const wxString& notebook_name, const wxString& perspective_name, const wxString& layout_string )
 {
-    m_config->Write( _T( "/GUI/ChatPerspective" ) , layout_string );
+    wxString entry = wxString::Format( _T( "/GUI/AUI/%s/%s" ), perspective_name.c_str(), notebook_name.c_str() );
+    m_config->Write( entry, layout_string );
 }
 
-wxString Settings::LoadPerspective( )
+wxString Settings::LoadPerspective( const wxString& notebook_name, const wxString& perspective_name )
 {
-    return m_config->Read( _T( "/GUI/ChatPerspective" ) , _T("") );
+    wxString entry = wxString::Format( _T( "/GUI/AUI/%s/%s" ), perspective_name.c_str(), notebook_name.c_str() );
+    return m_config->Read( entry , _T("") );
+}
+
+wxString Settings::GetLastPerspectiveName( )
+{
+    return m_config->Read( _T( "/GUI/AUI/lastperspective_name" ), _T("default") );
+}
+
+void Settings::SetLastPerspectiveName( const wxString&  name )
+{
+    m_config->Write( _T( "/GUI/AUI/lastperspective_name" ), name );
+}
+
+void Settings::SetAutosavePerspective( bool autosave )
+{
+    m_config->Write( _T( "/GUI/AUI/autosave" ), autosave );
+}
+
+bool Settings::GetAutosavePerspective( )
+{
+    return m_config->Read( _T( "/GUI/AUI/autosave" ), 1l );
 }

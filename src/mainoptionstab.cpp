@@ -51,7 +51,7 @@ END_EVENT_TABLE()
 MainOptionsTab::MainOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( parent, -1 ), m_ui( ui )
 {
 	GetAui().manager->AddPane( this, wxLEFT, _T( "mainoptionstab" ) );
-	m_tabs = new SLNotebook( this, OPTIONS_TABS, wxDefaultPosition, wxDefaultSize, wxAUI_NB_TAB_SPLIT | wxAUI_NB_TAB_MOVE | wxAUI_NB_SCROLL_BUTTONS | wxAUI_NB_TOP | wxAUI_NB_TAB_EXTERNAL_MOVE );
+	m_tabs = new SLNotebook( this, _T( "mainoptionstab" ), OPTIONS_TABS, wxDefaultPosition, wxDefaultSize, wxAUI_NB_TAB_SPLIT | wxAUI_NB_TAB_MOVE | wxAUI_NB_SCROLL_BUTTONS | wxAUI_NB_TOP | wxAUI_NB_TAB_EXTERNAL_MOVE );
 	m_tabs->SetArtProvider( new SLArtProvider );
 	m_imagelist = new wxImageList( 12, 12 );
 	m_imagelist->Add( wxIcon( spring_xpm ) );

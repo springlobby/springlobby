@@ -115,7 +115,7 @@ void WidgetInfoPanel::Create()
     while ( tk.HasMoreTokens() )
         m_changelog->AppendText( tk.GetNextToken() );
 
-    m_ext_info = new SLNotebook(  this, -1, wxDefaultPosition, wxDefaultSize, wxAUI_NB_LEFT );
+    m_ext_info = new SLNotebook(  this, _T("m_ext_info"), -1, wxDefaultPosition, wxDefaultSize, wxAUI_NB_LEFT );
     m_ext_info->SetArtProvider(new SLArtProvider);
     m_ext_info->AddPage( m_desc, _("Description") , true );
     m_ext_info->AddPage( m_changelog, _("Changelog") , false );

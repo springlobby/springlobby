@@ -6,11 +6,19 @@
 class SLNotebook : public wxAuiNotebook {
 
     public:
-        SLNotebook (wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxAUI_NB_DEFAULT_STYLE);
+        SLNotebook (wxWindow* parent, const wxString& name, wxWindowID id = wxID_ANY,
+                        const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize,
+                        long style = wxAUI_NB_DEFAULT_STYLE);
 //        wxAuiManager& GetAuiManager() { return m_mgr; }
 
         wxString SavePerspective();
         bool LoadPerspective(const wxString& layout);
+        wxString GetName() { return m_name; }
+
+    protected:
+        wxString m_name;
+        bool m_autosave_prespective;
+
 };
 
 class ChatPanel;
@@ -34,6 +42,9 @@ class SLChatNotebook : public SLNotebook {
 
         DECLARE_EVENT_TABLE();
 };
+
+void LoadNotebookPerspective( SLNotebook* notebook, const wxString& perspective_name );
+void SaveNotebookPerspective( SLNotebook* notebook, const wxString& perspective_name );
 
 #endif // SPRINGLOBBY_HEADERGUARD_SLBOOK_H
 

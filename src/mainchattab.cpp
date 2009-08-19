@@ -77,17 +77,13 @@ MainChatTab::MainChatTab( wxWindow* parent, Ui& ui )
 	m_main_sizer->SetSizeHints( this );
 	SetScrollRate( 3, 3 );
 
-//	wxString per = sett().LoadPerspective( );
-//    m_chat_tabs->LoadPerspective( per );
-
 	Layout();
 }
 
 
 MainChatTab::~MainChatTab()
 {
-//    wxString per = m_chat_tabs->SavePerspective();
-//    sett().SavePerspective( per );
+
 }
 
 ChatPanel& MainChatTab::ServerChat()

@@ -650,8 +650,12 @@ class Settings
     void SaveLayout( wxString& layout_name, wxString& layout_string );
     wxString GetLayout( wxString& layout_name );
 
-    void SavePerspective( wxString& layout_string );
-    wxString LoadPerspective( );
+    void SavePerspective( const wxString& notebook_name, const wxString& perspective_name, const wxString& layout_string );
+    wxString LoadPerspective( const wxString& notebook_name, const wxString& perspective_name );
+    wxString GetLastPerspectiveName( );
+    void SetLastPerspectiveName( const wxString&  name );
+    void SetAutosavePerspective( bool autosave );
+    bool GetAutosavePerspective( );
 
     wxArrayString GetLayoutList();
     void SetDefaultLayout( const wxString& layout_name );

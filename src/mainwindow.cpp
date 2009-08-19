@@ -180,7 +180,7 @@ MainWindow::MainWindow( Ui& ui )
   SetMenuBar(m_menubar);
 
   m_main_sizer = new wxBoxSizer( wxHORIZONTAL );
-  m_func_tabs = new SLNotebook(  this, MAIN_TABS, wxDefaultPosition, wxDefaultSize,
+  m_func_tabs = new SLNotebook(  this, _T("mainfunctabs"), MAIN_TABS, wxDefaultPosition, wxDefaultSize,
         wxAUI_NB_WINDOWLIST_BUTTON | wxAUI_NB_TAB_SPLIT | wxAUI_NB_TAB_MOVE | wxAUI_NB_TAB_EXTERNAL_MOVE | wxAUI_NB_SCROLL_BUTTONS | wxAUI_NB_LEFT );
   m_func_tabs->SetArtProvider(new SLArtProvider);
 
@@ -207,6 +207,7 @@ MainWindow::MainWindow( Ui& ui )
     m_func_tabs->AddPage( m_opts_tab,     m_tab_names[5], false );
 #endif
 
+    m_sp_tab->LoadPerspective();
 
 
   SetTabIcons();
@@ -657,24 +658,23 @@ void MainWindow::OnChannelListStart( )
 
 void MainWindow::OnMenuSaveLayout( wxCommandEvent& /*unused*/ )
 {
-//	wxString answer;
-//	if ( !ui().AskText( _("Layout manager"),_("Enter a profile name"), answer ) ) return;
-//	wxString layout = GetAui().manager->SavePerspective();
-//	sett().SaveLayout( answer, layout );
-//
-    wxString per = m_func_tabs->SavePerspective();
-    sett().SavePerspective( per );
+	wxString answer;
+	if ( !ui().AskText( _("Layout manager"),_("Enter a profile name"), answer ) )
+        return;
+    //save persp in all notebooks
+//    wxString per = m_func_tabs->SavePerspective();
+//    sett().SavePerspective( per );
 
 }
 
 void MainWindow::OnMenuLoadLayout( wxCommandEvent& /*unused*/ )
 {
-//	wxArrayString layouts = sett().GetLayoutList();
-//	unsigned int result = wxGetSingleChoiceIndex( _("Which profile fo you want to load?"), _("Layout manager"), layouts );
-//	if ( ( result < 0  ) || ( result > layouts.GetCount() ) ) return;
-//	GetAui().manager->LoadPerspective( sett().GetLayout( layouts[result] ) );
-	wxString per = sett().LoadPerspective( );
-    m_func_tabs->LoadPerspective( per );
+	wxArrayString layouts = sett().GetLayoutList();
+	unsigned int result = wxGetSingleChoiceIndex( _("Which profile fo you want to load?"), _("Layout manager"), layouts );
+	if ( ( result < 0  ) || ( result > layouts.GetCount() ) ) return;
+	GetAui().manager->LoadPerspective( sett().GetLayout( layouts[result] ) );
+//	wxString per = sett().LoadPerspective( );
+//    m_func_tabs->LoadPerspective( per );
 
 }
 

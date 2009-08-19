@@ -30,6 +30,9 @@ class MainSinglePlayerTab : public wxScrolledWindow
     BattleOptionsTab& GetOptionsTab();
     BattleroomMMOptionsTab<SinglePlayerBattle>& GetMMOptionsTab();
 
+    void LoadPerspective( const wxString& perspective_name = wxEmptyString );
+    void SavePerspective( const wxString& perspective_name = wxEmptyString );
+
   protected:
 
     Ui& m_ui;
