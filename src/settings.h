@@ -721,7 +721,7 @@ class Settings
     wxConfigBase* m_config; //!< wxConfig object to store and restore  all settings in.
     #endif
 
-    wxString m_chosed_path;
+    wxString m_chosen_path;
     bool m_portable_mode;
 
     std::map<wxString, wxString> m_spring_versions;
