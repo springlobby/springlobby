@@ -271,6 +271,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::OnClose( wxCloseEvent& /*unused*/ )
 {
+    SavePerspectives();
   AuiManagerContainer::ManagerType* manager=GetAui().manager;
   if(manager){
     GetAui().manager=NULL;
@@ -689,6 +690,7 @@ const MainWindow::TabNames& MainWindow::GetTabNames()
 
 void MainWindow::LoadPerspectives( const wxString& perspective_name )
 {
+    LoadNotebookPerspective( m_func_tabs, perspective_name );
     m_sp_tab->LoadPerspective( perspective_name );
     m_join_tab->LoadPerspective( perspective_name );
     m_opts_tab->LoadPerspective( perspective_name );
@@ -699,4 +701,5 @@ void MainWindow::SavePerspectives( const wxString& perspective_name )
     m_sp_tab->SavePerspective( perspective_name );
     m_join_tab->SavePerspective( perspective_name );
     m_opts_tab->SavePerspective( perspective_name );
+    SaveNotebookPerspective( m_func_tabs, perspective_name );
 }

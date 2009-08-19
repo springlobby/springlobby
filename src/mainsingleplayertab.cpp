@@ -54,8 +54,8 @@ MainSinglePlayerTab::MainSinglePlayerTab( wxWindow* parent, Ui& ui )
 
 MainSinglePlayerTab::~MainSinglePlayerTab()
 {
-    if ( sett().GetAutosavePerspective() )
-        SavePerspective();
+//    if ( sett().GetAutosavePerspective() )
+//        SavePerspective();
 }
 
 void MainSinglePlayerTab::LoadPerspective( const wxString& perspective_name  )

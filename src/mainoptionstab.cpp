@@ -98,8 +98,8 @@ MainOptionsTab::MainOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( p
 
 MainOptionsTab::~MainOptionsTab()
 {
-   if ( sett().GetAutosavePerspective() )
-        SavePerspective();
+//   if ( sett().GetAutosavePerspective() )
+//        SavePerspective();
 }
 
 
