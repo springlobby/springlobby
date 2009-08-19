@@ -24,6 +24,8 @@
 #include "spring.h"
 #include "springprocess.h"
 #include "ui.h"
+#include "mainwindow.h"
+#include "settings++/custom_dialogs.h"
 #include "utils/debug.h"
 #include "utils/conversion.h"
 #include "settings.h"
@@ -191,6 +193,12 @@ bool Spring::LaunchSpring( const wxString& params  )
     wxLogError( _T("Spring already running!") );
     return false;
   }
+    if ( !wxFile::Exists( sett().GetCurrentUsedSpringBinary() ) ) {
+        customMessageBoxNoModal( SL_MAIN_ICON, _T("The spring executable was not found at the set location, please re-check."), _T("Executable not found") );
+        ui().mw().ShowConfigure( MainWindow::OPT_PAGE_SPRING );
+        return false;
+    }
+
   wxString configfileflags = sett().GetCurrentUsedSpringConfigFilePath();
   if ( !configfileflags.IsEmpty() )
   {
