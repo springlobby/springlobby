@@ -3,18 +3,18 @@
 # This file is distributed under the same license as the springlobby package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
 #
-#: src/battleroomlistctrl.cpp:703 src/settings++/Defs.hpp:263
-#: src/settings++/Defs.hpp:345 src/settings++/Defs.hpp:347
-#: src/settings++/Defs.hpp:349 src/settings++/Defs.hpp:351
-#: src/settings++/Defs.hpp:353 src/settings++/Defs.hpp:404
-#: src/settings++/Defs.hpp:405 src/settings++/Defs.hpp:413
-#: src/settings++/Defs.hpp:418 src/settings++/Defs.hpp:421
-#: src/utils/controls.cpp:7
+#: src/filelister/filelistfilter.cpp:52 src/Helper/wxtextctrlhist.h:13
+#: src/settings++/Defs.hpp:264 src/settings++/Defs.hpp:344
+#: src/settings++/Defs.hpp:346 src/settings++/Defs.hpp:348
+#: src/settings++/Defs.hpp:350 src/settings++/Defs.hpp:352
+#: src/settings++/Defs.hpp:404 src/settings++/Defs.hpp:405
+#: src/settings++/Defs.hpp:413 src/settings++/Defs.hpp:418
+#: src/settings++/Defs.hpp:421 src/utils.cpp:265
 msgid ""
 msgstr ""
 "Project-Id-Version: springlobby\n"
 "Report-Msgid-Bugs-To: devel@www.springlobby.info\n"
-"POT-Creation-Date: 2009-07-03 00:47+0200\n"
+"POT-Creation-Date: 2009-02-18 14:06+0100\n"
 "PO-Revision-Date: 2008-09-07 20:22+0000\n"
 "Last-Translator: Danut Haiduc <danuthaiduc@gmail.com>\n"
 "Language-Team: Romanian <ro@li.org>\n"
@@ -24,46 +24,45 @@ msgstr ""
 "X-Launchpad-Export-Date: 2008-09-20 21:32+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
-#: src/addbotdialog.cpp:29
+#: src/addbotdialog.cpp:28
 msgid "Add bot"
 msgstr "Adaugă bot"
 
-#: src/addbotdialog.cpp:43
+#: src/addbotdialog.cpp:42
 msgid "Nickname:"
 msgstr "Poreclă:"
 
-#: src/addbotdialog.cpp:57
+#: src/addbotdialog.cpp:56
 msgid "AI:"
 msgstr "AI:"
 
-#: src/addbotdialog.cpp:61
+#: src/addbotdialog.cpp:60
 msgid "Choose the AI library to use with this bot."
 msgstr "Alege biblioteca AI pentru acest bot."
 
-#: src/addbotdialog.cpp:71
+#: src/addbotdialog.cpp:68
 msgid "property"
 msgstr ""
 
-#: src/addbotdialog.cpp:75
+#: src/addbotdialog.cpp:72
 #, fuzzy
 msgid "value"
 msgstr "Valoare"
 
-#: src/addbotdialog.cpp:108 src/autobalancedialog.cpp:65
-#: src/connectwindow.cpp:87 src/hostbattledialog.cpp:219
-#: src/mmoptionwindows.cpp:105
+#: src/addbotdialog.cpp:90 src/autobalancedialog.cpp:64
+#: src/connectwindow.cpp:86 src/hostbattledialog.cpp:212
 msgid "Cancel"
 msgstr "Anulează"
 
-#: src/addbotdialog.cpp:113
+#: src/addbotdialog.cpp:95
 msgid "Add Bot"
 msgstr "Adaugă Bot"
 
-#: src/addbotdialog.cpp:191
+#: src/addbotdialog.cpp:174
 msgid "No AI bots found in your Spring installation."
 msgstr "Nu au fost găsiţi boţi în instalaţia dvs. Spring."
 
-#: src/addbotdialog.cpp:191
+#: src/addbotdialog.cpp:174
 msgid "No bot-libs found"
 msgstr "Nu au fost găsite biblioteci AI."
 
@@ -75,48 +74,48 @@ msgstr "Acceptă acordul"
 msgid "Do you accept the terms of this agreement?"
 msgstr "Acceptaţi termenii acestui acord?"
 
-#: src/agreementdialog.cpp:41 src/utils/controls.h:15
+#: src/agreementdialog.cpp:41 src/uiutils.h:13
 msgid "Yes"
 msgstr "Da"
 
-#: src/agreementdialog.cpp:46 src/utils/controls.h:15
+#: src/agreementdialog.cpp:46 src/uiutils.h:13
 msgid "No"
 msgstr "Nu"
 
-#: src/autobalancedialog.cpp:36
+#: src/autobalancedialog.cpp:35
 msgid "Autobalance players into teams"
 msgstr "Auto-echilibrează jucătorii în echipe"
 
-#: src/autobalancedialog.cpp:39
+#: src/autobalancedialog.cpp:38
 msgid "Method"
 msgstr "Metodă"
 
-#: src/autobalancedialog.cpp:42
+#: src/autobalancedialog.cpp:41
 msgid "Divide ranks evenly"
 msgstr "Împarte rangurile în mod egal"
 
-#: src/autobalancedialog.cpp:43 src/battlemaptab.cpp:109
-#: src/battleroomtab.cpp:432 src/mmoptionswrapper.cpp:118
+#: src/autobalancedialog.cpp:42 src/battlemaptab.cpp:104
+#: src/battleroomtab.cpp:387 src/mmoptionswrapper.cpp:104
 msgid "Random"
 msgstr "Aleatoare"
 
-#: src/autobalancedialog.cpp:45
+#: src/autobalancedialog.cpp:44
 msgid "Clans"
 msgstr "Clanuri"
 
-#: src/autobalancedialog.cpp:48 src/hostbattledialog.cpp:145
+#: src/autobalancedialog.cpp:47 src/hostbattledialog.cpp:138
 msgid "None"
 msgstr "Niciunul"
 
-#: src/autobalancedialog.cpp:49
+#: src/autobalancedialog.cpp:48
 msgid "Fair"
 msgstr "Echitabil"
 
-#: src/autobalancedialog.cpp:50
+#: src/autobalancedialog.cpp:49
 msgid "Always"
 msgstr "Întotdeauna"
 
-#: src/autobalancedialog.cpp:51
+#: src/autobalancedialog.cpp:50
 msgid ""
 "Put members of same clan ( users having same clantag, like '[smurfzor]Alice' "
 "and '[smurfzor]Bob' ) together into same alliance. \n"
@@ -133,223 +132,209 @@ msgstr ""
 "Totdeauna: membrii unui clan sunt puşi întotdeauna în aceeaşi echipă, "
 "indiferent de rang."
 
-#: src/autobalancedialog.cpp:53
+#: src/autobalancedialog.cpp:52
 #, fuzzy
-msgid "Number of allies"
-msgstr "Numărul jucătorilor"
+msgid "Grouping size"
+msgstr "Acţiune"
 
-#: src/autobalancedialog.cpp:56
+#: src/autobalancedialog.cpp:55
 #, fuzzy
 msgid "Auto select"
 msgstr "Reconectează"
 
-#: src/autobalancedialog.cpp:68 src/connectwindow.cpp:86
-#: src/mmoptionwindows.cpp:108
+#: src/autobalancedialog.cpp:67 src/connectwindow.cpp:85
 msgid "Ok"
 msgstr "OK"
 
-#: src/battlelistctrl.cpp:56 src/hostbattledialog.cpp:59
-#: src/widgets/infopanel.cpp:120
+#: src/battlelistctrl.cpp:62 src/hostbattledialog.cpp:58
 msgid "Description"
 msgstr "Descriere"
 
-#: src/battlelistctrl.cpp:57 src/battleroomtab.cpp:169
-#: src/filelister/filelistctrl.cpp:181 src/filelister/filelistctrl.cpp:182
-#: src/filelister/filelistctrl.cpp:193 src/filelister/filelistctrl.cpp:194
-#: src/filelister/filelistdialog.cpp:130 src/mainjoinbattletab.cpp:137
-#: src/playback/playbacklistctrl.cpp:43
+#: src/battlelistctrl.cpp:66 src/battleroomtab.cpp:157
+#: src/filelister/filelistctrl.cpp:174 src/filelister/filelistctrl.cpp:175
+#: src/filelister/filelistctrl.cpp:186 src/filelister/filelistctrl.cpp:187
+#: src/filelister/filelistdialog.cpp:123 src/mainjoinbattletab.cpp:157
+#: src/mainjoinbattletab.cpp:162
 msgid "Map"
 msgstr "Hartă"
 
-#: src/battlelistctrl.cpp:58 src/filelister/filelistctrl.cpp:181
-#: src/filelister/filelistctrl.cpp:182 src/filelister/filelistctrl.cpp:193
-#: src/filelister/filelistctrl.cpp:194 src/filelister/filelistdialog.cpp:130
-#: src/hostbattledialog.cpp:78 src/playback/playbacklistctrl.cpp:42
+#: src/battlelistctrl.cpp:70 src/filelister/filelistctrl.cpp:174
+#: src/filelister/filelistctrl.cpp:175 src/filelister/filelistctrl.cpp:186
+#: src/filelister/filelistctrl.cpp:187 src/filelister/filelistdialog.cpp:123
+#: src/hostbattledialog.cpp:72
 msgid "Mod"
 msgstr "Mod"
 
-#: src/battlelistctrl.cpp:59 src/hostbattledialog.cpp:223
+#: src/battlelistctrl.cpp:74 src/hostbattledialog.cpp:216
 msgid "Host"
 msgstr "Gazdă"
 
-#: src/battlelistctrl.cpp:60
-#, fuzzy
-msgid "spectators"
-msgstr "Spectatori:"
+#: src/battlelistctrl.cpp:78 src/battleroomlistctrl.cpp:97
+msgid "a"
+msgstr "a"
 
-#: src/battlelistctrl.cpp:61
-#, fuzzy
-msgid "players"
-msgstr "Jucători:"
+#: src/battlelistctrl.cpp:82
+msgid "p"
+msgstr "j"
 
-#: src/battlelistctrl.cpp:62
-msgid "max"
-msgstr ""
+#: src/battlelistctrl.cpp:86
+msgid "m"
+msgstr "m"
 
-#: src/battlelistctrl.cpp:192 src/playback/playbacklistctrl.cpp:65
+#: src/battlelistctrl.cpp:125 src/replay/replaylistctrl.cpp:107
 msgid "Download &map"
 msgstr "Descarcă &harta"
 
-#: src/battlelistctrl.cpp:195 src/playback/playbacklistctrl.cpp:66
+#: src/battlelistctrl.cpp:126 src/replay/replaylistctrl.cpp:108
 msgid "Download m&od"
 msgstr "Descarcă &mod-ul"
 
-#: src/battlelistctrl.cpp:323 src/battlelisttab.cpp:107
+#: src/battlelistctrl.cpp:549 src/battlelisttab.cpp:113
 msgid "Spectators:"
 msgstr "Spectatori:"
 
-#: src/battlelistctrl.cpp:330
+#: src/battlelistctrl.cpp:556
 #, fuzzy
 msgid "Active Players:"
 msgstr "Jucători:"
 
-#: src/battlelistfilter.cpp:83
+#: src/battlelistfilter.cpp:90
 msgid "Host:"
 msgstr "Gazdă:"
 
-#: src/battlelistfilter.cpp:102 src/battlelistfilter.cpp:177
+#: src/battlelistfilter.cpp:109 src/battlelistfilter.cpp:184
 msgid "Status:"
 msgstr "Stare:"
 
-#: src/battlelistfilter.cpp:106 src/battleroomtab.cpp:195
+#: src/battlelistfilter.cpp:113 src/battleroomtab.cpp:184
+#: src/battleroomtab.cpp:186
 msgid "Locked"
 msgstr "Blocat"
 
-#: src/battlelistfilter.cpp:111
+#: src/battlelistfilter.cpp:118
 msgid "Passworded"
 msgstr "Parolat"
 
-#: src/battlelistfilter.cpp:116
+#: src/battlelistfilter.cpp:123
 #, fuzzy
 msgid "Highlighted only"
 msgstr "Evidenţiere"
 
-#: src/battlelistfilter.cpp:126
+#: src/battlelistfilter.cpp:133
 msgid "Rank Limit:"
 msgstr "Limită de rang:"
 
-#: src/battlelistfilter.cpp:160
+#: src/battlelistfilter.cpp:167
 msgid "Description:"
 msgstr "Descriere:"
 
-#: src/battlelistfilter.cpp:181
+#: src/battlelistfilter.cpp:188
 msgid "Started"
 msgstr "Început"
 
-#: src/battlelistfilter.cpp:186
+#: src/battlelistfilter.cpp:193
 msgid "Full"
 msgstr "Plin"
 
-#: src/battlelistfilter.cpp:191
+#: src/battlelistfilter.cpp:198
 msgid "Open"
 msgstr "Deschide"
 
-#: src/battlelistfilter.cpp:201 src/playback/playbackfilter.cpp:68
+#: src/battlelistfilter.cpp:208 src/replay/replayfilter.cpp:71
 msgid "Player:"
 msgstr "Jucător:"
 
-#: src/battlelistfilter.cpp:210 src/playback/playbackfilter.cpp:75
+#: src/battlelistfilter.cpp:217 src/replay/replayfilter.cpp:78
 msgid "All"
 msgstr "Tot"
 
-#: src/battlelistfilter.cpp:229 src/battlelisttab.cpp:89
-#: src/playback/playbackfilter.cpp:96 src/playback/playbacktab.cpp:88
-#: src/singleplayertab.cpp:63
+#: src/battlelistfilter.cpp:236 src/battlelisttab.cpp:95
+#: src/replay/replayfilter.cpp:99 src/replay/replaytab.cpp:87
+#: src/singleplayertab.cpp:66
 msgid "Map:"
 msgstr "Hartă:"
 
-#: src/battlelistfilter.cpp:246 src/playback/playbackfilter.cpp:113
+#: src/battlelistfilter.cpp:253 src/replay/replayfilter.cpp:116
 msgid "Only maps i have"
 msgstr "Doar hărţi pe care le am"
 
-#: src/battlelistfilter.cpp:257
+#: src/battlelistfilter.cpp:264
 msgid "Max.Player:"
 msgstr "Max. Jucători:"
 
-#: src/battlelistfilter.cpp:284 src/battlelisttab.cpp:95
-#: src/playback/playbackfilter.cpp:129 src/playback/playbacktab.cpp:94
-#: src/singleplayertab.cpp:72
+#: src/battlelistfilter.cpp:291 src/battlelisttab.cpp:101
+#: src/replay/replayfilter.cpp:132 src/replay/replaytab.cpp:93
+#: src/singleplayertab.cpp:75
 msgid "Mod:"
 msgstr "Mod:"
 
-#: src/battlelistfilter.cpp:301 src/playback/playbackfilter.cpp:146
+#: src/battlelistfilter.cpp:308 src/replay/replayfilter.cpp:149
 msgid "Only mods i have"
 msgstr "Doar mod-uri pe care le am"
 
-#: src/battlelistfilter.cpp:312
+#: src/battlelistfilter.cpp:319
 msgid "    Spectator:"
 msgstr "    Spectator:"
 
-#: src/battlelistfilter.cpp:597 src/battlelistfilter.cpp:602
-#: src/battlelistfilter.cpp:603 src/battlelistfilter.cpp:605
-#: src/playback/playbackfilter.cpp:412 src/settings++/tab_quality_video.cpp:87
-#: src/settings++/tab_quality_video.cpp:88
-#, c-format
-msgid "%d"
+#: src/battlelistfilter.cpp:591 src/battlelistfilter.cpp:596
+#: src/battlelistfilter.cpp:597 src/battlelistfilter.cpp:599
+#: src/replay/replayfilter.cpp:401
+msgid "%d%"
 msgstr "%d"
 
-#: src/battlelisttab.cpp:101 src/playback/playbacktab.cpp:100
+#: src/battlelisttab.cpp:107 src/replay/replaytab.cpp:99
 msgid "Players:"
 msgstr "Jucători:"
 
-#: src/battlelisttab.cpp:133 src/battlelisttab.cpp:135
+#: src/battlelisttab.cpp:139 src/battlelisttab.cpp:141
 #, fuzzy
 msgid " Filter "
 msgstr "Fişier"
 
-#: src/battlelisttab.cpp:140 src/battlelisttab.cpp:142
+#: src/battlelisttab.cpp:146 src/battlelisttab.cpp:148
 #, fuzzy
 msgid " Battle infos "
 msgstr "Listă de lupte"
 
-#: src/battlelisttab.cpp:146
+#: src/battlelisttab.cpp:152
 #, fuzzy
 msgid "Activated"
 msgstr "Început"
 
-#: src/battlelisttab.cpp:151
-msgid "0 battles displayed"
-msgstr ""
-
-#: src/battlelisttab.cpp:155
+#: src/battlelisttab.cpp:161
 msgid "Host new..."
 msgstr "Găzduieşte nou..."
 
-#: src/battlelisttab.cpp:158
+#: src/battlelisttab.cpp:164
 msgid "Join"
 msgstr "Alătură-te"
 
-#: src/battlelisttab.cpp:181
-#, c-format
-msgid "%d battles displayed"
-msgstr ""
-
-#: src/battlelisttab.cpp:303
+#: src/battlelisttab.cpp:396
 msgid ""
 "You cannot host a game while being offline. Please connect to a lobby server."
 msgstr ""
 "Nu puteţi găzdui un joc cât timp sunteţi deconectat. Vă rog să vă conectaţi "
 "la un server."
 
-#: src/battlelisttab.cpp:303
+#: src/battlelisttab.cpp:396
 msgid "Not Online."
 msgstr "Nu este conectat."
 
-#: src/battlelisttab.cpp:310
+#: src/battlelisttab.cpp:403
 msgid "Hosting is disabled due to the incompatible version you're using"
 msgstr ""
 "Găzduirea e dezactivată ca urmare a versiunii incompatibile de Spring "
 "folosită."
 
-#: src/battlelisttab.cpp:310 src/battlelisttab.cpp:316
-#: src/battlelisttab.cpp:489 src/battlelisttab.cpp:524
-#: src/playback/playbacktab.cpp:291 src/playback/playbacktab.cpp:315
-#: src/settings++/panel_pathoption.cpp:93 src/singleplayertab.cpp:307
-#: src/springoptionstab.cpp:219 src/ui.cpp:629 src/ui.cpp:649
+#: src/battlelisttab.cpp:403 src/battlelisttab.cpp:409
+#: src/battlelisttab.cpp:580 src/battlelisttab.cpp:600
+#: src/replay/replaytab.cpp:307 src/replay/replaytab.cpp:329
+#: src/settings++/panel_pathoption.cpp:91 src/singleplayertab.cpp:298
+#: src/springoptionstab.cpp:190 src/ui.cpp:606 src/ui.cpp:626
 msgid "Spring error"
 msgstr "Eroare Spring"
 
-#: src/battlelisttab.cpp:316
+#: src/battlelisttab.cpp:409
 msgid ""
 "You already are running a Spring instance, close it first in order to be "
 "able to host a new game"
@@ -357,11 +342,11 @@ msgstr ""
 "Rulaţi deja o instanţă de Spring; închideţi-o pentru a putea găzdui un nou "
 "joc"
 
-#: src/battlelisttab.cpp:322
+#: src/battlelisttab.cpp:415 src/battlelisttab.cpp:587
 msgid "Already in a battle"
 msgstr "Sunteţi deja într-o luptă"
 
-#: src/battlelisttab.cpp:322
+#: src/battlelisttab.cpp:415
 msgid ""
 "You are already in a battle.\n"
 "\n"
@@ -371,7 +356,7 @@ msgstr ""
 "\n"
 "Doriţi să o părăsiţi şi să deschideţi una?"
 
-#: src/battlelisttab.cpp:347
+#: src/battlelisttab.cpp:440
 msgid ""
 "Your using wxWidgets prior to version 2.8,\n"
 " port testing is not supported.\n"
@@ -381,7 +366,7 @@ msgstr ""
 " Testarea porturilor nu va funcţiona.\n"
 " Găzduirea poate să eşueze."
 
-#: src/battlelisttab.cpp:354
+#: src/battlelisttab.cpp:447
 #, c-format
 msgid ""
 "The server used for testing your port %d is unreachable. \n"
@@ -390,7 +375,7 @@ msgstr ""
 "Server-ul folosit pentru testarea portului %d este inaccesibil. \n"
 "Găzduirea poate să nu funcţioneze cu această setare."
 
-#: src/battlelisttab.cpp:362 src/battlelisttab.cpp:372
+#: src/battlelisttab.cpp:455 src/battlelisttab.cpp:465
 #, c-format
 msgid ""
 "Battle not started because the port you selected (%d) is unable to recieve "
@@ -408,17 +393,17 @@ msgstr ""
 "Dacă totul eşuează, activaţi opţiunea Hole Punching NAT Traversal\n"
 " din setările pentru găzduire."
 
-#: src/battlelisttab.cpp:388
+#: src/battlelisttab.cpp:481
 msgid "Battle not started beacuse the mod you selected could not be found. "
 msgstr ""
 "Lupta nu a fost pornită pentru că mod-ul pe care l-aţi ales nu poate fi "
 "găsit. "
 
-#: src/battlelisttab.cpp:388
+#: src/battlelisttab.cpp:481
 msgid "Error starting battle."
 msgstr "Eroare la pornirea luptei."
 
-#: src/battlelisttab.cpp:400 src/battlelisttab.cpp:411
+#: src/battlelisttab.cpp:493 src/battlelisttab.cpp:504
 msgid ""
 "Couldn't find any maps in your spring installation. This could happen when "
 "you set the Spring settings incorrectly."
@@ -426,11 +411,11 @@ msgstr ""
 "Nu pot găsi hărţi în instalaţia dvs. Spring. Acest lucru se poate întâmpla "
 "şi dacă nu aţi setat corect Spring."
 
-#: src/battlelisttab.cpp:400 src/battlelisttab.cpp:411
+#: src/battlelisttab.cpp:493 src/battlelisttab.cpp:504
 msgid "No maps found"
 msgstr "Nici o hartă găsită"
 
-#: src/battlelisttab.cpp:489
+#: src/battlelisttab.cpp:580
 msgid ""
 "Joining battles is disabled due to the incompatible spring version you're "
 "using."
@@ -438,39 +423,17 @@ msgstr ""
 "Alăturarea la lupte e dezactivată deoarece aveţi o versiune incompatibilă de "
 "Spring."
 
-#: src/battlelisttab.cpp:497
-#, fuzzy
-msgid "Already in this battle"
-msgstr "Sunteţi deja într-o luptă"
-
-#: src/battlelisttab.cpp:497
-#, fuzzy
-msgid ""
-"You are already in this battle.\n"
-"\n"
-"Do you want to leave it?"
-msgstr ""
-"Sunteţi deja într-o luptă.\n"
-"\n"
-"Doriţi să o părăsiţi şi să deschideţi una?"
-
-#: src/battlelisttab.cpp:511
-#, fuzzy
-msgid "Already in another battle"
-msgstr "Sunteţi deja într-o luptă"
-
-#: src/battlelisttab.cpp:511
-#, fuzzy
+#: src/battlelisttab.cpp:587
 msgid ""
 "You are already in a battle.\n"
 "\n"
-"Do you want to leave your current battle and join this one?"
+"Do you want to leave current battle to and join this one?"
 msgstr ""
 "Sunteţi deja într-o luptă.\n"
 "\n"
 "Doriţi să o părăsiţi şi să vă alăturaţi acesteia?"
 
-#: src/battlelisttab.cpp:524
+#: src/battlelisttab.cpp:600
 msgid ""
 "You already are running a Spring instance, close it first in order to be "
 "able to join another battle."
@@ -478,11 +441,11 @@ msgstr ""
 "Rulaţi deja o instanţă de Spring; închideţi-o pentru a vă putea alătura "
 "altei lupte."
 
-#: src/battlelisttab.cpp:529 src/playback/playbacktab.cpp:326
+#: src/battlelisttab.cpp:605 src/replay/replaytab.cpp:339
 msgid "Do you want me to take you to the download page?"
 msgstr ""
 
-#: src/battlelisttab.cpp:531 src/playback/playbacktab.cpp:328
+#: src/battlelisttab.cpp:607 src/replay/replaytab.cpp:341
 #, fuzzy
 msgid ""
 "Should i try to download it for you?\n"
@@ -491,405 +454,248 @@ msgstr ""
 "Să încerc să descarc pentru dvs?\n"
 "Puteţi vedea progresul sub tab-ul \"Download Manager\""
 
-#: src/battlelisttab.cpp:536
+#: src/battlelisttab.cpp:612
 msgid ""
 "You need to download the mod before you can join this game.\n"
 "\n"
 msgstr ""
 
-#: src/battlelisttab.cpp:536 src/playback/playbacktab.cpp:334
+#: src/battlelisttab.cpp:612 src/replay/replaytab.cpp:347
 msgid "Mod not available"
 msgstr "Mod indisponibil"
 
-#: src/battlelisttab.cpp:546
+#: src/battlelisttab.cpp:622
 msgid ""
 "You need to download the map to be able to play in this game.\n"
 "\n"
 msgstr ""
 
-#: src/battlelisttab.cpp:546 src/playback/playbacktab.cpp:346
+#: src/battlelisttab.cpp:622 src/replay/replaytab.cpp:356
 msgid "Map not available"
 msgstr "Hartă indisponibilă"
 
-#: src/battlelisttab.cpp:555 src/chatpanel.cpp:1499
+#: src/battlelisttab.cpp:631 src/chatpanel.cpp:1383
 msgid "Battle password"
 msgstr "Parola luptei"
 
-#: src/battlelisttab.cpp:555
+#: src/battlelisttab.cpp:631
 msgid "Enter password"
 msgstr "Introduceţi parola"
 
-#: src/battlemaptab.cpp:66
+#: src/battlemaptab.cpp:71
 #, fuzzy
 msgid "Select"
 msgstr "Alege..."
 
-#: src/battlemaptab.cpp:83 src/battleroomtab.cpp:280
-#: src/mapselectdialog.cpp:149
+#: src/battlemaptab.cpp:88 src/battleroomtab.cpp:246
 msgid "Option"
 msgstr "Opţiune"
 
-#: src/battlemaptab.cpp:85 src/battleroomtab.cpp:282
-#: src/mapselectdialog.cpp:151
+#: src/battlemaptab.cpp:90 src/battleroomtab.cpp:248
 msgid "Value"
 msgstr "Valoare"
 
-#: src/battlemaptab.cpp:90 src/battleroomtab.cpp:287 src/battleroomtab.cpp:288
-#: src/battleroomtab.cpp:496 src/battleroomtab.cpp:503
-#: src/mapselectdialog.cpp:156
+#: src/battlemaptab.cpp:95 src/battleroomtab.cpp:253 src/battleroomtab.cpp:254
+#: src/battleroomtab.cpp:452 src/battleroomtab.cpp:460
 msgid "Size"
 msgstr "Dimensiune"
 
-#: src/battlemaptab.cpp:91 src/battleroomtab.cpp:289 src/battleroomtab.cpp:290
-#: src/battleroomtab.cpp:497 src/battleroomtab.cpp:504
-#: src/mapselectdialog.cpp:157
+#: src/battlemaptab.cpp:96 src/battleroomtab.cpp:255 src/battleroomtab.cpp:256
+#: src/battleroomtab.cpp:453 src/battleroomtab.cpp:461
 msgid "Windspeed"
 msgstr "Viteza vântului"
 
-#: src/battlemaptab.cpp:92 src/battleroomtab.cpp:291 src/battleroomtab.cpp:292
-#: src/battleroomtab.cpp:498 src/battleroomtab.cpp:505
-#: src/mapselectdialog.cpp:158 src/mapselectdialog.cpp:261
+#: src/battlemaptab.cpp:97 src/battleroomtab.cpp:257 src/battleroomtab.cpp:258
+#: src/battleroomtab.cpp:454 src/battleroomtab.cpp:462
 msgid "Tidal strength"
 msgstr "Puterea valurilor"
 
-#: src/battlemaptab.cpp:93 src/mapselectdialog.cpp:159
-#: src/mapselectdialog.cpp:262
+#: src/battlemaptab.cpp:98
 msgid "Gravity"
 msgstr "Gravitaţie"
 
-#: src/battlemaptab.cpp:94 src/mapselectdialog.cpp:160
-#: src/mapselectdialog.cpp:264
+#: src/battlemaptab.cpp:99
 msgid "Extractor radius"
 msgstr "Raza extractoarelor"
 
-#: src/battlemaptab.cpp:95 src/mapselectdialog.cpp:161
-#: src/mapselectdialog.cpp:263
+#: src/battlemaptab.cpp:100
 msgid "Max metal"
 msgstr "Maxim de metal"
 
-#: src/battlemaptab.cpp:102 src/battlemaptab.cpp:109
+#: src/battlemaptab.cpp:104 src/battleroomtab.cpp:385
+#: src/mmoptionswrapper.cpp:103
+msgid "Fixed"
+msgstr "Fixată"
+
+#: src/battlemaptab.cpp:104
 msgid "Choose in game"
 msgstr "Aleasă în joc"
 
-#: src/battlemaptab.cpp:102 src/battlemaptab.cpp:109
-#: src/mmoptionswrapper.cpp:120
+#: src/battlemaptab.cpp:104 src/mmoptionswrapper.cpp:106
 #, fuzzy
 msgid "Chose before game"
 msgstr "Aleasă în joc"
 
-#: src/battlemaptab.cpp:105 src/battlemaptab.cpp:112
+#: src/battlemaptab.cpp:107
 msgid "Startpositions"
 msgstr "Poziţii de început"
 
-#: src/battlemaptab.cpp:109 src/battleroomtab.cpp:430
-#: src/mmoptionswrapper.cpp:117
-msgid "Fixed"
-msgstr "Fixată"
-
-#: src/battleoptionstab.cpp:52
+#: src/battleoptionstab.cpp:57
 msgid "Unit restrictions"
 msgstr "Unităţi restricţionate"
 
-#: src/battleoptionstab.cpp:60
+#: src/battleoptionstab.cpp:65
 msgid "Allowed units"
 msgstr "Unităţi permise"
 
-#: src/battleoptionstab.cpp:64
+#: src/battleoptionstab.cpp:69
 msgid "Units in this list will be available in the game."
 msgstr "Unităţile din această listă vor fi disponibile în joc."
 
-#: src/battleoptionstab.cpp:76
+#: src/battleoptionstab.cpp:81
 #, fuzzy
 msgid "Disable selected units."
 msgstr "Activează toate unităţile"
 
-#: src/battleoptionstab.cpp:80
+#: src/battleoptionstab.cpp:85
 #, fuzzy
 msgid "Re-enable selected units."
 msgstr "Activează toate unităţile"
 
-#: src/battleoptionstab.cpp:83
+#: src/battleoptionstab.cpp:88
 msgid "<<"
 msgstr ""
 
-#: src/battleoptionstab.cpp:84
+#: src/battleoptionstab.cpp:89
 msgid "Enable all units."
 msgstr "Activează toate unităţile"
 
-#: src/battleoptionstab.cpp:93
+#: src/battleoptionstab.cpp:98
 msgid "Restricted units"
 msgstr "Unităţi restricţionate"
 
-#: src/battleoptionstab.cpp:97
+#: src/battleoptionstab.cpp:102
 msgid "Units in this list will not be available in the game."
 msgstr "Unităţile din această listă nu vor fi disponibile în joc."
 
-#: src/battleoptionstab.cpp:238
-msgid "How many units of this type do you wish to allow?"
-msgstr ""
-
-#: src/battleoptionstab.cpp:238
-#, fuzzy
-msgid "Unit restriction"
-msgstr "Unităţi restricţionate"
-
-#: src/battleroomlistctrl.cpp:83 src/connectwindow.cpp:70
-#: src/nicklistctrl.cpp:61 src/selectusersdialog.cpp:106
+#: src/battleroomlistctrl.cpp:89 src/connectwindow.cpp:69
+#: src/nicklistctrl.cpp:58 src/selectusersdialog.cpp:105
 #: src/userlistctrl.cpp:20
 msgid "Nickname"
 msgstr "Porecla"
 
-#: src/battleroomlistctrl.cpp:84
-#, fuzzy
-msgid "team"
-msgstr "Echipă"
+#: src/battleroomlistctrl.cpp:93
+msgid "t"
+msgstr "e"
 
-#: src/battleroomlistctrl.cpp:85
-#, fuzzy
-msgid "ally"
-msgstr "Aliat"
-
-#: src/battleroomlistctrl.cpp:86
+#: src/battleroomlistctrl.cpp:101
 msgid "cpu"
 msgstr "cpu"
 
-#: src/battleroomlistctrl.cpp:87
+#: src/battleroomlistctrl.cpp:105
 msgid "Resource Bonus"
 msgstr "Bonus de resurse"
 
-#: src/battleroomlistctrl.cpp:110 src/battleroomtab.cpp:155
+#: src/battleroomlistctrl.cpp:138 src/battleroomtab.cpp:144
 msgid "Team"
 msgstr "Echipă"
 
-#: src/battleroomlistctrl.cpp:119 src/battleroomtab.cpp:156
+#: src/battleroomlistctrl.cpp:146 src/battleroomtab.cpp:145
 msgid "Ally"
 msgstr "Aliat"
 
-#: src/battleroomlistctrl.cpp:132 src/battleroomtab.cpp:158
+#: src/battleroomlistctrl.cpp:159 src/battleroomtab.cpp:147
 msgid "Side"
 msgstr "Parte"
 
-#: src/battleroomlistctrl.cpp:136
+#: src/battleroomlistctrl.cpp:163
 msgid "Set color"
 msgstr "Setează culoarea"
 
-#: src/battleroomlistctrl.cpp:141 src/battleroomlistctrl.cpp:393
+#: src/battleroomlistctrl.cpp:168 src/battleroomlistctrl.cpp:418
 msgid "Set Resource Bonus"
 msgstr "Setează bonusul de resurse"
 
-#: src/battleroomlistctrl.cpp:146 src/battleroomlistctrl.cpp:329
-#: src/battleroomlistctrl.cpp:338 src/battleroomtab.cpp:140
+#: src/battleroomlistctrl.cpp:173 src/battleroomlistctrl.cpp:355
+#: src/battleroomlistctrl.cpp:364 src/battleroomtab.cpp:129
 msgid "Spectator"
 msgstr "Spectator"
 
-#: src/battleroomlistctrl.cpp:151 src/battleroomlistctrl.cpp:333
-#: src/battleroomlistctrl.cpp:343
+#: src/battleroomlistctrl.cpp:178 src/battleroomlistctrl.cpp:359
+#: src/battleroomlistctrl.cpp:369
 msgid "Kick"
 msgstr "Kick"
 
-#: src/battleroomlistctrl.cpp:153 src/battleroomlistctrl.cpp:332
-#: src/battleroomlistctrl.cpp:341 src/chatpanel.cpp:555
+#: src/battleroomlistctrl.cpp:180 src/battleroomlistctrl.cpp:358
+#: src/battleroomlistctrl.cpp:367 src/chatpanel.cpp:510
 msgid "Ring"
 msgstr "Sună"
 
-#: src/battleroomlistctrl.cpp:393
+#: src/battleroomlistctrl.cpp:418
 msgid "Please enter a value between 0 and 100"
 msgstr "Vă rog introduceţi o valoare între 0 şi 100"
 
-#: src/battleroomlistctrl.cpp:706
-#, fuzzy
-msgid "AI (bot)\n"
-msgstr "Adaugă bot"
+#: src/battleroomlistctrl.cpp:423
+msgid "Not a number"
+msgstr "Nu e număr"
 
-#: src/battleroomlistctrl.cpp:708
-#, fuzzy
-msgid "Human\n"
-msgstr "Oman"
+#: src/battleroomlistctrl.cpp:423 src/battleroomlistctrl.cpp:428
+msgid "Invalid number"
+msgstr "Număr invalid"
 
-#: src/battleroomlistctrl.cpp:711
-#, fuzzy
-msgid "Spectator\n"
-msgstr "Spectator"
-
-#: src/battleroomlistctrl.cpp:713
-#, fuzzy
-msgid "Player\n"
-msgstr "Jucător:"
-
-#: src/battleroomlistctrl.cpp:716
-#, fuzzy
-msgid "Host\n"
-msgstr "Gazdă"
-
-#: src/battleroomlistctrl.cpp:718
-#, fuzzy
-msgid "Client\n"
-msgstr "Client"
-
-#: src/battleroomlistctrl.cpp:721
-#, fuzzy
-msgid "Ready\n"
-msgstr "Întotdeauna"
-
-#: src/battleroomlistctrl.cpp:723
-#, fuzzy
-msgid "Not ready\n"
-msgstr "Nu sunt gata"
-
-#: src/battleroomlistctrl.cpp:726
-#, fuzzy
-msgid "In sync"
-msgstr "Activează v-sync"
-
-#: src/battleroomlistctrl.cpp:728
-msgid "Not in sync"
+#: src/battleroomlistctrl.cpp:428
+msgid ""
+"Value out of range.\n"
+" Enter an integer between 0 & 100."
 msgstr ""
+"Valoare în afara intervalului.\n"
+" Introduceţi un întreg între 0 şi 100."
 
-#: src/battleroomlistctrl.cpp:780 src/chatpanel.cpp:1726
+#: src/battleroomlistctrl.cpp:974 src/chatpanel.cpp:1610
 msgid "Enter name"
 msgstr ""
 
-#: src/battleroomlistctrl.cpp:781 src/chatpanel.cpp:1727
+#: src/battleroomlistctrl.cpp:975 src/chatpanel.cpp:1611
 msgid ""
 "Please enter the name for the new group.\n"
 "After clicking ok you will be taken to adjust its settings."
 msgstr ""
 
-#: src/battleroommmoptionstab.cpp:55 src/battleroomtab.cpp:246
-msgid "Manage Presets"
-msgstr ""
-
-#: src/battleroommmoptionstab.cpp:58
-#, fuzzy
-msgid "Set name."
-msgstr "Setează acces..."
-
-#: src/battleroommmoptionstab.cpp:62
-msgid "Load..."
-msgstr "Încarcă..."
-
-#: src/battleroommmoptionstab.cpp:63
-#, fuzzy
-msgid "Load a saved set of options."
-msgstr "Încarcă un set salvat de restricţii."
-
-#: src/battleroommmoptionstab.cpp:67
-#, fuzzy
-msgid "Save..."
-msgstr "Salvează..."
-
-#: src/battleroommmoptionstab.cpp:68 src/battleroomtab.cpp:257
-#, fuzzy
-msgid "Save a set of options."
-msgstr "Salvează un set de restricţii"
-
-#: src/battleroommmoptionstab.cpp:72
-#, fuzzy
-msgid "Delete..."
-msgstr "Alege..."
-
-#: src/battleroommmoptionstab.cpp:73 src/battleroomtab.cpp:262
-#, fuzzy
-msgid "Delete a set of options."
-msgstr "Salvează un set de restricţii"
-
-#: src/battleroommmoptionstab.cpp:77
-#, fuzzy
-msgid "Set default..."
-msgstr "implicit"
-
-#: src/battleroommmoptionstab.cpp:78 src/battleroomtab.cpp:267
-msgid "Use the current set of options as mod's default."
-msgstr ""
-
-#: src/battleroommmoptionstab.cpp:86
-msgid "Mod Options"
-msgstr "Opţiuni mod"
-
-#: src/battleroommmoptionstab.cpp:91
-msgid "Map Options"
-msgstr "Opţiuni hartă"
-
-#: src/battleroommmoptionstab.cpp:152
-#, fuzzy
-msgid "no options available"
-msgstr "indisponibil"
-
-#: src/battleroommmoptionstab.cpp:494
-msgid ""
-"Cannot load an options set without a name\n"
-"Please select one from the list and try again."
-msgstr ""
-
-#: src/battleroommmoptionstab.cpp:494 src/battleroommmoptionstab.cpp:511
-#: src/battleroomtab.cpp:877 src/ui.cpp:854
-msgid "error"
-msgstr "eroare"
-
-#: src/battleroommmoptionstab.cpp:507 src/battleroomtab.cpp:874
-msgid "Enter preset name"
-msgstr ""
-
-#: src/battleroommmoptionstab.cpp:507 src/battleroomtab.cpp:874
-msgid ""
-"Enter a name to save the current set of options\n"
-"If a preset with the same name already exist, it will be overwritten"
-msgstr ""
-
-#: src/battleroommmoptionstab.cpp:511 src/battleroomtab.cpp:877
-msgid "Cannot save an options set without a name."
-msgstr ""
-
-#: src/battleroommmoptionstab.cpp:522 src/battleroommmoptionstab.cpp:531
-#: src/battleroomtab.cpp:887 src/battleroomtab.cpp:895
-msgid "Pick an existing option set from the list"
-msgstr ""
-
-#: src/battleroommmoptionstab.cpp:522 src/battleroomtab.cpp:887
-#, fuzzy
-msgid "Delete preset"
-msgstr "Selectaţi"
-
-#: src/battleroommmoptionstab.cpp:531 src/battleroomtab.cpp:895
-#, fuzzy
-msgid "Set mod default preset"
-msgstr "implicit"
-
-#: src/battleroomtab.cpp:133
+#: src/battleroomtab.cpp:122
 msgid "Players with the same team number share control of their units."
 msgstr "Jucătorii cu acelaşi număr de echipă controlează unităţile în comun."
 
-#: src/battleroomtab.cpp:135
+#: src/battleroomtab.cpp:124
 msgid "Players with the same ally number work together to achieve victory."
 msgstr ""
 "Jucătorii cu acelaşi număr de aliat lucrează împreună pentru a atinge "
 "victoria."
 
-#: src/battleroomtab.cpp:137
+#: src/battleroomtab.cpp:126
 msgid "Select a color to identify your units in-game"
 msgstr "Alegeţi o culoare pentru a vă identifica unităţile în joc."
 
-#: src/battleroomtab.cpp:139
+#: src/battleroomtab.cpp:128
 msgid "Select your faction"
 msgstr "Alegeţi-vă rasa"
 
-#: src/battleroomtab.cpp:141
+#: src/battleroomtab.cpp:130
 msgid "Spectate (watch) the battle instead of playing"
 msgstr "Intraţi ca spectator în loc să jucaţi"
 
-#: src/battleroomtab.cpp:142
+#: src/battleroomtab.cpp:131
 msgid "I'm ready"
 msgstr "Sunt gata"
 
-#: src/battleroomtab.cpp:143
+#: src/battleroomtab.cpp:132
 msgid "Click this if you are content with the battle settings."
 msgstr "Apăsaţi aici dacă ştiţi setările luptei şi sunteţi gata."
 
-#: src/battleroomtab.cpp:157
+#: src/battleroomtab.cpp:146
 msgid "Color"
 msgstr "Culoare"
 
-#: src/battleroomtab.cpp:167
+#: src/battleroomtab.cpp:155
 msgid ""
 "A preview of the selected map.  You can see the starting positions, or (if "
 "set) starting boxes."
@@ -897,259 +703,233 @@ msgstr ""
 "O previzualizare a hărţii selectate. Puteţi vedea poziţiile de start, sau "
 "(dacă puse) zonele de start."
 
-#: src/battleroomtab.cpp:177 src/chatpanel.cpp:414
+#: src/battleroomtab.cpp:165 src/chatpanel.cpp:380
 msgid "Leave"
 msgstr "Părăseşte"
 
-#: src/battleroomtab.cpp:178
+#: src/battleroomtab.cpp:166
 msgid "Leave the battle and return to the battle list"
 msgstr "Părăseşte lupta şi întoarce-te la lista de lupte"
 
-#: src/battleroomtab.cpp:179 src/singleplayertab.cpp:106
+#: src/battleroomtab.cpp:167 src/singleplayertab.cpp:109
 msgid "Start"
 msgstr "Start"
 
-#: src/battleroomtab.cpp:180
+#: src/battleroomtab.cpp:168
 msgid "Start the battle"
 msgstr ""
 
-#: src/battleroomtab.cpp:182
+#: src/battleroomtab.cpp:170
 msgid "Player Management"
 msgstr ""
 
-#: src/battleroomtab.cpp:183
+#: src/battleroomtab.cpp:171
 msgid "Various functions to make team games simplers to setup"
 msgstr ""
 
-#: src/battleroomtab.cpp:185
+#: src/battleroomtab.cpp:173
 msgid "Add Bot..."
 msgstr "Adaugă Bot..."
 
-#: src/battleroomtab.cpp:186
+#: src/battleroomtab.cpp:174
 msgid "Add a computer-controlled player to the game"
 msgstr "Adaugă un jucător controlat de calculator"
 
-#: src/battleroomtab.cpp:188 src/battleroomtab.cpp:190
+#: src/battleroomtab.cpp:176 src/battleroomtab.cpp:178
 msgid "Autolock on start"
 msgstr ""
 
-#: src/battleroomtab.cpp:192
+#: src/battleroomtab.cpp:180
 msgid ""
 "Automatically locks the battle when the game starts and unlock when it's "
 "finished."
 msgstr ""
 
-#: src/battleroomtab.cpp:196
+#: src/battleroomtab.cpp:188
 msgid "Prevent additional players from joining the battle"
 msgstr "Previne alăturarea altor jucători"
 
-#: src/battleroomtab.cpp:200
+#: src/battleroomtab.cpp:190 src/battleroomtab.cpp:192
 msgid "Autohost"
 msgstr ""
 
-#: src/battleroomtab.cpp:200
+#: src/battleroomtab.cpp:194
 msgid ""
 "Toggle autohost mode.  This allows players to control your battle using "
 "commands like '!balance' and '!start'."
 msgstr ""
 
-#: src/battleroomtab.cpp:204
-#, fuzzy
-msgid "AutoSpect"
-msgstr "Reconectează"
-
-#: src/battleroomtab.cpp:204
-msgid ""
-"Automatically spectate players that don't ready up or become synced within x "
-"seconds."
-msgstr ""
-
-#: src/battleroomtab.cpp:207
-msgid "AutoControlBalance"
-msgstr ""
-
-#: src/battleroomtab.cpp:207
-msgid ""
-"Automatically balance teams and allies and fix colors when all players are "
-"ready and synced"
-msgstr ""
-
-#: src/battleroomtab.cpp:210
-#, fuzzy
-msgid "AutoStart"
-msgstr "Start"
-
-#: src/battleroomtab.cpp:210
-msgid "Automatically start the battle when all players are ready and synced"
-msgstr ""
-
-#: src/battleroomtab.cpp:214
+#: src/battleroomtab.cpp:198
 #, fuzzy
 msgid "Lock Balance"
 msgstr "Balanţă"
 
-#: src/battleroomtab.cpp:214
+#: src/battleroomtab.cpp:198
 msgid "When activated, prevents anyone but the host to change team and ally"
 msgstr ""
 
-#: src/battleroomtab.cpp:219
-msgid "Ring unready"
-msgstr ""
-
-#: src/battleroomtab.cpp:219
-msgid "Rings all players that don't have ready status and aren't spectators"
-msgstr ""
-
-#: src/battleroomtab.cpp:221
-msgid "Ring unsynced"
-msgstr ""
-
-#: src/battleroomtab.cpp:221
-msgid "Rings all players that don't have sync status and aren't spectators"
-msgstr ""
-
-#: src/battleroomtab.cpp:223
-msgid "Ring unready and unsynced"
-msgstr ""
-
-#: src/battleroomtab.cpp:223
-msgid ""
-"Rings all players that don't have sync status or don't have ready status and "
-"aren't spectators"
-msgstr ""
-
-#: src/battleroomtab.cpp:225
-#, fuzzy
-msgid "Ring ..."
-msgstr "Sună"
-
-#: src/battleroomtab.cpp:228
-#, fuzzy
-msgid "Spect unready"
-msgstr "Nu sunt gata"
-
-#: src/battleroomtab.cpp:228
-msgid "Force to spectate all players that don't have ready status"
-msgstr ""
-
-#: src/battleroomtab.cpp:230
-msgid "Spect unsynced"
-msgstr ""
-
-#: src/battleroomtab.cpp:230
-msgid "Force to spectate all players that don't have sync status"
-msgstr ""
-
-#: src/battleroomtab.cpp:232
-msgid "Force to spectate unready and unsynced"
-msgstr ""
-
-#: src/battleroomtab.cpp:232
-msgid ""
-"Rings all players that don't have sync status or don't have ready status"
-msgstr ""
-
-#: src/battleroomtab.cpp:234
-#, fuzzy
-msgid "Force spectate ..."
-msgstr "Porneşte cu forţa?"
-
-#: src/battleroomtab.cpp:236
+#: src/battleroomtab.cpp:202
 #, fuzzy
 msgid "Balance alliances"
 msgstr "Doar gazda poate echilibra alianţele."
 
-#: src/battleroomtab.cpp:236
+#: src/battleroomtab.cpp:202
 msgid "Automatically balance players into two or more alliances"
 msgstr ""
 
-#: src/battleroomtab.cpp:239
+#: src/battleroomtab.cpp:205
 msgid "Fix colours"
 msgstr "Setează culoarea"
 
-#: src/battleroomtab.cpp:239
+#: src/battleroomtab.cpp:205
 msgid "Make player colors unique"
 msgstr "Face culorile jucătorilor mai uşor de distins."
 
-#: src/battleroomtab.cpp:242
+#: src/battleroomtab.cpp:208
 #, fuzzy
 msgid "Balance teams"
 msgstr "Balanţă"
 
-#: src/battleroomtab.cpp:242
+#: src/battleroomtab.cpp:208
 msgid ""
 "Automatically balance players into control teams, by default none shares "
 "control"
 msgstr ""
 
-#: src/battleroomtab.cpp:252
+#: src/battleroomtab.cpp:212
+msgid "Manage Presets"
+msgstr ""
+
+#: src/battleroomtab.cpp:218
 msgid "Load battle preset"
 msgstr ""
 
-#: src/battleroomtab.cpp:256
+#: src/battleroomtab.cpp:222
 #, fuzzy
 msgid "Save"
 msgstr "Salvează..."
 
-#: src/battleroomtab.cpp:261 src/playback/playbacktab.cpp:141
+#: src/battleroomtab.cpp:223
+#, fuzzy
+msgid "Save a set of options."
+msgstr "Salvează un set de restricţii"
+
+#: src/battleroomtab.cpp:227 src/replay/replaytab.cpp:144
 #, fuzzy
 msgid "Delete"
 msgstr "Selectaţi"
 
-#: src/battleroomtab.cpp:266
+#: src/battleroomtab.cpp:228
+#, fuzzy
+msgid "Delete a set of options."
+msgstr "Salvează un set de restricţii"
+
+#: src/battleroomtab.cpp:232
 #, fuzzy
 msgid "Set default"
 msgstr "implicit"
 
-#: src/battleroomtab.cpp:277
+#: src/battleroomtab.cpp:233
+msgid "Use the current set of options as mod's default."
+msgstr ""
+
+#: src/battleroomtab.cpp:243
 msgid "Activate an element to quickly change it"
 msgstr ""
 
-#: src/battleroomtab.cpp:434
+#: src/battleroomtab.cpp:389
 msgid "Boxes"
 msgstr "Zone de start"
 
-#: src/battleroomtab.cpp:436
+#: src/battleroomtab.cpp:391
 msgid "Pick"
 msgstr ""
 
-#: src/battleroomtab.cpp:448
+#: src/battleroomtab.cpp:403
 msgid "Continue"
 msgstr "Continuă"
 
-#: src/battleroomtab.cpp:450
+#: src/battleroomtab.cpp:405
 msgid "End"
 msgstr "Sfârşit"
 
-#: src/battleroomtab.cpp:452
+#: src/battleroomtab.cpp:407
 msgid "Lineage"
 msgstr ""
 
-#: src/battleroomtab.cpp:494
+#: src/battleroomtab.cpp:449
 msgid "Map does not exist."
 msgstr "Harta nu există."
 
-#: src/battleroomtab.cpp:590
-#, fuzzy
+#: src/battleroomtab.cpp:545
 msgid ""
-"Some Players are not ready yet\n"
-"Do you want to force start?"
+"There are two or more bots on the same team.  Because bots don't know how to "
+"share, this won't work."
+msgstr ""
+"Există doi sau mai mulţi boţi în aceeaşi echipă. Pentru că boţii nu ştiu cum "
+"să joace împreună, aceasta nu va funcţiona."
+
+#: src/battleroomtab.cpp:545
+msgid "Bot team sharing."
+msgstr "Boţi în aceeaşi echipă."
+
+#: src/battleroomtab.cpp:553
+msgid ""
+"Some players are not ready yet.\n"
+"Ring these players?"
 msgstr ""
 "Unii jucători nu sunt gata încă.\n"
 "Să îi sun?"
 
-#: src/battleroomtab.cpp:590
+#: src/battleroomtab.cpp:553 src/battleroomtab.cpp:559
 msgid "Not ready"
 msgstr "Nu sunt gata"
 
-#: src/battleroomtab.cpp:715
-msgid "Enter timeout before autospeccing a player in minutes"
+#: src/battleroomtab.cpp:559
+msgid "Force start?"
+msgstr "Porneşte cu forţa?"
+
+#: src/battleroomtab.cpp:564
+msgid ""
+"You have more than 32 players (including spectators) in your battle\n"
+"Spring supports maximum 32"
 msgstr ""
 
-#: src/battleroomtab.cpp:715
+#: src/battleroomtab.cpp:564 src/singleplayertab.cpp:273
 #, fuzzy
-msgid "Set Timeout"
-msgstr "Ping Timeout!"
+msgid "Num players error"
+msgstr "Numărul jucătorilor"
+
+#: src/battleroomtab.cpp:794
+msgid "Enter preset name"
+msgstr ""
+
+#: src/battleroomtab.cpp:794
+msgid ""
+"Enter a name to save the current set of options\n"
+"If a preset with the same name already exist, it will be overwritten"
+msgstr ""
+
+#: src/battleroomtab.cpp:797
+msgid "Cannot save an options set without a name."
+msgstr ""
+
+#: src/battleroomtab.cpp:797 src/ui.cpp:779
+msgid "error"
+msgstr "eroare"
+
+#: src/battleroomtab.cpp:807 src/battleroomtab.cpp:815
+msgid "Pick an existing option set from the list"
+msgstr ""
+
+#: src/battleroomtab.cpp:807
+msgid "Set delete preset"
+msgstr ""
+
+#: src/battleroomtab.cpp:815
+#, fuzzy
+msgid "Set mod default preset"
+msgstr "implicit"
 
 #: src/channel/autojoinchanneldialog.cpp:25
 #, fuzzy
@@ -1172,35 +952,40 @@ msgstr ""
 msgid "Find channel:"
 msgstr "Intră pe canal..."
 
-#: src/channel/channelchooserdialog.cpp:13 src/mainwindow.cpp:221
+#: src/channel/channelchooserdialog.cpp:13 src/mainwindow.cpp:229
 #, fuzzy
 msgid "Choose channels to join"
 msgstr "Numele canalului"
 
-#: src/channel/channellistctrl.cpp:28
+#: src/channel/channellistctrl.cpp:20
 #, fuzzy
-msgid "Channel"
-msgstr "canal"
+msgid "Channel name"
+msgstr "Informaţii canal"
 
-#: src/channel/channellistctrl.cpp:29
+#: src/channel/channellistctrl.cpp:24
 #, fuzzy
 msgid "# users"
 msgstr "(%d utilizatori)"
 
-#: src/channel/channellistctrl.cpp:114
+#: src/channel/channellistctrl.cpp:28
+#, fuzzy
+msgid "topic"
+msgstr "Subiectul \""
+
+#: src/channel/channellistctrl.cpp:203
 #, c-format
 msgid "Displaying %d out of %d channels"
 msgstr ""
 
-#: src/chatlog.cpp:44
+#: src/chatlog.cpp:43
 msgid "### Session Closed at ["
 msgstr "### Sesiune Închisă la ["
 
-#: src/chatlog.cpp:44
+#: src/chatlog.cpp:43
 msgid "]"
 msgstr "]"
 
-#: src/chatlog.cpp:97 src/chatlog.cpp:103
+#: src/chatlog.cpp:82 src/chatlog.cpp:88
 msgid ""
 "Couldn't create folder. \n"
 "Be sure that there isn't a write protection.\n"
@@ -1208,15 +993,15 @@ msgstr ""
 "Nu am putut crea folder. \n"
 "Asiguraţi-vă că nu este protecţie la scriere.\n"
 
-#: src/chatlog.cpp:97 src/chatlog.cpp:103
+#: src/chatlog.cpp:82 src/chatlog.cpp:88
 msgid "Log function is disabled until restart SpringLobby."
 msgstr "Funcţia de jurnal este dezactivată până la repornirea SpringLobby."
 
-#: src/chatlog.cpp:97 src/chatlog.cpp:120 src/chatlog.cpp:142
+#: src/chatlog.cpp:82 src/chatlog.cpp:105 src/chatlog.cpp:127
 msgid "Log Warning"
 msgstr "Avertizare de jurnal"
 
-#: src/chatlog.cpp:120
+#: src/chatlog.cpp:105
 msgid ""
 "Couldn't write message to log.\n"
 "Logging will be disabled for room "
@@ -1224,7 +1009,7 @@ msgstr ""
 "Nu pot trece mesajul în jurnal.\n"
 "Scrierea va fi dezactivată pentru camera "
 
-#: src/chatlog.cpp:120
+#: src/chatlog.cpp:105
 msgid ""
 ".\n"
 "\n"
@@ -1234,7 +1019,7 @@ msgstr ""
 "\n"
 "Intraţi din nou în cameră pentru a reactiva jurnalul."
 
-#: src/chatlog.cpp:142
+#: src/chatlog.cpp:127
 msgid ""
 "Can't open log file. \n"
 "Be sure that there isn't a write protection.\n"
@@ -1242,67 +1027,63 @@ msgstr ""
 "Nu pot deschide fişierul jurnal. \n"
 "Asiguraţi-vă că nu există protecţie la scriere.\n"
 
-#: src/chatoptionstab.cpp:70
+#: src/chatoptionstab.cpp:75
 msgid "Colors and font"
 msgstr "Culori şi font"
 
-#: src/chatoptionstab.cpp:75
+#: src/chatoptionstab.cpp:80
 msgid "Use system colors"
 msgstr "Foloseşte culorile sistemului"
 
-#: src/chatoptionstab.cpp:101
+#: src/chatoptionstab.cpp:106
 msgid "Normal"
 msgstr "Normal"
 
-#: src/chatoptionstab.cpp:115
+#: src/chatoptionstab.cpp:120
 msgid "Background"
 msgstr "Fundal"
 
-#: src/chatoptionstab.cpp:129
+#: src/chatoptionstab.cpp:134
 msgid "Action"
 msgstr "Acţiune"
 
-#: src/chatoptionstab.cpp:143 src/groupoptionspanel.cpp:125
+#: src/chatoptionstab.cpp:148 src/groupoptionspanel.cpp:124
 msgid "Highlight"
 msgstr "Evidenţiere"
 
-#: src/chatoptionstab.cpp:157
+#: src/chatoptionstab.cpp:162
 msgid "Join/Leave"
 msgstr "Intră/părăseşte"
 
-#: src/chatoptionstab.cpp:171
+#: src/chatoptionstab.cpp:176
 msgid "My messages"
 msgstr "Mesajele mele"
 
-#: src/chatoptionstab.cpp:190 src/connectwindow.cpp:64
+#: src/chatoptionstab.cpp:195 src/connectwindow.cpp:63
 msgid "Server"
 msgstr "Server"
 
-#: src/chatoptionstab.cpp:204
+#: src/chatoptionstab.cpp:209
 msgid "Client"
 msgstr "Client"
 
-#: src/chatoptionstab.cpp:218 src/chatpanel.cpp:1463 src/chatpanel.cpp:1637
-#: src/chatpanel.cpp:1643 src/chatpanel.cpp:1736
-#: src/Helper/imageviewer.cpp:146 src/Helper/imageviewer.cpp:170
-#: src/playback/playbacktab.cpp:385 src/serverevents.cpp:955
-#: src/settings++/tab_abstract.cpp:127 src/tasserver.cpp:498
-#: src/updater/updater.cpp:46 src/updater/updater.cpp:82
-#: src/updater/updater.cpp:96 src/updater/updater.cpp:101
-#: src/updater/updater.cpp:104 src/widgets/infopanel.cpp:161
-#: src/widgets/infopanel.cpp:173
+#: src/chatoptionstab.cpp:223 src/chatpanel.cpp:1347 src/chatpanel.cpp:1521
+#: src/chatpanel.cpp:1527 src/chatpanel.cpp:1620 src/replay/replaytab.cpp:381
+#: src/settings++/tab_abstract.cpp:127 src/tasserver.cpp:465
+#: src/updater/updater.cpp:39 src/updater/updater.cpp:55
+#: src/updater/updater.cpp:71 src/updater/updater.cpp:75
 msgid "Error"
 msgstr "Eroare"
 
-#: src/chatoptionstab.cpp:232
+#: src/chatoptionstab.cpp:237
 msgid "Timestamp"
 msgstr "Marcaj de timp"
 
-#: src/chatoptionstab.cpp:246
+#: src/chatoptionstab.cpp:251
 msgid "Notification"
 msgstr "Notificare"
 
-#: src/chatoptionstab.cpp:256
+#: src/chatoptionstab.cpp:261
 #, fuzzy
 msgid ""
 "[19:35] ** Server ** Connected to Server.\n"
@@ -1319,325 +1100,306 @@ msgstr ""
 "[22:45] <Tip> o serios?\n"
 "[22:46] <Tip2> Poate ar fi mai bine altcumva, le mai editez io...\n"
 
-#: src/chatoptionstab.cpp:267
+#: src/chatoptionstab.cpp:272
 msgid "Font:"
 msgstr "Font"
 
-#: src/chatoptionstab.cpp:271
+#: src/chatoptionstab.cpp:276
 msgid "default"
 msgstr "implicit"
 
-#: src/chatoptionstab.cpp:275
+#: src/chatoptionstab.cpp:280
 msgid "Select..."
 msgstr "Alege..."
 
-#: src/chatoptionstab.cpp:287
+#: src/chatoptionstab.cpp:292
 msgid "Behavior"
 msgstr "Comportament"
 
-#: src/chatoptionstab.cpp:289
-msgid "Enable Irc colors in chat messages"
-msgstr ""
-
 #: src/chatoptionstab.cpp:294
+msgid "Use smart scrolling"
+msgstr "Foloseşte derulare inteligentă"
+
+#: src/chatoptionstab.cpp:299
 msgid "Play notification sounds"
 msgstr ""
 
-#: src/chatoptionstab.cpp:305
+#: src/chatoptionstab.cpp:312
 msgid "Chat logs"
 msgstr "Jurnale de chat"
 
-#: src/chatoptionstab.cpp:308
+#: src/chatoptionstab.cpp:315
 msgid "Save chat logs"
 msgstr "Salvează jurnalele de chat"
 
-#: src/chatoptionstab.cpp:316
+#: src/chatoptionstab.cpp:323
 msgid "Highlight words"
 msgstr "Evidențiază cuvinte"
 
-#: src/chatoptionstab.cpp:318
+#: src/chatoptionstab.cpp:325
 msgid "Words to highlight in chat:"
 msgstr "Cuvinte de evidențiat în chat:"
 
-#: src/chatoptionstab.cpp:327
+#: src/chatoptionstab.cpp:334
 msgid "enter a ; seperated list"
 msgstr "introduceţi o listă separată prin \";\""
 
-#: src/chatoptionstab.cpp:331
+#: src/chatoptionstab.cpp:338
 msgid "Additionally play sound/flash titlebar "
 msgstr "În plus, sună avertizare/pâlpâie bara de titlu "
 
-#: src/chatpanel.cpp:121
+#: src/chatpanel.cpp:143
 msgid "channel_"
 msgstr ""
 
-#: src/chatpanel.cpp:123
+#: src/chatpanel.cpp:145
 msgid "#"
 msgstr "#"
 
-#: src/chatpanel.cpp:297 src/chatpanel.cpp:899 src/chatpanel.cpp:915
-#: src/chatpanel.cpp:940
-#, fuzzy, c-format
-msgid "%d users"
-msgstr "(%d utilizatori)"
-
-#: src/chatpanel.cpp:325
+#: src/chatpanel.cpp:315
 msgid "right click for options (like autojoin)"
 msgstr "click dreapta pentru opţiuni chat"
 
-#: src/chatpanel.cpp:333
+#: src/chatpanel.cpp:318
 msgid "Send"
 msgstr "Trimite"
 
-#: src/chatpanel.cpp:387
+#: src/chatpanel.cpp:366
 msgid "Disable text appending (workaround for autoscroll)"
 msgstr ""
 
-#: src/chatpanel.cpp:391
-msgid "Copy"
-msgstr "Copiază"
-
-#: src/chatpanel.cpp:397
-msgid "Copy link location"
-msgstr ""
-
-#: src/chatpanel.cpp:401
-msgid "Clear"
-msgstr "Curăţă"
-
-#: src/chatpanel.cpp:407
+#: src/chatpanel.cpp:373
 msgid "Auto join this channel"
 msgstr "Intră automat în acest canal"
 
-#: src/chatpanel.cpp:417
+#: src/chatpanel.cpp:383
 msgid "Display Join/Leave Messages"
 msgstr "Arată mesaje de ieşire/intrare"
 
-#: src/chatpanel.cpp:423
+#: src/chatpanel.cpp:389
 #, fuzzy
 msgid "Show mute list"
 msgstr "Arată ponturi"
 
-#: src/chatpanel.cpp:429
+#: src/chatpanel.cpp:395
 msgid "Channel info"
 msgstr "Informaţii canal"
 
-#: src/chatpanel.cpp:433 src/chatpanel.cpp:1299
+#: src/chatpanel.cpp:399 src/chatpanel.cpp:1184
 msgid "Set topic..."
 msgstr "Setează subiect..."
 
-#: src/chatpanel.cpp:435 src/chatpanel.cpp:1316
+#: src/chatpanel.cpp:401 src/chatpanel.cpp:1200
 msgid "Channel message..."
 msgstr "Mesajul canalului..."
 
-#: src/chatpanel.cpp:439
+#: src/chatpanel.cpp:405
 msgid "Lock..."
 msgstr "Blochează..."
 
-#: src/chatpanel.cpp:441
+#: src/chatpanel.cpp:407
 msgid "Unlock"
 msgstr "Deblochează"
 
-#: src/chatpanel.cpp:445
+#: src/chatpanel.cpp:411
 msgid "Register..."
 msgstr "Înregistrează..."
 
-#: src/chatpanel.cpp:447
+#: src/chatpanel.cpp:413
 msgid "Unregister"
 msgstr "Ştergere înregistrare"
 
-#: src/chatpanel.cpp:453
+#: src/chatpanel.cpp:419
 msgid "On"
 msgstr "Pornit"
 
-#: src/chatpanel.cpp:455
+#: src/chatpanel.cpp:421
 msgid "Off"
 msgstr "Oprit"
 
-#: src/chatpanel.cpp:459
+#: src/chatpanel.cpp:425
 msgid "Is on?"
 msgstr "E pornit?"
 
-#: src/chatpanel.cpp:461
+#: src/chatpanel.cpp:427
 msgid "Spam protection"
 msgstr "Protecţie spam"
 
-#: src/chatpanel.cpp:462 src/chatpanel.cpp:580
+#: src/chatpanel.cpp:428 src/chatpanel.cpp:534
 msgid "ChanServ"
 msgstr "ChanServ"
 
-#: src/chatpanel.cpp:469
+#: src/chatpanel.cpp:434
 msgid "Disconnect"
 msgstr "Deconectează"
 
-#: src/chatpanel.cpp:471
+#: src/chatpanel.cpp:436
 msgid "Reconnect"
 msgstr "Reconectează"
 
-#: src/chatpanel.cpp:480
+#: src/chatpanel.cpp:445
 msgid "Remove..."
 msgstr "Şterge..."
 
-#: src/chatpanel.cpp:482
+#: src/chatpanel.cpp:447
 msgid "Change password..."
 msgstr "Schimbă parola..."
 
-#: src/chatpanel.cpp:484
+#: src/chatpanel.cpp:449
 msgid "Set access..."
 msgstr "Setează acces..."
 
-#: src/chatpanel.cpp:486
+#: src/chatpanel.cpp:451
 msgid "Accounts"
 msgstr "Conturi"
 
-#: src/chatpanel.cpp:489
+#: src/chatpanel.cpp:454
 msgid "Broadcast..."
 msgstr "Emite..."
 
-#: src/chatpanel.cpp:491
+#: src/chatpanel.cpp:456
 msgid "Admin"
 msgstr "Administrator"
 
-#: src/chatpanel.cpp:500
-#, fuzzy
-msgid "User"
-msgstr "Muţeşte utilizator"
-
-#: src/chatpanel.cpp:510
+#: src/chatpanel.cpp:466
 msgid "Open Chat"
 msgstr "Deschide chat"
 
-#: src/chatpanel.cpp:513
+#: src/chatpanel.cpp:468
 msgid "Join same battle"
 msgstr "Intră în aceeaşi luptă"
 
-#: src/chatpanel.cpp:519
+#: src/chatpanel.cpp:474
 msgid "Ingame time"
 msgstr "Timp în joc"
 
-#: src/chatpanel.cpp:521
+#: src/chatpanel.cpp:476
 msgid "Retrieve IP and Smurfs"
 msgstr "Fă rost de IP şi Pitici"
 
-#: src/chatpanel.cpp:528 src/chatpanel.cpp:567
+#: src/chatpanel.cpp:483 src/chatpanel.cpp:521
 msgid "Mute..."
 msgstr "Muţeşte.."
 
-#: src/chatpanel.cpp:530
+#: src/chatpanel.cpp:485
 msgid "Mute for 5 minutes"
 msgstr "Muţeşte pentru 5 minute"
 
-#: src/chatpanel.cpp:532
+#: src/chatpanel.cpp:487
 msgid "Mute for 10 minutes"
 msgstr "Muţeşte pentru 10 minute"
 
-#: src/chatpanel.cpp:534
+#: src/chatpanel.cpp:489
 msgid "Mute for 30 minutes"
 msgstr "Muţeşte pentru 30 de minute"
 
-#: src/chatpanel.cpp:536
+#: src/chatpanel.cpp:491
 msgid "Mute for 2 hours"
 msgstr "Muţeşte pentru 2 ore"
 
-#: src/chatpanel.cpp:538
+#: src/chatpanel.cpp:493
 msgid "Mute for 1 day"
 msgstr "Muţeşte pentru 1 zi"
 
-#: src/chatpanel.cpp:541 src/chatpanel.cpp:569
+#: src/chatpanel.cpp:496 src/chatpanel.cpp:523
 msgid "Unmute"
 msgstr "Dez-muţeşte"
 
-#: src/chatpanel.cpp:543
+#: src/chatpanel.cpp:498
 msgid "Mute"
 msgstr "Muţeşte"
 
-#: src/chatpanel.cpp:545 src/chatpanel.cpp:572
+#: src/chatpanel.cpp:500 src/chatpanel.cpp:526
 msgid "Kick..."
 msgstr "Kick..."
 
-#: src/chatpanel.cpp:549
+#: src/chatpanel.cpp:504
 msgid "Ban..."
 msgstr "Ban..."
 
-#: src/chatpanel.cpp:551
+#: src/chatpanel.cpp:506
 msgid "Unban"
 msgstr "Unban"
 
-#: src/chatpanel.cpp:559
+#: src/chatpanel.cpp:514
 msgid "Slap!"
 msgstr "Dă-i palmă!"
 
-#: src/chatpanel.cpp:576
+#: src/chatpanel.cpp:530
 msgid "Op"
 msgstr "Op"
 
-#: src/chatpanel.cpp:578
+#: src/chatpanel.cpp:532
 msgid "DeOp"
 msgstr "DeOp"
 
-#: src/chatpanel.cpp:875
+#: src/chatpanel.cpp:777
 msgid " !! Command: \""
 msgstr " !! Comandă: \""
 
-#: src/chatpanel.cpp:875
+#: src/chatpanel.cpp:777
 msgid "\" params: \""
 msgstr "\" parametri: \""
 
-#: src/chatpanel.cpp:881
+#: src/chatpanel.cpp:783
 msgid "channel"
 msgstr "canal"
 
-#: src/chatpanel.cpp:882
+#: src/chatpanel.cpp:784
 msgid "battle"
 msgstr "luptă"
 
-#: src/chatpanel.cpp:883
+#: src/chatpanel.cpp:785
 msgid "server"
 msgstr "server"
 
-#: src/chatpanel.cpp:895 src/chatpanel.cpp:903
+#: src/chatpanel.cpp:797 src/chatpanel.cpp:802
 msgid " joined the "
 msgstr " a intrat în "
 
-#: src/chatpanel.cpp:936 src/chatpanel.cpp:945
+#: src/chatpanel.cpp:831 src/chatpanel.cpp:836
 msgid " left the "
 msgstr " a părăsit "
 
-#: src/chatpanel.cpp:968
+#: src/chatpanel.cpp:859
 #, fuzzy
 msgid " ** Channel topic:"
 msgstr "Informaţii canal"
 
-#: src/chatpanel.cpp:975
+#: src/chatpanel.cpp:866
 #, fuzzy
 msgid " ** Set by "
 msgstr ""
 "\n"
 " * Setată de "
 
-#: src/chatpanel.cpp:1002 src/chatpanel.cpp:1027 src/chatpanel.cpp:1053
+#: src/chatpanel.cpp:893 src/chatpanel.cpp:922 src/chatpanel.cpp:951
 msgid "Chat closed."
 msgstr "Chat închis."
 
-#: src/chatpanel.cpp:1100
+#: src/chatpanel.cpp:934
+msgid "_SERVER"
+msgstr "_SERVER"
+
+#: src/chatpanel.cpp:999
 #, c-format
 msgid "Are you sure you want to paste %d lines?"
 msgstr "Sunteţi sigur că vreţi să introduceţi %d rânduri?"
 
-#: src/chatpanel.cpp:1100
+#: src/chatpanel.cpp:999
 msgid "Flood warning"
 msgstr "Atenţie: exces de mesaje"
 
-#: src/chatpanel.cpp:1112
+#: src/chatpanel.cpp:1011
 msgid " You have SpringLobby v"
 msgstr " Aveţi SpringLobby v"
 
-#: src/chatpanel.cpp:1125
+#: src/chatpanel.cpp:1018
 msgid " You are not in channel or channel does not exist."
 msgstr " Nu sunteţi în canal sau canalul nu există."
 
-#: src/chatpanel.cpp:1131 src/chatpanel.cpp:1145 src/chatpanel.cpp:1159
-#: src/chatpanel.cpp:1169
+#: src/chatpanel.cpp:1024 src/chatpanel.cpp:1038 src/chatpanel.cpp:1052
+#: src/chatpanel.cpp:1062
 #, c-format
 msgid ""
 " Error: Command (%s) does not exist, use /help for a list of available "
@@ -1646,178 +1408,178 @@ msgstr ""
 " Eroare: comanda (%s) nu există, folosiţi /help pentru o listă de comenzi "
 "disponibile."
 
-#: src/chatpanel.cpp:1139
+#: src/chatpanel.cpp:1032
 msgid ""
 " You are not in battle or battle does not exist, use /help for a list of "
 "available commands."
 msgstr " Nu sunteţi în luptă sau lupta nu există."
 
-#: src/chatpanel.cpp:1153
+#: src/chatpanel.cpp:1046
 msgid " User is offline."
 msgstr " Utilizatorul e deconectat."
 
-#: src/chatpanel.cpp:1187
+#: src/chatpanel.cpp:1073
 msgid " Sent: \""
 msgstr " Trimis: \""
 
-#: src/chatpanel.cpp:1187
+#: src/chatpanel.cpp:1073
 msgid "\""
 msgstr "\""
 
-#: src/chatpanel.cpp:1279 src/chatpanel.cpp:1293 src/chatpanel.cpp:1310
-#: src/chatpanel.cpp:1327 src/chatpanel.cpp:1344 src/chatpanel.cpp:1360
-#: src/chatpanel.cpp:1377 src/chatpanel.cpp:1393 src/chatpanel.cpp:1407
-#: src/chatpanel.cpp:1421 src/chatpanel.cpp:1524 src/chatpanel.cpp:1546
-#: src/chatpanel.cpp:1563 src/chatpanel.cpp:1585 src/chatpanel.cpp:1602
+#: src/chatpanel.cpp:1164 src/chatpanel.cpp:1178 src/chatpanel.cpp:1194
+#: src/chatpanel.cpp:1211 src/chatpanel.cpp:1228 src/chatpanel.cpp:1244
+#: src/chatpanel.cpp:1261 src/chatpanel.cpp:1277 src/chatpanel.cpp:1291
+#: src/chatpanel.cpp:1305 src/chatpanel.cpp:1408 src/chatpanel.cpp:1430
+#: src/chatpanel.cpp:1447 src/chatpanel.cpp:1469 src/chatpanel.cpp:1486
 msgid "ChanServ error"
 msgstr "Eroare ChanServ"
 
-#: src/chatpanel.cpp:1279 src/chatpanel.cpp:1293 src/chatpanel.cpp:1310
-#: src/chatpanel.cpp:1327 src/chatpanel.cpp:1344 src/chatpanel.cpp:1393
-#: src/chatpanel.cpp:1407 src/chatpanel.cpp:1421 src/chatpanel.cpp:1524
-#: src/chatpanel.cpp:1546 src/chatpanel.cpp:1563 src/chatpanel.cpp:1585
-#: src/chatpanel.cpp:1602
+#: src/chatpanel.cpp:1164 src/chatpanel.cpp:1178 src/chatpanel.cpp:1194
+#: src/chatpanel.cpp:1211 src/chatpanel.cpp:1228 src/chatpanel.cpp:1277
+#: src/chatpanel.cpp:1291 src/chatpanel.cpp:1305 src/chatpanel.cpp:1408
+#: src/chatpanel.cpp:1430 src/chatpanel.cpp:1447 src/chatpanel.cpp:1469
+#: src/chatpanel.cpp:1486
 msgid "ChanServ is not in this channel."
 msgstr "ChanServ nu e în acest canal."
 
-#: src/chatpanel.cpp:1299
+#: src/chatpanel.cpp:1184
 msgid "What should be the new topic?"
 msgstr "Care va fi subiectul nou?"
 
-#: src/chatpanel.cpp:1316
+#: src/chatpanel.cpp:1200
 msgid "Message:"
 msgstr "Mesaj:"
 
-#: src/chatpanel.cpp:1333
+#: src/chatpanel.cpp:1217
 msgid "Lock channel..."
 msgstr "Blochează canalul..."
 
-#: src/chatpanel.cpp:1333
+#: src/chatpanel.cpp:1217
 msgid "What should the new password be?"
 msgstr "Care va fi parola nouă?"
 
-#: src/chatpanel.cpp:1349
+#: src/chatpanel.cpp:1233
 msgid "Unlock Channel"
 msgstr "Deblochează canalul"
 
-#: src/chatpanel.cpp:1349
+#: src/chatpanel.cpp:1233
 msgid "Are you sure you want to unlock this channel?"
 msgstr "Sunteţi sigur că doriţi să deblocaţi acest canal?"
 
-#: src/chatpanel.cpp:1360 src/chatpanel.cpp:1377
+#: src/chatpanel.cpp:1244 src/chatpanel.cpp:1261
 msgid "ChanServ is not on this server."
 msgstr "ChanServ nu e pe acest server."
 
-#: src/chatpanel.cpp:1366
+#: src/chatpanel.cpp:1250
 msgid "Register Channel"
 msgstr "Înregistrează canal"
 
-#: src/chatpanel.cpp:1366
+#: src/chatpanel.cpp:1250
 msgid "Who should be appointed founder of this channel?"
 msgstr "Cine va fi numit fondatorul canalului?"
 
-#: src/chatpanel.cpp:1382
+#: src/chatpanel.cpp:1266
 msgid "Unregister Channel"
 msgstr "Canal neînregistrat"
 
-#: src/chatpanel.cpp:1382
+#: src/chatpanel.cpp:1266
 msgid "Are you sure you want to unregister this channel?"
 msgstr "Sunteţi sigur că doriţi să dez-înregistraţi acest canal?"
 
-#: src/chatpanel.cpp:1446
+#: src/chatpanel.cpp:1330
 msgid "Remove User Acount"
 msgstr "Şterge cont utilizator"
 
-#: src/chatpanel.cpp:1446
+#: src/chatpanel.cpp:1330
 msgid "What user account do you want to remove today?"
 msgstr "Ce cont de utilizator doreşti să ştergi în această zi minunată?"
 
-#: src/chatpanel.cpp:1447
+#: src/chatpanel.cpp:1331
 msgid "Remove Account"
 msgstr "Şterge cont"
 
-#: src/chatpanel.cpp:1447
+#: src/chatpanel.cpp:1331
 msgid "Are you sure you want to remove the account "
 msgstr "Sunteţi sigur că doriţi să ştergeţi contul "
 
-#: src/chatpanel.cpp:1455 src/chatpanel.cpp:1456
+#: src/chatpanel.cpp:1339 src/chatpanel.cpp:1340
 msgid "Change User Acount Password"
 msgstr "Schimbă parola contului de utilizator"
 
-#: src/chatpanel.cpp:1455
+#: src/chatpanel.cpp:1339
 msgid "What user account do you want to change the password for?"
 msgstr "Pentru ce cont doriţi să schimbaţi parola?"
 
-#: src/chatpanel.cpp:1456
+#: src/chatpanel.cpp:1340
 msgid "What would be the new password?"
 msgstr "Care va fi noua parolă?"
 
-#: src/chatpanel.cpp:1463 src/chatpanel.cpp:1637 src/chatpanel.cpp:1643
+#: src/chatpanel.cpp:1347 src/chatpanel.cpp:1521 src/chatpanel.cpp:1527
 msgid "Not Implemented"
 msgstr "Nu a fost implementat"
 
-#: src/chatpanel.cpp:1470
+#: src/chatpanel.cpp:1354
 msgid "Broadcast Message"
 msgstr "Emite mesaj"
 
-#: src/chatpanel.cpp:1470
+#: src/chatpanel.cpp:1354
 msgid "Message to be broadcasted:"
 msgstr "Mesajul de emis:"
 
-#: src/chatpanel.cpp:1492
+#: src/chatpanel.cpp:1376
 msgid "You don't have the mod "
 msgstr "Nu aveţi modul "
 
-#: src/chatpanel.cpp:1493
+#: src/chatpanel.cpp:1377
 msgid " . Please download it first"
 msgstr " . Vă rugăm descărcaţi-l mai întâi."
 
-#: src/chatpanel.cpp:1493
+#: src/chatpanel.cpp:1377
 msgid "Mod unavailable"
 msgstr "Mod indisponibil"
 
-#: src/chatpanel.cpp:1499
+#: src/chatpanel.cpp:1383
 msgid "This battle is password protected, enter the password."
 msgstr "Această luptă e parolată; introduceţi parola."
 
-#: src/chatpanel.cpp:1529
+#: src/chatpanel.cpp:1413
 msgid "Mute User"
 msgstr "Muţeşte utilizator"
 
-#: src/chatpanel.cpp:1529
+#: src/chatpanel.cpp:1413
 msgid "For how many minutes should the user be muted?"
 msgstr "Pentru câte minute să fie muţit utilizatorul?"
 
-#: src/chatpanel.cpp:1571
+#: src/chatpanel.cpp:1455
 msgid "Kick User"
 msgstr "Kick Utilizator"
 
-#: src/chatpanel.cpp:1571 src/chatpanel.cpp:1630
+#: src/chatpanel.cpp:1455 src/chatpanel.cpp:1514
 msgid "Reason:"
 msgstr "Motiv:"
 
-#: src/chatpanel.cpp:1630
+#: src/chatpanel.cpp:1514
 msgid "Kick user"
 msgstr "Kick utilizator"
 
-#: src/chatpanel.cpp:1650
+#: src/chatpanel.cpp:1534
 msgid "Mute user"
 msgstr "Muţeşte utilizator"
 
-#: src/chatpanel.cpp:1650
+#: src/chatpanel.cpp:1534
 msgid "Duration:"
 msgstr "Durata:"
 
-#: src/chatpanel.cpp:1736
+#: src/chatpanel.cpp:1620
 #, fuzzy
 msgid "couldn't add user"
 msgstr "Nu pot lansa browser."
 
-#: src/connectwindow.cpp:43
+#: src/connectwindow.cpp:42
 msgid "Connect to lobby server"
 msgstr "Conectare la serverul lobby"
 
-#: src/connectwindow.cpp:66
+#: src/connectwindow.cpp:65
 msgid ""
 "Server to connect to. You can connect to any server you like by typing in "
 "hostaddress:port format."
@@ -1825,20 +1587,20 @@ msgstr ""
 "Serverul la care să vă conectaţi. Puteţi să vă conectaţi la orice server "
 "doriţi scriind în formatul \"adresa:portul\"."
 
-#: src/connectwindow.cpp:72 src/connectwindow.cpp:159
-#: src/hostbattledialog.cpp:93 src/ui.cpp:167
+#: src/connectwindow.cpp:71 src/connectwindow.cpp:158
+#: src/hostbattledialog.cpp:87 src/ui.cpp:157
 msgid "Password"
 msgstr "Parola"
 
-#: src/connectwindow.cpp:74
+#: src/connectwindow.cpp:73
 msgid "Remember password"
 msgstr ""
 
-#: src/connectwindow.cpp:75
+#: src/connectwindow.cpp:74
 msgid "Autoconnect next time"
 msgstr "Auto-conectare data viitoare"
 
-#: src/connectwindow.cpp:76
+#: src/connectwindow.cpp:75
 msgid ""
 "remember connection details and automatically connect to server on next "
 "lobby startup"
@@ -1846,7 +1608,7 @@ msgstr ""
 "ţine minte detaliile conexiunii şi se conectează automat la următoarea "
 "pornire a lobby-ului"
 
-#: src/connectwindow.cpp:84
+#: src/connectwindow.cpp:83
 msgid ""
 "Note: If you do not have an account, you\n"
 " can register one for free under the\n"
@@ -1856,15 +1618,15 @@ msgstr ""
 " puteţi înregistra pe gratis la\n"
 "tab-ul \"Înregistrare\""
 
-#: src/connectwindow.cpp:90
+#: src/connectwindow.cpp:89
 msgid "Login"
 msgstr "Conectare"
 
-#: src/connectwindow.cpp:91
+#: src/connectwindow.cpp:90
 msgid "Register"
 msgstr "Înregistrare"
 
-#: src/connectwindow.cpp:146
+#: src/connectwindow.cpp:145
 msgid "Nick"
 msgstr "Poreclă"
 
@@ -1914,9 +1676,25 @@ msgstr ""
 "Înregistrare nereuşită, motiv:\n"
 "Parolă / confirmare non-identice"
 
-#: src/connectwindow.cpp:300 src/ui.cpp:250
+#: src/connectwindow.cpp:300 src/connectwindow.cpp:314
 msgid "Registration failed."
 msgstr "Înregistrare nereuşită."
+
+#: src/connectwindow.cpp:308
+msgid ""
+"Registration successful,\n"
+"you should now be able to login."
+msgstr ""
+"Înregistrare cu succes.\n"
+"Ar trebui să vă puteţi conecta."
+
+#: src/connectwindow.cpp:308
+msgid "Registration successful"
+msgstr "Înregistrare cu succes."
+
+#: src/connectwindow.cpp:314
+msgid "Registration failed, the reason was:\n"
+msgstr "Înregistrare nereuşită, motivul a fost:\n"
 
 #: src/countrycodes.cpp:11
 msgid " Andorra"
@@ -2894,353 +2672,257 @@ msgstr "Zimbabwe"
 msgid "(Full country name not found)"
 msgstr "(Numele complet al ţării nu a fost găsit)"
 
-#: src/crashreport.cpp:66
+#: src/crashreport.cpp:71
 msgid "System informations"
 msgstr "Informaţii de sistem"
 
-#: src/crashreport.cpp:68
+#: src/crashreport.cpp:73
 msgid "Application verbose log"
 msgstr "Jurnal extins al aplicaţiei"
 
-#: src/crashreport.cpp:70
+#: src/crashreport.cpp:75
 msgid "Last generated spring launching script"
 msgstr "Ultimul script pentru Spring lansat"
 
-#: src/filelister/filelistctrl.cpp:43 src/filelister/filelistctrl.cpp:45
-#: src/mapselectdialog.cpp:260 src/selectusersdialog.cpp:73
-#: src/torrentlistctrl.cpp:40 src/widgets/downloadlistctrl.cpp:28
-#: src/widgets/infopanel.cpp:59
+#: src/filelister/filelistctrl.cpp:36 src/filelister/filelistctrl.cpp:38
+#: src/selectusersdialog.cpp:72 src/torrentlistctrl.cpp:33
 #, fuzzy
 msgid "Name"
 msgstr "Joc"
 
-#: src/filelister/filelistctrl.cpp:47 src/filelister/filelistctrl.cpp:49
+#: src/filelister/filelistctrl.cpp:40 src/filelister/filelistctrl.cpp:42
 msgid "Type"
 msgstr ""
 
-#: src/filelister/filelistctrl.cpp:51 src/filelister/filelistctrl.cpp:53
+#: src/filelister/filelistctrl.cpp:44 src/filelister/filelistctrl.cpp:46
 msgid "Hash"
 msgstr ""
 
-#: src/filelister/filelistdialog.cpp:30
+#: src/filelister/filelistdialog.cpp:23
 #, fuzzy
 msgid "Search and download files"
 msgstr "Caută fişier"
 
-#: src/filelister/filelistdialog.cpp:33
+#: src/filelister/filelistdialog.cpp:26
 msgid "Files displayed"
 msgstr ""
 
-#: src/filelister/filelistdialog.cpp:58
+#: src/filelister/filelistdialog.cpp:51
 #, fuzzy
 msgid "Download selected"
 msgstr "Descărcare completă"
 
-#: src/filelister/filelistdialog.cpp:104
+#: src/filelister/filelistdialog.cpp:97
 #, c-format
 msgid "%u files displayed"
 msgstr ""
 
-#: src/filelister/filelistdialog.cpp:146
+#: src/filelister/filelistdialog.cpp:139
 #, fuzzy
 msgid "unknown hash "
 msgstr "necunoscut"
 
-#: src/groupoptionspanel.cpp:55 src/groupoptionspanel.cpp:168
-#: src/widgets/infopanel.cpp:93
+#: src/globalevents.cpp:33
+msgid "Download complete"
+msgstr "Descărcare completă"
+
+#: src/globalevents.cpp:38
+msgid "Download failed"
+msgstr "Descărcare eşuată"
+
+#: src/groupoptionspanel.cpp:54 src/groupoptionspanel.cpp:167
 #, fuzzy
 msgid "Remove"
 msgstr "Şterge..."
 
-#: src/groupoptionspanel.cpp:57
+#: src/groupoptionspanel.cpp:56
 msgid "Remove an existing group"
 msgstr ""
 
-#: src/groupoptionspanel.cpp:61
+#: src/groupoptionspanel.cpp:60
 #, fuzzy
 msgid "Rename.."
 msgstr "Şterge..."
 
-#: src/groupoptionspanel.cpp:63
+#: src/groupoptionspanel.cpp:62
 msgid "Rename an existing group"
 msgstr ""
 
-#: src/groupoptionspanel.cpp:70
+#: src/groupoptionspanel.cpp:69
 #, fuzzy
 msgid "Add New.."
 msgstr "Adaugă Bot..."
 
-#: src/groupoptionspanel.cpp:71
+#: src/groupoptionspanel.cpp:70
 msgid "Add new group"
 msgstr ""
 
-#: src/groupoptionspanel.cpp:84
+#: src/groupoptionspanel.cpp:83
 #, fuzzy
 msgid "Group Actions"
 msgstr "Acţiune"
 
-#: src/groupoptionspanel.cpp:89
+#: src/groupoptionspanel.cpp:88
 msgid "Notify login/logout"
 msgstr ""
 
-#: src/groupoptionspanel.cpp:91
+#: src/groupoptionspanel.cpp:90
 msgid "Notify when users of this group go online or offline"
 msgstr ""
 
-#: src/groupoptionspanel.cpp:95
+#: src/groupoptionspanel.cpp:94
 #, fuzzy
 msgid "Ignore Chat"
 msgstr "Deschide chat"
 
-#: src/groupoptionspanel.cpp:97
+#: src/groupoptionspanel.cpp:96
 msgid "Ignore anything said in channel by any of the users in this group"
 msgstr ""
 
-#: src/groupoptionspanel.cpp:101
+#: src/groupoptionspanel.cpp:100
 #, fuzzy
 msgid "Notify Hosted Battles"
 msgstr "Găzduieşte luptă nouă"
 
-#: src/groupoptionspanel.cpp:103
+#: src/groupoptionspanel.cpp:102
 msgid "Notify when users of this group hosts a battle"
 msgstr ""
 
-#: src/groupoptionspanel.cpp:107 src/springlobbyapp.cpp:441
-#: src/springlobbyapp.cpp:442
+#: src/groupoptionspanel.cpp:106
 msgid "Ignore PM"
 msgstr ""
 
-#: src/groupoptionspanel.cpp:109
+#: src/groupoptionspanel.cpp:108
 msgid "Ignore anything said in private chat by any of the users in this group"
 msgstr ""
 
-#: src/groupoptionspanel.cpp:113
+#: src/groupoptionspanel.cpp:112
 msgid "Notify Status Change"
 msgstr ""
 
-#: src/groupoptionspanel.cpp:115
+#: src/groupoptionspanel.cpp:114
 msgid "Notify when the status of a users in this group changes"
 msgstr ""
 
-#: src/groupoptionspanel.cpp:119
+#: src/groupoptionspanel.cpp:118
 msgid "Autokick"
 msgstr ""
 
-#: src/groupoptionspanel.cpp:121
+#: src/groupoptionspanel.cpp:120
 msgid "Auto kick any of the users in this group from battles hosted"
 msgstr ""
 
-#: src/groupoptionspanel.cpp:127
+#: src/groupoptionspanel.cpp:126
 msgid "Highlight battles and the names of users in this group"
 msgstr ""
 
-#: src/groupoptionspanel.cpp:134
+#: src/groupoptionspanel.cpp:133
 #, fuzzy
 msgid "Highlight Color"
 msgstr "Evidențiază cuvinte"
 
-#: src/groupoptionspanel.cpp:139 src/groupoptionspanel.cpp:141
+#: src/groupoptionspanel.cpp:138 src/groupoptionspanel.cpp:140
 msgid "Select highlight color"
 msgstr ""
 
-#: src/groupoptionspanel.cpp:152
+#: src/groupoptionspanel.cpp:151
 msgid "Users in group"
 msgstr ""
 
-#: src/groupoptionspanel.cpp:163
+#: src/groupoptionspanel.cpp:162
 #, fuzzy
 msgid "Add.."
 msgstr "Adaugă Bot..."
 
-#: src/groupoptionspanel.cpp:164
+#: src/groupoptionspanel.cpp:163
 msgid "Add users to group"
 msgstr ""
 
-#: src/groupoptionspanel.cpp:170
+#: src/groupoptionspanel.cpp:169
 #, fuzzy
 msgid "Remove users from group"
 msgstr "Şterge cont utilizator"
 
-#: src/groupoptionspanel.cpp:264
+#: src/groupoptionspanel.cpp:263
 #, fuzzy
 msgid "Name of new group:"
 msgstr "Nume de utilizator"
 
-#: src/groupoptionspanel.cpp:264
+#: src/groupoptionspanel.cpp:263
 msgid "Add New Group"
 msgstr ""
 
-#: src/Helper/imageviewer.cpp:85
-msgid "previous"
-msgstr ""
-
-#: src/Helper/imageviewer.cpp:88
-msgid "next"
-msgstr ""
-
-#: src/Helper/imageviewer.cpp:92
-#, fuzzy
-msgid "delete"
-msgstr "Selectaţi"
-
-#: src/Helper/imageviewer.cpp:96
-msgid "save as"
-msgstr ""
-
-#: src/Helper/imageviewer.cpp:146
-msgid "couldn't remove file"
-msgstr ""
-
-#: src/Helper/imageviewer.cpp:160
-#, fuzzy
-msgid "Choose a filename"
-msgstr "Aleasă în joc"
-
-#: src/Helper/imageviewer.cpp:167
-#, fuzzy
-msgid "File successfully saved"
-msgstr ""
-"\n"
-"salvat cu sicces în:\n"
-
-#: src/Helper/imageviewer.cpp:167 src/updater/updater.cpp:112
-#: src/updater/updater.cpp:115 src/widgets/infopanel.cpp:158
-#: src/widgets/infopanel.cpp:170
-#, fuzzy
-msgid "Success"
-msgstr "Setează acces..."
-
-#: src/Helper/imageviewer.cpp:170
-#, fuzzy
-msgid "Couldn't save file"
-msgstr "Nu pot salva\n"
-
-#: src/Helper/wxTranslationHelper.cpp:96 src/springlobbyapp.cpp:440
-#, fuzzy
-msgid "Default"
-msgstr "implicit"
-
-#: src/Helper/wxTranslationHelper.cpp:127
-#, c-format
-msgid "SEARCHING FOR %s"
-msgstr ""
-
-#: src/Helper/wxTranslationHelper.cpp:144
-msgid "Array of language names and identifiers should have the same size."
-msgstr ""
-
-#: src/Helper/wxTranslationHelper.cpp:145
-#, fuzzy
-msgid "Select the language"
-msgstr "Informaţii canal"
-
-#: src/Helper/wxTranslationHelper.cpp:146
-msgid "Language"
-msgstr ""
-
-#: src/Helper/wxTranslationHelper.cpp:156
-#, c-format
-msgid "wxTranslationHelper: Path Prefix = \"%s\""
-msgstr ""
-
-#: src/Helper/wxTranslationHelper.cpp:159
-#, c-format
-msgid "wxTranslationHelper: Catalog Name = \"%s\""
-msgstr ""
-
-#: src/hostbattledialog.cpp:48
+#: src/hostbattledialog.cpp:47
 msgid "Host new battle"
 msgstr "Găzduieşte luptă nouă"
 
-#: src/hostbattledialog.cpp:64
+#: src/hostbattledialog.cpp:63
 msgid "A short description of the game, this will show up in the battle list."
 msgstr "O descriere scurtă a jocului, aceasta va apărea în lista de lupte."
 
-#: src/hostbattledialog.cpp:66
-#, fuzzy
-msgid "Autopaste description"
-msgstr "Descriere"
-
-#: src/hostbattledialog.cpp:68
-msgid "Automatically write the battle description when a user joins."
-msgstr ""
-
-#: src/hostbattledialog.cpp:84
+#: src/hostbattledialog.cpp:78
 msgid "Select the mod to play with."
 msgstr "Alegeţi mod-ul cu care să jucaţi."
 
-#: src/hostbattledialog.cpp:98
+#: src/hostbattledialog.cpp:92
 msgid "Password needed to join game. Keep empty for no password"
 msgstr ""
 "Parola necesară pentru joc. Lăsaţi necompletat pentru a nu avea parolă."
 
-#: src/hostbattledialog.cpp:108
+#: src/hostbattledialog.cpp:102
 msgid "Port"
 msgstr "Port"
 
-#: src/hostbattledialog.cpp:113
+#: src/hostbattledialog.cpp:107
 msgid "UDP port to host game on. Default is 8452."
 msgstr "Portul de ascultare UDP pentru găzduire. Implicit: 8452"
 
-#: src/hostbattledialog.cpp:117
+#: src/hostbattledialog.cpp:111
 msgid "Test firewall"
 msgstr "Testare firewall"
 
-#: src/hostbattledialog.cpp:126
+#: src/hostbattledialog.cpp:120
 msgid "Relay battle to an Autohost"
 msgstr ""
 
-#: src/hostbattledialog.cpp:127
-msgid ""
-"host and control game on remote server, helps if you have trouble hosting"
-msgstr ""
-
-#: src/hostbattledialog.cpp:133 src/playback/playbacklistctrl.cpp:44
+#: src/hostbattledialog.cpp:126
 msgid "Number of players"
 msgstr "Numărul jucătorilor"
 
-#: src/hostbattledialog.cpp:137
+#: src/hostbattledialog.cpp:130
 msgid "The maximum number of players to allow in the battle."
 msgstr "Numărul maxim de jucători permis în această luptă."
 
-#: src/hostbattledialog.cpp:145
+#: src/hostbattledialog.cpp:138
 msgid "Hole punching"
 msgstr "Hole punching"
 
-#: src/hostbattledialog.cpp:147
+#: src/hostbattledialog.cpp:140 src/ui.cpp:997
 msgid "NAT traversal"
 msgstr "Traversare NAT"
 
-#: src/hostbattledialog.cpp:153
+#: src/hostbattledialog.cpp:146
 #, fuzzy
 msgid "NAT traversal to use."
 msgstr "Traversare NAT"
 
-#: src/hostbattledialog.cpp:158
+#: src/hostbattledialog.cpp:151
 msgid "Minimum Rank needed"
 msgstr "Rang minim necesar"
 
-#: src/hostbattledialog.cpp:224
+#: src/hostbattledialog.cpp:217
 msgid "Start hosting the battle."
 msgstr "Începe găzduirea luptei."
 
-#: src/hostbattledialog.cpp:260 src/singleplayertab.cpp:229
+#: src/hostbattledialog.cpp:254 src/singleplayertab.cpp:220
 msgid "You have to select a mod first."
 msgstr "Trebuie să alegeţi un mod prima dată."
 
-#: src/hostbattledialog.cpp:260
+#: src/hostbattledialog.cpp:254
 msgid "No mod selected."
 msgstr "Nici un mod ales."
 
-#: src/httpdownloader.cpp:72
-msgid ""
-"\n"
-"successfully saved to:\n"
-msgstr ""
-"\n"
-"salvat cu sicces în:\n"
-
-#: src/httpdownloader.cpp:78
+#: src/httpdownloader.cpp:84
 #, fuzzy
 msgid ""
 "\n"
@@ -3249,17 +2931,25 @@ msgstr ""
 "\n"
 "salvat cu sicces în:\n"
 
-#: src/httpdownloader.cpp:79
+#: src/httpdownloader.cpp:86
+msgid ""
+"\n"
+"successfully saved to:\n"
+msgstr ""
+"\n"
+"salvat cu sicces în:\n"
+
+#: src/httpdownloader.cpp:87
 msgid ""
 "\n"
 " unzipping failed, please correct manually"
 msgstr ""
 
-#: src/httpdownloader.cpp:99
+#: src/httpdownloader.cpp:105
 msgid "Could not save\n"
 msgstr "Nu pot salva\n"
 
-#: src/httpdownloader.cpp:99
+#: src/httpdownloader.cpp:105
 msgid ""
 "\n"
 "to:\n"
@@ -3267,75 +2957,10 @@ msgstr ""
 "\n"
 "la:\n"
 
-#: src/httpdownloader.cpp:102
+#: src/httpdownloader.cpp:108
 msgid ""
 "\n"
 "Error number: "
-msgstr ""
-
-#: src/iconimagelist.cpp:281
-msgid "Game is open."
-msgstr ""
-
-#: src/iconimagelist.cpp:282
-msgid "Game is password-protected."
-msgstr ""
-
-#: src/iconimagelist.cpp:283
-msgid "Game is full."
-msgstr ""
-
-#: src/iconimagelist.cpp:284
-msgid "Game is full and password-protected."
-msgstr ""
-
-#: src/iconimagelist.cpp:285
-#, fuzzy
-msgid "Game is closed."
-msgstr "Chat închis."
-
-#: src/iconimagelist.cpp:286
-msgid "Game is closed and password-protected."
-msgstr ""
-
-#: src/iconimagelist.cpp:287
-msgid "Game is closed and full."
-msgstr ""
-
-#: src/iconimagelist.cpp:288
-msgid "Game is closed, full and password-protected."
-msgstr ""
-
-#: src/iconimagelist.cpp:289
-msgid "Game is in progress."
-msgstr ""
-
-#: src/iconimagelist.cpp:290
-msgid "Game is in progress and password-protected."
-msgstr ""
-
-#: src/iconimagelist.cpp:291
-msgid "Game is in progress and full."
-msgstr ""
-
-#: src/iconimagelist.cpp:292
-msgid "Game is in progress, full and password-protected."
-msgstr ""
-
-#: src/iconimagelist.cpp:293
-msgid "Game is in progress and closed."
-msgstr ""
-
-#: src/iconimagelist.cpp:294
-msgid "Game is in progress, closed and password-protected."
-msgstr ""
-
-#: src/iconimagelist.cpp:295
-msgid "Game is in progress, closed and full."
-msgstr ""
-
-#: src/iconimagelist.cpp:296
-msgid "Game is in progress, closed, full and password-protected."
 msgstr ""
 
 #: src/lobbyoptionstab.cpp:41 src/lobbyoptionstab.cpp:42
@@ -3359,7 +2984,7 @@ msgid "Specify the web browser you want to use"
 msgstr "Specifică browser-ul preferat"
 
 #: src/lobbyoptionstab.cpp:53 src/settings++/panel_pathoption.cpp:42
-#: src/springoptionstab.cpp:69 src/springoptionstab.cpp:79
+#: src/springoptionstab.cpp:58 src/springoptionstab.cpp:68
 msgid "Browse"
 msgstr "Răsfoiește"
 
@@ -3419,13 +3044,13 @@ msgid "Tooltips"
 msgstr "&Unelte"
 
 #: src/lobbyoptionstab.cpp:100
+msgid "Requires SpringLobby restart to take effect."
+msgstr ""
+
+#: src/lobbyoptionstab.cpp:101
 #, fuzzy
 msgid "Show Tooltips?"
 msgstr "Arată ponturi"
-
-#: src/lobbyoptionstab.cpp:103
-msgid "Requires SpringLobby restart to take effect."
-msgstr ""
 
 #: src/lobbyoptionstab.cpp:110
 msgid "Tab completion method"
@@ -3447,464 +3072,326 @@ msgstr "Prinde exceptii AI"
 msgid "Match nearest"
 msgstr ""
 
-#: src/lobbyoptionstab.cpp:123
-#, fuzzy
-msgid "Tab icons"
-msgstr "Opţiuni hartă"
-
-#: src/lobbyoptionstab.cpp:124
-msgid "Show big icons in mainwindow tabs?"
-msgstr ""
-
-#: src/lobbyoptionstab.cpp:129
-#, fuzzy
-msgid "Start tab"
-msgstr "Metal de început"
-
-#: src/lobbyoptionstab.cpp:132
-msgid "Select which tab to show at startup"
-msgstr ""
-
-#: src/lobbyoptionstab.cpp:207
+#: src/lobbyoptionstab.cpp:186
 msgid "Choose a web browser executable"
 msgstr "Alegeţi executabilul unui navigator"
 
-#: src/mainchattab.cpp:160 src/mainchattab.cpp:164
-#, fuzzy
-msgid "Disconnected from server, chat closed."
-msgstr "Răspuns necunoscut de la server"
-
-#: src/mainjoinbattletab.cpp:52
+#: src/mainjoinbattletab.cpp:67 src/mainjoinbattletab.cpp:69
 msgid "Battle list"
 msgstr "Listă de lupte"
 
-#: src/mainjoinbattletab.cpp:134
+#: src/mainjoinbattletab.cpp:156 src/mainjoinbattletab.cpp:161
 msgid "Battleroom"
 msgstr "Cameră de luptă"
 
-#: src/mainjoinbattletab.cpp:140 src/mainsingleplayertab.cpp:42
-#: src/mainwindow.h:180 src/settings++/tab_simple.cpp:134
+#: src/mainjoinbattletab.cpp:158 src/mainjoinbattletab.cpp:163
+#: src/mainsingleplayertab.cpp:54 src/mainsingleplayertab.cpp:56
+#: src/mainwindow.cpp:209 src/settings++/tab_simple.cpp:134
 msgid "Options"
 msgstr "Opțiuni"
 
-#: src/mainjoinbattletab.cpp:143 src/mainsingleplayertab.cpp:44
+#: src/mainjoinbattletab.cpp:159 src/mainjoinbattletab.cpp:164
+#: src/mainsingleplayertab.cpp:60 src/mainsingleplayertab.cpp:62
 #, fuzzy
 msgid "Unit Restrictions"
 msgstr "Unităţi restricţionate"
 
-#: src/mainoptionstab.cpp:62
+#: src/mainoptionstab.cpp:76 src/mainoptionstab.cpp:78
 msgid "Spring"
 msgstr "Spring"
 
-#: src/mainoptionstab.cpp:66
+#: src/mainoptionstab.cpp:84 src/mainoptionstab.cpp:86
 msgid "P2P"
 msgstr "P2P"
 
-#: src/mainoptionstab.cpp:70 src/mainwindow.h:172
+#: src/mainoptionstab.cpp:92 src/mainoptionstab.cpp:94 src/mainwindow.cpp:206
 msgid "Chat"
 msgstr "Chat"
 
-#: src/mainoptionstab.cpp:73
+#: src/mainoptionstab.cpp:100 src/mainoptionstab.cpp:102
 #, fuzzy
 msgid "General"
 msgstr "Senegal"
 
-#: src/mainoptionstab.cpp:76
+#: src/mainoptionstab.cpp:108 src/mainoptionstab.cpp:110
 msgid "Groups"
 msgstr ""
 
-#: src/mainoptionstab.cpp:78
+#: src/mainoptionstab.cpp:114
 msgid "Restore"
 msgstr "Restaurează"
 
-#: src/mainoptionstab.cpp:79
+#: src/mainoptionstab.cpp:115
 msgid "Apply"
 msgstr "Aplică"
 
-#: src/mainsingleplayertab.cpp:40
+#: src/mainsingleplayertab.cpp:51
 msgid "Game"
 msgstr "Joc"
 
-#: src/maintorrenttab.cpp:51
+#: src/maintorrenttab.cpp:44
 msgid "Transfers in progress: "
 msgstr ""
 
-#: src/maintorrenttab.cpp:57
+#: src/maintorrenttab.cpp:50
 msgid "Total Outgoing: "
 msgstr "Total Ieşire: "
 
-#: src/maintorrenttab.cpp:58
+#: src/maintorrenttab.cpp:51
 msgid "Total Incoming: "
 msgstr "Total Intrare: "
 
-#: src/maintorrenttab.cpp:65
+#: src/maintorrenttab.cpp:58
 msgid "unknown"
 msgstr "necunoscut"
 
-#: src/maintorrenttab.cpp:72
+#: src/maintorrenttab.cpp:65
 msgid "Cancel Download"
 msgstr "Anulează Descărcarea"
 
-#: src/maintorrenttab.cpp:75
+#: src/maintorrenttab.cpp:68
 msgid "Publish new file"
 msgstr "Publicaţi fişier nou"
 
-#: src/maintorrenttab.cpp:77
+#: src/maintorrenttab.cpp:70
 msgid "Search file"
 msgstr "Caută fişier"
 
-#: src/maintorrenttab.cpp:79
-#, fuzzy
-msgid "Download Lua widgets"
-msgstr "Activează unelte LuaUI"
-
-#: src/maintorrenttab.cpp:115
-msgid "Lua widget downloader"
-msgstr ""
-
-#: src/maintorrenttab.cpp:153
+#: src/maintorrenttab.cpp:134
 msgid "not available"
 msgstr "indisponibil"
 
-#: src/maintorrenttab.cpp:156
+#: src/maintorrenttab.cpp:137
 msgid "seeding"
 msgstr "seeding"
 
-#: src/maintorrenttab.cpp:157
+#: src/maintorrenttab.cpp:138
 msgid "leeching"
 msgstr ""
 
-#: src/maintorrenttab.cpp:158
+#: src/maintorrenttab.cpp:139
 msgid "queued"
 msgstr "la rând"
 
-#: src/maintorrenttab.cpp:204
+#: src/maintorrenttab.cpp:185
 msgid "Status: not connected"
 msgstr "Statut: deconectat"
 
-#: src/maintorrenttab.cpp:208
+#: src/maintorrenttab.cpp:189
 msgid "Status: connected"
 msgstr "Statut: conectat"
 
-#: src/maintorrenttab.cpp:212
+#: src/maintorrenttab.cpp:193
 msgid "Status: throttled or paused (ingame)"
 msgstr ""
 
-#: src/maintorrenttab.cpp:216
+#: src/maintorrenttab.cpp:197
 msgid "Status: unknown"
 msgstr "Statut: necunoscut"
 
-#: src/maintorrenttab.cpp:222
+#: src/maintorrenttab.cpp:203
 #, c-format
 msgid "Total Outgoing: %.2f KB/s"
 msgstr "Total Ieşire: %.2f KB/s"
 
-#: src/maintorrenttab.cpp:223
+#: src/maintorrenttab.cpp:204
 #, c-format
 msgid "Total Incoming: %.2f KB/s"
 msgstr "Total Intrare: %.2f KB/s"
 
-#: src/mainwindow.cpp:114
+#: src/mainwindow.cpp:110
 msgid "SpringLobby"
 msgstr "SpringLobby"
 
-#: src/mainwindow.cpp:124
+#: src/mainwindow.cpp:120
 msgid "&Connect..."
 msgstr "&Conectare..."
 
-#: src/mainwindow.cpp:125
+#: src/mainwindow.cpp:121
 msgid "&Disconnect"
 msgstr "&Deconectare"
 
-#: src/mainwindow.cpp:128
+#: src/mainwindow.cpp:123
 #, fuzzy
 msgid "&Save options"
 msgstr "Opţiuni UI"
 
-#: src/mainwindow.cpp:131
+#: src/mainwindow.cpp:125
 msgid "&Quit"
 msgstr "&Termină"
 
-#: src/mainwindow.cpp:145
+#: src/mainwindow.cpp:140
 msgid "&Join channel..."
 msgstr "&Intrare pe canal..."
 
-#: src/mainwindow.cpp:146
+#: src/mainwindow.cpp:141
 #, fuzzy
 msgid "Channel &list"
 msgstr "Informaţii canal"
 
-#: src/mainwindow.cpp:147
+#: src/mainwindow.cpp:142
 msgid "Open private &chat..."
 msgstr "Deschide chat &privat"
 
-#: src/mainwindow.cpp:148
+#: src/mainwindow.cpp:143
 msgid "&Autojoin channels..."
 msgstr ""
 
-#: src/mainwindow.cpp:149
-msgid "&View screenshots"
-msgstr ""
-
-#: src/mainwindow.cpp:151
+#: src/mainwindow.cpp:145
 msgid "&Reload maps/mods"
 msgstr "&Reîncarcă hărţi/mod-uri"
 
-#: src/mainwindow.cpp:157
+#: src/mainwindow.cpp:151
 msgid "Check for new Version"
 msgstr "Verifică pentru Versiune nouă"
 
-#: src/mainwindow.cpp:158
+#: src/mainwindow.cpp:152
 msgid "SpringSettings"
 msgstr "SpringSettings"
 
-#: src/mainwindow.cpp:162
+#: src/mainwindow.cpp:156
 msgid "&About"
 msgstr "&Despre"
 
-#: src/mainwindow.cpp:163
+#: src/mainwindow.cpp:157
 #, fuzzy
 msgid "&Change language"
 msgstr "Informaţii canal"
 
-#: src/mainwindow.cpp:164
+#: src/mainwindow.cpp:158
 msgid "&Report a bug..."
 msgstr "&Raportează o problemă..."
 
-#: src/mainwindow.cpp:165
+#: src/mainwindow.cpp:159
 msgid "&Documentation"
 msgstr "&Documentare"
 
-#: src/mainwindow.cpp:168
+#: src/mainwindow.cpp:162
 msgid "&File"
 msgstr "&Fişier"
 
-#: src/mainwindow.cpp:173
+#: src/mainwindow.cpp:167
 msgid "&Tools"
 msgstr "&Unelte"
 
-#: src/mainwindow.cpp:174
+#: src/mainwindow.cpp:168
 msgid "&Help"
 msgstr "&Ajutor"
 
-#: src/mainwindow.cpp:420
+#: src/mainwindow.cpp:207
+msgid "Multiplayer"
+msgstr ""
+
+#: src/mainwindow.cpp:208
+msgid "Singleplayer"
+msgstr ""
+
+#: src/mainwindow.cpp:210
+#, fuzzy
+msgid "Replays"
+msgstr "Întotdeauna"
+
+#: src/mainwindow.cpp:212
+#, fuzzy
+msgid "Downloads"
+msgstr "Descarcă"
+
+#: src/mainwindow.cpp:388
 msgid "You need to be connected to server to view channel list"
 msgstr ""
 
-#: src/mainwindow.cpp:420
+#: src/mainwindow.cpp:388
 #, fuzzy
 msgid "Not connected"
 msgstr "Statut: conectat"
 
-#: src/mainwindow.cpp:434
+#: src/mainwindow.cpp:402
 msgid "Join channel..."
 msgstr "Intră pe canal..."
 
-#: src/mainwindow.cpp:434
+#: src/mainwindow.cpp:402
 msgid "Name of channel to join"
 msgstr "Numele canalului"
 
-#: src/mainwindow.cpp:446
+#: src/mainwindow.cpp:414
 msgid "Open Private Chat..."
 msgstr "Deschide chat privat..."
 
-#: src/mainwindow.cpp:446
+#: src/mainwindow.cpp:414
 msgid "Name of user"
 msgstr "Nume de utilizator"
 
-#: src/mainwindow.cpp:460
+#: src/mainwindow.cpp:428
 msgid "SpringLobby is a cross-plattform lobby client for the RTS Spring engine"
 msgstr ""
 "SpringLobby este un client independent de platformă pentru motorul RTS "
 "Spring."
 
-#: src/mainwindow.cpp:515
-msgid "There were no screenshots found in your spring data directory."
-msgstr ""
-
-#: src/mainwindow.cpp:515
-#, fuzzy
-msgid "No files found"
-msgstr "Nici o hartă găsită"
-
-#: src/mainwindow.cpp:547
+#: src/mainwindow.cpp:510
 msgid "Manually &Start Torrent System"
 msgstr "Porneşte manual sistemul de torente"
 
-#: src/mainwindow.cpp:551
+#: src/mainwindow.cpp:514
 msgid "Manually &Stop Torrent System"
 msgstr "Opreşte manual sistemul de torente"
 
-#: src/mainwindow.cpp:609
+#: src/mainwindow.cpp:580
 msgid "You need to restart SpringLobby for the language change to take effect."
 msgstr ""
 
-#: src/mainwindow.cpp:610
+#: src/mainwindow.cpp:581
 msgid "Restart required"
 msgstr ""
 
-#: src/mainwindow.cpp:632 src/mainwindow.cpp:640 src/mainwindow.cpp:649
+#: src/mainwindow.cpp:604 src/mainwindow.cpp:614 src/mainwindow.cpp:625
 msgid "Layout manager"
 msgstr ""
 
-#: src/mainwindow.cpp:632
+#: src/mainwindow.cpp:604
 msgid "Enter a profile name"
 msgstr ""
 
-#: src/mainwindow.cpp:640
+#: src/mainwindow.cpp:614
 msgid "Which profile fo you want to load?"
 msgstr ""
 
-#: src/mainwindow.cpp:649
+#: src/mainwindow.cpp:625
 #, fuzzy
 msgid "Which profile do you want to be default?"
 msgstr "Ce cont de utilizator doreşti să ştergi în această zi minunată?"
 
-#: src/mainwindow.h:173
-msgid "Multiplayer"
-msgstr ""
-
-#: src/mainwindow.h:174
-msgid "Singleplayer"
-msgstr ""
-
-#: src/mainwindow.h:175
-#, fuzzy
-msgid "Savegames"
-msgstr "Salvează..."
-
-#: src/mainwindow.h:176
-#, fuzzy
-msgid "Replays"
-msgstr "Întotdeauna"
-
-#: src/mainwindow.h:178
-#, fuzzy
-msgid "Downloads"
-msgstr "Descarcă"
-
-#: src/mapctrl.cpp:587
+#: src/mapctrl.cpp:580
 #, c-format
 msgid "Metal: %.1f%%"
 msgstr ""
 
-#: src/mapctrl.cpp:692 src/mapctrl.cpp:693
+#: src/mapctrl.cpp:678 src/mapctrl.cpp:679
 msgid "Refresh"
 msgstr "Reincarcă"
 
-#: src/mapctrl.cpp:694 src/mapctrl.cpp:695 src/widgets/infopanel.cpp:91
+#: src/mapctrl.cpp:680 src/mapctrl.cpp:681
 msgid "Download"
 msgstr "Descarcă"
 
-#: src/mapctrl.cpp:895
+#: src/mapctrl.cpp:880
 msgid "side:"
 msgstr "parte:"
 
-#: src/mapctrl.cpp:908
+#: src/mapctrl.cpp:910
 #, c-format
 msgid "ally:   %d"
 msgstr "aliat: %d"
 
-#: src/mapctrl.cpp:919
+#: src/mapctrl.cpp:921
 #, c-format
 msgid "bonus: %d%%"
 msgstr "bonus: %d%%"
 
-#: src/mapselectdialog.cpp:67
-msgid "Select map (click and drag to scroll)"
-msgstr ""
-
-#: src/mapselectdialog.cpp:70
-msgid "Vertical sort key"
-msgstr ""
-
-#: src/mapselectdialog.cpp:76
-msgid "Horizontal sort key"
-msgstr ""
-
-#: src/mapselectdialog.cpp:82
-#, fuzzy
-msgid "Show"
-msgstr "Arată totul"
-
-#: src/mapselectdialog.cpp:83
-msgid "All maps"
-msgstr ""
-
-#: src/mapselectdialog.cpp:84
-msgid "Shows all available maps"
-msgstr ""
-
-#: src/mapselectdialog.cpp:86
-msgid "Popular maps"
-msgstr ""
-
-#: src/mapselectdialog.cpp:87
-msgid ""
-"Shows only maps which are currently being player on the server. You must be "
-"online to use this."
-msgstr ""
-
-#: src/mapselectdialog.cpp:89
-msgid "Recently played maps"
-msgstr ""
-
-#: src/mapselectdialog.cpp:91
-msgid "Shows only maps you played recently. (Based on your replays.)"
-msgstr ""
-
-#: src/mapselectdialog.cpp:94
-#, fuzzy
-msgid "Filter"
-msgstr "Fişier"
-
-#: src/mapselectdialog.cpp:96
-msgid "Shows only maps which contain this text in their name or description."
-msgstr ""
-
-#: src/mapselectdialog.cpp:99
-#, fuzzy
-msgid "Map details"
-msgstr "Maxim de metal"
-
-#: src/mapselectdialog.cpp:162
-#, fuzzy
-msgid "Start positions"
-msgstr "Poziţii de început"
-
-#: src/mapselectdialog.cpp:265
-#, fuzzy
-msgid "Minimum wind"
-msgstr "Rang minim necesar"
-
-#: src/mapselectdialog.cpp:266
-msgid "Maximum wind"
-msgstr ""
-
-#: src/mapselectdialog.cpp:267
-#, fuzzy
-msgid "Average wind"
-msgstr "Mediu"
-
-#: src/mapselectdialog.cpp:268
-msgid "Size (map area)"
-msgstr ""
-
-#: src/mapselectdialog.cpp:269
-#, fuzzy
-msgid "Aspect ratio"
-msgstr "Spectator"
-
-#: src/mapselectdialog.cpp:270
-#, fuzzy
-msgid "Number of start positions"
-msgstr "Poziţii de început"
-
-#: src/mmoptionswrapper.cpp:116
+#: src/mmoptionswrapper.cpp:102
 msgid "Start Position Type"
 msgstr "Tipul poziţiei de început"
 
-#: src/mmoptionswrapper.cpp:116
+#: src/mmoptionswrapper.cpp:102
 msgid ""
 "How players will select where to be spawned in the map\n"
 "0: fixed map positions\n"
@@ -3918,34 +3405,29 @@ msgstr ""
 "2: alegere în joc\n"
 "3: alegere în lobby înaintea începerii"
 
-#: src/mmoptionswrapper.cpp:119
+#: src/mmoptionswrapper.cpp:105
 #, fuzzy
 msgid "Chose in game"
 msgstr "Aleasă în joc"
 
-#: src/mmoptionswrapper.cpp:126
+#: src/mmoptionswrapper.cpp:112
 #, fuzzy
 msgid "List of restricted units"
 msgstr "Unităţi restricţionate"
 
-#: src/mmoptionswrapper.cpp:127
+#: src/mmoptionswrapper.cpp:114
 msgid "Map name"
 msgstr ""
 
-#: src/mmoptionwindows.cpp:38
-#, fuzzy
-msgid "Change option"
-msgstr "Opţiuni UI"
-
-#: src/nicklistctrl.cpp:58
+#: src/nicklistctrl.cpp:49
 msgid "s"
 msgstr "s"
 
-#: src/nicklistctrl.cpp:59
+#: src/nicklistctrl.cpp:52
 msgid "c"
 msgstr "ţ"
 
-#: src/nicklistctrl.cpp:60
+#: src/nicklistctrl.cpp:55
 msgid "r"
 msgstr "r"
 
@@ -3961,78 +3443,54 @@ msgstr "Orice fişier (*)|*"
 msgid "App Bundles (*.app)|*.app|Any File (*.*)|*.*"
 msgstr "App Bundles (*.app)|*.app|Orice fişier (*.*)|*.*"
 
-#: src/playback/playbackfilter.cpp:60
+#: src/replay/replayfilter.cpp:63
 #, fuzzy
 msgid "Filter settings"
 msgstr "Salvare setări"
 
-#: src/playback/playbackfilter.cpp:164
+#: src/replay/replayfilter.cpp:167
 #, fuzzy
 msgid "Filesize in KB:"
 msgstr "Mărime fişier (MB)"
 
-#: src/playback/playbackfilter.cpp:190
+#: src/replay/replayfilter.cpp:193
 #, fuzzy
 msgid "Duration (hh:mm:ss):"
 msgstr "Durata:"
 
-#: src/playback/playbacklistctrl.cpp:41
-#, fuzzy
-msgid "Date"
-msgstr "Selectaţi"
-
-#: src/playback/playbacklistctrl.cpp:41
-msgid "Date of recording"
-msgstr ""
-
-#: src/playback/playbacklistctrl.cpp:42
-#, fuzzy
-msgid "Modname"
-msgstr "Mod"
-
-#: src/playback/playbacklistctrl.cpp:43
-#, fuzzy
-msgid "Mapname"
-msgstr "Panama"
-
-#: src/playback/playbacklistctrl.cpp:44
+#: src/replay/replaylistctrl.cpp:57
 #, fuzzy
 msgid "Players"
 msgstr "Jucători:"
 
-#: src/playback/playbacklistctrl.cpp:45
+#: src/replay/replaylistctrl.cpp:61
 #, fuzzy
 msgid "Duration"
 msgstr "Durata:"
 
-#: src/playback/playbacklistctrl.cpp:46
+#: src/replay/replaylistctrl.cpp:65
 #, fuzzy
 msgid "Spring Version"
 msgstr "Eroare Spring"
 
-#: src/playback/playbacklistctrl.cpp:47
+#: src/replay/replaylistctrl.cpp:69
 #, fuzzy
 msgid "Filesize"
 msgstr "Mărime fişier (MB)"
 
-#: src/playback/playbacklistctrl.cpp:47
-#, fuzzy
-msgid "Filesize in kilobyte"
-msgstr "Mărime fişier (MB)"
-
-#: src/playback/playbacklistctrl.cpp:48 src/settings++/frame.cpp:228
+#: src/replay/replaylistctrl.cpp:73 src/settings++/frame.cpp:228
 msgid "File"
 msgstr "Fişier"
 
-#: src/playback/playbacktab.cpp:138
+#: src/replay/replaytab.cpp:141
 msgid "Watch"
 msgstr ""
 
-#: src/playback/playbacktab.cpp:144
+#: src/replay/replaytab.cpp:147
 msgid "Reload list"
 msgstr ""
 
-#: src/playback/playbacktab.cpp:291
+#: src/replay/replaytab.cpp:307
 #, fuzzy
 msgid "Couldn't get your spring versions from any unitsync library."
 msgstr ""
@@ -4040,52 +3498,38 @@ msgstr ""
 "\n"
 "Jocul online va fi dezactivat."
 
-#: src/playback/playbacktab.cpp:312
+#: src/replay/replaytab.cpp:326
 #, c-format
 msgid ""
 "No compatible installed spring version has been found, this replay requires "
 "version: %s\n"
 msgstr ""
 
-#: src/playback/playbacktab.cpp:313 src/ui.cpp:646
+#: src/replay/replaytab.cpp:327 src/ui.cpp:623
 msgid "Your current installed versions are:"
 msgstr ""
 
-#: src/playback/playbacktab.cpp:334
+#: src/replay/replaytab.cpp:347
 msgid ""
 "You need to download the mod before you can watch this replay.\n"
 "\n"
 msgstr ""
 
-#: src/playback/playbacktab.cpp:346
+#: src/replay/replaytab.cpp:356
 msgid ""
-" I couldn't find the map to be able to watch this replay\n"
-"This can be caused by tasclient writing broken map hash value\n"
-"If you're sure you have the map, press no\n"
 "You need to download the map to be able to watch this replay.\n"
 "\n"
 msgstr ""
 
-#: src/playback/playbacktab.cpp:367
-msgid ""
-"I don't think you will be able to watch this replay.\n"
-"Try anyways? (MIGHT CRASH!)"
-msgstr ""
-
-#: src/playback/playbacktab.cpp:367
-#, fuzzy
-msgid "Invalid replay"
-msgstr "Port invalid"
-
-#: src/playback/playbacktab.cpp:384
+#: src/replay/replaytab.cpp:380
 msgid "Could not delete Replay: "
 msgstr ""
 
-#: src/selectusersdialog.cpp:51
+#: src/selectusersdialog.cpp:50
 msgid "Filter names"
 msgstr ""
 
-#: src/selectusersdialog.cpp:56
+#: src/selectusersdialog.cpp:55
 msgid "Enter text filter to filter the online users list"
 msgstr ""
 
@@ -4094,157 +3538,89 @@ msgstr ""
 msgid "Select Users"
 msgstr "Selectaţi"
 
-#: src/serverevents.cpp:126
-#, c-format
-msgid "ping reply took %s ms"
-msgstr ""
-
-#: src/serverevents.cpp:143
+#: src/serverevents.cpp:130
 #, fuzzy
 msgid " is online"
 msgstr " Utilizatorul e deconectat."
 
-#: src/serverevents.cpp:165
+#: src/serverevents.cpp:152
 msgid " is now "
 msgstr ""
 
-#: src/serverevents.cpp:188
+#: src/serverevents.cpp:175
 msgid "OnUserStatus() failed ! (exception)"
 msgstr "OnUserStatus() eşuat ! (excepţie)"
 
-#: src/serverevents.cpp:217
+#: src/serverevents.cpp:189
 #, fuzzy
 msgid " just went offline"
 msgstr " Utilizatorul e deconectat."
 
-#: src/serverevents.cpp:252
+#: src/serverevents.cpp:224
 #, fuzzy
 msgid " opened battle "
 msgstr " a intrat în "
 
-#: src/serverevents.cpp:572
+#: src/serverevents.cpp:536
 msgid "Join channel failed"
 msgstr "Intrare pe canal eşuată"
 
-#: src/serverevents.cpp:572
+#: src/serverevents.cpp:536
 msgid "Could not join channel "
 msgstr "Nu pot intra pe canalul "
 
-#: src/serverevents.cpp:572
+#: src/serverevents.cpp:536
 msgid " because: "
 msgstr " deoarece: "
 
-#: src/serverevents.cpp:791
+#: src/serverevents.cpp:755
 msgid "Server Message"
 msgstr "Mesaj de la Server"
 
-#: src/serverevents.cpp:837
+#: src/serverevents.cpp:801
 #, c-format
 msgid " has ip=%s"
 msgstr " are ip=%s"
 
-#: src/serverevents.cpp:843
+#: src/serverevents.cpp:807
 msgid " does not really support nat traversal"
 msgstr " nu suportă, de fapt, nat traversal"
 
-#: src/serverevents.cpp:856
+#: src/serverevents.cpp:820
 msgid "You were kicked from the battle!"
 msgstr "Ai fost dat afară din luptă!"
 
-#: src/serverevents.cpp:856
+#: src/serverevents.cpp:820
 msgid "Kicked by Host"
 msgstr "Dat afară de către gazdă"
 
-#: src/serverevents.cpp:886
+#: src/serverevents.cpp:850
 msgid "Begin mutelist for "
 msgstr ""
 
-#: src/serverevents.cpp:886
-#, fuzzy, c-format
-msgid "%s mutelist"
+#: src/serverevents.cpp:850
+#, fuzzy
+msgid " mutelist"
 msgstr "Listă de lupte"
 
-#: src/serverevents.cpp:893
+#: src/serverevents.cpp:857
 msgid " indefinite time remaining"
 msgstr ""
 
-#: src/serverevents.cpp:895
+#: src/serverevents.cpp:859
 #, c-format
 msgid " %d minutes remaining"
 msgstr ""
 
-#: src/serverevents.cpp:901
+#: src/serverevents.cpp:865
 msgid "End mutelist for "
 msgstr ""
 
-#: src/serverevents.cpp:934
-#, fuzzy
-msgid "Download update"
-msgstr "Descărcare completă"
-
-#: src/serverevents.cpp:934
-#, c-format
-msgid ""
-"Would you like to download %s ? The file offers the following updates:\n"
-"%s"
-msgstr ""
-
-#: src/serverevents.cpp:940
-msgid ""
-"Download started in the background, please be patient\n"
-"you will be notified on operation completed."
-msgstr ""
-
-#: src/serverevents.cpp:940
-#, fuzzy
-msgid "Download started"
-msgstr "Descărcare completă"
-
-#: src/serverevents.cpp:947
-msgid "You refused a mandatory update, you will be disconnected now."
-msgstr ""
-
-#: src/serverevents.cpp:947
-#, fuzzy
-msgid "Disconnecting"
-msgstr "Deconectează"
-
-#: src/serverevents.cpp:955
-#, fuzzy
-msgid ""
-"There was an error downloading for the latest version.\n"
-"Please update manually from http://springrts.com"
-msgstr ""
-"S-a produs o eroare la verificarea versiunii.\n"
-"Vă rugăm încercaţi din nou mai târziu.\n"
-"Dacă problema persistă, vă rugăm să o raportaţi folosind Ajutor -> Raportare "
-"problemă."
-
-#: src/serverevents.cpp:962
-#, fuzzy
-msgid "Couldn't launch installer. File location is: "
-msgstr "Nu pot lansa browser. URL-ul este: "
-
-#: src/serverevents.cpp:962
-#, fuzzy
-msgid "Couldn't launch installer."
-msgstr "Nu pot lansa browser."
-
-#: src/serverevents.cpp:967
-#, fuzzy
-msgid "Download complete, location is: "
-msgstr "Descărcare completă"
-
-#: src/serverevents.cpp:967
-#, fuzzy
-msgid "Download complete."
-msgstr "Descărcare completă"
-
-#: src/settings++/Defs.hpp:212
+#: src/settings++/Defs.hpp:214
 msgid "Scrollwheel speed"
 msgstr "Viteza rotiţei de scroll"
 
-#: src/settings++/Defs.hpp:213
+#: src/settings++/Defs.hpp:215
 msgid ""
 "Higher values mean faster zoom with mouse wheel.\n"
 "Negative values will invert zoom direction.\n"
@@ -4254,11 +3630,11 @@ msgstr ""
 "Valorile negative vor inversa direcţia zoom-ului.\n"
 "Rezultatele pot depinde de modul camerei!"
 
-#: src/settings++/Defs.hpp:223
+#: src/settings++/Defs.hpp:225
 msgid "Shadow-map size"
 msgstr "Mărimea shadow-map"
 
-#: src/settings++/Defs.hpp:223
+#: src/settings++/Defs.hpp:225
 msgid ""
 "higher value = better looking shadows\n"
 "possible values: 1024, 2048, 4096, 8192"
@@ -4266,56 +3642,52 @@ msgstr ""
 "valori mai mari = umbre care arată mai bine\n"
 "valori posibile: 1024, 2048, 4096, 8192"
 
-#: src/settings++/Defs.hpp:225
+#: src/settings++/Defs.hpp:227
 msgid "Tree view-distance"
 msgstr "Distanţa vederii copacilor"
 
-#: src/settings++/Defs.hpp:225
+#: src/settings++/Defs.hpp:227
 msgid "sets the maximum distance at which trees will still be rendered"
 msgstr "setează distanţa maximă la care pomii vor fi afişaţi"
 
-#: src/settings++/Defs.hpp:226
+#: src/settings++/Defs.hpp:228
 msgid "Terrain detail"
 msgstr "Detaliul reliefului"
 
-#: src/settings++/Defs.hpp:226
+#: src/settings++/Defs.hpp:228
 msgid "higher value = more terrain details"
 msgstr "valoare mai mare = relief mai detaliat"
 
-#: src/settings++/Defs.hpp:227
-#, fuzzy
-msgid "Unit LOD distance"
-msgstr "Distanţa pictogramelor pt. unităţi"
+#: src/settings++/Defs.hpp:229
+msgid "Unit detail"
+msgstr "Detaliile unităţilor"
 
-#: src/settings++/Defs.hpp:227
-#, fuzzy
-msgid "higher value = units will remain detailed even when zooming out"
+#: src/settings++/Defs.hpp:229
+msgid "higher value = more detailed units"
 msgstr "valoare mai mare = unităţi mai detaliate"
 
-#: src/settings++/Defs.hpp:228
+#: src/settings++/Defs.hpp:230
 msgid "Grass detail"
 msgstr "Detaliile vegetaţiei"
 
-#: src/settings++/Defs.hpp:228
+#: src/settings++/Defs.hpp:230
 #, fuzzy
 msgid "higher value = more detailed grass"
 msgstr "valoare mai mare = iarbă mai detaliată"
 
-#: src/settings++/Defs.hpp:229
+#: src/settings++/Defs.hpp:231
 msgid "Ground decals"
 msgstr "Proiecţii pe pământ [decals]"
 
-#: src/settings++/Defs.hpp:229
-msgid ""
-"settings higher than 1 might have unwelcome side-effects / be very resource "
-"hungry"
-msgstr ""
+#: src/settings++/Defs.hpp:231
+msgid "only on/off available at this time"
+msgstr "numai pornit/oprit disponibil acum"
 
-#: src/settings++/Defs.hpp:230
+#: src/settings++/Defs.hpp:232
 msgid "Unit icon distance"
 msgstr "Distanţa pictogramelor pt. unităţi"
 
-#: src/settings++/Defs.hpp:230
+#: src/settings++/Defs.hpp:232
 msgid ""
 "determines at which range units are still fully rendered\n"
 "higher value = greater range = more units rendered at the same time"
@@ -4323,69 +3695,64 @@ msgstr ""
 "hotărăşte la ce distanţă unităţile sunt afişate complet; nu pictograme\n"
 "valoare mai mare = distanţă mai mare = unităţi mai multe afişate"
 
-#: src/settings++/Defs.hpp:232
+#: src/settings++/Defs.hpp:234
 msgid "Max simultaneous particles"
 msgstr "Maxim de particule simultane"
 
-#: src/settings++/Defs.hpp:232 src/settings++/Defs.hpp:233
+#: src/settings++/Defs.hpp:234
 msgid "limits how many particles are displayed at the same time"
 msgstr "limitează câte particule sunt afişate în acelaşi timp"
 
-#: src/settings++/Defs.hpp:233
-#, fuzzy
-msgid "Max nano simultaneous particles"
-msgstr "Maxim de particule simultane"
-
-#: src/settings++/Defs.hpp:241
+#: src/settings++/Defs.hpp:242
 msgid "Run full-screen"
 msgstr "Rulează full-screen"
 
-#: src/settings++/Defs.hpp:241
+#: src/settings++/Defs.hpp:242
 msgid "run fullscreen or in a window?"
 msgstr "rulează pe tot ecranul sau într-o fereastră?"
 
-#: src/settings++/Defs.hpp:242
+#: src/settings++/Defs.hpp:243
 msgid "Dual-screen mode"
 msgstr "Mod dual-screen"
 
-#: src/settings++/Defs.hpp:242
+#: src/settings++/Defs.hpp:243
 msgid "if you have two monitors you can use both"
 msgstr "dacă aveţi două monitoare le puteţi folosi pe ambele"
 
-#: src/settings++/Defs.hpp:243
+#: src/settings++/Defs.hpp:244
 msgid "Enable v-sync"
 msgstr "Activează v-sync"
 
-#: src/settings++/Defs.hpp:243
+#: src/settings++/Defs.hpp:244
 msgid "V-Sync on/off"
 msgstr "Sincronizare verticală pornit/oprit"
 
-#: src/settings++/Defs.hpp:249
+#: src/settings++/Defs.hpp:250
 msgid "16-bit Z-buffer"
 msgstr "16-bit Z-buffer"
 
-#: src/settings++/Defs.hpp:249 src/settings++/Defs.hpp:250
+#: src/settings++/Defs.hpp:250 src/settings++/Defs.hpp:251
 msgid "placeholder"
 msgstr "umplutură"
 
-#: src/settings++/Defs.hpp:250
+#: src/settings++/Defs.hpp:251
 msgid "24-bit Z-buffer"
 msgstr "24-bit Z-buffer"
 
-#: src/settings++/Defs.hpp:257
+#: src/settings++/Defs.hpp:258
 #, fuzzy
 msgid "Full-scene anti-aliasing samples"
 msgstr "Full-screen anti-aliasing samples"
 
-#: src/settings++/Defs.hpp:257
+#: src/settings++/Defs.hpp:258
 msgid "how much anti-aliasing should be applied"
 msgstr "cât de mult anti-aliasing să fie folosit"
 
-#: src/settings++/Defs.hpp:269
+#: src/settings++/Defs.hpp:270
 msgid "Maximum simultaneous sounds"
 msgstr "Maxim de sunete simultane"
 
-#: src/settings++/Defs.hpp:269
+#: src/settings++/Defs.hpp:270
 msgid ""
 "maximum different sounds played at the same time\n"
 "Set this to zero to disable sound completely."
@@ -4393,68 +3760,35 @@ msgstr ""
 "numărul maxim de sunete care să fie redate în acelaşi timp\n"
 "Setaţi ca zero pentru a dezactiva sunetul de tot."
 
-#: src/settings++/Defs.hpp:271
-#, fuzzy
-msgid "Master sound volume"
-msgstr "volumul de sunet total"
-
-#: src/settings++/Defs.hpp:271
-#, fuzzy
-msgid "master sound volume"
-msgstr "volumul de sunet total"
+#: src/settings++/Defs.hpp:272
+msgid "Global sound volume"
+msgstr "Volum de sunet global"
 
 #: src/settings++/Defs.hpp:272
-#, fuzzy
-msgid "General sound volume"
+msgid "overall sound volume"
 msgstr "volumul de sunet total"
-
-#: src/settings++/Defs.hpp:272
-#, fuzzy
-msgid "general volume relative to master volume"
-msgstr "volumul cu care unităţile răspund - afectat de volumul global"
 
 #: src/settings++/Defs.hpp:273
 msgid "Unit reply volume"
 msgstr "Volum de sunet de răspuns"
 
 #: src/settings++/Defs.hpp:273
-#, fuzzy
-msgid "reply volume relative to master volume"
+msgid "reply volume relative to global volume"
 msgstr "volumul cu care unităţile răspund - afectat de volumul global"
 
-#: src/settings++/Defs.hpp:274
-#, fuzzy
-msgid "Battle volume"
-msgstr "Cameră de luptă"
-
-#: src/settings++/Defs.hpp:274
-#, fuzzy
-msgid "battle volume relative to global volume"
-msgstr "volumul cu care unităţile răspund - afectat de volumul global"
-
-#: src/settings++/Defs.hpp:275
-#, fuzzy
-msgid "User interface volume"
-msgstr "Volum de sunet de răspuns"
-
-#: src/settings++/Defs.hpp:275
-#, fuzzy
-msgid "ui volume relative to global volume"
-msgstr "volumul cu care unităţile răspund - afectat de volumul global"
-
-#: src/settings++/Defs.hpp:282
+#: src/settings++/Defs.hpp:280
 msgid "Shadows (slow)"
 msgstr "Umbre (încet)"
 
-#: src/settings++/Defs.hpp:282
+#: src/settings++/Defs.hpp:280
 msgid "enable shadows?"
 msgstr "activează umbre?"
 
-#: src/settings++/Defs.hpp:283
+#: src/settings++/Defs.hpp:281
 msgid "3D trees"
 msgstr "Copaci 3D"
 
-#: src/settings++/Defs.hpp:283
+#: src/settings++/Defs.hpp:281
 msgid ""
 "want better looking trees?\n"
 "needs Geforce 2/Radeon 8500/Intel 830 or later class graphic card"
@@ -4462,11 +3796,11 @@ msgstr ""
 "doriţi copaci care arată mai bine?\n"
 "necesită placă video Geforce 2/Radeon 8500/Intel 830 sau mai bună"
 
-#: src/settings++/Defs.hpp:285
+#: src/settings++/Defs.hpp:283
 msgid "High-resolution clouds"
 msgstr "Nori cu rezoluţie înaltă"
 
-#: src/settings++/Defs.hpp:285
+#: src/settings++/Defs.hpp:283
 msgid ""
 "want better looking sky?\n"
 "needs Geforce 5/Radeon 9500/Intel 915 or later class graphic card"
@@ -4474,19 +3808,19 @@ msgstr ""
 "doriţi un cer mai frumos?\n"
 "necesită placă video Geforce 5/Radeon 9500/Intel 915 sau mai bună"
 
-#: src/settings++/Defs.hpp:287
+#: src/settings++/Defs.hpp:285
 msgid "Dynamic clouds (slow)"
 msgstr "Nori dinamici (încet)"
 
-#: src/settings++/Defs.hpp:287
+#: src/settings++/Defs.hpp:285
 msgid "want moving clouds in the sky?"
 msgstr "doriţi nori care se mişcă?"
 
-#: src/settings++/Defs.hpp:288
+#: src/settings++/Defs.hpp:286
 msgid "Reflective units"
 msgstr "Reflexii pe unităţi"
 
-#: src/settings++/Defs.hpp:288
+#: src/settings++/Defs.hpp:286
 msgid ""
 "shiny units?\n"
 "needs Geforce 5/Radeon 9500/Intel 915 or later class graphic card"
@@ -4494,133 +3828,141 @@ msgstr ""
 "unităţi strălucitoare\n"
 "necesită placă video Geforce 5/Radeon 9500/Intel 915 sau mai bună"
 
-#: src/settings++/Defs.hpp:290
+#: src/settings++/Defs.hpp:288
 msgid "Never use shaders when rendering SM3 maps"
 msgstr "Nu folosi shader-e pentru hărţi SM3"
 
-#: src/settings++/Defs.hpp:290
+#: src/settings++/Defs.hpp:288
 msgid "problems with sm3 maps? enable this"
 msgstr "aveţi probleme cu hărţi SM3? activaţi asta"
 
-#: src/settings++/Defs.hpp:291
+#: src/settings++/Defs.hpp:289
 msgid "Enable LuaShaders support"
 msgstr "Activează suport pentru LuaShaders"
 
-#: src/settings++/Defs.hpp:291
+#: src/settings++/Defs.hpp:289
 msgid "makes for some cool effects"
 msgstr "face nişte efecte ca lumea"
 
-#: src/settings++/Defs.hpp:292
+#: src/settings++/Defs.hpp:290
 msgid "Use Pixelbuffer objects"
 msgstr ""
 
-#: src/settings++/Defs.hpp:292
+#: src/settings++/Defs.hpp:290
 msgid ""
 "If supported, it speeds up the dynamic loading of terrain textures -> "
 "smoother camera movement"
 msgstr ""
 
-#: src/settings++/Defs.hpp:293
+#: src/settings++/Defs.hpp:291
 msgid "Compress textures"
 msgstr ""
 
-#: src/settings++/Defs.hpp:293
+#: src/settings++/Defs.hpp:291
 msgid ""
 "Runtime texture compression. (Ideal for graphic cards with small amount of "
 "vram)"
 msgstr ""
 
-#: src/settings++/Defs.hpp:294
+#: src/settings++/Defs.hpp:292
 msgid "High-resolution LOS textures"
 msgstr "Texturi LOS de rezoluţie înaltă"
 
-#: src/settings++/Defs.hpp:294
+#: src/settings++/Defs.hpp:292
 msgid "smoother Line of Sight overlays"
 msgstr "Line of Sight (câmp vizual) mai clar"
 
-#: src/settings++/Defs.hpp:295
+#: src/settings++/Defs.hpp:293
 msgid "Draw smooth points"
 msgstr "Puncte fine"
 
-#: src/settings++/Defs.hpp:295
+#: src/settings++/Defs.hpp:293
 msgid "should points be anti-aliased"
 msgstr "aplicare anti-aliasing pe puncte?"
 
-#: src/settings++/Defs.hpp:296
+#: src/settings++/Defs.hpp:294
 msgid "Draw smooth lines"
 msgstr "Linii fine"
 
-#: src/settings++/Defs.hpp:296
+#: src/settings++/Defs.hpp:294
 msgid "should lines be anti-aliased"
 msgstr "aplicare anti-aliasing pe linii?"
 
-#: src/settings++/Defs.hpp:303
+#: src/settings++/Defs.hpp:300
+msgid "Enable LuaUI widgets"
+msgstr "Activează unelte LuaUI"
+
+#: src/settings++/Defs.hpp:300
+msgid "mark to be able to use"
+msgstr "activează pentru a le putea folosi"
+
+#: src/settings++/Defs.hpp:302
 msgid "Issue commands on mini-map"
 msgstr "Arată comenzi pe mini-hartă"
 
-#: src/settings++/Defs.hpp:303
+#: src/settings++/Defs.hpp:302
 msgid "Issue orders on the mini-map like you would "
 msgstr "Daţi ordine pe mini-hartă cum aţi face "
 
-#: src/settings++/Defs.hpp:304
+#: src/settings++/Defs.hpp:303
 msgid "Show commands on mini-map"
 msgstr "Arată comenzi pe mini-hartă"
 
-#: src/settings++/Defs.hpp:304 src/settings++/Defs.hpp:305
-#: src/settings++/Defs.hpp:306
+#: src/settings++/Defs.hpp:303 src/settings++/Defs.hpp:304
+#: src/settings++/Defs.hpp:305
 msgid "default value is \"on\""
 msgstr "valoarea implicită e \"pornit\""
 
-#: src/settings++/Defs.hpp:305
+#: src/settings++/Defs.hpp:304
 msgid "Draw icons on mini-map"
 msgstr "Arată pictograme pe mini-hartă"
 
-#: src/settings++/Defs.hpp:306
+#: src/settings++/Defs.hpp:305
 msgid "Draw markers on mini-map"
 msgstr "Arată marcaje pe mini-hartă"
 
-#: src/settings++/Defs.hpp:307
+#: src/settings++/Defs.hpp:306
 msgid "Mini-map on left (single screen)"
 msgstr "Mini-hartă pe stânga (un singur ecran)"
 
-#: src/settings++/Defs.hpp:307 src/settings++/Defs.hpp:308
+#: src/settings++/Defs.hpp:306 src/settings++/Defs.hpp:307
 msgid "left is the default"
 msgstr "pe stânga e implicit"
 
-#: src/settings++/Defs.hpp:308
+#: src/settings++/Defs.hpp:307
 msgid "Mini-map on left (dual screen)"
 msgstr "Mini-hartă pe stânga (dual screen)"
 
-#: src/settings++/Defs.hpp:309
+#: src/settings++/Defs.hpp:308
 msgid "Simplified mini-map colors"
 msgstr "Culori de pe mini-hartă simplificate"
 
-#: src/settings++/Defs.hpp:309
+#: src/settings++/Defs.hpp:308
 msgid "Use less colors"
 msgstr "Foloseşte mai puţine culori"
 
-#: src/settings++/Defs.hpp:311
+#: src/settings++/Defs.hpp:310
 msgid "Team-colored nanospray"
 msgstr "Nanospray colorat ca echipele"
 
-#: src/settings++/Defs.hpp:312
+#: src/settings++/Defs.hpp:311
 msgid "Should nano particels be the color of your team?"
 msgstr "Să fie nano-particulele de culoarea echipelor?"
 
-#: src/settings++/Defs.hpp:313
+#: src/settings++/Defs.hpp:312
 msgid "Colorized elevation map"
 msgstr "Hartă de înălţime colorizată"
 
-#: src/settings++/Defs.hpp:313
+#: src/settings++/Defs.hpp:312
 msgid "makes differences in height clearer"
 msgstr "face diferenţele în înălţime mai evidente"
 
-#: src/settings++/Defs.hpp:315
+#: src/settings++/Defs.hpp:314
 msgid "Show in-game clock"
 msgstr "Arată ceas în joc"
 
-#: src/settings++/Defs.hpp:316 src/settings++/Defs.hpp:318
-#: src/settings++/Defs.hpp:320
+#: src/settings++/Defs.hpp:315 src/settings++/Defs.hpp:317
+#: src/settings++/Defs.hpp:319
 msgid ""
 "requires \"Enable LuaWidgets\" to be set.\n"
 "Will be displayed in the bottom right corner"
@@ -4628,27 +3970,27 @@ msgstr ""
 "necesită LuaWidgets (unelte Lua).\n"
 "Va fi arătat în colţul din dreapta-jos."
 
-#: src/settings++/Defs.hpp:317
+#: src/settings++/Defs.hpp:316
 msgid "Show in-game player information"
 msgstr "Arată informaţii despre jucători în joc"
 
-#: src/settings++/Defs.hpp:319
+#: src/settings++/Defs.hpp:318
 msgid "Show in-game framerate"
 msgstr "Arată numărul de cadre/secundă (FPS) în joc"
 
-#: src/settings++/Defs.hpp:322
+#: src/settings++/Defs.hpp:321
 msgid "Fix rendering on alt-tab"
 msgstr "Reglează afişajul la alt-tab"
 
-#: src/settings++/Defs.hpp:322
+#: src/settings++/Defs.hpp:321
 msgid "Do not change if not needed"
 msgstr "Nu schimbaţi dacă nu este necesar."
 
-#: src/settings++/Defs.hpp:323
+#: src/settings++/Defs.hpp:322
 msgid "Disallow helper AI's"
 msgstr "Interzi ajutoare AI"
 
-#: src/settings++/Defs.hpp:323
+#: src/settings++/Defs.hpp:322
 msgid ""
 "Disables Economy AI, etc.\n"
 "If enabled might screw with LuaUi."
@@ -4656,59 +3998,59 @@ msgstr ""
 "Dezactivează Economy AI etc,\n"
 "Poate afecta LuaUI."
 
-#: src/settings++/Defs.hpp:325
+#: src/settings++/Defs.hpp:324
 msgid "Enable scroll on window edge"
 msgstr "Activeză deplasarea la margine"
 
-#: src/settings++/Defs.hpp:325
+#: src/settings++/Defs.hpp:324
 msgid "Scroll the screen when mouse reaches the screen's edge."
 msgstr "Mută ecranul dacă săgeata se mută pe margine."
 
-#: src/settings++/Defs.hpp:326
+#: src/settings++/Defs.hpp:325
 msgid "Invert Mouse"
 msgstr "Inversează Mouse"
 
-#: src/settings++/Defs.hpp:326
+#: src/settings++/Defs.hpp:325
 msgid "Inverts the Mouse Y-axis in FPS mode"
 msgstr "Inversează axa Y a mouse-ului în modul FPS"
 
-#: src/settings++/Defs.hpp:327
+#: src/settings++/Defs.hpp:326
 msgid "Use Hardware Cursor"
 msgstr ""
 
-#: src/settings++/Defs.hpp:327
+#: src/settings++/Defs.hpp:326
 msgid "Use native OS mouse cursor (hardware accelerated)"
 msgstr ""
 
-#: src/settings++/Defs.hpp:335
+#: src/settings++/Defs.hpp:334
 msgid "Overhead camera"
 msgstr "Cameră de deasupra"
 
-#: src/settings++/Defs.hpp:335 src/settings++/Defs.hpp:336
-#: src/settings++/Defs.hpp:337 src/settings++/Defs.hpp:338
-#: src/settings++/Defs.hpp:339
+#: src/settings++/Defs.hpp:334 src/settings++/Defs.hpp:335
+#: src/settings++/Defs.hpp:336 src/settings++/Defs.hpp:337
+#: src/settings++/Defs.hpp:338
 msgid "set the scroll speed (mouse + keyboard) for this mode"
 msgstr "setează viteza de mutare (mouse şi tastatură) pentru acest mod"
 
-#: src/settings++/Defs.hpp:336
+#: src/settings++/Defs.hpp:335
 msgid "Rotatable overhead camera"
 msgstr "Cameră de deasupra rotativă"
 
-#: src/settings++/Defs.hpp:337
+#: src/settings++/Defs.hpp:336
 msgid "Total war camera"
 msgstr "Cameră de gen \"Total War\""
 
-#: src/settings++/Defs.hpp:338
+#: src/settings++/Defs.hpp:337
 msgid "First person camera"
 msgstr "Cameră persoana I (FPS)"
 
-#: src/settings++/Defs.hpp:339 src/settings++/Defs.hpp:398
+#: src/settings++/Defs.hpp:338 src/settings++/Defs.hpp:398
 msgid "Free camera"
 msgstr "Cameră liberă"
 
-#: src/settings++/Defs.hpp:345 src/settings++/Defs.hpp:347
-#: src/settings++/Defs.hpp:349 src/settings++/Defs.hpp:351
-#: src/settings++/Defs.hpp:353
+#: src/settings++/Defs.hpp:344 src/settings++/Defs.hpp:346
+#: src/settings++/Defs.hpp:348 src/settings++/Defs.hpp:350
+#: src/settings++/Defs.hpp:352
 msgid ""
 "Make this the default view when startins Spring.\n"
 "Can be changed ingame."
@@ -4716,21 +4058,29 @@ msgstr ""
 "Fă acesta tipul de cameră implicit în Spring.\n"
 "Poate fi schimbat în joc."
 
-#: src/settings++/Defs.hpp:360
+#: src/settings++/Defs.hpp:359
 msgid "Console verbose level (0=min,10=max)"
 msgstr "Nivel de verbozitate în consolă (0=min, 10=max)"
 
-#: src/settings++/Defs.hpp:360
+#: src/settings++/Defs.hpp:359
 msgid "How much information should be outputted?"
 msgstr "Câtă informaţie să iasă?"
 
-#: src/settings++/Defs.hpp:366
+#: src/settings++/Defs.hpp:365
 msgid "Catch AI exceptions"
 msgstr "Prinde exceptii AI"
 
-#: src/settings++/Defs.hpp:366
+#: src/settings++/Defs.hpp:365
 msgid "disable for AI debugging"
 msgstr "dezactivează pentru depanare AI"
+
+#: src/settings++/Defs.hpp:366
+msgid "Send debug info to console"
+msgstr "Trimite info pt. depanare la consolă"
+
+#: src/settings++/Defs.hpp:366
+msgid "if disabled these will only be logged"
+msgstr "dacă e dezactivat, acestea vor fi trecute numai în jurnal"
 
 #: src/settings++/Defs.hpp:372 src/settings++/Defs.hpp:383
 msgid "Basic"
@@ -5011,31 +4361,31 @@ msgstr "Restaurează TOATE setările la valori implicite?"
 msgid "Hint"
 msgstr "Sugestie"
 
-#: src/settings++/helpmenufunctions.cpp:28
+#: src/settings++/helpmenufunctions.cpp:27
 msgid ""
 "SpringSettings is a graphical frontend to the Settings of the Spring engine"
 msgstr "SpringSettings e o interfaţă grafică pentru setările motorului Spring."
 
-#: src/settings++/helpmenufunctions.cpp:37
+#: src/settings++/helpmenufunctions.cpp:38
 msgid "Kloot"
 msgstr "Kloot"
 
-#: src/settings++/helpmenufunctions.cpp:38
+#: src/settings++/helpmenufunctions.cpp:39
 msgid "The SpringLobby team"
 msgstr "Echipa SpringLobby"
 
-#: src/settings++/helpmenufunctions.cpp:38
+#: src/settings++/helpmenufunctions.cpp:39
 msgid ""
 "thanks for inviting me in, code to re-use, infrastructure and help in general"
 msgstr ""
 "mulţumiri pentru invitaţie, cod pentru refolosit, infrastructură, şi ajutor "
 "în general"
 
-#: src/settings++/helpmenufunctions.cpp:39
+#: src/settings++/helpmenufunctions.cpp:40
 msgid "everyone reporting bugs/suggestions"
 msgstr "toată lumea care a contribuit sugestii / găsit probleme"
 
-#: src/settings++/Main.cpp:94
+#: src/settings++/Main.cpp:95
 msgid ""
 "The application has generated a fatal error and will be terminated\n"
 "Generating a bug report is not possible\n"
@@ -5047,36 +4397,9 @@ msgstr ""
 "\n"
 "vă rugăm să activaţi wxUSE_DEBUGREPORT"
 
-#: src/settings++/Main.cpp:94 src/springlobbyapp.cpp:248
+#: src/settings++/Main.cpp:95 src/springlobbyapp.cpp:341
 msgid "Critical error"
 msgstr "Eroare critică"
-
-#: src/settings++/Main.cpp:102 src/springlobbyapp.cpp:274
-msgid "show this help message"
-msgstr ""
-
-#: src/settings++/Main.cpp:103 src/springlobbyapp.cpp:275
-msgid "don't use the crash handler (useful for debugging)"
-msgstr ""
-
-#: src/settings++/Main.cpp:104 src/springlobbyapp.cpp:276
-msgid "shows application log to the console(if available)"
-msgstr ""
-
-#: src/settings++/Main.cpp:105 src/springlobbyapp.cpp:277
-msgid "enables application log window"
-msgstr ""
-
-#: src/settings++/Main.cpp:106 src/springlobbyapp.cpp:282
-msgid ""
-"overrides default logging verbosity, can be:\n"
-"                                0: no log\n"
-"                                1: critical errors\n"
-"                                2: errors\n"
-"                                3: warnings (default)\n"
-"                                4: messages\n"
-"                                5: function trace"
-msgstr ""
 
 #: src/settings++/panel_pathoption.cpp:33
 msgid "Path to unitsync shared library"
@@ -5110,12 +4433,11 @@ msgstr "Setări de cale"
 msgid "Choose an unitsync library"
 msgstr "Alegeţi o cale către unitsync"
 
-#: src/settings++/panel_pathoption.cpp:78 src/springoptionstab.cpp:194
-#: src/springoptionstab.cpp:198
+#: src/settings++/panel_pathoption.cpp:76 src/springoptionstab.cpp:173
 msgid "Any File"
 msgstr "Orice fişier"
 
-#: src/settings++/panel_pathoption.cpp:90
+#: src/settings++/panel_pathoption.cpp:88
 msgid ""
 "SpringSettings is unable to load your unitsync library.\n"
 "You might want to take another look at your unitsync setting.\n"
@@ -5127,23 +4449,23 @@ msgstr ""
 "Versiunea dvs. Spring trebuie să fie 0.76 sau mai nouă, altfel \n"
 "va eşua în orice caz."
 
-#: src/settings++/presets.h:44 src/settings++/presets.h:45
+#: src/settings++/presets.h:46 src/settings++/presets.h:47
 msgid "low"
 msgstr "scăzut"
 
-#: src/settings++/presets.h:44 src/settings++/presets.h:45
+#: src/settings++/presets.h:46 src/settings++/presets.h:47
 msgid "medium"
 msgstr "mediu"
 
-#: src/settings++/presets.h:44 src/settings++/presets.h:45
+#: src/settings++/presets.h:46 src/settings++/presets.h:47
 msgid "high"
 msgstr "ridicat"
 
-#: src/settings++/presets.h:45
+#: src/settings++/presets.h:47
 msgid "very low"
 msgstr "foarte scăzut"
 
-#: src/settings++/presets.h:45
+#: src/settings++/presets.h:47
 msgid "very high"
 msgstr "foarte ridicat"
 
@@ -5163,25 +4485,31 @@ msgstr "Nu pot lansa browser."
 msgid "Could not access your settings.\n"
 msgstr "Nu pot accesa setările.\n"
 
-#: src/settings++/tab_abstract.cpp:567
+#: src/settings++/tab_abstract.cpp:555
 msgid "Could not save, unitsync not properly loaded"
 msgstr "Nu pot salva, unitsync nu este încărcat complet."
 
-#: src/settings++/tab_abstract.cpp:567
+#: src/settings++/tab_abstract.cpp:555
 msgid "SpringSettings Error"
 msgstr "Eroare SpringSettings"
 
-#: src/settings++/tab_audio.cpp:55
+#: src/settings++/tab_audio.cpp:61
 msgid "Audio Options"
 msgstr "Opţiuni audio"
 
-#: src/settings++/tab_debug.cpp:60
+#: src/settings++/tab_debug.cpp:61
 msgid "Debug Options"
 msgstr "Opţiuni depanare"
 
 #: src/settings++/tab_quality_video.cpp:64
 msgid "Screen Resolution"
 msgstr "Rezoluţie ecran"
+
+#: src/settings++/tab_quality_video.cpp:87
+#: src/settings++/tab_quality_video.cpp:88
+#, c-format
+msgid "%d"
+msgstr "%d"
 
 #: src/settings++/tab_quality_video.cpp:160
 msgid ""
@@ -5313,12 +4641,7 @@ msgstr "Alte opţiuni interfaţă"
 msgid "Zoom"
 msgstr "Zoom"
 
-#: src/singleplayerbattle.cpp:19
-#, fuzzy
-msgid "Player"
-msgstr "Jucător:"
-
-#: src/singleplayertab.cpp:57
+#: src/singleplayertab.cpp:60
 msgid ""
 "You can drag the sun/bot icon around to define start position.\n"
 " Hover over the icon for a popup that lets you change side, ally and bonus."
@@ -5327,33 +4650,33 @@ msgstr ""
 " Treceţi cu mouse-ul peste ea pentru a putea schimba partea, alianţa şi "
 "bonusul."
 
-#: src/singleplayertab.cpp:81
+#: src/singleplayertab.cpp:84
 msgid "Add bot..."
 msgstr "Adaugă bot..."
 
-#: src/singleplayertab.cpp:100
+#: src/singleplayertab.cpp:103
 #, fuzzy
 msgid "Spectate only"
 msgstr "Spectator"
 
-#: src/singleplayertab.cpp:103
+#: src/singleplayertab.cpp:106
 #, fuzzy
 msgid "Random start positions"
 msgstr "Poziţii de început"
 
-#: src/singleplayertab.cpp:143 src/singleplayertab.cpp:167
+#: src/singleplayertab.cpp:146 src/singleplayertab.cpp:167
 msgid "-- Select one --"
 msgstr "-- Alegeţi unul --"
 
-#: src/singleplayertab.cpp:229 src/singleplayertab.cpp:236
+#: src/singleplayertab.cpp:220 src/singleplayertab.cpp:226
 msgid "Gamesetup error"
 msgstr "Eroare la setarea jocului"
 
-#: src/singleplayertab.cpp:236
+#: src/singleplayertab.cpp:226
 msgid "You have to select a map first."
 msgstr "Trebuie să alegeţi întâi o hartă."
 
-#: src/singleplayertab.cpp:243
+#: src/singleplayertab.cpp:233
 msgid ""
 "Continue without adding a bot first?.\n"
 " The game will be over pretty fast.\n"
@@ -5363,19 +4686,23 @@ msgstr ""
 " Jocul se va termina repede.\n"
 " "
 
-#: src/singleplayertab.cpp:244
+#: src/singleplayertab.cpp:234
 msgid "No Bot added"
 msgstr "Nici un bot adăugat"
 
-#: src/singleplayertab.cpp:307
+#: src/singleplayertab.cpp:273
+msgid "Spring only supports up to 16 different teams"
+msgstr ""
+
+#: src/singleplayertab.cpp:298
 msgid "You cannot start a spring instance while another is already running"
 msgstr "Nu puteţi porni altă instanţă de Spring cât timp alta este pornită."
 
-#: src/springlobbyapp.cpp:161
+#: src/springlobbyapp.cpp:216
 msgid "Hi "
 msgstr "Salut, "
 
-#: src/springlobbyapp.cpp:161
+#: src/springlobbyapp.cpp:216
 msgid ""
 ",\n"
 "It looks like this is your first time using SpringLobby. I have guessed a "
@@ -5393,31 +4720,66 @@ msgstr ""
 "Când aţi terminat, conectaţi-vă la un server prin meniul Fişier, şi bucuraţi-"
 "vă de un joc bun de Spring :)"
 
-#: src/springlobbyapp.cpp:161
+#: src/springlobbyapp.cpp:216
 msgid "Welcome"
 msgstr "Bine ați venit"
 
-#: src/springlobbyapp.cpp:165
+#: src/springlobbyapp.cpp:219
 msgid ""
-"By default SpringLobby reports some usage statistics.\n"
+"You're using a wxwidgets library of the 2.6.x series\n"
+" battle filtering, advanced gui and joining/hosting games using nat "
+"traversal\n"
+" won't be available"
+msgstr ""
+"Folosiţi biblioteca wxWidgets versiunea 2.6.x.\n"
+" Filtrarea luptelor, interfaţa avansată şi jocurile cu traversare nat\n"
+" nu vor fi disponibile."
+
+#: src/springlobbyapp.cpp:219
+msgid "Missing Functionality"
+msgstr "Lipseşte funcţionalitate"
+
+#: src/springlobbyapp.cpp:230
+#, fuzzy
+msgid "Default"
+msgstr "implicit"
+
+#: src/springlobbyapp.cpp:248
+#, fuzzy
+msgid ""
+"Do you want to download OTA content?\n"
+"You need this to be able to play TA based mods.\n"
+"You need to own a copy of Total Annihilation do legally download it."
+msgstr ""
+"Doriţi să descărcaţi conţinutul OTA?\n"
+"Acesta este necesar pentru a juca modurile bazate pe TA.\n"
+"Aveţi nevoie de o copie legală a Total Annihilation pentru a-l obţine legal."
+
+#: src/springlobbyapp.cpp:250
+msgid "Download OTA content?"
+msgstr "Descarc conţinut OTA?"
+
+#: src/springlobbyapp.cpp:256
+msgid ""
+"By default SpringLobby reports some statistics.\n"
 "You can disable that on options tab --> General."
 msgstr ""
 
-#: src/springlobbyapp.cpp:165
+#: src/springlobbyapp.cpp:256
 #, fuzzy
 msgid "Notice"
 msgstr "Niciunul"
 
-#: src/springlobbyapp.cpp:181
+#: src/springlobbyapp.cpp:272
 msgid "Should I try to import (some) TASClient settings?\n"
 msgstr ""
 
-#: src/springlobbyapp.cpp:181
+#: src/springlobbyapp.cpp:272
 #, fuzzy
 msgid "Import settings?"
 msgstr "Setări de cale"
 
-#: src/springlobbyapp.cpp:248
+#: src/springlobbyapp.cpp:341
 msgid ""
 "The application has generated a fatal error and will be terminated\n"
 "Generating a bug report is not possible\n"
@@ -5429,92 +4791,43 @@ msgstr ""
 "\n"
 "Vă rugăm obţineţi o bibliotecă wxWidgets care suportă wxUSE_DEBUGREPORT"
 
-#: src/springlobbyapp.cpp:279
-msgid "only run update, quit immediately afterwards"
-msgstr ""
-
-#: src/springlobbyapp.cpp:443 src/springlobbyapp.cpp:444
+#: src/springlobbyapp.cpp:386
 #, fuzzy
-msgid "Ignore chat"
-msgstr "Deschide chat"
+msgid "Create a spring directory in my documents folder"
+msgstr "Creează un folder .spring în directorul home. (recomandat)"
 
-#: src/springlobbyapp.cpp:445 src/springlobbyapp.cpp:446
+#: src/springlobbyapp.cpp:389
 #, fuzzy
-msgid "Battle Autokick"
-msgstr "Listă de lupte"
+msgid "Do nothing"
+msgstr "Hole punching"
 
-#: src/springlobbyapp.cpp:447 src/springlobbyapp.cpp:448
-#: src/springlobbyapp.cpp:449 src/springlobbyapp.cpp:450
-#: src/springlobbyapp.cpp:451
-#, fuzzy
-msgid "Friends"
-msgstr "Găseşte"
+#: src/springlobbyapp.cpp:390
+msgid "Create a folder in a custom path (you'll get prompted for the path)"
+msgstr "Creează un folder într-o altă cale (veţi fi întrebat)"
 
-#: src/springoptionstab.cpp:57
-msgid "Search only in current installed path"
-msgstr ""
+#: src/springlobbyapp.cpp:391
+msgid "I have already a SpringData folder, i want to browse manually for it"
+msgstr "Am deja un folder SpringData, îl voi căuta manual"
 
-#: src/springoptionstab.cpp:65
-msgid "Spring executable"
-msgstr "Executabilul Spring"
-
-#: src/springoptionstab.cpp:67 src/springoptionstab.cpp:78
-msgid "Location"
-msgstr "Loc"
-
-#: src/springoptionstab.cpp:70 src/springoptionstab.cpp:80
-msgid "Find"
-msgstr "Găseşte"
-
-#: src/springoptionstab.cpp:75
-msgid "UnitSync library"
-msgstr "Biblioteca UnitSync"
-
-#: src/springoptionstab.cpp:82
-msgid "Auto Configure"
-msgstr "Configurare automată"
-
-#: src/springoptionstab.cpp:83
-msgid "Change Datadir path"
-msgstr ""
-
-#: src/springoptionstab.cpp:182
-msgid "Choose a Spring executable"
-msgstr "Alegeţi un executabil Spring"
-
-#: src/springoptionstab.cpp:190 src/springoptionstab.cpp:192
-#: src/springoptionstab.cpp:198
-msgid "Library"
-msgstr "Bibliotecă"
-
-#: src/springoptionstab.cpp:195
-msgid "Choose UnitSync library"
-msgstr ""
-
-#: src/springoptionstab.cpp:218
-msgid ""
-"SpringLobby is unable to load your UnitSync library.\n"
-"\n"
-"You might want to take another look at your unitsync setting."
-msgstr ""
-
-#: src/springoptionstab.cpp:279
+#: src/springlobbyapp.cpp:394
 #, fuzzy
 msgid ""
-"Do you want to change spring's datadir location? (select yes only if you "
-"know what you're doing)"
-msgstr "Nu fă nimic (folosiţi în cazul în care ştiţi ce faceţi)"
+"Looks like you don't have yet a user SpringData folder structure\n"
+"What would you like to do? (leave default choice if you don't know what this "
+"is for)"
+msgstr ""
+"Se pare că nu aveţi o structură de foldere SpringData.\n"
+"Ce doriţi să fac? (lăsaţi varianta implicită dacă nu ştiţi pentru ce e asta)"
 
-#: src/springoptionstab.cpp:279
-#, fuzzy
-msgid "Data dir wizard"
+#: src/springlobbyapp.cpp:395
+msgid "First time wizard"
 msgstr "Wizard pentru început"
 
-#: src/springoptionstab.cpp:283
+#: src/springlobbyapp.cpp:406
 msgid "Choose a folder"
 msgstr "Alegeţi un director"
 
-#: src/springoptionstab.cpp:296
+#: src/springlobbyapp.cpp:421
 msgid ""
 "Something went wrong when creating the directories\n"
 "Please create manually the following folders:"
@@ -5522,19 +4835,54 @@ msgstr ""
 "Ceva a eşuat în crearea directoarelor\n"
 "Vă rog creaţi manual următoarele foldere:"
 
-#: src/tasserver.cpp:391 src/ui.cpp:249
+#: src/springoptionstab.cpp:54
+msgid "Spring executable"
+msgstr "Executabilul Spring"
+
+#: src/springoptionstab.cpp:56 src/springoptionstab.cpp:67
+msgid "Location"
+msgstr "Loc"
+
+#: src/springoptionstab.cpp:59 src/springoptionstab.cpp:69
+msgid "Find"
+msgstr "Găseşte"
+
+#: src/springoptionstab.cpp:64
+msgid "UnitSync library"
+msgstr "Biblioteca UnitSync"
+
+#: src/springoptionstab.cpp:71
+msgid "Auto Configure"
+msgstr "Configurare automată"
+
+#: src/springoptionstab.cpp:162
+msgid "Choose a Spring executable"
+msgstr "Alegeţi un executabil Spring"
+
+#: src/springoptionstab.cpp:170
+msgid "Choose UnitSync library"
+msgstr ""
+
+#: src/springoptionstab.cpp:173
+msgid "Library"
+msgstr "Bibliotecă"
+
+#: src/springoptionstab.cpp:189
+msgid ""
+"SpringLobby is unable to load your UnitSync library.\n"
+"\n"
+"You might want to take another look at your unitsync setting."
+msgstr ""
+
+#: src/tasserver.cpp:351
 msgid "Connection timed out"
 msgstr "Timp de conectare expirat"
 
-#: src/tasserver.cpp:404
+#: src/tasserver.cpp:364
 msgid "Unknown answer from server"
 msgstr "Răspuns necunoscut de la server"
 
-#: src/tasserver.cpp:487
-msgid "Timeout assumed, disconnecting"
-msgstr ""
-
-#: src/tasserver.cpp:498
+#: src/tasserver.cpp:465
 msgid ""
 "Failed to punch through NAT, playing this battle might not work for you or "
 "for other players."
@@ -5542,138 +4890,122 @@ msgstr ""
 "Intrarea forţată prin NAT a eşuat, s-ar putea ca această luptă să nu "
 "funcţioneze."
 
-#: src/tdfcontainer.cpp:128
+#: src/tdfcontainer.cpp:126
 msgid "line "
 msgstr ""
 
-#: src/tdfcontainer.cpp:128
+#: src/tdfcontainer.cpp:126
 msgid " , column "
 msgstr ""
 
-#: src/torrentlistctrl.cpp:44
+#: src/torrentlistctrl.cpp:37
 msgid "numcopies"
 msgstr ""
 
-#: src/torrentlistctrl.cpp:48
+#: src/torrentlistctrl.cpp:41
 #, fuzzy
 msgid "MB downloaded"
 msgstr "MB trimişi"
 
-#: src/torrentlistctrl.cpp:52
+#: src/torrentlistctrl.cpp:45
 msgid "MB uploaded"
 msgstr "MB trimişi"
 
-#: src/torrentlistctrl.cpp:56
+#: src/torrentlistctrl.cpp:49
 msgid "status"
 msgstr ""
 
-#: src/torrentlistctrl.cpp:60
+#: src/torrentlistctrl.cpp:53
 #, c-format
 msgid "% complete"
 msgstr "% complet"
 
-#: src/torrentlistctrl.cpp:64
+#: src/torrentlistctrl.cpp:57
 msgid "KB/s up"
 msgstr "KB/s sus"
 
-#: src/torrentlistctrl.cpp:68
+#: src/torrentlistctrl.cpp:61
 msgid "KB/s down"
 msgstr "KB/s jos"
 
-#: src/torrentlistctrl.cpp:72
+#: src/torrentlistctrl.cpp:65
 msgid "ETA (s)"
 msgstr "Timp estimat (s)"
 
-#: src/torrentlistctrl.cpp:76
+#: src/torrentlistctrl.cpp:69
 msgid "Filesize (MB)"
 msgstr "Mărime fişier (MB)"
 
-#: src/torrentoptionspanel.cpp:37
+#: src/torrentoptionspanel.cpp:40
 msgid "Torrent system autostart"
 msgstr "Auto porneşte sistemul Torrent"
 
-#: src/torrentoptionspanel.cpp:39
+#: src/torrentoptionspanel.cpp:42
 msgid "at lobby connection (default)"
 msgstr "la conectarea lobby-ului"
 
-#: src/torrentoptionspanel.cpp:40
+#: src/torrentoptionspanel.cpp:43
 msgid "at lobby start"
 msgstr "la pornirea lobby-ului"
 
-#: src/torrentoptionspanel.cpp:41
+#: src/torrentoptionspanel.cpp:44
 msgid "manual"
 msgstr "manual"
 
-#: src/torrentoptionspanel.cpp:51
+#: src/torrentoptionspanel.cpp:54
 msgid "At game start suspend mode"
 msgstr "La pornirea jocului opreşte modul"
 
-#: src/torrentoptionspanel.cpp:53
+#: src/torrentoptionspanel.cpp:56
 msgid "Pause all torrents"
 msgstr "Pauză toate torrent-ele"
 
-#: src/torrentoptionspanel.cpp:54
+#: src/torrentoptionspanel.cpp:57
 msgid "Throttle speeds:"
 msgstr "Limite de viteză:"
 
-#: src/torrentoptionspanel.cpp:57
+#: src/torrentoptionspanel.cpp:60
 msgid "upload (KB/s)"
 msgstr "upload (KB/s)"
 
-#: src/torrentoptionspanel.cpp:59
+#: src/torrentoptionspanel.cpp:62
 msgid "download (KB/s)"
 msgstr "descărcare (KB/s)"
 
-#: src/torrentoptionspanel.cpp:72
+#: src/torrentoptionspanel.cpp:75
 msgid "Numbers"
 msgstr "Numere"
 
-#: src/torrentoptionspanel.cpp:76
+#: src/torrentoptionspanel.cpp:79
 msgid "maximum upload speed in KB/sec(-1 for infinite)"
 msgstr "viteză maximă upload în KB/s (-1 pt infinit)"
 
-#: src/torrentoptionspanel.cpp:83
+#: src/torrentoptionspanel.cpp:86
 msgid "maximum download speed in KB/sec (-1 for infinite)"
 msgstr "viteză maximă download în KB/s (-1 pt infinit)"
 
-#: src/torrentoptionspanel.cpp:90
+#: src/torrentoptionspanel.cpp:93
 msgid "port used for torrent connections"
 msgstr "port folosit pentru conexiuni torrent"
 
-#: src/torrentoptionspanel.cpp:97
+#: src/torrentoptionspanel.cpp:100
 msgid "maximum number of concurrent connections"
 msgstr "număr maxim de conexiuni simultane"
 
-#: src/torrentwrapper.cpp:443
+#: src/torrentwrapper.cpp:376
 msgid ""
 "Tried all known trackers for torrent system. No connection could be "
 "established"
 msgstr ""
 
-#: src/torrentwrapper.cpp:444
+#: src/torrentwrapper.cpp:377
 #, fuzzy
 msgid "Torrent system failure"
 msgstr "Auto porneşte sistemul Torrent"
 
-#: src/ui.cpp:167
+#: src/ui.cpp:157
 msgid "Server password"
 msgstr "Parola server-ului"
-
-#: src/ui.cpp:244
-msgid ""
-"Registration successful,\n"
-"you should now be able to login."
-msgstr ""
-"Înregistrare cu succes.\n"
-"Ar trebui să vă puteţi conecta."
-
-#: src/ui.cpp:244
-msgid "Registration successful"
-msgstr "Înregistrare cu succes."
-
-#: src/ui.cpp:250
-msgid "Registration failed, the reason was:\n"
-msgstr "Înregistrare nereuşită, motivul a fost:\n"
 
 #: src/ui.cpp:376
 msgid ""
@@ -5725,9 +5057,8 @@ msgid ""
 msgstr "  \"/help [subiect]\" - Arată informaţii despre o comandă."
 
 #: src/ui.cpp:498
-#, fuzzy
 msgid ""
-"  \"/join channel [password] [,channel2 [password2]]\" - Joins a channel."
+"  \"/join channel [password] [,channel2 [password2]]\" - Join a channel."
 msgstr ""
 "  \"/join channel [password] [,channel2 [password2]]\" - Intră într-un canal"
 
@@ -5736,60 +5067,42 @@ msgid "  \"/j\" - Alias to /join."
 msgstr "  \"/j\" - la fel ca \"/join\""
 
 #: src/ui.cpp:500
-#, fuzzy
-msgid "  \"/ingame\" - Shows how much time you have in game."
+msgid "  \"/ingame\" - Show how much time you have in game."
 msgstr "  \"/ingame\" - Arată cât timp aţi petrecut în joc."
 
 #: src/ui.cpp:501
-#, fuzzy
 msgid ""
-"  \"/msg username [text]\" - Sends a private message containing text to "
+"  \"/msg username [text]\" - sends a private message containing text to "
 "username."
 msgstr ""
 "  \"/msg utilizator [text]\" - Trimite un mesaj privat cu textul text către "
 "utilizator."
 
 #: src/ui.cpp:502
-#, fuzzy
-msgid "  \"/part\" - Leaves current channel."
-msgstr "  \"/channels\" - Arată canalele active"
-
-#: src/ui.cpp:503
-#, fuzzy
-msgid "  \"/p\" - Alias to /part."
-msgstr "  \"/j\" - la fel ca \"/join\""
-
-#: src/ui.cpp:504
 msgid "  \"/rename newalias\" - Changes your nickname to newalias."
 msgstr "  \"/rename newalias\" - Vă schimbă pseudonimul în newalias."
 
-#: src/ui.cpp:505
-#, fuzzy
-msgid "  \"/sayver\" - Says what version of springlobby you have in chat."
+#: src/ui.cpp:503
+msgid "  \"/sayver\" - Say what version of springlobby you have in chat."
 msgstr "  \"/sayver\" - Spune ce versiune de SpringLobby aveţi în chat."
 
-#: src/ui.cpp:506
+#: src/ui.cpp:504
 msgid "  \"/testmd5 text\" - Returns md5-b64 hash of given text."
 msgstr "  \"/testmd5 text\" - Dă hash md5-b64 pentru textul dat."
 
-#: src/ui.cpp:507
-#, fuzzy
-msgid "  \"/ver\" - Displays what version of SpringLobby you have."
+#: src/ui.cpp:505
+msgid "  \"/ver\" - Display what version of SpringLobby you have."
 msgstr "  \"/ver\" - Arată ce versiune de SpringLobby aveţi."
 
-#: src/ui.cpp:508
-msgid "  \"/clear\" - Clears all text from current chat panel"
-msgstr ""
-
-#: src/ui.cpp:510
+#: src/ui.cpp:507
 msgid "Chat commands:"
 msgstr "Comenzi chat:"
 
-#: src/ui.cpp:511
+#: src/ui.cpp:508
 msgid "  \"/me action\" - Say IRC style action message."
 msgstr "  \"/me acţiune\" - Spune mesaj de acţiune în stil IRC"
 
-#: src/ui.cpp:513
+#: src/ui.cpp:510
 msgid ""
 "If you are missing any commands, go to #springlobby and try to type it "
 "there :)"
@@ -5797,21 +5110,21 @@ msgstr ""
 "Dacă vă lipsesc unele comenzi, duceţi-vă în #springlobby şi încercaţi "
 "acolo :)"
 
-#: src/ui.cpp:518
+#: src/ui.cpp:515
 msgid "No topics written yet."
 msgstr "Nu au fost scrise subiectele încă."
 
-#: src/ui.cpp:522
+#: src/ui.cpp:519
 msgid "The topic \""
 msgstr "Subiectul \""
 
-#: src/ui.cpp:522
+#: src/ui.cpp:519
 msgid "\" was not found. Type \"/help topics\" only for available topics."
 msgstr ""
 "\" nu a fost găsit. Încercaţi \"/help topics\" numai pentru subiectele "
 "existente."
 
-#: src/ui.cpp:629
+#: src/ui.cpp:606
 #, fuzzy
 msgid ""
 "Couldn't get your spring versions from any unitsync library.\n"
@@ -5822,57 +5135,55 @@ msgstr ""
 "\n"
 "Jocul online va fi dezactivat."
 
-#: src/ui.cpp:645
+#: src/ui.cpp:622
 #, c-format
 msgid ""
 "No compatible installed spring version has been found, this server requires "
 "version: %s\n"
 msgstr ""
 
-#: src/ui.cpp:648
+#: src/ui.cpp:625
 #, fuzzy
 msgid "Online play is currently disabled."
 msgstr "Jocul online va fi dezactivat."
 
-#: src/ui.cpp:681
+#: src/ui.cpp:655
 #, fuzzy
 msgid "Disconnected from server."
 msgstr "Răspuns necunoscut de la server"
 
-#: src/ui.cpp:693
-msgid ""
-"A connection couldn't be established with the server\n"
-"Would you like to try again with the same server?\n"
-"No to switch to next server in the list"
-msgstr ""
-
-#: src/ui.cpp:693
+#: src/ui.cpp:661
 #, fuzzy
-msgid "Connection failure"
-msgstr "Timp de conectare expirat"
+msgid "Disconnected from server"
+msgstr "Răspuns necunoscut de la server"
 
-#: src/ui.cpp:854
+#: src/ui.cpp:661
+#, fuzzy
+msgid "Not online"
+msgstr "Nu este conectat."
+
+#: src/ui.cpp:779
 msgid "no active chat panels open."
 msgstr "nu sunt deschise panouri chat active."
 
-#: src/ui.cpp:857
+#: src/ui.cpp:782
 #, c-format
 msgid "(%d users)"
 msgstr "(%d utilizatori)"
 
-#: src/ui.cpp:921
+#: src/ui.cpp:846
 msgid "Server message"
 msgstr "Mesaj server"
 
-#: src/ui.cpp:963
+#: src/ui.cpp:888
 msgid "The current battle was closed by the host."
 msgstr "Lupta a fost închisă de gazdă."
 
-#: src/ui.cpp:963
+#: src/ui.cpp:888
 msgid "Battle closed"
 msgstr "Luptă închisă"
 
-#: src/ui.cpp:1066
+#: src/ui.cpp:991
 msgid ""
 "Your spring settings are probably not configured correctly,\n"
 "you should take another look at your settings before trying\n"
@@ -5881,15 +5192,29 @@ msgstr ""
 "Este probabil că setările dvs. Spring nu sunt corecte.\n"
 "Ar trebui să le verificaţi înainte de a juca online."
 
-#: src/ui.cpp:1066
+#: src/ui.cpp:991
 msgid "Spring settings error"
 msgstr "Eroare setări Spring"
 
-#: src/ui.cpp:1253
+#: src/ui.cpp:997
+msgid ""
+"This game uses NAT traversal that is not supported by wx 2.6 build of "
+"springlobby. \n"
+"\n"
+"You will not be able to play in this battle. \n"
+"Update your wxwidgets to 2.8 or newer to enable NAT traversal support."
+msgstr ""
+"Această luptă foloseşte NAT traversal care nu este suportată de build-ul cu "
+"wx 2.6 SpringLobby.\n"
+"\n"
+"Nu veţi putea juca în această luptă. \n"
+"Actualizaţi-vă biblioteca wxWidgets la 2.8 sau mai nou pentru NAT traversal."
+
+#: src/ui.cpp:1213
 msgid "The selected preset requires the map "
 msgstr ""
 
-#: src/ui.cpp:1253
+#: src/ui.cpp:1213
 msgid ""
 ". Should it be downloaded?                                     \n"
 " Selecting \"no\" will remove the missing map from the preset.\n"
@@ -5897,11 +5222,20 @@ msgid ""
 "download finished"
 msgstr ""
 
-#: src/ui.cpp:1256
+#: src/ui.cpp:1216
 msgid "Map missing"
 msgstr ""
 
-#: src/updater/updater.cpp:46
+#: src/uiutils.h:18
+#, fuzzy
+msgid "Choose color"
+msgstr "Alegeţi un director"
+
+#: src/uiutils.h:20
+msgid "Choose color (only first 16 will be saved)"
+msgstr ""
+
+#: src/updater/updater.cpp:39
 msgid ""
 "There was an error checking for the latest version.\n"
 "Please try again later.\n"
@@ -5912,15 +5246,15 @@ msgstr ""
 "Dacă problema persistă, vă rugăm să o raportaţi folosind Ajutor -> Raportare "
 "problemă."
 
-#: src/updater/updater.cpp:51
+#: src/updater/updater.cpp:44
 msgid "Your Version: "
 msgstr "Versiunea dvs.: "
 
-#: src/updater/updater.cpp:51
+#: src/updater/updater.cpp:44
 msgid "Latest Version: "
 msgstr "Ultima versiune: "
 
-#: src/updater/updater.cpp:55 src/updater/updater.cpp:68
+#: src/updater/updater.cpp:48 src/updater/updater.cpp:64
 msgid ""
 "Your SpringLobby version is not up to date.\n"
 "\n"
@@ -5928,7 +5262,7 @@ msgstr ""
 "Versiunea dvs. SpringLobby nu e actualizată.\n"
 "\n"
 
-#: src/updater/updater.cpp:55
+#: src/updater/updater.cpp:48
 msgid ""
 "\n"
 "\n"
@@ -5936,26 +5270,22 @@ msgid ""
 "effect next you launch the lobby again."
 msgstr ""
 
-#: src/updater/updater.cpp:55
+#: src/updater/updater.cpp:48
 #, fuzzy
 msgid "Not up to date"
 msgstr "Neactualizat"
 
-#: src/updater/updater.cpp:62
-msgid "SpringLobby -- downloading update"
-msgstr ""
-
-#: src/updater/updater.cpp:68
-msgid "Not up to Date"
-msgstr "Neactualizat"
-
-#: src/updater/updater.cpp:82
+#: src/updater/updater.cpp:55
 msgid ""
 "Unable to write to the lobby installation directory.\n"
 "Please update manually or enable write permissions for the current user."
 msgstr ""
 
-#: src/updater/updater.cpp:96
+#: src/updater/updater.cpp:64
+msgid "Not up to Date"
+msgstr "Neactualizat"
+
+#: src/updater/updater.cpp:71
 #, fuzzy
 msgid ""
 "There was an error downloading for the latest version.\n"
@@ -5967,7 +5297,7 @@ msgstr ""
 "Dacă problema persistă, vă rugăm să o raportaţi folosind Ajutor -> Raportare "
 "problemă."
 
-#: src/updater/updater.cpp:101 src/updater/updater.cpp:104
+#: src/updater/updater.cpp:75
 #, fuzzy, c-format
 msgid ""
 "There was an error while trying to replace the current executable version\n"
@@ -5980,18 +5310,23 @@ msgstr ""
 "Dacă problema persistă, vă rugăm să o raportaţi folosind Ajutor -> Raportare "
 "problemă."
 
-#: src/updater/updater.cpp:112 src/updater/updater.cpp:115
+#: src/updater/updater.cpp:80
 msgid "Update complete. The changes will be available next lobby start."
 msgstr ""
 
-#: src/updater/updater.cpp:122 src/updater/updater.cpp:125
+#: src/updater/updater.cpp:80
+#, fuzzy
+msgid "Success"
+msgstr "Setează acces..."
+
+#: src/updater/updater.cpp:83
 msgid ""
 "Binary updated successfully. \n"
 "Some translation files could not be updated.\n"
 "Please report this in #springlobby after restarting."
 msgstr ""
 
-#: src/updater/updater.cpp:122 src/updater/updater.cpp:125
+#: src/updater/updater.cpp:83
 msgid "Partial success"
 msgstr ""
 
@@ -6067,53 +5402,53 @@ msgstr ""
 msgid "popup a message box when user changes away status"
 msgstr ""
 
-#: src/user.cpp:77
+#: src/user.cpp:22
 #, fuzzy
 msgid "away"
 msgstr "Întotdeauna"
 
-#: src/user.cpp:77
+#: src/user.cpp:22
 msgid "back"
 msgstr ""
 
-#: src/user.cpp:79
+#: src/user.cpp:24
 #, fuzzy
 msgid "ingame"
 msgstr "Porecla"
 
-#: src/user.cpp:79
+#: src/user.cpp:24
 msgid "back from game"
 msgstr ""
 
-#: src/user.cpp:185
+#: src/user.cpp:121
 msgid "Newbie"
 msgstr "Nou-venit"
 
-#: src/user.cpp:186
+#: src/user.cpp:122
 msgid "Beginner"
 msgstr "Începător"
 
-#: src/user.cpp:187
+#: src/user.cpp:123
 msgid "Average"
 msgstr "Mediu"
 
-#: src/user.cpp:188
+#: src/user.cpp:124
 msgid "Above average"
 msgstr "Deasupra mediei"
 
-#: src/user.cpp:189
+#: src/user.cpp:125
 msgid "Experienced"
 msgstr "Cu experienţă"
 
-#: src/user.cpp:190
+#: src/user.cpp:126
 msgid "Highly experienced"
 msgstr "Cu multă experienţă"
 
-#: src/user.cpp:191
+#: src/user.cpp:127
 msgid "Veteran"
 msgstr "Veteran"
 
-#: src/user.cpp:193
+#: src/user.cpp:129
 #, fuzzy
 msgid "Unknown"
 msgstr "necunoscut"
@@ -6132,226 +5467,30 @@ msgstr "Adaugă Bot..."
 msgid "Remove from group"
 msgstr "Şterge cont utilizator"
 
-#: src/utils/controls.h:18
-#, fuzzy
-msgid "Choose color"
-msgstr "Alegeţi un director"
+#~ msgid "Mod Options"
+#~ msgstr "Opţiuni mod"
 
-#: src/utils/controls.h:20
-msgid "Choose color (only first 16 will be saved)"
-msgstr ""
-
-#: src/widgets/downloaddialog.cpp:14
-msgid "widgets"
-msgstr ""
-
-#: src/widgets/infopanel.cpp:35
-msgid "getting infos"
-msgstr ""
-
-#: src/widgets/infopanel.cpp:64
-#, fuzzy
-msgid "Author"
-msgstr "Austria"
-
-#: src/widgets/infopanel.cpp:69
-msgid "Suitable mods"
-msgstr ""
-
-#: src/widgets/infopanel.cpp:74
-#, fuzzy
-msgid "Current version"
-msgstr "Versiunea dvs. Spring"
-
-#: src/widgets/infopanel.cpp:79
-#, fuzzy
-msgid "# downloaded"
-msgstr "MB trimişi"
-
-#: src/widgets/infopanel.cpp:84
-#, fuzzy
-msgid "Published on"
-msgstr "Publicaţi fişier nou"
-
-#: src/widgets/infopanel.cpp:121
-#, fuzzy
-msgid "Changelog"
-msgstr "Anulează"
-
-#: src/widgets/infopanel.cpp:126
-#, fuzzy
-msgid "Screenshots"
-msgstr "Rezoluţie ecran"
-
-#: src/widgets/infopanel.cpp:158
-msgid "Widget files have been installed."
-msgstr ""
-
-#: src/widgets/infopanel.cpp:161
-msgid "Widget files have not been installed."
-msgstr ""
-
-#: src/widgets/infopanel.cpp:170
-msgid "Widget files have been removed."
-msgstr ""
-
-#: src/widgets/infopanel.cpp:173
-msgid "Widget files have not been removed."
-msgstr ""
+#~ msgid "Map Options"
+#~ msgstr "Opţiuni hartă"
 
 #, fuzzy
-#~ msgid "Grouping size"
-#~ msgstr "Acţiune"
+#~ msgid "Set name."
+#~ msgstr "Setează acces..."
 
-#~ msgid "a"
-#~ msgstr "a"
-
-#~ msgid "p"
-#~ msgstr "j"
-
-#~ msgid "m"
-#~ msgstr "m"
-
-#~ msgid "%d%"
-#~ msgstr "%d"
-
-#~ msgid "t"
-#~ msgstr "e"
-
-#~ msgid "Not a number"
-#~ msgstr "Nu e număr"
-
-#~ msgid "Invalid number"
-#~ msgstr "Număr invalid"
-
-#~ msgid ""
-#~ "Value out of range.\n"
-#~ " Enter an integer between 0 & 100."
-#~ msgstr ""
-#~ "Valoare în afara intervalului.\n"
-#~ " Introduceţi un întreg între 0 şi 100."
-
-#~ msgid ""
-#~ "There are two or more bots on the same team.  Because bots don't know how "
-#~ "to share, this won't work."
-#~ msgstr ""
-#~ "Există doi sau mai mulţi boţi în aceeaşi echipă. Pentru că boţii nu ştiu "
-#~ "cum să joace împreună, aceasta nu va funcţiona."
-
-#~ msgid "Bot team sharing."
-#~ msgstr "Boţi în aceeaşi echipă."
+#~ msgid "Load..."
+#~ msgstr "Încarcă..."
 
 #, fuzzy
-#~ msgid "Num players error"
-#~ msgstr "Numărul jucătorilor"
+#~ msgid "Load a saved set of options."
+#~ msgstr "Încarcă un set salvat de restricţii."
 
 #, fuzzy
-#~ msgid "Channel name"
-#~ msgstr "Informaţii canal"
+#~ msgid "Delete..."
+#~ msgstr "Alege..."
 
 #, fuzzy
-#~ msgid "topic"
-#~ msgstr "Subiectul \""
-
-#~ msgid "Use smart scrolling"
-#~ msgstr "Foloseşte derulare inteligentă"
-
-#~ msgid "_SERVER"
-#~ msgstr "_SERVER"
-
-#~ msgid "Download failed"
-#~ msgstr "Descărcare eşuată"
-
-#~ msgid "Unit detail"
-#~ msgstr "Detaliile unităţilor"
-
-#~ msgid "only on/off available at this time"
-#~ msgstr "numai pornit/oprit disponibil acum"
-
-#~ msgid "Global sound volume"
-#~ msgstr "Volum de sunet global"
-
-#~ msgid "mark to be able to use"
-#~ msgstr "activează pentru a le putea folosi"
-
-#~ msgid "Send debug info to console"
-#~ msgstr "Trimite info pt. depanare la consolă"
-
-#~ msgid "if disabled these will only be logged"
-#~ msgstr "dacă e dezactivat, acestea vor fi trecute numai în jurnal"
-
-#~ msgid ""
-#~ "You're using a wxwidgets library of the 2.6.x series\n"
-#~ " battle filtering, advanced gui and joining/hosting games using nat "
-#~ "traversal\n"
-#~ " won't be available"
-#~ msgstr ""
-#~ "Folosiţi biblioteca wxWidgets versiunea 2.6.x.\n"
-#~ " Filtrarea luptelor, interfaţa avansată şi jocurile cu traversare nat\n"
-#~ " nu vor fi disponibile."
-
-#~ msgid "Missing Functionality"
-#~ msgstr "Lipseşte funcţionalitate"
-
-#, fuzzy
-#~ msgid ""
-#~ "Do you want to download OTA content?\n"
-#~ "You need this to be able to play TA based mods.\n"
-#~ "You need to own a copy of Total Annihilation do legally download it."
-#~ msgstr ""
-#~ "Doriţi să descărcaţi conţinutul OTA?\n"
-#~ "Acesta este necesar pentru a juca modurile bazate pe TA.\n"
-#~ "Aveţi nevoie de o copie legală a Total Annihilation pentru a-l obţine "
-#~ "legal."
-
-#~ msgid "Download OTA content?"
-#~ msgstr "Descarc conţinut OTA?"
-
-#, fuzzy
-#~ msgid "Create a spring directory in my documents folder"
-#~ msgstr "Creează un folder .spring în directorul home. (recomandat)"
-
-#, fuzzy
-#~ msgid "Do nothing"
-#~ msgstr "Hole punching"
-
-#~ msgid "Create a folder in a custom path (you'll get prompted for the path)"
-#~ msgstr "Creează un folder într-o altă cale (veţi fi întrebat)"
-
-#~ msgid "I have already a SpringData folder, i want to browse manually for it"
-#~ msgstr "Am deja un folder SpringData, îl voi căuta manual"
-
-#, fuzzy
-#~ msgid ""
-#~ "Looks like you don't have yet a user SpringData folder structure\n"
-#~ "What would you like to do? (leave default choice if you don't know what "
-#~ "this is for)"
-#~ msgstr ""
-#~ "Se pare că nu aveţi o structură de foldere SpringData.\n"
-#~ "Ce doriţi să fac? (lăsaţi varianta implicită dacă nu ştiţi pentru ce e "
-#~ "asta)"
-
-#, fuzzy
-#~ msgid "Disconnected from server"
-#~ msgstr "Răspuns necunoscut de la server"
-
-#, fuzzy
-#~ msgid "Not online"
-#~ msgstr "Nu este conectat."
-
-#~ msgid ""
-#~ "This game uses NAT traversal that is not supported by wx 2.6 build of "
-#~ "springlobby. \n"
-#~ "\n"
-#~ "You will not be able to play in this battle. \n"
-#~ "Update your wxwidgets to 2.8 or newer to enable NAT traversal support."
-#~ msgstr ""
-#~ "Această luptă foloseşte NAT traversal care nu este suportată de build-ul "
-#~ "cu wx 2.6 SpringLobby.\n"
-#~ "\n"
-#~ "Nu veţi putea juca în această luptă. \n"
-#~ "Actualizaţi-vă biblioteca wxWidgets la 2.8 sau mai nou pentru NAT "
-#~ "traversal."
+#~ msgid "no options available"
+#~ msgstr "indisponibil"
 
 #, fuzzy
 #~ msgid "Only the host can change the game options"
@@ -6371,6 +5510,9 @@ msgstr ""
 #~ msgid "Invalid host/port or servername."
 #~ msgstr "Nume de server sau server/port invalid."
 
+#~ msgid "Ping Timeout!"
+#~ msgstr "Ping Timeout!"
+
 #~ msgid "Active chat channels:"
 #~ msgstr "Canale de chat active:"
 
@@ -6386,6 +5528,9 @@ msgstr ""
 
 #~ msgid "Select all"
 #~ msgstr "Selectează tot"
+
+#~ msgid "Copy"
+#~ msgstr "Copiază"
 
 #, fuzzy
 #~ msgid "Add user"
@@ -6426,6 +5571,9 @@ msgstr ""
 
 #~ msgid "You have one or more bots sharing team, this is not possible."
 #~ msgstr "Ai unul sau mai mulţi boţi în aceeaşi echipă, nu pot porni."
+
+#~ msgid "Show all"
+#~ msgstr "Arată totul"
 
 #~ msgid ""
 #~ "Please enter password needed to join this channel, leave blank for no "
@@ -6483,6 +5631,9 @@ msgstr ""
 #~ msgid "Resources"
 #~ msgstr "Resurse"
 
+#~ msgid "Start Metal"
+#~ msgstr "Metal de început"
+
 #~ msgid "The amount of metal each player starts with."
 #~ msgstr "Cantitatea de metal cu care fiecare jucător începe"
 
@@ -6506,6 +5657,9 @@ msgstr ""
 
 #~ msgid "Diminishing metal makers"
 #~ msgstr "Reducerea producţiei metal maker"
+
+#~ msgid "Clear"
+#~ msgstr "Curăţă"
 
 #~ msgid "This chat is exclusively for participants of this battle."
 #~ msgstr "Acest chat este exclusiv pentru participanţii acestei lupte."
@@ -6640,6 +5794,9 @@ msgstr ""
 #~ "\n"
 #~ "Această problemă va fi rezolvată în următoarea versiune de Spring."
 
+#~ msgid "Do nothing (use this only if you know what you're doing)"
+#~ msgstr "Nu fă nimic (folosiţi în cazul în care ştiţi ce faceţi)"
+
 #~ msgid "Spring directory"
 #~ msgstr "Directorul Spring"
 
@@ -6658,6 +5815,9 @@ msgstr ""
 #~ msgstr ""
 #~ "Încărcarea Unitsync a fost anulată deoarece directorul de date Spring nu "
 #~ "poate fi scris. Vă rugăm verificaţi."
+
+#~ msgid "Your spring version"
+#~ msgstr "Versiunea dvs. Spring"
 
 #~ msgid "is not supported by the lobby server that requires version"
 #~ msgstr "nu este suportat de serverul lobby care cere versiunea"

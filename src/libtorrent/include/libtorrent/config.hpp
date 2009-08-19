@@ -34,7 +34,6 @@ POSSIBILITY OF SUCH DAMAGE.
 #define TORRENT_CONFIG_HPP_INCLUDED
 
 #include <boost/config.hpp>
-#include <boost/version.hpp>
 
 #if defined(__GNUC__) && __GNUC__ >= 4
 
@@ -51,8 +50,6 @@ POSSIBILITY OF SUCH DAMAGE.
 # define TORRENT_EXPORT
 
 #elif defined(BOOST_MSVC)
-
-#pragma warning(disable: 4258)
 
 # if defined(TORRENT_BUILDING_SHARED)
 #  define TORRENT_EXPORT __declspec(dllexport)
@@ -79,20 +76,12 @@ POSSIBILITY OF SUCH DAMAGE.
 #define TORRENT_LINUX
 #elif defined WIN32
 #define TORRENT_WINDOWS
-#elif defined sun || defined __sun 
-#define TORRENT_SOLARIS
 #else
 #warning unkown OS, assuming BSD
 #define TORRENT_BSD
 #endif
 
-// should wpath or path be used?
-#if defined UNICODE && !defined BOOST_FILESYSTEM_NARROW_ONLY \
-	&& BOOST_VERSION >= 103400 && defined WIN32
-#define TORRENT_USE_WPATH 1
-#else
-#define TORRENT_USE_WPATH 0
-#endif
+
 
 #endif // TORRENT_CONFIG_HPP_INCLUDED
 

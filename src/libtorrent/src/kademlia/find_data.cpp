@@ -36,7 +36,6 @@ POSSIBILITY OF SUCH DAMAGE.
 #include <libtorrent/kademlia/routing_table.hpp>
 #include <libtorrent/kademlia/rpc_manager.hpp>
 #include <libtorrent/io.hpp>
-#include <libtorrent/socket.hpp>
 
 namespace libtorrent { namespace dht
 {
@@ -102,7 +101,7 @@ find_data::find_data(
 	add_requests();
 }
 
-void find_data::invoke(node_id const& id, udp::endpoint addr)
+void find_data::invoke(node_id const& id, asio::ip::udp::endpoint addr)
 {
 	if (m_done)
 	{
@@ -110,9 +109,8 @@ void find_data::invoke(node_id const& id, udp::endpoint addr)
 		return;
 	}
 
-	TORRENT_ASSERT(m_rpc.allocation_size() >= sizeof(find_data_observer));
 	observer_ptr o(new (m_rpc.allocator().malloc()) find_data_observer(this, id, m_target));
-#ifdef TORRENT_DEBUG
+#ifndef NDEBUG
 	o->m_in_constructor = false;
 #endif
 	m_rpc.invoke(messages::get_peers, addr, o);
@@ -139,6 +137,7 @@ void find_data::initiate(
 	, done_callback const& callback
 )
 {
+	std::cerr << "find_data::initiate, key: " << target << "\n";
 	new find_data(target, branch_factor, max_results, table, rpc, callback);
 }
 

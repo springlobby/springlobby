@@ -34,7 +34,6 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include <cctype>
 #include <algorithm>
-#include <stdio.h>
 
 #ifdef _MSC_VER
 #pragma warning(push, 1)
@@ -48,7 +47,6 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "libtorrent/identify_client.hpp"
 #include "libtorrent/fingerprint.hpp"
-#include "libtorrent/escape_string.hpp"
 
 namespace
 {
@@ -57,7 +55,7 @@ namespace
 
 	int decode_digit(char c)
 	{
-		if (is_digit(c)) return c - '0';
+		if (std::isdigit(c)) return c - '0';
 		return unsigned(c) - 'A' + 10;
 	}
 
@@ -69,7 +67,7 @@ namespace
 	{
 		fingerprint ret("..", 0, 0, 0, 0);
 
-		if (id[0] != '-' || !isprint(id[1]) || (id[2] < '0')
+		if (id[0] != '-' || !std::isprint(id[1]) || (id[2] < '0')
 			|| (id[3] < '0') || (id[4] < '0')
 			|| (id[5] < '0') || (id[6] < '0')
 			|| id[7] != '-')
@@ -131,7 +129,7 @@ namespace
 		ret.tag_version = 0;
 		if (sscanf(ids, "%c%d-%d-%d--", &ret.name[0], &ret.major_version, &ret.minor_version
 			, &ret.revision_version) != 4
-			|| !isprint(ret.name[0]))
+			|| !std::isprint(ret.name[0]))
 			return boost::optional<fingerprint>();
 
 		return boost::optional<fingerprint>(ret);
@@ -169,7 +167,6 @@ namespace
 		, {"HL", "Halite"}
 		, {"HN", "Hydranode"}
 		, {"KT", "KTorrent"}
-		, {"LC", "LeechCraft"}
 		, {"LK", "Linkage"}
 		, {"LP", "lphant"}
 		, {"LT", "libtorrent"}
@@ -268,7 +265,7 @@ namespace
 			std::lower_bound(name_map, name_map + size
 				, tmp, &compare_id);
 
-#ifdef TORRENT_DEBUG
+#ifndef NDEBUG
 		for (int i = 1; i < size; ++i)
 		{
 			TORRENT_ASSERT(compare_id(name_map[i-1]
@@ -288,7 +285,7 @@ namespace
 			<< "." << (int)f.minor_version
 			<< "." << (int)f.revision_version;
 
-		if (f.tag_version != 0)
+		if (f.name[1] != 0)
 			identity << "." << (int)f.tag_version;
 
 		return identity.str();
@@ -375,7 +372,7 @@ namespace libtorrent
 		std::string unknown("Unknown [");
 		for (peer_id::const_iterator i = p.begin(); i != p.end(); ++i)
 		{
-			unknown += isprint(char(*i))?*i:'.';
+			unknown += std::isprint(*i)?*i:'.';
 		}
 		unknown += "]";
 		return unknown;

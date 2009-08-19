@@ -34,15 +34,10 @@ POSSIBILITY OF SUCH DAMAGE.
 #define TORRENT_FILE_HPP_INCLUDED
 
 #include <memory>
-#include <string>
-#include <vector>
+#include <stdexcept>
 
 #ifdef _MSC_VER
 #pragma warning(push, 1)
-#endif
-
-#ifdef WIN32
-#include <windows.h>
 #endif
 
 #include <boost/noncopyable.hpp>
@@ -52,13 +47,17 @@ POSSIBILITY OF SUCH DAMAGE.
 #pragma warning(pop)
 #endif
 
-#include "libtorrent/error_code.hpp"
 #include "libtorrent/size_type.hpp"
 #include "libtorrent/config.hpp"
 
 namespace libtorrent
 {
 	namespace fs = boost::filesystem;
+
+	struct TORRENT_EXPORT file_error: std::runtime_error
+	{
+		file_error(std::string const& msg): std::runtime_error(msg) {}
+	};
 
 	class TORRENT_EXPORT file: public boost::noncopyable
 	{
@@ -81,6 +80,7 @@ namespace libtorrent
 		public:
 
 			open_mode(): m_mask(0) {}
+
 			open_mode operator|(open_mode m) const
 			{ return open_mode(m.m_mask | m_mask); }
 
@@ -95,7 +95,6 @@ namespace libtorrent
 
 			bool operator==(open_mode m) const { return m_mask == m.m_mask; }
 			bool operator!=(open_mode m) const { return m_mask != m.m_mask; }
-			operator bool() const { return m_mask != 0; }
 
 		private:
 
@@ -107,30 +106,23 @@ namespace libtorrent
 		static const open_mode out;
 
 		file();
-		file(fs::path const& p, open_mode m, error_code& ec);
+		file(fs::path const& p, open_mode m);
 		~file();
 
-		bool open(fs::path const& p, open_mode m, error_code& ec);
-		bool is_open() const;
+		void open(fs::path const& p, open_mode m);
 		void close();
-		bool set_size(size_type size, error_code& ec);
+		void set_size(size_type size);
 
-		size_type write(const char*, size_type num_bytes, error_code& ec);
-		size_type read(char*, size_type num_bytes, error_code& ec);
+		size_type write(const char*, size_type num_bytes);
+		size_type read(char*, size_type num_bytes);
 
-		size_type seek(size_type pos, seek_mode m, error_code& ec);
-		size_type tell(error_code& ec);
+		size_type seek(size_type pos, seek_mode m = begin);
+		size_type tell();
 
 	private:
 
-#ifdef TORRENT_WINDOWS
-		HANDLE m_file_handle;
-#else
-		int m_fd;
-#endif
-#ifdef TORRENT_DEBUG
-		open_mode m_open_mode;
-#endif
+		struct impl;
+		const std::auto_ptr<impl> m_impl;
 
 	};
 

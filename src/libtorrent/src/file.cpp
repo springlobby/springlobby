@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2003, Arvid Norberg
+Copyright (c) 2003, Magnus Jonsson & Arvid Norberg
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -30,57 +30,37 @@ POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#include "libtorrent/pch.hpp"
-#include "libtorrent/config.hpp"
-
-#include <boost/scoped_ptr.hpp>
-#ifdef TORRENT_WINDOWS
-// windows part
-#include "libtorrent/utf8.hpp"
-
-#include <windows.h>
-#include <winioctl.h>
-
-#else
-// posix part
-#define _FILE_OFFSET_BITS 64
-#include <unistd.h>
-#include <fcntl.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <errno.h>
-
-#include <boost/static_assert.hpp>
-// make sure the _FILE_OFFSET_BITS define worked
-// on this platform
-BOOST_STATIC_ASSERT(sizeof(lseek(0, 0, 0)) >= 8);
-
-#endif
-
-#include <boost/filesystem/operations.hpp>
 #include "libtorrent/file.hpp"
-#include <sstream>
-#include <cstring>
-#include <vector>
+#include "libtorrent/utf8.hpp"
+#include "libtorrent/assert.hpp"
 
-#ifndef O_BINARY
-#define O_BINARY 0
-#endif
-
-#ifndef O_RANDOM
-#define O_RANDOM 0
-#endif
-
-#if TORRENT_USE_WPATH
-// for safe_convert
+#ifdef UNICODE
 #include "libtorrent/storage.hpp"
 #endif
 
-#include "libtorrent/assert.hpp"
+#include <sstream>
+#include <windows.h>
+#include <winioctl.h>
 
 namespace
 {
-#ifdef TORRENT_WINDOWS
+	// must be used to not leak memory in case something would throw
+	class auto_localfree
+	{
+	public:
+		auto_localfree(HLOCAL memory)
+			: m_memory(memory)
+		{
+		}
+		~auto_localfree()
+		{
+			if (m_memory)
+				LocalFree(m_memory);
+		}
+	private:
+		HLOCAL m_memory;
+	};
+
 	std::string utf8_native(std::string const& s)
 	{
 		try
@@ -92,7 +72,7 @@ namespace
 			std::string ret;
 			ret.resize(size);
 			size = wcstombs(&ret[0], ws.c_str(), size + 1);
-			if (size == std::size_t(-1)) return s;
+			if (size == wchar_t(-1)) return s;
 			ret.resize(size);
 			return ret;
 		}
@@ -101,267 +81,287 @@ namespace
 			return s;
 		}
 	}
-#else
-
-	enum { mode_in = 1, mode_out = 2 };
-
-	mode_t map_open_mode(int m)
+	
+	void throw_exception(const char* thrower)
 	{
-		if (m == (mode_in | mode_out)) return O_RDWR | O_CREAT | O_BINARY | O_RANDOM;
-		if (m == mode_out) return O_WRONLY | O_CREAT | O_BINARY | O_RANDOM;
-		if (m == mode_in) return O_RDONLY | O_BINARY | O_RANDOM;
-		TORRENT_ASSERT(false);
-		return 0;
-	}
+		DWORD err = GetLastError();
+
+#ifdef UNICODE
+		wchar_t *wbuffer = 0;
+		FormatMessage(
+			FORMAT_MESSAGE_FROM_SYSTEM
+			|FORMAT_MESSAGE_ALLOCATE_BUFFER
+			, 0, err, 0, (LPWSTR)&wbuffer, 0, 0);
+		auto_localfree auto_free(wbuffer);
+		std::string tmp_utf8;
+		libtorrent::wchar_utf8(wbuffer, tmp_utf8);
+		char const* buffer = tmp_utf8.c_str();
+#else
+		char* buffer = 0;
+		FormatMessage(
+			FORMAT_MESSAGE_FROM_SYSTEM
+			|FORMAT_MESSAGE_ALLOCATE_BUFFER
+			, 0, err, 0, (LPSTR)&buffer, 0, 0);
+		auto_localfree auto_free(buffer);
 #endif
 
+		std::stringstream s;
+		s << (thrower ? thrower : "NULL") << ": " << (buffer ? buffer : "NULL");
+
+		throw libtorrent::file_error(s.str());
+	}
 }
 
 namespace libtorrent
 {
-	namespace fs = boost::filesystem;
 
-#ifdef TORRENT_WINDOWS
-	const file::open_mode file::in(GENERIC_READ);
-	const file::open_mode file::out(GENERIC_WRITE);
-	const file::seek_mode file::begin(FILE_BEGIN);
-	const file::seek_mode file::end(FILE_END);
-#else
-	const file::open_mode file::in(mode_in);
-	const file::open_mode file::out(mode_out);
-	const file::seek_mode file::begin(SEEK_SET);
-	const file::seek_mode file::end(SEEK_END);
-#endif
+	struct file::impl : boost::noncopyable
+	{
+		enum open_flags
+		{
+			read_flag = 1,
+			write_flag = 2
+		};
+
+		enum seek_mode
+		{
+			seek_begin = FILE_BEGIN,
+			seek_from_here = FILE_CURRENT,
+			seek_end = FILE_END
+		};
+
+		impl()
+		{
+			m_file_handle = INVALID_HANDLE_VALUE;
+		}
+
+		void open(const char *file_name, open_flags flags)
+		{
+			TORRENT_ASSERT(file_name);
+			TORRENT_ASSERT(flags & (read_flag | write_flag));
+
+			DWORD access_mask = 0;
+			if (flags & read_flag)
+				access_mask |= GENERIC_READ;
+			if (flags & write_flag)
+				access_mask |= GENERIC_WRITE;
+
+			TORRENT_ASSERT(access_mask & (GENERIC_READ | GENERIC_WRITE));
+
+		#ifdef UNICODE
+			std::wstring wfile_name(safe_convert(file_name));
+			HANDLE new_handle = CreateFile(
+				wfile_name.c_str()
+				, access_mask
+				, FILE_SHARE_READ
+				, 0
+				, (flags & write_flag)?OPEN_ALWAYS:OPEN_EXISTING
+				, FILE_ATTRIBUTE_NORMAL
+				, 0);
+		#else
+			HANDLE new_handle = CreateFile(
+				utf8_native(file_name).c_str()
+				, access_mask
+				, FILE_SHARE_READ
+				, 0
+				, (flags & write_flag)?OPEN_ALWAYS:OPEN_EXISTING
+				, FILE_ATTRIBUTE_NORMAL
+				, 0);
+		#endif
+
+			if (new_handle == INVALID_HANDLE_VALUE)
+				throw_exception(file_name);
+			// try to make the file sparse if supported
+			if (access_mask & GENERIC_WRITE)
+			{
+				DWORD temp;
+				::DeviceIoControl(new_handle, FSCTL_SET_SPARSE, 0, 0
+					, 0, 0, &temp, 0);
+			}
+			// will only close old file if the open succeeded
+			close();
+			m_file_handle = new_handle;
+		}
+
+		void close()
+		{
+			if (m_file_handle != INVALID_HANDLE_VALUE)
+			{
+				CloseHandle(m_file_handle);
+				m_file_handle = INVALID_HANDLE_VALUE;
+			}
+		}
+
+		~impl()
+		{
+			close();
+		}
+
+		size_type write(const char* buffer, size_type num_bytes)
+		{
+			TORRENT_ASSERT(buffer);
+			TORRENT_ASSERT((DWORD)num_bytes == num_bytes);
+			DWORD bytes_written = 0;
+			if (num_bytes != 0)
+			{
+				if (FALSE == WriteFile(
+					m_file_handle
+					, buffer
+					, (DWORD)num_bytes
+					, &bytes_written
+					, 0))
+				{
+					throw_exception("file::write");
+				}
+			}
+			return bytes_written;
+		}
+		
+		size_type read(char* buffer, size_type num_bytes)
+		{
+			TORRENT_ASSERT(buffer);
+			TORRENT_ASSERT(num_bytes >= 0);
+			TORRENT_ASSERT((DWORD)num_bytes == num_bytes);
+
+			DWORD bytes_read = 0;
+			if (num_bytes != 0)
+			{
+				if (FALSE == ReadFile(
+					m_file_handle
+					, buffer
+					, (DWORD)num_bytes
+					, &bytes_read
+					, 0))
+				{
+					throw_exception("file::read");
+				}
+			}
+			return bytes_read;
+		}
+
+		void set_size(size_type s)
+		{
+			size_type pos = tell();
+			seek(s, seek_begin);
+			if (FALSE == ::SetEndOfFile(m_file_handle))
+				throw_exception("file::set_size");
+
+			seek(pos, seek_begin);
+		}
+
+		size_type seek(size_type pos, seek_mode from_where)
+		{
+			TORRENT_ASSERT(pos >= 0 || from_where != seek_begin);
+			TORRENT_ASSERT(pos <= 0 || from_where != seek_end);
+			LARGE_INTEGER offs;
+			offs.QuadPart = pos;
+			if (FALSE == SetFilePointerEx(
+				m_file_handle
+				, offs
+				, &offs
+				, from_where))
+			{
+				throw_exception("file::seek");
+			}
+			return offs.QuadPart;
+		}
+		
+		size_type tell()
+		{
+			LARGE_INTEGER offs;
+			offs.QuadPart = 0;
+
+			// is there any other way to get offset?
+			if (FALSE == SetFilePointerEx(
+				m_file_handle
+				, offs
+				, &offs
+				, FILE_CURRENT))
+			{
+				throw_exception("file::tell");
+			}
+
+			size_type pos = offs.QuadPart;
+			TORRENT_ASSERT(pos >= 0);
+			return pos;
+		}
+/*
+		size_type size()
+		{
+			LARGE_INTEGER s;
+			if (FALSE == GetFileSizeEx(m_file_handle, &s))
+			{
+				throw_exception("file::size");
+			}
+			
+			size_type size = s.QuadPart;
+			TORRENT_ASSERT(size >= 0);
+			return size;
+		}
+*/
+	private:
+
+		HANDLE m_file_handle;
+
+	};
+}
+
+namespace libtorrent
+{
+
+	const file::seek_mode file::begin(file::impl::seek_begin);
+	const file::seek_mode file::end(file::impl::seek_end);
+
+	const file::open_mode file::in(file::impl::read_flag);
+	const file::open_mode file::out(file::impl::write_flag);
 
 	file::file()
-#ifdef TORRENT_WINDOWS
-		: m_file_handle(INVALID_HANDLE_VALUE)
-#else
-		: m_fd(-1)
-#endif
-#ifdef TORRENT_DEBUG
-		, m_open_mode(0)
-#endif
-	{}
-
-	file::file(fs::path const& path, open_mode mode, error_code& ec)
-#ifdef TORRENT_WINDOWS
-		: m_file_handle(INVALID_HANDLE_VALUE)
-#else
-		: m_fd(-1)
-#endif
-#ifdef TORRENT_DEBUG
-		, m_open_mode(0)
-#endif
+		: m_impl(new libtorrent::file::impl())
 	{
-		open(path, mode, ec);
+	}
+	file::file(boost::filesystem::path const& p, open_mode m)
+		: m_impl(new libtorrent::file::impl())
+	{
+		open(p,m);
 	}
 
 	file::~file()
 	{
-		close();
 	}
 
-	bool file::open(fs::path const& path, open_mode mode, error_code& ec)
+	void file::open(boost::filesystem::path const& p, open_mode m)
 	{
-		close();
-#ifdef TORRENT_WINDOWS
-
-#if TORRENT_USE_WPATH
-		std::wstring file_path(safe_convert(path.external_file_string()));
-#else
-		std::string file_path = utf8_native(path.external_file_string());
-#endif
-
-		m_file_handle = CreateFile(
-			file_path.c_str()
-			, mode.m_mask
-			, FILE_SHARE_READ
-			, 0
-			, (mode & out)?OPEN_ALWAYS:OPEN_EXISTING
-			, FILE_ATTRIBUTE_NORMAL
-			, 0);
-
-		if (m_file_handle == INVALID_HANDLE_VALUE)
-		{
-			ec = error_code(GetLastError(), get_system_category());
-			return false;
-		}
-
-		// try to make the file sparse if supported
-		if (mode & out)
-		{
-			DWORD temp;
-			::DeviceIoControl(m_file_handle, FSCTL_SET_SPARSE, 0, 0
-				, 0, 0, &temp, 0);
-		}
-#else
-		// rely on default umask to filter x and w permissions
-		// for group and others
-		int permissions = S_IRUSR | S_IWUSR
-			| S_IRGRP | S_IWGRP
-			| S_IROTH | S_IWOTH;
-
-		m_fd = ::open(path.external_file_string().c_str()
-			, map_open_mode(mode.m_mask), permissions);
-
-		if (m_fd == -1)
-		{
-			ec = error_code(errno, get_posix_category());
-			return false;
-		}
-#endif
-#ifdef TORRENT_DEBUG
-		m_open_mode = mode;
-#endif
-		TORRENT_ASSERT(is_open());
-		return true;
-	}
-
-	bool file::is_open() const
-	{
-#ifdef TORRENT_WINDOWS
-		return m_file_handle != INVALID_HANDLE_VALUE;
-#else
-		return m_fd != -1;
-#endif
+		TORRENT_ASSERT(p.is_complete());
+		m_impl->open(p.native_file_string().c_str(), impl::open_flags(m.m_mask));
 	}
 
 	void file::close()
 	{
-#ifdef TORRENT_WINDOWS
-		if (m_file_handle == INVALID_HANDLE_VALUE) return;
-		CloseHandle(m_file_handle);
-		m_file_handle = INVALID_HANDLE_VALUE;
-#else
-		if (m_fd == -1) return;
-		::close(m_fd);
-		m_fd = -1;
-#endif
-#ifdef TORRENT_DEBUG
-		m_open_mode = 0;
-#endif
+		m_impl->close();
 	}
 
-	size_type file::read(char* buf, size_type num_bytes, error_code& ec)
+	size_type file::write(const char* buffer, size_type num_bytes)
 	{
-		TORRENT_ASSERT((m_open_mode & in) == in);
-		TORRENT_ASSERT(buf);
-		TORRENT_ASSERT(num_bytes >= 0);
-		TORRENT_ASSERT(is_open());
-
-#ifdef TORRENT_WINDOWS
-
-		TORRENT_ASSERT(DWORD(num_bytes) == num_bytes);
-		DWORD ret = 0;
-		if (num_bytes != 0)
-		{
-			if (ReadFile(m_file_handle, buf, (DWORD)num_bytes, &ret, 0) == FALSE)
-			{
-				ec = error_code(GetLastError(), get_system_category());
-				return -1;
-			}
-		}
-#else
-		size_type ret = ::read(m_fd, buf, num_bytes);
-		if (ret == -1) ec = error_code(errno, get_posix_category());
-#endif
-		return ret;
+		return m_impl->write(buffer, num_bytes);
 	}
 
-	size_type file::write(const char* buf, size_type num_bytes, error_code& ec)
+	size_type file::read(char* buffer, size_type num_bytes)
 	{
-		TORRENT_ASSERT((m_open_mode & out) == out);
-		TORRENT_ASSERT(buf);
-		TORRENT_ASSERT(num_bytes >= 0);
-		TORRENT_ASSERT(is_open());
-
-#ifdef TORRENT_WINDOWS
-
-		DWORD ret = 0;
-		if (num_bytes != 0)
-		{
-			if (WriteFile(m_file_handle, buf, (DWORD)num_bytes, &ret, 0) == FALSE)
-			{
-				ec = error_code(GetLastError(), get_system_category());
-				return -1;
-			}
-		}
-#else
-		size_type ret = ::write(m_fd, buf, num_bytes);
-		if (ret == -1) ec = error_code(errno, get_posix_category());
-#endif
-		return ret;
+		return m_impl->read(buffer, num_bytes);
 	}
 
-  	bool file::set_size(size_type s, error_code& ec)
-  	{
-  		TORRENT_ASSERT(is_open());
-  		TORRENT_ASSERT(s >= 0);
-
-#ifdef TORRENT_WINDOWS
-		size_type pos = tell(ec);
-		if (ec) return false;
-		seek(s, begin, ec);
-		if (ec) return false;
-		if (::SetEndOfFile(m_file_handle) == FALSE)
-		{
-			ec = error_code(GetLastError(), get_system_category());
-			return false;
-		}
-#else
-		if (ftruncate(m_fd, s) < 0)
-		{
-			ec = error_code(errno, get_posix_category());
-			return false;
-		}
-#endif
-		return true;
-	}
-
-	size_type file::seek(size_type offset, seek_mode m, error_code& ec)
+	void file::set_size(size_type s)
 	{
-		TORRENT_ASSERT(is_open());
-
-#ifdef TORRENT_WINDOWS
-		LARGE_INTEGER offs;
-		offs.QuadPart = offset;
-		if (SetFilePointerEx(m_file_handle, offs, &offs, m.m_val) == FALSE)
-		{
-			ec = error_code(GetLastError(), get_system_category());
-			return -1;
-		}
-		return offs.QuadPart;
-#else
-		size_type ret = lseek(m_fd, offset, m.m_val);
-		if (ret < 0) ec = error_code(errno, get_posix_category());
-		return ret;
-#endif
+		m_impl->set_size(s);
 	}
 
-	size_type file::tell(error_code& ec)
+	size_type file::seek(size_type pos, seek_mode m)
 	{
-		TORRENT_ASSERT(is_open());
-
-#ifdef TORRENT_WINDOWS
-		LARGE_INTEGER offs;
-		offs.QuadPart = 0;
-
-		// is there any other way to get offset?
-		if (SetFilePointerEx(m_file_handle, offs, &offs
-			, FILE_CURRENT) == FALSE)
-		{
-			ec = error_code(GetLastError(), get_system_category());
-			return -1;
-		}
-
-		return offs.QuadPart;
-#else
-		size_type ret;
-		ret = lseek(m_fd, 0, SEEK_CUR);
-		if (ret < 0) ec = error_code(errno, get_posix_category());
-		return ret;
-#endif
+		return m_impl->seek(pos,impl::seek_mode(m.m_val));
+	}
+	
+	size_type file::tell()
+	{
+		return m_impl->tell();
 	}
 }
-

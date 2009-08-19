@@ -23,7 +23,7 @@ static T GetVal( const wxRegKey& reg, const wxString& name, const T def )
 }
 
 template < >
-wxString GetVal( const wxRegKey& reg, const wxString& name, const wxString def )
+static wxString GetVal( const wxRegKey& reg, const wxString& name, const wxString def )
 {
     wxString val = def;
     if ( reg.QueryValue( name, val ) )

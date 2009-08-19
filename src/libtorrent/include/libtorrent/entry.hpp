@@ -167,8 +167,6 @@ namespace libtorrent
 #endif
 		entry* find_key(char const* key);
 		entry const* find_key(char const* key) const;
-		entry* find_key(std::string const& key);
-		entry const* find_key(std::string const& key) const;
 		
 		void print(std::ostream& os, int indent = 0) const;
 
@@ -206,16 +204,6 @@ namespace libtorrent
 		};
 #endif
 
-#ifdef TORRENT_DEBUG
-	public:
-		// in debug mode this is set to false by bdecode
-		// to indicate that the program has not yet queried
-		// the type of this entry, and sould not assume
-		// that it has a certain type. This is asserted in
-		// the accessor functions. This does not apply if
-		// exceptions are used.
-		mutable bool m_type_queried;
-#endif
 	};
 
 	inline std::ostream& operator<<(std::ostream& os, const entry& e)
@@ -224,14 +212,11 @@ namespace libtorrent
 		return os;
 	}
 
-	inline entry::data_type entry::type() const
-	{
-#ifdef TORRENT_DEBUG
-		m_type_queried = true;
-#endif
-		return m_type;
-	}
+	inline entry::data_type entry::type() const { return m_type; }
 
+	inline entry::entry(): m_type(undefined_t) {}
+	inline entry::entry(data_type t): m_type(t) { construct(t); }
+	inline entry::entry(const entry& e) { copy(e); }
 	inline entry::~entry() { destruct(); }
 
 	inline void entry::operator=(const entry& e)
@@ -240,13 +225,12 @@ namespace libtorrent
 		copy(e);
 	}
 
+
 	inline entry::integer_type& entry::integer()
 	{
 		if (m_type == undefined_t) construct(int_t);
 #ifndef BOOST_NO_EXCEPTIONS
 		if (m_type != int_t) throw type_error("invalid type requested from entry");
-#elif defined TORRENT_DEBUG
-		TORRENT_ASSERT(m_type_queried);
 #endif
 		TORRENT_ASSERT(m_type == int_t);
 		return *reinterpret_cast<integer_type*>(data);
@@ -256,8 +240,6 @@ namespace libtorrent
 	{
 #ifndef BOOST_NO_EXCEPTIONS
 		if (m_type != int_t) throw type_error("invalid type requested from entry");
-#elif defined TORRENT_DEBUG
-		TORRENT_ASSERT(m_type_queried);
 #endif
 		TORRENT_ASSERT(m_type == int_t);
 		return *reinterpret_cast<const integer_type*>(data);
@@ -268,8 +250,6 @@ namespace libtorrent
 		if (m_type == undefined_t) construct(string_t);
 #ifndef BOOST_NO_EXCEPTIONS
 		if (m_type != string_t) throw type_error("invalid type requested from entry");
-#elif defined TORRENT_DEBUG
-		TORRENT_ASSERT(m_type_queried);
 #endif
 		TORRENT_ASSERT(m_type == string_t);
 		return *reinterpret_cast<string_type*>(data);
@@ -279,8 +259,6 @@ namespace libtorrent
 	{
 #ifndef BOOST_NO_EXCEPTIONS
 		if (m_type != string_t) throw type_error("invalid type requested from entry");
-#elif defined TORRENT_DEBUG
-		TORRENT_ASSERT(m_type_queried);
 #endif
 		TORRENT_ASSERT(m_type == string_t);
 		return *reinterpret_cast<const string_type*>(data);
@@ -291,8 +269,6 @@ namespace libtorrent
 		if (m_type == undefined_t) construct(list_t);
 #ifndef BOOST_NO_EXCEPTIONS
 		if (m_type != list_t) throw type_error("invalid type requested from entry");
-#elif defined TORRENT_DEBUG
-		TORRENT_ASSERT(m_type_queried);
 #endif
 		TORRENT_ASSERT(m_type == list_t);
 		return *reinterpret_cast<list_type*>(data);
@@ -302,8 +278,6 @@ namespace libtorrent
 	{
 #ifndef BOOST_NO_EXCEPTIONS
 		if (m_type != list_t) throw type_error("invalid type requested from entry");
-#elif defined TORRENT_DEBUG
-		TORRENT_ASSERT(m_type_queried);
 #endif
 		TORRENT_ASSERT(m_type == list_t);
 		return *reinterpret_cast<const list_type*>(data);
@@ -314,8 +288,6 @@ namespace libtorrent
 		if (m_type == undefined_t) construct(dictionary_t);
 #ifndef BOOST_NO_EXCEPTIONS
 		if (m_type != dictionary_t) throw type_error("invalid type requested from entry");
-#elif defined TORRENT_DEBUG
-		TORRENT_ASSERT(m_type_queried);
 #endif
 		TORRENT_ASSERT(m_type == dictionary_t);
 		return *reinterpret_cast<dictionary_type*>(data);
@@ -325,8 +297,6 @@ namespace libtorrent
 	{
 #ifndef BOOST_NO_EXCEPTIONS
 		if (m_type != dictionary_t) throw type_error("invalid type requested from entry");
-#elif defined TORRENT_DEBUG
-		TORRENT_ASSERT(m_type_queried);
 #endif
 		TORRENT_ASSERT(m_type == dictionary_t);
 		return *reinterpret_cast<const dictionary_type*>(data);
@@ -335,4 +305,3 @@ namespace libtorrent
 }
 
 #endif // TORRENT_ENTRY_HPP_INCLUDED
-

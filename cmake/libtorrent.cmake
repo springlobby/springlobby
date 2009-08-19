@@ -1,60 +1,46 @@
 SET(libtorrent_SOURCE_DIR src/libtorrent/src)
 SET(libtorrent_DIR src/libtorrent)
 SET(libtorrent_SRC 
-	${libtorrent_SOURCE_DIR}/alert.cpp
-	${libtorrent_SOURCE_DIR}/assert.cpp
-	${libtorrent_SOURCE_DIR}/broadcast_socket.cpp
-	${libtorrent_SOURCE_DIR}/bt_peer_connection.cpp
-	${libtorrent_SOURCE_DIR}/connection_queue.cpp
-	${libtorrent_SOURCE_DIR}/create_torrent.cpp
-	${libtorrent_SOURCE_DIR}/disk_buffer_holder.cpp
-	${libtorrent_SOURCE_DIR}/disk_io_thread.cpp
 	${libtorrent_SOURCE_DIR}/entry.cpp
-	${libtorrent_SOURCE_DIR}/enum_net.cpp
-	${libtorrent_SOURCE_DIR}/error_code.cpp
 	${libtorrent_SOURCE_DIR}/escape_string.cpp
-	${libtorrent_SOURCE_DIR}/session_impl.cpp
-	${libtorrent_SOURCE_DIR}/file.cpp
-	${libtorrent_SOURCE_DIR}/file_pool.cpp
-	${libtorrent_SOURCE_DIR}/file_storage.cpp
-	${libtorrent_SOURCE_DIR}/gzip.cpp
-	${libtorrent_SOURCE_DIR}/http_connection.cpp
-	${libtorrent_SOURCE_DIR}/http_parser.cpp
-	${libtorrent_SOURCE_DIR}/http_stream.cpp
-	${libtorrent_SOURCE_DIR}/http_tracker_connection.cpp
-	${libtorrent_SOURCE_DIR}/identify_client.cpp
-	${libtorrent_SOURCE_DIR}/instantiate_connection.cpp
-	${libtorrent_SOURCE_DIR}/ip_filter.cpp
-	${libtorrent_SOURCE_DIR}/lazy_bdecode.cpp
-	${libtorrent_SOURCE_DIR}/logger.cpp
-	${libtorrent_SOURCE_DIR}/lsd.cpp
-	${libtorrent_SOURCE_DIR}/magnet_uri.cpp
-	${libtorrent_SOURCE_DIR}/metadata_transfer.cpp
-	${libtorrent_SOURCE_DIR}/natpmp.cpp
-	${libtorrent_SOURCE_DIR}/parse_url.cpp
-	${libtorrent_SOURCE_DIR}/pe_crypto.cpp
+	${libtorrent_SOURCE_DIR}/assert.cpp
+	${libtorrent_SOURCE_DIR}/enum_net.cpp
+	${libtorrent_SOURCE_DIR}/broadcast_socket.cpp
 	${libtorrent_SOURCE_DIR}/peer_connection.cpp
+	${libtorrent_SOURCE_DIR}/bt_peer_connection.cpp
+	${libtorrent_SOURCE_DIR}/web_peer_connection.cpp
+	${libtorrent_SOURCE_DIR}/natpmp.cpp
 	${libtorrent_SOURCE_DIR}/piece_picker.cpp
 	${libtorrent_SOURCE_DIR}/policy.cpp
 	${libtorrent_SOURCE_DIR}/session.cpp
 	${libtorrent_SOURCE_DIR}/session_impl.cpp
 	${libtorrent_SOURCE_DIR}/sha1.cpp
-	${libtorrent_SOURCE_DIR}/smart_ban.cpp
-	${libtorrent_SOURCE_DIR}/socks4_stream.cpp
-	${libtorrent_SOURCE_DIR}/socks5_stream.cpp
 	${libtorrent_SOURCE_DIR}/stat.cpp
 	${libtorrent_SOURCE_DIR}/storage.cpp
 	${libtorrent_SOURCE_DIR}/torrent.cpp
 	${libtorrent_SOURCE_DIR}/torrent_handle.cpp
+	${libtorrent_SOURCE_DIR}/pe_crypto.cpp
 	${libtorrent_SOURCE_DIR}/torrent_info.cpp
 	${libtorrent_SOURCE_DIR}/tracker_manager.cpp
-	${libtorrent_SOURCE_DIR}/udp_socket.cpp
+	${libtorrent_SOURCE_DIR}/http_connection.cpp
+	${libtorrent_SOURCE_DIR}/http_tracker_connection.cpp
 	${libtorrent_SOURCE_DIR}/udp_tracker_connection.cpp
-	${libtorrent_SOURCE_DIR}/upnp.cpp
-	${libtorrent_SOURCE_DIR}/ut_metadata.cpp
+	${libtorrent_SOURCE_DIR}/alert.cpp
+	${libtorrent_SOURCE_DIR}/identify_client.cpp
+	${libtorrent_SOURCE_DIR}/ip_filter.cpp
+	${libtorrent_SOURCE_DIR}/file.cpp
+	${libtorrent_SOURCE_DIR}/metadata_transfer.cpp
+	${libtorrent_SOURCE_DIR}/logger.cpp
+	${libtorrent_SOURCE_DIR}/file_pool.cpp
 	${libtorrent_SOURCE_DIR}/ut_pex.cpp
-	${libtorrent_SOURCE_DIR}/web_peer_connection.cpp
-	${libtorrent_SOURCE_DIR}/GeoIP.c
+	${libtorrent_SOURCE_DIR}/lsd.cpp
+	${libtorrent_SOURCE_DIR}/upnp.cpp
+	${libtorrent_SOURCE_DIR}/instantiate_connection.cpp
+	${libtorrent_SOURCE_DIR}/socks5_stream.cpp
+	${libtorrent_SOURCE_DIR}/socks4_stream.cpp
+	${libtorrent_SOURCE_DIR}/http_stream.cpp
+	${libtorrent_SOURCE_DIR}/connection_queue.cpp
+	${libtorrent_SOURCE_DIR}/disk_io_thread.cpp
 
 	${libtorrent_SOURCE_DIR}/kademlia/closest_nodes.cpp
 	${libtorrent_SOURCE_DIR}/kademlia/dht_tracker.cpp
