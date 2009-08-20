@@ -94,7 +94,7 @@ struct BattleOptions
 
 	unsigned int maxplayers;
 	unsigned int spectators;
-
+	wxString relayhost;
 	wxString maphash;
 	wxString modhash;
 
@@ -276,7 +276,7 @@ public:
     virtual wxArrayString GetPresetList();
 
     virtual std::vector<wxColour> &GetFixColoursPalette( int numteams );
-    virtual int GetClosestFixColour(const wxColour &col, const std::vector<int> &excludes, int &difference);
+    virtual int GetClosestFixColour(const wxColour &col, const std::vector<int> &excludes, int difference);
     virtual wxColour GetFixColour(int i);
     virtual wxColour GetFreeColour( User &for_whom );
     wxColour GetFreeColour( User *for_whom = NULL );

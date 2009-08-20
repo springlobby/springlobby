@@ -389,6 +389,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 							free_team++;
 						}
 					}
+				  if ( battle.IsProxy() && ( user.GetNick() == battle.GetFounder().GetNick() ) ) continue;
 					if ( status.IsBot() ) continue;
 					tdf.EnterSection( _T("PLAYER") + TowxString( i ) );
 							tdf.Append( _T("Name"), user.GetNick() );

@@ -139,6 +139,8 @@ class TASServer : public Server
 
     void RequestSpringUpdate();
 
+    wxArrayString GetRelayHostList();
+
   protected:
 
     //! @brief Struct used internally by the TASServer class to calculate ping roundtimes.

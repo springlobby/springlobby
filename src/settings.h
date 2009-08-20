@@ -709,7 +709,15 @@ class Settings
     unsigned int GetMapSelectorFilterRadio();
     void SetMapSelectorFilterRadio( const unsigned int val );
     /**@}*/
+  /* ============================================================== */
+    /** @name Relayed Hosts
+    * @{
+    */
 
+    wxString GetLastRelayedHost(void);
+    void SetLastRelayedHost(wxString relhost);
+
+    /**@}*/
 
   protected:
     bool IsSpringBin( const wxString& path );

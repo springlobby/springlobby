@@ -15,6 +15,7 @@ class wxStaticLine;
 class wxButton;
 class wxBitmapButton;
 class wxCheckBox;
+class wxMenu;
 
 class HostBattleDialog : public wxDialog
 {
@@ -30,6 +31,8 @@ class HostBattleDialog : public wxDialog
 		void OnCancel       ( wxCommandEvent& event );
 		void OnNatChange    ( wxCommandEvent& event );
 		void OnReloadMods   ( wxCommandEvent& event );
+		void OnPickRelayHost( wxCommandEvent& event );
+		void OnRelayChoice	( wxCommandEvent& event );
 
 		int GetSelectedRank();
 
@@ -42,7 +45,7 @@ class HostBattleDialog : public wxDialog
 
 		wxStaticText* m_port_lbl;
 		wxTextCtrl* m_port_text;
-
+        wxTextCtrl* m_relayhost_name;
 //    entirely disabled until functionality is in server
 //    wxCheckBox* m_port_test_check;
 		wxCheckBox* m_relayed_host_check;
@@ -70,13 +73,20 @@ class HostBattleDialog : public wxDialog
 		wxButton* m_host_btn;
 
         wxBitmapButton* m_refresh_btn;
+		wxMenu* m_relayhost_list;
 
 		enum {
 			HOST_CANCEL = wxID_HIGHEST,
 			HOST_OK,
 			CHOSE_NAT,
-			BTN_REFRESH
+			BTN_REFRESH,
+			PICK_RELAYHOST,
+			AUTO_PICK_HOST,
+			MANUAL_PICK_HOST
 		};
+
+		wxString m_last_relayhost;
+		wxArrayString m_relayhost_array_list;
 
 		DECLARE_EVENT_TABLE()
 };

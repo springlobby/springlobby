@@ -425,9 +425,9 @@ void BattleListTab::OnHost( wxCommandEvent& /*unused*/ )
 		bo.maxplayers = sett().GetLastHostPlayerNum();
 
 		bo.isproxy = sett().GetLastHostRelayedMode();
-
-    	ui().GetServer().HostBattle( bo, sett().GetLastHostPassword() );
-  	}
+		bo.relayhost = sett().GetLastRelayedHost();
+		ui().GetServer().HostBattle( bo, sett().GetLastHostPassword() );
+	}
 }
 
 

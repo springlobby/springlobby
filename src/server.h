@@ -178,6 +178,8 @@ class Server : public iNetClass
 
     virtual void RequestSpringUpdate();
 
+		virtual wxArrayString GetRelayHostList();
+
   protected:
     Socket* m_sock;
     int m_keepalive;
