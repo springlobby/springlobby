@@ -453,9 +453,26 @@ bool IBattle::IsEveryoneReady()
 
 
 
+long StartRectArea( unsigned int left, unsigned int top, unsigned int right, unsigned int bottom ) {
+    return (right - left) * (bottom - top);
+}
+
 void IBattle::AddStartRect( unsigned int allyno, unsigned int left, unsigned int top, unsigned int right, unsigned int bottom )
 {
     BattleStartRect sr;
+    if ( top == bottom || StartRectArea( left, top, right, bottom  ) < 1000 )
+        bottom += minimum_startbox_size;
+    if ( left == right || StartRectArea( left, top, right, bottom  ) < 1000 )
+        left += minimum_startbox_size;
+    if ( m_map_loaded ) {
+        unsigned int w = m_local_map.info.width;
+        unsigned int h = m_local_map.info.height;
+        right = std::max( right, w );
+        bottom = std::max( bottom, h );
+        left = std::min( left, 0u );
+        top = std::min( top, 0u );
+    }
+
 
     sr.ally = allyno;
     sr.left = left;

@@ -1716,6 +1716,11 @@ std::vector<Settings::SettStartBox> Settings::GetMapLastRectPreset( const wxStri
 		box.bottomx = m_config->Read( additionalpath + _T( "BottomRightX" ), -1 );
 		box.bottomy = m_config->Read( additionalpath + _T( "BottomRightY" ), -1 );
 		box.ally = m_config->Read( additionalpath + _T( "AllyTeam" ), -1 );
+		if ( box.bottomx == box.topx )
+            box.topx += 40;
+        if ( box.bottomy == box.topy )
+            box.topy += 40;
+
 		ret.push_back( box );
 	}
 	return ret;
