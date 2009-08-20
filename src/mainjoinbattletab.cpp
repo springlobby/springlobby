@@ -12,6 +12,7 @@
 #include <wx/log.h>
 
 #include "ui.h"
+#include "mainwindow.h" //used only for global pers load/save, remove when signals are merged
 #include "settings.h"
 #include "battle.h"
 #include "mainjoinbattletab.h"
@@ -67,8 +68,6 @@ MainJoinBattleTab::MainJoinBattleTab( wxWindow* parent, Ui& ui )
 
 MainJoinBattleTab::~MainJoinBattleTab()
 {
-//    if ( sett().GetAutosavePerspective() )
-//        SavePerspective();
 }
 
 
@@ -149,7 +148,7 @@ void MainJoinBattleTab::JoinBattle( Battle& battle )
 	m_opts_tab = new BattleOptionsTab( m_tabs, m_ui, battle );
 	m_tabs->InsertPage( 4, m_opts_tab, _( "Unit Restrictions" ), false, wxIcon( battle_settings_xpm ) );
 
-    LoadPerspective( );
+    PostSwitchBattlePerspective( );
 
 #ifdef __WXMSW__
 	Refresh(); // this is needed to avoid a weird frame overlay glitch in windows
@@ -165,7 +164,7 @@ void MainJoinBattleTab::HostBattle( Battle& battle )
 
 void MainJoinBattleTab::LeaveCurrentBattle( bool called_from_join )
 {
-    SavePerspective();
+    PreSwitchBattlePerspective();
 
 	if ( m_mm_opts_tab ) {
 		m_tabs->DeletePage( 4 );
@@ -185,7 +184,7 @@ void MainJoinBattleTab::LeaveCurrentBattle( bool called_from_join )
 	}
 
     if( !called_from_join )
-        LoadPerspective();
+        PostSwitchBattlePerspective();
 
 }
 
@@ -271,16 +270,25 @@ BattleroomMMOptionsTab<Battle>& MainJoinBattleTab::GetMMOptionsTab()
 
 void MainJoinBattleTab::LoadPerspective( const wxString& perspective_name  )
 {
-    wxString pers_name = ( perspective_name.IsEmpty() ? sett().GetLastPerspectiveName() : perspective_name );
-    if ( m_tabs->GetPageCount() > 1 )
-        pers_name += _T("_battle");
-    LoadNotebookPerspective( m_tabs, pers_name );
+    LoadNotebookPerspective( m_tabs, perspective_name );
 }
 
 void MainJoinBattleTab::SavePerspective( const wxString& perspective_name )
 {
-    wxString pers_name = ( perspective_name.IsEmpty() ? sett().GetLastPerspectiveName() : perspective_name );
-    if ( m_tabs->GetPageCount() > 1 )
-        pers_name += _T("_battle");
-    SaveNotebookPerspective( m_tabs, pers_name );
+    SaveNotebookPerspective( m_tabs, perspective_name );
+}
+
+void MainJoinBattleTab::PostSwitchBattlePerspective( )
+{
+    ui().mw().LoadPerspectives( );
+}
+
+void MainJoinBattleTab::PreSwitchBattlePerspective( )
+{
+    ui().mw().SavePerspectives(  );
+}
+
+bool MainJoinBattleTab::UseBattlePerspective()
+{
+    return m_tabs->GetPageCount() > 1;
 }

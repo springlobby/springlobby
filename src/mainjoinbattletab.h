@@ -47,6 +47,7 @@ class MainJoinBattleTab : public wxScrolledWindow
 
     void LoadPerspective( const wxString& perspective_name = wxEmptyString );
     void SavePerspective( const wxString& perspective_name = wxEmptyString );
+    bool UseBattlePerspective();
 
   protected:
     wxBoxSizer* m_main_sizer;
@@ -62,6 +63,9 @@ class MainJoinBattleTab : public wxScrolledWindow
     BattleOptionsTab* m_opts_tab;
     BattleroomMMOptionsTab<Battle>* m_mm_opts_tab;
     Ui& m_ui;
+
+    void PreSwitchBattlePerspective ( );
+    void PostSwitchBattlePerspective( );
 
     enum {
         BATTLE_TABS = wxID_HIGHEST
