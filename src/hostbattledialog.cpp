@@ -52,10 +52,13 @@ BEGIN_EVENT_TABLE( HostBattleDialog, wxDialog )
 	EVT_BUTTON              ( PICK_RELAYHOST,	HostBattleDialog::OnPickRelayHost   )
 	EVT_MENU				( wxID_ANY, 		HostBattleDialog::OnRelayChoice		)
 	EVT_RADIOBOX            ( CHOSE_NAT,   		HostBattleDialog::OnNatChange 		)
+	EVT_CHECKBOX            ( CHK_USE_RELAY,    HostBattleDialog::OnUseRelay        )
 
 END_EVENT_TABLE()
 
-HostBattleDialog::HostBattleDialog( wxWindow* parent ): wxDialog( parent, -1, _( "Host new battle" ), wxDefaultPosition, wxSize( 410, 441 ), wxDEFAULT_DIALOG_STYLE )
+HostBattleDialog::HostBattleDialog( wxWindow* parent )
+    : wxDialog( parent, -1, _( "Host new battle" ), wxDefaultPosition, wxSize( 410, 441 ), wxDEFAULT_DIALOG_STYLE ),
+    m_last_relayhost( sett().GetLastRelayedHost() )
 {
 	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
 
@@ -120,22 +123,16 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent ): wxDialog( parent, -1, _(
 //	m_port_sizer->Add( m_port_test_check, 1, wxALL|wxEXPAND, 5 );
 
 
-//fixme
-	m_main_sizer->Add( m_port_sizer, 0, wxEXPAND, 5 );
 
-	wxBoxSizer* m_relayed_sizer;
-	wxBoxSizer * m_relayed_sizer_h;
-	m_relayed_sizer = new wxBoxSizer( wxHORIZONTAL );
-	m_relayed_sizer_h = new wxBoxSizer(wxHORIZONTAL);
-//fixme
-
-	m_relayed_host_check = new wxCheckBox( this, wxID_ANY, _( "Relay battle to an Autohost" ), wxDefaultPosition, wxDefaultSize, 0 );
+	m_relayed_host_check = new wxCheckBox( this, CHK_USE_RELAY, _( "Use relayhost" ), wxDefaultPosition, wxDefaultSize, 0 );
 	m_relayed_host_check->SetToolTip( TE( _( "host and control game on remote server, helps if you have trouble hosting" ) ) );
-	wxButton* m_relayed_host_pick = new wxButton( this, PICK_RELAYHOST, _( "" ), wxDefaultPosition, wxDefaultSize, 0 );
+	m_relayed_host_pick = new wxButton( this, PICK_RELAYHOST, _( "" ), wxDefaultPosition, wxDefaultSize, 0 );
+	m_relayed_host_pick->SetLabel( m_last_relayhost.IsEmpty() ? _T("automatic") : m_last_relayhost );
 
 	m_relayhost_list = new wxMenu();
 	wxMenuItem* automatic_pick = new wxMenuItem( m_relayhost_list, AUTO_PICK_HOST, _("Chose automatically"), _("Randomly picks an available one"), wxITEM_RADIO );
 	m_relayhost_list->Append( automatic_pick );
+	automatic_pick->Check( m_last_relayhost.IsEmpty() );
 	m_relayhost_list->AppendSeparator();
 	wxMenuItem* manual_pick_relay = new wxMenuItem( m_relayhost_list, MANUAL_PICK_HOST, _("Manually enter the manager name"), _("You'll get prompted for the exact manager name"), wxITEM_RADIO );
 	m_relayhost_list->Append( manual_pick_relay );
@@ -145,23 +142,17 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent ): wxDialog( parent, -1, _(
 	{
 		wxMenuItem* newitem = new wxMenuItem( m_relayhost_list, MANUAL_PICK_HOST + 1 + i, m_relayhost_array_list[i], _T("") , wxITEM_RADIO );
 		m_relayhost_list->Append( newitem );
+		newitem->Check( m_last_relayhost == m_relayhost_array_list[i] );
 	}
 
 	m_relayed_host_check->SetValue( sett().GetLastHostRelayedMode() );
-/*
-<<<<<<< HEAD:src/hostbattledialog.cpp
-	topsizer->AddStretchSpacer();
+	m_relayed_host_pick->Show( m_relayed_host_check->IsChecked() );
+
 	topsizer->Add(  m_relayed_host_check, 1, wxALL | wxEXPAND, 5 );
+	topsizer->Add(  m_relayed_host_pick, 0, wxALL | wxEXPAND, 5);
 
 	m_main_sizer->Add( topsizer, 0, wxEXPAND, 0 );
 
-=======
-
-	m_relayed_sizer_h->Add(  m_relayed_host_check, 1, wxALL | wxEXPAND, 5 );
-	m_relayed_sizer_h->Add(m_relayed_host_pick);
-	m_main_sizer->Add( m_relayed_sizer_h, 0, wxEXPAND, 5 );
->>>>>>> bd/master:src/hostbattledialog.cpp
-/*
 	wxStaticBoxSizer* m_players_box;
 	m_players_box = new wxStaticBoxSizer( new wxStaticBox( this, -1, _( "Number of players" ) ), wxVERTICAL );
 
@@ -353,15 +344,20 @@ void HostBattleDialog::OnPickRelayHost( wxCommandEvent& event )
 void HostBattleDialog::OnRelayChoice( wxCommandEvent& event )
 {
 		int index = event.GetId();
-		if ( index == AUTO_PICK_HOST ) m_last_relayhost = _T("");
-		else if ( index == MANUAL_PICK_HOST )
-		{
+		if ( index == AUTO_PICK_HOST )
+            m_last_relayhost = _T("");
+		else if ( index == MANUAL_PICK_HOST ) {
 			ui().AskText( _("Manually chose a manager"), _("Please type the nick of the manager you want to use ( case sensitive )"), m_last_relayhost );
 		}
-		else if ( index - MANUAL_PICK_HOST - 1 > m_relayhost_array_list.GetCount() ) return;
-		else
-		{
+		else if ( !(index - MANUAL_PICK_HOST - 1 > m_relayhost_array_list.GetCount()) ){
 			index = index - MANUAL_PICK_HOST - 1;
 			m_last_relayhost = m_relayhost_array_list[index];
 		}
+		m_relayed_host_pick->SetLabel( m_last_relayhost.IsEmpty() ? _T("automatic") : m_last_relayhost );
+}
+
+void HostBattleDialog::OnUseRelay( wxCommandEvent& event )
+{
+    m_relayed_host_pick->Show( m_relayed_host_check->IsChecked() );
+    Layout();
 }
