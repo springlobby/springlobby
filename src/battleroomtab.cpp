@@ -120,7 +120,8 @@ const MyStrings<SPRING_MAX_ALLIES> ally_choices;
 
 BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle& battle )
     : wxScrolledWindow( parent, -1 ),
-    m_battle( battle )
+    m_battle( battle ),
+    m_map_dlg( 0 )
 {
 	GetAui().manager->AddPane( this, wxLEFT, _T( "battleroomtab" ) );
 
@@ -406,7 +407,11 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle& battle )
 
 BattleRoomTab::~BattleRoomTab()
 {
-	if ( GetAui().manager )GetAui().manager->DetachPane( this );
+	if ( GetAui().manager )
+        GetAui().manager->DetachPane( this );
+    if ( m_map_dlg ) {
+        m_map_dlg->EndModal( 0 );
+    }
 }
 
 void BattleRoomTab::SplitSizerHorizontally( const bool horizontal )
@@ -902,11 +907,11 @@ void BattleRoomTab::OnSetModDefaultPreset( wxCommandEvent& /*unused*/ )
 void BattleRoomTab::OnMapBrowse( wxCommandEvent& /*unused*/ )
 {
 	wxLogDebugFunc( _T( "" ) );
-	MapSelectDialog dlg( GetParent() );
+	m_map_dlg = new MapSelectDialog ( ( wxWindow* )&m_ui.mw(), m_ui );
 
-	if ( dlg.ShowModal() == wxID_OK && dlg.GetSelectedMap() != NULL )
+	if ( m_map_dlg->ShowModal() == wxID_OK && m_map_dlg->GetSelectedMap() != NULL )
 	{
-		wxString mapname = dlg.GetSelectedMap()->name;
+		wxString mapname = m_map_dlg->GetSelectedMap()->name;
 		wxLogDebugFunc( mapname );
 		if ( !m_battle.IsFounderMe() )
 		{
@@ -914,8 +919,8 @@ void BattleRoomTab::OnMapBrowse( wxCommandEvent& /*unused*/ )
 			return;
 		}
 		const int idx = m_map_combo->FindString( RefineMapname( mapname ), true /*case sensitive*/ );
-		if ( idx != wxNOT_FOUND ) SetMap( idx );
-
+		if ( idx != wxNOT_FOUND )
+            SetMap( idx );
 	}
 }
 

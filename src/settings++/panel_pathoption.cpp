@@ -83,7 +83,7 @@ void PathOptionPanel::SetUsyncPath(wxCommandEvent& /*unused*/)
 void PathOptionPanel::UsePaths(wxCommandEvent& /*unused*/)
 {
 	sett().SetUnitSync( sett().GetCurrentUsedSpringIndex(),  usync_ctrl->GetValue() );
-	loadUnitsync();
+	usync().ReloadUnitSyncLib();
 
 	if ( !(susynclib().IsLoaded()) )
 	{

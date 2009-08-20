@@ -147,6 +147,8 @@ class Ui
 
     void ReloadPresetList();
 
+    void OpenFileInEditor( const wxString& filepath );
+
   protected:
     Server* m_serv;
     MainWindow* m_main_win;

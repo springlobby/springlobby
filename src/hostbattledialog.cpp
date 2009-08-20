@@ -21,10 +21,13 @@
 #include <wx/statbmp.h>
 #include <wx/checkbox.h>
 #include <wx/log.h>
+#include <wx/image.h>
+#include <wx/bmpbuttn.h>
 
 #include "settings.h"
 #include "iunitsync.h"
 #include "user.h"
+#include "uiutils.h"
 #include "utils/controls.h"
 #include "utils/customdialogs.h"
 
@@ -35,97 +38,89 @@
 #include "images/rank4.xpm"
 #include "images/rank5.xpm"
 #include "images/rank6.xpm"
+#include "images/arrow_refresh.png.h"
 
 BEGIN_EVENT_TABLE( HostBattleDialog, wxDialog )
 
 	EVT_BUTTON              ( HOST_CANCEL, HostBattleDialog::OnCancel    )
 	EVT_BUTTON              ( HOST_OK,     HostBattleDialog::OnOk        )
+	EVT_BUTTON              ( BTN_REFRESH, HostBattleDialog::OnReloadMods)
 	EVT_RADIOBOX            ( CHOSE_NAT,   HostBattleDialog::OnNatChange )
 
 END_EVENT_TABLE()
 
-HostBattleDialog::HostBattleDialog( wxWindow* parent ): wxDialog( parent, -1, _( "Host new battle" ), wxDefaultPosition, wxSize( 385, 441 ), wxDEFAULT_DIALOG_STYLE )
+HostBattleDialog::HostBattleDialog( wxWindow* parent ): wxDialog( parent, -1, _( "Host new battle" ), wxDefaultPosition, wxSize( 410, 441 ), wxDEFAULT_DIALOG_STYLE )
 {
 	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
+
+	wxFlexGridSizer* topsizer = new wxFlexGridSizer( 2,  0, 10);
+//	topsizer->AddGrowableCol( 1, 1 );
 
 	SetSizeHints( wxDefaultSize, wxDefaultSize );
 	wxBoxSizer* m_main_sizer;
 	m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
-	wxBoxSizer* m_desc_sizer;
-	m_desc_sizer = new wxBoxSizer( wxHORIZONTAL );
-
 	m_desc_lbl = new wxStaticText( this, wxID_ANY, _( "Description" ), wxDefaultPosition, wxDefaultSize, 0 );
 	m_desc_lbl->Wrap( -1 );
-	m_desc_sizer->Add( m_desc_lbl, 1, wxALL, 5 );
+	topsizer->Add( m_desc_lbl, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
+//    wxBoxSizer* desc_sizer = new wxBoxSizer( wxVERTICAL );
 	m_desc_text = new wxTextCtrl( this, wxID_ANY, sett().GetLastHostDescription(), wxDefaultPosition, wxDefaultSize, 0 );
 	m_desc_text->SetToolTip( TE( _( "A short description of the game, this will show up in the battle list." ) ) );
+	topsizer ->Add( m_desc_text, 1, wxALL | wxEXPAND, 5 );
 
-	m_desc_check = new wxCheckBox( this, wxID_ANY, _( "Autopaste description" ) );
+    m_desc_check = new wxCheckBox( this, wxID_ANY, _( "Autopaste description" ) );
 	m_desc_check->SetValue( sett().GetBattleLastAutoAnnounceDescription() );
 	m_desc_check->SetToolTip( TE( _( "Automatically write the battle description when a user joins." ) ) );
 
-	m_desc_sizer->Add( m_desc_text, 2, wxALL, 5 );
-
-	m_main_sizer->Add( m_desc_sizer, 0, wxEXPAND, 5 );
-	m_main_sizer->Add( m_desc_check, 0 );
-
-	wxBoxSizer* m_mod_sizer;
-	m_mod_sizer = new wxBoxSizer( wxHORIZONTAL );
+    topsizer->AddStretchSpacer();
+	topsizer->Add( m_desc_check, 0, wxLEFT, 5 );
+//	topsizer->Add( desc_sizer , 0, wxEXPAND | wxALL, 0 );
 
 	m_mod_lbl = new wxStaticText( this, wxID_ANY, _( "Mod" ), wxDefaultPosition, wxDefaultSize, 0 );
 	m_mod_lbl->Wrap( -1 );
-	m_mod_sizer->Add( m_mod_lbl, 1, wxALL, 5 );
+	topsizer->Add( m_mod_lbl, 0, wxALL | wxALIGN_CENTER_VERTICAL, 5 );
 
 	wxArrayString m_mod_picChoices;
+	wxBoxSizer* mod_choice_button_sizer = new wxBoxSizer( wxHORIZONTAL );
 	m_mod_pic = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_mod_picChoices, 0 );
 	m_mod_pic->SetToolTip( TE( _( "Select the mod to play with." ) ) );
+	mod_choice_button_sizer->Add( m_mod_pic, 0, wxALL , 5 );
 
-	m_mod_sizer->Add( m_mod_pic, 2, wxALL, 5 );
+    wxBitmap mp = charArr2wxBitmap( arrow_refresh_png, sizeof( arrow_refresh_png ) );
+	m_refresh_btn = new wxBitmapButton( this, BTN_REFRESH, mp );
+	mod_choice_button_sizer->Add( m_refresh_btn, 0, wxEXPAND|wxTOP|wxBOTTOM, 5 );
 
-	m_main_sizer->Add( m_mod_sizer, 0, wxEXPAND, 5 );
-
-	wxBoxSizer* m_pwd_sizer;
-	m_pwd_sizer = new wxBoxSizer( wxHORIZONTAL );
+	topsizer->Add( mod_choice_button_sizer, 0,  wxEXPAND|wxALL ,1 );
 
 	m_pwd_lbl = new wxStaticText( this, wxID_ANY, _( "Password" ), wxDefaultPosition, wxDefaultSize, 0 );
 	m_pwd_lbl->Wrap( -1 );
-	m_pwd_sizer->Add( m_pwd_lbl, 1, wxALL, 5 );
+	topsizer->Add( m_pwd_lbl, 1, wxALL| wxALIGN_CENTER_VERTICAL, 5 );
 
 	m_pwd_text = new wxTextCtrl( this, wxID_ANY, sett().GetLastHostPassword(), wxDefaultPosition, wxDefaultSize, wxTE_PASSWORD );
 	m_pwd_text->SetToolTip( TE( _( "Password needed to join game. Keep empty for no password" ) ) );
-
-	m_pwd_sizer->Add( m_pwd_text, 1, wxALL, 5 );
-	m_pwd_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
-
-	m_main_sizer->Add( m_pwd_sizer, 0, wxEXPAND, 5 );
-
-	wxBoxSizer* m_port_sizer;
-	m_port_sizer = new wxBoxSizer( wxHORIZONTAL );
+	topsizer->Add( m_pwd_text, 1, wxALL| wxEXPAND, 5 );
 
 	m_port_lbl = new wxStaticText( this, wxID_ANY, _( "Port" ), wxDefaultPosition, wxDefaultSize, 0 );
 	m_port_lbl->Wrap( -1 );
-	m_port_sizer->Add( m_port_lbl, 1, wxALL, 5 );
+	topsizer->Add( m_port_lbl, 1, wxALL| wxALIGN_CENTER_VERTICAL, 5 );
 
 	m_port_text = new wxTextCtrl( this, wxID_ANY, wxString::Format( _T( "%d" ), sett().GetLastHostPort() ), wxDefaultPosition, wxDefaultSize, 0 );
 	m_port_text->SetToolTip( TE( _( "UDP port to host game on. Default is 8452." ) ) );
-
-	m_port_sizer->Add( m_port_text, 1, wxALL, 5 );
+	topsizer->Add( m_port_text, 1, wxALL| wxEXPAND, 5 );
 
 //	m_port_test_check = new wxCheckBox( this, wxID_ANY, _("Test firewall"), wxDefaultPosition, wxDefaultSize, 0 );
 //	m_port_test_check->SetValue( sett().GetTestHostPort() );
 //	m_port_sizer->Add( m_port_test_check, 1, wxALL|wxEXPAND, 5 );
 
-	m_main_sizer->Add( m_port_sizer, 0, wxEXPAND, 5 );
-
-	wxBoxSizer* m_relayed_sizer;
-	m_relayed_sizer = new wxBoxSizer( wxHORIZONTAL );
 	m_relayed_host_check = new wxCheckBox( this, wxID_ANY, _( "Relay battle to an Autohost" ), wxDefaultPosition, wxDefaultSize, 0 );
 	m_relayed_host_check->SetToolTip( TE( _( "host and control game on remote server, helps if you have trouble hosting" ) ) );
 	m_relayed_host_check->SetValue( sett().GetLastHostRelayedMode() );
-	m_relayed_sizer->Add(  m_relayed_host_check, 1, wxALL | wxEXPAND, 5 );
-	m_main_sizer->Add( m_relayed_sizer, 0, wxEXPAND, 5 );
+	topsizer->AddStretchSpacer();
+	topsizer->Add(  m_relayed_host_check, 1, wxALL | wxEXPAND, 5 );
+
+	m_main_sizer->Add( topsizer, 0, wxEXPAND, 0 );
+
 
 	wxStaticBoxSizer* m_players_box;
 	m_players_box = new wxStaticBoxSizer( new wxStaticBox( this, -1, _( "Number of players" ) ), wxVERTICAL );
@@ -245,7 +240,11 @@ void HostBattleDialog::ReloadModList()
 	for ( size_t i = 0; i < nummods; i++ ) m_mod_pic->Insert( modlist[i], i );
 
 	wxString last = sett().GetLastHostMod();
-	if ( last != wxEmptyString ) m_mod_pic->SetSelection( m_mod_pic->FindString( last ) );
+	if ( last != wxEmptyString )
+        m_mod_pic->SetSelection( m_mod_pic->FindString( last ) );
+
+	if ( m_mod_pic->GetSelection() == wxNOT_FOUND )
+        m_mod_pic->SetSelection( 0 );
 }
 
 
@@ -297,4 +296,10 @@ void HostBattleDialog::OnNatChange( wxCommandEvent& /*unused*/  )
 {
 //  m_port_test_check->Enable( m_nat_radios->GetSelection() == 0 );
 	m_port_text->Enable( m_nat_radios->GetSelection() == 0 );
+}
+
+void HostBattleDialog::OnReloadMods( wxCommandEvent& event )
+{
+    usync().ReloadUnitSyncLib();
+    ReloadModList();
 }

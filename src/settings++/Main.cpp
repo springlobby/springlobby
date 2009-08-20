@@ -64,10 +64,6 @@ bool Springsettings::OnInit()
 	wxLogChain* logchain  = 0;
     wxLogWindow* loggerwin = InitializeLoggingTargets( 0, m_log_console, m_log_window_show, !m_crash_handle_disable, m_log_verbosity, logchain );
 
-    #ifdef __WXMSW__
-		sett().SetPortableMode( true );
-    #endif
-
     SetSettingsStandAlone( true );
     settings_frame* frame = new settings_frame(NULL,wxID_ANY,wxT("SpringSettings"),wxDefaultPosition,
     		wxDefaultSize);
