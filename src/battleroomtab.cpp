@@ -907,7 +907,7 @@ void BattleRoomTab::OnSetModDefaultPreset( wxCommandEvent& /*unused*/ )
 void BattleRoomTab::OnMapBrowse( wxCommandEvent& /*unused*/ )
 {
 	wxLogDebugFunc( _T( "" ) );
-	m_map_dlg = new MapSelectDialog ( ( wxWindow* )&m_ui.mw(), m_ui );
+	m_map_dlg = new MapSelectDialog ( ( wxWindow* )&ui().mw() );
 
 	if ( m_map_dlg->ShowModal() == wxID_OK && m_map_dlg->GetSelectedMap() != NULL )
 	{

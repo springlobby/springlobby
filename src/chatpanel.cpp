@@ -1856,7 +1856,7 @@ void ChatPanel::SortNickList()
 
 void ChatPanel::SetIconHighlight( HighlightType highlight )
 {
-  if (  m_ui.GetActiveChatPanel() != this && m_chat_tabs && !IsShownOnScreen() )
+  if (  ui().GetActiveChatPanel() != this && m_chat_tabs && !IsShownOnScreen() )
   {
     for ( unsigned int i = 0; i <  m_chat_tabs->GetPageCount( ); ++i )
     {

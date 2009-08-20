@@ -25,7 +25,7 @@
 #include "springprocess.h"
 #include "ui.h"
 #include "mainwindow.h"
-#include "settings++/custom_dialogs.h"
+#include "utils/customdialogs.h"
 #include "utils/debug.h"
 #include "utils/conversion.h"
 #include "settings.h"
