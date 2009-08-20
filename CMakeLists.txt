@@ -356,6 +356,7 @@ SET(SLSharedWithSettings
 	src/thread.cpp
 	src/spinctld.cpp
 	src/globalsmanager.cpp
+	src/utils/globalevents.cpp
 	src/mmoptionmodel.cpp
 	src/mmoptionswrapper.cpp
 )

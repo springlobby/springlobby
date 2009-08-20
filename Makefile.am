@@ -1058,6 +1058,7 @@ springsettings_SOURCES = \
 	src/mmoptionmodel.h \
 	src/mmoptionmodel.cpp \
 	src/globalsmanager.cpp \
+	src/utils/globalevents.cpp \
 	src/settings++/se_utils.cpp \
 	src/settings++/se_utils.h \
 	src/settings++/frame.cpp \
