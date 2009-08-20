@@ -402,6 +402,8 @@ springlobby_SOURCES = \
 	src/utils/activitynotice.cpp \
 	src/utils/activitynotice.h \
 	src/utils/isink.h \
+	src/utils/md5.h \
+	src/utils/md5.c \
 	src/aui/slbook.cpp \
 	src/aui/slbook.h \
 	src/utils/math.cpp \
@@ -492,8 +494,6 @@ springlobby_SOURCES = \
 	src/battleoptionstab.h \
 	src/battleroomtab.cpp \
 	src/battleroomtab.h \
-	src/boost/md5.cpp \
-	src/boost/md5.hpp \
 	src/crc.cpp \
 	src/crc.h \
 	src/channel/channel.cpp \
