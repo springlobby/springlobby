@@ -4,7 +4,7 @@
 #ifdef ENABLE_DEBUG_REPORT
 
 #include <wx/debugrpt.h>
-#include "utils.h"
+
 #if wxUSE_DEBUGREPORT
 
 #include <sstream>

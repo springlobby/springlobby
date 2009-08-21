@@ -749,12 +749,12 @@ void BattleRoomTab::OnAllySel( wxCommandEvent& /*unused*/ )
 
 void BattleRoomTab::OnColourSel( wxCommandEvent& /*unused*/ )
 {
-	User& u = m_battle.GetMe();
-	wxColour CurrentColour = u.BattleStatus().colour;
-	CurrentColour = GetColourFromUser( this, CurrentColour );
-	if ( !CurrentColour.IsColourOk() ) return;
-	sett().SetBattleLastColour( CurrentColour );
-	m_battle.ForceColour( u, CurrentColour );
+    User& u = m_battle.GetMe();
+    wxColour CurrentColour = u.BattleStatus().colour;
+    CurrentColour = GetColourFromUser(this, CurrentColour);
+    if ( !CurrentColour.IsOk() ) return;
+    sett().SetBattleLastColour( CurrentColour );
+    m_battle.ForceColour( u, CurrentColour );
 }
 
 

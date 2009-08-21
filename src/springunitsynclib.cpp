@@ -173,6 +173,7 @@ void SpringUnitSyncLib::_Load( const wxString& path )
     m_get_luaai_desc = (GetLuaAIDescPtr)_GetLibFuncPtr(_T("GetLuaAIDesc"));
 
     m_get_map_option_count = (GetMapOptionCountPtr)_GetLibFuncPtr(_T("GetMapOptionCount"));
+    m_get_custom_option_count = (GetCustomOptionCountPtr)_GetLibFuncPtr(_T("GetCustomOptionCount"));
     m_get_mod_option_count = (GetModOptionCountPtr)_GetLibFuncPtr(_T("GetModOptionCount"));
     m_get_skirmish_ai_option_count = (GetSkirmishAIOptionCountPtr)_GetLibFuncPtr(_T("GetSkirmishAIOptionCount"));
     m_get_option_key = (GetOptionKeyPtr)_GetLibFuncPtr(_T("GetOptionKey"));
@@ -1009,6 +1010,14 @@ int SpringUnitSyncLib::GetMapOptionCount( const wxString& name )
   ASSERT_EXCEPTION( !name.IsEmpty(), _T("passing void mapname to unitsync") );
 
   return m_get_map_option_count( name.mb_str( wxConvUTF8 ) );
+}
+
+int SpringUnitSyncLib::GetCustomOptionCount( const wxString& modname, const wxString& filename )
+{
+    InitLib( m_get_custom_option_count );
+    ASSERT_EXCEPTION( !modname.IsEmpty(), _T("passing void XXXname to unitsync") );
+    _SetCurrentMod( modname );
+    return m_get_custom_option_count( filename.mb_str( wxConvUTF8 ) );
 }
 
 

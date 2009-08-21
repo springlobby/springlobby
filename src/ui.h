@@ -149,6 +149,10 @@ class Ui
 
     void OpenFileInEditor( const wxString& filepath );
 
+    //! the welcome box, should be called in all code paths directly after MainWindow might be shown for the first time
+    void FirstRunWelcome();
+
+
   protected:
     Server* m_serv;
     MainWindow* m_main_win;

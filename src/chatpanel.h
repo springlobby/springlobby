@@ -162,6 +162,7 @@ class ChatPanel : public wxPanel
 
     wxButton* m_say_button;     //!< The say button.
     SLNotebook* m_chat_tabs;
+ 
     Channel* m_channel;         //!< Channel object.
     Server* m_server;           //!< Server object.
     const User* m_user;               //!< User object.

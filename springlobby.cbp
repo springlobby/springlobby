@@ -4,6 +4,10 @@
 	<Project>
 	<Unit filename="src/chatpanelmenu.h" />
 	<Unit filename="src/chatpanelmenu.cpp" />
+	<Unit filename="src/customizations.h" />
+	<Unit filename="src/customizations.cpp" />
+	<Unit filename="src/gui/gradientpanel.h" />
+	<Unit filename="src/gui/gradientpanel.cpp" />
 	<Unit filename="src/aui/slbook.cpp" />
 	<Unit filename="src/aui/slbook.h" />
 		<Option title="springlobby" />
@@ -16,7 +20,7 @@
 				<Option object_output="obj/GNU/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters="-cl -nc" />
+				<Option parameters='-cl -nc -s -c \&quot;Spring: 1944 SVN\&quot;' />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
 					<Add option="-Wall" />
@@ -275,6 +279,14 @@
 		<Unit filename="src/globalsmanager.h" />
 		<Unit filename="src/groupoptionspanel.cpp" />
 		<Unit filename="src/groupoptionspanel.h" />
+		<Unit filename="src/gui/simplefront.cpp" />
+		<Unit filename="src/gui/simplefront.h" />
+		<Unit filename="src/gui/skirmish_dialog.cpp" />
+		<Unit filename="src/gui/skirmish_dialog.h" />
+		<Unit filename="src/gui/wxbackgroundimage.cpp" />
+		<Unit filename="src/gui/wxbackgroundimage.h" />
+		<Unit filename="src/gui/wxgradientbutton.cpp" />
+		<Unit filename="src/gui/wxgradientbutton.h" />
 		<Unit filename="src/hostbattledialog.cpp" />
 		<Unit filename="src/hostbattledialog.h" />
 		<Unit filename="src/httpdownloader.h" />

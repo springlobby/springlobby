@@ -45,6 +45,8 @@ class SpringLobbyApp : public wxApp
     bool m_log_window_show;
     bool m_crash_handle_disable;
     bool m_updateing_only;
+    bool m_start_simple_interface;
+    wxString m_customizer_modname;
 
     UpdaterMainwindow* m_updater_window;
 

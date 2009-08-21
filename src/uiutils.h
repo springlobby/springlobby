@@ -13,9 +13,6 @@ class wxBitmap;
 
 #define wxDefaultBitmap wxBitmap()
 
-#define IsColourOk() IsOk()
-
-
 wxString RefineMapname( const wxString& mapname );
 wxString RefineModname( const wxString& modname );
 wxString RTFtoText( const wxString& rtfinput );

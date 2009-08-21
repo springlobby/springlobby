@@ -78,7 +78,7 @@ int OptionsWrapper::GetAIOptionIndex( const wxString& nick )
 	return -1;
 }
 
-bool OptionsWrapper::loadOptions(GameOption modmapFlag, const wxString& name)
+bool OptionsWrapper::loadOptions( GameOption modmapFlag, const wxString& name, const wxString& extra_filename )
 {
 	unLoadOptions(modmapFlag);
 	GameOptions opt;
@@ -98,6 +98,7 @@ bool OptionsWrapper::loadOptions(GameOption modmapFlag, const wxString& name)
 				return false;
 			}
 			break;
+
 		case ModOption:
 			try
 			{
@@ -110,23 +111,44 @@ bool OptionsWrapper::loadOptions(GameOption modmapFlag, const wxString& name)
 				return false;
 			}
 			break;
-    case EngineOption:
-    {
 
-        mmOptionList startpos( _("Start Position Type"),_T("startpostype"), _("How players will select where to be spawned in the map\n0: fixed map positions\n1: random map positions\n2: choose in game\n3: choose in the lobby before starting"), _T("0") );
-        startpos.addItem( _T("0"), _("Fixed"), _T("Use the start positions defined in the map, the positions will be assigned incrementally from the team with lowest number to highest") );
-        startpos.addItem( _T("1"), _("Random"), _T("Use the start positions defined in the map, the positions will be assigned randomly") );
-        startpos.addItem( _T("2"), _("Choose in-game"), _T("Players will be able to pick their own starting point right before the game starts, optionally limited by a bounding box defined by the host") );
-        startpos.addItem( _T("3"), _("Choose before game"), _T("The host will place each player's start position in the map preview before the game is launched") );
-        opt.list_map[_T("startpostype")] = startpos;
-        break;
-    }
-    case PrivateOptions:
-    {
-        opt.string_map[_T("restrictions")] = mmOptionString(_("List of restricted units"), _T("restrictedunits"), _T("Units in this list won't be available in game"), _T(""), 0 ); // tab separated list
-        opt.string_map[_T("mapname")] = mmOptionString(_("Map name"), _T("mapname"), _T("Map name"), _T(""), 0 );
-        break;
-    }
+        case EngineOption: {
+            mmOptionList startpos( _("Start Position Type"),_T("startpostype"), _("How players will select where to be spawned in the map\n0: fixed map positions\n1: random map positions\n2: choose in game\n3: choose in the lobby before starting"), _T("0") );
+            startpos.addItem( _T("0"), _("Fixed"), _T("Use the start positions defined in the map, the positions will be assigned incrementally from the team with lowest number to highest") );
+            startpos.addItem( _T("1"), _("Random"), _T("Use the start positions defined in the map, the positions will be assigned randomly") );
+            startpos.addItem( _T("2"), _("Choose in-game"), _T("Players will be able to pick their own starting point right before the game starts, optionally limited by a bounding box defined by the host") );
+            startpos.addItem( _T("3"), _("Choose before game"), _T("The host will place each player's start position in the map preview before the game is launched") );
+            opt.list_map[_T("startpostype")] = startpos;
+            break;
+        }
+
+        case PrivateOptions: {
+            opt.string_map[_T("restrictions")] = mmOptionString(_("List of restricted units"), _T("restrictedunits"), _T("Units in this list won't be available in game"), _T(""), 0 ); // tab separated list
+            opt.string_map[_T("mapname")] = mmOptionString(_("Map name"), _T("mapname"), _T("Map name"), _T(""), 0 );
+            break;
+        }
+
+        case ModCustomizations: {
+            try {
+                opt = usync().GetModCustomizations( name );
+            }
+            catch(...) {
+				wxLogError(_T("Could not load mod customizations"));
+				return false;
+			}
+			break;
+        }
+
+        case SkirmishOptions: {
+            try {
+                opt = usync().GetSkirmishOptions( name, extra_filename );
+            }
+            catch(...) {
+				wxLogError(_T("Could not load skirmish options"));
+				return false;
+			}
+			break;
+        }
 	}
 	m_opts[modmapFlag] = opt;
 	return true;
@@ -515,6 +537,32 @@ wxString OptionsWrapper::GetNameListOptItemKey(wxString optkey, wxString itemnam
 	return wxEmptyString;
 }
 
+bool OptionsWrapper::MergeOptions( const OptionsWrapper& other, GameOption merge_into )
+{
+    GameOptionsMapCIter other_it = other.m_opts.begin();
+    for ( ; other_it != other.m_opts.end(); ++other_it ) {
+        const GameOptions& other_opts = other_it->second;
+        const GameOption other_id = (const GameOption)other_it->first;
+
+        for (IUnitSync::OptionMapBoolConstIter it = other_opts.bool_map.begin(); it != other_opts.bool_map.end();++it ) {
+            m_opts[merge_into].bool_map[it->first] = it->second;
+        }
+
+        for ( IUnitSync::OptionMapFloatConstIter it = other_opts.float_map.begin(); it != other_opts.float_map.end(); ++it ) {
+            m_opts[merge_into].float_map[it->first] = it->second;
+        }
+
+        for ( IUnitSync::OptionMapListConstIter it = other_opts.list_map.begin(); it != other_opts.list_map.end(); ++it ){
+            m_opts[merge_into].list_map[it->first] = it->second;
+        }
+
+        for ( IUnitSync::OptionMapStringConstIter it = other_opts.string_map.begin(); it != other_opts.string_map.end(); ++it ) {
+            m_opts[merge_into].string_map[it->first] = it->second;
+        }
+    }
+    return true;
+}
+
 void OptionsWrapper::ParseSectionMap( mmSectionTree& section_tree, const IUnitSync::OptionMapSection& section_map )
 {
 
@@ -650,3 +698,5 @@ void mmSectionTree::Clear()
     m_section_map.clear();
     m_tree->DeleteAll();
 }
+
+

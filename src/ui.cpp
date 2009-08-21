@@ -45,7 +45,8 @@
 #include "unitsyncthread.h"
 #include "agreementdialog.h"
 #ifdef __WXMSW__
-#include "updater/updater.h"
+    #include "updater/updater.h"
+    #include "Helper/tasclientimport.h"
 #endif
 
 #include "utils/customdialogs.h"
@@ -1219,5 +1220,47 @@ void Ui::OpenFileInEditor( const wxString& filepath )
         customMessageBoxNoModal( SL_MAIN_ICON, _T("There was a problem launching the editor.\nPlease make sure the path is correct and the binary executable for your user.\nNote it's currently not possible to use shell-only editors like ed, vi, etc."), _T("Problem launching editor") );
         mw().ShowConfigure( MainWindow::OPT_PAGE_GENERAL );
     }
+}
 
+void Ui::FirstRunWelcome()
+{
+    if ( sett().IsFirstRun() )
+    {
+#ifdef __WXMSW__
+        sett().SetOldSpringLaunchMethod( true );
+#endif
+
+        wxLogMessage( _T("first time startup"));
+        wxMessageBox(_("Hi ") + wxGetUserName() + _(",\nIt looks like this is your first time using SpringLobby. I have guessed a configuration that I think will work for you but you should review it, especially the Spring configuration. \n\nWhen you are done you can go to the File menu, connect to a server, and enjoy a nice game of Spring :)"), _("Welcome"),
+                     wxOK | wxICON_INFORMATION, &mw() );
+
+
+        customMessageBoxNoModal(SL_MAIN_ICON, _("By default SpringLobby reports some usage statistics.\nYou can disable that on options tab --> General."),_("Notice"),wxOK );
+
+
+                // copy uikeys.txt
+                wxPathList pl;
+                pl.AddEnvList( _T("%ProgramFiles%") );
+                pl.AddEnvList( _T("XDG_DATA_DIRS") );
+                pl = sett().GetAdditionalSearchPaths( pl );
+                wxString uikeyslocation = pl.FindValidPath( _T("uikeys.txt") );
+                if ( !uikeyslocation.IsEmpty() )
+                {
+                    wxCopyFile( uikeyslocation, sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("uikeys.txt"), false );
+                }
+
+    #ifdef __WXMSW__
+        if ( TASClientPresent() &&
+                customMessageBox(SL_MAIN_ICON, _("Should I try to import (some) TASClient settings?\n" ),_("Import settings?"), wxYES_NO ) == wxYES )
+        {
+            ImportTASClientSettings();
+        }
+    #endif
+
+        mw().ShowConfigure();
+    }
+    else
+    {
+        mw().ShowSingleplayer();
+    }
 }

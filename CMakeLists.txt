@@ -210,6 +210,14 @@ SET(SpringLobbySrc
 	src/updater/updatermainwindow.cpp
 	src/utils/activitynotice.cpp
 	src/chatpanelmenu.cpp
+	src/customizations.cpp
+	src/gui/gradientpanel.cpp
+	src/gui/wxgradientbutton.cpp
+	src/gui/skirmish_dialog.cpp
+	src/gui/wxbackgroundimage.cpp
+	src/gui/simplefront.cpp
+	src/updater/updatermainwindow.cpp
+	src/utils/activitynotice.cpp
 	src/aui/slbook.cpp
 	src/utils/math.cpp
 	src/utils/misc.cpp

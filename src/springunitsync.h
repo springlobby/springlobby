@@ -157,6 +157,7 @@ class SpringUnitSync : public IUnitSync
 
     wxArrayString GetSides( const wxString& modname  );
     wxImage GetSidePicture( const wxString& modname, const wxString& SideName );
+    wxImage GetImage( const wxString& modname, const wxString& image_path );
 
     bool LoadUnitSyncLib( const wxString& unitsyncloc );
     void FreeUnitSyncLib();
@@ -215,6 +216,9 @@ class SpringUnitSync : public IUnitSync
     void GetMapExAsync( const wxString& mapname, int evtHandlerId );
 
     wxArrayString GetScreenshotFilenames();
+
+    virtual GameOptions GetModCustomizations( const wxString& modname );
+    virtual GameOptions GetSkirmishOptions( const wxString& modname, const wxString& skirmish_name );
 
   protected:
 	  EventReceiverFunc< SpringUnitSync, GlobalEvents::GlobalEventData, &SpringUnitSync::ReloadUnitSyncLib > m_UnitsyncReloadRequestSink;

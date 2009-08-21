@@ -49,12 +49,14 @@
 #include "updater/updater.h"
 #include "globalsmanager.h"
 #include "Helper/wxTranslationHelper.h"
-#include "Helper/tasclientimport.h"
 #include "playback/playbacktraits.h"
 #include "playback/playbacktab.h"
 #include "updater/versionchecker.h"
 #include "updater/updatermainwindow.h"
 #include "defines.h"
+#include "customizations.h"
+
+#include "gui/simplefront.h"
 
 const unsigned int TIMER_ID         = 101;
 const unsigned int TIMER_INTERVAL   = 100;
@@ -96,6 +98,7 @@ SpringLobbyApp::SpringLobbyApp()
     m_log_window_show( false ),
     m_crash_handle_disable( false ),
     m_updateing_only( false ),
+    m_start_simple_interface( false ),
     m_updater_window( 0 )
 {
     SetAppName( _T("springlobby") );
@@ -131,7 +134,6 @@ bool SpringLobbyApp::OnInit()
     wxFileSystem::AddHandler(new wxZipFSHandler);
     wxSocketBase::Initialize();
 
-
 #ifdef __WXMSW__
     wxString path = wxPathOnly( wxStandardPaths::Get().GetExecutablePath() ) + wxFileName::GetPathSeparator() + _T("locale");
 #else
@@ -163,48 +165,27 @@ bool SpringLobbyApp::OnInit()
     GetGlobalEventSender(GlobalEvents::UnitSyncReloadRequest).SendEvent( 0 ); // request an unitsync reload
 
     CacheAndSettingsSetup();
+
+    if ( !m_customizer_modname.IsEmpty() ) {
+        if ( SLcustomizations().Init( m_customizer_modname ) ) {
+            if ( m_start_simple_interface ) {
+                SimpleFront* sp = new SimpleFront( 0 );
+                SetTopWindow( sp );
+                sp->Show();
+                return true;
+            }
+        }
+        else {
+            customMessageBox( 0, _("Couldn't load customizations for ") + m_customizer_modname + _("\nPlease check that that is the correct name, passed in qoutation"), _("Fatal error"), wxOK );
+//            wxLogError( _("Couldn't load customizations for ") + m_customizer_modname + _("\nPlease check that that is the correct name, passed in qoutation"), _("Fatal error") );
+            exit( OnExit() );//for some twisted reason returning false here does not termiante the app
+        }
+    }
+
     ui().ShowMainWindow();
     SetTopWindow( &ui().mw() );
 
-    if ( sett().IsFirstRun() )
-    {
-#ifdef __WXMSW__
-        sett().SetOldSpringLaunchMethod( true );
-#endif
-
-        wxLogMessage( _T("first time startup"));
-        wxMessageBox(_("Hi ") + wxGetUserName() + _(",\nIt looks like this is your first time using SpringLobby. I have guessed a configuration that I think will work for you but you should review it, especially the Spring configuration. \n\nWhen you are done you can go to the File menu, connect to a server, and enjoy a nice game of Spring :)"), _("Welcome"),
-                     wxOK | wxICON_INFORMATION, &ui().mw() );
-
-
-        customMessageBoxNoModal(SL_MAIN_ICON, _("By default SpringLobby reports some usage statistics.\nYou can disable that on options tab --> General."),_("Notice"),wxOK );
-
-
-                // copy uikeys.txt
-                wxPathList pl;
-                pl.AddEnvList( _T("%ProgramFiles%") );
-                pl.AddEnvList( _T("XDG_DATA_DIRS") );
-                pl = sett().GetAdditionalSearchPaths( pl );
-                wxString uikeyslocation = pl.FindValidPath( _T("uikeys.txt") );
-                if ( !uikeyslocation.IsEmpty() )
-                {
-                    wxCopyFile( uikeyslocation, sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("uikeys.txt"), false );
-                }
-
-    #ifdef __WXMSW__
-        if ( TASClientPresent() &&
-                customMessageBox(SL_MAIN_ICON, _("Should I try to import (some) TASClient settings?\n" ),_("Import settings?"), wxYES_NO ) == wxYES )
-        {
-            ImportTASClientSettings();
-        }
-    #endif
-
-        ui().mw().ShowConfigure();
-    }
-    else
-    {
-        ui().mw().ShowSingleplayer();
-    }
+    ui().FirstRunWelcome();
 
 #ifndef NO_TORRENT_SYSTEM
     if( sett().GetTorrentSystemAutoStartMode() == 1 ) torrent().ConnectToP2PSystem();
@@ -278,41 +259,33 @@ bool SpringLobbyApp::SelectLanguage()
 void SpringLobbyApp::OnInitCmdLine(wxCmdLineParser& parser)
 {
     #ifndef HAVE_WX29
-        wxCmdLineEntryDesc cmdLineDesc[] =
-        {
-            { wxCMD_LINE_SWITCH, _T("h"), _T("help"), _("show this help message"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_OPTION_HELP },
-            { wxCMD_LINE_SWITCH, _T("nc"), _T("no-crash-handler"), _("don't use the crash handler (useful for debugging)"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
-        #if wxUSE_STD_IOSTREAM
-            { wxCMD_LINE_SWITCH, _T("cl"), _T("console-logging"),  _("shows application log to the console(if available)"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
-        #endif
-            { wxCMD_LINE_SWITCH, _T("gl"), _T("gui-logging"),  _("enables application log window"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
-        #ifdef __WXMSW__
-            { wxCMD_LINE_SWITCH, _T("u"), _T("update"),  _("only run update, quit immediately afterwards"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
-        #endif
-            //{ wxCMD_LINE_OPTION, _T("c"), _T("config-file"),  _("override default choice for config-file"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL | wxCMD_LINE_NEEDS_SEPARATOR },
-            { wxCMD_LINE_OPTION, _T("l"), _T("log-verbosity"),  _("overrides default logging verbosity, can be:\n                                0: no log\n                                1: critical errors\n                                2: errors\n                                3: warnings (default)\n                                4: messages\n                                5: function trace"), wxCMD_LINE_VAL_NUMBER, wxCMD_LINE_PARAM_OPTIONAL },
-            { wxCMD_LINE_NONE }
-        };
+        #define STR _T
     #else
-        wxCmdLineEntryDesc cmdLineDesc[] =
-        {
-            { wxCMD_LINE_SWITCH, "h", "help", _("show this help message"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_OPTION_HELP },
-            { wxCMD_LINE_SWITCH, "nc", "no-crash-handler", _("don't use the crash handler (useful for debugging)"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
-        #if wxUSE_STD_IOSTREAM
-            { wxCMD_LINE_SWITCH, "cl", "console-logging",  _("shows application log to the console(if available)"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
-        #endif
-            { wxCMD_LINE_SWITCH, "gl", "gui-logging",  _("enables application log window"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
-        #ifdef __WXMSW__
-            { wxCMD_LINE_SWITCH, "u", "update",  _("only run update, quit immediately afterwards"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
-        #endif
-            //{ wxCMD_LINE_OPTION, _T("c"), _T("config-file"),  _("override default choice for config-file"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL | wxCMD_LINE_NEEDS_SEPARATOR },
-            { wxCMD_LINE_OPTION, "l", "log-verbosity",  _("overrides default logging verbosity, can be:\n                                0: no log\n                                1: critical errors\n                                2: errors\n                                3: warnings (default)\n                                4: messages\n                                5: function trace"), wxCMD_LINE_VAL_NUMBER, wxCMD_LINE_PARAM_OPTIONAL },
-            { wxCMD_LINE_NONE }
-        };
+        #define STR
     #endif
+
+    wxCmdLineEntryDesc cmdLineDesc[] =
+    {
+        { wxCMD_LINE_SWITCH, STR("h"), STR("help"), _("show this help message"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_OPTION_HELP },
+        { wxCMD_LINE_SWITCH, STR("nc"), STR("no-crash-handler"), _("don't use the crash handler (useful for debugging)"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
+    #if wxUSE_STD_IOSTREAM
+        { wxCMD_LINE_SWITCH, STR("cl"), STR("console-logging"),  _("shows application log to the console(if available)"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
+    #endif
+        { wxCMD_LINE_SWITCH, STR("gl"), STR("gui-logging"),  _("enables application log window"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
+    #ifdef __WXMSW__
+        { wxCMD_LINE_SWITCH, STR("u"), STR("update"),  _("only run update, quit immediately afterwards"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
+    #endif
+        //{ wxCMD_LINE_OPTION, STR("c"), STR("config-file"),  _("override default choice for config-file"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL | wxCMD_LINE_NEEDS_SEPARATOR },
+        { wxCMD_LINE_OPTION, STR("l"), STR("log-verbosity"),  _("overrides default logging verbosity, can be:\n                                0: no log\n                                1: critical errors\n                                2: errors\n                                3: warnings (default)\n                                4: messages\n                                5: function trace"), wxCMD_LINE_VAL_NUMBER, wxCMD_LINE_PARAM_OPTIONAL },
+        { wxCMD_LINE_OPTION, STR("c"), STR("customize"),  _("Load lobby customizations from game archive. Expects the shortname."), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
+        { wxCMD_LINE_SWITCH, STR("s"), STR("simple"),  _("Start with the simple interface."), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
+        { wxCMD_LINE_NONE }
+    };
 
     parser.SetDesc( cmdLineDesc );
     parser.SetSwitchChars (_T("-"));
+
+    #undef STR
 }
 
 //! @brief parses the command line and sets global app options like log verbosity or log target
@@ -324,11 +297,14 @@ bool SpringLobbyApp::OnCmdLineParsed(wxCmdLineParser& parser)
         m_log_console = parser.Found(_T("console-logging"));
         m_log_window_show = parser.Found(_T("gui-logging"));
         m_crash_handle_disable = parser.Found(_T("no-crash-handler"));
+        m_start_simple_interface = parser.Found(_T("simple"));
 
 //        Settings::m_user_defined_config = parser.Found( _T("config-file"), &Settings::m_user_defined_config_path );
 
         if ( !parser.Found(_T("log-verbosity"), &m_log_verbosity ) )
             m_log_verbosity = m_log_window_show ? 3 : 5;
+        if ( !parser.Found(_T("customize"), &m_customizer_modname ) )
+            m_customizer_modname = _T("");
 
         if ( parser.Found(_T("help")) )
             return false; // not a syntax error, but program should stop if user asked for command line usage

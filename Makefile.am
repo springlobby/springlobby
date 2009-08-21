@@ -396,6 +396,18 @@ libtorrent_headers = \
 
 
 springlobby_SOURCES = \
+	src/customizations.h \
+	src/customizations.cpp \
+	src/gui/gradientpanel.h \
+	src/gui/gradientpanel.cpp \
+	src/gui/wxgradientbutton.cpp \
+	src/gui/wxgradientbutton.h \
+	src/gui/skirmish_dialog.h \
+	src/gui/skirmish_dialog.cpp \
+	src/gui/wxbackgroundimage.cpp \
+	src/gui/wxbackgroundimage.h \
+	src/gui/simplefront.h \
+	src/gui/simplefront.cpp \
 	src/defines.h \
 	src/updater/updatermainwindow.cpp \
 	src/updater/updatermainwindow.h \

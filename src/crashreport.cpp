@@ -5,7 +5,7 @@
 
 
 #if wxUSE_DEBUGREPORT && defined(ENABLE_DEBUG_REPORT)
-#include "utils.h"
+
 #include "crashreport.h"
 #include <wx/intl.h>
 #include <wx/filefn.h>
