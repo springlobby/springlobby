@@ -22,6 +22,7 @@
 
 #include "battlemaptab.h"
 #include "iunitsync.h"
+#include "ui.h"
 #include "user.h"
 #include "battle.h"
 #include "utils/debug.h"

@@ -84,7 +84,6 @@ MainTorrentTab::MainTorrentTab( wxWindow* parent )
 	SetScrollRate( SCROLL_RATE, SCROLL_RATE );
 
 	info_map = torrent().CollectGuiInfos();
-	m_torrent_list->SetInfoMap( &info_map );
 
 	m_torrent_list->Layout();
 
