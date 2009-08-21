@@ -383,6 +383,9 @@ public:
 
 		virtual void StartSpring() = 0;
 
+
+        static const int minimum_startbox_size = 40;
+
 protected:
 
 		void LoadScriptMMOpts( const wxString& sectionname, const PDataList& node );
