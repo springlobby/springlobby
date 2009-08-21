@@ -28,7 +28,7 @@ MainSinglePlayerTab::MainSinglePlayerTab( wxWindow* parent )
 {
 	m_main_sizer = new wxBoxSizer( wxVERTICAL );
 	GetAui().manager->AddPane( this, wxLEFT, _T( "mainsingleplayertab" ) );
-	m_tabs = new SLNotebook( this, -1, wxDefaultPosition, wxDefaultSize, wxAUI_NB_TAB_SPLIT | wxAUI_NB_TAB_MOVE | wxAUI_NB_SCROLL_BUTTONS | wxAUI_NB_TOP | wxAUI_NB_TAB_EXTERNAL_MOVE );
+	m_tabs = new SLNotebook( this, _T( "mainsingleplayertab" ), -1, wxDefaultPosition, wxDefaultSize, wxAUI_NB_TAB_SPLIT | wxAUI_NB_TAB_MOVE | wxAUI_NB_SCROLL_BUTTONS | wxAUI_NB_TOP | wxAUI_NB_TAB_EXTERNAL_MOVE );
 	m_tabs->SetArtProvider( new SLArtProvider );
 
 	m_imagelist = new wxImageList( 12, 12 );
@@ -44,7 +44,7 @@ MainSinglePlayerTab::MainSinglePlayerTab( wxWindow* parent )
 
 	m_main_sizer->Add( m_tabs, 1, wxEXPAND );
 
-	SetScrollRate( 3, 3 );
+	SetScrollRate( SCROLL_RATE, SCROLL_RATE );
 	SetSizer( m_main_sizer );
 	Layout();
 }
@@ -52,9 +52,19 @@ MainSinglePlayerTab::MainSinglePlayerTab( wxWindow* parent )
 
 MainSinglePlayerTab::~MainSinglePlayerTab()
 {
-
+//    if ( sett().GetAutosavePerspective() )
+//        SavePerspective();
 }
 
+void MainSinglePlayerTab::LoadPerspective( const wxString& perspective_name  )
+{
+    LoadNotebookPerspective( m_tabs, perspective_name );
+}
+
+void MainSinglePlayerTab::SavePerspective( const wxString& perspective_name )
+{
+    SaveNotebookPerspective( m_tabs, perspective_name );
+}
 
 void MainSinglePlayerTab::UpdateMinimap()
 {

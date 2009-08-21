@@ -29,7 +29,7 @@ class MainJoinBattleTab : public wxScrolledWindow
     //void UpdateCurrentBattle();
     void UpdateCurrentBattle();
     void UpdateCurrentBattle( const wxString& Tag );
-    void LeaveCurrentBattle();
+    void LeaveCurrentBattle( bool called_from_join = false );
     Battle* GetCurrentBattle();
     ChatPanel* GetActiveChatPanel();
 
@@ -42,6 +42,10 @@ class MainJoinBattleTab : public wxScrolledWindow
     void ReloadPresetList();
 
     void OnConnected();
+
+    void LoadPerspective( const wxString& perspective_name = wxEmptyString );
+    void SavePerspective( const wxString& perspective_name = wxEmptyString );
+    bool UseBattlePerspective();
 
   protected:
     wxBoxSizer* m_main_sizer;
@@ -56,6 +60,9 @@ class MainJoinBattleTab : public wxScrolledWindow
     BattleMapTab* m_map_tab;
     BattleOptionsTab* m_opts_tab;
     BattleroomMMOptionsTab<Battle>* m_mm_opts_tab;
+
+    void PreSwitchBattlePerspective ( );
+    void PostSwitchBattlePerspective( );
 
     enum {
         BATTLE_TABS = wxID_HIGHEST

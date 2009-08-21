@@ -16,6 +16,7 @@
 #include "utils/debug.h"
 #include "utils/conversion.h"
 #include "utils/math.h"
+#include "utils/controls.h"
 #include "mainwindow.h"
 #include "channel/channel.h"
 #include "user.h"
@@ -49,7 +50,7 @@ MainChatTab::MainChatTab( wxWindow* parent )
 
 	m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
-	m_chat_tabs = new SLNotebook( this, CHAT_TABS, wxDefaultPosition, wxDefaultSize, wxAUI_NB_DEFAULT_STYLE | wxAUI_NB_TOP | wxAUI_NB_TAB_EXTERNAL_MOVE | wxAUI_NB_WINDOWLIST_BUTTON );
+	m_chat_tabs = new SLChatNotebook( this, CHAT_TABS, wxDefaultPosition, wxDefaultSize, wxAUI_NB_DEFAULT_STYLE | wxAUI_NB_TOP | wxAUI_NB_TAB_EXTERNAL_MOVE | wxAUI_NB_WINDOWLIST_BUTTON );
 	m_chat_tabs ->SetArtProvider( new SLArtProvider );
 
 	wxBitmap userchat ( userchat_xpm ); //*charArr2wxBitmap(userchat_png, sizeof(userchat_png) );
@@ -74,7 +75,8 @@ MainChatTab::MainChatTab( wxWindow* parent )
 
 	SetSizer( m_main_sizer );
 	m_main_sizer->SetSizeHints( this );
-	SetScrollRate( 3, 3 );
+	SetScrollRate( SCROLL_RATE, SCROLL_RATE );
+
 	Layout();
 }
 
@@ -358,3 +360,12 @@ bool MainChatTab::RemoveChatPanel( ChatPanel* panel )
 	return false;
 }
 
+void MainChatTab::LoadPerspective( const wxString& perspective_name  )
+{
+    LoadNotebookPerspective( m_chat_tabs, perspective_name );
+}
+
+void MainChatTab::SavePerspective( const wxString& perspective_name )
+{
+    SaveNotebookPerspective( m_chat_tabs, perspective_name );
+}

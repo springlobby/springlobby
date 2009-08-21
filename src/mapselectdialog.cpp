@@ -401,7 +401,7 @@ void MapSelectDialog::LoadRecent()
 	for ( int i = 0; i < count; ++i ) {
 		// prefix and suffix with underscore to prevent most common partial matches
 		const wxString mapname = _T("_") + m_maps[i].BeforeLast( '.' ) + _T("_");
-		unsigned int replaycount = m_replays.GetCount();
+		long replaycount = long(m_replays.GetCount());
 		for ( int replaynum = 0; replaynum < replaycount; replaynum++ ) {
 			if ( m_replays[replaynum].Contains( mapname ) )
 				m_mapgrid->AddMap( m_maps[i] );

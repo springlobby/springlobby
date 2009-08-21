@@ -42,7 +42,7 @@ AutojoinChannelDialog::AutojoinChannelDialog( wxWindow* parent )
 	SetSizer( mainSizer );
 	wxString channels;
 	std::vector<ChannelJoinInfo> chanlist = sett().GetChannelsJoin();
-	for ( int i = 0; i < chanlist.size(); i++ )
+	for ( int i = 0; i < long(chanlist.size()); i++ )
 	{
 		ChannelJoinInfo info = chanlist[i];
 		channels << info.name + _T(" ") + info.password + _T("\n");

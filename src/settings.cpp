@@ -924,9 +924,11 @@ wxString Settings::GetCurrentUsedDataDir()
 		else dir = susynclib().GetSpringConfigString( _T( "SpringData" ), _T( "" ) );
 	}
 #ifdef __WXMSW__
-	if ( dir.IsEmpty() ) dir = GetExecutableFolder(); // fallback
+	if ( dir.IsEmpty() )
+        dir = GetExecutableFolder(); // fallback
 #else
-	if ( dir.IsEmpty() ) dir = wxFileName::GetHomeDir() + wxFileName::GetPathSeparator() + _T( ".spring" ); // fallback
+	if ( dir.IsEmpty() )
+        dir = wxFileName::GetHomeDir() + wxFileName::GetPathSeparator() + _T( ".spring" ); // fallback
 #endif
 	return dir;
 }
@@ -985,8 +987,10 @@ void Settings::SetSpringBinary( const wxString& index, const wxString& path )
 
 wxString Settings::GetForcedSpringConfigFilePath()
 {
-	if ( IsPortableMode() ) return GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T( "springsettings.cfg" );
-	else return _T( "" );
+	if ( IsPortableMode() )
+        return GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T( "springsettings.cfg" );
+	else
+        return _T( "" );
 }
 
 // ===================================================
@@ -2431,4 +2435,62 @@ bool Settings::GetShowXallTabs()
 void Settings::SetShowXallTabs( bool show )
 {
     m_config->Write( _T( "/GUI/CloseOnAll" ) , show );
+}
+
+void Settings::SavePerspective( const wxString& notebook_name, const wxString& perspective_name, const wxString& layout_string )
+{
+    wxString entry = wxString::Format( _T( "/GUI/AUI/%s/%s" ), perspective_name.c_str(), notebook_name.c_str() );
+    m_config->Write( entry, layout_string );
+}
+
+wxString Settings::LoadPerspective( const wxString& notebook_name, const wxString& perspective_name )
+{
+    wxString entry = wxString::Format( _T( "/GUI/AUI/%s/%s" ), perspective_name.c_str(), notebook_name.c_str() );
+    return m_config->Read( entry , _T("") );
+}
+
+wxString Settings::GetLastPerspectiveName( )
+{
+    return m_config->Read( _T( "/GUI/AUI/lastperspective_name" ), _T("default") );
+}
+
+void Settings::SetLastPerspectiveName( const wxString&  name )
+{
+    m_config->Write( _T( "/GUI/AUI/lastperspective_name" ), name );
+}
+
+void Settings::SetAutosavePerspective( bool autosave )
+{
+    m_config->Write( _T( "/GUI/AUI/autosave" ), autosave );
+}
+
+bool Settings::GetAutosavePerspective( )
+{
+    return m_config->Read( _T( "/GUI/AUI/autosave" ), 1l );
+}
+
+wxArrayString Settings::GetPerspectives()
+{
+    wxArrayString list = GetGroupList( _T( "/GUI/AUI" ) );
+    wxArrayString ret;
+    for ( size_t i = 0; i < list.GetCount(); ++i) {
+    	if ( !list[i].EndsWith( BattlePostfix ) )
+            ret.Add( list[i] );
+        else  {
+            wxString stripped = list[i].Left( list[i].Len() - BattlePostfix.Len() );
+            if ( !PerspectiveExists( stripped ) )
+                ret.Add( stripped );
+        }
+    }
+    return ret;
+}
+
+bool Settings::PerspectiveExists( const wxString& perspective_name )
+{
+    wxArrayString list = GetGroupList( _T( "/GUI/AUI" ) );
+    for ( size_t i = 0; i < list.GetCount(); ++i) {
+        if ( list[i] == perspective_name )
+            return true;
+    }
+    return false;
 }

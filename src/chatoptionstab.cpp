@@ -339,7 +339,7 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent )
 
 	bMainSizerV->Add( 0, 0, 1, wxEXPAND | wxALL, 5 );
 
-	SetScrollRate( 3, 3 );
+	SetScrollRate( SCROLL_RATE, SCROLL_RATE );
 
 	SetSizer( bMainSizerV );
 	Layout();

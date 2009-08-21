@@ -61,7 +61,7 @@ class MainWindow : public wxFrame
     void OpenPrivateChat( const User& user, bool doFocus = false );
 
     void ShowConfigure( const unsigned int page = OPT_PAGE_SPRING );
-    void ShowTab( const int idx );
+    void ShowTab( const unsigned int idx );
     void ShowSingleplayer();
 
     /** Show the channel list dialog. */
@@ -114,6 +114,9 @@ class MainWindow : public wxFrame
 
     void SetLogWin( wxLogWindow* log, wxLogChain* logchain );
 
+    void LoadPerspectives( const wxString& perspective_name = wxEmptyString );
+    void SavePerspectives( const wxString& perspective_name = wxEmptyString );
+
   protected:
 
     wxMenuItem* m_settings_menu;
@@ -140,6 +143,7 @@ class MainWindow : public wxFrame
     SavegameTab* m_savegame_tab;
 
     wxBitmap GetTabIcon( const unsigned char* data, size_t size  );
+    wxString AddPerspectivePostfix( const wxString& pers_name );
 
     wxLogWindow* m_log_win;
     wxLogChain* m_log_chain;

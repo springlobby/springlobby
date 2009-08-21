@@ -5,7 +5,6 @@
 #include <wx/textctrl.h>
 #include <vector>
 
-#include "usermenu.h"
 #include "chatlog.h"
 #include "Helper/TextCompletionDatabase.hpp"
 
@@ -32,6 +31,7 @@ class wxMouseEvent;
 class SLNotebook;
 class wxNotebook;
 class wxImageList;
+class ChatPanelMenu;
 
 enum ChatPanelType {
   CPT_Channel,
@@ -123,67 +123,14 @@ class ChatPanel : public wxPanel
     void OnLinkEvent( wxTextUrlEvent& event );
     void OnMouseDown( wxMouseEvent& event );
 
-    void OnMenuToggleAppend( wxCommandEvent& event );
-
-    void OnChannelMenuLeave( wxCommandEvent& event );
-    void OnChannelMenuDisplayJoinLeave( wxCommandEvent& event );
-    void OnChannelAutoJoin( wxCommandEvent& event );
-    void OnChannelMenuInfo( wxCommandEvent& event );
-    void OnChannelMenuTopic( wxCommandEvent& event );
-    void OnChannelMenuMessage( wxCommandEvent& event );
-    void OnChannelMenuLock( wxCommandEvent& event );
-    void OnChannelMenuUnlock( wxCommandEvent& event );
-    void OnChannelMenuRegister( wxCommandEvent& event );
-    void OnChannelMenuUnregister( wxCommandEvent& event );
-    void OnChannelMenuSpamOn( wxCommandEvent& event );
-    void OnChannelMenuSpanOff( wxCommandEvent& event );
-    void OnChannelMenuSpamIsOn( wxCommandEvent& event );
-    void OnChannelMenuShowMutelist( wxCommandEvent& event );
-
-    void OnServerMenuDisconnect( wxCommandEvent& event );
-    void OnServerMenuReconnect( wxCommandEvent& event );
-    void OnServerMenuRemove( wxCommandEvent& event );
-    void OnServerMenuChangePassword( wxCommandEvent& event );
-    void OnServerMenuSetAccess( wxCommandEvent& event );
-    void OnServerMenuBroadcast( wxCommandEvent& event );
-
-    void OnUserMenuOpenChat( wxCommandEvent& event );
-    void OnUserMenuJoinSame( wxCommandEvent& event );
-    void OnUserMenuSlap( wxCommandEvent& event );
-    void OnUserMenuMute( wxCommandEvent& event );
-    void OnUserMenuUnmute( wxCommandEvent& event );
-    void OnUserMenuKick( wxCommandEvent& event );
-    void OnUserMenuOp( wxCommandEvent& event );
-    void OnUserMenuDeop( wxCommandEvent& event );
-    void OnUserMenuModeratorIngame( wxCommandEvent& event );
-    void OnUserMenuModeratorCurrentIP( wxCommandEvent& event );
-    void OnUserMenuModeratorKick( wxCommandEvent& event );
-    void OnUserMenuModeratorBan( wxCommandEvent& event );
-    void OnUserMenuModeratorUnban( wxCommandEvent& event );
-    void OnUserMenuModeratorMute( wxCommandEvent& event );
-    void OnUserMenuModeratorMute5( wxCommandEvent& event );
-    void OnUserMenuModeratorMute10( wxCommandEvent& event );
-    void OnUserMenuModeratorMute30( wxCommandEvent& event );
-    void OnUserMenuModeratorMute120( wxCommandEvent& event );
-    void OnUserMenuModeratorMute1440( wxCommandEvent& event );
-    void OnUserMenuModeratorUnmute( wxCommandEvent& event );
-    void OnUserMenuModeratorRing( wxCommandEvent& event );
-
-    void OnUserMenuCopyLink( wxCommandEvent& event );
-
-    void OnChatMenuOpenLog( wxCommandEvent& event );
-
     void OnKeyPressed( wxKeyEvent& keyevent );
     void OnKeyReleased( wxKeyEvent& keyevent );
 
-    void OnUserMenuAddToGroup( wxCommandEvent& event );
-    void OnUserMenuDeleteFromGroup( wxCommandEvent& event );
-    void OnUserMenuCreateGroup( wxCommandEvent& event );
     void UpdateNicklistHighlights();
 
     void SortNickList();
 
-    void ClearContents( wxCommandEvent& event );
+    void OnMenuItem( wxCommandEvent& event );
 
   protected:
 
@@ -226,13 +173,9 @@ class ChatPanel : public wxPanel
 
     wxString m_chan_pass;
 
-    wxMenu* m_popup_menu;
-    wxMenuItem* m_autorejoin;
-    wxMenuItem* m_append_menu;
+    ChatPanelMenu* m_popup_menu;
+
     ChatLog m_chat_log;
-    wxMenuItem* displayjoinitem;
-    typedef SL_GENERIC::UserMenu<ChatPanel> UserMenu;
-    UserMenu* m_usermenu;
 
     void LogTime();
     void CreateControls( );
@@ -242,9 +185,6 @@ class ChatPanel : public wxPanel
 
     wxImageList* m_imagelist;
 
-    UserMenu* CreateNickListMenu();
-
-
     static const int m_groupMenu_baseID = 6798;
 	TextCompletionDatabase textcompletiondatabase;
 
@@ -252,6 +192,8 @@ class ChatPanel : public wxPanel
     bool m_disable_append;
 
     wxString m_url_at_pos; //! the mouse event sink sets this
+
+    friend class ChatPanelMenu; //menu needs access to members
 
     DECLARE_EVENT_TABLE();
 };
@@ -261,63 +203,8 @@ enum
     CHAT_SEND = wxID_HIGHEST,
     CHAT_TEXT,
     CHAT_LOG,
-    CHAT_CHAN_OPTS,
-
-    CHAT_MENU_DISABLE_APPEND,
-
-    CHAT_MENU_CH_CLEAR,
-    CHAT_MENU_CH_LEAVE,
-    CHAT_MENU_CH_DISPLAYJOIN,
-    CHAT_MENU_CH_AUTOJOIN,
-    CHAT_MENU_CH_INFO,
-    CHAT_MENU_CH_TOPIC,
-    CHAT_MENU_CH_MSG,
-    CHAT_MENU_CH_LOCK,
-    CHAT_MENU_CH_UNLOCK,
-    CHAT_MENU_CH_REG,
-    CHAT_MENU_CH_UNREG,
-    CHAT_MENU_CH_SPAM_ON,
-    CHAT_MENU_CH_SPAM_OFF,
-    CHAT_MENU_CH_SPAM_ISON,
-
-    CHAT_MENU_SV_DISCON,
-    CHAT_MENU_SV_RECON,
-    CHAT_MENU_SV_REMOVE,
-    CHAT_MENU_SV_CHPWD,
-    CHAT_MENU_SV_ACCESS,
-    CHAT_MENU_SV_BROADCAST,
-
-    CHAT_MENU_US_CHAT,
-    CHAT_MENU_US_JOIN,
-    CHAT_MENU_US_SLAP,
-    CHAT_MENU_US_MUTE,
-    CHAT_MENU_US_UNMUTE,
-    CHAT_MENU_US_KICK,
-    CHAT_MENU_US_ADD_TO_GROUP,
-    CHAT_MENU_US_OP,
-    CHAT_MENU_US_DEOP,
-    CHAT_MENU_US_MODERATOR_INGAME,
-    CHAT_MENU_US_MODERATOR_CURIP,
-    CHAT_MENU_US_MODERATOR_KICK,
-    CHAT_MENU_US_MODERATOR_BAN,
-    CHAT_MENU_US_MODERATOR_UNBAN,
-    CHAT_MENU_US_MODERATOR_MUTE,
-    CHAT_MENU_US_MODERATOR_MUTE_5,
-    CHAT_MENU_US_MODERATOR_MUTE_10,
-    CHAT_MENU_US_MODERATOR_MUTE_30,
-    CHAT_MENU_US_MODERATOR_MUTE_120,
-    CHAT_MENU_US_MODERATOR_MUTE_1440,
-    CHAT_MENU_US_MODERATOR_UNMUTE,
-    CHAT_MENU_US_MODERATOR_RING,
-
-    CHAT_MENU_COPYLINK,
-
-    CHAT_MENU_SHOW_MUTELIST,
-
-    CHAT_MENU_LOG_OPEN
+    CHAT_CHAN_OPTS
 };
-
-
 #endif // SPRINGLOBBY_HEADERGUARD_CHATPANEL_H
 
 /**

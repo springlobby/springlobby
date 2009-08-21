@@ -119,7 +119,7 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent )
 
 	SetSizer( m_main_sizer );
 
-	SetScrollRate( 3, 3 );
+	SetScrollRate( SCROLL_RATE, SCROLL_RATE );
 
 	Layout();
 

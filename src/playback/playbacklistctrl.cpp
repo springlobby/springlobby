@@ -243,7 +243,7 @@ wxListItemAttr* PlaybackListCtrl<PlaybackType>::GetItemAttr(long /*unused*/) con
 template <class PlaybackType>
 void PlaybackListCtrl<PlaybackType>::RemovePlayback( const int index )
 {
-    if ( index != -1 && index < m_data.size() ) {
+    if ( index != -1 && index < long(m_data.size()) ) {
         m_data.erase( m_data.begin() + index );
         SetItemCount( m_data.size() );
         RefreshVisibleItems( );

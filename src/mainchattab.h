@@ -9,7 +9,7 @@ class Server;
 class Channel;
 class User;
 class wxAuiNotebookEvent;
-class SLNotebook;
+class SLChatNotebook;
 class wxBoxSizer;
 class wxImageList;
 class wxString;
@@ -48,10 +48,13 @@ class MainChatTab : public wxScrolledWindow
 
     wxImage ReplaceChannelStatusColour( wxBitmap img, const wxColour& colour );
 
+    void LoadPerspective( const wxString& perspective_name = wxEmptyString );
+    void SavePerspective( const wxString& perspective_name = wxEmptyString );
+
   protected:
 
     wxWindow* m_close_window;
-    SLNotebook* m_chat_tabs;
+    SLChatNotebook* m_chat_tabs;
     wxBoxSizer* m_main_sizer;
     wxImageList* m_imagelist;
     ChatPanel* m_server_chat;

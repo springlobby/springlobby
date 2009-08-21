@@ -202,7 +202,7 @@ void ServerEvents::OnUserQuit( const wxString& nick )
 					int battleid = userbattle->GetID();
 					if ( &userbattle->GetFounder() == &user )
 					{
-						for ( int i = 0; i < userbattle->GetNumUsers(); i ++ )
+						for ( int i = 0; i < long(userbattle->GetNumUsers()); i ++ )
 						{
 							User& battleuser = userbattle->GetUser( i );
 							OnUserLeftBattle( battleid, battleuser.GetNick() );

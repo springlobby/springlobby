@@ -350,11 +350,12 @@ void CustomVirtListCtrl<T,L>::OnEndResizeCol(wxListEvent& event)
 }
 
 template < class T, class L >
-bool CustomVirtListCtrl<T,L>::SetColumnWidth(int col, int width)
+bool CustomVirtListCtrl<T,L>::SetColumnWidth(int col, int& width)
 {
     if ( sett().GetColumnWidth( m_name, col) != Settings::columnWidthUnset)
     {
-        return ListBaseType::SetColumnWidth( col, sett().GetColumnWidth( m_name, col) );
+        width = sett().GetColumnWidth( m_name, col);
+        return ListBaseType::SetColumnWidth( col, width );
     }
     else
     {
@@ -457,8 +458,10 @@ template < class T, class L >
 void CustomVirtListCtrl<T,L>::ResetColumnSizes()
 {
     typename colInfoVec::const_iterator it = m_colinfovec.begin();
-    for ( ; it != m_colinfovec.end(); ++it )
-        SetColumnWidth( it->col_num, it->size );
+    for ( ; it != m_colinfovec.end(); ++it ) {
+        int width = it->size;
+        SetColumnWidth( it->col_num, width );
+    }
 }
 
 template < class T, class L >

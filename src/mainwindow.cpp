@@ -138,12 +138,12 @@ MainWindow::MainWindow( )
   //TODO doesn't work atm
 
 
-  /* loading layouts currently borked
+    // loading layouts currently borked
 	wxMenu* menuView = new wxMenu;
 	menuView->Append( MENU_SAVE_LAYOUT, _("&Save Layout") );
 	menuView->Append( MENU_LOAD_LAYOUT, _("&Load layout") );
-	menuView->Append( MENU_DEFAULT_LAYOUT, _("&Set &Laoyut as default") );
-	*/
+//	menuView->Append( MENU_DEFAULT_LAYOUT, _("&Set &Laoyut as default") );
+
 
   m_menuTools = new wxMenu;
   m_menuTools->Append(MENU_JOIN, _("&Join channel..."));
@@ -172,14 +172,14 @@ MainWindow::MainWindow( )
   m_menubar->Append(menuFile, _("&File"));
   //m_menubar->Append(m_menuEdit, _("&Edit"));
 
-  //m_menubar->Append(menuView, _("&View")); //layout stuff --> disabled
+  m_menubar->Append(menuView, _("&View")); //layout stuff --> disabled
 
   m_menubar->Append(m_menuTools, _("&Tools"));
   m_menubar->Append(menuHelp, _("&Help"));
   SetMenuBar(m_menubar);
 
   m_main_sizer = new wxBoxSizer( wxHORIZONTAL );
-  m_func_tabs = new SLNotebook(  this, MAIN_TABS, wxDefaultPosition, wxDefaultSize,
+  m_func_tabs = new SLNotebook(  this, _T("mainfunctabs"), MAIN_TABS, wxDefaultPosition, wxDefaultSize,
         wxAUI_NB_WINDOWLIST_BUTTON | wxAUI_NB_TAB_SPLIT | wxAUI_NB_TAB_MOVE | wxAUI_NB_TAB_EXTERNAL_MOVE | wxAUI_NB_SCROLL_BUTTONS | wxAUI_NB_LEFT );
   m_func_tabs->SetArtProvider(new SLArtProvider);
 
@@ -209,6 +209,7 @@ MainWindow::MainWindow( )
     m_func_tabs->InsertPage( PAGE_OPTOS,    m_opts_tab,     m_tab_names[PAGE_OPTOS],    false );
 #endif
 
+    LoadPerspectives();
 
 
   SetTabIcons();
@@ -274,6 +275,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::OnClose( wxCloseEvent& /*unused*/ )
 {
+    SavePerspectives();
   AuiManagerContainer::ManagerType* manager=GetAui().manager;
   if(manager){
     GetAui().manager=NULL;
@@ -428,9 +430,9 @@ void MainWindow::ShowSingleplayer()
     ShowTab( PAGE_SINGLE );
 }
 
-void MainWindow::ShowTab( const int idx )
+void MainWindow::ShowTab( const unsigned int idx )
 {
-    if ( -1 < idx && idx <m_tab_names.GetCount() )
+    if ( 0 <= idx && idx <m_tab_names.GetCount() )
         m_func_tabs->SetSelection( idx );
     else
         wxLogError( _T("tab selection oob: %d"), idx );
@@ -647,20 +649,30 @@ void MainWindow::OnChannelListStart( )
     m_channel_chooser->ClearChannels();
 }
 
+wxString MainWindow::AddPerspectivePostfix( const wxString& pers_name )
+{
+    wxString perspective_name  = pers_name.IsEmpty() ? sett().GetLastPerspectiveName() : pers_name;
+    if ( m_join_tab &&  m_join_tab->UseBattlePerspective() )
+        perspective_name += BattlePostfix;
+    return perspective_name;
+}
+
 void MainWindow::OnMenuSaveLayout( wxCommandEvent& /*unused*/ )
 {
 	wxString answer;
-	if ( !ui().AskText( _("Layout manager"),_("Enter a profile name"), answer ) ) return;
-	wxString layout = GetAui().manager->SavePerspective();
-	sett().SaveLayout( answer, layout );
+	if ( !ui().AskText( _("Layout manager"),_("Enter a profile name"), answer ) )
+        return;
+    SavePerspectives( answer );
 }
 
 void MainWindow::OnMenuLoadLayout( wxCommandEvent& /*unused*/ )
 {
-	wxArrayString layouts = sett().GetLayoutList();
+	wxArrayString layouts = sett().GetPerspectives();
 	unsigned int result = wxGetSingleChoiceIndex( _("Which profile fo you want to load?"), _("Layout manager"), layouts );
-	if ( ( result < 0  ) || ( result > layouts.GetCount() ) ) return;
-	GetAui().manager->LoadPerspective( sett().GetLayout( layouts[result] ) );
+	if ( ( result < 0  ) || ( result > layouts.GetCount() ) )
+        return;
+
+    LoadPerspectives( layouts[result] );
 }
 
 
@@ -675,4 +687,34 @@ void MainWindow::OnMenuDefaultLayout( wxCommandEvent& /*unused*/ )
 const MainWindow::TabNames& MainWindow::GetTabNames()
 {
     return m_tab_names;
+}
+
+void MainWindow::LoadPerspectives( const wxString& pers_name )
+{
+    sett().SetLastPerspectiveName( pers_name );
+    wxString perspective_name = AddPerspectivePostfix( pers_name );
+
+    //loading a default layout on top of the more tabs of battle layout would prove fatal
+    if ( perspective_name.EndsWith( BattlePostfix ) && !sett().PerspectiveExists( perspective_name ) )
+        return;
+
+
+    LoadNotebookPerspective( m_func_tabs, perspective_name );
+    m_sp_tab->LoadPerspective( perspective_name );
+    m_join_tab->LoadPerspective( perspective_name );
+    m_opts_tab->LoadPerspective( perspective_name );
+    //chat tab saving won't work w/o further work
+//    m_chat_tab->LoadPerspective( perspective_name );
+}
+
+void MainWindow::SavePerspectives( const wxString& pers_name )
+{
+    sett().SetLastPerspectiveName( pers_name );
+    wxString perspective_name = AddPerspectivePostfix( pers_name );
+
+    m_sp_tab->SavePerspective( perspective_name );
+    m_join_tab->SavePerspective( perspective_name );
+    m_opts_tab->SavePerspective( perspective_name );
+//    m_chat_tab->SavePerspective( perspective_name );
+    SaveNotebookPerspective( m_func_tabs, perspective_name );
 }

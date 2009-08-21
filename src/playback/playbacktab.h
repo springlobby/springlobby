@@ -1,7 +1,7 @@
 #ifndef SPRINGLOBBY_PlaybackTab_H_INCLUDED
 #define SPRINGLOBBY_PlaybackTab_H_INCLUDED
 
-#include <wx/panel.h>
+#include <wx/scrolwin.h>
 #include <vector>
 
 class Ui;
@@ -28,7 +28,7 @@ template <class PlaybackType>
 class PlaybackLoader;
 
 template <class PlaybackTraitsImp>
-class PlaybackTab : public wxPanel
+class PlaybackTab : public wxScrolledWindow
 {
     protected:
         friend class BattleListFilter; //! WTF?

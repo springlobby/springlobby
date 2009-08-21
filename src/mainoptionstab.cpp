@@ -22,6 +22,7 @@
 #include "uiutils.h"
 #include "groupoptionspanel.h"
 #include "utils/debug.h"
+#include "utils/controls.h"
 #include "utils/conversion.h"
 
 #ifndef NO_TORRENT_SYSTEM
@@ -101,7 +102,7 @@ MainOptionsTab::MainOptionsTab( wxWindow* parent )
 	m_main_sizer->Add( m_button_sizer, 0, wxEXPAND );
 
 	SetSizer( m_main_sizer );
-	SetScrollRate( 3, 3 );
+	SetScrollRate( SCROLL_RATE, SCROLL_RATE );
 	Layout();
 	Refresh();
 }
@@ -109,7 +110,8 @@ MainOptionsTab::MainOptionsTab( wxWindow* parent )
 
 MainOptionsTab::~MainOptionsTab()
 {
-
+//   if ( sett().GetAutosavePerspective() )
+//        SavePerspective();
 }
 
 
@@ -118,7 +120,6 @@ GroupOptionsPanel& MainOptionsTab::GetGroupOptionsPanel()
 	ASSERT_EXCEPTION( m_groups_opts != 0, _T( "m_groups_opts == 0" ) );
 	return *m_groups_opts;
 }
-
 
 void MainOptionsTab::OnApply( wxCommandEvent& event )
 {
@@ -131,7 +132,6 @@ void MainOptionsTab::OnApply( wxCommandEvent& event )
 
 	sett().SaveSettings();
 }
-
 
 void MainOptionsTab::OnRestore( wxCommandEvent& event )
 {
@@ -160,3 +160,12 @@ void MainOptionsTab::SetSelection( const unsigned int page )
 }
 
 
+void MainOptionsTab::LoadPerspective( const wxString& perspective_name  )
+{
+    LoadNotebookPerspective( m_tabs, perspective_name );
+}
+
+void MainOptionsTab::SavePerspective( const wxString& perspective_name )
+{
+    SaveNotebookPerspective( m_tabs, perspective_name );
+}

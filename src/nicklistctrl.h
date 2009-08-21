@@ -7,13 +7,13 @@
 class User;
 class UserList;
 class Ui;
-class ChatPanel;
+class ChatPanelMenu;
 class UserMenu;
 
 class NickListCtrl : public CustomVirtListCtrl< const User* ,NickListCtrl >
 {
   protected:
-    typedef SL_GENERIC::UserMenu<ChatPanel> UserMenu;
+    typedef SL_GENERIC::UserMenu<ChatPanelMenu> UserMenu;
 
   public:
     NickListCtrl( wxWindow* parent, bool show_header = true, UserMenu* popup = 0,

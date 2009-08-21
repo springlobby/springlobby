@@ -131,7 +131,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle& battle )
 	UserBattleStatus& myself = m_battle.GetMe().BattleStatus();
 
 	m_player_panel = new wxScrolledWindow( m_splitter , -1 );
-	m_player_panel->SetScrollRate( 3, 3 );
+	m_player_panel->SetScrollRate( SCROLL_RATE, SCROLL_RATE );
 	m_team_sel = new wxComboBox( m_player_panel, BROOM_TEAMSEL, _T( "1" ), wxDefaultPosition, wxSize( 50, CONTROL_HEIGHT ), team_choices );
 	m_team_sel->SetToolTip( TE( _( "Players with the same team number share control of their units." ) ) );
 	m_ally_sel = new wxComboBox( m_player_panel, BROOM_ALLYSEL, _T( "1" ), wxDefaultPosition, wxSize( 50, CONTROL_HEIGHT ), ally_choices );
@@ -395,7 +395,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle& battle )
 	UpdateBattleInfo( wxString::Format( _T( "%d_mapname" ), OptionsWrapper::PrivateOptions ) );
 	UpdateBattleInfo();
 
-	SetScrollRate( 3, 3 );
+	SetScrollRate( SCROLL_RATE, SCROLL_RATE );
 	SetSizer( m_main_sizer );
 	Layout();
 	unsigned int widthfraction = m_opts_list->GetClientSize().GetWidth() / 3;

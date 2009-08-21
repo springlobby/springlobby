@@ -21,6 +21,7 @@
 #include "settings.h"
 #include "torrentwrapper.h"
 #include "utils/conversion.h"
+#include "utils/controls.h"
 
 
 BEGIN_EVENT_TABLE( TorrentOptionsPanel, wxScrolledWindow )
@@ -105,7 +106,7 @@ TorrentOptionsPanel::TorrentOptionsPanel( wxWindow* parent )
     OnRestore( dummy );
 
     SetSizer( mainboxsizer );
-    SetScrollRate( 3, 3 );
+    SetScrollRate( SCROLL_RATE, SCROLL_RATE );
     Layout();
 }
 

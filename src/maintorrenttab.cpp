@@ -18,6 +18,7 @@
 #include "torrentlistctrl.h"
 #include "torrentwrapper.h"
 #include "utils/conversion.h"
+#include "utils/controls.h"
 #include "Helper/colorbutton.h"
 #include "filelister/filelistdialog.h"
 #include "widgets/downloaddialog.h"
@@ -80,12 +81,11 @@ MainTorrentTab::MainTorrentTab( wxWindow* parent )
 	m_mainbox->Add( m_buttonbox, 0, wxALL, 5 );
 
 	SetSizer( m_mainbox );
-	m_mainbox->SetSizeHints( this );
-	Layout();
+	SetScrollRate( SCROLL_RATE, SCROLL_RATE );
 
 	info_map = torrent().CollectGuiInfos();
-//	m_torrent_list->SetInfoMap( &info_map );
-//    m_torrent_list->SetSizeHints(this);
+	m_torrent_list->SetInfoMap( &info_map );
+
 	m_torrent_list->Layout();
 
 	for ( map_infos_iter iter = info_map.begin(); iter != info_map.end(); ++iter )
@@ -95,6 +95,9 @@ MainTorrentTab::MainTorrentTab( wxWindow* parent )
 		m_torrent_list->AddTorrentInfo( iter->second );
 	}
 	m_download_dialog = 0;
+
+    Layout();
+
 }
 
 MainTorrentTab::~MainTorrentTab()

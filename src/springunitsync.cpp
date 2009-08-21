@@ -553,13 +553,13 @@ wxArrayString SpringUnitSync::GetAIList( const wxString& modname )
 	{
 		// list dynamic link libraries
 		wxArrayString dlllist = susynclib().FindFilesVFS( wxDynamicLibrary::CanonicalizeName(_T("AI/Bot-libs/*"), wxDL_MODULE) );
-		for( int i = 0; i < dlllist.GetCount(); i++ )
+		for( int i = 0; i < long(dlllist.GetCount()); i++ )
 		{
 			if ( ret.Index( dlllist[i].BeforeLast( '/') ) == wxNOT_FOUND ) ret.Add ( dlllist[i] ); // don't add duplicates
 		}
 		// list jar files (java AIs)
 		wxArrayString jarlist = susynclib().FindFilesVFS( _T("AI/Bot-libs/*.jar") );
-		for( int i = 0; i < jarlist.GetCount(); i++ )
+		for( int i = 0; i < long(jarlist.GetCount()); i++ )
 		{
 			if ( ret.Index( jarlist[i].BeforeLast( '/') ) == wxNOT_FOUND ) ret.Add ( jarlist[i] ); // don't add duplicates
 		}
@@ -934,7 +934,7 @@ wxArrayString SpringUnitSync::GetScreenshotFilenames()
     if ( !IsLoaded() ) return ret;
 
     ret = susynclib().FindFilesVFS( _T("screenshots/*.*") );
-    for ( int i = 0; i < ret.Count() - 1; ++i ) {
+    for ( int i = 0; i < long(ret.Count() - 1); ++i ) {
             if ( ret[i] == ret[i+1] )
                 ret.RemoveAt( i+1 );
     }

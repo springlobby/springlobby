@@ -404,6 +404,8 @@ springlobby_SOURCES = \
 	src/utils/isink.h \
 	src/utils/md5.h \
 	src/utils/md5.c \
+	src/chatpanelmenu.h \
+	src/chatpanelmenu.cpp \
 	src/aui/slbook.cpp \
 	src/aui/slbook.h \
 	src/utils/math.cpp \

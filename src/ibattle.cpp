@@ -78,7 +78,8 @@ std::vector<wxColour> &IBattle::GetFixColoursPalette( int numteams )
             }
         }
     }
-    if ( result.size() > numteams ) return result;
+    if ( long(result.size()) < numteams )
+        return result;
     return GetBigFixColoursPalette( numteams );
 }
 
