@@ -5,6 +5,13 @@
 
 class ChatPanelMenu;
 
+/** \brief wxAuiNotebook derived class that allows child page layouts to be saved/loaded at runtime
+    Originally this was just meant as means of setting the aui manager flags to circumvent
+    the crash with compositing enabled: http://trac.wxwidgets.org/ticket/4841 \n
+    The functionality for perspective loading/saving originates from the patch at:
+    http://trac.wxwidgets.org/ticket/10466
+
+**/
 class SLNotebook : public wxAuiNotebook {
 
     public:
@@ -17,6 +24,12 @@ class SLNotebook : public wxAuiNotebook {
         bool LoadPerspective(const wxString& layout);
         wxString GetName() { return m_name; }
 
+        /** \brief call fitinside for each child page
+            useful after loading perspectives, since that does not generate OnSize events
+            \note koshi: turns out it isn't strictly necessary on at least wxGTK
+        **/
+        void FitChildPages();
+
     protected:
         wxString m_name;
         bool m_autosave_prespective;
@@ -25,6 +38,9 @@ class SLNotebook : public wxAuiNotebook {
 
 class ChatPanel;
 
+/** \brief SLNotebook derived class that only accepts ChatPanel pages
+    Provides a common context menu for all tab headers that has a the repective Chatpanel's context menu as a submenu
+**/
 class SLChatNotebook : public SLNotebook {
 
     public:
@@ -47,6 +63,7 @@ class SLChatNotebook : public SLNotebook {
         DECLARE_EVENT_TABLE();
 };
 
+//! Utility function that handles surrounding Layout updates in addition to loading a notebook perspective
 void LoadNotebookPerspective( SLNotebook* notebook, const wxString& perspective_name );
 void SaveNotebookPerspective( SLNotebook* notebook, const wxString& perspective_name );
 

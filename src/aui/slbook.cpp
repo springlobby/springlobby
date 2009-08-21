@@ -365,6 +365,15 @@ bool SLNotebook::LoadPerspective(const wxString& layout) {
   return true;
 }
 
+void SLNotebook::FitChildPages()
+{
+    for ( size_t i = 0; i < GetPageCount(); ++i) {
+    	wxWindow* page = GetPage( i );
+    	if ( page )
+            page->FitInside();
+    }
+}
+
 void LoadNotebookPerspective( SLNotebook* notebook, const wxString& perspective_name )
 {
     wxString pers_name = ( perspective_name.IsEmpty() ? sett().GetLastPerspectiveName() : perspective_name );
@@ -372,6 +381,7 @@ void LoadNotebookPerspective( SLNotebook* notebook, const wxString& perspective_
     wxString pers = sett().LoadPerspective( name, pers_name );
     if ( !pers.IsEmpty() ) {
         notebook->LoadPerspective( pers );
+        notebook->Layout();
         wxWindow* parent = notebook->GetParent();
         if ( parent ) {
             parent->Layout();
