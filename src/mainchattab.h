@@ -48,6 +48,9 @@ class MainChatTab : public wxScrolledWindow
 
     wxImage ReplaceChannelStatusColour( wxBitmap img, const wxColour& colour );
 
+    void LoadPerspective( const wxString& perspective_name = wxEmptyString );
+    void SavePerspective( const wxString& perspective_name = wxEmptyString );
+
   protected:
 
     Ui& m_ui;

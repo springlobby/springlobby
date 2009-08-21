@@ -698,6 +698,8 @@ void MainWindow::LoadPerspectives( const wxString& pers_name )
     m_sp_tab->LoadPerspective( perspective_name );
     m_join_tab->LoadPerspective( perspective_name );
     m_opts_tab->LoadPerspective( perspective_name );
+    //chat tab saving won't work w/o further work
+//    m_chat_tab->LoadPerspective( perspective_name );
 }
 
 void MainWindow::SavePerspectives( const wxString& pers_name )
@@ -709,5 +711,6 @@ void MainWindow::SavePerspectives( const wxString& pers_name )
     m_sp_tab->SavePerspective( perspective_name );
     m_join_tab->SavePerspective( perspective_name );
     m_opts_tab->SavePerspective( perspective_name );
+//    m_chat_tab->SavePerspective( perspective_name );
     SaveNotebookPerspective( m_func_tabs, perspective_name );
 }

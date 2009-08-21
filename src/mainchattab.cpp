@@ -360,3 +360,12 @@ bool MainChatTab::RemoveChatPanel( ChatPanel* panel )
 	return false;
 }
 
+void MainChatTab::LoadPerspective( const wxString& perspective_name  )
+{
+    LoadNotebookPerspective( m_chat_tabs, perspective_name );
+}
+
+void MainChatTab::SavePerspective( const wxString& perspective_name )
+{
+    SaveNotebookPerspective( m_chat_tabs, perspective_name );
+}
