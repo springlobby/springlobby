@@ -23,6 +23,7 @@
 #include "uiutils.h"
 #include "groupoptionspanel.h"
 #include "utils/debug.h"
+#include "utils/controls.h"
 #include "utils/conversion.h"
 
 #ifndef NO_TORRENT_SYSTEM
@@ -90,7 +91,7 @@ MainOptionsTab::MainOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( p
 	m_main_sizer->Add( m_button_sizer, 0, wxEXPAND );
 
 	SetSizer( m_main_sizer );
-	SetScrollRate( 3, 3 );
+	SetScrollRate( SCROLL_RATE, SCROLL_RATE );
 	Layout();
 	Refresh();
 }

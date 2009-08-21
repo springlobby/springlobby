@@ -16,6 +16,7 @@
 #include "utils/debug.h"
 #include "utils/conversion.h"
 #include "utils/math.h"
+#include "utils/controls.h"
 #include "mainwindow.h"
 #include "channel/channel.h"
 #include "user.h"
@@ -75,7 +76,7 @@ MainChatTab::MainChatTab( wxWindow* parent, Ui& ui )
 
 	SetSizer( m_main_sizer );
 	m_main_sizer->SetSizeHints( this );
-	SetScrollRate( 3, 3 );
+	SetScrollRate( SCROLL_RATE, SCROLL_RATE );
 
 	Layout();
 }

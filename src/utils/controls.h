@@ -7,10 +7,12 @@ class wxColour;
 #include <wx/intl.h>
 
 #ifdef __WXMSW__
-#define CONTROL_HEIGHT 22
+    static const int CONTROL_HEIGHT = 22;
 #else
-#define CONTROL_HEIGHT 28
+    static const int CONTROL_HEIGHT = 28;
 #endif
+
+static const int SCROLL_RATE = 3;
 
 #define bool2yn(b) ((b)?_("Yes"):_("No"))
 

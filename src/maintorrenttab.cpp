@@ -19,6 +19,7 @@
 #include "torrentwrapper.h"
 #include "ui.h"
 #include "utils/conversion.h"
+#include "utils/controls.h"
 #include "Helper/colorbutton.h"
 #include "filelister/filelistdialog.h"
 #include "widgets/downloaddialog.h"
@@ -82,6 +83,7 @@ MainTorrentTab::MainTorrentTab( wxWindow* parent, Ui& ui )
 	m_mainbox->Add( m_buttonbox, 0, wxALL, 5 );
 
 	SetSizer( m_mainbox );
+	SetScrollRate( SCROLL_RATE, SCROLL_RATE );
 	m_mainbox->SetSizeHints( this );
 	Layout();
 

@@ -26,6 +26,7 @@
 #include "user.h"
 #include "battle.h"
 #include "utils/debug.h"
+#include "utils/controls.h"
 #include "chatpanel.h"
 #include "mapctrl.h"
 #include "mapselectdialog.h"
@@ -127,7 +128,7 @@ BattleMapTab::BattleMapTab( wxWindow* parent, Ui& ui, Battle& battle )
 
 	//m_map_combo->Enable( m_battle.IsFounderMe() );
 	m_start_radios->Enable( m_battle.IsFounderMe() );
-	SetScrollRate( 3, 3 );
+	SetScrollRate( SCROLL_RATE, SCROLL_RATE );
 	Layout();
 }
 

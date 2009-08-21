@@ -104,6 +104,7 @@ abstract_panel::abstract_panel(wxWindow *parent, wxWindowID id , const wxString 
                 : wxScrolledWindow(parent, id, pos, size, style|wxTAB_TRAVERSAL|wxHSCROLL,title) {
 //	abstract_panel::expertModeEnadbled = false;
 	SetScrollbars( 10, 10, 62, 62 );
+	Layout();
 }
 
 abstract_panel::~abstract_panel(void) {

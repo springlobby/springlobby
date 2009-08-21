@@ -60,7 +60,7 @@ MainJoinBattleTab::MainJoinBattleTab( wxWindow* parent, Ui& ui )
 
 	m_main_sizer->Add( m_tabs, 1, wxEXPAND );
 
-	SetScrollRate( 3, 3 );
+	SetScrollRate( SCROLL_RATE, SCROLL_RATE );
 	SetSizer( m_main_sizer );
 	Layout();
 }

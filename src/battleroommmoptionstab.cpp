@@ -102,20 +102,18 @@ BattleroomMMOptionsTab<BattleType>::BattleroomMMOptionsTab(  BattleType& battle,
 
   //m_main_sizer->FitInside(this);
 
+    SetScrollRate( SCROLL_RATE, SCROLL_RATE );
+	SetSizer( m_main_sizer );
+	Layout();
 
-	this->SetSizer( m_main_sizer );
-	this->Layout();
+    if ( !m_battle.IsFounderMe() ) {
+        m_options_preset_sel->Disable();
+        m_load_btn->Disable();
+        m_save_btn->Disable();
+        m_delete_btn->Disable();
+        m_default_btn->Disable();
+    }
 
-  if ( !m_battle.IsFounderMe() )
-  {
-    m_options_preset_sel->Disable();
-    m_load_btn->Disable();
-    m_save_btn->Disable();
-    m_delete_btn->Disable();
-    m_default_btn->Disable();
-  }
-
-	SetScrollRate( 4, 4 );
 }
 
 template < class BattleType >
