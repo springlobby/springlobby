@@ -2468,8 +2468,23 @@ wxArrayString Settings::GetPerspectives()
     wxArrayString list = GetGroupList( _T( "/GUI/AUI" ) );
     wxArrayString ret;
     for ( size_t i = 0; i < list.GetCount(); ++i) {
-    	if ( !list[i].EndsWith( _T("_battle") ) )
+    	if ( !list[i].EndsWith( BattlePostfix ) )
             ret.Add( list[i] );
+        else  {
+            wxString stripped = list[i].Left( list[i].Len() - BattlePostfix.Len() );
+            if ( !PerspectiveExists( stripped ) )
+                ret.Add( stripped );
+        }
     }
     return ret;
+}
+
+bool Settings::PerspectiveExists( const wxString& perspective_name )
+{
+    wxArrayString list = GetGroupList( _T( "/GUI/AUI" ) );
+    for ( size_t i = 0; i < list.GetCount(); ++i) {
+        if ( list[i] == perspective_name )
+            return true;
+    }
+    return false;
 }

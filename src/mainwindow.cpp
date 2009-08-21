@@ -143,7 +143,7 @@ MainWindow::MainWindow( Ui& ui )
 	wxMenu* menuView = new wxMenu;
 	menuView->Append( MENU_SAVE_LAYOUT, _("&Save Layout") );
 	menuView->Append( MENU_LOAD_LAYOUT, _("&Load layout") );
-	menuView->Append( MENU_DEFAULT_LAYOUT, _("&Set &Laoyut as default") );
+//	menuView->Append( MENU_DEFAULT_LAYOUT, _("&Set &Laoyut as default") );
 
 
   m_menuTools = new wxMenu;
@@ -657,6 +657,14 @@ void MainWindow::OnChannelListStart( )
     m_channel_chooser->ClearChannels();
 }
 
+wxString MainWindow::AddPerspectivePostfix( const wxString& pers_name )
+{
+    wxString perspective_name  = pers_name.IsEmpty() ? sett().GetLastPerspectiveName() : pers_name;
+    if ( m_join_tab &&  m_join_tab->UseBattlePerspective() )
+        perspective_name += BattlePostfix;
+    return perspective_name;
+}
+
 void MainWindow::OnMenuSaveLayout( wxCommandEvent& /*unused*/ )
 {
 	wxString answer;
@@ -691,9 +699,13 @@ const MainWindow::TabNames& MainWindow::GetTabNames()
 
 void MainWindow::LoadPerspectives( const wxString& pers_name )
 {
-    wxString perspective_name  = pers_name.IsEmpty() ? sett().GetLastPerspectiveName() : pers_name;
-    if ( m_join_tab &&  m_join_tab->UseBattlePerspective() )
-        perspective_name += _T("_battle");
+    sett().SetLastPerspectiveName( pers_name );
+    wxString perspective_name = AddPerspectivePostfix( pers_name );
+
+    //loading a default layout on top of the more tabs of battle layout would prove fatal
+    if ( perspective_name.EndsWith( BattlePostfix ) && !sett().PerspectiveExists( perspective_name ) )
+        return;
+
 
     LoadNotebookPerspective( m_func_tabs, perspective_name );
     m_sp_tab->LoadPerspective( perspective_name );
@@ -705,9 +717,8 @@ void MainWindow::LoadPerspectives( const wxString& pers_name )
 
 void MainWindow::SavePerspectives( const wxString& pers_name )
 {
-    wxString perspective_name  = pers_name.IsEmpty() ? sett().GetLastPerspectiveName() : pers_name;
-    if ( m_join_tab &&  m_join_tab->UseBattlePerspective() )
-        perspective_name += _T("_battle");
+    sett().SetLastPerspectiveName( pers_name );
+    wxString perspective_name = AddPerspectivePostfix( pers_name );
 
     m_sp_tab->SavePerspective( perspective_name );
     m_join_tab->SavePerspective( perspective_name );
