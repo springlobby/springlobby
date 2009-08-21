@@ -329,8 +329,10 @@ typedef std::vector<double> huevec;
 void hue(huevec& out, int amount, int level)
 {
 	if (level <= 1) {
-		if (out.size() < amount) out.push_back(0.0);
-		if (out.size() < amount) out.push_back(0.5);
+		if (long(out.size()) < amount)
+            out.push_back(0.0);
+		if (long(out.size()) < amount)
+            out.push_back(0.5);
 	}
 	else {
 		hue(out, amount, level - 1);

@@ -17,8 +17,8 @@ const unsigned int DEFSETT_MW_TOP = 50;
 const unsigned int DEFSETT_MW_LEFT = 50;
 const unsigned int DEFSETT_SPRING_PORT = 8452;
 
-const unsigned int SET_MODE_EXPERT = 5000;
-const unsigned int SET_MODE_SIMPLE = 5001;
+const int SET_MODE_EXPERT = 5000;
+const int SET_MODE_SIMPLE = 5001;
 const unsigned int DEFSETT_SW_WIDTH = 770;
 const unsigned int DEFSETT_SW_HEIGHT = 580;
 const unsigned int DEFSETT_SW_TOP = 50;
@@ -83,16 +83,15 @@ class Settings
     Settings();
     ~Settings();
 
-    /** used for passing config file at command line
-    */
+    //! used for passing config file at command line
     static bool m_user_defined_config;
     static wxString m_user_defined_config_path;
 
-		/// used to import default configs from a file in windows
-		#ifdef __WXMSW__
-    void SetDefaultConfigs( SL_WinConf& conf );
+    /// used to import default configs from a file in windows
+    #ifdef __WXMSW__
+        void SetDefaultConfigs( SL_WinConf& conf );
     #else
-    void SetDefaultConfigs( wxConfig& conf );
+        void SetDefaultConfigs( wxConfig& conf );
     #endif
 
     /// list all entries subkeys of a parent group
@@ -100,7 +99,7 @@ class Settings
     /// list all groups subkeys of a parent group
     wxArrayString GetEntryList( const wxString& base_key );
     /// counts all groups subkeys of a parent group
-		unsigned int GetGroupCount( const wxString& base_key );
+    unsigned int GetGroupCount( const wxString& base_key );
 
     bool IsPortableMode();
     void SetPortableMode( bool mode );
@@ -656,6 +655,7 @@ class Settings
     void SetLastPerspectiveName( const wxString&  name );
     void SetAutosavePerspective( bool autosave );
     bool GetAutosavePerspective( );
+    wxArrayString GetPerspectives();
 
     wxArrayString GetLayoutList();
     void SetDefaultLayout( const wxString& layout_name );

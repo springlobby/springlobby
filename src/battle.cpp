@@ -639,7 +639,7 @@ void Battle::SetInGame( bool value )
 	time_t now = time(0);
 	if ( m_ingame && !value )
 	{
-		for ( int i = 0; i < GetNumUsers(); i++ )
+		for ( int i = 0; i < long(GetNumUsers()); i++ )
 		{
 			User& user = GetUser( i );
 			UserBattleStatus& status = user.BattleStatus();
@@ -799,7 +799,7 @@ void Battle::Autobalance( BalanceType balance_type, bool support_clans, bool str
     if ( numallyteams == 0 ) // 0 == use num start rects
     {
         int ally = 0;
-        for ( int i = 0; i < GetNumRects(); ++i )
+        for ( int i = 0; i < long(GetNumRects()); ++i )
         {
             BattleStartRect sr = GetStartRect(i);
             if ( sr.IsOk() )

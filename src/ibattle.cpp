@@ -78,7 +78,8 @@ std::vector<wxColour> &IBattle::GetFixColoursPalette( int numteams )
             }
         }
     }
-    if ( result.size() < numteams ) return result;
+    if ( long(result.size()) < numteams )
+        return result;
     return GetBigFixColoursPalette( numteams );
 }
 
@@ -115,7 +116,7 @@ wxColour IBattle::GetFreeColour( User *for_whom )
             if ( bs.spectator ) continue;
 						if ( parsed_teams.find( bs.team ) != parsed_teams.end() ) continue; // skip duplicates
 						parsed_teams.insert( bs.team );
-						if ( lowest >= fixcolourspalette.size() ) fixcolourspalette = GetFixColoursPalette( lowest + 1 );
+						if ( lowest >= long(fixcolourspalette.size()) ) fixcolourspalette = GetFixColoursPalette( lowest + 1 );
             if ( AreColoursSimilar( bs.colour, fixcolourspalette[lowest], 20 ) )
             {
                 lowest++;

@@ -2462,3 +2462,14 @@ bool Settings::GetAutosavePerspective( )
 {
     return m_config->Read( _T( "/GUI/AUI/autosave" ), 1l );
 }
+
+wxArrayString Settings::GetPerspectives()
+{
+    wxArrayString list = GetGroupList( _T( "/GUI/AUI" ) );
+    wxArrayString ret;
+    for ( size_t i = 0; i < list.GetCount(); ++i) {
+    	if ( !list[i].EndsWith( _T("_battle") ) )
+            ret.Add( list[i] );
+    }
+    return ret;
+}

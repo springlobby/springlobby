@@ -427,9 +427,9 @@ void MainWindow::ShowSingleplayer()
     ShowTab( PAGE_SINGLE );
 }
 
-void MainWindow::ShowTab( const int idx )
+void MainWindow::ShowTab( const unsigned int idx )
 {
-    if ( -1 < idx && idx <m_tab_names.GetCount() )
+    if ( 0 <= idx && idx <m_tab_names.GetCount() )
         m_func_tabs->SetSelection( idx );
     else
         wxLogError( _T("tab selection oob: %d"), idx );
@@ -659,19 +659,20 @@ void MainWindow::OnChannelListStart( )
 
 void MainWindow::OnMenuSaveLayout( wxCommandEvent& /*unused*/ )
 {
-//	wxString answer;
-//	if ( !ui().AskText( _("Layout manager"),_("Enter a profile name"), answer ) )
-//        return;
-    SavePerspectives();
+	wxString answer;
+	if ( !ui().AskText( _("Layout manager"),_("Enter a profile name"), answer ) )
+        return;
+    SavePerspectives( answer );
 }
 
 void MainWindow::OnMenuLoadLayout( wxCommandEvent& /*unused*/ )
 {
-//	wxArrayString layouts = sett().GetLayoutList();
-//	unsigned int result = wxGetSingleChoiceIndex( _("Which profile fo you want to load?"), _("Layout manager"), layouts );
-//	if ( ( result < 0  ) || ( result > layouts.GetCount() ) ) return;
+	wxArrayString layouts = sett().GetPerspectives();
+	unsigned int result = wxGetSingleChoiceIndex( _("Which profile fo you want to load?"), _("Layout manager"), layouts );
+	if ( ( result < 0  ) || ( result > layouts.GetCount() ) )
+        return;
 
-    LoadPerspectives();
+    LoadPerspectives( layouts[result] );
 }
 
 

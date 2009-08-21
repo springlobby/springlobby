@@ -430,7 +430,7 @@ void ChatPanel::OutputLine( const ChatLine& line )
 					}
 
 				wxColor dummy(0,0,0);
-				if ( ( color > -1 ) && ( color < ( sizeof( m_irc_colors ) / sizeof( dummy ) ) ) )
+				if ( ( color > -1 ) && ( color < long(( sizeof( m_irc_colors ) / sizeof( dummy ) )) ) )
 				{
 
 					curcolor = m_irc_colors[color];

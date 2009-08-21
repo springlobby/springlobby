@@ -208,10 +208,12 @@ bool Spring::LaunchSpring( const wxString& params  )
 		if ( usync().GetSpringVersion().Contains(_T("0.78.") ) ) configfileflags = _T("");
 		#endif
   }
-  wxChar sep = wxFileName::GetPathSeparator();
+
   wxString cmd =  _T("\"") + sett().GetCurrentUsedSpringBinary();
   #ifdef __WXMAC__
-	if ( sett().GetCurrentUsedSpringBinary().AfterLast(_T('.')) == _T("app") ) cmd += sep + wxString(_T("Contents")) + sep + wxString(_T("MacOS")) + sep + wxString(_T("spring")); // append app bundle inner path
+    wxChar sep = wxFileName::GetPathSeparator();
+	if ( sett().GetCurrentUsedSpringBinary().AfterLast(_T('.')) == _T("app") )
+        cmd += sep + wxString(_T("Contents")) + sep + wxString(_T("MacOS")) + sep + wxString(_T("spring")); // append app bundle inner path
   #endif
   cmd += _T("\" ") + configfileflags + params;
   wxLogMessage( _T("spring call params: %s"), cmd.c_str() );
@@ -498,7 +500,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 			tdf.AppendLineBreak();
 
 
-			int maxiter = std::max( NumUsers, battle.GetLastRectIdx() + 1 );
+			unsigned int maxiter = std::max( NumUsers, battle.GetLastRectIdx() + 1 );
 			std::set<int> parsedallys;
 			for ( unsigned int i = 0; i < maxiter; i++ )
 			{
