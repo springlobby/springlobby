@@ -84,12 +84,10 @@ MainTorrentTab::MainTorrentTab( wxWindow* parent, Ui& ui )
 
 	SetSizer( m_mainbox );
 	SetScrollRate( SCROLL_RATE, SCROLL_RATE );
-	m_mainbox->SetSizeHints( this );
-	Layout();
 
 	info_map = torrent().CollectGuiInfos();
 	m_torrent_list->SetInfoMap( &info_map );
-//    m_torrent_list->SetSizeHints(this);
+
 	m_torrent_list->Layout();
 
 	for ( map_infos_iter iter = info_map.begin(); iter != info_map.end(); ++iter )
@@ -97,6 +95,9 @@ MainTorrentTab::MainTorrentTab( wxWindow* parent, Ui& ui )
 		AddTorrentInfo( iter->second );
 	}
 	m_download_dialog = 0;
+
+    Layout();
+
 }
 
 MainTorrentTab::~MainTorrentTab()

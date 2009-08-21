@@ -23,6 +23,7 @@
 #include "chatpanel.h"
 #include "utils/debug.h"
 #include "utils/conversion.h"
+#include "utils/controls.h"
 #include "uiutils.h"
 #include "hostbattledialog.h"
 #include "server.h"
@@ -163,8 +164,9 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui )
 
 	m_filter->Hide();
 
-	this->SetSizer( m_main_sizer );
-	this->Layout();
+    SetScrollRate( SCROLL_RATE, SCROLL_RATE );
+	SetSizer( m_main_sizer );
+	Layout();
 
 	SelectBattle( 0 );
 }

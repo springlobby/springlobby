@@ -49,10 +49,10 @@ BEGIN_EVENT_TABLE_TEMPLATE1( PlaybackTab, wxPanel, PlaybackTraits )
 END_EVENT_TABLE()
 
 template < class PlaybackTraits >
-PlaybackTab<PlaybackTraits>::PlaybackTab( wxWindow* parent, Ui& ui ) :
-		wxPanel( parent, -1 ),
-		m_replay_loader ( 0 ),
-		m_ui( ui )
+PlaybackTab<PlaybackTraits>::PlaybackTab( wxWindow* parent, Ui& ui )
+    : wxScrolledWindow( parent, -1 ),
+    m_replay_loader ( 0 ),
+    m_ui( ui )
 {
 	wxLogMessage( _T( "PlaybackTab::PlaybackTab()" ) );
 
@@ -144,13 +144,15 @@ PlaybackTab<PlaybackTraits>::PlaybackTab( wxWindow* parent, Ui& ui ) :
 
 	m_filter->Hide();
 
-	this->SetSizer( m_main_sizer );
-	this->Layout();
+	SetSizer( m_main_sizer );
 
-	ReloadList();
+    ReloadList();
 
 	//none selected --> shouldn't watch/delete that
 	Deselect();
+
+	SetScrollRate( SCROLL_RATE, SCROLL_RATE );
+	Layout();
 }
 
 template < class PlaybackTraits >
