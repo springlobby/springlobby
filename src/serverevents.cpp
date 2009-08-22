@@ -944,7 +944,8 @@ void ServerEvents::OnFileDownload( bool autolaunch, bool autoclose, bool disconn
 		else filename = _T("Spring installer.exe");
 		m_savepath = sett().GetCurrentUsedDataDir() + filename;
 		wxLogMessage(_T("downloading update in: %s, from: %s"),m_savepath.c_str(),refinedurl.c_str());
-		new HttpDownloaderThread<ServerEvents>( refinedurl, m_savepath, *this, wxID_HIGHEST + 100, true, false );
+		ui().OpenWebBrowser( url );
+		//new HttpDownloaderThread<ServerEvents>( refinedurl, m_savepath, *this, wxID_HIGHEST + 100, true, false );
 	}
 }
 void ServerEvents::OnSpringDownloadEvent( wxCommandEvent& event )
@@ -997,7 +998,7 @@ void ServerEvents::OnSpringDownloadEvent( wxCommandEvent& event )
 			customMessageBox(SL_MAIN_ICON, text, _("Download complete.")  );
 			if ( m_autolaunch )
 			{
-				if ( !wxExecute( m_savepath, wxEXEC_ASYNC ) )
+				if ( !wxExecute( _T("\"") + m_savepath + _T("\""), wxEXEC_ASYNC ) )
 				{
 						customMessageBoxNoModal(SL_MAIN_ICON, _("Couldn't launch installer. File location is: ") + m_savepath, _("Couldn't launch installer.")  );
 				}
