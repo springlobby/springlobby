@@ -994,7 +994,7 @@ void ServerEvents::OnSpringDownloadEvent( wxCommandEvent& event )
   {
 			wxString text =  _("Download complete, location is: ") + m_savepath;
 			if ( m_autoclose ) text += _("\nlobby will get closed now.");
-			customMessageBoxNoModal(SL_MAIN_ICON, text, _("Download complete.")  );
+			customMessageBox(SL_MAIN_ICON, text, _("Download complete.")  );
 			if ( m_autolaunch )
 			{
 				if ( !wxExecute( m_savepath, wxEXEC_ASYNC ) )
