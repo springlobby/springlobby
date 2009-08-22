@@ -944,7 +944,8 @@ void ServerEvents::OnFileDownload( bool autolaunch, bool autoclose, bool disconn
 		else filename = _T("Spring installer.exe");
 		m_savepath = sett().GetCurrentUsedDataDir() + filename;
 		wxLogMessage(_T("downloading update in: %s, from: %s"),m_savepath.c_str(),refinedurl.c_str());
-		new HttpDownloaderThread<ServerEvents>( refinedurl, m_savepath, *this, wxID_HIGHEST + 100, true, false );
+		ui().OpenWebBrowser( url );
+		//new HttpDownloaderThread<ServerEvents>( refinedurl, m_savepath, *this, wxID_HIGHEST + 100, true, false );
 	}
 }
 void ServerEvents::OnSpringDownloadEvent( wxCommandEvent& event )
