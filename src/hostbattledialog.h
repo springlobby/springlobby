@@ -13,6 +13,7 @@ class wxRadioButton;
 class wxStaticBitmap;
 class wxStaticLine;
 class wxButton;
+class wxBitmapButton;
 class wxCheckBox;
 class wxMenu;
 
@@ -26,13 +27,11 @@ class HostBattleDialog : public wxDialog
 
 	protected:
 
-		void OnOk( wxCommandEvent& event );
-		void OnCancel( wxCommandEvent& event );
-		void OnNatChange( wxCommandEvent& event  );
-		void OnPickRelayHost( wxCommandEvent& event );
-
-		void OnRelayChoice( wxCommandEvent& event );
-
+		void OnOk           ( wxCommandEvent& event );
+		void OnCancel       ( wxCommandEvent& event );
+		void OnNatChange    ( wxCommandEvent& event );
+		void OnReloadMods   ( wxCommandEvent& event );
+		void OnRelayChoice	( wxCommandEvent& event );
 
 		int GetSelectedRank();
 
@@ -74,13 +73,17 @@ class HostBattleDialog : public wxDialog
 
 		wxMenu* m_relayhost_list;
 
+        wxBitmapButton* m_refresh_btn;
+
+
 		enum {
 			HOST_CANCEL = wxID_HIGHEST,
 			HOST_OK,
 			CHOSE_NAT,
 			PICK_RELAYHOST,
 			AUTO_PICK_HOST,
-			MANUAL_PICK_HOST
+			MANUAL_PICK_HOST,
+			BTN_REFRESH
 		};
 
 		wxString m_last_relayhost;

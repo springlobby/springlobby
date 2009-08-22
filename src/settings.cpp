@@ -68,27 +68,28 @@ Settings::Settings()
 {
 #if defined(__WXMSW__) || defined(__WXMAC__)
 	wxString userfilepath = wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator() + _T( "springlobby.conf" );
-	wxString globalfilepath =  GetExecutableFolder() + wxFileName::GetPathSeparator() + _T( "springlobby.conf" );
+	wxString localfilepath =  GetExecutableFolder() + wxFileName::GetPathSeparator() + _T( "springlobby.conf" );
 
-	if ( !wxFileName::FileExists( globalfilepath ) || !wxFileName::IsFileWritable( globalfilepath ) )
+	if ( !wxFileName::FileExists( localfilepath ) || !wxFileName::IsFileWritable( localfilepath ) )
 	{
-		m_chosed_path = userfilepath;
+	    //either local conf file soes not exist, or it exists but is not writable
+		m_chosen_path = userfilepath;
 		SetPortableMode( false );
 	}
 	else
 	{
-		m_chosed_path = globalfilepath; // portable mode, use only current app paths
+		m_chosen_path = localfilepath; // portable mode, use only current app paths
 		SetPortableMode ( true );
 	}
 
 	// if it doesn't exist, try to create it
-	if ( !wxFileName::FileExists( m_chosed_path ) )
+	if ( !wxFileName::FileExists( m_chosen_path ) )
 	{
 		// if directory doesn't exist, try to create it
 		if ( !IsPortableMode() && !wxFileName::DirExists( wxStandardPaths::Get().GetUserDataDir() ) )
 			wxFileName::Mkdir( wxStandardPaths::Get().GetUserDataDir(), 0755 );
 
-		wxFileOutputStream outstream( m_chosed_path );
+		wxFileOutputStream outstream( m_chosen_path );
 
 		if ( !outstream.IsOk() )
 		{
@@ -99,7 +100,7 @@ Settings::Settings()
 		}
 	}
 
-	wxFileInputStream instream( m_chosed_path );
+	wxFileInputStream instream( m_chosen_path );
 
 	if ( !instream.IsOk() )
 	{
@@ -135,7 +136,7 @@ void Settings::SaveSettings()
 	SetSettingsVersion();
 	m_config->Flush();
 #if defined(__WXMSW__) || defined(__WXMAC__)
-	wxFileOutputStream outstream( m_chosed_path );
+	wxFileOutputStream outstream( m_chosen_path );
 
 	if ( !outstream.IsOk() )
 	{

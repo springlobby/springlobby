@@ -630,7 +630,7 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const 
     newline.time = _T( "[" ) + now.Format( _T( "%H:%M:%S" ) ) + _T( "]" );
     newline.chatstyle = chatstyle;
     newline.timestyle = timestyle;
- 
+
   if ( m_disable_append )
   {
     m_buffer.push_back( newline );
@@ -694,14 +694,14 @@ void ChatPanel::OutputLine( const ChatLine& line )
 					_2chars = false;
 					m1 = m1.Mid(2);
 					}
-				
+
 				wxColor dummy(0,0,0);
-				if ( ( color > -1 ) && ( color < ( sizeof( m_irc_colors ) / sizeof( dummy ) ) ) ) 
+				if ( ( color > -1 ) && ( color < ( sizeof( m_irc_colors ) / sizeof( dummy ) ) ) )
 				{
-					
+
 					curcolor = m_irc_colors[color];
 				}
-				
+
 			}else if(c == 2)//Bold
 			{
 				bold = not bold;
@@ -722,7 +722,7 @@ void ChatPanel::OutputLine( const ChatLine& line )
 					font.SetWeight(oldweight);
 				at.SetFont(font);
 				at.SetTextColour(curcolor);
-				
+
 				m_chatlog_text->SetDefaultStyle(at);
 				m_chatlog_text->AppendText( m1.Mid(0,1) );
 				m1 = m1.Mid(1);
@@ -735,7 +735,7 @@ void ChatPanel::OutputLine( const ChatLine& line )
 			at.SetFont(font);
 			m_chatlog_text->SetDefaultStyle(at);
 		}
-			
+
 	}
 	else
 	{
@@ -1859,7 +1859,7 @@ void ChatPanel::SortNickList()
 
 void ChatPanel::SetIconHighlight( HighlightType highlight )
 {
-  if (  m_ui.GetActiveChatPanel() != this && m_chat_tabs )
+  if (  m_ui.GetActiveChatPanel() != this && m_chat_tabs && !IsShownOnScreen() )
   {
     for ( unsigned int i = 0; i <  m_chat_tabs->GetPageCount( ); ++i )
     {
