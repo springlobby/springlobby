@@ -32,6 +32,8 @@ class HostBattleDialog : public wxDialog
 		void OnNatChange    ( wxCommandEvent& event );
 		void OnReloadMods   ( wxCommandEvent& event );
 		void OnRelayChoice	( wxCommandEvent& event );
+		void OnUseRelay     ( wxCommandEvent& event );
+        void OnPickRelayHost( wxCommandEvent& event );
 
 		int GetSelectedRank();
 
@@ -72,6 +74,7 @@ class HostBattleDialog : public wxDialog
 		wxButton* m_host_btn;
 
 		wxMenu* m_relayhost_list;
+		wxButton* m_relayed_host_pick;
 
         wxBitmapButton* m_refresh_btn;
 
@@ -83,7 +86,8 @@ class HostBattleDialog : public wxDialog
 			PICK_RELAYHOST,
 			AUTO_PICK_HOST,
 			MANUAL_PICK_HOST,
-			BTN_REFRESH
+			BTN_REFRESH,
+			CHK_USE_RELAY
 		};
 
 		wxString m_last_relayhost;
