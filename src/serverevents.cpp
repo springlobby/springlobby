@@ -941,23 +941,16 @@ void ServerEvents::OnFileDownload( bool autolaunch, bool autoclose, bool disconn
 		m_autolaunch = autolaunch;
 		wxString filename;
 		if ( FileName != _T("*") ) filename = FileName;
+		else filename = _T("Spring installer.exe");
 		m_savepath = sett().GetCurrentUsedDataDir() + filename;
 		wxLogMessage(_T("downloading update in: %s, from: %s"),m_savepath.c_str(),refinedurl.c_str());
 		new HttpDownloaderThread<ServerEvents>( refinedurl, m_savepath, *this, wxID_HIGHEST + 100, true, false );
-	}
-	else
-	{
-		if ( disconnectonrefuse )
-		{
-			customMessageBox(SL_MAIN_ICON, _("You refused a mandatory update, you will be disconnected now."), _("Disconnecting"));
-			m_serv.Disconnect();
-		}
 	}
 }
 void ServerEvents::OnSpringDownloadEvent( wxCommandEvent& event )
 {
 	int code = event.GetInt();
-
+	wxLogMessage(event.GetString());
   if ( code != 0)
   {
   	 customMessageBox(SL_MAIN_ICON, _("There was an error downloading for the latest version.\n"), _("Error"));
