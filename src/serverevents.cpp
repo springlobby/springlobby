@@ -992,16 +992,15 @@ void ServerEvents::OnSpringDownloadEvent( wxCommandEvent& event )
   }
   else
   {
+			wxString text =  _("Download complete, location is: ") + m_savepath;
+			if ( m_autoclose ) text += _("\nlobby will get closed now.");
+			customMessageBoxNoModal(SL_MAIN_ICON, text, _("Download complete.")  );
 			if ( m_autolaunch )
 			{
-				if ( !wxExecute ( m_savepath, wxEXEC_ASYNC ) )
+				if ( !wxExecute( m_savepath, wxEXEC_ASYNC ) )
 				{
 						customMessageBoxNoModal(SL_MAIN_ICON, _("Couldn't launch installer. File location is: ") + m_savepath, _("Couldn't launch installer.")  );
 				}
-			}
-			else
-			{
-				customMessageBoxNoModal(SL_MAIN_ICON, _("Download complete, location is: ") + m_savepath, _("Download complete.")  );
 			}
 			if ( m_autoclose )
 			{
