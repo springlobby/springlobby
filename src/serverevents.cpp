@@ -931,6 +931,9 @@ void ServerEvents::OnScriptEnd( int battleid )
 
 void ServerEvents::OnFileDownload( bool autolaunch, bool autoclose, bool disconnectonrefuse, const wxString& FileName, const wxString& url, const wxString& description )
 {
+	wxString refinedurl;
+	if ( url.Contains(_T("http://")) ) refinedurl = url.AfterFirst(_T('/')).AfterFirst(_T('/'));
+	else refinedurl = url;
 	bool result = ui().Ask( _("Download update"), wxString::Format( _("Would you like to download %s ? The file offers the following updates:\n\n%s\n\nThe download will be started in the background, you will be notified on operation completed."), url.c_str(), description.c_str() ) );
 	if ( result )
 	{
@@ -939,8 +942,8 @@ void ServerEvents::OnFileDownload( bool autolaunch, bool autoclose, bool disconn
 		wxString filename;
 		if ( FileName != _T("*") ) filename = FileName;
 		m_savepath = sett().GetCurrentUsedDataDir() + filename;
-		wxLogMessage(_T("downloading update in: %s, from: %s"),m_savepath.c_str(),url.c_str());
-		new HttpDownloaderThread<ServerEvents>( url, m_savepath, *this, wxID_HIGHEST + 100, true, false );
+		wxLogMessage(_T("downloading update in: %s, from: %s"),m_savepath.c_str(),refinedurl.c_str());
+		new HttpDownloaderThread<ServerEvents>( refinedurl, m_savepath, *this, wxID_HIGHEST + 100, true, false );
 	}
 	else
 	{
