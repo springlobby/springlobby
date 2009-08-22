@@ -79,8 +79,9 @@ BEGIN_EVENT_TABLE( MapCtrl, wxPanel )
     EVT_COMMAND( wxID_ANY, UnitSyncAsyncOperationCompletedEvt, MapCtrl::OnGetMapImageAsyncCompleted )
 END_EVENT_TABLE()
 
-    /* Something to do with start box sizes. */
+/* Something to do with start box sizes. */
 const int boxsize = 8;
+const int minboxsize = 40;
 
 static inline void WriteInt24(unsigned char* p, int i)
 {
@@ -1197,8 +1198,8 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
         wxRect sr = GetStartRect( m_mdown_rect );
 
         wxRect nsr( sr.x, sr.y, event.GetX() - sr.x, event.GetY() - sr.y );
-        if ( nsr.width < IBattle::minimum_startbox_size ) nsr.SetWidth( IBattle::minimum_startbox_size );
-        if ( nsr.height < IBattle::minimum_startbox_size ) nsr.SetHeight( IBattle::minimum_startbox_size );
+        if ( nsr.width < minboxsize ) nsr.SetWidth( minboxsize );
+        if ( nsr.height < minboxsize ) nsr.SetHeight( minboxsize );
         BattleStartRect bsr = GetBattleRect( nsr.x, nsr.y, nsr.x + nsr.width, nsr.y + nsr.height, m_mdown_rect );
         m_battle->AddStartRect( m_mdown_rect, bsr.left, bsr.top, bsr.right, bsr.bottom );
         m_battle->StartRectAdded( m_mdown_rect );
@@ -1217,15 +1218,15 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
         wxRect sr = GetStartRect( m_mdown_rect );
 
         wxRect nsr( event.GetX(), event.GetY(), (sr.x - event.GetX()) + sr.width, (sr.y - event.GetY()) + sr.height );
-        if ( nsr.width < IBattle::minimum_startbox_size )
+        if ( nsr.width < minboxsize )
         {
-            nsr.SetLeft( event.GetX() - IBattle::minimum_startbox_size + nsr.width );
-            nsr.SetWidth( IBattle::minimum_startbox_size );
+            nsr.SetLeft( event.GetX() - minboxsize + nsr.width );
+            nsr.SetWidth( minboxsize );
         }
-        if ( nsr.height < IBattle::minimum_startbox_size )
+        if ( nsr.height < minboxsize )
         {
-            nsr.SetTop( event.GetY() - IBattle::minimum_startbox_size + nsr.height );
-            nsr.SetHeight( IBattle::minimum_startbox_size );
+            nsr.SetTop( event.GetY() - minboxsize + nsr.height );
+            nsr.SetHeight( minboxsize );
         }
         BattleStartRect bsr = GetBattleRect( nsr.x, nsr.y, nsr.x + nsr.width, nsr.y + nsr.height, m_mdown_rect );
         m_battle->AddStartRect( m_mdown_rect, bsr.left, bsr.top, bsr.right, bsr.bottom );
@@ -1486,16 +1487,15 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
     {
 
         m_tmp_brect.ally = -1;
-        if ( ( abs( m_mdown_x - event.GetX() ) >= IBattle::minimum_startbox_size ) && ( abs( m_mdown_y - event.GetY() ) >= IBattle::minimum_startbox_size ) )
+        if ( ( abs( m_mdown_x - event.GetX() ) >= minboxsize ) && ( abs( m_mdown_y - event.GetY() ) >= minboxsize ) )
         {
             BattleStartRect r = GetBattleRect( m_mdown_x<event.GetX()?m_mdown_x:event.GetX(), m_mdown_y<event.GetY()?m_mdown_y:event.GetY(), m_mdown_x>event.GetX()?m_mdown_x:event.GetX(), m_mdown_y>event.GetY()?m_mdown_y:event.GetY() );
             m_battle->AddStartRect( GetNewRectIndex(), r.left, r.top, r.right, r.bottom );
         }
         else
         {
-            BattleStartRect r = GetBattleRect( m_mdown_x, m_mdown_y, m_mdown_x + IBattle::minimum_startbox_size, m_mdown_y + IBattle::minimum_startbox_size );
+            BattleStartRect r = GetBattleRect( m_mdown_x, m_mdown_y, m_mdown_x + minboxsize, m_mdown_y + minboxsize );
             m_battle->AddStartRect( GetNewRectIndex(), r.left, r.top, r.right, r.bottom );
-//            wxLogWarning( wxString::Format( _T("Box too small: (%d,%d) - (%d,%d)"),  )
         }
         m_battle->SendHostInfo( IBattle::HI_StartRects );
         UpdateMinimap();
