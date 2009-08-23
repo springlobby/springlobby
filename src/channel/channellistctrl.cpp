@@ -59,6 +59,8 @@ void ChannelListctrl::AddChannel(const wxString& channel, unsigned int num_users
 
     RefreshItem( m_visible_idxs.size() - 1);
     SetColumnWidth( 0, wxLIST_AUTOSIZE );
+    SetColumnWidth( 1, wxLIST_AUTOSIZE );
+    SetColumnWidth( 2, wxLIST_AUTOSIZE );
 }
 
 int ChannelListctrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir )
