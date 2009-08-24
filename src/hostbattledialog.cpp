@@ -21,9 +21,10 @@
 #include <wx/statbmp.h>
 #include <wx/checkbox.h>
 #include <wx/log.h>
+#include <wx/menu.h>
 #include <wx/image.h>
 #include <wx/bmpbuttn.h>
-#include <wx/menu.h>
+
 
 #include "settings.h"
 #include "iunitsync.h"
