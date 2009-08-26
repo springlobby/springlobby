@@ -68,7 +68,8 @@ EXTRA_DIST = \
 	src/playback/playbackstructs.h \
 	src/playback/playbacklist.h \
 	src/playback/playbacklist.cpp \
-	src/httpdownloader.cpp
+	src/httpdownloader.cpp \
+	CMakeLists.txt
 	
 
 springsettings_LDADD = \
