@@ -130,12 +130,17 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui )
 	wxBoxSizer* m_buttons_sizer;
 	m_buttons_sizer = new wxBoxSizer( wxHORIZONTAL );
 
+	m_buttons_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
+
 #if  wxUSE_TOGGLEBTN
 	m_filter_show = new wxToggleButton( this, BATTLE_LIST_FILTER_BUTTON , _( " Filter " ), wxDefaultPosition , wxSize( -1, 28 ), 0 );
 #else
 	m_filter_show = new wxCheckBox( this, BATTLE_LIST_FILTER_BUTTON , _( " Filter " ), wxDefaultPosition , wxSize( -1, 28 ), 0 );
 #endif
 	m_buttons_sizer->Add( m_filter_show, 0, 0, 5 );
+
+	m_filter_activ = new wxCheckBox( this, BATTLE_LIST_FILTER_ACTIV , _( "Activated" ), wxDefaultPosition, wxDefaultSize, 0 );
+	m_buttons_sizer->Add( m_filter_activ, 0, wxALL, 5 );
 
 #if  wxUSE_TOGGLEBTN
 	m_info_show = new wxToggleButton( this, BATTLE_LIST_INFO_BUTTON , _( " Battle infos " ), wxDefaultPosition , wxSize( -1, 28 ), 0 );
@@ -144,11 +149,6 @@ BattleListTab::BattleListTab( wxWindow* parent, Ui& ui )
 #endif
 	m_buttons_sizer->Add( m_info_show , 0, 0, 5 );
 
-	m_filter_activ = new wxCheckBox( this, BATTLE_LIST_FILTER_ACTIV , _( "Activated" ), wxDefaultPosition, wxDefaultSize, 0 );
-	m_buttons_sizer->Add( m_filter_activ, 0, wxALL, 5 );
-
-
-	m_buttons_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
 	m_battle_num = new wxStaticText( this, wxID_ANY, _( "0 battles displayed" ), wxDefaultPosition, wxDefaultSize, 0 );
 	m_buttons_sizer->Add( m_battle_num, 0, wxALIGN_CENTER | wxLEFT | wxRIGHT, 4 );
 	m_buttons_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
