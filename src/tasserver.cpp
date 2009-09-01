@@ -435,7 +435,7 @@ void TASServer::Login()
     localaddr = m_sock->GetLocalAddress();
     if ( localaddr.IsEmpty() ) localaddr = _T("*");
     SendCmd ( _T("LOGIN"), m_user + _T(" ") + pass + _T(" ") +
-              GetHostCPUSpeed() + _T(" ") + localaddr + _T(" SpringLobby ") + GetSpringLobbyVersion() + protocol );
+              GetHostCPUSpeed() + _T(" ") + localaddr + _T(" SpringLobby ") + GetSpringLobbyVersion() + protocol  + _T("\ta"));
 }
 
 void TASServer::Logout()
@@ -627,7 +627,8 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         nick = GetWordParam( params );
         contry = GetWordParam( params );
         cpu = GetIntParam( params );
-        m_se->OnNewUser( nick, contry, cpu );
+				id = GetIntParam( params );
+        m_se->OnNewUser( nick, contry, cpu, TowxString(id) );
         if ( nick == m_relay_host_bot )
         {
            RelayCmd( _T("OPENBATTLE"), m_delayed_open_command ); // relay bot is deployed, send host command

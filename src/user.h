@@ -101,6 +101,9 @@ class CommonUser
         int GetCpu() const { return m_cpu; }
         void SetCpu( const int& cpu ) { m_cpu = cpu; }
 
+        wxString GetID() const { return m_id; }
+        void SetID( const wxString& id ) { m_id = id; }
+
         UserStatus& Status() { return m_status; }
 
         UserStatus GetStatus() const { return m_status; }
@@ -129,6 +132,7 @@ class CommonUser
     protected:
         wxString m_nick;
         wxString m_country;
+        wxString m_id;
         int m_cpu;
         UserStatus m_status;
         UserBattleStatus m_bstatus;
