@@ -68,7 +68,8 @@ EXTRA_DIST = \
 	src/playback/playbackstructs.h \
 	src/playback/playbacklist.h \
 	src/playback/playbacklist.cpp \
-	src/httpdownloader.cpp
+	src/httpdownloader.cpp \
+	CMakeLists.txt
 	
 
 springsettings_LDADD = \
@@ -616,6 +617,7 @@ springlobby_SOURCES = \
 	src/images/open_full_pw_game.png.h \
 	src/images/options_icon.png.h \
 	src/images/options_icon_text.png.h \
+	src/images/arrow_refresh.png.h \
 	src/images/rank0.xpm \
 	src/images/rank1.xpm \
 	src/images/rank2.xpm \
@@ -1035,10 +1037,16 @@ springsettings_SOURCES = \
 	src/spinctld.cpp \
 	src/springunitsynclib.cpp \
 	src/springunitsynclib.h \
+	src/springunitsync.cpp \
+	src/springunitsync.h \
+	src/thread.cpp \
+	src/thread.h \
 	src/settings.cpp \
 	src/settings.h \
 	src/uiutils.cpp \
 	src/uiutils.h \
+	src/mmoptionmodel.h \
+	src/mmoptionmodel.cpp \
 	src/globalsmanager.cpp \
 	src/settings++/se_utils.cpp \
 	src/settings++/se_utils.h \

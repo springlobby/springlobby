@@ -6,7 +6,7 @@
 #include <map>
 
 class IBattle;
-class wxColor;
+class wxColour;
 struct UserStatus;
 
 class IconImageList : public wxImageList

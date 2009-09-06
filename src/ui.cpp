@@ -16,6 +16,7 @@
 #include <wx/thread.h>
 #include <wx/intl.h>
 #include <wx/utils.h>
+#include <wx/debugrpt.h>
 #include <wx/filename.h>
 
 #include "ui.h"
@@ -1119,7 +1120,7 @@ void Ui::OnSpringStarting()
 }
 
 
-void Ui::OnSpringTerminated( long /*exit_code*/ )
+void Ui::OnSpringTerminated( long exit_code )
 {
     m_ingame = false;
 #ifndef NO_TORRENT_SYSTEM
@@ -1138,6 +1139,25 @@ void Ui::OnSpringTerminated( long /*exit_code*/ )
           battle->SendHostInfo( IBattle::HI_Locked );
         }
     } catch ( assert_exception ){}
+
+    if ( exit_code ) {
+//        wxDebugReportCompress report;
+//        wxString dir = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator();
+//        wxString tmp_filename = wxPathOnly( wxFileName::CreateTempFileName(_T("dummy")) ) + wxFileName::GetPathSeparator() + _T("settings.txt");
+//        wxCopyFile( sett().GetCurrentUsedSpringConfigFilePath(), tmp_filename );
+//        report.AddFile( dir + _T("infolog.txt"), _T("Infolog") );
+//        report.AddFile( dir + _T("script.txt"), _T("Script") );
+//        report.AddFile( dir + _T("ext.txt"), _T("Infolog") );
+//        report.AddFile( dir + _T("unitsync.log"), _T("Infolog") );
+//        report.AddFile( tmp_filename, _T("Settings") );
+//        wxString info;
+//        info << wxGetOsDescription() << ( wxIsPlatform64Bit() ? _T(" 64bit\n") : _T(" 32bit\n") );
+//        report.AddText( _T("platform.txt"), info, _T("Platform") );
+//        wxDebugReportPreviewStd().Show( report );
+//        report.Process();
+        if ( customMessageBox( SL_MAIN_ICON, _T("The game has crashed.\nOpen infolog.txt?"), _T("Crash"), wxYES_NO ) == wxYES )
+            OpenFileInEditor( sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("infolog.txt") );
+    }
 }
 
 
@@ -1237,9 +1257,24 @@ bool Ui::OnPresetRequiringMap( const wxString& mapname )
                         _("Map missing"),
                         wxYES_NO ) )
     {
-        ui().DownloadMap( _T("") , mapname );
+        DownloadMap( _T("") , mapname );
         return true;
     }
     return false;
 }
 
+void Ui::OpenFileInEditor( const wxString& filepath )
+{
+    wxString editor_path = sett().GetEditorPath( );
+    if ( editor_path == wxEmptyString ) {
+        customMessageBoxNoModal( SL_MAIN_ICON, _T("You have not chosen an external text editor to open files with.\nPlease Select one now."), _T("No editor set") );
+        mw().ShowConfigure( MainWindow::OPT_PAGE_GENERAL );
+        return;
+    }
+    bool success = ( wxExecute( editor_path + _T(" \"") + filepath + _T("\""), wxEXEC_ASYNC ) != 0 );
+    if ( !success ) {
+        customMessageBoxNoModal( SL_MAIN_ICON, _T("There was a problem launching the editor.\nPlease make sure the path is correct and the binary executable for your user.\nNote it's currently not possible to use shell-only editors like ed, vi, etc."), _T("Problem launching editor") );
+        mw().ShowConfigure( MainWindow::OPT_PAGE_GENERAL );
+    }
+
+}

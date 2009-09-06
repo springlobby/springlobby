@@ -20,6 +20,7 @@ class wxListCtrl;
 class wxChoice;
 class wxRadioBox;
 class wxMouseEvent;
+class MapSelectDialog;
 
 /** \brief select map, draw startboxes (in sp define startpos)
  * \todo DOCMEMORE */
@@ -54,6 +55,7 @@ class BattleMapTab : public wxScrolledWindow
     wxButton* m_browse_btn;
     wxRadioBox* m_start_radios;
     wxListCtrl* m_map_opts_list;
+    MapSelectDialog* m_map_dlg;
 
     enum {
       BMAP_MAP_SEL = wxID_HIGHEST,

@@ -61,7 +61,7 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, Ui& ui, MainSinglePlayerTab& 
     wxBoxSizer* m_ctrl_sizer = new wxBoxSizer( wxHORIZONTAL );
 
     m_map_lbl = new wxStaticText( this, -1, _("Map:") );
-    m_ctrl_sizer->Add( m_map_lbl, 0, wxALL, 5 );
+    m_ctrl_sizer->Add( m_map_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
     m_map_pick = new wxChoice( this, SP_MAP_PICK );
     m_ctrl_sizer->Add( m_map_pick, 1, wxALL, 5 );
@@ -70,7 +70,7 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, Ui& ui, MainSinglePlayerTab& 
     m_ctrl_sizer->Add( m_select_btn, 0, wxBOTTOM|wxRIGHT|wxTOP, 5 );
 
     m_mod_lbl = new wxStaticText( this, -1, _("Mod:") );
-    m_ctrl_sizer->Add( m_mod_lbl, 0, wxALL, 5 );
+    m_ctrl_sizer->Add( m_mod_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
     m_mod_pick = new wxChoice( this, SP_MOD_PICK );
     m_ctrl_sizer->Add( m_mod_pick, 1, wxALL, 5 );

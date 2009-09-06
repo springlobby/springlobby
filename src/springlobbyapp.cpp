@@ -117,7 +117,7 @@ bool SpringLobbyApp::OnInit()
     wxLogChain* logchain = 0;
     wxLogWindow *loggerwin = InitializeLoggingTargets( 0, m_log_console, m_log_window_show, !m_crash_handle_disable, m_log_verbosity, logchain );
 
-#if wxUSE_ON_FATAL_EXCEPTION
+#if wxUSE_ON_FATAL_EXCEPTION && !defined(__WXMAC__)
     if (!m_crash_handle_disable) wxHandleFatalExceptions( true );
 #endif
 
@@ -452,6 +452,6 @@ void SpringLobbyApp::CacheAndSettingsSetup()
          useractions().ChangeAction( _("Friends"), UserActions::ActNotifBattle );
          useractions().ChangeAction( _("Friends"), UserActions::ActHighlight );
          useractions().ChangeAction( _("Friends"), UserActions::ActNotifLogin );
-         useractions().SetGroupColor( _("Friends"), wxColor( 0, 0, 255 ) );
+         useractions().SetGroupColor( _("Friends"), wxColour( 0, 0, 255 ) );
     }
 }

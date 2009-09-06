@@ -18,7 +18,7 @@ ColorButton::ColorButton(wxWindow* parent, wxWindowID id, const wxBitmap& bitmap
     //ctor
 }
 
-ColorButton::ColorButton(wxWindow* parent, wxWindowID id, const wxColor& color,
+ColorButton::ColorButton(wxWindow* parent, wxWindowID id, const wxColour& color,
     const wxPoint& pos , const wxSize& size , long style , const wxValidator& validator,
     const wxString& name )
     : wxBitmapButton( parent, id, wxBitmap(), pos , size , style , validator, name ),
@@ -32,12 +32,12 @@ ColorButton::~ColorButton()
     //dtor
 }
 
-wxColor ColorButton::GetColor( )
+wxColour ColorButton::GetColor( )
 {
     return m_color;
 }
 
-void ColorButton::SetColor( const wxColor& color )
+void ColorButton::SetColor( const wxColour& color )
 {
     m_color = color;
     SetBitmapLabel ( GetBitmapFromColor( color ) );
@@ -47,7 +47,7 @@ void ColorButton::SetColor( const wxColor& color )
     #endif
 }
 
-wxBitmap ColorButton::GetBitmapFromColor( const wxColor& colour )
+wxBitmap ColorButton::GetBitmapFromColor( const wxColour& colour )
 {
     #ifdef __WXMSW__
         wxImage img( colourbox_xpm );

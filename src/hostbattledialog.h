@@ -13,23 +13,29 @@ class wxRadioButton;
 class wxStaticBitmap;
 class wxStaticLine;
 class wxButton;
+class wxBitmapButton;
 class wxCheckBox;
+class wxMenu;
 
 class HostBattleDialog : public wxDialog
 {
 	public:
 		HostBattleDialog( wxWindow* parent );
 
-    void ReloadModList();
+		void ReloadModList();
 
 
 	protected:
 
-    void OnOk( wxCommandEvent& event );
-    void OnCancel( wxCommandEvent& event );
-    void OnNatChange( wxCommandEvent& event  );
+		void OnOk           ( wxCommandEvent& event );
+		void OnCancel       ( wxCommandEvent& event );
+		void OnNatChange    ( wxCommandEvent& event );
+		void OnReloadMods   ( wxCommandEvent& event );
+		void OnRelayChoice	( wxCommandEvent& event );
+		void OnUseRelay     ( wxCommandEvent& event );
+        void OnPickRelayHost( wxCommandEvent& event );
 
-    int GetSelectedRank();
+		int GetSelectedRank();
 
 		wxStaticText* m_desc_lbl;
 		wxTextCtrl* m_desc_text;
@@ -40,9 +46,11 @@ class HostBattleDialog : public wxDialog
 
 		wxStaticText* m_port_lbl;
 		wxTextCtrl* m_port_text;
-    wxCheckBox* m_port_test_check;
-    wxCheckBox* m_relayed_host_check;
-    wxCheckBox* m_desc_check;
+        wxTextCtrl* m_relayhost_name;
+//    entirely disabled until functionality is in server
+//    wxCheckBox* m_port_test_check;
+		wxCheckBox* m_relayed_host_check;
+		wxCheckBox* m_desc_check;
 		wxSlider* m_players_slide;
 		wxRadioBox* m_nat_radios;
 		wxRadioButton* m_rank0_radio;
@@ -65,13 +73,27 @@ class HostBattleDialog : public wxDialog
 
 		wxButton* m_host_btn;
 
-    enum {
-        HOST_CANCEL = wxID_HIGHEST,
-        HOST_OK,
-        CHOSE_NAT
-    };
+		wxMenu* m_relayhost_list;
+		wxButton* m_relayed_host_pick;
 
-    DECLARE_EVENT_TABLE()
+        wxBitmapButton* m_refresh_btn;
+
+
+		enum {
+			HOST_CANCEL = wxID_HIGHEST,
+			HOST_OK,
+			CHOSE_NAT,
+			PICK_RELAYHOST,
+			AUTO_PICK_HOST,
+			MANUAL_PICK_HOST,
+			BTN_REFRESH,
+			CHK_USE_RELAY
+		};
+
+		wxString m_last_relayhost;
+		wxArrayString m_relayhost_array_list;
+
+		DECLARE_EVENT_TABLE()
 };
 
 

@@ -44,7 +44,7 @@ struct BattleListFilterValues;
 struct PlaybackListFilterValues;
 class wxFileInputStream;
 class wxFileName;
-class wxColor;
+class wxColour;
 class wxColour;
 class wxColourData;
 class wxSize;
@@ -340,7 +340,13 @@ class Settings
     bool GetSplitBRoomHorizontally();
     void SetSplitBRoomHorizontally( const bool vertical );
 
+    bool GetShowXallTabs();
+    void SetShowXallTabs( bool show );
+
     void TranslateSavedColumWidths();
+
+    wxString GetEditorPath( );
+    void SetEditorPath( const wxString& path );
     /*@}*/
 
     /* ================================================================ */
@@ -354,8 +360,8 @@ class Settings
     void AddGroup( const wxString& group ) ;
     void DeleteGroup( const wxString& group ) ;
 
-    void SetGroupHLColor( const wxColor& color, const wxString& group = _T("default") );
-    wxColor GetGroupHLColor( const wxString& group = _T("default") ) const;
+    void SetGroupHLColor( const wxColour& color, const wxString& group = _T("default") );
+    wxColour GetGroupHLColor( const wxString& group = _T("default") ) const;
 
     void SetGroupActions( const wxString& group, UserActions::ActionType action );
     UserActions::ActionType GetGroupActions( const wxString& group ) const;
@@ -702,7 +708,15 @@ class Settings
     unsigned int GetMapSelectorFilterRadio();
     void SetMapSelectorFilterRadio( const unsigned int val );
     /**@}*/
+  /* ============================================================== */
+    /** @name Relayed Hosts
+    * @{
+    */
 
+    wxString GetLastRelayedHost(void);
+    void SetLastRelayedHost(wxString relhost);
+
+    /**@}*/
 
   protected:
     bool IsSpringBin( const wxString& path );
@@ -715,7 +729,7 @@ class Settings
     wxConfigBase* m_config; //!< wxConfig object to store and restore  all settings in.
     #endif
 
-    wxString m_chosed_path;
+    wxString m_chosen_path;
     bool m_portable_mode;
 
     std::map<wxString, wxString> m_spring_versions;
