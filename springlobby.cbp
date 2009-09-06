@@ -2,8 +2,6 @@
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="6" />
 	<Project>
-	<Unit filename="src/aui/slbook.cpp" />
-	<Unit filename="src/aui/slbook.h" />
 		<Option title="springlobby" />
 		<Option pch_mode="0" />
 		<Option compiler="gcc" />
@@ -176,6 +174,8 @@
 		<Unit filename="src/aui/artprovider.h" />
 		<Unit filename="src/aui/auimanager.cpp" />
 		<Unit filename="src/aui/auimanager.h" />
+		<Unit filename="src/aui/slbook.cpp" />
+		<Unit filename="src/aui/slbook.h" />
 		<Unit filename="src/autobalancedialog.cpp" />
 		<Unit filename="src/autobalancedialog.h" />
 		<Unit filename="src/autohost.cpp" />
@@ -202,8 +202,6 @@
 		<Unit filename="src/battleroommmoptionstab.h" />
 		<Unit filename="src/battleroomtab.cpp" />
 		<Unit filename="src/battleroomtab.h" />
-		<Unit filename="src/boost/md5.cpp" />
-		<Unit filename="src/boost/md5.hpp" />
 		<Unit filename="src/channel/autojoinchanneldialog.cpp" />
 		<Unit filename="src/channel/autojoinchanneldialog.h" />
 		<Unit filename="src/channel/channel.cpp" />
@@ -438,6 +436,10 @@
 		<Unit filename="src/utils/debug.h" />
 		<Unit filename="src/utils/math.cpp" />
 		<Unit filename="src/utils/math.h" />
+		<Unit filename="src/utils/md5.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/utils/md5.h" />
 		<Unit filename="src/utils/misc.cpp" />
 		<Unit filename="src/utils/misc.h" />
 		<Unit filename="src/utils/platform.cpp" />

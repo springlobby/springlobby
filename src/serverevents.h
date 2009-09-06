@@ -46,7 +46,7 @@ class ServerEvents : public wxEvtHandler
     void OnMotd( const wxString& msg );
     void OnPong( wxLongLong ping_time );
 
-    void OnNewUser( const wxString& nick, const wxString& conutry, int cpu );
+    void OnNewUser( const wxString& nick, const wxString& conutry, int cpu, const wxString& id );
     void OnUserStatus( const wxString& nick, UserStatus status );
     void OnUserQuit( const wxString& nick );
 

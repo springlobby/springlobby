@@ -24,7 +24,7 @@
 #include <map>
 
 #include "base64.h"
-#include "boost/md5.hpp"
+#include "utils/md5.h"
 #include "tasserver.h"
 #include "iunitsync.h"
 #include "user.h"
@@ -416,7 +416,24 @@ bool TASServer::IsPasswordHash( const wxString& pass ) const
 wxString TASServer::GetPasswordHash( const wxString& pass ) const
 {
     if ( IsPasswordHash(pass) ) return pass;
-    return wxBase64::Encode(boost::md5(pass.mb_str()).digest().value(), 16);
+
+    md5_state_t state;
+	md5_byte_t digest[16];
+	char hex_output[16*2 + 1];
+	int di;
+
+    std::string str = STD_STRING(pass);
+    char* cstr = new char [str.size()+1];
+    strcpy (cstr, str.c_str());
+
+	md5_init(&state);
+	md5_append(&state, (const md5_byte_t *) cstr, strlen( cstr ));
+	md5_finish(&state, digest);
+    for (di = 0; di < 16; ++di)
+	    sprintf(hex_output + di * 2, "%02x", digest[di]);
+
+    wxString coded = wxBase64::Encode( digest, 16 );
+    return coded;
 }
 
 
@@ -435,7 +452,7 @@ void TASServer::Login()
     localaddr = m_sock->GetLocalAddress();
     if ( localaddr.IsEmpty() ) localaddr = _T("*");
     SendCmd ( _T("LOGIN"), m_user + _T(" ") + pass + _T(" ") +
-              GetHostCPUSpeed() + _T(" ") + localaddr + _T(" SpringLobby ") + GetSpringLobbyVersion() + protocol );
+              GetHostCPUSpeed() + _T(" ") + localaddr + _T(" SpringLobby ") + GetSpringLobbyVersion() + protocol  + _T("\ta"));
 }
 
 void TASServer::Logout()
@@ -627,7 +644,8 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         nick = GetWordParam( params );
         contry = GetWordParam( params );
         cpu = GetIntParam( params );
-        m_se->OnNewUser( nick, contry, cpu );
+				id = GetIntParam( params );
+        m_se->OnNewUser( nick, contry, cpu, TowxString(id) );
         if ( nick == m_relay_host_bot )
         {
            RelayCmd( _T("OPENBATTLE"), m_delayed_open_command ); // relay bot is deployed, send host command

@@ -353,8 +353,8 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle )
 	m_top_sizer->Add( m_splitter, 1, wxEXPAND | wxALL, 2 );
 	m_top_sizer->Add( m_info_sizer, 0, wxEXPAND | wxALL, 2 );
 
-	m_buttons_sizer->Add( m_leave_btn, 0, wxEXPAND | wxALL, 2 );
 	m_buttons_sizer->AddStretchSpacer();
+	m_buttons_sizer->Add( m_leave_btn, 0, wxEXPAND | wxALL, 2 );
 	m_buttons_sizer->Add( m_addbot_btn, 0, wxEXPAND | wxALL, 2 );
 	m_buttons_sizer->Add( m_autolock_chk, 0, wxEXPAND | wxALL, 2 );
 	m_buttons_sizer->Add( m_lock_chk, 0, wxEXPAND | wxALL, 2 );

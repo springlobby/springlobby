@@ -117,7 +117,7 @@ bool SpringLobbyApp::OnInit()
     wxLogChain* logchain = 0;
     wxLogWindow *loggerwin = InitializeLoggingTargets( 0, m_log_console, m_log_window_show, !m_crash_handle_disable, m_log_verbosity, logchain );
 
-#if wxUSE_ON_FATAL_EXCEPTION
+#if wxUSE_ON_FATAL_EXCEPTION && !defined(__WXMAC__)
     if (!m_crash_handle_disable) wxHandleFatalExceptions( true );
 #endif
 
