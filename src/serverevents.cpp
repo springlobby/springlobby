@@ -127,7 +127,7 @@ void ServerEvents::OnPong( wxLongLong ping_time )
 }
 
 
-void ServerEvents::OnNewUser( const wxString& nick, const wxString& country, int cpu )
+void ServerEvents::OnNewUser( const wxString& nick, const wxString& country, int cpu, const wxString& id )
 {
     wxLogDebugFunc( _T("") );
     try
@@ -143,6 +143,7 @@ void ServerEvents::OnNewUser( const wxString& nick, const wxString& country, int
         actNotifBox( SL_MAIN_ICON, nick + _(" is online") );
     user.SetCountry( country );
     user.SetCpu( cpu );
+		user.SetID( id );
     ui().OnUserOnline( user );
 }
 
