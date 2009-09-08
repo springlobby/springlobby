@@ -370,6 +370,9 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle )
 	for ( UserList::user_map_t::size_type i = 0; i < battle.GetNumUsers(); i++ )
 	{
 		m_players->AddUser( battle.GetUser( i ) );
+		#ifdef __WXMAC__
+		UpdateUser( battle.GetUser( i ) );
+		#endif
 	}
 
 	if ( !IsHosted() )
@@ -824,6 +827,9 @@ void BattleRoomTab::OnUserJoined( User& user )
 {
 	if ( !user.BattleStatus().IsBot() ) m_chat->Joined( user );
 	m_players->AddUser( user );
+	#ifdef __WXMAC__
+	UpdateUser(user);
+	#endif
 	if ( &user == &m_battle.GetMe() )
 	{
 		m_players->SetSelectedIndex ( m_players->GetIndexFromData( &user ) );
