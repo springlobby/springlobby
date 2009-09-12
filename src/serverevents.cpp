@@ -890,10 +890,13 @@ void ServerEvents::OnMutelistBegin( const wxString& channel )
 void ServerEvents::OnMutelistItem( const wxString& /*unused*/, const wxString& mutee, const wxString& description )
 {
     wxString message = mutee;
-    if ( description == _T("indefinite") )
-        message << _(" indefinite time remaining");
-    else
-        message << wxString::Format( _(" %d minutes remaining") , s2l(description)/60 + 1 ) ;
+    wxString desc = description;
+    wxString mutetime = GetWordParam( desc );
+		long time;
+		if ( mutetime == _T("indefinite") ) message << _(" indefinite time remaining");
+		else if ( mutetime.ToLong(&time) ) message << wxString::Format( _(" %d minutes remaining"), time/60 + 1 );
+		else message << mutetime;
+		if ( !desc.IsEmpty() )  message << _T(", ") << desc;
     mutelistWindow( message );
 }
 
