@@ -370,6 +370,9 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle )
 	for ( UserList::user_map_t::size_type i = 0; i < battle.GetNumUsers(); i++ )
 	{
 		m_players->AddUser( battle.GetUser( i ) );
+		#ifdef __WXMAC__
+		UpdateUser( battle.GetUser( i ) );
+		#endif
 	}
 
 	if ( !IsHosted() )
@@ -824,6 +827,9 @@ void BattleRoomTab::OnUserJoined( User& user )
 {
 	if ( !user.BattleStatus().IsBot() ) m_chat->Joined( user );
 	m_players->AddUser( user );
+
+	UpdateUser(user);
+
 	if ( &user == &m_battle.GetMe() )
 	{
 		m_players->SetSelectedIndex ( m_players->GetIndexFromData( &user ) );
@@ -877,7 +883,8 @@ void BattleRoomTab::UpdatePresetList()
 void BattleRoomTab::OnSavePreset( wxCommandEvent& /*unused*/ )
 {
 	wxString presetname;
-	if ( ui().AskText( _( "Enter preset name" ), _( "Enter a name to save the current set of options\nIf a preset with the same name already exist, it will be overwritten" ), presetname ) ) return;
+	if ( !ui().AskText( _( "Enter preset name" ), _( "Enter a name to save the current set of options\nIf a preset with the same name already exist, it will be overwritten" ), presetname ) )
+		return;
 	if ( presetname.IsEmpty() )
 	{
 		customMessageBoxNoModal( SL_MAIN_ICON , _( "Cannot save an options set without a name." ), _( "error" ), wxICON_EXCLAMATION | wxOK );

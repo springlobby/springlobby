@@ -601,6 +601,9 @@ ChatPanel::UserMenu* ChatPanel::CreateNickListMenu()
 
 const User* ChatPanel::GetSelectedUser() const
 {
+	if ( m_type == CPT_User ) {
+		return m_user;
+	}
 	if ( !m_show_nick_list || ( m_nicklist == 0 ) ) return 0;
 
 	return m_nicklist->GetSelectedData();
