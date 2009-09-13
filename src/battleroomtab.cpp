@@ -827,9 +827,9 @@ void BattleRoomTab::OnUserJoined( User& user )
 {
 	if ( !user.BattleStatus().IsBot() ) m_chat->Joined( user );
 	m_players->AddUser( user );
-	#ifdef __WXMAC__
+
 	UpdateUser(user);
-	#endif
+
 	if ( &user == &m_battle.GetMe() )
 	{
 		m_players->SetSelectedIndex ( m_players->GetIndexFromData( &user ) );
