@@ -883,7 +883,8 @@ void BattleRoomTab::UpdatePresetList()
 void BattleRoomTab::OnSavePreset( wxCommandEvent& /*unused*/ )
 {
 	wxString presetname;
-	if ( ui().AskText( _( "Enter preset name" ), _( "Enter a name to save the current set of options\nIf a preset with the same name already exist, it will be overwritten" ), presetname ) ) return;
+	if ( !ui().AskText( _( "Enter preset name" ), _( "Enter a name to save the current set of options\nIf a preset with the same name already exist, it will be overwritten" ), presetname ) )
+		return;
 	if ( presetname.IsEmpty() )
 	{
 		customMessageBoxNoModal( SL_MAIN_ICON , _( "Cannot save an options set without a name." ), _( "error" ), wxICON_EXCLAMATION | wxOK );
