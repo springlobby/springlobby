@@ -1000,8 +1000,6 @@ springlobby_SOURCES += \
 	src/settings++/tab_quality_video.h \
 	src/settings++/frame.h \
 	src/settings++/tab_audio.h \
-	src/settings++/tab_debug.cpp \
-	src/settings++/tab_debug.h \
 	src/settings++/tab_audio.cpp \
 	src/settings++/presets.h \
 	src/settings++/tab_abstract.cpp \
@@ -1057,8 +1055,6 @@ springsettings_SOURCES = \
 	src/settings++/tab_quality_video.h \
 	src/settings++/frame.h \
 	src/settings++/tab_audio.h \
-	src/settings++/tab_debug.cpp \
-	src/settings++/tab_debug.h \
 	src/settings++/tab_audio.cpp \
 	src/settings++/presets.h \
 	src/settings++/tab_abstract.cpp \

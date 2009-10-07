@@ -326,7 +326,6 @@ SET(SettingsSrc
 	src/settings++/se_utils.cpp
 	src/settings++/tab_abstract.cpp
 	src/settings++/tab_audio.cpp
-	src/settings++/tab_debug.cpp
 	src/settings++/tab_quality_video.cpp
 	src/settings++/tab_render_detail.cpp
 	src/settings++/tab_simple.cpp
