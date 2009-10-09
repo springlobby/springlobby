@@ -122,9 +122,9 @@ bool Spring::Run( Battle& battle )
     // -m, --minimise          Start minimised
     // -q [T], --quit=[T]      Quit immediately on game over or after T seconds
     #ifndef __WXMSW__
-    cmd = _T("--minimise --quit=1000000000 ");
+    cmd = _T("--minimise");
     #else
-    cmd = _T("/minimise /quit 1000000000 ");
+    cmd = _T("/minimise");
     #endif
 	}
 	cmd += _T(" \"") + path +  _T("\"");
@@ -162,25 +162,7 @@ bool Spring::Run( SinglePlayerBattle& battle )
 bool Spring::Run( OfflineBattle& battle )
 {
 
-  wxString path = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("script.txt");
-
-  try
-  {
-
-    if ( !wxFile::Access( path, wxFile::write ) )
-    {
-      wxLogError( _T("Access denied to script.txt.") );
-    }
-
-    wxFile f( path, wxFile::write );
-    f.Write( WriteScriptTxt(battle) );
-    f.Close();
-
-  } catch (...)
-  {
-    wxLogError( _T("Couldn't write script.txt") );
-    return false;
-  }
+  wxString path = battle.GetPlayBackFilePath();
 
   return LaunchSpring( _T("\"") + path + _T("\"") );
 }
