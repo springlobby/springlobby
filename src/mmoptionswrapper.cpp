@@ -58,6 +58,7 @@ bool OptionsWrapper::loadAIOptions( const wxString& modname, int aiindex,const w
 {
 	int mapindex = m_ais_indexes[ainame];
 	if ( mapindex == 0 ) mapindex = m_ais_indexes.size() + LastOption;
+	m_ais_indexes[ainame] = mapindex;
 	unLoadOptions((GameOption)mapindex);
 	try
 	{
