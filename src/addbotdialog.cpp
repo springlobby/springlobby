@@ -288,7 +288,6 @@ void AddBotDialog::UpdateOption( const wxString& Tag )
 void AddBotDialog::OnOptionActivate( wxListEvent& event )
 {
 	long index = event.GetIndex();
-	if ( index == 0 ) return;
 	wxString tag;
 	for ( OptionListMap::iterator itor = m_opt_list_map.begin(); itor != m_opt_list_map.end(); itor++ )
 	{
