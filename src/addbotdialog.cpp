@@ -240,7 +240,7 @@ void AddBotDialog::ShowAIOptions()
   if ( !usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) ) return;
   m_opts_list->DeleteAllItems();
   m_opt_list_map.clear();
-  OptionsWrapper().loadAIOptions( m_battle.GetHostModName(), GetAIType(), GetNick() );
+  m_battle.CustomBattleOptions().loadAIOptions( m_battle.GetHostModName(), GetAIType(), GetNick() );
 	AddMMOptionsToList( 0, m_battle.CustomBattleOptions().GetAIOptionIndex( GetNick() ) );
 	m_opts_list->SetColumnWidth( 0, wxLIST_AUTOSIZE );
 	Layout();
