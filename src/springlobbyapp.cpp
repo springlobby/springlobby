@@ -132,9 +132,13 @@ bool SpringLobbyApp::OnInit()
 #ifdef __WXMSW__
     wxString path = wxPathOnly( wxStandardPaths::Get().GetExecutablePath() ) + wxFileName::GetPathSeparator() + _T("locale");
 #else
-    // use a dummy name here, we're only interested in the base path
-    wxString path = wxStandardPaths::Get().GetLocalizedResourcesDir(_T("noneWH"),wxStandardPaths::ResourceCat_Messages);
-    path = path.Left( path.First(_T("noneWH") ) );
+	#if defined(LOCALEDIR)
+		wxString path ( _T(LOCALEDIR) );
+	#else
+		// use a dummy name here, we're only interested in the base path
+		wxString path = wxStandardPaths::Get().GetLocalizedResourcesDir(_T("noneWH"),wxStandardPaths::ResourceCat_Messages);
+		path = path.Left( path.First(_T("noneWH") ) );
+	#endif
 #endif
     m_translationhelper = new wxTranslationHelper( *( (wxApp*)this ), path );
     m_translationhelper->Load();

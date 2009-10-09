@@ -216,7 +216,7 @@ SET(SpringLobbySrc
 	src/utils/tasutil.cpp
 	src/utils/sltipwin.cpp
 	src/utils/controls.cpp
-	src/boost/md5.cpp
+	src/utils/md5.c
 	src/updater/updater.cpp
 	src/updater/versionchecker.cpp
 	src/Helper/TextCompletionDatabase.cpp
@@ -347,8 +347,12 @@ SET(SLSharedWithSettings
 	src/updater/versionchecker.cpp
 	src/crashreport.cpp
 	src/springunitsynclib.cpp
+	src/springunitsync.cpp
+	src/thread.cpp
 	src/spinctld.cpp
 	src/globalsmanager.cpp
+	src/mmoptionmodel.cpp
+	src/mmoptionswrapper.cpp
 )
 
 # If we build for windows Systems, we also include the Resource-File containing the Manifest, Icon and other Resources.
