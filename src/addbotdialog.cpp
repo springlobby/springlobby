@@ -282,7 +282,7 @@ void AddBotDialog::UpdateOption( const wxString& Tag )
 		value = m_battle.CustomBattleOptions().GetNameListOptValue( key, type ); // get the key full name not short key
 	}
 	m_opts_list->SetItem( index, 1, value );
-	m_opts_list->SetColumnWidth( 1, wxLIST_AUTOSIZE );
+	m_opts_list->SetColumnWidth( 0, wxLIST_AUTOSIZE );
 }
 
 void AddBotDialog::OnOptionActivate( wxListEvent& event )
