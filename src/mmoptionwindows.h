@@ -6,7 +6,7 @@
 class wxCheckBox;
 class wxComboBox;
 class wxCommandEvent;
-class Battle;
+class IBattle;
 class wxSpinCtrlDbl;
 class wxTextCtrl;
 class wxStaticText;
@@ -16,13 +16,13 @@ class SingleOptionDialog: public wxDialog
 {
 
 	public:
-			SingleOptionDialog( wxWindow* parent, Battle& battle, const wxString& optiontag );
+			SingleOptionDialog( IBattle& battle, const wxString& optiontag );
 
 			void OnOk(wxCommandEvent& event);
 			void OnCancel(wxCommandEvent& event);
 
 	protected:
-			Battle& m_battle;
+			IBattle& m_battle;
 			wxString m_tag;
 
 			wxCheckBox* m_checkbox;

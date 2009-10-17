@@ -242,8 +242,8 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent )
 	m_buttons_sizer = new wxBoxSizer( wxHORIZONTAL );
 
 	m_cancel_btn = new wxButton( this, HOST_CANCEL, _( "Cancel" ), wxDefaultPosition, wxDefaultSize, 0 );
-	m_buttons_sizer->Add( m_cancel_btn, 0, wxALL, 5 );
 	m_buttons_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
+	m_buttons_sizer->Add( m_cancel_btn, 0, wxALL, 5 );
 
 	m_host_btn = new wxButton( this, HOST_OK, _( "Host" ), wxDefaultPosition, wxDefaultSize, 0 );
 	m_host_btn->SetToolTip( TE( _( "Start hosting the battle." ) ) );

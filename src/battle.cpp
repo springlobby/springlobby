@@ -598,15 +598,13 @@ void Battle::StartSpring()
 		}
 		GetMe().BattleStatus().ready = false;
 		SendMyBattleStatus();
-		GetMe().Status().in_game = true;
-		GetMe().SendMyUserStatus();
 		if( IsFounderMe() && GetAutoLockOnStart() )
 		{
 			SetIsLocked( true );
 			SendHostInfo( IBattle::HI_Locked );
 		}
-		ui().OnSpringStarting();
-		spring().Run( *this );
+		GetMe().Status().in_game = spring().Run( *this );
+		GetMe().SendMyUserStatus();
 	}
 	ui().OnBattleStarted( *this );
 }

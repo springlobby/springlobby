@@ -24,6 +24,8 @@
 #include "httpdownloader.h"
 #include "settings.h"
 #include "utils/customdialogs.h"
+#include "utils/tasutil.h"
+
 #ifndef NO_TORRENT_SYSTEM
 #include "torrentwrapper.h"
 #endif
@@ -127,7 +129,7 @@ void ServerEvents::OnPong( wxLongLong ping_time )
 }
 
 
-void ServerEvents::OnNewUser( const wxString& nick, const wxString& country, int cpu )
+void ServerEvents::OnNewUser( const wxString& nick, const wxString& country, int cpu, const wxString& id )
 {
     wxLogDebugFunc( _T("") );
     try
@@ -143,6 +145,7 @@ void ServerEvents::OnNewUser( const wxString& nick, const wxString& country, int
         actNotifBox( SL_MAIN_ICON, nick + _(" is online") );
     user.SetCountry( country );
     user.SetCpu( cpu );
+		user.SetID( id );
     ui().OnUserOnline( user );
 }
 
@@ -889,10 +892,13 @@ void ServerEvents::OnMutelistBegin( const wxString& channel )
 void ServerEvents::OnMutelistItem( const wxString& /*unused*/, const wxString& mutee, const wxString& description )
 {
     wxString message = mutee;
-    if ( description == _T("indefinite") )
-        message << _(" indefinite time remaining");
-    else
-        message << wxString::Format( _(" %d minutes remaining") , s2l(description)/60 + 1 ) ;
+    wxString desc = description;
+    wxString mutetime = GetWordParam( desc );
+		long time;
+		if ( mutetime == _T("indefinite") ) message << _(" indefinite time remaining");
+		else if ( mutetime.ToLong(&time) ) message << wxString::Format( _(" %d minutes remaining"), time/60 + 1 );
+		else message << mutetime;
+		if ( !desc.IsEmpty() )  message << _T(", ") << desc;
     mutelistWindow( message );
 }
 

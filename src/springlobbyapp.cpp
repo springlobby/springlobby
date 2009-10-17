@@ -123,7 +123,7 @@ bool SpringLobbyApp::OnInit()
     wxLogChain* logchain = 0;
     wxLogWindow *loggerwin = InitializeLoggingTargets( 0, m_log_console, m_log_window_show, !m_crash_handle_disable, m_log_verbosity, logchain );
 
-#if wxUSE_ON_FATAL_EXCEPTION
+#if wxUSE_ON_FATAL_EXCEPTION && !defined(__WXMAC__)
     if (!m_crash_handle_disable) wxHandleFatalExceptions( true );
 #endif
 
@@ -137,9 +137,13 @@ bool SpringLobbyApp::OnInit()
 #ifdef __WXMSW__
     wxString path = wxPathOnly( wxStandardPaths::Get().GetExecutablePath() ) + wxFileName::GetPathSeparator() + _T("locale");
 #else
-    // use a dummy name here, we're only interested in the base path
-    wxString path = wxStandardPaths::Get().GetLocalizedResourcesDir(_T("noneWH"),wxStandardPaths::ResourceCat_Messages);
-    path = path.Left( path.First(_T("noneWH") ) );
+	#if defined(LOCALEDIR)
+		wxString path ( _T(LOCALEDIR) );
+	#else
+		// use a dummy name here, we're only interested in the base path
+		wxString path = wxStandardPaths::Get().GetLocalizedResourcesDir(_T("noneWH"),wxStandardPaths::ResourceCat_Messages);
+		path = path.Left( path.First(_T("noneWH") ) );
+	#endif
 #endif
     m_translationhelper = new wxTranslationHelper( *( (wxApp*)this ), path );
     m_translationhelper->Load();

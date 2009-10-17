@@ -266,10 +266,6 @@ User& IBattle::OnBotAdded( const wxString& nick, const UserBattleStatus& bs )
 		User& user = m_internal_bot_list[nick];
 		user.UpdateBattleStatus( bs );
 		User& usr = OnUserAdded( user );
-		if ( GetMe().GetNick() == bs.owner )
-		{
-			 if ( bs.aitype >= 0 ) OptionsWrapper().loadAIOptions( GetHostModName(), bs.aitype, nick );
-		}
 		return usr;
 }
 

@@ -961,6 +961,7 @@ void Ui::OnUserLeftBattle( IBattle& battle, User& user )
 {
     if ( m_main_win == 0 ) return;
     user.SetSideiconIndex( -1 ); //just making sure he's not running around with some icon still set
+	user.BattleStatus().side = 0; // and reset side, so after rejoin we don't potentially stick with a num higher than avail
     mw().GetJoinTab().GetBattleListTab().UpdateBattle( battle );
     try
     {
