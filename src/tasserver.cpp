@@ -24,7 +24,7 @@
 #include <map>
 
 #include "base64.h"
-#include "boost/md5.hpp"
+#include "utils/md5.h"
 #include "tasserver.h"
 #include "iunitsync.h"
 #include "user.h"
@@ -416,7 +416,24 @@ bool TASServer::IsPasswordHash( const wxString& pass ) const
 wxString TASServer::GetPasswordHash( const wxString& pass ) const
 {
     if ( IsPasswordHash(pass) ) return pass;
-    return wxBase64::Encode(boost::md5(pass.mb_str()).digest().value(), 16);
+
+    md5_state_t state;
+	md5_byte_t digest[16];
+	char hex_output[16*2 + 1];
+	int di;
+
+    std::string str = STD_STRING(pass);
+    char* cstr = new char [str.size()+1];
+    strcpy (cstr, str.c_str());
+
+	md5_init(&state);
+	md5_append(&state, (const md5_byte_t *) cstr, strlen( cstr ));
+	md5_finish(&state, digest);
+    for (di = 0; di < 16; ++di)
+	    sprintf(hex_output + di * 2, "%02x", digest[di]);
+
+    wxString coded = wxBase64::Encode( digest, 16 );
+    return coded;
 }
 
 
@@ -435,7 +452,7 @@ void TASServer::Login()
     localaddr = m_sock->GetLocalAddress();
     if ( localaddr.IsEmpty() ) localaddr = _T("*");
     SendCmd ( _T("LOGIN"), m_user + _T(" ") + pass + _T(" ") +
-              GetHostCPUSpeed() + _T(" ") + localaddr + _T(" SpringLobby ") + GetSpringLobbyVersion() + protocol );
+              GetHostCPUSpeed() + _T(" ") + localaddr + _T(" SpringLobby ") + GetSpringLobbyVersion() + protocol  + _T("\ta"));
 }
 
 void TASServer::Logout()
@@ -627,7 +644,8 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         nick = GetWordParam( params );
         contry = GetWordParam( params );
         cpu = GetIntParam( params );
-        m_se->OnNewUser( nick, contry, cpu );
+				id = GetIntParam( params );
+        m_se->OnNewUser( nick, contry, cpu, TowxString(id) );
         if ( nick == m_relay_host_bot )
         {
            RelayCmd( _T("OPENBATTLE"), m_delayed_open_command ); // relay bot is deployed, send host command
@@ -918,6 +936,10 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         color.data = GetIntParam( params );
         bstatus.colour = wxColour( color.color.red, color.color.green, color.color.blue );
         wxString ai = GetSentenceParam( params );
+        if ( ai.IsEmpty() ) {
+            wxLogWarning( wxString::Format( _T("Recieved illegal ADDBOT (empty dll field) from %s for battle %d"), nick.c_str(), id ) );
+            ai = _T("INVALID|INVALID");
+        }
         if( usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) )
         {
 					 bstatus.aiversion = ai.AfterLast( _T('|') );
@@ -1365,10 +1387,7 @@ void TASServer::HostBattle( BattleOptions bo, const wxString& password )
 
     wxString cmd = wxString::Format( _T("0 %d "), nat_type );
     cmd += (password.IsEmpty())?_T("*"):password;
-    cmd += wxString::Format( _T(" %d %d "),
-                             bo.port,
-                             bo.maxplayers
-                           );
+    cmd += wxString::Format( _T(" %d %d "), bo.port, bo.maxplayers );
     cmd += MakeHashSigned( bo.modhash );
     cmd += wxString::Format( _T(" %d "), bo.rankneeded );
     cmd += MakeHashSigned( bo.maphash ) + _T(" ");
@@ -1383,29 +1402,24 @@ void TASServer::HostBattle( BattleOptions bo, const wxString& password )
     }
     else
     {
-       unsigned int numbots = m_relay_host_manager_list.GetCount();
-       if ( numbots > 0 )
+       if ( bo.relayhost.IsEmpty() )
        {
-          srand ( time(NULL) );
-          unsigned int begin = rand() % numbots;
-          unsigned int choice = begin;
-          m_relay_host_manager = _T("");
-          while ( true )
-          {
-            wxString currentmanager = m_relay_host_manager_list[choice];
-            if ( UserExists( currentmanager ) && !GetUser( currentmanager ).GetStatus().in_game && !GetUser( currentmanager ).GetStatus().away ) // skip the PM if the manager is not connected or reports it's ingame ( no slots available ), or it's away ( functionality disabled )
-            {
-            	m_relay_host_manager = currentmanager;
+					 wxArrayString relaylist = GetRelayHostList();
+           unsigned int numbots = relaylist.GetCount();
+           if ( numbots > 0 )
+           {
+              srand ( time(NULL) );
+              unsigned int choice = rand() % numbots;
+							m_relay_host_manager = relaylist[choice];
 							m_delayed_open_command = cmd;
-              SayPrivate( currentmanager, _T("!spawn") );
-              break;
-            }
-            else
-            {
-              choice = ( choice + 1 ) % numbots;
-							if ( choice == begin ) break;
-            }
-          }
+							SayPrivate( m_relay_host_manager, _T("!spawn") );
+           }
+       }
+       else
+       {
+           m_relay_host_manager = bo.relayhost;
+           m_delayed_open_command = cmd;
+           SayPrivate(bo.relayhost,_T("!spawn"));
        }
     }
 
@@ -2340,7 +2354,24 @@ int TASServer::TestOpenPort( unsigned int port )
 
 void TASServer::RequestSpringUpdate()
 {
-	SendCmd( _T("REQUESTUPDATEFILE"), _T("Spring ") + m_required_spring_ver );
+	SendCmd( _T("REQUESTUPDATEFILE"), _T("Spring ") + usync().GetSpringVersion() );
+}
+
+wxArrayString TASServer::GetRelayHostList()
+{
+	wxArrayString ret;
+	for ( unsigned int i = 0; i < m_relay_host_manager_list.GetCount(); i++ )
+	{
+		try
+		{
+			User& manager = GetUser( m_relay_host_manager_list[i] );
+			if ( manager.Status().in_game ) continue; // skip the manager is not connected or reports it's ingame ( no slots available ), or it's away ( functionality disabled )
+			if ( manager.Status().away ) continue;
+			ret.Add( m_relay_host_manager_list[i] );
+		}
+		catch(...){}
+	}
+	return ret;
 }
 
 ////////////////////////

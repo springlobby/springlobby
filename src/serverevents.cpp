@@ -23,6 +23,7 @@
 #include "battle.h"
 #include "httpdownloader.h"
 #include "settings.h"
+#include "utils/tasutil.h"
 #include "settings++/custom_dialogs.h"
 #ifndef NO_TORRENT_SYSTEM
 #include "torrentwrapper.h"
@@ -127,7 +128,7 @@ void ServerEvents::OnPong( wxLongLong ping_time )
 }
 
 
-void ServerEvents::OnNewUser( const wxString& nick, const wxString& country, int cpu )
+void ServerEvents::OnNewUser( const wxString& nick, const wxString& country, int cpu, const wxString& id )
 {
     wxLogDebugFunc( _T("") );
     try
@@ -143,6 +144,7 @@ void ServerEvents::OnNewUser( const wxString& nick, const wxString& country, int
         actNotifBox( SL_MAIN_ICON, nick + _(" is online") );
     user.SetCountry( country );
     user.SetCpu( cpu );
+		user.SetID( id );
     ui().OnUserOnline( user );
 }
 
@@ -889,10 +891,13 @@ void ServerEvents::OnMutelistBegin( const wxString& channel )
 void ServerEvents::OnMutelistItem( const wxString& /*unused*/, const wxString& mutee, const wxString& description )
 {
     wxString message = mutee;
-    if ( description == _T("indefinite") )
-        message << _(" indefinite time remaining");
-    else
-        message << wxString::Format( _(" %d minutes remaining") , s2l(description)/60 + 1 ) ;
+    wxString desc = description;
+    wxString mutetime = GetWordParam( desc );
+		long time;
+		if ( mutetime == _T("indefinite") ) message << _(" indefinite time remaining");
+		else if ( mutetime.ToLong(&time) ) message << wxString::Format( _(" %d minutes remaining"), time/60 + 1 );
+		else message << mutetime;
+		if ( !desc.IsEmpty() )  message << _T(", ") << desc;
     mutelistWindow( message );
 }
 
@@ -931,43 +936,82 @@ void ServerEvents::OnScriptEnd( int battleid )
 
 void ServerEvents::OnFileDownload( bool autolaunch, bool autoclose, bool disconnectonrefuse, const wxString& FileName, const wxString& url, const wxString& description )
 {
-	bool result = ui().Ask( _("Download update"), wxString::Format( _("Would you like to download %s ? The file offers the following updates:\n%s"), FileName.c_str(), description.c_str() ) );
+	wxString refinedurl;
+	if ( url.Contains(_T("http://")) ) refinedurl = url.AfterFirst(_T('/')).AfterFirst(_T('/'));
+	else refinedurl = url;
+	bool result = ui().Ask( _("Download update"), wxString::Format( _("Would you like to download %s ? The file offers the following updates:\n\n%s\n\nThe download will be started in the background, you will be notified on operation completed."), url.c_str(), description.c_str() ) );
 	if ( result )
 	{
 		m_autoclose = autoclose;
 		m_autolaunch = autolaunch;
-		m_savepath = sett().GetCurrentUsedDataDir() + FileName;
-		customMessageBox(SL_MAIN_ICON, _("Download started in the background, please be patient\nyou will be notified on operation completed."), _("Download started"));
-		new HttpDownloaderThread<ServerEvents>( url, m_savepath, *this, wxID_HIGHEST + 100, true, false );
-	}
-	else
-	{
-		if ( disconnectonrefuse )
-		{
-			customMessageBox(SL_MAIN_ICON, _("You refused a mandatory update, you will be disconnected now."), _("Disconnecting"));
-			m_serv.Disconnect();
-		}
+		wxString filename;
+		if ( FileName != _T("*") ) filename = FileName;
+		else filename = _T("Spring installer.exe");
+		m_savepath = sett().GetCurrentUsedDataDir() + filename;
+		wxLogMessage(_T("downloading update in: %s, from: %s"),m_savepath.c_str(),refinedurl.c_str());
+		ui().OpenWebBrowser( url );
+		//new HttpDownloaderThread<ServerEvents>( refinedurl, m_savepath, *this, wxID_HIGHEST + 100, true, false );
 	}
 }
 void ServerEvents::OnSpringDownloadEvent( wxCommandEvent& event )
 {
 	int code = event.GetInt();
-  if ( code != 0) customMessageBox(SL_MAIN_ICON, _("There was an error downloading for the latest version.\nPlease update manually from http://springrts.com"), _("Error"));
+	wxLogMessage(event.GetString());
+  if ( code != 0)
+  {
+  	 customMessageBox(SL_MAIN_ICON, _("There was an error downloading for the latest version.\n"), _("Error"));
+		wxString err;
+    switch (code)
+    {
+      case wxPROTO_NETERR:
+        err = _("Network Error");
+        break;
+      case wxPROTO_PROTERR:
+        err = _("Negotiation error");
+        break;
+      case wxPROTO_CONNERR:
+        err = _T("Failed to connect to server");
+        break;
+      case wxPROTO_INVVAL:
+        err = _("Invalid Value");
+        break;
+      case wxPROTO_NOHNDLR:
+        err = _("No Handler");
+        break;
+      case wxPROTO_NOFILE:
+        err = _("File doesn't exit");
+        break;
+      case wxPROTO_ABRT:
+        err = _("Action Aborted");
+        break;
+      case wxPROTO_RCNCT:
+        err = _("Reconnection Error");
+        break;
+      default:
+        err = _("Unknown Error");
+        break;
+    }
+
+    wxLogDebugFunc(_T("Error connecting! Error is: ") + err);
+    customMessageBoxNoModal(SL_MAIN_ICON, _T("Error connecting! (") + err + _T(")\nPlease update manually from http://springrts.com"), _T(""));
+
+  }
   else
   {
+			wxString text =  _("Download complete, location is: ") + m_savepath;
+			if ( m_autoclose ) text += _("\nlobby will get closed now.");
+			customMessageBox(SL_MAIN_ICON, text, _("Download complete.")  );
 			if ( m_autolaunch )
 			{
-				if ( !wxExecute ( m_savepath, wxEXEC_ASYNC ) )
+				if ( !wxExecute( _T("\"") + m_savepath + _T("\""), wxEXEC_ASYNC ) )
 				{
 						customMessageBoxNoModal(SL_MAIN_ICON, _("Couldn't launch installer. File location is: ") + m_savepath, _("Couldn't launch installer.")  );
 				}
 			}
-			else
-			{
-				customMessageBoxNoModal(SL_MAIN_ICON, _("Download complete, location is: ") + m_savepath, _("Download complete.")  );
-			}
 			if ( m_autoclose )
-                ui().mw().Close();
+			{
+				ui().mw().Close();
+			}
 
   }
 }

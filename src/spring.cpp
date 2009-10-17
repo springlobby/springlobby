@@ -24,6 +24,8 @@
 #include "spring.h"
 #include "springprocess.h"
 #include "ui.h"
+#include "mainwindow.h"
+#include "settings++/custom_dialogs.h"
 #include "utils/debug.h"
 #include "utils/conversion.h"
 #include "settings.h"
@@ -120,9 +122,9 @@ bool Spring::Run( Battle& battle )
     // -m, --minimise          Start minimised
     // -q [T], --quit=[T]      Quit immediately on game over or after T seconds
     #ifndef __WXMSW__
-    cmd = _T("--minimise --quit=1000000000 ");
+    cmd = _T("--minimise");
     #else
-    cmd = _T("/minimise /quit 1000000000 ");
+    cmd = _T("/minimise");
     #endif
 	}
 	cmd += _T(" \"") + path +  _T("\"");
@@ -160,25 +162,7 @@ bool Spring::Run( SinglePlayerBattle& battle )
 bool Spring::Run( OfflineBattle& battle )
 {
 
-  wxString path = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("script.txt");
-
-  try
-  {
-
-    if ( !wxFile::Access( path, wxFile::write ) )
-    {
-      wxLogError( _T("Access denied to script.txt.") );
-    }
-
-    wxFile f( path, wxFile::write );
-    f.Write( WriteScriptTxt(battle) );
-    f.Close();
-
-  } catch (...)
-  {
-    wxLogError( _T("Couldn't write script.txt") );
-    return false;
-  }
+  wxString path = battle.GetPlayBackFilePath();
 
   return LaunchSpring( _T("\"") + path + _T("\"") );
 }
@@ -191,6 +175,12 @@ bool Spring::LaunchSpring( const wxString& params  )
     wxLogError( _T("Spring already running!") );
     return false;
   }
+    if ( !wxFile::Exists( sett().GetCurrentUsedSpringBinary() ) ) {
+        customMessageBoxNoModal( SL_MAIN_ICON, _T("The spring executable was not found at the set location, please re-check."), _T("Executable not found") );
+        ui().mw().ShowConfigure( MainWindow::OPT_PAGE_SPRING );
+        return false;
+    }
+
   wxString configfileflags = sett().GetCurrentUsedSpringConfigFilePath();
   if ( !configfileflags.IsEmpty() )
   {
@@ -233,7 +223,7 @@ void Spring::OnTerminated( wxCommandEvent& event )
     m_running = false;
     m_process = 0; // NOTE I'm not sure if this should be deleted or not, according to wx docs it shouldn't.
     m_wx_process = 0;
-    ui().OnSpringTerminated( true );
+    ui().OnSpringTerminated( event.GetExtraLong() );
 }
 
 
@@ -381,6 +371,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 							free_team++;
 						}
 					}
+				  if ( battle.IsProxy() && ( user.GetNick() == battle.GetFounder().GetNick() ) ) continue;
 					if ( status.IsBot() ) continue;
 					tdf.EnterSection( _T("PLAYER") + TowxString( i ) );
 							tdf.Append( _T("Name"), user.GetNick() );

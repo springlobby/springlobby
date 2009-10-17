@@ -3,6 +3,7 @@
 #include "iunitsync.h"
 #include "utils/conversion.h"
 #include "settings++/custom_dialogs.h"
+#include "utils/debug.h"
 
 #include <stdexcept>
 #include <wx/intl.h>
@@ -58,6 +59,8 @@ bool OptionsWrapper::loadAIOptions( const wxString& modname, int aiindex,const w
 {
 	int mapindex = m_ais_indexes[ainame];
 	if ( mapindex == 0 ) mapindex = m_ais_indexes.size() + LastOption;
+	m_ais_indexes[ainame] = mapindex;
+	wxLogDebugFunc( _T("bot name: ") + ainame + _T(" option index: ") + TowxString( mapindex ) );
 	unLoadOptions((GameOption)mapindex);
 	try
 	{
@@ -74,8 +77,10 @@ bool OptionsWrapper::loadAIOptions( const wxString& modname, int aiindex,const w
 int OptionsWrapper::GetAIOptionIndex( const wxString& nick )
 {
 	std::map<wxString,int>::iterator itor = m_ais_indexes.find(nick);
-	if ( itor != m_ais_indexes.end() ) return itor->second;
-	return -1;
+	int pos = -1;
+	if ( itor != m_ais_indexes.end() ) pos = itor->second;
+	wxLogDebugFunc( _T("bot name: ") + nick + _T(" option index: ") + TowxString( pos ) );
+	return pos;
 }
 
 bool OptionsWrapper::loadOptions(GameOption modmapFlag, const wxString& name)

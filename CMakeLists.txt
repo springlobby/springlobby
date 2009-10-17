@@ -240,7 +240,7 @@ SET(SpringLobbySrc
 	src/utils/tasutil.cpp
 	src/utils/sltipwin.cpp
 	src/utils/controls.cpp
-	src/boost/md5.cpp
+	src/utils/md5.c
 	src/updater/updater.cpp
 	src/updater/versionchecker.cpp
 	src/Helper/TextCompletionDatabase.cpp
@@ -351,7 +351,6 @@ SET(SettingsSrc
 	src/settings++/se_utils.cpp
 	src/settings++/tab_abstract.cpp
 	src/settings++/tab_audio.cpp
-	src/settings++/tab_debug.cpp
 	src/settings++/tab_quality_video.cpp
 	src/settings++/tab_render_detail.cpp
 	src/settings++/tab_simple.cpp
@@ -374,8 +373,12 @@ SET(SLSharedWithSettings
 	src/crashreport.cpp
 	src/stacktrace.cpp 
 	src/springunitsynclib.cpp
+	src/springunitsync.cpp
+	src/thread.cpp
 	src/spinctld.cpp
 	src/globalsmanager.cpp
+	src/mmoptionmodel.cpp
+	src/mmoptionswrapper.cpp
 )
 
 SET( curlSRC

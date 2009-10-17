@@ -24,7 +24,7 @@ BEGIN_EVENT_TABLE( SingleOptionDialog, wxDialog )
 
 END_EVENT_TABLE()
 
-SingleOptionDialog::SingleOptionDialog( Battle& battle, const wxString& optiontag )
+SingleOptionDialog::SingleOptionDialog( IBattle& battle, const wxString& optiontag )
     : m_battle( battle ),
     m_tag( optiontag ),
     m_checkbox( 0 ),

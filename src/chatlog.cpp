@@ -15,6 +15,7 @@
 #include "chatlog.h"
 #include "settings.h"
 #include "utils/conversion.h"
+#include "ui.h"
 
 #include "settings++/custom_dialogs.h"
 
@@ -125,21 +126,21 @@ bool ChatLog::WriteLine( const wxString& text )
 
 bool ChatLog::OpenLogFile( const wxString& server, const wxString& room )
 {
-	wxString path = _GetPath() + wxFileName::GetPathSeparator() + server + wxFileName::GetPathSeparator() + room + _T( ".txt" );
+	m_current_logfile_path = _GetPath() + wxFileName::GetPathSeparator() + server + wxFileName::GetPathSeparator() + room + _T( ".txt" );
 	wxLogMessage( _T( "OpenLogFile( %s, %s )" ), server.c_str(), room.c_str() ) ;
 
 //  delete m_logfile;
 //  m_logfile = 0;
 
 	if ( m_parent_dir_exists && LogEnabled() && CreateFolder( server ) ) {
-		if ( wxFileExists( path ) ) {
-			m_logfile.Open( path, wxFile::write_append );
+		if ( wxFileExists( m_current_logfile_path ) ) {
+			m_logfile.Open( m_current_logfile_path, wxFile::write_append );
 		} else {
-			m_logfile.Open( path, wxFile::write );
+			m_logfile.Open( m_current_logfile_path, wxFile::write );
 		}
 		if ( !m_logfile.IsOpened() ) {
-			wxLogWarning( _T( "Can't open log file %s" ), path.c_str() ) ;
-			customMessageBox( SL_MAIN_ICON, _( "Can't open log file. \nBe sure that there isn't a write protection.\n" ) + path, _( "Log Warning" ) ) ;
+			wxLogWarning( _T( "Can't open log file %s" ), m_current_logfile_path.c_str() ) ;
+			customMessageBox( SL_MAIN_ICON, _( "Can't open log file. \nBe sure that there isn't a write protection.\n" ) + m_current_logfile_path, _( "Log Warning" ) ) ;
 
 		}
 		else {
@@ -163,3 +164,7 @@ wxString ChatLog::LogTime()
 	return  _T( "[" ) + now.Format( _T( "%H:%M" ) ) + _T( "]" );
 }
 
+void ChatLog::OpenInEditor()
+{
+    ui().OpenFileInEditor( m_current_logfile_path );
+}

@@ -26,7 +26,6 @@ class tab_ui;
 class tab_render_detail;
 class tab_quality_video;
 class audio_panel;
-class debug_panel;
 class abstract_panel;
 class wxMenu;
 class wxCommanEvent;
@@ -57,7 +56,6 @@ class settings_frame : public wxFrame
 		tab_simple* simpleTab;
 		tab_ui* uiTab;
 		audio_panel* audioTab;
-		debug_panel* debugTab;
 		tab_render_detail* detailTab;
 		tab_quality_video* qualityTab;
 
@@ -84,7 +82,7 @@ class settings_frame : public wxFrame
 			ID_QUALITY_VIDEO = 1012,
 			ID_RENDER_DETAIL = 1011,
 			ID_SIMPLE = 1010,
-			ID_DEBUG = 1009,
+			//ID_DEBUG = 1009,
 			ID_MOUSE = 1008,
 			ID_AUDIO = 1007,
 			ID_GENERAL = 1006,

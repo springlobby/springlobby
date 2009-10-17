@@ -99,31 +99,58 @@ int IBattle::GetPlayerNum( const User& user )
     return -1;
 }
 
+#include <algorithm>
+class DismissColor {
+    protected:
+        typedef std::vector<wxColour>
+            ColorVec;
+        const ColorVec& m_other;
+
+    public:
+        DismissColor( const ColorVec& other )
+            : m_other( other )
+        {}
+
+    bool operator() ( wxColor to_check ) {
+        return std::find ( m_other.begin(), m_other.end(), to_check ) != m_other.end();
+    }
+};
+
+class AreColoursSimilarProxy {
+    int m_mindiff;
+
+    public:
+        AreColoursSimilarProxy( int mindiff )
+            : m_mindiff ( mindiff )
+        {}
+
+        bool operator() ( wxColor a, wxColor b ) {
+                return AreColoursSimilar( a, b, m_mindiff );
+        }
+};
+
 wxColour IBattle::GetFreeColour( User *for_whom )
 {
-    int lowest = 0;
-    bool changed = true;
-    std::vector<wxColour>& fixcolourspalette = GetFixColoursPalette( m_teams_sizes.size() + 1 );
-    while ( changed )
-    {
-        changed = false;
-        std::set<int> parsed_teams;
-        for ( user_map_t::size_type i = 0; i < GetNumUsers(); i++ )
-        {
-            if ( (for_whom != NULL) && (&GetUser( i ) == for_whom) ) continue;
-            UserBattleStatus& bs = GetUser( i ).BattleStatus();
-            if ( bs.spectator ) continue;
-						if ( parsed_teams.find( bs.team ) != parsed_teams.end() ) continue; // skip duplicates
-						parsed_teams.insert( bs.team );
-						if ( lowest >= fixcolourspalette.size() ) fixcolourspalette = GetFixColoursPalette( lowest + 1 );
-            if ( AreColoursSimilar( bs.colour, fixcolourspalette[lowest], 20 ) )
-            {
-                lowest++;
-                changed = true;
-            }
-        }
+    typedef std::vector<wxColour>
+        ColorVec;
+
+    ColorVec current_used_colors;
+    for ( user_map_t::size_type i = 0; i < GetNumUsers(); ++i ) {
+        UserBattleStatus& bs = GetUser( i ).BattleStatus();
+        current_used_colors.push_back( bs.colour );
     }
-    return fixcolourspalette[lowest];
+
+    int inc = 1;
+    while ( true ) {
+        ColorVec fixcolourspalette = GetFixColoursPalette( m_teams_sizes.size() + inc++ );
+
+        ColorVec::iterator fixcolourspalette_new_end = std::unique( fixcolourspalette.begin(), fixcolourspalette.end(), AreColoursSimilarProxy( 20 ) );
+
+        fixcolourspalette_new_end = std::remove_if( fixcolourspalette.begin(), fixcolourspalette.end(), DismissColor( current_used_colors ) );
+
+        if ( fixcolourspalette_new_end != fixcolourspalette.begin() )
+            return (*fixcolourspalette.begin());
+    }
 }
 
 wxColour IBattle::GetFreeColour( User &for_whom )
@@ -204,7 +231,7 @@ User& IBattle::OnUserAdded( User& user )
     bs.spectator = false;
     bs.ready = false;
     bs.sync = SYNC_UNKNOWN;
-    if ( !bs.IsBot() && IsFounderMe() )
+    if ( !bs.IsBot() && IsFounderMe() && GetBattleType() == BT_Played )
     {
 			bs.team = GetFreeTeamNum( &user == &GetMe() );
 			bs.ally = GetFreeAlly( &user == &GetMe() );
@@ -238,10 +265,6 @@ User& IBattle::OnBotAdded( const wxString& nick, const UserBattleStatus& bs )
 		User& user = m_internal_bot_list[nick];
 		user.UpdateBattleStatus( bs );
 		User& usr = OnUserAdded( user );
-		if ( GetMe().GetNick() == bs.owner )
-		{
-			 if ( bs.aitype >= 0 ) OptionsWrapper().loadAIOptions( GetHostModName(), bs.aitype, nick );
-		}
 		return usr;
 }
 

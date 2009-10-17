@@ -120,7 +120,8 @@ const MyStrings<SPRING_MAX_ALLIES> ally_choices;
 BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle )
     : wxScrolledWindow( parent, -1 ),
     m_ui( ui ),
-    m_battle( battle )
+    m_battle( battle ),
+    m_map_dlg( 0 )
 {
 	GetAui().manager->AddPane( this, wxLEFT, _T( "battleroomtab" ) );
 
@@ -352,8 +353,8 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle )
 	m_top_sizer->Add( m_splitter, 1, wxEXPAND | wxALL, 2 );
 	m_top_sizer->Add( m_info_sizer, 0, wxEXPAND | wxALL, 2 );
 
-	m_buttons_sizer->Add( m_leave_btn, 0, wxEXPAND | wxALL, 2 );
 	m_buttons_sizer->AddStretchSpacer();
+	m_buttons_sizer->Add( m_leave_btn, 0, wxEXPAND | wxALL, 2 );
 	m_buttons_sizer->Add( m_addbot_btn, 0, wxEXPAND | wxALL, 2 );
 	m_buttons_sizer->Add( m_autolock_chk, 0, wxEXPAND | wxALL, 2 );
 	m_buttons_sizer->Add( m_lock_chk, 0, wxEXPAND | wxALL, 2 );
@@ -369,6 +370,9 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle )
 	for ( UserList::user_map_t::size_type i = 0; i < battle.GetNumUsers(); i++ )
 	{
 		m_players->AddUser( battle.GetUser( i ) );
+		#ifdef __WXMAC__
+		UpdateUser( battle.GetUser( i ) );
+		#endif
 	}
 
 	if ( !IsHosted() )
@@ -406,7 +410,11 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle )
 
 BattleRoomTab::~BattleRoomTab()
 {
-	if ( GetAui().manager )GetAui().manager->DetachPane( this );
+	if ( GetAui().manager )
+        GetAui().manager->DetachPane( this );
+    if ( m_map_dlg ) {
+        m_map_dlg->EndModal( 0 );
+    }
 }
 
 void BattleRoomTab::SplitSizerHorizontally( const bool horizontal )
@@ -819,6 +827,9 @@ void BattleRoomTab::OnUserJoined( User& user )
 {
 	if ( !user.BattleStatus().IsBot() ) m_chat->Joined( user );
 	m_players->AddUser( user );
+
+	UpdateUser(user);
+
 	if ( &user == &m_battle.GetMe() )
 	{
 		m_players->SetSelectedIndex ( m_players->GetIndexFromData( &user ) );
@@ -872,7 +883,8 @@ void BattleRoomTab::UpdatePresetList()
 void BattleRoomTab::OnSavePreset( wxCommandEvent& /*unused*/ )
 {
 	wxString presetname;
-	if ( ui().AskText( _( "Enter preset name" ), _( "Enter a name to save the current set of options\nIf a preset with the same name already exist, it will be overwritten" ), presetname ) ) return;
+	if ( !ui().AskText( _( "Enter preset name" ), _( "Enter a name to save the current set of options\nIf a preset with the same name already exist, it will be overwritten" ), presetname ) )
+		return;
 	if ( presetname.IsEmpty() )
 	{
 		customMessageBoxNoModal( SL_MAIN_ICON , _( "Cannot save an options set without a name." ), _( "error" ), wxICON_EXCLAMATION | wxOK );
@@ -902,11 +914,11 @@ void BattleRoomTab::OnSetModDefaultPreset( wxCommandEvent& /*unused*/ )
 void BattleRoomTab::OnMapBrowse( wxCommandEvent& /*unused*/ )
 {
 	wxLogDebugFunc( _T( "" ) );
-	MapSelectDialog dlg( ( wxWindow* )&m_ui.mw(), m_ui );
+	m_map_dlg = new MapSelectDialog ( ( wxWindow* )&m_ui.mw(), m_ui );
 
-	if ( dlg.ShowModal() == wxID_OK && dlg.GetSelectedMap() != NULL )
+	if ( m_map_dlg->ShowModal() == wxID_OK && m_map_dlg->GetSelectedMap() != NULL )
 	{
-		wxString mapname = dlg.GetSelectedMap()->name;
+		wxString mapname = m_map_dlg->GetSelectedMap()->name;
 		wxLogDebugFunc( mapname );
 		if ( !m_battle.IsFounderMe() )
 		{
@@ -914,8 +926,8 @@ void BattleRoomTab::OnMapBrowse( wxCommandEvent& /*unused*/ )
 			return;
 		}
 		const int idx = m_map_combo->FindString( RefineMapname( mapname ), true /*case sensitive*/ );
-		if ( idx != wxNOT_FOUND ) SetMap( idx );
-
+		if ( idx != wxNOT_FOUND )
+            SetMap( idx );
 	}
 }
 

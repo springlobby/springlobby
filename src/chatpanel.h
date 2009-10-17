@@ -171,6 +171,8 @@ class ChatPanel : public wxPanel
 
     void OnUserMenuCopyLink( wxCommandEvent& event );
 
+    void OnChatMenuOpenLog( wxCommandEvent& event );
+
     void OnKeyPressed( wxKeyEvent& keyevent );
     void OnKeyReleased( wxKeyEvent& keyevent );
 
@@ -311,7 +313,9 @@ enum
 
     CHAT_MENU_COPYLINK,
 
-    CHAT_MENU_SHOW_MUTELIST
+    CHAT_MENU_SHOW_MUTELIST,
+
+    CHAT_MENU_LOG_OPEN
 };
 
 
