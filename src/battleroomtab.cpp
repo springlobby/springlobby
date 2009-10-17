@@ -987,7 +987,7 @@ void BattleRoomTab::OnOptionActivate( wxListEvent& event )
 	wxString key = tag.AfterFirst( '_' );
 	OptionType type = optWrap.GetSingleOptionType( key );
 	if ( !optWrap.keyExists( key, optFlag, false, type ) ) return;
-	SingleOptionDialog dlg( this, m_battle, tag );
+	SingleOptionDialog dlg( m_battle, tag );
 	dlg.ShowModal();
 }
 

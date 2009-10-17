@@ -13,6 +13,7 @@
 #include <wx/tooltip.h>
 #include <wx/textctrl.h>
 
+#include "ui.h"
 #include "mmoptionswrapper.h"
 #include "battle.h"
 #include "utils/controls.h"
@@ -36,7 +37,7 @@ SingleOptionDialog::SingleOptionDialog( IBattle& battle, const wxString& optiont
 	OptionsWrapper::GameOption optFlag = ( OptionsWrapper::GameOption )s2l( optiontag.BeforeFirst( '_' ) );
 	wxString key = optiontag.AfterFirst( '_' );
 	OptionType type = optWrap.GetSingleOptionType( key );
-	Create( parent, wxID_ANY, _( "Change option" ), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE, _T( "OptionDialog" ) );
+	Create( (wxWindow*)&ui().mw(), wxID_ANY, _( "Change option" ), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE, _T( "OptionDialog" ) );
 	if ( !optWrap.keyExists( key, optFlag, false, type ) )
 	{
 		EndModal( wxID_CANCEL );
