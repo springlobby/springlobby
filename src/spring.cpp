@@ -465,11 +465,31 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 										tdf.Append( _T("TeamLeader"), player_to_number[&usr] );
 								}
 						}
-
-						if ( startpostype == IBattle::ST_Pick )
+						if ( battle.IsProxy() )
 						{
-								tdf.Append(_T("StartPosX"), status.pos.x );
-								tdf.Append(_T("StartPosZ"), status.pos.y );
+							if ( startpostype == IBattle::ST_Pick )
+							{
+									tdf.Append(_T("StartPosX"), status.pos.x );
+									tdf.Append(_T("StartPosZ"), status.pos.y );
+							}
+							else if ( ( startpostype == IBattle::ST_Fixed ) || ( startpostype == IBattle::ST_Random ) )
+							{
+									int teamnumber = teams_to_sorted_teams[status.team];
+									if ( teamnumber < ( sizeof ( battle.LoadMap().info.positions ) / sizeof( StartPos ) ) ) // don't overflow
+									{
+										StartPos position = battle.LoadMap().info.positions[teamnumber];
+										tdf.Append(_T("StartPosX"), position.x );
+										tdf.Append(_T("StartPosZ"), position.y );
+									}
+							}
+						}
+						else
+						{
+							if ( startpostype == IBattle::ST_Pick )
+							{
+									tdf.Append(_T("StartPosX"), status.pos.x );
+									tdf.Append(_T("StartPosZ"), status.pos.y );
+							}
 						}
 
 						tdf.Append( _T("AllyTeam"),status.ally );
