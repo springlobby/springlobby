@@ -345,8 +345,16 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 
 			tdf.AppendLineBreak();
 
-			tdf.Append( _T("NumPlayers"), battle.GetNumPlayers() );
-			tdf.Append( _T("NumUsers"), battle.GetNumUsers() );
+			if ( battle.IsProxy() )
+			{
+				tdf.Append( _T("NumPlayers"), battle.GetNumPlayers() -1 );
+				tdf.Append( _T("NumUsers"), battle.GetNumUsers() -1 );
+			}
+			else
+			{
+				tdf.Append( _T("NumPlayers"), battle.GetNumPlayers() );
+				tdf.Append( _T("NumUsers"), battle.GetNumUsers() );
+			}
 
 			tdf.AppendLineBreak();
 
