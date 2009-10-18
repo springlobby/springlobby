@@ -181,7 +181,6 @@ void BattleMapTab::Update( const wxString& Tag )
 	{
 		if ( key == _T( "startpostype" ) )
 		{
-			if ( m_battle.IsProxy() ) longval = longval - 2;
 			m_start_radios->SetSelection( longval );
 			m_minimap->UpdateMinimap();
 		}
