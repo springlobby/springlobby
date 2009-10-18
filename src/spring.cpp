@@ -342,9 +342,9 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 				{
 					startpostype = IBattle::ST_Pick; // use chose before game internally, dedicated server limitation
 					// shuffle the positions
+					srand ( time(NULL) );
 					for ( unsigned int i = 0; i < NumPositions; i++ )
 					{
-							srand ( time(NULL) );
 							unsigned int choice = rand() % ( NumPositions - i );
 							remap_positions.push_back( positionschunk[choice] );
 							positionschunk.erase( positionschunk.begin() + choice ); // remove the position from the possible list
