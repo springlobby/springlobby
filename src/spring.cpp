@@ -328,19 +328,21 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 
 				remap_positions = std::vector<StartPos> ( infos.positions, infos.positions + maxpositions ); // only add the first x positions
 
-				if ( startpostype == IBattle::ST_Fixed )
+				if ( startpostype == IBattle::ST_Random )
 				{
-					startpostype = IBattle::ST_Pick; // use chose before game internally, dedicated server limitation
-				}
-				else if ( startpostype == IBattle::ST_Random )
-				{
-					startpostype = IBattle::ST_Pick; // use chose before game internally, dedicated server limitation
 					random_shuffle( remap_positions.begin(), remap_positions.end() ); // shuffle the positions
 				}
 
 			}
-
-			tdf.Append( _T("startpostype"), startpostype );
+			if ( battle.IsProxy() )
+			{
+				if ( ( startpostype == IBattle::ST_Random ) || ( startpostype == IBattle::ST_Random ) )
+				{
+					tdf.Append( _T("startpostype"), IBattle::ST_Pick );
+				}
+				else tdf.Append( _T("startpostype"), startpostype );
+			}
+			else tdf.Append( _T("startpostype"), startpostype );
 
 			tdf.EnterSection( _T("mapoptions") );
 				OptionsWrapper::wxStringTripleVec optlistMap = battle.CustomBattleOptions().getOptions( OptionsWrapper::MapOption );
