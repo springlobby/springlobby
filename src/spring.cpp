@@ -307,7 +307,51 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 			long startpostype;
 			battle.CustomBattleOptions().getSingleValue( _T("startpostype"), OptionsWrapper::EngineOption ).ToLong( &startpostype );
 
-			if ( ( startpostype == IBattle::ST_Fixed ) && battle.IsProxy() ) startpostype = IBattle::ST_Pick;
+			std::vector<StartPos> remap_positions;
+			if ( battle.IsProxy() && ( startpostype != IBattle::ST_Pick ) && ( startpostype != IBattle::ST_Choose ) )
+			{
+				std::set<int> parsedteams;
+				int NumUsers = battle.GetNumUsers();
+				int NumTeams = 0;
+				for ( unsigned int i = 0; i < NumUsers; i++ )
+				{
+						User& usr = battle.GetUser( i );
+						UserBattleStatus& status = usr.BattleStatus();
+						if ( status.spectator ) continue;
+						if ( parsedteams.find( status.team ) != parsedteams.end() ) continue; // skip duplicates
+						parsedteams.insert( status.team );
+						NumTeams++;
+				}
+				std::vector<StartPos> positionschunk;
+				MapInfo infos = battle.LoadMap().info;
+				unsigned int maxpositions = sizeof ( infos.positions ) / sizeof( StartPos );
+				// only add the first x positions
+				for ( unsigned int i = 0; i < NumTeams; i++ )
+				{
+					if ( i > maxpositions ) break; // don't segfault
+					positionschunk.push_back( infos.positions[i] );
+				}
+				unsigned int NumPositions = positionschunk.size();
+
+				if ( startpostype == IBattle::ST_Fixed )
+				{
+					startpostype = IBattle::ST_Pick; // use chose before game internally, dedicated server limitation
+					remap_positions = positionschunk; // no remap done
+				}
+				else if ( startpostype == IBattle::ST_Random )
+				{
+					startpostype = IBattle::ST_Pick; // use chose before game internally, dedicated server limitation
+					// shuffle the positions
+					for ( unsigned int i = 0; i < NumPositions; i++ )
+					{
+							srand ( time(NULL) );
+							unsigned int choice = rand() % ( NumPositions - i );
+							remap_positions.push_back( positionschunk[choice] );
+							positionschunk.erase( positionschunk.begin() + choice ); // remove the position from the possible list
+					}
+				}
+
+			}
 
 			tdf.Append( _T("startpostype"), startpostype );
 
@@ -473,9 +517,9 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 							else if ( ( startpostype == IBattle::ST_Fixed ) || ( startpostype == IBattle::ST_Random ) )
 							{
 									int teamnumber = teams_to_sorted_teams[status.team];
-									if ( teamnumber < ( sizeof ( battle.LoadMap().info.positions ) / sizeof( StartPos ) ) ) // don't overflow
+									if ( teamnumber < remap_positions.size() ) // don't overflow
 									{
-										StartPos position = battle.LoadMap().info.positions[teamnumber];
+										StartPos position = remap_positions[teamnumber];
 										tdf.Append(_T("StartPosX"), position.x );
 										tdf.Append(_T("StartPosZ"), position.y );
 									}
