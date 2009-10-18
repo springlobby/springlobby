@@ -322,33 +322,20 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 						parsedteams.insert( status.team );
 						NumTeams++;
 				}
-				std::vector<StartPos> positionschunk;
+
 				MapInfo infos = battle.LoadMap().info;
 				unsigned int maxpositions = sizeof ( infos.positions ) / sizeof( StartPos );
-				// only add the first x positions
-				for ( unsigned int i = 0; i < NumTeams; i++ )
-				{
-					if ( i > maxpositions ) break; // don't segfault
-					positionschunk.push_back( infos.positions[i] );
-				}
-				unsigned int NumPositions = positionschunk.size();
+
+				remap_positions = std::vector<StartPos> ( infos.positions, infos.positions + maxpositions ); // only add the first x positions
 
 				if ( startpostype == IBattle::ST_Fixed )
 				{
 					startpostype = IBattle::ST_Pick; // use chose before game internally, dedicated server limitation
-					remap_positions = positionschunk; // no remap done
 				}
 				else if ( startpostype == IBattle::ST_Random )
 				{
 					startpostype = IBattle::ST_Pick; // use chose before game internally, dedicated server limitation
-					// shuffle the positions
-					srand ( time(NULL) );
-					for ( unsigned int i = 0; i < NumPositions; i++ )
-					{
-							unsigned int choice = rand() % ( NumPositions - i );
-							remap_positions.push_back( positionschunk[choice] );
-							positionschunk.erase( positionschunk.begin() + choice ); // remove the position from the possible list
-					}
+					random_shuffle( remap_positions.begin(), remap_positions.end() ); // shuffle the positions
 				}
 
 			}
