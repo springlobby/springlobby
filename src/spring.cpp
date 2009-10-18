@@ -307,11 +307,9 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 			long startpostype;
 			battle.CustomBattleOptions().getSingleValue( _T("startpostype"), OptionsWrapper::EngineOption ).ToLong( &startpostype );
 
-			OptionsWrapper::wxStringTripleVec optlistEng = battle.CustomBattleOptions().getOptions( OptionsWrapper::EngineOption );
-			for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistEng.begin(); it != optlistEng.end(); ++it)
-			{
-					tdf.Append(it->first,it->second.second);
-			}
+			if ( ( startpostype == IBattle::ST_Fixed ) && battle.IsProxy() ) startpostype = IBattle::ST_Pick;
+
+			tdf.Append( _T("startpostype"), startpostype );
 
 			tdf.EnterSection( _T("mapoptions") );
 				OptionsWrapper::wxStringTripleVec optlistMap = battle.CustomBattleOptions().getOptions( OptionsWrapper::MapOption );
