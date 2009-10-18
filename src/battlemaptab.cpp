@@ -100,20 +100,10 @@ BattleMapTab::BattleMapTab( wxWindow* parent, Ui& ui, Battle& battle )
 	m_opts_sizer->Add( m_map_opts_list, 0, wxALL, 2 );
 
 
-	if ( battle.IsProxy() )
-	{
-		wxString m_start_radiosChoices[] = { _( "Choose in game" ), _( "Chose before game" ) };
-		int m_start_radiosNChoices = sizeof( m_start_radiosChoices ) / sizeof( wxString );
-		//TODO these need to be tooltipped, no idea how yet
-		m_start_radios = new wxRadioBox( this, BMAP_START_TYPE, _( "Startpositions" ), wxDefaultPosition, wxSize( 150, -1 ), m_start_radiosNChoices, m_start_radiosChoices, 1, wxRA_SPECIFY_COLS );
-	}
-	else
-	{
-		wxString m_start_radiosChoices[] = { _( "Fixed" ), _( "Random" ), _( "Choose in game" ), _( "Chose before game" ) };
-		int m_start_radiosNChoices = sizeof( m_start_radiosChoices ) / sizeof( wxString );
-		//TODO these need to be tooltipped, no idea how yet
-		m_start_radios = new wxRadioBox( this, BMAP_START_TYPE, _( "Startpositions" ), wxDefaultPosition, wxSize( 150, -1 ), m_start_radiosNChoices, m_start_radiosChoices, 1, wxRA_SPECIFY_COLS );
-	}
+	wxString m_start_radiosChoices[] = { _( "Fixed" ), _( "Random" ), _( "Choose in game" ), _( "Chose before game" ) };
+	int m_start_radiosNChoices = sizeof( m_start_radiosChoices ) / sizeof( wxString );
+	//TODO these need to be tooltipped, no idea how yet
+	m_start_radios = new wxRadioBox( this, BMAP_START_TYPE, _( "Startpositions" ), wxDefaultPosition, wxSize( 150, -1 ), m_start_radiosNChoices, m_start_radiosChoices, 1, wxRA_SPECIFY_COLS );
 
 	m_opts_sizer->Add( m_start_radios, 0, wxALL, 2 );
 
@@ -191,7 +181,6 @@ void BattleMapTab::Update( const wxString& Tag )
 	{
 		if ( key == _T( "startpostype" ) )
 		{
-			if ( m_battle.IsProxy() ) longval = longval - 2;
 			m_start_radios->SetSelection( longval );
 			m_minimap->UpdateMinimap();
 		}
@@ -282,7 +271,6 @@ void BattleMapTab::OnMapBrowse( wxCommandEvent& /*unused*/ )
 void BattleMapTab::OnStartTypeSelect( wxCommandEvent& /*unused*/ )
 {
 	wxString pos = wxString::Format( _T( "%d" ), m_start_radios->GetSelection() );
-	if ( m_battle.IsProxy() ) pos = wxString::Format( _T( "%d" ), m_start_radios->GetSelection() + 2 );
 	m_battle.CustomBattleOptions().setSingleOption( _T( "startpostype" ), pos, OptionsWrapper::EngineOption );
 	m_battle.SendHostInfo( wxString::Format( _T( "%d_startpostype" ), OptionsWrapper::EngineOption ) );
 }
