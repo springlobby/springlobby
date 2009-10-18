@@ -311,8 +311,8 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 			if ( battle.IsProxy() && ( startpostype != IBattle::ST_Pick ) && ( startpostype != IBattle::ST_Choose ) )
 			{
 				std::set<int> parsedteams;
-				int NumUsers = battle.GetNumUsers();
-				int NumTeams = 0;
+				unsigned int NumUsers = battle.GetNumUsers();
+				unsigned int NumTeams = 0;
 				for ( unsigned int i = 0; i < NumUsers; i++ )
 				{
 						User& usr = battle.GetUser( i );
@@ -325,8 +325,8 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 
 				MapInfo infos = battle.LoadMap().info;
 				unsigned int maxpositions = sizeof ( infos.positions ) / sizeof( StartPos );
-
-				remap_positions = std::vector<StartPos> ( infos.positions, infos.positions + maxpositions ); // only add the first x positions
+				unsigned int copysize = std::min( maxpositions, NumTeams );
+				remap_positions = std::vector<StartPos> ( infos.positions, infos.positions + copysize ); // only add the first x positions
 
 				if ( startpostype == IBattle::ST_Random )
 				{
