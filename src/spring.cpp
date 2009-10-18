@@ -336,7 +336,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 			}
 			if ( battle.IsProxy() )
 			{
-				if ( ( startpostype == IBattle::ST_Random ) || ( startpostype == IBattle::ST_Random ) )
+				if ( ( startpostype == IBattle::ST_Random ) || ( startpostype == IBattle::ST_Fixed ) )
 				{
 					tdf.Append( _T("startpostype"), IBattle::ST_Pick );
 				}
