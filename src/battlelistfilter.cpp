@@ -467,15 +467,18 @@ bool BattleListFilter::FilterBattle( IBattle& battle )
 
 	if ( m_filter_highlighted->IsChecked() )
 	{
-		wxString host = battle.GetFounder().GetNick();
-		if ( !useractions().DoActionOnUser( UserActions::ActHighlight, host ) )
-			return false;
-
-		for ( unsigned int i = 0; i < battle.GetNumUsers(); ++i ) {
-			wxString name = battle.GetUser( i ).GetNick();
-			if ( !useractions().DoActionOnUser( UserActions::ActHighlight, name ) )
+		try
+		{
+			wxString host = battle.GetFounder().GetNick();
+			if ( !useractions().DoActionOnUser( UserActions::ActHighlight, host ) )
 				return false;
-		}
+
+			for ( unsigned int i = 0; i < battle.GetNumUsers(); ++i ) {
+				wxString name = battle.GetUser( i ).GetNick();
+				if ( !useractions().DoActionOnUser( UserActions::ActHighlight, name ) )
+					return false;
+			}
+		}catch(...){}
 	}
 
 	//Battle Status Check
@@ -535,9 +538,11 @@ bool BattleListFilter::FilterBattle( IBattle& battle )
         return false;
 
 	//Host:
-	if ( !battle.GetFounder().GetNick().Upper().Contains( m_filter_host_edit->GetValue().Upper() ) && !m_filter_host_expression->Matches( battle.GetFounder().GetNick() ) )
-        return false;
-
+	try
+	{
+		if ( !battle.GetFounder().GetNick().Upper().Contains( m_filter_host_edit->GetValue().Upper() ) && !m_filter_host_expression->Matches( battle.GetFounder().GetNick() ) )
+					return false;
+	}catch(...){}
 	//Map:
 	if ( !RefineMapname( battle.GetHostMapName() ).Upper().Contains( m_filter_map_edit->GetValue().Upper() ) && !m_filter_map_expression->Matches( RefineMapname( battle.GetHostMapName() ) ) )
         return false;
