@@ -465,8 +465,11 @@ int BattleroomListCtrl::CompareStatus(const DataType user1, const DataType user2
   }
   else
   {
+  	try
+  	{
     if ( &m_battle->GetFounder() != user1 )
       status1 = 1;
+		}catch(...){}
     if ( user1->BattleStatus().ready )
       status1 += 5;
     if ( user1->BattleStatus().sync )
@@ -482,8 +485,11 @@ int BattleroomListCtrl::CompareStatus(const DataType user1, const DataType user2
   }
   else
   {
+  	try
+  	{
     if ( &m_battle->GetFounder() != user2 )
       status2 = 1;
+		}catch(...){}
     if ( user2->BattleStatus().ready )
       status2 += 5;
     if ( user2->BattleStatus().sync )

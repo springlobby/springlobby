@@ -1277,7 +1277,27 @@ void TASServer::DoActionBattle( int /*unused*/, const wxString& msg )
 void TASServer::Ring( const wxString& nick )
 {
     wxLogDebugFunc( _T("") );
+		try
+		{
+				ASSERT_EXCEPTION( m_battle_id != -1, _T("invalid m_battle_id value") );
+				ASSERT_EXCEPTION( BattleExists(m_battle_id), _T("battle doesn't exists") );
 
+				Battle& battle = GetBattle( m_battle_id );
+				ASSERT_EXCEPTION( battle.IsFounderMe(), _T("I'm not founder") );
+
+				if ( battle.IsProxy() )
+				{
+					RelayCmd( _T("RING"), nick );
+				}
+				else
+				{
+					SendCmd( _T("RING"), nick );
+				}
+
+		}
+		catch (...)
+		{
+		}
     SendCmd( _T("RING"), nick );
 }
 

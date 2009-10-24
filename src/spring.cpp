@@ -335,11 +335,42 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 			long startpostype;
 			battle.CustomBattleOptions().getSingleValue( _T("startpostype"), OptionsWrapper::EngineOption ).ToLong( &startpostype );
 
-			OptionsWrapper::wxStringTripleVec optlistEng = battle.CustomBattleOptions().getOptions( OptionsWrapper::EngineOption );
-			for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistEng.begin(); it != optlistEng.end(); ++it)
+			std::vector<StartPos> remap_positions;
+			if ( battle.IsProxy() && ( startpostype != IBattle::ST_Pick ) && ( startpostype != IBattle::ST_Choose ) )
 			{
-					tdf.Append(it->first,it->second.second);
+				std::set<int> parsedteams;
+				unsigned int NumUsers = battle.GetNumUsers();
+				unsigned int NumTeams = 0;
+				for ( unsigned int i = 0; i < NumUsers; i++ )
+				{
+						User& usr = battle.GetUser( i );
+						UserBattleStatus& status = usr.BattleStatus();
+						if ( status.spectator ) continue;
+						if ( parsedteams.find( status.team ) != parsedteams.end() ) continue; // skip duplicates
+						parsedteams.insert( status.team );
+						NumTeams++;
+				}
+
+				MapInfo infos = battle.LoadMap().info;
+				unsigned int maxpositions = sizeof ( infos.positions ) / sizeof( StartPos );
+				unsigned int copysize = std::min( maxpositions, NumTeams );
+				remap_positions = std::vector<StartPos> ( infos.positions, infos.positions + copysize ); // only add the first x positions
+
+				if ( startpostype == IBattle::ST_Random )
+				{
+					random_shuffle( remap_positions.begin(), remap_positions.end() ); // shuffle the positions
+				}
+
 			}
+			if ( battle.IsProxy() )
+			{
+				if ( ( startpostype == IBattle::ST_Random ) || ( startpostype == IBattle::ST_Fixed ) )
+				{
+					tdf.Append( _T("startpostype"), IBattle::ST_Pick );
+				}
+				else tdf.Append( _T("startpostype"), startpostype );
+			}
+			else tdf.Append( _T("startpostype"), startpostype );
 
 			tdf.EnterSection( _T("mapoptions") );
 				OptionsWrapper::wxStringTripleVec optlistMap = battle.CustomBattleOptions().getOptions( OptionsWrapper::MapOption );
@@ -373,8 +404,16 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 
 			tdf.AppendLineBreak();
 
-			tdf.Append( _T("NumPlayers"), battle.GetNumPlayers() );
-			tdf.Append( _T("NumUsers"), battle.GetNumUsers() );
+			if ( battle.IsProxy() )
+			{
+				tdf.Append( _T("NumPlayers"), battle.GetNumPlayers() -1 );
+				tdf.Append( _T("NumUsers"), battle.GetNumUsers() -1 );
+			}
+			else
+			{
+				tdf.Append( _T("NumPlayers"), battle.GetNumPlayers() );
+				tdf.Append( _T("NumUsers"), battle.GetNumUsers() );
+			}
 
 			tdf.AppendLineBreak();
 
@@ -485,11 +524,31 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 										tdf.Append( _T("TeamLeader"), player_to_number[&usr] );
 								}
 						}
-
-						if ( startpostype == IBattle::ST_Pick )
+						if ( battle.IsProxy() )
 						{
-								tdf.Append(_T("StartPosX"), status.pos.x );
-								tdf.Append(_T("StartPosZ"), status.pos.y );
+							if ( startpostype == IBattle::ST_Pick )
+							{
+									tdf.Append(_T("StartPosX"), status.pos.x );
+									tdf.Append(_T("StartPosZ"), status.pos.y );
+							}
+							else if ( ( startpostype == IBattle::ST_Fixed ) || ( startpostype == IBattle::ST_Random ) )
+							{
+									int teamnumber = teams_to_sorted_teams[status.team];
+									if ( teamnumber < remap_positions.size() ) // don't overflow
+									{
+										StartPos position = remap_positions[teamnumber];
+										tdf.Append(_T("StartPosX"), position.x );
+										tdf.Append(_T("StartPosZ"), position.y );
+									}
+							}
+						}
+						else
+						{
+							if ( startpostype == IBattle::ST_Pick )
+							{
+									tdf.Append(_T("StartPosX"), status.pos.x );
+									tdf.Append(_T("StartPosZ"), status.pos.y );
+							}
 						}
 
 						tdf.Append( _T("AllyTeam"),status.ally );

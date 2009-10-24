@@ -176,6 +176,8 @@ void ServerEvents::OnUserStatus( const wxString& nick, UserStatus status )
         if ( user.GetBattle() != 0 )
         {
             Battle& battle = *user.GetBattle();
+            try
+            {
             if ( battle.GetFounder().GetNick() == user.GetNick() )
             {
                 if ( status.in_game != battle.GetInGame() )
@@ -185,6 +187,7 @@ void ServerEvents::OnUserStatus( const wxString& nick, UserStatus status )
                     else ui().OnBattleInfoUpdated( battle );
                 }
             }
+            }catch(...){}
         }
     }
     catch (...)
@@ -204,16 +207,19 @@ void ServerEvents::OnUserQuit( const wxString& nick )
 				if ( userbattle )
 				{
 					int battleid = userbattle->GetID();
-					if ( &userbattle->GetFounder() == &user )
+					try
 					{
-						for ( int i = 0; i < long(userbattle->GetNumUsers()); i ++ )
+						if ( &userbattle->GetFounder() == &user )
 						{
-							User& battleuser = userbattle->GetUser( i );
-							OnUserLeftBattle( battleid, battleuser.GetNick() );
+							for ( int i = 0; i < userbattle->GetNumUsers(); i ++ )
+							{
+								User& battleuser = userbattle->GetUser( i );
+								OnUserLeftBattle( battleid, battleuser.GetNick() );
+							}
+							 OnBattleClosed( battleid );
 						}
-						 OnBattleClosed( battleid );
-					}
-					else OnUserLeftBattle( battleid, user.GetNick() );
+						else OnUserLeftBattle( battleid, user.GetNick() );
+					}catch(...){}
 				}
         ui().OnUserOffline( user );
         m_serv._RemoveUser( nick );
@@ -365,15 +371,17 @@ void ServerEvents::OnUserJoinedBattle( int battleid, const wxString& nick )
 
         battle.OnUserAdded( user );
         ui().OnUserJoinedBattle( battle, user );
-
-        if ( &user == &battle.GetFounder() )
-        {
-            if ( user.Status().in_game )
-            {
-                battle.SetInGame( true );
-                battle.StartSpring();
-            }
-        }
+				try
+				{
+					if ( &user == &battle.GetFounder() )
+					{
+							if ( user.Status().in_game )
+							{
+									battle.SetInGame( true );
+									battle.StartSpring();
+							}
+					}
+        }catch(...){}
     }
     catch (std::runtime_error &except)
     {

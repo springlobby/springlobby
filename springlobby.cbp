@@ -397,8 +397,6 @@
 		<Unit filename="src/settings++/tab_abstract.h" />
 		<Unit filename="src/settings++/tab_audio.cpp" />
 		<Unit filename="src/settings++/tab_audio.h" />
-		<Unit filename="src/settings++/tab_debug.cpp" />
-		<Unit filename="src/settings++/tab_debug.h" />
 		<Unit filename="src/settings++/tab_quality_video.cpp" />
 		<Unit filename="src/settings++/tab_quality_video.h" />
 		<Unit filename="src/settings++/tab_render_detail.cpp" />

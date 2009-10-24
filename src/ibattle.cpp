@@ -1133,7 +1133,10 @@ bool IBattle::IsFounderMe()
 bool IBattle::IsFounder( const User& user ) const
 {
     if ( UserExists( m_opts.founder ) ) {
+    	try
+    	{
         return &GetFounder() == &user;
+			}catch(...){return false;}
     }
     else
         return false;

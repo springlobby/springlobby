@@ -288,7 +288,6 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent )
 
 	m_irc_colors = new wxCheckBox( this, wxID_ANY, _( "Enable Irc colors in chat messages" ), wxDefaultPosition, wxDefaultSize, 0 );
 	m_irc_colors->SetValue( sett().GetUseIrcColors() );
-	m_irc_colors->Enable( false );
 
 	sbBehaviorSizer->Add( m_irc_colors, 0, wxALL, 5 );
 #ifndef DISABLE_SOUND

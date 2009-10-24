@@ -889,15 +889,18 @@ void Ui::OnBattleOpened( IBattle& battle )
 {
     if ( m_main_win == 0 ) return;
     mw().GetJoinTab().GetBattleListTab().AddBattle( battle );
-    User& user = battle.GetFounder();
-    for ( int i = 0; i < GetServer().GetNumChannels(); i++ )
+    try
     {
-        Channel& chan = GetServer().GetChannel( i );
-        if ( ( chan.UserExists(user.GetNick()) ) && ( chan.uidata.panel != 0 ) )
-        {
-            chan.uidata.panel->UserStatusUpdated( user );
-        }
-    }
+			User& user = battle.GetFounder();
+			for ( int i = 0; i < GetServer().GetNumChannels(); i++ )
+			{
+					Channel& chan = GetServer().GetChannel( i );
+					if ( ( chan.UserExists(user.GetNick()) ) && ( chan.uidata.panel != 0 ) )
+					{
+							chan.uidata.panel->UserStatusUpdated( user );
+					}
+			}
+    }catch(...){}
 }
 
 
