@@ -137,6 +137,7 @@ int BattleListCtrl::GetItemColumnImage(long item, long column) const
         case 4: return battle.MapExists() ? icons().ICON_EXISTS : icons().ICON_NEXISTS;
         case 5: return battle.ModExists() ? icons().ICON_EXISTS : icons().ICON_NEXISTS;
     }
+    return -1; // simply to avoid compiler warning
 }
 
 wxListItemAttr* BattleListCtrl::GetItemAttr(long item) const
@@ -265,6 +266,7 @@ int BattleListCtrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir )
         case 9: return dir * compareSimple( u1->GetMaxPlayers(), u2->GetMaxPlayers() );
         default: return 0;
     }
+    return 0; // simply to avoid compiler warning
 }
 
 int BattleListCtrl::CompareStatus( DataType u1, DataType u2 )
