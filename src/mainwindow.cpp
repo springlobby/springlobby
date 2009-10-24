@@ -703,6 +703,9 @@ void MainWindow::LoadPerspectives( const wxString& pers_name )
     m_sp_tab->LoadPerspective( perspective_name );
     m_join_tab->LoadPerspective( perspective_name );
     m_opts_tab->LoadPerspective( perspective_name );
+    wxWindow* active_chat_tab = static_cast<wxWindow*> ( m_chat_tab->GetActiveChatPanel() );
+    if ( active_chat_tab )
+        active_chat_tab->Refresh();
     //chat tab saving won't work w/o further work
 //    m_chat_tab->LoadPerspective( perspective_name );
 }
