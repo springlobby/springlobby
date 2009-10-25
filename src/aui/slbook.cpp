@@ -16,7 +16,7 @@ static const long ID_NEW_TAB      = wxNewId();
 
 SLNotebook ::SLNotebook (wxWindow* parent, const wxString& name, wxWindowID id ,
                             const wxPoint& pos , const wxSize& size , long style )
-    : wxAuiNotebook( parent, id, pos, size, sett().GetShowXallTabs() ? style | wxAUI_NB_CLOSE_ON_ALL_TABS : style ),
+    : wxAuiNotebook( parent, id, pos, size, style ),
     m_name( name )
 {
     m_mgr.SetFlags(wxAUI_MGR_ALLOW_FLOATING |
@@ -46,7 +46,7 @@ bool SLChatNotebook::AddPage(ChatPanel* page, const wxString& caption, bool sele
   * @todo: document this function
   */
  SLChatNotebook::SLChatNotebook(wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style)
-    : ParentType( parent, _T("chatnotebook"), id, pos,  size, style )
+    : ParentType( parent, _T("chatnotebook"), id, pos,  size, sett().GetShowXallTabs() ? style | wxAUI_NB_CLOSE_ON_ALL_TABS : style )
 {
 
 }
