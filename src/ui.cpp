@@ -30,6 +30,7 @@
 #include "user.h"
 #include "utils/debug.h"
 #include "utils/conversion.h"
+#include "uiutils.h"
 #include "chatpanel.h"
 #include "battlelisttab.h"
 #include "battleroomtab.h"
@@ -44,10 +45,11 @@
 #include "unitsyncthread.h"
 #include "agreementdialog.h"
 #ifdef __WXMSW__
-#include "updater/updater.h"
+    #include "updater/updater.h"
+    #include "Helper/tasclientimport.h"
 #endif
 
-#include "settings++/custom_dialogs.h"
+#include "utils/customdialogs.h"
 
 #include "sdlsound.h"
 #include "globalsmanager.h"
@@ -66,7 +68,7 @@ Ui::Ui() :
         m_first_update_trigger(true),
         m_ingame(false)
 {
-    m_main_win = new MainWindow( *this );
+    m_main_win = new MainWindow( );
     CustomMessageBoxBase::setLobbypointer(m_main_win);
     m_serv = new TASServer();
 }
@@ -291,14 +293,6 @@ void Ui::Quit()
         m_con_win->Close();
 }
 
-
-void Ui::ReloadUnitSync()
-{
-    usync().ReloadUnitSyncLib();
-    if ( m_main_win != 0 ) mw().OnUnitSyncReloaded();
-}
-
-
 void Ui::DownloadMap( const wxString& hash, const wxString& name )
 {
 #ifndef NO_TORRENT_SYSTEM
@@ -349,31 +343,6 @@ void Ui::DownloadFileP2P( const wxString& hash, const wxString& name )
 //        }
     }
 #endif
-}
-
-
-void Ui::OpenWebBrowser( const wxString& url )
-{
-    if ( sett().GetWebBrowserUseDefault()
-            // These shouldn't happen, but if they do we use the default browser anyway.
-            || sett().GetWebBrowserPath() == wxEmptyString
-            || sett().GetWebBrowserPath() == _T("use default") )
-    {
-        if ( !wxLaunchDefaultBrowser( url ) )
-        {
-            wxLogWarning( _T("can't launch default browser") );
-            customMessageBoxNoModal(SL_MAIN_ICON, _("Couldn't launch browser. URL is: ") + url, _("Couldn't launch browser.")  );
-        }
-    }
-    else
-    {
-        if ( !wxExecute ( sett().GetWebBrowserPath() + _T(" ") + url, wxEXEC_ASYNC ) )
-        {
-            wxLogWarning( _T("can't launch browser: %s"), sett().GetWebBrowserPath().c_str() );
-            customMessageBoxNoModal(SL_MAIN_ICON, _("Couldn't launch browser. URL is: ") + url + _("\nBroser path is: ") + sett().GetWebBrowserPath(), _("Couldn't launch browser.")  );
-        }
-
-    }
 }
 
 
@@ -617,7 +586,7 @@ bool Ui::IsSpringCompatible()
         {
           wxLogMessage(_T("server enforce usage of version: %s, switching to profile: %s"), neededversion.c_str(), itor->first.c_str() );
           sett().SetUsedSpringIndex( itor->first );
-          ReloadUnitSync();
+          GetGlobalEventSender(GlobalEvents::UnitSyncReloadRequest).SendEvent( 0 ); // request an unitsync reload
         }
         return true;
       }
@@ -1176,7 +1145,7 @@ void Ui::OnAcceptAgreement( const wxString& agreement )
 }
 
 
-void Ui::OnRing( const wxString& /*from */)
+void Ui::OnRing( const wxString& from )
 {
     if ( m_main_win == 0 ) return;
     m_main_win->RequestUserAttention();
@@ -1187,31 +1156,6 @@ void Ui::OnRing( const wxString& /*from */)
 #else
     wxBell();
 #endif
-}
-
-
-void Ui::OnMapInfoCached( const wxString& /*unused*/ )
-{
-    if ( m_main_win == 0 ) return;
-    mw().OnUnitSyncReloaded();
-}
-
-
-void Ui::OnMinimapCached( const wxString& /*unused*/ )
-{
-    if ( m_main_win == 0 ) return;
-    mw().OnUnitSyncReloaded();
-}
-
-
-void Ui::OnModUnitsCached( const wxString& /*unused*/ )
-{
-}
-
-void Ui::OnMainWindowDestruct()
-{
-    //this is rather ugly and therefore disabled
-    //m_main_win = 0;
 }
 
 bool Ui::IsThisMe(User& other)
@@ -1280,5 +1224,47 @@ void Ui::OpenFileInEditor( const wxString& filepath )
         customMessageBoxNoModal( SL_MAIN_ICON, _T("There was a problem launching the editor.\nPlease make sure the path is correct and the binary executable for your user.\nNote it's currently not possible to use shell-only editors like ed, vi, etc."), _T("Problem launching editor") );
         mw().ShowConfigure( MainWindow::OPT_PAGE_GENERAL );
     }
+}
 
+void Ui::FirstRunWelcome()
+{
+    if ( sett().IsFirstRun() )
+    {
+#ifdef __WXMSW__
+        sett().SetOldSpringLaunchMethod( true );
+#endif
+
+        wxLogMessage( _T("first time startup"));
+        wxMessageBox(_("Hi ") + wxGetUserName() + _(",\nIt looks like this is your first time using SpringLobby. I have guessed a configuration that I think will work for you but you should review it, especially the Spring configuration. \n\nWhen you are done you can go to the File menu, connect to a server, and enjoy a nice game of Spring :)"), _("Welcome"),
+                     wxOK | wxICON_INFORMATION, &mw() );
+
+
+        customMessageBoxNoModal(SL_MAIN_ICON, _("By default SpringLobby reports some usage statistics.\nYou can disable that on options tab --> General."),_("Notice"),wxOK );
+
+
+                // copy uikeys.txt
+                wxPathList pl;
+                pl.AddEnvList( _T("%ProgramFiles%") );
+                pl.AddEnvList( _T("XDG_DATA_DIRS") );
+                pl = sett().GetAdditionalSearchPaths( pl );
+                wxString uikeyslocation = pl.FindValidPath( _T("uikeys.txt") );
+                if ( !uikeyslocation.IsEmpty() )
+                {
+                    wxCopyFile( uikeyslocation, sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("uikeys.txt"), false );
+                }
+
+    #ifdef __WXMSW__
+        if ( TASClientPresent() &&
+                customMessageBox(SL_MAIN_ICON, _("Should I try to import (some) TASClient settings?\n" ),_("Import settings?"), wxYES_NO ) == wxYES )
+        {
+            ImportTASClientSettings();
+        }
+    #endif
+
+        mw().ShowConfigure();
+    }
+    else
+    {
+        mw().ShowSingleplayer();
+    }
 }

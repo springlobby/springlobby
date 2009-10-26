@@ -50,7 +50,7 @@ void wxTextCtrlHist::OnChar(wxKeyEvent & event)
 {
         int keyCode = event.GetKeyCode();
 
-        if ( current_pos == Historical.GetCount() ) {
+        if ( current_pos == int(Historical.GetCount()) ) {
             m_original = GetValue();
         }
 

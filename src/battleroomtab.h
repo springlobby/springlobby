@@ -4,6 +4,7 @@
 #include <wx/scrolwin.h>
 
 #include "mmoptionswrapper.h"
+#include "utils/isink.h"
 #include <map>
 
 class Ui;
@@ -33,10 +34,10 @@ typedef std::map<wxString, long> OptionListMap;
 
 /** \brief container for BattleroomListCtrl, battle specific ChatPanel. Also displaying battle info summary
  * \todo DOCMEMORE */
-class BattleRoomTab : public wxScrolledWindow
+class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<BattleRoomTab>
 {
 	public:
-		BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle );
+		BattleRoomTab( wxWindow* parent, Battle& battle );
 		~BattleRoomTab();
 
 		BattleroomListCtrl& GetPlayersListCtrl();
@@ -92,7 +93,6 @@ class BattleRoomTab : public wxScrolledWindow
 		void OnUserJoined( User& user );
 		void OnUserLeft( User& user );
 
-		void OnUnitSyncReloaded();
 		void ReloadMaplist();
 		void SetMap( int index );
 
@@ -102,13 +102,14 @@ class BattleRoomTab : public wxScrolledWindow
 
 		void SortPlayerList();
 
+		void OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ );
+
 	protected:
 
 		long AddMMOptionsToList( long pos, OptionsWrapper::GameOption optFlag );
 
 		void SplitSizerHorizontally( const bool horizontal );
 
-		Ui& m_ui;
 		Battle& m_battle;
 		UnitSyncMap m_map;
 

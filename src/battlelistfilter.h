@@ -64,6 +64,29 @@ class BattleListFilter : public wxPanel
 		ButtonMode _GetButtonMode(wxString sign);
 		bool _IntCompare(int a,int b,ButtonMode mode);
 
+    /** A function callback used to transform an input string. */
+    typedef wxString (*StringTransformFunction)(const wxString& input);
+
+    /** Test whether an input string matches a filter string.
+     *  The filter will be tried as both a fixed string, and as a regular expression.
+     *
+     * @param input The input string to test.
+     *
+     * @param filter_string A fixed string to match against.
+     *
+     * @param filter_regex A regular expression object pointer.  If
+     * the expression is valid, it will be used to match the input if
+     * the fixed string does not.
+     *
+     * @param additional_transform A function that should be called to
+     * generate an additional <em>input</em> string.
+     *
+     * @param case_sensitive @c true if the comparison should be done case-sensitively.
+     *
+     * @return @c true if the input or generated input matches the filter string, and @c false otherwise.
+     */
+    bool StringMatches(const wxString& input, const wxString& filter_string, const wxRegEx* filter_regex = NULL, StringTransformFunction additional_transform = NULL, bool case_sensitive = false);
+
     bool m_activ;
 
 		BattleListTab* m_parent_battlelisttab;
@@ -101,6 +124,7 @@ class BattleListFilter : public wxPanel
 		wxStaticText* m_filter_description_text;
 		wxTextCtrl* m_filter_description_edit;
         wxRegEx*      m_filter_description_expression;
+
 
         //Player
 		wxStaticText* m_filter_player_text;

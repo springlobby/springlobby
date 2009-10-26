@@ -21,11 +21,12 @@
 #include <stdexcept>
 
 #include "battlemaptab.h"
-#include "ui.h"
 #include "iunitsync.h"
+#include "ui.h"
 #include "user.h"
 #include "battle.h"
 #include "utils/debug.h"
+#include "utils/controls.h"
 #include "chatpanel.h"
 #include "mapctrl.h"
 #include "mapselectdialog.h"
@@ -44,9 +45,8 @@ BEGIN_EVENT_TABLE( BattleMapTab, wxPanel )
 END_EVENT_TABLE()
 
 
-BattleMapTab::BattleMapTab( wxWindow* parent, Ui& ui, Battle& battle )
+BattleMapTab::BattleMapTab( wxWindow* parent, Battle& battle )
     : wxScrolledWindow( parent, -1 ),
-    m_ui( ui ),
     m_battle( battle ),
     m_map_dlg( 0 )
 {
@@ -56,7 +56,7 @@ BattleMapTab::BattleMapTab( wxWindow* parent, Ui& ui, Battle& battle )
 	wxBoxSizer* m_map_sizer = new wxBoxSizer( wxVERTICAL );
 
 	m_map_sizer->SetMinSize( wxSize( 352, -1 ) );
-	m_minimap = new MapCtrl( this, 352, &m_battle, m_ui, !battle.IsFounderMe(), false, true, false );
+	m_minimap = new MapCtrl( this, 352, &m_battle, !battle.IsFounderMe(), false, true, false );
 	m_minimap->SetMinSize( wxSize( 352, 352 ) );
 
 	m_map_sizer->Add( m_minimap, 1, wxALL | wxEXPAND, 2 );
@@ -117,7 +117,7 @@ BattleMapTab::BattleMapTab( wxWindow* parent, Ui& ui, Battle& battle )
 
 	//m_map_combo->Enable( m_battle.IsFounderMe() );
 	m_start_radios->Enable( m_battle.IsFounderMe() );
-	SetScrollRate( 3, 3 );
+	SetScrollRate( SCROLL_RATE, SCROLL_RATE );
 	Layout();
 }
 
@@ -249,7 +249,7 @@ void BattleMapTab::OnMapSelect( wxCommandEvent& /*unused*/ )
 void BattleMapTab::OnMapBrowse( wxCommandEvent& /*unused*/ )
 {
 	wxLogDebugFunc( _T( "" ) );
-	m_map_dlg = new MapSelectDialog ( ( wxWindow* )&m_ui.mw(), m_ui );
+	m_map_dlg = new MapSelectDialog ( ( wxWindow* )&ui().mw() );
 
 	if ( m_map_dlg->ShowModal() == wxID_OK && m_map_dlg->GetSelectedMap() != NULL )
 	{
@@ -276,9 +276,8 @@ void BattleMapTab::OnStartTypeSelect( wxCommandEvent& /*unused*/ )
 }
 
 
-void BattleMapTab::OnUnitSyncReloaded()
+void BattleMapTab::OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ )
 {
-	m_minimap->UpdateMinimap();
-	ReloadMaplist();
+    ReloadMaplist();
 }
 

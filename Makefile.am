@@ -397,8 +397,28 @@ libtorrent_headers = \
 
 
 springlobby_SOURCES = \
+	src/customizations.h \
+	src/customizations.cpp \
+	src/gui/gradientpanel.h \
+	src/gui/gradientpanel.cpp \
+	src/gui/wxgradientbutton.cpp \
+	src/gui/wxgradientbutton.h \
+	src/gui/skirmish_dialog.h \
+	src/gui/skirmish_dialog.cpp \
+	src/gui/wxbackgroundimage.cpp \
+	src/gui/wxbackgroundimage.h \
+	src/gui/simplefront.h \
+	src/gui/simplefront.cpp \
+	src/defines.h \
+	src/updater/updatermainwindow.cpp \
+	src/updater/updatermainwindow.h \
+	src/utils/activitynotice.cpp \
+	src/utils/activitynotice.h \
+	src/utils/isink.h \
 	src/utils/md5.h \
 	src/utils/md5.c \
+	src/chatpanelmenu.h \
+	src/chatpanelmenu.cpp \
 	src/aui/slbook.cpp \
 	src/aui/slbook.h \
 	src/utils/math.cpp \
@@ -417,6 +437,13 @@ springlobby_SOURCES = \
 	src/utils/sltipwin.h \
 	src/utils/controls.cpp \
 	src/utils/controls.h \
+	src/utils/globalevents.cpp \
+	src/utils/globalevents.h \
+	src/utils/networkevents.cpp \
+	src/utils/networkevents.h \
+	src/utils/uievents.cpp \
+	src/utils/uievents.h \
+	src/utils/events.h \
 	src/updater/versionchecker.cpp \
 	src/updater/versionchecker.h \
 	src/sounds/ring_sound.h \
@@ -905,8 +932,6 @@ springlobby_SOURCES = \
 	src/autobalancedialog.h \
 	src/tdfcontainer.cpp \
 	src/tdfcontainer.h \
-	src/globalevents.h \
-	src/globalevents.cpp \
 	src/httpdownloader.h \
 	src/Helper/TextCompletionDatabase.hpp \
 	src/Helper/TextCompletionDatabase.cpp \
@@ -1013,8 +1038,8 @@ springlobby_SOURCES += \
 	src/settings++/tab_abstract.h \
 	src/settings++/panel_pathoption.h \
 	src/settings++/panel_pathoption.cpp \
-	src/settings++/custom_dialogs.h \
-	src/settings++/custom_dialogs.cpp \
+	src/utils/customdialogs.h \
+	src/utils/customdialogs.cpp \
 	src/settings++/helpmenufunctions.h \
 	src/settings++/helpmenufunctions.cpp
 
@@ -1046,6 +1071,7 @@ springsettings_SOURCES = \
 	src/mmoptionmodel.h \
 	src/mmoptionmodel.cpp \
 	src/globalsmanager.cpp \
+	src/utils/globalevents.cpp \
 	src/settings++/se_utils.cpp \
 	src/settings++/se_utils.h \
 	src/settings++/frame.cpp \
@@ -1069,8 +1095,8 @@ springsettings_SOURCES = \
 	src/settings++/tab_abstract.h \
 	src/settings++/panel_pathoption.h \
 	src/settings++/panel_pathoption.cpp	\
-	src/settings++/custom_dialogs.h \
-	src/settings++/custom_dialogs.cpp \
+	src/utils/customdialogs.h \
+	src/utils/customdialogs.cpp \
 	src/settings++/helpmenufunctions.h \
 	src/settings++/helpmenufunctions.cpp
 

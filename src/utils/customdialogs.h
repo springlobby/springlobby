@@ -2,6 +2,11 @@
 #define CUSTOM_MSG_BOX_H_
 
 #include <wx/msgdlg.h>
+#include <wx/defs.h>
+#include <wx/dialog.h>
+#include <wx/timer.h>
+#include <wx/panel.h>
+
 
 const unsigned SL_MAIN_ICON = 1;
 const unsigned SS_MAIN_ICON = 2;
@@ -12,10 +17,12 @@ class wxWindow;
 class wxPoint;
 class wxString;
 class wxTextCtrl;
+class wxStaticText;
 class wxCommandEvent;
 class wxCloseEvent;
 class wxBoxSizer;
 class wxListCtrl;
+class wxGauge;
 
 #define SL_MAIN_WINDOW_PTR CustomMessageBox::getLobbypointer()
 #define SE_FRAME_PTR CustomMessageBox::getSettingspointer()
@@ -60,6 +67,20 @@ void mutelistWindow( const wxString& message,
         const wxString& caption = _T("Mutelist"),
         long style = wxOK|wxICON_INFORMATION,  const int x = -1, const int y = -1 );
 
+/** \brief utlity function to display modal messagebox, closing is denied until timer ran down
+ * \return wxOK|wxCANCEL|wxYES|wxNO according to option chosen
+ */
+int timedMessageBox(int whichIcon , const wxString& message,
+        const wxString& caption = wxMessageBoxCaptionStr, unsigned int delay = 3000, // miliseconds
+        long style = wxOK|wxICON_INFORMATION,  const int x = -1, const int y = -1 );
+
+/** \brief same as timedMessageBox, but not Modal --> no return val
+ * \return wxOK|wxCANCEL|wxYES|wxNO according to option chosen
+ */
+void timedMessageBoxNoModal(int whichIcon , const wxString& message,
+        const wxString& caption = wxMessageBoxCaptionStr, unsigned int delay = 3000, // miliseconds
+        long style = wxOK|wxICON_INFORMATION,  const int x = -1, const int y = -1 );
+
 //! cleanup
 void freeStaticBox();
 
@@ -81,6 +102,37 @@ public:
 protected:
 
      DECLARE_EVENT_TABLE()
+
+};
+
+/** \brief MessageBox variant with timer
+ */
+class TimedMessageBox : public wxDialog
+{
+public:
+	TimedMessageBox(wxIcon* icon ,wxWindow *parent, const wxString& message,
+	        const wxString& caption = wxMessageBoxCaptionStr,
+	        unsigned int delay = 3000, // miliseconds
+	        long style = wxOK|wxICON_INFORMATION, const wxPoint& pos = wxDefaultPosition);
+	virtual ~TimedMessageBox();
+
+    void OnOptionsNo(wxCommandEvent& event);
+
+protected:
+    const int m_delay;
+    wxSizer* sizerBtn;
+    wxSizer* topsizer;
+    wxSizer* m_delay_sizer;
+    wxStaticText* m_delay_notif;
+    wxTimer m_delay_timer;
+    wxTimer m_display_timer;
+    unsigned int m_display_hits;
+    static const unsigned int m_update_interval = 500;
+    void OnUpdate( wxTimerEvent& evt );
+    void OnUnlock( wxTimerEvent& evt );
+    void OnClose( wxCloseEvent& evt );
+
+    DECLARE_EVENT_TABLE()
 
 };
 
@@ -174,6 +226,7 @@ int GetSingleChoiceIndex( const wxString& message,
                             int x = wxDefaultCoord,
                             int y = wxDefaultCoord,
                             bool centre = true );
+
 
 #endif /*CUSTOM_MSG_DLG_H_*/
 

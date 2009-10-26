@@ -13,8 +13,7 @@
 #include "lobbyoptionstab.h"
 #include "nonportable.h"
 #include "settings.h"
-#include "springlobbyapp.h"
-#include "settings++/custom_dialogs.h"
+#include "utils/customdialogs.h"
 #include "utils/controls.h"
 #include "aui/auimanager.h"
 #include "ui.h"
@@ -160,8 +159,9 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
     m_start_tab_sizer->Add( m_start_tab , 0,  wxALIGN_CENTER_VERTICAL , 5 );
     m_main_sizer->Add( m_start_tab_sizer, 0, wxALL, 5 );
 
-    SetScrollRate( 10, 10 );
+    SetScrollRate( SCROLL_RATE, SCROLL_RATE );
     SetSizer( m_main_sizer );
+    Layout();
 }
 
 LobbyOptionsTab::~LobbyOptionsTab()

@@ -71,7 +71,7 @@
 #include "images/floppy_icon.png.h"
 
 #include "settings++/frame.h"
-#include "settings++/custom_dialogs.h"
+#include "utils/customdialogs.h"
 
 #include "updater/updater.h"
 #include "channel/autojoinchanneldialog.h"
@@ -114,9 +114,8 @@ END_EVENT_TABLE()
 
 MainWindow::TabNames MainWindow::m_tab_names;
 
-MainWindow::MainWindow( Ui& ui )
+MainWindow::MainWindow( )
     : wxFrame( (wxFrame*)0, -1, _("SpringLobby"), wxPoint(50, 50), wxSize(450, 340) ),
-    m_ui(ui),
     m_autojoin_dialog(NULL),
     m_channel_chooser(NULL),
     m_log_win(NULL)
@@ -139,12 +138,12 @@ MainWindow::MainWindow( Ui& ui )
   //TODO doesn't work atm
 
 
-  /* loading layouts currently borked
+    // loading layouts currently borked
 	wxMenu* menuView = new wxMenu;
 	menuView->Append( MENU_SAVE_LAYOUT, _("&Save Layout") );
 	menuView->Append( MENU_LOAD_LAYOUT, _("&Load layout") );
-	menuView->Append( MENU_DEFAULT_LAYOUT, _("&Set &Laoyut as default") );
-	*/
+//	menuView->Append( MENU_DEFAULT_LAYOUT, _("&Set &Laoyut as default") );
+
 
   m_menuTools = new wxMenu;
   m_menuTools->Append(MENU_JOIN, _("&Join channel..."));
@@ -173,40 +172,44 @@ MainWindow::MainWindow( Ui& ui )
   m_menubar->Append(menuFile, _("&File"));
   //m_menubar->Append(m_menuEdit, _("&Edit"));
 
-  //m_menubar->Append(menuView, _("&View")); //layout stuff --> disabled
+  m_menubar->Append(menuView, _("&View")); //layout stuff --> disabled
 
   m_menubar->Append(m_menuTools, _("&Tools"));
   m_menubar->Append(menuHelp, _("&Help"));
   SetMenuBar(m_menubar);
 
   m_main_sizer = new wxBoxSizer( wxHORIZONTAL );
-  m_func_tabs = new SLNotebook(  this, MAIN_TABS, wxDefaultPosition, wxDefaultSize,
+  m_func_tabs = new SLNotebook(  this, _T("mainfunctabs"), MAIN_TABS, wxDefaultPosition, wxDefaultSize,
         wxAUI_NB_WINDOWLIST_BUTTON | wxAUI_NB_TAB_SPLIT | wxAUI_NB_TAB_MOVE | wxAUI_NB_TAB_EXTERNAL_MOVE | wxAUI_NB_SCROLL_BUTTONS | wxAUI_NB_LEFT );
   m_func_tabs->SetArtProvider(new SLArtProvider);
 
+    //IMPORTANT: event handling needs to be disabled while constructing, otherwise deadlock occurs
+    SetEvtHandlerEnabled( false );
 
-  m_chat_tab = new MainChatTab( m_func_tabs, m_ui );
-  m_join_tab = new MainJoinBattleTab( m_func_tabs, m_ui );
-  m_sp_tab = new MainSinglePlayerTab( m_func_tabs, m_ui );
-  m_replay_tab = new ReplayTab ( m_func_tabs, m_ui );
-  m_savegame_tab = new SavegameTab( m_func_tabs, m_ui );
+  m_chat_tab = new MainChatTab( m_func_tabs );
+  m_join_tab = new MainJoinBattleTab( m_func_tabs );
+  m_sp_tab = new MainSinglePlayerTab( m_func_tabs );
+  m_replay_tab = new ReplayTab ( m_func_tabs );
+  m_savegame_tab = new SavegameTab( m_func_tabs );
 #ifndef NO_TORRENT_SYSTEM
-  m_torrent_tab = new MainTorrentTab( m_func_tabs, m_ui);
+  m_torrent_tab = new MainTorrentTab( m_func_tabs);
 #endif
-  m_opts_tab = new MainOptionsTab( m_func_tabs, m_ui );
+  m_opts_tab = new MainOptionsTab( m_func_tabs );
 
-    m_func_tabs->AddPage( m_chat_tab,     m_tab_names[0], true  );
-    m_func_tabs->AddPage( m_join_tab,     m_tab_names[1], false );
-    m_func_tabs->AddPage( m_sp_tab,       m_tab_names[2], false );
-    m_func_tabs->AddPage( m_savegame_tab, m_tab_names[3], false );
-    m_func_tabs->AddPage( m_replay_tab,   m_tab_names[4], false );
+    //use Insert so no Changepage events are triggered
+    m_func_tabs->InsertPage( PAGE_CHAT,     m_chat_tab,     m_tab_names[PAGE_CHAT],     true  );
+    m_func_tabs->InsertPage( PAGE_JOIN,     m_join_tab,     m_tab_names[PAGE_JOIN],     false );
+    m_func_tabs->InsertPage( PAGE_SINGLE,   m_sp_tab,       m_tab_names[PAGE_SINGLE],   false );
+    m_func_tabs->InsertPage( PAGE_SAVEGAME, m_savegame_tab, m_tab_names[PAGE_SAVEGAME], false );
+    m_func_tabs->InsertPage( PAGE_REPLAY,   m_replay_tab,   m_tab_names[PAGE_REPLAY],   false );
 #ifndef NO_TORRENT_SYSTEM
-    m_func_tabs->AddPage( m_torrent_tab,  m_tab_names[5], false );
-    m_func_tabs->AddPage( m_opts_tab,     m_tab_names[6], false );
+    m_func_tabs->InsertPage( PAGE_TORRENT,  m_torrent_tab,  m_tab_names[PAGE_TORRENT],  false );
+    m_func_tabs->InsertPage( PAGE_OPTOS,    m_opts_tab,     m_tab_names[PAGE_OPTOS],    false );
 #else
-    m_func_tabs->AddPage( m_opts_tab,     m_tab_names[5], false );
+    m_func_tabs->InsertPage( PAGE_OPTOS,    m_opts_tab,     m_tab_names[PAGE_OPTOS],    false );
 #endif
 
+    LoadPerspectives();
 
 
   SetTabIcons();
@@ -225,6 +228,8 @@ MainWindow::MainWindow( Ui& ui )
 
   m_channel_chooser = new ChannelChooserDialog( this, -1, _("Choose channels to join") );
 
+    // re-enable eventhandling
+    SetEvtHandlerEnabled( true );
 }
 
 wxBitmap MainWindow::GetTabIcon( const unsigned char* data, size_t size )
@@ -270,6 +275,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::OnClose( wxCloseEvent& /*unused*/ )
 {
+    SavePerspectives();
   AuiManagerContainer::ManagerType* manager=GetAui().manager;
   if(manager){
     GetAui().manager=NULL;
@@ -281,8 +287,7 @@ void MainWindow::OnClose( wxCloseEvent& /*unused*/ )
   sett().SetWindowSize( name, GetSize() );
   sett().SetWindowPos( name, GetPosition() );
 
-  m_ui.Quit();
-  m_ui.OnMainWindowDestruct();
+  ui().Quit();
   forceSettingsFrameClose();
   freeStaticBox();
 
@@ -329,7 +334,7 @@ void DrawBmpOnBmp( wxBitmap& canvas, wxBitmap& object, int x, int y )
 //! @brief Get the ChatPanel dedicated to server output and input
 ChatPanel& servwin()
 {
-  return m_ui.mw().GetChatTab().ServerChat();
+  return ui().mw().GetChatTab().ServerChat();
 }
 */
 
@@ -425,9 +430,9 @@ void MainWindow::ShowSingleplayer()
     ShowTab( PAGE_SINGLE );
 }
 
-void MainWindow::ShowTab( const int idx )
+void MainWindow::ShowTab( const unsigned int idx )
 {
-    if ( -1 < idx && idx <m_tab_names.GetCount() )
+    if ( 0 <= idx && idx <m_tab_names.GetCount() )
         m_func_tabs->SetSelection( idx );
     else
         wxLogError( _T("tab selection oob: %d"), idx );
@@ -459,10 +464,10 @@ void MainWindow::ShowChannelChooser()
 void MainWindow::OnMenuJoin( wxCommandEvent& /*unused*/ )
 {
 
-  if ( !m_ui.IsConnected() ) return;
+  if ( !ui().IsConnected() ) return;
   wxString answer;
-  if ( m_ui.AskText( _("Join channel..."), _("Name of channel to join"), answer ) ) {
-    m_ui.JoinChannel( answer, _T("") );
+  if ( ui().AskText( _("Join channel..."), _("Name of channel to join"), answer ) ) {
+    ui().JoinChannel( answer, _T("") );
   }
 
 }
@@ -471,12 +476,12 @@ void MainWindow::OnMenuJoin( wxCommandEvent& /*unused*/ )
 void MainWindow::OnMenuChat( wxCommandEvent& /*unused*/ )
 {
 
-  if ( !m_ui.IsConnected() ) return;
+  if ( !ui().IsConnected() ) return;
   wxString answer;
-  if ( m_ui.AskText( _("Open Private Chat..."), _("Name of user"), answer ) ) {
-    if (m_ui.GetServer().UserExists( answer ) ) {
+  if ( ui().AskText( _("Open Private Chat..."), _("Name of user"), answer ) ) {
+    if (ui().GetServer().UserExists( answer ) ) {
         //true puts focus on new tab
-      OpenPrivateChat( m_ui.GetServer().GetUser( answer ), true  );
+      OpenPrivateChat( ui().GetServer().GetUser( answer ), true  );
     }
   }
 
@@ -507,13 +512,13 @@ void MainWindow::OnMenuAbout( wxCommandEvent& /*unused*/ )
 
 void MainWindow::OnMenuConnect( wxCommandEvent& /*unused*/ )
 {
-  m_ui.ShowConnectWindow();
+  ui().ShowConnectWindow();
 }
 
 
 void MainWindow::OnMenuDisconnect( wxCommandEvent& /*unused*/ )
 {
-  m_ui.Disconnect();
+  ui().Disconnect();
 }
 
 void MainWindow::OnMenuSaveOptions( wxCommandEvent& /*unused*/ )
@@ -534,7 +539,7 @@ void MainWindow::OnMenuVersion( wxCommandEvent& /*unused*/ )
 
 void MainWindow::OnUnitSyncReload( wxCommandEvent& /*unused*/ )
 {
-    m_ui.ReloadUnitSync();
+    GetGlobalEventSender(GlobalEvents::UnitSyncReloadRequest).SendEvent( 0 ); // request an unitsync reload
 }
 
 void MainWindow::OnShowScreenshots( wxCommandEvent& /*unused*/ )
@@ -586,15 +591,15 @@ void MainWindow::OnMenuOpen( wxMenuEvent& /*unused*/ )
 void MainWindow::OnReportBug( wxCommandEvent& /*unused*/ )
 {
     wxString reporter = wxEmptyString;
-    if (m_ui.IsConnected() )
-        reporter = _T("?reporter=") + m_ui.GetServer().GetMe().GetNick();
-  m_ui.OpenWebBrowser( _T("http://trac.springlobby.info/newticket") + reporter);
+    if (ui().IsConnected() )
+        reporter = _T("?reporter=") + ui().GetServer().GetMe().GetNick();
+    OpenWebBrowser( _T("http://trac.springlobby.info/newticket") + reporter);
 }
 
 
 void MainWindow::OnShowDocs( wxCommandEvent& /*unused*/ )
 {
-  m_ui.OpenWebBrowser( _T("http://springlobby.info") );
+    OpenWebBrowser( _T("http://springlobby.info") );
 }
 
 void MainWindow::OnTabsChanged( wxAuiNotebookEvent& event )
@@ -603,24 +608,13 @@ void MainWindow::OnTabsChanged( wxAuiNotebookEvent& event )
 
   if ( newsel == 0 || newsel == 1 )
   {
-    if ( !m_ui.IsConnected() && m_ui.IsMainWindowCreated() ) m_ui.Connect();
+    if ( !ui().IsConnected() && ui().IsMainWindowCreated() ) ui().Connect();
   }
 }
 
-void MainWindow::OnUnitSyncReloaded()
+void MainWindow::OnShowSettingsPP( wxCommandEvent& event )
 {
-  wxLogDebugFunc( _T("") );
-  wxLogMessage( _T("Reloading join tab") );
-  GetJoinTab().OnUnitSyncReloaded();
-  wxLogMessage( _T("Join tab updated") );
-  wxLogMessage( _T("Reloading Singleplayer tab") );
-  GetSPTab().OnUnitSyncReloaded();
-  wxLogMessage( _T("Singleplayer tab updated") );
-}
-
-void MainWindow::OnShowSettingsPP( wxCommandEvent& /*unused*/ )
-{
-	se_frame = new settings_frame(this,wxID_ANY,wxT("Settings++"),wxDefaultPosition,
+	se_frame = new settings_frame(this,wxID_ANY,wxT("SpringSettings"),wxDefaultPosition,
 	  	    		wxDefaultSize);
 	se_frame_active = true;
 	se_frame->Show();
@@ -655,20 +649,30 @@ void MainWindow::OnChannelListStart( )
     m_channel_chooser->ClearChannels();
 }
 
+wxString MainWindow::AddPerspectivePostfix( const wxString& pers_name )
+{
+    wxString perspective_name  = pers_name.IsEmpty() ? sett().GetLastPerspectiveName() : pers_name;
+    if ( m_join_tab &&  m_join_tab->UseBattlePerspective() )
+        perspective_name += BattlePostfix;
+    return perspective_name;
+}
+
 void MainWindow::OnMenuSaveLayout( wxCommandEvent& /*unused*/ )
 {
 	wxString answer;
-	if ( !ui().AskText( _("Layout manager"),_("Enter a profile name"), answer ) ) return;
-	wxString layout = GetAui().manager->SavePerspective();
-	sett().SaveLayout( answer, layout );
+	if ( !ui().AskText( _("Layout manager"),_("Enter a profile name"), answer ) )
+        return;
+    SavePerspectives( answer );
 }
 
 void MainWindow::OnMenuLoadLayout( wxCommandEvent& /*unused*/ )
 {
-	wxArrayString layouts = sett().GetLayoutList();
+	wxArrayString layouts = sett().GetPerspectives();
 	unsigned int result = wxGetSingleChoiceIndex( _("Which profile fo you want to load?"), _("Layout manager"), layouts );
-	if ( ( result < 0  ) || ( result > layouts.GetCount() ) ) return;
-	GetAui().manager->LoadPerspective( sett().GetLayout( layouts[result] ) );
+	if ( ( result < 0  ) || ( result > layouts.GetCount() ) )
+        return;
+
+    LoadPerspectives( layouts[result] );
 }
 
 
@@ -683,4 +687,37 @@ void MainWindow::OnMenuDefaultLayout( wxCommandEvent& /*unused*/ )
 const MainWindow::TabNames& MainWindow::GetTabNames()
 {
     return m_tab_names;
+}
+
+void MainWindow::LoadPerspectives( const wxString& pers_name )
+{
+    sett().SetLastPerspectiveName( pers_name );
+    wxString perspective_name = AddPerspectivePostfix( pers_name );
+
+    //loading a default layout on top of the more tabs of battle layout would prove fatal
+    if ( perspective_name.EndsWith( BattlePostfix ) && !sett().PerspectiveExists( perspective_name ) )
+        return;
+
+
+    LoadNotebookPerspective( m_func_tabs, perspective_name );
+    m_sp_tab->LoadPerspective( perspective_name );
+    m_join_tab->LoadPerspective( perspective_name );
+    m_opts_tab->LoadPerspective( perspective_name );
+    wxWindow* active_chat_tab = static_cast<wxWindow*> ( m_chat_tab->GetActiveChatPanel() );
+    if ( active_chat_tab )
+        active_chat_tab->Refresh();
+    //chat tab saving won't work w/o further work
+//    m_chat_tab->LoadPerspective( perspective_name );
+}
+
+void MainWindow::SavePerspectives( const wxString& pers_name )
+{
+    sett().SetLastPerspectiveName( pers_name );
+    wxString perspective_name = AddPerspectivePostfix( pers_name );
+
+    m_sp_tab->SavePerspective( perspective_name );
+    m_join_tab->SavePerspective( perspective_name );
+    m_opts_tab->SavePerspective( perspective_name );
+//    m_chat_tab->SavePerspective( perspective_name );
+    SaveNotebookPerspective( m_func_tabs, perspective_name );
 }

@@ -19,16 +19,16 @@
 #include "torrentoptionspanel.h"
 #include "aui/auimanager.h"
 #include "settings.h"
-#include "ui.h"
 #include "torrentwrapper.h"
 #include "utils/conversion.h"
+#include "utils/controls.h"
 
 
 BEGIN_EVENT_TABLE( TorrentOptionsPanel, wxScrolledWindow )
 END_EVENT_TABLE()
 
-TorrentOptionsPanel::TorrentOptionsPanel( wxWindow* parent, Ui& ui)
-    : wxScrolledWindow( parent, -1), m_ui(ui)
+TorrentOptionsPanel::TorrentOptionsPanel( wxWindow* parent )
+    : wxScrolledWindow( parent, -1)
 {
     GetAui().manager->AddPane( this, wxLEFT, _T("torrentoptionspanel") );
 
@@ -106,7 +106,7 @@ TorrentOptionsPanel::TorrentOptionsPanel( wxWindow* parent, Ui& ui)
     OnRestore( dummy );
 
     SetSizer( mainboxsizer );
-    SetScrollRate( 3, 3 );
+    SetScrollRate( SCROLL_RATE, SCROLL_RATE );
     Layout();
 }
 

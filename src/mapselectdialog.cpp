@@ -48,9 +48,8 @@ BEGIN_EVENT_TABLE(MapSelectDialog,wxDialog)
 	//*)
 END_EVENT_TABLE()
 
-MapSelectDialog::MapSelectDialog(wxWindow* parent,Ui& ui)
-	: m_ui(ui)
-	, m_horizontal_direction( sett().GetHorizontalSortorder() )
+MapSelectDialog::MapSelectDialog( wxWindow* parent )
+	: m_horizontal_direction( sett().GetHorizontalSortorder() )
 	, m_vertical_direction( sett().GetVerticalSortorder() )
 {
 	//(*Initialize(MapSelectDialog)
@@ -109,7 +108,7 @@ MapSelectDialog::MapSelectDialog(wxWindow* parent,Ui& ui)
 	StdDialogButtonSizer1->Realize();
 	BoxSizer2->Add(StdDialogButtonSizer1, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	BoxSizer1->Add(BoxSizer2, 0, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-	m_mapgrid = new MapGridCtrl(this, m_ui, wxSize(600,400), ID_MAPGRID);
+	m_mapgrid = new MapGridCtrl(this, wxSize(600,400), ID_MAPGRID);
 	BoxSizer1->Add(m_mapgrid, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	SetSizer(BoxSizer1);
 	BoxSizer1->Fit(this);
@@ -205,7 +204,7 @@ void MapSelectDialog::OnInit( wxInitDialogEvent& /*unused*/ )
 	m_replays = usync().GetPlaybackList( true ); //true meaning replays, flase meaning savegames
 
     const unsigned int lastFilter = sett().GetMapSelectorFilterRadio();
-	m_filter_popular->Enable( m_ui.IsConnected() );
+	m_filter_popular->Enable( ui().IsConnected() );
 
 	// due to a bug / crappy design in SpringUnitSync / unitsync itself we
 	// get a replay list with one empty item when there are no replays..
@@ -216,7 +215,7 @@ void MapSelectDialog::OnInit( wxInitDialogEvent& /*unused*/ )
 	}
 
 	if ( lastFilter == m_filter_popular_sett ) {
-	    if ( m_ui.IsConnected() ) {
+	    if ( ui().IsConnected() ) {
 	        m_filter_popular->SetValue( true );
             LoadPopular();
 	    }
@@ -379,13 +378,13 @@ void MapSelectDialog::LoadPopular()
 	m_mapgrid->Clear();
 
 	try {
-		m_ui.GetServer().battles_iter->IteratorBegin();
-		while ( !m_ui.GetServer().battles_iter->EOL() ) {
-			Battle* b = m_ui.GetServer().battles_iter->GetBattle();
+		ui().GetServer().battles_iter->IteratorBegin();
+		while ( !ui().GetServer().battles_iter->EOL() ) {
+			Battle* b = ui().GetServer().battles_iter->GetBattle();
 			if ( b != NULL ) m_mapgrid->AddMap( b->GetHostMapName() );
 		}
 	}
-	catch (...) {} // m_ui.GetServer may throw when disconnected...
+	catch (...) {} // ui().GetServer may throw when disconnected...
 
 	m_mapgrid->Refresh();
 }
@@ -402,7 +401,7 @@ void MapSelectDialog::LoadRecent()
 	for ( int i = 0; i < count; ++i ) {
 		// prefix and suffix with underscore to prevent most common partial matches
 		const wxString mapname = _T("_") + m_maps[i].BeforeLast( '.' ) + _T("_");
-		unsigned int replaycount = m_replays.GetCount();
+		long replaycount = long(m_replays.GetCount());
 		for ( int replaynum = 0; replaynum < replaycount; replaynum++ ) {
 			if ( m_replays[replaynum].Contains( mapname ) )
 				m_mapgrid->AddMap( m_maps[i] );

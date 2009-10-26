@@ -24,13 +24,14 @@
 
 #include "settings.h"
 #include "springunitsynclib.h"
-#include "settings++/custom_dialogs.h"
+#include "utils/customdialogs.h"
 #include "unitsyncthread.h"
 #include "globalsmanager.h"
 #include "uiutils.h"
 #include "utils/debug.h"
 #include "utils/conversion.h"
 #include "utils/misc.h"
+#include "utils/globalevents.h"
 
 
 #define LOCK_UNITSYNC wxCriticalSectionLocker lock_criticalsection(m_lock)
@@ -46,7 +47,8 @@ IUnitSync& usync()
 
 
 SpringUnitSync::SpringUnitSync()
-  : m_map_image_cache( 3, _T("m_map_image_cache") )         // may take about 3M per image ( 1024x1024 24 bpp minimap )
+  : m_UnitsyncReloadRequestSink( this, &GetGlobalEventSender( GlobalEvents::UnitSyncReloadRequest ) )
+  , m_map_image_cache( 3, _T("m_map_image_cache") )         // may take about 3M per image ( 1024x1024 24 bpp minimap )
   , m_tiny_minimap_cache( 200, _T("m_tiny_minimap_cache") ) // takes at most 30k per image (   100x100 24 bpp minimap )
   , m_mapinfo_cache( 1000000, _T("m_mapinfo_cache") )       // this one is just misused as thread safe std::map ...
   , m_sides_cache( 200, _T("m_sides_cache") )               // another misuse
@@ -72,6 +74,7 @@ bool SpringUnitSync::LoadUnitSyncLib( const wxString& unitsyncloc )
    {
       m_cache_path = sett().GetCachePath();
       PopulateArchiveList();
+      GetGlobalEventSender(GlobalEvents::OnUnitsyncReloaded).SendEvent( 0 );
    }
    return ret;
 }
@@ -327,6 +330,7 @@ UnitSyncMap SpringUnitSync::GetMapEx( int index )
   if ( index < 0 ) return m;
 
   m.name = m_map_array[index];
+
   m.hash = m_maps_list[m.name];
 
   m.info = _GetMapInfoEx( m.name );
@@ -464,6 +468,30 @@ GameOptions SpringUnitSync::GetModOptions( const wxString& name )
   return ret;
 }
 
+GameOptions SpringUnitSync::GetModCustomizations( const wxString& modname )
+{
+    wxLogDebugFunc( modname );
+
+    GameOptions ret;
+    int count = susynclib().GetCustomOptionCount( modname, _T("LobbyOptions.lua") );
+    for (int i = 0; i < count; ++i) {
+        GetOptionEntry( i, ret );
+    }
+    return ret;
+}
+
+GameOptions SpringUnitSync::GetSkirmishOptions( const wxString& modname, const wxString& skirmish_name )
+{
+    wxLogDebugFunc( modname );
+
+    GameOptions ret;
+    int count = susynclib().GetCustomOptionCount( modname, skirmish_name );
+    for (int i = 0; i < count; ++i) {
+        GetOptionEntry( i, ret );
+    }
+    return ret;
+}
+
 wxArrayString SpringUnitSync::GetModDeps( const wxString& modname )
 {
 	wxArrayString ret;
@@ -494,22 +522,30 @@ wxImage SpringUnitSync::GetSidePicture( const wxString& modname, const wxString&
 {
   wxLogDebugFunc( _T("") );
 
-  wxImage cache;
-
-	susynclib().SetCurrentMod( modname );
 	wxLogDebugFunc( _T("SideName = \"") + SideName + _T("\"") );
 	wxString ImgName = _T("SidePics");
 	ImgName += _T("/");
 	ImgName += SideName.Upper();
 	ImgName += _T(".bmp");
 
-	int ini = susynclib().OpenFileVFS (ImgName );
+    return GetImage( modname, ImgName );
+}
+
+wxImage SpringUnitSync::GetImage( const wxString& modname, const wxString& image_path )
+{
+  wxLogDebugFunc( _T("") );
+
+    wxImage cache;
+
+	susynclib().SetCurrentMod( modname );
+
+	int ini = susynclib().OpenFileVFS ( image_path );
 	ASSERT_EXCEPTION( ini, _T("cannot find side image") );
 
 	int FileSize = susynclib().FileSizeVFS(ini);
 	if (FileSize == 0) {
 		susynclib().CloseFileVFS(ini);
-		ASSERT_EXCEPTION( FileSize, _T("side image has size 0") );
+		ASSERT_EXCEPTION( FileSize, _T("image has size 0") );
 	}
 
 	uninitialized_array<char> FileContent(FileSize);
@@ -520,8 +556,9 @@ wxImage SpringUnitSync::GetSidePicture( const wxString& modname, const wxString&
 	cache.InitAlpha();
 	for ( int x = 0; x < cache.GetWidth(); x++ )
 		for ( int y = 0; y < cache.GetHeight(); y++ )
-			if ( cache.GetBlue( x, y ) == 255 && cache.GetGreen( x, y ) == 255 && cache.GetRed( x, y ) == 255 ) cache.SetAlpha( x, y, 0 ); // set pixel to be transparent
-  return cache;
+			if ( cache.GetBlue( x, y ) == 255 && cache.GetGreen( x, y ) == 255 && cache.GetRed( x, y ) == 255 )
+                cache.SetAlpha( x, y, 0 ); // set pixel to be transparent
+    return cache;
 }
 
 
@@ -549,13 +586,13 @@ wxArrayString SpringUnitSync::GetAIList( const wxString& modname )
 	{
 		// list dynamic link libraries
 		wxArrayString dlllist = susynclib().FindFilesVFS( wxDynamicLibrary::CanonicalizeName(_T("AI/Bot-libs/*"), wxDL_MODULE) );
-		for( int i = 0; i < dlllist.GetCount(); i++ )
+		for( int i = 0; i < long(dlllist.GetCount()); i++ )
 		{
 			if ( ret.Index( dlllist[i].BeforeLast( '/') ) == wxNOT_FOUND ) ret.Add ( dlllist[i] ); // don't add duplicates
 		}
 		// list jar files (java AIs)
 		wxArrayString jarlist = susynclib().FindFilesVFS( _T("AI/Bot-libs/*.jar") );
-		for( int i = 0; i < jarlist.GetCount(); i++ )
+		for( int i = 0; i < long(jarlist.GetCount()); i++ )
 		{
 			if ( ret.Index( jarlist[i].BeforeLast( '/') ) == wxNOT_FOUND ) ret.Add ( jarlist[i] ); // don't add duplicates
 		}
@@ -930,7 +967,7 @@ wxArrayString SpringUnitSync::GetScreenshotFilenames()
     if ( !IsLoaded() ) return ret;
 
     ret = susynclib().FindFilesVFS( _T("screenshots/*.*") );
-    for ( int i = 0; i < ret.Count() - 1; ++i ) {
+    for ( int i = 0; i < long(ret.Count() - 1); ++i ) {
             if ( ret[i] == ret[i+1] )
                 ret.RemoveAt( i+1 );
     }
@@ -1095,9 +1132,9 @@ void SpringUnitSync::PrefetchMap( const wxString& mapname )
   // 50% hits without, 80% hits with this code.  (cache size 20 images)
 
   const int length = std::max(0, int(mapname.length()) - 4);
-  const int hash = (mapname[length * 1/4] << 16)
-                 | (mapname[length * 2/4] << 8)
-                 | (mapname[length * 3/4]);
+  const int hash = ( wxChar(mapname[length * 1/4]) << 16 )
+                 | ( wxChar(mapname[length * 2/4]) << 8  )
+                 | wxChar(mapname[length * 3/4]);
   const int priority = -hash;
 
   {

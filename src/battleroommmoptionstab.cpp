@@ -11,6 +11,7 @@
 #include <wx/button.h>
 #include <wx/tipwin.h>
 #include <wx/tooltip.h>
+#include <wx/textctrl.h>
 #include <map>
 
 #include "utils/controls.h"
@@ -18,7 +19,7 @@
 #include "mmoptionswrapper.h"
 #include "battle.h"
 #include "spinctld.h"
-#include "settings++/custom_dialogs.h"
+#include "utils/customdialogs.h"
 #include "server.h"
 #include "settings.h"
 #include "ui.h"
@@ -102,20 +103,18 @@ BattleroomMMOptionsTab<BattleType>::BattleroomMMOptionsTab(  BattleType& battle,
 
   //m_main_sizer->FitInside(this);
 
+    SetScrollRate( SCROLL_RATE, SCROLL_RATE );
+	SetSizer( m_main_sizer );
+	Layout();
 
-	this->SetSizer( m_main_sizer );
-	this->Layout();
+    if ( !m_battle.IsFounderMe() ) {
+        m_options_preset_sel->Disable();
+        m_load_btn->Disable();
+        m_save_btn->Disable();
+        m_delete_btn->Disable();
+        m_default_btn->Disable();
+    }
 
-  if ( !m_battle.IsFounderMe() )
-  {
-    m_options_preset_sel->Disable();
-    m_load_btn->Disable();
-    m_save_btn->Disable();
-    m_delete_btn->Disable();
-    m_default_btn->Disable();
-  }
-
-	SetScrollRate( 4, 4 );
 }
 
 template < class BattleType >

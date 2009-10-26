@@ -14,7 +14,7 @@
 #include "uiutils.h"
 #include "settings.h"
 #include "useractions.h"
-#include "settings++/custom_dialogs.h"
+#include "utils/customdialogs.h"
 #include "springunitsynclib.h"
 #include "iconimagelist.h"
 #include "spring.h"
@@ -99,7 +99,7 @@ void Battle::OnRequestBattleStatus()
     bs.spectator = false;
     bs.colour = sett().GetBattleLastColour();
     // theres some highly annoying bug with color changes on player join/leave.
-    if ( !bs.colour.IsColourOk() ) bs.colour = GetFreeColour( GetMe() );
+    if ( !bs.colour.IsOk() ) bs.colour = GetFreeColour( GetMe() );
 
     SendMyBattleStatus();
 }
@@ -585,7 +585,9 @@ void Battle::StartSpring()
 			try
 			{
 				wxString path = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("relayhost_script.txt");
-				if ( !wxFile::Access( path, wxFile::write ) ) wxLogError( _T("Access denied to script.txt.") );
+				if ( !wxFile::Access( path, wxFile::write ) ) {
+				    wxLogError( _T("Access denied to script.txt.") );
+				}
 
 				wxFile f( path, wxFile::write );
 				f.Write( hostscript );
@@ -637,7 +639,7 @@ void Battle::SetInGame( bool value )
 	time_t now = time(0);
 	if ( m_ingame && !value )
 	{
-		for ( int i = 0; i < GetNumUsers(); i++ )
+		for ( int i = 0; i < long(GetNumUsers()); i++ )
 		{
 			User& user = GetUser( i );
 			UserBattleStatus& status = user.BattleStatus();
@@ -792,7 +794,7 @@ void Battle::Autobalance( BalanceType balance_type, bool support_clans, bool str
     if ( numallyteams == 0 ) // 0 == use num start rects
     {
         int ally = 0;
-        for ( int i = 0; i < GetNumRects(); ++i )
+        for ( int i = 0; i < long(GetNumRects()); ++i )
         {
             BattleStartRect sr = GetStartRect(i);
             if ( sr.IsOk() )

@@ -12,6 +12,7 @@
 #include <wx/log.h>
 
 #include "ui.h"
+#include "mainwindow.h" //used only for global pers load/save, remove when signals are merged
 #include "settings.h"
 #include "battle.h"
 #include "mainjoinbattletab.h"
@@ -33,19 +34,18 @@
 
 #include <stdexcept>
 
-MainJoinBattleTab::MainJoinBattleTab( wxWindow* parent, Ui& ui )
+MainJoinBattleTab::MainJoinBattleTab( wxWindow* parent )
     : wxScrolledWindow( parent, -1 ),
     m_battle_tab( 0 ),
     m_map_tab( 0 ),
     m_opts_tab( 0 ),
-    m_mm_opts_tab( 0 ),
-    m_ui( ui )
+    m_mm_opts_tab( 0 )
 {
 	GetAui().manager->AddPane( this, wxLEFT, _T( "mainjoinbattletab" ) );
 
 	m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
-	m_tabs = new SLNotebook( this, BATTLE_TABS, wxDefaultPosition, wxDefaultSize, wxAUI_NB_TAB_SPLIT | wxAUI_NB_TAB_MOVE | wxAUI_NB_SCROLL_BUTTONS | wxAUI_NB_TOP | wxAUI_NB_TAB_EXTERNAL_MOVE );
+	m_tabs = new SLNotebook( this, _T( "mainjoinbattletab" ), BATTLE_TABS ,wxDefaultPosition, wxDefaultSize, wxAUI_NB_TAB_SPLIT | wxAUI_NB_TAB_MOVE | wxAUI_NB_SCROLL_BUTTONS | wxAUI_NB_TOP | wxAUI_NB_TAB_EXTERNAL_MOVE );
 	m_tabs->SetArtProvider( new SLArtProvider );
 
 	m_imagelist = new wxImageList( 12, 12 );
@@ -54,12 +54,12 @@ MainJoinBattleTab::MainJoinBattleTab( wxWindow* parent, Ui& ui )
 	m_imagelist->Add( wxIcon( battle_map_xpm ) );
 	m_imagelist->Add( wxIcon( battle_settings_xpm ) );
 
-	m_list_tab = new BattleListTab( m_tabs, m_ui );
+	m_list_tab = new BattleListTab( m_tabs );
 	m_tabs->AddPage( m_list_tab, _( "Battle list" ), true, wxIcon( battle_list_xpm ) );
 
 	m_main_sizer->Add( m_tabs, 1, wxEXPAND );
 
-	SetScrollRate( 3, 3 );
+	SetScrollRate( SCROLL_RATE, SCROLL_RATE );
 	SetSizer( m_main_sizer );
 	Layout();
 }
@@ -67,7 +67,6 @@ MainJoinBattleTab::MainJoinBattleTab( wxWindow* parent, Ui& ui )
 
 MainJoinBattleTab::~MainJoinBattleTab()
 {
-
 }
 
 
@@ -134,19 +133,21 @@ BattleListTab& MainJoinBattleTab::GetBattleListTab()
 
 void MainJoinBattleTab::JoinBattle( Battle& battle )
 {
-	LeaveCurrentBattle();
+	LeaveCurrentBattle( true );
 
-	m_battle_tab = new BattleRoomTab( m_tabs, m_ui, battle );
+	m_battle_tab = new BattleRoomTab( m_tabs, battle );
 	m_tabs->InsertPage( 1, m_battle_tab, _( "Battleroom" ), true, wxIcon( battle_xpm ) );
 
-	m_map_tab = new BattleMapTab( m_tabs, m_ui, battle );
+	m_map_tab = new BattleMapTab( m_tabs, battle );
 	m_tabs->InsertPage( 2, m_map_tab, _( "Map" ), false, wxIcon( battle_map_xpm ) );
 
 	m_mm_opts_tab = new BattleroomMMOptionsTab<Battle>( battle, m_tabs );
 	m_tabs->InsertPage( 3, m_mm_opts_tab, _( "Options" ), false, wxIcon( battle_settings_xpm ) );
 
-	m_opts_tab = new BattleOptionsTab( m_tabs, m_ui, battle );
+	m_opts_tab = new BattleOptionsTab( m_tabs, battle );
 	m_tabs->InsertPage( 4, m_opts_tab, _( "Unit Restrictions" ), false, wxIcon( battle_settings_xpm ) );
+
+    PostSwitchBattlePerspective( );
 
 #ifdef __WXMSW__
 	Refresh(); // this is needed to avoid a weird frame overlay glitch in windows
@@ -160,8 +161,10 @@ void MainJoinBattleTab::HostBattle( Battle& battle )
 }
 
 
-void MainJoinBattleTab::LeaveCurrentBattle()
+void MainJoinBattleTab::LeaveCurrentBattle( bool called_from_join )
 {
+    PreSwitchBattlePerspective();
+
 	if ( m_mm_opts_tab ) {
 		m_tabs->DeletePage( 4 );
 		m_mm_opts_tab = 0;
@@ -179,6 +182,8 @@ void MainJoinBattleTab::LeaveCurrentBattle()
 		m_battle_tab = 0;
 	}
 
+    if( !called_from_join )
+        PostSwitchBattlePerspective();
 
 }
 
@@ -193,23 +198,6 @@ void MainJoinBattleTab::BattleUserUpdated( User& user )
 	{
 		GetBattleMapTab().UpdateUser( user );
 	} catch ( ... ) {}
-}
-
-
-void MainJoinBattleTab::OnUnitSyncReloaded()
-{
-	wxLogDebugFunc( _T( "" ) );
-	GetBattleListTab().OnUnitSyncReloaded();
-	wxLogMessage( _T( "Battle list tab reloaded" ) );
-	try
-	{
-		GetBattleRoomTab().OnUnitSyncReloaded();
-	} catch ( ... ) {}
-	try
-	{
-		GetBattleMapTab().OnUnitSyncReloaded();
-	} catch ( ... ) {}
-	wxLogMessage( _T( "Battle list tab reloaded" ) );
 }
 
 void MainJoinBattleTab::OnConnected()
@@ -262,3 +250,27 @@ BattleroomMMOptionsTab<Battle>& MainJoinBattleTab::GetMMOptionsTab()
 	return *m_mm_opts_tab;
 }
 
+void MainJoinBattleTab::LoadPerspective( const wxString& perspective_name  )
+{
+    LoadNotebookPerspective( m_tabs, perspective_name );
+}
+
+void MainJoinBattleTab::SavePerspective( const wxString& perspective_name )
+{
+    SaveNotebookPerspective( m_tabs, perspective_name );
+}
+
+void MainJoinBattleTab::PostSwitchBattlePerspective( )
+{
+    ui().mw().LoadPerspectives( );
+}
+
+void MainJoinBattleTab::PreSwitchBattlePerspective( )
+{
+    ui().mw().SavePerspectives(  );
+}
+
+bool MainJoinBattleTab::UseBattlePerspective()
+{
+    return m_tabs->GetPageCount() > 1;
+}

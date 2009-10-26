@@ -47,7 +47,7 @@
 #endif //VERSION
 
 // for SL_MAIN_ICON
-#include "settings++/custom_dialogs.h"
+#include "utils/customdialogs.h"
 
 #include "settings.h"
 
@@ -2259,7 +2259,9 @@ unsigned int TASServer::UdpPing(unsigned int src_port, const wxString &target, u
         wxLogMessage(_T("socket's IsOk() is false, no UDP ping done."));
     }
 
-    if (udp_socket.Error())wxLogWarning(_T("wxDatagramSocket Error=%d"),udp_socket.LastError());
+    if (udp_socket.Error()) {
+        wxLogWarning(_T("wxDatagramSocket Error=%d"),udp_socket.LastError());
+    }
     return result;
 }
 

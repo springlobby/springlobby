@@ -31,9 +31,10 @@
 #include "user.h"
 #include "uiutils.h"
 #include "utils/controls.h"
-#include "settings++/custom_dialogs.h"
+#include "utils/customdialogs.h"
 #include "ui.h"
 #include "server.h"
+
 
 #include "images/rank0.xpm"
 #include "images/rank1.xpm"
@@ -330,6 +331,12 @@ void HostBattleDialog::OnNatChange( wxCommandEvent& /*unused*/  )
 	m_port_text->Enable( m_nat_radios->GetSelection() == 0 );
 }
 
+void HostBattleDialog::OnReloadMods( wxCommandEvent& event )
+{
+    usync().ReloadUnitSyncLib();
+    ReloadModList();
+}
+
 void HostBattleDialog::OnPickRelayHost( wxCommandEvent& event )
 {
 		PopupMenu( m_relayhost_list );
@@ -354,10 +361,4 @@ void HostBattleDialog::OnUseRelay( wxCommandEvent& event )
 {
     m_relayed_host_pick->Show( m_relayed_host_check->IsChecked() );
     Layout();
-}
-
-void HostBattleDialog::OnReloadMods( wxCommandEvent& event )
-{
-    usync().ReloadUnitSyncLib();
-    ReloadModList();
 }

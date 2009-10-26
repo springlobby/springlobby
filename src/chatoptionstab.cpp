@@ -31,7 +31,6 @@
 
 #include "nonportable.h"
 #include "chatoptionstab.h"
-#include "ui.h"
 #include "iunitsync.h"
 #include "utils/controls.h"
 #include "uiutils.h"
@@ -60,9 +59,8 @@ BEGIN_EVENT_TABLE( ChatOptionsTab, wxPanel )
 END_EVENT_TABLE()
 
 
-ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui )
-    : wxScrolledWindow( parent, -1 ),
-    m_ui( ui )
+ChatOptionsTab::ChatOptionsTab( wxWindow* parent )
+    : wxScrolledWindow( parent, -1 )
 {
 	GetAui().manager->AddPane( this, wxLEFT, _T( "chatoptionstab" ) );
 
@@ -340,7 +338,7 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui )
 
 	bMainSizerV->Add( 0, 0, 1, wxEXPAND | wxALL, 5 );
 
-	SetScrollRate( 3, 3 );
+	SetScrollRate( SCROLL_RATE, SCROLL_RATE );
 
 	SetSizer( bMainSizerV );
 	Layout();
@@ -480,7 +478,7 @@ void ChatOptionsTab::OnSelectFont( wxCommandEvent& /*unused*/ )
 {
 	wxFontData data;
 	data.SetChosenFont( m_chat_font );
-	wxFontDialog dlg( ( wxWindow* ) &ui().mw(), data );
+	wxFontDialog dlg( this->GetParent(), data );
 	if ( dlg.ShowModal() == wxID_OK ) {
 		m_chat_font = dlg.GetFontData().GetChosenFont();
 		m_fontname->SetLabel( m_chat_font.GetFaceName() );

@@ -12,7 +12,7 @@ class UpdaterClass : public wxEvtHandler
     void CheckForUpdates();
 
 #ifdef __WXMSW__
-    void StartUpdate( const wxString& rev, bool fromCli = false );
+    void StartUpdate( const wxString& rev );
 #endif
     void OnDownloadEvent( wxCommandEvent& event );
 
@@ -24,11 +24,6 @@ protected:
     wxString m_newexe;
 
     DECLARE_EVENT_TABLE()
-
-    wxString m_cur_mw_title;
-
-    bool m_fromCli;
-
 };
 
 UpdaterClass& Updater();

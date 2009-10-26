@@ -11,6 +11,7 @@
 #include "battle.h"
 #include "channel/channel.h"
 #include "user.h"
+#include "ui.h"
 #include "utils/debug.h"
 #include "utils/conversion.h"
 #include "chatpanel.h"
@@ -109,7 +110,7 @@ void Server::_RemoveUser( const wxString& nickname )
 Channel& Server::_AddChannel( const wxString& chan )
 {
   if ( m_channels.ChannelExists( chan ) ) return m_channels.GetChannel( chan );
-  Channel* c = new Channel( *this, ui() );
+  Channel* c = new Channel( *this );
   c->SetName( chan );
 
   m_channels.AddChannel( *c );

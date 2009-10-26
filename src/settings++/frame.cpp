@@ -35,7 +35,7 @@
 #include "tab_simple.h"
 #include "Defs.hpp"
 #include "panel_pathoption.h"
-#include "custom_dialogs.h"
+#include "../utils/customdialogs.h"
 #include "../images/springsettings.xpm"
 #include "helpmenufunctions.h"
 #include "se_utils.h"
@@ -179,17 +179,12 @@ void settings_frame::CreateGUIControls()
 						 uiTab = new tab_ui(notebook,ID_UI);
 						notebook->AddPage(simpleTab,simpleTabCap);
 						notebook->AddPage(uiTab, uiTabCap);
+						SetTitle(_("SpringSettings (simple mode)"));
 					break;
 			}
 			notebook->SetSelection(0);
 
-	if (sett().getMode()==SET_MODE_EXPERT)
-		SetTitle(_("SpringSettings (expert mode)"));
-	else
-		SetTitle(_("SpringSettings (simple mode)"));
-
 	abstract_panel::settingsChanged = false;
-
 }
 
 void settings_frame::initMenuBar() {

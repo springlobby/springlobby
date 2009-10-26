@@ -6,7 +6,7 @@ mmOptionModel::mmOptionModel(wxString name_, wxString key_, wxString description
       section(section_),ct_type_string(style_)
 {
     //set style according to input string
-    if ( style_= _T("yaadda") )
+    if ( style_ == _T("yaadda") )
         ct_type = ct_someothers;
     else
         ct_type = ct_undefined; //lobby will chooose best fit

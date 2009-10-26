@@ -28,7 +28,7 @@
 #include "countrycodes.h"
 #include "mainwindow.h"
 #include "aui/auimanager.h"
-#include "settings++/custom_dialogs.h"
+#include "utils/customdialogs.h"
 #include "settings.h"
 
 template<> SortOrder CustomVirtListCtrl<User*,BattleroomListCtrl>::m_sortorder = SortOrder();
@@ -54,7 +54,7 @@ BEGIN_EVENT_TABLE( BattleroomListCtrl,  BattleroomListCtrl::BaseType )
 END_EVENT_TABLE()
 
 
-BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, IBattle* battle, Ui& ui, bool readonly )
+BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, IBattle* battle, bool readonly )
     : CustomVirtListCtrl< User *,BattleroomListCtrl>(parent, BRLIST_LIST, wxDefaultPosition, wxDefaultSize,
                 wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL, _T("BattleroomListCtrl"), 10, 3, &CompareOneCrit,
                 true /*highlight*/, UserActions::ActHighlight, !readonly /*periodic sort*/ ),
@@ -64,7 +64,6 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, IBattle* battle, Ui& u
     m_sides(0),
     m_spec_item(0),
     m_handicap_item(0),
-    m_ui(ui),
     m_ro(readonly)
 {
   GetAui().manager->AddPane( this, wxLEFT, _T("battleroomlistctrl") );
@@ -102,7 +101,7 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, IBattle* battle, Ui& u
 
   	if ( !m_ro )
 	{
-		m_popup = new UserMenu(this);
+		m_popup = new UserMenu(this, this);
 		wxMenu* m_teams;
 		m_teams = new wxMenu();
 
@@ -157,6 +156,7 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, IBattle* battle, Ui& u
 		m_popup->Append( kick );
 		wxMenuItem* ring = new wxMenuItem( m_popup, BRLIST_RING, wxString( _("Ring") ) , wxEmptyString, wxITEM_NORMAL );
 		m_popup->Append( ring );
+
 	}
 }
 
@@ -344,12 +344,17 @@ void BattleroomListCtrl::OnListRightClick( wxListEvent& event )
         m_popup->Check( item, m_sel_user->BattleStatus().spectator );
         m_popup->Enable( item, true );
         m_popup->Enable( m_popup->FindItem( _("Ring") ), true );
-        bool isSelUserMe =  ( m_ui.IsThisMe(user) );
+        bool isSelUserMe =  ( ui().IsThisMe(user) );
         m_popup->Enable( m_popup->FindItem( _("Kick") ),!isSelUserMe);
     }
 
     wxLogMessage(_T("Popup"));
-    m_popup->EnableItems( !user.BattleStatus().IsBot(), GetSelectedUserNick() );
+    m_popup->EnableItems( !user.BattleStatus().IsBot(), GetSelectedUserNick() );//this updates groups, therefore we need to update the connection to evt handlers too
+    std::vector<long> groups_ids = m_popup->GetGroupIds();
+    for (std::vector<long>::const_iterator it = groups_ids.begin(); it != groups_ids.end(); ++it) {
+        Connect( *it, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnUserMenuAddToGroup ), 0, this );
+    }
+    Connect( GROUP_ID_NEW, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnUserMenuCreateGroup), 0, this );
     PopupMenu( m_popup );
     wxLogMessage(_T("Done"));
 }
@@ -377,7 +382,7 @@ void BattleroomListCtrl::OnColourSelect( wxCommandEvent& /*unused*/ )
 
 	wxColour CurrentColour = m_sel_user->BattleStatus().colour;
 	CurrentColour = GetColourFromUser(this, CurrentColour);
-	if ( !CurrentColour.IsColourOk() ) return;
+	if ( !CurrentColour.IsOk() ) return;
 	if( m_sel_user ) ((Battle*)m_battle)->ForceColour( *m_sel_user, CurrentColour );
 
 }
@@ -773,10 +778,11 @@ void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint& p
 
 void BattleroomListCtrl::OnUserMenuAddToGroup( wxCommandEvent& event )
 {
-    int id  = event.GetId() - GROUP_ID;
+    int id  = event.GetId();
     wxString groupname = m_popup->GetGroupByEvtID(id);
     wxString nick = GetSelectedUserNick();
     useractions().AddUserToGroup( groupname, nick );
+    Disconnect( GROUP_ID_NEW, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnUserMenuCreateGroup), 0, this );
 }
 
 void BattleroomListCtrl::OnUserMenuDeleteFromGroup( wxCommandEvent& /*unused*/ )

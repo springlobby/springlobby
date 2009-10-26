@@ -17,6 +17,7 @@
 #include <wx/icon.h>
 #include <wx/tooltip.h>
 #include <wx/log.h>
+#include <wx/textctrl.h>
 
 #include "connectwindow.h"
 #include "settings.h"
@@ -25,7 +26,7 @@
 #include "utils/controls.h"
 #include "utils/tasutil.h"
 
-#include "settings++/custom_dialogs.h"
+#include "utils/customdialogs.h"
 
 // Define events.
 BEGIN_EVENT_TABLE(ConnectWindow, wxDialog)
@@ -81,7 +82,7 @@ ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
 
     m_acc_note_line = new wxStaticLine( m_login_tab );
 
-    m_note_lbl = new wxStaticText( m_login_tab, -1, _("Note: If you do not have an account, you\n can register one for free under the\n\"Register\" tab.") );
+    m_note_lbl = new wxStaticText( m_login_tab, -1, _("Note: If you do not have an account, you\n can register one for free on the\n\"Register\" tab.") );
 
     m_ok_btn =     new wxButton( this, wxID_OK,     _("Ok") );
     m_cancel_btn = new wxButton( this, wxID_CANCEL, _("Cancel") );

@@ -22,7 +22,7 @@ src/crashreport.cpp
 src/filelister/filelistctrl.cpp
 src/filelister/filelistdialog.cpp
 src/filelister/filelistfilter.cpp
-src/globalevents.cpp
+src/utils/globalevents.cpp
 src/groupoptionspanel.cpp
 src/Helper/imageviewer.cpp
 src/Helper/wxtextctrlhist.h

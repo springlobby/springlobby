@@ -23,6 +23,7 @@
 #include "mainwindow.h"
 #include "countrycodes.h"
 #include "chatpanel.h"
+#include "chatpanelmenu.h"
 #include "userlist.h"
 #include "usermenu.h"
 #include "Helper/sortutil.h"

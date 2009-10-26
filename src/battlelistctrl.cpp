@@ -13,7 +13,7 @@
 #include "server.h"
 #include "countrycodes.h"
 #include "settings.h"
-#include "settings++/custom_dialogs.h"
+#include "utils/customdialogs.h"
 #include "useractions.h"
 #include "Helper/sortutil.h"
 #include "aui/auimanager.h"
@@ -32,12 +32,11 @@ BEGIN_EVENT_TABLE(BattleListCtrl, BattleListCtrl::BaseType )
 #endif
 END_EVENT_TABLE()
 
-BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui )
+BattleListCtrl::BattleListCtrl( wxWindow* parent )
     : CustomVirtListCtrl< IBattle *,BattleListCtrl>(parent, BLIST_LIST, wxDefaultPosition, wxDefaultSize,
             wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("BattleListCtrl"), 10, 4, &CompareOneCrit,
             true /*highlight*/, UserActions::ActHighlight, true /*periodic sort*/ ),
-    m_popup( 0 ),
-    m_ui(ui)
+    m_popup( 0 )
 {
     GetAui().manager->AddPane( this, wxLEFT, _T("battlelistctrl") );
 
@@ -137,6 +136,7 @@ int BattleListCtrl::GetItemColumnImage(long item, long column) const
         case 4: return battle.MapExists() ? icons().ICON_EXISTS : icons().ICON_NEXISTS;
         case 5: return battle.ModExists() ? icons().ICON_EXISTS : icons().ICON_NEXISTS;
     }
+    return -1; // simply to avoid compiler warning
 }
 
 wxListItemAttr* BattleListCtrl::GetItemAttr(long item) const
@@ -214,7 +214,7 @@ void BattleListCtrl::OnDLMap( wxCommandEvent& /*unused*/  )
 {
     if ( m_selected_index > 0 &&  (long)m_data.size() > m_selected_index ) {
         DataType dt = m_data[m_selected_index];
-        m_ui.DownloadMap( dt->GetHostMapHash(), dt->GetHostMapName() );
+        ui().DownloadMap( dt->GetHostMapHash(), dt->GetHostMapName() );
     }
 }
 
@@ -222,7 +222,7 @@ void BattleListCtrl::OnDLMod( wxCommandEvent& /*unused*/  )
 {
     if ( m_selected_index > 0 &&  (long)m_data.size() > m_selected_index ) {
         DataType dt = m_data[m_selected_index];
-        m_ui.DownloadMod( dt->GetHostModHash(), dt->GetHostModName() );
+        ui().DownloadMod( dt->GetHostModHash(), dt->GetHostModName() );
     }
 }
 
@@ -265,6 +265,7 @@ int BattleListCtrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir )
         case 9: return dir * compareSimple( u1->GetMaxPlayers(), u2->GetMaxPlayers() );
         default: return 0;
     }
+    return 0; // simply to avoid compiler warning
 }
 
 int BattleListCtrl::CompareStatus( DataType u1, DataType u2 )

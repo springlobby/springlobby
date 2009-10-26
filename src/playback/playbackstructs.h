@@ -14,7 +14,8 @@ struct Replay
     wxString ModName;
     wxString SpringVersion;
     wxString Filename;
-    wxString date;
+    time_t date;
+    wxString date_string;
     OfflineBattle battle;
     Replay():id(0),playernum(0),can_watch(false),duration(0),size(0){};
 
@@ -32,7 +33,8 @@ struct Savegame
     wxString ModName;
     wxString SpringVersion;
     wxString Filename;
-    wxString date;
+    time_t date;
+    wxString date_string;
     OfflineBattle battle;
     Savegame():id(0),playernum(0),can_watch(false),duration(0),size(0){};
 

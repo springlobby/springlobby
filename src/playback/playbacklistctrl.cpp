@@ -157,7 +157,7 @@ void PlaybackListCtrl<PlaybackType>::SetTipWindowText( const long item_hit, cons
     {
         switch (column) {
             case 0: // date
-            m_tiptext = replay.date;
+            m_tiptext = replay.date_string;
                 break;
             case 1: // modname
                 m_tiptext = replay.ModName;
@@ -192,7 +192,7 @@ wxString PlaybackListCtrl<PlaybackType>::GetItemText(long item, long column) con
                         (replay.duration%3600)/60, (replay.duration%60)/60 ) ;
 
     switch ( column ) {
-        case 0: return replay.date;
+        case 0: return replay.date_string;
         case 1: return replay.battle.GetHostModName();
         case 2: return replay.battle.GetHostMapName();
         case 3: return wxString::Format(_T("%d"),replay.battle.GetNumUsers() - replay.battle.GetSpectators() );
@@ -243,7 +243,7 @@ wxListItemAttr* PlaybackListCtrl<PlaybackType>::GetItemAttr(long /*unused*/) con
 template <class PlaybackType>
 void PlaybackListCtrl<PlaybackType>::RemovePlayback( const int index )
 {
-    if ( index != -1 && index < m_data.size() ) {
+    if ( index != -1 && index < long(m_data.size()) ) {
         m_data.erase( m_data.begin() + index );
         SetItemCount( m_data.size() );
         RefreshVisibleItems( );

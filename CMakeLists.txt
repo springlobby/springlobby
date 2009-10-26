@@ -207,6 +207,17 @@ ENDIF( OPTION_TORRENT_SYSTEM )
 INCLUDE_DIRECTORIES(${SpringLobby_SOURCE_DIR} ${Settings_SOURCE_DIR} )
 
 SET(SpringLobbySrc
+	src/updater/updatermainwindow.cpp
+	src/utils/activitynotice.cpp
+	src/chatpanelmenu.cpp
+	src/customizations.cpp
+	src/gui/gradientpanel.cpp
+	src/gui/wxgradientbutton.cpp
+	src/gui/skirmish_dialog.cpp
+	src/gui/wxbackgroundimage.cpp
+	src/gui/simplefront.cpp
+	src/updater/updatermainwindow.cpp
+	src/utils/activitynotice.cpp
 	src/aui/slbook.cpp
 	src/utils/math.cpp
 	src/utils/misc.cpp
@@ -216,6 +227,9 @@ SET(SpringLobbySrc
 	src/utils/tasutil.cpp
 	src/utils/sltipwin.cpp
 	src/utils/controls.cpp
+	src/utils/globalevents.cpp
+	src/utils/networkevents.cpp
+	src/utils/uievents.cpp
 	src/utils/md5.c
 	src/updater/updater.cpp
 	src/updater/versionchecker.cpp
@@ -230,7 +244,7 @@ SET(SpringLobbySrc
 	src/filelister/filelistdialog.cpp
 	src/filelister/filelistfilter.cpp
 	src/aui/auimanager.cpp
-        src/aui/artprovider.cpp
+	src/aui/artprovider.cpp
 	src/autobalancedialog.cpp
 	src/autohost.cpp
 	src/channel/autojoinchanneldialog.cpp
@@ -258,7 +272,6 @@ SET(SpringLobbySrc
 	src/crashreport.cpp
 	src/customlistctrl.cpp
 	src/flagimages.cpp
-	src/globalevents.cpp
 	src/groupoptionspanel.cpp
 	src/hostbattledialog.cpp
 	src/ibattle.cpp
@@ -319,7 +332,7 @@ SET(SpringLobbySrc
 )
 
 SET(SettingsSrc
-	src/settings++/custom_dialogs.cpp
+	src/utils/customdialogs.cpp
 	src/settings++/frame.cpp
 	src/settings++/helpmenufunctions.cpp
 	src/settings++/panel_pathoption.cpp
@@ -351,6 +364,7 @@ SET(SLSharedWithSettings
 	src/thread.cpp
 	src/spinctld.cpp
 	src/globalsmanager.cpp
+	src/utils/globalevents.cpp
 	src/mmoptionmodel.cpp
 	src/mmoptionswrapper.cpp
 )

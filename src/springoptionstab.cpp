@@ -37,7 +37,8 @@
 #include "uiutils.h"
 #include "settings.h"
 #include "mainwindow.h"
-#include "settings++/custom_dialogs.h"
+#include "utils/customdialogs.h"
+
 
 BEGIN_EVENT_TABLE( SpringOptionsTab, wxPanel )
 
@@ -52,9 +53,10 @@ BEGIN_EVENT_TABLE( SpringOptionsTab, wxPanel )
 END_EVENT_TABLE()
 
 
-SpringOptionsTab::SpringOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( parent, -1 ), m_ui( ui )
+SpringOptionsTab::SpringOptionsTab( wxWindow* parent )
+    : wxScrolledWindow( parent, -1 )
 {
-	m_dontsearch_chkbox = new wxCheckBox( this, SPRING_DONTSEARCH, _( "Search only in current installed path" ), wxDefaultPosition, wxSize( -1, CONTROL_HEIGHT ) );
+	m_dontsearch_chkbox = new wxCheckBox( this, SPRING_DONTSEARCH, _("Search only in current installed path"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
 	m_dontsearch_chkbox->SetValue( sett().GetSearchSpringOnlyInSLPath() );
 #ifndef __WXMSW__
 	m_dontsearch_chkbox->Disable();
@@ -117,7 +119,7 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindo
 
 	SetSizer( m_main_sizer );
 
-	SetScrollRate( 3, 3 );
+	SetScrollRate( SCROLL_RATE, SCROLL_RATE );
 
 	Layout();
 
@@ -218,8 +220,6 @@ void SpringOptionsTab::OnApply( wxCommandEvent& /*unused*/ )
 		                  _( "SpringLobby is unable to load your UnitSync library.\n\nYou might want to take another look at your unitsync setting." ),
 		                  _( "Spring error" ), wxOK );
 	}
-
-	m_ui.mw().OnUnitSyncReloaded();
 }
 
 

@@ -17,7 +17,6 @@
 #include "utils/debug.h"
 #include "socket.h"
 #include "base64.h"
-#include "globalevents.h"
 
 #include <libtorrent/entry.hpp>
 #include <libtorrent/session.hpp>
@@ -51,8 +50,9 @@
 #include <wx/event.h>
 
 #include "torrentwrapper.h"
-#include "settings++/custom_dialogs.h"
+#include "utils/customdialogs.h"
 #include "globalsmanager.h"
+#include "utils/globalevents.h"
 
 
 /** Get the name of the Spring data subdirectory that corresponds to a
@@ -515,6 +515,16 @@ bool TorrentWrapper::RemoveTorrentByHash( const wxString& hash )
 }
 
 
+P2P::FileStatus TorrentWrapper::GetTorrentStatusByHash(const wxString &hash)
+{
+	TorrentTable::PRow row=GetTorrentTable().RowByHash(hash);
+    if (!row.ok())
+		return P2P::not_stored;
+
+	libtorrent::torrent_handle handle = row->handle;
+	return row->status;
+}
+
 
 int TorrentWrapper::GetTorrentSystemStatus()
 {
@@ -699,9 +709,9 @@ bool TorrentWrapper::RemoveTorrentByRow( const TorrentTable::PRow& row )
 }
 
 
-std::map<int,TorrentInfos> TorrentWrapper::CollectGuiInfos()
+std::map<wxString,TorrentInfos> TorrentWrapper::CollectGuiInfos()
 {
-    std::map<int,TorrentInfos> ret;
+    std::map<wxString,TorrentInfos> ret;
     try
     {
         TorrentInfos globalinfos;
@@ -714,7 +724,7 @@ std::map<int,TorrentInfos> TorrentWrapper::CollectGuiInfos()
         globalinfos.inspeed = s.download_rate;
         globalinfos.numcopies = 0.0f;
         globalinfos.filesize = 0;
-        ret[0] = globalinfos;
+        ret[wxString(_T("global"))] = globalinfos;
 
         if ( ingame || !IsConnectedToP2PSystem()  ) return ret; // stop updating the gui if disconneted
 
@@ -732,12 +742,18 @@ std::map<int,TorrentInfos> TorrentWrapper::CollectGuiInfos()
             CurrentTorrent.numcopies = s.distributed_copies;
             CurrentTorrent.filesize = i->get_torrent_info().total_size();
 
+			int eta_seconds = -1;
+			if ( CurrentTorrent.progress > 0 && CurrentTorrent.inspeed > 0)
+				eta_seconds = int (  (CurrentTorrent.filesize - CurrentTorrent.downloaded ) / CurrentTorrent.inspeed );
+
+			CurrentTorrent.eta = eta_seconds;
+
             TorrentTable::PRow row=GetTorrentTable().RowByHandle(*i);
             if (!row.ok()) continue;
             CurrentTorrent.hash=row->hash;
             CurrentTorrent.downloadstatus = row->status;
 
-            ret[s2l(CurrentTorrent.hash)] = CurrentTorrent;
+            ret[CurrentTorrent.hash] = CurrentTorrent;
         }
     }
     catch (std::exception& e)
@@ -755,7 +771,8 @@ std::map<int,TorrentInfos> TorrentWrapper::CollectGuiInfos()
         QueuedTorrent.hash = (*it)->hash;
         QueuedTorrent.downloadstatus = P2P::queued;
         QueuedTorrent.name=(*it)->name;
-        ret[s2l(QueuedTorrent.hash)] = QueuedTorrent;
+		QueuedTorrent.eta = -1;
+        ret[QueuedTorrent.hash] = QueuedTorrent;
     }
 
     return ret;
@@ -1191,8 +1208,7 @@ void TorrentWrapper::RemoveUnneededTorrents()
 
                 GetTorrentTable().AddRowToDependencyCheckQueue( it->second );
 
-                wxCommandEvent refreshevt(UnitSyncReloadRequest); // request an unitsync reload
-                wxPostEvent( &SL_GlobalEvtHandler::GetSL_GlobalEvtHandler(), refreshevt );
+                GetGlobalEventSender(GlobalEvents::UnitSyncReloadRequest).SendEvent( 0 ); // request an unitsync reload
             }
             catch (std::exception& e)
             {

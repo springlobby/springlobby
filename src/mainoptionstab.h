@@ -25,7 +25,7 @@ class LobbyOptionsTab;
 class MainOptionsTab : public wxScrolledWindow
 {
 	public:
-		MainOptionsTab( wxWindow* parent, Ui& ui );
+		MainOptionsTab( wxWindow* parent );
 		~MainOptionsTab();
 
 		/** \brief delegate the data setting to memeber panels */
@@ -36,6 +36,8 @@ class MainOptionsTab : public wxScrolledWindow
 		void SetSelection( const unsigned int page );
 		GroupOptionsPanel& GetGroupOptionsPanel();
 
+        void LoadPerspective( const wxString& perspective_name = wxEmptyString );
+        void SavePerspective( const wxString& perspective_name = wxEmptyString );
 
 	protected:
 		wxBoxSizer* m_main_sizer;
@@ -54,8 +56,6 @@ class MainOptionsTab : public wxScrolledWindow
 		wxButton* m_apply_btn;
 
 		wxBoxSizer* m_button_sizer;
-
-		Ui& m_ui;
 
 		enum {
 			OPTIONS_TABS = wxID_HIGHEST,

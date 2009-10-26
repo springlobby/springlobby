@@ -36,6 +36,7 @@
 #include "battle.h"
 #include "utils/conversion.h"
 #include "utils/debug.h"
+#include "defines.h"
 #include "battleroomlistctrl.h"
 #include "chatpanel.h"
 #include "mapctrl.h"
@@ -43,7 +44,7 @@
 #include "addbotdialog.h"
 #include "server.h"
 #include "iconimagelist.h"
-#include "settings++/custom_dialogs.h"
+#include "utils/customdialogs.h"
 #include "autobalancedialog.h"
 #include "settings.h"
 #include "Helper/colorbutton.h"
@@ -117,9 +118,8 @@ class MyStrings : public wxArrayString
 const MyStrings<SPRING_MAX_TEAMS> team_choices;
 const MyStrings<SPRING_MAX_ALLIES> ally_choices;
 
-BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle )
+BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle& battle )
     : wxScrolledWindow( parent, -1 ),
-    m_ui( ui ),
     m_battle( battle ),
     m_map_dlg( 0 )
 {
@@ -131,7 +131,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle )
 	UserBattleStatus& myself = m_battle.GetMe().BattleStatus();
 
 	m_player_panel = new wxScrolledWindow( m_splitter , -1 );
-	m_player_panel->SetScrollRate( 3, 3 );
+	m_player_panel->SetScrollRate( SCROLL_RATE, SCROLL_RATE );
 	m_team_sel = new wxComboBox( m_player_panel, BROOM_TEAMSEL, _T( "1" ), wxDefaultPosition, wxSize( 50, CONTROL_HEIGHT ), team_choices );
 	m_team_sel->SetToolTip( TE( _( "Players with the same team number share control of their units." ) ) );
 	m_ally_sel = new wxComboBox( m_player_panel, BROOM_ALLYSEL, _T( "1" ), wxDefaultPosition, wxSize( 50, CONTROL_HEIGHT ), ally_choices );
@@ -166,14 +166,14 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle )
 
 	m_map_combo = new wxComboBox( this, BROOM_MAP_SEL, _T( "" ), wxDefaultPosition, wxDefaultSize );
 
-	m_minimap = new MapCtrl( this, 162, &m_battle, m_ui, true, true, true, false );
+	m_minimap = new MapCtrl( this, 162, &m_battle, true, true, true, false );
 	m_minimap->SetToolTip( TE( _( "A preview of the selected map.  You can see the starting positions, or (if set) starting boxes." ) ) );
 
 	m_browse_map_btn = new wxButton( this, BROOM_MAP_BROWSE, _( "Map" ), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
 	m_browse_map_btn->SetSize( m_browse_map_btn->GetSize().GetWidth() * 2 , m_browse_map_btn->GetSize().GetHeight() ) ; // has 0 effect
 
-	m_players = new BattleroomListCtrl( m_player_panel, ( IBattle* )&battle, m_ui, false );
-	m_chat = new ChatPanel( m_splitter, m_ui, battle );
+	m_players = new BattleroomListCtrl( m_player_panel, ( IBattle* )&battle, false );
+	m_chat = new ChatPanel( m_splitter, battle );
 
 	m_command_line = new wxStaticLine( this, -1, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
 
@@ -392,7 +392,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Ui& ui, Battle& battle )
 	UpdateBattleInfo( wxString::Format( _T( "%d_mapname" ), OptionsWrapper::PrivateOptions ) );
 	UpdateBattleInfo();
 
-	SetScrollRate( 3, 3 );
+	SetScrollRate( SCROLL_RATE, SCROLL_RATE );
 	SetSizer( m_main_sizer );
 	Layout();
 	unsigned int widthfraction = m_opts_list->GetClientSize().GetWidth() / 3;
@@ -596,7 +596,7 @@ void BattleRoomTab::OnStart( wxCommandEvent& /*unused*/ )
 
 	m_battle.SaveMapDefaults(); // save map presets
 
-	m_ui.StartHostedBattle();
+    ui().StartHostedBattle();
 }
 
 
@@ -679,7 +679,7 @@ void BattleRoomTab::OnAddBot( wxCommandEvent& /*unused*/ )
 		bs.aiversion = dlg.GetAIVersion();
 		bs.aitype = dlg.GetAIType();
 		bs.owner = m_battle.GetMe().GetNick();
-		m_ui.GetServer().AddBot( m_battle.GetBattleId(), dlg.GetNick(), bs );
+		ui().GetServer().AddBot( m_battle.GetBattleId(), dlg.GetNick(), bs );
 	}
 }
 
@@ -746,12 +746,12 @@ void BattleRoomTab::OnAllySel( wxCommandEvent& /*unused*/ )
 
 void BattleRoomTab::OnColourSel( wxCommandEvent& /*unused*/ )
 {
-	User& u = m_battle.GetMe();
-	wxColour CurrentColour = u.BattleStatus().colour;
-	CurrentColour = GetColourFromUser( this, CurrentColour );
-	if ( !CurrentColour.IsColourOk() ) return;
-	sett().SetBattleLastColour( CurrentColour );
-	m_battle.ForceColour( u, CurrentColour );
+    User& u = m_battle.GetMe();
+    wxColour CurrentColour = u.BattleStatus().colour;
+    CurrentColour = GetColourFromUser(this, CurrentColour);
+    if ( !CurrentColour.IsOk() ) return;
+    sett().SetBattleLastColour( CurrentColour );
+    m_battle.ForceColour( u, CurrentColour );
 }
 
 
@@ -838,9 +838,9 @@ void BattleRoomTab::OnUserLeft( User& user )
 }
 
 
-void BattleRoomTab::OnUnitSyncReloaded()
+void BattleRoomTab::OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ )
 {
-	m_minimap->UpdateMinimap();
+	//m_minimap->UpdateMinimap();//should happen automagically now
 	ReloadMaplist();
 	UpdateBattleInfo();
 	m_battle.SendMyBattleStatus(); // This should reset sync status.
@@ -908,7 +908,7 @@ void BattleRoomTab::OnSetModDefaultPreset( wxCommandEvent& /*unused*/ )
 void BattleRoomTab::OnMapBrowse( wxCommandEvent& /*unused*/ )
 {
 	wxLogDebugFunc( _T( "" ) );
-	m_map_dlg = new MapSelectDialog ( ( wxWindow* )&m_ui.mw(), m_ui );
+	m_map_dlg = new MapSelectDialog ( ( wxWindow* )&ui().mw() );
 
 	if ( m_map_dlg->ShowModal() == wxID_OK && m_map_dlg->GetSelectedMap() != NULL )
 	{

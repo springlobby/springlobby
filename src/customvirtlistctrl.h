@@ -246,7 +246,7 @@ public:
     //! does nothing
     void noOp(wxMouseEvent& event);
     //! automatically get saved column width if already saved, otherwise use parameter and save new width
-    virtual bool SetColumnWidth(int col, int width);
+    virtual bool SetColumnWidth(int col, int& width);
     //! reset columns with current set size (only effects columns with auto-size)
     void ResetColumnSizes();
 

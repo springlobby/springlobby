@@ -2,6 +2,7 @@
 #include "misc.h"
 
 #include "math.h"
+#include "../settings.h"
 
 #include <wx/string.h>
 #include <wx/arrstr.h>
@@ -55,5 +56,3 @@ wxString GetBestMatch(const wxArrayString& a, const wxString& s, double* distanc
     if (minDistanceIndex == -1) return _T("");
     return a[minDistanceIndex];
 }
-
-

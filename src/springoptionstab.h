@@ -16,7 +16,7 @@ class wxCheckBox;
 class SpringOptionsTab : public wxScrolledWindow
 {
   public:
-    SpringOptionsTab( wxWindow* parent, Ui& ui );
+    SpringOptionsTab( wxWindow* parent );
     ~SpringOptionsTab();
 
     void DoRestore();
@@ -71,8 +71,6 @@ class SpringOptionsTab : public wxScrolledWindow
     wxBoxSizer* m_sync_loc_sizer;
 
     wxCheckBox* m_dontsearch_chkbox;
-
-    Ui& m_ui;
 
     enum {
         SPRING_EXECBROWSE = wxID_HIGHEST,

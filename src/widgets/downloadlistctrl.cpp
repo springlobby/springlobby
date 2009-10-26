@@ -68,7 +68,7 @@ void WidgetDownloadListctrl::AddWidget( const Widget widget )
 
 wxString WidgetDownloadListctrl::GetItemText(long item, long column) const
 {
-    if ( item > m_data.size() || item < 0 )
+    if ( item > long(m_data.size()) || item < 0 )
         return wxEmptyString;
 
     const Widget& widget = m_data[item];

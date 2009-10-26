@@ -16,6 +16,7 @@
 #include "utils/debug.h"
 #include "utils/conversion.h"
 #include "utils/math.h"
+#include "utils/controls.h"
 #include "mainwindow.h"
 #include "channel/channel.h"
 #include "user.h"
@@ -39,9 +40,8 @@ BEGIN_EVENT_TABLE( MainChatTab, wxPanel )
 END_EVENT_TABLE()
 
 
-MainChatTab::MainChatTab( wxWindow* parent, Ui& ui )
-    : wxScrolledWindow( parent, -1, wxDefaultPosition, wxDefaultSize, 0, wxPanelNameStr ),
-    m_ui( ui )
+MainChatTab::MainChatTab( wxWindow* parent )
+    : wxScrolledWindow( parent, -1, wxDefaultPosition, wxDefaultSize, 0, wxPanelNameStr )
 {
 	GetAui().manager->AddPane( this, wxLEFT, _T( "mainchattab" ) );
 
@@ -50,7 +50,7 @@ MainChatTab::MainChatTab( wxWindow* parent, Ui& ui )
 
 	m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
-	m_chat_tabs = new SLNotebook( this, CHAT_TABS, wxDefaultPosition, wxDefaultSize, wxAUI_NB_DEFAULT_STYLE | wxAUI_NB_TOP | wxAUI_NB_TAB_EXTERNAL_MOVE | wxAUI_NB_WINDOWLIST_BUTTON );
+	m_chat_tabs = new SLChatNotebook( this, CHAT_TABS, wxDefaultPosition, wxDefaultSize, wxAUI_NB_DEFAULT_STYLE | wxAUI_NB_TOP | wxAUI_NB_TAB_EXTERNAL_MOVE | wxAUI_NB_WINDOWLIST_BUTTON );
 	m_chat_tabs ->SetArtProvider( new SLArtProvider );
 
 	wxBitmap userchat ( userchat_xpm ); //*charArr2wxBitmap(userchat_png, sizeof(userchat_png) );
@@ -75,7 +75,8 @@ MainChatTab::MainChatTab( wxWindow* parent, Ui& ui )
 
 	SetSizer( m_main_sizer );
 	m_main_sizer->SetSizeHints( this );
-	SetScrollRate( 3, 3 );
+	SetScrollRate( SCROLL_RATE, SCROLL_RATE );
+
 	Layout();
 }
 
@@ -189,15 +190,15 @@ void MainChatTab::RejoinChannels()
 			catch ( ... ) {}
 			if ( !alreadyin )
 			{
-				m_ui.GetServer().JoinChannel( name, _T( "" ) );
-				tmp->SetChannel( &m_ui.GetServer().GetChannel( name ) );
+				ui().GetServer().JoinChannel( name, _T( "" ) );
+				tmp->SetChannel( &ui().GetServer().GetChannel( name ) );
 			}
 
 		} else if ( tmp->GetPanelType() == CPT_User )
 		{
 
 			wxString name = m_chat_tabs->GetPageText( i );
-			if ( m_ui.GetServer().UserExists( name ) ) tmp->SetUser( &m_ui.GetServer().GetUser( name ) );
+			if ( ui().GetServer().UserExists( name ) ) tmp->SetUser( &ui().GetServer().GetUser( name ) );
 
 		}
 	}
@@ -218,7 +219,7 @@ ChatPanel* MainChatTab::AddChatPanel( Channel& channel )
 		}
 	}
 
-	ChatPanel* chat = new ChatPanel( m_chat_tabs, m_ui, channel, m_imagelist );
+	ChatPanel* chat = new ChatPanel( m_chat_tabs, channel, m_imagelist );
 	m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, channel.GetName(), true, wxBitmap( channel_xpm ) );
 	chat->FocusInputBox();
 	return chat;
@@ -238,7 +239,7 @@ ChatPanel* MainChatTab::AddChatPanel( Server& server, const wxString& name )
 		}
 	}
 
-	ChatPanel* chat = new ChatPanel( m_chat_tabs, m_ui, server, m_imagelist );
+	ChatPanel* chat = new ChatPanel( m_chat_tabs, server, m_imagelist );
 	m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, name, true, wxBitmap( server_xpm ) );
 	return chat;
 }
@@ -256,7 +257,7 @@ ChatPanel* MainChatTab::AddChatPanel( const User& user )
 		}
 	}
 	int selection = m_chat_tabs->GetSelection();
-	ChatPanel* chat = new ChatPanel( m_chat_tabs, m_ui, user, m_imagelist );
+	ChatPanel* chat = new ChatPanel( m_chat_tabs, user, m_imagelist );
 	m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, user.GetNick(), true, wxBitmap( userchat_xpm ) );
 	if ( selection > 0 ) m_chat_tabs->SetSelection( selection );
 	return chat;
@@ -359,3 +360,12 @@ bool MainChatTab::RemoveChatPanel( ChatPanel* panel )
 	return false;
 }
 
+void MainChatTab::LoadPerspective( const wxString& perspective_name  )
+{
+    LoadNotebookPerspective( m_chat_tabs, perspective_name );
+}
+
+void MainChatTab::SavePerspective( const wxString& perspective_name )
+{
+    SaveNotebookPerspective( m_chat_tabs, perspective_name );
+}

@@ -10,7 +10,7 @@
 #include <wx/log.h>
 
 #include "../utils/debug.h"
-#include "../settings++/custom_dialogs.h"
+#include "../utils/customdialogs.h"
 
 
 //! @brief gets latest version from version.springlobby.info via HTTP

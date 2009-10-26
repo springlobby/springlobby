@@ -19,7 +19,7 @@
 #include <wx/checklst.h>
 #include <wx/numdlg.h>
 
-#include "ui.h"
+#include "battleoptionstab.h"
 #include "iunitsync.h"
 #include "ibattle.h"
 #include "utils/controls.h"
@@ -37,8 +37,9 @@ BEGIN_EVENT_TABLE( BattleOptionsTab, wxPanel )
 END_EVENT_TABLE()
 
 
-BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle ):
-		wxScrolledWindow( parent, -1 ), m_ui( ui ), m_battle( battle )
+BattleOptionsTab::BattleOptionsTab( wxWindow* parent,IBattle& battle )
+	: wxScrolledWindow( parent, -1 ),	 
+	m_battle( battle )
 {
 	GetAui().manager->AddPane( this, wxLEFT, _T( "battleoptionstab" ) );
 
@@ -104,7 +105,7 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle ):
 
 	m_main_sizer->Add( m_restr_box, 1, wxALL | wxEXPAND, 5 );
 
-	SetScrollRate( 3, 3 );
+	SetScrollRate( SCROLL_RATE, SCROLL_RATE );
 	this->SetSizer( m_main_sizer );
 	this->Layout();
 

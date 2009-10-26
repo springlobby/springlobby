@@ -71,12 +71,8 @@ class Ui
 
     void Quit();
 
-    void ReloadUnitSync();
-
     void DownloadMap( const wxString& hash, const wxString& name );
     void DownloadMod( const wxString& hash, const wxString& name );
-
-    void OpenWebBrowser( const wxString& url );
 
     bool Ask( const wxString& heading, const wxString& question );
     bool AskText( const wxString& heading, const wxString& question, wxString& answer, long style = wxOK | wxCANCEL | wxCENTRE );
@@ -140,9 +136,6 @@ class Ui
 
     void OnRing( const wxString& from );
 
-    void OnMapInfoCached( const wxString& mapname );
-    void OnMinimapCached( const wxString& mapname );
-    void OnModUnitsCached( const wxString& modname );
     //! ask to download missing map, return true if download attempted
     bool OnPresetRequiringMap( const wxString& mapname );
 
@@ -155,6 +148,10 @@ class Ui
     void ReloadPresetList();
 
     void OpenFileInEditor( const wxString& filepath );
+
+    //! the welcome box, should be called in all code paths directly after MainWindow might be shown for the first time
+    void FirstRunWelcome();
+
 
   protected:
     Server* m_serv;

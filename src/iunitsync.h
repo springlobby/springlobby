@@ -7,6 +7,7 @@
 #include <map>
 
 #include "mmoptionmodel.h"
+#include "utils/globalevents.h"
 
 class wxImage;
 
@@ -163,6 +164,7 @@ class IUnitSync
 
     virtual wxArrayString GetSides( const wxString& modname  ) = 0;
     virtual wxImage GetSidePicture( const wxString& modname, const wxString& SideName ) =0;
+    virtual wxImage GetImage( const wxString& modname, const wxString& image_path ) =0;
 
     virtual int GetNumUnits( const wxString& modname ) = 0;
     virtual wxArrayString GetUnitsList( const wxString& modname ) = 0;
@@ -172,8 +174,8 @@ class IUnitSync
 
     virtual bool IsLoaded() = 0;
 
-		virtual wxString GetDefaultNick() = 0;
-		virtual void SetDefaultNick( const wxString& nick ) = 0;
+    virtual wxString GetDefaultNick() = 0;
+    virtual void SetDefaultNick( const wxString& nick ) = 0;
 
     virtual wxString GetSpringVersion() = 0;
     virtual bool VersionSupports( GameFeature feature ) = 0;
@@ -182,7 +184,8 @@ class IUnitSync
     virtual wxArrayString GetAIInfos( int index ) = 0;
     virtual GameOptions GetAIOptions( const wxString& modname, int index ) = 0;
 
-    virtual bool ReloadUnitSyncLib() = 0;
+    virtual bool ReloadUnitSyncLib(  ) = 0;
+    virtual void ReloadUnitSyncLib( GlobalEvents::GlobalEventData data ) = 0;
 
     virtual wxArrayString GetPlaybackList( bool ReplayType = true ) = 0; //savegames otherwise
 
@@ -206,6 +209,10 @@ class IUnitSync
     virtual void GetMapExAsync( const wxString& mapname, int evtHandlerId ) = 0;
 
     virtual wxArrayString GetScreenshotFilenames() = 0;
+
+    /** \param name Modname **/
+    virtual GameOptions GetModCustomizations( const wxString& modname ) = 0;
+    virtual GameOptions GetSkirmishOptions( const wxString& modname, const wxString& skirmish_name ) = 0;
 
     private:
         IUnitSync( const IUnitSync& );

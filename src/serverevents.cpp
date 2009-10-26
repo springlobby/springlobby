@@ -19,12 +19,14 @@
 #include "channel/channel.h"
 #include "user.h"
 #include "utils/debug.h"
+#include "uiutils.h"
 #include "server.h"
 #include "battle.h"
 #include "httpdownloader.h"
 #include "settings.h"
+#include "utils/customdialogs.h"
 #include "utils/tasutil.h"
-#include "settings++/custom_dialogs.h"
+
 #ifndef NO_TORRENT_SYSTEM
 #include "torrentwrapper.h"
 #endif
@@ -957,7 +959,7 @@ void ServerEvents::OnFileDownload( bool autolaunch, bool autoclose, bool disconn
 		else filename = _T("Spring installer.exe");
 		m_savepath = sett().GetCurrentUsedDataDir() + filename;
 		wxLogMessage(_T("downloading update in: %s, from: %s"),m_savepath.c_str(),refinedurl.c_str());
-		ui().OpenWebBrowser( url );
+		OpenWebBrowser( url );
 		//new HttpDownloaderThread<ServerEvents>( refinedurl, m_savepath, *this, wxID_HIGHEST + 100, true, false );
 	}
 }

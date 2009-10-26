@@ -250,7 +250,11 @@ int WinExecuteAdmin( const wxString& command, const wxString& params )
 
       shExecInfo.fMask = NULL;
       shExecInfo.hwnd = NULL;
-      shExecInfo.lpVerb = _T("runas");
+
+      //on XP this would open the real runas dialog, which apparently is its own wonder
+      //by default it has a checkbox enabled which makes sl unable to write to the working dir...
+      if ( IsUACenabled() )
+        shExecInfo.lpVerb = _T("runas");
 #ifdef _MSC_VER //some strange compiler stupidity going on here
       shExecInfo.lpFile = command.c_str();
       shExecInfo.lpParameters = params.c_str();
@@ -259,7 +263,6 @@ int WinExecuteAdmin( const wxString& command, const wxString& params )
       shExecInfo.lpParameters = params.wc_str();
 #endif
       shExecInfo.lpDirectory = NULL;
-      shExecInfo.nShow = SW_MAXIMIZE;
       shExecInfo.hInstApp = NULL;
 
       ShellExecuteEx(&shExecInfo);
