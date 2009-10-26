@@ -525,14 +525,6 @@ bool BattleListFilter::FilterBattle( IBattle& battle )
 	if ( !m_filter_status_open->GetValue() && !battle.IsPassworded() && !battle.IsLocked() && !battle.GetInGame() && !battle.IsFull() )
         return false;
 
-  /* "Open": Can we get in, without a password? */
-  if ( m_filter_status_open->IsChecked() &&
-       ( battle.IsPassworded()
-	 || battle.IsLocked()
-	 || battle.GetInGame()
-	 || battle.IsFull() ) )
-    return false;
-
   //Rank Check
 
   /** @fixme Is `nonsenserank' useful, or can it be removed?  Why is
