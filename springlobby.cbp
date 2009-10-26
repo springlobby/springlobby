@@ -2,14 +2,6 @@
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="6" />
 	<Project>
-	<Unit filename="src/chatpanelmenu.h" />
-	<Unit filename="src/chatpanelmenu.cpp" />
-	<Unit filename="src/customizations.h" />
-	<Unit filename="src/customizations.cpp" />
-	<Unit filename="src/gui/gradientpanel.h" />
-	<Unit filename="src/gui/gradientpanel.cpp" />
-	<Unit filename="src/aui/slbook.cpp" />
-	<Unit filename="src/aui/slbook.h" />
 		<Option title="springlobby" />
 		<Option pch_mode="0" />
 		<Option compiler="gcc" />
@@ -20,7 +12,7 @@
 				<Option object_output="obj/GNU/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters='-cl -nc -s -c \&quot;Spring: 1944 SVN\&quot;' />
+				<Option parameters="-cl -nc" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
 					<Add option="-Wall" />
@@ -254,6 +246,8 @@
 		<Unit filename="src/chatoptionstab.h" />
 		<Unit filename="src/chatpanel.cpp" />
 		<Unit filename="src/chatpanel.h" />
+		<Unit filename="src/chatpanelmenu.cpp" />
+		<Unit filename="src/chatpanelmenu.h" />
 		<Unit filename="src/connectwindow.cpp" />
 		<Unit filename="src/connectwindow.h" />
 		<Unit filename="src/countrycodes.cpp" />
@@ -262,6 +256,8 @@
 		<Unit filename="src/crashreport.h" />
 		<Unit filename="src/crc.cpp" />
 		<Unit filename="src/crc.h" />
+		<Unit filename="src/customizations.cpp" />
+		<Unit filename="src/customizations.h" />
 		<Unit filename="src/customlistctrl.cpp" />
 		<Unit filename="src/customlistctrl.h" />
 		<Unit filename="src/customvirtlistctrl.h" />
@@ -279,6 +275,8 @@
 		<Unit filename="src/globalsmanager.h" />
 		<Unit filename="src/groupoptionspanel.cpp" />
 		<Unit filename="src/groupoptionspanel.h" />
+		<Unit filename="src/gui/gradientpanel.cpp" />
+		<Unit filename="src/gui/gradientpanel.h" />
 		<Unit filename="src/gui/simplefront.cpp" />
 		<Unit filename="src/gui/simplefront.h" />
 		<Unit filename="src/gui/skirmish_dialog.cpp" />
