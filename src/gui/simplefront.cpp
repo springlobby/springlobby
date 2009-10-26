@@ -2,7 +2,6 @@
 
 #include "wxbackgroundimage.h"
 #include "../uiutils.h"
-#include "../images/s44.png.h"
 #include "../ui.h"
 #include "../springunitsync.h"
 #include "../springunitsynclib.h"
