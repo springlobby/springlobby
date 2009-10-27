@@ -4327,8 +4327,8 @@ msgid "Use this path"
 msgstr "Исп. этот путь"
 
 #: src/settings++/panel_pathoption.cpp:47
-msgid "unitsync.so on linux, unitsync.dll on windows"
-msgstr "unitsync.so в linux, unitsync.dll в windows"
+msgid "libunitsync.so on linux, unitsync.dll on windows"
+msgstr "libunitsync.so в linux, unitsync.dll в windows"
 
 #: src/settings++/panel_pathoption.cpp:53
 msgid "Path settings"

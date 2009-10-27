@@ -832,12 +832,14 @@ wxString Settings::AutoFindUnitSync()
 	pl.AddEnvList( _T( "LDPATH" ) );
 	pl.AddEnvList( _T( "LD_LIBRARY_PATH" ) );
 
+	pl.Add( _T( "/usr/local/lib/spring" ) );
 	pl.Add( _T( "/usr/local/lib64" ) );
 	pl.Add( _T( "/usr/local/games" ) );
 	pl.Add( _T( "/usr/local/games/lib" ) );
 	pl.Add( _T( "/usr/local/lib" ) );
 	pl.Add( _T( "/usr/lib64" ) );
 	pl.Add( _T( "/usr/lib" ) );
+	pl.Add( _T( "/usr/lib/spring" ) );
 	pl.Add( _T( "/usr/games" ) );
 	pl.Add( _T( "/usr/games/lib64" ) );
 	pl.Add( _T( "/usr/games/lib" ) );

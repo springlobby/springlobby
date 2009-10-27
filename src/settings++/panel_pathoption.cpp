@@ -44,7 +44,7 @@ PathOptionPanel::PathOptionPanel(wxWindow* parent,settings_frame* _origin) : wxP
 
 
 	usync_ctrl = new wxTextCtrl(this,-1, sett().GetCurrentUsedUnitSync(), wxDefaultPosition,wxSize(400,-1));
-	usync_ctrl->SetToolTip(_("unitsync.so on linux, unitsync.dll on windows"));
+	usync_ctrl->SetToolTip(_("libunitsync.so on linux, unitsync.dll on windows"));
 
 	usync_sizer =  new wxFlexGridSizer(1,5,5);
 
@@ -73,9 +73,15 @@ PathOptionPanel::PathOptionPanel(wxWindow* parent,settings_frame* _origin) : wxP
 void PathOptionPanel::SetUsyncPath(wxCommandEvent& /*unused*/)
 {
   wxString lib_ext = wxDynamicLibrary::CanonicalizeName(_T(""), wxDL_MODULE);
+#if defined(__MINGW32__) || defined(__linux__) || defined(__unix__)
+  wxString lib_pre = _T("lib");
+#else
+  wxString lib_pre = _T("");
+#endif
+
   wxFileDialog pic( this, _("Choose an unitsync library"),
                 wxPathOnly( sett().AutoFindSpringBin() ),
-                _T("unitsync") + lib_ext, wxString(_T("Library")) + _T("(*") + lib_ext + _T(")|*") + lib_ext + _T("|") + wxString(_("Any File")) + _T(" (*.*)|*.*")  );
+                lib_pre + _T("unitsync") + lib_ext, wxString(_T("Library")) + _T("(*") + lib_ext + _T(")|*") + lib_ext + _T("|") + wxString(_("Any File")) + _T(" (*.*)|*.*")  );
 	  if ( pic.ShowModal() == wxID_OK )
 		  usync_ctrl->SetValue( pic.GetPath() );
 }
