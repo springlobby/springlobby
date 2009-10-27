@@ -151,7 +151,14 @@ bool SpringLobbyApp::OnInit()
     if ( !wxDirExists( wxStandardPaths::Get().GetUserDataDir() ) )
         wxMkdir( wxStandardPaths::Get().GetUserDataDir() );
 
-    sett().RefreshSpringVersionList();
+#ifdef __WXMSW__
+	sett().SetSearchSpringOnlyInSLPath( sett().GetSearchSpringOnlyInSLPath() );
+#endif
+	sett().SetSpringBinary( sett().GetCurrentUsedSpringIndex(), sett().GetCurrentUsedSpringBinary() );
+	sett().SetUnitSync( sett().GetCurrentUsedSpringIndex(), sett().GetCurrentUsedUnitSync() );
+
+
+	sett().RefreshSpringVersionList();
 
 #ifdef __WXMSW__
     //everything below should not be executing when updating, so we can ensure no MainWindow window is created, torrent system isn't started, etc.

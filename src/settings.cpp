@@ -881,6 +881,11 @@ void Settings::RefreshSpringVersionList()
 		wxString groupname = list[i];
 		usync_paths[groupname] = m_config->Read( _T( "/Spring/Paths/" ) + groupname + _T( "/UnitSyncPath" ), _T( "" ) );
 	}
+	if ( sett().GetSearchSpringOnlyInSLPath() )
+	{
+		usync_paths.clear();
+		usync_paths[sett().GetCurrentUsedSpringIndex()] = sett().GetCurrentUsedUnitSync();
+	}
 	m_spring_versions = susynclib().GetSpringVersionList( usync_paths );
 }
 
