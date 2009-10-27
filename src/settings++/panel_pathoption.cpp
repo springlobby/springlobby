@@ -73,7 +73,7 @@ PathOptionPanel::PathOptionPanel(wxWindow* parent,settings_frame* _origin) : wxP
 void PathOptionPanel::SetUsyncPath(wxCommandEvent& /*unused*/)
 {
   wxString lib_ext = wxDynamicLibrary::CanonicalizeName(_T(""), wxDL_MODULE);
-#if defined(__MINGW32__) || defined(__linux__) || defined(__unix__)
+#if defined(__WXGTK__)
   wxString lib_pre = _T("lib");
 #else
   wxString lib_pre = _T("");
