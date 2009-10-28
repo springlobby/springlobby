@@ -72,14 +72,6 @@ MainOptionsTab::MainOptionsTab( wxWindow* parent )
     m_chat_opts = new ChatOptionsTab( m_tabs );
     m_tabs->AddPage( m_chat_opts, _("Chat"), true, wxIcon(userchat_xpm) );
 
-	m_spring_opts = new SpringOptionsTab( m_tabs );
-	m_tabs->AddPage( m_spring_opts, _( "Spring" ), true, wxIcon( spring_xpm ) );
-
-#ifndef NO_TORRENT_SYSTEM
-	m_torrent_opts = new TorrentOptionsPanel( m_tabs );
-	m_tabs->AddPage( m_torrent_opts, _( "P2P" ), true, charArr2wxBitmap( torrentoptionspanel_icon_png, sizeof( torrentoptionspanel_icon_png ) ) );
-#endif
-
     m_restore_btn = new wxButton( this, wxID_REVERT, _("Restore") );
     m_apply_btn = new wxButton( this, wxID_APPLY, _("Apply") );
 
