@@ -352,9 +352,9 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 				}
 
 				MapInfo infos = battle.LoadMap().info;
-				unsigned int maxpositions = sizeof ( infos.positions ) / sizeof( StartPos );
-				unsigned int copysize = std::min( maxpositions, NumTeams );
-				remap_positions = std::vector<StartPos> ( infos.positions, infos.positions + copysize ); // only add the first x positions
+				unsigned int nummapstartpositions = infos.positions.size();
+				unsigned int copysize = std::min( nummapstartpositions, NumTeams );
+				remap_positions = std::vector<StartPos> ( infos.positions.begin(), infos.positions.begin() + copysize ); // only add the first x positions
 
 				if ( startpostype == IBattle::ST_Random )
 				{

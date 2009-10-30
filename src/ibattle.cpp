@@ -764,7 +764,7 @@ UserPosition IBattle::GetFreePosition()
 {
 	UserPosition ret;
   UnitSyncMap map = LoadMap();
-  for ( int i = 0; i < map.info.posCount; i++ )
+  for ( int i = 0; i < map.info.positions.size(); i++ )
 	{
     bool taken = false;
     for ( unsigned int bi = 0; bi < GetNumUsers(); bi++ )

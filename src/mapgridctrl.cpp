@@ -139,7 +139,7 @@ inline int MapGridCtrl::CompareAspectRatio( const MapData* a, const MapData* b )
 }
 inline int MapGridCtrl::ComparePosCount( const MapData* a, const MapData* b )
 {
-	CMP( posCount );
+	CMP( positions.size() );
 }
 
 #undef CMP2

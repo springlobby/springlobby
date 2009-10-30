@@ -817,15 +817,14 @@ MapInfo SpringUnitSync::_GetMapInfoEx( const wxString& mapname )
         info.maxWind = s2l( cache[6] );
         info.width = s2l( cache[7] );
         info.height = s2l( cache[8] );
-        info.posCount = s2l( cache[9] );
 
         wxArrayString posinfo = wxStringTokenize( cache[10], _T(' '), wxTOKEN_RET_EMPTY );
-        for ( int i = 0; i < info.posCount; i++)
+        for ( int i = 0; i < posinfo.GetCount(); i++)
         {
            StartPos position;
            position.x = s2l( posinfo[i].BeforeFirst( _T('-') ) );
            position.y = s2l( posinfo[i].AfterFirst( _T('-') ) );
-           info.positions[i] = position;
+           info.positions.push_back( position );
         }
 
         unsigned int LineCount = cache.GetCount();
@@ -845,10 +844,9 @@ MapInfo SpringUnitSync::_GetMapInfoEx( const wxString& mapname )
         cache.Add( TowxString( info.maxWind )  );
         cache.Add( TowxString( info.width ) );
         cache.Add( TowxString( info.height ) );
-        cache.Add( TowxString( info.posCount ) );
 
         wxString postring;
-        for ( int i = 0; i < info.posCount; i++)
+        for ( int i = 0; i < info.positions.size(); i++)
         {
            postring << TowxString( info.positions[i].x ) << _T('-') << TowxString( info.positions[i].y ) << _T(' ');
         }
@@ -862,7 +860,6 @@ MapInfo SpringUnitSync::_GetMapInfoEx( const wxString& mapname )
       }
   }
   catch ( ... ) {
-      info.posCount = 0;
       info.width = 1;
       info.height = 1;
   }

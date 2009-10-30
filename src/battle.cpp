@@ -953,7 +953,8 @@ void Battle::FixTeamIDs( BalanceType balance_type, bool support_clans, bool stro
     {
       try
       {
-        numcontrolteams = std::min( numcontrolteams, LoadMap().info.posCount );
+      	int mapposcount = LoadMap().info.positions.size();
+        numcontrolteams = std::min( numcontrolteams, mapposcount );
       }
       catch( assert_exception ) {}
     }
