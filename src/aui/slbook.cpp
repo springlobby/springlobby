@@ -82,6 +82,14 @@ void SLChatNotebook::OnHeaderRightClick(wxAuiNotebookEvent &event)
     PopupMenu(pop);
 }
 
+void SLChatNotebook::DeleteChatPage( size_t i )
+{
+    ChatPanel* cur_page = static_cast<ChatPanel*>( GetPage( i ) );
+    if ( cur_page )
+        cur_page->Part();
+    ParentType::DeletePage( i );
+}
+
 void SLChatNotebook::OnMenuItem( wxCommandEvent& event )
 {
     long id = event.GetId();
@@ -89,11 +97,11 @@ void SLChatNotebook::OnMenuItem( wxCommandEvent& event )
         ui().mw().OnMenuJoin( event );
     }
     else if ( id == ID_CLOSE_TAB ) {
-        DeletePage( GetSelection() );
+        DeleteChatPage( GetSelection() );
     }
     else if ( id == ID_CLOSE_TAB_ALL ) {
         for ( size_t i = 0; i < GetPageCount(); ++i ){
-                DeletePage( i );
+                DeleteChatPage( i );
                 i--;
         }
     }
@@ -103,7 +111,7 @@ void SLChatNotebook::OnMenuItem( wxCommandEvent& event )
         	if ( i == selected )
         	    continue;
             else {
-                DeletePage( i );
+                DeleteChatPage( i );
                 i--;
                 selected--;
         	}
