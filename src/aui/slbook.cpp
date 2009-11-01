@@ -390,6 +390,7 @@ void LoadNotebookPerspective( SLNotebook* notebook, const wxString& perspective_
     if ( !pers.IsEmpty() ) {
         notebook->LoadPerspective( pers );
         notebook->Layout();
+        notebook->FitInside();
         wxWindow* parent = notebook->GetParent();
         if ( parent ) {
             parent->Layout();
