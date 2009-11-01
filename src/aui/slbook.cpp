@@ -8,6 +8,7 @@
 #include "../mainwindow.h"
 
 #include <wx/menu.h>
+#include <wx/scrolwin.h>
 
 static const long ID_CLOSE_TAB          = wxNewId();
 static const long ID_CLOSE_TAB_OTHER    = wxNewId();
@@ -396,13 +397,17 @@ void LoadNotebookPerspective( SLNotebook* notebook, const wxString& perspective_
         }
         #ifdef __WXMSW__
         for( size_t i = 0; i < notebook->GetPageCount(); ++i ) {
-            wxWindow* tmp = notebook->GetPage( i );
-            if ( tmp ) {
-                tmp->Layout();
-                tmp->Fit();
-                tmp->FitInside();
-                tmp->Update();
+            try {
+                wxScrolledWindow* tmp = dynamic_cast<wxScrolledWindow*>( notebook->GetPage( i ) );
+                if ( tmp ) {
+                    tmp->Layout();
+                    tmp->Fit();
+                    tmp->FitInside();
+                    tmp->SetScrollRate( 3, 3 );
+                    tmp->Update();
+                }
             }
+            catch (...) {}
         }
         #endif
     }
