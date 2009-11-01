@@ -353,7 +353,12 @@ bool SLNotebook::LoadPerspective(const wxString& layout) {
         wxAuiNotebookPage& page = m_tabs.GetPage(tab_idx);
         const size_t newpage_idx = dest_tabs->GetPageCount();
         dest_tabs->InsertPage(page.window, page, newpage_idx);
-
+        #ifdef __WXMSW__
+        if (page.window) {
+            page.window->Layout();
+            page.window->FitInside();
+        }
+        #endif
         if (c == wxT('+')) dest_tabs->SetActivePage(newpage_idx);
         else if ( c == wxT('*')) sel_page = tab_idx;
      }
@@ -390,7 +395,6 @@ void LoadNotebookPerspective( SLNotebook* notebook, const wxString& perspective_
     if ( !pers.IsEmpty() ) {
         notebook->LoadPerspective( pers );
         notebook->Layout();
-        notebook->FitInside();
         wxWindow* parent = notebook->GetParent();
         if ( parent ) {
             parent->Layout();
