@@ -506,7 +506,8 @@ void ChatPanel::OnLinkEvent( wxTextUrlEvent& event )
 void ChatPanel::OnChanOpts( wxCommandEvent& /*unused*/ )
 {
   CreatePopup();
-  if ( (m_chan_opts_button == 0) || (m_popup_menu == 0)) return;
+  if ( (m_chan_opts_button == 0) || (m_popup_menu == 0) )
+    return;
   m_chan_opts_button->PopupMenu(m_popup_menu->GetMenu());
 }
 

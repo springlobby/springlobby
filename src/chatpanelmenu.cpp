@@ -22,6 +22,7 @@ ChatPanelMenu::ChatPanelMenu(ChatPanel* parent, bool addChanServ, const wxString
     m_withChanserv( addChanServ )
 {}
 
+//!ATTENTION: _all_ event ids must be handled in ChatPanelMenu::OnMenuItem
 wxMenu* ChatPanelMenu::GetMenu()
 {
     m_menu_all = new wxMenu();
@@ -32,8 +33,6 @@ wxMenu* ChatPanelMenu::GetMenu()
 
     wxMenuItem* copy = new wxMenuItem( m_menu_all, wxID_COPY, _( "Copy" ), wxEmptyString, wxITEM_NORMAL );
     m_menu_all->Append( copy );
-    //      eventID,    eventType,                  member function pointer to be called        userData            instance on which member function is called
-    Connect( wxID_COPY, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTextCtrl::OnCopy, (wxObject*) NULL, (wxEvtHandler*)(m_chatpanel->m_chatlog_text) );
 
     if ( m_chatpanel->m_url_at_pos != _T("") ) {
         wxMenuItem* copylink = new wxMenuItem( m_menu_all, CHAT_MENU_COPYLINK, _( "Copy link location" ), wxEmptyString, wxITEM_NORMAL );
@@ -833,6 +832,9 @@ void ChatPanelMenu::OnMenuItem( wxCommandEvent& event )
 
     else if ( event.GetId() == GROUP_ID_NEW  ) OnUserMenuCreateGroup( event );
     else if ( event.GetId() == GROUP_ID_REMOVE  ) OnUserMenuDeleteFromGroup( event );
+    else if ( event.GetId() == wxID_COPY ) {
+            m_chatpanel->m_chatlog_text->OnCopy(event);
+    }
     else OnUserMenuAddToGroup( event );
 
 }
