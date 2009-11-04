@@ -20,6 +20,7 @@
 
 #ifdef __WXMSW__
  #include <wx/msw/registry.h>
+ #include <wx/platinfo.h>
 #endif
 
 #include <iostream>
@@ -254,7 +255,10 @@ int WinExecuteAdmin( const wxString& command, const wxString& params )
       //on XP this would open the real runas dialog, which apparently is its own wonder
       //by default it has a checkbox enabled which makes sl unable to write to the working dir...
       if ( IsUACenabled() )
-        shExecInfo.lpVerb = _T("runas");
+        if ( IsPreVistaWindows() )
+            shExecInfo.lpVerb = _T("open");
+        else
+            shExecInfo.lpVerb = _T("runas");
 #ifdef _MSC_VER //some strange compiler stupidity going on here
       shExecInfo.lpFile = command.c_str();
       shExecInfo.lpParameters = params.c_str();
@@ -268,5 +272,12 @@ int WinExecuteAdmin( const wxString& command, const wxString& params )
       ShellExecuteEx(&shExecInfo);
 
       return 0;
+}
+#endif
+
+#ifdef __WXMSW__
+bool IsPreVistaWindows()
+{
+    return wxPlatformInfo::GetOSMajorVersion() < 6;
 }
 #endif
