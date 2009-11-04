@@ -278,6 +278,6 @@ int WinExecuteAdmin( const wxString& command, const wxString& params )
 #ifdef __WXMSW__
 bool IsPreVistaWindows()
 {
-    return wxPlatformInfo::GetOSMajorVersion() < 6;
+    return wxPlatformInfo().GetOSMajorVersion() < 6;
 }
 #endif
