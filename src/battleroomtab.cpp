@@ -600,7 +600,7 @@ void BattleRoomTab::OnStart( wxCommandEvent& /*unused*/ )
 	}
 	else
 	{
-		if ( battle.GetFounder().Status().in_game )
+		if ( m_battle.GetFounder().Status().in_game )
 		{
 			if ( !ui().IsSpringRunning() ) m_battle.StartSpring();
 			else customMessageBoxNoModal( SL_MAIN_ICON, _("Spring is already running."), _("Error") );
