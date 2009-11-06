@@ -381,7 +381,6 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle& battle )
 		m_save_btn->Disable();
 		m_delete_btn->Disable();
 		m_default_btn->Disable();
-		m_start_btn->Disable();
 		m_manage_players_btn->Disable();
 		m_lock_chk->Disable();
 		m_autolock_chk->Disable();
@@ -586,17 +585,28 @@ ChatPanel& BattleRoomTab::GetChatPanel()
 
 void BattleRoomTab::OnStart( wxCommandEvent& /*unused*/ )
 {
-	m_battle.GetMe().BattleStatus().ready = true;
-
-	if ( !m_battle.IsEveryoneReady() )
+	if ( m_battle.IsFounderMe() )
 	{
-		int answer = customMessageBox( SL_MAIN_ICON, _( "Some Players are not ready yet\nDo you want to force start?" ), _( "Not ready" ), wxYES_NO );
-		if ( answer == wxNO ) return;
+		m_battle.GetMe().BattleStatus().ready = true;
+		if ( !m_battle.IsEveryoneReady() )
+		{
+			int answer = customMessageBox( SL_MAIN_ICON, _( "Some Players are not ready yet\nDo you want to force start?" ), _( "Not ready" ), wxYES_NO );
+			if ( answer == wxNO ) return;
+		}
+
+		m_battle.SaveMapDefaults(); // save map presets
+
+			ui().StartHostedBattle();
 	}
-
-	m_battle.SaveMapDefaults(); // save map presets
-
-    ui().StartHostedBattle();
+	else
+	{
+		if ( battle.GetFounder().Status().in_game )
+		{
+			if ( !ui().IsSpringRunning() ) m_battle.StartSpring();
+			else customMessageBoxNoModal( SL_MAIN_ICON, _("Spring is already running."), _("Error") );
+		}
+		else customMessageBoxNoModal( SL_MAIN_ICON, _("Host is not ingame."), _("Error") );
+	}
 }
 
 
