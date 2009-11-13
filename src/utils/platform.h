@@ -30,6 +30,10 @@ wxString GetExecutableFolder();
 wxString GetLibExtension();
 wxString GetHostCPUSpeed();
 
+#ifdef __WXMSW__
+bool IsPreVistaWindows();
+#endif
+
 #endif // SPRINGLOBBY_HEADERGUARD_PLATFORM_H
 
 /**
