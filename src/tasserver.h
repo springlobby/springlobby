@@ -172,6 +172,7 @@ class TASServer : public Server
     int m_battle_id;
 
     bool m_server_lanmode;
+    unsigned int m_account_id_count;
 
     wxString m_agreement;
 
