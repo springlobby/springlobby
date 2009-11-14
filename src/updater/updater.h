@@ -23,6 +23,7 @@ protected:
     bool UpdateLocale( const wxString& newdir, bool WaitForReboot );
 
     wxString m_newexe;
+    wxString m_latest_version;
 
     DECLARE_EVENT_TABLE()
 };

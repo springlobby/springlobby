@@ -74,6 +74,7 @@ void UpdaterClass::CheckForUpdates()
 void UpdaterClass::StartUpdate( const wxString& latestVersion )
 {
     wxString sep = wxFileName::GetPathSeparator();
+    m_latest_version = latestVersion;
     wxString currentexe = wxStandardPaths::Get().GetExecutablePath();
     if ( !wxFileName::IsDirWritable( currentexe.BeforeLast( wxFileName::GetPathSeparator() ) + wxFileName::GetPathSeparator() ) )
     {
@@ -87,9 +88,9 @@ void UpdaterClass::StartUpdate( const wxString& latestVersion )
 }
 #endif
 
-wxString GetDownloadUrl()
+wxString UpdaterClass::GetDownloadUrl()
 {
-	return _T("springlobby.info/windows/springlobby-") + latestVersion + _T("-win32.zip");
+	return _T("springlobby.info/windows/springlobby-") + m_latest_version + _T("-win32.zip");
 }
 
 //all messageboxes need to be modal, updater closes immeadiately when receiving the UpdateFinished event
