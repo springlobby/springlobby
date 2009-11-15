@@ -77,6 +77,7 @@ class MainWindow : public wxFrame
     void OnMenuVersion ( wxCommandEvent& event );
     void OnMenuSaveLayout( wxCommandEvent& event );
     void OnMenuLoadLayout( wxCommandEvent& event );
+    void OnMenuResetLayout( wxCommandEvent& event );
     void OnMenuDefaultLayout( wxCommandEvent& event );
     void OnUnitSyncReload( wxCommandEvent& event );
     void OnMenuStartTorrent( wxCommandEvent& event );
@@ -170,6 +171,7 @@ class MainWindow : public wxFrame
         MENU_CHANNELCHOOSER,
         MENU_SAVE_LAYOUT,
         MENU_LOAD_LAYOUT,
+        MENU_RESET_LAYOUT,
         MENU_DEFAULT_LAYOUT,
         MENU_SCREENSHOTS
     };
