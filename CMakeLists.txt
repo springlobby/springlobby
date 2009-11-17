@@ -119,7 +119,7 @@ IF ( OPTION_SOUND )
 		# MESSAGE("sound libs: ${SDL_SOUND_LIBRARIES}")
 		# MESSAGE("mixer libs: ${SDLMIXER_LIBRARY}")
 	ENDIF(CMAKE_CROSSCOMPILING OR NOT WIN32)
-	
+
 	IF(NOT WIN32)
 		# Set include paths and libraries to link.
 		INCLUDE_DIRECTORIES( ${SDL_SOUND_INCLUDE_DIR} ${SDLMIXER_INCLUDE_DIR} )
@@ -207,166 +207,166 @@ ENDIF( OPTION_TORRENT_SYSTEM )
 INCLUDE_DIRECTORIES(${SpringLobby_SOURCE_DIR} ${Settings_SOURCE_DIR} )
 
 SET(SpringLobbySrc
-	src/updater/updatermainwindow.cpp
-	src/utils/activitynotice.cpp
-	src/chatpanelmenu.cpp
-	src/customizations.cpp
-	src/gui/gradientpanel.cpp
-	src/gui/wxgradientbutton.cpp
-	src/gui/skirmish_dialog.cpp
-	src/gui/wxbackgroundimage.cpp
-	src/gui/simplefront.cpp
-	src/updater/updatermainwindow.cpp
-	src/utils/activitynotice.cpp
-	src/aui/slbook.cpp
-	src/utils/math.cpp
-	src/utils/misc.cpp
-	src/utils/debug.cpp
-	src/utils/platform.cpp
-	src/utils/conversion.cpp
-	src/utils/tasutil.cpp
-	src/utils/sltipwin.cpp
-	src/utils/controls.cpp
-	src/utils/globalevents.cpp
-	src/utils/networkevents.cpp
-	src/utils/uievents.cpp
+	src/updater/updatermainwindow
+	src/utils/activitynotice
+	src/chatpanelmenu
+	src/customizations
+	src/gui/gradientpanel
+	src/gui/wxgradientbutton
+	src/gui/skirmish_dialog
+	src/gui/wxbackgroundimage
+	src/gui/simplefront
+	src/updater/updatermainwindow
+	src/utils/activitynotice
+	src/aui/slbook
+	src/utils/math
+	src/utils/misc
+	src/utils/debug
+	src/utils/platform
+	src/utils/conversion
+	src/utils/tasutil
+	src/utils/sltipwin
+	src/utils/controls
+	src/utils/globalevents
+	src/utils/networkevents
+	src/utils/uievents
 	src/utils/md5.c
-	src/updater/updater.cpp
-	src/updater/versionchecker.cpp
-	src/Helper/TextCompletionDatabase.cpp
-	src/Helper/imageviewer.cpp
-	src/Helper/slhtmlwindow.cpp
-	src/channel/channelchooser.cpp
-	src/channel/channelchooserdialog.cpp
-	src/Helper/wxtextctrlhist.cpp
-	src/Helper/colorbutton.cpp
-	src/filelister/filelistctrl.cpp
-	src/filelister/filelistdialog.cpp
-	src/filelister/filelistfilter.cpp
-	src/aui/auimanager.cpp
-	src/aui/artprovider.cpp
-	src/autobalancedialog.cpp
-	src/autohost.cpp
-	src/channel/autojoinchanneldialog.cpp
-	src/addbotdialog.cpp
-	src/agreementdialog.cpp
-	src/base64.cpp
-	src/battle.cpp
-	src/battlelist.cpp
-	src/battlelistctrl.cpp
-	src/battlelistfilter.cpp
-	src/battlelisttab.cpp
-	src/battlemaptab.cpp
-	src/battleoptionstab.cpp
-	src/battleroomlistctrl.cpp
-	src/battleroomtab.cpp
-	src/crc.cpp
-	src/channel/channel.cpp
-	src/channel/channellist.cpp
-	src/channel/channellistctrl.cpp
-	src/chatlog.cpp
-	src/chatoptionstab.cpp
-	src/chatpanel.cpp
-	src/connectwindow.cpp
-	src/countrycodes.cpp
-	src/crashreport.cpp
-	src/customlistctrl.cpp
-	src/flagimages.cpp
-	src/groupoptionspanel.cpp
-	src/hostbattledialog.cpp
-	src/ibattle.cpp
-	src/iconimagelist.cpp
-	src/lobbyoptionstab.cpp
-	src/mainchattab.cpp
-	src/mainjoinbattletab.cpp
-	src/mainoptionstab.cpp
-	src/mainsingleplayertab.cpp
-	src/maintorrenttab.cpp
-	src/mainwindow.cpp
-	src/mapctrl.cpp
-	src/mapgridctrl.cpp
-	src/mapselectdialog.cpp
-	src/mmoptionwindows.cpp
-	src/mmoptionmodel.cpp
-	src/mmoptionswrapper.cpp
-	src/nicklistctrl.cpp
-	src/offlinebattle.cpp
-	src/playback/replaylist.cpp
-	src/playback/savegamelist.cpp
-	src/sdlsound.cpp
-	src/selectusersdialog.cpp
-	src/server.cpp
-	src/serverevents.cpp
-	src/settings.cpp
-	src/singleplayerbattle.cpp
-	src/singleplayertab.cpp
-	src/socket.cpp
-	src/spinctld.cpp
-	src/spring.cpp
-	src/springlobbyapp.cpp
-	src/springoptionstab.cpp
-	src/springprocess.cpp
-	src/springunitsync.cpp
-	src/springunitsynclib.cpp
-	src/tasserver.cpp
-	src/tdfcontainer.cpp
-	src/thread.cpp
-	src/torrentlistctrl.cpp
-	src/torrentoptionspanel.cpp
-	src/torrentwrapper.cpp
-	src/ui.cpp
-	src/uiutils.cpp
-	src/unitsyncthread.cpp
-	src/user.cpp
-	src/useractions.cpp
-	src/userlist.cpp
-	src/userlistctrl.cpp
-	src/widgets/downloadlistctrl.cpp
-	src/widgets/downloaddialog.cpp
-	src/widgets/downloadpanel.cpp
-	src/widgets/infopanel.cpp
-	src/widgets/widget.cpp
-	src/globalsmanager.cpp
-	src/Helper/wxTranslationHelper.cpp
-	src/Helper/tasclientimport.cpp
+	src/updater/updater
+	src/updater/versionchecker
+	src/Helper/TextCompletionDatabase
+	src/Helper/imageviewer
+	src/Helper/slhtmlwindow
+	src/channel/channelchooser
+	src/channel/channelchooserdialog
+	src/Helper/wxtextctrlhist
+	src/Helper/colorbutton
+	src/filelister/filelistctrl
+	src/filelister/filelistdialog
+	src/filelister/filelistfilter
+	src/aui/auimanager
+	src/aui/artprovider
+	src/autobalancedialog
+	src/autohost
+	src/channel/autojoinchanneldialog
+	src/addbotdialog
+	src/agreementdialog
+	src/base64
+	src/battle
+	src/battlelist
+	src/battlelistctrl
+	src/battlelistfilter
+	src/battlelisttab
+	src/battlemaptab
+	src/battleoptionstab
+	src/battleroomlistctrl
+	src/battleroomtab
+	src/crc
+	src/channel/channel
+	src/channel/channellist
+	src/channel/channellistctrl
+	src/chatlog
+	src/chatoptionstab
+	src/chatpanel
+	src/connectwindow
+	src/countrycodes
+	src/crashreport
+	src/customlistctrl
+	src/flagimages
+	src/groupoptionspanel
+	src/hostbattledialog
+	src/ibattle
+	src/iconimagelist
+	src/lobbyoptionstab
+	src/mainchattab
+	src/mainjoinbattletab
+	src/mainoptionstab
+	src/mainsingleplayertab
+	src/maintorrenttab
+	src/mainwindow
+	src/mapctrl
+	src/mapgridctrl
+	src/mapselectdialog
+	src/mmoptionwindows
+	src/mmoptionmodel
+	src/mmoptionswrapper
+	src/nicklistctrl
+	src/offlinebattle
+	src/playback/replaylist
+	src/playback/savegamelist
+	src/sdlsound
+	src/selectusersdialog
+	src/server
+	src/serverevents
+	src/settings
+	src/singleplayerbattle
+	src/singleplayertab
+	src/socket
+	src/spinctld
+	src/spring
+	src/springlobbyapp
+	src/springoptionstab
+	src/springprocess
+	src/springunitsync
+	src/springunitsynclib
+	src/tasserver
+	src/tdfcontainer
+	src/thread
+	src/torrentlistctrl
+	src/torrentoptionspanel
+	src/torrentwrapper
+	src/ui
+	src/uiutils
+	src/unitsyncthread
+	src/user
+	src/useractions
+	src/userlist
+	src/userlistctrl
+	src/widgets/downloadlistctrl
+	src/widgets/downloaddialog
+	src/widgets/downloadpanel
+	src/widgets/infopanel
+	src/widgets/widget
+	src/globalsmanager
+	src/Helper/wxTranslationHelper
+	src/Helper/tasclientimport
 )
 
 SET(SettingsSrc
-	src/utils/customdialogs.cpp
-	src/settings++/frame.cpp
-	src/settings++/helpmenufunctions.cpp
-	src/settings++/panel_pathoption.cpp
-	src/settings++/se_utils.cpp
-	src/settings++/tab_abstract.cpp
-	src/settings++/tab_audio.cpp
-	src/settings++/tab_quality_video.cpp
-	src/settings++/tab_render_detail.cpp
-	src/settings++/tab_simple.cpp
-	src/settings++/tab_ui.cpp
+	src/utils/customdialogs
+	src/settings++/frame
+	src/settings++/helpmenufunctions
+	src/settings++/panel_pathoption
+	src/settings++/se_utils
+	src/settings++/tab_abstract
+	src/settings++/tab_audio
+	src/settings++/tab_quality_video
+	src/settings++/tab_render_detail
+	src/settings++/tab_simple
+	src/settings++/tab_ui
 )
 
 SET(StandAloneSettings
-	src/settings.cpp
-	src/uiutils.cpp
-	src/settings++/Main.cpp
+	src/settings
+	src/uiutils
+	src/settings++/Main
 )
 
 SET(SLSharedWithSettings
-	src/utils/debug.cpp
-	src/utils/platform.cpp
-	src/utils/conversion.cpp
-	src/utils/sltipwin.cpp
-	src/utils/controls.cpp
-	src/updater/versionchecker.cpp
-	src/crashreport.cpp
-	src/springunitsynclib.cpp
-	src/springunitsync.cpp
-	src/thread.cpp
-	src/spinctld.cpp
-	src/globalsmanager.cpp
-	src/utils/globalevents.cpp
-	src/mmoptionmodel.cpp
-	src/mmoptionswrapper.cpp
+	src/utils/debug
+	src/utils/platform
+	src/utils/conversion
+	src/utils/sltipwin
+	src/utils/controls
+	src/updater/versionchecker
+	src/crashreport
+	src/springunitsynclib
+	src/springunitsync
+	src/thread
+	src/spinctld
+	src/globalsmanager
+	src/utils/globalevents
+	src/mmoptionmodel
+	src/mmoptionswrapper
 )
 
 # If we build for windows Systems, we also include the Resource-File containing the Manifest, Icon and other Resources.
@@ -379,12 +379,12 @@ IF(WIN32)
 		SET(SpringSettings_RC_FILE ${CMAKE_CURRENT_BINARY_DIR}/ss_icon.o )
 	ENDIF(MINGW OR CMAKE_CROSSCOMPILING)
 
-	SET(SpringLobbySrc ${SpringLobbySrc} src/Helper/listctrl.cpp)
+	SET(SpringLobbySrc ${SpringLobbySrc} src/Helper/listctrl)
 	SET(SpringLobbySrc ${SpringLobbySrc} src/springlobby.rc)
 	SET(StandAloneSettings ${StandAloneSettings} src/settings++/settings.rc)
 ELSE(WIN32)
 # If we don't build for windows, include some source code checks as pre-build step.
-    ADD_CUSTOM_TARGET(test_susynclib ALL COMMAND tools/test-susynclib.awk src/springunitsynclib.cpp WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
+    ADD_CUSTOM_TARGET(test_susynclib ALL COMMAND tools/test-susynclib.awk src/springunitsynclib WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
 ENDIF(WIN32)
 
 #----------------------------------------------------------------------------------------------------

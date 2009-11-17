@@ -184,6 +184,7 @@ void Server::RequestSpringUpdate()
 
 wxArrayString Server::GetRelayHostList()
 {
+	if ( UserExists( _T("RelayHostManagerList") ) ) SayPrivate( _T("RelayHostManagerList"), _T("!listmanagers") );
 	wxArrayString ret;
 	for ( unsigned int i = 0; i < m_relay_host_manager_list.GetCount(); i++ )
 	{

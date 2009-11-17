@@ -177,6 +177,8 @@ m_last_net_packet(0),
 m_last_id(0),
 m_udp_private_port(0),
 m_battle_id(-1),
+m_server_lanmode(false),
+m_account_id_count(0),
 m_do_finalize_join_battle(false),
 m_finalize_join_battle_id(-1),
 m_token_transmission( false )
@@ -644,7 +646,16 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         nick = GetWordParam( params );
         contry = GetWordParam( params );
         cpu = GetIntParam( params );
-				id = GetIntParam( params );
+        if ( params.IsEmpty() )
+        {
+        	// if server didn't send any account id to us, fill with an always increasing number
+        	id = m_account_id_count;
+        	m_account_id_count++;
+        }
+        else
+        {
+					id = GetIntParam( params );
+        }
         m_se->OnNewUser( nick, contry, cpu, TowxString(id) );
         if ( nick == m_relay_host_bot )
         {
@@ -2381,6 +2392,7 @@ void TASServer::RequestSpringUpdate()
 
 wxArrayString TASServer::GetRelayHostList()
 {
+	if ( UserExists( _T("RelayHostManagerList") ) ) SayPrivate( _T("RelayHostManagerList"), _T("!listmanagers") );
 	wxArrayString ret;
 	for ( unsigned int i = 0; i < m_relay_host_manager_list.GetCount(); i++ )
 	{

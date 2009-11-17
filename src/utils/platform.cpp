@@ -243,7 +243,7 @@ bool IsUACenabled()
 #include <wx/msw/winundef.h>
 #include <shellapi.h>
 
-int WinExecuteAdmin( const wxString& command, const wxString& params )
+bool WinExecuteAdmin( const wxString& command, const wxString& params )
 {
       SHELLEXECUTEINFO shExecInfo;
 
@@ -269,9 +269,7 @@ int WinExecuteAdmin( const wxString& command, const wxString& params )
       shExecInfo.lpDirectory = NULL;
       shExecInfo.hInstApp = NULL;
 
-      ShellExecuteEx(&shExecInfo);
-
-      return 0;
+      return ShellExecuteEx(&shExecInfo);
 }
 #endif
 

@@ -9,6 +9,7 @@
 #include "../ui.h"
 #include "../mainwindow.h"
 #include "../httpdownloader.h"
+#include "../uiutils.h"
 
 #include <wx/stdpaths.h>
 #include <wx/filefn.h>
@@ -54,7 +55,14 @@ void UpdaterClass::CheckForUpdates()
       int answer = customMessageBox(SL_MAIN_ICON, _("Your SpringLobby version is not up to date.\n\n") + msg + _("\n\nWould you like for me to autodownload the new version? Changes will take effect next you launch the lobby again."), _("Not up to date"), wxYES_NO);
       if (answer == wxYES)
       {
-            WinExecuteAdmin( wxStandardPaths::Get().GetExecutablePath(), _T("-u") );
+            bool result = WinExecuteAdmin( wxStandardPaths::Get().GetExecutablePath(), _T("-u") );
+            if ( !result )
+            {
+            	customMessageBox(SL_MAIN_ICON, _("Manual update failed\n\nyou will be redirected to a web page with instructions and download link will be opened in your browser.") + msg, _("Updater error.") );
+            	OpenWebBrowser( _T("http://springlobby.info/wiki/springlobby/Install#Windows-Binary") );
+            	OpenWebBrowser( GetDownloadUrl() );
+
+            }
       }
     #else
     customMessageBox(SL_MAIN_ICON, _("Your SpringLobby version is not up to date.\n\n") + msg, _("Not up to Date") );
@@ -66,6 +74,7 @@ void UpdaterClass::CheckForUpdates()
 void UpdaterClass::StartUpdate( const wxString& latestVersion )
 {
     wxString sep = wxFileName::GetPathSeparator();
+    m_latest_version = latestVersion;
     wxString currentexe = wxStandardPaths::Get().GetExecutablePath();
     if ( !wxFileName::IsDirWritable( currentexe.BeforeLast( wxFileName::GetPathSeparator() ) + wxFileName::GetPathSeparator() ) )
     {
@@ -75,10 +84,14 @@ void UpdaterClass::StartUpdate( const wxString& latestVersion )
     m_newexe = sett().GetLobbyWriteDir() + _T("update") + sep;
     if ( !wxDirExists( m_newexe ) )
         wxMkdir( m_newexe );
-    wxString url = _T("springlobby.info/windows/springlobby-") + latestVersion + _T("-win32.zip");
-    new HttpDownloaderThread<UpdaterClass>( url, m_newexe + _T("temp.zip"), *this, wxID_HIGHEST + 10000, true, true );
+    new HttpDownloaderThread<UpdaterClass>( GetDownloadUrl(), m_newexe + _T("temp.zip"), *this, wxID_HIGHEST + 10000, true, true );
 }
 #endif
+
+wxString UpdaterClass::GetDownloadUrl()
+{
+	return _T("springlobby.info/windows/springlobby-") + m_latest_version + _T("-win32.zip");
+}
 
 //all messageboxes need to be modal, updater closes immeadiately when receiving the UpdateFinished event
 void UpdaterClass::OnDownloadEvent( wxCommandEvent& event )

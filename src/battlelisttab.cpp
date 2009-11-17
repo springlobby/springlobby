@@ -314,12 +314,6 @@ void BattleListTab::OnHost( wxCommandEvent& /*unused*/ )
 		customMessageBoxNoModal( SL_MAIN_ICON, _( "Hosting is disabled due to the incompatible version you're using" ), _( "Spring error" ), wxICON_EXCLAMATION | wxOK );
 		return;
 	}
-	if ( ui().IsSpringRunning() )
-	{
-		wxLogWarning( _T( "trying to host while spring is running" ) );
-		customMessageBoxNoModal( SL_MAIN_ICON, _( "You already are running a Spring instance, close it first in order to be able to host a new game" ), _( "Spring error" ), wxICON_EXCLAMATION | wxOK );
-		return;
-	}
 	Battle* battle = ui().mw().GetJoinTab().GetCurrentBattle();
 	if ( battle != 0 )
 	{
@@ -529,13 +523,6 @@ void BattleListTab::DoJoin( Battle& battle )
 		{
 			return;
 		}
-	}
-
-	if ( ui().IsSpringRunning() )
-	{
-		wxLogWarning( _T( "trying to join a battle while spring is running" ) );
-		customMessageBox( SL_MAIN_ICON, _( "You already are running a Spring instance, close it first in order to be able to join another battle." ), _( "Spring error" ), wxICON_EXCLAMATION | wxOK );
-		return;
 	}
 
 #ifdef NO_TORRENT_SYSTEM
