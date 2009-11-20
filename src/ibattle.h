@@ -216,7 +216,7 @@ public:
     virtual bool MapExists() const;
     virtual bool ModExists() const;
 
-    virtual BattleStartRect GetStartRect( unsigned int allyno );
+    virtual BattleStartRect GetStartRect( unsigned int allyno ) const;
     User& OnUserAdded( User& user );
     void OnUserBattleStatusUpdated( User &user, UserBattleStatus status );
     void OnUserRemoved( User& user );
@@ -239,9 +239,9 @@ public:
     virtual void StartRectResized( unsigned int allyno );
     virtual void StartRectAdded( unsigned int allyno );
     virtual void ClearStartRects();
-    virtual unsigned int GetNumRects();
-	virtual unsigned int GetLastRectIdx();
-	virtual unsigned int GetNextFreeRectIdx();
+    virtual unsigned int GetNumRects() const;
+	virtual unsigned int GetLastRectIdx() const;
+	virtual unsigned int GetNextFreeRectIdx() const;
 
     virtual int GetFreeTeamNum( bool excludeme = false );
 
@@ -264,10 +264,8 @@ public:
 
     virtual void OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ );
 
-    virtual OptionsWrapper& CustomBattleOptions()
-    {
-        return m_opt_wrap;
-    }
+    virtual OptionsWrapper& CustomBattleOptions() { return m_opt_wrap; }
+    virtual const OptionsWrapper& CustomBattleOptions() const { return m_opt_wrap; }
 
     virtual bool LoadOptionsPreset( const wxString& name );
     virtual void SaveOptionsPreset( const wxString& name );

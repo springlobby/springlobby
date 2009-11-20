@@ -37,10 +37,11 @@ void SinglePlayerBattle::SendHostInfo( HostInfo update )
     SetLocalMap( usync().GetMapEx( usync().GetMapIndex( m_host_map.name ) ) );
     CustomBattleOptions().loadOptions( OptionsWrapper::MapOption, GetHostMapName() );
     m_sptab.ReloadMapOptContrls();
+    Update(  wxString::Format(_T("%d_%s"), OptionsWrapper::PrivateOptions , _T("mapname") ) );
   }
   if ( (update & HI_Mod_Changed) != 0 )
   {
-    for ( unsigned int num = 1; num < GetNumBots(); num++ ) KickPlayer( GetUser( num ) ); // remove all bots
+    RemoveUnfittingBots();
     CustomBattleOptions().loadOptions( OptionsWrapper::ModOption, GetHostModName() );
     wxString presetname = sett().GetModDefaultPresetName( GetHostModName() );
     if ( !presetname.IsEmpty() )
@@ -49,14 +50,14 @@ void SinglePlayerBattle::SendHostInfo( HostInfo update )
       SendHostInfo( HI_Send_All_opts );
     }
     m_sptab.ReloadModOptContrls();
-    Update(  wxString::Format(_T("%d_%s"), OptionsWrapper::PrivateOptions , _T("mapname") ) );
+    Update(  wxString::Format(_T("%d_%s"), OptionsWrapper::PrivateOptions , _T("modname") ) );
   }
   if ( (update & HI_Send_All_opts) != 0 )
   {
     for ( int i = 0; i < (int)OptionsWrapper::LastOption; i++)
     {
-      std::map<wxString,wxString> options = CustomBattleOptions().getOptionsMap( (OptionsWrapper::GameOption)i );
-      for ( std::map<wxString,wxString>::iterator itor = options.begin(); itor != options.end(); itor++ )
+      const std::map<wxString,wxString>& options = CustomBattleOptions().getOptionsMap( (OptionsWrapper::GameOption)i );
+      for ( std::map<wxString,wxString>::const_iterator itor = options.begin(); itor != options.end(); ++itor )
       {
         Update(  wxString::Format(_T("%d_%s"), i , itor->first.c_str() ) );
       }
@@ -64,6 +65,13 @@ void SinglePlayerBattle::SendHostInfo( HostInfo update )
   }
 }
 
+void SinglePlayerBattle::RemoveUnfittingBots()
+{
+    while ( GetNumBots() > 0 ) {
+        User& u = m_internal_bot_list.begin()->second;
+        KickPlayer( u ); // remove all bots
+    }
+}
 
 void SinglePlayerBattle::Update( const wxString& Tag )
 {
@@ -104,7 +112,7 @@ int NoGuiSinglePlayerBattle::GetAiIndex( const wxString& name )
     {
         wxArrayString infos = susynclib().GetAIInfo( i );
         int namepos = infos.Index( _T("shortName") );
-        int versionpos = infos.Index( _T("version") );
+//        int versionpos = infos.Index( _T("version") );
         wxString ainame;
         if ( namepos != wxNOT_FOUND )
             ainame += infos[namepos +1];

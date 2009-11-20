@@ -357,18 +357,14 @@ void SinglePlayerTab::OnColorButton( wxCommandEvent& /*unused*/ )
 
 void SinglePlayerTab::Update( const wxString& Tag )
 {
-  long type;
-  Tag.BeforeFirst( '_' ).ToLong( &type );
-  wxString key = Tag.AfterFirst( '_' );
-  wxString value = m_battle.CustomBattleOptions().getSingleValue( key, (OptionsWrapper::GameOption)type);
-  long longval;
-  value.ToLong( &longval );
-  if ( type == OptionsWrapper::PrivateOptions )
-  {
-    if ( key == _T("mapname") )
-    {
-        if ( key == _T("mapname") )
-        {
+    long type;
+    Tag.BeforeFirst( '_' ).ToLong( &type );
+    wxString key = Tag.AfterFirst( '_' );
+    wxString value = m_battle.CustomBattleOptions().getSingleValue( key, (OptionsWrapper::GameOption)type);
+    long longval;
+    value.ToLong( &longval );
+    if ( type == OptionsWrapper::PrivateOptions ) {
+        if ( key == _T("mapname") ) {
             m_addbot_btn->Enable( false );
             try
             {
@@ -378,8 +374,21 @@ void SinglePlayerTab::Update( const wxString& Tag )
             }
             catch (...) {}
         }
+        else if ( key == _T("modname") ) {
+            try
+            {
+//                int pln = m_battle.GetNumUsers();
+//                int botn = m_battle.GetNumBots();
+                UpdateMinimap();
+//                pln -= m_battle.GetNumUsers();
+//                botn -= m_battle.GetNumBots();
+//                assert( pln == 0 );
+//                assert( botn == 0 );
+
+            }
+            catch (...) {}
+        }
     }
-	}
 }
 
 void SinglePlayerTab::UpdatePresetList()

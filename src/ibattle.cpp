@@ -55,10 +55,6 @@ bool IBattle::IsSynced()
     return synced;
 }
 
-
-
-
-
 std::vector<wxColour> &IBattle::GetFixColoursPalette( int numteams )
 {
     static std::vector<wxColour> result;
@@ -558,22 +554,22 @@ void IBattle::StartRectAdded( unsigned int allyno )
 }
 
 
-BattleStartRect IBattle::GetStartRect( unsigned int allyno )
+BattleStartRect IBattle::GetStartRect( unsigned int allyno ) const
 {
-	std::map<unsigned int,BattleStartRect>::iterator rect_it = m_rects.find(allyno);
+	std::map<unsigned int,BattleStartRect>::const_iterator rect_it = m_rects.find(allyno);
 	if( rect_it != m_rects.end() )
 		return (*rect_it).second;
 	return BattleStartRect();
 }
 
 //total number of start rects
-unsigned int IBattle::GetNumRects()
+unsigned int IBattle::GetNumRects() const
 {
     return m_rects.size();
 }
 
 //key of last start rect in the map
-unsigned int IBattle::GetLastRectIdx()
+unsigned int IBattle::GetLastRectIdx() const
 {
 	if(GetNumRects() > 0)
 		return m_rects.rbegin()->first;
@@ -583,7 +579,7 @@ unsigned int IBattle::GetLastRectIdx()
 }
 
 //return  the lowest currently unused key in the map of rects.
-unsigned int IBattle::GetNextFreeRectIdx()
+unsigned int IBattle::GetNextFreeRectIdx() const
 {
 	//check for unused allyno keys
 	for(unsigned int i = 0; i <= GetLastRectIdx(); i++)
