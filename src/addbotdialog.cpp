@@ -171,6 +171,11 @@ wxString AddBotDialog::RefineAIName( const wxString& name )
   return ret2;
 }
 
+wxString AddBotDialog::GetAiRawName() {
+//    if ( m_ais.GetCount() < m_ai->GetSelection() )
+//        return wxEmptyString;
+    return m_ais[m_ai->GetSelection()];
+}
 
 void AddBotDialog::ReloadAIList()
 {

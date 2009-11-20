@@ -25,6 +25,7 @@ class AddBotDialog : public wxDialog
 
     wxString GetNick();
     wxString GetAIShortName();
+    wxString GetAiRawName();
     wxString GetAIVersion();
     int GetAIType();
 

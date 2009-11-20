@@ -27,6 +27,7 @@ IBattle::IBattle():
   m_mod_loaded(false),
   m_map_exists(false),
   m_mod_exists(false),
+  m_previous_local_mod_name( wxEmptyString ),
   m_ingame(false),
   m_generating_script(false),
 	m_players_ready(0),
@@ -865,6 +866,7 @@ void IBattle::SetLocalMod( const UnitSyncMod& mod )
 {
   if ( mod.name != m_local_mod.name || mod.hash != m_local_mod.hash )
   {
+    m_previous_local_mod_name = m_local_mod.name;
     m_local_mod = mod;
     m_mod_loaded = true;
     if ( !m_host_mod.hash.IsEmpty() ) m_mod_exists = usync().ModExists( m_host_mod.name, m_host_mod.hash );

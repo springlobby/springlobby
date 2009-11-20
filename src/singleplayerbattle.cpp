@@ -18,7 +18,7 @@ SinglePlayerBattle::SinglePlayerBattle( MainSinglePlayerTab& msptab ):
 {
 	OnUserAdded( m_me );
 	m_me.BattleStatus().colour = sett().GetBattleLastColour();
-  CustomBattleOptions().setSingleOption( _T("startpostype"), wxString::Format(_T("%d"), ST_Pick), OptionsWrapper::EngineOption );
+    CustomBattleOptions().setSingleOption( _T("startpostype"), wxString::Format(_T("%d"), ST_Pick), OptionsWrapper::EngineOption );
 }
 
 
@@ -67,9 +67,16 @@ void SinglePlayerBattle::SendHostInfo( HostInfo update )
 
 void SinglePlayerBattle::RemoveUnfittingBots()
 {
-    while ( GetNumBots() > 0 ) {
-        User& u = m_internal_bot_list.begin()->second;
-        KickPlayer( u ); // remove all bots
+    wxArrayString old_ais = usync().GetAIList( m_previous_local_mod_name );
+    wxArrayString new_ais = usync().GetAIList( m_local_mod.name );
+    for ( size_t i = 0; i < old_ais.GetCount(); ++i) {
+        if ( new_ais.Index(old_ais[i]) == wxNOT_FOUND  ) {
+            for( size_t j = 0; j < GetNumUsers(); ++j  ) {
+                User& u = GetUser( j );
+                if ( u.GetBattleStatus().airawname == old_ais[i] )
+                    KickPlayer( u );
+            }
+        }
     }
 }
 

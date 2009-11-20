@@ -263,7 +263,10 @@ void SinglePlayerTab::OnMapSelect( wxCommandEvent& /*unused*/ )
 void SinglePlayerTab::OnModSelect( wxCommandEvent& /*unused*/ )
 {
     unsigned int index = (unsigned int)m_mod_pick->GetCurrentSelection();
+    size_t num_bots = m_battle.GetNumBots();
     SetMod( index );
+    if( num_bots != m_battle.GetNumBots() )
+        customMessageBoxNoModal( SL_MAIN_ICON, _("Incompatible bots have been removed after game selection changed."), _("Bots removed") );
 }
 
 
@@ -290,6 +293,7 @@ void SinglePlayerTab::OnAddBot( wxCommandEvent& /*unused*/ )
         UserBattleStatus bs;
         bs.owner = m_battle.GetMe().GetNick();
         bs.aishortname = dlg.GetAIShortName();
+        bs.airawname = dlg.GetAiRawName();
         bs.aiversion = dlg.GetAIVersion();
         bs.aitype = dlg.GetAIType();
         bs.team = m_battle.GetFreeTeamNum();

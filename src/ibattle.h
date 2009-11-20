@@ -395,6 +395,7 @@ protected:
     UnitSyncMod m_local_mod;
     UnitSyncMap m_host_map;
     UnitSyncMod m_host_mod;
+    wxString m_previous_local_mod_name;
 
     std::map<wxString, int> m_restricted_units;
 
