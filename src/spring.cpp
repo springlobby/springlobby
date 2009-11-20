@@ -252,6 +252,7 @@ void Spring::OnTerminated( wxCommandEvent& event )
     m_process = 0; // NOTE I'm not sure if this should be deleted or not, according to wx docs it shouldn't.
     m_wx_process = 0;
     ui().OnSpringTerminated( event.GetExtraLong() );
+    GetGlobalEventSender(GlobalEvents::OnSpringTerminated).SendEvent( event.GetExtraLong() );
 }
 
 

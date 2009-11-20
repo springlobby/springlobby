@@ -3,6 +3,7 @@
 
 #include <wx/scrolwin.h>
 #include <vector>
+#include "utils/isink.h"
 
 class Ui;
 class MapCtrl;
@@ -28,7 +29,7 @@ template <class PlaybackType>
 class PlaybackLoader;
 
 template <class PlaybackTraitsImp>
-class PlaybackTab : public wxScrolledWindow
+class PlaybackTab : public wxScrolledWindow, public SpringTerminatedSink< PlaybackTab<PlaybackTraitsImp> >
 {
     protected:
         friend class BattleListFilter; //! WTF?
@@ -86,6 +87,8 @@ class PlaybackTab : public wxScrolledWindow
     void Deselect();
     void Deselected();
     void OnDeselect( wxListEvent& event );
+
+    void OnSpringTerminated( GlobalEvents::GlobalEventData data );
 
   protected:
     PlaybackListFilter<ThisType>* m_filter;

@@ -9,6 +9,7 @@ namespace GlobalEvents {
     {
       OnUnitsyncFirstTimeLoad,
       OnUnitsyncReloaded,
+      OnSpringTerminated,
       UnitSyncReloadRequest,
       UpdateFinished,
 
