@@ -666,23 +666,14 @@ void Battle::SetInGame( bool value )
 void Battle::FixColours()
 {
     if ( !IsFounderMe() )return;
-    std::set<int> parsed_teams;
-    for ( user_map_t::size_type i = 0; i < GetNumUsers(); i++ )
-    {
-        User &user=GetUser(i);
-        UserBattleStatus& status = user.BattleStatus();
-        if ( status.spectator ) continue;
-        if ( parsed_teams.find( status.team ) != parsed_teams.end() ) continue; // skip duplicates
-        parsed_teams.insert( status.team );
-    }
-    std::vector<wxColour> &palette = GetFixColoursPalette( parsed_teams.size() + 1 ); // we cannot use m_team_size because it uses info from the server, and we could be using the trick to not send stuff trough it to allow more teams/ally than in the bitfield
+    std::vector<wxColour> &palette = GetFixColoursPalette( m_teams_sizes.size() + 1 );
     std::vector<int> palette_use( palette.size(), 0 );
 
     wxColour my_col = GetMe().BattleStatus().colour; // Never changes color of founder (me) :-)
     int my_diff = 0;
     int my_col_i = GetClosestFixColour( my_col, palette_use,my_diff );
     palette_use[my_col_i]++;
-    parsed_teams.clear();
+    std::set<int> parsed_teams;
 
     for ( user_map_t::size_type i = 0; i < GetNumUsers(); i++ )
     {
