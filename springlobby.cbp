@@ -475,6 +475,8 @@
 		<Unit filename="src/utils/customdialogs.h" />
 		<Unit filename="src/utils/debug.cpp" />
 		<Unit filename="src/utils/debug.h" />
+		<Unit filename="src/utils/downloader.cpp" />
+		<Unit filename="src/utils/downloader.h" />
 		<Unit filename="src/utils/events.h" />
 		<Unit filename="src/utils/globalevents.cpp" />
 		<Unit filename="src/utils/globalevents.h" />
