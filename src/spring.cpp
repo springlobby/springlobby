@@ -267,23 +267,22 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
     // Start generating the script.
     tdf.EnterSection( _T("GAME") );
 
+		tdf.Append( _T("HostIP"), battle.GetHostIp() );
 			if ( battle.IsFounderMe() )
 			{
-					tdf.Append( _T("HostIP"), _T("localhost") );
 					if ( battle.GetNatType() == NAT_Hole_punching ) tdf.Append( _T("HostPort"), battle.GetMyInternalUdpSourcePort() );
 					else tdf.Append(_T("HostPort"), battle.GetHostPort() );
-
 			}
 			else
 			{
-					tdf.Append( _T("HostIP"), battle.GetHostIp() );
 					tdf.Append( _T("HostPort"), battle.GetHostPort() );
 					if ( battle.GetNatType() == NAT_Hole_punching )
 					{
 						tdf.Append( _T("SourcePort"), battle.GetMyInternalUdpSourcePort() );
 					}
-					else if ( sett().GetClientPort() != 0){ /// this allows to play with broken router by setting SourcePort to some forwarded port.
-						tdf.Append( _T("SourcePort"), sett().GetClientPort() );
+					else if ( sett().GetClientPort() != 0)
+					{
+						tdf.Append( _T("SourcePort"), sett().GetClientPort() ); /// this allows to play with broken router by setting SourcePort to some forwarded port.
 					}
 			}
 			tdf.Append( _T("IsHost"), battle.IsFounderMe() );
