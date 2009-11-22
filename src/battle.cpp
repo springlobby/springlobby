@@ -600,9 +600,9 @@ void Battle::StartHostedBattle()
 				SetIsLocked( true );
 				SendHostInfo( IBattle::HI_Locked );
 			}
-			GetServer().StartHostedBattle();
 			sett().SetLastHostMap( GetServer().GetCurrentBattle()->GetHostMapName() );
 			sett().SaveSettings();
+			if ( !IsProxy() ) GetServer().StartHostedBattle();
 		}
 	}
 }
