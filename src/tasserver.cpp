@@ -1308,8 +1308,8 @@ void TASServer::Ring( const wxString& nick )
 		}
 		catch (...)
 		{
+			SendCmd( _T("RING"), nick );
 		}
-    SendCmd( _T("RING"), nick );
 }
 
 
