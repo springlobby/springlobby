@@ -27,7 +27,7 @@ class AutoBalanceDialog: public wxDialog
       int groupingsize;
     };
 
-		AutoBalanceDialog(wxWindow* parent, const BalanceOptions& defaultval );
+		AutoBalanceDialog(wxWindow* parent, const BalanceOptions& defaultval, unsigned int maxnum = 16 );
 		virtual ~AutoBalanceDialog();
 
     BalanceOptions GetResult();
