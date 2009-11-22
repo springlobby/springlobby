@@ -277,7 +277,7 @@ void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 			{
 				if ( sett().GetBattleLastAutoStartState() )
 				{
-					if ( !ui().IsSpringRunning() ) ui().StartHostedBattle();
+					if ( !ui().IsSpringRunning() ) StartHostedBattle();
 				}
 			}
 		}
@@ -566,7 +566,7 @@ void Battle::SendScriptToClients()
 }
 
 
-void Battle::StartSpring()
+void Battle::StartHostedBattle()
 {
 	if ( UserExists( GetMe().GetNick() ) )
 	{
@@ -578,31 +578,41 @@ void Battle::StartSpring()
 				Autobalance( (IBattle::BalanceType)sett().GetBalanceMethod(), sett().GetBalanceClans(), sett().GetBalanceStrongClans(), sett().GetBalanceGrouping() );
 				FixColours();
 			}
-		}
-		if ( IsProxy() )
-		{
-			wxString hostscript = spring().WriteScriptTxt( *this );
-			try
+			if ( IsProxy() )
 			{
-				wxString path = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("relayhost_script.txt");
-				if ( !wxFile::Access( path, wxFile::write ) ) {
-				    wxLogError( _T("Access denied to script.txt.") );
-				}
+				wxString hostscript = spring().WriteScriptTxt( *this );
+				try
+				{
+					wxString path = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("relayhost_script.txt");
+					if ( !wxFile::Access( path, wxFile::write ) ) {
+							wxLogError( _T("Access denied to script.txt.") );
+					}
 
-				wxFile f( path, wxFile::write );
-				f.Write( hostscript );
-				f.Close();
+					wxFile f( path, wxFile::write );
+					f.Write( hostscript );
+					f.Close();
 
-			} catch (...) {}
-			m_serv.SendScriptToProxy( hostscript );
+				} catch (...) {}
+				m_serv.SendScriptToProxy( hostscript );
+			}
+			if( IsFounderMe() && GetAutoLockOnStart() )
+			{
+				SetIsLocked( true );
+				SendHostInfo( IBattle::HI_Locked );
+			}
+			GetServer().StartHostedBattle();
+			sett().SetLastHostMap( GetServer().GetCurrentBattle()->GetHostMapName() );
+			sett().SaveSettings();
 		}
+	}
+}
+
+void Battle::StartSpring()
+{
+	if ( UserExists( GetMe().GetNick() ) && !GetMe().Status().in_game )
+	{
 		GetMe().BattleStatus().ready = false;
 		SendMyBattleStatus();
-		if( IsFounderMe() && GetAutoLockOnStart() )
-		{
-			SetIsLocked( true );
-			SendHostInfo( IBattle::HI_Locked );
-		}
 		GetMe().Status().in_game = spring().Run( *this );
 		GetMe().SendMyUserStatus();
 	}

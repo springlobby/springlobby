@@ -20,6 +20,7 @@
 #include <wx/colour.h>
 #include <wx/log.h>
 #include <wx/bmpcbox.h>
+#include <wx/textdlg.h>
 #include <wx/image.h>
 #include <wx/choice.h>
 #if wxUSE_TOGGLEBTN
@@ -601,7 +602,7 @@ void BattleRoomTab::OnStart( wxCommandEvent& /*unused*/ )
 
 		m_battle.SaveMapDefaults(); // save map presets
 
-			ui().StartHostedBattle();
+		m_battle.StartHostedBattle();
 	}
 	else
 	{
@@ -720,7 +721,7 @@ void BattleRoomTab::OnAutoHost( wxCommandEvent& /*unused*/ )
 
 void BattleRoomTab::OnAutoPaste( wxCommandEvent& /*unused*/ )
 {
-	wxString description = wxGetTextFromUser( _( "Enter a battle description" ), _( "Set Timeout" ), _T( "" ), sett().GetBattleLastAutoSpectTime() / 60, 1, 60, ( wxWindow* ) & ui().mw(), wxDefaultPosition );
+	wxString description = wxGetTextFromUser( _( "Enter a battle description" ), _( "Set description" ), m_battle.GetDescription(), ( wxWindow* ) & ui().mw() );
 	m_autopaste_mnu->Check( description.IsEmpty() );
 	if ( !description.IsEmpty() ) m_battle.SetDescription( description );
 	sett().SetBattleLastAutoAnnounceDescription( m_autopaste_mnu->IsChecked() );
