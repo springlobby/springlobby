@@ -86,6 +86,7 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 		void OnRingUnsynced( wxCommandEvent& event );
 		void OnRingUnreadyUnsynced( wxCommandEvent& event );
 
+		void OnAutoPaste( wxCommandEvent& event );
 		void OnAutoControl( wxCommandEvent& event );
 		void OnAutoStart( wxCommandEvent& event );
 		void OnAutoSpec( wxCommandEvent& event );
@@ -166,6 +167,7 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 		wxMenuItem* m_autostart_mnu;
 		wxMenuItem* m_autospec_mnu;
 		wxMenuItem* m_autocontrol_mnu;
+		wxMenuItem* m_autopaste_mnu;
 
 		wxCheckBox* m_ready_chk;
 		wxCheckBox* m_spec_chk;
@@ -213,7 +215,8 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 			BROOM_SPECT_UNREADY_UNSYNC,
 			BROOM_AUTOSPECT,
 			BROOM_AUTOSTART,
-			BROOM_AUTOCONTROL
+			BROOM_AUTOCONTROL,
+			BROOM_AUTOPASTE
 		};
 
 		DECLARE_EVENT_TABLE();
