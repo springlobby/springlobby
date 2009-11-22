@@ -624,7 +624,7 @@ void BattleRoomTab::OnBalance( wxCommandEvent& /*unused*/ )
 	defaultval.respectclans = sett().GetBalanceClans();
 	defaultval.strongclans = sett().GetBalanceStrongClans();
 	defaultval.groupingsize = sett().GetBalanceGrouping();
-	AutoBalanceDialog dlg( this, defaultval );
+	AutoBalanceDialog dlg( this, defaultval, m_battle.GetMaxPlayers() );
 	if ( dlg.ShowModal() == wxID_OK )
 	{
 		AutoBalanceDialog::BalanceOptions balance = dlg.GetResult();
@@ -644,7 +644,7 @@ void BattleRoomTab::OnFixTeams( wxCommandEvent& /*unused*/ )
 	defaultval.respectclans = sett().GetFixIDClans();
 	defaultval.strongclans = sett().GetFixIDStrongClans();
 	defaultval.groupingsize = sett().GetFixIDGrouping();
-	AutoBalanceDialog dlg( this, defaultval );
+	AutoBalanceDialog dlg( this, defaultval, m_battle.GetMaxPlayers() );
 	if ( dlg.ShowModal() == wxID_OK )
 	{
 		AutoBalanceDialog::BalanceOptions balance = dlg.GetResult();
