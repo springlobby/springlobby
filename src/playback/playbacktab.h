@@ -3,7 +3,7 @@
 
 #include <wx/scrolwin.h>
 #include <vector>
-#include "utils/isink.h"
+#include "../utils/isink.h"
 
 class Ui;
 class MapCtrl;
