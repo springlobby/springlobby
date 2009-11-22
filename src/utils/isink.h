@@ -27,6 +27,29 @@ class UnitsyncReloadedSink {
 		{}
 };
 
+template <class Derived, class EventDataType = GlobalEvents::GlobalEventData >
+class SpringTerminatedSink {
+	protected:
+		Derived& asImp () { return static_cast<Derived&>(*this); }
+		const Derived& asImp () const { return static_cast<const Derived&>(*this); }
+
+		typedef SpringTerminatedSink<Derived,EventDataType>
+			BaseType;
+
+	public:
+		void OnSpringTerminated( EventDataType data ) { asImp().OnSpringTerminated( data ); }
+
+    protected:
+        typedef EventReceiverFunc<SpringTerminatedSink, EventDataType, &SpringTerminatedSink::OnSpringTerminated>
+            EventReceiverFunction;
+        EventReceiverFunction m_SpringTerminatedSink;
+
+    public:
+		SpringTerminatedSink ()
+			: m_SpringTerminatedSink( this, &GetGlobalEventSender( GlobalEvents::OnSpringTerminated ) )
+		{}
+};
+
 
 #endif // SPRINGLOBBY_HEADERGUARD_ISINK_H
 

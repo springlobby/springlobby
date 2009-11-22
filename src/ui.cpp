@@ -1251,7 +1251,7 @@ void Ui::FirstRunWelcome()
             ImportTASClientSettings();
         }
     #endif
-
+        mw().SavePerspectives( _T("SpringLobby-default") );
         mw().ShowConfigure();
     }
     else

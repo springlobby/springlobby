@@ -102,6 +102,7 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU( MENU_SAVE_LAYOUT, MainWindow::OnMenuSaveLayout )
   EVT_MENU( MENU_LOAD_LAYOUT, MainWindow::OnMenuLoadLayout )
   EVT_MENU( MENU_DEFAULT_LAYOUT, MainWindow::OnMenuDefaultLayout )
+  EVT_MENU( MENU_RESET_LAYOUT, MainWindow::OnMenuResetLayout )
 //  EVT_MENU( MENU_SHOW_TOOLTIPS, MainWindow::OnShowToolTips )
   EVT_MENU( MENU_AUTOJOIN_CHANNELS, MainWindow::OnMenuAutojoinChannels )
   EVT_MENU( MENU_SELECT_LOCALE, MainWindow::OnMenuSelectLocale )
@@ -142,6 +143,7 @@ MainWindow::MainWindow( )
 	wxMenu* menuView = new wxMenu;
 	menuView->Append( MENU_SAVE_LAYOUT, _("&Save Layout") );
 	menuView->Append( MENU_LOAD_LAYOUT, _("&Load layout") );
+	menuView->Append( MENU_RESET_LAYOUT, _("&Reset layout") );
 //	menuView->Append( MENU_DEFAULT_LAYOUT, _("&Set &Laoyut as default") );
 
 
@@ -662,6 +664,12 @@ void MainWindow::OnMenuSaveLayout( wxCommandEvent& /*unused*/ )
 	wxString answer;
 	if ( !ui().AskText( _("Layout manager"),_("Enter a profile name"), answer ) )
         return;
+    while ( answer == _T("SpringLobby-default") ) {
+        customMessageBox( SL_MAIN_ICON, _("This profile is write protected, please choose another name"), _("Error") );
+
+        if ( !ui().AskText( _("Layout manager"),_("Enter a profile name"), answer ) )
+           return;
+    }
     SavePerspectives( answer );
 }
 
@@ -682,6 +690,11 @@ void MainWindow::OnMenuDefaultLayout( wxCommandEvent& /*unused*/ )
 	unsigned int result = wxGetSingleChoiceIndex( _("Which profile do you want to be default?"), _("Layout manager"), layouts );
 	if ( ( result < 0  ) || ( result > layouts.GetCount() ) ) return;
 	sett().SetDefaultLayout( layouts[result] );
+}
+
+void MainWindow::OnMenuResetLayout( wxCommandEvent& /*event*/ )
+{
+    LoadPerspectives( _T("SpringLobby-default") );
 }
 
 const MainWindow::TabNames& MainWindow::GetTabNames()
