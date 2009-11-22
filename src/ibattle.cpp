@@ -13,7 +13,6 @@
 #include "settings.h"
 #include "ui.h"
 #include "springunitsynclib.h"
-#include "images/fixcolours_palette.xpm"
 
 #include <list>
 #include <algorithm>
@@ -61,25 +60,6 @@ bool IBattle::IsSynced()
 
 std::vector<wxColour> &IBattle::GetFixColoursPalette( int numteams )
 {
-    static std::vector<wxColour> result;
-    if (result.empty())
-    {
-        wxImage image(fixcolours_palette_xpm);
-        unsigned char* data=image.GetData();
-        size_t len=image.GetWidth()*image.GetHeight();
-        for (size_t i=0;i<len;++i)
-        {
-            int r=data[i*3];
-            int g=data[i*3+1];
-            int b=data[i*3+2];
-            if (r||g||b)
-            {
-                result.push_back(wxColour(r,g,b));
-            }
-        }
-    }
-    if ( long(result.size()) < numteams )
-        return result;
     return GetBigFixColoursPalette( numteams );
 }
 
