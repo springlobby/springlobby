@@ -113,7 +113,7 @@ ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
     m_pass_sizer->Add( m_pass_lbl, 1, wxALL | wxALIGN_CENTER_VERTICAL, 4 );
     m_pass_sizer->Add( m_pass_text, 2, wxEXPAND | wxALL, 4 );
 
-    //FIXME was lazy, absoulte positioning isn't that nice
+    //FIXME was lazy, absoulte positioning isn't that nice //probably causing http://springlobby.info/issues/1094
     int pos1 = (m_pass_lbl->GetSize()).GetWidth() + 40;
     m_check_sizer->Add(pos1,0,0);
     m_check_sizer->Add( m_rpass_sizer, 0, wxEXPAND | wxALIGN_RIGHT);
