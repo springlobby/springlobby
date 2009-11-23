@@ -174,6 +174,8 @@ class Server : public iNetClass
     ///used to fill userlist in groupuserdialog
     const UserList& GetUserList(){return m_users;}
 
+    unsigned int GetNumUsers() { return m_users.GetNumUsers(); }
+
     wxString GetServerName() { return m_server_name; }
 
     virtual void RequestSpringUpdate();

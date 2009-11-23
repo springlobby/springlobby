@@ -839,6 +839,12 @@ void Ui::OnUserStatusChanged( User& user )
         }
     }
     if ( user.GetStatus().in_game ) mw().GetJoinTab().GetBattleListTab().UserUpdate( user );
+    try
+    {
+			ChatPanel& server = mw().GetChatTab().ServerChat();
+			server.UserStatusUpdated( user );
+		}
+		catch(...){}
 }
 
 
