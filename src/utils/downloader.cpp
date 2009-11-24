@@ -26,28 +26,11 @@ const wxString s_soap_querytemplate = _T("<?xml version=\"1.0\" encoding=\"utf-8
 "   </soap12:Body>\n"\
 "</soap12:Envelope>\0");
 
-//const wxString alt_post = _T("POST http://planet-wars.eu/PlasmaServer/Service.asmx HTTP/1.1"\
-//"Accept-Encoding: gzip,deflate
-//"Content-Type: text/xml;charset=UTF-8
-//"SOAPAction: "http://planet-wars.eu/PlasmaServer/DownloadFile"
-//|User-Agent: Jakarta Commons-HttpClient/3.1
-//Host: planet-wars.eu
-//Content-Length: 351
-//
-//<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:plas="http://planet-wars.eu/PlasmaServer/">
-//   <soapenv:Header/>
-//   <soapenv:Body>
-//      <plas:DownloadFile>
-//         <!--Optional:-->
-//         <plas:internalName>Small divide</plas:internalName>
-//      </plas:DownloadFile>
-//   </soapenv:Body>
-//</soapenv:Envelope>
 
 wxArrayString getDownloadLinks( const wxString& name ) {
     wxSocketClient * socket = new wxSocketClient();
     wxString data = s_soap_querytemplate;
-    data.Replace( _T("REALNAME") , name );
+    data.Replace( _T("REALNAME") , _T("DeltaSiegeDry.smf") );
     wxString host = _T("planet-wars.eu");
     wxString path = _T("/PlasmaServer/Service.asmx");//can be php or any other file
 
@@ -59,7 +42,7 @@ wxArrayString getDownloadLinks( const wxString& name ) {
     header += _T("POST http://planet-wars.eu/PlasmaServer/Service.asmx");
 //    header += path;
     header += _T(" HTTP/1.1\n");
-    header += _T("Accept-Encoding: *\n");
+//    header += _T("Accept-Encoding: *\n");
 
     //Write host website name
 
@@ -69,7 +52,7 @@ wxArrayString getDownloadLinks( const wxString& name ) {
     //Write content type
     header += _T("Content-Type: text/xml;charset=UTF-8\n");
     header += _T("SOAPAction: \"http://planet-wars.eu/PlasmaServer/DownloadFile\"\n");
-    header += _T("User-Agent: Jakarta Commons-HttpClient/3.1\n");
+//    header += _T("User-Agent: Jakarta Commons-HttpClient/3.1\n");
 
     header += _T("Host: ");
     header += host;
@@ -103,8 +86,8 @@ wxArrayString getDownloadLinks( const wxString& name ) {
 
 
     //Get Response
-    char buf[4097];
-    socket->Read(buf,4097);
+    char buf[65537];
+    socket->Read(buf,65537);
 
 
     buf[socket->LastCount()] = '\0';
