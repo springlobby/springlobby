@@ -11,6 +11,7 @@
 
 #include <wx/protocol/http.h>
 #include <wx/xml/xml.h>
+#include <wx/tokenzr.h>
 #include "customdialogs.h"
 #include "utils/conversion.h"
 #include <wx/convauto.h>
@@ -78,22 +79,40 @@ wxArrayString getDownloadLinks( const wxString& name ) {
 
     //Write header
     socket->Write(header.mb_str(),header.Len());
-    wxMessageBox(wxString::Format(_T("Wrote %d out of %d bytes"),socket->LastCount(),header.Len()));
+//    wxMessageBox(wxString::Format(_T("Wrote %d out of %d bytes"),socket->LastCount(),header.Len()));
 
     //Write data
     socket->Write(data.mb_str(),data.Len());
-    wxMessageBox(wxString::Format(_T("Wrote %d out of %d bytes"),socket->LastCount(),data.Len()));
+//    wxMessageBox(wxString::Format(_T("Wrote %d out of %d bytes"),socket->LastCount(),data.Len()));
 
 
     //Get Response
-    char buf[65537];
-    socket->Read(buf,65537);
+    char peek_buf[1025];
+    socket->Peek(peek_buf,1025);
+    peek_buf[socket->LastCount()] = '\0';
 
-
+//    buf = wxString( buf, wxConvISO8859_1 );
+    wxString wxbuf = wxString::  FromAscii( peek_buf );
+    wxMessageBox(wxString::Format(_T("Read %d bytes: %s"),socket->LastCount(),wxbuf.c_str()));
+    long content_length = 0;
+    wxStringTokenizer toks ( wxbuf, _T("\n") );
+    while( toks.HasMoreTokens() ) {
+        wxString line = toks.GetNextToken();
+        if ( line.StartsWith( _T("Content-Length") ) ) {
+            line = line.SubString( line.Last( wxChar(':') ) + 1, line.Last( wxChar('\n') ) ).Trim( false ).Trim( true );
+            line.ToLong( &content_length );
+            wxMessageBox(line);
+            assert( content_length >= 0 );
+            break;
+        }
+    }
+    char buf[1025+content_length];
+    socket->Read(buf,1025+content_length);
     buf[socket->LastCount()] = '\0';
 
 //    buf = wxString( buf, wxConvISO8859_1 );
-    wxString wxbuf = wxString::  FromAscii( buf );
-    wxMessageBox(wxString::Format(_T("Read %d bytes: %s"),socket->LastCount(),wxbuf.c_str()));
+    wxbuf = wxString::  FromAscii( buf );
+    wxMessageBox(wxString::Format(_T("Content size %d | Read %d bytes: %s"),content_length,socket->LastCount(),wxbuf.c_str()));
+
     return wxArrayString();
 }
