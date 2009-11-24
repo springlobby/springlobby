@@ -20,6 +20,7 @@
 #include <wx/colour.h>
 #include <wx/log.h>
 #include <wx/bmpcbox.h>
+#include <wx/textdlg.h>
 #include <wx/image.h>
 #include <wx/choice.h>
 #if wxUSE_TOGGLEBTN
@@ -99,6 +100,7 @@ BEGIN_EVENT_TABLE( BattleRoomTab, wxPanel )
 	EVT_MENU                ( BROOM_BALANCE,                BattleRoomTab::OnBalance                )
 	EVT_MENU                ( BROOM_FIXID,                  BattleRoomTab::OnFixTeams               )
 	EVT_MENU                ( BROOM_FIXCOLOURS,             BattleRoomTab::OnFixColours             )
+	EVT_MENU                ( BROOM_AUTOPASTE,             BattleRoomTab::OnAutoPaste             )
 
 	EVT_LIST_ITEM_ACTIVATED ( BROOM_OPTIONLIST,             BattleRoomTab::OnOptionActivate         )
 
@@ -204,6 +206,10 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle& battle )
 	m_manage_users_mnu->Append( m_autohost_mnu );
 	m_autohost_mnu->Check( false );
 
+
+	m_autopaste_mnu = new wxMenuItem( m_manage_users_mnu, BROOM_AUTOPASTE, _( "AutoPaste Description" ), _( "Automatically paste battle's descriptoin when a new user joins" ), wxITEM_CHECK );
+	m_manage_users_mnu->Append( m_autopaste_mnu );
+	m_autopaste_mnu->Check( sett().GetBattleLastAutoAnnounceDescription() );
 	m_autospec_mnu = new wxMenuItem( m_manage_users_mnu, BROOM_AUTOSPECT, _( "AutoSpect" ), _( "Automatically spectate players that don't ready up or become synced within x seconds." ), wxITEM_CHECK );
 	m_manage_users_mnu->Append( m_autospec_mnu );
 	m_autospec_mnu->Check( sett().GetBattleLastAutoSpectTime() > 0 );
@@ -596,7 +602,7 @@ void BattleRoomTab::OnStart( wxCommandEvent& /*unused*/ )
 
 		m_battle.SaveMapDefaults(); // save map presets
 
-			ui().StartHostedBattle();
+		m_battle.StartHostedBattle();
 	}
 	else
 	{
@@ -624,7 +630,7 @@ void BattleRoomTab::OnBalance( wxCommandEvent& /*unused*/ )
 	defaultval.respectclans = sett().GetBalanceClans();
 	defaultval.strongclans = sett().GetBalanceStrongClans();
 	defaultval.groupingsize = sett().GetBalanceGrouping();
-	AutoBalanceDialog dlg( this, defaultval );
+	AutoBalanceDialog dlg( this, defaultval, m_battle.GetMaxPlayers() );
 	if ( dlg.ShowModal() == wxID_OK )
 	{
 		AutoBalanceDialog::BalanceOptions balance = dlg.GetResult();
@@ -644,7 +650,7 @@ void BattleRoomTab::OnFixTeams( wxCommandEvent& /*unused*/ )
 	defaultval.respectclans = sett().GetFixIDClans();
 	defaultval.strongclans = sett().GetFixIDStrongClans();
 	defaultval.groupingsize = sett().GetFixIDGrouping();
-	AutoBalanceDialog dlg( this, defaultval );
+	AutoBalanceDialog dlg( this, defaultval, m_battle.GetMaxPlayers() );
 	if ( dlg.ShowModal() == wxID_OK )
 	{
 		AutoBalanceDialog::BalanceOptions balance = dlg.GetResult();
@@ -712,6 +718,14 @@ void BattleRoomTab::OnAutoHost( wxCommandEvent& /*unused*/ )
 	m_battle.GetAutoHost().SetEnabled( m_autohost_mnu->IsChecked() );
 }
 
+
+void BattleRoomTab::OnAutoPaste( wxCommandEvent& /*unused*/ )
+{
+	wxString description = wxGetTextFromUser( _( "Enter a battle description" ), _( "Set description" ), m_battle.GetDescription(), ( wxWindow* ) & ui().mw() );
+	m_autopaste_mnu->Check( description.IsEmpty() );
+	if ( !description.IsEmpty() ) m_battle.SetDescription( description );
+	sett().SetBattleLastAutoAnnounceDescription( m_autopaste_mnu->IsChecked() );
+}
 
 void BattleRoomTab::OnAutoControl( wxCommandEvent& /*unused*/ )
 {

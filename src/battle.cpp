@@ -277,7 +277,7 @@ void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 			{
 				if ( sett().GetBattleLastAutoStartState() )
 				{
-					if ( !ui().IsSpringRunning() ) ui().StartHostedBattle();
+					if ( !ui().IsSpringRunning() ) StartHostedBattle();
 				}
 			}
 		}
@@ -566,7 +566,7 @@ void Battle::SendScriptToClients()
 }
 
 
-void Battle::StartSpring()
+void Battle::StartHostedBattle()
 {
 	if ( UserExists( GetMe().GetNick() ) )
 	{
@@ -578,31 +578,41 @@ void Battle::StartSpring()
 				Autobalance( (IBattle::BalanceType)sett().GetBalanceMethod(), sett().GetBalanceClans(), sett().GetBalanceStrongClans(), sett().GetBalanceGrouping() );
 				FixColours();
 			}
-		}
-		if ( IsProxy() )
-		{
-			wxString hostscript = spring().WriteScriptTxt( *this );
-			try
+			if ( IsProxy() )
 			{
-				wxString path = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("relayhost_script.txt");
-				if ( !wxFile::Access( path, wxFile::write ) ) {
-				    wxLogError( _T("Access denied to script.txt.") );
-				}
+				wxString hostscript = spring().WriteScriptTxt( *this );
+				try
+				{
+					wxString path = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("relayhost_script.txt");
+					if ( !wxFile::Access( path, wxFile::write ) ) {
+							wxLogError( _T("Access denied to script.txt.") );
+					}
 
-				wxFile f( path, wxFile::write );
-				f.Write( hostscript );
-				f.Close();
+					wxFile f( path, wxFile::write );
+					f.Write( hostscript );
+					f.Close();
 
-			} catch (...) {}
-			m_serv.SendScriptToProxy( hostscript );
+				} catch (...) {}
+				m_serv.SendScriptToProxy( hostscript );
+			}
+			if( IsFounderMe() && GetAutoLockOnStart() )
+			{
+				SetIsLocked( true );
+				SendHostInfo( IBattle::HI_Locked );
+			}
+			sett().SetLastHostMap( GetServer().GetCurrentBattle()->GetHostMapName() );
+			sett().SaveSettings();
+			if ( !IsProxy() ) GetServer().StartHostedBattle();
 		}
+	}
+}
+
+void Battle::StartSpring()
+{
+	if ( UserExists( GetMe().GetNick() ) && !GetMe().Status().in_game )
+	{
 		GetMe().BattleStatus().ready = false;
 		SendMyBattleStatus();
-		if( IsFounderMe() && GetAutoLockOnStart() )
-		{
-			SetIsLocked( true );
-			SendHostInfo( IBattle::HI_Locked );
-		}
 		GetMe().Status().in_game = spring().Run( *this );
 		GetMe().SendMyUserStatus();
 	}
@@ -794,7 +804,7 @@ void Battle::Autobalance( BalanceType balance_type, bool support_clans, bool str
     if ( numallyteams == 0 ) // 0 == use num start rects
     {
         int ally = 0;
-        for ( int i = 0; i < long(GetNumRects()); ++i )
+        for ( unsigned int i = 0; i < GetNumRects(); ++i )
         {
             BattleStartRect sr = GetStartRect(i);
             if ( sr.IsOk() )
@@ -947,7 +957,7 @@ void Battle::FixTeamIDs( BalanceType balance_type, bool support_clans, bool stro
     //int num_alliances;
     std::vector<ControlTeam> teams;
 
-    if ( numcontrolteams == 0 ) numcontrolteams = GetNumUsers(); // 0 == use num players, will use comshare only if no available team slots
+    if ( numcontrolteams == 0 ) numcontrolteams = GetNumUsers() - GetSpectators(); // 0 == use num players, will use comshare only if no available team slots
     IBattle::StartType position_type = (IBattle::StartType)s2l( CustomBattleOptions().getSingleValue( _T("startpostype"), OptionsWrapper::EngineOption ) );
     if ( ( position_type == ST_Fixed ) || ( position_type == ST_Random ) ) // if fixed start pos type or random, use max teams = start pos count
     {

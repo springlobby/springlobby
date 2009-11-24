@@ -125,15 +125,15 @@ MainWindow::MainWindow( )
 
   GetAui().manager = new AuiManagerContainer::ManagerType( this );
 
-  wxMenu *menuFile = new wxMenu;
-  menuFile->Append(MENU_CONNECT, _("&Connect..."));
-  menuFile->Append(MENU_DISCONNECT, _("&Disconnect"));
-  menuFile->AppendSeparator();
+  wxMenu *menuServer = new wxMenu;
+  menuServer->Append(MENU_CONNECT, _("&Connect..."));
+  menuServer->Append(MENU_DISCONNECT, _("&Disconnect"));
+  menuServer->AppendSeparator();
 #ifndef NDEBUG
-  menuFile->Append(MENU_SAVE_OPTIONS, _("&Save options"));
-  menuFile->AppendSeparator();
+  menuServer->Append(MENU_SAVE_OPTIONS, _("&Save options"));
+  menuServer->AppendSeparator();
 #endif
-  menuFile->Append(MENU_QUIT, _("&Quit"));
+  menuServer->Append(MENU_QUIT, _("&Quit"));
 
   //m_menuEdit = new wxMenu;
   //TODO doesn't work atm
@@ -171,7 +171,7 @@ MainWindow::MainWindow( )
   menuHelp->Append(MENU_DOC, _("&Documentation"));
 
   m_menubar = new wxMenuBar;
-  m_menubar->Append(menuFile, _("&File"));
+  m_menubar->Append(menuServer, _("&Server"));
   //m_menubar->Append(m_menuEdit, _("&Edit"));
 
   m_menubar->Append(menuView, _("&View")); //layout stuff --> disabled

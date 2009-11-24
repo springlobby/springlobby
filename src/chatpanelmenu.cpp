@@ -162,8 +162,12 @@ void ChatPanelMenu::CreateNickListMenu()
     m_user_menu->Append( joinbattleitem );
 
 	m_user_menu->AppendSeparator();
-
-	if ( ui().GetServer().GetMe().GetStatus().moderator ) {
+	bool moderator = false;
+	try
+	{
+		moderator = ui().GetServer().GetMe().GetStatus().moderator;
+	}catch(...){}
+	if ( moderator ) {
 		wxMenuItem* modingameitem = new wxMenuItem( m_user_menu, CHAT_MENU_US_MODERATOR_INGAME, _( "Ingame time" ), wxEmptyString, wxITEM_NORMAL );
 		m_user_menu->Append( modingameitem );
 		wxMenuItem* modipitem = new wxMenuItem( m_user_menu, CHAT_MENU_US_MODERATOR_CURIP, _( "Retrieve IP and Smurfs" ), wxEmptyString, wxITEM_NORMAL );

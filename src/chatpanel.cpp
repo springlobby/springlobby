@@ -143,7 +143,7 @@ ChatPanel::ChatPanel( wxWindow* parent, const User& user, wxImageList* imaglist 
 
 ChatPanel::ChatPanel( wxWindow* parent, Server& serv, wxImageList* imaglist  ):
   wxPanel( parent, -1 ),
-  m_show_nick_list( false ),
+  m_show_nick_list( true ),
   m_nicklist(0),
   m_chat_tabs(( SLNotebook* )parent ),
   m_channel( 0 ),
@@ -239,7 +239,10 @@ void ChatPanel::CreateControls( )
     m_chat_panel = new wxPanel( m_splitter, -1 );
 
     m_nick_sizer = new wxBoxSizer( wxVERTICAL );
-    m_usercount_label = new wxStaticText( m_nick_panel, wxID_ANY, wxString::Format( _("%d users"), GetChannel()->GetNumUsers() ) );
+    unsigned int numusers = 0;
+		if ( m_type == CPT_Channel ) numusers = GetChannel()->GetNumUsers();
+		else if ( m_type == CPT_Server && m_server ) numusers = m_server->GetNumUsers();
+    m_usercount_label = new wxStaticText( m_nick_panel, wxID_ANY, wxString::Format( _("%d users"), numusers ) );
     CreatePopup();//ensures m_popup_menu is constructed
     assert ( m_popup_menu->GetUserMenu() );
     m_nicklist = new NickListCtrl( m_nick_panel, true, m_popup_menu->GetUserMenu() );
@@ -673,25 +676,30 @@ void ChatPanel::Joined( User& who )
       SetIconHighlight( highlight_join_leave );
       OutputLine( _T( " ** " ) + who.GetNick() + _( " joined the " ) + GetChatTypeStr() + _T( "." ), sett().GetChatColorJoinPart(), sett().GetChatFont() );
     }
-		if ( m_show_nick_list && ( m_nicklist != 0 ) )
-		{
-			 m_usercount_label->SetLabel( wxString::Format( _("%d users"), GetChannel()->GetNumUsers() ) );
-			 m_nicklist->AddUser( who );
-		}
 	} else if ( m_type == CPT_Battle ) {
 		if ( sett().GetDisplayJoinLeave( _T( "game/battle" ) ) ) { OutputLine( _T( " ** " ) + who.GetNick() + _( " joined the " ) + GetChatTypeStr() + _T( "." ), sett().GetChatColorJoinPart(), sett().GetChatFont() ); }
 	}
-
+	if ( m_show_nick_list && ( m_nicklist != 0 ) )
+	{
+		unsigned int numusers = 0;
+		if ( m_type == CPT_Channel ) numusers = GetChannel()->GetNumUsers();
+		else if ( m_type == CPT_Server && m_server ) numusers = m_server->GetNumUsers();
+		m_usercount_label->SetLabel( wxString::Format( _("%d users"), numusers ) );
+		m_nicklist->AddUser( who );
+	}
 	// Also add the User to the TextCompletionDatabase
 	textcompletiondatabase.Insert_Mapping( who.GetNick(), who.GetNick() );
 }
 
 void ChatPanel::OnChannelJoin( User& who )
 {
-	if ( m_type == CPT_Channel && m_show_nick_list && (m_nicklist != 0) )
+	if ( m_show_nick_list && (m_nicklist != 0) )
 	{
-		 m_usercount_label->SetLabel( wxString::Format( _("%d users"), GetChannel()->GetNumUsers() ) );
-		 m_nicklist->AddUser( who );
+		unsigned int numusers = 0;
+		if ( m_type == CPT_Channel ) numusers = GetChannel()->GetNumUsers();
+		else if ( m_type == CPT_Server && m_server ) numusers = m_server->GetNumUsers();
+		m_usercount_label->SetLabel( wxString::Format( _("%d users"), numusers ) );
+		m_nicklist->AddUser( who );
 	}
 
 	// Also add the User to the TextCompletionDatabase
@@ -712,16 +720,18 @@ void ChatPanel::Parted( User& who, const wxString& message )
       SetIconHighlight( highlight_join_leave );
 		  OutputLine( _T( " ** " ) + who.GetNick() + _( " left the " ) + GetChatTypeStr() + _T( "( " ) + message + _T( " )." ), sett().GetChatColorJoinPart(), sett().GetChatFont() );
     }
-		if ( m_show_nick_list && ( m_nicklist != 0 ) )
-		{
-			m_usercount_label->SetLabel( wxString::Format( _("%d users"), GetChannel()->GetNumUsers() ) );
-			m_nicklist->RemoveUser( who );
-		}
 
 	} else if ( m_type == CPT_Battle ) {
 		if ( sett().GetDisplayJoinLeave( _T( "game/battle" ) ) )  { OutputLine( _T( " ** " ) + who.GetNick() + _( " left the " ) + GetChatTypeStr() + _T( "( " ) + message + _T( " )." ), sett().GetChatColorJoinPart(), sett().GetChatFont() ); }
 	}
-
+	if ( m_show_nick_list && ( m_nicklist != 0 ) )
+	{
+		unsigned int numusers = 0;
+		if ( m_type == CPT_Channel ) numusers = GetChannel()->GetNumUsers();
+		else if ( m_type == CPT_Server && m_server ) numusers = m_server->GetNumUsers();
+		m_usercount_label->SetLabel( wxString::Format( _("%d users"), numusers ) );
+		m_nicklist->RemoveUser( who );
+	}
 	// Also remove the User from the TextCompletionDatabase
 	textcompletiondatabase.Delete_Mapping( who.GetNick() );
 }
@@ -775,9 +785,9 @@ void ChatPanel::SetChannel( Channel* chan )
 		StatusMessage( _( "Chat closed." ) );
 
 		m_channel->uidata.panel = 0;
-		if ( m_show_nick_list && (m_nicklist != 0) ) {
-			m_nicklist->ClearUsers();
-		}
+	}
+	if ( m_show_nick_list && (m_nicklist != 0) ) {
+		m_nicklist->ClearUsers();
 	}
 
 	if ( chan != 0 ) {

@@ -66,9 +66,6 @@ class Ui
 
     bool IsSpringRunning();
 
-    void StartHostedBattle();
-    //void SendHostInfo( HostInfo update );
-
     void Quit();
 
     void DownloadMap( const wxString& hash, const wxString& name );

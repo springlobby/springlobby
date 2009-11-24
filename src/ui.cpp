@@ -265,15 +265,6 @@ void Ui::JoinChannel( const wxString& name, const wxString& password )
 }
 
 
-void Ui::StartHostedBattle()
-{
-    ASSERT_LOGIC( m_serv != 0, _T("m_serv = 0") );
-    GetServer().StartHostedBattle();
-    sett().SetLastHostMap( GetServer().GetCurrentBattle()->GetHostMapName() );
-    sett().SaveSettings();
-}
-
-
 bool Ui::IsSpringRunning()
 {
     return spring().IsRunning();
@@ -852,6 +843,12 @@ void Ui::OnUserStatusChanged( User& user )
         }
     }
     if ( user.GetStatus().in_game ) mw().GetJoinTab().GetBattleListTab().UserUpdate( user );
+    try
+    {
+			ChatPanel& server = mw().GetChatTab().ServerChat();
+			server.UserStatusUpdated( user );
+		}
+		catch(...){}
 }
 
 

@@ -98,6 +98,7 @@ class Battle : public IBattle
     void SaveMapDefaults();
     void LoadMapDefaults( const wxString& mapname );
 
+		void StartHostedBattle();
     void StartSpring();
 
     void OnTimer( wxTimerEvent& event );

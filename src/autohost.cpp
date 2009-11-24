@@ -293,11 +293,7 @@ void AutoHost::StartBattle()
 	}
 
 	m_battle.DoAction( _T( "is starting game ..." ) );
-	m_battle.GetServer().StartHostedBattle();
+	m_battle.StartHostedBattle();
 
 	m_battle.SaveMapDefaults(); // save map preset
-
-	// todo: copied from Ui::StartHostedBattle
-	sett().SetLastHostMap( m_battle.GetHostMapName() );
-	sett().SaveSettings();
 }
