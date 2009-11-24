@@ -14,6 +14,7 @@
 #include <wx/tokenzr.h>
 #include "customdialogs.h"
 #include "utils/conversion.h"
+#include "base64.h"
 #include <wx/convauto.h>
 
 const wxString s_soap_service_url = _T("http://planet-wars.eu/PlasmaServer/Service.asmx?op=DownloadFile");
@@ -65,8 +66,8 @@ wxArrayString getDownloadLinks( const wxString& name ) {
     header += _T("\n\n");
 
     //Print on screen to make sure it looks right
-    wxMessageBox(header);
-    wxMessageBox(data);
+//    wxMessageBox(header);
+//    wxMessageBox(data);
 
     //Connect to host
     wxIPV4address * address = new wxIPV4address();
@@ -87,6 +88,7 @@ wxArrayString getDownloadLinks( const wxString& name ) {
 
 
     //Get Response
+    socket->WaitForRead(10);
     char peek_buf[1025];
     socket->Peek(peek_buf,1025);
     peek_buf[socket->LastCount()] = '\0';
@@ -101,18 +103,25 @@ wxArrayString getDownloadLinks( const wxString& name ) {
         if ( line.StartsWith( _T("Content-Length") ) ) {
             line = line.SubString( line.Last( wxChar(':') ) + 1, line.Last( wxChar('\n') ) ).Trim( false ).Trim( true );
             line.ToLong( &content_length );
-            wxMessageBox(line);
             assert( content_length >= 0 );
             break;
         }
     }
     char buf[1025+content_length];
     socket->Read(buf,1025+content_length);
+
     buf[socket->LastCount()] = '\0';
 
 //    buf = wxString( buf, wxConvISO8859_1 );
     wxbuf = wxString::  FromAscii( buf );
     wxMessageBox(wxString::Format(_T("Content size %d | Read %d bytes: %s"),content_length,socket->LastCount(),wxbuf.c_str()));
+
+    wxString t_begin = _T("<torrent>");
+    wxString t_end = _T("</torrent>");
+    wxString bin_torrent = wxbuf.SubString( wxbuf.Find( t_begin ) + t_begin.Len()  , wxbuf.Find( t_end )  );
+//    bin_torrent = TowxString( wxBase64::Decode( bin_torrent ) );
+    wxMessageBox(bin_torrent);
+
 
     return wxArrayString();
 }
