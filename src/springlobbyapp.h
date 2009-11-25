@@ -22,8 +22,6 @@ class SpringLobbyApp : public wxApp
 
     virtual void OnFatalException();
 
-    // System Events
-    void OnTimer( wxTimerEvent& event );
     bool SelectLanguage();
 
     virtual void OnInitCmdLine(wxCmdLineParser& parser);
@@ -33,8 +31,6 @@ class SpringLobbyApp : public wxApp
   protected:
 
     void CacheAndSettingsSetup();
-
-    wxTimer* m_timer;
 
     bool quit_called;
 
@@ -49,8 +45,6 @@ class SpringLobbyApp : public wxApp
     wxString m_customizer_modname;
 
     UpdaterMainwindow* m_updater_window;
-
-    DECLARE_EVENT_TABLE()
 };
 
 DECLARE_APP(SpringLobbyApp)

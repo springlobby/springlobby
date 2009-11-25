@@ -18,6 +18,7 @@
 #include <wx/utils.h>
 #include <wx/debugrpt.h>
 #include <wx/filename.h>
+#include <wx/timer.h>
 
 #include "ui.h"
 #include "tasserver.h"
@@ -54,6 +55,13 @@
 #include "sdlsound.h"
 #include "globalsmanager.h"
 
+const unsigned int TIMER_ID         = wxNewId();
+const unsigned int TIMER_INTERVAL   = 100;
+
+BEGIN_EVENT_TABLE(Ui, wxEvtHandler)
+    EVT_TIMER(TIMER_ID, Ui::OnUpdate )
+END_EVENT_TABLE()
+
 Ui& ui()
 {
     static GlobalObjectHolder<Ui> m_ui;
@@ -66,18 +74,23 @@ Ui::Ui() :
         m_con_win(0),
         m_upd_counter_torrent(0),
         m_first_update_trigger(true),
-        m_ingame(false)
+        m_ingame(false),
+        m_timer ( new wxTimer(this, TIMER_ID) )
 {
     m_main_win = new MainWindow( );
     CustomMessageBoxBase::setLobbypointer(m_main_win);
     m_serv = new TASServer();
+
 }
 
 Ui::~Ui()
 {
     Disconnect();
-
+    delete m_timer;
     delete m_serv;
+}
+void Ui::StartUpdateTimer() {
+    m_timer->Start( TIMER_INTERVAL );
 }
 
 Server& Ui::GetServer()
@@ -175,6 +188,7 @@ void Ui::Reconnect()
 
 void Ui::Disconnect()
 {
+    m_timer->Stop();
     if ( m_serv != 0 )
     {
         if ( IsConnected() ) {
@@ -491,9 +505,9 @@ ChatPanel* Ui::GetChannelChatPanel( const wxString& channel )
 // EVENTS
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-
-void Ui::OnUpdate( int mselapsed )
+void Ui::OnUpdate( wxTimerEvent& event )
 {
+    int mselapsed = event.GetInterval();
     if ( GetServerStatus() )
     {
         GetServer().Update( mselapsed );
