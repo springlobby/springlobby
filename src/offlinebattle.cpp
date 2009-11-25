@@ -34,6 +34,7 @@ void OfflineBattle::StartSpring()
 
 OfflineBattle::OfflineBattle ( const OfflineBattle& other )
 {
+    //TODO init IBattle
     *this = other;
 }
 

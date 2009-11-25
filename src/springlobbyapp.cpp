@@ -217,11 +217,12 @@ int SpringLobbyApp::OnExit()
         wxDELETE(m_translationhelper);
     }
 
-  sett().SaveSettings(); // to make sure that cache path gets saved before destroying unitsync
+    sett().SaveSettings(); // to make sure that cache path gets saved before destroying unitsync
 
-  DestroyGlobals();
+    SetEvtHandlerEnabled(false);
+    DestroyGlobals();
 
-  return 0;
+    return 0;
 }
 
 //! @brief is called when the app crashes
