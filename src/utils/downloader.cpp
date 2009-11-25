@@ -11,10 +11,11 @@
 
 #include <wx/protocol/http.h>
 #include <wx/xml/xml.h>
+#include <wx/wfstream.h>
 #include <wx/tokenzr.h>
 #include "customdialogs.h"
-#include "utils/conversion.h"
-#include "base64.h"
+#include "conversion.h"
+#include "../base64.h"
 #include <wx/convauto.h>
 
 const wxString s_soap_service_url = _T("http://planet-wars.eu/PlasmaServer/Service.asmx?op=DownloadFile");
@@ -119,9 +120,11 @@ wxArrayString getDownloadLinks( const wxString& name ) {
     wxString t_begin = _T("<torrent>");
     wxString t_end = _T("</torrent>");
     wxString bin_torrent = wxbuf.SubString( wxbuf.Find( t_begin ) + t_begin.Len()  , wxbuf.Find( t_end )  );
-//    bin_torrent = TowxString( wxBase64::Decode( bin_torrent ) );
+    bin_torrent = TowxString( wxBase64::Decode( bin_torrent ) );
     wxMessageBox(bin_torrent);
 
-
+    wxFileOutputStream fo ( _T("/tmp/dsd.torrent") );
+    fo .Write( (void*)bin_torrent.c_str(), bin_torrent.Len() );
+    fo.Close();
     return wxArrayString();
 }

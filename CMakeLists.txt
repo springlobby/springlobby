@@ -221,6 +221,7 @@ SET(SpringLobbySrc
 	src/aui/slbook
 	src/utils/math
 	src/utils/misc
+	src/utils/downloader
 	src/utils/debug
 	src/utils/platform
 	src/utils/conversion
