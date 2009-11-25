@@ -33,8 +33,8 @@ void OfflineBattle::StartSpring()
 }
 
 OfflineBattle::OfflineBattle ( const OfflineBattle& other )
+    : IBattle()
 {
-    //TODO init IBattle
     *this = other;
 }
 

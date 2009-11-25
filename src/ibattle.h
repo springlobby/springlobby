@@ -385,8 +385,8 @@ public:
 
 protected:
 
-		void LoadScriptMMOpts( const wxString& sectionname, const PDataList& node );
-		void LoadScriptMMOpts( const PDataList& node );
+    void LoadScriptMMOpts( const wxString& sectionname, const PDataList& node );
+    void LoadScriptMMOpts( const PDataList& node );
 
 
     bool m_map_loaded;
@@ -404,18 +404,18 @@ protected:
 
     BattleOptions m_opts;
 
-		bool m_ingame;
+    bool m_ingame;
 
-		bool m_generating_script;
+    bool m_generating_script;
 
-		std::map<unsigned int,BattleStartRect> m_rects;
+    std::map<unsigned int,BattleStartRect> m_rects;
 
-		std::map<wxString, time_t> m_ready_up_map; // player name -> time counting from join/unspect
+    std::map<wxString, time_t> m_ready_up_map; // player name -> time counting from join/unspect
 
-		int m_players_ready;
-		int m_players_sync;
-		std::map<int, int> m_teams_sizes; // controlteam -> number of people in
-		std::map<int, int> m_ally_sizes; // allyteam -> number of people in
+    int m_players_ready;
+    int m_players_sync;
+    std::map<int, int> m_teams_sizes; // controlteam -> number of people in
+    std::map<int, int> m_ally_sizes; // allyteam -> number of people in
 
     wxString m_preset;
 
@@ -427,9 +427,9 @@ protected:
     wxString m_playback_file_path;
     TeamVec m_parsed_teams;
     AllyVec m_parsed_allies;
-		UserVec m_internal_user_list; /// to store users from savegame/replay
+    UserVec m_internal_user_list; /// to store users from savegame/replay
 
-		wxTimer* m_timer;
+    wxTimer* m_timer;
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_IBATTLE_H
