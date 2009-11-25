@@ -190,9 +190,9 @@ m_token_transmission( false )
 
 TASServer::~TASServer()
 {
-		Disconnect();
-		delete m_sock;
-		m_sock = 0;
+    Disconnect();
+    delete m_sock;
+    m_sock = 0;
     delete m_se;
 }
 
@@ -364,6 +364,7 @@ void TASServer::Disconnect()
     SendCmd( _T("EXIT") ); // EXIT command for new protocol compatibility
     m_sock->Disconnect();
     m_connected = false;
+    m_users.Nullify();
 }
 
 bool TASServer::IsConnected()

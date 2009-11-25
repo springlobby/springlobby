@@ -180,7 +180,7 @@ class Server : public iNetClass
 
     virtual void RequestSpringUpdate();
 
-		virtual wxArrayString GetRelayHostList();
+    virtual wxArrayString GetRelayHostList();
 
   protected:
     Socket* m_sock;

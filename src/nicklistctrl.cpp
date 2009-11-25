@@ -153,6 +153,7 @@ void NickListCtrl::SetTipWindowText( const long item_hit, const wxPoint& positio
 	}
 	else
 	{
+
 		const User& user = *m_data[item_hit];
 		{
 			switch ( column )
@@ -196,7 +197,7 @@ void NickListCtrl::SetTipWindowText( const long item_hit, const wxPoint& positio
 
 wxListItemAttr* NickListCtrl::GetItemAttr( long item ) const
 {
-	if ( item < ( long ) m_data.size() && item > -1 ) {
+	if ( m_data[item] && item < ( long ) m_data.size() && item > -1 ) {
 		const User& u = *m_data[item];
 		wxString name = u.GetNick();
 		return HighlightItemUser( name );
@@ -259,9 +260,14 @@ wxString NickListCtrl::GetItemText( long item, long column ) const
 		default:
 			return wxEmptyString;
 
-		case 3:
-			return ( m_data[item] ? m_data[item]->GetNick() : wxString() );
-	}
+		case 3: {
+            if ( m_data[item] )
+                return m_data[item]->GetNick();
+            else
+                return wxEmptyString;
+        }
+    }
+	return wxEmptyString;
 }
 
 int NickListCtrl::GetItemColumnImage( long item, long column ) const
