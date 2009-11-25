@@ -32,7 +32,6 @@ class SingleOptionDialog: public wxDialog
 			wxButton* m_cancel_button;
 			wxButton* m_ok_button;
 
-			DECLARE_EVENT_TABLE();
 };
 
 enum
