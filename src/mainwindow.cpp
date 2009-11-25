@@ -277,49 +277,49 @@ MainWindow::~MainWindow()
 
 void MainWindow::OnClose( wxCloseEvent& /*unused*/ )
 {
+    ui().StopUpdateTimer();
     SavePerspectives();
-  AuiManagerContainer::ManagerType* manager=GetAui().manager;
-  if(manager){
-    GetAui().manager=NULL;
-    manager->UnInit();
-    delete manager;
-  }
+    AuiManagerContainer::ManagerType* manager=GetAui().manager;
+    if(manager){
+        GetAui().manager=NULL;
+        manager->UnInit();
+        delete manager;
+    }
 
-  wxString name = _T("MAINWINDOW");
-  sett().SetWindowSize( name, GetSize() );
-  sett().SetWindowPos( name, GetPosition() );
+    wxString name = _T("MAINWINDOW");
+    sett().SetWindowSize( name, GetSize() );
+    sett().SetWindowPos( name, GetPosition() );
 
-  ui().Quit();
-  forceSettingsFrameClose();
-  freeStaticBox();
+    ui().Quit();
+    forceSettingsFrameClose();
+    freeStaticBox();
 
-  if ( m_autojoin_dialog  != 0 )
-  {
-    delete m_autojoin_dialog;
-    m_autojoin_dialog = 0;
-  }
+    if ( m_autojoin_dialog  != 0 )
+    {
+        delete m_autojoin_dialog;
+        m_autojoin_dialog = 0;
+    }
 
-  sett().SaveSettings();
-  if ( m_log_win ) {
-    m_log_win->GetFrame()->Destroy();
-    if ( m_log_chain ) // if logwin was created, it's the current "top" log
-        m_log_chain->DetachOldLog();  //so we need to tellwx not to delete it on its own
+    sett().SaveSettings();
+    if ( m_log_win ) {
+        m_log_win->GetFrame()->Destroy();
+        if ( m_log_chain ) // if logwin was created, it's the current "top" log
+            m_log_chain->DetachOldLog();  //so we need to tellwx not to delete it on its own
         //since we absolutely need to destroy the logwin here, set a fallback for the time until app cleanup
 #if(wxUSE_STD_IOSTREAM)
-        wxLog::SetActiveTarget( new wxLogStream( &std::cout ) );
+            wxLog::SetActiveTarget( new wxLogStream( &std::cout ) );
 #endif
-  }
+    }
 
-  Destroy();
-
+    Destroy();
 }
 
 void DrawBmpOnBmp( wxBitmap& canvas, wxBitmap& object, int x, int y )
 {
-  wxMemoryDC dc;
-  dc.SelectObject( canvas );
-  dc.DrawBitmap( object, x, y, true );
-  dc.SelectObject( wxNullBitmap );
+    wxMemoryDC dc;
+    dc.SelectObject( canvas );
+    dc.DrawBitmap( object, x, y, true );
+    dc.SelectObject( wxNullBitmap );
 }
 
 //void MainWindow::DrawTxtOnBmp( wxBitmap& canvas, wxString text, int x, int y )

@@ -93,6 +93,10 @@ void Ui::StartUpdateTimer() {
     m_timer->Start( TIMER_INTERVAL );
 }
 
+void Ui::StopUpdateTimer() {
+    m_timer->Stop();
+}
+
 Server& Ui::GetServer()
 {
     ASSERT_LOGIC( m_serv != 0, _T("m_serv NULL!") );
