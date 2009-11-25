@@ -103,7 +103,13 @@ Server& Ui::GetServer()
     return *m_serv;
 }
 
-bool Ui::GetServerStatus()
+const Server& Ui::GetServer() const
+{
+    ASSERT_LOGIC( m_serv != 0, _T("m_serv NULL!") );
+    return *m_serv;
+}
+
+bool Ui::GetServerStatus() const
 {
     return (bool)(m_serv);
 }
@@ -122,7 +128,7 @@ MainWindow& Ui::mw()
 }
 
 
-bool Ui::IsMainWindowCreated()
+bool Ui::IsMainWindowCreated() const
 {
     if ( m_main_win == 0 ) return false;
     else return true;
@@ -283,7 +289,7 @@ void Ui::JoinChannel( const wxString& name, const wxString& password )
 }
 
 
-bool Ui::IsSpringRunning()
+bool Ui::IsSpringRunning() const
 {
     return spring().IsRunning();
 }
@@ -387,16 +393,13 @@ bool Ui::AskText( const wxString& heading, const wxString& question, wxString& a
 
 void Ui::ShowMessage( const wxString& heading, const wxString& message )
 {
-
     if ( m_main_win == 0 ) return;
     serverMessageBox( SL_MAIN_ICON, message, heading, wxOK);
-
 }
 
 
 bool Ui::ExecuteSayCommand( const wxString& cmd )
 {
-
     if ( !IsConnected() ) return false;
     //TODO insert logic for joining multiple channels at once
     //or remove that from "/help"
@@ -1173,17 +1176,17 @@ void Ui::OnRing( const wxString& /*from */)
 #endif
 }
 
-bool Ui::IsThisMe(User& other)
+bool Ui::IsThisMe(User& other) const
 {
     return IsThisMe( other.GetNick() );
 }
 
-bool Ui::IsThisMe(User* other)
+bool Ui::IsThisMe(User* other) const
 {
     return ( ( other != 0 ) && IsThisMe( other->GetNick() ) );
 }
 
-bool Ui::IsThisMe(const wxString& other)
+bool Ui::IsThisMe(const wxString& other) const
 {
     //if i'm not connected i have no identity
     if (!IsConnected() || m_serv==0)
@@ -1192,7 +1195,7 @@ bool Ui::IsThisMe(const wxString& other)
         return ( other == GetServer().GetMe().GetNick() );
 }
 
-int Ui::TestHostPort( unsigned int port )
+int Ui::TestHostPort( unsigned int port ) const
 {
     return GetServer().TestOpenPort( port );
 }

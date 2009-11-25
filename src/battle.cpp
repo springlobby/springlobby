@@ -156,6 +156,11 @@ User& Battle::GetMe()
     return m_serv.GetMe();
 }
 
+const User& Battle::GetMe() const
+{
+    return m_serv.GetMe();
+}
+
 void Battle::SaveMapDefaults()
 {
     // save map preset

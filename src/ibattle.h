@@ -203,9 +203,9 @@ public:
     virtual bool IsFounderMe();
     virtual bool IsFounder( const User& user ) const;
 
-    virtual int GetMyPlayerNum();
+    virtual int GetMyPlayerNum() const;
 
-    virtual int GetPlayerNum( const User& user );
+    virtual int GetPlayerNum( const User& user ) const;
 
     virtual void SetHostMod( const wxString& modname, const wxString& hash );
     virtual void SetLocalMod( const UnitSyncMod& mod );
@@ -246,6 +246,7 @@ public:
     virtual int GetFreeTeamNum( bool excludeme = false );
 
     virtual User& GetMe() = 0;
+    virtual const User& GetMe() const = 0;
 
     virtual void SendHostInfo( HostInfo update );
     virtual void SendHostInfo( const wxString& Tag );
@@ -254,13 +255,13 @@ public:
     virtual unsigned int GetNumBots() const;
     virtual User& OnBotAdded( const wxString& nick, const UserBattleStatus& bs );
 
-    virtual UserPosition GetFreePosition();
-    virtual int GetFreeAlly( bool excludeme = false );
+    virtual UserPosition GetFreePosition() ;
+    virtual int GetFreeAlly( bool excludeme = false ) const;
 
     virtual void RestrictUnit( const wxString& unitname, int count = 0 );
     virtual void UnrestrictUnit( const wxString& unitname );
     virtual void UnrestrictAllUnits();
-    virtual std::map<wxString,int> RestrictedUnits();
+    virtual std::map<wxString,int> RestrictedUnits() const;
 
     virtual void OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ );
 
@@ -275,14 +276,13 @@ public:
     virtual void DeletePreset( const wxString& name );
     virtual wxArrayString GetPresetList();
 
-    virtual std::vector<wxColour> &GetFixColoursPalette( int numteams );
-    virtual int GetClosestFixColour(const wxColour &col, const std::vector<int> &excludes, int difference);
-    virtual wxColour GetFixColour(int i);
-    virtual wxColour GetFreeColour( User &for_whom );
-    wxColour GetFreeColour( User *for_whom = NULL );
-    wxColour GetNewColour();
-
-    virtual int ColourDifference(const wxColour &a, const wxColour &b);
+    virtual std::vector<wxColour> &GetFixColoursPalette( int numteams ) const;
+    virtual int GetClosestFixColour(const wxColour &col, const std::vector<int> &excludes, int difference) const;
+    virtual wxColour GetFixColour(int i) const;
+    virtual wxColour GetFreeColour( User &for_whom ) const;
+    wxColour GetFreeColour( User *for_whom = NULL ) const;
+    wxColour GetNewColour() const;
+    int ColourDifference(const wxColour &a, const wxColour &b)  const;
 
 	User& GetFounder() const { return GetUser( m_opts.founder ); }
 
@@ -370,16 +370,16 @@ public:
 		virtual void SetScript( const wxString& script ) { m_script = script; }
 		virtual void AppendScriptLine( const wxString& line ) { m_script << line; }
 		virtual void ClearScript() { m_script.Clear(); }
-		virtual wxString GetScript() { return m_script; }
+		virtual wxString GetScript() const { return m_script; }
 
 		virtual void SetPlayBackFilePath( const wxString& path ) { m_playback_file_path = path; }
-		virtual wxString GetPlayBackFilePath() { return m_playback_file_path; }
+		virtual wxString GetPlayBackFilePath() const { return m_playback_file_path; }
 
 		virtual void AddUserFromDemo( User& user );
 
 		virtual void GetBattleFromScript( bool loadmapmod );
 
-		virtual bool ShouldAutoStart();
+		virtual bool ShouldAutoStart() const;
 
 		virtual void StartSpring() = 0;
 

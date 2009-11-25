@@ -58,19 +58,19 @@ bool IBattle::IsSynced()
 
 
 
-std::vector<wxColour> &IBattle::GetFixColoursPalette( int numteams )
+std::vector<wxColour> &IBattle::GetFixColoursPalette( int numteams ) const
 {
     return GetBigFixColoursPalette( numteams );
 }
 
-wxColour IBattle::GetFixColour(int i)
+wxColour IBattle::GetFixColour(int i) const
 {
 		int size = m_teams_sizes.size();
     std::vector<wxColour> palette = GetFixColoursPalette( size );
 		return palette[i];
 }
 
-int IBattle::GetPlayerNum( const User& user )
+int IBattle::GetPlayerNum( const User& user ) const
 {
     for (user_map_t::size_type i = 0; i < GetNumUsers(); i++)
     {
@@ -110,7 +110,7 @@ class AreColoursSimilarProxy {
         }
 };
 
-wxColour IBattle::GetFreeColour( User * )
+wxColour IBattle::GetFreeColour( User * ) const
 {
     typedef std::vector<wxColour>
         ColorVec;
@@ -134,18 +134,18 @@ wxColour IBattle::GetFreeColour( User * )
     }
 }
 
-wxColour IBattle::GetFreeColour( User &for_whom )
+wxColour IBattle::GetFreeColour( User &for_whom ) const
 {
     return GetFreeColour( &for_whom );
 }
 
 
-wxColour IBattle::GetNewColour()
+wxColour IBattle::GetNewColour() const
 {
     return GetFreeColour();
 }
 
-int IBattle::ColourDifference(const wxColour &a, const wxColour &b) // returns max difference of r,g,b.
+int IBattle::ColourDifference(const wxColour &a, const wxColour &b)  const// returns max difference of r,g,b.
 {
     return std::max(abs(a.Red()-b.Red()),std::max(abs(a.Green()-b.Green()),abs(a.Blue()-b.Blue())));
 
@@ -172,7 +172,7 @@ int IBattle::GetFreeTeamNum( bool excludeme )
     return lowest;
 }
 
-int IBattle::GetClosestFixColour(const wxColour &col, const std::vector<int> &excludes, int difference)
+int IBattle::GetClosestFixColour(const wxColour &col, const std::vector<int> &excludes, int difference) const
 {
     std::vector<wxColour> palette = GetFixColoursPalette( m_teams_sizes.size() + 1 );
     int result=0;
@@ -378,7 +378,7 @@ void IBattle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 	}
 }
 
-bool IBattle::ShouldAutoStart()
+bool IBattle::ShouldAutoStart() const
 {
 	if ( GetInGame() ) return false;
 	if ( !IsLocked() && (  ( GetNumPlayers() - m_opts.spectators ) ) < m_opts.maxplayers ) return false; // proceed checking for ready players only if the battle is full or locked
@@ -719,7 +719,7 @@ void IBattle::KickPlayer( User& user )
 		}
 }
 
-int IBattle::GetFreeAlly( bool excludeme )
+int IBattle::GetFreeAlly( bool excludeme ) const
 {
   int lowest = 0;
   bool changed = true;
@@ -918,7 +918,7 @@ void IBattle::UnrestrictAllUnits()
 }
 
 
-std::map<wxString,int> IBattle::RestrictedUnits()
+std::map<wxString,int> IBattle::RestrictedUnits() const
 {
   return m_restricted_units;
 }
@@ -1125,7 +1125,7 @@ bool IBattle::IsFounder( const User& user ) const
         return false;
 }
 
-int IBattle::GetMyPlayerNum()
+int IBattle::GetMyPlayerNum() const
 {
     return GetPlayerNum( GetMe() );
 }

@@ -440,8 +440,10 @@ wxString TASServer::GetPasswordHash( const wxString& pass ) const
 }
 
 
-User& TASServer::GetMe() const
-{
+User& TASServer::GetMe() {
+    return GetUser( m_user );
+}
+const User& TASServer::GetMe() const {
     return GetUser( m_user );
 }
 
@@ -2354,7 +2356,7 @@ void TASServer::UdpPingAllClients()// used when hosting with nat holepunching. h
 
 
 //! @brief used to check if the NAT is done properly when hosting
-int TASServer::TestOpenPort( unsigned int port )
+int TASServer::TestOpenPort( unsigned int port ) const
 {
     wxIPV4address local_addr;
     local_addr.AnyAddress(); // <--- THATS ESSENTIAL!

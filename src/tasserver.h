@@ -53,7 +53,8 @@ class TASServer : public Server
     void UdpPingTheServer( const wxString &message );/// used for nat travelsal. pings the server.
     void UdpPingAllClients();/// used when hosting with nat holepunching
 
-    User& GetMe() const;
+    const User& GetMe() const;
+    User& GetMe();
 
     void JoinChannel( const wxString& channel, const wxString& key );
     void PartChannel( const wxString& channel );
@@ -131,7 +132,7 @@ class TASServer : public Server
     bool IsPasswordHash( const wxString& pass )  const;
     wxString GetPasswordHash( const wxString& pass ) const;
 
-    int TestOpenPort( unsigned int port );
+    int TestOpenPort( unsigned int port ) const;
 
     void SendScriptToProxy( const wxString& script );
 
@@ -139,7 +140,7 @@ class TASServer : public Server
 
     void RequestSpringUpdate();
 
-    wxArrayString GetRelayHostList();
+    wxArrayString GetRelayHostList() ;
 
   protected:
 
