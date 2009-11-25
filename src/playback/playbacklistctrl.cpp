@@ -215,7 +215,7 @@ int PlaybackListCtrl<PlaybackType>::GetItemImage(long item) const
 }
 
 template <class PlaybackType>
-int PlaybackListCtrl<PlaybackType>::GetItemColumnImage(long item, long column) const
+int PlaybackListCtrl<PlaybackType>::GetItemColumnImage(long /*item*/, long /*column*/) const
 {
     //nothing's been done here atm
     return -1;

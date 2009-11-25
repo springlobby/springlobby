@@ -124,7 +124,7 @@ bool FileListFilter::FilterTorrentData( const TorrentTable::PRow& data )
 	return true;
 }
 
-void FileListFilter::OnChange( wxCommandEvent& event )
+void FileListFilter::OnChange( wxCommandEvent&  )
 {
 	m_parent_filelistdialog->UpdateList();
 }

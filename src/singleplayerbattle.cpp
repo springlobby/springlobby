@@ -104,7 +104,7 @@ int NoGuiSinglePlayerBattle::GetAiIndex( const wxString& name )
     {
         wxArrayString infos = susynclib().GetAIInfo( i );
         int namepos = infos.Index( _T("shortName") );
-        int versionpos = infos.Index( _T("version") );
+//        int versionpos = infos.Index( _T("version") );
         wxString ainame;
         if ( namepos != wxNOT_FOUND )
             ainame += infos[namepos +1];

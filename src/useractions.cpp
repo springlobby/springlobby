@@ -71,9 +71,9 @@ void UserActions::Init()
     {
         ActionType cur = (ActionType) (int) std::pow( 2.0, i);
         wxSortedArrayString tmp;
-        for ( unsigned int i = 0; i < m_groupNames.GetCount(); ++i)
+        for ( unsigned int j = 0; j < m_groupNames.GetCount(); ++j)
         {
-            wxString name = m_groupNames[i];
+            wxString name = m_groupNames[j];
             if ( ( m_groupActions[name] & cur ) != 0 )
             {
                 tmp.Add( name );

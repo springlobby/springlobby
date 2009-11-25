@@ -44,7 +44,7 @@ ChannelListctrl::~ChannelListctrl()
     //dtor
 }
 
-void ChannelListctrl::HighlightItem( long item ){}
+void ChannelListctrl::HighlightItem( long ){}
 
 /** @brief AddChannel
   *
@@ -134,7 +134,7 @@ void ChannelListctrl::FilterChannel( const wxString& partial )
 }
 
 
-int ChannelListctrl::GetItemColumnImage(long /*unused*/, long column) const
+int ChannelListctrl::GetItemColumnImage(long /*unused*/, long ) const
 {
     return -1;
 }

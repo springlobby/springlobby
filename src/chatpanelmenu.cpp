@@ -15,9 +15,8 @@
 #include "mainwindow.h"
 #include "settings.h"
 
-ChatPanelMenu::ChatPanelMenu(ChatPanel* parent, bool addChanServ, const wxString& title , long style )
-
-:    m_chatpanel(parent),
+ChatPanelMenu::ChatPanelMenu(ChatPanel* parent, bool addChanServ, const wxString& /*title */, long /*style*/ )
+    : m_chatpanel(parent),
     m_autorejoin( 0 ),
     m_withChanserv( addChanServ )
 {}
@@ -732,7 +731,7 @@ void ChatPanelMenu::OnChannelMenuShowMutelist( wxCommandEvent& /*unused*/ )
     }
 }
 
-void ChatPanelMenu::OnChatMenuOpenLog( wxCommandEvent& event )
+void ChatPanelMenu::OnChatMenuOpenLog( wxCommandEvent&  )
 {
     m_chatpanel->m_chat_log.OpenInEditor();
 }

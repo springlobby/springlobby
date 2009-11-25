@@ -58,7 +58,7 @@ wxSpringProcess::~wxSpringProcess()
 	wxLogDebugFunc( _T( "" ) );
 }
 
-void wxSpringProcess::OnTerminate( int pid, int status )
+void wxSpringProcess::OnTerminate( int /*pid*/, int status )
 {
 	wxCommandEvent event( wxEVT_SPRING_EXIT, PROC_SPRING );
 	event.SetExtraLong( status );

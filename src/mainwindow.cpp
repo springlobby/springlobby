@@ -434,7 +434,7 @@ void MainWindow::ShowSingleplayer()
 
 void MainWindow::ShowTab( const unsigned int idx )
 {
-    if ( 0 <= idx && idx <m_tab_names.GetCount() )
+    if ( idx < m_tab_names.GetCount() )
         m_func_tabs->SetSelection( idx );
     else
         wxLogError( _T("tab selection oob: %d"), idx );
@@ -614,7 +614,7 @@ void MainWindow::OnTabsChanged( wxAuiNotebookEvent& event )
   }
 }
 
-void MainWindow::OnShowSettingsPP( wxCommandEvent& event )
+void MainWindow::OnShowSettingsPP( wxCommandEvent&  )
 {
 	se_frame = new settings_frame(this,wxID_ANY,wxT("SpringSettings"),wxDefaultPosition,
 	  	    		wxDefaultSize);
@@ -677,7 +677,7 @@ void MainWindow::OnMenuLoadLayout( wxCommandEvent& /*unused*/ )
 {
 	wxArrayString layouts = sett().GetPerspectives();
 	unsigned int result = wxGetSingleChoiceIndex( _("Which profile fo you want to load?"), _("Layout manager"), layouts );
-	if ( ( result < 0  ) || ( result > layouts.GetCount() ) )
+	if ( result > layouts.GetCount() )
         return;
 
     LoadPerspectives( layouts[result] );
@@ -688,7 +688,8 @@ void MainWindow::OnMenuDefaultLayout( wxCommandEvent& /*unused*/ )
 {
 	wxArrayString layouts = sett().GetLayoutList();
 	unsigned int result = wxGetSingleChoiceIndex( _("Which profile do you want to be default?"), _("Layout manager"), layouts );
-	if ( ( result < 0  ) || ( result > layouts.GetCount() ) ) return;
+	if ( result > layouts.GetCount() )
+        return;
 	sett().SetDefaultLayout( layouts[result] );
 }
 

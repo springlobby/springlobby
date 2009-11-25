@@ -411,7 +411,7 @@ void MapCtrl::GetClosestStartPos( int fromx, int fromy, int& index, int& x, int&
     range = -1;
     index = -1;
 
-    for ( int i = 0; i < map.info.positions.size(); i++ )
+    for ( int i = 0; i < int(map.info.positions.size()); i++ )
     {
         double dx = fromx - map.info.positions[i].x;
         double dy = fromy - map.info.positions[i].y;
@@ -753,7 +753,7 @@ void MapCtrl::DrawStartPositions( wxDC& dc )
 
         wxFont f( 7, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_LIGHT );
         dc.SetFont( f );
-        for ( int i = 0; i < m_map.info.positions.size(); i++ )
+        for ( int i = 0; i < int(m_map.info.positions.size()); i++ )
         {
             int x = (int)( (double)((double)m_map.info.positions[i].x / (double)m_map.info.width) * (double)mr.width ) - 8;
             int y = (int)( (double)(m_map.info.positions[i].y / (double)m_map.info.height) * (double)mr.height ) - 8;
@@ -766,7 +766,7 @@ void MapCtrl::DrawStartPositions( wxDC& dc )
     else
     {
         // Draw startpositions
-        for ( int i = 0; i < m_map.info.positions.size(); i++ )
+        for ( int i = 0; i < int(m_map.info.positions.size()); i++ )
         {
             int x = (int)( (double)((double)m_map.info.positions[i].x / (double)m_map.info.width) * (double)mr.width ) - 8;
             int y = (int)( (double)(m_map.info.positions[i].y / (double)m_map.info.height) * (double)mr.height ) - 8;
@@ -968,7 +968,7 @@ void MapCtrl::DrawUserPositions( wxDC& dc )
     m_map = m_battle->LoadMap();
     RequireImages();
 
-    for ( int i = 0; i < m_map.info.positions.size(); i++ )
+    for ( int i = 0; i < int(m_map.info.positions.size()); i++ )
     {
 
         int x = (int)( (double)((double)m_map.info.positions[i].x / (double)m_map.info.width) * (double)mr.width ) - 8;

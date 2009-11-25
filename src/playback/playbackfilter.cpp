@@ -423,18 +423,18 @@ void PlaybackListFilter<PlaybackTabType>::SetDurationValue()
 {
 
     wxString dur = m_filter_duration_edit->GetValue();
-    const wxChar* sep = _T(":");
-    int sep_count = dur.Replace(sep,sep); //i know, i know
+    const wxChar* mysep = _T(":");
+    int sep_count = dur.Replace(mysep,mysep); //i know, i know
     switch ( sep_count ) {
         default:
             break;
 
         case 0: m_duration_value = s2l( dur );
             break;
-        case 1: m_duration_value = s2l( dur.AfterFirst(*sep) ) + ( s2l( dur.BeforeFirst(*sep) ) * 60 );
+        case 1: m_duration_value = s2l( dur.AfterFirst(*mysep) ) + ( s2l( dur.BeforeFirst(*mysep) ) * 60 );
             break;
-        case 2: m_duration_value = s2l( dur.AfterLast(*sep) ) + ( s2l( dur.AfterFirst(*sep).BeforeFirst(*sep) ) * 60 )
-                                    + ( s2l( dur.BeforeFirst(*sep) ) * 3600 );
+        case 2: m_duration_value = s2l( dur.AfterLast(*mysep) ) + ( s2l( dur.AfterFirst(*mysep).BeforeFirst(*mysep) ) * 60 )
+                                    + ( s2l( dur.BeforeFirst(*mysep) ) * 3600 );
             break;
 
     }

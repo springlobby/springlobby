@@ -63,7 +63,7 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
     m_web_loc_sizer->Add( m_web_edit, 1, wxEXPAND );
     m_web_loc_sizer->Add( m_web_browse_btn );
 
-    wxStaticBoxSizer* m_web_box_sizer = new wxStaticBoxSizer( m_web_box, wxVERTICAL );
+    m_web_box_sizer = new wxStaticBoxSizer( m_web_box, wxVERTICAL );
 
     m_web_box_sizer->Add( m_web_def_radio, 0, wxALL, 2 );
     m_web_box_sizer->Add( m_web_spec_radio, 0, wxALL, 2 );
@@ -82,7 +82,7 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
     m_editor_loc_sizer->Add( m_editor_edit, 1, wxEXPAND );
     m_editor_loc_sizer->Add( m_editor_browse_btn );
 
-    wxStaticBoxSizer* m_editor_box_sizer = new wxStaticBoxSizer( m_editor_box, wxVERTICAL );
+    m_editor_box_sizer = new wxStaticBoxSizer( m_editor_box, wxVERTICAL );
 
     m_editor_box_sizer->Add( m_editor_loc_sizer, 0, wxEXPAND | wxALL, 2 );
 ////////

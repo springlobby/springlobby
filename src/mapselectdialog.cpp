@@ -277,7 +277,7 @@ static MapGridCtrl::SortKey GetSelectedSortKey( wxChoice* choice )
 namespace {
 struct FilterPredicate
 {
-	FilterPredicate( const wxString& searchText ) : searchText(searchText.Lower()) {}
+	FilterPredicate( const wxString& _searchText ) : searchText(_searchText.Lower()) {}
 	bool operator () ( const UnitSyncMap& map ) const
 	{
 		return map.name.Lower().Contains( searchText )

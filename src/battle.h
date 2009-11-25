@@ -101,7 +101,7 @@ class Battle : public IBattle
 		void StartHostedBattle();
     void StartSpring();
 
-    void OnTimer( wxTimerEvent& event );
+    void OnTimer( wxTimerEvent& /*event*/ );
 
 		void SetInGame( bool ingame );
 

@@ -412,7 +412,7 @@ void MapGridCtrl::OnPaint( wxPaintEvent& /*unused*/ )
 }
 
 
-void MapGridCtrl::OnResize( wxSizeEvent& event )
+void MapGridCtrl::OnResize( wxSizeEvent&  )
 {
 	CheckInBounds();
 }

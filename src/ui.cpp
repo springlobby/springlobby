@@ -531,7 +531,7 @@ void Ui::OnUpdate( int mselapsed )
 //! @brief Called when connected to a server
 //!
 //! @todo Display in servertab
-void Ui::OnConnected( Server& server, const wxString& server_name, const wxString& /*unused*/, bool supported )
+void Ui::OnConnected( Server& server, const wxString& server_name, const wxString& /*unused*/, bool /*supported*/ )
 {
     wxLogDebugFunc( _T("") );
     if ( !m_last_used_backup_server.IsEmpty() )
@@ -1142,7 +1142,7 @@ void Ui::OnAcceptAgreement( const wxString& agreement )
 }
 
 
-void Ui::OnRing( const wxString& from )
+void Ui::OnRing( const wxString& /*from */)
 {
     if ( m_main_win == 0 ) return;
     m_main_win->RequestUserAttention();

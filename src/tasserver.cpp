@@ -946,7 +946,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         bstatus = ConvTasbattlestatus( tasbstatus.tasdata );
         color.data = GetIntParam( params );
         bstatus.colour = wxColour( color.color.red, color.color.green, color.color.blue );
-        wxString ai = GetSentenceParam( params );
+        ai = GetSentenceParam( params );
         if ( ai.IsEmpty() ) {
             wxLogWarning( wxString::Format( _T("Recieved illegal ADDBOT (empty dll field) from %s for battle %d"), nick.c_str(), id ) );
             ai = _T("INVALID|INVALID");
@@ -1056,8 +1056,8 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         // clientipport username ip port
         nick=GetWordParam( params );
         wxString ip=GetWordParam(params);
-        unsigned int port=(unsigned int)GetIntParam( params );
-        m_se->OnClientIPPort(nick, ip, port);
+        unsigned int u_port=(unsigned int)GetIntParam( params );
+        m_se->OnClientIPPort(nick, ip, u_port);
     }
     else if ( cmd == _T("SETSCRIPTTAGS") )
     {
@@ -1103,11 +1103,11 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     {
         if ( m_online ) return;
         wxString address = GetWordParam( params );
-        unsigned int port = GetIntParam( params );
+        unsigned int u_port = GetIntParam( params );
         if ( address.IsEmpty() ) return;
-        if ( port == 0 ) port = DEFSETT_DEFAULT_SERVER_PORT;
+        if ( u_port  == 0 ) u_port  = DEFSETT_DEFAULT_SERVER_PORT;
         m_redirecting = true;
-        m_se->OnRedirect( address, port, m_user, m_pass );
+        m_se->OnRedirect( address, u_port , m_user, m_pass );
     }
     else if ( cmd == _T("MUTELISTBEGIN") )
     {
@@ -1673,7 +1673,6 @@ void TASServer::SendHostInfo( const wxString& Tag )
 
     try
     {
-        Battle& battle = GetBattle( m_battle_id );
         ASSERT_LOGIC( battle.IsFounderMe(), _T("I'm not founder") );
     }
     catch (...)

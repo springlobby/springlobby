@@ -514,12 +514,15 @@ void BattleRoomTab::UpdateBattleInfo( const wxString& Tag )
 				m_opts_list->SetItem( m_opt_list_map[ _( "Tidal strength" ) ], 1, _T( "?" ) );
 			}
 			wxString mapname = RefineMapname( m_battle.GetHostMapName() );
-			int index = m_map_combo->FindString( mapname );
-			if ( index != wxNOT_FOUND ) m_map_combo->SetSelection( index );
-			else m_map_combo->SetValue( mapname );
+			int index_ = m_map_combo->FindString( mapname );
+			if ( index_ != wxNOT_FOUND )
+                m_map_combo->SetSelection( index_ );
+			else
+                m_map_combo->SetValue( mapname );
 
 			//delete any eventual map option from the list and add options of the new map
-			for ( long i = m_map_opts_index; i < m_opts_list->GetItemCount(); i++ ) m_opts_list->DeleteItem( i );
+			for ( long i = m_map_opts_index; i < m_opts_list->GetItemCount(); i++ )
+                m_opts_list->DeleteItem( i );
 			AddMMOptionsToList( m_map_opts_index, OptionsWrapper::MapOption );
 
 			m_minimap->UpdateMinimap();

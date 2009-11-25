@@ -219,7 +219,7 @@ void ConnectWindow::ReloadServerList()
     m_server_combo->SetValue( sett().GetDefaultServer() );
 }
 
-void ConnectWindow::OnServerChange( wxCommandEvent& event )
+void ConnectWindow::OnServerChange( wxCommandEvent&  )
 {
     wxString HostAddress = m_server_combo->GetValue();
 		if ( !HostAddress.Contains( _T(":") ) )
@@ -234,7 +234,7 @@ void ConnectWindow::OnServerChange( wxCommandEvent& event )
 }
 
 
-void ConnectWindow::OnOk(wxCommandEvent& event)
+void ConnectWindow::OnOk(wxCommandEvent& )
 {
     Hide();
     wxString HostAddress = m_server_combo->GetValue();
@@ -315,7 +315,7 @@ void ConnectWindow::OnOk(wxCommandEvent& event)
     }
 }
 
-void ConnectWindow::OnCancel(wxCommandEvent& event)
+void ConnectWindow::OnCancel(wxCommandEvent& )
 {
     Hide();
 }

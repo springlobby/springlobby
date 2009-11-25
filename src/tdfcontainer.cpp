@@ -178,8 +178,8 @@ start:
 			token.type = Token::type_entry_value;
 			token.value_s = _T( "" );
 			while ( Good() && PeekNextChar() != ';' ) {
-				unsigned char c = GetNextChar();
-				token.value_s += c;
+				unsigned char c_ = GetNextChar();
+				token.value_s += c_;
 			}
 			return;
 		case '/':// handle comments
@@ -206,8 +206,8 @@ start:
 			}
 		default:
 			while ( Good() && PeekNextChar() != '=' ) {
-				unsigned char c = GetNextChar();
-				token.value_s += c;
+				unsigned char c_ = GetNextChar();
+				token.value_s += c_;
 			}
 			token.type = Token::type_entry_name;
 			return;

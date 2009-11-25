@@ -110,7 +110,7 @@ class AreColoursSimilarProxy {
         }
 };
 
-wxColour IBattle::GetFreeColour( User *for_whom )
+wxColour IBattle::GetFreeColour( User * )
 {
     typedef std::vector<wxColour>
         ColorVec;
@@ -744,7 +744,7 @@ UserPosition IBattle::GetFreePosition()
 {
 	UserPosition ret;
   UnitSyncMap map = LoadMap();
-  for ( int i = 0; i < map.info.positions.size(); i++ )
+  for ( int i = 0; i < int(map.info.positions.size()); i++ )
 	{
     bool taken = false;
     for ( unsigned int bi = 0; bi < GetNumUsers(); bi++ )
@@ -985,7 +985,10 @@ bool IBattle::LoadOptionsPreset( const wxString& name )
         }
       }
 
-			for( unsigned int i = 0; i <= GetLastRectIdx(); ++i ) if ( GetStartRect( i ).IsOk() ) RemoveStartRect(i); // remove all rects that might come from map presets
+			for( unsigned int j = 0; j <= GetLastRectIdx(); ++j ) {
+			    if ( GetStartRect( j ).IsOk() )
+                    RemoveStartRect(j); // remove all rects that might come from map presets
+			}
 			SendHostInfo( IBattle::HI_StartRects );
 
       unsigned int rectcount = s2l( options[_T("numrects")] );
