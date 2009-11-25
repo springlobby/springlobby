@@ -42,26 +42,27 @@
 #include "images/download_map.xpm"
 #include "images/reload_map.xpm"
 
-#define USER_BOX_EXPANDED_HEIGHT 70
-#define USER_BOX_EXPANDED_WIDTH 75
+const int USER_BOX_EXPANDED_HEIGHT = 70;
+const int USER_BOX_EXPANDED_WIDTH = 75;
 
 /** How much padding to place around the icon of a user box.
  */
-#define USER_BOX_ICON_PADDING 2
+const int USER_BOX_ICON_PADDING = 2;
 
 
 /** Width of the e.g. player or bot images that mark a player/bot's
  * chosen start position.
  */
-#define USER_BOX_ICON_WIDTH 16
+const int USER_BOX_ICON_WIDTH = 16;
 
 /** Height of the e.g. player or bot images that mark a player/bot's
  * chosen start position.
  */
-#define USER_BOX_ICON_HEIGHT 16
+const int USER_BOX_ICON_HEIGHT = 16;
 
-#define USER_BOX_ICON_HALFWIDTH (USER_BOX_ICON_WIDTH / 2)
-#define USER_BOX_ICON_HALFHEIGHT (USER_BOX_ICON_HEIGHT / 2)
+//int div is indeed wanted here
+const int USER_BOX_ICON_HALFWIDTH = (USER_BOX_ICON_WIDTH / 2);
+const int USER_BOX_ICON_HALFHEIGHT = (USER_BOX_ICON_HEIGHT / 2);
 
 
 const wxSize user_box_icon_size ( USER_BOX_ICON_WIDTH + 2 * USER_BOX_ICON_PADDING,

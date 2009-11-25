@@ -18,16 +18,16 @@
 
 /// Size of the map previews.  This should be same as size of map previews in
 /// battle list and as prefetch size in SpringUnitSync for performance reasons.
-#define MINIMAP_SIZE 98
+const int MINIMAP_SIZE = 98;
 
 /// Margin between the map previews, in pixels.
-#define MINIMAP_MARGIN 1
+const int MINIMAP_MARGIN = 1;
 
 /// Maximum minimap fetches in WorkerThread queue
 /// (these will still be executed after control is destroyed)
-#define MAX_MINIMAP_FETCHES 2
+const int MAX_MINIMAP_FETCHES = 2;
 /// Maximum mapinfo fetches in WorkerThread queue
-#define MAX_MAPINFO_FETCHES 5
+const int MAX_MAPINFO_FETCHES = 5;
 
 
 BEGIN_EVENT_TABLE( MapGridCtrl, wxPanel )

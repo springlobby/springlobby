@@ -30,165 +30,165 @@
 #ifndef DEFS_HPP
 #define DEFS_HPP
 
-#define PWIN_SIZE_X  895
-#define PWIN_SIZE_Y  830
-#define CWIN_SIZE_X  580
-#define CWIN_SIZE_Y  360
+const unsigned int PWIN_SIZE_X  = 895;
+const unsigned int PWIN_SIZE_Y  = 830;
+const unsigned int CWIN_SIZE_X  = 580;
+const unsigned int CWIN_SIZE_Y  = 360;
 
 // ParentWin menu-item IDs
-#define ID_MENUITEM_SAVE  			50
-#define ID_MENUITEM_RESET 			51
-#define ID_MENUITEM_QUIT  			52
-#define ID_MENUITEM_DISABLE_WARN 	53
-#define ID_MENUITEM_MODE 			60
-#define ID_MENUITEM_EXPERT 			62
-#define ID_MENUITEM_SIMPLE 			61
+const int ID_MENUITEM_SAVE  			= 50;
+const int ID_MENUITEM_RESET 			= 51;
+const int ID_MENUITEM_QUIT  			= 52;
+const int ID_MENUITEM_DISABLE_WARN 	= 53;
+const int ID_MENUITEM_MODE 			= 60;
+const int ID_MENUITEM_EXPERT 			= 62;
+const int ID_MENUITEM_SIMPLE 			= 61;
 
-#define ID_MENUITEM_HELP			70
-#define ID_MENUITEM_ABOUT 			71
-#define ID_MENUITEM_CONTACT			72
-#define ID_MENUITEM_CREDITS 		73
-#define ID_MENUITEM_BUGREPORT 		74
+const int ID_MENUITEM_HELP			    = 70;
+const int ID_MENUITEM_ABOUT 			= 71;
+const int ID_MENUITEM_CONTACT			= 72;
+const int ID_MENUITEM_CREDITS 		    = 73;
+const int ID_MENUITEM_BUGREPORT 		= 74;
 
 // ParentWin TextInput IDs
-#define ID_RES_CHOICES_LBOX_X 1111
-#define ID_RES_CHOICES_LBOX_Y 1112
-
+const int ID_RES_CHOICES_LBOX_X = 1111;
+const int ID_RES_CHOICES_LBOX_Y = 1112;
 
 // ParentWin Rendering Options slider IDs
-#define ID_RO_SLI_0 100
-#define ID_RO_SLI_1 101
-#define ID_RO_SLI_2 102
-#define ID_RO_SLI_3 103
-#define ID_RO_SLI_4 104
-#define ID_RO_SLI_5 105
-#define ID_RO_SLI_6 106
-#define ID_RO_SLI_7 107
-#define ID_RO_SLI_8 108
+const int ID_RO_SLI_0 = 100;
+const int ID_RO_SLI_1 = 101;
+const int ID_RO_SLI_2 = 102;
+const int ID_RO_SLI_3 = 103;
+const int ID_RO_SLI_4 = 104;
+const int ID_RO_SLI_5 = 105;
+const int ID_RO_SLI_6 = 106;
+const int ID_RO_SLI_7 = 107;
+const int ID_RO_SLI_8 = 108;
 
 // ParentWin Video Options checkbox IDs
-#define ID_WINDOWP_VO_CBOX_0 250
-#define ID_WINDOWP_VO_CBOX_1 251
-#define ID_WINDOWP_VO_CBOX_2 252
+const int ID_WINDOWP_VO_CBOX_0 = 250;
+const int ID_WINDOWP_VO_CBOX_1 = 251;
+const int ID_WINDOWP_VO_CBOX_2 = 252;
 
 // ParentWin Video Options radiobutton IDs
-#define ID_WINDOWP_VO_RBUT_0 280
-#define ID_WINDOWP_VO_RBUT_1 281
+const int ID_WINDOWP_VO_RBUT_0 = 280;
+const int ID_WINDOWP_VO_RBUT_1 = 281;
 
 // ParentWin Video Options slider IDs
-#define ID_VO_SLI_0 200
+const int ID_VO_SLI_0 = 200;
 
 // tab_simple controls
-#define ID_SIMPLE_QUAL_CBX		390
-#define ID_SIMPLE_DETAIL_CBX	391
-#define ID_SIMPLE_MODE_CBX		392
-#define ID_SIMPLE_GOEXPERT_BUT 	393
+const int ID_SIMPLE_QUAL_CBX		= 390;
+const int ID_SIMPLE_DETAIL_CBX	    = 391;
+const int ID_SIMPLE_MODE_CBX		= 392;
+const int ID_SIMPLE_GOEXPERT_BUT 	= 393;
 
 
 // UI Options checkbox IDs
-#define ID_WINDOWP_UI_CBOX_1  360
-#define ID_WINDOWP_UI_CBOX_2  361
-#define ID_WINDOWP_UI_CBOX_3  362
-#define ID_WINDOWP_UI_CBOX_4  363
-#define ID_WINDOWP_UI_CBOX_5  364
-#define ID_WINDOWP_UI_CBOX_6  365
-#define ID_WINDOWP_UI_CBOX_7  366
-#define ID_WINDOWP_UI_CBOX_8  367
-#define ID_WINDOWP_UI_CBOX_9  368
-#define ID_WINDOWP_UI_CBOX_10 369
-#define ID_WINDOWP_UI_CBOX_11 370
-#define ID_WINDOWP_UI_CBOX_12 371
-#define ID_WINDOWP_UI_CBOX_13 372
-#define ID_WINDOWP_UI_CBOX_14 373
-#define ID_WINDOWP_UI_CBOX_15 374
-#define ID_WINDOWP_UI_CBOX_16 375
-#define ID_WINDOWP_UI_CBOX_17 376
-#define ID_WINDOWP_UI_CBOX_18 377
+const int ID_WINDOWP_UI_CBOX_1  = 360;
+const int ID_WINDOWP_UI_CBOX_2  = 361;
+const int ID_WINDOWP_UI_CBOX_3  = 362;
+const int ID_WINDOWP_UI_CBOX_4  = 363;
+const int ID_WINDOWP_UI_CBOX_5  = 364;
+const int ID_WINDOWP_UI_CBOX_6  = 365;
+const int ID_WINDOWP_UI_CBOX_7  = 366;
+const int ID_WINDOWP_UI_CBOX_8  = 367;
+const int ID_WINDOWP_UI_CBOX_9  = 368;
+const int ID_WINDOWP_UI_CBOX_10 = 369;
+const int ID_WINDOWP_UI_CBOX_11 = 370;
+const int ID_WINDOWP_UI_CBOX_12 = 371;
+const int ID_WINDOWP_UI_CBOX_13 = 372;
+const int ID_WINDOWP_UI_CBOX_14 = 373;
+const int ID_WINDOWP_UI_CBOX_15 = 374;
+const int ID_WINDOWP_UI_CBOX_16 = 375;
+const int ID_WINDOWP_UI_CBOX_17 = 376;
+const int ID_WINDOWP_UI_CBOX_18 = 377;
 
 //Zoom opt
-#define ID_WINDOWP_UI_MW_SPD  385
+const int ID_WINDOWP_UI_MW_SPD  = 385;
 
 //QUALITY OPTIONS checkbox IDs
-#define ID_WINDOWP_QA_CBOX_0  300
-#define ID_WINDOWP_QA_CBOX_1  301
-#define ID_WINDOWP_QA_CBOX_2  302
-#define ID_WINDOWP_QA_CBOX_3  303
-#define ID_WINDOWP_QA_CBOX_4  304
-#define ID_WINDOWP_QA_CBOX_5  305
-#define ID_WINDOWP_QA_CBOX_6  306
-#define ID_WINDOWP_QA_CBOX_7  307
-#define ID_WINDOWP_QA_CBOX_8  308
-#define ID_WINDOWP_QA_CBOX_9  309
-#define ID_WINDOWP_QA_CBOX_10 310
-#define ID_WINDOWP_QA_CBOX_11 311
+const int ID_WINDOWP_QA_CBOX_0  = 300;
+const int ID_WINDOWP_QA_CBOX_1  = 301;
+const int ID_WINDOWP_QA_CBOX_2  = 302;
+const int ID_WINDOWP_QA_CBOX_3  = 303;
+const int ID_WINDOWP_QA_CBOX_4  = 304;
+const int ID_WINDOWP_QA_CBOX_5  = 305;
+const int ID_WINDOWP_QA_CBOX_6  = 306;
+const int ID_WINDOWP_QA_CBOX_7  = 307;
+const int ID_WINDOWP_QA_CBOX_8  = 308;
+const int ID_WINDOWP_QA_CBOX_9  = 309;
+const int ID_WINDOWP_QA_CBOX_10 = 310;
+const int ID_WINDOWP_QA_CBOX_11 = 311;
 
-#define ID_WINDOWP_WR_COMBOX  320
+const int ID_WINDOWP_WR_COMBOX  = 320;
 
 // ParentWin Audio Options slider IDs
-#define ID_AO_SLI_0 400
-#define ID_AO_SLI_1 401
-#define ID_AO_SLI_2 402
-#define ID_AO_SLI_3 403
-#define ID_AO_SLI_4 404
-#define ID_AO_SLI_5 405
+const int ID_AO_SLI_0 = 400;
+const int ID_AO_SLI_1 = 401;
+const int ID_AO_SLI_2 = 402;
+const int ID_AO_SLI_3 = 403;
+const int ID_AO_SLI_4 = 404;
+const int ID_AO_SLI_5 = 405;
 
 // ParentWin Debug Options checkbox IDs
-#define ID_WINDOWP_DO_CBOX_0 540
+const int ID_WINDOWP_DO_CBOX_0 = 540;
 
 
 // ParentWin Debug Options slider IDs
-#define ID_DO_SLI_0 500
+const int ID_DO_SLI_0 = 500;
 
 // ParentWin Water Rendering radiobutton IDs
-#define ID_WINDOWP_WR_RBUT_0 550
-#define ID_WINDOWP_WR_RBUT_1 551
-#define ID_WINDOWP_WR_RBUT_2 552
-#define ID_WINDOWP_WR_RBUT_3 553
+const int ID_WINDOWP_WR_RBUT_0 = 550;
+const int ID_WINDOWP_WR_RBUT_1 = 551;
+const int ID_WINDOWP_WR_RBUT_2 = 552;
+const int ID_WINDOWP_WR_RBUT_3 = 553;
 
 // ChildWin Mouse Options checkbox IDs
-#define ID_WINDOWC_MO_CBOX_0 650
-#define ID_WINDOWC_MO_CBOX_1 651
+const int ID_WINDOWC_MO_CBOX_0 = 650;
+const int ID_WINDOWC_MO_CBOX_1 = 651;
 
 // ChildWin Mouse Options radiobutton IDs
-#define ID_WINDOWC_MO_RBUT_0 680
-#define ID_WINDOWC_MO_RBUT_1 681
-#define ID_WINDOWC_MO_RBUT_2 682
-#define ID_WINDOWC_MO_RBUT_3 683
-#define ID_WINDOWC_MO_RBUT_4 684
+const int ID_WINDOWC_MO_RBUT_0 = 680;
+const int ID_WINDOWC_MO_RBUT_1 = 681;
+const int ID_WINDOWC_MO_RBUT_2 = 682;
+const int ID_WINDOWC_MO_RBUT_3 = 683;
+const int ID_WINDOWC_MO_RBUT_4 = 684;
 
 // ChildWin Mouse Options slider IDs
-#define ID_MO_SLI_0 660
-#define ID_MO_SLI_1 661
-#define ID_MO_SLI_2 662
-#define ID_MO_SLI_3 663
-#define ID_MO_SLI_4 664
+const int ID_MO_SLI_0 = 660;
+const int ID_MO_SLI_1 = 661;
+const int ID_MO_SLI_2 = 662;
+const int ID_MO_SLI_3 = 663;
+const int ID_MO_SLI_4 = 664;
 
 // panel_paths ids
-#define ID_PATH_USYNC_BTN		701
-#define ID_PATH_OK_BTN			702
+const int ID_PATH_USYNC_BTN		= 701;
+const int ID_PATH_OK_BTN			= 702;
 
 //water 4 specific options
-#define ID_W4_BumpWaterBlurReflection       720
-#define ID_W4_BumpWaterUseDepthTexture      721
-#define ID_W4_BumpWaterShoreWaves           722
-#define ID_W4_BumpWaterReflection           723
-#define ID_W4_BumpWaterTexSizeReflection    724
-#define ID_W4_BumpWaterRefraction           725
-#define ID_W4_BumpWaterAnisotropy           726
+const int ID_W4_BumpWaterBlurReflection       = 720;
+const int ID_W4_BumpWaterUseDepthTexture      = 721;
+const int ID_W4_BumpWaterShoreWaves           = 722;
+const int ID_W4_BumpWaterReflection           = 723;
+const int ID_W4_BumpWaterTexSizeReflection    = 724;
+const int ID_W4_BumpWaterRefraction           = 725;
+const int ID_W4_BumpWaterAnisotropy           = 726;
 
 #define SLI_STYLE (wxSL_LABELS )
 #define WX_DEF_V wxDefaultValidator
-#define WX_DEF_P wxPoint(-1, -1)
-#define WX_DEF_S wxSize(-1, -1)
-#define WX_SLI_S wxSize(200, -1)
+const wxPoint WX_DEF_P(-1, -1);
+const wxSize WX_DEF_S(-1, -1);
+const wxSize WX_SLI_S(200, -1);
+
+const int UPDATE_W4_CONTROLS 	                    = 2003;
+const int UPDATE_VIDEO_MODE 	                    = 2002;
+const int UPDATE_QA_BOXES	  	                    = 2001;
+const int UPDATE_ALL			                    = 2000;
+const int UPDATE_EXPERTMODE_WARNING_ON_SIMPLETAB   = 2003;
 
 #define configHandler (susynclib())
-#define TAB_SIZE wxSize(700,500)
-#define UPDATE_W4_CONTROLS 	2003
-#define UPDATE_VIDEO_MODE 	2002
-#define UPDATE_QA_BOXES	  	2001
-#define UPDATE_ALL			2000
-#define UPDATE_EXPERTMODE_WARNING_ON_SIMPLETAB 2003
+const wxSize TAB_SIZE (700,500);
 
 //#include <wx/string.h>
 #include <wx/intl.h>
@@ -436,109 +436,5 @@ const category_sizes_map_type entries_[] = { RC_TEXT_entry, MO_RBUT_entry, MO_CB
                                             VO_RBUT_entry, VO_CBOX_entry, RO_SLI_entry, UI_ZOOM_entry, W4_CONTROLS_entry};
 
 static category_sizes_map s_category_sizes ( entries_ , entries_ + sizeof(entries_) / sizeof(entries_[0]) );
-
-
-/** not used
-#define NUM_DEFAULTS 88
-const char DEFAULTS[NUM_DEFAULTS][64] = {
-	"3DTrees=1",
-	"AdvSky=0",
-	"AdvUnitShading=0",
-	"FSAA=0",
-	"FSAALevel=0",
-	"ReflectiveWater=1",
-	"MaxParticles=20000",
-	"DynamicSky=0",
-	"DepthBufferBits=16",
-	"StencilBufferBits=1",
-	"GrassDetail=10",
-	"GroundDecals=100",
-	"GroundDetail=120",
-	"Shadows=0",
-	"ShadowMapSize=2048",
-	"SM3MaxTextureStages=20",
-	"SM3ForceFallbackTex=1",
-	"TreeRadius=3000",
-	"UnitIconDist=1000",
-	"UnitLodDist=600",
-	"VSync=1",
-	"XResolution=1024",
-	"YResolution=768",
-
-	"BuildIconsFirst=0",
-	"ColorElev=1",
-	"DualScreenMode=0",
-	"FixAltTab=1",
-	"Fullscreen=0",
-	"HighResLos=1",
-	"NoHelperAIs=0",
-	"TeamNanoSpray=1",
-	"SmoothLines=0",
-	"SmoothPoints=0",
-	"ShowClock=1",
-	"ShowPlayerInfo=1",
-	"ShowFPS=0",
-
-	"StdoutDebug=0",
-	"CatchAIExceptions=0",
-	"VerboseLevel=0",
-
-	"CamMode=1",
-	"CamTimeExponent=4.0",
-	"CamTimeFactor=1.0",
-	"DoubleClickTime=200",
-
-	"FontCharFirst=32",
-	"FontCharLast=223",
-	"FontFile=Luxi.ttf",
-
-	"InfoConsoleGeometry=0.25 0.95 0.40 0.20",
-	"TooltipGeometry=0.00 0.00 0.40 0.1",
-	"TooltipOutlineFont=0",
-	"InfoMessageTime=400",
-	"InvertMouse=1",
-	"InvertQueueKey=0",
-	"WindowedEdgeMove=1",
-
-	"LuaGaia=1",
-	"LuaRules=1",
-	"LuaShaders=1",
-	"LuaUI=1",
-
-	"MapArchives=1",
-	"MetalMapPalette=0",
-
-	"MiniMapButtonSize=16",
-	"MiniMapCursorScale=-0.5",
-	"MiniMapDrawCommands=1",
-	"MiniMapFullProxy=1",
-	"MiniMapGeometry=2 2 200 200",
-	"MiniMapIcons=1",
-	"MiniMapMarker=1",
-	"MiniMapUnitExp=0.25",
-	"MiniMapUnitSize=2.5",
-	"MinimapOnLeft=1",
-	"DualScreenMiniMapOnLeft=1",
-	"SimpleMiniMapColors=0",
-
-	"OverheadEnabled=1",
-	"OverheadScrollSpeed=10",
-	"RotOverheadEnabled=0",
-	"RotOverheadScrollSpeed=0",
-	"RotOverheadMouseScale=0.002",
-	"TWEnabled=0",
-	"TWScrollSpeed=0",
-	"FPSEnabled=0",
-	"FPSScrollSpeed=0",
-	"FPSMouseScale=0.002",
-	"CamFreeEnabled=0",
-	"CamFreeScrollSpeed=0",
-	"ScrollWheelSpeed=25",
-
-	"MaxSounds=16",
-	"SoundVolume=100",
-	"UnitReplySoundVolume=80"
-};
-**/
 
 #endif
