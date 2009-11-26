@@ -22,8 +22,6 @@ class MainJoinBattleTab : public wxScrolledWindow
     MainJoinBattleTab( wxWindow* parent );
      ~MainJoinBattleTab();
 
-    BattleListTab& GetBattleListTab();
-
     void HostBattle( Battle& battle );
     void JoinBattle( Battle& battle );
     //void UpdateCurrentBattle();
@@ -41,8 +39,6 @@ class MainJoinBattleTab : public wxScrolledWindow
 
     void ReloadPresetList();
 
-    void OnConnected();
-
     void LoadPerspective( const wxString& perspective_name = wxEmptyString );
     void SavePerspective( const wxString& perspective_name = wxEmptyString );
     bool UseBattlePerspective();
@@ -53,8 +49,6 @@ class MainJoinBattleTab : public wxScrolledWindow
     wxImageList* m_imagelist;
 
     SLNotebook* m_tabs;
-
-    BattleListTab* m_list_tab;
 
     BattleRoomTab* m_battle_tab;
     BattleMapTab* m_map_tab;

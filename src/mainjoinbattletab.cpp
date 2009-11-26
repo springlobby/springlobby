@@ -16,7 +16,6 @@
 #include "settings.h"
 #include "battle.h"
 #include "mainjoinbattletab.h"
-#include "battlelisttab.h"
 #include "battleroomtab.h"
 #include "battlemaptab.h"
 #include "battleoptionstab.h"
@@ -53,9 +52,6 @@ MainJoinBattleTab::MainJoinBattleTab( wxWindow* parent )
 	m_imagelist->Add( wxIcon( battle_xpm ) );
 	m_imagelist->Add( wxIcon( battle_map_xpm ) );
 	m_imagelist->Add( wxIcon( battle_settings_xpm ) );
-
-	m_list_tab = new BattleListTab( m_tabs );
-	m_tabs->AddPage( m_list_tab, _( "Battle list" ), true, wxIcon( battle_list_xpm ) );
 
 	m_battle_tab = new BattleRoomTab( m_tabs, 0 );
 	m_tabs->InsertPage( 1, m_battle_tab, _( "Battleroom" ), false, wxIcon( battle_xpm ) );
@@ -136,13 +132,6 @@ void MainJoinBattleTab::UpdateCurrentBattle( const wxString& Tag )
 }
 
 
-BattleListTab& MainJoinBattleTab::GetBattleListTab()
-{
-	ASSERT_LOGIC( m_list_tab != 0, _T( "m_list_tab = 0" ) );
-	return *m_list_tab;
-}
-
-
 void MainJoinBattleTab::JoinBattle( Battle& battle )
 {
 	m_mm_opts_tab->SetBattle( &battle );
@@ -177,15 +166,6 @@ void MainJoinBattleTab::BattleUserUpdated( User& user )
 	{
 		GetBattleMapTab().UpdateUser( user );
 	} catch ( ... ) {}
-}
-
-void MainJoinBattleTab::OnConnected()
-{
-	if ( m_list_tab ) {
-		bool filter = sett().GetBattleFilterActivState();
-		m_list_tab->SetFilterActiv( filter );
-		//
-	}
 }
 
 void MainJoinBattleTab::ReloadPresetList()

@@ -553,8 +553,7 @@ void Ui::OnConnected( Server& server, const wxString& server_name, const wxStrin
     }
 
     if ( server.uidata.panel ) server.uidata.panel->StatusMessage( _T("Connected to ") + server_name + _T(".") );
-    mw().GetJoinTab().OnConnected();
-
+		mw().GetBattleListTab().OnConnected();
 }
 
 
@@ -615,7 +614,7 @@ void Ui::OnDisconnected( Server& server, bool wasonline )
     }
 
     mw().GetJoinTab().LeaveCurrentBattle();
-    mw().GetJoinTab().GetBattleListTab().RemoveAllBattles();
+    mw().GetBattleListTab().RemoveAllBattles();
 
     mw().GetChatTab().LeaveChannels();
 
@@ -841,7 +840,7 @@ void Ui::OnUserStatusChanged( User& user )
             chan.uidata.panel->UserStatusUpdated( user );
         }
     }
-    if ( user.GetStatus().in_game ) mw().GetJoinTab().GetBattleListTab().UserUpdate( user );
+    if ( user.GetStatus().in_game ) mw().GetBattleListTab().UserUpdate( user );
     try
     {
 			ChatPanel& server = mw().GetChatTab().ServerChat();
@@ -888,7 +887,7 @@ void Ui::OnUserSaid( User& user, const wxString& message, bool fromme )
 void Ui::OnBattleOpened( IBattle& battle )
 {
     if ( m_main_win == 0 ) return;
-    mw().GetJoinTab().GetBattleListTab().AddBattle( battle );
+    mw().GetBattleListTab().AddBattle( battle );
     try
     {
 			User& user = battle.GetFounder();
@@ -907,7 +906,7 @@ void Ui::OnBattleOpened( IBattle& battle )
 void Ui::OnBattleClosed( IBattle& battle )
 {
     if ( m_main_win == 0 ) return;
-    mw().GetJoinTab().GetBattleListTab().RemoveBattle( battle );
+    mw().GetBattleListTab().RemoveBattle( battle );
     try
     {
         if ( mw().GetJoinTab().GetBattleRoomTab().GetBattle() == &battle )
@@ -937,7 +936,7 @@ void Ui::OnBattleClosed( IBattle& battle )
 void Ui::OnUserJoinedBattle( IBattle& battle, User& user )
 {
     if ( m_main_win == 0 ) return;
-    mw().GetJoinTab().GetBattleListTab().UpdateBattle( battle );
+    mw().GetBattleListTab().UpdateBattle( battle );
 
     try
     {
@@ -965,7 +964,7 @@ void Ui::OnUserLeftBattle( IBattle& battle, User& user )
     if ( m_main_win == 0 ) return;
     user.SetSideiconIndex( -1 ); //just making sure he's not running around with some icon still set
 	user.BattleStatus().side = 0; // and reset side, so after rejoin we don't potentially stick with a num higher than avail
-    mw().GetJoinTab().GetBattleListTab().UpdateBattle( battle );
+    mw().GetBattleListTab().UpdateBattle( battle );
     try
     {
         if ( mw().GetJoinTab().GetBattleRoomTab().GetBattle() == &battle )
@@ -993,7 +992,7 @@ void Ui::OnUserLeftBattle( IBattle& battle, User& user )
 void Ui::OnBattleInfoUpdated( IBattle& battle )
 {
     if ( m_main_win == 0 ) return;
-    mw().GetJoinTab().GetBattleListTab().UpdateBattle( battle );
+    mw().GetBattleListTab().UpdateBattle( battle );
     if ( mw().GetJoinTab().GetCurrentBattle() == &battle )
     {
         mw().GetJoinTab().UpdateCurrentBattle();
@@ -1003,7 +1002,7 @@ void Ui::OnBattleInfoUpdated( IBattle& battle )
 void Ui::OnBattleInfoUpdated( IBattle& battle, const wxString& Tag )
 {
     if ( m_main_win == 0 ) return;
-    mw().GetJoinTab().GetBattleListTab().UpdateBattle( battle );
+    mw().GetBattleListTab().UpdateBattle( battle );
     if ( mw().GetJoinTab().GetCurrentBattle() == &battle )
     {
         mw().GetJoinTab().UpdateCurrentBattle( Tag );
@@ -1059,7 +1058,7 @@ void Ui::OnBattleStarted( Battle& battle )
 {
     if ( m_main_win == 0 ) return;
     wxLogDebugFunc( _T("") );
-    mw().GetJoinTab().GetBattleListTab().UpdateBattle( battle );
+    mw().GetBattleListTab().UpdateBattle( battle );
 }
 
 

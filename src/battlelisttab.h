@@ -32,6 +32,8 @@ class BattleListTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
     BattleListTab( wxWindow* parent );
      ~BattleListTab();
 
+		void OnConnected();
+
     void AddBattle( IBattle& battle );
     void RemoveBattle( IBattle& battle );
     void UpdateBattle( IBattle& battle );

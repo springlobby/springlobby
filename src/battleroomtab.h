@@ -29,6 +29,7 @@ struct UnitSyncMap;
 class wxToggleButton;
 class wxChoice;
 class MapSelectDialog;
+class wxListEvent;
 
 typedef std::map<wxString, long> OptionListMap;
 
