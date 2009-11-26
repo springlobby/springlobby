@@ -1,8 +1,10 @@
 # get revision and put into config.h
-# EXECUTE_PROCESS(COMMAND ${SpringLobby_SOURCE_DIR}/tools/get-revision.sh
-#         OUTPUT_VARIABLE SPRINGLOBBY_REV
-#         RESULT_VARIABLE GIT_ERROR
-#         OUTPUT_STRIP_TRAILING_WHITESPACE)
+IF ( NOT $SPRINGLOBBY_REV )
+EXECUTE_PROCESS(COMMAND ${SpringLobby_SOURCE_DIR}/tools/get-revision.sh
+        OUTPUT_VARIABLE SPRINGLOBBY_REV
+        RESULT_VARIABLE GIT_ERROR
+        OUTPUT_STRIP_TRAILING_WHITESPACE)
+ENDIF ( NOT $SPRINGLOBBY_REV )
 
 #don't write when git errored out resulting in unset version (ie when compiling from tarball)
 IF ( NOT GIT_ERROR)
