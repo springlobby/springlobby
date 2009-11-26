@@ -1177,8 +1177,10 @@ void TASServer::SendCmd( const wxString& command, const wxString& param )
 		else cmd = command;
 		if ( param.IsEmpty() ) msg = msg + cmd + _T("\n");
 		else msg = msg + cmd + _T(" ") + param + _T("\n");
-		m_sock->Send( msg );
-		wxLogMessage( _T("sent: %s"), msg.c_str() );
+		if ( m_sock->Send( msg ) )
+            wxLogMessage( _T("sent: %s"), msg.c_str() );
+        else
+            wxLogMessage( _T("sending: %s failed"), msg.c_str() );
 }
 
 void TASServer::Ping()

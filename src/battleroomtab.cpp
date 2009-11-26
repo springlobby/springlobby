@@ -407,7 +407,8 @@ void BattleRoomTab::UpdateBattleInfo()
 
 void BattleRoomTab::UpdateBattleInfo( const wxString& Tag )
 {
-	if ( !m_battle ) return;
+    assert( m_battle );
+
 	long index = m_opt_list_map[ Tag ];
 	OptionsWrapper::GameOption type = ( OptionsWrapper::GameOption )s2l( Tag.BeforeFirst( '_' ) );
 	wxString key = Tag.AfterFirst( '_' );
