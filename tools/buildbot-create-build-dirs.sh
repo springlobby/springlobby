@@ -54,4 +54,4 @@ fi
 
 #create-build-dir build "--with-wx-config=/var/lib/buildbot/lib/linux/wx/2.8/bin/wx-config --with-opt-level=0"
 create-build-dir-cmake build-cmake "-DCMAKE_CXX_FLAGS:STRING=-O0 -DSPRINGLOBBY_REV:STRING=${REV}"
-create-build-dir-cmake build-mingw-wx28 "-DCMAKE_TOOLCHAIN_FILE:STRING=../cmake/Toolchain-mingw32.cmake -DCMAKE_CXX_FLAGS:STRING=-O0 -DSPRINGLOBBY_REV:STRING=${REV} -DCMAKE_INSTALL_PREFIX:STRING=."
+create-build-dir-cmake build-mingw-wx28 "-DCMAKE_TOOLCHAIN_FILE:STRING=../cmake/Toolchain-mingw32.cmake -DCMAKE_CXX_FLAGS:STRING=-O0 -DSPRINGLOBBY_REV:STRING=${REV} -DCMAKE_INSTALL_PREFIX:STRING=${PWD}/build-mingw-wx28"
