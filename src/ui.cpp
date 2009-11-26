@@ -928,7 +928,7 @@ void Ui::OnBattleClosed( IBattle& battle )
     mw().GetJoinTab().GetBattleListTab().RemoveBattle( battle );
     try
     {
-        if ( &mw().GetJoinTab().GetBattleRoomTab().GetBattle() == &battle )
+        if ( mw().GetJoinTab().GetBattleRoomTab().GetBattle() == &battle )
         {
             if (!battle.IsFounderMe() )
                 customMessageBoxNoModal(SL_MAIN_ICON,_("The current battle was closed by the host."),_("Battle closed"));
@@ -959,7 +959,7 @@ void Ui::OnUserJoinedBattle( IBattle& battle, User& user )
 
     try
     {
-        if ( &mw().GetJoinTab().GetBattleRoomTab().GetBattle() == &battle )
+        if ( mw().GetJoinTab().GetBattleRoomTab().GetBattle() == &battle )
         {
         	 mw().GetJoinTab().GetBattleRoomTab().OnUserJoined( user );
         	 OnBattleInfoUpdated( battle );
@@ -986,7 +986,7 @@ void Ui::OnUserLeftBattle( IBattle& battle, User& user )
     mw().GetJoinTab().GetBattleListTab().UpdateBattle( battle );
     try
     {
-        if ( &mw().GetJoinTab().GetBattleRoomTab().GetBattle() == &battle )
+        if ( mw().GetJoinTab().GetBattleRoomTab().GetBattle() == &battle )
         {
             mw().GetJoinTab().GetBattleRoomTab().OnUserLeft( user );
 						OnBattleInfoUpdated( battle );
@@ -1064,9 +1064,9 @@ void Ui::OnRequestBattleStatus( IBattle& battle )
     if ( m_main_win == 0 ) return;
     try
     {
-        if ( &mw().GetJoinTab().GetBattleRoomTab().GetBattle() == &battle )
+        if ( mw().GetJoinTab().GetBattleRoomTab().GetBattle() == &battle )
         {
-            mw().GetJoinTab().GetBattleRoomTab().GetBattle().OnRequestBattleStatus();
+            mw().GetJoinTab().GetBattleRoomTab().GetBattle()->OnRequestBattleStatus();
         }
     }
     catch (...) {}

@@ -73,6 +73,7 @@ class BattleroomListCtrl : public CustomVirtListCtrl< User *, BattleroomListCtrl
     User* m_sel_user;
 
     wxMenu* m_sides;
+    std::vector<wxMenuItem*> side_vector;
     wxMenuItem* m_spec_item;
 
     wxMenuItem* m_handicap_item;

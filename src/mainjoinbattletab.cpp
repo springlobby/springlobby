@@ -73,7 +73,7 @@ MainJoinBattleTab::~MainJoinBattleTab()
 Battle* MainJoinBattleTab::GetCurrentBattle()
 {
 	if ( m_battle_tab )
-		return &m_battle_tab->GetBattle();
+		return m_battle_tab->GetBattle();
 
 	return 0;
 }
@@ -135,7 +135,7 @@ void MainJoinBattleTab::JoinBattle( Battle& battle )
 {
 	LeaveCurrentBattle( true );
 
-	m_battle_tab = new BattleRoomTab( m_tabs, battle );
+	m_battle_tab = new BattleRoomTab( m_tabs, &battle );
 	m_tabs->InsertPage( 1, m_battle_tab, _( "Battleroom" ), true, wxIcon( battle_xpm ) );
 
 	m_map_tab = new BattleMapTab( m_tabs, battle );

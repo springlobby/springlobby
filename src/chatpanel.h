@@ -70,7 +70,7 @@ class ChatPanel : public wxPanel
     ChatPanel( wxWindow* parent, Channel& chan, wxImageList* imaglist );
     ChatPanel( wxWindow* parent, const User& user, wxImageList* imaglist  );
     ChatPanel( wxWindow* parent, Server& serv, wxImageList* imaglist  );
-    ChatPanel( wxWindow* parent, Battle& battle );
+    ChatPanel( wxWindow* parent, Battle* battle );
     ~ChatPanel();
 
     void Said( const wxString& who, const wxString& message );
@@ -98,6 +98,8 @@ class ChatPanel : public wxPanel
 
     bool IsServerPanel() const;
     int GetPanelType() const;
+
+    void SetBattle( Battle* battle );
 
     void Say( const wxString& message );
     void Part();
@@ -162,7 +164,7 @@ class ChatPanel : public wxPanel
 
     wxButton* m_say_button;     //!< The say button.
     SLNotebook* m_chat_tabs;
- 
+
     Channel* m_channel;         //!< Channel object.
     Server* m_server;           //!< Server object.
     const User* m_user;               //!< User object.
