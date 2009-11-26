@@ -87,7 +87,7 @@ Battle* MainJoinBattleTab::GetCurrentBattle()
 ChatPanel* MainJoinBattleTab::GetActiveChatPanel()
 {
 	if ( m_tabs->GetSelection() == 1 ) {
-		return &GetBattleRoomTab.GetChatPanel();
+		return &GetBattleRoomTab().GetChatPanel();
 	}
 	return 0;
 }
