@@ -46,7 +46,7 @@ SET( OPTION_SOUND
 	1 CACHE BOOL
 	"Enables sound notification functionality (requires SDL and SDL_sound libraries)" )
 SET( OPTION_TRANSLATION_SUPPORT
-	0 CACHE BOOL
+	1 CACHE BOOL
 	"Enables translation support to the programs and adds facilities for helping translators (requires GNU Gettext)" )
 SET( BUILD_SHARED_LIBS
 	1 CACHE BOOL
@@ -363,7 +363,7 @@ IF(WIN32)
 		SET(SpringSettings_RC_FILE ${CMAKE_CURRENT_BINARY_DIR}/ss_icon.o )
 	ENDIF(MINGW OR CMAKE_CROSSCOMPILING)
 
-	SET(SpringLobbySrc ${SpringLobbySrc} src/Helper/listctrl)
+	SET(SpringLobbySrc ${SpringLobbySrc} src/Helper/listctrl.cpp)
 	SET(SpringLobbySrc ${SpringLobbySrc} src/springlobby.rc)
 	SET(StandAloneSettings ${StandAloneSettings} src/settings++/settings.rc)
 ELSE(WIN32)
