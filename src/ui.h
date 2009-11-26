@@ -149,7 +149,6 @@ class Ui : public wxEvtHandler
     void FirstRunWelcome();
 
     void StartUpdateTimer();
-    void StopUpdateTimer();
 
 
   protected:
