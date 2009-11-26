@@ -82,7 +82,7 @@ IF(wxWidgets_FOUND)
 	INCLUDE_DIRECTORIES( ${wxWidgets_INCLUDE_DIRS} )
 ELSE(wxWidgets_FOUND)
 	# For Convenience. If we cannot continue, inform the User.
-	MESSAGE( FATAL_ERROR "wxWidgets library is not found! Please install the package to continue")
+	MESSAGE( FATAL_ERROR "wxWidgets library not found! Please install the package to continue")
 ENDIF(wxWidgets_FOUND)
 ELSE (NOT CMAKE_CROSSCOMPILING)
     INCLUDE_DIRECTORIES( ${wxWidgets_INCLUDE_DIRS} )
@@ -99,19 +99,19 @@ IF ( OPTION_SOUND )
 		FIND_PACKAGE(SDL_mixer REQUIRED)
 		FIND_PACKAGE(SDL_sound REQUIRED)
 
-		# Throw an error to the user if SDL is not found
+		# Throw an error to the user if SDL not found
 		if ( NOT SDL_FOUND )
-		message ( FATAL_ERROR "SDL library was not found! Please install the package or toggle OPTION_SOUND to OFF" )
+		message ( FATAL_ERROR "SDL library not found! Please install the package or toggle OPTION_SOUND to OFF" )
 		endif( NOT SDL_FOUND )
 
-		# Throw an error to the user if SDL_mixer is not found
+		# Throw an error to the user if SDL_mixer not found
 		if ( NOT SDLMIXER_FOUND )
-		message ( FATAL_ERROR "SDL_mixer library was not found! Please install the package or toggle OPTION_SOUND to OFF" )
+		message ( FATAL_ERROR "SDL_mixer library not found! Please install the package or toggle OPTION_SOUND to OFF" )
 		endif(NOT SDLMIXER_FOUND)
 
-		# Throw an error to the user if SDL_sound is not found
+		# Throw an error to the user if SDL_sound not found
 		if ( NOT SDL_SOUND_FOUND )
-		message ( FATAL_ERROR "SDL_sound library was not found! Please install the package or toggle OPTION_SOUND to OFF" )
+		message ( FATAL_ERROR "SDL_sound library not found! Please install the package or toggle OPTION_SOUND to OFF" )
 		endif( NOT SDL_SOUND_FOUND )
 
 		# MESSAGE("sound inc dir: ${SDL_SOUND_INCLUDE_DIR}")
@@ -158,7 +158,7 @@ if( OPTION_TRANSLATION_SUPPORT )
 
 	    include("cmake/KWWidgetsInternationalizationMacros.cmake")
     else(GETTEXT_FOUND)
-	message(FATAL_ERROR "The GNU Gettext package is not found! Please install the package or toggle OPTION_TRANSLATION_SUPPORT to OFF")
+	message(FATAL_ERROR "GNU Gettext package not found! Please install the package or toggle OPTION_TRANSLATION_SUPPORT to OFF")
     endif(GETTEXT_FOUND)
 endif( OPTION_TRANSLATION_SUPPORT )
 
@@ -174,7 +174,7 @@ IF( OPTION_TORRENT_SYSTEM )
 		    INCLUDE_DIRECTORIES( ${LIBTORRENT_INCLUDE_DIRS} )
 		    LINK_LIBRARIES( ${LIBTORRENT_LIBRARIES} )
 	    ELSE()
-		    MESSAGE(FATAL_ERROR "libtorrent-rasterbar library is not found! Please install the package or toggle OPTION_TORRENT_SYSTEM to OFF")
+		    MESSAGE(FATAL_ERROR "libtorrent-rasterbar library not found! Please install the package or toggle OPTION_TORRENT_SYSTEM to OFF")
 	    ENDIF()
 	ELSE( NOT WIN32)
 	    INCLUDE_DIRECTORIES(${SpringLobby_SOURCE_DIR}/src/libtorrent/include
