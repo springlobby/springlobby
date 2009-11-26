@@ -44,7 +44,7 @@ BEGIN_EVENT_TABLE_TEMPLATE1( BattleroomMMOptionsTab, wxPanel, BattleType)
 END_EVENT_TABLE()
 
 template < class BattleType >
-BattleroomMMOptionsTab<BattleType>::BattleroomMMOptionsTab(  BattleType& battle, wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style )
+BattleroomMMOptionsTab<BattleType>::BattleroomMMOptionsTab(  BattleType* battle, wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style )
 : wxScrolledWindow( parent, id, pos, size, style | wxHSCROLL ),m_battle(battle)
 {
 
@@ -55,7 +55,7 @@ BattleroomMMOptionsTab<BattleType>::BattleroomMMOptionsTab(  BattleType& battle,
   wxStaticBoxSizer* m_preset_sizer;
   m_preset_sizer = new wxStaticBoxSizer( new wxStaticBox( this, -1, _("Manage Presets") ), wxHORIZONTAL );
 
-  m_options_preset_sel = new wxComboBox( this, BOPTS_CHOSEPRES, sett().GetModDefaultPresetName( m_battle.GetHostModName() ), wxDefaultPosition, wxDefaultSize,  sett().GetPresetList(), wxCB_READONLY );
+  m_options_preset_sel = new wxComboBox( this, BOPTS_CHOSEPRES, _T(""), wxDefaultPosition, wxDefaultSize,  sett().GetPresetList(), wxCB_READONLY );
   m_options_preset_sel->SetToolTip(TE(_("Set name.")));
 
   m_preset_sizer->Add( m_options_preset_sel, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
@@ -103,17 +103,12 @@ BattleroomMMOptionsTab<BattleType>::BattleroomMMOptionsTab(  BattleType& battle,
 
   //m_main_sizer->FitInside(this);
 
+  SetBattle( battle );
+
     SetScrollRate( SCROLL_RATE, SCROLL_RATE );
 	SetSizer( m_main_sizer );
 	Layout();
 
-    if ( !m_battle.IsFounderMe() ) {
-        m_options_preset_sel->Disable();
-        m_load_btn->Disable();
-        m_save_btn->Disable();
-        m_delete_btn->Disable();
-        m_default_btn->Disable();
-    }
 
 }
 
@@ -126,7 +121,8 @@ BattleroomMMOptionsTab<BattleType>::~BattleroomMMOptionsTab()
 template < class BattleType >
 void BattleroomMMOptionsTab<BattleType>::setupOptionsSizer( wxBoxSizer* parent_sizer, OptionsWrapper::GameOption optFlag )
 {
-    const IUnitSync::OptionMapSection& sections = m_battle.CustomBattleOptions().m_opts[optFlag].section_map;
+		if ( !m_battle ) return;
+    const IUnitSync::OptionMapSection& sections = m_battle->CustomBattleOptions().m_opts[optFlag].section_map;
 
     unsigned int num_options = 0;
     IUnitSync::OptionMapSectionConstIter it = sections.begin();
@@ -165,6 +161,7 @@ void BattleroomMMOptionsTab<BattleType>::setupOptionsSizer( wxBoxSizer* parent_s
 template < class BattleType >
 wxButton* BattleroomMMOptionsTab<BattleType>::getButton( const wxWindowID id, const wxString& name )
 {
+		if ( !m_battle ) return 0;
     m_button_map[name] = new wxButton(this, id + BUTTON_ID_OFFSET, _T("?"), wxDefaultPosition, wxDefaultSize, wxNO_BORDER|wxBU_EXACTFIT, wxDefaultValidator, name );
     return m_button_map[name];
 }
@@ -173,10 +170,11 @@ template < class BattleType >
 int BattleroomMMOptionsTab<BattleType>::setupOptionsSectionSizer(const mmOptionSection& section,
     wxBoxSizer* parent_sizer, OptionsWrapper::GameOption optFlag)
 {
+	if ( !m_battle ) return -1;
     const int col_gap = 35;
 	wxString pref = wxString::Format( _T("%d"),optFlag) + wxsep;
-	OptionsWrapper optWrap = m_battle.CustomBattleOptions();
-	bool enable = m_battle.IsFounderMe();
+	OptionsWrapper optWrap = m_battle->CustomBattleOptions();
+	bool enable = m_battle->IsFounderMe();
 	wxFlexGridSizer* cbxSizer =  new wxFlexGridSizer( 4, 2, 10, 10 );
 	wxFlexGridSizer* spinSizer =  new wxFlexGridSizer( 4, 10, 10 );
 	wxFlexGridSizer* textSizer =  new wxFlexGridSizer( 4, 10, 10 );
@@ -308,16 +306,17 @@ int BattleroomMMOptionsTab<BattleType>::setupOptionsSectionSizer(const mmOptionS
 template < class BattleType >
 void BattleroomMMOptionsTab<BattleType>::OnChkBoxChange(wxCommandEvent& event)
 {
+	if ( !m_battle ) return;
 	wxCheckBox* box = (wxCheckBox*) event.GetEventObject();
 	wxString key = (box->GetName()).AfterFirst(sep);
 	long gameoption ;
 	box->GetName().BeforeFirst(sep).ToLong(&gameoption);
 
-	if( m_battle.CustomBattleOptions().setSingleOption( key , (box->GetValue() ? _T("1") : _T("0")) , (OptionsWrapper::GameOption)gameoption ) )
+	if( m_battle->CustomBattleOptions().setSingleOption( key , (box->GetValue() ? _T("1") : _T("0")) , (OptionsWrapper::GameOption)gameoption ) )
 	{
-        if (m_battle.IsFounderMe())
+        if (m_battle->IsFounderMe())
         {
-          m_battle.SendHostInfo( (wxString()<<gameoption) + wxsep + key );
+          m_battle->SendHostInfo( (wxString()<<gameoption) + wxsep + key );
         }
 	}
 }
@@ -325,18 +324,19 @@ void BattleroomMMOptionsTab<BattleType>::OnChkBoxChange(wxCommandEvent& event)
 template < class BattleType >
 void BattleroomMMOptionsTab<BattleType>::OnComBoxChange(wxCommandEvent& event)
 {
+	if ( !m_battle ) return;
 	wxComboBox* box = (wxComboBox*) event.GetEventObject();
 
 	wxString key = (box->GetName()).AfterFirst(sep);
 	long gameoption;
 	box->GetName().BeforeFirst(sep).ToLong(&gameoption);
-	wxString itemKey = m_battle.CustomBattleOptions().GetNameListOptItemKey(key,  box->GetValue(), (OptionsWrapper::GameOption)gameoption );
+	wxString itemKey = m_battle->CustomBattleOptions().GetNameListOptItemKey(key,  box->GetValue(), (OptionsWrapper::GameOption)gameoption );
 
-	if(m_battle.CustomBattleOptions().setSingleOption( key, itemKey, (OptionsWrapper::GameOption)gameoption ) )
+	if(m_battle->CustomBattleOptions().setSingleOption( key, itemKey, (OptionsWrapper::GameOption)gameoption ) )
 	{
-        if (m_battle.IsFounderMe())
+        if (m_battle->IsFounderMe())
         {
-          m_battle.SendHostInfo( (wxString()<< gameoption) + wxsep + key );
+          m_battle->SendHostInfo( (wxString()<< gameoption) + wxsep + key );
         }
 	}
 }
@@ -344,15 +344,16 @@ void BattleroomMMOptionsTab<BattleType>::OnComBoxChange(wxCommandEvent& event)
 template < class BattleType >
 void BattleroomMMOptionsTab<BattleType>::OnTextCtrlChange(wxCommandEvent& event)
 {
+	if ( !m_battle ) return;
 	wxTextCtrl* box = (wxTextCtrl*) event.GetEventObject();
 	wxString key = (box->GetName()).AfterFirst(sep);
 	long gameoption;
 	box->GetName().BeforeFirst(sep).ToLong(&gameoption);
-	if(m_battle.CustomBattleOptions().setSingleOption( key, box->GetValue(), (OptionsWrapper::GameOption)gameoption ) )
+	if(m_battle->CustomBattleOptions().setSingleOption( key, box->GetValue(), (OptionsWrapper::GameOption)gameoption ) )
 	{
-		if (m_battle.IsFounderMe())
+		if (m_battle->IsFounderMe())
 		{
-		  m_battle.SendHostInfo(  (wxString()<< gameoption) + wxsep + key );
+		  m_battle->SendHostInfo(  (wxString()<< gameoption) + wxsep + key );
 		}
 
 	}
@@ -361,15 +362,16 @@ void BattleroomMMOptionsTab<BattleType>::OnTextCtrlChange(wxCommandEvent& event)
 template < class BattleType >
 void BattleroomMMOptionsTab<BattleType>::OnSpinCtrlChange(wxSpinEvent& event)
 {
+	if ( !m_battle ) return;
 	wxSpinCtrlDbl* box = (wxSpinCtrlDbl*) event.GetEventObject();
 	wxString key = (box->GetName()).AfterFirst(sep);
 	long gameoption;
 	box->GetName().BeforeFirst(sep).ToLong(&gameoption);
-	if(m_battle.CustomBattleOptions().setSingleOption( key,wxString::Format( _T("%f"),box->GetValue() ), (OptionsWrapper::GameOption)gameoption ) )
+	if(m_battle->CustomBattleOptions().setSingleOption( key,wxString::Format( _T("%f"),box->GetValue() ), (OptionsWrapper::GameOption)gameoption ) )
 	{
-		if (m_battle.IsFounderMe())
+		if (m_battle->IsFounderMe())
 		{
-		  m_battle.SendHostInfo(  (wxString()<< gameoption) + wxsep + key );
+		  m_battle->SendHostInfo(  (wxString()<< gameoption) + wxsep + key );
 		}
 	}
 }
@@ -377,6 +379,7 @@ void BattleroomMMOptionsTab<BattleType>::OnSpinCtrlChange(wxSpinEvent& event)
 template < class BattleType >
 void BattleroomMMOptionsTab<BattleType>::UpdateOptControls(wxString controlName)
 {
+	if ( !m_battle ) return;
 	long gameoption;
 	controlName.BeforeFirst(sep).ToLong(&gameoption);
 	wxString optKey = controlName.AfterFirst(sep);
@@ -390,7 +393,7 @@ void BattleroomMMOptionsTab<BattleType>::UpdateOptControls(wxString controlName)
 
 	if ( m_chkbox_map.find(controlName) != m_chkbox_map.end() )
 	{
-	    wxString value = m_battle.CustomBattleOptions().getSingleValue( optKey, (OptionsWrapper::GameOption)gameoption );
+	    wxString value = m_battle->CustomBattleOptions().getSingleValue( optKey, (OptionsWrapper::GameOption)gameoption );
 		wxCheckBox* cur = m_chkbox_map[controlName] ;
 		long l_val;
 		value.ToLong(&l_val);
@@ -399,21 +402,21 @@ void BattleroomMMOptionsTab<BattleType>::UpdateOptControls(wxString controlName)
 
 	 if ( m_combox_map.find(controlName) != m_combox_map.end() )
 	{
-		wxString value = m_battle.CustomBattleOptions().getSingleValue( optKey, (OptionsWrapper::GameOption)gameoption );
+		wxString value = m_battle->CustomBattleOptions().getSingleValue( optKey, (OptionsWrapper::GameOption)gameoption );
 		wxComboBox* cur = m_combox_map[controlName];
-		cur->SetValue(m_battle.CustomBattleOptions().GetNameListOptValue( optKey, (OptionsWrapper::GameOption)gameoption));
+		cur->SetValue(m_battle->CustomBattleOptions().GetNameListOptValue( optKey, (OptionsWrapper::GameOption)gameoption));
 	}
 
 	 if ( m_textctrl_map.find(controlName) != m_textctrl_map.end() )
 	{
-		wxString value = m_battle.CustomBattleOptions().getSingleValue( optKey, (OptionsWrapper::GameOption)gameoption );
+		wxString value = m_battle->CustomBattleOptions().getSingleValue( optKey, (OptionsWrapper::GameOption)gameoption );
 		wxTextCtrl* cur = m_textctrl_map[controlName];
 		cur->SetValue(value);
 	}
 
 	 if ( m_spinctrl_map.find(controlName) != m_spinctrl_map.end() )
 	{
-		wxString value = m_battle.CustomBattleOptions().getSingleValue( optKey, (OptionsWrapper::GameOption)gameoption );
+		wxString value = m_battle->CustomBattleOptions().getSingleValue( optKey, (OptionsWrapper::GameOption)gameoption );
 		wxSpinCtrlDbl* cur = m_spinctrl_map[controlName] ;
 		double l_val;
 		value.ToDouble(&l_val);
@@ -442,6 +445,7 @@ void RemovePrefixed(T &v, wxString pref){
 template < class BattleType >
 void BattleroomMMOptionsTab<BattleType>::OnReloadControls(OptionsWrapper::GameOption flag)
 {
+	if ( !m_battle ) return;
 	wxString pref = wxString::Format( _T("%d"),flag) + wxsep;
 
 	//purgin existing keys from map
@@ -483,6 +487,7 @@ void BattleroomMMOptionsTab<BattleType>::OnReloadControls(OptionsWrapper::GameOp
 template < class BattleType >
 void BattleroomMMOptionsTab<BattleType>::OnReloadControls()
 {
+		if ( !m_battle ) return;
     for ( unsigned int i = 0; i < OptionsWrapper::LastOption; i++)
         OnReloadControls( (OptionsWrapper::GameOption) i );
 }
@@ -490,14 +495,15 @@ void BattleroomMMOptionsTab<BattleType>::OnReloadControls()
 template < class BattleType >
 void BattleroomMMOptionsTab<BattleType>::OnLoadPreset( wxCommandEvent& /*unused*/ )
 {
+	if ( !m_battle ) return;
   wxString presetname = m_options_preset_sel->GetValue();
   if ( presetname.IsEmpty() )
   {
      customMessageBoxNoModal( SL_MAIN_ICON , _("Cannot load an options set without a name\nPlease select one from the list and try again."), _("error"), wxICON_EXCLAMATION|wxOK );
      return;
   }
-  m_battle.LoadOptionsPreset( presetname );
-  m_battle.SendHostInfo( IBattle::HI_Send_All_opts );
+  m_battle->LoadOptionsPreset( presetname );
+  m_battle->SendHostInfo( IBattle::HI_Send_All_opts );
   OnReloadControls( );
 }
 
@@ -505,6 +511,7 @@ void BattleroomMMOptionsTab<BattleType>::OnLoadPreset( wxCommandEvent& /*unused*
 template < class BattleType >
 void BattleroomMMOptionsTab<BattleType>::OnSavePreset( wxCommandEvent& /*unused*/ )
 {
+	if ( !m_battle ) return;
     wxString presetname;
 	if ( !ui().AskText( _("Enter preset name"), _("Enter a name to save the current set of options\nIf a preset with the same name already exist, it will be overwritten"), presetname ) )
         return;
@@ -513,35 +520,38 @@ void BattleroomMMOptionsTab<BattleType>::OnSavePreset( wxCommandEvent& /*unused*
         customMessageBoxNoModal( SL_MAIN_ICON , _("Cannot save an options set without a name."), _("error"), wxICON_EXCLAMATION|wxOK );
         return;
     }
-    m_battle.SaveOptionsPreset( presetname );
+    m_battle->SaveOptionsPreset( presetname );
 }
 
 
 template < class BattleType >
 void BattleroomMMOptionsTab<BattleType>::OnDeletePreset( wxCommandEvent& /*unused*/ )
 {
-  wxArrayString choices = m_battle.GetPresetList();
+	if ( !m_battle ) return;
+  wxArrayString choices = m_battle->GetPresetList();
 	int result = wxGetSingleChoiceIndex(_("Pick an existing option set from the list"),_("Delete preset"), choices );
 	if ( result < 0 ) return;
-  m_battle.DeletePreset( choices[result] );
+  m_battle->DeletePreset( choices[result] );
 }
 
 template < class BattleType >
 void BattleroomMMOptionsTab<BattleType>::OnSetModDefaultPreset( wxCommandEvent& /*unused*/ )
 {
-  wxArrayString choices = m_battle.GetPresetList();
+	if ( !m_battle ) return;
+  wxArrayString choices = m_battle->GetPresetList();
 	int result = wxGetSingleChoiceIndex(_("Pick an existing option set from the list"),_("Set mod default preset"), choices );
 	if ( result < 0 ) return;
-  sett().SetModDefaultPresetName( m_battle.GetHostModName(), choices[result] );
+  sett().SetModDefaultPresetName( m_battle->GetHostModName(), choices[result] );
 }
 
 
 template < class BattleType >
 void BattleroomMMOptionsTab<BattleType>::UpdatePresetList()
 {
+		if ( !m_battle ) return;
     m_options_preset_sel->Clear();
     m_options_preset_sel->Append(sett().GetPresetList());
-    m_options_preset_sel->SetStringSelection(  m_battle.GetCurrentPreset() );
+    m_options_preset_sel->SetStringSelection(  m_battle->GetCurrentPreset() );
 }
 
 template < class BattleType >
@@ -561,6 +571,7 @@ void BattleroomMMOptionsTab<BattleType>::OnButton( wxCommandEvent& event )
 template < class BattleType >
 void BattleroomMMOptionsTab<BattleType>::OnInfoButton( wxCommandEvent& event )
 {
+		if ( !m_battle ) return;
     #ifdef wxUSE_TIPWINDOW
     wxWindow* button = (wxWindow*) event.GetEventObject();
     if ( button ) {
@@ -575,3 +586,37 @@ void BattleroomMMOptionsTab<BattleType>::OnInfoButton( wxCommandEvent& event )
     #endif
 }
 
+template < class BattleType >
+void BattleroomMMOptionsTab<BattleType>::SetBattle( BattleType* battle )
+{
+	m_battle = battle;
+	m_options_preset_sel->Enable(m_battle);
+	m_load_btn->Enable(m_battle);
+	m_save_btn->Enable(m_battle);
+	m_delete_btn->Enable(m_battle);
+	m_default_btn->Enable(m_battle);
+	for ( chkBoxMap::iterator itor = m_chkbox_map.begin(); itor != m_chkbox_map.end(); itor++ ) itor->second->Enable(m_battle);
+	for ( comboBoxMap::iterator itor = m_combox_map.begin(); itor != m_combox_map.end(); itor++ ) itor->second->Enable(m_battle);
+	for ( spinCtrlMap::iterator itor = m_spinctrl_map.begin(); itor != m_spinctrl_map.end(); itor++ ) itor->second->Enable(m_battle);
+	for ( textCtrlMap::iterator itor = m_textctrl_map.begin(); itor != m_textctrl_map.end(); itor++ ) itor->second->Enable(m_battle);
+	for ( buttonMap::iterator itor = m_button_map.begin(); itor != m_button_map.end(); itor++ ) itor->second->Enable(m_battle);
+
+	if ( m_battle )
+	{
+		m_options_preset_sel->SetStringSelection( sett().GetModDefaultPresetName( m_battle->GetHostModName() ) );
+    if ( !m_battle->IsFounderMe() )
+    {
+        m_options_preset_sel->Disable();
+        m_load_btn->Disable();
+        m_save_btn->Disable();
+        m_delete_btn->Disable();
+        m_default_btn->Disable();
+    }
+	}
+}
+
+template < class BattleType >
+BattleType* BattleroomMMOptionsTab<BattleType>::GetBattle()
+{
+	return m_battle;
+}

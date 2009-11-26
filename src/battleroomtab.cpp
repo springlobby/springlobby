@@ -115,7 +115,7 @@ const MyStrings<SPRING_MAX_ALLIES> ally_choices;
 
 BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle )
     : wxScrolledWindow( parent, -1 ),
-    m_battle( 0 ),
+    m_battle( battle ),
     m_map_dlg( 0 )
 {
 	GetAui().manager->AddPane( this, wxLEFT, _T( "battleroomtab" ) );
@@ -997,17 +997,49 @@ void BattleRoomTab::SortPlayerList()
 
 void BattleRoomTab::SetBattle( Battle* battle )
 {
-	if ( battle == m_battle ) return;
 	m_battle = battle;
+
+	m_team_sel->Enable(m_battle);
+	m_ally_sel->Enable(m_battle);
+	m_color_sel->Enable(m_battle);
+	m_side_sel->Enable(m_battle);
+	m_options_preset_sel->Enable(m_battle);
+
+	m_minimap->Enable(m_battle);
+
+	m_player_panel->Enable(m_battle);
+
+	m_map_combo->Enable(m_battle);
+
+	m_players->Enable(m_battle);
+
+	m_leave_btn->Enable(m_battle);
+	m_start_btn->Enable(m_battle);
+	m_addbot_btn->Enable(m_battle);
+	m_manage_players_btn->Enable(m_battle);
+	m_save_btn->Enable(m_battle);
+	m_delete_btn->Enable(m_battle);
+	m_default_btn->Enable(m_battle);
+	m_browse_map_btn->Enable(m_battle);
+
+	m_ready_chk->Enable(m_battle);
+	m_spec_chk->Enable(m_battle);
+	m_lock_chk->Enable(m_battle);
+	m_autolock_chk->Enable(m_battle);
+
+	m_opts_list->Enable(m_battle);
+
+	m_minimap->SetBattle( m_battle );
+	m_players->SetBattle( m_battle );
+	m_chat->SetBattle( m_battle );
+	m_players->Clear();
+	m_side_sel->Clear();
+
 	if ( m_battle )
 	{
-		m_minimap->SetBattle( m_battle );
-		m_players->SetBattle( m_battle );
-		m_chat->SetBattle( m_battle );
 		m_options_preset_sel->SetStringSelection( sett().GetModDefaultPresetName( m_battle->GetHostModName() ) );
 
 		m_color_sel->SetColor( m_battle->GetMe().BattleStatus().colour );
-		m_side_sel->Clear();
 		try
 		{
 			wxArrayString sides = usync().GetSides( m_battle->GetHostModName() );
@@ -1024,36 +1056,6 @@ void BattleRoomTab::SetBattle( Battle* battle )
 			UpdateUser( m_battle->GetUser( i ) );
 			#endif
 		}
-
-		m_team_sel->Enable();
-		m_ally_sel->Enable();
-		m_color_sel->Enable();
-		m_side_sel->Enable();
-		m_options_preset_sel->Enable();
-
-		m_minimap->Enable();
-
-		m_player_panel->Enable();
-
-		m_map_combo->Enable();
-
-		m_players->Enable();
-
-		m_leave_btn->Enable();
-		m_start_btn->Enable();
-		m_addbot_btn->Enable();
-		m_manage_players_btn->Enable();
-		m_save_btn->Enable();
-		m_delete_btn->Enable();
-		m_default_btn->Enable();
-		m_browse_map_btn->Enable();
-
-		m_ready_chk->Enable();
-		m_spec_chk->Enable();
-		m_lock_chk->Enable();
-		m_autolock_chk->Enable();
-
-		m_opts_list->Enable();
 
 		if ( !m_battle->IsFounderMe() )
 		{
@@ -1087,43 +1089,5 @@ void BattleRoomTab::SetBattle( Battle* battle )
 
 		UpdateBattleInfo( wxString::Format( _T( "%d_mapname" ), OptionsWrapper::PrivateOptions ) );
 		UpdateBattleInfo();
-	}
-	else
-	{
-		m_team_sel->Disable();
-		m_ally_sel->Disable();
-		m_color_sel->Disable();
-		m_side_sel->Disable();
-		m_options_preset_sel->Disable();
-
-		m_minimap->Disable();
-
-		m_player_panel->Disable();
-
-		m_map_combo->Disable();
-
-		m_players->Disable();
-
-		m_leave_btn->Disable();
-		m_start_btn->Disable();
-		m_addbot_btn->Disable();
-		m_manage_players_btn->Disable();
-		m_save_btn->Disable();
-		m_delete_btn->Disable();
-		m_default_btn->Disable();
-		m_browse_map_btn->Disable();
-
-		m_ready_chk->Disable();
-		m_spec_chk->Disable();
-		m_lock_chk->Disable();
-		m_autolock_chk->Disable();
-
-		m_opts_list->Disable();
-
-		m_minimap->SetBattle( m_battle );
-		m_players->SetBattle( m_battle );
-		m_chat->SetBattle( m_battle );
-
-		m_players->Clear();
 	}
 }
