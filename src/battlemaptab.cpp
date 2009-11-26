@@ -47,7 +47,7 @@ END_EVENT_TABLE()
 
 BattleMapTab::BattleMapTab( wxWindow* parent, Battle* battle )
     : wxScrolledWindow( parent, -1 ),
-    m_battle( 0 ),
+    m_battle( battle ),
     m_map_dlg( 0 )
 {
 	GetAui().manager->AddPane( this, wxLEFT, _T( "battlemaptab" ) );
@@ -290,7 +290,6 @@ void BattleMapTab::OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ )
 
 void BattleMapTab::SetBattle( Battle* battle )
 {
-	if ( battle == m_battle ) return;
 	m_battle = battle;
 
 	m_start_radios->Enable( m_battle );

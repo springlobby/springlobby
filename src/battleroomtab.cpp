@@ -115,7 +115,7 @@ const MyStrings<SPRING_MAX_ALLIES> ally_choices;
 
 BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle )
     : wxScrolledWindow( parent, -1 ),
-    m_battle( 0 ),
+    m_battle( battle ),
     m_map_dlg( 0 )
 {
 	GetAui().manager->AddPane( this, wxLEFT, _T( "battleroomtab" ) );
@@ -997,7 +997,6 @@ void BattleRoomTab::SortPlayerList()
 
 void BattleRoomTab::SetBattle( Battle* battle )
 {
-	if ( battle == m_battle ) return;
 	m_battle = battle;
 
 	m_team_sel->Enable(m_battle);

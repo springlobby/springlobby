@@ -45,7 +45,7 @@ END_EVENT_TABLE()
 
 template < class BattleType >
 BattleroomMMOptionsTab<BattleType>::BattleroomMMOptionsTab(  BattleType* battle, wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style )
-: wxScrolledWindow( parent, id, pos, size, style | wxHSCROLL ),m_battle(0)
+: wxScrolledWindow( parent, id, pos, size, style | wxHSCROLL ),m_battle(battle)
 {
 
   GetAui().manager->AddPane( this, wxLEFT, _T("battleroommmoptionstab") );
@@ -589,7 +589,6 @@ void BattleroomMMOptionsTab<BattleType>::OnInfoButton( wxCommandEvent& event )
 template < class BattleType >
 void BattleroomMMOptionsTab<BattleType>::SetBattle( BattleType* battle )
 {
-	if ( m_battle == battle ) return;
 	m_battle = battle;
 	m_options_preset_sel->Enable(m_battle);
 	m_load_btn->Enable(m_battle);

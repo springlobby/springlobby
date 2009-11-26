@@ -39,7 +39,7 @@ END_EVENT_TABLE()
 
 BattleOptionsTab::BattleOptionsTab( wxWindow* parent,IBattle* battle )
 	: wxScrolledWindow( parent, -1 ),
-	m_battle( 0 )
+	m_battle( battle )
 {
 	GetAui().manager->AddPane( this, wxLEFT, _T( "battleoptionstab" ) );
 
@@ -277,7 +277,6 @@ void BattleOptionsTab::OnClearRestrictions( wxCommandEvent& /*unused*/ )
 
 void BattleOptionsTab::SetBattle( IBattle* battle )
 {
-	if ( m_battle == battle ) return;
 	m_battle = battle;
 
 	m_restrict_btn->Enable(m_battle);
