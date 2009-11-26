@@ -141,7 +141,7 @@ void MainJoinBattleTab::JoinBattle( Battle& battle )
 	m_map_tab = new BattleMapTab( m_tabs, &battle );
 	m_tabs->InsertPage( 2, m_map_tab, _( "Map" ), false, wxIcon( battle_map_xpm ) );
 
-	m_mm_opts_tab = new BattleroomMMOptionsTab<Battle>( battle, m_tabs );
+	m_mm_opts_tab = new BattleroomMMOptionsTab<Battle>( &battle, m_tabs );
 	m_tabs->InsertPage( 3, m_mm_opts_tab, _( "Options" ), false, wxIcon( battle_settings_xpm ) );
 
 	m_opts_tab = new BattleOptionsTab( m_tabs, &battle );
