@@ -58,7 +58,7 @@ MainJoinBattleTab::MainJoinBattleTab( wxWindow* parent )
 	m_tabs->AddPage( m_list_tab, _( "Battle list" ), true, wxIcon( battle_list_xpm ) );
 
 	m_battle_tab = new BattleRoomTab( m_tabs, 0 );
-	m_tabs->InsertPage( 1, m_battle_tab, _( "Battleroom" ), true, wxIcon( battle_xpm ) );
+	m_tabs->InsertPage( 1, m_battle_tab, _( "Battleroom" ), false, wxIcon( battle_xpm ) );
 
 	m_map_tab = new BattleMapTab( m_tabs, 0 );
 	m_tabs->InsertPage( 2, m_map_tab, _( "Map" ), false, wxIcon( battle_map_xpm ) );
