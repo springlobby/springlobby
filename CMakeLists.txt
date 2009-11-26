@@ -16,10 +16,6 @@ IF(MSVC)
 	ADD_DEFINITIONS(-D_RC_MSVC)
 ENDIF(MSVC)
 
-
-
-
-
 #----------------------------------------------------------------------------------------------------
 # General Settings
 #----------------------------------------------------------------------------------------------------
@@ -172,26 +168,14 @@ IF( OPTION_TORRENT_SYSTEM )
 	    pkg_check_modules( LIBTORRENT libtorrent-rasterbar>=${LIBTORRENT_MIN_VERSION} )
 	    IF( LIBTORRENT_FOUND )
 		    INCLUDE_DIRECTORIES( ${LIBTORRENT_INCLUDE_DIRS} )
-		    LINK_LIBRARIES( ${LIBTORRENT_LIBRARIES} )
+		    LINK_LIBRARIES( springlobby ${LIBTORRENT_LIBRARIES} )
 	    ELSE()
 		    MESSAGE(FATAL_ERROR "libtorrent-rasterbar library not found! Please install the package or toggle OPTION_TORRENT_SYSTEM to OFF")
 	    ENDIF()
 	ELSE( NOT WIN32)
-	    INCLUDE_DIRECTORIES(${SpringLobby_SOURCE_DIR}/src/libtorrent/include
-				${SpringLobby_SOURCE_DIR}/src/libtorrent/zlib
-				${SpringLobby_SOURCE_DIR}/src/libtorrent/ )
-	    INCLUDE ( ${SpringLobby_SOURCE_DIR}/cmake/libtorrent.cmake )
-	    ADD_DEFINITIONS( -DBOOST_WINDOWS -DTORRENT_DISABLE_ENCRYPTION )
-		IF(NOT CMAKE_CROSSCOMPILING)
-			SET(Boost_USE_STATIC_LIBS ON)
-			SET(Boost_USE_MULTITHREADED ON)
-			SET(Boost_ADDITIONAL_VERSIONS 1.35 1.35.0 1.38 1.38.0)
-			FIND_PACKAGE(Boost COMPONENTS system thread filesystem date_time)
-			INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIRS} )
-		ELSE(NOT CMAKE_CROSSCOMPILING)
 			link_directories( ${boost_LIB_DIR} )
 			INCLUDE_DIRECTORIES( ${boost_INCLUDE_DIR} )
-		ENDIF(NOT CMAKE_CROSSCOMPILING)
+		LINK_LIBRARIES( -mthreads torrent-rasterbar ${Boost_LIBRARIES} ws2_32 mswsock  )
 	ENDIF( NOT WIN32)
 ELSE( OPTION_TORRENT_SYSTEM )
 	ADD_DEFINITIONS( -DNO_TORRENT_SYSTEM )
@@ -424,21 +408,12 @@ cmake_policy(SET CMP0006 OLD)
 ADD_EXECUTABLE(springlobby WIN32 MACOSX_BUNDLE ${SpringLobbySrc} ${SettingsSrc} ${SpringLobby_RC_FILE})
 ADD_EXECUTABLE(springsettings WIN32 MACOSX_BUNDLE ${StandAloneSettings} ${SpringSettings_RC_FILE} ${SettingsSrc} ${SLSharedWithSettings} )
 
-#build libtorrent as a static lib to link in on windows
-IF(WIN32 AND OPTION_TORRENT_SYSTEM)
-ADD_LIBRARY(libtorrent STATIC ${libtorrent_SRC})
-SET_TARGET_PROPERTIES(libtorrent PROPERTIES COMPILE_FLAGS -DWIN32_LEAN_AND_MEAN)
-TARGET_LINK_LIBRARIES( libtorrent ${Boost_LIBRARIES} ws2_32 mswsock )
-TARGET_LINK_LIBRARIES( springlobby libtorrent )
-ENDIF(WIN32 AND OPTION_TORRENT_SYSTEM)
-
-
 # Here the wxWidgets Libraries are added. These are set for us by the FIND Script. If you need other Libraries, you can add them here as well.
 TARGET_LINK_LIBRARIES(springlobby ${wxWidgets_LIBRARIES})
 TARGET_LINK_LIBRARIES(springsettings ${wxWidgets_LIBRARIES})
 IF(MINGW)
 	TARGET_LINK_LIBRARIES( springlobby iphlpapi )
-	TARGET_LINK_LIBRARIES( springsettings iphlpapi )
+	TARGET_LINK_LIBRARIES( springsettings iphlpapi  )
 ENDIF(MINGW)
 
 IF (WIN32)
