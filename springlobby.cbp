@@ -12,7 +12,7 @@
 				<Option object_output="obj/GNU/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters="-cl -nc" />
+				<Option parameters="-cl -nc -f $HOME/.springlobby/testing.conf" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
 					<Add option="-Wshadow" />
