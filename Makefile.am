@@ -450,8 +450,6 @@ springlobby_SOURCES = \
 	src/sounds/pm_sound.h \
 	src/springunitsynclib.cpp \
 	src/springunitsynclib.h \
-	src/unitsyncthread.cpp \
-	src/unitsyncthread.h \
 	src/mapgridctrl.cpp \
 	src/mapgridctrl.h \
 	src/mapselectdialog.cpp \

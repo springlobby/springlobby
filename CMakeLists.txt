@@ -316,7 +316,6 @@ SET(SpringLobbySrc
 	src/torrentwrapper
 	src/ui
 	src/uiutils
-	src/unitsyncthread
 	src/user
 	src/useractions
 	src/userlist
