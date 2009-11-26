@@ -612,6 +612,7 @@ void BattleroomMMOptionsTab<BattleType>::SetBattle( BattleType* battle )
         m_delete_btn->Disable();
         m_default_btn->Disable();
     }
+    OnReloadControls();
 	}
 }
 
