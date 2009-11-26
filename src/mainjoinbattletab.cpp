@@ -57,6 +57,18 @@ MainJoinBattleTab::MainJoinBattleTab( wxWindow* parent )
 	m_list_tab = new BattleListTab( m_tabs );
 	m_tabs->AddPage( m_list_tab, _( "Battle list" ), true, wxIcon( battle_list_xpm ) );
 
+	m_battle_tab = new BattleRoomTab( m_tabs, 0 );
+	m_tabs->InsertPage( 1, m_battle_tab, _( "Battleroom" ), true, wxIcon( battle_xpm ) );
+
+	m_map_tab = new BattleMapTab( m_tabs, 0 );
+	m_tabs->InsertPage( 2, m_map_tab, _( "Map" ), false, wxIcon( battle_map_xpm ) );
+
+	m_mm_opts_tab = new BattleroomMMOptionsTab<Battle>( 0, m_tabs );
+	m_tabs->InsertPage( 3, m_mm_opts_tab, _( "Options" ), false, wxIcon( battle_settings_xpm ) );
+
+	m_opts_tab = new BattleOptionsTab( m_tabs, 0 );
+	m_tabs->InsertPage( 4, m_opts_tab, _( "Unit Restrictions" ), false, wxIcon( battle_settings_xpm ) );
+
 	m_main_sizer->Add( m_tabs, 1, wxEXPAND );
 
 	SetScrollRate( SCROLL_RATE, SCROLL_RATE );
@@ -133,25 +145,10 @@ BattleListTab& MainJoinBattleTab::GetBattleListTab()
 
 void MainJoinBattleTab::JoinBattle( Battle& battle )
 {
-	LeaveCurrentBattle( true );
-
-	m_battle_tab = new BattleRoomTab( m_tabs, &battle );
-	m_tabs->InsertPage( 1, m_battle_tab, _( "Battleroom" ), true, wxIcon( battle_xpm ) );
-
-	m_map_tab = new BattleMapTab( m_tabs, &battle );
-	m_tabs->InsertPage( 2, m_map_tab, _( "Map" ), false, wxIcon( battle_map_xpm ) );
-
-	m_mm_opts_tab = new BattleroomMMOptionsTab<Battle>( &battle, m_tabs );
-	m_tabs->InsertPage( 3, m_mm_opts_tab, _( "Options" ), false, wxIcon( battle_settings_xpm ) );
-
-	m_opts_tab = new BattleOptionsTab( m_tabs, &battle );
-	m_tabs->InsertPage( 4, m_opts_tab, _( "Unit Restrictions" ), false, wxIcon( battle_settings_xpm ) );
-
-    PostSwitchBattlePerspective( );
-
-#ifdef __WXMSW__
-	Refresh(); // this is needed to avoid a weird frame overlay glitch in windows
-#endif
+	m_mm_opts_tab->SetBattle( &battle );
+	m_opts_tab->SetBattle( &battle );
+	m_map_tab->SetBattle( &battle );
+	m_battle_tab->SetBattle( &battle );
 }
 
 
@@ -163,28 +160,10 @@ void MainJoinBattleTab::HostBattle( Battle& battle )
 
 void MainJoinBattleTab::LeaveCurrentBattle( bool called_from_join )
 {
-    PreSwitchBattlePerspective();
-
-	if ( m_mm_opts_tab ) {
-		m_tabs->DeletePage( 4 );
-		m_mm_opts_tab = 0;
-	}
-	if ( m_opts_tab ) {
-		m_tabs->DeletePage( 3 );
-		m_opts_tab = 0;
-	}
-	if ( m_map_tab ) {
-		m_tabs->DeletePage( 2 );
-		m_map_tab = 0;
-	}
-	if ( m_battle_tab ) {
-		m_tabs->DeletePage( 1 );
-		m_battle_tab = 0;
-	}
-
-    if( !called_from_join )
-        PostSwitchBattlePerspective();
-
+	m_mm_opts_tab->SetBattle( 0 );
+	m_opts_tab->SetBattle( 0 );
+	m_map_tab->SetBattle( 0 );
+	m_battle_tab->SetBattle( 0 );
 }
 
 
