@@ -54,16 +54,16 @@ MainJoinBattleTab::MainJoinBattleTab( wxWindow* parent )
 	m_imagelist->Add( wxIcon( battle_settings_xpm ) );
 
 	m_battle_tab = new BattleRoomTab( m_tabs, 0 );
-	m_tabs->InsertPage( 1, m_battle_tab, _( "Battleroom" ), false, wxIcon( battle_xpm ) );
+	m_tabs->InsertPage( 0, m_battle_tab, _( "Battleroom" ), true, wxIcon( battle_xpm ) );
 
 	m_map_tab = new BattleMapTab( m_tabs, 0 );
-	m_tabs->InsertPage( 2, m_map_tab, _( "Map" ), false, wxIcon( battle_map_xpm ) );
+	m_tabs->InsertPage( 1, m_map_tab, _( "Map" ), false, wxIcon( battle_map_xpm ) );
 
 	m_mm_opts_tab = new BattleroomMMOptionsTab<Battle>( 0, m_tabs );
-	m_tabs->InsertPage( 3, m_mm_opts_tab, _( "Options" ), false, wxIcon( battle_settings_xpm ) );
+	m_tabs->InsertPage( 2, m_mm_opts_tab, _( "Options" ), false, wxIcon( battle_settings_xpm ) );
 
 	m_opts_tab = new BattleOptionsTab( m_tabs, 0 );
-	m_tabs->InsertPage( 4, m_opts_tab, _( "Unit Restrictions" ), false, wxIcon( battle_settings_xpm ) );
+	m_tabs->InsertPage( 3, m_opts_tab, _( "Unit Restrictions" ), false, wxIcon( battle_settings_xpm ) );
 
 	m_main_sizer->Add( m_tabs, 1, wxEXPAND );
 
@@ -80,17 +80,14 @@ MainJoinBattleTab::~MainJoinBattleTab()
 
 Battle* MainJoinBattleTab::GetCurrentBattle()
 {
-	if ( m_battle_tab )
-		return m_battle_tab->GetBattle();
-
-	return 0;
+	return m_battle_tab->GetBattle();
 }
 
 
 ChatPanel* MainJoinBattleTab::GetActiveChatPanel()
 {
 	if ( m_tabs->GetSelection() == 1 ) {
-		if ( m_battle_tab != 0 ) return &m_battle_tab->GetChatPanel();
+		return &GetBattleRoomTab.GetChatPanel();
 	}
 	return 0;
 }
@@ -98,37 +95,16 @@ ChatPanel* MainJoinBattleTab::GetActiveChatPanel()
 //void MainJoinBattleTab::UpdateCurrentBattle()
 void MainJoinBattleTab::UpdateCurrentBattle()
 {
-	try
-	{
-		GetBattleRoomTab().UpdateBattleInfo();
-	} catch ( ... ) {}
-	try
-	{
-		GetBattleMapTab().Update();
-	} catch ( ... ) {}
+	GetBattleRoomTab().UpdateBattleInfo();
+	GetBattleMapTab().Update();
 }
 
 void MainJoinBattleTab::UpdateCurrentBattle( const wxString& Tag )
 {
-	try
-	{
-		GetBattleRoomTab().UpdateBattleInfo( Tag );
-	} catch ( ... ) {}
-
-	try
-	{
-		GetBattleMapTab().Update( Tag );
-	} catch ( ... ) {}
-
-	try
-	{
-		GetOptionsTab().UpdateBattle( Tag );
-	} catch ( ... ) {}
-
-	try
-	{
-		GetMMOptionsTab().UpdateOptControls( Tag );
-	} catch ( ... ) {}
+	GetBattleRoomTab().UpdateBattleInfo( Tag );
+	GetBattleMapTab().Update( Tag );
+	GetOptionsTab().UpdateBattle( Tag );
+	GetMMOptionsTab().UpdateOptControls( Tag );
 }
 
 
