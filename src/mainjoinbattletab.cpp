@@ -144,7 +144,7 @@ void MainJoinBattleTab::JoinBattle( Battle& battle )
 	m_mm_opts_tab = new BattleroomMMOptionsTab<Battle>( battle, m_tabs );
 	m_tabs->InsertPage( 3, m_mm_opts_tab, _( "Options" ), false, wxIcon( battle_settings_xpm ) );
 
-	m_opts_tab = new BattleOptionsTab( m_tabs, battle );
+	m_opts_tab = new BattleOptionsTab( m_tabs, &battle );
 	m_tabs->InsertPage( 4, m_opts_tab, _( "Unit Restrictions" ), false, wxIcon( battle_settings_xpm ) );
 
     PostSwitchBattlePerspective( );

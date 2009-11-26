@@ -37,9 +37,9 @@ BEGIN_EVENT_TABLE( BattleOptionsTab, wxPanel )
 END_EVENT_TABLE()
 
 
-BattleOptionsTab::BattleOptionsTab( wxWindow* parent,IBattle& battle )
-	: wxScrolledWindow( parent, -1 ),	 
-	m_battle( battle )
+BattleOptionsTab::BattleOptionsTab( wxWindow* parent,IBattle* battle )
+	: wxScrolledWindow( parent, -1 ),
+	m_battle( 0 )
 {
 	GetAui().manager->AddPane( this, wxLEFT, _T( "battleoptionstab" ) );
 
@@ -109,13 +109,7 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent,IBattle& battle )
 	this->SetSizer( m_main_sizer );
 	this->Layout();
 
-	ReloadRestrictions();
 
-	if ( !m_battle.IsFounderMe() ) {
-		m_restrict_btn->Disable();
-		m_allow_btn->Disable();
-		m_clear_btn->Disable();
-	}
 }
 
 
@@ -128,6 +122,7 @@ BattleOptionsTab::~BattleOptionsTab()
 
 void BattleOptionsTab::UpdateBattle( const wxString& Tag )
 {
+	if ( !m_battle ) return;
 	long type;
 	Tag.BeforeFirst( '_' ).ToLong( &type );
 	wxString key = Tag.AfterFirst( '_' );
@@ -138,15 +133,16 @@ void BattleOptionsTab::UpdateBattle( const wxString& Tag )
 
 void BattleOptionsTab::ReloadRestrictions()
 {
+	if ( !m_battle ) return;
 	m_allowed_list->Clear();
 	m_restrict_list->Clear();
-	if ( m_battle.GetHostModName() == wxEmptyString )
+	if ( m_battle->GetHostModName() == wxEmptyString )
         return;
 
 	try {
-		m_allowed_list->InsertItems( usync().GetUnitsList( m_battle.GetHostModName() ), 0 );
+		m_allowed_list->InsertItems( usync().GetUnitsList( m_battle->GetHostModName() ), 0 );
 	} catch ( ... ) {}
-	std::map<wxString, int> units = m_battle.RestrictedUnits();
+	std::map<wxString, int> units = m_battle->RestrictedUnits();
 
 	for ( std::map<wxString, int>::iterator itor = units.begin(); itor != units.end(); itor++ )
 		Restrict( itor->first, itor->second );
@@ -155,6 +151,7 @@ void BattleOptionsTab::ReloadRestrictions()
 
 int BattleOptionsTab::GetAllowedUnitIndex( const wxString& name )
 {
+	if ( !m_battle ) return -1;
 	for ( unsigned int i = 0; i < m_allowed_list->GetCount(); i++ ) {
 		wxString tmp = m_allowed_list->GetString( i );
 		tmp = tmp.AfterLast( '(' );
@@ -167,6 +164,7 @@ int BattleOptionsTab::GetAllowedUnitIndex( const wxString& name )
 
 int BattleOptionsTab::GetRestrictedUnitIndex( const wxString& name )
 {
+	if ( !m_battle ) return -1;
 	for ( unsigned int i = 0; i < m_restrict_list->GetCount(); i++ ) {
 		wxString tmp = m_restrict_list->GetString( i );
 		tmp = tmp.AfterLast( '(' );
@@ -185,6 +183,7 @@ bool BattleOptionsTab::IsRestricted( const wxString& name )
 
 void BattleOptionsTab::Restrict( const wxString& name, int count )
 {
+	if ( !m_battle ) return;
 	int i = GetAllowedUnitIndex( name );
 	Restrict( i, count );
 }
@@ -192,6 +191,7 @@ void BattleOptionsTab::Restrict( const wxString& name, int count )
 
 void BattleOptionsTab::Allow( const wxString& name )
 {
+	if ( !m_battle ) return;
 	int i = GetRestrictedUnitIndex( name );
 	Allow( i );
 }
@@ -199,6 +199,7 @@ void BattleOptionsTab::Allow( const wxString& name )
 
 void BattleOptionsTab::Restrict( int index, int count )
 {
+	if ( !m_battle ) return;
 	if ( index >= 0 ) {
 		wxString unit = m_allowed_list->GetString( index );
 		m_restrict_list->Append( unit << _T( " [" ) << count << _T( "]" ) );
@@ -209,6 +210,7 @@ void BattleOptionsTab::Restrict( int index, int count )
 
 void BattleOptionsTab::Allow( int index )
 {
+	if ( !m_battle ) return;
 	if ( index >= 0 ) {
 		wxString unit = m_restrict_list->GetString( index );
 		m_allowed_list->Append( unit );
@@ -224,6 +226,7 @@ void BattleOptionsTab::Allow( int index )
 
 void BattleOptionsTab::OnRestrict( wxCommandEvent& /*unused*/ )
 {
+	if ( !m_battle ) return;
 	wxArrayInt sel;
 	wxArrayString names;
 
@@ -237,14 +240,15 @@ void BattleOptionsTab::OnRestrict( wxCommandEvent& /*unused*/ )
 	for ( unsigned int i = 0; i < names.Count(); i++ ) {
 		wxString unit = names.Item( i );
 		int count = wxGetNumberFromUser( _( "How many units of this type do you wish to allow?" ), _T( "" ), _( "Unit restriction" ), 0, 0, 500000 );
-		if ( count >= 0 ) m_battle.RestrictUnit( unit, count );
+		if ( count >= 0 ) m_battle->RestrictUnit( unit, count );
 	}
-	if ( names.Count() > 0 ) m_battle.SendHostInfo( IBattle::HI_Restrictions );
+	if ( names.Count() > 0 ) m_battle->SendHostInfo( IBattle::HI_Restrictions );
 }
 
 
 void BattleOptionsTab::OnAllow( wxCommandEvent& /*unused*/ )
 {
+	if ( !m_battle ) return;
 	wxArrayInt sel;
 	wxArrayString names;
 
@@ -257,15 +261,46 @@ void BattleOptionsTab::OnAllow( wxCommandEvent& /*unused*/ )
 	}
 	for ( unsigned int i = 0; i < names.Count(); i++ ) {
 		wxString unit =  names.Item( i );
-		m_battle.UnrestrictUnit( unit );
+		m_battle->UnrestrictUnit( unit );
 	}
-	if ( names.Count() > 0 ) m_battle.SendHostInfo( IBattle::HI_Restrictions );
+	if ( names.Count() > 0 ) m_battle->SendHostInfo( IBattle::HI_Restrictions );
 
 }
 
 
 void BattleOptionsTab::OnClearRestrictions( wxCommandEvent& /*unused*/ )
 {
-	m_battle.UnrestrictAllUnits();
+	if ( !m_battle ) return;
+	m_battle->UnrestrictAllUnits();
 	ReloadRestrictions();
+}
+
+void BattleOptionsTab::SetBattle( IBattle* battle )
+{
+	if ( m_battle == battle ) return;
+	m_battle = battle;
+
+	m_restrict_btn->Enable(m_battle);
+	m_allow_btn->Enable(m_battle);
+	m_clear_btn->Enable(m_battle);
+	m_allowed_list->Enable(m_battle);
+	m_restrict_list->Enable(m_battle);
+
+	if ( battle )
+	{
+		ReloadRestrictions();
+
+		if ( !m_battle->IsFounderMe() )
+		{
+			m_restrict_btn->Disable();
+			m_allow_btn->Disable();
+			m_clear_btn->Disable();
+		}
+	}
+
+}
+
+IBattle* BattleOptionsTab::GetBattle()
+{
+	return m_battle;
 }
