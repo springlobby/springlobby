@@ -12,6 +12,7 @@
 
 #include <wx/intl.h>
 #include <wx/msgdlg.h>
+#include <wx/timer.h>
 #include <wx/stdpaths.h>
 #include <wx/filefn.h>
 #include <wx/image.h>
@@ -57,6 +58,9 @@
 
 #include "gui/simplefront.h"
 
+const unsigned int TIMER_ID         = 101;
+const unsigned int TIMER_INTERVAL   = 100;
+
 
 #if 0
 /// testing TDF parser
@@ -78,10 +82,16 @@ void TestTDFParser(){
 
 IMPLEMENT_APP(SpringLobbyApp)
 
+BEGIN_EVENT_TABLE(SpringLobbyApp, wxApp)
 
+    EVT_TIMER(TIMER_ID, SpringLobbyApp::OnTimer)
+
+
+END_EVENT_TABLE()
 
 SpringLobbyApp::SpringLobbyApp()
-    : quit_called( false ),
+    : 	m_timer ( new wxTimer(this, TIMER_ID) ),
+    quit_called( false ),
     m_translationhelper( NULL ),
     m_log_verbosity( 3 ),
     m_log_console( true ),
@@ -96,7 +106,7 @@ SpringLobbyApp::SpringLobbyApp()
 
 SpringLobbyApp::~SpringLobbyApp()
 {
-
+    delete m_timer;
 }
 
 
@@ -197,8 +207,10 @@ bool SpringLobbyApp::OnInit()
     ui().mw().GetSavegameTab().ReloadList();
     wxLogMessage( _T("Replaytab updated") );
 
+    m_timer->Start( TIMER_INTERVAL );
+
     ui().mw().SetLogWin( loggerwin, logchain );
-    ui().StartUpdateTimer();
+
     return true;
 }
 
@@ -217,7 +229,10 @@ int SpringLobbyApp::OnExit()
         wxDELETE(m_translationhelper);
     }
 
-    sett().SaveSettings(); // to make sure that cache path gets saved before destroying unitsync
+
+  	m_timer->Stop();
+
+  	sett().SaveSettings(); // to make sure that cache path gets saved before destroying unitsync
 
     SetEvtHandlerEnabled(false);
     DestroyGlobals();
@@ -233,6 +248,13 @@ void SpringLobbyApp::OnFatalException()
 #else
     wxMessageBox( _("The application has generated a fatal error and will be terminated\nGenerating a bug report is not possible\n\nplease get a wxWidgets library that supports wxUSE_DEBUGREPORT"),_("Critical error"), wxICON_ERROR | wxOK );
 #endif
+}
+
+
+//! @brief Is called every 1/10 seconds to update statuses
+void SpringLobbyApp::OnTimer( wxTimerEvent& event )
+{
+    ui().OnUpdate( event.GetInterval() );
 }
 
 bool SpringLobbyApp::SelectLanguage()
