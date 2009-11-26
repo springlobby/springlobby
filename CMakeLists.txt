@@ -16,6 +16,10 @@ IF(MSVC)
 	ADD_DEFINITIONS(-D_RC_MSVC)
 ENDIF(MSVC)
 
+
+
+
+
 #----------------------------------------------------------------------------------------------------
 # General Settings
 #----------------------------------------------------------------------------------------------------
@@ -78,7 +82,7 @@ IF(wxWidgets_FOUND)
 	INCLUDE_DIRECTORIES( ${wxWidgets_INCLUDE_DIRS} )
 ELSE(wxWidgets_FOUND)
 	# For Convenience. If we cannot continue, inform the User.
-	MESSAGE( FATAL_ERROR "wxWidgets library not found! Please install the package to continue")
+	MESSAGE( FATAL_ERROR "wxWidgets library is not found! Please install the package to continue")
 ENDIF(wxWidgets_FOUND)
 ELSE (NOT CMAKE_CROSSCOMPILING)
     INCLUDE_DIRECTORIES( ${wxWidgets_INCLUDE_DIRS} )
@@ -95,19 +99,19 @@ IF ( OPTION_SOUND )
 		FIND_PACKAGE(SDL_mixer REQUIRED)
 		FIND_PACKAGE(SDL_sound REQUIRED)
 
-		# Throw an error to the user if SDL not found
+		# Throw an error to the user if SDL is not found
 		if ( NOT SDL_FOUND )
-		message ( FATAL_ERROR "SDL library not found! Please install the package or toggle OPTION_SOUND to OFF" )
+		message ( FATAL_ERROR "SDL library was not found! Please install the package or toggle OPTION_SOUND to OFF" )
 		endif( NOT SDL_FOUND )
 
-		# Throw an error to the user if SDL_mixer not found
+		# Throw an error to the user if SDL_mixer is not found
 		if ( NOT SDLMIXER_FOUND )
-		message ( FATAL_ERROR "SDL_mixer library not found! Please install the package or toggle OPTION_SOUND to OFF" )
+		message ( FATAL_ERROR "SDL_mixer library was not found! Please install the package or toggle OPTION_SOUND to OFF" )
 		endif(NOT SDLMIXER_FOUND)
 
-		# Throw an error to the user if SDL_sound not found
+		# Throw an error to the user if SDL_sound is not found
 		if ( NOT SDL_SOUND_FOUND )
-		message ( FATAL_ERROR "SDL_sound library not found! Please install the package or toggle OPTION_SOUND to OFF" )
+		message ( FATAL_ERROR "SDL_sound library was not found! Please install the package or toggle OPTION_SOUND to OFF" )
 		endif( NOT SDL_SOUND_FOUND )
 
 		# MESSAGE("sound inc dir: ${SDL_SOUND_INCLUDE_DIR}")
@@ -154,7 +158,7 @@ if( OPTION_TRANSLATION_SUPPORT )
 
 	    include("cmake/KWWidgetsInternationalizationMacros.cmake")
     else(GETTEXT_FOUND)
-	message(FATAL_ERROR "GNU Gettext package not found! Please install the package or toggle OPTION_TRANSLATION_SUPPORT to OFF")
+	message(FATAL_ERROR "The GNU Gettext package is not found! Please install the package or toggle OPTION_TRANSLATION_SUPPORT to OFF")
     endif(GETTEXT_FOUND)
 endif( OPTION_TRANSLATION_SUPPORT )
 
@@ -168,14 +172,26 @@ IF( OPTION_TORRENT_SYSTEM )
 	    pkg_check_modules( LIBTORRENT libtorrent-rasterbar>=${LIBTORRENT_MIN_VERSION} )
 	    IF( LIBTORRENT_FOUND )
 		    INCLUDE_DIRECTORIES( ${LIBTORRENT_INCLUDE_DIRS} )
-		    LINK_LIBRARIES( springlobby ${LIBTORRENT_LIBRARIES} )
+		    LINK_LIBRARIES( ${LIBTORRENT_LIBRARIES} )
 	    ELSE()
-		    MESSAGE(FATAL_ERROR "libtorrent-rasterbar library not found! Please install the package or toggle OPTION_TORRENT_SYSTEM to OFF")
+		    MESSAGE(FATAL_ERROR "libtorrent-rasterbar library is not found! Please install the package or toggle OPTION_TORRENT_SYSTEM to OFF")
 	    ENDIF()
 	ELSE( NOT WIN32)
+	    INCLUDE_DIRECTORIES(${SpringLobby_SOURCE_DIR}/src/libtorrent/include
+				${SpringLobby_SOURCE_DIR}/src/libtorrent/zlib
+				${SpringLobby_SOURCE_DIR}/src/libtorrent/ )
+	    INCLUDE ( ${SpringLobby_SOURCE_DIR}/cmake/libtorrent.cmake )
+	    ADD_DEFINITIONS( -DBOOST_WINDOWS -DTORRENT_DISABLE_ENCRYPTION )
+		IF(NOT CMAKE_CROSSCOMPILING)
+			SET(Boost_USE_STATIC_LIBS ON)
+			SET(Boost_USE_MULTITHREADED ON)
+			SET(Boost_ADDITIONAL_VERSIONS 1.35 1.35.0 1.38 1.38.0)
+			FIND_PACKAGE(Boost COMPONENTS system thread filesystem date_time)
+			INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIRS} )
+		ELSE(NOT CMAKE_CROSSCOMPILING)
 			link_directories( ${boost_LIB_DIR} )
 			INCLUDE_DIRECTORIES( ${boost_INCLUDE_DIR} )
-		LINK_LIBRARIES( -mthreads torrent-rasterbar ${Boost_LIBRARIES} ws2_32 mswsock  )
+		ENDIF(NOT CMAKE_CROSSCOMPILING)
 	ENDIF( NOT WIN32)
 ELSE( OPTION_TORRENT_SYSTEM )
 	ADD_DEFINITIONS( -DNO_TORRENT_SYSTEM )
@@ -191,165 +207,166 @@ ENDIF( OPTION_TORRENT_SYSTEM )
 INCLUDE_DIRECTORIES(${SpringLobby_SOURCE_DIR} ${Settings_SOURCE_DIR} )
 
 SET(SpringLobbySrc
-	src/updater/updatermainwindow
-	src/utils/activitynotice
-	src/chatpanelmenu
-	src/customizations
-	src/gui/gradientpanel
-	src/gui/wxgradientbutton
-	src/gui/skirmish_dialog
-	src/gui/wxbackgroundimage
-	src/gui/simplefront
-	src/updater/updatermainwindow
-	src/utils/activitynotice
-	src/aui/slbook
-	src/utils/math
-	src/utils/misc
-	src/utils/debug
-	src/utils/platform
-	src/utils/conversion
-	src/utils/tasutil
-	src/utils/sltipwin
-	src/utils/controls
-	src/utils/globalevents
-	src/utils/networkevents
-	src/utils/uievents
+	src/updater/updatermainwindow.cpp
+	src/utils/activitynotice.cpp
+	src/chatpanelmenu.cpp
+	src/customizations.cpp
+	src/gui/gradientpanel.cpp
+	src/gui/wxgradientbutton.cpp
+	src/gui/skirmish_dialog.cpp
+	src/gui/wxbackgroundimage.cpp
+	src/gui/simplefront.cpp
+	src/updater/updatermainwindow.cpp
+	src/utils/activitynotice.cpp
+	src/aui/slbook.cpp
+	src/utils/math.cpp
+	src/utils/misc.cpp
+	src/utils/debug.cpp
+	src/utils/platform.cpp
+	src/utils/conversion.cpp
+	src/utils/tasutil.cpp
+	src/utils/sltipwin.cpp
+	src/utils/controls.cpp
+	src/utils/globalevents.cpp
+	src/utils/networkevents.cpp
+	src/utils/uievents.cpp
 	src/utils/md5.c
-	src/updater/updater
-	src/updater/versionchecker
-	src/Helper/TextCompletionDatabase
-	src/Helper/imageviewer
-	src/Helper/slhtmlwindow
-	src/channel/channelchooser
-	src/channel/channelchooserdialog
-	src/Helper/wxtextctrlhist
-	src/Helper/colorbutton
-	src/filelister/filelistctrl
-	src/filelister/filelistdialog
-	src/filelister/filelistfilter
-	src/aui/auimanager
-	src/aui/artprovider
-	src/autobalancedialog
-	src/autohost
-	src/channel/autojoinchanneldialog
-	src/addbotdialog
-	src/agreementdialog
-	src/base64
-	src/battle
-	src/battlelist
-	src/battlelistctrl
-	src/battlelistfilter
-	src/battlelisttab
-	src/battlemaptab
-	src/battleoptionstab
-	src/battleroomlistctrl
-	src/battleroomtab
-	src/crc
-	src/channel/channel
-	src/channel/channellist
-	src/channel/channellistctrl
-	src/chatlog
-	src/chatoptionstab
-	src/chatpanel
-	src/connectwindow
-	src/countrycodes
-	src/crashreport
-	src/customlistctrl
-	src/flagimages
-	src/groupoptionspanel
-	src/hostbattledialog
-	src/ibattle
-	src/iconimagelist
-	src/lobbyoptionstab
-	src/mainchattab
-	src/mainjoinbattletab
-	src/mainoptionstab
-	src/mainsingleplayertab
-	src/maintorrenttab
-	src/mainwindow
-	src/mapctrl
-	src/mapgridctrl
-	src/mapselectdialog
-	src/mmoptionwindows
-	src/mmoptionmodel
-	src/mmoptionswrapper
-	src/nicklistctrl
-	src/offlinebattle
-	src/playback/replaylist
-	src/playback/savegamelist
-	src/sdlsound
-	src/selectusersdialog
-	src/server
-	src/serverevents
-	src/settings
-	src/singleplayerbattle
-	src/singleplayertab
-	src/socket
-	src/spinctld
-	src/spring
-	src/springlobbyapp
-	src/springoptionstab
-	src/springprocess
-	src/springunitsync
-	src/springunitsynclib
-	src/tasserver
-	src/tdfcontainer
-	src/thread
-	src/torrentlistctrl
-	src/torrentoptionspanel
-	src/torrentwrapper
-	src/ui
-	src/uiutils
-	src/user
-	src/useractions
-	src/userlist
-	src/userlistctrl
-	src/widgets/downloadlistctrl
-	src/widgets/downloaddialog
-	src/widgets/downloadpanel
-	src/widgets/infopanel
-	src/widgets/widget
-	src/globalsmanager
-	src/Helper/wxTranslationHelper
-	src/Helper/tasclientimport
+	src/updater/updater.cpp
+	src/updater/versionchecker.cpp
+	src/Helper/TextCompletionDatabase.cpp
+	src/Helper/imageviewer.cpp
+	src/Helper/slhtmlwindow.cpp
+	src/channel/channelchooser.cpp
+	src/channel/channelchooserdialog.cpp
+	src/Helper/wxtextctrlhist.cpp
+	src/Helper/colorbutton.cpp
+	src/filelister/filelistctrl.cpp
+	src/filelister/filelistdialog.cpp
+	src/filelister/filelistfilter.cpp
+	src/aui/auimanager.cpp
+	src/aui/artprovider.cpp
+	src/autobalancedialog.cpp
+	src/autohost.cpp
+	src/channel/autojoinchanneldialog.cpp
+	src/addbotdialog.cpp
+	src/agreementdialog.cpp
+	src/base64.cpp
+	src/battle.cpp
+	src/battlelist.cpp
+	src/battlelistctrl.cpp
+	src/battlelistfilter.cpp
+	src/battlelisttab.cpp
+	src/battlemaptab.cpp
+	src/battleoptionstab.cpp
+	src/battleroomlistctrl.cpp
+	src/battleroomtab.cpp
+	src/crc.cpp
+	src/channel/channel.cpp
+	src/channel/channellist.cpp
+	src/channel/channellistctrl.cpp
+	src/chatlog.cpp
+	src/chatoptionstab.cpp
+	src/chatpanel.cpp
+	src/connectwindow.cpp
+	src/countrycodes.cpp
+	src/crashreport.cpp
+	src/customlistctrl.cpp
+	src/flagimages.cpp
+	src/groupoptionspanel.cpp
+	src/hostbattledialog.cpp
+	src/ibattle.cpp
+	src/iconimagelist.cpp
+	src/lobbyoptionstab.cpp
+	src/mainchattab.cpp
+	src/mainjoinbattletab.cpp
+	src/mainoptionstab.cpp
+	src/mainsingleplayertab.cpp
+	src/maintorrenttab.cpp
+	src/mainwindow.cpp
+	src/mapctrl.cpp
+	src/mapgridctrl.cpp
+	src/mapselectdialog.cpp
+	src/mmoptionwindows.cpp
+	src/mmoptionmodel.cpp
+	src/mmoptionswrapper.cpp
+	src/nicklistctrl.cpp
+	src/offlinebattle.cpp
+	src/playback/replaylist.cpp
+	src/playback/savegamelist.cpp
+	src/sdlsound.cpp
+	src/selectusersdialog.cpp
+	src/server.cpp
+	src/serverevents.cpp
+	src/settings.cpp
+	src/singleplayerbattle.cpp
+	src/singleplayertab.cpp
+	src/socket.cpp
+	src/spinctld.cpp
+	src/spring.cpp
+	src/springlobbyapp.cpp
+	src/springoptionstab.cpp
+	src/springprocess.cpp
+	src/springunitsync.cpp
+	src/springunitsynclib.cpp
+	src/tasserver.cpp
+	src/tdfcontainer.cpp
+	src/thread.cpp
+	src/torrentlistctrl.cpp
+	src/torrentoptionspanel.cpp
+	src/torrentwrapper.cpp
+	src/ui.cpp
+	src/uiutils.cpp
+	src/unitsyncthread.cpp
+	src/user.cpp
+	src/useractions.cpp
+	src/userlist.cpp
+	src/userlistctrl.cpp
+	src/widgets/downloadlistctrl.cpp
+	src/widgets/downloaddialog.cpp
+	src/widgets/downloadpanel.cpp
+	src/widgets/infopanel.cpp
+	src/widgets/widget.cpp
+	src/globalsmanager.cpp
+	src/Helper/wxTranslationHelper.cpp
+	src/Helper/tasclientimport.cpp
 )
 
 SET(SettingsSrc
-	src/utils/customdialogs
-	src/settings++/frame
-	src/settings++/helpmenufunctions
-	src/settings++/panel_pathoption
-	src/settings++/se_utils
-	src/settings++/tab_abstract
-	src/settings++/tab_audio
-	src/settings++/tab_quality_video
-	src/settings++/tab_render_detail
-	src/settings++/tab_simple
-	src/settings++/tab_ui
+	src/utils/customdialogs.cpp
+	src/settings++/frame.cpp
+	src/settings++/helpmenufunctions.cpp
+	src/settings++/panel_pathoption.cpp
+	src/settings++/se_utils.cpp
+	src/settings++/tab_abstract.cpp
+	src/settings++/tab_audio.cpp
+	src/settings++/tab_quality_video.cpp
+	src/settings++/tab_render_detail.cpp
+	src/settings++/tab_simple.cpp
+	src/settings++/tab_ui.cpp
 )
 
 SET(StandAloneSettings
-	src/settings
-	src/uiutils
-	src/settings++/Main
+	src/settings.cpp
+	src/uiutils.cpp
+	src/settings++/Main.cpp
 )
 
 SET(SLSharedWithSettings
-	src/utils/debug
-	src/utils/platform
-	src/utils/conversion
-	src/utils/sltipwin
-	src/utils/controls
-	src/updater/versionchecker
-	src/crashreport
-	src/springunitsynclib
-	src/springunitsync
-	src/thread
-	src/spinctld
-	src/globalsmanager
-	src/utils/globalevents
-	src/mmoptionmodel
-	src/mmoptionswrapper
+	src/utils/debug.cpp
+	src/utils/platform.cpp
+	src/utils/conversion.cpp
+	src/utils/sltipwin.cpp
+	src/utils/controls.cpp
+	src/updater/versionchecker.cpp
+	src/crashreport.cpp
+	src/springunitsynclib.cpp
+	src/springunitsync.cpp
+	src/thread.cpp
+	src/spinctld.cpp
+	src/globalsmanager.cpp
+	src/utils/globalevents.cpp
+	src/mmoptionmodel.cpp
+	src/mmoptionswrapper.cpp
 )
 
 # If we build for windows Systems, we also include the Resource-File containing the Manifest, Icon and other Resources.
@@ -362,7 +379,7 @@ IF(WIN32)
 		SET(SpringSettings_RC_FILE ${CMAKE_CURRENT_BINARY_DIR}/ss_icon.o )
 	ENDIF(MINGW OR CMAKE_CROSSCOMPILING)
 
-	SET(SpringLobbySrc ${SpringLobbySrc} src/Helper/listctrl)
+	SET(SpringLobbySrc ${SpringLobbySrc} src/Helper/listctrl.cpp)
 	SET(SpringLobbySrc ${SpringLobbySrc} src/springlobby.rc)
 	SET(StandAloneSettings ${StandAloneSettings} src/settings++/settings.rc)
 ELSE(WIN32)
@@ -408,12 +425,21 @@ cmake_policy(SET CMP0006 OLD)
 ADD_EXECUTABLE(springlobby WIN32 MACOSX_BUNDLE ${SpringLobbySrc} ${SettingsSrc} ${SpringLobby_RC_FILE})
 ADD_EXECUTABLE(springsettings WIN32 MACOSX_BUNDLE ${StandAloneSettings} ${SpringSettings_RC_FILE} ${SettingsSrc} ${SLSharedWithSettings} )
 
+#build libtorrent as a static lib to link in on windows
+IF(WIN32 AND OPTION_TORRENT_SYSTEM)
+ADD_LIBRARY(libtorrent STATIC ${libtorrent_SRC})
+SET_TARGET_PROPERTIES(libtorrent PROPERTIES COMPILE_FLAGS -DWIN32_LEAN_AND_MEAN)
+TARGET_LINK_LIBRARIES( libtorrent ${Boost_LIBRARIES} ws2_32 mswsock )
+TARGET_LINK_LIBRARIES( springlobby libtorrent )
+ENDIF(WIN32 AND OPTION_TORRENT_SYSTEM)
+
+
 # Here the wxWidgets Libraries are added. These are set for us by the FIND Script. If you need other Libraries, you can add them here as well.
 TARGET_LINK_LIBRARIES(springlobby ${wxWidgets_LIBRARIES})
 TARGET_LINK_LIBRARIES(springsettings ${wxWidgets_LIBRARIES})
 IF(MINGW)
 	TARGET_LINK_LIBRARIES( springlobby iphlpapi )
-	TARGET_LINK_LIBRARIES( springsettings iphlpapi  )
+	TARGET_LINK_LIBRARIES( springsettings iphlpapi )
 ENDIF(MINGW)
 
 IF (WIN32)
