@@ -25,7 +25,6 @@
 #include "settings.h"
 #include "springunitsynclib.h"
 #include "utils/customdialogs.h"
-#include "unitsyncthread.h"
 #include "globalsmanager.h"
 #include "uiutils.h"
 #include "utils/debug.h"
