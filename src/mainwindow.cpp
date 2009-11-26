@@ -746,3 +746,9 @@ void MainWindow::SavePerspectives( const wxString& pers_name )
 //    m_chat_tab->SavePerspective( perspective_name );
     SaveNotebookPerspective( m_func_tabs, perspective_name );
 }
+
+void MainWindow::FocusBattleRoomTab()
+{
+	m_func_tabs->SetSelection( PAGE_JOIN );
+	GetJoinTab().FocusBattleRoomTab();
+}

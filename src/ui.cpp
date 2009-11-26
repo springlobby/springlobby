@@ -1014,6 +1014,7 @@ void Ui::OnJoinedBattle( Battle& battle )
 {
     if ( m_main_win == 0 ) return;
     mw().GetJoinTab().JoinBattle( battle );
+    mw().FocusBattleRoomTab();
     if ( !usync().IsLoaded() )
     {
         customMessageBox(SL_MAIN_ICON, _("Your spring settings are probably not configured correctly,\nyou should take another look at your settings before trying\nto play online."), _("Spring settings error"), wxOK );
@@ -1028,6 +1029,7 @@ void Ui::OnJoinedBattle( Battle& battle )
 void Ui::OnHostedBattle( Battle& battle )
 {
     if ( m_main_win == 0 ) return;
+    mw().FocusBattleRoomTab();
     mw().GetJoinTab().HostBattle( battle );
 }
 
