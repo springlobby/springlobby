@@ -297,10 +297,9 @@ void BattleMapTab::SetBattle( Battle* battle )
 	m_map_combo->Enable( m_battle );
 	m_browse_btn->Enable( m_battle );
 	m_map_opts_list->Enable( m_battle );
-
+	m_minimap->SetBattle( m_battle );
 	if ( m_battle )
 	{
-		m_minimap->SetBattle( m_battle );
 		m_minimap->SetReadOnly( m_battle->IsFounderMe() );
 		m_start_radios->Enable( m_battle->IsFounderMe() );
 		ReloadMaplist();
