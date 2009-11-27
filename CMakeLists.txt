@@ -410,7 +410,8 @@ add_custom_target(dist cd ${CMAKE_SOURCE_DIR} &&
                         git archive --format=tar --prefix=${PACKAGE_NAME}-${PACKAGE_VERSION}/ HEAD |
                             gzip > ${CMAKE_BINARY_DIR}/${PACKAGE_NAME}-${PACKAGE_VERSION}.tar.gz &&
 						git archive --format=tar --prefix=${PACKAGE_NAME}-${PACKAGE_VERSION}/ HEAD |
-                            bzip2 > ${CMAKE_BINARY_DIR}/${PACKAGE_NAME}-${PACKAGE_VERSION}.tar.bz2 )
+                            bzip2 > ${CMAKE_BINARY_DIR}/${PACKAGE_NAME}-${PACKAGE_VERSION}.tar.bz2
+					 )
 
 # setup make distcheck
 add_custom_target(distcheck cd ${CMAKE_BINARY_DIR} &&
@@ -418,5 +419,6 @@ add_custom_target(distcheck cd ${CMAKE_BINARY_DIR} &&
                         gzip -df ${PACKAGE_NAME}-${PACKAGE_VERSION}.tar.gz &&
                         tar -xf ${PACKAGE_NAME}-${PACKAGE_VERSION}.tar &&
                         cd ${PACKAGE_NAME}-${PACKAGE_VERSION}/ &&
-                        cmake . && make )
+                        cmake . && make
+					)
 add_dependencies( distcheck dist )
