@@ -25,9 +25,9 @@ SET(CMAKE_FIND_LIBRARY_SUFFIXES ".so" ".lib" ".a")
 #----------------------------------------------------------------------------------------------------
 # Load needed Modules
 #----------------------------------------------------------------------------------------------------
+INCLUDE(cmake/package_config.cmake)
 # PKG-Config
 FIND_PACKAGE( PkgConfig )
-INCLUDE(cmake/package_config.cmake)
 IF(CMAKE_CROSSCOMPILING OR NOT WIN32)
 	INCLUDE(cmake/FindSDL.cmake)
 	INCLUDE(cmake/FindSDL_sound.cmake)
@@ -56,9 +56,11 @@ SET( BUILD_SHARED_LIBS
 	1 CACHE BOOL
 	"Chooses whether to link dynamic or static libraries. Recommend keeping this activated unless you know what you're doing." )
 SET( SPRINGLOBBY_REV
-	SPRINGLOBBY_GIT_REV CACHE STRING
+	${SPRINGLOBBY_GIT_REV} CACHE STRING
 	"The revision string used in packages etc." )
-
+SET( LOCALE_INSTALL_DIR
+	${CMAKE_INSTALL_PREFIX}/share/locale CACHE STRING
+	"message catalogs will installed here" )
 
 #----------------------------------------------------------------------------------------------------
 # wxWidgets lib dependency check
@@ -147,23 +149,6 @@ ELSE ( OPTION_SOUND )
     ADD_DEFINITIONS( -DDISABLE_SOUND )
 ENDIF ( OPTION_SOUND )
 
-
-#----------------------------------------------------------------------------------------------------
-# Gettext lib dependency check
-#----------------------------------------------------------------------------------------------------
-
-if( OPTION_TRANSLATION_SUPPORT )
-    set(Gettext_DIR "po" )
-    INCLUDE(cmake/FindGettext.cmake)
-    if(GETTEXT_FOUND)
-	    set(springlobby_INCLUDE_PATH ${springlobby_INCLUDE_PATH}
-		${GETTEXT_INCLUDE_DIR} CACHE INTERNAL "" FORCE)
-
-	    include("cmake/KWWidgetsInternationalizationMacros.cmake")
-    else(GETTEXT_FOUND)
-	message(FATAL_ERROR "GNU Gettext package not found! Please install the package or toggle OPTION_TRANSLATION_SUPPORT to OFF")
-    endif(GETTEXT_FOUND)
-endif( OPTION_TRANSLATION_SUPPORT )
 
 #----------------------------------------------------------------------------------------------------
 # libtorrent-rasterbar dependency check
@@ -381,22 +366,7 @@ ENDIF(WIN32)
 #----------------------------------------------------------------------------------------------------
 
 if( OPTION_TRANSLATION_SUPPORT )
-    set ( GETTEXT_XGETTEXT_EXECUTABLE "/usr/bin/xgettext" )
-    kwwidgets_create_gettext_targets(
-	    DOMAIN_NAME "springlobby"
-	    TARGET_BASENAME "springlobby"
-	    LOCALE_LIST "ar;cs;da;de;el;es;fi;fr;it;pl;pt;ro;ru;sv;uk;zh_CN"
-	    COPYRIGHT_HOLDER "The springlobby team"
-	    SOURCES "${springlobbySrc};${SettingsSrc};${StandAloneSettings}"
-	    PO_DIR "${CMAKE_SOURCE_DIR}/po"
-	    PO_PREFIX ""
-	    POT_BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/po"
-	    PO_BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/po"
-	    MO_INSTALL_DIR "/share/locale"
-	    CREATE_POT_TARGET 1
-	    CREATE_PO_TARGET 1
-	    ADD_MO_TARGET_TO_ALL
-    )
+	include ( ${CMAKE_SOURCE_DIR}/po/CMakeLists.txt )
 endif( OPTION_TRANSLATION_SUPPORT )
 
 #----------------------------------------------------------------------------------------------------
@@ -435,15 +405,6 @@ ELSE (WIN32)
 	    ${CMAKE_INSTALL_PREFIX}/share/applications)
 ENDIF (WIN32)
 
-### a hack to get cmake to wipe the po dir in binary tree before making any other target
-### the pack and pack_source custom targets are needed since CMake does not know of Cpack targets
-ADD_CUSTOM_TARGET(wipe_po_dir ALL COMMAND rm -rf ${springlobby_BINARY_DIR}/po )
-ADD_CUSTOM_TARGET(pack
-    COMMAND make package
-    COMMENT "Packaging files"
-    VERBATIM
-    )
-
 # setup make dist
 add_custom_target(dist cd ${CMAKE_SOURCE_DIR} &&
                         git archive --format=tar --prefix=${PACKAGE_NAME}-${PACKAGE_VERSION}/ HEAD |
@@ -459,4 +420,3 @@ add_custom_target(distcheck cd ${CMAKE_BINARY_DIR} &&
                         cd ${PACKAGE_NAME}-${PACKAGE_VERSION}/ &&
                         cmake . && make )
 add_dependencies( distcheck dist )
-add_dependencies( pack wipe_po_dir )
