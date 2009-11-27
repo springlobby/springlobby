@@ -539,7 +539,7 @@ void IBattle::ForceSide( User& user, int side )
 
 void IBattle::ForceTeam( User& user, int team )
 {
-  if ( IsFounderMe() || user.BattleStatus().IsBot() )
+  if ( IsFounderMe() || user.BattleStatus().IsBot() || &user == &GetMe() )
   {
 		if ( !user.BattleStatus().spectator )
 		{
@@ -554,7 +554,7 @@ void IBattle::ForceTeam( User& user, int team )
 void IBattle::ForceAlly( User& user, int ally )
 {
 
-  if ( IsFounderMe() || user.BattleStatus().IsBot() )
+  if ( IsFounderMe() || user.BattleStatus().IsBot() || &user == &GetMe() )
   {
 		if ( !user.BattleStatus().spectator )
 		{
@@ -618,7 +618,7 @@ void IBattle::PlayerLeftAlly( int ally )
 
 void IBattle::ForceSpectator( User& user, bool spectator )
 {
-		if ( IsFounderMe() || user.BattleStatus().IsBot() )
+		if ( IsFounderMe() || user.BattleStatus().IsBot() || &user == &GetMe() )
 		{
 			UserBattleStatus& status = user.BattleStatus();
 
@@ -881,6 +881,10 @@ void IBattle::OnSelfLeftBattle()
     susynclib().UnSetCurrentMod(); //left battle
     m_is_self_in = false;
     ClearStartRects();
+    m_teams_sizes.clear();
+    m_ally_sizes.clear();
+    m_players_ready = 0;
+    m_players_sync = 0;
 }
 
 void IBattle::OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ )
