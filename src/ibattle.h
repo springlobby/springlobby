@@ -391,6 +391,10 @@ protected:
     void LoadScriptMMOpts( const wxString& sectionname, const PDataList& node );
     void LoadScriptMMOpts( const PDataList& node );
 
+		void PlayerLeftTeam( int team );
+		void PlayerLeftAlly( int ally );
+		void PlayerJoinedTeam( int team );
+		void PlayerJoinedAlly( int ally );
 
     bool m_map_loaded;
     bool m_mod_loaded;

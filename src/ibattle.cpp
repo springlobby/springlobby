@@ -282,83 +282,53 @@ void IBattle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 			}
 			if ( m_opts.lockexternalbalancechanges )
 			{
-				if ( previousstatus.team != status.team ) ForceTeam( user, previousstatus.team );
-				if ( previousstatus.ally != status.ally ) ForceAlly( user, previousstatus.ally );
+				if ( previousstatus.team != status.team )
+				{
+					 ForceTeam( user, previousstatus.team );
+					 status.team = previousstatus.team;
+				}
+				if ( previousstatus.ally != status.ally )
+				{
+					ForceAlly( user, previousstatus.ally );
+					status.ally = previousstatus.ally;
+				}
 			}
 	}
-	if ( status.spectator != previousstatus.spectator )
+	if ( !previousstatus.spectator )
 	{
-		if ( !status.spectator )
-		{
-			std::map<int, int>::iterator itor = m_teams_sizes.find( status.team );
-			if ( itor == m_teams_sizes.end() ) m_teams_sizes[status.team] = 1;
-			else m_teams_sizes[status.team] = m_teams_sizes[status.team] + 1;
-			std::map<int, int>::iterator iter = m_ally_sizes.find( status.ally );
-			if ( iter == m_ally_sizes.end() ) m_ally_sizes[status.ally] = 1;
-			else m_ally_sizes[status.ally] = m_ally_sizes[status.ally] + 1;
-		}
-		else
-		{
-			std::map<int, int>::iterator itor = m_teams_sizes.find( status.team );
-			if ( itor != m_teams_sizes.end() )
-			{
-				 itor->second = itor->second -1;
-				if ( itor->second == 0 )
-				{
-					m_teams_sizes.erase( itor );
-				}
-			}
-			std::map<int, int>::iterator iter = m_ally_sizes.find( status.ally );
-			if ( iter != m_ally_sizes.end() )
-			{
-				iter->second = iter->second - 1;
-				if ( iter->second == 0 )
-				{
-					m_ally_sizes.erase( iter );
-				}
-			}
-		}
+		PlayerLeftAlly( previousstatus.ally );
+		PlayerLeftTeam( previousstatus.team );
 	}
-	else
+	if ( !status.spectator )
 	{
-		std::map<int, int>::iterator itor = m_teams_sizes.find( previousstatus.team );
-		if ( itor != m_teams_sizes.end() )
-		{
-			 itor->second = itor->second -1;
-			if ( itor->second == 0 )
-			{
-				m_teams_sizes.erase( itor );
-			}
-		}
-		itor = m_teams_sizes.find( status.team );
-		if ( itor != m_teams_sizes.end() ) itor->second = itor->second + 1;
-		else m_teams_sizes[status.team] = 1;
-
-		std::map<int, int>::iterator iter = m_ally_sizes.find( previousstatus.ally );
-		if ( iter != m_ally_sizes.end() )
-		{
-			 iter->second = iter->second - 1;
-				if ( iter->second == 0 )
-				{
-					m_ally_sizes.erase( iter );
-				}
-		}
-		iter = m_ally_sizes.find( status.ally );
-		if ( iter != m_ally_sizes.end() ) iter->second = iter->second + 1;
-		else m_ally_sizes[status.ally] = 1;
+		PlayerJoinedAlly( status.ally );
+		PlayerJoinedTeam( status.team );
 	}
 	if ( !status.IsBot() )
 	{
-		if ( ( previousstatus.ready != status.ready ) && !status.spectator && !previousstatus.spectator )
+
+		if ( !previousstatus.spectator && !status.spectator && (  previousstatus.ready != status.ready ) )
 		{
 			 if ( status.ready ) m_players_ready++;
 			 else m_players_ready--;
 		}
-		if ( ( previousstatus.sync != status.sync ) && !status.spectator && !previousstatus.spectator )
+
+		if ( previousstatus.spectator ) // coming from spectator
+		{
+			 if ( status.ready ) m_players_ready++;
+		}
+
+		if ( status.spectator ) // becoming spectator
+		{
+			if ( previousstatus.ready ) m_players_ready--;
+		}
+
+		if ( ( previousstatus.sync != status.sync ) )
 		{
 			 if ( status.sync ) m_players_sync++;
 			 else m_players_sync--;
 		}
+
 		if ( ( status.ready && status.sync ) || status.spectator )
 		{
 			std::map<wxString, time_t>::iterator itor = m_ready_up_map.find( user.GetNick() );
@@ -397,24 +367,8 @@ void IBattle::OnUserRemoved( User& user )
 		UserBattleStatus& bs = user.BattleStatus();
 		if ( !bs.spectator )
 		{
-			std::map<int, int>::iterator itor = m_teams_sizes.find( bs.team );
-			if ( itor != m_teams_sizes.end() )
-			{
-				 itor->second = itor->second -1;
-				if ( itor->second == 0 )
-				{
-					m_teams_sizes.erase( itor );
-				}
-			}
-			std::map<int, int>::iterator iter = m_ally_sizes.find( bs.ally );
-			if ( iter != m_ally_sizes.end() )
-			{
-				iter->second = iter->second - 1;
-				if ( iter->second == 0 )
-				{
-					m_ally_sizes.erase( iter );
-				}
-			}
+			PlayerLeftTeam( bs.team );
+			PlayerLeftAlly( bs.ally );
  		}
 		if ( bs.ready && !bs.IsBot() ) m_players_ready--;
 		if ( bs.sync && !bs.IsBot() ) m_players_sync--;
@@ -593,18 +547,8 @@ void IBattle::ForceTeam( User& user, int team )
   {
 		if ( !user.BattleStatus().spectator )
 		{
-			std::map<int, int>::iterator itor = m_teams_sizes.find( user.BattleStatus().ally );
-			if ( itor != m_teams_sizes.end() )
-			{
-				 itor->second = itor->second -1;
-				if ( itor->second == 0 )
-				{
-					m_teams_sizes.erase( itor );
-				}
-			}
-			itor = m_teams_sizes.find( team );
-			if ( itor != m_teams_sizes.end() ) itor->second = itor->second + 1;
-			else m_teams_sizes[team] = 1;
+			PlayerLeftTeam( user.BattleStatus().team );
+			PlayerJoinedTeam( team );
 		}
 		user.BattleStatus().team = team;
   }
@@ -618,18 +562,8 @@ void IBattle::ForceAlly( User& user, int ally )
   {
 		if ( !user.BattleStatus().spectator )
 		{
-			std::map<int, int>::iterator itor = m_ally_sizes.find( user.BattleStatus().ally );
-			if ( itor != m_ally_sizes.end() )
-			{
-				 itor->second = itor->second -1;
-				if ( itor->second == 0 )
-				{
-					m_ally_sizes.erase( itor );
-				}
-			}
-			itor = m_ally_sizes.find( ally );
-			if ( itor != m_ally_sizes.end() ) itor->second = itor->second + 1;
-			else m_ally_sizes[ally] = 1;
+			PlayerLeftAlly( user.BattleStatus().ally );
+			PlayerJoinedAlly( ally );
 		}
 		user.BattleStatus().ally = ally;
   }
@@ -646,6 +580,45 @@ void IBattle::ForceColour( User& user, const wxColour& col )
 
 }
 
+void IBattle::PlayerJoinedTeam( int team )
+{
+	std::map<int, int>::iterator itor = m_teams_sizes.find( team );
+	if ( itor == m_teams_sizes.end() ) m_teams_sizes[team] = 1;
+	else m_teams_sizes[team] = m_teams_sizes[team] + 1;
+}
+
+void IBattle::PlayerJoinedAlly( int ally )
+{
+	std::map<int, int>::iterator iter = m_ally_sizes.find( ally );
+	if ( iter == m_ally_sizes.end() ) m_ally_sizes[ally] = 1;
+	else m_ally_sizes[ally] = m_ally_sizes[ally] + 1;
+}
+
+void IBattle::PlayerLeftTeam( int team )
+{
+	std::map<int, int>::iterator itor = m_teams_sizes.find( team );
+	if ( itor != m_teams_sizes.end() )
+	{
+		 itor->second = itor->second -1;
+		if ( itor->second == 0 )
+		{
+			m_teams_sizes.erase( itor );
+		}
+	}
+}
+
+void IBattle::PlayerLeftAlly( int ally )
+{
+	std::map<int, int>::iterator iter = m_ally_sizes.find( ally );
+	if ( iter != m_ally_sizes.end() )
+	{
+		iter->second = iter->second - 1;
+		if ( iter->second == 0 )
+		{
+			m_ally_sizes.erase( iter );
+		}
+	}
+}
 
 void IBattle::ForceSpectator( User& user, bool spectator )
 {
@@ -654,35 +627,17 @@ void IBattle::ForceSpectator( User& user, bool spectator )
 			 UserBattleStatus& status = user.BattleStatus();
 			 if ( status.spectator != spectator )
 			 {
-					if ( !spectator )
+					if ( !spectator ) // leaving spectator status
 					{
-						std::map<int, int>::iterator itor = m_teams_sizes.find( status.team );
-						if ( itor == m_teams_sizes.end() ) m_teams_sizes[status.team] = 1;
-						else m_teams_sizes[status.team] = m_teams_sizes[status.team] + 1;
-						std::map<int, int>::iterator iter = m_ally_sizes.find( status.ally );
-						if ( iter == m_ally_sizes.end() ) m_ally_sizes[status.ally] = 1;
-						else m_ally_sizes[status.ally] = m_ally_sizes[status.ally] + 1;
+						PlayerJoinedTeam( status.team );
+						PlayerJoinedAlly( status.ally );
+						if ( status.ready && !status.IsBot() ) m_players_ready++;
 					}
-					else
+					else // entering spectator status
 					{
-						std::map<int, int>::iterator itor = m_teams_sizes.find( status.team );
-						if ( itor != m_teams_sizes.end() )
-						{
-							 itor->second = itor->second -1;
-							if ( itor->second == 0 )
-							{
-								m_teams_sizes.erase( itor );
-							}
-						}
-						std::map<int, int>::iterator iter = m_ally_sizes.find( status.ally );
-						if ( iter != m_ally_sizes.end() )
-						{
-							iter->second = iter->second - 1;
-							if ( iter->second == 0 )
-							{
-								m_ally_sizes.erase( iter );
-							}
-						}
+						PlayerLeftTeam( status.team );
+						PlayerLeftAlly( status.ally );
+						if ( status.ready && !status.IsBot() ) m_players_ready--;
 					}
 					if ( IsFounderMe() )
 					{
