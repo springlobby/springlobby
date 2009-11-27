@@ -282,12 +282,10 @@ void IBattle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 				if ( previousstatus.team != status.team )
 				{
 					 ForceTeam( user, previousstatus.team );
-					 status.team = previousstatus.team;
 				}
 				if ( previousstatus.ally != status.ally )
 				{
 					ForceAlly( user, previousstatus.ally );
-					status.ally = previousstatus.ally;
 				}
 			}
 	}
