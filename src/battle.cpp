@@ -91,11 +91,9 @@ void Battle::Leave()
 
 void Battle::OnRequestBattleStatus()
 {
-    int lowest = GetFreeTeamNum( true );
-
     UserBattleStatus& bs = m_serv.GetMe().BattleStatus();
-    bs.team = lowest;
-    bs.ally = lowest;
+    bs.team = GetFreeTeam( true );
+    bs.ally = GetFreeAlly( true );
     bs.spectator = false;
     bs.colour = sett().GetBattleLastColour();
     // theres some highly annoying bug with color changes on player join/leave.

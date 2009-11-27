@@ -151,7 +151,7 @@ int IBattle::ColourDifference(const wxColour &a, const wxColour &b)  const// ret
 
 }
 
-int IBattle::GetFreeTeamNum( bool excludeme )
+int IBattle::GetFreeTeam( bool excludeme )
 {
     int lowest = 0;
     bool changed = true;
@@ -215,7 +215,7 @@ User& IBattle::OnUserAdded( User& user )
     bs.sync = SYNC_UNKNOWN;
     if ( !bs.IsBot() && IsFounderMe() && GetBattleType() == BT_Played )
     {
-			bs.team = GetFreeTeamNum( &user == &GetMe() );
+			bs.team = GetFreeTeam( &user == &GetMe() );
 			bs.ally = GetFreeAlly( &user == &GetMe() );
 			bs.colour = GetFreeColour( user );
     }
@@ -683,7 +683,8 @@ int IBattle::GetFreeAlly( bool excludeme ) const
     for ( unsigned int i = 0; i < GetNumUsers(); i++ )
     {
       User& user = GetUser( i );
-      if ( ( &GetUser( i ) == &GetMe() ) && excludeme ) continue;
+      if ( ( &user == &GetMe() ) && excludeme ) continue;
+      if ( user.BattleStatus().spectator ) continue;
       if ( user.BattleStatus().ally == lowest )
       {
         lowest++;

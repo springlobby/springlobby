@@ -235,7 +235,7 @@ public:
 	virtual unsigned int GetLastRectIdx();
 	virtual unsigned int GetNextFreeRectIdx();
 
-    virtual int GetFreeTeamNum( bool excludeme = false );
+    virtual int GetFreeTeam( bool excludeme = false );
 
     virtual User& GetMe() = 0;
     virtual const User& GetMe() const = 0;
