@@ -158,6 +158,9 @@ if( OPTION_TRANSLATION_SUPPORT )
     endif(GETTEXT_FOUND)
 endif( OPTION_TRANSLATION_SUPPORT )
 
+EXECUTE_PROCESS(COMMAND rm -rf ${SpringLobby_BINARY_DIR}/po )
+
+
 #----------------------------------------------------------------------------------------------------
 # libtorrent-rasterbar dependency check
 #----------------------------------------------------------------------------------------------------
