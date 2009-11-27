@@ -424,7 +424,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 			ProgressiveTeamsVec teams_to_sorted_teams; // original team -> progressive team
 			int free_team = 0;
 			std::map<User*, int> player_to_number; // player -> ordernumber
-
+			srand ( time(NULL) );
 			for ( unsigned int i = 0; i < NumUsers; i++ )
 			{
 					User& user = battle.GetUser( i );
@@ -453,7 +453,6 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 							else
 							{
 								int speccteam = 0;
-								srand ( time(NULL) );
 								if ( teams_to_sorted_teams.size() != 0 ) speccteam = rand() % teams_to_sorted_teams.size();
 								else speccteam = itor->second;
 								tdf.Append( _T("Team"), speccteam );
