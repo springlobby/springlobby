@@ -991,14 +991,14 @@ void ChatPanel::OnUserDisconnected()
 {
   // change the image of the tab to show new events
   SetIconHighlight( highlight_join_leave );
-	OutputLine( _T( " ** User is now offline." ), sett().GetChatColorJoinPart(), sett().GetChatFont() );
+	OutputLine( _( " ** User is now offline." ), sett().GetChatColorJoinPart(), sett().GetChatFont() );
 }
 
 void ChatPanel::OnUserConnected()
 {
   // change the image of the tab to show new events
   SetIconHighlight( highlight_join_leave );
-	OutputLine( _T( " ** User just got online." ), sett().GetChatColorJoinPart(), sett().GetChatFont() );
+	OutputLine( _( " ** User just got online." ), sett().GetChatColorJoinPart(), sett().GetChatFont() );
 }
 
 
@@ -1130,6 +1130,11 @@ void ChatPanel::OnMenuItem( wxCommandEvent& event )
 
 void ChatPanel::SetBattle( Battle* battle )
 {
+	if ( m_battle != battle )
+	{
+		if ( m_battle ) OutputLine( _( " ** Left Battle." ), sett().GetChatColorNotification(), sett().GetChatFont() );
+		if ( battle ) OutputLine( _( " ** Joined Battle." ), sett().GetChatColorNotification(), sett().GetChatFont() );
+	}
 	m_battle = battle;
 	if ( m_battle )
 	{
