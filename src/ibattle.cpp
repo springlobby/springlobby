@@ -229,7 +229,7 @@ User& IBattle::OnUserAdded( User& user )
 			PlayerJoinedAlly( bs.ally );
 			PlayerJoinedTeam( bs.team );
 		}
-		if ( bs.spectator ) m_opts.spectators++;
+		if ( bs.spectator && IsFounderMe() ) m_opts.spectators++;
 		if ( bs.ready && !bs.IsBot() ) m_players_ready++;
 		if ( bs.sync && !bs.IsBot() ) m_players_sync++;
 		if ( !bs.spectator && !bs.IsBot() && ( !bs.ready || !bs.sync ) ) m_ready_up_map[user.GetNick()] = time(0);
