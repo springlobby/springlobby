@@ -414,10 +414,9 @@ add_custom_target(dist cd ${CMAKE_SOURCE_DIR} &&
 					 )
 
 # setup make distcheck
-add_custom_target(distcheck cd ${CMAKE_BINARY_DIR} &&
+add_custom_target(distcheck + cd ${CMAKE_BINARY_DIR} &&
                         rm -rf ${PACKAGE_NAME}-${PACKAGE_VERSION} &&
-                        gzip -df ${PACKAGE_NAME}-${PACKAGE_VERSION}.tar.gz &&
-                        tar -xf ${PACKAGE_NAME}-${PACKAGE_VERSION}.tar &&
+                        tar -xzf ${PACKAGE_NAME}-${PACKAGE_VERSION}.tar.gz &&
                         cd ${PACKAGE_NAME}-${PACKAGE_VERSION}/ &&
                         cmake . && make
 					)
