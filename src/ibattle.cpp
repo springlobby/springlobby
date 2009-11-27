@@ -263,6 +263,17 @@ void IBattle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 
     user.UpdateBattleStatus( status );
 
+		if ( !previousstatus.spectator )
+		{
+			PlayerLeftAlly( previousstatus.ally );
+			PlayerLeftTeam( previousstatus.team );
+		}
+		if ( !status.spectator )
+		{
+			PlayerJoinedAlly( status.ally );
+			PlayerJoinedTeam( status.team );
+		}
+
     if ( IsFounderMe() )
     {
 			if ( status.spectator != previousstatus.spectator )
@@ -289,16 +300,7 @@ void IBattle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 				}
 			}
 	}
-	if ( !previousstatus.spectator )
-	{
-		PlayerLeftAlly( previousstatus.ally );
-		PlayerLeftTeam( previousstatus.team );
-	}
-	if ( !status.spectator )
-	{
-		PlayerJoinedAlly( status.ally );
-		PlayerJoinedTeam( status.team );
-	}
+
 	if ( !status.IsBot() )
 	{
 
