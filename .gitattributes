@@ -1,10 +1,10 @@
-buildbot export-ignore
-debian export-ignore
-tools export-ignore
-debian export-ignore
-gentoo export-ignore
-images export-ignore
-rpm export-ignore
-wxsmith export-ignore
-formbuilder export-ignore
+/buildbot export-ignore
+/debian export-ignore
+/tools export-ignore
+/debian export-ignore
+/gentoo export-ignore
+/images export-ignore
+/rpm export-ignore
+/wxsmith export-ignore
+/formbuilder export-ignore
 
