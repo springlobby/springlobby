@@ -1174,9 +1174,7 @@ void IBattle::GetBattleFromScript( bool loadmapmod )
                 status.team = player->GetInt( _T("Team") );
 								if ( !status.spectator )
 								{
-									std::map<int, int>::iterator itor = m_teams_sizes.find( status.team );
-									if ( itor == m_teams_sizes.end() ) m_teams_sizes[status.team] = 1;
-									else m_teams_sizes[status.team] = m_teams_sizes[status.team] + 1;
+									PlayerJoinedTeam( status.team );
 								}
                 status.sync = true;
                 status.ready = true;
@@ -1227,9 +1225,7 @@ void IBattle::GetBattleFromScript( bool loadmapmod )
 										status.handicap = teaminfos.Handicap;
 										if ( !status.spectator )
 										{
-											std::map<int, int>::iterator iter = m_ally_sizes.find(status.ally );
-											if ( iter == m_ally_sizes.end() ) m_ally_sizes[status.ally] = 1;
-											else m_ally_sizes[status.ally] = m_ally_sizes[status.ally] + 1;
+											PlayerJoinedAlly( status.ally );
 										}
 										if ( teaminfos.SideNum >= 0 ) status.side = teaminfos.SideNum;
 										IBattle::AllyInfoContainer allyinfos = parsed_allies[user.BattleStatus().ally];
