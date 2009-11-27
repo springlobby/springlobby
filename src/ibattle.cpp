@@ -208,15 +208,15 @@ void IBattle::Update ( const wxString& /*unused*/)
 User& IBattle::OnUserAdded( User& user )
 {
     UserList::AddUser( user );
-		UserBattleStatus& bs = user.BattleStatus();
+    UserBattleStatus& bs = user.BattleStatus();
     bs.spectator = false;
     bs.ready = false;
     bs.sync = SYNC_UNKNOWN;
     if ( !bs.IsBot() && IsFounderMe() && GetBattleType() == BT_Played )
     {
-			bs.team = GetFreeTeamNum( &user == &GetMe() );
-			bs.ally = GetFreeAlly( &user == &GetMe() );
-			bs.colour = GetFreeColour( user );
+        bs.team = GetFreeTeamNum( &user == &GetMe() );
+        bs.ally = GetFreeAlly( &user == &GetMe() );
+        bs.colour = GetFreeColour( user );
     }
     if ( IsFounderMe() && ( ( bs.pos.x < 0 ) || ( bs.pos.y < 0 ) ) )
     {
@@ -224,15 +224,15 @@ User& IBattle::OnUserAdded( User& user )
     	 pos = GetFreePosition();
     	 UserPositionChanged( user );
     }
-		if ( !bs.spectator )
-		{
-			PlayerJoinedAlly( bs.ally );
-			PlayerJoinedTeam( bs.team );
-		}
-		if ( bs.spectator ) m_opts.spectators++;
-		if ( bs.ready && !bs.IsBot() ) m_players_ready++;
-		if ( bs.sync && !bs.IsBot() ) m_players_sync++;
-		if ( !bs.spectator && !bs.IsBot() && ( !bs.ready || !bs.sync ) ) m_ready_up_map[user.GetNick()] = time(0);
+    if ( !bs.spectator )
+    {
+        PlayerJoinedAlly( bs.ally );
+        PlayerJoinedTeam( bs.team );
+    }
+    if ( bs.spectator ) m_opts.spectators++;
+    if ( bs.ready && !bs.IsBot() ) m_players_ready++;
+    if ( bs.sync && !bs.IsBot() ) m_players_sync++;
+    if ( !bs.spectator && !bs.IsBot() && ( !bs.ready || !bs.sync ) ) m_ready_up_map[user.GetNick()] = time(0);
     return user;
 }
 
@@ -258,37 +258,37 @@ unsigned int IBattle::GetNumPlayers() const
 void IBattle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 {
 
-    UserBattleStatus previousstatus = user.BattleStatus();
+    const UserBattleStatus previousstatus = user.BattleStatus();
 
     user.UpdateBattleStatus( status );
 
     if ( IsFounderMe() )
     {
-			if ( status.spectator != previousstatus.spectator )
-			{
-					if ( status.spectator )
-					{
-							m_opts.spectators++;
-					}
-					else
-					{
-							m_opts.spectators--;
-					}
-					SendHostInfo( HI_Spectators );
-			}
-			if ( m_opts.lockexternalbalancechanges )
-			{
-				if ( previousstatus.team != status.team )
-				{
-					 ForceTeam( user, previousstatus.team );
-					 status.team = previousstatus.team;
-				}
-				if ( previousstatus.ally != status.ally )
-				{
-					ForceAlly( user, previousstatus.ally );
-					status.ally = previousstatus.ally;
-				}
-			}
+        if ( status.spectator != previousstatus.spectator )
+        {
+                if ( status.spectator )
+                {
+                        m_opts.spectators++;
+                }
+                else
+                {
+                        m_opts.spectators--;
+                }
+                SendHostInfo( HI_Spectators );
+        }
+        if ( m_opts.lockexternalbalancechanges )
+        {
+            if ( previousstatus.team != status.team )
+            {
+                 ForceTeam( user, previousstatus.team );
+                 status.team = previousstatus.team;
+            }
+            if ( previousstatus.ally != status.ally )
+            {
+                ForceAlly( user, previousstatus.ally );
+                status.ally = previousstatus.ally;
+            }
+        }
 	}
 	if ( !previousstatus.spectator )
 	{
