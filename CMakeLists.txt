@@ -405,6 +405,8 @@ ELSE (WIN32)
 	    ${CMAKE_INSTALL_PREFIX}/share/applications)
 ENDIF (WIN32)
 
+add_custom_target(pack COMMAND ${CMAKE_MAKE_PROGRAM} package)
+
 # setup make dist
 add_custom_target(dist cd ${CMAKE_SOURCE_DIR} &&
                         git archive --format=tar --prefix=${PACKAGE_NAME}-${PACKAGE_VERSION}/ HEAD |
@@ -418,6 +420,6 @@ add_custom_target(distcheck + cd ${CMAKE_BINARY_DIR} &&
                         rm -rf ${PACKAGE_NAME}-${PACKAGE_VERSION} &&
                         tar -xzf ${PACKAGE_NAME}-${PACKAGE_VERSION}.tar.gz &&
                         cd ${PACKAGE_NAME}-${PACKAGE_VERSION}/ &&
-                        cmake . && make
+                        cmake . && ${CMAKE_MAKE_PROGRAM}
 					)
 add_dependencies( distcheck dist )
