@@ -1,4 +1,4 @@
-PROJECT(SpringLobby)
+PROJECT(springlobby)
 
 #set minimum cmake version
 cmake_minimum_required(VERSION 2.6)
@@ -28,21 +28,20 @@ SET(CMAKE_FIND_LIBRARY_SUFFIXES ".so" ".lib" ".a")
 # PKG-Config
 FIND_PACKAGE( PkgConfig )
 INCLUDE(cmake/package_config.cmake)
-INCLUDE(CPack)
 IF(CMAKE_CROSSCOMPILING OR NOT WIN32)
 	INCLUDE(cmake/FindSDL.cmake)
 	INCLUDE(cmake/FindSDL_sound.cmake)
 	INCLUDE(cmake/FindSDL_mixer.cmake)
 ENDIF(CMAKE_CROSSCOMPILING OR NOT WIN32)
 
-EXECUTE_PROCESS(COMMAND ${SpringLobby_SOURCE_DIR}/tools/get-revision.sh
+EXECUTE_PROCESS(COMMAND ${springlobby_SOURCE_DIR}/tools/get-revision.sh
         OUTPUT_VARIABLE SPRINGLOBBY_GIT_REV
         RESULT_VARIABLE GIT_ERROR
         OUTPUT_STRIP_TRAILING_WHITESPACE)
 
 
 #----------------------------------------------------------------------------------------------------
-# Options, that can be changed be the User in order to customise SpringLobby
+# Options, that can be changed be the User in order to customise springlobby
 #----------------------------------------------------------------------------------------------------
 SET( OPTION_TORRENT_SYSTEM
 	1 CACHE BOOL
@@ -157,7 +156,7 @@ if( OPTION_TRANSLATION_SUPPORT )
     set(Gettext_DIR "po" )
     INCLUDE(cmake/FindGettext.cmake)
     if(GETTEXT_FOUND)
-	    set(SpringLobby_INCLUDE_PATH ${SpringLobby_INCLUDE_PATH}
+	    set(springlobby_INCLUDE_PATH ${springlobby_INCLUDE_PATH}
 		${GETTEXT_INCLUDE_DIR} CACHE INTERNAL "" FORCE)
 
 	    include("cmake/KWWidgetsInternationalizationMacros.cmake")
@@ -196,9 +195,9 @@ ENDIF( OPTION_TORRENT_SYSTEM )
 
 # We define the include paths here, our minimal source dir is one
 
-INCLUDE_DIRECTORIES(${SpringLobby_SOURCE_DIR} ${Settings_SOURCE_DIR} )
+INCLUDE_DIRECTORIES(${springlobby_SOURCE_DIR} ${Settings_SOURCE_DIR} )
 
-SET(SpringLobbySrc
+SET(springlobbySrc
 	src/updater/updatermainwindow.cpp
 	src/utils/activitynotice.cpp
 	src/chatpanelmenu.cpp
@@ -363,14 +362,14 @@ SET(SLSharedWithSettings
 IF(WIN32)
 	IF(MINGW OR CMAKE_CROSSCOMPILING)
 		FIND_PROGRAM(WINDRES NAMES windres i586-mingw32msvc-windres i686-mingw32-windres DOC "path to mingw's windres executable")
-		ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/sl_icon.o COMMAND ${WINDRES} -I${SpringLobby_SOURCE_DIR}/src -I${wxWidgets_RC_DIR} -i${SpringLobby_SOURCE_DIR}/src/springlobby.rc -o ${CMAKE_CURRENT_BINARY_DIR}/sl_icon.o)
-		ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/ss_icon.o COMMAND ${WINDRES} -I${SpringLobby_SOURCE_DIR}/src -I${wxWidgets_RC_DIR} -i${SpringLobby_SOURCE_DIR}/src/settings++/settings.rc -o ${CMAKE_CURRENT_BINARY_DIR}/ss_icon.o)
-		SET(SpringLobby_RC_FILE ${CMAKE_CURRENT_BINARY_DIR}/sl_icon.o )
+		ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/sl_icon.o COMMAND ${WINDRES} -I${springlobby_SOURCE_DIR}/src -I${wxWidgets_RC_DIR} -i${springlobby_SOURCE_DIR}/src/springlobby.rc -o ${CMAKE_CURRENT_BINARY_DIR}/sl_icon.o)
+		ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/ss_icon.o COMMAND ${WINDRES} -I${springlobby_SOURCE_DIR}/src -I${wxWidgets_RC_DIR} -i${springlobby_SOURCE_DIR}/src/settings++/settings.rc -o ${CMAKE_CURRENT_BINARY_DIR}/ss_icon.o)
+		SET(springlobby_RC_FILE ${CMAKE_CURRENT_BINARY_DIR}/sl_icon.o )
 		SET(SpringSettings_RC_FILE ${CMAKE_CURRENT_BINARY_DIR}/ss_icon.o )
 	ENDIF(MINGW OR CMAKE_CROSSCOMPILING)
 
-	SET(SpringLobbySrc ${SpringLobbySrc} src/Helper/listctrl.cpp)
-	SET(SpringLobbySrc ${SpringLobbySrc} src/springlobby.rc)
+	SET(springlobbySrc ${springlobbySrc} src/Helper/listctrl.cpp)
+	SET(springlobbySrc ${springlobbySrc} src/springlobby.rc)
 	SET(StandAloneSettings ${StandAloneSettings} src/settings++/settings.rc)
 ELSE(WIN32)
 # If we don't build for windows, include some source code checks as pre-build step.
@@ -387,8 +386,8 @@ if( OPTION_TRANSLATION_SUPPORT )
 	    DOMAIN_NAME "springlobby"
 	    TARGET_BASENAME "springlobby"
 	    LOCALE_LIST "ar;cs;da;de;el;es;fi;fr;it;pl;pt;ro;ru;sv;uk;zh_CN"
-	    COPYRIGHT_HOLDER "The SpringLobby team"
-	    SOURCES "${SpringLobbySrc};${SettingsSrc};${StandAloneSettings}"
+	    COPYRIGHT_HOLDER "The springlobby team"
+	    SOURCES "${springlobbySrc};${SettingsSrc};${StandAloneSettings}"
 	    PO_DIR "${CMAKE_SOURCE_DIR}/po"
 	    PO_PREFIX ""
 	    POT_BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/po"
@@ -404,7 +403,7 @@ endif( OPTION_TRANSLATION_SUPPORT )
 # Build target defintions
 #----------------------------------------------------------------------------------------------------
 
-# Here we define the executable SpringLobby ( or on Windows SpringLobby.exe )
+# Here we define the executable springlobby ( or on Windows springlobby.exe )
 
 #auto-remove whitespaces before/after lib paths
 cmake_policy(SET CMP0004 OLD)
@@ -412,7 +411,7 @@ cmake_policy(SET CMP0004 OLD)
 cmake_policy(SET CMP0006 OLD)
 
 
-ADD_EXECUTABLE(springlobby WIN32 MACOSX_BUNDLE ${SpringLobbySrc} ${SettingsSrc} ${SpringLobby_RC_FILE})
+ADD_EXECUTABLE(springlobby WIN32 MACOSX_BUNDLE ${springlobbySrc} ${SettingsSrc} ${springlobby_RC_FILE})
 ADD_EXECUTABLE(springsettings WIN32 MACOSX_BUNDLE ${StandAloneSettings} ${SpringSettings_RC_FILE} ${SettingsSrc} ${SLSharedWithSettings} )
 
 # Here the wxWidgets Libraries are added. These are set for us by the FIND Script. If you need other Libraries, you can add them here as well.
@@ -438,20 +437,29 @@ ENDIF (WIN32)
 
 ### a hack to get cmake to wipe the po dir in binary tree before making any other target
 ### the pack and pack_source custom targets are needed since CMake does not know of Cpack targets
-ADD_CUSTOM_TARGET(wipe_po_dir ALL COMMAND rm -rf ${SpringLobby_BINARY_DIR}/po )
+ADD_CUSTOM_TARGET(wipe_po_dir ALL COMMAND rm -rf ${springlobby_BINARY_DIR}/po )
 ADD_CUSTOM_TARGET(pack
     COMMAND make package
     COMMENT "Packaging files"
     VERBATIM
     )
-ADD_CUSTOM_TARGET(pack_source
-    COMMAND make package_source
-    COMMENT "Packaging Source files"
-    VERBATIM
-    )
+
+# setup make dist
+add_custom_target(dist cd ${CMAKE_SOURCE_DIR} &&
+                        git archive --format=tar --prefix=${PACKAGE_NAME}-${PACKAGE_VERSION}/ HEAD |
+                            gzip > ${CMAKE_BINARY_DIR}/${PACKAGE_NAME}-${PACKAGE_VERSION}.tar.gz &&
+						git archive --format=tar --prefix=${PACKAGE_NAME}-${PACKAGE_VERSION}/ HEAD |
+                            bzip2 > ${CMAKE_BINARY_DIR}/${PACKAGE_NAME}-${PACKAGE_VERSION}.tar.bz2 )
+
+# setup make distcheck
+add_custom_target(distcheck cd ${CMAKE_BINARY_DIR} &&
+                        rm -rf ${PACKAGE_NAME}-${PACKAGE_VERSION} &&
+                        gzip -df ${PACKAGE_NAME}-${PACKAGE_VERSION}.tar.gz &&
+                        tar -xf ${PACKAGE_NAME}-${PACKAGE_VERSION}.tar &&
+                        cd ${PACKAGE_NAME}-${PACKAGE_VERSION}/ &&
+                        cmake . && make )
+add_dependencies( distcheck dist )
 add_dependencies( pack wipe_po_dir )
-add_dependencies( pack_source wipe_po_dir )
 add_dependencies( springlobby wipe_po_dir )
 add_dependencies( springsettings wipe_po_dir )
-
 
