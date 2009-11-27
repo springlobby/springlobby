@@ -226,12 +226,8 @@ User& IBattle::OnUserAdded( User& user )
     }
 		if ( !bs.spectator )
 		{
-			std::map<int, int>::iterator itor = m_teams_sizes.find( bs.team );
-			if ( itor == m_teams_sizes.end() ) m_teams_sizes[bs.team] = 1;
-			else m_teams_sizes[bs.team] = m_teams_sizes[bs.team] + 1;
-			std::map<int, int>::iterator iter = m_ally_sizes.find( bs.ally );
-			if ( iter == m_ally_sizes.end() ) m_ally_sizes[bs.ally] = 1;
-			else m_ally_sizes[bs.ally] = m_ally_sizes[bs.ally] + 1;
+			PlayerJoinedAlly( bs.ally );
+			PlayerJoinedTeam( bs.team );
 		}
 		if ( bs.spectator ) m_opts.spectators++;
 		if ( bs.ready && !bs.IsBot() ) m_players_ready++;
@@ -641,13 +637,16 @@ void IBattle::ForceSpectator( User& user, bool spectator )
 					}
 					if ( IsFounderMe() )
 					{
-						if ( spectator )
+						if ( status.spectator != spectator )
 						{
-								m_opts.spectators++;
-						}
-						else
-						{
-								m_opts.spectators--;
+							if ( spectator )
+							{
+									m_opts.spectators++;
+							}
+							else
+							{
+									m_opts.spectators--;
+							}
 						}
 						SendHostInfo( HI_Spectators );
 					}
