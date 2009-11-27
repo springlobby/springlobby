@@ -620,38 +620,37 @@ void IBattle::ForceSpectator( User& user, bool spectator )
 {
 		if ( IsFounderMe() || user.BattleStatus().IsBot() )
 		{
-			 UserBattleStatus& status = user.BattleStatus();
-			 if ( status.spectator != spectator )
-			 {
-					if ( !spectator ) // leaving spectator status
-					{
-						PlayerJoinedTeam( status.team );
-						PlayerJoinedAlly( status.ally );
-						if ( status.ready && !status.IsBot() ) m_players_ready++;
-					}
-					else // entering spectator status
-					{
-						PlayerLeftTeam( status.team );
-						PlayerLeftAlly( status.ally );
-						if ( status.ready && !status.IsBot() ) m_players_ready--;
-					}
-					if ( IsFounderMe() )
-					{
-						if ( status.spectator != spectator )
-						{
-							if ( spectator )
-							{
-									m_opts.spectators++;
-							}
-							else
-							{
-									m_opts.spectators--;
-							}
-						}
-						SendHostInfo( HI_Spectators );
-					}
-			 }
+			UserBattleStatus& status = user.BattleStatus();
 
+			if ( !status.spectator ) // leaving spectator status
+			{
+				PlayerJoinedTeam( status.team );
+				PlayerJoinedAlly( status.ally );
+				if ( status.ready && !status.IsBot() ) m_players_ready++;
+			}
+
+			if (spectator) // entering spectator status
+			{
+				PlayerLeftTeam( status.team );
+				PlayerLeftAlly( status.ally );
+				if ( status.ready && !status.IsBot() ) m_players_ready--;
+			}
+
+			if ( IsFounderMe() )
+			{
+				if ( status.spectator != spectator )
+				{
+					if ( spectator )
+					{
+							m_opts.spectators++;
+					}
+					else
+					{
+							m_opts.spectators--;
+					}
+					SendHostInfo( HI_Spectators );
+				}
+			}
 			user.BattleStatus().spectator = spectator;
 		}
 }
