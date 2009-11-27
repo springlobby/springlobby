@@ -9,7 +9,7 @@ const int SETTINGS_VERSION  = 16;
 
 const wxString DEFSETT_DEFAULT_SERVER_NAME= _T("Official server");
 const wxString DEFSETT_DEFAULT_SERVER_HOST = _T("taspringmaster.clan-sy.com");
-const wxString BattlePostfix = _T("_battle");
+
 const int DEFSETT_DEFAULT_SERVER_PORT = 8200;
 const bool DEFSETT_SAVE_PASSWORD = false;
 const unsigned int DEFSETT_MW_WIDTH = 880;
