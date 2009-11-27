@@ -383,6 +383,9 @@ public:
 
 		virtual void StartSpring() = 0;
 
+		virtual std::map<int, int> GetAllySizes() { return m_ally_sizes; }
+		virtual std::map<int, int> GetTeamSizes() { return m_teams_sizes; }
+
 protected:
 
     void LoadScriptMMOpts( const wxString& sectionname, const PDataList& node );
