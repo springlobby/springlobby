@@ -412,8 +412,6 @@ void BattleRoomTab::UpdateBattleInfo()
 	m_minimap->UpdateMinimap();
 }
 
-bool comparefunc (int i,int j) { return (i<j); }
-
 void BattleRoomTab::PrintAllySetup()
 {
 	wxString setupstring;
