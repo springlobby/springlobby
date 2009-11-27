@@ -35,6 +35,11 @@ IF(CMAKE_CROSSCOMPILING OR NOT WIN32)
 	INCLUDE(cmake/FindSDL_mixer.cmake)
 ENDIF(CMAKE_CROSSCOMPILING OR NOT WIN32)
 
+EXECUTE_PROCESS(COMMAND ${SpringLobby_SOURCE_DIR}/tools/get-revision.sh
+        OUTPUT_VARIABLE SPRINGLOBBY_GIT_REV
+        RESULT_VARIABLE GIT_ERROR
+        OUTPUT_STRIP_TRAILING_WHITESPACE)
+
 
 #----------------------------------------------------------------------------------------------------
 # Options, that can be changed be the User in order to customise SpringLobby
@@ -51,6 +56,9 @@ SET( OPTION_TRANSLATION_SUPPORT
 SET( BUILD_SHARED_LIBS
 	1 CACHE BOOL
 	"Chooses whether to link dynamic or static libraries. Recommend keeping this activated unless you know what you're doing." )
+SET( SPRINGLOBBY_REV
+	SPRINGLOBBY_GIT_REV CACHE STRING
+	"The revision string used in packages etc." )
 
 
 #----------------------------------------------------------------------------------------------------
@@ -158,9 +166,6 @@ if( OPTION_TRANSLATION_SUPPORT )
     endif(GETTEXT_FOUND)
 endif( OPTION_TRANSLATION_SUPPORT )
 
-EXECUTE_PROCESS(COMMAND rm -rf ${SpringLobby_BINARY_DIR}/po )
-
-
 #----------------------------------------------------------------------------------------------------
 # libtorrent-rasterbar dependency check
 #----------------------------------------------------------------------------------------------------
@@ -173,7 +178,7 @@ IF( OPTION_TORRENT_SYSTEM )
 		    INCLUDE_DIRECTORIES( ${LIBTORRENT_INCLUDE_DIRS} )
 		    LINK_LIBRARIES( ${LIBTORRENT_LIBRARIES} )
 	    ELSE()
-		    MESSAGE(FATAL_ERROR "libtorrent-rasterbar library not found! Please install the package or toggle OPTION_TORRENT_SYSTEM to OFF")
+		    MESSAGE( FATAL_ERROR "libtorrent-rasterbar library not found! Please install the package or toggle OPTION_TORRENT_SYSTEM to OFF")
 	    ENDIF()
 	ELSE( NOT WIN32)
 			link_directories( ${boost_LIB_DIR} )
@@ -203,8 +208,6 @@ SET(SpringLobbySrc
 	src/gui/skirmish_dialog.cpp
 	src/gui/wxbackgroundimage.cpp
 	src/gui/simplefront.cpp
-	src/updater/updatermainwindow.cpp
-	src/utils/activitynotice.cpp
 	src/aui/slbook.cpp
 	src/utils/math.cpp
 	src/utils/misc.cpp
@@ -432,3 +435,23 @@ ELSE (WIN32)
     install(FILES src/springlobby.desktop DESTINATION
 	    ${CMAKE_INSTALL_PREFIX}/share/applications)
 ENDIF (WIN32)
+
+### a hack to get cmake to wipe the po dir in binary tree before making any other target
+### the pack and pack_source custom targets are needed since CMake does not know of Cpack targets
+ADD_CUSTOM_TARGET(wipe_po_dir ALL COMMAND rm -rf ${SpringLobby_BINARY_DIR}/po )
+ADD_CUSTOM_TARGET(pack
+    COMMAND make package
+    COMMENT "Packaging files"
+    VERBATIM
+    )
+ADD_CUSTOM_TARGET(pack_source
+    COMMAND make package_source
+    COMMENT "Packaging Source files"
+    VERBATIM
+    )
+add_dependencies( pack wipe_po_dir )
+add_dependencies( pack_source wipe_po_dir )
+add_dependencies( springlobby wipe_po_dir )
+add_dependencies( springsettings wipe_po_dir )
+
+
