@@ -412,8 +412,6 @@ void BattleRoomTab::UpdateBattleInfo()
 	m_minimap->UpdateMinimap();
 }
 
-bool comparefunc (int i,int j) { return (i<j); }
-
 void BattleRoomTab::PrintAllySetup()
 {
 	wxString setupstring;
@@ -849,6 +847,9 @@ void BattleRoomTab::OnUserJoined( User& user )
 	{
 		m_players->SetSelectedIndex ( m_players->GetIndexFromData( &user ) );
 	}
+	m_player_count_lbl->SetLabel( wxString::Format( _( "Players: %d" ), m_battle->GetNumUsers() - m_battle->GetSpectators() ) );
+	m_spec_count_lbl->SetLabel( wxString::Format( _( "Spectators: %d" ), m_battle->GetSpectators() ) );
+	PrintAllySetup();
 }
 
 
@@ -857,6 +858,10 @@ void BattleRoomTab::OnUserLeft( User& user )
 	if ( !m_battle ) return;
 	if ( !user.BattleStatus().IsBot() ) m_chat->Parted( user, wxEmptyString );
 	m_players->RemoveUser( user );
+
+	m_player_count_lbl->SetLabel( wxString::Format( _( "Players: %d" ), m_battle->GetNumUsers() - m_battle->GetSpectators() ) );
+	m_spec_count_lbl->SetLabel( wxString::Format( _( "Spectators: %d" ), m_battle->GetSpectators() ) );
+	PrintAllySetup();
 }
 
 

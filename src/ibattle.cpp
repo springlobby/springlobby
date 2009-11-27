@@ -539,7 +539,7 @@ void IBattle::ForceSide( User& user, int side )
 
 void IBattle::ForceTeam( User& user, int team )
 {
-  if ( IsFounderMe() || user.BattleStatus().IsBot() )
+  if ( IsFounderMe() || user.BattleStatus().IsBot() || &user == &GetMe() )
   {
 		if ( !user.BattleStatus().spectator )
 		{
@@ -554,7 +554,7 @@ void IBattle::ForceTeam( User& user, int team )
 void IBattle::ForceAlly( User& user, int ally )
 {
 
-  if ( IsFounderMe() || user.BattleStatus().IsBot() )
+  if ( IsFounderMe() || user.BattleStatus().IsBot() || &user == &GetMe() )
   {
 		if ( !user.BattleStatus().spectator )
 		{
@@ -618,40 +618,39 @@ void IBattle::PlayerLeftAlly( int ally )
 
 void IBattle::ForceSpectator( User& user, bool spectator )
 {
-		if ( IsFounderMe() || user.BattleStatus().IsBot() )
+		if ( IsFounderMe() || user.BattleStatus().IsBot() || &user == &GetMe() )
 		{
-			 UserBattleStatus& status = user.BattleStatus();
-			 if ( status.spectator != spectator )
-			 {
-					if ( !spectator ) // leaving spectator status
-					{
-						PlayerJoinedTeam( status.team );
-						PlayerJoinedAlly( status.ally );
-						if ( status.ready && !status.IsBot() ) m_players_ready++;
-					}
-					else // entering spectator status
-					{
-						PlayerLeftTeam( status.team );
-						PlayerLeftAlly( status.ally );
-						if ( status.ready && !status.IsBot() ) m_players_ready--;
-					}
-					if ( IsFounderMe() )
-					{
-						if ( status.spectator != spectator )
-						{
-							if ( spectator )
-							{
-									m_opts.spectators++;
-							}
-							else
-							{
-									m_opts.spectators--;
-							}
-						}
-						SendHostInfo( HI_Spectators );
-					}
-			 }
+			UserBattleStatus& status = user.BattleStatus();
 
+			if ( !status.spectator ) // leaving spectator status
+			{
+				PlayerJoinedTeam( status.team );
+				PlayerJoinedAlly( status.ally );
+				if ( status.ready && !status.IsBot() ) m_players_ready++;
+			}
+
+			if (spectator) // entering spectator status
+			{
+				PlayerLeftTeam( status.team );
+				PlayerLeftAlly( status.ally );
+				if ( status.ready && !status.IsBot() ) m_players_ready--;
+			}
+
+			if ( IsFounderMe() )
+			{
+				if ( status.spectator != spectator )
+				{
+					if ( spectator )
+					{
+							m_opts.spectators++;
+					}
+					else
+					{
+							m_opts.spectators--;
+					}
+					SendHostInfo( HI_Spectators );
+				}
+			}
 			user.BattleStatus().spectator = spectator;
 		}
 }
@@ -882,6 +881,10 @@ void IBattle::OnSelfLeftBattle()
     susynclib().UnSetCurrentMod(); //left battle
     m_is_self_in = false;
     ClearStartRects();
+    m_teams_sizes.clear();
+    m_ally_sizes.clear();
+    m_players_ready = 0;
+    m_players_sync = 0;
 }
 
 void IBattle::OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ )
@@ -1171,9 +1174,7 @@ void IBattle::GetBattleFromScript( bool loadmapmod )
                 status.team = player->GetInt( _T("Team") );
 								if ( !status.spectator )
 								{
-									std::map<int, int>::iterator itor = m_teams_sizes.find( status.team );
-									if ( itor == m_teams_sizes.end() ) m_teams_sizes[status.team] = 1;
-									else m_teams_sizes[status.team] = m_teams_sizes[status.team] + 1;
+									PlayerJoinedTeam( status.team );
 								}
                 status.sync = true;
                 status.ready = true;
@@ -1224,9 +1225,7 @@ void IBattle::GetBattleFromScript( bool loadmapmod )
 										status.handicap = teaminfos.Handicap;
 										if ( !status.spectator )
 										{
-											std::map<int, int>::iterator iter = m_ally_sizes.find(status.ally );
-											if ( iter == m_ally_sizes.end() ) m_ally_sizes[status.ally] = 1;
-											else m_ally_sizes[status.ally] = m_ally_sizes[status.ally] + 1;
+											PlayerJoinedAlly( status.ally );
 										}
 										if ( teaminfos.SideNum >= 0 ) status.side = teaminfos.SideNum;
 										IBattle::AllyInfoContainer allyinfos = parsed_allies[user.BattleStatus().ally];
