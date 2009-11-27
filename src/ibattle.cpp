@@ -539,7 +539,7 @@ void IBattle::ForceSide( User& user, int side )
 
 void IBattle::ForceTeam( User& user, int team )
 {
-  if ( IsFounderMe() || user.BattleStatus().IsBot() || &user == &GetMe() )
+  if ( IsFounderMe() || user.BattleStatus().IsBot() )
   {
 		if ( !user.BattleStatus().spectator )
 		{
@@ -554,7 +554,7 @@ void IBattle::ForceTeam( User& user, int team )
 void IBattle::ForceAlly( User& user, int ally )
 {
 
-  if ( IsFounderMe() || user.BattleStatus().IsBot() || &user == &GetMe() )
+  if ( IsFounderMe() || user.BattleStatus().IsBot() )
   {
 		if ( !user.BattleStatus().spectator )
 		{
@@ -618,7 +618,7 @@ void IBattle::PlayerLeftAlly( int ally )
 
 void IBattle::ForceSpectator( User& user, bool spectator )
 {
-		if ( IsFounderMe() || user.BattleStatus().IsBot() || &user == &GetMe() )
+		if ( IsFounderMe() || user.BattleStatus().IsBot() )
 		{
 			UserBattleStatus& status = user.BattleStatus();
 
