@@ -206,8 +206,8 @@ class MainWindow : public wxFrame
         static const unsigned int PAGE_LIST    = 1;
         static const unsigned int PAGE_JOIN    = 2;
         static const unsigned int PAGE_SINGLE  = 3;
-        static const unsigned int PAGE_REPLAY  = 4;
-        static const unsigned int PAGE_SAVEGAME = 5;
+        static const unsigned int PAGE_REPLAY  = 5;
+        static const unsigned int PAGE_SAVEGAME = 4;
 
         #ifndef NO_TORRENT_SYSTEM
         static const unsigned int PAGE_TORRENT = 6;

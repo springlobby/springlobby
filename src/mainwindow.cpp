@@ -58,17 +58,12 @@
 
 #include "images/springlobby.xpm"
 #include "images/chat_icon.png.h"
-#include "images/chat_icon_text.png.h"
 #include "images/join_icon.png.h"
-#include "images/join_icon_text.png.h"
 #include "images/single_player_icon.png.h"
-#include "images/single_player_icon_text.png.h"
 #include "images/options_icon.png.h"
-#include "images/options_icon_text.png.h"
 #include "images/downloads_icon.png.h"
-#include "images/downloads_icon_text.png.h"
 #include "images/replay_icon.png.h"
-#include "images/replay_icon_text.png.h"
+#include "images/broom_tab_icon.png.h"
 #include "images/floppy_icon.png.h"
 
 #include "settings++/frame.h"
@@ -193,8 +188,8 @@ MainWindow::MainWindow( )
 	m_list_tab = new BattleListTab( m_func_tabs );
   m_join_tab = new MainJoinBattleTab( m_func_tabs );
   m_sp_tab = new MainSinglePlayerTab( m_func_tabs );
-  m_replay_tab = new ReplayTab ( m_func_tabs );
   m_savegame_tab = new SavegameTab( m_func_tabs );
+  m_replay_tab = new ReplayTab ( m_func_tabs );
 #ifndef NO_TORRENT_SYSTEM
   m_torrent_tab = new MainTorrentTab( m_func_tabs);
 #endif
@@ -250,7 +245,7 @@ void MainWindow::SetTabIcons()
 		unsigned int count = 0;
     m_func_tabs->SetPageBitmap( count++, GetTabIcon( chat_icon_png, sizeof(chat_icon_png)  ) );
     m_func_tabs->SetPageBitmap( count++, GetTabIcon( join_icon_png, sizeof(join_icon_png)  ) );
-    m_func_tabs->SetPageBitmap( count++, GetTabIcon( join_icon_png, sizeof(join_icon_png) ) );
+    m_func_tabs->SetPageBitmap( count++, GetTabIcon( broom_tab_icon_png, sizeof(broom_tab_icon_png) ) );
     m_func_tabs->SetPageBitmap( count++, GetTabIcon( single_player_icon_png , sizeof (single_player_icon_png) ) );
     m_func_tabs->SetPageBitmap( count++, GetTabIcon( floppy_icon_png , sizeof (floppy_icon_png) ) );
     m_func_tabs->SetPageBitmap( count++, GetTabIcon( replay_icon_png , sizeof (replay_icon_png) ) );
