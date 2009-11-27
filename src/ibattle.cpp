@@ -637,13 +637,16 @@ void IBattle::ForceSpectator( User& user, bool spectator )
 					}
 					if ( IsFounderMe() )
 					{
-						if ( spectator )
+						if ( status.spectator != spectator )
 						{
-								m_opts.spectators++;
-						}
-						else
-						{
-								m_opts.spectators--;
+							if ( spectator )
+							{
+									m_opts.spectators++;
+							}
+							else
+							{
+									m_opts.spectators--;
+							}
 						}
 						SendHostInfo( HI_Spectators );
 					}
