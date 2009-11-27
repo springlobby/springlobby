@@ -716,7 +716,7 @@ void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint& p
         switch (column)
         {
         case 0: // is bot?
-            m_tiptext = _("");
+            m_tiptext = _T("");
 
             if ( user.BattleStatus().IsBot() )
                 m_tiptext += _("AI (bot)\n");
