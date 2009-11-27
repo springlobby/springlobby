@@ -1937,6 +1937,13 @@ wxString Settings::GetDefaultLayout()
 	return m_config->Read( _T( "/GUI/DefaultLayout" ), _T( "" ) );
 }
 
+void Settings::RemoveLayouts()
+{
+	m_config->DeleteEntry(_T("/GUI/DefaultLayout"));
+	m_config->DeleteGroup(_T("/Layout"));
+	m_config->DeleteGroup(_T("/GUI/AUI"));
+}
+
 void Settings::SetColumnWidth( const wxString& list_name, const int column_ind, const int column_width )
 {
 	m_config->Write( _T( "GUI/ColumnWidths/" ) + list_name + _T( "/" ) + TowxString( column_ind ), column_width );
