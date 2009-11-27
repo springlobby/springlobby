@@ -453,12 +453,8 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 							else
 							{
 								int speccteam = 0;
-								ProgressiveTeamsVecIter itor = teams_to_sorted_teams.find ( status.team );
-								if ( itor == teams_to_sorted_teams.end() )
-								{
-									srand ( time(NULL) );
-									if ( teams_to_sorted_teams.size() != 0 ) speccteam = rand() % teams_to_sorted_teams.size();
-								}
+								srand ( time(NULL) );
+								if ( teams_to_sorted_teams.size() != 0 ) speccteam = rand() % teams_to_sorted_teams.size();
 								else speccteam = itor->second;
 								tdf.Append( _T("Team"), speccteam );
 							}
