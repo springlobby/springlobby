@@ -143,6 +143,9 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle )
 	m_color_lbl = new wxStaticText( m_player_panel, -1, _( "Color" ) );
 	m_side_lbl = new wxStaticText( m_player_panel, -1, _( "Side" ) );
 
+	m_player_count_lbl = new wxStaticText( m_player_panel, -1, wxString::Format( _( "Players: %d" ), 0 ) );
+	m_spec_count_lbl = new wxStaticText( m_player_panel, -1, wxString::Format( _( "Spectators: %d" ), 0 ) );
+
 	m_size_lbl = new wxStaticText( this, -1, _T( "" ) );
 	m_wind_lbl = new wxStaticText( this, -1, _T( "" ) );
 	m_tidal_lbl = new wxStaticText( this, -1, _T( "" ) );
@@ -294,6 +297,9 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle )
 	m_player_sett_sizer->Add( m_side_sel_sizer, 0, wxEXPAND | wxALL, 2 );
 	m_player_sett_sizer->Add( m_spec_chk, 0, wxEXPAND | wxALL, 2 );
 	m_player_sett_sizer->Add( m_ready_chk, 0, wxEXPAND | wxALL, 2 );
+	m_player_sett_sizer->AddStretchSpacer();
+	m_player_sett_sizer->Add( m_player_count_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxEXPAND  | wxALL, 2 );
+	m_player_sett_sizer->Add( m_spec_count_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxEXPAND | wxALL, 2 );
 
 	m_players_sizer->Add( m_players, 1, wxEXPAND );
 	m_players_sizer->Add( m_player_sett_sizer, 0, wxEXPAND );
@@ -483,6 +489,9 @@ void BattleRoomTab::UpdateUser( User& user )
 	m_players->UpdateUser( user );
 
 	m_minimap->UpdateMinimap();
+
+	m_player_count_lbl->SetLabel( wxString::Format( _( "Players: %d" ), m_battle->GetNumUsers() - m_battle->GetSpectators() ) );
+	m_spec_count_lbl->SetLabel( wxString::Format( _( "Spectators: %d" ), m_battle->GetSpectators() ) );
 
 	if ( &user != &m_battle->GetMe() ) return;
 
