@@ -44,7 +44,7 @@ EXECUTE_PROCESS(COMMAND ${springlobby_SOURCE_DIR}/tools/get-revision.sh
 # Options, that can be changed be the User in order to customise springlobby
 #----------------------------------------------------------------------------------------------------
 SET( OPTION_TORRENT_SYSTEM
-	1 CACHE BOOL
+	0 CACHE BOOL
 	"Enables the builtin map/mod p2p downloader (requires libtorrent-rasterbar library)" )
 SET( OPTION_SOUND
 	1 CACHE BOOL
