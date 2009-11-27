@@ -160,9 +160,10 @@ int IBattle::GetFreeTeamNum( bool excludeme )
         changed = false;
         for ( user_map_t::size_type i = 0; i < GetNumUsers(); i++ )
         {
-            if ( ( &GetUser( i ) == &GetMe() ) && excludeme ) continue;
-            //if ( GetUser( i ).BattleStatus().spectator ) continue;
-            if ( GetUser( i ).BattleStatus().team == lowest )
+						User& user = GetUser( i );
+            if ( ( &user == &GetMe() ) && excludeme ) continue;
+            if ( user.BattleStatus().spectator ) continue;
+            if ( user.BattleStatus().team == lowest )
             {
                 lowest++;
                 changed = true;
