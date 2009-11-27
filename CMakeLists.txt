@@ -460,6 +460,3 @@ add_custom_target(distcheck cd ${CMAKE_BINARY_DIR} &&
                         cmake . && make )
 add_dependencies( distcheck dist )
 add_dependencies( pack wipe_po_dir )
-add_dependencies( springlobby wipe_po_dir )
-add_dependencies( springsettings wipe_po_dir )
-
