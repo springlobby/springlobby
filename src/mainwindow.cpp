@@ -41,6 +41,7 @@
 #include "battlelisttab.h"
 #include "mainchattab.h"
 #include "mainjoinbattletab.h"
+#include "battlelisttab.h"
 #include "mainsingleplayertab.h"
 #include "mainoptionstab.h"
 #include "iunitsync.h"
@@ -189,6 +190,7 @@ MainWindow::MainWindow( )
     SetEvtHandlerEnabled( false );
 
   m_chat_tab = new MainChatTab( m_func_tabs );
+	m_list_tab = new BattleListTab( m_func_tabs );
   m_join_tab = new MainJoinBattleTab( m_func_tabs );
   m_sp_tab = new MainSinglePlayerTab( m_func_tabs );
   m_replay_tab = new ReplayTab ( m_func_tabs );
@@ -200,6 +202,7 @@ MainWindow::MainWindow( )
 
     //use Insert so no Changepage events are triggered
     m_func_tabs->InsertPage( PAGE_CHAT,     m_chat_tab,     m_tab_names[PAGE_CHAT],     true  );
+    m_func_tabs->InsertPage( PAGE_LIST,     m_list_tab,     m_tab_names[PAGE_LIST],     false  );
     m_func_tabs->InsertPage( PAGE_JOIN,     m_join_tab,     m_tab_names[PAGE_JOIN],     false );
     m_func_tabs->InsertPage( PAGE_SINGLE,   m_sp_tab,       m_tab_names[PAGE_SINGLE],   false );
     m_func_tabs->InsertPage( PAGE_SAVEGAME, m_savegame_tab, m_tab_names[PAGE_SAVEGAME], false );
@@ -246,6 +249,7 @@ void MainWindow::SetTabIcons()
 {
 		unsigned int count = 0;
     m_func_tabs->SetPageBitmap( count++, GetTabIcon( chat_icon_png, sizeof(chat_icon_png)  ) );
+    m_func_tabs->SetPageBitmap( count++, GetTabIcon( join_icon_png, sizeof(join_icon_png)  ) );
     m_func_tabs->SetPageBitmap( count++, GetTabIcon( join_icon_png, sizeof(join_icon_png) ) );
     m_func_tabs->SetPageBitmap( count++, GetTabIcon( single_player_icon_png , sizeof (single_player_icon_png) ) );
     m_func_tabs->SetPageBitmap( count++, GetTabIcon( floppy_icon_png , sizeof (floppy_icon_png) ) );
@@ -345,6 +349,13 @@ MainChatTab& MainWindow::GetChatTab()
 {
   ASSERT_EXCEPTION( m_chat_tab != 0, _T("m_chat_tab = 0") );
   return *m_chat_tab;
+}
+
+//! @brief Returns the curent BattleListTab object
+BattleListTab& MainWindow::GetBattleListTab()
+{
+	ASSERT_EXCEPTION( m_list_tab != 0, _T( "m_list_tab = 0" ) );
+	return *m_list_tab;
 }
 
 MainJoinBattleTab& MainWindow::GetJoinTab()
@@ -651,13 +662,6 @@ void MainWindow::OnChannelListStart( )
     m_channel_chooser->ClearChannels();
 }
 
-wxString MainWindow::AddPerspectivePostfix( const wxString& pers_name )
-{
-    wxString perspective_name  = pers_name.IsEmpty() ? sett().GetLastPerspectiveName() : pers_name;
-    if ( m_join_tab &&  m_join_tab->UseBattlePerspective() )
-        perspective_name += BattlePostfix;
-    return perspective_name;
-}
 
 void MainWindow::OnMenuSaveLayout( wxCommandEvent& /*unused*/ )
 {
@@ -703,15 +707,13 @@ const MainWindow::TabNames& MainWindow::GetTabNames()
     return m_tab_names;
 }
 
-void MainWindow::LoadPerspectives( const wxString& pers_name )
+void MainWindow::LoadPerspectives( const wxString& perspective_name )
 {
-    sett().SetLastPerspectiveName( pers_name );
-    wxString perspective_name = AddPerspectivePostfix( pers_name );
+    sett().SetLastPerspectiveName( perspective_name );
 
     //loading a default layout on top of the more tabs of battle layout would prove fatal
-    if ( perspective_name.EndsWith( BattlePostfix ) && !sett().PerspectiveExists( perspective_name ) )
+    if ( !sett().PerspectiveExists( perspective_name ) )
         return;
-
 
     LoadNotebookPerspective( m_func_tabs, perspective_name );
     m_sp_tab->LoadPerspective( perspective_name );
@@ -724,14 +726,19 @@ void MainWindow::LoadPerspectives( const wxString& pers_name )
 //    m_chat_tab->LoadPerspective( perspective_name );
 }
 
-void MainWindow::SavePerspectives( const wxString& pers_name )
+void MainWindow::SavePerspectives( const wxString& perspective_name )
 {
-    sett().SetLastPerspectiveName( pers_name );
-    wxString perspective_name = AddPerspectivePostfix( pers_name );
+    sett().SetLastPerspectiveName( perspective_name );
 
     m_sp_tab->SavePerspective( perspective_name );
     m_join_tab->SavePerspective( perspective_name );
     m_opts_tab->SavePerspective( perspective_name );
 //    m_chat_tab->SavePerspective( perspective_name );
     SaveNotebookPerspective( m_func_tabs, perspective_name );
+}
+
+void MainWindow::FocusBattleRoomTab()
+{
+	m_func_tabs->SetSelection( PAGE_JOIN );
+	GetJoinTab().FocusBattleRoomTab();
 }

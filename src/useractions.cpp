@@ -93,7 +93,7 @@ void UserActions::UpdateUI()
 {
     try
     {
-      ui().mw().GetJoinTab().GetBattleListTab().UpdateHighlights();
+      ui().mw().GetBattleListTab().UpdateHighlights();
     } catch(...){}
 
     try

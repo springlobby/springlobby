@@ -10,6 +10,7 @@ class wxCommandEvent;
 class wxListbookEvent;
 class wxAuiNotebookEvent;
 class MainChatTab;
+class BattleListTab;
 class MainJoinBattleTab;
 class MainSinglePlayerTab;
 #ifndef NO_TORRENT_SYSTEM
@@ -100,6 +101,7 @@ class MainWindow : public wxFrame
 
     void OnTabsChanged( wxAuiNotebookEvent& event );
     MainChatTab& GetChatTab();
+    BattleListTab& GetBattleListTab();
     MainJoinBattleTab& GetJoinTab();
     MainSinglePlayerTab& GetSPTab();
     ReplayTab& GetReplayTab();
@@ -118,6 +120,8 @@ class MainWindow : public wxFrame
     void LoadPerspectives( const wxString& perspective_name = wxEmptyString );
     void SavePerspectives( const wxString& perspective_name = wxEmptyString );
 
+    void FocusBattleRoomTab();
+
   protected:
 
     wxMenuItem* m_settings_menu;
@@ -128,6 +132,7 @@ class MainWindow : public wxFrame
     SLNotebook* m_func_tabs;
 
     MainChatTab* m_chat_tab;
+    BattleListTab* m_list_tab;
     MainJoinBattleTab* m_join_tab;
     MainSinglePlayerTab* m_sp_tab;
     MainOptionsTab* m_opts_tab;
@@ -144,7 +149,7 @@ class MainWindow : public wxFrame
     SavegameTab* m_savegame_tab;
 
     wxBitmap GetTabIcon( const unsigned char* data, size_t size  );
-    wxString AddPerspectivePostfix( const wxString& pers_name );
+
 
     wxLogWindow* m_log_win;
     wxLogChain* m_log_chain;
@@ -182,7 +187,8 @@ class MainWindow : public wxFrame
                 TabNames ()
                 {
                     Add( _("Chat") );
-                    Add( _("Multiplayer") );
+                    Add( _("Battlelist") );
+                    Add( _("Battleroom") );
                     Add( _("Singleplayer") );
                     Add( _("Savegames") );
                     Add( _("Replays") );
@@ -197,16 +203,17 @@ class MainWindow : public wxFrame
     public:
         // Page indexes
         static const unsigned int PAGE_CHAT    = 0;
-        static const unsigned int PAGE_JOIN    = 1;
-        static const unsigned int PAGE_SINGLE  = 2;
+        static const unsigned int PAGE_LIST    = 1;
+        static const unsigned int PAGE_JOIN    = 2;
+        static const unsigned int PAGE_SINGLE  = 3;
         static const unsigned int PAGE_REPLAY  = 4;
-        static const unsigned int PAGE_SAVEGAME = 3;
+        static const unsigned int PAGE_SAVEGAME = 5;
 
         #ifndef NO_TORRENT_SYSTEM
-        static const unsigned int PAGE_TORRENT = 5;
-        static const unsigned int PAGE_OPTOS = 6;
+        static const unsigned int PAGE_TORRENT = 6;
+        static const unsigned int PAGE_OPTOS = 7;
         #else
-        static const unsigned int PAGE_OPTOS   = 5;
+        static const unsigned int PAGE_OPTOS   = 6;
         #endif
 
         static const unsigned int OPT_PAGE_SPRING   = 0;

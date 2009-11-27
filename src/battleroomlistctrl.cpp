@@ -58,7 +58,7 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, IBattle* battle, bool 
     : CustomVirtListCtrl< User *,BattleroomListCtrl>(parent, BRLIST_LIST, wxDefaultPosition, wxDefaultSize,
                 wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL, _T("BattleroomListCtrl"), 10, 3, &CompareOneCrit,
                 true /*highlight*/, UserActions::ActHighlight, !readonly /*periodic sort*/ ),
-	m_battle(battle),
+	m_battle(0),
 	m_popup(0),
     m_sel_user(0),
     m_sides(0),
@@ -123,16 +123,7 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, IBattle* battle, bool 
 		m_popup->Append( -1, _("Ally"), m_allies );
 
 		m_sides = new wxMenu();
-		try
-		{
-			wxArrayString sides = usync().GetSides( m_battle->GetHostModName() );
-			for ( unsigned int i = 0; i < sides.GetCount(); i++ )
-			{
-				wxMenuItem* side = new wxMenuItem( m_sides, BRLIST_SIDE + i, sides[i], wxEmptyString, wxITEM_NORMAL );
-				m_sides->Append( side );
-				Connect( BRLIST_SIDE + i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnSideSelect ) );
-			}
-		} catch (...) {}
+		SetBattle( battle );
 		m_popup->Append( -1, _("Side"), m_sides );
 
 		m_popup->AppendSeparator();
@@ -168,7 +159,33 @@ BattleroomListCtrl::~BattleroomListCtrl()
 
 void BattleroomListCtrl::SetBattle( IBattle* battle )
 {
+	if ( battle == m_battle ) return;
 	m_battle = battle;
+	if ( m_battle )
+	{
+		try
+		{
+			side_vector.clear();
+			wxArrayString sides = usync().GetSides( m_battle->GetHostModName() );
+			for ( unsigned int i = 0; i < sides.GetCount(); i++ )
+			{
+				wxMenuItem* side = new wxMenuItem( m_sides, BRLIST_SIDE + i, sides[i], wxEmptyString, wxITEM_NORMAL );
+				m_sides->Append( side );
+				side_vector.push_back( side );
+				Connect( BRLIST_SIDE + i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnSideSelect ) );
+			}
+		} catch (...) {}
+	}
+	else
+	{
+		for ( unsigned int i = 0; i < side_vector.size(); i++ )
+		{
+			wxMenuItem* side = side_vector[i];
+			delete side;
+			Disconnect( BRLIST_SIDE + i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnSideSelect ) );
+		}
+		side_vector.clear();
+	}
 }
 
 IBattle& BattleroomListCtrl::GetBattle()

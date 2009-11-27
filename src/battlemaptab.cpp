@@ -45,7 +45,7 @@ BEGIN_EVENT_TABLE( BattleMapTab, wxPanel )
 END_EVENT_TABLE()
 
 
-BattleMapTab::BattleMapTab( wxWindow* parent, Battle& battle )
+BattleMapTab::BattleMapTab( wxWindow* parent, Battle* battle )
     : wxScrolledWindow( parent, -1 ),
     m_battle( battle ),
     m_map_dlg( 0 )
@@ -56,7 +56,8 @@ BattleMapTab::BattleMapTab( wxWindow* parent, Battle& battle )
 	wxBoxSizer* m_map_sizer = new wxBoxSizer( wxVERTICAL );
 
 	m_map_sizer->SetMinSize( wxSize( 352, -1 ) );
-	m_minimap = new MapCtrl( this, 352, &m_battle, !battle.IsFounderMe(), false, true, false );
+	m_minimap = new MapCtrl( this, 352, m_battle, true, false, true, false );
+
 	m_minimap->SetMinSize( wxSize( 352, 352 ) );
 
 	m_map_sizer->Add( m_minimap, 1, wxALL | wxEXPAND, 2 );
@@ -112,11 +113,8 @@ BattleMapTab::BattleMapTab( wxWindow* parent, Battle& battle )
 	SetSizer( m_main_sizer );
 	Layout();
 
-	ReloadMaplist();
-	Update();
+	SetBattle( battle );
 
-	//m_map_combo->Enable( m_battle.IsFounderMe() );
-	m_start_radios->Enable( m_battle.IsFounderMe() );
 	SetScrollRate( SCROLL_RATE, SCROLL_RATE );
 	Layout();
 }
@@ -145,16 +143,17 @@ void BattleMapTab::OnMouseWheel( wxMouseEvent& event )
 
 void BattleMapTab::Update()
 {
-	wxString value = m_battle.CustomBattleOptions().getSingleValue( _T( "startpostype" ), OptionsWrapper::EngineOption );
+	if ( !m_battle ) return;
+	wxString value = m_battle->CustomBattleOptions().getSingleValue( _T( "startpostype" ), OptionsWrapper::EngineOption );
 	long longval;
 	value.ToLong( &longval );
 	m_start_radios->SetSelection( longval );
 
 	m_minimap->UpdateMinimap();
 
-	if ( !m_battle.MapExists() ) return;
+	if ( !m_battle->MapExists() ) return;
 
-	UnitSyncMap map = m_battle.LoadMap();
+	UnitSyncMap map = m_battle->LoadMap();
 
 	m_map_opts_list->SetItem( 0, 1, wxString::Format( _T( "%dx%d" ), map.info.width / 512, map.info.height / 512 ) );
 	m_map_opts_list->SetItem( 1, 1, wxString::Format( _T( "%d-%d" ), map.info.minWind, map.info.maxWind ) );
@@ -171,10 +170,11 @@ void BattleMapTab::Update()
 
 void BattleMapTab::Update( const wxString& Tag )
 {
+	if ( !m_battle ) return;
 	long type;
 	Tag.BeforeFirst( '_' ).ToLong( &type );
 	wxString key = Tag.AfterFirst( '_' );
-	wxString value = m_battle.CustomBattleOptions().getSingleValue( key, ( OptionsWrapper::GameOption )type );
+	wxString value = m_battle->CustomBattleOptions().getSingleValue( key, ( OptionsWrapper::GameOption )type );
 	long longval;
 	value.ToLong( &longval );
 	if ( type == OptionsWrapper::EngineOption )
@@ -197,6 +197,7 @@ void BattleMapTab::Update( const wxString& Tag )
 
 void BattleMapTab::ReloadMaplist()
 {
+	if ( !m_battle ) return;
 	m_map_combo->Clear();
 
 	wxArrayString maplist = usync().GetMapList();
@@ -209,7 +210,8 @@ void BattleMapTab::ReloadMaplist()
 
 void BattleMapTab::UpdateUser( User& user )
 {
-	if ( &m_battle.GetMe() == &user ) {
+	if ( !m_battle ) return;
+	if ( &m_battle->GetMe() == &user ) {
 		try {
 			m_minimap->UpdateMinimap();
 		} catch ( ... ) { }
@@ -219,23 +221,25 @@ void BattleMapTab::UpdateUser( User& user )
 
 void BattleMapTab::SetMap( int index )
 {
+	if ( !m_battle ) return;
 	try
 	{
 		UnitSyncMap map = usync().GetMapEx( index );
-		m_battle.SetLocalMap( map );
+		m_battle->SetLocalMap( map );
 
-		m_battle.SendHostInfo( IBattle::HI_Map );
+		m_battle->SendHostInfo( IBattle::HI_Map );
 	} catch ( ... ) {}
 }
 
 
 void BattleMapTab::OnMapSelect( wxCommandEvent& /*unused*/ )
 {
-	if ( !m_battle.IsFounderMe() )
+	if ( !m_battle ) return;
+	if ( !m_battle->IsFounderMe() )
 	{
 		try
 		{
-			m_battle.DoAction( _T( "suggests " ) + usync().GetMap( m_map_combo->GetCurrentSelection() ).name );
+			m_battle->DoAction( _T( "suggests " ) + usync().GetMap( m_map_combo->GetCurrentSelection() ).name );
 		}
 		catch ( ... )
 		{
@@ -248,6 +252,7 @@ void BattleMapTab::OnMapSelect( wxCommandEvent& /*unused*/ )
 
 void BattleMapTab::OnMapBrowse( wxCommandEvent& /*unused*/ )
 {
+	if ( !m_battle ) return;
 	wxLogDebugFunc( _T( "" ) );
 	m_map_dlg = new MapSelectDialog ( ( wxWindow* )&ui().mw() );
 
@@ -255,9 +260,9 @@ void BattleMapTab::OnMapBrowse( wxCommandEvent& /*unused*/ )
 	{
 		wxString mapname = m_map_dlg->GetSelectedMap()->name;
 		wxLogDebugFunc( mapname );
-		if ( !m_battle.IsFounderMe() )
+		if ( !m_battle->IsFounderMe() )
 		{
-			m_battle.DoAction( _T( "suggests " ) + mapname  );
+			m_battle->DoAction( _T( "suggests " ) + mapname  );
 			return;
 		}
 		const int idx = m_map_combo->FindString( RefineMapname( mapname ), true /*case sensitive*/ );
@@ -270,14 +275,35 @@ void BattleMapTab::OnMapBrowse( wxCommandEvent& /*unused*/ )
 
 void BattleMapTab::OnStartTypeSelect( wxCommandEvent& /*unused*/ )
 {
+	if ( !m_battle ) return;
 	wxString pos = wxString::Format( _T( "%d" ), m_start_radios->GetSelection() );
-	m_battle.CustomBattleOptions().setSingleOption( _T( "startpostype" ), pos, OptionsWrapper::EngineOption );
-	m_battle.SendHostInfo( wxString::Format( _T( "%d_startpostype" ), OptionsWrapper::EngineOption ) );
+	m_battle->CustomBattleOptions().setSingleOption( _T( "startpostype" ), pos, OptionsWrapper::EngineOption );
+	m_battle->SendHostInfo( wxString::Format( _T( "%d_startpostype" ), OptionsWrapper::EngineOption ) );
 }
 
 
 void BattleMapTab::OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ )
 {
+	if ( !m_battle ) return;
     ReloadMaplist();
 }
 
+void BattleMapTab::SetBattle( Battle* battle )
+{
+	m_battle = battle;
+
+	m_start_radios->Enable( m_battle );
+	m_minimap->Enable( m_battle );
+	m_map_combo->Enable( m_battle );
+	m_browse_btn->Enable( m_battle );
+	m_map_opts_list->Enable( m_battle );
+	m_minimap->SetBattle( m_battle );
+	if ( m_battle )
+	{
+		m_minimap->SetReadOnly( m_battle->IsFounderMe() );
+		m_start_radios->Enable( m_battle->IsFounderMe() );
+		ReloadMaplist();
+		Update();
+	}
+
+}

@@ -177,6 +177,12 @@ BattleListTab::~BattleListTab()
 		m_filter->SaveFilterValues();
 }
 
+void BattleListTab::OnConnected()
+{
+	bool filter = sett().GetBattleFilterActivState();
+	SetFilterActiv( filter );
+}
+
 void BattleListTab::SetNumDisplayed()
 {
 	int num = m_battle_list->GetItemCount();
