@@ -300,7 +300,7 @@ void BattleMapTab::SetBattle( Battle* battle )
 	m_minimap->SetBattle( m_battle );
 	if ( m_battle )
 	{
-		m_minimap->SetReadOnly( m_battle->IsFounderMe() );
+		m_minimap->SetReadOnly( !m_battle->IsFounderMe() );
 		m_start_radios->Enable( m_battle->IsFounderMe() );
 		ReloadMaplist();
 		Update();
