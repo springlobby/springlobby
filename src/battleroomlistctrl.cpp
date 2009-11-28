@@ -166,6 +166,7 @@ void BattleroomListCtrl::SetBattle( IBattle* battle )
 		delete side;
 		Disconnect( BRLIST_SIDE + i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnSideSelect ) );
 	}
+	side_vector.clear();
 	if ( m_battle && m_sides )
 	{
 		try
