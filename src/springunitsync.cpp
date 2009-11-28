@@ -25,7 +25,6 @@
 #include "settings.h"
 #include "springunitsynclib.h"
 #include "utils/customdialogs.h"
-#include "unitsyncthread.h"
 #include "globalsmanager.h"
 #include "uiutils.h"
 #include "utils/debug.h"
@@ -819,7 +818,7 @@ MapInfo SpringUnitSync::_GetMapInfoEx( const wxString& mapname )
         info.height = s2l( cache[8] );
 
         wxArrayString posinfo = wxStringTokenize( cache[10], _T(' '), wxTOKEN_RET_EMPTY );
-        for ( int i = 0; i < posinfo.GetCount(); i++)
+        for ( int i = 0; i < int(posinfo.GetCount()); i++)
         {
            StartPos position;
            position.x = s2l( posinfo[i].BeforeFirst( _T('-') ) );
@@ -846,7 +845,7 @@ MapInfo SpringUnitSync::_GetMapInfoEx( const wxString& mapname )
         cache.Add( TowxString( info.height ) );
 
         wxString postring;
-        for ( int i = 0; i < info.positions.size(); i++)
+        for ( int i = 0; i < int(info.positions.size()); i++)
         {
            postring << TowxString( info.positions[i].x ) << _T('-') << TowxString( info.positions[i].y ) << _T(' ');
         }
@@ -1196,7 +1195,7 @@ void SpringUnitSync::GetMetalmapAsync( const wxString& mapname, int evtHandlerId
   _GetMapImageAsync( mapname, &SpringUnitSync::GetMetalmap, evtHandlerId );
 }
 
-void SpringUnitSync::GetMetalmapAsync( const wxString& mapname, int width, int height, int evtHandlerId )
+void SpringUnitSync::GetMetalmapAsync( const wxString& mapname, int /*width*/, int /*height*/, int evtHandlerId )
 {
   GetMetalmapAsync( mapname, evtHandlerId );
 }
@@ -1207,7 +1206,7 @@ void SpringUnitSync::GetHeightmapAsync( const wxString& mapname, int evtHandlerI
   _GetMapImageAsync( mapname, &SpringUnitSync::GetHeightmap, evtHandlerId );
 }
 
-void SpringUnitSync::GetHeightmapAsync( const wxString& mapname, int width, int height, int evtHandlerId )
+void SpringUnitSync::GetHeightmapAsync( const wxString& mapname, int /*width*/, int /*height*/, int evtHandlerId )
 {
   GetHeightmapAsync( mapname, evtHandlerId );
 }

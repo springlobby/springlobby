@@ -156,6 +156,11 @@ User& Battle::GetMe()
     return m_serv.GetMe();
 }
 
+const User& Battle::GetMe() const
+{
+    return m_serv.GetMe();
+}
+
 void Battle::SaveMapDefaults()
 {
     // save map preset
@@ -501,7 +506,9 @@ void Battle::ForceColour( User& user, const wxColour& col )
 
 void Battle::ForceSpectator( User& user, bool spectator )
 {
-    m_serv.ForceSpectator( m_opts.battleid, user, spectator );
+		if ( !spectator && ( !user.BattleStatus().IsBot() && ( &user != &GetMe() ) ) ) return;
+		IBattle::ForceSpectator( user, spectator );
+		m_serv.ForceSpectator( m_opts.battleid, user, spectator );
 }
 
 
@@ -619,7 +626,7 @@ void Battle::StartSpring()
 	ui().OnBattleStarted( *this );
 }
 
-void Battle::OnTimer( wxTimerEvent& event )
+void Battle::OnTimer( wxTimerEvent&  )
 {
 	if ( !IsFounderMe() ) return;
 	if ( m_ingame ) return;
@@ -955,7 +962,7 @@ void Battle::FixTeamIDs( BalanceType balance_type, bool support_clans, bool stro
     wxLogMessage(_T("Autobalancing teams, type=%d, clans=%d, strong_clans=%d, numcontrolteams=%d"),balance_type, support_clans, strong_clans, numcontrolteams);
     //size_t i;
     //int num_alliances;
-    std::vector<ControlTeam> teams;
+    std::vector<ControlTeam> control_teams;
 
     if ( numcontrolteams == 0 ) numcontrolteams = GetNumUsers() - GetSpectators(); // 0 == use num players, will use comshare only if no available team slots
     IBattle::StartType position_type = (IBattle::StartType)s2l( CustomBattleOptions().getSingleValue( _T("startpostype"), OptionsWrapper::EngineOption ) );
@@ -1000,9 +1007,9 @@ void Battle::FixTeamIDs( BalanceType balance_type, bool support_clans, bool stro
       }
       return;
     }
-    for ( int i = 0; i < numcontrolteams; i++ ) teams.push_back( ControlTeam( i ) );
+    for ( int i = 0; i < numcontrolteams; i++ ) control_teams.push_back( ControlTeam( i ) );
 
-    wxLogMessage(_T("number of teams: %u"), teams.size() );
+    wxLogMessage(_T("number of teams: %u"), control_teams.size() );
 
     std::vector<User*> players_sorted;
     players_sorted.reserve( GetNumUsers() );
@@ -1044,7 +1051,7 @@ void Battle::FixTeamIDs( BalanceType balance_type, bool support_clans, bool stro
         {
             ControlTeam &clan = (*clan_it).second;
             // if clan is too small (only 1 clan member in battle) or too big, dont count it as clan
-            if ( ( clan.players.size() < 2 ) || ( !strong_clans && ( clan.players.size() >  ( ( players_sorted.size() + teams.size() -1 ) / teams.size() ) ) ) )
+            if ( ( clan.players.size() < 2 ) || ( !strong_clans && ( clan.players.size() >  ( ( players_sorted.size() + control_teams.size() -1 ) / control_teams.size() ) ) ) )
             {
                 wxLogMessage(_T("removing clan %s"),(*clan_it).first.c_str());
                 std::map<wxString, ControlTeam>::iterator next = clan_it;
@@ -1054,16 +1061,16 @@ void Battle::FixTeamIDs( BalanceType balance_type, bool support_clans, bool stro
                 continue;
             }
             wxLogMessage( _T("Inserting clan %s"), (*clan_it).first.c_str() );
-            std::sort( teams.begin(), teams.end() );
-            float lowestrank = teams[0].ranksum;
+            std::sort( control_teams.begin(), control_teams.end() );
+            float lowestrank = control_teams[0].ranksum;
             int rnd_k = 1; // number of alliances with rank equal to lowestrank
-            while ( size_t( rnd_k ) < teams.size() )
+            while ( size_t( rnd_k ) < control_teams.size() )
             {
-                if ( fabs( teams[rnd_k].ranksum - lowestrank ) > 0.01 ) break;
+                if ( fabs( control_teams[rnd_k].ranksum - lowestrank ) > 0.01 ) break;
                 rnd_k++;
             }
             wxLogMessage(_T("number of lowestrank teams with same rank=%d"), rnd_k );
-            teams[my_random( rnd_k )].AddTeam( clan );
+            control_teams[my_random( rnd_k )].AddTeam( clan );
             ++clan_it;
         }
     }
@@ -1086,28 +1093,28 @@ void Battle::FixTeamIDs( BalanceType balance_type, bool support_clans, bool stro
         // so we're essentially adding to teams with smallest number of players,
         // the one with smallest ranksum.
 
-        std::sort( teams.begin(), teams.end() );
-        float lowestrank = teams[0].ranksum;
+        std::sort( control_teams.begin(), control_teams.end() );
+        float lowestrank = control_teams[0].ranksum;
         int rnd_k = 1; // number of alliances with rank equal to lowestrank
-        while ( size_t( rnd_k ) < teams.size() )
+        while ( size_t( rnd_k ) < control_teams.size() )
         {
-            if ( fabs ( teams[rnd_k].ranksum - lowestrank ) > 0.01 ) break;
+            if ( fabs ( control_teams[rnd_k].ranksum - lowestrank ) > 0.01 ) break;
             rnd_k++;
         }
         wxLogMessage( _T("number of lowestrank teams with same rank=%d"), rnd_k );
-        teams[my_random( rnd_k )].AddPlayer( players_sorted[i] );
+        control_teams[my_random( rnd_k )].AddPlayer( players_sorted[i] );
     }
 
 
-    for ( size_t i=0; i < teams.size(); ++i )
+    for ( size_t i=0; i < control_teams.size(); ++i )
     {
-        for ( size_t j = 0; j < teams[i].players.size(); ++j )
+        for ( size_t j = 0; j < control_teams[i].players.size(); ++j )
         {
-            ASSERT_LOGIC( teams[i].players[j], _T("fail in Autobalance teams, NULL player") );
-            wxString msg = wxString::Format( _T("setting player %s to team and ally %d"), teams[i].players[j]->GetNick().c_str(), i );
+            ASSERT_LOGIC( control_teams[i].players[j], _T("fail in Autobalance teams, NULL player") );
+            wxString msg = wxString::Format( _T("setting player %s to team and ally %d"), control_teams[i].players[j]->GetNick().c_str(), i );
             wxLogMessage( _T("%s"), msg.c_str() );
-            ForceTeam( *teams[i].players[j], teams[i].teamnum );
-            ForceAlly( *teams[i].players[j], teams[i].teamnum );
+            ForceTeam( *control_teams[i].players[j], control_teams[i].teamnum );
+            ForceAlly( *control_teams[i].players[j], control_teams[i].teamnum );
         }
     }
 }

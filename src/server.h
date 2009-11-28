@@ -151,19 +151,20 @@ class Server : public iNetClass
 
     BattleList_Iter* const battles_iter;
 
-    virtual User& GetMe() const = 0;
+    virtual const User& GetMe() const = 0;
+    virtual User& GetMe() = 0;
     User& GetUser( const wxString& nickname ) const;
     bool UserExists( const wxString& nickname ) const;
 
     Channel& GetChannel( const wxString& name );
-    int GetNumChannels();
+    int GetNumChannels() const;
     Channel& GetChannel( const int& index );
-    bool ChannelExists( const wxString& name );
+    bool ChannelExists( const wxString& name ) const;
 
     Battle& GetBattle( const int& battleid );
-    bool BattleExists( const int& battleid );
+    bool BattleExists( const int& battleid ) const;
 
-    virtual int TestOpenPort( unsigned int port ) = 0;
+    virtual int TestOpenPort( unsigned int port ) const = 0;
 
     virtual void SendScriptToProxy( const wxString& script ) = 0;
 
@@ -172,15 +173,15 @@ class Server : public iNetClass
     std::map<wxString,wxString> m_channel_pw;  /// channel name -> password, filled on channel join
 
     ///used to fill userlist in groupuserdialog
-    const UserList& GetUserList(){return m_users;}
+    const UserList& GetUserList() const {return m_users;}
 
-    unsigned int GetNumUsers() { return m_users.GetNumUsers(); }
+    unsigned int GetNumUsers() const { return m_users.GetNumUsers(); }
 
-    wxString GetServerName() { return m_server_name; }
+    wxString GetServerName() const { return m_server_name; }
 
     virtual void RequestSpringUpdate();
 
-		virtual wxArrayString GetRelayHostList();
+    virtual wxArrayString GetRelayHostList() ;
 
   protected:
     Socket* m_sock;

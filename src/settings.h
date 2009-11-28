@@ -5,11 +5,11 @@
 #include <vector>
 
 const int CACHE_VERSION     = 10;
-const int SETTINGS_VERSION  = 15;
+const int SETTINGS_VERSION  = 16;
 
 const wxString DEFSETT_DEFAULT_SERVER_NAME= _T("Official server");
 const wxString DEFSETT_DEFAULT_SERVER_HOST = _T("taspringmaster.clan-sy.com");
-const wxString BattlePostfix = _T("_battle");
+
 const int DEFSETT_DEFAULT_SERVER_PORT = 8200;
 const bool DEFSETT_SAVE_PASSWORD = false;
 const unsigned int DEFSETT_MW_WIDTH = 880;
@@ -660,9 +660,8 @@ class Settings
     wxArrayString GetPerspectives();
     bool PerspectiveExists( const wxString& perspective_name );
 
-    wxArrayString GetLayoutList();
-    void SetDefaultLayout( const wxString& layout_name );
-    wxString GetDefaultLayout();
+    void RemoveLayouts();
+
     //! icons for mainwindow tabs??
     bool GetUseTabIcons();
     void SetUseTabIcons( bool use );

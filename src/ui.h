@@ -40,7 +40,8 @@ class Ui
     };
 
     Server& GetServer();
-    bool    GetServerStatus();
+    const Server& GetServer() const;
+    bool    GetServerStatus() const;
     ChatPanel* GetActiveChatPanel();
     ChatPanel* GetChannelChatPanel( const wxString& channel );
 
@@ -64,7 +65,7 @@ class Ui
 
     bool IsSpringCompatible();
 
-    bool IsSpringRunning();
+    bool IsSpringRunning() const;
 
     void Quit();
 
@@ -79,7 +80,7 @@ class Ui
 
     MainWindow& mw();
 
-    bool IsMainWindowCreated();
+    bool IsMainWindowCreated() const;
 
     void OnUpdate( int mselapsed );
 
@@ -136,11 +137,11 @@ class Ui
     //! ask to download missing map, return true if download attempted
     bool OnPresetRequiringMap( const wxString& mapname );
 
-    bool IsThisMe(User& other);
-    bool IsThisMe(User* other);
-    bool IsThisMe(const wxString& other);
+    bool IsThisMe(User& other) const;
+    bool IsThisMe(User* other) const;
+    bool IsThisMe(const wxString& other) const;
 
-    int TestHostPort( unsigned int port );
+    int TestHostPort( unsigned int port ) const;
 
     void ReloadPresetList();
 

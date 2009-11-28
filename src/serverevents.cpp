@@ -211,7 +211,7 @@ void ServerEvents::OnUserQuit( const wxString& nick )
 					{
 						if ( &userbattle->GetFounder() == &user )
 						{
-							for ( int i = 0; i < userbattle->GetNumUsers(); i ++ )
+							for ( int i = 0; i < int(userbattle->GetNumUsers()); i ++ )
 							{
 								User& battleuser = userbattle->GetUser( i );
 								OnUserLeftBattle( battleid, battleuser.GetNick() );
@@ -944,7 +944,7 @@ void ServerEvents::OnScriptEnd( int battleid )
 }
 
 
-void ServerEvents::OnFileDownload( bool autolaunch, bool autoclose, bool disconnectonrefuse, const wxString& FileName, const wxString& url, const wxString& description )
+void ServerEvents::OnFileDownload( bool autolaunch, bool autoclose, bool /*disconnectonrefuse*/, const wxString& FileName, const wxString& url, const wxString& description )
 {
 	wxString refinedurl;
 	if ( url.Contains(_T("http://")) ) refinedurl = url.AfterFirst(_T('/')).AfterFirst(_T('/'));

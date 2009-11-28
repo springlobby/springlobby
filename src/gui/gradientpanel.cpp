@@ -66,7 +66,7 @@ wxGradientPanel::wxGradientPanel( wxWindow* parent,
 */
 
 bool wxGradientPanel::Create( wxWindow* parent,
-                               wxWindowID id, const wxString & label, const wxPoint& pos,
+                               wxWindowID id, const wxString & /*label*/, const wxPoint& pos,
                                const wxSize& size, long style )
 {
 ////@begin wxGradientPanel creation
@@ -155,7 +155,7 @@ wxIcon wxGradientPanel::GetIconResource( const wxString& name )
 * wxEVT_PAINT event handler for ID_WXGRADIENTBUTTON
 */
 
-void wxGradientPanel::OnPaint( wxPaintEvent& event )
+void wxGradientPanel::OnPaint( wxPaintEvent& )
 {
 // Before editing this code, remove the block markers.
 	wxBufferedPaintDC dc( this );
@@ -205,7 +205,7 @@ void wxGradientPanel::OnPaint( wxPaintEvent& event )
 * wxEVT_ERASE_BACKGROUND event handler for ID_WXGRADIENTBUTTON
 */
 
-void wxGradientPanel::OnEraseBackground( wxEraseEvent& event )
+void wxGradientPanel::OnEraseBackground( wxEraseEvent&  )
 {
 }
 
@@ -213,7 +213,7 @@ void wxGradientPanel::OnEraseBackground( wxEraseEvent& event )
 * wxEVT_SIZE event handler for ID_WXGRADIENTBUTTON
 */
 
-void wxGradientPanel::OnSize( wxSizeEvent& event )
+void wxGradientPanel::OnSize( wxSizeEvent&  )
 {
 	Refresh();
 }

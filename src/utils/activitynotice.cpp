@@ -58,7 +58,7 @@ bool ActivityNoticePanel::Show(bool show )
     return ret;
 }
 
-void ActivityNoticePanel::OnTimer(wxTimerEvent& event)
+void ActivityNoticePanel::OnTimer(wxTimerEvent& )
 {
     m_gauge->Pulse();
 }

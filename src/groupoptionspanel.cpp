@@ -284,7 +284,7 @@ void GroupOptionsPanel::OnGroupListSelectionChange( wxCommandEvent& /*unused*/ )
 }
 
 
-void GroupOptionsPanel::OnGroupActionsChange( wxCommandEvent& event )
+void GroupOptionsPanel::OnGroupActionsChange( wxCommandEvent&  )
 {
   useractions().ChangeAction( m_current_group, UserActions::ActNotifLogin, m_login_notify_check->GetValue() );
   useractions().ChangeAction( m_current_group, UserActions::ActIgnoreChat, m_ignore_chat_check->GetValue() );

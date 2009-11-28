@@ -22,7 +22,7 @@ class UserMenu : public wxMenu
             ParentType;
 
     public:
-        UserMenu(wxEvtHandler * connectee, ParentType* parent, const wxString& title = wxEmptyString, long style = 0)
+        UserMenu(wxEvtHandler * /*connectee*/, ParentType* parent, const wxString& title = wxEmptyString, long style = 0)
         : wxMenu( title, style ),m_groupsMenu(0), m_parent(parent),m_groupCounter(0)
         {
             assert ( m_parent );

@@ -21,10 +21,6 @@
 #include "utils/conversion.h"
 #include "spinctld.h"
 
-BEGIN_EVENT_TABLE( SingleOptionDialog, wxDialog )
-
-END_EVENT_TABLE()
-
 SingleOptionDialog::SingleOptionDialog( IBattle& battle, const wxString& optiontag )
     : m_battle( battle ),
     m_tag( optiontag ),

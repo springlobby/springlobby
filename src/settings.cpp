@@ -1912,29 +1912,11 @@ bool Settings::GetShowTooltips()
 	return m_config->Read( _T( "/GUI/ShowTooltips" ), 1l );
 }
 
-void Settings::SaveLayout( wxString& layout_name, wxString& layout )
+void Settings::RemoveLayouts()
 {
-	m_config->Write( _T( "/Layout/" ) + layout_name, layout );
-}
-
-wxString Settings::GetLayout( wxString& layout_name )
-{
-	return  m_config->Read( _T( "/Layout/" ) + layout_name, _T( "" ) );
-}
-
-wxArrayString Settings::GetLayoutList()
-{
-	return GetEntryList( _T( "/Layout" ) );
-}
-
-void Settings::SetDefaultLayout( const wxString& layout_name )
-{
-	m_config->Write( _T( "/GUI/DefaultLayout" ), layout_name );
-}
-
-wxString Settings::GetDefaultLayout()
-{
-	return m_config->Read( _T( "/GUI/DefaultLayout" ), _T( "" ) );
+	m_config->DeleteEntry(_T("/GUI/DefaultLayout"));
+	m_config->DeleteGroup(_T("/Layout"));
+	m_config->DeleteGroup(_T("/GUI/AUI"));
 }
 
 void Settings::SetColumnWidth( const wxString& list_name, const int column_ind, const int column_width )
@@ -2481,13 +2463,7 @@ wxArrayString Settings::GetPerspectives()
     wxArrayString list = GetGroupList( _T( "/GUI/AUI" ) );
     wxArrayString ret;
     for ( size_t i = 0; i < list.GetCount(); ++i) {
-    	if ( !list[i].EndsWith( BattlePostfix ) )
-            ret.Add( list[i] );
-        else  {
-            wxString stripped = list[i].Left( list[i].Len() - BattlePostfix.Len() );
-            if ( !PerspectiveExists( stripped ) )
-                ret.Add( stripped );
-        }
+        ret.Add( list[i] );
     }
     return ret;
 }

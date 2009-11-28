@@ -167,7 +167,7 @@ ChatPanel::ChatPanel( wxWindow* parent, Server& serv, wxImageList* imaglist  ):
 }
 
 
-ChatPanel::ChatPanel( wxWindow* parent, Battle& battle ):
+ChatPanel::ChatPanel( wxWindow* parent, Battle* battle ):
   wxPanel( parent, -1 ),
   m_show_nick_list( false ),
   m_nicklist( 0 ),
@@ -175,17 +175,20 @@ ChatPanel::ChatPanel( wxWindow* parent, Battle& battle ):
   m_channel( 0 ),
   m_server( 0 ),
   m_user( 0 ),
-  m_battle( &battle ),
+  m_battle( battle ),
   m_type( CPT_Battle ),
   m_popup_menu( 0 ),
   m_chat_log(sett().GetDefaultServer(), _T( "_BATTLE_" ) + wxDateTime::Now().Format( _T( "%Y_%m_%d__%H_%M_%S" ) )),
   m_disable_append( false )
 {
 	wxLogDebugFunc( _T( "wxWindow* parent, Battle& battle" ) );
-	for (unsigned int i = 0; i < battle.GetNumUsers();++i)
+	if ( m_battle )
+	{
+		for (unsigned int i = 0; i < m_battle->GetNumUsers();++i)
     {
-       textcompletiondatabase.Insert_Mapping( battle.GetUser(i).GetNick(), battle.GetUser(i).GetNick() );
+       textcompletiondatabase.Insert_Mapping( m_battle->GetUser(i).GetNick(), m_battle->GetUser(i).GetNick() );
     }
+	}
 	CreateControls( );
 	m_chatlog_text->Connect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( ChatPanel::OnMouseDown ), 0, this );
 
@@ -988,14 +991,14 @@ void ChatPanel::OnUserDisconnected()
 {
   // change the image of the tab to show new events
   SetIconHighlight( highlight_join_leave );
-	OutputLine( _T( " ** User is now offline." ), sett().GetChatColorJoinPart(), sett().GetChatFont() );
+	OutputLine( _( " ** User is now offline." ), sett().GetChatColorJoinPart(), sett().GetChatFont() );
 }
 
 void ChatPanel::OnUserConnected()
 {
   // change the image of the tab to show new events
   SetIconHighlight( highlight_join_leave );
-	OutputLine( _T( " ** User just got online." ), sett().GetChatColorJoinPart(), sett().GetChatFont() );
+	OutputLine( _( " ** User just got online." ), sett().GetChatColorJoinPart(), sett().GetChatFont() );
 }
 
 
@@ -1123,4 +1126,21 @@ void ChatPanel::SetIconHighlight( HighlightType highlight )
 void ChatPanel::OnMenuItem( wxCommandEvent& event )
 {
     m_popup_menu->OnMenuItem( event );
+}
+
+void ChatPanel::SetBattle( Battle* battle )
+{
+	if ( m_battle != battle )
+	{
+		if ( m_battle ) OutputLine( _( " ** Left Battle." ), sett().GetChatColorNotification(), sett().GetChatFont() );
+		if ( battle ) OutputLine( _( " ** Joined Battle." ), sett().GetChatColorNotification(), sett().GetChatFont() );
+	}
+	m_battle = battle;
+	if ( m_battle )
+	{
+		for (unsigned int i = 0; i < m_battle->GetNumUsers();++i)
+    {
+       textcompletiondatabase.Insert_Mapping( m_battle->GetUser(i).GetNick(), m_battle->GetUser(i).GetNick() );
+    }
+	}
 }

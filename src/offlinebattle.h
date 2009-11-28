@@ -12,6 +12,7 @@ class OfflineBattle : public IBattle
 			OfflineBattle& operator = ( const OfflineBattle&  );
 			~OfflineBattle (){};
 			User& GetMe() { return m_me; }
+            const User& GetMe() const { return m_me; }
 			bool IsFounderMe() { return true; }
 			void StartSpring();
 

@@ -483,8 +483,8 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 									int optionmapindex = battle.CustomBattleOptions().GetAIOptionIndex( user.GetNick() );
 									if ( optionmapindex > 0 )
 									{
-										OptionsWrapper::wxStringTripleVec optlistMod = battle.CustomBattleOptions().getOptions( (OptionsWrapper::GameOption)optionmapindex );
-										for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistMod.begin(); it != optlistMod.end(); ++it)
+										OptionsWrapper::wxStringTripleVec optlistMod_ = battle.CustomBattleOptions().getOptions( (OptionsWrapper::GameOption)optionmapindex );
+										for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistMod_.begin(); it != optlistMod_.end(); ++it)
 										{
 												tdf.Append(it->first,it->second.second);
 										}
@@ -534,7 +534,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 							else if ( ( startpostype == IBattle::ST_Fixed ) || ( startpostype == IBattle::ST_Random ) )
 							{
 									int teamnumber = teams_to_sorted_teams[status.team];
-									if ( teamnumber < remap_positions.size() ) // don't overflow
+									if ( teamnumber < int(remap_positions.size()) ) // don't overflow
 									{
 										StartPos position = remap_positions[teamnumber];
 										tdf.Append(_T("StartPosX"), position.x );

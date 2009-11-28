@@ -23,7 +23,7 @@ class UpdaterPanel : public wxPanel {
             ID_BUT_CHANGELOG = wxID_HIGHEST
         };
 
-        void OnChangelog( wxCommandEvent& event )
+        void OnChangelog( wxCommandEvent&  )
         {
             OpenWebBrowser( _T("http://springlobby.info/embedded/springlobby/index.html") );
         }
@@ -91,7 +91,7 @@ END_EVENT_TABLE()
   *
   * @todo: document this function
   */
-void UpdaterMainwindow::OnClose(wxCloseEvent& evt)
+void UpdaterMainwindow::OnClose(wxCloseEvent&)
 {
     if ( timedMessageBox( SL_MAIN_ICON, _("Closing this window will abort the update, you may end up with a broken client.\nAbort?"), _("Warning"), 4000, wxYES_NO | wxICON_WARNING )
                         == wxYES )

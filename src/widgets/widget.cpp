@@ -70,8 +70,8 @@ bool Widget::GetImageInfos()
 
                 wxXmlNode* item = node->GetChildren();
                 while( item ) {
-                    wxString name = item->GetName();
-                    if ( name == _T("Url") ) {
+                    wxString item_name = item->GetName();
+                    if ( item_name == _T("Url") ) {
                         file.url = item->GetNodeContent();
                     }
                     item = item->GetNext();
@@ -164,14 +164,14 @@ bool Widget::GetFileInfos()
 
                 wxXmlNode* item = node->GetChildren();
                 while( item ) {
-                    wxString name = item->GetName();
-                    if ( name == _T("Url") ) {
+                    wxString item_name = item->GetName();
+                    if ( item_name == _T("Url") ) {
                         file.url = item->GetNodeContent();
                     }
-                    else if ( name == _T("MD5") ) {
+                    else if ( item_name == _T("MD5") ) {
                         file.md5 = item->GetNodeContent();
                     }
-                    else if ( name == _T("LocalPath") ) {
+                    else if ( item_name == _T("LocalPath") ) {
                         file.local_path = item->GetNodeContent();
                         file_present_count += usync().FileExists( file.local_path );
                     }

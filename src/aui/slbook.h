@@ -22,7 +22,6 @@ class SLNotebook : public wxAuiNotebook {
 
         wxString SavePerspective();
         bool LoadPerspective(const wxString& layout);
-        wxString GetName() { return m_name; }
 
         /** \brief call fitinside for each child page
             useful after loading perspectives, since that does not generate OnSize events
@@ -31,7 +30,6 @@ class SLNotebook : public wxAuiNotebook {
         void FitChildPages();
 
     protected:
-        wxString m_name;
         bool m_autosave_prespective;
 
 };
@@ -56,7 +54,7 @@ class SLChatNotebook : public SLNotebook {
             ParentType;
 
         //prohibit adding other panels
-        bool AddPage(wxWindow* page, const wxString& caption, bool select = false, const wxBitmap& bitmap = wxNullBitmap) {return false;}
+        bool AddPage(wxWindow* , const wxString& , bool , const wxBitmap& );
         void DeleteChatPage( size_t i );
 
         ChatPanelMenu* m_ch_menu;

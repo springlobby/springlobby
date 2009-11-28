@@ -245,8 +245,8 @@ wxWindowUpdateLocker noUpdates(m_user_list);
     m_user_list->DeleteAllItems();
   } else {
     for ( unsigned int i = 0; i < del.Count(); i++ ) {
-      long item = m_user_list->FindItem(-1, del[i]);
-      RemoveUserFromList(item);
+      long item1 = m_user_list->FindItem(-1, del[i]);
+      RemoveUserFromList(item1);
     }
   }
 
@@ -266,9 +266,9 @@ wxWindowUpdateLocker noUpdates(m_user_list);
   Sort();
 
   for ( unsigned int i = 0; i < sel.Count(); i++ ) {
-    long item = m_user_list->FindItem(-1, sel[i]);
-    if ( item != -1 )
-      m_user_list->SetItemState(item, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
+    long item1 = m_user_list->FindItem(-1, sel[i]);
+    if ( item1 != -1 )
+      m_user_list->SetItemState(item1, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
   }
 
 }

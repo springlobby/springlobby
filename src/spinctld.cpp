@@ -219,8 +219,8 @@ wxSpinCtrlDbl::~wxSpinCtrlDbl()
     m_spinButton = NULL;
 }
 
-#define wxSPINCTRLDBL_SPIN_WIDTH  15
-#define wxSPINCTRLDBL_SPIN_HEIGHT 22
+const int wxSPINCTRLDBL_SPIN_WIDTH  = 15;
+const int wxSPINCTRLDBL_SPIN_HEIGHT = 22;
 
 void wxSpinCtrlDbl::DoSetSize(int x, int y, int width, int height, int sizeFlags)
 {

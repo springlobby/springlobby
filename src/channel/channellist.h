@@ -20,8 +20,8 @@ class ChannelList
     void RemoveChannel( const wxString& name );
     Channel& GetChannel( const wxString& name );
     Channel& GetChannel( channel_map_t::size_type index );
-    bool ChannelExists( const wxString& name );
-    channel_map_t::size_type GetNumChannels();
+    bool ChannelExists( const wxString& name ) const;
+    channel_map_t::size_type GetNumChannels() const;
 
   private:
     channel_map_t m_chans;

@@ -603,25 +603,25 @@ TimedMessageBox::~TimedMessageBox()
 {
 }
 
-void TimedMessageBox::OnOptionsNo(wxCommandEvent& event)
+void TimedMessageBox::OnOptionsNo(wxCommandEvent& )
 {
    EndModal(wxID_NO);
 }
 
-void TimedMessageBox::OnUpdate( wxTimerEvent& evt )
+void TimedMessageBox::OnUpdate( wxTimerEvent&  )
 {
     m_display_hits++;
     int remainder = ( m_delay - ( m_display_hits * m_update_interval ) ) / 1000;
     m_delay_notif->SetLabel( wxString::Format( _("Please standby %d seconds"), remainder ) );
 }
 
-void TimedMessageBox::OnClose( wxCloseEvent& evt )
+void TimedMessageBox::OnClose( wxCloseEvent&  )
 {
     if ( !m_delay_timer.IsRunning() )
         Close();
 }
 
-void TimedMessageBox::OnUnlock( wxTimerEvent& evt )
+void TimedMessageBox::OnUnlock( wxTimerEvent&  )
 {
     m_delay_sizer->Show( false );
     sizerBtn->Show( true );

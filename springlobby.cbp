@@ -12,9 +12,12 @@
 				<Option object_output="obj/GNU/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters="-cl -nc" />
+				<Option parameters="-cl -nc -f $HOME/.springlobby/testing.conf" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
+					<Add option="-Wshadow" />
+					<Add option="-Winit-self" />
+					<Add option="-Wextra" />
 					<Add option="-Wall" />
 					<Add option="-g" />
 					<Add option="`wx-config --cflags`" />
@@ -449,8 +452,6 @@
 		<Unit filename="src/ui.h" />
 		<Unit filename="src/uiutils.cpp" />
 		<Unit filename="src/uiutils.h" />
-		<Unit filename="src/unitsyncthread.cpp" />
-		<Unit filename="src/unitsyncthread.h" />
 		<Unit filename="src/updater/updater.cpp" />
 		<Unit filename="src/updater/updater.h" />
 		<Unit filename="src/updater/updatermainwindow.cpp" />
