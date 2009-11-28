@@ -292,6 +292,8 @@ int NickListCtrl::GetItemColumnImage( long item, long column ) const
 
 int NickListCtrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir )
 {
+    if ( ! ( u1 && u2 ) )
+        return 0;
 	switch ( col ) {
 		case 0:
 			return dir * CompareUserStatus( u1, u2 );
