@@ -1,13 +1,6 @@
 .gitignore
-Makefile.in
-aclocal.m4
-autom4te.cache
-autotools-aux
 build-*
 build
-config.h.in
-configure
-configure.ac
 bin
 obj
 springlobby.layout
@@ -23,14 +16,11 @@ rpm/.gitignore
 *.ncb
 *.o
 po/*
-.deps/*
 Makefile
 Options.fbp
 Updater.fbp
 *.diff
 config.h
-config.log
-config.status
 doc/html/
 doc/*
 formbuilder.cpp
@@ -38,7 +28,6 @@ formbuilder.h
 options.xrc
 patch0.patch
 remrampatch.diff
-revision.cpp
 springlobby
 springsettings
 src/images/logo_xmas.svg
@@ -47,7 +36,6 @@ src/images/updater/
 src/iunitsyncmap.cpp
 src/sha1.c
 src/sha1.h
-stamp-h1
 test.txt
 test/*
 src/images/updater/*

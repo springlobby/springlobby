@@ -295,8 +295,8 @@ void Ui::DownloadMap( const wxString& hash, const wxString& name )
 #ifndef NO_TORRENT_SYSTEM
     DownloadFileP2P( hash, name );
 #else
-		wxString newname = name;
-		newname.Replace( _T(" "), _T("+") );
+    wxString newname = name;
+    newname.Replace( _T(" "), _T("+") );
     wxString url = _T(" http://spring.jobjol.nl/search_result.php?search_cat=1&select_select=select_file_subject&Submit=Search&search=") + newname;
     OpenWebBrowser ( url );
 #endif
@@ -308,8 +308,8 @@ void Ui::DownloadMod( const wxString& hash, const wxString& name )
 #ifndef NO_TORRENT_SYSTEM
     DownloadFileP2P( hash, name );
 #else
-		wxString newname = name;
-		newname.Replace( _T(" "), _T("+") );
+    wxString newname = name;
+    newname.Replace( _T(" "), _T("+") );
     wxString url = _T(" http://spring.jobjol.nl/search_result.php?search_cat=1&select_select=select_file_subject&Submit=Search&search=") + newname;
     OpenWebBrowser ( url );
 #endif

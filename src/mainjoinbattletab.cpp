@@ -205,11 +205,6 @@ void MainJoinBattleTab::PreSwitchBattlePerspective( )
     ui().mw().SavePerspectives(  );
 }
 
-bool MainJoinBattleTab::UseBattlePerspective()
-{
-    return m_tabs->GetPageCount() > 1;
-}
-
 void MainJoinBattleTab::FocusBattleRoomTab()
 {
 	m_tabs->SetSelection( 0 );

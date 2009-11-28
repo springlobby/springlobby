@@ -20,12 +20,14 @@ SET( wxWidgets_INCLUDE_DIRS /var/lib/buildbot/lib/mingw/wx/2.8/include/wx-2.8 /v
 SET( wxWidgets_LIB_DIR /var/lib/buildbot/lib/mingw/wx/2.8/lib )
 SET( wxWidgets_CONFIGURATION mswu )
 SET( CMAKE_VERBOSE_MAKEFILE ON )
-SET( Boost_LIBRARIES boost_thread-mt boost_filesystem-mt boost_date_time-mt )
-SET( boost_LIB_DIR /var/lib/buildbot/lib/mingw/lib )
-SET( boost_INCLUDE_DIR /var/lib/buildbot/lib/mingw/include )
 SET( sdl_INCLUDE_DIR /var/lib/buildbot/lib/mingw/include/SDL )
 SET( wxWidgets_RC_DIR /var/lib/buildbot/lib/mingw/wx/2.8/include/wx-2.8 )
 
+SET( Boost_LIBRARIES libboost_thread-gcc42-mt-d-1_41.a boost_filesystem-gcc42-mt-d-1_41 boost_date_time-gcc42-mt-d-1_41 boost_system-gcc42-mt-d-1_41 )
+SET( boost_LIB_DIR /var/lib/buildbot/lib/mingw/lib )
+SET( boost_INCLUDE_DIR /var/lib/buildbot/lib/mingw/include )
+link_directories( /var/lib/buildbot/lib/mingw/lib )
+INCLUDE_DIRECTORIES(/var/lib/buildbot/lib/mingw/include /var/lib/buildbot/lib/mingw/include/zlib/ )
 
 ADD_DEFINITIONS( -DWXUSINGDLL -D__WXMSW__)
 

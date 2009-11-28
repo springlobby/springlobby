@@ -166,8 +166,7 @@ void BattleroomListCtrl::SetBattle( IBattle* battle )
 		delete side;
 		Disconnect( BRLIST_SIDE + i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnSideSelect ) );
 	}
-	side_vector.clear();
-	if ( m_battle )
+	if ( m_battle && m_sides )
 	{
 		try
 		{
@@ -728,7 +727,7 @@ void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint& p
         switch (column)
         {
         case 0: // is bot?
-            m_tiptext = _("");
+            m_tiptext = _T("");
 
             if ( user.BattleStatus().IsBot() )
                 m_tiptext += _("AI (bot)\n");

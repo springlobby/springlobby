@@ -79,7 +79,6 @@ class MainWindow : public wxFrame
     void OnMenuSaveLayout( wxCommandEvent& event );
     void OnMenuLoadLayout( wxCommandEvent& event );
     void OnMenuResetLayout( wxCommandEvent& event );
-    void OnMenuDefaultLayout( wxCommandEvent& event );
     void OnUnitSyncReload( wxCommandEvent& event );
     void OnMenuStartTorrent( wxCommandEvent& event );
     void OnMenuStopTorrent( wxCommandEvent& event );
@@ -96,8 +95,6 @@ class MainWindow : public wxFrame
     void OnChannelList( const wxString& channel, const int& numusers, const wxString& topic );
     void OnChannelListStart( );
     void OnClose( wxCloseEvent& evt );
-
-
 
     void OnTabsChanged( wxAuiNotebookEvent& event );
     MainChatTab& GetChatTab();
@@ -149,7 +146,7 @@ class MainWindow : public wxFrame
     SavegameTab* m_savegame_tab;
 
     wxBitmap GetTabIcon( const unsigned char* data, size_t size  );
-    wxString AddPerspectivePostfix( const wxString& pers_name );
+
 
     wxLogWindow* m_log_win;
     wxLogChain* m_log_chain;
@@ -206,8 +203,8 @@ class MainWindow : public wxFrame
         static const unsigned int PAGE_LIST    = 1;
         static const unsigned int PAGE_JOIN    = 2;
         static const unsigned int PAGE_SINGLE  = 3;
-        static const unsigned int PAGE_REPLAY  = 4;
-        static const unsigned int PAGE_SAVEGAME = 5;
+        static const unsigned int PAGE_REPLAY  = 5;
+        static const unsigned int PAGE_SAVEGAME = 4;
 
         #ifndef NO_TORRENT_SYSTEM
         static const unsigned int PAGE_TORRENT = 6;
