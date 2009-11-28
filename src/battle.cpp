@@ -231,11 +231,25 @@ void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 {
     if ( IsFounderMe() )
     {
-        if ( ( &user != &GetMe() ) && !status.IsBot() && ( m_opts.rankneeded > UserStatus::RANK_1 ) && ( user.GetStatus().rank < m_opts.rankneeded ))
-        {
-						DoAction( _T("Rank limit autospec: ") + user.GetNick() );
-						ForceSpectator( user, true );
-        }
+			if ( ( &user != &GetMe() ) && !status.IsBot() && ( m_opts.rankneeded > UserStatus::RANK_1 ) && ( user.GetStatus().rank < m_opts.rankneeded ))
+			{
+					DoAction( _T("Rank limit autospec: ") + user.GetNick() );
+					ForceSpectator( user, true );
+			}
+			UserBattleStatus previousstatus = user.BattleStatus();
+			if ( m_opts.lockexternalbalancechanges )
+			{
+				if ( previousstatus.team != status.team )
+				{
+					 ForceTeam( user, previousstatus.team );
+					 status.team = previousstatus.team;
+				}
+				if ( previousstatus.ally != status.ally )
+				{
+					ForceAlly( user, previousstatus.ally );
+					status.ally = previousstatus.ally;
+				}
+			}
     }
 		IBattle::OnUserBattleStatusUpdated( user, status );
     if ( status.handicap != 0 )
@@ -450,24 +464,31 @@ void Battle::ForceSide( User& user, int side )
 
 void Battle::ForceTeam( User& user, int team )
 {
+	IBattle::ForceTeam( user, team );
   m_serv.ForceTeam( m_opts.battleid, user, team );
 }
 
 
 void Battle::ForceAlly( User& user, int ally )
 {
+	IBattle::ForceAlly( user, ally );
   m_serv.ForceAlly( m_opts.battleid, user, ally );
 }
 
 
 void Battle::ForceColour( User& user, const wxColour& col )
 {
+		IBattle::ForceColour( user, col );
     m_serv.ForceColour( m_opts.battleid, user, col );
 }
 
 
 void Battle::ForceSpectator( User& user, bool spectator )
 {
+		if ( spectator || ( &user == &GetMe() ) || user.BattleStatus().IsBot() )
+		{
+			IBattle::ForceSpectator( user, spectator );
+		}
 		m_serv.ForceSpectator( m_opts.battleid, user, spectator );
 }
 

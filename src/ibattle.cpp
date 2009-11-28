@@ -288,17 +288,6 @@ void IBattle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 					}
 					SendHostInfo( HI_Spectators );
 			}
-			if ( m_opts.lockexternalbalancechanges )
-			{
-				if ( previousstatus.team != status.team )
-				{
-					 ForceTeam( user, previousstatus.team );
-				}
-				if ( previousstatus.ally != status.ally )
-				{
-					ForceAlly( user, previousstatus.ally );
-				}
-			}
 	}
 
 	if ( !status.IsBot() )
