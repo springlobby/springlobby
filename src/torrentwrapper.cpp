@@ -348,7 +348,7 @@ TorrentWrapper::TorrentWrapper():
     m_tracker_urls.Add( _T("tracker.caspring.org"));
     m_tracker_urls.Add( _T("tracker2.caspring.org"));
     m_tracker_urls.Add( _T("backup-tracker.licho.eu"));
-    m_torr = new libtorrent::session();
+    m_torr = new libtorrent::session( libtorrent::fingerprint("SL", 0, 0, 0, 0), 0 );
     try
     {
         m_torr->add_extension(&libtorrent::create_metadata_plugin);
