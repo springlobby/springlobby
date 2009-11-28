@@ -656,6 +656,13 @@ void MainWindow::OnChannelListStart( )
     m_channel_chooser->ClearChannels();
 }
 
+wxString MainWindow::AddPerspectivePostfix( const wxString& pers_name )
+{
+    wxString perspective_name  = pers_name.IsEmpty() ? sett().GetLastPerspectiveName() : pers_name;
+    if ( m_join_tab &&  m_join_tab->UseBattlePerspective() )
+        perspective_name += BattlePostfix;
+    return perspective_name;
+}
 
 void MainWindow::OnMenuSaveLayout( wxCommandEvent& /*unused*/ )
 {
@@ -692,9 +699,15 @@ const MainWindow::TabNames& MainWindow::GetTabNames()
     return m_tab_names;
 }
 
-void MainWindow::LoadPerspectives( const wxString& perspective_name )
+void MainWindow::LoadPerspectives( const wxString& pers_name )
 {
-    sett().SetLastPerspectiveName( perspective_name );
+    sett().SetLastPerspectiveName( pers_name );
+    wxString perspective_name = AddPerspectivePostfix( pers_name );
+
+    //loading a default layout on top of the more tabs of battle layout would prove fatal
+    if ( perspective_name.EndsWith( BattlePostfix ) && !sett().PerspectiveExists( perspective_name ) )
+        return;
+
 
     LoadNotebookPerspective( m_func_tabs, perspective_name );
     m_sp_tab->LoadPerspective( perspective_name );
@@ -707,9 +720,10 @@ void MainWindow::LoadPerspectives( const wxString& perspective_name )
 //    m_chat_tab->LoadPerspective( perspective_name );
 }
 
-void MainWindow::SavePerspectives( const wxString& perspective_name )
+void MainWindow::SavePerspectives( const wxString& pers_name )
 {
-    sett().SetLastPerspectiveName( perspective_name );
+    sett().SetLastPerspectiveName( pers_name );
+    wxString perspective_name = AddPerspectivePostfix( pers_name );
 
     m_sp_tab->SavePerspective( perspective_name );
     m_join_tab->SavePerspective( perspective_name );
