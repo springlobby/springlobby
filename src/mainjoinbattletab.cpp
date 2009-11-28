@@ -207,7 +207,7 @@ void MainJoinBattleTab::PreSwitchBattlePerspective( )
 
 bool MainJoinBattleTab::UseBattlePerspective()
 {
-    return m_tabs->GetPageCount() > 1;
+    return GetBattleRoomTab().GetBattle() != 0;
 }
 
 void MainJoinBattleTab::FocusBattleRoomTab()
