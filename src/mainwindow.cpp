@@ -704,11 +704,6 @@ void MainWindow::LoadPerspectives( const wxString& pers_name )
     sett().SetLastPerspectiveName( pers_name );
     wxString perspective_name = AddPerspectivePostfix( pers_name );
 
-    //loading a default layout on top of the more tabs of battle layout would prove fatal
-    if ( perspective_name.EndsWith( BattlePostfix ) && !sett().PerspectiveExists( perspective_name ) )
-        return;
-
-
     LoadNotebookPerspective( m_func_tabs, perspective_name );
     m_sp_tab->LoadPerspective( perspective_name );
     m_join_tab->LoadPerspective( perspective_name );

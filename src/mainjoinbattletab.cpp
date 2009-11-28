@@ -110,10 +110,12 @@ void MainJoinBattleTab::UpdateCurrentBattle( const wxString& Tag )
 
 void MainJoinBattleTab::JoinBattle( Battle& battle )
 {
+    PreSwitchBattlePerspective();
 	m_mm_opts_tab->SetBattle( &battle );
 	m_opts_tab->SetBattle( &battle );
 	m_map_tab->SetBattle( &battle );
 	m_battle_tab->SetBattle( &battle );
+	PostSwitchBattlePerspective();
 }
 
 
@@ -125,10 +127,12 @@ void MainJoinBattleTab::HostBattle( Battle& battle )
 
 void MainJoinBattleTab::LeaveCurrentBattle( bool called_from_join )
 {
+    PreSwitchBattlePerspective();
 	m_mm_opts_tab->SetBattle( 0 );
 	m_opts_tab->SetBattle( 0 );
 	m_map_tab->SetBattle( 0 );
 	m_battle_tab->SetBattle( 0 );
+	PostSwitchBattlePerspective();
 }
 
 
