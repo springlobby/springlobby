@@ -1912,31 +1912,6 @@ bool Settings::GetShowTooltips()
 	return m_config->Read( _T( "/GUI/ShowTooltips" ), 1l );
 }
 
-void Settings::SaveLayout( wxString& layout_name, wxString& layout )
-{
-	m_config->Write( _T( "/Layout/" ) + layout_name, layout );
-}
-
-wxString Settings::GetLayout( wxString& layout_name )
-{
-	return  m_config->Read( _T( "/Layout/" ) + layout_name, _T( "" ) );
-}
-
-wxArrayString Settings::GetLayoutList()
-{
-	return GetEntryList( _T( "/Layout" ) );
-}
-
-void Settings::SetDefaultLayout( const wxString& layout_name )
-{
-	m_config->Write( _T( "/GUI/DefaultLayout" ), layout_name );
-}
-
-wxString Settings::GetDefaultLayout()
-{
-	return m_config->Read( _T( "/GUI/DefaultLayout" ), _T( "" ) );
-}
-
 void Settings::RemoveLayouts()
 {
 	m_config->DeleteEntry(_T("/GUI/DefaultLayout"));

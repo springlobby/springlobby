@@ -660,10 +660,6 @@ class Settings
     wxArrayString GetPerspectives();
     bool PerspectiveExists( const wxString& perspective_name );
 
-    wxArrayString GetLayoutList();
-    void SetDefaultLayout( const wxString& layout_name );
-    wxString GetDefaultLayout();
-
     void RemoveLayouts();
 
     //! icons for mainwindow tabs??

@@ -79,7 +79,6 @@ class MainWindow : public wxFrame
     void OnMenuSaveLayout( wxCommandEvent& event );
     void OnMenuLoadLayout( wxCommandEvent& event );
     void OnMenuResetLayout( wxCommandEvent& event );
-    void OnMenuDefaultLayout( wxCommandEvent& event );
     void OnUnitSyncReload( wxCommandEvent& event );
     void OnMenuStartTorrent( wxCommandEvent& event );
     void OnMenuStopTorrent( wxCommandEvent& event );
@@ -96,8 +95,6 @@ class MainWindow : public wxFrame
     void OnChannelList( const wxString& channel, const int& numusers, const wxString& topic );
     void OnChannelListStart( );
     void OnClose( wxCloseEvent& evt );
-
-
 
     void OnTabsChanged( wxAuiNotebookEvent& event );
     MainChatTab& GetChatTab();

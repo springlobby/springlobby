@@ -97,7 +97,6 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU( MENU_STOP_TORRENT, MainWindow::OnMenuStopTorrent )
   EVT_MENU( MENU_SAVE_LAYOUT, MainWindow::OnMenuSaveLayout )
   EVT_MENU( MENU_LOAD_LAYOUT, MainWindow::OnMenuLoadLayout )
-  EVT_MENU( MENU_DEFAULT_LAYOUT, MainWindow::OnMenuDefaultLayout )
   EVT_MENU( MENU_RESET_LAYOUT, MainWindow::OnMenuResetLayout )
 //  EVT_MENU( MENU_SHOW_TOOLTIPS, MainWindow::OnShowToolTips )
   EVT_MENU( MENU_AUTOJOIN_CHANNELS, MainWindow::OnMenuAutojoinChannels )
@@ -682,15 +681,6 @@ void MainWindow::OnMenuLoadLayout( wxCommandEvent& /*unused*/ )
     LoadPerspectives( layouts[result] );
 }
 
-
-void MainWindow::OnMenuDefaultLayout( wxCommandEvent& /*unused*/ )
-{
-	wxArrayString layouts = sett().GetLayoutList();
-	unsigned int result = wxGetSingleChoiceIndex( _("Which profile do you want to be default?"), _("Layout manager"), layouts );
-	if ( result > layouts.GetCount() )
-        return;
-	sett().SetDefaultLayout( layouts[result] );
-}
 
 void MainWindow::OnMenuResetLayout( wxCommandEvent& /*event*/ )
 {
