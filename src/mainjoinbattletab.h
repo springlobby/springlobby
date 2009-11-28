@@ -41,6 +41,7 @@ class MainJoinBattleTab : public wxScrolledWindow
 
     void LoadPerspective( const wxString& perspective_name = wxEmptyString );
     void SavePerspective( const wxString& perspective_name = wxEmptyString );
+    bool UseBattlePerspective();
 
     void FocusBattleRoomTab();
 

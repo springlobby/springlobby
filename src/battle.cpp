@@ -91,11 +91,9 @@ void Battle::Leave()
 
 void Battle::OnRequestBattleStatus()
 {
-    int lowest = GetFreeTeamNum( true );
-
     UserBattleStatus& bs = m_serv.GetMe().BattleStatus();
-    bs.team = lowest;
-    bs.ally = lowest;
+    bs.team = GetFreeTeam( true );
+    bs.ally = GetFreeAlly( true );
     bs.spectator = false;
     bs.colour = sett().GetBattleLastColour();
     // theres some highly annoying bug with color changes on player join/leave.
@@ -218,25 +216,8 @@ User& Battle::OnUserAdded( User& user )
 
         if ( ( &user != &GetMe() ) && !user.BattleStatus().IsBot() && ( m_opts.rankneeded > UserStatus::RANK_1 ) && ( user.GetStatus().rank < m_opts.rankneeded ))
         {
-            switch ( m_opts.ranklimittype )
-            {
-            case rank_limit_none:
-                break;
-            case rank_limit_autospec:
-                if ( !user.BattleStatus().spectator )
-                {
-                    DoAction( _T("Rank limit autospec: ") + user.GetNick() );
-                    ForceSpectator( user, true );
-                }
-                break;
-            case rank_limit_autokick:
-                DoAction( _T("Rank limit autokick: ") + user.GetNick() );
-                KickPlayer( user );
-                return user;
-            default:
-                wxLogError( _T("unknown ranklimittype in Battle::OnUserAdded") );
-                break;
-            }
+					DoAction( _T("Rank limit autospec: ") + user.GetNick() );
+					ForceSpectator( user, true );
         }
 
         m_ah.OnUserAdded( user );
@@ -250,26 +231,25 @@ void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 {
     if ( IsFounderMe() )
     {
-        if ( ( &user != &GetMe() ) && !status.IsBot() && ( m_opts.rankneeded > UserStatus::RANK_1 ) && ( user.GetStatus().rank < m_opts.rankneeded ))
-        {
-            switch ( m_opts.ranklimittype )
-            {
-            case rank_limit_none:
-                break;
-            case rank_limit_autospec:
-                if ( !status.spectator )
-                {
-                    DoAction( _T("Rank limit autospec: ") + user.GetNick() );
-                    ForceSpectator( user, true );
-                }
-                break;
-            case rank_limit_autokick:
-                DoAction( _T("Rank limit autokick: ") + user.GetNick() );
-                KickPlayer( user );
-                break;
-            }
-        }
-
+			if ( ( &user != &GetMe() ) && !status.IsBot() && ( m_opts.rankneeded > UserStatus::RANK_1 ) && ( user.GetStatus().rank < m_opts.rankneeded ))
+			{
+					DoAction( _T("Rank limit autospec: ") + user.GetNick() );
+					ForceSpectator( user, true );
+			}
+			UserBattleStatus previousstatus = user.BattleStatus();
+			if ( m_opts.lockexternalbalancechanges )
+			{
+				if ( previousstatus.team != status.team )
+				{
+					 ForceTeam( user, previousstatus.team );
+					 status.team = previousstatus.team;
+				}
+				if ( previousstatus.ally != status.ally )
+				{
+					ForceAlly( user, previousstatus.ally );
+					status.ally = previousstatus.ally;
+				}
+			}
     }
 		IBattle::OnUserBattleStatusUpdated( user, status );
     if ( status.handicap != 0 )
@@ -484,7 +464,7 @@ void Battle::ForceSide( User& user, int side )
 
 void Battle::ForceTeam( User& user, int team )
 {
-  IBattle::ForceTeam( user, team );
+	IBattle::ForceTeam( user, team );
   m_serv.ForceTeam( m_opts.battleid, user, team );
 }
 
@@ -493,7 +473,6 @@ void Battle::ForceAlly( User& user, int ally )
 {
 	IBattle::ForceAlly( user, ally );
   m_serv.ForceAlly( m_opts.battleid, user, ally );
-
 }
 
 
@@ -506,8 +485,6 @@ void Battle::ForceColour( User& user, const wxColour& col )
 
 void Battle::ForceSpectator( User& user, bool spectator )
 {
-		if ( !spectator && ( !user.BattleStatus().IsBot() && ( &user != &GetMe() ) ) ) return;
-		IBattle::ForceSpectator( user, spectator );
 		m_serv.ForceSpectator( m_opts.battleid, user, spectator );
 }
 
