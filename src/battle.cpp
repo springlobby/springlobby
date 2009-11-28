@@ -485,10 +485,6 @@ void Battle::ForceColour( User& user, const wxColour& col )
 
 void Battle::ForceSpectator( User& user, bool spectator )
 {
-		if ( spectator || ( &user == &GetMe() ) || user.BattleStatus().IsBot() )
-		{
-			IBattle::ForceSpectator( user, spectator );
-		}
 		m_serv.ForceSpectator( m_opts.battleid, user, spectator );
 }
 
