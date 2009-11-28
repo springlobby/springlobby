@@ -696,10 +696,6 @@ void MainWindow::LoadPerspectives( const wxString& perspective_name )
 {
     sett().SetLastPerspectiveName( perspective_name );
 
-    //loading a default layout on top of the more tabs of battle layout would prove fatal
-    if ( !sett().PerspectiveExists( perspective_name ) )
-        return;
-
     LoadNotebookPerspective( m_func_tabs, perspective_name );
     m_sp_tab->LoadPerspective( perspective_name );
     m_join_tab->LoadPerspective( perspective_name );
