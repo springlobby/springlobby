@@ -22,7 +22,6 @@ class SLNotebook : public wxAuiNotebook {
 
         wxString SavePerspective();
         bool LoadPerspective(const wxString& layout);
-        wxString GetName() { return m_name; }
 
         /** \brief call fitinside for each child page
             useful after loading perspectives, since that does not generate OnSize events
@@ -31,7 +30,6 @@ class SLNotebook : public wxAuiNotebook {
         void FitChildPages();
 
     protected:
-        wxString m_name;
         bool m_autosave_prespective;
 
 };
