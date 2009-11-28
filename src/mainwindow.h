@@ -146,7 +146,7 @@ class MainWindow : public wxFrame
     SavegameTab* m_savegame_tab;
 
     wxBitmap GetTabIcon( const unsigned char* data, size_t size  );
-
+    wxString AddPerspectivePostfix( const wxString& pers_name );
 
     wxLogWindow* m_log_win;
     wxLogChain* m_log_chain;
