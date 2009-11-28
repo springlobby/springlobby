@@ -161,30 +161,32 @@ void BattleroomListCtrl::SetBattle( IBattle* battle )
 {
 	if ( battle == m_battle ) return;
 	m_battle = battle;
-	if ( m_battle )
-	{
-		try
-		{
-			side_vector.clear();
-			wxArrayString sides = usync().GetSides( m_battle->GetHostModName() );
-			for ( unsigned int i = 0; i < sides.GetCount(); i++ )
-			{
-				wxMenuItem* side = new wxMenuItem( m_sides, BRLIST_SIDE + i, sides[i], wxEmptyString, wxITEM_NORMAL );
-				m_sides->Append( side );
-				side_vector.push_back( side );
-				Connect( BRLIST_SIDE + i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnSideSelect ) );
-			}
-		} catch (...) {}
-	}
-	else
-	{
-		for ( unsigned int i = 0; i < side_vector.size(); i++ )
-		{
-			wxMenuItem* side = side_vector[i];
-			delete side;
-			Disconnect( BRLIST_SIDE + i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnSideSelect ) );
-		}
-		side_vector.clear();
+	if ( m_sides ) {
+        if ( m_battle )
+        {
+            try
+            {
+                side_vector.clear();
+                wxArrayString sides = usync().GetSides( m_battle->GetHostModName() );
+                for ( unsigned int i = 0; i < sides.GetCount(); i++ )
+                {
+                    wxMenuItem* side = new wxMenuItem( m_sides, BRLIST_SIDE + i, sides[i], wxEmptyString, wxITEM_NORMAL );
+                    m_sides->Append( side );
+                    side_vector.push_back( side );
+                    Connect( BRLIST_SIDE + i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnSideSelect ) );
+                }
+            } catch (...) {}
+        }
+        else
+        {
+            for ( unsigned int i = 0; i < side_vector.size(); i++ )
+            {
+                wxMenuItem* side = side_vector[i];
+                delete side;
+                Disconnect( BRLIST_SIDE + i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnSideSelect ) );
+            }
+            side_vector.clear();
+        }
 	}
 }
 
