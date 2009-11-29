@@ -452,21 +452,9 @@
 		<Unit filename="src/ui.h" />
 		<Unit filename="src/uiutils.cpp" />
 		<Unit filename="src/uiutils.h" />
-		<Unit filename="src/updater/updatehelper.cpp" />
-		<Unit filename="src/updater/updatehelper.h" />
-		<Unit filename="src/updater/updater.cpp">
-			<Option target="GNU | Profile" />
-			<Option target="Win32 | Debug" />
-			<Option target="Win32 | Profile" />
-			<Option target="GNU | Debug (wx29)" />
-		</Unit>
+		<Unit filename="src/updater/updater.cpp" />
 		<Unit filename="src/updater/updater.h" />
-		<Unit filename="src/updater/updatermainwindow.cpp">
-			<Option target="GNU | Profile" />
-			<Option target="Win32 | Debug" />
-			<Option target="Win32 | Profile" />
-			<Option target="GNU | Debug (wx29)" />
-		</Unit>
+		<Unit filename="src/updater/updatermainwindow.cpp" />
 		<Unit filename="src/updater/updatermainwindow.h" />
 		<Unit filename="src/updater/versionchecker.cpp" />
 		<Unit filename="src/updater/versionchecker.h" />
