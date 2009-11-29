@@ -254,7 +254,7 @@ bool WinExecuteAdmin( const wxString& command, const wxString& params )
 
       //on XP this would open the real runas dialog, which apparently is its own wonder
       //by default it has a checkbox enabled which makes sl unable to write to the working dir...
-      if ( IsUACenabled() )
+      if ( IsUACenabled() ) {
         if ( IsPreVistaWindows() )
             shExecInfo.lpVerb = _T("open");
         else
@@ -268,7 +268,7 @@ bool WinExecuteAdmin( const wxString& command, const wxString& params )
 #endif
       shExecInfo.lpDirectory = NULL;
       shExecInfo.hInstApp = NULL;
-
+      }
       return ShellExecuteEx(&shExecInfo);
 }
 #endif
