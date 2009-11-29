@@ -29,6 +29,7 @@ wxString GetSpringLobbyVersion();
 wxString GetExecutableFolder();
 wxString GetLibExtension();
 wxString GetHostCPUSpeed();
+void CheckForUpdates();
 
 #ifdef __WXMSW__
 bool IsPreVistaWindows();

@@ -513,7 +513,8 @@ void Ui::OnUpdate( int mselapsed )
             mw().ShowTab( sett().GetStartTab() );
         }
 #ifdef __WXMSW__
-        if ( sett().GetAutoUpdate() )Updater().CheckForUpdates();
+        if ( sett().GetAutoUpdate() )
+            CheckForUpdates();
 #endif
     }
 
