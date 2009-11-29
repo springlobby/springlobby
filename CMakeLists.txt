@@ -183,8 +183,19 @@ ENDIF( OPTION_TORRENT_SYSTEM )
 
 INCLUDE_DIRECTORIES(${springlobby_SOURCE_DIR} ${Settings_SOURCE_DIR} )
 
-SET(springlobbySrc
+SET( updaterSrc
 	src/updater/updatermainwindow.cpp
+	src/updater/updater.cpp
+	src/updater/updaterapp.cpp
+	src/settings.cpp
+	src/utils/customdialogs.cpp
+	src/utils/activitynotice.cpp
+	src/utils/platform.cpp
+	src/utils/misc.cpp
+	src/uiutils.cpp
+)
+
+SET(springlobbySrc
 	src/utils/activitynotice.cpp
 	src/chatpanelmenu.cpp
 	src/customizations.cpp
@@ -206,7 +217,6 @@ SET(springlobbySrc
 	src/utils/networkevents.cpp
 	src/utils/uievents.cpp
 	src/utils/md5.c
-	src/updater/updater.cpp
 	src/updater/versionchecker.cpp
 	src/Helper/TextCompletionDatabase.cpp
 	src/Helper/imageviewer.cpp
@@ -350,12 +360,15 @@ IF(WIN32)
 		FIND_PROGRAM(WINDRES NAMES windres i586-mingw32msvc-windres i686-mingw32-windres DOC "path to mingw's windres executable")
 		ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/sl_icon.o COMMAND ${WINDRES} -I${springlobby_SOURCE_DIR}/src -I${wxWidgets_RC_DIR} -i${springlobby_SOURCE_DIR}/src/springlobby.rc -o ${CMAKE_CURRENT_BINARY_DIR}/sl_icon.o)
 		ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/ss_icon.o COMMAND ${WINDRES} -I${springlobby_SOURCE_DIR}/src -I${wxWidgets_RC_DIR} -i${springlobby_SOURCE_DIR}/src/settings++/settings.rc -o ${CMAKE_CURRENT_BINARY_DIR}/ss_icon.o)
+		ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/su_icon.o COMMAND ${WINDRES} -I${springlobby_SOURCE_DIR}/src -I${wxWidgets_RC_DIR} -i${springlobby_SOURCE_DIR}/src/updater/updater.rc -o ${CMAKE_CURRENT_BINARY_DIR}/su_icon.o)
 		SET(springlobby_RC_FILE ${CMAKE_CURRENT_BINARY_DIR}/sl_icon.o )
 		SET(SpringSettings_RC_FILE ${CMAKE_CURRENT_BINARY_DIR}/ss_icon.o )
+		SET(updater_RC_FILE ${CMAKE_CURRENT_BINARY_DIR}/su_icon.o )
 	ENDIF(MINGW OR CMAKE_CROSSCOMPILING)
 
 	SET(springlobbySrc ${springlobbySrc} src/Helper/listctrl.cpp)
 	SET(springlobbySrc ${springlobbySrc} src/springlobby.rc)
+	SET(updaterSrc ${updaterSrc} src/updater/updater.rc)
 	SET(StandAloneSettings ${StandAloneSettings} src/settings++/settings.rc)
 ELSE(WIN32)
 # If we don't build for windows, include some source code checks as pre-build step.
@@ -384,9 +397,13 @@ cmake_policy(SET CMP0006 OLD)
 
 ADD_EXECUTABLE(springlobby WIN32 MACOSX_BUNDLE ${springlobbySrc} ${SettingsSrc} ${springlobby_RC_FILE})
 ADD_EXECUTABLE(springsettings WIN32 MACOSX_BUNDLE ${StandAloneSettings} ${SpringSettings_RC_FILE} ${SettingsSrc} ${SLSharedWithSettings} )
+IF(WIN32)
+	ADD_EXECUTABLE(springlobby_updater WIN32 MACOSX_BUNDLE ${updaterSrc}  ${SLSharedWithSettings} ${updater_RC_FILE})
+ENDIF(WIN32)
 
 # Here the wxWidgets Libraries are added. These are set for us by the FIND Script. If you need other Libraries, you can add them here as well.
 TARGET_LINK_LIBRARIES(springlobby ${wxWidgets_LIBRARIES})
+TARGET_LINK_LIBRARIES(springlobby_updater ${wxWidgets_LIBRARIES})
 TARGET_LINK_LIBRARIES(springsettings ${wxWidgets_LIBRARIES})
 IF(MINGW)
 	TARGET_LINK_LIBRARIES( springlobby iphlpapi )
@@ -394,7 +411,7 @@ IF(MINGW)
 ENDIF(MINGW)
 
 IF (WIN32)
-    install(TARGETS springlobby springsettings RUNTIME DESTINATION .)
+    install(TARGETS springlobby springlobby_updater springsettings RUNTIME DESTINATION .)
     install(FILES AUTHORS COPYING NEWS README THANKS  DESTINATION .)
 	install(DIRECTORY ${CMAKE_INSTALL_PREFIX}/locale DESTINATION .)
 ELSE (WIN32)
