@@ -960,7 +960,7 @@ wxString SpringUnitSync::GetArchivePath( const wxString& name )
 
 wxArrayString SpringUnitSync::GetScreenshotFilenames()
 {
-    wxSortedArrayString ret;
+    wxArrayString ret;
     if ( !IsLoaded() ) return ret;
 
     ret = susynclib().FindFilesVFS( _T("screenshots/*.*") );
@@ -968,6 +968,7 @@ wxArrayString SpringUnitSync::GetScreenshotFilenames()
             if ( ret[i] == ret[i+1] )
                 ret.RemoveAt( i+1 );
     }
+    ret.Sort();
     return ret;
 }
 

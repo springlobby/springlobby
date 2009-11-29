@@ -91,10 +91,10 @@ class UserMenu : public wxMenu
 
         void UpdateGroups()
         {
-            wxSortedArrayString groupNames = useractions().GetGroupNames();
+            wxArrayString groupNames = useractions().GetGroupNames();
             bool first = m_oldGroups.GetCount() == 0;
             if ( first )
-                m_oldGroups = groupNames;
+                m_oldGroups = wxArrayString( groupNames );
             for ( unsigned int i = 0; i < groupNames.GetCount(); ++i)
             {
                 if ( m_oldGroups.Index( groupNames[i] ) == wxNOT_FOUND || first )

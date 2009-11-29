@@ -71,7 +71,7 @@ void UserActions::Init()
     for ( int i = 0; i < m_numActions; ++i)
     {
         ActionType cur = (ActionType) (int) std::pow( 2.0, i);
-        wxSortedArrayString tmp;
+        wxArrayString tmp;
         for ( unsigned int j = 0; j < m_groupNames.GetCount(); ++j)
         {
             wxString name = m_groupNames[j];
@@ -84,10 +84,12 @@ void UserActions::Init()
                 }
             }
         }
+        tmp.Sort();
         m_actionsGroups[cur] = tmp;
     }
     m_actionsGroups[ActNone] = m_groupNames;
-
+    m_groupNames.Sort();
+    m_knownUsers.Sort();
 }
 
 void UserActions::UpdateUI()
@@ -113,7 +115,7 @@ void UserActions::UpdateUI()
     } catch(...){}
 }
 
-wxSortedArrayString UserActions::GetGroupNames() const
+wxArrayString UserActions::GetGroupNames() const
 {
     return m_groupNames;
 }
