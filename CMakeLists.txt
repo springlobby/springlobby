@@ -97,6 +97,11 @@ ENDIF(NOT CMAKE_CROSSCOMPILING)
 #----------------------------------------------------------------------------------------------------
 # SDL libs dependency check
 #----------------------------------------------------------------------------------------------------
+IF ( CMAKE_CROSSCOMPILING )
+	ADD_DEFINITIONS( -DDISABLE_SOUND )
+	SET( OPTION_SOUND
+	0 FORCE-CACHE BOOL )
+ELSE ( CMAKE_CROSSCOMPILING )
 IF ( OPTION_SOUND )
 
 	IF (CMAKE_CROSSCOMPILING OR NOT WIN32)
@@ -148,7 +153,7 @@ ELSE ( OPTION_SOUND )
     # Disable sound.
     ADD_DEFINITIONS( -DDISABLE_SOUND )
 ENDIF ( OPTION_SOUND )
-
+ENDIF( CMAKE_CROSSCOMPILING )
 
 #----------------------------------------------------------------------------------------------------
 # libtorrent-rasterbar dependency check

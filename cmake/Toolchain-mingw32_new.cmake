@@ -45,4 +45,3 @@ link_directories( /opt/mingw32/lib )
 INCLUDE_DIRECTORIES(/opt/mingw32/include  )
 
 ADD_DEFINITIONS( -DWXUSINGDLL -D__WXMSW__ -mthreads)
-
