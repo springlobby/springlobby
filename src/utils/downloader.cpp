@@ -12,6 +12,7 @@
 #include <wx/protocol/http.h>
 #include <wx/xml/xml.h>
 #include <wx/wfstream.h>
+#include <wx/filename.h>
 #include <wx/tokenzr.h>
 #include "customdialogs.h"
 #include "conversion.h"
@@ -117,14 +118,33 @@ wxArrayString getDownloadLinks( const wxString& name ) {
     wxbuf = wxString::  FromAscii( buf );
     wxMessageBox(wxString::Format(_T("Content size %d | Read %d bytes: %s"),content_length,socket->LastCount(),wxbuf.c_str()));
 
-    wxString t_begin = _T("<torrent>");
-    wxString t_end = _T("</torrent>");
-    wxString bin_torrent = wxbuf.SubString( wxbuf.Find( t_begin ) + t_begin.Len()  , wxbuf.Find( t_end )  );
-    bin_torrent = TowxString( wxBase64::Decode( bin_torrent ) );
-    wxMessageBox(bin_torrent);
+    wxString t_begin = _T("<torrentFileName>");
+    wxString t_end = _T("</torrentFileName>");
+    wxString bin_torrent = wxbuf.SubString( wxbuf.Find( t_begin ) + t_begin.Len()  , wxbuf.Find( t_end ) - 1 );//first char after t_begin to one before t_end
+    downloadFile( host, _T("PlasmaServer/Resources/") + bin_torrent, _T("/tmp/doofus.torrent") );
 
-    wxFileOutputStream fo ( _T("/tmp/dsd.torrent") );
-    fo .Write( (void*)bin_torrent.c_str(), bin_torrent.Len() );
-    fo.Close();
     return wxArrayString();
+}
+
+void downloadFile( const wxString& host, const wxString& remote_path, const wxString& local_dest )
+{
+    wxHTTP FileDownloading;
+    /// normal timeout is 10 minutes.. set to 10 secs.
+    FileDownloading.SetTimeout(10);
+    FileDownloading.Connect( host, 80);
+
+    wxInputStream* httpstream = FileDownloading.GetInputStream( _T("/") + remote_path );
+
+    if ( httpstream )
+    {
+          wxFileOutputStream outs( local_dest );
+          httpstream->Read(outs);
+          outs.Close();
+          delete httpstream;
+          httpstream = 0;
+          //download success
+    }
+    else {
+        //throw something
+    }
 }
