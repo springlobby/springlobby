@@ -20,7 +20,8 @@
 
 UserActions& useractions()
 {
-    static GlobalObjectHolder<UserActions> m_useractions;
+    static LineInfo<UserActions> m( AT );
+    static GlobalObjectHolder<UserActions,LineInfo<UserActions> > m_useractions( m );
     return m_useractions;
 }
 

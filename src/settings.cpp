@@ -50,7 +50,8 @@ const wxColour defaultHLcolor ( 255, 0, 0 );
 
 Settings& sett()
 {
-	static GlobalObjectHolder<Settings> m_sett;
+    static LineInfo<Settings> m( AT );
+	static GlobalObjectHolder<Settings, LineInfo<Settings> > m_sett( m );
 	return m_sett;
 }
 

@@ -56,7 +56,8 @@
 
 Ui& ui()
 {
-    static GlobalObjectHolder<Ui> m_ui;
+    static LineInfo<Ui> m( AT );
+    static GlobalObjectHolder<Ui,LineInfo<Ui> > m_ui( m );
     return m_ui;
 }
 

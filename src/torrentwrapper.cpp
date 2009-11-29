@@ -332,7 +332,8 @@ unsigned int TorrentTable::GetOpenLeechsCount()
 
 TorrentWrapper& torrent()
 {
-    static GlobalObjectHolder<TorrentWrapper> m_torr_wrap;
+    static LineInfo<TorrentWrapper> m( AT );
+    static GlobalObjectHolder<TorrentWrapper,LineInfo<TorrentWrapper> > m_torr_wrap( m );
     return m_torr_wrap;
 }
 

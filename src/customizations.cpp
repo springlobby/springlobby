@@ -90,7 +90,8 @@ bool Customizations::Init(const wxString& modname)
   */
 Customizations& SLcustomizations()
 {
-    static GlobalObjectHolder<Customizations> s_customizations;
+    static LineInfo<Customizations> m( AT );
+    static GlobalObjectHolder<Customizations, LineInfo<Customizations> > s_customizations( m );
     return s_customizations;
 }
 

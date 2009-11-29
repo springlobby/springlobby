@@ -40,8 +40,9 @@ const wxEventType UnitSyncAsyncOperationCompletedEvt = wxNewEventType();
 
 IUnitSync& usync()
 {
-  static GlobalObjectHolder<SpringUnitSync> m_sync;
-  return m_sync;
+    static LineInfo<SpringUnitSync> m( AT );
+    static GlobalObjectHolder<SpringUnitSync, LineInfo<SpringUnitSync> > m_sync( m );
+    return m_sync;
 }
 
 

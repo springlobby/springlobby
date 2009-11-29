@@ -23,7 +23,8 @@ END_EVENT_TABLE()
 
 UpdaterClass& Updater()
 {
-    static GlobalObjectHolder<UpdaterClass> m_upd;
+    static LineInfo<UpdaterClass> m( AT );
+    static GlobalObjectHolder<UpdaterClass,LineInfo<UpdaterClass> > m_upd( m );
     return m_upd;
 }
 
