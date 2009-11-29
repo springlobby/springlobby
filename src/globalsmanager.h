@@ -7,7 +7,6 @@
 #include <wx/log.h>
 #include "utils/conversion.h"
 
-#include <stdio.h>
 #define STRINGIFY(x) #x
 #define TOSTRING(x) STRINGIFY(x)
 #define AT __FILE__ ":" TOSTRING(__LINE__)
@@ -55,12 +54,15 @@ class GlobalObjectHolder: public IGlobalObjectHolder
     T *private_ptr;
     T *public_ptr;
     bool constructing;
+    static int count;
 public:
     GlobalObjectHolder(I i):
             private_ptr( NULL ),
             public_ptr( NULL ),
             constructing( true )
     {
+        GlobalObjectHolder<T,I>::count += 1;
+        assert( (GlobalObjectHolder<T,I>::count) == 1 );
         wxLogError( _T("GOBAL_LINE: ") + i.m ) ;
         if ( RegisterSelf() )
         {
@@ -90,7 +92,8 @@ public:
         return GetInstance();
     }
 };
-
+template<class T, class I >
+int GlobalObjectHolder<T,I>::count = 0;
 #endif // GLOBALSMANAGER_H
 
 /**
