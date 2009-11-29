@@ -52,7 +52,8 @@ END_EVENT_TABLE()
 
 UpdaterApp::UpdaterApp()
     : 	m_timer ( new wxTimer(this, TIMER_ID) ),
-    m_updater_window( 0 )
+    m_updater_window( 0 ),
+	m_version( _T("-1") )
 {
     SetAppName( _T("springlobby_updater") );
 }
@@ -85,11 +86,13 @@ bool UpdaterApp::OnInit()
 
     m_timer->Start( TIMER_INTERVAL );
 
-	wxString latestVersion = GetLatestVersion();
-	m_updater_window = new UpdaterMainwindow( latestVersion );
+	if( m_version == _T("-1") )
+		m_version = GetLatestVersion();
+	
+	m_updater_window = new UpdaterMainwindow( m_version );
 	m_updater_window->Show( true );
 	SetTopWindow( m_updater_window );
-	Updater().StartUpdate( latestVersion );
+	Updater().StartUpdate( m_version, m_exe_to_update );
 	return true;
 }
 
@@ -135,6 +138,8 @@ void UpdaterApp::OnInitCmdLine(wxCmdLineParser& parser)
     wxCmdLineEntryDesc cmdLineDesc[] =
     {
         { wxCMD_LINE_SWITCH, STR("h"), STR("help"), _("show this help message"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_OPTION_HELP },
+		{ wxCMD_LINE_OPTION, STR("f"), STR("target-exe"),  _("the SpringLobby executeable to be updated"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_OPTION_MANDATORY | wxCMD_LINE_NEEDS_SEPARATOR },
+		{ wxCMD_LINE_OPTION, STR("r"), STR("target-rev"),  _("the SpringLobby revision to update to"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_OPTION_MANDATORY | wxCMD_LINE_NEEDS_SEPARATOR },
         { wxCMD_LINE_NONE }//while this throws warnings, it is mandatory according to http://docs.wxwidgets.org/stable/wx_wxcmdlineparser.html
     };
 
@@ -147,9 +152,11 @@ void UpdaterApp::OnInitCmdLine(wxCmdLineParser& parser)
 //! @brief parses the command line and sets global app options like log verbosity or log target
 bool UpdaterApp::OnCmdLineParsed(wxCmdLineParser& parser)
 {
-  #if wxUSE_CMDLINE_PARSER
+	#if wxUSE_CMDLINE_PARSER
         if ( parser.Found(_T("help")) )
             return false; // not a syntax error, but program should stop if user asked for command line usage
+		if ( parser.Found(_T("target-exe"), &m_exe_to_update ) && parser.Found(_T("target-rev"),  &m_version) )
+			return true;
 	#endif
         return true;
 }

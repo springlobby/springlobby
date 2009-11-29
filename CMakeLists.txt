@@ -313,7 +313,7 @@ SET(springlobbySrc
 	src/globalsmanager.cpp
 	src/Helper/wxTranslationHelper.cpp
 	src/Helper/tasclientimport.cpp
-
+	src/updater/updatehelper.cpp
 )
 
 SET(SettingsSrc
@@ -352,6 +352,7 @@ SET(SLSharedWithSettings
 	src/utils/globalevents.cpp
 	src/mmoptionmodel.cpp
 	src/mmoptionswrapper.cpp
+	src/updater/updatehelper.cpp
 )
 
 # If we build for windows Systems, we also include the Resource-File containing the Manifest, Icon and other Resources.
@@ -399,12 +400,13 @@ ADD_EXECUTABLE(springlobby WIN32 MACOSX_BUNDLE ${springlobbySrc} ${SettingsSrc} 
 ADD_EXECUTABLE(springsettings WIN32 MACOSX_BUNDLE ${StandAloneSettings} ${SpringSettings_RC_FILE} ${SettingsSrc} ${SLSharedWithSettings} )
 IF(WIN32)
 	ADD_EXECUTABLE(springlobby_updater WIN32 MACOSX_BUNDLE ${updaterSrc}  ${SLSharedWithSettings} ${updater_RC_FILE})
+	TARGET_LINK_LIBRARIES(springlobby_updater ${wxWidgets_LIBRARIES})
 ENDIF(WIN32)
 
 # Here the wxWidgets Libraries are added. These are set for us by the FIND Script. If you need other Libraries, you can add them here as well.
 TARGET_LINK_LIBRARIES(springlobby ${wxWidgets_LIBRARIES})
-TARGET_LINK_LIBRARIES(springlobby_updater ${wxWidgets_LIBRARIES})
 TARGET_LINK_LIBRARIES(springsettings ${wxWidgets_LIBRARIES})
+
 IF(MINGW)
 	TARGET_LINK_LIBRARIES( springlobby iphlpapi )
 	TARGET_LINK_LIBRARIES( springsettings iphlpapi  )

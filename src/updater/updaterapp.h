@@ -29,6 +29,8 @@ class UpdaterApp : public wxApp
   protected:
 
     wxTimer* m_timer;
+	wxString m_exe_to_update;
+	wxString m_version;
 
     UpdaterMainwindow* m_updater_window;
 

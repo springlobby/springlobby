@@ -105,18 +105,6 @@ wxLogWindow* InitializeLoggingTargets( wxFrame* parent, bool console, bool showg
     return loggerwin;
 }
 
-
-
-wxString GetSpringLobbyVersion()
-{
-#ifndef AUX_VERSION
-    return (TowxString(VERSION)).BeforeFirst( _T(' ') );
-#else
-    return (TowxString(VERSION)).BeforeFirst( _T(' ') ) + TowxString(AUX_VERSION);
-#endif
-
-}
-
 wxString GetExecutableFolder()
 {
 	return wxStandardPathsBase::Get().GetExecutablePath().BeforeLast( wxFileName::GetPathSeparator() );
@@ -281,38 +269,3 @@ bool IsPreVistaWindows()
     return wxPlatformInfo().GetOSMajorVersion() < 6;
 }
 #endif
-
-void CheckForUpdates()
-{
-  wxString latestVersion = GetLatestVersion();
-
-  if (latestVersion == _T("-1"))
-  {
-    customMessageBoxNoModal(SL_MAIN_ICON, _("There was an error checking for the latest version.\nPlease try again later.\nIf the problem persists, please use Help->Report Bug to report this bug."), _("Error"));
-    return;
-  }
-  wxString myVersion = GetSpringLobbyVersion() ;
-
-  wxString msg = _("Your Version: ") + myVersion + _T("\n") + _("Latest Version: ") + latestVersion;
-  if ( !latestVersion.IsSameAs(myVersion, false) )
-  {
-      #ifdef __WXMSW__
-      int answer = customMessageBox(SL_MAIN_ICON, _("Your SpringLobby version is not up to date.\n\n") + msg + _("\n\nWould you like for me to autodownload the new version? Changes will take effect next you launch the lobby again."), _("Not up to date"), wxYES_NO);
-      if (answer == wxYES)
-      {
-          //start updater, exit SL
-
-//            bool result = WinExecuteAdmin( wxStandardPaths::Get().GetExecutablePath(), _T("-u") );
-//            if ( !result )
-//            {
-//            	customMessageBox(SL_MAIN_ICON, _("Manual update failed\n\nyou will be redirected to a web page with instructions and download link will be opened in your browser.") + msg, _("Updater error.") );
-//            	OpenWebBrowser( _T("http://springlobby.info/wiki/springlobby/Install#Windows-Binary") );
-//            	OpenWebBrowser( GetDownloadUrl() );
-//
-//            }
-      }
-    #else
-    customMessageBox(SL_MAIN_ICON, _("Your SpringLobby version is not up to date.\n\n") + msg, _("Not up to Date") );
-    #endif
-  }
-}
