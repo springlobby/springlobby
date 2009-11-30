@@ -12,6 +12,7 @@
 #include <wx/protocol/http.h>
 #include <wx/xml/xml.h>
 #include <wx/wfstream.h>
+#include <wx/sstream.h>
 #include <wx/filename.h>
 #include <wx/tokenzr.h>
 #include "customdialogs.h"
@@ -97,13 +98,15 @@ wxArrayString getDownloadLinks( const wxString& name ) {
 
 //    buf = wxString( buf, wxConvISO8859_1 );
     wxString wxbuf = wxString::  FromAscii( peek_buf );
+    //msgbox also serves as wait thingy for socket read it seems here, remove and be prepared for less stuff read...
     wxMessageBox(wxString::Format(_T("Read %d bytes: %s"),socket->LastCount(),wxbuf.c_str()));
+
     long content_length = 0;
     wxStringTokenizer toks ( wxbuf, _T("\n") );
     while( toks.HasMoreTokens() ) {
         wxString line = toks.GetNextToken();
         if ( line.StartsWith( _T("Content-Length") ) ) {
-            line = line.SubString( line.Last( wxChar(':') ) + 1, line.Last( wxChar('\n') ) ).Trim( false ).Trim( true );
+            line = line.Mid( line.Last( wxChar(':') ) + 1, line.Last( wxChar('\n') ) ).Trim( false ).Trim( true );
             line.ToLong( &content_length );
             assert( content_length >= 0 );
             break;
@@ -118,12 +121,49 @@ wxArrayString getDownloadLinks( const wxString& name ) {
     wxbuf = wxString::  FromAscii( buf );
     wxMessageBox(wxString::Format(_T("Content size %d | Read %d bytes: %s"),content_length,socket->LastCount(),wxbuf.c_str()));
 
-    wxString t_begin = _T("<torrentFileName>");
-    wxString t_end = _T("</torrentFileName>");
-    wxString bin_torrent = wxbuf.SubString( wxbuf.Find( t_begin ) + t_begin.Len()  , wxbuf.Find( t_end ) - 1 );//first char after t_begin to one before t_end
-    downloadFile( host, _T("PlasmaServer/Resources/") + bin_torrent, _T("/tmp/doofus.torrent") );
+    wxString t_begin = _T("<soap:Envelope");
+    wxString t_end = _T("</soap:Envelope>");
+    wxString xml_section = wxbuf.Mid( wxbuf.Find( t_begin ) );//first char after t_begin to one before t_end
 
-    return wxArrayString();
+    wxMessageBox(xml_section);
+    wxStringInputStream str_input( xml_section );
+    wxXmlDocument xml( str_input );
+    assert( xml.GetRoot() );
+    wxXmlNode *node = xml.GetRoot()->GetChildren();
+    assert( node );
+    wxArrayString webseeds;
+    node = node->GetChildren();
+    assert( node );
+    while ( node ) {
+        wxString node_name = node->GetName();
+        if ( node_name == _T("DownloadFileResponse") ) {
+            wxXmlNode* downloadFileResult = node->GetChildren();
+            assert( downloadFileResult );
+            wxString result = downloadFileResult->GetNodeContent();
+            //check result
+            wxXmlNode* links = downloadFileResult->GetNext();
+            assert( links );
+            wxXmlNode* url = links->GetChildren();
+            while ( url ) {
+                webseeds.Add( url->GetNodeContent() );
+                url = url->GetNext();
+            }
+            wxXmlNode* next = links->GetNext();
+            while ( next ) {
+                wxString next_name = next->GetName();
+                if ( next_name == _T("torrentFileName") ) {
+                    wxString tor_name = next->GetNodeContent();
+                    wxString dl_target = wxString::Format( _T("/tmp/%s"), tor_name.c_str() );
+                    downloadFile( host, _T("PlasmaServer/Resources/") + tor_name, dl_target );
+                    break;
+                }
+                next = next->GetNext();
+            }
+            break;
+        }
+        node = node->GetNext();
+    }
+    return webseeds;
 }
 
 void downloadFile( const wxString& host, const wxString& remote_path, const wxString& local_dest )
