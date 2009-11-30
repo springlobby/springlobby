@@ -163,6 +163,10 @@ wxArrayString getDownloadLinks( const wxString& name ) {
         }
         node = node->GetNext();
     }
+    wxString seeds;
+    for ( size_t i = 0; i < webseeds.Count(); ++i )
+        seeds += webseeds[i] + _T("\n");
+    wxMessageBox( seeds );
     return webseeds;
 }
 
