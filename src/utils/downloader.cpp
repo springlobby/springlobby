@@ -132,6 +132,8 @@ wxArrayString getDownloadLinks( const wxString& name ) {
     wxXmlNode *node = xml.GetRoot()->GetChildren();
     assert( node );
     wxArrayString webseeds;
+    wxArrayString dependencies;
+    wxString resourceType ( _T("unknown") );
     node = node->GetChildren();
     assert( node );
     while ( node ) {
@@ -155,12 +157,21 @@ wxArrayString getDownloadLinks( const wxString& name ) {
                     wxString tor_name = next->GetNodeContent();
                     wxString dl_target = wxString::Format( _T("/tmp/%s"), tor_name.c_str() );
                     downloadFile( host, _T("PlasmaServer/Resources/") + tor_name, dl_target );
-                    break;
+                }
+                else if ( next_name == _T("dependencies") ) {
+                    wxXmlNode* deps = next->GetChildren();
+                    while ( deps ) {
+                        dependencies.Add( deps->GetNodeContent() );
+                        deps = deps->GetNext();
+                    }
+                }
+                else if ( next_name == _T("resourceType") ) {
+                    resourceType = next->GetNodeContent();
                 }
                 next = next->GetNext();
             }
             break;
-        }
+        } // end section <DownloadFileResponse/>
         node = node->GetNext();
     }
     wxString seeds;
