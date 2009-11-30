@@ -281,11 +281,6 @@ bool Ui::IsSpringRunning() const
 void Ui::Quit()
 {
     Disconnect();
-
-    #ifndef NO_TORRENT_SYSTEM
-        torrent().DisconnectFromP2PSystem();// Cant hurt to disconnect unconditionally.
-    #endif
-
     if ( m_con_win != 0 )
         m_con_win->Close();
 }
@@ -319,30 +314,30 @@ void Ui::DownloadMod( const wxString& hash, const wxString& name )
 
 void Ui::DownloadFileP2P( const wxString& hash, const wxString& name )
 {
-
     getDownloadLinks( name );
 #ifndef NO_TORRENT_SYSTEM
-    if ( !torrent().IsConnectedToP2PSystem() ){
-        wxArrayString hashesToResume = sett().GetTorrentListToResume();
-        hashesToResume.Add( hash );
-        sett().SetTorrentListToResume( hashesToResume );
-        torrent().ConnectToP2PSystem();
-    }
-    else {
-
-    //we need a way to have the request happen only after connect is complete
-        TorrentWrapper::DownloadRequestStatus status;
-        if ( !hash.IsEmpty() ) {
-             status = torrent().RequestFileByHash( hash );
-        }
-        else if ( !name.IsEmpty() )
-            status = torrent().RequestFileByName( name );
+//    if ( !torrent().IsConnectedToP2PSystem() )
+//    {
+//        wxArrayString hashesToResume = sett().GetTorrentListToResume();
+//        hashesToResume.Add( hash );
+//        sett().SetTorrentListToResume( hashesToResume );
+//        torrent().ConnectToP2PSystem();
+//    }
+//    else {
+//
+//    //we need a way to have the request happen only after connect is complete
+//        TorrentWrapper::DownloadRequestStatus status;
+//        if ( !hash.IsEmpty() ) {
+//             status = torrent().RequestFileByHash( hash );
+//        }
+//        else if ( !name.IsEmpty() )
+//            status = torrent().RequestFileByName( name );
 
 //!TODO: put some meaningful err msg here
 //        if ( status != TorrentWrapper::success ){
 //            customMessageBoxNoModal( SL_MAIN_ICON, _(""), _("") );
 //        }
-    }
+//    }
 #endif
 }
 
@@ -524,12 +519,9 @@ void Ui::OnUpdate( int mselapsed )
 #ifndef NO_TORRENT_SYSTEM
     if (m_upd_counter_torrent % 20 == 0 )
     {
-        if ( sett().GetTorrentSystemAutoStartMode() == 1 && !torrent().IsConnectedToP2PSystem() ) torrent().ConnectToP2PSystem();
-        else if ( GetServerStatus() && GetServer().IsOnline() && !torrent().IsConnectedToP2PSystem() && sett().GetTorrentSystemAutoStartMode() == 0 ) torrent().ConnectToP2PSystem();
-        if ( ( !GetServerStatus() || !GetServer().IsOnline() ) && torrent().IsConnectedToP2PSystem() && sett().GetTorrentSystemAutoStartMode() == 0 ) torrent().DisconnectFromP2PSystem();
         mw().GetTorrentTab().OnUpdate();
     }
-    torrent().UpdateFromTimer( mselapsed );
+//    torrent().UpdateFromTimer( mselapsed );
     m_upd_counter_torrent++;
 #endif
 }

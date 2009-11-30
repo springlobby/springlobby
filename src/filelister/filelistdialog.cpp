@@ -142,8 +142,9 @@ void FileListDialog::OnDownload( wxCommandEvent& /*unused*/ )
     for ( HashVector::const_iterator it = hashs.begin(); it != hashs.end(); ++it)
     {
         wxString hash = *it;
-        if (torrent().RequestFileByHash(hash) != TorrentWrapper::success)
-            wxLogError(_("unknown hash ") + hash );
+//        if (torrent().RequestFileByHash(hash) != TorrentWrapper::success)
+//            wxLogError(_("unknown hash ") + hash );
+        assert( false );
 
     }
 

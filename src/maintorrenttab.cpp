@@ -122,13 +122,13 @@ void MainTorrentTab::OnDLWidgets( wxCommandEvent& /*unused*/ )
 void MainTorrentTab::OnUpdate()
 {
 
-	if ( torrent().IsConnectedToP2PSystem() )
-	{
-		m_but_cancel->Enable();
-		m_but_publish->Enable();
-		m_but_download->Enable();
-	}
-	else
+//	if ( torrent().IsConnectedToP2PSystem() )
+//	{
+//		m_but_cancel->Enable();
+//		m_but_publish->Enable();
+//		m_but_download->Enable();
+//	}
+//	else
 	{
 		m_but_cancel->Disable();
 		m_but_publish->Disable();
@@ -169,7 +169,6 @@ void MainTorrentTab::OnUpdate()
 
     Layout();
     m_torrent_list->RestoreSelection();
-
 }
 
 

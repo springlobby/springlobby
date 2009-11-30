@@ -198,10 +198,6 @@ bool SpringLobbyApp::OnInit()
 
     ui().FirstRunWelcome();
 
-#ifndef NO_TORRENT_SYSTEM
-    if( sett().GetTorrentSystemAutoStartMode() == 1 ) torrent().ConnectToP2PSystem();
-#endif
-
     //starts the replay loading process in a thread
     ui().mw().GetReplayTab().ReloadList();
     ui().mw().GetSavegameTab().ReloadList();

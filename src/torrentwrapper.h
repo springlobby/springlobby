@@ -205,10 +205,6 @@ public:
     };
 
     /// gui interface
-
-    bool ConnectToP2PSystem(const unsigned int tracker_no = 0);
-    void DisconnectFromP2PSystem();
-    bool IsConnectedToP2PSystem();
     bool IsFileInSystem( const wxString& hash );
     bool RemoveTorrentByHash( const wxString& hash );
 	P2P::FileStatus GetTorrentStatusByHash(const wxString& hash);
@@ -221,36 +217,32 @@ public:
     DownloadRequestStatus RequestFileByHash( const wxString& hash );
     DownloadRequestStatus RequestFileByName( const wxString& name );
     void UpdateSettings();
-    void UpdateFromTimer( int mselapsed );
     std::map<wxString,TorrentInfos> CollectGuiInfos();
-    void SendMessageToCoordinator( const wxString& message );
 
     /// threaded maintenance tasks
     void JoinRequestedTorrents();
     void RemoveUnneededTorrents();
     void TryToJoinQueuedTorrents();
     void SearchAndGetQueuedDependencies();
-		void ResumeFromList();
+    void ResumeFromList();
 
     TorrentTable &GetTorrentTable()
     {
-				ScopedLocker<TorrentTable> l_torrent_table(m_torrent_table);
+        ScopedLocker<TorrentTable> l_torrent_table(m_torrent_table);
         return l_torrent_table.Get();
     }
 
 private:
 
-    void CreateTorrent( const wxString& uhash, const wxString& name, IUnitSync::MediaType type );
     DownloadRequestStatus RequestFileByRow( const TorrentTable::PRow& row );
     DownloadRequestStatus QueueFileByRow( const TorrentTable::PRow& row );
     bool RemoveTorrentByRow( const TorrentTable::PRow& row );
     bool JoinTorrent( const TorrentTable::PRow& row, bool IsSeed );
     bool DownloadTorrentFileFromTracker( const wxString& hash );
 
-    void ReceiveandExecute( const wxString& msg );
     void OnConnected( Socket* sock );
     void OnDisconnected( Socket* sock );
-    void OnDataReceived( Socket* sock );
+    virtual void OnDataReceived( Socket* ) {};
 
     wxString m_buffer;
 
@@ -264,13 +256,6 @@ private:
     TorrentMaintenanceThread m_maintenance_thread;
 
     libtorrent::session* m_torr;
-    Socket* m_socket_class;
-
-
-    //!we set this when trying a tracker and waiting for connection to be established
-    bool m_is_connecting;
-
-    unsigned int m_connected_tracker_index;
 
     bool m_started;
 

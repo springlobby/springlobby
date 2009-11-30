@@ -190,7 +190,8 @@ void TorrentListCtrl::OnCancel(wxCommandEvent &/*event*/)
 
 void TorrentListCtrl::OnRetry(wxCommandEvent &/*event*/)
 {
-	torrent().RequestFileByHash(GetSelectedData().hash);
+//	torrent().RequestFileByHash(GetSelectedData().hash);
+    assert( false );
 }
 
 

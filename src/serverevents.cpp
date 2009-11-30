@@ -51,15 +51,6 @@ void ServerEvents::OnDisconnected( bool wasonline )
     wxLogDebugFunc( _T("") );
     m_serv.SetRequiredSpring (_T(""));
     ui().OnDisconnected( m_serv, wasonline );
-#ifndef NO_TORRENT_SYSTEM
-    try // settings may be already destroyed
-    {
-        if ( sett().GetTorrentSystemAutoStartMode() == 0 ) torrent().DisconnectFromP2PSystem();
-    }
-    catch (GlobalDestroyedError e)
-    {
-    }
-#endif
 }
 
 
@@ -84,9 +75,6 @@ void ServerEvents::OnLoginInfoComplete()
     {
         m_serv.JoinChannel( itor->name, itor->password );
     }
-#ifndef NO_TORRENT_SYSTEM
-    if ( sett().GetTorrentSystemAutoStartMode() == 0 ) torrent().ConnectToP2PSystem();
-#endif
     ui().OnLoggedIn( );
 }
 

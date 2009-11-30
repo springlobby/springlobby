@@ -80,9 +80,6 @@ class MainWindow : public wxFrame
     void OnMenuLoadLayout( wxCommandEvent& event );
     void OnMenuResetLayout( wxCommandEvent& event );
     void OnUnitSyncReload( wxCommandEvent& event );
-    void OnMenuStartTorrent( wxCommandEvent& event );
-    void OnMenuStopTorrent( wxCommandEvent& event );
-    void OnMenuOpen( wxMenuEvent& event );
     void OnMenuAutojoinChannels( wxCommandEvent& event );
     void OnReportBug( wxCommandEvent& event );
     void OnShowDocs( wxCommandEvent& event );

@@ -95,7 +95,7 @@ void* TorrentMaintenanceThread::Entry()
 	while ( !TestDestroy() )
 	{
 		if( !Sleep( 2000 ) ) break;
-		if ( m_parent.IsConnectedToP2PSystem() )
+//		if ( m_parent.IsConnectedToP2PSystem() )
 		{
 				//  DON'T alter function call order here or bad things may happend like locust, earthquakes or raptor attack
 				m_parent.JoinRequestedTorrents();
@@ -147,7 +147,7 @@ void TorrentTable::FlushData()
     seed_requests.clear();
     queued_torrents.clear();
     seed_sent_data.clear();
-		dep_check_queue.clear();
+    dep_check_queue.clear();
 
     m_seed_count = 0;
     m_leech_count = 0;
@@ -341,7 +341,6 @@ TorrentWrapper::TorrentWrapper():
         ingame(false),
         m_timer_count(0),
         m_maintenance_thread(this),
-        m_is_connecting(false),
         m_started(false)
 {
     wxLogMessage(_T("TorrentWrapper::TorrentWrapper()"));
@@ -389,7 +388,6 @@ TorrentWrapper::TorrentWrapper():
     {
         wxLogError( TowxString( e.what() ) );
     }
-    m_socket_class = new Socket( *this );
     UpdateSettings();
 }
 
@@ -422,49 +420,13 @@ TorrentWrapper::~TorrentWrapper()
     {
         wxLogError( TowxString( e.what() ) );
     }
-    m_socket_class->SetTimeout( 1 );
-    DisconnectFromP2PSystem();
     delete m_torr;
-    delete m_socket_class;
 }
 
 
 ////////////////////////////////////////////////////////
 ////                gui interface                   ////
 ////////////////////////////////////////////////////////
-
-bool TorrentWrapper::ConnectToP2PSystem( const unsigned int tracker_no )
-{
-    if ( IsConnectedToP2PSystem() ) return true;
-    if ( tracker_no >= m_tracker_urls.GetCount() )
-    {
-        m_is_connecting = false;
-        m_connected_tracker_index = 0;
-        customMessageBoxNoModal( SL_MAIN_ICON, _("Tried all known trackers for torrent system. No connection could be established"),
-                                 _("Torrent system failure") );
-        return false;
-    }
-    m_socket_class->Connect( m_tracker_urls[tracker_no], DEFAULT_P2P_COORDINATOR_PORT );
-    m_connected_tracker_index= tracker_no;
-    m_is_connecting = true;
-
-    return IsConnectedToP2PSystem();
-}
-
-
-void TorrentWrapper::DisconnectFromP2PSystem()
-{
-    if ( IsConnectedToP2PSystem() )
-        m_socket_class->Disconnect();
-}
-
-
-bool TorrentWrapper::IsConnectedToP2PSystem()
-{
-    if ( m_socket_class == 0 ) return false;
-    return  (m_socket_class->State() == SS_Open);
-}
-
 
 void TorrentWrapper::UpdateSettings()
 {
@@ -528,31 +490,14 @@ P2P::FileStatus TorrentWrapper::GetTorrentStatusByHash(const wxString &hash)
 
 int TorrentWrapper::GetTorrentSystemStatus()
 {
-    if (!IsConnectedToP2PSystem()) return 0;
     if (ingame) return 2;
     return 1;
 }
 
 
-/*
-HashToTorrentData& TorrentWrapper::GetSystemFileList()
-{
-    return m_torrent_infos;
-}
-*/
-
 ////////////////////////////////////////////////////////
 ////               lobby interface                  ////
 ////////////////////////////////////////////////////////
-
-
-TorrentWrapper::DownloadRequestStatus TorrentWrapper::RequestFileByHash( const wxString& hash )
-{
-    TorrentTable::PRow row=GetTorrentTable().RowByHash(hash);
-    if ( !row.ok() ) return missing_in_table;
-    return QueueFileByRow( row );
-}
-
 
 TorrentWrapper::DownloadRequestStatus TorrentWrapper::RequestFileByName( const wxString& name )
 {
@@ -566,9 +511,11 @@ void TorrentWrapper::SetIngameStatus( bool status )
 {
     if ( status == ingame ) return; // no change needed
     ingame = status;
-    if ( ingame ) m_maintenance_thread.Pause();
-    else m_maintenance_thread.Resume();
-    if ( !IsConnectedToP2PSystem() ) return;
+    if ( ingame )
+        m_maintenance_thread.Pause();
+    else
+        m_maintenance_thread.Resume();
+
     try
     {
         std::vector<libtorrent::torrent_handle> TorrentList = m_torr->get_torrents();
@@ -599,21 +546,6 @@ void TorrentWrapper::SetIngameStatus( bool status )
     }
 }
 
-
-void TorrentWrapper::UpdateFromTimer( int /*mselapsed */)
-{
-    m_timer_count++;
-    if ( m_timer_count < 20 ) return;//update every 2 sec
-    m_timer_count = 0;
-    if ( m_is_connecting )
-    {
-        if ( IsConnectedToP2PSystem() )
-            m_is_connecting = false;
-        else
-            ConnectToP2PSystem( m_connected_tracker_index +1 );
-    }
-}
-
 void TorrentWrapper::ResumeFromList()
 {
     wxArrayString TorrentsToResume = sett().GetTorrentListToResume();
@@ -624,10 +556,10 @@ void TorrentWrapper::ResumeFromList()
         std::vector<int> successfulIndices;
         for ( unsigned int i = 0; i < ResumeCount; i++ )
         {
-            if (scheduled_in_cue == RequestFileByHash( TorrentsToResume[i] ) ) // resume all open leeched files when system as disconnected last time
-                successfulIndices.push_back(i);
+//            if (scheduled_in_cue == RequestFileByHash( TorrentsToResume[i] ) ) // resume all open leeched files when system as disconnected last time
+//                successfulIndices.push_back(i);
+            assert( false );
         }
-
 
         //remove successfully resumed torrents from list
         std::vector<int>::const_iterator it = successfulIndices.begin();
@@ -645,7 +577,6 @@ void TorrentWrapper::ResumeFromList()
 TorrentWrapper::DownloadRequestStatus TorrentWrapper::QueueFileByRow( const TorrentTable::PRow& row )
 {
     if (ingame) return paused_ingame;
-    if ( !IsConnectedToP2PSystem()  ) return not_connected;
 
     if (!row.ok())return file_not_found;
 
@@ -658,7 +589,6 @@ TorrentWrapper::DownloadRequestStatus TorrentWrapper::QueueFileByRow( const Torr
 TorrentWrapper::DownloadRequestStatus TorrentWrapper::RequestFileByRow( const TorrentTable::PRow& row )
 {
     if (ingame) return paused_ingame;
-    if ( !IsConnectedToP2PSystem()  ) return not_connected;
 
     if (!row.ok())return file_not_found;
 
@@ -697,7 +627,6 @@ bool TorrentWrapper::RemoveTorrentByRow( const TorrentTable::PRow& row )
         else
         {
         	 GetTorrentTable().SetRowStatus( row, P2P::not_stored );
-        	 SendMessageToCoordinator( _T("N-|")  + MakeHashSigned(row->hash) + _T("\n") );  //notify the system we don't need the file anymore
         }
     }
     catch (std::exception& e)
@@ -725,8 +654,6 @@ std::map<wxString,TorrentInfos> TorrentWrapper::CollectGuiInfos()
         globalinfos.numcopies = 0.0f;
         globalinfos.filesize = 0;
         ret[wxString(_T("global"))] = globalinfos;
-
-        if ( ingame || !IsConnectedToP2PSystem()  ) return ret; // stop updating the gui if disconneted
 
         std::vector<libtorrent::torrent_handle> TorrentList = m_torr->get_torrents();
         for ( std::vector<libtorrent::torrent_handle>::iterator i = TorrentList.begin(); i != TorrentList.end(); i++)
@@ -779,18 +706,9 @@ std::map<wxString,TorrentInfos> TorrentWrapper::CollectGuiInfos()
 }
 
 
-void TorrentWrapper::SendMessageToCoordinator( const wxString& message )
-{
-    if ( IsConnectedToP2PSystem()  )
-    {
-			 wxLogMessage( _T("T send: %s"), message.c_str() );
-    	 m_socket_class->Send( message + _T("\n") );
-    }
-}
-
-
 bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
 {
+#if 0
     if ( !row.ok() ) return false;
     wxLogMessage(_T("(1) Joining torrent, name=%s"),row->name.c_str());
     if (ingame) return false;
@@ -1023,89 +941,8 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
 
     wxLogMessage(_T("(5) Joining torrent: done"));
     return true;
-}
-
-
-void TorrentWrapper::CreateTorrent( const wxString& hash, const wxString& name, IUnitSync::MediaType type )
-{
-    if (ingame) return;
-
-
-    if ( sett().GetCurrentUsedDataDir().IsEmpty() ) return; // no good things can happend if you don't know which folder to r/w files from
-
-	# if LIBTORRENT_VERSION_MINOR >= 14
-
-    libtorrent::file_storage files;
-
-    wxString archivename;
-
-    switch ( type )
-    {
-        case IUnitSync::map :
-        {
-            if ( !usync().MapExists( name, hash ) ) return;
-            int index = usync().GetMapIndex( name );
-            if ( index == -1 ) return;
-            archivename = usync().GetMapArchive( index );
-            break;
-        }
-        case IUnitSync::mod :
-        {
-            if ( !usync().ModExists( name, hash ) ) return;
-            int index = usync().GetModIndex( name );
-            if ( index == -1 ) return;
-            archivename = usync().GetModArchive( index );
-            break;
-        }
-        default:
-            wxLogDebugFunc( _T("row-type unhandled") );
-            break;
-    }
-
-    wxString archivepath = usync().GetArchivePath( archivename );
-    int i = archivename.Find( archivepath );
-    wxString path;
-    if (i<0)
-    {
-        path = archivepath + archivename;
-    }
-    else
-    {
-        path = archivename;
-    }
-
-    boost::filesystem::path InputFilePath = complete(boost::filesystem::path( STD_STRING( path ) ) );
-
-    files.add_file( InputFilePath.branch_path(), boost::filesystem::file_size( InputFilePath ) );
-
-    libtorrent::create_torrent newtorrent(files);
-
-    for ( unsigned int j = 0; j < m_tracker_urls.GetCount(); j++ )
-    {
-        newtorrent.add_tracker( STD_STRING(m_tracker_urls[j] +  _T(":DEFAULT_P2P_TRACKER_PORT/announce") ) );
-    }
-
-    // calculate the hash for all pieces
-    set_piece_hashes(newtorrent, InputFilePath.branch_path());
-
-    switch (type)
-    {
-        case IUnitSync::map:
-            newtorrent.set_comment( wxString( name + _T("|MAP") ).mb_str() );
-            break;
-        case IUnitSync::mod:
-            newtorrent.set_comment( wxString( name + _T("|MOD") ).mb_str() );
-            break;
-        default:
-            wxLogDebugFunc( _T("row-type unhandled") );
-            break;
-    }
-
-    libtorrent::entry e = newtorrent.generate();
-    // TODO: e needs to be encoded and saved to a .torrent file
-    // or added to m_torr
-
-	#endif
+#endif // #if false
+    return false;
 }
 
 
@@ -1124,27 +961,28 @@ bool TorrentWrapper::DownloadTorrentFileFromTracker( const wxString& hash )
     wxHTTP fileRequest;
     //versionRequest.SetHeader(_T("Content-type"), _T(""));
     // normal timeout is 10 minutes.. set to 2 secs.
-    fileRequest.SetTimeout(2);
-    fileRequest.Connect( m_tracker_urls[m_connected_tracker_index], 80);
-    wxInputStream *stream = fileRequest.GetInputStream(  _T("/torrents/") + hash + _T(".torrent") );
-    bool ret = false;
-    if (fileRequest.GetError() == wxPROTO_NOERR)
-    {
-
-        wxFileOutputStream output( filename.GetFullPath() );
-        if ( output.Ok() )
-        {
-            stream->Read(output);
-            ret = true;
-        }
-
-    }
-
-    wxDELETE(stream);
-    fileRequest.Close();
-    if (ret) wxLogMessage(_T("torrent system downloading torrent info %s successful"), hash.c_str() );
-    else wxLogMessage(_T("torrent system downloading torrent info %s failed"), hash.c_str() );
-    return ret;
+//    fileRequest.SetTimeout(2);
+//    fileRequest.Connect( m_tracker_urls[m_connected_tracker_index], 80);
+//    wxInputStream *stream = fileRequest.GetInputStream(  _T("/torrents/") + hash + _T(".torrent") );
+//    bool ret = false;
+//    if (fileRequest.GetError() == wxPROTO_NOERR)
+//    {
+//
+//        wxFileOutputStream output( filename.GetFullPath() );
+//        if ( output.Ok() )
+//        {
+//            stream->Read(output);
+//            ret = true;
+//        }
+//
+//    }
+//
+//    wxDELETE(stream);
+//    fileRequest.Close();
+//    if (ret) wxLogMessage(_T("torrent system downloading torrent info %s successful"), hash.c_str() );
+//    else wxLogMessage(_T("torrent system downloading torrent info %s failed"), hash.c_str() );
+//    return ret;
+    return false;
 }
 
 
@@ -1284,131 +1122,6 @@ void TorrentWrapper::SearchAndGetQueuedDependencies()
 
 }
 
-void TorrentWrapper::ReceiveandExecute( const wxString& msg )
-{
-    wxLogMessage(_T("T recive: %s"), msg.c_str() );
-
-    wxArrayString data = wxStringTokenize( msg, _T('|') );
-
-    if ( data.GetCount() == 0 ) return;
-    // T+|hash|name|type 	 informs client that new torrent was added to server (type is either MOD or MAP)
-    else if ( data.GetCount() > 3 && data[0] == _T("T+") )
-    {
-
-        TorrentTable::PRow newtorrent = new TorrentTable::Row;
-
-        newtorrent->hash = MakeHashUnsigned(data[1]);
-        newtorrent->name = data[2];
-        if ( data[3] == _T("MAP") )
-        {
-            newtorrent->type = IUnitSync::map;
-            if ( usync().MapExists( newtorrent->name, newtorrent->hash ) ) newtorrent->status = P2P::stored;
-        }
-        else if ( data[3] == _T("MOD") )
-        {
-            newtorrent->type = IUnitSync::mod;
-            if ( usync().ModExists( newtorrent->name, newtorrent->hash ) ) newtorrent->status = P2P::stored;
-        }
-
-        GetTorrentTable().InsertRow( newtorrent );
-
-        // SendMessageToCoordinator(  _T("IH|") + data[1] + _T("\n") );
-
-        // T-|hash 	 informs client that torrent was removed from server
-    }
-    else if ( data[0] == _T("T-") && data.GetCount() > 1 )
-    {
-
-        TorrentTable::PRow row = GetTorrentTable().RowByHash( MakeHashUnsigned(data[1]) );
-        if ( !row.ok() ) return;
-        GetTorrentTable().RemoveRow( row );
-
-        // S+|hash|seeders|leechers 	 tells client that seed is needed for this torrent
-    }
-    else if ( data.GetCount() > 1 && data[0] == _T("S+") )
-    {
-
-        TorrentTable::PRow row = GetTorrentTable().RowByHash( MakeHashUnsigned(data[1]) );
-        if ( !row.ok() ) return;
-        GetTorrentTable().AddSeedRequest( row );
-
-        unsigned long seeders=0;
-        unsigned long leechers=0;
-        if (data.GetCount() > 2)data[2].ToULong(&seeders);
-        if (data.GetCount() > 3)data[3].ToULong(&leechers);
-
-        // S-|hash 	 tells client that seed is no longer neede for this torrent
-    }
-    else if ( data.GetCount() > 1 && data[0] == _T("S-") )
-    {
-
-        TorrentTable::PRow row = GetTorrentTable().RowByHash( MakeHashUnsigned(data[1]) );
-        if ( !row.ok() ) return;
-        GetTorrentTable().RemoveSeedRequest( row );
-
-        // M+|hash|url 	 It tells the client if url is given that http mirror exists for given hash, else there are no mirrors.
-    }
-    else if ( data[0] == _T("M+") && data.GetCount() > 2 )
-    {
-
-        TorrentTable::PRow row = GetTorrentTable().RowByHash( MakeHashUnsigned(data[1]) );
-        if ( !row.ok() ) return;
-
-        for ( unsigned int index = 2; index < data.GetCount(); index++ )
-        {
-						try
-						{
-							row->handle.add_url_seed( STD_STRING( data[index] ) );
-						} catch ( std::exception& e )
-						{
-						}
-        }
-
-        // PING 	 every minute - client must respond with its own "PING"
-    }
-    else if ( data[0] == _T("PING") )
-    {
-
-        SendMessageToCoordinator( _T("PING\n") );
-
-        //IH|hash|infohash infos the client about torrent's infohash b64 encoded
-    }
-    else if ( data.GetCount() > 2 && data[0] == _T("IH") )
-    {
-
-        TorrentTable::PRow row = GetTorrentTable().RowByHash( MakeHashUnsigned(data[1]) );
-        if ( !row.ok() ) return;
-
-        row->infohash = data[2];
-				// QH|query tag|type|name 	 queries clients for spring hashes of given map/mod
-    }
-    else if ( data[0] == _T("QH") && data.GetCount() > 3  )
-    {
-				wxString query_tag = data[1];
-				wxString file_type = data[2];
-				wxString unitsync_name = data[3];
-				wxString hash;
-				if ( file_type == _T("MAP") )
-				{
-					hash = usync().GetMap( unitsync_name ).hash;
-				}
-				else if ( file_type == _T("MOD") )
-				{
-					hash = usync().GetMod( unitsync_name ).hash;
-				}
-				if ( !hash.IsEmpty() )
-				{
-					hash = MakeHashSigned( hash );
-					SendMessageToCoordinator( _T("QH|") + query_tag + _T("|") + hash );
-				}
-    }
-    else if ( data[0] == _T("TLISTDONE") )
-    {
-        ResumeFromList(); // resume download of files
-    }
-}
-
-
 void TorrentWrapper::OnConnected( Socket* /*unused*/ )
 {
     wxLogMessage(_T("torrent system connected") );
@@ -1473,23 +1186,6 @@ void TorrentWrapper::OnDisconnected( Socket* /*unused*/ )
     }
     m_started = false;
     m_maintenance_thread.Stop();
-}
-
-
-void TorrentWrapper::OnDataReceived( Socket* sock )
-{
-		if ( sock == 0 ) return;
-
-    wxString data = sock->Receive();
-		m_buffer << data;
-		int returnpos = m_buffer.Find( _T("\n") );
-		while ( returnpos != -1 )
-		{
-			wxString cmd = m_buffer.Left( returnpos );
-			m_buffer = m_buffer.Mid( returnpos + 1 );
-			ReceiveandExecute( cmd );
-			returnpos = m_buffer.Find( _T("\n") );
-		}
 }
 
 #endif

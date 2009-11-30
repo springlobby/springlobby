@@ -93,8 +93,6 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU( MENU_SETTINGSPP, MainWindow::OnShowSettingsPP )
   EVT_MENU( MENU_VERSION, MainWindow::OnMenuVersion )
   EVT_MENU( MENU_ABOUT, MainWindow::OnMenuAbout )
-  EVT_MENU( MENU_START_TORRENT, MainWindow::OnMenuStartTorrent )
-  EVT_MENU( MENU_STOP_TORRENT, MainWindow::OnMenuStopTorrent )
   EVT_MENU( MENU_SAVE_LAYOUT, MainWindow::OnMenuSaveLayout )
   EVT_MENU( MENU_LOAD_LAYOUT, MainWindow::OnMenuLoadLayout )
   EVT_MENU( MENU_RESET_LAYOUT, MainWindow::OnMenuResetLayout )
@@ -103,7 +101,6 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU( MENU_SELECT_LOCALE, MainWindow::OnMenuSelectLocale )
   EVT_MENU( MENU_CHANNELCHOOSER, MainWindow::OnShowChannelChooser )
   EVT_MENU( MENU_SCREENSHOTS, MainWindow::OnShowScreenshots )
-  EVT_MENU_OPEN( MainWindow::OnMenuOpen )
   EVT_AUINOTEBOOK_PAGE_CHANGED( MAIN_TABS, MainWindow::OnTabsChanged )
   EVT_CLOSE( MainWindow::OnClose )
 END_EVENT_TABLE()
@@ -558,40 +555,6 @@ void MainWindow::OnShowScreenshots( wxCommandEvent& /*unused*/ )
     }
     ImageViewerDialog* img  = new ImageViewerDialog( ar, true, this, -1, _T("Screenshots") );
     img->Show( true );
-}
-
-void MainWindow::OnMenuStartTorrent( wxCommandEvent& /*unused*/ )
-{
-  #ifndef NO_TORRENT_SYSTEM
-  sett().SetTorrentSystemAutoStartMode( 2 ); // switch operation to manual mode
-  torrent().ConnectToP2PSystem();
-  #endif
-}
-
-
-void MainWindow::OnMenuStopTorrent( wxCommandEvent& /*unused*/ )
-{
-  #ifndef NO_TORRENT_SYSTEM
-  sett().SetTorrentSystemAutoStartMode( 2 ); // switch operation to manual mode
-  torrent().DisconnectFromP2PSystem();
-  #endif
-}
-
-
-void MainWindow::OnMenuOpen( wxMenuEvent& /*unused*/ )
-{
-  #ifndef NO_TORRENT_SYSTEM
-  m_menuTools->Delete(MENU_STOP_TORRENT);
-  m_menuTools->Delete(MENU_START_TORRENT);
-  if ( !torrent().IsConnectedToP2PSystem() )
-  {
-    m_menuTools->Insert( 5, MENU_START_TORRENT, _("Manually &Start Torrent System") );
-  }
-  else
-  {
-    m_menuTools->Insert( 5, MENU_STOP_TORRENT, _("Manually &Stop Torrent System") );
-  }
-  #endif
 }
 
 
