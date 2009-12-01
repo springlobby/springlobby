@@ -172,7 +172,7 @@ class ChatPanel : public wxPanel
 
     wxStaticText* m_usercount_label;
 
-    int m_type;       //!< Channel object.
+    const ChatPanelType m_type;       //!< Channel object.
 
     wxString m_chan_pass;
 

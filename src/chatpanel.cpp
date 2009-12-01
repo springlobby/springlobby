@@ -696,6 +696,7 @@ void ChatPanel::Joined( User& who )
 
 void ChatPanel::OnChannelJoin( User& who )
 {
+    assert( m_type == CPT_Channel || m_type == CPT_Server || m_type == CPT_Battle || m_type == CPT_User );
 	if ( m_show_nick_list && (m_nicklist != 0) )
 	{
 		unsigned int numusers = 0;
@@ -711,6 +712,7 @@ void ChatPanel::OnChannelJoin( User& who )
 
 void ChatPanel::Parted( User& who, const wxString& message )
 {
+    assert( m_type == CPT_Channel || m_type == CPT_Server || m_type == CPT_Battle || m_type == CPT_User );
 	if ( m_type == CPT_Channel ) {
 		if ( m_channel == 0 ) return;
 		if ( &who == &m_channel->GetMe() ) {
