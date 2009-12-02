@@ -97,7 +97,7 @@ class ChatPanel : public wxPanel
     void SetUser( const User* usr );
 
     bool IsServerPanel() const;
-    int GetPanelType() const;
+    ChatPanelType GetPanelType() const;
 
     void SetBattle( Battle* battle );
 
