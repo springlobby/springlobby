@@ -159,7 +159,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle )
 	m_browse_map_btn = new wxButton( this, BROOM_MAP_BROWSE, _( "Map" ), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
 	m_browse_map_btn->SetSize( m_browse_map_btn->GetSize().GetWidth() * 2 , m_browse_map_btn->GetSize().GetHeight() ) ; // has 0 effect
 
-	m_players = new BattleroomListCtrl( m_player_panel, m_battle, false );
+	m_players = new BattleroomListCtrl( m_player_panel, m_battle, false, true );
 	m_chat = new ChatPanel( m_splitter, m_battle );
 
 	m_command_line = new wxStaticLine( this, -1, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );

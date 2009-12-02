@@ -15,7 +15,7 @@ class wxIcon;
 class BattleroomListCtrl : public CustomVirtListCtrl< User *, BattleroomListCtrl >
 {
   public:
-    BattleroomListCtrl( wxWindow* parent, IBattle* battle, bool readonly );
+    BattleroomListCtrl( wxWindow* parent, IBattle* battle, bool readonly, bool showingame );
      ~BattleroomListCtrl();
 
     void SetBattle( IBattle* battle );
@@ -51,6 +51,7 @@ class BattleroomListCtrl : public CustomVirtListCtrl< User *, BattleroomListCtrl
     wxListItemAttr * GetItemAttr(long item) const;
 
   protected:
+		static int CompareLobbyStatus( const DataType user1, const DataType user2 );
     static int CompareStatus(const DataType user1, const DataType user2, const IBattle* m_battle );
     static int CompareSide(const DataType user1, const DataType user2);
     static int CompareColor(const DataType user1, const DataType user2);
@@ -83,6 +84,8 @@ class BattleroomListCtrl : public CustomVirtListCtrl< User *, BattleroomListCtrl
     virtual void Sort();
 
     bool m_ro;
+    bool m_showingame;
+    static bool s_showingame;
 
     enum {
       BRLIST_LIST = wxID_HIGHEST,
