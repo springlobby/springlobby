@@ -74,15 +74,15 @@ void UpdaterClass::OnDownloadEvent( wxCommandEvent& event )
         else {
             bool locale_ok = UpdateLocale( m_newexe, false );
             if ( locale_ok ) {
-                customMessageBox(SL_MAIN_ICON, _("Update complete. The changes will be available next lobby start."), _("Success"));
+                customMessageBox(SL_MAIN_ICON, _("Update complete. \nPlease restart SpringLobby now."), _("Success"));
             }
             else {
-                customMessageBox(SL_MAIN_ICON, _("Binary updated successfully. \nSome translation files could not be updated.\nPlease report this in #springlobby after restarting."), _("Partial success"));
+                customMessageBox(SL_MAIN_ICON, _("Binary updated successfully. \nSome translation files could not be updated.\nPlease report this in #springlobby. \nPlease restart SpringLobby now."), _("Partial success"));
             }
-//            wxRmdir( m_newexe );
-            GetGlobalEventSender( GlobalEvents::UpdateFinished ).SendEvent( 0 );
+            wxRmdir( m_newexe );
         }
     }
+    GetGlobalEventSender( GlobalEvents::UpdateFinished ).SendEvent( 0 );
 }
 
 //! DO NOT use mw() global unless fromCli is false !
