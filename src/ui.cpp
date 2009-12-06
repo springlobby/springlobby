@@ -1293,8 +1293,8 @@ void Ui::CheckForUpdates()
         int answer = customMessageBox(SL_MAIN_ICON, _("Your SpringLobby version is not up to date.\n\n") + msg + _("\n\nWould you like for me to autodownload the new version? Changes will take effect next you launch the lobby again."), _("Not up to date"), wxYES_NO);
         if (answer == wxYES)
         {
-            wxString command = wxPathOnly( wxStandardPaths::Get().GetExecutablePath() ) + wxFileName::GetPathSeparator()
-                                        + _T("springlobby_updater.exe -f ") +   wxStandardPaths::Get().GetExecutablePath()
+            wxString command = _T("\"") + wxPathOnly( wxStandardPaths::Get().GetExecutablePath() ) + wxFileName::GetPathSeparator()
+                                        + _T("springlobby_updater.exe\" -f ") +   _T("\"") + wxStandardPaths::Get().GetExecutablePath() + _T("\"")
                                         + _T(" -r ") +  latestVersion  ;
             if( wxExecute( command, wxEXEC_ASYNC, NULL) > 0 ) {
                 //returned pid > 0 -> proc started successfully
