@@ -4,7 +4,6 @@
 // (C) 2005..2006 Dmytry Lavrov.
 // Several automatic pointer types used in Volumetrics.
 //
-#include <cstdlib>
 
 class Lockable {
 public:

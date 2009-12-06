@@ -124,9 +124,29 @@ bool ChatLog::WriteLine( const wxString& text )
 	return true;
 }
 
+void ChatLog::FillLastLineArray()
+{
+    wxTextFile tmp( m_current_logfile_path );
+    tmp.Open();
+    if ( !tmp.IsOpened() )
+        return;
+
+    m_last_lines = wxArrayString();
+    int load_lines  = sett().GetAutoloadedChatlogLinesCount();
+    const size_t line_no = tmp.GetLineCount();
+    const size_t first_line_no = line_no - load_lines ;
+
+    for ( size_t i = first_line_no; i < line_no; ++i ) {
+        wxString tmp_str = tmp[i];
+        if ( ! tmp_str.StartsWith( _T("###") ) )
+            m_last_lines.Add( tmp_str );
+    }
+}
+
 bool ChatLog::OpenLogFile( const wxString& server, const wxString& room )
 {
 	m_current_logfile_path = _GetPath() + wxFileName::GetPathSeparator() + server + wxFileName::GetPathSeparator() + room + _T( ".txt" );
+    FillLastLineArray();
 	wxLogMessage( _T( "OpenLogFile( %s, %s )" ), server.c_str(), room.c_str() ) ;
 
 //  delete m_logfile;
@@ -167,4 +187,9 @@ wxString ChatLog::LogTime()
 void ChatLog::OpenInEditor()
 {
     ui().OpenFileInEditor( m_current_logfile_path );
+}
+
+const wxArrayString& ChatLog::GetLastLines( ) const
+{
+    return m_last_lines;
 }
