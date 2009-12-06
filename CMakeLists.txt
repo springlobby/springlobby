@@ -246,7 +246,11 @@ ELSE (WIN32)
 	    ${CMAKE_INSTALL_PREFIX}/share/applications)
 ENDIF (WIN32)
 
-add_custom_target(pack COMMAND ${CMAKE_MAKE_PROGRAM} package)
+add_custom_target(pack
+					${CMAKE_MAKE_PROGRAM} package
+					&& ${springlobby_SOURCE_DIR}/tools/transform_release_zip.sh
+						${CMAKE_BINARY_DIR}/${PACKAGE_NAME}-${PACKAGE_VERSION}-win32.zip
+				)
 
 # setup make dist
 add_custom_target(dist cd ${CMAKE_SOURCE_DIR} &&
