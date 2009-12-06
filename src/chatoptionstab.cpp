@@ -8,6 +8,7 @@
 #include <wx/sizer.h>
 #include <wx/statbox.h>
 #include <wx/intl.h>
+#include <wx/spinctrl.h>
 #include <wx/textctrl.h>
 #include <wx/radiobut.h>
 #include <wx/stattext.h>
@@ -310,6 +311,13 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent )
 
 	sbChatLogSizer->Add( m_save_logs, 0, wxALL, 5 );
 
+    wxBoxSizer* m_num_lines_sizer = new wxBoxSizer( wxHORIZONTAL );
+    m_num_lines = new wxSpinCtrl( this, wxID_ANY );
+    m_num_lines_lbl =  new wxStaticText( this, wxID_ANY, _( "lines loaded from log into chat" ), wxDefaultPosition, wxDefaultSize, 0 );
+    m_num_lines_sizer->Add( m_num_lines );
+    m_num_lines_sizer->Add( m_num_lines_lbl, 0, wxLEFT | wxALIGN_CENTER_VERTICAL, 5 );
+    sbChatLogSizer->Add( m_num_lines_sizer, 0, wxALL, 5 );
+
 	bBotomSizer->Add( sbChatLogSizer, 1, wxEXPAND | wxRIGHT, 5 );
 
 	wxStaticBoxSizer* sbHighlightSizer;
@@ -435,6 +443,7 @@ void ChatOptionsTab::DoRestore()
 #ifndef DISABLE_SOUND
 	m_play_sounds->SetValue( sett().GetChatPMSoundNotificationEnabled() );
 #endif
+    m_num_lines->SetValue( sett().GetAutoloadedChatlogLinesCount() );
 }
 
 void ChatOptionsTab::OnApply( wxCommandEvent& /*unused*/ )
@@ -464,7 +473,7 @@ void ChatOptionsTab::OnApply( wxCommandEvent& /*unused*/ )
 #ifndef DISABLE_SOUND
 	sett().SetChatPMSoundNotificationEnabled( m_play_sounds->IsChecked() );
 #endif
-
+    sett().SetAutoloadedChatlogLinesCount( m_num_lines->GetValue() );
 }
 
 

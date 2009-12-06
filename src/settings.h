@@ -348,6 +348,9 @@ class Settings
 
     wxString GetEditorPath( );
     void SetEditorPath( const wxString& path );
+
+    void SetAutoloadedChatlogLinesCount( const int count );
+    int GetAutoloadedChatlogLinesCount( );
     /*@}*/
 
     /* ================================================================ */

@@ -183,6 +183,7 @@ class ChatPanel : public wxPanel
     void LogTime();
     void CreateControls( );
     void CreatePopup();
+    void LoadLastLines();
 
     size_t m_icon_index;
 
