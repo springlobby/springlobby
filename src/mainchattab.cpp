@@ -284,7 +284,10 @@ void MainChatTab::OnTabClose( wxAuiNotebookEvent& event )
 	if ( panel )
 	{
 		panel->Part();
+		if( panel->IsServerPanel() )
+            m_server_chat = 0;
 	}
+
 }
 
 void MainChatTab::OnTabsChanged( wxAuiNotebookEvent& event )

@@ -696,6 +696,7 @@ void ChatPanel::Joined( User& who )
 
 void ChatPanel::OnChannelJoin( User& who )
 {
+//    assert( m_type == CPT_Channel || m_type == CPT_Server || m_type == CPT_Battle || m_type == CPT_User );
 	if ( m_show_nick_list && (m_nicklist != 0) )
 	{
 		unsigned int numusers = 0;
@@ -711,22 +712,27 @@ void ChatPanel::OnChannelJoin( User& who )
 
 void ChatPanel::Parted( User& who, const wxString& message )
 {
+//    assert( m_type == CPT_Channel || m_type == CPT_Server || m_type == CPT_Battle || m_type == CPT_User );
+    bool me_parted = m_channel && &who == &m_channel->GetMe();
 	if ( m_type == CPT_Channel ) {
 		if ( m_channel == 0 ) return;
-		if ( &who == &m_channel->GetMe() ) {
+		if ( me_parted ) {
 			m_channel->uidata.panel = 0;
 			SetChannel( 0 );
 			return;
 		}
 		if ( sett().GetDisplayJoinLeave( m_channel->GetName() ) ) {
-      // change the image of the tab to show new events
-      SetIconHighlight( highlight_join_leave );
+          // change the image of the tab to show new events
+          SetIconHighlight( highlight_join_leave );
 		  OutputLine( _T( " ** " ) + who.GetNick() + _( " left the " ) + GetChatTypeStr() + _T( "( " ) + message + _T( " )." ), sett().GetChatColorJoinPart(), sett().GetChatFont() );
-    }
-
+        }
 	} else if ( m_type == CPT_Battle ) {
-		if ( sett().GetDisplayJoinLeave( _T( "game/battle" ) ) )  { OutputLine( _T( " ** " ) + who.GetNick() + _( " left the " ) + GetChatTypeStr() + _T( "( " ) + message + _T( " )." ), sett().GetChatColorJoinPart(), sett().GetChatFont() ); }
+		if ( sett().GetDisplayJoinLeave( _T( "game/battle" ) ) )  {
+		    OutputLine( _T( " ** " ) + who.GetNick() + _( " left the " ) + GetChatTypeStr() + _T( "( " ) + message + _T( " )." ), sett().GetChatColorJoinPart(), sett().GetChatFont() );
+        }
 	}
+	else if ( m_type == CPT_Server && me_parted )
+        return;
 	if ( m_show_nick_list && ( m_nicklist != 0 ) )
 	{
 		unsigned int numusers = 0;
@@ -849,7 +855,7 @@ bool ChatPanel::IsServerPanel() const
 	return ( m_type == CPT_Server );
 }
 
-int ChatPanel::GetPanelType() const
+ChatPanelType ChatPanel::GetPanelType() const
 {
 	return m_type;
 }
