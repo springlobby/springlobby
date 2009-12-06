@@ -313,7 +313,7 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent )
 
     wxBoxSizer* m_num_lines_sizer = new wxBoxSizer( wxHORIZONTAL );
     m_num_lines = new wxSpinCtrl( this, wxID_ANY );
-    m_num_lines_lbl =  new wxStaticText( this, wxID_ANY, _( "lines loaded from log into chat" ), wxDefaultPosition, wxDefaultSize, 0 );
+    m_num_lines_lbl =  new wxStaticText( this, wxID_ANY, _( "approx. number of lines loaded from log into chat" ), wxDefaultPosition, wxDefaultSize, 0 );
     m_num_lines_sizer->Add( m_num_lines );
     m_num_lines_sizer->Add( m_num_lines_lbl, 0, wxLEFT | wxALIGN_CENTER_VERTICAL, 5 );
     sbChatLogSizer->Add( m_num_lines_sizer, 0, wxALL, 5 );
