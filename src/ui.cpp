@@ -1264,6 +1264,7 @@ void Ui::FirstRunWelcome()
             ImportTASClientSettings();
         }
     #endif
+        //this ensures that for new configs there's a default perspective to fall back on
         mw().SavePerspectives( _T("SpringLobby-default") );
         mw().ShowConfigure();
     }
@@ -1297,12 +1298,13 @@ void Ui::CheckForUpdates()
                                         + _T(" -r ") +  latestVersion  ;
             if( wxExecute( command, wxEXEC_ASYNC, NULL) > 0 ) {
                 //returned pid > 0 -> proc started successfully
+                // now close this instance immeadiately
                 wxCloseEvent dummy;
                 ui().mw().OnClose( dummy );
             }
             else
-            {
-                customMessageBox(SL_MAIN_ICON, _("Automatic update failed\n\nyou will be redirected to a web page with instructions and download link will be opened in your browser.") + msg, _("Updater error.") );
+            {//this will also happen if updater exe is not present so we don't really ne special check for existance of it
+                customMessageBox(SL_MAIN_ICON, _("Automatic update failed\n\nyou will be redirected to a web page with instructions and the download link will be opened in your browser.") + msg, _("Updater error.") );
                 OpenWebBrowser( _T("http://springlobby.info/wiki/springlobby/Install#Windows-Binary") );
                 OpenWebBrowser( GetDownloadUrl( latestVersion ) );
 
