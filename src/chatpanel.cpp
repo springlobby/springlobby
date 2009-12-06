@@ -110,6 +110,7 @@ ChatPanel::ChatPanel( wxWindow* parent, Channel& chan, wxImageList* imaglist ):
   GetAui().manager->AddPane( this, wxLEFT, _T("chatpanel-channel-") + chan.GetName() );
 	wxLogDebugFunc( _T( "wxWindow* parent, Channel& chan" ) );
 	CreateControls( );
+	LoadLastLines();
 	_SetChannel( &chan );
 	m_chatlog_text->Connect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( ChatPanel::OnMouseDown ), 0, this );
 
@@ -135,6 +136,7 @@ ChatPanel::ChatPanel( wxWindow* parent, const User& user, wxImageList* imaglist 
 {
   GetAui().manager->AddPane( this, wxLEFT, _T("chatpanel-pm-") + user.GetNick() );
 	CreateControls( );
+	LoadLastLines();
 	m_chatlog_text->Connect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( ChatPanel::OnMouseDown ), 0, this );
 	user.uidata.panel = this;
 
@@ -1143,4 +1145,24 @@ void ChatPanel::SetBattle( Battle* battle )
        textcompletiondatabase.Insert_Mapping( m_battle->GetUser(i).GetNick(), m_battle->GetUser(i).GetNick() );
     }
 	}
+}
+
+void ChatPanel::LoadLastLines()
+{
+    #ifdef __WXMSW__
+    wxWindowUpdateLocker noUpdates(m_chatlog_text);
+    #endif
+
+    wxArrayString lines = m_chat_log.GetLastLines(  );
+
+    wxFont f = m_chatlog_text->GetFont();
+	f.SetFamily( wxFONTFAMILY_DECORATIVE );
+	f.SetStyle( wxFONTSTYLE_ITALIC );
+	wxTextAttr chatstyle( sett().GetChatColorTime(), sett().GetChatColorBackground(), f );
+    m_chatlog_text->SetDefaultStyle( chatstyle );
+
+    for ( size_t i = 0; i < lines.Count(); ++i ) {
+        m_chatlog_text->AppendText( lines[i] );
+        m_chatlog_text->AppendText( _T( "\n" ) );
+    }
 }

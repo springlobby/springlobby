@@ -2483,3 +2483,13 @@ bool Settings::PerspectiveExists( const wxString& perspective_name )
     }
     return false;
 }
+
+void Settings::SetAutoloadedChatlogLinesCount( const int count )
+{
+    m_config->Write( _T( "/GUI/AutoloadedChatlogLinesCount" ), std::abs( count ) );
+}
+
+int Settings::GetAutoloadedChatlogLinesCount( )
+{
+    return m_config->Read( _T( "/GUI/AutoloadedChatlogLinesCount" ), 10l );
+}
