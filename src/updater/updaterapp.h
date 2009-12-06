@@ -34,6 +34,8 @@ class UpdaterApp : public wxApp
 
     UpdaterMainwindow* m_updater_window;
 
+    std::ofstream* m_logstream_target;
+
     DECLARE_EVENT_TABLE()
 };
 

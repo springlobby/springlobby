@@ -35,20 +35,28 @@ UpdaterClass::~UpdaterClass()
 }
 
 #ifdef __WXMSW__
-void UpdaterClass::StartUpdate( const wxString& latestVersion, const wxString& exe_to_update )
+bool UpdaterClass::StartUpdate( const wxString& latestVersion, const wxString& exe_to_update )
 {
     wxString sep = wxFileName::GetPathSeparator();
     m_latest_version = latestVersion;
     m_currentexe = exe_to_update;
     if ( !wxFileName::IsDirWritable( m_currentexe.BeforeLast( wxFileName::GetPathSeparator() ) + wxFileName::GetPathSeparator() ) ) {
-        customMessageBoxNoModal(SL_MAIN_ICON, _("Unable to write to the lobby installation directory.\nPlease update manually or enable write permissions for the current user."), _("Error"));
-        return;
+        customMessageBox(SL_MAIN_ICON, _("Unable to write to the lobby installation directory.\nPlease update manually or enable write permissions for the current user."), _("Error"));
+        return false;
     }
     m_newexe = sett().GetLobbyWriteDir() + _T("update") + sep;
-    if ( !wxDirExists( m_newexe ) )
-        wxMkdir( m_newexe );
+    wxLogError( m_newexe  );
+    if ( !wxDirExists( m_newexe ) ) {
+        if ( !wxMkdir( m_newexe ) ){
+            wxLogError( _T("couldn't create update directory") );
+            return false;
+        }
+    }
 
     m_http_thread = new HttpDownloaderThread<UpdaterClass>( GetDownloadUrl( m_latest_version ), m_newexe + _T("temp.zip"), *this, wxNewId(), true, true );
+
+    //could prolly use some test on the thread here instead
+    return true;
 }
 #endif
 
@@ -71,7 +79,7 @@ void UpdaterClass::OnDownloadEvent( wxCommandEvent& event )
             else {
                 customMessageBox(SL_MAIN_ICON, _("Binary updated successfully. \nSome translation files could not be updated.\nPlease report this in #springlobby after restarting."), _("Partial success"));
             }
-            wxRmdir( m_newexe );
+//            wxRmdir( m_newexe );
             GetGlobalEventSender( GlobalEvents::UpdateFinished ).SendEvent( 0 );
         }
     }

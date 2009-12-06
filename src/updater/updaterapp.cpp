@@ -24,6 +24,8 @@
 #endif
 #include <wx/utils.h>
 #include <wx/wfstream.h>
+#include <fstream>
+
 
 #include "updaterapp.h"
 #include "../settings.h"
@@ -36,6 +38,7 @@
 #include "versionchecker.h"
 #include "updatermainwindow.h"
 #include "../defines.h"
+#include "../utils/conversion.h"
 
 const unsigned int TIMER_ID         = 101;
 const unsigned int TIMER_INTERVAL   = 100;
@@ -52,14 +55,18 @@ END_EVENT_TABLE()
 
 UpdaterApp::UpdaterApp()
     : 	m_timer ( new wxTimer(this, TIMER_ID) ),
+	m_version( _T("-1") ),
     m_updater_window( 0 ),
-	m_version( _T("-1") )
+	m_logstream_target( new std::ofstream( STD_STRING(wxPathOnly( wxStandardPaths::Get().GetExecutablePath() ) + wxFileName::GetPathSeparator() + _T("update.log") ).c_str() ) )
 {
     SetAppName( _T("springlobby_updater") );
 }
 
 UpdaterApp::~UpdaterApp()
 {
+    m_logstream_target->flush();
+    m_logstream_target->close();
+    delete m_logstream_target;
     delete m_timer;
 }
 
@@ -72,6 +79,11 @@ bool UpdaterApp::OnInit()
     //this triggers the Cli Parser amongst other stuff
     if (!wxApp::OnInit())
         return false;
+
+    assert( m_logstream_target );
+    wxLogStream* m_log_stream = new wxLogStream( m_logstream_target );
+    m_log_stream->SetLogLevel( wxLOG_Trace );
+    wxLog::SetActiveTarget( m_log_stream );
 
 #if wxUSE_ON_FATAL_EXCEPTION && !defined(__WXMAC__)
     if (!m_crash_handle_disable) wxHandleFatalExceptions( true );
@@ -88,12 +100,12 @@ bool UpdaterApp::OnInit()
 
 	if( m_version == _T("-1") )
 		m_version = GetLatestVersion();
-	
+
 	m_updater_window = new UpdaterMainwindow( m_version );
 	m_updater_window->Show( true );
 	SetTopWindow( m_updater_window );
-	Updater().StartUpdate( m_version, m_exe_to_update );
-	return true;
+
+	return Updater().StartUpdate( m_version, m_exe_to_update );
 }
 
 
