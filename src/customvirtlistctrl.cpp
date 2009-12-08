@@ -1,6 +1,7 @@
 
 #include <wx/colour.h>
 #include <wx/log.h>
+#include <wx/wupdlock.h>
 
 #include "nonportable.h" //pulls in the SL_DUMMY_COL define if applicable
 #include "settings.h"
@@ -430,13 +431,13 @@ void CustomVirtListCtrl<T,L>::SortList( bool force )
     if ( ( m_sort_timer.IsRunning() ||  !m_dirty_sort ) && !force )
         return;
     wxMutexLocker lock(s_mutexProtectingTheGlobalData);
-
-    SelectionSaver<ThisType>(*this);
-    Freeze();
-    Sort();
-    Thaw();
-    m_dirty_sort = false;
-    RefreshVisibleItems();
+    {
+        wxWindowUpdateLocker upd( this );
+        SelectionSaver<ThisType>(*this);
+        Sort();
+        m_dirty_sort = false;
+    }
+    RefreshVisibleItems();//needs to be out of locker scope
 }
 
 template < class T, class L >

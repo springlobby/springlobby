@@ -343,9 +343,8 @@ wxString BattleroomListCtrl::GetItemText(long item, long column) const
 
 void BattleroomListCtrl::UpdateUser( const int& index )
 {
-    Freeze();
+    wxWindowUpdateLocker lock( this );
     RefreshItem( index );
-    Thaw();
     MarkDirtySort();
 }
 
