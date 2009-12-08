@@ -395,9 +395,9 @@ void ServerEvents::OnUserLeftBattle( int battleid, const wxString& nick )
     try
     {
         Battle& battle = m_serv.GetBattle( battleid );
-				User& user = battle.GetUser( nick );
+        User& user = battle.GetUser( nick );
         battle.OnUserRemoved( user );
-				ui().OnUserLeftBattle( battle, user );
+        ui().OnUserLeftBattle( battle, user );
     }
     catch (std::runtime_error &except)
     {
