@@ -3,15 +3,23 @@
 
 #include "globalevents.h"
 
-
-template <class Derived, class EventDataType = GlobalEvents::GlobalEventData >
-class UnitsyncReloadedSink {
+template <class Derived>
+class CRTPbase {
 	protected:
 		Derived& asImp () { return static_cast<Derived&>(*this); }
 		const Derived& asImp () const { return static_cast<const Derived&>(*this); }
+};
 
+/** \brief mixin classes that provide automatic sink creation and setup
+
+    originally created to work around name resolution problems when using sinks in templated classes
+**/
+template <class Derived, class EventDataType = GlobalEvents::GlobalEventData >
+class UnitsyncReloadedSink : public CRTPbase<Derived> {
+	protected:
 		typedef UnitsyncReloadedSink<Derived,EventDataType>
 			BaseType;
+        using CRTPbase<Derived>::asImp;
 
 	public:
 		void OnUnitsyncReloaded( EventDataType data ) { asImp().OnUnitsyncReloaded( data ); }
@@ -28,13 +36,11 @@ class UnitsyncReloadedSink {
 };
 
 template <class Derived, class EventDataType = GlobalEvents::GlobalEventData >
-class SpringTerminatedSink {
+class SpringTerminatedSink : public CRTPbase<Derived> {
 	protected:
-		Derived& asImp () { return static_cast<Derived&>(*this); }
-		const Derived& asImp () const { return static_cast<const Derived&>(*this); }
-
 		typedef SpringTerminatedSink<Derived,EventDataType>
 			BaseType;
+        using CRTPbase<Derived>::asImp;
 
 	public:
 		void OnSpringTerminated( EventDataType data ) { asImp().OnSpringTerminated( data ); }
@@ -51,13 +57,11 @@ class SpringTerminatedSink {
 };
 
 template <class Derived, class EventDataType = GlobalEvents::GlobalEventData >
-class OnQuitSink {
+class OnQuitSink : public CRTPbase<Derived> {
 	protected:
-		Derived& asImp () { return static_cast<Derived&>(*this); }
-		const Derived& asImp () const { return static_cast<const Derived&>(*this); }
-
 		typedef OnQuitSink<Derived,EventDataType>
 			BaseType;
+        using CRTPbase<Derived>::asImp;
 
 	public:
 		void OnQuit( EventDataType data ) { asImp().OnQuit( data ); }
