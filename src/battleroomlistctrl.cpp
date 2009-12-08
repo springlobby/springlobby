@@ -320,10 +320,10 @@ wxString BattleroomListCtrl::GetItemText(long item, long column) const
                 if ( !user.BattleStatus().aiversion.IsEmpty() ) botname += _T(" ") + user.BattleStatus().aiversion;
                 if ( !usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) )
                 {
-                    if ( botname.Contains(_T('.')) ) botname = botname.BeforeLast(_T('.'));
-                    if ( botname.Contains(_T('/')) ) botname = botname.AfterLast(_T('/'));
-                    if ( botname.Contains(_T('\\')) ) botname = botname.AfterLast(_T('\\'));
-                    if ( botname.Contains(_T("LuaAI:")) ) botname = botname.AfterFirst(_T(':'));
+                    if ( botname.Find(_T('.')) != wxNOT_FOUND ) botname = botname.BeforeLast(_T('.'));
+                    if ( botname.Find(_T('/')) != wxNOT_FOUND ) botname = botname.AfterLast(_T('/'));
+                    if ( botname.Find(_T('\\')) != wxNOT_FOUND ) botname = botname.AfterLast(_T('\\'));
+                    if ( botname.Find(_T("LuaAI:")) != wxNOT_FOUND ) botname = botname.AfterFirst(_T(':'));
                 }
                 return botname;
             }

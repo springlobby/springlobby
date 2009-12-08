@@ -122,7 +122,7 @@ void ChannelListctrl::FilterChannel( const wxString& partial )
     unsigned int idx = 0;
     for ( unsigned int i = 0; i < m_data.size() ; ++i ) {
         const ChannelInfo& data = m_data[i];
-        if ( data.name.Contains( partial ) ) {
+        if ( data.name.Find( partial ) != wxNOT_FOUND ) {
             m_visible_idxs[idx] = i;
             idx++;
         }

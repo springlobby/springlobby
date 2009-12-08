@@ -165,10 +165,10 @@ wxString AddBotDialog::RefineAIName( const wxString& name )
   wxString ret = name;
   if ( !usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) )
   {
-		if ( ret.Contains(_T('.')) ) ret = ret.BeforeLast(_T('.'));
-		if ( ret.Contains(_T('/')) ) ret = ret.AfterLast(_T('/'));
-		if ( ret.Contains(_T('\\')) ) ret = ret.AfterLast(_T('\\'));
-		if ( ret.Contains(_T("LuaAI:")) ) ret = ret.AfterFirst(_T(':'));
+		if ( ret.Find(_T('.')) != wxNOT_FOUND ) ret = ret.BeforeLast(_T('.'));
+		if ( ret.Find(_T('/')) != wxNOT_FOUND ) ret = ret.AfterLast(_T('/'));
+		if ( ret.Find(_T('\\')) != wxNOT_FOUND ) ret = ret.AfterLast(_T('\\'));
+		if ( ret.Find(_T("LuaAI:")) != wxNOT_FOUND ) ret = ret.AfterFirst(_T(':'));
   }
   if ( m_ai->FindString( ret ) == wxNOT_FOUND ) return ret;
   wxString ret2;
