@@ -396,7 +396,7 @@ TorrentWrapper::TorrentWrapper():
 
 TorrentWrapper::~TorrentWrapper()
 {
-    wxLogMessage(_T("TorrentWrapper::~TorrentWrapper()"));
+    wxLogDebugFunc( wxEmptyString );
     m_maintenance_thread.Stop();
     try
     {
