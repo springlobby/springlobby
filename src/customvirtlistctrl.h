@@ -21,6 +21,8 @@
 #include <utility>
 #include <map>
 
+#include <wx/thread.h>
+
 #include "useractions.h"
 #include "Helper/sortutil.h"
 
@@ -299,9 +301,9 @@ public:
      void ReverseOrder();
 
 protected:
-    typedef CustomVirtListCtrl< DataImp, ListCtrlImp >
+    typedef CustomVirtListCtrl< DataType, ListCtrlImp >
         BaseType;
-    typedef std::vector< DataImp >
+    typedef std::vector< DataType >
         DataVector;
     typedef typename DataVector::iterator
         DataIter;
@@ -322,8 +324,8 @@ protected:
     //! the Comparator object passed to the SLInsertionSort function
     ItemComparator<DataType> m_comparator;
 
-    bool RemoveItem( const DataImp item );
-    bool AddItem( const DataImp item );
+    bool RemoveItem( const DataType item );
+    bool AddItem( const DataType item );
 
     long m_periodic_sort_timer_id;
     wxTimer m_periodic_sort_timer;
@@ -340,6 +342,9 @@ private:
 
     ListCtrlImp& asImp() { return static_cast<ListCtrlImp&>(*this); }
     const ListCtrlImp& asImp() const { return static_cast<const ListCtrlImp&>(*this); }
+
+    static wxMutex s_mutexProtectingTheGlobalData;
+
 };
 
 template < class ListCtrlType >

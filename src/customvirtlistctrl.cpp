@@ -92,6 +92,7 @@ CustomVirtListCtrl<T,L>::CustomVirtListCtrl(wxWindow* parent, wxWindowID id, con
 template < class T, class L >
 CustomVirtListCtrl<T,L>::~CustomVirtListCtrl()
 {
+    Disconnect( m_periodic_sort_timer_id, wxTimerEvent().GetEventType(),   wxTimerEventHandler( ThisType::OnPeriodicSort ) );
     sett().SetSortOrder( m_name, m_sortorder );
 }
 
@@ -202,7 +203,7 @@ void CustomVirtListCtrl<T,L>::RefreshVisibleItems()
 {
 #ifndef __WXMSW__
     long topItemIndex = GetTopItem();
-    long range = topItemIndex + GetCountPerPage();
+    long range = topItemIndex + GetCountPerPage() -1;
     //RefreshItems( topItemIndex,  clamp( range, topItemIndex, (long) m_data.size() ) );
     RefreshItems( topItemIndex,  range );
 #else
@@ -415,10 +416,16 @@ bool CustomVirtListCtrl<T,L>::PopupMenu(wxMenu* menu, const wxPoint& pos )
 }
 
 template < class T, class L >
+wxMutex CustomVirtListCtrl<T,L>::s_mutexProtectingTheGlobalData;
+
+
+template < class T, class L >
 void CustomVirtListCtrl<T,L>::SortList( bool force )
 {
     if ( ( m_sort_timer.IsRunning() ||  !m_dirty_sort ) && !force )
         return;
+    wxMutexLocker lock(s_mutexProtectingTheGlobalData);
+
     SelectionSaver<ThisType>(*this);
     Freeze();
     Sort();
@@ -430,6 +437,7 @@ void CustomVirtListCtrl<T,L>::SortList( bool force )
 template < class T, class L >
 void CustomVirtListCtrl<T,L>::Clear()
 {
+    wxMutexLocker lock(s_mutexProtectingTheGlobalData);
     m_data.clear();
     SetItemCount( 0 );
     ResetSelection();
@@ -551,6 +559,7 @@ bool CustomVirtListCtrl<T,L>::AddItem( const T item )
     if ( GetIndexFromData( item ) != -1 )
         return false;
 
+    wxMutexLocker lock(s_mutexProtectingTheGlobalData);
     m_data.push_back( item );
     SetItemCount( m_data.size() );
     RefreshItem( m_data.size() - 1 );
@@ -565,6 +574,7 @@ bool CustomVirtListCtrl<T,L>::RemoveItem( const T item )
     int index = GetIndexFromData( item );
 
     if ( index != -1 ) {
+        wxMutexLocker lock(s_mutexProtectingTheGlobalData);
         SelectionSaver<ThisType>(*this);
         m_data.erase( m_data.begin() + index );
         SetItemCount( m_data.size() );
