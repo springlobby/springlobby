@@ -424,7 +424,7 @@ bool BattleListFilter::_IntCompare( const int a, const int b, const BattleListFi
 
 bool BattleListFilter::StringMatches(const wxString& input, const wxString& filter_string, const wxRegEx* filter_regex, StringTransformFunction additional_transform, bool case_sensitive)
 {
-    if ( filter_string.Length() < 1 || filter_string == _T("") )
+    if ( filter_string.Len() < 1 || filter_string == _T("") )
 	return true;
 
     wxString input_cased ( input );

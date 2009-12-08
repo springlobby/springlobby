@@ -169,22 +169,22 @@ void UserListctrl::HighlightItem( long /*item */)
 
 int wxCALLBACK UserListctrl::ComparePlayercountryDOWN(long item1, long item2, long /*unused*/)
 {
-    return ( (UserData*) item1)->first.Upper().CompareTo( ( (UserData*) item2)->first.Upper() ) ;
+    return ( (UserData*) item1)->first.Upper().Cmp( ( (UserData*) item2)->first.Upper() ) ;
 }
 
 int wxCALLBACK UserListctrl::ComparePlayercountryUP(long item1, long item2, long /*unused*/)
 {
-    return ( (UserData*) item2)->first.Upper().CompareTo( ( (UserData*) item1)->first.Upper() ) ;
+    return ( (UserData*) item2)->first.Upper().Cmp( ( (UserData*) item1)->first.Upper() ) ;
 }
 
 int wxCALLBACK UserListctrl::ComparePlayernameDOWN(long item1, long item2, long /*unused*/)
 {
-    return ( (UserData*) item1)->second.Upper().CompareTo( ( (UserData*) item2)->second.Upper() ) ;
+    return ( (UserData*) item1)->second.Upper().Cmp( ( (UserData*) item2)->second.Upper() ) ;
 }
 
 int wxCALLBACK UserListctrl::ComparePlayernameUP(long item1, long item2, long /*unused*/)
 {
-    return ( (UserData*) item2)->second.Upper().CompareTo( ( (UserData*) item1)->second.Upper()) ;
+    return ( (UserData*) item2)->second.Upper().Cmp( ( (UserData*) item1)->second.Upper()) ;
 }
 
 void UserListctrl::OnColClick( wxListEvent& event )

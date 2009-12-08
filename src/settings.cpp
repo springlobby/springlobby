@@ -800,7 +800,8 @@ wxPathList Settings::GetAdditionalSearchPaths( wxPathList& pl )
 	for ( size_t i = 0; i < pl.GetCount(); i++ )
 	{
 		wxString path = pl[i];
-		if ( path.Last() != sep ) path += sep;
+		if ( !path.EndsWith( wxString(sep) ) )
+            path += sep;
 		ret.Add( path );
 		ret.Add( path + _T( "Spring" ) + sep );
 		ret.Add( path + _T( "spring" ) + sep );
