@@ -1325,13 +1325,13 @@ bool Settings::GetDisplayJoinLeave( const wxString& channel  )
 
 void Settings::SetChatHistoryLenght( int historylines )
 {
-	m_config->Write( _T( "/Chat/HistoryLinesLenght/" ), historylines );
+	m_config->Write( _T( "/Chat/HistoryLinesLenght" ), historylines );
 }
 
 
 int Settings::GetChatHistoryLenght()
 {
-	return m_config->Read( _T( "/Chat/HistoryLinesLenght/" ), 1000 );
+	return m_config->Read( _T( "/Chat/HistoryLinesLenght" ), 1000l );
 }
 
 

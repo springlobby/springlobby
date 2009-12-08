@@ -83,11 +83,11 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, IBattle* battle, bool 
 		int count = 0;
     AddColumn( count, widths[count], _T("Status"), _T("Player/Bot") );
 		count++;
-    if ( m_showingame )
-    {
-			AddColumn( count, widths[count], _T("Ingame"), _T("Battleroom status") );
-		}
-		count++;
+    if ( m_showingame ) {
+        AddColumn( count, widths[count], _T("Ingame"), _T("Battleroom status") );
+        count++;
+    }
+
     AddColumn( count, widths[count], _T("Faction"), _T("Faction icon") );
 		count++;
     AddColumn( count, widths[count], _T("Colour"), _T("Teamcolour") );

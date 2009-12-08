@@ -42,9 +42,9 @@ CustomVirtListCtrl<T,L>::CustomVirtListCtrl(wxWindow* parent, wxWindowID id, con
     m_controlPointer( 0 ),
 #endif
 #ifndef SL_DUMMY_COL
-    m_columnCount( column_count_in ),
+    m_columnCount( 0 ),
 #else
-    m_columnCount( column_count_in + 1 ),
+    m_columnCount( 0 + 1 ),
 #endif
     m_selected_index(-1),
     m_prev_selected_index(-1),
@@ -102,6 +102,7 @@ void CustomVirtListCtrl<T,L>::AddColumn(long i, int width, const wxString& label
     #ifdef SL_DUMMY_COL
         i++;
     #endif
+    m_columnCount++;
     ListBaseType::InsertColumn( i, label, wxLIST_FORMAT_LEFT, width);
     SetColumnWidth( i, width );
     colInfo temp( i, label, tip, modifiable, width );
@@ -201,11 +202,13 @@ void CustomVirtListCtrl<T,L>::SetSelectedIndex(const long newindex)
 template < class T, class L >
 void CustomVirtListCtrl<T,L>::RefreshVisibleItems()
 {
+    if ( m_data.size() < 1 )
+        return;
 #ifndef __WXMSW__
     long topItemIndex = GetTopItem();
-    long range = topItemIndex + GetCountPerPage() -1;
-    //RefreshItems( topItemIndex,  clamp( range, topItemIndex, (long) m_data.size() ) );
-    RefreshItems( topItemIndex,  range );
+    long range = topItemIndex + GetCountPerPage();
+    RefreshItems( topItemIndex,  clamp( range, topItemIndex, (long) m_data.size() -1 ) );
+    //RefreshItems( topItemIndex,  range );
 #else
     RefreshItems( 0,  m_data.size() -1 );
 #endif
@@ -353,6 +356,8 @@ void CustomVirtListCtrl<T,L>::OnEndResizeCol(wxListEvent& event)
 template < class T, class L >
 bool CustomVirtListCtrl<T,L>::SetColumnWidth(int col, int& width)
 {
+    assert( col < (long)m_columnCount );
+    assert( col >= 0 );
     if ( sett().GetColumnWidth( m_name, col) != Settings::columnWidthUnset)
     {
         width = sett().GetColumnWidth( m_name, col);
