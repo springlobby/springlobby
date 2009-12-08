@@ -95,7 +95,11 @@ ChatPanel& MainChatTab::ServerChat()
 
 ChatPanel* MainChatTab::GetActiveChatPanel()
 {
-	return ( ChatPanel* )m_chat_tabs->GetPage( m_chat_tabs->GetSelection() );
+    int selection = m_chat_tabs->GetSelection();
+    if ( selection < 0 )
+        return NULL;
+    else
+        return static_cast< ChatPanel* >( m_chat_tabs->GetPage( selection ) );
 }
 
 

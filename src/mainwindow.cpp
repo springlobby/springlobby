@@ -21,6 +21,7 @@
 #include <wx/log.h>
 #include <wx/dcmemory.h>
 #include <wx/choicdlg.h>
+#include <wx/wupdlock.h>
 #include <wx/aui/auibook.h>
 #include <wx/tooltip.h>
 #include <wx/aboutdlg.h>
@@ -275,6 +276,10 @@ MainWindow::~MainWindow()
 
 void MainWindow::OnClose( wxCloseEvent& /*unused*/ )
 {
+    GetGlobalEventSender(GlobalEvents::OnQuit).SendEvent( 0 ); // request an unitsync reload
+    SetEvtHandlerEnabled(false);
+    {
+    wxWindowUpdateLocker lock( this );
     SavePerspectives();
   AuiManagerContainer::ManagerType* manager=GetAui().manager;
   if(manager){
@@ -308,6 +313,7 @@ void MainWindow::OnClose( wxCloseEvent& /*unused*/ )
 #endif
   }
 
+    }
   Destroy();
 
 }

@@ -106,8 +106,6 @@ bool SpringLobbyApp::OnInit()
 
     //this needs to called _before_ mainwindow instance is created
     wxInitAllImageHandlers();
-     //TODO needed?
-    wxImage::AddHandler(new wxPNGHandler);
     wxFileSystem::AddHandler(new wxZipFSHandler);
     wxSocketBase::Initialize();
 

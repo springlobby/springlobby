@@ -229,7 +229,7 @@ wxWindowUpdateLocker noUpdates(m_user_list);
     filter.MakeLower();
     name.MakeLower();
 
-    if ( (filter != wxEmptyString) && (!name.Contains(filter)) ) {
+    if ( (filter != wxEmptyString) && (name.Find(filter) == wxNOT_FOUND) ) {
       wxListItem listItem;
       listItem.SetId(item);
       m_user_list->GetItem(listItem);
@@ -257,7 +257,7 @@ wxWindowUpdateLocker noUpdates(m_user_list);
     wxString line = m_filtered_users[i];
     int sep = line.Find(' ');
     wxString name = line.Mid(0, sep);
-    if ( name.Contains(filter) || (filter == wxEmptyString) ) {
+    if ( name.Find(filter) != wxNOT_FOUND || (filter == wxEmptyString) ) {
       int flag = (int)FromwxString<long>( line.Mid(sep+1) ); // Flag is never < 0 or > intmax
       AddUserToList( name, flag );
       m_filtered_users.RemoveAt(i);

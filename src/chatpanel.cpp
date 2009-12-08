@@ -576,7 +576,7 @@ void ChatPanel::Said( const wxString& who, const wxString& message )
   }
 
 	if ( ( who == _T( "MelBot" ) || who == _T( "[BOT]tizbacbridgebot" ) )
-            && message.StartsWith( _T( "<" ) ) && message.Contains( _T( ">" ) ) )
+            && message.StartsWith( _T( "<" ) ) && message.Find( _T( ">" ) ) != wxNOT_FOUND )
     {
 		wxString who2;
 		wxString message2;
@@ -610,7 +610,7 @@ bool ChatPanel::ContainsWordToHighlight( const wxString& message ) const
     wxArrayString words = sett().GetHighlightedWords();
     for ( unsigned int i = 0; i < words.GetCount(); i++ )
     {
-        if ( message.Contains( words[i] ) )
+        if ( message.Find( words[i] ) != wxNOT_FOUND )
             return true;
     }
     return false;
@@ -766,7 +766,7 @@ void ChatPanel::SetTopic( const wxString& who, const wxString& message )
   wxStringTokenizer tkz( message, _T("\n") );
 	while ( tkz.HasMoreTokens() )
 	{
-	  wxString msg = tkz.GetNextToken().Strip();
+	  wxString msg = tkz.GetNextToken().Trim();
 	  OutputLine( _T(" ") + msg, sett().GetChatColorServer(), f );
 	}
 	OutputLine( _( " ** Set by " ) + who, sett().GetChatColorServer(), f );
