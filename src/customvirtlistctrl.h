@@ -201,7 +201,7 @@ public:
 
 public:
     CustomVirtListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pt,
-                    const wxSize& sz,long style, const wxString& name, unsigned int column_count, unsigned int sort_criteria_count, CompareFunction func, bool highlight = true,
+                    const wxSize& sz,long style, const wxString& name, unsigned int sort_criteria_count, CompareFunction func, bool highlight = true,
                     UserActions::ActionType hlaction = UserActions::ActHighlight, bool periodic_sort = false, unsigned int periodic_sort_interval = 5000 /*miliseconds*/);
 
     virtual ~CustomVirtListCtrl();

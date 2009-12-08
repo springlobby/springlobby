@@ -28,7 +28,7 @@ template <class PlaybackType>
 PlaybackListCtrl<PlaybackType>::PlaybackListCtrl( wxWindow* parent  ):
   PlaybackListCtrl::BaseType(parent, RLIST_LIST, wxDefaultPosition, wxDefaultSize,
                 wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT,
-                _T("PlaybackListCtrl"), 8, 4, &CompareOneCrit )
+                _T("PlaybackListCtrl"), 4, &CompareOneCrit )
 {
 #ifdef __WXMSW__
     const int hd = wxLIST_AUTOSIZE_USEHEADER;

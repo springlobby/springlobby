@@ -32,7 +32,7 @@ END_EVENT_TABLE()
 
 template < class T, class L >
 CustomVirtListCtrl<T,L>::CustomVirtListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pt, const wxSize& sz,
-                long style, const wxString& name, unsigned int column_count_in, unsigned int sort_criteria_count,
+                long style, const wxString& name, unsigned int sort_criteria_count,
                 CompareFunction func, bool highlight, UserActions::ActionType hlaction, bool periodic_sort, unsigned int periodic_sort_interval  )
     : ListBaseType(parent, id, pt, sz, style | wxLC_VIRTUAL),
     m_tiptimer(this, IDD_TIP_TIMER),
@@ -45,7 +45,7 @@ CustomVirtListCtrl<T,L>::CustomVirtListCtrl(wxWindow* parent, wxWindowID id, con
 #ifndef SL_DUMMY_COL
     m_columnCount( 0 ),
 #else
-    m_columnCount( 0 + 1 ),
+    m_columnCount( 1 ),
 #endif
     m_selected_index(-1),
     m_prev_selected_index(-1),

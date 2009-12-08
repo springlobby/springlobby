@@ -15,7 +15,7 @@ END_EVENT_TABLE()
 ChannelListctrl::ChannelListctrl(wxWindow* parent, wxWindowID /*unused*/, const wxString& /*unused*/,
                     long /*unused*/, const wxPoint& /*unused*/, const wxSize& /*unused*/)
     :CustomVirtListCtrl<ChannelInfo,ChannelListctrl>(parent, CHANNELLIST, wxDefaultPosition, wxDefaultSize,
-            wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("ChannelListCtrl"), 3, 3, &CompareOneCrit)
+            wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("ChannelListCtrl"), 3, &CompareOneCrit)
 {
 #if defined(__WXMSW__)
     const int widths [3] = { wxLIST_AUTOSIZE, wxLIST_AUTOSIZE, wxLIST_AUTOSIZE };
