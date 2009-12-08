@@ -40,7 +40,8 @@ bool UpdaterClass::StartUpdate( const wxString& latestVersion, const wxString& e
     wxString sep = wxFileName::GetPathSeparator();
     m_latest_version = latestVersion;
     m_currentexe = exe_to_update;
-    if ( !wxFileName::IsDirWritable( m_currentexe.BeforeLast( wxFileName::GetPathSeparator() ) + wxFileName::GetPathSeparator() ) ) {
+    if ( !wxFileName::IsDirWritable( wxPathOnly( m_currentexe ) ) ) {
+        wxLogError( _T("dir not writable: ") + m_currentexe );
         customMessageBox(SL_MAIN_ICON, _("Unable to write to the lobby installation directory.\nPlease update manually or enable write permissions for the current user."), _("Error"));
         return false;
     }
