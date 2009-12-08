@@ -431,15 +431,13 @@ bool CustomVirtListCtrl<T,L>::PopupMenu(wxMenu* menu, const wxPoint& pos )
 }
 
 template < class T, class L >
-wxMutex CustomVirtListCtrl<T,L>::s_mutexProtectingTheGlobalData;
-
-
-template < class T, class L >
 void CustomVirtListCtrl<T,L>::SortList( bool force )
 {
     if ( ( m_sort_timer.IsRunning() ||  !m_dirty_sort ) && !force )
+	{
         return;
-    wxMutexLocker lock(s_mutexProtectingTheGlobalData);
+	}
+
     {
         wxWindowUpdateLocker upd( this );
         SelectionSaver<ThisType>(*this);
@@ -452,7 +450,6 @@ void CustomVirtListCtrl<T,L>::SortList( bool force )
 template < class T, class L >
 void CustomVirtListCtrl<T,L>::Clear()
 {
-    wxMutexLocker lock(s_mutexProtectingTheGlobalData);
     m_data.clear();
     SetItemCount( 0 );
     ResetSelection();
@@ -574,7 +571,6 @@ bool CustomVirtListCtrl<T,L>::AddItem( const T item )
     if ( GetIndexFromData( item ) != -1 )
         return false;
 
-    wxMutexLocker lock(s_mutexProtectingTheGlobalData);
     m_data.push_back( item );
     SetItemCount( m_data.size() );
     RefreshItem( m_data.size() - 1 );
@@ -589,7 +585,6 @@ bool CustomVirtListCtrl<T,L>::RemoveItem( const T item )
     int index = GetIndexFromData( item );
 
     if ( index != -1 ) {
-        wxMutexLocker lock(s_mutexProtectingTheGlobalData);
         SelectionSaver<ThisType>(*this);
         m_data.erase( m_data.begin() + index );
         SetItemCount( m_data.size() );

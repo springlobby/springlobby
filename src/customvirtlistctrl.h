@@ -21,8 +21,6 @@
 #include <utility>
 #include <map>
 
-#include <wx/thread.h>
-
 #include "useractions.h"
 #include "Helper/sortutil.h"
 #include "utils/isink.h"
@@ -304,9 +302,9 @@ public:
      void OnQuit( GlobalEvents::GlobalEventData data );
 
 protected:
-    typedef CustomVirtListCtrl< DataType, ListCtrlImp >
+    typedef CustomVirtListCtrl< DataImp, ListCtrlImp >
         BaseType;
-    typedef std::vector< DataType >
+    typedef std::vector< DataImp >
         DataVector;
     typedef typename DataVector::iterator
         DataIter;
@@ -327,8 +325,8 @@ protected:
     //! the Comparator object passed to the SLInsertionSort function
     ItemComparator<DataType> m_comparator;
 
-    bool RemoveItem( const DataType item );
-    bool AddItem( const DataType item );
+    bool RemoveItem( const DataImp item );
+    bool AddItem( const DataImp item );
 
     long m_periodic_sort_timer_id;
     wxTimer m_periodic_sort_timer;
@@ -346,7 +344,6 @@ private:
     ListCtrlImp& asImp() { return static_cast<ListCtrlImp&>(*this); }
     const ListCtrlImp& asImp() const { return static_cast<const ListCtrlImp&>(*this); }
 
-    static wxMutex s_mutexProtectingTheGlobalData;
 };
 
 template < class ListCtrlType >
