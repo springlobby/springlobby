@@ -12,6 +12,7 @@ namespace GlobalEvents {
       OnSpringTerminated,
       UnitSyncReloadRequest,
       UpdateFinished,
+      OnQuit,
 
       OnTimerUpdates
     };

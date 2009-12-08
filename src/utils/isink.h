@@ -50,6 +50,29 @@ class SpringTerminatedSink {
 		{}
 };
 
+template <class Derived, class EventDataType = GlobalEvents::GlobalEventData >
+class OnQuitSink {
+	protected:
+		Derived& asImp () { return static_cast<Derived&>(*this); }
+		const Derived& asImp () const { return static_cast<const Derived&>(*this); }
+
+		typedef OnQuitSink<Derived,EventDataType>
+			BaseType;
+
+	public:
+		void OnQuit( EventDataType data ) { asImp().OnQuit( data ); }
+
+    protected:
+        typedef EventReceiverFunc<OnQuitSink, EventDataType, &OnQuitSink::OnQuit>
+            EventReceiverFunction;
+        EventReceiverFunction m_OnQuitSink;
+
+    public:
+		OnQuitSink ()
+			: m_OnQuitSink( this, &GetGlobalEventSender( GlobalEvents::OnQuit) )
+		{}
+};
+
 
 #endif // SPRINGLOBBY_HEADERGUARD_ISINK_H
 

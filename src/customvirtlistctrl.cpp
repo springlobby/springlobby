@@ -91,8 +91,17 @@ CustomVirtListCtrl<T,L>::CustomVirtListCtrl(wxWindow* parent, wxWindowID id, con
 }
 
 template < class T, class L >
+void CustomVirtListCtrl<T,L>::OnQuit( GlobalEvents::GlobalEventData /*data*/ )
+{
+    m_periodic_sort_timer.Stop();
+    m_dirty_sort = false;
+    Clear();
+}
+
+template < class T, class L >
 CustomVirtListCtrl<T,L>::~CustomVirtListCtrl()
 {
+    m_periodic_sort_timer.Stop();
     Disconnect( m_periodic_sort_timer_id, wxTimerEvent().GetEventType(),   wxTimerEventHandler( ThisType::OnPeriodicSort ) );
     sett().SetSortOrder( m_name, m_sortorder );
 }
@@ -598,7 +607,7 @@ wxString CustomVirtListCtrl<T,L>::OnGetItemText(long item, long column) const
         return wxEmptyString;
     column--;
     #endif
-    assert( item < m_data.size() );
+    assert( item < (long)m_data.size() );
     assert( column < m_columnCount );
     return asImp().GetItemText(item, column);
 }

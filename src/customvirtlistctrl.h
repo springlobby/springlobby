@@ -25,6 +25,7 @@
 
 #include "useractions.h"
 #include "Helper/sortutil.h"
+#include "utils/isink.h"
 
 class SLTipWindow;
 
@@ -36,7 +37,7 @@ class SLTipWindow;
  * \tparam the type of stored data
  */
 template < class DataImp, class ListCtrlImp >
-class CustomVirtListCtrl : public ListBaseType
+class CustomVirtListCtrl : public ListBaseType, public OnQuitSink<CustomVirtListCtrl<DataImp,ListCtrlImp> >
 {
 public:
     typedef DataImp
@@ -300,6 +301,8 @@ public:
 
      void ReverseOrder();
 
+     void OnQuit( GlobalEvents::GlobalEventData data );
+
 protected:
     typedef CustomVirtListCtrl< DataType, ListCtrlImp >
         BaseType;
@@ -344,7 +347,6 @@ private:
     const ListCtrlImp& asImp() const { return static_cast<const ListCtrlImp&>(*this); }
 
     static wxMutex s_mutexProtectingTheGlobalData;
-
 };
 
 template < class ListCtrlType >
