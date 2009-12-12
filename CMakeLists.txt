@@ -265,6 +265,6 @@ add_custom_target(distcheck + cd ${CMAKE_BINARY_DIR} &&
                         rm -rf ${PACKAGE_NAME}-${PACKAGE_VERSION} &&
                         tar -xzf ${PACKAGE_NAME}-${PACKAGE_VERSION}.tar.gz &&
                         cd ${PACKAGE_NAME}-${PACKAGE_VERSION}/ &&
-                        cmake . && ${CMAKE_MAKE_PROGRAM}
+                        cmake "-DCMAKE_CXX_FLAGS:STRING=-O0". && ${CMAKE_MAKE_PROGRAM}
 					)
 add_dependencies( distcheck dist )
