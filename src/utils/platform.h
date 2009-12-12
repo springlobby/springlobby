@@ -15,6 +15,8 @@ bool CopyDir( wxString origin, wxString destination, bool overwrite = true);
 
 /** \brief on vista execute command with admin temp eleveation, on earlier win it acts as "normal" shell execute **/
 bool WinExecuteAdmin( const wxString& command, const wxString& params );
+/** \brief "normal" shell execute **/
+bool WinExecute( const wxString& command, const wxString& params );
 
 //! returns false on !win, checks for regkey on win
 bool IsUACenabled();

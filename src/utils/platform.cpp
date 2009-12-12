@@ -261,9 +261,29 @@ bool WinExecuteAdmin( const wxString& command, const wxString& params )
 
       return ShellExecuteEx(&shExecInfo);
 }
-#endif
 
-#ifdef __WXMSW__
+bool WinExecute( const wxString& command, const wxString& params )
+{
+      SHELLEXECUTEINFO shExecInfo;
+
+      shExecInfo.cbSize = sizeof(SHELLEXECUTEINFO);
+    shExecInfo.lpVerb = _T("open");
+      shExecInfo.fMask = NULL;
+      shExecInfo.hwnd = NULL;
+
+#ifdef _MSC_VER //some strange compiler stupidity going on here
+      shExecInfo.lpFile = command.c_str();
+      shExecInfo.lpParameters = params.c_str();
+#else
+	  shExecInfo.lpFile = command.wc_str();
+      shExecInfo.lpParameters = params.wc_str();
+#endif
+      shExecInfo.lpDirectory = NULL;
+      shExecInfo.hInstApp = NULL;
+
+      return ShellExecuteEx(&shExecInfo);
+}
+
 bool IsPreVistaWindows()
 {
     return wxPlatformInfo().GetOSMajorVersion() < 6;
