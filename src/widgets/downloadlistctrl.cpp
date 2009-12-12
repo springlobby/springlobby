@@ -14,7 +14,7 @@ END_EVENT_TABLE()
 WidgetDownloadListctrl::WidgetDownloadListctrl(wxWindow* parent, wxWindowID /*unused*/, const wxString& /*unused*/,
                     long /*unused*/, const wxPoint&/*unused*/, const wxSize& /*unused*/)
     : WidgetDownloadListctrl::BaseType(parent, WIDGETLISTCTRL_ID, wxDefaultPosition, wxDefaultSize,
-            wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("WidgetDownloadListCtrl"), column_count, 3, &CompareOneCrit)
+            wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("WidgetDownloadListCtrl"), 3, &CompareOneCrit)
 {
     const int as = wxLIST_AUTOSIZE;
 #if defined(__WXMSW__)

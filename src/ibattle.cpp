@@ -350,35 +350,39 @@ bool IBattle::ShouldAutoStart() const
 
 void IBattle::OnUserRemoved( User& user )
 {
-		UserBattleStatus& bs = user.BattleStatus();
-		if ( !bs.spectator )
-		{
-			PlayerLeftTeam( bs.team );
-			PlayerLeftAlly( bs.ally );
- 		}
-		if ( bs.ready && !bs.IsBot() ) m_players_ready--;
-		if ( bs.sync && !bs.IsBot() ) m_players_sync--;
+    UserBattleStatus& bs = user.BattleStatus();
+    if ( !bs.spectator )
+    {
+        PlayerLeftTeam( bs.team );
+        PlayerLeftAlly( bs.ally );
+    }
+    if ( bs.ready && !bs.IsBot() )
+        m_players_ready--;
+    if ( bs.sync && !bs.IsBot() )
+        m_players_sync--;
     if ( IsFounderMe() && bs.spectator )
     {
-      m_opts.spectators--;
-      SendHostInfo( HI_Spectators );
+        m_opts.spectators--;
+        SendHostInfo( HI_Spectators );
     }
     if ( &user == &GetMe() )
     {
-    	 if ( m_timer ) m_timer->Stop();
-    	 delete m_timer;
-    	 m_timer = 0;
-    	 OnSelfLeftBattle();
+        if ( m_timer )
+            m_timer->Stop();
+        delete m_timer;
+        m_timer = 0;
+        OnSelfLeftBattle();
     }
     UserList::RemoveUser( user.GetNick() );
-    if ( !bs.IsBot() ) user.SetBattle( 0 );
+    if ( !bs.IsBot() )
+        user.SetBattle( 0 );
     else
     {
     	UserVecIter itor = m_internal_bot_list.find( user.GetNick() );
-			if ( itor != m_internal_bot_list.end() )
-			{
-    			m_internal_bot_list.erase( itor );
-			}
+        if ( itor != m_internal_bot_list.end() )
+        {
+            m_internal_bot_list.erase( itor );
+        }
     }
 }
 

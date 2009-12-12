@@ -51,8 +51,6 @@
 #include "Helper/wxTranslationHelper.h"
 #include "playback/playbacktraits.h"
 #include "playback/playbacktab.h"
-#include "updater/versionchecker.h"
-#include "updater/updatermainwindow.h"
 #include "defines.h"
 #include "customizations.h"
 
@@ -60,25 +58,6 @@
 
 const unsigned int TIMER_ID         = 101;
 const unsigned int TIMER_INTERVAL   = 100;
-
-
-#if 0
-/// testing TDF parser
-#include "tdfcontainer.h"
-#include <iostream>
-#include <fstream>
-void TestTDFParser(){
-  PDataList parsetree(new DataList);
-  Tokenizer tokenizer;
-  std::ifstream f("/home/dmytry/.spring/script.txt");
-  tokenizer.EnterStream(f);
-  parsetree->Load(tokenizer);
-  wxString result;
-  TDFWriter writer(result);
-  parsetree->Save(writer);
-  wxLogMessage(_T("Testing tdf parser: result %s "), result.c_str());
-}
-#endif
 
 IMPLEMENT_APP(SpringLobbyApp)
 
@@ -97,9 +76,7 @@ SpringLobbyApp::SpringLobbyApp()
     m_log_console( true ),
     m_log_window_show( false ),
     m_crash_handle_disable( false ),
-    m_updateing_only( false ),
-    m_start_simple_interface( false ),
-    m_updater_window( 0 )
+    m_start_simple_interface( false )
 {
     SetAppName( _T("springlobby") );
 }
@@ -129,8 +106,6 @@ bool SpringLobbyApp::OnInit()
 
     //this needs to called _before_ mainwindow instance is created
     wxInitAllImageHandlers();
-     //TODO needed?
-    wxImage::AddHandler(new wxPNGHandler);
     wxFileSystem::AddHandler(new wxZipFSHandler);
     wxSocketBase::Initialize();
 
@@ -160,18 +135,6 @@ bool SpringLobbyApp::OnInit()
 
 	sett().RefreshSpringVersionList();
 
-#ifdef __WXMSW__
-    //everything below should not be executing when updating, so we can ensure no MainWindow window is created, torrent system isn't started, etc.
-    // NOTE: this assumes no one will try to update at firstRun
-    if ( m_updateing_only ) {
-        wxString latestVersion = GetLatestVersion();
-        m_updater_window = new UpdaterMainwindow( latestVersion );
-        m_updater_window->Show( true );
-        SetTopWindow( m_updater_window );
-        Updater().StartUpdate( latestVersion );
-        return true;
-    }
-#endif
     usync(); //init object, sink needs to exist before event is posted. next line would do both object(sink) creation and Event posting
     GetGlobalEventSender(GlobalEvents::UnitSyncReloadRequest).SendEvent( 0 ); // request an unitsync reload
 
@@ -280,9 +243,6 @@ void SpringLobbyApp::OnInitCmdLine(wxCmdLineParser& parser)
         { wxCMD_LINE_SWITCH, STR("cl"), STR("console-logging"),  _("shows application log to the console(if available)"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
     #endif
         { wxCMD_LINE_SWITCH, STR("gl"), STR("gui-logging"),  _("enables application log window"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
-    #ifdef __WXMSW__
-        { wxCMD_LINE_SWITCH, STR("u"), STR("update"),  _("only run update, quit immediately afterwards"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
-    #endif
         { wxCMD_LINE_OPTION, STR("f"), STR("config-file"),  _("override default choice for config-file"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL | wxCMD_LINE_NEEDS_SEPARATOR },
         { wxCMD_LINE_OPTION, STR("l"), STR("log-verbosity"),  _("overrides default logging verbosity, can be:\n                                0: no log\n                                1: critical errors\n                                2: errors\n                                3: warnings (default)\n                                4: messages\n                                5: function trace"), wxCMD_LINE_VAL_NUMBER, wxCMD_LINE_PARAM_OPTIONAL },
         { wxCMD_LINE_OPTION, STR("c"), STR("customize"),  _("Load lobby customizations from game archive. Expects the shortname."), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
@@ -327,12 +287,7 @@ bool SpringLobbyApp::OnCmdLineParsed(wxCmdLineParser& parser)
 
         if ( parser.Found(_T("help")) )
             return false; // not a syntax error, but program should stop if user asked for command line usage
-#ifdef __WXMSW__
-        if ( parser.Found(_T("update")) ) {
-            m_updateing_only = true;
-            return true;
-        }
-#endif
+
         return true;
     }
     else

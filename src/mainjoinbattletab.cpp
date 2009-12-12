@@ -125,7 +125,7 @@ void MainJoinBattleTab::HostBattle( Battle& battle )
 }
 
 
-void MainJoinBattleTab::LeaveCurrentBattle( bool called_from_join )
+void MainJoinBattleTab::LeaveCurrentBattle( bool /*called_from_join*/ )
 {
     PreSwitchBattlePerspective();
 	m_mm_opts_tab->SetBattle( 0 );

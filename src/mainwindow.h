@@ -91,7 +91,7 @@ class MainWindow : public wxFrame
     void OnUnitSyncReloaded();
     void OnChannelList( const wxString& channel, const int& numusers, const wxString& topic );
     void OnChannelListStart( );
-    void OnClose( wxCloseEvent& evt );
+    void OnClose( wxCloseEvent& );
 
     void OnTabsChanged( wxAuiNotebookEvent& event );
     MainChatTab& GetChatTab();

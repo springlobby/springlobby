@@ -21,6 +21,7 @@
 #include <wx/log.h>
 #include <wx/dcmemory.h>
 #include <wx/choicdlg.h>
+#include <wx/wupdlock.h>
 #include <wx/aui/auibook.h>
 #include <wx/tooltip.h>
 #include <wx/aboutdlg.h>
@@ -69,7 +70,7 @@
 #include "settings++/frame.h"
 #include "utils/customdialogs.h"
 
-#include "updater/updater.h"
+#include "updater/updatehelper.h"
 #include "channel/autojoinchanneldialog.h"
 #include "channel/channelchooserdialog.h"
 #include "Helper/imageviewer.h"
@@ -272,6 +273,10 @@ MainWindow::~MainWindow()
 
 void MainWindow::OnClose( wxCloseEvent& /*unused*/ )
 {
+    GetGlobalEventSender(GlobalEvents::OnQuit).SendEvent( 0 ); // request an unitsync reload
+    SetEvtHandlerEnabled(false);
+    {
+    wxWindowUpdateLocker lock( this );
     SavePerspectives();
   AuiManagerContainer::ManagerType* manager=GetAui().manager;
   if(manager){
@@ -305,6 +310,7 @@ void MainWindow::OnClose( wxCloseEvent& /*unused*/ )
 #endif
   }
 
+    }
   Destroy();
 
 }
@@ -538,7 +544,7 @@ void MainWindow::OnMenuQuit( wxCommandEvent& /*unused*/ )
 
 void MainWindow::OnMenuVersion( wxCommandEvent& /*unused*/ )
 {
-  Updater().CheckForUpdates();
+    ui().CheckForUpdates();
 }
 
 void MainWindow::OnUnitSyncReload( wxCommandEvent& /*unused*/ )

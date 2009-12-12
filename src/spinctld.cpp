@@ -161,7 +161,7 @@ bool wxSpinCtrlDbl::Create( wxWindow *parent, wxWindowID id,
     wxArrayString list;
 
     wxString valid_chars(wxT(" 0123456789+-.eE"));
-    size_t len = valid_chars.Length();
+    size_t len = valid_chars.Len();
     for (size_t i=0; i<len; i++)
         list.Add(wxString(valid_chars.GetChar(i)));
 
@@ -170,7 +170,7 @@ bool wxSpinCtrlDbl::Create( wxWindow *parent, wxWindowID id,
     wxStringList list;
 
     wxString valid_chars(wxT(" 0123456789+-.eE"));
-    size_t len = valid_chars.Length();
+    size_t len = valid_chars.Len();
     for (size_t i=0; i<len; i++)
         list.Add(wxString(valid_chars.GetChar(i)));
 

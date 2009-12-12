@@ -253,9 +253,9 @@ wxBitmap BlendBitmaps( const wxBitmap& background, const wxBitmap& overlay, cons
 
 
 namespace {
+//! Helper class for BorderInvariantResizeImage
 struct Resizer
 {
-	// Helper class for BorderInvariantResizeImage
 	// Author: Tobi Vollebregt
 
 	Resizer( wxImage& result, const wxImage& image, bool alpha )

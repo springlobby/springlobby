@@ -213,7 +213,7 @@ bool Spring::LaunchSpring( const wxString& params  )
 
 		configfileflags = _T("--config=\"") + configfileflags + _T("\" ");
 		#ifdef __WXMSW__
-		if ( usync().GetSpringVersion().Contains(_T("0.78.") ) ) configfileflags = _T("");
+		if ( usync().GetSpringVersion().Find(_T("0.78.") ) != wxNOT_FOUND ) configfileflags = _T("");
 		#endif
   }
 
@@ -315,7 +315,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 				case BT_Replay:
 				{
 					wxString path = battle.GetPlayBackFilePath();
-					if ( path.Contains(_T("/")) ) path.BeforeLast(_T('/'));
+					if ( path.Find(_T("/")) != wxNOT_FOUND ) path.BeforeLast(_T('/'));
 					tdf.Append( _T("DemoFile"), path );
 					tdf.AppendLineBreak();
 					break;
@@ -323,7 +323,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 				case BT_Savegame:
 				{
 					wxString path = battle.GetPlayBackFilePath();
-					if ( path.Contains(_T("/")) ) path.BeforeLast(_T('/'));
+					if ( path.Find(_T("/")) != wxNOT_FOUND ) path.BeforeLast(_T('/'));
 					tdf.Append( _T("Savefile"), path );
 					tdf.AppendLineBreak();
 					break;

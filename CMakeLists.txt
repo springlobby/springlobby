@@ -26,6 +26,7 @@ SET(CMAKE_FIND_LIBRARY_SUFFIXES ".so" ".lib" ".a")
 # Load needed Modules
 #----------------------------------------------------------------------------------------------------
 INCLUDE(cmake/package_config.cmake)
+INCLUDE(cmake/sources.list)
 # PKG-Config
 FIND_PACKAGE( PkgConfig )
 IF(CMAKE_CROSSCOMPILING OR NOT WIN32)
@@ -175,187 +176,21 @@ ELSE( OPTION_TORRENT_SYSTEM )
 ENDIF( OPTION_TORRENT_SYSTEM )
 
 
-#----------------------------------------------------------------------------------------------------
-# Source listing
-#----------------------------------------------------------------------------------------------------
-
-# We define the include paths here, our minimal source dir is one
-
-INCLUDE_DIRECTORIES(${springlobby_SOURCE_DIR} ${Settings_SOURCE_DIR} )
-
-SET(springlobbySrc
-	src/updater/updatermainwindow.cpp
-	src/utils/activitynotice.cpp
-	src/chatpanelmenu.cpp
-	src/customizations.cpp
-	src/gui/gradientpanel.cpp
-	src/gui/wxgradientbutton.cpp
-	src/gui/skirmish_dialog.cpp
-	src/gui/wxbackgroundimage.cpp
-	src/gui/simplefront.cpp
-	src/aui/slbook.cpp
-	src/utils/math.cpp
-	src/utils/misc.cpp
-	src/utils/debug.cpp
-	src/utils/platform.cpp
-	src/utils/conversion.cpp
-	src/utils/tasutil.cpp
-	src/utils/sltipwin.cpp
-	src/utils/controls.cpp
-	src/utils/globalevents.cpp
-	src/utils/networkevents.cpp
-	src/utils/uievents.cpp
-	src/utils/md5.c
-	src/updater/updater.cpp
-	src/updater/versionchecker.cpp
-	src/Helper/TextCompletionDatabase.cpp
-	src/Helper/imageviewer.cpp
-	src/Helper/slhtmlwindow.cpp
-	src/channel/channelchooser.cpp
-	src/channel/channelchooserdialog.cpp
-	src/Helper/wxtextctrlhist.cpp
-	src/Helper/colorbutton.cpp
-	src/filelister/filelistctrl.cpp
-	src/filelister/filelistdialog.cpp
-	src/filelister/filelistfilter.cpp
-	src/aui/auimanager.cpp
-	src/aui/artprovider.cpp
-	src/autobalancedialog.cpp
-	src/autohost.cpp
-	src/channel/autojoinchanneldialog.cpp
-	src/addbotdialog.cpp
-	src/agreementdialog.cpp
-	src/base64.cpp
-	src/battle.cpp
-	src/battlelist.cpp
-	src/battlelistctrl.cpp
-	src/battlelistfilter.cpp
-	src/battlelisttab.cpp
-	src/battlemaptab.cpp
-	src/battleoptionstab.cpp
-	src/battleroomlistctrl.cpp
-	src/battleroomtab.cpp
-	src/crc.cpp
-	src/channel/channel.cpp
-	src/channel/channellist.cpp
-	src/channel/channellistctrl.cpp
-	src/chatlog.cpp
-	src/chatoptionstab.cpp
-	src/chatpanel.cpp
-	src/connectwindow.cpp
-	src/countrycodes.cpp
-	src/crashreport.cpp
-	src/customlistctrl.cpp
-	src/flagimages.cpp
-	src/groupoptionspanel.cpp
-	src/hostbattledialog.cpp
-	src/ibattle.cpp
-	src/iconimagelist.cpp
-	src/lobbyoptionstab.cpp
-	src/mainchattab.cpp
-	src/mainjoinbattletab.cpp
-	src/mainoptionstab.cpp
-	src/mainsingleplayertab.cpp
-	src/maintorrenttab.cpp
-	src/mainwindow.cpp
-	src/mapctrl.cpp
-	src/mapgridctrl.cpp
-	src/mapselectdialog.cpp
-	src/mmoptionwindows.cpp
-	src/mmoptionmodel.cpp
-	src/mmoptionswrapper.cpp
-	src/nicklistctrl.cpp
-	src/offlinebattle.cpp
-	src/playback/replaylist.cpp
-	src/playback/savegamelist.cpp
-	src/sdlsound.cpp
-	src/selectusersdialog.cpp
-	src/server.cpp
-	src/serverevents.cpp
-	src/settings.cpp
-	src/singleplayerbattle.cpp
-	src/singleplayertab.cpp
-	src/socket.cpp
-	src/spinctld.cpp
-	src/spring.cpp
-	src/springlobbyapp.cpp
-	src/springoptionstab.cpp
-	src/springprocess.cpp
-	src/springunitsync.cpp
-	src/springunitsynclib.cpp
-	src/tasserver.cpp
-	src/tdfcontainer.cpp
-	src/thread.cpp
-	src/torrentlistctrl.cpp
-	src/torrentoptionspanel.cpp
-	src/torrentwrapper.cpp
-	src/ui.cpp
-	src/uiutils.cpp
-	src/user.cpp
-	src/useractions.cpp
-	src/userlist.cpp
-	src/userlistctrl.cpp
-	src/widgets/downloadlistctrl.cpp
-	src/widgets/downloaddialog.cpp
-	src/widgets/downloadpanel.cpp
-	src/widgets/infopanel.cpp
-	src/widgets/widget.cpp
-	src/globalsmanager.cpp
-	src/Helper/wxTranslationHelper.cpp
-	src/Helper/tasclientimport.cpp
-
-)
-
-SET(SettingsSrc
-	src/utils/customdialogs.cpp
-	src/settings++/frame.cpp
-	src/settings++/helpmenufunctions.cpp
-	src/settings++/panel_pathoption.cpp
-	src/settings++/se_utils.cpp
-	src/settings++/tab_abstract.cpp
-	src/settings++/tab_audio.cpp
-	src/settings++/tab_quality_video.cpp
-	src/settings++/tab_render_detail.cpp
-	src/settings++/tab_simple.cpp
-	src/settings++/tab_ui.cpp
-)
-
-SET(StandAloneSettings
-	src/settings.cpp
-	src/uiutils.cpp
-	src/settings++/Main.cpp
-)
-
-SET(SLSharedWithSettings
-	src/utils/debug.cpp
-	src/utils/platform.cpp
-	src/utils/conversion.cpp
-	src/utils/sltipwin.cpp
-	src/utils/controls.cpp
-	src/updater/versionchecker.cpp
-	src/crashreport.cpp
-	src/springunitsynclib.cpp
-	src/springunitsync.cpp
-	src/thread.cpp
-	src/spinctld.cpp
-	src/globalsmanager.cpp
-	src/utils/globalevents.cpp
-	src/mmoptionmodel.cpp
-	src/mmoptionswrapper.cpp
-)
-
 # If we build for windows Systems, we also include the Resource-File containing the Manifest, Icon and other Resources.
 IF(WIN32)
 	IF(MINGW OR CMAKE_CROSSCOMPILING)
 		FIND_PROGRAM(WINDRES NAMES windres i586-mingw32msvc-windres i686-mingw32-windres DOC "path to mingw's windres executable")
 		ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/sl_icon.o COMMAND ${WINDRES} -I${springlobby_SOURCE_DIR}/src -I${wxWidgets_RC_DIR} -i${springlobby_SOURCE_DIR}/src/springlobby.rc -o ${CMAKE_CURRENT_BINARY_DIR}/sl_icon.o)
 		ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/ss_icon.o COMMAND ${WINDRES} -I${springlobby_SOURCE_DIR}/src -I${wxWidgets_RC_DIR} -i${springlobby_SOURCE_DIR}/src/settings++/settings.rc -o ${CMAKE_CURRENT_BINARY_DIR}/ss_icon.o)
+		ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/su_icon.o COMMAND ${WINDRES} -I${springlobby_SOURCE_DIR}/src -I${wxWidgets_RC_DIR} -i${springlobby_SOURCE_DIR}/src/updater/updater.rc -o ${CMAKE_CURRENT_BINARY_DIR}/su_icon.o)
 		SET(springlobby_RC_FILE ${CMAKE_CURRENT_BINARY_DIR}/sl_icon.o )
 		SET(SpringSettings_RC_FILE ${CMAKE_CURRENT_BINARY_DIR}/ss_icon.o )
+		SET(updater_RC_FILE ${CMAKE_CURRENT_BINARY_DIR}/su_icon.o )
 	ENDIF(MINGW OR CMAKE_CROSSCOMPILING)
 
 	SET(springlobbySrc ${springlobbySrc} src/Helper/listctrl.cpp)
 	SET(springlobbySrc ${springlobbySrc} src/springlobby.rc)
+	SET(updaterSrc ${updaterSrc} src/updater/updater.rc)
 	SET(StandAloneSettings ${StandAloneSettings} src/settings++/settings.rc)
 ELSE(WIN32)
 # If we don't build for windows, include some source code checks as pre-build step.
@@ -384,17 +219,22 @@ cmake_policy(SET CMP0006 OLD)
 
 ADD_EXECUTABLE(springlobby WIN32 MACOSX_BUNDLE ${springlobbySrc} ${SettingsSrc} ${springlobby_RC_FILE})
 ADD_EXECUTABLE(springsettings WIN32 MACOSX_BUNDLE ${StandAloneSettings} ${SpringSettings_RC_FILE} ${SettingsSrc} ${SLSharedWithSettings} )
+IF(WIN32)
+	ADD_EXECUTABLE(springlobby_updater WIN32 MACOSX_BUNDLE ${updaterSrc}  ${SLSharedWithSettings} ${updater_RC_FILE})
+	TARGET_LINK_LIBRARIES(springlobby_updater ${wxWidgets_LIBRARIES})
+ENDIF(WIN32)
 
 # Here the wxWidgets Libraries are added. These are set for us by the FIND Script. If you need other Libraries, you can add them here as well.
 TARGET_LINK_LIBRARIES(springlobby ${wxWidgets_LIBRARIES})
 TARGET_LINK_LIBRARIES(springsettings ${wxWidgets_LIBRARIES})
+
 IF(MINGW)
 	TARGET_LINK_LIBRARIES( springlobby iphlpapi )
 	TARGET_LINK_LIBRARIES( springsettings iphlpapi  )
 ENDIF(MINGW)
 
 IF (WIN32)
-    install(TARGETS springlobby springsettings RUNTIME DESTINATION .)
+    install(TARGETS springlobby springlobby_updater springsettings RUNTIME DESTINATION .)
     install(FILES AUTHORS COPYING NEWS README THANKS  DESTINATION .)
 	install(DIRECTORY ${CMAKE_INSTALL_PREFIX}/locale DESTINATION .)
 ELSE (WIN32)
@@ -406,7 +246,11 @@ ELSE (WIN32)
 	    ${CMAKE_INSTALL_PREFIX}/share/applications)
 ENDIF (WIN32)
 
-add_custom_target(pack COMMAND ${CMAKE_MAKE_PROGRAM} package)
+add_custom_target(pack
+					${CMAKE_MAKE_PROGRAM} package
+					&& ${springlobby_SOURCE_DIR}/tools/transform_release_zip.sh
+						${CMAKE_BINARY_DIR}/${PACKAGE_NAME}-${PACKAGE_VERSION}-win32.zip
+				)
 
 # setup make dist
 add_custom_target(dist cd ${CMAKE_SOURCE_DIR} &&

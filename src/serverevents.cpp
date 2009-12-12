@@ -383,9 +383,9 @@ void ServerEvents::OnUserLeftBattle( int battleid, const wxString& nick )
     try
     {
         Battle& battle = m_serv.GetBattle( battleid );
-				User& user = battle.GetUser( nick );
+        User& user = battle.GetUser( nick );
         battle.OnUserRemoved( user );
-				ui().OnUserLeftBattle( battle, user );
+        ui().OnUserLeftBattle( battle, user );
     }
     catch (std::runtime_error &except)
     {
@@ -447,10 +447,10 @@ void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const w
             {
             	OnBattleDisableUnit( battleid, key.AfterFirst(_T('/')), s2l(value) );
             }
-            else if ( key.Left( 4 ) == _T( "team" ) && key.Contains( _T("startpos") ) )
+            else if ( key.Left( 4 ) == _T( "team" ) && key.Find( _T("startpos") ) != wxNOT_FOUND )
             {
             	 int team = s2l( key.BeforeFirst(_T('/')).Mid( 4 ) );
-							 if ( key.Contains( _T("startposx") ) )
+							 if ( key.Find( _T("startposx") ) != wxNOT_FOUND )
 							 {
 							 	 int numusers = battle.GetNumUsers();
 							 	 for ( int i = 0; i < numusers; i++ )
@@ -464,7 +464,7 @@ void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const w
 							 	 	 }
 							 	 }
 							 }
-							 else if ( key.Contains( _T("startposy") ) )
+							 else if ( key.Find( _T("startposy") ) != wxNOT_FOUND )
 							 {
 							 	 int numusers = battle.GetNumUsers();
 							 	 for ( int i = 0; i < numusers; i++ )
@@ -935,7 +935,7 @@ void ServerEvents::OnScriptEnd( int battleid )
 void ServerEvents::OnFileDownload( bool autolaunch, bool autoclose, bool /*disconnectonrefuse*/, const wxString& FileName, const wxString& url, const wxString& description )
 {
 	wxString refinedurl;
-	if ( url.Contains(_T("http://")) ) refinedurl = url.AfterFirst(_T('/')).AfterFirst(_T('/'));
+	if ( url.Find(_T("http://")) != wxNOT_FOUND ) refinedurl = url.AfterFirst(_T('/')).AfterFirst(_T('/'));
 	else refinedurl = url;
 	bool result = ui().Ask( _("Download update"), wxString::Format( _("Would you like to download %s ? The file offers the following updates:\n\n%s\n\nThe download will be started in the background, you will be notified on operation completed."), url.c_str(), description.c_str() ) );
 	if ( result )

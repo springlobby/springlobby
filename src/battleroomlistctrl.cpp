@@ -57,7 +57,7 @@ END_EVENT_TABLE()
 
 BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, IBattle* battle, bool readonly, bool showingame )
     : CustomVirtListCtrl< User *,BattleroomListCtrl>(parent, BRLIST_LIST, wxDefaultPosition, wxDefaultSize,
-                wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL, _T("BattleroomListCtrl"), 10, 3, &CompareOneCrit,
+                wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL, _T("BattleroomListCtrl"), 3, &CompareOneCrit,
                 true /*highlight*/, UserActions::ActHighlight, !readonly /*periodic sort*/ ),
 	m_battle(battle),
 	m_popup(0),
@@ -83,11 +83,11 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, IBattle* battle, bool 
 		int count = 0;
     AddColumn( count, widths[count], _T("Status"), _T("Player/Bot") );
 		count++;
-    if ( m_showingame )
-    {
-			AddColumn( count, widths[count], _T("Ingame"), _T("Battleroom status") );
-		}
-		count++;
+    if ( m_showingame ) {
+        AddColumn( count, widths[count], _T("Ingame"), _T("Battleroom status") );
+        count++;
+    }
+
     AddColumn( count, widths[count], _T("Faction"), _T("Faction icon") );
 		count++;
     AddColumn( count, widths[count], _T("Colour"), _T("Teamcolour") );
@@ -320,10 +320,10 @@ wxString BattleroomListCtrl::GetItemText(long item, long column) const
                 if ( !user.BattleStatus().aiversion.IsEmpty() ) botname += _T(" ") + user.BattleStatus().aiversion;
                 if ( !usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) )
                 {
-                    if ( botname.Contains(_T('.')) ) botname = botname.BeforeLast(_T('.'));
-                    if ( botname.Contains(_T('/')) ) botname = botname.AfterLast(_T('/'));
-                    if ( botname.Contains(_T('\\')) ) botname = botname.AfterLast(_T('\\'));
-                    if ( botname.Contains(_T("LuaAI:")) ) botname = botname.AfterFirst(_T(':'));
+                    if ( botname.Find(_T('.')) != wxNOT_FOUND ) botname = botname.BeforeLast(_T('.'));
+                    if ( botname.Find(_T('/')) != wxNOT_FOUND ) botname = botname.AfterLast(_T('/'));
+                    if ( botname.Find(_T('\\')) != wxNOT_FOUND ) botname = botname.AfterLast(_T('\\'));
+                    if ( botname.Find(_T("LuaAI:")) != wxNOT_FOUND ) botname = botname.AfterFirst(_T(':'));
                 }
                 return botname;
             }
@@ -343,9 +343,8 @@ wxString BattleroomListCtrl::GetItemText(long item, long column) const
 
 void BattleroomListCtrl::UpdateUser( const int& index )
 {
-    Freeze();
+    wxWindowUpdateLocker lock( this );
     RefreshItem( index );
-    Thaw();
     MarkDirtySort();
 }
 

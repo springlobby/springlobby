@@ -382,14 +382,14 @@ bool TASServer::Register( const wxString& addr, const int port, const wxString& 
     if ( tempsocket.State() != SS_Open ) return false;
 
     wxString data = tempsocket.Receive().BeforeLast(_T('\n'));
-    if ( data.Contains( _T("\r") ) ) data = data.BeforeLast(_T('\r'));
+    if ( data.Find( _T("\r") ) != wxNOT_FOUND ) data = data.BeforeLast(_T('\r'));
     if ( GetWordParam( data ) != _T("TASServer") ) return false;
 
     tempsocket.Send( _T("REGISTER ") + nick + _T(" ") + GetPasswordHash( password ) + _T("\n") );
 
     data = tempsocket.Receive().BeforeLast(_T('\n'));
     tempsocket.Disconnect();
-    if ( data.Contains( _T("\r") ) ) data = data.BeforeLast(_T('\r'));
+    if ( data.Find( _T("\r") ) != wxNOT_FOUND ) data = data.BeforeLast(_T('\r'));
     if ( data.IsEmpty() )
     {
         reason = _("Connection timed out");
@@ -590,7 +590,7 @@ void TASServer::ExecuteCommand( const wxString& in )
 		wxString copy = cmd;
 		cmd = DecodeTokenMessage( cmd );
 		if ( copy != cmd ) m_token_transmission = true;
-		cmd.UpperCase();
+		cmd.MakeUpper();
 
     if ( m_debug_dont_catch )
     {

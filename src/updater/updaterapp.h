@@ -5,16 +5,14 @@
 
 class wxTimer;
 class wxTimerEvent;
-class wxIcon;
-class wxLocale;
-class wxTranslationHelper;
+class UpdaterMainwindow;
 
 //! @brief SpringLobby wxApp
-class SpringLobbyApp : public wxApp
+class UpdaterApp : public wxApp
 {
   public:
-    SpringLobbyApp();
-    ~SpringLobbyApp();
+    UpdaterApp();
+    ~UpdaterApp();
 
     virtual bool OnInit();
     virtual int OnExit();
@@ -23,7 +21,6 @@ class SpringLobbyApp : public wxApp
 
     // System Events
     void OnTimer( wxTimerEvent& event );
-    bool SelectLanguage();
 
     virtual void OnInitCmdLine(wxCmdLineParser& parser);
     virtual bool OnCmdLineParsed(wxCmdLineParser& parser);
@@ -31,25 +28,18 @@ class SpringLobbyApp : public wxApp
 
   protected:
 
-    void CacheAndSettingsSetup();
-
     wxTimer* m_timer;
+	wxString m_exe_to_update;
+	wxString m_version;
 
-    bool quit_called;
+    UpdaterMainwindow* m_updater_window;
 
-    wxTranslationHelper* m_translationhelper;
-
-    long m_log_verbosity;
-    bool m_log_console;
-    bool m_log_window_show;
-    bool m_crash_handle_disable;
-    bool m_start_simple_interface;
-    wxString m_customizer_modname;
+    std::ofstream* m_logstream_target;
 
     DECLARE_EVENT_TABLE()
 };
 
-DECLARE_APP(SpringLobbyApp)
+DECLARE_APP(UpdaterApp)
 
 #endif // SPRINGLOBBY_HEADERGUARD_SPRINGLOBBYAPP_H
 

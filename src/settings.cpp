@@ -659,7 +659,7 @@ void Settings::ConvertOldChannelSettings()
 	{
 		wxString channelinfo = m_config->Read( _T( "/Channels/Channel" ) + TowxString( i ), _T( "" ) );
 		m_config->DeleteEntry( _T( "/Channels/Channel" ) + TowxString( i ) );
-		if ( channelinfo.Contains( _T( " " ) ) ) AddChannelJoin( channelinfo.BeforeFirst( _T( ' ' ) ), channelinfo.AfterLast( _T( ' ' ) ) );
+		if ( channelinfo.Find( _T( " " ) ) != wxNOT_FOUND ) AddChannelJoin( channelinfo.BeforeFirst( _T( ' ' ) ), channelinfo.AfterLast( _T( ' ' ) ) );
 		else AddChannelJoin( channelinfo, _T( "" ) );
 	}
 }
@@ -800,7 +800,8 @@ wxPathList Settings::GetAdditionalSearchPaths( wxPathList& pl )
 	for ( size_t i = 0; i < pl.GetCount(); i++ )
 	{
 		wxString path = pl[i];
-		if ( path.Last() != sep ) path += sep;
+		if ( !path.EndsWith( wxString(sep) ) )
+            path += sep;
 		ret.Add( path );
 		ret.Add( path + _T( "Spring" ) + sep );
 		ret.Add( path + _T( "spring" ) + sep );
@@ -1325,13 +1326,13 @@ bool Settings::GetDisplayJoinLeave( const wxString& channel  )
 
 void Settings::SetChatHistoryLenght( int historylines )
 {
-	m_config->Write( _T( "/Chat/HistoryLinesLenght/" ), historylines );
+	m_config->Write( _T( "/Chat/HistoryLinesLenght" ), historylines );
 }
 
 
 int Settings::GetChatHistoryLenght()
 {
-	return m_config->Read( _T( "/Chat/HistoryLinesLenght/" ), 1000 );
+	return m_config->Read( _T( "/Chat/HistoryLinesLenght" ), 1000l );
 }
 
 
@@ -2482,4 +2483,14 @@ bool Settings::PerspectiveExists( const wxString& perspective_name )
             return true;
     }
     return false;
+}
+
+void Settings::SetAutoloadedChatlogLinesCount( const int count )
+{
+    m_config->Write( _T( "/GUI/AutoloadedChatlogLinesCount" ), std::abs( count ) );
+}
+
+int Settings::GetAutoloadedChatlogLinesCount( )
+{
+    return m_config->Read( _T( "/GUI/AutoloadedChatlogLinesCount" ), 10l );
 }

@@ -111,7 +111,7 @@ FileListFilter::FileListFilter( wxWindow* parent, wxWindowID id, FileListDialog*
 bool FileListFilter::FilterTorrentData( const TorrentTable::PRow& data )
 {
   if(!data.ok())return false;
-	if ( !data->name.Upper().Contains( m_filter_name_edit->GetValue().Upper() )
+	if ( data->name.Upper().Find( m_filter_name_edit->GetValue().Upper() ) == wxNOT_FOUND
 	        && !m_filter_name_expression->Matches( data->name ) )
 		return false;
 	if ( m_filter_type_choice_value == 0 && data->type != IUnitSync::map ) return false;

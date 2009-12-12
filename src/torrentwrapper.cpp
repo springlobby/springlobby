@@ -54,6 +54,10 @@
 #include "globalsmanager.h"
 #include "utils/globalevents.h"
 
+#ifdef __WXMSW__
+    #include "utils/platform.h"
+#endif
+
 
 /** Get the name of the Spring data subdirectory that corresponds to a
  * given IUnitSync::MediaType value.
@@ -364,37 +368,33 @@ TorrentWrapper::TorrentWrapper():
     {
         wxLogError( TowxString( e.what() ) );
     }
-    try
-    {
-        m_torr->start_upnp();
-    }
-    catch (std::exception& e)
-    {
-        wxLogError( TowxString( e.what() ) );
-    }
-    try
-    {
-        m_torr->start_natpmp();
-    }
-    catch (std::exception& e)
-    {
-        wxLogError( TowxString( e.what() ) );
-    }
-    try
-    {
-        m_torr->start_lsd();
-    }
-    catch (std::exception& e)
-    {
-        wxLogError( TowxString( e.what() ) );
-    }
+
+    #ifndef __WXMSW__
+        try
+        {
+            m_torr->start_upnp();
+        }
+        catch (std::exception& e)
+        {
+            wxLogError( TowxString( e.what() ) );
+        }
+        try
+        {
+            m_torr->start_natpmp();
+        }
+        catch (std::exception& e)
+        {
+            wxLogError( TowxString( e.what() ) );
+        }
+    #endif
+    m_socket_class = new Socket( *this );
     UpdateSettings();
 }
 
 
 TorrentWrapper::~TorrentWrapper()
 {
-    wxLogMessage(_T("TorrentWrapper::~TorrentWrapper()"));
+    wxLogDebugFunc( wxEmptyString );
     m_maintenance_thread.Stop();
     try
     {

@@ -20,7 +20,7 @@
 					<Add option="-Wextra" />
 					<Add option="-Wall" />
 					<Add option="-g" />
-					<Add option="`wx-config --cflags`" />
+					<Add option="`wx-config --debug --cflags`" />
 					<Add option="`pkg-config --cflags libtorrent-rasterbar`" />
 					<Add option="-Wno-strict-aliasing" />
 					<Add option='-DVERSION=\\&quot;cb-Unix-Debug\\&quot;' />
@@ -28,7 +28,7 @@
 					<Add option="-DDISABLE_SOUND" />
 				</Compiler>
 				<Linker>
-					<Add option="`wx-config --libs`" />
+					<Add option="`wx-config --debug --libs`" />
 					<Add option="`pkg-config --libs libtorrent-rasterbar`" />
 				</Linker>
 				<ExtraCommands>
