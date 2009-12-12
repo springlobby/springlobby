@@ -381,14 +381,6 @@ TorrentWrapper::TorrentWrapper():
     {
         wxLogError( TowxString( e.what() ) );
     }
-    try
-    {
-        m_torr->start_lsd();
-    }
-    catch (std::exception& e)
-    {
-        wxLogError( TowxString( e.what() ) );
-    }
     m_socket_class = new Socket( *this );
     UpdateSettings();
 }
