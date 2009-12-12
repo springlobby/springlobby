@@ -411,7 +411,7 @@ void SpringLobbyApp::CacheAndSettingsSetup()
 			{
 				sett().TranslateSavedColumWidths();
 			}
-			if ( settversion < 16 )
+			if ( settversion < 17 )
 			{
 				sett().RemoveLayouts();
 			}
