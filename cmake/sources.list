@@ -8,6 +8,7 @@ INCLUDE_DIRECTORIES(${springlobby_SOURCE_DIR} ${Settings_SOURCE_DIR} )
 
 SET(springlobbySrc
 	src/updater/updatermainwindow.cpp
+	src/updater/updatehelper.cpp
 	src/utils/activitynotice.cpp
 	src/chatpanelmenu.cpp
 	src/customizations.cpp
@@ -166,3 +167,17 @@ SET(SLSharedWithSettings
 	src/mmoptionmodel.cpp
 	src/mmoptionswrapper.cpp
 )
+
+SET( updaterSrc
+	src/updater/updatermainwindow.cpp
+	src/updater/updater.cpp
+	src/updater/updaterapp.cpp
+	src/updater/updatehelper.cpp
+	src/settings.cpp
+	src/utils/customdialogs.cpp
+	src/utils/activitynotice.cpp
+	src/utils/platform.cpp
+	src/utils/misc.cpp
+	src/uiutils.cpp
+)
+

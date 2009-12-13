@@ -2,7 +2,7 @@
 #define SPRINGLOBBY_UPDATER_H_INCLUDED
 
 #include <wx/event.h>
-
+#include "../httpdownloader.h"
 
 class UpdaterClass : public wxEvtHandler
 {
@@ -12,9 +12,8 @@ class UpdaterClass : public wxEvtHandler
     void CheckForUpdates();
 
 #ifdef __WXMSW__
-    void StartUpdate( const wxString& rev );
+    bool StartUpdate( const wxString& latestVersion, const wxString& exe_to_update );
 #endif
-		wxString GetDownloadUrl();
     void OnDownloadEvent( wxCommandEvent& event );
 
 protected:
@@ -23,7 +22,10 @@ protected:
     bool UpdateLocale( const wxString& newdir, bool WaitForReboot );
 
     wxString m_newexe;
+    wxString m_currentexe;
     wxString m_latest_version;
+
+    HttpDownloaderThread<UpdaterClass>* m_http_thread;
 
     DECLARE_EVENT_TABLE()
 };

@@ -12,6 +12,7 @@
 #include <wx/dc.h>
 #include <wx/dcclient.h>
 #include <wx/combobox.h>
+#include <cstdlib>
 
 #include "../springunitsync.h"
 #include "../springunitsynclib.h"

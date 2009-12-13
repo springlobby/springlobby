@@ -13,6 +13,7 @@ class wxBoxSizer;
 class wxCheckBox;
 class Ui;
 class ColorButton;
+class wxSpinCtrl;
 
 
 class ChatOptionsTab : public wxScrolledWindow
@@ -105,6 +106,9 @@ class ChatOptionsTab : public wxScrolledWindow
     wxTextCtrl* m_highlight_words;
 
     wxCheckBox* m_irc_colors;
+
+    wxStaticText* m_num_lines_lbl;
+    wxSpinCtrl* m_num_lines;
 
     wxFont m_chat_font;
 

@@ -187,12 +187,15 @@ IF(WIN32)
 		FIND_PROGRAM(WINDRES NAMES windres i586-mingw32msvc-windres i686-mingw32-windres DOC "path to mingw's windres executable")
 		ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/sl_icon.o COMMAND ${WINDRES} -I${springlobby_SOURCE_DIR}/src -I${wxWidgets_RC_DIR} -i${springlobby_SOURCE_DIR}/src/springlobby.rc -o ${CMAKE_CURRENT_BINARY_DIR}/sl_icon.o)
 		ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/ss_icon.o COMMAND ${WINDRES} -I${springlobby_SOURCE_DIR}/src -I${wxWidgets_RC_DIR} -i${springlobby_SOURCE_DIR}/src/settings++/settings.rc -o ${CMAKE_CURRENT_BINARY_DIR}/ss_icon.o)
+		ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/su_icon.o COMMAND ${WINDRES} -I${springlobby_SOURCE_DIR}/src -I${wxWidgets_RC_DIR} -i${springlobby_SOURCE_DIR}/src/updater/updater.rc -o ${CMAKE_CURRENT_BINARY_DIR}/su_icon.o)
 		SET(springlobby_RC_FILE ${CMAKE_CURRENT_BINARY_DIR}/sl_icon.o )
 		SET(SpringSettings_RC_FILE ${CMAKE_CURRENT_BINARY_DIR}/ss_icon.o )
+		SET(updater_RC_FILE ${CMAKE_CURRENT_BINARY_DIR}/su_icon.o )
 	ENDIF(MINGW OR CMAKE_CROSSCOMPILING)
 
 	SET(springlobbySrc ${springlobbySrc} src/Helper/listctrl.cpp)
 	SET(springlobbySrc ${springlobbySrc} src/springlobby.rc)
+	SET(updaterSrc ${updaterSrc} src/updater/updater.rc)
 	SET(StandAloneSettings ${StandAloneSettings} src/settings++/settings.rc)
 ELSE(WIN32)
 # If we don't build for windows, include some source code checks as pre-build step.
@@ -221,17 +224,22 @@ cmake_policy(SET CMP0006 OLD)
 
 ADD_EXECUTABLE(springlobby WIN32 MACOSX_BUNDLE ${springlobbySrc} ${SettingsSrc} ${springlobby_RC_FILE})
 ADD_EXECUTABLE(springsettings WIN32 MACOSX_BUNDLE ${StandAloneSettings} ${SpringSettings_RC_FILE} ${SettingsSrc} ${SLSharedWithSettings} )
+IF(WIN32)
+	ADD_EXECUTABLE(springlobby_updater WIN32 MACOSX_BUNDLE ${updaterSrc}  ${SLSharedWithSettings} ${updater_RC_FILE})
+	TARGET_LINK_LIBRARIES(springlobby_updater ${wxWidgets_LIBRARIES})
+ENDIF(WIN32)
 
 # Here the wxWidgets Libraries are added. These are set for us by the FIND Script. If you need other Libraries, you can add them here as well.
 TARGET_LINK_LIBRARIES(springlobby ${wxWidgets_LIBRARIES})
 TARGET_LINK_LIBRARIES(springsettings ${wxWidgets_LIBRARIES})
+
 IF(MINGW)
 	TARGET_LINK_LIBRARIES( springlobby iphlpapi )
 	TARGET_LINK_LIBRARIES( springsettings iphlpapi  )
 ENDIF(MINGW)
 
 IF (WIN32)
-    install(TARGETS springlobby springsettings RUNTIME DESTINATION .)
+    install(TARGETS springlobby springlobby_updater springsettings RUNTIME DESTINATION .)
     install(FILES AUTHORS COPYING NEWS README THANKS  DESTINATION .)
 	install(DIRECTORY ${CMAKE_INSTALL_PREFIX}/locale DESTINATION .)
 ELSE (WIN32)
@@ -243,7 +251,11 @@ ELSE (WIN32)
 	    ${CMAKE_INSTALL_PREFIX}/share/applications)
 ENDIF (WIN32)
 
-add_custom_target(pack COMMAND ${CMAKE_MAKE_PROGRAM} package)
+add_custom_target(pack
+					${CMAKE_MAKE_PROGRAM} package
+					&& ${springlobby_SOURCE_DIR}/tools/transform_release_zip.sh
+						${CMAKE_BINARY_DIR}/${PACKAGE_NAME}-${PACKAGE_VERSION}-win32.zip
+				)
 
 # setup make dist
 add_custom_target(dist cd ${CMAKE_SOURCE_DIR} &&
@@ -258,6 +270,6 @@ add_custom_target(distcheck + cd ${CMAKE_BINARY_DIR} &&
                         rm -rf ${PACKAGE_NAME}-${PACKAGE_VERSION} &&
                         tar -xzf ${PACKAGE_NAME}-${PACKAGE_VERSION}.tar.gz &&
                         cd ${PACKAGE_NAME}-${PACKAGE_VERSION}/ &&
-                        cmake . && ${CMAKE_MAKE_PROGRAM}
+                        cmake "-DCMAKE_CXX_FLAGS:STRING=-O0". && ${CMAKE_MAKE_PROGRAM}
 					)
 add_dependencies( distcheck dist )
