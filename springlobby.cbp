@@ -485,6 +485,14 @@
 		<Unit filename="src/updater/updatehelper.h" />
 		<Unit filename="src/updater/updater.cpp" />
 		<Unit filename="src/updater/updater.h" />
+		<Unit filename="src/updater/updaterapp.cpp">
+			<Option target="Win32 | Debug" />
+			<Option target="Win32 | Profile" />
+		</Unit>
+		<Unit filename="src/updater/updaterapp.h">
+			<Option target="Win32 | Debug" />
+			<Option target="Win32 | Profile" />
+		</Unit>
 		<Unit filename="src/updater/updatermainwindow.cpp" />
 		<Unit filename="src/updater/updatermainwindow.h" />
 		<Unit filename="src/updater/versionchecker.cpp" />

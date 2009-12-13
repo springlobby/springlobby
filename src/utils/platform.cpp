@@ -247,12 +247,21 @@ bool CopyDirWithFilebackupRename( wxString from, wxString to, bool overwrite )
             else{
                 //if files exists move it to backup, this way we can use this func on windows to replace 'active' files
                 if ( wxFileExists( to + filename ) ) {
+                    //delete prev backup
+                    if ( wxFileExists( to + filename + _T(".old") ) ) {
+                        wxRemoveFile( to + filename + _T(".old")  );
+                    }
+                    //make backup
                     if ( !wxRenameFile( to + filename, to + filename + _T(".old") ) ) {
                         wxLogError( wxString::Format( _T("could not rename %s, copydir aborted"), (to + filename).c_str() ) );
                         return false;
                     }
                 }
-                wxCopyFile(from + filename, to + filename, overwrite);
+                //do the actual copy
+                if ( !wxCopyFile(from + filename, to + filename, overwrite) ) {
+                    wxLogError( wxString::Format( _T("could not copy %s to %s, copydir aborted"), (from + filename).c_str(), (to + filename).c_str() ) );
+                    return false;
+                }
             }
         }
         while (dir.GetNext(&filename) );
