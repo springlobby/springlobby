@@ -35,10 +35,9 @@ SET( sdl_INCLUDE_DIR /opt/mingw32/include/SDL )
 SET( wxWidgets_RC_DIR /opt/mingw32/include/wx-2.8 )
 
 SET( Boost_LIBRARIES
-	boost_thread-gcc44-mt-d-1_41
-	boost_filesystem-gcc44-mt-d-1_41
-	boost_date_time-gcc44-mt-d-1_41
-	boost_system-gcc44-mt-d-1_41 )
+	boost_thread-gcc44-mt-1_41
+	boost_filesystem-gcc44-mt-1_41
+	boost_system-gcc44-mt-1_41 )
 SET( boost_LIB_DIR /opt/mingw32/lib )
 SET( boost_INCLUDE_DIR /opt/mingw32/include )
 link_directories( /opt/mingw32/lib )

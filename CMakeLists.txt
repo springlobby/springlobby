@@ -255,6 +255,7 @@ add_custom_target(pack
 					${CMAKE_MAKE_PROGRAM} package
 					&& ${springlobby_SOURCE_DIR}/tools/transform_release_zip.sh
 						${CMAKE_BINARY_DIR}/${PACKAGE_NAME}-${PACKAGE_VERSION}-win32.zip
+						${CMAKE_STRIP}
 				)
 
 # setup make dist
