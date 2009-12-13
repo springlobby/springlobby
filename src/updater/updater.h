@@ -21,6 +21,8 @@ protected:
     bool UpdateExe( const wxString& newexe, bool WaitForReboot );
     bool UpdateLocale( const wxString& newdir, bool WaitForReboot );
 
+    bool PostMinGW44( const wxString& newdir );
+
     wxString m_newexe;
     wxString m_currentexe;
     wxString m_latest_version;

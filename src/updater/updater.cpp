@@ -12,7 +12,7 @@
 #include <wx/stdpaths.h>
 #include <wx/filefn.h>
 #include <wx/filename.h>
-
+#include <limits>
 
 BEGIN_EVENT_TABLE(UpdaterClass, wxEvtHandler)
     EVT_COMMAND(wxID_ANY, httpDownloadEvtComplete,  UpdaterClass::OnDownloadEvent)
@@ -71,6 +71,11 @@ void UpdaterClass::OnDownloadEvent( wxCommandEvent& event )
     if ( code != 0)
         customMessageBox(SL_MAIN_ICON, _("There was an error downloading for the latest version.\nPlease try again later.\nIf the problem persists, please use Help->Report Bug to report this bug."), _("Error"));
     else {
+        if (!PostMinGW44( m_newexe ) ) {
+            customMessageBox(SL_MAIN_ICON, _("Automatic update failed\n\nyou will be redirected to a web page with instructions and the download link will be opened in your browser."), _("Updater error.") );
+            OpenWebBrowser( _T("http://springlobby.info/wiki/springlobby/Install#Windows-Binary") );
+            OpenWebBrowser( GetDownloadUrl( m_latest_version ) );
+        }
         if ( !UpdateExe( m_newexe , false ) ) {
             customMessageBox(SL_MAIN_ICON, wxString::Format( _("There was an error while trying to replace the current executable version.\n Please manually copy springlobby.exe from: %s\n to: %s\n"), m_newexe.c_str(), m_currentexe.c_str() ), _("Error"));
         }
@@ -115,4 +120,22 @@ bool UpdaterClass::UpdateExe( const wxString& newexe, bool /*unused*/ ) {
     }
 
     return true;
+}
+
+bool UpdaterClass::PostMinGW44( const wxString& newdir )
+{
+    wxString current = TowxString(VERSION);
+    long minor = std::numeric_limits<long>::max();
+    bool convert_ok = current.AfterLast( '.' ).ToLong( &minor );
+    wxLogMessage( wxString::Format( _T("Got minor rev %d"), minor ) );
+    if ( minor > 43 || !convert_ok   ) //0.43 was the last build on old mingw
+        return true; //all is well, we're already on a mingw4.4 build
+    wxString base = wxPathOnly( wxStandardPaths::Get().GetExecutablePath() ) + wxFileName::GetPathSeparator() ;
+
+    //use special copydir to overwrite locked files
+    bool success = CopyDirWithFilebackupRename( newdir + wxFileName::GetPathSeparator(), base  );
+    if ( !success ) {
+        wxLogError( _T("Full dir copy failed") );
+    }
+    return success;
 }
