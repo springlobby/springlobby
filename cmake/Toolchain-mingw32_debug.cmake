@@ -22,6 +22,7 @@ SET( wxWidgets_LIBRARIES
 	wx_mswud_adv-2.8-i586-mingw32msvc
 	wx_mswud_aui-2.8-i586-mingw32msvc
 	wx_mswud_html-2.8-i586-mingw32msvc
+	wx_mswud_qa-2.8-i586-mingw32msvc
 	wx_baseud_xml-2.8-i586-mingw32msvc)
 SET( wxWidgets_INCLUDE_DIRS /var/lib/buildbot/lib/mingw/wx/2.8/include/wx-2.8 /var/lib/buildbot/lib/mingw/wx/2.8/lib/wx/include/i586-mingw32msvc-msw-unicode-debug-2.8/)
 SET( wxWidgets_LIB_DIR /var/lib/buildbot/lib/mingw/wx/2.8/lib )
