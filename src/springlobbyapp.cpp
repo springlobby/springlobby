@@ -112,8 +112,8 @@ bool SpringLobbyApp::OnInit()
 #ifdef __WXMSW__
     wxString path = wxPathOnly( wxStandardPaths::Get().GetExecutablePath() ) + wxFileName::GetPathSeparator() + _T("locale");
 #else
-	#if defined(LOCALEDIR)
-		wxString path ( _T(LOCALEDIR) );
+	#if defined(LOCALE_INSTALL_DIR)
+		wxString path ( _T(LOCALE_INSTALL_DIR) );
 	#else
 		// use a dummy name here, we're only interested in the base path
 		wxString path = wxStandardPaths::Get().GetLocalizedResourcesDir(_T("noneWH"),wxStandardPaths::ResourceCat_Messages);

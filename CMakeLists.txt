@@ -209,7 +209,7 @@ ENDIF(WIN32)
 if( OPTION_TRANSLATION_SUPPORT )
 	include ( ${CMAKE_SOURCE_DIR}/po/CMakeLists.txt )
 endif( OPTION_TRANSLATION_SUPPORT )
-
+ADD_DEFINITIONS( -DLOCALE_INSTALL_DIR=${LOCALE_INSTALL_DIR} )
 #----------------------------------------------------------------------------------------------------
 # Build target defintions
 #----------------------------------------------------------------------------------------------------
