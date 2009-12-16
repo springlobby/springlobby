@@ -1,0 +1,1 @@
+WX_DECLARE_LIST(ToasterBoxWindow, ToasterBoxWindowList);
