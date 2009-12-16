@@ -52,7 +52,8 @@ END_EVENT_TABLE();
 
 Spring& spring()
 {
-	static GlobalObjectHolder<Spring> m_spring;
+    static LineInfo<Spring> m( AT );
+	static GlobalObjectHolder<Spring,LineInfo<Spring> > m_spring( m );
 	return m_spring;
 }
 
@@ -213,7 +214,7 @@ bool Spring::LaunchSpring( const wxString& params  )
 
 		configfileflags = _T("--config=\"") + configfileflags + _T("\" ");
 		#ifdef __WXMSW__
-		if ( usync().GetSpringVersion().Contains(_T("0.78.") ) ) configfileflags = _T("");
+		if ( usync().GetSpringVersion().Find(_T("0.78.") ) != wxNOT_FOUND ) configfileflags = _T("");
 		#endif
   }
 
@@ -315,7 +316,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 				case BT_Replay:
 				{
 					wxString path = battle.GetPlayBackFilePath();
-					if ( path.Contains(_T("/")) ) path.BeforeLast(_T('/'));
+					if ( path.Find(_T("/")) != wxNOT_FOUND ) path.BeforeLast(_T('/'));
 					tdf.Append( _T("DemoFile"), path );
 					tdf.AppendLineBreak();
 					break;
@@ -323,7 +324,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 				case BT_Savegame:
 				{
 					wxString path = battle.GetPlayBackFilePath();
-					if ( path.Contains(_T("/")) ) path.BeforeLast(_T('/'));
+					if ( path.Find(_T("/")) != wxNOT_FOUND ) path.BeforeLast(_T('/'));
 					tdf.Append( _T("Savefile"), path );
 					tdf.AppendLineBreak();
 					break;
@@ -424,7 +425,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 			ProgressiveTeamsVec teams_to_sorted_teams; // original team -> progressive team
 			int free_team = 0;
 			std::map<User*, int> player_to_number; // player -> ordernumber
-
+			srand ( time(NULL) );
 			for ( unsigned int i = 0; i < NumUsers; i++ )
 			{
 					User& user = battle.GetUser( i );
@@ -453,13 +454,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 							else
 							{
 								int speccteam = 0;
-								ProgressiveTeamsVecIter itor = teams_to_sorted_teams.find ( status.team );
-								if ( itor == teams_to_sorted_teams.end() )
-								{
-									srand ( time(NULL) );
-									if ( teams_to_sorted_teams.size() != 0 ) speccteam = rand() % teams_to_sorted_teams.size();
-								}
-								else speccteam = itor->second;
+								if ( teams_to_sorted_teams.size() != 0 ) speccteam = rand() % teams_to_sorted_teams.size();
 								tdf.Append( _T("Team"), speccteam );
 							}
 					tdf.LeaveSection();

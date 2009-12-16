@@ -25,7 +25,6 @@
 #include "settings.h"
 #include "springunitsynclib.h"
 #include "utils/customdialogs.h"
-#include "unitsyncthread.h"
 #include "globalsmanager.h"
 #include "uiutils.h"
 #include "utils/debug.h"
@@ -41,8 +40,9 @@ const wxEventType UnitSyncAsyncOperationCompletedEvt = wxNewEventType();
 
 IUnitSync& usync()
 {
-  static GlobalObjectHolder<SpringUnitSync> m_sync;
-  return m_sync;
+    static LineInfo<SpringUnitSync> m( AT );
+    static GlobalObjectHolder<SpringUnitSync, LineInfo<SpringUnitSync> > m_sync( m );
+    return m_sync;
 }
 
 
@@ -960,7 +960,7 @@ wxString SpringUnitSync::GetArchivePath( const wxString& name )
 
 wxArrayString SpringUnitSync::GetScreenshotFilenames()
 {
-    wxSortedArrayString ret;
+    wxArrayString ret;
     if ( !IsLoaded() ) return ret;
 
     ret = susynclib().FindFilesVFS( _T("screenshots/*.*") );
@@ -968,6 +968,7 @@ wxArrayString SpringUnitSync::GetScreenshotFilenames()
             if ( ret[i] == ret[i+1] )
                 ret.RemoveAt( i+1 );
     }
+    ret.Sort();
     return ret;
 }
 

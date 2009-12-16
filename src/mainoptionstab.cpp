@@ -59,7 +59,7 @@ MainOptionsTab::MainOptionsTab( wxWindow* parent )
     m_imagelist->Add( charArr2wxBitmap( torrentoptionspanel_icon_png, sizeof(torrentoptionspanel_icon_png) )  );
     m_imagelist->Add( wxIcon(userchat_xpm) );
     m_imagelist->Add( wxIcon(userchat_xpm) );
-    m_imagelist->Add( wxIcon(springlobby_xpm) );
+    m_imagelist->Add( wxIcon(springlobby_xpm) ); //!TODO this is non-square ?!!?
 
     m_spring_opts = new SpringOptionsTab( m_tabs );
     m_tabs->AddPage( m_spring_opts, _("Spring"), true, wxIcon(spring_xpm) );
@@ -71,9 +71,6 @@ MainOptionsTab::MainOptionsTab( wxWindow* parent )
 
     m_chat_opts = new ChatOptionsTab( m_tabs );
     m_tabs->AddPage( m_chat_opts, _("Chat"), true, wxIcon(userchat_xpm) );
-
-    m_restore_btn = new wxButton( this, wxID_REVERT, _("Restore") );
-    m_apply_btn = new wxButton( this, wxID_APPLY, _("Apply") );
 
 	m_lobby_opts = new LobbyOptionsTab( m_tabs );
 	m_tabs->AddPage ( m_lobby_opts, _( "General" ), true, wxIcon( springlobby_xpm ) );

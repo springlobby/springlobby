@@ -424,7 +424,7 @@ bool BattleListFilter::_IntCompare( const int a, const int b, const BattleListFi
 
 bool BattleListFilter::StringMatches(const wxString& input, const wxString& filter_string, const wxRegEx* filter_regex, StringTransformFunction additional_transform, bool case_sensitive)
 {
-    if ( filter_string.Length() < 1 || filter_string == _T("") )
+    if ( filter_string.Len() < 1 || filter_string == _T("") )
 	return true;
 
     wxString input_cased ( input );
@@ -438,7 +438,7 @@ bool BattleListFilter::StringMatches(const wxString& input, const wxString& filt
 	filter_cased.MakeUpper();
     }
 
-    if ( input_cased.Contains(filter_cased) || ( use_regex && filter_regex->Matches(input) ) )
+    if ( input_cased.Find(filter_cased) != wxNOT_FOUND || ( use_regex && filter_regex->Matches(input) ) )
 	return true;
     else if ( additional_transform )
     {
@@ -447,7 +447,7 @@ bool BattleListFilter::StringMatches(const wxString& input, const wxString& filt
 	if ( ! case_sensitive )
 	    input_generated.MakeUpper();
 
-	if ( input_generated.Contains(filter_cased) || ( use_regex && filter_regex->Matches(input_generated) ) )
+	if ( input_generated.Find(filter_cased) != wxNOT_FOUND || ( use_regex && filter_regex->Matches(input_generated) ) )
 	    return true;
     }
 

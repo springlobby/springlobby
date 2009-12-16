@@ -40,7 +40,8 @@ SpringUnitSyncLib::~SpringUnitSyncLib()
 
 SpringUnitSyncLib& susynclib()
 {
-  static GlobalObjectHolder<SpringUnitSyncLib> lib;
+    static LineInfo<SpringUnitSyncLib> m( AT );
+  static GlobalObjectHolder<SpringUnitSyncLib, LineInfo<SpringUnitSyncLib> > lib( m );
   return lib.GetInstance();
 }
 

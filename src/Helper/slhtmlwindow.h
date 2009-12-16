@@ -3,7 +3,7 @@
 
 #include <wx/html/htmlwin.h>
 
-
+//! A simple wxHtmlWindow that forwards link clicks to system browser
 class slHtmlWindow : public wxHtmlWindow
 {
     public:

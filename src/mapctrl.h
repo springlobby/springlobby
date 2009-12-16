@@ -79,6 +79,8 @@ class MapCtrl : public wxPanel
 
     void OnGetMapImageAsyncCompleted( wxCommandEvent& event );
 
+    void SetReadOnly( bool readonly ) { m_ro = readonly; }
+
    protected:
 
     int LoadMinimap();

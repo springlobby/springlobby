@@ -60,6 +60,9 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent )
 	m_dontsearch_chkbox->SetValue( sett().GetSearchSpringOnlyInSLPath() );
 #ifndef __WXMSW__
 	m_dontsearch_chkbox->Disable();
+#else
+    m_oldlaunch_chkbox = new wxCheckBox( this, SPRING_DONTSEARCH, _("Use old launch method"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
+    m_oldlaunch_chkbox->SetValue( sett().UseOldSpringLaunchMethod() );
 #endif
 	/* ================================
 	 * Spring executable
@@ -113,7 +116,9 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent )
 	m_main_sizer->Add( m_dontsearch_chkbox, 0, wxEXPAND | wxALL, 5 );
 	m_main_sizer->Add( m_exec_box_sizer, 0, wxEXPAND | wxALL, 5 );
 	m_main_sizer->Add( m_sync_box_sizer, 0, wxEXPAND | wxALL, 5 );
-
+#ifdef __WXMSW__
+    m_main_sizer->Add( m_dontsearch_chkbox, 0, wxEXPAND | wxALL, 5 );
+#endif
 	m_main_sizer->Add( m_aconf_sizer, 0, wxEXPAND | wxALL, 5 );
 	m_main_sizer->AddStretchSpacer();
 
@@ -153,6 +158,7 @@ void SpringOptionsTab::DoRestore()
 {
 #ifdef __WXMSW__
 	m_dontsearch_chkbox->SetValue( sett().GetSearchSpringOnlyInSLPath() );
+    m_oldlaunch_chkbox->SetValue( sett().UseOldSpringLaunchMethod() );
 #endif
 	m_sync_edit->SetValue( sett().GetCurrentUsedUnitSync() );
 	m_exec_edit->SetValue( sett().GetCurrentUsedSpringBinary() );
@@ -208,6 +214,7 @@ void SpringOptionsTab::OnApply( wxCommandEvent& /*unused*/ )
 	sett().SetUnitSync( sett().GetCurrentUsedSpringIndex(), m_sync_edit->GetValue() );
 #ifdef __WXMSW__
 	sett().SetSearchSpringOnlyInSLPath( m_dontsearch_chkbox->IsChecked() );
+	sett().SetOldSpringLaunchMethod( m_oldlaunch_chkbox->IsChecked() );
 #endif
 
 	if ( sett().IsFirstRun() ) return;

@@ -88,20 +88,20 @@ class CommonUser
 {
     public:
         CommonUser(const wxString& nick, const wxString& country, const int& cpu)
-           : m_nick(nick), m_country(country), m_cpu(cpu)  {};
+           : m_nick(wxString(nick)), m_country(wxString(country)), m_cpu(cpu)  {}
 
         virtual ~CommonUser(){}
 
-        wxString GetNick() const { return m_nick; }
+        const wxString& GetNick() const { return m_nick; }
         virtual void SetNick( const wxString& nick ) { m_nick = nick; }
 
-        wxString GetCountry() const { return m_country; }
+        const wxString& GetCountry() const { return m_country; }
         virtual void SetCountry( const wxString& country ) { m_country = country; }
 
         int GetCpu() const { return m_cpu; }
         void SetCpu( const int& cpu ) { m_cpu = cpu; }
 
-        wxString GetID() const { return m_id; }
+        const wxString& GetID() const { return m_id; }
         void SetID( const wxString& id ) { m_id = id; }
 
         UserStatus& Status() { return m_status; }

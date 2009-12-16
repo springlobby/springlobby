@@ -222,7 +222,7 @@ void ConnectWindow::ReloadServerList()
 void ConnectWindow::OnServerChange( wxCommandEvent&  )
 {
     wxString HostAddress = m_server_combo->GetValue();
-		if ( !HostAddress.Contains( _T(":") ) )
+		if ( HostAddress.Find( _T(":") ) == wxNOT_FOUND )
 		{
 			if ( !sett().ServerExists( HostAddress ) )
 			{
@@ -238,7 +238,7 @@ void ConnectWindow::OnOk(wxCommandEvent& )
 {
     Hide();
     wxString HostAddress = m_server_combo->GetValue();
-    if ( !HostAddress.Contains( _T(":") ) )
+    if ( HostAddress.Find( _T(":") ) == wxNOT_FOUND )
 		{
 			if ( !sett().ServerExists( HostAddress ) )
 			{

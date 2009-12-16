@@ -43,7 +43,7 @@ static wxString     cvt = _T("ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 wxString wxBase64::Encode(const wxString& data)
 {
-    return wxBase64::Encode((const wxUint8*)data.c_str(), data.Length());
+    return wxBase64::Encode((const wxUint8*)data.c_str(), data.Len());
 }
 
 wxString wxBase64::Encode(const wxUint8* pData, size_t len)
@@ -93,7 +93,7 @@ std::string wxBase64::Decode(const wxString& data)
 {
     int c;
     int c1;
-    size_t len = data.Length();
+    size_t len = data.Len();
     std::string ret;
     ret.reserve(data.length() * 3 / 4);
 

@@ -266,7 +266,8 @@ void AutoHost::OnUserAdded( User& user )
 
 void AutoHost::OnUserRemoved( User& user )
 {
-	m_userlist.Remove( user.GetNick() );
+    if ( m_userlist.Index( user.GetNick() ) != wxNOT_FOUND )//triggers assertion in arraystring otherwise
+        m_userlist.Remove( user.GetNick() );
 	// do nothing if autohost functionality is disabled
 	if ( !m_enabled )
 		return;

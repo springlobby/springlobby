@@ -5,9 +5,10 @@
 #include <wx/panel.h>
 
 class wxPaintEvent;
-class SL_JPEGHandler;
+class SL_JPEGHandler;//this would be a custom jpeg handler with better resizing implemented
 class wxPaintDC;
 
+//! panel displaying bitmap loaded from file
 class ImagePanel : public wxPanel
 {
     public:
@@ -29,6 +30,7 @@ class ImagePanel : public wxPanel
 class wxBoxSizer;
 class wxButton;
 
+//! panel containing a ImagePanel plus navigation buttons to view a list of filenames
 class ImageViewerPanel : public wxPanel
 {
     public:
@@ -67,6 +69,7 @@ class ImageViewerPanel : public wxPanel
         DECLARE_EVENT_TABLE()
 };
 
+//! dialog used as container for ImageViewerPanel, eg for screenshots filenames retrieved via Unitsysnc
 class ImageViewerDialog : public wxDialog
 {
     public:

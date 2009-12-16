@@ -52,13 +52,6 @@ enum NatType
 		NAT_Fixed_source_ports
 };
 
-enum RankLimitType
-{
-		rank_limit_none = 0,
-		rank_limit_autospec,
-		rank_limit_autokick
-};
-
 
 enum BattleType
 {
@@ -71,7 +64,7 @@ enum BattleType
 struct BattleOptions
 {
 	BattleOptions() :
-		battleid(-1),islocked(false),battletype(BT_Played),ispassworded(false),rankneeded(0),isproxy(false),lockexternalbalancechanges(false),ranklimittype(rank_limit_autospec),
+		battleid(-1),islocked(false),battletype(BT_Played),ispassworded(false),rankneeded(0),isproxy(false),lockexternalbalancechanges(false),
 		nattype(NAT_None),port(DEFAULT_SERVER_PORT),externaludpsourceport(DEFAULT_EXTERNAL_UDP_SOURCE_PORT),internaludpsourceport(DEFAULT_EXTERNAL_UDP_SOURCE_PORT),maxplayers(0),spectators(0),
 		guilistactiv(false) {}
 
@@ -82,7 +75,6 @@ struct BattleOptions
 	int rankneeded;
 	bool isproxy;
 	bool lockexternalbalancechanges;
-	bool ranklimittype;
 
 	wxString founder;
 
@@ -243,7 +235,7 @@ public:
 	virtual unsigned int GetLastRectIdx();
 	virtual unsigned int GetNextFreeRectIdx();
 
-    virtual int GetFreeTeamNum( bool excludeme = false );
+    virtual int GetFreeTeam( bool excludeme = false );
 
     virtual User& GetMe() = 0;
     virtual const User& GetMe() const = 0;
@@ -383,11 +375,18 @@ public:
 
 		virtual void StartSpring() = 0;
 
+		virtual std::map<int, int> GetAllySizes() { return m_ally_sizes; }
+		virtual std::map<int, int> GetTeamSizes() { return m_teams_sizes; }
+
 protected:
 
     void LoadScriptMMOpts( const wxString& sectionname, const PDataList& node );
     void LoadScriptMMOpts( const PDataList& node );
 
+		void PlayerLeftTeam( int team );
+		void PlayerLeftAlly( int ally );
+		void PlayerJoinedTeam( int team );
+		void PlayerJoinedAlly( int ally );
 
     bool m_map_loaded;
     bool m_mod_loaded;

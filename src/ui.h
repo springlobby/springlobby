@@ -6,26 +6,28 @@ class TASServer;
 class ConnectWindow;
 class Spring;
 class MainWindow;
-class wxString;
 class Channel;
 class User;
-class wxTimer;
-class wxTimerEvent;
 class IBattle;
 class Battle;
 class SinglePlayerBattle;
 class OfflineBattle;
 class ChatPanel;
 
-#include <wx/event.h>
+//this removes the necessity to drag wx/event.h into almost every other file for a single type
+//if it's too "hackish" for someone's taste, just include that header again and remove this (koshi)
+#ifndef wxEventType
+typedef int wxEventType;
+#endif
 
 typedef int AlertEventType;
 
 extern const wxEventType torrentSystemStatusUpdateEvt;
 
+#include <wx/string.h>
 
 //! @brief UI main class
-class Ui : public wxEvtHandler
+class Ui
 {
   public:
 
@@ -80,7 +82,7 @@ class Ui : public wxEvtHandler
 
     bool IsMainWindowCreated() const;
 
-    void OnUpdate( wxTimerEvent& event );
+    void OnUpdate( int mselapsed );
 
     void OnConnected( Server& server, const wxString& server_name, const wxString& server_ver, bool supported );
     void OnLoggedIn( );
@@ -147,10 +149,7 @@ class Ui : public wxEvtHandler
 
     //! the welcome box, should be called in all code paths directly after MainWindow might be shown for the first time
     void FirstRunWelcome();
-
-    void StartUpdateTimer();
-    void StopUpdateTimer();
-
+    void CheckForUpdates();
 
   protected:
     Server* m_serv;
@@ -164,15 +163,12 @@ class Ui : public wxEvtHandler
     bool m_first_update_trigger;
 
     bool m_ingame;
-    wxTimer* m_timer;
 
     //! does actual work, called from downloadmap/mod
     void DownloadFileP2P( const wxString& hash, const wxString& name );
 
     private:
         Ui( const Ui& );
-
-    DECLARE_EVENT_TABLE()
 
 };
 
