@@ -170,7 +170,7 @@ wxSize wxGradientButton::DoGetBestSize() const
 * wxEVT_PAINT event handler for ID_WXGRADIENTBUTTON
 */
 
-void wxGradientButton::OnPaint( wxPaintEvent& event )
+void wxGradientButton::OnPaint( wxPaintEvent&  )
 {
 // Before editing this code, remove the block markers.
 	wxBufferedPaintDC dc( this );
@@ -220,7 +220,7 @@ void wxGradientButton::OnPaint( wxPaintEvent& event )
 * wxEVT_LEFT_DOWN event handler for ID_WXGRADIENTBUTTON
 */
 
-void wxGradientButton::OnLeftDown( wxMouseEvent& event )
+void wxGradientButton::OnLeftDown( wxMouseEvent&  )
 {
 	if ( GetCapture() != this )
 	{
@@ -251,7 +251,7 @@ void wxGradientButton::OnLeftUp( wxMouseEvent& event )
 * wxEVT_ERASE_BACKGROUND event handler for ID_WXGRADIENTBUTTON
 */
 
-void wxGradientButton::OnEraseBackground( wxEraseEvent& event )
+void wxGradientButton::OnEraseBackground( wxEraseEvent&  )
 {
 }
 
@@ -259,7 +259,7 @@ void wxGradientButton::OnEraseBackground( wxEraseEvent& event )
 * wxEVT_SIZE event handler for ID_WXGRADIENTBUTTON
 */
 
-void wxGradientButton::OnSize( wxSizeEvent& event )
+void wxGradientButton::OnSize( wxSizeEvent&  )
 {
 	Refresh();
 }

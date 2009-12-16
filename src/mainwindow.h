@@ -10,6 +10,7 @@ class wxCommandEvent;
 class wxListbookEvent;
 class wxAuiNotebookEvent;
 class MainChatTab;
+class BattleListTab;
 class MainJoinBattleTab;
 class MainSinglePlayerTab;
 #ifndef NO_TORRENT_SYSTEM
@@ -77,7 +78,7 @@ class MainWindow : public wxFrame
     void OnMenuVersion ( wxCommandEvent& event );
     void OnMenuSaveLayout( wxCommandEvent& event );
     void OnMenuLoadLayout( wxCommandEvent& event );
-    void OnMenuDefaultLayout( wxCommandEvent& event );
+    void OnMenuResetLayout( wxCommandEvent& event );
     void OnUnitSyncReload( wxCommandEvent& event );
     void OnMenuStartTorrent( wxCommandEvent& event );
     void OnMenuStopTorrent( wxCommandEvent& event );
@@ -93,12 +94,11 @@ class MainWindow : public wxFrame
     void OnUnitSyncReloaded();
     void OnChannelList( const wxString& channel, const int& numusers, const wxString& topic );
     void OnChannelListStart( );
-    void OnClose( wxCloseEvent& evt );
-
-
+    void OnClose( wxCloseEvent& );
 
     void OnTabsChanged( wxAuiNotebookEvent& event );
     MainChatTab& GetChatTab();
+    BattleListTab& GetBattleListTab();
     MainJoinBattleTab& GetJoinTab();
     MainSinglePlayerTab& GetSPTab();
     ReplayTab& GetReplayTab();
@@ -117,6 +117,8 @@ class MainWindow : public wxFrame
     void LoadPerspectives( const wxString& perspective_name = wxEmptyString );
     void SavePerspectives( const wxString& perspective_name = wxEmptyString );
 
+    void FocusBattleRoomTab();
+
   protected:
 
     wxMenuItem* m_settings_menu;
@@ -127,6 +129,7 @@ class MainWindow : public wxFrame
     SLNotebook* m_func_tabs;
 
     MainChatTab* m_chat_tab;
+    BattleListTab* m_list_tab;
     MainJoinBattleTab* m_join_tab;
     MainSinglePlayerTab* m_sp_tab;
     MainOptionsTab* m_opts_tab;
@@ -170,6 +173,7 @@ class MainWindow : public wxFrame
         MENU_CHANNELCHOOSER,
         MENU_SAVE_LAYOUT,
         MENU_LOAD_LAYOUT,
+        MENU_RESET_LAYOUT,
         MENU_DEFAULT_LAYOUT,
         MENU_SCREENSHOTS
     };
@@ -180,7 +184,8 @@ class MainWindow : public wxFrame
                 TabNames ()
                 {
                     Add( _("Chat") );
-                    Add( _("Multiplayer") );
+                    Add( _("Battlelist") );
+                    Add( _("Battleroom") );
                     Add( _("Singleplayer") );
                     Add( _("Savegames") );
                     Add( _("Replays") );
@@ -195,16 +200,17 @@ class MainWindow : public wxFrame
     public:
         // Page indexes
         static const unsigned int PAGE_CHAT    = 0;
-        static const unsigned int PAGE_JOIN    = 1;
-        static const unsigned int PAGE_SINGLE  = 2;
-        static const unsigned int PAGE_REPLAY  = 4;
-        static const unsigned int PAGE_SAVEGAME = 3;
+        static const unsigned int PAGE_LIST    = 1;
+        static const unsigned int PAGE_JOIN    = 2;
+        static const unsigned int PAGE_SINGLE  = 3;
+        static const unsigned int PAGE_REPLAY  = 5;
+        static const unsigned int PAGE_SAVEGAME = 4;
 
         #ifndef NO_TORRENT_SYSTEM
-        static const unsigned int PAGE_TORRENT = 5;
-        static const unsigned int PAGE_OPTOS = 6;
+        static const unsigned int PAGE_TORRENT = 6;
+        static const unsigned int PAGE_OPTOS = 7;
         #else
-        static const unsigned int PAGE_OPTOS   = 5;
+        static const unsigned int PAGE_OPTOS   = 6;
         #endif
 
         static const unsigned int OPT_PAGE_SPRING   = 0;

@@ -165,7 +165,7 @@ void SelectUsersDialog::UpdateUsersList()
 
 void SelectUsersDialog::UpdateSelection()
 {
-  wxSortedArrayString text = GetSelectionFromText();
+  wxArrayString text = GetSelectionFromText();
   for ( unsigned int i = 0; i < m_selection.Count(); i++ ) {
     if ( text.Index(m_selection[i], false) == wxNOT_FOUND ) text.Insert( m_selection[i], 0 );
   }
@@ -183,25 +183,26 @@ wxString SelectUsersDialog::BuildSelectionText( const wxSortedArrayString& sel )
   return str;
 }
 
-wxSortedArrayString SelectUsersDialog::GetSelectionFromText()
+wxArrayString SelectUsersDialog::GetSelectionFromText()
 {
-  wxSortedArrayString s;
+  wxArrayString s;
   wxStringTokenizer st(m_selection_text->GetValue(), _T(";, "), wxTOKEN_DEFAULT);
   while ( st.HasMoreTokens() ) {
     s.Add(st.GetNextToken());
   }
+  s.Sort();
   return s;
 }
 
-wxSortedArrayString SelectUsersDialog::GetUsers(wxWindow* parent)
+wxArrayString SelectUsersDialog::GetUsers(wxWindow* parent)
 {
-  SelectUsersDialog dlg(parent);
-  if ( dlg.ShowModal() == wxID_OK ) {
-    return dlg.GetSelection();
-  } else {
-    wxSortedArrayString s;
+    wxArrayString s;
+    SelectUsersDialog dlg(parent);
+    if ( dlg.ShowModal() == wxID_OK ) {
+        s = dlg.GetSelection();
+        s.Sort();
+    }
     return s;
-  }
 }
 
 int SelectUsersDialog::ShowModal()
@@ -229,7 +230,7 @@ wxWindowUpdateLocker noUpdates(m_user_list);
     filter.MakeLower();
     name.MakeLower();
 
-    if ( (filter != wxEmptyString) && (!name.Contains(filter)) ) {
+    if ( (filter != wxEmptyString) && (name.Find(filter) == wxNOT_FOUND) ) {
       wxListItem listItem;
       listItem.SetId(item);
       m_user_list->GetItem(listItem);
@@ -245,8 +246,8 @@ wxWindowUpdateLocker noUpdates(m_user_list);
     m_user_list->DeleteAllItems();
   } else {
     for ( unsigned int i = 0; i < del.Count(); i++ ) {
-      long item = m_user_list->FindItem(-1, del[i]);
-      RemoveUserFromList(item);
+      long item1 = m_user_list->FindItem(-1, del[i]);
+      RemoveUserFromList(item1);
     }
   }
 
@@ -257,7 +258,7 @@ wxWindowUpdateLocker noUpdates(m_user_list);
     wxString line = m_filtered_users[i];
     int sep = line.Find(' ');
     wxString name = line.Mid(0, sep);
-    if ( name.Contains(filter) || (filter == wxEmptyString) ) {
+    if ( name.Find(filter) != wxNOT_FOUND || (filter == wxEmptyString) ) {
       int flag = (int)FromwxString<long>( line.Mid(sep+1) ); // Flag is never < 0 or > intmax
       AddUserToList( name, flag );
       m_filtered_users.RemoveAt(i);
@@ -266,9 +267,9 @@ wxWindowUpdateLocker noUpdates(m_user_list);
   Sort();
 
   for ( unsigned int i = 0; i < sel.Count(); i++ ) {
-    long item = m_user_list->FindItem(-1, sel[i]);
-    if ( item != -1 )
-      m_user_list->SetItemState(item, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
+    long item1 = m_user_list->FindItem(-1, sel[i]);
+    if ( item1 != -1 )
+      m_user_list->SetItemState(item1, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
   }
 
 }
@@ -309,7 +310,7 @@ void SelectUsersDialog::OnOk( wxCommandEvent& /*unused*/ )
 }
 
 
-wxSortedArrayString SelectUsersDialog::GetSelection()
+wxArrayString SelectUsersDialog::GetSelection()
 {
   return GetSelectionFromText();
 }

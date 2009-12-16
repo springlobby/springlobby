@@ -5,6 +5,7 @@
 #if wxUSE_TIPWINDOW
 #include <wx/tipwin.h>
 
+//! A wxTipWindow that gets canceled on mousewheel events
 class SLTipWindow : public wxTipWindow{
     public:
         SLTipWindow(wxWindow *parent, const wxString &text);

@@ -28,8 +28,6 @@ class Battle : public IBattle
     void SendHostInfo( HostInfo update );
     void SendHostInfo( const wxString& Tag );
 
-    int GetMyPlayerNum() const;
-
     void Update();
     void Update( const wxString& Tag );
 
@@ -77,7 +75,7 @@ class Battle : public IBattle
     void SetLockExternalBalanceChanges( bool value );
     bool GetLockExternalBalanceChanges();
 
-		void FixColours();
+    void FixColours();
     void Autobalance( BalanceType balance_type = balance_divide, bool clans = true, bool strong_clans = true, int allyteamsize = 0 );
     void FixTeamIDs( BalanceType balance_type = balance_divide, bool clans = true, bool strong_clans = true, int controlteamsize = 0 );
 
@@ -90,6 +88,7 @@ class Battle : public IBattle
     void SetImReady( bool ready );
 
     User& GetMe();
+    const User& GetMe() const;
 
     void UserPositionChanged( const User& user );
 
@@ -98,9 +97,10 @@ class Battle : public IBattle
     void SaveMapDefaults();
     void LoadMapDefaults( const wxString& mapname );
 
+		void StartHostedBattle();
     void StartSpring();
 
-    void OnTimer( wxTimerEvent& event );
+    void OnTimer( wxTimerEvent& /*event*/ );
 
 		void SetInGame( bool ingame );
 

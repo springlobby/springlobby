@@ -547,7 +547,7 @@ bool OptionsWrapper::MergeOptions( const OptionsWrapper& other, GameOption merge
     GameOptionsMapCIter other_it = other.m_opts.begin();
     for ( ; other_it != other.m_opts.end(); ++other_it ) {
         const GameOptions& other_opts = other_it->second;
-        const GameOption other_id = (const GameOption)other_it->first;
+        //const GameOption other_id = (const GameOption)other_it->first; //TODO (koshi) what was this supposed to be used for?
 
         for (IUnitSync::OptionMapBoolConstIter it = other_opts.bool_map.begin(); it != other_opts.bool_map.end();++it ) {
             m_opts[merge_into].bool_map[it->first] = it->second;

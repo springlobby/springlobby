@@ -94,14 +94,14 @@ class ListNodeBare {
 template<class TParamType>
 class EventReceiverFuncBase: public ListNodeBare {
 	public:
-		virtual void OnEvent( TParamType param ) {};
+		virtual void OnEvent( TParamType /*param*/ ) {};
 };
 
 /// use EventSender::SendEvent to send events.
 template<class TParamType>
 class EventSender: public EventReceiverFuncBase<TParamType> {
 	public:
-		void OnEvent( TParamType param ) {
+		void OnEvent( TParamType /*param */) {
 			/// you may want to put assert(0) here, or log a message.
 			/// This method is only called when you have multiple senders sharing same event list.
 			/// Which happens when you unnecessarily make a copy of sender.

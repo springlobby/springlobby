@@ -12,9 +12,12 @@ class wxLogChain;
     \return true if successful
 */
 bool CopyDir( wxString origin, wxString destination, bool overwrite = true);
+bool CopyDirWithFilebackupRename( wxString origin, wxString destination, bool overwrite = true);
 
 /** \brief on vista execute command with admin temp eleveation, on earlier win it acts as "normal" shell execute **/
-int WinExecuteAdmin( const wxString& command, const wxString& params );
+bool WinExecuteAdmin( const wxString& command, const wxString& params );
+/** \brief "normal" shell execute **/
+bool WinExecute( const wxString& command, const wxString& params );
 
 //! returns false on !win, checks for regkey on win
 bool IsUACenabled();
@@ -29,6 +32,10 @@ wxString GetSpringLobbyVersion();
 wxString GetExecutableFolder();
 wxString GetLibExtension();
 wxString GetHostCPUSpeed();
+
+#ifdef __WXMSW__
+bool IsPreVistaWindows();
+#endif
 
 #endif // SPRINGLOBBY_HEADERGUARD_PLATFORM_H
 

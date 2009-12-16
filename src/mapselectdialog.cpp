@@ -277,12 +277,12 @@ static MapGridCtrl::SortKey GetSelectedSortKey( wxChoice* choice )
 namespace {
 struct FilterPredicate
 {
-	FilterPredicate( const wxString& searchText ) : searchText(searchText.Lower()) {}
+	FilterPredicate( const wxString& _searchText ) : searchText(_searchText.Lower()) {}
 	bool operator () ( const UnitSyncMap& map ) const
 	{
-		return map.name.Lower().Contains( searchText )
-			|| map.info.description.Lower().Contains( searchText )
-			|| map.info.author.Lower().Contains( searchText );
+		return map.name.Lower().Find( searchText ) != wxNOT_FOUND
+			|| map.info.description.Lower().Find( searchText ) != wxNOT_FOUND
+			|| map.info.author.Lower().Find( searchText ) != wxNOT_FOUND ;
 	}
 	wxString searchText;
 };
@@ -322,7 +322,7 @@ void MapSelectDialog::OnMapSelected( wxCommandEvent& event )
 	m_map_opts_list->SetItem( 3, 1, wxString::Format( _T("%d"), map.info.gravity ) );
 	m_map_opts_list->SetItem( 4, 1, wxString::Format( _T("%d"), map.info.extractorRadius ) );
 	m_map_opts_list->SetItem( 5, 1, wxString::Format( _T("%.3f"), map.info.maxMetal ) );
-	m_map_opts_list->SetItem( 6, 1, wxString::Format( _T("%d"), map.info.posCount ) );
+	m_map_opts_list->SetItem( 6, 1, wxString::Format( _T("%d"), map.info.positions.size() ) );
 }
 
 void MapSelectDialog::OnMapLoadingCompleted( wxCommandEvent& /*unused*/ )
@@ -403,7 +403,7 @@ void MapSelectDialog::LoadRecent()
 		const wxString mapname = _T("_") + m_maps[i].BeforeLast( '.' ) + _T("_");
 		long replaycount = long(m_replays.GetCount());
 		for ( int replaynum = 0; replaynum < replaycount; replaynum++ ) {
-			if ( m_replays[replaynum].Contains( mapname ) )
+			if ( m_replays[replaynum].Find( mapname ) != wxNOT_FOUND )
 				m_mapgrid->AddMap( m_maps[i] );
 		}
 	}

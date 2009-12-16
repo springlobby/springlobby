@@ -25,6 +25,7 @@ class SinglePlayerBattle: public IBattle
     bool IsFounderMe() { return true; }
 
     User& GetMe() { return m_me; }
+    const User& GetMe() const { return m_me; }
 
     void SendHostInfo( HostInfo update );
     void SendHostInfo( const wxString& /*unused*/ ){}
@@ -53,6 +54,7 @@ class NoGuiSinglePlayerBattle : public IBattle {
         void StartSpring();
         bool IsFounderMe() { return true; }
         User& GetMe() { return m_me; }
+        const User& GetMe() const { return m_me; }
 
         bool AddBot( const wxString& name, int team_id, const wxString& side );
 

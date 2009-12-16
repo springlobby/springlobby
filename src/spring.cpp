@@ -52,7 +52,8 @@ END_EVENT_TABLE();
 
 Spring& spring()
 {
-	static GlobalObjectHolder<Spring> m_spring;
+    static LineInfo<Spring> m( AT );
+	static GlobalObjectHolder<Spring,LineInfo<Spring> > m_spring( m );
 	return m_spring;
 }
 
@@ -213,7 +214,7 @@ bool Spring::LaunchSpring( const wxString& params  )
 
 		configfileflags = _T("--config=\"") + configfileflags + _T("\" ");
 		#ifdef __WXMSW__
-		if ( usync().GetSpringVersion().Contains(_T("0.78.") ) ) configfileflags = _T("");
+		if ( usync().GetSpringVersion().Find(_T("0.78.") ) != wxNOT_FOUND ) configfileflags = _T("");
 		#endif
   }
 
@@ -252,6 +253,7 @@ void Spring::OnTerminated( wxCommandEvent& event )
     m_process = 0; // NOTE I'm not sure if this should be deleted or not, according to wx docs it shouldn't.
     m_wx_process = 0;
     ui().OnSpringTerminated( event.GetExtraLong() );
+    GetGlobalEventSender(GlobalEvents::OnSpringTerminated).SendEvent( event.GetExtraLong() );
 }
 
 
@@ -266,23 +268,22 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
     // Start generating the script.
     tdf.EnterSection( _T("GAME") );
 
+		tdf.Append( _T("HostIP"), battle.GetHostIp() );
 			if ( battle.IsFounderMe() )
 			{
-					tdf.Append( _T("HostIP"), _T("localhost") );
 					if ( battle.GetNatType() == NAT_Hole_punching ) tdf.Append( _T("HostPort"), battle.GetMyInternalUdpSourcePort() );
 					else tdf.Append(_T("HostPort"), battle.GetHostPort() );
-
 			}
 			else
 			{
-					tdf.Append( _T("HostIP"), battle.GetHostIp() );
 					tdf.Append( _T("HostPort"), battle.GetHostPort() );
 					if ( battle.GetNatType() == NAT_Hole_punching )
 					{
 						tdf.Append( _T("SourcePort"), battle.GetMyInternalUdpSourcePort() );
 					}
-					else if ( sett().GetClientPort() != 0){ /// this allows to play with broken router by setting SourcePort to some forwarded port.
-						tdf.Append( _T("SourcePort"), sett().GetClientPort() );
+					else if ( sett().GetClientPort() != 0)
+					{
+						tdf.Append( _T("SourcePort"), sett().GetClientPort() ); /// this allows to play with broken router by setting SourcePort to some forwarded port.
 					}
 			}
 			tdf.Append( _T("IsHost"), battle.IsFounderMe() );
@@ -315,7 +316,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 				case BT_Replay:
 				{
 					wxString path = battle.GetPlayBackFilePath();
-					if ( path.Contains(_T("/")) ) path.BeforeLast(_T('/'));
+					if ( path.Find(_T("/")) != wxNOT_FOUND ) path.BeforeLast(_T('/'));
 					tdf.Append( _T("DemoFile"), path );
 					tdf.AppendLineBreak();
 					break;
@@ -323,7 +324,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 				case BT_Savegame:
 				{
 					wxString path = battle.GetPlayBackFilePath();
-					if ( path.Contains(_T("/")) ) path.BeforeLast(_T('/'));
+					if ( path.Find(_T("/")) != wxNOT_FOUND ) path.BeforeLast(_T('/'));
 					tdf.Append( _T("Savefile"), path );
 					tdf.AppendLineBreak();
 					break;
@@ -352,9 +353,9 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 				}
 
 				MapInfo infos = battle.LoadMap().info;
-				unsigned int maxpositions = sizeof ( infos.positions ) / sizeof( StartPos );
-				unsigned int copysize = std::min( maxpositions, NumTeams );
-				remap_positions = std::vector<StartPos> ( infos.positions, infos.positions + copysize ); // only add the first x positions
+				unsigned int nummapstartpositions = infos.positions.size();
+				unsigned int copysize = std::min( nummapstartpositions, NumTeams );
+				remap_positions = std::vector<StartPos> ( infos.positions.begin(), infos.positions.begin() + copysize ); // only add the first x positions
 
 				if ( startpostype == IBattle::ST_Random )
 				{
@@ -424,7 +425,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 			ProgressiveTeamsVec teams_to_sorted_teams; // original team -> progressive team
 			int free_team = 0;
 			std::map<User*, int> player_to_number; // player -> ordernumber
-
+			srand ( time(NULL) );
 			for ( unsigned int i = 0; i < NumUsers; i++ )
 			{
 					User& user = battle.GetUser( i );
@@ -453,13 +454,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 							else
 							{
 								int speccteam = 0;
-								ProgressiveTeamsVecIter itor = teams_to_sorted_teams.find ( status.team );
-								if ( itor == teams_to_sorted_teams.end() )
-								{
-									srand ( time(NULL) );
-									if ( teams_to_sorted_teams.size() != 0 ) speccteam = rand() % teams_to_sorted_teams.size();
-								}
-								else speccteam = itor->second;
+								if ( teams_to_sorted_teams.size() != 0 ) speccteam = rand() % teams_to_sorted_teams.size();
 								tdf.Append( _T("Team"), speccteam );
 							}
 					tdf.LeaveSection();
@@ -483,8 +478,8 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 									int optionmapindex = battle.CustomBattleOptions().GetAIOptionIndex( user.GetNick() );
 									if ( optionmapindex > 0 )
 									{
-										OptionsWrapper::wxStringTripleVec optlistMod = battle.CustomBattleOptions().getOptions( (OptionsWrapper::GameOption)optionmapindex );
-										for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistMod.begin(); it != optlistMod.end(); ++it)
+										OptionsWrapper::wxStringTripleVec optlistMod_ = battle.CustomBattleOptions().getOptions( (OptionsWrapper::GameOption)optionmapindex );
+										for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistMod_.begin(); it != optlistMod_.end(); ++it)
 										{
 												tdf.Append(it->first,it->second.second);
 										}
@@ -534,7 +529,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 							else if ( ( startpostype == IBattle::ST_Fixed ) || ( startpostype == IBattle::ST_Random ) )
 							{
 									int teamnumber = teams_to_sorted_teams[status.team];
-									if ( teamnumber < remap_positions.size() ) // don't overflow
+									if ( teamnumber < int(remap_positions.size()) ) // don't overflow
 									{
 										StartPos position = remap_positions[teamnumber];
 										tdf.Append(_T("StartPosX"), position.x );

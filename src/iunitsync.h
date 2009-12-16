@@ -38,8 +38,7 @@ struct MapInfo
 
   int width;
   int height;
-  int posCount;
-  StartPos positions[16];
+  std::vector<StartPos> positions;
 
   wxString author;
 };

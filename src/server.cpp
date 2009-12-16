@@ -50,7 +50,7 @@ Channel& Server::GetChannel( const wxString& name )
 }
 
 
-int Server::GetNumChannels()
+int Server::GetNumChannels() const
 {
   return m_channels.GetNumChannels();
 }
@@ -62,7 +62,7 @@ Channel& Server::GetChannel( const int& index )
 }
 
 
-bool Server::ChannelExists( const wxString& name )
+bool Server::ChannelExists( const wxString& name ) const
 {
   return m_channels.ChannelExists( name );
 }
@@ -74,7 +74,7 @@ Battle& Server::GetBattle( const int& battleid )
 }
 
 
-bool Server::BattleExists( const int& battleid )
+bool Server::BattleExists( const int& battleid ) const
 {
   return battles_iter->BattleExists( battleid );
 }
@@ -184,6 +184,7 @@ void Server::RequestSpringUpdate()
 
 wxArrayString Server::GetRelayHostList()
 {
+	if ( UserExists( _T("RelayHostManagerList") ) ) SayPrivate( _T("RelayHostManagerList"), _T("!listmanagers") );
 	wxArrayString ret;
 	for ( unsigned int i = 0; i < m_relay_host_manager_list.GetCount(); i++ )
 	{

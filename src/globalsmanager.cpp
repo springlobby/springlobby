@@ -92,7 +92,7 @@ void GlobalsManager::DestroyAll()
 
     globals.clear();
     de_initialized = true;
-    wxLogMessage( _T("GlobalsManager::DestroyAll() done") );
+//    wxLogMessage( _T("GlobalsManager::DestroyAll() done") );//this segfaults for me on clos esometimes...
 }
 
 GlobalsManager::~GlobalsManager()

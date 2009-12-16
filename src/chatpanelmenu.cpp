@@ -15,13 +15,13 @@
 #include "mainwindow.h"
 #include "settings.h"
 
-ChatPanelMenu::ChatPanelMenu(ChatPanel* parent, bool addChanServ, const wxString& title , long style )
-
-:    m_chatpanel(parent),
+ChatPanelMenu::ChatPanelMenu(ChatPanel* parent, bool addChanServ, const wxString& /*title */, long /*style*/ )
+    : m_chatpanel(parent),
     m_autorejoin( 0 ),
     m_withChanserv( addChanServ )
 {}
 
+//!ATTENTION: _all_ event ids must be handled in ChatPanelMenu::OnMenuItem
 wxMenu* ChatPanelMenu::GetMenu()
 {
     m_menu_all = new wxMenu();
@@ -32,8 +32,6 @@ wxMenu* ChatPanelMenu::GetMenu()
 
     wxMenuItem* copy = new wxMenuItem( m_menu_all, wxID_COPY, _( "Copy" ), wxEmptyString, wxITEM_NORMAL );
     m_menu_all->Append( copy );
-    //      eventID,    eventType,                  member function pointer to be called        userData            instance on which member function is called
-    Connect( wxID_COPY, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTextCtrl::OnCopy, (wxObject*) NULL, (wxEvtHandler*)(m_chatpanel->m_chatlog_text) );
 
     if ( m_chatpanel->m_url_at_pos != _T("") ) {
         wxMenuItem* copylink = new wxMenuItem( m_menu_all, CHAT_MENU_COPYLINK, _( "Copy link location" ), wxEmptyString, wxITEM_NORMAL );
@@ -163,8 +161,12 @@ void ChatPanelMenu::CreateNickListMenu()
     m_user_menu->Append( joinbattleitem );
 
 	m_user_menu->AppendSeparator();
-
-	if ( ui().GetServer().GetMe().GetStatus().moderator ) {
+	bool moderator = false;
+	try
+	{
+		moderator = ui().GetServer().GetMe().GetStatus().moderator;
+	}catch(...){}
+	if ( moderator ) {
 		wxMenuItem* modingameitem = new wxMenuItem( m_user_menu, CHAT_MENU_US_MODERATOR_INGAME, _( "Ingame time" ), wxEmptyString, wxITEM_NORMAL );
 		m_user_menu->Append( modingameitem );
 		wxMenuItem* modipitem = new wxMenuItem( m_user_menu, CHAT_MENU_US_MODERATOR_CURIP, _( "Retrieve IP and Smurfs" ), wxEmptyString, wxITEM_NORMAL );
@@ -729,7 +731,7 @@ void ChatPanelMenu::OnChannelMenuShowMutelist( wxCommandEvent& /*unused*/ )
     }
 }
 
-void ChatPanelMenu::OnChatMenuOpenLog( wxCommandEvent& event )
+void ChatPanelMenu::OnChatMenuOpenLog( wxCommandEvent&  )
 {
     m_chatpanel->m_chat_log.OpenInEditor();
 }
@@ -833,6 +835,9 @@ void ChatPanelMenu::OnMenuItem( wxCommandEvent& event )
 
     else if ( event.GetId() == GROUP_ID_NEW  ) OnUserMenuCreateGroup( event );
     else if ( event.GetId() == GROUP_ID_REMOVE  ) OnUserMenuDeleteFromGroup( event );
+    else if ( event.GetId() == wxID_COPY ) {
+            m_chatpanel->m_chatlog_text->OnCopy(event);
+    }
     else OnUserMenuAddToGroup( event );
 
 }

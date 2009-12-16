@@ -25,7 +25,6 @@
 #include "settings.h"
 #include "springunitsynclib.h"
 #include "utils/customdialogs.h"
-#include "unitsyncthread.h"
 #include "globalsmanager.h"
 #include "uiutils.h"
 #include "utils/debug.h"
@@ -41,8 +40,9 @@ const wxEventType UnitSyncAsyncOperationCompletedEvt = wxNewEventType();
 
 IUnitSync& usync()
 {
-  static GlobalObjectHolder<SpringUnitSync> m_sync;
-  return m_sync;
+    static LineInfo<SpringUnitSync> m( AT );
+    static GlobalObjectHolder<SpringUnitSync, LineInfo<SpringUnitSync> > m_sync( m );
+    return m_sync;
 }
 
 
@@ -817,15 +817,14 @@ MapInfo SpringUnitSync::_GetMapInfoEx( const wxString& mapname )
         info.maxWind = s2l( cache[6] );
         info.width = s2l( cache[7] );
         info.height = s2l( cache[8] );
-        info.posCount = s2l( cache[9] );
 
         wxArrayString posinfo = wxStringTokenize( cache[10], _T(' '), wxTOKEN_RET_EMPTY );
-        for ( int i = 0; i < info.posCount; i++)
+        for ( int i = 0; i < int(posinfo.GetCount()); i++)
         {
            StartPos position;
            position.x = s2l( posinfo[i].BeforeFirst( _T('-') ) );
            position.y = s2l( posinfo[i].AfterFirst( _T('-') ) );
-           info.positions[i] = position;
+           info.positions.push_back( position );
         }
 
         unsigned int LineCount = cache.GetCount();
@@ -845,10 +844,9 @@ MapInfo SpringUnitSync::_GetMapInfoEx( const wxString& mapname )
         cache.Add( TowxString( info.maxWind )  );
         cache.Add( TowxString( info.width ) );
         cache.Add( TowxString( info.height ) );
-        cache.Add( TowxString( info.posCount ) );
 
         wxString postring;
-        for ( int i = 0; i < info.posCount; i++)
+        for ( int i = 0; i < int(info.positions.size()); i++)
         {
            postring << TowxString( info.positions[i].x ) << _T('-') << TowxString( info.positions[i].y ) << _T(' ');
         }
@@ -862,7 +860,6 @@ MapInfo SpringUnitSync::_GetMapInfoEx( const wxString& mapname )
       }
   }
   catch ( ... ) {
-      info.posCount = 0;
       info.width = 1;
       info.height = 1;
   }
@@ -963,7 +960,7 @@ wxString SpringUnitSync::GetArchivePath( const wxString& name )
 
 wxArrayString SpringUnitSync::GetScreenshotFilenames()
 {
-    wxSortedArrayString ret;
+    wxArrayString ret;
     if ( !IsLoaded() ) return ret;
 
     ret = susynclib().FindFilesVFS( _T("screenshots/*.*") );
@@ -971,6 +968,7 @@ wxArrayString SpringUnitSync::GetScreenshotFilenames()
             if ( ret[i] == ret[i+1] )
                 ret.RemoveAt( i+1 );
     }
+    ret.Sort();
     return ret;
 }
 
@@ -1199,7 +1197,7 @@ void SpringUnitSync::GetMetalmapAsync( const wxString& mapname, int evtHandlerId
   _GetMapImageAsync( mapname, &SpringUnitSync::GetMetalmap, evtHandlerId );
 }
 
-void SpringUnitSync::GetMetalmapAsync( const wxString& mapname, int width, int height, int evtHandlerId )
+void SpringUnitSync::GetMetalmapAsync( const wxString& mapname, int /*width*/, int /*height*/, int evtHandlerId )
 {
   GetMetalmapAsync( mapname, evtHandlerId );
 }
@@ -1210,7 +1208,7 @@ void SpringUnitSync::GetHeightmapAsync( const wxString& mapname, int evtHandlerI
   _GetMapImageAsync( mapname, &SpringUnitSync::GetHeightmap, evtHandlerId );
 }
 
-void SpringUnitSync::GetHeightmapAsync( const wxString& mapname, int width, int height, int evtHandlerId )
+void SpringUnitSync::GetHeightmapAsync( const wxString& mapname, int /*width*/, int /*height*/, int evtHandlerId )
 {
   GetHeightmapAsync( mapname, evtHandlerId );
 }

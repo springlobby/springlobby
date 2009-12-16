@@ -40,7 +40,8 @@ SpringUnitSyncLib::~SpringUnitSyncLib()
 
 SpringUnitSyncLib& susynclib()
 {
-  static GlobalObjectHolder<SpringUnitSyncLib> lib;
+    static LineInfo<SpringUnitSyncLib> m( AT );
+  static GlobalObjectHolder<SpringUnitSyncLib, LineInfo<SpringUnitSyncLib> > lib( m );
   return lib.GetInstance();
 }
 
@@ -427,8 +428,7 @@ void SpringUnitSyncLib::_ConvertSpringMapInfo( const SpringMapInfo& in, MapInfo&
 
   out.width = in.width;
   out.height = in.height;
-  out.posCount = in.posCount;
-  for ( int i = 0; i < in.posCount; i++) out.positions[i] = in.positions[i];
+  out.positions = std::vector<StartPos>( in.positions, in.positions + in.posCount );
 }
 
 

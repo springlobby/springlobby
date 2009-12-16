@@ -22,7 +22,7 @@ wxString GetLatestVersion()
   // normal timeout is 10 minutes.. set to 10 secs.
   versionRequest.SetTimeout(10);
   versionRequest.Connect( _T("version.springlobby.info"), 80);
-  wxInputStream *stream = versionRequest.GetInputStream( _T("/latest.txt") );
+  wxInputStream *stream = versionRequest.GetInputStream( _T("/current.txt") );
   wxString result;
 
   if (versionRequest.GetError() == wxPROTO_NOERR)

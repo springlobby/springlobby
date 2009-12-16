@@ -34,7 +34,7 @@
 
 class Replay;
 
-template <class PB>
+template <class PB, class I>
 class GlobalObjectHolder;
 
 class ReplayList : public PlaybackList<Replay>
@@ -49,7 +49,7 @@ class ReplayList : public PlaybackList<Replay>
   protected:
     ReplayList();
 
-    template <class PB>
+    template <class PB, class T>
     friend class GlobalObjectHolder;
 
     bool GetReplayInfos ( const wxString& ReplayPath, Replay& ret );

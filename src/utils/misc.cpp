@@ -45,10 +45,10 @@ wxString GetBestMatch(const wxArrayString& a, const wxString& s, double* distanc
     int minDistanceIndex = -1;
     for (unsigned int i = 0; i < count; ++i)
     {
-        const double distance = LevenshteinDistance(a[i], s);
-        if (distance < minDistance)
+        const double distance_ = LevenshteinDistance(a[i], s);
+        if (distance_ < minDistance)
         {
-            minDistance = distance;
+            minDistance = distance_;
             minDistanceIndex = i;
         }
     }

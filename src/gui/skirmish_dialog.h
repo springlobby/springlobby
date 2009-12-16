@@ -1,8 +1,7 @@
+#ifndef SPRINGLOBBY_HEADERGUARD_SKIRMISHDIALOG
+#define SPRINGLOBBY_HEADERGUARD_SKIRMISHDIALOG
 
-#ifndef __skirmish_dialog__
-#define __skirmish_dialog__
-
-#include <wx/intl.h>
+#include <wx/string.h>
 
 #include "gradientpanel.h"
 #include "../mmoptionswrapper.h"
@@ -56,4 +55,4 @@ class SkirmishDialog : public wxGradientPanel
 
 };
 
-#endif //__skirmish_dialog__
+#endif //SPRINGLOBBY_HEADERGUARD_SKIRMISHDIALOG

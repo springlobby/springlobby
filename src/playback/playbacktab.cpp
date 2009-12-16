@@ -100,7 +100,7 @@ PlaybackTab<PlaybackTraits>::PlaybackTab( wxWindow* parent )
 
 	m_info_sizer->Add( m_data_sizer, 1, wxEXPAND | wxALL, 0 );
 
-	m_players = new BattleroomListCtrl( this, 0, true );
+	m_players = new BattleroomListCtrl( this, 0, true, false );
 	m_info_sizer->Add( m_players , 2, wxALL | wxEXPAND, 0 );
 
 	m_main_sizer->Add( m_info_sizer, 0, wxEXPAND, 5 );
@@ -471,15 +471,9 @@ void PlaybackTab<PlaybackTraits>::Deselected()
 template < class PlaybackTraits >
 void PlaybackTab<PlaybackTraits>::ReloadList()
 {
-	wxDateTime dt = wxDateTime::UNow();
 	Deselect();
 	m_replay_listctrl->Clear();
 	m_replay_loader->Run();
-
-
-//    long sec = (wxDateTime::UNow() - dt).GetMilliseconds().ToLong();
-//    if ( sec > 0 )
-//        customMessageBoxNoModal(SL_MAIN_ICON, wxString::Format( _T("List reloaded in %d milli seconds"),sec ) );
 }
 
 template < class PlaybackTraits >
@@ -487,3 +481,10 @@ void PlaybackTab<PlaybackTraits>::OnReload( wxCommandEvent& /*unused*/ )
 {
 	ReloadList();
 }
+
+template < class PlaybackTraits >
+void PlaybackTab<PlaybackTraits>::OnSpringTerminated( GlobalEvents::GlobalEventData /*data*/ )
+{
+    ReloadList();
+}
+

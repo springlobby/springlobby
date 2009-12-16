@@ -159,7 +159,7 @@ tab_simple::tab_simple(settings_frame* _origin, wxWindow *parent, wxWindowID id 
 	SetSizer(parentSizer); // true --> delete old sizer if present
 }
 
-void tab_simple::updateControls(int what_to_update)
+void tab_simple::updateControls(int /*what_to_update*/)
 {
 	audioVolume_SLI->SetValue(intSettings[AO_SLI[1].key]);
 }
@@ -174,7 +174,7 @@ void tab_simple::OnComboBoxChange(wxCommandEvent& event)
 	abstract_panel::OnComboBoxChange(event);
 }
 
-void tab_simple::OnButtonClick(wxCommandEvent& event)
+void tab_simple::OnButtonClick(wxCommandEvent& )
 {
 	origin->switchToExpertMode();
 }

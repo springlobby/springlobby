@@ -54,6 +54,10 @@
 #include "globalsmanager.h"
 #include "utils/globalevents.h"
 
+#ifdef __WXMSW__
+    #include "utils/platform.h"
+#endif
+
 
 /** Get the name of the Spring data subdirectory that corresponds to a
  * given IUnitSync::MediaType value.
@@ -332,7 +336,8 @@ unsigned int TorrentTable::GetOpenLeechsCount()
 
 TorrentWrapper& torrent()
 {
-    static GlobalObjectHolder<TorrentWrapper> m_torr_wrap;
+    static LineInfo<TorrentWrapper> m( AT );
+    static GlobalObjectHolder<TorrentWrapper,LineInfo<TorrentWrapper> > m_torr_wrap( m );
     return m_torr_wrap;
 }
 
@@ -348,7 +353,7 @@ TorrentWrapper::TorrentWrapper():
     m_tracker_urls.Add( _T("tracker.caspring.org"));
     m_tracker_urls.Add( _T("tracker2.caspring.org"));
     m_tracker_urls.Add( _T("backup-tracker.licho.eu"));
-    m_torr = new libtorrent::session();
+    m_torr = new libtorrent::session( libtorrent::fingerprint("SL", 0, 0, 0, 0), 0 );
     try
     {
         m_torr->add_extension(&libtorrent::create_metadata_plugin);
@@ -365,30 +370,25 @@ TorrentWrapper::TorrentWrapper():
     {
         wxLogError( TowxString( e.what() ) );
     }
-    try
-    {
-        m_torr->start_upnp();
-    }
-    catch (std::exception& e)
-    {
-        wxLogError( TowxString( e.what() ) );
-    }
-    try
-    {
-        m_torr->start_natpmp();
-    }
-    catch (std::exception& e)
-    {
-        wxLogError( TowxString( e.what() ) );
-    }
-    try
-    {
-        m_torr->start_lsd();
-    }
-    catch (std::exception& e)
-    {
-        wxLogError( TowxString( e.what() ) );
-    }
+
+    #ifndef __WXMSW__
+        try
+        {
+            m_torr->start_upnp();
+        }
+        catch (std::exception& e)
+        {
+            wxLogError( TowxString( e.what() ) );
+        }
+        try
+        {
+            m_torr->start_natpmp();
+        }
+        catch (std::exception& e)
+        {
+            wxLogError( TowxString( e.what() ) );
+        }
+    #endif
     m_socket_class = new Socket( *this );
     UpdateSettings();
 }
@@ -396,7 +396,7 @@ TorrentWrapper::TorrentWrapper():
 
 TorrentWrapper::~TorrentWrapper()
 {
-    wxLogMessage(_T("TorrentWrapper::~TorrentWrapper()"));
+    wxLogDebugFunc( wxEmptyString );
     m_maintenance_thread.Stop();
     try
     {
@@ -600,7 +600,7 @@ void TorrentWrapper::SetIngameStatus( bool status )
 }
 
 
-void TorrentWrapper::UpdateFromTimer( int mselapsed )
+void TorrentWrapper::UpdateFromTimer( int /*mselapsed */)
 {
     m_timer_count++;
     if ( m_timer_count < 20 ) return;//update every 2 sec
@@ -715,13 +715,13 @@ std::map<wxString,TorrentInfos> TorrentWrapper::CollectGuiInfos()
     try
     {
         TorrentInfos globalinfos;
-        libtorrent::session_status s = m_torr->status();
+        libtorrent::session_status session_status = m_torr->status();
         globalinfos.downloadstatus = P2P::leeching;
         globalinfos.progress = 0.0f;
-        globalinfos.downloaded = s.total_download;
-        globalinfos.uploaded = s.total_upload;
-        globalinfos.outspeed = s.upload_rate;
-        globalinfos.inspeed = s.download_rate;
+        globalinfos.downloaded = session_status.total_download;
+        globalinfos.uploaded = session_status.total_upload;
+        globalinfos.outspeed = session_status.upload_rate;
+        globalinfos.inspeed = session_status.download_rate;
         globalinfos.numcopies = 0.0f;
         globalinfos.filesize = 0;
         ret[wxString(_T("global"))] = globalinfos;
@@ -732,14 +732,14 @@ std::map<wxString,TorrentInfos> TorrentWrapper::CollectGuiInfos()
         for ( std::vector<libtorrent::torrent_handle>::iterator i = TorrentList.begin(); i != TorrentList.end(); i++)
         {
             TorrentInfos CurrentTorrent;
-            libtorrent::torrent_status s = i->status();
+            libtorrent::torrent_status torrent_status = i->status();
             CurrentTorrent.name = TowxString(i->name()).BeforeFirst(_T('|'));
-            CurrentTorrent.progress = s.progress;
-            CurrentTorrent.downloaded = s.total_payload_download;
-            CurrentTorrent.uploaded = s.total_payload_upload;
-            CurrentTorrent.inspeed = s.download_payload_rate;
-            CurrentTorrent.outspeed = s.upload_payload_rate;
-            CurrentTorrent.numcopies = s.distributed_copies;
+            CurrentTorrent.progress = torrent_status.progress;
+            CurrentTorrent.downloaded = torrent_status.total_payload_download;
+            CurrentTorrent.uploaded = torrent_status.total_payload_upload;
+            CurrentTorrent.inspeed = torrent_status.download_payload_rate;
+            CurrentTorrent.outspeed = torrent_status.upload_payload_rate;
+            CurrentTorrent.numcopies = torrent_status.distributed_copies;
             CurrentTorrent.filesize = i->get_torrent_info().total_size();
 
 			int eta_seconds = -1;
@@ -1080,9 +1080,9 @@ void TorrentWrapper::CreateTorrent( const wxString& hash, const wxString& name, 
 
     libtorrent::create_torrent newtorrent(files);
 
-    for ( unsigned int i = 0; i < m_tracker_urls.GetCount(); i++ )
+    for ( unsigned int j = 0; j < m_tracker_urls.GetCount(); j++ )
     {
-        newtorrent.add_tracker( STD_STRING(m_tracker_urls[i] +  _T(":DEFAULT_P2P_TRACKER_PORT/announce") ) );
+        newtorrent.add_tracker( STD_STRING(m_tracker_urls[j] +  _T(":DEFAULT_P2P_TRACKER_PORT/announce") ) );
     }
 
     // calculate the hash for all pieces
