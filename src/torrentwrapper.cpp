@@ -17,7 +17,6 @@
 #include "utils/debug.h"
 #include "socket.h"
 #include "base64.h"
-#include "globalevents.h"
 
 #include <libtorrent/entry.hpp>
 #include <libtorrent/session.hpp>
@@ -51,8 +50,13 @@
 #include <wx/event.h>
 
 #include "torrentwrapper.h"
-#include "settings++/custom_dialogs.h"
+#include "utils/customdialogs.h"
 #include "globalsmanager.h"
+#include "utils/globalevents.h"
+
+#ifdef __WXMSW__
+    #include "utils/platform.h"
+#endif
 
 
 /** Get the name of the Spring data subdirectory that corresponds to a
@@ -332,7 +336,8 @@ unsigned int TorrentTable::GetOpenLeechsCount()
 
 TorrentWrapper& torrent()
 {
-    static GlobalObjectHolder<TorrentWrapper> m_torr_wrap;
+    static LineInfo<TorrentWrapper> m( AT );
+    static GlobalObjectHolder<TorrentWrapper,LineInfo<TorrentWrapper> > m_torr_wrap( m );
     return m_torr_wrap;
 }
 
@@ -348,7 +353,7 @@ TorrentWrapper::TorrentWrapper():
     m_tracker_urls.Add( _T("tracker.caspring.org"));
     m_tracker_urls.Add( _T("tracker2.caspring.org"));
     m_tracker_urls.Add( _T("backup-tracker.licho.eu"));
-    m_torr = new libtorrent::session();
+    m_torr = new libtorrent::session( libtorrent::fingerprint("SL", 0, 0, 0, 0), 0 );
     try
     {
         m_torr->add_extension(&libtorrent::create_metadata_plugin);
@@ -365,30 +370,25 @@ TorrentWrapper::TorrentWrapper():
     {
         wxLogError( TowxString( e.what() ) );
     }
-    try
-    {
-        m_torr->start_upnp();
-    }
-    catch (std::exception& e)
-    {
-        wxLogError( TowxString( e.what() ) );
-    }
-    try
-    {
-        m_torr->start_natpmp();
-    }
-    catch (std::exception& e)
-    {
-        wxLogError( TowxString( e.what() ) );
-    }
-    try
-    {
-        m_torr->start_lsd();
-    }
-    catch (std::exception& e)
-    {
-        wxLogError( TowxString( e.what() ) );
-    }
+
+    #ifndef __WXMSW__
+        try
+        {
+            m_torr->start_upnp();
+        }
+        catch (std::exception& e)
+        {
+            wxLogError( TowxString( e.what() ) );
+        }
+        try
+        {
+            m_torr->start_natpmp();
+        }
+        catch (std::exception& e)
+        {
+            wxLogError( TowxString( e.what() ) );
+        }
+    #endif
     m_socket_class = new Socket( *this );
     UpdateSettings();
 }
@@ -396,7 +396,7 @@ TorrentWrapper::TorrentWrapper():
 
 TorrentWrapper::~TorrentWrapper()
 {
-    wxLogMessage(_T("TorrentWrapper::~TorrentWrapper()"));
+    wxLogDebugFunc( wxEmptyString );
     m_maintenance_thread.Stop();
     try
     {
@@ -515,6 +515,16 @@ bool TorrentWrapper::RemoveTorrentByHash( const wxString& hash )
 }
 
 
+P2P::FileStatus TorrentWrapper::GetTorrentStatusByHash(const wxString &hash)
+{
+	TorrentTable::PRow row=GetTorrentTable().RowByHash(hash);
+    if (!row.ok())
+		return P2P::not_stored;
+
+	libtorrent::torrent_handle handle = row->handle;
+	return row->status;
+}
+
 
 int TorrentWrapper::GetTorrentSystemStatus()
 {
@@ -590,7 +600,7 @@ void TorrentWrapper::SetIngameStatus( bool status )
 }
 
 
-void TorrentWrapper::UpdateFromTimer( int mselapsed )
+void TorrentWrapper::UpdateFromTimer( int /*mselapsed */)
 {
     m_timer_count++;
     if ( m_timer_count < 20 ) return;//update every 2 sec
@@ -699,22 +709,22 @@ bool TorrentWrapper::RemoveTorrentByRow( const TorrentTable::PRow& row )
 }
 
 
-std::map<int,TorrentInfos> TorrentWrapper::CollectGuiInfos()
+std::map<wxString,TorrentInfos> TorrentWrapper::CollectGuiInfos()
 {
-    std::map<int,TorrentInfos> ret;
+    std::map<wxString,TorrentInfos> ret;
     try
     {
         TorrentInfos globalinfos;
-        libtorrent::session_status s = m_torr->status();
+        libtorrent::session_status session_status = m_torr->status();
         globalinfos.downloadstatus = P2P::leeching;
         globalinfos.progress = 0.0f;
-        globalinfos.downloaded = s.total_download;
-        globalinfos.uploaded = s.total_upload;
-        globalinfos.outspeed = s.upload_rate;
-        globalinfos.inspeed = s.download_rate;
+        globalinfos.downloaded = session_status.total_download;
+        globalinfos.uploaded = session_status.total_upload;
+        globalinfos.outspeed = session_status.upload_rate;
+        globalinfos.inspeed = session_status.download_rate;
         globalinfos.numcopies = 0.0f;
         globalinfos.filesize = 0;
-        ret[0] = globalinfos;
+        ret[wxString(_T("global"))] = globalinfos;
 
         if ( ingame || !IsConnectedToP2PSystem()  ) return ret; // stop updating the gui if disconneted
 
@@ -722,22 +732,28 @@ std::map<int,TorrentInfos> TorrentWrapper::CollectGuiInfos()
         for ( std::vector<libtorrent::torrent_handle>::iterator i = TorrentList.begin(); i != TorrentList.end(); i++)
         {
             TorrentInfos CurrentTorrent;
-            libtorrent::torrent_status s = i->status();
+            libtorrent::torrent_status torrent_status = i->status();
             CurrentTorrent.name = TowxString(i->name()).BeforeFirst(_T('|'));
-            CurrentTorrent.progress = s.progress;
-            CurrentTorrent.downloaded = s.total_payload_download;
-            CurrentTorrent.uploaded = s.total_payload_upload;
-            CurrentTorrent.inspeed = s.download_payload_rate;
-            CurrentTorrent.outspeed = s.upload_payload_rate;
-            CurrentTorrent.numcopies = s.distributed_copies;
+            CurrentTorrent.progress = torrent_status.progress;
+            CurrentTorrent.downloaded = torrent_status.total_payload_download;
+            CurrentTorrent.uploaded = torrent_status.total_payload_upload;
+            CurrentTorrent.inspeed = torrent_status.download_payload_rate;
+            CurrentTorrent.outspeed = torrent_status.upload_payload_rate;
+            CurrentTorrent.numcopies = torrent_status.distributed_copies;
             CurrentTorrent.filesize = i->get_torrent_info().total_size();
+
+			int eta_seconds = -1;
+			if ( CurrentTorrent.progress > 0 && CurrentTorrent.inspeed > 0)
+				eta_seconds = int (  (CurrentTorrent.filesize - CurrentTorrent.downloaded ) / CurrentTorrent.inspeed );
+
+			CurrentTorrent.eta = eta_seconds;
 
             TorrentTable::PRow row=GetTorrentTable().RowByHandle(*i);
             if (!row.ok()) continue;
             CurrentTorrent.hash=row->hash;
             CurrentTorrent.downloadstatus = row->status;
 
-            ret[s2l(CurrentTorrent.hash)] = CurrentTorrent;
+            ret[CurrentTorrent.hash] = CurrentTorrent;
         }
     }
     catch (std::exception& e)
@@ -755,7 +771,8 @@ std::map<int,TorrentInfos> TorrentWrapper::CollectGuiInfos()
         QueuedTorrent.hash = (*it)->hash;
         QueuedTorrent.downloadstatus = P2P::queued;
         QueuedTorrent.name=(*it)->name;
-        ret[s2l(QueuedTorrent.hash)] = QueuedTorrent;
+		QueuedTorrent.eta = -1;
+        ret[QueuedTorrent.hash] = QueuedTorrent;
     }
 
     return ret;
@@ -789,16 +806,19 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
 
     switch (row->type)
     {
-    case IUnitSync::map:
-    {
-        torrent_name = torrent_name + _T("|MAP");
-        break;
-    }
-    case IUnitSync::mod:
-    {
-        torrent_name = torrent_name + _T("|MOD");
-        break;
-    }
+        case IUnitSync::map:
+        {
+            torrent_name = torrent_name + _T("|MAP");
+            break;
+        }
+        case IUnitSync::mod:
+        {
+            torrent_name = torrent_name + _T("|MOD");
+            break;
+        }
+        default:
+            wxLogDebugFunc( _T("row-type unhandled") );
+            break;
     }
 
     if ( IsSeed )
@@ -806,22 +826,25 @@ bool TorrentWrapper::JoinTorrent( const TorrentTable::PRow& row, bool IsSeed )
         wxString archivename;
         switch ( row->type ) // if file is not present locally you can't seed it
         {
-        case IUnitSync::map:
-        {
-            if ( !usync().MapExists( row->name, row->hash ) ) return false;
-            int index = usync().GetMapIndex( row->name );
-            if ( index == -1 ) return false;
-            archivename = usync().GetMapArchive( index );
-            break;
-        }
-        case IUnitSync::mod:
-        {
-            if ( !usync().ModExists( row->name, row->hash ) ) return false;
-            int index = usync().GetModIndex( row->name );
-            if ( index == -1 ) return false;
-            archivename = usync().GetModArchive( index );
-            break;
-        }
+            case IUnitSync::map:
+            {
+                if ( !usync().MapExists( row->name, row->hash ) ) return false;
+                int index = usync().GetMapIndex( row->name );
+                if ( index == -1 ) return false;
+                archivename = usync().GetMapArchive( index );
+                break;
+            }
+            case IUnitSync::mod:
+            {
+                if ( !usync().ModExists( row->name, row->hash ) ) return false;
+                int index = usync().GetModIndex( row->name );
+                if ( index == -1 ) return false;
+                archivename = usync().GetModArchive( index );
+                break;
+            }
+            default:
+                wxLogDebugFunc( _T("row-type unhandled") );
+                break;
         }
 
         try
@@ -1018,22 +1041,25 @@ void TorrentWrapper::CreateTorrent( const wxString& hash, const wxString& name, 
 
     switch ( type )
     {
-    case IUnitSync::map :
-    {
-        if ( !usync().MapExists( name, hash ) ) return;
-        int index = usync().GetMapIndex( name );
-        if ( index == -1 ) return;
-        archivename = usync().GetMapArchive( index );
-        break;
-    }
-    case IUnitSync::mod :
-    {
-        if ( !usync().ModExists( name, hash ) ) return;
-        int index = usync().GetModIndex( name );
-        if ( index == -1 ) return;
-        archivename = usync().GetModArchive( index );
-        break;
-    }
+        case IUnitSync::map :
+        {
+            if ( !usync().MapExists( name, hash ) ) return;
+            int index = usync().GetMapIndex( name );
+            if ( index == -1 ) return;
+            archivename = usync().GetMapArchive( index );
+            break;
+        }
+        case IUnitSync::mod :
+        {
+            if ( !usync().ModExists( name, hash ) ) return;
+            int index = usync().GetModIndex( name );
+            if ( index == -1 ) return;
+            archivename = usync().GetModArchive( index );
+            break;
+        }
+        default:
+            wxLogDebugFunc( _T("row-type unhandled") );
+            break;
     }
 
     wxString archivepath = usync().GetArchivePath( archivename );
@@ -1054,9 +1080,9 @@ void TorrentWrapper::CreateTorrent( const wxString& hash, const wxString& name, 
 
     libtorrent::create_torrent newtorrent(files);
 
-    for ( unsigned int i = 0; i < m_tracker_urls.GetCount(); i++ )
+    for ( unsigned int j = 0; j < m_tracker_urls.GetCount(); j++ )
     {
-        newtorrent.add_tracker( STD_STRING(m_tracker_urls[i] +  _T(":DEFAULT_P2P_TRACKER_PORT/announce") ) );
+        newtorrent.add_tracker( STD_STRING(m_tracker_urls[j] +  _T(":DEFAULT_P2P_TRACKER_PORT/announce") ) );
     }
 
     // calculate the hash for all pieces
@@ -1064,10 +1090,15 @@ void TorrentWrapper::CreateTorrent( const wxString& hash, const wxString& name, 
 
     switch (type)
     {
-    case IUnitSync::map:
-        newtorrent.set_comment( wxString( name + _T("|MAP") ).mb_str() );
-    case IUnitSync::mod:
-        newtorrent.set_comment( wxString( name + _T("|MOD") ).mb_str() );
+        case IUnitSync::map:
+            newtorrent.set_comment( wxString( name + _T("|MAP") ).mb_str() );
+            break;
+        case IUnitSync::mod:
+            newtorrent.set_comment( wxString( name + _T("|MOD") ).mb_str() );
+            break;
+        default:
+            wxLogDebugFunc( _T("row-type unhandled") );
+            break;
     }
 
     libtorrent::entry e = newtorrent.generate();
@@ -1177,8 +1208,7 @@ void TorrentWrapper::RemoveUnneededTorrents()
 
                 GetTorrentTable().AddRowToDependencyCheckQueue( it->second );
 
-                wxCommandEvent refreshevt(UnitSyncReloadRequest); // request an unitsync reload
-                wxPostEvent( &SL_GlobalEvtHandler::GetSL_GlobalEvtHandler(), refreshevt );
+                GetGlobalEventSender(GlobalEvents::UnitSyncReloadRequest).SendEvent( 0 ); // request an unitsync reload
             }
             catch (std::exception& e)
             {
@@ -1379,7 +1409,7 @@ void TorrentWrapper::ReceiveandExecute( const wxString& msg )
 }
 
 
-void TorrentWrapper::OnConnected( Socket* sock )
+void TorrentWrapper::OnConnected( Socket* /*unused*/ )
 {
     wxLogMessage(_T("torrent system connected") );
     m_started = true;
@@ -1399,7 +1429,7 @@ void TorrentWrapper::OnConnected( Socket* sock )
 }
 
 
-void TorrentWrapper::OnDisconnected( Socket* sock )
+void TorrentWrapper::OnDisconnected( Socket* /*unused*/ )
 {
     wxLogMessage(_T("torrent system disconnected") );
 

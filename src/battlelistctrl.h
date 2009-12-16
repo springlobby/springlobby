@@ -17,7 +17,7 @@ class Ui;
 class BattleListCtrl : public CustomVirtListCtrl< IBattle *, BattleListCtrl>
 {
   public:
-    BattleListCtrl( wxWindow* parent, Ui& ui );
+    BattleListCtrl( wxWindow* parent );
     ~BattleListCtrl();
 
     void AddBattle( IBattle& battle );
@@ -28,7 +28,7 @@ class BattleListCtrl : public CustomVirtListCtrl< IBattle *, BattleListCtrl>
     void OnListRightClick( wxListEvent& event );
     void OnDLMap( wxCommandEvent& event );
     void OnDLMod( wxCommandEvent& event );
-    virtual void SetTipWindowText( const long item_hit, const wxPoint position);
+    virtual void SetTipWindowText( const long item_hit, const wxPoint& position);
 
     //these are overloaded to use list in virtual style
     wxString GetItemText(long item, long column) const;
@@ -53,7 +53,6 @@ class BattleListCtrl : public CustomVirtListCtrl< IBattle *, BattleListCtrl>
     int GetIndexFromData( const DataType& data ) const;
 
     wxMenu* m_popup;
-    Ui& m_ui;
 
     virtual void Sort();
 

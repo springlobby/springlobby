@@ -28,7 +28,7 @@ void GetArrayStringFromHashMap( const HashMap_String_String& hm , wxArrayString&
         matches.Add( it->second );
 }
 
-wxTextCtrlHist::wxTextCtrlHist(TextCompletionDatabase& textDb, wxWindow* parent, wxWindowID id, const wxString& value, const wxPoint& pos, const wxSize& size, long style )
+wxTextCtrlHist::wxTextCtrlHist(TextCompletionDatabase& textDb, wxWindow* parent, wxWindowID id, const wxString& value, const wxPoint& pos, const wxSize& size, long /*unused*/ )
     : wxTextCtrl(parent, id, value, pos, size, wxTE_PROCESS_ENTER | wxTE_PROCESS_TAB ),
     textcompletiondatabase(textDb), current_pos(0), history_max(32)
 {
@@ -50,7 +50,7 @@ void wxTextCtrlHist::OnChar(wxKeyEvent & event)
 {
         int keyCode = event.GetKeyCode();
 
-        if ( current_pos == Historical.GetCount() ) {
+        if ( current_pos == int(Historical.GetCount()) ) {
             m_original = GetValue();
         }
 
@@ -120,7 +120,7 @@ void wxTextCtrlHist::OnChar(wxKeyEvent & event)
                         GetArrayStringFromHashMap( hm , matches );
                         wxString newWord = GetBestMatch( matches, currentWord );
 
-                        bool realCompletion = newWord.Length() >= currentWord.Length(); // otherwise we have actually less word than before :P
+                        bool realCompletion = newWord.Len() >= currentWord.Len(); // otherwise we have actually less word than before :P
                         if ( realCompletion )
                             currentWord =  newWord;
 

@@ -2,6 +2,7 @@
 #define SPRINGLOBBY_HEADERGUARD_ADDBOTDIALOG_H
 
 #include <wx/dialog.h>
+#include <map>
 
 class wxTextCtrl;
 class wxStaticText;
@@ -12,6 +13,7 @@ class wxCommandEvent;
 class IBattle;
 class wxListCtrl;
 class wxBoxSizer;
+class wxListEvent;
 
 /** \brief used in SP/MP BattletAB to present choice of AIs to add
  * \todo DOCMEMORE */
@@ -20,6 +22,7 @@ class AddBotDialog : public wxDialog
   public:
 
     AddBotDialog( wxWindow* parent, IBattle& battle, bool singleplayer = false );
+    ~AddBotDialog( );
 
     wxString GetNick();
     wxString GetAIShortName();
@@ -33,7 +36,15 @@ class AddBotDialog : public wxDialog
     void OnAddBot( wxCommandEvent& event );
     void OnSelectBot( wxCommandEvent& event );
 
+    void OnOptionActivate( wxListEvent& event );
+    void UpdateOption( const wxString& Tag );
+    long AddMMOptionsToList( long pos, int optFlag );
+    void ShowAIOptions();
+
+
   protected:
+    AddBotDialog( const AddBotDialog& );
+
     wxStaticText* m_nick_lbl;
     wxTextCtrl* m_nick;
     wxStaticText* m_ai_lbl;
@@ -42,6 +53,10 @@ class AddBotDialog : public wxDialog
     wxButton* m_cancel_btn;
     wxButton* m_add_btn;
     wxListCtrl* m_ai_infos_lst;
+    wxListCtrl* m_opts_list;
+
+    typedef std::map<wxString, long> OptionListMap;
+		OptionListMap m_opt_list_map;
 
     wxBoxSizer* m_main_sizer;
     wxBoxSizer* m_info_sizer;
@@ -59,7 +74,8 @@ class AddBotDialog : public wxDialog
     {
       ADDBOT_ADD = wxID_HIGHEST,
       ADDBOT_CANCEL,
-      ADDBOT_AI
+      ADDBOT_AI,
+      ADDBOT_OPTIONLIST,
     };
 
     DECLARE_EVENT_TABLE()

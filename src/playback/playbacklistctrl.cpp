@@ -28,10 +28,10 @@ template <class PlaybackType>
 PlaybackListCtrl<PlaybackType>::PlaybackListCtrl( wxWindow* parent  ):
   PlaybackListCtrl::BaseType(parent, RLIST_LIST, wxDefaultPosition, wxDefaultSize,
                 wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT,
-                _T("PlaybackListCtrl"), 8, 4, &CompareOneCrit )
+                _T("PlaybackListCtrl"), 4, &CompareOneCrit )
 {
-    const int hd = wxLIST_AUTOSIZE_USEHEADER;
 #ifdef __WXMSW__
+    const int hd = wxLIST_AUTOSIZE_USEHEADER;
     const int widths[8] = {80,140,141,hd,160,hd,70,180};
 #else
     const int widths[8] = {80,140,141,50,160,50,70,180};
@@ -73,7 +73,7 @@ PlaybackListCtrl<PlaybackType>::~PlaybackListCtrl()
 }
 
 template <class PlaybackType>
-void PlaybackListCtrl<PlaybackType>::OnListRightClick( wxListEvent& event )
+void PlaybackListCtrl<PlaybackType>::OnListRightClick( wxListEvent& /*unused*/ )
 {
   PopupMenu( m_popup );
 }
@@ -97,7 +97,7 @@ void PlaybackListCtrl<PlaybackType>::RemovePlayback( const PlaybackType& replay 
 }
 
 template <class PlaybackType>
-void PlaybackListCtrl<PlaybackType>::OnDLMap( wxCommandEvent& event )
+void PlaybackListCtrl<PlaybackType>::OnDLMap( wxCommandEvent& /*unused*/ )
 {
     if ( m_selected_index > 0 &&  (long)m_data.size() > m_selected_index ) {
         OfflineBattle battle = m_data[m_selected_index]->battle;
@@ -106,7 +106,7 @@ void PlaybackListCtrl<PlaybackType>::OnDLMap( wxCommandEvent& event )
 }
 
 template <class PlaybackType>
-void PlaybackListCtrl<PlaybackType>::OnDLMod( wxCommandEvent& event )
+void PlaybackListCtrl<PlaybackType>::OnDLMod( wxCommandEvent& /*unused*/ )
 {
     if ( m_selected_index > 0 &&  (long)m_data.size() > m_selected_index ) {
         OfflineBattle battle = m_data[m_selected_index]->battle;
@@ -157,7 +157,7 @@ void PlaybackListCtrl<PlaybackType>::SetTipWindowText( const long item_hit, cons
     {
         switch (column) {
             case 0: // date
-            m_tiptext = replay.date;
+            m_tiptext = replay.date_string;
                 break;
             case 1: // modname
                 m_tiptext = replay.ModName;
@@ -192,7 +192,7 @@ wxString PlaybackListCtrl<PlaybackType>::GetItemText(long item, long column) con
                         (replay.duration%3600)/60, (replay.duration%60)/60 ) ;
 
     switch ( column ) {
-        case 0: return replay.date;
+        case 0: return replay.date_string;
         case 1: return replay.battle.GetHostModName();
         case 2: return replay.battle.GetHostMapName();
         case 3: return wxString::Format(_T("%d"),replay.battle.GetNumUsers() - replay.battle.GetSpectators() );
@@ -215,20 +215,23 @@ int PlaybackListCtrl<PlaybackType>::GetItemImage(long item) const
 }
 
 template <class PlaybackType>
-int PlaybackListCtrl<PlaybackType>::GetItemColumnImage(long item, long column) const
+int PlaybackListCtrl<PlaybackType>::GetItemColumnImage(long /*item*/, long /*column*/) const
 {
-    if ( m_data[item] == NULL )
-        return -1;
+    //nothing's been done here atm
+    return -1;
 
-    const PlaybackType& replay = *m_data[item];
-
-    switch ( column ) {
-        default: return -1;
-    }
+//    if ( m_data[item] == NULL )
+//        return -1;
+//
+//    const PlaybackType& replay = *m_data[item];
+//
+//    switch ( column ) {
+//        default: return -1;
+//    }
 }
 
 template <class PlaybackType>
-wxListItemAttr* PlaybackListCtrl<PlaybackType>::GetItemAttr(long item) const
+wxListItemAttr* PlaybackListCtrl<PlaybackType>::GetItemAttr(long /*unused*/) const
 {
     //not neded atm
 //    if ( item < m_data.size() && item > -1 ) {
@@ -240,7 +243,7 @@ wxListItemAttr* PlaybackListCtrl<PlaybackType>::GetItemAttr(long item) const
 template <class PlaybackType>
 void PlaybackListCtrl<PlaybackType>::RemovePlayback( const int index )
 {
-    if ( index != -1 && index < m_data.size() ) {
+    if ( index != -1 && index < long(m_data.size()) ) {
         m_data.erase( m_data.begin() + index );
         SetItemCount( m_data.size() );
         RefreshVisibleItems( );

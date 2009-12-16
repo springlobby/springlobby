@@ -11,6 +11,7 @@ class wxLocale;
 class wxArrayString;
 class wxArrayLong;
 
+//! manages locale setting/finding with user interface
 class wxTranslationHelper
 {
 
@@ -37,6 +38,7 @@ private:
 	wxLocale * m_Locale;
 	bool m_UseNativeConfig;
 
+    wxTranslationHelper( const wxTranslationHelper& );
 };
 
 #endif

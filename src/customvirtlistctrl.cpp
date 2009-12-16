@@ -1,11 +1,12 @@
 
 #include <wx/colour.h>
 #include <wx/log.h>
+#include <wx/wupdlock.h>
 
 #include "nonportable.h" //pulls in the SL_DUMMY_COL define if applicable
 #include "settings.h"
 #include "iconimagelist.h"
-#include "settings++/custom_dialogs.h"
+#include "utils/customdialogs.h"
 #include "uiutils.h"
 #include "utils/sltipwin.h"
 #include "utils/math.h"
@@ -17,7 +18,7 @@
 BEGIN_EVENT_TABLE_TEMPLATE2(CustomVirtListCtrl, ListBaseType, T,L)
 #if wxUSE_TIPWINDOW
   EVT_MOTION(CustomVirtListCtrl::OnMouseMotion)
-  EVT_TIMER(wxID_ANY, CustomVirtListCtrl::OnTimer)
+  EVT_TIMER(IDD_TIP_TIMER, CustomVirtListCtrl::OnTimer)
 #endif
   EVT_LIST_COL_BEGIN_DRAG(wxID_ANY, CustomVirtListCtrl::OnStartResizeCol)
   EVT_LIST_COL_END_DRAG(wxID_ANY, CustomVirtListCtrl::OnEndResizeCol)
@@ -31,7 +32,7 @@ END_EVENT_TABLE()
 
 template < class T, class L >
 CustomVirtListCtrl<T,L>::CustomVirtListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pt, const wxSize& sz,
-                long style, const wxString& name, unsigned int column_count, unsigned int sort_criteria_count,
+                long style, const wxString& name, unsigned int sort_criteria_count,
                 CompareFunction func, bool highlight, UserActions::ActionType hlaction, bool periodic_sort, unsigned int periodic_sort_interval  )
     : ListBaseType(parent, id, pt, sz, style | wxLC_VIRTUAL),
     m_tiptimer(this, IDD_TIP_TIMER),
@@ -42,9 +43,9 @@ CustomVirtListCtrl<T,L>::CustomVirtListCtrl(wxWindow* parent, wxWindowID id, con
     m_controlPointer( 0 ),
 #endif
 #ifndef SL_DUMMY_COL
-    m_columnCount( column_count ),
+    m_columnCount( 0 ),
 #else
-    m_columnCount( column_count + 1 ),
+    m_columnCount( 1 ),
 #endif
     m_selected_index(-1),
     m_prev_selected_index(-1),
@@ -90,8 +91,18 @@ CustomVirtListCtrl<T,L>::CustomVirtListCtrl(wxWindow* parent, wxWindowID id, con
 }
 
 template < class T, class L >
+void CustomVirtListCtrl<T,L>::OnQuit( GlobalEvents::GlobalEventData /*data*/ )
+{
+    m_periodic_sort_timer.Stop();
+    m_dirty_sort = false;
+    Clear();
+}
+
+template < class T, class L >
 CustomVirtListCtrl<T,L>::~CustomVirtListCtrl()
 {
+    m_periodic_sort_timer.Stop();
+    Disconnect( m_periodic_sort_timer_id, wxTimerEvent().GetEventType(),   wxTimerEventHandler( ThisType::OnPeriodicSort ) );
     sett().SetSortOrder( m_name, m_sortorder );
 }
 
@@ -101,6 +112,7 @@ void CustomVirtListCtrl<T,L>::AddColumn(long i, int width, const wxString& label
     #ifdef SL_DUMMY_COL
         i++;
     #endif
+    m_columnCount++;
     ListBaseType::InsertColumn( i, label, wxLIST_FORMAT_LEFT, width);
     SetColumnWidth( i, width );
     colInfo temp( i, label, tip, modifiable, width );
@@ -200,18 +212,20 @@ void CustomVirtListCtrl<T,L>::SetSelectedIndex(const long newindex)
 template < class T, class L >
 void CustomVirtListCtrl<T,L>::RefreshVisibleItems()
 {
+    if ( m_data.size() < 1 )
+        return;
 #ifndef __WXMSW__
     long topItemIndex = GetTopItem();
     long range = topItemIndex + GetCountPerPage();
-    //RefreshItems( topItemIndex,  clamp( range, topItemIndex, (long) m_data.size() ) );
-    RefreshItems( topItemIndex,  range );
+    RefreshItems( topItemIndex,  clamp( range, topItemIndex, (long) m_data.size() -1 ) );
+    //RefreshItems( topItemIndex,  range );
 #else
     RefreshItems( 0,  m_data.size() -1 );
 #endif
 }
 
 template < class T, class L >
-void CustomVirtListCtrl<T,L>::OnTimer(wxTimerEvent& event)
+void CustomVirtListCtrl<T,L>::OnTimer(wxTimerEvent& /*unused*/ )
 {
 #if wxUSE_TIPWINDOW
 
@@ -296,7 +310,7 @@ void CustomVirtListCtrl<T,L>::OnMouseMotion(wxMouseEvent& event)
 }
 
 template < class T, class L >
-void CustomVirtListCtrl<T,L>::SetTipWindowText( const long item_hit, const wxPoint position)
+void CustomVirtListCtrl<T,L>::SetTipWindowText( const long /*unused*/ , const wxPoint& position)
 {
   int column = getColumnFromPosition(position);
   #ifdef SL_DUMMY_COL
@@ -350,11 +364,14 @@ void CustomVirtListCtrl<T,L>::OnEndResizeCol(wxListEvent& event)
 }
 
 template < class T, class L >
-bool CustomVirtListCtrl<T,L>::SetColumnWidth(int col, int width)
+bool CustomVirtListCtrl<T,L>::SetColumnWidth(int col, int& width)
 {
+    assert( col < (long)m_columnCount );
+    assert( col >= 0 );
     if ( sett().GetColumnWidth( m_name, col) != Settings::columnWidthUnset)
     {
-        return ListBaseType::SetColumnWidth( col, sett().GetColumnWidth( m_name, col) );
+        width = sett().GetColumnWidth( m_name, col);
+        return ListBaseType::SetColumnWidth( col, width );
     }
     else
     {
@@ -417,13 +434,17 @@ template < class T, class L >
 void CustomVirtListCtrl<T,L>::SortList( bool force )
 {
     if ( ( m_sort_timer.IsRunning() ||  !m_dirty_sort ) && !force )
+	{
         return;
-    SelectionSaver<ThisType>(this);
-    Freeze();
-    Sort();
-    Thaw();
-    m_dirty_sort = false;
-    RefreshVisibleItems();
+	}
+
+    {
+        wxWindowUpdateLocker upd( this );
+        SelectionSaver<ThisType>(*this);
+        Sort();
+        m_dirty_sort = false;
+    }
+    RefreshVisibleItems();//needs to be out of locker scope
 }
 
 template < class T, class L >
@@ -457,8 +478,10 @@ template < class T, class L >
 void CustomVirtListCtrl<T,L>::ResetColumnSizes()
 {
     typename colInfoVec::const_iterator it = m_colinfovec.begin();
-    for ( ; it != m_colinfovec.end(); ++it )
-        SetColumnWidth( it->col_num, it->size );
+    for ( ; it != m_colinfovec.end(); ++it ) {
+        int width = it->size;
+        SetColumnWidth( it->col_num, width );
+    }
 }
 
 template < class T, class L >
@@ -519,7 +542,7 @@ template < class T, class L >
 bool CustomVirtListCtrl<T,L>::GetColumn(int col, wxListItem& item) const
 {
     #ifdef SL_DUMMY_COL
-        col--;
+        col++;
     #endif
     return ListBaseType::GetColumn( col, item );
 }
@@ -528,7 +551,7 @@ template < class T, class L >
 bool CustomVirtListCtrl<T,L>::SetColumn(int col, wxListItem& item)
 {
     #ifdef SL_DUMMY_COL
-        col--;
+        col++;
     #endif
     return ListBaseType::SetColumn( col, item );
 }
@@ -562,7 +585,7 @@ bool CustomVirtListCtrl<T,L>::RemoveItem( const T item )
     int index = GetIndexFromData( item );
 
     if ( index != -1 ) {
-        SelectionSaver<ThisType>(this);
+        SelectionSaver<ThisType>(*this);
         m_data.erase( m_data.begin() + index );
         SetItemCount( m_data.size() );
         RefreshItems( index, m_data.size() -1 );
@@ -579,6 +602,8 @@ wxString CustomVirtListCtrl<T,L>::OnGetItemText(long item, long column) const
         return wxEmptyString;
     column--;
     #endif
+    assert( item < (long)m_data.size() );
+    assert( column < m_columnCount );
     return asImp().GetItemText(item, column);
 }
 
@@ -600,7 +625,7 @@ wxListItemAttr* CustomVirtListCtrl<T,L>::OnGetItemAttr(long item) const
 }
 
 template < class T, class L >
-void CustomVirtListCtrl<T,L>::OnPeriodicSort( wxTimerEvent& evt )
+void CustomVirtListCtrl<T,L>::OnPeriodicSort( wxTimerEvent& /*unused*/  )
 {
     SortList();
 }

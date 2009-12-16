@@ -10,13 +10,13 @@
 #include <wx/icon.h>
 #include <wx/textctrl.h>
 #include <wx/statline.h>
-#include <wx/aui/auibook.h>
 #include <wx/wupdlock.h>
 
 #include "widget.h"
 #include "../aui/artprovider.h"
+#include "../aui/slbook.h"
 #include "../utils/conversion.h"
-#include "../settings++/custom_dialogs.h"
+#include "../utils/customdialogs.h"
 #include "../Helper/imageviewer.h"
 #include "../Helper/slhtmlwindow.h"
 
@@ -26,7 +26,7 @@ BEGIN_EVENT_TABLE( WidgetInfoPanel, wxPanel)
     EVT_BUTTON( WidgetInfoPanel::BUT_UPDATE, WidgetInfoPanel::OnUpdate )
 END_EVENT_TABLE()
 
-WidgetInfoPanel::WidgetInfoPanel( Widget& widget, wxWindow* parent, wxWindowID id, const wxString& title,
+WidgetInfoPanel::WidgetInfoPanel( Widget& widget, wxWindow* parent, wxWindowID id, const wxString& /*unused*/,
     const wxPoint& pos , const wxSize& size , long style )
     : wxScrolledWindow (parent,  id, pos, size, style),
     m_widget( widget )
@@ -115,7 +115,7 @@ void WidgetInfoPanel::Create()
     while ( tk.HasMoreTokens() )
         m_changelog->AppendText( tk.GetNextToken() );
 
-    m_ext_info = new wxAuiNotebook(  this, -1, wxDefaultPosition, wxDefaultSize, wxAUI_NB_LEFT );
+    m_ext_info = new SLNotebook(  this, _T("m_ext_info"), -1, wxDefaultPosition, wxDefaultSize, wxAUI_NB_LEFT );
     m_ext_info->SetArtProvider(new SLArtProvider);
     m_ext_info->AddPage( m_desc, _("Description") , true );
     m_ext_info->AddPage( m_changelog, _("Changelog") , false );
@@ -152,7 +152,7 @@ WidgetInfoPanel::~WidgetInfoPanel()
     //dtor
 }
 
-void WidgetInfoPanel::OnDownload( wxCommandEvent& evt )
+void WidgetInfoPanel::OnDownload( wxCommandEvent& /*unused*/ )
 {
     if ( m_widget.Install() ) {
         customMessageBoxNoModal( SL_MAIN_ICON, _("Widget files have been installed."), _("Success") );
@@ -164,7 +164,7 @@ void WidgetInfoPanel::OnDownload( wxCommandEvent& evt )
 }
 
 
-void WidgetInfoPanel::OnRemove( wxCommandEvent& evt )
+void WidgetInfoPanel::OnRemove( wxCommandEvent& /*unused*/ )
 {
     if ( m_widget.Remove() ) {
         customMessageBoxNoModal( SL_MAIN_ICON, _("Widget files have been removed."), _("Success") );
@@ -175,7 +175,7 @@ void WidgetInfoPanel::OnRemove( wxCommandEvent& evt )
     SetButtonStates();
 }
 
-void WidgetInfoPanel::OnUpdate( wxCommandEvent& evt )
+void WidgetInfoPanel::OnUpdate( wxCommandEvent& /*unused*/ )
 {
 
 }

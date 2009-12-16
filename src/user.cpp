@@ -81,7 +81,7 @@ wxString UserStatus::GetDiffString ( const UserStatus& old ) const
         wxEmptyString;
 }
 
-void User::Said( const wxString& message ) const
+void User::Said( const wxString& /*message*/ ) const
 {
 }
 
@@ -115,10 +115,13 @@ void User::SetStatus( const UserStatus& status )
   m_status = status;
   // If user is host of a game, then his in_game status tells if the game is on!
   if ( m_battle != 0 ) {
-    User& user = m_battle->GetFounder();
-    if ( user.GetNick() == m_nick ) {
-      m_battle->Update();
-    }
+  	try
+  	{
+			User& user = m_battle->GetFounder();
+			if ( user.GetNick() == m_nick ) {
+				m_battle->Update();
+			}
+    }catch(...){}
   }
 
   m_statusicon_idx = icons().GetUserListStateIcon( m_status, false, m_battle != 0 );
@@ -189,8 +192,8 @@ wxString User::GetRankName(UserStatus::RankContainer rank)
           case UserStatus::RANK_5: return _("Experienced");
           case UserStatus::RANK_6: return _("Highly experienced");
           case UserStatus::RANK_7: return _("Veteran");
+          default:                 return _("Unknown");
       }
-			return _("Unknown");
 }
 
 float User::GetBalanceRank()

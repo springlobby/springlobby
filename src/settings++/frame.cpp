@@ -26,17 +26,16 @@
 
 #include "frame.h"
 #include "../settings.h"
-#include "../springunitsynclib.h"
+#include "../springunitsync.h"
 #include "tab_render_detail.h"
 #include "tab_quality_video.h"
 #include "tab_abstract.h"
 #include "tab_audio.h"
-#include "tab_debug.h"
 #include "tab_ui.h"
 #include "tab_simple.h"
 #include "Defs.hpp"
 #include "panel_pathoption.h"
-#include "custom_dialogs.h"
+#include "../utils/customdialogs.h"
 #include "../images/springsettings.xpm"
 #include "helpmenufunctions.h"
 #include "se_utils.h"
@@ -44,7 +43,6 @@
 const wxString simpleTabCap= _("Combined Options");
 const wxString qualityTabCap= _("Render quality / Video mode");
 const wxString detailTabCap = _("Render detail");
-const wxString debugTabCap = _("Debug");
 const wxString uiTabCap= _("UI options");
 const wxString audioTabCap = _("Audio");
 const wxString expertModeWarning = _("Changes made on Quality/Detail tab in expert mode"
@@ -64,7 +62,8 @@ settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &
 	alreadyCalled = false;
 	parentWindow = parent;
 
-	if ( !susynclib().IsLoaded() ) loadUnitsync();
+	if ( !usync().IsLoaded() )
+        usync().ReloadUnitSyncLib();
 
 	notebook = new wxNotebook(this, ID_OPTIONS, wxPoint(0,0),TAB_SIZE, wxNB_TOP|wxNB_NOPAGETHEME);
 	notebook->SetFont(wxFont(8, wxSWISS, wxNORMAL,wxNORMAL, false, _T("Tahoma")));
@@ -147,6 +146,7 @@ void settings_frame::handleExit() {
         	break;
 
         case wxCANCEL:
+        default:
         	break;
         }
     }
@@ -166,31 +166,25 @@ void settings_frame::CreateGUIControls()
 							    detailTab = new tab_render_detail(notebook,ID_RENDER_DETAIL);
 							    uiTab = new tab_ui(notebook,ID_UI);
 							    audioTab = new audio_panel(notebook,ID_AUDIO);
-							    debugTab = new debug_panel(notebook,ID_DEBUG);
                                 simpleTab = 0;
 								notebook->AddPage(uiTab, uiTabCap);
 								notebook->AddPage(qualityTab, qualityTabCap);
 								notebook->AddPage(detailTab, detailTabCap);
 								notebook->AddPage(audioTab,audioTabCap);
-								notebook->AddPage(debugTab, debugTabCap);
 
 						break;
+                    default:
 					case SET_MODE_SIMPLE:
 						simpleTab = new tab_simple(this,notebook,ID_SIMPLE);
 						 uiTab = new tab_ui(notebook,ID_UI);
 						notebook->AddPage(simpleTab,simpleTabCap);
 						notebook->AddPage(uiTab, uiTabCap);
+						SetTitle(_("SpringSettings (simple mode)"));
 					break;
 			}
 			notebook->SetSelection(0);
 
-	if (sett().getMode()==SET_MODE_EXPERT)
-		SetTitle(_("SpringSettings (expert mode)"));
-	else
-		SetTitle(_("SpringSettings (simple mode)"));
-
 	abstract_panel::settingsChanged = false;
-
 }
 
 void settings_frame::initMenuBar() {
@@ -219,6 +213,7 @@ void settings_frame::initMenuBar() {
 			menuMode->Check(ID_MENUITEM_EXPERT,true);
 		}
 			break;
+        default:
 		case SET_MODE_SIMPLE: {
 			menuMode->Check(ID_MENUITEM_SIMPLE,true);
 		}
@@ -265,14 +260,12 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 				if (notebook->GetSelection()!=1)
 					notebook->SetSelection(0);
 
-				notebook->DeletePage(5);
 				notebook->DeletePage(4);
 				notebook->DeletePage(3);
 				notebook->DeletePage(2);
 				qualityTab = 0;
 				detailTab = 0;
 				audioTab = 0;
-				debugTab = 0;
 
 				SetTitle(_("SpringSettings (simple mode)"));
 				if (!sett().getDisableWarning()){
@@ -317,11 +310,9 @@ void settings_frame::switchToExpertMode()
 	qualityTab = new tab_quality_video(notebook,ID_QUALITY_VIDEO);
     	detailTab = new tab_render_detail(notebook,ID_RENDER_DETAIL);
     	audioTab = new audio_panel(notebook,ID_AUDIO);
-    	debugTab = new debug_panel(notebook,ID_DEBUG);
 	notebook->AddPage(qualityTab, qualityTabCap);
 	notebook->AddPage(detailTab, detailTabCap);
 	notebook->AddPage(audioTab,audioTabCap);
-	notebook->AddPage(debugTab, debugTabCap);
 
 	notebook->DeletePage(0);
 	simpleTab = 0;
@@ -329,7 +320,6 @@ void settings_frame::switchToExpertMode()
 	uiTab->updateControls(UPDATE_ALL);
 	detailTab->updateControls(UPDATE_ALL);
 	qualityTab->updateControls(UPDATE_ALL);
-	debugTab->updateControls(UPDATE_ALL);
 	audioTab->updateControls(UPDATE_ALL);
 }
 
@@ -343,12 +333,10 @@ void settings_frame::updateAllControls()
 		detailTab->updateControls(UPDATE_ALL);
 	if (qualityTab)
 		qualityTab->updateControls(UPDATE_ALL);
-	if (debugTab)
-		debugTab->updateControls(UPDATE_ALL);
 	if (audioTab)
 		audioTab->updateControls(UPDATE_ALL);
 }
-void settings_frame::OnClose(wxCloseEvent& event)
+void settings_frame::OnClose(wxCloseEvent& /*unused*/)
 {
 	if ( !alreadyCalled ){
         wxString name = _T("SETTINGSFRAME");

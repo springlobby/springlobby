@@ -133,7 +133,7 @@ GroupOptionsPanel::GroupOptionsPanel( wxWindow* parent, wxWindowID id, const wxP
 
 	m_highlight_colorstaticText = new wxStaticText( m_group_panel, wxID_ANY, _("Highlight Color"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_highlight_colorstaticText->Wrap( -1 );
-	colorSizer->Add( m_highlight_colorstaticText, 0, wxALL, 5 );
+	colorSizer->Add( m_highlight_colorstaticText, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
 	m_highlight_color_button = new ColorButton( m_group_panel, HIGHLIGHT_COLOR, wxColour(0,0,0), wxDefaultPosition, wxSize( 20,20 ) );
 	m_highlight_color_button->SetToolTip( _("Select highlight color") );
@@ -224,7 +224,7 @@ void GroupOptionsPanel::ShowGroup( const wxString& group )
 
 void GroupOptionsPanel::ReloadUsersList()
 {
-    wxSortedArrayString groupuser = sett().GetPeopleList( m_current_group );
+    wxArrayString groupuser = sett().GetPeopleList( m_current_group );
     m_user_list->Clear();
     m_user_list->InsertItems(groupuser, 0);
     m_remove_user_button->Enable( false );
@@ -232,7 +232,7 @@ void GroupOptionsPanel::ReloadUsersList()
 
 void GroupOptionsPanel::ReloadGroupsList()
 {
-  wxSortedArrayString groupnames = useractions().GetGroupNames();
+  wxArrayString groupnames = useractions().GetGroupNames();
   m_group_list->Clear();
   m_group_list->InsertItems(groupnames, 0);
   m_group_list->SetStringSelection(m_current_group);
@@ -245,7 +245,7 @@ wxString GroupOptionsPanel::GetFirstGroupName()
   return groupnames[0];
 }
 
-void GroupOptionsPanel::OnRemoveGroup( wxCommandEvent& event )
+void GroupOptionsPanel::OnRemoveGroup( wxCommandEvent& /*unused*/ )
 {
   if (m_current_group == _T("Default")) return;
   useractions().DeleteGroup( m_current_group );
@@ -254,12 +254,12 @@ void GroupOptionsPanel::OnRemoveGroup( wxCommandEvent& event )
 }
 
 
-void GroupOptionsPanel::OnRenameGroup( wxCommandEvent& event )
+void GroupOptionsPanel::OnRenameGroup( wxCommandEvent& /*unused*/ )
 {
 }
 
 
-void GroupOptionsPanel::OnAddNewGroup( wxCommandEvent& event )
+void GroupOptionsPanel::OnAddNewGroup( wxCommandEvent& /*unused*/ )
 {
   wxTextEntryDialog* ted = new wxTextEntryDialog(this, _("Name of new group:"), _("Add New Group"));
   if ( ted->ShowModal() == wxID_OK ) {
@@ -273,7 +273,7 @@ void GroupOptionsPanel::OnAddNewGroup( wxCommandEvent& event )
 }
 
 
-void GroupOptionsPanel::OnGroupListSelectionChange( wxCommandEvent& event )
+void GroupOptionsPanel::OnGroupListSelectionChange( wxCommandEvent& /*unused*/ )
 {
   wxString newgroup = m_group_list->GetStringSelection();
   wxSortedArrayString groupnames = useractions().GetGroupNames();
@@ -284,7 +284,7 @@ void GroupOptionsPanel::OnGroupListSelectionChange( wxCommandEvent& event )
 }
 
 
-void GroupOptionsPanel::OnGroupActionsChange( wxCommandEvent& event )
+void GroupOptionsPanel::OnGroupActionsChange( wxCommandEvent&  )
 {
   useractions().ChangeAction( m_current_group, UserActions::ActNotifLogin, m_login_notify_check->GetValue() );
   useractions().ChangeAction( m_current_group, UserActions::ActIgnoreChat, m_ignore_chat_check->GetValue() );
@@ -308,7 +308,7 @@ void GroupOptionsPanel::OnHighlightColorClick( wxCommandEvent& event )
 }
 
 
-void GroupOptionsPanel::OnUsersListSelectionChange( wxCommandEvent& event )
+void GroupOptionsPanel::OnUsersListSelectionChange( wxCommandEvent& /*unused*/ )
 {
   wxArrayInt sel;
   m_user_list->GetSelections( sel );
@@ -316,7 +316,7 @@ void GroupOptionsPanel::OnUsersListSelectionChange( wxCommandEvent& event )
 }
 
 
-void GroupOptionsPanel::OnAddUsers( wxCommandEvent& event )
+void GroupOptionsPanel::OnAddUsers( wxCommandEvent& /*unused*/ )
 {
   wxSortedArrayString users = SelectUsersDialog::GetUsers(this);
   for ( unsigned int i = 0; i < users.Count(); i++ ) {
@@ -326,7 +326,7 @@ void GroupOptionsPanel::OnAddUsers( wxCommandEvent& event )
 }
 
 
-void GroupOptionsPanel::OnRemoveUser( wxCommandEvent& event )
+void GroupOptionsPanel::OnRemoveUser( wxCommandEvent& /*unused*/ )
 {
   wxArrayInt sel;
   int num = m_user_list->GetSelections( sel );

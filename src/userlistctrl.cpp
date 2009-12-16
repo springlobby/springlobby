@@ -89,11 +89,12 @@ void UserListctrl::Sort()
     switch ( m_sortorder[ i ].col ) {
       case 0 : SortItems( ( m_sortorder[ i ].direction )?&ComparePlayercountryUP:&ComparePlayercountryDOWN , 0 ); break;
       case 1 : SortItems( ( m_sortorder[ i ].direction )?&ComparePlayernameUP:&ComparePlayernameDOWN , 0 ); break;
+      default: break;
     }
   }
 }
 
-void UserListctrl::SetTipWindowText( const long item_hit, const wxPoint position){}
+void UserListctrl::SetTipWindowText( const long /*unused*/, const wxPoint /*unused*/){}
 
 wxArrayString UserListctrl::GetUserNicks( ) const
 {
@@ -161,29 +162,29 @@ bool UserListctrl::IsInList( const UserData userdata )
     return ( it != m_userdata.end() );
 }
 
-void UserListctrl::HighlightItem( long item )
+void UserListctrl::HighlightItem( long /*item */)
 {
 
 }
 
-int wxCALLBACK UserListctrl::ComparePlayercountryDOWN(long item1, long item2, long sortData)
+int wxCALLBACK UserListctrl::ComparePlayercountryDOWN(long item1, long item2, long /*unused*/)
 {
-    return ( (UserData*) item1)->first.Upper().CompareTo( ( (UserData*) item2)->first.Upper() ) ;
+    return ( (UserData*) item1)->first.Upper().Cmp( ( (UserData*) item2)->first.Upper() ) ;
 }
 
-int wxCALLBACK UserListctrl::ComparePlayercountryUP(long item1, long item2, long sortData)
+int wxCALLBACK UserListctrl::ComparePlayercountryUP(long item1, long item2, long /*unused*/)
 {
-    return ( (UserData*) item2)->first.Upper().CompareTo( ( (UserData*) item1)->first.Upper() ) ;
+    return ( (UserData*) item2)->first.Upper().Cmp( ( (UserData*) item1)->first.Upper() ) ;
 }
 
-int wxCALLBACK UserListctrl::ComparePlayernameDOWN(long item1, long item2, long sortData)
+int wxCALLBACK UserListctrl::ComparePlayernameDOWN(long item1, long item2, long /*unused*/)
 {
-    return ( (UserData*) item1)->second.Upper().CompareTo( ( (UserData*) item2)->second.Upper() ) ;
+    return ( (UserData*) item1)->second.Upper().Cmp( ( (UserData*) item2)->second.Upper() ) ;
 }
 
-int wxCALLBACK UserListctrl::ComparePlayernameUP(long item1, long item2, long sortData)
+int wxCALLBACK UserListctrl::ComparePlayernameUP(long item1, long item2, long /*unused*/)
 {
-    return ( (UserData*) item2)->second.Upper().CompareTo( ( (UserData*) item1)->second.Upper()) ;
+    return ( (UserData*) item2)->second.Upper().Cmp( ( (UserData*) item1)->second.Upper()) ;
 }
 
 void UserListctrl::OnColClick( wxListEvent& event )

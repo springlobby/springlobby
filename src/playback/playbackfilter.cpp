@@ -258,6 +258,7 @@ wxString PlaybackListFilter<PlaybackTabType>::_GetButtonSign(m_button_mode value
   switch (value) {
     case m_equal   : return _T("=");
     case m_smaller : return _T("<");
+    case m_bigger  :
     default        : return _T(">");
   }
 }
@@ -268,6 +269,7 @@ typename PlaybackListFilter<PlaybackTabType>::m_button_mode PlaybackListFilter<P
   switch (value) {
     case m_equal   : return m_smaller;
     case m_smaller : return m_bigger;
+    case m_bigger  :
     default        : return m_equal;
   }
 }
@@ -332,7 +334,7 @@ bool PlaybackListFilter<PlaybackTabType>::FilterPlayback( const typename Playbac
 }
 
 template <class PlaybackTabType>
-void PlaybackListFilter<PlaybackTabType>::OnChange   ( wxCommandEvent& event )
+void PlaybackListFilter<PlaybackTabType>::OnChange   ( wxCommandEvent& /*unused*/ )
 {
   if (!m_activ) return;
   m_parent_tab->UpdateList();
@@ -421,18 +423,18 @@ void PlaybackListFilter<PlaybackTabType>::SetDurationValue()
 {
 
     wxString dur = m_filter_duration_edit->GetValue();
-    const wxChar* sep = _T(":");
-    int sep_count = dur.Replace(sep,sep); //i know, i know
+    const wxChar* mysep = _T(":");
+    int sep_count = dur.Replace(mysep,mysep); //i know, i know
     switch ( sep_count ) {
         default:
             break;
 
         case 0: m_duration_value = s2l( dur );
             break;
-        case 1: m_duration_value = s2l( dur.AfterFirst(*sep) ) + ( s2l( dur.BeforeFirst(*sep) ) * 60 );
+        case 1: m_duration_value = s2l( dur.AfterFirst(*mysep) ) + ( s2l( dur.BeforeFirst(*mysep) ) * 60 );
             break;
-        case 2: m_duration_value = s2l( dur.AfterLast(*sep) ) + ( s2l( dur.AfterFirst(*sep).BeforeFirst(*sep) ) * 60 )
-                                    + ( s2l( dur.BeforeFirst(*sep) ) * 3600 );
+        case 2: m_duration_value = s2l( dur.AfterLast(*mysep) ) + ( s2l( dur.AfterFirst(*mysep).BeforeFirst(*mysep) ) * 60 )
+                                    + ( s2l( dur.BeforeFirst(*mysep) ) * 3600 );
             break;
 
     }

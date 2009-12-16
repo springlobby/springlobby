@@ -46,12 +46,10 @@ create-build-dir ()
 	)
 }
 
-create-build-dir build "--with-wx-config=/var/lib/buildbot/lib/linux/wx/2.8/bin/wx-config --with-opt-level=0"
-create-build-dir build-mingw-wx28 "--build=i686-pc-linux-gnu --host=i586-mingw32msvc --with-wx-config=/var/lib/buildbot/lib/mingw/wx/2.8/bin/wx-config  --with-boost-prefix=/var/lib/buildbot/lib/mingw/include/  --with-sdl-config=/var/lib/buildbot/lib/mingw/bin/sdl-config --with-opt-level=2"
-if [ -e /usr/bin/g++-4.4 ] ; then
-	create-build-dir-cmake build-cmake "-DCMAKE_CXX_COMPILER:STRING=g++-4.4 -DCMAKE_CXX_FLAGS:STRING=-O0"
-else
-	create-build-dir-cmake build-cmake "-DCMAKE_CXX_FLAGS:STRING=-O0"	
-fi
+#create-build-dir build "--with-wx-config=/var/lib/buildbot/lib/linux/wx/2.8/bin/wx-config --with-opt-level=0"
+create-build-dir-cmake build-cmake "-DCMAKE_CXX_FLAGS:STRING=-O0 -DSPRINGLOBBY_REV:STRING=${1}"
+create-build-dir-cmake build-mingw-wx28 "-DCMAKE_TOOLCHAIN_FILE:STRING=../cmake/Toolchain-mingw32_new.cmake \
+	-DSPRINGLOBBY_REV:STRING=${1} -DCMAKE_INSTALL_PREFIX:STRING=${PWD}/build-mingw-wx28 \
+	-DLOCALE_INSTALL_DIR:STRING=${PWD}/build-mingw-wx28/locale -DCMAKE_BUILD_TYPE:STRING=RELEASE -DCMAKE_EXE_LINKER_FLAGS:STRING=-L/opt/mingw32/lib"
 
-create-build-dir-cmake build-cmake-win "-DCMAKE_TOOLCHAIN_FILE:STRING=../cmake/Toolchain-mingw32.cmake -DCMAKE_CXX_FLAGS:STRING=-O0"
+	

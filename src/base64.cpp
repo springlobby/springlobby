@@ -21,6 +21,11 @@
 //
 
 #include "base64.h"
+#include "defines.h"
+
+#ifdef HAVE_WX29
+    #include "utils/conversion.h"
+#endif
 
 const wxChar fillchar = '=';
 
@@ -38,7 +43,7 @@ static wxString     cvt = _T("ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 wxString wxBase64::Encode(const wxString& data)
 {
-    return wxBase64::Encode((const wxUint8*)data.c_str(), data.Length());
+    return wxBase64::Encode((const wxUint8*)data.c_str(), data.Len());
 }
 
 wxString wxBase64::Encode(const wxUint8* pData, size_t len)
@@ -88,7 +93,7 @@ std::string wxBase64::Decode(const wxString& data)
 {
     int c;
     int c1;
-    size_t len = data.Length();
+    size_t len = data.Len();
     std::string ret;
     ret.reserve(data.length() * 3 / 4);
 
@@ -107,8 +112,11 @@ std::string wxBase64::Decode(const wxString& data)
             c = data[i];
             if ((char)fillchar == c)
                 break;
-
+        #ifndef HAVE_WX29
             c = cvt.find(c);
+        #else
+            c = cvt.find( TowxString(c) );
+        #endif
             wxASSERT_MSG(c >= 0, _T("invalid base64 input"));
             c1 = ((c1 << 4) & 0xf0) | ((c >> 2) & 0xf);
             ret.push_back(c1);
@@ -120,7 +128,11 @@ std::string wxBase64::Decode(const wxString& data)
             if ((char)fillchar == c1)
                 break;
 
+        #ifndef HAVE_WX29
             c1 = cvt.find(c1);
+        #else
+            c1 = cvt.find( TowxString(c1) );
+        #endif
             wxASSERT_MSG(c1 >= 0, _T("invalid base64 input"));
             c = ((c << 6) & 0xc0) | c1;
             ret.push_back(c);

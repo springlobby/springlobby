@@ -23,9 +23,9 @@ class FakeNetClass : public iNetClass
     FakeNetClass(){}
     ~FakeNetClass(){}
 
-    void OnConnected( Socket* sock ) {}
-    void OnDisconnected( Socket* sock ) {}
-    void OnDataReceived( Socket* sock ) {}
+    void OnConnected( Socket* /*unused*/ ) {}
+    void OnDisconnected( Socket* /*unused*/ ) {}
+    void OnDataReceived( Socket* /*unused*/ ) {}
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_INETCLASS_H

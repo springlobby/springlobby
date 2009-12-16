@@ -7,13 +7,13 @@
 class User;
 class UserList;
 class Ui;
-class ChatPanel;
+class ChatPanelMenu;
 class UserMenu;
 
 class NickListCtrl : public CustomVirtListCtrl< const User* ,NickListCtrl >
 {
   protected:
-    typedef SL_GENERIC::UserMenu<ChatPanel> UserMenu;
+    typedef SL_GENERIC::UserMenu<ChatPanelMenu> UserMenu;
 
   public:
     NickListCtrl( wxWindow* parent, bool show_header = true, UserMenu* popup = 0,
@@ -29,7 +29,7 @@ class NickListCtrl : public CustomVirtListCtrl< const User* ,NickListCtrl >
 
     void OnActivateItem( wxListEvent& event );
     void OnShowMenu( wxContextMenuEvent& event );
-    virtual void SetTipWindowText( const long item_hit, const wxPoint position);
+    virtual void SetTipWindowText( const long item_hit, const wxPoint& position);
 
     void HighlightItem( long item );
 

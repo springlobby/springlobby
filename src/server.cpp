@@ -11,6 +11,7 @@
 #include "battle.h"
 #include "channel/channel.h"
 #include "user.h"
+#include "ui.h"
 #include "utils/debug.h"
 #include "utils/conversion.h"
 #include "chatpanel.h"
@@ -49,7 +50,7 @@ Channel& Server::GetChannel( const wxString& name )
 }
 
 
-int Server::GetNumChannels()
+int Server::GetNumChannels() const
 {
   return m_channels.GetNumChannels();
 }
@@ -61,7 +62,7 @@ Channel& Server::GetChannel( const int& index )
 }
 
 
-bool Server::ChannelExists( const wxString& name )
+bool Server::ChannelExists( const wxString& name ) const
 {
   return m_channels.ChannelExists( name );
 }
@@ -73,7 +74,7 @@ Battle& Server::GetBattle( const int& battleid )
 }
 
 
-bool Server::BattleExists( const int& battleid )
+bool Server::BattleExists( const int& battleid ) const
 {
   return battles_iter->BattleExists( battleid );
 }
@@ -109,7 +110,7 @@ void Server::_RemoveUser( const wxString& nickname )
 Channel& Server::_AddChannel( const wxString& chan )
 {
   if ( m_channels.ChannelExists( chan ) ) return m_channels.GetChannel( chan );
-  Channel* c = new Channel( *this, ui() );
+  Channel* c = new Channel( *this );
   c->SetName( chan );
 
   m_channels.AddChannel( *c );
@@ -179,4 +180,22 @@ void Server::OnDisconnected()
 
 void Server::RequestSpringUpdate()
 {
+}
+
+wxArrayString Server::GetRelayHostList()
+{
+	if ( UserExists( _T("RelayHostManagerList") ) ) SayPrivate( _T("RelayHostManagerList"), _T("!listmanagers") );
+	wxArrayString ret;
+	for ( unsigned int i = 0; i < m_relay_host_manager_list.GetCount(); i++ )
+	{
+		try
+		{
+			User& manager = GetUser( m_relay_host_manager_list[i] );
+			if ( manager.Status().in_game ) continue; // skip the manager is not connected or reports it's ingame ( no slots available ), or it's away ( functionality disabled )
+			if ( manager.Status().away ) continue;
+			ret.Add( m_relay_host_manager_list[i] );
+		}
+		catch(...){}
+	}
+	return ret;
 }

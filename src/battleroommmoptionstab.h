@@ -45,7 +45,7 @@ template < class BattleType >
 class BattleroomMMOptionsTab : public wxScrolledWindow
 {
 	public:
-		BattleroomMMOptionsTab( BattleType& battle, wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,300 ), long style = wxTAB_TRAVERSAL );
+		BattleroomMMOptionsTab( BattleType* battle, wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,300 ), long style = wxTAB_TRAVERSAL );
 		~BattleroomMMOptionsTab();
 
 		void UpdateOptControls(wxString controlName);
@@ -63,8 +63,11 @@ class BattleroomMMOptionsTab : public wxScrolledWindow
         void OnSetModDefaultPreset( wxCommandEvent& event );
         void OnInfoButton( wxCommandEvent& event );
 
+        BattleType* GetBattle();
+        void SetBattle( BattleType* battle );
+
 	protected:
-        BattleType& m_battle;
+        BattleType* m_battle;
 
 		wxBoxSizer* m_main_sizer;
 		wxStaticBoxSizer* m_mod_options_sizer;

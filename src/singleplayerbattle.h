@@ -15,8 +15,8 @@ class SinglePlayerBattle: public IBattle
 {
   public:
 
-    SinglePlayerBattle( Ui& ui, MainSinglePlayerTab& msptab );
-    ~SinglePlayerBattle();
+    SinglePlayerBattle( MainSinglePlayerTab& msptab );
+    virtual ~SinglePlayerBattle();
 
 // (koshi) these are never called
 //    unsigned int AddBot( int ally, int posx, int posy, int handicap, const wxString& aidll );
@@ -25,9 +25,10 @@ class SinglePlayerBattle: public IBattle
     bool IsFounderMe() { return true; }
 
     User& GetMe() { return m_me; }
+    const User& GetMe() const { return m_me; }
 
     void SendHostInfo( HostInfo update );
-    void SendHostInfo( const wxString& Tag ){}
+    void SendHostInfo( const wxString& /*unused*/ ){}
 
     void Update( const wxString& Tag );
 
@@ -35,11 +36,36 @@ class SinglePlayerBattle: public IBattle
 
   protected:
 
-    Ui& m_ui;
     MainSinglePlayerTab& m_sptab;
 
     User m_me;
 
+};
+
+/** A derivative used in the Simple interface
+
+    Has no GUI tie-ins like SingelPlayerBattle and provides some functions to translate from the mod customization settings to our IBattle logic.
+
+**/
+class NoGuiSinglePlayerBattle : public IBattle {
+    public:
+        NoGuiSinglePlayerBattle ();
+        virtual ~NoGuiSinglePlayerBattle () {}
+        void StartSpring();
+        bool IsFounderMe() { return true; }
+        User& GetMe() { return m_me; }
+        const User& GetMe() const { return m_me; }
+
+        bool AddBot( const wxString& name, int team_id, const wxString& side );
+
+        //! returns -1 on fail, otherwise usnyc index that matches the given name
+        int GetSideIndex( const wxString& name );
+
+    protected:
+        //! returns -1 on fail, otherwise usnyc index that matches the given name
+        int GetAiIndex( const wxString& name );
+
+        User m_me;
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_SINGLEPLAYERBATTLE_H

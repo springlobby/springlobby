@@ -16,6 +16,7 @@
 #include <wx/thread.h>
 #include <wx/intl.h>
 #include <wx/utils.h>
+#include <wx/debugrpt.h>
 #include <wx/filename.h>
 
 #include "ui.h"
@@ -29,6 +30,7 @@
 #include "user.h"
 #include "utils/debug.h"
 #include "utils/conversion.h"
+#include "uiutils.h"
 #include "chatpanel.h"
 #include "battlelisttab.h"
 #include "battleroomtab.h"
@@ -40,20 +42,24 @@
 #include "maintorrenttab.h"
 #include "torrentwrapper.h"
 #endif
-#include "unitsyncthread.h"
+
 #include "agreementdialog.h"
 #ifdef __WXMSW__
-#include "updater/updater.h"
+    #include "updater/updatehelper.h"
+    #include "Helper/tasclientimport.h"
+    #include <wx/stdpaths.h>
 #endif
 
-#include "settings++/custom_dialogs.h"
-
+#include "utils/customdialogs.h"
+#include "utils/platform.h"
+#include "updater/versionchecker.h"
 #include "sdlsound.h"
 #include "globalsmanager.h"
 
 Ui& ui()
 {
-    static GlobalObjectHolder<Ui> m_ui;
+    static LineInfo<Ui> m( AT );
+    static GlobalObjectHolder<Ui,LineInfo<Ui> > m_ui( m );
     return m_ui;
 }
 
@@ -65,7 +71,7 @@ Ui::Ui() :
         m_first_update_trigger(true),
         m_ingame(false)
 {
-    m_main_win = new MainWindow( *this );
+    m_main_win = new MainWindow( );
     CustomMessageBoxBase::setLobbypointer(m_main_win);
     m_serv = new TASServer();
 }
@@ -83,7 +89,13 @@ Server& Ui::GetServer()
     return *m_serv;
 }
 
-bool Ui::GetServerStatus()
+const Server& Ui::GetServer() const
+{
+    ASSERT_LOGIC( m_serv != 0, _T("m_serv NULL!") );
+    return *m_serv;
+}
+
+bool Ui::GetServerStatus() const
 {
     return (bool)(m_serv);
 }
@@ -102,7 +114,7 @@ MainWindow& Ui::mw()
 }
 
 
-bool Ui::IsMainWindowCreated()
+bool Ui::IsMainWindowCreated() const
 {
     if ( m_main_win == 0 ) return false;
     else return true;
@@ -262,16 +274,7 @@ void Ui::JoinChannel( const wxString& name, const wxString& password )
 }
 
 
-void Ui::StartHostedBattle()
-{
-    ASSERT_LOGIC( m_serv != 0, _T("m_serv = 0") );
-    GetServer().StartHostedBattle();
-    sett().SetLastHostMap( GetServer().GetCurrentBattle()->GetHostMapName() );
-    sett().SaveSettings();
-}
-
-
-bool Ui::IsSpringRunning()
+bool Ui::IsSpringRunning() const
 {
     return spring().IsRunning();
 }
@@ -290,21 +293,13 @@ void Ui::Quit()
         m_con_win->Close();
 }
 
-
-void Ui::ReloadUnitSync()
-{
-    usync().ReloadUnitSyncLib();
-    if ( m_main_win != 0 ) mw().OnUnitSyncReloaded();
-}
-
-
 void Ui::DownloadMap( const wxString& hash, const wxString& name )
 {
 #ifndef NO_TORRENT_SYSTEM
     DownloadFileP2P( hash, name );
 #else
-		wxString newname = name;
-		newname.Replace( _T(" "), _T("+") );
+    wxString newname = name;
+    newname.Replace( _T(" "), _T("+") );
     wxString url = _T(" http://spring.jobjol.nl/search_result.php?search_cat=1&select_select=select_file_subject&Submit=Search&search=") + newname;
     OpenWebBrowser ( url );
 #endif
@@ -316,8 +311,8 @@ void Ui::DownloadMod( const wxString& hash, const wxString& name )
 #ifndef NO_TORRENT_SYSTEM
     DownloadFileP2P( hash, name );
 #else
-		wxString newname = name;
-		newname.Replace( _T(" "), _T("+") );
+    wxString newname = name;
+    newname.Replace( _T(" "), _T("+") );
     wxString url = _T(" http://spring.jobjol.nl/search_result.php?search_cat=1&select_select=select_file_subject&Submit=Search&search=") + newname;
     OpenWebBrowser ( url );
 #endif
@@ -348,31 +343,6 @@ void Ui::DownloadFileP2P( const wxString& hash, const wxString& name )
 //        }
     }
 #endif
-}
-
-
-void Ui::OpenWebBrowser( const wxString& url )
-{
-    if ( sett().GetWebBrowserUseDefault()
-            // These shouldn't happen, but if they do we use the default browser anyway.
-            || sett().GetWebBrowserPath() == wxEmptyString
-            || sett().GetWebBrowserPath() == _T("use default") )
-    {
-        if ( !wxLaunchDefaultBrowser( url ) )
-        {
-            wxLogWarning( _T("can't launch default browser") );
-            customMessageBoxNoModal(SL_MAIN_ICON, _("Couldn't launch browser. URL is: ") + url, _("Couldn't launch browser.")  );
-        }
-    }
-    else
-    {
-        if ( !wxExecute ( sett().GetWebBrowserPath() + _T(" ") + url, wxEXEC_ASYNC ) )
-        {
-            wxLogWarning( _T("can't launch browser: %s"), sett().GetWebBrowserPath().c_str() );
-            customMessageBoxNoModal(SL_MAIN_ICON, _("Couldn't launch browser. URL is: ") + url + _("\nBroser path is: ") + sett().GetWebBrowserPath(), _("Couldn't launch browser.")  );
-        }
-
-    }
 }
 
 
@@ -408,16 +378,13 @@ bool Ui::AskText( const wxString& heading, const wxString& question, wxString& a
 
 void Ui::ShowMessage( const wxString& heading, const wxString& message )
 {
-
     if ( m_main_win == 0 ) return;
     serverMessageBox( SL_MAIN_ICON, message, heading, wxOK);
-
 }
 
 
 bool Ui::ExecuteSayCommand( const wxString& cmd )
 {
-
     if ( !IsConnected() ) return false;
     //TODO insert logic for joining multiple channels at once
     //or remove that from "/help"
@@ -549,7 +516,8 @@ void Ui::OnUpdate( int mselapsed )
             mw().ShowTab( sett().GetStartTab() );
         }
 #ifdef __WXMSW__
-        if ( sett().GetAutoUpdate() )Updater().CheckForUpdates();
+        if ( sett().GetAutoUpdate() )
+            CheckForUpdates();
 #endif
     }
 
@@ -570,7 +538,7 @@ void Ui::OnUpdate( int mselapsed )
 //! @brief Called when connected to a server
 //!
 //! @todo Display in servertab
-void Ui::OnConnected( Server& server, const wxString& server_name, const wxString& server_ver, bool supported )
+void Ui::OnConnected( Server& server, const wxString& server_name, const wxString& /*unused*/, bool /*supported*/ )
 {
     wxLogDebugFunc( _T("") );
     if ( !m_last_used_backup_server.IsEmpty() )
@@ -589,13 +557,13 @@ void Ui::OnConnected( Server& server, const wxString& server_name, const wxStrin
     }
 
     if ( server.uidata.panel ) server.uidata.panel->StatusMessage( _T("Connected to ") + server_name + _T(".") );
-    mw().GetJoinTab().OnConnected();
-
+		mw().GetBattleListTab().OnConnected();
 }
 
 
 bool Ui::IsSpringCompatible()
 {
+    sett().RefreshSpringVersionList();
     if ( sett().GetDisableSpringVersionCheck() ) return true;
     wxString neededversion = GetServer().GetRequiredSpring();
     if ( neededversion == _T("*") ) return true; // Server accepts any version.
@@ -615,7 +583,7 @@ bool Ui::IsSpringCompatible()
         {
           wxLogMessage(_T("server enforce usage of version: %s, switching to profile: %s"), neededversion.c_str(), itor->first.c_str() );
           sett().SetUsedSpringIndex( itor->first );
-          ReloadUnitSync();
+          GetGlobalEventSender(GlobalEvents::UnitSyncReloadRequest).SendEvent( 0 ); // request an unitsync reload
         }
         return true;
       }
@@ -650,7 +618,7 @@ void Ui::OnDisconnected( Server& server, bool wasonline )
     }
 
     mw().GetJoinTab().LeaveCurrentBattle();
-    mw().GetJoinTab().GetBattleListTab().RemoveAllBattles();
+    mw().GetBattleListTab().RemoveAllBattles();
 
     mw().GetChatTab().LeaveChannels();
 
@@ -682,6 +650,7 @@ void Ui::ConnectionFailurePrompt()
 			ShowConnectWindow();
 			break;
 		}
+		default:
 		case wxID_CANCEL: // do nothing
 		{
 			return;
@@ -875,7 +844,13 @@ void Ui::OnUserStatusChanged( User& user )
             chan.uidata.panel->UserStatusUpdated( user );
         }
     }
-    if ( user.GetStatus().in_game ) mw().GetJoinTab().GetBattleListTab().UserUpdate( user );
+    if ( user.GetStatus().in_game ) mw().GetBattleListTab().UserUpdate( user );
+    try
+    {
+			ChatPanel& server = mw().GetChatTab().ServerChat();
+			server.UserStatusUpdated( user );
+		}
+		catch(...){}
 }
 
 
@@ -916,26 +891,29 @@ void Ui::OnUserSaid( User& user, const wxString& message, bool fromme )
 void Ui::OnBattleOpened( IBattle& battle )
 {
     if ( m_main_win == 0 ) return;
-    mw().GetJoinTab().GetBattleListTab().AddBattle( battle );
-    User& user = battle.GetFounder();
-    for ( int i = 0; i < GetServer().GetNumChannels(); i++ )
+    mw().GetBattleListTab().AddBattle( battle );
+    try
     {
-        Channel& chan = GetServer().GetChannel( i );
-        if ( ( chan.UserExists(user.GetNick()) ) && ( chan.uidata.panel != 0 ) )
-        {
-            chan.uidata.panel->UserStatusUpdated( user );
-        }
-    }
+			User& user = battle.GetFounder();
+			for ( int i = 0; i < GetServer().GetNumChannels(); i++ )
+			{
+					Channel& chan = GetServer().GetChannel( i );
+					if ( ( chan.UserExists(user.GetNick()) ) && ( chan.uidata.panel != 0 ) )
+					{
+							chan.uidata.panel->UserStatusUpdated( user );
+					}
+			}
+    }catch(...){}
 }
 
 
 void Ui::OnBattleClosed( IBattle& battle )
 {
     if ( m_main_win == 0 ) return;
-    mw().GetJoinTab().GetBattleListTab().RemoveBattle( battle );
+    mw().GetBattleListTab().RemoveBattle( battle );
     try
     {
-        if ( &mw().GetJoinTab().GetBattleRoomTab().GetBattle() == &battle )
+        if ( mw().GetJoinTab().GetBattleRoomTab().GetBattle() == &battle )
         {
             if (!battle.IsFounderMe() )
                 customMessageBoxNoModal(SL_MAIN_ICON,_("The current battle was closed by the host."),_("Battle closed"));
@@ -962,11 +940,11 @@ void Ui::OnBattleClosed( IBattle& battle )
 void Ui::OnUserJoinedBattle( IBattle& battle, User& user )
 {
     if ( m_main_win == 0 ) return;
-    mw().GetJoinTab().GetBattleListTab().UpdateBattle( battle );
+    mw().GetBattleListTab().UpdateBattle( battle );
 
     try
     {
-        if ( &mw().GetJoinTab().GetBattleRoomTab().GetBattle() == &battle )
+        if ( mw().GetJoinTab().GetBattleRoomTab().GetBattle() == &battle )
         {
         	 mw().GetJoinTab().GetBattleRoomTab().OnUserJoined( user );
         	 OnBattleInfoUpdated( battle );
@@ -989,10 +967,11 @@ void Ui::OnUserLeftBattle( IBattle& battle, User& user )
 {
     if ( m_main_win == 0 ) return;
     user.SetSideiconIndex( -1 ); //just making sure he's not running around with some icon still set
-    mw().GetJoinTab().GetBattleListTab().UpdateBattle( battle );
+	user.BattleStatus().side = 0; // and reset side, so after rejoin we don't potentially stick with a num higher than avail
+    mw().GetBattleListTab().UpdateBattle( battle );
     try
     {
-        if ( &mw().GetJoinTab().GetBattleRoomTab().GetBattle() == &battle )
+        if ( mw().GetJoinTab().GetBattleRoomTab().GetBattle() == &battle )
         {
             mw().GetJoinTab().GetBattleRoomTab().OnUserLeft( user );
 						OnBattleInfoUpdated( battle );
@@ -1017,7 +996,7 @@ void Ui::OnUserLeftBattle( IBattle& battle, User& user )
 void Ui::OnBattleInfoUpdated( IBattle& battle )
 {
     if ( m_main_win == 0 ) return;
-    mw().GetJoinTab().GetBattleListTab().UpdateBattle( battle );
+    mw().GetBattleListTab().UpdateBattle( battle );
     if ( mw().GetJoinTab().GetCurrentBattle() == &battle )
     {
         mw().GetJoinTab().UpdateCurrentBattle();
@@ -1027,7 +1006,7 @@ void Ui::OnBattleInfoUpdated( IBattle& battle )
 void Ui::OnBattleInfoUpdated( IBattle& battle, const wxString& Tag )
 {
     if ( m_main_win == 0 ) return;
-    mw().GetJoinTab().GetBattleListTab().UpdateBattle( battle );
+    mw().GetBattleListTab().UpdateBattle( battle );
     if ( mw().GetJoinTab().GetCurrentBattle() == &battle )
     {
         mw().GetJoinTab().UpdateCurrentBattle( Tag );
@@ -1039,6 +1018,7 @@ void Ui::OnJoinedBattle( Battle& battle )
 {
     if ( m_main_win == 0 ) return;
     mw().GetJoinTab().JoinBattle( battle );
+    mw().FocusBattleRoomTab();
     if ( !usync().IsLoaded() )
     {
         customMessageBox(SL_MAIN_ICON, _("Your spring settings are probably not configured correctly,\nyou should take another look at your settings before trying\nto play online."), _("Spring settings error"), wxOK );
@@ -1053,6 +1033,7 @@ void Ui::OnJoinedBattle( Battle& battle )
 void Ui::OnHostedBattle( Battle& battle )
 {
     if ( m_main_win == 0 ) return;
+    mw().FocusBattleRoomTab();
     mw().GetJoinTab().HostBattle( battle );
 }
 
@@ -1070,9 +1051,9 @@ void Ui::OnRequestBattleStatus( IBattle& battle )
     if ( m_main_win == 0 ) return;
     try
     {
-        if ( &mw().GetJoinTab().GetBattleRoomTab().GetBattle() == &battle )
+        if ( mw().GetJoinTab().GetBattleRoomTab().GetBattle() == &battle )
         {
-            mw().GetJoinTab().GetBattleRoomTab().GetBattle().OnRequestBattleStatus();
+            mw().GetJoinTab().GetBattleRoomTab().GetBattle()->OnRequestBattleStatus();
         }
     }
     catch (...) {}
@@ -1083,11 +1064,11 @@ void Ui::OnBattleStarted( Battle& battle )
 {
     if ( m_main_win == 0 ) return;
     wxLogDebugFunc( _T("") );
-    mw().GetJoinTab().GetBattleListTab().UpdateBattle( battle );
+    mw().GetBattleListTab().UpdateBattle( battle );
 }
 
 
-void Ui::OnSaidBattle( IBattle& battle, const wxString& nick, const wxString& msg )
+void Ui::OnSaidBattle( IBattle& /*battle*/, const wxString& nick, const wxString& msg )
 {
     if ( m_main_win == 0 ) return;
     try
@@ -1098,7 +1079,7 @@ void Ui::OnSaidBattle( IBattle& battle, const wxString& nick, const wxString& ms
 }
 
 
-void Ui::OnBattleAction( IBattle& battle, const wxString& nick, const wxString& msg )
+void Ui::OnBattleAction( IBattle& /*battle*/, const wxString& nick, const wxString& msg )
 {
     if ( m_main_win == 0 ) return;
     try
@@ -1136,6 +1117,25 @@ void Ui::OnSpringTerminated( long exit_code )
           battle->SendHostInfo( IBattle::HI_Locked );
         }
     } catch ( assert_exception ){}
+
+    if ( exit_code ) {
+//        wxDebugReportCompress report;
+//        wxString dir = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator();
+//        wxString tmp_filename = wxPathOnly( wxFileName::CreateTempFileName(_T("dummy")) ) + wxFileName::GetPathSeparator() + _T("settings.txt");
+//        wxCopyFile( sett().GetCurrentUsedSpringConfigFilePath(), tmp_filename );
+//        report.AddFile( dir + _T("infolog.txt"), _T("Infolog") );
+//        report.AddFile( dir + _T("script.txt"), _T("Script") );
+//        report.AddFile( dir + _T("ext.txt"), _T("Infolog") );
+//        report.AddFile( dir + _T("unitsync.log"), _T("Infolog") );
+//        report.AddFile( tmp_filename, _T("Settings") );
+//        wxString info;
+//        info << wxGetOsDescription() << ( wxIsPlatform64Bit() ? _T(" 64bit\n") : _T(" 32bit\n") );
+//        report.AddText( _T("platform.txt"), info, _T("Platform") );
+//        wxDebugReportPreviewStd().Show( report );
+//        report.Process();
+        if ( customMessageBox( SL_MAIN_ICON, _T("The game has crashed.\nOpen infolog.txt?"), _T("Crash"), wxYES_NO ) == wxYES )
+            OpenFileInEditor( sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("infolog.txt") );
+    }
 }
 
 
@@ -1150,7 +1150,7 @@ void Ui::OnAcceptAgreement( const wxString& agreement )
 }
 
 
-void Ui::OnRing( const wxString& from )
+void Ui::OnRing( const wxString& /*from */)
 {
     if ( m_main_win == 0 ) return;
     m_main_win->RequestUserAttention();
@@ -1163,42 +1163,17 @@ void Ui::OnRing( const wxString& from )
 #endif
 }
 
-
-void Ui::OnMapInfoCached( const wxString& mapname )
-{
-    if ( m_main_win == 0 ) return;
-    mw().OnUnitSyncReloaded();
-}
-
-
-void Ui::OnMinimapCached( const wxString& mapname )
-{
-    if ( m_main_win == 0 ) return;
-    mw().OnUnitSyncReloaded();
-}
-
-
-void Ui::OnModUnitsCached( const wxString& modname )
-{
-}
-
-void Ui::OnMainWindowDestruct()
-{
-    //this is rather ugly and therefore disabled
-    //m_main_win = 0;
-}
-
-bool Ui::IsThisMe(User& other)
+bool Ui::IsThisMe(User& other) const
 {
     return IsThisMe( other.GetNick() );
 }
 
-bool Ui::IsThisMe(User* other)
+bool Ui::IsThisMe(User* other) const
 {
     return ( ( other != 0 ) && IsThisMe( other->GetNick() ) );
 }
 
-bool Ui::IsThisMe(const wxString& other)
+bool Ui::IsThisMe(const wxString& other) const
 {
     //if i'm not connected i have no identity
     if (!IsConnected() || m_serv==0)
@@ -1207,7 +1182,7 @@ bool Ui::IsThisMe(const wxString& other)
         return ( other == GetServer().GetMe().GetNick() );
 }
 
-int Ui::TestHostPort( unsigned int port )
+int Ui::TestHostPort( unsigned int port ) const
 {
     return GetServer().TestOpenPort( port );
 }
@@ -1235,9 +1210,112 @@ bool Ui::OnPresetRequiringMap( const wxString& mapname )
                         _("Map missing"),
                         wxYES_NO ) )
     {
-        ui().DownloadMap( _T("") , mapname );
+        DownloadMap( _T("") , mapname );
         return true;
     }
     return false;
 }
 
+void Ui::OpenFileInEditor( const wxString& filepath )
+{
+    wxString editor_path = sett().GetEditorPath( );
+    if ( editor_path == wxEmptyString ) {
+        customMessageBoxNoModal( SL_MAIN_ICON, _T("You have not chosen an external text editor to open files with.\nPlease Select one now."), _T("No editor set") );
+        mw().ShowConfigure( MainWindow::OPT_PAGE_GENERAL );
+        return;
+    }
+    bool success = ( wxExecute( editor_path + _T(" \"") + filepath + _T("\""), wxEXEC_ASYNC ) != 0 );
+    if ( !success ) {
+        customMessageBoxNoModal( SL_MAIN_ICON, _T("There was a problem launching the editor.\nPlease make sure the path is correct and the binary executable for your user.\nNote it's currently not possible to use shell-only editors like ed, vi, etc."), _T("Problem launching editor") );
+        mw().ShowConfigure( MainWindow::OPT_PAGE_GENERAL );
+    }
+}
+
+void Ui::FirstRunWelcome()
+{
+    if ( sett().IsFirstRun() )
+    {
+#ifdef __WXMSW__
+        sett().SetOldSpringLaunchMethod( true );
+#endif
+
+        wxLogMessage( _T("first time startup"));
+        wxMessageBox(_("Hi ") + wxGetUserName() + _(",\nIt looks like this is your first time using SpringLobby. I have guessed a configuration that I think will work for you but you should review it, especially the Spring configuration. \n\nWhen you are done you can go to the File menu, connect to a server, and enjoy a nice game of Spring :)"), _("Welcome"),
+                     wxOK | wxICON_INFORMATION, &mw() );
+
+
+        customMessageBoxNoModal(SL_MAIN_ICON, _("By default SpringLobby reports some usage statistics.\nYou can disable that on options tab --> General."),_("Notice"),wxOK );
+
+
+                // copy uikeys.txt
+                wxPathList pl;
+                pl.AddEnvList( _T("%ProgramFiles%") );
+                pl.AddEnvList( _T("XDG_DATA_DIRS") );
+                pl = sett().GetAdditionalSearchPaths( pl );
+                wxString uikeyslocation = pl.FindValidPath( _T("uikeys.txt") );
+                if ( !uikeyslocation.IsEmpty() )
+                {
+                    wxCopyFile( uikeyslocation, sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("uikeys.txt"), false );
+                }
+
+    #ifdef __WXMSW__
+        if ( TASClientPresent() &&
+                customMessageBox(SL_MAIN_ICON, _("Should I try to import (some) TASClient settings?\n" ),_("Import settings?"), wxYES_NO ) == wxYES )
+        {
+            ImportTASClientSettings();
+        }
+    #endif
+        //this ensures that for new configs there's a default perspective to fall back on
+        mw().SavePerspectives( _T("SpringLobby-default") );
+        mw().ShowConfigure();
+    }
+    else
+    {
+        mw().ShowSingleplayer();
+    }
+}
+
+
+void Ui::CheckForUpdates()
+{
+    wxString latestVersion = GetLatestVersion();
+
+    if (latestVersion == _T("-1"))
+    {
+        customMessageBoxNoModal(SL_MAIN_ICON, _("There was an error checking for the latest version.\nPlease try again later.\nIf the problem persists, please use Help->Report Bug to report this bug."), _("Error"));
+        return;
+    }
+    wxString myVersion = GetSpringLobbyVersion() ;
+
+    wxString msg = _("Your Version: ") + myVersion + _T("\n") + _("Latest Version: ") + latestVersion;
+    if ( !latestVersion.IsSameAs(myVersion, false) )
+    {
+        #ifdef __WXMSW__
+        int answer = customMessageBox(SL_MAIN_ICON, _("Your SpringLobby version is not up to date.\n\n") + msg + _("\n\nWould you like for me to autodownload the new version? Changes will take effect next you launch the lobby again."), _("Not up to date"), wxYES_NO);
+        if (answer == wxYES)
+        {
+            wxString command = _T("\"") + wxPathOnly( wxStandardPaths::Get().GetExecutablePath() ) + wxFileName::GetPathSeparator() + _T("springlobby_updater.exe\"");
+            wxString params = _T("-f \"") + wxStandardPaths::Get().GetExecutablePath() + _T("\"") + _T(" -r ") +  latestVersion  ;
+            if( WinExecute( command, params ) > 0 ) {
+                //returned pid > 0 -> proc started successfully
+                // now close this instance immeadiately
+                wxCloseEvent dummy;
+                ui().mw().OnClose( dummy );
+            }
+            else
+            {//this will also happen if updater exe is not present so we don't really ne special check for existance of it
+                customMessageBox(SL_MAIN_ICON, _("Automatic update failed\n\nyou will be redirected to a web page with instructions and the download link will be opened in your browser.") + msg, _("Updater error.") );
+                OpenWebBrowser( _T("http://springlobby.info/wiki/springlobby/Install#Windows-Binary") );
+                OpenWebBrowser( GetDownloadUrl( latestVersion ) );
+
+            }
+        }
+        #else
+        customMessageBoxNoModal(SL_MAIN_ICON, _("Your SpringLobby version is not up to date.\n\n") + msg, _("Not up to Date") );
+        #endif
+    }
+    /* TODO currently not usable cause automatic update calls this function too and we don't want a msg box everytime the check succeeds
+    else
+        customMessageBoxNoModal(SL_MAIN_ICON, _("Your SpringLobby version is up to date.\n\n") + msg, _("Up to Date") );
+    */
+}

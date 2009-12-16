@@ -8,7 +8,7 @@
 #include "utils/controls.h"
 #include "settings.h"
 #include "iconimagelist.h"
-#include "settings++/custom_dialogs.h"
+#include "utils/customdialogs.h"
 #include "uiutils.h"
 
 
@@ -163,7 +163,7 @@ long CustomListCtrl::GetSelectedData()
   return m_selected ;
 }
 
-void CustomListCtrl::OnTimer(wxTimerEvent& event)
+void CustomListCtrl::OnTimer(wxTimerEvent& /*unused*/)
 {
 #if wxUSE_TIPWINDOW
 
@@ -240,7 +240,7 @@ void CustomListCtrl::OnMouseMotion(wxMouseEvent& event)
 #endif
 }
 
-void CustomListCtrl::SetTipWindowText( const long item_hit, const wxPoint position)
+void CustomListCtrl::SetTipWindowText( const long /*unused*/, const wxPoint position)
 {
   int column = getColumnFromPosition(position);
   if (column >= int(m_colinfovec.size()) || column < 0)
@@ -324,7 +324,7 @@ void CustomListCtrl::UpdateHighlights()
 void CustomListCtrl::HighlightItemUser( long item, const wxString& name )
 {
    if ( m_highlight && useractions().DoActionOnUser( m_highlightAction, name ) ) {
-        wxColor c = sett().GetGroupHLColor( useractions().GetGroupOfUser( name ) );
+        wxColour c = sett().GetGroupHLColor( useractions().GetGroupOfUser( name ) );
         SetItemBackgroundColour( item, c );
   }
   else

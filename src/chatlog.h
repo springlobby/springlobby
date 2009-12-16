@@ -3,7 +3,7 @@
 
 #include <wx/string.h>
 #include <wx/file.h>
-
+#include <wx/arrstr.h>
 
 class ChatLog
 {
@@ -13,6 +13,8 @@ class ChatLog
     bool AddMessage(const wxString& text);
     bool LogEnabled();
     wxString LogTime();
+    void OpenInEditor();
+    const wxArrayString& GetLastLines( ) const;
 //    void SetTarget( const wxString& server,const wxString& room );
   protected:
     bool CreateFolder(const wxString& server);
@@ -22,9 +24,12 @@ class ChatLog
     wxFile m_logfile;
     wxString m_server;
     wxString m_room;
+    wxString m_current_logfile_path;
     bool m_active;
     static bool m_parent_dir_exists;
+    wxArrayString m_last_lines;
 
+    void FillLastLineArray();
 
 };
 

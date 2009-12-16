@@ -15,47 +15,50 @@
 #include "uiutils.h"
 #include "battle.h"
 #include "iunitsync.h"
+#include "mmoptionwindows.h"
+#include "utils/conversion.h"
 
-#include "settings++/custom_dialogs.h"
+#include "utils/customdialogs.h"
 
 BEGIN_EVENT_TABLE( AddBotDialog, wxDialog )
     EVT_BUTTON( ADDBOT_CANCEL, AddBotDialog::OnClose )
     EVT_BUTTON( ADDBOT_ADD, AddBotDialog::OnAddBot )
     EVT_CHOICE( ADDBOT_AI, AddBotDialog::OnSelectBot )
+		EVT_LIST_ITEM_ACTIVATED ( ADDBOT_OPTIONLIST, AddBotDialog::OnOptionActivate )
 END_EVENT_TABLE()
 
 
 AddBotDialog::AddBotDialog( wxWindow* parent, IBattle& battle , bool singleplayer):
-  wxDialog( parent, wxID_ANY, _("Add bot"), wxDefaultPosition, wxDefaultSize ),
+  wxDialog( parent, wxID_ANY, _("Add bot"), wxDefaultPosition, wxDefaultSize, wxRESIZE_BORDER | wxDEFAULT_DIALOG_STYLE ),
   m_battle( battle ),
   m_sp(singleplayer)
 {
+  wxSize size = sett().GetWindowSize( _T("ADDBOTDIALOG"), wxSize(-1, 255) );
+  wxPoint pos = sett().GetWindowPos( _T("ADDBOTDIALOG"), wxPoint( -1, -1 ) );
+  SetSize( pos.x , pos.y, size.GetWidth(), size.GetHeight() );
 
-  this->SetSizeHints( wxDefaultSize, wxDefaultSize );
+  //this->SetSizeHints( wxDefaultSize, wxDefaultSize );
 
   m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
-  if ( !m_sp )
-  {
-    wxBoxSizer* m_nick_sizer;
-    m_nick_sizer = new wxBoxSizer( wxHORIZONTAL );
+	wxBoxSizer* m_nick_sizer;
+	m_nick_sizer = new wxBoxSizer( wxHORIZONTAL );
 
-    m_nick_lbl = new wxStaticText( this, wxID_ANY, _("Nickname:"), wxDefaultPosition, wxDefaultSize, 0 );
-    m_nick_sizer->Add( m_nick_lbl, 1, wxALL, 5 );
+	m_nick_lbl = new wxStaticText( this, wxID_ANY, _("Nickname:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_nick_sizer->Add( m_nick_lbl, 1, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
-    int bot = m_battle.GetNumBots()+1;
+	int bot = m_battle.GetNumBots()+1;
 
-    m_nick = new wxTextCtrl( this, wxID_ANY, wxString::Format( _T("Bot%d"), bot ), wxDefaultPosition, wxDefaultSize, 0 );
-    m_nick_sizer->Add( m_nick, 2, wxALL, 5 );
+	m_nick = new wxTextCtrl( this, wxID_ANY, wxString::Format( _T("Bot%d"), bot ), wxDefaultPosition, wxDefaultSize, 0 );
+	m_nick_sizer->Add( m_nick, 2, wxALL, 5 );
 
-    m_main_sizer->Add( m_nick_sizer, 0, wxEXPAND, 5 );
-  }
+	m_main_sizer->Add( m_nick_sizer, 0, wxEXPAND, 5 );
 
   wxBoxSizer* m_ai_sizer;
   m_ai_sizer = new wxBoxSizer( wxHORIZONTAL );
 
   m_ai_lbl = new wxStaticText( this, wxID_ANY, _("AI:"), wxDefaultPosition, wxDefaultSize, 0 );
-  m_ai_sizer->Add( m_ai_lbl, 1, wxALL, 5 );
+  m_ai_sizer->Add( m_ai_lbl, 1, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
   m_ai = new wxChoice( this, ADDBOT_AI );
   m_ai->SetToolTip( TE(_("Choose the AI library to use with this bot.") ) );
@@ -76,25 +79,24 @@ AddBotDialog::AddBotDialog( wxWindow* parent, IBattle& battle , bool singleplaye
 		col2.SetImage( -1 );
 		m_ai_infos_lst->InsertColumn( 1, col2 );
 
-		m_ai_infos_lst->DeleteAllItems();
-		wxArrayString info = usync().GetAIInfos( m_ai->GetSelection() );
-		int count = info.GetCount();
-		for ( int i = 0; i < count; i = i + 3 )
-		{
-			long index = m_ai_infos_lst->InsertItem( i, info[i] );
-			m_ai_infos_lst->SetItem( index, 0,  info[i] );
-			m_ai_infos_lst->SetItem( index, 1,  info[i+1] );
-		}
-		m_ai_infos_lst->SetColumnWidth( 0, wxLIST_AUTOSIZE );
-		m_ai_infos_lst->SetColumnWidth( 1, wxLIST_AUTOSIZE );
+		m_opts_list = new wxListCtrl( this, ADDBOT_OPTIONLIST, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_NO_HEADER );
+		wxListItem col3;
+		col3.SetText( _("property") );
+		col3.SetImage( -1 );
+		m_opts_list->InsertColumn( 0, col3 );
+		wxListItem col4;
+		col4.SetText( _("value") );
+		col4.SetImage( -1 );
+		m_opts_list->InsertColumn( 1, col4 );
 
 		m_info_sizer = new wxBoxSizer(wxVERTICAL);
 		m_info_sizer->Add( m_ai_infos_lst, 1, wxALL|wxEXPAND );
+		m_info_sizer->Add( m_opts_list, 1, wxALL|wxEXPAND );
 		m_main_sizer->Add( m_info_sizer, 1, wxALL|wxEXPAND );
+
 	}
 	else
 	{
-		 this->SetSize( wxSize(-1, 155) );
 		 m_main_sizer->AddStretchSpacer();
 	}
 
@@ -121,6 +123,13 @@ AddBotDialog::AddBotDialog( wxWindow* parent, IBattle& battle , bool singleplaye
   ReloadAIList();
 }
 
+
+AddBotDialog::~AddBotDialog()
+{
+    sett().SetWindowSize( _T("ADDBOTDIALOG"), GetSize() );
+    sett().SetWindowPos( _T("ADDBOTDIALOG"), GetPosition() );
+    sett().SaveSettings();
+}
 
 wxString AddBotDialog::GetNick()
 {
@@ -156,10 +165,10 @@ wxString AddBotDialog::RefineAIName( const wxString& name )
   wxString ret = name;
   if ( !usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) )
   {
-		if ( ret.Contains(_T('.')) ) ret = ret.BeforeLast(_T('.'));
-		if ( ret.Contains(_T('/')) ) ret = ret.AfterLast(_T('/'));
-		if ( ret.Contains(_T('\\')) ) ret = ret.AfterLast(_T('\\'));
-		if ( ret.Contains(_T("LuaAI:")) ) ret = ret.AfterFirst(_T(':'));
+		if ( ret.Find(_T('.')) != wxNOT_FOUND ) ret = ret.BeforeLast(_T('.'));
+		if ( ret.Find(_T('/')) != wxNOT_FOUND ) ret = ret.AfterLast(_T('/'));
+		if ( ret.Find(_T('\\')) != wxNOT_FOUND ) ret = ret.AfterLast(_T('\\'));
+		if ( ret.Find(_T("LuaAI:")) != wxNOT_FOUND ) ret = ret.AfterFirst(_T(':'));
   }
   if ( m_ai->FindString( ret ) == wxNOT_FOUND ) return ret;
   wxString ret2;
@@ -192,25 +201,27 @@ void AddBotDialog::ReloadAIList()
   }
   m_add_btn->Enable( m_ai->GetStringSelection() != wxEmptyString );
   ShowAIInfo();
+  ShowAIOptions();
 }
 
 
-void AddBotDialog::OnClose( wxCommandEvent& event )
+void AddBotDialog::OnClose( wxCommandEvent& /*event*/ )
 {
   EndModal( wxID_CANCEL );
 }
 
 
-void AddBotDialog::OnAddBot( wxCommandEvent& event )
+void AddBotDialog::OnAddBot( wxCommandEvent& /*event*/ )
 {
   sett().SetLastAI(  m_ai->GetStringSelection() );
   EndModal( wxID_OK );
 }
 
 
-void AddBotDialog::OnSelectBot( wxCommandEvent& event )
+void AddBotDialog::OnSelectBot( wxCommandEvent& /*unused*/ )
 {
 	ShowAIInfo();
+	ShowAIOptions();
 }
 
 void AddBotDialog::ShowAIInfo()
@@ -218,7 +229,7 @@ void AddBotDialog::ShowAIInfo()
   m_add_btn->Enable( m_ai->GetStringSelection() != wxEmptyString );
   if ( !usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) ) return;
   m_ai_infos_lst->DeleteAllItems();
-  wxArrayString info = usync().GetAIInfos( m_ai->GetSelection() );
+  wxArrayString info = usync().GetAIInfos( GetAIType() );
   int count = info.GetCount();
 	for ( int i = 0; i < count; i = i + 3 )
 	{
@@ -230,4 +241,78 @@ void AddBotDialog::ShowAIInfo()
 	m_ai_infos_lst->SetColumnWidth( 1, wxLIST_AUTOSIZE );
 	Layout();
 	SetSize( wxDefaultSize );
+}
+
+
+void AddBotDialog::ShowAIOptions()
+{
+  if ( !usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) ) return;
+  m_opts_list->DeleteAllItems();
+  m_opt_list_map.clear();
+  m_battle.CustomBattleOptions().loadAIOptions( m_battle.GetHostModName(), GetAIType(), GetNick() );
+	AddMMOptionsToList( 0, m_battle.CustomBattleOptions().GetAIOptionIndex( GetNick() ) );
+	m_opts_list->SetColumnWidth( 0, wxLIST_AUTOSIZE );
+	m_opts_list->SetColumnWidth( 1, wxLIST_AUTOSIZE );
+	Layout();
+	SetSize( wxDefaultSize );
+}
+
+long AddBotDialog::AddMMOptionsToList( long pos, int optFlag )
+{
+	OptionsWrapper::wxStringTripleVec optlist = m_battle.CustomBattleOptions().getOptions( (OptionsWrapper::GameOption)optFlag );
+	for ( OptionsWrapper::wxStringTripleVec::iterator it = optlist.begin(); it != optlist.end(); ++it )
+	{
+		m_opts_list->InsertItem( pos, it->second.first );
+		wxString tag = wxString::Format( _T( "%d_" ), optFlag ) + it->first;
+		m_opt_list_map[ tag ] = pos;
+		UpdateOption( tag );
+		pos++;
+	}
+	return pos;
+}
+
+
+void AddBotDialog::UpdateOption( const wxString& Tag )
+{
+	long index = m_opt_list_map[ Tag ];
+	OptionsWrapper::GameOption type = ( OptionsWrapper::GameOption )s2l( Tag.BeforeFirst( '_' ) );
+	wxString key = Tag.AfterFirst( '_' );
+	wxString value;
+
+	OptionType DataType = m_battle.CustomBattleOptions().GetSingleOptionType( key );
+	value = m_battle.CustomBattleOptions().getSingleValue( key, ( OptionsWrapper::GameOption )type );
+	if ( m_battle.CustomBattleOptions().getDefaultValue( key, type ) == value ) m_opts_list->SetItemFont( index, wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_LIGHT ) );
+	else m_opts_list->SetItemFont( index, wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD ) );
+	if ( DataType == opt_bool )
+	{
+		value =  bool2yn( s2l( value ) ); // convert from 0/1 to literal Yes/No
+	}
+	else if ( DataType == opt_list )
+	{
+		value = m_battle.CustomBattleOptions().GetNameListOptValue( key, type ); // get the key full name not short key
+	}
+	m_opts_list->SetItem( index, 1, value );
+	m_opts_list->SetColumnWidth( 1, wxLIST_AUTOSIZE );
+}
+
+void AddBotDialog::OnOptionActivate( wxListEvent& event )
+{
+	long index = event.GetIndex();
+	wxString tag;
+	for ( OptionListMap::iterator itor = m_opt_list_map.begin(); itor != m_opt_list_map.end(); itor++ )
+	{
+		if ( itor->second == index )
+		{
+			tag = itor->first;
+			break;
+		}
+	}
+	OptionsWrapper& optWrap = m_battle.CustomBattleOptions();
+	OptionsWrapper::GameOption optFlag = ( OptionsWrapper::GameOption )s2l( tag.BeforeFirst( '_' ) );
+	wxString key = tag.AfterFirst( '_' );
+	OptionType type = optWrap.GetSingleOptionType( key );
+	if ( !optWrap.keyExists( key, optFlag, false, type ) ) return;
+	SingleOptionDialog dlg( m_battle, tag );
+	dlg.ShowModal();
+	UpdateOption( tag );
 }

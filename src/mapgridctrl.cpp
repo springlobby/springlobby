@@ -18,16 +18,16 @@
 
 /// Size of the map previews.  This should be same as size of map previews in
 /// battle list and as prefetch size in SpringUnitSync for performance reasons.
-#define MINIMAP_SIZE 98
+const int MINIMAP_SIZE = 98;
 
 /// Margin between the map previews, in pixels.
-#define MINIMAP_MARGIN 1
+const int MINIMAP_MARGIN = 1;
 
 /// Maximum minimap fetches in WorkerThread queue
 /// (these will still be executed after control is destroyed)
-#define MAX_MINIMAP_FETCHES 2
+const int MAX_MINIMAP_FETCHES = 2;
 /// Maximum mapinfo fetches in WorkerThread queue
-#define MAX_MAPINFO_FETCHES 5
+const int MAX_MAPINFO_FETCHES = 5;
 
 
 BEGIN_EVENT_TABLE( MapGridCtrl, wxPanel )
@@ -45,9 +45,8 @@ const wxEventType MapGridCtrl::MapSelectedEvt = wxNewEventType();
 const wxEventType MapGridCtrl::LoadingCompletedEvt = wxNewEventType();
 
 
-MapGridCtrl::MapGridCtrl( wxWindow* parent, Ui& ui, wxSize size, wxWindowID id )
+MapGridCtrl::MapGridCtrl( wxWindow* parent, wxSize size, wxWindowID id )
 	: wxPanel( parent, id, wxDefaultPosition, size, wxSIMPLE_BORDER|wxFULL_REPAINT_ON_RESIZE )
-	, m_ui( ui )
 	, m_async( this )
 	, m_selection_follows_mouse( sett().GetMapSelectorFollowsMouse() )
 	, m_size( 0, 0 )
@@ -63,7 +62,7 @@ MapGridCtrl::MapGridCtrl( wxWindow* parent, Ui& ui, wxSize size, wxWindowID id )
 
 	m_img_background.Create( MINIMAP_SIZE, MINIMAP_SIZE, false /*don't clear*/ );
 	wxRect rect( 0, 0, MINIMAP_SIZE, MINIMAP_SIZE );
-	wxColor color( GetBackgroundColour() );
+	wxColour color( GetBackgroundColour() );
 	m_img_background.SetRGB( rect, color.Red(), color.Green(), color.Blue() );
 
 	m_img_minimap_alpha = charArr2wxImage( map_select_1_png, sizeof(map_select_1_png) );
@@ -140,7 +139,7 @@ inline int MapGridCtrl::CompareAspectRatio( const MapData* a, const MapData* b )
 }
 inline int MapGridCtrl::ComparePosCount( const MapData* a, const MapData* b )
 {
-	CMP( posCount );
+	CMP( positions.size() );
 }
 
 #undef CMP2
@@ -350,6 +349,9 @@ void MapGridCtrl::DrawMap( wxDC& dc, MapData& map, int x, int y )
 				dc.DrawRectangle( x - 1, y - 1, map.minimap.GetWidth() + 2, map.minimap.GetHeight() + 2 );
 			}
 			break;
+        default:
+            wxLogError( _T("unknonw map.state in MapGridCtrl::DrawMap") );
+            break;
 	}
 }
 
@@ -366,7 +368,7 @@ void MapGridCtrl::DrawBackground( wxDC& dc )
 }
 
 
-void MapGridCtrl::OnPaint( wxPaintEvent& event )
+void MapGridCtrl::OnPaint( wxPaintEvent& /*unused*/ )
 {
 	// This line must come first, to avoid an endless succession of paint messages.
 	// OnPaint handlers must always create a wxPaintDC.
@@ -410,7 +412,7 @@ void MapGridCtrl::OnPaint( wxPaintEvent& event )
 }
 
 
-void MapGridCtrl::OnResize( wxSizeEvent& event )
+void MapGridCtrl::OnResize( wxSizeEvent&  )
 {
 	CheckInBounds();
 }

@@ -13,8 +13,7 @@
 #include "lobbyoptionstab.h"
 #include "nonportable.h"
 #include "settings.h"
-#include "springlobbyapp.h"
-#include "settings++/custom_dialogs.h"
+#include "utils/customdialogs.h"
 #include "utils/controls.h"
 #include "aui/auimanager.h"
 #include "ui.h"
@@ -22,8 +21,11 @@
 
 
 BEGIN_EVENT_TABLE(LobbyOptionsTab, wxPanel)
-    EVT_BUTTON ( SPRING_WEBBROWSE, LobbyOptionsTab::OnBrowseWeb )
-    EVT_RADIOBUTTON( SPRING_DEFWEB, LobbyOptionsTab::OnDefaultWeb )
+
+    EVT_BUTTON (        SPRING_WEBBROWSE,   LobbyOptionsTab::OnBrowseWeb    )
+    EVT_BUTTON (        ID_BUT_EDITOR,      LobbyOptionsTab::OnBrowseEditor )
+    EVT_RADIOBUTTON(    SPRING_DEFWEB,      LobbyOptionsTab::OnDefaultWeb   )
+
 END_EVENT_TABLE()
 
 LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
@@ -61,12 +63,29 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
     m_web_loc_sizer->Add( m_web_edit, 1, wxEXPAND );
     m_web_loc_sizer->Add( m_web_browse_btn );
 
-    wxStaticBoxSizer* m_web_box_sizer = new wxStaticBoxSizer( m_web_box, wxVERTICAL );
+    m_web_box_sizer = new wxStaticBoxSizer( m_web_box, wxVERTICAL );
 
     m_web_box_sizer->Add( m_web_def_radio, 0, wxALL, 2 );
     m_web_box_sizer->Add( m_web_spec_radio, 0, wxALL, 2 );
     m_web_box_sizer->Add( m_web_loc_sizer, 0, wxEXPAND | wxALL, 2 );
+/////
+    wxStaticBox* m_editor_box = new wxStaticBox( this , -1, _("External text editor") );
+    m_editor_loc_text = new wxStaticText( this, -1, _("Path") );
 
+    m_editor_edit = new wxTextCtrl( this, -1, sett().GetEditorPath() );
+
+    m_editor_browse_btn = new wxButton( this, ID_BUT_EDITOR, _("Browse") );
+    m_editor_browse_btn->SetToolTip(TE(_("Use a file dialog to find the editor binary")));
+
+    m_editor_loc_sizer = new wxBoxSizer( wxHORIZONTAL );
+    m_editor_loc_sizer->Add( m_editor_loc_text, 0, wxALL | wxALIGN_CENTER_VERTICAL, 2 );
+    m_editor_loc_sizer->Add( m_editor_edit, 1, wxEXPAND );
+    m_editor_loc_sizer->Add( m_editor_browse_btn );
+
+    m_editor_box_sizer = new wxStaticBoxSizer( m_editor_box, wxVERTICAL );
+
+    m_editor_box_sizer->Add( m_editor_loc_sizer, 0, wxEXPAND | wxALL, 2 );
+////////
     wxStaticBoxSizer* m_autojoin_sizer= new wxStaticBoxSizer ( wxVERTICAL, this, _("Autoconnect") );
     m_autoconnect_label = new wxStaticText ( this, -1, _("If checked, SpringLobby will automatically log on to the last used server") );
     m_autojoin = new wxCheckBox( this, -1, _("Autoconnect on lobby start"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -82,6 +101,7 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
     m_reportstats_sizer->Add( m_reportstats, 0, wxEXPAND|wxALL, 5);
 
     m_main_sizer->Add( m_web_box_sizer, 0, wxEXPAND | wxALL, 5 );
+    m_main_sizer->Add( m_editor_box_sizer, 0, wxEXPAND | wxALL, 5 );
     m_main_sizer->Add( m_autojoin_sizer, 0, wxALL, 5 );
     m_main_sizer->Add( m_reportstats_sizer, 0, wxALL, 5 );
 
@@ -120,11 +140,16 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
 
     m_main_sizer->Add( m_complete_method_sizer, 0, wxALL, 5 );
 
-    wxStaticBoxSizer* m_use_tabicons_sizer = new wxStaticBoxSizer ( wxVERTICAL, this, _("Tab icons") );
+    wxStaticBoxSizer* m_misc_gui_sizer = new wxStaticBoxSizer ( wxVERTICAL, this, _("Misc GUI") );
     m_use_tabicons = new wxCheckBox( this, -1, _("Show big icons in mainwindow tabs?"), wxDefaultPosition, wxDefaultSize, 0 );
     m_use_tabicons->SetValue( sett().GetUseTabIcons() );
-    m_use_tabicons_sizer->Add( m_use_tabicons , 0, wxEXPAND | wxALL, 5 );
-    m_main_sizer->Add( m_use_tabicons_sizer , 0, wxALL, 5 );
+    m_misc_gui_sizer->Add( m_use_tabicons , 0, wxEXPAND | wxALL, 5 );
+
+
+    m_x_on_all_tabs = new wxCheckBox( this, -1, _("Show close button on all tabs? (needs restart to take effect)"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_x_on_all_tabs->SetValue( sett().GetShowXallTabs() );
+    m_misc_gui_sizer->Add( m_x_on_all_tabs , 1, wxEXPAND | wxALL, 5 );
+    m_main_sizer->Add( m_misc_gui_sizer , 0, wxALL, 5 );
 
     wxStaticBoxSizer* m_start_tab_sizer = new wxStaticBoxSizer ( wxHORIZONTAL, this, _("Start tab") );
     m_start_tab = new wxChoice( this, -1,  wxDefaultPosition, wxDefaultSize, MainWindow::GetTabNames() );
@@ -134,8 +159,9 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
     m_start_tab_sizer->Add( m_start_tab , 0,  wxALIGN_CENTER_VERTICAL , 5 );
     m_main_sizer->Add( m_start_tab_sizer, 0, wxALL, 5 );
 
-    SetScrollRate( 10, 10 );
+    SetScrollRate( SCROLL_RATE, SCROLL_RATE );
     SetSizer( m_main_sizer );
+    Layout();
 }
 
 LobbyOptionsTab::~LobbyOptionsTab()
@@ -143,7 +169,7 @@ LobbyOptionsTab::~LobbyOptionsTab()
     //dtor
 }
 
-void LobbyOptionsTab::OnApply(wxCommandEvent& event)
+void LobbyOptionsTab::OnApply(wxCommandEvent& /*unused*/)
 {
     if ( !m_web_def_radio->GetValue() ) sett().SetWebBrowserPath( m_web_edit->GetValue() );
     sett().SetWebBrowserUseDefault( m_web_def_radio->GetValue() );
@@ -162,10 +188,14 @@ void LobbyOptionsTab::OnApply(wxCommandEvent& event)
     sett().SetUseTabIcons( m_use_tabicons->IsChecked() );
     ui().mw().SetTabIcons();
     sett().SetStartTab( m_start_tab->GetSelection() );
+
+    sett().SetEditorPath( m_editor_edit->GetValue() );
+
+    sett().SetShowXallTabs( m_x_on_all_tabs->IsChecked() );
 }
 
 
-void LobbyOptionsTab::OnRestore(wxCommandEvent& event)
+void LobbyOptionsTab::OnRestore(wxCommandEvent& /*unused*/)
 {
     m_autojoin->SetValue( sett().GetAutoConnect() );
     m_reportstats->SetValue( sett().GetReportStats() );
@@ -183,6 +213,10 @@ void LobbyOptionsTab::OnRestore(wxCommandEvent& event)
     m_use_tabicons->SetValue( sett().GetUseTabIcons()  );
 
     m_start_tab->SetSelection( sett().GetStartTab() );
+
+    m_editor_edit->SetValue( sett().GetEditorPath() );
+
+    m_x_on_all_tabs->SetValue( sett().GetShowXallTabs() );
 }
 
 void LobbyOptionsTab::HandleWebloc( bool defloc )
@@ -202,13 +236,19 @@ void LobbyOptionsTab::HandleWebloc( bool defloc )
   }
 }
 
-void LobbyOptionsTab::OnBrowseWeb( wxCommandEvent& event )
+void LobbyOptionsTab::OnBrowseWeb( wxCommandEvent& /*unused*/ )
 {
   wxFileDialog pick( this, _("Choose a web browser executable"), _T(""), _T("*"), CHOOSE_EXE );
   if ( pick.ShowModal() == wxID_OK ) m_web_edit->SetValue( pick.GetPath() );
 }
 
-void LobbyOptionsTab::OnDefaultWeb( wxCommandEvent& event )
+void LobbyOptionsTab::OnBrowseEditor( wxCommandEvent& /*unused*/ )
+{
+  wxFileDialog pick( this, _("Choose a editor browser executable"), _T(""), _T("*"), CHOOSE_EXE );
+  if ( pick.ShowModal() == wxID_OK ) m_editor_edit->SetValue( pick.GetPath() );
+}
+
+void LobbyOptionsTab::OnDefaultWeb( wxCommandEvent& /*unused*/ )
 {
   HandleWebloc( m_web_def_radio->GetValue() );
 }

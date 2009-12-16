@@ -3,13 +3,25 @@
 
 #include <wx/aui/aui.h>
 
+class wxAuiManagerDupe {
+    public:
+        wxAuiManagerDupe(wxWindow* /*managed_wnd*/ = NULL, unsigned int /*flags*/ = 0 ) {}
+        bool AddPane(wxWindow* /*window*/, int /*direction*/ = wxLEFT, const wxString& /*caption */= wxEmptyString) { return false; }
+        bool DetachPane(wxWindow* /*window*/) { return false; }
+        void UnInit() {}
+        wxString SavePerspective() { return wxEmptyString; }
+        bool LoadPerspective(const wxString& /*perspective*/, bool /*update*/ = true) { return false; }
+};
+
 class AuiManagerContainer
 {
   public:
     AuiManagerContainer() {}
 
-    wxAuiManager* manager;
+    typedef wxAuiManager
+        ManagerType;
 
+    ManagerType* manager;
 };
 
 AuiManagerContainer& GetAui();

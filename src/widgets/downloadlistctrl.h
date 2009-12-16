@@ -20,7 +20,7 @@ class WidgetDownloadListctrl : public CustomVirtListCtrl<Widget,WidgetDownloadLi
         wxString GetItemText(long item, long column) const;
         int GetItemImage(long item) const;
         int GetItemColumnImage(long item, long column) const;
-        wxListItemAttr* GetItemAttr(long item) const {return 0;}
+        wxListItemAttr* GetItemAttr(long /*unused*/) const {return 0;}
 
         void Sort();
 

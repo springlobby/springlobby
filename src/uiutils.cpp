@@ -19,7 +19,7 @@
 #include "utils/math.h"
 #include "utils/conversion.h"
 #include "utils/debug.h"
-#include "settings++/custom_dialogs.h"
+#include "utils/customdialogs.h"
 #include "settings.h"
 
 wxString RefineMapname( const wxString& mapname )
@@ -84,8 +84,9 @@ bool AreColoursSimilar( const wxColour& col1, const wxColour& col2, int mindiff 
     r = r>0?r:-r;
     g = g>0?g:-g;
     b = b>0?b:-b;
-    if ( (r <= mindiff) && (g <= mindiff) && (b <= mindiff) ) return true;
-    return false;
+    int difference = std::min( r, g );
+    difference = std::min( difference, b );
+    return difference < mindiff;
 }
 
 
@@ -143,7 +144,7 @@ wxColour ColourDelta( const wxColour& colour, const int& delta )
 
 
 
-wxColour GetColorFromFloatStrng( const wxString color )
+wxColour GetColorFromFloatStrng( const wxString& color )
 {
     wxString c = color;
     float r = 0, g = 0, b = 0;
@@ -242,7 +243,7 @@ wxBitmap charArr2wxBitmapWithBlending(const unsigned char * dest, int dest_size,
     return wxBitmap( ret );
 }
 
-wxBitmap BlendBitmaps( const wxBitmap& background, const wxBitmap& overlay, const int dim )
+wxBitmap BlendBitmaps( const wxBitmap& background, const wxBitmap& overlay, const int /*dim*/ )
 {
     wxImage back = background.ConvertToImage();
     wxImage front = overlay.ConvertToImage();
@@ -252,9 +253,9 @@ wxBitmap BlendBitmaps( const wxBitmap& background, const wxBitmap& overlay, cons
 
 
 namespace {
+//! Helper class for BorderInvariantResizeImage
 struct Resizer
 {
-	// Helper class for BorderInvariantResizeImage
 	// Author: Tobi Vollebregt
 
 	Resizer( wxImage& result, const wxImage& image, bool alpha )
@@ -322,6 +323,85 @@ struct Resizer
 	unsigned char* const result_data;
 };
 }
+
+typedef std::vector<double> huevec;
+
+
+void hue(huevec& out, int amount, int level)
+{
+	if (level <= 1) {
+		if (long(out.size()) < amount)
+            out.push_back(0.0);
+		if (long(out.size()) < amount)
+            out.push_back(0.5);
+	}
+	else {
+		hue(out, amount, level - 1);
+		const int lower = out.size();
+		hue(out, amount, level - 1);
+		const int upper = out.size();
+		for (int i = lower; i < upper; ++i)
+			out.at(i) += 1.0 / (1 << level);
+	}
+}
+
+void hue(huevec& out, int amount)
+{
+	int level = 0;
+	while ((1 << level) < amount) ++level;
+
+	out.reserve(amount);
+	hue(out, amount, level);
+}
+
+std::vector<wxColour>& GetBigFixColoursPalette( int numteams )
+{
+    static std::vector<wxColour> result;
+    wxLogDebugFunc( TowxString(numteams) );
+		huevec huevector;
+    static int satvalbifurcatepos;
+    static std::vector<double> satvalsplittings;
+    if ( satvalsplittings.empty() ) // insert ranges to bifurcate
+    {
+    	satvalsplittings.push_back( 1 );
+    	satvalsplittings.push_back( 0 );
+    	satvalbifurcatepos = 0;
+    }
+		hue( huevector, numteams );
+    int bisectionlimit = 20;
+    for ( int i = result.size(); i < numteams; i++ )
+    {
+    	double hue = huevector[i];
+    	double saturation = 1;
+    	double value = 1;
+			int switccolors = i % 3; // why only 3 and not all combinations? because it's easy, plus the bisection limit cannot be divided integer by it
+
+			if ( ( i % bisectionlimit ) == 0 )
+			{
+				satvalbifurcatepos = satvalbifurcatepos % ( satvalsplittings.size() -1 );
+				std::vector<double>::iterator toinsert = satvalsplittings.begin() + satvalbifurcatepos + 1;
+				satvalsplittings.insert( toinsert, ( satvalsplittings[satvalbifurcatepos] - satvalsplittings[satvalbifurcatepos + 1] ) / 2 + satvalsplittings[satvalbifurcatepos + 1] );
+				satvalbifurcatepos += 2;
+			}
+
+			if ( switccolors == 1 )
+			{
+				saturation = satvalsplittings[satvalbifurcatepos -1];
+			}
+			else if ( switccolors == 2 )
+			{
+				value = satvalsplittings[satvalbifurcatepos -1];
+			}
+			hue += 0.17; // use as starting point a zone where color band is narrow so that small variations means high change in visual effect
+			if ( hue > 1 ) hue-= 1;
+			wxImage::HSVValue hsvcolor( hue, saturation, value );
+			wxImage::RGBValue rgbvalue = wxImage::HSVtoRGB( hsvcolor );
+			wxColour col( rgbvalue.red, rgbvalue.green, rgbvalue.blue );
+			result.push_back( col );
+    }
+    return result;
+}
+
 
 wxImage BorderInvariantResizeImage(  const wxImage& image, int width, int height )
 {
@@ -418,3 +498,27 @@ void CopyToClipboard( const wxString& text )
     }
 }
 
+
+void OpenWebBrowser( const wxString& url )
+{
+    if ( sett().GetWebBrowserUseDefault()
+            // These shouldn't happen, but if they do we use the default browser anyway.
+            || sett().GetWebBrowserPath() == wxEmptyString
+            || sett().GetWebBrowserPath() == _T("use default") )
+    {
+        if ( !wxLaunchDefaultBrowser( url ) )
+        {
+            wxLogWarning( _T("can't launch default browser") );
+            customMessageBoxNoModal(SL_MAIN_ICON, _("Couldn't launch browser. URL is: ") + url, _("Couldn't launch browser.")  );
+        }
+    }
+    else
+    {
+        if ( !wxExecute ( sett().GetWebBrowserPath() + _T(" ") + url, wxEXEC_ASYNC ) )
+        {
+            wxLogWarning( _T("can't launch browser: %s"), sett().GetWebBrowserPath().c_str() );
+            customMessageBoxNoModal(SL_MAIN_ICON, _("Couldn't launch browser. URL is: ") + url + _("\nBroser path is: ") + sett().GetWebBrowserPath(), _("Couldn't launch browser.")  );
+        }
+
+    }
+}

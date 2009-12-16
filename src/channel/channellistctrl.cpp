@@ -12,10 +12,10 @@ BEGIN_EVENT_TABLE( ChannelListctrl, ChannelListctrl::BaseType )
 END_EVENT_TABLE()
 
 
-ChannelListctrl::ChannelListctrl(wxWindow* parent, wxWindowID id, const wxString& name,
-                    long style, const wxPoint& pt, const wxSize& sz)
+ChannelListctrl::ChannelListctrl(wxWindow* parent, wxWindowID /*unused*/, const wxString& /*unused*/,
+                    long /*unused*/, const wxPoint& /*unused*/, const wxSize& /*unused*/)
     :CustomVirtListCtrl<ChannelInfo,ChannelListctrl>(parent, CHANNELLIST, wxDefaultPosition, wxDefaultSize,
-            wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("ChannelListCtrl"), 3, 3, &CompareOneCrit)
+            wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("ChannelListCtrl"), 3, &CompareOneCrit)
 {
 #if defined(__WXMSW__)
     const int widths [3] = { wxLIST_AUTOSIZE, wxLIST_AUTOSIZE, wxLIST_AUTOSIZE };
@@ -44,7 +44,7 @@ ChannelListctrl::~ChannelListctrl()
     //dtor
 }
 
-void ChannelListctrl::HighlightItem( long item ){}
+void ChannelListctrl::HighlightItem( long ){}
 
 /** @brief AddChannel
   *
@@ -58,7 +58,9 @@ void ChannelListctrl::AddChannel(const wxString& channel, unsigned int num_users
     SetItemCount( m_visible_idxs.size() );
 
     RefreshItem( m_visible_idxs.size() - 1);
-    SetColumnWidth( 0, wxLIST_AUTOSIZE );
+//    SetColumnWidth( 0, wxLIST_AUTOSIZE );
+//    SetColumnWidth( 1, wxLIST_AUTOSIZE );
+//    SetColumnWidth( 2, wxLIST_AUTOSIZE );
 }
 
 int ChannelListctrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir )
@@ -120,7 +122,7 @@ void ChannelListctrl::FilterChannel( const wxString& partial )
     unsigned int idx = 0;
     for ( unsigned int i = 0; i < m_data.size() ; ++i ) {
         const ChannelInfo& data = m_data[i];
-        if ( data.name.Contains( partial ) ) {
+        if ( data.name.Find( partial ) != wxNOT_FOUND ) {
             m_visible_idxs[idx] = i;
             idx++;
         }
@@ -132,12 +134,12 @@ void ChannelListctrl::FilterChannel( const wxString& partial )
 }
 
 
-int ChannelListctrl::GetItemColumnImage(long item, long column) const
+int ChannelListctrl::GetItemColumnImage(long /*unused*/, long ) const
 {
     return -1;
 }
 
-int ChannelListctrl::GetItemImage(long item) const
+int ChannelListctrl::GetItemImage(long /*unused*/) const
 {
     return -1;
 }
@@ -155,7 +157,7 @@ wxString ChannelListctrl::GetItemText(long item, long column) const
     }
 }
 
-void ChannelListctrl::SetTipWindowText(const long item_hit, const wxPoint position)
+void ChannelListctrl::SetTipWindowText(const long item_hit, const wxPoint& position)
 {
     int column = getColumnFromPosition(position);
     if (column > (int)m_colinfovec.size() || column < 0 || item_hit < 0 || item_hit > (long)m_data.size() )

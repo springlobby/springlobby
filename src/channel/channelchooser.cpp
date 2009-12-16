@@ -14,7 +14,7 @@ BEGIN_EVENT_TABLE( ChannelChooserPanel, wxScrolledWindow )
 	EVT_TEXT( ID_SEARCH_TEXT  , ChannelChooserPanel::OnSearch )
 END_EVENT_TABLE()
 
-ChannelChooserPanel::ChannelChooserPanel(wxWindow* parent, wxWindowID id, const wxString& title,
+ChannelChooserPanel::ChannelChooserPanel(wxWindow* parent, wxWindowID id, const wxString& /*unused*/,
     const wxPoint& pos , const wxSize& size , long style , const wxString& name)
     : wxScrolledWindow (parent,  id, pos, size, style, name)
 {
@@ -29,7 +29,7 @@ ChannelChooserPanel::ChannelChooserPanel(wxWindow* parent, wxWindowID id, const 
     wxBoxSizer* search_sizer = new wxBoxSizer( wxHORIZONTAL );
     wxStaticText* search_label = new wxStaticText( this, -1, _("Find channel:") );
     m_search_text = new wxTextCtrl ( this, ID_SEARCH_TEXT );
-    search_sizer->Add( search_label, 0, wxALL , 0 );
+    search_sizer->Add( search_label, 0, wxALIGN_CENTER_VERTICAL | wxALL , 0 );
     search_sizer->Add( m_search_text, 1, wxLEFT | wxEXPAND, 5 );
     m_main_sizer->Add( search_sizer, 0, wxALL | wxEXPAND, 5 );
 
@@ -58,7 +58,7 @@ void ChannelChooserPanel::ClearChannels()
     m_search_text->SetValue( _T("") );
 }
 
-void ChannelChooserPanel::OnSearch( wxCommandEvent& event )
+void ChannelChooserPanel::OnSearch( wxCommandEvent& /*unused*/ )
 {
     m_channellist->FilterChannel( m_search_text->GetValue() );
     m_info_label->SetLabel( m_channellist->GetInfo() );

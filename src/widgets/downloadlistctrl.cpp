@@ -11,10 +11,10 @@ BEGIN_EVENT_TABLE( WidgetDownloadListctrl, WidgetDownloadListctrl::BaseType )
   EVT_LIST_COL_CLICK( WIDGETLISTCTRL_ID, WidgetDownloadListctrl::OnColClick )
 END_EVENT_TABLE()
 
-WidgetDownloadListctrl::WidgetDownloadListctrl(wxWindow* parent, wxWindowID id, const wxString& name,
-                    long style, const wxPoint& pt, const wxSize& sz)
+WidgetDownloadListctrl::WidgetDownloadListctrl(wxWindow* parent, wxWindowID /*unused*/, const wxString& /*unused*/,
+                    long /*unused*/, const wxPoint&/*unused*/, const wxSize& /*unused*/)
     : WidgetDownloadListctrl::BaseType(parent, WIDGETLISTCTRL_ID, wxDefaultPosition, wxDefaultSize,
-            wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("WidgetDownloadListCtrl"), column_count, 3, &CompareOneCrit)
+            wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("WidgetDownloadListCtrl"), 3, &CompareOneCrit)
 {
     const int as = wxLIST_AUTOSIZE;
 #if defined(__WXMSW__)
@@ -68,7 +68,7 @@ void WidgetDownloadListctrl::AddWidget( const Widget widget )
 
 wxString WidgetDownloadListctrl::GetItemText(long item, long column) const
 {
-    if ( item > m_data.size() || item < 0 )
+    if ( item > long(m_data.size()) || item < 0 )
         return wxEmptyString;
 
     const Widget& widget = m_data[item];
@@ -84,17 +84,17 @@ wxString WidgetDownloadListctrl::GetItemText(long item, long column) const
 
 }
 
-int WidgetDownloadListctrl::GetItemImage(long item) const
+int WidgetDownloadListctrl::GetItemImage(long /*unused*/) const
 {
     return -1;
 }
 
-int WidgetDownloadListctrl::GetItemColumnImage(long item, long column) const
+int WidgetDownloadListctrl::GetItemColumnImage(long /*unused*/, long /*unused*/) const
 {
     return -1;
 }
 
-void WidgetDownloadListctrl::HighlightItem( long item )
+void WidgetDownloadListctrl::HighlightItem( long /*unused*/ )
 {
 
 }

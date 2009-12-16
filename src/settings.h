@@ -5,10 +5,11 @@
 #include <vector>
 
 const int CACHE_VERSION     = 10;
-const int SETTINGS_VERSION  = 15;
+const int SETTINGS_VERSION  = 17;
 
 const wxString DEFSETT_DEFAULT_SERVER_NAME= _T("Official server");
 const wxString DEFSETT_DEFAULT_SERVER_HOST = _T("taspringmaster.clan-sy.com");
+const wxString BattlePostfix = _T("_battle");
 const int DEFSETT_DEFAULT_SERVER_PORT = 8200;
 const bool DEFSETT_SAVE_PASSWORD = false;
 const unsigned int DEFSETT_MW_WIDTH = 880;
@@ -17,8 +18,8 @@ const unsigned int DEFSETT_MW_TOP = 50;
 const unsigned int DEFSETT_MW_LEFT = 50;
 const unsigned int DEFSETT_SPRING_PORT = 8452;
 
-const unsigned int SET_MODE_EXPERT = 5000;
-const unsigned int SET_MODE_SIMPLE = 5001;
+const int SET_MODE_EXPERT = 5000;
+const int SET_MODE_SIMPLE = 5001;
 const unsigned int DEFSETT_SW_WIDTH = 770;
 const unsigned int DEFSETT_SW_HEIGHT = 580;
 const unsigned int DEFSETT_SW_TOP = 50;
@@ -32,6 +33,7 @@ const unsigned int SPRING_MAX_ALLIES = 16;
  */
 const bool DEFSETT_WEB_BROWSER_USE_DEFAULT = true;
 
+#include <wx/config.h>
 #include <wx/fileconf.h>
 #include "useractions.h"
 #include "Helper/sortutil.h"
@@ -44,7 +46,7 @@ struct BattleListFilterValues;
 struct PlaybackListFilterValues;
 class wxFileInputStream;
 class wxFileName;
-class wxColor;
+class wxColour;
 class wxColour;
 class wxColourData;
 class wxSize;
@@ -62,7 +64,7 @@ struct ChannelJoinInfo
 class SL_WinConf : public wxFileConfig
 {
     public:
-			SL_WinConf ( const wxString& appName, const wxString& vendorName, const wxString& strLocal, const wxString& strGlobal, long style, const wxMBConv& conv):
+			SL_WinConf ( const wxString& appName, const wxString& vendorName, const wxString& strLocal, const wxString& strGlobal, long style, const wxMBConv& /*conv*/):
 			wxFileConfig( appName, vendorName, strLocal, strGlobal, style)
 			{
 			}
@@ -83,16 +85,15 @@ class Settings
     Settings();
     ~Settings();
 
-    /** used for passing config file at command line
-    */
+    //! used for passing config file at command line
     static bool m_user_defined_config;
     static wxString m_user_defined_config_path;
 
-		/// used to import default configs from a file in windows
-		#ifdef __WXMSW__
-    void SetDefaultConfigs( SL_WinConf& conf );
+    /// used to import default configs from a file in windows
+    #ifdef __WXMSW__
+        void SetDefaultConfigs( SL_WinConf& conf );
     #else
-    void SetDefaultConfigs( wxConfig& conf );
+        void SetDefaultConfigs( wxConfig& conf );
     #endif
 
     /// list all entries subkeys of a parent group
@@ -100,7 +101,7 @@ class Settings
     /// list all groups subkeys of a parent group
     wxArrayString GetEntryList( const wxString& base_key );
     /// counts all groups subkeys of a parent group
-		unsigned int GetGroupCount( const wxString& base_key );
+    unsigned int GetGroupCount( const wxString& base_key );
 
     bool IsPortableMode();
     void SetPortableMode( bool mode );
@@ -176,7 +177,7 @@ class Settings
      *
      * @param path A path to a web browser
      */
-    void SetWebBrowserPath( const wxString path );
+    void SetWebBrowserPath( const wxString& path );
 
     /**@}*/
 
@@ -329,6 +330,7 @@ class Settings
     int GetColumnWidth( const wxString& list_name, const int column );
     //! used to signal unset column width in Get...
     static const int columnWidthUnset = -3;
+    static const int columnWidthMinimum = 5;
 
     void SetLanguageID ( const long id );
     long GetLanguageID ( );
@@ -339,7 +341,16 @@ class Settings
     bool GetSplitBRoomHorizontally();
     void SetSplitBRoomHorizontally( const bool vertical );
 
+    bool GetShowXallTabs();
+    void SetShowXallTabs( bool show );
+
     void TranslateSavedColumWidths();
+
+    wxString GetEditorPath( );
+    void SetEditorPath( const wxString& path );
+
+    void SetAutoloadedChatlogLinesCount( const int count );
+    int GetAutoloadedChatlogLinesCount( );
     /*@}*/
 
     /* ================================================================ */
@@ -353,8 +364,8 @@ class Settings
     void AddGroup( const wxString& group ) ;
     void DeleteGroup( const wxString& group ) ;
 
-    void SetGroupHLColor( const wxColor& color, const wxString& group = _T("default") );
-    wxColor GetGroupHLColor( const wxString& group = _T("default") ) const;
+    void SetGroupHLColor( const wxColour& color, const wxString& group = _T("default") );
+    wxColour GetGroupHLColor( const wxString& group = _T("default") ) const;
 
     void SetGroupActions( const wxString& group, UserActions::ActionType action );
     UserActions::ActionType GetGroupActions( const wxString& group ) const;
@@ -642,9 +653,18 @@ class Settings
      */
     void SaveLayout( wxString& layout_name, wxString& layout_string );
     wxString GetLayout( wxString& layout_name );
-    wxArrayString GetLayoutList();
-    void SetDefaultLayout( const wxString& layout_name );
-    wxString GetDefaultLayout();
+
+    void SavePerspective( const wxString& notebook_name, const wxString& perspective_name, const wxString& layout_string );
+    wxString LoadPerspective( const wxString& notebook_name, const wxString& perspective_name );
+    wxString GetLastPerspectiveName( );
+    void SetLastPerspectiveName( const wxString&  name );
+    void SetAutosavePerspective( bool autosave );
+    bool GetAutosavePerspective( );
+    wxArrayString GetPerspectives();
+    bool PerspectiveExists( const wxString& perspective_name );
+
+    void RemoveLayouts();
+
     //! icons for mainwindow tabs??
     bool GetUseTabIcons();
     void SetUseTabIcons( bool use );
@@ -701,7 +721,15 @@ class Settings
     unsigned int GetMapSelectorFilterRadio();
     void SetMapSelectorFilterRadio( const unsigned int val );
     /**@}*/
+  /* ============================================================== */
+    /** @name Relayed Hosts
+    * @{
+    */
 
+    wxString GetLastRelayedHost(void);
+    void SetLastRelayedHost(wxString relhost);
+
+    /**@}*/
 
   protected:
     bool IsSpringBin( const wxString& path );
@@ -714,10 +742,12 @@ class Settings
     wxConfigBase* m_config; //!< wxConfig object to store and restore  all settings in.
     #endif
 
-    wxString m_chosed_path;
+    wxString m_chosen_path;
     bool m_portable_mode;
 
     std::map<wxString, wxString> m_spring_versions;
+
+    Settings( const Settings& );
 
 };
 

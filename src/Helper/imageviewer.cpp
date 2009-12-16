@@ -13,7 +13,7 @@
 #include <wx/button.h>
 #include <wx/filedlg.h>
 
-#include "../settings++/custom_dialogs.h"
+#include "../utils/customdialogs.h"
 #include "../uiutils.h"
 
 BEGIN_EVENT_TABLE( ImagePanel, wxPanel )
@@ -69,7 +69,7 @@ void ImagePanel::OnSize(wxSizeEvent& WXUNUSED(event))
 }
 
 ImageViewerPanel::ImageViewerPanel(const wxArrayString& filenames, bool enable_delete, wxWindow* parent,
-        wxWindowID id, long style )
+        wxWindowID id, long /*style*/ )
     : wxPanel ( parent, id, wxDefaultPosition, wxDefaultSize ),
     m_filenames( filenames ),
     m_current_file_index( 0 ),
@@ -126,13 +126,13 @@ void ImageViewerPanel::SetImage()
 //    SetTitle( m_filenames[m_current_file_index] );
 }
 
-void ImageViewerPanel::OnNext( wxCommandEvent& evt )
+void ImageViewerPanel::OnNext( wxCommandEvent& /*evt*/ )
 {
     m_current_file_index++;
     SetImage();
 }
 
-void ImageViewerPanel::OnDelete( wxCommandEvent& evt )
+void ImageViewerPanel::OnDelete( wxCommandEvent& /*evt*/ )
 {
     wxString file = m_filenames[m_current_file_index];
     if ( wxRemoveFile( file ) ) {
@@ -147,13 +147,13 @@ void ImageViewerPanel::OnDelete( wxCommandEvent& evt )
     }
 }
 
-void ImageViewerPanel::OnPrev( wxCommandEvent& evt )
+void ImageViewerPanel::OnPrev( wxCommandEvent& /*evt*/ )
 {
     m_current_file_index--;
     SetImage();
 }
 
-void ImageViewerPanel::OnSaveAs( wxCommandEvent& evt )
+void ImageViewerPanel::OnSaveAs( wxCommandEvent& /*evt*/ )
 {
     wxString ext = m_filenames[m_current_file_index].AfterLast( '.' );
     wxString mask = _T("*.") + ext;

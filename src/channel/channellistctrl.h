@@ -32,11 +32,11 @@ class ChannelListctrl : public CustomVirtListCtrl< ChannelInfo, ChannelListctrl 
         wxString GetItemText(long item, long column) const;
         int GetItemImage(long item) const;
         int GetItemColumnImage(long item, long column) const;
-        wxListItemAttr* GetItemAttr(long item) const {return 0;}
+        wxListItemAttr* GetItemAttr(long /*unused*/) const {return 0;}
 
     protected:
         void Sort();
-        void SetTipWindowText( const long item_hit, const wxPoint position);
+        void SetTipWindowText( const long item_hit, const wxPoint& position);
 
         void OnActivateItem( wxListEvent& event );
 

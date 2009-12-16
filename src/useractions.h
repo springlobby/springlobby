@@ -52,7 +52,7 @@ public:
      };
     static const int m_numActions = sizeof(m_actionNames) / sizeof(wxString);
     bool DoActionOnUser( const ActionType action, const wxString& name ) ;
-    wxSortedArrayString GetGroupNames() const;
+    wxArrayString GetGroupNames() const;
     void AddUserToGroup( const wxString& group, const wxString& name );
     void AddGroup(const wxString& name );
     void DeleteGroup(const wxString& name );
@@ -66,29 +66,29 @@ public:
 
 protected:
     //lotsa maps to keep runtime finds, etc ti a minimum
-    typedef std::map<wxString,wxSortedArrayString> GroupMap;
+    typedef std::map<wxString,wxArrayString> GroupMap;
     /// groupname --> array of people in the group
     GroupMap m_groupMap;
     typedef std::map<wxString,ActionType> GroupActionMap;
     /// groupname --> ActionType for that group
     GroupActionMap m_groupActions;
-    typedef std::map<ActionType,wxSortedArrayString> ActionGroupsMap;
+    typedef std::map<ActionType,wxArrayString> ActionGroupsMap;
     /// ActionType --> array of groups with that actiontype
     ActionGroupsMap m_actionsGroups;
-    typedef std::map<ActionType,wxSortedArrayString> ActionPeopleMap;
+    typedef std::map<ActionType,wxArrayString> ActionPeopleMap;
     /// ActionType --> array of people with that actiontype
     ActionPeopleMap m_actionsPeople;
     ///nickname --> group map (we don't allow users to be in more than one group
     typedef std::map<wxString,wxString> PeopleGroupMap;
     PeopleGroupMap m_peopleGroup;
     ///list all known users in groups
-    wxSortedArrayString m_knownUsers;
+    wxArrayString m_knownUsers;
 
     //reload all maps and stuff
     void Init();
     void UpdateUI();
 
-    wxSortedArrayString m_groupNames;
+    wxArrayString m_groupNames;
 };
 
 UserActions& useractions();

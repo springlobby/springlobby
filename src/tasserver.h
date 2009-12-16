@@ -53,7 +53,8 @@ class TASServer : public Server
     void UdpPingTheServer( const wxString &message );/// used for nat travelsal. pings the server.
     void UdpPingAllClients();/// used when hosting with nat holepunching
 
-    User& GetMe() const;
+    const User& GetMe() const;
+    User& GetMe();
 
     void JoinChannel( const wxString& channel, const wxString& key );
     void PartChannel( const wxString& channel );
@@ -131,13 +132,15 @@ class TASServer : public Server
     bool IsPasswordHash( const wxString& pass )  const;
     wxString GetPasswordHash( const wxString& pass ) const;
 
-    int TestOpenPort( unsigned int port );
+    int TestOpenPort( unsigned int port ) const;
 
     void SendScriptToProxy( const wxString& script );
 
     void SendScriptToClients( const wxString& script );
 
     void RequestSpringUpdate();
+
+    wxArrayString GetRelayHostList() ;
 
   protected:
 
@@ -152,7 +155,7 @@ class TASServer : public Server
     ServerEvents* m_se;
     double m_ser_ver;
 
-		wxString m_last_denied;
+    wxString m_last_denied;
     bool m_connected;
     bool m_online;
     bool m_debug_dont_catch;
@@ -170,6 +173,7 @@ class TASServer : public Server
     int m_battle_id;
 
     bool m_server_lanmode;
+    unsigned int m_account_id_count;
 
     wxString m_agreement;
 
@@ -179,7 +183,7 @@ class TASServer : public Server
     bool m_do_finalize_join_battle;
     int m_finalize_join_battle_id;
     wxString m_finalize_join_battle_pw;
-		bool m_token_transmission;
+    bool m_token_transmission;
 
     void FinalizeJoinBattle();
 
@@ -189,7 +193,7 @@ class TASServer : public Server
 
     wxString m_current_chan_name_mutelist;
 
-		wxArrayString m_relay_host_manager_list;
+    wxArrayString m_relay_host_manager_list;
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_TASSERVER_H

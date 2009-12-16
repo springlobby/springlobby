@@ -20,7 +20,7 @@ class wxCheckListBox;
 class BattleOptionsTab : public wxScrolledWindow
 {
   public:
-    BattleOptionsTab( wxWindow* parent, Ui& ui, IBattle& battle );
+    BattleOptionsTab( wxWindow* parent, IBattle* battle );
     ~BattleOptionsTab();
 
     void UpdateBattle( const wxString& Tag );
@@ -39,12 +39,14 @@ class BattleOptionsTab : public wxScrolledWindow
     void OnAllow( wxCommandEvent& event );
     void OnClearRestrictions( wxCommandEvent& event );
 
+    void SetBattle( IBattle* battle );
+    IBattle* GetBattle();
+
   protected:
 
     void UpdateBattle();
 
-    Ui& m_ui;
-    IBattle& m_battle;
+    IBattle* m_battle;
 
     wxStaticText* m_aloowed_lbl;
     wxListBox* m_allowed_list;

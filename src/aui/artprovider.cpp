@@ -22,9 +22,9 @@ SLArtProvider::SLArtProvider()
 #ifdef __WXMAC__
     wxBrush toolbarbrush;
     toolbarbrush.MacSetTheme( kThemeBrushToolbarBackground );
-    wxColor base_colour = toolbarbrush.GetColour();
+    wxColour base_colour = toolbarbrush.GetColour();
 #else
-    wxColor base_colour = wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE);
+    wxColour base_colour = wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE);
 #endif
 
     // the base_colour is too pale to use as our base colour,
@@ -37,7 +37,7 @@ SLArtProvider::SLArtProvider()
     }
 
     m_base_colour = base_colour;
-    wxColor border_colour = wxAuiStepColour(base_colour, 75);
+    wxColour border_colour = wxAuiStepColour(base_colour, 75);
 
     m_border_pen = wxPen(border_colour);
     m_base_colour_pen = wxPen(m_base_colour);
@@ -113,8 +113,8 @@ void SLArtProvider::DrawBackground(wxDC& dc,
                                         const wxRect& rect)
 {
     // draw background
-   wxColor top_color       = wxAuiStepColour(m_base_colour, 90);
-   wxColor bottom_color   = wxAuiStepColour(m_base_colour, 170);
+   wxColour top_color       = wxAuiStepColour(m_base_colour, 90);
+   wxColour bottom_color   = wxAuiStepColour(m_base_colour, 170);
    wxRect r;
 
    if (m_flags &wxAUI_NB_BOTTOM)
@@ -291,8 +291,8 @@ void SLArtProvider::DrawTab(wxDC& dc,
         r.y -= 2;
 
         // draw gradient background
-        wxColor top_color = *wxWHITE;
-        wxColor bottom_color = m_base_colour;
+        wxColour top_color = *wxWHITE;
+        wxColour bottom_color = m_base_colour;
         dc.GradientFillLinear(r, bottom_color, top_color, wxNORTH);
     }
      else
@@ -311,8 +311,8 @@ void SLArtProvider::DrawTab(wxDC& dc,
         r.height--;
 
         // -- draw top gradient fill for glossy look
-        wxColor top_color = m_base_colour;
-        wxColor bottom_color = wxAuiStepColour(top_color, 160);
+        wxColour top_color = m_base_colour;
+        wxColour bottom_color = wxAuiStepColour(top_color, 160);
         dc.GradientFillLinear(r, bottom_color, top_color, wxNORTH);
 
         r.y += r.height;
@@ -379,13 +379,13 @@ void SLArtProvider::DrawTab(wxDC& dc,
                           tab_width - (text_offset-tab_x) - close_button_width);
 
     // draw tab text
-    wxColor fg_color = dc.GetTextForeground( );
+    wxColour fg_color = dc.GetTextForeground( );
     if (!page.active ) {
 
-        wxColor fg_color_new = fg_color;
+        wxColour fg_color_new = fg_color;
         if ( AreColoursSimilar( fg_color, dc.GetTextBackground() , 50 ) )
         {
-          fg_color_new = wxColor( ( fg_color.Red() +125 ) % 255 , ( fg_color.Green() +125 ) % 255, ( fg_color.Blue() +125 ) % 255 );
+          fg_color_new = wxColour( ( fg_color.Red() +125 ) % 255 , ( fg_color.Green() +125 ) % 255, ( fg_color.Blue() +125 ) % 255 );
         }
         dc.SetTextForeground( wxAuiLightContrastColour(fg_color_new) );
     }
@@ -536,6 +536,7 @@ void SLArtProvider::DrawButton(wxDC& dc,
                  else
                 bmp = m_active_windowlist_bmp;
             break;
+        default: break;
     }
 
 

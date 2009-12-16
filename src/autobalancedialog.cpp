@@ -27,7 +27,7 @@ BEGIN_EVENT_TABLE(AutoBalanceDialog,wxDialog)
 END_EVENT_TABLE()
 
 
-AutoBalanceDialog::AutoBalanceDialog( wxWindow* parent, const BalanceOptions& defaultval )
+AutoBalanceDialog::AutoBalanceDialog( wxWindow* parent, const BalanceOptions& defaultval, unsigned int maxnum )
 {
 	wxFlexGridSizer* m_choices_sizer;
 	wxBoxSizer* m_buttons_sizer;
@@ -54,7 +54,7 @@ AutoBalanceDialog::AutoBalanceDialog( wxWindow* parent, const BalanceOptions& de
 	m_choices_sizer->Add(StaticText2, 0, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 0);
 	m_group_choice = new wxChoice(this, ID_CHOICE2, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, _T("ID_CHOICE2"));
 	m_group_choice->Append( _("Auto select") );
-	for ( unsigned int i = 1; i < 17; i++ ) m_group_choice->Append( TowxString( i ) );
+	for ( unsigned int i = 1; i < (maxnum + 1); i++ ) m_group_choice->Append( TowxString( i ) );
 	m_choices_sizer->Add(m_group_choice, 0, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 0);
 	m_main_sizer->Add(m_choices_sizer, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	wxSize __SpacerSize_1 = wxDLG_UNIT(this,wxSize(0,0));
@@ -85,12 +85,12 @@ AutoBalanceDialog::~AutoBalanceDialog()
 }
 
 
-void AutoBalanceDialog::OnCancel(wxCommandEvent& event)
+void AutoBalanceDialog::OnCancel(wxCommandEvent& /*unused*/)
 {
   EndModal( wxID_CANCEL );
 }
 
-void AutoBalanceDialog::OnOk(wxCommandEvent& event)
+void AutoBalanceDialog::OnOk(wxCommandEvent& /*unused*/)
 {
   EndModal( wxID_OK );
 }
