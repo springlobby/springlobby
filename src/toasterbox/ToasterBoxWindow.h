@@ -22,7 +22,7 @@ class ToasterBoxWindow: public wxFrame, public wxTimer
 
   private:
     void ScrollUp();
-    void ScrollDown( wxTimerEvent& event );
+    void ScrollDown();
     void DrawText();
     void Notify();
 
@@ -39,14 +39,11 @@ class ToasterBoxWindow: public wxFrame, public wxTimer
     //should we attempt to shrink the text
     //if it's too big for the popup?
     bool shrink;
-    /// wxEVT_PAINT event handler for ID_WXGRADIENTBUTTON
-		void OnPaint( wxPaintEvent& event );
 
-/// wxEVT_ERASE_BACKGROUND event handler for ID_WXGRADIENTBUTTON
-		void OnEraseBackground( wxEraseEvent& event );
+    //!two dummy functions that do nothing currently
+    void OnPaint( wxPaintEvent& event );
+    void OnEraseBackground( wxEraseEvent& event );
 
-//    wxTimer m_timer;
-//    DECLARE_EVENT_TABLE()
 };
 
 #endif //#define TOASTERBOXWINDOW_HH_INCLUDED
