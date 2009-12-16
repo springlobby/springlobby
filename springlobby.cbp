@@ -309,6 +309,8 @@
 		<Unit filename="src/groupoptionspanel.h" />
 		<Unit filename="src/gui/gradientpanel.cpp" />
 		<Unit filename="src/gui/gradientpanel.h" />
+		<Unit filename="src/gui/notificationmanager.cpp" />
+		<Unit filename="src/gui/notificationmanager.h" />
 		<Unit filename="src/gui/simplefront.cpp" />
 		<Unit filename="src/gui/simplefront.h" />
 		<Unit filename="src/gui/skirmish_dialog.cpp" />
@@ -471,6 +473,12 @@
 		<Unit filename="src/tdfcontainer.h" />
 		<Unit filename="src/thread.cpp" />
 		<Unit filename="src/thread.h" />
+		<Unit filename="src/toasterbox/ToasterBox.cpp" />
+		<Unit filename="src/toasterbox/ToasterBox.h" />
+		<Unit filename="src/toasterbox/ToasterBoxWindow.cpp" />
+		<Unit filename="src/toasterbox/ToasterBoxWindow.h" />
+		<Unit filename="src/toasterbox/ToasterBoxWindowList.cpp" />
+		<Unit filename="src/toasterbox/ToasterBoxWindowList.h" />
 		<Unit filename="src/torrentlistctrl.cpp" />
 		<Unit filename="src/torrentlistctrl.h" />
 		<Unit filename="src/torrentoptionspanel.cpp" />
