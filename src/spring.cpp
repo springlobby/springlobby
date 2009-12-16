@@ -52,7 +52,8 @@ END_EVENT_TABLE();
 
 Spring& spring()
 {
-	static GlobalObjectHolder<Spring> m_spring;
+    static LineInfo<Spring> m( AT );
+	static GlobalObjectHolder<Spring,LineInfo<Spring> > m_spring( m );
 	return m_spring;
 }
 

@@ -20,7 +20,7 @@
 					<Add option="-Wextra" />
 					<Add option="-Wall" />
 					<Add option="-g" />
-					<Add option="`wx-config --debug --cflags`" />
+					<Add option="`wx-config  --cflags`" />
 					<Add option="`pkg-config --cflags libtorrent-rasterbar`" />
 					<Add option="-Wno-strict-aliasing" />
 					<Add option='-DVERSION=\\&quot;cb-Unix-Debug\\&quot;' />
@@ -28,7 +28,7 @@
 					<Add option="-DDISABLE_SOUND" />
 				</Compiler>
 				<Linker>
-					<Add option="`wx-config --debug --libs`" />
+					<Add option="`wx-config --libs`" />
 					<Add option="`pkg-config --libs libtorrent-rasterbar`" />
 				</Linker>
 				<ExtraCommands>
@@ -169,6 +169,35 @@
 				</Compiler>
 				<Linker>
 					<Add option="`/share/sources/wxsource/wxWidgets-svn/build-linux/wx-config --libs aui xml adv core base html net`" />
+					<Add option="`pkg-config --libs libtorrent-rasterbar`" />
+				</Linker>
+				<ExtraCommands>
+					<Add before="tools/test-susynclib.awk src/springunitsynclib.cpp" />
+				</ExtraCommands>
+			</Target>
+			<Target title="GNU | RealDebug">
+				<Option output="bin/GNU/Debug/springlobby" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="bin/GNU/Debug/" />
+				<Option object_output="obj/GNU/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option parameters="-cl -nc -f $HOME/.springlobby/testing.conf" />
+				<Option projectLinkerOptionsRelation="2" />
+				<Compiler>
+					<Add option="-Wshadow" />
+					<Add option="-Winit-self" />
+					<Add option="-Wextra" />
+					<Add option="-Wall" />
+					<Add option="-g" />
+					<Add option="`wx-config --debug --cflags`" />
+					<Add option="`pkg-config --cflags libtorrent-rasterbar`" />
+					<Add option="-Wno-strict-aliasing" />
+					<Add option='-DVERSION=\\&quot;cb-Unix-Debug\\&quot;' />
+					<Add option="-DNO_DEBUG_REPORT_UPLOAD" />
+					<Add option="-DDISABLE_SOUND" />
+				</Compiler>
+				<Linker>
+					<Add option="`wx-config --debug --libs`" />
 					<Add option="`pkg-config --libs libtorrent-rasterbar`" />
 				</Linker>
 				<ExtraCommands>
@@ -452,8 +481,18 @@
 		<Unit filename="src/ui.h" />
 		<Unit filename="src/uiutils.cpp" />
 		<Unit filename="src/uiutils.h" />
+		<Unit filename="src/updater/updatehelper.cpp" />
+		<Unit filename="src/updater/updatehelper.h" />
 		<Unit filename="src/updater/updater.cpp" />
 		<Unit filename="src/updater/updater.h" />
+		<Unit filename="src/updater/updaterapp.cpp">
+			<Option target="Win32 | Debug" />
+			<Option target="Win32 | Profile" />
+		</Unit>
+		<Unit filename="src/updater/updaterapp.h">
+			<Option target="Win32 | Debug" />
+			<Option target="Win32 | Profile" />
+		</Unit>
 		<Unit filename="src/updater/updatermainwindow.cpp" />
 		<Unit filename="src/updater/updatermainwindow.h" />
 		<Unit filename="src/updater/versionchecker.cpp" />

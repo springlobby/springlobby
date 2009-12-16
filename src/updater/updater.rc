@@ -2,5 +2,5 @@
 springlobby_updater ICON "images/SpringLobby.ico"
 
 #ifndef _RC_MSVC //don't use this on visual studio - it enables all the UAC rights and XP style management on its own.
-CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "springlobby_updater.exe.manifest"
+CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "updater/springlobby_updater.exe.manifest"
 #endif

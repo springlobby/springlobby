@@ -165,7 +165,7 @@ void SelectUsersDialog::UpdateUsersList()
 
 void SelectUsersDialog::UpdateSelection()
 {
-  wxSortedArrayString text = GetSelectionFromText();
+  wxArrayString text = GetSelectionFromText();
   for ( unsigned int i = 0; i < m_selection.Count(); i++ ) {
     if ( text.Index(m_selection[i], false) == wxNOT_FOUND ) text.Insert( m_selection[i], 0 );
   }
@@ -183,25 +183,26 @@ wxString SelectUsersDialog::BuildSelectionText( const wxSortedArrayString& sel )
   return str;
 }
 
-wxSortedArrayString SelectUsersDialog::GetSelectionFromText()
+wxArrayString SelectUsersDialog::GetSelectionFromText()
 {
-  wxSortedArrayString s;
+  wxArrayString s;
   wxStringTokenizer st(m_selection_text->GetValue(), _T(";, "), wxTOKEN_DEFAULT);
   while ( st.HasMoreTokens() ) {
     s.Add(st.GetNextToken());
   }
+  s.Sort();
   return s;
 }
 
-wxSortedArrayString SelectUsersDialog::GetUsers(wxWindow* parent)
+wxArrayString SelectUsersDialog::GetUsers(wxWindow* parent)
 {
-  SelectUsersDialog dlg(parent);
-  if ( dlg.ShowModal() == wxID_OK ) {
-    return dlg.GetSelection();
-  } else {
-    wxSortedArrayString s;
+    wxArrayString s;
+    SelectUsersDialog dlg(parent);
+    if ( dlg.ShowModal() == wxID_OK ) {
+        s = dlg.GetSelection();
+        s.Sort();
+    }
     return s;
-  }
 }
 
 int SelectUsersDialog::ShowModal()
@@ -309,7 +310,7 @@ void SelectUsersDialog::OnOk( wxCommandEvent& /*unused*/ )
 }
 
 
-wxSortedArrayString SelectUsersDialog::GetSelection()
+wxArrayString SelectUsersDialog::GetSelection()
 {
   return GetSelectionFromText();
 }

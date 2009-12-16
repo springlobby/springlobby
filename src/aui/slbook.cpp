@@ -8,6 +8,7 @@
 #include "../mainwindow.h"
 
 #include <wx/menu.h>
+#include <wx/scrolwin.h>
 
 static const long ID_CLOSE_TAB          = wxNewId();
 static const long ID_CLOSE_TAB_OTHER    = wxNewId();
@@ -353,7 +354,6 @@ bool SLNotebook::LoadPerspective(const wxString& layout) {
         wxAuiNotebookPage& page = m_tabs.GetPage(tab_idx);
         const size_t newpage_idx = dest_tabs->GetPageCount();
         dest_tabs->InsertPage(page.window, page, newpage_idx);
-
         if (c == wxT('+')) dest_tabs->SetActivePage(newpage_idx);
         else if ( c == wxT('*')) sel_page = tab_idx;
      }
@@ -395,6 +395,21 @@ void LoadNotebookPerspective( SLNotebook* notebook, const wxString& perspective_
             parent->Layout();
             parent->Refresh();
         }
+        #ifdef __WXMSW__
+        for( size_t i = 0; i < notebook->GetPageCount(); ++i ) {
+            try {
+                wxScrolledWindow* tmp = dynamic_cast<wxScrolledWindow*>( notebook->GetPage( i ) );
+                if ( tmp ) {
+                    tmp->Layout();
+                    tmp->Fit();
+                    tmp->FitInside();
+                    tmp->SetScrollRate( 3, 3 );
+                    tmp->Update();
+                }
+            }
+            catch (...) {}
+        }
+        #endif
     }
 }
 

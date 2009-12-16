@@ -98,6 +98,11 @@ ENDIF(NOT CMAKE_CROSSCOMPILING)
 #----------------------------------------------------------------------------------------------------
 # SDL libs dependency check
 #----------------------------------------------------------------------------------------------------
+IF ( CMAKE_CROSSCOMPILING )
+	ADD_DEFINITIONS( -DDISABLE_SOUND )
+	SET( OPTION_SOUND
+	0 FORCE-CACHE BOOL )
+ELSE ( CMAKE_CROSSCOMPILING )
 IF ( OPTION_SOUND )
 
 	IF (CMAKE_CROSSCOMPILING OR NOT WIN32)
@@ -149,7 +154,7 @@ ELSE ( OPTION_SOUND )
     # Disable sound.
     ADD_DEFINITIONS( -DDISABLE_SOUND )
 ENDIF ( OPTION_SOUND )
-
+ENDIF( CMAKE_CROSSCOMPILING )
 
 #----------------------------------------------------------------------------------------------------
 # libtorrent-rasterbar dependency check
@@ -169,7 +174,7 @@ IF( OPTION_TORRENT_SYSTEM )
 		link_directories( ${boost_LIB_DIR} )
 		INCLUDE_DIRECTORIES( ${boost_INCLUDE_DIR} )
 		ADD_DEFINITIONS( -mthreads  )
-		LINK_LIBRARIES( -mthreads torrent-rasterbar ${Boost_LIBRARIES} ws2_32 mswsock  )
+		LINK_LIBRARIES( -mthreads torrent-rasterbar ${Boost_LIBRARIES} z ws2_32 mswsock  )
 	ENDIF( NOT WIN32)
 ELSE( OPTION_TORRENT_SYSTEM )
 	ADD_DEFINITIONS( -DNO_TORRENT_SYSTEM )
@@ -204,7 +209,7 @@ ENDIF(WIN32)
 if( OPTION_TRANSLATION_SUPPORT )
 	include ( ${CMAKE_SOURCE_DIR}/po/CMakeLists.txt )
 endif( OPTION_TRANSLATION_SUPPORT )
-
+ADD_DEFINITIONS( -DLOCALE_INSTALL_DIR="${LOCALE_INSTALL_DIR}" )
 #----------------------------------------------------------------------------------------------------
 # Build target defintions
 #----------------------------------------------------------------------------------------------------
@@ -250,6 +255,7 @@ add_custom_target(pack
 					${CMAKE_MAKE_PROGRAM} package
 					&& ${springlobby_SOURCE_DIR}/tools/transform_release_zip.sh
 						${CMAKE_BINARY_DIR}/${PACKAGE_NAME}-${PACKAGE_VERSION}-win32.zip
+						${CMAKE_STRIP}
 				)
 
 # setup make dist
@@ -265,6 +271,6 @@ add_custom_target(distcheck + cd ${CMAKE_BINARY_DIR} &&
                         rm -rf ${PACKAGE_NAME}-${PACKAGE_VERSION} &&
                         tar -xzf ${PACKAGE_NAME}-${PACKAGE_VERSION}.tar.gz &&
                         cd ${PACKAGE_NAME}-${PACKAGE_VERSION}/ &&
-                        cmake . && ${CMAKE_MAKE_PROGRAM}
+                        cmake "-DCMAKE_CXX_FLAGS:STRING=-O0". && ${CMAKE_MAKE_PROGRAM}
 					)
 add_dependencies( distcheck dist )

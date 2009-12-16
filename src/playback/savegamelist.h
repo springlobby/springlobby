@@ -5,7 +5,7 @@
 
 class Savegame;
 
-template <class PB>
+template <class PB, class T>
 class GlobalObjectHolder;
 
 class SavegameList : public PlaybackList<Savegame>
@@ -20,7 +20,7 @@ class SavegameList : public PlaybackList<Savegame>
   protected:
     SavegameList();
 
-    template <class PB>
+    template <class PB, class I >
     friend class GlobalObjectHolder;
 
     bool GetSavegameInfos ( const wxString& SavegamePath, Savegame& ret );

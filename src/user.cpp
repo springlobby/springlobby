@@ -137,7 +137,7 @@ void User::SetCountry( const wxString& country )
 void CommonUser::UpdateBattleStatus( const UserBattleStatus& status )
 {
 
-  // total 16 members to update.
+  // total 17 members to update.
 
   m_bstatus.team = status.team;
   m_bstatus.ally = status.ally;
@@ -149,6 +149,7 @@ void CommonUser::UpdateBattleStatus( const UserBattleStatus& status )
   m_bstatus.spectator = status.spectator;
   m_bstatus.ready = status.ready;
   if( !status.aishortname.IsEmpty() ) m_bstatus.aishortname = status.aishortname;
+  if( !status.airawname.IsEmpty() ) m_bstatus.airawname = status.airawname;
   if( !status.aiversion.IsEmpty() ) m_bstatus.aiversion = status.aiversion;
   if( !status.aitype > 0 ) m_bstatus.aitype = status.aitype;
   if( !status.owner.IsEmpty() ) m_bstatus.owner = status.owner;

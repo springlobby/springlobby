@@ -25,7 +25,7 @@
 #include <wx/msw/winundef.h>
 #include <iphlpapi.h>
 #pragma comment(lib, "iphlpapi.lib")
-#else
+#elif defined(linux)
 #include <sys/ioctl.h>
 #include <net/if.h>
 #endif

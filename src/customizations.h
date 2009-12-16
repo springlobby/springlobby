@@ -28,7 +28,7 @@ class Customizations {
         wxSize GetBackgroundSize();
         const OptionsWrapper& GetCustomizations();
 
-    friend class GlobalObjectHolder<Customizations>;
+    friend class GlobalObjectHolder<Customizations, LineInfo<Customizations> >;
 };
 
 Customizations& SLcustomizations();

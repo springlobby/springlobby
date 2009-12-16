@@ -12,6 +12,7 @@ class wxLogChain;
     \return true if successful
 */
 bool CopyDir( wxString origin, wxString destination, bool overwrite = true);
+bool CopyDirWithFilebackupRename( wxString origin, wxString destination, bool overwrite = true);
 
 /** \brief on vista execute command with admin temp eleveation, on earlier win it acts as "normal" shell execute **/
 bool WinExecuteAdmin( const wxString& command, const wxString& params );

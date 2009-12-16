@@ -58,7 +58,8 @@
 
 Ui& ui()
 {
-    static GlobalObjectHolder<Ui> m_ui;
+    static LineInfo<Ui> m( AT );
+    static GlobalObjectHolder<Ui,LineInfo<Ui> > m_ui( m );
     return m_ui;
 }
 
@@ -1309,4 +1310,8 @@ void Ui::CheckForUpdates()
         customMessageBoxNoModal(SL_MAIN_ICON, _("Your SpringLobby version is not up to date.\n\n") + msg, _("Not up to Date") );
         #endif
     }
+    /* TODO currently not usable cause automatic update calls this function too and we don't want a msg box everytime the check succeeds
+    else
+        customMessageBoxNoModal(SL_MAIN_ICON, _("Your SpringLobby version is up to date.\n\n") + msg, _("Up to Date") );
+    */
 }

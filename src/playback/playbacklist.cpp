@@ -6,7 +6,8 @@
 template <class ListImp>
 ListImp& playbacklist()
 {
-    static GlobalObjectHolder<ListImp> m_replay_list;
+    static LineInfo<ListImp> m( AT );
+    static GlobalObjectHolder<ListImp,LineInfo<ListImp> > m_replay_list( m );
     return m_replay_list;
 }
 

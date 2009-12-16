@@ -5,9 +5,14 @@ cd $(dirname $0)/..
 
 #assumes absolute path
 ZIPFILE=${1}
-
+STRIP=${2}
 if [ ! -w ${ZIPFILE} ]; then
 	echo "cannot write to ${ZIPFILE}"
+	exit 1
+fi
+
+if [ ! -x ${STRIP} ]; then
+	echo "cannot execute strip binary at ${STRIP}"
 	exit 1
 fi
 
@@ -21,5 +26,5 @@ ZIPFILEBASE=$(echo $(basename $1))
 TOPLEVELDIR=${ZIPFILEBASE%".zip"}
 unzip ${ZIPFILE}
 rm ${ZIPFILE}
-cd ${TOPLEVELDIR} && zip ${ZIPFILE} * || exit 1
+cd ${TOPLEVELDIR} && ${STRIP} *.dll && zip -r ${ZIPFILE} * locale/\* || exit 1
 exit 0

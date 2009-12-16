@@ -52,7 +52,7 @@ class SelectUsersDialog : public wxDialog
     void ClearList();
     void UpdateUsersList();
     void UpdateSelection();
-    wxSortedArrayString GetSelectionFromText();
+    wxArrayString GetSelectionFromText();
     wxString BuildSelectionText( const wxSortedArrayString& sel );
 
     long AddUserToList( const wxString& nick, const wxString& flag );
@@ -67,10 +67,10 @@ class SelectUsersDialog : public wxDialog
     SelectUsersDialog( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Select Users"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 358,518 ), long style = wxDEFAULT_DIALOG_STYLE );
     ~SelectUsersDialog();
 
-    static wxSortedArrayString GetUsers(wxWindow* parent = 0);
+    static wxArrayString GetUsers(wxWindow* parent = 0);
 
     int ShowModal();
-    wxSortedArrayString GetSelection();
+    wxArrayString GetSelection();
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_SELECTUSERSDIALOG_H

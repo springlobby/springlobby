@@ -28,13 +28,14 @@ class SinglePlayerBattle: public IBattle
     const User& GetMe() const { return m_me; }
 
     void SendHostInfo( HostInfo update );
-    void SendHostInfo( const wxString& /*unused*/ ){}
+    void SendHostInfo( const wxString& /*unused*/ ){ assert(false);}
 
     void Update( const wxString& Tag );
 
     void StartSpring();
 
   protected:
+    void RemoveUnfittingBots();
 
     MainSinglePlayerTab& m_sptab;
 
