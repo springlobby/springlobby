@@ -23,6 +23,7 @@
 #include "mainwindow.h"
 #include "countrycodes.h"
 #include "chatpanel.h"
+#include "chatpanelmenu.h"
 #include "userlist.h"
 #include "usermenu.h"
 #include "Helper/sortutil.h"
@@ -45,7 +46,7 @@ NickListCtrl::NickListCtrl( wxWindow* parent, bool show_header, NickListCtrl::Us
                             const wxString& name, bool highlight )
     : NickListCtrl::BaseType( parent, NICK_LIST, wxDefaultPosition, wxDefaultSize,
 		                          wxLC_VIRTUAL | wxSUNKEN_BORDER | wxLC_REPORT | ( int )( !show_header ) * wxLC_NO_HEADER | ( int )( singleSelectList ) * wxLC_SINGLE_SEL,
-		                          name, 4, 3, &CompareOneCrit, highlight, UserActions::ActHighlight, true /*periodic sort*/ ),
+		                          name, 3, &CompareOneCrit, highlight, UserActions::ActHighlight, true /*periodic sort*/ ),
     m_menu( popup )
 {
 
@@ -152,6 +153,7 @@ void NickListCtrl::SetTipWindowText( const long item_hit, const wxPoint& positio
 	}
 	else
 	{
+
 		const User& user = *m_data[item_hit];
 		{
 			switch ( column )
@@ -195,7 +197,7 @@ void NickListCtrl::SetTipWindowText( const long item_hit, const wxPoint& positio
 
 wxListItemAttr* NickListCtrl::GetItemAttr( long item ) const
 {
-	if ( item < ( long ) m_data.size() && item > -1 ) {
+	if ( m_data[item] && item < ( long ) m_data.size() && item > -1 ) {
 		const User& u = *m_data[item];
 		wxString name = u.GetNick();
 		return HighlightItemUser( name );
@@ -258,9 +260,14 @@ wxString NickListCtrl::GetItemText( long item, long column ) const
 		default:
 			return wxEmptyString;
 
-		case 3:
-			return ( m_data[item] ? m_data[item]->GetNick() : wxString() );
-	}
+		case 3: {
+            if ( m_data[item] )
+                return m_data[item]->GetNick();
+            else
+                return wxEmptyString;
+        }
+    }
+	return wxEmptyString;
 }
 
 int NickListCtrl::GetItemColumnImage( long item, long column ) const
@@ -285,6 +292,8 @@ int NickListCtrl::GetItemColumnImage( long item, long column ) const
 
 int NickListCtrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir )
 {
+    if ( ! ( u1 && u2 ) )
+        return 0;
 	switch ( col ) {
 		case 0:
 			return dir * CompareUserStatus( u1, u2 );

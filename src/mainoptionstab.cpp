@@ -16,13 +16,13 @@
 #include "aui/auimanager.h"
 #include "aui/artprovider.h"
 #include "aui/slbook.h"
-#include "ui.h"
 #include "springoptionstab.h"
 #include "chatoptionstab.h"
 #include "settings.h"
 #include "uiutils.h"
 #include "groupoptionspanel.h"
 #include "utils/debug.h"
+#include "utils/controls.h"
 #include "utils/conversion.h"
 
 #ifndef NO_TORRENT_SYSTEM
@@ -48,28 +48,29 @@ END_EVENT_TABLE()
  * rather then those having to implement (and duplicate) this functionality. \n
  * See SpringOptionsTab, TorrentOptionsPanel, ChatOptionsTab
  */
-MainOptionsTab::MainOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( parent, -1 ), m_ui( ui )
+MainOptionsTab::MainOptionsTab( wxWindow* parent )
+    : wxScrolledWindow( parent, -1 )
 {
-	GetAui().manager->AddPane( this, wxLEFT, _T( "mainoptionstab" ) );
-	m_tabs = new SLNotebook( this, OPTIONS_TABS, wxDefaultPosition, wxDefaultSize, wxAUI_NB_TAB_SPLIT | wxAUI_NB_TAB_MOVE | wxAUI_NB_SCROLL_BUTTONS | wxAUI_NB_TOP | wxAUI_NB_TAB_EXTERNAL_MOVE );
-	m_tabs->SetArtProvider( new SLArtProvider );
-	m_imagelist = new wxImageList( 12, 12 );
-	m_imagelist->Add( wxIcon( spring_xpm ) );
-	m_imagelist->Add( charArr2wxBitmap( torrentoptionspanel_icon_png, sizeof( torrentoptionspanel_icon_png ) )  );
-	m_imagelist->Add( wxIcon( userchat_xpm ) );
-	m_imagelist->Add( wxIcon( userchat_xpm ) );
-	m_imagelist->Add( wxIcon( springlobby_xpm ) );
+    GetAui().manager->AddPane( this, wxLEFT, _T("mainoptionstab") );
+    m_tabs = new SLNotebook( this, _T("mainoptionstab"), OPTIONS_TABS, wxDefaultPosition, wxDefaultSize, wxAUI_NB_TAB_SPLIT | wxAUI_NB_TAB_MOVE | wxAUI_NB_SCROLL_BUTTONS | wxAUI_NB_TOP | wxAUI_NB_TAB_EXTERNAL_MOVE );
+    m_tabs->SetArtProvider(new SLArtProvider);
+    m_imagelist = new wxImageList( 12, 12 );
+    m_imagelist->Add( wxIcon(spring_xpm) );
+    m_imagelist->Add( charArr2wxBitmap( torrentoptionspanel_icon_png, sizeof(torrentoptionspanel_icon_png) )  );
+    m_imagelist->Add( wxIcon(userchat_xpm) );
+    m_imagelist->Add( wxIcon(userchat_xpm) );
+    m_imagelist->Add( wxIcon(springlobby_xpm) ); //!TODO this is non-square ?!!?
 
-	m_spring_opts = new SpringOptionsTab( m_tabs, m_ui );
-	m_tabs->AddPage( m_spring_opts, _( "Spring" ), true, wxIcon( spring_xpm ) );
+    m_spring_opts = new SpringOptionsTab( m_tabs );
+    m_tabs->AddPage( m_spring_opts, _("Spring"), true, wxIcon(spring_xpm) );
 
 #ifndef NO_TORRENT_SYSTEM
-	m_torrent_opts = new TorrentOptionsPanel( m_tabs, m_ui );
-	m_tabs->AddPage( m_torrent_opts, _( "P2P" ), true, charArr2wxBitmap( torrentoptionspanel_icon_png, sizeof( torrentoptionspanel_icon_png ) ) );
+    m_torrent_opts = new TorrentOptionsPanel( m_tabs );
+    m_tabs->AddPage( m_torrent_opts, _("P2P"), true, charArr2wxBitmap( torrentoptionspanel_icon_png, sizeof(torrentoptionspanel_icon_png) ) );
 #endif
 
-	m_chat_opts = new ChatOptionsTab( m_tabs, m_ui );
-	m_tabs->AddPage( m_chat_opts, _( "Chat" ), true, wxIcon( userchat_xpm ) );
+    m_chat_opts = new ChatOptionsTab( m_tabs );
+    m_tabs->AddPage( m_chat_opts, _("Chat"), true, wxIcon(userchat_xpm) );
 
 	m_lobby_opts = new LobbyOptionsTab( m_tabs );
 	m_tabs->AddPage ( m_lobby_opts, _( "General" ), true, wxIcon( springlobby_xpm ) );
@@ -90,7 +91,7 @@ MainOptionsTab::MainOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( p
 	m_main_sizer->Add( m_button_sizer, 0, wxEXPAND );
 
 	SetSizer( m_main_sizer );
-	SetScrollRate( 3, 3 );
+	SetScrollRate( SCROLL_RATE, SCROLL_RATE );
 	Layout();
 	Refresh();
 }
@@ -98,7 +99,8 @@ MainOptionsTab::MainOptionsTab( wxWindow* parent, Ui& ui ) : wxScrolledWindow( p
 
 MainOptionsTab::~MainOptionsTab()
 {
-
+//   if ( sett().GetAutosavePerspective() )
+//        SavePerspective();
 }
 
 
@@ -107,7 +109,6 @@ GroupOptionsPanel& MainOptionsTab::GetGroupOptionsPanel()
 	ASSERT_EXCEPTION( m_groups_opts != 0, _T( "m_groups_opts == 0" ) );
 	return *m_groups_opts;
 }
-
 
 void MainOptionsTab::OnApply( wxCommandEvent& event )
 {
@@ -120,7 +121,6 @@ void MainOptionsTab::OnApply( wxCommandEvent& event )
 
 	sett().SaveSettings();
 }
-
 
 void MainOptionsTab::OnRestore( wxCommandEvent& event )
 {
@@ -149,3 +149,12 @@ void MainOptionsTab::SetSelection( const unsigned int page )
 }
 
 
+void MainOptionsTab::LoadPerspective( const wxString& perspective_name  )
+{
+    LoadNotebookPerspective( m_tabs, perspective_name );
+}
+
+void MainOptionsTab::SavePerspective( const wxString& perspective_name )
+{
+    SaveNotebookPerspective( m_tabs, perspective_name );
+}

@@ -4313,8 +4313,8 @@ msgid "Use this path"
 msgstr "Χρήση αυτής της διαδρομής"
 
 #: src/settings++/panel_pathoption.cpp:47
-msgid "unitsync.so on linux, unitsync.dll on windows"
-msgstr "unitsync.so στο Linux, unitsync.dll στα Windows"
+msgid "libunitsync.so on linux, unitsync.dll on windows"
+msgstr "libunitsync.so στο Linux, unitsync.dll στα Windows"
 
 #: src/settings++/panel_pathoption.cpp:53
 msgid "Path settings"

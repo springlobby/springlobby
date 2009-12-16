@@ -37,7 +37,7 @@
     #endif
 #endif // wxCHECK_VERSION(2,5,0)
 
-// NOTES : if the textctrl is focused and the program is ending, a killfocus
+// NOTE : if the textctrl is focused and the program is ending, a killfocus
 //         event is sent in MSW, this is why m_textCtrl is set to NULL in it's
 //         destructor and there's so many checks for it not being NULL
 
@@ -161,7 +161,7 @@ bool wxSpinCtrlDbl::Create( wxWindow *parent, wxWindowID id,
     wxArrayString list;
 
     wxString valid_chars(wxT(" 0123456789+-.eE"));
-    size_t len = valid_chars.Length();
+    size_t len = valid_chars.Len();
     for (size_t i=0; i<len; i++)
         list.Add(wxString(valid_chars.GetChar(i)));
 
@@ -170,7 +170,7 @@ bool wxSpinCtrlDbl::Create( wxWindow *parent, wxWindowID id,
     wxStringList list;
 
     wxString valid_chars(wxT(" 0123456789+-.eE"));
-    size_t len = valid_chars.Length();
+    size_t len = valid_chars.Len();
     for (size_t i=0; i<len; i++)
         list.Add(wxString(valid_chars.GetChar(i)));
 
@@ -219,8 +219,8 @@ wxSpinCtrlDbl::~wxSpinCtrlDbl()
     m_spinButton = NULL;
 }
 
-#define wxSPINCTRLDBL_SPIN_WIDTH  15
-#define wxSPINCTRLDBL_SPIN_HEIGHT 22
+const int wxSPINCTRLDBL_SPIN_WIDTH  = 15;
+const int wxSPINCTRLDBL_SPIN_HEIGHT = 22;
 
 void wxSpinCtrlDbl::DoSetSize(int x, int y, int width, int height, int sizeFlags)
 {

@@ -16,7 +16,7 @@
 
 
 #include "utils/conversion.h"
-#include "globalevents.h"
+#include "utils/debug.h"
 
 template <class ParentClass>
 HttpDownloaderThread<ParentClass>::HttpDownloaderThread(  const wxString& FileUrl, const wxString& DestPath,
@@ -81,6 +81,7 @@ void* HttpDownloaderThread<ParentClass>::Entry()
 				}
 				if ( m_noticeOk != wxEmptyString ) notice.SetString( m_noticeOk );
 				notice.SetInt( FileDownloading.GetError() );
+				wxLogMessage( notice.GetString() );
 				wxPostEvent( &m_parent, notice );
 			}
 			return NULL;
@@ -101,6 +102,7 @@ void* HttpDownloaderThread<ParentClass>::Entry()
 			notice.SetString( m_noticeErr );
 		notice.SetString( notice.GetString() + _( "\nError number: " ) + TowxString( FileDownloading.GetError() ) );
 		notice.SetInt( FileDownloading.GetError() );
+		wxLogError( notice.GetString() );
 		wxPostEvent( &m_parent, notice );
 	}
 
@@ -135,14 +137,20 @@ bool HttpDownloaderThread<ParentClass>::Unzip()
 			}
 			else
 			{
+			    wxLogMessage( _T("unzipping: ")+ file );
 				wxFFileOutputStream out( file );
-				out.Write( zip );
-				out.Close();
+				if( !out.IsOk() )
+                    wxLogError( _T("unzipping failed on: ")+ file );
+                else {
+                    out.Write( zip );
+                    out.Close();
+                }
 			}
 		}
 	}
-	catch ( ... )
+	catch ( std::exception& e )
 	{
+	    wxLogError( TowxString( e.what() ) );
 		return false;
 	}
 

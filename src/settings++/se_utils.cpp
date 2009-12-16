@@ -10,7 +10,7 @@
 
 #include "se_utils.h"
 
-#include "custom_dialogs.h"
+#include "../utils/customdialogs.h"
 #include "../settings.h"
 #include "../springunitsynclib.h"
 //#include "../utils/.h"
@@ -19,19 +19,19 @@ static bool standalonemode = true;
 
 bool IsSettingsStandAlone()
 {
-  return standalonemode;
+	return standalonemode;
 }
 
 void SetSettingsStandAlone( bool value )
 {
-  standalonemode = value;
+	standalonemode = value;
 }
 
 
-int fromString(const wxString& s) {
-        long temp = 0;
-        s.ToLong(&temp);
-        return int(temp);
+int fromString( const wxString& s ) {
+	long temp = 0;
+	s.ToLong( &temp );
+	return int( temp );
 }
 
 void openUrl( const wxString& url )

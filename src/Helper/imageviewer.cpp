@@ -13,7 +13,7 @@
 #include <wx/button.h>
 #include <wx/filedlg.h>
 
-#include "../settings++/custom_dialogs.h"
+#include "../utils/customdialogs.h"
 #include "../uiutils.h"
 
 BEGIN_EVENT_TABLE( ImagePanel, wxPanel )

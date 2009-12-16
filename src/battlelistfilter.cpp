@@ -422,6 +422,38 @@ bool BattleListFilter::_IntCompare( const int a, const int b, const BattleListFi
 	}
 }
 
+bool BattleListFilter::StringMatches(const wxString& input, const wxString& filter_string, const wxRegEx* filter_regex, StringTransformFunction additional_transform, bool case_sensitive)
+{
+    if ( filter_string.Len() < 1 || filter_string == _T("") )
+	return true;
+
+    wxString input_cased ( input );
+    wxString filter_cased ( filter_string );
+    bool use_regex ( filter_regex && filter_regex->IsValid() );
+
+    /* Case-(in)sensitivize the input and filter strings. */
+    if ( ! case_sensitive )
+    {
+	input_cased.MakeUpper();
+	filter_cased.MakeUpper();
+    }
+
+    if ( input_cased.Find(filter_cased) != wxNOT_FOUND || ( use_regex && filter_regex->Matches(input) ) )
+	return true;
+    else if ( additional_transform )
+    {
+	/* Try matching using a transformed input string. */
+	wxString input_generated ( additional_transform(input) );
+	if ( ! case_sensitive )
+	    input_generated.MakeUpper();
+
+	if ( input_generated.Find(filter_cased) != wxNOT_FOUND || ( use_regex && filter_regex->Matches(input_generated) ) )
+	    return true;
+    }
+
+    return false;
+}
+
 void BattleListFilter::OnRankButton   ( wxCommandEvent& event )
 {
 	m_filter_rank_mode = _GetNextMode( m_filter_rank_mode );
@@ -467,15 +499,18 @@ bool BattleListFilter::FilterBattle( IBattle& battle )
 
 	if ( m_filter_highlighted->IsChecked() )
 	{
-		wxString host = battle.GetFounder().GetNick();
-		if ( !useractions().DoActionOnUser( UserActions::ActHighlight, host ) )
-			return false;
-
-		for ( unsigned int i = 0; i < battle.GetNumUsers(); ++i ) {
-			wxString name = battle.GetUser( i ).GetNick();
-			if ( !useractions().DoActionOnUser( UserActions::ActHighlight, name ) )
+		try
+		{
+			wxString host = battle.GetFounder().GetNick();
+			if ( !useractions().DoActionOnUser( UserActions::ActHighlight, host ) )
 				return false;
-		}
+
+			for ( unsigned int i = 0; i < battle.GetNumUsers(); ++i ) {
+				wxString name = battle.GetUser( i ).GetNick();
+				if ( !useractions().DoActionOnUser( UserActions::ActHighlight, name ) )
+					return false;
+			}
+		}catch(...){}
 	}
 
 	//Battle Status Check
@@ -490,25 +525,25 @@ bool BattleListFilter::FilterBattle( IBattle& battle )
 	if ( !m_filter_status_open->GetValue() && !battle.IsPassworded() && !battle.IsLocked() && !battle.GetInGame() && !battle.IsFull() )
         return false;
 
-	//Rank Check
+  //Rank Check
 
-	/** @fixme Is `nonsenserank' useful, or can it be removed?  Why is
-	 * it here in the first place?
-	 */
-	/* `Nonsense', in this context, apparently means that the battle
-	 * requires rank 100, exactly, AND we're filtering for values less
-	 * than some number.
-	 */
-	bool nonsenserank = ( m_filter_rank_mode == BUTTON_MODE_SMALLER ) && ( battle.GetRankNeeded() == 100 ) ;
+  /** @fixme Is `nonsenserank' useful, or can it be removed?  Why is
+   * it here in the first place?
+   */
+  /* `Nonsense', in this context, apparently means that the battle
+   * requires rank 100, exactly, AND we're filtering for values less
+   * than some number.
+   */
+  bool nonsenserank = ( m_filter_rank_mode == BUTTON_MODE_SMALLER ) && ( battle.GetRankNeeded() == 100) ;
 
-	if ( m_filter_rank_choice_value != -1 /* don't have "all" selected */
-	        && !nonsenserank			/* Nonsensical `nonsenserank' flag isn't set. */
-	        && !_IntCompare( battle.GetRankNeeded(),
-	                         m_filter_rank_choice_value,
-	                         m_filter_rank_mode ) )
-		return false;
+  if ( m_filter_rank_choice_value != -1 /* don't have "all" selected */
+       && !nonsenserank			/* Nonsensical `nonsenserank' flag isn't set. */
+       && !_IntCompare( battle.GetRankNeeded(),
+			m_filter_rank_choice_value,
+			m_filter_rank_mode ) )
+      return false;
 
-	//Player Check
+ 	//Player Check
 	if ( ( m_filter_player_choice_value != -1 ) && !_IntCompare( battle.GetNumUsers() - battle.GetSpectators() , m_filter_player_choice_value , m_filter_player_mode ) )
         return false;
 
@@ -530,21 +565,33 @@ bool BattleListFilter::FilterBattle( IBattle& battle )
 
 	//Strings Plain Text & RegEx Check (Case insensitiv)
 
-	//Description:
-	if ( !battle.GetDescription().Upper().Contains( m_filter_description_edit->GetValue().Upper() ) && !m_filter_description_expression->Matches( battle.GetDescription() ) )
-        return false;
+  //Description:
+  if ( ! StringMatches(battle.GetDescription(),
+		       m_filter_description_edit->GetValue(),
+		       m_filter_description_expression) )
+      return false;
 
-	//Host:
-	if ( !battle.GetFounder().GetNick().Upper().Contains( m_filter_host_edit->GetValue().Upper() ) && !m_filter_host_expression->Matches( battle.GetFounder().GetNick() ) )
-        return false;
+  //Host:
+	try { //!TODO
+  if ( ! StringMatches(battle.GetFounder().GetNick(),
+		       m_filter_host_edit->GetValue(),
+		       m_filter_host_expression) )
+      return false;
+	} catch (...) {}
 
-	//Map:
-	if ( !RefineMapname( battle.GetHostMapName() ).Upper().Contains( m_filter_map_edit->GetValue().Upper() ) && !m_filter_map_expression->Matches( RefineMapname( battle.GetHostMapName() ) ) )
-        return false;
+  //Map:
+  if ( ! StringMatches(battle.GetHostMapName(),
+		       m_filter_map_edit->GetValue(),
+		       m_filter_map_expression,
+		       RefineMapname) )
+      return false;
 
-	//Mod:
-	if ( !battle.GetHostModName().Upper().Contains( m_filter_mod_edit->GetValue().Upper() ) &&  !RefineModname( battle.GetHostModName() ).Upper().Contains( m_filter_mod_edit->GetValue().Upper() ) && !m_filter_mod_expression->Matches( RefineModname( battle.GetHostModName() ) ) )
-        return false;
+  //Mod:
+  if ( ! StringMatches(battle.GetHostModName(),
+		       m_filter_mod_edit->GetValue(),
+		       m_filter_mod_expression,
+		       RefineModname) )
+      return false;
 
 	return true;
 }
@@ -558,46 +605,50 @@ void BattleListFilter::OnChange   ( wxCommandEvent& /*unused*/ )
 
 void BattleListFilter::OnChangeMap ( wxCommandEvent& event )
 {
-	if ( m_filter_map_edit == NULL )
-        return;
-	if ( m_filter_map_expression != NULL ) {
-		delete m_filter_map_expression;
-	}
-	m_filter_map_expression = new wxRegEx( m_filter_map_edit->GetValue(), wxRE_ICASE );
-	OnChange( event );
+  if ( m_filter_map_edit == NULL ) return;
+
+  if ( m_filter_map_expression == NULL )
+      m_filter_map_expression = new wxRegEx(m_filter_map_edit->GetValue(), wxRE_ICASE);
+  else
+      m_filter_map_expression->Compile(m_filter_map_edit->GetValue(), wxRE_ICASE);
+
+  OnChange(event);
 }
 
 void BattleListFilter::OnChangeMod ( wxCommandEvent& event )
 {
-	if ( m_filter_mod_edit == NULL )
-        return;
-	if ( m_filter_mod_expression != NULL ) {
-		delete m_filter_mod_expression;
-	}
-	m_filter_mod_expression = new wxRegEx( m_filter_mod_edit->GetValue(), wxRE_ICASE );
-	OnChange( event );
+  if ( m_filter_mod_edit == NULL ) return;
+
+  if ( m_filter_mod_expression == NULL )
+      m_filter_mod_expression = new wxRegEx(m_filter_mod_edit->GetValue(), wxRE_ICASE);
+  else
+      m_filter_mod_expression->Compile(m_filter_mod_edit->GetValue(), wxRE_ICASE);
+
+  OnChange(event);
 }
 
 void BattleListFilter::OnChangeDescription ( wxCommandEvent& event )
 {
-	if ( m_filter_description_edit == NULL )
-        return;
-	if ( m_filter_description_expression != NULL ) {
-		delete m_filter_description_expression;
-	}
-	m_filter_description_expression = new wxRegEx( m_filter_description_edit->GetValue(), wxRE_ICASE );
-	OnChange( event );
+  if ( m_filter_description_edit == NULL ) return;
+
+  if ( m_filter_description_expression == NULL )
+      m_filter_description_expression = new wxRegEx(m_filter_description_edit->GetValue(), wxRE_ICASE);
+  else
+      m_filter_description_expression->Compile(m_filter_description_edit->GetValue(), wxRE_ICASE);
+
+  OnChange(event);
 }
 
 void BattleListFilter::OnChangeHost ( wxCommandEvent& event )
 {
-	if ( m_filter_host_edit == NULL )
-        return;
-	if ( m_filter_host_expression != NULL ) {
-		delete m_filter_host_expression;
-	}
-	m_filter_host_expression = new wxRegEx( m_filter_host_edit->GetValue(), wxRE_ICASE );
-	OnChange( event );
+  if ( m_filter_host_edit == NULL ) return;
+
+  if ( m_filter_host_expression == NULL )
+      m_filter_host_expression = new wxRegEx(m_filter_host_edit->GetValue(), wxRE_ICASE);
+  else
+      m_filter_host_expression->Compile(m_filter_host_edit->GetValue(), wxRE_ICASE);
+
+  OnChange(event);
 }
 
 

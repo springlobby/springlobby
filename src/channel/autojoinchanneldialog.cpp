@@ -42,7 +42,7 @@ AutojoinChannelDialog::AutojoinChannelDialog( wxWindow* parent )
 	SetSizer( mainSizer );
 	wxString channels;
 	std::vector<ChannelJoinInfo> chanlist = sett().GetChannelsJoin();
-	for ( int i = 0; i < chanlist.size(); i++ )
+	for ( int i = 0; i < long(chanlist.size()); i++ )
 	{
 		ChannelJoinInfo info = chanlist[i];
 		channels << info.name + _T(" ") + info.password + _T("\n");
@@ -68,7 +68,7 @@ void AutojoinChannelDialog::OnOk( wxCommandEvent& /*unused*/ )
 	{
 		wxString line = tokenList.GetNextToken();
 		wxString chan;
-		if ( line.Contains( _T(" ") ) ) chan = line.BeforeFirst( _T(' ') );
+		if ( line.Find( _T(" ") ) != wxNOT_FOUND ) chan = line.BeforeFirst( _T(' ') );
 		else chan = line;
 		wxString key = line.AfterFirst( _T(' ') );
 		sett().AddChannelJoin( chan, key );

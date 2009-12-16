@@ -8,6 +8,7 @@
 #include <wx/sizer.h>
 #include <wx/statbox.h>
 #include <wx/intl.h>
+#include <wx/spinctrl.h>
 #include <wx/textctrl.h>
 #include <wx/radiobut.h>
 #include <wx/stattext.h>
@@ -31,7 +32,6 @@
 
 #include "nonportable.h"
 #include "chatoptionstab.h"
-#include "ui.h"
 #include "iunitsync.h"
 #include "utils/controls.h"
 #include "uiutils.h"
@@ -60,9 +60,8 @@ BEGIN_EVENT_TABLE( ChatOptionsTab, wxPanel )
 END_EVENT_TABLE()
 
 
-ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui )
-    : wxScrolledWindow( parent, -1 ),
-    m_ui( ui )
+ChatOptionsTab::ChatOptionsTab( wxWindow* parent )
+    : wxScrolledWindow( parent, -1 )
 {
 	GetAui().manager->AddPane( this, wxLEFT, _T( "chatoptionstab" ) );
 
@@ -290,7 +289,6 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui )
 
 	m_irc_colors = new wxCheckBox( this, wxID_ANY, _( "Enable Irc colors in chat messages" ), wxDefaultPosition, wxDefaultSize, 0 );
 	m_irc_colors->SetValue( sett().GetUseIrcColors() );
-	m_irc_colors->Enable( false );
 
 	sbBehaviorSizer->Add( m_irc_colors, 0, wxALL, 5 );
 #ifndef DISABLE_SOUND
@@ -312,6 +310,13 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui )
 	m_save_logs->SetValue( sett().GetChatLogEnable() );
 
 	sbChatLogSizer->Add( m_save_logs, 0, wxALL, 5 );
+
+    wxBoxSizer* m_num_lines_sizer = new wxBoxSizer( wxHORIZONTAL );
+    m_num_lines = new wxSpinCtrl( this, wxID_ANY );
+    m_num_lines_lbl =  new wxStaticText( this, wxID_ANY, _( "approx. number of lines loaded from log into chat" ), wxDefaultPosition, wxDefaultSize, 0 );
+    m_num_lines_sizer->Add( m_num_lines );
+    m_num_lines_sizer->Add( m_num_lines_lbl, 0, wxLEFT | wxALIGN_CENTER_VERTICAL, 5 );
+    sbChatLogSizer->Add( m_num_lines_sizer, 0, wxALL, 5 );
 
 	bBotomSizer->Add( sbChatLogSizer, 1, wxEXPAND | wxRIGHT, 5 );
 
@@ -341,7 +346,7 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent, Ui& ui )
 
 	bMainSizerV->Add( 0, 0, 1, wxEXPAND | wxALL, 5 );
 
-	SetScrollRate( 3, 3 );
+	SetScrollRate( SCROLL_RATE, SCROLL_RATE );
 
 	SetSizer( bMainSizerV );
 	Layout();
@@ -438,6 +443,7 @@ void ChatOptionsTab::DoRestore()
 #ifndef DISABLE_SOUND
 	m_play_sounds->SetValue( sett().GetChatPMSoundNotificationEnabled() );
 #endif
+    m_num_lines->SetValue( sett().GetAutoloadedChatlogLinesCount() );
 }
 
 void ChatOptionsTab::OnApply( wxCommandEvent& /*unused*/ )
@@ -467,7 +473,7 @@ void ChatOptionsTab::OnApply( wxCommandEvent& /*unused*/ )
 #ifndef DISABLE_SOUND
 	sett().SetChatPMSoundNotificationEnabled( m_play_sounds->IsChecked() );
 #endif
-
+    sett().SetAutoloadedChatlogLinesCount( m_num_lines->GetValue() );
 }
 
 
@@ -481,7 +487,7 @@ void ChatOptionsTab::OnSelectFont( wxCommandEvent& /*unused*/ )
 {
 	wxFontData data;
 	data.SetChosenFont( m_chat_font );
-	wxFontDialog dlg( ( wxWindow* ) &ui().mw(), data );
+	wxFontDialog dlg( this->GetParent(), data );
 	if ( dlg.ShowModal() == wxID_OK ) {
 		m_chat_font = dlg.GetFontData().GetChosenFont();
 		m_fontname->SetLabel( m_chat_font.GetFaceName() );

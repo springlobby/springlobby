@@ -157,7 +157,7 @@ IconImageList::IconImageList() : wxImageList(16,16,true)
 
     ICON_FLAGS_BASE = AddFlagImages( *this );
 
-    ICON_EMPTY = Add( wxBitmap(empty_xpm) );
+    ICON_EMPTY = Add( wxBitmap(empty_xpm) );//!TODO make empty_xpm proper size if it's not intend hack for msw
 
 #ifdef __WXMSW__
     ICON_NONE = ICON_NOSTATE = ICON_RANK_NONE = ICON_GAME_UNKNOWN = ICON_EMPTY;

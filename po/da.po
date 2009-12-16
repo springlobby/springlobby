@@ -4168,7 +4168,7 @@ msgid "Use this path"
 msgstr "Brug denne sti"
 
 #: src/settings++/panel_pathoption.cpp:47
-msgid "unitsync.so on linux, unitsync.dll on windows"
+msgid "libunitsync.so on linux, unitsync.dll on windows"
 msgstr ""
 
 #: src/settings++/panel_pathoption.cpp:53

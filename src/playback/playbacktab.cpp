@@ -27,7 +27,7 @@
 #include "playbackfilter.h"
 #include "../iconimagelist.h"
 
-#include "../settings++/custom_dialogs.h"
+#include "../utils/customdialogs.h"
 
 
 BEGIN_EVENT_TABLE_TEMPLATE1( PlaybackTab, wxPanel, PlaybackTraits )
@@ -49,10 +49,9 @@ BEGIN_EVENT_TABLE_TEMPLATE1( PlaybackTab, wxPanel, PlaybackTraits )
 END_EVENT_TABLE()
 
 template < class PlaybackTraits >
-PlaybackTab<PlaybackTraits>::PlaybackTab( wxWindow* parent, Ui& ui ) :
-		wxPanel( parent, -1 ),
-		m_replay_loader ( 0 ),
-		m_ui( ui )
+PlaybackTab<PlaybackTraits>::PlaybackTab( wxWindow* parent )
+	: wxScrolledWindow( parent, -1 ),
+    m_replay_loader ( 0 )
 {
 	wxLogMessage( _T( "PlaybackTab::PlaybackTab()" ) );
 
@@ -75,7 +74,7 @@ PlaybackTab<PlaybackTraits>::PlaybackTab( wxWindow* parent, Ui& ui ) :
 	wxBoxSizer* m_info_sizer;
 	m_info_sizer = new wxBoxSizer( wxHORIZONTAL );
 
-	m_minimap = new MapCtrl( this, 100, 0, m_ui, true, true, false, false );
+	m_minimap = new MapCtrl( this, 100, 0, true, true, false, false );
 	m_info_sizer->Add( m_minimap, 0, wxALL, 5 );
 
 	wxFlexGridSizer* m_data_sizer;
@@ -101,7 +100,7 @@ PlaybackTab<PlaybackTraits>::PlaybackTab( wxWindow* parent, Ui& ui ) :
 
 	m_info_sizer->Add( m_data_sizer, 1, wxEXPAND | wxALL, 0 );
 
-	m_players = new BattleroomListCtrl( this, 0, m_ui, true );
+	m_players = new BattleroomListCtrl( this, 0, true, false );
 	m_info_sizer->Add( m_players , 2, wxALL | wxEXPAND, 0 );
 
 	m_main_sizer->Add( m_info_sizer, 0, wxEXPAND, 5 );
@@ -144,13 +143,15 @@ PlaybackTab<PlaybackTraits>::PlaybackTab( wxWindow* parent, Ui& ui ) :
 
 	m_filter->Hide();
 
-	this->SetSizer( m_main_sizer );
-	this->Layout();
+	SetSizer( m_main_sizer );
 
-	ReloadList();
+    ReloadList();
 
 	//none selected --> shouldn't watch/delete that
 	Deselect();
+
+	SetScrollRate( SCROLL_RATE, SCROLL_RATE );
+	Layout();
 }
 
 template < class PlaybackTraits >
@@ -293,7 +294,7 @@ void PlaybackTab<PlaybackTraits>::OnWatch( wxCommandEvent& /*unused*/ )
 					if ( sett().GetCurrentUsedSpringIndex() != itor->first ) {
 						wxLogMessage( _T( "%s requires version: %s, switching to profile: %s" ), type.c_str(), rep.SpringVersion.c_str(), itor->first.c_str() );
 						sett().SetUsedSpringIndex( itor->first );
-						ui().ReloadUnitSync();
+						GetGlobalEventSender(GlobalEvents::UnitSyncReloadRequest).SendEvent( 0 ); // request an unitsync reload
 					}
 					versionfound = true;
 				}
@@ -326,7 +327,7 @@ void PlaybackTab<PlaybackTraits>::OnWatch( wxCommandEvent& /*unused*/ )
 					if ( customMessageBox( SL_MAIN_ICON, _( "You need to download the mod before you can watch this replay.\n\n" ) + downloadProc, _( "Mod not available" ), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
 						wxString modhash = battle.GetHostModHash();
 						wxString modname = battle.GetHostModName();
-						m_ui.DownloadMod ( modhash, modname );
+						ui().DownloadMod ( modhash, modname );
 					}
 					else {
 						AskForceWatch( rep );
@@ -338,7 +339,7 @@ void PlaybackTab<PlaybackTraits>::OnWatch( wxCommandEvent& /*unused*/ )
 					if ( customMessageBox( SL_MAIN_ICON, _( " I couldn't find the map to be able to watch this replay\nThis can be caused by tasclient writing broken map hash value\nIf you're sure you have the map, press no\nYou need to download the map to be able to watch this replay.\n\n" ) + downloadProc, _( "Map not available" ), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
 						wxString maphash = battle.GetHostMapHash();
 						wxString mapname = battle.GetHostMapName();
-						m_ui.DownloadMap ( maphash, mapname );
+						ui().DownloadMap ( maphash, mapname );
 					}
 					else {
 						AskForceWatch( rep );
@@ -470,15 +471,9 @@ void PlaybackTab<PlaybackTraits>::Deselected()
 template < class PlaybackTraits >
 void PlaybackTab<PlaybackTraits>::ReloadList()
 {
-	wxDateTime dt = wxDateTime::UNow();
 	Deselect();
 	m_replay_listctrl->Clear();
 	m_replay_loader->Run();
-
-
-//    long sec = (wxDateTime::UNow() - dt).GetMilliseconds().ToLong();
-//    if ( sec > 0 )
-//        customMessageBoxNoModal(SL_MAIN_ICON, wxString::Format( _T("List reloaded in %d milli seconds"),sec ) );
 }
 
 template < class PlaybackTraits >
@@ -486,3 +481,10 @@ void PlaybackTab<PlaybackTraits>::OnReload( wxCommandEvent& /*unused*/ )
 {
 	ReloadList();
 }
+
+template < class PlaybackTraits >
+void PlaybackTab<PlaybackTraits>::OnSpringTerminated( GlobalEvents::GlobalEventData /*data*/ )
+{
+    ReloadList();
+}
+

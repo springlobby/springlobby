@@ -39,13 +39,14 @@ class SpringLobbyApp : public wxApp
 
     wxTranslationHelper* m_translationhelper;
 
-    DECLARE_EVENT_TABLE()
-
     long m_log_verbosity;
     bool m_log_console;
     bool m_log_window_show;
     bool m_crash_handle_disable;
-    bool m_updateing_only;
+    bool m_start_simple_interface;
+    wxString m_customizer_modname;
+
+    DECLARE_EVENT_TABLE()
 };
 
 DECLARE_APP(SpringLobbyApp)

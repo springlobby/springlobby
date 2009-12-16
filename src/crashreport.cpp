@@ -4,7 +4,7 @@
 //
 
 
-#if defined(ENABLE_DEBUG_REPORT)
+#if wxUSE_DEBUGREPORT && defined(ENABLE_DEBUG_REPORT)
 
 #include "crashreport.h"
 

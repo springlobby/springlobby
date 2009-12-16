@@ -4,7 +4,7 @@
 #include <wx/colour.h>
 #include "settings.h"
 #include <cmath>
-#include "settings++/custom_dialogs.h"
+#include "utils/customdialogs.h"
 
 //for updating ui, anybody feel free to replace with fancy events stuff :P
 #include "ui.h"
@@ -20,7 +20,8 @@
 
 UserActions& useractions()
 {
-    static GlobalObjectHolder<UserActions> m_useractions;
+    static LineInfo<UserActions> m( AT );
+    static GlobalObjectHolder<UserActions,LineInfo<UserActions> > m_useractions( m );
     return m_useractions;
 }
 
@@ -70,10 +71,10 @@ void UserActions::Init()
     for ( int i = 0; i < m_numActions; ++i)
     {
         ActionType cur = (ActionType) (int) std::pow( 2.0, i);
-        wxSortedArrayString tmp;
-        for ( unsigned int i = 0; i < m_groupNames.GetCount(); ++i)
+        wxArrayString tmp;
+        for ( unsigned int j = 0; j < m_groupNames.GetCount(); ++j)
         {
-            wxString name = m_groupNames[i];
+            wxString name = m_groupNames[j];
             if ( ( m_groupActions[name] & cur ) != 0 )
             {
                 tmp.Add( name );
@@ -83,17 +84,19 @@ void UserActions::Init()
                 }
             }
         }
+        tmp.Sort();
         m_actionsGroups[cur] = tmp;
     }
     m_actionsGroups[ActNone] = m_groupNames;
-
+    m_groupNames.Sort();
+    m_knownUsers.Sort();
 }
 
 void UserActions::UpdateUI()
 {
     try
     {
-      ui().mw().GetJoinTab().GetBattleListTab().UpdateHighlights();
+      ui().mw().GetBattleListTab().UpdateHighlights();
     } catch(...){}
 
     try
@@ -112,7 +115,7 @@ void UserActions::UpdateUI()
     } catch(...){}
 }
 
-wxSortedArrayString UserActions::GetGroupNames() const
+wxArrayString UserActions::GetGroupNames() const
 {
     return m_groupNames;
 }

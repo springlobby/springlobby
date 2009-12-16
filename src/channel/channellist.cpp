@@ -43,12 +43,12 @@ Channel& ChannelList::GetChannel( channel_map_t::size_type index )
   return *m_seek->second;
 }
 
-bool ChannelList::ChannelExists( const wxString& name )
+bool ChannelList::ChannelExists( const wxString& name ) const
 {
   return m_chans.find( name ) != m_chans.end();
 }
 
-channel_map_t::size_type ChannelList::GetNumChannels()
+channel_map_t::size_type ChannelList::GetNumChannels() const
 {
   return m_chans.size();
 }

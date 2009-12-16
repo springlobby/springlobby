@@ -2,6 +2,7 @@
 #define SPRINGLOBBY_HEADERGUARD_BATTLELISTTAB_H
 
 #include <wx/scrolwin.h>
+#include "utils/isink.h"
 
 class User;
 class Ui;
@@ -24,12 +25,14 @@ class wxToggleButton;
 class wxFlexGridSizer;
 /** \brief The panel containing a BattleListCtrl and a BattleListFilter
  * \todo DOCME */
-class BattleListTab : public wxScrolledWindow
+class BattleListTab : public wxScrolledWindow, public UnitsyncReloadedSink<BattleListTab>
 {
   friend class BattleListFilter;
   public:
-    BattleListTab( wxWindow* parent, Ui& ui );
+    BattleListTab( wxWindow* parent );
      ~BattleListTab();
+
+		void OnConnected();
 
     void AddBattle( IBattle& battle );
     void RemoveBattle( IBattle& battle );
@@ -56,7 +59,7 @@ class BattleListTab : public wxScrolledWindow
     void DoJoin( Battle& battle );
 
     void OnSelect( wxListEvent& event );
-    void OnUnitSyncReloaded();
+    void OnUnitsyncReloaded( GlobalEvents::GlobalEventData data );
 
     void UpdateHighlights();
 
@@ -93,8 +96,6 @@ class BattleListTab : public wxScrolledWindow
 		wxCheckBox* m_filter_show;
 		wxCheckBox* m_info_show;
 #endif
-
-    Ui& m_ui;
 
     IBattle* m_sel_battle;
 

@@ -13,8 +13,7 @@
 #include "lobbyoptionstab.h"
 #include "nonportable.h"
 #include "settings.h"
-#include "springlobbyapp.h"
-#include "settings++/custom_dialogs.h"
+#include "utils/customdialogs.h"
 #include "utils/controls.h"
 #include "aui/auimanager.h"
 #include "ui.h"
@@ -64,7 +63,7 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
     m_web_loc_sizer->Add( m_web_edit, 1, wxEXPAND );
     m_web_loc_sizer->Add( m_web_browse_btn );
 
-    wxStaticBoxSizer* m_web_box_sizer = new wxStaticBoxSizer( m_web_box, wxVERTICAL );
+    m_web_box_sizer = new wxStaticBoxSizer( m_web_box, wxVERTICAL );
 
     m_web_box_sizer->Add( m_web_def_radio, 0, wxALL, 2 );
     m_web_box_sizer->Add( m_web_spec_radio, 0, wxALL, 2 );
@@ -83,7 +82,7 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
     m_editor_loc_sizer->Add( m_editor_edit, 1, wxEXPAND );
     m_editor_loc_sizer->Add( m_editor_browse_btn );
 
-    wxStaticBoxSizer* m_editor_box_sizer = new wxStaticBoxSizer( m_editor_box, wxVERTICAL );
+    m_editor_box_sizer = new wxStaticBoxSizer( m_editor_box, wxVERTICAL );
 
     m_editor_box_sizer->Add( m_editor_loc_sizer, 0, wxEXPAND | wxALL, 2 );
 ////////
@@ -160,8 +159,9 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
     m_start_tab_sizer->Add( m_start_tab , 0,  wxALIGN_CENTER_VERTICAL , 5 );
     m_main_sizer->Add( m_start_tab_sizer, 0, wxALL, 5 );
 
-    SetScrollRate( 10, 10 );
+    SetScrollRate( SCROLL_RATE, SCROLL_RATE );
     SetSizer( m_main_sizer );
+    Layout();
 }
 
 LobbyOptionsTab::~LobbyOptionsTab()

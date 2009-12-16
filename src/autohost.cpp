@@ -266,7 +266,8 @@ void AutoHost::OnUserAdded( User& user )
 
 void AutoHost::OnUserRemoved( User& user )
 {
-	m_userlist.Remove( user.GetNick() );
+    if ( m_userlist.Index( user.GetNick() ) != wxNOT_FOUND )//triggers assertion in arraystring otherwise
+        m_userlist.Remove( user.GetNick() );
 	// do nothing if autohost functionality is disabled
 	if ( !m_enabled )
 		return;
@@ -293,11 +294,7 @@ void AutoHost::StartBattle()
 	}
 
 	m_battle.DoAction( _T( "is starting game ..." ) );
-	m_battle.GetServer().StartHostedBattle();
+	m_battle.StartHostedBattle();
 
 	m_battle.SaveMapDefaults(); // save map preset
-
-	// todo: copied from Ui::StartHostedBattle
-	sett().SetLastHostMap( m_battle.GetHostMapName() );
-	sett().SaveSettings();
 }

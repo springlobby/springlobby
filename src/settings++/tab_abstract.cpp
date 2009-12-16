@@ -31,8 +31,9 @@
 #include <wx/radiobut.h>
 #include <wx/combobox.h>
 #include <wx/spinctrl.h>
+#include <wx/textctrl.h>
 
-#include "custom_dialogs.h"
+#include "../utils/customdialogs.h"
 #include "../springunitsynclib.h"
 
 #include "Defs.hpp"
@@ -104,6 +105,7 @@ abstract_panel::abstract_panel(wxWindow *parent, wxWindowID id , const wxString 
                 : wxScrolledWindow(parent, id, pos, size, style|wxTAB_TRAVERSAL|wxHSCROLL,title) {
 //	abstract_panel::expertModeEnadbled = false;
 	SetScrollbars( 10, 10, 62, 62 );
+	Layout();
 }
 
 abstract_panel::~abstract_panel(void) {

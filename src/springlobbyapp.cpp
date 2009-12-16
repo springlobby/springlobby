@@ -41,7 +41,7 @@
 #include "ui.h"
 #include "iunitsync.h"
 #include "channel/channel.h"
-#include "settings++/custom_dialogs.h"
+#include "utils/customdialogs.h"
 #include "settings++/se_utils.h"
 #ifndef NO_TORRENT_SYSTEM
 #include "torrentwrapper.h"
@@ -49,35 +49,18 @@
 #include "updater/updater.h"
 #include "globalsmanager.h"
 #include "Helper/wxTranslationHelper.h"
-#include "Helper/tasclientimport.h"
 #include "playback/playbacktraits.h"
 #include "playback/playbacktab.h"
-#include "updater/versionchecker.h"
+#include "defines.h"
+#include "customizations.h"
+
+#include "gui/simplefront.h"
 
 #include <wx/debugrpt.h>
 #include "utils/misc.h"
 
 const unsigned int TIMER_ID         = 101;
 const unsigned int TIMER_INTERVAL   = 100;
-
-
-#if 0
-/// testing TDF parser
-#include "tdfcontainer.h"
-#include <iostream>
-#include <fstream>
-void TestTDFParser(){
-  PDataList parsetree(new DataList);
-  Tokenizer tokenizer;
-  std::ifstream f("/home/dmytry/.spring/script.txt");
-  tokenizer.EnterStream(f);
-  parsetree->Load(tokenizer);
-  wxString result;
-  TDFWriter writer(result);
-  parsetree->Save(writer);
-  wxLogMessage(_T("Testing tdf parser: result %s "), result.c_str());
-}
-#endif
 
 IMPLEMENT_APP(SpringLobbyApp)
 
@@ -96,7 +79,7 @@ SpringLobbyApp::SpringLobbyApp()
     m_log_console( true ),
     m_log_window_show( false ),
     m_crash_handle_disable( false ),
-    m_updateing_only( false )
+    m_start_simple_interface( false )
 {
     SetAppName( _T("springlobby") );
 }
@@ -143,8 +126,6 @@ bool SpringLobbyApp::OnInit()
 
     //this needs to called _before_ mainwindow instance is created
     wxInitAllImageHandlers();
-     //TODO needed?
-    wxImage::AddHandler(new wxPNGHandler);
     wxFileSystem::AddHandler(new wxZipFSHandler);
     wxSocketBase::Initialize();
 
@@ -153,8 +134,8 @@ bool SpringLobbyApp::OnInit()
 #ifdef __WXMSW__
     wxString path = wxPathOnly( wxStandardPaths::Get().GetExecutablePath() ) + wxFileName::GetPathSeparator() + _T("locale");
 #else
-	#if defined(LOCALEDIR)
-		wxString path ( _T(LOCALEDIR) );
+	#if defined(LOCALE_INSTALL_DIR)
+		wxString path ( _T(LOCALE_INSTALL_DIR) );
 	#else
 		// use a dummy name here, we're only interested in the base path
 		wxString path = wxStandardPaths::Get().GetLocalizedResourcesDir(_T("noneWH"),wxStandardPaths::ResourceCat_Messages);
@@ -167,57 +148,40 @@ bool SpringLobbyApp::OnInit()
     if ( !wxDirExists( wxStandardPaths::Get().GetUserDataDir() ) )
         wxMkdir( wxStandardPaths::Get().GetUserDataDir() );
 
-    sett().RefreshSpringVersionList();
-    usync().ReloadUnitSyncLib(); // first time load of unitsync
+#ifdef __WXMSW__
+	sett().SetSearchSpringOnlyInSLPath( sett().GetSearchSpringOnlyInSLPath() );
+#endif
+	sett().SetSpringBinary( sett().GetCurrentUsedSpringIndex(), sett().GetCurrentUsedSpringBinary() );
+	sett().SetUnitSync( sett().GetCurrentUsedSpringIndex(), sett().GetCurrentUsedUnitSync() );
 
-    //everything below should not be executing when updating, so we can ensure no GUI window is created, torrent system isn't started, etc.
-    // NOTE: this assumes no one will try to update at firstRun
-    if ( m_updateing_only )
-        return true;
+
+	sett().RefreshSpringVersionList();
+
+    usync(); //init object, sink needs to exist before event is posted. next line would do both object(sink) creation and Event posting
+    GetGlobalEventSender(GlobalEvents::UnitSyncReloadRequest).SendEvent( 0 ); // request an unitsync reload
 
     CacheAndSettingsSetup();
+
+    if ( !m_customizer_modname.IsEmpty() ) {
+        if ( SLcustomizations().Init( m_customizer_modname ) ) {
+            if ( m_start_simple_interface ) {
+                SimpleFront* sp = new SimpleFront( 0 );
+                SetTopWindow( sp );
+                sp->Show();
+                return true;
+            }
+        }
+        else {
+            customMessageBox( 0, _("Couldn't load customizations for ") + m_customizer_modname + _("\nPlease check that that is the correct name, passed in qoutation"), _("Fatal error"), wxOK );
+//            wxLogError( _("Couldn't load customizations for ") + m_customizer_modname + _("\nPlease check that that is the correct name, passed in qoutation"), _("Fatal error") );
+            exit( OnExit() );//for some twisted reason returning false here does not termiante the app
+        }
+    }
+
     ui().ShowMainWindow();
     SetTopWindow( &ui().mw() );
 
-    if ( sett().IsFirstRun() )
-    {
-#ifdef __WXMSW__
-        sett().SetOldSpringLaunchMethod( true );
-#endif
-
-        wxLogMessage( _T("first time startup"));
-        wxMessageBox(_("Hi ") + wxGetUserName() + _(",\nIt looks like this is your first time using SpringLobby. I have guessed a configuration that I think will work for you but you should review it, especially the Spring configuration. \n\nWhen you are done you can go to the File menu, connect to a server, and enjoy a nice game of Spring :)"), _("Welcome"),
-                     wxOK | wxICON_INFORMATION, &ui().mw() );
-
-
-        customMessageBoxNoModal(SL_MAIN_ICON, _("By default SpringLobby reports some usage statistics.\nYou can disable that on options tab --> General."),_("Notice"),wxOK );
-
-
-                // copy uikeys.txt
-                wxPathList pl;
-                pl.AddEnvList( _T("%ProgramFiles%") );
-                pl.AddEnvList( _T("XDG_DATA_DIRS") );
-                pl = sett().GetAdditionalSearchPaths( pl );
-                wxString uikeyslocation = pl.FindValidPath( _T("uikeys.txt") );
-                if ( !uikeyslocation.IsEmpty() )
-                {
-                    wxCopyFile( uikeyslocation, sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("uikeys.txt"), false );
-                }
-
-    #ifdef __WXMSW__
-        if ( TASClientPresent() &&
-                customMessageBox(SL_MAIN_ICON, _("Should I try to import (some) TASClient settings?\n" ),_("Import settings?"), wxYES_NO ) == wxYES )
-        {
-            ImportTASClientSettings();
-        }
-    #endif
-
-        ui().mw().ShowConfigure();
-    }
-    else
-    {
-        ui().mw().ShowSingleplayer();
-    }
+    ui().FirstRunWelcome();
 
 #ifndef NO_TORRENT_SYSTEM
     if( sett().GetTorrentSystemAutoStartMode() == 1 ) torrent().ConnectToP2PSystem();
@@ -251,13 +215,14 @@ int SpringLobbyApp::OnExit()
     }
 
 
-  m_timer->Stop();
+  	m_timer->Stop();
 
-  sett().SaveSettings(); // to make sure that cache path gets saved before destroying unitsync
+  	sett().SaveSettings(); // to make sure that cache path gets saved before destroying unitsync
 
-  DestroyGlobals();
+    SetEvtHandlerEnabled(false);
+    DestroyGlobals();
 
-  return 0;
+    return 0;
 }
 
 //! @brief is called when the app crashes
@@ -295,25 +260,31 @@ bool SpringLobbyApp::SelectLanguage()
 
 void SpringLobbyApp::OnInitCmdLine(wxCmdLineParser& parser)
 {
+    #ifndef HAVE_WX29
+        #define STR _T
+    #else
+        #define STR
+    #endif
+
     wxCmdLineEntryDesc cmdLineDesc[] =
     {
-        { wxCMD_LINE_SWITCH, _T("h"), _T("help"), _("show this help message"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_OPTION_HELP },
-        { wxCMD_LINE_SWITCH, _T("nc"), _T("no-crash-handler"), _("don't use the crash handler (useful for debugging)"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
-#if wxUSE_STD_IOSTREAM
-        { wxCMD_LINE_SWITCH, _T("cl"), _T("console-logging"),  _("shows application log to the console(if available)"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
-#endif
-        { wxCMD_LINE_SWITCH, _T("gl"), _T("gui-logging"),  _("enables application log window"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
-#ifdef __WXMSW__
-        { wxCMD_LINE_SWITCH, _T("u"), _T("update"),  _("only run update, quit immediately afterwards"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
-#endif
-//      { wxCMD_LINE_OPTION, _T("c"), _T("config-file"),  _("override default choice for config-file"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL | wxCMD_LINE_NEEDS_SEPARATOR },
-        { wxCMD_LINE_OPTION, _T("l"), _T("log-verbosity"),  _("overrides default logging verbosity, can be:\n                                0: no log\n                                1: critical errors\n                                2: errors\n                                3: warnings (default)\n                                4: messages\n                                5: function trace"), wxCMD_LINE_VAL_NUMBER, wxCMD_LINE_PARAM_OPTIONAL },
-        { wxCMD_LINE_NONE }
-
+        { wxCMD_LINE_SWITCH, STR("h"), STR("help"), _("show this help message"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_OPTION_HELP },
+        { wxCMD_LINE_SWITCH, STR("nc"), STR("no-crash-handler"), _("don't use the crash handler (useful for debugging)"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
+    #if wxUSE_STD_IOSTREAM
+        { wxCMD_LINE_SWITCH, STR("cl"), STR("console-logging"),  _("shows application log to the console(if available)"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
+    #endif
+        { wxCMD_LINE_SWITCH, STR("gl"), STR("gui-logging"),  _("enables application log window"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
+        { wxCMD_LINE_OPTION, STR("f"), STR("config-file"),  _("override default choice for config-file"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL | wxCMD_LINE_NEEDS_SEPARATOR },
+        { wxCMD_LINE_OPTION, STR("l"), STR("log-verbosity"),  _("overrides default logging verbosity, can be:\n                                0: no log\n                                1: critical errors\n                                2: errors\n                                3: warnings (default)\n                                4: messages\n                                5: function trace"), wxCMD_LINE_VAL_NUMBER, wxCMD_LINE_PARAM_OPTIONAL },
+        { wxCMD_LINE_OPTION, STR("c"), STR("customize"),  _("Load lobby customizations from game archive. Expects the shortname."), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
+        { wxCMD_LINE_SWITCH, STR("s"), STR("simple"),  _("Start with the simple interface."), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
+        { wxCMD_LINE_NONE }//while this throws warnings, it is mandatory according to http://docs.wxwidgets.org/stable/wx_wxcmdlineparser.html
     };
 
     parser.SetDesc( cmdLineDesc );
-    parser.SetSwitchChars (wxT("-"));
+    parser.SetSwitchChars (_T("-"));
+
+    #undef STR
 }
 
 //! @brief parses the command line and sets global app options like log verbosity or log target
@@ -325,22 +296,29 @@ bool SpringLobbyApp::OnCmdLineParsed(wxCmdLineParser& parser)
         m_log_console = parser.Found(_T("console-logging"));
         m_log_window_show = parser.Found(_T("gui-logging"));
         m_crash_handle_disable = parser.Found(_T("no-crash-handler"));
+        m_start_simple_interface = parser.Found(_T("simple"));
 
-//        Settings::m_user_defined_config = parser.Found( _T("config-file"), &Settings::m_user_defined_config_path );
+        Settings::m_user_defined_config = parser.Found( _T("config-file"), &Settings::m_user_defined_config_path );
+        if ( Settings::m_user_defined_config ) {
+             wxFileName fn ( Settings::m_user_defined_config_path );
+             if ( ! fn.IsAbsolute() ) {
+                 wxLogError ( _T("path for parameter \"config-file\" must be absolute") );
+                 return false;
+             }
+             if ( ! fn.IsFileWritable() ) {
+                 wxLogError ( _T("path for parameter \"config-file\" must be writeable") );
+                 return false;
+             }
+        }
 
         if ( !parser.Found(_T("log-verbosity"), &m_log_verbosity ) )
-            m_log_verbosity = 5;
+            m_log_verbosity = m_log_window_show ? 3 : 5;
+        if ( !parser.Found(_T("customize"), &m_customizer_modname ) )
+            m_customizer_modname = _T("");
 
         if ( parser.Found(_T("help")) )
             return false; // not a syntax error, but program should stop if user asked for command line usage
-#ifdef __WXMSW__
-        if ( parser.Found(_T("update")) ) {
-            m_updateing_only = true;
-            wxString latestVersion = GetLatestVersion();
-            Updater().StartUpdate( latestVersion );
-            return true;
-        }
-#endif
+
         return true;
     }
     else
@@ -376,8 +354,9 @@ void SpringLobbyApp::CacheAndSettingsSetup()
     SetSettingsStandAlone( false );
 
     if ( sett().IsFirstRun() && !wxDirExists( wxStandardPaths::Get().GetUserDataDir() ) )
+    {
         wxMkdir( wxStandardPaths::Get().GetUserDataDir() );
-
+    }
     if ( (sett().GetCacheVersion() < CACHE_VERSION) && !sett().IsFirstRun() )
     {
         sett().SetMapCachingThreadProgress( 0 ); // reset map cache thread
@@ -396,68 +375,73 @@ void SpringLobbyApp::CacheAndSettingsSetup()
 
     if ( !sett().IsFirstRun() )
     {
-    	if ( sett().GetSettingsVersion() < 3 )
-            sett().ConvertOldSpringDirsOptions();
-        if ( sett().GetSettingsVersion() < 4 )
-        {
-            if ( sett().GetTorrentPort() == DEFSETT_SPRING_PORT )
-                sett().SetTorrentPort( DEFSETT_SPRING_PORT + 1 );
-        }
-        if ( sett().GetSettingsVersion() < 5 )
-        {
-            wxArrayString list = sett().GetServers();
-            int count = list.GetCount();
-            wxArrayString wordlist = sett().GetHighlightedWords();
-            for ( int i= 0; i < count; i++ )
-            {
-                wxString nick = sett().GetServerAccountNick( list[i] );
-                if ( wordlist.Index( nick ) == -1 )
-                {
-                    wordlist.Add( nick );
-                }
-            }
-            sett().SetHighlightedWords( wordlist );
-        }
-        if ( sett().GetSettingsVersion() < 6 )
-        {
-            sett().ConvertOldServerSettings();
-        }
-        if ( sett().GetSettingsVersion() < 7 )
-        {
-            sett().AddChannelJoin( _T("springlobby"), _T("") );
-        }
-        if ( sett().GetSettingsVersion() < 8 )
-        {
-             sett().DeleteServer( _T("Backup server") );
-             sett().SetServer( _T("Backup server 1"), _T("springbackup1.servegame.com"), 8200 );
-             sett().SetServer( _T("Backup server 2"), _T("springbackup2.servegame.org"), 8200 );
-             sett().SetServer( _T("Test server"), _T("taspringmaster.servegame.com"), 8300 );
-        }
-        if ( sett().GetSettingsVersion() < 10 )
-        {
-            sett().ConvertOldColorSettings();
-        }
-        if ( sett().GetSettingsVersion() < 11 )
-        {
-            if( IsUACenabled() )
-            {
-                usync().ReloadUnitSyncLib();
-                if ( usync().IsLoaded() )
-                    usync().SetSpringDataPath(_T("")); // UAC is on, fix the spring data path
-            }
-        }
-        if ( sett().GetSettingsVersion() < 12 )
-        {
-            sett().ConvertOldChannelSettings();
-        }
-        if ( sett().GetSettingsVersion() < 13 )
-        {
-            sett().ConvertOldHiglightSettings();
-        }
-        if ( sett().GetSettingsVersion() < 15 )
-        {
-            sett().TranslateSavedColumWidths();
-        }
+    	int settversion = sett().GetSettingsVersion();
+    	if ( settversion < 3 )
+    	{
+				sett().ConvertOldSpringDirsOptions();
+    	}
+			if ( settversion < 4 )
+			{
+				if ( sett().GetTorrentPort() == DEFSETT_SPRING_PORT ) sett().SetTorrentPort( DEFSETT_SPRING_PORT + 1 );
+			}
+			if ( settversion < 5 )
+			{
+				wxArrayString list = sett().GetServers();
+				int count = list.GetCount();
+				wxArrayString wordlist = sett().GetHighlightedWords();
+				for ( int i= 0; i < count; i++ )
+				{
+					wxString nick = sett().GetServerAccountNick( list[i] );
+					if ( wordlist.Index( nick ) == -1 )
+					{
+						wordlist.Add( nick );
+					}
+				}
+					sett().SetHighlightedWords( wordlist );
+			}
+			if ( settversion < 6 )
+			{
+				sett().ConvertOldServerSettings();
+			}
+			if ( settversion < 7 )
+			{
+				sett().AddChannelJoin( _T("springlobby"), _T("") );
+			}
+			if ( settversion < 8 )
+			{
+				sett().DeleteServer( _T("Backup server") );
+				sett().SetServer( _T("Backup server 1"), _T("springbackup1.servegame.com"), 8200 );
+				sett().SetServer( _T("Backup server 2"), _T("springbackup2.servegame.org"), 8200 );
+				sett().SetServer( _T("Test server"), _T("taspringmaster.servegame.com"), 8300 );
+			}
+			if ( settversion < 10 )
+			{
+				sett().ConvertOldColorSettings();
+			}
+			if ( settversion < 11 )
+			{
+				if( IsUACenabled() )
+				{
+					usync().ReloadUnitSyncLib();
+					if ( usync().IsLoaded() ) usync().SetSpringDataPath(_T("")); // UAC is on, fix the spring data path
+				}
+			}
+			if ( settversion < 12 )
+			{
+				sett().ConvertOldChannelSettings();
+			}
+			if ( settversion < 13 )
+			{
+				sett().ConvertOldHiglightSettings();
+			}
+			if ( settversion < 15 )
+			{
+				sett().TranslateSavedColumWidths();
+			}
+			if ( settversion < 17 )
+			{
+				sett().RemoveLayouts();
+			}
     }
 
     if ( sett().ShouldAddDefaultServerSettings() || ( sett().GetSettingsVersion() < 14 && sett().GetServers().Count() < 2  ) )

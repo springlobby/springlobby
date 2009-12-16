@@ -10,7 +10,7 @@
 #include "mmoptionswrapper.h"
 #include "userlist.h"
 #include "tdfcontainer.h"
-
+#include "utils/isink.h"
 
 const unsigned int DEFAULT_SERVER_PORT = 8452;
 const unsigned int DEFAULT_EXTERNAL_UDP_SOURCE_PORT = 16941;
@@ -52,13 +52,6 @@ enum NatType
 		NAT_Fixed_source_ports
 };
 
-enum RankLimitType
-{
-		rank_limit_none = 0,
-		rank_limit_autospec,
-		rank_limit_autokick
-};
-
 
 enum BattleType
 {
@@ -71,7 +64,7 @@ enum BattleType
 struct BattleOptions
 {
 	BattleOptions() :
-		battleid(-1),islocked(false),battletype(BT_Played),ispassworded(false),rankneeded(0),isproxy(false),lockexternalbalancechanges(false),ranklimittype(rank_limit_autospec),
+		battleid(-1),islocked(false),battletype(BT_Played),ispassworded(false),rankneeded(0),isproxy(false),lockexternalbalancechanges(false),
 		nattype(NAT_None),port(DEFAULT_SERVER_PORT),externaludpsourceport(DEFAULT_EXTERNAL_UDP_SOURCE_PORT),internaludpsourceport(DEFAULT_EXTERNAL_UDP_SOURCE_PORT),maxplayers(0),spectators(0),
 		guilistactiv(false) {}
 
@@ -82,7 +75,6 @@ struct BattleOptions
 	int rankneeded;
 	bool isproxy;
 	bool lockexternalbalancechanges;
-	bool ranklimittype;
 
 	wxString founder;
 
@@ -105,7 +97,7 @@ struct BattleOptions
 	bool guilistactiv;
 };
 
-class IBattle: public UserList, public wxEvtHandler
+class IBattle: public UserList, public wxEvtHandler, public UnitsyncReloadedSink< IBattle >
 {
 public:
 
@@ -163,28 +155,28 @@ public:
     };
 
 
-		struct TeamInfoContainer
-		{
-				bool exist;
-				int TeamLeader;
-				int StartPosX;
-				int StartPosY;
-				int AllyTeam;
-				wxColour RGBColor;
-				wxString SideName;
-				int Handicap;
-				int SideNum;
-		};
+    struct TeamInfoContainer
+    {
+            bool exist;
+            int TeamLeader;
+            int StartPosX;
+            int StartPosY;
+            int AllyTeam;
+            wxColor RGBColor;
+            wxString SideName;
+            int Handicap;
+            int SideNum;
+    };
 
-		struct AllyInfoContainer
-		{
-				bool exist;
-				int NumAllies;
-				int StartRectLeft;
-				int StartRectTop;
-				int StartRectRight;
-				int StartRectBottom;
-		};
+    struct AllyInfoContainer
+    {
+            bool exist;
+            int NumAllies;
+            int StartRectLeft;
+            int StartRectTop;
+            int StartRectRight;
+            int StartRectBottom;
+    };
 
 
     /**@}*/
@@ -203,9 +195,9 @@ public:
     virtual bool IsFounderMe();
     virtual bool IsFounder( const User& user ) const;
 
-    virtual int GetMyPlayerNum();
+    virtual int GetMyPlayerNum() const;
 
-		virtual int GetPlayerNum( const User& user );
+    virtual int GetPlayerNum( const User& user ) const;
 
     virtual void SetHostMod( const wxString& modname, const wxString& hash );
     virtual void SetLocalMod( const UnitSyncMod& mod );
@@ -221,15 +213,15 @@ public:
     void OnUserBattleStatusUpdated( User &user, UserBattleStatus status );
     void OnUserRemoved( User& user );
 
-		bool IsEveryoneReady();
+    bool IsEveryoneReady();
 
-		void ForceSide( User& user, int side );
-		void ForceAlly( User& user, int ally );
-		void ForceTeam( User& user, int team );
-		void ForceColour( User& user, const wxColour& col );
-		void ForceSpectator( User& user, bool spectator );
-		void SetHandicap( User& user, int handicap);
-		void KickPlayer( User& user );
+    void ForceSide( User& user, int side );
+    void ForceAlly( User& user, int ally );
+    void ForceTeam( User& user, int team );
+    void ForceColour( User& user, const wxColour& col );
+    void ForceSpectator( User& user, bool spectator );
+    void SetHandicap( User& user, int handicap);
+    void KickPlayer( User& user );
 
 
     virtual void AddStartRect( unsigned int allyno, unsigned int left, unsigned int top, unsigned int right, unsigned int bottom );
@@ -243,26 +235,27 @@ public:
 	virtual unsigned int GetLastRectIdx();
 	virtual unsigned int GetNextFreeRectIdx();
 
-    virtual int GetFreeTeamNum( bool excludeme = false );
+    virtual int GetFreeTeam( bool excludeme = false );
 
     virtual User& GetMe() = 0;
+    virtual const User& GetMe() const = 0;
 
     virtual void SendHostInfo( HostInfo update );
     virtual void SendHostInfo( const wxString& Tag );
-		virtual void Update ( const wxString& Tag );
+    virtual void Update ( const wxString& Tag );
 
     virtual unsigned int GetNumBots() const;
     virtual User& OnBotAdded( const wxString& nick, const UserBattleStatus& bs );
 
-    virtual UserPosition GetFreePosition();
-    virtual int GetFreeAlly( bool excludeme = false );
+    virtual UserPosition GetFreePosition() ;
+    virtual int GetFreeAlly( bool excludeme = false ) const;
 
     virtual void RestrictUnit( const wxString& unitname, int count = 0 );
     virtual void UnrestrictUnit( const wxString& unitname );
     virtual void UnrestrictAllUnits();
-    virtual std::map<wxString,int> RestrictedUnits();
+    virtual std::map<wxString,int> RestrictedUnits() const;
 
-    virtual void OnUnitSyncReloaded();
+    virtual void OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ );
 
     virtual OptionsWrapper& CustomBattleOptions()
     {
@@ -275,14 +268,13 @@ public:
     virtual void DeletePreset( const wxString& name );
     virtual wxArrayString GetPresetList();
 
-    virtual std::vector<wxColour> &GetFixColoursPalette( int numteams );
-    virtual int GetClosestFixColour(const wxColour &col, const std::vector<int> &excludes, int difference);
-    virtual wxColour GetFixColour(int i);
-    virtual wxColour GetFreeColour( User &for_whom );
-    wxColour GetFreeColour( User *for_whom = NULL );
-    wxColour GetNewColour();
-
-    virtual int ColourDifference(const wxColour &a, const wxColour &b);
+    virtual std::vector<wxColour> &GetFixColoursPalette( int numteams ) const;
+    virtual int GetClosestFixColour(const wxColour &col, const std::vector<int> &excludes, int difference) const;
+    virtual wxColour GetFixColour(int i) const;
+    virtual wxColour GetFreeColour( User &for_whom ) const;
+    wxColour GetFreeColour( User *for_whom = NULL ) const;
+    wxColour GetNewColour() const;
+    int ColourDifference(const wxColour &a, const wxColour &b)  const;
 
 	User& GetFounder() const { return GetUser( m_opts.founder ); }
 
@@ -370,24 +362,31 @@ public:
 		virtual void SetScript( const wxString& script ) { m_script = script; }
 		virtual void AppendScriptLine( const wxString& line ) { m_script << line; }
 		virtual void ClearScript() { m_script.Clear(); }
-		virtual wxString GetScript() { return m_script; }
+		virtual wxString GetScript() const { return m_script; }
 
 		virtual void SetPlayBackFilePath( const wxString& path ) { m_playback_file_path = path; }
-		virtual wxString GetPlayBackFilePath() { return m_playback_file_path; }
+		virtual wxString GetPlayBackFilePath() const { return m_playback_file_path; }
 
 		virtual void AddUserFromDemo( User& user );
 
 		virtual void GetBattleFromScript( bool loadmapmod );
 
-		virtual bool ShouldAutoStart();
+		virtual bool ShouldAutoStart() const;
 
 		virtual void StartSpring() = 0;
 
+		virtual std::map<int, int> GetAllySizes() { return m_ally_sizes; }
+		virtual std::map<int, int> GetTeamSizes() { return m_teams_sizes; }
+
 protected:
 
-		void LoadScriptMMOpts( const wxString& sectionname, const PDataList& node );
-		void LoadScriptMMOpts( const PDataList& node );
+    void LoadScriptMMOpts( const wxString& sectionname, const PDataList& node );
+    void LoadScriptMMOpts( const PDataList& node );
 
+		void PlayerLeftTeam( int team );
+		void PlayerLeftAlly( int ally );
+		void PlayerJoinedTeam( int team );
+		void PlayerJoinedAlly( int ally );
 
     bool m_map_loaded;
     bool m_mod_loaded;
@@ -404,18 +403,18 @@ protected:
 
     BattleOptions m_opts;
 
-		bool m_ingame;
+    bool m_ingame;
 
-		bool m_generating_script;
+    bool m_generating_script;
 
-		std::map<unsigned int,BattleStartRect> m_rects;
+    std::map<unsigned int,BattleStartRect> m_rects;
 
-		std::map<wxString, time_t> m_ready_up_map; // player name -> time counting from join/unspect
+    std::map<wxString, time_t> m_ready_up_map; // player name -> time counting from join/unspect
 
-		int m_players_ready;
-		int m_players_sync;
-		std::map<int, int> m_teams_sizes; // controlteam -> number of people in
-		std::map<int, int> m_ally_sizes; // allyteam -> number of people in
+    int m_players_ready;
+    int m_players_sync;
+    std::map<int, int> m_teams_sizes; // controlteam -> number of people in
+    std::map<int, int> m_ally_sizes; // allyteam -> number of people in
 
     wxString m_preset;
 
@@ -427,9 +426,9 @@ protected:
     wxString m_playback_file_path;
     TeamVec m_parsed_teams;
     AllyVec m_parsed_allies;
-		UserVec m_internal_user_list; /// to store users from savegame/replay
+    UserVec m_internal_user_list; /// to store users from savegame/replay
 
-		wxTimer* m_timer;
+    wxTimer* m_timer;
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_IBATTLE_H

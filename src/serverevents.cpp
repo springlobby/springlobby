@@ -19,12 +19,14 @@
 #include "channel/channel.h"
 #include "user.h"
 #include "utils/debug.h"
+#include "uiutils.h"
 #include "server.h"
 #include "battle.h"
 #include "httpdownloader.h"
 #include "settings.h"
+#include "utils/customdialogs.h"
 #include "utils/tasutil.h"
-#include "settings++/custom_dialogs.h"
+
 #ifndef NO_TORRENT_SYSTEM
 #include "torrentwrapper.h"
 #endif
@@ -174,6 +176,8 @@ void ServerEvents::OnUserStatus( const wxString& nick, UserStatus status )
         if ( user.GetBattle() != 0 )
         {
             Battle& battle = *user.GetBattle();
+            try
+            {
             if ( battle.GetFounder().GetNick() == user.GetNick() )
             {
                 if ( status.in_game != battle.GetInGame() )
@@ -183,6 +187,7 @@ void ServerEvents::OnUserStatus( const wxString& nick, UserStatus status )
                     else ui().OnBattleInfoUpdated( battle );
                 }
             }
+            }catch(...){}
         }
     }
     catch (...)
@@ -202,16 +207,19 @@ void ServerEvents::OnUserQuit( const wxString& nick )
 				if ( userbattle )
 				{
 					int battleid = userbattle->GetID();
-					if ( &userbattle->GetFounder() == &user )
+					try
 					{
-						for ( int i = 0; i < userbattle->GetNumUsers(); i ++ )
+						if ( &userbattle->GetFounder() == &user )
 						{
-							User& battleuser = userbattle->GetUser( i );
-							OnUserLeftBattle( battleid, battleuser.GetNick() );
+							for ( int i = 0; i < int(userbattle->GetNumUsers()); i ++ )
+							{
+								User& battleuser = userbattle->GetUser( i );
+								OnUserLeftBattle( battleid, battleuser.GetNick() );
+							}
+							 OnBattleClosed( battleid );
 						}
-						 OnBattleClosed( battleid );
-					}
-					else OnUserLeftBattle( battleid, user.GetNick() );
+						else OnUserLeftBattle( battleid, user.GetNick() );
+					}catch(...){}
 				}
         ui().OnUserOffline( user );
         m_serv._RemoveUser( nick );
@@ -363,15 +371,17 @@ void ServerEvents::OnUserJoinedBattle( int battleid, const wxString& nick )
 
         battle.OnUserAdded( user );
         ui().OnUserJoinedBattle( battle, user );
-
-        if ( &user == &battle.GetFounder() )
-        {
-            if ( user.Status().in_game )
-            {
-                battle.SetInGame( true );
-                battle.StartSpring();
-            }
-        }
+				try
+				{
+					if ( &user == &battle.GetFounder() )
+					{
+							if ( user.Status().in_game )
+							{
+									battle.SetInGame( true );
+									battle.StartSpring();
+							}
+					}
+        }catch(...){}
     }
     catch (std::runtime_error &except)
     {
@@ -385,9 +395,9 @@ void ServerEvents::OnUserLeftBattle( int battleid, const wxString& nick )
     try
     {
         Battle& battle = m_serv.GetBattle( battleid );
-				User& user = battle.GetUser( nick );
+        User& user = battle.GetUser( nick );
         battle.OnUserRemoved( user );
-				ui().OnUserLeftBattle( battle, user );
+        ui().OnUserLeftBattle( battle, user );
     }
     catch (std::runtime_error &except)
     {
@@ -449,10 +459,10 @@ void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const w
             {
             	OnBattleDisableUnit( battleid, key.AfterFirst(_T('/')), s2l(value) );
             }
-            else if ( key.Left( 4 ) == _T( "team" ) && key.Contains( _T("startpos") ) )
+            else if ( key.Left( 4 ) == _T( "team" ) && key.Find( _T("startpos") ) != wxNOT_FOUND )
             {
             	 int team = s2l( key.BeforeFirst(_T('/')).Mid( 4 ) );
-							 if ( key.Contains( _T("startposx") ) )
+							 if ( key.Find( _T("startposx") ) != wxNOT_FOUND )
 							 {
 							 	 int numusers = battle.GetNumUsers();
 							 	 for ( int i = 0; i < numusers; i++ )
@@ -466,7 +476,7 @@ void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const w
 							 	 	 }
 							 	 }
 							 }
-							 else if ( key.Contains( _T("startposy") ) )
+							 else if ( key.Find( _T("startposy") ) != wxNOT_FOUND )
 							 {
 							 	 int numusers = battle.GetNumUsers();
 							 	 for ( int i = 0; i < numusers; i++ )
@@ -934,10 +944,10 @@ void ServerEvents::OnScriptEnd( int battleid )
 }
 
 
-void ServerEvents::OnFileDownload( bool autolaunch, bool autoclose, bool disconnectonrefuse, const wxString& FileName, const wxString& url, const wxString& description )
+void ServerEvents::OnFileDownload( bool autolaunch, bool autoclose, bool /*disconnectonrefuse*/, const wxString& FileName, const wxString& url, const wxString& description )
 {
 	wxString refinedurl;
-	if ( url.Contains(_T("http://")) ) refinedurl = url.AfterFirst(_T('/')).AfterFirst(_T('/'));
+	if ( url.Find(_T("http://")) != wxNOT_FOUND ) refinedurl = url.AfterFirst(_T('/')).AfterFirst(_T('/'));
 	else refinedurl = url;
 	bool result = ui().Ask( _("Download update"), wxString::Format( _("Would you like to download %s ? The file offers the following updates:\n\n%s\n\nThe download will be started in the background, you will be notified on operation completed."), url.c_str(), description.c_str() ) );
 	if ( result )
@@ -949,7 +959,7 @@ void ServerEvents::OnFileDownload( bool autolaunch, bool autoclose, bool disconn
 		else filename = _T("Spring installer.exe");
 		m_savepath = sett().GetCurrentUsedDataDir() + filename;
 		wxLogMessage(_T("downloading update in: %s, from: %s"),m_savepath.c_str(),refinedurl.c_str());
-		ui().OpenWebBrowser( url );
+		OpenWebBrowser( url );
 		//new HttpDownloaderThread<ServerEvents>( refinedurl, m_savepath, *this, wxID_HIGHEST + 100, true, false );
 	}
 }

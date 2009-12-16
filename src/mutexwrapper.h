@@ -69,7 +69,9 @@ class MutexWrapper: public AbstractMutexWrapper
     }
     protected:
     T &GetData(){
-      if(!locked)wxLogError(_T("serious error in MutexWrapper usage : not locked, but Get() is called!"));
+      if(!locked) {
+            wxLogError(_T("serious error in MutexWrapper usage : not locked, but Get() is called!"));
+      }
       return data;
     }
     friend class ScopedLocker<T>;

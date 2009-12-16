@@ -13,9 +13,6 @@ class wxBitmap;
 
 #define wxDefaultBitmap wxBitmap()
 
-#define IsColourOk() IsOk()
-
-
 wxString RefineMapname( const wxString& mapname );
 wxString RefineModname( const wxString& modname );
 wxString RTFtoText( const wxString& rtfinput );
@@ -49,6 +46,9 @@ std::vector<wxColour>& GetBigFixColoursPalette( int numteams );
 
 
 void CopyToClipboard( const wxString& text );
+
+//! open either plattform default browser or binary saved in settings with given url
+void OpenWebBrowser( const wxString& url );
 
 #endif
 // SPRINGLOBBY_HEADERGUARD_UIUTILS_H

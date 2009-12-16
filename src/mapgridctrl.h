@@ -35,7 +35,7 @@ class MapGridCtrl : public wxPanel
 			SortKey_PosCount,
 		};
 
-		MapGridCtrl( wxWindow* parent, Ui& ui, wxSize size = wxDefaultSize, wxWindowID id = -1 );
+		MapGridCtrl( wxWindow* parent, wxSize size = wxDefaultSize, wxWindowID id = -1 );
 		~MapGridCtrl();
 
 		void Clear();
@@ -145,7 +145,6 @@ class MapGridCtrl : public wxPanel
 		void SetMinimap( MapMap& maps, const wxString& mapname, const wxBitmap& minimap );
 		void SelectMap( MapData* map );
 
-		Ui& m_ui;
 		UnitSyncAsyncOps m_async;
 
 		const bool m_selection_follows_mouse;

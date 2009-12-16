@@ -39,7 +39,7 @@
 #include "Helper/sortutil.h"
 #include "mainwindow.h"
 #ifdef SL_DUMMY_COL
-#include "settings++/custom_dialogs.h"
+    #include "utils/customdialogs.h"
 #endif
 
 bool Settings::m_user_defined_config = false;
@@ -50,7 +50,8 @@ const wxColour defaultHLcolor ( 255, 0, 0 );
 
 Settings& sett()
 {
-	static GlobalObjectHolder<Settings> m_sett;
+    static LineInfo<Settings> m( AT );
+	static GlobalObjectHolder<Settings, LineInfo<Settings> > m_sett( m );
 	return m_sett;
 }
 
@@ -410,11 +411,11 @@ bool Settings::ShouldAddDefaultServerSettings()
 //! @brief Restores default settings
 void Settings::SetDefaultServerSettings()
 {
-	SetServer( WX_STRINGC( DEFSETT_DEFAULT_SERVER_NAME ), WX_STRINGC( DEFSETT_DEFAULT_SERVER_HOST ), DEFSETT_DEFAULT_SERVER_PORT );
+	SetServer(  DEFSETT_DEFAULT_SERVER_NAME,  DEFSETT_DEFAULT_SERVER_HOST, DEFSETT_DEFAULT_SERVER_PORT );
 	SetServer( _T( "Backup server 1" ), _T( "springbackup1.servegame.com" ), 8200 );
 	SetServer( _T( "Backup server 2" ), _T( "springbackup2.servegame.org" ), 8200 );
 	SetServer( _T( "Test server" ), _T( "taspringmaster.servegame.com" ), 8300 );
-	SetDefaultServer( WX_STRINGC( DEFSETT_DEFAULT_SERVER_NAME ) );
+	SetDefaultServer( DEFSETT_DEFAULT_SERVER_NAME );
 }
 
 
@@ -431,7 +432,7 @@ void Settings::ConvertOldServerSettings()
 	for ( int i = 0; i < count; i++ )
 	{
 		wxString server_name = m_config->Read( wxString::Format( _T( "/Servers/Server%d" ), i ), _T( "" ) );
-		if ( server_name == _T( "TAS Server" ) ) server_name = WX_STRINGC( DEFSETT_DEFAULT_SERVER_NAME );
+		if ( server_name == _T( "TAS Server" ) ) server_name = DEFSETT_DEFAULT_SERVER_NAME;
 		servers.Add( server_name );
 		m_saved_nicks[server_name] = m_config->Read( _T( "/Server/" ) + server_name + _T( "/nick" ), _T( "" ) );
 		m_saved_pass[server_name] = m_config->Read( _T( "/Server/" ) + server_name + _T( "/pass" ), _T( "" ) );
@@ -466,8 +467,8 @@ bool Settings::ServerExists( const wxString& server_name )
 //! @note Normally this will be the previously selected server. But at first run it will be a server that is set as the default.
 wxString Settings::GetDefaultServer()
 {
-	wxString serv = WX_STRINGC( DEFSETT_DEFAULT_SERVER_NAME );
-	return m_config->Read( _T( "/Server/Default" ), serv );
+    wxString serv = DEFSETT_DEFAULT_SERVER_NAME;
+    return m_config->Read( _T("/Server/Default"), serv );
 }
 
 void Settings::SetAutoConnect( bool do_autoconnect )
@@ -496,8 +497,8 @@ void   Settings::SetDefaultServer( const wxString& server_name )
 //! @param server_name the server name/alias
 wxString Settings::GetServerHost( const wxString& server_name )
 {
-	wxString host = WX_STRINGC( DEFSETT_DEFAULT_SERVER_HOST );
-	return m_config->Read( _T( "/Server/Servers/" ) + server_name + _T( "/Host" ), host );
+    wxString host = DEFSETT_DEFAULT_SERVER_HOST;
+    return m_config->Read( _T("/Server/Servers/")+ server_name +_T("/Host"), host );
 }
 
 
@@ -659,7 +660,7 @@ void Settings::ConvertOldChannelSettings()
 	{
 		wxString channelinfo = m_config->Read( _T( "/Channels/Channel" ) + TowxString( i ), _T( "" ) );
 		m_config->DeleteEntry( _T( "/Channels/Channel" ) + TowxString( i ) );
-		if ( channelinfo.Contains( _T( " " ) ) ) AddChannelJoin( channelinfo.BeforeFirst( _T( ' ' ) ), channelinfo.AfterLast( _T( ' ' ) ) );
+		if ( channelinfo.Find( _T( " " ) ) != wxNOT_FOUND ) AddChannelJoin( channelinfo.BeforeFirst( _T( ' ' ) ), channelinfo.AfterLast( _T( ' ' ) ) );
 		else AddChannelJoin( channelinfo, _T( "" ) );
 	}
 }
@@ -800,7 +801,8 @@ wxPathList Settings::GetAdditionalSearchPaths( wxPathList& pl )
 	for ( size_t i = 0; i < pl.GetCount(); i++ )
 	{
 		wxString path = pl[i];
-		if ( path.Last() != sep ) path += sep;
+		if ( !path.EndsWith( wxString(sep) ) )
+            path += sep;
 		ret.Add( path );
 		ret.Add( path + _T( "Spring" ) + sep );
 		ret.Add( path + _T( "spring" ) + sep );
@@ -832,12 +834,14 @@ wxString Settings::AutoFindUnitSync()
 	pl.AddEnvList( _T( "LDPATH" ) );
 	pl.AddEnvList( _T( "LD_LIBRARY_PATH" ) );
 
+	pl.Add( _T( "/usr/local/lib/spring" ) );
 	pl.Add( _T( "/usr/local/lib64" ) );
 	pl.Add( _T( "/usr/local/games" ) );
 	pl.Add( _T( "/usr/local/games/lib" ) );
 	pl.Add( _T( "/usr/local/lib" ) );
 	pl.Add( _T( "/usr/lib64" ) );
 	pl.Add( _T( "/usr/lib" ) );
+	pl.Add( _T( "/usr/lib/spring" ) );
 	pl.Add( _T( "/usr/games" ) );
 	pl.Add( _T( "/usr/games/lib64" ) );
 	pl.Add( _T( "/usr/games/lib" ) );
@@ -880,6 +884,11 @@ void Settings::RefreshSpringVersionList()
 	{
 		wxString groupname = list[i];
 		usync_paths[groupname] = m_config->Read( _T( "/Spring/Paths/" ) + groupname + _T( "/UnitSyncPath" ), _T( "" ) );
+	}
+	if ( sett().GetSearchSpringOnlyInSLPath() )
+	{
+		usync_paths.clear();
+		usync_paths[sett().GetCurrentUsedSpringIndex()] = sett().GetCurrentUsedUnitSync();
 	}
 	m_spring_versions = susynclib().GetSpringVersionList( usync_paths );
 }
@@ -924,9 +933,11 @@ wxString Settings::GetCurrentUsedDataDir()
 		else dir = susynclib().GetSpringConfigString( _T( "SpringData" ), _T( "" ) );
 	}
 #ifdef __WXMSW__
-	if ( dir.IsEmpty() ) dir = GetExecutableFolder(); // fallback
+	if ( dir.IsEmpty() )
+        dir = GetExecutableFolder(); // fallback
 #else
-	if ( dir.IsEmpty() ) dir = wxFileName::GetHomeDir() + wxFileName::GetPathSeparator() + _T( ".spring" ); // fallback
+	if ( dir.IsEmpty() )
+        dir = wxFileName::GetHomeDir() + wxFileName::GetPathSeparator() + _T( ".spring" ); // fallback
 #endif
 	return dir;
 }
@@ -985,8 +996,10 @@ void Settings::SetSpringBinary( const wxString& index, const wxString& path )
 
 wxString Settings::GetForcedSpringConfigFilePath()
 {
-	if ( IsPortableMode() ) return GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T( "springsettings.cfg" );
-	else return _T( "" );
+	if ( IsPortableMode() )
+        return GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T( "springsettings.cfg" );
+	else
+        return _T( "" );
 }
 
 // ===================================================
@@ -1314,13 +1327,13 @@ bool Settings::GetDisplayJoinLeave( const wxString& channel  )
 
 void Settings::SetChatHistoryLenght( int historylines )
 {
-	m_config->Write( _T( "/Chat/HistoryLinesLenght/" ), historylines );
+	m_config->Write( _T( "/Chat/HistoryLinesLenght" ), historylines );
 }
 
 
 int Settings::GetChatHistoryLenght()
 {
-	return m_config->Read( _T( "/Chat/HistoryLinesLenght/" ), 1000 );
+	return m_config->Read( _T( "/Chat/HistoryLinesLenght" ), 1000l );
 }
 
 
@@ -1901,29 +1914,11 @@ bool Settings::GetShowTooltips()
 	return m_config->Read( _T( "/GUI/ShowTooltips" ), 1l );
 }
 
-void Settings::SaveLayout( wxString& layout_name, wxString& layout )
+void Settings::RemoveLayouts()
 {
-	m_config->Write( _T( "/Layout/" ) + layout_name, layout );
-}
-
-wxString Settings::GetLayout( wxString& layout_name )
-{
-	return  m_config->Read( _T( "/Layout/" ) + layout_name, _T( "" ) );
-}
-
-wxArrayString Settings::GetLayoutList()
-{
-	return GetEntryList( _T( "/Layout" ) );
-}
-
-void Settings::SetDefaultLayout( const wxString& layout_name )
-{
-	m_config->Write( _T( "/GUI/DefaultLayout" ), layout_name );
-}
-
-wxString Settings::GetDefaultLayout()
-{
-	return m_config->Read( _T( "/GUI/DefaultLayout" ), _T( "" ) );
+	m_config->DeleteEntry(_T("/GUI/DefaultLayout"));
+	m_config->DeleteGroup(_T("/Layout"));
+	m_config->DeleteGroup(_T("/GUI/AUI"));
 }
 
 void Settings::SetColumnWidth( const wxString& list_name, const int column_ind, const int column_width )
@@ -2431,4 +2426,72 @@ bool Settings::GetShowXallTabs()
 void Settings::SetShowXallTabs( bool show )
 {
     m_config->Write( _T( "/GUI/CloseOnAll" ) , show );
+}
+
+void Settings::SavePerspective( const wxString& notebook_name, const wxString& perspective_name, const wxString& layout_string )
+{
+    wxString entry = wxString::Format( _T( "/GUI/AUI/%s/%s" ), perspective_name.c_str(), notebook_name.c_str() );
+    m_config->Write( entry, layout_string );
+}
+
+wxString Settings::LoadPerspective( const wxString& notebook_name, const wxString& perspective_name )
+{
+    wxString entry = wxString::Format( _T( "/GUI/AUI/%s/%s" ), perspective_name.c_str(), notebook_name.c_str() );
+    return m_config->Read( entry , _T("") );
+}
+
+wxString Settings::GetLastPerspectiveName( )
+{
+    return m_config->Read( _T( "/GUI/AUI/lastperspective_name" ), _T("default") );
+}
+
+void Settings::SetLastPerspectiveName( const wxString&  name )
+{
+    m_config->Write( _T( "/GUI/AUI/lastperspective_name" ), name );
+}
+
+void Settings::SetAutosavePerspective( bool autosave )
+{
+    m_config->Write( _T( "/GUI/AUI/autosave" ), autosave );
+}
+
+bool Settings::GetAutosavePerspective( )
+{
+    return m_config->Read( _T( "/GUI/AUI/autosave" ), 1l );
+}
+
+wxArrayString Settings::GetPerspectives()
+{
+    wxArrayString list = GetGroupList( _T( "/GUI/AUI" ) );
+    wxArrayString ret;
+    for ( size_t i = 0; i < list.GetCount(); ++i) {
+    	if ( !list[i].EndsWith( BattlePostfix ) )
+            ret.Add( list[i] );
+        else  {
+            wxString stripped = list[i].Left( list[i].Len() - BattlePostfix.Len() );
+            if ( !PerspectiveExists( stripped ) )
+                ret.Add( stripped );
+        }
+    }
+    return ret;
+}
+
+bool Settings::PerspectiveExists( const wxString& perspective_name )
+{
+    wxArrayString list = GetGroupList( _T( "/GUI/AUI" ) );
+    for ( size_t i = 0; i < list.GetCount(); ++i) {
+        if ( list[i] == perspective_name )
+            return true;
+    }
+    return false;
+}
+
+void Settings::SetAutoloadedChatlogLinesCount( const int count )
+{
+    m_config->Write( _T( "/GUI/AutoloadedChatlogLinesCount" ), std::abs( count ) );
+}
+
+int Settings::GetAutoloadedChatlogLinesCount( )
+{
+    return m_config->Read( _T( "/GUI/AutoloadedChatlogLinesCount" ), 10l );
 }

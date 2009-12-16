@@ -7,7 +7,7 @@
 #include "replaylist.h"
 #include "../utils/math.h"
 #include "../utils/conversion.h"
-#include "../settings++/custom_dialogs.h"
+#include "../utils/customdialogs.h"
 #include "playbacktab.h"
 #include "playbackstructs.h"
 #include "../uiutils.h"
@@ -48,7 +48,7 @@ bool ReplayList::GetReplayInfos ( const wxString& ReplayPath, Replay& ret )
     wxString FileName = ReplayPath.AfterLast( '/' ); // strips file path
     FileName = FileName.BeforeLast( _T('.') ); //strips the file extension;
 
-    ret.date = FileName.BeforeFirst(_T('_'));
+    ret.date_string = FileName.BeforeFirst(_T('_'));
     FileName = FileName.AfterFirst(_T('_'));
 
     FileName = FileName.AfterFirst(_T('_')); // strips hours minutes seconds informatiom
@@ -112,8 +112,9 @@ void ReplayList::GetHeaderInfo( Replay& rep, const wxString& ReplayPath )
         wxDateTime dt;
         dt.Set( (time_t) unixtime );
         // todo: add 2 strings one for date other for time?
-        wxString date = dt.FormatISODate()+_T(" ")+dt.FormatISOTime();
-        rep.date = date;
+        wxString date_string = dt.FormatISODate()+_T(" ")+dt.FormatISOTime();
+        rep.date = (time_t) unixtime ;
+        rep.date_string = date_string;
     }
     catch (...){ }
 }

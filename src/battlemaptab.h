@@ -2,6 +2,7 @@
 #define SPRINGLOBBY_HEADERGUARD_BATTLEMAPTAB_H
 
 #include <wx/scrolwin.h>
+#include "utils/isink.h"
 
 class Ui;
 class Battle;
@@ -24,10 +25,10 @@ class MapSelectDialog;
 
 /** \brief select map, draw startboxes (in sp define startpos)
  * \todo DOCMEMORE */
-class BattleMapTab : public wxScrolledWindow
+class BattleMapTab : public wxScrolledWindow, public UnitsyncReloadedSink< BattleMapTab >
 {
   public:
-    BattleMapTab( wxWindow* parent, Ui& ui, Battle& battle );
+    BattleMapTab( wxWindow* parent, Battle* battle );
      ~BattleMapTab();
 
      void UpdateUser( User& user );
@@ -41,13 +42,14 @@ class BattleMapTab : public wxScrolledWindow
      void OnStartTypeSelect( wxCommandEvent& event );
      void OnMouseWheel( wxMouseEvent& event );
 
-    void OnUnitSyncReloaded();
+    void OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ );
 
     void SetMap( int index );
+    void SetBattle( Battle* battle );
+    Battle* GetBattle() { return m_battle; }
 
   protected:
-    Ui& m_ui;
-    Battle& m_battle;
+    Battle* m_battle;
     //UnitSyncMap m_map;
 
     MapCtrl* m_minimap;

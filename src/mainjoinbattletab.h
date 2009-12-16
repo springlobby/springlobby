@@ -19,17 +19,15 @@ class wxNotebook;
 class MainJoinBattleTab : public wxScrolledWindow
 {
   public:
-    MainJoinBattleTab( wxWindow* parent, Ui& ui );
+    MainJoinBattleTab( wxWindow* parent );
      ~MainJoinBattleTab();
-
-    BattleListTab& GetBattleListTab();
 
     void HostBattle( Battle& battle );
     void JoinBattle( Battle& battle );
     //void UpdateCurrentBattle();
     void UpdateCurrentBattle();
     void UpdateCurrentBattle( const wxString& Tag );
-    void LeaveCurrentBattle();
+    void LeaveCurrentBattle( bool called_from_join = false );
     Battle* GetCurrentBattle();
     ChatPanel* GetActiveChatPanel();
 
@@ -41,9 +39,11 @@ class MainJoinBattleTab : public wxScrolledWindow
 
     void ReloadPresetList();
 
-    void OnUnitSyncReloaded();
+    void LoadPerspective( const wxString& perspective_name = wxEmptyString );
+    void SavePerspective( const wxString& perspective_name = wxEmptyString );
+    bool UseBattlePerspective();
 
-    void OnConnected();
+    void FocusBattleRoomTab();
 
   protected:
     wxBoxSizer* m_main_sizer;
@@ -52,13 +52,13 @@ class MainJoinBattleTab : public wxScrolledWindow
 
     SLNotebook* m_tabs;
 
-    BattleListTab* m_list_tab;
-
     BattleRoomTab* m_battle_tab;
     BattleMapTab* m_map_tab;
     BattleOptionsTab* m_opts_tab;
     BattleroomMMOptionsTab<Battle>* m_mm_opts_tab;
-    Ui& m_ui;
+
+    void PreSwitchBattlePerspective ( );
+    void PostSwitchBattlePerspective( );
 
     enum {
         BATTLE_TABS = wxID_HIGHEST
