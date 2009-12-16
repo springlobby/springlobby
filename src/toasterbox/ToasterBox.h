@@ -17,6 +17,7 @@ class ToasterBox : public wxTimer
     void SetPopupPosition(int pos);
     void SetPopupPauseTime(int milliseconds){pauseTime = milliseconds;}
     void SetPopupBitmap(wxString _bitmapFile){bitmapFile = _bitmapFile;}
+    void SetPopupBitmap(wxBitmap& bitmap){ m_bitmap = bitmap; }
     void SetPopupBackgroundColor(int r, int g, int b);
     void SetPopupTextColor(int r, int g, int b);
     void SetPopupScrollSpeed(int _sleepTime){sleepTime = _sleepTime;}
@@ -27,19 +28,20 @@ class ToasterBox : public wxTimer
     void Notify();
     void CleanList();
     void StartAll(bool start = true);
-    
-  
+
+
   private:
     wxPoint bottomRight, popupTop, popupPosition;
     wxSize popupSize;
     int sleepTime;
     //how long the box hangs around for
-    int pauseTime;    
+    int pauseTime;
     wxStaticBitmap sbm;
     wxColour colFg, colBg;
     wxString popupText, bitmapFile;
     wxWindow *parent;
     ToasterBoxWindowList *winList;
+    wxBitmap m_bitmap;
     //should we attempt to shrink the text
     //if it's too big for the popup?
     bool shrink;

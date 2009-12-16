@@ -10,6 +10,7 @@ class ToasterBoxWindow: public wxFrame, public wxTimer
     void SetPopupPosition(int x, int y);
     void SetPopupPauseTime(int milliseconds){pauseTime = milliseconds;}
     void SetPopupBitmap(wxString bitmapFile);
+    void SetPopupBitmap(wxBitmap& bitmap);
     void SetPopupBackgroundColor(int r, int g, int b);
     void SetPopupTextColor(int r, int g, int b);
     void SetPopupScrollSpeed(int _sleepTime){sleepTime = _sleepTime;}

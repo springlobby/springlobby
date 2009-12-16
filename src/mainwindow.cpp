@@ -553,7 +553,8 @@ void MainWindow::OnMenuVersion( wxCommandEvent& /*unused*/ )
     m_toasterbox.SetPopupBackgroundColor(255,255,255);
     m_toasterbox.SetPopupTextColor(0,0,0);
 //    m_toasterbox.SetPopupScrollSpeed(pScrollSpeed);
-//    m_toasterbox.SetPopupBitmap(pBitmap);
+    wxBitmap icon ( charArr2wxBitmap  (single_player_icon_png , sizeof (single_player_icon_png) ) );
+    m_toasterbox.SetPopupBitmap( icon );
     m_toasterbox.SetPopupText(_T("jowieabclskzndclswandc"), false);
     m_toasterbox.Play();
 }

@@ -19,6 +19,7 @@
 
 
 ToasterBox::ToasterBox(wxWindow* _parent)
+    : m_bitmap( wxNullBitmap )
 {
   parent = _parent;
   sleepTime = 10;
@@ -99,6 +100,8 @@ void ToasterBox::Play()
   tb->SetPopupScrollSpeed(sleepTime);
   tb->SetPopupTextColor(colFg.Red(),colFg.Green(),colFg.Blue());
   tb->SetPopupBackgroundColor(colBg.Red(),colBg.Green(),colBg.Blue());
+  if( m_bitmap.IsOk() )
+    tb->SetPopupBitmap( m_bitmap );
   if(!bitmapFile.IsEmpty())
     tb->SetPopupBitmap(bitmapFile);
   tb->SetPopupText(popupText, true);

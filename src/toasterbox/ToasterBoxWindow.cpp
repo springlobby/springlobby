@@ -38,6 +38,11 @@ ToasterBoxWindow::ToasterBoxWindow(wxWindow* parent, wxTimer *_parent2):
     wxFrame::Connect( wxEVT_PAINT, (wxObjectEventFunction)& ToasterBoxWindow::OnPaint );
 }
 
+void ToasterBoxWindow::SetPopupBitmap(wxBitmap& bitmap)
+{
+    sbm.Create(this, 0, bitmap, wxPoint(0,0));
+}
+
 void ToasterBoxWindow::SetPopupBitmap(wxString _bitmapFile)
 {
   if(!_bitmapFile.IsEmpty())
