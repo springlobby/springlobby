@@ -127,7 +127,7 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent )
 
 	m_relayed_host_check = new wxCheckBox( this, CHK_USE_RELAY, _( "Use relayhost" ), wxDefaultPosition, wxDefaultSize, 0 );
 	m_relayed_host_check->SetToolTip( TE( _( "host and control game on remote server, helps if you have trouble hosting" ) ) );
-	m_relayed_host_pick = new wxButton( this, PICK_RELAYHOST, _( "" ), wxDefaultPosition, wxDefaultSize, 0 );
+	m_relayed_host_pick = new wxButton( this, PICK_RELAYHOST, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
 	m_relayed_host_pick->SetLabel( m_last_relayhost.IsEmpty() ? _T("automatic") : m_last_relayhost );
 
 	m_relayhost_list = new wxMenu();
@@ -331,13 +331,13 @@ void HostBattleDialog::OnNatChange( wxCommandEvent& /*unused*/  )
 	m_port_text->Enable( m_nat_radios->GetSelection() == 0 );
 }
 
-void HostBattleDialog::OnReloadMods( wxCommandEvent& event )
+void HostBattleDialog::OnReloadMods( wxCommandEvent&  )
 {
     usync().ReloadUnitSyncLib();
     ReloadModList();
 }
 
-void HostBattleDialog::OnPickRelayHost( wxCommandEvent& event )
+void HostBattleDialog::OnPickRelayHost( wxCommandEvent&  )
 {
 		PopupMenu( m_relayhost_list );
 }
@@ -350,14 +350,14 @@ void HostBattleDialog::OnRelayChoice( wxCommandEvent& event )
 		else if ( index == MANUAL_PICK_HOST ) {
 			ui().AskText( _("Manually chose a manager"), _("Please type the nick of the manager you want to use ( case sensitive )"), m_last_relayhost );
 		}
-		else if ( !(index - MANUAL_PICK_HOST - 1 > m_relayhost_array_list.GetCount()) ){
+		else if ( !(index - MANUAL_PICK_HOST - 1 > int(m_relayhost_array_list.GetCount()) ) ){
 			index = index - MANUAL_PICK_HOST - 1;
 			m_last_relayhost = m_relayhost_array_list[index];
 		}
 		m_relayed_host_pick->SetLabel( m_last_relayhost.IsEmpty() ? _T("automatic") : m_last_relayhost );
 }
 
-void HostBattleDialog::OnUseRelay( wxCommandEvent& event )
+void HostBattleDialog::OnUseRelay( wxCommandEvent&  )
 {
     m_relayed_host_pick->Show( m_relayed_host_check->IsChecked() );
     Layout();

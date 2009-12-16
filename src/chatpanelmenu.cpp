@@ -15,9 +15,8 @@
 #include "mainwindow.h"
 #include "settings.h"
 
-ChatPanelMenu::ChatPanelMenu(ChatPanel* parent, bool addChanServ, const wxString& title , long style )
-
-:    m_chatpanel(parent),
+ChatPanelMenu::ChatPanelMenu(ChatPanel* parent, bool addChanServ, const wxString& /*title */, long /*style*/ )
+    : m_chatpanel(parent),
     m_autorejoin( 0 ),
     m_withChanserv( addChanServ )
 {}
@@ -162,8 +161,12 @@ void ChatPanelMenu::CreateNickListMenu()
     m_user_menu->Append( joinbattleitem );
 
 	m_user_menu->AppendSeparator();
-
-	if ( ui().GetServer().GetMe().GetStatus().moderator ) {
+	bool moderator = false;
+	try
+	{
+		moderator = ui().GetServer().GetMe().GetStatus().moderator;
+	}catch(...){}
+	if ( moderator ) {
 		wxMenuItem* modingameitem = new wxMenuItem( m_user_menu, CHAT_MENU_US_MODERATOR_INGAME, _( "Ingame time" ), wxEmptyString, wxITEM_NORMAL );
 		m_user_menu->Append( modingameitem );
 		wxMenuItem* modipitem = new wxMenuItem( m_user_menu, CHAT_MENU_US_MODERATOR_CURIP, _( "Retrieve IP and Smurfs" ), wxEmptyString, wxITEM_NORMAL );
@@ -728,7 +731,7 @@ void ChatPanelMenu::OnChannelMenuShowMutelist( wxCommandEvent& /*unused*/ )
     }
 }
 
-void ChatPanelMenu::OnChatMenuOpenLog( wxCommandEvent& event )
+void ChatPanelMenu::OnChatMenuOpenLog( wxCommandEvent&  )
 {
     m_chatpanel->m_chat_log.OpenInEditor();
 }

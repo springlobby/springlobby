@@ -29,12 +29,15 @@ END_EVENT_TABLE()
 
 
 AddBotDialog::AddBotDialog( wxWindow* parent, IBattle& battle , bool singleplayer):
-  wxDialog( parent, wxID_ANY, _("Add bot"), wxDefaultPosition, wxDefaultSize ),
+  wxDialog( parent, wxID_ANY, _("Add bot"), wxDefaultPosition, wxDefaultSize, wxRESIZE_BORDER | wxDEFAULT_DIALOG_STYLE ),
   m_battle( battle ),
   m_sp(singleplayer)
 {
+  wxSize size = sett().GetWindowSize( _T("ADDBOTDIALOG"), wxSize(-1, 255) );
+  wxPoint pos = sett().GetWindowPos( _T("ADDBOTDIALOG"), wxPoint( -1, -1 ) );
+  SetSize( pos.x , pos.y, size.GetWidth(), size.GetHeight() );
 
-  this->SetSizeHints( wxDefaultSize, wxDefaultSize );
+  //this->SetSizeHints( wxDefaultSize, wxDefaultSize );
 
   m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
@@ -94,7 +97,6 @@ AddBotDialog::AddBotDialog( wxWindow* parent, IBattle& battle , bool singleplaye
 	}
 	else
 	{
-		 this->SetSize( wxSize(-1, 155) );
 		 m_main_sizer->AddStretchSpacer();
 	}
 
@@ -121,6 +123,13 @@ AddBotDialog::AddBotDialog( wxWindow* parent, IBattle& battle , bool singleplaye
   ReloadAIList();
 }
 
+
+AddBotDialog::~AddBotDialog()
+{
+    sett().SetWindowSize( _T("ADDBOTDIALOG"), GetSize() );
+    sett().SetWindowPos( _T("ADDBOTDIALOG"), GetPosition() );
+    sett().SaveSettings();
+}
 
 wxString AddBotDialog::GetNick()
 {
@@ -156,10 +165,10 @@ wxString AddBotDialog::RefineAIName( const wxString& name )
   wxString ret = name;
   if ( !usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) )
   {
-		if ( ret.Contains(_T('.')) ) ret = ret.BeforeLast(_T('.'));
-		if ( ret.Contains(_T('/')) ) ret = ret.AfterLast(_T('/'));
-		if ( ret.Contains(_T('\\')) ) ret = ret.AfterLast(_T('\\'));
-		if ( ret.Contains(_T("LuaAI:")) ) ret = ret.AfterFirst(_T(':'));
+		if ( ret.Find(_T('.')) != wxNOT_FOUND ) ret = ret.BeforeLast(_T('.'));
+		if ( ret.Find(_T('/')) != wxNOT_FOUND ) ret = ret.AfterLast(_T('/'));
+		if ( ret.Find(_T('\\')) != wxNOT_FOUND ) ret = ret.AfterLast(_T('\\'));
+		if ( ret.Find(_T("LuaAI:")) != wxNOT_FOUND ) ret = ret.AfterFirst(_T(':'));
   }
   if ( m_ai->FindString( ret ) == wxNOT_FOUND ) return ret;
   wxString ret2;

@@ -36,10 +36,10 @@ MainSinglePlayerTab::MainSinglePlayerTab( wxWindow* parent )
 	m_imagelist->Add( wxIcon( battle_settings_xpm ) );
 
 	m_sp_tab = new SinglePlayerTab( m_tabs, *this );
-	m_tabs->AddPage( m_sp_tab, _( "Game" ), true, 0 );
-	m_mm_opts_tab = new BattleroomMMOptionsTab<SinglePlayerBattle>( m_sp_tab->GetBattle(), m_tabs );
+	m_tabs->AddPage( m_sp_tab, _( "Game" ), true, 0 ); //!TODO use valid bitmap
+	m_mm_opts_tab = new BattleroomMMOptionsTab<SinglePlayerBattle>( &m_sp_tab->GetBattle(), m_tabs );
 	m_tabs->InsertPage( 1, m_mm_opts_tab, _( "Options" ), false, wxIcon( battle_settings_xpm ) );
-	m_opts_tab = new BattleOptionsTab( m_tabs, m_sp_tab->GetBattle() );
+	m_opts_tab = new BattleOptionsTab( m_tabs, &m_sp_tab->GetBattle() );
 	m_tabs->InsertPage( 2, m_opts_tab, _( "Unit Restrictions" ), false, wxIcon( battle_settings_xpm ) );
 
 	m_main_sizer->Add( m_tabs, 1, wxEXPAND );

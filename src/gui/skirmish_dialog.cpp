@@ -12,6 +12,7 @@
 #include <wx/dc.h>
 #include <wx/dcclient.h>
 #include <wx/combobox.h>
+#include <cstdlib>
 
 #include "../springunitsync.h"
 #include "../springunitsynclib.h"
@@ -145,18 +146,18 @@ SkirmishDialog::~SkirmishDialog()
 //	m_map_random->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SkirmishDialog::OnRandom ), NULL, this );
 }
 
-void SkirmishDialog::OnBack( wxCommandEvent& event )
+void SkirmishDialog::OnBack( wxCommandEvent&  )
 {
     m_parent->ShowSP( false );
 }
 
-void SkirmishDialog::OnRandom( wxCommandEvent& event )
+void SkirmishDialog::OnRandom( wxCommandEvent&  )
 {
 //    bool checked = m_map_random->IsChecked();
 //    m_map->Enable( !checked );
 }
 
-void SkirmishDialog::OnScenarioChoice( wxCommandEvent& event )
+void SkirmishDialog::OnScenarioChoice( wxCommandEvent&  )
 {
     m_map->Clear();
     m_sides->Clear();
@@ -185,7 +186,7 @@ void SkirmishDialog::OnScenarioChoice( wxCommandEvent& event )
 
 }
 
-void SkirmishDialog::OnAdvanced( wxCommandEvent& event )
+void SkirmishDialog::OnAdvanced( wxCommandEvent&  )
 {
     ui().mw().ShowSingleplayer();
     ui().mw().Show( true );
@@ -193,7 +194,7 @@ void SkirmishDialog::OnAdvanced( wxCommandEvent& event )
 }
 
 
-void SkirmishDialog::OnStart( wxCommandEvent& event )
+void SkirmishDialog::OnStart( wxCommandEvent& )
 {
     OptionsWrapper& opts = m_skirmishes[m_scenario_choice->GetStringSelection()];
     // this overwrites any modoptions with those found in the skirmish definition
@@ -221,7 +222,7 @@ void SkirmishDialog::OnStart( wxCommandEvent& event )
         if ( current.key == _T("ai_names") ) {
             for ( ListItemVec::iterator itor = current.listitems.begin(); itor != current.listitems.end(); ++itor) {
                 size_t idx = FromwxString<size_t>( itor->key );
-                if ( idx < ai_sides.size() && idx >= 0 )
+                if ( idx < ai_sides.size() )
                     ai_names[idx] = itor->name;
             }
         break;

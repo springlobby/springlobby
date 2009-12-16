@@ -43,7 +43,7 @@ class TorrentListCtrl : public CustomVirtListCtrl<TorrentInfos, TorrentListCtrl>
     wxString GetItemText(long item, long column) const;
     int GetItemImage(long item) const;
     int GetItemColumnImage(long item, long column) const;
-    wxListItemAttr* GetItemAttr(long item) const {return 0;}
+    wxListItemAttr* GetItemAttr(long ) const {return 0;}
 
   protected:
 	static int CompareOneCrit( DataType u1, DataType u2, int col, int dir ) ;

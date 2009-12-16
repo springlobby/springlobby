@@ -38,7 +38,7 @@ BEGIN_EVENT_TABLE( TorrentListCtrl, TorrentListCtrl::BaseType )
 END_EVENT_TABLE()
 
 TorrentListCtrl::TorrentListCtrl( wxWindow* parent )
-:	TorrentListCtrl::BaseType( parent, TLIST_CLICK, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("TorrentListCtrl"), 10, 10, &CompareOneCrit )
+:	TorrentListCtrl::BaseType( parent, TLIST_CLICK, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("TorrentListCtrl"), 10, &CompareOneCrit )
 , m_popup(0)
 {
 #if defined(__WXMAC__)

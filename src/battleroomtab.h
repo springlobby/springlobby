@@ -29,6 +29,7 @@ struct UnitSyncMap;
 class wxToggleButton;
 class wxChoice;
 class MapSelectDialog;
+class wxListEvent;
 
 typedef std::map<wxString, long> OptionListMap;
 
@@ -37,17 +38,15 @@ typedef std::map<wxString, long> OptionListMap;
 class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<BattleRoomTab>
 {
 	public:
-		BattleRoomTab( wxWindow* parent, Battle& battle );
+		BattleRoomTab( wxWindow* parent, Battle* battle );
 		~BattleRoomTab();
 
 		BattleroomListCtrl& GetPlayersListCtrl();
 
 		void UpdateUser( User& user );
 
-		Battle& GetBattle();
+		Battle* GetBattle();
 		ChatPanel& GetChatPanel();
-
-		bool IsHosted();
 
 		void UpdateBattleInfo();
 		void UpdateBattleInfo( const wxString& Tag );
@@ -86,6 +85,7 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 		void OnRingUnsynced( wxCommandEvent& event );
 		void OnRingUnreadyUnsynced( wxCommandEvent& event );
 
+		void OnAutoPaste( wxCommandEvent& event );
 		void OnAutoControl( wxCommandEvent& event );
 		void OnAutoStart( wxCommandEvent& event );
 		void OnAutoSpec( wxCommandEvent& event );
@@ -104,13 +104,17 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 
 		void OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ );
 
+		void SetBattle( Battle* battle );
+
+		void PrintAllySetup();
+
 	protected:
 
 		long AddMMOptionsToList( long pos, OptionsWrapper::GameOption optFlag );
 
 		void SplitSizerHorizontally( const bool horizontal );
 
-		Battle& m_battle;
+		Battle* m_battle;
 		UnitSyncMap m_map;
 
 		long m_map_opts_index;
@@ -138,6 +142,9 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 		wxStaticText* m_wind_lbl;
 		wxStaticText* m_tidal_lbl;
 		wxStaticText* m_size_lbl;
+		wxStaticText* m_player_count_lbl;
+		wxStaticText* m_spec_count_lbl;
+		wxStaticText* m_ally_setup_lbl;
 
 		MapCtrl * m_minimap;
 
@@ -166,15 +173,12 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 		wxMenuItem* m_autostart_mnu;
 		wxMenuItem* m_autospec_mnu;
 		wxMenuItem* m_autocontrol_mnu;
+		wxMenuItem* m_autopaste_mnu;
 
 		wxCheckBox* m_ready_chk;
 		wxCheckBox* m_spec_chk;
 		wxCheckBox* m_lock_chk;
-#if wxUSE_TOGGLEBTN
-		wxToggleButton* m_autolock_chk;
-#else
 		wxCheckBox* m_autolock_chk;
-#endif
 
 		wxListCtrl* m_opts_list;
 
@@ -213,7 +217,8 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 			BROOM_SPECT_UNREADY_UNSYNC,
 			BROOM_AUTOSPECT,
 			BROOM_AUTOSTART,
-			BROOM_AUTOCONTROL
+			BROOM_AUTOCONTROL,
+			BROOM_AUTOPASTE
 		};
 
 		DECLARE_EVENT_TABLE();

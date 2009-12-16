@@ -114,7 +114,7 @@ SimpleFront::~SimpleFront()
 
 }
 
-void SimpleFront::OnSingleplayer( wxCommandEvent& event )
+void SimpleFront::OnSingleplayer( wxCommandEvent&  )
 {
     ShowSP( true );
 }
@@ -132,14 +132,14 @@ void SimpleFront::ShowSP( bool show )
 	Layout();
 }
 
-void SimpleFront::OnMultiplayer( wxCommandEvent& event )
+void SimpleFront::OnMultiplayer( wxCommandEvent&  )
 {
     ui().FirstRunWelcome();
 	ui().mw().ShowTab( MainWindow::PAGE_JOIN );
 	Close();
 }
 
-void SimpleFront::OnSettings( wxCommandEvent& event )
+void SimpleFront::OnSettings( wxCommandEvent&  )
 {
 //	if ( !m_settings ) //TODO cleanup the exit mess in SS
         m_settings_frame = new settings_frame( this, wxID_ANY, wxT("SpringSettings"),
@@ -149,12 +149,12 @@ void SimpleFront::OnSettings( wxCommandEvent& event )
 
 }
 
-void SimpleFront::OnExit( wxCommandEvent& event )
+void SimpleFront::OnExit( wxCommandEvent&  )
 {
 	Destroy();
 }
 
-void SimpleFront::OnSkipChecked( wxCommandEvent& event )
+void SimpleFront::OnSkipChecked( wxCommandEvent&  )
 {
 	// TODO: save in settings
 }
@@ -166,7 +166,7 @@ void SimpleFront::Close()
     Destroy();
 }
 
-void SimpleFront::OnHelp( wxCommandEvent& event )
+void SimpleFront::OnHelp( wxCommandEvent&  )
 {
     OpenWebBrowser( SLcustomizations().GetHelpUrl() );
 

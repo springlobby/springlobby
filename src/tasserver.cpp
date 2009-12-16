@@ -190,9 +190,9 @@ m_token_transmission( false )
 
 TASServer::~TASServer()
 {
-		Disconnect();
-		delete m_sock;
-		m_sock = 0;
+    Disconnect();
+    delete m_sock;
+    m_sock = 0;
     delete m_se;
 }
 
@@ -364,6 +364,7 @@ void TASServer::Disconnect()
     SendCmd( _T("EXIT") ); // EXIT command for new protocol compatibility
     m_sock->Disconnect();
     m_connected = false;
+    m_users.Nullify();
 }
 
 bool TASServer::IsConnected()
@@ -381,14 +382,14 @@ bool TASServer::Register( const wxString& addr, const int port, const wxString& 
     if ( tempsocket.State() != SS_Open ) return false;
 
     wxString data = tempsocket.Receive().BeforeLast(_T('\n'));
-    if ( data.Contains( _T("\r") ) ) data = data.BeforeLast(_T('\r'));
+    if ( data.Find( _T("\r") ) != wxNOT_FOUND ) data = data.BeforeLast(_T('\r'));
     if ( GetWordParam( data ) != _T("TASServer") ) return false;
 
     tempsocket.Send( _T("REGISTER ") + nick + _T(" ") + GetPasswordHash( password ) + _T("\n") );
 
     data = tempsocket.Receive().BeforeLast(_T('\n'));
     tempsocket.Disconnect();
-    if ( data.Contains( _T("\r") ) ) data = data.BeforeLast(_T('\r'));
+    if ( data.Find( _T("\r") ) != wxNOT_FOUND ) data = data.BeforeLast(_T('\r'));
     if ( data.IsEmpty() )
     {
         reason = _("Connection timed out");
@@ -439,8 +440,10 @@ wxString TASServer::GetPasswordHash( const wxString& pass ) const
 }
 
 
-User& TASServer::GetMe() const
-{
+User& TASServer::GetMe() {
+    return GetUser( m_user );
+}
+const User& TASServer::GetMe() const {
     return GetUser( m_user );
 }
 
@@ -587,7 +590,7 @@ void TASServer::ExecuteCommand( const wxString& in )
 		wxString copy = cmd;
 		cmd = DecodeTokenMessage( cmd );
 		if ( copy != cmd ) m_token_transmission = true;
-		cmd.UpperCase();
+		cmd.MakeUpper();
 
     if ( m_debug_dont_catch )
     {
@@ -946,7 +949,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         bstatus = ConvTasbattlestatus( tasbstatus.tasdata );
         color.data = GetIntParam( params );
         bstatus.colour = wxColour( color.color.red, color.color.green, color.color.blue );
-        wxString ai = GetSentenceParam( params );
+        ai = GetSentenceParam( params );
         if ( ai.IsEmpty() ) {
             wxLogWarning( wxString::Format( _T("Recieved illegal ADDBOT (empty dll field) from %s for battle %d"), nick.c_str(), id ) );
             ai = _T("INVALID|INVALID");
@@ -1056,8 +1059,8 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         // clientipport username ip port
         nick=GetWordParam( params );
         wxString ip=GetWordParam(params);
-        unsigned int port=(unsigned int)GetIntParam( params );
-        m_se->OnClientIPPort(nick, ip, port);
+        unsigned int u_port=(unsigned int)GetIntParam( params );
+        m_se->OnClientIPPort(nick, ip, u_port);
     }
     else if ( cmd == _T("SETSCRIPTTAGS") )
     {
@@ -1103,11 +1106,11 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     {
         if ( m_online ) return;
         wxString address = GetWordParam( params );
-        unsigned int port = GetIntParam( params );
+        unsigned int u_port = GetIntParam( params );
         if ( address.IsEmpty() ) return;
-        if ( port == 0 ) port = DEFSETT_DEFAULT_SERVER_PORT;
+        if ( u_port  == 0 ) u_port  = DEFSETT_DEFAULT_SERVER_PORT;
         m_redirecting = true;
-        m_se->OnRedirect( address, port, m_user, m_pass );
+        m_se->OnRedirect( address, u_port , m_user, m_pass );
     }
     else if ( cmd == _T("MUTELISTBEGIN") )
     {
@@ -1174,8 +1177,10 @@ void TASServer::SendCmd( const wxString& command, const wxString& param )
 		else cmd = command;
 		if ( param.IsEmpty() ) msg = msg + cmd + _T("\n");
 		else msg = msg + cmd + _T(" ") + param + _T("\n");
-		m_sock->Send( msg );
-		wxLogMessage( _T("sent: %s"), msg.c_str() );
+		if ( m_sock->Send( msg ) )
+            wxLogMessage( _T("sent: %s"), msg.c_str() );
+        else
+            wxLogMessage( _T("sending: %s failed"), msg.c_str() );
 }
 
 void TASServer::Ping()
@@ -1308,8 +1313,8 @@ void TASServer::Ring( const wxString& nick )
 		}
 		catch (...)
 		{
+			SendCmd( _T("RING"), nick );
 		}
-    SendCmd( _T("RING"), nick );
 }
 
 
@@ -1673,7 +1678,6 @@ void TASServer::SendHostInfo( const wxString& Tag )
 
     try
     {
-        Battle& battle = GetBattle( m_battle_id );
         ASSERT_LOGIC( battle.IsFounderMe(), _T("I'm not founder") );
     }
     catch (...)
@@ -1767,8 +1771,6 @@ void TASServer::SendMyBattleStatus( UserBattleStatus& bs )
 {
     wxLogDebugFunc( _T("") );
 
-    GetMe().UpdateBattleStatus( bs );
-
     UTASBattleStatus tasbs;
     tasbs.tasdata = ConvTasbattlestatus( bs );
     UTASColor tascl;
@@ -1838,7 +1840,7 @@ void TASServer::ForceSide( int battleid, User& user, int side )
         return;
     }
 
-		UserBattleStatus& status = user.BattleStatus();
+		UserBattleStatus status = user.BattleStatus();
 
     if ( &user == &GetMe() )
     {
@@ -1868,16 +1870,17 @@ void TASServer::ForceTeam( int battleid, User& user, int team )
     {
         return;
     }
-		if ( user.BattleStatus().IsBot() )
+    UserBattleStatus status = user.BattleStatus();
+		if ( status.IsBot() )
 		{
-				user.BattleStatus().team = team;
-				UpdateBot( battleid, user, user.BattleStatus() );
+				status.team = team;
+				UpdateBot( battleid, user, status );
 				return;
 		}
 		if ( &user == &GetMe() )
 		{
-				GetMe().BattleStatus().team = team;
-				SendMyBattleStatus( GetMe().BattleStatus() );
+				status.team = team;
+				SendMyBattleStatus( status );
 				return;
 		}
     if ( !GetBattle(battleid).IsFounderMe() )
@@ -1905,18 +1908,18 @@ void TASServer::ForceAlly( int battleid, User& user, int ally )
     {
         return;
     }
-
-		if ( user.BattleStatus().IsBot() )
+		UserBattleStatus status = user.BattleStatus();
+		if ( status.IsBot() )
 		{
-			 user.BattleStatus().ally = ally;
-			 UpdateBot( battleid, user, user.BattleStatus() );
+			 status.ally = ally;
+			 UpdateBot( battleid, user, status );
 			 return;
 		}
 
 		if ( &user == &GetMe() )
 		{
-				GetMe().BattleStatus().ally = ally;
-				SendMyBattleStatus( GetMe().BattleStatus() );
+				status.ally = ally;
+				SendMyBattleStatus( status );
 				return;
 		}
 
@@ -1945,17 +1948,17 @@ void TASServer::ForceColour( int battleid, User& user, const wxColour& col )
     {
         return;
     }
-
-		if ( user.BattleStatus().IsBot() )
+		UserBattleStatus status = user.BattleStatus();
+		if ( status.IsBot() )
 		{
-			 user.BattleStatus().colour = col;
-			 UpdateBot( battleid, user, user.BattleStatus() );
+			 status.colour = col;
+			 UpdateBot( battleid, user, status );
 			 return;
 		}
 		if ( &user == &GetMe() )
 		{
-				GetMe().BattleStatus().colour = col;
-				SendMyBattleStatus( GetMe().BattleStatus() );
+				status.colour = col;
+				SendMyBattleStatus( status );
 				return;
 		}
     if ( !GetBattle(battleid).IsFounderMe() )
@@ -1988,17 +1991,17 @@ void TASServer::ForceSpectator( int battleid, User& user, bool spectator )
     {
         return;
     }
-
-		if ( user.BattleStatus().IsBot() )
+		UserBattleStatus status = user.BattleStatus();
+		if ( status.IsBot() )
 		{
-			 user.BattleStatus().spectator = spectator;
-			 UpdateBot( battleid, user, user.BattleStatus() );
+			 status.spectator = spectator;
+			 UpdateBot( battleid, user, status );
 			 return;
 		}
 		if ( &user == &GetMe() )
 		{
-				GetMe().BattleStatus().spectator = spectator;
-				SendMyBattleStatus( GetMe().BattleStatus() );
+				status.spectator = spectator;
+				SendMyBattleStatus( status );
 				return;
 		}
     if ( !GetBattle(battleid).IsFounderMe() )
@@ -2027,8 +2030,8 @@ void TASServer::BattleKickPlayer( int battleid, User& user )
     {
         return;
     }
-
-    if ( user.BattleStatus().IsBot() )
+		UserBattleStatus status = user.BattleStatus();
+    if ( status.IsBot() )
     {
     	RemoveBot( battleid, user );
     	return;
@@ -2062,11 +2065,11 @@ void TASServer::SetHandicap( int battleid, User& user, int handicap)
     {
         return;
     }
-
-		if ( user.BattleStatus().IsBot() )
+		UserBattleStatus status = user.BattleStatus();
+		if ( status.IsBot() )
 		{
-				user.BattleStatus().handicap = handicap;
-				UpdateBot( battleid, user, user.BattleStatus() );
+				status.handicap = handicap;
+				UpdateBot( battleid, user, status );
 				return;
 		}
 
@@ -2354,7 +2357,7 @@ void TASServer::UdpPingAllClients()// used when hosting with nat holepunching. h
 
 
 //! @brief used to check if the NAT is done properly when hosting
-int TASServer::TestOpenPort( unsigned int port )
+int TASServer::TestOpenPort( unsigned int port ) const
 {
     wxIPV4address local_addr;
     local_addr.AnyAddress(); // <--- THATS ESSENTIAL!

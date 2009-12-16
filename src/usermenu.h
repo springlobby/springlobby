@@ -22,7 +22,7 @@ class UserMenu : public wxMenu
             ParentType;
 
     public:
-        UserMenu(wxEvtHandler * connectee, ParentType* parent, const wxString& title = wxEmptyString, long style = 0)
+        UserMenu(wxEvtHandler * /*connectee*/, ParentType* parent, const wxString& title = wxEmptyString, long style = 0)
         : wxMenu( title, style ),m_groupsMenu(0), m_parent(parent),m_groupCounter(0)
         {
             assert ( m_parent );
@@ -91,10 +91,10 @@ class UserMenu : public wxMenu
 
         void UpdateGroups()
         {
-            wxSortedArrayString groupNames = useractions().GetGroupNames();
+            wxArrayString groupNames = useractions().GetGroupNames();
             bool first = m_oldGroups.GetCount() == 0;
             if ( first )
-                m_oldGroups = groupNames;
+                m_oldGroups = wxArrayString( groupNames );
             for ( unsigned int i = 0; i < groupNames.GetCount(); ++i)
             {
                 if ( m_oldGroups.Index( groupNames[i] ) == wxNOT_FOUND || first )

@@ -34,7 +34,7 @@ END_EVENT_TABLE()
 
 BattleListCtrl::BattleListCtrl( wxWindow* parent )
     : CustomVirtListCtrl< IBattle *,BattleListCtrl>(parent, BLIST_LIST, wxDefaultPosition, wxDefaultSize,
-            wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("BattleListCtrl"), 10, 4, &CompareOneCrit,
+            wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("BattleListCtrl"), 4, &CompareOneCrit,
             true /*highlight*/, UserActions::ActHighlight, true /*periodic sort*/ ),
     m_popup( 0 )
 {

@@ -1,4 +1,4 @@
-PROJECT(SpringLobby)
+PROJECT(springlobby)
 
 #set minimum cmake version
 cmake_minimum_required(VERSION 2.6)
@@ -16,10 +16,6 @@ IF(MSVC)
 	ADD_DEFINITIONS(-D_RC_MSVC)
 ENDIF(MSVC)
 
-
-
-
-
 #----------------------------------------------------------------------------------------------------
 # General Settings
 #----------------------------------------------------------------------------------------------------
@@ -29,19 +25,24 @@ SET(CMAKE_FIND_LIBRARY_SUFFIXES ".so" ".lib" ".a")
 #----------------------------------------------------------------------------------------------------
 # Load needed Modules
 #----------------------------------------------------------------------------------------------------
+INCLUDE(cmake/package_config.cmake)
+INCLUDE(cmake/sources.list)
 # PKG-Config
 FIND_PACKAGE( PkgConfig )
-INCLUDE(cmake/package_config.cmake)
-INCLUDE(CPack)
 IF(CMAKE_CROSSCOMPILING OR NOT WIN32)
 	INCLUDE(cmake/FindSDL.cmake)
 	INCLUDE(cmake/FindSDL_sound.cmake)
 	INCLUDE(cmake/FindSDL_mixer.cmake)
 ENDIF(CMAKE_CROSSCOMPILING OR NOT WIN32)
 
+EXECUTE_PROCESS(COMMAND ${springlobby_SOURCE_DIR}/tools/get-revision.sh
+        OUTPUT_VARIABLE SPRINGLOBBY_GIT_REV
+        RESULT_VARIABLE GIT_ERROR
+        OUTPUT_STRIP_TRAILING_WHITESPACE)
+
 
 #----------------------------------------------------------------------------------------------------
-# Options, that can be changed be the User in order to customise SpringLobby
+# Options, that can be changed be the User in order to customise springlobby
 #----------------------------------------------------------------------------------------------------
 SET( OPTION_TORRENT_SYSTEM
 	1 CACHE BOOL
@@ -50,12 +51,17 @@ SET( OPTION_SOUND
 	1 CACHE BOOL
 	"Enables sound notification functionality (requires SDL and SDL_sound libraries)" )
 SET( OPTION_TRANSLATION_SUPPORT
-	0 CACHE BOOL
+	1 CACHE BOOL
 	"Enables translation support to the programs and adds facilities for helping translators (requires GNU Gettext)" )
 SET( BUILD_SHARED_LIBS
 	1 CACHE BOOL
 	"Chooses whether to link dynamic or static libraries. Recommend keeping this activated unless you know what you're doing." )
-
+SET( SPRINGLOBBY_REV
+	${SPRINGLOBBY_GIT_REV} CACHE STRING
+	"The revision string used in packages etc." )
+SET( LOCALE_INSTALL_DIR
+	${CMAKE_INSTALL_PREFIX}/share/locale CACHE STRING
+	"message catalogs will installed here" )
 
 #----------------------------------------------------------------------------------------------------
 # wxWidgets lib dependency check
@@ -82,7 +88,7 @@ IF(wxWidgets_FOUND)
 	INCLUDE_DIRECTORIES( ${wxWidgets_INCLUDE_DIRS} )
 ELSE(wxWidgets_FOUND)
 	# For Convenience. If we cannot continue, inform the User.
-	MESSAGE( FATAL_ERROR "wxWidgets library is not found! Please install the package to continue")
+	MESSAGE( FATAL_ERROR "wxWidgets library not found! Please install the package to continue")
 ENDIF(wxWidgets_FOUND)
 ELSE (NOT CMAKE_CROSSCOMPILING)
     INCLUDE_DIRECTORIES( ${wxWidgets_INCLUDE_DIRS} )
@@ -92,6 +98,11 @@ ENDIF(NOT CMAKE_CROSSCOMPILING)
 #----------------------------------------------------------------------------------------------------
 # SDL libs dependency check
 #----------------------------------------------------------------------------------------------------
+IF ( CMAKE_CROSSCOMPILING )
+	ADD_DEFINITIONS( -DDISABLE_SOUND )
+	SET( OPTION_SOUND
+	0 FORCE-CACHE BOOL )
+ELSE ( CMAKE_CROSSCOMPILING )
 IF ( OPTION_SOUND )
 
 	IF (CMAKE_CROSSCOMPILING OR NOT WIN32)
@@ -99,19 +110,19 @@ IF ( OPTION_SOUND )
 		FIND_PACKAGE(SDL_mixer REQUIRED)
 		FIND_PACKAGE(SDL_sound REQUIRED)
 
-		# Throw an error to the user if SDL is not found
+		# Throw an error to the user if SDL not found
 		if ( NOT SDL_FOUND )
-		message ( FATAL_ERROR "SDL library was not found! Please install the package or toggle OPTION_SOUND to OFF" )
+		message ( FATAL_ERROR "SDL library not found! Please install the package or toggle OPTION_SOUND to OFF" )
 		endif( NOT SDL_FOUND )
 
-		# Throw an error to the user if SDL_mixer is not found
+		# Throw an error to the user if SDL_mixer not found
 		if ( NOT SDLMIXER_FOUND )
-		message ( FATAL_ERROR "SDL_mixer library was not found! Please install the package or toggle OPTION_SOUND to OFF" )
+		message ( FATAL_ERROR "SDL_mixer library not found! Please install the package or toggle OPTION_SOUND to OFF" )
 		endif(NOT SDLMIXER_FOUND)
 
-		# Throw an error to the user if SDL_sound is not found
+		# Throw an error to the user if SDL_sound not found
 		if ( NOT SDL_SOUND_FOUND )
-		message ( FATAL_ERROR "SDL_sound library was not found! Please install the package or toggle OPTION_SOUND to OFF" )
+		message ( FATAL_ERROR "SDL_sound library not found! Please install the package or toggle OPTION_SOUND to OFF" )
 		endif( NOT SDL_SOUND_FOUND )
 
 		# MESSAGE("sound inc dir: ${SDL_SOUND_INCLUDE_DIR}")
@@ -143,24 +154,7 @@ ELSE ( OPTION_SOUND )
     # Disable sound.
     ADD_DEFINITIONS( -DDISABLE_SOUND )
 ENDIF ( OPTION_SOUND )
-
-
-#----------------------------------------------------------------------------------------------------
-# Gettext lib dependency check
-#----------------------------------------------------------------------------------------------------
-
-if( OPTION_TRANSLATION_SUPPORT )
-    set(Gettext_DIR "po" )
-    INCLUDE(cmake/FindGettext.cmake)
-    if(GETTEXT_FOUND)
-	    set(SpringLobby_INCLUDE_PATH ${SpringLobby_INCLUDE_PATH}
-		${GETTEXT_INCLUDE_DIR} CACHE INTERNAL "" FORCE)
-
-	    include("cmake/KWWidgetsInternationalizationMacros.cmake")
-    else(GETTEXT_FOUND)
-	message(FATAL_ERROR "The GNU Gettext package is not found! Please install the package or toggle OPTION_TRANSLATION_SUPPORT to OFF")
-    endif(GETTEXT_FOUND)
-endif( OPTION_TRANSLATION_SUPPORT )
+ENDIF( CMAKE_CROSSCOMPILING )
 
 #----------------------------------------------------------------------------------------------------
 # libtorrent-rasterbar dependency check
@@ -174,217 +168,38 @@ IF( OPTION_TORRENT_SYSTEM )
 		    INCLUDE_DIRECTORIES( ${LIBTORRENT_INCLUDE_DIRS} )
 		    LINK_LIBRARIES( ${LIBTORRENT_LIBRARIES} )
 	    ELSE()
-		    MESSAGE(FATAL_ERROR "libtorrent-rasterbar library is not found! Please install the package or toggle OPTION_TORRENT_SYSTEM to OFF")
+		    MESSAGE( FATAL_ERROR "libtorrent-rasterbar library not found! Please install the package or toggle OPTION_TORRENT_SYSTEM to OFF")
 	    ENDIF()
 	ELSE( NOT WIN32)
-	    INCLUDE_DIRECTORIES(${SpringLobby_SOURCE_DIR}/src/libtorrent/include
-				${SpringLobby_SOURCE_DIR}/src/libtorrent/zlib
-				${SpringLobby_SOURCE_DIR}/src/libtorrent/ )
-	    INCLUDE ( ${SpringLobby_SOURCE_DIR}/cmake/libtorrent.cmake )
-	    ADD_DEFINITIONS( -DBOOST_WINDOWS -DTORRENT_DISABLE_ENCRYPTION )
-		IF(NOT CMAKE_CROSSCOMPILING)
-			SET(Boost_USE_STATIC_LIBS ON)
-			SET(Boost_USE_MULTITHREADED ON)
-			SET(Boost_ADDITIONAL_VERSIONS 1.35 1.35.0 1.38 1.38.0)
-			FIND_PACKAGE(Boost COMPONENTS system thread filesystem date_time)
-			INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIRS} )
-		ELSE(NOT CMAKE_CROSSCOMPILING)
-			link_directories( ${boost_LIB_DIR} )
-			INCLUDE_DIRECTORIES( ${boost_INCLUDE_DIR} )
-		ENDIF(NOT CMAKE_CROSSCOMPILING)
+		link_directories( ${boost_LIB_DIR} )
+		INCLUDE_DIRECTORIES( ${boost_INCLUDE_DIR} )
+		ADD_DEFINITIONS( -mthreads  )
+		LINK_LIBRARIES( -mthreads torrent-rasterbar ${Boost_LIBRARIES} z ws2_32 mswsock  )
 	ENDIF( NOT WIN32)
 ELSE( OPTION_TORRENT_SYSTEM )
 	ADD_DEFINITIONS( -DNO_TORRENT_SYSTEM )
 ENDIF( OPTION_TORRENT_SYSTEM )
 
 
-#----------------------------------------------------------------------------------------------------
-# Source listing
-#----------------------------------------------------------------------------------------------------
-
-# We define the include paths here, our minimal source dir is one
-
-INCLUDE_DIRECTORIES(${SpringLobby_SOURCE_DIR} ${Settings_SOURCE_DIR} )
-
-SET(SpringLobbySrc
-	src/updater/updatermainwindow
-	src/utils/activitynotice
-	src/chatpanelmenu
-	src/customizations
-	src/gui/gradientpanel
-	src/gui/wxgradientbutton
-	src/gui/skirmish_dialog
-	src/gui/wxbackgroundimage
-	src/gui/simplefront
-	src/updater/updatermainwindow
-	src/utils/activitynotice
-	src/aui/slbook
-	src/utils/math
-	src/utils/misc
-	src/utils/debug
-	src/utils/platform
-	src/utils/conversion
-	src/utils/tasutil
-	src/utils/sltipwin
-	src/utils/controls
-	src/utils/globalevents
-	src/utils/networkevents
-	src/utils/uievents
-	src/utils/md5.c
-	src/updater/updater
-	src/updater/versionchecker
-	src/Helper/TextCompletionDatabase
-	src/Helper/imageviewer
-	src/Helper/slhtmlwindow
-	src/channel/channelchooser
-	src/channel/channelchooserdialog
-	src/Helper/wxtextctrlhist
-	src/Helper/colorbutton
-	src/filelister/filelistctrl
-	src/filelister/filelistdialog
-	src/filelister/filelistfilter
-	src/aui/auimanager
-	src/aui/artprovider
-	src/autobalancedialog
-	src/autohost
-	src/channel/autojoinchanneldialog
-	src/addbotdialog
-	src/agreementdialog
-	src/base64
-	src/battle
-	src/battlelist
-	src/battlelistctrl
-	src/battlelistfilter
-	src/battlelisttab
-	src/battlemaptab
-	src/battleoptionstab
-	src/battleroomlistctrl
-	src/battleroomtab
-	src/crc
-	src/channel/channel
-	src/channel/channellist
-	src/channel/channellistctrl
-	src/chatlog
-	src/chatoptionstab
-	src/chatpanel
-	src/connectwindow
-	src/countrycodes
-	src/crashreport
-	src/customlistctrl
-	src/flagimages
-	src/groupoptionspanel
-	src/hostbattledialog
-	src/ibattle
-	src/iconimagelist
-	src/lobbyoptionstab
-	src/mainchattab
-	src/mainjoinbattletab
-	src/mainoptionstab
-	src/mainsingleplayertab
-	src/maintorrenttab
-	src/mainwindow
-	src/mapctrl
-	src/mapgridctrl
-	src/mapselectdialog
-	src/mmoptionwindows
-	src/mmoptionmodel
-	src/mmoptionswrapper
-	src/nicklistctrl
-	src/offlinebattle
-	src/playback/replaylist
-	src/playback/savegamelist
-	src/sdlsound
-	src/selectusersdialog
-	src/server
-	src/serverevents
-	src/settings
-	src/singleplayerbattle
-	src/singleplayertab
-	src/socket
-	src/spinctld
-	src/spring
-	src/springlobbyapp
-	src/springoptionstab
-	src/springprocess
-	src/springunitsync
-	src/springunitsynclib
-	src/tasserver
-	src/tdfcontainer
-	src/thread
-	src/torrentlistctrl
-	src/torrentoptionspanel
-	src/torrentwrapper
-	src/ui
-	src/uiutils
-	src/unitsyncthread
-	src/user
-	src/useractions
-	src/userlist
-	src/userlistctrl
-	src/widgets/downloadlistctrl
-	src/widgets/downloaddialog
-	src/widgets/downloadpanel
-	src/widgets/infopanel
-	src/widgets/widget
-	src/globalsmanager
-	src/Helper/wxTranslationHelper
-	src/Helper/tasclientimport
-)
-
-SET(SettingsSrc
-	src/utils/customdialogs
-	src/settings++/frame
-	src/settings++/helpmenufunctions
-	src/settings++/panel_pathoption
-	src/settings++/se_utils
-	src/settings++/tab_abstract
-	src/settings++/tab_audio
-	src/settings++/tab_quality_video
-	src/settings++/tab_render_detail
-	src/settings++/tab_simple
-	src/settings++/tab_ui
-)
-
-SET(StandAloneSettings
-	src/settings
-	src/uiutils
-	src/settings++/Main
-)
-
-SET(SLSharedWithSettings
-	src/utils/debug
-	src/utils/platform
-	src/utils/conversion
-	src/utils/sltipwin
-	src/utils/controls
-	src/updater/versionchecker
-	src/crashreport
-	src/springunitsynclib
-	src/springunitsync
-	src/thread
-	src/spinctld
-	src/globalsmanager
-	src/utils/globalevents
-	src/mmoptionmodel
-	src/mmoptionswrapper
-)
-
 # If we build for windows Systems, we also include the Resource-File containing the Manifest, Icon and other Resources.
 IF(WIN32)
 	IF(MINGW OR CMAKE_CROSSCOMPILING)
 		FIND_PROGRAM(WINDRES NAMES windres i586-mingw32msvc-windres i686-mingw32-windres DOC "path to mingw's windres executable")
-		ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/sl_icon.o COMMAND ${WINDRES} -I${SpringLobby_SOURCE_DIR}/src -I${wxWidgets_RC_DIR} -i${SpringLobby_SOURCE_DIR}/src/springlobby.rc -o ${CMAKE_CURRENT_BINARY_DIR}/sl_icon.o)
-		ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/ss_icon.o COMMAND ${WINDRES} -I${SpringLobby_SOURCE_DIR}/src -I${wxWidgets_RC_DIR} -i${SpringLobby_SOURCE_DIR}/src/settings++/settings.rc -o ${CMAKE_CURRENT_BINARY_DIR}/ss_icon.o)
-		SET(SpringLobby_RC_FILE ${CMAKE_CURRENT_BINARY_DIR}/sl_icon.o )
+		ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/sl_icon.o COMMAND ${WINDRES} -I${springlobby_SOURCE_DIR}/src -I${wxWidgets_RC_DIR} -i${springlobby_SOURCE_DIR}/src/springlobby.rc -o ${CMAKE_CURRENT_BINARY_DIR}/sl_icon.o)
+		ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/ss_icon.o COMMAND ${WINDRES} -I${springlobby_SOURCE_DIR}/src -I${wxWidgets_RC_DIR} -i${springlobby_SOURCE_DIR}/src/settings++/settings.rc -o ${CMAKE_CURRENT_BINARY_DIR}/ss_icon.o)
+		ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/su_icon.o COMMAND ${WINDRES} -I${springlobby_SOURCE_DIR}/src -I${wxWidgets_RC_DIR} -i${springlobby_SOURCE_DIR}/src/updater/updater.rc -o ${CMAKE_CURRENT_BINARY_DIR}/su_icon.o)
+		SET(springlobby_RC_FILE ${CMAKE_CURRENT_BINARY_DIR}/sl_icon.o )
 		SET(SpringSettings_RC_FILE ${CMAKE_CURRENT_BINARY_DIR}/ss_icon.o )
+		SET(updater_RC_FILE ${CMAKE_CURRENT_BINARY_DIR}/su_icon.o )
 	ENDIF(MINGW OR CMAKE_CROSSCOMPILING)
 
-	SET(SpringLobbySrc ${SpringLobbySrc} src/Helper/listctrl)
-	SET(SpringLobbySrc ${SpringLobbySrc} src/springlobby.rc)
+	SET(springlobbySrc ${springlobbySrc} src/Helper/listctrl.cpp)
+	SET(springlobbySrc ${springlobbySrc} src/springlobby.rc)
+	SET(updaterSrc ${updaterSrc} src/updater/updater.rc)
 	SET(StandAloneSettings ${StandAloneSettings} src/settings++/settings.rc)
 ELSE(WIN32)
 # If we don't build for windows, include some source code checks as pre-build step.
-    ADD_CUSTOM_TARGET(test_susynclib ALL COMMAND tools/test-susynclib.awk src/springunitsynclib WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
+    ADD_CUSTOM_TARGET(test_susynclib ALL COMMAND tools/test-susynclib.awk src/springunitsynclib.cpp WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
 ENDIF(WIN32)
 
 #----------------------------------------------------------------------------------------------------
@@ -392,29 +207,14 @@ ENDIF(WIN32)
 #----------------------------------------------------------------------------------------------------
 
 if( OPTION_TRANSLATION_SUPPORT )
-    set ( GETTEXT_XGETTEXT_EXECUTABLE "/usr/bin/xgettext" )
-    kwwidgets_create_gettext_targets(
-	    DOMAIN_NAME "springlobby"
-	    TARGET_BASENAME "springlobby"
-	    LOCALE_LIST "ar;cs;da;de;el;es;fi;fr;it;pl;pt;ro;ru;sv;uk;zh_CN"
-	    COPYRIGHT_HOLDER "The SpringLobby team"
-	    SOURCES "${SpringLobbySrc};${SettingsSrc};${StandAloneSettings}"
-	    PO_DIR "${CMAKE_SOURCE_DIR}/po"
-	    PO_PREFIX ""
-	    POT_BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/po"
-	    PO_BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/po"
-	    MO_INSTALL_DIR "/share/locale"
-	    CREATE_POT_TARGET 1
-	    CREATE_PO_TARGET 1
-	    ADD_MO_TARGET_TO_ALL
-    )
+	include ( ${CMAKE_SOURCE_DIR}/po/CMakeLists.txt )
 endif( OPTION_TRANSLATION_SUPPORT )
-
+ADD_DEFINITIONS( -DLOCALE_INSTALL_DIR="${LOCALE_INSTALL_DIR}" )
 #----------------------------------------------------------------------------------------------------
 # Build target defintions
 #----------------------------------------------------------------------------------------------------
 
-# Here we define the executable SpringLobby ( or on Windows SpringLobby.exe )
+# Here we define the executable springlobby ( or on Windows springlobby.exe )
 
 #auto-remove whitespaces before/after lib paths
 cmake_policy(SET CMP0004 OLD)
@@ -422,29 +222,26 @@ cmake_policy(SET CMP0004 OLD)
 cmake_policy(SET CMP0006 OLD)
 
 
-ADD_EXECUTABLE(springlobby WIN32 MACOSX_BUNDLE ${SpringLobbySrc} ${SettingsSrc} ${SpringLobby_RC_FILE})
+ADD_EXECUTABLE(springlobby WIN32 MACOSX_BUNDLE ${springlobbySrc} ${SettingsSrc} ${springlobby_RC_FILE})
 ADD_EXECUTABLE(springsettings WIN32 MACOSX_BUNDLE ${StandAloneSettings} ${SpringSettings_RC_FILE} ${SettingsSrc} ${SLSharedWithSettings} )
-
-#build libtorrent as a static lib to link in on windows
-IF(WIN32 AND OPTION_TORRENT_SYSTEM)
-ADD_LIBRARY(libtorrent STATIC ${libtorrent_SRC})
-SET_TARGET_PROPERTIES(libtorrent PROPERTIES COMPILE_FLAGS -DWIN32_LEAN_AND_MEAN)
-TARGET_LINK_LIBRARIES( libtorrent ${Boost_LIBRARIES} ws2_32 mswsock )
-TARGET_LINK_LIBRARIES( springlobby libtorrent )
-ENDIF(WIN32 AND OPTION_TORRENT_SYSTEM)
-
+IF(WIN32)
+	ADD_EXECUTABLE(springlobby_updater WIN32 MACOSX_BUNDLE ${updaterSrc}  ${SLSharedWithSettings} ${updater_RC_FILE})
+	TARGET_LINK_LIBRARIES(springlobby_updater ${wxWidgets_LIBRARIES})
+ENDIF(WIN32)
 
 # Here the wxWidgets Libraries are added. These are set for us by the FIND Script. If you need other Libraries, you can add them here as well.
 TARGET_LINK_LIBRARIES(springlobby ${wxWidgets_LIBRARIES})
 TARGET_LINK_LIBRARIES(springsettings ${wxWidgets_LIBRARIES})
+
 IF(MINGW)
 	TARGET_LINK_LIBRARIES( springlobby iphlpapi )
-	TARGET_LINK_LIBRARIES( springsettings iphlpapi )
+	TARGET_LINK_LIBRARIES( springsettings iphlpapi  )
 ENDIF(MINGW)
 
 IF (WIN32)
-    install(TARGETS springlobby springsettings RUNTIME DESTINATION .)
-    install(FILES AUTHORS COPYING NEWS README THANKS DESTINATION .)
+    install(TARGETS springlobby springlobby_updater springsettings RUNTIME DESTINATION .)
+    install(FILES AUTHORS COPYING NEWS README THANKS  DESTINATION .)
+	install(DIRECTORY ${CMAKE_INSTALL_PREFIX}/locale DESTINATION .)
 ELSE (WIN32)
     install(TARGETS springlobby springsettings RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin )
     install(FILES AUTHORS COPYING NEWS README THANKS DESTINATION ${CMAKE_INSTALL_PREFIX}/share/doc/springlobby )
@@ -453,3 +250,27 @@ ELSE (WIN32)
     install(FILES src/springlobby.desktop DESTINATION
 	    ${CMAKE_INSTALL_PREFIX}/share/applications)
 ENDIF (WIN32)
+
+add_custom_target(pack
+					${CMAKE_MAKE_PROGRAM} package
+					&& ${springlobby_SOURCE_DIR}/tools/transform_release_zip.sh
+						${CMAKE_BINARY_DIR}/${PACKAGE_NAME}-${PACKAGE_VERSION}-win32.zip
+						${CMAKE_STRIP}
+				)
+
+# setup make dist
+add_custom_target(dist cd ${CMAKE_SOURCE_DIR} &&
+                        git archive --format=tar --prefix=${PACKAGE_NAME}-${PACKAGE_VERSION}/ HEAD |
+                            gzip > ${CMAKE_BINARY_DIR}/${PACKAGE_NAME}-${PACKAGE_VERSION}.tar.gz &&
+						git archive --format=tar --prefix=${PACKAGE_NAME}-${PACKAGE_VERSION}/ HEAD |
+                            bzip2 > ${CMAKE_BINARY_DIR}/${PACKAGE_NAME}-${PACKAGE_VERSION}.tar.bz2
+					 )
+
+# setup make distcheck
+add_custom_target(distcheck + cd ${CMAKE_BINARY_DIR} &&
+                        rm -rf ${PACKAGE_NAME}-${PACKAGE_VERSION} &&
+                        tar -xzf ${PACKAGE_NAME}-${PACKAGE_VERSION}.tar.gz &&
+                        cd ${PACKAGE_NAME}-${PACKAGE_VERSION}/ &&
+                        cmake "-DCMAKE_CXX_FLAGS:STRING=-O0". && ${CMAKE_MAKE_PROGRAM}
+					)
+add_dependencies( distcheck dist )

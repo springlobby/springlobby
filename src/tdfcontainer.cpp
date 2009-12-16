@@ -178,8 +178,8 @@ start:
 			token.type = Token::type_entry_value;
 			token.value_s = _T( "" );
 			while ( Good() && PeekNextChar() != ';' ) {
-				unsigned char c = GetNextChar();
-				token.value_s += c;
+				unsigned char c_ = GetNextChar();
+				token.value_s += c_;
 			}
 			return;
 		case '/':// handle comments
@@ -206,8 +206,8 @@ start:
 			}
 		default:
 			while ( Good() && PeekNextChar() != '=' ) {
-				unsigned char c = GetNextChar();
-				token.value_s += c;
+				unsigned char c_ = GetNextChar();
+				token.value_s += c_;
 			}
 			token.type = Token::type_entry_name;
 			return;
@@ -608,8 +608,8 @@ void DataList::Load( Tokenizer &f ) {
 }
 
 
-int DataList::GetInt( const wxString &name, int default_value, bool *it_worked ) {
-	PDataLeaf leaf( Find( name ) );
+int DataList::GetInt( const wxString &f_name, int default_value, bool *it_worked ) {
+	PDataLeaf leaf( Find( f_name ) );
 	if ( !leaf.ok() ) {
 		if ( it_worked ) {
 			*it_worked = false;
@@ -629,8 +629,8 @@ int DataList::GetInt( const wxString &name, int default_value, bool *it_worked )
 	}
 	return result;
 }
-double DataList::GetDouble( const wxString &name, double default_value, bool *it_worked ) {
-	PDataLeaf leaf( Find( name ) );
+double DataList::GetDouble( const wxString &f_name, double default_value, bool *it_worked ) {
+	PDataLeaf leaf( Find( f_name ) );
 	if ( !leaf.ok() ) {
 		if ( it_worked ) {
 			*it_worked = false;
@@ -651,8 +651,8 @@ double DataList::GetDouble( const wxString &name, double default_value, bool *it
 	return result;
 
 }
-wxString DataList::GetString( const wxString &name, const wxString &default_value, bool *it_worked ) {
-	PDataLeaf leaf( Find( name ) );
+wxString DataList::GetString( const wxString &f_name, const wxString &default_value, bool *it_worked ) {
+	PDataLeaf leaf( Find( f_name ) );
 	if ( !leaf.ok() ) {
 		if ( it_worked ) {
 			*it_worked = false;
@@ -664,8 +664,8 @@ wxString DataList::GetString( const wxString &name, const wxString &default_valu
 	}
 	return leaf->GetValue();
 }
-int DataList::GetDoubleArray( const wxString &name, int n_values, double *values ) {
-	PDataLeaf leaf( Find( name ) );
+int DataList::GetDoubleArray( const wxString &f_name, int n_values, double *values ) {
+	PDataLeaf leaf( Find( f_name ) );
 	if ( !leaf.ok() ) {
 		return 0;
 	}
@@ -679,9 +679,9 @@ int DataList::GetDoubleArray( const wxString &name, int n_values, double *values
 	return values_read;
 }
 
-wxColour DataList::GetColour( const wxString &name, const wxColour &default_value, bool *it_worked ) {
+wxColour DataList::GetColour( const wxString &f_name, const wxColour &default_value, bool *it_worked ) {
 	double values[3];
-	if ( GetDoubleArray( name, 3, values ) != 3 ) {
+	if ( GetDoubleArray( f_name, 3, values ) != 3 ) {
 		if ( it_worked ) {
 			*it_worked = false;
 		}

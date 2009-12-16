@@ -28,7 +28,7 @@ class MapSelectDialog;
 class BattleMapTab : public wxScrolledWindow, public UnitsyncReloadedSink< BattleMapTab >
 {
   public:
-    BattleMapTab( wxWindow* parent, Battle& battle );
+    BattleMapTab( wxWindow* parent, Battle* battle );
      ~BattleMapTab();
 
      void UpdateUser( User& user );
@@ -45,9 +45,11 @@ class BattleMapTab : public wxScrolledWindow, public UnitsyncReloadedSink< Battl
     void OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ );
 
     void SetMap( int index );
+    void SetBattle( Battle* battle );
+    Battle* GetBattle() { return m_battle; }
 
   protected:
-    Battle& m_battle;
+    Battle* m_battle;
     //UnitSyncMap m_map;
 
     MapCtrl* m_minimap;

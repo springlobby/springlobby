@@ -132,6 +132,9 @@ protected:
     void OnUnlock( wxTimerEvent& evt );
     void OnClose( wxCloseEvent& evt );
 
+    TimedMessageBox( const TimedMessageBox& );
+    const TimedMessageBox& operator = ( const TimedMessageBox& );
+
     DECLARE_EVENT_TABLE()
 
 };

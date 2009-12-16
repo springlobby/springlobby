@@ -26,6 +26,8 @@
 #include <iostream>
 
 #include "conversion.h"
+#include "../updater/versionchecker.h"
+#include "customdialogs.h"
 #include "math.h"
 
 wxString GetLibExtension()
@@ -36,7 +38,7 @@ wxString GetLibExtension()
 
 //! @brief Initializes the logging functions.
 ///initializes logging in an hidden stream and std::cout/gui messages
-wxLogWindow* InitializeLoggingTargets( wxFrame* parent, bool console, bool showgui, bool logcrash, int verbosity, wxLogChain* logChain )
+wxLogWindow* InitializeLoggingTargets( wxFrame* parent, bool console, bool showgui, bool /*logcrash*/, int verbosity, wxLogChain* logChain )
 {
     wxLogWindow* loggerwin = 0;
 
@@ -101,18 +103,6 @@ wxLogWindow* InitializeLoggingTargets( wxFrame* parent, bool console, bool showg
     }
 
     return loggerwin;
-}
-
-
-
-wxString GetSpringLobbyVersion()
-{
-#ifndef AUX_VERSION
-    return (TowxString(VERSION)).BeforeFirst( _T(' ') );
-#else
-    return (TowxString(VERSION)).BeforeFirst( _T(' ') ) + TowxString(AUX_VERSION);
-#endif
-
 }
 
 wxString GetExecutableFolder()
@@ -219,6 +209,66 @@ bool CopyDir( wxString from, wxString to, bool overwrite )
     return true;
 }
 
+bool CopyDirWithFilebackupRename( wxString from, wxString to, bool overwrite )
+{
+    wxString sep = wxFileName::GetPathSeparator();
+
+    // append a slash if there is not one (for easier parsing)
+    // because who knows what people will pass to the function.
+    if ( !to.EndsWith( sep ) ) {
+            to += sep;
+    }
+    // for both dirs
+    if ( !from.EndsWith( sep ) ) {
+            from += sep;
+    }
+
+    // first make sure that the source dir exists
+    if(!wxDir::Exists(from)) {
+            wxLogError(from + _T(" does not exist.  Can not copy directory.") );
+            return false;
+    }
+
+    if (!wxDirExists(to))
+        wxMkdir(to);
+
+    wxDir dir(from);
+    wxString filename;
+    bool bla = dir.GetFirst(&filename);
+
+    if (bla){
+        do {
+
+            if (wxDirExists(from + filename) )
+            {
+                wxMkdir(to + filename);
+                CopyDir(from + filename, to + filename, overwrite);
+            }
+            else{
+                //if files exists move it to backup, this way we can use this func on windows to replace 'active' files
+                if ( wxFileExists( to + filename ) ) {
+                    //delete prev backup
+                    if ( wxFileExists( to + filename + _T(".old") ) ) {
+                        wxRemoveFile( to + filename + _T(".old")  );
+                    }
+                    //make backup
+                    if ( !wxRenameFile( to + filename, to + filename + _T(".old") ) ) {
+                        wxLogError( wxString::Format( _T("could not rename %s, copydir aborted"), (to + filename).c_str() ) );
+                        return false;
+                    }
+                }
+                //do the actual copy
+                if ( !wxCopyFile(from + filename, to + filename, overwrite) ) {
+                    wxLogError( wxString::Format( _T("could not copy %s to %s, copydir aborted"), (from + filename).c_str(), (to + filename).c_str() ) );
+                    return false;
+                }
+            }
+        }
+        while (dir.GetNext(&filename) );
+    }
+    return true;
+}
+
 bool IsUACenabled()
 {
 #ifdef __WXMSW__
@@ -254,7 +304,7 @@ bool WinExecuteAdmin( const wxString& command, const wxString& params )
 
       //on XP this would open the real runas dialog, which apparently is its own wonder
       //by default it has a checkbox enabled which makes sl unable to write to the working dir...
-      if ( IsUACenabled() )
+      if ( IsUACenabled() ) {
         if ( IsPreVistaWindows() )
             shExecInfo.lpVerb = _T("open");
         else
@@ -268,12 +318,32 @@ bool WinExecuteAdmin( const wxString& command, const wxString& params )
 #endif
       shExecInfo.lpDirectory = NULL;
       shExecInfo.hInstApp = NULL;
+      }
+      return ShellExecuteEx(&shExecInfo);
+}
+
+bool WinExecute( const wxString& command, const wxString& params )
+{
+      SHELLEXECUTEINFO shExecInfo;
+
+      shExecInfo.cbSize = sizeof(SHELLEXECUTEINFO);
+    shExecInfo.lpVerb = _T("open");
+      shExecInfo.fMask = NULL;
+      shExecInfo.hwnd = NULL;
+
+#ifdef _MSC_VER //some strange compiler stupidity going on here
+      shExecInfo.lpFile = command.c_str();
+      shExecInfo.lpParameters = params.c_str();
+#else
+	  shExecInfo.lpFile = command.wc_str();
+      shExecInfo.lpParameters = params.wc_str();
+#endif
+      shExecInfo.lpDirectory = NULL;
+      shExecInfo.hInstApp = NULL;
 
       return ShellExecuteEx(&shExecInfo);
 }
-#endif
 
-#ifdef __WXMSW__
 bool IsPreVistaWindows()
 {
     return wxPlatformInfo().GetOSMajorVersion() < 6;

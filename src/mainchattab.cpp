@@ -95,7 +95,11 @@ ChatPanel& MainChatTab::ServerChat()
 
 ChatPanel* MainChatTab::GetActiveChatPanel()
 {
-	return ( ChatPanel* )m_chat_tabs->GetPage( m_chat_tabs->GetSelection() );
+    int selection = m_chat_tabs->GetSelection();
+    if ( selection < 0 )
+        return NULL;
+    else
+        return static_cast< ChatPanel* >( m_chat_tabs->GetPage( selection ) );
 }
 
 
@@ -119,6 +123,10 @@ void MainChatTab::UpdateNicklistHighlights()
 			tmp->UpdateNicklistHighlights();
 		}
 	}
+	if ( m_server_chat != 0 )
+	{
+		m_server_chat->UpdateNicklistHighlights();
+	}
 }
 
 ChatPanel* MainChatTab::GetUserChatPanel( const wxString& user )
@@ -137,10 +145,15 @@ ChatPanel* MainChatTab::GetUserChatPanel( const wxString& user )
 void MainChatTab::OnUserConnected( User& user )
 {
 	ChatPanel* panel = GetUserChatPanel( user.GetNick() );
-	if ( panel != 0 ) {
+	if ( panel != 0 )
+	{
 		panel->SetUser( &user );
 		panel->OnUserConnected();
 		//TODO enable send button (koshi)
+	}
+	if ( m_server_chat != 0 )
+	{
+		m_server_chat->OnChannelJoin( user );
 	}
 }
 
@@ -148,10 +161,15 @@ void MainChatTab::OnUserConnected( User& user )
 void MainChatTab::OnUserDisconnected( User& user )
 {
 	ChatPanel* panel = GetUserChatPanel( user.GetNick() );
-	if ( panel != 0 ) {
+	if ( panel != 0 )
+	{
 		panel->OnUserDisconnected();
 		panel->SetUser( 0 );
 		//TODO disable send button (koshi)
+	}
+	if ( m_server_chat != 0 )
+	{
+		m_server_chat->Parted( user, _T("") );
 	}
 }
 
@@ -232,14 +250,14 @@ ChatPanel* MainChatTab::AddChatPanel( Server& server, const wxString& name )
 		if ( m_chat_tabs->GetPageText( i ) == name ) {
 			ChatPanel* tmp = ( ChatPanel* )m_chat_tabs->GetPage( i );
 			if ( tmp->GetPanelType() == CPT_Server ) {
-				m_chat_tabs->SetSelection( i );
-				tmp->SetServer( &server );
-				return tmp;
+				m_chat_tabs->DeletePage( i );
+				i--;
 			}
 		}
 	}
 
 	ChatPanel* chat = new ChatPanel( m_chat_tabs, server, m_imagelist );
+	m_server_chat = chat;
 	m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, name, true, wxBitmap( server_xpm ) );
 	return chat;
 }
@@ -270,7 +288,10 @@ void MainChatTab::OnTabClose( wxAuiNotebookEvent& event )
 	if ( panel )
 	{
 		panel->Part();
+		if( panel->IsServerPanel() )
+            m_server_chat = 0;
 	}
+
 }
 
 void MainChatTab::OnTabsChanged( wxAuiNotebookEvent& event )
