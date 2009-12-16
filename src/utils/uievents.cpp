@@ -7,4 +7,9 @@ namespace UiEvents {
     {
        return UiEvents[cmd];
     }
+
+    static EventSender<NotficationData> NotificationEventSender;
+    EventSender<NotficationData> &GetNotificationEventSender(  ) {
+        return NotificationEventSender;
+    }
 }

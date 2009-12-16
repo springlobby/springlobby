@@ -544,19 +544,12 @@ void MainWindow::OnMenuQuit( wxCommandEvent& /*unused*/ )
   Close();
 }
 
+#include "utils/uievents.h"
+
 void MainWindow::OnMenuVersion( wxCommandEvent& /*unused*/ )
 {
-    //ui().CheckForUpdates();
-
-    m_toasterbox.SetPopupPauseTime(10000);
-//    m_toasterbox.SetPopupTextColor(colFg.Red(),colFg.Green(),colFg.Blue());
-    m_toasterbox.SetPopupBackgroundColor(255,255,255);
-    m_toasterbox.SetPopupTextColor(0,0,0);
-//    m_toasterbox.SetPopupScrollSpeed(pScrollSpeed);
-    wxBitmap icon ( charArr2wxBitmap  (single_player_icon_png , sizeof (single_player_icon_png) ) );
-    m_toasterbox.SetPopupBitmap( icon );
-    m_toasterbox.SetPopupText(_T("jowieabclskzndclswandc"), false);
-    m_toasterbox.Play();
+//    ui().CheckForUpdates();
+    UiEvents::GetNotificationEventSender().SendEvent( UiEvents::NotficationData( UiEvents::defaultIcon, _T("Hello SpringLobby") ) );
 }
 
 void MainWindow::OnUnitSyncReload( wxCommandEvent& /*unused*/ )

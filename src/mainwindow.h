@@ -2,7 +2,6 @@
 #define SPRINGLOBBY_HEADERGUARD_MAINWINDOW_H
 
 #include <wx/frame.h>
-#include "toasterbox/ToasterBox.h"
 
 class Ui;
 class Channel;
@@ -228,8 +227,6 @@ class MainWindow : public wxFrame
         static const TabNames& GetTabNames();
 
     protected:
-        ToasterBox m_toasterbox;
-
         DECLARE_EVENT_TABLE()
 };
 

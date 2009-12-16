@@ -48,6 +48,7 @@
 #endif
 #include "updater/updater.h"
 #include "globalsmanager.h"
+#include "gui/notificationmanager.h"
 #include "Helper/wxTranslationHelper.h"
 #include "playback/playbacktraits.h"
 #include "playback/playbacktab.h"
@@ -137,6 +138,7 @@ bool SpringLobbyApp::OnInit()
 
     usync(); //init object, sink needs to exist before event is posted. next line would do both object(sink) creation and Event posting
     GetGlobalEventSender(GlobalEvents::UnitSyncReloadRequest).SendEvent( 0 ); // request an unitsync reload
+    notificationManager(); //needs to be initialized too
 
     CacheAndSettingsSetup();
 

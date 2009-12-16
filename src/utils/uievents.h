@@ -4,6 +4,7 @@
 #include "events.h"
 #include <wx/arrstr.h>
 #include <map>
+#include <utility>
 
 namespace UiEvents {
     typedef wxString UiEventsTypes;
@@ -11,5 +12,13 @@ namespace UiEvents {
     typedef wxArrayString UiEventData;
 
     EventSender<UiEventData> &GetUiEventSender( UiEventsTypes cmd );
+
+    enum NotificationIcon{
+        defaultIcon
+    };
+    typedef std::pair< NotificationIcon, wxString >
+        NotficationData;
+
+    EventSender<NotficationData> &GetNotificationEventSender();
 }
 #endif // SPRINGLOBBY_HEADERGUARD_UIEVENTS_H
