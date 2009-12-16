@@ -544,10 +544,18 @@ void MainWindow::OnMenuQuit( wxCommandEvent& /*unused*/ )
   Close();
 }
 
-
 void MainWindow::OnMenuVersion( wxCommandEvent& /*unused*/ )
 {
-    ui().CheckForUpdates();
+    //ui().CheckForUpdates();
+
+    m_toasterbox.SetPopupPauseTime(10000);
+//    m_toasterbox.SetPopupTextColor(colFg.Red(),colFg.Green(),colFg.Blue());
+    m_toasterbox.SetPopupBackgroundColor(255,255,255);
+    m_toasterbox.SetPopupTextColor(0,0,0);
+//    m_toasterbox.SetPopupScrollSpeed(pScrollSpeed);
+//    m_toasterbox.SetPopupBitmap(pBitmap);
+    m_toasterbox.SetPopupText(_T("jowieabclskzndclswandc"), false);
+    m_toasterbox.Play();
 }
 
 void MainWindow::OnUnitSyncReload( wxCommandEvent& /*unused*/ )

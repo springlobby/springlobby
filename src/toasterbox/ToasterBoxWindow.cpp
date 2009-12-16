@@ -12,6 +12,17 @@
 
 long ToasterBoxWindow::count = 0;
 
+//BEGIN_EVENT_TABLE( ToasterBoxWindow, wxFrame )
+//
+//	////@begin wxGradientPanel event table entries
+////	EVT_SIZE( wxGradientPanel::OnSize )
+//	EVT_PAINT( ToasterBoxWindow::OnPaint )
+//	EVT_ERASE_BACKGROUND( ToasterBoxWindow::OnEraseBackground )
+//	EVT_TIMER( -1, ToasterBoxWindow::ScrollDown )
+//	////@end wxGradientPanel event table entries
+//
+//END_EVENT_TABLE()
+
 ToasterBoxWindow::ToasterBoxWindow(wxWindow* parent, wxTimer *_parent2):
   wxFrame(parent, 0, _T("window"),
   wxPoint(0,0), wxDefaultSize, wxNO_BORDER|wxSTAY_ON_TOP|wxFRAME_NO_TASKBAR)
@@ -139,7 +150,7 @@ void ToasterBoxWindow::ScrollUp()
   Update();
 }
 
-void ToasterBoxWindow::ScrollDown()
+void ToasterBoxWindow::ScrollDown( wxTimerEvent& event )
 {
   wxLogDebug("Lowering");
 
@@ -162,7 +173,7 @@ void ToasterBoxWindow::ScrollDown()
   else
     wxLogDebug("not valid parent");
 }
-
+#include "../settings.h"
 void ToasterBoxWindow::DrawText()
 {
   //width and height of text
@@ -182,7 +193,8 @@ void ToasterBoxWindow::DrawText()
 
   wxClientDC dc(this);
   dc.GetTextExtent(pText, &w, &h);
-
+//  dc.SetFont( sett().GetChatFont() );
+//shrink=false;
   //shrink the text to fit in the popup box
   if(shrink)
   {
@@ -204,7 +216,7 @@ void ToasterBoxWindow::DrawText()
 
   dc.SetTextForeground(textColor);
 
-  //if we have multiple lines
+//  //if we have multiple lines
   if(textLines > 1)
   {
     //how many lines we can fit in the height available
@@ -227,7 +239,8 @@ void ToasterBoxWindow::DrawText()
 void ToasterBoxWindow::Notify()
 {
   wxLogDebug("Been up for: %i", wxGetLocalTime() - startTime);
-  ScrollDown();
+  wxTimerEvent fake;
+  ScrollDown( fake );
 }
 
 void ToasterBoxWindow::PrintInfo()
@@ -235,4 +248,15 @@ void ToasterBoxWindow::PrintInfo()
   wxLogDebug("brX:%i brY:%i szW:%i szH:%i",
     bottomRight.x, bottomRight.y, GetSize().GetWidth(),
     GetSize().GetHeight());
+}
+
+void ToasterBoxWindow::OnPaint( wxPaintEvent& event )
+{
+DrawText();
+}
+
+/// wxEVT_ERASE_BACKGROUND event handler for ID_WXGRADIENTBUTTON
+void ToasterBoxWindow::OnEraseBackground( wxEraseEvent& event )
+{
+DrawText();
 }
