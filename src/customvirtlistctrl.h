@@ -8,8 +8,8 @@
 //disabled until further fixes
     #include "Helper/listctrl.h"
     typedef SL_Extern::wxGenericListCtrl ListBaseType;
-//    #include <wx/listctrl.h>
-//    typedef wxListCtrl ListBaseType;
+    //#include <wx/listctrl.h>
+    //typedef wxListCtrl ListBaseType;
 #endif
 
 #include <wx/timer.h>

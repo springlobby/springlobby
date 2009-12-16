@@ -26,6 +26,7 @@ IBattle::IBattle():
   m_mod_loaded(false),
   m_map_exists(false),
   m_mod_exists(false),
+  m_previous_local_mod_name( wxEmptyString ),
   m_ingame(false),
   m_generating_script(false),
 	m_players_ready(0),
@@ -53,10 +54,6 @@ bool IBattle::IsSynced()
     if ( !m_host_mod.name.IsEmpty() ) synced = synced && (m_local_mod.name == m_host_mod.name);
     return synced;
 }
-
-
-
-
 
 std::vector<wxColour> &IBattle::GetFixColoursPalette( int numteams ) const
 {
@@ -482,22 +479,22 @@ void IBattle::StartRectAdded( unsigned int allyno )
 }
 
 
-BattleStartRect IBattle::GetStartRect( unsigned int allyno )
+BattleStartRect IBattle::GetStartRect( unsigned int allyno ) const
 {
-	std::map<unsigned int,BattleStartRect>::iterator rect_it = m_rects.find(allyno);
+	std::map<unsigned int,BattleStartRect>::const_iterator rect_it = m_rects.find(allyno);
 	if( rect_it != m_rects.end() )
 		return (*rect_it).second;
 	return BattleStartRect();
 }
 
 //total number of start rects
-unsigned int IBattle::GetNumRects()
+unsigned int IBattle::GetNumRects() const
 {
     return m_rects.size();
 }
 
 //key of last start rect in the map
-unsigned int IBattle::GetLastRectIdx()
+unsigned int IBattle::GetLastRectIdx() const
 {
 	if(GetNumRects() > 0)
 		return m_rects.rbegin()->first;
@@ -507,7 +504,7 @@ unsigned int IBattle::GetLastRectIdx()
 }
 
 //return  the lowest currently unused key in the map of rects.
-unsigned int IBattle::GetNextFreeRectIdx()
+unsigned int IBattle::GetNextFreeRectIdx() const
 {
 	//check for unused allyno keys
 	for(unsigned int i = 0; i <= GetLastRectIdx(); i++)
@@ -797,6 +794,7 @@ void IBattle::SetLocalMod( const UnitSyncMod& mod )
 {
   if ( mod.name != m_local_mod.name || mod.hash != m_local_mod.hash )
   {
+    m_previous_local_mod_name = m_local_mod.name;
     m_local_mod = mod;
     m_mod_loaded = true;
     if ( !m_host_mod.hash.IsEmpty() ) m_mod_exists = usync().ModExists( m_host_mod.name, m_host_mod.hash );

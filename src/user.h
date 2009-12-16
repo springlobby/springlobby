@@ -42,7 +42,7 @@ struct UserPosition
 
 struct UserBattleStatus
 {
-  // when adding something to this struct, also modify User::UpdateBattleStatus()
+  //!!! when adding something to this struct, also modify User::UpdateBattleStatus() !!
   // total 17 members here
   int team;
   int ally;
@@ -58,6 +58,7 @@ struct UserBattleStatus
 	// bot-only stuff
 	wxString owner;
 	wxString aishortname;
+	wxString airawname;
 	wxString aiversion;
 	int aitype;
   // for nat holepunching
