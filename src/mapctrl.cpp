@@ -128,11 +128,8 @@ MapCtrl::MapCtrl( wxWindow* parent, int size, IBattle* battle, bool readonly, bo
 {
     SetBackgroundStyle( wxBG_STYLE_CUSTOM );
     SetBackgroundColour( *wxLIGHT_GREY );
-    if ( !m_ro )
-    {
-        m_close_img = new wxBitmap( close_xpm );
-        m_close_hi_img = new wxBitmap( close_hi_xpm );
-    }
+		m_close_img = new wxBitmap( close_xpm );
+		m_close_hi_img = new wxBitmap( close_hi_xpm );
     m_tmp_brect.ally = -1;
 }
 

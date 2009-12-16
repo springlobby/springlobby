@@ -224,7 +224,7 @@ void GroupOptionsPanel::ShowGroup( const wxString& group )
 
 void GroupOptionsPanel::ReloadUsersList()
 {
-    wxSortedArrayString groupuser = sett().GetPeopleList( m_current_group );
+    wxArrayString groupuser = sett().GetPeopleList( m_current_group );
     m_user_list->Clear();
     m_user_list->InsertItems(groupuser, 0);
     m_remove_user_button->Enable( false );
@@ -232,7 +232,7 @@ void GroupOptionsPanel::ReloadUsersList()
 
 void GroupOptionsPanel::ReloadGroupsList()
 {
-  wxSortedArrayString groupnames = useractions().GetGroupNames();
+  wxArrayString groupnames = useractions().GetGroupNames();
   m_group_list->Clear();
   m_group_list->InsertItems(groupnames, 0);
   m_group_list->SetStringSelection(m_current_group);

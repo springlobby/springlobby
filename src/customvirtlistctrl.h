@@ -6,10 +6,10 @@
     typedef wxListCtrl ListBaseType;
 #else
 //disabled until further fixes
-//    #include "Helper/listctrl.h"
-//    typedef SL_Extern::wxGenericListCtrl ListBaseType;
-    #include <wx/listctrl.h>
-    typedef wxListCtrl ListBaseType;
+    #include "Helper/listctrl.h"
+    typedef SL_Extern::wxGenericListCtrl ListBaseType;
+    //#include <wx/listctrl.h>
+    //typedef wxListCtrl ListBaseType;
 #endif
 
 #include <wx/timer.h>
@@ -23,6 +23,7 @@
 
 #include "useractions.h"
 #include "Helper/sortutil.h"
+#include "utils/isink.h"
 
 class SLTipWindow;
 
@@ -34,7 +35,7 @@ class SLTipWindow;
  * \tparam the type of stored data
  */
 template < class DataImp, class ListCtrlImp >
-class CustomVirtListCtrl : public ListBaseType
+class CustomVirtListCtrl : public ListBaseType, public OnQuitSink<CustomVirtListCtrl<DataImp,ListCtrlImp> >
 {
 public:
     typedef DataImp
@@ -199,7 +200,7 @@ public:
 
 public:
     CustomVirtListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pt,
-                    const wxSize& sz,long style, const wxString& name, unsigned int column_count, unsigned int sort_criteria_count, CompareFunction func, bool highlight = true,
+                    const wxSize& sz,long style, const wxString& name, unsigned int sort_criteria_count, CompareFunction func, bool highlight = true,
                     UserActions::ActionType hlaction = UserActions::ActHighlight, bool periodic_sort = false, unsigned int periodic_sort_interval = 5000 /*miliseconds*/);
 
     virtual ~CustomVirtListCtrl();
@@ -298,6 +299,8 @@ public:
 
      void ReverseOrder();
 
+     void OnQuit( GlobalEvents::GlobalEventData data );
+
 protected:
     typedef CustomVirtListCtrl< DataImp, ListCtrlImp >
         BaseType;
@@ -340,6 +343,7 @@ private:
 
     ListCtrlImp& asImp() { return static_cast<ListCtrlImp&>(*this); }
     const ListCtrlImp& asImp() const { return static_cast<const ListCtrlImp&>(*this); }
+
 };
 
 template < class ListCtrlType >

@@ -26,6 +26,7 @@ IBattle::IBattle():
   m_mod_loaded(false),
   m_map_exists(false),
   m_mod_exists(false),
+  m_previous_local_mod_name( wxEmptyString ),
   m_ingame(false),
   m_generating_script(false),
 	m_players_ready(0),
@@ -53,10 +54,6 @@ bool IBattle::IsSynced()
     if ( !m_host_mod.name.IsEmpty() ) synced = synced && (m_local_mod.name == m_host_mod.name);
     return synced;
 }
-
-
-
-
 
 std::vector<wxColour> &IBattle::GetFixColoursPalette( int numteams ) const
 {
@@ -151,7 +148,7 @@ int IBattle::ColourDifference(const wxColour &a, const wxColour &b)  const// ret
 
 }
 
-int IBattle::GetFreeTeamNum( bool excludeme )
+int IBattle::GetFreeTeam( bool excludeme )
 {
     int lowest = 0;
     bool changed = true;
@@ -160,9 +157,10 @@ int IBattle::GetFreeTeamNum( bool excludeme )
         changed = false;
         for ( user_map_t::size_type i = 0; i < GetNumUsers(); i++ )
         {
-            if ( ( &GetUser( i ) == &GetMe() ) && excludeme ) continue;
-            //if ( GetUser( i ).BattleStatus().spectator ) continue;
-            if ( GetUser( i ).BattleStatus().team == lowest )
+						User& user = GetUser( i );
+            if ( ( &user == &GetMe() ) && excludeme ) continue;
+            if ( user.BattleStatus().spectator ) continue;
+            if ( user.BattleStatus().team == lowest )
             {
                 lowest++;
                 changed = true;
@@ -214,7 +212,7 @@ User& IBattle::OnUserAdded( User& user )
     bs.sync = SYNC_UNKNOWN;
     if ( !bs.IsBot() && IsFounderMe() && GetBattleType() == BT_Played )
     {
-			bs.team = GetFreeTeamNum( &user == &GetMe() );
+			bs.team = GetFreeTeam( &user == &GetMe() );
 			bs.ally = GetFreeAlly( &user == &GetMe() );
 			bs.colour = GetFreeColour( user );
     }
@@ -262,6 +260,17 @@ void IBattle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 
     user.UpdateBattleStatus( status );
 
+		if ( !previousstatus.spectator )
+		{
+			PlayerLeftAlly( previousstatus.ally );
+			PlayerLeftTeam( previousstatus.team );
+		}
+		if ( !status.spectator )
+		{
+			PlayerJoinedAlly( status.ally );
+			PlayerJoinedTeam( status.team );
+		}
+
     if ( IsFounderMe() )
     {
 			if ( status.spectator != previousstatus.spectator )
@@ -276,30 +285,8 @@ void IBattle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 					}
 					SendHostInfo( HI_Spectators );
 			}
-			if ( m_opts.lockexternalbalancechanges )
-			{
-				if ( previousstatus.team != status.team )
-				{
-					 ForceTeam( user, previousstatus.team );
-					 status.team = previousstatus.team;
-				}
-				if ( previousstatus.ally != status.ally )
-				{
-					ForceAlly( user, previousstatus.ally );
-					status.ally = previousstatus.ally;
-				}
-			}
 	}
-	if ( !previousstatus.spectator )
-	{
-		PlayerLeftAlly( previousstatus.ally );
-		PlayerLeftTeam( previousstatus.team );
-	}
-	if ( !status.spectator )
-	{
-		PlayerJoinedAlly( status.ally );
-		PlayerJoinedTeam( status.team );
-	}
+
 	if ( !status.IsBot() )
 	{
 
@@ -360,35 +347,39 @@ bool IBattle::ShouldAutoStart() const
 
 void IBattle::OnUserRemoved( User& user )
 {
-		UserBattleStatus& bs = user.BattleStatus();
-		if ( !bs.spectator )
-		{
-			PlayerLeftTeam( bs.team );
-			PlayerLeftAlly( bs.ally );
- 		}
-		if ( bs.ready && !bs.IsBot() ) m_players_ready--;
-		if ( bs.sync && !bs.IsBot() ) m_players_sync--;
+    UserBattleStatus& bs = user.BattleStatus();
+    if ( !bs.spectator )
+    {
+        PlayerLeftTeam( bs.team );
+        PlayerLeftAlly( bs.ally );
+    }
+    if ( bs.ready && !bs.IsBot() )
+        m_players_ready--;
+    if ( bs.sync && !bs.IsBot() )
+        m_players_sync--;
     if ( IsFounderMe() && bs.spectator )
     {
-      m_opts.spectators--;
-      SendHostInfo( HI_Spectators );
+        m_opts.spectators--;
+        SendHostInfo( HI_Spectators );
     }
     if ( &user == &GetMe() )
     {
-    	 if ( m_timer ) m_timer->Stop();
-    	 delete m_timer;
-    	 m_timer = 0;
-    	 OnSelfLeftBattle();
+        if ( m_timer )
+            m_timer->Stop();
+        delete m_timer;
+        m_timer = 0;
+        OnSelfLeftBattle();
     }
     UserList::RemoveUser( user.GetNick() );
-    if ( !bs.IsBot() ) user.SetBattle( 0 );
+    if ( !bs.IsBot() )
+        user.SetBattle( 0 );
     else
     {
     	UserVecIter itor = m_internal_bot_list.find( user.GetNick() );
-			if ( itor != m_internal_bot_list.end() )
-			{
-    			m_internal_bot_list.erase( itor );
-			}
+        if ( itor != m_internal_bot_list.end() )
+        {
+            m_internal_bot_list.erase( itor );
+        }
     }
 }
 
@@ -488,22 +479,22 @@ void IBattle::StartRectAdded( unsigned int allyno )
 }
 
 
-BattleStartRect IBattle::GetStartRect( unsigned int allyno )
+BattleStartRect IBattle::GetStartRect( unsigned int allyno ) const
 {
-	std::map<unsigned int,BattleStartRect>::iterator rect_it = m_rects.find(allyno);
+	std::map<unsigned int,BattleStartRect>::const_iterator rect_it = m_rects.find(allyno);
 	if( rect_it != m_rects.end() )
 		return (*rect_it).second;
 	return BattleStartRect();
 }
 
 //total number of start rects
-unsigned int IBattle::GetNumRects()
+unsigned int IBattle::GetNumRects() const
 {
     return m_rects.size();
 }
 
 //key of last start rect in the map
-unsigned int IBattle::GetLastRectIdx()
+unsigned int IBattle::GetLastRectIdx() const
 {
 	if(GetNumRects() > 0)
 		return m_rects.rbegin()->first;
@@ -513,7 +504,7 @@ unsigned int IBattle::GetLastRectIdx()
 }
 
 //return  the lowest currently unused key in the map of rects.
-unsigned int IBattle::GetNextFreeRectIdx()
+unsigned int IBattle::GetNextFreeRectIdx() const
 {
 	//check for unused allyno keys
 	for(unsigned int i = 0; i <= GetLastRectIdx(); i++)
@@ -539,7 +530,7 @@ void IBattle::ForceSide( User& user, int side )
 
 void IBattle::ForceTeam( User& user, int team )
 {
-  if ( IsFounderMe() || user.BattleStatus().IsBot() || &user == &GetMe() )
+  if ( IsFounderMe() || user.BattleStatus().IsBot() )
   {
 		if ( !user.BattleStatus().spectator )
 		{
@@ -554,7 +545,7 @@ void IBattle::ForceTeam( User& user, int team )
 void IBattle::ForceAlly( User& user, int ally )
 {
 
-  if ( IsFounderMe() || user.BattleStatus().IsBot() || &user == &GetMe() )
+  if ( IsFounderMe() || user.BattleStatus().IsBot() )
   {
 		if ( !user.BattleStatus().spectator )
 		{
@@ -618,7 +609,7 @@ void IBattle::PlayerLeftAlly( int ally )
 
 void IBattle::ForceSpectator( User& user, bool spectator )
 {
-		if ( IsFounderMe() || user.BattleStatus().IsBot() || &user == &GetMe() )
+		if ( IsFounderMe() || user.BattleStatus().IsBot() )
 		{
 			UserBattleStatus& status = user.BattleStatus();
 
@@ -682,7 +673,8 @@ int IBattle::GetFreeAlly( bool excludeme ) const
     for ( unsigned int i = 0; i < GetNumUsers(); i++ )
     {
       User& user = GetUser( i );
-      if ( ( &GetUser( i ) == &GetMe() ) && excludeme ) continue;
+      if ( ( &user == &GetMe() ) && excludeme ) continue;
+      if ( user.BattleStatus().spectator ) continue;
       if ( user.BattleStatus().ally == lowest )
       {
         lowest++;
@@ -802,6 +794,7 @@ void IBattle::SetLocalMod( const UnitSyncMod& mod )
 {
   if ( mod.name != m_local_mod.name || mod.hash != m_local_mod.hash )
   {
+    m_previous_local_mod_name = m_local_mod.name;
     m_local_mod = mod;
     m_mod_loaded = true;
     if ( !m_host_mod.hash.IsEmpty() ) m_mod_exists = usync().ModExists( m_host_mod.name, m_host_mod.hash );

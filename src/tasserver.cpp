@@ -382,14 +382,14 @@ bool TASServer::Register( const wxString& addr, const int port, const wxString& 
     if ( tempsocket.State() != SS_Open ) return false;
 
     wxString data = tempsocket.Receive().BeforeLast(_T('\n'));
-    if ( data.Contains( _T("\r") ) ) data = data.BeforeLast(_T('\r'));
+    if ( data.Find( _T("\r") ) != wxNOT_FOUND ) data = data.BeforeLast(_T('\r'));
     if ( GetWordParam( data ) != _T("TASServer") ) return false;
 
     tempsocket.Send( _T("REGISTER ") + nick + _T(" ") + GetPasswordHash( password ) + _T("\n") );
 
     data = tempsocket.Receive().BeforeLast(_T('\n'));
     tempsocket.Disconnect();
-    if ( data.Contains( _T("\r") ) ) data = data.BeforeLast(_T('\r'));
+    if ( data.Find( _T("\r") ) != wxNOT_FOUND ) data = data.BeforeLast(_T('\r'));
     if ( data.IsEmpty() )
     {
         reason = _("Connection timed out");
@@ -590,7 +590,7 @@ void TASServer::ExecuteCommand( const wxString& in )
 		wxString copy = cmd;
 		cmd = DecodeTokenMessage( cmd );
 		if ( copy != cmd ) m_token_transmission = true;
-		cmd.UpperCase();
+		cmd.MakeUpper();
 
     if ( m_debug_dont_catch )
     {
@@ -1771,8 +1771,6 @@ void TASServer::SendMyBattleStatus( UserBattleStatus& bs )
 {
     wxLogDebugFunc( _T("") );
 
-    GetMe().UpdateBattleStatus( bs );
-
     UTASBattleStatus tasbs;
     tasbs.tasdata = ConvTasbattlestatus( bs );
     UTASColor tascl;
@@ -1842,7 +1840,7 @@ void TASServer::ForceSide( int battleid, User& user, int side )
         return;
     }
 
-		UserBattleStatus& status = user.BattleStatus();
+		UserBattleStatus status = user.BattleStatus();
 
     if ( &user == &GetMe() )
     {
@@ -1872,16 +1870,17 @@ void TASServer::ForceTeam( int battleid, User& user, int team )
     {
         return;
     }
-		if ( user.BattleStatus().IsBot() )
+    UserBattleStatus status = user.BattleStatus();
+		if ( status.IsBot() )
 		{
-				user.BattleStatus().team = team;
-				UpdateBot( battleid, user, user.BattleStatus() );
+				status.team = team;
+				UpdateBot( battleid, user, status );
 				return;
 		}
 		if ( &user == &GetMe() )
 		{
-				GetMe().BattleStatus().team = team;
-				SendMyBattleStatus( GetMe().BattleStatus() );
+				status.team = team;
+				SendMyBattleStatus( status );
 				return;
 		}
     if ( !GetBattle(battleid).IsFounderMe() )
@@ -1909,18 +1908,18 @@ void TASServer::ForceAlly( int battleid, User& user, int ally )
     {
         return;
     }
-
-		if ( user.BattleStatus().IsBot() )
+		UserBattleStatus status = user.BattleStatus();
+		if ( status.IsBot() )
 		{
-			 user.BattleStatus().ally = ally;
-			 UpdateBot( battleid, user, user.BattleStatus() );
+			 status.ally = ally;
+			 UpdateBot( battleid, user, status );
 			 return;
 		}
 
 		if ( &user == &GetMe() )
 		{
-				GetMe().BattleStatus().ally = ally;
-				SendMyBattleStatus( GetMe().BattleStatus() );
+				status.ally = ally;
+				SendMyBattleStatus( status );
 				return;
 		}
 
@@ -1949,17 +1948,17 @@ void TASServer::ForceColour( int battleid, User& user, const wxColour& col )
     {
         return;
     }
-
-		if ( user.BattleStatus().IsBot() )
+		UserBattleStatus status = user.BattleStatus();
+		if ( status.IsBot() )
 		{
-			 user.BattleStatus().colour = col;
-			 UpdateBot( battleid, user, user.BattleStatus() );
+			 status.colour = col;
+			 UpdateBot( battleid, user, status );
 			 return;
 		}
 		if ( &user == &GetMe() )
 		{
-				GetMe().BattleStatus().colour = col;
-				SendMyBattleStatus( GetMe().BattleStatus() );
+				status.colour = col;
+				SendMyBattleStatus( status );
 				return;
 		}
     if ( !GetBattle(battleid).IsFounderMe() )
@@ -1992,17 +1991,17 @@ void TASServer::ForceSpectator( int battleid, User& user, bool spectator )
     {
         return;
     }
-
-		if ( user.BattleStatus().IsBot() )
+		UserBattleStatus status = user.BattleStatus();
+		if ( status.IsBot() )
 		{
-			 user.BattleStatus().spectator = spectator;
-			 UpdateBot( battleid, user, user.BattleStatus() );
+			 status.spectator = spectator;
+			 UpdateBot( battleid, user, status );
 			 return;
 		}
 		if ( &user == &GetMe() )
 		{
-				GetMe().BattleStatus().spectator = spectator;
-				SendMyBattleStatus( GetMe().BattleStatus() );
+				status.spectator = spectator;
+				SendMyBattleStatus( status );
 				return;
 		}
     if ( !GetBattle(battleid).IsFounderMe() )
@@ -2031,8 +2030,8 @@ void TASServer::BattleKickPlayer( int battleid, User& user )
     {
         return;
     }
-
-    if ( user.BattleStatus().IsBot() )
+		UserBattleStatus status = user.BattleStatus();
+    if ( status.IsBot() )
     {
     	RemoveBot( battleid, user );
     	return;
@@ -2066,11 +2065,11 @@ void TASServer::SetHandicap( int battleid, User& user, int handicap)
     {
         return;
     }
-
-		if ( user.BattleStatus().IsBot() )
+		UserBattleStatus status = user.BattleStatus();
+		if ( status.IsBot() )
 		{
-				user.BattleStatus().handicap = handicap;
-				UpdateBot( battleid, user, user.BattleStatus() );
+				status.handicap = handicap;
+				UpdateBot( battleid, user, status );
 				return;
 		}
 

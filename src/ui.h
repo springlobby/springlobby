@@ -6,7 +6,6 @@ class TASServer;
 class ConnectWindow;
 class Spring;
 class MainWindow;
-class wxString;
 class Channel;
 class User;
 class IBattle;
@@ -25,6 +24,7 @@ typedef int AlertEventType;
 
 extern const wxEventType torrentSystemStatusUpdateEvt;
 
+#include <wx/string.h>
 
 //! @brief UI main class
 class Ui
@@ -149,7 +149,7 @@ class Ui
 
     //! the welcome box, should be called in all code paths directly after MainWindow might be shown for the first time
     void FirstRunWelcome();
-
+    void CheckForUpdates();
 
   protected:
     Server* m_serv;

@@ -52,13 +52,6 @@ enum NatType
 		NAT_Fixed_source_ports
 };
 
-enum RankLimitType
-{
-		rank_limit_none = 0,
-		rank_limit_autospec,
-		rank_limit_autokick
-};
-
 
 enum BattleType
 {
@@ -71,7 +64,7 @@ enum BattleType
 struct BattleOptions
 {
 	BattleOptions() :
-		battleid(-1),islocked(false),battletype(BT_Played),ispassworded(false),rankneeded(0),isproxy(false),lockexternalbalancechanges(false),ranklimittype(rank_limit_autospec),
+		battleid(-1),islocked(false),battletype(BT_Played),ispassworded(false),rankneeded(0),isproxy(false),lockexternalbalancechanges(false),
 		nattype(NAT_None),port(DEFAULT_SERVER_PORT),externaludpsourceport(DEFAULT_EXTERNAL_UDP_SOURCE_PORT),internaludpsourceport(DEFAULT_EXTERNAL_UDP_SOURCE_PORT),maxplayers(0),spectators(0),
 		guilistactiv(false) {}
 
@@ -82,7 +75,6 @@ struct BattleOptions
 	int rankneeded;
 	bool isproxy;
 	bool lockexternalbalancechanges;
-	bool ranklimittype;
 
 	wxString founder;
 
@@ -216,7 +208,7 @@ public:
     virtual bool MapExists() const;
     virtual bool ModExists() const;
 
-    virtual BattleStartRect GetStartRect( unsigned int allyno );
+    virtual BattleStartRect GetStartRect( unsigned int allyno ) const;
     User& OnUserAdded( User& user );
     void OnUserBattleStatusUpdated( User &user, UserBattleStatus status );
     void OnUserRemoved( User& user );
@@ -239,11 +231,11 @@ public:
     virtual void StartRectResized( unsigned int allyno );
     virtual void StartRectAdded( unsigned int allyno );
     virtual void ClearStartRects();
-    virtual unsigned int GetNumRects();
-	virtual unsigned int GetLastRectIdx();
-	virtual unsigned int GetNextFreeRectIdx();
+    virtual unsigned int GetNumRects() const;
+	virtual unsigned int GetLastRectIdx() const;
+	virtual unsigned int GetNextFreeRectIdx() const;
 
-    virtual int GetFreeTeamNum( bool excludeme = false );
+    virtual int GetFreeTeam( bool excludeme = false );
 
     virtual User& GetMe() = 0;
     virtual const User& GetMe() const = 0;
@@ -265,10 +257,8 @@ public:
 
     virtual void OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ );
 
-    virtual OptionsWrapper& CustomBattleOptions()
-    {
-        return m_opt_wrap;
-    }
+    virtual OptionsWrapper& CustomBattleOptions() { return m_opt_wrap; }
+    virtual const OptionsWrapper& CustomBattleOptions() const { return m_opt_wrap; }
 
     virtual bool LoadOptionsPreset( const wxString& name );
     virtual void SaveOptionsPreset( const wxString& name );
@@ -404,6 +394,7 @@ protected:
     UnitSyncMod m_local_mod;
     UnitSyncMap m_host_map;
     UnitSyncMod m_host_mod;
+    wxString m_previous_local_mod_name;
 
     std::map<wxString, int> m_restricted_units;
 

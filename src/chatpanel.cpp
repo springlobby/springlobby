@@ -110,6 +110,7 @@ ChatPanel::ChatPanel( wxWindow* parent, Channel& chan, wxImageList* imaglist ):
   GetAui().manager->AddPane( this, wxLEFT, _T("chatpanel-channel-") + chan.GetName() );
 	wxLogDebugFunc( _T( "wxWindow* parent, Channel& chan" ) );
 	CreateControls( );
+	LoadLastLines();
 	_SetChannel( &chan );
 	m_chatlog_text->Connect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( ChatPanel::OnMouseDown ), 0, this );
 
@@ -135,6 +136,7 @@ ChatPanel::ChatPanel( wxWindow* parent, const User& user, wxImageList* imaglist 
 {
   GetAui().manager->AddPane( this, wxLEFT, _T("chatpanel-pm-") + user.GetNick() );
 	CreateControls( );
+	LoadLastLines();
 	m_chatlog_text->Connect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( ChatPanel::OnMouseDown ), 0, this );
 	user.uidata.panel = this;
 
@@ -574,7 +576,7 @@ void ChatPanel::Said( const wxString& who, const wxString& message )
   }
 
 	if ( ( who == _T( "MelBot" ) || who == _T( "[BOT]tizbacbridgebot" ) )
-            && message.StartsWith( _T( "<" ) ) && message.Contains( _T( ">" ) ) )
+            && message.StartsWith( _T( "<" ) ) && message.Find( _T( ">" ) ) != wxNOT_FOUND )
     {
 		wxString who2;
 		wxString message2;
@@ -608,7 +610,7 @@ bool ChatPanel::ContainsWordToHighlight( const wxString& message ) const
     wxArrayString words = sett().GetHighlightedWords();
     for ( unsigned int i = 0; i < words.GetCount(); i++ )
     {
-        if ( message.Contains( words[i] ) )
+        if ( message.Find( words[i] ) != wxNOT_FOUND )
             return true;
     }
     return false;
@@ -696,6 +698,7 @@ void ChatPanel::Joined( User& who )
 
 void ChatPanel::OnChannelJoin( User& who )
 {
+//    assert( m_type == CPT_Channel || m_type == CPT_Server || m_type == CPT_Battle || m_type == CPT_User );
 	if ( m_show_nick_list && (m_nicklist != 0) )
 	{
 		unsigned int numusers = 0;
@@ -711,22 +714,27 @@ void ChatPanel::OnChannelJoin( User& who )
 
 void ChatPanel::Parted( User& who, const wxString& message )
 {
+//    assert( m_type == CPT_Channel || m_type == CPT_Server || m_type == CPT_Battle || m_type == CPT_User );
+    bool me_parted = m_channel && &who == &m_channel->GetMe();
 	if ( m_type == CPT_Channel ) {
 		if ( m_channel == 0 ) return;
-		if ( &who == &m_channel->GetMe() ) {
+		if ( me_parted ) {
 			m_channel->uidata.panel = 0;
 			SetChannel( 0 );
 			return;
 		}
 		if ( sett().GetDisplayJoinLeave( m_channel->GetName() ) ) {
-      // change the image of the tab to show new events
-      SetIconHighlight( highlight_join_leave );
+          // change the image of the tab to show new events
+          SetIconHighlight( highlight_join_leave );
 		  OutputLine( _T( " ** " ) + who.GetNick() + _( " left the " ) + GetChatTypeStr() + _T( "( " ) + message + _T( " )." ), sett().GetChatColorJoinPart(), sett().GetChatFont() );
-    }
-
+        }
 	} else if ( m_type == CPT_Battle ) {
-		if ( sett().GetDisplayJoinLeave( _T( "game/battle" ) ) )  { OutputLine( _T( " ** " ) + who.GetNick() + _( " left the " ) + GetChatTypeStr() + _T( "( " ) + message + _T( " )." ), sett().GetChatColorJoinPart(), sett().GetChatFont() ); }
+		if ( sett().GetDisplayJoinLeave( _T( "game/battle" ) ) )  {
+		    OutputLine( _T( " ** " ) + who.GetNick() + _( " left the " ) + GetChatTypeStr() + _T( "( " ) + message + _T( " )." ), sett().GetChatColorJoinPart(), sett().GetChatFont() );
+        }
 	}
+	else if ( m_type == CPT_Server && me_parted )
+        return;
 	if ( m_show_nick_list && ( m_nicklist != 0 ) )
 	{
 		unsigned int numusers = 0;
@@ -758,7 +766,7 @@ void ChatPanel::SetTopic( const wxString& who, const wxString& message )
   wxStringTokenizer tkz( message, _T("\n") );
 	while ( tkz.HasMoreTokens() )
 	{
-	  wxString msg = tkz.GetNextToken().Strip();
+	  wxString msg = tkz.GetNextToken().Trim();
 	  OutputLine( _T(" ") + msg, sett().GetChatColorServer(), f );
 	}
 	OutputLine( _( " ** Set by " ) + who, sett().GetChatColorServer(), f );
@@ -849,7 +857,7 @@ bool ChatPanel::IsServerPanel() const
 	return ( m_type == CPT_Server );
 }
 
-int ChatPanel::GetPanelType() const
+ChatPanelType ChatPanel::GetPanelType() const
 {
 	return m_type;
 }
@@ -1143,4 +1151,24 @@ void ChatPanel::SetBattle( Battle* battle )
        textcompletiondatabase.Insert_Mapping( m_battle->GetUser(i).GetNick(), m_battle->GetUser(i).GetNick() );
     }
 	}
+}
+
+void ChatPanel::LoadLastLines()
+{
+    #ifdef __WXMSW__
+    wxWindowUpdateLocker noUpdates(m_chatlog_text);
+    #endif
+
+    wxArrayString lines = m_chat_log.GetLastLines(  );
+
+    wxFont f = m_chatlog_text->GetFont();
+	f.SetFamily( wxFONTFAMILY_DECORATIVE );
+	f.SetStyle( wxFONTSTYLE_ITALIC );
+	wxTextAttr chatstyle( sett().GetChatColorTime(), sett().GetChatColorBackground(), f );
+    m_chatlog_text->SetDefaultStyle( chatstyle );
+
+    for ( size_t i = 0; i < lines.Count(); ++i ) {
+        m_chatlog_text->AppendText( lines[i] );
+        m_chatlog_text->AppendText( _T( "\n" ) );
+    }
 }

@@ -59,7 +59,7 @@ MainOptionsTab::MainOptionsTab( wxWindow* parent )
     m_imagelist->Add( charArr2wxBitmap( torrentoptionspanel_icon_png, sizeof(torrentoptionspanel_icon_png) )  );
     m_imagelist->Add( wxIcon(userchat_xpm) );
     m_imagelist->Add( wxIcon(userchat_xpm) );
-    m_imagelist->Add( wxIcon(springlobby_xpm) );
+    m_imagelist->Add( wxIcon(springlobby_xpm) ); //!TODO this is non-square ?!!?
 
     m_spring_opts = new SpringOptionsTab( m_tabs );
     m_tabs->AddPage( m_spring_opts, _("Spring"), true, wxIcon(spring_xpm) );

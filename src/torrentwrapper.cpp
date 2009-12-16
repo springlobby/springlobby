@@ -54,6 +54,10 @@
 #include "globalsmanager.h"
 #include "utils/globalevents.h"
 
+#ifdef __WXMSW__
+    #include "utils/platform.h"
+#endif
+
 
 /** Get the name of the Spring data subdirectory that corresponds to a
  * given IUnitSync::MediaType value.
@@ -332,7 +336,8 @@ unsigned int TorrentTable::GetOpenLeechsCount()
 
 TorrentWrapper& torrent()
 {
-    static GlobalObjectHolder<TorrentWrapper> m_torr_wrap;
+    static LineInfo<TorrentWrapper> m( AT );
+    static GlobalObjectHolder<TorrentWrapper,LineInfo<TorrentWrapper> > m_torr_wrap( m );
     return m_torr_wrap;
 }
 
@@ -348,7 +353,7 @@ TorrentWrapper::TorrentWrapper():
     m_tracker_urls.Add( _T("tracker.caspring.org"));
     m_tracker_urls.Add( _T("tracker2.caspring.org"));
     m_tracker_urls.Add( _T("backup-tracker.licho.eu"));
-    m_torr = new libtorrent::session();
+    m_torr = new libtorrent::session( libtorrent::fingerprint("SL", 0, 0, 0, 0), 0 );
     try
     {
         m_torr->add_extension(&libtorrent::create_metadata_plugin);
@@ -365,30 +370,25 @@ TorrentWrapper::TorrentWrapper():
     {
         wxLogError( TowxString( e.what() ) );
     }
-    try
-    {
-        m_torr->start_upnp();
-    }
-    catch (std::exception& e)
-    {
-        wxLogError( TowxString( e.what() ) );
-    }
-    try
-    {
-        m_torr->start_natpmp();
-    }
-    catch (std::exception& e)
-    {
-        wxLogError( TowxString( e.what() ) );
-    }
-    try
-    {
-        m_torr->start_lsd();
-    }
-    catch (std::exception& e)
-    {
-        wxLogError( TowxString( e.what() ) );
-    }
+
+    #ifndef __WXMSW__
+        try
+        {
+            m_torr->start_upnp();
+        }
+        catch (std::exception& e)
+        {
+            wxLogError( TowxString( e.what() ) );
+        }
+        try
+        {
+            m_torr->start_natpmp();
+        }
+        catch (std::exception& e)
+        {
+            wxLogError( TowxString( e.what() ) );
+        }
+    #endif
     m_socket_class = new Socket( *this );
     UpdateSettings();
 }
@@ -396,7 +396,7 @@ TorrentWrapper::TorrentWrapper():
 
 TorrentWrapper::~TorrentWrapper()
 {
-    wxLogMessage(_T("TorrentWrapper::~TorrentWrapper()"));
+    wxLogDebugFunc( wxEmptyString );
     m_maintenance_thread.Stop();
     try
     {

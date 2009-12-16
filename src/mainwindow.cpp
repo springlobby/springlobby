@@ -21,6 +21,7 @@
 #include <wx/log.h>
 #include <wx/dcmemory.h>
 #include <wx/choicdlg.h>
+#include <wx/wupdlock.h>
 #include <wx/aui/auibook.h>
 #include <wx/tooltip.h>
 #include <wx/aboutdlg.h>
@@ -58,23 +59,18 @@
 
 #include "images/springlobby.xpm"
 #include "images/chat_icon.png.h"
-#include "images/chat_icon_text.png.h"
 #include "images/join_icon.png.h"
-#include "images/join_icon_text.png.h"
 #include "images/single_player_icon.png.h"
-#include "images/single_player_icon_text.png.h"
 #include "images/options_icon.png.h"
-#include "images/options_icon_text.png.h"
 #include "images/downloads_icon.png.h"
-#include "images/downloads_icon_text.png.h"
 #include "images/replay_icon.png.h"
-#include "images/replay_icon_text.png.h"
+#include "images/broom_tab_icon.png.h"
 #include "images/floppy_icon.png.h"
 
 #include "settings++/frame.h"
 #include "utils/customdialogs.h"
 
-#include "updater/updater.h"
+#include "updater/updatehelper.h"
 #include "channel/autojoinchanneldialog.h"
 #include "channel/channelchooserdialog.h"
 #include "Helper/imageviewer.h"
@@ -102,7 +98,6 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU( MENU_STOP_TORRENT, MainWindow::OnMenuStopTorrent )
   EVT_MENU( MENU_SAVE_LAYOUT, MainWindow::OnMenuSaveLayout )
   EVT_MENU( MENU_LOAD_LAYOUT, MainWindow::OnMenuLoadLayout )
-  EVT_MENU( MENU_DEFAULT_LAYOUT, MainWindow::OnMenuDefaultLayout )
   EVT_MENU( MENU_RESET_LAYOUT, MainWindow::OnMenuResetLayout )
 //  EVT_MENU( MENU_SHOW_TOOLTIPS, MainWindow::OnShowToolTips )
   EVT_MENU( MENU_AUTOJOIN_CHANNELS, MainWindow::OnMenuAutojoinChannels )
@@ -193,8 +188,8 @@ MainWindow::MainWindow( )
 	m_list_tab = new BattleListTab( m_func_tabs );
   m_join_tab = new MainJoinBattleTab( m_func_tabs );
   m_sp_tab = new MainSinglePlayerTab( m_func_tabs );
-  m_replay_tab = new ReplayTab ( m_func_tabs );
   m_savegame_tab = new SavegameTab( m_func_tabs );
+  m_replay_tab = new ReplayTab ( m_func_tabs );
 #ifndef NO_TORRENT_SYSTEM
   m_torrent_tab = new MainTorrentTab( m_func_tabs);
 #endif
@@ -250,7 +245,7 @@ void MainWindow::SetTabIcons()
 		unsigned int count = 0;
     m_func_tabs->SetPageBitmap( count++, GetTabIcon( chat_icon_png, sizeof(chat_icon_png)  ) );
     m_func_tabs->SetPageBitmap( count++, GetTabIcon( join_icon_png, sizeof(join_icon_png)  ) );
-    m_func_tabs->SetPageBitmap( count++, GetTabIcon( join_icon_png, sizeof(join_icon_png) ) );
+    m_func_tabs->SetPageBitmap( count++, GetTabIcon( broom_tab_icon_png, sizeof(broom_tab_icon_png) ) );
     m_func_tabs->SetPageBitmap( count++, GetTabIcon( single_player_icon_png , sizeof (single_player_icon_png) ) );
     m_func_tabs->SetPageBitmap( count++, GetTabIcon( floppy_icon_png , sizeof (floppy_icon_png) ) );
     m_func_tabs->SetPageBitmap( count++, GetTabIcon( replay_icon_png , sizeof (replay_icon_png) ) );
@@ -281,6 +276,10 @@ MainWindow::~MainWindow()
 
 void MainWindow::OnClose( wxCloseEvent& /*unused*/ )
 {
+    GetGlobalEventSender(GlobalEvents::OnQuit).SendEvent( 0 ); // request an unitsync reload
+    SetEvtHandlerEnabled(false);
+    {
+    wxWindowUpdateLocker lock( this );
     SavePerspectives();
   AuiManagerContainer::ManagerType* manager=GetAui().manager;
   if(manager){
@@ -314,6 +313,7 @@ void MainWindow::OnClose( wxCloseEvent& /*unused*/ )
 #endif
   }
 
+    }
   Destroy();
 
 }
@@ -547,7 +547,7 @@ void MainWindow::OnMenuQuit( wxCommandEvent& /*unused*/ )
 
 void MainWindow::OnMenuVersion( wxCommandEvent& /*unused*/ )
 {
-  Updater().CheckForUpdates();
+    ui().CheckForUpdates();
 }
 
 void MainWindow::OnUnitSyncReload( wxCommandEvent& /*unused*/ )
@@ -557,11 +557,12 @@ void MainWindow::OnUnitSyncReload( wxCommandEvent& /*unused*/ )
 
 void MainWindow::OnShowScreenshots( wxCommandEvent& /*unused*/ )
 {
-    wxSortedArrayString ar = usync().GetScreenshotFilenames();
+    wxArrayString ar = usync().GetScreenshotFilenames();
     if ( ar.Count() == 0 ) {
         customMessageBoxNoModal( SL_MAIN_ICON, _("There were no screenshots found in your spring data directory."), _("No files found") );
         return;
     }
+    ar.Sort();
     ImageViewerDialog* img  = new ImageViewerDialog( ar, true, this, -1, _T("Screenshots") );
     img->Show( true );
 }
@@ -662,6 +663,13 @@ void MainWindow::OnChannelListStart( )
     m_channel_chooser->ClearChannels();
 }
 
+wxString MainWindow::AddPerspectivePostfix( const wxString& pers_name )
+{
+    wxString perspective_name  = pers_name.IsEmpty() ? sett().GetLastPerspectiveName() : pers_name;
+    if ( m_join_tab &&  m_join_tab->UseBattlePerspective() )
+        perspective_name += BattlePostfix;
+    return perspective_name;
+}
 
 void MainWindow::OnMenuSaveLayout( wxCommandEvent& /*unused*/ )
 {
@@ -688,15 +696,6 @@ void MainWindow::OnMenuLoadLayout( wxCommandEvent& /*unused*/ )
 }
 
 
-void MainWindow::OnMenuDefaultLayout( wxCommandEvent& /*unused*/ )
-{
-	wxArrayString layouts = sett().GetLayoutList();
-	unsigned int result = wxGetSingleChoiceIndex( _("Which profile do you want to be default?"), _("Layout manager"), layouts );
-	if ( result > layouts.GetCount() )
-        return;
-	sett().SetDefaultLayout( layouts[result] );
-}
-
 void MainWindow::OnMenuResetLayout( wxCommandEvent& /*event*/ )
 {
     LoadPerspectives( _T("SpringLobby-default") );
@@ -707,13 +706,10 @@ const MainWindow::TabNames& MainWindow::GetTabNames()
     return m_tab_names;
 }
 
-void MainWindow::LoadPerspectives( const wxString& perspective_name )
+void MainWindow::LoadPerspectives( const wxString& pers_name )
 {
-    sett().SetLastPerspectiveName( perspective_name );
-
-    //loading a default layout on top of the more tabs of battle layout would prove fatal
-    if ( !sett().PerspectiveExists( perspective_name ) )
-        return;
+    sett().SetLastPerspectiveName( pers_name );
+    wxString perspective_name = AddPerspectivePostfix( pers_name );
 
     LoadNotebookPerspective( m_func_tabs, perspective_name );
     m_sp_tab->LoadPerspective( perspective_name );
@@ -726,9 +722,10 @@ void MainWindow::LoadPerspectives( const wxString& perspective_name )
 //    m_chat_tab->LoadPerspective( perspective_name );
 }
 
-void MainWindow::SavePerspectives( const wxString& perspective_name )
+void MainWindow::SavePerspectives( const wxString& pers_name )
 {
-    sett().SetLastPerspectiveName( perspective_name );
+    sett().SetLastPerspectiveName( pers_name );
+    wxString perspective_name = AddPerspectivePostfix( pers_name );
 
     m_sp_tab->SavePerspective( perspective_name );
     m_join_tab->SavePerspective( perspective_name );

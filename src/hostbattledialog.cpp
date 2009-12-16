@@ -127,7 +127,7 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent )
 
 	m_relayed_host_check = new wxCheckBox( this, CHK_USE_RELAY, _( "Use relayhost" ), wxDefaultPosition, wxDefaultSize, 0 );
 	m_relayed_host_check->SetToolTip( TE( _( "host and control game on remote server, helps if you have trouble hosting" ) ) );
-	m_relayed_host_pick = new wxButton( this, PICK_RELAYHOST, _( "" ), wxDefaultPosition, wxDefaultSize, 0 );
+	m_relayed_host_pick = new wxButton( this, PICK_RELAYHOST, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
 	m_relayed_host_pick->SetLabel( m_last_relayhost.IsEmpty() ? _T("automatic") : m_last_relayhost );
 
 	m_relayhost_list = new wxMenu();

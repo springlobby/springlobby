@@ -45,18 +45,21 @@
 
 #include "agreementdialog.h"
 #ifdef __WXMSW__
-    #include "updater/updater.h"
+    #include "updater/updatehelper.h"
     #include "Helper/tasclientimport.h"
+    #include <wx/stdpaths.h>
 #endif
 
 #include "utils/customdialogs.h"
-
+#include "utils/platform.h"
+#include "updater/versionchecker.h"
 #include "sdlsound.h"
 #include "globalsmanager.h"
 
 Ui& ui()
 {
-    static GlobalObjectHolder<Ui> m_ui;
+    static LineInfo<Ui> m( AT );
+    static GlobalObjectHolder<Ui,LineInfo<Ui> > m_ui( m );
     return m_ui;
 }
 
@@ -295,8 +298,8 @@ void Ui::DownloadMap( const wxString& hash, const wxString& name )
 #ifndef NO_TORRENT_SYSTEM
     DownloadFileP2P( hash, name );
 #else
-		wxString newname = name;
-		newname.Replace( _T(" "), _T("+") );
+    wxString newname = name;
+    newname.Replace( _T(" "), _T("+") );
     wxString url = _T(" http://spring.jobjol.nl/search_result.php?search_cat=1&select_select=select_file_subject&Submit=Search&search=") + newname;
     OpenWebBrowser ( url );
 #endif
@@ -308,8 +311,8 @@ void Ui::DownloadMod( const wxString& hash, const wxString& name )
 #ifndef NO_TORRENT_SYSTEM
     DownloadFileP2P( hash, name );
 #else
-		wxString newname = name;
-		newname.Replace( _T(" "), _T("+") );
+    wxString newname = name;
+    newname.Replace( _T(" "), _T("+") );
     wxString url = _T(" http://spring.jobjol.nl/search_result.php?search_cat=1&select_select=select_file_subject&Submit=Search&search=") + newname;
     OpenWebBrowser ( url );
 #endif
@@ -513,7 +516,8 @@ void Ui::OnUpdate( int mselapsed )
             mw().ShowTab( sett().GetStartTab() );
         }
 #ifdef __WXMSW__
-        if ( sett().GetAutoUpdate() )Updater().CheckForUpdates();
+        if ( sett().GetAutoUpdate() )
+            CheckForUpdates();
 #endif
     }
 
@@ -1261,6 +1265,7 @@ void Ui::FirstRunWelcome()
             ImportTASClientSettings();
         }
     #endif
+        //this ensures that for new configs there's a default perspective to fall back on
         mw().SavePerspectives( _T("SpringLobby-default") );
         mw().ShowConfigure();
     }
@@ -1268,4 +1273,49 @@ void Ui::FirstRunWelcome()
     {
         mw().ShowSingleplayer();
     }
+}
+
+
+void Ui::CheckForUpdates()
+{
+    wxString latestVersion = GetLatestVersion();
+
+    if (latestVersion == _T("-1"))
+    {
+        customMessageBoxNoModal(SL_MAIN_ICON, _("There was an error checking for the latest version.\nPlease try again later.\nIf the problem persists, please use Help->Report Bug to report this bug."), _("Error"));
+        return;
+    }
+    wxString myVersion = GetSpringLobbyVersion() ;
+
+    wxString msg = _("Your Version: ") + myVersion + _T("\n") + _("Latest Version: ") + latestVersion;
+    if ( !latestVersion.IsSameAs(myVersion, false) )
+    {
+        #ifdef __WXMSW__
+        int answer = customMessageBox(SL_MAIN_ICON, _("Your SpringLobby version is not up to date.\n\n") + msg + _("\n\nWould you like for me to autodownload the new version? Changes will take effect next you launch the lobby again."), _("Not up to date"), wxYES_NO);
+        if (answer == wxYES)
+        {
+            wxString command = _T("\"") + wxPathOnly( wxStandardPaths::Get().GetExecutablePath() ) + wxFileName::GetPathSeparator() + _T("springlobby_updater.exe\"");
+            wxString params = _T("-f \"") + wxStandardPaths::Get().GetExecutablePath() + _T("\"") + _T(" -r ") +  latestVersion  ;
+            if( WinExecute( command, params ) > 0 ) {
+                //returned pid > 0 -> proc started successfully
+                // now close this instance immeadiately
+                wxCloseEvent dummy;
+                ui().mw().OnClose( dummy );
+            }
+            else
+            {//this will also happen if updater exe is not present so we don't really ne special check for existance of it
+                customMessageBox(SL_MAIN_ICON, _("Automatic update failed\n\nyou will be redirected to a web page with instructions and the download link will be opened in your browser.") + msg, _("Updater error.") );
+                OpenWebBrowser( _T("http://springlobby.info/wiki/springlobby/Install#Windows-Binary") );
+                OpenWebBrowser( GetDownloadUrl( latestVersion ) );
+
+            }
+        }
+        #else
+        customMessageBoxNoModal(SL_MAIN_ICON, _("Your SpringLobby version is not up to date.\n\n") + msg, _("Not up to Date") );
+        #endif
+    }
+    /* TODO currently not usable cause automatic update calls this function too and we don't want a msg box everytime the check succeeds
+    else
+        customMessageBoxNoModal(SL_MAIN_ICON, _("Your SpringLobby version is up to date.\n\n") + msg, _("Up to Date") );
+    */
 }
