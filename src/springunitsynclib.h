@@ -125,6 +125,7 @@ typedef const char* (USYNC_CALL_CONV *GetLuaAINamePtr)(int aiIndex);
 typedef const char* (USYNC_CALL_CONV *GetLuaAIDescPtr)(int aiIndex);
 
 typedef int (USYNC_CALL_CONV *GetMapOptionCountPtr)(const char* name);
+typedef int (USYNC_CALL_CONV *GetCustomOptionCountPtr)(const char* name);
 typedef int (USYNC_CALL_CONV *GetModOptionCountPtr)();
 typedef int (USYNC_CALL_CONV *GetSkirmishAIOptionCountPtr)(int index);
 typedef const char* (USYNC_CALL_CONV *GetOptionKeyPtr)(int optIndex);
@@ -368,6 +369,7 @@ class SpringUnitSyncLib
     wxString GetValidMapName( unsigned int MapIndex );
 
     int GetMapOptionCount( const wxString& name );
+    int GetCustomOptionCount( const wxString& modname, const wxString& filename );
     int GetModOptionCount( const wxString& name );
     int GetAIOptionCount( const wxString& modname, int index );
     wxString GetOptionKey( int optIndex );
@@ -589,6 +591,7 @@ class SpringUnitSyncLib
     GetLuaAIDescPtr m_get_luaai_desc;
 
     GetMapOptionCountPtr m_get_map_option_count;
+    GetCustomOptionCountPtr m_get_custom_option_count;
     GetModOptionCountPtr m_get_mod_option_count;
 		GetSkirmishAIOptionCountPtr m_get_skirmish_ai_option_count;
     GetOptionKeyPtr m_get_option_key;

@@ -13,12 +13,13 @@ class wxBoxSizer;
 class wxCheckBox;
 class Ui;
 class ColorButton;
+class wxSpinCtrl;
 
 
 class ChatOptionsTab : public wxScrolledWindow
 {
   public:
-    ChatOptionsTab( wxWindow* parent, Ui& ui );
+    ChatOptionsTab( wxWindow* parent );
     ~ChatOptionsTab();
 
     void UpdateTextSample();
@@ -106,9 +107,10 @@ class ChatOptionsTab : public wxScrolledWindow
 
     wxCheckBox* m_irc_colors;
 
-    wxFont m_chat_font;
+    wxStaticText* m_num_lines_lbl;
+    wxSpinCtrl* m_num_lines;
 
-    Ui& m_ui;
+    wxFont m_chat_font;
 
     /// generic func used in all handlers
     void OnColorChange( ColorButton* button );

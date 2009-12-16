@@ -54,3 +54,10 @@ UserList::user_map_t::size_type UserList::GetNumUsers() const
   return m_users.size();
 }
 
+void UserList::Nullify()
+{
+    for( user_map_t::iterator it = m_users.begin(); it != m_users.begin(); ++it ) {
+        delete it->second;
+        it->second = NULL;
+    }
+}

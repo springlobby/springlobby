@@ -1,7 +1,7 @@
 #ifndef SPRINGLOBBY_SORTUTIL_H_INCLUDED
 #define SPRINGLOBBY_SORTUTIL_H_INCLUDED
 
-
+//! reference sort algo implementation, not in production use
 template< class ContainerType, class Comparator >
 void SLBubbleSort( ContainerType& data, const Comparator& cmp )
 {
@@ -34,6 +34,7 @@ struct SortOrderItem {
 typedef std::map<int,SortOrderItem> SortOrder;
 
 
+//! the sort algo used in almost all ListCtrls
 template< class ContainerType, class Comparator >
 void SLInsertionSort( ContainerType& data, const Comparator& cmp )
 {

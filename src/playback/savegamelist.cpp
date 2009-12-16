@@ -9,7 +9,7 @@
 
 #include "replaylist.h"
 //#include "../utils/.h"
-#include "../settings++/custom_dialogs.h"
+#include "../utils/customdialogs.h"
 #include "playbacktab.h"
 #include "playbackstructs.h"
 #include "../uiutils.h"
@@ -48,14 +48,16 @@ bool SavegameList::GetSavegameInfos ( const wxString& SavegamePath, Savegame& re
     //wxLOG_Info  ( STD_STRING( SavegamePath ) );
     //TODO extract moar info
     ret.Filename = SavegamePath;
-		ret.battle.SetPlayBackFilePath( SavegamePath );
-		if ( SavegamePath.IsEmpty() ) return false;
+    ret.battle.SetPlayBackFilePath( SavegamePath );
+    if ( SavegamePath.IsEmpty() )
+        return false;
     ret.battle.SetScript( GetScriptFromSavegame( SavegamePath ) );
     //wxLogMessage(_T("Script: %s"), script.c_str());
 
-    if ( ret.battle.GetScript().IsEmpty() ) return false;
+    if ( ret.battle.GetScript().IsEmpty() )
+        return false;
 
-		ret.battle.GetBattleFromScript( true );
+    ret.battle.GetBattleFromScript( true );
     ret.ModName = ret.battle.GetHostModName();
     ret.battle.SetBattleType( BT_Savegame );
 
@@ -74,7 +76,7 @@ wxString SavegameList::GetScriptFromSavegame ( const wxString& SavegamePath  )
 		{
 			file.read(&c,sizeof(char));
 			if (c) script += c;
-		} while ( ( c != 0 ) && !file.eof() );
+		} while ( ( c != 0 ) && !file.fail() );
 	}
 	return TowxString( script );
 }

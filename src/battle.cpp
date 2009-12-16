@@ -14,7 +14,7 @@
 #include "uiutils.h"
 #include "settings.h"
 #include "useractions.h"
-#include "settings++/custom_dialogs.h"
+#include "utils/customdialogs.h"
 #include "springunitsynclib.h"
 #include "iconimagelist.h"
 #include "spring.h"
@@ -91,15 +91,13 @@ void Battle::Leave()
 
 void Battle::OnRequestBattleStatus()
 {
-    int lowest = GetFreeTeamNum( true );
-
     UserBattleStatus& bs = m_serv.GetMe().BattleStatus();
-    bs.team = lowest;
-    bs.ally = lowest;
+    bs.team = GetFreeTeam( true );
+    bs.ally = GetFreeAlly( true );
     bs.spectator = false;
     bs.colour = sett().GetBattleLastColour();
     // theres some highly annoying bug with color changes on player join/leave.
-    if ( !bs.colour.IsColourOk() ) bs.colour = GetFreeColour( GetMe() );
+    if ( !bs.colour.IsOk() ) bs.colour = GetFreeColour( GetMe() );
 
     SendMyBattleStatus();
 }
@@ -152,6 +150,11 @@ void Battle::SetLocalMap( const UnitSyncMap& map )
 }
 
 User& Battle::GetMe()
+{
+    return m_serv.GetMe();
+}
+
+const User& Battle::GetMe() const
 {
     return m_serv.GetMe();
 }
@@ -213,25 +216,8 @@ User& Battle::OnUserAdded( User& user )
 
         if ( ( &user != &GetMe() ) && !user.BattleStatus().IsBot() && ( m_opts.rankneeded > UserStatus::RANK_1 ) && ( user.GetStatus().rank < m_opts.rankneeded ))
         {
-            switch ( m_opts.ranklimittype )
-            {
-            case rank_limit_none:
-                break;
-            case rank_limit_autospec:
-                if ( !user.BattleStatus().spectator )
-                {
-                    DoAction( _T("Rank limit autospec: ") + user.GetNick() );
-                    ForceSpectator( user, true );
-                }
-                break;
-            case rank_limit_autokick:
-                DoAction( _T("Rank limit autokick: ") + user.GetNick() );
-                KickPlayer( user );
-                return user;
-            default:
-                wxLogError( _T("unknown ranklimittype in Battle::OnUserAdded") );
-                break;
-            }
+					DoAction( _T("Rank limit autospec: ") + user.GetNick() );
+					ForceSpectator( user, true );
         }
 
         m_ah.OnUserAdded( user );
@@ -245,26 +231,25 @@ void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 {
     if ( IsFounderMe() )
     {
-        if ( ( &user != &GetMe() ) && !status.IsBot() && ( m_opts.rankneeded > UserStatus::RANK_1 ) && ( user.GetStatus().rank < m_opts.rankneeded ))
-        {
-            switch ( m_opts.ranklimittype )
-            {
-            case rank_limit_none:
-                break;
-            case rank_limit_autospec:
-                if ( !status.spectator )
-                {
-                    DoAction( _T("Rank limit autospec: ") + user.GetNick() );
-                    ForceSpectator( user, true );
-                }
-                break;
-            case rank_limit_autokick:
-                DoAction( _T("Rank limit autokick: ") + user.GetNick() );
-                KickPlayer( user );
-                break;
-            }
-        }
-
+			if ( ( &user != &GetMe() ) && !status.IsBot() && ( m_opts.rankneeded > UserStatus::RANK_1 ) && ( user.GetStatus().rank < m_opts.rankneeded ))
+			{
+					DoAction( _T("Rank limit autospec: ") + user.GetNick() );
+					ForceSpectator( user, true );
+			}
+			UserBattleStatus previousstatus = user.BattleStatus();
+			if ( m_opts.lockexternalbalancechanges )
+			{
+				if ( previousstatus.team != status.team )
+				{
+					 ForceTeam( user, previousstatus.team );
+					 status.team = previousstatus.team;
+				}
+				if ( previousstatus.ally != status.ally )
+				{
+					ForceAlly( user, previousstatus.ally );
+					status.ally = previousstatus.ally;
+				}
+			}
     }
 		IBattle::OnUserBattleStatusUpdated( user, status );
     if ( status.handicap != 0 )
@@ -277,7 +262,7 @@ void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 			{
 				if ( sett().GetBattleLastAutoStartState() )
 				{
-					if ( !ui().IsSpringRunning() ) ui().StartHostedBattle();
+					if ( !ui().IsSpringRunning() ) StartHostedBattle();
 				}
 			}
 		}
@@ -479,7 +464,7 @@ void Battle::ForceSide( User& user, int side )
 
 void Battle::ForceTeam( User& user, int team )
 {
-  IBattle::ForceTeam( user, team );
+	IBattle::ForceTeam( user, team );
   m_serv.ForceTeam( m_opts.battleid, user, team );
 }
 
@@ -488,7 +473,6 @@ void Battle::ForceAlly( User& user, int ally )
 {
 	IBattle::ForceAlly( user, ally );
   m_serv.ForceAlly( m_opts.battleid, user, ally );
-
 }
 
 
@@ -501,7 +485,7 @@ void Battle::ForceColour( User& user, const wxColour& col )
 
 void Battle::ForceSpectator( User& user, bool spectator )
 {
-    m_serv.ForceSpectator( m_opts.battleid, user, spectator );
+		m_serv.ForceSpectator( m_opts.battleid, user, spectator );
 }
 
 
@@ -566,7 +550,7 @@ void Battle::SendScriptToClients()
 }
 
 
-void Battle::StartSpring()
+void Battle::StartHostedBattle()
 {
 	if ( UserExists( GetMe().GetNick() ) )
 	{
@@ -578,38 +562,48 @@ void Battle::StartSpring()
 				Autobalance( (IBattle::BalanceType)sett().GetBalanceMethod(), sett().GetBalanceClans(), sett().GetBalanceStrongClans(), sett().GetBalanceGrouping() );
 				FixColours();
 			}
-		}
-		if ( IsProxy() )
-		{
-			wxString hostscript = spring().WriteScriptTxt( *this );
-			try
+			if ( IsProxy() )
 			{
-				wxString path = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("relayhost_script.txt");
-				if ( !wxFile::Access( path, wxFile::write ) ) wxLogError( _T("Access denied to script.txt.") );
+				wxString hostscript = spring().WriteScriptTxt( *this );
+				try
+				{
+					wxString path = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("relayhost_script.txt");
+					if ( !wxFile::Access( path, wxFile::write ) ) {
+							wxLogError( _T("Access denied to script.txt.") );
+					}
 
-				wxFile f( path, wxFile::write );
-				f.Write( hostscript );
-				f.Close();
+					wxFile f( path, wxFile::write );
+					f.Write( hostscript );
+					f.Close();
 
-			} catch (...) {}
-			m_serv.SendScriptToProxy( hostscript );
+				} catch (...) {}
+				m_serv.SendScriptToProxy( hostscript );
+			}
+			if( IsFounderMe() && GetAutoLockOnStart() )
+			{
+				SetIsLocked( true );
+				SendHostInfo( IBattle::HI_Locked );
+			}
+			sett().SetLastHostMap( GetServer().GetCurrentBattle()->GetHostMapName() );
+			sett().SaveSettings();
+			if ( !IsProxy() ) GetServer().StartHostedBattle();
 		}
+	}
+}
+
+void Battle::StartSpring()
+{
+	if ( UserExists( GetMe().GetNick() ) && !GetMe().Status().in_game )
+	{
 		GetMe().BattleStatus().ready = false;
 		SendMyBattleStatus();
-		GetMe().Status().in_game = true;
+		GetMe().Status().in_game = spring().Run( *this );
 		GetMe().SendMyUserStatus();
-		if( IsFounderMe() && GetAutoLockOnStart() )
-		{
-			SetIsLocked( true );
-			SendHostInfo( IBattle::HI_Locked );
-		}
-		ui().OnSpringStarting();
-		spring().Run( *this );
 	}
 	ui().OnBattleStarted( *this );
 }
 
-void Battle::OnTimer( wxTimerEvent& event )
+void Battle::OnTimer( wxTimerEvent&  )
 {
 	if ( !IsFounderMe() ) return;
 	if ( m_ingame ) return;
@@ -639,7 +633,7 @@ void Battle::SetInGame( bool value )
 	time_t now = time(0);
 	if ( m_ingame && !value )
 	{
-		for ( int i = 0; i < GetNumUsers(); i++ )
+		for ( int i = 0; i < long(GetNumUsers()); i++ )
 		{
 			User& user = GetUser( i );
 			UserBattleStatus& status = user.BattleStatus();
@@ -794,7 +788,7 @@ void Battle::Autobalance( BalanceType balance_type, bool support_clans, bool str
     if ( numallyteams == 0 ) // 0 == use num start rects
     {
         int ally = 0;
-        for ( int i = 0; i < GetNumRects(); ++i )
+        for ( unsigned int i = 0; i < GetNumRects(); ++i )
         {
             BattleStartRect sr = GetStartRect(i);
             if ( sr.IsOk() )
@@ -945,15 +939,16 @@ void Battle::FixTeamIDs( BalanceType balance_type, bool support_clans, bool stro
     wxLogMessage(_T("Autobalancing teams, type=%d, clans=%d, strong_clans=%d, numcontrolteams=%d"),balance_type, support_clans, strong_clans, numcontrolteams);
     //size_t i;
     //int num_alliances;
-    std::vector<ControlTeam> teams;
+    std::vector<ControlTeam> control_teams;
 
-    if ( numcontrolteams == 0 ) numcontrolteams = GetNumUsers(); // 0 == use num players, will use comshare only if no available team slots
+    if ( numcontrolteams == 0 ) numcontrolteams = GetNumUsers() - GetSpectators(); // 0 == use num players, will use comshare only if no available team slots
     IBattle::StartType position_type = (IBattle::StartType)s2l( CustomBattleOptions().getSingleValue( _T("startpostype"), OptionsWrapper::EngineOption ) );
     if ( ( position_type == ST_Fixed ) || ( position_type == ST_Random ) ) // if fixed start pos type or random, use max teams = start pos count
     {
       try
       {
-        numcontrolteams = std::min( numcontrolteams, LoadMap().info.posCount );
+      	int mapposcount = LoadMap().info.positions.size();
+        numcontrolteams = std::min( numcontrolteams, mapposcount );
       }
       catch( assert_exception ) {}
     }
@@ -989,9 +984,9 @@ void Battle::FixTeamIDs( BalanceType balance_type, bool support_clans, bool stro
       }
       return;
     }
-    for ( int i = 0; i < numcontrolteams; i++ ) teams.push_back( ControlTeam( i ) );
+    for ( int i = 0; i < numcontrolteams; i++ ) control_teams.push_back( ControlTeam( i ) );
 
-    wxLogMessage(_T("number of teams: %u"), teams.size() );
+    wxLogMessage(_T("number of teams: %u"), control_teams.size() );
 
     std::vector<User*> players_sorted;
     players_sorted.reserve( GetNumUsers() );
@@ -1033,7 +1028,7 @@ void Battle::FixTeamIDs( BalanceType balance_type, bool support_clans, bool stro
         {
             ControlTeam &clan = (*clan_it).second;
             // if clan is too small (only 1 clan member in battle) or too big, dont count it as clan
-            if ( ( clan.players.size() < 2 ) || ( !strong_clans && ( clan.players.size() >  ( ( players_sorted.size() + teams.size() -1 ) / teams.size() ) ) ) )
+            if ( ( clan.players.size() < 2 ) || ( !strong_clans && ( clan.players.size() >  ( ( players_sorted.size() + control_teams.size() -1 ) / control_teams.size() ) ) ) )
             {
                 wxLogMessage(_T("removing clan %s"),(*clan_it).first.c_str());
                 std::map<wxString, ControlTeam>::iterator next = clan_it;
@@ -1043,16 +1038,16 @@ void Battle::FixTeamIDs( BalanceType balance_type, bool support_clans, bool stro
                 continue;
             }
             wxLogMessage( _T("Inserting clan %s"), (*clan_it).first.c_str() );
-            std::sort( teams.begin(), teams.end() );
-            float lowestrank = teams[0].ranksum;
+            std::sort( control_teams.begin(), control_teams.end() );
+            float lowestrank = control_teams[0].ranksum;
             int rnd_k = 1; // number of alliances with rank equal to lowestrank
-            while ( size_t( rnd_k ) < teams.size() )
+            while ( size_t( rnd_k ) < control_teams.size() )
             {
-                if ( fabs( teams[rnd_k].ranksum - lowestrank ) > 0.01 ) break;
+                if ( fabs( control_teams[rnd_k].ranksum - lowestrank ) > 0.01 ) break;
                 rnd_k++;
             }
             wxLogMessage(_T("number of lowestrank teams with same rank=%d"), rnd_k );
-            teams[my_random( rnd_k )].AddTeam( clan );
+            control_teams[my_random( rnd_k )].AddTeam( clan );
             ++clan_it;
         }
     }
@@ -1075,28 +1070,28 @@ void Battle::FixTeamIDs( BalanceType balance_type, bool support_clans, bool stro
         // so we're essentially adding to teams with smallest number of players,
         // the one with smallest ranksum.
 
-        std::sort( teams.begin(), teams.end() );
-        float lowestrank = teams[0].ranksum;
+        std::sort( control_teams.begin(), control_teams.end() );
+        float lowestrank = control_teams[0].ranksum;
         int rnd_k = 1; // number of alliances with rank equal to lowestrank
-        while ( size_t( rnd_k ) < teams.size() )
+        while ( size_t( rnd_k ) < control_teams.size() )
         {
-            if ( fabs ( teams[rnd_k].ranksum - lowestrank ) > 0.01 ) break;
+            if ( fabs ( control_teams[rnd_k].ranksum - lowestrank ) > 0.01 ) break;
             rnd_k++;
         }
         wxLogMessage( _T("number of lowestrank teams with same rank=%d"), rnd_k );
-        teams[my_random( rnd_k )].AddPlayer( players_sorted[i] );
+        control_teams[my_random( rnd_k )].AddPlayer( players_sorted[i] );
     }
 
 
-    for ( size_t i=0; i < teams.size(); ++i )
+    for ( size_t i=0; i < control_teams.size(); ++i )
     {
-        for ( size_t j = 0; j < teams[i].players.size(); ++j )
+        for ( size_t j = 0; j < control_teams[i].players.size(); ++j )
         {
-            ASSERT_LOGIC( teams[i].players[j], _T("fail in Autobalance teams, NULL player") );
-            wxString msg = wxString::Format( _T("setting player %s to team and ally %d"), teams[i].players[j]->GetNick().c_str(), i );
+            ASSERT_LOGIC( control_teams[i].players[j], _T("fail in Autobalance teams, NULL player") );
+            wxString msg = wxString::Format( _T("setting player %s to team and ally %d"), control_teams[i].players[j]->GetNick().c_str(), i );
             wxLogMessage( _T("%s"), msg.c_str() );
-            ForceTeam( *teams[i].players[j], teams[i].teamnum );
-            ForceAlly( *teams[i].players[j], teams[i].teamnum );
+            ForceTeam( *control_teams[i].players[j], control_teams[i].teamnum );
+            ForceAlly( *control_teams[i].players[j], control_teams[i].teamnum );
         }
     }
 }

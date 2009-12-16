@@ -17,7 +17,7 @@ class Ui;
 class BattleListCtrl : public CustomVirtListCtrl< IBattle *, BattleListCtrl>
 {
   public:
-    BattleListCtrl( wxWindow* parent, Ui& ui );
+    BattleListCtrl( wxWindow* parent );
     ~BattleListCtrl();
 
     void AddBattle( IBattle& battle );
@@ -53,7 +53,6 @@ class BattleListCtrl : public CustomVirtListCtrl< IBattle *, BattleListCtrl>
     int GetIndexFromData( const DataType& data ) const;
 
     wxMenu* m_popup;
-    Ui& m_ui;
 
     virtual void Sort();
 

@@ -6,6 +6,7 @@
 class wxCommandEvent;
 class IBattle;
 class SinglePlayerBattle;
+class NoGuiSinglePlayerBattle;
 class OfflineBattle;
 class Battle;
 class SpringProcess;
@@ -22,6 +23,7 @@ class Spring: public wxEvtHandler
     bool IsRunning() const;
     bool Run( Battle& battle );
     bool Run( SinglePlayerBattle& battle );
+    bool Run( NoGuiSinglePlayerBattle& battle );
     bool Run( OfflineBattle& battle );
 
     //! executes spring with replay as parameter

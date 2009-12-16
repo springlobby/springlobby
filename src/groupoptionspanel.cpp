@@ -133,7 +133,7 @@ GroupOptionsPanel::GroupOptionsPanel( wxWindow* parent, wxWindowID id, const wxP
 
 	m_highlight_colorstaticText = new wxStaticText( m_group_panel, wxID_ANY, _("Highlight Color"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_highlight_colorstaticText->Wrap( -1 );
-	colorSizer->Add( m_highlight_colorstaticText, 0, wxALL, 5 );
+	colorSizer->Add( m_highlight_colorstaticText, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
 	m_highlight_color_button = new ColorButton( m_group_panel, HIGHLIGHT_COLOR, wxColour(0,0,0), wxDefaultPosition, wxSize( 20,20 ) );
 	m_highlight_color_button->SetToolTip( _("Select highlight color") );
@@ -224,7 +224,7 @@ void GroupOptionsPanel::ShowGroup( const wxString& group )
 
 void GroupOptionsPanel::ReloadUsersList()
 {
-    wxSortedArrayString groupuser = sett().GetPeopleList( m_current_group );
+    wxArrayString groupuser = sett().GetPeopleList( m_current_group );
     m_user_list->Clear();
     m_user_list->InsertItems(groupuser, 0);
     m_remove_user_button->Enable( false );
@@ -232,7 +232,7 @@ void GroupOptionsPanel::ReloadUsersList()
 
 void GroupOptionsPanel::ReloadGroupsList()
 {
-  wxSortedArrayString groupnames = useractions().GetGroupNames();
+  wxArrayString groupnames = useractions().GetGroupNames();
   m_group_list->Clear();
   m_group_list->InsertItems(groupnames, 0);
   m_group_list->SetStringSelection(m_current_group);
@@ -284,7 +284,7 @@ void GroupOptionsPanel::OnGroupListSelectionChange( wxCommandEvent& /*unused*/ )
 }
 
 
-void GroupOptionsPanel::OnGroupActionsChange( wxCommandEvent& event )
+void GroupOptionsPanel::OnGroupActionsChange( wxCommandEvent&  )
 {
   useractions().ChangeAction( m_current_group, UserActions::ActNotifLogin, m_login_notify_check->GetValue() );
   useractions().ChangeAction( m_current_group, UserActions::ActIgnoreChat, m_ignore_chat_check->GetValue() );

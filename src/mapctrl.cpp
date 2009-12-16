@@ -42,26 +42,27 @@
 #include "images/download_map.xpm"
 #include "images/reload_map.xpm"
 
-#define USER_BOX_EXPANDED_HEIGHT 70
-#define USER_BOX_EXPANDED_WIDTH 75
+const int USER_BOX_EXPANDED_HEIGHT = 70;
+const int USER_BOX_EXPANDED_WIDTH = 75;
 
 /** How much padding to place around the icon of a user box.
  */
-#define USER_BOX_ICON_PADDING 2
+const int USER_BOX_ICON_PADDING = 2;
 
 
 /** Width of the e.g. player or bot images that mark a player/bot's
  * chosen start position.
  */
-#define USER_BOX_ICON_WIDTH 16
+const int USER_BOX_ICON_WIDTH = 16;
 
 /** Height of the e.g. player or bot images that mark a player/bot's
  * chosen start position.
  */
-#define USER_BOX_ICON_HEIGHT 16
+const int USER_BOX_ICON_HEIGHT = 16;
 
-#define USER_BOX_ICON_HALFWIDTH (USER_BOX_ICON_WIDTH / 2)
-#define USER_BOX_ICON_HALFHEIGHT (USER_BOX_ICON_HEIGHT / 2)
+//int div is indeed wanted here
+const int USER_BOX_ICON_HALFWIDTH = (USER_BOX_ICON_WIDTH / 2);
+const int USER_BOX_ICON_HALFHEIGHT = (USER_BOX_ICON_HEIGHT / 2);
 
 
 const wxSize user_box_icon_size ( USER_BOX_ICON_WIDTH + 2 * USER_BOX_ICON_PADDING,
@@ -95,14 +96,13 @@ static inline int ReadInt24(const unsigned char* p)
     return p[0] | (p[1] << 8) | (p[2] << 16);
 }
 
-MapCtrl::MapCtrl( wxWindow* parent, int size, IBattle* battle, Ui& ui, bool readonly, bool fixed_size, bool draw_start_types, bool singleplayer ):
+MapCtrl::MapCtrl( wxWindow* parent, int size, IBattle* battle, bool readonly, bool fixed_size, bool draw_start_types, bool singleplayer ):
         wxPanel( parent, -1, wxDefaultPosition, wxSize(size, size), wxSIMPLE_BORDER|wxFULL_REPAINT_ON_RESIZE ),
         m_async(this),
         m_minimap(0),
         m_metalmap(0),
         m_heightmap(0),
         m_battle(battle),
-        m_ui(ui),
         m_mapname(_T("")),
         m_draw_start_types(draw_start_types),
         m_fixed_size(fixed_size),
@@ -128,11 +128,8 @@ MapCtrl::MapCtrl( wxWindow* parent, int size, IBattle* battle, Ui& ui, bool read
 {
     SetBackgroundStyle( wxBG_STYLE_CUSTOM );
     SetBackgroundColour( *wxLIGHT_GREY );
-    if ( !m_ro )
-    {
-        m_close_img = new wxBitmap( close_xpm );
-        m_close_hi_img = new wxBitmap( close_hi_xpm );
-    }
+		m_close_img = new wxBitmap( close_xpm );
+		m_close_hi_img = new wxBitmap( close_hi_xpm );
     m_tmp_brect.ally = -1;
 }
 
@@ -412,7 +409,7 @@ void MapCtrl::GetClosestStartPos( int fromx, int fromy, int& index, int& x, int&
     range = -1;
     index = -1;
 
-    for ( int i = 0; i < map.info.posCount; i++ )
+    for ( int i = 0; i < int(map.info.positions.size()); i++ )
     {
         double dx = fromx - map.info.positions[i].x;
         double dy = fromy - map.info.positions[i].y;
@@ -504,8 +501,12 @@ void MapCtrl::UpdateMinimap()
 			}
         }
     }
-    Refresh();
-    Update();
+    //without this test aborts happen when unit sync is reloaded from torrent complete
+    //if ( IsShownOnScreen() ) //meh, doesn't actually help
+    {
+        Refresh();
+        Update();
+    }
 }
 
 
@@ -750,7 +751,7 @@ void MapCtrl::DrawStartPositions( wxDC& dc )
 
         wxFont f( 7, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_LIGHT );
         dc.SetFont( f );
-        for ( int i = 0; i < m_map.info.posCount; i++ )
+        for ( int i = 0; i < int(m_map.info.positions.size()); i++ )
         {
             int x = (int)( (double)((double)m_map.info.positions[i].x / (double)m_map.info.width) * (double)mr.width ) - 8;
             int y = (int)( (double)(m_map.info.positions[i].y / (double)m_map.info.height) * (double)mr.height ) - 8;
@@ -763,7 +764,7 @@ void MapCtrl::DrawStartPositions( wxDC& dc )
     else
     {
         // Draw startpositions
-        for ( int i = 0; i < m_map.info.posCount; i++ )
+        for ( int i = 0; i < int(m_map.info.positions.size()); i++ )
         {
             int x = (int)( (double)((double)m_map.info.positions[i].x / (double)m_map.info.width) * (double)mr.width ) - 8;
             int y = (int)( (double)(m_map.info.positions[i].y / (double)m_map.info.height) * (double)mr.height ) - 8;
@@ -965,7 +966,7 @@ void MapCtrl::DrawUserPositions( wxDC& dc )
     m_map = m_battle->LoadMap();
     RequireImages();
 
-    for ( int i = 0; i < m_map.info.posCount; i++ )
+    for ( int i = 0; i < int(m_map.info.positions.size()); i++ )
     {
 
         int x = (int)( (double)((double)m_map.info.positions[i].x / (double)m_map.info.width) * (double)mr.width ) - 8;
@@ -1461,13 +1462,13 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
         {
             if ( m_mdown_area == Refreshing )
             {
-                m_ui.ReloadUnitSync();
+                GetGlobalEventSender(GlobalEvents::UnitSyncReloadRequest).SendEvent( 0 ); // request an unitsync reload
                 m_battle->Update( wxString::Format( _T("%d_mapname"), OptionsWrapper::PrivateOptions ) );
                 UpdateMinimap();
             }
             else if ( m_mdown_area == Download )
             {
-                m_ui.DownloadMap( m_battle->GetHostMapHash(),  m_battle->GetHostMapName() );
+                ui().DownloadMap( m_battle->GetHostMapHash(),  m_battle->GetHostMapName() );
             }
         }
         m_mdown_area = Main;

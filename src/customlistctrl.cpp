@@ -8,7 +8,7 @@
 #include "utils/controls.h"
 #include "settings.h"
 #include "iconimagelist.h"
-#include "settings++/custom_dialogs.h"
+#include "utils/customdialogs.h"
 #include "uiutils.h"
 
 
@@ -324,7 +324,7 @@ void CustomListCtrl::UpdateHighlights()
 void CustomListCtrl::HighlightItemUser( long item, const wxString& name )
 {
    if ( m_highlight && useractions().DoActionOnUser( m_highlightAction, name ) ) {
-        wxColor c = sett().GetGroupHLColor( useractions().GetGroupOfUser( name ) );
+        wxColour c = sett().GetGroupHLColor( useractions().GetGroupOfUser( name ) );
         SetItemBackgroundColour( item, c );
   }
   else

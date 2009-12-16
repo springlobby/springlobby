@@ -17,6 +17,7 @@
 #include <wx/icon.h>
 #include <wx/tooltip.h>
 #include <wx/log.h>
+#include <wx/textctrl.h>
 
 #include "connectwindow.h"
 #include "settings.h"
@@ -25,7 +26,7 @@
 #include "utils/controls.h"
 #include "utils/tasutil.h"
 
-#include "settings++/custom_dialogs.h"
+#include "utils/customdialogs.h"
 
 // Define events.
 BEGIN_EVENT_TABLE(ConnectWindow, wxDialog)
@@ -81,7 +82,7 @@ ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
 
     m_acc_note_line = new wxStaticLine( m_login_tab );
 
-    m_note_lbl = new wxStaticText( m_login_tab, -1, _("Note: If you do not have an account, you\n can register one for free under the\n\"Register\" tab.") );
+    m_note_lbl = new wxStaticText( m_login_tab, -1, _("Note: If you do not have an account, you\n can register one for free on the\n\"Register\" tab.") );
 
     m_ok_btn =     new wxButton( this, wxID_OK,     _("Ok") );
     m_cancel_btn = new wxButton( this, wxID_CANCEL, _("Cancel") );
@@ -112,7 +113,7 @@ ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
     m_pass_sizer->Add( m_pass_lbl, 1, wxALL | wxALIGN_CENTER_VERTICAL, 4 );
     m_pass_sizer->Add( m_pass_text, 2, wxEXPAND | wxALL, 4 );
 
-    //FIXME was lazy, absoulte positioning isn't that nice
+    //FIXME was lazy, absoulte positioning isn't that nice //probably causing http://springlobby.info/issues/1094
     int pos1 = (m_pass_lbl->GetSize()).GetWidth() + 40;
     m_check_sizer->Add(pos1,0,0);
     m_check_sizer->Add( m_rpass_sizer, 0, wxEXPAND | wxALIGN_RIGHT);
@@ -218,10 +219,10 @@ void ConnectWindow::ReloadServerList()
     m_server_combo->SetValue( sett().GetDefaultServer() );
 }
 
-void ConnectWindow::OnServerChange( wxCommandEvent& event )
+void ConnectWindow::OnServerChange( wxCommandEvent&  )
 {
     wxString HostAddress = m_server_combo->GetValue();
-		if ( !HostAddress.Contains( _T(":") ) )
+		if ( HostAddress.Find( _T(":") ) == wxNOT_FOUND )
 		{
 			if ( !sett().ServerExists( HostAddress ) )
 			{
@@ -233,11 +234,11 @@ void ConnectWindow::OnServerChange( wxCommandEvent& event )
 }
 
 
-void ConnectWindow::OnOk(wxCommandEvent& event)
+void ConnectWindow::OnOk(wxCommandEvent& )
 {
     Hide();
     wxString HostAddress = m_server_combo->GetValue();
-    if ( !HostAddress.Contains( _T(":") ) )
+    if ( HostAddress.Find( _T(":") ) == wxNOT_FOUND )
 		{
 			if ( !sett().ServerExists( HostAddress ) )
 			{
@@ -314,7 +315,7 @@ void ConnectWindow::OnOk(wxCommandEvent& event)
     }
 }
 
-void ConnectWindow::OnCancel(wxCommandEvent& event)
+void ConnectWindow::OnCancel(wxCommandEvent& )
 {
     Hide();
 }

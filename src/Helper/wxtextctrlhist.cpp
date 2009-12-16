@@ -50,7 +50,7 @@ void wxTextCtrlHist::OnChar(wxKeyEvent & event)
 {
         int keyCode = event.GetKeyCode();
 
-        if ( current_pos == Historical.GetCount() ) {
+        if ( current_pos == int(Historical.GetCount()) ) {
             m_original = GetValue();
         }
 
@@ -120,7 +120,7 @@ void wxTextCtrlHist::OnChar(wxKeyEvent & event)
                         GetArrayStringFromHashMap( hm , matches );
                         wxString newWord = GetBestMatch( matches, currentWord );
 
-                        bool realCompletion = newWord.Length() >= currentWord.Length(); // otherwise we have actually less word than before :P
+                        bool realCompletion = newWord.Len() >= currentWord.Len(); // otherwise we have actually less word than before :P
                         if ( realCompletion )
                             currentWord =  newWord;
 

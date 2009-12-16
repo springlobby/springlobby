@@ -24,7 +24,6 @@
  * these are necessary duplications for standalone mode atm
  * \todo can prolly be avoided if properly use code from SL
  * @{ */
-void loadUnitsync();
 
 int fromString(const wxString& s);
 

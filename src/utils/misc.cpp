@@ -2,6 +2,7 @@
 #include "misc.h"
 
 #include "math.h"
+#include "../settings.h"
 
 #include <wx/string.h>
 #include <wx/arrstr.h>
@@ -49,10 +50,10 @@ wxString GetBestMatch(const wxArrayString& a, const wxString& s, double* distanc
     int minDistanceIndex = -1;
     for (unsigned int i = 0; i < count; ++i)
     {
-        const double distance = LevenshteinDistance(a[i], s);
-        if (distance < minDistance)
+        const double distance_ = LevenshteinDistance(a[i], s);
+        if (distance_ < minDistance)
         {
-            minDistance = distance;
+            minDistance = distance_;
             minDistanceIndex = i;
         }
     }
@@ -60,6 +61,8 @@ wxString GetBestMatch(const wxArrayString& a, const wxString& s, double* distanc
     if (minDistanceIndex == -1) return _T("");
     return a[minDistanceIndex];
 }
+
+
 
 //typedef int (*func_T)(void);
 //bool wxCurlBase::SetOpt(CURL* m_pCURL,CURLoption option, ...)
@@ -141,3 +144,4 @@ wxString Paste2Pastebin( const wxString& message )
 
 }
 #endif
+

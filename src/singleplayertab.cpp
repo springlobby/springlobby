@@ -25,7 +25,7 @@
 #include "settings.h"
 #include "Helper/colorbutton.h"
 #include "aui/auimanager.h"
-#include "settings++/custom_dialogs.h"
+#include "utils/customdialogs.h"
 #include "springunitsynclib.h"
 
 BEGIN_EVENT_TABLE(SinglePlayerTab, wxPanel)
@@ -44,16 +44,15 @@ BEGIN_EVENT_TABLE(SinglePlayerTab, wxPanel)
 END_EVENT_TABLE()
 
 
-SinglePlayerTab::SinglePlayerTab(wxWindow* parent, Ui& ui, MainSinglePlayerTab& msptab):
+SinglePlayerTab::SinglePlayerTab(wxWindow* parent, MainSinglePlayerTab& msptab):
         wxScrolledWindow( parent, -1 ),
-        m_ui( ui ),
-        m_battle( ui, msptab )
+        m_battle( msptab )
 {
     GetAui().manager->AddPane( this, wxLEFT, _T("singleplayertab") );
 
     wxBoxSizer* m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
-    m_minimap = new MapCtrl( this, 100, &m_battle, ui, false, false, true, true );
+    m_minimap = new MapCtrl( this, 100, &m_battle, false, false, true, true );
     m_minimap->SetToolTip( TE(_("You can drag the sun/bot icon around to define start position.\n "
                                 "Hover over the icon for a popup that lets you change side, ally and bonus." )) );
     m_main_sizer->Add( m_minimap, 1, wxALL|wxEXPAND, 5 );
@@ -61,7 +60,7 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, Ui& ui, MainSinglePlayerTab& 
     wxBoxSizer* m_ctrl_sizer = new wxBoxSizer( wxHORIZONTAL );
 
     m_map_lbl = new wxStaticText( this, -1, _("Map:") );
-    m_ctrl_sizer->Add( m_map_lbl, 0, wxALL, 5 );
+    m_ctrl_sizer->Add( m_map_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
     m_map_pick = new wxChoice( this, SP_MAP_PICK );
     m_ctrl_sizer->Add( m_map_pick, 1, wxALL, 5 );
@@ -70,7 +69,7 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, Ui& ui, MainSinglePlayerTab& 
     m_ctrl_sizer->Add( m_select_btn, 0, wxBOTTOM|wxRIGHT|wxTOP, 5 );
 
     m_mod_lbl = new wxStaticText( this, -1, _("Mod:") );
-    m_ctrl_sizer->Add( m_mod_lbl, 0, wxALL, 5 );
+    m_ctrl_sizer->Add( m_mod_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
     m_mod_pick = new wxChoice( this, SP_MOD_PICK );
     m_ctrl_sizer->Add( m_mod_pick, 1, wxALL, 5 );
@@ -108,7 +107,7 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, Ui& ui, MainSinglePlayerTab& 
 
     m_main_sizer->Add( m_buttons_sizer, 0, wxEXPAND, 5 );
 
-    SetScrollRate( 3, 3 );
+    SetScrollRate( SCROLL_RATE, SCROLL_RATE );
     this->SetSizer( m_main_sizer );
     this->Layout();
 
@@ -134,19 +133,19 @@ void SinglePlayerTab::ReloadMaplist()
 {
     m_map_pick->Clear();
 
+    //applies RefineMapname to every new element
     TransformedArrayString maplist ( usync().GetMapList(), &RefineMapname ) ;
     //maplist.Sort(CompareStringIgnoreCase);
-//
-//    size_t nummaps = maplist.Count();
-//    for ( size_t i = 0; i < nummaps; i++ )
-//        m_map_pick->Insert( RefineMapname(maplist[i]), i );
+
     m_map_pick->Append( maplist );
 
     m_map_pick->Insert( _("-- Select one --"), m_map_pick->GetCount() );
+
     if ( m_battle.GetHostMapName() != wxEmptyString )
     {
         m_map_pick->SetStringSelection( RefineMapname( m_battle.GetHostMapName() ) );
-        if ( m_map_pick->GetStringSelection() == wxEmptyString ) SetMap( m_mod_pick->GetCount()-1 );
+        if ( m_map_pick->GetStringSelection() == wxEmptyString )
+            SetMap( m_mod_pick->GetCount()-1 );
     }
     else
     {
@@ -182,7 +181,7 @@ void SinglePlayerTab::ReloadModlist()
 
 void SinglePlayerTab::SetMap( unsigned int index )
 {
-	//m_ui.ReloadUnitSync();
+	//ui().ReloadUnitSync();
   m_addbot_btn->Enable( false );
   if ( index >= m_map_pick->GetCount()-1 ) {
     m_battle.SetHostMap( wxEmptyString, wxEmptyString );
@@ -205,7 +204,7 @@ void SinglePlayerTab::ResetUsername()
 
 void SinglePlayerTab::SetMod( unsigned int index )
 {
-    //m_ui.ReloadUnitSync();
+    //ui().ReloadUnitSync();
     if ( index >= m_mod_pick->GetCount()-1 )
     {
         m_battle.SetHostMod( wxEmptyString, wxEmptyString );
@@ -271,7 +270,7 @@ void SinglePlayerTab::OnModSelect( wxCommandEvent& /*unused*/ )
 void SinglePlayerTab::OnMapBrowse( wxCommandEvent& /*unused*/ )
 {
     wxLogDebugFunc( _T("") );
-    MapSelectDialog dlg( (wxWindow*)&m_ui.mw(), m_ui );
+    MapSelectDialog dlg( (wxWindow*)&ui().mw() );
 
     if ( dlg.ShowModal() == wxID_OK && dlg.GetSelectedMap() != NULL )
     {
@@ -293,7 +292,7 @@ void SinglePlayerTab::OnAddBot( wxCommandEvent& /*unused*/ )
         bs.aishortname = dlg.GetAIShortName();
         bs.aiversion = dlg.GetAIVersion();
         bs.aitype = dlg.GetAIType();
-        bs.team = m_battle.GetFreeTeamNum();
+        bs.team = m_battle.GetFreeTeam();
         bs.ally = m_battle.GetFreeAlly();
         bs.colour = m_battle.GetNewColour();
         User& bot = m_battle.OnBotAdded( _T("Bot") + TowxString( bs.team ), bs  );
@@ -302,12 +301,26 @@ void SinglePlayerTab::OnAddBot( wxCommandEvent& /*unused*/ )
     }
 }
 
+void SinglePlayerTab::OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ )
+{
+    try {
+        ReloadMaplist();
+        ReloadModlist();
+        UpdateMinimap();
+    }
+    catch ( ... )
+    {
+        wxLogDebugFunc( _T("") );
+        wxLogError( _T("unitsync reload sink failed") );
+    }
+}
+
 
 void SinglePlayerTab::OnStart( wxCommandEvent& /*unused*/ )
 {
     wxLogDebugFunc( _T("SP: ") );
 
-    if ( m_ui.IsSpringRunning() )
+    if ( ui().IsSpringRunning() )
     {
         wxLogWarning(_T("trying to start spring while another instance is running") );
         customMessageBoxNoModal(SL_MAIN_ICON, _("You cannot start a spring instance while another is already running"), _("Spring error"), wxICON_EXCLAMATION );
@@ -336,7 +349,7 @@ void SinglePlayerTab::OnColorButton( wxCommandEvent& /*unused*/ )
     User& u = m_battle.GetMe();
     wxColour CurrentColour = u.BattleStatus().colour;
     CurrentColour = GetColourFromUser(this, CurrentColour);
-    if ( !CurrentColour.IsColourOk() ) return;
+    if ( !CurrentColour.IsOk() ) return;
     sett().SetBattleLastColour( CurrentColour );
     m_battle.ForceColour( u, CurrentColour );
     UpdateMinimap();

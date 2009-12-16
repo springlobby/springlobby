@@ -1,8 +1,9 @@
 #ifndef SPRINGLOBBY_PlaybackTab_H_INCLUDED
 #define SPRINGLOBBY_PlaybackTab_H_INCLUDED
 
-#include <wx/panel.h>
+#include <wx/scrolwin.h>
 #include <vector>
+#include "../utils/isink.h"
 
 class Ui;
 class MapCtrl;
@@ -28,7 +29,7 @@ template <class PlaybackType>
 class PlaybackLoader;
 
 template <class PlaybackTraitsImp>
-class PlaybackTab : public wxPanel
+class PlaybackTab : public wxScrolledWindow, public SpringTerminatedSink< PlaybackTab<PlaybackTraitsImp> >
 {
     protected:
         friend class BattleListFilter; //! WTF?
@@ -51,7 +52,7 @@ class PlaybackTab : public wxPanel
 
   public:
     //! loads all replays into list and adds them to listctrl
-    PlaybackTab( wxWindow* parent, Ui& ui );
+    PlaybackTab( wxWindow* parent );
      ~PlaybackTab();
 
     //! adds a single replay to listctrl
@@ -87,6 +88,8 @@ class PlaybackTab : public wxPanel
     void Deselected();
     void OnDeselect( wxListEvent& event );
 
+    void OnSpringTerminated( GlobalEvents::GlobalEventData data );
+
   protected:
     PlaybackListFilter<ThisType>* m_filter;
     ListCtrlType* m_replay_listctrl;
@@ -112,8 +115,6 @@ class PlaybackTab : public wxPanel
 #else
 		wxCheckBox* m_filter_show;
 #endif
-
-    Ui& m_ui;
 
     void AskForceWatch( PlaybackType& rep  ) const;
 

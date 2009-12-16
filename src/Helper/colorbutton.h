@@ -3,23 +3,23 @@
 
 #include <wx/bmpbuttn.h>
 
-
+//! a wxBitmapButton whose Bitmap is a rectangle with uni color solid fill
 class ColorButton : public wxBitmapButton
 {
     public:
         ColorButton(wxWindow* parent, wxWindowID id, const wxBitmap& bitmap = wxBitmap(), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxBU_AUTODRAW,
             const wxValidator& validator = wxDefaultValidator, const wxString& name = _T("button") );
-        ColorButton(wxWindow* parent, wxWindowID id, const wxColor& color, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxBU_AUTODRAW,
+        ColorButton(wxWindow* parent, wxWindowID id, const wxColour& color, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxBU_AUTODRAW,
             const wxValidator& validator = wxDefaultValidator, const wxString& name = _T("button") );
         virtual ~ColorButton();
 
-        void SetColor( const wxColor& color );
-        wxColor GetColor( );
+        void SetColor( const wxColour& color );
+        wxColour GetColor( );
 
     protected:
         wxSize m_size;
-        wxColor m_color;
-        wxBitmap GetBitmapFromColor( const wxColor& color );
+        wxColour m_color;
+        wxBitmap GetBitmapFromColor( const wxColour& color );
 
 };
 

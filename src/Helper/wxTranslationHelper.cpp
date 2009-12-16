@@ -8,7 +8,7 @@
 #include <wx/choicdlg.h>
 #include <wx/intl.h>
 #include "../settings.h"
-#include "../settings++/custom_dialogs.h"
+#include "../utils/customdialogs.h"
 
 wxTranslationHelper::wxTranslationHelper( wxApp & app,
 										 const wxString & search_path )

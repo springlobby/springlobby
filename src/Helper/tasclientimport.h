@@ -2,7 +2,9 @@
 #define TASCLIENTIMPORT_H
 
 #ifdef __WXMSW__
+//! read some basic tasc settings from registry and map them to our setting handler
 bool ImportTASClientSettings();
+//! return true if "HKEY_CURRENT_USER\\Software\\TASClient\\Preferences" exists
 bool TASClientPresent();
 #endif
 

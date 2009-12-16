@@ -2,17 +2,23 @@
 #define SPRINGLOBBY_HEADERGUARD_PLAYBACKTHREAD
 
 #include <wx/string.h>
+#include "../defines.h"
 
 static const wxEventType PlaybacksLoadedEvt = wxNewEventType();
 
-template <class PlaybackTabImp >
-class PlaybackLoader
+#ifdef HAVE_WX29
+#include <wx/event.h>
+    template <class PlaybackTabImp >
+    class PlaybackLoader : public wxEvtHandler
+#else
+    template <class PlaybackTabImp >
+    class PlaybackLoader
+#endif
 {
 protected:
-
     class PlaybackLoaderThread : public wxThread
     {
-        private:
+        protected:
             typedef PlaybackLoader<PlaybackTabImp>
                 ParentType;
 
@@ -21,7 +27,7 @@ protected:
             void SetParent( ParentType* parent );
             void* Entry();
 
-        private:
+        protected:
             ParentType* m_parent;
     };
 

@@ -13,7 +13,7 @@
 #include "server.h"
 #include "countrycodes.h"
 #include "settings.h"
-#include "settings++/custom_dialogs.h"
+#include "utils/customdialogs.h"
 #include "useractions.h"
 #include "Helper/sortutil.h"
 #include "aui/auimanager.h"
@@ -32,12 +32,11 @@ BEGIN_EVENT_TABLE(BattleListCtrl, BattleListCtrl::BaseType )
 #endif
 END_EVENT_TABLE()
 
-BattleListCtrl::BattleListCtrl( wxWindow* parent, Ui& ui )
+BattleListCtrl::BattleListCtrl( wxWindow* parent )
     : CustomVirtListCtrl< IBattle *,BattleListCtrl>(parent, BLIST_LIST, wxDefaultPosition, wxDefaultSize,
-            wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("BattleListCtrl"), 10, 4, &CompareOneCrit,
+            wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("BattleListCtrl"), 4, &CompareOneCrit,
             true /*highlight*/, UserActions::ActHighlight, true /*periodic sort*/ ),
-    m_popup( 0 ),
-    m_ui(ui)
+    m_popup( 0 )
 {
     GetAui().manager->AddPane( this, wxLEFT, _T("battlelistctrl") );
 
@@ -125,31 +124,42 @@ int BattleListCtrl::GetItemColumnImage(long item, long column) const
         default: return -1;
 
         case 0: return icons().GetBattleStatusIcon( battle );
-        case 1: return icons().GetFlagIcon( battle.GetFounder().GetCountry() );
+        case 1:
+        {
+        	try
+        	{
+        	 return icons().GetFlagIcon( battle.GetFounder().GetCountry() );
+        	}catch(...){}
+					break;
+        }
         case 2: return icons().GetRankIcon( battle.GetRankNeeded(), false );
         case 4: return battle.MapExists() ? icons().ICON_EXISTS : icons().ICON_NEXISTS;
         case 5: return battle.ModExists() ? icons().ICON_EXISTS : icons().ICON_NEXISTS;
     }
+    return -1; // simply to avoid compiler warning
 }
 
 wxListItemAttr* BattleListCtrl::GetItemAttr(long item) const
 {
     if ( item < (long)m_data.size() && item > -1 ) {
         const IBattle& b = *m_data[item];
-        wxString host = b.GetFounder().GetNick();
-        wxListItemAttr* attr = HighlightItemUser( host );
-        if ( attr != NULL )
-            return attr;
+        try
+        {
+					wxString host = b.GetFounder().GetNick();
+					wxListItemAttr* attr = HighlightItemUser( host );
+					if ( attr != NULL )
+							return attr;
 
-        //to avoid color flicker check first if highlighting should be done
-        //and return if it should
-        for ( unsigned int i = 0; i < b.GetNumUsers(); ++i){
-            wxString name = b.GetUser(i).GetNick();
-            attr = HighlightItemUser( name );
-            if ( attr != NULL )
-                return attr;
+					//to avoid color flicker check first if highlighting should be done
+					//and return if it should
+					for ( unsigned int i = 0; i < b.GetNumUsers(); ++i){
+							wxString name = b.GetUser(i).GetNick();
+							attr = HighlightItemUser( name );
+							if ( attr != NULL )
+									return attr;
 
-        }
+					}
+				}catch(...){}
     }
     return NULL;
 }
@@ -204,7 +214,7 @@ void BattleListCtrl::OnDLMap( wxCommandEvent& /*unused*/  )
 {
     if ( m_selected_index > 0 &&  (long)m_data.size() > m_selected_index ) {
         DataType dt = m_data[m_selected_index];
-        m_ui.DownloadMap( dt->GetHostMapHash(), dt->GetHostMapName() );
+        ui().DownloadMap( dt->GetHostMapHash(), dt->GetHostMapName() );
     }
 }
 
@@ -212,7 +222,7 @@ void BattleListCtrl::OnDLMod( wxCommandEvent& /*unused*/  )
 {
     if ( m_selected_index > 0 &&  (long)m_data.size() > m_selected_index ) {
         DataType dt = m_data[m_selected_index];
-        m_ui.DownloadMod( dt->GetHostModHash(), dt->GetHostModName() );
+        ui().DownloadMod( dt->GetHostModHash(), dt->GetHostModName() );
     }
 }
 
@@ -230,17 +240,32 @@ int BattleListCtrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir )
 {
     switch ( col ) {
         case 0: return dir * CompareStatus( u1, u2 );
-        case 1: return dir * u1->GetFounder().GetCountry().CmpNoCase( u2->GetFounder().GetCountry() );
+        case 1:
+        {
+					try
+					{
+        	 return dir * u1->GetFounder().GetCountry().CmpNoCase( u2->GetFounder().GetCountry() );
+        	 }catch(...){}
+					break;
+        }
         case 2: return dir * compareSimple( u1->GetRankNeeded(), u2->GetRankNeeded() );
         case 3: return dir * u1->GetDescription().CmpNoCase( u2->GetDescription() );
         case 4: return dir * RefineMapname( u1->GetHostMapName() ).CmpNoCase( RefineMapname( u2->GetHostMapName() ) );
         case 5: return dir * RefineModname( u1->GetHostModName() ).CmpNoCase( RefineModname( u2->GetHostModName() ) );
-        case 6: return dir * u1->GetFounder().GetNick().CmpNoCase( u2->GetFounder().GetNick() );
+        case 6:
+        {
+        	try
+					{
+        	 return dir * u1->GetFounder().GetNick().CmpNoCase( u2->GetFounder().GetNick() );
+        	 }catch(...){}
+        	 break;
+        }
         case 7: return dir * compareSimple( u1->GetSpectators(), u2->GetSpectators() );
         case 8: return dir * ComparePlayer( u1, u2 );
         case 9: return dir * compareSimple( u1->GetMaxPlayers(), u2->GetMaxPlayers() );
         default: return 0;
     }
+    return 0; // simply to avoid compiler warning
 }
 
 int BattleListCtrl::CompareStatus( DataType u1, DataType u2 )
@@ -303,7 +328,10 @@ void BattleListCtrl::SetTipWindowText( const long item_hit, const wxPoint& posit
         m_tiptext = icons().GetBattleStatus(battle);
             break;
         case 1: // country
-            m_tiptext = GetFlagNameFromCountryCode(battle.GetFounder().GetCountry());
+						try
+						{
+							m_tiptext = GetFlagNameFromCountryCode(battle.GetFounder().GetCountry());
+            }catch(...){}
             break;
         case 2: // rank_min
             m_tiptext = m_colinfovec[column].tip;
@@ -318,7 +346,10 @@ void BattleListCtrl::SetTipWindowText( const long item_hit, const wxPoint& posit
             m_tiptext = RefineModname(battle.GetHostModName());
             break;
         case 6: // host
+					try
+					{
             m_tiptext = battle.GetFounder().GetNick();
+					}catch(...){}
             break;
         case 7: // specs
             m_tiptext = _("Spectators:");

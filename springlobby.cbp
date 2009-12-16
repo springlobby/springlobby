@@ -12,12 +12,15 @@
 				<Option object_output="obj/GNU/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters="-cl " />
+				<Option parameters="-cl -nc -f $HOME/.springlobby/testing.conf" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
+					<Add option="-Wshadow" />
+					<Add option="-Winit-self" />
+					<Add option="-Wextra" />
 					<Add option="-Wall" />
 					<Add option="-g" />
-					<Add option="`wx-config --cflags`" />
+					<Add option="`wx-config  --cflags`" />
 					<Add option="`pkg-config --cflags libtorrent-rasterbar`" />
 					<Add option="-Wno-strict-aliasing" />
 					<Add option='-DVERSION=\\&quot;cb-Unix-Debug\\&quot;' />
@@ -147,6 +150,61 @@
 					<Variable name="WX_DIR" value="C:/wxWidgets-2.8.4" />
 				</Environment>
 			</Target>
+			<Target title="GNU | Debug (wx29)">
+				<Option output="bin/GNU/Debug/springlobby" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="bin/GNU/Debug/" />
+				<Option object_output="obj/GNU/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option parameters="-cl -nc" />
+				<Option projectLinkerOptionsRelation="2" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-g" />
+					<Add option="`/share/sources/wxsource/wxWidgets-svn/build-linux/wx-config --cflags`" />
+					<Add option="`pkg-config --cflags libtorrent-rasterbar`" />
+					<Add option="-Wno-strict-aliasing" />
+					<Add option='-DVERSION=\\&quot;cb-Unix-Debug\\&quot;' />
+					<Add option="-DNO_DEBUG_REPORT_UPLOAD" />
+					<Add option="-DDISABLE_SOUND" />
+				</Compiler>
+				<Linker>
+					<Add option="`/share/sources/wxsource/wxWidgets-svn/build-linux/wx-config --libs aui xml adv core base html net`" />
+					<Add option="`pkg-config --libs libtorrent-rasterbar`" />
+				</Linker>
+				<ExtraCommands>
+					<Add before="tools/test-susynclib.awk src/springunitsynclib.cpp" />
+				</ExtraCommands>
+			</Target>
+			<Target title="GNU | RealDebug">
+				<Option output="bin/GNU/Debug/springlobby" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="bin/GNU/Debug/" />
+				<Option object_output="obj/GNU/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option parameters="-cl -nc -f $HOME/.springlobby/testing.conf" />
+				<Option projectLinkerOptionsRelation="2" />
+				<Compiler>
+					<Add option="-Wshadow" />
+					<Add option="-Winit-self" />
+					<Add option="-Wextra" />
+					<Add option="-Wall" />
+					<Add option="-g" />
+					<Add option="`wx-config --debug --cflags`" />
+					<Add option="`pkg-config --cflags libtorrent-rasterbar`" />
+					<Add option="-Wno-strict-aliasing" />
+					<Add option='-DVERSION=\\&quot;cb-Unix-Debug\\&quot;' />
+					<Add option="-DNO_DEBUG_REPORT_UPLOAD" />
+					<Add option="-DDISABLE_SOUND" />
+				</Compiler>
+				<Linker>
+					<Add option="`wx-config --debug --libs`" />
+					<Add option="`pkg-config --libs libtorrent-rasterbar`" />
+				</Linker>
+				<ExtraCommands>
+					<Add before="tools/test-susynclib.awk src/springunitsynclib.cpp" />
+				</ExtraCommands>
+			</Target>
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
@@ -175,6 +233,8 @@
 		<Unit filename="src/aui/artprovider.h" />
 		<Unit filename="src/aui/auimanager.cpp" />
 		<Unit filename="src/aui/auimanager.h" />
+		<Unit filename="src/aui/slbook.cpp" />
+		<Unit filename="src/aui/slbook.h" />
 		<Unit filename="src/autobalancedialog.cpp" />
 		<Unit filename="src/autobalancedialog.h" />
 		<Unit filename="src/autohost.cpp" />
@@ -201,8 +261,6 @@
 		<Unit filename="src/battleroommmoptionstab.h" />
 		<Unit filename="src/battleroomtab.cpp" />
 		<Unit filename="src/battleroomtab.h" />
-		<Unit filename="src/boost/md5.cpp" />
-		<Unit filename="src/boost/md5.hpp" />
 		<Unit filename="src/channel/autojoinchanneldialog.cpp" />
 		<Unit filename="src/channel/autojoinchanneldialog.h" />
 		<Unit filename="src/channel/channel.cpp" />
@@ -221,6 +279,8 @@
 		<Unit filename="src/chatoptionstab.h" />
 		<Unit filename="src/chatpanel.cpp" />
 		<Unit filename="src/chatpanel.h" />
+		<Unit filename="src/chatpanelmenu.cpp" />
+		<Unit filename="src/chatpanelmenu.h" />
 		<Unit filename="src/connectwindow.cpp" />
 		<Unit filename="src/connectwindow.h" />
 		<Unit filename="src/countrycodes.cpp" />
@@ -229,6 +289,7 @@
 		<Unit filename="src/crashreport.h" />
 		<Unit filename="src/crc.cpp" />
 		<Unit filename="src/crc.h" />
+<<<<<<< HEAD:springlobby.cbp
 		<Unit filename="src/curl/base.cpp" />
 		<Unit filename="src/curl/base.h" />
 		<Unit filename="src/curl/curlthread.cpp" />
@@ -239,9 +300,14 @@
 		<Unit filename="src/curl/http.h" />
 		<Unit filename="src/curl/utils.cpp" />
 		<Unit filename="src/curl/utils.h" />
+=======
+		<Unit filename="src/customizations.cpp" />
+		<Unit filename="src/customizations.h" />
+>>>>>>> master:springlobby.cbp
 		<Unit filename="src/customlistctrl.cpp" />
 		<Unit filename="src/customlistctrl.h" />
 		<Unit filename="src/customvirtlistctrl.h" />
+		<Unit filename="src/defines.h" />
 		<Unit filename="src/filelister/filelistctrl.cpp" />
 		<Unit filename="src/filelister/filelistctrl.h" />
 		<Unit filename="src/filelister/filelistdialog.cpp" />
@@ -251,12 +317,20 @@
 		<Unit filename="src/flagimagedata.h" />
 		<Unit filename="src/flagimages.cpp" />
 		<Unit filename="src/flagimages.h" />
-		<Unit filename="src/globalevents.cpp" />
-		<Unit filename="src/globalevents.h" />
 		<Unit filename="src/globalsmanager.cpp" />
 		<Unit filename="src/globalsmanager.h" />
 		<Unit filename="src/groupoptionspanel.cpp" />
 		<Unit filename="src/groupoptionspanel.h" />
+		<Unit filename="src/gui/gradientpanel.cpp" />
+		<Unit filename="src/gui/gradientpanel.h" />
+		<Unit filename="src/gui/simplefront.cpp" />
+		<Unit filename="src/gui/simplefront.h" />
+		<Unit filename="src/gui/skirmish_dialog.cpp" />
+		<Unit filename="src/gui/skirmish_dialog.h" />
+		<Unit filename="src/gui/wxbackgroundimage.cpp" />
+		<Unit filename="src/gui/wxbackgroundimage.h" />
+		<Unit filename="src/gui/wxgradientbutton.cpp" />
+		<Unit filename="src/gui/wxgradientbutton.h" />
 		<Unit filename="src/hostbattledialog.cpp" />
 		<Unit filename="src/hostbattledialog.h" />
 		<Unit filename="src/httpdownloader.h" />
@@ -354,8 +428,6 @@
 		<Unit filename="src/serverevents.cpp" />
 		<Unit filename="src/serverevents.h" />
 		<Unit filename="src/settings++/Defs.hpp" />
-		<Unit filename="src/settings++/custom_dialogs.cpp" />
-		<Unit filename="src/settings++/custom_dialogs.h" />
 		<Unit filename="src/settings++/frame.cpp" />
 		<Unit filename="src/settings++/frame.h" />
 		<Unit filename="src/settings++/helpmenufunctions.cpp" />
@@ -369,8 +441,6 @@
 		<Unit filename="src/settings++/tab_abstract.h" />
 		<Unit filename="src/settings++/tab_audio.cpp" />
 		<Unit filename="src/settings++/tab_audio.h" />
-		<Unit filename="src/settings++/tab_debug.cpp" />
-		<Unit filename="src/settings++/tab_debug.h" />
 		<Unit filename="src/settings++/tab_quality_video.cpp" />
 		<Unit filename="src/settings++/tab_quality_video.h" />
 		<Unit filename="src/settings++/tab_render_detail.cpp" />
@@ -427,10 +497,20 @@
 		<Unit filename="src/ui.h" />
 		<Unit filename="src/uiutils.cpp" />
 		<Unit filename="src/uiutils.h" />
-		<Unit filename="src/unitsyncthread.cpp" />
-		<Unit filename="src/unitsyncthread.h" />
+		<Unit filename="src/updater/updatehelper.cpp" />
+		<Unit filename="src/updater/updatehelper.h" />
 		<Unit filename="src/updater/updater.cpp" />
 		<Unit filename="src/updater/updater.h" />
+		<Unit filename="src/updater/updaterapp.cpp">
+			<Option target="Win32 | Debug" />
+			<Option target="Win32 | Profile" />
+		</Unit>
+		<Unit filename="src/updater/updaterapp.h">
+			<Option target="Win32 | Debug" />
+			<Option target="Win32 | Profile" />
+		</Unit>
+		<Unit filename="src/updater/updatermainwindow.cpp" />
+		<Unit filename="src/updater/updatermainwindow.h" />
 		<Unit filename="src/updater/versionchecker.cpp" />
 		<Unit filename="src/updater/versionchecker.h" />
 		<Unit filename="src/user.cpp" />
@@ -441,16 +521,30 @@
 		<Unit filename="src/userlist.h" />
 		<Unit filename="src/userlistctrl.cpp" />
 		<Unit filename="src/userlistctrl.h" />
+		<Unit filename="src/utils/activitynotice.cpp" />
+		<Unit filename="src/utils/activitynotice.h" />
 		<Unit filename="src/utils/controls.cpp" />
 		<Unit filename="src/utils/controls.h" />
 		<Unit filename="src/utils/conversion.cpp" />
 		<Unit filename="src/utils/conversion.h" />
+		<Unit filename="src/utils/customdialogs.cpp" />
+		<Unit filename="src/utils/customdialogs.h" />
 		<Unit filename="src/utils/debug.cpp" />
 		<Unit filename="src/utils/debug.h" />
+		<Unit filename="src/utils/events.h" />
+		<Unit filename="src/utils/globalevents.cpp" />
+		<Unit filename="src/utils/globalevents.h" />
+		<Unit filename="src/utils/isink.h" />
 		<Unit filename="src/utils/math.cpp" />
 		<Unit filename="src/utils/math.h" />
+		<Unit filename="src/utils/md5.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/utils/md5.h" />
 		<Unit filename="src/utils/misc.cpp" />
 		<Unit filename="src/utils/misc.h" />
+		<Unit filename="src/utils/networkevents.cpp" />
+		<Unit filename="src/utils/networkevents.h" />
 		<Unit filename="src/utils/platform.cpp" />
 		<Unit filename="src/utils/platform.h" />
 		<Unit filename="src/utils/sltipwin.cpp" />
@@ -463,6 +557,8 @@
 		<Unit filename="src/utils/stack.h" />
 		<Unit filename="src/utils/tasutil.cpp" />
 		<Unit filename="src/utils/tasutil.h" />
+		<Unit filename="src/utils/uievents.cpp" />
+		<Unit filename="src/utils/uievents.h" />
 		<Unit filename="src/widgets/downloaddialog.cpp" />
 		<Unit filename="src/widgets/downloaddialog.h" />
 		<Unit filename="src/widgets/downloadlistctrl.cpp" />

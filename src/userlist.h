@@ -24,11 +24,14 @@ class UserList
     bool UserExists( wxString const& nick ) const;
     user_map_t::size_type GetNumUsers() const;
 
+    void Nullify();
+
   private:
     user_map_t m_users;
     // The following are used as internal cache to speed up random access:
     mutable user_const_iter_t m_seek;
     mutable user_map_t::size_type m_seekpos;
+
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_USERLIST_H

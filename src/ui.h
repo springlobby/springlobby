@@ -6,7 +6,6 @@ class TASServer;
 class ConnectWindow;
 class Spring;
 class MainWindow;
-class wxString;
 class Channel;
 class User;
 class IBattle;
@@ -25,6 +24,7 @@ typedef int AlertEventType;
 
 extern const wxEventType torrentSystemStatusUpdateEvt;
 
+#include <wx/string.h>
 
 //! @brief UI main class
 class Ui
@@ -40,7 +40,8 @@ class Ui
     };
 
     Server& GetServer();
-    bool    GetServerStatus();
+    const Server& GetServer() const;
+    bool    GetServerStatus() const;
     ChatPanel* GetActiveChatPanel();
     ChatPanel* GetChannelChatPanel( const wxString& channel );
 
@@ -64,19 +65,12 @@ class Ui
 
     bool IsSpringCompatible();
 
-    bool IsSpringRunning();
-
-    void StartHostedBattle();
-    //void SendHostInfo( HostInfo update );
+    bool IsSpringRunning() const;
 
     void Quit();
 
-    void ReloadUnitSync();
-
     void DownloadMap( const wxString& hash, const wxString& name );
     void DownloadMod( const wxString& hash, const wxString& name );
-
-    void OpenWebBrowser( const wxString& url );
 
     bool Ask( const wxString& heading, const wxString& question );
     bool AskText( const wxString& heading, const wxString& question, wxString& answer, long style = wxOK | wxCANCEL | wxCENTRE );
@@ -86,7 +80,7 @@ class Ui
 
     MainWindow& mw();
 
-    bool IsMainWindowCreated();
+    bool IsMainWindowCreated() const;
 
     void OnUpdate( int mselapsed );
 
@@ -140,19 +134,22 @@ class Ui
 
     void OnRing( const wxString& from );
 
-    void OnMapInfoCached( const wxString& mapname );
-    void OnMinimapCached( const wxString& mapname );
-    void OnModUnitsCached( const wxString& modname );
     //! ask to download missing map, return true if download attempted
     bool OnPresetRequiringMap( const wxString& mapname );
 
-    bool IsThisMe(User& other);
-    bool IsThisMe(User* other);
-    bool IsThisMe(const wxString& other);
+    bool IsThisMe(User& other) const;
+    bool IsThisMe(User* other) const;
+    bool IsThisMe(const wxString& other) const;
 
-    int TestHostPort( unsigned int port );
+    int TestHostPort( unsigned int port ) const;
 
     void ReloadPresetList();
+
+    void OpenFileInEditor( const wxString& filepath );
+
+    //! the welcome box, should be called in all code paths directly after MainWindow might be shown for the first time
+    void FirstRunWelcome();
+    void CheckForUpdates();
 
   protected:
     Server* m_serv;

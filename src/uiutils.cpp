@@ -19,7 +19,7 @@
 #include "utils/math.h"
 #include "utils/conversion.h"
 #include "utils/debug.h"
-#include "settings++/custom_dialogs.h"
+#include "utils/customdialogs.h"
 #include "settings.h"
 
 wxString RefineMapname( const wxString& mapname )
@@ -253,9 +253,9 @@ wxBitmap BlendBitmaps( const wxBitmap& background, const wxBitmap& overlay, cons
 
 
 namespace {
+//! Helper class for BorderInvariantResizeImage
 struct Resizer
 {
-	// Helper class for BorderInvariantResizeImage
 	// Author: Tobi Vollebregt
 
 	Resizer( wxImage& result, const wxImage& image, bool alpha )
@@ -330,8 +330,10 @@ typedef std::vector<double> huevec;
 void hue(huevec& out, int amount, int level)
 {
 	if (level <= 1) {
-		if (out.size() < amount) out.push_back(0.0);
-		if (out.size() < amount) out.push_back(0.5);
+		if (long(out.size()) < amount)
+            out.push_back(0.0);
+		if (long(out.size()) < amount)
+            out.push_back(0.5);
 	}
 	else {
 		hue(out, amount, level - 1);
@@ -355,6 +357,7 @@ void hue(huevec& out, int amount)
 std::vector<wxColour>& GetBigFixColoursPalette( int numteams )
 {
     static std::vector<wxColour> result;
+    wxLogDebugFunc( TowxString(numteams) );
 		huevec huevector;
     static int satvalbifurcatepos;
     static std::vector<double> satvalsplittings;
@@ -393,7 +396,7 @@ std::vector<wxColour>& GetBigFixColoursPalette( int numteams )
 			if ( hue > 1 ) hue-= 1;
 			wxImage::HSVValue hsvcolor( hue, saturation, value );
 			wxImage::RGBValue rgbvalue = wxImage::HSVtoRGB( hsvcolor );
-			wxColor col( rgbvalue.red, rgbvalue.green, rgbvalue.blue );
+			wxColour col( rgbvalue.red, rgbvalue.green, rgbvalue.blue );
 			result.push_back( col );
     }
     return result;
@@ -495,3 +498,27 @@ void CopyToClipboard( const wxString& text )
     }
 }
 
+
+void OpenWebBrowser( const wxString& url )
+{
+    if ( sett().GetWebBrowserUseDefault()
+            // These shouldn't happen, but if they do we use the default browser anyway.
+            || sett().GetWebBrowserPath() == wxEmptyString
+            || sett().GetWebBrowserPath() == _T("use default") )
+    {
+        if ( !wxLaunchDefaultBrowser( url ) )
+        {
+            wxLogWarning( _T("can't launch default browser") );
+            customMessageBoxNoModal(SL_MAIN_ICON, _("Couldn't launch browser. URL is: ") + url, _("Couldn't launch browser.")  );
+        }
+    }
+    else
+    {
+        if ( !wxExecute ( sett().GetWebBrowserPath() + _T(" ") + url, wxEXEC_ASYNC ) )
+        {
+            wxLogWarning( _T("can't launch browser: %s"), sett().GetWebBrowserPath().c_str() );
+            customMessageBoxNoModal(SL_MAIN_ICON, _("Couldn't launch browser. URL is: ") + url + _("\nBroser path is: ") + sett().GetWebBrowserPath(), _("Couldn't launch browser.")  );
+        }
+
+    }
+}
