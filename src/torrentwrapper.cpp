@@ -117,51 +117,6 @@ bool TorrentMaintenanceThread::TestDestroy()
 	return Thread::TestDestroy() || m_stop_thread;
 }
 
-bool TorrentTable::IsConsistent()
-{
-#ifdef TorrentTable_validate
-#endif
-    return true;
-}
-
-void TorrentTable::FlushData()
-{
-#ifdef TorrentTable_validate
-
-#endif
-    m_leech_count = 0;
-}
-
-//
-//void TorrentTable::SetRowStatus( TorrentTable::PRow row, P2P::FileStatus status )
-//{
-//		if (!row.ok())return;
-//		if ( row->status != P2P::seeding && status == P2P::seeding ) m_seed_count++;
-//		if ( row->status != P2P::leeching && status == P2P::leeching ) m_leech_count++;
-//		if ( row->status == P2P::seeding && status != P2P::seeding ) m_seed_count--;
-//		if ( row->status == P2P::leeching && status != P2P::leeching ) m_leech_count--;
-//    if ( row->status != P2P::queued && status == P2P::queued ) queued_torrents.insert( row );
-//		if ( row->status == P2P::queued && status != P2P::queued ) queued_torrents.erase( row );
-//    if ( row->status == P2P::seeding || row->status == P2P::leeching )
-//    {
-//        if ( status != P2P::seeding && status != P2P::leeching ) RemoveRowHandle( row );
-//    }
-//    row->status = status;
-//}
-
-//void TorrentTable::SetRowTransferredData( PRow row, TransferredData data )
-//{
-//	if (!row.ok())return;
-//	seed_sent_data[row] = data;
-//}
-
-
-unsigned int TorrentTable::GetOpenLeechsCount()
-{
-	return m_leech_count;
-}
-
-
 TorrentWrapper& torrent()
 {
     static LineInfo<TorrentWrapper> m( AT );
@@ -173,7 +128,7 @@ TorrentWrapper& torrent()
 TorrentWrapper::TorrentWrapper():
         ingame(false),
         m_timer_count(0),
-        m_maintenance_thread(this),
+//        m_maintenance_thread(this),
         m_started(false),
         m_plasma_interface( new PlasmaInterface() )
 {
@@ -229,7 +184,7 @@ TorrentWrapper::TorrentWrapper():
 TorrentWrapper::~TorrentWrapper()
 {
     wxLogDebugFunc( wxEmptyString );
-    m_maintenance_thread.Stop();
+//    m_maintenance_thread.Stop();
     #ifndef __WXMSW__
         try
         {
@@ -348,46 +303,58 @@ TorrentWrapper::DownloadRequestStatus TorrentWrapper::RequestFileByName( const w
     assert( info.m_type != PlasmaResourceInfo::unknwon );
     if ( m_plasma_interface->DownloadTorrentFile( info, sett().GetTorrentDataDir().GetFullPath() ) )
     {
-        libtorrent::add_torrent_params p;
-
-        try {
-            // the torrent_info is stored in an intrusive_ptr
-            p.ti = new libtorrent::torrent_info(boost::filesystem::path( info.m_local_torrent_filepath.mb_str() ) );
-            wxString dl_dir_path = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator()
-                    + getDataSubdirForType( convertMediaType( info.m_type ) ) + wxFileName::GetPathSeparator() + info.m_name;
-            p.save_path = boost::filesystem::path( dl_dir_path.mb_str() );
-        }
-        catch ( std::exception& exc ) {
-                wxLogMessage( _T("torrent has invalid encoding") );
-                return corrupt_torrent_file;
-        }
-        try {
-            libtorrent::torrent_handle tor = m_torr->add_torrent(p);
-            size_t num_webseeds = info.m_webseeds.Count();
-            if ( num_webseeds < 1 )
-                return no_seeds_found;
-            for ( size_t i = 0; i < num_webseeds; ++ i )
-                tor.add_url_seed( STD_STRING( info.m_webseeds[i] ) );
+        if ( AddTorrent( info ) == success ) {
+            for ( size_t i = 0; i < info.m_dependencies.Count(); ++i ) {
+                wxString dependency_name = info.m_dependencies[i];
+                PlasmaResourceInfo dependency_info = m_plasma_interface->GetResourceInfo( dependency_name );
+                if ( dependency_info.m_type != PlasmaResourceInfo::unknwon )
+                    continue;
+                if ( m_plasma_interface->DownloadTorrentFile( dependency_info, sett().GetTorrentDataDir().GetFullPath() ) )
+                    AddTorrent( dependency_info );
+            }
             return success;
         }
-        catch (std::exception& e) {
-           wxLogError(_T("%s"),TowxString( e.what()).c_str()); // TODO (BrainDamage#1#): add message to user on failure
-           return missing_in_table;
-        }
-
     }
     return remote_file_dl_failed;
 }
 
+TorrentWrapper::DownloadRequestStatus TorrentWrapper::AddTorrent( const PlasmaResourceInfo& info ){
+    libtorrent::add_torrent_params p;
+
+    try {
+        // the torrent_info is stored in an intrusive_ptr
+        p.ti = new libtorrent::torrent_info(boost::filesystem::path( info.m_local_torrent_filepath.mb_str() ) );
+        wxString dl_dir_path = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator()
+                + getDataSubdirForType( convertMediaType( info.m_type ) ) + wxFileName::GetPathSeparator() + info.m_name;
+        p.save_path = boost::filesystem::path( dl_dir_path.mb_str() );
+    }
+    catch ( std::exception& exc ) {
+            wxLogMessage( _T("torrent has invalid encoding") );
+            return corrupt_torrent_file;
+    }
+    try {
+        libtorrent::torrent_handle tor = m_torr->add_torrent(p);
+        size_t num_webseeds = info.m_webseeds.Count();
+        if ( num_webseeds < 1 )
+            return no_seeds_found;
+        for ( size_t i = 0; i < num_webseeds; ++ i )
+            tor.add_url_seed( STD_STRING( info.m_webseeds[i] ) );
+        return success;
+    }
+    catch (std::exception& e) {
+       wxLogError(_T("%s"),TowxString( e.what()).c_str()); // TODO (BrainDamage#1#): add message to user on failure
+       return missing_in_table;
+    }
+}
 
 void TorrentWrapper::SetIngameStatus( bool status )
 {
     if ( status == ingame ) return; // no change needed
     ingame = status;
-    if ( ingame )
-        m_maintenance_thread.Pause();
-    else
-        m_maintenance_thread.Resume();
+//    if ( ingame )
+//        m_maintenance_thread.Pause();
+//    else
+//        m_maintenance_thread.Resume();
 
     try
     {
@@ -518,14 +485,6 @@ std::map<wxString,TorrentInfos> TorrentWrapper::CollectGuiInfos()
     return ret;
 }
 
-
-bool TorrentWrapper::GetTorrentFileAndInfos( const wxString& resourceName )
-{
-    if ( sett().GetCurrentUsedDataDir().IsEmpty() ) return false; // no good things can happend if you don't know which folder to r/w files from
-
-    return true;
-}
-
 void TorrentWrapper::RemoveUnneededTorrents()
 {
 
@@ -535,17 +494,6 @@ void TorrentWrapper::RemoveUnneededTorrents()
 
 void TorrentWrapper::TryToJoinQueuedTorrents()
 {
-
-    if ( GetTorrentTable().GetOpenLeechsCount() < 5 )
-    {
-        // join queued files if there are available slots
-//        std::set<TorrentTable::PRow> queuedrequests = GetTorrentTable().QueuedTorrentsByRow();
-//        for ( std::set<TorrentTable::PRow>::iterator it = queuedrequests.begin(); ( it != queuedrequests.end() ) && ( GetTorrentTable().GetOpenLeechsCount() < 4 ); it++ )
-//        {
-//            if ( !it->ok() ) continue;
-//            RequestFileByRow( *it );
-//        }
-    }
 
 }
 
@@ -585,6 +533,7 @@ void TorrentWrapper::SearchAndGetQueuedDependencies()
 
 }
 
+ #if 0
 void TorrentWrapper::OnConnected( Socket* /*unused*/ )
 {
     wxLogMessage(_T("torrent system connected") );
@@ -592,15 +541,14 @@ void TorrentWrapper::OnConnected( Socket* /*unused*/ )
 
     try
     {
-        m_torr->start_dht();
+        m_torr->start_dht();//! still needed??
     }
     catch (std::exception& e)
     {
         wxLogError( TowxString( e.what() ) ); // TODO (BrainDamage#1#): add message to user on failure
     }
 
-    GetTorrentTable().FlushData(); // flush the torrent data
-		m_maintenance_thread.Init();
+    m_maintenance_thread.Init();
 
 }
 
@@ -609,46 +557,47 @@ void TorrentWrapper::OnDisconnected( Socket* /*unused*/ )
 {
     wxLogMessage(_T("torrent system disconnected") );
 
-//    std::set<TorrentTable::PRow> queued =  GetTorrentTable().QueuedTorrentsByRow();
-//    wxArrayString TorrentsToResume;
-//    for ( std::set<TorrentTable::PRow>::iterator it = queued.begin(); it != queued.end(); it++ ) TorrentsToResume.Add( (*it)->hash );
-//
-//    std::map<libtorrent::torrent_handle, TorrentTable::PRow> handles =  GetTorrentTable().RowByTorrentHandles();
-//		for ( std::map<libtorrent::torrent_handle, TorrentTable::PRow>::iterator it = handles.begin(); it != handles.end(); it++ )
-//    {
-//        if ( !it->first.is_seed() ) TorrentsToResume.Add( it->second->hash ); // save leeching torrents for resume on next connection
-//
-//        try
-//        {
-//            m_torr->remove_torrent(it->first); //remove all torrents upon disconnect
-//        }
-//        catch (std::exception& e)
-//        {
-//            wxLogError( TowxString( e.what() ) ); // TODO (BrainDamage#1#): add message to user on failure
-//        }
-//    }
-//
-//    try
-//    {
-//        if (m_started) m_torr->stop_dht();
-//    }
-//    catch (std::exception& e)
-//    {
-//        wxLogError( TowxString( e.what() ) ); // TODO (BrainDamage#1#): add message to user on failure
-//    }
-//
-//
-//    GetTorrentTable().FlushData(); // flush the torrent data
-//
-//    try
-//    {
-//        sett().SetTorrentListToResume( TorrentsToResume );
-//    }
-//    catch (GlobalDestroyedError)
-//    {
-//    }
+    std::set<TorrentTable::PRow> queued =  GetTorrentTable().QueuedTorrentsByRow();
+    wxArrayString TorrentsToResume;
+    for ( std::set<TorrentTable::PRow>::iterator it = queued.begin(); it != queued.end(); it++ ) TorrentsToResume.Add( (*it)->hash );
+
+    std::map<libtorrent::torrent_handle, TorrentTable::PRow> handles =  GetTorrentTable().RowByTorrentHandles();
+		for ( std::map<libtorrent::torrent_handle, TorrentTable::PRow>::iterator it = handles.begin(); it != handles.end(); it++ )
+    {
+        if ( !it->first.is_seed() ) TorrentsToResume.Add( it->second->hash ); // save leeching torrents for resume on next connection
+
+        try
+        {
+            m_torr->remove_torrent(it->first); //remove all torrents upon disconnect
+        }
+        catch (std::exception& e)
+        {
+            wxLogError( TowxString( e.what() ) ); // TODO (BrainDamage#1#): add message to user on failure
+        }
+    }
+
+    try
+    {
+        if (m_started) m_torr->stop_dht();
+    }
+    catch (std::exception& e)
+    {
+        wxLogError( TowxString( e.what() ) ); // TODO (BrainDamage#1#): add message to user on failure
+    }
+
+
+    GetTorrentTable().FlushData(); // flush the torrent data
+
+    try
+    {
+        sett().SetTorrentListToResume( TorrentsToResume );
+    }
+    catch (GlobalDestroyedError)
+    {
+    }
     m_started = false;
     m_maintenance_thread.Stop();
 }
+#endif //#if 0
 
 #endif

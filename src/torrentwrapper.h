@@ -13,21 +13,16 @@
 
 #include <map>
 
-#include "inetclass.h"
-#include "mutexwrapper.h"
 #include "iunitsync.h"
 #include "thread.h"
 
-#include "autopointers.h"
-
-#define DEFAULT_P2P_COORDINATOR_PORT 8202
-#define DEFAULT_P2P_TRACKER_PORT 8201
 /*
 namespace libtorrent{ class session; };
 namespace libtorrent { struct torrent_handle; };
 */
 class TorrentWrapper;
 class PlasmaInterface;
+class PlasmaResourceInfo;
 
 namespace P2P {
 enum FileStatus
@@ -77,34 +72,8 @@ class TorrentMaintenanceThread : public Thread
 		TorrentWrapper& m_parent;
 };
 
-class TorrentTable
-{
-public:
 
-    bool IsConsistent();
-
-    TorrentTable():
-    m_leech_count(0)
-    {
-    }
-
-    struct TransferredData
-    {
-        unsigned int failed_check_counts;
-        unsigned int sentdata;
-        TransferredData(): failed_check_counts(0), sentdata(0) {}
-    };
-
-    // deletes all stored infos
-    void FlushData();
-
-    unsigned int GetOpenLeechsCount();
-
-private:
-    unsigned int m_leech_count;
-};
-
-class TorrentWrapper : public iNetClass
+class TorrentWrapper //: public iNetClass
 {
 public:
 
@@ -148,19 +117,13 @@ public:
     void SearchAndGetQueuedDependencies();
     void ResumeFromList();
 
-    TorrentTable &GetTorrentTable()
-    {
-        ScopedLocker<TorrentTable> l_torrent_table(m_torrent_table);
-        return l_torrent_table.Get();
-    }
-
 private:
 
-    bool GetTorrentFileAndInfos( const wxString& resourceName );
+    DownloadRequestStatus AddTorrent( const PlasmaResourceInfo& info );
 
-    void OnConnected( Socket* sock );
-    void OnDisconnected( Socket* sock );
-    virtual void OnDataReceived( Socket* ) {};
+//    void OnConnected( Socket* sock );
+//    void OnDisconnected( Socket* sock );
+//    virtual void OnDataReceived( Socket* ) {};
 
     wxString m_buffer;
 
@@ -169,9 +132,7 @@ private:
 
     wxArrayString m_tracker_urls;
 
-    MutexWrapper<TorrentTable> m_torrent_table;
-
-    TorrentMaintenanceThread m_maintenance_thread;
+//    TorrentMaintenanceThread m_maintenance_thread;
 
     libtorrent::session* m_torr;
 
