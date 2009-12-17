@@ -32,11 +32,16 @@ const wxString s_soap_querytemplate = _T("<?xml version=\"1.0\" encoding=\"utf-8
 "</soap12:Envelope>\0");
 
 
-wxArrayString getDownloadLinks( const wxString& name ) {
+/** @brief GetResourceInfo
+  *
+  * @todo: document this function
+  */
+PlasmaResourceInfo PlasmaInterface::GetResourceInfo(const wxString& name)
+{
+    PlasmaResourceInfo info;
     wxSocketClient * socket = new wxSocketClient();
     wxString data = s_soap_querytemplate;
     data.Replace( _T("REALNAME") , _T("DeltaSiegeDry.smf") );
-    wxString host = _T("planet-wars.eu");
     wxString path = _T("/PlasmaServer/Service.asmx");//can be php or any other file
 
 
@@ -60,7 +65,7 @@ wxArrayString getDownloadLinks( const wxString& name ) {
 //    header += _T("User-Agent: Jakarta Commons-HttpClient/3.1\n");
 
     header += _T("Host: ");
-    header += host;
+    header += m_host;
     header += _T("\n");
 
     //Write POST content length
@@ -74,7 +79,7 @@ wxArrayString getDownloadLinks( const wxString& name ) {
 
     //Connect to host
     wxIPV4address * address = new wxIPV4address();
-    address->Hostname(host);
+    address->Hostname(m_host);
     address->Service(80);
 
     socket->Connect(*address);
@@ -131,8 +136,7 @@ wxArrayString getDownloadLinks( const wxString& name ) {
     assert( xml.GetRoot() );
     wxXmlNode *node = xml.GetRoot()->GetChildren();
     assert( node );
-    wxArrayString webseeds;
-    wxArrayString dependencies;
+
     wxString resourceType ( _T("unknown") );
     node = node->GetChildren();
     assert( node );
@@ -147,26 +151,30 @@ wxArrayString getDownloadLinks( const wxString& name ) {
             assert( links );
             wxXmlNode* url = links->GetChildren();
             while ( url ) {
-                webseeds.Add( url->GetNodeContent() );
+                info.m_webseeds.Add( url->GetNodeContent() );
                 url = url->GetNext();
             }
             wxXmlNode* next = links->GetNext();
             while ( next ) {
                 wxString next_name = next->GetName();
                 if ( next_name == _T("torrentFileName") ) {
-                    wxString tor_name = next->GetNodeContent();
-                    wxString dl_target = wxString::Format( _T("/tmp/%s"), tor_name.c_str() );
-                    downloadFile( host, _T("PlasmaServer/Resources/") + tor_name, dl_target );
+                    info.m_torrent_filename = next->GetNodeContent();
                 }
                 else if ( next_name == _T("dependencies") ) {
                     wxXmlNode* deps = next->GetChildren();
                     while ( deps ) {
-                        dependencies.Add( deps->GetNodeContent() );
+                        info.m_dependencies.Add( deps->GetNodeContent() );
                         deps = deps->GetNext();
                     }
                 }
                 else if ( next_name == _T("resourceType") ) {
                     resourceType = next->GetNodeContent();
+                    if ( resourceType == _T("Mod") )
+                        info.m_type = PlasmaResourceInfo::mod;
+                    else if ( resourceType == _T("Map") )
+                        info.m_type = PlasmaResourceInfo::map;
+                    else
+                        info.m_type = PlasmaResourceInfo::unknwon;
                 }
                 next = next->GetNext();
             }
@@ -175,12 +183,48 @@ wxArrayString getDownloadLinks( const wxString& name ) {
         node = node->GetNext();
     }
     wxString seeds;
-    for ( size_t i = 0; i < webseeds.Count(); ++i )
-        seeds += webseeds[i] + _T("\n");
+    for ( size_t i = 0; i < info.m_webseeds.Count(); ++i )
+        seeds += info.m_webseeds[i] + _T("\n");
     wxMessageBox( seeds );
-    return webseeds;
+
+
+    return info;
+
 }
 
+/** @brief downloadFile
+  *
+  * @todo: document this function
+  */
+void PlasmaInterface::downloadFile(const wxString& host, const wxString& remote_path, const wxString& local_dest)
+{
+
+}
+
+/** @brief DownloadTorrentFile
+  *
+  * @todo: document this function
+  */
+bool PlasmaInterface::DownloadTorrentFile(const PlasmaResourceInfo& info, const wxString& destination_directory)
+{
+    wxString dl_target = destination_directory + wxFileName::GetPathSeparator() + info.m_torrent_filename;
+    downloadFile( m_host, _T("PlasmaServer/Resources/") + info.m_torrent_filename, dl_target );
+}
+
+/** @brief PlasmaInterface
+  *
+  * @todo: document this function
+  */
+PlasmaInterface::PlasmaInterface()
+    : m_host ( _T("planet-wars.eu") )
+{
+
+}
+
+/** @brief downloadFile
+  *
+  * @todo: document this function
+  */
 void downloadFile( const wxString& host, const wxString& remote_path, const wxString& local_dest )
 {
     wxHTTP FileDownloading;
@@ -203,3 +247,5 @@ void downloadFile( const wxString& host, const wxString& remote_path, const wxSt
         //throw something
     }
 }
+
+

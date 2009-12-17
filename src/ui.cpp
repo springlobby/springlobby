@@ -317,7 +317,7 @@ void Ui::DownloadMod( const wxString& hash, const wxString& name )
 
 void Ui::DownloadFileP2P( const wxString& hash, const wxString& name )
 {
-    getDownloadLinks( name );
+
 #ifndef NO_TORRENT_SYSTEM
 //    if ( !torrent().IsConnectedToP2PSystem() )
 //    {
