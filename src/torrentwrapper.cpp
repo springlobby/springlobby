@@ -214,6 +214,14 @@ TorrentWrapper::TorrentWrapper():
         {
             wxLogError( TowxString( e.what() ) );
         }
+        try
+        {
+            m_torr->start_lsd();
+        }
+        catch (std::exception& e)
+        {
+            wxLogError( TowxString( e.what() ) );
+        }
     #endif
     UpdateSettings();
 }
@@ -223,30 +231,32 @@ TorrentWrapper::~TorrentWrapper()
 {
     wxLogDebugFunc( wxEmptyString );
     m_maintenance_thread.Stop();
-    try
-    {
-        m_torr->stop_upnp();
-    }
-    catch (std::exception& e)
-    {
-        wxLogError( TowxString( e.what() ) );
-    }
-    try
-    {
-        m_torr->stop_natpmp();
-    }
-    catch (std::exception& e)
-    {
-        wxLogError( TowxString( e.what() ) );
-    }
-    try
-    {
-        m_torr->stop_lsd();
-    }
-    catch (std::exception& e)
-    {
-        wxLogError( TowxString( e.what() ) );
-    }
+    #ifndef __WXMSW__
+        try
+        {
+            m_torr->stop_upnp();
+        }
+        catch (std::exception& e)
+        {
+            wxLogError( TowxString( e.what() ) );
+        }
+        try
+        {
+            m_torr->stop_natpmp();
+        }
+        catch (std::exception& e)
+        {
+            wxLogError( TowxString( e.what() ) );
+        }
+        try
+        {
+            m_torr->stop_lsd();
+        }
+        catch (std::exception& e)
+        {
+            wxLogError( TowxString( e.what() ) );
+        }
+    #endif
     delete m_torr;
 }
 
