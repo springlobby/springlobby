@@ -337,8 +337,7 @@ int TorrentWrapper::GetTorrentSystemStatus()
 IUnitSync::MediaType convertMediaType( const PlasmaResourceInfo::ResourceType& t ) {
     switch ( t ) {
         case PlasmaResourceInfo::map: return IUnitSync::map;
-        case PlasmaResourceInfo::mod: return IUnitSync::mod;
-        default: assert( false );
+        default: return IUnitSync::mod;
     }
 
 }
@@ -346,8 +345,38 @@ IUnitSync::MediaType convertMediaType( const PlasmaResourceInfo::ResourceType& t
 TorrentWrapper::DownloadRequestStatus TorrentWrapper::RequestFileByName( const wxString& name )
 {
     PlasmaResourceInfo info = m_plasma_interface->GetResourceInfo( name );
-    m_plasma_interface->DownloadTorrentFile( info, sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + getDataSubdirForType( convertMediaType(info.m_type) ) );
-    return missing_in_table;
+    assert( info.m_type != PlasmaResourceInfo::unknwon );
+    if ( m_plasma_interface->DownloadTorrentFile( info, sett().GetTorrentDataDir().GetFullPath() ) )
+    {
+        libtorrent::add_torrent_params p;
+
+        try {
+            // the torrent_info is stored in an intrusive_ptr
+            p.ti = new libtorrent::torrent_info(boost::filesystem::path( info.m_local_torrent_filepath.mb_str() ) );
+            wxString dl_dir_path = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator()
+                    + getDataSubdirForType( convertMediaType( info.m_type ) ) + wxFileName::GetPathSeparator() + info.m_name;
+            p.save_path = boost::filesystem::path( dl_dir_path.mb_str() );
+        }
+        catch ( std::exception& exc ) {
+                wxLogMessage( _T("torrent has invalid encoding") );
+                return corrupt_torrent_file;
+        }
+        try {
+            libtorrent::torrent_handle tor = m_torr->add_torrent(p);
+            size_t num_webseeds = info.m_webseeds.Count();
+            if ( num_webseeds < 1 )
+                return no_seeds_found;
+            for ( size_t i = 0; i < num_webseeds; ++ i )
+                tor.add_url_seed( STD_STRING( info.m_webseeds[i] ) );
+            return success;
+        }
+        catch (std::exception& e) {
+           wxLogError(_T("%s"),TowxString( e.what()).c_str()); // TODO (BrainDamage#1#): add message to user on failure
+           return missing_in_table;
+        }
+
+    }
+    return remote_file_dl_failed;
 }
 
 

@@ -15,10 +15,13 @@
 #include <wx/sstream.h>
 #include <wx/filename.h>
 #include <wx/tokenzr.h>
-#include "customdialogs.h"
-#include "conversion.h"
-#include "../base64.h"
 #include <wx/convauto.h>
+#include <wx/log.h>
+
+#include "customdialogs.h"//shoudl be remove d fater initlai debug
+#include "conversion.h"
+#include "debug.h"
+
 
 const wxString s_soap_service_url = _T("http://planet-wars.eu/PlasmaServer/Service.asmx?op=DownloadFile");
 
@@ -51,6 +54,7 @@ PlasmaResourceInfo PlasmaInterface::GetResourceInfo(const wxString& name) const
     PlasmaResourceInfo info;
     wxSocketClient * socket = new wxSocketClient();
     wxString data = s_soap_querytemplate;
+    data.Replace( _T("REALNAME") , name );
     data.Replace( _T("REALNAME") , _T("DeltaSiegeDry.smf") );
 
     //Set up header
@@ -212,6 +216,7 @@ void PlasmaInterface::downloadFile(const wxString& host, const wxString& remote_
     FileDownloading.Connect( host, 80);
 
     wxInputStream* httpstream = FileDownloading.GetInputStream( _T("/") + remote_path );
+    wxLogDebug( _T("downloading file ") + host + _T("/") + remote_path );
 
     if ( httpstream )
     {
@@ -223,7 +228,7 @@ void PlasmaInterface::downloadFile(const wxString& host, const wxString& remote_
           //download success
     }
     else {
-        //throw something
+        throw std::exception();
     }
 }
 
@@ -234,6 +239,13 @@ void PlasmaInterface::downloadFile(const wxString& host, const wxString& remote_
 bool PlasmaInterface::DownloadTorrentFile( PlasmaResourceInfo& info, const wxString& destination_directory) const
 {
     wxString dl_target = destination_directory + wxFileName::GetPathSeparator() + info.m_torrent_filename;
-    downloadFile( m_host, _T("PlasmaServer/Resources/") + info.m_torrent_filename, dl_target );
+    try {
+        downloadFile( m_host, _T("PlasmaServer/Resources/") + info.m_torrent_filename, dl_target );
+        info.m_local_torrent_filepath = dl_target;
+    }
+    catch ( std::exception& e ) {
+        wxLogError( _T("downloading file failed: :") + dl_target );
+        return false;
+    }
     return true;
 }

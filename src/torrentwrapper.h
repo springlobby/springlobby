@@ -120,7 +120,10 @@ public:
         file_not_found,
         torrent_join_failed,
         scheduled_in_cue,
-        missing_in_table
+        missing_in_table,
+        remote_file_dl_failed,
+        corrupt_torrent_file,
+        no_seeds_found
     };
 
     /// gui interface
