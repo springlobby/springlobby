@@ -294,7 +294,7 @@ void PlasmaInterface::InitResourceList()
 //    wxMessageBox(wxString::Format(_T("Wrote %d out of %d bytes"),socket->LastCount(),data.Len()));
 
     //Get Response
-    socket->WaitForRead(10);
+    socket->WaitForRead();
     char peek_buf[1025];
     socket->Peek(peek_buf,1025);
     peek_buf[socket->LastCount()] = '\0';
@@ -322,15 +322,18 @@ void PlasmaInterface::InitResourceList()
 
 //    buf = wxString( buf, wxConvISO8859_1 );
     wxbuf = wxString::  FromAscii( buf );
-    wxMessageBox(wxString::Format(_T("Content size %d | Read %d bytes: %s"),content_length,socket->LastCount(),wxbuf.c_str()));
+    wxMessageBox(wxString::Format(_T("Content size %d | Read %d bytes:"),content_length,socket->LastCount() ) );
 
     wxString t_begin = _T("<soap:Envelope");
     wxString t_end = _T("</soap:Envelope>");
     wxString xml_section = wxbuf.Mid( wxbuf.Find( t_begin ) );//first char after t_begin to one before t_end
 
-    wxMessageBox(xml_section);
     wxStringInputStream str_input( xml_section );
     wxXmlDocument xml( str_input );
+    wxFileOutputStream outs( _T("/tmp/sl.txt") );
+    wxStringInputStream fe( xml_section ) ;
+    outs <<  fe;
+    outs.Close();
     assert( xml.GetRoot() );
     wxXmlNode *node = xml.GetRoot()->GetChildren();
     assert( node );
@@ -359,7 +362,7 @@ void PlasmaInterface::InitResourceList()
                         info.m_name = resourceDataContent->GetNodeContent();
                     }
                     else if ( rc_node_name == _T("ResourceType") ){
-                        wxString resourceType = resourceDataContent->GetNodeContent();
+                        resourceType = resourceDataContent->GetNodeContent();
                         if ( resourceType == _T("Mod") )
                             info.m_type = PlasmaResourceInfo::mod;
                         else if ( resourceType == _T("Map") )
