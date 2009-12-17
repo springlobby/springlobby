@@ -165,7 +165,6 @@ void MainTorrentTab::OnUpdate()
             continue; //skip global torrent stats
 		m_torrent_list->UpdateTorrentInfo(iter->second);
     }
-	m_torrent_list->RefreshTorrentStatus();
 
     Layout();
     m_torrent_list->RestoreSelection();

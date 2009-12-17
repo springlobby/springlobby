@@ -32,7 +32,6 @@ class TorrentListCtrl : public CustomVirtListCtrl<TorrentInfos, TorrentListCtrl>
 	bool AddTorrentInfo(const DataType& info);
 	bool RemoveTorrentInfo(const DataType& info);
 	void UpdateTorrentInfo(const DataType& info);
-	void RefreshTorrentStatus();
 
     virtual void HighlightItem( long item );
 

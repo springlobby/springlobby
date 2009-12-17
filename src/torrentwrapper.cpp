@@ -462,6 +462,7 @@ std::map<wxString,TorrentInfos> TorrentWrapper::CollectGuiInfos()
     catch (std::exception& e)
     {
         wxLogError(_T("%s"), TowxString(e.what()).c_str());
+        return ret;
     }
 
     // display infos about queued torrents

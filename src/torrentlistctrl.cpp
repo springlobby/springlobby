@@ -130,35 +130,6 @@ void TorrentListCtrl::UpdateTorrentInfo(const DataType& info)
 }
 
 
-void TorrentListCtrl::RefreshTorrentStatus()
-{
-	BaseType::DataIter it = m_data.begin();
-	for(; it != m_data.end(); ++it)
-	{
-		P2P::FileStatus currentStatus = torrent().GetTorrentStatusByHash(it->hash);
-		if(it->downloadstatus != currentStatus)
-		{
-			it->downloadstatus = currentStatus;
-			if(currentStatus == P2P::not_stored || currentStatus == P2P::stored)
-			{
-				it->inspeed = 0.f;
-				it->outspeed = 0.f;
-				it->eta = -1;
-				if(currentStatus == P2P::stored)
-				{
-					it->progress = 1.f;
-					it->downloaded = it->filesize; //ugly - assuming downloaded == filesize
-				}
-				else
-					it->progress = 0.f;
-			}
-			RefreshItem(GetIndexFromData(*it));
-			MarkDirtySort();
-		}
-
-	}
-}
-
 void TorrentListCtrl::OnListRightClick( wxListEvent& event )
 {
 	int idx = event.GetIndex();
