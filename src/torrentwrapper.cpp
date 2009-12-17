@@ -130,7 +130,7 @@ TorrentWrapper::TorrentWrapper():
         m_timer_count(0),
 //        m_maintenance_thread(this),
         m_started(false),
-        m_plasma_interface( new PlasmaInterface() )
+        m_plasma_interface( new PlasmaInterface )
 {
     wxLogMessage(_T("TorrentWrapper::TorrentWrapper()"));
     m_torr = new libtorrent::session( libtorrent::fingerprint("SL", 0, 0, 0, 0), 0 );

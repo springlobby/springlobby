@@ -23,6 +23,8 @@
 #include "filelister/filelistdialog.h"
 #include "widgets/downloaddialog.h"
 #include "aui/auimanager.h"
+#include "utils/downloader.h"
+
 
 BEGIN_EVENT_TABLE( MainTorrentTab, wxPanel )
 	//(*EventTable(MainTorrentTab)
@@ -35,7 +37,8 @@ END_EVENT_TABLE()
 
 MainTorrentTab::MainTorrentTab( wxWindow* parent )
     : wxScrolledWindow( parent ),
-    m_widgets_dialog( NULL )
+    m_widgets_dialog( NULL ),
+    m_plasma_interface( new PlasmaInterface )
 {
 	GetAui().manager->AddPane( this, wxLEFT, _T( "maintorrenttab" ) );
 
