@@ -83,105 +83,23 @@ public:
     bool IsConsistent();
 
     TorrentTable():
-    m_seed_count(0),
     m_leech_count(0)
     {
     }
 
-class Row: public RefcountedContainer
+    struct TransferredData
     {
-        /// If you want to modify row's keys, you need to remove it from table first,
-        /// then re-insert
-    public:
-        wxString hash;/// key, unitsync hash
-        wxString name;/// key, unitsync name
-        libtorrent::torrent_handle handle;/// key
-        IUnitSync::MediaType type;
-        wxString infohash; /// torrent sha1 infohash in b64
-        //bool ondisk;
-
-        P2P::FileStatus status;
-        bool is_open;
-        Row():
-                type(IUnitSync::map),
-                status(P2P::not_stored)
-        {
-        }
-        bool HasFullFileLocal()
-        {
-            return status & P2P::stored;
-        }
-        void SetHasFullFileLocal(bool b=true)
-        {
-            if (b)
-            {
-                if ( !status & P2P::stored )
-                    status=P2P::stored;
-            }
-            else
-            {
-                if ( status & P2P::stored )
-                    status=P2P::not_stored;
-            }
-        }
+        unsigned int failed_check_counts;
+        unsigned int sentdata;
+        TransferredData(): failed_check_counts(0), sentdata(0) {}
     };
-    typedef RefcountedPointer<Row> PRow;
 
+    // deletes all stored infos
+    void FlushData();
 
-		struct TransferredData
-		{
-			unsigned int failed_check_counts;
-			unsigned int sentdata;
-			TransferredData(): failed_check_counts(0), sentdata(0) {}
-		};
-
-		// deletes all stored infos
-		void FlushData();
-
-    void InsertRow(PRow row);
-    void RemoveRow(PRow row);
-
-    /// row must be already inserted
-    void AddSeedRequest(PRow row);
-    void RemoveSeedRequest(PRow row);
-    void SetRowHandle(PRow row, const libtorrent::torrent_handle &handle);
-    void AddRowToDependencyCheckQueue(PRow row);
-    void RemoveRowFromDependencyCheckQueue(PRow row);
-    void RemoveRowHandle( PRow row );
-    void SetRowStatus( PRow row, P2P::FileStatus status );
-    void SetRowTransferredData( PRow row, TransferredData data );
-
-    bool IsSeedRequest(PRow row);
-
-/// Following methods return NULL if not found!
-    PRow RowByHash(const wxString &hash);
-    PRow RowByName(const wxString &name);
-    PRow RowByHandle(libtorrent::torrent_handle handle);
-    std::map<wxString, TorrentTable::PRow> RowsByHash();
-    std::set<PRow> SeedRequestsByRow();
-    std::map<libtorrent::torrent_handle, PRow> RowByTorrentHandles();
-    std::set<PRow> QueuedTorrentsByRow();
-    std::map<TorrentTable::PRow, TransferredData> TransferredDataByRow();
-    std::set<TorrentTable::PRow> DependencyCheckQueuebyRow();
-
-    unsigned int GetOpenSeedsCount();
     unsigned int GetOpenLeechsCount();
 
 private:
-
-
-#ifdef TorrentTable_validate
-    std::set<PRow> all_torrents;
-#endif
-    std::map<wxString, PRow> hash_index;
-    std::map<wxString, PRow> name_index;
-    std::map<libtorrent::torrent_handle, PRow> handle_index;
-    std::set<PRow> seed_requests;
-    std::set<PRow> queued_torrents;
-    std::map<TorrentTable::PRow, TorrentTable::TransferredData>  seed_sent_data;
-		std::set<TorrentTable::PRow> dep_check_queue;
-
-    unsigned int m_seed_count;
     unsigned int m_leech_count;
 };
 
@@ -234,11 +152,7 @@ public:
 
 private:
 
-    DownloadRequestStatus RequestFileByRow( const TorrentTable::PRow& row );
-    DownloadRequestStatus QueueFileByRow( const TorrentTable::PRow& row );
-    bool RemoveTorrentByRow( const TorrentTable::PRow& row );
-    bool JoinTorrent( const TorrentTable::PRow& row, bool IsSeed );
-    bool DownloadTorrentFileFromTracker( const wxString& hash );
+    bool GetTorrentFileAndInfos( const wxString& resourceName );
 
     void OnConnected( Socket* sock );
     void OnDisconnected( Socket* sock );

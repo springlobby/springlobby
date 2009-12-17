@@ -157,45 +157,25 @@ void FileListCtrl::Sort()
 
 int wxCALLBACK FileListCtrl::CompareNameUP( long item1, long item2, long /*unused*/ )
 {
-  TorrentTable::PRow row1=s_parent_dialog->RowByHash(TowxString<long>(item1));
-  TorrentTable::PRow row2=s_parent_dialog->RowByHash(TowxString<long>(item2));
-  wxString name1 = row1.ok() ? row1->name.Upper() : _T("");
-  wxString name2 = row2.ok() ? row2->name.Upper() : _T("");
-  return name1.Cmp(name2);
+    return 0;
 }
 
 
 int wxCALLBACK FileListCtrl::CompareNameDOWN( long item1, long item2, long /*unused*/ )
 {
-    TorrentTable::PRow row1=s_parent_dialog->RowByHash(TowxString<long>(item1));
-    TorrentTable::PRow row2=s_parent_dialog->RowByHash(TowxString<long>(item2));
-    wxString name1 = row1.ok() ? row1->name.Upper() : _T("");
-    wxString name2 = row2.ok() ? row2->name.Upper() : _T("");
-    return name2.Cmp(name1);
+    return 0;
 }
 
 
 int wxCALLBACK FileListCtrl::CompareTypeUP( long item1, long item2, long /*unused*/ )
 {
-    TorrentTable::PRow row1=s_parent_dialog->RowByHash(TowxString<long>(item1));
-    TorrentTable::PRow row2=s_parent_dialog->RowByHash(TowxString<long>(item2));
-
-    wxString name1 = row1.ok() ? (row1->type == IUnitSync::map ? _("Map") : _("Mod")) : _T("");
-    wxString name2 = row2.ok() ? (row2->type == IUnitSync::map ? _("Map") : _("Mod")) : _T("");
-
-    return name1.Cmp(name2);
+    return 0;
 }
 
 
 int wxCALLBACK FileListCtrl::CompareTypeDOWN( long item1, long item2, long /*unused*/ )
 {
-    TorrentTable::PRow row1=s_parent_dialog->RowByHash(TowxString<long>(item1));
-    TorrentTable::PRow row2=s_parent_dialog->RowByHash(TowxString<long>(item2));
-
-    wxString name1 = row1.ok() ? (row1->type == IUnitSync::map ? _("Map") : _("Mod")) : _T("");
-    wxString name2 = row2.ok() ? (row2->type == IUnitSync::map ? _("Map") : _("Mod")) : _T("");
-
-    return name2.Cmp(name1);
+    return 0;
 }
 
 

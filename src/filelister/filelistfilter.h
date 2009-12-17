@@ -40,7 +40,6 @@ class FileListFilter : public wxPanel
     void OnChangeType         ( wxCommandEvent& event );
     void OnChangeOndisk         ( wxCommandEvent& event );
 
-    bool FilterTorrentData(const TorrentTable::PRow& data);
     bool GetActiv() const;
 
 	protected:

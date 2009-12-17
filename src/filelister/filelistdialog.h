@@ -25,15 +25,11 @@ class FileListDialog : public wxDialog
 
         //void SetData(const TorrentTable& data);
         //TorrentTable &GetData();
-        TorrentTable::PRow RowByHash(const wxString& hash );
+
 
     protected:
         wxBoxSizer* m_main_sizer;
         FileListCtrl* m_filelistctrl;
-
-
-        // TorrentTable m_torrent_table;
-        std::map<wxString, TorrentTable::PRow> m_hash_to_torrent;
 
         FileListFilter* m_filter;
         wxStaticText* m_filecount;
@@ -42,7 +38,7 @@ class FileListDialog : public wxDialog
         wxButton* m_selectNone_button;
         wxButton* m_selectInv_button;
 
-        bool AddTorrentRow(TorrentTable::PRow row);
+
 
         void OnDownload( wxCommandEvent& event );
         void OnRefreshList( wxCommandEvent& event );

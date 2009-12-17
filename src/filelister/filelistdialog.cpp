@@ -60,7 +60,6 @@ FileListDialog::FileListDialog(wxWindow* parent) :
 
 
     //SetData( torrent().GetTorrentTable() );
-    m_hash_to_torrent=torrent().GetTorrentTable().RowsByHash();
     UpdateList();
 
     m_main_sizer->Add( m_list_sizer,1, wxALL|wxEXPAND, 5 );
@@ -85,54 +84,48 @@ void FileListDialog::UpdateList()
 {
     m_filelistctrl->DeleteAllItems();
     unsigned int count = 0;
-    for (std::map<wxString, TorrentTable::PRow>::iterator  it = m_hash_to_torrent.begin(); it != m_hash_to_torrent.end(); ++it)
-    {
-      if(!it->second.ok())continue;
-        switch (it->second->type)
-        {
-            case IUnitSync::mod:
-                it->second->SetHasFullFileLocal(usync().ModExists( it->second->name, it->second->hash ));
-                break;
-            case IUnitSync::map:
-                it->second->SetHasFullFileLocal(usync().MapExists( it->second->name, it->second->hash ));
-                break;
-            default:  it->second->SetHasFullFileLocal(false);
-                break;
-        }
-        count += AddTorrentRow( it->second );
-    }
+//    for (std::map<wxString, TorrentTable::PRow>::iterator  it = m_hash_to_torrent.begin(); it != m_hash_to_torrent.end(); ++it)
+//    {
+//      if(!it->second.ok())continue;
+//        switch (it->second->type)
+//        {
+//            case IUnitSync::mod:
+//                it->second->SetHasFullFileLocal(usync().ModExists( it->second->name, it->second->hash ));
+//                break;
+//            case IUnitSync::map:
+//                it->second->SetHasFullFileLocal(usync().MapExists( it->second->name, it->second->hash ));
+//                break;
+//            default:  it->second->SetHasFullFileLocal(false);
+//                break;
+//        }
+//        count += AddTorrentRow( it->second );
+//    }
     m_filecount->SetLabel( wxString::Format( _("%u files displayed"), count ) );
     m_filelistctrl->SetColumnWidths();
 }
 
-TorrentTable::PRow FileListDialog::RowByHash(const wxString& hash )
-{
-  std::map<wxString,TorrentTable::PRow>::iterator i=m_hash_to_torrent.find(hash);
-  return i!=m_hash_to_torrent.end() ? i->second : TorrentTable::PRow(NULL);
-}
-
-bool FileListDialog::AddTorrentRow(TorrentTable::PRow data)
-{
-  if(!data.ok())return false;
-
-  if ( !m_filter->FilterTorrentData( data ) )
-      return false;
-  try
-  {
-      int index = m_filelistctrl->InsertItem( m_filelistctrl->GetItemCount(), data->hash);
-
-      //this enables me to later retrieve the index from itemtext (used in sort funcs)
-      m_filelistctrl->SetItemText( index, data->name );
-
-      //setting hash as item's data means we can retrieve it later for download
-      m_filelistctrl->SetItemData( index, (unsigned int)FromwxString<long>(data->hash) );
-      m_filelistctrl->SetItem( index, 0, data->name );
-      m_filelistctrl->SetItem( index, 1, data->type == IUnitSync::map ? _("Map") : _("Mod") );
-      m_filelistctrl->SetItem( index, 2, data->hash );
-
-  } catch (...) { return false; }
-  return true;
-}
+//bool FileListDialog::AddTorrentRow(TorrentTable::PRow data)
+//{
+//  if(!data.ok())return false;
+//
+//  if ( !m_filter->FilterTorrentData( data ) )
+//      return false;
+//  try
+//  {
+//      int index = m_filelistctrl->InsertItem( m_filelistctrl->GetItemCount(), data->hash);
+//
+//      //this enables me to later retrieve the index from itemtext (used in sort funcs)
+//      m_filelistctrl->SetItemText( index, data->name );
+//
+//      //setting hash as item's data means we can retrieve it later for download
+//      m_filelistctrl->SetItemData( index, (unsigned int)FromwxString<long>(data->hash) );
+//      m_filelistctrl->SetItem( index, 0, data->name );
+//      m_filelistctrl->SetItem( index, 1, data->type == IUnitSync::map ? _("Map") : _("Mod") );
+//      m_filelistctrl->SetItem( index, 2, data->hash );
+//
+//  } catch (...) { return false; }
+//  return true;
+//}
 
 void FileListDialog::OnDownload( wxCommandEvent& /*unused*/ )
 {
