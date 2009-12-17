@@ -5,10 +5,16 @@
 #include <wx/arrstr.h>
 
 struct PlasmaResourceInfo {
-    wxString m_name;//file name
-    wxString m_torrent_filename;//fn on remote
-    wxArrayString m_webseeds;//full urls
-    wxArrayString m_dependencies;//list of resource names
+    //!file name
+    wxString m_name;
+    //!fn on remote
+    wxString m_torrent_filename;
+    //!full urls
+    wxArrayString m_webseeds;
+    //!list of resource names
+    wxArrayString m_dependencies;
+    //! will only be non-empty when actual download of torrent file succeeded
+    wxString m_local_torrent_filepath;
 
     enum ResourceType {
         mod = 0,
@@ -24,13 +30,19 @@ class PlasmaInterface {
     public:
         PlasmaInterface();
 
-        PlasmaResourceInfo GetResourceInfo( const wxString& name );
-        bool DownloadTorrentFile( const PlasmaResourceInfo& info, const wxString& destination_directory );
+        PlasmaResourceInfo GetResourceInfo( const wxString& name ) const;
+
+        //! post: added full path to dl'ed torrent fiel to info
+        bool DownloadTorrentFile( PlasmaResourceInfo& info, const wxString& destination_directory ) const;
 
     protected:
-        void downloadFile( const wxString& host, const wxString& remote_path, const wxString& local_dest );
+        //!TODO doesn't really need to be here
+        void downloadFile( const wxString& host, const wxString& remote_path, const wxString& local_dest ) const;
 
+        //! fqdn of the host where plasma service runs
         wxString m_host;
+        //! remote path to service aspx, starting at web root
+        wxString m_remote_path;
 };
 
 #endif

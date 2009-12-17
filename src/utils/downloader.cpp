@@ -31,25 +31,33 @@ const wxString s_soap_querytemplate = _T("<?xml version=\"1.0\" encoding=\"utf-8
 "   </soap12:Body>\n"\
 "</soap12:Envelope>\0");
 
+/** @brief PlasmaInterface
+  *
+  * @todo: document this function
+  */
+PlasmaInterface::PlasmaInterface()
+    : m_host ( _T("planet-wars.eu") ),
+    m_remote_path ( _T("/PlasmaServer/Service.asmx") )
+{
+
+}
 
 /** @brief GetResourceInfo
   *
   * @todo: document this function
   */
-PlasmaResourceInfo PlasmaInterface::GetResourceInfo(const wxString& name)
+PlasmaResourceInfo PlasmaInterface::GetResourceInfo(const wxString& name) const
 {
     PlasmaResourceInfo info;
     wxSocketClient * socket = new wxSocketClient();
     wxString data = s_soap_querytemplate;
     data.Replace( _T("REALNAME") , _T("DeltaSiegeDry.smf") );
-    wxString path = _T("/PlasmaServer/Service.asmx");//can be php or any other file
-
 
     //Set up header
     wxString header = _T("");
 
     //POST
-    header += _T("POST http://planet-wars.eu/PlasmaServer/Service.asmx");
+    header += wxString::Format( _T("POST http://%s%s"), m_host.c_str(), m_remote_path.c_str() ) ;
 //    header += path;
     header += _T(" HTTP/1.1\n");
 //    header += _T("Accept-Encoding: *\n");
@@ -196,36 +204,7 @@ PlasmaResourceInfo PlasmaInterface::GetResourceInfo(const wxString& name)
   *
   * @todo: document this function
   */
-void PlasmaInterface::downloadFile(const wxString& host, const wxString& remote_path, const wxString& local_dest)
-{
-
-}
-
-/** @brief DownloadTorrentFile
-  *
-  * @todo: document this function
-  */
-bool PlasmaInterface::DownloadTorrentFile(const PlasmaResourceInfo& info, const wxString& destination_directory)
-{
-    wxString dl_target = destination_directory + wxFileName::GetPathSeparator() + info.m_torrent_filename;
-    downloadFile( m_host, _T("PlasmaServer/Resources/") + info.m_torrent_filename, dl_target );
-}
-
-/** @brief PlasmaInterface
-  *
-  * @todo: document this function
-  */
-PlasmaInterface::PlasmaInterface()
-    : m_host ( _T("planet-wars.eu") )
-{
-
-}
-
-/** @brief downloadFile
-  *
-  * @todo: document this function
-  */
-void downloadFile( const wxString& host, const wxString& remote_path, const wxString& local_dest )
+void PlasmaInterface::downloadFile(const wxString& host, const wxString& remote_path, const wxString& local_dest) const
 {
     wxHTTP FileDownloading;
     /// normal timeout is 10 minutes.. set to 10 secs.
@@ -248,4 +227,13 @@ void downloadFile( const wxString& host, const wxString& remote_path, const wxSt
     }
 }
 
-
+/** @brief DownloadTorrentFile
+  *
+  * @todo: document this function
+  */
+bool PlasmaInterface::DownloadTorrentFile( PlasmaResourceInfo& info, const wxString& destination_directory) const
+{
+    wxString dl_target = destination_directory + wxFileName::GetPathSeparator() + info.m_torrent_filename;
+    downloadFile( m_host, _T("PlasmaServer/Resources/") + info.m_torrent_filename, dl_target );
+    return true;
+}
