@@ -34,6 +34,14 @@ const wxString s_soap_querytemplate = _T("<?xml version=\"1.0\" encoding=\"utf-8
 "   </soap12:Body>\n"\
 "</soap12:Envelope>\0");
 
+const wxString s_soap_querytemplate_resourcelist = _T("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" \
+"<soap12:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">\n"\
+"   <soap12:Body>\n"\
+"       <GetResourceList xmlns=\"http://planet-wars.eu/PlasmaServer/\" />\n"\
+"   </soap12:Body>\n"\
+"</soap12:Envelope>\0");
+
+
 /** @brief PlasmaInterface
   *
   * @todo: document this function
@@ -55,26 +63,17 @@ PlasmaResourceInfo PlasmaInterface::GetResourceInfo(const wxString& name) const
     wxSocketClient * socket = new wxSocketClient();
     wxString data = s_soap_querytemplate;
     data.Replace( _T("REALNAME") , name );
-    data.Replace( _T("REALNAME") , _T("DeltaSiegeDry.smf") );
 
     //Set up header
     wxString header = _T("");
 
     //POST
     header += wxString::Format( _T("POST http://%s%s"), m_host.c_str(), m_remote_path.c_str() ) ;
-//    header += path;
     header += _T(" HTTP/1.1\n");
-//    header += _T("Accept-Encoding: *\n");
-
-    //Write host website name
-
-//    //Write user agent
-//    header += _T("User-Agent: HTTPTool/1.0\n");
 
     //Write content type
     header += _T("Content-Type: text/xml;charset=UTF-8\n");
     header += _T("SOAPAction: \"http://planet-wars.eu/PlasmaServer/DownloadFile\"\n");
-//    header += _T("User-Agent: Jakarta Commons-HttpClient/3.1\n");
 
     header += _T("Host: ");
     header += m_host;
@@ -85,18 +84,12 @@ PlasmaResourceInfo PlasmaInterface::GetResourceInfo(const wxString& name) const
     header += wxString::Format(_T("%d"), data.Len());
     header += _T("\n\n");
 
-    //Print on screen to make sure it looks right
-//    wxMessageBox(header);
-//    wxMessageBox(data);
-
     //Connect to host
     wxIPV4address * address = new wxIPV4address();
     address->Hostname(m_host);
     address->Service(80);
 
     socket->Connect(*address);
-//    if (socket->Connect(*address))
-//            wxMessageBox(_T("connected"));
 
     //Write header
     socket->Write(header.mb_str(),header.Len());
@@ -105,7 +98,6 @@ PlasmaResourceInfo PlasmaInterface::GetResourceInfo(const wxString& name) const
     //Write data
     socket->Write(data.mb_str(),data.Len());
 //    wxMessageBox(wxString::Format(_T("Wrote %d out of %d bytes"),socket->LastCount(),data.Len()));
-
 
     //Get Response
     socket->WaitForRead(10);
@@ -248,4 +240,143 @@ bool PlasmaInterface::DownloadTorrentFile( PlasmaResourceInfo& info, const wxStr
         return false;
     }
     return true;
+}
+
+void PlasmaInterface::InitResourceList()
+{
+    wxSocketClient * socket = new wxSocketClient();
+    wxString data = s_soap_querytemplate_resourcelist;
+
+    //Set up header
+    wxString header = _T("");
+
+    //POST
+    header += wxString::Format( _T("POST http://%s%s"), m_host.c_str(), m_remote_path.c_str() ) ;
+//    header += path;
+    header += _T(" HTTP/1.1\n");
+//    header += _T("Accept-Encoding: *\n");
+
+    //Write host website name
+
+//    //Write user agent
+//    header += _T("User-Agent: HTTPTool/1.0\n");
+
+    //Write content type
+    header += _T("Content-Type: text/xml;charset=UTF-8\n");
+    header += _T("SOAPAction: \"http://planet-wars.eu/PlasmaServer/GetResourceList\"\n");
+
+    header += _T("Host: ");
+    header += m_host;
+    header += _T("\n");
+
+    //Write POST content length
+    header += _T("Content-Length: ");
+    header += wxString::Format(_T("%d"), data.Len());
+    header += _T("\n\n");
+
+    //Print on screen to make sure it looks right
+//    wxMessageBox(header);
+//    wxMessageBox(data);
+
+    //Connect to host
+    wxIPV4address * address = new wxIPV4address();
+    address->Hostname(m_host);
+    address->Service(80);
+
+    socket->Connect(*address);
+
+    //Write header
+    socket->Write(header.mb_str(),header.Len());
+//    wxMessageBox(wxString::Format(_T("Wrote %d out of %d bytes"),socket->LastCount(),header.Len()));
+
+    //Write data
+    socket->Write(data.mb_str(),data.Len());
+//    wxMessageBox(wxString::Format(_T("Wrote %d out of %d bytes"),socket->LastCount(),data.Len()));
+
+    //Get Response
+    socket->WaitForRead(10);
+    char peek_buf[1025];
+    socket->Peek(peek_buf,1025);
+    peek_buf[socket->LastCount()] = '\0';
+
+//    buf = wxString( buf, wxConvISO8859_1 );
+    wxString wxbuf = wxString::  FromAscii( peek_buf );
+    //msgbox also serves as wait thingy for socket read it seems here, remove and be prepared for less stuff read...
+    wxMessageBox(wxString::Format(_T("Read %d bytes: %s"),socket->LastCount(),wxbuf.c_str()));
+
+    long content_length = 0;
+    wxStringTokenizer toks ( wxbuf, _T("\n") );
+    while( toks.HasMoreTokens() ) {
+        wxString line = toks.GetNextToken();
+        if ( line.StartsWith( _T("Content-Length") ) ) {
+            line = line.Mid( line.Last( wxChar(':') ) + 1, line.Last( wxChar('\n') ) ).Trim( false ).Trim( true );
+            line.ToLong( &content_length );
+            assert( content_length >= 0 );
+            break;
+        }
+    }
+    char buf[1025+content_length];
+    socket->Read(buf,1025+content_length);
+
+    buf[socket->LastCount()] = '\0';
+
+//    buf = wxString( buf, wxConvISO8859_1 );
+    wxbuf = wxString::  FromAscii( buf );
+    wxMessageBox(wxString::Format(_T("Content size %d | Read %d bytes: %s"),content_length,socket->LastCount(),wxbuf.c_str()));
+
+    wxString t_begin = _T("<soap:Envelope");
+    wxString t_end = _T("</soap:Envelope>");
+    wxString xml_section = wxbuf.Mid( wxbuf.Find( t_begin ) );//first char after t_begin to one before t_end
+
+    wxMessageBox(xml_section);
+    wxStringInputStream str_input( xml_section );
+    wxXmlDocument xml( str_input );
+    assert( xml.GetRoot() );
+    wxXmlNode *node = xml.GetRoot()->GetChildren();
+    assert( node );
+
+    m_resource_list.clear();
+
+    wxString resourceType ( _T("unknown") );
+    node = node->GetChildren();
+    assert( node );
+    while ( node ) {
+        wxString node_name = node->GetName();
+        if ( node_name == _T("GetResourceListResponse") ) {
+            wxXmlNode* resourceListResult = node->GetChildren();
+            assert( resourceListResult );
+            wxXmlNode* resourceData = resourceListResult->GetChildren();
+
+            while ( resourceData ) {
+                wxXmlNode* resourceDataContent = resourceData->GetChildren();
+                PlasmaResourceInfo info;
+                while ( resourceDataContent ) {
+                    wxString rc_node_name = resourceDataContent->GetName();
+                    if ( rc_node_name == _T("Dependencies") ){
+                        //! TODO
+                    }
+                    else if ( rc_node_name == _T("InternalName") ){
+                        info.m_name = resourceDataContent->GetNodeContent();
+                    }
+                    else if ( rc_node_name == _T("ResourceType") ){
+                        wxString resourceType = resourceDataContent->GetNodeContent();
+                        if ( resourceType == _T("Mod") )
+                            info.m_type = PlasmaResourceInfo::mod;
+                        else if ( resourceType == _T("Map") )
+                            info.m_type = PlasmaResourceInfo::map;
+                        else
+                            info.m_type = PlasmaResourceInfo::unknwon;
+                    }
+                    else if ( rc_node_name == _T("SpringHashes") ){
+                        //! TODO
+                    }
+                    resourceDataContent = resourceDataContent->GetNext();
+                }
+                m_resource_list.push_back( info );
+                resourceData = resourceListResult->GetNext();
+            }
+            break;
+        } // end section <GetResourceListResponse/>
+        node = node->GetNext();
+    }
 }

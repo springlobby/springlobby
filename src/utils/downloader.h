@@ -3,6 +3,7 @@
 
 #include <wx/string.h>
 #include <wx/arrstr.h>
+#include <vector>
 
 struct PlasmaResourceInfo {
     //!file name
@@ -35,14 +36,23 @@ class PlasmaInterface {
         //! post: added full path to dl'ed torrent fiel to info
         bool DownloadTorrentFile( PlasmaResourceInfo& info, const wxString& destination_directory ) const;
 
+        typedef std::vector<PlasmaResourceInfo>
+            ResourceList;
+
+        const ResourceList& GetResourceList() { InitResourceList(); return m_resource_list; }
+
     protected:
         //!TODO doesn't really need to be here
         void downloadFile( const wxString& host, const wxString& remote_path, const wxString& local_dest ) const;
+        void InitResourceList();
 
         //! fqdn of the host where plasma service runs
         wxString m_host;
         //! remote path to service aspx, starting at web root
         wxString m_remote_path;
+
+        //! a vector holding (after the initial request) all the available resources on the remote
+        ResourceList m_resource_list;
 };
 
 #endif
