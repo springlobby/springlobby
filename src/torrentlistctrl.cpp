@@ -280,7 +280,7 @@ int TorrentListCtrl::GetIndexFromData( const DataType& data ) const
 {
     DataCIter it = m_data.begin();
     for ( int i = 0; it != m_data.end(); ++it , ++i) {
-        if ( it->hash == data.hash )
+        if ( it->name == data.name )
             return i;
     }
     return -1;

@@ -454,11 +454,9 @@ std::map<wxString,TorrentInfos> TorrentWrapper::CollectGuiInfos()
 				eta_seconds = int (  (CurrentTorrent.filesize - CurrentTorrent.downloaded ) / CurrentTorrent.inspeed );
 
 			CurrentTorrent.eta = eta_seconds;
-
-            CurrentTorrent.hash=i->name;
             CurrentTorrent.downloadstatus = P2P::leeching;
 //
-            ret[CurrentTorrent.hash] = CurrentTorrent;
+            ret[CurrentTorrent.name] = CurrentTorrent;
         }
     }
     catch (std::exception& e)
