@@ -1,10 +1,10 @@
 #include "notificationmanager.h"
 
-#include "toasterbox/ToasterBox.h"
-#include "globalsmanager.h"
-#include "uiutils.h"
+#include "../toasterbox/ToasterBox.h"
+#include "../globalsmanager.h"
+#include "../uiutils.h"
 
-#include "images/springlobby.xpm"
+#include "../images/springlobby.xpm"
 
 NotificationManager& notificationManager()
 {

@@ -3,6 +3,7 @@
 
 #include "events.h"
 #include <wx/arrstr.h>
+#include <wx/bitmap.h>
 #include <map>
 #include <utility>
 
@@ -13,10 +14,7 @@ namespace UiEvents {
 
     EventSender<UiEventData> &GetUiEventSender( UiEventsTypes cmd );
 
-    enum NotificationIcon{
-        defaultIcon
-    };
-    typedef std::pair< NotificationIcon, wxString >
+    typedef std::pair< wxBitmap, wxString >
         NotficationData;
 
     EventSender<NotficationData> &GetNotificationEventSender();

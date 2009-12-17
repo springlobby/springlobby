@@ -549,7 +549,7 @@ void MainWindow::OnMenuQuit( wxCommandEvent& /*unused*/ )
 void MainWindow::OnMenuVersion( wxCommandEvent& /*unused*/ )
 {
 //    ui().CheckForUpdates();
-    UiEvents::GetNotificationEventSender().SendEvent( UiEvents::NotficationData( UiEvents::defaultIcon, _T("Hello SpringLobby") ) );
+    UiEvents::GetNotificationEventSender().SendEvent( UiEvents::NotficationData( wxBitmap(springlobby_xpm), _T("Hello SpringLobby") ) );
 }
 
 void MainWindow::OnUnitSyncReload( wxCommandEvent& /*unused*/ )

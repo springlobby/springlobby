@@ -33,7 +33,7 @@ ToasterBox::ToasterBox(wxWindow* _parent)
   colBg = *wxBLACK;
 
   //where to keep track of all the toasterboxwindows
-  winList = new ToasterBoxWindowList(wxKEY_NONE);
+  winList = new ToasterBoxWindowList();
   winList->DeleteContents(true);
 
   //set the bottom right corner of the dialog

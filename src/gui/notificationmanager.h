@@ -3,7 +3,7 @@
 
 class ToasterBox;
 
-#include "utils/uievents.h"
+#include "../utils/uievents.h"
 
 class NotificationManager
 {

@@ -127,7 +127,10 @@ SET(springlobbySrc
 	src/globalsmanager.cpp
 	src/Helper/wxTranslationHelper.cpp
 	src/Helper/tasclientimport.cpp
-
+	src/toasterbox/ToasterBox.cpp
+	src/toasterbox/ToasterBoxWindow.cpp
+	src/toasterbox/ToasterBoxWindowList.cpp
+	src/gui/notificationmanager.cpp
 )
 
 SET(SettingsSrc
