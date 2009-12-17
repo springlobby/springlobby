@@ -51,6 +51,7 @@
 
 #include "torrentwrapper.h"
 #include "utils/customdialogs.h"
+#include "utils/downloader.h"
 #include "globalsmanager.h"
 #include "utils/globalevents.h"
 
@@ -173,12 +174,10 @@ TorrentWrapper::TorrentWrapper():
         ingame(false),
         m_timer_count(0),
         m_maintenance_thread(this),
-        m_started(false)
+        m_started(false),
+        m_plasma_interface( new PlasmaInterface() )
 {
     wxLogMessage(_T("TorrentWrapper::TorrentWrapper()"));
-    m_tracker_urls.Add( _T("tracker.caspring.org"));
-    m_tracker_urls.Add( _T("tracker2.caspring.org"));
-    m_tracker_urls.Add( _T("backup-tracker.licho.eu"));
     m_torr = new libtorrent::session( libtorrent::fingerprint("SL", 0, 0, 0, 0), 0 );
     try
     {
@@ -335,8 +334,19 @@ int TorrentWrapper::GetTorrentSystemStatus()
 ////               lobby interface                  ////
 ////////////////////////////////////////////////////////
 
+IUnitSync::MediaType convertMediaType( const PlasmaResourceInfo::ResourceType& t ) {
+    switch ( t ) {
+        case PlasmaResourceInfo::map: return IUnitSync::map;
+        case PlasmaResourceInfo::mod: return IUnitSync::mod;
+        default: assert( false );
+    }
+
+}
+
 TorrentWrapper::DownloadRequestStatus TorrentWrapper::RequestFileByName( const wxString& name )
 {
+    PlasmaResourceInfo info = m_plasma_interface->GetResourceInfo( name );
+    m_plasma_interface->DownloadTorrentFile( info, sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + getDataSubdirForType( convertMediaType(info.m_type) ) );
     return missing_in_table;
 }
 

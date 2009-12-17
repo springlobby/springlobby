@@ -27,6 +27,7 @@ namespace libtorrent{ class session; };
 namespace libtorrent { struct torrent_handle; };
 */
 class TorrentWrapper;
+class PlasmaInterface;
 
 namespace P2P {
 enum FileStatus
@@ -173,6 +174,7 @@ private:
 
     bool m_started;
 
+    PlasmaInterface* m_plasma_interface;
 };
 
 
