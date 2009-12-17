@@ -15,6 +15,7 @@ class NotificationManager
     protected:
         NotificationManager();
         ToasterBox* m_toasterbox;
+        void SetPopupPosition();
 
         //make globals holder have access to ctor
         template <class PB, class I >
