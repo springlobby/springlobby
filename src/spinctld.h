@@ -9,8 +9,8 @@
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
 
-#ifndef _WX_GENERIC_SPINCTRL_H_
-#define _WX_GENERIC_SPINCTRL_H_
+#ifndef _WX_GENERIC_SPINCTRL_H_SL
+#define _WX_GENERIC_SPINCTRL_H_SL
 
 // ----------------------------------------------------------------------------
 // wxSpinCtrlDbl is a combination of wxSpinButton and wxTextCtrl, so if
@@ -19,9 +19,9 @@
 // the different interface. This allows to write programs using wxSpinCtrlDbl
 // without tons of #ifdefs.
 // ----------------------------------------------------------------------------
-
+#include <wx/setup.h>
 #if wxUSE_SPINBTN
-#include <wx/spinctrl.h> // for EVT_SPINCTRL
+#include <wx/control.h>
 class  wxSpinButton;
 class  wxTextCtrl;
 
@@ -101,11 +101,12 @@ private:
     wxTextCtrl *m_text;
     wxSpinButton *m_btn;
 
-//private:
-//    DECLARE_DYNAMIC_CLASS(wxSpinCtrlDbl)
+private:
+    DECLARE_DYNAMIC_CLASS(wxSpinCtrlDbl)
+
 };
 
 #endif // wxUSE_SPINBTN/!wxUSE_SPINBTN
-
+#include <wx/spinctrl.h> // for EVT_SPINCTRL
 #endif // _WX_GENERIC_SPINCTRL_H_
 

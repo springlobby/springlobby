@@ -16,9 +16,10 @@
 // ----------------------------------------------------------------------------
 // headers
 // ----------------------------------------------------------------------------
+#include "spinctld.h"
 
 #if wxUSE_SPINCTRL
-#include "spinctld.h"
+
 #include <wx/spinbutt.h>
 #include <wx/spinctrl.h>
 #include <wx/textctrl.h>
@@ -49,7 +50,7 @@ public:
 protected:
     void OnTextChange(wxCommandEvent& event)
     {
-        int val;
+        double val;
         if ( m_spin->GetTextValue(&val) )
         {
             m_spin->GetSpinButton()->SetValue(val);
@@ -126,7 +127,7 @@ END_EVENT_TABLE()
 // ============================================================================
 // implementation
 // ============================================================================
-
+IMPLEMENT_DYNAMIC_CLASS(wxSpinCtrlDbl, wxControl)
 // ----------------------------------------------------------------------------
 // wxSpinCtrlDbl creation
 // ----------------------------------------------------------------------------
@@ -167,7 +168,7 @@ bool wxSpinCtrlDbl::Create(wxWindow *parent,
     }
 
     m_text = new wxSpinCtrlDblText(this, value);
-    m_btn = new wxSpinCtrlDblButton(this, style);
+    m_btn = new wxSpinCtrlDblButton(this, style, increment);
 
     m_btn->SetRange(min, max);
     m_btn->SetValue(initial);
