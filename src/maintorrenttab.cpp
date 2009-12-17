@@ -173,7 +173,7 @@ void MainTorrentTab::OnUpdate()
 
 void MainTorrentTab::OnCancelButton( wxCommandEvent& /*unused*/ )
 {
-	torrent().RemoveTorrentByHash(m_torrent_list->GetSelectedData().hash);
+	torrent().RemoveTorrentByName(m_torrent_list->GetSelectedData().name );
     m_torrent_list->RemoveTorrentInfo(m_torrent_list->GetSelectedData());
 }
 

@@ -254,19 +254,19 @@ void TorrentWrapper::UpdateSettings()
 }
 
 
-bool TorrentWrapper::IsFileInSystem( const wxString& hash )
+bool TorrentWrapper::IsFileInSystem( const wxString& name )
 {
     return false;//GetTorrentTable().RowByHash(hash).ok();
 }
 
 
-bool TorrentWrapper::RemoveTorrentByHash( const wxString& hash )
+bool TorrentWrapper::RemoveTorrentByName( const wxString& name )
 {
     return false;
 }
 
 
-P2P::FileStatus TorrentWrapper::GetTorrentStatusByHash(const wxString &hash)
+P2P::FileStatus TorrentWrapper::GetTorrentStatusByName(const wxString& name )
 {
 //	TorrentTable::PRow row=GetTorrentTable().RowByHash(hash);
 //    if (!row.ok())

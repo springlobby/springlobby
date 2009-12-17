@@ -47,7 +47,7 @@ struct TorrentInfos
     float inspeed;
     float outspeed;
     unsigned int filesize;
-    wxString hash;
+
     int eta;
 
 	//default constructor
@@ -96,16 +96,15 @@ public:
     };
 
     /// gui interface
-    bool IsFileInSystem( const wxString& hash );
-    bool RemoveTorrentByHash( const wxString& hash );
-	P2P::FileStatus GetTorrentStatusByHash(const wxString& hash);
+    bool IsFileInSystem( const wxString& name );
+    P2P::FileStatus GetTorrentStatusByName(const wxString& name );
+    bool RemoveTorrentByName( const wxString& name );
     int GetTorrentSystemStatus();
 
     ///HashToTorrentData& GetSystemFileList();
 
     /// lobby interface
     void SetIngameStatus( bool status );
-    DownloadRequestStatus RequestFileByHash( const wxString& hash );
     DownloadRequestStatus RequestFileByName( const wxString& name );
     void UpdateSettings();
     std::map<wxString,TorrentInfos> CollectGuiInfos();

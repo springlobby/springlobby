@@ -154,7 +154,7 @@ void TorrentListCtrl::OnListRightClick( wxListEvent& event )
 
 void TorrentListCtrl::OnCancel(wxCommandEvent &/*event*/)
 {
-	torrent().RemoveTorrentByHash(GetSelectedData().hash);
+	torrent().RemoveTorrentByName(GetSelectedData().name);
 	RemoveTorrentInfo(GetSelectedData());
 }
 
