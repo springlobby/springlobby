@@ -33,7 +33,7 @@ BEGIN_EVENT_TABLE_TEMPLATE1( BattleroomMMOptionsTab, wxPanel, BattleType)
 	EVT_COMBOBOX					(wxID_ANY, BattleroomMMOptionsTab::OnComBoxChange)
 	EVT_CHECKBOX					(wxID_ANY, BattleroomMMOptionsTab::OnChkBoxChange)
 	EVT_TEXT_ENTER					(wxID_ANY,  BattleroomMMOptionsTab::OnTextCtrlChange)
-	EVT_SPINCTRL					(wxID_ANY,  BattleroomMMOptionsTab::OnSpinCtrlChange)
+//	EVT_SPINCTRL					(wxID_ANY,  BattleroomMMOptionsTab::OnSpinCtrlChange)
 
 //  EVT_BUTTON( BOPTS_LOADPRES, BattleroomMMOptionsTab::OnLoadPreset )
 //  EVT_BUTTON( BOPTS_SAVEPRES, BattleroomMMOptionsTab::OnSavePreset )
@@ -215,8 +215,8 @@ int BattleroomMMOptionsTab<BattleType>::setupOptionsSectionSizer(const mmOptionS
 			mmOptionFloat current = it->second;
 			wxSpinCtrlDbl* tempspin = new wxSpinCtrlDbl();
 			tempspin->Create(this, FLOAT_START_ID+ctrl_count, _T(""),
-					wxDefaultPosition, wxDefaultSize, 0, double(current.min), double(current.max),
-					double(current.value),double(current.stepping), wxSPINCTRLDBL_AUTODIGITS, current.key);
+					wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, double(current.min), double(current.max),
+					double(current.value),double(current.stepping), current.key);
 			tempspin->SetToolTip(TE(current.description));
 			m_name_info_map[pref+current.key] = current.description;
 			tempspin->Enable(enable);

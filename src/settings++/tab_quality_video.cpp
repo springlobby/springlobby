@@ -241,8 +241,8 @@ void tab_quality_video::initW4Sizer(wxSizer* sizer)
     sizer->Add(new wxStaticText(this, -1, (W4_CONTROLS[6].lbl)) , 0, wxTOP|wxEXPAND, 5);
     m_aniso_spin = new wxSpinCtrlDbl();
     m_aniso_spin->Create(this, W4_CONTROLS[6].id, _T(""),
-            wxDefaultPosition, wxDefaultSize, 0, 0.f, 6.f,
-            0.f,0.25f, wxSPINCTRLDBL_AUTODIGITS, _T(""));
+            wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0.f, 6.f,
+            0.f,0.25f, _T(""));
     m_aniso_spin->SetToolTip(W4_CONTROLS[6].tTip[0]);
 	m_w4_controls.push_back( (wxControl*) m_aniso_spin );
     sizer->Add( m_aniso_spin, 0, wxEXPAND|wxALL, 4 );
