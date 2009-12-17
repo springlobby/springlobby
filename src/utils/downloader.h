@@ -4,6 +4,7 @@
 #include <wx/string.h>
 #include <wx/arrstr.h>
 #include <vector>
+#include "inetclass.h"
 
 struct PlasmaResourceInfo {
     //!file name
@@ -27,7 +28,7 @@ struct PlasmaResourceInfo {
 
 };
 
-class PlasmaInterface {
+class PlasmaInterface : public iNetClass {
     public:
         PlasmaInterface();
 
@@ -53,6 +54,9 @@ class PlasmaInterface {
 
         //! a vector holding (after the initial request) all the available resources on the remote
         ResourceList m_resource_list;
+
+				std::map<Socket*, int> m_socket_index;
+        std::vector<wxString> m_buffers; // why not using map here directly? because i can write directly into the vector this way
 };
 
 #endif

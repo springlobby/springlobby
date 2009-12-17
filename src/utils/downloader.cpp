@@ -60,7 +60,12 @@ PlasmaInterface::PlasmaInterface()
 PlasmaResourceInfo PlasmaInterface::GetResourceInfo(const wxString& name) const
 {
     PlasmaResourceInfo info;
-    wxSocketClient * socket = new wxSocketClient();
+
+    Socket* socket = new Socket( this );
+		m_socket_index[socket] = m_buffers.size();
+    wxString buff;
+    m_buffers.push_back(buff);
+
     wxString data = s_soap_querytemplate;
     data.Replace( _T("REALNAME") , name );
 
@@ -85,18 +90,14 @@ PlasmaResourceInfo PlasmaInterface::GetResourceInfo(const wxString& name) const
     header += _T("\n\n");
 
     //Connect to host
-    wxIPV4address * address = new wxIPV4address();
-    address->Hostname(m_host);
-    address->Service(80);
-
-    socket->Connect(*address);
+    socket->Connect(m_host, 80);
 
     //Write header
-    socket->Write(header.mb_str(),header.Len());
+    socket->Send(header);
 //    wxMessageBox(wxString::Format(_T("Wrote %d out of %d bytes"),socket->LastCount(),header.Len()));
 
     //Write data
-    socket->Write(data.mb_str(),data.Len());
+    socket->Send(data);
 //    wxMessageBox(wxString::Format(_T("Wrote %d out of %d bytes"),socket->LastCount(),data.Len()));
 
     //Get Response
@@ -244,7 +245,11 @@ bool PlasmaInterface::DownloadTorrentFile( PlasmaResourceInfo& info, const wxStr
 
 void PlasmaInterface::InitResourceList()
 {
-    wxSocketClient * socket = new wxSocketClient();
+    Socket* socket = new Socket( this );
+		m_socket_index[socket] = m_buffers.size();
+    wxString buff;
+    m_buffers.push_back(buff);
+
     wxString data = s_soap_querytemplate_resourcelist;
 
     //Set up header
@@ -279,18 +284,14 @@ void PlasmaInterface::InitResourceList()
 //    wxMessageBox(data);
 
     //Connect to host
-    wxIPV4address * address = new wxIPV4address();
-    address->Hostname(m_host);
-    address->Service(80);
-
-    socket->Connect(*address);
+    socket->Connect(m_host,80);
 
     //Write header
-    socket->Write(header.mb_str(),header.Len());
+    socket->Send(header);
 //    wxMessageBox(wxString::Format(_T("Wrote %d out of %d bytes"),socket->LastCount(),header.Len()));
 
     //Write data
-    socket->Write(data.mb_str(),data.Len());
+    socket->Send(data);
 //    wxMessageBox(wxString::Format(_T("Wrote %d out of %d bytes"),socket->LastCount(),data.Len()));
 
     //Get Response
@@ -383,3 +384,26 @@ void PlasmaInterface::InitResourceList()
         node = node->GetNext();
     }
 }
+
+
+
+void PlasmaInterface::OnConnected( Socket* /*unused*/ )
+{
+}
+
+
+void PlasmaInterface::OnDisconnected( Socket* /*unused*/ )
+{
+}
+
+
+void PlasmaInterface::OnDataReceived( Socket* sock )
+{
+		if ( sock == 0 ) return;
+
+    wxString data = sock->Receive();
+    int index = m_socket_index[sock];
+		m_buffers[index] << data;
+
+}
+
