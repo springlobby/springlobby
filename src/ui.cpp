@@ -319,12 +319,9 @@ void Ui::DownloadFileP2P( const wxString& hash, const wxString& name )
 {
 
 #ifndef NO_TORRENT_SYSTEM
-    assert ( torrent().RequestFileByName( name ) ==     TorrentWrapper::success );
+    if ( torrent().RequestFileByName( name ) != TorrentWrapper::success )
+        customMessageBoxNoModal( SL_MAIN_ICON, _("dl failed"), _("dl failed") );
 //!TODO: put some meaningful err msg here
-//        if ( status != TorrentWrapper::success ){
-//            customMessageBoxNoModal( SL_MAIN_ICON, _(""), _("") );
-//        }
-//    }
 #endif
 }
 

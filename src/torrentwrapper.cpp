@@ -455,12 +455,10 @@ std::map<wxString,TorrentInfos> TorrentWrapper::CollectGuiInfos()
 
 			CurrentTorrent.eta = eta_seconds;
 
-////            TorrentTable::PRow row=GetTorrentTable().RowByHandle(*i);
-//            if (!row.ok()) continue;
-//            CurrentTorrent.hash=row->hash;
-//            CurrentTorrent.downloadstatus = row->status;
+            CurrentTorrent.hash=i->name;
+            CurrentTorrent.downloadstatus = P2P::leeching;
 //
-//            ret[CurrentTorrent.hash] = CurrentTorrent;
+            ret[CurrentTorrent.hash] = CurrentTorrent;
         }
     }
     catch (std::exception& e)
