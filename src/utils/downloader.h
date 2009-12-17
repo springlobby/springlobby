@@ -4,6 +4,7 @@
 #include <wx/string.h>
 #include <wx/arrstr.h>
 #include <vector>
+#include <map>
 #include "inetclass.h"
 
 struct PlasmaResourceInfo {
@@ -32,7 +33,7 @@ class PlasmaInterface : public iNetClass {
     public:
         PlasmaInterface();
 
-        PlasmaResourceInfo GetResourceInfo( const wxString& name ) const;
+        PlasmaResourceInfo GetResourceInfo( const wxString& name ) ;
 
         //! post: added full path to dl'ed torrent fiel to info
         bool DownloadTorrentFile( PlasmaResourceInfo& info, const wxString& destination_directory ) const;
@@ -47,6 +48,10 @@ class PlasmaInterface : public iNetClass {
         void downloadFile( const wxString& host, const wxString& remote_path, const wxString& local_dest ) const;
         void InitResourceList();
 
+        void OnConnected( Socket* ){}
+        void OnDisconnected( Socket* ){}
+        virtual void OnDataReceived( Socket* socket );
+
         //! fqdn of the host where plasma service runs
         wxString m_host;
         //! remote path to service aspx, starting at web root
@@ -55,7 +60,7 @@ class PlasmaInterface : public iNetClass {
         //! a vector holding (after the initial request) all the available resources on the remote
         ResourceList m_resource_list;
 
-				std::map<Socket*, int> m_socket_index;
+        std::map<Socket*, int> m_socket_index;
         std::vector<wxString> m_buffers; // why not using map here directly? because i can write directly into the vector this way
 };
 

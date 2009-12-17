@@ -21,7 +21,7 @@
 #include "customdialogs.h"//shoudl be remove d fater initlai debug
 #include "conversion.h"
 #include "debug.h"
-
+#include "../socket.h"
 
 const wxString s_soap_service_url = _T("http://planet-wars.eu/PlasmaServer/Service.asmx?op=DownloadFile");
 
@@ -57,11 +57,11 @@ PlasmaInterface::PlasmaInterface()
   *
   * @todo: document this function
   */
-PlasmaResourceInfo PlasmaInterface::GetResourceInfo(const wxString& name) const
+PlasmaResourceInfo PlasmaInterface::GetResourceInfo(const wxString& name)
 {
     PlasmaResourceInfo info;
 
-    Socket* socket = new Socket( this );
+    Socket* socket = new Socket( *this );
 		m_socket_index[socket] = m_buffers.size();
     wxString buff;
     m_buffers.push_back(buff);
@@ -101,11 +101,8 @@ PlasmaResourceInfo PlasmaInterface::GetResourceInfo(const wxString& name) const
 //    wxMessageBox(wxString::Format(_T("Wrote %d out of %d bytes"),socket->LastCount(),data.Len()));
 
     //Get Response
-    socket->WaitForRead(10);
-    char peek_buf[1025];
-    socket->Peek(peek_buf,1025);
-    peek_buf[socket->LastCount()] = '\0';
-
+    wxString received_data = socket->Receive();
+#if 0
 //    buf = wxString( buf, wxConvISO8859_1 );
     wxString wxbuf = wxString::  FromAscii( peek_buf );
     //msgbox also serves as wait thingy for socket read it seems here, remove and be prepared for less stuff read...
@@ -194,7 +191,7 @@ PlasmaResourceInfo PlasmaInterface::GetResourceInfo(const wxString& name) const
 
 
     return info;
-
+#endif
 }
 
 /** @brief downloadFile
@@ -245,7 +242,7 @@ bool PlasmaInterface::DownloadTorrentFile( PlasmaResourceInfo& info, const wxStr
 
 void PlasmaInterface::InitResourceList()
 {
-    Socket* socket = new Socket( this );
+    Socket* socket = new Socket( *this );
 		m_socket_index[socket] = m_buffers.size();
     wxString buff;
     m_buffers.push_back(buff);
@@ -295,11 +292,9 @@ void PlasmaInterface::InitResourceList()
 //    wxMessageBox(wxString::Format(_T("Wrote %d out of %d bytes"),socket->LastCount(),data.Len()));
 
     //Get Response
-    socket->WaitForRead();
-    char peek_buf[1025];
-    socket->Peek(peek_buf,1025);
-    peek_buf[socket->LastCount()] = '\0';
+    wxString received_data = socket->Receive();
 
+#if 0
 //    buf = wxString( buf, wxConvISO8859_1 );
     wxString wxbuf = wxString::  FromAscii( peek_buf );
     //msgbox also serves as wait thingy for socket read it seems here, remove and be prepared for less stuff read...
@@ -383,27 +378,17 @@ void PlasmaInterface::InitResourceList()
         } // end section <GetResourceListResponse/>
         node = node->GetNext();
     }
+#endif
 }
-
-
-
-void PlasmaInterface::OnConnected( Socket* /*unused*/ )
-{
-}
-
-
-void PlasmaInterface::OnDisconnected( Socket* /*unused*/ )
-{
-}
-
 
 void PlasmaInterface::OnDataReceived( Socket* sock )
 {
-		if ( sock == 0 ) return;
+    if ( sock == 0 )
+        return;
 
     wxString data = sock->Receive();
     int index = m_socket_index[sock];
-		m_buffers[index] << data;
+    m_buffers[index] << data;
 
 }
 
