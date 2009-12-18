@@ -17,6 +17,7 @@ SET(springlobbySrc
 	src/gui/skirmish_dialog.cpp
 	src/gui/wxbackgroundimage.cpp
 	src/gui/simplefront.cpp
+	src/gui/spinctl/generic/spinctlg.cpp
 	src/aui/slbook.cpp
 	src/utils/math.cpp
 	src/utils/misc.cpp
@@ -100,7 +101,6 @@ SET(springlobbySrc
 	src/singleplayerbattle.cpp
 	src/singleplayertab.cpp
 	src/socket.cpp
-	src/spinctld.cpp
 	src/spring.cpp
 	src/springlobbyapp.cpp
 	src/springoptionstab.cpp
@@ -161,11 +161,11 @@ SET(SLSharedWithSettings
 	src/springunitsynclib.cpp
 	src/springunitsync.cpp
 	src/thread.cpp
-	src/spinctld.cpp
 	src/globalsmanager.cpp
 	src/utils/globalevents.cpp
 	src/mmoptionmodel.cpp
 	src/mmoptionswrapper.cpp
+	src/gui/spinctl/generic/spinctlg.cpp
 )
 
 SET( updaterSrc
@@ -180,4 +180,5 @@ SET( updaterSrc
 	src/utils/misc.cpp
 	src/uiutils.cpp
 )
+
 
