@@ -249,8 +249,9 @@ bool PlasmaInterface::DownloadTorrentFile( PlasmaResourceInfo& info, const wxStr
 
 void PlasmaInterface::InitResourceList()
 {
-    Socket* socket = new Socket( *this );
-    m_socket_index[socket] = 1 + m_buffers.size();
+    Socket* socket = new Socket( *this, true );
+    const int index = 1 + m_buffers.size();
+    m_socket_index[socket] = index;
     wxString buff;
     m_buffers.push_back(buff);
 
@@ -289,10 +290,13 @@ void PlasmaInterface::InitResourceList()
 
     //Connect to host
     socket->Connect(m_host,80);
+    assert (  socket->State() == SS_Open );
 
     //Write header
     socket->Send(header+data);
-//    wxMessageBox(wxString::Format(_T("Wrote %d out of %d bytes"),socket->LastCount(),header.Len()));
+    wxString g = socket->Receive();
+    m_buffers[index] = g;
+    ParseResourceListData( index );
 
     //Write data
 //    socket->Send(data);

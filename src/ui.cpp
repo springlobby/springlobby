@@ -322,6 +322,7 @@ void Ui::DownloadFileP2P( const wxString& hash, const wxString& name )
     for ( PlasmaInterface::ResourceList::const_iterator i = rl.begin(); i != rl.end(); ++i )
         msg += i->m_name + _T("\n");
     customMessageBox( SL_MAIN_ICON, msg, _("files") );
+    plasmaInterface().InitResourceList();
 #ifndef NO_TORRENT_SYSTEM
 //    if ( torrent().RequestFileByName( name ) != TorrentWrapper::success )
 //        customMessageBoxNoModal( SL_MAIN_ICON, _("dl failed"), _("dl failed") );

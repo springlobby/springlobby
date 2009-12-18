@@ -172,7 +172,7 @@ bool SpringLobbyApp::OnInit()
     ui().mw().SetLogWin( loggerwin, logchain );
 
     plasmaInterface();
-    plasmaInterface().InitResourceList();
+
     return true;
 }
 
