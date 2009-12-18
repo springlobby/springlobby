@@ -104,7 +104,7 @@ public:
 
 protected:
     void OnSpinButton(wxSpinEvent& eventSpin) {
-        eventSpin.Skip();
+        eventSpin.Veto();
     }
     void OnSpinButtonUp(wxSpinEvent& eventSpin)
     {
@@ -363,7 +363,7 @@ void wxSpinCtrlDbl::SetValue(double val)
     wxCHECK_RET( m_btn, _T("invalid call to wxSpinCtrlDbl::SetValue") );
 
     m_current = clamp( val, m_min, m_max );
-//    m_current = val;
+    m_current = val;
     SetTextValue(m_current);
 
 
@@ -397,15 +397,8 @@ void wxSpinCtrlDbl::SetRange(double  min, double  max)
 
 void wxSpinCtrlDbl::Increment(bool up)
 {
-//    static unsigned long counter = 0;
-
     double new_val = up ? m_current + m_increment : m_current - m_increment;
-    m_current = clamp( new_val, m_min, m_max );
-//    m_current = new_val;
-//    if ( counter % 2 )
-        SetTextValue( m_current );
-//    counter++;
-//    counter++;
+    SetValue( new_val );
 }
 
 
