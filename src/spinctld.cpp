@@ -181,8 +181,8 @@ bool wxSpinCtrlDbl::Create(wxWindow *parent,
     // parameter unspecified)
     if ( !value.empty() )
     {
-        long l;
-        if ( value.ToLong(&l) )
+        double l;
+        if ( value.ToDouble(&l) )
             initial = l;
     }
 
