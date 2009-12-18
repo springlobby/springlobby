@@ -331,8 +331,6 @@ double wxSpinCtrlDbl::GetMax() const
 void wxSpinCtrlDbl::SetTextValue(double val)
 {
     wxCHECK_RET( m_text, _T("invalid call to wxSpinCtrlDbl::SetTextValue") );
-    wxLogMessage( _T("wxSpinCtrlDbl::SetTextValue") );
-
     m_text->SetValue(wxString::Format(_T("%.1f"), val));
 
     // select all text
@@ -362,8 +360,12 @@ void wxSpinCtrlDbl::SetValue(double val)
 {
     wxCHECK_RET( m_btn, _T("invalid call to wxSpinCtrlDbl::SetValue") );
 
-    m_current = clamp( val, m_min, m_max );
-    m_current = val;
+    if ( val < m_min || val > m_max )
+        return;
+    wxLogMessage( _T("wxSpinCtrlDbl::SetValue") );
+    m_current = clamp<double> ( val, m_min, m_max );
+    //remove this and fear the apocalypse! once a ctrl hits  val with full double representation --> kaboom
+    m_current *= 1.001;
     SetTextValue(m_current);
 
 
