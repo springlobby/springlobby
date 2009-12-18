@@ -213,7 +213,7 @@ int BattleroomMMOptionsTab<BattleType>::setupOptionsSectionSizer(const mmOptionS
         if ( it->second.section == section.key )
         {
 			mmOptionFloat current = it->second;
-			wxSpinCtrlDouble* tempspin = new wxSpinCtrlDouble();
+			SlSpinCtrlDouble* tempspin = new SlSpinCtrlDouble();
 			tempspin->Create(this, FLOAT_START_ID+ctrl_count, _T(""),
 					wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, double(current.min), double(current.max),
 					double(current.value),double(current.stepping), current.key);
@@ -363,7 +363,7 @@ template < class BattleType >
 void BattleroomMMOptionsTab<BattleType>::OnSpinCtrlChange(wxSpinEvent& event)
 {
 	if ( !m_battle ) return;
-	wxSpinCtrlDouble* box = (wxSpinCtrlDouble*) event.GetEventObject();
+	SlSpinCtrlDouble* box = (SlSpinCtrlDouble*) event.GetEventObject();
 	wxString key = (box->GetName()).AfterFirst(sep);
 	long gameoption;
 	box->GetName().BeforeFirst(sep).ToLong(&gameoption);
@@ -417,7 +417,7 @@ void BattleroomMMOptionsTab<BattleType>::UpdateOptControls(wxString controlName)
 	 if ( m_spinctrl_map.find(controlName) != m_spinctrl_map.end() )
 	{
 		wxString value = m_battle->CustomBattleOptions().getSingleValue( optKey, (OptionsWrapper::GameOption)gameoption );
-		wxSpinCtrlDouble* cur = m_spinctrl_map[controlName] ;
+		SlSpinCtrlDouble* cur = m_spinctrl_map[controlName] ;
 		double l_val;
 		value.ToDouble(&l_val);
 		cur->SetValue(l_val);

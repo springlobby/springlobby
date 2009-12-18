@@ -58,7 +58,7 @@ SingleOptionDialog::SingleOptionDialog( IBattle& battle, const wxString& optiont
 		case opt_float:
 			{
 				mmOptionFloat opt = optWrap.m_opts[optFlag].float_map[key];
-				m_spinctrl = new wxSpinCtrlDouble();
+				m_spinctrl = new SlSpinCtrlDouble();
 				m_spinctrl->Create( this, wxID_ANY, _T( "" ), wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, double( opt.min ), double( opt.max ), double( opt.value ), double( opt.stepping ), opt.key );
 				m_spinctrl->SetToolTip( TE( opt.description ) );
 				m_main_sizer->Add( m_spinctrl, 0, wxEXPAND );

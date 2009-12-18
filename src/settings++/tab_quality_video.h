@@ -34,7 +34,7 @@ class wxSize;
 class wxCloseEvent;
 class wxSlider;
 class wxStaticBoxSizer;
-class wxSpinCtrlDouble;
+class SlSpinCtrlDouble;
 
 class tab_quality_video : public abstract_panel
 {
@@ -86,7 +86,7 @@ class tab_quality_video : public abstract_panel
 
         std::vector<wxControl*> m_w4_controls;
 
-        wxSpinCtrlDouble* m_aniso_spin;
+        SlSpinCtrlDouble* m_aniso_spin;
 
     protected:
 		DECLARE_EVENT_TABLE()

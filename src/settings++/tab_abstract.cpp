@@ -2,7 +2,7 @@
     This file is part of springsettings,
     Copyright (C) 2007
     Original work by Kloot
-    cross-plattform/UI adaptation and currently maintained by koshi (Ren� Milk)
+    cross-plattform/UI adaptation and currently maintained by koshi (Rene Milk)
     visit http://spring.clan-sy.com/phpbb/viewtopic.php?t=12104
     for more info/help
 
@@ -27,6 +27,8 @@
 #include <wx/defs.h>
 #include <wx/slider.h>
 #include <wx/log.h>
+#include "../gui/spinctl/spinctrl.h" //needs to be included BEFORE the 'real' spnictrl
+#include <wx/spinctrl.h>
 #include <wx/checkbox.h>
 #include <wx/radiobut.h>
 #include <wx/combobox.h>
@@ -39,7 +41,7 @@
 #include "se_utils.h"
 #include "../settings.h"
 #include "presets.h"
-#include "../gui/spinctl/spinctrl.h"
+
 #include "../utils/debug.h"
 
 intMap abstract_panel::intSettings;
@@ -566,7 +568,7 @@ void abstract_panel::OnSpinControlChange(wxSpinEvent& event)
 	}
 	if (event.GetId()==ID_W4_BumpWaterAnisotropy)
 	{
-		wxSpinCtrlDouble* aniso = (wxSpinCtrlDouble*) event.GetEventObject();
+		SlSpinCtrlDouble* aniso = (SlSpinCtrlDouble*) event.GetEventObject();
 		(floatSettings)[W4_CONTROLS[6].key] = aniso->GetValue();
 		settingsChanged = true;
 	}

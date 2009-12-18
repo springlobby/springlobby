@@ -18,7 +18,7 @@ class wxCheckBox;
 class wxComboBox;
 class wxCommandEvent;
 class Battle;
-class wxSpinCtrlDouble;
+class SlSpinCtrlDouble;
 class wxTextCtrl;
 class wxSpinEvent;
 class wxStaticText;
@@ -27,7 +27,7 @@ class wxButton;
 //totally ok to store pointers here, since wx takes care of gui element destruction for us
 typedef std::map<wxString,wxCheckBox*> chkBoxMap;
 typedef std::map<wxString,wxComboBox*> comboBoxMap;
-typedef std::map<wxString,wxSpinCtrlDouble*> spinCtrlMap;
+typedef std::map<wxString,SlSpinCtrlDouble*> spinCtrlMap;
 typedef std::map<wxString,wxTextCtrl*> textCtrlMap;
 typedef std::map<wxString,wxStaticText*> staticTextMap;
 typedef std::map<wxString,wxButton*> buttonMap;

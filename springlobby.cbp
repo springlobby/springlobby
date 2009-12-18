@@ -313,6 +313,9 @@
 		<Unit filename="src/gui/simplefront.h" />
 		<Unit filename="src/gui/skirmish_dialog.cpp" />
 		<Unit filename="src/gui/skirmish_dialog.h" />
+		<Unit filename="src/gui/spinctl/generic/spinctlg.cpp" />
+		<Unit filename="src/gui/spinctl/generic/spinctlg.h" />
+		<Unit filename="src/gui/spinctl/spinctrl.h" />
 		<Unit filename="src/gui/wxbackgroundimage.cpp" />
 		<Unit filename="src/gui/wxbackgroundimage.h" />
 		<Unit filename="src/gui/wxgradientbutton.cpp" />
@@ -445,8 +448,6 @@
 		<Unit filename="src/socket.h" />
 		<Unit filename="src/sounds/pm_sound.h" />
 		<Unit filename="src/sounds/ring_sound.h" />
-		<Unit filename="src/spinctld.cpp" />
-		<Unit filename="src/spinctld.h" />
 		<Unit filename="src/spring.cpp" />
 		<Unit filename="src/spring.h" />
 		<Unit filename="src/springlobby.rc">

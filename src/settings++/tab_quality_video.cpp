@@ -239,7 +239,7 @@ void tab_quality_video::initW4Sizer(wxSizer* sizer)
     sizer->Add( refractionCom, 0, wxEXPAND|wxALL, 4 );
 
     sizer->Add(new wxStaticText(this, -1, (W4_CONTROLS[6].lbl)) , 0, wxTOP|wxEXPAND, 5);
-    m_aniso_spin = new wxSpinCtrlDouble();
+    m_aniso_spin = new SlSpinCtrlDouble();
     m_aniso_spin->Create(this, W4_CONTROLS[6].id, _T(""),
             wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0.f, 6.f,
             0.f,0.25f, _T(""));
