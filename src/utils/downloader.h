@@ -55,6 +55,7 @@ class PlasmaInterface : public iNetClass {
         //!TODO doesn't really need to be here
         void downloadFile( const wxString& host, const wxString& remote_path, const wxString& local_dest ) const;
         void ParseResourceListData( const int buffer_index );
+        void ParseResourceInfoData( const int buffer_index );
 
         void OnConnected( Socket* ){}
         void OnDisconnected( Socket* ){}
@@ -69,7 +70,7 @@ class PlasmaInterface : public iNetClass {
         ResourceList m_resource_list;
 
         std::map<Socket*, int> m_socket_index;
-        std::vector<wxString> m_buffers; // why not using map here directly? because i can write directly into the vector this way
+        std::map<int,wxString> m_buffers;
 
         static const int m_list_socket_index = 0;
         static const int m_info_socket_index = 1;

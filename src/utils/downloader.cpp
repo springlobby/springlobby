@@ -66,12 +66,10 @@ PlasmaInterface::PlasmaInterface()
   */
 PlasmaResourceInfo PlasmaInterface::GetResourceInfo(const wxString& name)
 {
-    PlasmaResourceInfo info;
-
     Socket* socket = new Socket( *this );
+    const int index =
     m_socket_index[socket] = -1 - m_buffers.size();
-    wxString buff;
-    m_buffers.push_back(buff);
+    m_buffers[index] = wxEmptyString;
 
     wxString data = s_soap_querytemplate;
     data.Replace( _T("REALNAME") , name );
@@ -109,31 +107,15 @@ PlasmaResourceInfo PlasmaInterface::GetResourceInfo(const wxString& name)
 
     //Get Response
 //    wxString received_data = socket->Receive();
-#if 0
-//    buf = wxString( buf, wxConvISO8859_1 );
-    wxString wxbuf = wxString::  FromAscii( peek_buf );
-    //msgbox also serves as wait thingy for socket read it seems here, remove and be prepared for less stuff read...
-    wxMessageBox(wxString::Format(_T("Read %d bytes: %s"),socket->LastCount(),wxbuf.c_str()));
 
-    long content_length = 0;
-    wxStringTokenizer toks ( wxbuf, _T("\n") );
-    while( toks.HasMoreTokens() ) {
-        wxString line = toks.GetNextToken();
-        if ( line.StartsWith( _T("Content-Length") ) ) {
-            line = line.Mid( line.Last( wxChar(':') ) + 1, line.Last( wxChar('\n') ) ).Trim( false ).Trim( true );
-            line.ToLong( &content_length );
-            assert( content_length >= 0 );
-            break;
-        }
-    }
-    char buf[1025+content_length];
-    socket->Read(buf,1025+content_length);
+    //dummy return
+    return PlasmaResourceInfo();
+}
 
-    buf[socket->LastCount()] = '\0';
-
-//    buf = wxString( buf, wxConvISO8859_1 );
-    wxbuf = wxString::  FromAscii( buf );
-    wxMessageBox(wxString::Format(_T("Content size %d | Read %d bytes: %s"),content_length,socket->LastCount(),wxbuf.c_str()));
+void PlasmaInterface::ParseResourceInfoData( const int buffer_index )
+{
+    PlasmaResourceInfo info;
+    wxString wxbuf = m_buffers[buffer_index];
 
     wxString t_begin = _T("<soap:Envelope");
     wxString t_end = _T("</soap:Envelope>");
@@ -197,8 +179,6 @@ PlasmaResourceInfo PlasmaInterface::GetResourceInfo(const wxString& name)
     wxMessageBox( seeds );
 
 
-    return info;
-#endif
 }
 
 /** @brief downloadFile
@@ -252,8 +232,7 @@ void PlasmaInterface::InitResourceList()
     Socket* socket = new Socket( *this, true );
     const int index = 1 + m_buffers.size();
     m_socket_index[socket] = index;
-    wxString buff;
-    m_buffers.push_back(buff);
+    m_buffers[index] = wxEmptyString;
 
     wxString data = s_soap_querytemplate_resourcelist;
 
