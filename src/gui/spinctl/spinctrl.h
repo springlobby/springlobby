@@ -31,8 +31,8 @@
 // Events
 class WXDLLIMPEXP_FWD_CORE SlSpinDoubleEvent;
 
-DECLARE_EVENT_TYPE(wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEvent);
-DECLARE_EVENT_TYPE(wxEVT_COMMAND_SPINCTRLDOUBLE_UPDATED, SlSpinDoubleEvent);
+//DECLARE_EVENT_TYPE(SLEVT_COMMAND_SPINCTRL_UPDATED, SlSpinEvent);
+DECLARE_EVENT_TYPE(SLEVT_COMMAND_SPINCTRLDOUBLE_UPDATED, SlSpinDoubleEvent);
 
 
 // ----------------------------------------------------------------------------
@@ -106,20 +106,20 @@ private:
 typedef void (wxEvtHandler::*SlSpinDoubleEventFunction)(SlSpinDoubleEvent&);
 
 #define SlSpinDoubleEventHandler(func) \
-    wxEVENT_HANDLER_CAST(SlSpinDoubleEventFunction, func)
+    (wxObjectEventFunction)(wxEventFunction)wxStaticCastEvent(SlSpinDoubleEventFunction, &func)
 
+//#define wxCommandEventHandler(func)
+//    (wxObjectEventFunction)(wxEventFunction)wxStaticCastEvent(wxCommandEventFunction, &func)
 // macros for handling spinctrl events
 
-#define EVT_SlSPINCTRL(id, fn) \
-    wx__DECLARE_EVT1(SlEVT_COMMAND_SPINCTRL_UPDATED, id, SlSpinEventHandler(fn))
+//#define EVT_SLSPINCTRL(id, fn)
+//    wx__DECLARE_EVT1(SLEVT_COMMAND_SPINCTRL_UPDATED, id, SlSpinEventHandler(fn))
 
-#define EVT_SlSPINCTRLDOUBLE(id, fn) \
-    wx__DECLARE_EVT1(SlEVT_COMMAND_SPINCTRLDOUBLE_UPDATED, id, SlSpinDoubleEventHandler(fn))
+#define EVT_SLSPINCTRLDOUBLE(id, fn) \
+    wx__DECLARE_EVT1(SLEVT_COMMAND_SPINCTRLDOUBLE_UPDATED, id, SlSpinDoubleEventHandler(fn))
 
 
-#if !defined(wxHAS_NATIVE_SPINCTRL) || !defined(wxHAS_NATIVE_SPINCTRLDOUBLE)
-    #include "generic/spinctlg.h"
-#endif
+#include "generic/spinctlg.h"
 
 #endif // wxUSE_SPINCTRL
 

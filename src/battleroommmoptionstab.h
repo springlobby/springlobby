@@ -20,7 +20,7 @@ class wxCommandEvent;
 class Battle;
 class SlSpinCtrlDouble;
 class wxTextCtrl;
-class wxSpinEvent;
+class SlSpinDoubleEvent;
 class wxStaticText;
 class wxButton;
 
@@ -112,7 +112,7 @@ class BattleroomMMOptionsTab : public wxScrolledWindow
 		void OnComBoxChange(wxCommandEvent&);
 		void OnChkBoxChange(wxCommandEvent&);
 		void OnTextCtrlChange(wxCommandEvent& event);
-		void OnSpinCtrlChange(wxSpinEvent& event);
+		void OnSpinCtrlChange(SlSpinDoubleEvent& event);
 		/** @} */
 
 		wxButton* getButton( const wxWindowID id, const wxString& name );

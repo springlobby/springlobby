@@ -27,8 +27,8 @@
 
 #if wxUSE_SPINBTN
 
-DEFINE_EVENT_TYPE( wxEVT_COMMAND_SPINCTRLDOUBLE_UPDATED )
-DEFINE_EVENT_TYPE( wxEVT_COMMAND_SPINCTRL_UPDATED )
+DEFINE_EVENT_TYPE( SLEVT_COMMAND_SPINCTRLDOUBLE_UPDATED )
+//DEFINE_EVENT_TYPE( SLEVT_COMMAND_SPINCTRL_UPDATED )
 // ----------------------------------------------------------------------------
 // constants
 // ----------------------------------------------------------------------------
@@ -506,17 +506,17 @@ void SlSpinCtrlGenericBase::SetSelection(long from, long to)
 // SlSpinCtrl
 //-----------------------------------------------------------------------------
 
-IMPLEMENT_DYNAMIC_CLASS(SlSpinCtrl, SlSpinCtrlGenericBase)
-
-void SlSpinCtrl::DoSendEvent()
-{
-    wxSpinEvent event( wxEVT_COMMAND_SPINCTRL_UPDATED, GetId());
-    event.SetEventObject( this );
-    event.SetPosition((int)(m_value + 0.5)); // FIXME should be SetValue
-    event.SetString(m_textCtrl->GetValue());
-    GetEventHandler()->ProcessEvent( event );
-}
-
+//IMPLEMENT_DYNAMIC_CLASS(SlSpinCtrl, SlSpinCtrlGenericBase)
+//
+//void SlSpinCtrl::DoSendEvent()
+//{
+//    wxSpinEvent event( wxEVT_COMMAND_SPINCTRL_UPDATED, GetId());
+//    event.SetEventObject( this );
+//    event.SetPosition((int)(m_value + 0.5)); // FIXME should be SetValue
+//    event.SetString(m_textCtrl->GetValue());
+//    GetEventHandler()->ProcessEvent( event );
+//}
+//
 
 
 //-----------------------------------------------------------------------------
@@ -527,7 +527,7 @@ IMPLEMENT_DYNAMIC_CLASS(SlSpinCtrlDouble, SlSpinCtrlGenericBase)
 
 void SlSpinCtrlDouble::DoSendEvent()
 {
-    SlSpinDoubleEvent event( wxEVT_COMMAND_SPINCTRLDOUBLE_UPDATED, GetId());
+    SlSpinDoubleEvent event( SLEVT_COMMAND_SPINCTRLDOUBLE_UPDATED, GetId());
     event.SetEventObject( this );
     event.SetValue(m_value);
     event.SetString(m_textCtrl->GetValue());

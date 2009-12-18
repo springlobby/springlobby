@@ -33,7 +33,7 @@ BEGIN_EVENT_TABLE_TEMPLATE1( BattleroomMMOptionsTab, wxPanel, BattleType)
 	EVT_COMBOBOX					(wxID_ANY, BattleroomMMOptionsTab::OnComBoxChange)
 	EVT_CHECKBOX					(wxID_ANY, BattleroomMMOptionsTab::OnChkBoxChange)
 	EVT_TEXT_ENTER					(wxID_ANY,  BattleroomMMOptionsTab::OnTextCtrlChange)
-	EVT_SPINCTRL					(wxID_ANY,  BattleroomMMOptionsTab::OnSpinCtrlChange)
+	EVT_SLSPINCTRLDOUBLE            (wxID_ANY,  BattleroomMMOptionsTab::OnSpinCtrlChange)
 
 //  EVT_BUTTON( BOPTS_LOADPRES, BattleroomMMOptionsTab::OnLoadPreset )
 //  EVT_BUTTON( BOPTS_SAVEPRES, BattleroomMMOptionsTab::OnSavePreset )
@@ -47,6 +47,7 @@ template < class BattleType >
 BattleroomMMOptionsTab<BattleType>::BattleroomMMOptionsTab(  BattleType* battle, wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style )
 : wxScrolledWindow( parent, id, pos, size, style | wxHSCROLL ),m_battle(battle)
 {
+//        Connect( SLEVT_COMMAND_SPINCTRLDOUBLE_UPDATED, SlSpinDoubleEventHandler( BattleroomMMOptionsTab::OnSpinCtrlChange ), 0, this );
 
   GetAui().manager->AddPane( this, wxLEFT, _T("battleroommmoptionstab") );
 
@@ -360,7 +361,7 @@ void BattleroomMMOptionsTab<BattleType>::OnTextCtrlChange(wxCommandEvent& event)
 }
 
 template < class BattleType >
-void BattleroomMMOptionsTab<BattleType>::OnSpinCtrlChange(wxSpinEvent& event)
+void BattleroomMMOptionsTab<BattleType>::OnSpinCtrlChange(SlSpinDoubleEvent& event)
 {
 	if ( !m_battle ) return;
 	SlSpinCtrlDouble* box = (SlSpinCtrlDouble*) event.GetEventObject();
