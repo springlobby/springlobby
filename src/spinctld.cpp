@@ -23,6 +23,9 @@
 #include <wx/spinbutt.h>
 #include <wx/spinctrl.h>
 #include <wx/textctrl.h>
+#include <limits>
+#include "utils/conversion.h"
+
 
 // ----------------------------------------------------------------------------
 // constants
@@ -100,7 +103,6 @@ public:
 protected:
     void OnSpinButton(wxSpinEvent& eventSpin)
     {
-        //!TODO something about multiplying with increment
         m_spin->SetTextValue(eventSpin.GetPosition());
 
         wxCommandEvent event(wxEVT_COMMAND_SPINCTRL_UPDATED, m_spin->GetId());
@@ -131,6 +133,14 @@ IMPLEMENT_DYNAMIC_CLASS(wxSpinCtrlDbl, wxControl)
 // ----------------------------------------------------------------------------
 // wxSpinCtrlDbl creation
 // ----------------------------------------------------------------------------
+//BEGIN_EVENT_TABLE(wxSpinCtrlDbl,wxControl)
+//    EVT_SPIN_UP   ( wxID_ANY, wxSpinCtrlDbl::OnSpinUp    )
+//    EVT_SPIN_DOWN ( wxID_ANY, wxSpinCtrlDbl::OnSpinDown  )
+////    EVT_TEXT_ENTER( wxID_ANY, wxSpinCtrlDbl::OnTextEnter )
+////    EVT_TEXT      ( wxID_ANY, wxSpinCtrlDbl::OnText      )
+////    EVT_SET_FOCUS ( wxSpinCtrlDbl::OnFocus     )
+////    EVT_KILL_FOCUS( wxSpinCtrlDbl::OnKillFocus )
+//END_EVENT_TABLE()
 
 void wxSpinCtrlDbl::Init()
 {
@@ -150,6 +160,9 @@ bool wxSpinCtrlDbl::Create(wxWindow *parent,
                         double increment,
                         const wxString& name)
 {
+    m_min = min;
+    m_max = max;
+    m_increment = increment;
     if ( !wxControl::Create(parent, id, wxDefaultPosition, wxDefaultSize, style,
                             wxDefaultValidator, name) )
     {
@@ -271,8 +284,8 @@ bool wxSpinCtrlDbl::Reparent(wxWindow *newParent)
 
 bool wxSpinCtrlDbl::GetTextValue(double  *val) const
 {
-    long l;
-    if ( !m_text->GetValue().ToLong(&l) )
+    double l;
+    if ( !m_text->GetValue().ToDouble(&l) )
     {
         // not a number at all
         return false;
@@ -308,11 +321,12 @@ double wxSpinCtrlDbl::GetMax() const
 // changing value and range
 // ----------------------------------------------------------------------------
 
-void wxSpinCtrlDbl::SetTextValue(double val)
+void wxSpinCtrlDbl::SetTextValue(int pos)
 {
+    double val = pos * m_increment + m_min;
     wxCHECK_RET( m_text, _T("invalid call to wxSpinCtrlDbl::SetTextValue") );
 
-    m_text->SetValue(wxString::Format(_T("%d"), val));
+    m_text->SetValue(wxString::Format(_T("%.1f"), val));
 
     // select all text
     m_text->SetSelection(0, -1);
@@ -350,10 +364,12 @@ void wxSpinCtrlDbl::SetValue(const wxString& text)
 {
     wxCHECK_RET( m_text, _T("invalid call to wxSpinCtrlDbl::SetValue") );
 
-    long val;
-    if ( text.ToLong(&val) && ((val > INT_MIN) && (val < INT_MAX)) )
+    double val;
+    if ( text.ToDouble(&val)
+            &&  ((val > std::numeric_limits<double>::min() )
+            && (val < std::numeric_limits<double>::max() )) )
     {
-        SetValue((int)val);
+        SetValue(val);
     }
     else // not a number at all or out of range
     {

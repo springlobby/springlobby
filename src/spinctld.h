@@ -28,7 +28,7 @@ class  wxTextCtrl;
 // ----------------------------------------------------------------------------
 // wxSpinCtrlDbl is a combination of wxTextCtrl and wxSpinButton
 // ----------------------------------------------------------------------------
-
+class wxSpinCtrlDblButton;
 class  wxSpinCtrlDbl : public wxControl
 {
 public:
@@ -80,8 +80,6 @@ public:
     wxTextCtrl *GetText() const { return m_text; }
     wxSpinButton *GetSpinButton() const { return m_btn; }
 
-    // set the value of the text (only)
-    void SetTextValue(double val);
 
     // put the numeric value of the string in the text ctrl doubleo val and return
     // true or return false if the text ctrl doesn't contain a number or if the
@@ -92,9 +90,14 @@ protected:
     // override the base class virtuals involved into geometry calculations
     virtual wxSize DoGetBestSize() const;
     virtual void DoMoveWindow(int x, int y, int width, int height);
+    double m_min,m_max,m_increment;
 
     // common part of all ctors
     void Init();
+
+    friend class wxSpinCtrlDblButton;
+    // set the value of the text (only)
+    void SetTextValue(int val);//putting this here makes sure it's not called fromt he ouside, so we can enable 'special' semantics
 
 private:
     // the subcontrols
@@ -103,7 +106,7 @@ private:
 
 private:
     DECLARE_DYNAMIC_CLASS(wxSpinCtrlDbl)
-
+//    DECLARE_EVENT_TABLE()
 };
 
 #endif // wxUSE_SPINBTN/!wxUSE_SPINBTN
