@@ -103,16 +103,7 @@ public:
     }
 
 protected:
-    void OnSpinButton(wxSpinEvent& eventSpin)
-    {
-//        m_spin->SetTextValue(eventSpin.GetPosition());
-//
-//        wxCommandEvent event(wxEVT_COMMAND_SPINCTRL_UPDATED, m_spin->GetId());
-//        event.SetEventObject(m_spin);
-//        event.SetInt(eventSpin.GetPosition());
-//
-//        m_spin->GetEventHandler()->ProcessEvent(event);
-
+    void OnSpinButton(wxSpinEvent& eventSpin) {
         eventSpin.Skip();
     }
     void OnSpinButtonUp(wxSpinEvent& eventSpin)
@@ -134,7 +125,7 @@ private:
 };
 
 BEGIN_EVENT_TABLE(wxSpinCtrlDblButton, wxSpinButton)
-//    EVT_SPIN(wxID_ANY, wxSpinCtrlDblButton::OnSpinButton)
+    EVT_SPIN(wxID_ANY, wxSpinCtrlDblButton::OnSpinButton) //need to implement this to prevent doupicate increment
     EVT_SPIN_UP(wxID_ANY, wxSpinCtrlDblButton::OnSpinButtonUp)
     EVT_SPIN_DOWN(wxID_ANY, wxSpinCtrlDblButton::OnSpinButtonDown)
 END_EVENT_TABLE()
@@ -371,8 +362,8 @@ void wxSpinCtrlDbl::SetValue(double val)
 {
     wxCHECK_RET( m_btn, _T("invalid call to wxSpinCtrlDbl::SetValue") );
 
-//    m_current = clamp( val, m_min, m_max );
-    m_current = val;
+    m_current = clamp( val, m_min, m_max );
+//    m_current = val;
     SetTextValue(m_current);
 
 
@@ -406,10 +397,15 @@ void wxSpinCtrlDbl::SetRange(double  min, double  max)
 
 void wxSpinCtrlDbl::Increment(bool up)
 {
+//    static unsigned long counter = 0;
+
     double new_val = up ? m_current + m_increment : m_current - m_increment;
     m_current = clamp( new_val, m_min, m_max );
-    m_current = new_val;
-    SetTextValue( m_current );
+//    m_current = new_val;
+//    if ( counter % 2 )
+        SetTextValue( m_current );
+//    counter++;
+//    counter++;
 }
 
 
