@@ -43,7 +43,8 @@ class PlasmaInterface : public iNetClass {
         typedef std::vector<PlasmaResourceInfo>
             ResourceList;
 
-        const ResourceList& GetResourceList() { InitResourceList(); return m_resource_list; }
+        const ResourceList& GetResourceList() {  return m_resource_list; }
+        void InitResourceList();
 
     protected:
         PlasmaInterface();
@@ -53,7 +54,6 @@ class PlasmaInterface : public iNetClass {
 
         //!TODO doesn't really need to be here
         void downloadFile( const wxString& host, const wxString& remote_path, const wxString& local_dest ) const;
-        void InitResourceList();
         void ParseResourceListData( const int buffer_index );
 
         void OnConnected( Socket* ){}

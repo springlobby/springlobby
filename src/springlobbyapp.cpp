@@ -42,6 +42,7 @@
 #include "iunitsync.h"
 #include "channel/channel.h"
 #include "utils/customdialogs.h"
+#include "utils/downloader.h"
 #include "settings++/se_utils.h"
 #ifndef NO_TORRENT_SYSTEM
 #include "torrentwrapper.h"
@@ -170,6 +171,8 @@ bool SpringLobbyApp::OnInit()
 
     ui().mw().SetLogWin( loggerwin, logchain );
 
+    plasmaInterface();
+    plasmaInterface().InitResourceList();
     return true;
 }
 

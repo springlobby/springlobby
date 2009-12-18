@@ -100,15 +100,15 @@ PlasmaResourceInfo PlasmaInterface::GetResourceInfo(const wxString& name)
     socket->Connect(m_host, 80);
 
     //Write header
-    socket->Send(header);
+    socket->Send(header+data);
 //    wxMessageBox(wxString::Format(_T("Wrote %d out of %d bytes"),socket->LastCount(),header.Len()));
 
     //Write data
-    socket->Send(data);
+//    socket->Send(data);
 //    wxMessageBox(wxString::Format(_T("Wrote %d out of %d bytes"),socket->LastCount(),data.Len()));
 
     //Get Response
-    wxString received_data = socket->Receive();
+//    wxString received_data = socket->Receive();
 #if 0
 //    buf = wxString( buf, wxConvISO8859_1 );
     wxString wxbuf = wxString::  FromAscii( peek_buf );
@@ -291,11 +291,11 @@ void PlasmaInterface::InitResourceList()
     socket->Connect(m_host,80);
 
     //Write header
-    socket->Send(header);
+    socket->Send(header+data);
 //    wxMessageBox(wxString::Format(_T("Wrote %d out of %d bytes"),socket->LastCount(),header.Len()));
 
     //Write data
-    socket->Send(data);
+//    socket->Send(data);
 //    wxMessageBox(wxString::Format(_T("Wrote %d out of %d bytes"),socket->LastCount(),data.Len()));
 
 }
@@ -379,7 +379,7 @@ void PlasmaInterface::OnDataReceived( Socket* sock )
     }
     else //socekt for list
     {
-
+        ParseResourceListData( index );
     }
 }
 
