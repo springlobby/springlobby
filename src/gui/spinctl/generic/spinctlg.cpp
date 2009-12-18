@@ -187,6 +187,7 @@ bool SlSpinCtrlGenericBase::Create(wxWindow *parent,
     // reasons and also because it is simpler to satisfy the string value which
     // comes much sooner in the list of arguments and leave the initial
     // parameter unspecified)
+    m_textCtrl->SetValue(wxString::Format(m_format, m_value));
     if ( !value.empty() )
     {
         double d;
