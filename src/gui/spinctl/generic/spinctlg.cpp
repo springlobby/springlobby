@@ -27,7 +27,7 @@
 
 #if wxUSE_SPINBTN
 
-DEFINE_EVENT_TYPE( SLEVT_COMMAND_SPINCTRLDOUBLE_UPDATED )
+
 //DEFINE_EVENT_TYPE( SLEVT_COMMAND_SPINCTRL_UPDATED )
 // ----------------------------------------------------------------------------
 // constants

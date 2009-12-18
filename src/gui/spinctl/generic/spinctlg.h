@@ -22,10 +22,6 @@
 
 #if wxUSE_SPINBTN
 
-
-class WXDLLIMPEXP_FWD_CORE SlSpinButton;
-class WXDLLIMPEXP_FWD_CORE wxTextCtrl;
-
 class SlSpinCtrlGenericBase;
 
 #include <wx/textctrl.h>
@@ -59,7 +55,7 @@ private:
 // function ambiguity.
 // ----------------------------------------------------------------------------
 
-class WXDLLIMPEXP_CORE SlSpinCtrlGenericBase : public SlSpinCtrlBase
+class  SlSpinCtrlGenericBase : public SlSpinCtrlBase
 {
 public:
     SlSpinCtrlGenericBase() { Init(); }
@@ -165,7 +161,7 @@ private:
 
 #include "wx/textctrl.h"
 
-class WXDLLIMPEXP_CORE SlSpinCtrlGenericBase : public wxTextCtrl
+class  SlSpinCtrlGenericBase : public wxTextCtrl
 {
 public:
     SlSpinCtrlGenericBase() : m_value(0), m_min(0), m_max(100),
@@ -303,7 +299,7 @@ protected:
 // SlSpinCtrlDouble
 //-----------------------------------------------------------------------------
 
-class WXDLLIMPEXP_CORE SlSpinCtrlDouble : public SlSpinCtrlGenericBase
+class  SlSpinCtrlDouble : public SlSpinCtrlGenericBase
 {
 public:
     SlSpinCtrlDouble() : m_digits(0) { }

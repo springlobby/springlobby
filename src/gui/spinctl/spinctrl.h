@@ -29,11 +29,10 @@
 #include "wx/spinbutt.h"        // should make wxSpinEvent visible to the app
 
 // Events
-class WXDLLIMPEXP_FWD_CORE SlSpinDoubleEvent;
+class  SlSpinDoubleEvent;
 
-//DECLARE_EVENT_TYPE(SLEVT_COMMAND_SPINCTRL_UPDATED, SlSpinEvent);
-DECLARE_EVENT_TYPE(SLEVT_COMMAND_SPINCTRLDOUBLE_UPDATED, SlSpinDoubleEvent);
-
+const wxEventType SLEVT_COMMAND_SPINCTRLDOUBLE_UPDATED  = wxNewEventType();
+//const wxEventType SLEVT_COMMAND_SPINCTRL_UPDATED  = wxNewEventType();
 
 // ----------------------------------------------------------------------------
 // A spin ctrl is a text control with a spin button which is usually used to
@@ -41,7 +40,7 @@ DECLARE_EVENT_TYPE(SLEVT_COMMAND_SPINCTRLDOUBLE_UPDATED, SlSpinDoubleEvent);
 // There are two kinds for number types T=integer or T=double.
 // ----------------------------------------------------------------------------
 
-class WXDLLIMPEXP_CORE SlSpinCtrlBase : public wxControl
+class  SlSpinCtrlBase : public wxControl
 {
 public:
     SlSpinCtrlBase() {}
@@ -73,7 +72,7 @@ private:
 // wxSpinDoubleEvent - a wxSpinEvent for double valued controls
 // ----------------------------------------------------------------------------
 
-class WXDLLIMPEXP_CORE SlSpinDoubleEvent : public wxNotifyEvent
+class  SlSpinDoubleEvent : public wxNotifyEvent
 {
 public:
     SlSpinDoubleEvent(wxEventType commandType = wxEVT_NULL, int winid = 0,
