@@ -29,6 +29,7 @@ class wxPoint;
 class wxSize;
 class wxCloseEvent;
 class wxSpinEvent;
+class SlSpinDoubleEvent;
 
 
 typedef std::map<wxString,int> intMap;
@@ -82,6 +83,7 @@ class abstract_panel : public wxScrolledWindow
 		virtual void updateControls(int what_to_update);
 		static bool loadValuesIntoMap();
 		void OnSpinControlChange(wxSpinEvent& event);
+		void OnSpinControlDoubleChange(SlSpinDoubleEvent& event);
     protected:
         void OnClose(wxCloseEvent& event);
 		void CreateGUIControls();

@@ -27,8 +27,7 @@
 #include <wx/defs.h>
 #include <wx/slider.h>
 #include <wx/log.h>
-#include "../gui/spinctl/spinctrl.h" //needs to be included BEFORE the 'real' spnictrl
-#include <wx/spinctrl.h>
+#include "../gui/spinctl/spinctrl.h"
 #include <wx/checkbox.h>
 #include <wx/radiobut.h>
 #include <wx/combobox.h>
@@ -558,18 +557,23 @@ void abstract_panel::OnComboBoxChange(wxCommandEvent& event) {
             break;
 	}
 }
+
+void abstract_panel::OnSpinControlDoubleChange(SlSpinDoubleEvent& event)
+{
+	if (event.GetId()==ID_W4_BumpWaterAnisotropy)
+	{
+		SlSpinCtrlDouble* aniso = (SlSpinCtrlDouble*) event.GetEventObject();
+		(floatSettings)[W4_CONTROLS[6].key] = aniso->GetValue();
+		settingsChanged = true;
+	}
+}
+
 void abstract_panel::OnSpinControlChange(wxSpinEvent& event)
 {
 	if (event.GetId()==ID_WINDOWP_UI_MW_SPD)
 	{
 		wxSpinCtrl* zoom = (wxSpinCtrl*) event.GetEventObject();
 		(intSettings)[UI_ZOOM[0].key] = zoom->GetValue();
-		settingsChanged = true;
-	}
-	if (event.GetId()==ID_W4_BumpWaterAnisotropy)
-	{
-		SlSpinCtrlDouble* aniso = (SlSpinCtrlDouble*) event.GetEventObject();
-		(floatSettings)[W4_CONTROLS[6].key] = aniso->GetValue();
 		settingsChanged = true;
 	}
 }
@@ -602,11 +606,12 @@ void abstract_panel::updateControls(int /*unused*/)
 {}
 
 BEGIN_EVENT_TABLE(abstract_panel, wxPanel)
-	EVT_SLIDER(wxID_ANY,            abstract_panel::OnSliderMove)
-	EVT_TEXT(wxID_ANY,              abstract_panel::OnTextUpdate)
-	EVT_CHECKBOX(wxID_ANY,          abstract_panel::OnCheckBoxTick)
-	EVT_RADIOBUTTON(wxID_ANY,       abstract_panel::OnRadioButtonToggle)
+	EVT_SLIDER              (wxID_ANY,  abstract_panel::OnSliderMove)
+	EVT_TEXT                (wxID_ANY,  abstract_panel::OnTextUpdate)
+	EVT_CHECKBOX            (wxID_ANY,  abstract_panel::OnCheckBoxTick)
+	EVT_RADIOBUTTON         (wxID_ANY,  abstract_panel::OnRadioButtonToggle)
 //	EVT_IDLE(                       abstract_panel::update)
-	EVT_SPINCTRL(wxID_ANY, 				abstract_panel::OnSpinControlChange)
-	EVT_COMBOBOX(wxID_ANY, 		abstract_panel::OnComboBoxChange)
+	EVT_SPINCTRL            (wxID_ANY, 	abstract_panel::OnSpinControlChange)
+	EVT_SLSPINCTRLDOUBLE    (wxID_ANY, 	abstract_panel::OnSpinControlDoubleChange)
+	EVT_COMBOBOX            (wxID_ANY, 	abstract_panel::OnComboBoxChange)
  END_EVENT_TABLE()
