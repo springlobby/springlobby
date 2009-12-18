@@ -30,7 +30,6 @@
 #include <wx/checkbox.h>
 #include <wx/radiobut.h>
 #include <wx/combobox.h>
-#include <wx/spinctrl.h>
 #include <wx/textctrl.h>
 
 #include "../utils/customdialogs.h"
@@ -40,7 +39,7 @@
 #include "se_utils.h"
 #include "../settings.h"
 #include "presets.h"
-#include "../spinctld.h"
+#include "../gui/spinctl/spinctrl.h"
 #include "../utils/debug.h"
 
 intMap abstract_panel::intSettings;
@@ -567,7 +566,7 @@ void abstract_panel::OnSpinControlChange(wxSpinEvent& event)
 	}
 	if (event.GetId()==ID_W4_BumpWaterAnisotropy)
 	{
-		wxSpinCtrlDbl* aniso = (wxSpinCtrlDbl*) event.GetEventObject();
+		wxSpinCtrlDouble* aniso = (wxSpinCtrlDouble*) event.GetEventObject();
 		(floatSettings)[W4_CONTROLS[6].key] = aniso->GetValue();
 		settingsChanged = true;
 	}
