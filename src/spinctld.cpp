@@ -23,8 +23,11 @@
 #include <wx/spinbutt.h>
 #include <wx/spinctrl.h>
 #include <wx/textctrl.h>
+#include <wx/log.h>
 #include <limits>
 #include "utils/conversion.h"
+#include "utils/math.h"
+#include "utils/debug.h"
 
 
 // ----------------------------------------------------------------------------
@@ -88,9 +91,8 @@ END_EVENT_TABLE()
 class wxSpinCtrlDblButton : public wxSpinButton
 {
 public:
-    wxSpinCtrlDblButton(wxSpinCtrlDbl *spin, int style, double increment )
-        : wxSpinButton(spin->GetParent()),
-        m_increment( increment )
+    wxSpinCtrlDblButton(wxSpinCtrlDbl *spin, int style )
+        : wxSpinButton(spin->GetParent())
     {
         m_spin = spin;
 
@@ -103,26 +105,37 @@ public:
 protected:
     void OnSpinButton(wxSpinEvent& eventSpin)
     {
-        m_spin->SetTextValue(eventSpin.GetPosition());
+//        m_spin->SetTextValue(eventSpin.GetPosition());
+//
+//        wxCommandEvent event(wxEVT_COMMAND_SPINCTRL_UPDATED, m_spin->GetId());
+//        event.SetEventObject(m_spin);
+//        event.SetInt(eventSpin.GetPosition());
+//
+//        m_spin->GetEventHandler()->ProcessEvent(event);
 
-        wxCommandEvent event(wxEVT_COMMAND_SPINCTRL_UPDATED, m_spin->GetId());
-        event.SetEventObject(m_spin);
-        event.SetInt(eventSpin.GetPosition());
-
-        m_spin->GetEventHandler()->ProcessEvent(event);
-
-        eventSpin.Skip();
+        eventSpin.Veto();
+    }
+    void OnSpinButtonUp(wxSpinEvent& eventSpin)
+    {
+        m_spin->Increment( true );
+        eventSpin.Veto();
+    }
+    void OnSpinButtonDown(wxSpinEvent& eventSpin)
+    {
+        m_spin->Increment( false );
+        eventSpin.Veto();
     }
 
 private:
     wxSpinCtrlDbl *m_spin;
-    double m_increment;
 
     DECLARE_EVENT_TABLE()
 };
 
 BEGIN_EVENT_TABLE(wxSpinCtrlDblButton, wxSpinButton)
     EVT_SPIN(wxID_ANY, wxSpinCtrlDblButton::OnSpinButton)
+    EVT_SPIN_UP(wxID_ANY, wxSpinCtrlDblButton::OnSpinButtonUp)
+    EVT_SPIN_DOWN(wxID_ANY, wxSpinCtrlDblButton::OnSpinButtonDown)
 END_EVENT_TABLE()
 
 
@@ -163,6 +176,7 @@ bool wxSpinCtrlDbl::Create(wxWindow *parent,
     m_min = min;
     m_max = max;
     m_increment = increment;
+    m_current = initial;
     if ( !wxControl::Create(parent, id, wxDefaultPosition, wxDefaultSize, style,
                             wxDefaultValidator, name) )
     {
@@ -181,10 +195,11 @@ bool wxSpinCtrlDbl::Create(wxWindow *parent,
     }
 
     m_text = new wxSpinCtrlDblText(this, value);
-    m_btn = new wxSpinCtrlDblButton(this, style, increment);
+    m_btn = new wxSpinCtrlDblButton(this, style);
 
     m_btn->SetRange(min, max);
     m_btn->SetValue(initial);
+    SetTextValue( initial );
     SetInitialSize(size);
     Move(pos);
 
@@ -304,27 +319,27 @@ bool wxSpinCtrlDbl::GetTextValue(double  *val) const
 
 double wxSpinCtrlDbl::GetValue() const
 {
-    return m_btn ? m_btn->GetValue() : 0;
+    return m_current;
 }
 
 double wxSpinCtrlDbl::GetMin() const
 {
-    return m_btn ? m_btn->GetMin() : 0;
+    return m_min;
 }
 
 double wxSpinCtrlDbl::GetMax() const
 {
-    return m_btn ? m_btn->GetMax() : 0;
+    return m_max;
 }
 
 // ----------------------------------------------------------------------------
 // changing value and range
 // ----------------------------------------------------------------------------
 
-void wxSpinCtrlDbl::SetTextValue(int pos)
+void wxSpinCtrlDbl::SetTextValue(double val)
 {
-    double val = pos * m_increment + m_min;
     wxCHECK_RET( m_text, _T("invalid call to wxSpinCtrlDbl::SetTextValue") );
+    wxLogMessage( _T("wxSpinCtrlDbl::SetTextValue") );
 
     m_text->SetValue(wxString::Format(_T("%.1f"), val));
 
@@ -355,9 +370,12 @@ void wxSpinCtrlDbl::SetValue(double val)
 {
     wxCHECK_RET( m_btn, _T("invalid call to wxSpinCtrlDbl::SetValue") );
 
-    SetTextValue(val);
+//    m_current = clamp( val, m_min, m_max );
+    m_current = val;
+    SetTextValue(m_current);
 
-    m_btn->SetValue(val);
+
+    m_btn->SetValue(m_current);
 }
 
 void wxSpinCtrlDbl::SetValue(const wxString& text)
@@ -384,6 +402,19 @@ void wxSpinCtrlDbl::SetRange(double  min, double  max)
 
     m_btn->SetRange(min, max);
 }
+/** @brief Increment
+  *
+  * @todo: document this function
+  */
+void wxSpinCtrlDbl::Increment(bool up)
+{
+    double new_val = up ? m_current + m_increment : m_current - m_increment;
+    m_current = clamp( new_val, m_min, m_max );
+//    m_current = new_val;
+    SetTextValue( m_current );
+}
+
+
 
 #endif // wxUSE_SPINCTRL
 

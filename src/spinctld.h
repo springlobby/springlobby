@@ -63,6 +63,7 @@ public:
     void SetValue(const wxString& text);
     void SetRange(double min, double max);
     void SetSelection(long from, long to);
+    void Increment( bool up );
 
     // accessors
     double GetValue() const;
@@ -90,14 +91,14 @@ protected:
     // override the base class virtuals involved into geometry calculations
     virtual wxSize DoGetBestSize() const;
     virtual void DoMoveWindow(int x, int y, int width, int height);
-    double m_min,m_max,m_increment;
+    double m_min,m_max,m_increment,m_current;
 
     // common part of all ctors
     void Init();
 
     friend class wxSpinCtrlDblButton;
     // set the value of the text (only)
-    void SetTextValue(int val);//putting this here makes sure it's not called fromt he ouside, so we can enable 'special' semantics
+    void SetTextValue(double val);//putting this here makes sure it's not called fromt he ouside, so we can enable 'special' semantics
 
 private:
     // the subcontrols
