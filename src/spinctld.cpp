@@ -113,11 +113,12 @@ protected:
 //
 //        m_spin->GetEventHandler()->ProcessEvent(event);
 
-        eventSpin.Veto();
+        eventSpin.Skip();
     }
     void OnSpinButtonUp(wxSpinEvent& eventSpin)
     {
         m_spin->Increment( true );
+        //DO NOT let these events skip or value WILL NOT change
         eventSpin.Veto();
     }
     void OnSpinButtonDown(wxSpinEvent& eventSpin)
@@ -133,7 +134,7 @@ private:
 };
 
 BEGIN_EVENT_TABLE(wxSpinCtrlDblButton, wxSpinButton)
-    EVT_SPIN(wxID_ANY, wxSpinCtrlDblButton::OnSpinButton)
+//    EVT_SPIN(wxID_ANY, wxSpinCtrlDblButton::OnSpinButton)
     EVT_SPIN_UP(wxID_ANY, wxSpinCtrlDblButton::OnSpinButtonUp)
     EVT_SPIN_DOWN(wxID_ANY, wxSpinCtrlDblButton::OnSpinButtonDown)
 END_EVENT_TABLE()
@@ -402,15 +403,12 @@ void wxSpinCtrlDbl::SetRange(double  min, double  max)
 
     m_btn->SetRange(min, max);
 }
-/** @brief Increment
-  *
-  * @todo: document this function
-  */
+
 void wxSpinCtrlDbl::Increment(bool up)
 {
     double new_val = up ? m_current + m_increment : m_current - m_increment;
     m_current = clamp( new_val, m_min, m_max );
-//    m_current = new_val;
+    m_current = new_val;
     SetTextValue( m_current );
 }
 
