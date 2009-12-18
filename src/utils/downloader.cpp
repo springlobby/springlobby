@@ -99,6 +99,10 @@ PlasmaResourceInfo PlasmaInterface::GetResourceInfo(const wxString& name)
 
     //Write header
     socket->Send(header+data);
+
+    wxString g = socket->Receive();
+    m_buffers[index] = g;
+
 //    wxMessageBox(wxString::Format(_T("Wrote %d out of %d bytes"),socket->LastCount(),header.Len()));
 
     //Write data
@@ -109,10 +113,10 @@ PlasmaResourceInfo PlasmaInterface::GetResourceInfo(const wxString& name)
 //    wxString received_data = socket->Receive();
 
     //dummy return
-    return PlasmaResourceInfo();
+    return ParseResourceInfoData( index );
 }
 
-void PlasmaInterface::ParseResourceInfoData( const int buffer_index )
+PlasmaResourceInfo PlasmaInterface::ParseResourceInfoData( const int buffer_index )
 {
     PlasmaResourceInfo info;
     wxString wxbuf = m_buffers[buffer_index];
@@ -178,7 +182,7 @@ void PlasmaInterface::ParseResourceInfoData( const int buffer_index )
         seeds += info.m_webseeds[i] + _T("\n");
     wxMessageBox( seeds );
 
-
+    return info;
 }
 
 /** @brief downloadFile

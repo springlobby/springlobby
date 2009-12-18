@@ -55,7 +55,7 @@ class PlasmaInterface : public iNetClass {
         //!TODO doesn't really need to be here
         void downloadFile( const wxString& host, const wxString& remote_path, const wxString& local_dest ) const;
         void ParseResourceListData( const int buffer_index );
-        void ParseResourceInfoData( const int buffer_index );
+        PlasmaResourceInfo ParseResourceInfoData( const int buffer_index );
 
         void OnConnected( Socket* ){}
         void OnDisconnected( Socket* ){}
