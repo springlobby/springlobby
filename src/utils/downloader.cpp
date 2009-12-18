@@ -22,6 +22,7 @@
 #include "conversion.h"
 #include "debug.h"
 #include "../socket.h"
+#include "../globalsmanager.h"
 
 const wxString s_soap_service_url = _T("http://planet-wars.eu/PlasmaServer/Service.asmx?op=DownloadFile");
 
@@ -41,6 +42,12 @@ const wxString s_soap_querytemplate_resourcelist = _T("<?xml version=\"1.0\" enc
 "   </soap12:Body>\n"\
 "</soap12:Envelope>\0");
 
+PlasmaInterface& plasmaInterface()
+{
+    static LineInfo<PlasmaInterface> m( AT );
+	static GlobalObjectHolder<PlasmaInterface, LineInfo<PlasmaInterface> > m_plasma( m );
+	return m_plasma;
+}
 
 /** @brief PlasmaInterface
   *
@@ -62,7 +69,7 @@ PlasmaResourceInfo PlasmaInterface::GetResourceInfo(const wxString& name)
     PlasmaResourceInfo info;
 
     Socket* socket = new Socket( *this );
-		m_socket_index[socket] = m_buffers.size();
+    m_socket_index[socket] = -1 - m_buffers.size();
     wxString buff;
     m_buffers.push_back(buff);
 
@@ -243,7 +250,7 @@ bool PlasmaInterface::DownloadTorrentFile( PlasmaResourceInfo& info, const wxStr
 void PlasmaInterface::InitResourceList()
 {
     Socket* socket = new Socket( *this );
-		m_socket_index[socket] = m_buffers.size();
+    m_socket_index[socket] = 1 + m_buffers.size();
     wxString buff;
     m_buffers.push_back(buff);
 
@@ -291,34 +298,12 @@ void PlasmaInterface::InitResourceList()
     socket->Send(data);
 //    wxMessageBox(wxString::Format(_T("Wrote %d out of %d bytes"),socket->LastCount(),data.Len()));
 
-    //Get Response
-    wxString received_data = socket->Receive();
-
-#if 0
+}
+void PlasmaInterface::ParseResourceListData( const int buffer_index )
+{
 //    buf = wxString( buf, wxConvISO8859_1 );
-    wxString wxbuf = wxString::  FromAscii( peek_buf );
+    wxString wxbuf = m_buffers[buffer_index];
     //msgbox also serves as wait thingy for socket read it seems here, remove and be prepared for less stuff read...
-    wxMessageBox(wxString::Format(_T("Read %d bytes: %s"),socket->LastCount(),wxbuf.c_str()));
-
-    long content_length = 0;
-    wxStringTokenizer toks ( wxbuf, _T("\n") );
-    while( toks.HasMoreTokens() ) {
-        wxString line = toks.GetNextToken();
-        if ( line.StartsWith( _T("Content-Length") ) ) {
-            line = line.Mid( line.Last( wxChar(':') ) + 1, line.Last( wxChar('\n') ) ).Trim( false ).Trim( true );
-            line.ToLong( &content_length );
-            assert( content_length >= 0 );
-            break;
-        }
-    }
-    char buf[1025+content_length];
-    socket->Read(buf,1025+content_length);
-
-    buf[socket->LastCount()] = '\0';
-
-//    buf = wxString( buf, wxConvISO8859_1 );
-    wxbuf = wxString::  FromAscii( buf );
-    wxMessageBox(wxString::Format(_T("Content size %d | Read %d bytes:"),content_length,socket->LastCount() ) );
 
     wxString t_begin = _T("<soap:Envelope");
     wxString t_end = _T("</soap:Envelope>");
@@ -378,7 +363,6 @@ void PlasmaInterface::InitResourceList()
         } // end section <GetResourceListResponse/>
         node = node->GetNext();
     }
-#endif
 }
 
 void PlasmaInterface::OnDataReceived( Socket* sock )
@@ -390,5 +374,12 @@ void PlasmaInterface::OnDataReceived( Socket* sock )
     int index = m_socket_index[sock];
     m_buffers[index] << data;
 
+    if ( index < 0 ) //socket for infos
+    {
+    }
+    else //socekt for list
+    {
+
+    }
 }
 

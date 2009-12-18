@@ -29,9 +29,11 @@ struct PlasmaResourceInfo {
 
 };
 
+template <class PB, class I >
+class GlobalObjectHolder;
+
 class PlasmaInterface : public iNetClass {
     public:
-        PlasmaInterface();
 
         PlasmaResourceInfo GetResourceInfo( const wxString& name ) ;
 
@@ -44,9 +46,15 @@ class PlasmaInterface : public iNetClass {
         const ResourceList& GetResourceList() { InitResourceList(); return m_resource_list; }
 
     protected:
+        PlasmaInterface();
+
+        template <class PB, class I >
+        friend class GlobalObjectHolder;
+
         //!TODO doesn't really need to be here
         void downloadFile( const wxString& host, const wxString& remote_path, const wxString& local_dest ) const;
         void InitResourceList();
+        void ParseResourceListData( const int buffer_index );
 
         void OnConnected( Socket* ){}
         void OnDisconnected( Socket* ){}
@@ -62,6 +70,11 @@ class PlasmaInterface : public iNetClass {
 
         std::map<Socket*, int> m_socket_index;
         std::vector<wxString> m_buffers; // why not using map here directly? because i can write directly into the vector this way
+
+        static const int m_list_socket_index = 0;
+        static const int m_info_socket_index = 1;
 };
+
+PlasmaInterface& plasmaInterface();
 
 #endif

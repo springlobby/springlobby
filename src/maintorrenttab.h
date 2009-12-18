@@ -66,7 +66,6 @@ class MainTorrentTab: public wxScrolledWindow
 
         wxBoxSizer* m_mainbox;
         FileListDialog* m_download_dialog;
-        PlasmaInterface* m_plasma_interface;
 
 	private:
 

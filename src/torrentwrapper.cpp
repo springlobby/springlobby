@@ -129,8 +129,7 @@ TorrentWrapper::TorrentWrapper():
         ingame(false),
         m_timer_count(0),
 //        m_maintenance_thread(this),
-        m_started(false),
-        m_plasma_interface( new PlasmaInterface )
+        m_started(false)
 {
     wxLogMessage(_T("TorrentWrapper::TorrentWrapper()"));
     m_torr = new libtorrent::session( libtorrent::fingerprint("SL", 0, 0, 0, 0), 0 );
@@ -299,17 +298,17 @@ IUnitSync::MediaType convertMediaType( const PlasmaResourceInfo::ResourceType& t
 
 TorrentWrapper::DownloadRequestStatus TorrentWrapper::RequestFileByName( const wxString& name )
 {
-    PlasmaResourceInfo info = m_plasma_interface->GetResourceInfo( name );
+    PlasmaResourceInfo info = plasmaInterface().GetResourceInfo( name );
     assert( info.m_type != PlasmaResourceInfo::unknwon );
-    if ( m_plasma_interface->DownloadTorrentFile( info, sett().GetTorrentDataDir().GetFullPath() ) )
+    if ( plasmaInterface().DownloadTorrentFile( info, sett().GetTorrentDataDir().GetFullPath() ) )
     {
         if ( AddTorrent( info ) == success ) {
             for ( size_t i = 0; i < info.m_dependencies.Count(); ++i ) {
                 wxString dependency_name = info.m_dependencies[i];
-                PlasmaResourceInfo dependency_info = m_plasma_interface->GetResourceInfo( dependency_name );
+                PlasmaResourceInfo dependency_info = plasmaInterface().GetResourceInfo( dependency_name );
                 if ( dependency_info.m_type != PlasmaResourceInfo::unknwon )
                     continue;
-                if ( m_plasma_interface->DownloadTorrentFile( dependency_info, sett().GetTorrentDataDir().GetFullPath() ) )
+                if ( plasmaInterface().DownloadTorrentFile( dependency_info, sett().GetTorrentDataDir().GetFullPath() ) )
                     AddTorrent( dependency_info );
             }
             return success;

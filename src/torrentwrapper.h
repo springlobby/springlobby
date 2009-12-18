@@ -136,8 +136,6 @@ private:
     libtorrent::session* m_torr;
 
     bool m_started;
-
-    PlasmaInterface* m_plasma_interface;
 };
 
 

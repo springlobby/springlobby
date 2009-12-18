@@ -37,8 +37,7 @@ END_EVENT_TABLE()
 
 MainTorrentTab::MainTorrentTab( wxWindow* parent )
     : wxScrolledWindow( parent ),
-    m_widgets_dialog( NULL ),
-    m_plasma_interface( new PlasmaInterface )
+    m_widgets_dialog( NULL )
 {
 	GetAui().manager->AddPane( this, wxLEFT, _T( "maintorrenttab" ) );
 
