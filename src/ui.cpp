@@ -317,7 +317,7 @@ void Ui::DownloadMod( const wxString& hash, const wxString& name )
 
 void Ui::DownloadFileP2P( const wxString& hash, const wxString& name )
 {
-    plasmaInterface().InitResourceList();
+
     const PlasmaInterface::ResourceList& rl = plasmaInterface().GetResourceList();
     wxString msg;
     for ( PlasmaInterface::ResourceList::const_iterator i = rl.begin(); i != rl.end(); ++i )
