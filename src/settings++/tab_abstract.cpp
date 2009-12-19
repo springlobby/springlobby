@@ -558,11 +558,11 @@ void abstract_panel::OnComboBoxChange(wxCommandEvent& event) {
 	}
 }
 
-void abstract_panel::OnSpinControlDoubleChange(SlSpinDoubleEvent& event)
+void abstract_panel::OnSpinCtrlDoubleChange(SlSpinDoubleEvent& event)
 {
 	if (event.GetId()==ID_W4_BumpWaterAnisotropy)
 	{
-		SlSpinCtrlDouble* aniso = (SlSpinCtrlDouble*) event.GetEventObject();
+		SlSpinCtrlDouble<abstract_panel>* aniso = (SlSpinCtrlDouble<abstract_panel>*) event.GetEventObject();
 		(floatSettings)[W4_CONTROLS[6].key] = aniso->GetValue();
 		settingsChanged = true;
 	}
@@ -605,6 +605,7 @@ bool abstract_panel::saveSettings() {
 void abstract_panel::updateControls(int /*unused*/)
 {}
 
+// note that the SpinCtrlDouble change is hadnled explicitly via the control calling the right handler
 BEGIN_EVENT_TABLE(abstract_panel, wxPanel)
 	EVT_SLIDER              (wxID_ANY,  abstract_panel::OnSliderMove)
 	EVT_TEXT                (wxID_ANY,  abstract_panel::OnTextUpdate)
@@ -612,6 +613,6 @@ BEGIN_EVENT_TABLE(abstract_panel, wxPanel)
 	EVT_RADIOBUTTON         (wxID_ANY,  abstract_panel::OnRadioButtonToggle)
 //	EVT_IDLE(                       abstract_panel::update)
 	EVT_SPINCTRL            (wxID_ANY, 	abstract_panel::OnSpinControlChange)
-	EVT_SLSPINCTRLDOUBLE    (wxID_ANY, 	abstract_panel::OnSpinControlDoubleChange)
+
 	EVT_COMBOBOX            (wxID_ANY, 	abstract_panel::OnComboBoxChange)
  END_EVENT_TABLE()

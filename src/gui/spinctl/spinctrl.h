@@ -31,7 +31,7 @@
 // Events
 class  SlSpinDoubleEvent;
 
-const wxEventType SLEVT_COMMAND_SPINCTRLDOUBLE_UPDATED  = wxNewEventType();
+static const wxEventType SLEVT_COMMAND_SPINCTRLDOUBLE_UPDATED  = wxNewEventType();
 //const wxEventType SLEVT_COMMAND_SPINCTRL_UPDATED  = wxNewEventType();
 
 // ----------------------------------------------------------------------------
@@ -117,8 +117,10 @@ typedef void (wxEvtHandler::*SlSpinDoubleEventFunction)(SlSpinDoubleEvent&);
 #define EVT_SLSPINCTRLDOUBLE(id, fn) \
     wx__DECLARE_EVT1(SLEVT_COMMAND_SPINCTRLDOUBLE_UPDATED, id, SlSpinDoubleEventHandler(fn))
 
-
+//the common stuff
 #include "generic/spinctlg.h"
+//the actual tempalte class, seperated to avoid multiple definition conflicts
+#include "generic/spinctrldouble.hh"
 
 #endif // wxUSE_SPINCTRL
 

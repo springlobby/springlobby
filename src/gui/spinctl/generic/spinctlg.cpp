@@ -503,47 +503,6 @@ void SlSpinCtrlGenericBase::SetSelection(long from, long to)
     m_textCtrl->SetSelection(from, to);
 }
 
-//-----------------------------------------------------------------------------
-// SlSpinCtrl
-//-----------------------------------------------------------------------------
-
-//IMPLEMENT_DYNAMIC_CLASS(SlSpinCtrl, SlSpinCtrlGenericBase)
-//
-//void SlSpinCtrl::DoSendEvent()
-//{
-//    wxSpinEvent event( wxEVT_COMMAND_SPINCTRL_UPDATED, GetId());
-//    event.SetEventObject( this );
-//    event.SetPosition((int)(m_value + 0.5)); // FIXME should be SetValue
-//    event.SetString(m_textCtrl->GetValue());
-//    GetEventHandler()->ProcessEvent( event );
-//}
-//
-
-
-//-----------------------------------------------------------------------------
-// SlSpinCtrlDouble
-//-----------------------------------------------------------------------------
-
-IMPLEMENT_DYNAMIC_CLASS(SlSpinCtrlDouble, SlSpinCtrlGenericBase)
-
-void SlSpinCtrlDouble::DoSendEvent()
-{
-    SlSpinDoubleEvent event( SLEVT_COMMAND_SPINCTRLDOUBLE_UPDATED, GetId());
-    event.SetEventObject( this );
-    event.SetValue(m_value);
-    event.SetString(m_textCtrl->GetValue());
-    GetEventHandler()->ProcessEvent( event );
-}
-
-void SlSpinCtrlDouble::SetDigits(unsigned digits)
-{
-    wxCHECK_RET( digits <= 20, "too many digits for SlSpinCtrlDouble" );
-
-    m_format.Printf(wxT("%%0.%ulf"), digits);
-
-    DoSetValue(m_value);
-}
-
 #endif // wxUSE_SPINBTN
 
 

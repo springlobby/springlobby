@@ -83,7 +83,7 @@ class abstract_panel : public wxScrolledWindow
 		virtual void updateControls(int what_to_update);
 		static bool loadValuesIntoMap();
 		void OnSpinControlChange(wxSpinEvent& event);
-		void OnSpinControlDoubleChange(SlSpinDoubleEvent& event);
+		void OnSpinCtrlDoubleChange(SlSpinDoubleEvent& event);
     protected:
         void OnClose(wxCloseEvent& event);
 		void CreateGUIControls();

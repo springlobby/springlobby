@@ -239,7 +239,7 @@ void tab_quality_video::initW4Sizer(wxSizer* sizer)
     sizer->Add( refractionCom, 0, wxEXPAND|wxALL, 4 );
 
     sizer->Add(new wxStaticText(this, -1, (W4_CONTROLS[6].lbl)) , 0, wxTOP|wxEXPAND, 5);
-    m_aniso_spin = new SlSpinCtrlDouble();
+    m_aniso_spin = new SlSpinCtrlDouble<tab_quality_video>();
     m_aniso_spin->Create(this, W4_CONTROLS[6].id, _T(""),
             wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0.f, 6.f,
             0.f,0.25f, _T(""));
@@ -329,6 +329,12 @@ void tab_quality_video::OnComboBoxChange(wxCommandEvent& event)
     }
 
     abstract_panel::OnComboBoxChange( event );
+}
+
+//! this just forwards the direct event receivier from the control to base class
+void tab_quality_video::OnSpinCtrlDoubleChange(SlSpinDoubleEvent& event)
+{
+    abstract_panel::OnSpinCtrlDoubleChange( event );
 }
 
 BEGIN_EVENT_TABLE(tab_quality_video, abstract_panel)
