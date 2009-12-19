@@ -20,7 +20,7 @@ class wxButton;
 class wxRegEx;
 class wxStaticText;
 class Battle;
-struct TorrentData;
+struct PlasmaResourceInfo;
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -39,6 +39,8 @@ class FileListFilter : public wxPanel
     void OnChangeName         ( wxCommandEvent& event );
     void OnChangeType         ( wxCommandEvent& event );
     void OnChangeOndisk         ( wxCommandEvent& event );
+    //! return false if info is to be displayed, false otherwise
+    bool DoFilterResource( const PlasmaResourceInfo& );
 
     bool GetActiv() const;
 

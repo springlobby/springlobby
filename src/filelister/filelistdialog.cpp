@@ -11,6 +11,7 @@
 #include "filelistctrl.h"
 #include "../iunitsync.h"
 #include "../utils/conversion.h"
+#include "../utils/downloader.h"
 #include <wx/sizer.h>
 #include <wx/stattext.h>
 #include <wx/button.h>
@@ -36,7 +37,7 @@ FileListDialog::FileListDialog(wxWindow* parent) :
 
     wxBoxSizer* m_list_sizer;
     m_list_sizer = new wxBoxSizer( wxVERTICAL );
-    m_filelistctrl = new FileListCtrl( this, this );
+    m_filelistctrl = new FileListCtrl( this );
     m_list_sizer->Add( m_filelistctrl, 1, wxALL|wxEXPAND, 5 );
 
     wxBoxSizer* m_select_sizer = new wxBoxSizer( wxHORIZONTAL );
@@ -68,6 +69,7 @@ FileListDialog::FileListDialog(wxWindow* parent) :
     m_main_sizer->Add( m_button_sizer,0, wxALL|wxEXPAND, 5 );
     m_main_sizer->Add( m_filecount,0, wxALL|wxEXPAND, 5 );
     SetSizer( m_main_sizer );
+    Refresh();
 }
 
 FileListDialog::~FileListDialog()
@@ -84,24 +86,16 @@ void FileListDialog::UpdateList()
 {
     m_filelistctrl->DeleteAllItems();
     unsigned int count = 0;
-//    for (std::map<wxString, TorrentTable::PRow>::iterator  it = m_hash_to_torrent.begin(); it != m_hash_to_torrent.end(); ++it)
-//    {
-//      if(!it->second.ok())continue;
-//        switch (it->second->type)
-//        {
-//            case IUnitSync::mod:
-//                it->second->SetHasFullFileLocal(usync().ModExists( it->second->name, it->second->hash ));
+
+    const PlasmaInterface::ResourceList& rl = plasmaInterface().GetResourceList();
+    for ( PlasmaInterface::ResourceList::const_iterator i = rl.begin(); i != rl.end(); ++i ){
+//        if ( !m_filter->DoFilterResource( *i ) )
+            count += m_filelistctrl->AddFile( &(*i) );
+//            if ( count > 4 )
 //                break;
-//            case IUnitSync::map:
-//                it->second->SetHasFullFileLocal(usync().MapExists( it->second->name, it->second->hash ));
-//                break;
-//            default:  it->second->SetHasFullFileLocal(false);
-//                break;
-//        }
-//        count += AddTorrentRow( it->second );
-//    }
+    }
     m_filecount->SetLabel( wxString::Format( _("%u files displayed"), count ) );
-    m_filelistctrl->SetColumnWidths();
+    m_filelistctrl->RefreshVisibleItems();
 }
 
 //bool FileListDialog::AddTorrentRow(TorrentTable::PRow data)
@@ -129,18 +123,15 @@ void FileListDialog::UpdateList()
 
 void FileListDialog::OnDownload( wxCommandEvent& /*unused*/ )
 {
-    typedef FileListCtrl::HashVector HashVector;
-    HashVector hashs;
-    m_filelistctrl->GetSelectedHashes(hashs);
-    for ( HashVector::const_iterator it = hashs.begin(); it != hashs.end(); ++it)
+    typedef FileListCtrl::InternalNameVector InternalNameVector;
+    InternalNameVector names;
+    m_filelistctrl->GetSelectedHashes(names);
+    for ( InternalNameVector::const_iterator it = names.begin(); it != names.end(); ++it)
     {
-        wxString hash = *it;
-//        if (torrent().RequestFileByHash(hash) != TorrentWrapper::success)
-//            wxLogError(_("unknown hash ") + hash );
-        assert( false );
-
+        wxString name = *it;
+        if (torrent().RequestFileByName(name) != TorrentWrapper::success)
+            wxLogError(_("remote file not found ") + name );
     }
-
 }
 
 void FileListDialog::OnRefreshList( wxCommandEvent& /*unused*/ )

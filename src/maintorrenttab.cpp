@@ -126,15 +126,15 @@ void MainTorrentTab::OnUpdate()
 
 //	if ( torrent().IsConnectedToP2PSystem() )
 //	{
-//		m_but_cancel->Enable();
-//		m_but_publish->Enable();
-//		m_but_download->Enable();
+		m_but_cancel->Enable();
+		m_but_publish->Enable();
+		m_but_download->Enable();
 //	}
 //	else
 	{
-		m_but_cancel->Disable();
-		m_but_publish->Disable();
-		m_but_download->Disable();
+//		m_but_cancel->Disable();
+//		m_but_publish->Disable();
+//		m_but_download->Disable();
 	}
 
 	switch ( torrent().GetTorrentSystemStatus() )

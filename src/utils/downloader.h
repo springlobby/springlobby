@@ -18,6 +18,8 @@ struct PlasmaResourceInfo {
     wxArrayString m_dependencies;
     //! will only be non-empty when actual download of torrent file succeeded
     wxString m_local_torrent_filepath;
+    //! filesize in KB; a value of 0 will be interpreted as unknown
+    unsigned int m_size_KB;
 
     enum ResourceType {
         mod = 0,

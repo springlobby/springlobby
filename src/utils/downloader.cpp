@@ -287,7 +287,6 @@ void PlasmaInterface::InitResourceList()
 
     //Write data
 //    socket->Send(data);
-//    wxMessageBox(wxString::Format(_T("Wrote %d out of %d bytes"),socket->LastCount(),data.Len()));
 
 }
 void PlasmaInterface::ParseResourceListData( const int buffer_index )

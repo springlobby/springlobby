@@ -313,20 +313,11 @@ void Ui::DownloadMod( const wxString& hash, const wxString& name )
 #endif
 }
 
-#include "utils/downloader.h"
-
 void Ui::DownloadFileP2P( const wxString& hash, const wxString& name )
 {
-
-    const PlasmaInterface::ResourceList& rl = plasmaInterface().GetResourceList();
-    wxString msg;
-    for ( PlasmaInterface::ResourceList::const_iterator i = rl.begin(); i != rl.end(); ++i )
-        msg += i->m_name + _T("\n");
-    customMessageBoxNoModal( SL_MAIN_ICON, msg, _("files") );
-
 #ifndef NO_TORRENT_SYSTEM
-//    if ( torrent().RequestFileByName( name ) != TorrentWrapper::success )
-//        customMessageBoxNoModal( SL_MAIN_ICON, _("dl failed"), _("dl failed") );
+    if ( torrent().RequestFileByName( name ) != TorrentWrapper::success )
+        customMessageBoxNoModal( SL_MAIN_ICON, _("dl failed"), _("dl failed") );
 //!TODO: put some meaningful err msg here
 #endif
 }
