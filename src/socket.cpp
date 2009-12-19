@@ -64,22 +64,22 @@ void SocketEvents::OnSocketEvent(wxSocketEvent& event)
 
 
 //! @brief Constructor
-Socket::Socket( iNetClass& netclass, bool blocking ):
-  m_block(blocking),
-  m_net_class(netclass),
-  m_rate(-1),
-  m_sent(0)
+Socket::Socket( iNetClass& netclass, bool wait_on_connect, bool blocking  )
+    : m_wait_on_connect( wait_on_connect ),
+    m_blocking(blocking),
+    m_net_class(netclass),
+    m_rate(-1),
+    m_sent(0)
 {
-  m_connecting = false;
+    m_connecting = false;
 
-  m_sock = 0;
-  m_events = 0;
+    m_sock = 0;
+    m_events = 0;
 
-  //resetting the ping state vars.
-  m_ping_msg = wxEmptyString;
-  m_ping_int = 0;
-  m_ping_t = 0;
-
+    //resetting the ping state vars.
+    m_ping_msg = wxEmptyString;
+    m_ping_int = 0;
+    m_ping_t = 0;
 }
 
 
@@ -97,23 +97,30 @@ Socket::~Socket()
 //! @brief Creates an TCP socket and sets it up.
 wxSocketClient* Socket::_CreateSocket()
 {
-  wxSocketClient* sock = new wxSocketClient();
+    wxSocketClient* sock = new wxSocketClient();
 
-  sock->SetClientData( (void*)this );
-  if ( !m_block ) {
-    if ( m_events == 0 ) m_events = new SocketEvents( m_net_class );
-    sock->SetFlags( wxSOCKET_NOWAIT );
+    sock->SetClientData( (void*)this );
+    if ( !m_blocking )
+    {
+        if ( m_events == 0 )
+            m_events = new SocketEvents( m_net_class );
+        sock->SetFlags( wxSOCKET_NOWAIT );
 
-    sock->SetEventHandler(*m_events, SOCKET_ID);
-    sock->SetNotify( wxSOCKET_CONNECTION_FLAG | wxSOCKET_INPUT_FLAG | wxSOCKET_LOST_FLAG );
-    sock->Notify(true);
-  } else {
-    if ( m_events != 0 ) {
-      delete m_events;
-      m_events = 0;
+        sock->SetEventHandler(*m_events, SOCKET_ID);
+        sock->SetNotify( wxSOCKET_CONNECTION_FLAG | wxSOCKET_INPUT_FLAG | wxSOCKET_LOST_FLAG );
+        sock->Notify(true);
     }
-  }
-  return sock;
+    else
+    {
+        //this does not block GUI, only ensures receivesend do not return until all data is read/sent
+        sock->SetFlags( wxSOCKET_WAITALL );
+        if ( m_events != 0 )
+        {
+            delete m_events;
+            m_events = 0;
+        }
+    }
+    return sock;
 }
 
 //! @brief Connect to remote host.
@@ -132,7 +139,7 @@ void Socket::Connect( const wxString& addr, const int port )
 
   if ( m_sock != 0 ) m_sock->Destroy();
   m_sock = _CreateSocket();
-  m_sock->Connect( wxaddr, m_block );
+  m_sock->Connect( wxaddr, m_wait_on_connect );
   m_sock->SetTimeout( 40 );
 }
 
