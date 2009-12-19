@@ -5,7 +5,7 @@
 #include <wx/arrstr.h>
 #include <vector>
 #include <map>
-#include "inetclass.h"
+#include "../inetclass.h"
 
 struct PlasmaResourceInfo {
     //!file name
