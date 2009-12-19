@@ -217,6 +217,7 @@ int BattleroomMMOptionsTab<BattleType>::setupOptionsSectionSizer(const mmOptionS
 			tempspin->Create(this, FLOAT_START_ID+ctrl_count, _T(""),
 					wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, double(current.min), double(current.max),
 					double(current.value),double(current.stepping), current.key);
+            tempspin->SetSnapToTicks( true );
 			tempspin->SetToolTip(TE(current.description));
 			m_name_info_map[pref+current.key] = current.description;
 			tempspin->Enable(enable);
@@ -358,8 +359,7 @@ void BattleroomMMOptionsTab<BattleType>::OnTextCtrlChange(wxCommandEvent& event)
 
 	}
 }
-#include "utils/debug.h"
-#include <wx/log.h>
+
 template < class BattleType >
 void BattleroomMMOptionsTab<BattleType>::OnSpinCtrlDoubleChange(SlSpinDoubleEvent& event)
 {

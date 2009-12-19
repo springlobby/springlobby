@@ -88,9 +88,7 @@ template <class P>
 void SlSpinCtrlDouble<P>::SetDigits(unsigned digits)
 {
     wxCHECK_RET( digits <= 20, "too many digits for SlSpinCtrlDouble" );
-
     m_format.Printf(wxT("%%0.%ulf"), digits);
-
     DoSetValue(m_value);
 }
 
