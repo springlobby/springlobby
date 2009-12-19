@@ -66,7 +66,7 @@ PlasmaInterface::PlasmaInterface()
   */
 PlasmaResourceInfo PlasmaInterface::GetResourceInfo(const wxString& name)
 {
-    Socket* socket = new Socket( *this );
+    Socket* socket = new Socket( *this, true, true );
     const int index =
     m_socket_index[socket] = -1 - m_buffers.size();
     m_buffers[index] = wxEmptyString;
@@ -120,12 +120,16 @@ PlasmaResourceInfo PlasmaInterface::ParseResourceInfoData( const int buffer_inde
 {
     PlasmaResourceInfo info;
     wxString wxbuf = m_buffers[buffer_index];
-
+{
+     wxFileOutputStream outs( _T("/tmp/sl.txt") );
+    wxStringInputStream fe( wxbuf ) ;
+    outs <<  fe;
+    outs.Close();
+}
     wxString t_begin = _T("<soap:Envelope");
     wxString t_end = _T("</soap:Envelope>");
     wxString xml_section = wxbuf.Mid( wxbuf.Find( t_begin ) );//first char after t_begin to one before t_end
 
-    wxMessageBox(xml_section);
     wxStringInputStream str_input( xml_section );
     wxXmlDocument xml( str_input );
     assert( xml.GetRoot() );
@@ -233,7 +237,7 @@ bool PlasmaInterface::DownloadTorrentFile( PlasmaResourceInfo& info, const wxStr
 
 void PlasmaInterface::InitResourceList()
 {
-    Socket* socket = new Socket( *this, true );
+    Socket* socket = new Socket( *this, true, true );
     const int index = 1 + m_buffers.size();
     m_socket_index[socket] = index;
     m_buffers[index] = wxEmptyString;
