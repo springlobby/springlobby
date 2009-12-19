@@ -120,12 +120,12 @@ PlasmaResourceInfo PlasmaInterface::ParseResourceInfoData( const int buffer_inde
 {
     PlasmaResourceInfo info;
     wxString wxbuf = m_buffers[buffer_index];
-{
-     wxFileOutputStream outs( _T("/tmp/sl.txt") );
-    wxStringInputStream fe( wxbuf ) ;
-    outs <<  fe;
-    outs.Close();
-}
+//{
+//     wxFileOutputStream outs( _T("/tmp/sl.txt") );
+//    wxStringInputStream fe( wxbuf ) ;
+//    outs <<  fe;
+//    outs.Close();
+//}
     wxString t_begin = _T("<soap:Envelope");
     wxString t_end = _T("</soap:Envelope>");
     wxString xml_section = wxbuf.Mid( wxbuf.Find( t_begin ) );//first char after t_begin to one before t_end
@@ -302,6 +302,7 @@ void PlasmaInterface::ParseResourceListData( const int buffer_index )
 
     wxStringInputStream str_input( xml_section );
     wxXmlDocument xml( str_input );
+    xml.Save( _T("/tmp/sl.xml") );
     wxFileOutputStream outs( _T("/tmp/sl.txt") );
     wxStringInputStream fe( xml_section ) ;
     outs <<  fe;
@@ -320,37 +321,39 @@ void PlasmaInterface::ParseResourceListData( const int buffer_index )
         if ( node_name == _T("GetResourceListResponse") ) {
             wxXmlNode* resourceListResult = node->GetChildren();
             assert( resourceListResult );
-            wxXmlNode* resourceData = resourceListResult->GetChildren();
+            while ( resourceListResult ) {
+                wxXmlNode* resourceData = resourceListResult->GetChildren();
 
-            while ( resourceData ) {
-                wxXmlNode* resourceDataContent = resourceData->GetChildren();
-                PlasmaResourceInfo info;
-                while ( resourceDataContent ) {
-                    wxString rc_node_name = resourceDataContent->GetName();
-                    if ( rc_node_name == _T("Dependencies") ){
-                        //! TODO
+                while ( resourceData ) {
+                    wxXmlNode* resourceDataContent = resourceData->GetChildren();
+                    PlasmaResourceInfo info;
+                    while ( resourceDataContent ) {
+                        wxString rc_node_name = resourceDataContent->GetName();
+                        if ( rc_node_name == _T("Dependencies") ){
+                            //! TODO
+                        }
+                        else if ( rc_node_name == _T("InternalName") ){
+                            info.m_name = resourceDataContent->GetNodeContent();
+                        }
+                        else if ( rc_node_name == _T("ResourceType") ){
+                            resourceType = resourceDataContent->GetNodeContent();
+                            if ( resourceType == _T("Mod") )
+                                info.m_type = PlasmaResourceInfo::mod;
+                            else if ( resourceType == _T("Map") )
+                                info.m_type = PlasmaResourceInfo::map;
+                            else
+                                info.m_type = PlasmaResourceInfo::unknwon;
+                        }
+                        else if ( rc_node_name == _T("SpringHashes") ){
+                            //! TODO
+                        }
+                        resourceDataContent = resourceDataContent->GetNext();
                     }
-                    else if ( rc_node_name == _T("InternalName") ){
-                        info.m_name = resourceDataContent->GetNodeContent();
-                    }
-                    else if ( rc_node_name == _T("ResourceType") ){
-                        resourceType = resourceDataContent->GetNodeContent();
-                        if ( resourceType == _T("Mod") )
-                            info.m_type = PlasmaResourceInfo::mod;
-                        else if ( resourceType == _T("Map") )
-                            info.m_type = PlasmaResourceInfo::map;
-                        else
-                            info.m_type = PlasmaResourceInfo::unknwon;
-                    }
-                    else if ( rc_node_name == _T("SpringHashes") ){
-                        //! TODO
-                    }
-                    resourceDataContent = resourceDataContent->GetNext();
+                    m_resource_list.push_back( info );
+                    resourceData = resourceData->GetNext();
                 }
-                m_resource_list.push_back( info );
-                resourceData = resourceListResult->GetNext();
+                resourceListResult = resourceListResult->GetNext();
             }
-            break;
         } // end section <GetResourceListResponse/>
         node = node->GetNext();
     }
