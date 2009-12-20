@@ -20,18 +20,11 @@ SET(springlobbySrc
 	src/aui/slbook.cpp
 	src/utils/math.cpp
 	src/utils/misc.cpp
-	src/utils/debug.cpp
-	src/utils/platform.cpp
-	src/utils/conversion.cpp
 	src/utils/tasutil.cpp
-	src/utils/sltipwin.cpp
-	src/utils/controls.cpp
-	src/utils/globalevents.cpp
 	src/utils/networkevents.cpp
 	src/utils/uievents.cpp
 	src/utils/md5.c
 	src/updater/updater.cpp
-	src/updater/versionchecker.cpp
 	src/Helper/TextCompletionDatabase.cpp
 	src/Helper/imageviewer.cpp
 	src/Helper/slhtmlwindow.cpp
@@ -86,8 +79,6 @@ SET(springlobbySrc
 	src/mapgridctrl.cpp
 	src/mapselectdialog.cpp
 	src/mmoptionwindows.cpp
-	src/mmoptionmodel.cpp
-	src/mmoptionswrapper.cpp
 	src/nicklistctrl.cpp
 	src/offlinebattle.cpp
 	src/playback/replaylist.cpp
@@ -96,25 +87,19 @@ SET(springlobbySrc
 	src/selectusersdialog.cpp
 	src/server.cpp
 	src/serverevents.cpp
-	src/settings.cpp
 	src/singleplayerbattle.cpp
 	src/singleplayertab.cpp
 	src/socket.cpp
-	src/spinctld.cpp
 	src/spring.cpp
 	src/springlobbyapp.cpp
 	src/springoptionstab.cpp
 	src/springprocess.cpp
-	src/springunitsync.cpp
-	src/springunitsynclib.cpp
 	src/tasserver.cpp
 	src/tdfcontainer.cpp
-	src/thread.cpp
 	src/torrentlistctrl.cpp
 	src/torrentoptionspanel.cpp
 	src/torrentwrapper.cpp
 	src/ui.cpp
-	src/uiutils.cpp
 	src/user.cpp
 	src/useractions.cpp
 	src/userlist.cpp
@@ -125,14 +110,11 @@ SET(springlobbySrc
 	src/widgets/downloadpanel.cpp
 	src/widgets/infopanel.cpp
 	src/widgets/widget.cpp
-	src/globalsmanager.cpp
 	src/Helper/wxTranslationHelper.cpp
 	src/Helper/tasclientimport.cpp
-
 )
 
 SET(SettingsSrc
-	src/utils/customdialogs.cpp
 	src/settings++/frame.cpp
 	src/settings++/helpmenufunctions.cpp
 	src/settings++/panel_pathoption.cpp
@@ -153,27 +135,29 @@ SET( curlSRC
 )
 
 SET(StandAloneSettings
-	src/settings.cpp
-	src/uiutils.cpp
 	src/settings++/Main.cpp
 )
 
 SET(SLSharedWithSettings
-	src/utils/debug.cpp
-	src/utils/platform.cpp
-	src/utils/conversion.cpp
-	src/utils/sltipwin.cpp
-	src/utils/controls.cpp
+	src/uiutils.cpp
 	src/updater/versionchecker.cpp
-	src/crashreport.cpp
-	src/springunitsynclib.cpp
-	src/springunitsync.cpp
-	src/thread.cpp
-	src/spinctld.cpp
-	src/globalsmanager.cpp
+	src/utils/controls.cpp
+	src/utils/conversion.cpp
+	src/utils/customdialogs.cpp
+	src/utils/debug.cpp
 	src/utils/globalevents.cpp
+	src/utils/platform.cpp
+	src/utils/sltipwin.cpp
+	src/crashreport.cpp
+	src/globalsmanager.cpp	
 	src/mmoptionmodel.cpp
 	src/mmoptionswrapper.cpp
+	src/settings.cpp
+	src/spinctld.cpp
+	src/springunitsynclib.cpp
+	src/springunitsync.cpp	
+	src/stacktrace.cpp
+	src/thread.cpp
 )
 
 SET( updaterSrc

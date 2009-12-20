@@ -184,24 +184,6 @@ IF( ENABLE_DEBUG_REPORT )
 	ENDIF(WIN32)
 ENDIF( ENABLE_DEBUG_REPORT )
 
-
-#----------------------------------------------------------------------------------------------------
-# Gettext lib dependency check
-#----------------------------------------------------------------------------------------------------
-
-if( OPTION_TRANSLATION_SUPPORT )
-    set(Gettext_DIR "po" )
-    INCLUDE(cmake/FindGettext.cmake)
-    if(GETTEXT_FOUND)
-	    set(SpringLobby_INCLUDE_PATH ${SpringLobby_INCLUDE_PATH}
-		${GETTEXT_INCLUDE_DIR} CACHE INTERNAL "" FORCE)
-
-	    include("cmake/KWWidgetsInternationalizationMacros.cmake")
-    else(GETTEXT_FOUND)
-	message(FATAL_ERROR "The GNU Gettext package is not found! Please install the package or toggle OPTION_TRANSLATION_SUPPORT to OFF")
-    endif(GETTEXT_FOUND)
-endif( OPTION_TRANSLATION_SUPPORT )
-
 #----------------------------------------------------------------------------------------------------
 # libtorrent-rasterbar dependency check
 #----------------------------------------------------------------------------------------------------
@@ -251,11 +233,11 @@ ENDIF(WIN32)
 #----------------------------------------------------------------------------------------------------
 # L10n support
 #----------------------------------------------------------------------------------------------------
-
 if( OPTION_TRANSLATION_SUPPORT )
 	include ( ${CMAKE_SOURCE_DIR}/po/CMakeLists.txt )
 endif( OPTION_TRANSLATION_SUPPORT )
 ADD_DEFINITIONS( -DLOCALE_INSTALL_DIR="${LOCALE_INSTALL_DIR}" )
+
 #----------------------------------------------------------------------------------------------------
 # Build target defintions
 #----------------------------------------------------------------------------------------------------
@@ -272,8 +254,8 @@ IF( ENABLE_DEBUG_REPORT )
 	SET( SettingsSrc ${SettingsSrc} ${curlSRC} )
 ENDIF( ENABLE_DEBUG_REPORT )
 
-ADD_EXECUTABLE(springlobby WIN32 MACOSX_BUNDLE ${springlobbySrc} ${SettingsSrc} ${springlobby_RC_FILE})
-ADD_EXECUTABLE(springsettings WIN32 MACOSX_BUNDLE ${StandAloneSettings} ${SpringSettings_RC_FILE} ${SettingsSrc} ${SLSharedWithSettings} )
+ADD_EXECUTABLE(springlobby WIN32 MACOSX_BUNDLE ${springlobbySrc} ${SettingsSrc} ${SLSharedWithSettings} ${springlobby_RC_FILE})
+ADD_EXECUTABLE(springsettings WIN32 MACOSX_BUNDLE ${StandAloneSettings} ${SettingsSrc} ${SLSharedWithSettings} ${SpringSettings_RC_FILE} )
 
 IF( ENABLE_DEBUG_REPORT )
 	IF(WIN32)

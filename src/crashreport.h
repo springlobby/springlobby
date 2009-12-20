@@ -6,7 +6,7 @@
 #if wxUSE_DEBUGREPORT && defined(ENABLE_DEBUG_REPORT)
 
 #include <wx/debugrpt.h>
-//#include "utils.h"
+#include "utils/platform.h"
 
 #include <sstream>
 #include <wx/arrstr.h>
