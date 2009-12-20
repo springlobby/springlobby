@@ -1,6 +1,8 @@
 #ifndef STACKTRACE_H_INCLUDED
 #define STACKTRACE_H_INCLUDED
 
+#if defined(ENABLE_DEBUG_REPORT)
+
 #include <wx/string.h>
 #include <wx/stackwalk.h>
 
@@ -24,14 +26,16 @@ class StackTrace : public wxStackWalker
 };
 #else
     #ifdef __WXMSW__
-    #include <windows.h>
-#include <process.h>
-#include <imagehlp.h>
-#include <signal.h>
-    class wxArrayString;
-    /** Print out a stacktrace. */
-    wxArrayString Stacktrace(LPEXCEPTION_POINTERS e);
+        #include <windows.h>
+        #include <process.h>
+        #include <imagehlp.h>
+        #include <signal.h>
+        class wxArrayString;
+        /** Print out a stacktrace. */
+        wxArrayString Stacktrace(LPEXCEPTION_POINTERS e);
     #endif
-#endif
+#endif //#if wxUSE_STACKWALKER
+
+#endif //#if defined(ENABLE_DEBUG_REPORT)
 
 #endif // SPRINGLOBBY_HEADERGUARD_STACKTRACE_H_INCLUDED

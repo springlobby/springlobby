@@ -2,7 +2,7 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
-
+#if defined(ENABLE_DEBUG_REPORT)
 #include <iomanip>
 #include <sstream>
 #include <ostream>
@@ -37,7 +37,7 @@ namespace
         std::string ret = name;
         try { if ((d = abi::__cxa_demangle(name, 0, 0, &status))) ret = d; }
         catch(...) {  }
-        std::free(d);
+        free(d);
         return ret;
     }
 #endif
@@ -233,8 +233,8 @@ namespace
 
         symbol_context sc;
 
-        STACKFRAME frame; std::memset(&frame, 0, sizeof frame);
-        CONTEXT context;  std::memset(&context, 0, sizeof(CONTEXT));
+        STACKFRAME frame; memset(&frame, 0, sizeof frame);
+        CONTEXT context;  memset(&context, 0, sizeof(CONTEXT));
         context.ContextFlags = CONTEXT_FULL;
 
         windows_dll kernel32("kernel32.dll");
@@ -426,3 +426,4 @@ namespace dbg
 
 } // close namespace dbg
 
+#endif //#if defined(ENABLE_DEBUG_REPORT)

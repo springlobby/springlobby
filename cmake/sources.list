@@ -146,6 +146,7 @@ SET(SLSharedWithSettings
 	src/utils/globalevents.cpp
 	src/utils/platform.cpp
 	src/utils/sltipwin.cpp
+	src/utils/stack.cpp
 	src/crashreport.cpp
 	src/globalsmanager.cpp	
 	src/mmoptionmodel.cpp
@@ -162,12 +163,7 @@ SET( updaterSrc
 	src/updater/updatermainwindow.cpp
 	src/updater/updater.cpp
 	src/updater/updaterapp.cpp
-	src/updater/updatehelper.cpp
-	src/settings.cpp
-	src/utils/customdialogs.cpp
 	src/utils/activitynotice.cpp
-	src/utils/platform.cpp
 	src/utils/misc.cpp
-	src/uiutils.cpp
 )
 

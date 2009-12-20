@@ -90,12 +90,12 @@ SpringLobbyApp::~SpringLobbyApp()
     delete m_timer;
 }
 
-#ifdef __WXMSW__
+#if defined(__WXMSW__) && defined(ENABLE_DEBUG_REPORT)
 LONG __stdcall filter(EXCEPTION_POINTERS* p){
     #if wxUSE_STACKWALKER
-        crashreport().GenerateReport();
+        CrashReport::instance().GenerateReport();
     #else
-        crashreport().GenerateReport(p);
+        CrashReport::instance().GenerateReport(p);
     #endif
     return 0; //must return 0 here or we'll end in an inf loop of dbg reports
 }
@@ -114,7 +114,7 @@ bool SpringLobbyApp::OnInit()
     #if wxUSE_ON_FATAL_EXCEPTION
         wxHandleFatalExceptions( true );
     #endif
-    #ifdef __WXMSW__
+    #if defined(__WXMSW__) && defined(ENABLE_DEBUG_REPORT)
         //this undocumented function acts as a workaround for the dysfunctional
         // wxUSE_ON_FATAL_EXCEPTION on msw when mingw is used (or any other non SEH-capable compiler )
         SetUnhandledExceptionFilter(filter);

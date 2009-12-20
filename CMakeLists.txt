@@ -61,10 +61,6 @@ SET( ENABLE_DEBUG_REPORT
 	1 CACHE BOOL
 	"Enable automatic uploading of crash information (requires libcurl)" )
 
-IF( WIN32 AND ENABLE_DEBUG_REPORT AND NOT OPTION_TORRENT_SYSTEM )
-	MESSAGE( FATAL_ERROR "cross-compile with debug report enabled currently only works with torrent enabled. FIXME!!" )
-ENDIF( WIN32 AND ENABLE_DEBUG_REPORT AND NOT OPTION_TORRENT_SYSTEM )
-
 SET( SPRINGLOBBY_REV
 	${SPRINGLOBBY_GIT_REV} CACHE STRING
 	"The revision string used in packages etc." )
@@ -168,22 +164,19 @@ ENDIF ( OPTION_SOUND )
 ENDIF( CMAKE_CROSSCOMPILING )
 
 IF( ENABLE_DEBUG_REPORT )
-	IF(WIN32)
-		ADD_DEFINITIONS( -DENABLE_DEBUG_REPORT -DCURL_STATICLIB -mno-cygwin )
-		INCLUDE_DIRECTORIES( ${libcurl_INCLUDE_DIR} )#we use this from the mingw toolchain file
-		LINK_DIRECTORIES( ${libcurl_LIB_DIR} )
-		SET( CURL_LIBRARIES "curl" "imagehlp")
-	ELSE(WIN32)
-		ADD_DEFINITIONS( -DENABLE_DEBUG_REPORT )
-		FIND_PACKAGE ( CURL REQUIRED )
-		IF( NOT CURL_FOUND )
-			MESSAGE( FATAL_ERROR "libCURL not found, either install it or set ENABLE_DEBUG_REPORT to OFF" )
-		ENDIF( NOT CURL_FOUND )
-		INCLUDE_DIRECTORIES( ${CURL_INCLUDE_DIR} )#we use this from the mingw toolchain file
-		#LINK_DIRECTORIES( ??? ) #The FindCURL script does nto provide a lib dir....
-	ENDIF(WIN32)
+	ADD_DEFINITIONS( -DENABLE_DEBUG_REPORT )
 ENDIF( ENABLE_DEBUG_REPORT )
 
+pkg_check_modules( CURL REQUIRED libcurl )
+IF( NOT CURL_FOUND )
+		MESSAGE( FATAL_ERROR "libCURL not found, either install it or set ENABLE_DEBUG_REPORT to OFF" )
+ELSE( NOT CURL_FOUND )
+	INCLUDE_DIRECTORIES( ${CURL_INCLUDE_DIR} )
+	LINK_DIRECTORIES( ${CURL_LIB_DIR} )
+	IF(WIN32)
+		ADD_DEFINITIONS( -DCURL_STATICLIB -mno-cygwin )
+	ENDIF(WIN32)
+ENDIF( NOT CURL_FOUND )
 #----------------------------------------------------------------------------------------------------
 # libtorrent-rasterbar dependency check
 #----------------------------------------------------------------------------------------------------
@@ -265,9 +258,9 @@ ENDIF(WIN32)
 
 IF( ENABLE_DEBUG_REPORT )
 	IF(WIN32)
-		TARGET_LINK_LIBRARIES(springlobby ws2_32 mswsock ${CURL_LIBRARIES} libtorrent /share/sources/mingw-distro/MinGW/lib/libbfd.a iberty psapi)
-		TARGET_LINK_LIBRARIES(springsettings ws2_32 mswsock ${CURL_LIBRARIES} libtorrent /share/sources/mingw-distro/MinGW/lib/libbfd.a iberty psapi)
-		TARGET_LINK_LIBRARIES(springlobby_updater ws2_32 mswsock ${CURL_LIBRARIES} libtorrent /share/sources/mingw-distro/MinGW/lib/libbfd.a iberty psapi)
+		TARGET_LINK_LIBRARIES(springlobby ws2_32 mswsock ${CURL_LIBRARIES}  )
+		TARGET_LINK_LIBRARIES(springsettings ws2_32 mswsock ${CURL_LIBRARIES} )
+		TARGET_LINK_LIBRARIES(springlobby_updater ws2_32 mswsock ${CURL_LIBRARIES} )
 	ELSE(WIN32)
 		TARGET_LINK_LIBRARIES(springlobby ${CURL_LIBRARIES} )
 		TARGET_LINK_LIBRARIES(springsettings ${CURL_LIBRARIES} )

@@ -3,9 +3,9 @@
 // Class: StackTrace
 //
 
-
 #include "stacktrace.h"
 
+#if defined(ENABLE_DEBUG_REPORT)
 
 #if wxUSE_STACKWALKER
 
@@ -157,4 +157,6 @@ wxArrayString Stacktrace(LPEXCEPTION_POINTERS e) {
 }
 
 #endif //__MSW
+
+#endif //#if defined(ENABLE_DEBUG_REPORT)
 #endif //useStacktrace
