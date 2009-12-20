@@ -77,6 +77,7 @@
 
 #if defined(__WXMSW__)
     #include <wx/msw/winundef.h>
+    #include <iostream>
 #endif
 #include <wx/aboutdlg.h>
 
@@ -114,6 +115,7 @@ MainWindow::MainWindow( )
     m_channel_chooser(NULL),
     m_log_win(NULL)
 {
+
   SetIcon( wxIcon(springlobby_xpm) );
 
   GetAui().manager = new AuiManagerContainer::ManagerType( this );

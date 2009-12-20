@@ -6,6 +6,8 @@ class wxFrame;
 class wxString;
 class wxLogChain;
 
+#include <wx/string.h>
+
 /**
     let origin be /path/to/some/dir and destination /some/other/path
     this will copy dir (and everything below that recursively to /some/other/path/dir
@@ -33,9 +35,18 @@ wxString GetExecutableFolder();
 wxString GetLibExtension();
 wxString GetHostCPUSpeed();
 
+//! set new cwd in ctor, reset to old in dtor
+class CwdGuard {
+    wxString m_old_cwd;
+    public:
+        CwdGuard( const wxString& new_cwd );
+        ~CwdGuard();
+};
+
 #ifdef __WXMSW__
 bool IsPreVistaWindows();
 #endif
+
 
 #endif // SPRINGLOBBY_HEADERGUARD_PLATFORM_H
 

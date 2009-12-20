@@ -29,6 +29,7 @@
 #include "../updater/versionchecker.h"
 #include "customdialogs.h"
 #include "math.h"
+#include "../crashreport.h"
 
 wxString GetLibExtension()
 {
@@ -57,24 +58,16 @@ wxLogWindow* InitializeLoggingTargets( wxFrame* parent, bool console, bool showg
         logChain = new wxLogChain( loggerwin );
     }
 
-    #if 0 //TODO reenable wxUSE_DEBUGREPORT
-        if ( logcrash )
-        {
-            ///hidden stream logging for crash reports, verbosity ignores command line params
-            wxLog *loggercrash = new wxLogStream( &crashreport().crashlog );
-            wxLogChain *logCrashChain = new wxLogChain( loggercrash );
-            lastlog = logCrashChain;
-        }
+    #if wxUSE_DEBUGREPORT && defined(ENABLE_DEBUG_REPORT)
+        ///hidden stream logging for crash reports
+        wxLog *loggercrash = new wxLogStream( &CrashReport::instance().crashlog );
+        logChain = new wxLogChain( loggercrash );
 
-        #if wxUSE_DEBUGREPORT && defined(ENABLE_DEBUG_REPORT)
-            ///hidden stream logging for crash reports
-            wxLog *loggercrash = new wxLogStream( &crashreport().crashlog );
-            wxLogChain *logCrashChain = new wxLogChain( loggercrash );
-            logCrashChain->SetLogLevel( wxLOG_Trace );
-            logCrashChain->SetVerbose( true );
-        #endif
-
+//        logCrashChain->SetLogLevel( wxLOG_Trace );
+//        logCrashChain->SetVerbose( true );
     #endif
+
+
 
 
     if ( !(  console || showgui ) || verbosity == 0 ){
@@ -349,3 +342,13 @@ bool IsPreVistaWindows()
     return wxPlatformInfo().GetOSMajorVersion() < 6;
 }
 #endif
+
+CwdGuard::CwdGuard( const wxString& new_cwd )
+    : m_old_cwd( wxGetCwd() )
+{
+    wxSetWorkingDirectory( new_cwd );
+}
+CwdGuard::~CwdGuard()
+{
+    wxSetWorkingDirectory( m_old_cwd );
+}

@@ -57,6 +57,9 @@
 
 #include "gui/simplefront.h"
 
+#include <wx/debugrpt.h>
+#include "utils/misc.h"
+
 const unsigned int TIMER_ID         = 101;
 const unsigned int TIMER_INTERVAL   = 100;
 
@@ -87,6 +90,16 @@ SpringLobbyApp::~SpringLobbyApp()
     delete m_timer;
 }
 
+#ifdef __WXMSW__
+LONG __stdcall filter(EXCEPTION_POINTERS* p){
+    #if wxUSE_STACKWALKER
+        crashreport().GenerateReport();
+    #else
+        crashreport().GenerateReport(p);
+    #endif
+    return 0; //must return 0 here or we'll end in an inf loop of dbg reports
+}
+#endif
 
 //! @brief Initializes the application.
 //!
@@ -97,18 +110,27 @@ bool SpringLobbyApp::OnInit()
     if (!wxApp::OnInit())
         return false;
 
+    if (!m_crash_handle_disable) {
+    #if wxUSE_ON_FATAL_EXCEPTION
+        wxHandleFatalExceptions( true );
+    #endif
+    #ifdef __WXMSW__
+        //this undocumented function acts as a workaround for the dysfunctional
+        // wxUSE_ON_FATAL_EXCEPTION on msw when mingw is used (or any other non SEH-capable compiler )
+        SetUnhandledExceptionFilter(filter);
+    #endif
+    }
+
     //initialize all loggers, we'll use the returned pointer to set correct parent window later
     wxLogChain* logchain = 0;
     wxLogWindow *loggerwin = InitializeLoggingTargets( 0, m_log_console, m_log_window_show, !m_crash_handle_disable, m_log_verbosity, logchain );
-
-#if wxUSE_ON_FATAL_EXCEPTION && !defined(__WXMAC__)
-    if (!m_crash_handle_disable) wxHandleFatalExceptions( true );
-#endif
 
     //this needs to called _before_ mainwindow instance is created
     wxInitAllImageHandlers();
     wxFileSystem::AddHandler(new wxZipFSHandler);
     wxSocketBase::Initialize();
+
+
 
 #ifdef __WXMSW__
     wxString path = wxPathOnly( wxStandardPaths::Get().GetExecutablePath() ) + wxFileName::GetPathSeparator() + _T("locale");
@@ -207,7 +229,12 @@ int SpringLobbyApp::OnExit()
 void SpringLobbyApp::OnFatalException()
 {
 #if wxUSE_DEBUGREPORT && defined(ENABLE_DEBUG_REPORT)
-    crashreport().GenerateReport(wxDebugReport::Context_Exception);
+    #if wxUSE_STACKWALKER
+        CrashReport::instance().GenerateReport();
+    #else
+        EXCEPTION_POINTERS* p = new EXCEPTION_POINTERS; //lets hope this'll never get called
+        CrashReport::instance().GenerateReport(p);
+    #endif
 #else
     wxMessageBox( _("The application has generated a fatal error and will be terminated\nGenerating a bug report is not possible\n\nplease get a wxWidgets library that supports wxUSE_DEBUGREPORT"),_("Critical error"), wxICON_ERROR | wxOK );
 #endif

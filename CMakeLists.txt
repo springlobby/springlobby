@@ -56,12 +56,22 @@ SET( OPTION_TRANSLATION_SUPPORT
 SET( BUILD_SHARED_LIBS
 	1 CACHE BOOL
 	"Chooses whether to link dynamic or static libraries. Recommend keeping this activated unless you know what you're doing." )
+
+SET( ENABLE_DEBUG_REPORT
+	1 CACHE BOOL
+	"Enable automatic uploading of crash information (requires libcurl)" )
+
+IF( WIN32 AND ENABLE_DEBUG_REPORT AND NOT OPTION_TORRENT_SYSTEM )
+	MESSAGE( FATAL_ERROR "cross-compile with debug report enabled currently only works with torrent enabled. FIXME!!" )
+ENDIF( WIN32 AND ENABLE_DEBUG_REPORT AND NOT OPTION_TORRENT_SYSTEM )
+
 SET( SPRINGLOBBY_REV
 	${SPRINGLOBBY_GIT_REV} CACHE STRING
 	"The revision string used in packages etc." )
 SET( LOCALE_INSTALL_DIR
 	${CMAKE_INSTALL_PREFIX}/share/locale CACHE STRING
 	"message catalogs will installed here" )
+
 
 #----------------------------------------------------------------------------------------------------
 # wxWidgets lib dependency check
@@ -70,10 +80,10 @@ SET( LOCALE_INSTALL_DIR
 # Here you can define, what Libraries of wxWidgets you need for your Application. You can figure out what Libraries you need here:
 # http://www.wxwidgets.org/manuals/2.8/wx_librarieslist.html
 IF(NOT CMAKE_CROSSCOMPILING)
-SET(wxWidgets_USE_LIBS base core net adv aui html xml )
+SET(wxWidgets_USE_LIBS base core net adv aui html xml qa)
 
 # We need the Find package for wxWidgets to work
-FIND_PACKAGE(wxWidgets REQUIRED base core net adv aui html xml)
+FIND_PACKAGE(wxWidgets REQUIRED base core net adv aui html xml qa)
 
 # Did we find wxWidgets ? This condition will fail for as long as the internal Vars do not point to the proper wxWidgets Configuration.
 IF(wxWidgets_FOUND)
@@ -146,6 +156,7 @@ IF ( OPTION_SOUND )
 			LINK_LIBRARIES(${SDLMAIN_LIBRARY} ${SDL_LIBRARY} ${SDLMIXER_LIBRARY})
 		ELSE(NOT CMAKE_CROSSCOMPILING)
 			INCLUDE_DIRECTORIES( ${sdl_INCLUDE_DIR} )
+			LINK_DIRECTORIES( ${sdl_LIB_DIR} )
 			LINK_LIBRARIES(SDLmain SDL SDL_mixer)
 		ENDIF(NOT CMAKE_CROSSCOMPILING)
     ENDIF(NOT WIN32)
@@ -155,6 +166,41 @@ ELSE ( OPTION_SOUND )
     ADD_DEFINITIONS( -DDISABLE_SOUND )
 ENDIF ( OPTION_SOUND )
 ENDIF( CMAKE_CROSSCOMPILING )
+
+IF( ENABLE_DEBUG_REPORT )
+	IF(WIN32)
+		ADD_DEFINITIONS( -DENABLE_DEBUG_REPORT -DCURL_STATICLIB -mno-cygwin )
+		INCLUDE_DIRECTORIES( ${libcurl_INCLUDE_DIR} )#we use this from the mingw toolchain file
+		LINK_DIRECTORIES( ${libcurl_LIB_DIR} )
+		SET( CURL_LIBRARIES "curl" "imagehlp")
+	ELSE(WIN32)
+		ADD_DEFINITIONS( -DENABLE_DEBUG_REPORT )
+		FIND_PACKAGE ( CURL REQUIRED )
+		IF( NOT CURL_FOUND )
+			MESSAGE( FATAL_ERROR "libCURL not found, either install it or set ENABLE_DEBUG_REPORT to OFF" )
+		ENDIF( NOT CURL_FOUND )
+		INCLUDE_DIRECTORIES( ${CURL_INCLUDE_DIR} )#we use this from the mingw toolchain file
+		#LINK_DIRECTORIES( ??? ) #The FindCURL script does nto provide a lib dir....
+	ENDIF(WIN32)
+ENDIF( ENABLE_DEBUG_REPORT )
+
+
+#----------------------------------------------------------------------------------------------------
+# Gettext lib dependency check
+#----------------------------------------------------------------------------------------------------
+
+if( OPTION_TRANSLATION_SUPPORT )
+    set(Gettext_DIR "po" )
+    INCLUDE(cmake/FindGettext.cmake)
+    if(GETTEXT_FOUND)
+	    set(SpringLobby_INCLUDE_PATH ${SpringLobby_INCLUDE_PATH}
+		${GETTEXT_INCLUDE_DIR} CACHE INTERNAL "" FORCE)
+
+	    include("cmake/KWWidgetsInternationalizationMacros.cmake")
+    else(GETTEXT_FOUND)
+	message(FATAL_ERROR "The GNU Gettext package is not found! Please install the package or toggle OPTION_TRANSLATION_SUPPORT to OFF")
+    endif(GETTEXT_FOUND)
+endif( OPTION_TRANSLATION_SUPPORT )
 
 #----------------------------------------------------------------------------------------------------
 # libtorrent-rasterbar dependency check
@@ -221,17 +267,28 @@ cmake_policy(SET CMP0004 OLD)
 #ignore warnings about macosx app bundle output dir
 cmake_policy(SET CMP0006 OLD)
 
+IF( ENABLE_DEBUG_REPORT )
+	SET( SpringLobbySrc ${SpringLobbySrc} ${curlSRC} )
+	SET( SettingsSrc ${SettingsSrc} ${curlSRC} )
+ENDIF( ENABLE_DEBUG_REPORT )
 
 ADD_EXECUTABLE(springlobby WIN32 MACOSX_BUNDLE ${springlobbySrc} ${SettingsSrc} ${springlobby_RC_FILE})
 ADD_EXECUTABLE(springsettings WIN32 MACOSX_BUNDLE ${StandAloneSettings} ${SpringSettings_RC_FILE} ${SettingsSrc} ${SLSharedWithSettings} )
-IF(WIN32)
-	ADD_EXECUTABLE(springlobby_updater WIN32 MACOSX_BUNDLE ${updaterSrc}  ${SLSharedWithSettings} ${updater_RC_FILE})
-	TARGET_LINK_LIBRARIES(springlobby_updater ${wxWidgets_LIBRARIES})
-ENDIF(WIN32)
+
+IF( ENABLE_DEBUG_REPORT )
+	IF(WIN32)
+		TARGET_LINK_LIBRARIES(springlobby ws2_32 mswsock ${CURL_LIBRARIES} libtorrent /share/sources/mingw-distro/MinGW/lib/libbfd.a iberty psapi)
+		TARGET_LINK_LIBRARIES(springsettings ws2_32 mswsock ${CURL_LIBRARIES} libtorrent /share/sources/mingw-distro/MinGW/lib/libbfd.a iberty psapi)
+	ELSE(WIN32)
+		TARGET_LINK_LIBRARIES(springlobby ${CURL_LIBRARIES} )
+		TARGET_LINK_LIBRARIES(springsettings ${CURL_LIBRARIES} )
+	ENDIF(WIN32)
+ENDIF( ENABLE_DEBUG_REPORT )
+
 
 # Here the wxWidgets Libraries are added. These are set for us by the FIND Script. If you need other Libraries, you can add them here as well.
-TARGET_LINK_LIBRARIES(springlobby ${wxWidgets_LIBRARIES})
-TARGET_LINK_LIBRARIES(springsettings ${wxWidgets_LIBRARIES})
+TARGET_LINK_LIBRARIES(springlobby ${wxWidgets_LIBRARIES} ${CURL_LIBRARIES})
+TARGET_LINK_LIBRARIES(springsettings ${wxWidgets_LIBRARIES} ${CURL_LIBRARIES})
 
 IF(MINGW)
 	TARGET_LINK_LIBRARIES( springlobby iphlpapi )
