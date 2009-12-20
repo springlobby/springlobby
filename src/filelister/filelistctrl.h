@@ -3,10 +3,7 @@
 
 #ifndef NO_TORRENT_SYSTEM
 
-#include "filelistfilter.h"
-
 #include "../customvirtlistctrl.h"
-#include <wx/intl.h>
 
 class wxMenu;
 class wxListEvent;
@@ -58,16 +55,17 @@ class FileListCtrl : public CustomVirtListCtrl< const PlasmaResourceInfo* ,FileL
 //    static Ui* m_ui_for_sort;
 
     FileListDialog* m_parent_dialog;
-    static FileListDialog* s_parent_dialog;
+
+    enum
+    {
+        FILELIST_COL_CLICK = wxID_HIGHEST,
+
+    };
 
     DECLARE_EVENT_TABLE()
 };
 
-enum
-{
-    FILELIST_COL_CLICK = wxID_HIGHEST,
 
-};
 
 #endif
 

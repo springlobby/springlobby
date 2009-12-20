@@ -58,7 +58,7 @@ SET( BUILD_SHARED_LIBS
 	"Chooses whether to link dynamic or static libraries. Recommend keeping this activated unless you know what you're doing." )
 
 SET( ENABLE_DEBUG_REPORT
-	1 CACHE BOOL
+	0 CACHE BOOL
 	"Enable automatic uploading of crash information (requires libcurl)" )
 
 SET( SPRINGLOBBY_REV
@@ -165,16 +165,25 @@ ENDIF( CMAKE_CROSSCOMPILING )
 
 IF( ENABLE_DEBUG_REPORT )
 	ADD_DEFINITIONS( -DENABLE_DEBUG_REPORT )
+	IF( MINGW )
+		ADD_DEFINITIONS( -DENABLE_DEBUG_REPORT -gstabs )
+		LINK_LIBRARIES( bfd intl iberty psapi imagehlp)
+	ENDIF( MINGW )
 ENDIF( ENABLE_DEBUG_REPORT )
 
 pkg_check_modules( CURL REQUIRED libcurl )
 IF( NOT CURL_FOUND )
-		MESSAGE( FATAL_ERROR "libCURL not found, either install it or set ENABLE_DEBUG_REPORT to OFF" )
+	MESSAGE( FATAL_ERROR "required library libCURL not found" )
 ELSE( NOT CURL_FOUND )
 	INCLUDE_DIRECTORIES( ${CURL_INCLUDE_DIR} )
-	LINK_DIRECTORIES( ${CURL_LIB_DIR} )
 	IF(WIN32)
-		ADD_DEFINITIONS( -DCURL_STATICLIB -mno-cygwin )
+		ADD_DEFINITIONS( ${CURL_CFLAGS}  )
+		LINK_DIRECTORIES( ${CURL_STATIC_LIBRARY_DIRS} )
+		LINK_LIBRARIES( ${CURL_STATIC_LDFLAGS} )
+	ELSE(WIN32)
+		ADD_DEFINITIONS( ${CURL_CFLAGS} )
+		LINK_DIRECTORIES( ${CURL_LIB_DIRS} )
+		LINK_LIBRARIES( ${CURL_LDFLAGS} )
 	ENDIF(WIN32)
 ENDIF( NOT CURL_FOUND )
 #----------------------------------------------------------------------------------------------------
@@ -205,7 +214,7 @@ ENDIF( OPTION_TORRENT_SYSTEM )
 # If we build for windows Systems, we also include the Resource-File containing the Manifest, Icon and other Resources.
 IF(WIN32)
 	IF(MINGW OR CMAKE_CROSSCOMPILING)
-		FIND_PROGRAM(WINDRES NAMES windres i586-mingw32msvc-windres i686-mingw32-windres DOC "path to mingw's windres executable")
+		FIND_PROGRAM(WINDRES NAMES i586-pc-mingw32-windres windres i686-mingw32-windres DOC "path to mingw's windres executable")
 		ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/sl_icon.o COMMAND ${WINDRES} -I${springlobby_SOURCE_DIR}/src -I${wxWidgets_RC_DIR} -i${springlobby_SOURCE_DIR}/src/springlobby.rc -o ${CMAKE_CURRENT_BINARY_DIR}/sl_icon.o)
 		ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/ss_icon.o COMMAND ${WINDRES} -I${springlobby_SOURCE_DIR}/src -I${wxWidgets_RC_DIR} -i${springlobby_SOURCE_DIR}/src/settings++/settings.rc -o ${CMAKE_CURRENT_BINARY_DIR}/ss_icon.o)
 		ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/su_icon.o COMMAND ${WINDRES} -I${springlobby_SOURCE_DIR}/src -I${wxWidgets_RC_DIR} -i${springlobby_SOURCE_DIR}/src/updater/updater.rc -o ${CMAKE_CURRENT_BINARY_DIR}/su_icon.o)
@@ -242,35 +251,17 @@ cmake_policy(SET CMP0004 OLD)
 #ignore warnings about macosx app bundle output dir
 cmake_policy(SET CMP0006 OLD)
 
-IF( ENABLE_DEBUG_REPORT )
-	SET( SpringLobbySrc ${SpringLobbySrc} ${curlSRC} )
-	SET( SettingsSrc ${SettingsSrc} ${curlSRC} )
-	SET( updaterSrc ${updaterSrc} ${curlSRC} )
-ENDIF( ENABLE_DEBUG_REPORT )
-
-ADD_EXECUTABLE(springlobby WIN32 MACOSX_BUNDLE ${springlobbySrc} ${SettingsSrc} ${SLSharedWithSettings} ${springlobby_RC_FILE})
-ADD_EXECUTABLE(springsettings WIN32 MACOSX_BUNDLE ${StandAloneSettings} ${SettingsSrc} ${SLSharedWithSettings} ${SpringSettings_RC_FILE} )
+ADD_EXECUTABLE(springlobby WIN32 MACOSX_BUNDLE ${springlobbySrc} ${SettingsSrc} ${SLSharedWithSettings} ${curlSRC} ${springlobby_RC_FILE})
+ADD_EXECUTABLE(springsettings WIN32 MACOSX_BUNDLE ${StandAloneSettings} ${SettingsSrc} ${SLSharedWithSettings} ${curlSRC} ${SpringSettings_RC_FILE} )
 #the updater needs to be build for windows only
 IF(WIN32) 
-       ADD_EXECUTABLE(springlobby_updater WIN32 MACOSX_BUNDLE ${updaterSrc}  ${SLSharedWithSettings} ${updater_RC_FILE} )
+       ADD_EXECUTABLE(springlobby_updater WIN32 MACOSX_BUNDLE ${updaterSrc} ${SLSharedWithSettings} ${curlSRC} ${updater_RC_FILE} )
        TARGET_LINK_LIBRARIES(springlobby_updater ${wxWidgets_LIBRARIES} )
 ENDIF(WIN32)
 
-IF( ENABLE_DEBUG_REPORT )
-	IF(WIN32)
-		TARGET_LINK_LIBRARIES(springlobby ws2_32 mswsock ${CURL_LIBRARIES}  )
-		TARGET_LINK_LIBRARIES(springsettings ws2_32 mswsock ${CURL_LIBRARIES} )
-		TARGET_LINK_LIBRARIES(springlobby_updater ws2_32 mswsock ${CURL_LIBRARIES} )
-	ELSE(WIN32)
-		TARGET_LINK_LIBRARIES(springlobby ${CURL_LIBRARIES} )
-		TARGET_LINK_LIBRARIES(springsettings ${CURL_LIBRARIES} )
-	ENDIF(WIN32)
-ENDIF( ENABLE_DEBUG_REPORT )
-
-
 # Here the wxWidgets Libraries are added. These are set for us by the FIND Script. If you need other Libraries, you can add them here as well.
-TARGET_LINK_LIBRARIES(springlobby ${wxWidgets_LIBRARIES} ${CURL_LIBRARIES})
-TARGET_LINK_LIBRARIES(springsettings ${wxWidgets_LIBRARIES} ${CURL_LIBRARIES})
+TARGET_LINK_LIBRARIES(springlobby ${wxWidgets_LIBRARIES} )
+TARGET_LINK_LIBRARIES(springsettings ${wxWidgets_LIBRARIES} )
 
 IF(MINGW)
 	TARGET_LINK_LIBRARIES( springlobby iphlpapi )

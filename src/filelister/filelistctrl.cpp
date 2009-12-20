@@ -2,18 +2,12 @@
 
 #ifndef NO_TORRENT_SYSTEM
 
-#ifdef _MSC_VER
-#ifndef NOMINMAX
-    #define NOMINMAX
-#endif // NOMINMAX
-#include <winsock2.h>
-#endif // _MSC_VER
+
+#include "filelistctrl.h"
 
 #include <wx/intl.h>
 #include <wx/menu.h>
-#include <wx/string.h>
 
-#include "filelistctrl.h"
 #include "filelistdialog.h"
 #include "../utils/conversion.h"
 #include "../iconimagelist.h"
@@ -32,8 +26,6 @@ BEGIN_EVENT_TABLE( FileListCtrl, FileListCtrl::BaseType )
 	#endif
 	#endif
 END_EVENT_TABLE()
-
-FileListDialog* FileListCtrl::s_parent_dialog = 0;
 
 const int fileListDialogID = wxNewId();
 

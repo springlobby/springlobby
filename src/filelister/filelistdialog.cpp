@@ -1,14 +1,9 @@
 #ifndef NO_TORRENT_SYSTEM
 
-#ifdef _MSC_VER
-#ifndef NOMINMAX
-    #define NOMINMAX
-#endif // NOMINMAX
-#include <winsock2.h>
-#endif // _MSC_VER
-
 #include "filelistdialog.h"
 #include "filelistctrl.h"
+#include "filelistfilter.h"
+
 #include "../iunitsync.h"
 #include "../utils/conversion.h"
 #include "../utils/downloader.h"

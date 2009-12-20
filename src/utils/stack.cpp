@@ -2,6 +2,7 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
+// http://www.mr-edd.co.uk/?p=66#more-66
 #if defined(ENABLE_DEBUG_REPORT)
 #include <iomanip>
 #include <sstream>
