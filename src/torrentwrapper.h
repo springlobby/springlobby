@@ -12,6 +12,7 @@
 #include <wx/arrstr.h>
 
 #include <map>
+#include <vector>
 
 #include "iunitsync.h"
 #include "thread.h"
@@ -54,8 +55,6 @@ struct TorrentInfos
 	TorrentInfos() : numcopies(-1.f), downloaded(0), uploaded(0), downloadstatus(P2P::not_stored), progress(0.f), inspeed(0.f), outspeed(0.f), filesize(0), eta(0) {}
 };
 
-
-#define TorrentTable_validate
 
 class TorrentMaintenanceThread : public Thread
 {
@@ -118,6 +117,13 @@ public:
 
 private:
 
+    typedef std::vector<libtorrent::torrent_handle>
+        TorrenthandleVector;
+    //! internal
+    typedef std::map<PlasmaResourceInfo,libtorrent::torrent_handle>
+        TorrenthandleInfoMap;
+    TorrenthandleInfoMap m_handleInfo_map;
+
     DownloadRequestStatus AddTorrent( const PlasmaResourceInfo& info );
 
 //    void OnConnected( Socket* sock );
@@ -131,7 +137,7 @@ private:
 
     wxArrayString m_tracker_urls;
 
-//    TorrentMaintenanceThread m_maintenance_thread;
+    TorrentMaintenanceThread m_maintenance_thread;
 
     libtorrent::session* m_torr;
 

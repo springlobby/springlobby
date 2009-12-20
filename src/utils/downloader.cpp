@@ -185,7 +185,6 @@ PlasmaResourceInfo PlasmaInterface::ParseResourceInfoData( const int buffer_inde
     wxString seeds;
     for ( size_t i = 0; i < info.m_webseeds.Count(); ++i )
         seeds += info.m_webseeds[i] + _T("\n");
-    wxMessageBox( seeds );
 
     return info;
 }

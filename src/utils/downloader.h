@@ -29,6 +29,10 @@ struct PlasmaResourceInfo {
 
     ResourceType m_type;
 
+    bool operator < ( const PlasmaResourceInfo& o ) const {
+        return m_name < o.m_name;
+    }
+
 };
 
 template <class PB, class I >

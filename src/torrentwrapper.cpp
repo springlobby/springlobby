@@ -128,7 +128,7 @@ TorrentWrapper& torrent()
 TorrentWrapper::TorrentWrapper():
         ingame(false),
         m_timer_count(0),
-//        m_maintenance_thread(this),
+        m_maintenance_thread(this),
         m_started(false)
 {
     wxLogMessage(_T("TorrentWrapper::TorrentWrapper()"));
@@ -149,7 +149,7 @@ TorrentWrapper::TorrentWrapper():
     {
         wxLogError( TowxString( e.what() ) );
     }
-
+    //these extensions proved o be too problematic on win so i flat out disable them
     #ifndef __WXMSW__
         try
         {
@@ -177,13 +177,14 @@ TorrentWrapper::TorrentWrapper():
         }
     #endif
     UpdateSettings();
+    m_maintenance_thread.Init();
 }
 
 
 TorrentWrapper::~TorrentWrapper()
 {
     wxLogDebugFunc( wxEmptyString );
-//    m_maintenance_thread.Stop();
+    m_maintenance_thread.Stop();
     #ifndef __WXMSW__
         try
         {
@@ -220,10 +221,9 @@ TorrentWrapper::~TorrentWrapper()
 
 void TorrentWrapper::UpdateSettings()
 {
-    int uploadLimit, downloadLimit;
-
     try
     {
+        int uploadLimit, downloadLimit;
         if ( !ingame || sett().GetTorrentSystemSuspendMode() == 0 )
         {
             uploadLimit = sett().GetTorrentUploadRate();
@@ -299,7 +299,9 @@ IUnitSync::MediaType convertMediaType( const PlasmaResourceInfo::ResourceType& t
 TorrentWrapper::DownloadRequestStatus TorrentWrapper::RequestFileByName( const wxString& name )
 {
     PlasmaResourceInfo info = plasmaInterface().GetResourceInfo( name );
-    assert( info.m_type != PlasmaResourceInfo::unknwon );
+    if( info.m_type == PlasmaResourceInfo::unknwon )
+        return remote_file_dl_failed; //!TODO use ebtter code
+
     if ( plasmaInterface().DownloadTorrentFile( info, sett().GetTorrentDataDir().GetFullPath() ) )
     {
         if ( AddTorrent( info ) == success ) {
@@ -317,7 +319,8 @@ TorrentWrapper::DownloadRequestStatus TorrentWrapper::RequestFileByName( const w
     return remote_file_dl_failed;
 }
 
-TorrentWrapper::DownloadRequestStatus TorrentWrapper::AddTorrent( const PlasmaResourceInfo& info ){
+TorrentWrapper::DownloadRequestStatus TorrentWrapper::AddTorrent( const PlasmaResourceInfo& info )
+{
     libtorrent::add_torrent_params p;
 
     try {
@@ -332,10 +335,13 @@ TorrentWrapper::DownloadRequestStatus TorrentWrapper::AddTorrent( const PlasmaRe
             return corrupt_torrent_file;
     }
     try {
-        libtorrent::torrent_handle tor = m_torr->add_torrent(p);
+        //if we have no seeds the torrent is useless
         size_t num_webseeds = info.m_webseeds.Count();
         if ( num_webseeds < 1 )
             return no_seeds_found;
+
+        libtorrent::torrent_handle tor = m_torr->add_torrent(p);
+        m_handleInfo_map[info] = tor;
         for ( size_t i = 0; i < num_webseeds; ++ i )
             tor.add_url_seed( STD_STRING( info.m_webseeds[i] ) );
         return success;
@@ -357,10 +363,11 @@ void TorrentWrapper::SetIngameStatus( bool status )
 
     try
     {
-        std::vector<libtorrent::torrent_handle> TorrentList = m_torr->get_torrents();
+        TorrenthandleVector torrentList = m_torr->get_torrents();
         if ( ingame ) // going ingame, pause all torrents (or throttle speeds) and disable dht
         {
-            if ( sett().GetTorrentSystemSuspendMode() == 0 ) for ( unsigned int i = 0; i < TorrentList.size(); i++) TorrentList[i].pause();
+            if ( sett().GetTorrentSystemSuspendMode() == 0 ) for ( unsigned int i = 0; i < torrentList.size(); i++)
+                torrentList[i].pause();
             else
             {
                 m_torr->set_upload_rate_limit(sett().GetTorrentThrottledUploadRate() * 1024);
@@ -371,7 +378,7 @@ void TorrentWrapper::SetIngameStatus( bool status )
         else// game closed, resume all torrents (or reset normal speed) and reactivate dht
         {
             m_torr->start_dht();
-            if ( sett().GetTorrentSystemSuspendMode() == 0 ) for ( unsigned int i = 0; i < TorrentList.size(); i++) TorrentList[i].resume();
+            if ( sett().GetTorrentSystemSuspendMode() == 0 ) for ( unsigned int i = 0; i < torrentList.size(); i++) torrentList[i].resume();
             else
             {
                 m_torr->set_upload_rate_limit(sett().GetTorrentUploadRate() * 1024);
@@ -387,26 +394,26 @@ void TorrentWrapper::SetIngameStatus( bool status )
 
 void TorrentWrapper::ResumeFromList()
 {
-    wxArrayString TorrentsToResume = sett().GetTorrentListToResume();
-    unsigned int ResumeCount = TorrentsToResume.GetCount();
-    if ( ResumeCount > 0 )
-    {
-        //request all hashes in list, remember successes
-        std::vector<int> successfulIndices;
-        for ( unsigned int i = 0; i < ResumeCount; i++ )
-        {
-//            if (scheduled_in_cue == RequestFileByHash( TorrentsToResume[i] ) ) // resume all open leeched files when system as disconnected last time
-//                successfulIndices.push_back(i);
-            assert( false );
-        }
-
-        //remove successfully resumed torrents from list
-        std::vector<int>::const_iterator it = successfulIndices.begin();
-        for ( ; it != successfulIndices.end(); ++it )
-            TorrentsToResume.RemoveAt( *it );
-        //save new list (hopefully empty)
-        sett().SetTorrentListToResume( TorrentsToResume );
-    }
+//    wxArrayString TorrentsToResume = sett().GetTorrenthandleVectorToResume();
+//    unsigned int ResumeCount = TorrentsToResume.GetCount();
+//    if ( ResumeCount > 0 )
+//    {
+//        //request all hashes in list, remember successes
+//        std::vector<int> successfulIndices;
+//        for ( unsigned int i = 0; i < ResumeCount; i++ )
+//        {
+////            if (scheduled_in_cue == RequestFileByHash( TorrentsToResume[i] ) ) // resume all open leeched files when system as disconnected last time
+////                successfulIndices.push_back(i);
+//            assert( false );
+//        }
+//
+//        //remove successfully resumed torrents from list
+//        std::vector<int>::const_iterator it = successfulIndices.begin();
+//        for ( ; it != successfulIndices.end(); ++it )
+//            TorrentsToResume.RemoveAt( *it );
+//        //save new list (hopefully empty)
+//        sett().SetTorrenthandleVectorToResume( TorrentsToResume );
+//    }
 }
 
 ////////////////////////////////////////////////////////
@@ -434,8 +441,8 @@ std::map<wxString,TorrentInfos> TorrentWrapper::CollectGuiInfos()
         globalinfos.filesize = 0;
         ret[wxString(_T("global"))] = globalinfos;
 
-        std::vector<libtorrent::torrent_handle> TorrentList = m_torr->get_torrents();
-        for ( std::vector<libtorrent::torrent_handle>::iterator i = TorrentList.begin(); i != TorrentList.end(); i++)
+        TorrenthandleVector torrentList = m_torr->get_torrents();
+        for ( TorrenthandleVector::const_iterator i = torrentList.begin(); i != torrentList.end(); ++i )
         {
             TorrentInfos CurrentTorrent;
             libtorrent::torrent_status torrent_status = i->status();
@@ -483,8 +490,26 @@ std::map<wxString,TorrentInfos> TorrentWrapper::CollectGuiInfos()
 
 void TorrentWrapper::RemoveUnneededTorrents()
 {
-
-
+    TorrenthandleInfoMap::iterator it = m_handleInfo_map.begin();
+    for ( ; it != m_handleInfo_map.end(); ++it )
+    {
+        PlasmaResourceInfo info = it->first;
+        libtorrent::torrent_handle handle = it->second;
+        if ( !handle.is_valid() )
+        {
+            m_torr->remove_torrent( handle );
+            m_handleInfo_map.erase( it++ );
+        }
+        else
+        {
+            if ( handle.is_seed() )
+            {
+//                //send finsihed event
+                m_torr->remove_torrent( handle );
+                m_handleInfo_map.erase( it++ );
+            }
+        }
+    }
 }
 
 
@@ -586,7 +611,7 @@ void TorrentWrapper::OnDisconnected( Socket* /*unused*/ )
 
     try
     {
-        sett().SetTorrentListToResume( TorrentsToResume );
+        sett().SetTorrenthandleVectorToResume( TorrentsToResume );
     }
     catch (GlobalDestroyedError)
     {
