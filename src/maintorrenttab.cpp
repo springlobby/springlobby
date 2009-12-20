@@ -71,13 +71,13 @@ MainTorrentTab::MainTorrentTab( wxWindow* parent )
 
 	m_mainbox->Add( m_firstrow_box, 0, wxALL, 5 );
 
-	m_but_cancel = new wxButton( this, ID_BUTTON_CANCEL, _( "Cancel Download" ) );
-	//m_but_cancel->Disable();
-	m_buttonbox->Add( m_but_cancel, 1, wxALL | wxALIGN_CENTER_HORIZONTAL | wxALIGN_BOTTOM, 5 );
-	m_but_publish = new wxButton( this, ID_BUTTON_PUB, _( "Publish new file" ) );
-	m_buttonbox->Add( m_but_publish, 1, wxALL | wxALIGN_CENTER_HORIZONTAL | wxALIGN_BOTTOM, 5 );
-	m_but_download = new wxButton( this, ID_DOWNLOAD_DIALOG, _( "Search file" ) );
-	m_buttonbox->Add( m_but_download, 1, wxALL | wxALIGN_CENTER_HORIZONTAL | wxALIGN_BOTTOM, 5 );
+//	m_but_cancel = new wxButton( this, ID_BUTTON_CANCEL, _( "Cancel Download" ) );
+//	//m_but_cancel->Disable();
+//	m_buttonbox->Add( m_but_cancel, 1, wxALL | wxALIGN_CENTER_HORIZONTAL | wxALIGN_BOTTOM, 5 );
+//	m_but_publish = new wxButton( this, ID_BUTTON_PUB, _( "Publish new file" ) );
+//	m_buttonbox->Add( m_but_publish, 1, wxALL | wxALIGN_CENTER_HORIZONTAL | wxALIGN_BOTTOM, 5 );
+//	m_but_download = new wxButton( this, ID_DOWNLOAD_DIALOG, _( "Search file" ) );
+//	m_buttonbox->Add( m_but_download, 1, wxALL | wxALIGN_CENTER_HORIZONTAL | wxALIGN_BOTTOM, 5 );
 	m_but_widgets = new wxButton( this, ID_BUTTON_WIDGETS, _( "Download Lua widgets" ) );
 	m_buttonbox->Add( m_but_widgets, 1, wxALL | wxALIGN_RIGHT | wxALIGN_BOTTOM, 5 );
 
@@ -125,9 +125,9 @@ void MainTorrentTab::OnUpdate()
 
 //	if ( torrent().IsConnectedToP2PSystem() )
 //	{
-		m_but_cancel->Enable();
-		m_but_publish->Enable();
-		m_but_download->Enable();
+//		m_but_cancel->Enable();
+//		m_but_publish->Enable();
+//		m_but_download->Enable();
 //	}
 //	else
 	{

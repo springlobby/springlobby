@@ -172,7 +172,8 @@ bool SpringLobbyApp::OnInit()
     ui().mw().SetLogWin( loggerwin, logchain );
 
     plasmaInterface();
-    plasmaInterface().InitResourceList();
+    //resource list disabled for now, has serious cpu usage issues
+    //plasmaInterface().InitResourceList();
     return true;
 }
 
