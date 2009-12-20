@@ -261,6 +261,18 @@ bool TorrentWrapper::IsFileInSystem( const wxString& name )
 
 bool TorrentWrapper::RemoveTorrentByName( const wxString& name )
 {
+    TorrenthandleInfoMap::iterator it = m_handleInfo_map.begin();
+    for ( ; it != m_handleInfo_map.end(); ++it )
+    {
+        PlasmaResourceInfo info = it->first;
+        libtorrent::torrent_handle handle = it->second;
+        if ( info.m_name == name )
+        {
+            m_torr->remove_torrent( handle );
+            m_handleInfo_map.erase( it++ );
+            return true;
+        }
+    }
     return false;
 }
 
@@ -356,10 +368,10 @@ void TorrentWrapper::SetIngameStatus( bool status )
 {
     if ( status == ingame ) return; // no change needed
     ingame = status;
-//    if ( ingame )
-//        m_maintenance_thread.Pause();
-//    else
-//        m_maintenance_thread.Resume();
+    if ( ingame )
+        m_maintenance_thread.Pause();
+    else
+        m_maintenance_thread.Resume();
 
     try
     {
