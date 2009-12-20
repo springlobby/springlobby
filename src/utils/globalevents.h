@@ -13,6 +13,7 @@ namespace GlobalEvents {
       UnitSyncReloadRequest,
       UpdateFinished,
       OnQuit,
+      PlasmaResourceListParsed,
 
       OnTimerUpdates
     };

@@ -27,9 +27,10 @@ BEGIN_EVENT_TABLE(FileListDialog, wxDialog)
 
 END_EVENT_TABLE()
 
-FileListDialog::FileListDialog(wxWindow* parent) :
-    wxDialog(parent, -1, _("Search and download files"), wxDefaultPosition, wxSize(800, 600),
-           wxDEFAULT_DIALOG_STYLE | wxCLIP_CHILDREN | wxRESIZE_BORDER)
+FileListDialog::FileListDialog(wxWindow* parent)
+    : wxDialog(parent, -1, _("Search and download files"), wxDefaultPosition, wxSize(800, 600),
+           wxDEFAULT_DIALOG_STYLE | wxCLIP_CHILDREN | wxRESIZE_BORDER),
+    m_onResourceListParsed( this, &GetGlobalEventSender( GlobalEvents::PlasmaResourceListParsed ) )
 {
     m_filecount = new wxStaticText( this, wxID_ANY, _("Files displayed") );
 
@@ -60,8 +61,8 @@ FileListDialog::FileListDialog(wxWindow* parent) :
     m_button_sizer->Add( m_download_button );
 
 
-    //SetData( torrent().GetTorrentTable() );
-    UpdateList();
+    //needs dummy event data
+    UpdateList( GlobalEvents::GlobalEventData() );
 
     m_main_sizer->Add( m_list_sizer,1, wxALL|wxEXPAND, 5 );
     m_main_sizer->Add( m_select_sizer,0, wxALL|wxEXPAND, 5 );
@@ -82,19 +83,19 @@ FileListCtrl* FileListDialog::GetListCtrl()
     return m_filelistctrl;
 }
 
-void FileListDialog::UpdateList()
+void FileListDialog::UpdateList( GlobalEvents::GlobalEventData )
 {
-    m_filelistctrl->DeleteAllItems();
     unsigned int count = 0;
 
     const PlasmaInterface::ResourceList& rl = plasmaInterface().GetResourceList();
     for ( PlasmaInterface::ResourceList::const_iterator i = rl.begin(); i != rl.end(); ++i ){
 //        if ( !m_filter->DoFilterResource( *i ) )
             count += m_filelistctrl->AddFile( &(*i) );
-//            if ( count > 4 )
+//            if ( count > 400 )
 //                break;
     }
-    m_filecount->SetLabel( wxString::Format( _("%u files displayed"), count ) );
+    m_filecount->SetLabel( wxString::Format( _("%u files displayed"), m_filelistctrl->GetItemCount() ) );
+    m_filelistctrl->SortList();
     m_filelistctrl->RefreshVisibleItems();
 }
 

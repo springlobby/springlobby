@@ -21,6 +21,7 @@
 #include "customdialogs.h"//shoudl be remove d fater initlai debug
 #include "conversion.h"
 #include "debug.h"
+#include "globalevents.h"
 #include "../socket.h"
 #include "../globalsmanager.h"
 
@@ -285,8 +286,7 @@ void PlasmaInterface::InitResourceList()
     m_buffers[index] = g;
     ParseResourceListData( index );
 
-    //Write data
-//    socket->Send(data);
+    GetGlobalEventSender( GlobalEvents::PlasmaResourceListParsed ).SendEvent( 0 );
 
 }
 void PlasmaInterface::ParseResourceListData( const int buffer_index )

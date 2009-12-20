@@ -126,7 +126,8 @@ bool FileListFilter::DoFilterResource( const PlasmaResourceInfo& info )
 
 void FileListFilter::OnChange( wxCommandEvent&  )
 {
-	m_parent_filelistdialog->UpdateList();
+    //needs dummy event data
+	m_parent_filelistdialog->UpdateList( GlobalEvents::GlobalEventData() );
 }
 
 void FileListFilter::OnChangeName( wxCommandEvent& event )

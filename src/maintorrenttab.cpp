@@ -37,7 +37,8 @@ END_EVENT_TABLE()
 
 MainTorrentTab::MainTorrentTab( wxWindow* parent )
     : wxScrolledWindow( parent ),
-    m_widgets_dialog( NULL )
+    m_widgets_dialog( NULL ),
+    m_download_dialog ( new FileListDialog( this ) )
 {
 	GetAui().manager->AddPane( this, wxLEFT, _T( "maintorrenttab" ) );
 
@@ -95,10 +96,8 @@ MainTorrentTab::MainTorrentTab( wxWindow* parent )
             continue;
 		m_torrent_list->AddTorrentInfo( iter->second );
 	}
-	m_download_dialog = 0;
 
     Layout();
-
 }
 
 MainTorrentTab::~MainTorrentTab()
@@ -181,7 +180,6 @@ void MainTorrentTab::OnCancelButton( wxCommandEvent& /*unused*/ )
 
 void MainTorrentTab::OnDownloadDialog( wxCommandEvent& /*unused*/ )
 {
-	m_download_dialog = new FileListDialog( this );
 	m_download_dialog->Show();
 }
 
