@@ -20,11 +20,6 @@ BEGIN_EVENT_TABLE( FileListCtrl, FileListCtrl::BaseType )
 
 	EVT_LIST_ITEM_RIGHT_CLICK( FILELIST_COL_CLICK, FileListCtrl::OnListRightClick )
 
-	#if wxUSE_TIPWINDOW
-	#if !defined(__WXMSW__) /* && !defined(__WXMAC__) */ //disables tooltips on msw /* and mac */
-	EVT_MOTION( FileListCtrl::OnMouseMotion )
-	#endif
-	#endif
 END_EVENT_TABLE()
 
 const int fileListDialogID = wxNewId();

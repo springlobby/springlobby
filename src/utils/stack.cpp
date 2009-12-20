@@ -3,14 +3,18 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 // http://www.mr-edd.co.uk/?p=66#more-66
-#if defined(ENABLE_DEBUG_REPORT)
+
+#include "stack.h"
+
+#if defined(ENABLE_DEBUG_REPORT) && defined(__WXMSW__)
+
 #include <iomanip>
 #include <sstream>
 #include <ostream>
 #include <iostream>
 #include <cassert>
 
-#include "stack.h"
+
 
 #if defined(_WIN32)
     #include <windows.h>
@@ -428,3 +432,4 @@ namespace dbg
 } // close namespace dbg
 
 #endif //#if defined(ENABLE_DEBUG_REPORT)
+

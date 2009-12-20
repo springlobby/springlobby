@@ -6,7 +6,9 @@
 #ifndef STACK_HPP_0022_01092007
 #define STACK_HPP_0022_01092007
 
-#if defined(ENABLE_DEBUG_REPORT)
+#include <wx/setup.h>
+
+#if defined(ENABLE_DEBUG_REPORT) && defined(__WXMSW__)
 
 #include <string>
 #include <list>
