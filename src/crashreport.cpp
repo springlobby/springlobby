@@ -4,7 +4,7 @@
 //
 
 
-#if wxUSE_DEBUGREPORT && defined(ENABLE_DEBUG_REPORT)
+//#if wxUSE_DEBUGREPORT && defined(ENABLE_DEBUG_REPORT)
 
 #include "crashreport.h"
 
@@ -180,5 +180,4 @@ bool NetDebugReport::OnServerReply( const wxArrayString& reply )
 }
 
 
-
-#endif // wxUSE_DEBUGREPORT
+//#endif // wxUSE_DEBUGREPORT

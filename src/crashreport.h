@@ -36,7 +36,11 @@ class CrashReport
 {
   public:
 
-    CrashReport(){}
+    static CrashReport& instance()
+    {
+      static CrashReport c;
+      return c;
+    }
 
     #if wxUSE_STACKWALKER
         void GenerateReport();
@@ -44,15 +48,14 @@ class CrashReport
         void GenerateReport(EXCEPTION_POINTERS* p);
     #endif
 
-    //! @brief is the container for the stream logging target
-    std::ostringstream crashlog;
+        //! @brief is the container for the stream logging target
+        std::ostringstream crashlog;
+
+    protected:
+        CrashReport(){}
+
 };
 
-static CrashReport& crashreport()
-{
-  static CrashReport c;
-  return c;
-}
 
 #endif //wxUSE_DEBUGREPORT && defined(ENABLE_DEBUG_REPORT)
 

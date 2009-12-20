@@ -230,10 +230,10 @@ void SpringLobbyApp::OnFatalException()
 {
 #if wxUSE_DEBUGREPORT && defined(ENABLE_DEBUG_REPORT)
     #if wxUSE_STACKWALKER
-        crashreport().GenerateReport();
+        CrashReport::instance().GenerateReport();
     #else
         EXCEPTION_POINTERS* p = new EXCEPTION_POINTERS; //lets hope this'll never get called
-        crashreport().GenerateReport(p);
+        CrashReport::instance().GenerateReport(p);
     #endif
 #else
     wxMessageBox( _("The application has generated a fatal error and will be terminated\nGenerating a bug report is not possible\n\nplease get a wxWidgets library that supports wxUSE_DEBUGREPORT"),_("Critical error"), wxICON_ERROR | wxOK );

@@ -60,7 +60,7 @@ wxLogWindow* InitializeLoggingTargets( wxFrame* parent, bool console, bool showg
 
     #if wxUSE_DEBUGREPORT && defined(ENABLE_DEBUG_REPORT)
         ///hidden stream logging for crash reports
-        wxLog *loggercrash = new wxLogStream( &crashreport().crashlog );
+        wxLog *loggercrash = new wxLogStream( &CrashReport::instance().crashlog );
         logChain = new wxLogChain( loggercrash );
 
 //        logCrashChain->SetLogLevel( wxLOG_Trace );

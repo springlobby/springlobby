@@ -289,7 +289,6 @@
 		<Unit filename="src/crashreport.h" />
 		<Unit filename="src/crc.cpp" />
 		<Unit filename="src/crc.h" />
-<<<<<<< HEAD:springlobby.cbp
 		<Unit filename="src/curl/base.cpp" />
 		<Unit filename="src/curl/base.h" />
 		<Unit filename="src/curl/curlthread.cpp" />
@@ -300,10 +299,8 @@
 		<Unit filename="src/curl/http.h" />
 		<Unit filename="src/curl/utils.cpp" />
 		<Unit filename="src/curl/utils.h" />
-=======
 		<Unit filename="src/customizations.cpp" />
 		<Unit filename="src/customizations.h" />
->>>>>>> master:springlobby.cbp
 		<Unit filename="src/customlistctrl.cpp" />
 		<Unit filename="src/customlistctrl.h" />
 		<Unit filename="src/customvirtlistctrl.h" />
