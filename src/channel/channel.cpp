@@ -9,7 +9,7 @@
 #include "../user.h"
 #include "../utils/tasutil.h"
 #include "../utils/debug.h"
-#include "../utils/platform.h"
+#include "../updater/updatehelper.h"
 #include <wx/regex.h>
 #include <wx/log.h>
 #include "../chatpanel.h"

@@ -30,7 +30,6 @@ bool IsUACenabled();
 **/
 wxLogWindow* InitializeLoggingTargets( wxFrame* parent, bool console, bool showgui, bool logcrash, int verbosity, wxLogChain* logChain );
 
-wxString GetSpringLobbyVersion();
 wxString GetExecutableFolder();
 wxString GetLibExtension();
 wxString GetHostCPUSpeed();

@@ -17,7 +17,7 @@
 #include <wx/log.h>
 #include <wx/platinfo.h>
 
-#include "utils/platform.h"
+#include "updater/updatehelper.h"
 #include "utils/conversion.h"
 #include "settings.h"
 #include "curl/http.h"

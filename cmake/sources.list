@@ -7,8 +7,6 @@
 INCLUDE_DIRECTORIES(${springlobby_SOURCE_DIR} ${Settings_SOURCE_DIR} )
 
 SET(springlobbySrc
-	src/updater/updatermainwindow.cpp
-	src/updater/updatehelper.cpp
 	src/utils/activitynotice.cpp
 	src/chatpanelmenu.cpp
 	src/customizations.cpp
@@ -61,7 +59,6 @@ SET(springlobbySrc
 	src/chatpanel.cpp
 	src/connectwindow.cpp
 	src/countrycodes.cpp
-	src/crashreport.cpp
 	src/customlistctrl.cpp
 	src/flagimages.cpp
 	src/groupoptionspanel.cpp
@@ -141,6 +138,7 @@ SET(StandAloneSettings
 SET(SLSharedWithSettings
 	src/uiutils.cpp
 	src/updater/versionchecker.cpp
+	src/updater/updatehelper.cpp
 	src/utils/controls.cpp
 	src/utils/conversion.cpp
 	src/utils/customdialogs.cpp

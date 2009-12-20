@@ -32,7 +32,7 @@
 #include "channel/channel.h"
 #include "utils/debug.h"
 #include "utils/conversion.h"
-#include "utils/platform.h"
+#include "updater/updatehelper.h"
 #include "utils/misc.h"
 #include "ui.h"
 #include "server.h"
