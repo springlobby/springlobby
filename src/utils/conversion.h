@@ -87,12 +87,19 @@ static inline wxString MakeHashSigned( const wxString& hash )
 //! convert wxArrayString into a wxString[] which must be delete[]d by caller
 int ConvertWXArrayToC(const wxArrayString& aChoices, wxString **choices);
 
-
+//! is a copy of given wxArrayString with a function applied on each element
 class TransformedArrayString : public wxArrayString {
     public:
         TransformedArrayString( const wxArrayString& original, wxString trans_op (const wxString& ) );
 };
 
+#include <vector>
+class wxStringTokenizer;
+//! converts a string tokneizer into a vector of string
+class StringtokenizerVectorized : public std::vector<wxString> {
+    public:
+        StringtokenizerVectorized( wxStringTokenizer tokenizer );
+};
 #endif // SPRINGLOBBY_HEADERGUARD_CONVERSION_H
 
 /**
