@@ -42,21 +42,24 @@
 				<Option object_output="obj/GNU/Profile/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
+				<Option parameters="-cl -nc -f $HOME/.springlobby/testing.conf" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
 					<Add option="-O2" />
 					<Add option="-Wall" />
-					<Add option="-pg" />
 					<Add option="-g" />
 					<Add option="`wx-config --cflags`" />
 					<Add option="`pkg-config --cflags libtorrent`" />
 					<Add option="`sdl-config --cflags`" />
 					<Add option='-DVERSION=\\&quot;0.0.1-git-cb\\&quot;' />
+					<Add option="-DNDEBUG" />
+					<Add option="-DDISABLE_SOUND" />
 				</Compiler>
 				<Linker>
-					<Add option="-pg" />
 					<Add option="`wx-config --libs`" />
 					<Add option="`pkg-config --libs libtorrent-rasterbar`" />
+					<Add option="`sdl-config --libs`" />
+					<Add library="curl" />
 				</Linker>
 				<ExtraCommands>
 					<Add before="tools/test-susynclib.awk src/springunitsynclib.cpp" />
@@ -554,6 +557,14 @@
 			<Option target="Win32 | Profile" />
 		</Unit>
 		<Unit filename="src/utils/stack.h" />
+		<Unit filename="src/utils/stringserializer.cpp">
+			<Option target="GNU | Profile" />
+			<Option target="Win32 | Debug" />
+			<Option target="Win32 | Profile" />
+			<Option target="GNU | Debug (wx29)" />
+			<Option target="GNU | RealDebug" />
+		</Unit>
+		<Unit filename="src/utils/stringserializer.h" />
 		<Unit filename="src/utils/tasutil.cpp" />
 		<Unit filename="src/utils/tasutil.h" />
 		<Unit filename="src/utils/uievents.cpp" />
