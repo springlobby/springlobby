@@ -527,6 +527,7 @@
 		<Unit filename="src/utils/controls.h" />
 		<Unit filename="src/utils/conversion.cpp" />
 		<Unit filename="src/utils/conversion.h" />
+		<Unit filename="src/utils/crtpbase.h" />
 		<Unit filename="src/utils/customdialogs.cpp" />
 		<Unit filename="src/utils/customdialogs.h" />
 		<Unit filename="src/utils/debug.cpp" />
@@ -558,11 +559,7 @@
 		</Unit>
 		<Unit filename="src/utils/stack.h" />
 		<Unit filename="src/utils/stringserializer.cpp">
-			<Option target="GNU | Profile" />
-			<Option target="Win32 | Debug" />
-			<Option target="Win32 | Profile" />
-			<Option target="GNU | Debug (wx29)" />
-			<Option target="GNU | RealDebug" />
+			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
 		<Unit filename="src/utils/stringserializer.h" />
 		<Unit filename="src/utils/tasutil.cpp" />

@@ -197,6 +197,7 @@ bool SpringLobbyApp::OnInit()
     plasmaInterface();
     //resource list disabled for now, has serious cpu usage issues
     plasmaInterface().InitResourceList();
+    plasmaInterface().FetchResourceList();
 
     return true;
 }

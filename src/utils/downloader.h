@@ -6,33 +6,40 @@
 #include <vector>
 #include <map>
 #include "../inetclass.h"
+#include "stringserializer.h"
 
-struct PlasmaResourceInfo {
-    //!file name
-    wxString m_name;
-    //!fn on remote
-    wxString m_torrent_filename;
-    //!full urls
-    wxArrayString m_webseeds;
-    //!list of resource names
-    wxArrayString m_dependencies;
-    //! will only be non-empty when actual download of torrent file succeeded
-    wxString m_local_torrent_filepath;
-    //! filesize in KB; a value of 0 will be interpreted as unknown
-    unsigned int m_size_KB;
+struct PlasmaResourceInfo : public StringSerializer<PlasmaResourceInfo> {
 
-    enum ResourceType {
-        mod = 0,
-        map = 1,
-        unknwon = 2
-    };
+    public:
+        PlasmaResourceInfo();
 
-    ResourceType m_type;
+        //!file name
+        wxString m_name;
+        //!fn on remote
+        wxString m_torrent_filename;
+        //!full urls
+        wxArrayString m_webseeds;
+        //!list of resource names
+        wxArrayString m_dependencies;
+        //! will only be non-empty when actual download of torrent file succeeded
+        wxString m_local_torrent_filepath;
+        //! filesize in KB; a value of 0 will be interpreted as unknown
+        unsigned int m_size_KB;
 
-    bool operator < ( const PlasmaResourceInfo& o ) const {
-        return m_name < o.m_name;
-    }
+        enum ResourceType {
+            mod = 0,
+            map = 1,
+            unknwon = 2
+        };
 
+        ResourceType m_type;
+
+        bool operator < ( const PlasmaResourceInfo& o ) const {
+            return m_name < o.m_name;
+        }
+
+        wxString ToString() const;
+        void FromString( const wxString& str );
 };
 
 template <class PB, class I >
@@ -50,6 +57,9 @@ class PlasmaInterface : public iNetClass {
             ResourceList;
 
         const ResourceList& GetResourceList() {  return m_resource_list; }
+        //! start retrieving the newest resourcelist info
+        void FetchResourceList();
+        //! fill resourcelist with cached data
         void InitResourceList();
 
     protected:
