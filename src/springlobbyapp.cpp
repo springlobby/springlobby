@@ -196,22 +196,7 @@ bool SpringLobbyApp::OnInit()
 
     plasmaInterface();
     //resource list disabled for now, has serious cpu usage issues
-    //plasmaInterface().InitResourceList();
-
-    wxCurlHTTP http( _T("http://debug.springlobby.info/upload.php") );
-    struct curl_forms testform[2];
-
-//    testform[0].option = CURLFORM_COPYNAME;
-//    testform[0].value = "file";
-    testform[0].option = CURLFORM_FILE;
-    testform[0].value = "springlobby.zip";//filename.mb_str();
-    testform[1].option = CURLFORM_END;
-
-    assert(http.AddForm(true, _T("file"), testform));
-
-//			if(http.Post(szData.ToAscii(), szData.Len()))
-    wxString szResponse;
-    http.Post();
+    plasmaInterface().InitResourceList();
 
     return true;
 }

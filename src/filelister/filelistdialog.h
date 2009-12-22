@@ -22,7 +22,7 @@ class FileListDialog : public wxDialog
         ~FileListDialog();
 
         void UpdateList( GlobalEvents::GlobalEventData );
-        FileListCtrl* GetListCtrl();
+//        FileListCtrl* GetListCtrl();
     protected:
         wxBoxSizer* m_main_sizer;
         FileListCtrl* m_filelistctrl;

@@ -73,49 +73,16 @@ FileListDialog::~FileListDialog()
 
 }
 
-FileListCtrl* FileListDialog::GetListCtrl()
-{
-    return m_filelistctrl;
-}
-
 void FileListDialog::UpdateList( GlobalEvents::GlobalEventData )
 {
-    unsigned int count = 0;
-
     const PlasmaInterface::ResourceList& rl = plasmaInterface().GetResourceList();
     for ( PlasmaInterface::ResourceList::const_iterator i = rl.begin(); i != rl.end(); ++i ){
 //        if ( !m_filter->DoFilterResource( *i ) )
-            count += m_filelistctrl->AddFile( &(*i) );
-//            if ( count > 400 )
-//                break;
+            m_filelistctrl->AddFile( &(*i) );
     }
     m_filecount->SetLabel( wxString::Format( _("%u files displayed"), m_filelistctrl->GetItemCount() ) );
     m_filelistctrl->SortList();
-    m_filelistctrl->RefreshVisibleItems();
 }
-
-//bool FileListDialog::AddTorrentRow(TorrentTable::PRow data)
-//{
-//  if(!data.ok())return false;
-//
-//  if ( !m_filter->FilterTorrentData( data ) )
-//      return false;
-//  try
-//  {
-//      int index = m_filelistctrl->InsertItem( m_filelistctrl->GetItemCount(), data->hash);
-//
-//      //this enables me to later retrieve the index from itemtext (used in sort funcs)
-//      m_filelistctrl->SetItemText( index, data->name );
-//
-//      //setting hash as item's data means we can retrieve it later for download
-//      m_filelistctrl->SetItemData( index, (unsigned int)FromwxString<long>(data->hash) );
-//      m_filelistctrl->SetItem( index, 0, data->name );
-//      m_filelistctrl->SetItem( index, 1, data->type == IUnitSync::map ? _("Map") : _("Mod") );
-//      m_filelistctrl->SetItem( index, 2, data->hash );
-//
-//  } catch (...) { return false; }
-//  return true;
-//}
 
 void FileListDialog::OnDownload( wxCommandEvent& /*unused*/ )
 {

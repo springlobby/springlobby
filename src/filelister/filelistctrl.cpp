@@ -61,7 +61,7 @@ FileListCtrl::~FileListCtrl()
 
 void FileListCtrl::OnListRightClick( wxListEvent& /*unused*/ )
 {
-	//PopupMenu( m_popup );
+//	PopupMenu( m_popup );
 }
 
 void FileListCtrl::Sort()
@@ -69,7 +69,7 @@ void FileListCtrl::Sort()
     if ( m_data.size() > 0 )
 	{
 		SaveSelection();
-		SLInsertionSort( m_data, m_comparator );
+		SlQuickSort::Sort ( m_data, m_comparator );
 		RestoreSelection();
 	}
 }

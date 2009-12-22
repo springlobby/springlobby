@@ -237,7 +237,6 @@ bool PlasmaInterface::DownloadTorrentFile( PlasmaResourceInfo& info, const wxStr
 
 void PlasmaInterface::InitResourceList()
 {
-    assert( false );//currently disabled, just making sure it really isn't called. would block GUI for quite some time
     Socket* socket = new Socket( *this, true, true );
     const int index = 1 + m_buffers.size();
     m_socket_index[socket] = index;
