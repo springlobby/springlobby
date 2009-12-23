@@ -315,6 +315,7 @@ TorrentWrapper::DownloadRequestStatus TorrentWrapper::RequestFileByName( const w
         return remote_file_dl_failed; //!TODO use ebtter code
 
     if ( plasmaInterface().DownloadTorrentFile( info, sett().GetTorrentDataDir().GetFullPath() ) )
+    plasmaInterface().DownloadTorrentFile( info, sett().GetTorrentDataDir().GetFullPath() );
     {
         if ( AddTorrent( info ) == success ) {
             for ( size_t i = 0; i < info.m_dependencies.Count(); ++i ) {

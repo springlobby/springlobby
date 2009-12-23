@@ -58,7 +58,7 @@ PlasmaInterface& plasmaInterface()
   * @todo: document this function
   */
 PlasmaInterface::PlasmaInterface()
-    : m_host ( _T("http://planet-wars.eu") ),
+    : m_host ( _T("planet-wars.eu") ),
     m_remote_path ( _T("/PlasmaServer/Service.asmx") )
 {
 
@@ -80,17 +80,13 @@ struct MemoryStruct {
 PlasmaResourceInfo PlasmaInterface::GetResourceInfo(const wxString& name)
 {
     const int index = 1;
-    m_buffers[index] = wxEmptyString;
+
 
     wxString data = s_soap_querytemplate;
     data.Replace( _T("REALNAME") , name );
 
     //Set up header
     wxArrayString header;// = _T("");
-
-    //POST
-//    header.Add( wxString::Format( _T("POST http://%s%s  HTTP/1.1\n"), m_host.c_str(), m_remote_path.c_str() ) ) ;
-
     //Write content type
     header.Add( wxT("Content-Type: text/xml;charset=UTF-8") );
     header.Add( wxT("SOAPAction: \"http://planet-wars.eu/PlasmaServer/DownloadFile\"") );
@@ -100,13 +96,8 @@ PlasmaResourceInfo PlasmaInterface::GetResourceInfo(const wxString& name)
 
     //Write POST content length
     header.Add( wxString::Format(_T("Content-Length: %d"), data.Len()) );
-//    header.Add();
-//    header.Add();
 
-    wxString kk = data + _T("");
     wxStringInputStream req ( data );
-
-
     wxStringOutputStream response;
     wxStringOutputStream rheader;
     CURL *curl_handle;
@@ -127,28 +118,17 @@ PlasmaResourceInfo PlasmaInterface::GetResourceInfo(const wxString& name)
     curl_easy_setopt(curl_handle, CURLOPT_POSTFIELDSIZE_LARGE, data.Len() );
     curl_easy_setopt(curl_handle, CURLOPT_READFUNCTION, wxcurl_stream_read);
     curl_easy_setopt(curl_handle, CURLOPT_READDATA, (void*)&req);
-//    curl_easy_setopt(curl_handle, CURLOPT_HTTPHEADER, NULL );
 
     CURLcode ret = curl_easy_perform(curl_handle);
 
-//    wxMessageBox( response.GetString() + _T("\n\n") + rheader.GetString() );
+//    wxMessageBox( response.GetString() );
 
   /* cleanup curl stuff */
     curl_easy_cleanup(curl_handle);
 
+    m_buffers[index] = response.GetString();
 
-//    wxMessageBox( m_curl->GetResponseBody() );
-//    wxMessageBox(m_curl->GetDetailedErrorString());
-
-    //Write data
-//    socket->Send(data);
-//    wxMessageBox(wxString::Format(_T("Wrote %d out of %d bytes"),socket->LastCount(),data.Len()));
-
-    //Get Response
-//    wxString received_data = socket->Receive();
-
-    //dummy return
-    return PlasmaResourceInfo();//ParseResourceInfoData( index );
+    return ParseResourceInfoData( index );
 }
 
 PlasmaResourceInfo PlasmaInterface::ParseResourceInfoData( const int buffer_index )
@@ -166,11 +146,16 @@ PlasmaResourceInfo PlasmaInterface::ParseResourceInfoData( const int buffer_inde
     wxString xml_section = wxbuf.Mid( wxbuf.Find( t_begin ) );//first char after t_begin to one before t_end
 
     wxStringInputStream str_input( xml_section );
-    wxXmlDocument xml( str_input );
-    assert( xml.GetRoot() );
-    wxXmlNode *node = xml.GetRoot()->GetChildren();
-    assert( node );
+//    wxXmlDocument xml( str_input );
+//    assert( xml.GetRoot() );
+//    wxXmlNode *node = xml.GetRoot()->GetChildren();
+//    assert( node );
 
+
+wxXmlDocument xml;
+xml.Load( _T("/tmp/sl.txt") );
+//xml.Save( _T("/tmp/sl.txt") );
+wxXmlNode *node = xml.GetRoot()->GetChildren();
     wxString resourceType ( _T("unknown") );
     node = node->GetChildren();
     assert( node );
@@ -220,6 +205,8 @@ PlasmaResourceInfo PlasmaInterface::ParseResourceInfoData( const int buffer_inde
     for ( size_t i = 0; i < info.m_webseeds.Count(); ++i )
         seeds += info.m_webseeds[i] + _T("\n");
 
+    assert( info.m_webseeds.Count() > 0 );
+//    assert( info.ToFile( _T("/tmp/dl.info") ) );
     return info;
 }
 

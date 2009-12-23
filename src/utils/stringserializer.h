@@ -7,7 +7,7 @@ class wxString;
 
 template <class ImpType>
 //! ImpType will need to provide a default constructor
-class StringSerializer : protected CRTPbase<ImpType>
+class StringSerializer : public CRTPbase<ImpType>
 {
     public:
         StringSerializer();
