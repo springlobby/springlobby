@@ -64,15 +64,84 @@ PlasmaInterface::PlasmaInterface()
 
 }
 
+#include <curl/curl.h>
+#include <curl/types.h>
+#include <curl/easy.h>
+
+struct MemoryStruct {
+  char *memory;
+  size_t size;
+};
+
+//static char *myrealloc(char *ptr, size_t size);
+//
+//static char *myrealloc(char *ptr, size_t size)
+//{
+//  /* There might be a realloc() out there that doesn't like reallocing
+//     NULL pointers, so we take care of it here */
+//  if(ptr)
+//    return realloc(ptr, size);
+//  else
+//    return malloc(size);
+//}
+
+static size_t
+WriteMemoryCallback(void *ptr, size_t size, size_t nmemb, void *data)
+{
+  size_t realsize = size * nmemb;
+  struct MemoryStruct *mem = (struct MemoryStruct *)data;
+
+  mem->memory = (char*)realloc(mem->memory, mem->size + realsize + 1);
+  if (mem->memory) {
+    memcpy(&(mem->memory[mem->size]), ptr, realsize);
+    mem->size += realsize;
+    mem->memory[mem->size] = 0;
+  }
+  return realsize;
+}
+
+
 /** @brief GetResourceInfo
   *
   * @todo: document this function
   */
 PlasmaResourceInfo PlasmaInterface::GetResourceInfo(const wxString& name)
 {
-    if( !m_curl )
-        m_curl = new wxCurlHTTP( m_host + m_remote_path, wxEmptyString, wxEmptyString, this );
-//    wxMessageBox( m_curl->GetResponseBody() );
+ CURL *curl_handle;
+
+  struct MemoryStruct chunk;
+
+  chunk.memory=NULL; /* we expect realloc(NULL, size) to work */
+  chunk.size = 0;    /* no data at this point */
+
+  /* init the curl session */
+  curl_handle = curl_easy_init();
+
+  /* specify URL to get */
+  curl_easy_setopt(curl_handle, CURLOPT_URL, (m_host+m_remote_path).c_str() );
+
+  /* send all data to this function  */
+  curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
+
+  /* we pass our 'chunk' struct to the callback function */
+  curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, (void *)&chunk);
+
+  /* some servers don't like requests that are made without a user-agent
+     field, so we provide one */
+  curl_easy_setopt(curl_handle, CURLOPT_USERAGENT, "libcurl-agent/1.0");
+
+
+
+  /*
+   * Now, our chunk.memory points to a memory block that is chunk.size
+   * bytes big and contains the remote file.
+   *
+   * Do something nice with it!
+   *
+   * You should be aware of the fact that at this point we might have an
+   * allocated data block, and nothing has yet deallocated that data. So when
+   * you're done with it, you should free() it as a nice application.
+   */
 
     const int index = 1;
     m_buffers[index] = wxEmptyString;
@@ -97,20 +166,33 @@ PlasmaResourceInfo PlasmaInterface::GetResourceInfo(const wxString& name)
 //    header.Add();
 //    header.Add();
 
-    wxString kk;// = data;
+    wxString kk = data + _T("");
     wxStringInputStream req ( data );
 
-    curl_slist* m_pHeaders = 0;
+    struct curl_slist* m_pHeaders = NULL;
             for(unsigned int i = 0; i < header.Count(); i++)
         {
             m_pHeaders = curl_slist_append(m_pHeaders, (const char*)(header[i].c_str()));
             wxLogMessage( header[i] );
         }
 
-//    m_curl->SetOpt(CURLOPT_HTTPHEADER, m_pHeaders);
-    m_curl->Post( req );
-    wxMessageBox( m_curl->GetResponseHeader() );
-    wxMessageBox( m_curl->GetResponseBody() );
+    curl_easy_setopt(curl_handle, CURLOPT_POST, TRUE);
+    curl_easy_setopt(curl_handle, CURLOPT_POSTFIELDSIZE_LARGE, data.Len() );
+    curl_easy_setopt(curl_handle, CURLOPT_READFUNCTION, wxcurl_stream_read);
+    curl_easy_setopt(curl_handle, CURLOPT_READDATA, (void*)&req);
+    curl_easy_setopt(curl_handle, CURLOPT_HTTPHEADER, m_pHeaders);
+    curl_easy_perform(curl_handle);
+
+
+
+  /* cleanup curl stuff */
+  curl_easy_cleanup(curl_handle);
+
+  if(chunk.memory)
+    free(chunk.memory);
+
+    wxMessageBox( TowxString(chunk.memory) );
+//    wxMessageBox( m_curl->GetResponseBody() );
 //    wxMessageBox(m_curl->GetDetailedErrorString());
 
     //Write data
