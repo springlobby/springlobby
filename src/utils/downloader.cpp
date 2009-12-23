@@ -113,8 +113,8 @@ PlasmaResourceInfo PlasmaInterface::GetResourceInfo(const wxString& name)
 //    header.Add( wxString::Format( _T("POST http://%s%s  HTTP/1.1\n"), m_host.c_str(), m_remote_path.c_str() ) ) ;
 
     //Write content type
-    header.Add( _T("Content-Type: text/xml;charset=UTF-8") );
-    header.Add( _T("SOAPAction: \"http://planet-wars.eu/PlasmaServer/DownloadFile\"") );
+    header.Add( wxT("Content-Type: text/xml;charset=UTF-8") );
+    header.Add( wxT("SOAPAction: \"http://planet-wars.eu/PlasmaServer/DownloadFile\"") );
 
 //    header.Add( _T("Host: ") + m_host );
 
@@ -132,8 +132,8 @@ PlasmaResourceInfo PlasmaInterface::GetResourceInfo(const wxString& name)
             m_pHeaders = curl_slist_append(m_pHeaders, (const char*)(header[i].c_str()));
             wxLogMessage( header[i] );
         }
-    wxCharBuffer response;
-    curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, wxcurl_string_write);
+    wxStringOutputStream response;
+    curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, wxcurl_stream_write);
     curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, (void *)&response);
     curl_easy_setopt(curl_handle, CURLOPT_POST, TRUE);
     curl_easy_setopt(curl_handle, CURLOPT_POSTFIELDSIZE_LARGE, data.Len() );
@@ -142,10 +142,10 @@ PlasmaResourceInfo PlasmaInterface::GetResourceInfo(const wxString& name)
     curl_easy_setopt(curl_handle, CURLOPT_HTTPHEADER, m_pHeaders);
     CURLcode ret = curl_easy_perform(curl_handle);
 
-wxMessageBox( wxCURL_BUF2STRING( response ) );
+    wxMessageBox( response.GetString() );
 
   /* cleanup curl stuff */
-  curl_easy_cleanup(curl_handle);
+    curl_easy_cleanup(curl_handle);
 
 
 //    wxMessageBox( m_curl->GetResponseBody() );
