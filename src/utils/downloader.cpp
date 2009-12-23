@@ -79,27 +79,6 @@ struct MemoryStruct {
   */
 PlasmaResourceInfo PlasmaInterface::GetResourceInfo(const wxString& name)
 {
- CURL *curl_handle;
-
-  struct MemoryStruct chunk;
-
-  chunk.memory=NULL; /* we expect realloc(NULL, size) to work */
-  chunk.size = 0;    /* no data at this point */
-
-  /* init the curl session */
-  curl_handle = curl_easy_init();
-
-  /* specify URL to get */
-  curl_easy_setopt(curl_handle, CURLOPT_URL, "http://planet-wars.eu/PlasmaServer/Service.asmx" );
-
-  /* send all data to this function  */
-
-  /* some servers don't like requests that are made without a user-agent
-     field, so we provide one */
-  curl_easy_setopt(curl_handle, CURLOPT_USERAGENT, "libcurl-agent/1.0");
-
-
-
     const int index = 1;
     m_buffers[index] = wxEmptyString;
 
@@ -115,34 +94,44 @@ PlasmaResourceInfo PlasmaInterface::GetResourceInfo(const wxString& name)
     //Write content type
     header.Add( wxT("Content-Type: text/xml;charset=UTF-8") );
     header.Add( wxT("SOAPAction: \"http://planet-wars.eu/PlasmaServer/DownloadFile\"") );
+    header.Add( wxT("Expect:") );
 
 //    header.Add( _T("Host: ") + m_host );
 
     //Write POST content length
-//    header.Add( wxString::Format(_T("Content-Length: %d"), data.Len()) );
+    header.Add( wxString::Format(_T("Content-Length: %d"), data.Len()) );
 //    header.Add();
 //    header.Add();
 
     wxString kk = data + _T("");
     wxStringInputStream req ( data );
 
-    struct curl_slist* m_pHeaders = NULL;
-            for(unsigned int i = 0; i < header.Count(); i++)
-        {
-            m_pHeaders = curl_slist_append(m_pHeaders, (const char*)(header[i].c_str()));
-            wxLogMessage( header[i] );
-        }
+
     wxStringOutputStream response;
+    wxStringOutputStream rheader;
+    CURL *curl_handle;
+    curl_handle = curl_easy_init();
+    struct curl_slist* m_pHeaders = NULL;
+    m_pHeaders = curl_slist_append(m_pHeaders, "Content-Type: text/xml;charset=UTF-8") ;
+    m_pHeaders = curl_slist_append(m_pHeaders, "SOAPAction: \"http://planet-wars.eu/PlasmaServer/DownloadFile\"") ;
+    m_pHeaders = curl_slist_append(m_pHeaders, "Expect:") ;
+
+    curl_easy_setopt(curl_handle, CURLOPT_HTTPHEADER, m_pHeaders);
+    curl_easy_setopt(curl_handle, CURLOPT_URL, "http://planet-wars.eu/PlasmaServer/Service.asmx" );
+    curl_easy_setopt(curl_handle, CURLOPT_VERBOSE, 1L);
+    curl_easy_setopt(curl_handle, CURLOPT_USERAGENT, "libcurl-agent/1.0");
     curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, wxcurl_stream_write);
     curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, (void *)&response);
+    curl_easy_setopt(curl_handle, CURLOPT_WRITEHEADER, (void *)&rheader);
     curl_easy_setopt(curl_handle, CURLOPT_POST, TRUE);
     curl_easy_setopt(curl_handle, CURLOPT_POSTFIELDSIZE_LARGE, data.Len() );
     curl_easy_setopt(curl_handle, CURLOPT_READFUNCTION, wxcurl_stream_read);
     curl_easy_setopt(curl_handle, CURLOPT_READDATA, (void*)&req);
-    curl_easy_setopt(curl_handle, CURLOPT_HTTPHEADER, m_pHeaders);
+//    curl_easy_setopt(curl_handle, CURLOPT_HTTPHEADER, NULL );
+
     CURLcode ret = curl_easy_perform(curl_handle);
 
-    wxMessageBox( response.GetString() );
+//    wxMessageBox( response.GetString() + _T("\n\n") + rheader.GetString() );
 
   /* cleanup curl stuff */
     curl_easy_cleanup(curl_handle);
