@@ -130,7 +130,7 @@ bool SpringLobbyApp::OnInit()
     wxInitAllImageHandlers();
     wxFileSystem::AddHandler(new wxZipFSHandler);
     wxSocketBase::Initialize();
-
+    wxCurlBase::Init();
 
 
 #ifdef __WXMSW__
@@ -197,7 +197,7 @@ bool SpringLobbyApp::OnInit()
     plasmaInterface();
     //resource list disabled for now, has serious cpu usage issues
     plasmaInterface().InitResourceList();
-    plasmaInterface().FetchResourceList();
+//    plasmaInterface().FetchResourceList();
 
     return true;
 }
@@ -217,6 +217,7 @@ int SpringLobbyApp::OnExit()
         wxDELETE(m_translationhelper);
     }
 
+    wxCurlBase::Shutdown();
 
   	m_timer->Stop();
 

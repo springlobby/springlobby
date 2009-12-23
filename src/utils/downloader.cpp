@@ -24,6 +24,7 @@
 #include "debug.h"
 #include "globalevents.h"
 #include "../socket.h"
+#include "../curl/http.h"
 #include "../globalsmanager.h"
 #include "conversion.h"
 
@@ -69,44 +70,48 @@ PlasmaInterface::PlasmaInterface()
   */
 PlasmaResourceInfo PlasmaInterface::GetResourceInfo(const wxString& name)
 {
-    Socket* socket = new Socket( *this, true, true );
-    const int index =
-    m_socket_index[socket] = -1 - m_buffers.size();
+    if( !m_curl )
+        m_curl = new wxCurlHTTP( m_host + m_remote_path, wxEmptyString, wxEmptyString, this );
+//    wxMessageBox( m_curl->GetResponseBody() );
+
+    const int index = 1;
     m_buffers[index] = wxEmptyString;
 
     wxString data = s_soap_querytemplate;
     data.Replace( _T("REALNAME") , name );
 
     //Set up header
-    wxString header = _T("");
+    wxArrayString header;// = _T("");
 
     //POST
-    header += wxString::Format( _T("POST http://%s%s"), m_host.c_str(), m_remote_path.c_str() ) ;
-    header += _T(" HTTP/1.1\n");
+    header.Add( wxString::Format( _T("POST http://%s%s  HTTP/1.1\n"), m_host.c_str(), m_remote_path.c_str() ) ) ;
 
     //Write content type
-    header += _T("Content-Type: text/xml;charset=UTF-8\n");
-    header += _T("SOAPAction: \"http://planet-wars.eu/PlasmaServer/DownloadFile\"\n");
+    header.Add( _T("Content-Type: text/xml;charset=UTF-8") );
+    header.Add( _T("SOAPAction: \"http://planet-wars.eu/PlasmaServer/DownloadFile\"") );
 
-    header += _T("Host: ");
-    header += m_host;
-    header += _T("\n");
+    header.Add( _T("Host: ") + m_host );
 
     //Write POST content length
-    header += _T("Content-Length: ");
-    header += wxString::Format(_T("%d"), data.Len());
-    header += _T("\n\n");
+    header.Add( wxString::Format(_T("Content-Length: %d"), data.Len()) );
+//    header.Add();
+//    header.Add();
 
-    //Connect to host
-    socket->Connect(m_host, 80);
+    wxString kk;// = data;
+    wxStringInputStream req ( data );
 
-    //Write header
-    socket->Send(header+data);
+    curl_slist* m_pHeaders = 0;
+            for(unsigned int i = 0; i < header.Count(); i++)
+        {
+            m_pHeaders = curl_slist_append(m_pHeaders, (const char*)(header[i].c_str()));
+            wxLogMessage( header[i] );
+        }
 
-    wxString g = socket->Receive();
-    m_buffers[index] = g;
-
-//    wxMessageBox(wxString::Format(_T("Wrote %d out of %d bytes"),socket->LastCount(),header.Len()));
+//    m_curl->SetOpt(CURLOPT_HTTPHEADER, m_pHeaders);
+    m_curl->Post( req );
+    wxMessageBox( m_curl->GetResponseHeader() );
+    wxMessageBox( m_curl->GetResponseBody() );
+//    wxMessageBox(m_curl->GetDetailedErrorString());
 
     //Write data
 //    socket->Send(data);
@@ -116,7 +121,7 @@ PlasmaResourceInfo PlasmaInterface::GetResourceInfo(const wxString& name)
 //    wxString received_data = socket->Receive();
 
     //dummy return
-    return ParseResourceInfoData( index );
+    return PlasmaResourceInfo();//ParseResourceInfoData( index );
 }
 
 PlasmaResourceInfo PlasmaInterface::ParseResourceInfoData( const int buffer_index )
@@ -444,3 +449,12 @@ void PlasmaResourceInfo::FromString( const wxString& str )
 
 PlasmaResourceInfo::PlasmaResourceInfo()
 {}
+
+void PlasmaInterface::OnCurlPerformEnd( wxCurlEndPerformEvent& evt )
+{
+    wxMessageBox( m_curl->GetResponseBody() );
+}
+
+BEGIN_EVENT_TABLE( PlasmaInterface, wxEvtHandler )
+    EVT_CURL_END_PERFORM( -1, PlasmaInterface::OnCurlPerformEnd )
+END_EVENT_TABLE()

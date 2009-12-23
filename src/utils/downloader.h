@@ -3,6 +3,7 @@
 
 #include <wx/string.h>
 #include <wx/arrstr.h>
+#include <wx/event.h>
 #include <vector>
 #include <map>
 #include "../inetclass.h"
@@ -45,7 +46,10 @@ struct PlasmaResourceInfo : public StringSerializer<PlasmaResourceInfo> {
 template <class PB, class I >
 class GlobalObjectHolder;
 
-class PlasmaInterface : public iNetClass {
+class wxCurlHTTP;
+class wxCurlEndPerformEvent;
+
+class PlasmaInterface : public iNetClass, public wxEvtHandler {
     public:
 
         PlasmaResourceInfo GetResourceInfo( const wxString& name ) ;
@@ -90,6 +94,10 @@ class PlasmaInterface : public iNetClass {
 
         static const int m_list_socket_index = 0;
         static const int m_info_socket_index = 1;
+
+        wxCurlHTTP* m_curl;
+        void OnCurlPerformEnd( wxCurlEndPerformEvent& evt );
+        DECLARE_EVENT_TABLE()
 };
 
 PlasmaInterface& plasmaInterface();
