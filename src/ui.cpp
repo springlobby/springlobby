@@ -292,7 +292,7 @@ void Ui::Quit()
 void Ui::DownloadMap( const wxString& hash, const wxString& name )
 {
 #ifndef NO_TORRENT_SYSTEM
-    DownloadFileP2P( hash, name );
+    DownloadFileP2P( name );
 #else
     wxString newname = name;
     newname.Replace( _T(" "), _T("+") );
@@ -305,7 +305,7 @@ void Ui::DownloadMap( const wxString& hash, const wxString& name )
 void Ui::DownloadMod( const wxString& hash, const wxString& name )
 {
 #ifndef NO_TORRENT_SYSTEM
-    DownloadFileP2P( hash, name );
+    DownloadFileP2P( name );
 #else
     wxString newname = name;
     newname.Replace( _T(" "), _T("+") );
@@ -314,12 +314,10 @@ void Ui::DownloadMod( const wxString& hash, const wxString& name )
 #endif
 }
 
-void Ui::DownloadFileP2P( const wxString& hash, const wxString& name )
+void Ui::DownloadFileP2P( const wxString& name )
 {
 #ifndef NO_TORRENT_SYSTEM
-    if ( torrent().RequestFileByName( name ) != TorrentWrapper::success )
-        customMessageBoxNoModal( SL_MAIN_ICON, _("dl failed"), _("dl failed") );
-//!TODO: put some meaningful err msg here
+    torrent().RequestFileByName( name );
 #endif
 }
 

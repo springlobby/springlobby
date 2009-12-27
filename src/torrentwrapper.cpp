@@ -59,7 +59,6 @@
     #include "utils/platform.h"
 #endif
 
-
 /** Get the name of the Spring data subdirectory that corresponds to a
  * given IUnitSync::MediaType value.
  */
@@ -178,6 +177,7 @@ TorrentWrapper::TorrentWrapper():
     #endif
     UpdateSettings();
     m_maintenance_thread.Init();
+    Connect( TorrentDownloadRequestEventType, wxCommandEventHandler( TorrentWrapper::OnRequestFileByName ), NULL, this );
 }
 
 
@@ -308,7 +308,25 @@ IUnitSync::MediaType convertMediaType( const PlasmaResourceInfo::ResourceType& t
 
 }
 
-TorrentWrapper::DownloadRequestStatus TorrentWrapper::RequestFileByName( const wxString& name )
+void TorrentWrapper::OnRequestFileByName( wxCommandEvent& evt )
+{
+    wxString resourcename = evt.GetString();
+    DownloadRequestStatus stat = _RequestFileByName( resourcename );
+    if ( stat != TorrentWrapper::success )
+        customMessageBoxNoModal( SL_MAIN_ICON, _("dl failed"), _("dl failed") );
+}
+
+/* koshi's note: I tried to post this event from UI, however it was never received by this class,
+    be it via dynamic Connect or static event table...
+*/
+void TorrentWrapper::RequestFileByName( const wxString& name )
+{
+    wxCommandEvent evt( TorrentDownloadRequestEventType, wxNewId() );
+    evt.SetString( name );
+    AddPendingEvent( evt );
+}
+
+TorrentWrapper::DownloadRequestStatus TorrentWrapper::_RequestFileByName( const wxString& name )
 {
     PlasmaResourceInfo info = plasmaInterface().GetResourceInfo( name );
     if( info.m_type == PlasmaResourceInfo::unknwon )

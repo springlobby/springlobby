@@ -10,6 +10,7 @@
 //#endif
 
 #include <wx/arrstr.h>
+#include <wx/event.h>
 
 #include <map>
 #include <vector>
@@ -24,6 +25,8 @@ namespace libtorrent { struct torrent_handle; };
 class TorrentWrapper;
 class PlasmaInterface;
 class PlasmaResourceInfo;
+
+const wxEventType TorrentDownloadRequestEventType = wxNewEventType();
 
 namespace P2P {
 enum FileStatus
@@ -72,7 +75,7 @@ class TorrentMaintenanceThread : public Thread
 };
 
 
-class TorrentWrapper //: public iNetClass
+class TorrentWrapper : public wxEvtHandler
 {
 public:
 
@@ -104,7 +107,10 @@ public:
 
     /// lobby interface
     void SetIngameStatus( bool status );
-    DownloadRequestStatus RequestFileByName( const wxString& name );
+
+    //! will post an event internally so as to not block GUI
+    void RequestFileByName( const wxString& name );
+
     void UpdateSettings();
     std::map<wxString,TorrentInfos> CollectGuiInfos();
 
@@ -116,6 +122,9 @@ public:
     void ResumeFromList();
 
 private:
+    DownloadRequestStatus _RequestFileByName( const wxString& name );
+    void OnRequestFileByName( wxCommandEvent& evt );
+    void DisplayError( const wxString& resourcename, DownloadRequestStatus );
 
     typedef std::vector<libtorrent::torrent_handle>
         TorrenthandleVector;
@@ -142,6 +151,8 @@ private:
     libtorrent::session* m_torr;
 
     bool m_started;
+
+
 };
 
 

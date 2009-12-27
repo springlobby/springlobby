@@ -96,8 +96,6 @@ class PlasmaInterface : public iNetClass, public wxEvtHandler {
         static const int m_info_socket_index = 1;
 
         wxCurlHTTP* m_curl;
-        void OnCurlPerformEnd( wxCurlEndPerformEvent& evt );
-        DECLARE_EVENT_TABLE()
 };
 
 PlasmaInterface& plasmaInterface();

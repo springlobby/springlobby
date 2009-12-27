@@ -80,22 +80,8 @@ struct MemoryStruct {
 PlasmaResourceInfo PlasmaInterface::GetResourceInfo(const wxString& name)
 {
     const int index = 1;
-
-
     wxString data = s_soap_querytemplate;
     data.Replace( _T("REALNAME") , name );
-
-    //Set up header
-    wxArrayString header;// = _T("");
-    //Write content type
-    header.Add( wxT("Content-Type: text/xml;charset=UTF-8") );
-    header.Add( wxT("SOAPAction: \"http://planet-wars.eu/PlasmaServer/DownloadFile\"") );
-    header.Add( wxT("Expect:") );
-
-//    header.Add( _T("Host: ") + m_host );
-
-    //Write POST content length
-    header.Add( wxString::Format(_T("Content-Length: %d"), data.Len()) );
 
     wxStringInputStream req ( data );
     wxStringOutputStream response;
@@ -103,8 +89,9 @@ PlasmaResourceInfo PlasmaInterface::GetResourceInfo(const wxString& name)
     CURL *curl_handle;
     curl_handle = curl_easy_init();
     struct curl_slist* m_pHeaders = NULL;
-    m_pHeaders = curl_slist_append(m_pHeaders, "Content-Type: text/xml;charset=UTF-8") ;
-    m_pHeaders = curl_slist_append(m_pHeaders, "SOAPAction: \"http://planet-wars.eu/PlasmaServer/DownloadFile\"") ;
+    // these header lines will overwrite/add to cURL defaults
+    m_pHeaders = curl_slist_append(m_pHeaders, "Content-Type: text/xml;charset=UTF-8");//default is formurl-encoded with cURL-POST, that's bad for us
+    m_pHeaders = curl_slist_append(m_pHeaders, "SOAPAction: \"http://planet-wars.eu/PlasmaServer/DownloadFile\"");
     m_pHeaders = curl_slist_append(m_pHeaders, "Expect:") ;
 
     curl_easy_setopt(curl_handle, CURLOPT_HTTPHEADER, m_pHeaders);
@@ -135,27 +122,16 @@ PlasmaResourceInfo PlasmaInterface::ParseResourceInfoData( const int buffer_inde
 {
     PlasmaResourceInfo info;
     wxString wxbuf = m_buffers[buffer_index];
-//{
-//     wxFileOutputStream outs( _T("/tmp/sl.txt") );
-//    wxStringInputStream fe( wxbuf ) ;
-//    outs <<  fe;
-//    outs.Close();
-//}
+
     wxString t_begin = _T("<soap:Envelope");
     wxString t_end = _T("</soap:Envelope>");
     wxString xml_section = wxbuf.Mid( wxbuf.Find( t_begin ) );//first char after t_begin to one before t_end
 
     wxStringInputStream str_input( xml_section );
-//    wxXmlDocument xml( str_input );
-//    assert( xml.GetRoot() );
-//    wxXmlNode *node = xml.GetRoot()->GetChildren();
-//    assert( node );
-
-
-wxXmlDocument xml;
-xml.Load( _T("/tmp/sl.txt") );
-//xml.Save( _T("/tmp/sl.txt") );
-wxXmlNode *node = xml.GetRoot()->GetChildren();
+    wxXmlDocument xml( str_input );
+    assert( xml.GetRoot() );
+    wxXmlNode *node = xml.GetRoot()->GetChildren();
+    assert( node );
     wxString resourceType ( _T("unknown") );
     node = node->GetChildren();
     assert( node );
@@ -463,12 +439,3 @@ void PlasmaResourceInfo::FromString( const wxString& str )
 
 PlasmaResourceInfo::PlasmaResourceInfo()
 {}
-
-void PlasmaInterface::OnCurlPerformEnd( wxCurlEndPerformEvent& evt )
-{
-    wxMessageBox( m_curl->GetResponseBody() );
-}
-
-BEGIN_EVENT_TABLE( PlasmaInterface, wxEvtHandler )
-    EVT_CURL_END_PERFORM( -1, PlasmaInterface::OnCurlPerformEnd )
-END_EVENT_TABLE()

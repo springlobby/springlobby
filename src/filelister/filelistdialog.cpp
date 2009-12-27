@@ -92,8 +92,7 @@ void FileListDialog::OnDownload( wxCommandEvent& /*unused*/ )
     for ( InternalNameVector::const_iterator it = names.begin(); it != names.end(); ++it)
     {
         wxString name = *it;
-        if (torrent().RequestFileByName(name) != TorrentWrapper::success)
-            wxLogError(_("remote file not found ") + name );
+        torrent().RequestFileByName(name);
     }
 }
 
