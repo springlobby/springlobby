@@ -352,6 +352,7 @@ TorrentWrapper::DownloadRequestStatus TorrentWrapper::_RequestFileByName( const 
 
 TorrentWrapper::DownloadRequestStatus TorrentWrapper::AddTorrent( const PlasmaResourceInfo& info )
 {
+    wxMutexLocker lock( m_info_map_mutex );
     libtorrent::add_torrent_params p;
 
     try {
@@ -457,6 +458,7 @@ void TorrentWrapper::JoinRequestedTorrents()
 
 std::map<wxString,TorrentInfos> TorrentWrapper::CollectGuiInfos()
 {
+    wxMutexLocker lock( m_info_map_mutex );
     std::map<wxString,TorrentInfos> ret;
     try
     {
@@ -521,8 +523,9 @@ std::map<wxString,TorrentInfos> TorrentWrapper::CollectGuiInfos()
 
 void TorrentWrapper::RemoveUnneededTorrents()
 {
+    wxMutexLocker lock( m_info_map_mutex );
     TorrenthandleInfoMap::iterator it = m_handleInfo_map.begin();
-    for ( ; it != m_handleInfo_map.end(); ++it )
+    for ( ; it != m_handleInfo_map.end(); )
     {
         PlasmaResourceInfo info = it->first;
         libtorrent::torrent_handle handle = it->second;
@@ -532,21 +535,32 @@ void TorrentWrapper::RemoveUnneededTorrents()
             m_handleInfo_map.erase( it++ );
         }
         else
+            ++it;
+    }
+}
+
+void TorrentWrapper::ClearFinishedTorrents()
+{
+    wxMutexLocker lock( m_info_map_mutex );
+    TorrenthandleInfoMap::iterator it = m_handleInfo_map.begin();
+    for ( ; it != m_handleInfo_map.end();  )
+    {
+        PlasmaResourceInfo info = it->first;
+        libtorrent::torrent_handle handle = it->second;
+        if ( !handle.is_valid() || handle.is_seed() )
         {
-            if ( handle.is_seed() )
-            {
-//                //send finsihed event
-                m_torr->remove_torrent( handle );
-                m_handleInfo_map.erase( it++ );
-            }
+            m_torr->remove_torrent( handle );
+            m_handleInfo_map.erase( it++ );
         }
+        else
+            ++it;
     }
 }
 
 
 void TorrentWrapper::TryToJoinQueuedTorrents()
 {
-
+    wxMutexLocker lock( m_info_map_mutex );
 }
 
 void TorrentWrapper::SearchAndGetQueuedDependencies()

@@ -30,6 +30,7 @@ BEGIN_EVENT_TABLE( MainTorrentTab, wxPanel )
 	//(*EventTable(MainTorrentTab)
 	//*)
 	EVT_BUTTON      ( ID_BUTTON_CANCEL,     MainTorrentTab::OnCancelButton      )
+	EVT_BUTTON      ( ID_BUTTON_CLEAR,      MainTorrentTab::OnClearFinished     )
 	EVT_BUTTON      ( ID_DOWNLOAD_DIALOG,   MainTorrentTab::OnDownloadDialog    )
 	EVT_BUTTON      ( ID_BUTTON_WIDGETS,    MainTorrentTab::OnDLWidgets         )
 
@@ -74,6 +75,8 @@ MainTorrentTab::MainTorrentTab( wxWindow* parent )
 	m_but_cancel = new wxButton( this, ID_BUTTON_CANCEL, _( "Cancel Download" ) );
 	//m_but_cancel->Disable();
 	m_buttonbox->Add( m_but_cancel, 1, wxALL | wxALIGN_CENTER_HORIZONTAL | wxALIGN_BOTTOM, 5 );
+	m_but_clear = new wxButton( this, ID_BUTTON_CLEAR, _( "Clear finished" ) );
+	m_buttonbox->Add( m_but_clear, 1, wxALL | wxALIGN_CENTER_HORIZONTAL | wxALIGN_BOTTOM, 5 );
 //	m_but_publish = new wxButton( this, ID_BUTTON_PUB, _( "Publish new file" ) );
 //	m_buttonbox->Add( m_but_publish, 1, wxALL | wxALIGN_CENTER_HORIZONTAL | wxALIGN_BOTTOM, 5 );
 	m_but_download = new wxButton( this, ID_DOWNLOAD_DIALOG, _( "Search file" ) );
@@ -107,6 +110,12 @@ MainTorrentTab::~MainTorrentTab()
 		delete m_download_dialog;
 		m_download_dialog = 0;
 	}
+}
+
+void MainTorrentTab::OnClearFinished( wxCommandEvent& event )
+{
+    torrent().ClearFinishedTorrents();
+    m_torrent_list->Clear();
 }
 
 void MainTorrentTab::OnDLWidgets( wxCommandEvent& /*unused*/ )

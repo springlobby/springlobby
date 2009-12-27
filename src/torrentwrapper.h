@@ -111,6 +111,9 @@ public:
     //! will post an event internally so as to not block GUI
     void RequestFileByName( const wxString& name );
 
+    //!remove all torrents that have seed status
+    void ClearFinishedTorrents();
+
     void UpdateSettings();
     std::map<wxString,TorrentInfos> CollectGuiInfos();
 
@@ -152,7 +155,7 @@ private:
 
     bool m_started;
 
-
+    wxMutex m_info_map_mutex;
 };
 
 
