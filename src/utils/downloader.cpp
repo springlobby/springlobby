@@ -79,7 +79,7 @@ struct MemoryStruct {
   */
 PlasmaResourceInfo PlasmaInterface::GetResourceInfo(const wxString& name)
 {
-    const int index = 1;
+    const int index =  -1 - m_buffers.size();
     wxString data = s_soap_querytemplate;
     data.Replace( _T("REALNAME") , name );
 
