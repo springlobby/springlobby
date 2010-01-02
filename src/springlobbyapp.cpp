@@ -447,6 +447,11 @@ void SpringLobbyApp::CacheAndSettingsSetup()
 			{
 				sett().RemoveLayouts();
 			}
+			if ( settversion < 18 )
+			{
+				//new downloader was introduced
+				sett().ClearTorrentListToResume();
+			}
     }
 
     if ( sett().ShouldAddDefaultServerSettings() || ( sett().GetSettingsVersion() < 14 && sett().GetServers().Count() < 2  ) )

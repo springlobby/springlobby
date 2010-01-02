@@ -5,7 +5,7 @@
 #include <vector>
 
 const int CACHE_VERSION     = 10;
-const int SETTINGS_VERSION  = 17;
+const int SETTINGS_VERSION  = 18;
 
 const wxString DEFSETT_DEFAULT_SERVER_NAME= _T("Official server");
 const wxString DEFSETT_DEFAULT_SERVER_HOST = _T("taspringmaster.clan-sy.com");
@@ -627,8 +627,9 @@ class Settings
     void SetTorrentMaxConnections( int connections );
     int GetTorrentMaxConnections();
 
-    void SetTorrentListToResume( const wxArrayString& list );
-    wxArrayString GetTorrentListToResume();
+	void SetTorrentListToResume( const std::vector<wxString>& list );
+	std::vector<wxString> GetTorrentListToResume();
+	void ClearTorrentListToResume();
 
     /** Get the path to the directory where *.torrent files are stored.
      */

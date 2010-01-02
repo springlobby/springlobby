@@ -97,6 +97,7 @@ void TorrentMaintenanceThread::Stop()
 
 void* TorrentMaintenanceThread::Entry()
 {
+	m_parent.ResumeFromList();
 	while ( !TestDestroy() )
 	{
 		if( !Sleep( 2000 ) ) break;
@@ -186,6 +187,26 @@ TorrentWrapper::~TorrentWrapper()
     m_maintenance_thread.Stop();
 	m_torr->pause();
 	ClearFinishedTorrents();
+	RemoveInvalidTorrents();
+	/* the use of Settings seems to a problem (destruction order) therefore disabled until further notice
+	//save torrents to resume
+	std::vector<wxString> toResume;
+	TorrenthandleInfoMap::iterator it = m_handleInfo_map.begin();
+	for ( ; it != m_handleInfo_map.end(); ++it )
+	{
+		PlasmaResourceInfo info = it->first;
+		toResume.push_back( info.m_name );
+	}
+	std::vector<wxString> currentResumes = sett().GetTorrentListToResume();
+	for ( std::vector<wxString>::const_iterator it = currentResumes.begin();
+		it != currentResumes.end(); ++it )
+	{
+		toResume.push_back( *it );
+	}
+	//save new list
+	sett().SetTorrentListToResume( toResume );
+	*/
+
     #ifndef __WXMSW__
         try
         {
@@ -423,26 +444,16 @@ void TorrentWrapper::SetIngameStatus( bool status )
 
 void TorrentWrapper::ResumeFromList()
 {
-//    wxArrayString TorrentsToResume = sett().GetTorrenthandleVectorToResume();
-//    unsigned int ResumeCount = TorrentsToResume.GetCount();
-//    if ( ResumeCount > 0 )
-//    {
-//        //request all hashes in list, remember successes
-//        std::vector<int> successfulIndices;
-//        for ( unsigned int i = 0; i < ResumeCount; i++ )
-//        {
-////            if (scheduled_in_cue == RequestFileByHash( TorrentsToResume[i] ) ) // resume all open leeched files when system as disconnected last time
-////                successfulIndices.push_back(i);
-//            assert( false );
-//        }
-//
-//        //remove successfully resumed torrents from list
-//        std::vector<int>::const_iterator it = successfulIndices.begin();
-//        for ( ; it != successfulIndices.end(); ++it )
-//            TorrentsToResume.RemoveAt( *it );
-//        //save new list (hopefully empty)
-//        sett().SetTorrenthandleVectorToResume( TorrentsToResume );
-//    }
+	std::vector<wxString> torrentsToResume = sett().GetTorrentListToResume();
+	std::vector<wxString> resumeFailures;
+	for ( std::vector<wxString>::const_iterator it = torrentsToResume.begin();
+		it != torrentsToResume.end(); ++it )
+	{
+		if ( _RequestFileByName( *it ) != success )
+			resumeFailures.push_back( *it );
+	}
+	//save new list (hopefully empty)
+	sett().SetTorrentListToResume( resumeFailures );
 }
 
 ////////////////////////////////////////////////////////
