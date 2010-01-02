@@ -14,6 +14,7 @@
 
 #include <map>
 #include <vector>
+#include <queue>
 
 #include "iunitsync.h"
 #include "thread.h"
@@ -75,7 +76,7 @@ class TorrentMaintenanceThread : public Thread
 };
 
 
-class TorrentWrapper : public wxEvtHandler
+class TorrentWrapper
 {
 public:
 
@@ -108,7 +109,7 @@ public:
     /// lobby interface
     void SetIngameStatus( bool status );
 
-    //! will post an event internally so as to not block GUI
+	//! will add name to a queue that's processed from the maint. thread, to avoid GUI blocking (maybe)
     void RequestFileByName( const wxString& name );
 
     //!remove all torrents that have seed status
@@ -117,17 +118,17 @@ public:
     void UpdateSettings();
     std::map<wxString,TorrentInfos> CollectGuiInfos();
 
-    /// threaded maintenance tasks
+	//! threaded maintenance tasks
     void JoinRequestedTorrents();
     void RemoveUnneededTorrents();
+	void HandleCompleted();
     void TryToJoinQueuedTorrents();
     void SearchAndGetQueuedDependencies();
     void ResumeFromList();
 
 private:
     DownloadRequestStatus _RequestFileByName( const wxString& name );
-    void OnRequestFileByName( wxCommandEvent& evt );
-    void DisplayError( const wxString& resourcename, DownloadRequestStatus );
+	void DisplayError( const wxString& resourcename, DownloadRequestStatus );
 
     typedef std::vector<libtorrent::torrent_handle>
         TorrenthandleVector;
@@ -138,9 +139,9 @@ private:
 
     DownloadRequestStatus AddTorrent( const PlasmaResourceInfo& info );
 
-//    void OnConnected( Socket* sock );
-//    void OnDisconnected( Socket* sock );
-//    virtual void OnDataReceived( Socket* ) {};
+	typedef std::queue<wxString>
+		JoinQueue;
+	JoinQueue m_join_queue;
 
     wxString m_buffer;
 

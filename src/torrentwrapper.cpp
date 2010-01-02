@@ -104,6 +104,7 @@ void* TorrentMaintenanceThread::Entry()
 				//  DON'T alter function call order here or bad things may happend like locust, earthquakes or raptor attack
 				m_parent.JoinRequestedTorrents();
 				m_parent.RemoveUnneededTorrents();
+				m_parent.HandleCompleted();
 				m_parent.TryToJoinQueuedTorrents();
 				m_parent.SearchAndGetQueuedDependencies();
 		}
@@ -177,7 +178,6 @@ TorrentWrapper::TorrentWrapper():
     #endif
     UpdateSettings();
     m_maintenance_thread.Init();
-    Connect( TorrentDownloadRequestEventType, wxCommandEventHandler( TorrentWrapper::OnRequestFileByName ), NULL, this );
 }
 
 
@@ -308,32 +308,19 @@ IUnitSync::MediaType convertMediaType( const PlasmaResourceInfo::ResourceType& t
 
 }
 
-void TorrentWrapper::OnRequestFileByName( wxCommandEvent& evt )
-{
-    wxString resourcename = evt.GetString();
-    DownloadRequestStatus stat = _RequestFileByName( resourcename );
-    if ( stat != TorrentWrapper::success )
-        customMessageBoxNoModal( SL_MAIN_ICON, _("dl failed"), _("dl failed") );
-}
-
-/* koshi's note: I tried to post this event from UI, however it was never received by this class,
-    be it via dynamic Connect or static event table...
-*/
 void TorrentWrapper::RequestFileByName( const wxString& name )
 {
-    wxCommandEvent evt( TorrentDownloadRequestEventType, wxNewId() );
-    evt.SetString( name );
-    AddPendingEvent( evt );
+	m_join_queue.push( name );
 }
 
 TorrentWrapper::DownloadRequestStatus TorrentWrapper::_RequestFileByName( const wxString& name )
 {
     PlasmaResourceInfo info = plasmaInterface().GetResourceInfo( name );
+	info.m_name = name;
     if( info.m_type == PlasmaResourceInfo::unknwon )
         return remote_file_dl_failed; //!TODO use ebtter code
 
-    if ( plasmaInterface().DownloadTorrentFile( info, sett().GetTorrentDataDir().GetFullPath() ) )
-    plasmaInterface().DownloadTorrentFile( info, sett().GetTorrentDataDir().GetFullPath() );
+	if ( plasmaInterface().DownloadTorrentFile( info, sett().GetTorrentDir().GetFullPath() ) )
     {
         if ( AddTorrent( info ) == success ) {
             for ( size_t i = 0; i < info.m_dependencies.Count(); ++i ) {
@@ -357,9 +344,9 @@ TorrentWrapper::DownloadRequestStatus TorrentWrapper::AddTorrent( const PlasmaRe
 
     try {
         // the torrent_info is stored in an intrusive_ptr
-        p.ti = new libtorrent::torrent_info(boost::filesystem::path( info.m_local_torrent_filepath.mb_str() ) );
-        wxString dl_dir_path = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator()
-                + getDataSubdirForType( convertMediaType( info.m_type ) ) + wxFileName::GetPathSeparator() + info.m_name;
+		boost::filesystem::path torfile_b_path( info.m_local_torrent_filepath.mb_str() );
+		p.ti = new libtorrent::torrent_info( torfile_b_path );
+		wxString dl_dir_path = sett().GetTorrentDataDir().GetFullPath() + wxFileName::GetPathSeparator();
         p.save_path = boost::filesystem::path( dl_dir_path.mb_str() );
     }
     catch ( std::exception& exc ) {
@@ -453,7 +440,59 @@ void TorrentWrapper::ResumeFromList()
 ////////////////////////////////////////////////////////
 void TorrentWrapper::JoinRequestedTorrents()
 {
+	while ( m_join_queue.size() > 0 )
+	{
+		wxString resourcename = m_join_queue.front();
+		DownloadRequestStatus stat = _RequestFileByName( resourcename );
+		if ( stat != TorrentWrapper::success )
+			customMessageBoxNoModal( SL_MAIN_ICON, _("dl failed"), _("dl failed") );
+		m_join_queue.pop();
+	}
+}
 
+void TorrentWrapper::HandleCompleted()
+{
+	wxMutexLocker lock( m_info_map_mutex );
+	TorrenthandleInfoMap::iterator it = m_handleInfo_map.begin();
+	int num_completed = 0;
+	for ( ; it != m_handleInfo_map.end(); ++it )
+	{
+		PlasmaResourceInfo info = it->first;
+		libtorrent::torrent_handle handle = it->second;
+		if ( handle.is_valid() && handle.is_seed() )
+		{
+			wxString dest_filename = sett().GetCurrentUsedDataDir() +
+									 getDataSubdirForType( convertMediaType( info.m_type ) ) +
+									 wxFileName::GetPathSeparator() +
+									 TowxString( handle.get_torrent_info().file_at( 0 ).path.string() );
+			if ( !wxFileExists( dest_filename ) )
+			{
+				wxString source_path = TowxString( handle.save_path().string() )  +
+									   wxFileName::GetPathSeparator() +
+									   TowxString( handle.get_torrent_info().file_at( 0 ).path.string() );
+				bool ok = wxCopyFile( source_path, dest_filename );
+				if ( !ok )
+				{
+//					customMessageBoxNoModal( SL_MAIN_ICON, wxString::Format( _("File copy from %s to %s failed.\nPlease copy manually and reload maps/mods afterwards"),
+//																			 source_path.c_str(), dest_filename.c_str() ),
+//											 _("Copy failed") );
+					wxLogError( wxString::Format( _("File copy from %s to %s failed.\nPlease copy manually and reload maps/mods afterwards"),
+																			 source_path.c_str(), dest_filename.c_str() ) );
+				}
+				else
+				{
+					num_completed++;
+				}
+			}
+//			else	wxLogError( wxString::Format( _("File exists at %s"), dest_filename.c_str() ) );
+
+		}
+	}
+	if ( num_completed > 0 )
+	{
+		GlobalEvents::GetGlobalEventSender( GlobalEvents::UnitSyncReloadRequest ).SendEvent( 0 );
+		wxLogError( _("USYNC RELOAD"));
+	}
 }
 
 std::map<wxString,TorrentInfos> TorrentWrapper::CollectGuiInfos()
