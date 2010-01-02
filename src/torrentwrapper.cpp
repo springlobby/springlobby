@@ -53,6 +53,7 @@
 #include "utils/customdialogs.h"
 #include "utils/downloader.h"
 #include "globalsmanager.h"
+#include "iunitsync.h"
 #include "utils/globalevents.h"
 
 #ifdef __WXMSW__
@@ -452,9 +453,11 @@ void TorrentWrapper::JoinRequestedTorrents()
 
 void TorrentWrapper::HandleCompleted()
 {
+	int num_completed = 0;
+	{//to put the lock outside usync reload scope
 	wxMutexLocker lock( m_info_map_mutex );
 	TorrenthandleInfoMap::iterator it = m_handleInfo_map.begin();
-	int num_completed = 0;
+
 	for ( ; it != m_handleInfo_map.end(); ++it )
 	{
 		PlasmaResourceInfo info = it->first;
@@ -484,20 +487,17 @@ void TorrentWrapper::HandleCompleted()
 					num_completed++;
 				}
 			}
-//			else	wxLogError( wxString::Format( _("File exists at %s"), dest_filename.c_str() ) );
-
 		}
+	}
 	}
 	if ( num_completed > 0 )
 	{
-		GlobalEvents::GetGlobalEventSender( GlobalEvents::UnitSyncReloadRequest ).SendEvent( 0 );
-		wxLogError( _("USYNC RELOAD"));
+		usync().AddReloadEvent();
 	}
 }
 
 std::map<wxString,TorrentInfos> TorrentWrapper::CollectGuiInfos()
 {
-    wxMutexLocker lock( m_info_map_mutex );
     std::map<wxString,TorrentInfos> ret;
     try
     {
@@ -511,7 +511,7 @@ std::map<wxString,TorrentInfos> TorrentWrapper::CollectGuiInfos()
         globalinfos.filesize = 0;
         ret[wxString(_T("global"))] = globalinfos;
 
-        TorrenthandleVector torrentList = m_torr->get_torrents();
+		const TorrenthandleVector torrentList = m_torr->get_torrents();
         for ( TorrenthandleVector::const_iterator i = torrentList.begin(); i != torrentList.end(); ++i )
         {
             TorrentInfos CurrentTorrent;
@@ -529,7 +529,6 @@ std::map<wxString,TorrentInfos> TorrentWrapper::CollectGuiInfos()
 
 			CurrentTorrent.eta = eta_seconds;
             CurrentTorrent.downloadstatus = P2P::leeching;
-//
             ret[CurrentTorrent.name] = CurrentTorrent;
         }
     }
@@ -538,20 +537,6 @@ std::map<wxString,TorrentInfos> TorrentWrapper::CollectGuiInfos()
         wxLogError(_T("%s"), TowxString(e.what()).c_str());
         return ret;
     }
-
-    // display infos about queued torrents
-
-//    std::set<TorrentTable::PRow> queuedrequests = GetTorrentTable().QueuedTorrentsByRow();
-//    for ( std::set<TorrentTable::PRow>::iterator it = queuedrequests.begin(); ( it != queuedrequests.end() ) && ( GetTorrentTable().GetOpenLeechsCount() < 4 ); it++ )
-//    {
-//        TorrentInfos QueuedTorrent;
-//        QueuedTorrent.numcopies = -1;
-//        QueuedTorrent.hash = (*it)->hash;
-//        QueuedTorrent.downloadstatus = P2P::queued;
-//        QueuedTorrent.name=(*it)->name;
-//		QueuedTorrent.eta = -1;
-//        ret[QueuedTorrent.hash] = QueuedTorrent;
-//    }
 
     return ret;
 }
