@@ -100,14 +100,12 @@ void* TorrentMaintenanceThread::Entry()
 	while ( !TestDestroy() )
 	{
 		if( !Sleep( 2000 ) ) break;
-//		if ( m_parent.IsConnectedToP2PSystem() )
 		{
 				//  DON'T alter function call order here or bad things may happend like locust, earthquakes or raptor attack
 				m_parent.JoinRequestedTorrents();
-				m_parent.RemoveUnneededTorrents();
+				m_parent.RemoveInvalidTorrents();
 				m_parent.HandleCompleted();
 				m_parent.TryToJoinQueuedTorrents();
-				m_parent.SearchAndGetQueuedDependencies();
 		}
 	}
 	return 0;
@@ -186,6 +184,8 @@ TorrentWrapper::~TorrentWrapper()
 {
     wxLogDebugFunc( wxEmptyString );
     m_maintenance_thread.Stop();
+	m_torr->pause();
+	ClearFinishedTorrents();
     #ifndef __WXMSW__
         try
         {
@@ -256,7 +256,16 @@ void TorrentWrapper::UpdateSettings()
 
 bool TorrentWrapper::IsFileInSystem( const wxString& name )
 {
-    return false;//GetTorrentTable().RowByHash(hash).ok();
+	TorrenthandleInfoMap::iterator it = m_handleInfo_map.begin();
+	for ( ; it != m_handleInfo_map.end(); ++it )
+	{
+		PlasmaResourceInfo info = it->first;
+		if ( info.m_name == name )
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 
@@ -476,11 +485,11 @@ void TorrentWrapper::HandleCompleted()
 				bool ok = wxCopyFile( source_path, dest_filename );
 				if ( !ok )
 				{
-//					customMessageBoxNoModal( SL_MAIN_ICON, wxString::Format( _("File copy from %s to %s failed.\nPlease copy manually and reload maps/mods afterwards"),
-//																			 source_path.c_str(), dest_filename.c_str() ),
-//											 _("Copy failed") );
-					wxLogError( wxString::Format( _("File copy from %s to %s failed.\nPlease copy manually and reload maps/mods afterwards"),
-																			 source_path.c_str(), dest_filename.c_str() ) );
+					customMessageBoxNoModal( SL_MAIN_ICON, wxString::Format( _("File copy from %s to %s failed.\nPlease copy manually and reload maps/mods afterwards"),
+																			 source_path.c_str(), dest_filename.c_str() ),
+											 _("Copy failed") );
+					//this basically invalidates the handle for further use
+					m_torr->remove_torrent( handle );
 				}
 				else
 				{
@@ -541,7 +550,7 @@ std::map<wxString,TorrentInfos> TorrentWrapper::CollectGuiInfos()
     return ret;
 }
 
-void TorrentWrapper::RemoveUnneededTorrents()
+void TorrentWrapper::RemoveInvalidTorrents()
 {
     wxMutexLocker lock( m_info_map_mutex );
     TorrenthandleInfoMap::iterator it = m_handleInfo_map.begin();
@@ -552,6 +561,7 @@ void TorrentWrapper::RemoveUnneededTorrents()
         if ( !handle.is_valid() )
         {
             m_torr->remove_torrent( handle );
+			//! TODO: should this remove all files as well??
             m_handleInfo_map.erase( it++ );
         }
         else
@@ -567,9 +577,12 @@ void TorrentWrapper::ClearFinishedTorrents()
     {
         PlasmaResourceInfo info = it->first;
         libtorrent::torrent_handle handle = it->second;
-        if ( !handle.is_valid() || handle.is_seed() )
-        {
-            m_torr->remove_torrent( handle );
+		if ( handle.is_valid() && handle.is_seed() )
+		{
+			//since the handle is still valid, this file has already been copied to the proper destination in datadir
+			//so we pass the second arg to delete all associated files but the torrent file itself
+			m_torr->remove_torrent( handle, libtorrent::session::delete_files );
+			wxRemoveFile( info.m_local_torrent_filepath );
             m_handleInfo_map.erase( it++ );
         }
         else
@@ -582,42 +595,5 @@ void TorrentWrapper::TryToJoinQueuedTorrents()
 {
     wxMutexLocker lock( m_info_map_mutex );
 }
-
-void TorrentWrapper::SearchAndGetQueuedDependencies()
-{
-//	std::set<TorrentTable::PRow> listcopy = GetTorrentTable().DependencyCheckQueuebyRow();
-//	for ( std::set<TorrentTable::PRow>::iterator itor = listcopy.begin(); itor != listcopy.end(); itor++ )
-//	{
-//		TorrentTable::PRow row = *itor;
-//		if ( row->type == IUnitSync::map )
-//		{
-//			if ( usync().MapExists( row->name, row->hash ) )
-//			{
-//				wxArrayString deps = usync().GetMapDeps( row->name );
-//				int count = deps.GetCount();
-//				for ( int i = 0; i < count; i++ )
-//				{
-//					RequestFileByName( deps[i] );
-//				}
-//				GetTorrentTable().RemoveRowFromDependencyCheckQueue( row );
-//			}
-//		}
-//		else if ( row->type == IUnitSync::mod )
-//		{
-//			if ( usync().ModExists( row->name, row->hash ) )
-//			{
-//				wxArrayString deps = usync().GetModDeps( row->name );
-//				int count = deps.GetCount();
-//				for ( int i = 0; i < count; i++ )
-//				{
-//					RequestFileByName( deps[i] );
-//				}
-//				GetTorrentTable().RemoveRowFromDependencyCheckQueue( row );
-//			}
-//		}
-//	}
-
-}
-
 
 #endif

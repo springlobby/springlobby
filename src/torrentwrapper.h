@@ -116,10 +116,9 @@ public:
 
 	//! threaded maintenance tasks
     void JoinRequestedTorrents();
-    void RemoveUnneededTorrents();
+	void RemoveInvalidTorrents();
 	void HandleCompleted();
-    void TryToJoinQueuedTorrents();
-    void SearchAndGetQueuedDependencies();
+	void TryToJoinQueuedTorrents();
     void ResumeFromList();
 
 private:
