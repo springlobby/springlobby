@@ -506,8 +506,6 @@ std::map<wxString,TorrentInfos> TorrentWrapper::CollectGuiInfos()
         globalinfos.downloadstatus = P2P::leeching;
         globalinfos.progress = 0.0f;
         globalinfos.downloaded = session_status.total_download;
-        globalinfos.uploaded = session_status.total_upload;
-        globalinfos.outspeed = session_status.upload_rate;
         globalinfos.inspeed = session_status.download_rate;
         globalinfos.numcopies = 0.0f;
         globalinfos.filesize = 0;
@@ -521,9 +519,7 @@ std::map<wxString,TorrentInfos> TorrentWrapper::CollectGuiInfos()
             CurrentTorrent.name = TowxString(i->name()).BeforeFirst(_T('|'));
             CurrentTorrent.progress = torrent_status.progress;
             CurrentTorrent.downloaded = torrent_status.total_payload_download;
-            CurrentTorrent.uploaded = torrent_status.total_payload_upload;
             CurrentTorrent.inspeed = torrent_status.download_payload_rate;
-            CurrentTorrent.outspeed = torrent_status.upload_payload_rate;
             CurrentTorrent.numcopies = torrent_status.distributed_copies;
             CurrentTorrent.filesize = i->get_torrent_info().total_size();
 

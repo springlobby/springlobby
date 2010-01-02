@@ -27,8 +27,6 @@ class TorrentWrapper;
 class PlasmaInterface;
 class PlasmaResourceInfo;
 
-const wxEventType TorrentDownloadRequestEventType = wxNewEventType();
-
 namespace P2P {
 enum FileStatus
 {
@@ -46,17 +44,15 @@ struct TorrentInfos
     float numcopies;
     wxString name;
     unsigned int downloaded;
-    unsigned int uploaded;
     P2P::FileStatus downloadstatus;
     float progress;
     float inspeed;
-    float outspeed;
     unsigned int filesize;
 
     int eta;
 
 	//default constructor
-	TorrentInfos() : numcopies(-1.f), downloaded(0), uploaded(0), downloadstatus(P2P::not_stored), progress(0.f), inspeed(0.f), outspeed(0.f), filesize(0), eta(0) {}
+	TorrentInfos() : numcopies(-1.f), downloaded(0), downloadstatus(P2P::not_stored), progress(0.f), inspeed(0.f), filesize(0), eta(0) {}
 };
 
 
