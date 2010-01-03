@@ -102,13 +102,13 @@ PlasmaResourceInfo PlasmaInterface::GetResourceInfo(const wxString& name)
     curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, (void *)&response);
     curl_easy_setopt(curl_handle, CURLOPT_WRITEHEADER, (void *)&rheader);
     curl_easy_setopt(curl_handle, CURLOPT_POST, TRUE);
-    curl_easy_setopt(curl_handle, CURLOPT_POSTFIELDSIZE_LARGE, data.Len() );
+    curl_easy_setopt(curl_handle, CURLOPT_POSTFIELDSIZE, data.Len() );
     curl_easy_setopt(curl_handle, CURLOPT_READFUNCTION, wxcurl_stream_read);
     curl_easy_setopt(curl_handle, CURLOPT_READDATA, (void*)&req);
 
     CURLcode ret = curl_easy_perform(curl_handle);
 
-//    wxMessageBox( response.GetString() );
+	//wxMessageBox( rheader.GetString()  );
 
   /* cleanup curl stuff */
     curl_easy_cleanup(curl_handle);
