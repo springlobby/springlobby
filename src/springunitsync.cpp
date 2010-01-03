@@ -869,6 +869,16 @@ MapInfo SpringUnitSync::_GetMapInfoEx( const wxString& mapname )
   return info;
 }
 
+void SpringUnitSync::OnReload( wxCommandEvent& event )
+{
+	ReloadUnitSyncLib();
+}
+
+void SpringUnitSync::AddReloadEvent(  )
+{
+	wxCommandEvent evt( wxUnitsyncReloadEvent, wxNewId() );
+	AddPendingEvent( evt );
+}
 
 bool SpringUnitSync::ReloadUnitSyncLib()
 {

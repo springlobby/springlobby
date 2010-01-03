@@ -12,6 +12,7 @@
 class wxImage;
 
 extern const wxEventType UnitSyncAsyncOperationCompletedEvt;
+const wxEventType wxUnitsyncReloadEvent = wxNewEventType();
 
 struct UnitSyncMod
 {
@@ -55,11 +56,19 @@ struct GameOptions;
 
  /** UnitSync interface definition.
  */
-class IUnitSync
+class IUnitSync : public wxEvtHandler
 {
   public:
-    IUnitSync() { }
-    virtual ~IUnitSync() { }
+		virtual void OnReload( wxCommandEvent& event ) = 0;
+	IUnitSync()
+	{
+		Connect( wxUnitsyncReloadEvent, wxCommandEventHandler( IUnitSync::OnReload ), NULL, this );
+	}
+
+	virtual ~IUnitSync()
+	{
+		Disconnect( wxUnitsyncReloadEvent, wxCommandEventHandler( IUnitSync::OnReload ), NULL, this );
+	}
 
     enum GameFeature
     {
@@ -212,6 +221,9 @@ class IUnitSync
     /** \param name Modname **/
     virtual GameOptions GetModCustomizations( const wxString& modname ) = 0;
     virtual GameOptions GetSkirmishOptions( const wxString& modname, const wxString& skirmish_name ) = 0;
+
+	//! this only generates a wxUnitsyncReloadEvent type wxCommandEvent and appends it to itself
+	virtual void AddReloadEvent() = 0;
 
     private:
         IUnitSync( const IUnitSync& );

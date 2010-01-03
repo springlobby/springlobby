@@ -57,9 +57,7 @@ MainTorrentTab::MainTorrentTab( wxWindow* parent )
 	m_listbox->Add( m_torrent_list, 2, wxALL | wxEXPAND | wxALIGN_CENTER_HORIZONTAL, 5 );
 	m_mainbox->Add( m_listbox, 2, wxALL | wxEXPAND | wxALIGN_CENTER_HORIZONTAL, 0 );
 
-	m_outgoing_lbl = new wxStaticText( this, ID_OUTGOING_LBL, _( "Total Outgoing: " ) );
 	m_incoming_lbl = new wxStaticText( this, ID_INCOMING_LBL, _( "Total Incoming: " ) );
-	m_totalbox->Add( m_outgoing_lbl, 1, wxALL | wxALIGN_CENTER_HORIZONTAL, 10 );
 	m_totalbox->Add( m_incoming_lbl, 1, wxALL | wxALIGN_CENTER_HORIZONTAL, 10 );
 
 	m_firstrow_box->Add( m_totalbox, 0, wxALL, 5  );
@@ -167,8 +165,7 @@ void MainTorrentTab::OnUpdate()
 
 	m_torrent_list->SaveSelection();
     info_map = torrent().CollectGuiInfos();
-    m_outgoing_lbl->SetLabel( wxString::Format(_("Total Outgoing: %.2f KB/s"), (info_map[wxString(_T("global"))].outspeed/float(1024)) ) );
-    m_incoming_lbl->SetLabel( wxString::Format(_("Total Incoming: %.2f KB/s"), (info_map[wxString(_T("global"))].inspeed/ float(1024)) ) );
+	m_incoming_lbl->SetLabel( wxString::Format(_("Total Incoming: %.2f KB/s"), (info_map[wxString(_T("global"))].inspeed/ float(1024)) ) );
     for (map_infos_iter iter = info_map.begin(); iter != info_map.end(); ++iter)
     {
 		if (iter->first == wxString(_T("global")))

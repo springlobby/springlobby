@@ -159,8 +159,9 @@ bool SpringLobbyApp::OnInit()
 
 	sett().RefreshSpringVersionList();
 
-    usync(); //init object, sink needs to exist before event is posted. next line would do both object(sink) creation and Event posting
-    GetGlobalEventSender(GlobalEvents::UnitSyncReloadRequest).SendEvent( 0 ); // request an unitsync reload
+//    usync(); //init object, sink needs to exist before event is posted. next line would do both object(sink) creation and Event posting
+//    GetGlobalEventSender(GlobalEvents::UnitSyncReloadRequest).SendEvent( 0 ); // request an unitsync reload
+	usync().AddReloadEvent();
 
     CacheAndSettingsSetup();
 
@@ -197,7 +198,7 @@ bool SpringLobbyApp::OnInit()
     plasmaInterface();
     //resource list disabled for now, has serious cpu usage issues
     plasmaInterface().InitResourceList();
-//    plasmaInterface().FetchResourceList();
+    plasmaInterface().FetchResourceList();
 
     return true;
 }
@@ -445,6 +446,11 @@ void SpringLobbyApp::CacheAndSettingsSetup()
 			if ( settversion < 17 )
 			{
 				sett().RemoveLayouts();
+			}
+			if ( settversion < 18 )
+			{
+				//new downloader was introduced
+				sett().ClearTorrentListToResume();
 			}
     }
 

@@ -1844,9 +1844,9 @@ int Settings::GetTorrentMaxConnections()
 	return  m_config->Read( _T( "/Torrent/MaxConnections" ), 250 );
 }
 
-void Settings::SetTorrentListToResume( const wxArrayString& list )
+void Settings::SetTorrentListToResume( const std::vector<wxString>& list )
 {
-	unsigned int TorrentCount = list.GetCount();
+	unsigned int TorrentCount = list.size();
 	m_config->DeleteGroup( _T( "/Torrent/ResumeList" ) );
 	for ( unsigned int i = 0; i < TorrentCount; i++ )
 	{
@@ -1855,22 +1855,27 @@ void Settings::SetTorrentListToResume( const wxArrayString& list )
 }
 
 
-wxArrayString Settings::GetTorrentListToResume()
+std::vector<wxString> Settings::GetTorrentListToResume()
 {
-	wxArrayString list;
+	std::vector<wxString> list;
 	wxString old_path = m_config->GetPath();
 	m_config->SetPath( _T( "/Torrent/ResumeList" ) );
 	unsigned int TorrentCount = m_config->GetNumberOfEntries( false );
 	for ( unsigned int i = 0; i < TorrentCount; i++ )
 	{
 		wxString ToAdd;
-		if ( m_config->Read( _T( "/Torrent/ResumeList/" ) + TowxString( i ), &ToAdd ) ) list.Add( ToAdd );
+		if ( m_config->Read( _T( "/Torrent/ResumeList/" ) + TowxString( i ), &ToAdd ) )
+			list.push_back( ToAdd );
 	}
 
 	m_config->SetPath( old_path );
 	return list;
 }
 
+void Settings::ClearTorrentListToResume()
+{
+	m_config->DeleteGroup( _T("/Torrent/ResumeList") );
+}
 
 wxFileName Settings::GetTorrentDir()
 {

@@ -53,6 +53,7 @@
 #include "utils/customdialogs.h"
 #include "utils/downloader.h"
 #include "globalsmanager.h"
+#include "iunitsync.h"
 #include "utils/globalevents.h"
 
 #ifdef __WXMSW__
@@ -96,16 +97,16 @@ void TorrentMaintenanceThread::Stop()
 
 void* TorrentMaintenanceThread::Entry()
 {
+	m_parent.ResumeFromList();
 	while ( !TestDestroy() )
 	{
 		if( !Sleep( 2000 ) ) break;
-//		if ( m_parent.IsConnectedToP2PSystem() )
 		{
 				//  DON'T alter function call order here or bad things may happend like locust, earthquakes or raptor attack
 				m_parent.JoinRequestedTorrents();
-				m_parent.RemoveUnneededTorrents();
+				m_parent.RemoveInvalidTorrents();
+				m_parent.HandleCompleted();
 				m_parent.TryToJoinQueuedTorrents();
-				m_parent.SearchAndGetQueuedDependencies();
 		}
 	}
 	return 0;
@@ -177,7 +178,6 @@ TorrentWrapper::TorrentWrapper():
     #endif
     UpdateSettings();
     m_maintenance_thread.Init();
-    Connect( TorrentDownloadRequestEventType, wxCommandEventHandler( TorrentWrapper::OnRequestFileByName ), NULL, this );
 }
 
 
@@ -185,6 +185,28 @@ TorrentWrapper::~TorrentWrapper()
 {
     wxLogDebugFunc( wxEmptyString );
     m_maintenance_thread.Stop();
+	m_torr->pause();
+	ClearFinishedTorrents();
+	RemoveInvalidTorrents();
+	/* the use of Settings seems to a problem (destruction order) therefore disabled until further notice
+	//save torrents to resume
+	std::vector<wxString> toResume;
+	TorrenthandleInfoMap::iterator it = m_handleInfo_map.begin();
+	for ( ; it != m_handleInfo_map.end(); ++it )
+	{
+		PlasmaResourceInfo info = it->first;
+		toResume.push_back( info.m_name );
+	}
+	std::vector<wxString> currentResumes = sett().GetTorrentListToResume();
+	for ( std::vector<wxString>::const_iterator it = currentResumes.begin();
+		it != currentResumes.end(); ++it )
+	{
+		toResume.push_back( *it );
+	}
+	//save new list
+	sett().SetTorrentListToResume( toResume );
+	*/
+
     #ifndef __WXMSW__
         try
         {
@@ -255,7 +277,16 @@ void TorrentWrapper::UpdateSettings()
 
 bool TorrentWrapper::IsFileInSystem( const wxString& name )
 {
-    return false;//GetTorrentTable().RowByHash(hash).ok();
+	TorrenthandleInfoMap::iterator it = m_handleInfo_map.begin();
+	for ( ; it != m_handleInfo_map.end(); ++it )
+	{
+		PlasmaResourceInfo info = it->first;
+		if ( info.m_name == name )
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 
@@ -308,32 +339,19 @@ IUnitSync::MediaType convertMediaType( const PlasmaResourceInfo::ResourceType& t
 
 }
 
-void TorrentWrapper::OnRequestFileByName( wxCommandEvent& evt )
-{
-    wxString resourcename = evt.GetString();
-    DownloadRequestStatus stat = _RequestFileByName( resourcename );
-    if ( stat != TorrentWrapper::success )
-        customMessageBoxNoModal( SL_MAIN_ICON, _("dl failed"), _("dl failed") );
-}
-
-/* koshi's note: I tried to post this event from UI, however it was never received by this class,
-    be it via dynamic Connect or static event table...
-*/
 void TorrentWrapper::RequestFileByName( const wxString& name )
 {
-    wxCommandEvent evt( TorrentDownloadRequestEventType, wxNewId() );
-    evt.SetString( name );
-    AddPendingEvent( evt );
+	m_join_queue.push( name );
 }
 
 TorrentWrapper::DownloadRequestStatus TorrentWrapper::_RequestFileByName( const wxString& name )
 {
     PlasmaResourceInfo info = plasmaInterface().GetResourceInfo( name );
+	info.m_name = name;
     if( info.m_type == PlasmaResourceInfo::unknwon )
         return remote_file_dl_failed; //!TODO use ebtter code
 
-    if ( plasmaInterface().DownloadTorrentFile( info, sett().GetTorrentDataDir().GetFullPath() ) )
-    plasmaInterface().DownloadTorrentFile( info, sett().GetTorrentDataDir().GetFullPath() );
+	if ( plasmaInterface().DownloadTorrentFile( info, sett().GetTorrentDir().GetFullPath() ) )
     {
         if ( AddTorrent( info ) == success ) {
             for ( size_t i = 0; i < info.m_dependencies.Count(); ++i ) {
@@ -357,9 +375,9 @@ TorrentWrapper::DownloadRequestStatus TorrentWrapper::AddTorrent( const PlasmaRe
 
     try {
         // the torrent_info is stored in an intrusive_ptr
-        p.ti = new libtorrent::torrent_info(boost::filesystem::path( info.m_local_torrent_filepath.mb_str() ) );
-        wxString dl_dir_path = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator()
-                + getDataSubdirForType( convertMediaType( info.m_type ) ) + wxFileName::GetPathSeparator() + info.m_name;
+		boost::filesystem::path torfile_b_path( info.m_local_torrent_filepath.mb_str() );
+		p.ti = new libtorrent::torrent_info( torfile_b_path );
+		wxString dl_dir_path = sett().GetTorrentDataDir().GetFullPath() + wxFileName::GetPathSeparator();
         p.save_path = boost::filesystem::path( dl_dir_path.mb_str() );
     }
     catch ( std::exception& exc ) {
@@ -426,26 +444,16 @@ void TorrentWrapper::SetIngameStatus( bool status )
 
 void TorrentWrapper::ResumeFromList()
 {
-//    wxArrayString TorrentsToResume = sett().GetTorrenthandleVectorToResume();
-//    unsigned int ResumeCount = TorrentsToResume.GetCount();
-//    if ( ResumeCount > 0 )
-//    {
-//        //request all hashes in list, remember successes
-//        std::vector<int> successfulIndices;
-//        for ( unsigned int i = 0; i < ResumeCount; i++ )
-//        {
-////            if (scheduled_in_cue == RequestFileByHash( TorrentsToResume[i] ) ) // resume all open leeched files when system as disconnected last time
-////                successfulIndices.push_back(i);
-//            assert( false );
-//        }
-//
-//        //remove successfully resumed torrents from list
-//        std::vector<int>::const_iterator it = successfulIndices.begin();
-//        for ( ; it != successfulIndices.end(); ++it )
-//            TorrentsToResume.RemoveAt( *it );
-//        //save new list (hopefully empty)
-//        sett().SetTorrenthandleVectorToResume( TorrentsToResume );
-//    }
+	std::vector<wxString> torrentsToResume = sett().GetTorrentListToResume();
+	std::vector<wxString> resumeFailures;
+	for ( std::vector<wxString>::const_iterator it = torrentsToResume.begin();
+		it != torrentsToResume.end(); ++it )
+	{
+		if ( _RequestFileByName( *it ) != success )
+			resumeFailures.push_back( *it );
+	}
+	//save new list (hopefully empty)
+	sett().SetTorrentListToResume( resumeFailures );
 }
 
 ////////////////////////////////////////////////////////
@@ -453,12 +461,63 @@ void TorrentWrapper::ResumeFromList()
 ////////////////////////////////////////////////////////
 void TorrentWrapper::JoinRequestedTorrents()
 {
+	while ( m_join_queue.size() > 0 )
+	{
+		wxString resourcename = m_join_queue.front();
+		DownloadRequestStatus stat = _RequestFileByName( resourcename );
+		if ( stat != TorrentWrapper::success )
+			customMessageBoxNoModal( SL_MAIN_ICON, _("dl failed"), _("dl failed") );
+		m_join_queue.pop();
+	}
+}
 
+void TorrentWrapper::HandleCompleted()
+{
+	int num_completed = 0;
+	{//to put the lock outside usync reload scope
+	wxMutexLocker lock( m_info_map_mutex );
+	TorrenthandleInfoMap::iterator it = m_handleInfo_map.begin();
+
+	for ( ; it != m_handleInfo_map.end(); ++it )
+	{
+		PlasmaResourceInfo info = it->first;
+		libtorrent::torrent_handle handle = it->second;
+		if ( handle.is_valid() && handle.is_seed() )
+		{
+			wxString dest_filename = sett().GetCurrentUsedDataDir() +
+									 getDataSubdirForType( convertMediaType( info.m_type ) ) +
+									 wxFileName::GetPathSeparator() +
+									 TowxString( handle.get_torrent_info().file_at( 0 ).path.string() );
+			if ( !wxFileExists( dest_filename ) )
+			{
+				wxString source_path = TowxString( handle.save_path().string() )  +
+									   wxFileName::GetPathSeparator() +
+									   TowxString( handle.get_torrent_info().file_at( 0 ).path.string() );
+				bool ok = wxCopyFile( source_path, dest_filename );
+				if ( !ok )
+				{
+					customMessageBoxNoModal( SL_MAIN_ICON, wxString::Format( _("File copy from %s to %s failed.\nPlease copy manually and reload maps/mods afterwards"),
+																			 source_path.c_str(), dest_filename.c_str() ),
+											 _("Copy failed") );
+					//this basically invalidates the handle for further use
+					m_torr->remove_torrent( handle );
+				}
+				else
+				{
+					num_completed++;
+				}
+			}
+		}
+	}
+	}
+	if ( num_completed > 0 )
+	{
+		usync().AddReloadEvent();
+	}
 }
 
 std::map<wxString,TorrentInfos> TorrentWrapper::CollectGuiInfos()
 {
-    wxMutexLocker lock( m_info_map_mutex );
     std::map<wxString,TorrentInfos> ret;
     try
     {
@@ -467,14 +526,12 @@ std::map<wxString,TorrentInfos> TorrentWrapper::CollectGuiInfos()
         globalinfos.downloadstatus = P2P::leeching;
         globalinfos.progress = 0.0f;
         globalinfos.downloaded = session_status.total_download;
-        globalinfos.uploaded = session_status.total_upload;
-        globalinfos.outspeed = session_status.upload_rate;
         globalinfos.inspeed = session_status.download_rate;
         globalinfos.numcopies = 0.0f;
         globalinfos.filesize = 0;
         ret[wxString(_T("global"))] = globalinfos;
 
-        TorrenthandleVector torrentList = m_torr->get_torrents();
+		const TorrenthandleVector torrentList = m_torr->get_torrents();
         for ( TorrenthandleVector::const_iterator i = torrentList.begin(); i != torrentList.end(); ++i )
         {
             TorrentInfos CurrentTorrent;
@@ -482,9 +539,7 @@ std::map<wxString,TorrentInfos> TorrentWrapper::CollectGuiInfos()
             CurrentTorrent.name = TowxString(i->name()).BeforeFirst(_T('|'));
             CurrentTorrent.progress = torrent_status.progress;
             CurrentTorrent.downloaded = torrent_status.total_payload_download;
-            CurrentTorrent.uploaded = torrent_status.total_payload_upload;
             CurrentTorrent.inspeed = torrent_status.download_payload_rate;
-            CurrentTorrent.outspeed = torrent_status.upload_payload_rate;
             CurrentTorrent.numcopies = torrent_status.distributed_copies;
             CurrentTorrent.filesize = i->get_torrent_info().total_size();
 
@@ -494,7 +549,6 @@ std::map<wxString,TorrentInfos> TorrentWrapper::CollectGuiInfos()
 
 			CurrentTorrent.eta = eta_seconds;
             CurrentTorrent.downloadstatus = P2P::leeching;
-//
             ret[CurrentTorrent.name] = CurrentTorrent;
         }
     }
@@ -504,24 +558,10 @@ std::map<wxString,TorrentInfos> TorrentWrapper::CollectGuiInfos()
         return ret;
     }
 
-    // display infos about queued torrents
-
-//    std::set<TorrentTable::PRow> queuedrequests = GetTorrentTable().QueuedTorrentsByRow();
-//    for ( std::set<TorrentTable::PRow>::iterator it = queuedrequests.begin(); ( it != queuedrequests.end() ) && ( GetTorrentTable().GetOpenLeechsCount() < 4 ); it++ )
-//    {
-//        TorrentInfos QueuedTorrent;
-//        QueuedTorrent.numcopies = -1;
-//        QueuedTorrent.hash = (*it)->hash;
-//        QueuedTorrent.downloadstatus = P2P::queued;
-//        QueuedTorrent.name=(*it)->name;
-//		QueuedTorrent.eta = -1;
-//        ret[QueuedTorrent.hash] = QueuedTorrent;
-//    }
-
     return ret;
 }
 
-void TorrentWrapper::RemoveUnneededTorrents()
+void TorrentWrapper::RemoveInvalidTorrents()
 {
     wxMutexLocker lock( m_info_map_mutex );
     TorrenthandleInfoMap::iterator it = m_handleInfo_map.begin();
@@ -532,6 +572,7 @@ void TorrentWrapper::RemoveUnneededTorrents()
         if ( !handle.is_valid() )
         {
             m_torr->remove_torrent( handle );
+			//! TODO: should this remove all files as well??
             m_handleInfo_map.erase( it++ );
         }
         else
@@ -547,9 +588,12 @@ void TorrentWrapper::ClearFinishedTorrents()
     {
         PlasmaResourceInfo info = it->first;
         libtorrent::torrent_handle handle = it->second;
-        if ( !handle.is_valid() || handle.is_seed() )
-        {
-            m_torr->remove_torrent( handle );
+		if ( handle.is_valid() && handle.is_seed() )
+		{
+			//since the handle is still valid, this file has already been copied to the proper destination in datadir
+			//so we pass the second arg to delete all associated files but the torrent file itself
+			m_torr->remove_torrent( handle, libtorrent::session::delete_files );
+			wxRemoveFile( info.m_local_torrent_filepath );
             m_handleInfo_map.erase( it++ );
         }
         else
@@ -562,42 +606,5 @@ void TorrentWrapper::TryToJoinQueuedTorrents()
 {
     wxMutexLocker lock( m_info_map_mutex );
 }
-
-void TorrentWrapper::SearchAndGetQueuedDependencies()
-{
-//	std::set<TorrentTable::PRow> listcopy = GetTorrentTable().DependencyCheckQueuebyRow();
-//	for ( std::set<TorrentTable::PRow>::iterator itor = listcopy.begin(); itor != listcopy.end(); itor++ )
-//	{
-//		TorrentTable::PRow row = *itor;
-//		if ( row->type == IUnitSync::map )
-//		{
-//			if ( usync().MapExists( row->name, row->hash ) )
-//			{
-//				wxArrayString deps = usync().GetMapDeps( row->name );
-//				int count = deps.GetCount();
-//				for ( int i = 0; i < count; i++ )
-//				{
-//					RequestFileByName( deps[i] );
-//				}
-//				GetTorrentTable().RemoveRowFromDependencyCheckQueue( row );
-//			}
-//		}
-//		else if ( row->type == IUnitSync::mod )
-//		{
-//			if ( usync().ModExists( row->name, row->hash ) )
-//			{
-//				wxArrayString deps = usync().GetModDeps( row->name );
-//				int count = deps.GetCount();
-//				for ( int i = 0; i < count; i++ )
-//				{
-//					RequestFileByName( deps[i] );
-//				}
-//				GetTorrentTable().RemoveRowFromDependencyCheckQueue( row );
-//			}
-//		}
-//	}
-
-}
-
 
 #endif
