@@ -5,11 +5,8 @@
     #include <wx/listctrl.h>
     typedef wxListCtrl ListBaseType;
 #else
-//disabled until further fixes
     #include "Helper/listctrl.h"
     typedef SL_Extern::wxGenericListCtrl ListBaseType;
-    //#include <wx/listctrl.h>
-    //typedef wxListCtrl ListBaseType;
 #endif
 
 #include <wx/timer.h>
@@ -24,6 +21,15 @@
 #include "useractions.h"
 #include "Helper/sortutil.h"
 #include "utils/isink.h"
+
+const wxEventType ListctrlDoSortEventType = wxNewEventType();
+
+class ListctrlSortEvent : public wxCommandEvent {
+public:
+	ListctrlSortEvent( int event_id = wxNewId() )
+	 : wxCommandEvent( ListctrlDoSortEventType, event_id )
+	{}
+};
 
 class SLTipWindow;
 
@@ -333,6 +339,8 @@ protected:
     bool m_periodic_sort;
     unsigned int m_periodic_sort_interval;
     void OnPeriodicSort( wxTimerEvent& evt );
+	//! this is the sink for a custom event that can be used for async sort
+	void OnSortEvent( wxCommandEvent& evt );
 
 public:
     DECLARE_EVENT_TABLE()

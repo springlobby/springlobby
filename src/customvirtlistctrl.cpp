@@ -87,6 +87,7 @@ CustomVirtListCtrl<T,L>::CustomVirtListCtrl(wxWindow* parent, wxWindowID id, con
         bool started = m_periodic_sort_timer.Start( m_periodic_sort_interval );
         assert( started );
     }
+	Connect( ListctrlDoSortEventType, wxCommandEventHandler( ThisType::OnSortEvent ), NULL, this );
 
 }
 
@@ -531,11 +532,24 @@ void CustomVirtListCtrl<T,L>::OnColClick( wxListEvent& event )
     col.SetImage( ( m_sortorder[0].direction > 0 )?icons().ICON_UP:icons().ICON_DOWN );
     SetColumn( m_sortorder[0].col, col );
 
-    if ( old_sort_col != m_sortorder[0].col )
-        SortList( true );
+	if ( old_sort_col != m_sortorder[0].col ){
+		ListctrlSortEvent evt;
+		evt.SetInt( 1 );
+		asImp(). AddPendingEvent( evt );
+	}
     else { // O(n) instead of guaranteed worst case O(n*n)
         ReverseOrder();
     }
+}
+
+template < class T, class L >
+void CustomVirtListCtrl<T,L>::OnSortEvent( wxCommandEvent& evt )
+{
+//	wxEventType t = evt.GetEventType();
+//	//if ( t != Listctrl )
+	wxLogError( _T("SHIAT CALLED"));
+	bool force  = evt.GetInt() != 0;
+	SortList( force );
 }
 
 template < class T, class L >
