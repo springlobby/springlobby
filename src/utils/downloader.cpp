@@ -169,7 +169,7 @@ PlasmaResourceInfo PlasmaInterface::ParseResourceInfoData( const int buffer_inde
                     else if ( resourceType == _T("Map") )
                         info.m_type = PlasmaResourceInfo::map;
                     else
-                        info.m_type = PlasmaResourceInfo::unknwon;
+						info.m_type = PlasmaResourceInfo::unknown;
                 }
                 next = next->GetNext();
             }
@@ -251,14 +251,7 @@ void PlasmaInterface::FetchResourceList()
 
     //POST
     header += wxString::Format( _T("POST http://%s%s"), m_host.c_str(), m_remote_path.c_str() ) ;
-//    header += path;
     header += _T(" HTTP/1.1\n");
-//    header += _T("Accept-Encoding: *\n");
-
-    //Write host website name
-
-//    //Write user agent
-//    header += _T("User-Agent: HTTPTool/1.0\n");
 
     //Write content type
     header += _T("Content-Type: text/xml;charset=UTF-8\n");
@@ -272,10 +265,6 @@ void PlasmaInterface::FetchResourceList()
     header += _T("Content-Length: ");
     header += wxString::Format(_T("%d"), data.Len());
     header += _T("\n\n");
-
-    //Print on screen to make sure it looks right
-//    wxMessageBox(header);
-//    wxMessageBox(data);
 
     //Connect to host
     socket->Connect(m_host,80);
@@ -294,9 +283,7 @@ void PlasmaInterface::FetchResourceList()
 }
 void PlasmaInterface::ParseResourceListData( const int buffer_index )
 {
-//    buf = wxString( buf, wxConvISO8859_1 );
     wxString wxbuf = m_buffers[buffer_index];
-    //msgbox also serves as wait thingy for socket read it seems here, remove and be prepared for less stuff read...
 
     wxString t_begin = _T("<soap:Envelope");
     wxString t_end = _T("</soap:Envelope>");
@@ -304,11 +291,6 @@ void PlasmaInterface::ParseResourceListData( const int buffer_index )
 
     wxStringInputStream str_input( xml_section );
     wxXmlDocument xml( str_input );
-    xml.Save( _T("/tmp/sl.xml") );
-    wxFileOutputStream outs( _T("/tmp/sl.txt") );
-    wxStringInputStream fe( xml_section ) ;
-    outs <<  fe;
-    outs.Close();
     assert( xml.GetRoot() );
     wxXmlNode *node = xml.GetRoot()->GetChildren();
     assert( node );
@@ -344,7 +326,7 @@ void PlasmaInterface::ParseResourceListData( const int buffer_index )
                             else if ( resourceType == _T("Map") )
                                 info.m_type = PlasmaResourceInfo::map;
                             else
-                                info.m_type = PlasmaResourceInfo::unknwon;
+								info.m_type = PlasmaResourceInfo::unknown;
                         }
                         else if ( rc_node_name == _T("SpringHashes") ){
                             //! TODO
@@ -361,32 +343,6 @@ void PlasmaInterface::ParseResourceListData( const int buffer_index )
     }
 }
 
-void PlasmaInterface::OnDataReceived( Socket* sock )
-{
-    if ( sock == 0 )
-        return;
-
-    wxString data = sock->Receive();
-    int index = m_socket_index[sock];
-    m_buffers[index] << data;
-
-    if ( index < 0 ) //socket for infos
-    {
-    }
-    else //socekt for list
-    {
-        ParseResourceListData( index );
-    }
-}
-
-
-//wxString m_name;
-//wxString m_torrent_filename;
-//wxArrayString m_webseeds;
-//wxArrayString m_dependencies;
-//wxString m_local_torrent_filepath;
-//unsigned int m_size_KB;
-//ResourceType m_type;
 wxString PlasmaResourceInfo::ToString() const
 {
     //we save the number of elements in both arraytypes so we can use the same seperator for the whole line
@@ -424,7 +380,7 @@ void PlasmaResourceInfo::FromString( const wxString& str )
     m_size_KB = FromwxString<unsigned int>( vec[5] );
     int rt = FromwxString<int>( vec[6] );
     switch ( rt ) {
-        default: m_type = unknwon; break;
+		default: m_type = unknown; break;
         case 1: m_type = map; break;
         case 0: m_type = mod; break;
     }

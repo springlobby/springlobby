@@ -77,9 +77,9 @@ getDataSubdirForType(const IUnitSync::MediaType type)
     }
 }
 
-TorrentMaintenanceThread::TorrentMaintenanceThread( TorrentWrapper* parent ):
-m_stop_thread( false ),
-m_parent( *parent )
+TorrentMaintenanceThread::TorrentMaintenanceThread( TorrentWrapper* parent )
+	: m_stop_thread( false ),
+	m_parent( *parent )
 {
 }
 
@@ -307,19 +307,6 @@ bool TorrentWrapper::RemoveTorrentByName( const wxString& name )
     return false;
 }
 
-
-P2P::FileStatus TorrentWrapper::GetTorrentStatusByName(const wxString& name )
-{
-//	TorrentTable::PRow row=GetTorrentTable().RowByHash(hash);
-//    if (!row.ok())
-//		return P2P::not_stored;
-//
-//	libtorrent::torrent_handle handle = row->handle;
-//	return row->status;
-    return P2P::not_stored;
-}
-
-
 int TorrentWrapper::GetTorrentSystemStatus()
 {
     if (ingame) return 2;
@@ -348,7 +335,7 @@ TorrentWrapper::DownloadRequestStatus TorrentWrapper::_RequestFileByName( const 
 {
     PlasmaResourceInfo info = plasmaInterface().GetResourceInfo( name );
 	info.m_name = name;
-    if( info.m_type == PlasmaResourceInfo::unknwon )
+	if( info.m_type == PlasmaResourceInfo::unknown )
         return remote_file_dl_failed; //!TODO use ebtter code
 
 	if ( plasmaInterface().DownloadTorrentFile( info, sett().GetTorrentDir().GetFullPath() ) )
@@ -357,7 +344,7 @@ TorrentWrapper::DownloadRequestStatus TorrentWrapper::_RequestFileByName( const 
             for ( size_t i = 0; i < info.m_dependencies.Count(); ++i ) {
                 wxString dependency_name = info.m_dependencies[i];
                 PlasmaResourceInfo dependency_info = plasmaInterface().GetResourceInfo( dependency_name );
-                if ( dependency_info.m_type != PlasmaResourceInfo::unknwon )
+				if ( dependency_info.m_type != PlasmaResourceInfo::unknown )
                     continue;
                 if ( plasmaInterface().DownloadTorrentFile( dependency_info, sett().GetTorrentDataDir().GetFullPath() ) )
                     AddTorrent( dependency_info );
@@ -398,7 +385,7 @@ TorrentWrapper::DownloadRequestStatus TorrentWrapper::AddTorrent( const PlasmaRe
     }
     catch (std::exception& e) {
        wxLogError(_T("%s"),TowxString( e.what()).c_str()); // TODO (BrainDamage#1#): add message to user on failure
-       return missing_in_table;
+	   return torrent_join_failed;
     }
 }
 

@@ -82,13 +82,9 @@ public:
     enum DownloadRequestStatus
     {
         success,
-        not_connected,
         paused_ingame,
-        duplicate_request,
         file_not_found,
         torrent_join_failed,
-        scheduled_in_cue,
-        missing_in_table,
         remote_file_dl_failed,
         corrupt_torrent_file,
         no_seeds_found
@@ -96,7 +92,6 @@ public:
 
     /// gui interface
     bool IsFileInSystem( const wxString& name );
-    P2P::FileStatus GetTorrentStatusByName(const wxString& name );
     bool RemoveTorrentByName( const wxString& name );
     int GetTorrentSystemStatus();
 
