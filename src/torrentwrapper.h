@@ -82,7 +82,7 @@ public:
     enum DownloadRequestStatus
     {
 		success					= 0,
-		paused_ingame			= 1,
+//		paused_ingame			= 1,
 		file_not_found			= 2,
 		torrent_join_failed		= 3,
 		remote_file_dl_failed	= 4,

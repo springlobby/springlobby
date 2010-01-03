@@ -358,7 +358,8 @@ TorrentWrapper::DownloadRequestStatus TorrentWrapper::_RequestFileByName( const 
 
 	if ( plasmaInterface().DownloadTorrentFile( info, sett().GetTorrentDir().GetFullPath() ) )
     {
-        if ( AddTorrent( info ) == success ) {
+		DownloadRequestStatus status = AddTorrent( info );
+		if ( status == success ) {
             for ( size_t i = 0; i < info.m_dependencies.Count(); ++i ) {
                 wxString dependency_name = info.m_dependencies[i];
                 PlasmaResourceInfo dependency_info = plasmaInterface().GetResourceInfo( dependency_name );
@@ -367,8 +368,8 @@ TorrentWrapper::DownloadRequestStatus TorrentWrapper::_RequestFileByName( const 
                 if ( plasmaInterface().DownloadTorrentFile( dependency_info, sett().GetTorrentDataDir().GetFullPath() ) )
                     AddTorrent( dependency_info );
             }
-            return success;
         }
+		return status;
     }
     return remote_file_dl_failed;
 }
@@ -469,10 +470,28 @@ void TorrentWrapper::JoinRequestedTorrents()
 	{
 		wxString resourcename = m_join_queue.front();
 		DownloadRequestStatus stat = _RequestFileByName( resourcename );
-		if ( stat != TorrentWrapper::success )
-			customMessageBoxNoModal( SL_MAIN_ICON, _("dl failed"), _("dl failed") );
+		if ( stat != success )
+			DisplayError( resourcename, stat );
 		m_join_queue.pop();
 	}
+}
+
+void TorrentWrapper::DisplayError( const wxString& resourcename, DownloadRequestStatus status )
+{
+	wxString msg;
+	switch ( status )
+	{
+		case no_seeds_found: msg = _("The remote server supplied no sources to download the file from."); break;
+		case remote_file_dl_failed: msg = _("The file was not found on the remote server"); break;
+		case corrupt_torrent_file: msg = _("The downloaded file was corrupted. You should retry the download."); break;
+		case torrent_join_failed: msg = _("The downloaded .torrent file was unusable."); break;
+		default: msg = _("Unknown"); break;
+	}
+	msg = wxString::Format(_("Downloading %s failed with reason:\n%s"), resourcename.c_str(), msg.c_str() );
+	wxString title = _("Download failure");
+    wxMutexGuiEnter();
+	customMessageBoxNoModal( SL_MAIN_ICON, msg, title );//if this throws we're dead
+    wxMutexGuiLeave();
 }
 
 void TorrentWrapper::HandleCompleted()
