@@ -5,7 +5,7 @@
 #include <vector>
 
 const int CACHE_VERSION     = 10;
-const int SETTINGS_VERSION  = 18;
+const int SETTINGS_VERSION  = 19;
 
 const wxString DEFSETT_DEFAULT_SERVER_NAME= _T("Official server");
 const wxString DEFSETT_DEFAULT_SERVER_HOST = _T("taspringmaster.clan-sy.com");
@@ -328,6 +328,7 @@ class Settings
 
     void SetColumnWidth( const wxString& list_name, const int column_ind, const int column_width );
     int GetColumnWidth( const wxString& list_name, const int column );
+	void NukeColumnWidths();
     //! used to signal unset column width in Get...
     static const int columnWidthUnset = -3;
     static const int columnWidthMinimum = 5;

@@ -42,11 +42,7 @@ CustomVirtListCtrl<T,L>::CustomVirtListCtrl(wxWindow* parent, wxWindowID id, con
     m_tipwindow( 0 ),
     m_controlPointer( 0 ),
 #endif
-#ifndef SL_DUMMY_COL
     m_columnCount( 0 ),
-#else
-    m_columnCount( 1 ),
-#endif
     m_selected_index(-1),
     m_prev_selected_index(-1),
     m_last_mouse_pos( wxPoint(-1,-1) ),
@@ -72,12 +68,6 @@ CustomVirtListCtrl<T,L>::CustomVirtListCtrl(wxWindow* parent, wxWindowID id, con
     SetImageList( &icons(), wxIMAGE_LIST_SMALL );
     SetImageList( &icons(), wxIMAGE_LIST_STATE );
     m_sortorder = sett().GetSortOrder( name );
-    #ifdef SL_DUMMY_COL //a little duplication here, but the AddColumn method will be altered when this is defined
-        ListBaseType::InsertColumn( 0, wxEmptyString, wxLIST_FORMAT_LEFT, 0 );
-        ListBaseType::SetColumnWidth( 0, 0 );
-        colInfo temp( 0, wxEmptyString, wxEmptyString, false, 0 );
-        m_colinfovec.push_back( temp );
-    #endif
 
     if ( m_periodic_sort )
     {
@@ -110,9 +100,6 @@ CustomVirtListCtrl<T,L>::~CustomVirtListCtrl()
 template < class T, class L >
 void CustomVirtListCtrl<T,L>::AddColumn(long i, int width, const wxString& label, const wxString& tip, bool modifiable)
 {
-    #ifdef SL_DUMMY_COL
-        i++;
-    #endif
     m_columnCount++;
     ListBaseType::InsertColumn( i, label, wxLIST_FORMAT_LEFT, width);
     SetColumnWidth( i, width );
@@ -314,9 +301,6 @@ template < class T, class L >
 void CustomVirtListCtrl<T,L>::SetTipWindowText( const long /*unused*/ , const wxPoint& position)
 {
   int column = getColumnFromPosition(position);
-  #ifdef SL_DUMMY_COL
-    column++;
-  #endif
   if (column >= int(m_colinfovec.size()) || column < 0)
   {
     m_tiptext = _T("");
@@ -336,11 +320,7 @@ int CustomVirtListCtrl<T,L>::getColumnFromPosition(wxPoint pos)
     {
         x_pos += GetColumnWidth(i);
         if (pos.x < x_pos)
-        #ifdef SL_DUMMY_COL
-            return i-1;
-        #else
             return i;
-        #endif
     }
     return -1;
 }
@@ -491,13 +471,8 @@ void CustomVirtListCtrl<T,L>::OnColClick( wxListEvent& event )
     if ( event.GetColumn() == -1 )
         return;
 
-    #ifdef SL_DUMMY_COL
-        if ( event.GetColumn() == 0 )
-            return;
-        const int evt_col = event.GetColumn()-1;
-    #else
-        const int evt_col = event.GetColumn();
-    #endif
+	const int evt_col = event.GetColumn();
+
 
     m_sort_timer.Stop();//otherwise sorting will be way delayed
 
@@ -550,18 +525,12 @@ void CustomVirtListCtrl<T,L>::OnSortEvent( wxCommandEvent& evt )
 template < class T, class L >
 bool CustomVirtListCtrl<T,L>::GetColumn(int col, wxListItem& item) const
 {
-    #ifdef SL_DUMMY_COL
-        col++;
-    #endif
     return ListBaseType::GetColumn( col, item );
 }
 
 template < class T, class L >
 bool CustomVirtListCtrl<T,L>::SetColumn(int col, wxListItem& item)
 {
-    #ifdef SL_DUMMY_COL
-        col++;
-    #endif
     return ListBaseType::SetColumn( col, item );
 }
 
@@ -606,11 +575,6 @@ bool CustomVirtListCtrl<T,L>::RemoveItem( const T item )
 template < class T, class L >
 wxString CustomVirtListCtrl<T,L>::OnGetItemText(long item, long column) const
 {
-    #ifdef SL_DUMMY_COL
-    if ( column < 1 )
-        return wxEmptyString;
-    column--;
-    #endif
     assert( item < (long)m_data.size() );
     assert( column < m_columnCount );
     return asImp().GetItemText(item, column);
@@ -619,11 +583,6 @@ wxString CustomVirtListCtrl<T,L>::OnGetItemText(long item, long column) const
 template < class T, class L >
 int CustomVirtListCtrl<T,L>::OnGetItemColumnImage(long item, long column) const
 {
-    #ifdef SL_DUMMY_COL
-    if ( column < 1 )
-        return -1;
-    column--;
-    #endif
     return asImp().GetItemColumnImage(item, column);
 }
 

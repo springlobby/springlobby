@@ -452,6 +452,11 @@ void SpringLobbyApp::CacheAndSettingsSetup()
 				//new downloader was introduced
 				sett().ClearTorrentListToResume();
 			}
+			if( settversion < 19 )
+			{
+				//the dummy column hack was removed on win
+					sett().NukeColumnWidths();
+			}
     }
 
     if ( sett().ShouldAddDefaultServerSettings() || ( sett().GetSettingsVersion() < 14 && sett().GetServers().Count() < 2  ) )

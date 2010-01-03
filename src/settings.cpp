@@ -1933,11 +1933,16 @@ void Settings::SetColumnWidth( const wxString& list_name, const int column_ind, 
 
 int Settings::GetColumnWidth( const wxString& list_name, const int column )
 {
-	const int orgwidth = m_config->Read( _T( "GUI/ColumnWidths/" ) + list_name + _T( "/" ) + TowxString( column ), columnWidthUnset );
+	const int orgwidth = m_config->Read( _T( "/GUI/ColumnWidths/" ) + list_name + _T( "/" ) + TowxString( column ), columnWidthUnset );
 	int width = orgwidth;
 	if ( orgwidth > -1 ) //-3 is unset, -2 and -1 used for auto size by wx
 		width = std::max ( width, int( Settings::columnWidthMinimum ) ); //removing the temporary creation here gives me undefined ref error (koshi)
 	return width;
+}
+
+void Settings::NukeColumnWidths()
+{
+	m_config->DeleteGroup(_T("/GUI/ColumnWidths/"));
 }
 
 void Settings::SetPeopleList( const wxArrayString& friends, const wxString& group  )
