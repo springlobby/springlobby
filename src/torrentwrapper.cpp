@@ -308,7 +308,7 @@ bool TorrentWrapper::IsFileInSystem( const wxString& name )
 
 bool TorrentWrapper::RemoveTorrentByName( const wxString& name )
 {
-	TorrenthandleInfoMap infomap = GetHandleInfoMap();
+	TorrenthandleInfoMap& infomap = GetHandleInfoMap();
 	TorrenthandleInfoMap::iterator it = infomap.begin();
 	for ( ; it != infomap.end(); ++it )
     {
@@ -318,7 +318,7 @@ bool TorrentWrapper::RemoveTorrentByName( const wxString& name )
         {
             m_torr->remove_torrent( handle );
 			infomap.erase( it++ );
-			SetHandleInfoMap( infomap );
+//			SetHandleInfoMap( infomap );
             return true;
         }
     }
@@ -555,23 +555,25 @@ std::map<wxString,TorrentInfos> TorrentWrapper::CollectGuiInfos()
         ret[wxString(_T("global"))] = globalinfos;
 
 		const TorrenthandleVector torrentList = m_torr->get_torrents();
-        for ( TorrenthandleVector::const_iterator i = torrentList.begin(); i != torrentList.end(); ++i )
+		const TorrenthandleInfoMap& infomap = GetHandleInfoMap();
+		for ( TorrenthandleInfoMap::const_iterator i = infomap.begin(); i != infomap.end(); ++i )
         {
             TorrentInfos CurrentTorrent;
-            libtorrent::torrent_status torrent_status = i->status();
-            CurrentTorrent.name = TowxString(i->name()).BeforeFirst(_T('|'));
+			libtorrent::torrent_handle handle = i->second;
+			libtorrent::torrent_status torrent_status = handle.status();
+			CurrentTorrent.name = i->first.m_name;
             CurrentTorrent.progress = torrent_status.progress;
             CurrentTorrent.downloaded = torrent_status.total_payload_download;
             CurrentTorrent.inspeed = torrent_status.download_payload_rate;
             CurrentTorrent.numcopies = torrent_status.distributed_copies;
-            CurrentTorrent.filesize = i->get_torrent_info().total_size();
+			CurrentTorrent.filesize = handle.get_torrent_info().total_size();
 
 			int eta_seconds = -1;
 			if ( CurrentTorrent.progress > 0 && CurrentTorrent.inspeed > 0)
 				eta_seconds = int (  (CurrentTorrent.filesize - CurrentTorrent.downloaded ) / CurrentTorrent.inspeed );
 
 			CurrentTorrent.eta = eta_seconds;
-			CurrentTorrent.downloadstatus = getP2PStatusFromHandle( *i );
+			CurrentTorrent.downloadstatus = getP2PStatusFromHandle( handle );
             ret[CurrentTorrent.name] = CurrentTorrent;
         }
     }
@@ -586,7 +588,7 @@ std::map<wxString,TorrentInfos> TorrentWrapper::CollectGuiInfos()
 
 void TorrentWrapper::RemoveInvalidTorrents()
 {
-	TorrenthandleInfoMap infomap = GetHandleInfoMap();
+	TorrenthandleInfoMap& infomap = GetHandleInfoMap();
 	TorrenthandleInfoMap::iterator it = infomap.begin();
 	for ( ; it != infomap.end(); )
     {
@@ -601,12 +603,11 @@ void TorrentWrapper::RemoveInvalidTorrents()
         else
             ++it;
     }
-	SetHandleInfoMap( infomap );
 }
 
 void TorrentWrapper::ClearFinishedTorrents()
 {
-	TorrenthandleInfoMap infomap = GetHandleInfoMap();
+	TorrenthandleInfoMap& infomap = GetHandleInfoMap();
 	TorrenthandleInfoMap::iterator it = infomap.begin();
 	for ( ; it != infomap.end();  )
     {
@@ -623,7 +624,6 @@ void TorrentWrapper::ClearFinishedTorrents()
         else
             ++it;
     }
-	SetHandleInfoMap( infomap );
 }
 
 
