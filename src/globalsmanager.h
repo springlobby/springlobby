@@ -63,7 +63,7 @@ public:
     {
         GlobalObjectHolder<T,I>::count += 1;
         assert( (GlobalObjectHolder<T,I>::count) == 1 );
-        wxLogMessage( _T("GOBAL_LINE: ") + i.m ) ;
+		wxLogDebug( _T("GOBAL_LINE: ") + i.m ) ;
         if ( RegisterSelf() )
         {
             private_ptr = new T;

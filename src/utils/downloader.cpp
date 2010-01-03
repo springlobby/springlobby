@@ -181,8 +181,6 @@ PlasmaResourceInfo PlasmaInterface::ParseResourceInfoData( const int buffer_inde
     for ( size_t i = 0; i < info.m_webseeds.Count(); ++i )
         seeds += info.m_webseeds[i] + _T("\n");
 
-    assert( info.m_webseeds.Count() > 0 );
-//    assert( info.ToFile( _T("/tmp/dl.info") ) );
     return info;
 }
 
