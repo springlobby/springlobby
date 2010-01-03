@@ -533,9 +533,7 @@ void CustomVirtListCtrl<T,L>::OnColClick( wxListEvent& event )
     SetColumn( m_sortorder[0].col, col );
 
 	if ( old_sort_col != m_sortorder[0].col ){
-		ListctrlSortEvent evt;
-		evt.SetInt( 1 );
-		asImp(). AddPendingEvent( evt );
+		SortList( true );
 	}
     else { // O(n) instead of guaranteed worst case O(n*n)
         ReverseOrder();
