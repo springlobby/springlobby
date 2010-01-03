@@ -18,6 +18,8 @@
 
 #include "iunitsync.h"
 #include "thread.h"
+#include "mutexwrapper.h"
+#include "utils/plasmaresourceinfo.h"
 
 /*
 namespace libtorrent{ class session; };
@@ -25,7 +27,6 @@ namespace libtorrent { struct torrent_handle; };
 */
 class TorrentWrapper;
 class PlasmaInterface;
-class PlasmaResourceInfo;
 
 namespace P2P {
 enum FileStatus
@@ -125,7 +126,19 @@ private:
     //! internal
     typedef std::map<PlasmaResourceInfo,libtorrent::torrent_handle>
         TorrenthandleInfoMap;
-    TorrenthandleInfoMap m_handleInfo_map;
+	MutexWrapper<TorrenthandleInfoMap> m_handleInfo_map;
+
+	TorrenthandleInfoMap &GetHandleInfoMap()
+	{
+		ScopedLocker<TorrenthandleInfoMap> l_torrent_table(m_handleInfo_map);
+		return l_torrent_table.Get();
+	}
+
+	void SetHandleInfoMap( TorrenthandleInfoMap info )
+	{
+		ScopedLocker<TorrenthandleInfoMap> l_torrent_table(m_handleInfo_map);
+		l_torrent_table.Get() = info;
+	}
 
     DownloadRequestStatus AddTorrent( const PlasmaResourceInfo& info );
 
@@ -146,7 +159,7 @@ private:
 
     bool m_started;
 
-    wxMutex m_info_map_mutex;
+
 };
 
 

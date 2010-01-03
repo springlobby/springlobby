@@ -102,6 +102,7 @@ SET(springlobbySrc
 	src/userlist.cpp
 	src/userlistctrl.cpp
 	src/utils/downloader.cpp
+	src/utils/plasmaresourceinfo.cpp
 	src/widgets/downloadlistctrl.cpp
 	src/widgets/downloaddialog.cpp
 	src/widgets/downloadpanel.cpp
@@ -148,13 +149,13 @@ SET(SLSharedWithSettings
 	src/utils/sltipwin.cpp
 	src/utils/stack.cpp
 	src/crashreport.cpp
-	src/globalsmanager.cpp	
+	src/globalsmanager.cpp
 	src/mmoptionmodel.cpp
 	src/mmoptionswrapper.cpp
 	src/settings.cpp
 	src/spinctld.cpp
 	src/springunitsynclib.cpp
-	src/springunitsync.cpp	
+	src/springunitsync.cpp
 	src/stacktrace.cpp
 	src/thread.cpp
 )
@@ -166,4 +167,3 @@ SET( updaterSrc
 	src/utils/activitynotice.cpp
 	src/utils/misc.cpp
 )
-

@@ -205,8 +205,9 @@ TorrentWrapper::~TorrentWrapper()
 	/* the use of Settings seems to a problem (destruction order) therefore disabled until further notice
 	//save torrents to resume
 	std::vector<wxString> toResume;
-	TorrenthandleInfoMap::iterator it = m_handleInfo_map.begin();
-	for ( ; it != m_handleInfo_map.end(); ++it )
+	TorrenthandleInfoMap infomap = GetHandleInfoMap();
+	TorrenthandleInfoMap::iterator it = infomap.begin();
+	for ( ; it != infomap.end(); ++it )
 	{
 		PlasmaResourceInfo info = it->first;
 		toResume.push_back( info.m_name );
@@ -291,8 +292,9 @@ void TorrentWrapper::UpdateSettings()
 
 bool TorrentWrapper::IsFileInSystem( const wxString& name )
 {
-	TorrenthandleInfoMap::iterator it = m_handleInfo_map.begin();
-	for ( ; it != m_handleInfo_map.end(); ++it )
+	TorrenthandleInfoMap infomap = GetHandleInfoMap();
+	TorrenthandleInfoMap::iterator it = infomap.begin();
+	for ( ; it != infomap.end(); ++it )
 	{
 		PlasmaResourceInfo info = it->first;
 		if ( info.m_name == name )
@@ -306,15 +308,17 @@ bool TorrentWrapper::IsFileInSystem( const wxString& name )
 
 bool TorrentWrapper::RemoveTorrentByName( const wxString& name )
 {
-    TorrenthandleInfoMap::iterator it = m_handleInfo_map.begin();
-    for ( ; it != m_handleInfo_map.end(); ++it )
+	TorrenthandleInfoMap infomap = GetHandleInfoMap();
+	TorrenthandleInfoMap::iterator it = infomap.begin();
+	for ( ; it != infomap.end(); ++it )
     {
         PlasmaResourceInfo info = it->first;
         libtorrent::torrent_handle handle = it->second;
         if ( info.m_name == name )
         {
             m_torr->remove_torrent( handle );
-            m_handleInfo_map.erase( it++ );
+			infomap.erase( it++ );
+			SetHandleInfoMap( infomap );
             return true;
         }
     }
@@ -371,7 +375,6 @@ TorrentWrapper::DownloadRequestStatus TorrentWrapper::_RequestFileByName( const 
 
 TorrentWrapper::DownloadRequestStatus TorrentWrapper::AddTorrent( const PlasmaResourceInfo& info )
 {
-    wxMutexLocker lock( m_info_map_mutex );
     libtorrent::add_torrent_params p;
 
     try {
@@ -392,7 +395,7 @@ TorrentWrapper::DownloadRequestStatus TorrentWrapper::AddTorrent( const PlasmaRe
             return no_seeds_found;
 
         libtorrent::torrent_handle tor = m_torr->add_torrent(p);
-        m_handleInfo_map[info] = tor;
+		GetHandleInfoMap()[info] = tor;
         for ( size_t i = 0; i < num_webseeds; ++ i )
             tor.add_url_seed( STD_STRING( info.m_webseeds[i] ) );
         return success;
@@ -475,11 +478,11 @@ void TorrentWrapper::JoinRequestedTorrents()
 void TorrentWrapper::HandleCompleted()
 {
 	int num_completed = 0;
-	{//to put the lock outside usync reload scope
-	wxMutexLocker lock( m_info_map_mutex );
-	TorrenthandleInfoMap::iterator it = m_handleInfo_map.begin();
+	{
+	TorrenthandleInfoMap infohandle = GetHandleInfoMap();
+	TorrenthandleInfoMap::iterator it = infohandle.begin();
 
-	for ( ; it != m_handleInfo_map.end(); ++it )
+	for ( ; it != infohandle.end(); ++it )
 	{
 		PlasmaResourceInfo info = it->first;
 		libtorrent::torrent_handle handle = it->second;
@@ -564,9 +567,9 @@ std::map<wxString,TorrentInfos> TorrentWrapper::CollectGuiInfos()
 
 void TorrentWrapper::RemoveInvalidTorrents()
 {
-    wxMutexLocker lock( m_info_map_mutex );
-    TorrenthandleInfoMap::iterator it = m_handleInfo_map.begin();
-    for ( ; it != m_handleInfo_map.end(); )
+	TorrenthandleInfoMap infomap = GetHandleInfoMap();
+	TorrenthandleInfoMap::iterator it = infomap.begin();
+	for ( ; it != infomap.end(); )
     {
         PlasmaResourceInfo info = it->first;
         libtorrent::torrent_handle handle = it->second;
@@ -574,18 +577,19 @@ void TorrentWrapper::RemoveInvalidTorrents()
         {
             m_torr->remove_torrent( handle );
 			//! TODO: should this remove all files as well??
-            m_handleInfo_map.erase( it++ );
+			infomap.erase( it++ );
         }
         else
             ++it;
     }
+	SetHandleInfoMap( infomap );
 }
 
 void TorrentWrapper::ClearFinishedTorrents()
 {
-    wxMutexLocker lock( m_info_map_mutex );
-    TorrenthandleInfoMap::iterator it = m_handleInfo_map.begin();
-    for ( ; it != m_handleInfo_map.end();  )
+	TorrenthandleInfoMap infomap = GetHandleInfoMap();
+	TorrenthandleInfoMap::iterator it = infomap.begin();
+	for ( ; it != infomap.end();  )
     {
         PlasmaResourceInfo info = it->first;
         libtorrent::torrent_handle handle = it->second;
@@ -595,17 +599,17 @@ void TorrentWrapper::ClearFinishedTorrents()
 			//so we pass the second arg to delete all associated files but the torrent file itself
 			m_torr->remove_torrent( handle, libtorrent::session::delete_files );
 			wxRemoveFile( info.m_local_torrent_filepath );
-            m_handleInfo_map.erase( it++ );
+			infomap.erase( it++ );
         }
         else
             ++it;
     }
+	SetHandleInfoMap( infomap );
 }
 
 
 void TorrentWrapper::TryToJoinQueuedTorrents()
 {
-    wxMutexLocker lock( m_info_map_mutex );
 }
 
 #endif
