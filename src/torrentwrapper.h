@@ -30,12 +30,11 @@ class PlasmaResourceInfo;
 namespace P2P {
 enum FileStatus
 {
-    /// Dont change values. Bit arithmetics is used in TorrentTable::Row
-    not_stored=0, /// file is not on disk and not downloading
-    queued=1, /// file is not on disk and queued for download
-    leeching=2,/// file is being downloaded
-    stored=128,/// file is on disk
-    seeding=129/// file is on disk and being seeded
+	not_stored	= 0, /// file is not on disk and not downloading
+	queued		= 1, /// file is not on disk and queued for download
+	leeching	= 2, /// file is being downloaded
+	paused		= 3, /// file currently not downloading but has valid handle
+	complete	= 4, /// file is on disk / dl completed
 };
 }
 
@@ -81,13 +80,13 @@ public:
 
     enum DownloadRequestStatus
     {
-        success,
-        paused_ingame,
-        file_not_found,
-        torrent_join_failed,
-        remote_file_dl_failed,
-        corrupt_torrent_file,
-        no_seeds_found
+		success					= 0,
+		paused_ingame			= 1,
+		file_not_found			= 2,
+		torrent_join_failed		= 3,
+		remote_file_dl_failed	= 4,
+		corrupt_torrent_file	= 5,
+		no_seeds_found			= 6
     };
 
     /// gui interface
@@ -117,6 +116,7 @@ public:
     void ResumeFromList();
 
 private:
+	P2P::FileStatus getP2PStatusFromHandle( const libtorrent::torrent_handle& handle );
     DownloadRequestStatus _RequestFileByName( const wxString& name );
 	void DisplayError( const wxString& resourcename, DownloadRequestStatus );
 

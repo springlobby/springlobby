@@ -77,6 +77,20 @@ getDataSubdirForType(const IUnitSync::MediaType type)
     }
 }
 
+//! translate handle status to P2Pstatus
+P2P::FileStatus TorrentWrapper::getP2PStatusFromHandle( const libtorrent::torrent_handle& handle )
+{
+	if ( !handle.is_valid() )
+		return P2P::not_stored;
+	if ( handle.is_seed() )
+		return P2P::complete;
+	if ( handle.is_paused() )
+		return P2P::paused;
+	if ( handle.queue_position() > m_torr->settings().active_downloads )
+		return P2P::queued;
+	return P2P::leeching;
+}
+
 TorrentMaintenanceThread::TorrentMaintenanceThread( TorrentWrapper* parent )
 	: m_stop_thread( false ),
 	m_parent( *parent )
@@ -535,7 +549,7 @@ std::map<wxString,TorrentInfos> TorrentWrapper::CollectGuiInfos()
 				eta_seconds = int (  (CurrentTorrent.filesize - CurrentTorrent.downloaded ) / CurrentTorrent.inspeed );
 
 			CurrentTorrent.eta = eta_seconds;
-            CurrentTorrent.downloadstatus = P2P::leeching;
+			CurrentTorrent.downloadstatus = getP2PStatusFromHandle( *i );
             ret[CurrentTorrent.name] = CurrentTorrent;
         }
     }
