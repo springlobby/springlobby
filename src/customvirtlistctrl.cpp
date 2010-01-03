@@ -543,9 +543,6 @@ void CustomVirtListCtrl<T,L>::OnColClick( wxListEvent& event )
 template < class T, class L >
 void CustomVirtListCtrl<T,L>::OnSortEvent( wxCommandEvent& evt )
 {
-//	wxEventType t = evt.GetEventType();
-//	//if ( t != Listctrl )
-	wxLogError( _T("SHIAT CALLED"));
 	bool force  = evt.GetInt() != 0;
 	SortList( force );
 }
