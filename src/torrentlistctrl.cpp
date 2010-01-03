@@ -112,16 +112,7 @@ void TorrentListCtrl::UpdateTorrentInfo(const DataType& info)
 		return;
 	}
 
-	if(!IsTorrentActive(info))
-	{
-		RemoveTorrentInfo(info);
-		return;
-	}
-	else
-	{
-		m_data[index] = info;
-	}
-
+	m_data[index] = info;
 	RefreshItem( index );
 	MarkDirtySort();
 }
@@ -137,13 +128,13 @@ void TorrentListCtrl::OnListRightClick( wxListEvent& event )
         m_popup = new wxMenu( _T("") );
 		if(dt.downloadstatus == P2P::not_stored)
 		{
-			m_popup->Append( TLIST_CANCEL, _("Cancel torrent") );
-			m_popup->Append( TLIST_RETRY, _("Retry torrent") );
+			m_popup->Append( TLIST_CANCEL, _("Cancel download") );
+			m_popup->Append( TLIST_RETRY, _("Retry download") );
 		}
 		else if(dt.downloadstatus == P2P::queued || dt.downloadstatus == P2P::leeching)
-			m_popup->Append( TLIST_CANCEL, _("Cancel torrent") );
-		else if(dt.downloadstatus == P2P::stored || dt.downloadstatus == P2P::seeding)
-			m_popup->Append( TLIST_CANCEL, _("Cancel torrent (keeping downloaded file)") );
+			m_popup->Append( TLIST_CANCEL, _("Cancel download") );
+		else if(dt.downloadstatus == P2P::complete)
+			m_popup->Append( TLIST_CANCEL, _("Remove download (keeping downloaded file)") );
 
         PopupMenu( m_popup );
     }
@@ -158,8 +149,10 @@ void TorrentListCtrl::OnCancel(wxCommandEvent &/*event*/)
 
 void TorrentListCtrl::OnRetry(wxCommandEvent &/*event*/)
 {
-//	torrent().RequestFileByHash(GetSelectedData().hash);
-    assert( false );
+	DataType info( GetSelectedData() );
+	torrent().RemoveTorrentByName( info.name );
+	RemoveTorrentInfo( info );
+	torrent().RequestFileByName( info.name );
 }
 
 
@@ -227,9 +220,8 @@ wxString TorrentListCtrl::GetItemText(long item, long column) const
 		case 2:
 			if(infos.downloadstatus == P2P::not_stored) return _("not found");
 			else if(infos.downloadstatus == P2P::queued) return _("queued");
-			else if(infos.downloadstatus == P2P::leeching) return _("leeching");
-			else if(infos.downloadstatus == P2P::stored) return _("complete");
-			else if(infos.downloadstatus == P2P::seeding) return _("seeding");
+			else if(infos.downloadstatus == P2P::leeching) return _("downloading");
+			else if(infos.downloadstatus == P2P::complete) return _("complete");
 			else return wxEmptyString;
 		case 3: return infos.progress > -0.01 ? wxString::Format(_T("%.2f"), infos.progress * 100 ) : na_str;
 		case 4: return infos.inspeed > -0.01 ? wxString::Format(_T("%.2f"), infos.inspeed*kfactor ) : na_str;
