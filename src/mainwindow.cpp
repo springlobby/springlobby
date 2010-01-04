@@ -32,6 +32,7 @@
 #include "aui/auimanager.h"
 #include "aui/slbook.h"
 #include "aui/artprovider.h"
+#include "gui/statusbar.h"
 #include "springlobbyapp.h"
 #include "mainwindow.h"
 #include "settings.h"
@@ -227,6 +228,8 @@ MainWindow::MainWindow( )
 
   m_channel_chooser = new ChannelChooserDialog( this, -1, _("Choose channels to join") );
 
+	m_statusbar = new Statusbar( this );
+	SetStatusBar( m_statusbar );
     // re-enable eventhandling
     SetEvtHandlerEnabled( true );
 }

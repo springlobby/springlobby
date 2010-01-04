@@ -34,6 +34,7 @@ class WidgetDownloadDialog;
 class wxLogWindow;
 class wxLogChain;
 class wxCloseEvent;
+class Statusbar;
 
 class ReplayTraits;
 template < class Traits >
@@ -119,6 +120,7 @@ class MainWindow : public wxFrame
     wxMenuItem* m_settings_menu;
     wxMenuBar* m_menubar;
     wxMenu* m_menuTools;
+	Statusbar* m_statusbar;
 
     wxBoxSizer* m_main_sizer;
     SLNotebook* m_func_tabs;
