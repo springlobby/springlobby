@@ -38,6 +38,8 @@ class PlasmaInterface : public iNetClass, public wxEvtHandler {
         void ParseResourceListData( const wxString& buffer );
 
 
+		void Ping() {}
+
     protected:
         PlasmaInterface();
 

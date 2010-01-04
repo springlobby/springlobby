@@ -56,6 +56,12 @@ void ServerEvents::OnDisconnected( bool wasonline )
 
 void ServerEvents::OnLogin()
 {
+}
+
+
+void ServerEvents::OnLoginInfoComplete()
+{
+    wxLogDebugFunc( _T("") );
 	wxString nick = m_serv.GetMe().GetNick();
 	wxArrayString highlights = sett().GetHighlightedWords();
 	if ( highlights.Index( nick ) == -1 )
@@ -63,12 +69,6 @@ void ServerEvents::OnLogin()
 		highlights.Add( nick );
 		sett().SetHighlightedWords( highlights );
 	}
-}
-
-
-void ServerEvents::OnLoginInfoComplete()
-{
-    wxLogDebugFunc( _T("") );
     //m_serv.RequestChannels();
     std::vector<ChannelJoinInfo> autojoin = sett().GetChannelsJoin();
     for ( std::vector<ChannelJoinInfo>::iterator itor = autojoin.begin(); itor != autojoin.end(); itor++ )
