@@ -22,7 +22,7 @@ void* PingThread::Entry()
 
   while ( true )
   {
-	m_parent.PingThread();
+	m_parent.Ping();
 	// break if woken
 	if(!Sleep(m_interval))break;
   }

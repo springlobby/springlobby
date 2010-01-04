@@ -343,8 +343,7 @@ void TASServer::Connect( const wxString& servername ,const wxString& addr, const
     m_sock->Connect( addr, port );
     if ( IsConnected() )
     {
-		m_ping_thread = new PingThread( this, 10000 );
-		m_ping_thread->Init();
+		m_ping_thread = new PingThread( *this, 10000 );
 		GetLastID() = 0;
 		GetPingList().clear();
         m_last_udp_ping = time( 0 );
@@ -466,8 +465,10 @@ void TASServer::Login()
     wxString localaddr;
     localaddr = m_sock->GetLocalAddress();
     if ( localaddr.IsEmpty() ) localaddr = _T("*");
+	m_id_transmission = false;
     SendCmd ( _T("LOGIN"), m_user + _T(" ") + pass + _T(" ") +
               GetHostCPUSpeed() + _T(" ") + localaddr + _T(" SpringLobby ") + GetSpringLobbyVersion() + protocol  + _T("\ta"));
+	m_id_transmission = true;
 }
 
 void TASServer::Logout()
@@ -645,10 +646,11 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     }
     else if ( cmd == _T("ACCEPTED") )
     {
-				if ( m_online ) return; // in case is the server sends WTF
+		if ( m_online ) return; // in case is the server sends WTF
         m_online = true;
         m_user = params;
         m_se->OnLogin( );
+		m_ping_thread->Init();
     }
     else if ( cmd == _T("MOTD") )
     {
@@ -1195,11 +1197,6 @@ void TASServer::SendCmd( const wxString& command, const wxString& param )
 			else
 				wxLogMessage( _T("sending: %s failed"), msg.c_str() );
 		}
-}
-
-void TASServer::PingThread()
-{
-	Ping();
 }
 
 void TASServer::Ping()

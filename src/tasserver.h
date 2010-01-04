@@ -44,7 +44,6 @@ class TASServer : public Server
 
     void Update( int mselapsed );
 
-	void PingThread();
 	void Ping();
 
     void UDPPing();/// used for nat travelsal
@@ -146,13 +145,14 @@ class TASServer : public Server
     wxArrayString GetRelayHostList() ;
 
   protected:
-	PingThread* m_ping_thread;
+
     //! @brief Struct used internally by the TASServer class to calculate ping roundtimes.
     struct TASPingListItem {
       int id;
       wxLongLong t;
     };
 
+	PingThread* m_ping_thread;
     CRC m_crc;
 
     ServerEvents* m_se;
