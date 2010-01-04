@@ -29,6 +29,7 @@
 #include "../uiutils.h"
 #include "conversion.h"
 
+
 const wxString s_soap_service_url = _T("http://planet-wars.eu/PlasmaServer/Service.asmx?op=DownloadFile");
 
 const wxString s_soap_querytemplate = _T("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" \
@@ -76,9 +77,6 @@ PlasmaInterface::~PlasmaInterface()
 #include <curl/types.h>
 #include <curl/easy.h>
 
-FetchResourceListWorkItem::FetchResourceListWorkItem( PlasmaInterface* interface )
-	:m_interface( interface )
-{}
 
 /** @brief GetResourceInfo
   *
@@ -347,8 +345,15 @@ void PlasmaInterface::ParseResourceListData( const wxString& buffer )
 	PlasmaResourceInfo::VectorToFile( m_resource_list, _T("plasmaresourcelist.sl") );
 }
 
+void FetchResourceListWorkItem ::SetInterface( PlasmaInterface* i )
+{
+    m_interface = i;
+}
+
 void PlasmaInterface::FetchResourceList()
 {
-	FetchResourceListWorkItem* item = new FetchResourceListWorkItem( this );
+	FetchResourceListWorkItem* item = new FetchResourceListWorkItem( );
+	item->SetInterface( this );
 	m_worker_thread.DoWork( item, 0 );
 }
+

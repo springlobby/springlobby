@@ -16,17 +16,8 @@ class GlobalObjectHolder;
 
 class wxCurlHTTP;
 class wxCurlEndPerformEvent;
-class PlasmaInterface;
 
 const wxEventType DoFetchResourcesEvt = wxNewEventType();
-
-class FetchResourceListWorkItem : public WorkItem {
-public:
-	FetchResourceListWorkItem( PlasmaInterface* interface );
-	void Run();
-protected:
-	PlasmaInterface* m_interface;
-};
 
 class PlasmaInterface : public iNetClass, public wxEvtHandler {
     public:
@@ -44,6 +35,8 @@ class PlasmaInterface : public iNetClass, public wxEvtHandler {
         void FetchResourceList();
         //! fill resourcelist with cached data
         void InitResourceList();
+        void ParseResourceListData( const wxString& buffer );
+
 
     protected:
         PlasmaInterface();
@@ -55,7 +48,6 @@ class PlasmaInterface : public iNetClass, public wxEvtHandler {
 
         //!TODO doesn't really need to be here
         void downloadFile( const wxString& host, const wxString& remote_path, const wxString& local_dest ) const;
-		void ParseResourceListData( const wxString& buffer );
         PlasmaResourceInfo ParseResourceInfoData( const int buffer_index );
 
         void OnConnected( Socket* ){}
@@ -79,9 +71,20 @@ class PlasmaInterface : public iNetClass, public wxEvtHandler {
 		WorkerThread m_worker_thread;
 };
 
-
-
 PlasmaInterface& plasmaInterface();
+
+class FetchResourceListWorkItem : public WorkItem
+{
+protected:
+	PlasmaInterface* m_interface;
+public:
+	FetchResourceListWorkItem(  )
+	:m_interface( 0 ){}
+	void SetInterface( PlasmaInterface* m_interface );
+	void Run();
+
+};
+
 
 #endif //NO_TORRENT_SYSTEM
 
