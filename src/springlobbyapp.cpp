@@ -198,7 +198,7 @@ bool SpringLobbyApp::OnInit()
 #ifndef NO_TORRENT_SYSTEM
     plasmaInterface();
     plasmaInterface().InitResourceList();
-    plasmaInterface().FetchResourceList();
+	plasmaInterface().FetchResourceList();
 #endif
 
     return true;

@@ -522,3 +522,20 @@ void OpenWebBrowser( const wxString& url )
 
     }
 }
+
+
+#include <wx/datetime.h>
+#include "utils/customdialogs.h"
+TimerMessageBox::TimerMessageBox( const wxString& msg_format  )
+	:m_start( new wxDateTime( wxDateTime::Now() ) ),
+	m_msg_format( msg_format )
+{
+
+}
+
+TimerMessageBox::~TimerMessageBox()
+{
+	wxTimeSpan diff = wxDateTime::Now().Subtract( *m_start );
+	customMessageBoxNoModal( SL_MAIN_ICON, wxString::Format( m_msg_format, diff.Format().c_str() ) );
+	delete m_start;
+}
