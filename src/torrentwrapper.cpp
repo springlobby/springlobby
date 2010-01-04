@@ -52,6 +52,7 @@
 #include "torrentwrapper.h"
 #include "utils/customdialogs.h"
 #include "utils/downloader.h"
+#include "utils/uievents.h"
 #include "globalsmanager.h"
 #include "iunitsync.h"
 #include "utils/globalevents.h"
@@ -527,6 +528,8 @@ void TorrentWrapper::HandleCompleted()
 				}
 				else
 				{
+					UiEvents::StatusData data( wxString::Format( _("Download completed: %s"), info.m_name.c_str() ), 1 );
+					UiEvents::GetStatusEventSender( UiEvents::addStatusMessage ).SendEvent( data );
 					num_completed++;
 				}
 			}

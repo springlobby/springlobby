@@ -31,6 +31,7 @@
 #include "utils/conversion.h"
 #include "utils/misc.h"
 #include "utils/globalevents.h"
+#include "utils/uievents.h"
 
 
 #define LOCK_UNITSYNC wxCriticalSectionLocker lock_criticalsection(m_lock)
@@ -67,6 +68,7 @@ SpringUnitSync::~SpringUnitSync()
 bool SpringUnitSync::LoadUnitSyncLib( const wxString& unitsyncloc )
 {
    LOCK_UNITSYNC;
+   UiEvents::ScopedStatusMessage staus(_("loading unitsync"), 0);
    wxLogDebugFunc( _T("") );
    bool ret = _LoadUnitSyncLib( unitsyncloc );
    if (ret)
