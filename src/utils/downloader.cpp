@@ -1,3 +1,4 @@
+#ifndef NO_TORRENT_SYSTEM
 #include "downloader.h"
 
 
@@ -341,3 +342,4 @@ void PlasmaInterface::ParseResourceListData( const int buffer_index )
     }
 }
 
+#endif //NO_TORRENT_SYSTEM

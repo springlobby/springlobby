@@ -195,10 +195,11 @@ bool SpringLobbyApp::OnInit()
 
     ui().mw().SetLogWin( loggerwin, logchain );
 
+#ifndef NO_TORRENT_SYSTEM
     plasmaInterface();
-    //resource list disabled for now, has serious cpu usage issues
     plasmaInterface().InitResourceList();
     plasmaInterface().FetchResourceList();
+#endif
 
     return true;
 }

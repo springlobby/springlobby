@@ -1,6 +1,8 @@
 #ifndef DOWNLOADER_HH_INCLUDED
 #define DOWNLOADER_HH_INCLUDED
 
+#ifndef NO_TORRENT_SYSTEM
+
 #include <wx/string.h>
 #include <wx/event.h>
 #include <map>
@@ -63,5 +65,7 @@ class PlasmaInterface : public iNetClass, public wxEvtHandler {
 };
 
 PlasmaInterface& plasmaInterface();
+
+#endif //NO_TORRENT_SYSTEM
 
 #endif
