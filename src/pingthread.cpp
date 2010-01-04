@@ -20,7 +20,7 @@ void PingThread::Init()
 void* PingThread::Entry()
 {
 
-  while ( true )
+  while ( !TestDestroy() )
   {
 	m_parent.Ping();
 	// break if woken
