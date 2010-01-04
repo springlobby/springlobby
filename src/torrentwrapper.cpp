@@ -118,10 +118,8 @@ void* TorrentMaintenanceThread::Entry()
 		if( !Sleep( 2000 ) ) break;
 		{
 				//  DON'T alter function call order here or bad things may happend like locust, earthquakes or raptor attack
-				m_parent.JoinRequestedTorrents();
 				m_parent.RemoveInvalidTorrents();
 				m_parent.HandleCompleted();
-				m_parent.TryToJoinQueuedTorrents();
 		}
 	}
 	return 0;
@@ -193,6 +191,9 @@ TorrentWrapper::TorrentWrapper():
     #endif
     UpdateSettings();
     m_maintenance_thread.Init();
+	m_info_download_thread.Create();
+	m_info_download_thread.SetPriority( WXTHREAD_MIN_PRIORITY );
+	m_info_download_thread.Run();
 }
 
 
@@ -200,6 +201,7 @@ TorrentWrapper::~TorrentWrapper()
 {
     wxLogDebugFunc( wxEmptyString );
     m_maintenance_thread.Stop();
+	m_info_download_thread.Wait();
 	m_torr->pause();
 	ClearFinishedTorrents();
 	RemoveInvalidTorrents();
@@ -290,7 +292,6 @@ void TorrentWrapper::UpdateSettings()
     }
 }
 
-
 bool TorrentWrapper::IsFileInSystem( const wxString& name )
 {
 	TorrenthandleInfoMap infomap = GetHandleInfoMap();
@@ -306,7 +307,6 @@ bool TorrentWrapper::IsFileInSystem( const wxString& name )
 	return false;
 }
 
-
 bool TorrentWrapper::RemoveTorrentByName( const wxString& name )
 {
 	TorrenthandleInfoMap& infomap = GetHandleInfoMap();
@@ -319,7 +319,6 @@ bool TorrentWrapper::RemoveTorrentByName( const wxString& name )
         {
             m_torr->remove_torrent( handle );
 			infomap.erase( it++ );
-//			SetHandleInfoMap( infomap );
             return true;
         }
     }
@@ -347,32 +346,8 @@ IUnitSync::MediaType convertMediaType( const PlasmaResourceInfo::ResourceType& t
 
 void TorrentWrapper::RequestFileByName( const wxString& name )
 {
-	m_join_queue.push( name );
-}
-
-TorrentWrapper::DownloadRequestStatus TorrentWrapper::_RequestFileByName( const wxString& name )
-{
-    PlasmaResourceInfo info = plasmaInterface().GetResourceInfo( name );
-	info.m_name = name;
-	if( info.m_type == PlasmaResourceInfo::unknown )
-        return remote_file_dl_failed; //!TODO use ebtter code
-
-	if ( plasmaInterface().DownloadTorrentFile( info, sett().GetTorrentDir().GetFullPath() ) )
-    {
-		DownloadRequestStatus status = AddTorrent( info );
-		if ( status == success ) {
-            for ( size_t i = 0; i < info.m_dependencies.Count(); ++i ) {
-                wxString dependency_name = info.m_dependencies[i];
-                PlasmaResourceInfo dependency_info = plasmaInterface().GetResourceInfo( dependency_name );
-				if ( dependency_info.m_type != PlasmaResourceInfo::unknown )
-                    continue;
-                if ( plasmaInterface().DownloadTorrentFile( dependency_info, sett().GetTorrentDataDir().GetFullPath() ) )
-                    AddTorrent( dependency_info );
-            }
-        }
-		return status;
-    }
-    return remote_file_dl_failed;
+	ResourceInfoWorkItem* item = new ResourceInfoWorkItem( name, this );
+	m_info_download_thread.DoWork( item );
 }
 
 TorrentWrapper::DownloadRequestStatus TorrentWrapper::AddTorrent( const PlasmaResourceInfo& info )
@@ -450,51 +425,21 @@ void TorrentWrapper::SetIngameStatus( bool status )
 
 void TorrentWrapper::ResumeFromList()
 {
-	std::vector<wxString> torrentsToResume = sett().GetTorrentListToResume();
-	std::vector<wxString> resumeFailures;
-	for ( std::vector<wxString>::const_iterator it = torrentsToResume.begin();
-		it != torrentsToResume.end(); ++it )
-	{
-		if ( _RequestFileByName( *it ) != success )
-			resumeFailures.push_back( *it );
-	}
-	//save new list (hopefully empty)
-	sett().SetTorrentListToResume( resumeFailures );
+//	std::vector<wxString> torrentsToResume = sett().GetTorrentListToResume();
+//	std::vector<wxString> resumeFailures;
+//	for ( std::vector<wxString>::const_iterator it = torrentsToResume.begin();
+//		it != torrentsToResume.end(); ++it )
+//	{
+//		if ( _RequestFileByName( *it ) != success )
+//			resumeFailures.push_back( *it );
+//	}
+//	//save new list (hopefully empty)
+//	sett().SetTorrentListToResume( resumeFailures );
 }
 
 ////////////////////////////////////////////////////////
 //// private functions to interface with the system ////
 ////////////////////////////////////////////////////////
-void TorrentWrapper::JoinRequestedTorrents()
-{
-	while ( m_join_queue.size() > 0 )
-	{
-		wxString resourcename = m_join_queue.front();
-		DownloadRequestStatus stat = _RequestFileByName( resourcename );
-		if ( stat != success )
-			DisplayError( resourcename, stat );
-		m_join_queue.pop();
-	}
-}
-
-void TorrentWrapper::DisplayError( const wxString& resourcename, DownloadRequestStatus status )
-{
-	wxString msg;
-	switch ( status )
-	{
-		case no_seeds_found: msg = _("The remote server supplied no sources to download the file from."); break;
-		case remote_file_dl_failed: msg = _("The file was not found on the remote server"); break;
-		case corrupt_torrent_file: msg = _("The downloaded file was corrupted. You should retry the download."); break;
-		case torrent_join_failed: msg = _("The downloaded .torrent file was unusable."); break;
-		default: msg = _("Unknown"); break;
-	}
-	msg = wxString::Format(_("Downloading %s failed with reason:\n%s"), resourcename.c_str(), msg.c_str() );
-	wxString title = _("Download failure");
-    wxMutexGuiEnter();
-	customMessageBoxNoModal( SL_MAIN_ICON, msg, title );//if this throws we're dead
-    wxMutexGuiLeave();
-}
-
 void TorrentWrapper::HandleCompleted()
 {
 	int num_completed = 0;
@@ -629,9 +574,58 @@ void TorrentWrapper::ClearFinishedTorrents()
     }
 }
 
-
-void TorrentWrapper::TryToJoinQueuedTorrents()
+void DisplayError( const wxString& resourcename, TorrentWrapper::DownloadRequestStatus status )
 {
+	wxString msg;
+	switch ( status )
+	{
+		case TorrentWrapper::no_seeds_found: msg = _("The remote server supplied no sources to download the file from."); break;
+		case TorrentWrapper::remote_file_dl_failed: msg = _("The file was not found on the remote server"); break;
+		case TorrentWrapper::corrupt_torrent_file: msg = _("The downloaded file was corrupted. You should retry the download."); break;
+		case TorrentWrapper::torrent_join_failed: msg = _("The downloaded .torrent file was unusable."); break;
+		default: msg = _("Unknown"); break;
+	}
+	msg = wxString::Format(_("Downloading %s failed with reason:\n%s"), resourcename.c_str(), msg.c_str() );
+	wxString title = _("Download failure");
+	wxMutexGuiEnter();
+	customMessageBoxNoModal( SL_MAIN_ICON, msg, title );//if this throws we're dead
+	wxMutexGuiLeave();
+}
+
+ResourceInfoWorkItem::ResourceInfoWorkItem( const  wxString& name, TorrentWrapper* tor )
+	: m_name( name ), m_TorrentWrapper( tor )
+{}
+
+void ResourceInfoWorkItem::Run()
+{
+	TorrentWrapper::DownloadRequestStatus stat;
+	PlasmaResourceInfo info = plasmaInterface().GetResourceInfo( m_name );
+	info.m_name = m_name;
+	if( info.m_type == PlasmaResourceInfo::unknown )
+	{
+		stat = TorrentWrapper::remote_file_dl_failed; //!TODO use ebtter code
+	}
+	else if ( plasmaInterface().DownloadTorrentFile( info, sett().GetTorrentDir().GetFullPath() ) )
+	{
+		TorrentWrapper::DownloadRequestStatus dep_status = m_TorrentWrapper->AddTorrent( info );
+		if ( dep_status == TorrentWrapper::success ) {
+			for ( size_t i = 0; i < info.m_dependencies.Count(); ++i ) {
+				wxString dependency_name = info.m_dependencies[i];
+				PlasmaResourceInfo dependency_info = plasmaInterface().GetResourceInfo( dependency_name );
+				if ( dependency_info.m_type == PlasmaResourceInfo::unknown )
+					continue;
+				if ( plasmaInterface().DownloadTorrentFile( dependency_info, sett().GetTorrentDataDir().GetFullPath() ) )
+					m_TorrentWrapper->AddTorrent( dependency_info );
+			}
+		}
+		stat = dep_status;
+	}
+	else
+	{
+		stat = TorrentWrapper::remote_file_dl_failed;
+	}
+	if ( stat != TorrentWrapper::success )
+			DisplayError( m_name, stat );
 }
 
 #endif

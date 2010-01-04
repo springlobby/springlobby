@@ -71,6 +71,15 @@ class TorrentMaintenanceThread : public Thread
 		TorrentWrapper& m_parent;
 };
 
+class TorrentWrapper;
+class ResourceInfoWorkItem : public WorkItem {
+public:
+	ResourceInfoWorkItem( const  wxString& name, TorrentWrapper* tor );
+	void Run();
+protected:
+	wxString m_name;
+	TorrentWrapper* m_TorrentWrapper;
+};
 
 class TorrentWrapper
 {
@@ -95,31 +104,27 @@ public:
     bool RemoveTorrentByName( const wxString& name );
     int GetTorrentSystemStatus();
 
-    ///HashToTorrentData& GetSystemFileList();
-
     /// lobby interface
     void SetIngameStatus( bool status );
 
-	//! will add name to a queue that's processed from the maint. thread, to avoid GUI blocking (maybe)
+	//! will add name to a queue that's processed from a worker thread, to avoid GUI blocking
     void RequestFileByName( const wxString& name );
 
-    //!remove all torrents that have seed status
+	//! remove all torrents that have seed status
     void ClearFinishedTorrents();
+	//! insert a downloaded torrent file/resource info into the libt session
+	DownloadRequestStatus AddTorrent( const PlasmaResourceInfo& info );
 
     void UpdateSettings();
     std::map<wxString,TorrentInfos> CollectGuiInfos();
 
 	//! threaded maintenance tasks
-    void JoinRequestedTorrents();
 	void RemoveInvalidTorrents();
 	void HandleCompleted();
-	void TryToJoinQueuedTorrents();
     void ResumeFromList();
 
 private:
 	P2P::FileStatus getP2PStatusFromHandle( const libtorrent::torrent_handle& handle );
-    DownloadRequestStatus _RequestFileByName( const wxString& name );
-	void DisplayError( const wxString& resourcename, DownloadRequestStatus );
 
     typedef std::vector<libtorrent::torrent_handle>
         TorrenthandleVector;
@@ -134,12 +139,6 @@ private:
 		return l_torrent_table.Get();
 	}
 
-    DownloadRequestStatus AddTorrent( const PlasmaResourceInfo& info );
-
-	typedef std::queue<wxString>
-		JoinQueue;
-	JoinQueue m_join_queue;
-
     wxString m_buffer;
 
     bool ingame;
@@ -152,6 +151,8 @@ private:
     libtorrent::session* m_torr;
 
     bool m_started;
+
+	WorkerThread m_info_download_thread;
 
 
 };

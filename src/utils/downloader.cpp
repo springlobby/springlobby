@@ -273,10 +273,7 @@ void FetchResourceListWorkItem::Run()
 	curl_easy_setopt(curl_handle, CURLOPT_READDATA, (void*)&req);
 
 	CURLcode ret = curl_easy_perform(curl_handle);
-	if ( ret != CURLE_OK ) {
-		wxMessageBox( rheader.GetString()  );
-		wxMessageBox( response.GetString()  );
-	}
+	assert( ret == CURLE_OK );
 
   /* cleanup curl stuff */
 	curl_easy_cleanup(curl_handle);
