@@ -573,7 +573,7 @@ void TASServer::ExecuteCommand( const wxString& in )
     }
     if ( params[0] == '#' )
     {
-				wxString id = params.BeforeFirst( ' ' ).AfterFirst( '#' );
+		wxString id = params.BeforeFirst( ' ' ).AfterFirst( '#' );
         params = params.AfterFirst( ' ' );
         id.ToLong( &replyid );
     }
@@ -1220,8 +1220,9 @@ void TASServer::JoinChannel( const wxString& channel, const wxString& key )
     wxLogDebugFunc( channel );
 
     m_channel_pw[channel] = key;
-
+	m_id_transmission = false; // workaround a retarded server bug
     SendCmd ( _T("JOIN"), channel + _T(" ") + key );
+	m_id_transmission = true;
 }
 
 
