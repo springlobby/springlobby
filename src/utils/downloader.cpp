@@ -1,4 +1,3 @@
-#ifndef NO_TORRENT_SYSTEM
 #include "downloader.h"
 
 
@@ -27,6 +26,7 @@
 #include "../socket.h"
 #include "../curl/http.h"
 #include "../globalsmanager.h"
+#include "../uiutils.h"
 #include "conversion.h"
 
 const wxString s_soap_service_url = _T("http://planet-wars.eu/PlasmaServer/Service.asmx?op=DownloadFile");
@@ -62,17 +62,23 @@ PlasmaInterface::PlasmaInterface()
     : m_host ( _T("planet-wars.eu") ),
     m_remote_path ( _T("/PlasmaServer/Service.asmx") )
 {
+	m_worker_thread.Create();
+	m_worker_thread.SetPriority( WXTHREAD_MIN_PRIORITY );
+	m_worker_thread.Run();
+}
 
+PlasmaInterface::~PlasmaInterface()
+{
+	m_worker_thread.Wait();
 }
 
 #include <curl/curl.h>
 #include <curl/types.h>
 #include <curl/easy.h>
 
-struct MemoryStruct {
-  char *memory;
-  size_t size;
-};
+FetchResourceListWorkItem::FetchResourceListWorkItem( PlasmaInterface* interface )
+	:m_interface( interface )
+{}
 
 /** @brief GetResourceInfo
   *
@@ -182,6 +188,8 @@ PlasmaResourceInfo PlasmaInterface::ParseResourceInfoData( const int buffer_inde
     for ( size_t i = 0; i < info.m_webseeds.Count(); ++i )
         seeds += info.m_webseeds[i] + _T("\n");
 
+    assert( info.m_webseeds.Count() > 0 );
+//    assert( info.ToFile( _T("/tmp/dl.info") ) );
     return info;
 }
 
@@ -236,53 +244,52 @@ void PlasmaInterface::InitResourceList()
     m_resource_list = PlasmaResourceInfo::VectorFromFile( _T("plasmaresourcelist.sl") );
 }
 
-void PlasmaInterface::FetchResourceList()
+//void PlasmaInterface::FetchResourceList()
+void FetchResourceListWorkItem::Run()
 {
-    Socket* socket = new Socket( *this, true, true );
-    const int index = 1 + m_buffers.size();
-    m_socket_index[socket] = index;
-    m_buffers[index] = wxEmptyString;
-
     wxString data = s_soap_querytemplate_resourcelist;
 
-    //Set up header
-    wxString header = _T("");
+	wxStringInputStream req ( data );
+	wxStringOutputStream response;
+	wxStringOutputStream rheader;
+	CURL *curl_handle;
+	curl_handle = curl_easy_init();
+	struct curl_slist* m_pHeaders = NULL;
+	// these header lines will overwrite/add to cURL defaults
+	m_pHeaders = curl_slist_append(m_pHeaders, "Content-Type: text/xml;charset=UTF-8");//default is formurl-encoded with cURL-POST, that's bad for us
+	m_pHeaders = curl_slist_append(m_pHeaders, "SOAPAction: \"http://planet-wars.eu/PlasmaServer/GetResourceList\"");
+	m_pHeaders = curl_slist_append(m_pHeaders, "Expect:") ;
 
-    //POST
-    header += wxString::Format( _T("POST http://%s%s"), m_host.c_str(), m_remote_path.c_str() ) ;
-    header += _T(" HTTP/1.1\n");
+	curl_easy_setopt(curl_handle, CURLOPT_HTTPHEADER, m_pHeaders);
+	curl_easy_setopt(curl_handle, CURLOPT_URL, "http://planet-wars.eu/PlasmaServer/Service.asmx" );
+	//curl_easy_setopt(curl_handle, CURLOPT_VERBOSE, 1L);
+	curl_easy_setopt(curl_handle, CURLOPT_USERAGENT, "libcurl-agent/1.0");
+	curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, wxcurl_stream_write);
+	curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, (void *)&response);
+	curl_easy_setopt(curl_handle, CURLOPT_WRITEHEADER, (void *)&rheader);
+	curl_easy_setopt(curl_handle, CURLOPT_POST, TRUE);
+	curl_easy_setopt(curl_handle, CURLOPT_POSTFIELDSIZE, data.Len() );
+	curl_easy_setopt(curl_handle, CURLOPT_READFUNCTION, wxcurl_stream_read);
+	curl_easy_setopt(curl_handle, CURLOPT_READDATA, (void*)&req);
 
-    //Write content type
-    header += _T("Content-Type: text/xml;charset=UTF-8\n");
-    header += _T("SOAPAction: \"http://planet-wars.eu/PlasmaServer/GetResourceList\"\n");
+	CURLcode ret = curl_easy_perform(curl_handle);
+	if ( ret != CURLE_OK ) {
+		wxMessageBox( rheader.GetString()  );
+		wxMessageBox( response.GetString()  );
+	}
 
-    header += _T("Host: ");
-    header += m_host;
-    header += _T("\n");
+  /* cleanup curl stuff */
+	curl_easy_cleanup(curl_handle);
 
-    //Write POST content length
-    header += _T("Content-Length: ");
-    header += wxString::Format(_T("%d"), data.Len());
-    header += _T("\n\n");
-
-    //Connect to host
-    socket->Connect(m_host,80);
-    assert (  socket->State() == SS_Open );
-
-    //Write header
-    socket->Send(header+data);
-    wxString g = socket->Receive();
-    m_buffers[index] = g;
-    ParseResourceListData( index );
-
-    PlasmaResourceInfo::VectorToFile( m_resource_list, _T("plasmaresourcelist.sl") );
+	m_interface->ParseResourceListData( response.GetString() );
 
     GetGlobalEventSender( GlobalEvents::PlasmaResourceListParsed ).SendEvent( 0 );
 
 }
-void PlasmaInterface::ParseResourceListData( const int buffer_index )
+void PlasmaInterface::ParseResourceListData( const wxString& buffer )
 {
-    wxString wxbuf = m_buffers[buffer_index];
+	//MUTEX !!
+	wxString wxbuf = buffer;
 
     wxString t_begin = _T("<soap:Envelope");
     wxString t_end = _T("</soap:Envelope>");
@@ -340,6 +347,11 @@ void PlasmaInterface::ParseResourceListData( const int buffer_index )
         } // end section <GetResourceListResponse/>
         node = node->GetNext();
     }
+	PlasmaResourceInfo::VectorToFile( m_resource_list, _T("plasmaresourcelist.sl") );
 }
 
-#endif //NO_TORRENT_SYSTEM
+void PlasmaInterface::FetchResourceList()
+{
+	FetchResourceListWorkItem* item = new FetchResourceListWorkItem( this );
+	m_worker_thread.DoWork( item, 0 );
+}

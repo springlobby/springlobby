@@ -5,19 +5,32 @@
 
 #include <wx/string.h>
 #include <wx/event.h>
+#include <wx/event.h>
 #include <map>
 #include "../inetclass.h"
 #include "plasmaresourceinfo.h"
+#include "../thread.h"
 
 template <class PB, class I >
 class GlobalObjectHolder;
 
 class wxCurlHTTP;
 class wxCurlEndPerformEvent;
+class PlasmaInterface;
+
+const wxEventType DoFetchResourcesEvt = wxNewEventType();
+
+class FetchResourceListWorkItem : public WorkItem {
+public:
+	FetchResourceListWorkItem( PlasmaInterface* interface );
+	void Run();
+protected:
+	PlasmaInterface* m_interface;
+};
 
 class PlasmaInterface : public iNetClass, public wxEvtHandler {
     public:
-
+		~PlasmaInterface();
         PlasmaResourceInfo GetResourceInfo( const wxString& name ) ;
 
         //! post: added full path to dl'ed torrent fiel to info
@@ -38,9 +51,11 @@ class PlasmaInterface : public iNetClass, public wxEvtHandler {
         template <class PB, class I >
         friend class GlobalObjectHolder;
 
+		friend class FetchResourceListWorkItem;
+
         //!TODO doesn't really need to be here
         void downloadFile( const wxString& host, const wxString& remote_path, const wxString& local_dest ) const;
-        void ParseResourceListData( const int buffer_index );
+		void ParseResourceListData( const wxString& buffer );
         PlasmaResourceInfo ParseResourceInfoData( const int buffer_index );
 
         void OnConnected( Socket* ){}
@@ -61,8 +76,10 @@ class PlasmaInterface : public iNetClass, public wxEvtHandler {
         static const int m_list_socket_index = 0;
         static const int m_info_socket_index = 1;
 
-        wxCurlHTTP* m_curl;
+		WorkerThread m_worker_thread;
 };
+
+
 
 PlasmaInterface& plasmaInterface();
 
