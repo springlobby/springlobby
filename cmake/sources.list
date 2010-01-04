@@ -21,7 +21,6 @@ SET(springlobbySrc
 	src/utils/misc.cpp
 	src/utils/tasutil.cpp
 	src/utils/networkevents.cpp
-	src/utils/uievents.cpp
 	src/utils/md5.c
 	src/updater/updater.cpp
 	src/Helper/TextCompletionDatabase.cpp
@@ -149,6 +148,7 @@ SET(SLSharedWithSettings
 	src/utils/platform.cpp
 	src/utils/sltipwin.cpp
 	src/utils/stack.cpp
+	src/utils/uievents.cpp
 	src/crashreport.cpp
 	src/globalsmanager.cpp
 	src/mmoptionmodel.cpp
