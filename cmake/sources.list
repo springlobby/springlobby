@@ -110,6 +110,7 @@ SET(springlobbySrc
 	src/widgets/widget.cpp
 	src/Helper/wxTranslationHelper.cpp
 	src/Helper/tasclientimport.cpp
+	src/pingthread.cpp
 )
 
 SET(SettingsSrc

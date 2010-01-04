@@ -30,6 +30,8 @@ class PlasmaInterface : public iNetClass, public wxEvtHandler {
         //! fill resourcelist with cached data
         void InitResourceList();
 
+		void PingThread() {}
+
     protected:
         PlasmaInterface();
 
