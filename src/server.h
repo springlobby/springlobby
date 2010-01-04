@@ -184,7 +184,7 @@ class Server : public iNetClass
     virtual wxArrayString GetRelayHostList() ;
 
   protected:
-    Socket* m_sock;
+	Socket* m_sock;
     int m_keepalive;
     wxString m_user;
     wxString m_pass;

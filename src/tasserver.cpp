@@ -193,8 +193,6 @@ m_token_transmission( false )
 TASServer::~TASServer()
 {
     Disconnect();
-    delete m_sock;
-    m_sock = 0;
     delete m_se;
 }
 
@@ -339,17 +337,9 @@ void TASServer::Connect( const wxString& servername ,const wxString& addr, const
 	m_server_name = servername;
     m_addr=addr;
 	m_buffer = _T("");
-	m_buffer = _T("");
-    m_sock->Connect( addr, port );
-    if ( IsConnected() )
-    {
-		m_ping_thread = new PingThread( *this, 10000 );
-		GetLastID() = 0;
-		GetPingList().clear();
-        m_last_udp_ping = time( 0 );
-        m_connected = true;
-    }
-    m_sock->SetSendRateLimit( 800 ); // 1250 is the server limit but 800 just to make sure :)
+	m_sock->Connect( addr, port );
+	m_sock->SetSendRateLimit( 800 ); // 1250 is the server limit but 800 just to make sure :)
+	m_connected = false;
     m_online = false;
     m_redirecting = false;
     m_agreement = _T("");
@@ -366,19 +356,12 @@ void TASServer::Disconnect()
         return;
     }
     SendCmd( _T("EXIT") ); // EXIT command for new protocol compatibility
-    m_sock->Disconnect();
-    m_connected = false;
-    m_users.Nullify();
-	GetLastID() = 0;
-	GetPingList().clear();
-	m_ping_thread->Wait();
-	delete m_ping_thread;
-	m_ping_thread = 0;
+	m_sock->Disconnect();
 }
 
 bool TASServer::IsConnected()
 {
-    return (m_sock->State() == SS_Open);
+	return (m_sock->State() == SS_Open);
 }
 
 
@@ -463,7 +446,7 @@ void TASServer::Login()
     wxString pass = GetPasswordHash( m_pass );
     wxString protocol = _T("\t") + TowxString( m_crc.GetCRC() );
     wxString localaddr;
-    localaddr = m_sock->GetLocalAddress();
+	localaddr = m_sock->GetLocalAddress();
     if ( localaddr.IsEmpty() ) localaddr = _T("*");
 	m_id_transmission = false;
     SendCmd ( _T("LOGIN"), m_user + _T(" ") + pass + _T(" ") +
@@ -499,7 +482,7 @@ void TASServer::AcceptAgreement()
 void TASServer::Update( int mselapsed )
 {
 
-    m_sock->OnTimer( mselapsed );
+	m_sock->OnTimer( mselapsed );
 
     if ( !m_connected )   // We are not formally connected yet, but might be.
     {
@@ -2217,6 +2200,9 @@ void TASServer::OnConnected( Socket* /*unused*/ )
 		m_token_transmission = false;
 		m_relay_host_manager_list.Clear();
 		m_last_denied = _T("");
+	m_ping_thread = new PingThread( *this, 10000 );
+	GetLastID() = 0;
+	GetPingList().clear();
 }
 
 
@@ -2228,9 +2214,15 @@ void TASServer::OnDisconnected( Socket* /*unused*/ )
     m_connected = false;
     m_online = false;
     m_redirecting = false;
-		m_token_transmission = false;
-		m_buffer = _T("");
-		m_relay_host_manager_list.Clear();
+	m_token_transmission = false;
+	m_buffer = _T("");
+	m_relay_host_manager_list.Clear();
+	GetLastID() = 0;
+	GetPingList().clear();
+	m_ping_thread->Wait();
+	delete m_ping_thread;
+	m_ping_thread = 0;
+	m_users.Nullify();
     m_se->OnDisconnected( connectionwaspresent );
     Server::OnDisconnected();
 }
