@@ -223,9 +223,6 @@ class SpringUnitSync : public IUnitSync
 	virtual void OnReload( wxCommandEvent& event );
 	virtual void AddReloadEvent(  );
 
-  protected:
-	  EventReceiverFunc< SpringUnitSync, GlobalEvents::GlobalEventData, &SpringUnitSync::ReloadUnitSyncLib > m_UnitsyncReloadRequestSink;
-
   private:
 
     LocalArchivesVector m_maps_list; /// mapname -> hash
