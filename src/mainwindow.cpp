@@ -663,10 +663,11 @@ void MainWindow::OnMenuLoadLayout( wxCommandEvent& /*unused*/ )
     LoadPerspectives( layouts[result] );
 }
 
-
+#include "sdlsound.h"
 void MainWindow::OnMenuResetLayout( wxCommandEvent& /*event*/ )
 {
-    LoadPerspectives( _T("SpringLobby-default") );
+	sound().pm();
+	//LoadPerspectives( _T("SpringLobby-default") );
 }
 
 const MainWindow::TabNames& MainWindow::GetTabNames()

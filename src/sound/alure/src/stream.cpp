@@ -3,7 +3,7 @@
 #include "alure_config.h"
 
 #include "main.h"
-
+#include "AL/alure.h"
 #include <string.h>
 
 #include <algorithm>
@@ -11,7 +11,7 @@
 #include <memory>
 #include <string>
 #include <cstdio>
-void init_alure(void);
+
 struct nullStream : public alureStream {
     virtual bool IsValid() { return false; }
     virtual bool GetFormat(ALenum*,ALuint*,ALuint*) { return false; }

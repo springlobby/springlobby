@@ -29,11 +29,6 @@ INCLUDE(cmake/package_config.cmake)
 INCLUDE(cmake/sources.list)
 # PKG-Config
 FIND_PACKAGE( PkgConfig )
-IF(CMAKE_CROSSCOMPILING OR NOT WIN32)
-	INCLUDE(cmake/FindSDL.cmake)
-	INCLUDE(cmake/FindSDL_sound.cmake)
-	INCLUDE(cmake/FindSDL_mixer.cmake)
-ENDIF(CMAKE_CROSSCOMPILING OR NOT WIN32)
 
 EXECUTE_PROCESS(COMMAND ${springlobby_SOURCE_DIR}/tools/get-revision.sh
         OUTPUT_VARIABLE SPRINGLOBBY_GIT_REV
@@ -49,7 +44,7 @@ SET( OPTION_TORRENT_SYSTEM
 	"Enables the builtin map/mod p2p downloader (requires libtorrent-rasterbar library)" )
 SET( OPTION_SOUND
 	1 CACHE BOOL
-	"Enables sound notification functionality (requires SDL and SDL_sound libraries)" )
+	"Enables sound notification functionality (requires openAL libraries)" )
 SET( OPTION_TRANSLATION_SUPPORT
 	1 CACHE BOOL
 	"Enables translation support to the programs and adds facilities for helping translators (requires GNU Gettext)" )
@@ -102,16 +97,17 @@ ELSE (NOT CMAKE_CROSSCOMPILING)
 ENDIF(NOT CMAKE_CROSSCOMPILING)
 
 #----------------------------------------------------------------------------------------------------
-# SDL libs dependency check
+# openAL libs dependency check
 #----------------------------------------------------------------------------------------------------
 
 IF ( OPTION_SOUND )
 
 	FIND_PACKAGE(OpenAL REQUIRED)
 	INCLUDE_DIRECTORIES(${OPENAL_INCLUDE_DIR})
-	LINK_LIBRARIES( ${OPENAL_LIBRARY} )
+	
 	Add_Subdirectory( ${springlobby_SOURCE_DIR}/src/sound/alure )
-
+	INCLUDE_DIRECTORIES( ${springlobby_SOURCE_DIR}/src/sound/alure/include )
+	LINK_LIBRARIES( ${OPENAL_LIBRARY} ${springlobby_BINARY_DIR}/src/sound/alure/libalure.a )
 ELSE ( OPTION_SOUND )
     # Disable sound.
     ADD_DEFINITIONS( -DDISABLE_SOUND )

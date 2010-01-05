@@ -15,12 +15,10 @@ class ALsound
 	private:
 		int m_num_buffer;
 		int m_num_sources;
-		ALuint alsource;
+		ALuint alsource,buf;
 };
 
 ALsound& sound();
-struct alureStream;
-ALboolean alureDestroyStream(alureStream *stream, ALsizei numBufs, ALuint *bufs);
 
 #endif
 

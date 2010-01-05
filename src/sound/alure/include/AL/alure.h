@@ -45,7 +45,7 @@ extern "C" {
 #endif
 
 typedef struct alureStream alureStream;
-
+ALURE_API void ALURE_APIENTRY init_alure(void);
 ALURE_API void ALURE_APIENTRY alureGetVersion(ALuint *major, ALuint *minor);
 ALURE_API const ALchar* ALURE_APIENTRY alureGetErrorString(void);
 

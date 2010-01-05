@@ -1,18 +1,28 @@
 #ifndef DISABLE_SOUND
 #include "sdlsound.h"
 
-//#include <AL/alut.h>
+#include "AL/alure.h"
 
 #include "sound/ring_sound.h"
 #include "sound/pm_sound.h"
+#include <wx/log.h>
+#include "utils/debug.h"
+#include "utils/conversion.h"
 
+#include <assert.h>
 
 ALsound& sound()
 {
 	static ALsound m_sound;
     return m_sound;
 }
-
+volatile int isdone = 0;
+static void eos_callback(void *unused, ALuint unused2)
+{
+	isdone = 1;
+	(void)unused;
+	(void)unused2;
+}
 ALsound::ALsound()
 {
   //Initialise SDL, mixer subsystem and load sound sample
@@ -44,12 +54,27 @@ ALsound::ALsound()
 	//*
 
 	//create single file source
+	assert(alureInitDevice(0, 0));
+
 	alGenSources(1,&alsource);
 	if(alGetError()!=AL_NO_ERROR)
 	{
-		//
+		wxLogError( TowxString(alureGetErrorString()) );
 	}
+	buf = alureCreateBufferFromMemory( pm_sound_data, sizeof(pm_sound_data)/sizeof(pm_sound_data[0]) );
+	if ( !alGetError()!=AL_NO_ERROR )
+	{
+		wxLogError( TowxString(alureGetErrorString()) );
+		return;
+	}
+	alSourcei(alsource, AL_BUFFER, buf);
 
+
+	if (alurePlaySource(alsource, eos_callback, buf) == AL_FALSE)
+	{
+		wxLogError( TowxString(alureGetErrorString()) );
+		return;
+	}
 }
 
 ALsound::~ALsound()

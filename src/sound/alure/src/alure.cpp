@@ -41,7 +41,7 @@ CRITICAL_SECTION cs_StreamPlay;
 alureStream::ListType alureStream::StreamList;
 
 
-static void init_alure(void)
+void init_alure(void)
 {
     InitializeCriticalSection(&cs_StreamPlay);
 
