@@ -60,21 +60,16 @@ ALsound::ALsound()
 	if(alGetError()!=AL_NO_ERROR)
 	{
 		wxLogError( TowxString(alureGetErrorString()) );
+		assert( false );
 	}
 	buf = alureCreateBufferFromMemory( pm_sound_data, sizeof(pm_sound_data)/sizeof(pm_sound_data[0]) );
-	if ( !alGetError()!=AL_NO_ERROR )
+	if ( alGetError()!=AL_NO_ERROR )
 	{
 		wxLogError( TowxString(alureGetErrorString()) );
+		assert( false );
 		return;
 	}
 	alSourcei(alsource, AL_BUFFER, buf);
-
-
-	if (alurePlaySource(alsource, eos_callback, buf) == AL_FALSE)
-	{
-		wxLogError( TowxString(alureGetErrorString()) );
-		return;
-	}
 }
 
 ALsound::~ALsound()
@@ -90,7 +85,12 @@ void ALsound::ring() const
 
 void ALsound::pm() const
 {
-
+	if (alurePlaySource(alsource, eos_callback, 0) == AL_FALSE)
+	{
+		wxLogError( TowxString(alureGetErrorString()) );
+		assert( false );
+		return;
+	}
 }
 
 #endif
