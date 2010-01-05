@@ -20,7 +20,7 @@ extern "C" {
  #if defined(ALURE_BUILD_LIBRARY)
   #define ALURE_API __declspec(dllexport)
  #else
-  #define ALURE_API __declspec(dllimport)
+  #define ALURE_API 
  #endif
 #else
  #if defined(ALURE_BUILD_LIBRARY) && defined(HAVE_GCC_VISIBILITY)
