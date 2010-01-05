@@ -45,4 +45,4 @@ SET( boost_INCLUDE_DIR /opt/mingw32/include )
 link_directories( /opt/mingw32/lib )
 INCLUDE_DIRECTORIES(/opt/mingw32/include  )
 
-ADD_DEFINITIONS( -DWXUSINGDLL -D__WXMSW__ -mthreads)
+ADD_DEFINITIONS( -DCURL_STATICLIB -DWXUSINGDLL -D__WXMSW__ -mthreads)

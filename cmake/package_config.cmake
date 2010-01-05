@@ -29,7 +29,6 @@ IF (WIN32)
 	SET( BASEPATH /opt/mingw32/ )
 	INSTALL(FILES
 		${BASEPATH}/i586-pc-mingw32/bin/mingwm10.dll
-		${BASEPATH}/bin/libcurl-4.dll
 		DESTINATION . )
 	
 ELSE (WIN32)
