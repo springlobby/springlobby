@@ -592,7 +592,7 @@ void DisplayError( const wxString& resourcename, TorrentWrapper::DownloadRequest
 	UiEvents::GetStatusEventSender( UiEvents::addStatusMessage ).SendEvent( data );
 #else
 	wxMutexGuiEnter();
-	customMessageBoxNoModal( -6417, msg, title );//if this throws we're dead
+	customMessageBoxNoModal( SL_MAIN_ICON, msg, title );//if this throws we're dead
 	wxMutexGuiLeave();
 #endif
 }
