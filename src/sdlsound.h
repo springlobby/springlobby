@@ -13,9 +13,10 @@ class ALsound
 		void pm() const;
 
 	private:
-		int m_num_buffer;
-		int m_num_sources;
-		ALuint alsource,buf;
+		static const int m_num_buffer = 2;
+		static const int m_num_sources = 2;
+		ALuint m_sources[m_num_sources];
+		ALuint m_buffers[m_num_buffer];
 };
 
 ALsound& sound();

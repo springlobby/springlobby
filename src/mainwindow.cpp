@@ -535,10 +535,11 @@ void MainWindow::OnMenuDisconnect( wxCommandEvent& /*unused*/ )
 {
   ui().Disconnect();
 }
-
+#include "sdlsound.h"
 void MainWindow::OnMenuSaveOptions( wxCommandEvent& /*unused*/ )
 {
   sett().SaveSettings();
+  sound().pm();
 }
 
 void MainWindow::OnMenuQuit( wxCommandEvent& /*unused*/ )
@@ -549,7 +550,7 @@ void MainWindow::OnMenuQuit( wxCommandEvent& /*unused*/ )
 
 void MainWindow::OnMenuVersion( wxCommandEvent& /*unused*/ )
 {
-    ui().CheckForUpdates();
+	ui().CheckForUpdates();
 }
 
 void MainWindow::OnUnitSyncReload( wxCommandEvent& /*unused*/ )
@@ -663,11 +664,9 @@ void MainWindow::OnMenuLoadLayout( wxCommandEvent& /*unused*/ )
     LoadPerspectives( layouts[result] );
 }
 
-#include "sdlsound.h"
 void MainWindow::OnMenuResetLayout( wxCommandEvent& /*event*/ )
 {
-	sound().pm();
-	//LoadPerspectives( _T("SpringLobby-default") );
+	LoadPerspectives( _T("SpringLobby-default") );
 }
 
 const MainWindow::TabNames& MainWindow::GetTabNames()

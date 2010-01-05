@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 import sys
 import os
 import os.path
@@ -23,7 +24,7 @@ for path in sys.argv[1:]:
 	count = len(bytes)
  
 	# Create the C header
-	text = "/* %s - %d bytes */\n static const unsigned char %s_png[] = {\n" % (filename, count, filename)
+	text = "/* %s - %d bytes */\n static const unsigned char %s_data[] = {\n" % (filename, count, filename)
  
 	# Iterate the characters, we want
 	# lines like:
@@ -40,5 +41,4 @@ for path in sys.argv[1:]:
  
 	# Now conclude the C source
 	text += "};\n/* End Of File */\n"
- 
 	open(path + ".h", 'w').write(text)

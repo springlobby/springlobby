@@ -8,13 +8,14 @@
 #include <wx/log.h>
 #include "utils/debug.h"
 #include "utils/conversion.h"
-
+#include "globalsmanager.h"
 #include <assert.h>
 
 ALsound& sound()
 {
-	static ALsound m_sound;
-    return m_sound;
+	static LineInfo<ALsound> m( AT );
+	static GlobalObjectHolder<ALsound,LineInfo<ALsound> > m_sound( m );
+	return m_sound;
 }
 volatile int isdone = 0;
 static void eos_callback(void *unused, ALuint unused2)
@@ -25,16 +26,6 @@ static void eos_callback(void *unused, ALuint unused2)
 }
 ALsound::ALsound()
 {
-  //Initialise SDL, mixer subsystem and load sound sample
-  //Fails are treated silently
-//  SDL_RWops *ringwave = SDL_RWFromConstMem(ring_sound_data, sizeof(ring_sound_data));
-//  SDL_RWops *pmwave = SDL_RWFromConstMem(pm_sound_data, sizeof(pm_sound_data));
-	m_num_buffer = 0;
-	m_num_sources = 0;
-
-
-	ALuint alwavs = 0;
-
 	//Init
 	alGetError();
 	//*
@@ -53,44 +44,55 @@ ALsound::ALsound()
 	alListenerfv(AL_ORIENTATION,alori);
 	//*
 
-	//create single file source
 	assert(alureInitDevice(0, 0));
 
-	alGenSources(1,&alsource);
+	alGenSources(m_num_sources,m_sources);
 	if(alGetError()!=AL_NO_ERROR)
 	{
 		wxLogError( TowxString(alureGetErrorString()) );
 		assert( false );
+		return;
 	}
-	buf = alureCreateBufferFromMemory( pm_sound_data, sizeof(pm_sound_data)/sizeof(pm_sound_data[0]) );
+
+	m_buffers[0] = alureCreateBufferFromMemory( pm_sound_data, sizeof(pm_sound_data)/sizeof(pm_sound_data[0]) );
+	m_buffers[1] = alureCreateBufferFromMemory( ring_sound_data, sizeof(ring_sound_data)/sizeof(ring_sound_data[0]) );
+
 	if ( alGetError()!=AL_NO_ERROR )
 	{
 		wxLogError( TowxString(alureGetErrorString()) );
 		assert( false );
 		return;
 	}
-	alSourcei(alsource, AL_BUFFER, buf);
-}
-
-ALsound::~ALsound()
-{
-
-}
-
-void ALsound::ring() const
-{
-
-}
-
-
-void ALsound::pm() const
-{
-	if (alurePlaySource(alsource, eos_callback, 0) == AL_FALSE)
+	alSourcei(m_sources[0], AL_BUFFER, m_buffers[0] );
+	alSourcei(m_sources[1], AL_BUFFER, m_buffers[1] );
+	if ( alGetError()!=AL_NO_ERROR )
 	{
 		wxLogError( TowxString(alureGetErrorString()) );
 		assert( false );
 		return;
 	}
+}
+
+ALsound::~ALsound()
+{
+	alureStopSource(m_sources[0], AL_FALSE);
+	alureStopSource(m_sources[1], AL_FALSE);
+
+	alDeleteSources(m_num_sources, m_sources);
+	alureShutdownDevice();
+}
+
+void ALsound::ring() const
+{
+	if (alurePlaySource(m_sources[1], 0, 0) == AL_FALSE)
+		wxLogError( TowxString(alureGetErrorString()) );
+}
+
+
+void ALsound::pm() const
+{
+	if (alurePlaySource(m_sources[0], 0, 0) == AL_FALSE)
+		wxLogError( TowxString(alureGetErrorString()) );
 }
 
 #endif

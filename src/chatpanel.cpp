@@ -598,7 +598,7 @@ void ChatPanel::Said( const wxString& who, const wxString& message )
 	if ( req_user ) {
      ui().mw().RequestUserAttention();
      #ifndef DISABLE_SOUND
-     if ( sett().GetChatPMSoundNotificationEnabled() && ( ui().GetActiveChatPanel() != this  || !wxTheApp->IsActive() ) )
+	 //if ( sett().GetChatPMSoundNotificationEnabled() && ( ui().GetActiveChatPanel() != this  || !wxTheApp->IsActive() ) )
         sound().pm();
      #endif
 	}

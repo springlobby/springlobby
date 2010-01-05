@@ -55,6 +55,7 @@
 #include "defines.h"
 #include "customizations.h"
 #include "curl/http.h"
+#include "sdlsound.h"
 
 #include "gui/simplefront.h"
 
@@ -159,9 +160,13 @@ bool SpringLobbyApp::OnInit()
 
 	sett().RefreshSpringVersionList();
 
-//    usync(); //init object, sink needs to exist before event is posted. next line would do both object(sink) creation and Event posting
-//    GetGlobalEventSender(GlobalEvents::UnitSyncReloadRequest).SendEvent( 0 ); // request an unitsync reload
+	//unitsync first load, async via event posting
 	usync().AddReloadEvent();
+
+	#ifndef DISABLE_SOUND
+		//sound sources/buffer init
+		sound();
+	#endif
 
     CacheAndSettingsSetup();
 
