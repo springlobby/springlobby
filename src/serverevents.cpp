@@ -26,6 +26,7 @@
 #include "settings.h"
 #include "utils/customdialogs.h"
 #include "utils/tasutil.h"
+#include "utils/uievents.h"
 
 #ifndef NO_TORRENT_SYSTEM
 #include "torrentwrapper.h"
@@ -113,8 +114,9 @@ void ServerEvents::OnMotd( const wxString& msg )
 
 void ServerEvents::OnPong( wxLongLong ping_time )
 {
-    //wxLongLong is non-POD and cannot be passed to wxFormat as such. use c-string rep instead. converting to long might loose precision
-    ui().OnServerMessage( m_serv, wxString::Format( _("ping reply took %s ms"), ping_time.ToString().c_str() ) );
+	//wxLongLong is non-POD and cannot be passed to wxFormat as such. use c-string rep instead. converting to long might loose precision
+	UiEvents::StatusData data( wxString::Format( _("ping: %s ms"), ping_time.ToString().c_str() ), 2 );
+	UiEvents::GetStatusEventSender( UiEvents::addStatusMessage ).SendEvent( data );
 }
 
 

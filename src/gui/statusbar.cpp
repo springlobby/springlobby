@@ -7,8 +7,8 @@ Statusbar::Statusbar( wxWindow* parent )
 	m_removeMessageSink( this, &GetStatusEventSender(UiEvents::removeStatusMessage) )
 
 {
-	int w[2] = {-1,-1};
-	SetFieldsCount( 2, w );
+	int w[3] = {-1,-1,120};
+	SetFieldsCount( 3, w );
 	PushStatusText( _T("SpringLobby ") + GetSpringLobbyVersion(), 1 );
 }
 
