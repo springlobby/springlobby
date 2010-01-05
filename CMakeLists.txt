@@ -104,64 +104,19 @@ ENDIF(NOT CMAKE_CROSSCOMPILING)
 #----------------------------------------------------------------------------------------------------
 # SDL libs dependency check
 #----------------------------------------------------------------------------------------------------
-IF ( CMAKE_CROSSCOMPILING )
-	ADD_DEFINITIONS( -DDISABLE_SOUND )
-	SET( OPTION_SOUND
-	0 FORCE-CACHE BOOL )
-ELSE ( CMAKE_CROSSCOMPILING )
+
 IF ( OPTION_SOUND )
 
-	IF (CMAKE_CROSSCOMPILING OR NOT WIN32)
-		FIND_PACKAGE(SDL REQUIRED)
-		FIND_PACKAGE(SDL_mixer REQUIRED)
-		FIND_PACKAGE(SDL_sound REQUIRED)
-
-		# Throw an error to the user if SDL not found
-		if ( NOT SDL_FOUND )
-		message ( FATAL_ERROR "SDL library not found! Please install the package or toggle OPTION_SOUND to OFF" )
-		endif( NOT SDL_FOUND )
-
-		# Throw an error to the user if SDL_mixer not found
-		if ( NOT SDLMIXER_FOUND )
-		message ( FATAL_ERROR "SDL_mixer library not found! Please install the package or toggle OPTION_SOUND to OFF" )
-		endif(NOT SDLMIXER_FOUND)
-
-		# Throw an error to the user if SDL_sound not found
-		if ( NOT SDL_SOUND_FOUND )
-		message ( FATAL_ERROR "SDL_sound library not found! Please install the package or toggle OPTION_SOUND to OFF" )
-		endif( NOT SDL_SOUND_FOUND )
-
-		# MESSAGE("sound inc dir: ${SDL_SOUND_INCLUDE_DIR}")
-		# MESSAGE("mixer inc dir: ${SDLMIXER_INCLUDE_DIR}")
-		# MESSAGE("sound libs: ${SDL_SOUND_LIBRARIES}")
-		# MESSAGE("mixer libs: ${SDLMIXER_LIBRARY}")
-	ENDIF(CMAKE_CROSSCOMPILING OR NOT WIN32)
-
-	IF(NOT WIN32)
-		# Set include paths and libraries to link.
-		INCLUDE_DIRECTORIES( ${SDL_SOUND_INCLUDE_DIR} ${SDLMIXER_INCLUDE_DIR} )
-		LINK_LIBRARIES( # ${SDL_SOUND_LIBRARIES}
-			${SDLMIXER_LIBRARY}  )
-	ELSE(NOT WIN32)
-		SET(SDL_INCLUDE_DIR "SDL_INCLUDE_DIR_NOT_SET" CACHE PATH "Path to SDL header files (sdl_mixer.h should be in the same dir as well)")
-		SET(SDLMAIN_LIBRARY "SDLMAIN_LIBRARY_NOT_SET" CACHE FILEPATH "Filepath to SDLmain.lib or libsdlmain.a, depending on whether you're using MSVC or MingW")
-		SET(SDL_LIBRARY "SDL_LIBRARY_NOT_SET" CACHE FILEPATH "Filepath to SDL.lib or libsdl.dll.a, depending on whether you're using MSVC or MingW")
-		SET(SDLMIXER_LIBRARY "SDLMIXER_LIBRARY_NOT_SET" CACHE FILEPATH "Filepath to SDL_mixer.lib or libSDL_mixer.dll.a, depending on whether you're using MSVC or MingW")
-		IF(NOT CMAKE_CROSSCOMPILING)
-			INCLUDE_DIRECTORIES( ${SDL_INCLUDE_DIR})
-			LINK_LIBRARIES(${SDLMAIN_LIBRARY} ${SDL_LIBRARY} ${SDLMIXER_LIBRARY})
-		ELSE(NOT CMAKE_CROSSCOMPILING)
-			INCLUDE_DIRECTORIES( ${sdl_INCLUDE_DIR} )
-			LINK_DIRECTORIES( ${sdl_LIB_DIR} )
-			LINK_LIBRARIES(SDLmain SDL SDL_mixer)
-		ENDIF(NOT CMAKE_CROSSCOMPILING)
-    ENDIF(NOT WIN32)
+	FIND_PACKAGE(OpenAL REQUIRED)
+	INCLUDE_DIRECTORIES(${OPENAL_INCLUDE_DIR})
+	LINK_LIBRARIES( ${OPENAL_LIBRARY} )
+	Add_Subdirectory( ${springlobby_SOURCE_DIR}/src/sound/alure )
 
 ELSE ( OPTION_SOUND )
     # Disable sound.
     ADD_DEFINITIONS( -DDISABLE_SOUND )
 ENDIF ( OPTION_SOUND )
-ENDIF( CMAKE_CROSSCOMPILING )
+
 
 IF( ENABLE_DEBUG_REPORT )
 	ADD_DEFINITIONS( -DENABLE_DEBUG_REPORT )
@@ -260,7 +215,7 @@ IF(WIN32)
 ENDIF(WIN32)
 
 # Here the wxWidgets Libraries are added. These are set for us by the FIND Script. If you need other Libraries, you can add them here as well.
-TARGET_LINK_LIBRARIES(springlobby ${wxWidgets_LIBRARIES} )
+TARGET_LINK_LIBRARIES(springlobby ${wxWidgets_LIBRARIES} ${OPENAL_LIBRARY} )
 TARGET_LINK_LIBRARIES(springsettings ${wxWidgets_LIBRARIES} )
 
 IF(MINGW)

@@ -1,63 +1,71 @@
 #ifndef DISABLE_SOUND
-
-#include "SDL.h"
-#include "SDL_mixer.h"
-
-#include "sounds/ring_sound.h"
-#include "sounds/pm_sound.h"
-
 #include "sdlsound.h"
 
+//#include <AL/alut.h>
 
-SDLSound& sound()
+#include "sound/ring_sound.h"
+#include "sound/pm_sound.h"
+
+
+ALsound& sound()
 {
-    static SDLSound m_sound;
+	static ALsound m_sound;
     return m_sound;
 }
 
-SDLSound::SDLSound()
+ALsound::ALsound()
 {
   //Initialise SDL, mixer subsystem and load sound sample
   //Fails are treated silently
-  SDL_RWops *ringwave = SDL_RWFromConstMem(ring_sound_data, sizeof(ring_sound_data));
-  SDL_RWops *pmwave = SDL_RWFromConstMem(pm_sound_data, sizeof(pm_sound_data));
-
-  if(SDL_Init(SDL_INIT_AUDIO) < 0) {
-    return;
-  }
-
-  if (Mix_OpenAudio(11025, AUDIO_S16SYS, 1, 1024) < 0)
-    {
-      return;
-    }
+//  SDL_RWops *ringwave = SDL_RWFromConstMem(ring_sound_data, sizeof(ring_sound_data));
+//  SDL_RWops *pmwave = SDL_RWFromConstMem(pm_sound_data, sizeof(pm_sound_data));
+	m_num_buffer = 0;
+	m_num_sources = 0;
 
 
+	ALuint alwavs = 0;
 
-  ring_sound = Mix_LoadWAV_RW(ringwave, 0);
-  pm_sound = Mix_LoadWAV_RW( pmwave, 0);
+	//Init
+	alGetError();
+	//*
+
+	//set up 3d sound
+	ALfloat	alpos[3];
+	ALfloat	alvel[3];
+	ALfloat	alori[6];
+	alpos[0] = 0; alpos[1] = 0; alpos[2] = 0;
+	alvel[0] = 0; alvel[1] = 0; alvel[2] = 0;
+	alori[0] = 0; alori[1] = 0; alori[2] = -1;
+	alori[3] = 0; alori[4] = 1; alori[5] = 0;
+
+	alListenerfv(AL_POSITION,alpos);
+	alListenerfv(AL_VELOCITY,alvel);
+	alListenerfv(AL_ORIENTATION,alori);
+	//*
+
+	//create single file source
+	alGenSources(1,&alsource);
+	if(alGetError()!=AL_NO_ERROR)
+	{
+		//
+	}
 
 }
 
-SDLSound::~SDLSound()
+ALsound::~ALsound()
 {
-  if ( ring_sound ) Mix_FreeChunk(ring_sound);
-  if ( pm_sound ) Mix_FreeChunk(pm_sound);
 
-
-  Mix_CloseAudio();
-
-  SDL_Quit();
 }
 
-void SDLSound::ring() const
+void ALsound::ring() const
 {
-  if ( ring_sound ) Mix_PlayChannel(-1, ring_sound, 0);
+
 }
 
 
-void SDLSound::pm() const
+void ALsound::pm() const
 {
-  if ( pm_sound ) Mix_PlayChannel(-1, pm_sound, 0);
+
 }
 
 #endif
