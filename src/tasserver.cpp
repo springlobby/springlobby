@@ -632,6 +632,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
 		if ( m_online ) return; // in case is the server sends WTF
         m_online = true;
         m_user = params;
+		m_ping_thread = new PingThread( *this, 10000 );
 		m_ping_thread->Init();
         m_se->OnLogin( );
     }
@@ -2201,7 +2202,6 @@ void TASServer::OnConnected( Socket* /*unused*/ )
 	m_token_transmission = false;
 	m_relay_host_manager_list.Clear();
 	m_last_denied = _T("");
-	m_ping_thread = new PingThread( *this, 10000 );
 	GetLastID() = 0;
 	GetPingList().clear();
 }
@@ -2220,9 +2220,12 @@ void TASServer::OnDisconnected( Socket* /*unused*/ )
 	m_relay_host_manager_list.Clear();
 	GetLastID() = 0;
 	GetPingList().clear();
-	m_ping_thread->Wait();
-	delete m_ping_thread;
-	m_ping_thread = 0;
+	if ( m_ping_thread )
+	{
+		m_ping_thread->Wait();
+		delete m_ping_thread;
+		m_ping_thread = 0;
+	}
 	m_users.Nullify();
     m_se->OnDisconnected( connectionwaspresent );
     Server::OnDisconnected();
