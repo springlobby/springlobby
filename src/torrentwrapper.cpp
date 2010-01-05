@@ -587,9 +587,14 @@ void DisplayError( const wxString& resourcename, TorrentWrapper::DownloadRequest
 	}
 	msg = wxString::Format(_("Downloading %s failed with reason:\n%s"), resourcename.c_str(), msg.c_str() );
 	wxString title = _("Download failure");
+#ifdef __WXMSW__
+	UiEvents::StatusData data( wxString::Format(_("Downloading %s failed"), resourcename.c_str() ), 1 );
+	UiEvents::GetStatusEventSender( UiEvents::addStatusMessage ).SendEvent( data );
+#else
 	wxMutexGuiEnter();
-	customMessageBoxNoModal( SL_MAIN_ICON, msg, title );//if this throws we're dead
+	customMessageBoxNoModal( -6417, msg, title );//if this throws we're dead
 	wxMutexGuiLeave();
+#endif
 }
 
 ResourceInfoWorkItem::ResourceInfoWorkItem( const  wxString& name, TorrentWrapper* tor )
