@@ -36,7 +36,7 @@ for path in sys.argv[1:]:
 		text += "0x%02x" % (byte)
 		# Separate all but the last values 
 		if (i + 1) < count:
-			text += ", "
+			text += ","
 		i += 1
  
 	# Now conclude the C source
