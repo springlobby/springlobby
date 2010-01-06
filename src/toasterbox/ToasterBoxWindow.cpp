@@ -8,7 +8,14 @@
 #include <wx/timer.h>
 #include <wx/dcclient.h>
 #include <wx/region.h>
+#include <wx/dcbuffer.h>
 #include "ToasterBoxWindow.h"
+
+#ifndef __WXMSW__
+	typedef wxClientDC DCType;
+#else
+	typedef wxBufferedPaintDC DCType;
+#endif
 
 long ToasterBoxWindow::count = 0;
 
@@ -18,7 +25,7 @@ long ToasterBoxWindow::count = 0;
 //END_EVENT_TABLE ()
 
 ToasterBoxWindow::ToasterBoxWindow(wxWindow* parent, wxTimer *_parent2)
-	:  wxPopupWindow(parent,  wxNO_BORDER|wxSTAY_ON_TOP|wxFRAME_NO_TASKBAR|wxFRAME_TOOL_WINDOW)
+	:  wxPopupWindow(parent,  wxNO_BORDER|wxSTAY_ON_TOP|wxFRAME_NO_TASKBAR)
 {
   startTime = wxGetLocalTime();
   parent2 = _parent2;
@@ -131,22 +138,24 @@ void ToasterBoxWindow::SetPopupTextColor(int r, int g, int b)
 void ToasterBoxWindow::ScrollUp()
 {
   wxLogDebug("Raising");
-
+  SetSize(dialogTop.x, dialogTop.y, GetSize().GetWidth(),GetSize().GetHeight()	);
   Show();
+//
+//
+//  //walk the Y value up in a raise motion
+//  int windowSize = 0;
+//  for(int i = bottomRight.y; i > dialogTop.y; i -= step)
+//  {
+//    if(i < dialogTop.y)
+//      i = dialogTop.y;
+//    windowSize += step;
+//    SetSize(dialogTop.x, i, GetSize().GetWidth(),
+//      windowSize);
+//	//Update();
+//	  wxMilliSleep(sleepTime);
+//  }
 
-
-  //walk the Y value up in a raise motion
-  int windowSize = 0;
-  for(int i = bottomRight.y; i > dialogTop.y; i -= step)
-  {
-    if(i < dialogTop.y)
-      i = dialogTop.y;
-    windowSize += step;
-    SetSize(dialogTop.x, i, GetSize().GetWidth(),
-      windowSize);
-    //Update();
-	  wxMilliSleep(sleepTime);
-  }
+//
   Update();
   DrawText();
   Update();
@@ -155,20 +164,20 @@ void ToasterBoxWindow::ScrollUp()
 void ToasterBoxWindow::ScrollDown( )
 {
   wxLogDebug("Lowering");
-
-  //walk down the Y value
-  int windowSize = GetSize().GetHeight();
-  for(int i = dialogTop.y; i < bottomRight.y; i += step)
-  {
-    if(i > bottomRight.y)
-      i = bottomRight.y;
-    windowSize -= step;
-    SetSize(dialogTop.x, i, GetSize().GetWidth(),
-      windowSize);
-    //Update();
-	  wxMilliSleep(sleepTime);
-
-  }
+//
+//  //walk down the Y value
+//  int windowSize = GetSize().GetHeight();
+//  for(int i = dialogTop.y; i < bottomRight.y; i += step)
+//  {
+//    if(i > bottomRight.y)
+//      i = bottomRight.y;
+//    windowSize -= step;
+//    SetSize(dialogTop.x, i, GetSize().GetWidth(),
+//      windowSize);
+//    //Update();
+//	  wxMilliSleep(sleepTime);
+//
+//  }
   Hide();
   if(parent2)
     parent2->Notify();
@@ -178,6 +187,7 @@ void ToasterBoxWindow::ScrollDown( )
 #include "../settings.h"
 void ToasterBoxWindow::DrawText()
 {
+	DCType dc( this );
   //width and height of text
   wxCoord w = 0, h = 0;
   //where we will set the text
@@ -193,7 +203,7 @@ void ToasterBoxWindow::DrawText()
   //the popupText after our transformations (if we do any)
   wxString pText = GetPopupText();
 
-  wxClientDC dc(this);
+
   dc.GetTextExtent(pText, &w, &h);
 
   //shrink the text to fit in the popup box
@@ -252,11 +262,11 @@ void ToasterBoxWindow::PrintInfo()
 
 void ToasterBoxWindow::OnPaint( wxPaintEvent& event )
 {
-DrawText();
+	DrawText();
 }
 
 /// wxEVT_ERASE_BACKGROUND event handler for ID_WXGRADIENTBUTTON
 void ToasterBoxWindow::OnEraseBackground( wxEraseEvent& event )
 {
-DrawText();
+	DrawText();
 }
