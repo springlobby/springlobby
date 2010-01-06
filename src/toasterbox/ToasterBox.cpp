@@ -165,7 +165,7 @@ void ToasterBox::Notify()
   CleanList();
 
   //figure out how many blanks we have
-  wxToasterBoxWindowListNode *node = winList->GetFirst();
+  ToasterBoxWindowListNode node = winList->GetFirst();
   if(!node)
     return;
 
@@ -182,7 +182,7 @@ void ToasterBox::Notify()
     for(unsigned int j = 0; j < winList->GetCount(); j++)
     {
       long ourNewHeight = i - (j * popupSize.GetHeight()-8);
-      wxToasterBoxWindowListNode *tmpNode = winList->Item(j);
+	  ToasterBoxWindowListNode tmpNode = winList->Item(j);
       ToasterBoxWindow *tmpTb = tmpNode->GetData();
       //reset where the object THINKS its supposed to be
       tmpTb->SetPopupPosition(popupPosition.x, ourNewHeight);
@@ -191,7 +191,7 @@ void ToasterBox::Notify()
         tmpTb->GetSize().GetWidth(),
         tmpTb->GetSize().GetHeight());
 
-      tmpNode = 0;
+	  //tmpNode = 0;
       tmpTb = 0;
     }
 
@@ -200,20 +200,21 @@ void ToasterBox::Notify()
     //Update();
   }
   StartAll();
-  node = 0;
+  //node = 0;
 }
 
 void ToasterBox::CleanList()
 {
   //wxLogDebug("Items on list bc %i", winList->GetCount());
-  wxToasterBoxWindowListNode *node = winList->GetFirst();
+  ToasterBoxWindowListNode node = winList->GetFirst();
   while(node)
   {
     ToasterBoxWindow *tbTemp = node->GetData();
     if(!tbTemp->IsShown())
     {
-      delete tbTemp;
-      delete node;
+	  winList->DeleteNode(node);
+
+
       node = winList->GetFirst();
     }
     else
@@ -221,13 +222,13 @@ void ToasterBox::CleanList()
 
     tbTemp = 0;
   }
-  node = 0;
+  //node = 0;
   //wxLogDebug("Items on list ac %i", winList->GetCount());
 }
 
 void ToasterBox::StartAll(bool start)
 {
-  wxToasterBoxWindowListNode *node = winList->GetLast();
+  ToasterBoxWindowListNode node = winList->GetLast();
   while(node)
   {
     ToasterBoxWindow *tbTemp = node->GetData();
@@ -235,5 +236,5 @@ void ToasterBox::StartAll(bool start)
     node = node->GetPrevious();
     tbTemp = 0;
   }
-  node = 0;
+  //node = 0;
 }
