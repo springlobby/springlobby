@@ -144,6 +144,8 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
     m_use_tabicons = new wxCheckBox( this, -1, _("Show big icons in mainwindow tabs?"), wxDefaultPosition, wxDefaultSize, 0 );
     m_use_tabicons->SetValue( sett().GetUseTabIcons() );
     m_misc_gui_sizer->Add( m_use_tabicons , 0, wxEXPAND | wxALL, 5 );
+	m_use_notif_popups = new wxCheckBox( this, -1, _("Use notification popups?"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_misc_gui_sizer->Add( m_use_notif_popups, 0, wxEXPAND | wxALL, 5 );
 
 
     m_x_on_all_tabs = new wxCheckBox( this, -1, _("Show close button on all tabs? (needs restart to take effect)"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -158,6 +160,10 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
     m_start_tab_sizer->Add( m_start_tab_label  , 0, wxALIGN_CENTER_VERTICAL | wxEXPAND | wxALL, 5 );
     m_start_tab_sizer->Add( m_start_tab , 0,  wxALIGN_CENTER_VERTICAL , 5 );
     m_main_sizer->Add( m_start_tab_sizer, 0, wxALL, 5 );
+
+	//dummy event that updates controls to correct state
+	wxCommandEvent evt;
+	OnRestore( evt );
 
     SetScrollRate( SCROLL_RATE, SCROLL_RATE );
     SetSizer( m_main_sizer );
@@ -192,6 +198,7 @@ void LobbyOptionsTab::OnApply(wxCommandEvent& /*unused*/)
     sett().SetEditorPath( m_editor_edit->GetValue() );
 
     sett().SetShowXallTabs( m_x_on_all_tabs->IsChecked() );
+	sett().SetUseNotificationPopups( m_use_notif_popups->IsChecked() );
 }
 
 
@@ -217,6 +224,7 @@ void LobbyOptionsTab::OnRestore(wxCommandEvent& /*unused*/)
     m_editor_edit->SetValue( sett().GetEditorPath() );
 
     m_x_on_all_tabs->SetValue( sett().GetShowXallTabs() );
+	m_use_notif_popups->SetValue( sett().GetUseNotificationPopups() );
 }
 
 void LobbyOptionsTab::HandleWebloc( bool defloc )
