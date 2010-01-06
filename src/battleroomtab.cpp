@@ -34,6 +34,7 @@
 #include "battle.h"
 #include "utils/conversion.h"
 #include "utils/debug.h"
+#include "utils/uievents.h"
 #include "defines.h"
 #include "battleroomlistctrl.h"
 #include "chatpanel.h"
@@ -850,6 +851,9 @@ void BattleRoomTab::OnUserJoined( User& user )
 	m_player_count_lbl->SetLabel( wxString::Format( _( "Players: %d" ), m_battle->GetNumUsers() - m_battle->GetSpectators() ) );
 	m_spec_count_lbl->SetLabel( wxString::Format( _( "Spectators: %d" ), m_battle->GetSpectators() ) );
 	PrintAllySetup();
+
+	UiEvents::GetStatusEventSender( UiEvents::addStatusMessage ).SendEvent(
+			UiEvents::StatusData( wxString::Format(_("%s joined your active battle"), user.GetNick().c_str()), 1 ) );
 }
 
 

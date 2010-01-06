@@ -18,6 +18,7 @@
 #include <wx/utils.h>
 #include <wx/debugrpt.h>
 #include <wx/filename.h>
+#include <wx/app.h>
 
 #include "ui.h"
 #include "tasserver.h"
@@ -30,6 +31,7 @@
 #include "user.h"
 #include "utils/debug.h"
 #include "utils/conversion.h"
+#include "utils/uievents.h"
 #include "updater/updatehelper.h"
 #include "uiutils.h"
 #include "chatpanel.h"
@@ -595,16 +597,24 @@ void Ui::OnDisconnected( Server& server, bool wasonline )
 
     mw().GetChatTab().LeaveChannels();
 
+	wxString disconnect_msg = wxString::Format(_("disconnected from server: %s"), server.GetServerName().c_str() );
+	UiEvents::GetStatusEventSender( UiEvents::addStatusMessage ).SendEvent(
+			UiEvents::StatusData( disconnect_msg, 1 ) );
+	if ( sett().GetUseNotificationPopups() && !wxTheApp->IsActive() )
+	{
+		UiEvents::GetNotificationEventSender().SendEvent(
+				UiEvents::NotficationData( wxNullBitmap, disconnect_msg ) );
+	}
     if ( server.uidata.panel )
     {
-        server.uidata.panel->StatusMessage( _("Disconnected from server.") );
+		server.uidata.panel->StatusMessage( disconnect_msg );
 
         server.uidata.panel->SetServer( 0 );
     }
-		if ( !wasonline ) // couldn't even estabilish a socket, prompt the user to switch to another server
-		{
-			ConnectionFailurePrompt();
-		}
+	if ( !wasonline ) // couldn't even estabilish a socket, prompt the user to switch to another server
+	{
+		ConnectionFailurePrompt();
+	}
 }
 
 void Ui::ConnectionFailurePrompt()
@@ -1123,10 +1133,16 @@ void Ui::OnAcceptAgreement( const wxString& agreement )
 }
 
 
-void Ui::OnRing( const wxString& /*from */)
+void Ui::OnRing( const wxString& from )
 {
     if ( m_main_win == 0 ) return;
     m_main_win->RequestUserAttention();
+
+	if ( sett().GetUseNotificationPopups() && !wxTheApp->IsActive() )
+	{
+		UiEvents::GetNotificationEventSender().SendEvent(
+				UiEvents::NotficationData( wxNullBitmap, wxString::Format(_("%s:\nring!"),from.c_str()) ) );
+	}
 
 #ifndef DISABLE_SOUND
     if ( sett().GetChatPMSoundNotificationEnabled() )

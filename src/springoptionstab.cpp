@@ -34,6 +34,7 @@
 #include "iunitsync.h"
 #include "utils/controls.h"
 #include "utils/platform.h"
+#include "utils/uievents.h"
 #include "uiutils.h"
 #include "settings.h"
 #include "mainwindow.h"
@@ -219,6 +220,7 @@ void SpringOptionsTab::OnApply( wxCommandEvent& /*unused*/ )
 
 	if ( sett().IsFirstRun() ) return;
 
+	UiEvents::ScopedStatusMessage( _("Reloading unitsync"), 0 );
 	sett().RefreshSpringVersionList();
 	if ( !usync().LoadUnitSyncLib( sett().GetCurrentUsedUnitSync() ) )
 	{
