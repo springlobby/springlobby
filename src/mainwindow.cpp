@@ -535,11 +535,10 @@ void MainWindow::OnMenuDisconnect( wxCommandEvent& /*unused*/ )
 {
   ui().Disconnect();
 }
-#include "sdlsound.h"
+
 void MainWindow::OnMenuSaveOptions( wxCommandEvent& /*unused*/ )
 {
   sett().SaveSettings();
-  sound().pm();
 }
 
 void MainWindow::OnMenuQuit( wxCommandEvent& /*unused*/ )

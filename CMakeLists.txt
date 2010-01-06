@@ -104,7 +104,7 @@ IF ( OPTION_SOUND )
 
 	FIND_PACKAGE(OpenAL REQUIRED)
 	INCLUDE_DIRECTORIES(${OPENAL_INCLUDE_DIR})
-	
+
 	Add_Subdirectory( ${springlobby_SOURCE_DIR}/src/sound/alure )
 	INCLUDE_DIRECTORIES( ${springlobby_SOURCE_DIR}/src/sound/alure/include )
 	LINK_LIBRARIES( ${OPENAL_LIBRARY} ${springlobby_BINARY_DIR}/src/sound/alure/libalure.a )
@@ -203,10 +203,10 @@ cmake_policy(SET CMP0004 OLD)
 cmake_policy(SET CMP0006 OLD)
 
 ADD_EXECUTABLE(springlobby WIN32 MACOSX_BUNDLE ${springlobbySrc} ${SettingsSrc} ${SLSharedWithSettings} ${curlSRC} ${springlobby_RC_FILE})
-ADD_EXECUTABLE(springsettings WIN32 MACOSX_BUNDLE ${StandAloneSettings} ${SettingsSrc} ${SLSharedWithSettings} ${curlSRC} ${SpringSettings_RC_FILE} )
+ADD_EXECUTABLE(springsettings WIN32 MACOSX_BUNDLE ${StandAloneSettings} ${SettingsSrc} ${SLSharedWithSettings} ${SpringSettings_RC_FILE} )
 #the updater needs to be build for windows only
-IF(WIN32) 
-       ADD_EXECUTABLE(springlobby_updater WIN32 MACOSX_BUNDLE ${updaterSrc} ${SLSharedWithSettings} ${curlSRC} ${updater_RC_FILE} )
+IF(WIN32)
+       ADD_EXECUTABLE(springlobby_updater WIN32 MACOSX_BUNDLE ${updaterSrc} ${SLSharedWithSettings} ${updater_RC_FILE} )
        TARGET_LINK_LIBRARIES(springlobby_updater ${wxWidgets_LIBRARIES} )
 ENDIF(WIN32)
 
@@ -256,5 +256,3 @@ add_custom_target(distcheck + cd ${CMAKE_BINARY_DIR} &&
 					)
 add_dependencies( distcheck dist )
 add_dependencies( alure springlobby )
-add_dependencies( alure springsettings )
-add_dependencies( alure springlobby_updater )
