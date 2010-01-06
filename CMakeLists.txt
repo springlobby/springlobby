@@ -255,4 +255,4 @@ add_custom_target(distcheck + cd ${CMAKE_BINARY_DIR} &&
                         cmake "-DCMAKE_CXX_FLAGS:STRING=-O0". && ${CMAKE_MAKE_PROGRAM}
 					)
 add_dependencies( distcheck dist )
-add_dependencies( alure springlobby )
+add_dependencies( springlobby alure )
