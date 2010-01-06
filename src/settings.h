@@ -347,11 +347,14 @@ class Settings
 
     void TranslateSavedColumWidths();
 
-    wxString GetEditorPath( );
+	wxString GetEditorPath();
     void SetEditorPath( const wxString& path );
 
     void SetAutoloadedChatlogLinesCount( const int count );
-    int GetAutoloadedChatlogLinesCount( );
+	int GetAutoloadedChatlogLinesCount();
+
+	void SetUseNotificationPopups( const bool use );
+	bool GetUseNotificationPopups();
     /*@}*/
 
     /* ================================================================ */

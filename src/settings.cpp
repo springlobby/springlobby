@@ -2505,3 +2505,13 @@ int Settings::GetAutoloadedChatlogLinesCount( )
 {
     return m_config->Read( _T( "/GUI/AutoloadedChatlogLinesCount" ), 10l );
 }
+
+void Settings::SetUseNotificationPopups( const bool use )
+{
+	m_config->Write( _T("/GUI/UseNotificationPopups"), use );
+}
+
+bool Settings::GetUseNotificationPopups()
+{
+	return m_config->Read( _T("/GUI/UseNotificationPopups"), true );
+}
