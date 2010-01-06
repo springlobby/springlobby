@@ -32,6 +32,7 @@
 #include "channel/channel.h"
 #include "utils/debug.h"
 #include "utils/conversion.h"
+#include "utils/uievents.h"
 #include "updater/updatehelper.h"
 #include "utils/misc.h"
 #include "ui.h"
@@ -596,11 +597,16 @@ void ChatPanel::Said( const wxString& who, const wxString& message )
 
 
 	if ( req_user ) {
-     ui().mw().RequestUserAttention();
-     #ifndef DISABLE_SOUND
-	 if ( sett().GetChatPMSoundNotificationEnabled() && ( ui().GetActiveChatPanel() != this  || !wxTheApp->IsActive() ) )
-        sound().pm();
-     #endif
+		bool inactive = ui().GetActiveChatPanel() != this  || !wxTheApp->IsActive() ;
+		ui().mw().RequestUserAttention();
+		if ( sett().GetUseNotificationPopups() && inactive )
+			UiEvents::GetNotificationEventSender().SendEvent(
+					UiEvents::NotficationData( wxNullBitmap,
+											   wxString::Format( _T("%s:\n%s"), who.c_str(), message.Left(50).c_str() ) ) );
+		#ifndef DISABLE_SOUND
+			if ( sett().GetChatPMSoundNotificationEnabled() && inactive )
+				sound().pm();
+		#endif
 	}
 }
 
