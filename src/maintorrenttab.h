@@ -52,7 +52,7 @@ class MainTorrentTab: public wxScrolledWindow
 		wxButton* m_but_cancel;
 		wxButton* m_but_clear;
 		wxButton* m_but_publish;
-		wxButton* m_but_download;
+		//wxButton* m_but_download;
 		wxButton* m_but_widgets;
 		ColorButton* m_status_color;
 		TorrentListCtrl* m_torrent_list;
@@ -60,7 +60,7 @@ class MainTorrentTab: public wxScrolledWindow
 
         map_infos info_map;
         void OnCancelButton( wxCommandEvent& event );
-        void OnDownloadDialog( wxCommandEvent& event );
+		void OnDownloadDialog( wxCommandEvent& event );
         void OnDLWidgets( wxCommandEvent& event );
         void OnClearFinished( wxCommandEvent& event );
 
