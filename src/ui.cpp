@@ -54,7 +54,7 @@
 #include "utils/customdialogs.h"
 #include "utils/platform.h"
 #include "updater/versionchecker.h"
-#include "sdlsound.h"
+#include "alsound.h"
 #include "globalsmanager.h"
 
 Ui& ui()

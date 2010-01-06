@@ -1,5 +1,5 @@
 #ifndef DISABLE_SOUND
-#include "sdlsound.h"
+#include "alsound.h"
 
 #include "AL/alure.h"
 
@@ -17,13 +17,13 @@ ALsound& sound()
 	static GlobalObjectHolder<ALsound,LineInfo<ALsound> > m_sound( m );
 	return m_sound;
 }
-volatile int isdone = 0;
-static void eos_callback(void *unused, ALuint unused2)
-{
-	isdone = 1;
-	(void)unused;
-	(void)unused2;
-}
+//volatile int isdone = 0;
+//static void eos_callback(void *unused, ALuint unused2)
+//{
+//	isdone = 1;
+//	(void)unused;
+//	(void)unused2;
+//}
 ALsound::ALsound()
 {
 	//Init
