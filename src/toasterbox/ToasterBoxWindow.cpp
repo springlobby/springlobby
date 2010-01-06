@@ -193,7 +193,8 @@ void ToasterBoxWindow::DrawText()
   //where we will set the text
   wxCoord x = 5, y = 0;
   //border from sides and top to text (in pixels)
-  int border = 7;
+  int border_right = 7;
+  int border_left = sbm.GetBitmap().GetWidth() + 4;
   //how much space between text lines
   int textPadding = 4;
   //how much can we have on a line?
@@ -209,7 +210,7 @@ void ToasterBoxWindow::DrawText()
   //shrink the text to fit in the popup box
   if(shrink)
   {
-    while((w +(border * 2))> GetSize().GetWidth())
+	while((w +(border_right + border_left))> GetSize().GetWidth())
     {
       pText = pText.Left(pText.Length()-1);
       dc.GetTextExtent(pText, &w, &h);
@@ -220,10 +221,10 @@ void ToasterBoxWindow::DrawText()
   }
 
   //center the text
-  if(w < GetSize().GetWidth())
-    x = (GetSize().GetWidth() - w) / 2;
-  if(h < GetSize().GetHeight())
-    y = (GetSize().GetHeight() - h) / 2;
+//  if(w < GetSize().GetWidth())
+//    x = (GetSize().GetWidth() - w) / 2;
+//  if(h < GetSize().GetHeight())
+//    y = (GetSize().GetHeight() - h) / 2;
 
   dc.SetTextForeground(textColor);
 
@@ -237,7 +238,7 @@ void ToasterBoxWindow::DrawText()
     y = (GetSize().GetHeight() - ((h+textPadding) * howManyLinesFit)) / 2;
     for(int i = 0; i < howManyLinesFit; i++)
     {
-      dc.DrawText(GetPopupText().Mid((i*textColumns), textColumns), x,y);
+	  dc.DrawText(GetPopupText().Mid((i*textColumns), textColumns), x + border_left,y);
       //move the text down a line
       y += h+textPadding;
     }
