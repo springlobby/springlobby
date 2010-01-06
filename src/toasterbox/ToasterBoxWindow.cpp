@@ -12,9 +12,13 @@
 
 long ToasterBoxWindow::count = 0;
 
-ToasterBoxWindow::ToasterBoxWindow(wxWindow* parent, wxTimer *_parent2):
-  wxFrame(parent, 0, _T("window"),
-  wxPoint(0,0), wxDefaultSize, wxNO_BORDER|wxSTAY_ON_TOP|wxFRAME_NO_TASKBAR)
+//BEGIN_EVENT_TABLE (ToasterBoxWindow, wxFrame)
+//   EVT_KILL_FOCUS (ToasterBoxWindow::RejectFocus)
+//   EVT_SET_FOCUS (ToasterBoxWindow::RejectFocus)
+//END_EVENT_TABLE ()
+
+ToasterBoxWindow::ToasterBoxWindow(wxWindow* parent, wxTimer *_parent2)
+	:  wxPopupWindow(parent,  wxNO_BORDER|wxSTAY_ON_TOP|wxFRAME_NO_TASKBAR|wxFRAME_TOOL_WINDOW)
 {
   startTime = wxGetLocalTime();
   parent2 = _parent2;
@@ -34,8 +38,8 @@ ToasterBoxWindow::ToasterBoxWindow(wxWindow* parent, wxTimer *_parent2):
   SetSize(bottomRight.x, bottomRight.y,
     dialogSize.GetWidth(), dialogSize.GetHeight());
 
-    wxFrame::Connect( wxEVT_ERASE_BACKGROUND, (wxObjectEventFunction)& ToasterBoxWindow::OnEraseBackground );
-    wxFrame::Connect( wxEVT_PAINT, (wxObjectEventFunction)& ToasterBoxWindow::OnPaint );
+	wxPopupWindow::Connect( wxEVT_ERASE_BACKGROUND, (wxObjectEventFunction)& ToasterBoxWindow::OnEraseBackground);
+	wxPopupWindow::Connect( wxEVT_PAINT, (wxObjectEventFunction)& ToasterBoxWindow::OnPaint);
 }
 
 void ToasterBoxWindow::SetPopupBitmap(wxBitmap& bitmap)
@@ -130,6 +134,7 @@ void ToasterBoxWindow::ScrollUp()
 
   Show();
 
+
   //walk the Y value up in a raise motion
   int windowSize = 0;
   for(int i = bottomRight.y; i > dialogTop.y; i -= step)
@@ -140,7 +145,7 @@ void ToasterBoxWindow::ScrollUp()
     SetSize(dialogTop.x, i, GetSize().GetWidth(),
       windowSize);
     //Update();
-      wxUsleep(sleepTime);
+	  wxMilliSleep(sleepTime);
   }
   Update();
   DrawText();
@@ -161,7 +166,7 @@ void ToasterBoxWindow::ScrollDown( )
     SetSize(dialogTop.x, i, GetSize().GetWidth(),
       windowSize);
     //Update();
-      wxUsleep(sleepTime);
+	  wxMilliSleep(sleepTime);
 
   }
   Hide();

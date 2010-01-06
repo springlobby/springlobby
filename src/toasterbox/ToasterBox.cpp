@@ -186,7 +186,7 @@ void ToasterBox::Notify()
       tmpTb = 0;
     }
 
-    wxUsleep(sleepTime);
+	wxMilliSleep(sleepTime);
     //DrawText();
     //Update();
   }

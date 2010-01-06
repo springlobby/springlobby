@@ -1,7 +1,11 @@
 #ifndef TOASTERBOXWINDOW_HH_INCLUDED
 #define TOASTERBOXWINDOW_HH_INCLUDED
+
+#include <wx/timer.h>
 #include <wx/wx.h>
-class ToasterBoxWindow: public wxFrame, public wxTimer
+#include <wx/popupwin.h>
+
+class ToasterBoxWindow: public wxPopupWindow, public wxTimer
 {
   public:
     ToasterBoxWindow(wxWindow* parent, wxTimer *_parent2);
@@ -20,7 +24,7 @@ class ToasterBoxWindow: public wxFrame, public wxTimer
     bool DoesTextFit();
     static long count;
 
-
+	virtual bool AcceptsFocus() const { return false; }
   private:
     void ScrollUp();
     void ScrollDown();

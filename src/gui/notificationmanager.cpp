@@ -3,7 +3,8 @@
 #include "../toasterbox/ToasterBox.h"
 #include "../globalsmanager.h"
 #include "../uiutils.h"
-
+#include "../ui.h"
+#include "../mainwindow.h"
 #include "../images/springlobby.xpm"
 
 NotificationManager& notificationManager()
@@ -16,7 +17,7 @@ NotificationManager& notificationManager()
 NotificationManager::NotificationManager()
     : m_showNotificationSink( this, &UiEvents::GetNotificationEventSender( ) )
 {
-    m_toasterbox = new ToasterBox();
+	m_toasterbox = new ToasterBox(&ui().mw());
         m_toasterbox->SetPopupPauseTime(3000);
   m_toasterbox->SetPopupSize(200,40);
 

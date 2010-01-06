@@ -535,11 +535,10 @@ void MainWindow::OnMenuDisconnect( wxCommandEvent& /*unused*/ )
 {
   ui().Disconnect();
 }
-#include "sdlsound.h"
+
 void MainWindow::OnMenuSaveOptions( wxCommandEvent& /*unused*/ )
 {
   sett().SaveSettings();
-  sound().pm();
 }
 
 void MainWindow::OnMenuQuit( wxCommandEvent& /*unused*/ )
@@ -552,6 +551,7 @@ void MainWindow::OnMenuQuit( wxCommandEvent& /*unused*/ )
 void MainWindow::OnMenuVersion( wxCommandEvent& /*unused*/ )
 {
 //    ui().CheckForUpdates();
+	wxSleep( 2 );
     UiEvents::GetNotificationEventSender().SendEvent( UiEvents::NotficationData( wxBitmap(springlobby_xpm), _T("Hello SpringLobby") ) );
 }
 
