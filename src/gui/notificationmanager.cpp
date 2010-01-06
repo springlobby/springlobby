@@ -56,15 +56,19 @@ void NotificationManager::SetPopupPosition()
 	{
 		case ScreenPosition::bottom_left :
 			m_toasterbox->SetPopupPosition( 0 + m_x_offset, dim_y - m_height - m_y_offset );
+			m_toasterbox->SetStackDirection( ToasterBox::StackUp );
 			break;
-		 case ScreenPosition::top_left :
-			 m_toasterbox->SetPopupPosition( 0 + m_x_offset, 0 + m_y_offset );
-			 break;
-		 case ScreenPosition::top_right :
-			 m_toasterbox->SetPopupPosition( dim_x - m_width - m_x_offset, 0 + m_y_offset );
-			 break;
-		 default://bottom_right
-			 m_toasterbox->SetPopupPosition( dim_x - m_width - m_x_offset, dim_y - m_height - m_y_offset );
-		 break;
+		case ScreenPosition::top_left :
+			m_toasterbox->SetPopupPosition( 0 + m_x_offset, 0 + m_y_offset );
+			m_toasterbox->SetStackDirection( ToasterBox::StackDown );
+			break;
+		case ScreenPosition::top_right :
+			m_toasterbox->SetPopupPosition( dim_x - m_width - m_x_offset, 0 + m_y_offset );
+			m_toasterbox->SetStackDirection( ToasterBox::StackDown );
+			break;
+		default://bottom_right
+			m_toasterbox->SetPopupPosition( dim_x - m_width - m_x_offset, dim_y - m_height - m_y_offset );
+			m_toasterbox->SetStackDirection( ToasterBox::StackUp );
+			break;
 	}
 }

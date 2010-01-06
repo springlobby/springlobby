@@ -28,21 +28,28 @@ class ToasterBox : public wxTimer
     void Notify();
     void CleanList();
     void StartAll(bool start = true);
+	enum StackDirection {
+		StackUp = -1,
+		StackDown = 1
+	};
+	void SetStackDirection( StackDirection dir );
 
 
   private:
+	wxWindow *parent;
+	int sleepTime;
+	//how long the box hangs around for
+	int pauseTime;
+	wxString popupText;
     wxPoint bottomRight, popupTop, popupPosition;
     wxSize popupSize;
-    int sleepTime;
-    //how long the box hangs around for
-    int pauseTime;
     wxStaticBitmap sbm;
     wxColour colFg, colBg;
-    wxString popupText, bitmapFile;
-    wxWindow *parent;
+	wxString bitmapFile;
     ToasterBoxWindowList *winList;
     wxBitmap m_bitmap;
     //should we attempt to shrink the text
     //if it's too big for the popup?
     bool shrink;
+	StackDirection m_stack_direction;
 };

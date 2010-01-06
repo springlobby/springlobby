@@ -19,27 +19,27 @@
 
 
 ToasterBox::ToasterBox(wxWindow* _parent)
-    : m_bitmap( wxNullBitmap )
+	: parent( _parent ),
+	sleepTime( 10 ),
+	pauseTime( 1700 ),
+	popupText(  _T("default") ),
+	popupTop( wxPoint(0,0) ),
+	popupPosition( wxPoint(100,100) ),
+	popupSize( wxSize(150, 170) ),
+	colFg( *wxWHITE ),
+	colBg( *wxBLACK ),
+	bitmapFile( wxEmptyString ),
+	m_bitmap( wxNullBitmap ),
+	m_stack_direction( StackUp )
 {
-  parent = _parent;
-  sleepTime = 10;
-  pauseTime = 1700;
-  popupText = _T("default");
-  popupPosition = wxPoint(100,100);
-  popupTop = wxPoint(0,0);
-  popupSize = wxSize(150, 170);
-  bitmapFile = wxEmptyString;
-  colFg = *wxWHITE;
-  colBg = *wxBLACK;
+	//where to keep track of all the toasterboxwindows
+	winList = new ToasterBoxWindowList();
+	winList->DeleteContents(true);
 
-  //where to keep track of all the toasterboxwindows
-  winList = new ToasterBoxWindowList();
-  winList->DeleteContents(true);
-
-  //set the bottom right corner of the dialog
-  //at the bottom right of the screen
-  bottomRight = wxPoint(wxGetDisplaySize().GetWidth(),
-    wxGetDisplaySize().GetHeight());
+	//set the bottom right corner of the dialog
+	//at the bottom right of the screen
+	bottomRight = wxPoint(wxGetDisplaySize().GetWidth(),
+							wxGetDisplaySize().GetHeight());
 
 }
 
@@ -141,8 +141,17 @@ void ToasterBox::MoveAbove(ToasterBoxWindow *tb)
 {
   //recalc where to place this popup
 
-  tb->SetPopupPosition(popupPosition.x,
-    popupPosition.y - (popupSize.GetHeight() * winList->GetCount()));
+	if( m_stack_direction == StackUp )
+		tb->SetPopupPosition(popupPosition.x,
+			popupPosition.y - (popupSize.GetHeight() * winList->GetCount()));
+	else
+		tb->SetPopupPosition(popupPosition.x,
+			popupPosition.y + (popupSize.GetHeight() * winList->GetCount()));
+}
+
+void ToasterBox::SetStackDirection( StackDirection dir )
+{
+	m_stack_direction = dir;
 }
 
 void ToasterBox::Notify()
