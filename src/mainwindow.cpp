@@ -575,10 +575,7 @@ void MainWindow::OnShowScreenshots( wxCommandEvent& /*unused*/ )
 
 void MainWindow::OnReportBug( wxCommandEvent& /*unused*/ )
 {
-    wxString reporter = wxEmptyString;
-    if (ui().IsConnected() )
-        reporter = _T("?reporter=") + ui().GetServer().GetMe().GetNick();
-    OpenWebBrowser( _T("http://trac.springlobby.info/newticket") + reporter);
+	OpenWebBrowser( _T("http://springlobby.info/projects/springlobby/issues/new") );
 }
 
 
