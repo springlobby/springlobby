@@ -22,6 +22,8 @@
 #include "../images/springlobby.xpm"
 #include "../utils/conversion.h"
 #include "../defines.h"
+#include "../settings.h"
+#include "uievents.h"
 
 #ifdef HAVE_WX29
     //in < 29 this is defined in wxDialogBase, which seems to have disappeared
@@ -416,6 +418,12 @@ void serverMessageBox( int whichIcon , const wxString& message,const wxString& c
 void actNotifBox( int whichIcon , const wxString& message,const wxString& caption,
 		long style , int x, int y )
 {
+	if ( sett().GetUseNotificationPopups() )
+	{
+		UiEvents::GetNotificationEventSender().SendEvent( UiEvents::NotficationData( wxBitmap(springlobby_xpm), message ) );
+	}
+	else
+	{
 		wxWindow* parent;
 		wxIcon* icon;
 		switch (whichIcon)
@@ -444,6 +452,7 @@ void actNotifBox( int whichIcon , const wxString& message,const wxString& captio
             s_actNotifBox->AppendMessage(message);
             s_actNotifBox->Show(true);
 		}
+	}
 }
 
 int GetSingleChoiceIndex( const wxString& message,
