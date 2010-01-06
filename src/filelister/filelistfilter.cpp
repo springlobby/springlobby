@@ -24,7 +24,7 @@
 #include "filelistctrl.h"
 #include "filelistdialog.h"
 #include "../uiutils.h"
-//#include "../utils.h"
+#include "../utils/downloader.h"
 #include "../torrentwrapper.h"
 
 ///////////////////////////////////////////////////////////////////////////
@@ -108,25 +108,26 @@ FileListFilter::FileListFilter( wxWindow* parent, wxWindowID id, FileListDialog*
 
 }
 
-bool FileListFilter::FilterTorrentData( const TorrentTable::PRow& data )
+bool FileListFilter::DoFilterResource( const PlasmaResourceInfo& info )
 {
-  if(!data.ok())return false;
-	if ( data->name.Upper().Find( m_filter_name_edit->GetValue().Upper() ) == wxNOT_FOUND
-	        && !m_filter_name_expression->Matches( data->name ) )
-		return false;
-	if ( m_filter_type_choice_value == 0 && data->type != IUnitSync::map ) return false;
+//  if(!data.ok())return false;
+//	if ( data->name.Upper().Find( m_filter_name_edit->GetValue().Upper() ) == wxNOT_FOUND
+//	        && !m_filter_name_expression->Matches( data->name ) )
+//		return false;
+//	if ( m_filter_type_choice_value == 0 && data->type != IUnitSync::map ) return false;
+//
+//	if ( m_filter_type_choice_value == 1 && data->type != IUnitSync::mod ) return false;
+//
+//	if ( m_filter_ondisk->IsChecked() && data->HasFullFileLocal() )
+//		return false;
 
-	if ( m_filter_type_choice_value == 1 && data->type != IUnitSync::mod ) return false;
-
-	if ( m_filter_ondisk->IsChecked() && data->HasFullFileLocal() )
-		return false;
-
-	return true;
+	return false;
 }
 
 void FileListFilter::OnChange( wxCommandEvent&  )
 {
-	m_parent_filelistdialog->UpdateList();
+    //needs dummy event data
+	m_parent_filelistdialog->UpdateList( GlobalEvents::GlobalEventData() );
 }
 
 void FileListFilter::OnChangeName( wxCommandEvent& event )

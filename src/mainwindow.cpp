@@ -32,6 +32,7 @@
 #include "aui/auimanager.h"
 #include "aui/slbook.h"
 #include "aui/artprovider.h"
+#include "gui/statusbar.h"
 #include "springlobbyapp.h"
 #include "mainwindow.h"
 #include "settings.h"
@@ -77,6 +78,7 @@
 
 #if defined(__WXMSW__)
     #include <wx/msw/winundef.h>
+    #include <iostream>
 #endif
 #include <wx/aboutdlg.h>
 
@@ -94,8 +96,6 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU( MENU_SETTINGSPP, MainWindow::OnShowSettingsPP )
   EVT_MENU( MENU_VERSION, MainWindow::OnMenuVersion )
   EVT_MENU( MENU_ABOUT, MainWindow::OnMenuAbout )
-  EVT_MENU( MENU_START_TORRENT, MainWindow::OnMenuStartTorrent )
-  EVT_MENU( MENU_STOP_TORRENT, MainWindow::OnMenuStopTorrent )
   EVT_MENU( MENU_SAVE_LAYOUT, MainWindow::OnMenuSaveLayout )
   EVT_MENU( MENU_LOAD_LAYOUT, MainWindow::OnMenuLoadLayout )
   EVT_MENU( MENU_RESET_LAYOUT, MainWindow::OnMenuResetLayout )
@@ -104,7 +104,6 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU( MENU_SELECT_LOCALE, MainWindow::OnMenuSelectLocale )
   EVT_MENU( MENU_CHANNELCHOOSER, MainWindow::OnShowChannelChooser )
   EVT_MENU( MENU_SCREENSHOTS, MainWindow::OnShowScreenshots )
-  EVT_MENU_OPEN( MainWindow::OnMenuOpen )
   EVT_AUINOTEBOOK_PAGE_CHANGED( MAIN_TABS, MainWindow::OnTabsChanged )
   EVT_CLOSE( MainWindow::OnClose )
 END_EVENT_TABLE()
@@ -117,6 +116,7 @@ MainWindow::MainWindow( )
     m_channel_chooser(NULL),
     m_log_win(NULL)
 {
+
   SetIcon( wxIcon(springlobby_xpm) );
 
   GetAui().manager = new AuiManagerContainer::ManagerType( this );
@@ -228,6 +228,8 @@ MainWindow::MainWindow( )
 
   m_channel_chooser = new ChannelChooserDialog( this, -1, _("Choose channels to join") );
 
+	m_statusbar = new Statusbar( this );
+	SetStatusBar( m_statusbar );
     // re-enable eventhandling
     SetEvtHandlerEnabled( true );
 }
@@ -533,10 +535,11 @@ void MainWindow::OnMenuDisconnect( wxCommandEvent& /*unused*/ )
 {
   ui().Disconnect();
 }
-
+#include "sdlsound.h"
 void MainWindow::OnMenuSaveOptions( wxCommandEvent& /*unused*/ )
 {
   sett().SaveSettings();
+  sound().pm();
 }
 
 void MainWindow::OnMenuQuit( wxCommandEvent& /*unused*/ )
@@ -554,7 +557,7 @@ void MainWindow::OnMenuVersion( wxCommandEvent& /*unused*/ )
 
 void MainWindow::OnUnitSyncReload( wxCommandEvent& /*unused*/ )
 {
-    GetGlobalEventSender(GlobalEvents::UnitSyncReloadRequest).SendEvent( 0 ); // request an unitsync reload
+	usync().AddReloadEvent();
 }
 
 void MainWindow::OnShowScreenshots( wxCommandEvent& /*unused*/ )
@@ -567,40 +570,6 @@ void MainWindow::OnShowScreenshots( wxCommandEvent& /*unused*/ )
     ar.Sort();
     ImageViewerDialog* img  = new ImageViewerDialog( ar, true, this, -1, _T("Screenshots") );
     img->Show( true );
-}
-
-void MainWindow::OnMenuStartTorrent( wxCommandEvent& /*unused*/ )
-{
-  #ifndef NO_TORRENT_SYSTEM
-  sett().SetTorrentSystemAutoStartMode( 2 ); // switch operation to manual mode
-  torrent().ConnectToP2PSystem();
-  #endif
-}
-
-
-void MainWindow::OnMenuStopTorrent( wxCommandEvent& /*unused*/ )
-{
-  #ifndef NO_TORRENT_SYSTEM
-  sett().SetTorrentSystemAutoStartMode( 2 ); // switch operation to manual mode
-  torrent().DisconnectFromP2PSystem();
-  #endif
-}
-
-
-void MainWindow::OnMenuOpen( wxMenuEvent& /*unused*/ )
-{
-  #ifndef NO_TORRENT_SYSTEM
-  m_menuTools->Delete(MENU_STOP_TORRENT);
-  m_menuTools->Delete(MENU_START_TORRENT);
-  if ( !torrent().IsConnectedToP2PSystem() )
-  {
-    m_menuTools->Insert( 5, MENU_START_TORRENT, _("Manually &Start Torrent System") );
-  }
-  else
-  {
-    m_menuTools->Insert( 5, MENU_STOP_TORRENT, _("Manually &Stop Torrent System") );
-  }
-  #endif
 }
 
 
@@ -697,10 +666,9 @@ void MainWindow::OnMenuLoadLayout( wxCommandEvent& /*unused*/ )
     LoadPerspectives( layouts[result] );
 }
 
-
 void MainWindow::OnMenuResetLayout( wxCommandEvent& /*event*/ )
 {
-    LoadPerspectives( _T("SpringLobby-default") );
+	LoadPerspectives( _T("SpringLobby-default") );
 }
 
 const MainWindow::TabNames& MainWindow::GetTabNames()

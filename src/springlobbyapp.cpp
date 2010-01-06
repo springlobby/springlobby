@@ -42,6 +42,7 @@
 #include "iunitsync.h"
 #include "channel/channel.h"
 #include "utils/customdialogs.h"
+#include "utils/downloader.h"
 #include "settings++/se_utils.h"
 #ifndef NO_TORRENT_SYSTEM
 #include "torrentwrapper.h"
@@ -54,8 +55,13 @@
 #include "playback/playbacktab.h"
 #include "defines.h"
 #include "customizations.h"
+#include "curl/http.h"
+#include "sdlsound.h"
 
 #include "gui/simplefront.h"
+
+#include <wx/debugrpt.h>
+#include "utils/misc.h"
 
 const unsigned int TIMER_ID         = 101;
 const unsigned int TIMER_INTERVAL   = 100;
@@ -87,6 +93,16 @@ SpringLobbyApp::~SpringLobbyApp()
     delete m_timer;
 }
 
+#if defined(__WXMSW__) && defined(ENABLE_DEBUG_REPORT)
+LONG __stdcall filter(EXCEPTION_POINTERS* p){
+    #if wxUSE_STACKWALKER
+        CrashReport::instance().GenerateReport();
+    #else
+        CrashReport::instance().GenerateReport(p);
+    #endif
+    return 0; //must return 0 here or we'll end in an inf loop of dbg reports
+}
+#endif
 
 //! @brief Initializes the application.
 //!
@@ -97,18 +113,27 @@ bool SpringLobbyApp::OnInit()
     if (!wxApp::OnInit())
         return false;
 
+    if (!m_crash_handle_disable) {
+    #if wxUSE_ON_FATAL_EXCEPTION
+        wxHandleFatalExceptions( true );
+    #endif
+    #if defined(__WXMSW__) && defined(ENABLE_DEBUG_REPORT)
+        //this undocumented function acts as a workaround for the dysfunctional
+        // wxUSE_ON_FATAL_EXCEPTION on msw when mingw is used (or any other non SEH-capable compiler )
+        SetUnhandledExceptionFilter(filter);
+    #endif
+    }
+
     //initialize all loggers, we'll use the returned pointer to set correct parent window later
     wxLogChain* logchain = 0;
     wxLogWindow *loggerwin = InitializeLoggingTargets( 0, m_log_console, m_log_window_show, !m_crash_handle_disable, m_log_verbosity, logchain );
-
-#if wxUSE_ON_FATAL_EXCEPTION && !defined(__WXMAC__)
-    if (!m_crash_handle_disable) wxHandleFatalExceptions( true );
-#endif
 
     //this needs to called _before_ mainwindow instance is created
     wxInitAllImageHandlers();
     wxFileSystem::AddHandler(new wxZipFSHandler);
     wxSocketBase::Initialize();
+    wxCurlBase::Init();
+
 
 #ifdef __WXMSW__
     wxString path = wxPathOnly( wxStandardPaths::Get().GetExecutablePath() ) + wxFileName::GetPathSeparator() + _T("locale");
@@ -136,9 +161,15 @@ bool SpringLobbyApp::OnInit()
 
 	sett().RefreshSpringVersionList();
 
-    usync(); //init object, sink needs to exist before event is posted. next line would do both object(sink) creation and Event posting
-    GetGlobalEventSender(GlobalEvents::UnitSyncReloadRequest).SendEvent( 0 ); // request an unitsync reload
+	//unitsync first load, async via event posting
+	usync().AddReloadEvent();
     notificationManager(); //needs to be initialized too
+
+	#ifndef DISABLE_SOUND
+		//sound sources/buffer init
+		sound();
+	#endif
+
 
     CacheAndSettingsSetup();
 
@@ -163,10 +194,6 @@ bool SpringLobbyApp::OnInit()
 
     ui().FirstRunWelcome();
 
-#ifndef NO_TORRENT_SYSTEM
-    if( sett().GetTorrentSystemAutoStartMode() == 1 ) torrent().ConnectToP2PSystem();
-#endif
-
     //starts the replay loading process in a thread
     ui().mw().GetReplayTab().ReloadList();
     ui().mw().GetSavegameTab().ReloadList();
@@ -175,6 +202,12 @@ bool SpringLobbyApp::OnInit()
     m_timer->Start( TIMER_INTERVAL );
 
     ui().mw().SetLogWin( loggerwin, logchain );
+
+#ifndef NO_TORRENT_SYSTEM
+    plasmaInterface();
+//    plasmaInterface().InitResourceList();
+//	plasmaInterface().FetchResourceList();
+#endif
 
     return true;
 }
@@ -194,6 +227,7 @@ int SpringLobbyApp::OnExit()
         wxDELETE(m_translationhelper);
     }
 
+    wxCurlBase::Shutdown();
 
   	m_timer->Stop();
 
@@ -209,7 +243,12 @@ int SpringLobbyApp::OnExit()
 void SpringLobbyApp::OnFatalException()
 {
 #if wxUSE_DEBUGREPORT && defined(ENABLE_DEBUG_REPORT)
-    crashreport().GenerateReport(wxDebugReport::Context_Exception);
+    #if wxUSE_STACKWALKER
+        CrashReport::instance().GenerateReport();
+    #else
+        EXCEPTION_POINTERS* p = new EXCEPTION_POINTERS; //lets hope this'll never get called
+        CrashReport::instance().GenerateReport(p);
+    #endif
 #else
     wxMessageBox( _("The application has generated a fatal error and will be terminated\nGenerating a bug report is not possible\n\nplease get a wxWidgets library that supports wxUSE_DEBUGREPORT"),_("Critical error"), wxICON_ERROR | wxOK );
 #endif
@@ -416,6 +455,16 @@ void SpringLobbyApp::CacheAndSettingsSetup()
 			if ( settversion < 17 )
 			{
 				sett().RemoveLayouts();
+			}
+			if ( settversion < 18 )
+			{
+				//new downloader was introduced
+				sett().ClearTorrentListToResume();
+			}
+			if( settversion < 19 )
+			{
+				//the dummy column hack was removed on win
+					sett().NukeColumnWidths();
 			}
     }
 

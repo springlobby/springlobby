@@ -181,7 +181,8 @@ void BattleroomListCtrl::SetBattle( IBattle* battle )
 	for ( unsigned int i = 0; i < side_vector.size(); i++ )
 	{
 		wxMenuItem* side = side_vector[i];
-		delete side;
+		m_popup->Destroy( side );
+//		delete side;
 		Disconnect( BRLIST_SIDE + i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnSideSelect ) );
 	}
 	m_data.clear();
@@ -372,6 +373,7 @@ void BattleroomListCtrl::OnListRightClick( wxListEvent& event )
     else
     {
         wxLogMessage(_T("User"));
+        assert( m_popup );
         int item = m_popup->FindItem( _("Spectator") );
         m_popup->Check( item, m_sel_user->BattleStatus().spectator );
         m_popup->Enable( item, true );

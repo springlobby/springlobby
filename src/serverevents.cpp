@@ -26,6 +26,7 @@
 #include "settings.h"
 #include "utils/customdialogs.h"
 #include "utils/tasutil.h"
+#include "utils/uievents.h"
 
 #ifndef NO_TORRENT_SYSTEM
 #include "torrentwrapper.h"
@@ -51,20 +52,17 @@ void ServerEvents::OnDisconnected( bool wasonline )
     wxLogDebugFunc( _T("") );
     m_serv.SetRequiredSpring (_T(""));
     ui().OnDisconnected( m_serv, wasonline );
-#ifndef NO_TORRENT_SYSTEM
-    try // settings may be already destroyed
-    {
-        if ( sett().GetTorrentSystemAutoStartMode() == 0 ) torrent().DisconnectFromP2PSystem();
-    }
-    catch (GlobalDestroyedError e)
-    {
-    }
-#endif
 }
 
 
 void ServerEvents::OnLogin()
 {
+}
+
+
+void ServerEvents::OnLoginInfoComplete()
+{
+    wxLogDebugFunc( _T("") );
 	wxString nick = m_serv.GetMe().GetNick();
 	wxArrayString highlights = sett().GetHighlightedWords();
 	if ( highlights.Index( nick ) == -1 )
@@ -72,21 +70,12 @@ void ServerEvents::OnLogin()
 		highlights.Add( nick );
 		sett().SetHighlightedWords( highlights );
 	}
-}
-
-
-void ServerEvents::OnLoginInfoComplete()
-{
-    wxLogDebugFunc( _T("") );
     //m_serv.RequestChannels();
     std::vector<ChannelJoinInfo> autojoin = sett().GetChannelsJoin();
     for ( std::vector<ChannelJoinInfo>::iterator itor = autojoin.begin(); itor != autojoin.end(); itor++ )
     {
         m_serv.JoinChannel( itor->name, itor->password );
     }
-#ifndef NO_TORRENT_SYSTEM
-    if ( sett().GetTorrentSystemAutoStartMode() == 0 ) torrent().ConnectToP2PSystem();
-#endif
     ui().OnLoggedIn( );
 }
 
@@ -125,8 +114,9 @@ void ServerEvents::OnMotd( const wxString& msg )
 
 void ServerEvents::OnPong( wxLongLong ping_time )
 {
-    //wxLongLong is non-POD and cannot be passed to wxFormat as such. use c-string rep instead. converting to long might loose precision
-    ui().OnServerMessage( m_serv, wxString::Format( _("ping reply took %s ms"), ping_time.ToString().c_str() ) );
+	//wxLongLong is non-POD and cannot be passed to wxFormat as such. use c-string rep instead. converting to long might loose precision
+	UiEvents::StatusData data( wxString::Format( _("ping: %s ms"), ping_time.ToString().c_str() ), 2 );
+	UiEvents::GetStatusEventSender( UiEvents::addStatusMessage ).SendEvent( data );
 }
 
 

@@ -1,63 +1,98 @@
 #ifndef DISABLE_SOUND
-
-#include "SDL.h"
-#include "SDL_mixer.h"
-
-#include "sounds/ring_sound.h"
-#include "sounds/pm_sound.h"
-
 #include "sdlsound.h"
 
+#include "AL/alure.h"
 
-SDLSound& sound()
+#include "sound/ring_sound.h"
+#include "sound/pm_sound.h"
+#include <wx/log.h>
+#include "utils/debug.h"
+#include "utils/conversion.h"
+#include "globalsmanager.h"
+#include <assert.h>
+
+ALsound& sound()
 {
-    static SDLSound m_sound;
-    return m_sound;
+	static LineInfo<ALsound> m( AT );
+	static GlobalObjectHolder<ALsound,LineInfo<ALsound> > m_sound( m );
+	return m_sound;
+}
+volatile int isdone = 0;
+static void eos_callback(void *unused, ALuint unused2)
+{
+	isdone = 1;
+	(void)unused;
+	(void)unused2;
+}
+ALsound::ALsound()
+{
+	//Init
+	alGetError();
+	//*
+
+	//set up 3d sound
+	ALfloat	alpos[3];
+	ALfloat	alvel[3];
+	ALfloat	alori[6];
+	alpos[0] = 0; alpos[1] = 0; alpos[2] = 0;
+	alvel[0] = 0; alvel[1] = 0; alvel[2] = 0;
+	alori[0] = 0; alori[1] = 0; alori[2] = -1;
+	alori[3] = 0; alori[4] = 1; alori[5] = 0;
+
+	alListenerfv(AL_POSITION,alpos);
+	alListenerfv(AL_VELOCITY,alvel);
+	alListenerfv(AL_ORIENTATION,alori);
+	//*
+
+	assert(alureInitDevice(0, 0));
+
+	alGenSources(m_num_sources,m_sources);
+	if(alGetError()!=AL_NO_ERROR)
+	{
+		wxLogError( TowxString(alureGetErrorString()) );
+		assert( false );
+		return;
+	}
+
+	m_buffers[0] = alureCreateBufferFromMemory( pm_sound_data, sizeof(pm_sound_data)/sizeof(pm_sound_data[0]) );
+	m_buffers[1] = alureCreateBufferFromMemory( ring_sound_data, sizeof(ring_sound_data)/sizeof(ring_sound_data[0]) );
+
+	if ( alGetError()!=AL_NO_ERROR )
+	{
+		wxLogError( TowxString(alureGetErrorString()) );
+		assert( false );
+		return;
+	}
+	alSourcei(m_sources[0], AL_BUFFER, m_buffers[0] );
+	alSourcei(m_sources[1], AL_BUFFER, m_buffers[1] );
+	if ( alGetError()!=AL_NO_ERROR )
+	{
+		wxLogError( TowxString(alureGetErrorString()) );
+		assert( false );
+		return;
+	}
 }
 
-SDLSound::SDLSound()
+ALsound::~ALsound()
 {
-  //Initialise SDL, mixer subsystem and load sound sample
-  //Fails are treated silently
-  SDL_RWops *ringwave = SDL_RWFromConstMem(ring_sound_data, sizeof(ring_sound_data));
-  SDL_RWops *pmwave = SDL_RWFromConstMem(pm_sound_data, sizeof(pm_sound_data));
+	alureStopSource(m_sources[0], AL_FALSE);
+	alureStopSource(m_sources[1], AL_FALSE);
 
-  if(SDL_Init(SDL_INIT_AUDIO) < 0) {
-    return;
-  }
-
-  if (Mix_OpenAudio(11025, AUDIO_S16SYS, 1, 1024) < 0)
-    {
-      return;
-    }
-
-
-
-  ring_sound = Mix_LoadWAV_RW(ringwave, 0);
-  pm_sound = Mix_LoadWAV_RW( pmwave, 0);
-
+	alDeleteSources(m_num_sources, m_sources);
+	alureShutdownDevice();
 }
 
-SDLSound::~SDLSound()
+void ALsound::ring() const
 {
-  if ( ring_sound ) Mix_FreeChunk(ring_sound);
-  if ( pm_sound ) Mix_FreeChunk(pm_sound);
-
-
-  Mix_CloseAudio();
-
-  SDL_Quit();
-}
-
-void SDLSound::ring() const
-{
-  if ( ring_sound ) Mix_PlayChannel(-1, ring_sound, 0);
+	if (alurePlaySource(m_sources[1], 0, 0) == AL_FALSE)
+		wxLogError( TowxString(alureGetErrorString()) );
 }
 
 
-void SDLSound::pm() const
+void ALsound::pm() const
 {
-  if ( pm_sound ) Mix_PlayChannel(-1, pm_sound, 0);
+	if (alurePlaySource(m_sources[0], 0, 0) == AL_FALSE)
+		wxLogError( TowxString(alureGetErrorString()) );
 }
 
 #endif

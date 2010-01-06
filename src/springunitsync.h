@@ -11,6 +11,7 @@
 #include "utils/debug.h" //remove after MRU impl moved to cpp
 #include <wx/log.h>//remove after MRU impl moved to cpp
 
+
 class wxCriticalSection;
 class wxDynamicLibrary;
 class wxImage;
@@ -114,7 +115,6 @@ class EvtHandlerCollection
     EvtHandlerMap m_items;
     int m_last_id;
 };
-
 
 class SpringUnitSync : public IUnitSync
 {
@@ -220,8 +220,8 @@ class SpringUnitSync : public IUnitSync
     virtual GameOptions GetModCustomizations( const wxString& modname );
     virtual GameOptions GetSkirmishOptions( const wxString& modname, const wxString& skirmish_name );
 
-  protected:
-	  EventReceiverFunc< SpringUnitSync, GlobalEvents::GlobalEventData, &SpringUnitSync::ReloadUnitSyncLib > m_UnitsyncReloadRequestSink;
+	virtual void OnReload( wxCommandEvent& event );
+	virtual void AddReloadEvent(  );
 
   private:
 

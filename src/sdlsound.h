@@ -2,27 +2,24 @@
 #define SPRINGLOBBY_HEADERGUARD_SDLSOUND_H
 
 #ifndef DISABLE_SOUND
-
-//struct Mix_Chunk;
-#include <SDL_mixer.h>
-
-class SDLSound
+#include <AL/al.h>
+class ALsound
 {
- public:
-  SDLSound();
-  ~SDLSound();
+	public:
+		ALsound();
+		~ALsound();
 
-  void ring() const;
-  void pm() const;
+		void ring() const;
+		void pm() const;
 
- private:
-
-  Mix_Chunk *ring_sound;
-  Mix_Chunk *pm_sound;
-
+	private:
+		static const int m_num_buffer = 2;
+		static const int m_num_sources = 2;
+		ALuint m_sources[m_num_sources];
+		ALuint m_buffers[m_num_buffer];
 };
 
-SDLSound& sound();
+ALsound& sound();
 
 #endif
 

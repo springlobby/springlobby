@@ -24,12 +24,13 @@
 					<Add option="`pkg-config --cflags libtorrent-rasterbar`" />
 					<Add option="-Wno-strict-aliasing" />
 					<Add option='-DVERSION=\\&quot;cb-Unix-Debug\\&quot;' />
-					<Add option="-DNO_DEBUG_REPORT_UPLOAD" />
+					<Add option="-DENABLE_DEBUG_REPORT" />
 					<Add option="-DDISABLE_SOUND" />
 				</Compiler>
 				<Linker>
 					<Add option="`wx-config --libs`" />
 					<Add option="`pkg-config --libs libtorrent-rasterbar`" />
+					<Add library="curl" />
 				</Linker>
 				<ExtraCommands>
 					<Add before="tools/test-susynclib.awk src/springunitsynclib.cpp" />
@@ -41,21 +42,24 @@
 				<Option object_output="obj/GNU/Profile/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
+				<Option parameters="-cl -nc -f $HOME/.springlobby/testing.conf" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
 					<Add option="-O2" />
 					<Add option="-Wall" />
-					<Add option="-pg" />
 					<Add option="-g" />
 					<Add option="`wx-config --cflags`" />
 					<Add option="`pkg-config --cflags libtorrent`" />
 					<Add option="`sdl-config --cflags`" />
 					<Add option='-DVERSION=\\&quot;0.0.1-git-cb\\&quot;' />
+					<Add option="-DNDEBUG" />
+					<Add option="-DDISABLE_SOUND" />
 				</Compiler>
 				<Linker>
-					<Add option="-pg" />
 					<Add option="`wx-config --libs`" />
 					<Add option="`pkg-config --libs libtorrent-rasterbar`" />
+					<Add option="`sdl-config --libs`" />
+					<Add library="curl" />
 				</Linker>
 				<ExtraCommands>
 					<Add before="tools/test-susynclib.awk src/springunitsynclib.cpp" />
@@ -288,6 +292,16 @@
 		<Unit filename="src/crashreport.h" />
 		<Unit filename="src/crc.cpp" />
 		<Unit filename="src/crc.h" />
+		<Unit filename="src/curl/base.cpp" />
+		<Unit filename="src/curl/base.h" />
+		<Unit filename="src/curl/curlthread.cpp" />
+		<Unit filename="src/curl/curlthread.h" />
+		<Unit filename="src/curl/ftp.cpp" />
+		<Unit filename="src/curl/ftp.h" />
+		<Unit filename="src/curl/http.cpp" />
+		<Unit filename="src/curl/http.h" />
+		<Unit filename="src/curl/utils.cpp" />
+		<Unit filename="src/curl/utils.h" />
 		<Unit filename="src/customizations.cpp" />
 		<Unit filename="src/customizations.h" />
 		<Unit filename="src/customlistctrl.cpp" />
@@ -466,6 +480,8 @@
 		<Unit filename="src/springunitsync.h" />
 		<Unit filename="src/springunitsynclib.cpp" />
 		<Unit filename="src/springunitsynclib.h" />
+		<Unit filename="src/stacktrace.cpp" />
+		<Unit filename="src/stacktrace.h" />
 		<Unit filename="src/tasserver.cpp" />
 		<Unit filename="src/tasserver.h" />
 		<Unit filename="src/tasservertokentable.h" />
@@ -519,10 +535,13 @@
 		<Unit filename="src/utils/controls.h" />
 		<Unit filename="src/utils/conversion.cpp" />
 		<Unit filename="src/utils/conversion.h" />
+		<Unit filename="src/utils/crtpbase.h" />
 		<Unit filename="src/utils/customdialogs.cpp" />
 		<Unit filename="src/utils/customdialogs.h" />
 		<Unit filename="src/utils/debug.cpp" />
 		<Unit filename="src/utils/debug.h" />
+		<Unit filename="src/utils/downloader.cpp" />
+		<Unit filename="src/utils/downloader.h" />
 		<Unit filename="src/utils/events.h" />
 		<Unit filename="src/utils/globalevents.cpp" />
 		<Unit filename="src/utils/globalevents.h" />
@@ -537,10 +556,22 @@
 		<Unit filename="src/utils/misc.h" />
 		<Unit filename="src/utils/networkevents.cpp" />
 		<Unit filename="src/utils/networkevents.h" />
+		<Unit filename="src/utils/plasmaresourceinfo.cpp" />
+		<Unit filename="src/utils/plasmaresourceinfo.h" />
 		<Unit filename="src/utils/platform.cpp" />
 		<Unit filename="src/utils/platform.h" />
 		<Unit filename="src/utils/sltipwin.cpp" />
 		<Unit filename="src/utils/sltipwin.h" />
+		<Unit filename="src/utils/stack.cpp">
+			<Option target="GNU | Profile" />
+			<Option target="Win32 | Debug" />
+			<Option target="Win32 | Profile" />
+		</Unit>
+		<Unit filename="src/utils/stack.h" />
+		<Unit filename="src/utils/stringserializer.cpp">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="src/utils/stringserializer.h" />
 		<Unit filename="src/utils/tasutil.cpp" />
 		<Unit filename="src/utils/tasutil.h" />
 		<Unit filename="src/utils/uievents.cpp" />

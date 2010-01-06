@@ -6,7 +6,12 @@
 #include <wx/panel.h>
 #include <wx/timer.h>
 #include <wx/dialog.h>
-#include <wx/gauge.h> //cannot forward this cause msw mixes up the types otherwise
+
+#ifdef __WXMSW__
+    #include <wx/gauge.h> //cannot forward this cause msw mixes up the types otherwise
+#else
+    class wxGauge;
+#endif
 
 class wxStaticText;
 

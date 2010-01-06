@@ -5,6 +5,7 @@
 
 #include <wx/dialog.h>
 #include "../torrentwrapper.h"
+#include "../utils/globalevents.h"
 
 class wxBoxSizer;
 class wxButton;
@@ -20,20 +21,11 @@ class FileListDialog : public wxDialog
         FileListDialog(wxWindow* parent);
         ~FileListDialog();
 
-        void UpdateList();
-        FileListCtrl* GetListCtrl();
-
-        //void SetData(const TorrentTable& data);
-        //TorrentTable &GetData();
-        TorrentTable::PRow RowByHash(const wxString& hash );
-
+        void UpdateList( GlobalEvents::GlobalEventData );
+//        FileListCtrl* GetListCtrl();
     protected:
         wxBoxSizer* m_main_sizer;
         FileListCtrl* m_filelistctrl;
-
-
-        // TorrentTable m_torrent_table;
-        std::map<wxString, TorrentTable::PRow> m_hash_to_torrent;
 
         FileListFilter* m_filter;
         wxStaticText* m_filecount;
@@ -42,7 +34,10 @@ class FileListDialog : public wxDialog
         wxButton* m_selectNone_button;
         wxButton* m_selectInv_button;
 
-        bool AddTorrentRow(TorrentTable::PRow row);
+        typedef EventReceiverFunc<FileListDialog, GlobalEvents::GlobalEventData, &FileListDialog::UpdateList>
+            EventReceiverFunction;
+        EventReceiverFunction m_onResourceListParsed;
+
 
         void OnDownload( wxCommandEvent& event );
         void OnRefreshList( wxCommandEvent& event );

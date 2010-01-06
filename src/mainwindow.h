@@ -34,6 +34,7 @@ class WidgetDownloadDialog;
 class wxLogWindow;
 class wxLogChain;
 class wxCloseEvent;
+class Statusbar;
 
 class ReplayTraits;
 template < class Traits >
@@ -42,8 +43,6 @@ class PlaybackTab;
 class SavegameTraits;
 template < class Traits >
 class SavegameTab;
-
-
 
 //! @brief wxFrame that contains the main window of the client.
 class MainWindow : public wxFrame
@@ -80,9 +79,6 @@ class MainWindow : public wxFrame
     void OnMenuLoadLayout( wxCommandEvent& event );
     void OnMenuResetLayout( wxCommandEvent& event );
     void OnUnitSyncReload( wxCommandEvent& event );
-    void OnMenuStartTorrent( wxCommandEvent& event );
-    void OnMenuStopTorrent( wxCommandEvent& event );
-    void OnMenuOpen( wxMenuEvent& event );
     void OnMenuAutojoinChannels( wxCommandEvent& event );
     void OnReportBug( wxCommandEvent& event );
     void OnShowDocs( wxCommandEvent& event );
@@ -124,6 +120,7 @@ class MainWindow : public wxFrame
     wxMenuItem* m_settings_menu;
     wxMenuBar* m_menubar;
     wxMenu* m_menuTools;
+	Statusbar* m_statusbar;
 
     wxBoxSizer* m_main_sizer;
     SLNotebook* m_func_tabs;

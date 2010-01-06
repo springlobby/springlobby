@@ -1844,9 +1844,9 @@ int Settings::GetTorrentMaxConnections()
 	return  m_config->Read( _T( "/Torrent/MaxConnections" ), 250 );
 }
 
-void Settings::SetTorrentListToResume( const wxArrayString& list )
+void Settings::SetTorrentListToResume( const std::vector<wxString>& list )
 {
-	unsigned int TorrentCount = list.GetCount();
+	unsigned int TorrentCount = list.size();
 	m_config->DeleteGroup( _T( "/Torrent/ResumeList" ) );
 	for ( unsigned int i = 0; i < TorrentCount; i++ )
 	{
@@ -1855,22 +1855,27 @@ void Settings::SetTorrentListToResume( const wxArrayString& list )
 }
 
 
-wxArrayString Settings::GetTorrentListToResume()
+std::vector<wxString> Settings::GetTorrentListToResume()
 {
-	wxArrayString list;
+	std::vector<wxString> list;
 	wxString old_path = m_config->GetPath();
 	m_config->SetPath( _T( "/Torrent/ResumeList" ) );
 	unsigned int TorrentCount = m_config->GetNumberOfEntries( false );
 	for ( unsigned int i = 0; i < TorrentCount; i++ )
 	{
 		wxString ToAdd;
-		if ( m_config->Read( _T( "/Torrent/ResumeList/" ) + TowxString( i ), &ToAdd ) ) list.Add( ToAdd );
+		if ( m_config->Read( _T( "/Torrent/ResumeList/" ) + TowxString( i ), &ToAdd ) )
+			list.push_back( ToAdd );
 	}
 
 	m_config->SetPath( old_path );
 	return list;
 }
 
+void Settings::ClearTorrentListToResume()
+{
+	m_config->DeleteGroup( _T("/Torrent/ResumeList") );
+}
 
 wxFileName Settings::GetTorrentDir()
 {
@@ -1928,11 +1933,16 @@ void Settings::SetColumnWidth( const wxString& list_name, const int column_ind, 
 
 int Settings::GetColumnWidth( const wxString& list_name, const int column )
 {
-	const int orgwidth = m_config->Read( _T( "GUI/ColumnWidths/" ) + list_name + _T( "/" ) + TowxString( column ), columnWidthUnset );
+	const int orgwidth = m_config->Read( _T( "/GUI/ColumnWidths/" ) + list_name + _T( "/" ) + TowxString( column ), columnWidthUnset );
 	int width = orgwidth;
 	if ( orgwidth > -1 ) //-3 is unset, -2 and -1 used for auto size by wx
 		width = std::max ( width, int( Settings::columnWidthMinimum ) ); //removing the temporary creation here gives me undefined ref error (koshi)
 	return width;
+}
+
+void Settings::NukeColumnWidths()
+{
+	m_config->DeleteGroup(_T("/GUI/ColumnWidths/"));
 }
 
 void Settings::SetPeopleList( const wxArrayString& friends, const wxString& group  )

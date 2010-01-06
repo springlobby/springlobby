@@ -1,16 +1,12 @@
 #ifndef NO_TORRENT_SYSTEM
 
-#ifdef _MSC_VER
-#ifndef NOMINMAX
-    #define NOMINMAX
-#endif // NOMINMAX
-#include <winsock2.h>
-#endif // _MSC_VER
-
 #include "filelistdialog.h"
 #include "filelistctrl.h"
+#include "filelistfilter.h"
+
 #include "../iunitsync.h"
 #include "../utils/conversion.h"
+#include "../utils/downloader.h"
 #include <wx/sizer.h>
 #include <wx/stattext.h>
 #include <wx/button.h>
@@ -26,9 +22,10 @@ BEGIN_EVENT_TABLE(FileListDialog, wxDialog)
 
 END_EVENT_TABLE()
 
-FileListDialog::FileListDialog(wxWindow* parent) :
-    wxDialog(parent, -1, _("Search and download files"), wxDefaultPosition, wxSize(800, 600),
-           wxDEFAULT_DIALOG_STYLE | wxCLIP_CHILDREN | wxRESIZE_BORDER)
+FileListDialog::FileListDialog(wxWindow* parent)
+    : wxDialog(parent, -1, _("Search and download files"), wxDefaultPosition, wxSize(800, 600),
+           wxDEFAULT_DIALOG_STYLE | wxCLIP_CHILDREN | wxRESIZE_BORDER),
+    m_onResourceListParsed( this, &GetGlobalEventSender( GlobalEvents::PlasmaResourceListParsed ) )
 {
     m_filecount = new wxStaticText( this, wxID_ANY, _("Files displayed") );
 
@@ -36,7 +33,7 @@ FileListDialog::FileListDialog(wxWindow* parent) :
 
     wxBoxSizer* m_list_sizer;
     m_list_sizer = new wxBoxSizer( wxVERTICAL );
-    m_filelistctrl = new FileListCtrl( this, this );
+    m_filelistctrl = new FileListCtrl( this );
     m_list_sizer->Add( m_filelistctrl, 1, wxALL|wxEXPAND, 5 );
 
     wxBoxSizer* m_select_sizer = new wxBoxSizer( wxHORIZONTAL );
@@ -59,9 +56,8 @@ FileListDialog::FileListDialog(wxWindow* parent) :
     m_button_sizer->Add( m_download_button );
 
 
-    //SetData( torrent().GetTorrentTable() );
-    m_hash_to_torrent=torrent().GetTorrentTable().RowsByHash();
-    UpdateList();
+    //needs dummy event data
+    UpdateList( GlobalEvents::GlobalEventData() );
 
     m_main_sizer->Add( m_list_sizer,1, wxALL|wxEXPAND, 5 );
     m_main_sizer->Add( m_select_sizer,0, wxALL|wxEXPAND, 5 );
@@ -69,6 +65,7 @@ FileListDialog::FileListDialog(wxWindow* parent) :
     m_main_sizer->Add( m_button_sizer,0, wxALL|wxEXPAND, 5 );
     m_main_sizer->Add( m_filecount,0, wxALL|wxEXPAND, 5 );
     SetSizer( m_main_sizer );
+    Refresh();
 }
 
 FileListDialog::~FileListDialog()
@@ -76,77 +73,27 @@ FileListDialog::~FileListDialog()
 
 }
 
-FileListCtrl* FileListDialog::GetListCtrl()
+void FileListDialog::UpdateList( GlobalEvents::GlobalEventData )
 {
-    return m_filelistctrl;
-}
-
-void FileListDialog::UpdateList()
-{
-    m_filelistctrl->DeleteAllItems();
-    unsigned int count = 0;
-    for (std::map<wxString, TorrentTable::PRow>::iterator  it = m_hash_to_torrent.begin(); it != m_hash_to_torrent.end(); ++it)
-    {
-      if(!it->second.ok())continue;
-        switch (it->second->type)
-        {
-            case IUnitSync::mod:
-                it->second->SetHasFullFileLocal(usync().ModExists( it->second->name, it->second->hash ));
-                break;
-            case IUnitSync::map:
-                it->second->SetHasFullFileLocal(usync().MapExists( it->second->name, it->second->hash ));
-                break;
-            default:  it->second->SetHasFullFileLocal(false);
-                break;
-        }
-        count += AddTorrentRow( it->second );
+    const PlasmaInterface::ResourceList& rl = plasmaInterface().GetResourceList();
+    for ( PlasmaInterface::ResourceList::const_iterator i = rl.begin(); i != rl.end(); ++i ){
+//        if ( !m_filter->DoFilterResource( *i ) )
+            m_filelistctrl->AddFile( &(*i) );
     }
-    m_filecount->SetLabel( wxString::Format( _("%u files displayed"), count ) );
-    m_filelistctrl->SetColumnWidths();
-}
-
-TorrentTable::PRow FileListDialog::RowByHash(const wxString& hash )
-{
-  std::map<wxString,TorrentTable::PRow>::iterator i=m_hash_to_torrent.find(hash);
-  return i!=m_hash_to_torrent.end() ? i->second : TorrentTable::PRow(NULL);
-}
-
-bool FileListDialog::AddTorrentRow(TorrentTable::PRow data)
-{
-  if(!data.ok())return false;
-
-  if ( !m_filter->FilterTorrentData( data ) )
-      return false;
-  try
-  {
-      int index = m_filelistctrl->InsertItem( m_filelistctrl->GetItemCount(), data->hash);
-
-      //this enables me to later retrieve the index from itemtext (used in sort funcs)
-      m_filelistctrl->SetItemText( index, data->name );
-
-      //setting hash as item's data means we can retrieve it later for download
-      m_filelistctrl->SetItemData( index, (unsigned int)FromwxString<long>(data->hash) );
-      m_filelistctrl->SetItem( index, 0, data->name );
-      m_filelistctrl->SetItem( index, 1, data->type == IUnitSync::map ? _("Map") : _("Mod") );
-      m_filelistctrl->SetItem( index, 2, data->hash );
-
-  } catch (...) { return false; }
-  return true;
+    m_filecount->SetLabel( wxString::Format( _("%u files displayed"), m_filelistctrl->GetItemCount() ) );
+    m_filelistctrl->SortList();
 }
 
 void FileListDialog::OnDownload( wxCommandEvent& /*unused*/ )
 {
-    typedef FileListCtrl::HashVector HashVector;
-    HashVector hashs;
-    m_filelistctrl->GetSelectedHashes(hashs);
-    for ( HashVector::const_iterator it = hashs.begin(); it != hashs.end(); ++it)
+    typedef FileListCtrl::InternalNameVector InternalNameVector;
+    InternalNameVector names;
+    m_filelistctrl->GetSelectedHashes(names);
+    for ( InternalNameVector::const_iterator it = names.begin(); it != names.end(); ++it)
     {
-        wxString hash = *it;
-        if (torrent().RequestFileByHash(hash) != TorrentWrapper::success)
-            wxLogError(_("unknown hash ") + hash );
-
+        wxString name = *it;
+        torrent().RequestFileByName(name);
     }
-
 }
 
 void FileListDialog::OnRefreshList( wxCommandEvent& /*unused*/ )

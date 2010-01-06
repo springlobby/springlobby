@@ -32,11 +32,13 @@
 #include "utils/tasutil.h"
 #include "utils/conversion.h"
 #include "utils/platform.h"
+#include "updater/updatehelper.h"
 #include "battle.h"
 #include "serverevents.h"
 #include "socket.h"
 #include "channel/channel.h"
 #include "tasservertokentable.h"
+#include "pingthread.h"
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -165,16 +167,16 @@ NatType IntToNatType( int nat );
 IBattle::GameType IntToGameType( int gt );
 
 TASServer::TASServer():
+m_ping_thread(0),
 m_ser_ver(0),
 m_connected(false),
 m_online(false),
 m_debug_dont_catch( false ),
-m_id_transmission( false ),
+m_id_transmission( true ),
 m_redirecting( false ),
 m_buffer(_T("")),
 m_last_udp_ping(0),
 m_last_net_packet(0),
-m_last_id(0),
 m_udp_private_port(0),
 m_battle_id(-1),
 m_server_lanmode(false),
@@ -183,7 +185,7 @@ m_do_finalize_join_battle(false),
 m_finalize_join_battle_id(-1),
 m_token_transmission( false )
 {
-    m_se = new ServerEvents( *this );
+	  m_se = new ServerEvents( *this );
 	  FillAliasMap();
 	  m_relay_host_manager_list.Clear();
 }
@@ -191,8 +193,6 @@ m_token_transmission( false )
 TASServer::~TASServer()
 {
     Disconnect();
-    delete m_sock;
-    m_sock = 0;
     delete m_se;
 }
 
@@ -334,25 +334,19 @@ bool TASServer::ExecuteSayCommand( const wxString& cmd )
 
 void TASServer::Connect( const wxString& servername ,const wxString& addr, const int port )
 {
-		m_server_name = servername;
+	m_server_name = servername;
     m_addr=addr;
-		m_buffer = _T("");
-		m_buffer = _T("");
-    m_sock->Connect( addr, port );
-    if ( IsConnected() )
-    {
-        m_last_udp_ping = time( 0 );
-        m_connected = true;
-    }
-    m_sock->SetPingInfo( _T("PING\n"), 10000 );
-    m_sock->SetSendRateLimit( 800 ); // 1250 is the server limit but 800 just to make sure :)
+	m_buffer = _T("");
+	m_sock->Connect( addr, port );
+	m_sock->SetSendRateLimit( 800 ); // 1250 is the server limit but 800 just to make sure :)
+	m_connected = false;
     m_online = false;
     m_redirecting = false;
     m_agreement = _T("");
-		m_crc.ResetCRC();
-		m_last_net_packet = time( 0 );
-		wxString handle = m_sock->GetHandle();
-		if ( !handle.IsEmpty() ) m_crc.UpdateData( STD_STRING( wxString( handle + m_addr ) ) );
+	m_crc.ResetCRC();
+	m_last_net_packet = time( 0 );
+	wxString handle = m_sock->GetHandle();
+	if ( !handle.IsEmpty() ) m_crc.UpdateData( STD_STRING( wxString( handle + m_addr ) ) );
 }
 
 void TASServer::Disconnect()
@@ -362,14 +356,12 @@ void TASServer::Disconnect()
         return;
     }
     SendCmd( _T("EXIT") ); // EXIT command for new protocol compatibility
-    m_sock->Disconnect();
-    m_connected = false;
-    m_users.Nullify();
+	m_sock->Disconnect();
 }
 
 bool TASServer::IsConnected()
 {
-    return (m_sock->State() == SS_Open);
+	return (m_sock->State() == SS_Open);
 }
 
 
@@ -454,10 +446,12 @@ void TASServer::Login()
     wxString pass = GetPasswordHash( m_pass );
     wxString protocol = _T("\t") + TowxString( m_crc.GetCRC() );
     wxString localaddr;
-    localaddr = m_sock->GetLocalAddress();
+	localaddr = m_sock->GetLocalAddress();
     if ( localaddr.IsEmpty() ) localaddr = _T("*");
+	m_id_transmission = false;
     SendCmd ( _T("LOGIN"), m_user + _T(" ") + pass + _T(" ") +
               GetHostCPUSpeed() + _T(" ") + localaddr + _T(" SpringLobby ") + GetSpringLobbyVersion() + protocol  + _T("\ta"));
+	m_id_transmission = true;
 }
 
 void TASServer::Logout()
@@ -488,7 +482,7 @@ void TASServer::AcceptAgreement()
 void TASServer::Update( int mselapsed )
 {
 
-    m_sock->OnTimer( mselapsed );
+	m_sock->OnTimer( mselapsed );
 
     if ( !m_connected )   // We are not formally connected yet, but might be.
     {
@@ -579,7 +573,7 @@ void TASServer::ExecuteCommand( const wxString& in )
     }
     if ( params[0] == '#' )
     {
-				wxString id = params.BeforeFirst( ' ' ).AfterFirst( '#' );
+		wxString id = params.BeforeFirst( ' ' ).AfterFirst( '#' );
         params = params.AfterFirst( ' ' );
         id.ToLong( &replyid );
     }
@@ -635,9 +629,11 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     }
     else if ( cmd == _T("ACCEPTED") )
     {
-				if ( m_online ) return; // in case is the server sends WTF
+		if ( m_online ) return; // in case is the server sends WTF
         m_online = true;
         m_user = params;
+		m_ping_thread = new PingThread( *this, 10000 );
+		m_ping_thread->Init();
         m_se->OnLogin( );
     }
     else if ( cmd == _T("MOTD") )
@@ -1167,8 +1163,8 @@ void TASServer::SendCmd( const wxString& command, const wxString& param )
 		wxString cmd, msg;
 		if ( m_id_transmission )
 		{
-			 m_last_id++;
-			 msg = msg + _T("#") + TowxString( m_last_id ) + _T(" ");
+			 GetLastID()++;
+			 msg = msg + _T("#") + TowxString( GetLastID() ) + _T(" ");
 		}
 		if ( m_token_transmission )
 		{
@@ -1177,31 +1173,32 @@ void TASServer::SendCmd( const wxString& command, const wxString& param )
 		else cmd = command;
 		if ( param.IsEmpty() ) msg = msg + cmd + _T("\n");
 		else msg = msg + cmd + _T(" ") + param + _T("\n");
-		if ( m_sock->Send( msg ) )
-            wxLogMessage( _T("sent: %s"), msg.c_str() );
-        else
-            wxLogMessage( _T("sending: %s failed"), msg.c_str() );
+		bool send_success = m_sock->Send( msg );
+		if ( command != _T("PING") )
+		{
+			if ( send_success )
+				wxLogMessage( _T("sent: %s"), msg.c_str() );
+			else
+				wxLogMessage( _T("sending: %s failed"), msg.c_str() );
+		}
 }
 
 void TASServer::Ping()
 {
-    //wxLogDebugFunc( _T("") );
-		m_id_transmission = true;
-		SendCmd( _T("PING") );
-		m_id_transmission = false;
-    TASPingListItem pli;
-    pli.id = m_last_id;
-    pli.t = wxGetLocalTimeMillis();
-    m_pinglist.push_back ( pli );
+	SendCmd( _T("PING") );
+	TASPingListItem pli;
+	pli.id = GetLastID();
+	pli.t = wxGetLocalTimeMillis();
+	GetPingList().push_back ( pli );
 }
-
 
 void TASServer::HandlePong( int replyid )
 {
-    std::list<TASPingListItem>::iterator it;
+	PingList& pinglistcopy = GetPingList();
+	PingList::iterator it;
 
     bool found = false;
-    for ( it = m_pinglist.begin(); it != m_pinglist.end(); it++ )
+	for ( it = pinglistcopy.begin(); it != pinglistcopy.end(); it++ )
     {
         if (it->id == replyid )
         {
@@ -1213,7 +1210,7 @@ void TASServer::HandlePong( int replyid )
     if ( found )
     {
         m_se->OnPong( (wxGetLocalTimeMillis() - it->t) );
-        m_pinglist.erase( it );
+		pinglistcopy.erase( it );
     }
 }
 
@@ -1224,8 +1221,9 @@ void TASServer::JoinChannel( const wxString& channel, const wxString& key )
     wxLogDebugFunc( channel );
 
     m_channel_pw[channel] = key;
-
+	m_id_transmission = false; // workaround a retarded server bug
     SendCmd ( _T("JOIN"), channel + _T(" ") + key );
+	m_id_transmission = true;
 }
 
 
@@ -2201,9 +2199,11 @@ void TASServer::OnConnected( Socket* /*unused*/ )
     m_last_udp_ping = time( 0 );
     m_connected = true;
     m_online = false;
-		m_token_transmission = false;
-		m_relay_host_manager_list.Clear();
-		m_last_denied = _T("");
+	m_token_transmission = false;
+	m_relay_host_manager_list.Clear();
+	m_last_denied = _T("");
+	GetLastID() = 0;
+	GetPingList().clear();
 }
 
 
@@ -2215,9 +2215,18 @@ void TASServer::OnDisconnected( Socket* /*unused*/ )
     m_connected = false;
     m_online = false;
     m_redirecting = false;
-		m_token_transmission = false;
-		m_buffer = _T("");
-		m_relay_host_manager_list.Clear();
+	m_token_transmission = false;
+	m_buffer = _T("");
+	m_relay_host_manager_list.Clear();
+	GetLastID() = 0;
+	GetPingList().clear();
+	if ( m_ping_thread )
+	{
+		m_ping_thread->Wait();
+		delete m_ping_thread;
+		m_ping_thread = 0;
+	}
+	m_users.Nullify();
     m_se->OnDisconnected( connectionwaspresent );
     Server::OnDisconnected();
 }

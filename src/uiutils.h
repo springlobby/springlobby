@@ -50,6 +50,17 @@ void CopyToClipboard( const wxString& text );
 //! open either plattform default browser or binary saved in settings with given url
 void OpenWebBrowser( const wxString& url );
 
+class wxDateTime;
+//! measures time diff between ctor and dtor, shows result in msg box
+struct TimerMessageBox {
+	//! msg_format must contain exactly one %s to be filled with the elapsed time
+	TimerMessageBox( const wxString& msg_format );
+	~TimerMessageBox();
+	wxDateTime* m_start;
+	wxString m_msg_format;
+};
+
+
 #endif
 // SPRINGLOBBY_HEADERGUARD_UIUTILS_H
 

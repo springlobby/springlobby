@@ -114,7 +114,7 @@ bool Spring::Run( Battle& battle )
   {
     CommandForAutomaticTeamSpeak << TowxString<unsigned int>( battle.GetUser(i).BattleStatus().ally) << _T("|") << battle.GetUser(i).GetNick() << _T("|");
   }
-  torrent().SendMessageToCoordinator(CommandForAutomaticTeamSpeak);
+//  torrent().SendMessageToCoordinator(CommandForAutomaticTeamSpeak); //this is gone too now, right?
   #endif
 
 	wxString cmd;

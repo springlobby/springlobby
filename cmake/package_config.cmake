@@ -27,7 +27,9 @@ IF (WIN32)
 		INSTALL(FILES ${wxWidgets_LIB_DIR}/${file}.dll DESTINATION . )
  	ENDFOREACH( file )
 	SET( BASEPATH /opt/mingw32/ )
-	INSTALL(FILES ${BASEPATH}/i586-pc-mingw32/bin/mingwm10.dll DESTINATION . )
+	INSTALL(FILES
+		${BASEPATH}/i586-pc-mingw32/bin/mingwm10.dll
+		DESTINATION . )
 	
 ELSE (WIN32)
     SET(CPACK_CMAKE_GENERATOR "Unix Makefiles")

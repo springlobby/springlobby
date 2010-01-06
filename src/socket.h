@@ -4,7 +4,6 @@
 #include <wx/string.h>
 
 #include <wx/event.h>
-#include "thread.h"
 
 class iNetClass;
 class Socket;
@@ -50,7 +49,7 @@ class Socket
 {
   public:
 
-    Socket( iNetClass& netclass, bool blocking = false );
+    Socket( iNetClass& netclass, bool wait_on_connect = false, bool blocking = false );
     ~Socket();
 
     // Socket interface
@@ -60,12 +59,8 @@ class Socket
 
     bool Send( const wxString& data );
     wxString Receive();
-
-
-    void Ping();
-    void SetPingInfo( const wxString& msg = wxEmptyString, unsigned int interval = 10000 );
-    unsigned int GetPingInterval() const { return m_ping_int; }
-    bool GetPingEnabled() const { return m_ping_msg != wxEmptyString; }
+    //! used in plasmaservice, otherwise getting garbeld responses
+    wxString ReceiveSpecial();
 
     wxString GetLocalAddress() const;
     wxString GetHandle();
@@ -88,12 +83,10 @@ class Socket
     wxCriticalSection m_lock;
 
     wxString m_ping_msg;
-    unsigned int m_ping_int;
-
-    PingThread* m_ping_t;
 
     bool m_connecting;
-    bool m_block;
+    bool m_wait_on_connect;
+    bool m_blocking;
     iNetClass& m_net_class;
 
     unsigned int m_udp_private_port;
@@ -104,41 +97,6 @@ class Socket
     wxSocketClient* _CreateSocket();
 
     bool _Send( const wxString& data );
-    void _EnablePingThread( bool enable = true );
-    bool _ShouldEnablePingThread() const;
-};
-
-
-/** A thread class that sends pings to socket.
- * Implemented as joinable thread.
- * When you want it started, construct it then call Init()
- * When you want it killed, call Wait() method.
- * Dont call other methods, especially the Destroy() method.
- */
- /*
-class PingThread: public wxThread
-{
-  public:
-    PingThread( Socket& sock );
-    void Init();
-    /// overrides wxThread::Wait
-    ExitCode Wait();
-  private:
-    Socket& m_sock;
-    wxSemaphore m_thread_sleep_semaphore;
-
-    void* Entry();
-    void OnExit();
-};*/
-class PingThread: public Thread
-{
-  public:
-    PingThread( Socket& sock );
-    void Init();
-    private:
-    Socket& m_sock;
-    void* Entry();
-    void OnExit();
 };
 
 

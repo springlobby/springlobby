@@ -7,6 +7,7 @@
 
 #include "server.h"
 #include "crc.h"
+#include "mutexwrapper.h"
 
 const unsigned int FIRST_UDP_SOURCEPORT = 8300;
 
@@ -16,6 +17,7 @@ class User;
 struct UserBattleStatus;
 class ServerEvents;
 class wxString;
+class PingThread;
 
 //! @brief TASServer protocol implementation.
 class TASServer : public Server
@@ -42,7 +44,7 @@ class TASServer : public Server
 
     void Update( int mselapsed );
 
-    void Ping();
+	void Ping();
 
     void UDPPing();/// used for nat travelsal
     /// generic udp "ping" function
@@ -150,6 +152,7 @@ class TASServer : public Server
       wxLongLong t;
     };
 
+	PingThread* m_ping_thread;
     CRC m_crc;
 
     ServerEvents* m_se;
@@ -164,8 +167,21 @@ class TASServer : public Server
     wxString m_buffer;
     time_t m_last_udp_ping;
     time_t m_last_net_packet;
-    unsigned int m_last_id;
-    std::list<TASPingListItem> m_pinglist;
+	MutexWrapper<unsigned int> m_last_id;
+	unsigned int& GetLastID()
+	{
+		ScopedLocker<unsigned int> l_last_id(m_last_id);
+		return l_last_id.Get();
+	}
+
+	typedef std::list<TASPingListItem> PingList;
+	MutexWrapper<PingList> m_pinglist;
+
+	PingList& GetPingList()
+	{
+		ScopedLocker<PingList> l_pinglist(m_pinglist);
+		return l_pinglist.Get();
+	}
 
     unsigned long m_udp_private_port;
     unsigned long m_nat_helper_port;

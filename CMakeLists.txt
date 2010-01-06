@@ -29,11 +29,6 @@ INCLUDE(cmake/package_config.cmake)
 INCLUDE(cmake/sources.list)
 # PKG-Config
 FIND_PACKAGE( PkgConfig )
-IF(CMAKE_CROSSCOMPILING OR NOT WIN32)
-	INCLUDE(cmake/FindSDL.cmake)
-	INCLUDE(cmake/FindSDL_sound.cmake)
-	INCLUDE(cmake/FindSDL_mixer.cmake)
-ENDIF(CMAKE_CROSSCOMPILING OR NOT WIN32)
 
 EXECUTE_PROCESS(COMMAND ${springlobby_SOURCE_DIR}/tools/get-revision.sh
         OUTPUT_VARIABLE SPRINGLOBBY_GIT_REV
@@ -49,19 +44,25 @@ SET( OPTION_TORRENT_SYSTEM
 	"Enables the builtin map/mod p2p downloader (requires libtorrent-rasterbar library)" )
 SET( OPTION_SOUND
 	1 CACHE BOOL
-	"Enables sound notification functionality (requires SDL and SDL_sound libraries)" )
+	"Enables sound notification functionality (requires openAL libraries)" )
 SET( OPTION_TRANSLATION_SUPPORT
 	1 CACHE BOOL
 	"Enables translation support to the programs and adds facilities for helping translators (requires GNU Gettext)" )
 SET( BUILD_SHARED_LIBS
 	1 CACHE BOOL
 	"Chooses whether to link dynamic or static libraries. Recommend keeping this activated unless you know what you're doing." )
+
+SET( ENABLE_DEBUG_REPORT
+	0 CACHE BOOL
+	"Enable automatic uploading of crash information (requires libcurl)" )
+
 SET( SPRINGLOBBY_REV
 	${SPRINGLOBBY_GIT_REV} CACHE STRING
 	"The revision string used in packages etc." )
 SET( LOCALE_INSTALL_DIR
 	${CMAKE_INSTALL_PREFIX}/share/locale CACHE STRING
 	"message catalogs will installed here" )
+
 
 #----------------------------------------------------------------------------------------------------
 # wxWidgets lib dependency check
@@ -70,10 +71,10 @@ SET( LOCALE_INSTALL_DIR
 # Here you can define, what Libraries of wxWidgets you need for your Application. You can figure out what Libraries you need here:
 # http://www.wxwidgets.org/manuals/2.8/wx_librarieslist.html
 IF(NOT CMAKE_CROSSCOMPILING)
-SET(wxWidgets_USE_LIBS base core net adv aui html xml )
+SET(wxWidgets_USE_LIBS base core net adv aui html xml qa)
 
 # We need the Find package for wxWidgets to work
-FIND_PACKAGE(wxWidgets REQUIRED base core net adv aui html xml)
+FIND_PACKAGE(wxWidgets REQUIRED base core net adv aui html xml qa)
 
 # Did we find wxWidgets ? This condition will fail for as long as the internal Vars do not point to the proper wxWidgets Configuration.
 IF(wxWidgets_FOUND)
@@ -96,66 +97,46 @@ ELSE (NOT CMAKE_CROSSCOMPILING)
 ENDIF(NOT CMAKE_CROSSCOMPILING)
 
 #----------------------------------------------------------------------------------------------------
-# SDL libs dependency check
+# openAL libs dependency check
 #----------------------------------------------------------------------------------------------------
-IF ( CMAKE_CROSSCOMPILING )
-	ADD_DEFINITIONS( -DDISABLE_SOUND )
-	SET( OPTION_SOUND
-	0 FORCE-CACHE BOOL )
-ELSE ( CMAKE_CROSSCOMPILING )
+
 IF ( OPTION_SOUND )
 
-	IF (CMAKE_CROSSCOMPILING OR NOT WIN32)
-		FIND_PACKAGE(SDL REQUIRED)
-		FIND_PACKAGE(SDL_mixer REQUIRED)
-		FIND_PACKAGE(SDL_sound REQUIRED)
-
-		# Throw an error to the user if SDL not found
-		if ( NOT SDL_FOUND )
-		message ( FATAL_ERROR "SDL library not found! Please install the package or toggle OPTION_SOUND to OFF" )
-		endif( NOT SDL_FOUND )
-
-		# Throw an error to the user if SDL_mixer not found
-		if ( NOT SDLMIXER_FOUND )
-		message ( FATAL_ERROR "SDL_mixer library not found! Please install the package or toggle OPTION_SOUND to OFF" )
-		endif(NOT SDLMIXER_FOUND)
-
-		# Throw an error to the user if SDL_sound not found
-		if ( NOT SDL_SOUND_FOUND )
-		message ( FATAL_ERROR "SDL_sound library not found! Please install the package or toggle OPTION_SOUND to OFF" )
-		endif( NOT SDL_SOUND_FOUND )
-
-		# MESSAGE("sound inc dir: ${SDL_SOUND_INCLUDE_DIR}")
-		# MESSAGE("mixer inc dir: ${SDLMIXER_INCLUDE_DIR}")
-		# MESSAGE("sound libs: ${SDL_SOUND_LIBRARIES}")
-		# MESSAGE("mixer libs: ${SDLMIXER_LIBRARY}")
-	ENDIF(CMAKE_CROSSCOMPILING OR NOT WIN32)
-
-	IF(NOT WIN32)
-		# Set include paths and libraries to link.
-		INCLUDE_DIRECTORIES( ${SDL_SOUND_INCLUDE_DIR} ${SDLMIXER_INCLUDE_DIR} )
-		LINK_LIBRARIES( # ${SDL_SOUND_LIBRARIES}
-			${SDLMIXER_LIBRARY}  )
-	ELSE(NOT WIN32)
-		SET(SDL_INCLUDE_DIR "SDL_INCLUDE_DIR_NOT_SET" CACHE PATH "Path to SDL header files (sdl_mixer.h should be in the same dir as well)")
-		SET(SDLMAIN_LIBRARY "SDLMAIN_LIBRARY_NOT_SET" CACHE FILEPATH "Filepath to SDLmain.lib or libsdlmain.a, depending on whether you're using MSVC or MingW")
-		SET(SDL_LIBRARY "SDL_LIBRARY_NOT_SET" CACHE FILEPATH "Filepath to SDL.lib or libsdl.dll.a, depending on whether you're using MSVC or MingW")
-		SET(SDLMIXER_LIBRARY "SDLMIXER_LIBRARY_NOT_SET" CACHE FILEPATH "Filepath to SDL_mixer.lib or libSDL_mixer.dll.a, depending on whether you're using MSVC or MingW")
-		IF(NOT CMAKE_CROSSCOMPILING)
-			INCLUDE_DIRECTORIES( ${SDL_INCLUDE_DIR})
-			LINK_LIBRARIES(${SDLMAIN_LIBRARY} ${SDL_LIBRARY} ${SDLMIXER_LIBRARY})
-		ELSE(NOT CMAKE_CROSSCOMPILING)
-			INCLUDE_DIRECTORIES( ${sdl_INCLUDE_DIR} )
-			LINK_LIBRARIES(SDLmain SDL SDL_mixer)
-		ENDIF(NOT CMAKE_CROSSCOMPILING)
-    ENDIF(NOT WIN32)
-
+	FIND_PACKAGE(OpenAL REQUIRED)
+	INCLUDE_DIRECTORIES(${OPENAL_INCLUDE_DIR})
+	
+	Add_Subdirectory( ${springlobby_SOURCE_DIR}/src/sound/alure )
+	INCLUDE_DIRECTORIES( ${springlobby_SOURCE_DIR}/src/sound/alure/include )
+	LINK_LIBRARIES( ${OPENAL_LIBRARY} ${springlobby_BINARY_DIR}/src/sound/alure/libalure.a )
 ELSE ( OPTION_SOUND )
     # Disable sound.
     ADD_DEFINITIONS( -DDISABLE_SOUND )
 ENDIF ( OPTION_SOUND )
-ENDIF( CMAKE_CROSSCOMPILING )
 
+
+IF( ENABLE_DEBUG_REPORT )
+	ADD_DEFINITIONS( -DENABLE_DEBUG_REPORT )
+	IF( MINGW )
+		ADD_DEFINITIONS( -DENABLE_DEBUG_REPORT -gstabs )
+		LINK_LIBRARIES( bfd intl iberty psapi imagehlp)
+	ENDIF( MINGW )
+ENDIF( ENABLE_DEBUG_REPORT )
+
+pkg_check_modules( CURL REQUIRED libcurl )
+IF( NOT CURL_FOUND )
+	MESSAGE( FATAL_ERROR "required library libCURL not found" )
+ELSE( NOT CURL_FOUND )
+	INCLUDE_DIRECTORIES( ${CURL_INCLUDE_DIR} )
+	IF(WIN32)
+		ADD_DEFINITIONS( ${CURL_CFLAGS}  )
+		LINK_DIRECTORIES( ${CURL_STATIC_LIBRARY_DIRS} )
+		LINK_LIBRARIES( ${CURL_STATIC_LDFLAGS} )
+	ELSE(WIN32)
+		ADD_DEFINITIONS( ${CURL_CFLAGS} )
+		LINK_DIRECTORIES( ${CURL_LIB_DIRS} )
+		LINK_LIBRARIES( ${CURL_LDFLAGS} )
+	ENDIF(WIN32)
+ENDIF( NOT CURL_FOUND )
 #----------------------------------------------------------------------------------------------------
 # libtorrent-rasterbar dependency check
 #----------------------------------------------------------------------------------------------------
@@ -184,7 +165,7 @@ ENDIF( OPTION_TORRENT_SYSTEM )
 # If we build for windows Systems, we also include the Resource-File containing the Manifest, Icon and other Resources.
 IF(WIN32)
 	IF(MINGW OR CMAKE_CROSSCOMPILING)
-		FIND_PROGRAM(WINDRES NAMES windres i586-mingw32msvc-windres i686-mingw32-windres DOC "path to mingw's windres executable")
+		FIND_PROGRAM(WINDRES NAMES i586-pc-mingw32-windres windres i686-mingw32-windres DOC "path to mingw's windres executable")
 		ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/sl_icon.o COMMAND ${WINDRES} -I${springlobby_SOURCE_DIR}/src -I${wxWidgets_RC_DIR} -i${springlobby_SOURCE_DIR}/src/springlobby.rc -o ${CMAKE_CURRENT_BINARY_DIR}/sl_icon.o)
 		ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/ss_icon.o COMMAND ${WINDRES} -I${springlobby_SOURCE_DIR}/src -I${wxWidgets_RC_DIR} -i${springlobby_SOURCE_DIR}/src/settings++/settings.rc -o ${CMAKE_CURRENT_BINARY_DIR}/ss_icon.o)
 		ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/su_icon.o COMMAND ${WINDRES} -I${springlobby_SOURCE_DIR}/src -I${wxWidgets_RC_DIR} -i${springlobby_SOURCE_DIR}/src/updater/updater.rc -o ${CMAKE_CURRENT_BINARY_DIR}/su_icon.o)
@@ -205,11 +186,11 @@ ENDIF(WIN32)
 #----------------------------------------------------------------------------------------------------
 # L10n support
 #----------------------------------------------------------------------------------------------------
-
 if( OPTION_TRANSLATION_SUPPORT )
 	include ( ${CMAKE_SOURCE_DIR}/po/CMakeLists.txt )
 endif( OPTION_TRANSLATION_SUPPORT )
 ADD_DEFINITIONS( -DLOCALE_INSTALL_DIR="${LOCALE_INSTALL_DIR}" )
+
 #----------------------------------------------------------------------------------------------------
 # Build target defintions
 #----------------------------------------------------------------------------------------------------
@@ -221,17 +202,17 @@ cmake_policy(SET CMP0004 OLD)
 #ignore warnings about macosx app bundle output dir
 cmake_policy(SET CMP0006 OLD)
 
-
-ADD_EXECUTABLE(springlobby WIN32 MACOSX_BUNDLE ${springlobbySrc} ${SettingsSrc} ${springlobby_RC_FILE})
-ADD_EXECUTABLE(springsettings WIN32 MACOSX_BUNDLE ${StandAloneSettings} ${SpringSettings_RC_FILE} ${SettingsSrc} ${SLSharedWithSettings} )
-IF(WIN32)
-	ADD_EXECUTABLE(springlobby_updater WIN32 MACOSX_BUNDLE ${updaterSrc}  ${SLSharedWithSettings} ${updater_RC_FILE})
-	TARGET_LINK_LIBRARIES(springlobby_updater ${wxWidgets_LIBRARIES})
+ADD_EXECUTABLE(springlobby WIN32 MACOSX_BUNDLE ${springlobbySrc} ${SettingsSrc} ${SLSharedWithSettings} ${curlSRC} ${springlobby_RC_FILE})
+ADD_EXECUTABLE(springsettings WIN32 MACOSX_BUNDLE ${StandAloneSettings} ${SettingsSrc} ${SLSharedWithSettings} ${curlSRC} ${SpringSettings_RC_FILE} )
+#the updater needs to be build for windows only
+IF(WIN32) 
+       ADD_EXECUTABLE(springlobby_updater WIN32 MACOSX_BUNDLE ${updaterSrc} ${SLSharedWithSettings} ${curlSRC} ${updater_RC_FILE} )
+       TARGET_LINK_LIBRARIES(springlobby_updater ${wxWidgets_LIBRARIES} )
 ENDIF(WIN32)
 
 # Here the wxWidgets Libraries are added. These are set for us by the FIND Script. If you need other Libraries, you can add them here as well.
-TARGET_LINK_LIBRARIES(springlobby ${wxWidgets_LIBRARIES})
-TARGET_LINK_LIBRARIES(springsettings ${wxWidgets_LIBRARIES})
+TARGET_LINK_LIBRARIES(springlobby ${wxWidgets_LIBRARIES} ${OPENAL_LIBRARY} )
+TARGET_LINK_LIBRARIES(springsettings ${wxWidgets_LIBRARIES} )
 
 IF(MINGW)
 	TARGET_LINK_LIBRARIES( springlobby iphlpapi )
