@@ -61,6 +61,17 @@ struct ChannelJoinInfo
 	wxString password;
 };
 
+//!convenience class for saving and displaying a choice of discrete screen pos
+class ScreenPosition : public wxArrayString
+{
+public:
+	ScreenPosition(){ Add(_("Bottom right"));Add(_("Bottom left"));Add(_("Top right"));Add(_("Top left"));}
+	static const size_t bottom_right	= 0;
+	static const size_t bottom_left		= 1;
+	static const size_t top_right		= 2;
+	static const size_t top_left		= 3;
+};
+
 class SL_WinConf : public wxFileConfig
 {
     public:
@@ -355,6 +366,8 @@ class Settings
 
 	void SetUseNotificationPopups( const bool use );
 	bool GetUseNotificationPopups();
+	void SetNotificationPopupPosition( const size_t index );
+	size_t GetNotificationPopupPosition();
     /*@}*/
 
     /* ================================================================ */

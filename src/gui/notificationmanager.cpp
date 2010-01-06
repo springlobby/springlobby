@@ -4,6 +4,7 @@
 #include "../globalsmanager.h"
 #include "../uiutils.h"
 #include "../ui.h"
+#include "../settings.h"
 #include "../mainwindow.h"
 #include "../images/springlobby_64.png.h"
 
@@ -17,7 +18,9 @@ NotificationManager& notificationManager()
 NotificationManager::NotificationManager()
 	: m_showNotificationSink( this, &UiEvents::GetNotificationEventSender( ) ),
 	m_width(300),
-	m_height(80)
+	m_height(80),
+	m_x_offset(30),
+	m_y_offset(30)
 {
 	m_toasterbox = new ToasterBox(&ui().mw());
         m_toasterbox->SetPopupPauseTime(3000);
@@ -49,5 +52,19 @@ void NotificationManager::SetPopupPosition()
 {
     int dim_x = wxSystemSettings::GetMetric( wxSYS_SCREEN_X );
     int dim_y = wxSystemSettings::GetMetric( wxSYS_SCREEN_Y );
-	m_toasterbox->SetPopupPosition( dim_x - m_width - 30, dim_y - m_height - 30 );
+	switch ( sett().GetNotificationPopupPosition() )
+	{
+		case ScreenPosition::bottom_left :
+			m_toasterbox->SetPopupPosition( 0 + m_x_offset, dim_y - m_height - m_y_offset );
+			break;
+		 case ScreenPosition::top_left :
+			 m_toasterbox->SetPopupPosition( 0 + m_x_offset, 0 + m_y_offset );
+			 break;
+		 case ScreenPosition::top_right :
+			 m_toasterbox->SetPopupPosition( dim_x - m_width - m_x_offset, 0 + m_y_offset );
+			 break;
+		 default://bottom_right
+			 m_toasterbox->SetPopupPosition( dim_x - m_width - m_x_offset, dim_y - m_height - m_y_offset );
+		 break;
+	}
 }

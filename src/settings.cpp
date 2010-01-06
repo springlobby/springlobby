@@ -2515,3 +2515,13 @@ bool Settings::GetUseNotificationPopups()
 {
 	return m_config->Read( _T("/GUI/UseNotificationPopups"), true );
 }
+
+void Settings::SetNotificationPopupPosition( const size_t index )
+{
+	m_config->Write( _T("/GUI/NotificationPopupPosition"), (long)index );
+}
+
+size_t Settings::GetNotificationPopupPosition()
+{
+	return m_config->Read( _T("/GUI/NotificationPopupPosition"), (long)ScreenPosition::bottom_right );
+}

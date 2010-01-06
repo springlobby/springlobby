@@ -22,7 +22,7 @@ class NotificationManager
         friend class GlobalObjectHolder;
 
         EventReceiverFunc< NotificationManager, UiEvents::NotficationData, &NotificationManager::ShowNotification> m_showNotificationSink;
-		int m_width,m_height;
+		int m_width,m_height,m_x_offset,m_y_offset;
 };
 
 NotificationManager& notificationManager();

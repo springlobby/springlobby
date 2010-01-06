@@ -146,6 +146,12 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
     m_misc_gui_sizer->Add( m_use_tabicons , 0, wxEXPAND | wxALL, 5 );
 	m_use_notif_popups = new wxCheckBox( this, -1, _("Use notification popups?"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_misc_gui_sizer->Add( m_use_notif_popups, 0, wxEXPAND | wxALL, 5 );
+	m_notif_popup_pos_sizer = new wxBoxSizer( wxHORIZONTAL );
+	m_notif_popup_pos_label = new wxStaticText( this, -1, _("Screen position for notification popups") );
+	m_notif_popup_pos = new wxChoice( this, -1,  wxDefaultPosition, wxDefaultSize, ScreenPosition() );
+	m_notif_popup_pos_sizer->Add( m_notif_popup_pos_label, 0, wxALL| wxALIGN_CENTER_VERTICAL, 5 );
+	m_notif_popup_pos_sizer->Add( m_notif_popup_pos, 0, wxALL| wxALIGN_CENTER_VERTICAL, 5 );
+	m_misc_gui_sizer->Add( m_notif_popup_pos_sizer, 0, wxEXPAND | wxALL, 0 );
 
 
     m_x_on_all_tabs = new wxCheckBox( this, -1, _("Show close button on all tabs? (needs restart to take effect)"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -199,6 +205,7 @@ void LobbyOptionsTab::OnApply(wxCommandEvent& /*unused*/)
 
     sett().SetShowXallTabs( m_x_on_all_tabs->IsChecked() );
 	sett().SetUseNotificationPopups( m_use_notif_popups->IsChecked() );
+	sett().SetNotificationPopupPosition( m_notif_popup_pos->GetSelection() );
 }
 
 
@@ -225,6 +232,7 @@ void LobbyOptionsTab::OnRestore(wxCommandEvent& /*unused*/)
 
     m_x_on_all_tabs->SetValue( sett().GetShowXallTabs() );
 	m_use_notif_popups->SetValue( sett().GetUseNotificationPopups() );
+	m_notif_popup_pos->SetSelection( sett().GetNotificationPopupPosition() );
 }
 
 void LobbyOptionsTab::HandleWebloc( bool defloc )

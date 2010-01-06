@@ -46,6 +46,7 @@ class LobbyOptionsTab : public wxScrolledWindow
         wxTextCtrl* m_editor_edit;
 
         wxStaticText* m_complete_method_label;
+		wxStaticText* m_notif_popup_pos_label;
         wxRadioButton* m_complete_method_old;
         wxRadioButton* m_complete_method_new;
         wxButton* m_web_browse_btn;
@@ -60,8 +61,10 @@ class LobbyOptionsTab : public wxScrolledWindow
         wxStaticBoxSizer* m_editor_box_sizer;
         wxBoxSizer* m_web_loc_sizer;
         wxBoxSizer* m_editor_loc_sizer;
+		wxBoxSizer* m_notif_popup_pos_sizer;
 
         wxChoice* m_start_tab;
+		wxChoice* m_notif_popup_pos;
 
     enum
     {
