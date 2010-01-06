@@ -80,7 +80,7 @@ SET(springlobbySrc
 	src/offlinebattle.cpp
 	src/playback/replaylist.cpp
 	src/playback/savegamelist.cpp
-	src/sdlsound.cpp
+	src/alsound.cpp
 	src/selectusersdialog.cpp
 	src/server.cpp
 	src/serverevents.cpp

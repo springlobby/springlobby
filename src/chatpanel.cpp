@@ -48,7 +48,7 @@
 #include "Helper/wxtextctrlhist.h"
 
 #ifndef DISABLE_SOUND
-#include "sdlsound.h"
+#include "alsound.h"
 #endif
 #include "useractions.h"
 #include "usermenu.h"

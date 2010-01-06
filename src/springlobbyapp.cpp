@@ -55,7 +55,7 @@
 #include "defines.h"
 #include "customizations.h"
 #include "curl/http.h"
-#include "sdlsound.h"
+#include "alsound.h"
 
 #include "gui/simplefront.h"
 
