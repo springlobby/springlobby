@@ -22,9 +22,9 @@ NotificationManager::NotificationManager()
 	m_x_offset(30),
 	m_y_offset(30)
 {
-	m_toasterbox = new ToasterBox(&ui().mw());
-        m_toasterbox->SetPopupPauseTime(3000);
-  m_toasterbox->SetPopupSize(m_width, m_height );
+	m_toasterbox = new ToasterBox(0);
+	m_toasterbox->SetPopupPauseTime(3000);
+	m_toasterbox->SetPopupSize(m_width, m_height );
 
     m_toasterbox->SetPopupBackgroundColor(0,0,0);
     m_toasterbox->SetPopupTextColor(255,255,255);

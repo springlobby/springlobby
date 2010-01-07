@@ -6,10 +6,11 @@
   "stacking".
 */
 
+class NotificationManager;
+
 class ToasterBox : public wxTimer
 {
   public:
-    ToasterBox(wxWindow* _parent=(wxWindow *)NULL);
     ~ToasterBox();
     void SetPopupText(wxString _text, bool _shrink = false){popupText = _text;}
     void SetPopupSize(int x, int y){popupSize = wxSize(x, y);}
@@ -34,6 +35,9 @@ class ToasterBox : public wxTimer
 	};
 	void SetStackDirection( StackDirection dir );
 
+protected:
+	friend class NotificationManager;
+	ToasterBox(wxWindow* _parent=(wxWindow *)NULL);
 
   private:
 	wxWindow *parent;
