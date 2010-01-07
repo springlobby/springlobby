@@ -33,7 +33,8 @@ FIND_PACKAGE( PkgConfig )
 EXECUTE_PROCESS(COMMAND ${springlobby_SOURCE_DIR}/tools/get-revision.sh
         OUTPUT_VARIABLE SPRINGLOBBY_GIT_REV
         RESULT_VARIABLE GIT_ERROR
-        OUTPUT_STRIP_TRAILING_WHITESPACE)
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+		ERROR_QUIET)
 
 
 #----------------------------------------------------------------------------------------------------
