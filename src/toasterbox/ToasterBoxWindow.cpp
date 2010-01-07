@@ -188,6 +188,10 @@ void ToasterBoxWindow::ScrollDown( )
 void ToasterBoxWindow::DrawText()
 {
 	DCType dc( this );
+#ifdef __WXMSW__
+	dc.SetBackground( *wxBLACK_BRUSH );
+	dc.Clear();
+#endif
   //width and height of text
   wxCoord w = 0, h = 0;
   //where we will set the text
