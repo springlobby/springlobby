@@ -3,7 +3,7 @@
 
 #include <wx/scrolwin.h>
 #include <wx/dialog.h>
-
+#include "gui/windowattributespickle.h"
 class Ui;
 class wxCommandEvent;
 class wxBoxSizer;
@@ -65,7 +65,7 @@ class MainOptionsTab : public wxScrolledWindow
 		DECLARE_EVENT_TABLE()
 };
 
-class OptionsDialog : public wxDialog
+class OptionsDialog : public wxDialog, public WindowAttributesPickle
 {
 public:
 	OptionsDialog( wxWindow* parent );

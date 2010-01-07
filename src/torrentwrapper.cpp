@@ -591,9 +591,8 @@ void DisplayError( const wxString& resourcename, TorrentWrapper::DownloadRequest
 	UiEvents::StatusData data( wxString::Format(_("Downloading %s failed"), resourcename.c_str() ), 1 );
 	UiEvents::GetStatusEventSender( UiEvents::addStatusMessage ).SendEvent( data );
 #else
-	wxMutexGuiEnter();
-	customMessageBoxNoModal( SL_MAIN_ICON, msg, title );//if this throws we're dead
-	wxMutexGuiLeave();
+	wxMutexGuiLocker locker;
+	customMessageBoxNoModal( SL_MAIN_ICON, msg, title );
 #endif
 }
 

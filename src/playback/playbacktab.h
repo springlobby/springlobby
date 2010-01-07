@@ -89,6 +89,7 @@ class PlaybackTab : public wxScrolledWindow, public SpringTerminatedSink< Playba
     void OnDeselect( wxListEvent& event );
 
     void OnSpringTerminated( GlobalEvents::GlobalEventData data );
+	void OnUnitsyncReloaded( GlobalEvents::GlobalEventData data );
 
   protected:
     PlaybackListFilter<ThisType>* m_filter;
@@ -117,6 +118,8 @@ class PlaybackTab : public wxScrolledWindow, public SpringTerminatedSink< Playba
 #endif
 
     void AskForceWatch( PlaybackType& rep  ) const;
+
+	EventReceiverFunc<ThisType, GlobalEvents::GlobalEventData, &ThisType::OnUnitsyncReloaded> OnUsync_reload;
 
     DECLARE_EVENT_TABLE();
 };

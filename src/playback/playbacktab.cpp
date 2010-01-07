@@ -51,7 +51,8 @@ END_EVENT_TABLE()
 template < class PlaybackTraits >
 PlaybackTab<PlaybackTraits>::PlaybackTab( wxWindow* parent )
 	: wxScrolledWindow( parent, -1 ),
-    m_replay_loader ( 0 )
+	m_replay_loader ( 0 ),
+	OnUsync_reload( this, &GetGlobalEventSender( GlobalEvents::OnUnitsyncReloaded ) )
 {
 	wxLogMessage( _T( "PlaybackTab::PlaybackTab()" ) );
 
@@ -173,7 +174,7 @@ void PlaybackTab<PlaybackTraits>::AddAllPlaybacks( wxCommandEvent& /*unused*/ )
 	for ( typename ListType::playback_const_iter_t i = replays.begin();i != replays.end();++i ) {
 		AddPlayback( i->second  );
 	}
-	m_replay_listctrl->RefreshVisibleItems();
+	m_replay_listctrl->SortList( true );
 }
 
 template < class PlaybackTraits >
@@ -488,3 +489,8 @@ void PlaybackTab<PlaybackTraits>::OnSpringTerminated( GlobalEvents::GlobalEventD
     ReloadList();
 }
 
+template < class PlaybackTraits >
+void PlaybackTab<PlaybackTraits>::OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ )
+{
+	ReloadList();
+}
