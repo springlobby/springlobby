@@ -77,8 +77,15 @@ void SLChatNotebook::OnHeaderRightClick(wxAuiNotebookEvent &event)
     }
 
     ChatPanel* cur_page = static_cast<ChatPanel*>( GetPage( event.GetSelection() ) );
+	assert( cur_page );
     m_ch_menu = new ChatPanelMenu( cur_page, true );
-    pop->AppendSubMenu ( m_ch_menu->GetMenu() , _( "Channel" ));
+	if ( cur_page->GetPanelType() == CPT_User ) {
+		pop->AppendSubMenu ( m_ch_menu->GetMenu() , _( "Panel" ));
+		pop->AppendSubMenu ( m_ch_menu->GetUserMenuNoCreate() , _( "User" ));
+	}
+	else
+		pop->AppendSubMenu ( m_ch_menu->GetMenu() , _( "Channel" ));
+
     Connect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( SLChatNotebook::OnMenuItem ), cur_page, this );
     PopupMenu(pop);
 }

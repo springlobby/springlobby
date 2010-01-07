@@ -72,6 +72,7 @@ class ChatPanelMenu : public wxEvtHandler {
         void OnMenuItem( wxCommandEvent& event );
 
         wxMenu* GetMenu();
+		ChatPanelMenu::UserMenu* GetUserMenuNoCreate();
 
     protected:
         void CreateNickListMenu();
