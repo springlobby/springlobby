@@ -238,6 +238,10 @@ ChatPanelMenu::UserMenu* ChatPanelMenu::GetUserMenu()
     return m_user_menu;
 }
 
+ChatPanelMenu::UserMenu* ChatPanelMenu::GetUserMenuNoCreate()
+{
+	return m_user_menu;
+}
 
 void ChatPanelMenu::OnUserMenuCopyLink( wxCommandEvent& /*unused*/ )
 {

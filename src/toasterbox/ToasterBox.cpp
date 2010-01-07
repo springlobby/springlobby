@@ -160,7 +160,7 @@ void ToasterBox::Notify()
   if(winList->IsEmpty())
     return;
 
-  wxLogDebug("clean&shrink");
+  wxLogDebug(_T("clean&shrink"));
   //clean the window list
   CleanList();
 

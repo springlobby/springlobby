@@ -213,6 +213,9 @@
 			<Add option="-Wall" />
 			<Add directory="src" />
 		</Compiler>
+		<Linker>
+			<Add library="curl" />
+		</Linker>
 		<Unit filename="src/Helper/TextCompletionDatabase.cpp" />
 		<Unit filename="src/Helper/TextCompletionDatabase.hpp" />
 		<Unit filename="src/Helper/colorbutton.cpp" />
@@ -329,6 +332,10 @@
 		<Unit filename="src/gui/simplefront.h" />
 		<Unit filename="src/gui/skirmish_dialog.cpp" />
 		<Unit filename="src/gui/skirmish_dialog.h" />
+		<Unit filename="src/gui/statusbar.cpp" />
+		<Unit filename="src/gui/statusbar.h" />
+		<Unit filename="src/gui/windowattributespickle.cpp" />
+		<Unit filename="src/gui/windowattributespickle.h" />
 		<Unit filename="src/gui/wxbackgroundimage.cpp" />
 		<Unit filename="src/gui/wxbackgroundimage.h" />
 		<Unit filename="src/gui/wxgradientbutton.cpp" />
@@ -407,6 +414,8 @@
 		<Unit filename="src/nicklistctrl.h" />
 		<Unit filename="src/nonportable.h" />
 		<Unit filename="src/offlinebattle.cpp" />
+		<Unit filename="src/pingthread.cpp" />
+		<Unit filename="src/pingthread.h" />
 		<Unit filename="src/playback/playbackfilter.h" />
 		<Unit filename="src/playback/playbackfiltervalues.h" />
 		<Unit filename="src/playback/playbacklist.h" />
@@ -421,8 +430,13 @@
 		<Unit filename="src/playback/savegamelist.h" />
 		<Unit filename="src/poolmanager.cpp" />
 		<Unit filename="src/poolmanager.h" />
-		<Unit filename="src/sdlsound.cpp" />
-		<Unit filename="src/sdlsound.h" />
+		<Unit filename="src/sdlsound.h">
+			<Option target="GNU | Profile" />
+			<Option target="Win32 | Debug" />
+			<Option target="Win32 | Profile" />
+			<Option target="GNU | Debug (wx29)" />
+			<Option target="GNU | RealDebug" />
+		</Unit>
 		<Unit filename="src/selectusersdialog.cpp" />
 		<Unit filename="src/selectusersdialog.h" />
 		<Unit filename="src/server.cpp" />

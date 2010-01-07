@@ -13,7 +13,7 @@
 static const long ID_CLOSE_TAB          = wxNewId();
 static const long ID_CLOSE_TAB_OTHER    = wxNewId();
 static const long ID_CLOSE_TAB_ALL      = wxNewId();
-static const long ID_NEW_TAB      = wxNewId();
+static const long ID_NEW_TAB            = wxNewId();
 
 SLNotebook ::SLNotebook (wxWindow* parent, const wxString& name, wxWindowID id ,
                             const wxPoint& pos , const wxSize& size , long style )
@@ -48,6 +48,7 @@ bool SLChatNotebook::AddPage(ChatPanel* page, const wxString& caption, bool sele
   */
  SLChatNotebook::SLChatNotebook(wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style)
     : ParentType( parent, _T("chatnotebook"), id, pos,  size, sett().GetShowXallTabs() ? style | wxAUI_NB_CLOSE_ON_ALL_TABS : style )
+    ,m_cur_page(0)
 {
 
 }
@@ -67,6 +68,7 @@ void SLChatNotebook::OnHeaderRightClick(wxAuiNotebookEvent &event)
     if ( event.GetSelection() == -1 )
         return;
 
+    m_cur_page = static_cast<ChatPanel*>( GetPage( event.GetSelection() ) );
     wxMenu* pop = new wxMenu;
     pop->Append( ID_NEW_TAB, _("New Tab") );
     pop->Append( ID_CLOSE_TAB, _("Close") );
@@ -75,11 +77,16 @@ void SLChatNotebook::OnHeaderRightClick(wxAuiNotebookEvent &event)
         pop->Append( ID_CLOSE_TAB_ALL, _("Close all"));
         pop->Append( ID_CLOSE_TAB_OTHER, _("Close all others"));
     }
-
-    ChatPanel* cur_page = static_cast<ChatPanel*>( GetPage( event.GetSelection() ) );
-    m_ch_menu = new ChatPanelMenu( cur_page, true );
-    pop->AppendSubMenu ( m_ch_menu->GetMenu() , _( "Channel" ));
-    Connect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( SLChatNotebook::OnMenuItem ), cur_page, this );
+    m_ch_menu = new ChatPanelMenu( m_cur_page, true );
+	if ( m_cur_page->GetPanelType() == CPT_User ) {
+		wxMenu* panel_menu = m_ch_menu->GetMenu(  );
+		panel_menu->Remove( panel_menu->FindItem(_( "User" )) );
+		pop->AppendSubMenu ( panel_menu, _( "Panel" ) );
+		pop->AppendSubMenu ( m_ch_menu->GetUserMenuNoCreate() , _( "User" ));
+	}
+	else
+		pop->AppendSubMenu ( m_ch_menu->GetMenu() , _( "Channel" ));
+	Connect( wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( SLChatNotebook::OnMenuItem ), 0, this );
     PopupMenu(pop);
 }
 
@@ -119,11 +126,11 @@ void SLChatNotebook::OnMenuItem( wxCommandEvent& event )
         }
     }
     else {
-        ChatPanel* cur_page = static_cast<ChatPanel*>( GetPage( GetSelection() ) );
-        if ( cur_page ) {
+        if ( m_cur_page ) {
             m_ch_menu->OnMenuItem( event );
         }
     }
+    Disconnect( wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( SLChatNotebook::OnMenuItem ), 0, this );
 }
 
 // wxTabFrame is an interesting case.  It's important that all child pages

@@ -270,6 +270,7 @@ void MainWindow::SetLogWin( wxLogWindow* log, wxLogChain* logchain  )
 
 MainWindow::~MainWindow()
 {
+	SetEvtHandlerEnabled( false );
 }
 
 void MainWindow::OnClose( wxCloseEvent& /*unused*/ )
@@ -692,7 +693,7 @@ void MainWindow::FocusBattleRoomTab()
 	GetJoinTab().FocusBattleRoomTab();
 }
 
-void MainWindow::OnMenuPreferences( wxCommandEvent& event )
+void MainWindow::OnMenuPreferences( wxCommandEvent& /*event*/ )
 {
 	OptionsDialog* opts = new OptionsDialog( this );
 	opts->Show();
