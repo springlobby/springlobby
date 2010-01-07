@@ -2,7 +2,7 @@
 #define SPRINGLOBBY_HEADERGUARD_SPRINGLOBBYAPP_H
 
 #include <wx/app.h>
-
+#include "utils/isink.h"
 class wxTimer;
 class wxTimerEvent;
 class wxIcon;
@@ -10,7 +10,7 @@ class wxLocale;
 class wxTranslationHelper;
 
 //! @brief SpringLobby wxApp
-class SpringLobbyApp : public wxApp
+class SpringLobbyApp : public wxApp, public OnQuitSink<SpringLobbyApp>
 {
   public:
     SpringLobbyApp();
@@ -28,6 +28,7 @@ class SpringLobbyApp : public wxApp
     virtual void OnInitCmdLine(wxCmdLineParser& parser);
     virtual bool OnCmdLineParsed(wxCmdLineParser& parser);
 
+	void OnQuit( GlobalEvents::GlobalEventData data );
 
   protected:
 

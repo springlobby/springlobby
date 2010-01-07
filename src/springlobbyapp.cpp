@@ -486,3 +486,8 @@ void SpringLobbyApp::CacheAndSettingsSetup()
          useractions().SetGroupColor( _("Friends"), wxColour( 0, 0, 255 ) );
     }
 }
+
+void SpringLobbyApp::OnQuit( GlobalEvents::GlobalEventData data )
+{
+	m_timer->Stop();
+}

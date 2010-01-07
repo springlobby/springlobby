@@ -275,7 +275,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::OnClose( wxCloseEvent& /*unused*/ )
 {
-    GetGlobalEventSender(GlobalEvents::OnQuit).SendEvent( 0 ); // request an unitsync reload
+	GetGlobalEventSender(GlobalEvents::OnQuit).SendEvent( 0 );
     SetEvtHandlerEnabled(false);
     {
     wxWindowUpdateLocker lock( this );
