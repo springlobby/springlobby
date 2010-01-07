@@ -58,6 +58,7 @@ class SLChatNotebook : public SLNotebook {
         void DeleteChatPage( size_t i );
 
         ChatPanelMenu* m_ch_menu;
+        ChatPanel* m_cur_page;
 
         DECLARE_EVENT_TABLE();
 };
