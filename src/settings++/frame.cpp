@@ -57,7 +57,8 @@ BEGIN_EVENT_TABLE(settings_frame,wxFrame)
 END_EVENT_TABLE()
 
 settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& pa_size)
-: wxFrame(parent, id, title, position, pa_size)
+	: wxFrame(parent, id, title, position, pa_size),
+	WindowAttributesPickle( _T("SETTINGSFRAME"), this, wxSize( DEFSETT_SW_WIDTH, DEFSETT_SW_HEIGHT ) )
 {
 	alreadyCalled = false;
 	parentWindow = parent;
@@ -82,10 +83,6 @@ settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &
 	}
 
      SetIcon(*settingsIcon);
-     wxString name = _T("SETTINGSFRAME");
-     wxPoint pos = sett().GetWindowPos( name, wxPoint( DEFSETT_SW_LEFT, DEFSETT_SW_TOP ) );
-     wxSize size = sett().GetWindowSize( name, wxSize( DEFSETT_SW_WIDTH, DEFSETT_SW_HEIGHT ) );
-     SetSize( pos.x , pos.y, size.GetWidth(), size.GetHeight() );
      Layout();
      Center();
 }
@@ -339,10 +336,6 @@ void settings_frame::updateAllControls()
 void settings_frame::OnClose(wxCloseEvent& /*unused*/)
 {
 	if ( !alreadyCalled ){
-        wxString name = _T("SETTINGSFRAME");
-        sett().SetWindowSize( name, GetSize() );
-        sett().SetWindowPos( name, GetPosition() );
-        sett().SaveSettings();
         handleExit();
 	}
 }

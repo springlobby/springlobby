@@ -20,6 +20,7 @@
 
 
 #include <wx/frame.h>
+#include "../gui/windowattributespickle.h"
 class wxNotebook;
 class tab_simple;
 class tab_ui;
@@ -39,7 +40,7 @@ class wxNotebookEvent;
 class PathOptionPanel;
 class wxIcon;
 
-class settings_frame : public wxFrame
+class settings_frame : public wxFrame, public WindowAttributesPickle
 {
 	private:
 		DECLARE_EVENT_TABLE();

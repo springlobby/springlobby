@@ -49,8 +49,9 @@ BEGIN_EVENT_TABLE(MapSelectDialog,wxDialog)
 END_EVENT_TABLE()
 
 MapSelectDialog::MapSelectDialog( wxWindow* parent )
-	: m_horizontal_direction( sett().GetHorizontalSortorder() )
-	, m_vertical_direction( sett().GetVerticalSortorder() )
+	: WindowAttributesPickle( m_dialog_name, this, wxSize( DEFSETT_MW_WIDTH, DEFSETT_MW_HEIGHT ) ),
+	m_horizontal_direction( sett().GetHorizontalSortorder() ),
+	m_vertical_direction( sett().GetVerticalSortorder() )
 {
 	//(*Initialize(MapSelectDialog)
 	wxStaticBoxSizer* StaticBoxSizer2;
@@ -160,11 +161,6 @@ MapSelectDialog::MapSelectDialog( wxWindow* parent )
 	m_map_opts_list->InsertItem( 5, _("Max metal") );
 	m_map_opts_list->InsertItem( 6, _("Start positions") );
 
-	//could prolly go into Create() params, dunno how tho w/o meddling w wxsmith
-
-    wxPoint pos = sett().GetWindowPos( m_dialog_name , wxPoint( DEFSETT_MW_LEFT, DEFSETT_MW_TOP ) );
-    wxSize size = sett().GetWindowSize( m_dialog_name , wxSize( DEFSETT_MW_WIDTH, DEFSETT_MW_HEIGHT ) );
-    SetSize( pos.x , pos.y, size.GetWidth(), size.GetHeight() );
     Layout();
 }
 
@@ -176,8 +172,6 @@ MapSelectDialog::~MapSelectDialog()
 	sett().SetVerticalSortkeyIndex( m_vertical_choice->GetSelection() );
 	sett().SetHorizontalSortorder( m_horizontal_direction );
 	sett().SetVerticalSortorder( m_vertical_direction );
-	sett().SetWindowSize( m_dialog_name , GetSize() );
-    sett().SetWindowPos( m_dialog_name , GetPosition() );
     if ( m_filter_all->GetValue() )
         sett().SetMapSelectorFilterRadio( m_filter_all_sett );
     else if ( m_filter_recent->GetValue() )

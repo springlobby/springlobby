@@ -113,7 +113,8 @@ END_EVENT_TABLE()
 MainWindow::TabNames MainWindow::m_tab_names;
 
 MainWindow::MainWindow( )
-    : wxFrame( (wxFrame*)0, -1, _("SpringLobby"), wxPoint(50, 50), wxSize(450, 340) ),
+	: wxFrame( (wxFrame*)0, -1, _("SpringLobby"), wxPoint(50, 50) ),
+	WindowAttributesPickle( _T("MAINWINDOW"), this, wxSize(450, 340) ),
     m_autojoin_dialog(NULL),
     m_channel_chooser(NULL),
     m_log_win(NULL)
@@ -214,10 +215,7 @@ MainWindow::MainWindow( )
 	m_main_sizer->Add( m_func_tabs, 1, wxEXPAND | wxALL, 0 );
 
 	SetSizer( m_main_sizer );
-	wxString name = _T("MAINWINDOW");
-	wxPoint pos = sett().GetWindowPos( name, wxPoint( DEFSETT_MW_LEFT, DEFSETT_MW_TOP ) );
-	wxSize size = sett().GetWindowSize( name, wxSize( DEFSETT_MW_WIDTH, DEFSETT_MW_HEIGHT ) );
-	SetSize( pos.x , pos.y, size.GetWidth(), size.GetHeight() );
+
 	Layout();
 
 	se_frame_active = false;
@@ -287,10 +285,6 @@ void MainWindow::OnClose( wxCloseEvent& /*unused*/ )
     manager->UnInit();
     delete manager;
   }
-
-  wxString name = _T("MAINWINDOW");
-  sett().SetWindowSize( name, GetSize() );
-  sett().SetWindowPos( name, GetPosition() );
 
   ui().Quit();
   forceSettingsFrameClose();

@@ -160,7 +160,7 @@ void MainOptionsTab::SavePerspective( const wxString& perspective_name )
 }
 
 OptionsDialog::OptionsDialog( wxWindow* parent )
-	: wxDialog( parent, -1, _("SpringLobby Preferences"), wxDefaultPosition, wxSize( 700,430 ), wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER )
+	: wxDialog( parent, -1, _("SpringLobby Preferences"), wxDefaultPosition, wxSize( 700,430 ), wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX )
 {
 	m_options = new MainOptionsTab( this );
 	m_main_sizer = new wxBoxSizer( wxVERTICAL );

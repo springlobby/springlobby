@@ -2,6 +2,7 @@
 #define SPRINGLOBBY_HEADERGUARD_MAINWINDOW_H
 
 #include <wx/frame.h>
+#include "gui/windowattributespickle.h"
 
 class Ui;
 class Channel;
@@ -45,7 +46,7 @@ template < class Traits >
 class SavegameTab;
 
 //! @brief wxFrame that contains the main window of the client.
-class MainWindow : public wxFrame
+class MainWindow : public wxFrame, public WindowAttributesPickle
 {
   public:
     MainWindow( );

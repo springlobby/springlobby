@@ -4,6 +4,7 @@
 #define MAPSELECTDIALOG_H
 
 #include <vector>
+#include "gui/windowattributespickle.h"
 
 //(*Headers(MapSelectDialog)
 #include <wx/dialog.h>
@@ -23,7 +24,7 @@ class Ui;
 struct UnitSyncMap;
 
 
-class MapSelectDialog: public wxDialog
+class MapSelectDialog: public wxDialog, public WindowAttributesPickle
 {
 	public:
 

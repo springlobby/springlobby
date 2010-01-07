@@ -2,11 +2,12 @@
 #define SPRINGLOBBY_CHANNELCHOOSERDIALOG_H_INCLUDED
 
 #include <wx/dialog.h>
+#include "../gui/windowattributespickle.h"
 
 class ChannelChooserPanel;
 class wxBoxSizer;
 
-class ChannelChooserDialog : public wxDialog
+class ChannelChooserDialog : public wxDialog, public WindowAttributesPickle
 {
     public:
         ChannelChooserDialog(wxWindow* parent, wxWindowID id, const wxString& title,

@@ -2,6 +2,7 @@
 #define SPRINGLOBBY_HEADERGUARD_ADDBOTDIALOG_H
 
 #include <wx/dialog.h>
+#include "gui/windowattributespickle.h"
 #include <map>
 
 class wxTextCtrl;
@@ -17,7 +18,7 @@ class wxListEvent;
 
 /** \brief used in SP/MP BattletAB to present choice of AIs to add
  * \todo DOCMEMORE */
-class AddBotDialog : public wxDialog
+class AddBotDialog : public wxDialog, public WindowAttributesPickle
 {
   public:
 
