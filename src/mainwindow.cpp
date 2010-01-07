@@ -84,26 +84,28 @@
 
 BEGIN_EVENT_TABLE(MainWindow, wxFrame)
 
-  EVT_MENU( MENU_JOIN, MainWindow::OnMenuJoin )
-  EVT_MENU( MENU_CHAT, MainWindow::OnMenuChat )
-  EVT_MENU( MENU_CONNECT, MainWindow::OnMenuConnect )
-  EVT_MENU( MENU_DISCONNECT, MainWindow::OnMenuDisconnect )
-  EVT_MENU( MENU_SAVE_OPTIONS, MainWindow::OnMenuSaveOptions )
-  EVT_MENU( MENU_QUIT, MainWindow::OnMenuQuit )
-  EVT_MENU( MENU_USYNC, MainWindow::OnUnitSyncReload )
-  EVT_MENU( MENU_TRAC, MainWindow::OnReportBug )
-  EVT_MENU( MENU_DOC, MainWindow::OnShowDocs )
-  EVT_MENU( MENU_SETTINGSPP, MainWindow::OnShowSettingsPP )
-  EVT_MENU( MENU_VERSION, MainWindow::OnMenuVersion )
-  EVT_MENU( MENU_ABOUT, MainWindow::OnMenuAbout )
-  EVT_MENU( MENU_SAVE_LAYOUT, MainWindow::OnMenuSaveLayout )
-  EVT_MENU( MENU_LOAD_LAYOUT, MainWindow::OnMenuLoadLayout )
-  EVT_MENU( MENU_RESET_LAYOUT, MainWindow::OnMenuResetLayout )
-//  EVT_MENU( MENU_SHOW_TOOLTIPS, MainWindow::OnShowToolTips )
-  EVT_MENU( MENU_AUTOJOIN_CHANNELS, MainWindow::OnMenuAutojoinChannels )
-  EVT_MENU( MENU_SELECT_LOCALE, MainWindow::OnMenuSelectLocale )
-  EVT_MENU( MENU_CHANNELCHOOSER, MainWindow::OnShowChannelChooser )
-  EVT_MENU( MENU_SCREENSHOTS, MainWindow::OnShowScreenshots )
+  EVT_MENU( MENU_JOIN,					MainWindow::OnMenuJoin				)
+  EVT_MENU( MENU_CHAT,					MainWindow::OnMenuChat				)
+  EVT_MENU( MENU_CONNECT,				MainWindow::OnMenuConnect			)
+  EVT_MENU( MENU_DISCONNECT,			MainWindow::OnMenuDisconnect		)
+  EVT_MENU( MENU_SAVE_OPTIONS,			MainWindow::OnMenuSaveOptions		)
+  EVT_MENU( MENU_QUIT,					MainWindow::OnMenuQuit				)
+  EVT_MENU( MENU_USYNC,					MainWindow::OnUnitSyncReload		)
+  EVT_MENU( MENU_TRAC,					MainWindow::OnReportBug				)
+  EVT_MENU( MENU_DOC,					MainWindow::OnShowDocs				)
+  EVT_MENU( MENU_SETTINGSPP,			MainWindow::OnShowSettingsPP		)
+  EVT_MENU( MENU_VERSION,				MainWindow::OnMenuVersion			)
+  EVT_MENU( MENU_ABOUT,					MainWindow::OnMenuAbout				)
+  EVT_MENU( MENU_SAVE_LAYOUT,			MainWindow::OnMenuSaveLayout		)
+  EVT_MENU( MENU_LOAD_LAYOUT,			MainWindow::OnMenuLoadLayout		)
+  EVT_MENU( MENU_RESET_LAYOUT,			MainWindow::OnMenuResetLayout		)
+//  EVT_MENU( MENU_SHOW_TOOLTIPS,		MainWindow::OnShowToolTips			)
+  EVT_MENU( MENU_AUTOJOIN_CHANNELS,		MainWindow::OnMenuAutojoinChannels	)
+  EVT_MENU( MENU_SELECT_LOCALE,			MainWindow::OnMenuSelectLocale		)
+  EVT_MENU( MENU_CHANNELCHOOSER,		MainWindow::OnShowChannelChooser	)
+  EVT_MENU( MENU_SCREENSHOTS,			MainWindow::OnShowScreenshots		)
+  EVT_MENU( MENU_PREFERENCES,			MainWindow::OnMenuPreferences		)
+
   EVT_AUINOTEBOOK_PAGE_CHANGED( MAIN_TABS, MainWindow::OnTabsChanged )
   EVT_CLOSE( MainWindow::OnClose )
 END_EVENT_TABLE()
@@ -121,79 +123,80 @@ MainWindow::MainWindow( )
 
   GetAui().manager = new AuiManagerContainer::ManagerType( this );
 
-  wxMenu *menuServer = new wxMenu;
-  menuServer->Append(MENU_CONNECT, _("&Connect..."));
-  menuServer->Append(MENU_DISCONNECT, _("&Disconnect"));
-  menuServer->AppendSeparator();
+	wxMenu *menuServer = new wxMenu;
+	menuServer->Append(MENU_CONNECT, _("&Connect..."));
+	menuServer->Append(MENU_DISCONNECT, _("&Disconnect"));
+	menuServer->AppendSeparator();
 #ifndef NDEBUG
-  menuServer->Append(MENU_SAVE_OPTIONS, _("&Save options"));
-  menuServer->AppendSeparator();
+	//this is a prime spot to add experimental stuff, or stubs used to test things not really meant to be in mainwindow
+	menuServer->Append(MENU_SAVE_OPTIONS, _("&Save options"));
+	menuServer->AppendSeparator();
 #endif
-  menuServer->Append(MENU_QUIT, _("&Quit"));
+	menuServer->Append(MENU_QUIT, _("&Quit"));
 
-  //m_menuEdit = new wxMenu;
-  //TODO doesn't work atm
+	m_menuEdit = new wxMenu;
+	m_menuEdit->Append(MENU_AUTOJOIN_CHANNELS, _("&Autojoin channels"));
+	m_menuEdit->Append(MENU_PREFERENCES, _("&Preferences"));
+	m_settings_menu = new wxMenuItem( m_menuTools, MENU_SETTINGSPP, _("&Spring settings"), wxEmptyString, wxITEM_NORMAL );
+	m_menuEdit->Append (m_settings_menu);
 
 
     // loading layouts currently borked
 	wxMenu* menuView = new wxMenu;
-	menuView->Append( MENU_SAVE_LAYOUT, _("&Save Layout") );
+	menuView->Append( MENU_SAVE_LAYOUT, _("&Save layout") );
 	menuView->Append( MENU_LOAD_LAYOUT, _("&Load layout") );
 	menuView->Append( MENU_RESET_LAYOUT, _("&Reset layout") );
-//	menuView->Append( MENU_DEFAULT_LAYOUT, _("&Set &Laoyut as default") );
+//	menuView->Append( MENU_DEFAULT_LAYOUT, _("&Set &Layout as default") );
 
 
-  m_menuTools = new wxMenu;
-  m_menuTools->Append(MENU_JOIN, _("&Join channel..."));
-  m_menuTools->Append(MENU_CHANNELCHOOSER, _("Channel &list"));
-  m_menuTools->Append(MENU_CHAT, _("Open private &chat..."));
-  m_menuTools->Append(MENU_AUTOJOIN_CHANNELS, _("&Autojoin channels..."));
-  m_menuTools->Append(MENU_SCREENSHOTS, _("&View screenshots"));
-  m_menuTools->AppendSeparator();
-  m_menuTools->Append(MENU_USYNC, _("&Reload maps/mods"));
+	m_menuTools = new wxMenu;
+	m_menuTools->Append(MENU_JOIN, _("&Join channel..."));
+	m_menuTools->Append(MENU_CHANNELCHOOSER, _("Channel &list"));
+	m_menuTools->Append(MENU_CHAT, _("Open private &chat..."));
+	m_menuTools->Append(MENU_SCREENSHOTS, _("&View screenshots"));
+	m_menuTools->AppendSeparator();
+	m_menuTools->Append(MENU_USYNC, _("&Reload maps/mods"));
 
 
-  #ifndef NO_TORRENT_SYSTEM
-  m_menuTools->AppendSeparator();
-  #endif
-  m_menuTools->Append(MENU_VERSION, _("Check for new Version"));
-  m_settings_menu = new wxMenuItem( m_menuTools, MENU_SETTINGSPP, _("SpringSettings"), wxEmptyString, wxITEM_NORMAL );
-  m_menuTools->Append (m_settings_menu);
-
-  wxMenu *menuHelp = new wxMenu;
-  menuHelp->Append(MENU_ABOUT, _("&About"));
-  menuHelp->Append(MENU_SELECT_LOCALE, _("&Change language"));
-  menuHelp->Append(MENU_TRAC, _("&Report a bug..."));
-  menuHelp->Append(MENU_DOC, _("&Documentation"));
-
-  m_menubar = new wxMenuBar;
-  m_menubar->Append(menuServer, _("&Server"));
-  //m_menubar->Append(m_menuEdit, _("&Edit"));
-
-  m_menubar->Append(menuView, _("&View")); //layout stuff --> disabled
-
-  m_menubar->Append(m_menuTools, _("&Tools"));
-  m_menubar->Append(menuHelp, _("&Help"));
-  SetMenuBar(m_menubar);
-
-  m_main_sizer = new wxBoxSizer( wxHORIZONTAL );
-  m_func_tabs = new SLNotebook(  this, _T("mainfunctabs"), MAIN_TABS, wxDefaultPosition, wxDefaultSize,
-        wxAUI_NB_WINDOWLIST_BUTTON | wxAUI_NB_TAB_SPLIT | wxAUI_NB_TAB_MOVE | wxAUI_NB_TAB_EXTERNAL_MOVE | wxAUI_NB_SCROLL_BUTTONS | wxAUI_NB_LEFT );
-  m_func_tabs->SetArtProvider(new SLArtProvider);
-
-    //IMPORTANT: event handling needs to be disabled while constructing, otherwise deadlock occurs
-    SetEvtHandlerEnabled( false );
-
-  m_chat_tab = new MainChatTab( m_func_tabs );
-	m_list_tab = new BattleListTab( m_func_tabs );
-  m_join_tab = new MainJoinBattleTab( m_func_tabs );
-  m_sp_tab = new MainSinglePlayerTab( m_func_tabs );
-  m_savegame_tab = new SavegameTab( m_func_tabs );
-  m_replay_tab = new ReplayTab ( m_func_tabs );
 #ifndef NO_TORRENT_SYSTEM
-  m_torrent_tab = new MainTorrentTab( m_func_tabs);
+	m_menuTools->AppendSeparator();
 #endif
-  m_opts_tab = new MainOptionsTab( m_func_tabs );
+	m_menuTools->Append(MENU_VERSION, _("Check for new Version"));
+
+
+	wxMenu *menuHelp = new wxMenu;
+	menuHelp->Append(MENU_ABOUT, _("&About"));
+	menuHelp->Append(MENU_SELECT_LOCALE, _("&Change language"));
+	menuHelp->Append(MENU_TRAC, _("&Report a bug..."));
+	menuHelp->Append(MENU_DOC, _("&Documentation"));
+
+	m_menubar = new wxMenuBar;
+	m_menubar->Append(menuServer, _("&Server"));
+	m_menubar->Append(m_menuEdit, _("&Edit"));
+
+	m_menubar->Append(menuView, _("&View")); //layout stuff --> disabled
+
+	m_menubar->Append(m_menuTools, _("&Tools"));
+	m_menubar->Append(menuHelp, _("&Help"));
+	SetMenuBar(m_menubar);
+
+	m_main_sizer = new wxBoxSizer( wxHORIZONTAL );
+	m_func_tabs = new SLNotebook(  this, _T("mainfunctabs"), MAIN_TABS, wxDefaultPosition, wxDefaultSize,
+		wxAUI_NB_WINDOWLIST_BUTTON | wxAUI_NB_TAB_SPLIT | wxAUI_NB_TAB_MOVE | wxAUI_NB_TAB_EXTERNAL_MOVE | wxAUI_NB_SCROLL_BUTTONS | wxAUI_NB_LEFT );
+	m_func_tabs->SetArtProvider(new SLArtProvider);
+
+	//IMPORTANT: event handling needs to be disabled while constructing, otherwise deadlock occurs
+	SetEvtHandlerEnabled( false );
+
+	m_chat_tab = new MainChatTab( m_func_tabs );
+	m_list_tab = new BattleListTab( m_func_tabs );
+	m_join_tab = new MainJoinBattleTab( m_func_tabs );
+	m_sp_tab = new MainSinglePlayerTab( m_func_tabs );
+	m_savegame_tab = new SavegameTab( m_func_tabs );
+	m_replay_tab = new ReplayTab ( m_func_tabs );
+#ifndef NO_TORRENT_SYSTEM
+	m_torrent_tab = new MainTorrentTab( m_func_tabs);
+#endif
 
     //use Insert so no Changepage events are triggered
     m_func_tabs->InsertPage( PAGE_CHAT,     m_chat_tab,     m_tab_names[PAGE_CHAT],     true  );
@@ -204,29 +207,24 @@ MainWindow::MainWindow( )
     m_func_tabs->InsertPage( PAGE_REPLAY,   m_replay_tab,   m_tab_names[PAGE_REPLAY],   false );
 #ifndef NO_TORRENT_SYSTEM
     m_func_tabs->InsertPage( PAGE_TORRENT,  m_torrent_tab,  m_tab_names[PAGE_TORRENT],  false );
-    m_func_tabs->InsertPage( PAGE_OPTOS,    m_opts_tab,     m_tab_names[PAGE_OPTOS],    false );
-#else
-    m_func_tabs->InsertPage( PAGE_OPTOS,    m_opts_tab,     m_tab_names[PAGE_OPTOS],    false );
 #endif
 
     LoadPerspectives();
+	SetTabIcons();
+	m_main_sizer->Add( m_func_tabs, 1, wxEXPAND | wxALL, 0 );
 
+	SetSizer( m_main_sizer );
+	wxString name = _T("MAINWINDOW");
+	wxPoint pos = sett().GetWindowPos( name, wxPoint( DEFSETT_MW_LEFT, DEFSETT_MW_TOP ) );
+	wxSize size = sett().GetWindowSize( name, wxSize( DEFSETT_MW_WIDTH, DEFSETT_MW_HEIGHT ) );
+	SetSize( pos.x , pos.y, size.GetWidth(), size.GetHeight() );
+	Layout();
 
-  SetTabIcons();
-  m_main_sizer->Add( m_func_tabs, 1, wxEXPAND | wxALL, 0 );
+	se_frame_active = false;
 
-  SetSizer( m_main_sizer );
-  wxString name = _T("MAINWINDOW");
-  wxPoint pos = sett().GetWindowPos( name, wxPoint( DEFSETT_MW_LEFT, DEFSETT_MW_TOP ) );
-  wxSize size = sett().GetWindowSize( name, wxSize( DEFSETT_MW_WIDTH, DEFSETT_MW_HEIGHT ) );
-  SetSize( pos.x , pos.y, size.GetWidth(), size.GetHeight() );
-  Layout();
+	wxToolTip::Enable(sett().GetShowTooltips());
 
-  se_frame_active = false;
-
-  wxToolTip::Enable(sett().GetShowTooltips());
-
-  m_channel_chooser = new ChannelChooserDialog( this, -1, _("Choose channels to join") );
+	m_channel_chooser = new ChannelChooserDialog( this, -1, _("Choose channels to join") );
 
 	m_statusbar = new Statusbar( this );
 	SetStatusBar( m_statusbar );
@@ -406,12 +404,6 @@ ChatPanel* MainWindow::GetChannelChatPanel( const wxString& channel )
   return m_chat_tab->GetChannelChatPanel( channel );
 }
 
-MainOptionsTab& MainWindow::GetOptionsTab()
-{
-  ASSERT_EXCEPTION(m_opts_tab != 0, _T("m_opts_tab == 0"));
-  return *m_opts_tab;
-}
-
 //! @brief Open a new chat tab with a channel chat
 //!
 //! @param channel The channel name
@@ -456,9 +448,10 @@ void MainWindow::ShowTab( const unsigned int idx )
 //! @brief Displays the lobby configuration.
 void MainWindow::ShowConfigure( const unsigned int page )
 {
-  m_func_tabs->SetSelection( PAGE_OPTOS );
-  //possibly out of bounds is captured by m_opts_tab itslef
-  m_opts_tab->SetSelection( page );
+	OptionsDialog* opts = new OptionsDialog( this );
+	//possibly out of bounds is captured by m_opts_tab itslef
+	opts->SetSelection( page );
+	opts->Show();
 }
 
 void MainWindow::ShowChannelChooser()
@@ -681,7 +674,6 @@ void MainWindow::LoadPerspectives( const wxString& pers_name )
     LoadNotebookPerspective( m_func_tabs, perspective_name );
     m_sp_tab->LoadPerspective( perspective_name );
     m_join_tab->LoadPerspective( perspective_name );
-    m_opts_tab->LoadPerspective( perspective_name );
     wxWindow* active_chat_tab = static_cast<wxWindow*> ( m_chat_tab->GetActiveChatPanel() );
     if ( active_chat_tab )
         active_chat_tab->Refresh();
@@ -696,7 +688,6 @@ void MainWindow::SavePerspectives( const wxString& pers_name )
 
     m_sp_tab->SavePerspective( perspective_name );
     m_join_tab->SavePerspective( perspective_name );
-    m_opts_tab->SavePerspective( perspective_name );
 //    m_chat_tab->SavePerspective( perspective_name );
     SaveNotebookPerspective( m_func_tabs, perspective_name );
 }
@@ -705,4 +696,10 @@ void MainWindow::FocusBattleRoomTab()
 {
 	m_func_tabs->SetSelection( PAGE_JOIN );
 	GetJoinTab().FocusBattleRoomTab();
+}
+
+void MainWindow::OnMenuPreferences( wxCommandEvent& event )
+{
+	OptionsDialog* opts = new OptionsDialog( this );
+	opts->Show();
 }

@@ -158,3 +158,18 @@ void MainOptionsTab::SavePerspective( const wxString& perspective_name )
 {
     SaveNotebookPerspective( m_tabs, perspective_name );
 }
+
+OptionsDialog::OptionsDialog( wxWindow* parent )
+	: wxDialog( parent, -1, _("SpringLobby Preferences"), wxDefaultPosition, wxSize( 700,430 ), wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER )
+{
+	m_options = new MainOptionsTab( this );
+	m_main_sizer = new wxBoxSizer( wxVERTICAL );
+	m_main_sizer->Add( m_options, 1, wxEXPAND | wxALL, 0 );
+	SetSizer( m_main_sizer );
+	Layout();
+}
+
+void OptionsDialog::SetSelection( const unsigned int page )
+{
+	m_options->SetSelection( page );
+}

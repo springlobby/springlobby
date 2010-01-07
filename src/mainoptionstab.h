@@ -2,6 +2,7 @@
 #define SPRINGLOBBY_HEADERGUARD_MAINOPTIONSTAB_H
 
 #include <wx/scrolwin.h>
+#include <wx/dialog.h>
 
 class Ui;
 class wxCommandEvent;
@@ -20,7 +21,7 @@ class LobbyOptionsTab;
 /** \brief A container for the various option panels
  * Contains a notebook holding the real option panels as pages. Handles "apply" and "restore" events for those pages,
  * rather then those having to implement (and duplicate) this functionality. \n
- * See SpringOptionsTab, TorrentOptionsPanel, ChatOptionsTab
+ * See SpringOptionsTab, TorrentOptionsPanel, ChatOptionsTab, LobbyOptionsTab
  */
 class MainOptionsTab : public wxScrolledWindow
 {
@@ -64,6 +65,15 @@ class MainOptionsTab : public wxScrolledWindow
 		DECLARE_EVENT_TABLE()
 };
 
+class OptionsDialog : public wxDialog
+{
+public:
+	OptionsDialog( wxWindow* parent );
+	void SetSelection( const unsigned int page );
+private:
+	MainOptionsTab* m_options;
+	wxBoxSizer* m_main_sizer;
+};
 
 
 #endif // SPRINGLOBBY_HEADERGUARD_MAINOPTIONSTAB_H

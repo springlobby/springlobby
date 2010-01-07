@@ -78,6 +78,7 @@ class MainWindow : public wxFrame
     void OnMenuSaveLayout( wxCommandEvent& event );
     void OnMenuLoadLayout( wxCommandEvent& event );
     void OnMenuResetLayout( wxCommandEvent& event );
+	void OnMenuPreferences( wxCommandEvent& event );
     void OnUnitSyncReload( wxCommandEvent& event );
     void OnMenuAutojoinChannels( wxCommandEvent& event );
     void OnReportBug( wxCommandEvent& event );
@@ -104,7 +105,6 @@ class MainWindow : public wxFrame
     #endif
     ChatPanel* GetActiveChatPanel();
     ChatPanel* GetChannelChatPanel( const wxString& channel );
-    MainOptionsTab& GetOptionsTab();
 
     void SetTabIcons();
 
@@ -120,6 +120,7 @@ class MainWindow : public wxFrame
     wxMenuItem* m_settings_menu;
     wxMenuBar* m_menubar;
     wxMenu* m_menuTools;
+	wxMenu* m_menuEdit;
 	Statusbar* m_statusbar;
 
     wxBoxSizer* m_main_sizer;
@@ -129,7 +130,6 @@ class MainWindow : public wxFrame
     BattleListTab* m_list_tab;
     MainJoinBattleTab* m_join_tab;
     MainSinglePlayerTab* m_sp_tab;
-    MainOptionsTab* m_opts_tab;
     #ifndef NO_TORRENT_SYSTEM
     MainTorrentTab* m_torrent_tab;
     #endif
@@ -172,7 +172,8 @@ class MainWindow : public wxFrame
         MENU_LOAD_LAYOUT,
         MENU_RESET_LAYOUT,
         MENU_DEFAULT_LAYOUT,
-        MENU_SCREENSHOTS
+		MENU_SCREENSHOTS,
+		MENU_PREFERENCES
     };
 
         class TabNames : public wxArrayString
@@ -189,7 +190,6 @@ class MainWindow : public wxFrame
                 #ifndef NO_TORRENT_SYSTEM
                     Add( _("Downloads") );
                 #endif
-                    Add( _("Options") );
                 }
         };
         static TabNames m_tab_names;
@@ -205,9 +205,6 @@ class MainWindow : public wxFrame
 
         #ifndef NO_TORRENT_SYSTEM
         static const unsigned int PAGE_TORRENT = 6;
-        static const unsigned int PAGE_OPTOS = 7;
-        #else
-        static const unsigned int PAGE_OPTOS   = 6;
         #endif
 
         static const unsigned int OPT_PAGE_SPRING   = 0;
