@@ -57,6 +57,7 @@ wxString Customizations::GetModname()
   */
 bool Customizations::Init(const wxString& modname)
 {
+	//!TODO require blocking usync init if it's not loaded
     m_modname = modname;
     if ( !usync().ModExists( m_modname ) )
         return false;
