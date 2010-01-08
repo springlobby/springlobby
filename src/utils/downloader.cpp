@@ -1,5 +1,6 @@
 #include "downloader.h"
 
+#ifndef NO_TORRENT_SYSTEM
 
 #ifdef _MSC_VER
 #ifndef NOMINMAX
@@ -355,3 +356,4 @@ void PlasmaInterface::FetchResourceList()
 	m_worker_thread.DoWork( item, 0 );
 }
 
+#endif //NO_TORRENT_SYSTEM
