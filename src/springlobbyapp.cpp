@@ -161,8 +161,8 @@ bool SpringLobbyApp::OnInit()
 
 	sett().RefreshSpringVersionList();
 
-	//unitsync first load, async via event posting
-	usync().AddReloadEvent();
+	//unitsync first load, NEEDS to be blocking
+	usync().ReloadUnitSyncLib();
     notificationManager(); //needs to be initialized too
 
 	#ifndef DISABLE_SOUND
