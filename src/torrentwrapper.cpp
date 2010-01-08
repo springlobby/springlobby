@@ -465,6 +465,7 @@ void TorrentWrapper::HandleCompleted()
 				bool ok = wxCopyFile( source_path, dest_filename );
 				if ( !ok )
 				{
+					wxMutexGuiLocker locker;
 					customMessageBoxNoModal( SL_MAIN_ICON, wxString::Format( _("File copy from %s to %s failed.\nPlease copy manually and reload maps/mods afterwards"),
 																			 source_path.c_str(), dest_filename.c_str() ),
 											 _("Copy failed") );
@@ -473,6 +474,7 @@ void TorrentWrapper::HandleCompleted()
 				}
 				else
 				{
+					wxMutexGuiLocker locker;
 					UiEvents::StatusData data( wxString::Format( _("Download completed: %s"), info.m_name.c_str() ), 1 );
 					UiEvents::GetStatusEventSender( UiEvents::addStatusMessage ).SendEvent( data );
 					num_completed++;
