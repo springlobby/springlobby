@@ -618,6 +618,7 @@ void ResourceInfoWorkItem::Run()
 			for ( size_t i = 0; i < info.m_dependencies.Count(); ++i ) {
 				wxString dependency_name = info.m_dependencies[i];
 				PlasmaResourceInfo dependency_info = plasmaInterface().GetResourceInfo( dependency_name );
+				dependency_info.m_name = dependency_name;
 				if ( dependency_info.m_type == PlasmaResourceInfo::unknown )
 					continue;
 				if ( plasmaInterface().DownloadTorrentFile( dependency_info, sett().GetTorrentDataDir().GetFullPath() ) )
