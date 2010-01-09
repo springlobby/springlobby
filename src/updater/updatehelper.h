@@ -8,10 +8,12 @@
 #ifndef VERSION
 	#define VERSION "unknown"
 #endif //VERSION
+#ifndef AUX_VERSION
+	#define AUX_VERSION wxEmptyString
+#endif //AUX_VERSION
 
 class wxString;
 
-void CheckForUpdates();
 wxString GetDownloadUrl( const wxString& version );
 wxString GetSpringLobbyVersion();
 

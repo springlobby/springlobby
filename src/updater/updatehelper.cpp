@@ -1,4 +1,5 @@
 #include "updatehelper.h"
+
 #include "../utils/conversion.h"
 
 wxString GetDownloadUrl( const wxString& version )
@@ -11,7 +12,7 @@ wxString GetSpringLobbyVersion()
 #ifndef AUX_VERSION
     return (TowxString(VERSION)).BeforeFirst( _T(' ') );
 #else
-    return (TowxString(VERSION)).BeforeFirst( _T(' ') ) + TowxString(AUX_VERSION);
+	return (TowxString(VERSION)).BeforeFirst( _T(' ') ) + _T(" ") + TowxString(AUX_VERSION);
 #endif
 
 }

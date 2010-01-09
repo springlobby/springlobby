@@ -25,16 +25,22 @@ SET(CMAKE_FIND_LIBRARY_SUFFIXES ".so" ".lib" ".a")
 #----------------------------------------------------------------------------------------------------
 # Load needed Modules
 #----------------------------------------------------------------------------------------------------
+EXECUTE_PROCESS(COMMAND ${springlobby_SOURCE_DIR}/tools/get-revision.sh
+        OUTPUT_VARIABLE SPRINGLOBBY_GIT_REV
+        ERROR_VARIABLE GIT_ERROR
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+		)
+
 INCLUDE(cmake/package_config.cmake)
 INCLUDE(cmake/sources.list)
 # PKG-Config
 FIND_PACKAGE( PkgConfig )
 
-EXECUTE_PROCESS(COMMAND ${springlobby_SOURCE_DIR}/tools/get-revision.sh
-        OUTPUT_VARIABLE SPRINGLOBBY_GIT_REV
-        RESULT_VARIABLE GIT_ERROR
-        OUTPUT_STRIP_TRAILING_WHITESPACE
-		ERROR_QUIET)
+#if nothing went wrong we have the file and can define HAVE_CONFIG_H
+IF ( EXISTS ${springlobby_BINARY_DIR}/config.h OR  EXISTS ${springlobby_SOURCE_DIR}/config.h )
+    ADD_DEFINITIONS( -DHAVE_CONFIG_H )
+    INCLUDE_DIRECTORIES(${springlobby_BINARY_DIR})
+ENDIF ( EXISTS ${springlobby_BINARY_DIR}/config.h OR  EXISTS ${springlobby_SOURCE_DIR}/config.h )
 
 
 #----------------------------------------------------------------------------------------------------
@@ -64,6 +70,9 @@ SET( LOCALE_INSTALL_DIR
 	${CMAKE_INSTALL_PREFIX}/share/locale CACHE STRING
 	"message catalogs will installed here" )
 
+IF( AUX_VERSION )
+	ADD_DEFINITIONS( -DAUX_VERSION="${AUX_VERSION}" )
+ENDIF( AUX_VERSION )
 
 #----------------------------------------------------------------------------------------------------
 # wxWidgets lib dependency check
@@ -241,11 +250,7 @@ add_custom_target(pack
 				)
 
 # setup make dist
-add_custom_target(dist cd ${CMAKE_SOURCE_DIR} &&
-                        git archive --format=tar --prefix=${PACKAGE_NAME}-${PACKAGE_VERSION}/ HEAD |
-                            gzip > ${CMAKE_BINARY_DIR}/${PACKAGE_NAME}-${PACKAGE_VERSION}.tar.gz &&
-						git archive --format=tar --prefix=${PACKAGE_NAME}-${PACKAGE_VERSION}/ HEAD |
-                            bzip2 > ${CMAKE_BINARY_DIR}/${PACKAGE_NAME}-${PACKAGE_VERSION}.tar.bz2
+add_custom_target(dist ${CMAKE_SOURCE_DIR}/tools/make_dist.sh "${springlobby_BINARY_DIR}" "${PACKAGE_NAME}-${PACKAGE_VERSION}"
 					 )
 
 # setup make distcheck
