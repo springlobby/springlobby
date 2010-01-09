@@ -48,6 +48,7 @@
 #include "mainoptionstab.h"
 #include "iunitsync.h"
 #include "uiutils.h"
+#include "utils/misc.h"
 #include "chatpanel.h"
 #include "playback/playbacktraits.h"
 #include "playback/playbacktab.h"
@@ -526,6 +527,10 @@ void MainWindow::OnMenuDisconnect( wxCommandEvent& /*unused*/ )
 
 void MainWindow::OnMenuSaveOptions( wxCommandEvent& /*unused*/ )
 {
+	wxString text;
+	if ( ui().AskText(wxEmptyString,wxEmptyString,text) ){
+		wxMessageBox( Paste2Pastebin( text ) );
+	}
   sett().SaveSettings();
 }
 

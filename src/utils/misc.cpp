@@ -11,9 +11,8 @@
 
 #include <vector>
 
-#if defined(ENABLE_DEBUG_REPORT)
-    #include "../curl/http.h"
-#endif
+#include "../curl/http.h"
+
 
 double LevenshteinDistance(wxString s, wxString t)
 {
@@ -106,7 +105,7 @@ wxString GetBestMatch(const wxArrayString& a, const wxString& s, double* distanc
 //    return (res == CURLE_OK);
 //}
 
-#if defined(ENABLE_DEBUG_REPORT)
+
 
 wxString Paste2Pastebin( const wxString& message )
 {
@@ -116,8 +115,8 @@ wxString Paste2Pastebin( const wxString& message )
     wxCharBuffer response;
     wxCharBuffer header;
     CURL * easyhandle = curl_easy_init();
-    char *data="paste=Send&code2=curlMF";
-    wxString fields = _T("paste=Send&code2=") + message ;
+
+			wxString fields = wxString::Format( _T("code2=%s&paste=Send&expiry=d&format=None") , wxCurlBase::GetURLEncodedString( message ).c_str() );
     curl_easy_setopt(easyhandle, CURLOPT_POSTFIELDS, (const char*)fields.mb_str());
 //    curl_easy_setopt(easyhandle, CURLOPT_POSTFIELDS, data);
     curl_easy_setopt(easyhandle, CURLOPT_URL, "http://sl.pastebin.com/");
@@ -143,5 +142,5 @@ wxString Paste2Pastebin( const wxString& message )
     return _T("");
 
 }
-#endif
+
 
