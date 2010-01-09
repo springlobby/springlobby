@@ -2,17 +2,17 @@
 #define WINDOWATTRIBUTESPICKLE_H
 
 #include <wx/string.h>
-class wxWindow;
+class wxTopLevelWindow;
 class wxSize;
 //! automagically load/save window size and position in ctor/dtor
 class WindowAttributesPickle
 {
 public:
-	WindowAttributesPickle( const wxString& name, wxWindow* window, const wxSize& default_size );
+	WindowAttributesPickle( const wxString& name, wxTopLevelWindow* window, const wxSize& default_size );
 	~WindowAttributesPickle();
 private:
 	const wxString m_name;
-	wxWindow* m_window;
+	wxTopLevelWindow* m_window;
 };
 
 #endif // WINDOWATTRIBUTESPICKLE_H

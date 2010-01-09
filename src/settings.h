@@ -322,8 +322,11 @@ class Settings
     wxSize  GetWindowSize( const wxString& window, const wxSize& def );
     void    SetWindowSize( const wxString& window, const wxSize& size  );
 
-    wxPoint  GetWindowPos( const wxString& window, const wxPoint& def );
+	wxPoint GetWindowPos( const wxString& window, const wxPoint& def );
     void    SetWindowPos( const wxString& window, const wxPoint& pos );
+
+	bool	GetWindowMaximized( const wxString& window );
+	void	GetWindowMaximized( const wxString& window, bool maximized );
 
     bool UseOldSpringLaunchMethod();
     void SetOldSpringLaunchMethod( bool value );
