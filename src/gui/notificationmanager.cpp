@@ -43,9 +43,10 @@ void NotificationManager::ShowNotification( UiEvents::NotficationData data )
 {
     //call this before showing everytime to accout for desktop resolution changes
     SetPopupPosition();
-
-    m_toasterbox->SetPopupText( data.second, false);
-    m_toasterbox->Play();
+	if ( m_toasterbox ) {
+		m_toasterbox->SetPopupText( data.second, false);
+		m_toasterbox->Play();
+	}
 }
 
 void NotificationManager::SetPopupPosition()
@@ -71,4 +72,14 @@ void NotificationManager::SetPopupPosition()
 			m_toasterbox->SetStackDirection( ToasterBox::StackUp );
 			break;
 	}
+}
+
+void NotificationManager::OnQuit( GlobalEvents::GlobalEventData data )
+{
+	if ( m_toasterbox )
+	{
+		m_toasterbox->CleanList();
+	}
+	delete m_toasterbox;
+	m_toasterbox = 0;
 }

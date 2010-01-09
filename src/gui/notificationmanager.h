@@ -4,13 +4,15 @@
 class ToasterBox;
 
 #include "../utils/uievents.h"
+#include "../utils/isink.h"
 
-class NotificationManager
+class NotificationManager : public OnQuitSink < NotificationManager >
 {
     public:
         virtual ~NotificationManager();
 
         void ShowNotification( UiEvents::NotficationData data );
+		void OnQuit( GlobalEvents::GlobalEventData data );
 
     protected:
         NotificationManager();
@@ -23,6 +25,7 @@ class NotificationManager
 
         EventReceiverFunc< NotificationManager, UiEvents::NotficationData, &NotificationManager::ShowNotification> m_showNotificationSink;
 		int m_width,m_height,m_x_offset,m_y_offset;
+
 };
 
 NotificationManager& notificationManager();
