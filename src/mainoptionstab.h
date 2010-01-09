@@ -70,6 +70,7 @@ class OptionsDialog : public wxDialog, public WindowAttributesPickle
 public:
 	OptionsDialog( wxWindow* parent );
 	void SetSelection( const unsigned int page );
+	bool Show( bool show = true );
 private:
 	MainOptionsTab* m_options;
 	wxBoxSizer* m_main_sizer;

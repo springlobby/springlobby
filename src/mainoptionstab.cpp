@@ -174,3 +174,11 @@ void OptionsDialog::SetSelection( const unsigned int page )
 {
 	m_options->SetSelection( page );
 }
+
+bool OptionsDialog::Show( bool show )
+{
+	if( !show )
+		SaveAttributes();
+	return wxDialog::Show( show );
+
+}

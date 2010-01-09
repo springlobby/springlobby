@@ -115,6 +115,7 @@ MainWindow::TabNames MainWindow::m_tab_names;
 MainWindow::MainWindow( )
 	: wxFrame( (wxFrame*)0, -1, _("SpringLobby"), wxPoint(50, 50) ),
 	WindowAttributesPickle( _T("MAINWINDOW"), this, wxSize(450, 340) ),
+	m_opts_dialog(NULL),
     m_autojoin_dialog(NULL),
     m_channel_chooser(NULL),
     m_log_win(NULL)
@@ -271,6 +272,10 @@ void MainWindow::SetLogWin( wxLogWindow* log, wxLogChain* logchain  )
 MainWindow::~MainWindow()
 {
 	SetEvtHandlerEnabled( false );
+	if ( m_opts_dialog )
+	{
+		m_opts_dialog->Destroy();
+	}
 }
 
 void MainWindow::OnClose( wxCloseEvent& /*unused*/ )
@@ -695,6 +700,6 @@ void MainWindow::FocusBattleRoomTab()
 
 void MainWindow::OnMenuPreferences( wxCommandEvent& /*event*/ )
 {
-	OptionsDialog* opts = new OptionsDialog( this );
-	opts->Show();
+	m_opts_dialog = new OptionsDialog( this );
+	m_opts_dialog->Show();
 }

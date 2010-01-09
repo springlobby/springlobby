@@ -36,7 +36,7 @@ class wxLogWindow;
 class wxLogChain;
 class wxCloseEvent;
 class Statusbar;
-
+class OptionsDialog;
 class ReplayTraits;
 template < class Traits >
 class PlaybackTab;
@@ -134,6 +134,7 @@ class MainWindow : public wxFrame, public WindowAttributesPickle
     #ifndef NO_TORRENT_SYSTEM
     MainTorrentTab* m_torrent_tab;
     #endif
+	OptionsDialog* m_opts_dialog;
 
     AutojoinChannelDialog* m_autojoin_dialog;
     settings_frame* se_frame;
