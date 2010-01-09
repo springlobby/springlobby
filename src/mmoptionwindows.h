@@ -7,7 +7,9 @@ class wxCheckBox;
 class wxComboBox;
 class wxCommandEvent;
 class IBattle;
-class wxSpinCtrlDbl;
+template <class P>
+class SlSpinCtrlDouble;
+class SlSpinDoubleEvent;
 class wxTextCtrl;
 class wxStaticText;
 class wxButton;
@@ -21,17 +23,19 @@ class SingleOptionDialog: public wxDialog
 			void OnOk(wxCommandEvent& event);
 			void OnCancel(wxCommandEvent& event);
 
+			//! dummy event receiver, mandated by the control implementation
+            void OnSpinCtrlDoubleChange(SlSpinDoubleEvent& event){}
+
 	protected:
 			IBattle& m_battle;
 			wxString m_tag;
 
 			wxCheckBox* m_checkbox;
 			wxComboBox* m_combobox;
-			wxSpinCtrlDbl* m_spinctrl;
+			SlSpinCtrlDouble<SingleOptionDialog>* m_spinctrl;
 			wxTextCtrl* m_textctrl;
 			wxButton* m_cancel_button;
 			wxButton* m_ok_button;
-
 };
 
 enum

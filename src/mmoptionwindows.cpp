@@ -19,7 +19,7 @@
 #include "utils/controls.h"
 #include "utils/math.h"
 #include "utils/conversion.h"
-#include "spinctld.h"
+#include "gui/spinctl/spinctrl.h"
 
 SingleOptionDialog::SingleOptionDialog( IBattle& battle, const wxString& optiontag )
     : m_battle( battle ),
@@ -58,8 +58,8 @@ SingleOptionDialog::SingleOptionDialog( IBattle& battle, const wxString& optiont
 		case opt_float:
 			{
 				mmOptionFloat opt = optWrap.m_opts[optFlag].float_map[key];
-				m_spinctrl = new wxSpinCtrlDbl();
-				m_spinctrl->Create( this, wxID_ANY, _T( "" ), wxDefaultPosition, wxDefaultSize, 0, double( opt.min ), double( opt.max ), double( opt.value ), double( opt.stepping ), wxSPINCTRLDBL_AUTODIGITS, opt.key );
+				m_spinctrl = new SlSpinCtrlDouble<SingleOptionDialog>();
+				m_spinctrl->Create( this, wxID_ANY, _T( "" ), wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, double( opt.min ), double( opt.max ), double( opt.value ), double( opt.stepping ), opt.key );
 				m_spinctrl->SetToolTip( TE( opt.description ) );
 				m_main_sizer->Add( m_spinctrl, 0, wxEXPAND );
 				break;
@@ -130,7 +130,12 @@ void SingleOptionDialog::OnOk( wxCommandEvent& /*unused*/ )
 	wxString value;
 	if ( m_textctrl ) value = m_textctrl->GetValue();
 	else if ( m_combobox ) value = m_battle.CustomBattleOptions().GetNameListOptItemKey( key, m_combobox->GetValue(), optFlag );
-	else if ( m_spinctrl ) value = TowxString( m_spinctrl->GetValue() );
+	else if ( m_spinctrl )
+	{
+	    double d = m_spinctrl->GetValue() ;
+	    value = wxString::Format( _T("%f"),d );
+	    wxLogMessage( wxString::Format( _T("Got VALUE: %s -- %f") , value.c_str(), d ) );
+	}
 	else if ( m_checkbox ) value = TowxString( m_checkbox->GetValue() );
 	m_battle.CustomBattleOptions().setSingleOption( key, value, optFlag );
 	m_battle.SendHostInfo( m_tag );

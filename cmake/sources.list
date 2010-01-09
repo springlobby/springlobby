@@ -16,6 +16,7 @@ SET(springlobbySrc
 	src/gui/wxbackgroundimage.cpp
 	src/gui/simplefront.cpp
 	src/gui/statusbar.cpp
+	src/gui/spinctl/generic/spinctlg.cpp
 	src/aui/slbook.cpp
 	src/utils/math.cpp
 	src/utils/misc.cpp
@@ -165,6 +166,7 @@ SET(SLSharedWithSettings
 	src/stacktrace.cpp
 	src/thread.cpp
 	src/gui/windowattributespickle.cpp
+	src/gui/spinctl/generic/spinctlg.cpp
 )
 
 SET( updaterSrc
@@ -174,3 +176,4 @@ SET( updaterSrc
 	src/utils/activitynotice.cpp
 	src/utils/misc.cpp
 )
+

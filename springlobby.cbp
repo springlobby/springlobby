@@ -264,6 +264,13 @@
 		<Unit filename="src/battleoptionstab.h" />
 		<Unit filename="src/battleroomlistctrl.cpp" />
 		<Unit filename="src/battleroomlistctrl.h" />
+		<Unit filename="src/battleroommmoptionstab.cpp">
+			<Option target="GNU | Profile" />
+			<Option target="Win32 | Debug" />
+			<Option target="Win32 | Profile" />
+			<Option target="GNU | Debug (wx29)" />
+			<Option target="GNU | RealDebug" />
+		</Unit>
 		<Unit filename="src/battleroommmoptionstab.h" />
 		<Unit filename="src/battleroomtab.cpp" />
 		<Unit filename="src/battleroomtab.h" />
@@ -336,6 +343,9 @@
 		<Unit filename="src/gui/statusbar.h" />
 		<Unit filename="src/gui/windowattributespickle.cpp" />
 		<Unit filename="src/gui/windowattributespickle.h" />
+		<Unit filename="src/gui/spinctl/generic/spinctlg.cpp" />
+		<Unit filename="src/gui/spinctl/generic/spinctlg.h" />
+		<Unit filename="src/gui/spinctl/spinctrl.h" />
 		<Unit filename="src/gui/wxbackgroundimage.cpp" />
 		<Unit filename="src/gui/wxbackgroundimage.h" />
 		<Unit filename="src/gui/wxgradientbutton.cpp" />
@@ -475,8 +485,6 @@
 		<Unit filename="src/socket.h" />
 		<Unit filename="src/sounds/pm_sound.h" />
 		<Unit filename="src/sounds/ring_sound.h" />
-		<Unit filename="src/spinctld.cpp" />
-		<Unit filename="src/spinctld.h" />
 		<Unit filename="src/spring.cpp" />
 		<Unit filename="src/spring.h" />
 		<Unit filename="src/springlobby.rc">
