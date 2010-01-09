@@ -368,8 +368,8 @@ bool TASServer::IsConnected()
 bool TASServer::Register( const wxString& addr, const int port, const wxString& nick, const wxString& password, wxString& reason )
 {
     wxLogDebugFunc( _T("") );
-		FakeNetClass temp;
-		Socket tempsocket( temp, true );
+	FakeNetClass temp;
+	Socket tempsocket( temp, true, true );
     tempsocket.Connect( addr, port );
     if ( tempsocket.State() != SS_Open ) return false;
 
