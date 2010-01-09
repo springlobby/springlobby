@@ -160,7 +160,6 @@ SET(SLSharedWithSettings
 	src/mmoptionmodel.cpp
 	src/mmoptionswrapper.cpp
 	src/settings.cpp
-	src/spinctld.cpp
 	src/springunitsynclib.cpp
 	src/springunitsync.cpp
 	src/stacktrace.cpp
