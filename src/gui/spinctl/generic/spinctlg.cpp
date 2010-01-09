@@ -18,6 +18,7 @@
 // ----------------------------------------------------------------------------
 
 #include "../spinctrl.h"
+#include <wx/wxchar.h>
 
 #if wxUSE_SPINCTRL
 
