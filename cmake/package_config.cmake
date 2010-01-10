@@ -29,10 +29,11 @@ ELSE (WIN32)
     SET(CPACK_CMAKE_GENERATOR "Unix Makefiles")
     SET(CPACK_GENERATOR "TBZ2;TGZ")
     SET(CPACK_PACKAGE_FILE_NAME "springlobby-${SPRINGLOBBY_REV}")
-	INSTALL(FILES
-		${springlobby_BINARY_DIR}/config.h
-		DESTINATION . )
-	
+	IF( EXISTS ${springlobby_BINARY_DIR}/config.h )
+		INSTALL(FILES
+			${springlobby_BINARY_DIR}/config.h
+			DESTINATION . OPTIONAL)
+	ENDIF( EXISTS ${springlobby_BINARY_DIR}/config.h )
 ENDIF (WIN32)
 SET(CPACK_INSTALL_CMAKE_PROJECTS "${CMAKE_BINARY_DIR};${CMAKE_PROJECT_NAME};ALL;/")
 # SET(CPACK_OUTPUT_CONFIG_FILE "/home/andy/vtk/CMake-bin/CPackConfig.cmake")

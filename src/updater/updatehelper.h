@@ -15,6 +15,6 @@
 class wxString;
 
 wxString GetDownloadUrl( const wxString& version );
-wxString GetSpringLobbyVersion();
+wxString GetSpringLobbyVersion( bool consider_aux = true );
 
 #endif
