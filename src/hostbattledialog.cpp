@@ -58,7 +58,8 @@ BEGIN_EVENT_TABLE( HostBattleDialog, wxDialog )
 END_EVENT_TABLE()
 
 HostBattleDialog::HostBattleDialog( wxWindow* parent )
-    : wxDialog( parent, -1, _( "Host new battle" ), wxDefaultPosition, wxSize( 410, 441 ), wxDEFAULT_DIALOG_STYLE ),
+	: wxDialog( parent, -1, _( "Host new battle" ), wxDefaultPosition, wxSize( 410, 441 ), wxRESIZE_BORDER | wxDEFAULT_DIALOG_STYLE ),
+	WindowAttributesPickle( _T("hostbattledialog"), this, wxSize( 410, 441 ) ),
     m_last_relayhost( sett().GetLastRelayedHost() )
 {
 	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
