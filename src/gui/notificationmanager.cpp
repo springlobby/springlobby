@@ -42,8 +42,8 @@ NotificationManager::~NotificationManager()
 void NotificationManager::ShowNotification( UiEvents::NotficationData data )
 {
     //call this before showing everytime to accout for desktop resolution changes
-    SetPopupPosition();
 	if ( m_toasterbox ) {
+		SetPopupPosition();
 		m_toasterbox->SetPopupText( data.second, false);
 		m_toasterbox->Play();
 	}
