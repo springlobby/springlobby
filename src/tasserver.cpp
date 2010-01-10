@@ -40,14 +40,6 @@
 #include "tasservertokentable.h"
 #include "pingthread.h"
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif //HAVE_CONFIG_H
-
-#ifndef VERSION
-	#define VERSION "unknown"
-#endif //VERSION
-
 // for SL_MAIN_ICON
 #include "utils/customdialogs.h"
 
@@ -711,13 +703,10 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     {
 				if ( sett().GetReportStats() )
 				{
-					wxString version = WX_STRINGC(VERSION).BeforeFirst( _T(' ') );
-					wxString aux;
-					#ifdef AUX_VERSION
-						aux = WX_STRINGC(AUX_VERSION);
-						aux.Replace( _T(" "), _T("") );
-						aux = _T(" ") + aux;
-					#endif
+					wxString version = GetSpringLobbyVersion(false);
+					wxString aux = GetSpringLobbyAuxVersion();
+					aux.Replace( _T(" "), _T("") );
+					aux = _T(" ") + aux;
 					wxString os = wxPlatformInfo::Get().GetOperatingSystemIdName();
 					os.Replace( _T(" "), _T("") );
 					wxString wxversion = wxVERSION_STRING;

@@ -9,10 +9,6 @@
 #include <stdexcept>
 #include <wx/log.h>
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "utils/debug.h"
 #include "utils/conversion.h"
 #include "utils/math.h"
