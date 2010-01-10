@@ -3,7 +3,7 @@
 
 
 #include <wx/dialog.h>
-
+#include "gui/windowattributespickle.h"
 class wxStaticText;
 class wxTextCtrl;
 class wxChoice;
@@ -17,7 +17,7 @@ class wxBitmapButton;
 class wxCheckBox;
 class wxMenu;
 
-class HostBattleDialog : public wxDialog
+class HostBattleDialog : public wxDialog, public WindowAttributesPickle
 {
 	public:
 		HostBattleDialog( wxWindow* parent );
