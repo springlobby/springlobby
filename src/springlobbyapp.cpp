@@ -57,6 +57,7 @@
 #include "customizations.h"
 #include "curl/http.h"
 #include "alsound.h"
+#include "mapselectdialog.h"
 
 #include "gui/simplefront.h"
 
@@ -161,6 +162,8 @@ bool SpringLobbyApp::OnInit()
 
 	sett().RefreshSpringVersionList();
 
+	//this should take off the firstload time considerably *ie nil it :P )
+	mapSelectDialog();
 	//unitsync first load, NEEDS to be blocking
 	usync().ReloadUnitSyncLib();
     notificationManager(); //needs to be initialized too
@@ -191,6 +194,7 @@ bool SpringLobbyApp::OnInit()
 
     ui().ShowMainWindow();
     SetTopWindow( &ui().mw() );
+	mapSelectDialog().Reparent( &ui().mw() );
     ui().FirstRunWelcome();
     m_timer->Start( TIMER_INTERVAL );
 
@@ -201,6 +205,7 @@ bool SpringLobbyApp::OnInit()
 //    plasmaInterface().InitResourceList();
 //	plasmaInterface().FetchResourceList();
 #endif
+
 
     return true;
 }

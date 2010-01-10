@@ -23,7 +23,6 @@ NotificationManager::NotificationManager()
 	m_y_offset(30)
 {
 	m_toasterbox = new ToasterBox(&ui().mw());
-	m_toasterbox->SetPopupPauseTime(3000);
 	m_toasterbox->SetPopupSize(m_width, m_height );
 
     m_toasterbox->SetPopupBackgroundColor(0,0,0);
@@ -42,8 +41,8 @@ NotificationManager::~NotificationManager()
 void NotificationManager::ShowNotification( UiEvents::NotficationData data )
 {
     //call this before showing everytime to accout for desktop resolution changes
-    SetPopupPosition();
 	if ( m_toasterbox ) {
+		SetPopupPosition();
 		m_toasterbox->SetPopupText( data.second, false);
 		m_toasterbox->Play();
 	}
@@ -51,6 +50,7 @@ void NotificationManager::ShowNotification( UiEvents::NotficationData data )
 
 void NotificationManager::SetPopupPosition()
 {
+	m_toasterbox->SetPopupPauseTime(sett().GetNotificationPopupDisplayTime()*1000);
     int dim_x = wxSystemSettings::GetMetric( wxSYS_SCREEN_X );
     int dim_y = wxSystemSettings::GetMetric( wxSYS_SCREEN_Y );
 	switch ( sett().GetNotificationPopupPosition() )

@@ -408,8 +408,8 @@ void LoadNotebookPerspective( SLNotebook* notebook, const wxString& perspective_
 				wxWindow* tmp = notebook->GetPage( i );
 				if ( tmp ) {
 					tmp->Layout();
-//                    tmp->Fit();
-//                    tmp->FitInside();//these two seem to be problematic rather than helpful
+					tmp->Fit();
+					tmp->FitInside();
 					tmp->Refresh();
 				}
 				wxScrolledWindow* scrollwin = dynamic_cast<wxScrolledWindow*>( notebook->GetPage( i ) );

@@ -116,8 +116,7 @@ const MyStrings<SPRING_MAX_ALLIES> ally_choices;
 
 BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle )
     : wxScrolledWindow( parent, -1 ),
-    m_battle( battle ),
-    m_map_dlg( 0 )
+	m_battle( battle )
 {
 	GetAui().manager->AddPane( this, wxLEFT, _T( "battleroomtab" ) );
 
@@ -357,9 +356,6 @@ BattleRoomTab::~BattleRoomTab()
 {
 	if ( GetAui().manager )
         GetAui().manager->DetachPane( this );
-    if ( m_map_dlg ) {
-        m_map_dlg->EndModal( 0 );
-    }
 }
 
 void BattleRoomTab::SplitSizerHorizontally( const bool horizontal )
@@ -947,11 +943,10 @@ void BattleRoomTab::OnMapBrowse( wxCommandEvent& /*unused*/ )
 {
 	if ( !m_battle ) return;
 	wxLogDebugFunc( _T( "" ) );
-	m_map_dlg = new MapSelectDialog ( ( wxWindow* )&ui().mw() );
 
-	if ( m_map_dlg->ShowModal() == wxID_OK && m_map_dlg->GetSelectedMap() != NULL )
+	if ( mapSelectDialog().ShowModal() == wxID_OK && mapSelectDialog().GetSelectedMap() != NULL )
 	{
-		wxString mapname = m_map_dlg->GetSelectedMap()->name;
+		wxString mapname = mapSelectDialog().GetSelectedMap()->name;
 		wxLogDebugFunc( mapname );
 		if ( !m_battle->IsFounderMe() )
 		{

@@ -5,7 +5,7 @@
 
 #include <vector>
 #include "gui/windowattributespickle.h"
-
+#include "utils/isink.h"
 //(*Headers(MapSelectDialog)
 #include <wx/dialog.h>
 class wxStdDialogButtonSizer;
@@ -24,14 +24,18 @@ class Ui;
 struct UnitSyncMap;
 
 
-class MapSelectDialog: public wxDialog, public WindowAttributesPickle
+class MapSelectDialog: public wxDialog, public WindowAttributesPickle, public UnitsyncReloadedSink<MapSelectDialog>
 {
 	public:
 
-		MapSelectDialog( wxWindow* parent );
+	/** since we use this class in a global we cannot pass a parent window, instead wxWindow::Reparent is called after the first use in app init
+		the parameter is only here to not break wxSmith code production **/
+		MapSelectDialog(wxWindow* parent = 0);
 		virtual ~MapSelectDialog();
 
 		UnitSyncMap* GetSelectedMap() const;
+
+		void OnUnitsyncReloaded( GlobalEvents::GlobalEventData data );
 
 	protected:
 
@@ -101,6 +105,7 @@ class MapSelectDialog: public wxDialog, public WindowAttributesPickle
 		DECLARE_EVENT_TABLE()
 };
 
+MapSelectDialog& mapSelectDialog();
 #endif
 
 /**

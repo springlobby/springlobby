@@ -28,7 +28,6 @@ class wxBitmapComboBox;
 struct UnitSyncMap;
 class wxToggleButton;
 class wxChoice;
-class MapSelectDialog;
 class wxListEvent;
 
 typedef std::map<wxString, long> OptionListMap;
@@ -181,8 +180,6 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 		wxCheckBox* m_autolock_chk;
 
 		wxListCtrl* m_opts_list;
-
-		MapSelectDialog* m_map_dlg;
 
 		enum {
 			BROOM_LEAVE = wxID_HIGHEST,

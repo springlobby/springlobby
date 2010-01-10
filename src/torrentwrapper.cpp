@@ -117,9 +117,14 @@ void* TorrentMaintenanceThread::Entry()
 	{
 		if( !Sleep( 2000 ) ) break;
 		{
+			//just to be on the safe sade in case anything slipped thru
+			try {
 				//  DON'T alter function call order here or bad things may happend like locust, earthquakes or raptor attack
 				m_parent.RemoveInvalidTorrents();
 				m_parent.HandleCompleted();
+			}
+			catch ( ... )
+			{}
 		}
 	}
 	return 0;
@@ -508,23 +513,27 @@ std::map<wxString,TorrentInfos> TorrentWrapper::CollectGuiInfos()
 		const TorrenthandleInfoMap& infomap = GetHandleInfoMap();
 		for ( TorrenthandleInfoMap::const_iterator i = infomap.begin(); i != infomap.end(); ++i )
         {
-            TorrentInfos CurrentTorrent;
-			libtorrent::torrent_handle handle = i->second;
-			libtorrent::torrent_status torrent_status = handle.status();
-			CurrentTorrent.name = i->first.m_name;
-            CurrentTorrent.progress = torrent_status.progress;
-            CurrentTorrent.downloaded = torrent_status.total_payload_download;
-            CurrentTorrent.inspeed = torrent_status.download_payload_rate;
-            CurrentTorrent.numcopies = torrent_status.distributed_copies;
-			CurrentTorrent.filesize = handle.get_torrent_info().total_size();
+			try {
+				TorrentInfos CurrentTorrent;
+				libtorrent::torrent_handle handle = i->second;
+				libtorrent::torrent_status torrent_status = handle.status();
+				CurrentTorrent.name = i->first.m_name;
+				CurrentTorrent.progress = torrent_status.progress;
+				CurrentTorrent.downloaded = torrent_status.total_payload_download;
+				CurrentTorrent.inspeed = torrent_status.download_payload_rate;
+				CurrentTorrent.numcopies = torrent_status.distributed_copies;
+				CurrentTorrent.filesize = handle.get_torrent_info().total_size();
 
-			int eta_seconds = -1;
-			if ( CurrentTorrent.progress > 0 && CurrentTorrent.inspeed > 0)
-				eta_seconds = int (  (CurrentTorrent.filesize - CurrentTorrent.downloaded ) / CurrentTorrent.inspeed );
+				int eta_seconds = -1;
+				if ( CurrentTorrent.progress > 0 && CurrentTorrent.inspeed > 0)
+					eta_seconds = int (  (CurrentTorrent.filesize - CurrentTorrent.downloaded ) / CurrentTorrent.inspeed );
 
-			CurrentTorrent.eta = eta_seconds;
-			CurrentTorrent.downloadstatus = getP2PStatusFromHandle( handle );
-            ret[CurrentTorrent.name] = CurrentTorrent;
+				CurrentTorrent.eta = eta_seconds;
+				CurrentTorrent.downloadstatus = getP2PStatusFromHandle( handle );
+				ret[CurrentTorrent.name] = CurrentTorrent;
+			}
+			catch ( libtorrent::invalid_handle& h )
+			{}
         }
     }
     catch (std::exception& e)

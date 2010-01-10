@@ -11,6 +11,7 @@ class wxTextCtrl;
 class wxButton;
 class wxStaticBoxSizer;
 class wxChoice;
+class wxSpinCtrl;
 
 class LobbyOptionsTab : public wxScrolledWindow
 {
@@ -47,6 +48,7 @@ class LobbyOptionsTab : public wxScrolledWindow
 
         wxStaticText* m_complete_method_label;
 		wxStaticText* m_notif_popup_pos_label;
+		wxStaticText* m_notif_popup_time_label;
         wxRadioButton* m_complete_method_old;
         wxRadioButton* m_complete_method_new;
         wxButton* m_web_browse_btn;
@@ -62,9 +64,11 @@ class LobbyOptionsTab : public wxScrolledWindow
         wxBoxSizer* m_web_loc_sizer;
         wxBoxSizer* m_editor_loc_sizer;
 		wxBoxSizer* m_notif_popup_pos_sizer;
+		wxBoxSizer* m_notif_popup_time_sizer;
 
         wxChoice* m_start_tab;
 		wxChoice* m_notif_popup_pos;
+		wxSpinCtrl* m_notif_popup_time;
 
     enum
     {
