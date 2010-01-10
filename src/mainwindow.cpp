@@ -274,6 +274,7 @@ MainWindow::~MainWindow()
 	SetEvtHandlerEnabled( false );
 	if ( m_opts_dialog )
 	{
+		m_opts_dialog->Show(false);
 		m_opts_dialog->Destroy();
 	}
 }

@@ -371,6 +371,8 @@ class Settings
 	bool GetUseNotificationPopups();
 	void SetNotificationPopupPosition( const size_t index );
 	size_t GetNotificationPopupPosition();
+	void SetNotificationPopupDisplayTime( const unsigned int seconds );
+	unsigned int GetNotificationPopupDisplayTime( );
     /*@}*/
 
     /* ================================================================ */
