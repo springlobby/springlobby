@@ -194,10 +194,7 @@ bool SpringLobbyApp::OnInit()
 
     ui().ShowMainWindow();
     SetTopWindow( &ui().mw() );
-
-	if ( !mapSelectDialog().Reparent( &ui().mw() ) )
-		wxMessageBox( _T("reparent failed"));
-    ui().FirstRunWelcome();
+	ui().FirstRunWelcome();
     m_timer->Start( TIMER_INTERVAL );
 
     ui().mw().SetLogWin( loggerwin, logchain );
