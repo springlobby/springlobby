@@ -1128,3 +1128,13 @@ void BattleRoomTab::SetBattle( Battle* battle )
 		m_spec_count_lbl->SetLabel( wxString::Format( _( "Spectators: %d" ), m_battle->GetSpectators() ) );
 	}
 }
+
+void BattleRoomTab::MaximizeSizer()
+{
+	wxSize s = GetClientSize();
+	m_main_sizer->RecalcSizes();
+	//m_main_sizer->SetDimension( )
+	m_main_sizer->Layout();
+	Layout();
+	Refresh();
+}

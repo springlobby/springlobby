@@ -667,6 +667,10 @@ const MainWindow::TabNames& MainWindow::GetTabNames()
     return m_tab_names;
 }
 
+#ifdef __WXMSW__
+	#include "battleroomtab.h"
+#endif
+
 void MainWindow::LoadPerspectives( const wxString& pers_name )
 {
     sett().SetLastPerspectiveName( pers_name );
@@ -678,6 +682,9 @@ void MainWindow::LoadPerspectives( const wxString& pers_name )
     wxWindow* active_chat_tab = static_cast<wxWindow*> ( m_chat_tab->GetActiveChatPanel() );
     if ( active_chat_tab )
         active_chat_tab->Refresh();
+	#ifdef __WXMSW__
+		m_join_tab->GetBattleRoomTab().MaximizeSizer();
+	#endif
     //chat tab saving won't work w/o further work
 //    m_chat_tab->LoadPerspective( perspective_name );
 }
