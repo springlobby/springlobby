@@ -25,7 +25,7 @@ long ToasterBoxWindow::count = 0;
 //END_EVENT_TABLE ()
 
 ToasterBoxWindow::ToasterBoxWindow(wxWindow* parent, wxTimer *_parent2)
-	:  wxPopupWindow(parent,  wxNO_BORDER|wxSTAY_ON_TOP|wxFRAME_NO_TASKBAR)
+	:  ToasterBase(parent,  wxNO_BORDER|wxSTAY_ON_TOP|wxFRAME_NO_TASKBAR)
 {
   startTime = wxGetLocalTime();
   parent2 = _parent2;
