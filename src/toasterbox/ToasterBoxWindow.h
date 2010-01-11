@@ -3,9 +3,18 @@
 
 #include <wx/timer.h>
 #include <wx/wx.h>
-#include <wx/popupwin.h>
+#include <wx/defs.h>
+#if wxUSE_POPUPWIN
+	#include <wx/popupwin.h>
+	typedef wxPopupWindow
+		ToasterBase;
+#else
+	#include <wx/popupwin.h>
+	typedef wxWindow
+		ToasterBase;
+#endif
 
-class ToasterBoxWindow: public wxPopupWindow, public wxTimer
+class ToasterBoxWindow: public ToasterBase, public wxTimer
 {
   public:
     ToasterBoxWindow(wxWindow* parent, wxTimer *_parent2);
