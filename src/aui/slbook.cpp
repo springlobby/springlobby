@@ -398,10 +398,7 @@ void LoadNotebookPerspective( SLNotebook* notebook, const wxString& perspective_
         notebook->LoadPerspective( pers );
         notebook->Layout();
         wxWindow* parent = notebook->GetParent();
-        if ( parent ) {
-            parent->Layout();
-            parent->Refresh();
-        }
+
         #ifdef __WXMSW__
         for( size_t i = 0; i < notebook->GetPageCount(); ++i ) {
             try {
@@ -419,7 +416,12 @@ void LoadNotebookPerspective( SLNotebook* notebook, const wxString& perspective_
             }
             catch (...) {}
         }
+		notebook->Refresh();
         #endif
+		if ( parent ) {
+			parent->Layout();
+			parent->Refresh();
+		}
     }
 }
 
