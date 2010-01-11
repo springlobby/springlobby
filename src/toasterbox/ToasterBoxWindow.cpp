@@ -45,8 +45,8 @@ ToasterBoxWindow::ToasterBoxWindow(wxWindow* parent, wxTimer *_parent2)
   SetSize(bottomRight.x, bottomRight.y,
     dialogSize.GetWidth(), dialogSize.GetHeight());
 
-	wxPopupWindow::Connect( wxEVT_ERASE_BACKGROUND, (wxObjectEventFunction)& ToasterBoxWindow::OnEraseBackground);
-	wxPopupWindow::Connect( wxEVT_PAINT, (wxObjectEventFunction)& ToasterBoxWindow::OnPaint);
+	ToasterBase::Connect( wxEVT_ERASE_BACKGROUND, (wxObjectEventFunction)& ToasterBoxWindow::OnEraseBackground);
+	ToasterBase::Connect( wxEVT_PAINT, (wxObjectEventFunction)& ToasterBoxWindow::OnPaint);
 }
 
 void ToasterBoxWindow::SetPopupBitmap(wxBitmap& bitmap)
