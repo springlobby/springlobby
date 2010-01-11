@@ -107,6 +107,8 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 
 		void PrintAllySetup();
 
+		void MaximizeSizer();
+
 	protected:
 
 		long AddMMOptionsToList( long pos, OptionsWrapper::GameOption optFlag );

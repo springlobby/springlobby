@@ -398,18 +398,15 @@ void LoadNotebookPerspective( SLNotebook* notebook, const wxString& perspective_
         notebook->LoadPerspective( pers );
         notebook->Layout();
         wxWindow* parent = notebook->GetParent();
-        if ( parent ) {
-            parent->Layout();
-            parent->Refresh();
-        }
+
         #ifdef __WXMSW__
         for( size_t i = 0; i < notebook->GetPageCount(); ++i ) {
             try {
 				wxWindow* tmp = notebook->GetPage( i );
 				if ( tmp ) {
 					tmp->Layout();
-					tmp->Fit();
-					tmp->FitInside();
+//                    tmp->Fit();
+//                    tmp->FitInside();//these two seem to be problematic rather than helpful
 					tmp->Refresh();
 				}
 				wxScrolledWindow* scrollwin = dynamic_cast<wxScrolledWindow*>( notebook->GetPage( i ) );
@@ -419,7 +416,12 @@ void LoadNotebookPerspective( SLNotebook* notebook, const wxString& perspective_
             }
             catch (...) {}
         }
+		notebook->Refresh();
         #endif
+		if ( parent ) {
+			parent->Layout();
+			parent->Refresh();
+		}
     }
 }
 
