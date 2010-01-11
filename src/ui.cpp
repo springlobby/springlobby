@@ -1015,9 +1015,10 @@ void Ui::OnJoinedBattle( Battle& battle )
 
 void Ui::OnHostedBattle( Battle& battle )
 {
-    if ( m_main_win == 0 ) return;
-    mw().FocusBattleRoomTab();
+	if ( m_main_win == 0 )
+		return;
     mw().GetJoinTab().HostBattle( battle );
+	mw().FocusBattleRoomTab();
 }
 
 
