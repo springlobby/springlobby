@@ -100,9 +100,9 @@ public:
     };
 
     /// gui interface
-    bool IsFileInSystem( const wxString& name );
+	bool IsFileInSystem( const wxString& name );
     bool RemoveTorrentByName( const wxString& name );
-    int GetTorrentSystemStatus();
+	int GetTorrentSystemStatus() const;
 
     /// lobby interface
     void SetIngameStatus( bool status );
@@ -124,7 +124,7 @@ public:
     void ResumeFromList();
 
 private:
-	P2P::FileStatus getP2PStatusFromHandle( const libtorrent::torrent_handle& handle );
+	P2P::FileStatus getP2PStatusFromHandle( const libtorrent::torrent_handle& handle ) const;
 
     typedef std::vector<libtorrent::torrent_handle>
         TorrenthandleVector;
