@@ -128,8 +128,8 @@ void SpringUnitSync::PopulateArchiveList()
 		 int count = susynclib().GetPrimaryModArchiveCount( i );
 		 if ( count > 0 )
 		 {
-		   archivename = susynclib().GetPrimaryModArchive( 0 );
-			 unchainedhash = susynclib().GetArchiveChecksum( archivename );
+			archivename = susynclib().GetPrimaryModArchive( i );
+			unchainedhash = susynclib().GetArchiveChecksum( archivename );
 		 }
     } catch (...) { continue; }
     try
