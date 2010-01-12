@@ -166,6 +166,7 @@ class Ui
 
     //! does actual work, called from downloadmap/mod
     void DownloadFileP2P( const wxString& name );
+	void DownloadFileWebsite( const wxString& name );
 
     private:
         Ui( const Ui& );

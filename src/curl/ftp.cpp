@@ -47,9 +47,9 @@ wxCurlFTP::wxCurlFTP(const wxString& szURL /*= wxEmptyString*/,
                      long flags /*= wxCURL_DEFAULT_FLAGS*/)
 : wxCurlBase(szURL, szUserName, szPassword, pEvtHandler, id, flags),
   m_pQuote(NULL), m_pPreQuote(NULL), m_pPostQuote(NULL),
-  m_bCreateMissingDirs(true), m_bUsePortOption(false),
-  m_bUseEPRT(false), m_bUseEPSV(false), m_bAppend(false),
-  m_tmMode(kASCII),
+  m_bCreateMissingDirs(true), m_bAppend(false),
+  m_bUsePortOption(false), m_tmMode(kASCII),
+  m_bUseEPRT(false), m_bUseEPSV(false),
   m_szPortParam("-")
 {
 }

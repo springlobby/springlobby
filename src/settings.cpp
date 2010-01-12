@@ -2535,3 +2535,13 @@ void Settings::GetWindowMaximized( const wxString& window, bool maximized )
 {
 	m_config->Write(_T( "/GUI/" ) + window + _T( "/maximized" ), maximized );
 }
+
+void Settings::SetNotificationPopupDisplayTime( const unsigned int seconds )
+{
+	m_config->Write( _T("/GUI/NotificationPopupDisplayTime"), (long)seconds );
+}
+
+unsigned int Settings::GetNotificationPopupDisplayTime( )
+{
+	return m_config->Read( _T("/GUI/NotificationPopupDisplayTime"), 5l );
+}

@@ -194,6 +194,7 @@ bool SpringLobbyApp::OnInit()
 
     ui().ShowMainWindow();
     SetTopWindow( &ui().mw() );
+
 	mapSelectDialog().Reparent( &ui().mw() );
     ui().FirstRunWelcome();
     m_timer->Start( TIMER_INTERVAL );
@@ -450,7 +451,7 @@ void SpringLobbyApp::CacheAndSettingsSetup()
 			{
 				sett().TranslateSavedColumWidths();
 			}
-			if ( settversion < 17 )
+			if ( settversion < 17 || settversion < 20 )
 			{
 				sett().RemoveLayouts();
 			}
@@ -492,7 +493,7 @@ void SpringLobbyApp::CacheAndSettingsSetup()
     }
 }
 
-void SpringLobbyApp::OnQuit( GlobalEvents::GlobalEventData data )
+void SpringLobbyApp::OnQuit( GlobalEvents::GlobalEventData /*data*/ )
 {
 	m_timer->Stop();
 }

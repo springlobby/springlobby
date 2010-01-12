@@ -25,7 +25,7 @@ long ToasterBoxWindow::count = 0;
 //END_EVENT_TABLE ()
 
 ToasterBoxWindow::ToasterBoxWindow(wxWindow* parent, wxTimer *_parent2)
-	:  wxPopupWindow(parent,  wxNO_BORDER|wxSTAY_ON_TOP|wxFRAME_NO_TASKBAR)
+	:  ToasterBase(parent,  wxNO_BORDER|wxSTAY_ON_TOP|wxFRAME_NO_TASKBAR)
 {
   startTime = wxGetLocalTime();
   parent2 = _parent2;
@@ -45,8 +45,8 @@ ToasterBoxWindow::ToasterBoxWindow(wxWindow* parent, wxTimer *_parent2)
   SetSize(bottomRight.x, bottomRight.y,
     dialogSize.GetWidth(), dialogSize.GetHeight());
 
-	wxPopupWindow::Connect( wxEVT_ERASE_BACKGROUND, (wxObjectEventFunction)& ToasterBoxWindow::OnEraseBackground);
-	wxPopupWindow::Connect( wxEVT_PAINT, (wxObjectEventFunction)& ToasterBoxWindow::OnPaint);
+	ToasterBase::Connect( wxEVT_ERASE_BACKGROUND, (wxObjectEventFunction)& ToasterBoxWindow::OnEraseBackground);
+	ToasterBase::Connect( wxEVT_PAINT, (wxObjectEventFunction)& ToasterBoxWindow::OnPaint);
 }
 
 void ToasterBoxWindow::SetPopupBitmap(wxBitmap& bitmap)
@@ -265,13 +265,13 @@ void ToasterBoxWindow::PrintInfo()
     GetSize().GetHeight());
 }
 
-void ToasterBoxWindow::OnPaint( wxPaintEvent& event )
+void ToasterBoxWindow::OnPaint( wxPaintEvent& /*event*/ )
 {
 	DrawText();
 }
 
 /// wxEVT_ERASE_BACKGROUND event handler for ID_WXGRADIENTBUTTON
-void ToasterBoxWindow::OnEraseBackground( wxEraseEvent& event )
+void ToasterBoxWindow::OnEraseBackground( wxEraseEvent& /*event*/ )
 {
 	DrawText();
 }

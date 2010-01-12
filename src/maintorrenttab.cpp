@@ -110,7 +110,7 @@ MainTorrentTab::~MainTorrentTab()
 	}
 }
 
-void MainTorrentTab::OnClearFinished( wxCommandEvent& event )
+void MainTorrentTab::OnClearFinished( wxCommandEvent& /*event*/ )
 {
     torrent().ClearFinishedTorrents();
     m_torrent_list->Clear();

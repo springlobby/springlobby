@@ -6,6 +6,7 @@
 
 #include "ibattle.h"
 #include "iunitsync.h"
+#include "utils/isink.h"
 
 class wxPanel;
 class wxBitmap;
@@ -18,7 +19,7 @@ class Ui;
 struct UnitSyncMap;
 class BattleRoomTab;
 
-class MapCtrl : public wxPanel
+class MapCtrl : public wxPanel, public UnitsyncReloadedSink<MapCtrl>
 {
 
 	enum RectangleArea
@@ -80,6 +81,8 @@ class MapCtrl : public wxPanel
     void OnGetMapImageAsyncCompleted( wxCommandEvent& event );
 
     void SetReadOnly( bool readonly ) { m_ro = readonly; }
+
+	void OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ ){ UpdateMinimap(); }
 
    protected:
 

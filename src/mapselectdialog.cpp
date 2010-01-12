@@ -179,6 +179,8 @@ MapSelectDialog::~MapSelectDialog()
         sett().SetMapSelectorFilterRadio( m_filter_recent_sett );
     else
         sett().SetMapSelectorFilterRadio( m_filter_popular_sett );
+	if ( IsShown() )
+		EndModal( 0 );
 }
 
 
@@ -431,20 +433,23 @@ void MapSelectDialog::OnFilterTextChanged(wxCommandEvent& /*unused*/)
 	wxLogDebugFunc( _T("") );
 	UpdateSortAndFilter();
 }
-
-#include "ui.h"
-#include "mainwindow.h"
+#ifdef __WXMSW__
+	#include "ui.h"
+	#include "mainwindow.h"
+#endif
 MapSelectDialog& mapSelectDialog()
 {
-//	static LineInfo<MapSelectDialog> m( AT );
-//	static GlobalObjectHolder<MapSelectDialog, LineInfo<MapSelectDialog> > m_select( m );
-//	return m_select;
-/* either a globals handled or directly on stack created dialog would result in sigsegv / sigabrt in dtor, no idea why */
-	static MapSelectDialog* m = new MapSelectDialog( 0 );
-	return *m;
+	#ifdef __WXMSW__
+		static MapSelectDialog* m = new MapSelectDialog( &ui().mw() );
+		return *m;
+	#else
+	/* either a globals handled or directly on stack created dialog would result in sigsegv / sigabrt in dtor, no idea why */
+		static MapSelectDialog* m = new MapSelectDialog( 0 );
+		return *m;
+	#endif
 }
 
-void MapSelectDialog::OnUnitsyncReloaded( GlobalEvents::GlobalEventData  )
+void MapSelectDialog::OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ )
 {
 	wxInitDialogEvent dummy;
 	AddPendingEvent( dummy );

@@ -56,7 +56,11 @@ class GlobalObjectHolder: public IGlobalObjectHolder
     bool constructing;
     static int count;
 public:
+#if wxUSE_LOG_DEBUG
     GlobalObjectHolder(I i):
+#else
+	GlobalObjectHolder(I ):
+#endif
             private_ptr( NULL ),
             public_ptr( NULL ),
             constructing( true )
