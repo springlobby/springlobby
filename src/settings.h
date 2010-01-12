@@ -643,9 +643,6 @@ class Settings
     int GetTorrentThrottledDownloadRate();
     void SetTorrentThrottledDownloadRate( int speed );
 
-    int GetTorrentSystemAutoStartMode();
-    void SetTorrentSystemAutoStartMode( int mode );
-
     void SetTorrentMaxConnections( int connections );
     int GetTorrentMaxConnections();
 

@@ -1821,18 +1821,6 @@ void Settings::SetTorrentThrottledDownloadRate( int speed )
 }
 
 
-int Settings::GetTorrentSystemAutoStartMode()
-{
-	return  m_config->Read( _T( "/Torrent/AutoStartMode" ), 0l );
-}
-
-
-void Settings::SetTorrentSystemAutoStartMode( int mode )
-{
-	m_config->Write( _T( "/Torrent/AutoStartMode" ), mode );
-}
-
-
 void Settings::SetTorrentMaxConnections( int connections )
 {
 	m_config->Write( _T( "/Torrent/MaxConnections" ), connections );
