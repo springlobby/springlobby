@@ -479,6 +479,7 @@ void TorrentWrapper::HandleCompleted()
 				}
 				else
 				{
+					wxRemoveFile( source_path );
 					wxMutexGuiLocker locker;
 					UiEvents::StatusData data( wxString::Format( _("Download completed: %s"), info.m_name.c_str() ), 1 );
 					UiEvents::GetStatusEventSender( UiEvents::addStatusMessage ).SendEvent( data );
