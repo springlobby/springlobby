@@ -60,7 +60,7 @@ extern "C"
         return 0;
     }
 
-    int wxcurl_verbose_stream_write(CURL * crlptr, curl_infotype info,
+	int wxcurl_verbose_stream_write(CURL * /*crlptr*/, curl_infotype info,
                                     char * cStrMessage, size_t msgSize, void * buffer)
     {
         wxString szMessage((const char*)cStrMessage, wxConvLibc, msgSize);

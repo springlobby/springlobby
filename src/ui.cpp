@@ -291,7 +291,7 @@ void Ui::Quit()
         m_con_win->Close();
 }
 
-void Ui::DownloadMap( const wxString& hash, const wxString& name )
+void Ui::DownloadMap( const wxString& /*hash*/, const wxString& name )
 {
 #ifndef NO_TORRENT_SYSTEM
     DownloadFileP2P( name );
@@ -304,7 +304,7 @@ void Ui::DownloadMap( const wxString& hash, const wxString& name )
 }
 
 
-void Ui::DownloadMod( const wxString& hash, const wxString& name )
+void Ui::DownloadMod( const wxString& /*hash*/, const wxString& name )
 {
 #ifndef NO_TORRENT_SYSTEM
     DownloadFileP2P( name );

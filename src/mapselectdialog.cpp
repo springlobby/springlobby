@@ -449,7 +449,7 @@ MapSelectDialog& mapSelectDialog()
 	#endif
 }
 
-void MapSelectDialog::OnUnitsyncReloaded( GlobalEvents::GlobalEventData data )
+void MapSelectDialog::OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ )
 {
 	wxInitDialogEvent dummy;
 	AddPendingEvent( dummy );
