@@ -291,36 +291,44 @@ void Ui::Quit()
         m_con_win->Close();
 }
 
-void Ui::DownloadMap( const wxString& hash, const wxString& name )
+void Ui::DownloadMap( const wxString& /*hash*/, const wxString& name )
 {
 #ifndef NO_TORRENT_SYSTEM
     DownloadFileP2P( name );
 #else
-    wxString newname = name;
-    newname.Replace( _T(" "), _T("+") );
-    wxString url = _T(" http://spring.jobjol.nl/search_result.php?search_cat=1&select_select=select_file_subject&Submit=Search&search=") + newname;
-    OpenWebBrowser ( url );
+	DownloadFileWebsite( name );
 #endif
 }
 
 
-void Ui::DownloadMod( const wxString& hash, const wxString& name )
+void Ui::DownloadMod( const wxString& /*hash*/, const wxString& name )
 {
 #ifndef NO_TORRENT_SYSTEM
     DownloadFileP2P( name );
 #else
-    wxString newname = name;
-    newname.Replace( _T(" "), _T("+") );
-    wxString url = _T(" http://spring.jobjol.nl/search_result.php?search_cat=1&select_select=select_file_subject&Submit=Search&search=") + newname;
-    OpenWebBrowser ( url );
+	DownloadFileWebsite( name );
 #endif
 }
 
 void Ui::DownloadFileP2P( const wxString& name )
 {
 #ifndef NO_TORRENT_SYSTEM
-    torrent().RequestFileByName( name );
+	if ( usync().IsLoaded() )
+		torrent().RequestFileByName( name );
+	else
+	{
+		customMessageBoxNoModal( SL_MAIN_ICON, _("To use the integrated downloader the unitsync library needs to be loaded.\n" \
+												 "Please check for correct path in Edit->Preferences->Spring"), _("Unitsync not loaded") );
+	}
 #endif
+}
+
+void Ui::DownloadFileWebsite( const wxString& name )
+{
+	wxString newname = name;
+	newname.Replace( _T(" "), _T("+") );
+	wxString url = _T(" http://spring.jobjol.nl/search_result.php?search_cat=1&select_select=select_file_subject&Submit=Search&search=") + newname;
+	OpenWebBrowser ( url );
 }
 
 

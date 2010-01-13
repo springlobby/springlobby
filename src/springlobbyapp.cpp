@@ -493,7 +493,7 @@ void SpringLobbyApp::CacheAndSettingsSetup()
     }
 }
 
-void SpringLobbyApp::OnQuit( GlobalEvents::GlobalEventData data )
+void SpringLobbyApp::OnQuit( GlobalEvents::GlobalEventData /*data*/ )
 {
 	m_timer->Stop();
 }

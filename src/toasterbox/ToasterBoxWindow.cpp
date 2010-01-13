@@ -265,13 +265,13 @@ void ToasterBoxWindow::PrintInfo()
     GetSize().GetHeight());
 }
 
-void ToasterBoxWindow::OnPaint( wxPaintEvent& event )
+void ToasterBoxWindow::OnPaint( wxPaintEvent& /*event*/ )
 {
 	DrawText();
 }
 
 /// wxEVT_ERASE_BACKGROUND event handler for ID_WXGRADIENTBUTTON
-void ToasterBoxWindow::OnEraseBackground( wxEraseEvent& event )
+void ToasterBoxWindow::OnEraseBackground( wxEraseEvent& /*event*/ )
 {
 	DrawText();
 }

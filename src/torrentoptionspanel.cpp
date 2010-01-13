@@ -34,20 +34,6 @@ TorrentOptionsPanel::TorrentOptionsPanel( wxWindow* parent )
 
     wxBoxSizer* mainboxsizer = new wxBoxSizer( wxVERTICAL );
 
-    m_autostart_box = new wxStaticBox(this, -1, _("Torrent system autostart") );
-    wxStaticBoxSizer* m_autostart_box_sizer  = new wxStaticBoxSizer( m_autostart_box, wxVERTICAL );
-    m_autostart_logon = new wxRadioButton (this, ID_AUTOSTART_RADIO, _("at lobby connection (default)"), wxDefaultPosition, wxDefaultSize, wxRB_GROUP  );
-    m_autostart_start = new wxRadioButton (this, ID_AUTOSTART_RADIO, _("at lobby start"));
-    m_autostart_manual = new wxRadioButton (this, ID_AUTOSTART_RADIO, _("manual") );
-
-    SetAutoStartRadio();
-
-    m_autostart_box_sizer->Add(m_autostart_logon,  0, wxALL, 5);
-    m_autostart_box_sizer->Add(m_autostart_start,  0, wxALL, 5);
-    m_autostart_box_sizer->Add(m_autostart_manual,  0, wxALL, 5);
-//    m_autostart_box_sizer->Add(NULL);
-    mainboxsizer->Add( m_autostart_box_sizer, 0, wxALL, 5 );
-
     m_gamestart_box = new wxStaticBox(this, -1, _("At game start suspend mode") );
     wxStaticBoxSizer* m_gamestart_box_sizer = new wxStaticBoxSizer(m_gamestart_box , wxVERTICAL );
     m_gamestart_pause = new wxRadioButton(this, ID_GAMESTART_RADIO, _("Pause all torrents"), wxDefaultPosition, wxDefaultSize, wxRB_GROUP  );
@@ -115,32 +101,15 @@ TorrentOptionsPanel::~TorrentOptionsPanel()
 
 }
 
-
-//TODO wtf did i add these for
-void TorrentOptionsPanel::OnMaxUp( wxCommandEvent& /*unused*/ ){}
-void TorrentOptionsPanel::OnMaxDown( wxCommandEvent& /*unused*/ ){}
-void TorrentOptionsPanel::OnP2PPort( wxCommandEvent& /*unused*/ ){}
-void TorrentOptionsPanel::OnMaxConnections( wxCommandEvent& /*unused*/ ){}
-
-
 void TorrentOptionsPanel::OnApply( wxCommandEvent& /*unused*/ )
 {
 
-    sett().SetTorrentSystemAutoStartMode( 0 );
     sett().SetTorrentUploadRate( FromwxString<long>( m_maxUp->GetValue() ) );
     sett().SetTorrentDownloadRate( FromwxString<long>( m_maxDown->GetValue() ) );
     sett().SetTorrentPort( FromwxString<long>( m_p2pport->GetValue() ) );
     sett().SetTorrentMaxConnections( FromwxString<long>( m_maxConnections->GetValue() ) );
     sett().SetTorrentThrottledUploadRate( FromwxString<long>( m_gamestart_throttle_up->GetValue() ) );
     sett().SetTorrentThrottledDownloadRate( FromwxString<long>( m_gamestart_throttle_down->GetValue() ) );
-
-    //last radio box value, will be changed if other box is pressed
-    int autostart_mode = 2;
-    if ( m_autostart_logon->GetValue() )
-        autostart_mode = 0;
-    else if ( m_autostart_start->GetValue() )
-        autostart_mode = 1;
-    sett().SetTorrentSystemAutoStartMode( autostart_mode );
 
     // if mode == pause selected --> m_gamestart_throttle->GetValue() == 0
     sett().SetTorrentSystemSuspendMode( m_gamestart_throttle->GetValue() );
@@ -156,23 +125,7 @@ void TorrentOptionsPanel::OnRestore( wxCommandEvent& /*unused*/ )
     m_maxUp->SetValue( TowxString( sett().GetTorrentUploadRate() ) );
     m_gamestart_throttle_up->SetValue( TowxString( sett().GetTorrentThrottledUploadRate() ) );
     m_gamestart_throttle_down->SetValue( TowxString( sett().GetTorrentThrottledDownloadRate( ) ) );
-    SetAutoStartRadio();
     m_gamestart_throttle->SetValue( sett().GetTorrentSystemSuspendMode() );
-}
-
-void TorrentOptionsPanel::SetAutoStartRadio()
-{
-    switch ( sett().GetTorrentSystemAutoStartMode() )
-    {
-        case 1:
-            m_autostart_start->SetValue( true );
-            break;
-        case 2:
-            m_autostart_manual->SetValue( true );
-            break;
-        default:
-            m_autostart_logon->SetValue( true );
-    }
 }
 
 #endif

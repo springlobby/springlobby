@@ -12,7 +12,7 @@ class ToasterBox : public wxTimer
 {
   public:
     ~ToasterBox();
-    void SetPopupText(wxString _text, bool _shrink = false){popupText = _text;}
+	void SetPopupText(wxString _text, bool /*_shrink*/ = false){popupText = _text;}
     void SetPopupSize(int x, int y){popupSize = wxSize(x, y);}
     void SetPopupPosition(int x, int y);
     void SetPopupPosition(int pos);

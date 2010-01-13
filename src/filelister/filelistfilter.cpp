@@ -108,7 +108,7 @@ FileListFilter::FileListFilter( wxWindow* parent, wxWindowID id, FileListDialog*
 
 }
 
-bool FileListFilter::DoFilterResource( const PlasmaResourceInfo& info )
+bool FileListFilter::DoFilterResource( const PlasmaResourceInfo& /*info*/ )
 {
 //  if(!data.ok())return false;
 //	if ( data->name.Upper().Find( m_filter_name_edit->GetValue().Upper() ) == wxNOT_FOUND

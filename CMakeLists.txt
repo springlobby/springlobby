@@ -7,7 +7,7 @@ SET(CMAKE_COLOR_MAKEFILE ON)
 # Add Definitions, Compiler-Switches, etc.: -Wall -O2 -g3 ...
 # MSVC compiler (cl.exe) does not accept the same switches as gcc, although preprocessor definitions in the -D form will work for both
 IF(NOT MSVC)
-	ADD_DEFINITIONS(-Wall -Wno-strict-aliasing)
+	ADD_DEFINITIONS(-Wall -Wno-strict-aliasing -Wextra)
 ENDIF(NOT MSVC)
 IF(WIN32)
 	ADD_DEFINITIONS( -DWXUSINGDLL -D__WXMSW__ -D_WIN32_WINNT=0x0501)

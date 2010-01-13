@@ -24,7 +24,7 @@ class SingleOptionDialog: public wxDialog
 			void OnCancel(wxCommandEvent& event);
 
 			//! dummy event receiver, mandated by the control implementation
-            void OnSpinCtrlDoubleChange(SlSpinDoubleEvent& event){}
+			void OnSpinCtrlDoubleChange(SlSpinDoubleEvent& /*event*/){}
 
 	protected:
 			IBattle& m_battle;

@@ -7,7 +7,7 @@
 #include <wx/file.h>
 #include <wx/filefn.h>
 
-#include "replaylist.h"
+//#include "replaylist.h"
 //#include "../utils/.h"
 #include "../utils/customdialogs.h"
 #include "playbacktab.h"
@@ -60,6 +60,7 @@ bool SavegameList::GetSavegameInfos ( const wxString& SavegamePath, Savegame& re
     ret.battle.GetBattleFromScript( true );
     ret.ModName = ret.battle.GetHostModName();
     ret.battle.SetBattleType( BT_Savegame );
+	ret.size = wxFileName::GetSize( SavegamePath ).ToULong();
 
     return true;
 }

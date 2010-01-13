@@ -16,7 +16,6 @@ SET(springlobbySrc
 	src/gui/wxbackgroundimage.cpp
 	src/gui/simplefront.cpp
 	src/gui/statusbar.cpp
-	src/gui/spinctl/generic/spinctlg.cpp
 	src/aui/slbook.cpp
 	src/utils/math.cpp
 	src/utils/misc.cpp

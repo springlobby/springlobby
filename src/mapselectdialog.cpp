@@ -433,13 +433,15 @@ void MapSelectDialog::OnFilterTextChanged(wxCommandEvent& /*unused*/)
 	wxLogDebugFunc( _T("") );
 	UpdateSortAndFilter();
 }
-
+#ifdef __WXMSW__
+	#include "ui.h"
+	#include "mainwindow.h"
+#endif
 MapSelectDialog& mapSelectDialog()
 {
 	#ifdef __WXMSW__
-		static LineInfo<MapSelectDialog> m( AT );
-		static GlobalObjectHolder<MapSelectDialog, LineInfo<MapSelectDialog> > m_select( m );
-		return m_select;
+		static MapSelectDialog* m = new MapSelectDialog( &ui().mw() );
+		return *m;
 	#else
 	/* either a globals handled or directly on stack created dialog would result in sigsegv / sigabrt in dtor, no idea why */
 		static MapSelectDialog* m = new MapSelectDialog( 0 );
@@ -447,7 +449,7 @@ MapSelectDialog& mapSelectDialog()
 	#endif
 }
 
-void MapSelectDialog::OnUnitsyncReloaded( GlobalEvents::GlobalEventData data )
+void MapSelectDialog::OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ )
 {
 	wxInitDialogEvent dummy;
 	AddPendingEvent( dummy );

@@ -60,7 +60,7 @@ extern "C"
         return 0;
     }
 
-    int wxcurl_verbose_stream_write(CURL * crlptr, curl_infotype info,
+	int wxcurl_verbose_stream_write(CURL * /*crlptr*/, curl_infotype info,
                                     char * cStrMessage, size_t msgSize, void * buffer)
     {
         wxString szMessage((const char*)cStrMessage, wxConvLibc, msgSize);
@@ -262,7 +262,7 @@ IMPLEMENT_DYNAMIC_CLASS(wxCurlDownloadEvent, wxEvent);
 
 wxCurlDownloadEvent::wxCurlDownloadEvent()
 : wxCurlProgressBaseEvent(-1, wxCURL_DOWNLOAD_EVENT),
-m_rDownloadNow(0.0), m_rDownloadTotal(0.0)
+m_rDownloadTotal(0.0), m_rDownloadNow(0.0)
 {
 }
 
@@ -297,7 +297,7 @@ IMPLEMENT_DYNAMIC_CLASS(wxCurlUploadEvent, wxEvent);
 
 wxCurlUploadEvent::wxCurlUploadEvent()
 : wxCurlProgressBaseEvent(-1, wxCURL_UPLOAD_EVENT),
-m_rUploadNow(0.0), m_rUploadTotal(0.0)
+m_rUploadTotal(0.0), m_rUploadNow(0.0)
 {
 }
 
@@ -393,16 +393,15 @@ wxCurlBase::wxCurlBase(const wxString& szURL /*= wxEmptyString*/,
                     wxEvtHandler* pEvtHandler /*= NULL*/,
                     int id /*= wxID_ANY*/,
                     long flags /*=wxCURL_DEFAULT_FLAGS*/)
-: m_szBaseURL(wxCURL_STRING2BUF(szURL)),
+: m_pCURL(NULL),m_szBaseURL(wxCURL_STRING2BUF(szURL)),
 m_szCurrFullURL(wxCURL_STRING2BUF(szURL)),
 m_szUsername(wxCURL_STRING2BUF(szUserName)),
 m_szPassword(wxCURL_STRING2BUF(szPassword)),
-m_iHostPort(-1), m_iResponseCode(-1),
+ m_iHostPort(-1),
+m_iResponseCode(-1),m_pHeaders(NULL),
 m_bUseProxy(false), m_iProxyPort(-1),
-m_pCURL(NULL), m_pHeaders(NULL),
-m_pEvtHandler(pEvtHandler), m_nId(id),
-m_nFlags(flags),
-m_bVerbose(false)
+m_bVerbose(false), m_pEvtHandler(pEvtHandler),
+m_nId(id),m_nFlags(flags)
 {
     m_szDetailedErrorBuffer[0] = '\0';
     m_progressCallback = wxcurl_evt_progress_func;

@@ -74,7 +74,7 @@ void NotificationManager::SetPopupPosition()
 	}
 }
 
-void NotificationManager::OnQuit( GlobalEvents::GlobalEventData data )
+void NotificationManager::OnQuit( GlobalEvents::GlobalEventData /*data*/ )
 {
 	if ( m_toasterbox )
 	{

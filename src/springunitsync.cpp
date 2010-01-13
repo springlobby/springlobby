@@ -870,7 +870,7 @@ MapInfo SpringUnitSync::_GetMapInfoEx( const wxString& mapname )
   return info;
 }
 
-void SpringUnitSync::OnReload( wxCommandEvent& event )
+void SpringUnitSync::OnReload( wxCommandEvent& /*event*/ )
 {
 	ReloadUnitSyncLib();
 }

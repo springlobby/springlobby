@@ -28,7 +28,7 @@ struct Savegame
     int playernum;
     bool can_watch;
     int duration; //in seconds
-    int size; //in bytes
+	unsigned long size; //in bytes
     wxString MapName;
     wxString ModName;
     wxString SpringVersion;
