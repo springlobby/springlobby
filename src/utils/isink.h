@@ -71,7 +71,26 @@ class OnQuitSink : public CRTPbase<Derived> {
 		{}
 };
 
+template <class Derived, class EventDataType = GlobalEvents::GlobalEventData >
+class BattleSyncReloadSink : public CRTPbase<Derived> {
+	protected:
+		typedef BattleSyncReloadSink<Derived,EventDataType>
+			BaseType;
+		using CRTPbase<Derived>::asImp;
 
+	public:
+		void OnBattleSyncReload( EventDataType data ) { asImp().OnBattleSyncReload( data ); }
+
+	protected:
+		typedef EventReceiverFunc<BattleSyncReloadSink, EventDataType, &BattleSyncReloadSink::OnBattleSyncReload>
+			EventReceiverFunction;
+		EventReceiverFunction m_BattleSyncReloadSink;
+
+	public:
+		BattleSyncReloadSink ()
+			: m_BattleSyncReloadSink( this, &GetGlobalEventSender( GlobalEvents::BattleSyncReload) )
+		{}
+};
 #endif // SPRINGLOBBY_HEADERGUARD_ISINK_H
 
 /**
