@@ -170,8 +170,10 @@ void MainTorrentTab::OnUpdate()
 
 void MainTorrentTab::OnCancelButton( wxCommandEvent& /*unused*/ )
 {
-	torrent().RemoveTorrentByName(m_torrent_list->GetSelectedData().name );
-    m_torrent_list->RemoveTorrentInfo(m_torrent_list->GetSelectedData());
+	if ( m_torrent_list->GetSelectedIndex() != -1 ) {
+		torrent().RemoveTorrentByName(m_torrent_list->GetSelectedData().name );
+		m_torrent_list->RemoveTorrentInfo(m_torrent_list->GetSelectedData());
+	}
 }
 
 void MainTorrentTab::OnDownloadDialog( wxCommandEvent& /*unused*/ )
