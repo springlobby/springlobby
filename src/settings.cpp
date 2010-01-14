@@ -2533,3 +2533,13 @@ unsigned int Settings::GetNotificationPopupDisplayTime( )
 {
 	return m_config->Read( _T("/GUI/NotificationPopupDisplayTime"), 5l );
 }
+
+bool Settings::DoResetPerspectives()
+{
+	return m_config->Read(_T( "/reset_perspectives" ) , 0l );
+}
+
+void Settings::SetDoResetPerspectives( bool do_it )
+{
+	m_config->Write(_T( "/reset_perspectives" ) , (long)do_it );
+}
