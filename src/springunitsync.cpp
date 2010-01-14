@@ -808,7 +808,7 @@ MapInfo SpringUnitSync::_GetMapInfoEx( const wxString& mapname )
       {
         cache = GetCacheFile( GetFileCachePath( mapname, m_maps_unchained_hash[mapname], false ) + _T(".infoex") );
 
-        ASSERT_EXCEPTION( cache.GetCount() >= 11, _T("not enough lines found in cache info ex") );
+		ASSERT_EXCEPTION( cache.GetCount() >= 10, _T("not enough lines found in cache info ex") );
         info.author = cache[0];
         info.tidalStrength =  s2l( cache[1] );
         info.gravity = s2l( cache[2] );
@@ -819,7 +819,7 @@ MapInfo SpringUnitSync::_GetMapInfoEx( const wxString& mapname )
         info.width = s2l( cache[7] );
         info.height = s2l( cache[8] );
 
-        wxArrayString posinfo = wxStringTokenize( cache[10], _T(' '), wxTOKEN_RET_EMPTY );
+		wxArrayString posinfo = wxStringTokenize( cache[9], _T(' '), wxTOKEN_RET_EMPTY );
         for ( int i = 0; i < int(posinfo.GetCount()); i++)
         {
            StartPos position;
