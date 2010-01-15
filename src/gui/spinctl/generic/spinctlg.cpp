@@ -24,6 +24,7 @@
 
 
 #include "wx/spinbutt.h"
+#include <wx/string.h>
 
 #if wxUSE_SPINBTN
 
@@ -146,7 +147,7 @@ void SlSpinCtrlGenericBase::Init()
     m_max           = 100;
     m_increment     = 1;
     m_snap_to_ticks = false;
-    m_format        = wxS("%g");
+	m_format        = _T("%g");
 
     m_spin_value    = 0;
 
