@@ -643,9 +643,6 @@ class Settings
     int GetTorrentThrottledDownloadRate();
     void SetTorrentThrottledDownloadRate( int speed );
 
-    int GetTorrentSystemAutoStartMode();
-    void SetTorrentSystemAutoStartMode( int mode );
-
     void SetTorrentMaxConnections( int connections );
     int GetTorrentMaxConnections();
 
@@ -685,6 +682,8 @@ class Settings
     bool GetAutosavePerspective( );
     wxArrayString GetPerspectives();
     bool PerspectiveExists( const wxString& perspective_name );
+	bool DoResetPerspectives();
+	void SetDoResetPerspectives( bool do_it );
 
     void RemoveLayouts();
 

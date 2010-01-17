@@ -79,7 +79,7 @@ getDataSubdirForType(const IUnitSync::MediaType type)
 }
 
 //! translate handle status to P2Pstatus
-P2P::FileStatus TorrentWrapper::getP2PStatusFromHandle( const libtorrent::torrent_handle& handle )
+P2P::FileStatus TorrentWrapper::getP2PStatusFromHandle( const libtorrent::torrent_handle& handle ) const
 {
 	if ( !handle.is_valid() )
 		return P2P::not_stored;
@@ -299,8 +299,8 @@ void TorrentWrapper::UpdateSettings()
 
 bool TorrentWrapper::IsFileInSystem( const wxString& name )
 {
-	TorrenthandleInfoMap infomap = GetHandleInfoMap();
-	TorrenthandleInfoMap::iterator it = infomap.begin();
+	const TorrenthandleInfoMap& infomap = GetHandleInfoMap();
+	TorrenthandleInfoMap::const_iterator it = infomap.begin();
 	for ( ; it != infomap.end(); ++it )
 	{
 		PlasmaResourceInfo info = it->first;
@@ -330,7 +330,7 @@ bool TorrentWrapper::RemoveTorrentByName( const wxString& name )
     return false;
 }
 
-int TorrentWrapper::GetTorrentSystemStatus()
+int TorrentWrapper::GetTorrentSystemStatus() const
 {
     if (ingame) return 2;
     return 1;
@@ -479,6 +479,7 @@ void TorrentWrapper::HandleCompleted()
 				}
 				else
 				{
+					wxRemoveFile( source_path );
 					wxMutexGuiLocker locker;
 					UiEvents::StatusData data( wxString::Format( _("Download completed: %s"), info.m_name.c_str() ), 1 );
 					UiEvents::GetStatusEventSender( UiEvents::addStatusMessage ).SendEvent( data );

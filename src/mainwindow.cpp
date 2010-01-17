@@ -120,10 +120,9 @@ MainWindow::MainWindow( )
     m_channel_chooser(NULL),
     m_log_win(NULL)
 {
+	SetIcon( wxIcon(springlobby_xpm) );
 
-  SetIcon( wxIcon(springlobby_xpm) );
-
-  GetAui().manager = new AuiManagerContainer::ManagerType( this );
+	GetAui().manager = new AuiManagerContainer::ManagerType( this );
 
 	wxMenu *menuServer = new wxMenu;
 	menuServer->Append(MENU_CONNECT, _("&Connect..."));
@@ -659,7 +658,8 @@ void MainWindow::OnMenuLoadLayout( wxCommandEvent& /*unused*/ )
 
 void MainWindow::OnMenuResetLayout( wxCommandEvent& /*event*/ )
 {
-	LoadPerspectives( _T("SpringLobby-default") );
+	sett().SetDoResetPerspectives( true );
+	customMessageBoxNoModal( SL_MAIN_ICON, _("Please restart SpringLobby now"), wxEmptyString );
 }
 
 const MainWindow::TabNames& MainWindow::GetTabNames()

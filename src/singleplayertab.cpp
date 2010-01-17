@@ -94,18 +94,18 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, MainSinglePlayerTab& msptab):
     m_buttons_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
 
     m_color_btn = new  ColorButton( this, SP_COLOUR, sett().GetBattleLastColour(), wxDefaultPosition, wxSize(30, CONTROL_HEIGHT) );
-    m_buttons_sizer->Add( m_color_btn, 0, wxALL, 0 );
+	m_buttons_sizer->Add( m_color_btn, 0, wxALIGN_CENTER_VERTICAL|wxALL, 0 );
 
     m_spectator_check = new wxCheckBox( this, SP_SPECTATE, _("Spectate only") );
-    m_buttons_sizer->Add( m_spectator_check, 0, wxALL, 5 );
+	m_buttons_sizer->Add( m_spectator_check, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
     m_random_check = new wxCheckBox( this, SP_RANDOM, _("Random start positions") );
-    m_buttons_sizer->Add( m_random_check, 0, wxALL, 5 );
+	m_buttons_sizer->Add( m_random_check, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
     m_start_btn = new wxButton( this, SP_START, _("Start"), wxDefaultPosition, wxSize(80, CONTROL_HEIGHT), 0 );
-    m_buttons_sizer->Add( m_start_btn, 0, wxALL, 5 );
+	m_buttons_sizer->Add( m_start_btn, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
-    m_main_sizer->Add( m_buttons_sizer, 0, wxEXPAND, 5 );
+	m_main_sizer->Add( m_buttons_sizer, 0, wxEXPAND, 5 );
 
     SetScrollRate( SCROLL_RATE, SCROLL_RATE );
     this->SetSizer( m_main_sizer );

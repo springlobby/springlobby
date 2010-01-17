@@ -13,6 +13,7 @@ namespace GlobalEvents {
       UpdateFinished,
       OnQuit,
       PlasmaResourceListParsed,
+	  BattleSyncReload,
 
       OnTimerUpdates
     };

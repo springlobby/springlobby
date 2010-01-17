@@ -159,6 +159,13 @@ bool SpringLobbyApp::OnInit()
 	sett().SetSpringBinary( sett().GetCurrentUsedSpringIndex(), sett().GetCurrentUsedSpringBinary() );
 	sett().SetUnitSync( sett().GetCurrentUsedSpringIndex(), sett().GetCurrentUsedUnitSync() );
 
+	if ( sett().DoResetPerspectives() )
+	{
+		//we do this early on and reset the config var a little later so we can save a def. perps once mw is created
+		sett().RemoveLayouts();
+		sett().SetDoResetPerspectives( false );
+		ui().mw().SavePerspectives( _T("SpringLobby-default") );
+	}
 
 	sett().RefreshSpringVersionList();
 
@@ -194,6 +201,12 @@ bool SpringLobbyApp::OnInit()
 
     ui().ShowMainWindow();
     SetTopWindow( &ui().mw() );
+	if ( sett().DoResetPerspectives() )
+	{
+		//now that mainwindow is shown, we can save what is the default layout and remove the flag to reset
+		sett().SetDoResetPerspectives( false );
+		ui().mw().SavePerspectives( _T("SpringLobby-default") );
+	}
 
 	mapSelectDialog().Reparent( &ui().mw() );
     ui().FirstRunWelcome();

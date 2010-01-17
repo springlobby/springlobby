@@ -14,11 +14,6 @@
 template <class PB, class I >
 class GlobalObjectHolder;
 
-class wxCurlHTTP;
-class wxCurlEndPerformEvent;
-
-const wxEventType DoFetchResourcesEvt = wxNewEventType();
-
 class PlasmaInterface : public iNetClass, public wxEvtHandler {
     public:
 		~PlasmaInterface();
