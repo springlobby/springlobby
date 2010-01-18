@@ -296,7 +296,8 @@ void AutoHost::StartBattle()
 
 	m_battle.GetMe().BattleStatus().ready = true;
 
-	if ( !m_battle.IsEveryoneReady() ) {
+	if ( !m_battle.IsEveryoneReady() )
+	{
 		m_battle.DoAction( _T( "Some players are not ready yet." ) );
 		return;
 	}

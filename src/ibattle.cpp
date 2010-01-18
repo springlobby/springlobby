@@ -388,9 +388,8 @@ bool IBattle::IsEveryoneReady()
 {
     for (user_map_t::size_type i = 0; i < GetNumUsers(); i++)
     {
-				User& usr = GetUser(i);
-				if ( usr.BattleStatus().IsBot() ) continue;
-        UserBattleStatus& bs = usr.BattleStatus();
+		UserBattleStatus& bs = GetUser(i).BattleStatus();
+		if ( bs.IsBot() ) continue;
         if ( !bs.ready && !bs.spectator ) return false;
     }
     return true;
