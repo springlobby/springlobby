@@ -881,6 +881,11 @@ void SpringUnitSync::AddReloadEvent(  )
 	AddPendingEvent( evt );
 }
 
+wxArrayString SpringUnitSync::FindFilesVFS( const wxString& pattern )
+{
+	return susynclib().FindFilesVFS( pattern );
+}
+
 bool SpringUnitSync::ReloadUnitSyncLib()
 {
   return LoadUnitSyncLib( sett().GetCurrentUsedUnitSync() );
