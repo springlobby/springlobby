@@ -428,7 +428,7 @@ void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const w
     try
     {
         Battle& battle = m_serv.GetBattle( battleid );
-
+		battle.m_script_tags[param] = value;
         wxString key = param;
         if ( key.Left( 5 ) == _T("game/") )
         {

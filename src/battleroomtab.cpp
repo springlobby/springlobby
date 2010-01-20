@@ -1129,12 +1129,12 @@ void BattleRoomTab::SetBattle( Battle* battle )
 	}
 }
 
-void BattleRoomTab::MaximizeSizer()
-{
-	wxSize s = GetClientSize();
-	m_main_sizer->RecalcSizes();
-	//m_main_sizer->SetDimension( )
-	m_main_sizer->Layout();
-	Layout();
-	Refresh();
-}
+//void BattleRoomTab::MaximizeSizer()
+//{
+//	wxSize s = GetClientSize();
+//	m_main_sizer->RecalcSizes();
+//	//m_main_sizer->SetDimension( )
+//	m_main_sizer->Layout();
+//	Layout();
+//	Refresh();
+//}

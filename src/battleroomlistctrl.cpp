@@ -770,7 +770,7 @@ void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint& p
 {
     if ( item_hit < 0 || item_hit >= (long)m_data.size() )
         return;
-
+	if ( !m_battle ) return;
     const User& user = *GetDataFromIndex( item_hit );
 
     int column = getColumnFromPosition( position );
@@ -816,9 +816,13 @@ void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint& p
                 m_tiptext = _T("Spectators have no side");
             else
             {
-								wxArrayString sides = usync().GetSides( m_battle->GetHostModName() );
-								int side = user.BattleStatus().side;
-								if ( side < (int)sides.GetCount() ) m_tiptext = sides[side];
+				try
+				{
+					wxArrayString sides = usync().GetSides( m_battle->GetHostModName() );
+					int side = user.BattleStatus().side;
+					if ( side < (int)sides.GetCount() ) m_tiptext = sides[side];
+				}
+				catch (...){}
             }
             break;
 				case 1: // lobby status
