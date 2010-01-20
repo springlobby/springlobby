@@ -225,6 +225,8 @@ class IUnitSync : public wxEvtHandler
 	//! this only generates a wxUnitsyncReloadEvent type wxCommandEvent and appends it to itself
 	virtual void AddReloadEvent() = 0;
 
+	virtual wxArrayString FindFilesVFS( const wxString& pattern ) = 0;
+
     private:
         IUnitSync( const IUnitSync& );
 };

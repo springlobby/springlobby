@@ -223,6 +223,8 @@ class SpringUnitSync : public IUnitSync
 	virtual void OnReload( wxCommandEvent& event );
 	virtual void AddReloadEvent(  );
 
+	wxArrayString FindFilesVFS( const wxString& pattern );
+
   private:
 
     LocalArchivesVector m_maps_list; /// mapname -> hash
