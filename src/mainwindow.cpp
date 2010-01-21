@@ -291,9 +291,13 @@ void MainWindow::OnClose( wxCloseEvent& /*unused*/ )
     manager->UnInit();
     delete manager;
   }
-  mapSelectDialog().Show( false );
-  mapSelectDialog().Reparent( &ui().mw() );
-  mapSelectDialog().Destroy( );
+	//interim fix for resize crashes on metacity and kwin
+	#ifndef __WXMSW__
+		mapSelectDialog().Show( false );
+		mapSelectDialog().Reparent( &ui().mw() );
+		mapSelectDialog().Destroy( );
+	#endif
+
   ui().Quit();
   forceSettingsFrameClose();
   freeStaticBox();
