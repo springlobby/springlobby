@@ -208,7 +208,7 @@ bool SpringLobbyApp::OnInit()
 		ui().mw().SavePerspectives( _T("SpringLobby-default") );
 	}
 
-	mapSelectDialog().Reparent( &ui().mw() );
+
     ui().FirstRunWelcome();
     m_timer->Start( TIMER_INTERVAL );
 

@@ -56,7 +56,7 @@
 	#include "torrentwrapper.h"
 #endif
 #include "user.h"
-
+#include "mapselectdialog.h"
 
 #include "images/springlobby.xpm"
 #include "images/chat_icon.png.h"
@@ -291,7 +291,9 @@ void MainWindow::OnClose( wxCloseEvent& /*unused*/ )
     manager->UnInit();
     delete manager;
   }
-
+  mapSelectDialog().Show( false );
+  mapSelectDialog().Reparent( &ui().mw() );
+  mapSelectDialog().Destroy( );
   ui().Quit();
   forceSettingsFrameClose();
   freeStaticBox();
