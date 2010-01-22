@@ -166,7 +166,7 @@ void PlaybackListCtrl<PlaybackType>::SetTipWindowText( const long item_hit, cons
                 m_tiptext = replay.MapName;
                 break;
             case 3: //playernum
-                m_tiptext = RefineModname(replay.ModName);
+                m_tiptext = replay.ModName;
                 break;
             case 4: // spring version
                 m_tiptext = replay.SpringVersion;

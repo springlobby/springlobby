@@ -13,8 +13,6 @@ class wxBitmap;
 
 #define wxDefaultBitmap wxBitmap()
 
-wxString RefineMapname( const wxString& mapname );
-wxString RefineModname( const wxString& modname );
 wxString RTFtoText( const wxString& rtfinput );
 bool AreColoursSimilar( const wxColour& col1, const wxColour& col2, int mindiff = 10 );
 

@@ -198,7 +198,7 @@ void BattleListTab::SelectBattle( IBattle* battle )
 	m_players->ClearUsers();
 	if ( m_sel_battle != 0 )
 	{
-		m_map_text->SetLabel( RefineMapname( m_sel_battle->GetHostMapName() ) );
+		m_map_text->SetLabel( m_sel_battle->GetHostMapName() );
 		m_mod_text->SetLabel( m_sel_battle->GetHostModName() );
 		m_players_text->SetLabel( wxString::Format( _T( "%d / %d" ), int( m_sel_battle->GetNumUsers() ) - int( m_sel_battle->GetSpectators() ), int( m_sel_battle->GetMaxPlayers() ) ) );
 		m_spec_text->SetLabel( wxString::Format( _T( "%d" ), m_sel_battle->GetSpectators() ) );

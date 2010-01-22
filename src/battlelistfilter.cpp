@@ -582,15 +582,13 @@ bool BattleListFilter::FilterBattle( IBattle& battle )
   //Map:
   if ( ! StringMatches(battle.GetHostMapName(),
 		       m_filter_map_edit->GetValue(),
-		       m_filter_map_expression,
-		       RefineMapname) )
+			   m_filter_map_expression) )
       return false;
 
   //Mod:
   if ( ! StringMatches(battle.GetHostModName(),
 		       m_filter_mod_edit->GetValue(),
-		       m_filter_mod_expression,
-		       RefineModname) )
+			   m_filter_mod_expression) )
       return false;
 
 	return true;
