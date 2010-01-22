@@ -25,7 +25,6 @@
 wxString RefineMapname( const wxString& mapname )
 {
     wxString ret = mapname;
-    ret = ret.BeforeLast( '.' );
     ret.Replace(_T("_"), _T(" ") );
     ret.Replace(_T("-"), _T(" ") );
     return ret;
