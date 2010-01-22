@@ -56,7 +56,7 @@
 	#include "torrentwrapper.h"
 #endif
 #include "user.h"
-
+#include "mapselectdialog.h"
 
 #include "images/springlobby.xpm"
 #include "images/chat_icon.png.h"
@@ -291,6 +291,12 @@ void MainWindow::OnClose( wxCloseEvent& /*unused*/ )
     manager->UnInit();
     delete manager;
   }
+	//interim fix for resize crashes on metacity and kwin
+	#ifndef __WXMSW__
+		mapSelectDialog().Show( false );
+		mapSelectDialog().Reparent( &ui().mw() );
+		mapSelectDialog().Destroy( );
+	#endif
 
   ui().Quit();
   forceSettingsFrameClose();
@@ -680,9 +686,6 @@ void MainWindow::LoadPerspectives( const wxString& pers_name )
     wxWindow* active_chat_tab = static_cast<wxWindow*> ( m_chat_tab->GetActiveChatPanel() );
     if ( active_chat_tab )
         active_chat_tab->Refresh();
-	#ifdef __WXMSW__
-		m_join_tab->GetBattleRoomTab().MaximizeSizer();
-	#endif
     //chat tab saving won't work w/o further work
 //    m_chat_tab->LoadPerspective( perspective_name );
 }

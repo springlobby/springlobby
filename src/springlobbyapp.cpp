@@ -208,7 +208,11 @@ bool SpringLobbyApp::OnInit()
 		ui().mw().SavePerspectives( _T("SpringLobby-default") );
 	}
 
-	mapSelectDialog().Reparent( &ui().mw() );
+	//interim fix for resize crashes on metacity and kwin
+	#ifdef __WXMSW__
+		mapSelectDialog().Reparent( &ui().mw() );
+	#endif
+
     ui().FirstRunWelcome();
     m_timer->Start( TIMER_INTERVAL );
 
