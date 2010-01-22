@@ -802,68 +802,7 @@ MapInfo SpringUnitSync::_GetMapInfoEx( const wxString& mapname )
 
   if ( m_mapinfo_cache.TryGet( mapname, info ) ) return info;
 
-  wxArrayString cache;
-  try {
-      try
-      {
-        cache = GetCacheFile( GetFileCachePath( mapname, m_maps_unchained_hash[mapname], false ) + _T(".infoex") );
-
-		ASSERT_EXCEPTION( cache.GetCount() >= 11, _T("not enough lines found in cache info ex") );
-        info.author = cache[0];
-        info.tidalStrength =  s2l( cache[1] );
-        info.gravity = s2l( cache[2] );
-        info.maxMetal = s2d( cache[3] );
-        info.extractorRadius = s2d( cache[4] );
-        info.minWind = s2l( cache[5] );
-        info.maxWind = s2l( cache[6] );
-        info.width = s2l( cache[7] );
-        info.height = s2l( cache[8] );
-
-		wxArrayString posinfo = wxStringTokenize( cache[10], _T(' '), wxTOKEN_RET_EMPTY );
-		for ( unsigned int i = 0; i < posinfo.GetCount(); i++)
-        {
-           StartPos position;
-           position.x = s2l( posinfo[i].BeforeFirst( _T('-') ) );
-           position.y = s2l( posinfo[i].AfterFirst( _T('-') ) );
-           info.positions.push_back( position );
-        }
-
-        unsigned int LineCount = cache.GetCount();
-        for ( unsigned int i = 11; i < LineCount; i++ ) info.description << cache[i] << _T('\n');
-
-      }
-      catch (...)
-      {
-        info = susynclib().GetMapInfoEx( mapname, 1 );
-
-        cache.Add ( info.author );
-        cache.Add( TowxString( info.tidalStrength ) );
-        cache.Add( TowxString( info.gravity ) );
-        cache.Add( TowxString( info.maxMetal ) );
-        cache.Add( TowxString( info.extractorRadius ) );
-        cache.Add( TowxString( info.minWind ) );
-        cache.Add( TowxString( info.maxWind )  );
-        cache.Add( TowxString( info.width ) );
-        cache.Add( TowxString( info.height ) );
-
-        wxString postring;
-		for ( unsigned int i = 0; i < info.positions.size(); i++)
-        {
-           postring << TowxString( info.positions[i].x ) << _T('-') << TowxString( info.positions[i].y ) << _T(' ');
-        }
-        cache.Add( postring );
-
-        wxArrayString descrtoken = wxStringTokenize( info.description, _T('\n') );
-        unsigned int desclinecount = descrtoken.GetCount();
-        for ( unsigned int count = 0; count < desclinecount; count++ ) cache.Add( descrtoken[count] );
-
-        SetCacheFile( GetFileCachePath( mapname, m_maps_unchained_hash[mapname], false ) + _T(".infoex"), cache );
-      }
-  }
-  catch ( ... ) {
-      info.width = 1;
-      info.height = 1;
-  }
+  info = susynclib().GetMapInfoEx( mapname, 1 );
 
   m_mapinfo_cache.Add( mapname, info );
 
