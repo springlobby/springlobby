@@ -468,7 +468,7 @@ void BattleRoomTab::UpdateBattleInfo( const wxString& Tag )
 				m_opts_list->SetItem( m_opt_list_map[ _( "Windspeed" ) ], 1, _T( "?-?" ) );
 				m_opts_list->SetItem( m_opt_list_map[ _( "Tidal strength" ) ], 1, _T( "?" ) );
 			}
-			wxString mapname = RefineMapname( m_battle->GetHostMapName() );
+			wxString mapname =m_battle->GetHostMapName();
 			int index_ = m_map_combo->FindString( mapname );
 			if ( index_ != wxNOT_FOUND )
                 m_map_combo->SetSelection( index_ );
@@ -953,7 +953,7 @@ void BattleRoomTab::OnMapBrowse( wxCommandEvent& /*unused*/ )
 			m_battle->DoAction( _T( "suggests " ) + mapname );
 			return;
 		}
-		const int idx = m_map_combo->FindString( RefineMapname( mapname ), true /*case sensitive*/ );
+		const int idx = m_map_combo->FindString( mapname, true /*case sensitive*/ );
 		if ( idx != wxNOT_FOUND )
             SetMap( idx );
 	}
@@ -968,7 +968,7 @@ void BattleRoomTab::ReloadMaplist()
 // maplist.Sort(CompareStringIgnoreCase);
 
 	size_t nummaps = maplist.Count();
-	for ( size_t i = 0; i < nummaps; i++ ) m_map_combo->Insert( RefineMapname( maplist[i] ), i );
+	for ( size_t i = 0; i < nummaps; i++ ) m_map_combo->Insert( maplist[i], i );
 }
 
 void BattleRoomTab::SetMap( int index )

@@ -131,19 +131,15 @@ void SinglePlayerTab::UpdateMinimap()
 
 void SinglePlayerTab::ReloadMaplist()
 {
-    m_map_pick->Clear();
+	m_map_pick->Clear();
 
-    //applies RefineMapname to every new element
-    TransformedArrayString maplist ( usync().GetMapList(), &RefineMapname ) ;
-    //maplist.Sort(CompareStringIgnoreCase);
-
-    m_map_pick->Append( maplist );
+    m_map_pick->Append( usync().GetMapList() );
 
     m_map_pick->Insert( _("-- Select one --"), m_map_pick->GetCount() );
 
     if ( m_battle.GetHostMapName() != wxEmptyString )
     {
-        m_map_pick->SetStringSelection( RefineMapname( m_battle.GetHostMapName() ) );
+		m_map_pick->SetStringSelection( m_battle.GetHostMapName());
         if ( m_map_pick->GetStringSelection() == wxEmptyString )
             SetMap( m_mod_pick->GetCount()-1 );
     }
@@ -277,7 +273,7 @@ void SinglePlayerTab::OnMapBrowse( wxCommandEvent& /*unused*/ )
 	if ( mapSelectDialog().ShowModal() == wxID_OK && mapSelectDialog().GetSelectedMap() != NULL )
     {
 		wxLogDebugFunc( mapSelectDialog().GetSelectedMap()->name );
-		const wxString mapname = RefineMapname( mapSelectDialog().GetSelectedMap()->name );
+		const wxString mapname = mapSelectDialog().GetSelectedMap()->name;
         const int idx = m_map_pick->FindString( mapname, true /*case sensitive*/ );
         if ( idx != wxNOT_FOUND ) SetMap( idx );
     }

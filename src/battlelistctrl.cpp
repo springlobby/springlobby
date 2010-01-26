@@ -96,8 +96,8 @@ wxString BattleListCtrl::GetItemText(long item, long column) const
         default: return wxEmptyString;
 
         case 3: return ( opts.description );
-        case 4: return ( RefineMapname( battle.GetHostMapName() ) );
-        case 5: return ( RefineModname( battle.GetHostModName() ) );
+		case 4: return ( battle.GetHostMapName() );
+		case 5: return ( battle.GetHostModName() );
         case 6: return ( opts.founder );
         case 7: return ( wxString::Format(_T("%d"), int(battle.GetSpectators())) );
         case 8: return ( wxString::Format(_T("%d"), int(battle.GetNumUsers()) - int(battle.GetSpectators()) ) );
@@ -250,8 +250,8 @@ int BattleListCtrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir )
         }
         case 2: return dir * compareSimple( u1->GetRankNeeded(), u2->GetRankNeeded() );
         case 3: return dir * u1->GetDescription().CmpNoCase( u2->GetDescription() );
-        case 4: return dir * RefineMapname( u1->GetHostMapName() ).CmpNoCase( RefineMapname( u2->GetHostMapName() ) );
-        case 5: return dir * RefineModname( u1->GetHostModName() ).CmpNoCase( RefineModname( u2->GetHostModName() ) );
+		case 4: return dir * u1->GetHostMapName().CmpNoCase( u2->GetHostMapName() );
+		case 5: return dir * u1->GetHostModName().CmpNoCase( u2->GetHostModName() );
         case 6:
         {
         	try
@@ -340,10 +340,10 @@ void BattleListCtrl::SetTipWindowText( const long item_hit, const wxPoint& posit
             m_tiptext = battle.GetDescription();
             break;
         case 4: //map
-            m_tiptext = RefineMapname(battle.GetHostMapName());
+			m_tiptext = battle.GetHostMapName();
             break;
         case 5: //mod
-            m_tiptext = RefineModname(battle.GetHostModName());
+			m_tiptext = battle.GetHostModName();
             break;
         case 6: // host
 					try

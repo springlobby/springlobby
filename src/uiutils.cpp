@@ -22,34 +22,6 @@
 #include "utils/customdialogs.h"
 #include "settings.h"
 
-wxString RefineMapname( const wxString& mapname )
-{
-    wxString ret = mapname;
-    ret = ret.BeforeLast( '.' );
-    ret.Replace(_T("_"), _T(" ") );
-    ret.Replace(_T("-"), _T(" ") );
-    return ret;
-}
-
-
-wxString RefineModname( const wxString& modname )
-{
-    wxString ret = modname;
-    ret.Replace(_T("Absolute Annihilation"), _T("AA") );
-    ret.Replace(_T("Complete Annihilation"), _T("CA") );
-    ret.Replace(_T("Balanced Annihilation"), _T("BA") );
-    ret.Replace(_T("Expand and Exterminate"), _T("EE") );
-    ret.Replace(_T("War Evolution"), _T("WarEv") );
-    ret.Replace(_T("TinyComm"), _T("TC") );
-    ret.Replace(_T("BETA"), _T("b") );
-    ret.Replace(_T("Public Alpha"), _T("pa") );
-    ret.Replace(_T("Public Beta"), _T("pb") );
-    ret.Replace(_T("Public"), _T("p") );
-    ret.Replace(_T("Alpha"), _T("a") );
-    ret.Replace(_T("Beta"), _T("b") );
-    return ret;
-}
-
 
 wxString RTFtoText( const wxString& rtfinput )
 {

@@ -310,7 +310,7 @@ void MapSelectDialog::OnMapSelected( wxCommandEvent& event )
 	if ( pMap == NULL) return;
 	const UnitSyncMap& map = *pMap;
 
-	m_map_name->SetLabel( RefineMapname( map.name ) + _T("\n\n") + map.info.description );
+	m_map_name->SetLabel( map.name + _T("\n\n") + map.info.description );
 
 	// TODO: refactor, this is copied from battlemaptab.cpp
 	m_map_opts_list->SetItem( 0, 1, wxString::Format( _T("%dx%d"), map.info.width/512, map.info.height/512 ) );

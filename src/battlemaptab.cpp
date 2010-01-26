@@ -158,7 +158,7 @@ void BattleMapTab::Update()
 	m_map_opts_list->SetItem( 4, 1, wxString::Format( _T( "%d" ), map.info.extractorRadius ) );
 	m_map_opts_list->SetItem( 5, 1, wxString::Format( _T( "%.3f" ), map.info.maxMetal ) );
 
-	int index = m_map_combo->FindString( RefineMapname( map.name ) );
+	int index = m_map_combo->FindString( map.name );
 	if ( index == wxNOT_FOUND ) return;
 	m_map_combo->SetSelection( index );
 }
@@ -200,7 +200,7 @@ void BattleMapTab::ReloadMaplist()
 // maplist.Sort(CompareStringIgnoreCase);
 
 	size_t nummaps = maplist.Count();
-	for ( size_t i = 0; i < nummaps; i++ ) m_map_combo->Insert( RefineMapname( maplist[i] ), i );
+	for ( size_t i = 0; i < nummaps; i++ ) m_map_combo->Insert( maplist[i], i );
 }
 
 
@@ -260,7 +260,7 @@ void BattleMapTab::OnMapBrowse( wxCommandEvent& /*unused*/ )
 			m_battle->DoAction( _T( "suggests " ) + mapname  );
 			return;
 		}
-		const int idx = m_map_combo->FindString( RefineMapname( mapname ), true /*case sensitive*/ );
+		const int idx = m_map_combo->FindString( mapname, true /*case sensitive*/ );
 		if ( idx != wxNOT_FOUND )
             SetMap( idx );
 	}
