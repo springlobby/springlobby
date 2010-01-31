@@ -221,7 +221,7 @@ IF(WIN32)
 ENDIF(WIN32)
 
 # Here the wxWidgets Libraries are added. These are set for us by the FIND Script. If you need other Libraries, you can add them here as well.
-TARGET_LINK_LIBRARIES(springlobby ${wxWidgets_LIBRARIES} ${OPENAL_LIBRARY} )
+TARGET_LINK_LIBRARIES(springlobby ${wxWidgets_LIBRARIES} )
 TARGET_LINK_LIBRARIES(springsettings ${wxWidgets_LIBRARIES} )
 
 IF(MINGW)
