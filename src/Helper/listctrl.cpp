@@ -1551,12 +1551,7 @@ void wxListLineData::DrawInReportMode( wxDC *dc,
 
     wxCoord x = rect.x + HEADER_OFFSET_X,
             yMid = rect.y + rect.height/2;
-#ifdef __WXGTK__
-    // This probably needs to be done
-    // on all platforms as the icons
-    // otherwise nearly touch the border
-    x += 2;
-#endif
+	x += 4;
 
     size_t col = 0;
     for ( wxListItemDataList::compatibility_iterator node = m_items.GetFirst();
@@ -1582,7 +1577,7 @@ void wxListLineData::DrawInReportMode( wxDC *dc,
         }
 
         if ( item->HasText() )
-            DrawTextFormatted(dc, item->GetText(), col, xOld, yMid, width - 8);
+			DrawTextFormatted(dc, item->GetText(), col, xOld, yMid, width - 8);
     }
 }
 
