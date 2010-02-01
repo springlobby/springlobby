@@ -81,8 +81,9 @@ wxString ReplayList::GetScriptFromReplay ( const wxString& ReplayPath  )
         int headerSize=0 ;
         replay.Read( &headerSize, 4);
         replay.Seek( 64 );
-        int scriptSize=0;
+		wxFileOffset scriptSize=0;
         replay.Read( &scriptSize, 4);
+		scriptSize = clamp( wxFileOffset(scriptSize), wxFileOffset(0), replay.Length() );
         replay.Seek( headerSize );
         std::string script_a(scriptSize,0);
         replay.Read( &script_a[0], scriptSize );
