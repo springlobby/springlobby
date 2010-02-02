@@ -178,4 +178,17 @@ SET( updaterSrc
 FILE( GLOB header "src/*.h" )
 FILE( GLOB header2 "src/*/*.h" )
 
-set_source_files_properties( ${header2} ${header} PROPERTIES HEADER_FILE_ONLY 1 )
+#grep -lR cpp\"$ src/*
+SET( templatesources
+	src/battleroommmoptionstab.h
+	src/customvirtlistctrl.h
+	src/httpdownloader.h
+	src/playback/playbackfilter.h
+	src/playback/playbacklist.h
+	src/playback/playbacklistctrl.h
+	src/playback/playbackthread.h
+	src/playback/playbacktab.h
+	src/utils/stringserializer.h
+)
+LIST( APPEND header ${header2} ${templatesources} )
+set_source_files_properties(  ${header} PROPERTIES HEADER_FILE_ONLY 1 )
