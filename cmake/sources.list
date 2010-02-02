@@ -175,3 +175,7 @@ SET( updaterSrc
 	src/utils/misc.cpp
 )
 
+FILE( GLOB header "src/*.h" )
+FILE( GLOB header2 "src/*/*.h" )
+
+set_source_files_properties( ${header2} ${header} PROPERTIES HEADER_FILE_ONLY 1 )
