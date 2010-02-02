@@ -507,6 +507,7 @@ std::map<wxString,TorrentInfos> TorrentWrapper::CollectGuiInfos()
     std::map<wxString,TorrentInfos> ret;
     try
     {
+		const TorrenthandleInfoMap& infomap = GetHandleInfoMap();
         TorrentInfos globalinfos;
         libtorrent::session_status session_status = m_torr->status();
         globalinfos.downloadstatus = P2P::leeching;
@@ -518,7 +519,6 @@ std::map<wxString,TorrentInfos> TorrentWrapper::CollectGuiInfos()
         ret[wxString(_T("global"))] = globalinfos;
 
 		const TorrenthandleVector torrentList = m_torr->get_torrents();
-		const TorrenthandleInfoMap& infomap = GetHandleInfoMap();
 		for ( TorrenthandleInfoMap::const_iterator i = infomap.begin(); i != infomap.end(); ++i )
         {
 			try {
