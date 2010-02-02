@@ -6,7 +6,6 @@ SET(CMAKE_C_COMPILER i586-pc-mingw32-gcc)
 SET(CMAKE_CXX_COMPILER i586-pc-mingw32-g++)
 SET( wxWidgets_ROOT_DIR /opt/mingw32/ )
 # here is the target environment located
-SET(CMAKE_FIND_ROOT_PATH  /opt/mingw32 )
 
 # adjust the default behaviour of the FIND_XXX() commands:
 # search headers and libraries in the target environment, search 
