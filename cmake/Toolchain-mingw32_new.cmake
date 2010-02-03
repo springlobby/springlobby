@@ -45,4 +45,5 @@ SET( boost_INCLUDE_DIR /opt/mingw32/include )
 link_directories( /opt/mingw32/lib )
 INCLUDE_DIRECTORIES(/opt/mingw32/include  )
 
+SET( PKG_CONFIG_EXECUTABLE /opt/mingw32/bin/pkg-config )
 ADD_DEFINITIONS( -DCURL_STATICLIB -DWXUSINGDLL -D__WXMSW__ -mthreads)
