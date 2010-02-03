@@ -661,6 +661,7 @@ void MainWindow::OnMenuLoadLayout( wxCommandEvent& /*unused*/ )
 void MainWindow::OnMenuResetLayout( wxCommandEvent& /*event*/ )
 {
 	sett().SetDoResetPerspectives( true );
+	sett().SaveSettings();
 	customMessageBoxNoModal( SL_MAIN_ICON, _("Please restart SpringLobby now"), wxEmptyString );
 }
 
