@@ -9,7 +9,7 @@
 #include  <wx/msw/private.h>
 #endif
 
-#ifdef __WXMAC__
+#if defined(__WXMAC__) && defined(__WXOSX_CARBON__)
 #include <wx/mac/carbon/private.h>
 #endif
 
