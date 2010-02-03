@@ -2,8 +2,8 @@
 SET(CMAKE_SYSTEM_NAME Windows)
 
 # which compilers to use for C and C++
-SET(CMAKE_C_COMPILER i586-pc-mingw32-gcc)
-SET(CMAKE_CXX_COMPILER i586-pc-mingw32-g++)
+SET(CMAKE_C_COMPILER /usr/local/bin/i586-pc-mingw32-gcc)
+SET(CMAKE_CXX_COMPILER /usr/local/bin/i586-pc-mingw32-g++)
 SET( wxWidgets_ROOT_DIR /opt/mingw32/ )
 # here is the target environment located
 SET(CMAKE_FIND_ROOT_PATH  /opt/mingw32 )
