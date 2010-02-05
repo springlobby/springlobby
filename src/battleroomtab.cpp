@@ -695,7 +695,7 @@ void BattleRoomTab::OnAutoPaste( wxCommandEvent& /*unused*/ )
 {
 	if ( !m_battle ) return;
 	wxString description = wxGetTextFromUser( _( "Enter a battle description" ), _( "Set description" ), m_battle->GetDescription(), ( wxWindow* ) & ui().mw() );
-	m_autopaste_mnu->Check( description.IsEmpty() );
+	m_autopaste_mnu->Check( !description.IsEmpty() );
 	if ( !description.IsEmpty() ) m_battle->SetDescription( description );
 	sett().SetBattleLastAutoAnnounceDescription( m_autopaste_mnu->IsChecked() );
 }
