@@ -121,7 +121,14 @@ PlasmaResourceInfo PlasmaInterface::GetResourceInfo(const wxString& name)
 
     m_buffers[index] = response.GetString();
 
-    return ParseResourceInfoData( index );
+	PlasmaResourceInfo info;
+	try {
+		info = ParseResourceInfoData( index );
+	}
+	catch (...){
+		info.m_type = PlasmaResourceInfo::unknown;
+	}
+	return info;
 }
 
 PlasmaResourceInfo PlasmaInterface::ParseResourceInfoData( const int buffer_index )
@@ -135,21 +142,21 @@ PlasmaResourceInfo PlasmaInterface::ParseResourceInfoData( const int buffer_inde
 
     wxStringInputStream str_input( xml_section );
     wxXmlDocument xml( str_input );
-    assert( xml.GetRoot() );
+	ASSERT_EXCEPTION( xml.GetRoot(), _T("Plasma: XMLparser: no root") );
     wxXmlNode *node = xml.GetRoot()->GetChildren();
-    assert( node );
+	ASSERT_EXCEPTION( node , _T("Plasma: XMLparser: no first node") );
     wxString resourceType ( _T("unknown") );
     node = node->GetChildren();
-    assert( node );
+	ASSERT_EXCEPTION( node , _T("Plasma: XMLparser: no node") );
     while ( node ) {
         wxString node_name = node->GetName();
         if ( node_name == _T("DownloadFileResponse") ) {
             wxXmlNode* downloadFileResult = node->GetChildren();
-            assert( downloadFileResult );
+			ASSERT_EXCEPTION( downloadFileResult, _T("Plasma: XMLparser: no result section") );
             wxString result = downloadFileResult->GetNodeContent();
             //check result
             wxXmlNode* links = downloadFileResult->GetNext();
-            assert( links );
+			ASSERT_EXCEPTION( links, _T("Plasma: XMLparser: no webseed section") );
             wxXmlNode* url = links->GetChildren();
             while ( url ) {
                 info.m_webseeds.Add( url->GetNodeContent() );
