@@ -85,6 +85,11 @@ void Battle::Leave()
 {
     m_serv.LeaveBattle( m_opts.battleid );
     m_is_self_in = false;
+	for( size_t j = 0; j < GetNumUsers(); ++j  )
+	{
+		User& u = GetUser( j );
+		if ( u.GetBattleStatus().IsBot() ) OnUserRemoved( u );
+	}
     susynclib().UnSetCurrentMod( );
 }
 
