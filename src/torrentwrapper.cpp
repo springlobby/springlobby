@@ -467,6 +467,9 @@ void TorrentWrapper::HandleCompleted()
 				wxString source_path = TowxString( handle.save_path().string() )  +
 									   wxFileName::GetPathSeparator() +
 									   TowxString( handle.get_torrent_info().file_at( 0 ).path.string() );
+				wxString dest_path = wxPathOnly( dest_filename );
+				if ( !wxDirExists( dest_path ) )
+						wxMkdir( dest_path );
 				bool ok = wxCopyFile( source_path, dest_filename );
 				if ( !ok )
 				{
