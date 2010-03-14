@@ -1015,3 +1015,11 @@ void ServerEvents::OnSpringDownloadEvent( wxCommandEvent& event )
 
   }
 }
+
+IServerEvents* IServerEvents::getInstance( Server& server, ServerEventsMode mode  )
+{
+	switch (mode) {
+		default: return new ServerEvents( server );
+		//case IServerEvents::simple: return new SimpleServerEvents( server );
+		}
+}
