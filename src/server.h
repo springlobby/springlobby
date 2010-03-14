@@ -10,6 +10,7 @@
 #include "inetclass.h"
 
 class ServerEvents;
+class SimpleServerEvents;
 class Channel;
 class Ui;
 struct BattleOptions;
@@ -28,7 +29,8 @@ typedef int HostInfo;
 class Server : public iNetClass
 {
   public:
-    friend class ServerEvents;
+	friend class ServerEvents;
+	friend class SimpleServerEvents;
 
     enum PortTestCode {
       porttest_pass_WX26    = 0,

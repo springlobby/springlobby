@@ -1,7 +1,7 @@
-#ifndef SPRINGLOBBY_HEADERGUARD_SERVEREVENTS_H
-#define SPRINGLOBBY_HEADERGUARD_SERVEREVENTS_H
+#ifndef SPRINGLOBBY_HEADERGUARD_SIMPLESERVEREVENTS_H
+#define SPRINGLOBBY_HEADERGUARD_SIMPLESERVEREVENTS_H
 
-#include "iserverevents.h"
+#include "../iserverevents.h"
 #include <wx/event.h>
 #include <wx/longlong.h>
 
@@ -11,11 +11,11 @@ struct UserBattleStatus;
 class Battle;
 
 //! @brief Class that implements server event behaviour.
-class ServerEvents : public IServerEvents, public wxEvtHandler
+class SimpleServerEvents : public IServerEvents, public wxEvtHandler
 {
   public:
-    ServerEvents( Server& serv) : m_serv(serv) {}
-    ~ServerEvents() {}
+	SimpleServerEvents( Server& serv) : m_serv(serv) {}
+	~SimpleServerEvents() {}
 
   // Uicontrol interface
 
@@ -126,7 +126,7 @@ class ServerEvents : public IServerEvents, public wxEvtHandler
     wxString m_savepath;
 };
 
-#endif // SPRINGLOBBY_HEADERGUARD_SERVEREVENTS_H
+#endif // SPRINGLOBBY_HEADERGUARD_SIMPLESERVEREVENTS_H
 
 /**
     This file is part of SpringLobby,
