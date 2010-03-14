@@ -120,6 +120,7 @@ MainWindow::MainWindow( )
     m_channel_chooser(NULL),
     m_log_win(NULL)
 {
+	assert( !wxGetApp().IsSimple() );
 	SetIcon( wxIcon(springlobby_xpm) );
 
 	GetAui().manager = new AuiManagerContainer::ManagerType( this );

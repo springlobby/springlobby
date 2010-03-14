@@ -13,6 +13,7 @@
 #include "settings.h"
 #include "ui.h"
 #include "springunitsynclib.h"
+#include "springlobbyapp.h"
 
 #include <list>
 #include <algorithm>
@@ -722,11 +723,15 @@ void IBattle::SetHostMap(const wxString& mapname, const wxString& hash)
     m_map_loaded = false;
     m_host_map.name = mapname;
     m_host_map.hash = hash;
-    if ( !m_host_map.hash.IsEmpty() ) m_map_exists = usync().MapExists( m_host_map.name, m_host_map.hash );
-    else m_map_exists = usync().MapExists( m_host_map.name );
-    #ifndef __WXMSW__
-		if ( m_map_exists && !ui().IsSpringRunning() ) usync().PrefetchMap( m_host_map.name );
-		#endif
+	if ( !m_host_map.hash.IsEmpty() )
+		m_map_exists = usync().MapExists( m_host_map.name, m_host_map.hash );
+	else
+		m_map_exists = usync().MapExists( m_host_map.name );
+	#ifndef __WXMSW__ //!TODO why not on win?
+		// don't do this in simple, cause it uses ui
+		if ( m_map_exists && !wxGetApp().IsSimple() && !ui().IsSpringRunning() )
+			usync().PrefetchMap( m_host_map.name );
+	#endif
   }
 }
 

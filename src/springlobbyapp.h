@@ -29,6 +29,7 @@ class SpringLobbyApp : public wxApp, public OnQuitSink<SpringLobbyApp>
     virtual bool OnCmdLineParsed(wxCmdLineParser& parser);
 
 	void OnQuit( GlobalEvents::GlobalEventData data );
+	bool IsSimple() const {return m_start_simple_interface;}
 
   protected:
 

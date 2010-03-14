@@ -405,39 +405,39 @@ void SimpleServerEvents::OnSetBattleInfo( int battleid, const wxString& param, c
             else if ( key.Left( 4 ) == _T( "team" ) && key.Find( _T("startpos") ) != wxNOT_FOUND )
             {
             	 int team = s2l( key.BeforeFirst(_T('/')).Mid( 4 ) );
-							 if ( key.Find( _T("startposx") ) != wxNOT_FOUND )
-							 {
-							 	 int numusers = battle.GetNumUsers();
-							 	 for ( int i = 0; i < numusers; i++ )
-							 	 {
-							 	 	 User& usr = battle.GetUser( i );
-							 	 	 UserBattleStatus& status = usr.BattleStatus();
-							 	 	 if ( status.team == team )
-							 	 	 {
-							 	 	 	 status.pos.x = s2l( value );
-										 battle.OnUserBattleStatusUpdated( usr, status );
-							 	 	 }
-							 	 }
-							 }
-							 else if ( key.Find( _T("startposy") ) != wxNOT_FOUND )
-							 {
-							 	 int numusers = battle.GetNumUsers();
-							 	 for ( int i = 0; i < numusers; i++ )
-							 	 {
-							 	 	 User& usr = battle.GetUser( i );
-							 	 	 UserBattleStatus& status = usr.BattleStatus();
-							 	 	 if ( status.team == team )
-							 	 	 {
-							 	 	 	 status.pos.y = s2l( value );
-							 	 	 	 battle.OnUserBattleStatusUpdated( usr, status );
-							 	 	 }
-							 	 }
-							 }
+				 if ( key.Find( _T("startposx") ) != wxNOT_FOUND )
+				 {
+					 int numusers = battle.GetNumUsers();
+					 for ( int i = 0; i < numusers; i++ )
+					 {
+						 User& usr = battle.GetUser( i );
+						 UserBattleStatus& status = usr.BattleStatus();
+						 if ( status.team == team )
+						 {
+							 status.pos.x = s2l( value );
+							 battle.OnUserBattleStatusUpdated( usr, status );
+						 }
+					 }
+				 }
+				 else if ( key.Find( _T("startposy") ) != wxNOT_FOUND )
+				 {
+					 int numusers = battle.GetNumUsers();
+					 for ( int i = 0; i < numusers; i++ )
+					 {
+						 User& usr = battle.GetUser( i );
+						 UserBattleStatus& status = usr.BattleStatus();
+						 if ( status.team == team )
+						 {
+							 status.pos.y = s2l( value );
+							 battle.OnUserBattleStatusUpdated( usr, status );
+						 }
+					 }
+				 }
             }
             else
             {
-							battle.CustomBattleOptions().setSingleOption( key,  value, OptionsWrapper::EngineOption );
-							battle.Update( wxString::Format(_T("%d_%s"), OptionsWrapper::EngineOption, key.c_str() ) );
+				battle.CustomBattleOptions().setSingleOption( key,  value, OptionsWrapper::EngineOption );
+				battle.Update( wxString::Format(_T("%d_%s"), OptionsWrapper::EngineOption, key.c_str() ) );
             }
         }
     }
