@@ -173,7 +173,6 @@ bool SpringLobbyApp::OnInit()
 	mapSelectDialog();
 	//unitsync first load, NEEDS to be blocking
 	usync().ReloadUnitSyncLib();
-    notificationManager(); //needs to be initialized too
 
 	#ifndef DISABLE_SOUND
 		//sound sources/buffer init
@@ -199,6 +198,7 @@ bool SpringLobbyApp::OnInit()
         }
     }
 
+	notificationManager(); //needs to be initialized too
     ui().ShowMainWindow();
     SetTopWindow( &ui().mw() );
 	if ( sett().DoResetPerspectives() )

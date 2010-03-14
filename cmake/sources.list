@@ -111,6 +111,8 @@ SET(springlobbySrc
 	src/Helper/wxTranslationHelper.cpp
 	src/Helper/tasclientimport.cpp
 	src/simpleinterface/simpleserverevents.cpp
+	src/simpleinterface/customizedframe.cpp
+	src/simpleinterface/simplempframe.cpp
 	src/toasterbox/ToasterBox.cpp
 	src/toasterbox/ToasterBoxWindow.cpp
 	src/toasterbox/ToasterBoxWindowList.cpp

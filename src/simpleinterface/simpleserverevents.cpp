@@ -97,12 +97,12 @@ void SimpleServerEvents::OnNewUser( const wxString& nick, const wxString& countr
 	catch (...) {
         return;
     }
-	assert(false);
-//    User& user = m_serv._AddUser( nick );
-//    user.SetCountry( country );
-//    user.SetCpu( cpu );
-//	user.SetID( id );
-//    ui().OnUserOnline( user );
+
+	User& user = m_serv._AddUser( nick );
+	user.SetCountry( country );
+	user.SetCpu( cpu );
+	user.SetID( id );
+//	ui().OnUserOnline( user );
 }
 
 
