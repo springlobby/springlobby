@@ -5,6 +5,7 @@
 
 #include "mmoptionswrapper.h"
 #include "utils/isink.h"
+#include "utils/uievents.h"
 #include <map>
 
 class Ui;
@@ -88,6 +89,8 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 		void OnAutoControl( wxCommandEvent& event );
 		void OnAutoStart( wxCommandEvent& event );
 		void OnAutoSpec( wxCommandEvent& event );
+
+		void OnBattleActionEvent( UiEvents::UiEventData data );
 
 		void OnUserJoined( User& user );
 		void OnUserLeft( User& user );
@@ -180,6 +183,8 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 		wxCheckBox* m_autolock_chk;
 
 		wxListCtrl* m_opts_list;
+
+		EventReceiverFunc<BattleRoomTab, UiEvents::UiEventData, &BattleRoomTab::OnBattleActionEvent> m_BattleActionSink;
 
 		enum {
 			BROOM_LEAVE = wxID_HIGHEST,

@@ -120,7 +120,7 @@ class Ui
     void OnRequestBattleStatus( IBattle& battle );
 
     void OnSaidBattle( IBattle& battle, const wxString& nick, const wxString& msg );
-    void OnBattleAction( IBattle& battle, const wxString& nick, const wxString& msg );
+//    void OnBattleAction( IBattle& battle, const wxString& nick, const wxString& msg );
 
     void OnSpringStarting();
     void OnSpringTerminated( long exit_code );

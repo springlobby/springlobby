@@ -32,4 +32,9 @@ namespace UiEvents {
 		GetStatusEventSender( UiEvents::removeStatusMessage ).SendEvent( data );
 	}
 
+	OnBattleActionData::OnBattleActionData( const wxString& nick, const wxString& msg )
+	{
+		Add( nick );
+		Add( msg );
+	}
 }

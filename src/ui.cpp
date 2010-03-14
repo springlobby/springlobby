@@ -1088,15 +1088,15 @@ void Ui::OnSaidBattle( IBattle& /*battle*/, const wxString& nick, const wxString
 }
 
 
-void Ui::OnBattleAction( IBattle& /*battle*/, const wxString& nick, const wxString& msg )
-{
-    if ( m_main_win == 0 ) return;
-    try
-    {
-        mw().GetJoinTab().GetBattleRoomTab().GetChatPanel().DidAction( nick, msg );
-    }
-    catch (...){}
-}
+//void Ui::OnBattleAction( IBattle& /*battle*/, const wxString& nick, const wxString& msg )
+//{
+//    if ( m_main_win == 0 ) return;
+//    try
+//    {
+//        mw().GetJoinTab().GetBattleRoomTab().GetChatPanel().DidAction( nick, msg );
+//    }
+//    catch (...){}
+//}
 
 void Ui::OnSpringStarting()
 {

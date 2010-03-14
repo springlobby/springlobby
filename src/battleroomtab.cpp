@@ -116,7 +116,8 @@ const MyStrings<SPRING_MAX_ALLIES> ally_choices;
 
 BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle )
     : wxScrolledWindow( parent, -1 ),
-	m_battle( battle )
+	m_battle( battle ),
+	m_BattleActionSink( this, &UiEvents::GetUiEventSender( UiEvents::OnBattleActionEvent ))
 {
 	GetAui().manager->AddPane( this, wxLEFT, _T( "battleroomtab" ) );
 
@@ -1127,6 +1128,13 @@ void BattleRoomTab::SetBattle( Battle* battle )
 		m_player_count_lbl->SetLabel( wxString::Format( _( "Players: %d" ), m_battle->GetNumUsers() - m_battle->GetSpectators() ) );
 		m_spec_count_lbl->SetLabel( wxString::Format( _( "Spectators: %d" ), m_battle->GetSpectators() ) );
 	}
+}
+
+void BattleRoomTab::OnBattleActionEvent( UiEvents::UiEventData data )
+{
+	wxString nick = data.Count() > 0 ? data[0] : wxString(wxEmptyString);
+	wxString msg = data.Count() > 1 ? data[1] : wxString(wxEmptyString);
+	GetChatPanel().DidAction( nick, msg );
 }
 
 //void BattleRoomTab::MaximizeSizer()

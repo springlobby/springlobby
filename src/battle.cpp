@@ -11,6 +11,7 @@
 #include "utils/debug.h"
 #include "utils/conversion.h"
 #include "utils/math.h"
+#include "utils/uievents.h"
 #include "uiutils.h"
 #include "settings.h"
 #include "useractions.h"
@@ -259,7 +260,9 @@ void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 		IBattle::OnUserBattleStatusUpdated( user, status );
     if ( status.handicap != 0 )
     {
-        ui().OnBattleAction( *this, wxString(_T(" ")) , ( _T("Warning: user ") + user.GetNick() + _T(" got bonus ") ) << status.handicap );
+		UiEvents::GetUiEventSender( UiEvents::OnBattleActionEvent ).SendEvent(
+				UiEvents::OnBattleActionData( wxString(_T(" ")) , ( _T("Warning: user ") + user.GetNick() + _T(" got bonus ") ) << status.handicap )
+			);
     }
 		if ( IsFounderMe() )
 		{
@@ -267,7 +270,7 @@ void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 			{
 				if ( sett().GetBattleLastAutoStartState() )
 				{
-					if ( !ui().IsSpringRunning() ) StartHostedBattle();
+					if ( !spring().IsRunning() ) StartHostedBattle();
 				}
 			}
 		}
@@ -349,28 +352,41 @@ bool Battle::ExecuteSayCommand( const wxString& cmd )
 							m_serv.BattleKickPlayer( m_opts.battleid, user );
 						}
 						catch( assert_exception ) {}
-            ui().OnBattleAction(*this,wxString(_T(" ")),nick+_T(" banned"));
-            //m_serv.DoActionBattle( m_opts.battleid, cmd.AfterFirst(' ') );
+			UiEvents::GetUiEventSender( UiEvents::OnBattleActionEvent ).SendEvent(
+					UiEvents::OnBattleActionData( wxString(_T(" ")) , nick+_T(" banned") )
+				);
+
+			//m_serv.DoActionBattle( m_opts.battleid, cmd.AfterFirst(' ') );
             return true;
         }
         if ( cmd_name == _T("/unban") )
         {
             wxString nick=cmd.AfterFirst(' ');
             m_banned_users.erase(nick);
-            ui().OnBattleAction(*this,wxString(_T(" ")),nick+_T(" unbanned"));
+			UiEvents::GetUiEventSender( UiEvents::OnBattleActionEvent ).SendEvent(
+					UiEvents::OnBattleActionData( wxString(_T(" ")) , nick+_T(" unbanned") )
+				);
             //m_serv.DoActionBattle( m_opts.battleid, cmd.AfterFirst(' ') );
             return true;
         }
         if ( cmd_name == _T("/banlist") )
         {
-            ui().OnBattleAction(*this,wxString(_T(" ")),_T("banlist:"));
+			UiEvents::GetUiEventSender( UiEvents::OnBattleActionEvent ).SendEvent(
+					UiEvents::OnBattleActionData( wxString(_T(" ")) , _T("banlist:") )
+				);
+
             for (std::set<wxString>::iterator i=m_banned_users.begin();i!=m_banned_users.end();++i)
             {
-                ui().OnBattleAction(*this,wxString(_T("  ")), *i);
+				UiEvents::GetUiEventSender( UiEvents::OnBattleActionEvent ).SendEvent(
+						UiEvents::OnBattleActionData( wxString(_T(" ")) , *i )
+					);
             }
             for (std::set<wxString>::iterator i=m_banned_ips.begin();i!=m_banned_ips.end();++i)
             {
-                ui().OnBattleAction(*this,wxString(_T("  ")), *i);
+				UiEvents::GetUiEventSender( UiEvents::OnBattleActionEvent ).SendEvent(
+						UiEvents::OnBattleActionData( wxString(_T(" ")) , *i )
+					);
+
             }
             return true;
         }
@@ -379,7 +395,10 @@ bool Battle::ExecuteSayCommand( const wxString& cmd )
             wxString nick=cmd.AfterFirst(' ');
             m_banned_users.erase(nick);
             m_banned_ips.erase(nick);
-            ui().OnBattleAction(*this,wxString(_T(" ")),nick+_T(" unbanned"));
+			UiEvents::GetUiEventSender( UiEvents::OnBattleActionEvent ).SendEvent(
+					UiEvents::OnBattleActionData( wxString(_T(" ")) , nick+_T(" unbanned") )
+				);
+
             //m_serv.DoActionBattle( m_opts.battleid, cmd.AfterFirst(' ') );
             return true;
         }
@@ -387,14 +406,19 @@ bool Battle::ExecuteSayCommand( const wxString& cmd )
         {
             wxString nick=cmd.AfterFirst(' ');
             m_banned_users.insert(nick);
-            ui().OnBattleAction(*this,wxString(_T(" ")),nick+_T(" banned"));
+			UiEvents::GetUiEventSender( UiEvents::OnBattleActionEvent ).SendEvent(
+					UiEvents::OnBattleActionData( wxString(_T(" ")) , nick+_T(" banned") )
+				);
+
             if (UserExists(nick))
             {
                 User &user=GetUser(nick);
                 if (!user.BattleStatus().ip.empty())
                 {
                     m_banned_ips.insert(user.BattleStatus().ip);
-                    ui().OnBattleAction(*this,wxString(_T(" ")),user.BattleStatus().ip+_T(" banned"));
+					UiEvents::GetUiEventSender( UiEvents::OnBattleActionEvent ).SendEvent(
+							UiEvents::OnBattleActionData( wxString(_T(" ")) , user.BattleStatus().ip+_T(" banned") )
+						);
                 }
                 m_serv.BattleKickPlayer( m_opts.battleid, user );
             }
@@ -417,12 +441,16 @@ bool Battle::CheckBan(User &user)
                 || useractions().DoActionOnUser(UserActions::ActAutokick, user.GetNick() ) )
         {
             KickPlayer(user);
-            ui().OnBattleAction(*this,wxString(_T(" ")),user.GetNick()+_T(" is banned, kicking"));
+			UiEvents::GetUiEventSender( UiEvents::OnBattleActionEvent ).SendEvent(
+					UiEvents::OnBattleActionData( wxString(_T(" ")) , user.GetNick()+_T(" is banned, kicking") )
+				);
             return true;
         }
         else if (m_banned_ips.count(user.BattleStatus().ip)>0)
         {
-            ui().OnBattleAction(*this,wxString(_T(" ")),user.BattleStatus().ip+_T(" is banned, kicking"));
+			UiEvents::GetUiEventSender( UiEvents::OnBattleActionEvent ).SendEvent(
+					UiEvents::OnBattleActionData( wxString(_T(" ")) , user.BattleStatus().ip+_T(" is banned, kicking") )
+				);
             KickPlayer(user);
             return true;
         }
