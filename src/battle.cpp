@@ -12,6 +12,7 @@
 #include "utils/conversion.h"
 #include "utils/math.h"
 #include "utils/uievents.h"
+#include "utils/battleevents.h"
 #include "uiutils.h"
 #include "settings.h"
 #include "useractions.h"
@@ -65,13 +66,13 @@ void Battle::SendHostInfo( const wxString& Tag )
 
 void Battle::Update()
 {
-    ui().OnBattleInfoUpdated( *this );
+	BattleEvents::GetBattleEventSender( BattleEvents::BattleInfoUpdate ).SendEvent( std::make_pair(this,wxString()) );
 }
 
 
 void Battle::Update( const wxString& Tag )
 {
-    ui().OnBattleInfoUpdated( *this, Tag );
+	BattleEvents::GetBattleEventSender( BattleEvents::BattleInfoUpdate ).SendEvent( std::make_pair(this,Tag) );
 }
 
 

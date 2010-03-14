@@ -4,6 +4,7 @@
 #include "customizedframe.h"
 
 class TASServer;
+class SimpleBattlelistCtrl;
 
 class SimpleMPFrame : public CustomizedFrame
 {
@@ -13,6 +14,7 @@ public:
 
 protected:
 	TASServer* m_serv;
+	SimpleBattlelistCtrl* m_battlelist;
 };
 
 #endif // SIMPLEMPFRAME_H

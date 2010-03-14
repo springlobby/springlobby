@@ -106,7 +106,8 @@ Ui::Ui() :
         m_con_win(0),
         m_upd_counter_torrent(0),
         m_first_update_trigger(true),
-        m_ingame(false)
+		m_ingame(false),
+		m_battle_info_updatedSink( this, &BattleEvents::GetBattleEventSender( ( BattleEvents::BattleInfoUpdate ) ) )
 {
     m_main_win = new MainWindow( );
     CustomMessageBoxBase::setLobbypointer(m_main_win);
@@ -955,7 +956,7 @@ void Ui::OnUserJoinedBattle( IBattle& battle, User& user )
         if ( mw().GetJoinTab().GetBattleRoomTab().GetBattle() == &battle )
         {
         	 mw().GetJoinTab().GetBattleRoomTab().OnUserJoined( user );
-        	 OnBattleInfoUpdated( battle );
+			 OnBattleInfoUpdated( std::make_pair(&battle,wxString()) );
         }
     }
     catch (...){}
@@ -982,7 +983,7 @@ void Ui::OnUserLeftBattle( IBattle& battle, User& user )
         if ( mw().GetJoinTab().GetBattleRoomTab().GetBattle() == &battle )
         {
             mw().GetJoinTab().GetBattleRoomTab().OnUserLeft( user );
-						OnBattleInfoUpdated( battle );
+						OnBattleInfoUpdated( std::make_pair(&battle,wxString()) );
 			if ( &user == &serverSelector().GetServer().GetMe() )
             {
                 mw().GetJoinTab().LeaveCurrentBattle();
@@ -1001,25 +1002,30 @@ void Ui::OnUserLeftBattle( IBattle& battle, User& user )
     }
 }
 
-void Ui::OnBattleInfoUpdated( IBattle& battle )
+void Ui::OnBattleInfoUpdated( BattleEvents::BattleEventData data )
 {
+	IBattle& battle = *data.first;
+	const wxString& Tag = data.second;
     if ( m_main_win == 0 ) return;
     mw().GetBattleListTab().UpdateBattle( battle );
     if ( mw().GetJoinTab().GetCurrentBattle() == &battle )
     {
-        mw().GetJoinTab().UpdateCurrentBattle();
+		if ( Tag.IsEmpty() )
+			mw().GetJoinTab().UpdateCurrentBattle();
+		else
+			mw().GetJoinTab().UpdateCurrentBattle( Tag );
     }
 }
 
-void Ui::OnBattleInfoUpdated( IBattle& battle, const wxString& Tag )
-{
-    if ( m_main_win == 0 ) return;
-    mw().GetBattleListTab().UpdateBattle( battle );
-    if ( mw().GetJoinTab().GetCurrentBattle() == &battle )
-    {
-        mw().GetJoinTab().UpdateCurrentBattle( Tag );
-    }
-}
+//void Ui::OnBattleInfoUpdated( IBattle& battle, const wxString& Tag )
+//{
+//    if ( m_main_win == 0 ) return;
+//    mw().GetBattleListTab().UpdateBattle( battle );
+//    if ( mw().GetJoinTab().GetCurrentBattle() == &battle )
+//    {
+//        mw().GetJoinTab().UpdateCurrentBattle( Tag );
+//    }
+//}
 
 
 void Ui::OnJoinedBattle( Battle& battle )
@@ -1051,7 +1057,7 @@ void Ui::OnUserBattleStatus( IBattle& battle, User& user )
 {
     if ( m_main_win == 0 ) return;
     mw().GetJoinTab().BattleUserUpdated( user );
-    OnBattleInfoUpdated( battle );
+	OnBattleInfoUpdated( std::make_pair(&battle,wxString()) );
 }
 
 
@@ -1086,17 +1092,6 @@ void Ui::OnSaidBattle( IBattle& /*battle*/, const wxString& nick, const wxString
     }
     catch (...) {}
 }
-
-
-//void Ui::OnBattleAction( IBattle& /*battle*/, const wxString& nick, const wxString& msg )
-//{
-//    if ( m_main_win == 0 ) return;
-//    try
-//    {
-//        mw().GetJoinTab().GetBattleRoomTab().GetChatPanel().DidAction( nick, msg );
-//    }
-//    catch (...){}
-//}
 
 void Ui::OnSpringStarting()
 {

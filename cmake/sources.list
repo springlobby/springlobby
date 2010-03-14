@@ -103,6 +103,7 @@ SET(springlobbySrc
 	src/userlistctrl.cpp
 	src/utils/downloader.cpp
 	src/utils/plasmaresourceinfo.cpp
+	src/utils/battleevents.cpp
 	src/widgets/downloadlistctrl.cpp
 	src/widgets/downloaddialog.cpp
 	src/widgets/downloadpanel.cpp
@@ -113,6 +114,7 @@ SET(springlobbySrc
 	src/simpleinterface/simpleserverevents.cpp
 	src/simpleinterface/customizedframe.cpp
 	src/simpleinterface/simplempframe.cpp
+	src/simpleinterface/simplebattlelistctrl.cpp
 	src/toasterbox/ToasterBox.cpp
 	src/toasterbox/ToasterBoxWindow.cpp
 	src/toasterbox/ToasterBoxWindowList.cpp

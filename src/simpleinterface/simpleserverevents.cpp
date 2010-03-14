@@ -16,7 +16,7 @@
 #include "../channel/channel.h"
 #include "../user.h"
 #include "../utils/debug.h"
-//#include "../uiutils.h"
+#include "../utils/battleevents.h"
 #include "../server.h"
 #include "../battle.h"
 #include "../httpdownloader.h"
@@ -130,8 +130,8 @@ void SimpleServerEvents::OnUserStatus( const wxString& nick, UserStatus status )
 					if ( status.in_game != battle.GetInGame() )
 					{
 						battle.SetInGame( status.in_game );
-						if ( status.in_game )
-							battle.StartSpring();
+//						if ( status.in_game )
+//							battle.StartSpring();
 //						else
 //							*/ui().OnBattleInfoUpdated( battle );
 					}
@@ -202,7 +202,7 @@ void SimpleServerEvents::OnBattleOpened( int id, BattleType type, NatType nat, c
         battle.SetDescription( title );
         battle.SetHostMod( mod, wxEmptyString );
 
-//        ui().OnBattleOpened( battle );
+		BattleEvents::GetBattleEventSender( BattleEvents::AddBattle ).SendEvent( std::make_pair(&battle,wxString()) );
         if ( user.Status().in_game )
         {
             battle.SetInGame( true );

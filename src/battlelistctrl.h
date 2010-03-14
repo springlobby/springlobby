@@ -44,8 +44,6 @@ class BattleListCtrl : public CustomVirtListCtrl< IBattle *, BattleListCtrl>
 
 
   protected:
-    static int wxCALLBACK CompareStatusDOWN(long item1, long item2, long sortData);
-
     static int CompareStatus( DataType u1, DataType u2 );
     static int ComparePlayer( DataType u1, DataType u2 );
 

@@ -24,6 +24,7 @@ typedef int AlertEventType;
 
 extern const wxEventType torrentSystemStatusUpdateEvt;
 
+#include "utils/battleevents.h"
 #include <wx/string.h>
 
 //! @brief UI main class
@@ -110,8 +111,8 @@ class Ui
     void OnBattleClosed( IBattle& battle );
     void OnUserJoinedBattle( IBattle& battle, User& user );
     void OnUserLeftBattle( IBattle& battle, User& user );
-    void OnBattleInfoUpdated( IBattle& battle );
-    void OnBattleInfoUpdated( IBattle& battle, const wxString& Tag );
+	void OnBattleInfoUpdated( BattleEvents::BattleEventData data );
+//    void OnBattleInfoUpdated( IBattle& battle, const wxString& Tag );
     void OnBattleStarted( Battle& battle );
 
     void OnJoinedBattle( Battle& battle );
@@ -160,6 +161,9 @@ class Ui
     bool m_first_update_trigger;
 
     bool m_ingame;
+
+	EventReceiverFunc<Ui, BattleEvents::BattleEventData, &Ui::OnBattleInfoUpdated>
+		m_battle_info_updatedSink;
 
     //! does actual work, called from downloadmap/mod
     void DownloadFileP2P( const wxString& name );

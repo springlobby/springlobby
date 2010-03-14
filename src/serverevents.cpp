@@ -174,7 +174,8 @@ void ServerEvents::OnUserStatus( const wxString& nick, UserStatus status )
                 {
                     battle.SetInGame( status.in_game );
                     if ( status.in_game ) battle.StartSpring();
-                    else ui().OnBattleInfoUpdated( battle );
+					else
+						BattleEvents::GetBattleEventSender( BattleEvents::BattleInfoUpdate ).SendEvent( std::make_pair(user.GetBattle(),wxString()) );
                 }
             }
             }catch(...){}
@@ -417,7 +418,7 @@ void ServerEvents::OnBattleInfoUpdated( int battleid, int spectators, bool locke
             battle.Update( wxString::Format( _T("%d_mapname"), OptionsWrapper::PrivateOptions ) );
         }
 
-        ui().OnBattleInfoUpdated( battle );
+		BattleEvents::GetBattleEventSender( BattleEvents::BattleInfoUpdate ).SendEvent( std::make_pair(&battle,wxString()) );
     }
     catch (assert_exception) {}
 }
@@ -498,7 +499,7 @@ void ServerEvents::OnBattleInfoUpdated( int battleid )
     try
     {
         Battle& battle = m_serv.GetBattle( battleid );
-        ui().OnBattleInfoUpdated( battle );
+		BattleEvents::GetBattleEventSender( BattleEvents::BattleInfoUpdate ).SendEvent( std::make_pair(&battle,wxString()) );
     }
     catch ( assert_exception ) {}
 }
