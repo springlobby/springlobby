@@ -202,21 +202,21 @@ void MainChatTab::RejoinChannels()
 			bool alreadyin = false;
 			try
 			{
-				ui().GetServer().GetChannel( name ).GetMe();
+				serverSelector().GetServer().GetChannel( name ).GetMe();
 				alreadyin = true;
 			}
 			catch ( ... ) {}
 			if ( !alreadyin )
 			{
-				ui().GetServer().JoinChannel( name, _T( "" ) );
-				tmp->SetChannel( &ui().GetServer().GetChannel( name ) );
+				serverSelector().GetServer().JoinChannel( name, _T( "" ) );
+				tmp->SetChannel( &serverSelector().GetServer().GetChannel( name ) );
 			}
 
 		} else if ( tmp->GetPanelType() == CPT_User )
 		{
 
 			wxString name = m_chat_tabs->GetPageText( i );
-			if ( ui().GetServer().UserExists( name ) ) tmp->SetUser( &ui().GetServer().GetUser( name ) );
+			if ( serverSelector().GetServer().UserExists( name ) ) tmp->SetUser( &serverSelector().GetServer().GetUser( name ) );
 
 		}
 	}

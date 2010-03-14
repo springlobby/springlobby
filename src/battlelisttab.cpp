@@ -275,10 +275,10 @@ void BattleListTab::UpdateBattle( IBattle& battle )
 void BattleListTab::RemoveAllBattles()
 {
 	SelectBattle( 0 );
-	ui().GetServer().battles_iter->IteratorBegin();
-	while ( ! ui().GetServer().battles_iter->EOL() )
+	serverSelector().GetServer().battles_iter->IteratorBegin();
+	while ( ! serverSelector().GetServer().battles_iter->EOL() )
 	{
-		Battle* temp_battle = ui().GetServer().battles_iter->GetBattle();
+		Battle* temp_battle = serverSelector().GetServer().battles_iter->GetBattle();
 		if ( temp_battle != 0 )
 			temp_battle->SetGUIListActiv( false );
 	}
@@ -288,9 +288,9 @@ void BattleListTab::RemoveAllBattles()
 
 
 void BattleListTab::UpdateList() {
-	ui().GetServer().battles_iter->IteratorBegin();
-	while ( ! ui().GetServer().battles_iter->EOL() ) {
-		Battle* b = ui().GetServer().battles_iter->GetBattle();
+	serverSelector().GetServer().battles_iter->IteratorBegin();
+	while ( ! serverSelector().GetServer().battles_iter->EOL() ) {
+		Battle* b = serverSelector().GetServer().battles_iter->GetBattle();
 		if ( b != 0 )
 			UpdateBattle( *b );
 	}
@@ -431,7 +431,7 @@ void BattleListTab::OnHost( wxCommandEvent& /*unused*/ )
 		bo.isproxy = sett().GetLastHostRelayedMode();
 		if ( bo.isproxy ) bo.nattype = NAT_None;
 		bo.relayhost = sett().GetLastRelayedHost();
-		ui().GetServer().HostBattle( bo, sett().GetLastHostPassword() );
+		serverSelector().GetServer().HostBattle( bo, sett().GetLastHostPassword() );
 	}
 }
 
@@ -477,7 +477,7 @@ void BattleListTab::OnJoin( wxCommandEvent& /*unused*/ )
 	if ( m_battle_list->GetSelectedIndex() < 0 ) return;
 
 	int id = m_battle_list->GetSelectedData()->GetBattleId();
-	DoJoin( ui().GetServer().battles_iter->GetBattle( id ) );
+	DoJoin( serverSelector().GetServer().battles_iter->GetBattle( id ) );
 }
 
 
@@ -492,7 +492,7 @@ void BattleListTab::OnListJoin( wxListEvent& event )
 	if ( event.GetIndex() < 0 ) return;
 
 	int id = m_battle_list->GetSelectedData()->GetBattleId();
-	DoJoin( ui().GetServer().battles_iter->GetBattle( id ) );
+	DoJoin( serverSelector().GetServer().battles_iter->GetBattle( id ) );
 }
 
 
@@ -586,9 +586,10 @@ void BattleListTab::OnSelect( wxListEvent& event )
 
 void BattleListTab::OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ )
 {
-  if ( ! ui().GetServerStatus() ) { return; }
+	if ( ! serverSelector().GetServerStatus() )
+		return;
 
-  UpdateList();
+	UpdateList();
 }
 
 void BattleListTab::UpdateHighlights()

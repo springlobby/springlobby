@@ -468,7 +468,7 @@ void MainWindow::ShowChannelChooser()
         customMessageBox( SL_MAIN_ICON, _("You need to be connected to server to view channel list"), _("Not connected") );
     else {
         m_channel_chooser->ClearChannels();
-        ui().GetServer().RequestChannels();
+		serverSelector().GetServer().RequestChannels();
         m_channel_chooser->Show( true );
     }
 }
@@ -492,9 +492,9 @@ void MainWindow::OnMenuChat( wxCommandEvent& /*unused*/ )
   if ( !ui().IsConnected() ) return;
   wxString answer;
   if ( ui().AskText( _("Open Private Chat..."), _("Name of user"), answer ) ) {
-    if (ui().GetServer().UserExists( answer ) ) {
+	if (serverSelector().GetServer().UserExists( answer ) ) {
         //true puts focus on new tab
-      OpenPrivateChat( ui().GetServer().GetUser( answer ), true  );
+	  OpenPrivateChat( serverSelector().GetServer().GetUser( answer ), true  );
     }
   }
 

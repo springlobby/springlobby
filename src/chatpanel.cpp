@@ -353,7 +353,7 @@ const User* ChatPanel::GetSelectedUser() const
 
 const User& ChatPanel::GetMe()  const
 {
-	return ui().GetServer().GetMe();
+	return serverSelector().GetServer().GetMe();
 }
 
 void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const wxFont& fon )

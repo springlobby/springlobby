@@ -375,9 +375,9 @@ void MapSelectDialog::LoadPopular()
 	m_mapgrid->Clear();
 
 	try {
-		ui().GetServer().battles_iter->IteratorBegin();
-		while ( !ui().GetServer().battles_iter->EOL() ) {
-			Battle* b = ui().GetServer().battles_iter->GetBattle();
+		serverSelector().GetServer().battles_iter->IteratorBegin();
+		while ( !serverSelector().GetServer().battles_iter->EOL() ) {
+			Battle* b = serverSelector().GetServer().battles_iter->GetBattle();
 			if ( b != NULL ) m_mapgrid->AddMap( b->GetHostMapName() );
 		}
 	}

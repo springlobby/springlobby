@@ -1,11 +1,13 @@
 #include "simplempframe.h"
 #include "../tasserver.h"
 #include "../settings.h"
+#include "../ui.h"
 
 SimpleMPFrame::SimpleMPFrame( wxWindow* parent )
 	: CustomizedFrame( parent )
 {
 	m_serv = new TASServer(1);
+	serverSelector().SetCurrentServer( m_serv );
 	wxString servername = sett().GetDefaultServer();
 	wxString username = sett().GetServerAccountNick( servername );
 	wxString password = sett().GetServerAccountPass( servername );
