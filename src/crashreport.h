@@ -34,8 +34,11 @@ class NetDebugReport : public wxDebugReportCompress
 };
 
 class SpringDebugReport : public NetDebugReport {
-public:
-	SpringDebugReport();
+	public:
+		SpringDebugReport();
+protected:
+		void AddVFSFile( const wxString& fn, const wxString& id );
+
 };
 
 //! @brief dumps various infos to the zipped debug info package and calls NetDebugReport if network is present

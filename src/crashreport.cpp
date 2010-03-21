@@ -20,6 +20,7 @@
 #include "settings.h"
 #include "curl/http.h"
 #include "stacktrace.h"
+#include "springunitsync.h"
 
 #if ! wxUSE_STACKWALKER
     #include "utils/stack.h"
@@ -40,6 +41,7 @@ bool NetDebugReport::Process()
     CwdGuard setCwd( wxPathOnly( filename ) );
 	wxLogMessage( filename );
 	wxCurlHTTP http( m_url );
+//	wxCurlHTTP http( _T("http://127.0.0.1/upload") );
     struct curl_forms testform[2];
 
 	testform[0].option = CURLFORM_FILE;
@@ -50,7 +52,6 @@ bool NetDebugReport::Process()
 
 	http.AddForm(true, _T("file"), testform);
 
-//			if(http.Post(szData.ToAscii(), szData.Len()))
     wxString szResponse;
 	if(http.Post()) {
         wxMemoryOutputStream outStream;
@@ -96,17 +97,32 @@ bool NetDebugReport::OnServerReply( const wxArrayString& reply )
 	return true;
 }
 
+void SpringDebugReport::AddVFSFile( const wxString& fn, const wxString& id )
+{
+	wxString dir = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator();
+	AddFile( dir + fn, id );
+	return;
+	wxArrayString res = usync().FindFilesVFS( fn );
+	if ( res.Count() > 0 ) {
+		AddFile( res[0], id );
+		wxLogError( _T("SpringDebugReport: file found: "), res[0].c_str() );
+	}
+	else
+		wxLogError( _T("SpringDebugReport: file not found: "), fn.c_str() );
+}
+
 SpringDebugReport::SpringDebugReport()
 	: NetDebugReport( _T("http://127.0.0.1/upload") )
 {
-	wxString dir = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator();
 	wxString tmp_filename = wxPathOnly( wxFileName::CreateTempFileName(_T("dummy")) ) + wxFileName::GetPathSeparator() + _T("settings.txt");
 	wxCopyFile( sett().GetCurrentUsedSpringConfigFilePath(), tmp_filename );
-	AddFile( dir + _T("infolog.txt"), _T("Infolog") );
-	AddFile( dir + _T("script.txt"), _T("Script") );
-	AddFile( dir + _T("ext.txt"), _T("Infolog") );
-	AddFile( dir + _T("unitsync.log"), _T("Infolog") );
 	AddFile( tmp_filename, _T("Settings") );
+
+	AddVFSFile( _T("infolog.txt"),		_T("Infolog") );
+	AddVFSFile( _T("script.txt"),		_T("Script") );
+	AddVFSFile( _T("ext.txt"),			_T("Extensions") );
+	AddVFSFile( _T("unitsync.log"),		_T("unitsync") );
+
 	wxString info;
 	info << wxGetOsDescription() << ( wxIsPlatform64Bit() ? _T(" 64bit\n") : _T(" 32bit\n") );
 	AddText( _T("platform.txt"), info, _T("Platform") );
@@ -126,8 +142,6 @@ SpringDebugReport::SpringDebugReport()
 	bool online = true; // TODO (BrainDamage#1#): check if being online
 #endif
 	NetDebugReport* report = new NetDebugReport( _T("http://debug.springlobby.info/upload.php") );
-//	online  ? new NetDebugReport //Process() is not virtual --> THIS WAS FAIL
-//	                                : new wxDebugReportCompress;
 
 	// add all standard files: currently this means just a minidump and an
 	// XML file with system info and stack trace
