@@ -22,13 +22,20 @@
 class NetDebugReport : public wxDebugReportCompress
 {
   public:
-      //! @brief class contructor that sets curl arguments
-      NetDebugReport();
+	  NetDebugReport( const wxString& url );
+
+	  //! the real workhorse
       bool Process();
 
   protected:
       //! @brief gets called after server answered to the upload attempt
       bool OnServerReply(const wxArrayString& reply);
+	  const wxString& m_url;
+};
+
+class SpringDebugReport : public NetDebugReport {
+public:
+	SpringDebugReport();
 };
 
 //! @brief dumps various infos to the zipped debug info package and calls NetDebugReport if network is present

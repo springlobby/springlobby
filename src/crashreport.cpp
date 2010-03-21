@@ -28,9 +28,9 @@
     #include <iterator>
 #endif
 
-NetDebugReport::NetDebugReport()
+NetDebugReport::NetDebugReport( const wxString& url )
+	: m_url( url )
 {
-
 }
 
 bool NetDebugReport::Process()
@@ -38,21 +38,21 @@ bool NetDebugReport::Process()
     wxDebugReportCompress::Process(); //compress files into zip
     wxString filename = GetCompressedFileName();
     CwdGuard setCwd( wxPathOnly( filename ) );
-    wxCurlHTTP http( _T("http://debug.springlobby.info/upload.php") );
+	wxLogMessage( filename );
+	wxCurlHTTP http( m_url );
     struct curl_forms testform[2];
 
-//    testform[0].option = CURLFORM_COPYNAME;
-//    testform[0].value = "file";
-    testform[0].option = CURLFORM_FILE;
-    testform[0].value = "springlobby.zip";//filename.mb_str();
+	testform[0].option = CURLFORM_FILE;
+	//a cookie for him who riddles me the not working of next, but working second line
+	//testform[0].value = filename.mb_str();
+	testform[0].value = "springlobby.zip";
     testform[1].option = CURLFORM_END;
 
-    assert(http.AddForm(true, _T("file"), testform));
+	http.AddForm(true, _T("file"), testform);
 
 //			if(http.Post(szData.ToAscii(), szData.Len()))
     wxString szResponse;
-    if(http.Post())
-    {
+	if(http.Post()) {
         wxMemoryOutputStream outStream;
 
         wxString szVerbose;
@@ -65,8 +65,7 @@ bool NetDebugReport::Process()
         wxLogMessage( szResponse );
         return true;
     }
-    else
-    {
+	else {
         szResponse = wxT("FAILURE!\n\n");
         szResponse += wxString::Format(wxT("\nResponse Code: %d\n\n"), http.GetResponseCode());
         szResponse += http.GetResponseHeader();
@@ -82,25 +81,36 @@ bool NetDebugReport::Process()
 
 bool NetDebugReport::OnServerReply( const wxArrayString& reply )
 {
-	if ( reply.IsEmpty() )
-	{
+	if ( reply.IsEmpty() ) {
 		wxLogError( _T( "Didn't receive the expected server reply." ) );
 		return false;
 	}
 
 	wxString s( _T( "Server replied:\n" ) );
-
 	const size_t count = reply.GetCount();
-	for ( size_t n = 0; n < count; n++ )
-	{
+	for ( size_t n = 0; n < count; n++ ) {
 		s << _T( '\t' ) << reply[n] << _T( '\n' );
 	}
 
 	wxLogMessage( _T( "%s" ), s.c_str() );
-
 	return true;
 }
 
+SpringDebugReport::SpringDebugReport()
+	: NetDebugReport( _T("http://127.0.0.1/upload") )
+{
+	wxString dir = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator();
+	wxString tmp_filename = wxPathOnly( wxFileName::CreateTempFileName(_T("dummy")) ) + wxFileName::GetPathSeparator() + _T("settings.txt");
+	wxCopyFile( sett().GetCurrentUsedSpringConfigFilePath(), tmp_filename );
+	AddFile( dir + _T("infolog.txt"), _T("Infolog") );
+	AddFile( dir + _T("script.txt"), _T("Script") );
+	AddFile( dir + _T("ext.txt"), _T("Infolog") );
+	AddFile( dir + _T("unitsync.log"), _T("Infolog") );
+	AddFile( tmp_filename, _T("Settings") );
+	wxString info;
+	info << wxGetOsDescription() << ( wxIsPlatform64Bit() ? _T(" 64bit\n") : _T(" 32bit\n") );
+	AddText( _T("platform.txt"), info, _T("Platform") );
+}
 
 #if wxUSE_STACKWALKER
     void CrashReport::GenerateReport()
@@ -115,7 +125,7 @@ bool NetDebugReport::OnServerReply( const wxArrayString& reply )
 #else
 	bool online = true; // TODO (BrainDamage#1#): check if being online
 #endif
-	NetDebugReport* report = new NetDebugReport;
+	NetDebugReport* report = new NetDebugReport( _T("http://debug.springlobby.info/upload.php") );
 //	online  ? new NetDebugReport //Process() is not virtual --> THIS WAS FAIL
 //	                                : new wxDebugReportCompress;
 

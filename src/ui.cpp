@@ -41,6 +41,7 @@
 #include "mainchattab.h"
 #include "mainjoinbattletab.h"
 #include "mainsingleplayertab.h"
+#include "crashreport.h"
 #ifndef NO_TORRENT_SYSTEM
 #include "maintorrenttab.h"
 #include "torrentwrapper.h"
@@ -1123,22 +1124,11 @@ void Ui::OnSpringTerminated( long exit_code )
     } catch ( assert_exception ){}
 
     if ( exit_code ) {
-//        wxDebugReportCompress report;
-//        wxString dir = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator();
-//        wxString tmp_filename = wxPathOnly( wxFileName::CreateTempFileName(_T("dummy")) ) + wxFileName::GetPathSeparator() + _T("settings.txt");
-//        wxCopyFile( sett().GetCurrentUsedSpringConfigFilePath(), tmp_filename );
-//        report.AddFile( dir + _T("infolog.txt"), _T("Infolog") );
-//        report.AddFile( dir + _T("script.txt"), _T("Script") );
-//        report.AddFile( dir + _T("ext.txt"), _T("Infolog") );
-//        report.AddFile( dir + _T("unitsync.log"), _T("Infolog") );
-//        report.AddFile( tmp_filename, _T("Settings") );
-//        wxString info;
-//        info << wxGetOsDescription() << ( wxIsPlatform64Bit() ? _T(" 64bit\n") : _T(" 32bit\n") );
-//        report.AddText( _T("platform.txt"), info, _T("Platform") );
-//        wxDebugReportPreviewStd().Show( report );
-//        report.Process();
-        if ( customMessageBox( SL_MAIN_ICON, _T("The game has crashed.\nOpen infolog.txt?"), _T("Crash"), wxYES_NO ) == wxYES )
-            OpenFileInEditor( sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("infolog.txt") );
+		SpringDebugReport report;
+		wxDebugReportPreviewStd().Show( report );
+		report.Process();
+//        if ( customMessageBox( SL_MAIN_ICON, _T("The game has crashed.\nOpen infolog.txt?"), _T("Crash"), wxYES_NO ) == wxYES )
+//            OpenFileInEditor( sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("infolog.txt") );
     }
 }
 
