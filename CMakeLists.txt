@@ -127,9 +127,10 @@ ENDIF ( OPTION_SOUND )
 IF( ENABLE_DEBUG_REPORT )
 	ADD_DEFINITIONS( -DENABLE_DEBUG_REPORT )
 	IF( MINGW )
-		ADD_DEFINITIONS( -DENABLE_DEBUG_REPORT -gstabs )
+		ADD_DEFINITIONS( -gstabs )
 		LINK_LIBRARIES( bfd intl iberty psapi imagehlp)
 	ENDIF( MINGW )
+	LIST( APPEND SLSharedWithSettings ${curlSRC} )
 ENDIF( ENABLE_DEBUG_REPORT )
 
 pkg_check_modules( CURL REQUIRED libcurl )
@@ -212,7 +213,7 @@ cmake_policy(SET CMP0004 OLD)
 #ignore warnings about macosx app bundle output dir
 cmake_policy(SET CMP0006 OLD)
 
-ADD_EXECUTABLE(springlobby WIN32 MACOSX_BUNDLE ${header} ${springlobbySrc} ${SettingsSrc} ${SLSharedWithSettings} ${curlSRC} ${springlobby_RC_FILE})
+ADD_EXECUTABLE(springlobby WIN32 MACOSX_BUNDLE ${header} ${springlobbySrc} ${SettingsSrc} ${SLSharedWithSettings} ${springlobby_RC_FILE})
 ADD_EXECUTABLE(springsettings WIN32 MACOSX_BUNDLE ${StandAloneSettings} ${SettingsSrc} ${SLSharedWithSettings} ${SpringSettings_RC_FILE} )
 #the updater needs to be build for windows only
 IF(WIN32)
