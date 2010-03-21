@@ -920,13 +920,13 @@ wxArrayString SpringUnitSyncLib::FindFilesVFS( const wxString& name )
 	UNITSYNC_EXCEPTION( m_init_find_vfs, _T("Function was not in unitsync library.") );
 	int handle = m_init_find_vfs( name.mb_str(wxConvUTF8) );
 	wxArrayString ret;
-	do
+	while ( handle )
 	{
 		char buffer[1025];
 		handle = m_find_files_vfs( handle, &buffer[0], 1024 );
 		buffer[1024] = 0;
 		ret.Add( WX_STRINGC( &buffer[0] ) );
-	} while ( handle );
+	}
   return ret;
 }
 
