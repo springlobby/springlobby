@@ -22,7 +22,7 @@
 class NetDebugReport : public wxDebugReportCompress
 {
   public:
-	  NetDebugReport( const wxString& url );
+	  NetDebugReport( const char* url );
 
 	  //! the real workhorse
       bool Process();
@@ -30,7 +30,7 @@ class NetDebugReport : public wxDebugReportCompress
   protected:
       //! @brief gets called after server answered to the upload attempt
       bool OnServerReply(const wxArrayString& reply);
-	  const wxString& m_url;
+	  const char* m_url;
 };
 
 class SpringDebugReport : public NetDebugReport {
