@@ -818,11 +818,7 @@ MapInfo SpringUnitSync::_GetMapInfoEx( const wxString& mapname )
         info.maxWind = s2l( cache[6] );
         info.width = s2l( cache[7] );
         info.height = s2l( cache[8] );
-		#ifndef __WXMSW__
-		wxArrayString posinfo = wxStringTokenize( cache[10], _T(' '), wxTOKEN_RET_EMPTY );
-		#else
 		wxArrayString posinfo = wxStringTokenize( cache[9], _T(' '), wxTOKEN_RET_EMPTY );
-		#endif
 		for ( unsigned int i = 0; i < posinfo.GetCount(); i++)
         {
            StartPos position;
@@ -832,11 +828,7 @@ MapInfo SpringUnitSync::_GetMapInfoEx( const wxString& mapname )
         }
 
         unsigned int LineCount = cache.GetCount();
-		#ifndef __WXMSW__
-        for ( unsigned int i = 11; i < LineCount; i++ ) info.description << cache[i] << _T('\n');
-		#else
 		for ( unsigned int i = 10; i < LineCount; i++ ) info.description << cache[i] << _T('\n');
-		#endif
 
       }
       catch (...)
