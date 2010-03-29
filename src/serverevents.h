@@ -1,31 +1,17 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_SERVEREVENTS_H
 #define SPRINGLOBBY_HEADERGUARD_SERVEREVENTS_H
 
-//almost only needed for NAtType enum def
-#include "battle.h"
+#include "iserverevents.h"
 #include <wx/event.h>
 #include <wx/longlong.h>
 
 class Ui;
 struct UserStatus;
 struct UserBattleStatus;
-class Server;
-
-// FIXME this is defined elsewhere, should use a different kind of type so we could use forward decl
-typedef int Sockerror;
-
-typedef int Protocolerror;
-
-struct MessageSpamCheck
-{
-  time_t lastmessage;
-  unsigned int count;
-};
-
 class Battle;
 
 //! @brief Class that implements server event behaviour.
-class ServerEvents : public wxEvtHandler
+class ServerEvents : public IServerEvents, public wxEvtHandler
 {
   public:
     ServerEvents( Server& serv) : m_serv(serv) {}
@@ -144,9 +130,9 @@ class ServerEvents : public wxEvtHandler
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by
     the Free Software Foundation.
 

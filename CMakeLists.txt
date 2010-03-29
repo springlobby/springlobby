@@ -212,7 +212,7 @@ cmake_policy(SET CMP0004 OLD)
 #ignore warnings about macosx app bundle output dir
 cmake_policy(SET CMP0006 OLD)
 
-ADD_EXECUTABLE(springlobby WIN32 MACOSX_BUNDLE ${springlobbySrc} ${SettingsSrc} ${SLSharedWithSettings} ${curlSRC} ${springlobby_RC_FILE})
+ADD_EXECUTABLE(springlobby WIN32 MACOSX_BUNDLE ${header} ${springlobbySrc} ${SettingsSrc} ${SLSharedWithSettings} ${curlSRC} ${springlobby_RC_FILE})
 ADD_EXECUTABLE(springsettings WIN32 MACOSX_BUNDLE ${StandAloneSettings} ${SettingsSrc} ${SLSharedWithSettings} ${SpringSettings_RC_FILE} )
 #the updater needs to be build for windows only
 IF(WIN32)
@@ -221,7 +221,7 @@ IF(WIN32)
 ENDIF(WIN32)
 
 # Here the wxWidgets Libraries are added. These are set for us by the FIND Script. If you need other Libraries, you can add them here as well.
-TARGET_LINK_LIBRARIES(springlobby ${wxWidgets_LIBRARIES} ${OPENAL_LIBRARY} )
+TARGET_LINK_LIBRARIES(springlobby ${wxWidgets_LIBRARIES} )
 TARGET_LINK_LIBRARIES(springsettings ${wxWidgets_LIBRARIES} )
 
 IF(MINGW)

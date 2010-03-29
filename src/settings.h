@@ -5,7 +5,7 @@
 #include <vector>
 
 const int CACHE_VERSION     = 10;
-const int SETTINGS_VERSION  = 20;
+const int SETTINGS_VERSION  = 21;
 
 const wxString DEFSETT_DEFAULT_SERVER_NAME= _T("Official server");
 const wxString DEFSETT_DEFAULT_SERVER_HOST = _T("taspringmaster.clan-sy.com");
@@ -779,9 +779,9 @@ Settings& sett();
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by
     the Free Software Foundation.
 

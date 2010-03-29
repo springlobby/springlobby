@@ -174,7 +174,8 @@ void ServerEvents::OnUserStatus( const wxString& nick, UserStatus status )
                 {
                     battle.SetInGame( status.in_game );
                     if ( status.in_game ) battle.StartSpring();
-                    else ui().OnBattleInfoUpdated( battle );
+					else
+						BattleEvents::GetBattleEventSender( BattleEvents::BattleInfoUpdate ).SendEvent( std::make_pair(user.GetBattle(),wxString()) );
                 }
             }
             }catch(...){}
@@ -417,7 +418,7 @@ void ServerEvents::OnBattleInfoUpdated( int battleid, int spectators, bool locke
             battle.Update( wxString::Format( _T("%d_mapname"), OptionsWrapper::PrivateOptions ) );
         }
 
-        ui().OnBattleInfoUpdated( battle );
+		BattleEvents::GetBattleEventSender( BattleEvents::BattleInfoUpdate ).SendEvent( std::make_pair(&battle,wxString()) );
     }
     catch (assert_exception) {}
 }
@@ -498,7 +499,7 @@ void ServerEvents::OnBattleInfoUpdated( int battleid )
     try
     {
         Battle& battle = m_serv.GetBattle( battleid );
-        ui().OnBattleInfoUpdated( battle );
+		BattleEvents::GetBattleEventSender( BattleEvents::BattleInfoUpdate ).SendEvent( std::make_pair(&battle,wxString()) );
     }
     catch ( assert_exception ) {}
 }
@@ -697,12 +698,13 @@ void ServerEvents::OnSaidBattle( int battleid, const wxString& nick, const wxStr
     catch (assert_exception) {}
 }
 
-void ServerEvents::OnBattleAction( int battleid, const wxString& nick, const wxString& msg )
+void ServerEvents::OnBattleAction( int /*battleid*/, const wxString& nick, const wxString& msg )
 {
     try
     {
-        Battle& battle = m_serv.GetBattle( battleid );
-        ui().OnBattleAction( battle, nick, msg );
+		UiEvents::GetUiEventSender( UiEvents::OnBattleActionEvent ).SendEvent(
+				UiEvents::OnBattleActionData( nick, msg )
+			);
     }
     catch (assert_exception) {}
 }
@@ -836,13 +838,20 @@ void ServerEvents::OnClientIPPort( const wxString &username, const wxString &ip,
         user.BattleStatus().udpport=udpport;
         wxLogMessage(_T("set to %s %d "),user.BattleStatus().ip.c_str(),user.BattleStatus().udpport);
 
-        if (sett().GetShowIPAddresses())ui().OnBattleAction(*m_serv.GetCurrentBattle(),username,wxString::Format(_(" has ip=%s"),ip.c_str()));
+		if (sett().GetShowIPAddresses()) {
+			UiEvents::GetUiEventSender( UiEvents::OnBattleActionEvent ).SendEvent(
+					UiEvents::OnBattleActionData( username,wxString::Format(_(" has ip=%s"),ip.c_str()) )
+				);
+		}
 
         if (m_serv.GetCurrentBattle()->GetNatType() != NAT_None && (udpport==0))
         {
             // todo: better warning message
             //something.OutputLine( _T(" ** ") + who.GetNick() + _(" does not support nat traversal! ") + GetChatTypeStr() + _T("."), sett().GetChatColorJoinPart(), sett().GetChatFont() );
-            ui().OnBattleAction(*m_serv.GetCurrentBattle(),username,_(" does not really support nat traversal"));
+			UiEvents::GetUiEventSender( UiEvents::OnBattleActionEvent ).SendEvent(
+					UiEvents::OnBattleActionData( username,_(" does not really support nat traversal") )
+				);
+
         }
         m_serv.GetCurrentBattle()->CheckBan(user);
     }

@@ -158,7 +158,7 @@ IBattle::StartType IntToStartType( int start );
 NatType IntToNatType( int nat );
 IBattle::GameType IntToGameType( int gt );
 
-TASServer::TASServer():
+TASServer::TASServer(int serverEventsMode):
 m_ping_thread(0),
 m_ser_ver(0),
 m_connected(false),
@@ -177,7 +177,7 @@ m_do_finalize_join_battle(false),
 m_finalize_join_battle_id(-1),
 m_token_transmission( false )
 {
-	  m_se = new ServerEvents( *this );
+	  m_se = IServerEvents::getInstance( *this, IServerEvents::ServerEventsMode(serverEventsMode) );
 	  FillAliasMap();
 	  m_relay_host_manager_list.Clear();
 }

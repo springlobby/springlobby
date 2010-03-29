@@ -15,7 +15,7 @@ class Ui;
 class Socket;
 class User;
 struct UserBattleStatus;
-class ServerEvents;
+class IServerEvents;
 class wxString;
 class PingThread;
 
@@ -23,7 +23,7 @@ class PingThread;
 class TASServer : public Server
 {
   public:
-    TASServer();
+	TASServer(int serverEventsMode = 0);
     ~TASServer();
 
     // Overloaded functions from Server
@@ -155,7 +155,7 @@ class TASServer : public Server
 	PingThread* m_ping_thread;
     CRC m_crc;
 
-    ServerEvents* m_se;
+	IServerEvents* m_se;
     double m_ser_ver;
 
     wxString m_last_denied;
@@ -216,9 +216,9 @@ class TASServer : public Server
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by
     the Free Software Foundation.
 

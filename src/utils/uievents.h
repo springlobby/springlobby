@@ -12,6 +12,12 @@ namespace UiEvents {
 
     typedef wxArrayString UiEventData;
 
+	struct OnBattleActionData : public wxArrayString{
+		OnBattleActionData( const wxString& nick, const wxString& msg );
+	};
+
+	static const wxString OnBattleActionEvent = _T("OnBattleActionEvent");
+
     EventSender<UiEventData> &GetUiEventSender( UiEventsTypes cmd );
 
     typedef std::pair< wxBitmap, wxString >

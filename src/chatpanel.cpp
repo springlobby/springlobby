@@ -353,7 +353,7 @@ const User* ChatPanel::GetSelectedUser() const
 
 const User& ChatPanel::GetMe()  const
 {
-	return ui().GetServer().GetMe();
+	return serverSelector().GetServer().GetMe();
 }
 
 void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const wxFont& fon )
@@ -400,7 +400,7 @@ void ChatPanel::OutputLine( const ChatLine& line )
 
   m_chatlog_text->SetDefaultStyle( line.chatstyle );
 
-
+#ifndef __WXOSX_COCOA__
 	if ( sett().GetUseIrcColors() )
 	{
 		wxString m1;
@@ -482,6 +482,7 @@ void ChatPanel::OutputLine( const ChatLine& line )
 
 	}
 	else
+#endif
 	{
 		m_chatlog_text->AppendText( line.chat );
 	}

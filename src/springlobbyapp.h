@@ -29,6 +29,7 @@ class SpringLobbyApp : public wxApp, public OnQuitSink<SpringLobbyApp>
     virtual bool OnCmdLineParsed(wxCmdLineParser& parser);
 
 	void OnQuit( GlobalEvents::GlobalEventData data );
+	bool IsSimple() const {return m_start_simple_interface;}
 
   protected:
 
@@ -56,9 +57,9 @@ DECLARE_APP(SpringLobbyApp)
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by
     the Free Software Foundation.
 

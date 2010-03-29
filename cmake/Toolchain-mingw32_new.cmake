@@ -2,11 +2,10 @@
 SET(CMAKE_SYSTEM_NAME Windows)
 
 # which compilers to use for C and C++
-SET(CMAKE_C_COMPILER i586-pc-mingw32-gcc)
-SET(CMAKE_CXX_COMPILER i586-pc-mingw32-g++)
+SET(CMAKE_C_COMPILER /usr/local/bin/i586-pc-mingw32-gcc)
+SET(CMAKE_CXX_COMPILER /usr/local/bin/i586-pc-mingw32-g++)
 SET( wxWidgets_ROOT_DIR /opt/mingw32/ )
 # here is the target environment located
-SET(CMAKE_FIND_ROOT_PATH  /opt/mingw32 )
 
 # adjust the default behaviour of the FIND_XXX() commands:
 # search headers and libraries in the target environment, search 
@@ -45,4 +44,6 @@ SET( boost_INCLUDE_DIR /opt/mingw32/include )
 link_directories( /opt/mingw32/lib )
 INCLUDE_DIRECTORIES(/opt/mingw32/include  )
 
+SET( PKG_CONFIG_EXECUTABLE /opt/mingw32/bin/pkg-config )
 ADD_DEFINITIONS( -DCURL_STATICLIB -DWXUSINGDLL -D__WXMSW__ -mthreads)
+

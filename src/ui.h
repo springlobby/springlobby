@@ -24,6 +24,7 @@ typedef int AlertEventType;
 
 extern const wxEventType torrentSystemStatusUpdateEvt;
 
+#include "utils/battleevents.h"
 #include <wx/string.h>
 
 //! @brief UI main class
@@ -39,9 +40,6 @@ class Ui
         SavegamePlayback
     };
 
-    Server& GetServer();
-    const Server& GetServer() const;
-    bool    GetServerStatus() const;
     ChatPanel* GetActiveChatPanel();
     ChatPanel* GetChannelChatPanel( const wxString& channel );
 
@@ -113,8 +111,8 @@ class Ui
     void OnBattleClosed( IBattle& battle );
     void OnUserJoinedBattle( IBattle& battle, User& user );
     void OnUserLeftBattle( IBattle& battle, User& user );
-    void OnBattleInfoUpdated( IBattle& battle );
-    void OnBattleInfoUpdated( IBattle& battle, const wxString& Tag );
+	void OnBattleInfoUpdated( BattleEvents::BattleEventData data );
+//    void OnBattleInfoUpdated( IBattle& battle, const wxString& Tag );
     void OnBattleStarted( Battle& battle );
 
     void OnJoinedBattle( Battle& battle );
@@ -123,7 +121,7 @@ class Ui
     void OnRequestBattleStatus( IBattle& battle );
 
     void OnSaidBattle( IBattle& battle, const wxString& nick, const wxString& msg );
-    void OnBattleAction( IBattle& battle, const wxString& nick, const wxString& msg );
+//    void OnBattleAction( IBattle& battle, const wxString& nick, const wxString& msg );
 
     void OnSpringStarting();
     void OnSpringTerminated( long exit_code );
@@ -164,6 +162,9 @@ class Ui
 
     bool m_ingame;
 
+	EventReceiverFunc<Ui, BattleEvents::BattleEventData, &Ui::OnBattleInfoUpdated>
+		m_battle_info_updatedSink;
+
     //! does actual work, called from downloadmap/mod
     void DownloadFileP2P( const wxString& name );
 	void DownloadFileWebsite( const wxString& name );
@@ -175,14 +176,29 @@ class Ui
 
 Ui& ui();
 
+class ServerSelector;
+ServerSelector& serverSelector();
+
+#include "globalsmanager.h"
+class ServerSelector {
+public:
+	Server& GetServer();
+	const Server& GetServer() const;
+	void SetCurrentServer(Server* server);
+	bool    GetServerStatus() const;
+protected:
+	ServerSelector();
+	Server* m_serv;
+	friend class GlobalObjectHolder<ServerSelector, LineInfo<ServerSelector> >;
+};
 
 #endif // SPRINGLOBBY_HEADERGUARD_UI_H
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by
     the Free Software Foundation.
 

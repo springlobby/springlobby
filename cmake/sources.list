@@ -103,6 +103,7 @@ SET(springlobbySrc
 	src/userlistctrl.cpp
 	src/utils/downloader.cpp
 	src/utils/plasmaresourceinfo.cpp
+	src/utils/battleevents.cpp
 	src/widgets/downloadlistctrl.cpp
 	src/widgets/downloaddialog.cpp
 	src/widgets/downloadpanel.cpp
@@ -110,11 +111,16 @@ SET(springlobbySrc
 	src/widgets/widget.cpp
 	src/Helper/wxTranslationHelper.cpp
 	src/Helper/tasclientimport.cpp
+	src/simpleinterface/simpleserverevents.cpp
+	src/simpleinterface/customizedframe.cpp
+	src/simpleinterface/simplempframe.cpp
+	src/simpleinterface/simplebattlelistctrl.cpp
 	src/toasterbox/ToasterBox.cpp
 	src/toasterbox/ToasterBoxWindow.cpp
 	src/toasterbox/ToasterBoxWindowList.cpp
 	src/gui/notificationmanager.cpp
 	src/pingthread.cpp
+	src/iserverevents.cpp
 )
 
 SET(SettingsSrc
@@ -175,3 +181,20 @@ SET( updaterSrc
 	src/utils/misc.cpp
 )
 
+FILE( GLOB header "src/*.h" )
+FILE( GLOB header2 "src/*/*.h" )
+
+#grep -lR cpp\"$ src/* | sed -e "s/\.h/\.cpp/g"
+SET( templatesources
+	src/battleroommmoptionstab.cpp
+	src/customvirtlistctrl.cpp
+	src/httpdownloader.cpp
+	src/playback/playbackfilter.cpp
+	src/playback/playbacklist.cpp
+	src/playback/playbacklistctrl.cpp
+	src/playback/playbackthread.cpp
+	src/playback/playbacktab.cpp
+	src/utils/stringserializer.cpp
+)
+LIST( APPEND header ${header2} ${templatesources} )
+set_source_files_properties(  ${header} PROPERTIES HEADER_FILE_ONLY 1 )

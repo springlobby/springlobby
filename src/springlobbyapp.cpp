@@ -169,11 +169,12 @@ bool SpringLobbyApp::OnInit()
 
 	sett().RefreshSpringVersionList();
 
-	//this should take off the firstload time considerably *ie nil it :P )
-	mapSelectDialog();
+	//!currently we cannot use the dialog in simple, because it uses Ui and therefore creates mainwindow
+	if ( !m_start_simple_interface )
+		//this should take off the firstload time considerably *ie nil it :P )
+		mapSelectDialog();
 	//unitsync first load, NEEDS to be blocking
 	usync().ReloadUnitSyncLib();
-    notificationManager(); //needs to be initialized too
 
 	#ifndef DISABLE_SOUND
 		//sound sources/buffer init
@@ -199,6 +200,7 @@ bool SpringLobbyApp::OnInit()
         }
     }
 
+	notificationManager(); //needs to be initialized too
     ui().ShowMainWindow();
     SetTopWindow( &ui().mw() );
 	if ( sett().DoResetPerspectives() )
@@ -468,7 +470,7 @@ void SpringLobbyApp::CacheAndSettingsSetup()
 			{
 				sett().TranslateSavedColumWidths();
 			}
-			if ( settversion < 17 || settversion < 20 )
+			if ( settversion < 21 )
 			{
 				sett().RemoveLayouts();
 			}
