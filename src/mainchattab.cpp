@@ -335,7 +335,7 @@ void MainChatTab::OnTabsChanged( wxAuiNotebookEvent& event )
 wxImage MainChatTab::ReplaceChannelStatusColour( wxBitmap img, const wxColour& colour )
 {
 	wxImage ret = img.ConvertToImage();
-	wxImage::HSVValue origcolour = wxImage::RGBtoHSV( wxImage::RGBValue::RGBValue( colour.Red(), colour.Green(), colour.Blue() ) );
+	wxImage::HSVValue origcolour = wxImage::RGBtoHSV( wxImage::RGBValue( colour.Red(), colour.Green(), colour.Blue() ) );
 
 	double bright = origcolour.value - 0.1 * origcolour.value;
 	bright = clamp( bright, 0.0, 1.0 );
