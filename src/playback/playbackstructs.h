@@ -17,7 +17,7 @@ struct Replay
     time_t date;
     wxString date_string;
     OfflineBattle battle;
-    Replay():id(0),playernum(0),can_watch(false),duration(0),size(0){};
+	Replay( const size_t idx = 0):id(idx),playernum(0),can_watch(false),duration(0),size(0){};
 
     bool Equals( const Replay& other ) const { return Filename == other.Filename; }
 };
@@ -36,7 +36,7 @@ struct Savegame
     time_t date;
     wxString date_string;
     OfflineBattle battle;
-    Savegame():id(0),playernum(0),can_watch(false),duration(0),size(0){};
+	Savegame(const size_t idx = 0):id(idx),playernum(0),can_watch(false),duration(0),size(0){};
 
     bool Equals( const Savegame& other ) const { return Filename == other.Filename; }
 };

@@ -26,12 +26,10 @@ void ReplayList::LoadPlaybacks( const wxArrayString& filenames )
     size_t size = filenames.GetCount();
     for ( size_t i = 0; i < size; ++i)
     {
-        Replay rep;
-        rep.id = i;
-				Replay& rep_ref = AddPlayback( rep ); // don't touch this reference, since elements inside this data structure are filled using pointers, adding & not fecthing the new addresses would screw up references when rep gets destroyed
+		Replay& rep_ref = AddPlayback( i ); // don't touch this reference, since elements inside this data structure are filled using pointers, adding & not fecthing the new addresses would screw up references when rep gets destroyed
         if ( !GetReplayInfos( filenames[i] , rep_ref ) )
         {
-            RemovePlayback( rep.id );
+			RemovePlayback( rep_ref.id );
             m_fails++;
         }
     }
