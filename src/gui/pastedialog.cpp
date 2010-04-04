@@ -90,7 +90,7 @@ void PasteDialog::OnPasteButton( wxCommandEvent& /*evt*/ )
 	EndModal( pasteButtonReturnCode );
 }
 
-void CustomMessageBox::OnOptionsNo(wxCommandEvent& /*unused*/)
+void PasteDialog::OnOptionsNo(wxCommandEvent& /*unused*/)
 {
    EndModal(wxID_NO);
 }

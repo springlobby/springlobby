@@ -36,6 +36,7 @@ protected:
 		ID_PASTE_BUTTON = wxID_HIGHEST
 	};
 	void OnPasteButton( wxCommandEvent& evt );
+	void OnOptionsNo(wxCommandEvent& event);
 	DECLARE_EVENT_TABLE()
 
 };
