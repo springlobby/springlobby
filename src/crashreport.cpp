@@ -128,7 +128,7 @@ void SpringDebugReport::AddVFSFile( const wxString& fn, const wxString& id )
 }
 
 SpringDebugReport::SpringDebugReport()
-	: NetDebugReport( "http://127.0.0.1/upload" )
+	: NetDebugReport( "http://infologs.springzine.net/upload" )
 {
 	wxString tmp_filename = wxPathOnly( wxFileName::CreateTempFileName(_T("dummy")) ) + wxFileName::GetPathSeparator() + _T("settings.txt");
 	wxCopyFile( sett().GetCurrentUsedSpringConfigFilePath(), tmp_filename );
