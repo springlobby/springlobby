@@ -128,8 +128,8 @@ void SpringUnitSync::PopulateArchiveList()
 		 int count = susynclib().GetPrimaryModArchiveCount( i );
 		 if ( count > 0 )
 		 {
-		   archivename = susynclib().GetPrimaryModArchive( 0 );
-			 unchainedhash = susynclib().GetArchiveChecksum( archivename );
+			archivename = susynclib().GetPrimaryModArchive( i );
+			unchainedhash = susynclib().GetArchiveChecksum( archivename );
 		 }
     } catch (...) { continue; }
     try
@@ -808,7 +808,7 @@ MapInfo SpringUnitSync::_GetMapInfoEx( const wxString& mapname )
       {
         cache = GetCacheFile( GetFileCachePath( mapname, m_maps_unchained_hash[mapname], false ) + _T(".infoex") );
 
-        ASSERT_EXCEPTION( cache.GetCount() >= 11, _T("not enough lines found in cache info ex") );
+		ASSERT_EXCEPTION( cache.GetCount() >= 11, _T("not enough lines found in cache info ex") );
         info.author = cache[0];
         info.tidalStrength =  s2l( cache[1] );
         info.gravity = s2l( cache[2] );
@@ -818,9 +818,8 @@ MapInfo SpringUnitSync::_GetMapInfoEx( const wxString& mapname )
         info.maxWind = s2l( cache[6] );
         info.width = s2l( cache[7] );
         info.height = s2l( cache[8] );
-
-        wxArrayString posinfo = wxStringTokenize( cache[10], _T(' '), wxTOKEN_RET_EMPTY );
-        for ( int i = 0; i < int(posinfo.GetCount()); i++)
+		wxArrayString posinfo = wxStringTokenize( cache[9], _T(' '), wxTOKEN_RET_EMPTY );
+		for ( unsigned int i = 0; i < posinfo.GetCount(); i++)
         {
            StartPos position;
            position.x = s2l( posinfo[i].BeforeFirst( _T('-') ) );
@@ -829,7 +828,7 @@ MapInfo SpringUnitSync::_GetMapInfoEx( const wxString& mapname )
         }
 
         unsigned int LineCount = cache.GetCount();
-        for ( unsigned int i = 11; i < LineCount; i++ ) info.description << cache[i] << _T('\n');
+		for ( unsigned int i = 10; i < LineCount; i++ ) info.description << cache[i] << _T('\n');
 
       }
       catch (...)
@@ -847,7 +846,7 @@ MapInfo SpringUnitSync::_GetMapInfoEx( const wxString& mapname )
         cache.Add( TowxString( info.height ) );
 
         wxString postring;
-        for ( int i = 0; i < int(info.positions.size()); i++)
+		for ( unsigned int i = 0; i < info.positions.size(); i++)
         {
            postring << TowxString( info.positions[i].x ) << _T('-') << TowxString( info.positions[i].y ) << _T(' ');
         }
@@ -870,7 +869,7 @@ MapInfo SpringUnitSync::_GetMapInfoEx( const wxString& mapname )
   return info;
 }
 
-void SpringUnitSync::OnReload( wxCommandEvent& event )
+void SpringUnitSync::OnReload( wxCommandEvent& /*event*/ )
 {
 	ReloadUnitSyncLib();
 }
@@ -879,6 +878,11 @@ void SpringUnitSync::AddReloadEvent(  )
 {
 	wxCommandEvent evt( wxUnitsyncReloadEvent, wxNewId() );
 	AddPendingEvent( evt );
+}
+
+wxArrayString SpringUnitSync::FindFilesVFS( const wxString& pattern )
+{
+	return susynclib().FindFilesVFS( pattern );
 }
 
 bool SpringUnitSync::ReloadUnitSyncLib()

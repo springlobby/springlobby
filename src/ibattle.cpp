@@ -11,8 +11,10 @@
 #include "utils/math.h"
 #include "uiutils.h"
 #include "settings.h"
-#include "ui.h"
+#include "ui.h" //only required for preset stuff
+#include "spring.h"
 #include "springunitsynclib.h"
+#include "springlobbyapp.h"
 
 #include <list>
 #include <algorithm>
@@ -388,9 +390,8 @@ bool IBattle::IsEveryoneReady()
 {
     for (user_map_t::size_type i = 0; i < GetNumUsers(); i++)
     {
-				User& usr = GetUser(i);
-				if ( usr.BattleStatus().IsBot() ) continue;
-        UserBattleStatus& bs = usr.BattleStatus();
+		UserBattleStatus& bs = GetUser(i).BattleStatus();
+		if ( bs.IsBot() ) continue;
         if ( !bs.ready && !bs.spectator ) return false;
     }
     return true;
@@ -723,11 +724,14 @@ void IBattle::SetHostMap(const wxString& mapname, const wxString& hash)
     m_map_loaded = false;
     m_host_map.name = mapname;
     m_host_map.hash = hash;
-    if ( !m_host_map.hash.IsEmpty() ) m_map_exists = usync().MapExists( m_host_map.name, m_host_map.hash );
-    else m_map_exists = usync().MapExists( m_host_map.name );
-    #ifndef __WXMSW__
-		if ( m_map_exists && !ui().IsSpringRunning() ) usync().PrefetchMap( m_host_map.name );
-		#endif
+	if ( !m_host_map.hash.IsEmpty() )
+		m_map_exists = usync().MapExists( m_host_map.name, m_host_map.hash );
+	else
+		m_map_exists = usync().MapExists( m_host_map.name );
+	#ifndef __WXMSW__ //!TODO why not on win?
+		if ( m_map_exists && !spring().IsRunning() )
+			usync().PrefetchMap( m_host_map.name );
+	#endif
   }
 }
 
@@ -737,10 +741,13 @@ void IBattle::SetLocalMap(const UnitSyncMap& map)
   if ( map.name != m_local_map.name || map.hash != m_local_map.hash ) {
     m_local_map = map;
     m_map_loaded = true;
-    if ( !m_host_map.hash.IsEmpty() ) m_map_exists = usync().MapExists( m_host_map.name, m_host_map.hash );
-    else m_map_exists = usync().MapExists( m_host_map.name );
+	if ( !m_host_map.hash.IsEmpty() )
+		m_map_exists = usync().MapExists( m_host_map.name, m_host_map.hash );
+	else
+		m_map_exists = usync().MapExists( m_host_map.name );
     #ifndef __WXMSW__
-    if ( m_map_exists && !ui().IsSpringRunning() ) usync().PrefetchMap( m_host_map.name );
+		if ( m_map_exists && !spring().IsRunning() )
+			usync().PrefetchMap( m_host_map.name );
     #endif
     if ( IsFounderMe() ) // save all rects infos
     {
@@ -935,11 +942,11 @@ bool IBattle::LoadOptionsPreset( const wxString& name )
         }
       }
 
-			for( unsigned int j = 0; j <= GetLastRectIdx(); ++j ) {
-			    if ( GetStartRect( j ).IsOk() )
-                    RemoveStartRect(j); // remove all rects that might come from map presets
-			}
-			SendHostInfo( IBattle::HI_StartRects );
+		for( unsigned int j = 0; j <= GetLastRectIdx(); ++j ) {
+			if ( GetStartRect( j ).IsOk() )
+				RemoveStartRect(j); // remove all rects that might come from map presets
+		}
+		SendHostInfo( IBattle::HI_StartRects );
 
       unsigned int rectcount = s2l( options[_T("numrects")] );
       for ( unsigned int loadrect = 0; loadrect < rectcount; loadrect++)

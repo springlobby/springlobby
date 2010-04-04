@@ -7,7 +7,7 @@
 
 const wxChar* TooltipEnable(const wxChar* input)
 {
-    #ifndef HAVE_WX29
+	#if !defined(HAVE_WX29) || defined(__WXOSX_COCOA__)
         return sett().GetShowTooltips() ? input : _T("");
     #else
         return sett().GetShowTooltips() ? input : _T("").wc_str();

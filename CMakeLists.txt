@@ -7,7 +7,7 @@ SET(CMAKE_COLOR_MAKEFILE ON)
 # Add Definitions, Compiler-Switches, etc.: -Wall -O2 -g3 ...
 # MSVC compiler (cl.exe) does not accept the same switches as gcc, although preprocessor definitions in the -D form will work for both
 IF(NOT MSVC)
-	ADD_DEFINITIONS(-Wall -Wno-strict-aliasing)
+	ADD_DEFINITIONS(-Wall -Wno-strict-aliasing -Wextra)
 ENDIF(NOT MSVC)
 IF(WIN32)
 	ADD_DEFINITIONS( -DWXUSINGDLL -D__WXMSW__ -D_WIN32_WINNT=0x0501)
@@ -25,16 +25,22 @@ SET(CMAKE_FIND_LIBRARY_SUFFIXES ".so" ".lib" ".a")
 #----------------------------------------------------------------------------------------------------
 # Load needed Modules
 #----------------------------------------------------------------------------------------------------
+EXECUTE_PROCESS(COMMAND ${springlobby_SOURCE_DIR}/tools/get-revision.sh
+        OUTPUT_VARIABLE SPRINGLOBBY_GIT_REV
+        ERROR_VARIABLE GIT_ERROR
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+		)
+
 INCLUDE(cmake/package_config.cmake)
 INCLUDE(cmake/sources.list)
 # PKG-Config
 FIND_PACKAGE( PkgConfig )
 
-EXECUTE_PROCESS(COMMAND ${springlobby_SOURCE_DIR}/tools/get-revision.sh
-        OUTPUT_VARIABLE SPRINGLOBBY_GIT_REV
-        RESULT_VARIABLE GIT_ERROR
-        OUTPUT_STRIP_TRAILING_WHITESPACE
-		ERROR_QUIET)
+#if nothing went wrong we have the file and can define HAVE_CONFIG_H
+IF ( EXISTS ${springlobby_BINARY_DIR}/config.h OR  EXISTS ${springlobby_SOURCE_DIR}/config.h )
+    ADD_DEFINITIONS( -DHAVE_CONFIG_H )
+    INCLUDE_DIRECTORIES(${springlobby_BINARY_DIR})
+ENDIF ( EXISTS ${springlobby_BINARY_DIR}/config.h OR  EXISTS ${springlobby_SOURCE_DIR}/config.h )
 
 
 #----------------------------------------------------------------------------------------------------
@@ -64,6 +70,9 @@ SET( LOCALE_INSTALL_DIR
 	${CMAKE_INSTALL_PREFIX}/share/locale CACHE STRING
 	"message catalogs will installed here" )
 
+IF( AUX_VERSION )
+	ADD_DEFINITIONS( -DAUX_VERSION="${AUX_VERSION}" )
+ENDIF( AUX_VERSION )
 
 #----------------------------------------------------------------------------------------------------
 # wxWidgets lib dependency check
@@ -118,9 +127,10 @@ ENDIF ( OPTION_SOUND )
 IF( ENABLE_DEBUG_REPORT )
 	ADD_DEFINITIONS( -DENABLE_DEBUG_REPORT )
 	IF( MINGW )
-		ADD_DEFINITIONS( -DENABLE_DEBUG_REPORT -gstabs )
+		ADD_DEFINITIONS( -gstabs )
 		LINK_LIBRARIES( bfd intl iberty psapi imagehlp)
 	ENDIF( MINGW )
+	LIST( APPEND SLSharedWithSettings ${curlSRC} )
 ENDIF( ENABLE_DEBUG_REPORT )
 
 pkg_check_modules( CURL REQUIRED libcurl )
@@ -158,6 +168,7 @@ IF( OPTION_TORRENT_SYSTEM )
 		ADD_DEFINITIONS( -mthreads  )
 		LINK_LIBRARIES( -mthreads torrent-rasterbar ${Boost_LIBRARIES} z ws2_32 mswsock  )
 	ENDIF( NOT WIN32)
+	LIST( APPEND SLSharedWithSettings ${curlSRC} )
 ELSE( OPTION_TORRENT_SYSTEM )
 	ADD_DEFINITIONS( -DNO_TORRENT_SYSTEM )
 ENDIF( OPTION_TORRENT_SYSTEM )
@@ -203,7 +214,7 @@ cmake_policy(SET CMP0004 OLD)
 #ignore warnings about macosx app bundle output dir
 cmake_policy(SET CMP0006 OLD)
 
-ADD_EXECUTABLE(springlobby WIN32 MACOSX_BUNDLE ${springlobbySrc} ${SettingsSrc} ${SLSharedWithSettings} ${curlSRC} ${springlobby_RC_FILE})
+ADD_EXECUTABLE(springlobby WIN32 MACOSX_BUNDLE ${header} ${springlobbySrc} ${SettingsSrc} ${SLSharedWithSettings} ${springlobby_RC_FILE})
 ADD_EXECUTABLE(springsettings WIN32 MACOSX_BUNDLE ${StandAloneSettings} ${SettingsSrc} ${SLSharedWithSettings} ${SpringSettings_RC_FILE} )
 #the updater needs to be build for windows only
 IF(WIN32)
@@ -212,7 +223,7 @@ IF(WIN32)
 ENDIF(WIN32)
 
 # Here the wxWidgets Libraries are added. These are set for us by the FIND Script. If you need other Libraries, you can add them here as well.
-TARGET_LINK_LIBRARIES(springlobby ${wxWidgets_LIBRARIES} ${OPENAL_LIBRARY} )
+TARGET_LINK_LIBRARIES(springlobby ${wxWidgets_LIBRARIES} )
 TARGET_LINK_LIBRARIES(springsettings ${wxWidgets_LIBRARIES} )
 
 IF(MINGW)
@@ -241,11 +252,7 @@ add_custom_target(pack
 				)
 
 # setup make dist
-add_custom_target(dist cd ${CMAKE_SOURCE_DIR} &&
-                        git archive --format=tar --prefix=${PACKAGE_NAME}-${PACKAGE_VERSION}/ HEAD |
-                            gzip > ${CMAKE_BINARY_DIR}/${PACKAGE_NAME}-${PACKAGE_VERSION}.tar.gz &&
-						git archive --format=tar --prefix=${PACKAGE_NAME}-${PACKAGE_VERSION}/ HEAD |
-                            bzip2 > ${CMAKE_BINARY_DIR}/${PACKAGE_NAME}-${PACKAGE_VERSION}.tar.bz2
+add_custom_target(dist ${CMAKE_SOURCE_DIR}/tools/make_dist.sh "${springlobby_BINARY_DIR}" "${PACKAGE_NAME}-${PACKAGE_VERSION}"
 					 )
 
 # setup make distcheck

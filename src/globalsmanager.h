@@ -56,7 +56,11 @@ class GlobalObjectHolder: public IGlobalObjectHolder
     bool constructing;
     static int count;
 public:
+#if wxUSE_LOG_DEBUG
     GlobalObjectHolder(I i):
+#else
+	GlobalObjectHolder(I ):
+#endif
             private_ptr( NULL ),
             public_ptr( NULL ),
             constructing( true )
@@ -98,9 +102,9 @@ int GlobalObjectHolder<T,I>::count = 0;
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by
     the Free Software Foundation.
 

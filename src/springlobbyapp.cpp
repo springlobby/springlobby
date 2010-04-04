@@ -57,6 +57,7 @@
 #include "customizations.h"
 #include "curl/http.h"
 #include "alsound.h"
+#include "mapselectdialog.h"
 
 #include "gui/simplefront.h"
 
@@ -158,12 +159,22 @@ bool SpringLobbyApp::OnInit()
 	sett().SetSpringBinary( sett().GetCurrentUsedSpringIndex(), sett().GetCurrentUsedSpringBinary() );
 	sett().SetUnitSync( sett().GetCurrentUsedSpringIndex(), sett().GetCurrentUsedUnitSync() );
 
+	if ( sett().DoResetPerspectives() )
+	{
+		//we do this early on and reset the config var a little later so we can save a def. perps once mw is created
+		sett().RemoveLayouts();
+		sett().SetDoResetPerspectives( false );
+		ui().mw().SavePerspectives( _T("SpringLobby-default") );
+	}
 
 	sett().RefreshSpringVersionList();
 
+	//!currently we cannot use the dialog in simple, because it uses Ui and therefore creates mainwindow
+	if ( !m_start_simple_interface )
+		//this should take off the firstload time considerably *ie nil it :P )
+		mapSelectDialog();
 	//unitsync first load, NEEDS to be blocking
 	usync().ReloadUnitSyncLib();
-    notificationManager(); //needs to be initialized too
 
 	#ifndef DISABLE_SOUND
 		//sound sources/buffer init
@@ -189,8 +200,21 @@ bool SpringLobbyApp::OnInit()
         }
     }
 
+	notificationManager(); //needs to be initialized too
     ui().ShowMainWindow();
     SetTopWindow( &ui().mw() );
+	if ( sett().DoResetPerspectives() )
+	{
+		//now that mainwindow is shown, we can save what is the default layout and remove the flag to reset
+		sett().SetDoResetPerspectives( false );
+		ui().mw().SavePerspectives( _T("SpringLobby-default") );
+	}
+
+	//interim fix for resize crashes on metacity and kwin
+	#ifdef __WXMSW__
+		mapSelectDialog().Reparent( &ui().mw() );
+	#endif
+
     ui().FirstRunWelcome();
     m_timer->Start( TIMER_INTERVAL );
 
@@ -201,6 +225,7 @@ bool SpringLobbyApp::OnInit()
 //    plasmaInterface().InitResourceList();
 //	plasmaInterface().FetchResourceList();
 #endif
+
 
     return true;
 }
@@ -445,7 +470,7 @@ void SpringLobbyApp::CacheAndSettingsSetup()
 			{
 				sett().TranslateSavedColumWidths();
 			}
-			if ( settversion < 17 )
+			if ( settversion < 21 )
 			{
 				sett().RemoveLayouts();
 			}
@@ -487,7 +512,7 @@ void SpringLobbyApp::CacheAndSettingsSetup()
     }
 }
 
-void SpringLobbyApp::OnQuit( GlobalEvents::GlobalEventData data )
+void SpringLobbyApp::OnQuit( GlobalEvents::GlobalEventData /*data*/ )
 {
 	m_timer->Stop();
 }

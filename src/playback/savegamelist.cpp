@@ -7,7 +7,7 @@
 #include <wx/file.h>
 #include <wx/filefn.h>
 
-#include "replaylist.h"
+//#include "replaylist.h"
 //#include "../utils/.h"
 #include "../utils/customdialogs.h"
 #include "playbacktab.h"
@@ -29,14 +29,12 @@ void SavegameList::LoadPlaybacks( const wxArrayString& filenames )
     size_t size = filenames.GetCount();
     for ( size_t i = 0; i < size; ++i)
     {
-        Savegame rep;
-        rep.id = i;
         wxString fn = filenames[i];
-        Savegame& rep_ref = AddPlayback( rep ); // don't touch this reference, since elements inside this data structure are filled using pointers, adding & not fecthing the new addresses would screw up references when rep gets destroyed
+		Savegame& rep_ref = AddPlayback( i ); // don't touch this reference, since elements inside this data structure are filled using pointers, adding & not fecthing the new addresses would screw up references when rep gets destroyed
 
         if ( !GetSavegameInfos( filenames[i] , rep_ref ) )
         {
-            RemovePlayback( rep.id );
+			RemovePlayback( rep_ref.id );
             m_fails++;
         }
     }
@@ -60,6 +58,7 @@ bool SavegameList::GetSavegameInfos ( const wxString& SavegamePath, Savegame& re
     ret.battle.GetBattleFromScript( true );
     ret.ModName = ret.battle.GetHostModName();
     ret.battle.SetBattleType( BT_Savegame );
+	ret.size = wxFileName::GetSize( SavegamePath ).ToULong();
 
     return true;
 }

@@ -66,7 +66,7 @@ MainOptionsTab::MainOptionsTab( wxWindow* parent )
 
 #ifndef NO_TORRENT_SYSTEM
     m_torrent_opts = new TorrentOptionsPanel( m_tabs );
-    m_tabs->AddPage( m_torrent_opts, _("P2P"), true, charArr2wxBitmap( torrentoptionspanel_icon_png, sizeof(torrentoptionspanel_icon_png) ) );
+	m_tabs->AddPage( m_torrent_opts, _("Downloads"), true, charArr2wxBitmap( torrentoptionspanel_icon_png, sizeof(torrentoptionspanel_icon_png) ) );
 #endif
 
     m_chat_opts = new ChatOptionsTab( m_tabs );
@@ -173,4 +173,12 @@ OptionsDialog::OptionsDialog( wxWindow* parent )
 void OptionsDialog::SetSelection( const unsigned int page )
 {
 	m_options->SetSelection( page );
+}
+
+bool OptionsDialog::Show( bool show )
+{
+	if( !show )
+		SaveAttributes();
+	return wxDialog::Show( show );
+
 }

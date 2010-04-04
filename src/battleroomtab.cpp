@@ -116,8 +116,8 @@ const MyStrings<SPRING_MAX_ALLIES> ally_choices;
 
 BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle )
     : wxScrolledWindow( parent, -1 ),
-    m_battle( battle ),
-    m_map_dlg( 0 )
+	m_battle( battle ),
+	m_BattleActionSink( this, &UiEvents::GetUiEventSender( UiEvents::OnBattleActionEvent ))
 {
 	GetAui().manager->AddPane( this, wxLEFT, _T( "battleroomtab" ) );
 
@@ -357,9 +357,6 @@ BattleRoomTab::~BattleRoomTab()
 {
 	if ( GetAui().manager )
         GetAui().manager->DetachPane( this );
-    if ( m_map_dlg ) {
-        m_map_dlg->EndModal( 0 );
-    }
 }
 
 void BattleRoomTab::SplitSizerHorizontally( const bool horizontal )
@@ -472,7 +469,7 @@ void BattleRoomTab::UpdateBattleInfo( const wxString& Tag )
 				m_opts_list->SetItem( m_opt_list_map[ _( "Windspeed" ) ], 1, _T( "?-?" ) );
 				m_opts_list->SetItem( m_opt_list_map[ _( "Tidal strength" ) ], 1, _T( "?" ) );
 			}
-			wxString mapname = RefineMapname( m_battle->GetHostMapName() );
+			wxString mapname =m_battle->GetHostMapName();
 			int index_ = m_map_combo->FindString( mapname );
 			if ( index_ != wxNOT_FOUND )
                 m_map_combo->SetSelection( index_ );
@@ -668,7 +665,7 @@ void BattleRoomTab::OnAddBot( wxCommandEvent& /*unused*/ )
 		bs.aiversion = dlg.GetAIVersion();
 		bs.aitype = dlg.GetAIType();
 		bs.owner = m_battle->GetMe().GetNick();
-		ui().GetServer().AddBot( m_battle->GetBattleId(), dlg.GetNick(), bs );
+		serverSelector().GetServer().AddBot( m_battle->GetBattleId(), dlg.GetNick(), bs );
 	}
 }
 
@@ -699,7 +696,7 @@ void BattleRoomTab::OnAutoPaste( wxCommandEvent& /*unused*/ )
 {
 	if ( !m_battle ) return;
 	wxString description = wxGetTextFromUser( _( "Enter a battle description" ), _( "Set description" ), m_battle->GetDescription(), ( wxWindow* ) & ui().mw() );
-	m_autopaste_mnu->Check( description.IsEmpty() );
+	m_autopaste_mnu->Check( !description.IsEmpty() );
 	if ( !description.IsEmpty() ) m_battle->SetDescription( description );
 	sett().SetBattleLastAutoAnnounceDescription( m_autopaste_mnu->IsChecked() );
 }
@@ -947,18 +944,17 @@ void BattleRoomTab::OnMapBrowse( wxCommandEvent& /*unused*/ )
 {
 	if ( !m_battle ) return;
 	wxLogDebugFunc( _T( "" ) );
-	m_map_dlg = new MapSelectDialog ( ( wxWindow* )&ui().mw() );
 
-	if ( m_map_dlg->ShowModal() == wxID_OK && m_map_dlg->GetSelectedMap() != NULL )
+	if ( mapSelectDialog().ShowModal() == wxID_OK && mapSelectDialog().GetSelectedMap() != NULL )
 	{
-		wxString mapname = m_map_dlg->GetSelectedMap()->name;
+		wxString mapname = mapSelectDialog().GetSelectedMap()->name;
 		wxLogDebugFunc( mapname );
 		if ( !m_battle->IsFounderMe() )
 		{
 			m_battle->DoAction( _T( "suggests " ) + mapname );
 			return;
 		}
-		const int idx = m_map_combo->FindString( RefineMapname( mapname ), true /*case sensitive*/ );
+		const int idx = m_map_combo->FindString( mapname, true /*case sensitive*/ );
 		if ( idx != wxNOT_FOUND )
             SetMap( idx );
 	}
@@ -973,7 +969,7 @@ void BattleRoomTab::ReloadMaplist()
 // maplist.Sort(CompareStringIgnoreCase);
 
 	size_t nummaps = maplist.Count();
-	for ( size_t i = 0; i < nummaps; i++ ) m_map_combo->Insert( RefineMapname( maplist[i] ), i );
+	for ( size_t i = 0; i < nummaps; i++ ) m_map_combo->Insert( maplist[i], i );
 }
 
 void BattleRoomTab::SetMap( int index )
@@ -1133,3 +1129,20 @@ void BattleRoomTab::SetBattle( Battle* battle )
 		m_spec_count_lbl->SetLabel( wxString::Format( _( "Spectators: %d" ), m_battle->GetSpectators() ) );
 	}
 }
+
+void BattleRoomTab::OnBattleActionEvent( UiEvents::UiEventData data )
+{
+	wxString nick = data.Count() > 0 ? data[0] : wxString(wxEmptyString);
+	wxString msg = data.Count() > 1 ? data[1] : wxString(wxEmptyString);
+	GetChatPanel().DidAction( nick, msg );
+}
+
+//void BattleRoomTab::MaximizeSizer()
+//{
+//	wxSize s = GetClientSize();
+//	m_main_sizer->RecalcSizes();
+//	//m_main_sizer->SetDimension( )
+//	m_main_sizer->Layout();
+//	Layout();
+//	Refresh();
+//}

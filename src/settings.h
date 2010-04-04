@@ -4,8 +4,8 @@
 #include <wx/string.h>
 #include <vector>
 
-const int CACHE_VERSION     = 10;
-const int SETTINGS_VERSION  = 19;
+const int CACHE_VERSION     = 11;
+const int SETTINGS_VERSION  = 21;
 
 const wxString DEFSETT_DEFAULT_SERVER_NAME= _T("Official server");
 const wxString DEFSETT_DEFAULT_SERVER_HOST = _T("taspringmaster.clan-sy.com");
@@ -322,8 +322,11 @@ class Settings
     wxSize  GetWindowSize( const wxString& window, const wxSize& def );
     void    SetWindowSize( const wxString& window, const wxSize& size  );
 
-    wxPoint  GetWindowPos( const wxString& window, const wxPoint& def );
+	wxPoint GetWindowPos( const wxString& window, const wxPoint& def );
     void    SetWindowPos( const wxString& window, const wxPoint& pos );
+
+	bool	GetWindowMaximized( const wxString& window );
+	void	GetWindowMaximized( const wxString& window, bool maximized );
 
     bool UseOldSpringLaunchMethod();
     void SetOldSpringLaunchMethod( bool value );
@@ -368,6 +371,8 @@ class Settings
 	bool GetUseNotificationPopups();
 	void SetNotificationPopupPosition( const size_t index );
 	size_t GetNotificationPopupPosition();
+	void SetNotificationPopupDisplayTime( const unsigned int seconds );
+	unsigned int GetNotificationPopupDisplayTime( );
     /*@}*/
 
     /* ================================================================ */
@@ -638,9 +643,6 @@ class Settings
     int GetTorrentThrottledDownloadRate();
     void SetTorrentThrottledDownloadRate( int speed );
 
-    int GetTorrentSystemAutoStartMode();
-    void SetTorrentSystemAutoStartMode( int mode );
-
     void SetTorrentMaxConnections( int connections );
     int GetTorrentMaxConnections();
 
@@ -680,6 +682,8 @@ class Settings
     bool GetAutosavePerspective( );
     wxArrayString GetPerspectives();
     bool PerspectiveExists( const wxString& perspective_name );
+	bool DoResetPerspectives();
+	void SetDoResetPerspectives( bool do_it );
 
     void RemoveLayouts();
 
@@ -775,9 +779,9 @@ Settings& sett();
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by
     the Free Software Foundation.
 

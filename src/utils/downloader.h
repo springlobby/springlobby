@@ -14,11 +14,6 @@
 template <class PB, class I >
 class GlobalObjectHolder;
 
-class wxCurlHTTP;
-class wxCurlEndPerformEvent;
-
-const wxEventType DoFetchResourcesEvt = wxNewEventType();
-
 class PlasmaInterface : public iNetClass, public wxEvtHandler {
     public:
 		~PlasmaInterface();
@@ -54,7 +49,7 @@ class PlasmaInterface : public iNetClass, public wxEvtHandler {
 
         void OnConnected( Socket* ){}
         void OnDisconnected( Socket* ){}
-		virtual void OnDataReceived( Socket* socket ){}
+		virtual void OnDataReceived( Socket* /*socket*/ ){}
 
         //! fqdn of the host where plasma service runs
         wxString m_host;

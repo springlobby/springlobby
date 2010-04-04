@@ -57,7 +57,7 @@
 	#include "torrentwrapper.h"
 #endif
 #include "user.h"
-
+#include "mapselectdialog.h"
 
 #include "images/springlobby.xpm"
 #include "images/chat_icon.png.h"
@@ -116,14 +116,15 @@ MainWindow::TabNames MainWindow::m_tab_names;
 MainWindow::MainWindow( )
 	: wxFrame( (wxFrame*)0, -1, _("SpringLobby"), wxPoint(50, 50) ),
 	WindowAttributesPickle( _T("MAINWINDOW"), this, wxSize(450, 340) ),
+	m_opts_dialog(NULL),
     m_autojoin_dialog(NULL),
     m_channel_chooser(NULL),
     m_log_win(NULL)
 {
+	assert( !wxGetApp().IsSimple() );
+	SetIcon( wxIcon(springlobby_xpm) );
 
-  SetIcon( wxIcon(springlobby_xpm) );
-
-  GetAui().manager = new AuiManagerContainer::ManagerType( this );
+	GetAui().manager = new AuiManagerContainer::ManagerType( this );
 
 	wxMenu *menuServer = new wxMenu;
 	menuServer->Append(MENU_CONNECT, _("&Connect..."));
@@ -272,6 +273,11 @@ void MainWindow::SetLogWin( wxLogWindow* log, wxLogChain* logchain  )
 MainWindow::~MainWindow()
 {
 	SetEvtHandlerEnabled( false );
+	if ( m_opts_dialog )
+	{
+		m_opts_dialog->Show(false);
+		m_opts_dialog->Destroy();
+	}
 }
 
 void MainWindow::OnClose( wxCloseEvent& /*unused*/ )
@@ -279,39 +285,43 @@ void MainWindow::OnClose( wxCloseEvent& /*unused*/ )
 	GetGlobalEventSender(GlobalEvents::OnQuit).SendEvent( 0 );
     SetEvtHandlerEnabled(false);
     {
-    wxWindowUpdateLocker lock( this );
-    SavePerspectives();
-  AuiManagerContainer::ManagerType* manager=GetAui().manager;
-  if(manager){
-    GetAui().manager=NULL;
-    manager->UnInit();
-    delete manager;
-  }
+		wxWindowUpdateLocker lock( this );
+		SavePerspectives();
+		AuiManagerContainer::ManagerType* manager=GetAui().manager;
+		if(manager){
+			GetAui().manager=NULL;
+			manager->UnInit();
+			delete manager;
+		}
+		//interim fix for resize crashes on metacity and kwin
+		#ifndef __WXMSW__
+			mapSelectDialog().Show( false );
+			mapSelectDialog().Reparent( &ui().mw() );
+			mapSelectDialog().Destroy( );
+		#endif
 
-  ui().Quit();
-  forceSettingsFrameClose();
-  freeStaticBox();
+		ui().Quit();
+		forceSettingsFrameClose();
+		freeStaticBox();
 
-  if ( m_autojoin_dialog  != 0 )
-  {
-    delete m_autojoin_dialog;
-    m_autojoin_dialog = 0;
-  }
+		if ( m_autojoin_dialog )
+		{
+			delete m_autojoin_dialog;
+			m_autojoin_dialog = 0;
+		}
 
-  sett().SaveSettings();
-  if ( m_log_win ) {
-    m_log_win->GetFrame()->Destroy();
-    if ( m_log_chain ) // if logwin was created, it's the current "top" log
-        m_log_chain->DetachOldLog();  //so we need to tellwx not to delete it on its own
-        //since we absolutely need to destroy the logwin here, set a fallback for the time until app cleanup
-#if(wxUSE_STD_IOSTREAM)
-        wxLog::SetActiveTarget( new wxLogStream( &std::cout ) );
-#endif
-  }
-
-    }
-  Destroy();
-
+		sett().SaveSettings();
+		if ( m_log_win ) {
+			m_log_win->GetFrame()->Destroy();
+			if ( m_log_chain ) // if logwin was created, it's the current "top" log
+				m_log_chain->DetachOldLog();  //so we need to tellwx not to delete it on its own
+				//since we absolutely need to destroy the logwin here, set a fallback for the time until app cleanup
+			#if(wxUSE_STD_IOSTREAM)
+				wxLog::SetActiveTarget( new wxLogStream( &std::cout ) );
+			#endif
+		}
+	}
+	Destroy();
 }
 
 void DrawBmpOnBmp( wxBitmap& canvas, wxBitmap& object, int x, int y )
@@ -459,7 +469,7 @@ void MainWindow::ShowChannelChooser()
         customMessageBox( SL_MAIN_ICON, _("You need to be connected to server to view channel list"), _("Not connected") );
     else {
         m_channel_chooser->ClearChannels();
-        ui().GetServer().RequestChannels();
+		serverSelector().GetServer().RequestChannels();
         m_channel_chooser->Show( true );
     }
 }
@@ -483,9 +493,9 @@ void MainWindow::OnMenuChat( wxCommandEvent& /*unused*/ )
   if ( !ui().IsConnected() ) return;
   wxString answer;
   if ( ui().AskText( _("Open Private Chat..."), _("Name of user"), answer ) ) {
-    if (ui().GetServer().UserExists( answer ) ) {
+	if (serverSelector().GetServer().UserExists( answer ) ) {
         //true puts focus on new tab
-      OpenPrivateChat( ui().GetServer().GetUser( answer ), true  );
+	  OpenPrivateChat( serverSelector().GetServer().GetUser( answer ), true  );
     }
   }
 
@@ -543,9 +553,7 @@ void MainWindow::OnMenuQuit( wxCommandEvent& /*unused*/ )
 
 void MainWindow::OnMenuVersion( wxCommandEvent& /*unused*/ )
 {
-//    ui().CheckForUpdates();
-	wxSleep( 2 );
-    UiEvents::GetNotificationEventSender().SendEvent( UiEvents::NotficationData( wxBitmap(springlobby_xpm), _T("Hello SpringLobby") ) );
+	ui().CheckForUpdates();
 }
 
 void MainWindow::OnUnitSyncReload( wxCommandEvent& /*unused*/ )
@@ -658,13 +666,19 @@ void MainWindow::OnMenuLoadLayout( wxCommandEvent& /*unused*/ )
 
 void MainWindow::OnMenuResetLayout( wxCommandEvent& /*event*/ )
 {
-	LoadPerspectives( _T("SpringLobby-default") );
+	sett().SetDoResetPerspectives( true );
+	sett().SaveSettings();
+	customMessageBoxNoModal( SL_MAIN_ICON, _("Please restart SpringLobby now"), wxEmptyString );
 }
 
 const MainWindow::TabNames& MainWindow::GetTabNames()
 {
     return m_tab_names;
 }
+
+#ifdef __WXMSW__
+	#include "battleroomtab.h"
+#endif
 
 void MainWindow::LoadPerspectives( const wxString& pers_name )
 {
@@ -700,6 +714,6 @@ void MainWindow::FocusBattleRoomTab()
 
 void MainWindow::OnMenuPreferences( wxCommandEvent& /*event*/ )
 {
-	OptionsDialog* opts = new OptionsDialog( this );
-	opts->Show();
+	m_opts_dialog = new OptionsDialog( this );
+	m_opts_dialog->Show();
 }

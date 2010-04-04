@@ -94,18 +94,18 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, MainSinglePlayerTab& msptab):
     m_buttons_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
 
     m_color_btn = new  ColorButton( this, SP_COLOUR, sett().GetBattleLastColour(), wxDefaultPosition, wxSize(30, CONTROL_HEIGHT) );
-    m_buttons_sizer->Add( m_color_btn, 0, wxALL, 0 );
+	m_buttons_sizer->Add( m_color_btn, 0, wxALIGN_CENTER_VERTICAL|wxALL, 0 );
 
     m_spectator_check = new wxCheckBox( this, SP_SPECTATE, _("Spectate only") );
-    m_buttons_sizer->Add( m_spectator_check, 0, wxALL, 5 );
+	m_buttons_sizer->Add( m_spectator_check, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
     m_random_check = new wxCheckBox( this, SP_RANDOM, _("Random start positions") );
-    m_buttons_sizer->Add( m_random_check, 0, wxALL, 5 );
+	m_buttons_sizer->Add( m_random_check, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
     m_start_btn = new wxButton( this, SP_START, _("Start"), wxDefaultPosition, wxSize(80, CONTROL_HEIGHT), 0 );
-    m_buttons_sizer->Add( m_start_btn, 0, wxALL, 5 );
+	m_buttons_sizer->Add( m_start_btn, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
-    m_main_sizer->Add( m_buttons_sizer, 0, wxEXPAND, 5 );
+	m_main_sizer->Add( m_buttons_sizer, 0, wxEXPAND, 5 );
 
     SetScrollRate( SCROLL_RATE, SCROLL_RATE );
     this->SetSizer( m_main_sizer );
@@ -131,19 +131,15 @@ void SinglePlayerTab::UpdateMinimap()
 
 void SinglePlayerTab::ReloadMaplist()
 {
-    m_map_pick->Clear();
+	m_map_pick->Clear();
 
-    //applies RefineMapname to every new element
-    TransformedArrayString maplist ( usync().GetMapList(), &RefineMapname ) ;
-    //maplist.Sort(CompareStringIgnoreCase);
-
-    m_map_pick->Append( maplist );
+    m_map_pick->Append( usync().GetMapList() );
 
     m_map_pick->Insert( _("-- Select one --"), m_map_pick->GetCount() );
 
     if ( m_battle.GetHostMapName() != wxEmptyString )
     {
-        m_map_pick->SetStringSelection( RefineMapname( m_battle.GetHostMapName() ) );
+		m_map_pick->SetStringSelection( m_battle.GetHostMapName());
         if ( m_map_pick->GetStringSelection() == wxEmptyString )
             SetMap( m_mod_pick->GetCount()-1 );
     }
@@ -273,12 +269,11 @@ void SinglePlayerTab::OnModSelect( wxCommandEvent& /*unused*/ )
 void SinglePlayerTab::OnMapBrowse( wxCommandEvent& /*unused*/ )
 {
     wxLogDebugFunc( _T("") );
-    MapSelectDialog dlg( (wxWindow*)&ui().mw() );
 
-    if ( dlg.ShowModal() == wxID_OK && dlg.GetSelectedMap() != NULL )
+	if ( mapSelectDialog().ShowModal() == wxID_OK && mapSelectDialog().GetSelectedMap() != NULL )
     {
-        wxLogDebugFunc( dlg.GetSelectedMap()->name );
-        const wxString mapname = RefineMapname( dlg.GetSelectedMap()->name );
+		wxLogDebugFunc( mapSelectDialog().GetSelectedMap()->name );
+		const wxString mapname = mapSelectDialog().GetSelectedMap()->name;
         const int idx = m_map_pick->FindString( mapname, true /*case sensitive*/ );
         if ( idx != wxNOT_FOUND ) SetMap( idx );
     }
@@ -299,7 +294,7 @@ void SinglePlayerTab::OnAddBot( wxCommandEvent& /*unused*/ )
         bs.team = m_battle.GetFreeTeam();
         bs.ally = m_battle.GetFreeAlly();
         bs.colour = m_battle.GetNewColour();
-        User& bot = m_battle.OnBotAdded( _T("Bot") + TowxString( bs.team ), bs  );
+		User& bot = m_battle.OnBotAdded( dlg.GetNick(), bs  );
         ASSERT_LOGIC( &bot != 0, _T("bot == 0") );
         m_minimap->UpdateMinimap();
     }

@@ -1821,18 +1821,6 @@ void Settings::SetTorrentThrottledDownloadRate( int speed )
 }
 
 
-int Settings::GetTorrentSystemAutoStartMode()
-{
-	return  m_config->Read( _T( "/Torrent/AutoStartMode" ), 0l );
-}
-
-
-void Settings::SetTorrentSystemAutoStartMode( int mode )
-{
-	m_config->Write( _T( "/Torrent/AutoStartMode" ), mode );
-}
-
-
 void Settings::SetTorrentMaxConnections( int connections )
 {
 	m_config->Write( _T( "/Torrent/MaxConnections" ), connections );
@@ -2524,4 +2512,34 @@ void Settings::SetNotificationPopupPosition( const size_t index )
 size_t Settings::GetNotificationPopupPosition()
 {
 	return m_config->Read( _T("/GUI/NotificationPopupPosition"), (long)ScreenPosition::bottom_right );
+}
+
+bool Settings::GetWindowMaximized( const wxString& window )
+{
+	return m_config->Read(_T( "/GUI/" ) + window + _T( "/maximized" ), 0l );
+}
+
+void Settings::GetWindowMaximized( const wxString& window, bool maximized )
+{
+	m_config->Write(_T( "/GUI/" ) + window + _T( "/maximized" ), maximized );
+}
+
+void Settings::SetNotificationPopupDisplayTime( const unsigned int seconds )
+{
+	m_config->Write( _T("/GUI/NotificationPopupDisplayTime"), (long)seconds );
+}
+
+unsigned int Settings::GetNotificationPopupDisplayTime( )
+{
+	return m_config->Read( _T("/GUI/NotificationPopupDisplayTime"), 5l );
+}
+
+bool Settings::DoResetPerspectives()
+{
+	return m_config->Read(_T( "/reset_perspectives" ) , 0l );
+}
+
+void Settings::SetDoResetPerspectives( bool do_it )
+{
+	m_config->Write(_T( "/reset_perspectives" ) , (long)do_it );
 }

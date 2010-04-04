@@ -427,7 +427,10 @@ bool  OptionsWrapper::setSingleOptionTypeSwitch(wxString key, wxString value, Ga
 		{
 			//test if min < val < max
 			double d_val;
+			//temp set to C locale cause we get '.' as decimal seperator over the net
+			const char* old_locale = std::setlocale(LC_NUMERIC, "C");
 			bool d_conv_ok = value.ToDouble(&d_val);
+			std::setlocale(LC_NUMERIC, old_locale);
 			if( !d_conv_ok || d_val < (gameoptions.float_map)[key].min || d_val > (gameoptions.float_map)[key].max )
 			{
 				wxLogWarning(_T("recieved number option exceeds boundaries"));

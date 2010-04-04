@@ -1,8 +1,8 @@
 /**
     This file is part of springsettings,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by
     the Free Software Foundation.
 
@@ -34,7 +34,9 @@ class wxSize;
 class wxCloseEvent;
 class wxSlider;
 class wxStaticBoxSizer;
-class wxSpinCtrlDbl;
+template <class P>
+class SlSpinCtrlDouble;
+class SlSpinDoubleEvent;
 
 class tab_quality_video : public abstract_panel
 {
@@ -50,6 +52,7 @@ class tab_quality_video : public abstract_panel
 		void initW4Sizer(wxSizer* );
 		void updateControls(int);
 		virtual void OnComboBoxChange(wxCommandEvent& event);
+		void OnSpinCtrlDoubleChange(SlSpinDoubleEvent& event);
 
 	private:
 		void OnClose(wxCloseEvent& event);
@@ -86,7 +89,7 @@ class tab_quality_video : public abstract_panel
 
         std::vector<wxControl*> m_w4_controls;
 
-        wxSpinCtrlDbl* m_aniso_spin;
+        SlSpinCtrlDouble<tab_quality_video>* m_aniso_spin;
 
     protected:
 		DECLARE_EVENT_TABLE()

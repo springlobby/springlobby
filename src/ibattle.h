@@ -376,6 +376,8 @@ public:
 		virtual std::map<int, int> GetAllySizes() { return m_ally_sizes; }
 		virtual std::map<int, int> GetTeamSizes() { return m_teams_sizes; }
 
+		std::map<wxString, wxString> m_script_tags; // extra script tags to reload in the case of map/mod reload
+
 protected:
 
     void LoadScriptMMOpts( const wxString& sectionname, const PDataList& node );
@@ -434,9 +436,9 @@ protected:
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by
     the Free Software Foundation.
 

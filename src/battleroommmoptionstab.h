@@ -18,20 +18,13 @@ class wxCheckBox;
 class wxComboBox;
 class wxCommandEvent;
 class Battle;
-class wxSpinCtrlDbl;
+template <class P>
+class SlSpinCtrlDouble;
 class wxTextCtrl;
-class wxSpinEvent;
+class SlSpinDoubleEvent;
 class wxStaticText;
 class wxButton;
 
-//totally ok to store pointers here, since wx takes care of gui element destruction for us
-typedef std::map<wxString,wxCheckBox*> chkBoxMap;
-typedef std::map<wxString,wxComboBox*> comboBoxMap;
-typedef std::map<wxString,wxSpinCtrlDbl*> spinCtrlMap;
-typedef std::map<wxString,wxTextCtrl*> textCtrlMap;
-typedef std::map<wxString,wxStaticText*> staticTextMap;
-typedef std::map<wxString,wxButton*> buttonMap;
-typedef std::map<wxString,wxString> nameInfoMap; //! map control name <-> info (description)
 
 /** \brief a panel displaying programmatically generated gui elements to manipulate mmOptions
  * Since storing of data is mixed in with gui elements, this is a very delicate place to apply changes to.
@@ -84,6 +77,26 @@ class BattleroomMMOptionsTab : public wxScrolledWindow
 
 		OptionsWrapper* m_mapmodoptions;
 
+        typedef BattleroomMMOptionsTab<BattleType>
+            ThisType;
+
+        friend class SlSpinCtrlDouble<ThisType>; //so we don't have to make the event handler public for everyone
+        //totally ok to store pointers here, since wx takes care of gui element destruction for us
+        typedef std::map<wxString,wxCheckBox*>
+            chkBoxMap;
+        typedef std::map<wxString,wxComboBox*>
+            comboBoxMap;
+        typedef std::map<wxString,SlSpinCtrlDouble<ThisType> * >
+            spinCtrlMap;
+        typedef std::map<wxString,wxTextCtrl*>
+            textCtrlMap;
+        typedef std::map<wxString,wxStaticText*>
+            staticTextMap;
+        typedef std::map<wxString,wxButton*>
+            buttonMap;
+        typedef std::map<wxString,wxString>
+            nameInfoMap; //! map control name <-> info (description)
+
 		chkBoxMap m_chkbox_map;
 		comboBoxMap m_combox_map;
 		spinCtrlMap m_spinctrl_map;
@@ -112,7 +125,7 @@ class BattleroomMMOptionsTab : public wxScrolledWindow
 		void OnComBoxChange(wxCommandEvent&);
 		void OnChkBoxChange(wxCommandEvent&);
 		void OnTextCtrlChange(wxCommandEvent& event);
-		void OnSpinCtrlChange(wxSpinEvent& event);
+		void OnSpinCtrlDoubleChange(SlSpinDoubleEvent& event);
 		/** @} */
 
 		wxButton* getButton( const wxWindowID id, const wxString& name );
@@ -136,9 +149,9 @@ enum
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by
     the Free Software Foundation.
 

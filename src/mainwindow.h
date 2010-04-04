@@ -36,7 +36,7 @@ class wxLogWindow;
 class wxLogChain;
 class wxCloseEvent;
 class Statusbar;
-
+class OptionsDialog;
 class ReplayTraits;
 template < class Traits >
 class PlaybackTab;
@@ -134,6 +134,7 @@ class MainWindow : public wxFrame, public WindowAttributesPickle
     #ifndef NO_TORRENT_SYSTEM
     MainTorrentTab* m_torrent_tab;
     #endif
+	OptionsDialog* m_opts_dialog;
 
     AutojoinChannelDialog* m_autojoin_dialog;
     settings_frame* se_frame;
@@ -234,9 +235,9 @@ class MainWindow : public wxFrame, public WindowAttributesPickle
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by
     the Free Software Foundation.
 

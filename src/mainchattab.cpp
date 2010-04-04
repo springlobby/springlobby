@@ -202,21 +202,21 @@ void MainChatTab::RejoinChannels()
 			bool alreadyin = false;
 			try
 			{
-				ui().GetServer().GetChannel( name ).GetMe();
+				serverSelector().GetServer().GetChannel( name ).GetMe();
 				alreadyin = true;
 			}
 			catch ( ... ) {}
 			if ( !alreadyin )
 			{
-				ui().GetServer().JoinChannel( name, _T( "" ) );
-				tmp->SetChannel( &ui().GetServer().GetChannel( name ) );
+				serverSelector().GetServer().JoinChannel( name, _T( "" ) );
+				tmp->SetChannel( &serverSelector().GetServer().GetChannel( name ) );
 			}
 
 		} else if ( tmp->GetPanelType() == CPT_User )
 		{
 
 			wxString name = m_chat_tabs->GetPageText( i );
-			if ( ui().GetServer().UserExists( name ) ) tmp->SetUser( &ui().GetServer().GetUser( name ) );
+			if ( serverSelector().GetServer().UserExists( name ) ) tmp->SetUser( &serverSelector().GetServer().GetUser( name ) );
 
 		}
 	}
@@ -335,7 +335,7 @@ void MainChatTab::OnTabsChanged( wxAuiNotebookEvent& event )
 wxImage MainChatTab::ReplaceChannelStatusColour( wxBitmap img, const wxColour& colour )
 {
 	wxImage ret = img.ConvertToImage();
-	wxImage::HSVValue origcolour = wxImage::RGBtoHSV( wxImage::RGBValue::RGBValue( colour.Red(), colour.Green(), colour.Blue() ) );
+	wxImage::HSVValue origcolour = wxImage::RGBtoHSV( wxImage::RGBValue( colour.Red(), colour.Green(), colour.Blue() ) );
 
 	double bright = origcolour.value - 0.1 * origcolour.value;
 	bright = clamp( bright, 0.0, 1.0 );

@@ -226,7 +226,7 @@ void ToasterBox::CleanList()
   //wxLogDebug("Items on list ac %i", winList->GetCount());
 }
 
-void ToasterBox::StartAll(bool start)
+void ToasterBox::StartAll(bool /*start*/)
 {
   ToasterBoxWindowListNode node = winList->GetLast();
   while(node)

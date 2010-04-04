@@ -71,12 +71,31 @@ class OnQuitSink : public CRTPbase<Derived> {
 		{}
 };
 
+template <class Derived, class EventDataType = GlobalEvents::GlobalEventData >
+class BattleSyncReloadSink : public CRTPbase<Derived> {
+	protected:
+		typedef BattleSyncReloadSink<Derived,EventDataType>
+			BaseType;
+		using CRTPbase<Derived>::asImp;
 
+	public:
+		void OnBattleSyncReload( EventDataType data ) { asImp().OnBattleSyncReload( data ); }
+
+	protected:
+		typedef EventReceiverFunc<BattleSyncReloadSink, EventDataType, &BattleSyncReloadSink::OnBattleSyncReload>
+			EventReceiverFunction;
+		EventReceiverFunction m_BattleSyncReloadSink;
+
+	public:
+		BattleSyncReloadSink ()
+			: m_BattleSyncReloadSink( this, &GetGlobalEventSender( GlobalEvents::BattleSyncReload) )
+		{}
+};
 #endif // SPRINGLOBBY_HEADERGUARD_ISINK_H
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
     SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by

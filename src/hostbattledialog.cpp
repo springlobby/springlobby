@@ -58,7 +58,8 @@ BEGIN_EVENT_TABLE( HostBattleDialog, wxDialog )
 END_EVENT_TABLE()
 
 HostBattleDialog::HostBattleDialog( wxWindow* parent )
-    : wxDialog( parent, -1, _( "Host new battle" ), wxDefaultPosition, wxSize( 410, 441 ), wxDEFAULT_DIALOG_STYLE ),
+	: wxDialog( parent, -1, _( "Host new battle" ), wxDefaultPosition, wxSize( 410, 441 ), wxRESIZE_BORDER | wxDEFAULT_DIALOG_STYLE ),
+	WindowAttributesPickle( _T("hostbattledialog"), this, wxSize( 410, 441 ) ),
     m_last_relayhost( sett().GetLastRelayedHost() )
 {
 	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
@@ -138,7 +139,7 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent )
 	wxMenuItem* manual_pick_relay = new wxMenuItem( m_relayhost_list, MANUAL_PICK_HOST, _("Manually enter the manager name"), _("You'll get prompted for the exact manager name"), wxITEM_RADIO );
 	m_relayhost_list->Append( manual_pick_relay );
 	m_relayhost_list->AppendSeparator();
-	m_relayhost_array_list = ui().GetServer().GetRelayHostList();
+	m_relayhost_array_list = serverSelector().GetServer().GetRelayHostList();
 	for ( unsigned int i = 0; i < m_relayhost_array_list.GetCount(); i++ )
 	{
 		wxMenuItem* newitem = new wxMenuItem( m_relayhost_list, MANUAL_PICK_HOST + 1 + i, m_relayhost_array_list[i], _T("") , wxITEM_RADIO );

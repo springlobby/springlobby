@@ -5,6 +5,7 @@
 
 #include "mmoptionswrapper.h"
 #include "utils/isink.h"
+#include "utils/uievents.h"
 #include <map>
 
 class Ui;
@@ -28,7 +29,6 @@ class wxBitmapComboBox;
 struct UnitSyncMap;
 class wxToggleButton;
 class wxChoice;
-class MapSelectDialog;
 class wxListEvent;
 
 typedef std::map<wxString, long> OptionListMap;
@@ -89,6 +89,8 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 		void OnAutoControl( wxCommandEvent& event );
 		void OnAutoStart( wxCommandEvent& event );
 		void OnAutoSpec( wxCommandEvent& event );
+
+		void OnBattleActionEvent( UiEvents::UiEventData data );
 
 		void OnUserJoined( User& user );
 		void OnUserLeft( User& user );
@@ -182,7 +184,7 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 
 		wxListCtrl* m_opts_list;
 
-		MapSelectDialog* m_map_dlg;
+		EventReceiverFunc<BattleRoomTab, UiEvents::UiEventData, &BattleRoomTab::OnBattleActionEvent> m_BattleActionSink;
 
 		enum {
 			BROOM_LEAVE = wxID_HIGHEST,
@@ -228,9 +230,9 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by
     the Free Software Foundation.
 

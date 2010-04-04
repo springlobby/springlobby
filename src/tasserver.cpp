@@ -40,14 +40,6 @@
 #include "tasservertokentable.h"
 #include "pingthread.h"
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif //HAVE_CONFIG_H
-
-#ifndef VERSION
-	#define VERSION "unknown"
-#endif //VERSION
-
 // for SL_MAIN_ICON
 #include "utils/customdialogs.h"
 
@@ -166,7 +158,7 @@ IBattle::StartType IntToStartType( int start );
 NatType IntToNatType( int nat );
 IBattle::GameType IntToGameType( int gt );
 
-TASServer::TASServer():
+TASServer::TASServer(int serverEventsMode):
 m_ping_thread(0),
 m_ser_ver(0),
 m_connected(false),
@@ -185,7 +177,7 @@ m_do_finalize_join_battle(false),
 m_finalize_join_battle_id(-1),
 m_token_transmission( false )
 {
-	  m_se = new ServerEvents( *this );
+	  m_se = IServerEvents::getInstance( *this, IServerEvents::ServerEventsMode(serverEventsMode) );
 	  FillAliasMap();
 	  m_relay_host_manager_list.Clear();
 }
@@ -368,8 +360,8 @@ bool TASServer::IsConnected()
 bool TASServer::Register( const wxString& addr, const int port, const wxString& nick, const wxString& password, wxString& reason )
 {
     wxLogDebugFunc( _T("") );
-		FakeNetClass temp;
-		Socket tempsocket( temp, true );
+	FakeNetClass temp;
+	Socket tempsocket( temp, true, true );
     tempsocket.Connect( addr, port );
     if ( tempsocket.State() != SS_Open ) return false;
 
@@ -450,7 +442,7 @@ void TASServer::Login()
     if ( localaddr.IsEmpty() ) localaddr = _T("*");
 	m_id_transmission = false;
     SendCmd ( _T("LOGIN"), m_user + _T(" ") + pass + _T(" ") +
-              GetHostCPUSpeed() + _T(" ") + localaddr + _T(" SpringLobby ") + GetSpringLobbyVersion() + protocol  + _T("\ta"));
+			  GetHostCPUSpeed() + _T(" ") + localaddr + _T(" SpringLobby ") + GetSpringLobbyVersion(false) + protocol  + _T("\ta"));
 	m_id_transmission = true;
 }
 
@@ -711,13 +703,10 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     {
 				if ( sett().GetReportStats() )
 				{
-					wxString version = WX_STRINGC(VERSION).BeforeFirst( _T(' ') );
-					wxString aux;
-					#ifdef AUX_VERSION
-						aux = WX_STRINGC(AUX_VERSION);
-						aux.Replace( _T(" "), _T("") );
-						aux = _T(" ") + aux;
-					#endif
+					wxString version = GetSpringLobbyVersion(false);
+					wxString aux = GetSpringLobbyAuxVersion();
+					aux.Replace( _T(" "), _T("") );
+					aux = _T(" ") + aux;
 					wxString os = wxPlatformInfo::Get().GetOperatingSystemIdName();
 					os.Replace( _T(" "), _T("") );
 					wxString wxversion = wxVERSION_STRING;

@@ -5,5 +5,5 @@
 
 /* the git tag / commit we build from */
 #define VERSION "@SPRINGLOBBY_REV@"
-#define AUX_VERSION "@AUX_VERSION@"
+
 #endif	/* SPRINGLOBBY_HEADERGUARD_CONFIG_H */

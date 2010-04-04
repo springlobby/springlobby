@@ -79,7 +79,7 @@ getDataSubdirForType(const IUnitSync::MediaType type)
 }
 
 //! translate handle status to P2Pstatus
-P2P::FileStatus TorrentWrapper::getP2PStatusFromHandle( const libtorrent::torrent_handle& handle )
+P2P::FileStatus TorrentWrapper::getP2PStatusFromHandle( const libtorrent::torrent_handle& handle ) const
 {
 	if ( !handle.is_valid() )
 		return P2P::not_stored;
@@ -117,9 +117,14 @@ void* TorrentMaintenanceThread::Entry()
 	{
 		if( !Sleep( 2000 ) ) break;
 		{
+			//just to be on the safe sade in case anything slipped thru
+			try {
 				//  DON'T alter function call order here or bad things may happend like locust, earthquakes or raptor attack
 				m_parent.RemoveInvalidTorrents();
 				m_parent.HandleCompleted();
+			}
+			catch ( ... )
+			{}
 		}
 	}
 	return 0;
@@ -294,8 +299,8 @@ void TorrentWrapper::UpdateSettings()
 
 bool TorrentWrapper::IsFileInSystem( const wxString& name )
 {
-	TorrenthandleInfoMap infomap = GetHandleInfoMap();
-	TorrenthandleInfoMap::iterator it = infomap.begin();
+	const TorrenthandleInfoMap& infomap = GetHandleInfoMap();
+	TorrenthandleInfoMap::const_iterator it = infomap.begin();
 	for ( ; it != infomap.end(); ++it )
 	{
 		PlasmaResourceInfo info = it->first;
@@ -325,7 +330,7 @@ bool TorrentWrapper::RemoveTorrentByName( const wxString& name )
     return false;
 }
 
-int TorrentWrapper::GetTorrentSystemStatus()
+int TorrentWrapper::GetTorrentSystemStatus() const
 {
     if (ingame) return 2;
     return 1;
@@ -462,17 +467,30 @@ void TorrentWrapper::HandleCompleted()
 				wxString source_path = TowxString( handle.save_path().string() )  +
 									   wxFileName::GetPathSeparator() +
 									   TowxString( handle.get_torrent_info().file_at( 0 ).path.string() );
+				wxString dest_path = wxPathOnly( dest_filename );
+				if ( !wxDirExists( dest_path ) )
+						wxMkdir( dest_path );
 				bool ok = wxCopyFile( source_path, dest_filename );
 				if ( !ok )
 				{
-					customMessageBoxNoModal( SL_MAIN_ICON, wxString::Format( _("File copy from %s to %s failed.\nPlease copy manually and reload maps/mods afterwards"),
-																			 source_path.c_str(), dest_filename.c_str() ),
-											 _("Copy failed") );
+					wxString msg = wxString::Format( _("File copy from %s to %s failed.\nPlease copy manually and reload maps/mods afterwards"),
+								source_path.c_str(), dest_filename.c_str() );
+					wxLogError( _T("DL: File copy from %s to %s failed."), source_path.c_str(), dest_filename.c_str() );
+					wxMutexGuiLocker locker;
+					#ifdef __WXMSW__
+						UiEvents::StatusData data( msg, 1 );
+						UiEvents::GetStatusEventSender( UiEvents::addStatusMessage ).SendEvent( data );
+					#else
+						customMessageBoxNoModal( SL_MAIN_ICON, msg, _("Copy failed") );
+					#endif
 					//this basically invalidates the handle for further use
 					m_torr->remove_torrent( handle );
 				}
 				else
 				{
+					wxRemoveFile( source_path );
+					wxLogDebug( _T("DL complete: %s"), info.m_name.c_str() );
+					wxMutexGuiLocker locker;
 					UiEvents::StatusData data( wxString::Format( _("Download completed: %s"), info.m_name.c_str() ), 1 );
 					UiEvents::GetStatusEventSender( UiEvents::addStatusMessage ).SendEvent( data );
 					num_completed++;
@@ -492,6 +510,7 @@ std::map<wxString,TorrentInfos> TorrentWrapper::CollectGuiInfos()
     std::map<wxString,TorrentInfos> ret;
     try
     {
+		const TorrenthandleInfoMap& infomap = GetHandleInfoMap();
         TorrentInfos globalinfos;
         libtorrent::session_status session_status = m_torr->status();
         globalinfos.downloadstatus = P2P::leeching;
@@ -503,26 +522,29 @@ std::map<wxString,TorrentInfos> TorrentWrapper::CollectGuiInfos()
         ret[wxString(_T("global"))] = globalinfos;
 
 		const TorrenthandleVector torrentList = m_torr->get_torrents();
-		const TorrenthandleInfoMap& infomap = GetHandleInfoMap();
 		for ( TorrenthandleInfoMap::const_iterator i = infomap.begin(); i != infomap.end(); ++i )
         {
-            TorrentInfos CurrentTorrent;
-			libtorrent::torrent_handle handle = i->second;
-			libtorrent::torrent_status torrent_status = handle.status();
-			CurrentTorrent.name = i->first.m_name;
-            CurrentTorrent.progress = torrent_status.progress;
-            CurrentTorrent.downloaded = torrent_status.total_payload_download;
-            CurrentTorrent.inspeed = torrent_status.download_payload_rate;
-            CurrentTorrent.numcopies = torrent_status.distributed_copies;
-			CurrentTorrent.filesize = handle.get_torrent_info().total_size();
+			try {
+				TorrentInfos CurrentTorrent;
+				libtorrent::torrent_handle handle = i->second;
+				libtorrent::torrent_status torrent_status = handle.status();
+				CurrentTorrent.name = i->first.m_name;
+				CurrentTorrent.progress = torrent_status.progress;
+				CurrentTorrent.downloaded = torrent_status.total_payload_download;
+				CurrentTorrent.inspeed = torrent_status.download_payload_rate;
+				CurrentTorrent.numcopies = torrent_status.distributed_copies;
+				CurrentTorrent.filesize = handle.get_torrent_info().total_size();
 
-			int eta_seconds = -1;
-			if ( CurrentTorrent.progress > 0 && CurrentTorrent.inspeed > 0)
-				eta_seconds = int (  (CurrentTorrent.filesize - CurrentTorrent.downloaded ) / CurrentTorrent.inspeed );
+				int eta_seconds = -1;
+				if ( CurrentTorrent.progress > 0 && CurrentTorrent.inspeed > 0)
+					eta_seconds = int (  (CurrentTorrent.filesize - CurrentTorrent.downloaded ) / CurrentTorrent.inspeed );
 
-			CurrentTorrent.eta = eta_seconds;
-			CurrentTorrent.downloadstatus = getP2PStatusFromHandle( handle );
-            ret[CurrentTorrent.name] = CurrentTorrent;
+				CurrentTorrent.eta = eta_seconds;
+				CurrentTorrent.downloadstatus = getP2PStatusFromHandle( handle );
+				ret[CurrentTorrent.name] = CurrentTorrent;
+			}
+			catch ( libtorrent::invalid_handle& h )
+			{}
         }
     }
     catch (std::exception& e)
@@ -616,6 +638,7 @@ void ResourceInfoWorkItem::Run()
 			for ( size_t i = 0; i < info.m_dependencies.Count(); ++i ) {
 				wxString dependency_name = info.m_dependencies[i];
 				PlasmaResourceInfo dependency_info = plasmaInterface().GetResourceInfo( dependency_name );
+				dependency_info.m_name = dependency_name;
 				if ( dependency_info.m_type == PlasmaResourceInfo::unknown )
 					continue;
 				if ( plasmaInterface().DownloadTorrentFile( dependency_info, sett().GetTorrentDataDir().GetFullPath() ) )

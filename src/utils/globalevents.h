@@ -10,9 +10,11 @@ namespace GlobalEvents {
       OnUnitsyncFirstTimeLoad,
       OnUnitsyncReloaded,
       OnSpringTerminated,
+	  OnSpringStarted,
       UpdateFinished,
       OnQuit,
       PlasmaResourceListParsed,
+	  BattleSyncReload,
 
       OnTimerUpdates
     };

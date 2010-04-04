@@ -44,13 +44,12 @@ ALsound::ALsound()
 	alListenerfv(AL_ORIENTATION,alori);
 	//*
 
-	assert(alureInitDevice(0, 0));
+	alureInitDevice(0, 0);
 
 	alGenSources(m_num_sources,m_sources);
 	if(alGetError()!=AL_NO_ERROR)
 	{
 		wxLogError( TowxString(alureGetErrorString()) );
-		assert( false );
 		return;
 	}
 
@@ -60,7 +59,6 @@ ALsound::ALsound()
 	if ( alGetError()!=AL_NO_ERROR )
 	{
 		wxLogError( TowxString(alureGetErrorString()) );
-		assert( false );
 		return;
 	}
 	alSourcei(m_sources[0], AL_BUFFER, m_buffers[0] );
@@ -68,7 +66,6 @@ ALsound::ALsound()
 	if ( alGetError()!=AL_NO_ERROR )
 	{
 		wxLogError( TowxString(alureGetErrorString()) );
-		assert( false );
 		return;
 	}
 }

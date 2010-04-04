@@ -22,13 +22,23 @@
 class NetDebugReport : public wxDebugReportCompress
 {
   public:
-      //! @brief class contructor that sets curl arguments
-      NetDebugReport();
+	  NetDebugReport( const char* url );
+
+	  //! the real workhorse
       bool Process();
 
   protected:
       //! @brief gets called after server answered to the upload attempt
       bool OnServerReply(const wxArrayString& reply);
+	  const char* m_url;
+};
+
+class SpringDebugReport : public NetDebugReport {
+	public:
+		SpringDebugReport();
+protected:
+		void AddVFSFile( const wxString& fn, const wxString& id );
+
 };
 
 //! @brief dumps various infos to the zipped debug info package and calls NetDebugReport if network is present
@@ -63,9 +73,9 @@ class CrashReport
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by
     the Free Software Foundation.
 

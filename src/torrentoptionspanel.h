@@ -19,11 +19,6 @@ class TorrentOptionsPanel: public wxScrolledWindow
         TorrentOptionsPanel( wxWindow* parent );
         ~TorrentOptionsPanel();
 
-        //void OnEnableP2P( wxCommandEvent& event );
-        void OnMaxUp( wxCommandEvent& event );
-        void OnMaxDown( wxCommandEvent& event );
-        void OnP2PPort( wxCommandEvent& event );
-        void OnMaxConnections( wxCommandEvent& event );
         void OnApply( wxCommandEvent& event );
         void OnRestore( wxCommandEvent& event );
 
@@ -32,11 +27,7 @@ class TorrentOptionsPanel: public wxScrolledWindow
         wxTextCtrl* m_maxDown;
         wxTextCtrl* m_p2pport;
         wxTextCtrl* m_maxConnections;
-        wxStaticBox* m_autostart_box;
         wxStaticBox* m_gamestart_box;
-        wxRadioButton* m_autostart_start;
-        wxRadioButton* m_autostart_logon;
-        wxRadioButton* m_autostart_manual;
         wxRadioButton* m_gamestart_pause;
         wxRadioButton* m_gamestart_throttle;
         wxTextCtrl* m_gamestart_throttle_up;
@@ -46,8 +37,6 @@ class TorrentOptionsPanel: public wxScrolledWindow
 
         void EnableSettings( bool enable);
         void SetStatusDisplay();
-        void SetAutoStartRadio();
-
 
         enum
         {
@@ -58,7 +47,6 @@ class TorrentOptionsPanel: public wxScrolledWindow
             ID_MAXCONNECTIONS,
             ID_APPLY,
             ID_RESTORE,
-            ID_AUTOSTART_RADIO,
             ID_GAMESTART_RADIO,
             ID_INGAME_UP,
             ID_INGAME_DOWN
@@ -73,9 +61,9 @@ class TorrentOptionsPanel: public wxScrolledWindow
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by
     the Free Software Foundation.
 

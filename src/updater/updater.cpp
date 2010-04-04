@@ -124,7 +124,7 @@ bool UpdaterClass::UpdateExe( const wxString& newexe, bool /*unused*/ ) {
 
 bool UpdaterClass::PostMinGW44( const wxString& newdir )
 {
-    wxString current = TowxString(VERSION);
+	wxString current = GetSpringLobbyVersion(false);
     long minor = std::numeric_limits<long>::max();
     bool convert_ok = current.AfterLast( '.' ).ToLong( &minor );
     wxLogMessage( wxString::Format( _T("Got minor rev %d"), minor ) );

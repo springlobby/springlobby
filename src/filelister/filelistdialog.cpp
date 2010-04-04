@@ -86,6 +86,7 @@ void FileListDialog::UpdateList( GlobalEvents::GlobalEventData )
 
 void FileListDialog::OnDownload( wxCommandEvent& /*unused*/ )
 {
+	//!TODO check that usync is loaded before
     typedef FileListCtrl::InternalNameVector InternalNameVector;
     InternalNameVector names;
     m_filelistctrl->GetSelectedHashes(names);

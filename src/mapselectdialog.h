@@ -5,7 +5,7 @@
 
 #include <vector>
 #include "gui/windowattributespickle.h"
-
+#include "utils/isink.h"
 //(*Headers(MapSelectDialog)
 #include <wx/dialog.h>
 class wxStdDialogButtonSizer;
@@ -24,14 +24,16 @@ class Ui;
 struct UnitSyncMap;
 
 
-class MapSelectDialog: public wxDialog, public WindowAttributesPickle
+class MapSelectDialog: public wxDialog, public WindowAttributesPickle, public UnitsyncReloadedSink<MapSelectDialog>
 {
 	public:
 
-		MapSelectDialog( wxWindow* parent );
+		MapSelectDialog( wxWindow* parent = 0 );
 		virtual ~MapSelectDialog();
 
 		UnitSyncMap* GetSelectedMap() const;
+
+		void OnUnitsyncReloaded( GlobalEvents::GlobalEventData data );
 
 	protected:
 
@@ -101,13 +103,14 @@ class MapSelectDialog: public wxDialog, public WindowAttributesPickle
 		DECLARE_EVENT_TABLE()
 };
 
+MapSelectDialog& mapSelectDialog();
 #endif
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by
     the Free Software Foundation.
 

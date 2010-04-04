@@ -10,6 +10,7 @@
 #include "utils/controls.h"
 #include "utils/debug.h"
 #include "settings.h"
+#include "globalsmanager.h"
 #include <wx/settings.h>
 
 //(*InternalHeaders(MapSelectDialog)
@@ -178,6 +179,8 @@ MapSelectDialog::~MapSelectDialog()
         sett().SetMapSelectorFilterRadio( m_filter_recent_sett );
     else
         sett().SetMapSelectorFilterRadio( m_filter_popular_sett );
+	if ( IsShown() )
+		EndModal( 0 );
 }
 
 
@@ -307,7 +310,7 @@ void MapSelectDialog::OnMapSelected( wxCommandEvent& event )
 	if ( pMap == NULL) return;
 	const UnitSyncMap& map = *pMap;
 
-	m_map_name->SetLabel( RefineMapname( map.name ) + _T("\n\n") + map.info.description );
+	m_map_name->SetLabel( map.name + _T("\n\n") + map.info.description );
 
 	// TODO: refactor, this is copied from battlemaptab.cpp
 	m_map_opts_list->SetItem( 0, 1, wxString::Format( _T("%dx%d"), map.info.width/512, map.info.height/512 ) );
@@ -372,9 +375,9 @@ void MapSelectDialog::LoadPopular()
 	m_mapgrid->Clear();
 
 	try {
-		ui().GetServer().battles_iter->IteratorBegin();
-		while ( !ui().GetServer().battles_iter->EOL() ) {
-			Battle* b = ui().GetServer().battles_iter->GetBattle();
+		serverSelector().GetServer().battles_iter->IteratorBegin();
+		while ( !serverSelector().GetServer().battles_iter->EOL() ) {
+			Battle* b = serverSelector().GetServer().battles_iter->GetBattle();
 			if ( b != NULL ) m_mapgrid->AddMap( b->GetHostMapName() );
 		}
 	}
@@ -429,4 +432,25 @@ void MapSelectDialog::OnFilterTextChanged(wxCommandEvent& /*unused*/)
 {
 	wxLogDebugFunc( _T("") );
 	UpdateSortAndFilter();
+}
+#ifdef __WXMSW__
+	#include "ui.h"
+	#include "mainwindow.h"
+#endif
+MapSelectDialog& mapSelectDialog()
+{
+	#ifdef __WXMSW__
+		static MapSelectDialog* m = new MapSelectDialog( &ui().mw() );
+		return *m;
+	#else
+	/* either a globals handled or directly on stack created dialog would result in sigsegv / sigabrt in dtor, no idea why */
+		static MapSelectDialog* m = new MapSelectDialog( 0 );
+		return *m;
+	#endif
+}
+
+void MapSelectDialog::OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ )
+{
+	wxInitDialogEvent dummy;
+	AddPendingEvent( dummy );
 }

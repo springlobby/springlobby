@@ -2,14 +2,6 @@
 
 #include "platform.h"
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
-#ifndef VERSION
-	#define VERSION "unknown"
-#endif
-
 #include <wx/string.h>
 #include <wx/log.h>
 #include <wx/dynlib.h>

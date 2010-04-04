@@ -14,12 +14,16 @@
 #include <wx/file.h>
 #include <wx/log.h>
 #include <wx/platinfo.h>
+#include <curl/curl.h>
+#include <curl/types.h>
+#include <curl/easy.h>
 
 #include "updater/updatehelper.h"
 #include "utils/conversion.h"
 #include "settings.h"
 #include "curl/http.h"
 #include "stacktrace.h"
+#include "springunitsync.h"
 
 #if ! wxUSE_STACKWALKER
     #include "utils/stack.h"
@@ -28,9 +32,9 @@
     #include <iterator>
 #endif
 
-NetDebugReport::NetDebugReport()
+NetDebugReport::NetDebugReport( const char* url )
+	: m_url( url )
 {
-
 }
 
 bool NetDebugReport::Process()
@@ -38,69 +42,107 @@ bool NetDebugReport::Process()
     wxDebugReportCompress::Process(); //compress files into zip
     wxString filename = GetCompressedFileName();
     CwdGuard setCwd( wxPathOnly( filename ) );
-    wxCurlHTTP http( _T("http://debug.springlobby.info/upload.php") );
-    struct curl_forms testform[2];
+	wxLogMessage( filename );
+	wxStringOutputStream response;
+	wxStringOutputStream rheader;
+	CURL *curl_handle;
+	curl_handle = curl_easy_init();
+	struct curl_slist* m_pHeaders = NULL;
+	struct curl_httppost*   m_pPostHead = NULL;
+	struct curl_httppost*   m_pPostTail = NULL;
+	struct curl_forms testform[2];
 
-//    testform[0].option = CURLFORM_COPYNAME;
-//    testform[0].value = "file";
-    testform[0].option = CURLFORM_FILE;
-    testform[0].value = "springlobby.zip";//filename.mb_str();
-    testform[1].option = CURLFORM_END;
+	// these header lines will overwrite/add to cURL defaults
+	m_pHeaders = curl_slist_append(m_pHeaders, "Expect:") ;
 
-    assert(http.AddForm(true, _T("file"), testform));
+	testform[0].option = CURLFORM_FILE;
+	//we need to keep these buffers around for curl op duration
+	wxCharBuffer filename_buffer = filename.mb_str();
+	testform[0].value = (const char*)filename_buffer;
+	testform[1].option = CURLFORM_END;
+	curl_formadd(&m_pPostHead, &m_pPostTail, CURLFORM_COPYNAME,
+						   "file",
+						   CURLFORM_ARRAY, testform, CURLFORM_END);
+	curl_easy_setopt(curl_handle, CURLOPT_HTTPHEADER, m_pHeaders);
+	curl_easy_setopt(curl_handle, CURLOPT_URL, m_url );
+//	curl_easy_setopt(curl_handle, CURLOPT_VERBOSE, 1L);
+	curl_easy_setopt(curl_handle, CURLOPT_USERAGENT, "SpringLobby");
+	curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, wxcurl_stream_write);
+	curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, (void *)&response);
+	curl_easy_setopt(curl_handle, CURLOPT_WRITEHEADER, (void *)&rheader);
+	curl_easy_setopt(curl_handle, CURLOPT_POST, TRUE);
+	curl_easy_setopt(curl_handle, CURLOPT_HTTPPOST, m_pPostHead);
 
-//			if(http.Post(szData.ToAscii(), szData.Len()))
-    wxString szResponse;
-    if(http.Post())
-    {
-        wxMemoryOutputStream outStream;
+	CURLcode ret = curl_easy_perform(curl_handle);
 
-        wxString szVerbose;
-        http.GetVerboseString(szVerbose);
+	wxLogError( rheader.GetString()  );
 
-        szResponse = wxT("SUCCESS!\n\n");
-        szResponse += http.GetResponseBody();
-        szResponse += wxT("\n\nVERBOSE DATA:\n");
-        szResponse += szVerbose;
-        wxLogMessage( szResponse );
-        return true;
-    }
-    else
-    {
-        szResponse = wxT("FAILURE!\n\n");
-        szResponse += wxString::Format(wxT("\nResponse Code: %d\n\n"), http.GetResponseCode());
-        szResponse += http.GetResponseHeader();
-        szResponse += wxT("\n\n");
-        szResponse += http.GetResponseBody();
-        szResponse += wxT("\n\n");
-        szResponse += http.GetErrorString();
-        wxLogMessage( szResponse );
-        return false;
-    }
+  /* cleanup curl stuff */
+	curl_easy_cleanup(curl_handle);
+	curl_formfree(m_pPostHead);
 
+	wxString szResponse;
+	if(ret == CURLE_OK)
+		szResponse = wxT("SUCCESS!\n\n");
+	else
+		szResponse = wxT("FAILURE!\n\n");
+	szResponse += wxString::Format(wxT("\nResponse Code: %d\n\n"), ret);
+	szResponse += rheader.GetString();
+	szResponse += wxT("\n\n");
+	szResponse += response.GetString();
+	szResponse += wxT("\n\n");
+	wxLogMessage( szResponse );
+
+	return ret == CURLE_OK;
 }
 
 bool NetDebugReport::OnServerReply( const wxArrayString& reply )
 {
-	if ( reply.IsEmpty() )
-	{
+	if ( reply.IsEmpty() ) {
 		wxLogError( _T( "Didn't receive the expected server reply." ) );
 		return false;
 	}
 
 	wxString s( _T( "Server replied:\n" ) );
-
 	const size_t count = reply.GetCount();
-	for ( size_t n = 0; n < count; n++ )
-	{
+	for ( size_t n = 0; n < count; n++ ) {
 		s << _T( '\t' ) << reply[n] << _T( '\n' );
 	}
 
 	wxLogMessage( _T( "%s" ), s.c_str() );
-
 	return true;
 }
 
+void SpringDebugReport::AddVFSFile( const wxString& fn, const wxString& id )
+{
+	wxString dir = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator();
+	AddFile( dir + fn, id );
+	return;
+	wxArrayString res = usync().FindFilesVFS( fn );
+	if ( res.Count() > 0 ) {
+		AddFile( res[0], id );
+		wxLogError( _T("SpringDebugReport: file found: "), res[0].c_str() );
+	}
+	else
+		wxLogError( _T("SpringDebugReport: file not found: "), fn.c_str() );
+}
+
+SpringDebugReport::SpringDebugReport()
+	: NetDebugReport( "http://infologs.springzine.net/upload" )
+{
+	wxString tmp_filename = wxPathOnly( wxFileName::CreateTempFileName(_T("dummy")) ) + wxFileName::GetPathSeparator() + _T("settings.txt");
+	wxCopyFile( sett().GetCurrentUsedSpringConfigFilePath(), tmp_filename );
+	AddFile( tmp_filename, _T("Settings") );
+
+	AddVFSFile( _T("infolog.txt"),		_T("Infolog") );
+	AddVFSFile( _T("script.txt"),		_T("Script") );
+	AddVFSFile( _T("ext.txt"),			_T("Extensions") );
+	AddVFSFile( _T("unitsync.log"),		_T("unitsync") );
+
+	wxString info;
+	info << wxGetOsDescription() << ( wxIsPlatform64Bit() ? _T(" 64bit\n") : _T(" 32bit\n") );
+	AddText( _T("platform.txt"), info, _T("Platform") );
+}
 
 #if wxUSE_STACKWALKER
     void CrashReport::GenerateReport()
@@ -115,9 +157,7 @@ bool NetDebugReport::OnServerReply( const wxArrayString& reply )
 #else
 	bool online = true; // TODO (BrainDamage#1#): check if being online
 #endif
-	NetDebugReport* report = new NetDebugReport;
-//	online  ? new NetDebugReport //Process() is not virtual --> THIS WAS FAIL
-//	                                : new wxDebugReportCompress;
+	NetDebugReport* report = new NetDebugReport( "http://debug.springlobby.info/upload.php" ) ;
 
 	// add all standard files: currently this means just a minidump and an
 	// XML file with system info and stack trace
