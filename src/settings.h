@@ -4,7 +4,7 @@
 #include <wx/string.h>
 #include <vector>
 
-const int CACHE_VERSION     = 10;
+const int CACHE_VERSION     = 11;
 const int SETTINGS_VERSION  = 21;
 
 const wxString DEFSETT_DEFAULT_SERVER_NAME= _T("Official server");
