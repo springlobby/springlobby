@@ -182,7 +182,8 @@ SpringDebugReport::SpringDebugReport()
     StackTrace stacktrace;
     stacktrace.Walk( 2, 20 );
     report->AddText( _T( "stacktrace.txt" ), stacktrace.GetStackTrace(), _( "StackTrace" ) );
-#else
+#endif
+#if 0 // this simpy does not bild on mingw atm
     dbg::stack stack;
     std::stringstream stack_str;
     std::copy(stack.begin(), stack.end(), std::ostream_iterator<dbg::stack_frame>(stack_str, "\n"));

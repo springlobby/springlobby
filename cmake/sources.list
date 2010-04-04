@@ -159,7 +159,6 @@ SET(SLSharedWithSettings
 	src/utils/globalevents.cpp
 	src/utils/platform.cpp
 	src/utils/sltipwin.cpp
-	src/utils/stack.cpp
 	src/utils/uievents.cpp
 	src/crashreport.cpp
 	src/globalsmanager.cpp
@@ -168,7 +167,6 @@ SET(SLSharedWithSettings
 	src/settings.cpp
 	src/springunitsynclib.cpp
 	src/springunitsync.cpp
-	src/stacktrace.cpp
 	src/thread.cpp
 	src/gui/windowattributespickle.cpp
 	src/gui/spinctl/generic/spinctlg.cpp
