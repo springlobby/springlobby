@@ -19,6 +19,7 @@ SET(springlobbySrc
 	src/aui/slbook.cpp
 	src/utils/math.cpp
 	src/utils/misc.cpp
+	src/gui/pastedialog.cpp
 	src/utils/tasutil.cpp
 	src/utils/networkevents.cpp
 	src/utils/md5.c
