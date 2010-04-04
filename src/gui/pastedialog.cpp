@@ -38,12 +38,12 @@
 #endif
 
 BEGIN_EVENT_TABLE(PasteDialog,wxDialog)
-//  EVT_BUTTON(wxID_NO, PasteDialog::OnOptionsNo)
+		EVT_BUTTON(ID_PASTE_BUTTON, PasteDialog::OnPasteButton)
+		EVT_BUTTON(wxID_NO, PasteDialog::OnOptionsNo)
 END_EVENT_TABLE()
 
 PasteDialog::PasteDialog( wxWindow *parent, const wxString& message )
-	: wxDialog(parent,-1,_( "Flood warning" ),wxDefaultPosition,wxDefaultSize,wxFRAME_FLOAT_ON_PARENT|wxDEFAULT_DIALOG_STYLE),
-	m_message( message )
+	: wxDialog(parent,-1,_( "Flood warning" ),wxDefaultPosition,wxDefaultSize,wxFRAME_FLOAT_ON_PARENT|wxDEFAULT_DIALOG_STYLE)
 {
 	SetIcon( wxIcon(springlobby_xpm) );
 
@@ -65,8 +65,11 @@ PasteDialog::PasteDialog( wxWindow *parent, const wxString& message )
 
 	// 3) buttons
 	wxSizer *sizerBtn = CreateButtonSizer(wxYES_NO);
-	if ( sizerBtn )
+	if ( sizerBtn ) {
+		wxButton* but = new wxButton( this, ID_PASTE_BUTTON, _("Use pastebin") );
+		sizerBtn->Add( but, 0, wxALL, 10 );
 		topsizer->Add(sizerBtn, 0, wxALIGN_CENTRE| wxALL, 10 );
+	}
 
 
 	SetAutoLayout( true );
@@ -81,3 +84,13 @@ PasteDialog::PasteDialog( wxWindow *parent, const wxString& message )
 
 PasteDialog::~PasteDialog()
 {}
+
+void PasteDialog::OnPasteButton( wxCommandEvent& /*evt*/ )
+{
+	EndModal( pasteButtonReturnCode );
+}
+
+void CustomMessageBox::OnOptionsNo(wxCommandEvent& /*unused*/)
+{
+   EndModal(wxID_NO);
+}

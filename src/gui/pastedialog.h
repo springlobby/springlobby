@@ -29,12 +29,14 @@ public:
 	PasteDialog( wxWindow *parent, const wxString& message );
 	virtual ~PasteDialog();
 
-//	void OnOptionsNo(wxCommandEvent& event);
+	static const int pasteButtonReturnCode = wxID_HIGHEST + 1;
 
 protected:
-
-	const wxString& m_message;
-	 DECLARE_EVENT_TABLE()
+	enum {
+		ID_PASTE_BUTTON = wxID_HIGHEST
+	};
+	void OnPasteButton( wxCommandEvent& evt );
+	DECLARE_EVENT_TABLE()
 
 };
 
