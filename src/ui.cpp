@@ -647,7 +647,9 @@ void Ui::OnDisconnected( Server& server, bool wasonline )
 
 void Ui::ConnectionFailurePrompt()
 {
-	wxMessageDialog dlg( &mw(), _("A connection couldn't be established with the server\nWould you like to try again with the same server?\nNo to switch to next server in the list"), _("Connection failure"), wxYES_NO | wxCANCEL | wxNO_DEFAULT );
+	static wxMessageDialog dlg( &mw(), _("A connection couldn't be established with the server\nWould you like to try again with the same server?\nNo to switch to next server in the list"), _("Connection failure"), wxYES_NO | wxCANCEL | wxNO_DEFAULT );
+	if ( dlg.IsShown() )
+		return;
 	switch ( dlg.ShowModal() )
 	{
 		case wxID_YES: // try again with the same server/settings
