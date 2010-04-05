@@ -12,18 +12,18 @@
 void StackTrace::OnStackFrame ( const wxStackFrame& frame )
 {
 //  StackTraceString += wxString::Format( _T("(%d) "), frame.GetLevel() ); // (frame_level_number)
-  PartToHash += wxString::Format( _T("(%d) "), frame.GetLevel() );
+//  PartToHash += wxString::Format( _T("(%d) "), frame.GetLevel() );
   StackTraceString += wxString::Format( _T("%p "), frame.GetAddress() ); // [calling_address]
 
 
     StackTraceString += frame.GetName();  // function_name
-    PartToHash += frame.GetName() + _T("\n");
+//    PartToHash += frame.GetName() + _T("\n");
 
   if ( frame.HasSourceLocation() )
   {
     int paramcount = frame.GetParamCount();
     if ( paramcount == 0 ){
-      StackTraceString += _T("\n");
+	  StackTraceString += _T(" ");
     } else {
       StackTraceString += _T("(");
       while ( paramcount > 0 )
