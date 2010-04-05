@@ -800,256 +800,260 @@ void GenerateExceptionReport(PEXCEPTION_POINTERS pExceptionInfo)
 	HMODULE hModule;
 	PCONTEXT pContext;
 
-	// Start out with a banner
-	rprintf(_T("-------------------\r\n\r\n"));
+	#if defined(SHOW_EXTRA_REPORT_STUFF)
+		// Start out with a banner
+		rprintf(_T("-------------------\r\n\r\n"));
 
-	{
-		TCHAR *lpDayOfWeek[] = {
-			_T("Sunday"),
-			_T("Monday"),
-			_T("Tuesday"),
-			_T("Wednesday"),
-			_T("Thursday"),
-			_T("Friday"),
-			_T("Saturday")
-		};
-		TCHAR *lpMonth[] = {
-			NULL,
-			_T("January"),
-			_T("February"),
-			_T("March"),
-			_T("April"),
-			_T("May"),
-			_T("June"),
-			_T("July"),
-			_T("August"),
-			_T("September"),
-			_T("October"),
-			_T("November"),
-			_T("December")
-		};
-		SYSTEMTIME SystemTime;
+		{
+			TCHAR *lpDayOfWeek[] = {
+				_T("Sunday"),
+				_T("Monday"),
+				_T("Tuesday"),
+				_T("Wednesday"),
+				_T("Thursday"),
+				_T("Friday"),
+				_T("Saturday")
+			};
+			TCHAR *lpMonth[] = {
+				NULL,
+				_T("January"),
+				_T("February"),
+				_T("March"),
+				_T("April"),
+				_T("May"),
+				_T("June"),
+				_T("July"),
+				_T("August"),
+				_T("September"),
+				_T("October"),
+				_T("November"),
+				_T("December")
+			};
+			SYSTEMTIME SystemTime;
 
-		GetLocalTime(&SystemTime);
-		rprintf(_T("Error occured on %s, %s %i, %i at %02i:%02i:%02i.\r\n\r\n"),
-			lpDayOfWeek[SystemTime.wDayOfWeek],
-			lpMonth[SystemTime.wMonth],
-			SystemTime.wDay,
-			SystemTime.wYear,
-			SystemTime.wHour,
-			SystemTime.wMinute,
-			SystemTime.wSecond
-		);
-	}
+			GetLocalTime(&SystemTime);
+			rprintf(_T("Error occured on %s, %s %i, %i at %02i:%02i:%02i.\r\n\r\n"),
+				lpDayOfWeek[SystemTime.wDayOfWeek],
+				lpMonth[SystemTime.wMonth],
+				SystemTime.wDay,
+				SystemTime.wYear,
+				SystemTime.wHour,
+				SystemTime.wMinute,
+				SystemTime.wSecond
+			);
+		}
 
-	// First print information about the type of fault
-	rprintf(_T("%s caused "),  GetModuleFileName(NULL, szModule, MAX_PATH) ? szModule : "Application");
-	switch(pExceptionRecord->ExceptionCode)
-	{
-		case EXCEPTION_ACCESS_VIOLATION:
-			rprintf(_T("an Access Violation"));
-			break;
+		// First print information about the type of fault
+		rprintf(_T("%s caused "),  GetModuleFileName(NULL, szModule, MAX_PATH) ? szModule : "Application");
+		switch(pExceptionRecord->ExceptionCode)
+		{
+			case EXCEPTION_ACCESS_VIOLATION:
+				rprintf(_T("an Access Violation"));
+				break;
 
-		case EXCEPTION_ARRAY_BOUNDS_EXCEEDED:
-			rprintf(_T("an Array Bound Exceeded"));
-			break;
+			case EXCEPTION_ARRAY_BOUNDS_EXCEEDED:
+				rprintf(_T("an Array Bound Exceeded"));
+				break;
 
-		case EXCEPTION_BREAKPOINT:
-			rprintf(_T("a Breakpoint"));
-			break;
+			case EXCEPTION_BREAKPOINT:
+				rprintf(_T("a Breakpoint"));
+				break;
 
-		case EXCEPTION_DATATYPE_MISALIGNMENT:
-			rprintf(_T("a Datatype Misalignment"));
-			break;
+			case EXCEPTION_DATATYPE_MISALIGNMENT:
+				rprintf(_T("a Datatype Misalignment"));
+				break;
 
-		case EXCEPTION_FLT_DENORMAL_OPERAND:
-			rprintf(_T("a Float Denormal Operand"));
-			break;
+			case EXCEPTION_FLT_DENORMAL_OPERAND:
+				rprintf(_T("a Float Denormal Operand"));
+				break;
 
-		case EXCEPTION_FLT_DIVIDE_BY_ZERO:
-			rprintf(_T("a Float Divide By Zero"));
-			break;
+			case EXCEPTION_FLT_DIVIDE_BY_ZERO:
+				rprintf(_T("a Float Divide By Zero"));
+				break;
 
-		case EXCEPTION_FLT_INEXACT_RESULT:
-			rprintf(_T("a Float Inexact Result"));
-			break;
+			case EXCEPTION_FLT_INEXACT_RESULT:
+				rprintf(_T("a Float Inexact Result"));
+				break;
 
-		case EXCEPTION_FLT_INVALID_OPERATION:
-			rprintf(_T("a Float Invalid Operation"));
-			break;
+			case EXCEPTION_FLT_INVALID_OPERATION:
+				rprintf(_T("a Float Invalid Operation"));
+				break;
 
-		case EXCEPTION_FLT_OVERFLOW:
-			rprintf(_T("a Float Overflow"));
-			break;
+			case EXCEPTION_FLT_OVERFLOW:
+				rprintf(_T("a Float Overflow"));
+				break;
 
-		case EXCEPTION_FLT_STACK_CHECK:
-			rprintf(_T("a Float Stack Check"));
-			break;
+			case EXCEPTION_FLT_STACK_CHECK:
+				rprintf(_T("a Float Stack Check"));
+				break;
 
-		case EXCEPTION_FLT_UNDERFLOW:
-			rprintf(_T("a Float Underflow"));
-			break;
+			case EXCEPTION_FLT_UNDERFLOW:
+				rprintf(_T("a Float Underflow"));
+				break;
 
-		case EXCEPTION_GUARD_PAGE:
-			rprintf(_T("a Guard Page"));
-			break;
+			case EXCEPTION_GUARD_PAGE:
+				rprintf(_T("a Guard Page"));
+				break;
 
-		case EXCEPTION_ILLEGAL_INSTRUCTION:
-			rprintf(_T("an Illegal Instruction"));
-			break;
+			case EXCEPTION_ILLEGAL_INSTRUCTION:
+				rprintf(_T("an Illegal Instruction"));
+				break;
 
-		case EXCEPTION_IN_PAGE_ERROR:
-			rprintf(_T("an In Page Error"));
-			break;
+			case EXCEPTION_IN_PAGE_ERROR:
+				rprintf(_T("an In Page Error"));
+				break;
 
-		case EXCEPTION_INT_DIVIDE_BY_ZERO:
-			rprintf(_T("an Integer Divide By Zero"));
-			break;
+			case EXCEPTION_INT_DIVIDE_BY_ZERO:
+				rprintf(_T("an Integer Divide By Zero"));
+				break;
 
-		case EXCEPTION_INT_OVERFLOW:
-			rprintf(_T("an Integer Overflow"));
-			break;
+			case EXCEPTION_INT_OVERFLOW:
+				rprintf(_T("an Integer Overflow"));
+				break;
 
-		case EXCEPTION_INVALID_DISPOSITION:
-			rprintf(_T("an Invalid Disposition"));
-			break;
+			case EXCEPTION_INVALID_DISPOSITION:
+				rprintf(_T("an Invalid Disposition"));
+				break;
 
-		case EXCEPTION_INVALID_HANDLE:
-			rprintf(_T("an Invalid Handle"));
-			break;
+			case EXCEPTION_INVALID_HANDLE:
+				rprintf(_T("an Invalid Handle"));
+				break;
 
-		case EXCEPTION_NONCONTINUABLE_EXCEPTION:
-			rprintf(_T("a Noncontinuable Exception"));
-			break;
+			case EXCEPTION_NONCONTINUABLE_EXCEPTION:
+				rprintf(_T("a Noncontinuable Exception"));
+				break;
 
-		case EXCEPTION_PRIV_INSTRUCTION:
-			rprintf(_T("a Privileged Instruction"));
-			break;
+			case EXCEPTION_PRIV_INSTRUCTION:
+				rprintf(_T("a Privileged Instruction"));
+				break;
 
-		case EXCEPTION_SINGLE_STEP:
-			rprintf(_T("a Single Step"));
-			break;
+			case EXCEPTION_SINGLE_STEP:
+				rprintf(_T("a Single Step"));
+				break;
 
-		case EXCEPTION_STACK_OVERFLOW:
-			rprintf(_T("a Stack Overflow"));
-			break;
+			case EXCEPTION_STACK_OVERFLOW:
+				rprintf(_T("a Stack Overflow"));
+				break;
 
-		case DBG_CONTROL_C:
-			rprintf(_T("a Control+C"));
-			break;
+			case DBG_CONTROL_C:
+				rprintf(_T("a Control+C"));
+				break;
 
-		case DBG_CONTROL_BREAK:
-			rprintf(_T("a Control+Break"));
-			break;
+			case DBG_CONTROL_BREAK:
+				rprintf(_T("a Control+Break"));
+				break;
 
-		case DBG_TERMINATE_THREAD:
-			rprintf(_T("a Terminate Thread"));
-			break;
+			case DBG_TERMINATE_THREAD:
+				rprintf(_T("a Terminate Thread"));
+				break;
 
-		case DBG_TERMINATE_PROCESS:
-			rprintf(_T("a Terminate Process"));
-			break;
+			case DBG_TERMINATE_PROCESS:
+				rprintf(_T("a Terminate Process"));
+				break;
 
-		case RPC_S_UNKNOWN_IF:
-			rprintf(_T("an Unknown Interface"));
-			break;
+			case RPC_S_UNKNOWN_IF:
+				rprintf(_T("an Unknown Interface"));
+				break;
 
-		case RPC_S_SERVER_UNAVAILABLE:
-			rprintf(_T("a Server Unavailable"));
-			break;
+			case RPC_S_SERVER_UNAVAILABLE:
+				rprintf(_T("a Server Unavailable"));
+				break;
 
-		default:
-			/*
-			static TCHAR szBuffer[512] = { 0 };
+			default:
+				/*
+				static TCHAR szBuffer[512] = { 0 };
 
-			// If not one of the "known" exceptions, try to get the string
-			// from NTDLL.DLL's message table.
+				// If not one of the "known" exceptions, try to get the string
+				// from NTDLL.DLL's message table.
 
-			FormatMessage(FORMAT_MESSAGE_IGNORE_INSERTS | FORMAT_MESSAGE_FROM_HMODULE,
-							GetModuleHandle(_T("NTDLL.DLL")),
-							dwCode, 0, szBuffer, sizeof(szBuffer), 0);
-			*/
+				FormatMessage(FORMAT_MESSAGE_IGNORE_INSERTS | FORMAT_MESSAGE_FROM_HMODULE,
+								GetModuleHandle(_T("NTDLL.DLL")),
+								dwCode, 0, szBuffer, sizeof(szBuffer), 0);
+				*/
 
-			rprintf(_T("an Unknown [0x%lX] Exception"), pExceptionRecord->ExceptionCode);
-			break;
-	}
+				rprintf(_T("an Unknown [0x%lX] Exception"), pExceptionRecord->ExceptionCode);
+				break;
+		}
 
-	// Now print information about where the fault occured
-	rprintf(_T(" at location %08x"), (DWORD) pExceptionRecord->ExceptionAddress);
-	if((hModule = (HMODULE) GetModuleBase((DWORD) pExceptionRecord->ExceptionAddress)) && GetModuleFileName(hModule, szModule, sizeof(szModule)))
-		rprintf(_T(" in module %s"), szModule);
+		// Now print information about where the fault occured
+		rprintf(_T(" at location %08x"), (DWORD) pExceptionRecord->ExceptionAddress);
+		if((hModule = (HMODULE) GetModuleBase((DWORD) pExceptionRecord->ExceptionAddress)) && GetModuleFileName(hModule, szModule, sizeof(szModule)))
+			rprintf(_T(" in module %s"), szModule);
 
-	// If the exception was an access violation, print out some additional information, to the error log and the debugger.
-	if(pExceptionRecord->ExceptionCode == EXCEPTION_ACCESS_VIOLATION && pExceptionRecord->NumberParameters >= 2)
-		rprintf(" %s location %08x", pExceptionRecord->ExceptionInformation[0] ? "Writing to" : "Reading from", pExceptionRecord->ExceptionInformation[1]);
+		// If the exception was an access violation, print out some additional information, to the error log and the debugger.
+		if(pExceptionRecord->ExceptionCode == EXCEPTION_ACCESS_VIOLATION && pExceptionRecord->NumberParameters >= 2)
+			rprintf(" %s location %08x", pExceptionRecord->ExceptionInformation[0] ? "Writing to" : "Reading from", pExceptionRecord->ExceptionInformation[1]);
 
-	rprintf(".\r\n\r\n");
+		rprintf(".\r\n\r\n");
 
-	pContext = pExceptionInfo->ContextRecord;
+		pContext = pExceptionInfo->ContextRecord;
 
-	#ifdef _M_IX86	// Intel Only!
+		#ifdef _M_IX86	// Intel Only!
 
-	// Show the registers
-	rprintf(_T("Registers:\r\n"));
-	if(pContext->ContextFlags & CONTEXT_INTEGER)
-		rprintf(
-			_T("eax=%08lx ebx=%08lx ecx=%08lx edx=%08lx esi=%08lx edi=%08lx\r\n"),
-			pContext->Eax,
-			pContext->Ebx,
-			pContext->Ecx,
-			pContext->Edx,
-			pContext->Esi,
-			pContext->Edi
-		);
-	if(pContext->ContextFlags & CONTEXT_CONTROL)
-		rprintf(
-			_T("eip=%08lx esp=%08lx ebp=%08lx iopl=%1lx %s %s %s %s %s %s %s %s %s %s\r\n"),
-			pContext->Eip,
-			pContext->Esp,
-			pContext->Ebp,
-			(pContext->EFlags >> 12) & 3,	//  IOPL level value
-			pContext->EFlags & 0x00100000 ? "vip" : "   ",	//  VIP (virtual interrupt pending)
-			pContext->EFlags & 0x00080000 ? "vif" : "   ",	//  VIF (virtual interrupt flag)
-			pContext->EFlags & 0x00000800 ? "ov" : "nv",	//  VIF (virtual interrupt flag)
-			pContext->EFlags & 0x00000400 ? "dn" : "up",	//  OF (overflow flag)
-			pContext->EFlags & 0x00000200 ? "ei" : "di",	//  IF (interrupt enable flag)
-			pContext->EFlags & 0x00000080 ? "ng" : "pl",	//  SF (sign flag)
-			pContext->EFlags & 0x00000040 ? "zr" : "nz",	//  ZF (zero flag)
-			pContext->EFlags & 0x00000010 ? "ac" : "na",	//  AF (aux carry flag)
-			pContext->EFlags & 0x00000004 ? "po" : "pe",	//  PF (parity flag)
-			pContext->EFlags & 0x00000001 ? "cy" : "nc"	//  CF (carry flag)
-		);
-	if(pContext->ContextFlags & CONTEXT_SEGMENTS)
-	{
-		rprintf(
-			_T("cs=%04lx  ss=%04lx  ds=%04lx  es=%04lx  fs=%04lx  gs=%04lx"),
-			pContext->SegCs,
-			pContext->SegSs,
-			pContext->SegDs,
-			pContext->SegEs,
-			pContext->SegFs,
-			pContext->SegGs,
-			pContext->EFlags
-		);
+		// Show the registers
+		rprintf(_T("Registers:\r\n"));
+		if(pContext->ContextFlags & CONTEXT_INTEGER)
+			rprintf(
+				_T("eax=%08lx ebx=%08lx ecx=%08lx edx=%08lx esi=%08lx edi=%08lx\r\n"),
+				pContext->Eax,
+				pContext->Ebx,
+				pContext->Ecx,
+				pContext->Edx,
+				pContext->Esi,
+				pContext->Edi
+			);
 		if(pContext->ContextFlags & CONTEXT_CONTROL)
 			rprintf(
-				_T("             efl=%08lx"),
-				pContext->EFlags
+				_T("eip=%08lx esp=%08lx ebp=%08lx iopl=%1lx %s %s %s %s %s %s %s %s %s %s\r\n"),
+				pContext->Eip,
+				pContext->Esp,
+				pContext->Ebp,
+				(pContext->EFlags >> 12) & 3,	//  IOPL level value
+				pContext->EFlags & 0x00100000 ? "vip" : "   ",	//  VIP (virtual interrupt pending)
+				pContext->EFlags & 0x00080000 ? "vif" : "   ",	//  VIF (virtual interrupt flag)
+				pContext->EFlags & 0x00000800 ? "ov" : "nv",	//  VIF (virtual interrupt flag)
+				pContext->EFlags & 0x00000400 ? "dn" : "up",	//  OF (overflow flag)
+				pContext->EFlags & 0x00000200 ? "ei" : "di",	//  IF (interrupt enable flag)
+				pContext->EFlags & 0x00000080 ? "ng" : "pl",	//  SF (sign flag)
+				pContext->EFlags & 0x00000040 ? "zr" : "nz",	//  ZF (zero flag)
+				pContext->EFlags & 0x00000010 ? "ac" : "na",	//  AF (aux carry flag)
+				pContext->EFlags & 0x00000004 ? "po" : "pe",	//  PF (parity flag)
+				pContext->EFlags & 0x00000001 ? "cy" : "nc"	//  CF (carry flag)
 			);
-	}
-	else
-		if(pContext->ContextFlags & CONTEXT_CONTROL)
+		if(pContext->ContextFlags & CONTEXT_SEGMENTS)
+		{
 			rprintf(
-				_T("                                                                       efl=%08lx"),
+				_T("cs=%04lx  ss=%04lx  ds=%04lx  es=%04lx  fs=%04lx  gs=%04lx"),
+				pContext->SegCs,
+				pContext->SegSs,
+				pContext->SegDs,
+				pContext->SegEs,
+				pContext->SegFs,
+				pContext->SegGs,
 				pContext->EFlags
 			);
-	rprintf(_T("\r\n\r\n"));
+			if(pContext->ContextFlags & CONTEXT_CONTROL)
+				rprintf(
+					_T("             efl=%08lx"),
+					pContext->EFlags
+				);
+		}
+		else
+			if(pContext->ContextFlags & CONTEXT_CONTROL)
+				rprintf(
+					_T("                                                                       efl=%08lx"),
+					pContext->EFlags
+				);
+		rprintf(_T("\r\n\r\n"));
 
-	#endif
+		#endif
+
+	#else
+		pContext = pExceptionInfo->ContextRecord;
+	#endif //SHOW_EXTRA_REPORT_STUFF
 
 	StackBackTrace(GetCurrentProcess(), GetCurrentThread(), pContext);
 
-	rprintf(_T("\r\n\r\n"));
 }
 
 #include <stdio.h>
