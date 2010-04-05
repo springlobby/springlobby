@@ -7,7 +7,11 @@ SET(CMAKE_COLOR_MAKEFILE ON)
 # Add Definitions, Compiler-Switches, etc.: -Wall -O2 -g3 ...
 # MSVC compiler (cl.exe) does not accept the same switches as gcc, although preprocessor definitions in the -D form will work for both
 IF(NOT MSVC)
-	ADD_DEFINITIONS(-Wall -Wno-strict-aliasing -Wextra)
+	IF( NOT MINGW )
+		#wxMSW generates > 9000 warnings with -wextra...
+		ADD_DEFINITIONS( -Wextra )
+	ENDIF( NOT MINGW )
+	ADD_DEFINITIONS( -Wall -Wno-strict-aliasing )
 ENDIF(NOT MSVC)
 IF(WIN32)
 	ADD_DEFINITIONS( -DWXUSINGDLL -D__WXMSW__ -D_WIN32_WINNT=0x0501)
@@ -20,7 +24,7 @@ ENDIF(MSVC)
 # General Settings
 #----------------------------------------------------------------------------------------------------
 SET( CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS true )
-SET(CMAKE_FIND_LIBRARY_SUFFIXES ".so" ".lib" ".a")
+SET( CMAKE_FIND_LIBRARY_SUFFIXES ".so" ".lib" ".a" )
 
 #----------------------------------------------------------------------------------------------------
 # Load needed Modules

@@ -29,7 +29,7 @@ SET( wxWidgets_LIBRARIES
 SET( wxWidgets_INCLUDE_DIRS /opt/mingw32/include/wx-2.8/ /opt/mingw32/lib/wx/include/i586-pc-mingw32-msw-unicode-release-2.8/)
 SET( wxWidgets_LIB_DIR /opt/mingw32/lib )
 SET( wxWidgets_CONFIGURATION mswu )
-SET( CMAKE_VERBOSE_MAKEFILE ON )
+SET( CMAKE_VERBOSE_MAKEFILE OFF )
 SET( wxWidgets_RC_DIR /opt/mingw32/include/wx-2.8 )
 #otherwise cmake finds linux lib for win...
 SET( ENV{OPENALDIR} /opt/mingw32/ )
@@ -41,6 +41,7 @@ SET( Boost_LIBRARIES
 	boost_system-gcc44-mt-1_41 )
 SET( boost_LIB_DIR /opt/mingw32/lib )
 SET( boost_INCLUDE_DIR /opt/mingw32/include )
+SET( WINDRES /opt/mingw32/bin/i586-pc-mingw32-windres )
 link_directories( /opt/mingw32/lib )
 INCLUDE_DIRECTORIES(/opt/mingw32/include  )
 INCLUDE_DIRECTORIES(/opt/mingw32/include/drmingw/include  )
