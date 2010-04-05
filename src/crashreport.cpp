@@ -150,7 +150,7 @@ SpringDebugReport::SpringDebugReport()
 #else
 	bool online = true; // TODO (BrainDamage#1#): check if being online
 #endif
-	NetDebugReport* report = new NetDebugReport( "http://debug.springlobby.info/upload.php" ) ;
+	NetDebugReport* report = new NetDebugReport( "http://debug.springzine.net/upload" ) ;
 
 	// add all standard files: currently this means just a minidump and an
 	// XML file with system info and stack trace
