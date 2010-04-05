@@ -132,6 +132,19 @@ SpringDebugReport::SpringDebugReport()
 	AddVFSFile( _T("ext.txt"),			_T("Extensions") );
 	AddVFSFile( _T("unitsync.log"),		_T("unitsync") );
 
+	wxString SlBuildFlags;
+	#ifdef NO_TORRENT_SYSTEM
+		SlBuildFlags += _T(" torrent=no");
+	#else
+		SlBuildFlags += _T(" torrent=yes");
+	#endif
+	#ifdef DISABLE_SOUND
+		SlBuildFlags += _T(" sound=no");
+	#else
+		SlBuildFlags += _T(" sound=yes");
+	#endif
+	AddText( _T("buildflags.txt"), SlBuildFlags, _T("BuildFlags") );
+
 	wxString info;
 	info << wxGetOsDescription() << ( wxIsPlatform64Bit() ? _T(" 64bit\n") : _T(" 32bit\n") );
 	AddText( _T("platform.txt"), info, _T("Platform") );
