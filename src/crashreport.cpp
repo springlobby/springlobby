@@ -151,7 +151,7 @@ SpringDebugReport::SpringDebugReport()
 #endif
 {
     wxLogMessage( _T( "Report generated in " ) );
-	wxSetWorkingDirectory( wxFileName::GetTempDir() );
+	CwdGuard cwgGuard( wxFileName::GetTempDir() );
 #if defined(__WXMSW__)
 	bool online = false; // TODO (BrainDamage#1#): check if being online
 #else
@@ -182,14 +182,11 @@ SpringDebugReport::SpringDebugReport()
     StackTrace stacktrace;
     stacktrace.Walk( 2, 20 );
     report->AddText( _T( "stacktrace.txt" ), stacktrace.GetStackTrace(), _( "StackTrace" ) );
-#endif
-#if 0 // this simpy does not bild on mingw atm
-    dbg::stack stack;
-    std::stringstream stack_str;
-    std::copy(stack.begin(), stack.end(), std::ostream_iterator<dbg::stack_frame>(stack_str, "\n"));
-
-    wxString trace_str ( TowxString( stack_str.str() ) );
-    report->AddText( _T( "stacktrace.txt" ), trace_str, _( "StackTrace" ) );
+#else
+	wxString report_fn = ( wxGetCwd() + wxFileName::GetPathSeparator() + _T("stacktrace.txt") );
+	wxCharBuffer report_fn_char = report_fn.mb_str();
+	TopLevelExceptionFilter( p, (const char*)report_fn_char );
+	report->AddFile( report_fn, _( "StackTrace" ) );
 #endif
 
     wxDebugReportPreviewStd* bkl = new wxDebugReportPreviewStd();

@@ -3,10 +3,10 @@
 
 #if defined(ENABLE_DEBUG_REPORT)
 
+#if wxUSE_STACKWALKER
 #include <wx/string.h>
 #include <wx/stackwalk.h>
 
-#if wxUSE_STACKWALKER
 
 class StackTrace : public wxStackWalker
 {
@@ -26,13 +26,19 @@ class StackTrace : public wxStackWalker
 };
 #else
     #ifdef __WXMSW__
-        #include <windows.h>
-        #include <process.h>
-        #include <imagehlp.h>
-        #include <signal.h>
-        class wxArrayString;
-        /** Print out a stacktrace. */
-        wxArrayString Stacktrace(LPEXCEPTION_POINTERS e);
+//		namespace StackTrace {
+			#include <windows.h>
+//			static std::string report_filename;
+//			long Stacktrace(LPEXCEPTION_POINTERS e);
+		#ifdef __cplusplus
+			extern "C" {
+		#endif
+				 LONG WINAPI TopLevelExceptionFilter(PEXCEPTION_POINTERS pExceptionInfo, const char* report_filename);
+		#ifdef __cplusplus
+			}
+		#endif
+	#else
+		#error "No usable stacktrace config, set ENABLE_DEBUG_REPORT=OFF in cmake"
     #endif
 #endif //#if wxUSE_STACKWALKER
 

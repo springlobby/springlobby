@@ -197,3 +197,9 @@ SET( templatesources
 )
 LIST( APPEND header ${header2} ${templatesources} )
 set_source_files_properties(  ${header} PROPERTIES HEADER_FILE_ONLY 1 )
+
+IF( WIN32 )
+	LIST( APPEND SLSharedWithSettings src/stacktrace.c )
+ELSE( WIN32 )
+	LIST( APPEND SLSharedWithSettings src/stacktrace.cpp )
+ENDIF( WIN32 )
