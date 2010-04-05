@@ -180,7 +180,7 @@ SpringDebugReport::SpringDebugReport()
 	if ( wxFile::Exists( report_fn ) )
 		wxRemoveFile( report_fn );
 	wxCharBuffer report_fn_char = report_fn.mb_str();
-	TopLevelExceptionFilter( p, (const char*)report_fn_char );
+	DrMingwGenerateStacktrace( p, (const char*)report_fn_char );
 	report->AddFile( report_fn, _( "StackTrace" ) );
 #endif
 

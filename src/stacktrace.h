@@ -8,7 +8,7 @@
 	#ifdef __cplusplus
 		extern "C" {
 	#endif
-			 LONG WINAPI TopLevelExceptionFilter(PEXCEPTION_POINTERS pExceptionInfo, const char* report_filename);
+			 LONG WINAPI DrMingwGenerateStacktrace(PEXCEPTION_POINTERS pExceptionInfo, const char* report_filename);
 	#ifdef __cplusplus
 		}
 	#endif

@@ -1059,7 +1059,7 @@ void GenerateExceptionReport(PEXCEPTION_POINTERS pExceptionInfo)
 
 // Entry point where control comes on an unhandled exception
 
-LONG WINAPI TopLevelExceptionFilter(PEXCEPTION_POINTERS pExceptionInfo, const char* report_filename )
+LONG WINAPI DrMingwGenerateStacktrace(PEXCEPTION_POINTERS pExceptionInfo, const char* report_filename )
 {
 	static BOOL bBeenHere = FALSE;
 	strcpy(szLogFileName,report_filename);
