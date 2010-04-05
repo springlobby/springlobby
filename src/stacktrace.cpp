@@ -11,9 +11,9 @@
 
 void StackTrace::OnStackFrame ( const wxStackFrame& frame )
 {
-  StackTraceString += wxString::Format( _T("(%d) "), frame.GetLevel() ); // (frame_level_number)
+//  StackTraceString += wxString::Format( _T("(%d) "), frame.GetLevel() ); // (frame_level_number)
   PartToHash += wxString::Format( _T("(%d) "), frame.GetLevel() );
-  StackTraceString += wxString::Format( _T("[%p] "), frame.GetAddress() ); // [calling_address]
+  StackTraceString += wxString::Format( _T("%p "), frame.GetAddress() ); // [calling_address]
 
 
     StackTraceString += frame.GetName();  // function_name
@@ -43,19 +43,13 @@ void StackTrace::OnStackFrame ( const wxStackFrame& frame )
         if ( paramcount > 0 ) StackTraceString += _T(",");
       }
     }
-    StackTraceString += _T("->") + frame.GetFileName() + wxString::Format( _T(":%d"), frame.GetLine() ); // File: file_name : line_number
+	StackTraceString += _T(" ") + frame.GetFileName() + wxString::Format( _T(":%d"), frame.GetLine() ); // File: file_name : line_number
 
   }
   StackTraceString += _T("\n");
 
 }
 
-#else
-#ifdef __WXMSW__
-
-namespace StackTrace {
-}//end namespace StackTrace
 #endif //__MSW
 
 #endif //#if defined(ENABLE_DEBUG_REPORT)
-#endif //useStacktrace

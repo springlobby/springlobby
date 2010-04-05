@@ -692,9 +692,9 @@ BOOL StackBackTrace(HANDLE hProcess, HANDLE hThread, PCONTEXT pContext)
 		if((hModule = (HMODULE) GetModuleBase(StackFrame.AddrPC.Offset)) && GetModuleFileName(hModule, szModule, sizeof(szModule)))
 		{
 #ifndef HAVE_BFD
-			rprintf( _T("  %s:ModulBase %08lX"), szModule, hModule);
+//			rprintf( _T("  %s:ModulBase %08lX"), szModule, hModule);
 #else /* HAVE_BFD */
-			rprintf( _T("  %s:%08lX"), szModule, StackFrame.AddrPC.Offset);
+//			rprintf( _T("  %s:%08lX"), szModule, StackFrame.AddrPC.Offset);
 
 			if(hModule != hPrevModule)
 			{

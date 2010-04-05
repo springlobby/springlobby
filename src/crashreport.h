@@ -11,11 +11,8 @@
 #include <sstream>
 #include <wx/arrstr.h>
 
-#if !defined(wxUSE_STACKWALKER) || !wxUSE_STACKWALKER
-    #include <windows.h>
-    #include <process.h>
-    #include <imagehlp.h>
-    #include <signal.h>
+#if ! wxUSE_STACKWALKER
+	#include <windows.h>
 #endif
 
 //! @brief uploads zipped stacktraces using curl

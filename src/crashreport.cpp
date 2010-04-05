@@ -25,13 +25,6 @@
 #include "stacktrace.h"
 #include "springunitsync.h"
 
-#if ! wxUSE_STACKWALKER
-    #include "utils/stack.h"
-    #include <algorithm>
-    #include <iostream>
-    #include <iterator>
-#endif
-
 NetDebugReport::NetDebugReport( const char* url )
 	: m_url( url )
 {
@@ -180,10 +173,12 @@ SpringDebugReport::SpringDebugReport()
 
 #if wxUSE_STACKWALKER
     StackTrace stacktrace;
-    stacktrace.Walk( 2, 20 );
-    report->AddText( _T( "stacktrace.txt" ), stacktrace.GetStackTrace(), _( "StackTrace" ) );
+	stacktrace.Walk( 3, 20 );
+	report->AddText( _T( "stacktrace.txt" ), _T("Call stack:\n") + stacktrace.GetStackTrace(), _( "StackTrace" ) );
 #else
 	wxString report_fn = ( wxGetCwd() + wxFileName::GetPathSeparator() + _T("stacktrace.txt") );
+	if ( wxFile::Exists( report_fn ) )
+		wxRemoveFile( report_fn );
 	wxCharBuffer report_fn_char = report_fn.mb_str();
 	TopLevelExceptionFilter( p, (const char*)report_fn_char );
 	report->AddFile( report_fn, _( "StackTrace" ) );
