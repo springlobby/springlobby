@@ -91,11 +91,6 @@ wxString Paste2Pastebin( const wxString& message )
 				 CURLFORM_END);
 	curl_formadd(&m_pPostHead,
 				 &m_pPostTail,
-				 CURLFORM_COPYNAME, "paste_expire_date",
-				 CURLFORM_COPYCONTENTS, "3D",
-				 CURLFORM_END);
-	curl_formadd(&m_pPostHead,
-				 &m_pPostTail,
 				 CURLFORM_COPYNAME, "paste_name",
 				 CURLFORM_COPYCONTENTS, (const char*)nick_buffer,
 				 CURLFORM_END);
