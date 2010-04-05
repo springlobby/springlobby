@@ -60,7 +60,7 @@ SET( BUILD_SHARED_LIBS
 	"Chooses whether to link dynamic or static libraries. Recommend keeping this activated unless you know what you're doing." )
 
 SET( ENABLE_DEBUG_REPORT
-	0 CACHE BOOL
+	1 CACHE BOOL
 	"Enable automatic uploading of crash information (requires libcurl)" )
 
 SET( SPRINGLOBBY_REV
