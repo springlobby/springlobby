@@ -857,7 +857,7 @@ void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint& p
             break;
 
         default:
-            m_tiptext =m_colinfovec[column].tip;
+			m_tiptext = m_colinfovec.size() > column ? m_colinfovec[column].tip : wxString();
             break;
         }
     }
