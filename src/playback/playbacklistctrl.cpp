@@ -26,9 +26,9 @@ template<class T,class L> SortOrder CustomVirtListCtrl<T,L>::m_sortorder = SortO
 
 template <class PlaybackType>
 PlaybackListCtrl<PlaybackType>::PlaybackListCtrl( wxWindow* parent  ):
-  PlaybackListCtrl::BaseType(parent, RLIST_LIST, wxDefaultPosition, wxDefaultSize,
+  PlaybackListCtrl::BaseType(this, parent, RLIST_LIST, wxDefaultPosition, wxDefaultSize,
                 wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT,
-                _T("PlaybackListCtrl"), 4, &CompareOneCrit )
+				_T("PlaybackListCtrl"), 4, &PlaybackListCtrl::CompareOneCrit )
 {
 #ifdef __WXMSW__
     const int hd = wxLIST_AUTOSIZE_USEHEADER;
@@ -125,7 +125,7 @@ void PlaybackListCtrl<PlaybackType>::Sort()
 }
 
 template <class PlaybackType>
-int PlaybackListCtrl<PlaybackType>::CompareOneCrit( DataType u1, DataType u2, int col, int dir )
+int PlaybackListCtrl<PlaybackType>::CompareOneCrit( DataType u1, DataType u2, int col, int dir ) const
 {
     switch ( col ) {
         case 0: return dir * compareSimple( u1->date, u2->date );

@@ -47,7 +47,7 @@ class BattleListCtrl : public CustomVirtListCtrl< IBattle *, BattleListCtrl>
     static int CompareStatus( DataType u1, DataType u2 );
     static int ComparePlayer( DataType u1, DataType u2 );
 
-    static int CompareOneCrit( DataType u1, DataType u2, int col, int dir ) ;
+	int CompareOneCrit( DataType u1, DataType u2, int col, int dir ) const;
     int GetIndexFromData( const DataType& data ) const;
 
     wxMenu* m_popup;

@@ -33,8 +33,8 @@ BEGIN_EVENT_TABLE(BattleListCtrl, BattleListCtrl::BaseType )
 END_EVENT_TABLE()
 
 BattleListCtrl::BattleListCtrl( wxWindow* parent )
-    : CustomVirtListCtrl< IBattle *,BattleListCtrl>(parent, BLIST_LIST, wxDefaultPosition, wxDefaultSize,
-            wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("BattleListCtrl"), 4, &CompareOneCrit,
+	: CustomVirtListCtrl< IBattle *,BattleListCtrl>(this, parent, BLIST_LIST, wxDefaultPosition, wxDefaultSize,
+													wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("BattleListCtrl"), 4, &BattleListCtrl::CompareOneCrit,
             true /*highlight*/, UserActions::ActHighlight, true /*periodic sort*/ ),
     m_popup( 0 )
 {
@@ -236,7 +236,7 @@ void BattleListCtrl::Sort()
     }
 }
 
-int BattleListCtrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir )
+int BattleListCtrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir ) const
 {
     switch ( col ) {
         case 0: return dir * CompareStatus( u1, u2 );

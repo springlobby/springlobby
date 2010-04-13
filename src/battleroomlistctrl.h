@@ -79,7 +79,7 @@ class BattleroomListCtrl : public CustomVirtListCtrl< User *, BattleroomListCtrl
 
     wxMenuItem* m_handicap_item;
 
-    static int CompareOneCrit( DataType u1, DataType u2, int col, int dir ) ;
+	int CompareOneCrit( DataType u1, DataType u2, int col, int dir ) const;
 
     virtual void Sort();
 

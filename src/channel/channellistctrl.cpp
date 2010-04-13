@@ -14,8 +14,8 @@ END_EVENT_TABLE()
 
 ChannelListctrl::ChannelListctrl(wxWindow* parent, wxWindowID /*unused*/, const wxString& /*unused*/,
                     long /*unused*/, const wxPoint& /*unused*/, const wxSize& /*unused*/)
-    :CustomVirtListCtrl<ChannelInfo,ChannelListctrl>(parent, CHANNELLIST, wxDefaultPosition, wxDefaultSize,
-            wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("ChannelListCtrl"), 3, &CompareOneCrit)
+	:CustomVirtListCtrl<ChannelInfo,ChannelListctrl>(this, parent, CHANNELLIST, wxDefaultPosition, wxDefaultSize,
+			wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("ChannelListCtrl"), 3, &ChannelListctrl::CompareOneCrit)
 {
 #if defined(__WXMSW__)
     const int widths [3] = { wxLIST_AUTOSIZE, wxLIST_AUTOSIZE, wxLIST_AUTOSIZE };
@@ -63,7 +63,7 @@ void ChannelListctrl::AddChannel(const wxString& channel, unsigned int num_users
 //    SetColumnWidth( 2, wxLIST_AUTOSIZE );
 }
 
-int ChannelListctrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir )
+int ChannelListctrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir ) const
 {
     switch ( col ) {
         case 0: return dir * u1.name.CmpNoCase( u2.name );

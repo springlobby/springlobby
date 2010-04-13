@@ -12,8 +12,9 @@ BEGIN_EVENT_TABLE(SimpleBattlelistCtrl, SimpleBattlelistCtrl::BaseType )
 END_EVENT_TABLE()
 
 SimpleBattlelistCtrl::SimpleBattlelistCtrl( wxWindow* parent )
-	: CustomVirtListCtrl< IBattle *,SimpleBattlelistCtrl>(parent, SI_BLIST_LIST, wxDefaultPosition, wxSize(150,360),
-			wxLC_NO_HEADER | wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("SimpleBattleListCtrl"), 2, &CompareOneCrit,
+	: CustomVirtListCtrl< IBattle *,SimpleBattlelistCtrl>(this, parent, SI_BLIST_LIST, wxDefaultPosition, wxSize(150,360),
+														  wxLC_NO_HEADER | wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT,
+														  _T("SimpleBattleListCtrl"), 2, &SimpleBattlelistCtrl::CompareOneCrit,
 			false /*highlight*/, UserActions::ActHighlight, true /*periodic sort*/ ),
 	m_addSink( this, &BattleEvents::GetBattleEventSender( ( BattleEvents::AddBattle ) ) ),
 	m_removeSink( this, &BattleEvents::GetBattleEventSender( ( BattleEvents::RemoveBattle ) ) ),
@@ -96,7 +97,7 @@ void SimpleBattlelistCtrl::Sort()
 	}
 }
 
-int SimpleBattlelistCtrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir )
+int SimpleBattlelistCtrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir ) const
 {
 	return 0;
 }
