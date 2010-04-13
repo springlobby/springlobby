@@ -152,14 +152,14 @@ protected:
 		typedef int (ListCtrlImp::*CmpFunc)  ( ObjType u1, ObjType u2, int, int ) const;
         CmpFunc m_cmp_func;
         const unsigned int m_num_criteria;
-		const ListCtrlImp* m_listctrl;
+		const BaseType* m_listctrl;
 
         /** \param order SortOrder map that defines which columns should be sorted in what directions
          * \param func the comparison callback func. Should return -1,0,1 for less,equal,greater
          * \param num_criteria set to 1,2 to limit sub-ordering
          * \todo make order const reference to eliminate assumption about existence of entries
          */
-		ItemComparator( const ListCtrlImp* listctrl, SortOrder& order,CmpFunc func, const unsigned int num_criteria = 3 )
+		ItemComparator( const BaseType* listctrl, SortOrder& order,CmpFunc func, const unsigned int num_criteria = 3 )
             :m_order(order),
             m_cmp_func(func),
 			m_num_criteria(num_criteria),
@@ -168,17 +168,17 @@ protected:
 
         bool operator () ( ObjType u1, ObjType u2 ) const
         {
-			int res = (m_listctrl->*m_cmp_func)( u1, u2, m_order[0].col, m_order[0].direction );
+			int res = (m_listctrl->asImp().*m_cmp_func)( u1, u2, m_order[0].col, m_order[0].direction );
             if ( res != 0 )
                 return res < 0;
 
             if ( m_num_criteria > 1 ) {
-				res = (m_listctrl->*m_cmp_func)( u1, u2, m_order[1].col, m_order[1].direction );
+				res = (m_listctrl->asImp().*m_cmp_func)( u1, u2, m_order[1].col, m_order[1].direction );
                 if ( res != 0 )
                     return res < 0;
 
                 if ( m_num_criteria > 2 ) {
-					res = (m_listctrl->*m_cmp_func)( u1, u2, m_order[2].col, m_order[2].direction );
+					res = (m_listctrl->asImp().*m_cmp_func)( u1, u2, m_order[2].col, m_order[2].direction );
                     if ( res != 0 )
                         return res < 0;
                 }
@@ -210,7 +210,7 @@ public:
      */
 
 public:
-	CustomVirtListCtrl(const ListCtrlImp* l, wxWindow* parent, wxWindowID id, const wxPoint& pt,
+	CustomVirtListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pt,
                     const wxSize& sz,long style, const wxString& name, unsigned int sort_criteria_count, CompareFunction func, bool highlight = true,
                     UserActions::ActionType hlaction = UserActions::ActHighlight, bool periodic_sort = false, unsigned int periodic_sort_interval = 5000 /*miliseconds*/);
 

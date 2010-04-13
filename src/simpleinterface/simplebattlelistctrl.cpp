@@ -12,7 +12,7 @@ BEGIN_EVENT_TABLE(SimpleBattlelistCtrl, SimpleBattlelistCtrl::BaseType )
 END_EVENT_TABLE()
 
 SimpleBattlelistCtrl::SimpleBattlelistCtrl( wxWindow* parent )
-	: CustomVirtListCtrl< IBattle *,SimpleBattlelistCtrl>(this, parent, SI_BLIST_LIST, wxDefaultPosition, wxSize(150,360),
+	: CustomVirtListCtrl< IBattle *,SimpleBattlelistCtrl>(parent, SI_BLIST_LIST, wxDefaultPosition, wxSize(150,360),
 														  wxLC_NO_HEADER | wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT,
 														  _T("SimpleBattleListCtrl"), 2, &SimpleBattlelistCtrl::CompareOneCrit,
 			false /*highlight*/, UserActions::ActHighlight, true /*periodic sort*/ ),

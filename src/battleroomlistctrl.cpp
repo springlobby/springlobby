@@ -56,9 +56,10 @@ END_EVENT_TABLE()
 
 
 BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, IBattle* battle, bool readonly, bool showingame )
-	: CustomVirtListCtrl< User *,BattleroomListCtrl>(this, parent, BRLIST_LIST, wxDefaultPosition, wxDefaultSize,
-													 wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL, _T("BattleroomListCtrl"), 3, &BattleroomListCtrl::CompareOneCrit,
-                true /*highlight*/, UserActions::ActHighlight, !readonly /*periodic sort*/ ),
+	: CustomVirtListCtrl< User *,BattleroomListCtrl>(parent, BRLIST_LIST, wxDefaultPosition, wxDefaultSize,
+													 wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL, _T("BattleroomListCtrl"),
+													 3, &BattleroomListCtrl::CompareOneCrit,
+													true /*highlight*/, UserActions::ActHighlight, !readonly /*periodic sort*/ ),
 	m_battle(battle),
 	m_popup(0),
     m_sel_user(0),

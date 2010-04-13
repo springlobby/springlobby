@@ -26,9 +26,9 @@ template<class T,class L> SortOrder CustomVirtListCtrl<T,L>::m_sortorder = SortO
 
 template <class PlaybackType>
 PlaybackListCtrl<PlaybackType>::PlaybackListCtrl( wxWindow* parent  ):
-  PlaybackListCtrl::BaseType(this, parent, RLIST_LIST, wxDefaultPosition, wxDefaultSize,
-                wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT,
-				_T("PlaybackListCtrl"), 4, &PlaybackListCtrl::CompareOneCrit )
+  PlaybackListCtrl::BaseType(parent, RLIST_LIST, wxDefaultPosition, wxDefaultSize,
+							wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT,
+							_T("PlaybackListCtrl"), 4, &PlaybackListCtrl::CompareOneCrit )
 {
 #ifdef __WXMSW__
     const int hd = wxLIST_AUTOSIZE_USEHEADER;

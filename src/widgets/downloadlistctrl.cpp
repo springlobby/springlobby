@@ -13,7 +13,7 @@ END_EVENT_TABLE()
 
 WidgetDownloadListctrl::WidgetDownloadListctrl(wxWindow* parent, wxWindowID /*unused*/, const wxString& /*unused*/,
                     long /*unused*/, const wxPoint&/*unused*/, const wxSize& /*unused*/)
-	: WidgetDownloadListctrl::BaseType(this, parent, WIDGETLISTCTRL_ID, wxDefaultPosition, wxDefaultSize,
+	: WidgetDownloadListctrl::BaseType(parent, WIDGETLISTCTRL_ID, wxDefaultPosition, wxDefaultSize,
 									   wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("WidgetDownloadListCtrl"),
 									   3, &WidgetDownloadListctrl::CompareOneCrit)
 {

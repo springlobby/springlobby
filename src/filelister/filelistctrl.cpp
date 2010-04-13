@@ -25,7 +25,7 @@ END_EVENT_TABLE()
 const int fileListDialogID = wxNewId();
 
 FileListCtrl::FileListCtrl( FileListDialog* parent  )
-	: FileListCtrl::BaseType( this, parent, fileListDialogID, wxDefaultPosition, wxDefaultSize,
+	: FileListCtrl::BaseType( parent, fileListDialogID, wxDefaultPosition, wxDefaultSize,
             wxLC_VIRTUAL | wxSUNKEN_BORDER | wxLC_REPORT , _T("FileListCtrl"), 2,
 			&FileListCtrl::CompareOneCrit, false/*no highlights*/, UserActions::ActHighlight, false /*periodic sort*/ ),
     m_parent_dialog( parent )
