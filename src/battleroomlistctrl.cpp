@@ -33,9 +33,6 @@
 
 template<> SortOrder CustomVirtListCtrl<User*,BattleroomListCtrl>::m_sortorder = SortOrder();
 
-IBattle* BattleroomListCtrl::s_battle = 0;
-bool BattleroomListCtrl::s_showingame = false;
-
 BEGIN_EVENT_TABLE( BattleroomListCtrl,  BattleroomListCtrl::BaseType )
 
   EVT_LIST_ITEM_RIGHT_CLICK( BRLIST_LIST, BattleroomListCtrl::OnListRightClick )
@@ -69,9 +66,9 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, IBattle* battle, bool 
     m_ro(readonly),
     m_showingame(showingame)
 {
-  GetAui().manager->AddPane( this, wxLEFT, _T("battleroomlistctrl") );
+	GetAui().manager->AddPane( this, wxLEFT, _T("battleroomlistctrl") );
 
-  wxListItem col;
+	wxListItem col;
 
     const int hd = wxLIST_AUTOSIZE_USEHEADER;
 
@@ -81,7 +78,7 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, IBattle* battle, bool 
 #else
     const int widths[11] = {hd,hd,hd,hd,hd,hd,170,hd,hd,80,130};
 #endif
-		int count = 0;
+	int count = 0;
     AddColumn( count, widths[count], _T("Status"), _T("Player/Bot") );
 		count++;
     if ( m_showingame ) {
@@ -260,7 +257,8 @@ int BattleroomListCtrl::GetItemColumnImage(long item, long column) const
     const User& user = *GetDataFromIndex( item );
     bool is_bot = user.BattleStatus().IsBot();
     bool is_spec = user.BattleStatus().spectator;
-		if ( !m_showingame && column > 0 ) column++;
+	if ( !m_showingame && column > 0 )
+		column++;
     switch ( column ) {
         case 0: {
             if ( !is_bot ) {
@@ -299,7 +297,8 @@ wxString BattleroomListCtrl::GetItemText(long item, long column) const
     const User& user = *GetDataFromIndex( item );
     bool is_bot = user.BattleStatus().IsBot();
     bool is_spec = user.BattleStatus().spectator;
-		if ( !m_showingame && column > 0 ) column++;
+	if ( !m_showingame && column > 0 )
+		column++;
     switch ( column ) {
         case 2: {
             try {
@@ -468,8 +467,6 @@ void BattleroomListCtrl::Sort()
     if ( m_data.size() > 0 )
     {
         SaveSelection();
-        s_battle = m_battle;
-        s_showingame = m_showingame;
         SLInsertionSort( m_data, m_comparator );
         RestoreSelection();
     }
@@ -477,9 +474,10 @@ void BattleroomListCtrl::Sort()
 
 int BattleroomListCtrl::CompareOneCrit(DataType u1, DataType u2, int col, int dir) const
 {
-		if ( !s_showingame && col > 0 ) col++;
+	if ( !m_showingame && col > 0 )
+		col++;
     switch ( col ) {
-        case 0: return dir * CompareStatus( u1, u2, s_battle );
+		case 0: return dir * CompareStatus( u1, u2, m_battle );
         case 1: return dir * CompareLobbyStatus( u1, u2 );
         case 2: return dir * CompareSide( u1, u2 );
         case 3: return dir * CompareColor( u1, u2 );
@@ -858,7 +856,7 @@ void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint& p
             break;
 
         default:
-			m_tiptext = m_colinfovec.size() > column ? m_colinfovec[column].tip : wxString();
+			m_tiptext = int(m_colinfovec.size()) > column ? m_colinfovec[column].tip : wxString();
             break;
         }
     }

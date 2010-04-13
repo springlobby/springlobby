@@ -51,7 +51,7 @@ class BattleroomListCtrl : public CustomVirtListCtrl< User *, BattleroomListCtrl
     wxListItemAttr * GetItemAttr(long item) const;
 
   protected:
-		static int CompareLobbyStatus( const DataType user1, const DataType user2 );
+	static int CompareLobbyStatus( const DataType user1, const DataType user2 );
     static int CompareStatus(const DataType user1, const DataType user2, const IBattle* m_battle );
     static int CompareSide(const DataType user1, const DataType user2);
     static int CompareColor(const DataType user1, const DataType user2);
@@ -66,7 +66,6 @@ class BattleroomListCtrl : public CustomVirtListCtrl< User *, BattleroomListCtrl
     wxString GetSelectedUserNick();
 
     IBattle* m_battle;
-    static IBattle* s_battle;
 
     typedef SL_GENERIC::UserMenu<BattleroomListCtrl> UserMenu;
     UserMenu* m_popup;
@@ -85,7 +84,6 @@ class BattleroomListCtrl : public CustomVirtListCtrl< User *, BattleroomListCtrl
 
     bool m_ro;
     bool m_showingame;
-    static bool s_showingame;
 
     enum {
       BRLIST_LIST = wxID_HIGHEST,
