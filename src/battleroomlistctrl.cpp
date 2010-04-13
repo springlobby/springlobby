@@ -292,85 +292,74 @@ int BattleroomListCtrl::GetItemColumnImage(long item, long column) const
     const User& user = *GetDataFromIndex( item );
     bool is_bot = user.BattleStatus().IsBot();
     bool is_spec = user.BattleStatus().spectator;
-    switch ( column ) {
-		case s_status_column_index: {
-            if ( !is_bot ) {
-                if ( m_battle->IsFounder( user ) ) {
-                    return icons().GetHostIcon( is_spec );
-                }
-                else {
-                    return icons().GetReadyIcon( is_spec, user.BattleStatus().ready, user.BattleStatus().sync, is_bot );
-                }
-            }
-            else
-                return icons().ICON_BOT;
-        }
-		case s_ingame_column_index: return user.GetStatusIconIndex();
-		case s_colour_column_index: return is_spec ? -1: icons().GetColourIcon( user.BattleStatus().team );
-		case s_country_column_index: return is_bot ? -1 : icons().GetFlagIcon( user.GetCountry() );
-		case s_rank_column_index: return is_bot ? -1 : icons().GetRankIcon( user.GetStatus().rank );
-		case s_faction_column_index: return is_spec ? -1 : user.GetSideiconIndex();
-		case s_team_column_index:
-		case s_ally_column_index:
-		case s_cpu_column_index:
-		case s_resourcebonus_column_index:
-		case s_nick_column_index: return -1;
-        default: {
-            wxLogWarning( _T("column oob in BattleroomListCtrl::OnGetItemColumnImage") );
-            return -1;
-        }
-    }
+
+	 if ( column == s_status_column_index ) {
+		if ( !is_bot ) {
+			if ( m_battle->IsFounder( user ) ) {
+				return icons().GetHostIcon( is_spec );
+			}
+			else {
+				return icons().GetReadyIcon( is_spec, user.BattleStatus().ready, user.BattleStatus().sync, is_bot );
+			}
+		}
+		else
+			return icons().ICON_BOT;
+	}
+	 if ( column == s_ingame_column_index ) return user.GetStatusIconIndex();
+	 if ( column == s_colour_column_index ) return is_spec ? -1 : icons().GetColourIcon( user.BattleStatus().team );
+	 if ( column == s_country_column_index ) return is_bot ? -1 : icons().GetFlagIcon( user.GetCountry() );
+	 if ( column == s_rank_column_index ) return is_bot ? -1 : icons().GetRankIcon( user.GetStatus().rank );
+	 if ( column == s_faction_column_index ) return is_spec ? -1 : user.GetSideiconIndex();
+	 if ( column == s_nick_column_index ) return -1;
+	 else
+	 {
+		wxLogWarning( _T("column oob in BattleroomListCtrl::OnGetItemColumnImage") );
+		return -1;
+	 }
 }
 
 wxString BattleroomListCtrl::GetItemText(long item, long column) const
 {
-    if ( item == -1 || item >= (long)m_data.size())
-        return _T("");
+	if ( item == -1 || item >= (long)m_data.size())
+		return _T("");
 
-    const User& user = *GetDataFromIndex( item );
-    bool is_bot = user.BattleStatus().IsBot();
-    bool is_spec = user.BattleStatus().spectator;
-    switch ( column ) {
-		case s_faction_column_index: {
-            try {
-                wxArrayString sides = usync().GetSides( m_battle->GetHostModName() );
-                ASSERT_EXCEPTION( user.BattleStatus().side < (long)sides.GetCount(), _T("Side index too high") );
-            }
-            catch ( ... ) {
-                return wxString::Format( _T("s%d"), user.BattleStatus().side + 1 );
-            }
-            return _T("");
-        }
-		case s_nick_column_index: return is_bot ? user.GetNick() + _T(" (") + user.BattleStatus().owner + _T(")") : user.GetNick();
-		case s_team_column_index: return is_spec ? _T("") : wxString::Format( _T("%d"), user.BattleStatus().team + 1 );
-		case s_ally_column_index: return is_spec ? _T("") : wxString::Format( _T("%d"), user.BattleStatus().ally + 1 );
-		case s_cpu_column_index: {
-            if (!is_bot )
-                return wxString::Format( _T("%.1f GHz"), user.GetCpu() / 1000.0 );
-            else { //!TODO could prolly be cached
-                wxString botname = user.BattleStatus().aishortname;
-                if ( !user.BattleStatus().aiversion.IsEmpty() ) botname += _T(" ") + user.BattleStatus().aiversion;
-                if ( !usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) )
-                {
-                    if ( botname.Find(_T('.')) != wxNOT_FOUND ) botname = botname.BeforeLast(_T('.'));
-                    if ( botname.Find(_T('/')) != wxNOT_FOUND ) botname = botname.AfterLast(_T('/'));
-                    if ( botname.Find(_T('\\')) != wxNOT_FOUND ) botname = botname.AfterLast(_T('\\'));
-                    if ( botname.Find(_T("LuaAI:")) != wxNOT_FOUND ) botname = botname.AfterFirst(_T(':'));
-                }
-                return botname;
-            }
-        }
-		case s_resourcebonus_column_index: return is_spec ? _T("") : wxString::Format( _T("%d%%"), user.BattleStatus().handicap );
-		case s_status_column_index:
-		case s_ingame_column_index:
-		case s_colour_column_index:
-		case s_country_column_index: return _T("");
-		case s_rank_column_index:
-        default: {
-            wxLogWarning( _T("column oob in BattleroomListCtrl::OnGetItemText") );
-            return _T("");
-        }
-    }
+	const User& user = *GetDataFromIndex( item );
+	bool is_bot = user.BattleStatus().IsBot();
+	bool is_spec = user.BattleStatus().spectator;
+
+	if ( column == s_faction_column_index ) {
+		try {
+			wxArrayString sides = usync().GetSides( m_battle->GetHostModName() );
+			ASSERT_EXCEPTION( user.BattleStatus().side < (long)sides.GetCount(), _T("Side index too high") );
+		}
+		catch ( ... ) {
+			return wxString::Format( _T("s%d"), user.BattleStatus().side + 1 );
+		}
+		return _T("");
+	}
+	if ( column == s_nick_column_index ) return is_bot ? user.GetNick() + _T(" (") + user.BattleStatus().owner + _T(")") : user.GetNick();
+	if ( column == s_team_column_index ) return is_spec ? _T("") : wxString::Format( _T("%d"), user.BattleStatus().team + 1 );
+	if ( column == s_ally_column_index ) return is_spec ? _T("") : wxString::Format( _T("%d"), user.BattleStatus().ally + 1 );
+	if ( column == s_cpu_column_index ) {
+		if (!is_bot )
+			return wxString::Format( _T("%.1f GHz"), user.GetCpu() / 1000.0 );
+		else { //!TODO could prolly be cached
+			wxString botname = user.BattleStatus().aishortname;
+			if ( !user.BattleStatus().aiversion.IsEmpty() ) botname += _T(" ") + user.BattleStatus().aiversion;
+			if ( !usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) )
+			{
+				if ( botname.Find(_T('.')) != wxNOT_FOUND ) botname = botname.BeforeLast(_T('.'));
+				if ( botname.Find(_T('/')) != wxNOT_FOUND ) botname = botname.AfterLast(_T('/'));
+				if ( botname.Find(_T('\\')) != wxNOT_FOUND ) botname = botname.AfterLast(_T('\\'));
+				if ( botname.Find(_T("LuaAI )")) != wxNOT_FOUND ) botname = botname.AfterFirst(_T(' )'));
+			}
+			return botname;
+		}
+	}
+	if ( column == s_resourcebonus_column_index ) return is_spec ? _T("") : wxString::Format( _T("%d%%"), user.BattleStatus().handicap );
+	if ( column == s_country_column_index ) return _T("");
+
+	return _T("");
 }
 
 void BattleroomListCtrl::UpdateUser( const int& index )
@@ -517,20 +506,18 @@ void BattleroomListCtrl::Sort()
 
 int BattleroomListCtrl::CompareOneCrit(DataType u1, DataType u2, int col, int dir)
 {
-    switch ( col ) {
-		case s_status_column_index: return dir * CompareStatus( u1, u2, s_battle );
-		case s_ingame_column_index: return dir * CompareLobbyStatus( u1, u2 );
-		case s_faction_column_index: return dir * CompareSide( u1, u2 );
-		case s_colour_column_index: return dir * CompareColor( u1, u2 );
-		case s_country_column_index: return dir * compareSimple( u1, u2 );
-		case s_rank_column_index: return dir * CompareRank( u1, u2 );
-		case s_nick_column_index: return dir * u1->GetNick().CmpNoCase( u2->GetNick() );
-		case s_team_column_index: return dir * CompareTeam( u1, u2 );
-		case s_ally_column_index: return dir * CompareAlly( u1, u2 );
-		case s_cpu_column_index: return dir * CompareCpu( u1, u2 );
-		case s_resourcebonus_column_index: return dir * CompareHandicap( u1, u2 );
-        default: return 0;
-    }
+	if ( col == s_status_column_index ) return dir * CompareStatus( u1, u2, s_battle );
+	if ( col == s_ingame_column_index ) return dir * CompareLobbyStatus( u1, u2 );
+	if ( col == s_faction_column_index ) return dir * CompareSide( u1, u2 );
+	if ( col == s_colour_column_index ) return dir * CompareColor( u1, u2 );
+	if ( col == s_country_column_index ) return dir * compareSimple( u1, u2 );
+	if ( col == s_rank_column_index ) return dir * CompareRank( u1, u2 );
+	if ( col == s_nick_column_index ) return dir * u1->GetNick().CmpNoCase( u2->GetNick() );
+	if ( col == s_team_column_index ) return dir * CompareTeam( u1, u2 );
+	if ( col == s_ally_column_index ) return dir * CompareAlly( u1, u2 );
+	if ( col == s_cpu_column_index ) return dir * CompareCpu( u1, u2 );
+	if ( col == s_resourcebonus_column_index ) return dir * CompareHandicap( u1, u2 );
+	return 0;
 }
 
 int BattleroomListCtrl::CompareLobbyStatus( const DataType user1, const DataType user2 )
@@ -820,41 +807,42 @@ void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint& p
     }
     else
     {
-        switch (column)
-        {
-		case s_status_column_index: // is bot?
-            m_tiptext = _T("");
+		if ( column == s_status_column_index ) // is bot?
+			m_tiptext = _T("");
 
-            if ( user.BattleStatus().IsBot() )
-                m_tiptext += _("AI (bot)\n");
-            else
-                m_tiptext += _("Human\n");
+		if ( user.BattleStatus().IsBot() )
+			m_tiptext += _("AI (bot)\n");
+		else
+			m_tiptext += _("Human\n");
 
-            if ( user.BattleStatus().spectator )
-                m_tiptext += _("Spectator\n");
-            else
-                m_tiptext += _("Player\n");
+		if ( user.BattleStatus().spectator )
+			m_tiptext += _("Spectator\n");
+		else
+			m_tiptext += _("Player\n");
 
-            if ( m_battle->IsFounder( user ) )
-                m_tiptext += _("Host\n");
-            else
-                m_tiptext += _("Client\n");
+		if ( m_battle->IsFounder( user ) )
+			m_tiptext += _("Host\n");
+		else
+			m_tiptext += _("Client\n");
 
-            if ( user.BattleStatus().ready )
-                m_tiptext += _("Ready\n");
-            else
-                m_tiptext += _("Not ready\n");
+		if ( user.BattleStatus().ready )
+			m_tiptext += _("Ready\n");
+		else
+			m_tiptext += _("Not ready\n");
 
-            if  ( user.BattleStatus().sync == SYNC_SYNCED )
-                m_tiptext += _("In sync");
-            else
-                m_tiptext += _("Not in sync");
-            break;
-		case s_faction_column_index: // icon
-            if ( user.BattleStatus().spectator )
-                m_tiptext = _T("Spectators have no side");
-            else
-            {
+		if  ( user.BattleStatus().sync == SYNC_SYNCED )
+			m_tiptext += _("In sync");
+		else
+			m_tiptext += _("Not in sync");
+
+		if ( column == s_faction_column_index ) // icon
+		{
+			if ( user.BattleStatus().spectator )
+			{
+				m_tiptext = _T("Spectators have no side");
+			}
+			else
+			{
 				try
 				{
 					wxArrayString sides = usync().GetSides( m_battle->GetHostModName() );
@@ -862,9 +850,10 @@ void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint& p
 					if ( side < (int)sides.GetCount() ) m_tiptext = sides[side];
 				}
 				catch (...){}
-            }
-            break;
-			case s_ingame_column_index: // lobby status
+			}
+		}
+			if ( column == s_ingame_column_index ) // lobby status
+			{
 				m_tiptext = _T( "This " );
 				if ( user.GetStatus().bot )
 					m_tiptext << _T( "bot " );
@@ -879,26 +868,20 @@ void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint& p
 					m_tiptext <<  _T( "is away" );
 				else
 					m_tiptext << _T( "is available" );
-				break;
-		case s_country_column_index: // country
-            m_tiptext = user.BattleStatus().IsBot() ? _T("This bot is from nowhere particular") : GetFlagNameFromCountryCode(user.GetCountry());
-            break;
-		case s_rank_column_index: // rank
-            m_tiptext = user.BattleStatus().IsBot() ? _T("This bot has no rank") : user.GetRankName(user.GetStatus().rank);
-            break;
+			}
+		if ( column == s_country_column_index ) // country
+			m_tiptext = user.BattleStatus().IsBot() ? _T("This bot is from nowhere particular") : GetFlagNameFromCountryCode(user.GetCountry());
 
-		case s_nick_column_index: //name
-            m_tiptext = user.BattleStatus().IsBot() ?user.GetNick() : user.GetNick();
-            break;
+		if ( column == s_rank_column_index ) // rank
+			m_tiptext = user.BattleStatus().IsBot() ? _T("This bot has no rank") : user.GetRankName(user.GetStatus().rank);
 
-		case s_cpu_column_index: // cpu
-            m_tiptext = user.BattleStatus().IsBot() ? ( user.BattleStatus().aishortname + _T(" ") + user.BattleStatus().aiversion ) : m_colinfovec[column].tip;
-            break;
+		if ( column == s_nick_column_index ) //name
+			m_tiptext = user.BattleStatus().IsBot() ?user.GetNick() : user.GetNick();
 
-        default:
-            m_tiptext =m_colinfovec[column].tip;
-            break;
-        }
+		if ( column == s_cpu_column_index ) // cpu
+			m_tiptext = user.BattleStatus().IsBot() ? ( user.BattleStatus().aishortname + _T(" ") + user.BattleStatus().aiversion ) : m_colinfovec[column].tip;
+
+		m_tiptext =m_colinfovec[column].tip;
     }
 }
 
