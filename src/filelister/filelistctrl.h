@@ -43,16 +43,7 @@ class FileListCtrl : public CustomVirtListCtrl< const PlasmaResourceInfo* ,FileL
     int GetIndexFromData( const DataType& data ) const;
 
   protected:
-//    static int wxCALLBACK CompareNameUP(long item1, long item2, long sortData);
-//    static int wxCALLBACK CompareNameDOWN(long item1, long item2, long sortData);
-//    static int wxCALLBACK CompareHashUP(long item1, long item2, long sortData);
-//    static int wxCALLBACK CompareHashDOWN(long item1, long item2, long sortData);
-//    static int wxCALLBACK CompareTypeUP(long item1, long item2, long sortData);
-//    static int wxCALLBACK CompareTypeDOWN(long item1, long item2, long sortData);
-
     wxMenu* m_popup;
-//    Ui& m_ui;
-//    static Ui* m_ui_for_sort;
 
     FileListDialog* m_parent_dialog;
 
