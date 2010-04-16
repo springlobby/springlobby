@@ -135,6 +135,7 @@ SpringDebugReport::SpringDebugReport()
 	wxString info;
 	info << wxGetOsDescription() << ( wxIsPlatform64Bit() ? _T(" 64bit\n") : _T(" 32bit\n") );
 	AddText( _T("platform.txt"), info, _T("Platform") );
+	AddText( _T("client.txt"), _T( "SpringLobby " ) + GetSpringLobbyVersion(), _T("Client") );
 }
 
 #if wxUSE_STACKWALKER
