@@ -86,17 +86,17 @@ class BattleroomListCtrl : public CustomVirtListCtrl< User *, BattleroomListCtrl
     bool m_showingame;
 
 	// if -1 then it's not set
-	mutable int m_status_column_index;
-	mutable int m_ingame_column_index;
-	mutable int m_faction_column_index;
-	mutable int m_colour_column_index;
-	mutable int m_country_column_index;
-	mutable int m_rank_column_index;
-	mutable int m_nick_column_index;
-	mutable int m_team_column_index;
-	mutable int m_ally_column_index;
-	mutable int m_cpu_column_index;
-	mutable int m_resourcebonus_column_index;
+	int m_status_column_index;
+	int m_ingame_column_index;
+	int m_faction_column_index;
+	int m_colour_column_index;
+	int m_country_column_index;
+	int m_rank_column_index;
+	int m_nick_column_index;
+	int m_team_column_index;
+	int m_ally_column_index;
+	int m_cpu_column_index;
+	int m_resourcebonus_column_index;
 
     enum {
       BRLIST_LIST = wxID_HIGHEST,
