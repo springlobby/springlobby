@@ -41,8 +41,8 @@ FIND_PACKAGE( PkgConfig )
 
 #if nothing went wrong we have the file and can define HAVE_CONFIG_H
 IF ( EXISTS ${springlobby_BINARY_DIR}/config.h OR  EXISTS ${springlobby_SOURCE_DIR}/config.h )
-    ADD_DEFINITIONS( -DHAVE_CONFIG_H )
-    INCLUDE_DIRECTORIES(${springlobby_BINARY_DIR})
+#     ADD_DEFINITIONS( -DHAVE_CONFIG_H )
+#     INCLUDE_DIRECTORIES(${springlobby_BINARY_DIR})
 ENDIF ( EXISTS ${springlobby_BINARY_DIR}/config.h OR  EXISTS ${springlobby_SOURCE_DIR}/config.h )
 
 
@@ -73,6 +73,7 @@ SET( LOCALE_INSTALL_DIR
 	${CMAKE_INSTALL_PREFIX}/share/locale CACHE STRING
 	"message catalogs will installed here" )
 
+ADD_DEFINITIONS( -DVERSION="${SPRINGLOBBY_REV}" )
 IF( AUX_VERSION )
 	ADD_DEFINITIONS( -DAUX_VERSION="${AUX_VERSION}" )
 ENDIF( AUX_VERSION )
