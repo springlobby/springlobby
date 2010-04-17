@@ -52,7 +52,7 @@ CustomVirtListCtrl<T,L>::CustomVirtListCtrl(wxWindow* parent, wxWindowID id, con
     m_bg_color( GetBackgroundColour() ),
     m_dirty_sort(false),
     m_sort_criteria_count( sort_criteria_count ),
-    m_comparator( m_sortorder, func ),
+	m_comparator( this,m_sortorder, func ),
     m_periodic_sort_timer_id( wxNewId() ),
     m_periodic_sort_timer( this, m_periodic_sort_timer_id ),
     m_periodic_sort( periodic_sort ),

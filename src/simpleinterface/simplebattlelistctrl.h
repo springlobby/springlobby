@@ -27,7 +27,7 @@ public:
 	wxListItemAttr * GetItemAttr(long item) const;
 
 protected:
-	static int CompareOneCrit( DataType u1, DataType u2, int col, int dir ) ;
+	int CompareOneCrit( DataType u1, DataType u2, int col, int dir ) const;
 	int GetIndexFromData( const DataType& data ) const;
 	virtual void Sort();
 

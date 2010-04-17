@@ -51,7 +51,7 @@ class BattleroomListCtrl : public CustomVirtListCtrl< User *, BattleroomListCtrl
     wxListItemAttr * GetItemAttr(long item) const;
 
   protected:
-		static int CompareLobbyStatus( const DataType user1, const DataType user2 );
+	static int CompareLobbyStatus( const DataType user1, const DataType user2 );
     static int CompareStatus(const DataType user1, const DataType user2, const IBattle* m_battle );
     static int CompareSide(const DataType user1, const DataType user2);
     static int CompareColor(const DataType user1, const DataType user2);
@@ -66,7 +66,6 @@ class BattleroomListCtrl : public CustomVirtListCtrl< User *, BattleroomListCtrl
     wxString GetSelectedUserNick();
 
     IBattle* m_battle;
-    static IBattle* s_battle;
 
     typedef SL_GENERIC::UserMenu<BattleroomListCtrl> UserMenu;
     UserMenu* m_popup;
@@ -79,7 +78,7 @@ class BattleroomListCtrl : public CustomVirtListCtrl< User *, BattleroomListCtrl
 
     wxMenuItem* m_handicap_item;
 
-    static int CompareOneCrit( DataType u1, DataType u2, int col, int dir ) ;
+	int CompareOneCrit( DataType u1, DataType u2, int col, int dir ) const;
 
     virtual void Sort();
 
@@ -87,29 +86,17 @@ class BattleroomListCtrl : public CustomVirtListCtrl< User *, BattleroomListCtrl
     bool m_showingame;
 
 	// if -1 then it's not set
-	static int s_status_column_index;
-	static int s_ingame_column_index;
-	static int s_faction_column_index;
-	static int s_colour_column_index;
-	static int s_country_column_index;
-	static int s_rank_column_index;
-	static int s_nick_column_index;
-	static int s_team_column_index;
-	static int s_ally_column_index;
-	static int s_cpu_column_index;
-	static int s_resourcebonus_column_index;
-
-	int status_column_index;
-	int ingame_column_index;
-	int faction_column_index;
-	int colour_column_index;
-	int country_column_index;
-	int rank_column_index;
-	int nick_column_index;
-	int team_column_index;
-	int ally_column_index;
-	int cpu_column_index;
-	int resourcebonus_column_index;
+	mutable int m_status_column_index;
+	mutable int m_ingame_column_index;
+	mutable int m_faction_column_index;
+	mutable int m_colour_column_index;
+	mutable int m_country_column_index;
+	mutable int m_rank_column_index;
+	mutable int m_nick_column_index;
+	mutable int m_team_column_index;
+	mutable int m_ally_column_index;
+	mutable int m_cpu_column_index;
+	mutable int m_resourcebonus_column_index;
 
     enum {
       BRLIST_LIST = wxID_HIGHEST,

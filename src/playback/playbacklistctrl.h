@@ -67,7 +67,7 @@ class PlaybackListCtrl : public CustomVirtListCtrl< const PlaybackImp*, Playback
     using ParentType::GetDataFromIndex;
 
   protected:
-    static int CompareOneCrit( DataType u1, DataType u2, int col, int dir ) ;
+	int CompareOneCrit( DataType u1, DataType u2, int col, int dir ) const;
 
     virtual void Sort();
 

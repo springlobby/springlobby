@@ -121,7 +121,7 @@ void SpringDebugReport::AddVFSFile( const wxString& fn, const wxString& id )
 }
 
 SpringDebugReport::SpringDebugReport()
-	: NetDebugReport( "http://infologs.springzine.net/upload" )
+	: NetDebugReport( "http://infologs.springrts.com/upload" )
 {
 	wxString tmp_filename = wxPathOnly( wxFileName::CreateTempFileName(_T("dummy")) ) + wxFileName::GetPathSeparator() + _T("settings.txt");
 	wxCopyFile( sett().GetCurrentUsedSpringConfigFilePath(), tmp_filename );
@@ -135,6 +135,7 @@ SpringDebugReport::SpringDebugReport()
 	wxString info;
 	info << wxGetOsDescription() << ( wxIsPlatform64Bit() ? _T(" 64bit\n") : _T(" 32bit\n") );
 	AddText( _T("platform.txt"), info, _T("Platform") );
+	AddText( _T("client.txt"), _T( "SpringLobby " ) + GetSpringLobbyVersion(), _T("Client") );
 }
 
 #if wxUSE_STACKWALKER

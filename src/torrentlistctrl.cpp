@@ -38,7 +38,9 @@ BEGIN_EVENT_TABLE( TorrentListCtrl, TorrentListCtrl::BaseType )
 END_EVENT_TABLE()
 
 TorrentListCtrl::TorrentListCtrl( wxWindow* parent )
-:	TorrentListCtrl::BaseType( parent, TLIST_CLICK, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("TorrentListCtrl"), 10, &CompareOneCrit )
+:	TorrentListCtrl::BaseType( parent, TLIST_CLICK, wxDefaultPosition, wxDefaultSize,
+							   wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT,
+							   _T("TorrentListCtrl"), 10, &TorrentListCtrl::CompareOneCrit )
 , m_popup(0)
 {
 #if defined(__WXMAC__)
@@ -177,7 +179,7 @@ void TorrentListCtrl::HighlightItem( long /*item*/ )
 
 }
 
-int TorrentListCtrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir )
+int TorrentListCtrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir ) const
 {
     switch ( col ) {
         case 0: return dir * u1.name.CmpNoCase( u2.name );

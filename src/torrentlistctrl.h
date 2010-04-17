@@ -45,7 +45,7 @@ class TorrentListCtrl : public CustomVirtListCtrl<TorrentInfos, TorrentListCtrl>
     wxListItemAttr* GetItemAttr(long ) const {return 0;}
 
   protected:
-	static int CompareOneCrit( DataType u1, DataType u2, int col, int dir ) ;
+	int CompareOneCrit( DataType u1, DataType u2, int col, int dir ) const;
 	int GetIndexFromData( const DataType& data ) const;
 
 	bool IsTorrentActive(const DataType& info);

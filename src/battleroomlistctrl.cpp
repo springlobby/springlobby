@@ -33,20 +33,6 @@
 
 template<> SortOrder CustomVirtListCtrl<User*,BattleroomListCtrl>::m_sortorder = SortOrder();
 
-IBattle* BattleroomListCtrl::s_battle = 0;
-
-int BattleroomListCtrl::s_status_column_index = -1;
-int BattleroomListCtrl::s_ingame_column_index = -1;
-int BattleroomListCtrl::s_faction_column_index = -1;
-int BattleroomListCtrl::s_colour_column_index = -1;
-int BattleroomListCtrl::s_country_column_index = -1;
-int BattleroomListCtrl::s_rank_column_index = -1;
-int BattleroomListCtrl::s_nick_column_index = -1;
-int BattleroomListCtrl::s_team_column_index = -1;
-int BattleroomListCtrl::s_ally_column_index = -1;
-int BattleroomListCtrl::s_cpu_column_index = -1;
-int BattleroomListCtrl::s_resourcebonus_column_index = -1;
-
 BEGIN_EVENT_TABLE( BattleroomListCtrl,  BattleroomListCtrl::BaseType )
 
   EVT_LIST_ITEM_RIGHT_CLICK( BRLIST_LIST, BattleroomListCtrl::OnListRightClick )
@@ -68,9 +54,10 @@ END_EVENT_TABLE()
 
 
 BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, IBattle* battle, bool readonly, bool showingame )
-    : CustomVirtListCtrl< User *,BattleroomListCtrl>(parent, BRLIST_LIST, wxDefaultPosition, wxDefaultSize,
-                wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL, _T("BattleroomListCtrl"), 3, &CompareOneCrit,
-                true /*highlight*/, UserActions::ActHighlight, !readonly /*periodic sort*/ ),
+	: CustomVirtListCtrl< User *,BattleroomListCtrl>(parent, BRLIST_LIST, wxDefaultPosition, wxDefaultSize,
+													 wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL, _T("BattleroomListCtrl"),
+													 3, &BattleroomListCtrl::CompareOneCrit,
+													true /*highlight*/, UserActions::ActHighlight, !readonly /*periodic sort*/ ),
 	m_battle(battle),
 	m_popup(0),
     m_sel_user(0),
@@ -79,21 +66,21 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, IBattle* battle, bool 
     m_handicap_item(0),
     m_ro(readonly),
 	m_showingame(showingame),
-	status_column_index(-1),
-	ingame_column_index(-1),
-	faction_column_index(-1),
-	colour_column_index(-1),
-	country_column_index(-1),
-	rank_column_index(-1),
-	nick_column_index(-1),
-	team_column_index(-1),
-	ally_column_index(-1),
-	cpu_column_index(-1),
-	resourcebonus_column_index(-1)
+	m_status_column_index(-1),
+	m_ingame_column_index(-1),
+	m_faction_column_index(-1),
+	m_colour_column_index(-1),
+	m_country_column_index(-1),
+	m_rank_column_index(-1),
+	m_nick_column_index(-1),
+	m_team_column_index(-1),
+	m_ally_column_index(-1),
+	m_cpu_column_index(-1),
+	m_resourcebonus_column_index(-1)
 {
-  GetAui().manager->AddPane( this, wxLEFT, _T("battleroomlistctrl") );
+	GetAui().manager->AddPane( this, wxLEFT, _T("battleroomlistctrl") );
 
-  wxListItem col;
+	wxListItem col;
 
     const int hd = wxLIST_AUTOSIZE_USEHEADER;
 
@@ -103,50 +90,50 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, IBattle* battle, bool 
 #else
     const int widths[11] = {hd,hd,hd,hd,hd,hd,170,hd,hd,80,130};
 #endif
-		int count = 0;
+	int count = 0;
     AddColumn( count, widths[count], _T("Status"), _T("Player/Bot") );
-	status_column_index = count;
+	m_status_column_index = count;
 	count++;
 	if ( m_showingame )
 	{
         AddColumn( count, widths[count], _T("Ingame"), _T("Battleroom status") );
-		ingame_column_index = count;
+		m_ingame_column_index = count;
         count++;
     }
 
     AddColumn( count, widths[count], _T("Faction"), _T("Faction icon") );
-	status_column_index = count;
+	m_status_column_index = count;
 	count++;
     AddColumn( count, widths[count], _T("Colour"), _T("Teamcolour") );
-	colour_column_index = count;
+	m_colour_column_index = count;
 	count++;
     AddColumn( count, widths[count], _T("Country"), _T("Country") );
-	country_column_index = count;
+	m_country_column_index = count;
 	count++;
     AddColumn( count, widths[count], _T("Rank"), _T("Rank") );
-	rank_column_index = count;
+	m_rank_column_index = count;
 	count++;
     AddColumn( count, widths[count], _("Nickname"), _T("Ingame name"));
-	nick_column_index = count;
+	m_nick_column_index = count;
 	count++;
     AddColumn( count, widths[count], _("Team"), _T("Team number") );
-	team_column_index = count;
+	m_team_column_index = count;
 	count++;
     AddColumn( count, widths[count], _("Ally"), _T("Ally number") );
-	ally_column_index = count;
+	m_ally_column_index = count;
 	count++;
     AddColumn( count, widths[count], _("CPU"), _T("CPU speed (might not be accurate)") );
-	cpu_column_index = count;
+	m_cpu_column_index = count;
 	count++;
     AddColumn( count, widths[count], _("Resource Bonus"), _T("Resource Bonus") );
-	resourcebonus_column_index = count;
+	m_resourcebonus_column_index = count;
 
     if ( m_sortorder.size() == 0 ) {
-		m_sortorder[0].col = team_column_index;
+		m_sortorder[0].col = m_team_column_index;
         m_sortorder[0].direction = true;
-		m_sortorder[1].col = ally_column_index;
+		m_sortorder[1].col = m_ally_column_index;
         m_sortorder[1].direction = true;
-		m_sortorder[2].col = nick_column_index;
+		m_sortorder[2].col = m_nick_column_index;
         m_sortorder[2].direction = true;
     }
 
@@ -292,8 +279,7 @@ int BattleroomListCtrl::GetItemColumnImage(long item, long column) const
     const User& user = *GetDataFromIndex( item );
     bool is_bot = user.BattleStatus().IsBot();
     bool is_spec = user.BattleStatus().spectator;
-
-	 if ( column == s_status_column_index ) {
+	 if ( column == m_status_column_index ) {
 		if ( !is_bot ) {
 			if ( m_battle->IsFounder( user ) ) {
 				return icons().GetHostIcon( is_spec );
@@ -305,12 +291,12 @@ int BattleroomListCtrl::GetItemColumnImage(long item, long column) const
 		else
 			return icons().ICON_BOT;
 	}
-	 if ( column == s_ingame_column_index ) return user.GetStatusIconIndex();
-	 if ( column == s_colour_column_index ) return is_spec ? -1 : icons().GetColourIcon( user.BattleStatus().team );
-	 if ( column == s_country_column_index ) return is_bot ? -1 : icons().GetFlagIcon( user.GetCountry() );
-	 if ( column == s_rank_column_index ) return is_bot ? -1 : icons().GetRankIcon( user.GetStatus().rank );
-	 if ( column == s_faction_column_index ) return is_spec ? -1 : user.GetSideiconIndex();
-	 if ( column == s_nick_column_index ) return -1;
+	 if ( column == m_ingame_column_index ) return user.GetStatusIconIndex();
+	 if ( column == m_colour_column_index ) return is_spec ? -1 : icons().GetColourIcon( user.BattleStatus().team );
+	 if ( column == m_country_column_index ) return is_bot ? -1 : icons().GetFlagIcon( user.GetCountry() );
+	 if ( column == m_rank_column_index ) return is_bot ? -1 : icons().GetRankIcon( user.GetStatus().rank );
+	 if ( column == m_faction_column_index ) return is_spec ? -1 : user.GetSideiconIndex();
+	 if ( column == m_nick_column_index ) return -1;
 	 else
 	 {
 		wxLogWarning( _T("column oob in BattleroomListCtrl::OnGetItemColumnImage") );
@@ -327,7 +313,7 @@ wxString BattleroomListCtrl::GetItemText(long item, long column) const
 	bool is_bot = user.BattleStatus().IsBot();
 	bool is_spec = user.BattleStatus().spectator;
 
-	if ( column == s_faction_column_index ) {
+	if ( column == m_faction_column_index ) {
 		try {
 			wxArrayString sides = usync().GetSides( m_battle->GetHostModName() );
 			ASSERT_EXCEPTION( user.BattleStatus().side < (long)sides.GetCount(), _T("Side index too high") );
@@ -337,10 +323,10 @@ wxString BattleroomListCtrl::GetItemText(long item, long column) const
 		}
 		return _T("");
 	}
-	if ( column == s_nick_column_index ) return is_bot ? user.GetNick() + _T(" (") + user.BattleStatus().owner + _T(")") : user.GetNick();
-	if ( column == s_team_column_index ) return is_spec ? _T("") : wxString::Format( _T("%d"), user.BattleStatus().team + 1 );
-	if ( column == s_ally_column_index ) return is_spec ? _T("") : wxString::Format( _T("%d"), user.BattleStatus().ally + 1 );
-	if ( column == s_cpu_column_index ) {
+	if ( column == m_nick_column_index ) return is_bot ? user.GetNick() + _T(" (") + user.BattleStatus().owner + _T(")") : user.GetNick();
+	if ( column == m_team_column_index ) return is_spec ? _T("") : wxString::Format( _T("%d"), user.BattleStatus().team + 1 );
+	if ( column == m_ally_column_index ) return is_spec ? _T("") : wxString::Format( _T("%d"), user.BattleStatus().ally + 1 );
+	if ( column == m_cpu_column_index ) {
 		if (!is_bot )
 			return wxString::Format( _T("%.1f GHz"), user.GetCpu() / 1000.0 );
 		else { //!TODO could prolly be cached
@@ -351,13 +337,13 @@ wxString BattleroomListCtrl::GetItemText(long item, long column) const
 				if ( botname.Find(_T('.')) != wxNOT_FOUND ) botname = botname.BeforeLast(_T('.'));
 				if ( botname.Find(_T('/')) != wxNOT_FOUND ) botname = botname.AfterLast(_T('/'));
 				if ( botname.Find(_T('\\')) != wxNOT_FOUND ) botname = botname.AfterLast(_T('\\'));
-				if ( botname.Find(_T("LuaAI )")) != wxNOT_FOUND ) botname = botname.AfterFirst(_T(' )'));
+				if ( botname.Find(_T("LuaAI:")) != wxNOT_FOUND ) botname = botname.AfterFirst(_T(':'));
 			}
 			return botname;
 		}
 	}
-	if ( column == s_resourcebonus_column_index ) return is_spec ? _T("") : wxString::Format( _T("%d%%"), user.BattleStatus().handicap );
-	if ( column == s_country_column_index ) return _T("");
+	if ( column == m_resourcebonus_column_index ) return is_spec ? _T("") : wxString::Format( _T("%d%%"), user.BattleStatus().handicap );
+	if ( column == m_country_column_index ) return _T("");
 
 	return _T("");
 }
@@ -487,36 +473,24 @@ void BattleroomListCtrl::Sort()
     if ( m_data.size() > 0 )
     {
         SaveSelection();
-        s_battle = m_battle;
-		s_status_column_index = status_column_index;
-		s_ingame_column_index = ingame_column_index;
-		s_faction_column_index = faction_column_index;
-		s_colour_column_index = colour_column_index;
-		s_country_column_index = country_column_index;
-		s_rank_column_index = rank_column_index;
-		s_nick_column_index = nick_column_index;
-		s_team_column_index = team_column_index;
-		s_ally_column_index = ally_column_index;
-		s_cpu_column_index = cpu_column_index;
-		s_resourcebonus_column_index = resourcebonus_column_index;
         SLInsertionSort( m_data, m_comparator );
         RestoreSelection();
     }
 }
 
-int BattleroomListCtrl::CompareOneCrit(DataType u1, DataType u2, int col, int dir)
+int BattleroomListCtrl::CompareOneCrit(DataType u1, DataType u2, int col, int dir) const
 {
-	if ( col == s_status_column_index ) return dir * CompareStatus( u1, u2, s_battle );
-	if ( col == s_ingame_column_index ) return dir * CompareLobbyStatus( u1, u2 );
-	if ( col == s_faction_column_index ) return dir * CompareSide( u1, u2 );
-	if ( col == s_colour_column_index ) return dir * CompareColor( u1, u2 );
-	if ( col == s_country_column_index ) return dir * compareSimple( u1, u2 );
-	if ( col == s_rank_column_index ) return dir * CompareRank( u1, u2 );
-	if ( col == s_nick_column_index ) return dir * u1->GetNick().CmpNoCase( u2->GetNick() );
-	if ( col == s_team_column_index ) return dir * CompareTeam( u1, u2 );
-	if ( col == s_ally_column_index ) return dir * CompareAlly( u1, u2 );
-	if ( col == s_cpu_column_index ) return dir * CompareCpu( u1, u2 );
-	if ( col == s_resourcebonus_column_index ) return dir * CompareHandicap( u1, u2 );
+	if ( col == m_status_column_index ) return dir * CompareStatus( u1, u2, m_battle );
+	if ( col == m_ingame_column_index ) return dir * CompareLobbyStatus( u1, u2 );
+	if ( col == m_faction_column_index ) return dir * CompareSide( u1, u2 );
+	if ( col == m_colour_column_index ) return dir * CompareColor( u1, u2 );
+	if ( col == m_country_column_index ) return dir * compareSimple( u1, u2 );
+	if ( col == m_rank_column_index ) return dir * CompareRank( u1, u2 );
+	if ( col == m_nick_column_index ) return dir * u1->GetNick().CmpNoCase( u2->GetNick() );
+	if ( col == m_team_column_index ) return dir * CompareTeam( u1, u2 );
+	if ( col == m_ally_column_index ) return dir * CompareAlly( u1, u2 );
+	if ( col == m_cpu_column_index ) return dir * CompareCpu( u1, u2 );
+	if ( col == m_resourcebonus_column_index ) return dir * CompareHandicap( u1, u2 );
 	return 0;
 }
 
@@ -807,7 +781,7 @@ void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint& p
     }
     else
     {
-		if ( column == s_status_column_index ) // is bot?
+		if ( column == m_status_column_index ) // is bot?
 			m_tiptext = _T("");
 
 		if ( user.BattleStatus().IsBot() )
@@ -835,7 +809,7 @@ void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint& p
 		else
 			m_tiptext += _("Not in sync");
 
-		if ( column == s_faction_column_index ) // icon
+		if ( column == m_faction_column_index ) // icon
 		{
 			if ( user.BattleStatus().spectator )
 			{
@@ -852,7 +826,7 @@ void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint& p
 				catch (...){}
 			}
 		}
-			if ( column == s_ingame_column_index ) // lobby status
+			if ( column == m_ingame_column_index ) // lobby status
 			{
 				m_tiptext = _T( "This " );
 				if ( user.GetStatus().bot )
@@ -869,19 +843,19 @@ void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint& p
 				else
 					m_tiptext << _T( "is available" );
 			}
-		if ( column == s_country_column_index ) // country
+		if ( column == m_country_column_index ) // country
 			m_tiptext = user.BattleStatus().IsBot() ? _T("This bot is from nowhere particular") : GetFlagNameFromCountryCode(user.GetCountry());
 
-		if ( column == s_rank_column_index ) // rank
+		if ( column == m_rank_column_index ) // rank
 			m_tiptext = user.BattleStatus().IsBot() ? _T("This bot has no rank") : user.GetRankName(user.GetStatus().rank);
 
-		if ( column == s_nick_column_index ) //name
+		if ( column == m_nick_column_index ) //name
 			m_tiptext = user.BattleStatus().IsBot() ?user.GetNick() : user.GetNick();
 
-		if ( column == s_cpu_column_index ) // cpu
+		if ( column == m_cpu_column_index ) // cpu
 			m_tiptext = user.BattleStatus().IsBot() ? ( user.BattleStatus().aishortname + _T(" ") + user.BattleStatus().aiversion ) : m_colinfovec[column].tip;
 
-		m_tiptext =m_colinfovec[column].tip;
+		m_tiptext = m_colinfovec[column].tip;
     }
 }
 

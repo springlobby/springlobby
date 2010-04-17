@@ -34,7 +34,7 @@ class FileListCtrl : public CustomVirtListCtrl< const PlasmaResourceInfo* ,FileL
   protected:
 
     //! passed as callback to generic ItemComparator, returns -1,0,1 as per defined ordering
-    static int CompareOneCrit( DataType u1, DataType u2, int col, int dir );
+	int CompareOneCrit( DataType u1, DataType u2, int col, int dir ) const;
     //! utils func for comparing user status, so the CompareOneCrit doesn't get too crowded
     static int CompareUserStatus( DataType u1, DataType u2 );
     //! required per base clase
@@ -43,16 +43,7 @@ class FileListCtrl : public CustomVirtListCtrl< const PlasmaResourceInfo* ,FileL
     int GetIndexFromData( const DataType& data ) const;
 
   protected:
-//    static int wxCALLBACK CompareNameUP(long item1, long item2, long sortData);
-//    static int wxCALLBACK CompareNameDOWN(long item1, long item2, long sortData);
-//    static int wxCALLBACK CompareHashUP(long item1, long item2, long sortData);
-//    static int wxCALLBACK CompareHashDOWN(long item1, long item2, long sortData);
-//    static int wxCALLBACK CompareTypeUP(long item1, long item2, long sortData);
-//    static int wxCALLBACK CompareTypeDOWN(long item1, long item2, long sortData);
-
     wxMenu* m_popup;
-//    Ui& m_ui;
-//    static Ui* m_ui_for_sort;
 
     FileListDialog* m_parent_dialog;
 
