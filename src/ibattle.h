@@ -213,7 +213,7 @@ public:
     void OnUserBattleStatusUpdated( User &user, UserBattleStatus status );
     void OnUserRemoved( User& user );
 
-    bool IsEveryoneReady();
+	bool IsEveryoneReady() const;
 
     void ForceSide( User& user, int side );
     void ForceAlly( User& user, int ally );

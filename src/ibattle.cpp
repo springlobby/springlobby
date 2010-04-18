@@ -266,7 +266,6 @@ void IBattle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
     UserBattleStatus previousstatus = user.BattleStatus();
 
     user.UpdateBattleStatus( status );
-	bool isfounderme = IsFounderMe();
 	unsigned int oldspeccount = m_opts.spectators;
 	m_opts.spectators = 0;
 	m_players_sync = 0;
@@ -277,10 +276,7 @@ void IBattle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 	{
 		User& loopuser = GetUser( i );
 		UserBattleStatus& loopstatus = loopuser.BattleStatus();
-		if ( isfounderme )
-		{
-			if ( loopstatus.spectator ) m_opts.spectators++;
-		}
+		if ( loopstatus.spectator ) m_opts.spectators++;
 		if ( !loopstatus.IsBot() )
 		{
 			if ( loopstatus.ready )
@@ -301,7 +297,6 @@ void IBattle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 	if ( oldspeccount != m_opts.spectators  )
 	{
 		if ( IsFounderMe() ) SendHostInfo( HI_Spectators );
-		else m_opts.spectators = oldspeccount; // use host's instead
 	}
 	if ( !status.IsBot() )
 	{
@@ -328,8 +323,7 @@ bool IBattle::ShouldAutoStart() const
 {
 	if ( GetInGame() ) return false;
 	if ( !IsLocked() && ( GetNumActivePlayers() < m_opts.maxplayers ) ) return false; // proceed checking for ready & symc players only if the battle is full or locked
-	if ( m_players_ready < GetNumActivePlayers() ) return false;
-	if ( m_players_sync < GetNumActivePlayers() ) return false;
+	if ( !IsEveryoneReady() ) return false;
 	return true;
 }
 
@@ -372,15 +366,11 @@ void IBattle::OnUserRemoved( User& user )
 }
 
 
-bool IBattle::IsEveryoneReady()
+bool IBattle::IsEveryoneReady() const
 {
-    for (user_map_t::size_type i = 0; i < GetNumUsers(); i++)
-    {
-		UserBattleStatus& bs = GetUser(i).BattleStatus();
-		if ( bs.IsBot() ) continue;
-        if ( !bs.ready && !bs.spectator ) return false;
-    }
-    return true;
+   if ( m_players_ready < GetNumActivePlayers() ) return false;
+   if ( m_players_sync < GetNumActivePlayers() ) return false;
+   return true;
 }
 
 
