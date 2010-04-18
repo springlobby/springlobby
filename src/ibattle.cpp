@@ -31,8 +31,9 @@ IBattle::IBattle():
   m_previous_local_mod_name( wxEmptyString ),
   m_ingame(false),
   m_generating_script(false),
-	m_players_ready(0),
-	m_players_sync(0),
+  m_players_ready(0),
+  m_players_sync(0),
+  m_players_ok(0),
   m_is_self_in(false),
 	m_timer ( 0 )
 {
@@ -230,9 +231,13 @@ User& IBattle::OnUserAdded( User& user )
 			PlayerJoinedTeam( bs.team );
 		}
 		if ( bs.spectator && IsFounderMe() ) m_opts.spectators++;
-		if ( bs.ready && !bs.IsBot() ) m_players_ready++;
-		if ( bs.sync && !bs.IsBot() ) m_players_sync++;
-		if ( !bs.spectator && !bs.IsBot() && ( !bs.ready || !bs.sync ) ) m_ready_up_map[user.GetNick()] = time(0);
+		if ( !bs.spectator && !bs.IsBot() )
+		{
+			if ( bs.ready ) m_players_ready++;
+			if ( bs.sync) m_players_sync++;
+			if ( !bs.ready || !bs.sync ) m_ready_up_map[user.GetNick()] = time(0);
+			else m_players_ok++;
+		}
     return user;
 }
 
@@ -270,6 +275,7 @@ void IBattle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 	m_opts.spectators = 0;
 	m_players_sync = 0;
 	m_players_ready = 0;
+	m_players_ok = 0;
 	m_teams_sizes.clear();
 	m_ally_sizes.clear();
 	for ( unsigned int i = 0; i < GetNumUsers(); i++ )
@@ -279,16 +285,11 @@ void IBattle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 		if ( loopstatus.spectator ) m_opts.spectators++;
 		if ( !loopstatus.IsBot() )
 		{
-			if ( loopstatus.ready && loopstatus.spectator )
-			{
-				m_players_ready++;
-			}
-			if ( loopstatus.sync )
-			{
-				m_players_sync++;
-			}
 			if ( !loopstatus.spectator )
 			{
+				if ( loopstatus.ready && loopstatus.spectator ) m_players_ready++;
+				if ( loopstatus.sync ) m_players_sync++;
+				if ( loopstatus.ready && loopstatus.sync ) m_players_ok++;
 				PlayerJoinedTeam( loopstatus.team );
 				PlayerJoinedAlly( loopstatus.ally );
 			}
@@ -335,10 +336,12 @@ void IBattle::OnUserRemoved( User& user )
         PlayerLeftTeam( bs.team );
         PlayerLeftAlly( bs.ally );
     }
-    if ( bs.ready && !bs.IsBot() )
-        m_players_ready--;
-    if ( bs.sync && !bs.IsBot() )
-        m_players_sync--;
+	if ( !bs.spectator && !bs.IsBot() )
+	{
+		if ( bs.ready ) m_players_ready--;
+		if ( bs.sync ) m_players_sync--;
+		if ( bs.ready && bs.sync ) m_players_ok--;
+	}
     if ( IsFounderMe() && bs.spectator )
     {
         m_opts.spectators--;
@@ -368,12 +371,7 @@ void IBattle::OnUserRemoved( User& user )
 
 bool IBattle::IsEveryoneReady() const
 {
-	for ( unsigned int i = 0; i < GetNumUsers(); i++ )
-	{
-		UserBattleStatus& status = GetUser( i ).BattleStatus();
-		if ( status.IsBot() ) continue;
-		if ( !status.spectator && ( !status.ready || !status.sync ) )  return false;
-	}
+	if ( m_players_ok < GetNumActivePlayers() ) return false;
 	return true;
 }
 
@@ -869,6 +867,7 @@ void IBattle::OnSelfLeftBattle()
     m_ally_sizes.clear();
     m_players_ready = 0;
     m_players_sync = 0;
+	m_players_ok = 0;
 }
 
 void IBattle::OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ )
@@ -1156,15 +1155,22 @@ void IBattle::GetBattleFromScript( bool loadmapmod )
                 status.spectator = player->GetInt( _T("Spectator"), 0 );
                 opts.spectators += user.BattleStatus().spectator;
                 status.team = player->GetInt( _T("Team") );
-								if ( !status.spectator )
-								{
-									PlayerJoinedTeam( status.team );
-								}
+				if ( !status.spectator )
+				{
+					PlayerJoinedTeam( status.team );
+				}
                 status.sync = true;
                 status.ready = true;
                 if ( status.spectator ) m_opts.spectators++;
-								if ( status.ready && !bot.ok() ) m_players_ready++;
-								if ( status.sync && !bot.ok() ) m_players_sync++;
+				else
+				{
+					if ( !bot.ok() )
+					{
+						if ( status.ready) m_players_ready++;
+						if ( status.sync ) m_players_sync++;
+						if ( status.sync && status.ready ) m_players_ok++;
+					}
+				}
 
                 //! (koshi) changed this from ServerRankContainer to RankContainer
                 user.Status().rank = (UserStatus::RankContainer)player->GetInt( _T("Rank"), -1 );
