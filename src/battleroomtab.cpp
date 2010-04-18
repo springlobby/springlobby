@@ -872,6 +872,7 @@ void BattleRoomTab::OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ )
 	//m_minimap->UpdateMinimap();//should happen automagically now
 	ReloadMaplist();
 	UpdateBattleInfo();
+	RegenerateOptionsList();
 	m_battle->SendMyBattleStatus(); // This should reset sync status.
 }
 
@@ -1103,22 +1104,7 @@ void BattleRoomTab::SetBattle( Battle* battle )
 			m_autolock_chk->Disable();
 		}
 
-		long pos = 0;
-		m_opts_list->DeleteAllItems();
-		m_opts_list->InsertItem( pos, _( "Size" ) );
-		m_opt_list_map[ _( "Size" ) ] = pos++;
-		m_opts_list->InsertItem( pos , _( "Windspeed" ) );
-		m_opt_list_map[ _( "Windspeed" ) ] = pos++;
-		m_opts_list->InsertItem( pos, _( "Tidal strength" ) );
-		m_opt_list_map[ _( "Tidal strength" ) ] = pos++;
-
-		m_opts_list->InsertItem( pos++, wxEmptyString );
-		pos = AddMMOptionsToList( pos++, OptionsWrapper::EngineOption );
-		m_opts_list->InsertItem( pos++, wxEmptyString );
-		pos = AddMMOptionsToList( pos, OptionsWrapper::ModOption );
-		m_opts_list->InsertItem( pos++, wxEmptyString );
-		m_map_opts_index = pos;
-		pos = AddMMOptionsToList( pos, OptionsWrapper::MapOption );
+		RegenerateOptionsList();
 
 		ReloadMaplist();
 
@@ -1128,6 +1114,27 @@ void BattleRoomTab::SetBattle( Battle* battle )
 		m_player_count_lbl->SetLabel( wxString::Format( _( "Players: %d" ), m_battle->GetNumUsers() - m_battle->GetSpectators() ) );
 		m_spec_count_lbl->SetLabel( wxString::Format( _( "Spectators: %d" ), m_battle->GetSpectators() ) );
 	}
+}
+
+void BattleRoomTab::RegenerateOptionsList()
+{
+	long pos = 0;
+	m_opts_list->DeleteAllItems();
+	m_opts_list->InsertItem( pos, _( "Size" ) );
+	m_opt_list_map[ _( "Size" ) ] = pos++;
+	m_opts_list->InsertItem( pos , _( "Windspeed" ) );
+	m_opt_list_map[ _( "Windspeed" ) ] = pos++;
+	m_opts_list->InsertItem( pos, _( "Tidal strength" ) );
+	m_opt_list_map[ _( "Tidal strength" ) ] = pos++;
+
+	m_opts_list->InsertItem( pos++, wxEmptyString );
+	pos = AddMMOptionsToList( pos++, OptionsWrapper::EngineOption );
+	m_opts_list->InsertItem( pos++, wxEmptyString );
+	m_mod_opts_index = pos;
+	pos = AddMMOptionsToList( pos, OptionsWrapper::ModOption );
+	m_opts_list->InsertItem( pos++, wxEmptyString );
+	m_map_opts_index = pos;
+	pos = AddMMOptionsToList( pos, OptionsWrapper::MapOption );
 }
 
 void BattleRoomTab::OnBattleActionEvent( UiEvents::UiEventData data )

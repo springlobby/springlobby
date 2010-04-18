@@ -119,6 +119,7 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 		Battle* m_battle;
 		UnitSyncMap m_map;
 
+		long m_mod_opts_index;
 		long m_map_opts_index;
 
 		OptionListMap m_opt_list_map;
