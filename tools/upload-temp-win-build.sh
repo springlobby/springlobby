@@ -1,15 +1,15 @@
 #! /bin/bash
 
 set -e
-cd $(dirname $0)/../$1
+cd $(dirname $0)/../${1}
 pwd
-
+DEVELOPER=${3}
 /usr/i586-mingw32msvc/bin/strip springlobby.exe
 
-if [ x$2 == x ]; then
+if [ x$3 == x ]; then
 	filename=sl_master.zip
 else
-	filename=sl_${2}.zip
+	filename=sl_${3}.zip
 fi
 
 zip -9 -u ${filename} springlobby.exe
