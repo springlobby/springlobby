@@ -482,7 +482,20 @@ void SpringLobbyApp::CacheAndSettingsSetup()
 			if( settversion < 19 )
 			{
 				//the dummy column hack was removed on win
-					sett().NukeColumnWidths();
+				sett().NukeColumnWidths();
+			}
+			if ( settversion < 22 )
+			{
+				if ( m_translationhelper )
+				{
+					// add locale's language code to autojoin
+					if ( m_translationhelper->GetLocale() )
+					{
+						wxString localecode = m_translationhelper->GetLocale()->GetCanonicalName();
+						if ( localecode.Find(_T("_")) != -1 ) localecode = localecode.BeforeFirst(_T('_'));
+						sett().AddChannelJoin( localecode, _T("") );
+					}
+				}
 			}
     }
 
@@ -493,6 +506,15 @@ void SpringLobbyApp::CacheAndSettingsSetup()
     {
         sett().AddChannelJoin( _T("main"), _T("") );
         sett().AddChannelJoin( _T("newbies"), _T("") );
+		if ( m_translationhelper )
+		{
+			if ( m_translationhelper->GetLocale() )
+			{
+				wxString localecode = m_translationhelper->GetLocale()->GetCanonicalName();
+				if ( localecode.Find(_T("_")) != -1 ) localecode = localecode.BeforeFirst(_T('_'));
+				sett().AddChannelJoin( localecode, _T("") ); // add locale's language code to autojoin
+			}
+		}
     }
 
     if ( sett().ShouldAddDefaultGroupSettings() )

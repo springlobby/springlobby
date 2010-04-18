@@ -146,7 +146,8 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle )
 
 	m_player_count_lbl = new wxStaticText( m_player_panel, -1, wxString::Format( _( "Players: %d" ), 0 ) );
 	m_spec_count_lbl = new wxStaticText( m_player_panel, -1, wxString::Format( _( "Spectators: %d" ), 0 ) );
-	m_ally_setup_lbl = new wxStaticText( m_player_panel, -1, wxString::Format( _( "Setup : %s" ), _T("") ) );
+	m_ally_setup_lbl = new wxStaticText( m_player_panel, -1, wxString::Format( _( "Setup: %s" ), _T("") ) );
+	m_ok_count_lbl = new wxStaticText( m_player_panel, -1, wxString::Format( _( "Unready/Unsynced: %d" ), 0 ) );
 
 	m_size_lbl = new wxStaticText( this, -1, _T( "" ) );
 	m_wind_lbl = new wxStaticText( this, -1, _T( "" ) );
@@ -303,6 +304,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle )
 	m_player_sett_sizer->Add( m_ally_setup_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 2 );
 	m_player_sett_sizer->Add( m_player_count_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT  | wxALL, 2 );
 	m_player_sett_sizer->Add( m_spec_count_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 2 );
+	m_player_sett_sizer->Add( m_ok_count_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 2 );
 
 	m_players_sizer->Add( m_players, 1, wxEXPAND );
 	m_players_sizer->Add( m_player_sett_sizer, 0, wxEXPAND );
@@ -497,6 +499,13 @@ BattleroomListCtrl& BattleRoomTab::GetPlayersListCtrl()
 	return *m_players;
 }
 
+void BattleRoomTab::UpdateStatsLabels()
+{
+	m_player_count_lbl->SetLabel( wxString::Format( _( "Players: %d" ), m_battle->GetNumActivePlayers() ) );
+	m_spec_count_lbl->SetLabel( wxString::Format( _( "Spectators: %d" ), m_battle->GetSpectators() ) );
+	m_ok_count_lbl->SetLabel( wxString::Format( _( "Unready/Unsynced: %d" ), m_battle->GetNumActivePlayers() - m_battle->GetNumOkPlayers() ) );
+	PrintAllySetup();
+}
 
 void BattleRoomTab::UpdateUser( User& user )
 {
@@ -505,9 +514,7 @@ void BattleRoomTab::UpdateUser( User& user )
 
 	m_minimap->UpdateMinimap();
 
-	m_player_count_lbl->SetLabel( wxString::Format( _( "Players: %d" ), m_battle->GetNumUsers() - m_battle->GetSpectators() ) );
-	m_spec_count_lbl->SetLabel( wxString::Format( _( "Spectators: %d" ), m_battle->GetSpectators() ) );
-	PrintAllySetup();
+	UpdateStatsLabels();
 
 	if ( &user != &m_battle->GetMe() ) return;
 
@@ -845,9 +852,7 @@ void BattleRoomTab::OnUserJoined( User& user )
 	{
 		m_players->SetSelectedIndex ( m_players->GetIndexFromData( &user ) );
 	}
-	m_player_count_lbl->SetLabel( wxString::Format( _( "Players: %d" ), m_battle->GetNumUsers() - m_battle->GetSpectators() ) );
-	m_spec_count_lbl->SetLabel( wxString::Format( _( "Spectators: %d" ), m_battle->GetSpectators() ) );
-	PrintAllySetup();
+	UpdateStatsLabels();
 
 	UiEvents::GetStatusEventSender( UiEvents::addStatusMessage ).SendEvent(
 			UiEvents::StatusData( wxString::Format(_("%s joined your active battle"), user.GetNick().c_str()), 1 ) );
@@ -860,9 +865,7 @@ void BattleRoomTab::OnUserLeft( User& user )
 	if ( !user.BattleStatus().IsBot() ) m_chat->Parted( user, wxEmptyString );
 	m_players->RemoveUser( user );
 
-	m_player_count_lbl->SetLabel( wxString::Format( _( "Players: %d" ), m_battle->GetNumUsers() - m_battle->GetSpectators() ) );
-	m_spec_count_lbl->SetLabel( wxString::Format( _( "Spectators: %d" ), m_battle->GetSpectators() ) );
-	PrintAllySetup();
+	UpdateStatsLabels();
 }
 
 
@@ -872,6 +875,7 @@ void BattleRoomTab::OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ )
 	//m_minimap->UpdateMinimap();//should happen automagically now
 	ReloadMaplist();
 	UpdateBattleInfo();
+	RegenerateOptionsList();
 	m_battle->SendMyBattleStatus(); // This should reset sync status.
 }
 
@@ -1103,31 +1107,35 @@ void BattleRoomTab::SetBattle( Battle* battle )
 			m_autolock_chk->Disable();
 		}
 
-		long pos = 0;
-		m_opts_list->DeleteAllItems();
-		m_opts_list->InsertItem( pos, _( "Size" ) );
-		m_opt_list_map[ _( "Size" ) ] = pos++;
-		m_opts_list->InsertItem( pos , _( "Windspeed" ) );
-		m_opt_list_map[ _( "Windspeed" ) ] = pos++;
-		m_opts_list->InsertItem( pos, _( "Tidal strength" ) );
-		m_opt_list_map[ _( "Tidal strength" ) ] = pos++;
-
-		m_opts_list->InsertItem( pos++, wxEmptyString );
-		pos = AddMMOptionsToList( pos++, OptionsWrapper::EngineOption );
-		m_opts_list->InsertItem( pos++, wxEmptyString );
-		pos = AddMMOptionsToList( pos, OptionsWrapper::ModOption );
-		m_opts_list->InsertItem( pos++, wxEmptyString );
-		m_map_opts_index = pos;
-		pos = AddMMOptionsToList( pos, OptionsWrapper::MapOption );
+		RegenerateOptionsList();
 
 		ReloadMaplist();
 
 		UpdateBattleInfo( wxString::Format( _T( "%d_mapname" ), OptionsWrapper::PrivateOptions ) );
 		UpdateBattleInfo();
-		PrintAllySetup();
-		m_player_count_lbl->SetLabel( wxString::Format( _( "Players: %d" ), m_battle->GetNumUsers() - m_battle->GetSpectators() ) );
-		m_spec_count_lbl->SetLabel( wxString::Format( _( "Spectators: %d" ), m_battle->GetSpectators() ) );
+		UpdateStatsLabels();
 	}
+}
+
+void BattleRoomTab::RegenerateOptionsList()
+{
+	long pos = 0;
+	m_opts_list->DeleteAllItems();
+	m_opts_list->InsertItem( pos, _( "Size" ) );
+	m_opt_list_map[ _( "Size" ) ] = pos++;
+	m_opts_list->InsertItem( pos , _( "Windspeed" ) );
+	m_opt_list_map[ _( "Windspeed" ) ] = pos++;
+	m_opts_list->InsertItem( pos, _( "Tidal strength" ) );
+	m_opt_list_map[ _( "Tidal strength" ) ] = pos++;
+
+	m_opts_list->InsertItem( pos++, wxEmptyString );
+	pos = AddMMOptionsToList( pos++, OptionsWrapper::EngineOption );
+	m_opts_list->InsertItem( pos++, wxEmptyString );
+	m_mod_opts_index = pos;
+	pos = AddMMOptionsToList( pos, OptionsWrapper::ModOption );
+	m_opts_list->InsertItem( pos++, wxEmptyString );
+	m_map_opts_index = pos;
+	pos = AddMMOptionsToList( pos, OptionsWrapper::MapOption );
 }
 
 void BattleRoomTab::OnBattleActionEvent( UiEvents::UiEventData data )

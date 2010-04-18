@@ -213,7 +213,7 @@ public:
     void OnUserBattleStatusUpdated( User &user, UserBattleStatus status );
     void OnUserRemoved( User& user );
 
-    bool IsEveryoneReady();
+	bool IsEveryoneReady() const;
 
     void ForceSide( User& user, int side );
     void ForceAlly( User& user, int ally );
@@ -276,9 +276,14 @@ public:
 
 	User& GetFounder() const { return GetUser( m_opts.founder ); }
 
-		bool IsFull() const { return GetMaxPlayers() == ( GetNumUsers() - GetSpectators() ); }
+	bool IsFull() const { return GetMaxPlayers() == GetNumActivePlayers(); }
 
 		virtual unsigned int GetNumPlayers() const;
+		virtual unsigned int GetNumActivePlayers() const;
+
+		virtual unsigned int GetNumReadyPlayers() const { return m_players_ready; }
+		virtual unsigned int GetNumSyncedPlayers() const { return m_players_sync; }
+		virtual unsigned int GetNumOkPlayers() const { return m_players_ok; }
 
 		virtual int GetBattleId() const { return m_opts.battleid; }
 
@@ -412,8 +417,9 @@ protected:
 
     std::map<wxString, time_t> m_ready_up_map; // player name -> time counting from join/unspect
 
-    int m_players_ready;
-    int m_players_sync;
+	unsigned int m_players_ready;
+	unsigned int m_players_sync;
+	unsigned int m_players_ok; // players which are ready and in sync
     std::map<int, int> m_teams_sizes; // controlteam -> number of people in
     std::map<int, int> m_ally_sizes; // allyteam -> number of people in
 

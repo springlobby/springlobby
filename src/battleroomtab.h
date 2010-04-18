@@ -110,6 +110,10 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 
 		void PrintAllySetup();
 
+		void RegenerateOptionsList();
+
+		void UpdateStatsLabels();
+
 	protected:
 
 		long AddMMOptionsToList( long pos, OptionsWrapper::GameOption optFlag );
@@ -119,6 +123,7 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 		Battle* m_battle;
 		UnitSyncMap m_map;
 
+		long m_mod_opts_index;
 		long m_map_opts_index;
 
 		OptionListMap m_opt_list_map;
@@ -147,6 +152,7 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 		wxStaticText* m_player_count_lbl;
 		wxStaticText* m_spec_count_lbl;
 		wxStaticText* m_ally_setup_lbl;
+		wxStaticText* m_ok_count_lbl;
 
 		MapCtrl * m_minimap;
 
