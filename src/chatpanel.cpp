@@ -284,7 +284,7 @@ void ChatPanel::CreateControls( )
 	} else if ( m_type == CPT_User ) {
 		if ( m_user )
 		{
-			m_chan_opts_button = new wxBitmapButton(m_chat_panel, wxID_ANY, icons().GetBitmap(icons().GetUserBattleStateIcon(m_user->GetStatus()) ), wxDefaultPosition , wxSize( CONTROL_HEIGHT, CONTROL_HEIGHT ) );
+			m_chan_opts_button = new wxBitmapButton(m_chat_panel, CHAT_CHAN_OPTS, icons().GetBitmap(icons().GetUserBattleStateIcon(m_user->GetStatus()) ), wxDefaultPosition , wxSize( CONTROL_HEIGHT, CONTROL_HEIGHT ) );
 		}
 	} else {
 	  m_chan_opts_button = 0;
@@ -522,8 +522,7 @@ void ChatPanel::OnLinkEvent( wxTextUrlEvent& event )
 void ChatPanel::OnChanOpts( wxCommandEvent& /*unused*/ )
 {
   CreatePopup();
-  if ( (m_chan_opts_button == 0) || (m_popup_menu == 0) )
-    return;
+  if ( (m_chan_opts_button == 0) || (m_popup_menu == 0) ) return;
   m_chan_opts_button->PopupMenu(m_popup_menu->GetMenu());
 }
 
@@ -790,6 +789,7 @@ void ChatPanel::UserStatusUpdated( User& who )
   if ( ( m_type == CPT_User ) && ( m_user == &who ) )
   {
 	m_chan_opts_button->SetBitmapLabel( icons().GetBitmap(icons().GetUserListStateIcon(who.GetStatus(),false, who.GetBattle() != 0 ) ) );
+
   }
   if ( !m_show_nick_list || ( m_nicklist == 0 ) ) return;
   try
