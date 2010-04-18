@@ -49,3 +49,4 @@ INCLUDE_DIRECTORIES(/opt/mingw32/include/drmingw/include  )
 SET( PKG_CONFIG_EXECUTABLE /opt/mingw32/bin/pkg-config )
 ADD_DEFINITIONS( -DCURL_STATICLIB -DWXUSINGDLL -D__WXMSW__ -mthreads)
 
+SET( LOCALE_INSTALL_DIR "${CMAKE_BINARY_DIR}/locale" )
