@@ -1133,5 +1133,5 @@ void Battle::FixTeamIDs( BalanceType balance_type, bool support_clans, bool stro
 void Battle::OnUnitsyncReloaded( GlobalEvents::GlobalEventData data )
 {
 	IBattle::OnUnitsyncReloaded( data );
-	SendMyBattleStatus();
+	if ( m_is_self_in ) SendMyBattleStatus();
 }
