@@ -146,7 +146,9 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle )
 
 	m_player_count_lbl = new wxStaticText( m_player_panel, -1, wxString::Format( _( "Players: %d" ), 0 ) );
 	m_spec_count_lbl = new wxStaticText( m_player_panel, -1, wxString::Format( _( "Spectators: %d" ), 0 ) );
-	m_ally_setup_lbl = new wxStaticText( m_player_panel, -1, wxString::Format( _( "Setup : %s" ), _T("") ) );
+	m_ally_setup_lbl = new wxStaticText( m_player_panel, -1, wxString::Format( _( "Setup: %s" ), _T("") ) );
+	m_ready_count_lbl = new wxStaticText( m_player_panel, -1, wxString::Format( _( "Unready: %d" ), 0 ) );
+	m_sync_count_lbl = new wxStaticText( m_player_panel, -1, wxString::Format( _( "Unsynced: %d" ), 0 ) );
 
 	m_size_lbl = new wxStaticText( this, -1, _T( "" ) );
 	m_wind_lbl = new wxStaticText( this, -1, _T( "" ) );
@@ -303,6 +305,8 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle )
 	m_player_sett_sizer->Add( m_ally_setup_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 2 );
 	m_player_sett_sizer->Add( m_player_count_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT  | wxALL, 2 );
 	m_player_sett_sizer->Add( m_spec_count_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 2 );
+	m_player_sett_sizer->Add( m_ready_count_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 2 );
+	m_player_sett_sizer->Add( m_sync_count_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 2 );
 
 	m_players_sizer->Add( m_players, 1, wxEXPAND );
 	m_players_sizer->Add( m_player_sett_sizer, 0, wxEXPAND );
@@ -505,8 +509,10 @@ void BattleRoomTab::UpdateUser( User& user )
 
 	m_minimap->UpdateMinimap();
 
-	m_player_count_lbl->SetLabel( wxString::Format( _( "Players: %d" ), m_battle->GetNumUsers() - m_battle->GetSpectators() ) );
+	m_player_count_lbl->SetLabel( wxString::Format( _( "Players: %d" ), m_battle->GetNumActivePlayers() ) );
 	m_spec_count_lbl->SetLabel( wxString::Format( _( "Spectators: %d" ), m_battle->GetSpectators() ) );
+	m_ready_count_lbl->SetLabel( wxString::Format( _( "Unready: %d" ), m_battle->GetNumActivePlayers() - m_battle->GetNumReadyPlayers() ) );
+	m_sync_count_lbl->SetLabel( wxString::Format( _( "Unsynced: %d" ), m_battle->GetNumActivePlayers() - m_battle->GetNumSyncedPlayers() ) );
 	PrintAllySetup();
 
 	if ( &user != &m_battle->GetMe() ) return;
@@ -845,8 +851,10 @@ void BattleRoomTab::OnUserJoined( User& user )
 	{
 		m_players->SetSelectedIndex ( m_players->GetIndexFromData( &user ) );
 	}
-	m_player_count_lbl->SetLabel( wxString::Format( _( "Players: %d" ), m_battle->GetNumUsers() - m_battle->GetSpectators() ) );
+	m_player_count_lbl->SetLabel( wxString::Format( _( "Players: %d" ), m_battle->GetNumActivePlayers() ) );
 	m_spec_count_lbl->SetLabel( wxString::Format( _( "Spectators: %d" ), m_battle->GetSpectators() ) );
+	m_ready_count_lbl->SetLabel( wxString::Format( _( "Unready: %d" ), m_battle->GetNumActivePlayers() - m_battle->GetNumReadyPlayers() ) );
+	m_sync_count_lbl->SetLabel( wxString::Format( _( "Unsynced: %d" ), m_battle->GetNumActivePlayers() - m_battle->GetNumSyncedPlayers() ) );
 	PrintAllySetup();
 
 	UiEvents::GetStatusEventSender( UiEvents::addStatusMessage ).SendEvent(
@@ -860,8 +868,10 @@ void BattleRoomTab::OnUserLeft( User& user )
 	if ( !user.BattleStatus().IsBot() ) m_chat->Parted( user, wxEmptyString );
 	m_players->RemoveUser( user );
 
-	m_player_count_lbl->SetLabel( wxString::Format( _( "Players: %d" ), m_battle->GetNumUsers() - m_battle->GetSpectators() ) );
+	m_player_count_lbl->SetLabel( wxString::Format( _( "Players: %d" ), m_battle->GetNumActivePlayers() ) );
 	m_spec_count_lbl->SetLabel( wxString::Format( _( "Spectators: %d" ), m_battle->GetSpectators() ) );
+	m_ready_count_lbl->SetLabel( wxString::Format( _( "Unready: %d" ), m_battle->GetNumActivePlayers() - m_battle->GetNumReadyPlayers() ) );
+	m_sync_count_lbl->SetLabel( wxString::Format( _( "Unsynced: %d" ), m_battle->GetNumActivePlayers() - m_battle->GetNumSyncedPlayers() ) );
 	PrintAllySetup();
 }
 
@@ -1111,8 +1121,10 @@ void BattleRoomTab::SetBattle( Battle* battle )
 		UpdateBattleInfo( wxString::Format( _T( "%d_mapname" ), OptionsWrapper::PrivateOptions ) );
 		UpdateBattleInfo();
 		PrintAllySetup();
-		m_player_count_lbl->SetLabel( wxString::Format( _( "Players: %d" ), m_battle->GetNumUsers() - m_battle->GetSpectators() ) );
+		m_player_count_lbl->SetLabel( wxString::Format( _( "Players: %d" ), m_battle->GetNumActivePlayers() ) );
 		m_spec_count_lbl->SetLabel( wxString::Format( _( "Spectators: %d" ), m_battle->GetSpectators() ) );
+		m_ready_count_lbl->SetLabel( wxString::Format( _( "Unready: %d" ), m_battle->GetNumActivePlayers() - m_battle->GetNumReadyPlayers() ) );
+		m_sync_count_lbl->SetLabel( wxString::Format( _( "Unsynced: %d" ), m_battle->GetNumActivePlayers() - m_battle->GetNumSyncedPlayers() ) );
 	}
 }
 

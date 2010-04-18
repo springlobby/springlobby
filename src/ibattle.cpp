@@ -279,7 +279,7 @@ void IBattle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 		if ( loopstatus.spectator ) m_opts.spectators++;
 		if ( !loopstatus.IsBot() )
 		{
-			if ( loopstatus.ready )
+			if ( loopstatus.ready && loopstatus.spectator )
 			{
 				m_players_ready++;
 			}
@@ -368,9 +368,13 @@ void IBattle::OnUserRemoved( User& user )
 
 bool IBattle::IsEveryoneReady() const
 {
-   if ( m_players_ready < GetNumActivePlayers() ) return false;
-   if ( m_players_sync < GetNumActivePlayers() ) return false;
-   return true;
+	for ( unsigned int i = 0; i < GetNumUsers(); i++ )
+	{
+		UserBattleStatus& status = GetUser( i ).BattleStatus();
+		if ( status.IsBot() ) continue;
+		if ( !status.spectator && ( !status.ready || !status.sync ) )  return false;
+	}
+	return true;
 }
 
 

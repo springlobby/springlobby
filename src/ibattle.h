@@ -276,10 +276,13 @@ public:
 
 	User& GetFounder() const { return GetUser( m_opts.founder ); }
 
-		bool IsFull() const { return GetMaxPlayers() == ( GetNumUsers() - GetSpectators() ); }
+	bool IsFull() const { return GetMaxPlayers() == GetNumActivePlayers(); }
 
 		virtual unsigned int GetNumPlayers() const;
 		virtual unsigned int GetNumActivePlayers() const;
+
+		virtual unsigned int GetNumReadyPlayers() const { return m_players_ready; }
+		virtual unsigned int GetNumSyncedPlayers() const { return m_players_sync; }
 
 		virtual int GetBattleId() const { return m_opts.battleid; }
 
