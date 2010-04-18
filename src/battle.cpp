@@ -1130,8 +1130,8 @@ void Battle::FixTeamIDs( BalanceType balance_type, bool support_clans, bool stro
     }
 }
 
-void Battle::OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ )
+void Battle::OnUnitsyncReloaded( GlobalEvents::GlobalEventData data )
 {
-	IBattle::OnUnitsyncReloaded(  GlobalEvents::GlobalEventData /*data*/ );
+	IBattle::OnUnitsyncReloaded( data );
 	SendMyBattleStatus();
 }

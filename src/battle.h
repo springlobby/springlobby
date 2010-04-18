@@ -104,7 +104,7 @@ class Battle : public IBattle
 
 	void SetInGame( bool ingame );
 
-	void OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ );
+	void OnUnitsyncReloaded( GlobalEvents::GlobalEventData data );
 
   protected:
     // Battle variables
