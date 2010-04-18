@@ -740,6 +740,8 @@ const UnitSyncMap& IBattle::LoadMap()
     try {
       ASSERT_EXCEPTION( m_map_exists, _T("Map does not exist.") );
       m_local_map = usync().GetMapEx( m_host_map.name );
+	  bool options_loaded = CustomBattleOptions().loadOptions( OptionsWrapper::MapOption, m_host_map.name );
+	  ASSERT_EXCEPTION( options_loaded, _T("couldn't load the map options") );
       m_map_loaded = true;
 
     } catch (...) {}
@@ -793,6 +795,8 @@ const UnitSyncMod& IBattle::LoadMod()
     try {
       ASSERT_EXCEPTION( m_mod_exists, _T("Mod does not exist.") );
       m_local_mod = usync().GetMod( m_host_mod.name );
+	  bool options_loaded = CustomBattleOptions().loadOptions( OptionsWrapper::ModOption, m_host_mod.name );
+	  ASSERT_EXCEPTION( options_loaded, _T("couldn't load the mod options") );
       m_mod_loaded = true;
     } catch (...) {}
   }
