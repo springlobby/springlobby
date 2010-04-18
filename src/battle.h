@@ -102,7 +102,9 @@ class Battle : public IBattle
 
     void OnTimer( wxTimerEvent& /*event*/ );
 
-		void SetInGame( bool ingame );
+	void SetInGame( bool ingame );
+
+	void OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ );
 
   protected:
     // Battle variables

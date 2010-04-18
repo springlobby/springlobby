@@ -857,6 +857,10 @@ void Ui::OnUserStatusChanged( User& user )
             chan.uidata.panel->UserStatusUpdated( user );
         }
     }
+	if ( user.uidata.panel )
+	{
+		user.uidata.panel->UserStatusUpdated( user );
+	}
     if ( user.GetStatus().in_game ) mw().GetBattleListTab().UserUpdate( user );
     try
     {
