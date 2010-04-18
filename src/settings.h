@@ -5,7 +5,7 @@
 #include <vector>
 
 const int CACHE_VERSION     = 11;
-const int SETTINGS_VERSION  = 21;
+const int SETTINGS_VERSION  = 22;
 
 const wxString DEFSETT_DEFAULT_SERVER_NAME= _T("Official server");
 const wxString DEFSETT_DEFAULT_SERVER_HOST = _T("taspringmaster.clan-sy.com");
