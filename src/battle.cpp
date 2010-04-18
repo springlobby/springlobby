@@ -819,7 +819,7 @@ void Battle::Autobalance( BalanceType balance_type, bool support_clans, bool str
     //size_t i;
     //int num_alliances;
     std::vector<Alliance>alliances;
-    if ( numallyteams == 0 ) // 0 == use num start rects
+	if ( numallyteams == 0 || numallyteams == -1 ) // 0 or 1 -> use num start rects
     {
         int ally = 0;
         for ( unsigned int i = 0; i < GetNumRects(); ++i )
@@ -975,7 +975,7 @@ void Battle::FixTeamIDs( BalanceType balance_type, bool support_clans, bool stro
     //int num_alliances;
     std::vector<ControlTeam> control_teams;
 
-    if ( numcontrolteams == 0 ) numcontrolteams = GetNumUsers() - GetSpectators(); // 0 == use num players, will use comshare only if no available team slots
+	if ( numcontrolteams == 0 || numcontrolteams == -1 ) numcontrolteams = GetNumUsers() - GetSpectators(); // 0 or -1 -> use num players, will use comshare only if no available team slots
     IBattle::StartType position_type = (IBattle::StartType)s2l( CustomBattleOptions().getSingleValue( _T("startpostype"), OptionsWrapper::EngineOption ) );
     if ( ( position_type == ST_Fixed ) || ( position_type == ST_Random ) ) // if fixed start pos type or random, use max teams = start pos count
     {

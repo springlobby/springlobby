@@ -255,65 +255,56 @@ unsigned int IBattle::GetNumPlayers() const
 		return GetNumUsers() - GetNumBots();
 }
 
+unsigned int IBattle::GetNumActivePlayers() const
+{
+		return GetNumPlayers() - m_opts.spectators;
+}
+
 void IBattle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 {
 
     UserBattleStatus previousstatus = user.BattleStatus();
 
     user.UpdateBattleStatus( status );
-
-		if ( !previousstatus.spectator )
+	bool isfounderme = IsFounderMe();
+	unsigned int oldspeccount = m_opts.spectators;
+	m_opts.spectators = 0;
+	m_players_sync = 0;
+	m_players_ready = 0;
+	m_teams_sizes.clear();
+	m_ally_sizes.clear();
+	for ( unsigned int i = 0; i < GetNumUsers(); i++ )
+	{
+		User& loopuser = GetUser( i );
+		UserBattleStatus& loopstatus = loopuser.BattleStatus();
+		if ( isfounderme )
 		{
-			PlayerLeftAlly( previousstatus.ally );
-			PlayerLeftTeam( previousstatus.team );
+			if ( loopstatus.spectator ) m_opts.spectators++;
 		}
-		if ( !status.spectator )
+		if ( !loopstatus.IsBot() )
 		{
-			PlayerJoinedAlly( status.ally );
-			PlayerJoinedTeam( status.team );
-		}
-
-    if ( IsFounderMe() )
-    {
-			if ( status.spectator != previousstatus.spectator )
+			if ( loopstatus.ready )
 			{
-					if ( status.spectator )
-					{
-							m_opts.spectators++;
-					}
-					else
-					{
-							m_opts.spectators--;
-					}
-					SendHostInfo( HI_Spectators );
+				m_players_ready++;
 			}
+			if ( loopstatus.sync )
+			{
+				m_players_sync++;
+			}
+			if ( !loopstatus.spectator )
+			{
+				PlayerJoinedTeam( loopstatus.team );
+				PlayerJoinedAlly( loopstatus.ally );
+			}
+		}
 	}
-
+	if ( oldspeccount != m_opts.spectators  )
+	{
+		if ( IsFounderMe() ) SendHostInfo( HI_Spectators );
+		else m_opts.spectators = oldspeccount; // use host's instead
+	}
 	if ( !status.IsBot() )
 	{
-
-		if ( !previousstatus.spectator && !status.spectator && (  previousstatus.ready != status.ready ) )
-		{
-			 if ( status.ready ) m_players_ready++;
-			 else m_players_ready--;
-		}
-
-		if ( previousstatus.spectator ) // coming from spectator
-		{
-			 if ( status.ready ) m_players_ready++;
-		}
-
-		if ( status.spectator ) // becoming spectator
-		{
-			if ( previousstatus.ready ) m_players_ready--;
-		}
-
-		if ( ( previousstatus.sync != status.sync ) )
-		{
-			 if ( status.sync ) m_players_sync++;
-			 else m_players_sync--;
-		}
-
 		if ( ( status.ready && status.sync ) || status.spectator )
 		{
 			std::map<wxString, time_t>::iterator itor = m_ready_up_map.find( user.GetNick() );
@@ -336,14 +327,9 @@ void IBattle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 bool IBattle::ShouldAutoStart() const
 {
 	if ( GetInGame() ) return false;
-	if ( !IsLocked() && (  ( GetNumPlayers() - m_opts.spectators ) ) < m_opts.maxplayers ) return false; // proceed checking for ready players only if the battle is full or locked
-	for ( unsigned int i = 0; i < GetNumUsers(); i++ )
-	{
-		User& usr = GetUser( i );
-		UserBattleStatus& status = usr.BattleStatus();
-		if ( status.IsBot() ) continue;
-		if ( !status.spectator && ( !status.sync || !status.ready ) ) return false;
-	}
+	if ( !IsLocked() && ( GetNumActivePlayers() < m_opts.maxplayers ) ) return false; // proceed checking for ready & symc players only if the battle is full or locked
+	if ( m_players_ready < GetNumActivePlayers() ) return false;
+	if ( m_players_sync < GetNumActivePlayers() ) return false;
 	return true;
 }
 

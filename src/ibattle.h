@@ -279,6 +279,7 @@ public:
 		bool IsFull() const { return GetMaxPlayers() == ( GetNumUsers() - GetSpectators() ); }
 
 		virtual unsigned int GetNumPlayers() const;
+		virtual unsigned int GetNumActivePlayers() const;
 
 		virtual int GetBattleId() const { return m_opts.battleid; }
 
@@ -412,8 +413,8 @@ protected:
 
     std::map<wxString, time_t> m_ready_up_map; // player name -> time counting from join/unspect
 
-    int m_players_ready;
-    int m_players_sync;
+	unsigned int m_players_ready;
+	unsigned int m_players_sync;
     std::map<int, int> m_teams_sizes; // controlteam -> number of people in
     std::map<int, int> m_ally_sizes; // allyteam -> number of people in
 
