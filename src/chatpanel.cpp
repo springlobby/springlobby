@@ -281,17 +281,21 @@ void ChatPanel::CreateControls( )
 	if ( m_type == CPT_Channel ) {
 	  m_chatlog_text->SetToolTip( TE(_("right click for options (like autojoin)" ) ) );
 	  m_chan_opts_button = new wxBitmapButton(m_chat_panel, CHAT_CHAN_OPTS, icons().GetBitmap(icons().ICON_CHANNEL_OPTIONS), wxDefaultPosition , wxSize( CONTROL_HEIGHT, CONTROL_HEIGHT ) );
+	} else if ( m_type == CPT_User ) {
+		if ( m_user )
+		{
+			m_chan_opts_button = new wxBitmapButton(m_chat_panel, wxID_ANY, icons().GetBitmap(icons().GetUserBattleStateIcon(m_user->GetStatus()) ), wxDefaultPosition , wxSize( CONTROL_HEIGHT, CONTROL_HEIGHT ) );
+		}
 	} else {
 	  m_chan_opts_button = 0;
 	}
-
 
 	m_say_text = new wxTextCtrlHist( textcompletiondatabase, m_chat_panel, CHAT_TEXT, _T( "" ), wxDefaultPosition, wxSize( 100, CONTROL_HEIGHT ), wxTE_PROCESS_ENTER | wxTE_PROCESS_TAB );
 	m_say_button = new wxButton( m_chat_panel, CHAT_SEND, _( "Send" ), wxDefaultPosition, wxSize( 80, CONTROL_HEIGHT ) );
 
 	// Adding elements to sizers
-	if ( m_type == CPT_Channel )
-    m_say_sizer->Add( m_chan_opts_button );
+	if ( m_type == CPT_Channel ) m_say_sizer->Add( m_chan_opts_button );
+	if ( m_type == CPT_User ) m_say_sizer->Add( m_chan_opts_button );
 	m_say_sizer->Add( m_say_text, 1, wxEXPAND );
 	m_say_sizer->Add( m_say_button );
 	m_chat_sizer->Add( m_chatlog_text, 1, wxEXPAND );
@@ -783,7 +787,11 @@ void ChatPanel::SetTopic( const wxString& who, const wxString& message )
 
 void ChatPanel::UserStatusUpdated( User& who )
 {
-	if ( !m_show_nick_list || ( m_nicklist == 0 ) ) return;
+  if ( ( m_type == CPT_User ) && ( m_user == &who ) )
+  {
+	m_chan_opts_button->SetBitmapLabel( icons().GetBitmap(icons().GetUserListStateIcon(who.GetStatus(),false, who.GetBattle() != 0 ) ) );
+  }
+  if ( !m_show_nick_list || ( m_nicklist == 0 ) ) return;
   try
   {
 		m_nicklist->UserUpdated( who );
@@ -852,11 +860,14 @@ void ChatPanel::SetUser( const User* usr )
 	{
 	  StatusMessage( _( "Chat closed." ) );
 	  m_user->uidata.panel = 0;
+	  m_chan_opts_button->SetBitmapLabel( icons().GetBitmap(icons().ICON_EMPTY) );
 	}
 	else if ( usr != 0 ) usr->uidata.panel = this;
-
 	m_user = usr;
-
+	if ( m_user )
+	{
+		m_chan_opts_button->SetBitmapLabel( icons().GetBitmap(icons().GetUserListStateIcon(m_user->GetStatus(),false, m_user->GetBattle() != 0 ) ) );
+	}
 //	if ( m_user )
 //        m_chat_log.SetTarget( sett().GetDefaultServer(), usr->GetNick() );
 }
