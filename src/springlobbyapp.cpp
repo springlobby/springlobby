@@ -489,9 +489,12 @@ void SpringLobbyApp::CacheAndSettingsSetup()
 				if ( m_translationhelper )
 				{
 					// add locale's language code to autojoin
-					wxString localecode = m_translationhelper->GetLocale()->GetCanonicalName();
-					if ( localecode.Find(_T("_")) != -1 ) localecode = localecode.BeforeFirst(_T('_'));
-					sett().AddChannelJoin( localecode, _T("") );
+					if ( m_translationhelper->GetLocale() )
+					{
+						wxString localecode = m_translationhelper->GetLocale()->GetCanonicalName();
+						if ( localecode.Find(_T("_")) != -1 ) localecode = localecode.BeforeFirst(_T('_'));
+						sett().AddChannelJoin( localecode, _T("") );
+					}
 				}
 			}
     }
@@ -505,9 +508,12 @@ void SpringLobbyApp::CacheAndSettingsSetup()
         sett().AddChannelJoin( _T("newbies"), _T("") );
 		if ( m_translationhelper )
 		{
-			wxString localecode = m_translationhelper->GetLocale()->GetCanonicalName();
-			if ( localecode.Find(_T("_")) != -1 ) localecode = localecode.BeforeFirst(_T('_'));
-			sett().AddChannelJoin( localecode, _T("") ); // add locale's language code to autojoin
+			if ( m_translationhelper->GetLocale() )
+			{
+				wxString localecode = m_translationhelper->GetLocale()->GetCanonicalName();
+				if ( localecode.Find(_T("_")) != -1 ) localecode = localecode.BeforeFirst(_T('_'));
+				sett().AddChannelJoin( localecode, _T("") ); // add locale's language code to autojoin
+			}
 		}
     }
 
