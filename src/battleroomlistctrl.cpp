@@ -102,7 +102,7 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, IBattle* battle, bool 
     }
 
     AddColumn( count, widths[count], _T("Faction"), _T("Faction icon") );
-	m_status_column_index = count;
+	m_faction_column_index = count;
 	count++;
     AddColumn( count, widths[count], _T("Colour"), _T("Teamcolour") );
 	m_colour_column_index = count;
