@@ -40,10 +40,10 @@ INCLUDE(cmake/sources.list)
 FIND_PACKAGE( PkgConfig )
 
 #if nothing went wrong we have the file and can define HAVE_CONFIG_H
-IF ( EXISTS ${springlobby_BINARY_DIR}/config.h OR  EXISTS ${springlobby_SOURCE_DIR}/config.h )
+IF ( EXISTS ${springlobby_BINARY_DIR}/springlobby_config.h  OR  EXISTS ${springlobby_SOURCE_DIR}/springlobby_config.h  )
     ADD_DEFINITIONS( -DHAVE_CONFIG_H )
     INCLUDE_DIRECTORIES(${springlobby_BINARY_DIR})
-ENDIF ( EXISTS ${springlobby_BINARY_DIR}/config.h OR  EXISTS ${springlobby_SOURCE_DIR}/config.h )
+ENDIF ( EXISTS ${springlobby_BINARY_DIR}/springlobby_config.h  OR  EXISTS ${springlobby_SOURCE_DIR}/springlobby_config.h  )
 
 
 #----------------------------------------------------------------------------------------------------

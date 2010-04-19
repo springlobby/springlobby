@@ -20,7 +20,7 @@
 int main ( int , char** )
 {
 #ifdef HAVE_CONFIG_H
-	#include "config.h"
+	#include "springlobby_config.h"
 	std::cout << "config.h found\n";
 #else
 	std::cout << "config.h NOT found\n";
