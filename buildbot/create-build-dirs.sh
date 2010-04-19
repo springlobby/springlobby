@@ -16,7 +16,7 @@ else
 	echo skipped
 fi
 
-echo -n configuring ${DIR} with -DSPRINGLOBBY_REV:STRING=${1} $@ ...
+echo -n configuring ${DIR} with -DSPRINGLOBBY_REV:STRING=${REV} $@ ...
 
 cd ${DIR}
-cmake ..  -DSPRINGLOBBY_REV="${1}" $@
+cmake ..  -DSPRINGLOBBY_REV="${REV}" $@
