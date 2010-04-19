@@ -225,7 +225,7 @@ IF(WIN32)
        ADD_EXECUTABLE(springlobby_updater WIN32 MACOSX_BUNDLE ${updaterSrc} ${SLSharedWithSettings} ${updater_RC_FILE} )
        TARGET_LINK_LIBRARIES(springlobby_updater ${wxWidgets_LIBRARIES} )
 ENDIF(WIN32)
-
+ADD_EXECUTABLE(versiontest WIN32 MACOSX_BUNDLE src/versiontest.cpp )
 # Here the wxWidgets Libraries are added. These are set for us by the FIND Script. If you need other Libraries, you can add them here as well.
 TARGET_LINK_LIBRARIES(springlobby ${wxWidgets_LIBRARIES} )
 TARGET_LINK_LIBRARIES(springsettings ${wxWidgets_LIBRARIES} )
