@@ -974,6 +974,7 @@ void BattleRoomTab::ReloadMaplist()
 
 	size_t nummaps = maplist.Count();
 	for ( size_t i = 0; i < nummaps; i++ ) m_map_combo->Insert( maplist[i], i );
+	m_map_combo->SetValue( m_battle->GetHostMapName() );
 }
 
 void BattleRoomTab::SetMap( int index )
