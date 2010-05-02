@@ -148,6 +148,10 @@ class IUnitSync : public wxEvtHandler
 
     virtual wxArrayString GetModDeps( const wxString& name ) = 0;
 
+	/** Un-loads current mod in unitsync.
+	  */
+	virtual void UnSetCurrentMod() = 0;
+
     virtual int GetNumMaps() = 0;
     virtual wxArrayString GetMapList() = 0;
     virtual wxArrayString GetModValidMapList( const wxString& modname ) = 0;

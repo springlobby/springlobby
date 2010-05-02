@@ -168,6 +168,8 @@ class SpringUnitSync : public IUnitSync
     //! function wich checks if the version returned from unitsync matches a table of supported feature
     bool VersionSupports( GameFeature feature );
 
+	void UnSetCurrentMod();
+
     wxArrayString GetAIList( const wxString& modname );
     wxArrayString GetAIInfos( int index );
     GameOptions GetAIOptions( const wxString& modname, int index );

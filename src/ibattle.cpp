@@ -42,6 +42,7 @@ IBattle::IBattle():
 
 IBattle::~IBattle()
 {
+	if ( m_is_self_in ) usync().UnSetCurrentMod();
 	if ( m_timer ) m_timer->Stop();
 	delete m_timer;
 }
@@ -349,10 +350,6 @@ void IBattle::OnUserRemoved( User& user )
     }
     if ( &user == &GetMe() )
     {
-        if ( m_timer )
-            m_timer->Stop();
-        delete m_timer;
-        m_timer = 0;
         OnSelfLeftBattle();
     }
     UserList::RemoveUser( user.GetNick() );
@@ -860,14 +857,27 @@ std::map<wxString,int> IBattle::RestrictedUnits() const
 
 void IBattle::OnSelfLeftBattle()
 {
-    susynclib().UnSetCurrentMod(); //left battle
+	if ( m_timer ) m_timer->Stop();
+	delete m_timer;
+	m_timer = 0;
     m_is_self_in = false;
+	for( size_t j = 0; j < GetNumUsers(); ++j  )
+	{
+		User& u = GetUser( j );
+		if ( u.GetBattleStatus().IsBot() )
+		{
+			OnUserRemoved( u );
+			ui().OnUserLeftBattle( *this, u );
+			j--;
+		}
+	}
     ClearStartRects();
     m_teams_sizes.clear();
     m_ally_sizes.clear();
     m_players_ready = 0;
     m_players_sync = 0;
 	m_players_ok = 0;
+	usync().UnSetCurrentMod(); //left battle
 }
 
 void IBattle::OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ )
