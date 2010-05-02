@@ -175,6 +175,8 @@ const int ID_W4_BumpWaterTexSizeReflection    = 724;
 const int ID_W4_BumpWaterRefraction           = 725;
 const int ID_W4_BumpWaterAnisotropy           = 726;
 
+const int ID_SHADOW_CHOICES	= 740;
+
 #define SLI_STYLE (wxSL_LABELS )
 #define WX_DEF_V wxDefaultValidator
 const wxPoint WX_DEF_P(-1, -1);
@@ -427,7 +429,8 @@ const Control W4_CONTROLS[] = {
 };
 
 const wxString W4_REFRACTION_CHOICES[] = { _("off"), _("screencopy(fast)"), _("own rendering pass(slow)") };
-const wxString W4_TEXSIZE_CHOICES[] = { _("128"), _("256"), _("512"), _T("1024") };
+const wxString W4_TEXSIZE_CHOICES[] = { _T("128"), _T("256"), _T("512"), _T("1024") };
+const wxString SHADOW_CHOICES[] = { _T("disabled"), _T("off"), _T("on") };
 
 const category_sizes_map_type W4_CONTROLS_entry ( _T("W4_CONTROLS"), sizeof(W4_CONTROLS) / Control_size );
 

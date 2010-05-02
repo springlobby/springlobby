@@ -496,6 +496,16 @@ void abstract_panel::OnComboBoxChange(wxCommandEvent& event) {
 		    break;
 		}
 
+		case ID_SHADOW_CHOICES:
+		{
+			int choiceIndex = comboBox->GetCurrentSelection();
+
+			//really off = -1, off = 0, on = 1
+			//const wxString SHADOW_CHOICES[] = { _T("disabled"), _T("off"), _T("on") };
+			(intSettings)[QA_CBOX[0].key] = choiceIndex - 1;
+			break;
+		}
+
 		case ID_SIMPLE_QUAL_CBX:
 		{
 

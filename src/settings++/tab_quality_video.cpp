@@ -73,16 +73,16 @@ void tab_quality_video::initVideoSizer(wxFlexGridSizer* sizer) {
 void tab_quality_video::updateControls(int what_to_update)
 {
 	if (what_to_update == UPDATE_ALL)
-		{
-			//the rest
-			for (int i = 5; i < 7; i++) {
-						ctrl_qa_Boxes[i]->SetValue(intSettings[QA_CBOX[i].key]);
-			}
-
-			for (int i = 0; i < ctrl_vo_Boxes_size; i++) {
-				ctrl_vo_Boxes[i]->SetValue(intSettings[VO_CBOX[i].key]);
-			}
+	{
+		//the rest
+		for (int i = 5; i < 7; i++) {
+			ctrl_qa_Boxes[i]->SetValue(intSettings[QA_CBOX[i].key]);
 		}
+
+		for (int i = 0; i < ctrl_vo_Boxes_size; i++) {
+			ctrl_vo_Boxes[i]->SetValue(intSettings[VO_CBOX[i].key]);
+		}
+	}
 
 	if (what_to_update == UPDATE_VIDEO_MODE || what_to_update == UPDATE_ALL)
 	{
@@ -92,23 +92,26 @@ void tab_quality_video::updateControls(int what_to_update)
 	if (what_to_update == UPDATE_QA_BOXES || what_to_update == UPDATE_ALL)
 	{
 		//option 7-9 are not on presets
-		for (int i = 0; i < 9; i++) {
+		//skip 0 == shadows
+		for (int i = 1; i < 9; i++) {
 			ctrl_qa_Boxes[i]->SetValue(intSettings[QA_CBOX[i].key]);
 		}
 		for (int i = 10; i < ctrl_qa_Boxes_size; i++) {
 			ctrl_qa_Boxes[i]->SetValue(intSettings[QA_CBOX[i].key]);
 		}
 
+		ctrl_shadows_CBox->SetValue( SHADOW_CHOICES[ intSettings[ QA_CBOX[0].key] +1 ] );
+
         m_enable_w4 = false;
 		int waterOptIndex = 0;
-		int waterSetting = intSettings[WR_COMBOX[0].key];
+		const int waterSetting = intSettings[WR_COMBOX[0].key];
 		switch (waterSetting)
 		{
-		case 0:
-		case 1: waterOptIndex = waterSetting; break;
-		case 2: waterOptIndex = 3; break;
-		case 3: waterOptIndex = 2; break;
-		case 4: waterOptIndex = 4; m_enable_w4 = true; break;
+			case 0:
+			case 1: waterOptIndex = waterSetting; break;
+			case 2: waterOptIndex = 3; break;
+			case 3: waterOptIndex = 2; break;
+			case 4: waterOptIndex = 4; m_enable_w4 = true; break;
 		}
 		ctrl_waterQ_CBox->SetValue(WR_COMBOX_CHOICES[waterOptIndex]);
 
@@ -117,8 +120,8 @@ void tab_quality_video::updateControls(int what_to_update)
 		ctrl_fsaa_slider->SetValue((useFSAA == 1)? FSAALev: 0);
 
 		switch (intSettings[VO_RBUT[0].key]) {
-		case 16: { ctrl_z_radio1->SetValue(1); } break;
-		case 24: { ctrl_z_radio2->SetValue(1); } break;
+			case 16: { ctrl_z_radio1->SetValue(1); } break;
+			case 24: { ctrl_z_radio2->SetValue(1); } break;
 		}
 
 	}
@@ -164,12 +167,21 @@ void tab_quality_video::initQualitySizer(wxFlexGridSizer* sizer)
 
 	// i < 8 with High resolution LOS textures
 	// i < 7 without
-	for (int i = 0; i < ctrl_qa_Boxes_size-3; i++) {
+	//skip first == shadows
+	for (int i = 1; i < ctrl_qa_Boxes_size-3; i++) {
 		ctrl_qa_Boxes[i] = new wxCheckBox(this, QA_CBOX[i].id, (QA_CBOX[i].lbl));
 		//ctrl_qa_Boxes[i]->SetValue(configHandler.GetSpringConfigInt(QA_CBOX[i].key,fromString(QA_CBOX[i].def)));
 		ctrl_qa_Boxes[i]->SetToolTip(QA_CBOX[i].tTip[0]);
 		sizer->Add(ctrl_qa_Boxes[i], 0, wxTOP, (i == 0)? 5: 0);
 	}
+
+	wxSizer* subSizer_shadows = new wxBoxSizer(wxVERTICAL);
+	subSizer_shadows->Add(new wxStaticText(this, -1, _("Shadows (slow)")), 0, wxTOP| wxEXPAND, 10);
+	ctrl_shadows_CBox = new wxComboBox(this, ID_SHADOW_CHOICES, SHADOW_CHOICES[0], wxDefaultPosition, wxSize(220,21),
+			3,SHADOW_CHOICES,wxCB_DROPDOWN|wxCB_READONLY);
+	ctrl_shadows_CBox->SetToolTip(QA_CBOX[0].tTip[0]);
+	subSizer_shadows->Add(ctrl_shadows_CBox, 0, wxBOTTOM, 5);
+	sizer->Add(subSizer_shadows,0, wxBOTTOM, 5);
 
 	wxSizer* subSizer = new wxBoxSizer(wxVERTICAL);
 	subSizer->Add(new wxStaticText(this, -1, _("Water Quality")), 0, wxTOP| wxEXPAND, 10);
@@ -177,7 +189,6 @@ void tab_quality_video::initQualitySizer(wxFlexGridSizer* sizer)
 			5,WR_COMBOX_CHOICES,wxCB_DROPDOWN|wxCB_READONLY);
 	ctrl_waterQ_CBox->SetToolTip(WR_COMBOX[0].tTip[0]);
 	subSizer->Add(ctrl_waterQ_CBox, 0, wxBOTTOM, 5);
-
 	sizer->Add(subSizer,0, wxBOTTOM, 5);
 
 }
