@@ -836,9 +836,15 @@ void ChatPanel::SetServer( Server* serv )
 	if (( serv == 0 ) && ( m_server != 0 ) ){
 	  StatusMessage( _( "Chat closed." ) );
 	  m_server->uidata.panel = 0;
+	  if ( m_nicklist ) {
+		  m_nicklist->StopTimer();
+		  m_nicklist->Clear();
+	  }
 	}
 	else if ( serv != 0 ){
 	   serv->uidata.panel = this;
+	   if ( m_nicklist )
+		   m_nicklist->StartTimer();
 	}
 	m_server = serv;
 
