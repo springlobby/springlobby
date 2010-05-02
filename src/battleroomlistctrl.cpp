@@ -782,35 +782,57 @@ void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint& p
     else
     {
 		if ( column == m_status_column_index ) // is bot?
+		{
 			m_tiptext = _T("");
 
-		if ( user.BattleStatus().IsBot() )
-			m_tiptext += _("AI (bot)\n");
-		else
-			m_tiptext += _("Human\n");
+			if ( user.BattleStatus().IsBot() )
+			{
+				m_tiptext += _("AI (bot)\n");
+			}
+			else
+			{
+				m_tiptext += _("Human\n");
+			}
 
-		if ( user.BattleStatus().spectator )
-			m_tiptext += _("Spectator\n");
-		else
-			m_tiptext += _("Player\n");
+			if ( user.BattleStatus().spectator )
+			{
+				m_tiptext += _("Spectator\n");
+			}
+			else
+			{
+				m_tiptext += _("Player\n");
+			}
 
-		if ( m_battle->IsFounder( user ) )
-			m_tiptext += _("Host\n");
-		else
-			m_tiptext += _("Client\n");
+			if ( m_battle->IsFounder( user ) )
+			{
+				m_tiptext += _("Host\n");
+			}
+			else
+			{
+				m_tiptext += _("Client\n");
+			}
 
-		if ( user.BattleStatus().ready )
-			m_tiptext += _("Ready\n");
-		else
-			m_tiptext += _("Not ready\n");
+			if ( user.BattleStatus().ready )
+			{
+				m_tiptext += _("Ready\n");
+			}
+			else
+			{
+				m_tiptext += _("Not ready\n");
+			}
 
-		if  ( user.BattleStatus().sync == SYNC_SYNCED )
-			m_tiptext += _("In sync");
-		else
-			m_tiptext += _("Not in sync");
-
-		if ( column == m_faction_column_index ) // icon
+			if  ( user.BattleStatus().sync == SYNC_SYNCED )
+			{
+				m_tiptext += _("In sync");
+			}
+			else
+			{
+				m_tiptext += _("Not in sync");
+			}
+		}
+		else if ( column == m_faction_column_index ) // icon
 		{
+			m_tiptext = _T("");
 			if ( user.BattleStatus().spectator )
 			{
 				m_tiptext = _T("Spectators have no side");
@@ -826,36 +848,52 @@ void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint& p
 				catch (...){}
 			}
 		}
-			if ( column == m_ingame_column_index ) // lobby status
+		else if ( column == m_ingame_column_index ) // lobby status
+		{
+			m_tiptext = _T( "This " );
+			if ( user.GetStatus().bot )
 			{
-				m_tiptext = _T( "This " );
-				if ( user.GetStatus().bot )
-					m_tiptext << _T( "bot " );
-				else if ( user.GetStatus().moderator )
-					m_tiptext << _T( "moderator " );
-				else
-					m_tiptext << _T( "player " );
-
-				if ( user.GetStatus().in_game )
-					m_tiptext <<  _T( "is ingame" );
-				else if ( user.GetStatus().away )
-					m_tiptext <<  _T( "is away" );
-				else
-					m_tiptext << _T( "is available" );
+				m_tiptext << _T( "bot " );
 			}
-		if ( column == m_country_column_index ) // country
+			else if ( user.GetStatus().moderator )
+			{
+				m_tiptext << _T( "moderator " );
+			}
+			else
+			{
+				m_tiptext << _T( "player " );
+			}
+
+			if ( user.GetStatus().in_game )
+			{
+				m_tiptext <<  _T( "is ingame" );
+			}
+			else if ( user.GetStatus().away )
+			{
+				m_tiptext <<  _T( "is away" );
+			}
+			else
+			{
+				m_tiptext << _T( "is available" );
+			}
+		}
+		else if ( column == m_country_column_index ) // country
+		{
 			m_tiptext = user.BattleStatus().IsBot() ? _T("This bot is from nowhere particular") : GetFlagNameFromCountryCode(user.GetCountry());
-
-		if ( column == m_rank_column_index ) // rank
+		}
+		else if ( column == m_rank_column_index ) // rank
+		{
 			m_tiptext = user.BattleStatus().IsBot() ? _T("This bot has no rank") : user.GetRankName(user.GetStatus().rank);
-
-		if ( column == m_nick_column_index ) //name
+		}
+		else if ( column == m_nick_column_index ) //name
+		{
 			m_tiptext = user.BattleStatus().IsBot() ?user.GetNick() : user.GetNick();
-
-		if ( column == m_cpu_column_index ) // cpu
+		}
+		else if ( column == m_cpu_column_index ) // cpu
+		{
 			m_tiptext = user.BattleStatus().IsBot() ? ( user.BattleStatus().aishortname + _T(" ") + user.BattleStatus().aiversion ) : m_colinfovec[column].tip;
-
-		m_tiptext = m_colinfovec[column].tip;
+		}
+		else m_tiptext = m_colinfovec[column].tip;
     }
 }
 
