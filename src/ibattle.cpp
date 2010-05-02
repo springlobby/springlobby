@@ -226,19 +226,19 @@ User& IBattle::OnUserAdded( User& user )
     	 pos = GetFreePosition();
     	 UserPositionChanged( user );
     }
-		if ( !bs.spectator )
-		{
-			PlayerJoinedAlly( bs.ally );
-			PlayerJoinedTeam( bs.team );
-		}
-		if ( bs.spectator && IsFounderMe() ) m_opts.spectators++;
-		if ( !bs.spectator && !bs.IsBot() )
-		{
-			if ( bs.ready ) m_players_ready++;
-			if ( bs.sync) m_players_sync++;
-			if ( !bs.ready || !bs.sync ) m_ready_up_map[user.GetNick()] = time(0);
-			else m_players_ok++;
-		}
+	if ( !bs.spectator )
+	{
+		PlayerJoinedAlly( bs.ally );
+		PlayerJoinedTeam( bs.team );
+	}
+	if ( bs.spectator && IsFounderMe() ) m_opts.spectators++;
+	if ( !bs.spectator && !bs.IsBot() )
+	{
+		if ( bs.ready ) m_players_ready++;
+		if ( bs.sync) m_players_sync++;
+		if ( !bs.ready || !bs.sync ) m_ready_up_map[user.GetNick()] = time(0);
+		if ( bs.ready && bs.sync ) m_players_ok++;
+	}
     return user;
 }
 
