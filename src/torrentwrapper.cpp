@@ -409,7 +409,7 @@ void TorrentWrapper::SetIngameStatus( bool status )
 			if ( sett().GetTorrentSystemSuspendMode() == 0 )
 			{
 				for ( unsigned int i = 0; i < torrentList.size(); i++)
-				}
+				{
 				   torrentList[i].pause();
 				}
 			}
