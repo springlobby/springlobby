@@ -33,7 +33,7 @@
 #include "tab_audio.h"
 #include "tab_ui.h"
 #include "tab_simple.h"
-#include "Defs.hpp"
+#include "ctrlconstants.h"
 #include "panel_pathoption.h"
 #include "../utils/customdialogs.h"
 #include "../images/springsettings.xpm"

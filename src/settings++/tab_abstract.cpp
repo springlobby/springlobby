@@ -36,7 +36,7 @@
 #include "../utils/customdialogs.h"
 #include "../springunitsynclib.h"
 
-#include "Defs.hpp"
+#include "ctrlconstants.h"
 #include "se_utils.h"
 #include "../settings.h"
 #include "presets.h"

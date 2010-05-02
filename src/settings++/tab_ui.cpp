@@ -26,7 +26,7 @@
 #include <wx/spinctrl.h>
 #include <wx/log.h>
 
-#include "Defs.hpp"
+#include "ctrlconstants.h"
 #include "../utils/debug.h"
 #include "se_utils.h"
 

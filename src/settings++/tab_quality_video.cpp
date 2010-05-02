@@ -36,7 +36,7 @@ c    This file is part of springsettings,
 
 #include "../gui/spinctl/spinctrl.h"
 
-#include "Defs.hpp"
+#include "ctrlconstants.h"
 
 void tab_quality_video::initVideoSizer(wxFlexGridSizer* sizer) {
 

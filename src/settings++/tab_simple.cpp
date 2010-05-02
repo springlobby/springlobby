@@ -31,7 +31,7 @@ d     This file is part of springsettings,
 #include <wx/combobox.h>
 #include <wx/button.h>
 
-#include "Defs.hpp"
+#include "ctrlconstants.h"
 #include "presets.h"
 #include "frame.h"
 #include "../settings.h"

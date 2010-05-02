@@ -18,7 +18,7 @@
 #include <wx/dynlib.h>
 
 #include "se_utils.h"
-#include "Defs.hpp"
+#include "ctrlconstants.h"
 #include "frame.h"
 #include "../settings.h"
 #include "../nonportable.h"
