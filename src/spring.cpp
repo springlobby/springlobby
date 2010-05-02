@@ -562,36 +562,41 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 
 			tdf.AppendLineBreak();
 
-
-			unsigned int maxiter = std::max( NumUsers, battle.GetLastRectIdx() + 1 );
-			std::set<int> parsedallys;
-			for ( unsigned int i = 0; i < maxiter; i++ )
+			if ( startpostype == IBattle::ST_Choose )
 			{
+				unsigned int maxiter = std::max( NumUsers, battle.GetLastRectIdx() + 1 );
+				std::set<int> parsedallys;
+				for ( unsigned int i = 0; i < maxiter; i++ )
+				{
 
-					User& usr = battle.GetUser( i );
-					UserBattleStatus& status = usr.BattleStatus();
-					BattleStartRect sr = battle.GetStartRect( i );
-					if ( status.spectator && !sr.IsOk() ) continue;
-					int ally = status.ally;
-					if ( status.spectator ) ally = i;
-					if ( parsedallys.find( ally ) != parsedallys.end() ) continue; // skip duplicates
-					sr = battle.GetStartRect( ally );
-					parsedallys.insert( ally );
+						User& usr = battle.GetUser( i );
+						UserBattleStatus& status = usr.BattleStatus();
+						BattleStartRect sr = battle.GetStartRect( i );
+						if ( status.spectator && !sr.IsOk() )
+							continue;
+						int ally = status.ally;
+						if ( status.spectator )
+							ally = i;
+						if ( parsedallys.find( ally ) != parsedallys.end() )
+							continue; // skip duplicates
+						sr = battle.GetStartRect( ally );
+						parsedallys.insert( ally );
 
-					tdf.EnterSection( _T("ALLYTEAM") + TowxString( ally ) );
-						tdf.Append( _T("NumAllies"), 0 );
-						if ( sr.IsOk() )
-						{
-								const char* old_locale = std::setlocale(LC_NUMERIC, "C");
+						tdf.EnterSection( _T("ALLYTEAM") + TowxString( ally ) );
+							tdf.Append( _T("NumAllies"), 0 );
+							if ( sr.IsOk() )
+							{
+									const char* old_locale = std::setlocale(LC_NUMERIC, "C");
 
-								tdf.Append( _T("StartRectLeft"), wxString::Format( _T("%.3f"), sr.left / 200.0 ) );
-								tdf.Append( _T("StartRectTop"), wxString::Format( _T("%.3f"), sr.top / 200.0 ) );
-								tdf.Append( _T("StartRectRight"), wxString::Format( _T("%.3f"), sr.right / 200.0 ) );
-								tdf.Append( _T("StartRectBottom"), wxString::Format( _T("%.3f"), sr.bottom / 200.0 ) );
+									tdf.Append( _T("StartRectLeft"), wxString::Format( _T("%.3f"), sr.left / 200.0 ) );
+									tdf.Append( _T("StartRectTop"), wxString::Format( _T("%.3f"), sr.top / 200.0 ) );
+									tdf.Append( _T("StartRectRight"), wxString::Format( _T("%.3f"), sr.right / 200.0 ) );
+									tdf.Append( _T("StartRectBottom"), wxString::Format( _T("%.3f"), sr.bottom / 200.0 ) );
 
-								std::setlocale(LC_NUMERIC, old_locale);
-						}
-					tdf.LeaveSection();
+									std::setlocale(LC_NUMERIC, old_locale);
+							}
+						tdf.LeaveSection();
+				}
 			}
 
     tdf.LeaveSection();
