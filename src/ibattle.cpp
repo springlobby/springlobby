@@ -42,6 +42,7 @@ IBattle::IBattle():
 
 IBattle::~IBattle()
 {
+	if ( m_is_self_in ) usync().UnSetCurrentMod();
 	if ( m_timer ) m_timer->Stop();
 	delete m_timer;
 }
@@ -225,19 +226,19 @@ User& IBattle::OnUserAdded( User& user )
     	 pos = GetFreePosition();
     	 UserPositionChanged( user );
     }
-		if ( !bs.spectator )
-		{
-			PlayerJoinedAlly( bs.ally );
-			PlayerJoinedTeam( bs.team );
-		}
-		if ( bs.spectator && IsFounderMe() ) m_opts.spectators++;
-		if ( !bs.spectator && !bs.IsBot() )
-		{
-			if ( bs.ready ) m_players_ready++;
-			if ( bs.sync) m_players_sync++;
-			if ( !bs.ready || !bs.sync ) m_ready_up_map[user.GetNick()] = time(0);
-			else m_players_ok++;
-		}
+	if ( !bs.spectator )
+	{
+		PlayerJoinedAlly( bs.ally );
+		PlayerJoinedTeam( bs.team );
+	}
+	if ( bs.spectator && IsFounderMe() ) m_opts.spectators++;
+	if ( !bs.spectator && !bs.IsBot() )
+	{
+		if ( bs.ready ) m_players_ready++;
+		if ( bs.sync) m_players_sync++;
+		if ( !bs.ready || !bs.sync ) m_ready_up_map[user.GetNick()] = time(0);
+		if ( bs.ready && bs.sync ) m_players_ok++;
+	}
     return user;
 }
 
@@ -349,10 +350,6 @@ void IBattle::OnUserRemoved( User& user )
     }
     if ( &user == &GetMe() )
     {
-        if ( m_timer )
-            m_timer->Stop();
-        delete m_timer;
-        m_timer = 0;
         OnSelfLeftBattle();
     }
     UserList::RemoveUser( user.GetNick() );
@@ -860,14 +857,27 @@ std::map<wxString,int> IBattle::RestrictedUnits() const
 
 void IBattle::OnSelfLeftBattle()
 {
-    susynclib().UnSetCurrentMod(); //left battle
+	if ( m_timer ) m_timer->Stop();
+	delete m_timer;
+	m_timer = 0;
     m_is_self_in = false;
+	for( size_t j = 0; j < GetNumUsers(); ++j  )
+	{
+		User& u = GetUser( j );
+		if ( u.GetBattleStatus().IsBot() )
+		{
+			OnUserRemoved( u );
+			ui().OnUserLeftBattle( *this, u );
+			j--;
+		}
+	}
     ClearStartRects();
     m_teams_sizes.clear();
     m_ally_sizes.clear();
     m_players_ready = 0;
     m_players_sync = 0;
 	m_players_ok = 0;
+	usync().UnSetCurrentMod(); //left battle
 }
 
 void IBattle::OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ )

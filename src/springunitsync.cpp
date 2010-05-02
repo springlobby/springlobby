@@ -612,6 +612,14 @@ wxArrayString SpringUnitSync::GetAIList( const wxString& modname )
   return ret;
 }
 
+void SpringUnitSync::UnSetCurrentMod()
+{
+	try
+	{
+		susynclib().UnSetCurrentMod();
+	} catch( unitsync_assert ) {}
+}
+
 wxArrayString SpringUnitSync::GetAIInfos( int index )
 {
 	wxArrayString ret;
