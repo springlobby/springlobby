@@ -744,7 +744,7 @@ class Settings
     void SetMapSelectorFilterRadio( const unsigned int val );
     /**@}*/
   /* ============================================================== */
-    /** @name Relayed Hosts
+	/** @name Relay Hosts
     * @{
     */
 
@@ -752,6 +752,13 @@ class Settings
     void SetLastRelayedHost(wxString relhost);
 
     /**@}*/
+
+	//!you are absolutely forbidden to use this
+	template < class T >
+	T Get( wxString setting, const T def )
+	{
+		return m_config->Read( setting, def );
+	}
 
   protected:
     bool IsSpringBin( const wxString& path );
