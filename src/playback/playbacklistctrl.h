@@ -68,6 +68,7 @@ class PlaybackListCtrl : public CustomVirtListCtrl< const PlaybackImp*, Playback
 
   protected:
 	int CompareOneCrit( DataType u1, DataType u2, int col, int dir ) const;
+	void OnChar(wxKeyEvent & event);
 
     virtual void Sort();
 

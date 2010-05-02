@@ -19,6 +19,7 @@ BEGIN_EVENT_TABLE_TEMPLATE1(PlaybackListCtrl, PlaybackListCtrl::BaseType, Playba
   EVT_MENU                 ( RLIST_DLMAP, PlaybackListCtrl::OnDLMap )
   EVT_MENU                 ( RLIST_DLMOD, PlaybackListCtrl::OnDLMod )
   EVT_LIST_COL_CLICK       ( RLIST_LIST, ParentType::OnColClick )
+  EVT_KEY_DOWN			   ( PlaybackListCtrl::OnChar )
 
 END_EVENT_TABLE()
 
@@ -262,6 +263,16 @@ int PlaybackListCtrl<PlaybackType>::GetIndexFromData( const DataType& data ) con
     }
     wxLogError( _T("didn't find the battle.") );
     return -1;
+}
+
+template <class PlaybackType>
+void PlaybackListCtrl<PlaybackType>::OnChar(wxKeyEvent & event)
+{
+	const int keyCode = event.GetKeyCode();
+	if ( keyCode == WXK_DELETE )
+		RemovePlayback( ParentType::GetSelectedIndex() );
+	else
+		event.Skip();
 }
 
 /////!TODO get rid of this in favor of the functionality in base class
