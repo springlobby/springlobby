@@ -311,6 +311,8 @@ public:
      void ReverseOrder();
 
      void OnQuit( GlobalEvents::GlobalEventData data );
+	 void StartTimer();
+	 void StopTimer();
 
 protected:
     typedef std::vector< DataImp >
