@@ -562,28 +562,28 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 
 			tdf.AppendLineBreak();
 
-			if ( startpostype == IBattle::ST_Choose )
+			unsigned int maxiter = std::max( NumUsers, battle.GetLastRectIdx() + 1 );
+			std::set<int> parsedallys;
+			for ( unsigned int i = 0; i < maxiter; i++ )
 			{
-				unsigned int maxiter = std::max( NumUsers, battle.GetLastRectIdx() + 1 );
-				std::set<int> parsedallys;
-				for ( unsigned int i = 0; i < maxiter; i++ )
-				{
 
-						User& usr = battle.GetUser( i );
-						UserBattleStatus& status = usr.BattleStatus();
-						BattleStartRect sr = battle.GetStartRect( i );
-						if ( status.spectator && !sr.IsOk() )
-							continue;
-						int ally = status.ally;
-						if ( status.spectator )
-							ally = i;
-						if ( parsedallys.find( ally ) != parsedallys.end() )
-							continue; // skip duplicates
-						sr = battle.GetStartRect( ally );
-						parsedallys.insert( ally );
+					User& usr = battle.GetUser( i );
+					UserBattleStatus& status = usr.BattleStatus();
+					BattleStartRect sr = battle.GetStartRect( i );
+					if ( status.spectator && !sr.IsOk() )
+						continue;
+					int ally = status.ally;
+					if ( status.spectator )
+						ally = i;
+					if ( parsedallys.find( ally ) != parsedallys.end() )
+						continue; // skip duplicates
+					sr = battle.GetStartRect( ally );
+					parsedallys.insert( ally );
 
-						tdf.EnterSection( _T("ALLYTEAM") + TowxString( ally ) );
-							tdf.Append( _T("NumAllies"), 0 );
+					tdf.EnterSection( _T("ALLYTEAM") + TowxString( ally ) );
+						tdf.Append( _T("NumAllies"), 0 );
+						if ( startpostype == IBattle::ST_Choose )
+						{
 							if ( sr.IsOk() )
 							{
 									const char* old_locale = std::setlocale(LC_NUMERIC, "C");
@@ -595,8 +595,8 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 
 									std::setlocale(LC_NUMERIC, old_locale);
 							}
-						tdf.LeaveSection();
-				}
+						}
+					tdf.LeaveSection();
 			}
 
     tdf.LeaveSection();
