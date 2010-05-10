@@ -51,6 +51,8 @@ class MainChatTab : public wxScrolledWindow
     void LoadPerspective( const wxString& perspective_name = wxEmptyString );
     void SavePerspective( const wxString& perspective_name = wxEmptyString );
 
+	void AdvanceSelection( bool forward );
+
   protected:
 
     wxWindow* m_close_window;

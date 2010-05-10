@@ -23,6 +23,8 @@ class SLNotebook : public wxAuiNotebook {
         wxString SavePerspective();
         bool LoadPerspective(const wxString& layout);
 
+		void AdvanceSelection( bool forward );
+
         /** \brief call fitinside for each child page
             useful after loading perspectives, since that does not generate OnSize events
             \note koshi: turns out it isn't strictly necessary on at least wxGTK
