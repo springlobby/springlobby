@@ -55,7 +55,7 @@ class SLChatNotebook : public SLNotebook {
 
         //prohibit adding other panels
         bool AddPage(wxWindow* , const wxString& , bool , const wxBitmap& );
-        void DeleteChatPage( size_t i );
+		bool DeleteChatPage( size_t i );
 
         ChatPanelMenu* m_ch_menu;
         ChatPanel* m_cur_page;

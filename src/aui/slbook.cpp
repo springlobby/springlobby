@@ -74,8 +74,8 @@ void SLChatNotebook::OnHeaderRightClick(wxAuiNotebookEvent &event)
     pop->Append( ID_CLOSE_TAB, _("Close") );
     if ( GetPageCount() > 1)
     {
-        pop->Append( ID_CLOSE_TAB_ALL, _("Close all"));
-        pop->Append( ID_CLOSE_TAB_OTHER, _("Close all others"));
+		pop->Append( ID_CLOSE_TAB_ALL, _("Close all chats"));
+		pop->Append( ID_CLOSE_TAB_OTHER, _("Close all other chats"));
     }
     m_ch_menu = new ChatPanelMenu( m_cur_page, true );
 	if ( m_cur_page->GetPanelType() == CPT_User ) {
@@ -90,12 +90,17 @@ void SLChatNotebook::OnHeaderRightClick(wxAuiNotebookEvent &event)
     PopupMenu(pop);
 }
 
-void SLChatNotebook::DeleteChatPage( size_t i )
+bool SLChatNotebook::DeleteChatPage( size_t i )
 {
     ChatPanel* cur_page = static_cast<ChatPanel*>( GetPage( i ) );
-    if ( cur_page )
+
+	//the checking for server panel is not supposed to be here, but it prevents a nasty crash bug in handling 'close all' for the time being
+	if ( cur_page && !cur_page->IsServerPanel() ) {
         cur_page->Part();
-    ParentType::DeletePage( i );
+		ParentType::DeletePage( i );
+		return true;
+	}
+	return false;
 }
 
 void SLChatNotebook::OnMenuItem( wxCommandEvent& event )
@@ -109,8 +114,8 @@ void SLChatNotebook::OnMenuItem( wxCommandEvent& event )
     }
     else if ( id == ID_CLOSE_TAB_ALL ) {
         for ( size_t i = 0; i < GetPageCount(); ++i ){
-                DeleteChatPage( i );
-                i--;
+				if ( DeleteChatPage( i ) )
+					i--;
         }
     }
     else if ( id == ID_CLOSE_TAB_OTHER ) {
@@ -119,9 +124,10 @@ void SLChatNotebook::OnMenuItem( wxCommandEvent& event )
         	if ( i == selected )
         	    continue;
             else {
-                DeleteChatPage( i );
-                i--;
-                selected--;
+				if ( DeleteChatPage( i ) ) {
+					i--;
+					selected--;
+				}
         	}
         }
     }
