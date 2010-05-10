@@ -36,13 +36,16 @@ wxTextCtrlHist::wxTextCtrlHist(TextCompletionDatabase& textDb, wxWindow* parent,
 
 void wxTextCtrlHist::OnSendMessage( wxCommandEvent &event )
 {
-    Historical.Add(GetLineText(0));
-    current_pos = Historical.GetCount();
+	const wxString msg = GetLineText(0);
+	if ( msg != wxEmptyString ) {
+		Historical.Add( msg );
+		current_pos = Historical.GetCount();
 
-    if(current_pos > history_max) {
-            Historical.RemoveAt(0);
-            --current_pos;
-    }
+		if(current_pos > history_max) {
+				Historical.RemoveAt(0);
+				--current_pos;
+		}
+	}
     event.Skip();
 }
 
