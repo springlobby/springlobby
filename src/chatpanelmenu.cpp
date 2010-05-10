@@ -515,6 +515,10 @@ void ChatPanelMenu::OnUserMenuJoinSame( wxCommandEvent& /*unused*/ )
 		return;
 	}
 
+	if ( battle->IsLocked() ) {
+		customMessageBoxNoModal( SL_MAIN_ICON, _( "The battle you requested to join is locked." ) );
+		return;
+	}
 	wxString password;
 	if ( battle->IsPassworded() ) {
 		if ( !ui().AskPassword( _( "Battle password" ), _( "This battle is password protected, enter the password." ), password ) ) return;
