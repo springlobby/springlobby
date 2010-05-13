@@ -106,6 +106,7 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU( MENU_CHANNELCHOOSER,		MainWindow::OnShowChannelChooser	)
   EVT_MENU( MENU_SCREENSHOTS,			MainWindow::OnShowScreenshots		)
   EVT_MENU( MENU_PREFERENCES,			MainWindow::OnMenuPreferences		)
+  EVT_MENU( MENU_RENAME,				MainWindow::OnMenuRename			)
 
   EVT_AUINOTEBOOK_PAGE_CHANGED( MAIN_TABS, MainWindow::OnTabsChanged )
   EVT_CLOSE( MainWindow::OnClose )
@@ -156,6 +157,7 @@ MainWindow::MainWindow( )
 	m_menuTools->Append(MENU_JOIN, _("&Join channel..."));
 	m_menuTools->Append(MENU_CHANNELCHOOSER, _("Channel &list"));
 	m_menuTools->Append(MENU_CHAT, _("Open private &chat..."));
+	m_menuTools->Append(MENU_RENAME, _("Change &username"));
 	m_menuTools->Append(MENU_SCREENSHOTS, _("&View screenshots"));
 	m_menuTools->AppendSeparator();
 	m_menuTools->Append(MENU_USYNC, _("&Reload maps/mods"));
@@ -716,4 +718,11 @@ void MainWindow::OnMenuPreferences( wxCommandEvent& /*event*/ )
 {
 	m_opts_dialog = new OptionsDialog( this );
 	m_opts_dialog->Show();
+}
+
+void MainWindow::OnMenuRename( wxCommandEvent& /*event*/ )
+{
+	wxString new_username;
+	if ( ui().AskText( _("Rename"), _("Enter new nickname"), new_username ) )
+		serverSelector().GetServer().ExecuteSayCommand( _T("/rename ") + new_username );
 }
