@@ -139,6 +139,17 @@ protected:
 
 };
 
+class AutocloseMessageBox : public TimedMessageBox {
+public:
+	AutocloseMessageBox(wxWindow *parent, const wxString& message,
+			const wxString& caption = wxMessageBoxCaptionStr,
+			unsigned int delay = 3000, // miliseconds
+			long style = wxOK|wxICON_INFORMATION, const wxPoint& pos = wxDefaultPosition);
+	virtual ~AutocloseMessageBox();
+protected:
+	void OnUnlock( wxTimerEvent& evt );
+};
+
 /** \brief used to display server messages when no chatwindow has focus
  */
 class ServerMessageBox : public wxDialog
