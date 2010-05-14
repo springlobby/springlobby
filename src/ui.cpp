@@ -61,6 +61,8 @@
 #include "globalsmanager.h"
 #include "utils/misc.h"
 
+static const unsigned int s_reconnect_delay_ms = 6000;
+
 Ui& ui()
 {
     static LineInfo<Ui> m( AT );
@@ -219,6 +221,11 @@ void Ui::Disconnect()
 //! @brief Opens the accutial connection to a server.
 void Ui::DoConnect( const wxString& servername, const wxString& username, const wxString& password )
 {
+	if ( m_reconnect_delay_timer.IsRunning() ) {
+		AutocloseMessageBox m( &mw(), _("Waiting for reconnect"), wxMessageBoxCaptionStr, s_reconnect_delay_ms );
+		m.ShowModal();
+	}
+
     wxString host;
     int port;
 
@@ -611,6 +618,7 @@ void Ui::OnLoggedIn( )
 
 void Ui::OnDisconnected( Server& server, bool wasonline )
 {
+	m_reconnect_delay_timer.Start( s_reconnect_delay_ms, true );
     if ( m_main_win == 0 ) return;
     wxLogDebugFunc( _T("") );
     if (!&server)
