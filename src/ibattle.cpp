@@ -368,7 +368,16 @@ void IBattle::OnUserRemoved( User& user )
 
 bool IBattle::IsEveryoneReady() const
 {
-	if ( m_players_ok < GetNumActivePlayers() ) return false;
+	for ( unsigned int i = 0; i < GetNumPlayers(); i++ )
+	{
+		User& usr = GetUser( i );
+		UserBattleStatus& status = usr.BattleStatus();
+		if ( status.IsBot() ) continue;
+		if ( status.spectator ) continue;
+		if ( &usr == &GetMe() ) continue;
+		if ( !status.ready ) return false;
+		if ( !status.sync ) return false;
+	}
 	return true;
 }
 
