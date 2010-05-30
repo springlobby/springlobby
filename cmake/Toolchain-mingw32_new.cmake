@@ -2,8 +2,8 @@
 SET(CMAKE_SYSTEM_NAME Windows)
 
 # which compilers to use for C and C++
-SET(CMAKE_C_COMPILER /opt/mingw32/bin/i686-w64-mingw32-gcc)
-SET(CMAKE_CXX_COMPILER /opt/mingw32/bin/i686-w64-mingw32-g++)
+SET(CMAKE_C_COMPILER /opt/mingw32/bin/i586-pc-mingw32-gcc)
+SET(CMAKE_CXX_COMPILER /opt/mingw32/bin/i586-pc-mingw32-g++)
 SET( wxWidgets_ROOT_DIR /opt/mingw32/ )
 # here is the target environment located
 
@@ -41,12 +41,12 @@ SET( Boost_LIBRARIES
 	boost_system-gcc44-mt-1_41 )
 SET( boost_LIB_DIR /opt/mingw32/lib )
 SET( boost_INCLUDE_DIR /opt/mingw32/include )
-SET( WINDRES /opt/mingw32/bin/i686-w64-mingw32-windres )
+SET( WINDRES /opt/mingw32/bin/i586-pc-mingw32-windres )
 link_directories( /opt/mingw32/lib )
 INCLUDE_DIRECTORIES(/opt/mingw32/include  )
 INCLUDE_DIRECTORIES(/opt/mingw32/include/drmingw/include  )
 
-#SET( PKG_CONFIG_EXECUTABLE /opt/mingw32/bin/pkg-config )
+SET( PKG_CONFIG_EXECUTABLE /opt/mingw32/bin/pkg-config )
 ADD_DEFINITIONS( -DCURL_STATICLIB -DWXUSINGDLL -D__WXMSW__ -mthreads)
 
 SET( LOCALE_INSTALL_DIR "${CMAKE_BINARY_DIR}/locale" CACHE STRING
