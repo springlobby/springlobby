@@ -327,8 +327,12 @@ wxString BattleroomListCtrl::GetItemText(long item, long column) const
 	if ( column == m_team_column_index ) return is_spec ? _T("") : wxString::Format( _T("%d"), user.BattleStatus().team + 1 );
 	if ( column == m_ally_column_index ) return is_spec ? _T("") : wxString::Format( _T("%d"), user.BattleStatus().ally + 1 );
 	if ( column == m_cpu_column_index ) {
-		if (!is_bot )
-			return wxString::Format( _T("%.1f GHz"), user.GetCpu() / 1000.0 );
+		if (!is_bot ) {
+			if ( user.GetCpu() > 0 )
+				return wxString::Format( _T("%.1f GHz"), user.GetCpu() / 1000.0 );
+			else
+				return _T("n/a");//0 cpu in replays for example
+		}
 		else { //!TODO could prolly be cached
 			wxString botname = user.BattleStatus().aishortname;
 			if ( !user.BattleStatus().aiversion.IsEmpty() ) botname += _T(" ") + user.BattleStatus().aiversion;
