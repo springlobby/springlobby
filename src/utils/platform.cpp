@@ -128,18 +128,30 @@ wxString GetHostCPUSpeed()
 
 #else
 
-    wxTextFile file( _T("/proc/cpuinfo") );
+    wxTextFile file( _T("/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq") );
     if ( file.Exists() )
     {
       file.Open();
-      for ( wxString line = file.GetFirstLine(); !file.Eof(); line = file.GetNextLine() )
+      wxString line = file.GetFirstLine();
+      cpu_count++;
+      int tmp = s2l( line );
+      tmp /= 1000;
+      if ( max_cpu_speed < tmp ) max_cpu_speed = tmp;
+    }
+    else {
+      wxTextFile file( _T("/proc/cpuinfo") );
+      if ( file.Exists() )
       {
-        if ( line.Left(7) == _T("cpu MHz") )
+        file.Open();
+        for ( wxString line = file.GetFirstLine(); !file.Eof(); line = file.GetNextLine() )
         {
-          line = line.AfterLast( _T(' ') ).BeforeLast( _T('.') );
-          cpu_count++;
-          int tmp = s2l( line );
-          if ( max_cpu_speed < tmp ) max_cpu_speed = tmp;
+          if ( line.Left(7) == _T("cpu MHz") )
+          {
+            line = line.AfterLast( _T(' ') ).BeforeLast( _T('.') );
+            cpu_count++;
+            int tmp = s2l( line );
+            if ( max_cpu_speed < tmp ) max_cpu_speed = tmp;
+          }
         }
       }
     }

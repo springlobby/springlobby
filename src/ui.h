@@ -26,6 +26,7 @@ extern const wxEventType torrentSystemStatusUpdateEvt;
 
 #include "utils/battleevents.h"
 #include <wx/string.h>
+#include <wx/timer.h>
 
 //! @brief UI main class
 class Ui
@@ -153,6 +154,7 @@ class Ui
     Server* m_serv;
     MainWindow* m_main_win;
     ConnectWindow* m_con_win;
+	wxTimer m_reconnect_delay_timer;
 
     wxString m_last_used_backup_server;
 

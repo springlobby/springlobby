@@ -27,6 +27,43 @@ SLNotebook ::SLNotebook (wxWindow* parent, const wxString& name, wxWindowID id ,
         );
 }
 
+// Advances the selection, generation page selection events
+void SLNotebook::AdvanceSelection(bool forward)
+{
+	if (GetPageCount() <= 1)
+		return;
+	int currentSelection = GetSelection();
+	wxAuiTabCtrl* tabCtrl = 0;
+	int idx = -1;
+
+	if(!FindTab(GetPage(currentSelection), &tabCtrl, &idx))
+		return;
+
+	if(!tabCtrl || idx < 0)
+		return;
+
+	wxWindow* page = 0;
+	size_t maxPages = tabCtrl->GetPageCount();
+
+	forward?idx++:idx--;
+
+	if(idx < 0)
+		idx = maxPages - 1;
+
+	if ((size_t)idx < maxPages)
+		page = tabCtrl->GetPage(idx).window;
+
+	if (!page && maxPages > 0)
+		page = tabCtrl->GetPage(0).window;
+
+	if(page)
+	{
+		currentSelection = GetPageIndex(page);
+		SetSelection(currentSelection);
+	}
+}
+
+
 BEGIN_EVENT_TABLE( SLChatNotebook, SLNotebook )
 
      EVT_AUINOTEBOOK_TAB_RIGHT_UP ( wxID_ANY, SLChatNotebook::OnHeaderRightClick )
@@ -74,8 +111,8 @@ void SLChatNotebook::OnHeaderRightClick(wxAuiNotebookEvent &event)
     pop->Append( ID_CLOSE_TAB, _("Close") );
     if ( GetPageCount() > 1)
     {
-        pop->Append( ID_CLOSE_TAB_ALL, _("Close all"));
-        pop->Append( ID_CLOSE_TAB_OTHER, _("Close all others"));
+		pop->Append( ID_CLOSE_TAB_ALL, _("Close all chats"));
+		pop->Append( ID_CLOSE_TAB_OTHER, _("Close all other chats"));
     }
     m_ch_menu = new ChatPanelMenu( m_cur_page, true );
 	if ( m_cur_page->GetPanelType() == CPT_User ) {
@@ -90,12 +127,17 @@ void SLChatNotebook::OnHeaderRightClick(wxAuiNotebookEvent &event)
     PopupMenu(pop);
 }
 
-void SLChatNotebook::DeleteChatPage( size_t i )
+bool SLChatNotebook::DeleteChatPage( size_t i )
 {
     ChatPanel* cur_page = static_cast<ChatPanel*>( GetPage( i ) );
-    if ( cur_page )
+
+	//the checking for server panel is not supposed to be here, but it prevents a nasty crash bug in handling 'close all' for the time being
+	if ( cur_page && !cur_page->IsServerPanel() ) {
         cur_page->Part();
-    ParentType::DeletePage( i );
+		ParentType::DeletePage( i );
+		return true;
+	}
+	return false;
 }
 
 void SLChatNotebook::OnMenuItem( wxCommandEvent& event )
@@ -108,20 +150,21 @@ void SLChatNotebook::OnMenuItem( wxCommandEvent& event )
         DeleteChatPage( GetSelection() );
     }
     else if ( id == ID_CLOSE_TAB_ALL ) {
-        for ( size_t i = 0; i < GetPageCount(); ++i ){
-                DeleteChatPage( i );
-                i--;
+		for ( size_t i = 0; i < GetPageCount(); ++i ){
+				if ( DeleteChatPage( i ) )
+					i--;
         }
     }
     else if ( id == ID_CLOSE_TAB_OTHER ) {
         size_t selected = GetSelection();
-        for ( size_t i = 0; i < GetPageCount(); ++i ){
+		for ( size_t i = 0; i < GetPageCount(); ++i ){
         	if ( i == selected )
         	    continue;
             else {
-                DeleteChatPage( i );
-                i--;
-                selected--;
+				if ( DeleteChatPage( i ) ) {
+					i--;
+					selected--;
+				}
         	}
         }
     }
@@ -185,8 +228,8 @@ public:
 
         if (m_tabs->GetFlags() & wxAUI_NB_BOTTOM)
         {
-            m_tab_rect = wxRect (m_rect.x, m_rect.y + m_rect.height - m_tab_ctrl_height, m_rect.width, m_tab_ctrl_height);
-            m_tabs->SetSize     (m_rect.x, m_rect.y + m_rect.height - m_tab_ctrl_height, m_rect.width, m_tab_ctrl_height);
+			m_tab_rect = wxRect (m_rect.x, m_rect.y + m_rect.height - m_tab_ctrl_height, m_rect.width, m_tab_ctrl_height);
+			m_tabs->SetSize     (m_rect.x, m_rect.y + m_rect.height - m_tab_ctrl_height, m_rect.width, m_tab_ctrl_height);
             m_tabs->SetRect     (wxRect(0, 0, m_rect.width, m_tab_ctrl_height));
         }
         else //TODO: if (GetFlags() & wxAUI_NB_TOP)
@@ -204,7 +247,7 @@ public:
         wxAuiNotebookPageArray& pages = m_tabs->GetPages();
         size_t i, page_count = pages.GetCount();
 
-        for (i = 0; i < page_count; ++i)
+		for (i = 0; i < page_count; ++i)
         {
             wxAuiNotebookPage& page = pages.Item(i);
             if (m_tabs->GetFlags() & wxAUI_NB_BOTTOM)
@@ -214,7 +257,7 @@ public:
             }
             else //TODO: if (GetFlags() & wxAUI_NB_TOP)
             {
-                page.window->SetSize(m_rect.x, m_rect.y + m_tab_ctrl_height,
+				page.window->SetSize(m_rect.x, m_rect.y + m_tab_ctrl_height,
                                     m_rect.width, m_rect.height - m_tab_ctrl_height);
             }
             // TODO: else if (GetFlags() & wxAUI_NB_LEFT){}
@@ -266,22 +309,22 @@ wxString SLNotebook::SavePerspective() {
 
        wxTabFrame* tabframe = (wxTabFrame*)pane.window;
 
-     if (!tabs.empty()) tabs += wxT("|");
-     tabs += pane.name;
-     tabs += wxT("=");
+	 if (!tabs.empty()) tabs += wxT("|");
+	 tabs += pane.name;
+	 tabs += wxT("=");
 
      // add tab id's
      size_t page_count = tabframe->m_tabs->GetPageCount();
-     for (size_t p = 0; p < page_count; ++p)
+	 for (size_t p = 0; p < page_count; ++p)
      {
         wxAuiNotebookPage& page = tabframe->m_tabs->GetPage(p);
         const size_t page_idx = m_tabs.GetIdxFromWindow(page.window);
 
-        if (p) tabs += wxT(",");
+		if (p) tabs += wxT(",");
 
-        if ((int)page_idx == m_curpage) tabs += wxT("*");
-        else if ((int)p == tabframe->m_tabs->GetActivePage()) tabs += wxT("+");
-        tabs += wxString::Format(wxT("%u"), page_idx);
+		if ((int)page_idx == m_curpage) tabs += wxT("*");
+		else if ((int)p == tabframe->m_tabs->GetActivePage()) tabs += wxT("+");
+		tabs += wxString::Format(wxT("%u"), page_idx);
      }
   }
   tabs += wxT("@");
@@ -382,7 +425,7 @@ bool SLNotebook::LoadPerspective(const wxString& layout) {
 
 void SLNotebook::FitChildPages()
 {
-    for ( size_t i = 0; i < GetPageCount(); ++i) {
+	for ( size_t i = 0; i < GetPageCount(); ++i) {
     	wxWindow* page = GetPage( i );
     	if ( page )
             page->FitInside();
@@ -400,7 +443,7 @@ void LoadNotebookPerspective( SLNotebook* notebook, const wxString& perspective_
         wxWindow* parent = notebook->GetParent();
 
         #ifdef __WXMSW__
-        for( size_t i = 0; i < notebook->GetPageCount(); ++i ) {
+		for( size_t i = 0; i < notebook->GetPageCount(); ++i ) {
             try {
 				wxWindow* tmp = notebook->GetPage( i );
 				if ( tmp ) {

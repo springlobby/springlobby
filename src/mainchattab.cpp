@@ -390,3 +390,8 @@ void MainChatTab::SavePerspective( const wxString& perspective_name )
 {
     SaveNotebookPerspective( m_chat_tabs, perspective_name );
 }
+
+void MainChatTab::AdvanceSelection( bool forward )
+{
+	m_chat_tabs->AdvanceSelection( forward );
+}

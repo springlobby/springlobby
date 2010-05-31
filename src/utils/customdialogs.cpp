@@ -638,3 +638,24 @@ void TimedMessageBox::OnUnlock( wxTimerEvent&  )
     topsizer->Fit( this );
     Layout();
 }
+
+AutocloseMessageBox::AutocloseMessageBox( wxWindow *parent, const wxString& message,
+										  const wxString& caption ,
+										  unsigned int delay,
+										  long style, const wxPoint& pos )
+	: TimedMessageBox( new wxIcon(springlobby_xpm), parent, message, caption, delay, style, pos )
+{
+	wxWindowID delay_timerID = wxNewId();
+	m_delay_timer.SetOwner( this, delay_timerID );
+	Connect( delay_timerID, wxEVT_TIMER, wxTimerEventHandler( AutocloseMessageBox::OnUnlock) );
+}
+
+void AutocloseMessageBox::OnUnlock( wxTimerEvent& evt )
+{
+	EndModal(0);
+}
+
+AutocloseMessageBox::~AutocloseMessageBox()
+{
+
+}
