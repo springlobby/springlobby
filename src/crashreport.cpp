@@ -14,14 +14,12 @@
 #include <wx/file.h>
 #include <wx/log.h>
 #include <wx/platinfo.h>
-#include <curl/curl.h>
-#include <curl/types.h>
-#include <curl/easy.h>
+#include <wx/sstream.h>
 
+#include "utils/curlhelper.h"
 #include "updater/updatehelper.h"
 #include "utils/conversion.h"
 #include "settings.h"
-#include "curl/http.h"
 #include "stacktrace.h"
 #include "springunitsync.h"
 

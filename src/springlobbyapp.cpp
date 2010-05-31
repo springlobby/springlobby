@@ -55,7 +55,6 @@
 #include "playback/playbacktab.h"
 #include "defines.h"
 #include "customizations.h"
-#include "curl/http.h"
 #include "alsound.h"
 #include "mapselectdialog.h"
 
@@ -133,7 +132,6 @@ bool SpringLobbyApp::OnInit()
     wxInitAllImageHandlers();
     wxFileSystem::AddHandler(new wxZipFSHandler);
     wxSocketBase::Initialize();
-    wxCurlBase::Init();
 
 
 #ifdef __WXMSW__
@@ -244,8 +242,6 @@ int SpringLobbyApp::OnExit()
     {
         wxDELETE(m_translationhelper);
     }
-
-    wxCurlBase::Shutdown();
 
   	m_timer->Stop();
 

@@ -8,11 +8,9 @@
 #include <wx/arrstr.h>
 #include <wx/log.h>
 #include <wx/tokenzr.h>
-
+#include <wx/sstream.h>
 #include <vector>
-
-#include "../curl/http.h"
-
+#include "curlhelper.h"
 
 double LevenshteinDistance(wxString s, wxString t)
 {

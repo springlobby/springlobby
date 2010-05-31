@@ -138,10 +138,7 @@ SET(SettingsSrc
 )
 
 SET( curlSRC
-	src/curl/base.cpp
-	src/curl/http.cpp
-	src/curl/ftp.cpp
-	src/curl/curlthread.cpp
+	src/utils/curlhelper.cpp
 )
 
 SET(StandAloneSettings
