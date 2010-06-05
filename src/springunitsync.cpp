@@ -665,7 +665,7 @@ wxArrayString SpringUnitSync::GetUnitsList( const wxString& modname )
   } catch(...)
   {
     susynclib().SetCurrentMod( modname );
-    while ( susynclib().ProcessUnitsNoChecksum() );
+    while ( susynclib().ProcessUnitsNoChecksum() ) {}
     unsigned int unitcount = susynclib().GetUnitCount();
     for ( unsigned int i = 0; i < unitcount; i++ )
     {
@@ -841,7 +841,7 @@ MapInfo SpringUnitSync::_GetMapInfoEx( const wxString& mapname )
       }
       catch (...)
       {
-        info = susynclib().GetMapInfoEx( mapname, 1 );
+        info = susynclib().GetMapInfoEx( GetMapIndex(mapname), 1 );
 
         cache.Add ( info.author );
         cache.Add( TowxString( info.tidalStrength ) );
