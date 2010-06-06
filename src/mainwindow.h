@@ -152,11 +152,11 @@ class MainWindow : public wxFrame, public WindowAttributesPickle
     wxLogChain* m_log_chain;
 
     enum {
-        MENU_SETTINGSPP,
         MENU_ABOUT = wxID_ABOUT,
         MENU_QUIT = wxID_EXIT,
 
         MENU_CONNECT = wxID_HIGHEST,
+		MENU_SETTINGSPP,
         MENU_DISCONNECT,
         MENU_SAVE_OPTIONS,
         MENU_JOIN,
