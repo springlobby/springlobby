@@ -141,7 +141,7 @@ MainWindow::MainWindow( )
 	m_menuEdit = new wxMenu;
 	m_menuEdit->Append(MENU_AUTOJOIN_CHANNELS, _("&Autojoin channels"));
 	m_menuEdit->Append(MENU_PREFERENCES, _("&Preferences"));
-	m_settings_menu = new wxMenuItem( m_menuTools, MENU_SETTINGSPP, _("&Spring settings"), wxEmptyString, wxITEM_NORMAL );
+	m_settings_menu = new wxMenuItem( m_menuEdit, MENU_SETTINGSPP, _("&Spring settings"), wxEmptyString, wxITEM_NORMAL );
 	m_menuEdit->Append (m_settings_menu);
 
 
