@@ -288,7 +288,13 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 			}
 			tdf.Append( _T("IsHost"), battle.IsFounderMe() );
 
-			tdf.Append(_T("MyPlayerName"), battle.GetMe().GetNick() );
+			User& me = battle.GetMe();
+			tdf.Append(_T("MyPlayerName"), me.GetNick() );
+
+			if ( !me.BattleStatus().scriptPassword.IsEmpty() )
+			{
+				tdf.Append( _T("MyPasswd"), me.BattleStatus().scriptPassword );
+			}
 
 			if ( !battle.IsFounderMe() )
 			{
@@ -447,6 +453,10 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 							tdf.Append( _T("Spectator"), status.spectator );
 							tdf.Append( _T("Rank"), (int)user.GetRank() );
 							tdf.Append( _T("IsFromDemo"), int(status.isfromdemo) );
+							if ( !status.scriptPassword.IsEmpty() )
+							{
+								tdf.Append( _T("Password"), status.scriptPassword );
+							}
 							if ( !status.spectator )
 							{
 								tdf.Append( _T("Team"), teams_to_sorted_teams[status.team] );
