@@ -778,7 +778,7 @@ void ChatPanel::SetTopic( const wxString& who, const wxString& message )
   wxStringTokenizer tkz( message, _T("\n") );
 	while ( tkz.HasMoreTokens() )
 	{
-	  wxString msg = tkz.GetNextToken().Trim();
+	  wxString msg = tkz.GetNextToken();
 	  OutputLine( _T(" ") + msg, sett().GetChatColorServer(), f );
 	}
 	OutputLine( _( " ** Set by " ) + who, sett().GetChatColorServer(), f );
