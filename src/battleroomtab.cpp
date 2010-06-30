@@ -479,8 +479,7 @@ void BattleRoomTab::UpdateBattleInfo( const wxString& Tag )
                 m_map_combo->SetValue( mapname );
 
 			//delete any eventual map option from the list and add options of the new map
-			int combocount = m_opts_list->GetItemCount();
-			for ( int i = m_map_opts_index; i < combocount; i++ )
+			for ( int i = m_map_opts_index; i < m_opts_list->GetItemCount(); )
 			{
                 m_opts_list->DeleteItem( i );
 			}
