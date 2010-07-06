@@ -67,15 +67,21 @@
 inline wxString
 getDataSubdirForType(const IUnitSync::MediaType type)
 {
+	wxFileName torrentDir( sett().GetCurrentUsedDataDir() );
     switch ( type)
     {
     case IUnitSync::map:
-        return _T("maps");
+		torrentDir.AppendDir( _T( "maps" ) );
     case IUnitSync::mod:
-        return _T("mods");
+		torrentDir.AppendDir( _T( "mods" ) );
     default:
         ASSERT_EXCEPTION(false, _T("Unhandled IUnitSync::MediaType value"));
     }
+	if ( !torrentDir.DirExists() )
+	{
+		if ( !torrentDir.Mkdir( 0755 ) ) torrentDir.Clear();
+	}
+	return torrentDir.GetFullPath();
 }
 
 //! translate handle status to P2Pstatus
@@ -473,8 +479,7 @@ void TorrentWrapper::HandleCompleted()
 		libtorrent::torrent_handle handle = it->second;
 		if ( handle.is_valid() && handle.is_seed() )
 		{
-			wxString dest_filename = sett().GetCurrentUsedDataDir() +
-									 getDataSubdirForType( convertMediaType( info.m_type ) ) +
+			wxString dest_filename = getDataSubdirForType( convertMediaType( info.m_type ) ) +
 									 wxFileName::GetPathSeparator() +
 									 TowxString( handle.get_torrent_info().file_at( 0 ).path.string() );
 			if ( !wxFileExists( dest_filename ) )
