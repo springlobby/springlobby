@@ -907,7 +907,7 @@ void SpringUnitSync::SetSpringDataPath( const wxString& path )
 
 wxString SpringUnitSync::GetFileCachePath( const wxString& name, const wxString& hash, bool IsMod )
 {
-  LOCK_UNITSYNC;
+//  LOCK_UNITSYNC;
 
   wxString ret = m_cache_path;
   if ( !name.IsEmpty() ) ret << name;
