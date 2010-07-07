@@ -64,7 +64,8 @@
 /** Get the name of the Spring data subdirectory that corresponds to a
  * given IUnitSync::MediaType value.
  */
-wxString getDataSubdirForType(const IUnitSync::MediaType type, const wxString& filename )
+inline wxString
+getDataSubdirForType(const IUnitSync::MediaType type)
 {
 	wxFileName torrentDir( sett().GetCurrentUsedDataDir() );
     switch ( type)
@@ -80,7 +81,6 @@ wxString getDataSubdirForType(const IUnitSync::MediaType type, const wxString& f
 	{
 		if ( !torrentDir.Mkdir( 0755 ) ) torrentDir.Clear();
 	}
-	torrentDir.SetFullName(filename);
 	return torrentDir.GetFullPath();
 }
 
@@ -479,7 +479,9 @@ void TorrentWrapper::HandleCompleted()
 		libtorrent::torrent_handle handle = it->second;
 		if ( handle.is_valid() && handle.is_seed() )
 		{
-			wxString dest_filename = getDataSubdirForType( convertMediaType( info.m_type ), TowxString( handle.get_torrent_info().file_at( 0 ).path.string() ) );
+			wxString dest_filename = getDataSubdirForType( convertMediaType( info.m_type ) ) +
+									 wxFileName::GetPathSeparator() +
+									 TowxString( handle.get_torrent_info().file_at( 0 ).path.string() );
 			if ( !wxFileExists( dest_filename ) )
 			{
 				wxString source_path = TowxString( handle.save_path().string() )  +
