@@ -47,6 +47,9 @@
 #include "images/rank7.xpm"
 #include "images/rank_unknown.xpm"
 
+#include "images/major.xpm"
+#include "images/minor.xpm"
+
 #include "images/open_game.png.h"
 #include "images/open_pw_game.png.h"
 #include "images/open_full_pw_game.png.h"
@@ -117,6 +120,25 @@ IconImageList::IconImageList() : wxImageList(16,16,true)
     ICON_RANK6 = Add( wxBitmap(rank5_xpm) );
     ICON_RANK7 = Add( wxBitmap(rank6_xpm) );
 	ICON_RANK8 = Add( wxBitmap(rank7_xpm) );
+
+	m_rank_requirements.push_back(ICON_RANK1);
+	m_rank_requirements.push_back(ICON_RANK2);
+	m_rank_requirements.push_back(ICON_RANK3);
+	m_rank_requirements.push_back(ICON_RANK4);
+	m_rank_requirements.push_back(ICON_RANK5);
+	m_rank_requirements.push_back(ICON_RANK6);
+	m_rank_requirements.push_back(ICON_RANK7);
+	m_rank_requirements.push_back(ICON_RANK8);
+
+	wxBitmap major_bitmap(major_xpm);
+	wxBitmap minor_bitmap(minor_xpm);
+	m_minimum_rank_requirement_border = m_rank_requirements.size();
+	for ( int i = 0; i < m_minimum_rank_requirement_border; i++)
+	{
+		wxBitmap to_blend= GetBitmap(m_rank_requirements[i]);
+		m_rank_requirements[i] = Add( BlendBitmaps( to_blend, major_bitmap ) ); // replace old with blended with major
+		m_rank_requirements.push_back( Add( BlendBitmaps( to_blend, major_bitmap ) ) ); // add new blended with minor
+	}
 
     ICON_READY = ICON_OPEN_GAME = Add( charArr2wxBitmap(open_game_png, sizeof(open_game_png) ) );
     ICON_OPEN_PW_GAME = Add( charArr2wxBitmap(open_pw_game_png, sizeof(open_pw_game_png) ) );
@@ -227,23 +249,36 @@ int IconImageList::GetUserBattleStateIcon( const UserStatus& us )
     return ICON_NOSTATE;
 }
 
-
 int IconImageList::GetRankIcon( const unsigned int& rank, const bool& showlowest )
+ {
+	 if ( !showlowest && rank == UserStatus::RANK_1 )
+		 return ICON_RANK_NONE;
+	switch (rank)
+	{
+	  case UserStatus::RANK_1: return ICON_RANK1;
+	  case UserStatus::RANK_2: return ICON_RANK2;
+	  case UserStatus::RANK_3: return ICON_RANK3;
+	  case UserStatus::RANK_4: return ICON_RANK4;
+	  case UserStatus::RANK_5: return ICON_RANK5;
+	  case UserStatus::RANK_6: return ICON_RANK6;
+	  case UserStatus::RANK_7: return ICON_RANK7;
+	  case UserStatus::RANK_8: return ICON_RANK8;
+	  default: return ICON_RANK_UNKNOWN;
+	}
+}
+
+int IconImageList::GetRankLimitIcon( int rank,  bool showlowest )
 {
     if ( !showlowest && rank == UserStatus::RANK_1 )
         return ICON_RANK_NONE;
-    switch (rank)
-    {
-      case UserStatus::RANK_1: return ICON_RANK1;
-      case UserStatus::RANK_2: return ICON_RANK2;
-      case UserStatus::RANK_3: return ICON_RANK3;
-      case UserStatus::RANK_4: return ICON_RANK4;
-      case UserStatus::RANK_5: return ICON_RANK5;
-      case UserStatus::RANK_6: return ICON_RANK6;
-      case UserStatus::RANK_7: return ICON_RANK7;
-	  case UserStatus::RANK_8: return ICON_RANK8;
-      default: return ICON_RANK_UNKNOWN;
-    }
+
+	if ( rank < UserStatus::RANK_1 )
+	{
+		rank = -rank -1 + m_minimum_rank_requirement_border;
+	}
+	if ( rank > m_rank_requirements.size() ) return ICON_RANK_UNKNOWN;
+
+	return m_rank_requirements[rank];
 }
 
 

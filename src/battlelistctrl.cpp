@@ -133,7 +133,7 @@ int BattleListCtrl::GetItemColumnImage(long item, long column) const
         	}catch(...){}
 					break;
         }
-        case 2: return icons().GetRankIcon( battle.GetRankNeeded(), false );
+		case 2: return icons().GetRankLimitIcon( battle.GetRankNeeded(), false );
         case 4: return battle.MapExists() ? icons().ICON_EXISTS : icons().ICON_NEXISTS;
         case 5: return battle.ModExists() ? icons().ICON_EXISTS : icons().ICON_NEXISTS;
     }
