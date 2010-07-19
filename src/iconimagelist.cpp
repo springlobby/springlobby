@@ -137,7 +137,7 @@ IconImageList::IconImageList() : wxImageList(16,16,true)
 	{
 		wxBitmap to_blend= GetBitmap(m_rank_requirements[i]);
 		m_rank_requirements[i] = Add( BlendBitmaps( to_blend, major_bitmap ) ); // replace old with blended with major
-		m_rank_requirements.push_back( Add( BlendBitmaps( to_blend, major_bitmap ) ) ); // add new blended with minor
+		m_rank_requirements.push_back( Add( BlendBitmaps( to_blend, minor_bitmap ) ) ); // add new blended with minor
 	}
 
     ICON_READY = ICON_OPEN_GAME = Add( charArr2wxBitmap(open_game_png, sizeof(open_game_png) ) );
