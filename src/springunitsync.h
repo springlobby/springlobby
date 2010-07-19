@@ -270,19 +270,9 @@ class SpringUnitSync : public IUnitSync
     bool _LoadUnitSyncLib( const wxString& unitsyncloc );
     void _FreeUnitSyncLib();
 
-    bool _ModExists( const wxString& modname );
-    UnitSyncMod _GetMod( int index );
-    wxString _GetModArchive( int index );
-
-    int _GetMapIndex( const wxString& name );
-    UnitSyncMap _GetMap( int index, bool getmapinfo = false );
-    UnitSyncMap _GetMap( const wxString& mapname, bool getmapinfo = false );
-    UnitSyncMap _GetMapEx( const wxString& mapname, bool force = false );
     MapInfo _GetMapInfoEx( const wxString& mapname );
 
     void PopulateArchiveList();
-
-    double _GetSpringVersion();
 
     wxImage _GetMapImage( const wxString& mapname, const wxString& imagename, wxImage (SpringUnitSyncLib::*loadMethod)(const wxString&) );
     wxImage _GetScaledMapImage( const wxString& mapname, wxImage (SpringUnitSync::*loadMethod)(const wxString&), int width, int height );
