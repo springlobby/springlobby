@@ -21,7 +21,8 @@ struct UserStatus
       RANK_4,
       RANK_5,
       RANK_6,
-      RANK_7
+	  RANK_7,
+	  RANK_8
     };
 
   bool in_game;

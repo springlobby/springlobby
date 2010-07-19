@@ -44,6 +44,7 @@
 #include "images/rank4.xpm"
 #include "images/rank5.xpm"
 #include "images/rank6.xpm"
+#include "images/rank7.xpm"
 #include "images/rank_unknown.xpm"
 
 #include "images/open_game.png.h"
@@ -115,6 +116,7 @@ IconImageList::IconImageList() : wxImageList(16,16,true)
     ICON_RANK5 = Add( wxBitmap(rank4_xpm) );
     ICON_RANK6 = Add( wxBitmap(rank5_xpm) );
     ICON_RANK7 = Add( wxBitmap(rank6_xpm) );
+	ICON_RANK8 = Add( wxBitmap(rank7_xpm) );
 
     ICON_READY = ICON_OPEN_GAME = Add( charArr2wxBitmap(open_game_png, sizeof(open_game_png) ) );
     ICON_OPEN_PW_GAME = Add( charArr2wxBitmap(open_pw_game_png, sizeof(open_pw_game_png) ) );
@@ -239,6 +241,7 @@ int IconImageList::GetRankIcon( const unsigned int& rank, const bool& showlowest
       case UserStatus::RANK_5: return ICON_RANK5;
       case UserStatus::RANK_6: return ICON_RANK6;
       case UserStatus::RANK_7: return ICON_RANK7;
+	  case UserStatus::RANK_8: return ICON_RANK8;
       default: return ICON_RANK_UNKNOWN;
     }
 }

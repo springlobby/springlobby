@@ -67,6 +67,8 @@ class HostBattleDialog : public wxDialog, public WindowAttributesPickle
 		wxStaticBitmap* m_rank5_img;
 		wxRadioButton* m_rank6_radio;
 		wxStaticBitmap* m_rank6_img;
+		wxRadioButton* m_rank7_radio;
+		wxStaticBitmap* m_rank7_img;
 
 		wxStaticLine* m_buttons_sep;
 		wxButton* m_cancel_btn;

@@ -43,6 +43,7 @@
 #include "images/rank4.xpm"
 #include "images/rank5.xpm"
 #include "images/rank6.xpm"
+#include "images/rank7.xpm"
 #include "images/arrow_refresh.png.h"
 
 BEGIN_EVENT_TABLE( HostBattleDialog, wxDialog )
@@ -229,6 +230,12 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent )
 	m_rank6_img = new wxStaticBitmap( this, wxID_ANY, wxBitmap( rank6_xpm ), wxDefaultPosition, wxSize( 16, 16 ), 0 );
 	m_rank_sizer->Add( m_rank6_img, 0, wxALL, 5 );
 
+	m_rank7_radio = new wxRadioButton( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	m_rank_sizer->Add( m_rank7_radio, 0, wxALL, 5 );
+
+	m_rank7_img = new wxStaticBitmap( this, wxID_ANY, wxBitmap( rank7_xpm ), wxDefaultPosition, wxSize( 16, 16 ), 0 );
+	m_rank_sizer->Add( m_rank7_img, 0, wxALL, 5 );
+
 	m_rank_box->Add( m_rank_sizer, 1, wxEXPAND, 5 );
 
 	m_pl_nat_sizer->Add( m_rank_box, 1, wxALL | wxEXPAND, 5 );
@@ -323,6 +330,7 @@ int HostBattleDialog::GetSelectedRank()
 	if ( m_rank4_radio->GetValue() ) return 4;
 	if ( m_rank5_radio->GetValue() ) return 5;
 	if ( m_rank6_radio->GetValue() ) return 6;
+	if ( m_rank7_radio->GetValue() ) return 7;
 	return 000;
 }
 

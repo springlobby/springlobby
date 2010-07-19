@@ -61,6 +61,7 @@ class IconImageList : public wxImageList
     int ICON_RANK5;
     int ICON_RANK6;
     int ICON_RANK7;
+	int ICON_RANK8;
 
     int ICON_GAME_UNKNOWN;
     int ICON_OPEN_GAME;
