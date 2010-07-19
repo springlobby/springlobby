@@ -129,6 +129,8 @@ class SpringUnitSync : public IUnitSync
     bool ModExistsCheckHash( const wxString& hash ) const;
     UnitSyncMod GetMod( const wxString& modname );
 	UnitSyncMod GetMod( int index );
+	//! this functions returns index CUSTOM ALPHBETICALLY SORTED, DO NOT USE TO ACCESS UNITSYNC DIRECTLY
+	//! use m_unsorted_mod_array for real unitsync index
     int GetModIndex( const wxString& name );
     GameOptions GetModOptions( const wxString& name );
     wxArrayString GetModDeps( const wxString& name );
@@ -150,7 +152,8 @@ class SpringUnitSync : public IUnitSync
 		wxString GetDefaultNick();
 		//! function to set default singplayer/replay/savegame's default nick
 		void SetDefaultNick( const wxString& nick );
-
+	//! this functions returns index CUSTOM ALPHBETICALLY SORTED, DO NOT USE TO ACCESS UNITSYNC DIRECTLY
+	//! use m_unsorted_map_array for real unitsync index
     int GetMapIndex( const wxString& name );
 
     wxArrayString GetSides( const wxString& modname  );
@@ -233,8 +236,10 @@ class SpringUnitSync : public IUnitSync
     LocalArchivesVector m_maps_unchained_hash; /// mapname -> unchained hash
     LocalArchivesVector m_mods_archive_name; /// modname -> archive name
     LocalArchivesVector m_maps_archive_name; /// mapname -> archive name
-    wxArrayString m_map_array;
-    wxArrayString m_mod_array;
+	wxArrayString m_map_array; // this vector is CUSTOM SORTED ALPHABETICALLY, DON'T USE TO ACCESS UNITSYNC DIRECTLY
+	wxArrayString m_mod_array; // this vector is CUSTOM SORTED ALPHABETICALLY, DON'T USE TO ACCESS UNITSYNC DIRECTLY
+	wxArrayString m_unsorted_map_array; // this is because unitsync doesn't have a search map index by name ..
+	wxArrayString m_unsorted_mod_array; // this isn't necessary but makes things more symmetrical :P
 
     /// caches sett().GetCachePath(), because that method calls back into
     /// susynclib(), there's a good chance main thread blocks on some

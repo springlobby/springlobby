@@ -81,6 +81,12 @@ bool SpringUnitSync::LoadUnitSyncLib( const wxString& unitsyncloc )
 }
 
 
+static int CompareStringNoCase(const wxString& first, const wxString& second)
+{
+	return first.CmpNoCase(second);
+}
+
+
 void SpringUnitSync::PopulateArchiveList()
 {
   m_maps_list.clear();
@@ -143,6 +149,10 @@ void SpringUnitSync::PopulateArchiveList()
       wxLogError( _T("Found mod with hash collision: ") + name + _T(" hash: ") + hash );
     }
   }
+  m_unsorted_mod_array = m_mod_array;
+  m_unsorted_map_array = m_map_array;
+  m_map_array.Sort(CompareStringNoCase);
+  m_mod_array.Sort(CompareStringNoCase);
 }
 
 
@@ -408,7 +418,7 @@ wxArrayString SpringUnitSync::GetMapDeps( const wxString& mapname )
 	wxArrayString ret;
 	try
 	{
-		ret = susynclib().GetMapDeps( GetMapIndex( mapname ) );
+		ret = susynclib().GetMapDeps( m_unsorted_map_array.Index( mapname ) );
 	}
 	catch( unitsync_assert ) {}
 	return ret;
@@ -473,7 +483,7 @@ wxArrayString SpringUnitSync::GetModDeps( const wxString& modname )
 	wxArrayString ret;
 	try
 	{
-		ret = susynclib().GetModDeps( susynclib().GetModIndex( modname ) );
+		ret = susynclib().GetModDeps( m_unsorted_mod_array.Index( modname ) );
 	}
 	catch( unitsync_assert ) {}
 	return ret;
@@ -622,7 +632,7 @@ int SpringUnitSync::GetNumUnits( const wxString& modname )
 {
   wxLogDebugFunc( _T("") );
 
-  susynclib().AddAllArchives( susynclib().GetPrimaryModArchive( susynclib().GetModIndex( modname ) ) );
+  susynclib().AddAllArchives( susynclib().GetPrimaryModArchive( m_unsorted_mod_array.Index( modname ) ) );
   susynclib().ProcessUnitsNoChecksum();
 
   return susynclib().GetUnitCount();
@@ -816,7 +826,7 @@ MapInfo SpringUnitSync::_GetMapInfoEx( const wxString& mapname )
       }
       catch (...)
       {
-		info = susynclib().GetMapInfoEx( GetMapIndex(mapname), 1 );
+		info = susynclib().GetMapInfoEx( m_unsorted_map_array.Index(mapname), 1 );
 
         cache.Add ( info.author );
         cache.Add( TowxString( info.tidalStrength ) );
