@@ -128,9 +128,8 @@ class SpringUnitSync : public IUnitSync
     bool ModExists( const wxString& modname, const wxString& hash );
     bool ModExistsCheckHash( const wxString& hash ) const;
     UnitSyncMod GetMod( const wxString& modname );
-    UnitSyncMod GetMod( int index );
+	UnitSyncMod GetMod( int index );
     int GetModIndex( const wxString& name );
-    wxString GetModArchive( int index );
     GameOptions GetModOptions( const wxString& name );
     wxArrayString GetModDeps( const wxString& name );
 
@@ -141,10 +140,9 @@ class SpringUnitSync : public IUnitSync
     bool MapExists( const wxString& mapname, const wxString& hash );
 
     UnitSyncMap GetMap( const wxString& mapname );
-    UnitSyncMap GetMap( int index );
+	UnitSyncMap GetMap( int index );
     UnitSyncMap GetMapEx( const wxString& mapname );
-    UnitSyncMap GetMapEx( int index );
-    wxString GetMapArchive( int index );
+	UnitSyncMap GetMapEx( int index );
     GameOptions GetMapOptions( const wxString& name );
     wxArrayString GetMapDeps( const wxString& name );
 

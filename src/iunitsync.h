@@ -137,10 +137,6 @@ class IUnitSync : public wxEvtHandler
      */
     virtual int GetModIndex( const wxString& name ) = 0;
 
-    /** Fetch the name of a mod archive by the mod index.
-     */
-    virtual wxString GetModArchive( int index ) = 0;
-
     /** Get the options for a mod by name.
      */
     virtual GameOptions GetModOptions( const wxString& name ) = 0;
@@ -162,7 +158,6 @@ class IUnitSync : public wxEvtHandler
     virtual UnitSyncMap GetMap( int index ) = 0;
     virtual UnitSyncMap GetMapEx( const wxString& mapname ) = 0;
     virtual UnitSyncMap GetMapEx( int index ) = 0;
-    virtual wxString GetMapArchive( int index ) = 0;
     virtual GameOptions GetMapOptions( const wxString& name ) = 0;
     virtual wxArrayString GetMapDeps( const wxString& name ) = 0;
 

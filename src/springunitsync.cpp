@@ -435,27 +435,6 @@ int SpringUnitSync::GetMapIndex( const wxString& name )
 }
 
 
-wxString SpringUnitSync::GetModArchive( int index )
-{
-  wxLogDebugFunc( _T("") );
-
-  return susynclib().GetPrimaryModArchive( index );
-}
-
-
-wxString SpringUnitSync::GetMapArchive( int index )
-{
-  wxLogDebugFunc( _T("") );
-
-  int count = susynclib().GetMapArchiveCount( index );
-
-  if ( count > 0 )
-    return susynclib().GetMapArchiveName( 0 );
-  else
-    return _T("");
-}
-
-
 GameOptions SpringUnitSync::GetModOptions( const wxString& name )
 {
   wxLogDebugFunc( name );
