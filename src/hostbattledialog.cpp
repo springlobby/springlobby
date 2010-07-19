@@ -274,7 +274,6 @@ void HostBattleDialog::ReloadModList()
 	m_mod_pic->Clear();
 
 	wxArrayString modlist = usync().GetModList();
-	//modlist.Sort(CompareStringIgnoreCase);
 
 	size_t nummods = modlist.Count();
 	for ( size_t i = 0; i < nummods; i++ ) m_mod_pic->Insert( modlist[i], i );

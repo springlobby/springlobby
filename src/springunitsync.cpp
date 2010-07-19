@@ -206,12 +206,9 @@ wxArrayString SpringUnitSync::GetModList()
 
 int SpringUnitSync::GetModIndex( const wxString& name )
 {
-  wxLogDebugFunc( _T("name = \"") + name + _T("\"") );
-  try
-  {
-    return susynclib().GetModIndex( name );
-  } catch (...){}
-  return -1;
+	int result = m_mod_array.Index( name );
+	if ( result == wxNOT_FOUND ) result = -1;
+	return result;
 }
 
 
@@ -476,7 +473,7 @@ wxArrayString SpringUnitSync::GetModDeps( const wxString& modname )
 	wxArrayString ret;
 	try
 	{
-		ret = susynclib().GetModDeps( GetModIndex( modname ) );
+		ret = susynclib().GetModDeps( susynclib().GetModIndex( modname ) );
 	}
 	catch( unitsync_assert ) {}
 	return ret;
@@ -819,7 +816,7 @@ MapInfo SpringUnitSync::_GetMapInfoEx( const wxString& mapname )
       }
       catch (...)
       {
-        info = susynclib().GetMapInfoEx( GetMapIndex(mapname), 1 );
+		info = susynclib().GetMapInfoEx( GetMapIndex(mapname), 1 );
 
         cache.Add ( info.author );
         cache.Add( TowxString( info.tidalStrength ) );
