@@ -254,9 +254,8 @@ UnitSyncMod SpringUnitSync::GetMod( int index )
 {
   wxLogDebugFunc( _T("") );
   UnitSyncMod m;
-  susynclib().GetPrimaryModCount();
-  m.name = susynclib().GetPrimaryModName( index );
-  m.hash = susynclib().GetPrimaryModChecksum( index );
+  m.name = m_mod_array[index];
+  m.hash = m_mods_list[m.name];
 
   return m;
  }
