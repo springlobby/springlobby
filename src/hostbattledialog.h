@@ -43,7 +43,7 @@ class HostBattleDialog : public wxDialog, public WindowAttributesPickle
 		wxChoice* m_mod_pic;
 		wxStaticText* m_pwd_lbl;
 		wxTextCtrl* m_pwd_text;
-
+		wxChoice* m_rank_direction;
 		wxStaticText* m_port_lbl;
 		wxTextCtrl* m_port_text;
         wxTextCtrl* m_relayhost_name;

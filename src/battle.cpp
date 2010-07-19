@@ -212,10 +212,18 @@ User& Battle::OnUserAdded( User& user )
     {
         if ( CheckBan( user ) ) return user;
 
-		if ( ( &user != &GetMe() ) && !user.BattleStatus().IsBot() && ( m_opts.rankneeded > UserStatus::RANK_1 ) && ( user.GetStatus().rank < m_opts.rankneeded ) && !user.BattleStatus().spectator )
+		if ( ( &user != &GetMe() ) && !user.BattleStatus().IsBot() && ( m_opts.rankneeded != UserStatus::RANK_1 ) && !user.BattleStatus().spectator )
         {
-					DoAction( _T("Rank limit autospec: ") + user.GetNick() );
-					ForceSpectator( user, true );
+			 if ( m_opts.rankneeded > UserStatus::RANK_1 && user.GetStatus().rank < m_opts.rankneeded )
+			 {
+				DoAction( _T("Rank limit autospec: ") + user.GetNick() );
+				ForceSpectator( user, true );
+			 }
+			 if ( m_opts.rankneeded < UserStatus::RANK_1 && user.GetStatus().rank > ( -m_opts.rankneeded - 1 ) )
+			 {
+				 DoAction( _T("Rank limit autospec: ") + user.GetNick() );
+				 ForceSpectator( user, true );
+			 }
         }
 
         m_ah.OnUserAdded( user );
@@ -229,10 +237,18 @@ void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 {
     if ( IsFounderMe() )
     {
-			if ( ( &user != &GetMe() ) && !status.IsBot() && ( m_opts.rankneeded > UserStatus::RANK_1 ) && ( user.GetStatus().rank < m_opts.rankneeded ) && !status.spectator )
+			if ( ( &user != &GetMe() ) && !status.IsBot() && ( m_opts.rankneeded != UserStatus::RANK_1 ) && !status.spectator )
 			{
+				if ( m_opts.rankneeded > UserStatus::RANK_1 && user.GetStatus().rank < m_opts.rankneeded )
+				{
 					DoAction( _T("Rank limit autospec: ") + user.GetNick() );
 					ForceSpectator( user, true );
+				}
+				if ( m_opts.rankneeded < UserStatus::RANK_1 && user.GetStatus().rank > ( -m_opts.rankneeded - 1 ) )
+				{
+					DoAction( _T("Rank limit autospec: ") + user.GetNick() );
+					ForceSpectator( user, true );
+				}
 			}
 			UserBattleStatus previousstatus = user.BattleStatus();
 			if ( m_opts.lockexternalbalancechanges )
