@@ -2,14 +2,22 @@
 #include "controls.h"
 #include "../settings.h"
 #include "../defines.h"
+#include "../ui.h"
+#include "../mainwindow.h"
 #include <wx/gdicmn.h>
 #include <wx/window.h>
 
 const wxChar* TooltipEnable(const wxChar* input)
 {
 	#if !defined(HAVE_WX29) || defined(__WXOSX_COCOA__)
+		#ifdef __WXMSW__
+			if (!ui().mw().HasFocus()) return _T("");
+		#endif
         return sett().GetShowTooltips() ? input : _T("");
     #else
+		#ifdef __WXMSW__
+			if (!ui().mw().HasFocus()) return _T("");
+		#endif
         return sett().GetShowTooltips() ? input : _T("").wc_str();
     #endif
 }

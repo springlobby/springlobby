@@ -107,7 +107,8 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU( MENU_SCREENSHOTS,			MainWindow::OnShowScreenshots		)
   EVT_MENU( MENU_PREFERENCES,			MainWindow::OnMenuPreferences		)
   EVT_MENU( MENU_RENAME,				MainWindow::OnMenuRename			)
-
+  EVT_SET_FOCUS(                        MainWindow::OnSetFocus              )
+  EVT_KILL_FOCUS(                       MainWindow::OnKillFocus             )
   EVT_AUINOTEBOOK_PAGE_CHANGED( MAIN_TABS, MainWindow::OnTabsChanged )
   EVT_CLOSE( MainWindow::OnClose )
 END_EVENT_TABLE()
@@ -120,7 +121,8 @@ MainWindow::MainWindow( )
 	m_opts_dialog(NULL),
     m_autojoin_dialog(NULL),
     m_channel_chooser(NULL),
-    m_log_win(NULL)
+	m_log_win(NULL),
+	m_has_focus(true)
 {
 	assert( !wxGetApp().IsSimple() );
 	SetIcon( wxIcon(springlobby_xpm) );
@@ -324,6 +326,21 @@ void MainWindow::OnClose( wxCloseEvent& /*unused*/ )
 		}
 	}
 	Destroy();
+}
+
+void MainWindow::OnSetFocus(wxFocusEvent&)
+{
+	m_has_focus = true;
+}
+
+void MainWindow::OnKillFocus(wxFocusEvent&)
+{
+	m_has_focus = false;
+}
+
+bool MainWindow::HasFocus()
+{
+	return m_has_focus;
 }
 
 void DrawBmpOnBmp( wxBitmap& canvas, wxBitmap& object, int x, int y )
