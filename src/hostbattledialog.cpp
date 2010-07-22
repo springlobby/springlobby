@@ -368,7 +368,7 @@ void HostBattleDialog::OnRelayChoice( wxCommandEvent& event )
 void HostBattleDialog::OnUseRelay( wxCommandEvent&  )
 {
     m_relayed_host_pick->Show( m_relayed_host_check->IsChecked() );
-	m_port_text->Enable( m_relayed_host_check->IsChecked() && m_nat_radios->GetSelection() == 0 );
-	m_nat_radios->Enable( m_relayed_host_check->IsChecked() );
+	m_port_text->Enable( !m_relayed_host_check->IsChecked() && m_nat_radios->GetSelection() == 0 );
+	m_nat_radios->Enable( !m_relayed_host_check->IsChecked() );
     Layout();
 }
