@@ -73,7 +73,7 @@ Spring::~Spring()
 
 bool Spring::IsRunning() const
 {
-    return m_process != 0;
+	return m_running;
 }
 
 bool Spring::RunReplay ( const wxString& filename )
