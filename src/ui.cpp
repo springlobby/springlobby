@@ -20,6 +20,7 @@
 #include <wx/filename.h>
 #include <wx/app.h>
 
+#include "introguide.h"
 #include "ui.h"
 #include "tasserver.h"
 #include "settings.h"
@@ -1257,23 +1258,22 @@ void Ui::FirstRunWelcome()
 #endif
 
         wxLogMessage( _T("first time startup"));
-        wxMessageBox(_("Hi ") + wxGetUserName() + _(",\nIt looks like this is your first time using SpringLobby. I have guessed a configuration that I think will work for you but you should review it, especially the Spring configuration. \n\nWhen you are done you can go to the File menu, connect to a server, and enjoy a nice game of Spring :)"), _("Welcome"),
+		wxMessageBox(_("Hi ") + wxGetUserName() + _(",\nIt looks like this is your first time using SpringLobby. I have guessed a configuration that I think will work for you but you should review it, especially the Spring configuration."), _("Welcome"),
                      wxOK | wxICON_INFORMATION, &mw() );
 
+		IntroGuide* intro = new IntroGuide();
+		intro->Show();
 
-        customMessageBoxNoModal(SL_MAIN_ICON, _("By default SpringLobby reports some usage statistics.\nYou can disable that on options tab --> General."),_("Notice"),wxOK );
-
-
-                // copy uikeys.txt
-                wxPathList pl;
-                pl.AddEnvList( _T("%ProgramFiles%") );
-                pl.AddEnvList( _T("XDG_DATA_DIRS") );
-                pl = sett().GetAdditionalSearchPaths( pl );
-                wxString uikeyslocation = pl.FindValidPath( _T("uikeys.txt") );
-                if ( !uikeyslocation.IsEmpty() )
-                {
-                    wxCopyFile( uikeyslocation, sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("uikeys.txt"), false );
-                }
+		// copy uikeys.txt
+		wxPathList pl;
+		pl.AddEnvList( _T("%ProgramFiles%") );
+		pl.AddEnvList( _T("XDG_DATA_DIRS") );
+		pl = sett().GetAdditionalSearchPaths( pl );
+		wxString uikeyslocation = pl.FindValidPath( _T("uikeys.txt") );
+		if ( !uikeyslocation.IsEmpty() )
+		{
+			wxCopyFile( uikeyslocation, sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("uikeys.txt"), false );
+		}
 
     #ifdef __WXMSW__
         if ( TASClientPresent() &&
