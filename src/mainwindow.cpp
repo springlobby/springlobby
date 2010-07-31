@@ -37,6 +37,7 @@
 #include "mainwindow.h"
 #include "settings.h"
 #include "ui.h"
+#include "introguide.h"
 #include "server.h"
 #include "utils/debug.h"
 #include "utils/platform.h"
@@ -107,6 +108,7 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU( MENU_SCREENSHOTS,			MainWindow::OnShowScreenshots		)
   EVT_MENU( MENU_PREFERENCES,			MainWindow::OnMenuPreferences		)
   EVT_MENU( MENU_RENAME,				MainWindow::OnMenuRename			)
+  EVT_MENU( MENU_GENERAL_HELP,			MainWindow::OnMenuFirstStart		)
 
   EVT_AUINOTEBOOK_PAGE_CHANGED( MAIN_TABS, MainWindow::OnTabsChanged )
   EVT_CLOSE( MainWindow::OnClose )
@@ -170,6 +172,7 @@ MainWindow::MainWindow( )
 
 
 	wxMenu *menuHelp = new wxMenu;
+	menuHelp->Append(MENU_GENERAL_HELP, _("&Help, tutorial and FAQ"));
 	menuHelp->Append(MENU_ABOUT, _("&About"));
 	menuHelp->Append(MENU_SELECT_LOCALE, _("&Change language"));
 	menuHelp->Append(MENU_TRAC, _("&Report a bug..."));
@@ -539,10 +542,6 @@ void MainWindow::OnMenuDisconnect( wxCommandEvent& /*unused*/ )
 
 void MainWindow::OnMenuSaveOptions( wxCommandEvent& /*unused*/ )
 {
-	wxString text;
-	if ( ui().AskText(wxEmptyString,wxEmptyString,text) ){
-		wxMessageBox( Paste2Pastebin( text ) );
-	}
   sett().SaveSettings();
 }
 
@@ -725,4 +724,10 @@ void MainWindow::OnMenuRename( wxCommandEvent& /*event*/ )
 	wxString new_username;
 	if ( ui().AskText( _("Rename"), _("Enter new nickname"), new_username ) )
 		serverSelector().GetServer().ExecuteSayCommand( _T("/rename ") + new_username );
+}
+
+void MainWindow::OnMenuFirstStart( wxCommandEvent& /*event*/ )
+{
+	IntroGuide* intro = new IntroGuide();
+	intro->Show();
 }
