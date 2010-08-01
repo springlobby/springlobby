@@ -119,12 +119,12 @@ wxFrame( (wxFrame*)&ui().mw(), -1, _("Newbies guide"), wxPoint(50, 50) )
 	GraphicTroubles = new wxCheckBox( this, GRAPHIC_TROUB, _( "Graphic and performance problems" ) );
 	WikiLinks = new wxCheckBox( this, HELP_LINKS, _( "Useful links" ) );
 #endif
-	ButtonSizer->Add(SpringDescription,0,wxFIXED_MINSIZE|wxALL);
-	ButtonSizer->Add(InstallingContent,0,wxFIXED_MINSIZE|wxALL);
-	ButtonSizer->Add(SingleDescription,0,wxFIXED_MINSIZE|wxALL);
-	ButtonSizer->Add(MultiDescription,0,wxFIXED_MINSIZE|wxALL);
-	ButtonSizer->Add(GraphicTroubles,0,wxFIXED_MINSIZE|wxALL);
-	ButtonSizer->Add(WikiLinks,0,wxFIXED_MINSIZE|wxALL);
+	ButtonSizer->Add(SpringDescription,0,wxEXPAND|wxRIGHT);
+	ButtonSizer->Add(InstallingContent,0,wxEXPAND|wxRIGHT);
+	ButtonSizer->Add(SingleDescription,0,wxEXPAND|wxRIGHT);
+	ButtonSizer->Add(MultiDescription,0,wxEXPAND|wxRIGHT);
+	ButtonSizer->Add(GraphicTroubles,0,wxEXPAND|wxRIGHT);
+	ButtonSizer->Add(WikiLinks,0,wxEXPAND|wxRIGHT);
 
 	m_text_stuff = new wxTextCtrl( this, TEXT_DISPLAY, _T( "" ), wxDefaultPosition, wxSize(-1,-1), wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_AUTO_URL );
 	TextSizer->Add(m_text_stuff,1,wxEXPAND|wxTOP,2);
