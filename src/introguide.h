@@ -2,6 +2,7 @@
 #define INTROGUIDE_H
 
 #include <wx/frame.h>
+#inclide <wx/string.h>
 
 class wxTextCtrl;
 class wxToggleButton;
@@ -21,6 +22,13 @@ public:
 	void OnWikiLinks( wxCommandEvent& event );
 	void OnLinkEvent( wxTextUrlEvent& event );
 private:
+	wxString SpringOverview;
+	wxString InstallOverview;
+	wxString SinglePlayer;
+	wxString MultiPlayer;
+	wxString GraphicProblems;
+	wxString UsefulLinks;
+
 	wxTextCtrl* m_text_stuff;
 #if wxUSE_TOGGLEBTN
 	wxToggleButton* SpringDescription;
