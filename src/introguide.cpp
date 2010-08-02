@@ -40,7 +40,7 @@ wxFrame( (wxFrame*)&ui().mw(), -1, _("Newbies guide"), wxPoint(50, 50), wxSize(8
 	SpringOverview << _("For players with previous RTS experience, one tricky part of spring is that fog of war is present, but not visualized by default ingame until you press the \"L\" button.\n\n");
 	SpringOverview << _("For developers, spring is highly customizable, with a scripting engine, you'd want to check out the forum/wiki to get started.\n"); // spring overview
 	InstallOverview << _("If you skip the automatic content installer for some reason, you can still download and install content manually.\n");
-	InstallOverview << _("The most popular download site is http://spring.jobjol.nl .\n");
+	InstallOverview << _("The most popular download site is http://www.springfiles.com .\n");
 	InstallOverview << _("The installation directory, differs according to the operative system:\n");
 	InstallOverview << _("Windows XP: Spring's installation path.\n");
 	InstallOverview << _("Windows Vista/Windows 7: C:\\Users\\username\\App Data\\local\\spring (This folder is default insibie, change your file manager settings to display it).\n");
@@ -79,7 +79,7 @@ wxFrame( (wxFrame*)&ui().mw(), -1, _("Newbies guide"), wxPoint(50, 50), wxSize(8
 	GraphicProblems << _("That being said, the first thing you should do open the Spring settings editor, and lower the graphic detail, some video cards don't work well with some advanced options.\n");
 	GraphicProblems << _("If the problem persists, try to update your video drivers to the latest version (as weird as it may sound, ATI users might actually want to try older versions too, see the forums for an explanation).\n");
 	GraphicProblems << _("If your map/models are white or generally untextured, and you're using Linux, there's a solution at  http://springrts.com/phpbb/viewtopic.php?f=20&t=20809.\n\n");
-	GraphicProblems << _("If you're using an integrated card, changes are you're simply unable to run/un smoothly Spring, because of the high requirements which those chips can't provide.\n\n");
+	GraphicProblems << _("If you're using an integrated card, chances are you're simply unable to run/un smoothly Spring, because of the high requirements which those chips can't provide.\n\n");
 	GraphicProblems << _("For further help, visit the help section of the forums at http://springrts.com ."); // graphic problems
 	UsefulLinks << _("Main website: http://springrts.com\n");
 	UsefulLinks << _("Lobby website: http://springlobby.info\n");
