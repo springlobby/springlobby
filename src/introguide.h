@@ -2,7 +2,7 @@
 #define INTROGUIDE_H
 
 #include <wx/frame.h>
-#inclide <wx/string.h>
+#include <wx/string.h>
 
 class wxTextCtrl;
 class wxToggleButton;
