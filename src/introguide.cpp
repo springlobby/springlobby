@@ -79,7 +79,7 @@ wxFrame( (wxFrame*)&ui().mw(), -1, _("Newbies guide"), wxPoint(50, 50), wxSize(8
 	GraphicProblems << _("That being said, the first thing you should do open the Spring settings editor, and lower the graphic detail, some video cards don't work well with some advanced options.\n");
 	GraphicProblems << _("If the problem persists, try to update your video drivers to the latest version (as weird as it may sound, ATI users might actually want to try older versions too, see the forums for an explanation).\n");
 	GraphicProblems << _("If your map/models are white or generally untextured, and you're using Linux, there's a solution at  http://springrts.com/phpbb/viewtopic.php?f=20&t=20809.\n\n");
-	GraphicProblems << _("If you're using an integrated card, chances are you're simply unable to run/un smoothly Spring, because of the high requirements which those chips can't provide.\n\n");
+	GraphicProblems << _("If you're using an integrated card, chances are you're simply unable to run smoothly Spring, because of the high requirements which those chips can't provide.\n\n");
 	GraphicProblems << _("For further help, visit the help section of the forums at http://springrts.com ."); // graphic problems
 	UsefulLinks << _("Main website: http://springrts.com\n");
 	UsefulLinks << _("Lobby website: http://springlobby.info\n");
