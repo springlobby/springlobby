@@ -40,6 +40,7 @@ class OptionsDialog;
 class ReplayTraits;
 template < class Traits >
 class PlaybackTab;
+class wxFocusEvent;
 
 class SavegameTraits;
 template < class Traits >
@@ -95,6 +96,8 @@ class MainWindow : public wxFrame, public WindowAttributesPickle
     void OnChannelList( const wxString& channel, const int& numusers, const wxString& topic );
     void OnChannelListStart( );
     void OnClose( wxCloseEvent& );
+	void OnSetFocus(wxFocusEvent&);
+	void OnKillFocus(wxFocusEvent&);
 
     void OnTabsChanged( wxAuiNotebookEvent& event );
     MainChatTab& GetChatTab();
@@ -117,6 +120,10 @@ class MainWindow : public wxFrame, public WindowAttributesPickle
     void SavePerspectives( const wxString& perspective_name = wxEmptyString );
 
     void FocusBattleRoomTab();
+
+	bool HasFocus();
+
+
 
   protected:
 
@@ -151,6 +158,8 @@ class MainWindow : public wxFrame, public WindowAttributesPickle
 
     wxLogWindow* m_log_win;
     wxLogChain* m_log_chain;
+
+	bool m_has_focus;
 
     enum {
         MENU_ABOUT = wxID_ABOUT,
@@ -227,6 +236,7 @@ class MainWindow : public wxFrame, public WindowAttributesPickle
         static const TabNames& GetTabNames();
 
     protected:
+
         DECLARE_EVENT_TABLE()
 };
 

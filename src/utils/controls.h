@@ -30,6 +30,9 @@ wxColour GetColourFromUser(wxWindow *parent, const wxColour& colInit,
 
 #define TE(v) TooltipEnable(v)
 
+//! call this function everytime map app loses/acquires focus to enable/disable tooltips
+void UpdateMainAppHasFocus( bool focus );
+
 /** @brief when setting tooltips use output of this func as input
     it outputs empty string if tooltips are disabled in SL settings
 */
