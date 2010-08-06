@@ -10,15 +10,11 @@
 const wxChar* TooltipEnable(const wxChar* input)
 {
 	#if !defined(HAVE_WX29) || defined(__WXOSX_COCOA__)
-		#ifdef __WXMSW__
 			if (!ui().mw().HasFocus()) return _T("");
-		#endif
-        return sett().GetShowTooltips() ? input : _T("");
+			return sett().GetShowTooltips() ? input : _T("");
     #else
-		#ifdef __WXMSW__
-			if (!ui().mw().HasFocus()) return _T("");
-		#endif
-        return sett().GetShowTooltips() ? input : _T("").wc_str();
+			if (!ui().mw().HasFocus()) return _T("").wc_str();
+			return sett().GetShowTooltips() ? input : _T("").wc_str();
     #endif
 }
 
