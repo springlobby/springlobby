@@ -587,7 +587,7 @@ wxString CustomVirtListCtrl<T,L>::OnGetItemText(long item, long column) const
 {
     assert( item < (long)m_data.size() );
     //assert( column < m_columnCount );
-	column = clamp( column, 0, m_columnCount );
+	column = clamp( column, long(0), long(m_columnCount) );
    return asImp().GetItemText(item, column);
 }
 
