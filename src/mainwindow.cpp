@@ -234,6 +234,8 @@ MainWindow::MainWindow( )
 	SetStatusBar( m_statusbar );
     // re-enable eventhandling
     SetEvtHandlerEnabled( true );
+
+	UpdateMainAppHasFocus(m_has_focus);
 }
 
 wxBitmap MainWindow::GetTabIcon( const unsigned char* data, size_t size )
@@ -331,11 +333,13 @@ void MainWindow::OnClose( wxCloseEvent& /*unused*/ )
 void MainWindow::OnSetFocus(wxFocusEvent&)
 {
 	m_has_focus = true;
+	UpdateMainAppHasFocus(m_has_focus);
 }
 
 void MainWindow::OnKillFocus(wxFocusEvent&)
 {
 	m_has_focus = false;
+	UpdateMainAppHasFocus(m_has_focus);
 }
 
 bool MainWindow::HasFocus()

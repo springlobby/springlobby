@@ -2,18 +2,25 @@
 #include "controls.h"
 #include "../settings.h"
 #include "../defines.h"
-#include "../ui.h"
-#include "../mainwindow.h"
 #include <wx/gdicmn.h>
 #include <wx/window.h>
+#include <wx/tooltip.h>
+
+bool main_app_has_focus;
+
+void UpdateMainAppHasFocus( bool focus )
+{
+	main_app_has_focus = focus;
+	wxToolTip::Enable(sett().GetShowTooltips()&&main_app_has_focus);
+}
 
 const wxChar* TooltipEnable(const wxChar* input)
 {
 	#if !defined(HAVE_WX29) || defined(__WXOSX_COCOA__)
-			if (!ui().mw().HasFocus()) return _T("");
+			if (!main_app_has_focus) return _T("");
 			return sett().GetShowTooltips() ? input : _T("");
     #else
-			if (!ui().mw().HasFocus()) return _T("").wc_str();
+			if (!main_app_has_focus) return _T("").wc_str();
 			return sett().GetShowTooltips() ? input : _T("").wc_str();
     #endif
 }

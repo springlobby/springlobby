@@ -36,6 +36,7 @@
 #include "ctrlconstants.h"
 #include "panel_pathoption.h"
 #include "../utils/customdialogs.h"
+#include "../utils/controls.h"
 #include "../images/springsettings.xpm"
 #include "helpmenufunctions.h"
 #include "se_utils.h"
@@ -54,11 +55,14 @@ const wxString expertModeWarning = _("Changes made on Quality/Detail tab in expe
 BEGIN_EVENT_TABLE(settings_frame,wxFrame)
 	EVT_CLOSE(settings_frame::OnClose)
 	EVT_MENU(wxID_ANY,settings_frame::OnMenuChoice)
+  EVT_SET_FOCUS( settings_frame::OnSetFocus)
+  EVT_KILL_FOCUS( settings_frame::OnKillFocus )
 END_EVENT_TABLE()
 
 settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& pa_size)
 	: wxFrame(parent, id, title, position, pa_size),
-	WindowAttributesPickle( _T("SETTINGSFRAME"), this, wxSize( DEFSETT_SW_WIDTH, DEFSETT_SW_HEIGHT ) )
+	WindowAttributesPickle( _T("SETTINGSFRAME"), this, wxSize( DEFSETT_SW_WIDTH, DEFSETT_SW_HEIGHT ) ),
+	m_has_focus(true)
 {
 	alreadyCalled = false;
 	parentWindow = parent;
@@ -85,6 +89,8 @@ settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &
      SetIcon(*settingsIcon);
      Layout();
      Center();
+
+     if ( !parentWindow ) 	UpdateMainAppHasFocus(m_has_focus); // only do if not being a slave of main SL app
 }
 
 void settings_frame::buildGuiFromErrorPanel()
@@ -106,6 +112,18 @@ void settings_frame::buildGuiFromErrorPanel()
 settings_frame::~settings_frame()
 {
 
+}
+
+void settings_frame::OnSetFocus(wxFocusEvent&)
+{
+	m_has_focus = true;
+	UpdateMainAppHasFocus(m_has_focus);
+}
+
+void settings_frame::OnKillFocus(wxFocusEvent&)
+{
+	m_has_focus = false;
+	UpdateMainAppHasFocus(m_has_focus);
 }
 
 void settings_frame::handleExternExit()
