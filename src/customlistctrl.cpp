@@ -12,7 +12,11 @@
 #include "uiutils.h"
 
 
+#ifdef HAVE_WX28
 BEGIN_EVENT_TABLE(CustomListCtrl, ListBaseType)
+#else
+wxBEGIN_EVENT_TABLE_TEMPLATE2(CustomVirtListCtrl, ListBaseType, T,L)
+#endif
 #if wxUSE_TIPWINDOW
   EVT_MOTION(CustomListCtrl::OnMouseMotion)
   EVT_TIMER(IDD_TIP_TIMER, CustomListCtrl::OnTimer)

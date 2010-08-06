@@ -139,7 +139,7 @@ void ToasterBoxWindow::ScrollUp()
 {
   wxLogDebug(_T("Raising"));
   SetSize(dialogTop.x, dialogTop.y, GetSize().GetWidth(),GetSize().GetHeight()	);
-  Show();
+  Show(true);
 //
 //
 //  //walk the Y value up in a raise motion

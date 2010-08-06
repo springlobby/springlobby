@@ -62,6 +62,7 @@ wxString GetBestMatch(const wxArrayString& a, const wxString& s, double* distanc
 
 wxString Paste2Pastebin( const wxString& message )
 {
+	#ifndef __WXMAC__
 	wxStringOutputStream response;
 	wxStringOutputStream rheader;
 	CURL *curl_handle;
@@ -113,6 +114,7 @@ wxString Paste2Pastebin( const wxString& message )
 	if(ret == CURLE_OK)
 		return response.GetString();
 	else
+	#endif
 		return wxEmptyString;
 }
 
