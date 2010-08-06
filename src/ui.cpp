@@ -1138,7 +1138,7 @@ void Ui::OnSpringTerminated( long exit_code )
         }
     } catch ( assert_exception ){}
 
-	if ( sett().GetReportStats() && exit_code ) {
+	if ( false && exit_code ) { // disabled for now for stability
 		#if wxUSE_DEBUGREPORT && defined(ENABLE_DEBUG_REPORT)
 			SpringDebugReport report;
 			if ( wxDebugReportPreviewStd().Show( report ) )
