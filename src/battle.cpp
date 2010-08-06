@@ -212,7 +212,7 @@ User& Battle::OnUserAdded( User& user )
     {
         if ( CheckBan( user ) ) return user;
 
-        if ( ( &user != &GetMe() ) && !user.BattleStatus().IsBot() && ( m_opts.rankneeded > UserStatus::RANK_1 ) && ( user.GetStatus().rank < m_opts.rankneeded ))
+		if ( ( &user != &GetMe() ) && !user.BattleStatus().IsBot() && ( m_opts.rankneeded > UserStatus::RANK_1 ) && ( user.GetStatus().rank < m_opts.rankneeded ) && !user.BattleStatus().spectator )
         {
 					DoAction( _T("Rank limit autospec: ") + user.GetNick() );
 					ForceSpectator( user, true );
@@ -229,7 +229,7 @@ void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 {
     if ( IsFounderMe() )
     {
-			if ( ( &user != &GetMe() ) && !status.IsBot() && ( m_opts.rankneeded > UserStatus::RANK_1 ) && ( user.GetStatus().rank < m_opts.rankneeded ))
+			if ( ( &user != &GetMe() ) && !status.IsBot() && ( m_opts.rankneeded > UserStatus::RANK_1 ) && ( user.GetStatus().rank < m_opts.rankneeded ) && !status.spectator )
 			{
 					DoAction( _T("Rank limit autospec: ") + user.GetNick() );
 					ForceSpectator( user, true );

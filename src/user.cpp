@@ -193,13 +193,14 @@ wxString User::GetRankName(UserStatus::RankContainer rank)
           case UserStatus::RANK_5: return _("Experienced");
           case UserStatus::RANK_6: return _("Highly experienced");
           case UserStatus::RANK_7: return _("Veteran");
+		  case UserStatus::RANK_8: return _("Badly needs to get laid");
           default:                 return _("Unknown");
       }
 }
 
 float User::GetBalanceRank()
 {
-  return 1.0 + 0.1 * float( GetStatus().rank - UserStatus::RANK_1 ) / float( UserStatus::RANK_7 - UserStatus::RANK_1 );
+  return 1.0 + 0.1 * float( GetStatus().rank - UserStatus::RANK_1 ) / float( UserStatus::RANK_8 - UserStatus::RANK_1 );
 }
 
 wxString User::GetClan()

@@ -53,7 +53,7 @@ class IServerEvents
 						 bool haspass, int rank, const wxString& maphash, const wxString& map,
 						 const wxString& title, const wxString& mod ) = 0;
 
-	virtual void OnUserJoinedBattle( int battleid, const wxString& nick ) = 0;
+	virtual void OnUserJoinedBattle( int battleid, const wxString& nick, const wxString& userScriptPassword ) = 0;
 	virtual void OnUserLeftBattle( int battleid, const wxString& nick ) = 0;
 	virtual void OnBattleInfoUpdated( int battleid, int spectators, bool locked, const wxString& maphash, const wxString& map ) = 0;
 	virtual void OnSetBattleInfo( int battleid, const wxString& param, const wxString& value ) = 0;

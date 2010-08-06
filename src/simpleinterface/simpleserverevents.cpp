@@ -303,7 +303,7 @@ void SimpleServerEvents::OnClientBattleStatus( int battleid, const wxString& nic
 }
 
 
-void SimpleServerEvents::OnUserJoinedBattle( int battleid, const wxString& nick )
+void SimpleServerEvents::OnUserJoinedBattle( int battleid, const wxString& nick, const wxString& userScriptPassword )
 {
     try
     {
@@ -312,6 +312,7 @@ void SimpleServerEvents::OnUserJoinedBattle( int battleid, const wxString& nick 
         Battle& battle = m_serv.GetBattle( battleid );
 
         battle.OnUserAdded( user );
+		user.BattleStatus().scriptPassword = userScriptPassword;
 //        ui().OnUserJoinedBattle( battle, user );
 		try
 		{
@@ -339,6 +340,7 @@ void SimpleServerEvents::OnUserLeftBattle( int battleid, const wxString& nick )
     {
         Battle& battle = m_serv.GetBattle( battleid );
         User& user = battle.GetUser( nick );
+		user.BattleStatus().scriptPassword.Empty();
         battle.OnUserRemoved( user );
 //        ui().OnUserLeftBattle( battle, user );
     }

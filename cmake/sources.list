@@ -66,6 +66,7 @@ SET(springlobbySrc
 	src/hostbattledialog.cpp
 	src/ibattle.cpp
 	src/iconimagelist.cpp
+	src/introguide.cpp
 	src/lobbyoptionstab.cpp
 	src/mainchattab.cpp
 	src/mainjoinbattletab.cpp

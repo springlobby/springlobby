@@ -104,8 +104,9 @@ wxSocketClient* Socket::_CreateSocket()
     }
     else
     {
-        //this does not block GUI, only ensures receivesend do not return until all data is read/sent
-        sock->SetFlags( wxSOCKET_WAITALL );
+		// blocking mode _must_ block, and end blocking as soon as data arrives otherwise other blocking but no gui block
+		// mode will wait for timeout before unlocking
+		sock->SetFlags( wxSOCKET_BLOCK );
         if ( m_events != 0 )
         {
             delete m_events;

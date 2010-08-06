@@ -442,7 +442,7 @@ void TASServer::Login()
     if ( localaddr.IsEmpty() ) localaddr = _T("*");
 	m_id_transmission = false;
     SendCmd ( _T("LOGIN"), m_user + _T(" ") + pass + _T(" ") +
-			  GetHostCPUSpeed() + _T(" ") + localaddr + _T(" SpringLobby ") + GetSpringLobbyVersion(false) + protocol  + _T("\ta"));
+			  GetHostCPUSpeed() + _T(" ") + localaddr + _T(" SpringLobby ") + GetSpringLobbyVersion(false) + protocol  + _T("\ta sp"));
 	m_id_transmission = true;
 }
 
@@ -688,7 +688,8 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     {
         id = GetIntParam( params );
         nick = GetWordParam( params );
-        m_se->OnUserJoinedBattle( id, nick );
+		wxString userScriptPassword = GetWordParam( params );
+		m_se->OnUserJoinedBattle( id, nick, userScriptPassword );
     }
     else if ( cmd == _T("UPDATEBATTLEINFO") )
     {
@@ -835,7 +836,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         id = GetIntParam( params );
         hash = MakeHashUnsigned( GetWordParam( params ) );
         m_battle_id = id;
-        m_se->OnJoinedBattle( id, hash );
+		m_se->OnJoinedBattle( id, hash );
         m_se->OnBattleInfoUpdated( m_battle_id );
     }
     else if ( cmd == _T("CLIENTBATTLESTATUS") )
@@ -1506,7 +1507,9 @@ void TASServer::FinalizeJoinBattle()
 {
     if (m_do_finalize_join_battle)
     {
-        SendCmd( _T("JOINBATTLE"), wxString::Format( _T("%d"), m_finalize_join_battle_id ) + _T(" ") + m_finalize_join_battle_pw);
+		srand ( time(NULL) );
+		wxString randomScriptPassword = wxString::Format(_T("%04x%04x"), rand()&0xFFFF, rand()&0xFFFF);
+		SendCmd( _T("JOINBATTLE"), wxString::Format( _T("%d %s %s"), m_finalize_join_battle_id, m_finalize_join_battle_pw.c_str(), randomScriptPassword.c_str()  ) );
         m_do_finalize_join_battle=false;
     }
 }

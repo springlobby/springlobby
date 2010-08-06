@@ -352,7 +352,7 @@ void ServerEvents::OnClientBattleStatus( int battleid, const wxString& nick, Use
 }
 
 
-void ServerEvents::OnUserJoinedBattle( int battleid, const wxString& nick )
+void ServerEvents::OnUserJoinedBattle( int battleid, const wxString& nick, const wxString& userScriptPassword )
 {
     try
     {
@@ -361,6 +361,7 @@ void ServerEvents::OnUserJoinedBattle( int battleid, const wxString& nick )
         Battle& battle = m_serv.GetBattle( battleid );
 
         battle.OnUserAdded( user );
+		user.BattleStatus().scriptPassword = userScriptPassword;
         ui().OnUserJoinedBattle( battle, user );
 				try
 				{
@@ -387,6 +388,7 @@ void ServerEvents::OnUserLeftBattle( int battleid, const wxString& nick )
     {
         Battle& battle = m_serv.GetBattle( battleid );
         User& user = battle.GetUser( nick );
+		user.BattleStatus().scriptPassword.Clear();
         battle.OnUserRemoved( user );
         ui().OnUserLeftBattle( battle, user );
     }
@@ -762,8 +764,8 @@ void ServerEvents::OnBattleRemoveBot( int battleid, const wxString& nick )
     try
     {
         Battle& battle = m_serv.GetBattle( battleid );
-				User& user = battle.GetUser( nick );
-				ui().OnUserLeftBattle( battle, user );
+		User& user = battle.GetUser( nick );
+		ui().OnUserLeftBattle( battle, user );
         battle.OnUserRemoved( user );
     }
     catch (std::runtime_error &except)
