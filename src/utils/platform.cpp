@@ -17,6 +17,8 @@
 
 #include <iostream>
 
+#include <stdio.h>
+
 #include "conversion.h"
 #include "../updater/versionchecker.h"
 #include "customdialogs.h"
@@ -31,7 +33,7 @@ wxString GetLibExtension()
 
 //! @brief Initializes the logging functions.
 ///initializes logging in an hidden stream and std::cout/gui messages
-wxLogWindow* InitializeLoggingTargets( wxFrame* parent, bool console, bool showgui, bool /*logcrash*/, int verbosity, wxLogChain* logChain )
+wxLogWindow* InitializeLoggingTargets( wxFrame* parent, bool console, const wxString&  logfilepath, bool showgui, bool /*logcrash*/, int verbosity, wxLogChain* logChain )
 {
     wxLogWindow* loggerwin = 0;
 
@@ -41,7 +43,19 @@ wxLogWindow* InitializeLoggingTargets( wxFrame* parent, bool console, bool showg
         ///std::cout logging
         logChain = new wxLogChain( new wxLogStream( &std::cout ) );
     }
+#else
+	if (  console && verbosity != 0 )
+	{
+		///std::cerr logging
+		logChain = new wxLogChain( new  wxLogStderr( 0 ) );
+	}
 #endif
+
+	if ( logfilepath.size() != 0 && verbosity != 0 )
+	{
+		FILE* logfile = fopen(C_STRING(logfilepath), "w"); // even if it returns null, wxLogStderr will switch to stderr logging, so it's fine
+		logChain = new wxLogChain( new  wxLogStderr( logfile ) );
+	}
 
     if ( showgui && verbosity != 0 )
     {

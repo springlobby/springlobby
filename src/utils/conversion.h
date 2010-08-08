@@ -15,6 +15,9 @@ typedef __int64 int64_t;
 //! Converts a wxString to an std::string
 #define STD_STRING(v) std::string((const char*)(v).mb_str(wxConvUTF8))
 
+//! converts a wxString to a c string
+#define C_STRING(v) (v).mb_str(wxConvUTF8)
+
 #include <wx/string.h>
 #include <sstream>
 

@@ -81,6 +81,7 @@ SpringLobbyApp::SpringLobbyApp()
     m_translationhelper( NULL ),
     m_log_verbosity( 3 ),
     m_log_console( true ),
+	m_log_file( false ),
     m_log_window_show( false ),
     m_crash_handle_disable( false ),
     m_start_simple_interface( false )
@@ -126,7 +127,7 @@ bool SpringLobbyApp::OnInit()
 
     //initialize all loggers, we'll use the returned pointer to set correct parent window later
     wxLogChain* logchain = 0;
-    wxLogWindow *loggerwin = InitializeLoggingTargets( 0, m_log_console, m_log_window_show, !m_crash_handle_disable, m_log_verbosity, logchain );
+	wxLogWindow *loggerwin = InitializeLoggingTargets( 0, m_log_console, m_log_file_path, m_log_window_show, !m_crash_handle_disable, m_log_verbosity, logchain );
 
     //this needs to called _before_ mainwindow instance is created
     wxInitAllImageHandlers();
@@ -298,9 +299,8 @@ void SpringLobbyApp::OnInitCmdLine(wxCmdLineParser& parser)
     {
         { wxCMD_LINE_SWITCH, STR("h"), STR("help"), _("show this help message"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_OPTION_HELP },
         { wxCMD_LINE_SWITCH, STR("nc"), STR("no-crash-handler"), _("don't use the crash handler (useful for debugging)"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
-    #if wxUSE_STD_IOSTREAM
+		{ wxCMD_LINE_OPTION, STR("fl"), STR("file-logging"),  _("dumps application log to a file ( enter path )"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL | wxCMD_LINE_NEEDS_SEPARATOR },
         { wxCMD_LINE_SWITCH, STR("cl"), STR("console-logging"),  _("shows application log to the console(if available)"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
-    #endif
         { wxCMD_LINE_SWITCH, STR("gl"), STR("gui-logging"),  _("enables application log window"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
         { wxCMD_LINE_OPTION, STR("f"), STR("config-file"),  _("override default choice for config-file"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL | wxCMD_LINE_NEEDS_SEPARATOR },
         { wxCMD_LINE_OPTION, STR("l"), STR("log-verbosity"),  _("overrides default logging verbosity, can be:\n                                0: no log\n                                1: critical errors\n                                2: errors\n                                3: warnings (default)\n                                4: messages\n                                5: function trace"), wxCMD_LINE_VAL_NUMBER, wxCMD_LINE_PARAM_OPTIONAL },
@@ -323,6 +323,7 @@ bool SpringLobbyApp::OnCmdLineParsed(wxCmdLineParser& parser)
     {
         m_log_console = parser.Found(_T("console-logging"));
         m_log_window_show = parser.Found(_T("gui-logging"));
+		m_log_file = parser.Found(_T("file-logging"), &m_log_file_path);
         m_crash_handle_disable = parser.Found(_T("no-crash-handler"));
         m_start_simple_interface = parser.Found(_T("simple"));
 
