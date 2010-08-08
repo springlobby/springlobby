@@ -48,21 +48,21 @@ wxFrame( (wxFrame*)&ui().mw(), -1, _("Newbies guide"), wxPoint(50, 50), wxSize(8
 	InstallOverview << _("As obvious as it could be, maps belong to the maps subdirectory, mods to the mods subdirectory, and widgets to LuaUI\\Widgets subdirectory.\n\n");
 	InstallOverview << _("In order for the lobby to detect correctly a freshly installed map/mod, you'll need to trigger a refresh, to do it click on tools->Reload map/mod list."); // installing content
 	SinglePlayer << _("Select in order, first the mod, then the map.\n");
-	SinglePlayer << _("You'll need to add at least one bot to play, if the mod ship it's own AI, it's highly reccomended to use that since bots are not compatible with all mods.\n");
+	SinglePlayer << _("You'll need to add at least one bot to play, if the mod ship it's own AI, it's highly recommended to use that since bots are not compatible with all mods.\n");
 	SinglePlayer << _("You can drag both the bot and yourself(the sun icon) anywhere, map's default start positions will snap on.\n");
-	SinglePlayer << _("You can change alliances (same number equals to allied players) and colour by hovering the icon.\n");
+	SinglePlayer << _("You can change alliances (same number equals to allied players) and color by hovering the icon.\n");
 	SinglePlayer << _("Bonus number is a resource multiplier bonus, if the bot feels too weak, try increasing the number on the bot or add more of them, if it feels too strong, do on yourself.\n");
 	SinglePlayer << _("EVEN IF THE BOT DOESN'T APPEAR IN THE PLAYER LIST INGAME, HE'LL STILL BE THERE, EXPLORE THE WHOLE MAP TO FIND IT.");
 	MultiPlayer << _("The lobby has an irc-like chat for talk and a battlelist\n");
 	MultiPlayer << _("You can get a list of available chat commands using /help\n");
 	MultiPlayer << _("Asking questions such as \"Is anyone here\" or \"Can anyone help me\" is actually considered rude if you don't specify your problem.\n");
-	MultiPlayer << _("It's also highly reccomended to avoid asking questions such as \"what is the best mod\" since it's a very touchy subject for many players.\n");
+	MultiPlayer << _("It's also highly recommended to avoid asking questions such as \"what is the best mod\" since it's a very touchy subject for many players.\n");
 	MultiPlayer << _("In order to play online, you'll NEED the latest STABLE OFFICIAL RELEASE, older or newer or development versions won't work.\n\n\n");
 	MultiPlayer << _("Joining a battle:\n");
-	MultiPlayer << _("In order to join a battle, simply double click on it on the list, and the lobby will prompt you for downloading the necesary files.\n");
+	MultiPlayer << _("In order to join a battle, simply double click on it on the list, and the lobby will prompt you for downloading the necessary files.\n");
 	MultiPlayer << _("When you are in a battleroom, focus your attention to the middle bar on the the screen.\n");
 	MultiPlayer << _("When two or more players have the same team number, they will share controls (also referred as comshare or coop).\n");
-	MultiPlayer << _("When two or more players have the same ally number, they will be allied togheter.\n");
+	MultiPlayer << _("When two or more players have the same ally number, they will be allied together.\n");
 	MultiPlayer << _("The host has possibility to override your values anytime with the exception of spectator.\n");
 	MultiPlayer << _("If you are not a spectator, you will have to press the ready button once you're ready to play.");
 	MultiPlayer << _("The unsynced status (the ! status icon) appears when you lack the map or the mod, or they are corrupted, you might need a list refresh to update them (tools->reload map/mod list).\n");
@@ -70,10 +70,10 @@ wxFrame( (wxFrame*)&ui().mw(), -1, _("Newbies guide"), wxPoint(50, 50), wxSize(8
 	MultiPlayer << _("The game will start when the host decides so, just sit down and wait (don't forget to press ready).\n");
 	MultiPlayer << _("Some hosts are automatically controlled (autohosts), they can be controlled trough a list of chat commands ( for the list, send !help in the chat).\n\n\n");
 	MultiPlayer << _("Hosting a battle:\n");
-	MultiPlayer << _("Almost the totality of the options in the hosting dialog cannot be changed without reopening the battle (sorry this won't change' in the forseeable future).\n");
+	MultiPlayer << _("Almost the totality of the options in the hosting dialog cannot be changed without reopening the battle (sorry this won't change' in the foreseeable future).\n");
 	MultiPlayer << _("You'll need to open the port indicated in the hosting dialog (default: 8452), type: UDP in your firewall/router in order to let other players to join your game.\n");
-	MultiPlayer << _("Alternatively, you can enable the option \"Hole punching\"(not reccomended) which uses a small hack to bypass the firewall, but it might not work for all the firewalls/routers, and it might not work for all the clients.\n");
-	MultiPlayer << _("More reccomended instead, is to use the option \"Use Relayhost\", which will spawn a bot that your lobby will control, the bot will host for you instead.\n"); // online play
+	MultiPlayer << _("Alternatively, you can enable the option \"Hole punching\"(not recommended) which uses a small hack to bypass the firewall, but it might not work for all the firewalls/routers, and it might not work for all the clients.\n");
+	MultiPlayer << _("More recommended instead, is to use the option \"Use Relayhost\", which will spawn a bot that your lobby will control, the bot will host for you instead.\n"); // online play
 	GraphicProblems << _("Most of the graphic-related problems come from old or bad video drivers.\n");
 	GraphicProblems << _("Before considering \"But XYZ game works fine!\", remember that most games on Windows uses DirectX, while Spring uses OpenGL, also the OpenGL spec is rather large, and certain bugs appear only with very specific conditions.\n");
 	GraphicProblems << _("That being said, the first thing you should do open the Spring settings editor, and lower the graphic detail, some video cards don't work well with some advanced options.\n");
@@ -94,7 +94,7 @@ wxFrame( (wxFrame*)&ui().mw(), -1, _("Newbies guide"), wxPoint(50, 50), wxSize(8
 	wxBoxSizer* TextSizer = new wxBoxSizer(wxVERTICAL);
 	wxBoxSizer* HeaderSizer = new wxBoxSizer(wxVERTICAL);
 
-	wxStaticText* Heading = new wxStaticText( this, -1, _("Introduction to Spring and Frequently Asked Questions\nIt's HIGHLY reccomended you read this troughroughtfuly\nClick on a button to view the topic"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE );
+	wxStaticText* Heading = new wxStaticText( this, -1, _("Introduction to Spring and Frequently Asked Questions\nIt's HIGHLY recommended you read this through completely.\nClick on a button to view the topic."), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE );
 	Heading->SetForegroundColour(wxColour(20,0,200));
 	wxFont tempfont = Heading->GetFont();
 	tempfont.SetPointSize(14);
