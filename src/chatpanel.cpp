@@ -55,6 +55,8 @@
 #include "useractions.h"
 #include "usermenu.h"
 
+#include <iostream>
+
 BEGIN_EVENT_TABLE( ChatPanel, wxPanel )
 
 	EVT_TEXT_ENTER( CHAT_TEXT, ChatPanel::OnSay )
@@ -397,13 +399,16 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const 
 void ChatPanel::OutputLine( const ChatLine& line )
 {
   int pos = m_chatlog_text->GetScrollPos(wxVERTICAL);
-  // get "real" size, don't use thumb size or scroll size! no matter how you combine them, you don't get the right one
   int size = m_chatlog_text->GetSize().GetHeight();
   int end = m_chatlog_text->GetScrollRange(wxVERTICAL);
   int thumb = m_chatlog_text->GetScrollThumb(wxVERTICAL);
+#ifndef __WXMSW__
   float original_pos = (float)(pos+thumb) / (float)end;
+#else
+  float original_pos = (float)(pos+size) / (float)end;
+#endif
   int original_line = (int)(original_pos *(float)m_chatlog_text->GetNumberOfLines());
-
+  std::cout << "pos: " << pos << " size: " << size << " end: " << end << " thumb: " << thumb << " original_pos: " << original_pos << std::endl;
 
   wxWindowUpdateLocker noUpdates(m_chatlog_text);
 
@@ -520,7 +525,7 @@ void ChatPanel::OutputLine( const ChatLine& line )
   else
   {
 	m_chatlog_text->ShowPosition( m_chatlog_text->GetLastPosition() );
-	m_chatlog_text->ScrollLines(2); // necessary for wxmsg wtf
+	m_chatlog_text->ScrollLines(2); // necessary to show the very latest line
   }
   this->Refresh();
 }
