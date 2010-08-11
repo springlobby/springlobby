@@ -530,13 +530,8 @@ void ChatPanel::OutputLine( const ChatLine& line )
   }
   else
   {
-#ifdef __WXMSW__
-	m_chatlog_text->ScrollLines(10); // wxmsw is retarded
+	m_chatlog_text->ScrollLines(10); // wx is retarded, necessary to show the latest line
 	m_chatlog_text->ShowPosition( m_chatlog_text->GetLastPosition() );
-#else
-	m_chatlog_text->ShowPosition( m_chatlog_text->GetLastPosition() );
-	m_chatlog_text->ScrollLines(2); // necessary to show the very latest line
-#endif
   }
   this->Refresh();
 }
