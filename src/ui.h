@@ -58,7 +58,7 @@ class Ui
 	void ReopenServerTab();
 
     void ConnectionFailurePrompt();
-    void SwitchToNextServer();
+	wxString GetNextServer();
 
     bool DoRegister( const wxString& servername, const wxString& username, const wxString& password, wxString& reason );
 

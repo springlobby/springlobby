@@ -180,14 +180,14 @@ void Ui::ShowConnectWindow()
 //! @see DoConnect
 void Ui::Connect()
 {
-    bool doit = sett().GetAutoConnect();
-    if ( !doit )
+	wxString server_name = sett().GetDefaultServer();
+	wxString nick = sett().GetServerAccountNick( server_name );
+	bool autoconnect = sett().GetAutoConnect();
+	if ( !autoconnect || server_name.IsEmpty() || nick.IsEmpty() )
         ShowConnectWindow();
     else
     {
         m_con_win = 0;
-        wxString server_name = sett().GetDefaultServer();
-        wxString nick = sett().GetServerAccountNick( server_name );
         wxString pass = sett().GetServerAccountPass( server_name );
         DoConnect( server_name, nick, pass);
     }
@@ -201,9 +201,7 @@ void Ui::Reconnect()
     wxString pass  = sett().GetServerAccountPass(servname);
     if ( !sett().GetServerAccountSavePass(servname) )
     {
-        wxString pass2 = pass;
-        if ( !AskPassword( _("Server password"), _("Password"), pass2 ) ) return;
-        pass = pass2;
+		if ( !AskPassword( _("Server password"), _("Password"), pass ) ) return;
     }
 
     Disconnect();
@@ -705,8 +703,12 @@ void Ui::ConnectionFailurePrompt()
 		}
 		case wxID_NO: // switch to next server in the list
 		{
-			SwitchToNextServer();
-			ShowConnectWindow();
+			wxString next_server = GetNextServer();
+			wxString current_server = sett().GetDefaultServer();
+			sett().SetDefaultServer( next_server ); // temp set default server, to be restored to previous once connect dialog is shown or connection is attempted
+			Connect();
+			m_last_used_backup_server = next_server; // save it temporarily to avoid retrying it
+			sett().SetDefaultServer( current_server );
 			break;
 		}
 		default:
@@ -717,7 +719,9 @@ void Ui::ConnectionFailurePrompt()
 	}
 }
 
-void Ui::SwitchToNextServer()
+
+
+wxString Ui::GetNextServer()
 {
 		wxString previous_server = m_last_used_backup_server;
 		if ( previous_server.IsEmpty() ) previous_server = sett().GetDefaultServer();
@@ -725,11 +729,7 @@ void Ui::SwitchToNextServer()
 		int position = serverlist.Index( previous_server );
 		if ( position == wxNOT_FOUND ) position = -1;
 		position = ( position + 1) % serverlist.GetCount(); // switch to next in the list
-		m_last_used_backup_server = serverlist[position];
-		sett().SetDefaultServer( m_last_used_backup_server );
-		if ( m_con_win ) // we don't necessarily have that constructed yet (autojoin)
-            m_con_win->ReloadServerList();
-		sett().SetDefaultServer( previous_server ); // don't save the new server as default when switched this way
+		return serverlist[position];
 }
 
 static inline bool IsAutoJoinChannel( Channel& chan )
