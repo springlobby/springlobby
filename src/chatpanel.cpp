@@ -520,18 +520,21 @@ void ChatPanel::OutputLine( const ChatLine& line )
 
   wxString linetext = m_chatlog_text->GetLineText(original_line);
   long zoomto = m_chatlog_text->GetValue().Find(linetext);
-#ifdef __WXMSW__
-  m_chatlog_text->ShowPosition( 0 );
-  m_chatlog_text->ScrollLines(original_line); // wxmsw is retarded
+  if (original_pos < 1.0f)
+  {
+#ifndef __WXMSW__
+	  m_chatlog_text->ShowPosition( zoomto );
 #else
-  m_chatlog_text->ShowPosition( zoomto );
+	  //m_chatlog_text->ScrollLines(-1);
 #endif
-  if (original_pos == 1.0f)
+  }
+  else
   {
 #ifdef __WXMSW__
 	m_chatlog_text->ScrollLines(10); // wxmsw is retarded
-	m_chatlog_text->ShowPosition( m_chatlog_text->GetLastPosition() );
+	m_chatlog_text->ShowPosition( zoomto );
 #else
+	m_chatlog_text->ShowPosition( zoomto );
 	m_chatlog_text->ScrollLines(2); // necessary to show the very latest line
 #endif
   }
