@@ -407,7 +407,6 @@ void ChatPanel::OutputLine( const ChatLine& line )
 #endif
   if ( original_pos < 0.0f ) original_pos = 0.0f;
   if ( original_pos > 1.0f ) original_pos = 1.0f; // this is necessary because the code in windows isn't 100% right because thumb always returns 0
-  int original_line = (int)(original_pos *(float)m_chatlog_text->GetNumberOfLines());
 
   wxWindowUpdateLocker noUpdates(m_chatlog_text);
 
@@ -517,6 +516,7 @@ void ChatPanel::OutputLine( const ChatLine& line )
   if (original_pos < 1.0f)
   {
 #ifndef __WXMSW__
+	  long original_line = (long)(original_pos *(float)m_chatlog_text->GetNumberOfLines());
 	  wxString linetext = m_chatlog_text->GetLineText(original_line);
 	  long zoomto = m_chatlog_text->GetValue().Find(linetext);
 	  m_chatlog_text->ShowPosition( zoomto ); // wxgtk is retarded and always autoscrolls
