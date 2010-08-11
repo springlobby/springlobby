@@ -514,13 +514,11 @@ void ChatPanel::OutputLine( const ChatLine& line )
 		m_chatlog_text->Remove( 0, end );
   }
 
-#ifndef __WXMSW__
-  wxString linetext = m_chatlog_text->GetLineText(original_line);
-  long zoomto = m_chatlog_text->GetValue().Find(linetext);
-#endif
   if (original_pos < 1.0f)
   {
 #ifndef __WXMSW__
+	  wxString linetext = m_chatlog_text->GetLineText(original_line);
+	  long zoomto = m_chatlog_text->GetValue().Find(linetext);
 	  m_chatlog_text->ShowPosition( zoomto ); // wxgtk is retarded and always autoscrolls
 #endif
   }
@@ -530,7 +528,7 @@ void ChatPanel::OutputLine( const ChatLine& line )
 	m_chatlog_text->ScrollLines(10); // wxmsw is retarded
 	m_chatlog_text->ShowPosition( m_chatlog_text->GetLastPosition() );
 #else
-	m_chatlog_text->ShowPosition( zoomto );
+	m_chatlog_text->ShowPosition( m_chatlog_text->GetLastPosition() );
 	m_chatlog_text->ScrollLines(2); // necessary to show the very latest line
 #endif
   }
