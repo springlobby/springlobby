@@ -168,6 +168,7 @@ class Ui
     bool m_first_update_trigger;
 
     bool m_ingame;
+	bool m_recconecting_wait;
 
 	EventReceiverFunc<Ui, BattleEvents::BattleEventData, &Ui::OnBattleInfoUpdated>
 		m_battle_info_updatedSink;

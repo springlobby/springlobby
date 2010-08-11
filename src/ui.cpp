@@ -114,6 +114,7 @@ Ui::Ui() :
         m_upd_counter_torrent(0),
         m_first_update_trigger(true),
 		m_ingame(false),
+		m_recconecting_wait(false),
 		m_battle_info_updatedSink( this, &BattleEvents::GetBattleEventSender( ( BattleEvents::BattleInfoUpdate ) ) )
 {
     m_main_win = new MainWindow( );
@@ -161,7 +162,7 @@ void Ui::ShowMainWindow()
 //! @note It will create the ConnectWindow if not allready created
 void Ui::ShowConnectWindow()
 {
-	if ( IsConnecting() || IsConnected() || m_reconnect_delay_timer.IsRunning() )
+	if ( IsConnecting() || IsConnected() || m_recconecting_wait )
 		return;
 	if ( m_con_win == 0 )
     {
@@ -224,8 +225,10 @@ void Ui::Disconnect()
 void Ui::DoConnect( const wxString& servername, const wxString& username, const wxString& password )
 {
 	if ( m_reconnect_delay_timer.IsRunning() ) {
+		m_recconecting_wait = true;
 		AutocloseMessageBox m( &mw(), _("Waiting for reconnect"), wxMessageBoxCaptionStr, s_reconnect_delay_ms );
 		m.ShowModal();
+		m_recconecting_wait = false;
 	}
 
     wxString host;
@@ -685,6 +688,10 @@ void Ui::OnDisconnected( Server& server, bool wasonline )
 void Ui::ConnectionFailurePrompt()
 {
 	if ( m_reconnect_dialog != 0 )
+	{
+		return;
+	}
+	if ( m_recconecting_wait )
 	{
 		return;
 	}
