@@ -55,8 +55,6 @@
 #include "useractions.h"
 #include "usermenu.h"
 
-#include <iostream>
-
 BEGIN_EVENT_TABLE( ChatPanel, wxPanel )
 
 	EVT_TEXT_ENTER( CHAT_TEXT, ChatPanel::OnSay )
@@ -410,7 +408,6 @@ void ChatPanel::OutputLine( const ChatLine& line )
   if ( original_pos < 0.0f ) original_pos = 0.0f;
   if ( original_pos > 1.0f ) original_pos = 1.0f; // this is necessary because the code in windows isn't 100% right because thumb always returns 0
   int original_line = (int)(original_pos *(float)m_chatlog_text->GetNumberOfLines());
-  std::cout << "pos: " << pos << " size: " << size << " end: " << end << " thumb: " << thumb << " original_pos: " << original_pos << std::endl;
 
   wxWindowUpdateLocker noUpdates(m_chatlog_text);
 
@@ -517,9 +514,10 @@ void ChatPanel::OutputLine( const ChatLine& line )
 		m_chatlog_text->Remove( 0, end );
   }
 
-
+#ifndef __WXMSW__
   wxString linetext = m_chatlog_text->GetLineText(original_line);
   long zoomto = m_chatlog_text->GetValue().Find(linetext);
+#endif
   if (original_pos < 1.0f)
   {
 #ifndef __WXMSW__
