@@ -413,9 +413,11 @@ void ChatPanel::OutputLine( const ChatLine& line )
 #ifndef __WXMSW__
 	  original_line = (long)(original_pos *(float)m_chatlog_text->GetNumberOfLines()); // GetNumberOfLines is expensive, only call when necessary
 #endif
+	  m_chatlog_text->Freeze();
   }
-
-  wxWindowUpdateLocker noUpdates(m_chatlog_text);
+#ifdef __WXMSW__
+  m_chatlog_text->Freeze();
+#endif
 
   m_chatlog_text->SetDefaultStyle( line.timestyle );
   m_chatlog_text->AppendText( line.time );
@@ -530,10 +532,20 @@ void ChatPanel::OutputLine( const ChatLine& line )
   }
   else
   {
+#ifdef __WXMSW__
 	m_chatlog_text->ScrollLines(10); // wx is retarded, necessary to show the latest line
 	m_chatlog_text->ShowPosition( m_chatlog_text->GetLastPosition() );
+#endif
   }
   this->Refresh();
+#ifndef __WXMSW__
+ if (original_pos < 1.0f)
+  {
+	m_chatlog_text->Thaw();
+  }
+#else
+	m_chatlog_text->Thaw();
+#endif
 }
 
 
