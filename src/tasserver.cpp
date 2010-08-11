@@ -2165,6 +2165,11 @@ void TASServer::UpdateBot( int battleid, User& bot, UserBattleStatus& status )
 
 void TASServer::SendScriptToProxy( const wxString& script )
 {
+  try
+  {
+	  if ( GetUser(m_relay_host_bot).Status().in_game ) return; // don't send the script if the bot is ingame alredy
+  }
+  catch(...) {}
   RelayCmd( _T("CLEANSCRIPT") );
   wxStringTokenizer tkzr( script, _T("\n") );
   while ( tkzr.HasMoreTokens() )
