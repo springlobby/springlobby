@@ -1196,6 +1196,11 @@ void TASServer::SendCmd( const wxString& command, const wxString& param )
 
 void TASServer::SetRelayIngamePassword( const User& user )
 {
+	Battle* battle = GetCurrentBattle();
+	if (battle)
+	{
+		if ( !battle->GetInGame() ) return false;
+	}
 	RelayCmd( _T("SETINGAMEPASSWORD"), user.GetNick() + _T(" ") + user.BattleStatus().scriptPassword );
 }
 
