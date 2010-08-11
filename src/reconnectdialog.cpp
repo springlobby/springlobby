@@ -14,8 +14,8 @@
 BEGIN_EVENT_TABLE( ReconnectDialog, wxDialog )
 
 	EVT_BUTTON  ( CONNECT_RECONNECT, 		ReconnectDialog::OnReconnect    		)
-	EVT_BUTTON  ( CONNECT_NEXT,     		ReconnectDialog::OnCancel        		)
-	EVT_BUTTON  ( CONNECT_CANCEL, 		    ReconnectDialog::OnTryNext	         	)
+	EVT_BUTTON  ( CONNECT_CANCEL,     		ReconnectDialog::OnCancel        		)
+	EVT_BUTTON  ( CONNECT_NEXT, 		    ReconnectDialog::OnTryNext	         	)
 
 END_EVENT_TABLE()
 

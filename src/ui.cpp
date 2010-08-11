@@ -234,6 +234,15 @@ void Ui::DoConnect( const wxString& servername, const wxString& username, const 
     wxString host;
     int port;
 
+	if ( servername != m_last_used_backup_server ) // do not save the server as default if it's a backup one
+	{
+		sett().SetDefaultServer( servername );
+	}
+	else
+	{
+		m_last_used_backup_server = _T("");
+	}
+
     if ( !sett().ServerExists( servername ) )
     {
         ASSERT_LOGIC( false, _T("Server does not exist in settings") );
@@ -583,14 +592,6 @@ void Ui::OnUpdate( int mselapsed )
 void Ui::OnConnected( Server& server, const wxString& server_name, const wxString& /*unused*/, bool /*supported*/ )
 {
     wxLogDebugFunc( _T("") );
-    if ( !m_last_used_backup_server.IsEmpty() )
-    {
-    	 m_last_used_backup_server = _T("");
-    }
-    else // connect successful & it's not a backup server fallback -> save as default
-    {
-			 sett().SetDefaultServer( server_name );
-    }
     if ( !IsSpringCompatible() )
     {
     	#ifdef __WXMSW__
@@ -695,9 +696,12 @@ void Ui::ConnectionFailurePrompt()
 	{
 		return;
 	}
+	if ( m_con_win ) // if connect window instance exists, delete it to avoid 2 windows which do the same task
+	{
+		delete m_con_win;
+		m_con_win = 0;
+	}
 	m_reconnect_dialog = new ReconnectDialog();
-	if ( m_reconnect_dialog->IsShown() )
-		return;
 	int returnval = m_reconnect_dialog->ShowModal();
 	delete m_reconnect_dialog;
 	m_reconnect_dialog = 0;
@@ -710,12 +714,11 @@ void Ui::ConnectionFailurePrompt()
 		}
 		case wxID_NO: // switch to next server in the list
 		{
-			wxString next_server = GetNextServer();
+			wxString m_last_used_backup_server = GetNextServer();
 			wxString current_server = sett().GetDefaultServer();
-			sett().SetDefaultServer( next_server ); // temp set default server, to be restored to previous once connect dialog is shown or connection is attempted
+			sett().SetDefaultServer( m_last_used_backup_server );// temp set backup server as default
 			Connect();
-			m_last_used_backup_server = next_server; // save it temporarily to avoid retrying it
-			sett().SetDefaultServer( current_server );
+			sett().SetDefaultServer( current_server ); // restore original serv
 			break;
 		}
 		default:
