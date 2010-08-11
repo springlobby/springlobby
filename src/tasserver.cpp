@@ -1199,7 +1199,7 @@ void TASServer::SetRelayIngamePassword( const User& user )
 	Battle* battle = GetCurrentBattle();
 	if (battle)
 	{
-		if ( !battle->GetInGame() ) return false;
+		if ( !battle->GetInGame() ) return;
 	}
 	RelayCmd( _T("SETINGAMEPASSWORD"), user.GetNick() + _T(" ") + user.BattleStatus().scriptPassword );
 }
