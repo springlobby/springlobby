@@ -55,6 +55,7 @@
     #include <wx/stdpaths.h>
 #endif
 
+#include "reconnectdialog.h"
 #include "utils/customdialogs.h"
 #include "utils/platform.h"
 #include "updater/versionchecker.h"
@@ -109,6 +110,7 @@ Ui::Ui() :
         m_serv(0),
         m_main_win(0),
         m_con_win(0),
+		m_reconnect_dialog(0),
         m_upd_counter_torrent(0),
         m_first_update_trigger(true),
 		m_ingame(false),
@@ -123,7 +125,6 @@ Ui::Ui() :
 Ui::~Ui()
 {
     Disconnect();
-
     delete m_serv;
 }
 
@@ -160,14 +161,16 @@ void Ui::ShowMainWindow()
 //! @note It will create the ConnectWindow if not allready created
 void Ui::ShowConnectWindow()
 {
-    if ( m_con_win == 0 )
+	if ( IsConnecting() || IsConnected() || m_reconnect_delay_timer.IsRunning() )
+		return;
+	if ( m_con_win == 0 )
     {
         ASSERT_LOGIC( m_main_win != 0, _T("m_main_win = 0") );
         m_con_win = new ConnectWindow( m_main_win, *this );
     }
-    m_con_win->CenterOnParent();
-    m_con_win->Show(true);
-    m_con_win->Raise();
+	m_con_win->CenterOnParent();
+	m_con_win->Show(true);
+	m_con_win->Raise();
 }
 
 
@@ -315,6 +318,11 @@ bool Ui::DoRegister( const wxString& servername, const wxString& username, const
 
 }
 
+bool Ui::IsConnecting() const
+{
+	if ( m_reconnect_dialog != 0 ) return m_reconnect_dialog->IsShown();
+	return false;
+}
 
 bool Ui::IsConnected() const
 {
@@ -678,10 +686,17 @@ void Ui::OnDisconnected( Server& server, bool wasonline )
 
 void Ui::ConnectionFailurePrompt()
 {
-	static wxMessageDialog dlg( &mw(), _("A connection couldn't be established with the server\nWould you like to try again with the same server?\nNo to switch to next server in the list"), _("Connection failure"), wxYES_NO | wxCANCEL | wxNO_DEFAULT );
-	if ( dlg.IsShown() )
+	if ( m_reconnect_dialog != 0 )
+	{
 		return;
-	switch ( dlg.ShowModal() )
+	}
+	m_reconnect_dialog = new ReconnectDialog();
+	if ( m_reconnect_dialog->IsShown() )
+		return;
+	int returnval = m_reconnect_dialog->ShowModal();
+	delete m_reconnect_dialog;
+	m_reconnect_dialog = 0;
+	switch ( returnval )
 	{
 		case wxID_YES: // try again with the same server/settings
 		{

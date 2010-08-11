@@ -85,6 +85,7 @@ SET(springlobbySrc
 	src/alsound.cpp
 	src/selectusersdialog.cpp
 	src/server.cpp
+	src/reconnectdialog.cpp
 	src/serverevents.cpp
 	src/singleplayerbattle.cpp
 	src/singleplayertab.cpp

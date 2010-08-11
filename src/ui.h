@@ -13,6 +13,7 @@ class Battle;
 class SinglePlayerBattle;
 class OfflineBattle;
 class ChatPanel;
+class ReconnectDialog;
 
 //this removes the necessity to drag wx/event.h into almost every other file for a single type
 //if it's too "hackish" for someone's taste, just include that header again and remove this (koshi)
@@ -61,6 +62,7 @@ class Ui
 
     bool DoRegister( const wxString& servername, const wxString& username, const wxString& password, wxString& reason );
 
+	bool IsConnecting() const;
     bool IsConnected() const;
     void JoinChannel( const wxString& name, const wxString& password );
 
@@ -157,6 +159,7 @@ class Ui
     MainWindow* m_main_win;
     ConnectWindow* m_con_win;
 	wxTimer m_reconnect_delay_timer;
+	ReconnectDialog* m_reconnect_dialog;
 
     wxString m_last_used_backup_server;
 

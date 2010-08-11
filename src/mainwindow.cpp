@@ -620,7 +620,7 @@ void MainWindow::OnTabsChanged( wxAuiNotebookEvent& event )
 
   if ( newsel == 0 || newsel == 1 )
   {
-    if ( !ui().IsConnected() && ui().IsMainWindowCreated() ) ui().Connect();
+	if ( !ui().IsConnected() && ui().IsMainWindowCreated() ) ui().Connect();
   }
 }
 
