@@ -91,10 +91,14 @@ void SpringUnitSync::PopulateArchiveList()
 {
   m_maps_list.clear();
   m_mods_list.clear();
-  m_mod_array.Empty();
-  m_map_array.Empty();
+  m_mod_array.Clear();
+  m_map_array.Clear();
+  m_unsorted_mod_array.Clear();
+  m_unsorted_map_array.Clear();
   m_map_image_cache.Clear();
   m_mapinfo_cache.Clear();
+  m_maps_unchained_hash.clear();
+  m_mods_unchained_hash.clear();
 
   int numMaps = susynclib().GetMapCount();
   for ( int i = 0; i < numMaps; i++ )
