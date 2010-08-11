@@ -396,9 +396,16 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const 
 
 void ChatPanel::OutputLine( const ChatLine& line )
 {
-  #ifdef __WXMSW__
-    wxWindowUpdateLocker noUpdates(m_chatlog_text);
-  #endif
+  int pos = m_chatlog_text->GetScrollPos(wxVERTICAL);
+  // get "real" size, don't use thumb size or scroll size! no matter how you combine them, you don't get the right one
+  int size = m_chatlog_text->GetSize().GetHeight();
+  int end = m_chatlog_text->GetScrollRange(wxVERTICAL);
+  int thumb = m_chatlog_text->GetScrollThumb(wxVERTICAL);
+  float original_pos = (float)(pos+thumb) / (float)end;
+  int original_line = (int)(original_pos *(float)m_chatlog_text->GetNumberOfLines());
+
+
+  wxWindowUpdateLocker noUpdates(m_chatlog_text);
 
   m_chatlog_text->SetDefaultStyle( line.timestyle );
   m_chatlog_text->AppendText( line.time );
@@ -501,11 +508,20 @@ void ChatPanel::OutputLine( const ChatLine& line )
 		int end = 0;
 		for ( int i = 0; i < 20; i++ ) end += m_chatlog_text->GetLineLength( i ) + 1;
 		m_chatlog_text->Remove( 0, end );
-	}
-  #ifdef __WXMSW__
-  m_chatlog_text->ScrollLines( 10 ); // to prevent for weird empty space appended
-  m_chatlog_text->ShowPosition( m_chatlog_text->GetLastPosition() );// scroll to the bottom
-  #endif
+  }
+
+
+  wxString linetext = m_chatlog_text->GetLineText(original_line);
+  long zoomto = m_chatlog_text->GetValue().Find(linetext);
+  if (original_pos < 1.0f)
+  {
+	m_chatlog_text->ShowPosition( zoomto );
+  }
+  else
+  {
+	m_chatlog_text->ShowPosition( m_chatlog_text->GetLastPosition() );
+	m_chatlog_text->ScrollLines(2); // necessary for wxmsg wtf
+  }
   this->Refresh();
 }
 
