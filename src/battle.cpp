@@ -219,7 +219,7 @@ User& Battle::OnUserAdded( User& user )
 				DoAction( _T("Rank limit autospec: ") + user.GetNick() );
 				ForceSpectator( user, true );
 			 }
-			 if ( m_opts.rankneeded < UserStatus::RANK_1 && user.GetStatus().rank > ( -m_opts.rankneeded - 1 ) )
+			 else if ( m_opts.rankneeded < UserStatus::RANK_1 && user.GetStatus().rank > ( -m_opts.rankneeded - 1 ) )
 			 {
 				 DoAction( _T("Rank limit autospec: ") + user.GetNick() );
 				 ForceSpectator( user, true );
@@ -244,7 +244,7 @@ void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 					DoAction( _T("Rank limit autospec: ") + user.GetNick() );
 					ForceSpectator( user, true );
 				}
-				if ( m_opts.rankneeded < UserStatus::RANK_1 && user.GetStatus().rank > ( -m_opts.rankneeded - 1 ) )
+				else if ( m_opts.rankneeded < UserStatus::RANK_1 && user.GetStatus().rank > ( -m_opts.rankneeded - 1 ) )
 				{
 					DoAction( _T("Rank limit autospec: ") + user.GetNick() );
 					ForceSpectator( user, true );
