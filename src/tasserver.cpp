@@ -942,9 +942,12 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         }
         if( usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) )
         {
-					 bstatus.aiversion = ai.AfterLast( _T('|') );
-					 ai = ai.BeforeLast( _T('|') );
-        	 bstatus.aishortname = ai;
+			if (ai.Find(_T('|') != -1))
+			{
+				bstatus.aiversion = ai.AfterLast( _T('|') );
+				ai = ai.BeforeLast( _T('|') );
+			}
+			bstatus.aishortname = ai;
         }
         else
         {
