@@ -807,6 +807,20 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     else if ( cmd == _T("SAIDPRIVATE") )
     {
         nick = GetWordParam( params );
+		if ( nick == m_relay_host_bot )
+		{
+			if ( params.StartsWith(_T("JOINEDBATTLE")) )
+			{
+				id = GetIntParam( params );
+				nick = GetWordParam( params );
+				wxString userScriptPassword = GetWordParam( params );
+				try
+				{
+					GetUser(nick).BattleStatus().scriptPassword = userScriptPassword;
+				} catch (...) {}
+				return;
+			}
+		}
         if ( nick == m_relay_host_manager )
         {
           if ( params.StartsWith( _T("\001") ) ) // error code
