@@ -109,6 +109,7 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU( MENU_PREFERENCES,			MainWindow::OnMenuPreferences		)
   EVT_MENU( MENU_RENAME,				MainWindow::OnMenuRename			)
   EVT_MENU( MENU_GENERAL_HELP,			MainWindow::OnMenuFirstStart		)
+  EVT_MENU( MENU_SERVER_TAB,			MainWindow::OnMenuServerTab			)
   EVT_SET_FOCUS(                        MainWindow::OnSetFocus              )
   EVT_KILL_FOCUS(                       MainWindow::OnKillFocus             )
   EVT_AUINOTEBOOK_PAGE_CHANGED( MAIN_TABS, MainWindow::OnTabsChanged )
@@ -134,6 +135,7 @@ MainWindow::MainWindow( )
 	wxMenu *menuServer = new wxMenu;
 	menuServer->Append(MENU_CONNECT, _("&Connect..."));
 	menuServer->Append(MENU_DISCONNECT, _("&Disconnect"));
+	menuServer->Append(MENU_SERVER_TAB, _("&Reopen server panel"));
 	menuServer->AppendSeparator();
 #ifndef NDEBUG
 	//this is a prime spot to add experimental stuff, or stubs used to test things not really meant to be in mainwindow
@@ -559,6 +561,11 @@ void MainWindow::OnMenuConnect( wxCommandEvent& /*unused*/ )
 void MainWindow::OnMenuDisconnect( wxCommandEvent& /*unused*/ )
 {
   ui().Disconnect();
+}
+
+void MainWindow::OnMenuServerTab( wxCommandEvent& /*unused*/ )
+{
+  ui().ReopenServerTab();
 }
 
 void MainWindow::OnMenuSaveOptions( wxCommandEvent& /*unused*/ )

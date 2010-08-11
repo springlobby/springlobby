@@ -247,7 +247,8 @@ ChatPanel* MainChatTab::AddChatPanel( Server& server, const wxString& name )
 {
 
 	for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ ) {
-		if ( m_chat_tabs->GetPageText( i ) == name ) {
+		//if ( m_chat_tabs->GetPageText( i ) == name ) {
+		if ( true ) { // wipe all old server tabs
 			ChatPanel* tmp = ( ChatPanel* )m_chat_tabs->GetPage( i );
 			if ( tmp->GetPanelType() == CPT_Server ) {
 				m_chat_tabs->DeletePage( i );

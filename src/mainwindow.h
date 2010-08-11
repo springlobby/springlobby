@@ -74,6 +74,7 @@ class MainWindow : public wxFrame, public WindowAttributesPickle
     void OnMenuChat( wxCommandEvent& event );
     void OnMenuConnect( wxCommandEvent& event );
     void OnMenuDisconnect( wxCommandEvent& event );
+	void OnMenuServerTab( wxCommandEvent& event );
     void OnMenuSaveOptions( wxCommandEvent& event );
     void OnMenuQuit( wxCommandEvent& event );
     void OnMenuVersion ( wxCommandEvent& event );
@@ -168,6 +169,7 @@ class MainWindow : public wxFrame, public WindowAttributesPickle
         MENU_CONNECT = wxID_HIGHEST,
 		MENU_SETTINGSPP,
         MENU_DISCONNECT,
+		MENU_SERVER_TAB,
         MENU_SAVE_OPTIONS,
         MENU_JOIN,
         MENU_USYNC,

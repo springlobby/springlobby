@@ -53,6 +53,8 @@ class Ui
     void Disconnect();
     void Reconnect();
     void DoConnect( const wxString& servername, const wxString& username, const wxString& password );
+	void AddServerWindow( const wxString& servername );
+	void ReopenServerTab();
 
     void ConnectionFailurePrompt();
     void SwitchToNextServer();

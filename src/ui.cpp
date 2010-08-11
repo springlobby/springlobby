@@ -255,7 +255,7 @@ void Ui::DoConnect( const wxString& servername, const wxString& username, const 
     host = sett().GetServerHost( servername );
     port = sett().GetServerPort( servername );
 
-	serverSelector().GetServer().uidata.panel = m_main_win->GetChatTab().AddChatPanel( *m_serv, servername );
+	AddServerWindow( servername );
 	serverSelector().GetServer().uidata.panel->StatusMessage( _T("Connecting to server ") + servername + _T("...") );
 
     // Connect
@@ -263,6 +263,29 @@ void Ui::DoConnect( const wxString& servername, const wxString& username, const 
 
 }
 
+void Ui::AddServerWindow( const wxString& servername )
+{
+	if ( !serverSelector().GetServer().uidata.panel )
+	{
+		serverSelector().GetServer().uidata.panel = m_main_win->GetChatTab().AddChatPanel( *m_serv, servername );
+
+	}
+}
+
+
+void Ui::ReopenServerTab()
+{
+	if ( serverSelector().GetServer().IsOnline() )
+	{
+		AddServerWindow( serverSelector().GetServer().GetServerName() );
+		// re-add all users to the user list
+		const UserList& list = serverSelector().GetServer().GetUserList();
+		for ( unsigned int i = 0; i < list.GetNumUsers(); i++ )
+		{
+			serverSelector().GetServer().uidata.panel->OnChannelJoin( list.GetUser(i) );
+		}
+	}
+}
 
 bool Ui::DoRegister( const wxString& servername, const wxString& username, const wxString& password,wxString& reason)
 {
@@ -894,10 +917,6 @@ void Ui::OnMotd( Server& server, const wxString& message )
 void Ui::OnServerMessage( Server& server, const wxString& message )
 {
     if ( server.uidata.panel != 0 ) server.uidata.panel->StatusMessage( message );
-    else
-    {
-        ShowMessage( _("Server message"), message );
-    }
 }
 
 
