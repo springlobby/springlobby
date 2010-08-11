@@ -788,9 +788,7 @@ wxPathList Settings::GetAdditionalSearchPaths( wxPathList& pl )
 	wxStandardPathsBase& sp = wxStandardPathsBase::Get();
 
 	pl.Add( wxFileName::GetCwd() );
-	pl.Add( sp.GetExecutablePath() );
-	pl.Add( wxFileName::GetCwd() );
-	pl.Add( sp.GetExecutablePath() );
+	pl.Add( sp.GetExecutablePath().BeforeLast( wxFileName::GetPathSeparator() ) );
 	pl.Add( wxFileName::GetHomeDir() );
 	pl.Add( sp.GetUserDataDir().BeforeLast( sep ) );
 	pl.Add( sp.GetDataDir().BeforeLast( sep ) );
