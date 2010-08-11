@@ -408,15 +408,14 @@ void ChatPanel::OutputLine( const ChatLine& line )
   if ( original_pos < 0.0f ) original_pos = 0.0f;
   if ( original_pos > 1.0f ) original_pos = 1.0f; // this is necessary because the code in windows isn't 100% right because thumb always returns 0
   long original_line = 0;
+#ifndef __WXMSW__
   if (original_pos < 1.0f )
   {
-#ifndef __WXMSW__
 	  original_line = (long)(original_pos *(float)m_chatlog_text->GetNumberOfLines()); // GetNumberOfLines is expensive, only call when necessary
-#endif
 	  m_chatlog_text->Freeze();
   }
-#ifdef __WXMSW__
-  m_chatlog_text->Freeze();
+#else
+	 wxWindowUpdateLocker noUpdates(m_chatlog_text); // use the automatic one in windows
 #endif
 
   m_chatlog_text->SetDefaultStyle( line.timestyle );
@@ -543,8 +542,6 @@ void ChatPanel::OutputLine( const ChatLine& line )
   {
 	m_chatlog_text->Thaw();
   }
-#else
-	m_chatlog_text->Thaw();
 #endif
 }
 
