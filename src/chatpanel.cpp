@@ -405,7 +405,7 @@ void ChatPanel::OutputLine( const ChatLine& line )
 #ifndef __WXMSW__
   float original_pos = (float)(pos+thumb) / (float)end;
 #else
-  float original_pos = (float)(pos+size) / (float)end;
+  float original_pos = (float)(pos+size) / (float)end; // wxmsw is retarded and reports thumb size as 0 always
 #endif
   if ( original_pos < 0.0f ) original_pos = 0.0f;
   if ( original_pos > 1.0f ) original_pos = 1.0f; // this is necessary because the code in windows isn't 100% right because thumb always returns 0
@@ -523,16 +523,14 @@ void ChatPanel::OutputLine( const ChatLine& line )
   if (original_pos < 1.0f)
   {
 #ifndef __WXMSW__
-	  m_chatlog_text->ShowPosition( zoomto );
-#else
-	  //m_chatlog_text->ScrollLines(-1);
+	  m_chatlog_text->ShowPosition( zoomto ); // wxgtk is retarded and always autoscrolls
 #endif
   }
   else
   {
 #ifdef __WXMSW__
 	m_chatlog_text->ScrollLines(10); // wxmsw is retarded
-	m_chatlog_text->ShowPosition( zoomto );
+	m_chatlog_text->ShowPosition( m_chatlog_text->GetLastPosition() );
 #else
 	m_chatlog_text->ShowPosition( zoomto );
 	m_chatlog_text->ScrollLines(2); // necessary to show the very latest line
