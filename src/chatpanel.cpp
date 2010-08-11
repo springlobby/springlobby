@@ -407,6 +407,8 @@ void ChatPanel::OutputLine( const ChatLine& line )
 #else
   float original_pos = (float)(pos+size) / (float)end;
 #endif
+  if ( original_pos > 0.0f ) original_pos = 0.0f;
+  if ( original_pos < 1.0f ) original_pos = 1.0f; // this is necessary because the code in windows isn't 100% right because thumb always returns 0
   int original_line = (int)(original_pos *(float)m_chatlog_text->GetNumberOfLines());
   std::cout << "pos: " << pos << " size: " << size << " end: " << end << " thumb: " << thumb << " original_pos: " << original_pos << std::endl;
 
@@ -525,7 +527,11 @@ void ChatPanel::OutputLine( const ChatLine& line )
   else
   {
 	m_chatlog_text->ShowPosition( m_chatlog_text->GetLastPosition() );
+#ifndef __WXMSW__
 	m_chatlog_text->ScrollLines(2); // necessary to show the very latest line
+#else
+	m_chatlog_text->ScrollLines(original_line); // wxmsq wtf
+#endif
   }
   this->Refresh();
 }
