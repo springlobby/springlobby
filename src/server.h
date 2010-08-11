@@ -181,6 +181,8 @@ class Server : public iNetClass
 
     virtual void RequestSpringUpdate();
 
+	virtual void SetRelayIngamePassword( const User& user ) = 0;
+
     virtual wxArrayString GetRelayHostList() ;
 
   protected:

@@ -852,6 +852,10 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         m_battle_id = id;
 		m_se->OnJoinedBattle( id, hash );
         m_se->OnBattleInfoUpdated( m_battle_id );
+		try
+		{
+		 if (GetBattle(id).IsProxy()) RelayCmd(_T("SUPPORTSCRIPTPASSWORD")); // send flag to relayhost marking we support script passwords
+		} catch(...) {}
     }
     else if ( cmd == _T("CLIENTBATTLESTATUS") )
     {
@@ -1188,6 +1192,11 @@ void TASServer::SendCmd( const wxString& command, const wxString& param )
 			else
 				wxLogMessage( _T("sending: %s failed"), msg.c_str() );
 		}
+}
+
+void TASServer::SetRelayIngamePassword( const User& user )
+{
+	RelayCmd( _T("SETINGAMEPASSWORD"), user.GetNick() + _T(" ") + user.BattleStatus().scriptPassword );
 }
 
 void TASServer::Ping()
