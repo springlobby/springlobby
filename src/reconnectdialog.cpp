@@ -49,7 +49,7 @@ ReconnectDialog::ReconnectDialog()
 
 	this->SetSizer( m_main_sizer );
 	this->Layout();
-
+	this->Raise();
 	m_next_btn->SetFocus();
 }
 
