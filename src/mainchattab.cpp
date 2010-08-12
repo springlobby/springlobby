@@ -282,6 +282,18 @@ ChatPanel* MainChatTab::AddChatPanel( const User& user )
 	return chat;
 }
 
+
+void MainChatTab::BroadcastMessage( const wxString& message )
+{
+	// spam the message in all channels
+	for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ )
+	{
+		ChatPanel* tmp = ( ChatPanel* )m_chat_tabs->GetPage( i );
+		tmp->StatusMessage( message );
+	}
+}
+
+
 void MainChatTab::OnTabClose( wxAuiNotebookEvent& event )
 {
 	int selection = event.GetSelection();
