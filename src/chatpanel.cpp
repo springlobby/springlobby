@@ -531,8 +531,8 @@ void ChatPanel::OutputLine( const ChatLine& line )
   }
   else
   {
-#ifdef __WXMSW__
 	m_chatlog_text->ScrollLines(10); // wx is retarded, necessary to show the latest line
+#ifdef __WXMSW__
 	m_chatlog_text->ShowPosition( m_chatlog_text->GetLastPosition() );
 #endif
   }
