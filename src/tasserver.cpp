@@ -309,9 +309,18 @@ bool TASServer::ExecuteSayCommand( const wxString& cmd )
     }
     else if ( subcmd == _T("/changepassword") )
     {
-				if ( arrayparams.GetCount() != 3 ) return false;
-        wxString oldpassword = GetPasswordHash( arrayparams[1] );
-        wxString newpassword = GetPasswordHash( arrayparams[2] );
+		if ( arrayparams.GetCount() < 2 ) return false;
+		wxString oldpassword = sett().GetServerAccountPass( GetServerName() );
+		wxString newpassword;
+		if  ( oldpassword.IsEmpty() || !sett().GetServerAccountSavePass(GetServerName()) )
+		{
+			oldpassword = GetPasswordHash(arrayparams[1]);
+			newpassword = GetPasswordHash( arrayparams[2] );
+		}
+		else
+		{
+			newpassword = GetPasswordHash( params );
+		}
         SendCmd( _T("CHANGEPASSWORD"), oldpassword + _T(" ") + newpassword );
         return true;
     }
