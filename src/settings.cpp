@@ -357,7 +357,13 @@ void Settings::SetWebBrowserPath( const wxString& path )
 
 wxString Settings::GetCachePath()
 {
-	wxString path = GetLobbyWriteDir() + _T( "cache" ) + wxFileName::GetPathSeparator();
+	wxString sep = wxFileName::GetPathSeparator();
+	wxString path = GetCurrentUsedDataDir() + sep + _T( "cache" ) + sep;
+	if ( !wxFileName::DirExists( path ) )
+	{
+		if ( !wxFileName::Mkdir(  path, 0755  ) ) return wxEmptyString;
+	}
+	path += _T( "SpringLobby" ) + sep;
 	if ( !wxFileName::DirExists( path ) )
 	{
 		if ( !wxFileName::Mkdir(  path, 0755  ) ) return wxEmptyString;
