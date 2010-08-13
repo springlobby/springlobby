@@ -1137,7 +1137,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     else if ( cmd == _T("MUTELIST") )
     {
         wxString mutee = GetWordParam( params );
-        wxString description = GetWordParam( params );
+		wxString description = GetSentenceParam( params );
         m_se->OnMutelistItem( m_current_chan_name_mutelist, mutee, description );
     }
     else if ( cmd == _T("MUTELISTEND") )
