@@ -820,6 +820,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
 		{
 			if ( params.StartsWith(_T("JOINEDBATTLE")) )
 			{
+				GetWordParam( params ); // skip first word, it's the message itself
 				id = GetIntParam( params );
 				wxString usernick = GetWordParam( params );
 				wxString userScriptPassword = GetWordParam( params );
@@ -827,6 +828,11 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
 				{
 					User& usr = GetUser(usernick);
 					usr.BattleStatus().scriptPassword = userScriptPassword;
+					Battle* battle = GetCurrentBattle();
+					if (battle)
+					{
+						if ( battle->CheckBan( usr ) ) return;
+					}
 					SetRelayIngamePassword( usr );
 				} catch (...) {}
 				return;
