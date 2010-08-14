@@ -2086,7 +2086,12 @@ void TASServer::BattleKickPlayer( int battleid, User& user )
     }
 
     //KICKFROMBATTLE username
-    if( !GetBattle(battleid).IsProxy() ) SendCmd( _T("KICKFROMBATTLE"), user.GetNick() );
+	if( !GetBattle(battleid).IsProxy() )
+	{
+		user.BattleStatus().scriptPassword = wxString::Format(_T("%04x%04x"), rand()&0xFFFF, rand()&0xFFFF); // reset his password to something random, so he can't rejoin
+		SetRelayIngamePassword( user );
+		SendCmd( _T("KICKFROMBATTLE"), user.GetNick() );
+	}
     else RelayCmd( _T("KICKFROMBATTLE"), user.GetNick() );
 }
 
