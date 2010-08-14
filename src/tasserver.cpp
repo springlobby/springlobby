@@ -821,11 +821,13 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
 			if ( params.StartsWith(_T("JOINEDBATTLE")) )
 			{
 				id = GetIntParam( params );
-				nick = GetWordParam( params );
+				wxString usernick = GetWordParam( params );
 				wxString userScriptPassword = GetWordParam( params );
 				try
 				{
-					GetUser(nick).BattleStatus().scriptPassword = userScriptPassword;
+					User& usr = GetUser(usernick);
+					usr.BattleStatus().scriptPassword = userScriptPassword;
+					SetRelayIngamePassword( usr );
 				} catch (...) {}
 				return;
 			}

@@ -228,7 +228,6 @@ User& Battle::OnUserAdded( User& user )
 
         m_ah.OnUserAdded( user );
         if ( !user.BattleStatus().IsBot() && sett().GetBattleLastAutoAnnounceDescription() ) DoAction( m_opts.description );
-		if (IsProxy()) m_serv.SetRelayIngamePassword( user );
     }
     // any code here may be skipped if the user was autokicked
     return user;
