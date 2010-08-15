@@ -105,7 +105,7 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent )
 
 	topsizer->Add( mod_choice_button_sizer, 0,  wxEXPAND|wxALL ,1 );
 
-	m_pwd_lbl = new wxStaticText( this, wxID_ANY, _( "Password" ), wxDefaultPosition, wxDefaultSize, 0 );
+	m_pwd_lbl = new wxStaticText( this, wxID_ANY, _( "Password (spaces will be stripped)" ), wxDefaultPosition, wxDefaultSize, 0 );
 	m_pwd_lbl->Wrap( -1 );
 	topsizer->Add( m_pwd_lbl, 1, wxALL| wxALIGN_CENTER_VERTICAL, 5 );
 
@@ -303,7 +303,9 @@ void HostBattleDialog::OnOk( wxCommandEvent& /*unused*/ )
 	if ( m_desc_text->GetValue().IsEmpty() ) m_desc_text->SetValue( _T( "(none)" ) );
 	sett().SetLastHostDescription( m_desc_text->GetValue() );
 	sett().SetLastHostMod( m_mod_pic->GetString( m_mod_pic->GetSelection() ) );
-	sett().SetLastHostPassword( m_pwd_text->GetValue() );
+	wxString password = m_pwd_text->GetValue();
+	password.Replace(_T(" "), _T(""));
+	sett().SetLastHostPassword( password );
 	long tmp = DEFSETT_SPRING_PORT;
 	m_port_text->GetValue().ToLong( &tmp );
 	sett().SetLastHostPort( tmp );
