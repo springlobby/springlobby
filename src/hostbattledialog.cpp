@@ -105,7 +105,7 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent )
 
 	topsizer->Add( mod_choice_button_sizer, 0,  wxEXPAND|wxALL ,1 );
 
-	m_pwd_lbl = new wxStaticText( this, wxID_ANY, _( "Password (spaces will be stripped)" ), wxDefaultPosition, wxDefaultSize, 0 );
+	m_pwd_lbl = new wxStaticText( this, wxID_ANY, _( "Password\n(no spaces)" ), wxDefaultPosition, wxDefaultSize, 0 );
 	m_pwd_lbl->Wrap( -1 );
 	topsizer->Add( m_pwd_lbl, 1, wxALL| wxALIGN_CENTER_VERTICAL, 5 );
 
