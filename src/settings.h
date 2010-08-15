@@ -760,6 +760,10 @@ class Settings
 		return m_config->Read( setting, def );
 	}
 
+	//setting to spam the server messages in all channels
+	bool GetBroadcastEverywhere();
+	void SetBroadcastEverywhere(bool value);
+
   protected:
     bool IsSpringBin( const wxString& path );
 

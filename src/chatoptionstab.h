@@ -102,6 +102,7 @@ class ChatOptionsTab : public wxScrolledWindow
     wxStaticText* m_hilight_words_label;
     wxCheckBox* m_play_sounds;
     wxCheckBox* m_highlight_req;
+	wxCheckBox* m_broadcast_check;
 
     wxTextCtrl* m_highlight_words;
 
