@@ -20,6 +20,7 @@
 #include <wx/filename.h>
 #include <wx/app.h>
 
+#include "introguide.h"
 #include "ui.h"
 #include "tasserver.h"
 #include "settings.h"
@@ -54,12 +55,15 @@
     #include <wx/stdpaths.h>
 #endif
 
+#include "reconnectdialog.h"
 #include "utils/customdialogs.h"
 #include "utils/platform.h"
 #include "updater/versionchecker.h"
 #include "alsound.h"
 #include "globalsmanager.h"
 #include "utils/misc.h"
+
+static const unsigned int s_reconnect_delay_ms = 6000;
 
 Ui& ui()
 {
@@ -106,9 +110,11 @@ Ui::Ui() :
         m_serv(0),
         m_main_win(0),
         m_con_win(0),
+		m_reconnect_dialog(0),
         m_upd_counter_torrent(0),
         m_first_update_trigger(true),
 		m_ingame(false),
+		m_recconecting_wait(false),
 		m_battle_info_updatedSink( this, &BattleEvents::GetBattleEventSender( ( BattleEvents::BattleInfoUpdate ) ) )
 {
     m_main_win = new MainWindow( );
@@ -120,7 +126,6 @@ Ui::Ui() :
 Ui::~Ui()
 {
     Disconnect();
-
     delete m_serv;
 }
 
@@ -157,14 +162,16 @@ void Ui::ShowMainWindow()
 //! @note It will create the ConnectWindow if not allready created
 void Ui::ShowConnectWindow()
 {
-    if ( m_con_win == 0 )
+	if ( IsConnecting() || IsConnected() || m_recconecting_wait )
+		return;
+	if ( m_con_win == 0 )
     {
         ASSERT_LOGIC( m_main_win != 0, _T("m_main_win = 0") );
         m_con_win = new ConnectWindow( m_main_win, *this );
     }
-    m_con_win->CenterOnParent();
-    m_con_win->Show(true);
-    m_con_win->Raise();
+	m_con_win->CenterOnParent();
+	m_con_win->Show(true);
+	m_con_win->Raise();
 }
 
 
@@ -174,14 +181,14 @@ void Ui::ShowConnectWindow()
 //! @see DoConnect
 void Ui::Connect()
 {
-    bool doit = sett().GetAutoConnect();
-    if ( !doit )
+	wxString server_name = sett().GetDefaultServer();
+	wxString nick = sett().GetServerAccountNick( server_name );
+	bool autoconnect = sett().GetAutoConnect();
+	if ( !autoconnect || server_name.IsEmpty() || nick.IsEmpty() )
         ShowConnectWindow();
     else
     {
         m_con_win = 0;
-        wxString server_name = sett().GetDefaultServer();
-        wxString nick = sett().GetServerAccountNick( server_name );
         wxString pass = sett().GetServerAccountPass( server_name );
         DoConnect( server_name, nick, pass);
     }
@@ -195,9 +202,7 @@ void Ui::Reconnect()
     wxString pass  = sett().GetServerAccountPass(servname);
     if ( !sett().GetServerAccountSavePass(servname) )
     {
-        wxString pass2 = pass;
-        if ( !AskPassword( _("Server password"), _("Password"), pass2 ) ) return;
-        pass = pass2;
+		if ( !AskPassword( _("Server password"), _("Password"), pass ) ) return;
     }
 
     Disconnect();
@@ -219,8 +224,24 @@ void Ui::Disconnect()
 //! @brief Opens the accutial connection to a server.
 void Ui::DoConnect( const wxString& servername, const wxString& username, const wxString& password )
 {
+	if ( m_reconnect_delay_timer.IsRunning() ) {
+		m_recconecting_wait = true;
+		AutocloseMessageBox m( &mw(), _("Waiting for reconnect"), wxMessageBoxCaptionStr, s_reconnect_delay_ms );
+		m.ShowModal();
+		m_recconecting_wait = false;
+	}
+
     wxString host;
     int port;
+
+	if ( servername != m_last_used_backup_server ) // do not save the server as default if it's a backup one
+	{
+		sett().SetDefaultServer( servername );
+	}
+	else
+	{
+		m_last_used_backup_server = _T("");
+	}
 
     if ( !sett().ServerExists( servername ) )
     {
@@ -247,7 +268,7 @@ void Ui::DoConnect( const wxString& servername, const wxString& username, const 
     host = sett().GetServerHost( servername );
     port = sett().GetServerPort( servername );
 
-	serverSelector().GetServer().uidata.panel = m_main_win->GetChatTab().AddChatPanel( *m_serv, servername );
+	AddServerWindow( servername );
 	serverSelector().GetServer().uidata.panel->StatusMessage( _T("Connecting to server ") + servername + _T("...") );
 
     // Connect
@@ -255,6 +276,29 @@ void Ui::DoConnect( const wxString& servername, const wxString& username, const 
 
 }
 
+void Ui::AddServerWindow( const wxString& servername )
+{
+	if ( !serverSelector().GetServer().uidata.panel )
+	{
+		serverSelector().GetServer().uidata.panel = m_main_win->GetChatTab().AddChatPanel( *m_serv, servername );
+
+	}
+}
+
+
+void Ui::ReopenServerTab()
+{
+	if ( serverSelector().GetServer().IsOnline() )
+	{
+		AddServerWindow( serverSelector().GetServer().GetServerName() );
+		// re-add all users to the user list
+		const UserList& list = serverSelector().GetServer().GetUserList();
+		for ( unsigned int i = 0; i < list.GetNumUsers(); i++ )
+		{
+			serverSelector().GetServer().uidata.panel->OnChannelJoin( list.GetUser(i) );
+		}
+	}
+}
 
 bool Ui::DoRegister( const wxString& servername, const wxString& username, const wxString& password,wxString& reason)
 {
@@ -284,6 +328,11 @@ bool Ui::DoRegister( const wxString& servername, const wxString& username, const
 
 }
 
+bool Ui::IsConnecting() const
+{
+	if ( m_reconnect_dialog != 0 ) return m_reconnect_dialog->IsShown();
+	return false;
+}
 
 bool Ui::IsConnected() const
 {
@@ -347,7 +396,7 @@ void Ui::DownloadFileWebsite( const wxString& name )
 {
 	wxString newname = name;
 	newname.Replace( _T(" "), _T("+") );
-	wxString url = _T(" http://spring.jobjol.nl/search_result.php?search_cat=1&select_select=select_file_subject&Submit=Search&search=") + newname;
+	wxString url = _T("http://spring.jobjol.nl/search_result.php?search_cat=1&select_select=select_file_subject&Submit=Search&search=") + newname;
 	OpenWebBrowser ( url );
 }
 
@@ -392,8 +441,7 @@ void Ui::ShowMessage( const wxString& heading, const wxString& message )
 bool Ui::ExecuteSayCommand( const wxString& cmd )
 {
     if ( !IsConnected() ) return false;
-    //TODO insert logic for joining multiple channels at once
-    //or remove that from "/help"
+
     if ( (cmd.BeforeFirst(' ').Lower() == _T("/join")) || (cmd.BeforeFirst(' ').Lower() == _T("/j")) )
     {
         wxString channel = cmd.AfterFirst(' ');
@@ -464,7 +512,7 @@ void Ui::ConsoleHelp( const wxString& topic )
         panel->ClientMessage( _("  \"/changepassword oldpassword newpassword\" - Changes the current active account's password.") );
         panel->ClientMessage( _("  \"/channels\" - Lists currently active channels.") );
         panel->ClientMessage( _("  \"/help [topic]\" - Put topic if you want to know more specific information about a command.") );
-        panel->ClientMessage( _("  \"/join channel [password] [,channel2 [password2]]\" - Joins a channel.") );
+		panel->ClientMessage( _("  \"/join channel [password]\" - Joins a channel.") );
         panel->ClientMessage( _("  \"/j\" - Alias to /join.") );
         panel->ClientMessage( _("  \"/ingame\" - Shows how much time you have in game.") );
         panel->ClientMessage( _("  \"/msg username [text]\" - Sends a private message containing text to username.") );
@@ -544,18 +592,10 @@ void Ui::OnUpdate( int mselapsed )
 void Ui::OnConnected( Server& server, const wxString& server_name, const wxString& /*unused*/, bool /*supported*/ )
 {
     wxLogDebugFunc( _T("") );
-    if ( !m_last_used_backup_server.IsEmpty() )
-    {
-    	 m_last_used_backup_server = _T("");
-    }
-    else // connect successful & it's not a backup server fallback -> save as default
-    {
-			 sett().SetDefaultServer( server_name );
-    }
     if ( !IsSpringCompatible() )
     {
     	#ifdef __WXMSW__
-    	if ( Ask( _T("Request update"), _T("Would you like to query the server for a spring update?\n The server is totally demential and will disconnect you if no automatic update will be available") ) ) server.RequestSpringUpdate();
+			server.RequestSpringUpdate();
     	#endif
     }
 
@@ -612,6 +652,7 @@ void Ui::OnLoggedIn( )
 
 void Ui::OnDisconnected( Server& server, bool wasonline )
 {
+	m_reconnect_delay_timer.Start( s_reconnect_delay_ms, true );
     if ( m_main_win == 0 ) return;
     wxLogDebugFunc( _T("") );
     if (!&server)
@@ -647,10 +688,24 @@ void Ui::OnDisconnected( Server& server, bool wasonline )
 
 void Ui::ConnectionFailurePrompt()
 {
-	static wxMessageDialog dlg( &mw(), _("A connection couldn't be established with the server\nWould you like to try again with the same server?\nNo to switch to next server in the list"), _("Connection failure"), wxYES_NO | wxCANCEL | wxNO_DEFAULT );
-	if ( dlg.IsShown() )
+	if ( m_reconnect_dialog != 0 )
+	{
 		return;
-	switch ( dlg.ShowModal() )
+	}
+	if ( m_recconecting_wait )
+	{
+		return;
+	}
+	if ( m_con_win ) // if connect window instance exists, delete it to avoid 2 windows which do the same task
+	{
+		delete m_con_win;
+		m_con_win = 0;
+	}
+	m_reconnect_dialog = new ReconnectDialog();
+	int returnval = m_reconnect_dialog->ShowModal();
+	delete m_reconnect_dialog;
+	m_reconnect_dialog = 0;
+	switch ( returnval )
 	{
 		case wxID_YES: // try again with the same server/settings
 		{
@@ -659,8 +714,11 @@ void Ui::ConnectionFailurePrompt()
 		}
 		case wxID_NO: // switch to next server in the list
 		{
-			SwitchToNextServer();
-			ShowConnectWindow();
+			wxString m_last_used_backup_server = GetNextServer();
+			wxString current_server = sett().GetDefaultServer();
+			sett().SetDefaultServer( m_last_used_backup_server );// temp set backup server as default
+			Connect();
+			sett().SetDefaultServer( current_server ); // restore original serv
 			break;
 		}
 		default:
@@ -671,7 +729,9 @@ void Ui::ConnectionFailurePrompt()
 	}
 }
 
-void Ui::SwitchToNextServer()
+
+
+wxString Ui::GetNextServer()
 {
 		wxString previous_server = m_last_used_backup_server;
 		if ( previous_server.IsEmpty() ) previous_server = sett().GetDefaultServer();
@@ -679,11 +739,7 @@ void Ui::SwitchToNextServer()
 		int position = serverlist.Index( previous_server );
 		if ( position == wxNOT_FOUND ) position = -1;
 		position = ( position + 1) % serverlist.GetCount(); // switch to next in the list
-		m_last_used_backup_server = serverlist[position];
-		sett().SetDefaultServer( m_last_used_backup_server );
-		if ( m_con_win ) // we don't necessarily have that constructed yet (autojoin)
-            m_con_win->ReloadServerList();
-		sett().SetDefaultServer( previous_server ); // don't save the new server as default when switched this way
+		return serverlist[position];
 }
 
 static inline bool IsAutoJoinChannel( Channel& chan )
@@ -886,10 +942,13 @@ void Ui::OnMotd( Server& server, const wxString& message )
 void Ui::OnServerMessage( Server& server, const wxString& message )
 {
     if ( server.uidata.panel != 0 ) server.uidata.panel->StatusMessage( message );
-    else
-    {
-        ShowMessage( _("Server message"), message );
-    }
+	if ( m_main_win == 0 ) return;
+	mw().GetChatTab().BroadcastMessage( message );
+	try // send it to battleroom too
+	{
+		mw().GetJoinTab().GetBattleRoomTab().GetChatPanel().StatusMessage(message);
+	}
+	catch(...) {}
 }
 
 
@@ -1130,7 +1189,7 @@ void Ui::OnSpringTerminated( long exit_code )
         }
     } catch ( assert_exception ){}
 
-    if ( exit_code ) {
+	if ( false && exit_code ) { // disabled for now for stability
 		#if wxUSE_DEBUGREPORT && defined(ENABLE_DEBUG_REPORT)
 			SpringDebugReport report;
 			if ( wxDebugReportPreviewStd().Show( report ) )
@@ -1250,23 +1309,22 @@ void Ui::FirstRunWelcome()
 #endif
 
         wxLogMessage( _T("first time startup"));
-        wxMessageBox(_("Hi ") + wxGetUserName() + _(",\nIt looks like this is your first time using SpringLobby. I have guessed a configuration that I think will work for you but you should review it, especially the Spring configuration. \n\nWhen you are done you can go to the File menu, connect to a server, and enjoy a nice game of Spring :)"), _("Welcome"),
+		wxMessageBox(_("Hi ") + wxGetUserName() + _(",\nIt looks like this is your first time using SpringLobby. I have guessed a configuration that I think will work for you but you should review it, especially the Spring configuration."), _("Welcome"),
                      wxOK | wxICON_INFORMATION, &mw() );
 
+		IntroGuide* intro = new IntroGuide();
+		intro->Show();
 
-        customMessageBoxNoModal(SL_MAIN_ICON, _("By default SpringLobby reports some usage statistics.\nYou can disable that on options tab --> General."),_("Notice"),wxOK );
-
-
-                // copy uikeys.txt
-                wxPathList pl;
-                pl.AddEnvList( _T("%ProgramFiles%") );
-                pl.AddEnvList( _T("XDG_DATA_DIRS") );
-                pl = sett().GetAdditionalSearchPaths( pl );
-                wxString uikeyslocation = pl.FindValidPath( _T("uikeys.txt") );
-                if ( !uikeyslocation.IsEmpty() )
-                {
-                    wxCopyFile( uikeyslocation, sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("uikeys.txt"), false );
-                }
+		// copy uikeys.txt
+		wxPathList pl;
+		pl.AddEnvList( _T("%ProgramFiles%") );
+		pl.AddEnvList( _T("XDG_DATA_DIRS") );
+		pl = sett().GetAdditionalSearchPaths( pl );
+		wxString uikeyslocation = pl.FindValidPath( _T("uikeys.txt") );
+		if ( !uikeyslocation.IsEmpty() )
+		{
+			wxCopyFile( uikeyslocation, sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("uikeys.txt"), false );
+		}
 
     #ifdef __WXMSW__
         if ( TASClientPresent() &&

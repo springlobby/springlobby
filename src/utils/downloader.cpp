@@ -25,11 +25,13 @@
 #include "debug.h"
 #include "globalevents.h"
 #include "../socket.h"
-#include "../curl/http.h"
 #include "../globalsmanager.h"
 #include "../uiutils.h"
 #include "conversion.h"
-
+#include <curl/curl.h>
+#include <curl/types.h>
+#include <curl/easy.h>
+#include "curlhelper.h"
 
 const wxString s_soap_service_url = _T("http://planet-wars.eu/PlasmaServer/Service.asmx?op=DownloadFile");
 
@@ -73,11 +75,6 @@ PlasmaInterface::~PlasmaInterface()
 {
 	m_worker_thread.Wait();
 }
-
-#include <curl/curl.h>
-#include <curl/types.h>
-#include <curl/easy.h>
-
 
 /** @brief GetResourceInfo
   *

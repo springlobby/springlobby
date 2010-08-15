@@ -26,7 +26,7 @@ wxMenu* ChatPanelMenu::GetMenu()
 {
     m_menu_all = new wxMenu();
     CreateNickListMenu();
-    m_append_menu = new wxMenuItem( m_menu_all, CHAT_MENU_DISABLE_APPEND, _( "Disable text appending (workaround for autoscroll)" ), wxEmptyString, wxITEM_CHECK );
+	m_append_menu = new wxMenuItem( m_menu_all, CHAT_MENU_DISABLE_APPEND, _( "Disable text appending" ), wxEmptyString, wxITEM_CHECK );
     m_menu_all->Append( m_append_menu );
     m_append_menu->Check( m_chatpanel->m_disable_append );
 
@@ -515,6 +515,10 @@ void ChatPanelMenu::OnUserMenuJoinSame( wxCommandEvent& /*unused*/ )
 		return;
 	}
 
+	if ( battle->IsLocked() ) {
+		customMessageBoxNoModal( SL_MAIN_ICON, _( "The battle you requested to join is locked." ) );
+		return;
+	}
 	wxString password;
 	if ( battle->IsPassworded() ) {
 		if ( !ui().AskPassword( _( "Battle password" ), _( "This battle is password protected, enter the password." ), password ) ) return;

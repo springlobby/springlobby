@@ -309,9 +309,18 @@ bool TASServer::ExecuteSayCommand( const wxString& cmd )
     }
     else if ( subcmd == _T("/changepassword") )
     {
-				if ( arrayparams.GetCount() != 3 ) return false;
-        wxString oldpassword = GetPasswordHash( arrayparams[1] );
-        wxString newpassword = GetPasswordHash( arrayparams[2] );
+		if ( arrayparams.GetCount() < 2 ) return false;
+		wxString oldpassword = sett().GetServerAccountPass( GetServerName() );
+		wxString newpassword;
+		if  ( oldpassword.IsEmpty() || !sett().GetServerAccountSavePass(GetServerName()) )
+		{
+			oldpassword = GetPasswordHash(arrayparams[1]);
+			newpassword = GetPasswordHash( arrayparams[2] );
+		}
+		else
+		{
+			newpassword = GetPasswordHash( params );
+		}
         SendCmd( _T("CHANGEPASSWORD"), oldpassword + _T(" ") + newpassword );
         return true;
     }
@@ -442,7 +451,7 @@ void TASServer::Login()
     if ( localaddr.IsEmpty() ) localaddr = _T("*");
 	m_id_transmission = false;
     SendCmd ( _T("LOGIN"), m_user + _T(" ") + pass + _T(" ") +
-			  GetHostCPUSpeed() + _T(" ") + localaddr + _T(" SpringLobby ") + GetSpringLobbyVersion(false) + protocol  + _T("\ta"));
+			  GetHostCPUSpeed() + _T(" ") + localaddr + _T(" SpringLobby ") + GetSpringLobbyVersion(false) + protocol  + _T("\ta sp"));
 	m_id_transmission = true;
 }
 
@@ -688,7 +697,8 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     {
         id = GetIntParam( params );
         nick = GetWordParam( params );
-        m_se->OnUserJoinedBattle( id, nick );
+		wxString userScriptPassword = GetWordParam( params );
+		m_se->OnUserJoinedBattle( id, nick, userScriptPassword );
     }
     else if ( cmd == _T("UPDATEBATTLEINFO") )
     {
@@ -806,6 +816,28 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     else if ( cmd == _T("SAIDPRIVATE") )
     {
         nick = GetWordParam( params );
+		if ( nick == m_relay_host_bot )
+		{
+			if ( params.StartsWith(_T("JOINEDBATTLE")) )
+			{
+				GetWordParam( params ); // skip first word, it's the message itself
+				id = GetIntParam( params );
+				wxString usernick = GetWordParam( params );
+				wxString userScriptPassword = GetWordParam( params );
+				try
+				{
+					User& usr = GetUser(usernick);
+					usr.BattleStatus().scriptPassword = userScriptPassword;
+					Battle* battle = GetCurrentBattle();
+					if (battle)
+					{
+						if ( battle->CheckBan( usr ) ) return;
+					}
+					SetRelayIngamePassword( usr );
+				} catch (...) {}
+				return;
+			}
+		}
         if ( nick == m_relay_host_manager )
         {
           if ( params.StartsWith( _T("\001") ) ) // error code
@@ -835,8 +867,12 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         id = GetIntParam( params );
         hash = MakeHashUnsigned( GetWordParam( params ) );
         m_battle_id = id;
-        m_se->OnJoinedBattle( id, hash );
+		m_se->OnJoinedBattle( id, hash );
         m_se->OnBattleInfoUpdated( m_battle_id );
+		try
+		{
+		 if (GetBattle(id).IsProxy()) RelayCmd(_T("SUPPORTSCRIPTPASSWORD")); // send flag to relayhost marking we support script passwords
+		} catch(...) {}
     }
     else if ( cmd == _T("CLIENTBATTLESTATUS") )
     {
@@ -941,9 +977,12 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         }
         if( usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) )
         {
-					 bstatus.aiversion = ai.AfterLast( _T('|') );
-					 ai = ai.BeforeLast( _T('|') );
-        	 bstatus.aishortname = ai;
+			if (ai.Find(_T('|') != -1))
+			{
+				bstatus.aiversion = ai.AfterLast( _T('|') );
+				ai = ai.BeforeLast( _T('|') );
+			}
+			bstatus.aishortname = ai;
         }
         else
         {
@@ -1106,7 +1145,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     else if ( cmd == _T("MUTELIST") )
     {
         wxString mutee = GetWordParam( params );
-        wxString description = GetWordParam( params );
+		wxString description = GetSentenceParam( params );
         m_se->OnMutelistItem( m_current_chan_name_mutelist, mutee, description );
     }
     else if ( cmd == _T("MUTELISTEND") )
@@ -1170,6 +1209,16 @@ void TASServer::SendCmd( const wxString& command, const wxString& param )
 			else
 				wxLogMessage( _T("sending: %s failed"), msg.c_str() );
 		}
+}
+
+void TASServer::SetRelayIngamePassword( const User& user )
+{
+	Battle* battle = GetCurrentBattle();
+	if (battle)
+	{
+		if ( !battle->GetInGame() ) return;
+	}
+	RelayCmd( _T("SETINGAMEPASSWORD"), user.GetNick() + _T(" ") + user.BattleStatus().scriptPassword );
 }
 
 void TASServer::Ping()
@@ -1506,7 +1555,9 @@ void TASServer::FinalizeJoinBattle()
 {
     if (m_do_finalize_join_battle)
     {
-        SendCmd( _T("JOINBATTLE"), wxString::Format( _T("%d"), m_finalize_join_battle_id ) + _T(" ") + m_finalize_join_battle_pw);
+		srand ( time(NULL) );
+		wxString randomScriptPassword = wxString::Format(_T("%04x%04x"), rand()&0xFFFF, rand()&0xFFFF);
+		SendCmd( _T("JOINBATTLE"), wxString::Format( _T("%d %s %s"), m_finalize_join_battle_id, m_finalize_join_battle_pw.c_str(), randomScriptPassword.c_str()  ) );
         m_do_finalize_join_battle=false;
     }
 }
@@ -2035,7 +2086,12 @@ void TASServer::BattleKickPlayer( int battleid, User& user )
     }
 
     //KICKFROMBATTLE username
-    if( !GetBattle(battleid).IsProxy() ) SendCmd( _T("KICKFROMBATTLE"), user.GetNick() );
+	if( !GetBattle(battleid).IsProxy() )
+	{
+		user.BattleStatus().scriptPassword = wxString::Format(_T("%04x%04x"), rand()&0xFFFF, rand()&0xFFFF); // reset his password to something random, so he can't rejoin
+		SetRelayIngamePassword( user );
+		SendCmd( _T("KICKFROMBATTLE"), user.GetNick() );
+	}
     else RelayCmd( _T("KICKFROMBATTLE"), user.GetNick() );
 }
 
@@ -2159,6 +2215,11 @@ void TASServer::UpdateBot( int battleid, User& bot, UserBattleStatus& status )
 
 void TASServer::SendScriptToProxy( const wxString& script )
 {
+  try
+  {
+	  if ( GetUser(m_relay_host_bot).Status().in_game ) return; // don't send the script if the bot is ingame alredy
+  }
+  catch(...) {}
   RelayCmd( _T("CLEANSCRIPT") );
   wxStringTokenizer tkzr( script, _T("\n") );
   while ( tkzr.HasMoreTokens() )

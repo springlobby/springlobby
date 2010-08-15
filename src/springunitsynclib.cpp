@@ -114,6 +114,31 @@ void SpringUnitSyncLib::_Load( const wxString& path )
     m_get_map_count = (GetMapCountPtr)_GetLibFuncPtr(_T("GetMapCount"));
     m_get_map_checksum = (GetMapChecksumPtr)_GetLibFuncPtr(_T("GetMapChecksum"));
     m_get_map_name = (GetMapNamePtr)_GetLibFuncPtr(_T("GetMapName"));
+
+    try {
+      m_get_map_description = (GetMapDescriptionPtr)_GetLibFuncPtr(_T("GetMapDescription"));
+      m_get_map_author = (GetMapAuthorPtr)_GetLibFuncPtr(_T("GetMapAuthor"));
+      m_get_map_width = (GetMapWidthPtr)_GetLibFuncPtr(_T("GetMapWidth"));
+      m_get_map_height = (GetMapHeightPtr)_GetLibFuncPtr(_T("GetMapHeight"));
+      m_get_map_tidalStrength = (GetMapTidalStrengthPtr)_GetLibFuncPtr(_T("GetMapTidalStrength"));
+      m_get_map_windMin = (GetMapWindMinPtr)_GetLibFuncPtr(_T("GetMapWindMin"));
+      m_get_map_windMax = (GetMapWindMaxPtr)_GetLibFuncPtr(_T("GetMapWindMax"));
+      m_get_map_gravity = (GetMapGravityPtr)_GetLibFuncPtr(_T("GetMapGravity"));
+      m_get_map_resource_count = (GetMapResourceCountPtr)_GetLibFuncPtr(_T("GetMapResourceCount"));
+      m_get_map_resource_name = (GetMapResourceNamePtr)_GetLibFuncPtr(_T("GetMapResourceName"));
+      m_get_map_resource_max = (GetMapResourceMaxPtr)_GetLibFuncPtr(_T("GetMapResourceMax"));
+      m_get_map_resource_extractorRadius = (GetMapResourceExtractorRadiusPtr)_GetLibFuncPtr(_T("GetMapResourceExtractorRadius"));
+      m_get_map_pos_count = (GetMapPosCountPtr)_GetLibFuncPtr(_T("GetMapPosCount"));
+      m_get_map_pos_x = (GetMapPosXPtr)_GetLibFuncPtr(_T("GetMapPosX"));
+      m_get_map_pos_z = (GetMapPosZPtr)_GetLibFuncPtr(_T("GetMapPosZ"));
+      wxLogMessage(_T("Using new style map-info fetching (GetMap*() functions)."));
+    }
+    catch ( ... )
+    {
+      m_get_map_name = NULL;
+      wxLogMessage(_T("Using old style map-info fetching (GetMapInfoEx())."));
+    }
+
     m_get_map_info_ex = (GetMapInfoExPtr)_GetLibFuncPtr(_T("GetMapInfoEx"));
     m_get_minimap = (GetMinimapPtr)_GetLibFuncPtr(_T("GetMinimap"));
     m_get_infomap_size = (GetInfoMapSizePtr)_GetLibFuncPtr(_T("GetInfoMapSize"));
@@ -590,24 +615,65 @@ wxArrayString SpringUnitSyncLib::GetMapDeps( int index )
 }
 
 
-MapInfo SpringUnitSyncLib::GetMapInfoEx( const wxString& mapName, int version )
+MapInfo SpringUnitSyncLib::GetMapInfoEx( int index, int version )
 {
-  InitLib( m_get_map_info_ex );
+  if (m_get_map_description == NULL) {
+    // old fetch method
+    InitLib( m_get_map_info_ex );
 
-  char tmpdesc[256];
-  char tmpauth[256];
+    const wxString& mapName =  WX_STRINGC( m_get_map_name( index ) );
 
-  MapInfo info;
+    char tmpdesc[256];
+    char tmpauth[256];
 
-  SpringMapInfo tm;
-  tm.description = &tmpdesc[0];
-  tm.author = &tmpauth[0];
+    MapInfo info;
 
-  bool result = m_get_map_info_ex( mapName.mb_str( wxConvUTF8 ), &tm, version );
-  ASSERT_EXCEPTION( result, _T("Failed to get map infos") );
-  _ConvertSpringMapInfo( tm, info );
+    SpringMapInfo tm;
+    tm.description = &tmpdesc[0];
+    tm.author = &tmpauth[0];
 
-  return info;
+    bool result = m_get_map_info_ex( mapName.mb_str( wxConvUTF8 ), &tm, version );
+    ASSERT_EXCEPTION( result, _T("Failed to get map infos") );
+    _ConvertSpringMapInfo( tm, info );
+
+    return info;
+  } else {
+    // new fetch method
+	InitLib( m_get_map_description )
+
+    MapInfo info;
+
+    info.description = WX_STRINGC(m_get_map_description( index));
+    info.tidalStrength = m_get_map_tidalStrength(index);
+    info.gravity = m_get_map_gravity(index);
+
+    const int resCount = m_get_map_resource_count(index);
+    if (resCount > 0) {
+      const int resourceIndex = 0;
+      info.maxMetal = m_get_map_resource_max(index, resourceIndex);
+      info.extractorRadius = m_get_map_resource_extractorRadius(index, resourceIndex);
+    } else {
+      info.maxMetal = 0.0f;
+      info.extractorRadius = 0.0f;
+    }
+
+    info.minWind = m_get_map_windMin(index);
+    info.maxWind = m_get_map_windMax(index);
+
+    info.width = m_get_map_width(index);
+    info.height = m_get_map_height(index);
+    const int posCount = m_get_map_pos_count(index);
+    for (int p = 0; p < posCount; ++p) {
+      StartPos sp;
+      sp.x = m_get_map_pos_x(index, p);
+      sp.y = m_get_map_pos_z(index, p);
+      info.positions.push_back(sp);
+    }
+
+    info.author = WX_STRINGC(m_get_map_author(index));
+
+    return info;
+  }
 }
 
 

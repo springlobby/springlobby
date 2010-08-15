@@ -357,7 +357,13 @@ void Settings::SetWebBrowserPath( const wxString& path )
 
 wxString Settings::GetCachePath()
 {
-	wxString path = GetLobbyWriteDir() + _T( "cache" ) + wxFileName::GetPathSeparator();
+	wxString sep = wxFileName::GetPathSeparator();
+	wxString path = GetCurrentUsedDataDir() + sep + _T( "cache" ) + sep;
+	if ( !wxFileName::DirExists( path ) )
+	{
+		if ( !wxFileName::Mkdir(  path, 0755  ) ) return wxEmptyString;
+	}
+	path += _T( "SpringLobby" ) + sep;
 	if ( !wxFileName::DirExists( path ) )
 	{
 		if ( !wxFileName::Mkdir(  path, 0755  ) ) return wxEmptyString;
@@ -788,9 +794,7 @@ wxPathList Settings::GetAdditionalSearchPaths( wxPathList& pl )
 	wxStandardPathsBase& sp = wxStandardPathsBase::Get();
 
 	pl.Add( wxFileName::GetCwd() );
-	pl.Add( sp.GetExecutablePath() );
-	pl.Add( wxFileName::GetCwd() );
-	pl.Add( sp.GetExecutablePath() );
+	pl.Add( sp.GetExecutablePath().BeforeLast( wxFileName::GetPathSeparator() ) );
 	pl.Add( wxFileName::GetHomeDir() );
 	pl.Add( sp.GetUserDataDir().BeforeLast( sep ) );
 	pl.Add( sp.GetDataDir().BeforeLast( sep ) );

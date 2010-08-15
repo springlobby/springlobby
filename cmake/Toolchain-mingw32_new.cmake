@@ -53,3 +53,7 @@ SET( LOCALE_INSTALL_DIR "${CMAKE_BINARY_DIR}/locale" CACHE STRING
 	"message catalogs will installed here" FORCE )
 SET( CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}" CACHE STRING
 	"install prefix" FORCE )
+SET( CURL_CFLAGS "-I/opt/mingw32/include" )
+SET( CURL_STATIC_LIBRARY_DIRS "/opt/mingw32/lib")
+SET( CURL_STATIC_LDFLAGS "-L/opt/mingw32/lib;-lcurl;-lws2_32")
+SET( CURL_INCLUDE_DIR "/opt/mingw32/include")

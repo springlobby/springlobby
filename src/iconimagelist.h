@@ -4,6 +4,7 @@
 
 #include <wx/imaglist.h>
 #include <map>
+#include <vector>
 
 class IBattle;
 class wxColour;
@@ -17,7 +18,8 @@ class IconImageList : public wxImageList
     int GetUserListStateIcon( const UserStatus& us, bool chanop, bool inbroom );
     int GetUserBattleStateIcon( const UserStatus& us );
 
-    int GetRankIcon( const unsigned int& rank, const bool& showlowest = true );
+	int GetRankLimitIcon(  int rank, bool showlowest = true );
+	int GetRankIcon( const unsigned int& rank, const bool& showlowest = true );
     int GetFlagIcon( const wxString& flagname );
     int GetBattleStatusIcon( const IBattle& battle ) const;
     wxString GetBattleStatus(const IBattle& battle) const;
@@ -61,6 +63,7 @@ class IconImageList : public wxImageList
     int ICON_RANK5;
     int ICON_RANK6;
     int ICON_RANK7;
+	int ICON_RANK8;
 
     int ICON_GAME_UNKNOWN;
     int ICON_OPEN_GAME;
@@ -106,6 +109,9 @@ class IconImageList : public wxImageList
     std::map<wxString, int> m_cached_side_icons;
     // why map? because i already included and didn't want to include more stuff, it's not time-critical code anyway
     std::map<unsigned int, unsigned int> m_player_colour_icons;
+
+	std::vector<int> m_rank_requirements;
+	int m_minimum_rank_requirement_border;
 
     typedef std::map<int,int> IndexMap;
     IndexMap m_state_index_map;

@@ -3,8 +3,8 @@
 set -e
 cd $(dirname $0)/../${1}
 pwd
-DEVELOPER=${3}
-/usr/i586-mingw32msvc/bin/strip springlobby.exe
+DEVELOPER=${2}
+/opt/mingw32/bin/i586-pc-mingw32-strip springlobby.exe
 
 if [ x$3 == x ]; then
 	filename=sl_master.zip

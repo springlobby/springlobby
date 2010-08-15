@@ -28,7 +28,7 @@ bool IsUACenabled();
 
     \return Logwindow pointer (may be 0), useful if parent frame should be created _after_ logging is set up
 **/
-wxLogWindow* InitializeLoggingTargets( wxFrame* parent, bool console, bool showgui, bool logcrash, int verbosity, wxLogChain* logChain );
+wxLogWindow* InitializeLoggingTargets( wxFrame* parent, bool console, const wxString& logfilepath, bool showgui, bool logcrash, int verbosity, wxLogChain* logChain );
 
 wxString GetExecutableFolder();
 wxString GetLibExtension();

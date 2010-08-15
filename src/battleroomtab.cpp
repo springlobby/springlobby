@@ -479,8 +479,10 @@ void BattleRoomTab::UpdateBattleInfo( const wxString& Tag )
                 m_map_combo->SetValue( mapname );
 
 			//delete any eventual map option from the list and add options of the new map
-			for ( long i = m_map_opts_index; i < m_opts_list->GetItemCount(); i++ )
+			for ( int i = m_map_opts_index; i < m_opts_list->GetItemCount(); )
+			{
                 m_opts_list->DeleteItem( i );
+			}
 			AddMMOptionsToList( m_map_opts_index, OptionsWrapper::MapOption );
 
 			m_minimap->UpdateMinimap();
@@ -883,7 +885,7 @@ long BattleRoomTab::AddMMOptionsToList( long pos, OptionsWrapper::GameOption opt
 {
 	if ( !m_battle ) return -1;
 	OptionsWrapper::wxStringTripleVec optlist = m_battle->CustomBattleOptions().getOptions( optFlag );
-	for ( OptionsWrapper::wxStringTripleVec::iterator it = optlist.begin(); it != optlist.end(); ++it )
+	for ( OptionsWrapper::wxStringTripleVec::iterator it = optlist.begin(); it != optlist.end(); it++ )
 	{
 		m_opts_list->InsertItem( pos, it->second.first );
 		wxString tag = wxString::Format( _T( "%d_" ), optFlag ) + it->first;
@@ -1123,20 +1125,27 @@ void BattleRoomTab::RegenerateOptionsList()
 	long pos = 0;
 	m_opts_list->DeleteAllItems();
 	m_opts_list->InsertItem( pos, _( "Size" ) );
-	m_opt_list_map[ _( "Size" ) ] = pos++;
+	m_opt_list_map[ _( "Size" ) ] = pos;
+	pos++;
 	m_opts_list->InsertItem( pos , _( "Windspeed" ) );
-	m_opt_list_map[ _( "Windspeed" ) ] = pos++;
+	m_opt_list_map[ _( "Windspeed" ) ] = pos;
+	pos++;
 	m_opts_list->InsertItem( pos, _( "Tidal strength" ) );
-	m_opt_list_map[ _( "Tidal strength" ) ] = pos++;
-
-	m_opts_list->InsertItem( pos++, wxEmptyString );
-	pos = AddMMOptionsToList( pos++, OptionsWrapper::EngineOption );
-	m_opts_list->InsertItem( pos++, wxEmptyString );
+	m_opt_list_map[ _( "Tidal strength" ) ] = pos;
+	pos++;
+	m_opts_list->InsertItem( pos, wxEmptyString );
+	pos++;
+	pos = AddMMOptionsToList( pos, OptionsWrapper::EngineOption );
+	// AddMMOptionsToList already increments pos by itself
+	m_opts_list->InsertItem( pos, wxEmptyString );
+	pos++;
 	m_mod_opts_index = pos;
-	pos = AddMMOptionsToList( pos, OptionsWrapper::ModOption );
-	m_opts_list->InsertItem( pos++, wxEmptyString );
+	pos = AddMMOptionsToList( m_mod_opts_index, OptionsWrapper::ModOption );
+	// AddMMOptionsToList already increments pos by itself
+	m_opts_list->InsertItem( pos, wxEmptyString );
+	pos++;
 	m_map_opts_index = pos;
-	pos = AddMMOptionsToList( pos, OptionsWrapper::MapOption );
+	pos = AddMMOptionsToList( m_map_opts_index, OptionsWrapper::MapOption );
 }
 
 void BattleRoomTab::OnBattleActionEvent( UiEvents::UiEventData data )

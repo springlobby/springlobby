@@ -17,6 +17,8 @@
 
 #include <iostream>
 
+#include <stdio.h>
+
 #include "conversion.h"
 #include "../updater/versionchecker.h"
 #include "customdialogs.h"
@@ -31,7 +33,7 @@ wxString GetLibExtension()
 
 //! @brief Initializes the logging functions.
 ///initializes logging in an hidden stream and std::cout/gui messages
-wxLogWindow* InitializeLoggingTargets( wxFrame* parent, bool console, bool showgui, bool /*logcrash*/, int verbosity, wxLogChain* logChain )
+wxLogWindow* InitializeLoggingTargets( wxFrame* parent, bool console, const wxString&  logfilepath, bool showgui, bool /*logcrash*/, int verbosity, wxLogChain* logChain )
 {
     wxLogWindow* loggerwin = 0;
 
@@ -41,7 +43,19 @@ wxLogWindow* InitializeLoggingTargets( wxFrame* parent, bool console, bool showg
         ///std::cout logging
         logChain = new wxLogChain( new wxLogStream( &std::cout ) );
     }
+#else
+	if (  console && verbosity != 0 )
+	{
+		///std::cerr logging
+		logChain = new wxLogChain( new  wxLogStderr( 0 ) );
+	}
 #endif
+
+	if ( logfilepath.size() != 0 && verbosity != 0 )
+	{
+		FILE* logfile = fopen(C_STRING(logfilepath), "w"); // even if it returns null, wxLogStderr will switch to stderr logging, so it's fine
+		logChain = new wxLogChain( new  wxLogStderr( logfile ) );
+	}
 
     if ( showgui && verbosity != 0 )
     {
@@ -128,18 +142,30 @@ wxString GetHostCPUSpeed()
 
 #else
 
-    wxTextFile file( _T("/proc/cpuinfo") );
+    wxTextFile file( _T("/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq") );
     if ( file.Exists() )
     {
       file.Open();
-      for ( wxString line = file.GetFirstLine(); !file.Eof(); line = file.GetNextLine() )
+      wxString line = file.GetFirstLine();
+      cpu_count++;
+      int tmp = s2l( line );
+      tmp /= 1000;
+      if ( max_cpu_speed < tmp ) max_cpu_speed = tmp;
+    }
+    else {
+      wxTextFile file( _T("/proc/cpuinfo") );
+      if ( file.Exists() )
       {
-        if ( line.Left(7) == _T("cpu MHz") )
+        file.Open();
+        for ( wxString line = file.GetFirstLine(); !file.Eof(); line = file.GetNextLine() )
         {
-          line = line.AfterLast( _T(' ') ).BeforeLast( _T('.') );
-          cpu_count++;
-          int tmp = s2l( line );
-          if ( max_cpu_speed < tmp ) max_cpu_speed = tmp;
+          if ( line.Left(7) == _T("cpu MHz") )
+          {
+            line = line.AfterLast( _T(' ') ).BeforeLast( _T('.') );
+            cpu_count++;
+            int tmp = s2l( line );
+            if ( max_cpu_speed < tmp ) max_cpu_speed = tmp;
+          }
         }
       }
     }

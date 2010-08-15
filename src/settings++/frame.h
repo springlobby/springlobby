@@ -52,6 +52,8 @@ class settings_frame : public wxFrame, public WindowAttributesPickle
 		void handleExternExit();
 		void switchToExpertMode();
 		void buildGuiFromErrorPanel();
+	void OnSetFocus(wxFocusEvent&);
+	void OnKillFocus(wxFocusEvent&);
 
 	private:
 		tab_simple* simpleTab;
@@ -75,6 +77,7 @@ class settings_frame : public wxFrame, public WindowAttributesPickle
 		void initMenuBar();
 		void handleExit();
 		bool alreadyCalled;
+		bool m_has_focus;
 
 		enum
 		{

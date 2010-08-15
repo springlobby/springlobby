@@ -66,6 +66,7 @@ SET(springlobbySrc
 	src/hostbattledialog.cpp
 	src/ibattle.cpp
 	src/iconimagelist.cpp
+	src/introguide.cpp
 	src/lobbyoptionstab.cpp
 	src/mainchattab.cpp
 	src/mainjoinbattletab.cpp
@@ -84,6 +85,7 @@ SET(springlobbySrc
 	src/alsound.cpp
 	src/selectusersdialog.cpp
 	src/server.cpp
+	src/reconnectdialog.cpp
 	src/serverevents.cpp
 	src/singleplayerbattle.cpp
 	src/singleplayertab.cpp
@@ -138,10 +140,7 @@ SET(SettingsSrc
 )
 
 SET( curlSRC
-	src/curl/base.cpp
-	src/curl/http.cpp
-	src/curl/ftp.cpp
-	src/curl/curlthread.cpp
+	src/utils/curlhelper.cpp
 )
 
 SET(StandAloneSettings

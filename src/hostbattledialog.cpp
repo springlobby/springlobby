@@ -43,6 +43,7 @@
 #include "images/rank4.xpm"
 #include "images/rank5.xpm"
 #include "images/rank6.xpm"
+#include "images/rank7.xpm"
 #include "images/arrow_refresh.png.h"
 
 BEGIN_EVENT_TABLE( HostBattleDialog, wxDialog )
@@ -181,7 +182,13 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent )
 	m_pl_nat_sizer->Add( m_nat_radios, 1, wxALL | wxEXPAND, 5 );
 
 	wxStaticBoxSizer* m_rank_box;
-	m_rank_box = new wxStaticBoxSizer( new wxStaticBox( this, -1, _( "Minimum Rank needed" ) ), wxVERTICAL );
+	m_rank_box = new wxStaticBoxSizer( new wxStaticBox( this, -1, _( "Rank requirement" ) ), wxVERTICAL );
+	wxArrayString rankFilterChoices;
+	rankFilterChoices.Add(_("At least"));
+	rankFilterChoices.Add(_("No greater than"));
+	m_rank_direction = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, rankFilterChoices, 0 );
+	m_rank_direction->SetToolTip( TE( _( "Select the type of rank enforcement." ) ) );
+	m_rank_box->Add(m_rank_direction);
 
 	wxFlexGridSizer* m_rank_sizer;
 	m_rank_sizer = new wxFlexGridSizer( 2, 6, 0, 0 );
@@ -229,6 +236,12 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent )
 	m_rank6_img = new wxStaticBitmap( this, wxID_ANY, wxBitmap( rank6_xpm ), wxDefaultPosition, wxSize( 16, 16 ), 0 );
 	m_rank_sizer->Add( m_rank6_img, 0, wxALL, 5 );
 
+	m_rank7_radio = new wxRadioButton( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	m_rank_sizer->Add( m_rank7_radio, 0, wxALL, 5 );
+
+	m_rank7_img = new wxStaticBitmap( this, wxID_ANY, wxBitmap( rank7_xpm ), wxDefaultPosition, wxSize( 16, 16 ), 0 );
+	m_rank_sizer->Add( m_rank7_img, 0, wxALL, 5 );
+
 	m_rank_box->Add( m_rank_sizer, 1, wxEXPAND, 5 );
 
 	m_pl_nat_sizer->Add( m_rank_box, 1, wxALL | wxEXPAND, 5 );
@@ -267,7 +280,6 @@ void HostBattleDialog::ReloadModList()
 	m_mod_pic->Clear();
 
 	wxArrayString modlist = usync().GetModList();
-	//modlist.Sort(CompareStringIgnoreCase);
 
 	size_t nummods = modlist.Count();
 	for ( size_t i = 0; i < nummods; i++ ) m_mod_pic->Insert( modlist[i], i );
@@ -316,14 +328,17 @@ void HostBattleDialog::OnCancel( wxCommandEvent& /*unused*/ )
 
 int HostBattleDialog::GetSelectedRank()
 {
-	if ( m_rank0_radio->GetValue() ) return 0;
-	if ( m_rank1_radio->GetValue() ) return 1;
-	if ( m_rank2_radio->GetValue() ) return 2;
-	if ( m_rank3_radio->GetValue() ) return 3;
-	if ( m_rank4_radio->GetValue() ) return 4;
-	if ( m_rank5_radio->GetValue() ) return 5;
-	if ( m_rank6_radio->GetValue() ) return 6;
-	return 000;
+	int ret = 0;
+	if ( m_rank0_radio->GetValue() ) ret = 0;
+	if ( m_rank1_radio->GetValue() ) ret = 1;
+	if ( m_rank2_radio->GetValue() ) ret = 2;
+	if ( m_rank3_radio->GetValue() ) ret = 3;
+	if ( m_rank4_radio->GetValue() ) ret = 4;
+	if ( m_rank5_radio->GetValue() ) ret = 5;
+	if ( m_rank6_radio->GetValue() ) ret = 6;
+	if ( m_rank7_radio->GetValue() ) ret = 7;
+	if ( m_rank_direction->GetSelection() > 0 ) ret = -ret -1;
+	return ret;
 }
 
 void HostBattleDialog::OnNatChange( wxCommandEvent& /*unused*/  )
@@ -361,5 +376,7 @@ void HostBattleDialog::OnRelayChoice( wxCommandEvent& event )
 void HostBattleDialog::OnUseRelay( wxCommandEvent&  )
 {
     m_relayed_host_pick->Show( m_relayed_host_check->IsChecked() );
+	m_port_text->Enable( !m_relayed_host_check->IsChecked() && m_nat_radios->GetSelection() == 0 );
+	m_nat_radios->Enable( !m_relayed_host_check->IsChecked() );
     Layout();
 }

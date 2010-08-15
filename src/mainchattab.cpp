@@ -247,7 +247,8 @@ ChatPanel* MainChatTab::AddChatPanel( Server& server, const wxString& name )
 {
 
 	for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ ) {
-		if ( m_chat_tabs->GetPageText( i ) == name ) {
+		//if ( m_chat_tabs->GetPageText( i ) == name ) {
+		if ( true ) { // wipe all old server tabs
 			ChatPanel* tmp = ( ChatPanel* )m_chat_tabs->GetPage( i );
 			if ( tmp->GetPanelType() == CPT_Server ) {
 				m_chat_tabs->DeletePage( i );
@@ -280,6 +281,18 @@ ChatPanel* MainChatTab::AddChatPanel( const User& user )
 	if ( selection > 0 ) m_chat_tabs->SetSelection( selection );
 	return chat;
 }
+
+
+void MainChatTab::BroadcastMessage( const wxString& message )
+{
+	// spam the message in all channels
+	for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ )
+	{
+		ChatPanel* tmp = ( ChatPanel* )m_chat_tabs->GetPage( i );
+		tmp->StatusMessage( message );
+	}
+}
+
 
 void MainChatTab::OnTabClose( wxAuiNotebookEvent& event )
 {
@@ -389,4 +402,9 @@ void MainChatTab::LoadPerspective( const wxString& perspective_name  )
 void MainChatTab::SavePerspective( const wxString& perspective_name )
 {
     SaveNotebookPerspective( m_chat_tabs, perspective_name );
+}
+
+void MainChatTab::AdvanceSelection( bool forward )
+{
+	m_chat_tabs->AdvanceSelection( forward );
 }
