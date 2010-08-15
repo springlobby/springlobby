@@ -299,7 +299,7 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent )
 
 	m_broadcast_check = new wxCheckBox( this, wxID_ANY, _( "Copy server messages in current channel" ), wxDefaultPosition, wxDefaultSize, 0 );
 	m_broadcast_check->SetValue( sett().GetBroadcastEverywhere() );
-	sbBehaviorSizer->Add( m_play_sounds, 0, wxALL, 5 );
+	sbBehaviorSizer->Add( m_broadcast_check, 0, wxALL, 5 );
 
 	bMainSizerV->Add( sbBehaviorSizer, 0, wxEXPAND | wxBOTTOM | wxRIGHT | wxLEFT, 5 );
 
