@@ -294,6 +294,14 @@ void MainChatTab::BroadcastMessage( const wxString& message )
 }
 
 
+ChatPanel* MainChatTab::GetCurrentPanel()
+{
+	int sel = m_chat_tabs->GetSelection();
+	if ( sel < 0 ) return 0;
+	return ( ChatPanel* )m_chat_tabs->GetPage( sel );
+}
+
+
 void MainChatTab::OnTabClose( wxAuiNotebookEvent& event )
 {
 	int selection = event.GetSelection();

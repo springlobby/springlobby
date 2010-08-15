@@ -110,6 +110,7 @@ class Ui
 
     void OnUnknownCommand( Server& server, const wxString& command, const wxString& params );
     void OnMotd( Server& server, const wxString& message );
+	void OnServerBroadcast( Server& server, const wxString& message );
     void OnServerMessage( Server& server, const wxString& message );
 
     void OnBattleOpened( IBattle& battle );

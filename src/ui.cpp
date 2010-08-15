@@ -938,6 +938,17 @@ void Ui::OnMotd( Server& server, const wxString& message )
     if ( server.uidata.panel != 0 ) server.uidata.panel->Motd( message );
 }
 
+void Ui::OnServerBroadcast( Server& server, const wxString& message )
+{
+	if ( m_main_win == 0 ) return;
+	mw().GetChatTab().BroadcastMessage( message );
+	try // send it to battleroom too
+	{
+		mw().GetJoinTab().GetBattleRoomTab().GetChatPanel().StatusMessage(message);
+	}
+	catch(...) {}
+}
+
 
 void Ui::OnServerMessage( Server& server, const wxString& message )
 {
@@ -947,8 +958,13 @@ void Ui::OnServerMessage( Server& server, const wxString& message )
 	}
 	else
 	{
+		if ( server.uidata.panel != 0 ) server.uidata.panel->StatusMessage( message );
 		if ( m_main_win == 0 ) return;
-		mw().GetChatTab().BroadcastMessage( message );
+		ChatPanel* activepanel = mw().GetChatTab().GetActiveChatPanel();
+		if ( activepanel != 0 )
+		{
+			if (activepanel != server.uidata.panel) activepanel->StatusMessage(message); // don't send it twice to the server tab
+		}
 		try // send it to battleroom too
 		{
 			mw().GetJoinTab().GetBattleRoomTab().GetChatPanel().StatusMessage(message);

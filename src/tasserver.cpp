@@ -1120,7 +1120,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     }
     else if ( cmd == _T("BROADCAST"))
     {
-        m_se->OnServerMessage( params );
+		m_se->OnServerBroadcast( params );
     }
     else if ( cmd == _T("SERVERMSGBOX"))
     {

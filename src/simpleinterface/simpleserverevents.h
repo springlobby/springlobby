@@ -86,6 +86,7 @@ class SimpleServerEvents : public IServerEvents, public wxEvtHandler
     void OnRing( const wxString& from );
 
     void OnServerMessage( const wxString& message );
+	void OnServerBroadcast( const wxString& message );
     void OnServerMessageBox( const wxString& message );
     void OnChannelMessage( const wxString& channel, const wxString& msg );
 
