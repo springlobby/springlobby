@@ -1615,21 +1615,41 @@ void TASServer::SendHostInfo( HostInfo update )
         OptionsWrapper::wxStringTripleVec optlistMap = battle.CustomBattleOptions().getOptions( OptionsWrapper::MapOption );
         for (OptionsWrapper::wxStringTripleVec::iterator it = optlistMap.begin(); it != optlistMap.end(); ++it)
         {
-            cmd << _T("game/mapoptions/") << it->first + _T("=") << it->second.second << _T("\t");
+			wxString newcmd = _T("game/mapoptions/") + it->first + _T("=") + it->second.second + _T("\t");
+			if ( cmd.size() + newcmd.size() > 900 ) // should be 1024 add margin for relayhost name and command itself
+			{
+				if ( !battle.IsProxy() ) SendCmd( _T("SETSCRIPTTAGS"), cmd );
+				else RelayCmd( _T("SETSCRIPTTAGS"), cmd );
+				cmd = _T("");
+			}
+			cmd << newcmd;
         }
         OptionsWrapper::wxStringTripleVec optlistMod = battle.CustomBattleOptions().getOptions( OptionsWrapper::ModOption );
         for (OptionsWrapper::wxStringTripleVec::iterator it = optlistMod.begin(); it != optlistMod.end(); ++it)
         {
-            cmd << _T("game/modoptions/") << it->first << _T("=") << it->second.second << _T("\t");
+			wxString newcmd = _T("game/modoptions/") + it->first + _T("=") + it->second.second + _T("\t");
+			if ( cmd.size() + newcmd.size() > 900 )// should be 1024 add margin for relayhost name and command itself
+			{
+				if ( !battle.IsProxy() ) SendCmd( _T("SETSCRIPTTAGS"), cmd );
+				else RelayCmd( _T("SETSCRIPTTAGS"), cmd );
+				cmd = _T("");
+			}
+			cmd << newcmd;
         }
         OptionsWrapper::wxStringTripleVec optlistEng = battle.CustomBattleOptions().getOptions( OptionsWrapper::EngineOption );
         for (OptionsWrapper::wxStringTripleVec::iterator it = optlistEng.begin(); it != optlistEng.end(); ++it)
         {
-            cmd << _T("game/") << it->first << _T("=") << it->second.second << _T("\t");
+			wxString newcmd = _T("game/") + it->first + _T("=") + it->second.second + _T("\t");
+			if ( cmd.size() + newcmd.size() > 900 )// should be 1024 add margin for relayhost name and command itself
+			{
+				if ( !battle.IsProxy() ) SendCmd( _T("SETSCRIPTTAGS"), cmd );
+				else RelayCmd( _T("SETSCRIPTTAGS"), cmd );
+				cmd = _T("");
+			}
+			cmd << newcmd;
         }
-
-        if ( !battle.IsProxy() ) SendCmd( _T("SETSCRIPTTAGS"), cmd );
-        else RelayCmd( _T("SETSCRIPTTAGS"), cmd );
+		if ( !battle.IsProxy() ) SendCmd( _T("SETSCRIPTTAGS"), cmd );
+		else RelayCmd( _T("SETSCRIPTTAGS"), cmd );
     }
 
     if ( (update & IBattle::HI_StartRects) > 0 )   // Startrects should be updated.
