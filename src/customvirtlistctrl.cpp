@@ -14,8 +14,11 @@
 
 #include <algorithm>
 
-
+#ifndef HAVE_WX29
 BEGIN_EVENT_TABLE_TEMPLATE2(CustomVirtListCtrl, ListBaseType, T,L)
+#else
+wxBEGIN_EVENT_TABLE_TEMPLATE2(CustomVirtListCtrl, ListBaseType, T,L)
+#endif
 #if wxUSE_TIPWINDOW
   EVT_MOTION(CustomVirtListCtrl::OnMouseMotion)
   EVT_TIMER(IDD_TIP_TIMER, CustomVirtListCtrl::OnTimer)
