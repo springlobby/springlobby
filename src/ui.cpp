@@ -601,6 +601,8 @@ void Ui::OnConnected( Server& server, const wxString& server_name, const wxStrin
 
     if ( server.uidata.panel ) server.uidata.panel->StatusMessage( _T("Connected to ") + server_name + _T(".") );
 		mw().GetBattleListTab().OnConnected();
+	if (m_con_win) delete m_con_win;
+	if (m_reconnect_dialog) delete m_reconnect_dialog;
 }
 
 
