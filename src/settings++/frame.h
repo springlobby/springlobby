@@ -27,6 +27,7 @@ class tab_ui;
 class tab_render_detail;
 class tab_quality_video;
 class audio_panel;
+class hotkey_panel;
 class abstract_panel;
 class wxMenu;
 class wxCommanEvent;
@@ -59,6 +60,7 @@ class settings_frame : public wxFrame, public WindowAttributesPickle
 		audio_panel* audioTab;
 		tab_render_detail* detailTab;
 		tab_quality_video* qualityTab;
+		hotkey_panel* hotkeyTab;
 
 		wxMenu* menuFile;
 		wxMenu* menuMode;
@@ -79,6 +81,7 @@ class settings_frame : public wxFrame, public WindowAttributesPickle
 		enum
 		{
 			////GUI Enum Control ID Start
+			ID_HOTKEY = 1014,
 			ID_UI = 1013,
 			ID_QUALITY_VIDEO = 1012,
 			ID_RENDER_DETAIL = 1011,
@@ -99,6 +102,7 @@ class settings_frame : public wxFrame, public WindowAttributesPickle
 		void resetSettings();
 		void updateAllControls();
 
+		bool saveSettingsAbstract(); //do not call abstract_panel::SaveSettings directly, call this instead!
 };
 
 

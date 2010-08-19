@@ -752,6 +752,19 @@ class Settings
     void SetLastRelayedHost(wxString relhost);
 
     /**@}*/
+  /* ============================================================== */
+	/** @name Hotkeys
+    * @{
+    */
+
+	void SetHotkey( const wxString& profileName, const wxString& command, const wxString& key, unsigned index );
+	wxString GetHotkey( const wxString& profileName, const wxString& command, const wxString& index );
+	wxArrayString GetHotkeyProfiles();
+	wxArrayString GetHotkeyProfileCommands( const wxString& profileName );
+	wxArrayString GetHotkeyProfileCommandKeys( const wxString& profileName, const wxString& command );
+	void DeleteHotkeyProfiles();
+
+    /**@}*/
 
 	//!you are absolutely forbidden to use this
 	template < class T >

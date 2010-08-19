@@ -31,6 +31,7 @@
 #include "tab_quality_video.h"
 #include "tab_abstract.h"
 #include "tab_audio.h"
+#include "hotkey_panel.h"
 #include "tab_ui.h"
 #include "tab_simple.h"
 #include "ctrlconstants.h"
@@ -45,6 +46,7 @@ const wxString qualityTabCap= _("Render quality / Video mode");
 const wxString detailTabCap = _("Render detail");
 const wxString uiTabCap= _("UI options");
 const wxString audioTabCap = _("Audio");
+const wxString hotkeyTabCap = _("Hotkeys");
 const wxString expertModeWarning = _("Changes made on Quality/Detail tab in expert mode"
 									"\n will be lost if you change simple options again.\n"
 									"Also these changes WILL NOT be reflected by the \n"
@@ -117,7 +119,7 @@ void settings_frame::handleExternExit()
 			int choice = customMessageBox(SS_MAIN_ICON,_("Save Spring settings before exiting?"), _("Confirmation needed"), wxYES|wxNO |wxICON_QUESTION);
 			if ( choice == wxYES)
 			{
-				abstract_panel::saveSettings();
+				saveSettingsAbstract();
 				if (simpleTab!=0)
 					simpleTab->saveCbxChoices();
 			}
@@ -133,7 +135,7 @@ void settings_frame::handleExit() {
     	int action = customMessageBox(SS_MAIN_ICON,_("Save Spring settings before exiting?"), _("Confirmation needed"),wxYES_NO|wxCANCEL|wxICON_QUESTION );
         switch (action) {
         case wxYES:
-        	if (abstract_panel::saveSettings())
+        	if (saveSettingsAbstract())
         				 (abstract_panel::settingsChanged) = false;
         	if (simpleTab!=0)
         			simpleTab->saveCbxChoices();
@@ -163,12 +165,13 @@ void settings_frame::CreateGUIControls()
 							    detailTab = new tab_render_detail(notebook,ID_RENDER_DETAIL);
 							    uiTab = new tab_ui(notebook,ID_UI);
 							    audioTab = new audio_panel(notebook,ID_AUDIO);
-                                simpleTab = 0;
+                                hotkeyTab = new hotkey_panel(notebook, ID_HOTKEY);
+								simpleTab = 0;
 								notebook->AddPage(uiTab, uiTabCap);
 								notebook->AddPage(qualityTab, qualityTabCap);
 								notebook->AddPage(detailTab, detailTabCap);
 								notebook->AddPage(audioTab,audioTabCap);
-
+								notebook->AddPage(hotkeyTab,hotkeyTabCap);
 						break;
                     default:
 					case SET_MODE_SIMPLE:
@@ -229,7 +232,7 @@ void settings_frame::initMenuBar() {
 void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 	switch (event.GetId()) {
 		case ID_MENUITEM_SAVE:
-			if (abstract_panel::saveSettings())
+			if (saveSettingsAbstract())
 			 (abstract_panel::settingsChanged) = false;
 			if (simpleTab!=0)
         			simpleTab->saveCbxChoices();
@@ -257,13 +260,14 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 				if (notebook->GetSelection()!=1)
 					notebook->SetSelection(0);
 
+				notebook->DeletePage(5);
 				notebook->DeletePage(4);
 				notebook->DeletePage(3);
 				notebook->DeletePage(2);
 				qualityTab = 0;
 				detailTab = 0;
 				audioTab = 0;
-
+				hotkeyTab = 0;
 				SetTitle(_("SpringSettings (simple mode)"));
 				if (!sett().getDisableWarning()){
 					customMessageBox(SS_MAIN_ICON,expertModeWarning, _("Hint"), wxOK);
@@ -305,11 +309,13 @@ void settings_frame::switchToExpertMode()
 	menuMode->Check(ID_MENUITEM_EXPERT,true);
 
 	qualityTab = new tab_quality_video(notebook,ID_QUALITY_VIDEO);
-    	detailTab = new tab_render_detail(notebook,ID_RENDER_DETAIL);
-    	audioTab = new audio_panel(notebook,ID_AUDIO);
+    detailTab = new tab_render_detail(notebook,ID_RENDER_DETAIL);
+    audioTab = new audio_panel(notebook,ID_AUDIO);
+	hotkeyTab = new hotkey_panel(notebook,ID_HOTKEY);
 	notebook->AddPage(qualityTab, qualityTabCap);
 	notebook->AddPage(detailTab, detailTabCap);
 	notebook->AddPage(audioTab,audioTabCap);
+	notebook->AddPage(hotkeyTab,hotkeyTabCap);
 
 	notebook->DeletePage(0);
 	simpleTab = 0;
@@ -318,6 +324,7 @@ void settings_frame::switchToExpertMode()
 	detailTab->updateControls(UPDATE_ALL);
 	qualityTab->updateControls(UPDATE_ALL);
 	audioTab->updateControls(UPDATE_ALL);
+	hotkeyTab->UpdateControls(UPDATE_ALL);
 }
 
 void settings_frame::updateAllControls()
@@ -332,6 +339,8 @@ void settings_frame::updateAllControls()
 		qualityTab->updateControls(UPDATE_ALL);
 	if (audioTab)
 		audioTab->updateControls(UPDATE_ALL);
+	if (hotkeyTab)
+		hotkeyTab->UpdateControls(UPDATE_ALL);
 }
 void settings_frame::OnClose(wxCloseEvent& /*unused*/)
 {
@@ -340,4 +349,9 @@ void settings_frame::OnClose(wxCloseEvent& /*unused*/)
 	}
 }
 
+bool settings_frame::saveSettingsAbstract()
+{
+	hotkeyTab->SaveSettings();
 
+	return abstract_panel::saveSettings();
+}
