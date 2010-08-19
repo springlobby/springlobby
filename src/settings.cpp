@@ -2557,3 +2557,36 @@ void Settings::SetBroadcastEverywhere(bool value)
 {
 	m_config->Write( _T("/Chat/BroadcastEverywhere"), value);
 }
+
+//Hotkeys stuff (for springsettings)
+void Settings::SetHotkey( const wxString& profileName, const wxString& command, const wxString& key, unsigned index )
+{
+	m_config->Write(_T( "/HotkeyProfiles/") + profileName + _T("/") + command + _T("/") + wxString() << index, key );
+}
+
+wxString Settings::GetHotkey( const wxString& profileName, const wxString& command, const wxString& index )
+{
+	return m_config->Read( _T( "/HotkeyProfiles/") + profileName + _T("/") + command + _T("/") + index, _T("") );
+}
+
+wxArrayString Settings::GetHotkeyProfiles()
+{
+	return GetGroupList( _T( "/HotkeyProfiles/" ) );
+}
+
+wxArrayString Settings::GetHotkeyProfileCommands( const wxString& profileName )
+{
+	return GetGroupList( _T( "/HotkeyProfiles/" ) + profileName + _T("/") );
+}
+
+wxArrayString Settings::GetHotkeyProfileCommandKeys( const wxString& profileName, const wxString& command )
+{
+	return GetEntryList( _T( "/HotkeyProfiles/" ) + profileName + _T("/") + command + _T("/") );
+}
+
+void Settings::DeleteHotkeyProfiles()
+{
+	m_config->DeleteGroup( _T( "/HotkeyProfiles/" ) );
+}
+
+//END OF Hotkeys stuff (for springsettings)

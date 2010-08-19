@@ -6,6 +6,7 @@
 #include "utils/debug.h"
 
 #include <stdexcept>
+#include <clocale>
 #include <wx/intl.h>
 #include <wx/log.h>
 #include <wx/fileconf.h>

@@ -50,7 +50,7 @@ void SpringUnitSyncLib::Load( const wxString& path, const wxString& ForceConfigF
 {
   LOCK_UNITSYNC;
 
-  _Load( path );
+  _Load( "D:\\Games\\Spring\\unitsync.dll" ); //path );
 
   if ( !ForceConfigFilePath.IsEmpty() )
   {
