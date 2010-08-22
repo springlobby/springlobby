@@ -1,0 +1,3 @@
+-unify entries to springsettings.conf, should all be keybinder-keystrings
+-"meta" as possible keycode
+-savesettings speedup

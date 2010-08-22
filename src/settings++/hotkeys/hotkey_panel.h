@@ -34,6 +34,9 @@ public:
 
 private:
 	wxKeyProfile buildNewProfile( const wxString& name, const wxString& description, bool readOnly );
+	void putKeybindingsToProfile( wxKeyProfile& profile, const key_binding& bindings );
+	static bool isBindingInProfile( const wxKeyProfile& profile, const wxString& command, const wxString& key );
+	bool isDefaultBinding( const wxString& command, const wxString& key );
 
 	typedef std::list<wxTextCtrl*>			EditControlList;
 	typedef std::list<wxStaticText*>		StaticControlList;
@@ -42,8 +45,6 @@ private:
 	StaticControlList	staticControls;
 
 	wxButton*			m_button2;
-	static wxCmd* cmdCreate(int id);
-	//wxKeyProfileArray	m_profilesArray;
 	wxKeyConfigPanel	m_keyConfigPanel;
 	hotkey_parser		m_uikeys_manager;
 };

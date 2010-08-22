@@ -2545,14 +2545,20 @@ void Settings::SetDoResetPerspectives( bool do_it )
 }
 
 //Hotkeys stuff (for springsettings)
-void Settings::SetHotkey( const wxString& profileName, const wxString& command, const wxString& key, unsigned index )
+void Settings::SetHotkey( const wxString& profileName, const wxString& command, const wxString& key, bool unbind )
 {
-	m_config->Write(_T( "/HotkeyProfiles/") + profileName + _T("/") + command + _T("/") + wxString() << index, key );
+	wxString bindStr = wxT("bind");
+	if ( unbind )
+	{
+		bindStr = wxT("unbind");
+	}
+
+	m_config->Write(_T( "/HotkeyProfiles/") + profileName + _T("/") + command + _T("/") + key, bindStr );
 }
 
-wxString Settings::GetHotkey( const wxString& profileName, const wxString& command, const wxString& index )
+wxString Settings::GetHotkey( const wxString& profileName, const wxString& command, const wxString& key )
 {
-	return m_config->Read( _T( "/HotkeyProfiles/") + profileName + _T("/") + command + _T("/") + index, _T("") );
+	return m_config->Read( _T( "/HotkeyProfiles/") + profileName + _T("/") + command + _T("/") + key, _T("") );
 }
 
 wxArrayString Settings::GetHotkeyProfiles()

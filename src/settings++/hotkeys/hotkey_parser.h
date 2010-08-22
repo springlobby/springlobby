@@ -7,19 +7,20 @@
 
 #include <wx/string.h>
 
+#include "HotkeyTypes.h"
+
 class hotkey_parser
 {
 public:
 	hotkey_parser( const wxString& filename );
 	~hotkey_parser();
 
-	typedef std::set<wxString>			key_set;
-	typedef std::map<wxString, key_set>	key_binding;
-
 	const key_binding& getBindingsC2K() const;
 	const key_binding& getBindingsK2C() const;
 	
 	void writeBindingsToFile( const key_binding& bindings );
+
+	void dumpIncludeSourceCode( const wxString& filename );
 
 private:
 	static std::vector< wxString > tokenize_uikeys_line( const wxString& line );
