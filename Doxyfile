@@ -149,7 +149,8 @@ EXCLUDE                = ./src/base64.cpp \
                          ./src/libtorrent \
                          ./src/boost \
 			 ./src/images \
-			 ./src/sounds
+			 ./src/sounds \
+			 ./src/sound
 EXCLUDE_SYMLINKS       = NO
 EXCLUDE_PATTERNS       = */.svn/* \
                          ./src/libtorrent/* \

@@ -1372,9 +1372,6 @@ void Ui::FirstRunWelcome()
 
 void Ui::CheckForUpdates()
 {
-	wxString t = _T("SpringLobby test\njfrepojeivnpenver\nwvpreivienrio\npwoewnpfwpnef\njcwoejfwp");
-	Paste2Pastebin( t );
-	return;
     wxString latestVersion = GetLatestVersion();
 
     if (latestVersion == _T("-1"))
