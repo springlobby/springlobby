@@ -451,13 +451,13 @@ void ChatPanel::OutputLine( const ChatLine& line )
 			{
 				if (m1.Len() > 2 && (m1.GetChar(2) >= 48 && m1.GetChar(2) <= 58))
 				{
-					color = (m1.GetChar(1) - 48)*10+(m1.GetChar(2) - 48);
+					color = (int(m1.GetChar(1)) - 48)*10+(int(m1.GetChar(2)) - 48);
 					_2chars = true;
 					m1 = m1.Mid(3);
 					}
 				else
 				{
-					color = m1.GetChar(1) -48;
+					color = int(m1.GetChar(1)) -48;
 					_2chars = false;
 					m1 = m1.Mid(2);
 					}
