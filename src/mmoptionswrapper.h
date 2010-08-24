@@ -17,7 +17,7 @@ class mmSectionTree {
         mmSectionTree();
         ~mmSectionTree();
 
-        void AddSection( const mmOptionSection );
+        void AddSection( const mmOptionSection& section );
         mmOptionSection GetSection( const wxString& key );
 
         typedef std::vector< mmOptionSection > SectionVector;

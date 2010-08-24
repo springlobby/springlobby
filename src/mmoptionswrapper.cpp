@@ -681,7 +681,7 @@ wxString mmSectionTree::FindParentpath ( const wxString& parent_key )
         return _T("");
 }
 
-void mmSectionTree::AddSection( const mmOptionSection section)
+void mmSectionTree::AddSection( const mmOptionSection& section)
 {
     m_section_map[section.key] = section;
     wxString name = section.section;

@@ -65,8 +65,6 @@ void Tokenizer::EnterStream( std::istream &stream_, const wxString &name ) {
 	skip_eol = false;
 	include_stack.push_back( IncludeCacheEntry( &stream_, false ) );
 	include_stack.back().name = name;
-	include_stack.back().line = 1;
-	include_stack.back().column = 1;
 };
 void Tokenizer::UnwindStack() {
 	while ( ( !include_stack.empty() ) && include_stack.back().stream && ( !include_stack.back().stream->good() ) ) {

@@ -9,17 +9,17 @@
   *
   * @todo: document this function
   */
-wxBitmap Customizations::GetBackground()
+const wxBitmap& Customizations::GetBackground() const
 {
     return m_background;
 }
 
-wxSize Customizations::GetBackgroundSize()
+wxSize Customizations::GetBackgroundSize() const
 {
     return wxSize( m_background.GetWidth(), m_background.GetHeight() );
 }
 
-const OptionsWrapper& Customizations::GetCustomizations()
+const OptionsWrapper& Customizations::GetCustomizations() const
 {
     return m_customs;
 }
@@ -28,7 +28,7 @@ const OptionsWrapper& Customizations::GetCustomizations()
   *
   * @todo: document this function
   */
-wxIcon Customizations::GetAppIcon()
+const wxIcon& Customizations::GetAppIcon() const
 {
     return m_app_ico;
 }
@@ -37,7 +37,7 @@ wxIcon Customizations::GetAppIcon()
   *
   * @todo: document this function
   */
-wxString Customizations::GetHelpUrl()
+const wxString& Customizations::GetHelpUrl() const
 {
     return m_help_url;
 }
@@ -46,7 +46,7 @@ wxString Customizations::GetHelpUrl()
   *
   * @todo: document this function
   */
-wxString Customizations::GetModname()
+const wxString& Customizations::GetModname() const
 {
     return m_modname;
 }

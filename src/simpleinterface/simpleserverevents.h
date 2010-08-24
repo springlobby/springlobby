@@ -14,7 +14,7 @@ class Battle;
 class SimpleServerEvents : public IServerEvents, public wxEvtHandler
 {
   public:
-	SimpleServerEvents( Server& serv) : m_serv(serv) {}
+	SimpleServerEvents( Server& serv) : m_serv(serv), m_autolaunch(false), m_autoclose(false) {}
 	~SimpleServerEvents() {}
 
   // Uicontrol interface

@@ -103,11 +103,8 @@ MainTorrentTab::MainTorrentTab( wxWindow* parent )
 
 MainTorrentTab::~MainTorrentTab()
 {
-	if ( m_download_dialog )
-	{
-		delete m_download_dialog;
-		m_download_dialog = 0;
-	}
+	delete m_download_dialog;
+	m_download_dialog = 0;
 }
 
 void MainTorrentTab::OnClearFinished( wxCommandEvent& /*event*/ )

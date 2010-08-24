@@ -55,8 +55,8 @@ struct Widget
     ExtendedInfo extendedinfo;
     bool is_installed;
 
-    bool IsInstalled();
-    wxArrayString GetImageFilenames();
+    bool IsInstalled() const;
+    wxArrayString GetImageFilenames() const;
     bool GetImageInfos();
     bool DownloadImages();
     bool GetFileInfos();

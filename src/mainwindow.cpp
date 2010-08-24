@@ -315,11 +315,8 @@ void MainWindow::OnClose( wxCloseEvent& /*unused*/ )
 		forceSettingsFrameClose();
 		freeStaticBox();
 
-		if ( m_autojoin_dialog )
-		{
-			delete m_autojoin_dialog;
-			m_autojoin_dialog = 0;
-		}
+		delete m_autojoin_dialog;
+		m_autojoin_dialog = 0;
 
 		sett().SaveSettings();
 		if ( m_log_win ) {

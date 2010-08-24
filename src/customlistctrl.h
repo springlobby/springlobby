@@ -88,7 +88,7 @@ protected:
     //! list should be sorted
     bool m_dirty_sort;
 
-    virtual void SetTipWindowText( const long item_hit, const wxPoint position);
+    virtual void SetTipWindowText( const long item_hit, const wxPoint& position);
 
     ColumnMap m_column_map;
 

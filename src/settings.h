@@ -114,7 +114,7 @@ class Settings
     /// counts all groups subkeys of a parent group
     unsigned int GetGroupCount( const wxString& base_key );
 
-    bool IsPortableMode();
+    bool IsPortableMode() const;
     void SetPortableMode( bool mode );
 
     /** Initialize all settings to default.
@@ -406,7 +406,7 @@ class Settings
     void ConvertOldSpringDirsOptions();
 
 		void RefreshSpringVersionList();
-    std::map<wxString, wxString> GetSpringVersionList(); /// index -> version
+    std::map<wxString, wxString> GetSpringVersionList() const; /// index -> version
     wxString GetCurrentUsedSpringIndex();
     void SetUsedSpringIndex( const wxString& index );
     void DeleteSpringVersionbyIndex( const wxString& index );

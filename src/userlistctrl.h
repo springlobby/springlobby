@@ -21,7 +21,7 @@ class UserListctrl : public CustomListCtrl
         UserListctrl( wxWindow* parent, const wxString& name = _T("usergrouplist"), bool highlight = false,wxWindowID id=USERLIST  );
         virtual ~UserListctrl();
 
-        void AddUser( const UserData userdata );
+        void AddUser( const UserData& userdata );
         void AddUser( const UserDataMap& userdata );
         const UserDataMap& GetUserData() const;
         void RemoveUsers( const UserDataMap& userdata );
@@ -37,12 +37,12 @@ class UserListctrl : public CustomListCtrl
 
         //! no-op atm, so i don't get segfault because of missing data
         virtual void Sort();
-        virtual void SetTipWindowText( const long item_hit, const wxPoint position);
+        virtual void SetTipWindowText( const long item_hit, const wxPoint& position);
 
         void HighlightItem( long item );
 
-        bool IsInList( const UserData userdata );
-        UserDataMapIter FindData( const UserData userdata );
+        bool IsInList( const UserData& userdata );
+        UserDataMapIter FindData( const UserData& userdata );
 
         static int wxCALLBACK ComparePlayernameUP(long item1, long item2, long sortData);
         static int wxCALLBACK ComparePlayernameDOWN(long item1, long item2, long sortData);

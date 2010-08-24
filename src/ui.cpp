@@ -601,16 +601,12 @@ void Ui::OnConnected( Server& server, const wxString& server_name, const wxStrin
 
     if ( server.uidata.panel ) server.uidata.panel->StatusMessage( _T("Connected to ") + server_name + _T(".") );
 		mw().GetBattleListTab().OnConnected();
-	if (m_con_win)
-		{
-			delete m_con_win;
-			m_con_win = 0;
-		}
-	if (m_reconnect_dialog)
-	{
-		delete m_reconnect_dialog;
-		m_reconnect_dialog = 0;
-	}
+
+	delete m_con_win;
+	m_con_win = 0;
+
+	delete m_reconnect_dialog;
+	m_reconnect_dialog = 0;
 }
 
 
@@ -706,11 +702,9 @@ void Ui::ConnectionFailurePrompt()
 	{
 		return;
 	}
-	if ( m_con_win ) // if connect window instance exists, delete it to avoid 2 windows which do the same task
-	{
-		delete m_con_win;
-		m_con_win = 0;
-	}
+	// if connect window instance exists, delete it to avoid 2 windows which do the same task
+	delete m_con_win;
+	m_con_win = 0;
 	m_reconnect_dialog = new ReconnectDialog();
 	int returnval = m_reconnect_dialog->ShowModal();
 	delete m_reconnect_dialog;
