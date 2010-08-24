@@ -32,6 +32,7 @@
 #include "iunitsync.h"
 #include "user.h"
 #include "battle.h"
+#include "defines.h"
 #include "utils/conversion.h"
 #include "utils/debug.h"
 #include "utils/uievents.h"
@@ -284,9 +285,11 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle )
 	//m_info1_sizer = new wxBoxSizer( wxHORIZONTAL );
 	m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
-	int side_sel_width = m_side_sel->GetWidestItemWidth();
 	wxBoxSizer* m_side_sel_sizer = new wxBoxSizer( wxHORIZONTAL );
-	m_side_sel_sizer->SetMinSize( side_sel_width, CONTROL_HEIGHT );
+	#ifndef HAVE_WX29
+		int side_sel_width = m_side_sel->GetWidestItemWidth();
+		m_side_sel_sizer->SetMinSize( side_sel_width, CONTROL_HEIGHT );
+	#endif
 	m_side_sel_sizer->Add( m_side_sel, 1, wxEXPAND );
 
 	// Put widgets in place
