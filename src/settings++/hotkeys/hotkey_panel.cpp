@@ -101,6 +101,22 @@ bool hotkey_panel::isBindingInProfile( const wxKeyProfile& profile, const wxStri
 	return false;
 }
 
+key_binding hotkey_panel::getBindingsFromProfile( const wxKeyProfile& profile )
+{
+	key_binding binding;
+	const wxCmdArray* pCmdArr = profile.GetArray();
+	for( int j=0; j < pCmdArr->GetCount(); ++j )
+	{
+		const wxCmd& cmd = *pCmdArr->Item(j);
+		wxArrayString keys = cmd.GetShortcutsList();
+		for( size_t k=0; k < keys.GetCount(); ++k )
+		{
+			binding[ cmd.GetName() ].insert( keys.Item( k ) );
+		}
+	}
+	return binding;
+}
+
 bool hotkey_panel::isDefaultBinding( const wxString& command, const wxString& keybinderkey )
 {
 	const key_binding& defBindings = SpringDefaultProfile::getAllBindingsC2K();
@@ -221,18 +237,132 @@ void hotkey_panel::putKeybindingsToProfile( wxKeyProfile& profile, const key_bin
 	}
 }
 
+unsigned hotkey_panel::getShortcutCountFromBinding( const key_binding& bindings )
+{
+	unsigned count = 0;
+	for ( key_binding::const_iterator iter = bindings.begin(); iter != bindings.end(); ++iter )
+	{
+		count += iter->second.size();
+	}
+	return count;
+}
+
+bool hotkey_panel::compareBindings( const key_binding& springBindings, const key_binding& kbBindings )
+{
+	//first, compare total keycount, that will do for most
+	if ( hotkey_panel::getShortcutCountFromBinding( springBindings ) !=
+			hotkey_panel::getShortcutCountFromBinding( kbBindings ) )
+	{
+		return false;
+	}
+
+	for ( key_binding::const_iterator iter = springBindings.begin(); iter != springBindings.end(); ++iter )
+	{
+		key_binding::const_iterator cmdIter = kbBindings.find( iter->first );
+		if ( cmdIter == kbBindings.end() )
+		{
+			//command not found in this profile
+			return false;
+		}
+
+		//we cant just use find. todo: maybe use a find with custom comparator
+		for( key_set::const_iterator iiter = iter->second.begin(); iiter != iter->second.end(); ++iiter )
+		{
+			bool found = false;
+			for( key_set::const_iterator iiiter = cmdIter->second.begin(); iiiter != cmdIter->second.end(); ++iiiter )
+			{
+				if ( KeynameConverter::compareSpring2wxKeybinder( (*iiter), (*iiiter) ) )
+				{
+					found = true;
+					break;
+				}
+			}
+
+			if ( !found )
+			{
+				return false;
+			}
+		}
+	}
+
+	return true;
+}
+
+wxString hotkey_panel::getNextFreeProfileName()
+{
+	const wxString profNameTempl = "UserProfile ";
+	wxString curProfTryName;
+	const wxKeyProfileArray profileArr = m_keyConfigPanel.GetProfiles();
+	
+	for( unsigned k=1; k < 99999u; ++k )
+	{
+		bool found = false;
+		curProfTryName = profNameTempl;
+		curProfTryName << k;
+		for( int i=0; i < profileArr.GetCount(); ++i )
+		{
+			const wxKeyProfile& profile = *profileArr.Item(i);
+			if ( profile.GetName() == curProfTryName )
+			{
+				found = true;
+				break;
+			}
+		}
+		if ( found == false )
+		{
+			break;
+		}
+	}
+	return curProfTryName;
+}
+
+void hotkey_panel::selectProfileFromUikeys()
+{
+	const key_binding& curBinding = this->m_uikeys_manager.getBindingsC2K();
+
+	const wxKeyProfileArray profileArr = m_keyConfigPanel.GetProfiles();
+
+	static int noProfileFound = -1;
+	int foundIdx = noProfileFound;
+	for( int i=0; i < profileArr.GetCount(); ++i )
+	{
+		const wxKeyProfile& profile = *profileArr.Item(i);
+		const key_binding proBinds = hotkey_panel::getBindingsFromProfile( profile );
+
+		if ( hotkey_panel::compareBindings( curBinding, proBinds ) )
+		{
+			foundIdx = i;
+			break;
+		}
+	}
+
+	if ( foundIdx == noProfileFound )
+	{
+		const wxString profName = this->getNextFreeProfileName();
+		wxKeyProfile profile = buildNewProfile( profName, wxT("User hotkey profile"), false );
+		this->putKeybindingsToProfile( profile, curBinding );	
+		m_keyConfigPanel.AddProfile( profile );
+
+		customMessageBox(SS_MAIN_ICON, _("Your current hotkey configuration does not match any known profile.\n A new profile with the name '" + profName + "' has been created."), 
+			_("New hotkey profile found"), wxOK );
+
+		foundIdx = m_keyConfigPanel.GetProfiles().GetCount() - 1;
+	}
+
+	m_keyConfigPanel.SetSelProfile( foundIdx );
+}
+
 void hotkey_panel::UpdateControls(int /*unused*/)
 {
 	m_keyConfigPanel.RemoveAllProfiles();
 
 	//put default profile
 	wxKeyProfile defProf = this->buildNewProfile("Spring default", wxT("Spring's default keyprofile"),true);
-	key_binding defBinds = SpringDefaultProfile::getAllBindingsC2K();
+	const key_binding defBinds = SpringDefaultProfile::getAllBindingsC2K();
 	this->putKeybindingsToProfile( defProf, defBinds );		
 	m_keyConfigPanel.AddProfile( defProf );
 
 	//put user profiles from springsettings configuration
-	key_binding_collection configProfiles;
 	{
 		wxArrayString profiles = sett().GetHotkeyProfiles();
 		for( size_t i=0; i < profiles.GetCount(); ++i)
@@ -241,6 +371,9 @@ void hotkey_panel::UpdateControls(int /*unused*/)
 
 			wxKeyProfile profile = buildNewProfile(profName, wxT("User hotkey profile"),false);
 			this->putKeybindingsToProfile( profile, defBinds );	
+
+			//156
+			hotkey_panel::getShortcutCountFromBinding( defBinds );
 
 			//add keybindings
 			wxArrayString commands = sett().GetHotkeyProfileCommands( profName );
@@ -267,10 +400,11 @@ void hotkey_panel::UpdateControls(int /*unused*/)
 				}
 			}
 
+			hotkey_panel::getShortcutCountFromBinding( hotkey_panel::getBindingsFromProfile( profile ) );
+
 			m_keyConfigPanel.AddProfile( profile );
 		}
 	}
 
-	//	m_uikeys_manager.g
-	m_keyConfigPanel.SetSelProfile(0);
+	selectProfileFromUikeys();
 }

@@ -21,6 +21,7 @@
 #include <wx/keybinder.h>
 
 #include "hotkey_parser.h"
+#include "HotkeyTypes.h"
 
 
 class hotkey_panel : public wxScrolledWindow
@@ -33,6 +34,12 @@ public:
 	void UpdateControls(int=0/*unused*/);
 
 private:
+	void selectProfileFromUikeys();
+	wxString getNextFreeProfileName();
+
+	static unsigned getShortcutCountFromBinding( const key_binding& bindings );
+	static bool compareBindings( const key_binding& springBindings, const key_binding& kbBindings );
+	static key_binding getBindingsFromProfile( const wxKeyProfile& profile );
 	wxKeyProfile buildNewProfile( const wxString& name, const wxString& description, bool readOnly );
 	void putKeybindingsToProfile( wxKeyProfile& profile, const key_binding& bindings );
 	static bool isBindingInProfile( const wxKeyProfile& profile, const wxString& command, const wxString& key );

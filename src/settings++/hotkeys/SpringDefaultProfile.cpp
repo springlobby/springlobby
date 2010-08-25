@@ -25,7 +25,7 @@ void SpringDefaultProfile::initialize()
 	SpringDefaultProfile::addBinding( _T("buildfacing inc"), _T("Shift+[") );
 	SpringDefaultProfile::addBinding( _T("buildfacing inc"), _T("[") );
 	SpringDefaultProfile::addBinding( _T("buildspacing dec"), _T("Any+x") );
-	SpringDefaultProfile::addBinding( _T("buildspacing inc"), _T("Any+y") );
+	SpringDefaultProfile::addBinding( _T("buildspacing inc"), _T("Any+z") );
 	SpringDefaultProfile::addBinding( _T("chat"), _T("Any+enter") );
 	SpringDefaultProfile::addBinding( _T("chatall"), _T("Ctrl+enter") );
 	SpringDefaultProfile::addBinding( _T("chatally"), _T("Alt+enter") );
@@ -35,17 +35,19 @@ void SpringDefaultProfile::initialize()
 	SpringDefaultProfile::addBinding( _T("chatswitchspec"), _T("Shift+enter") );
 	SpringDefaultProfile::addBinding( _T("cloak"), _T("Shift+k") );
 	SpringDefaultProfile::addBinding( _T("cloak"), _T("k") );
+	SpringDefaultProfile::addBinding( _T("controlunit"), _T("Any+c") );
 	SpringDefaultProfile::addBinding( _T("createvideo"), _T("Ctrl+Shift+f10") );
 	SpringDefaultProfile::addBinding( _T("debug"), _T("Alt+b") );
 	SpringDefaultProfile::addBinding( _T("decguiopacity"), _T("Shift+,") );
 	SpringDefaultProfile::addBinding( _T("decreaseViewRadius"), _T("Any+end") );
 	SpringDefaultProfile::addBinding( _T("dgun"), _T("Shift+d") );
 	SpringDefaultProfile::addBinding( _T("dgun"), _T("d") );
-	SpringDefaultProfile::addBinding( _T("drawinmap"), _T("Any+0xa7") );
+	SpringDefaultProfile::addBinding( _T("drawinmap"), _T("Any+\\") );
 	SpringDefaultProfile::addBinding( _T("drawinmap"), _T("Any+`") );
-	SpringDefaultProfile::addBinding( _T("drawinmap"), _T("Any+tab") );
+	SpringDefaultProfile::addBinding( _T("drawinmap"), _T("Any+0xa7") );
 	SpringDefaultProfile::addBinding( _T("dynamicSky"), _T("Any+f7") );
 	SpringDefaultProfile::addBinding( _T("edit_backspace"), _T("Any+backspace") );
+	SpringDefaultProfile::addBinding( _T("edit_complete"), _T("Any+tab") );
 	SpringDefaultProfile::addBinding( _T("edit_delete"), _T("Any+delete") );
 	SpringDefaultProfile::addBinding( _T("edit_end"), _T("Alt+right") );
 	SpringDefaultProfile::addBinding( _T("edit_end"), _T("Any+end") );
@@ -147,14 +149,13 @@ void SpringDefaultProfile::initialize()
 	SpringDefaultProfile::addBinding( _T("speedup"), _T("Any++") );
 	SpringDefaultProfile::addBinding( _T("speedup"), _T("Any+=") );
 	SpringDefaultProfile::addBinding( _T("speedup"), _T("Any+insert") );
-	
 	SpringDefaultProfile::addBinding( _T("speedup"), _T("Any+numpad+") );
 	SpringDefaultProfile::addBinding( _T("stop"), _T("Shift+s") );
 	SpringDefaultProfile::addBinding( _T("stop"), _T("s") );
 	SpringDefaultProfile::addBinding( _T("togglecammode"), _T("Ctrl+backspace") );
 	SpringDefaultProfile::addBinding( _T("togglecammode"), _T("Shift+backspace") );
 	SpringDefaultProfile::addBinding( _T("togglelos"), _T("Any+l") );
-	SpringDefaultProfile::addBinding( _T("toggleoverview"), _T("Any+\\") );
+	SpringDefaultProfile::addBinding( _T("toggleoverview"), _T("Any+tab") );
 	SpringDefaultProfile::addBinding( _T("toggleradarandjammer"), _T("Any+;") );
 	SpringDefaultProfile::addBinding( _T("track"), _T("Any+t") );
 	SpringDefaultProfile::addBinding( _T("trackmode"), _T("Ctrl+t") );
