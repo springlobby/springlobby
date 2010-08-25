@@ -33,6 +33,8 @@ public:
 	void SaveSettings();
 	void UpdateControls(int=0/*unused*/);
 
+	static bool isDefaultBinding( const wxString& command, const wxString& key );
+
 private:
 	void selectProfileFromUikeys();
 	wxString getNextFreeProfileName();
@@ -43,8 +45,7 @@ private:
 	wxKeyProfile buildNewProfile( const wxString& name, const wxString& description, bool readOnly );
 	void putKeybindingsToProfile( wxKeyProfile& profile, const key_binding& bindings );
 	static bool isBindingInProfile( const wxKeyProfile& profile, const wxString& command, const wxString& key );
-	bool isDefaultBinding( const wxString& command, const wxString& key );
-
+	
 	typedef std::list<wxTextCtrl*>			EditControlList;
 	typedef std::list<wxStaticText*>		StaticControlList;
 

@@ -23,6 +23,7 @@ public:
 	void dumpIncludeSourceCode( const wxString& filename );
 
 private:
+	static bool isKeyInProfile( const key_binding& binding, const wxString& command, const wxString& keystring );
 	static std::vector< wxString > tokenize_uikeys_line( const wxString& line );
 	bool processLine( const wxString& line );
 

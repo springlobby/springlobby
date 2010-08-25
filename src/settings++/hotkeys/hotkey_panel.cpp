@@ -144,67 +144,63 @@ bool hotkey_panel::isDefaultBinding( const wxString& command, const wxString& ke
 */
 void hotkey_panel::SaveSettings()
 {
-	sett().DeleteHotkeyProfiles();
-
-	wxKeyProfileArray profileArr = m_keyConfigPanel.GetProfiles();
-	for( int i=0; i < profileArr.GetCount(); ++i )
+	try
 	{
-		const wxKeyProfile& profile = *profileArr.Item(i);
-		if ( profile.IsNotEditable() )
-		{
-			//skip build-in profiles
-			continue;
-		}
+		sett().DeleteHotkeyProfiles();
 
-		//add bindings
-		const wxCmdArray* pCmdArr = profile.GetArray();
-		for( int j=0; j < pCmdArr->GetCount(); ++j )
+		wxKeyProfileArray profileArr = m_keyConfigPanel.GetProfiles();
+		for( int i=0; i < profileArr.GetCount(); ++i )
 		{
-			const wxCmd& cmd = *pCmdArr->Item(j);
-			wxArrayString keys = cmd.GetShortcutsList();
-			for( size_t k=0; k < keys.GetCount(); ++k )
+			const wxKeyProfile& profile = *profileArr.Item(i);
+			if ( profile.IsNotEditable() )
 			{
-				//only write non-default bindings to settings
-				if ( false == hotkey_panel::isDefaultBinding( cmd.GetName(), keys.Item( k ) ) )
+				//skip build-in profiles
+				continue;
+			}
+
+			//add bindings
+			const wxCmdArray* pCmdArr = profile.GetArray();
+			for( int j=0; j < pCmdArr->GetCount(); ++j )
+			{
+				const wxCmd& cmd = *pCmdArr->Item(j);
+				wxArrayString keys = cmd.GetShortcutsList();
+				for( size_t k=0; k < keys.GetCount(); ++k )
 				{
-					sett().SetHotkey( profile.GetName(), cmd.GetName(), keys.Item(k).ToAscii(), false );
+					//only write non-default bindings to settings
+					if ( false == hotkey_panel::isDefaultBinding( cmd.GetName(), keys.Item( k ) ) )
+					{
+						sett().SetHotkey( profile.GetName(), cmd.GetName(), keys.Item(k).ToAscii(), false );
+					}
+				}
+			}
+
+			//check if any bindings from the default bindings have been unbind. and save that info to the settings
+			const key_binding& defBindings = SpringDefaultProfile::getAllBindingsC2K();
+			for( key_binding::const_iterator iter = defBindings.begin(); iter != defBindings.end(); ++iter )
+			{
+				//check now if this default key binding has been deleted from this profile
+				for ( key_set::const_iterator iiter = iter->second.begin(); iiter != iter->second.end(); ++iiter )
+				{
+					if ( false == hotkey_panel::isBindingInProfile( profile, iter->first, (*iiter) ) )
+					{
+						sett().SetHotkey( profile.GetName(), iter->first, KeynameConverter::spring2wxKeybinder( (*iiter) ), true );
+					}
 				}
 			}
 		}
 
-		//check if any bindings from the default bindings have been unbind. and save that info to the settings
-		const key_binding& defBindings = SpringDefaultProfile::getAllBindingsC2K();
-		for( key_binding::const_iterator iter = defBindings.begin(); iter != defBindings.end(); ++iter )
-		{
-			//check now if this default key binding has been deleted from this profile
-			for ( key_set::const_iterator iiter = iter->second.begin(); iiter != iter->second.end(); ++iiter )
-			{
-				if ( false == hotkey_panel::isBindingInProfile( profile, iter->first, (*iiter) ) )
-				{
-					sett().SetHotkey( profile.GetName(), iter->first, KeynameConverter::spring2wxKeybinder( (*iiter) ), true );
-				}
-			}
-		}
+		sett().SaveSettings();
+
+		//Write bindings to file
+		const wxKeyProfile& selProfile = *this->m_keyConfigPanel.GetSelProfile();
+		key_binding bindings = hotkey_panel::getBindingsFromProfile( selProfile );
+
+		this->m_uikeys_manager.writeBindingsToFile( bindings );
 	}
-
-	sett().SaveSettings();
-
-	//Write bindings to file
-	key_binding bindings;
-	const wxKeyProfile& selProfile = *this->m_keyConfigPanel.GetSelProfile();
-	const wxCmdArray* pCmdArr = selProfile.GetArray();
-	for( int j=0; j < pCmdArr->GetCount(); ++j )
+	catch( const std::exception& ex )
 	{
-		const wxCmd& cmd = *pCmdArr->Item(j);
-		wxArrayString keys = cmd.GetShortcutsList();
-		for( size_t k=0; k < keys.GetCount(); ++k )
-		{
-			bindings[cmd.GetName()].insert( keys.Item(k).ToAscii() );
-		}
+		customMessageBox(SS_MAIN_ICON, ex.what(), _("Hotkey SaveSettings error"), wxOK );
 	}
-
-	// use this to generate the source code of the spring default key bindings
-	//	this->m_uikeys_manager.writeBindingsToFile( bindings );
 }
 
 wxKeyProfile hotkey_panel::buildNewProfile( const wxString& name, const wxString& description, bool readOnly )

@@ -34,7 +34,7 @@ private:
 	KeynameConverter();
 
 	static wxString convert( const wxString& keystring, bool reverse = false );
-	static wxString modifier2String( const KeynameConverter::ModifierList& mod );
+	static wxString modifier2String( const KeynameConverter::ModifierList& mod, bool addAny = false );
 	static ModifierList stringToKeyModifier(const wxString &keyModifier);
 	static wxString discardModifier( const wxString& keystring );
 

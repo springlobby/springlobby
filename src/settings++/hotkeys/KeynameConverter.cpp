@@ -119,27 +119,43 @@ wxString KeynameConverter::spring2wxKeybinder( const wxString& keystring, bool r
 	}
 	else
 	{
-		kbKey = key.Upper();
+		if ( reverse )
+		{
+			kbKey = key.Lower();
+		}
+		else
+		{
+			kbKey = key.Upper();
+		}
 	}
 
-	return KeynameConverter::modifier2String( modifiers ) + kbKey;
+	return KeynameConverter::modifier2String( modifiers, reverse ) + kbKey;
 }
 
-wxString KeynameConverter::modifier2String( const KeynameConverter::ModifierList& mod )
+wxString KeynameConverter::modifier2String( const KeynameConverter::ModifierList& mod, bool addAny )
 {
 	wxString modString;
 
+	bool modFound = false;
 	if ( mod.find( CTRL ) != mod.end() )
 	{
 		modString += wxT("Ctrl+");
+		modFound = true;
 	}
 	if ( mod.find( SHIFT ) != mod.end() )
 	{
 		modString += wxT("Shift+");
+		modFound = true;
 	}
 	if ( mod.find( ALT ) != mod.end() )
 	{
 		modString += wxT("Alt+");
+		modFound = true;
+	}
+
+	if ( !modFound && addAny )
+	{
+		modString = wxT("any+") + modString;
 	}
 
 	return modString;

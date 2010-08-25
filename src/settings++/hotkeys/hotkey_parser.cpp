@@ -9,7 +9,9 @@
 #include <wx/textfile.h>
 #include <wx/tokenzr.h>
 
+#include "KeynameConverter.h"
 #include "SpringDefaultProfile.h"
+#include "hotkey_panel.h"
 
 hotkey_parser::hotkey_parser(const wxString& uikeys_filename) : filename( uikeys_filename )
 {
@@ -183,6 +185,25 @@ void hotkey_parser::updateBindsC2K()
 	}
 }
 
+bool hotkey_parser::isKeyInProfile( const key_binding& binding, const wxString& command, const wxString& keystring )
+{
+	key_binding::const_iterator cmdIter = binding.find( command );
+	if ( cmdIter == binding.end() )
+	{
+		return false;
+	}
+
+	for( key_set::const_iterator iter = cmdIter->second.begin(); iter != cmdIter->second.end(); ++iter )
+	{
+		if ( KeynameConverter::compareSpring2wxKeybinder( keystring, (*iter) ) )
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
 void hotkey_parser::writeBindingsToFile( const key_binding& bindings )
 {
 	const wxString newTmpFilename = this->filename + _T(".tmp");
@@ -210,9 +231,64 @@ void hotkey_parser::writeBindingsToFile( const key_binding& bindings )
 		std::getline (oldFile,line);
 		wxString wxLine = line;
 		wxLine.Trim();
-		if ( wxLine.StartsWith("//") )
+		if ( wxLine.StartsWith(wxT("//")) )
 		{
-			newFile << line;
+			newFile << line << "\n";
+		}
+	}
+
+	const key_binding defBinds = SpringDefaultProfile::getAllBindingsC2K();
+	for( key_binding::const_iterator iter = defBinds.begin(); iter != defBinds.end(); ++iter )
+	{
+		for( key_set::const_iterator iiter = iter->second.begin(); iiter != iter->second.end(); ++iiter )
+		{
+			if ( !hotkey_parser::isKeyInProfile( bindings, iter->first, (*iiter) ) )
+			{
+				newFile << wxT("unbind\t\t") << (*iiter) << wxT("\t") << iter->first << "\n";
+			}
+		}
+	}
+
+	for( key_binding::const_iterator iter = bindings.begin(); iter != bindings.end(); ++iter )
+	{
+		for( key_set::const_iterator iiter = iter->second.begin(); iiter != iter->second.end(); ++iiter )
+		{
+			if ( !hotkey_panel::isDefaultBinding( iter->first, (*iiter) ) )
+			{
+				newFile << wxT("bind\t\t") << KeynameConverter::spring2wxKeybinder( (*iiter), true ) << wxT("\t") << iter->first << "\n";
+			}
+		}
+	}
+
+	oldFile.close();
+	newFile.close();
+
+	//delete old backup
+	const wxString prevFilenameBak = wxT("uikeys.txt.bak");
+	{
+		int rc = unlink( prevFilenameBak.c_str() );
+		if ( rc != 0 )
+		{
+			throw std::runtime_error( std::string("Error delete backup file uikeys.txt.bak: ") + strerror( errno ) );
+		}
+	}
+	
+	//backup our current uikeys.txt
+	{
+		int rc = rename( this->filename.To8BitData(), prevFilenameBak.To8BitData() );
+		if ( rc != 0 )
+		{
+			throw std::runtime_error( std::string("Error rename uikeys.txt to uikeys.txt.bak: ") + strerror( errno ) );
+		}
+	}
+
+	//rename our new tmp file to uikeys.txt. restore backup if failed
+	{
+		int rc = rename( newTmpFilename.c_str(), this->filename.To8BitData() );
+		if ( rc != 0 )
+		{
+			int rc = rename( prevFilenameBak.To8BitData(), this->filename.To8BitData() );
+			throw std::runtime_error( std::string("Error renaming uikeys.txt.tmp to uikeys.txt: ") + strerror( errno ) );
 		}
 	}
 }
