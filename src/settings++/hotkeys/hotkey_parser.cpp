@@ -17,6 +17,8 @@ hotkey_parser::hotkey_parser(const wxString& uikeys_filename) : filename( uikeys
 {
 	//we will read the uikeys.txt now to get the key profile
 	//1. Fill the profile with spring's default bindings
+	KeynameConverter::initialize();
+
 	this->bindsK2C = SpringDefaultProfile::getAllBindingsK2C();
 
 	//2. now read uikeys.txt and modify the default profile
@@ -24,7 +26,7 @@ hotkey_parser::hotkey_parser(const wxString& uikeys_filename) : filename( uikeys
 
 	if ( !uiFile.Open() )
 	{
-		wxLogWarning( _( "can't open " + uikeys_filename ) );
+		wxLogWarning( _( "can't open " ) + uikeys_filename );
 		return;
 	}
 
@@ -76,7 +78,7 @@ bool hotkey_parser::processLine( const wxString& line )
 	}
 
 	const wxString& cmd = tokLine[0];
-	const wxString& key = tokLine[1];
+	const wxString& key = KeynameConverter::normalizeSpringKey( tokLine[1] );
 
 	//append all following tokens to the action string for stuff like "buildspacing inc"
 	wxString action; 
@@ -184,27 +186,27 @@ void hotkey_parser::updateBindsC2K()
 		}
 	}
 }
-
-bool hotkey_parser::isKeyInProfile( const key_binding& binding, const wxString& command, const wxString& keystring )
+/*
+bool hotkey_parser::isKeyInProfile( const key_binding& kbBinding, const wxString& command, const wxString& kbBeystring )
 {
-	key_binding::const_iterator cmdIter = binding.find( command );
-	if ( cmdIter == binding.end() )
+	key_binding::const_iterator cmdIter = kbBinding.find( command );
+	if ( cmdIter == kbBinding.end() )
 	{
 		return false;
 	}
 
 	for( key_set::const_iterator iter = cmdIter->second.begin(); iter != cmdIter->second.end(); ++iter )
 	{
-		if ( KeynameConverter::compareSpring2wxKeybinder( keystring, (*iter) ) )
+		if ( KeynameConverter::compareSpring2wxKeybinder( kbBeystring, (*iter) ) )
 		{
 			return true;
 		}
 	}
 
 	return false;
-}
+}*/
 
-void hotkey_parser::writeBindingsToFile( const key_binding& bindings )
+void hotkey_parser::writeBindingsToFile( const key_binding& springbindings )
 {
 	const wxString newTmpFilename = this->filename + _T(".tmp");
 
@@ -242,14 +244,14 @@ void hotkey_parser::writeBindingsToFile( const key_binding& bindings )
 	{
 		for( key_set::const_iterator iiter = iter->second.begin(); iiter != iter->second.end(); ++iiter )
 		{
-			if ( !hotkey_parser::isKeyInProfile( bindings, iter->first, (*iiter) ) )
+			if ( !hotkey_panel::isBindingInProfile( springbindings, iter->first, (*iiter) ) )
 			{
 				newFile << wxT("unbind\t\t") << (*iiter) << wxT("\t") << iter->first << "\n";
 			}
 		}
 	}
 
-	for( key_binding::const_iterator iter = bindings.begin(); iter != bindings.end(); ++iter )
+	for( key_binding::const_iterator iter = springbindings.begin(); iter != springbindings.end(); ++iter )
 	{
 		for( key_set::const_iterator iiter = iter->second.begin(); iiter != iter->second.end(); ++iiter )
 		{
@@ -266,7 +268,7 @@ void hotkey_parser::writeBindingsToFile( const key_binding& bindings )
 	//delete old backup
 	const wxString prevFilenameBak = wxT("uikeys.txt.bak");
 	{
-		int rc = unlink( prevFilenameBak.c_str() );
+		int rc = _unlink( prevFilenameBak.c_str() );
 		if ( rc != 0 )
 		{
 			throw std::runtime_error( std::string("Error delete backup file uikeys.txt.bak: ") + strerror( errno ) );

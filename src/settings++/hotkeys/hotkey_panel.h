@@ -33,18 +33,23 @@ public:
 	void SaveSettings();
 	void UpdateControls(int=0/*unused*/);
 
-	static bool isDefaultBinding( const wxString& command, const wxString& key );
+	static bool isDefaultBinding( const wxString& command, const wxString& springKey );
 
+	bool HasProfileBeenModifiedOrSelected() const;
+	void ResetProfileBeenModifiedOrSelected();
+	static unsigned getShortcutCountFromBinding( const key_binding& bindings );
+	static bool isBindingInProfile( const key_binding& springprofile, const wxString& command, const wxString& springkey );
+	
 private:
 	void selectProfileFromUikeys();
 	wxString getNextFreeProfileName();
+	void updateTreeView();
 
-	static unsigned getShortcutCountFromBinding( const key_binding& bindings );
-	static bool compareBindings( const key_binding& springBindings, const key_binding& kbBindings );
+	static key_binding_collection getProfilesFromSettings();
+	//static bool compareBindings( const key_binding& springBindings, const key_binding& kbBindings );
 	static key_binding getBindingsFromProfile( const wxKeyProfile& profile );
 	wxKeyProfile buildNewProfile( const wxString& name, const wxString& description, bool readOnly );
 	void putKeybindingsToProfile( wxKeyProfile& profile, const key_binding& bindings );
-	static bool isBindingInProfile( const wxKeyProfile& profile, const wxString& command, const wxString& key );
 	
 	typedef std::list<wxTextCtrl*>			EditControlList;
 	typedef std::list<wxStaticText*>		StaticControlList;

@@ -18,12 +18,12 @@ public:
 	const key_binding& getBindingsC2K() const;
 	const key_binding& getBindingsK2C() const;
 	
-	void writeBindingsToFile( const key_binding& bindings );
+	void writeBindingsToFile( const key_binding& springbindings );
 
 	void dumpIncludeSourceCode( const wxString& filename );
 
 private:
-	static bool isKeyInProfile( const key_binding& binding, const wxString& command, const wxString& keystring );
+	//static bool isKeyInProfile( const key_binding& binding, const wxString& command, const wxString& keystring );
 	static std::vector< wxString > tokenize_uikeys_line( const wxString& line );
 	bool processLine( const wxString& line );
 

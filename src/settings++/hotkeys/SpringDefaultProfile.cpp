@@ -1,4 +1,5 @@
 #include "SpringDefaultProfile.h"
+#include "KeynameConverter.h"
 
 key_binding		SpringDefaultProfile::m_mappingC2K;
 key_binding		SpringDefaultProfile::m_mappingK2C;
@@ -44,7 +45,7 @@ void SpringDefaultProfile::initialize()
 	SpringDefaultProfile::addBinding( _T("dgun"), _T("d") );
 	SpringDefaultProfile::addBinding( _T("drawinmap"), _T("Any+\\") );
 	SpringDefaultProfile::addBinding( _T("drawinmap"), _T("Any+`") );
-	SpringDefaultProfile::addBinding( _T("drawinmap"), _T("Any+0xa7") );
+	//SpringDefaultProfile::addBinding( _T("drawinmap"), _T("Any+0xa7") ); what key is this??
 	SpringDefaultProfile::addBinding( _T("dynamicSky"), _T("Any+f7") );
 	SpringDefaultProfile::addBinding( _T("edit_backspace"), _T("Any+backspace") );
 	SpringDefaultProfile::addBinding( _T("edit_complete"), _T("Any+tab") );
@@ -171,8 +172,9 @@ void SpringDefaultProfile::initialize()
 
 void SpringDefaultProfile::addBinding( const wxString& command, const wxString& key )
 {
-	SpringDefaultProfile::m_mappingK2C[key].insert( command );
-	SpringDefaultProfile::m_mappingC2K[command].insert( key );
+	const wxString normKey = KeynameConverter::normalizeSpringKey( key );
+	SpringDefaultProfile::m_mappingK2C[normKey].insert( command );
+	SpringDefaultProfile::m_mappingC2K[command].insert( normKey );
 }
 
 const key_binding& SpringDefaultProfile::getAllBindingsK2C()

@@ -39,7 +39,9 @@ public:
 
 		if ( m_commands.find( command ) == m_commands.end() )
 		{
-			throw std::runtime_error( std::string("Unknown command: ") + command.ToAscii());
+			//add the command
+			CommandList::addCommand( wxT("Custom"), command, wxT("Custom command") );
+			//throw std::runtime_error( std::string("Unknown command: ") + command.ToAscii());
 		}
 
 		return m_commands[command];

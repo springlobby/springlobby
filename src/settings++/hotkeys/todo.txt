@@ -1,6 +1,4 @@
--unify entries to springsettings.conf, should all be keybinder-keystrings
 -"meta" as possible keycode
 -"any" checkbox?
--savesettings speedup
 -order of binds/unbinds for multiple keys
 -check for unsaved changes in hotkeys when quit

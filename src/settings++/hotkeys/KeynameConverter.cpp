@@ -87,6 +87,22 @@ bool KeynameConverter::compareSpring2wxKeybinder( const wxString& springkey, con
 	return true;
 }
 
+wxString KeynameConverter::normalizeSpringKey( const wxString& springKey )
+{
+	//get modifiers
+	KeynameConverter::ModifierList modifiers = stringToKeyModifier( springKey );
+
+	wxString key = KeynameConverter::discardModifier( springKey );
+	key.MakeLower();
+
+	if ( key == wxT("escape") )
+	{
+		key = wxT("esc");
+	}
+
+	return KeynameConverter::modifier2String( modifiers, true ) + key;
+}
+
 wxString KeynameConverter::spring2wxKeybinder( const wxString& keystring, bool reverse )
 {
 	//get modifiers
@@ -155,7 +171,7 @@ wxString KeynameConverter::modifier2String( const KeynameConverter::ModifierList
 
 	if ( !modFound && addAny )
 	{
-		modString = wxT("any+") + modString;
+		modString = wxT("Any+") + modString;
 	}
 
 	return modString;

@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+#include <wx/log.h>
+
 #include "../../utils/customdialogs.h"
 #include "hotkey_parser.h"
 #include "spring_command.h"
@@ -42,17 +44,7 @@ m_uikeys_manager("D:\\games\\spring\\uikeys.txt")
 
 		//m_KeyProfiles->Add(pPrimary);
 
-		wxKeyConfigPanel::ControlMap ctrlMap;
-		{
-			const CommandList::CommandMap& commands = CommandList::getCommands();
-			for( CommandList::CommandMap::const_iterator iter = commands.begin(); iter != commands.end(); ++iter )
-			{
-				const CommandList::Command& cmd = iter->second;
-				ctrlMap[ cmd.m_category ][ cmd.m_command ] = cmd.m_id;
-			}
-		}
 
-		m_keyConfigPanel.ImportRawList( ctrlMap, "Commands" ); 
 
 		UpdateControls();
 
@@ -63,7 +55,6 @@ m_uikeys_manager("D:\\games\\spring\\uikeys.txt")
 	catch( const std::exception& ex )
 	{
 		customMessageBox(SS_MAIN_ICON, ex.what(), _("Hotkey panel error"), wxOK );
-		throw;
 	}
 }
 
@@ -83,22 +74,42 @@ hotkey_panel::~hotkey_panel(void)
 	staticControls.clear();
 }
 
-bool hotkey_panel::isBindingInProfile( const wxKeyProfile& profile, const wxString& command, const wxString& springkey )
+bool hotkey_panel::isBindingInProfile( const key_binding& springprofile, const wxString& command, const wxString& springkey )
 {
+	key_binding::const_iterator citer = springprofile.find( command );
+	if ( citer == springprofile.end() )
+	{
+		return false;
+	}
+
+	key_set::const_iterator kiter = citer->second.find( springkey );
+	if ( kiter == citer->second.end() )
+	{
+		return false;
+	}
+
+	return true;
+/*
 	const wxCmdArray* pCmdArr = profile.GetArray();
 	for( int j=0; j < pCmdArr->GetCount(); ++j )
 	{
 		const wxCmd& cmd = *pCmdArr->Item(j);
+
+		if ( cmd != command )
+		{
+			continue;
+		}
+
 		wxArrayString keys = cmd.GetShortcutsList();
 		for( size_t k=0; k < keys.GetCount(); ++k )
 		{
-			if ( ( cmd.GetName() == command ) && ( KeynameConverter::compareSpring2wxKeybinder( springkey, keys.Item(k) ) ) )
+			if ( kbKey == keys.Item(k) ) //KeynameConverter::compareSpring2wxKeybinder( springkey, keys.Item(k) ) )
 			{
 				return true;
 			}
 		}
 	}
-	return false;
+	return false;*/
 }
 
 key_binding hotkey_panel::getBindingsFromProfile( const wxKeyProfile& profile )
@@ -111,32 +122,32 @@ key_binding hotkey_panel::getBindingsFromProfile( const wxKeyProfile& profile )
 		wxArrayString keys = cmd.GetShortcutsList();
 		for( size_t k=0; k < keys.GetCount(); ++k )
 		{
-			binding[ cmd.GetName() ].insert( keys.Item( k ) );
+			binding[ cmd.GetName() ].insert( KeynameConverter::spring2wxKeybinder( keys.Item( k ),true ) );
 		}
 	}
 	return binding;
 }
 
-bool hotkey_panel::isDefaultBinding( const wxString& command, const wxString& keybinderkey )
+bool hotkey_panel::isDefaultBinding( const wxString& command, const wxString& springKey )
 {
 	const key_binding& defBindings = SpringDefaultProfile::getAllBindingsC2K();
 
-	key_binding::const_iterator pos = defBindings.find( command );
+	return hotkey_panel::isBindingInProfile( defBindings, command, springKey );
+/*	key_binding::const_iterator pos = defBindings.find( command );
 	if ( pos == defBindings.end() )
 	{
 		return false;
 	}
 
-	for ( key_set::const_iterator iiter = pos->second.begin(); iiter != pos->second.end(); ++iiter )
+	//const wxString springKey = KeynameConverter::spring2wxKeybinder( keybinderkey, true );
+
+	//check now if this default key binding has been deleted from this profile
+	if ( pos->second.find( springKey ) != pos->second.end() )
 	{
-		//check now if this default key binding has been deleted from this profile
-		if ( KeynameConverter::compareSpring2wxKeybinder( (*iiter), keybinderkey ) )
-		{
-			return true;
-		}
+		return true;
 	}
 
-	return false;
+	return false;*/
 }
 
 /*
@@ -176,12 +187,13 @@ void hotkey_panel::SaveSettings()
 
 			//check if any bindings from the default bindings have been unbind. and save that info to the settings
 			const key_binding& defBindings = SpringDefaultProfile::getAllBindingsC2K();
+			const key_binding& proBindings = hotkey_panel::getBindingsFromProfile( profile  );
 			for( key_binding::const_iterator iter = defBindings.begin(); iter != defBindings.end(); ++iter )
 			{
 				//check now if this default key binding has been deleted from this profile
 				for ( key_set::const_iterator iiter = iter->second.begin(); iiter != iter->second.end(); ++iiter )
 				{
-					if ( false == hotkey_panel::isBindingInProfile( profile, iter->first, (*iiter) ) )
+					if ( false == hotkey_panel::isBindingInProfile( proBindings, iter->first, (*iiter) ) )
 					{
 						sett().SetHotkey( profile.GetName(), iter->first, KeynameConverter::spring2wxKeybinder( (*iiter) ), true );
 					}
@@ -196,6 +208,8 @@ void hotkey_panel::SaveSettings()
 		key_binding bindings = hotkey_panel::getBindingsFromProfile( selProfile );
 
 		this->m_uikeys_manager.writeBindingsToFile( bindings );
+
+		this->m_keyConfigPanel.ResetProfileBeenModifiedOrSelected();
 	}
 	catch( const std::exception& ex )
 	{
@@ -223,12 +237,21 @@ void hotkey_panel::putKeybindingsToProfile( wxKeyProfile& profile, const key_bin
 {
 	for( key_binding::const_iterator iter = bindings.begin(); iter != bindings.end(); ++iter )
 	{
-		wxCmd& cmd = *(profile.GetCmd( CommandList::getCommandByName(iter->first).m_id ));
-
-		const key_set& keys = iter->second;
-		for( key_set::const_iterator iiter = keys.begin(); iiter != keys.end(); iiter++ )
+		try
 		{
-			cmd.AddShortcut( KeynameConverter::spring2wxKeybinder( (*iiter) ) );
+			wxCmd& cmd = *(profile.GetCmd( CommandList::getCommandByName(iter->first).m_id ));
+
+			const key_set& keys = iter->second;
+			for( key_set::const_iterator iiter = keys.begin(); iiter != keys.end(); iiter++ )
+			{
+				cmd.AddShortcut( KeynameConverter::spring2wxKeybinder( (*iiter) ) );
+			}
+		}
+		catch( const std::exception& ex )
+		{
+			wxString msg = _( "Warning: Error reading uikeys.txt: " ) + wxString(ex.what()); 
+			wxLogWarning( msg );
+			customMessageBox(SS_MAIN_ICON, msg, "Hotkey warning", wxOK );
 		}
 	}
 }
@@ -243,38 +266,28 @@ unsigned hotkey_panel::getShortcutCountFromBinding( const key_binding& bindings 
 	return count;
 }
 
+/*
 bool hotkey_panel::compareBindings( const key_binding& springBindings, const key_binding& kbBindings )
 {
 	//first, compare total keycount, that will do for most
 	if ( hotkey_panel::getShortcutCountFromBinding( springBindings ) !=
-			hotkey_panel::getShortcutCountFromBinding( kbBindings ) )
+		hotkey_panel::getShortcutCountFromBinding( kbBindings ) )
 	{
 		return false;
 	}
 
-	for ( key_binding::const_iterator iter = springBindings.begin(); iter != springBindings.end(); ++iter )
+	for ( key_binding::const_iterator iter = kbBindings.begin(); iter != kbBindings.end(); ++iter )
 	{
-		key_binding::const_iterator cmdIter = kbBindings.find( iter->first );
-		if ( cmdIter == kbBindings.end() )
+		key_binding::const_iterator cmdIter = springBindings.find( iter->first );
+		if ( cmdIter == springBindings.end() )
 		{
 			//command not found in this profile
 			return false;
 		}
 
-		//we cant just use find. todo: maybe use a find with custom comparator
 		for( key_set::const_iterator iiter = iter->second.begin(); iiter != iter->second.end(); ++iiter )
 		{
-			bool found = false;
-			for( key_set::const_iterator iiiter = cmdIter->second.begin(); iiiter != cmdIter->second.end(); ++iiiter )
-			{
-				if ( KeynameConverter::compareSpring2wxKeybinder( (*iiter), (*iiiter) ) )
-				{
-					found = true;
-					break;
-				}
-			}
-
-			if ( !found )
+			if ( cmdIter->second.find( KeynameConverter::spring2wxKeybinder( *iiter, true ) ) == cmdIter->second.end() )
 			{
 				return false;
 			}
@@ -283,13 +296,14 @@ bool hotkey_panel::compareBindings( const key_binding& springBindings, const key
 
 	return true;
 }
+*/
 
 wxString hotkey_panel::getNextFreeProfileName()
 {
 	const wxString profNameTempl = "UserProfile ";
 	wxString curProfTryName;
 	const wxKeyProfileArray profileArr = m_keyConfigPanel.GetProfiles();
-	
+
 	for( unsigned k=1; k < 99999u; ++k )
 	{
 		bool found = false;
@@ -325,7 +339,7 @@ void hotkey_panel::selectProfileFromUikeys()
 		const wxKeyProfile& profile = *profileArr.Item(i);
 		const key_binding proBinds = hotkey_panel::getBindingsFromProfile( profile );
 
-		if ( hotkey_panel::compareBindings( curBinding, proBinds ) )
+		if ( curBinding == proBinds ) //hotkey_panel::compareBindings( curBinding, proBinds ) )
 		{
 			foundIdx = i;
 			break;
@@ -337,7 +351,8 @@ void hotkey_panel::selectProfileFromUikeys()
 		const wxString profName = this->getNextFreeProfileName();
 		wxKeyProfile profile = buildNewProfile( profName, wxT("User hotkey profile"), false );
 		this->putKeybindingsToProfile( profile, curBinding );	
-		m_keyConfigPanel.AddProfile( profile );
+		m_keyConfigPanel.AddProfile( profile, true );
+
 
 		customMessageBox(SS_MAIN_ICON, _("Your current hotkey configuration does not match any known profile.\n A new profile with the name '" + profName + "' has been created."), 
 			_("New hotkey profile found"), wxOK );
@@ -348,8 +363,52 @@ void hotkey_panel::selectProfileFromUikeys()
 	m_keyConfigPanel.SetSelProfile( foundIdx );
 }
 
+key_binding_collection hotkey_panel::getProfilesFromSettings( )
+{
+	key_binding_collection coll;
+
+	wxArrayString profiles = sett().GetHotkeyProfiles();
+	for( size_t i=0; i < profiles.GetCount(); ++i)
+	{
+		wxString profName = profiles.Item(i);
+
+		//fill with the default bindings
+		coll[profName] = SpringDefaultProfile::getAllBindingsC2K();
+	
+		//add keybindings
+		wxArrayString commands = sett().GetHotkeyProfileCommands( profName );
+		for( size_t k=0; k < commands.GetCount(); ++k )
+		{
+			wxString cmd = commands.Item(k);
+			wxArrayString keys = sett().GetHotkeyProfileCommandKeys( profName, cmd );
+			for( size_t j=0; j < keys.GetCount(); ++j )
+			{
+				const wxString& key = sett().GetHotkey( profName, cmd, keys.Item(j) );
+				const wxString& springKey = KeynameConverter::spring2wxKeybinder( keys.Item(j), true );
+				if ( key == "bind" )
+				{
+					coll[profName][cmd].insert( springKey );
+				}
+				else if ( key == "unbind" )
+				{
+					coll[profName][cmd].erase( springKey );
+				}
+				else
+				{
+					throw std::runtime_error( std::string("Unknown key action: ") + key.ToAscii() );
+				}
+			}
+		}
+	}
+
+	return coll;
+}
+
 void hotkey_panel::UpdateControls(int /*unused*/)
 {
+	this->updateTreeView();
+
+	//Fetch the profiles
 	m_keyConfigPanel.RemoveAllProfiles();
 
 	//put default profile
@@ -360,47 +419,83 @@ void hotkey_panel::UpdateControls(int /*unused*/)
 
 	//put user profiles from springsettings configuration
 	{
-		wxArrayString profiles = sett().GetHotkeyProfiles();
-		for( size_t i=0; i < profiles.GetCount(); ++i)
+		key_binding_collection profiles = hotkey_panel::getProfilesFromSettings();
+		for( key_binding_collection::const_iterator piter = profiles.begin(); piter != profiles.end(); ++piter )
 		{
-			wxString profName = profiles.Item(i);
-
+			wxString profName = piter->first;
+			
 			wxKeyProfile profile = buildNewProfile(profName, wxT("User hotkey profile"),false);
-			this->putKeybindingsToProfile( profile, defBinds );	
-
-			//156
-			hotkey_panel::getShortcutCountFromBinding( defBinds );
 
 			//add keybindings
-			wxArrayString commands = sett().GetHotkeyProfileCommands( profName );
-			for( size_t k=0; k < commands.GetCount(); ++k )
+			for( key_binding::const_iterator citer = piter->second.begin(); citer != piter->second.end(); ++citer )
 			{
-				wxString cmd = commands.Item(k);
-				wxArrayString keys = sett().GetHotkeyProfileCommandKeys( profName, cmd );
-				for( size_t j=0; j < keys.GetCount(); ++j )
+				const wxString cmd = citer->first;
+				for ( key_set::const_iterator kiter = citer->second.begin(); kiter != citer->second.end(); ++kiter )
 				{
 					wxCmd* pCmd = profile.GetCmd( CommandList::getCommandByName(cmd).m_id );
-					wxString key = sett().GetHotkey( profName, cmd, keys.Item(j) );
-					if ( key == "bind" )
-					{
-						pCmd->AddShortcut( keys.Item(j) );
-					}
-					else if ( key == "unbind" )
-					{
-						pCmd->RemoveShortcut( keys.Item(j) );
-					}
-					else
-					{
-						throw std::runtime_error( std::string("Unknown key action: ") + key.ToAscii() );
-					}
+					pCmd->AddShortcut( KeynameConverter::spring2wxKeybinder( (*kiter) ) );
 				}
 			}
 
-			hotkey_panel::getShortcutCountFromBinding( hotkey_panel::getBindingsFromProfile( profile ) );
-
 			m_keyConfigPanel.AddProfile( profile );
+
+			getBindingsFromProfile( *m_keyConfigPanel.GetProfile(1) );
 		}
 	}
 
+	this->m_keyConfigPanel.ResetProfileBeenModifiedOrSelected();
+
 	selectProfileFromUikeys();
+}
+
+void hotkey_panel::updateTreeView()
+{
+	wxKeyConfigPanel::ControlMap ctrlMap;
+
+	{	//1. import control map
+		const CommandList::CommandMap& commands = CommandList::getCommands();
+		for( CommandList::CommandMap::const_iterator iter = commands.begin(); iter != commands.end(); ++iter )
+		{
+			const CommandList::Command& cmd = iter->second;
+			ctrlMap[ cmd.m_category ][ cmd.m_command ] = cmd.m_id;
+		}
+	}
+
+	{	//2. import springsettings-config-profiles
+		key_binding_collection profiles = hotkey_panel::getProfilesFromSettings();
+		for( key_binding_collection::const_iterator piter = profiles.begin(); piter != profiles.end(); ++piter )
+		{
+			wxString profName = piter->first;
+			
+			//add keybindings
+			for( key_binding::const_iterator citer = piter->second.begin(); citer != piter->second.end(); ++citer )
+			{
+				const CommandList::Command& cmd = CommandList::getCommandByName( citer->first );
+				ctrlMap[ cmd.m_category ][ cmd.m_command ] = cmd.m_id;
+			}
+		}
+	}
+
+	{	//3. from uikeys.txt
+		key_binding uikeys = this->m_uikeys_manager.getBindingsC2K();
+
+		key_binding_collection profiles = hotkey_panel::getProfilesFromSettings();
+		for( key_binding::const_iterator iter = uikeys.begin(); iter != uikeys.end(); ++iter )
+		{
+			const CommandList::Command& cmd = CommandList::getCommandByName( iter->first );
+			ctrlMap[ cmd.m_category ][ cmd.m_command ] = cmd.m_id;
+		}
+	}
+
+	m_keyConfigPanel.ImportRawList( ctrlMap, "Commands" ); 
+}
+
+bool hotkey_panel::HasProfileBeenModifiedOrSelected() const
+{
+	return this->m_keyConfigPanel.HasProfileBeenModifiedOrSelected();
+}
+
+void hotkey_panel::ResetProfileBeenModifiedOrSelected()
+{
+	this->m_keyConfigPanel.ResetProfileBeenModifiedOrSelected();
 }

@@ -18,6 +18,7 @@ public:
 
 	static wxString spring2wxKeybinder( const wxString& keystring, bool reverse = false );
 	static bool compareSpring2wxKeybinder( const wxString& springkey, const wxString& kbkey );
+	static wxString normalizeSpringKey( const wxString& springKey );
 
 private:
 	enum Modifier

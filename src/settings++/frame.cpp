@@ -114,7 +114,7 @@ void settings_frame::handleExternExit()
 {
 	if ( !alreadyCalled){
 		alreadyCalled = true;
-		if (abstract_panel::settingsChanged)
+		if (settingsChangedAbstract())
 		{
 			int choice = customMessageBox(SS_MAIN_ICON,_("Save Spring settings before exiting?"), _("Confirmation needed"), wxYES|wxNO |wxICON_QUESTION);
 			if ( choice == wxYES)
@@ -130,7 +130,7 @@ void settings_frame::handleExternExit()
 }
 
 void settings_frame::handleExit() {
-    if (abstract_panel::settingsChanged)
+    if (settingsChangedAbstract())
     {
     	int action = customMessageBox(SS_MAIN_ICON,_("Save Spring settings before exiting?"), _("Confirmation needed"),wxYES_NO|wxCANCEL|wxICON_QUESTION );
         switch (action) {
@@ -354,4 +354,14 @@ bool settings_frame::saveSettingsAbstract()
 	hotkeyTab->SaveSettings();
 
 	return abstract_panel::saveSettings();
+}
+
+bool settings_frame::settingsChangedAbstract()
+{
+	bool rc = false;
+
+	rc |= hotkeyTab->HasProfileBeenModifiedOrSelected();
+	rc |= abstract_panel::settingsChanged;
+
+	return rc;
 }
