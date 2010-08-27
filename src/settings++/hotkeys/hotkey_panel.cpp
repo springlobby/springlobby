@@ -178,7 +178,8 @@ void hotkey_panel::SaveSettings()
 				for( size_t k=0; k < keys.GetCount(); ++k )
 				{
 					//only write non-default bindings to settings
-					if ( false == hotkey_panel::isDefaultBinding( cmd.GetName(), keys.Item( k ) ) )
+					const wxString springkey = KeynameConverter::spring2wxKeybinder( keys.Item( k ), true );
+					if ( false == hotkey_panel::isDefaultBinding( cmd.GetName(), springkey ) )
 					{
 						sett().SetHotkey( profile.GetName(), cmd.GetName(), keys.Item(k).ToAscii(), false );
 					}
