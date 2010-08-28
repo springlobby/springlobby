@@ -5,5 +5,4 @@
 
 
 -DEFINE BFD?
--springsettings.ico
 -resource.rc xp look?
