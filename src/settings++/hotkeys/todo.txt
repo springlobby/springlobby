@@ -1,4 +1,9 @@
 -"meta" as possible keycode
 -"any" checkbox?
 -order of binds/unbinds for multiple keys
--check for unsaved changes in hotkeys when quit
+-colorize commands that have changed hotkeys compared to default
+
+
+-DEFINE BFD?
+-springsettings.ico
+-resource.rc xp look?
