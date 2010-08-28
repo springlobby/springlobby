@@ -416,6 +416,7 @@ class Settings
     bool GetSearchSpringOnlyInSLPath();
 
     /// convenience wrappers to get current used version paths
+	wxString GetCurrentUsedUikeys();
     wxString GetCurrentUsedDataDir();
     wxString GetCurrentUsedUnitSync();
     wxString GetCurrentUsedSpringBinary();
@@ -430,6 +431,7 @@ class Settings
 
     wxString AutoFindSpringBin();
     wxString AutoFindUnitSync();
+	wxString AutoFindUikeys();
 
     //!@brief returns config file path spring should use, returns empty for default
     wxString GetForcedSpringConfigFilePath();
@@ -763,6 +765,7 @@ class Settings
 	wxArrayString GetHotkeyProfileCommands( const wxString& profileName );
 	wxArrayString GetHotkeyProfileCommandKeys( const wxString& profileName, const wxString& command );
 	void DeleteHotkeyProfiles();
+	wxString GetUikeys( const wxString& index );
 
     /**@}*/
 
@@ -791,6 +794,7 @@ class Settings
 
     Settings( const Settings& );
 
+	wxPathList GetConfigFileSearchPathes();
 };
 
 Settings& sett();

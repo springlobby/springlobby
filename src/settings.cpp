@@ -798,6 +798,13 @@ wxPathList Settings::GetAdditionalSearchPaths( wxPathList& pl )
 
 	pl.Add( wxGetOSDirectory() );
 
+#ifdef __WXMSW__
+	pl.Add( sp.GetDocumentsDir() + sep + wxT("My Games") + sep + wxT("Spring") );
+	//maybe add more here like:
+	//Appdata + \Spring
+	//Mydocs + \Spring
+#endif
+
 	for ( size_t i = 0; i < pl.GetCount(); i++ )
 	{
 		wxString path = pl[i];
@@ -825,7 +832,7 @@ wxString Settings::AutoFindSpringBin()
 }
 
 
-wxString Settings::AutoFindUnitSync()
+wxPathList Settings::GetConfigFileSearchPathes()
 {
 	wxPathList pl;
 
@@ -848,10 +855,22 @@ wxString Settings::AutoFindUnitSync()
 
 	pl = GetAdditionalSearchPaths( pl );
 
+	return pl;
+}
+
+wxString Settings::AutoFindUnitSync()
+{
+	wxPathList pl = GetConfigFileSearchPathes();;
 	wxString retpath = pl.FindValidPath( _T( "unitsync" ) + GetLibExtension() );
 	if ( retpath.IsEmpty() )
 		retpath = pl.FindValidPath( _T( "libunitsync" ) + GetLibExtension() );
 	return retpath;
+}
+
+wxString Settings::AutoFindUikeys()
+{
+	wxPathList pl = GetConfigFileSearchPathes();;
+	return pl.FindValidPath( _T( "uikeys.txt" ) );
 }
 
 
@@ -960,6 +979,15 @@ wxString Settings::GetCurrentUsedUnitSync()
 	else if ( GetSearchSpringOnlyInSLPath() ) return GetExecutableFolder() + wxFileName::GetPathSeparator() + _T( "unitsync" ) + GetLibExtension();
 #endif
 	else return GetUnitSync( GetCurrentUsedSpringIndex() );
+}
+
+wxString Settings::GetCurrentUsedUikeys()
+{
+	if ( IsPortableMode() ) return GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T( "uikeys.txt" );
+#ifdef __WXMSW__
+	else if ( GetSearchSpringOnlyInSLPath() ) return GetExecutableFolder() + wxFileName::GetPathSeparator() + _T( "uikeys.txt" );
+#endif
+	else return GetUikeys( GetCurrentUsedSpringIndex() );
 }
 
 wxString Settings::GetCurrentUsedSpringConfigFilePath()
@@ -2579,6 +2607,12 @@ wxArrayString Settings::GetHotkeyProfileCommandKeys( const wxString& profileName
 void Settings::DeleteHotkeyProfiles()
 {
 	m_config->DeleteGroup( _T( "/HotkeyProfiles/" ) );
+}
+
+
+wxString Settings::GetUikeys( const wxString& index )
+{
+	return m_config->Read( _T( "/Spring/Paths/" ) + index + _T( "/Uikeys" ), AutoFindUikeys() );
 }
 
 //END OF Hotkeys stuff (for springsettings)

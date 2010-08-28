@@ -13,9 +13,9 @@
 #include "SpringDefaultProfile.h"
 
 hotkey_panel::hotkey_panel(wxWindow *parent, wxWindowID id , const wxString &title , const wxPoint& pos , const wxSize& size, long style)
-: wxScrolledWindow(parent, id, pos, size, style|wxTAB_TRAVERSAL|wxHSCROLL,title),
-m_keyConfigPanel( this, -1, wxDefaultPosition, wxDefaultSize, 1|8|16|524288 ),
-m_uikeys_manager("D:\\games\\spring\\uikeys.txt")
+						: wxScrolledWindow(parent, id, pos, size, style|wxTAB_TRAVERSAL|wxHSCROLL,title),
+							m_keyConfigPanel( this, -1, wxDefaultPosition, wxDefaultSize, 1|8|16|524288 ),
+							m_uikeys_manager(sett().GetCurrentUsedUikeys() )
 {
 	try
 	{
