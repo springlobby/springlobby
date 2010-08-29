@@ -34,12 +34,12 @@ wxLocale * wxTranslationHelper::GetLocale()
 	return m_Locale;
 }
 
-const wxString & wxTranslationHelper::GetSearchPath()
+const wxString & wxTranslationHelper::GetSearchPath() const
 {
 	return m_SearchPath;
 }
 
-void wxTranslationHelper::SetSearchPath( wxString& value )
+void wxTranslationHelper::SetSearchPath( const wxString& value )
 {
 	m_SearchPath = value;
 	if( m_SearchPath.IsEmpty() )

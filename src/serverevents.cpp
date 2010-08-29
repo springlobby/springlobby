@@ -785,6 +785,10 @@ void ServerEvents::OnRing( const wxString& from )
     ui().OnRing( from );
 }
 
+void ServerEvents::OnServerBroadcast( const wxString& message )
+{
+	ui().OnServerBroadcast( m_serv, message );
+}
 
 void ServerEvents::OnServerMessage( const wxString& message )
 {

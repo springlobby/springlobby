@@ -169,7 +169,7 @@ void TorrentListCtrl::Sort()
 }
 
 
-void TorrentListCtrl::SetTipWindowText( const long /*item_hit*/, const wxPoint /*position*/)
+void TorrentListCtrl::SetTipWindowText( const long /*item_hit*/, const wxPoint& /*position*/)
 {
     m_tiptext = _T("");
 }

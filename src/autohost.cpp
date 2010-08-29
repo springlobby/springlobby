@@ -24,7 +24,7 @@ void AutoHost::SetEnabled( const bool enabled )
 	m_enabled = enabled;
 }
 
-bool AutoHost::GetEnabled()
+bool AutoHost::GetEnabled() const
 {
 	return m_enabled;
 }

@@ -560,9 +560,14 @@ void BattleListTab::DoJoin( Battle& battle )
 
 	if ( battle.IsPassworded() )
 	{
-		wxPasswordEntryDialog pw( this, _( "Battle password" ), _( "Enter password" ) );
+		wxPasswordEntryDialog pw( this, _( "Battle password" ), _( "Enter password (spaces will be stripped)" ) );
 		pw.SetFocus();
-		if ( pw.ShowModal() == wxID_OK ) battle.Join( pw.GetValue() );
+		if ( pw.ShowModal() == wxID_OK )
+		{
+			wxString password = pw.GetValue();
+			password.Replace(_T(" "), _T(""));
+			battle.Join( password );
+		}
 	}
 	else
 	{

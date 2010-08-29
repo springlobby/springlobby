@@ -601,6 +601,12 @@ void Ui::OnConnected( Server& server, const wxString& server_name, const wxStrin
 
     if ( server.uidata.panel ) server.uidata.panel->StatusMessage( _T("Connected to ") + server_name + _T(".") );
 		mw().GetBattleListTab().OnConnected();
+
+	delete m_con_win;
+	m_con_win = 0;
+
+	delete m_reconnect_dialog;
+	m_reconnect_dialog = 0;
 }
 
 
@@ -696,11 +702,9 @@ void Ui::ConnectionFailurePrompt()
 	{
 		return;
 	}
-	if ( m_con_win ) // if connect window instance exists, delete it to avoid 2 windows which do the same task
-	{
-		delete m_con_win;
-		m_con_win = 0;
-	}
+	// if connect window instance exists, delete it to avoid 2 windows which do the same task
+	delete m_con_win;
+	m_con_win = 0;
 	m_reconnect_dialog = new ReconnectDialog();
 	int returnval = m_reconnect_dialog->ShowModal();
 	delete m_reconnect_dialog;
@@ -938,10 +942,8 @@ void Ui::OnMotd( Server& server, const wxString& message )
     if ( server.uidata.panel != 0 ) server.uidata.panel->Motd( message );
 }
 
-
-void Ui::OnServerMessage( Server& server, const wxString& message )
+void Ui::OnServerBroadcast( Server& server, const wxString& message )
 {
-    if ( server.uidata.panel != 0 ) server.uidata.panel->StatusMessage( message );
 	if ( m_main_win == 0 ) return;
 	mw().GetChatTab().BroadcastMessage( message );
 	try // send it to battleroom too
@@ -949,6 +951,30 @@ void Ui::OnServerMessage( Server& server, const wxString& message )
 		mw().GetJoinTab().GetBattleRoomTab().GetChatPanel().StatusMessage(message);
 	}
 	catch(...) {}
+}
+
+
+void Ui::OnServerMessage( Server& server, const wxString& message )
+{
+	if ( !sett().GetBroadcastEverywhere() )
+	{
+		if ( server.uidata.panel != 0 ) server.uidata.panel->StatusMessage( message );
+	}
+	else
+	{
+		if ( server.uidata.panel != 0 ) server.uidata.panel->StatusMessage( message );
+		if ( m_main_win == 0 ) return;
+		ChatPanel* activepanel = mw().GetChatTab().GetActiveChatPanel();
+		if ( activepanel != 0 )
+		{
+			if (activepanel != server.uidata.panel) activepanel->StatusMessage(message); // don't send it twice to the server tab
+		}
+		try // send it to battleroom too
+		{
+			mw().GetJoinTab().GetBattleRoomTab().GetChatPanel().StatusMessage(message);
+		}
+		catch(...) {}
+	}
 }
 
 
@@ -1346,9 +1372,6 @@ void Ui::FirstRunWelcome()
 
 void Ui::CheckForUpdates()
 {
-	wxString t = _T("SpringLobby test\njfrepojeivnpenver\nwvpreivienrio\npwoewnpfwpnef\njcwoejfwp");
-	Paste2Pastebin( t );
-	return;
     wxString latestVersion = GetLatestVersion();
 
     if (latestVersion == _T("-1"))

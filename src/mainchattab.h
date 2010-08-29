@@ -42,6 +42,7 @@ class MainChatTab : public wxScrolledWindow
     void OnUserDisconnected( User& user );
 
 	void BroadcastMessage( const wxString& message );
+	ChatPanel* GetCurrentPanel();
 
     void ChangeUnreadChannelColour( const wxColour& colour );
     void ChangeUnreadPMColour( const wxColour& colour );

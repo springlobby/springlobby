@@ -735,6 +735,11 @@ void SimpleServerEvents::OnRing( const wxString& from )
 }
 
 
+void SimpleServerEvents::OnServerBroadcast( const wxString& message )
+{
+//    ui().OnServerBroadcast( m_serv, message );
+}
+
 void SimpleServerEvents::OnServerMessage( const wxString& message )
 {
 //    ui().OnServerMessage( m_serv, message );

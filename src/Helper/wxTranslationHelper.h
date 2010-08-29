@@ -29,8 +29,8 @@ public:
 	bool Load();
 	void Save();
 
-	const wxString & GetSearchPath();
-	void SetSearchPath( wxString& value );
+	const wxString & GetSearchPath() const;
+	void SetSearchPath( const wxString& value );
 
 private:
     wxApp& m_App;

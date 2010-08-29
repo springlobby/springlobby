@@ -743,7 +743,7 @@ struct Alliance
     std::vector<User *>players;
     float ranksum;
     int allynum;
-    Alliance(): ranksum(0) {}
+    Alliance(): ranksum(0), allynum(-1) {}
     Alliance(int i): ranksum(0), allynum(i) {}
     void AddPlayer( User *player )
     {
@@ -768,7 +768,7 @@ struct ControlTeam
     std::vector<User*> players;
     float ranksum;
     int teamnum;
-    ControlTeam(): ranksum(0) {}
+    ControlTeam(): ranksum(0), teamnum(-1) {}
     ControlTeam( int i ): ranksum(0), teamnum(i) {}
     void AddPlayer( User *player )
     {

@@ -62,7 +62,7 @@ class BattleListFilter : public wxPanel
 
     wxString _GetButtonSign(ButtonMode value);
 		ButtonMode _GetNextMode(ButtonMode value);
-		ButtonMode _GetButtonMode(wxString sign);
+		ButtonMode _GetButtonMode(const wxString& sign);
 		bool _IntCompare(int a,int b,ButtonMode mode);
 
     /** A function callback used to transform an input string. */

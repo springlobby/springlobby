@@ -90,7 +90,7 @@ wxFrame( (wxFrame*)&ui().mw(), -1, _("Newbies guide"), wxPoint(50, 50), wxSize(8
 	UsefulLinks << _("Development infos: http://springrts.com/wiki/Engine_Development\n"); // guides and links
 
 	wxBoxSizer* MainSizer = new wxBoxSizer(wxVERTICAL);
-	wxFlexGridSizer* ButtonSizer = new wxFlexGridSizer(3,2);
+	wxFlexGridSizer* ButtonSizer = new wxFlexGridSizer(3,2,2,2);
 	wxBoxSizer* TextSizer = new wxBoxSizer(wxVERTICAL);
 	wxBoxSizer* HeaderSizer = new wxBoxSizer(wxVERTICAL);
 

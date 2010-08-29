@@ -142,7 +142,7 @@ int PlaybackListCtrl<PlaybackType>::CompareOneCrit( DataType u1, DataType u2, in
 }
 
 template <class PlaybackType>
-void PlaybackListCtrl<PlaybackType>::SetTipWindowText( const long item_hit, const wxPoint position)
+void PlaybackListCtrl<PlaybackType>::SetTipWindowText( const long item_hit, const wxPoint& position)
 {
     if ( item_hit < 0 || item_hit >= (long)m_data.size() )
         return;

@@ -98,6 +98,7 @@ class IServerEvents
 	virtual void OnRing( const wxString& from ) = 0;
 
 	virtual void OnServerMessage( const wxString& message ) = 0;
+	virtual void OnServerBroadcast( const wxString& message ) = 0;
 	virtual void OnServerMessageBox( const wxString& message ) = 0;
 	virtual void OnChannelMessage( const wxString& channel, const wxString& msg ) = 0;
 

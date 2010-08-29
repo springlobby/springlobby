@@ -5,6 +5,7 @@
 
 #include "nonportable.h" //pulls in the SL_DUMMY_COL define if applicable
 #include "settings.h"
+#include "defines.h"
 #include "iconimagelist.h"
 #include "utils/customdialogs.h"
 #include "uiutils.h"
@@ -14,8 +15,11 @@
 
 #include <algorithm>
 
-
-BEGIN_EVENT_TABLE_TEMPLATE2(CustomVirtListCtrl, ListBaseType, T,L)
+#ifdef HAVE_WX29
+	wxBEGIN_EVENT_TABLE_TEMPLATE2(CustomVirtListCtrl, ListBaseType, T,L)
+#else
+	BEGIN_EVENT_TABLE_TEMPLATE2(CustomVirtListCtrl, ListBaseType, T,L)
+#endif
 #if wxUSE_TIPWINDOW
   EVT_MOTION(CustomVirtListCtrl::OnMouseMotion)
   EVT_TIMER(IDD_TIP_TIMER, CustomVirtListCtrl::OnTimer)
@@ -554,7 +558,7 @@ void CustomVirtListCtrl<T,L>::ReverseOrder()
 }
 
 template < class T, class L >
-bool CustomVirtListCtrl<T,L>::AddItem( const T item )
+bool CustomVirtListCtrl<T,L>::AddItem( const T& item )
 {
     if ( GetIndexFromData( item ) != -1 )
         return false;
@@ -568,7 +572,7 @@ bool CustomVirtListCtrl<T,L>::AddItem( const T item )
 }
 
 template < class T, class L >
-bool CustomVirtListCtrl<T,L>::RemoveItem( const T item )
+bool CustomVirtListCtrl<T,L>::RemoveItem( const T& item )
 {
     int index = GetIndexFromData( item );
 

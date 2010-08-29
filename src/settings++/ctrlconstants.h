@@ -130,6 +130,7 @@ const int ID_AO_SLI_2 = 402;
 const int ID_AO_SLI_3 = 403;
 const int ID_AO_SLI_4 = 404;
 const int ID_AO_SLI_5 = 405;
+const int ID_AO_SLI_6 = 406;
 
 // ParentWin Debug Options checkbox IDs
 const int ID_WINDOWP_DO_CBOX_0 = 540;
@@ -274,7 +275,8 @@ const Control AO_SLI[] = {
 	{_("General sound volume"),   _T("snd_general"),                ID_AO_SLI_2,	_T("100"), {_("general volume relative to master volume")}},
 	{_("Unit reply volume"),     _T("snd_volunitreply"),       ID_AO_SLI_3,	_T("100") , {_("reply volume relative to master volume")}},
 	{_("Battle volume"),     _T("snd_volbattle"),       ID_AO_SLI_4,	_T("100") , {_("battle volume relative to global volume")}},
-	{_("User interface volume"),     _T("snd_volui"),       ID_AO_SLI_5,	_T("100") , {_("ui volume relative to global volume")}}
+	{_("User interface volume"),     _T("snd_volui"),       ID_AO_SLI_5,	_T("100") , {_("ui volume relative to global volume")}},
+	{_("Air Absorbtion factor"),     _T("snd_airAbsorption"),       ID_AO_SLI_6,	_T("0") , {_("How much far sounds will have high frequencies dampened")}}
 
 };
 

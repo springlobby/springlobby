@@ -66,8 +66,7 @@ Spring::Spring() :
 
 Spring::~Spring()
 {
-    if ( m_process != 0 )
-        delete m_process;
+    delete m_process;
 }
 
 

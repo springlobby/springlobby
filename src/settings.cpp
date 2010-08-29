@@ -243,7 +243,7 @@ unsigned int Settings::GetGroupCount( const wxString& base_key )
 	return count;
 }
 
-bool Settings::IsPortableMode()
+bool Settings::IsPortableMode() const
 {
 	return m_portable_mode;
 }
@@ -266,7 +266,7 @@ void Settings::SetSettingsVersion()
 }
 
 
-unsigned int  Settings::GetSettingsVersion()
+unsigned int Settings::GetSettingsVersion()
 {
 	return m_config->Read( _T( "/General/SettingsVersion" ), 0l );
 }
@@ -873,7 +873,7 @@ void Settings::ConvertOldSpringDirsOptions()
 	m_config->DeleteEntry( _T( "/Spring/exec_loc" ) );
 }
 
-std::map<wxString, wxString> Settings::GetSpringVersionList()
+std::map<wxString, wxString> Settings::GetSpringVersionList() const
 {
 	return m_spring_versions;
 }
@@ -2546,4 +2546,14 @@ bool Settings::DoResetPerspectives()
 void Settings::SetDoResetPerspectives( bool do_it )
 {
 	m_config->Write(_T( "/reset_perspectives" ) , (long)do_it );
+}
+
+bool Settings::GetBroadcastEverywhere()
+{
+	return m_config->Read( _T("/Chat/BroadcastEverywhere") ,true);
+}
+
+void Settings::SetBroadcastEverywhere(bool value)
+{
+	m_config->Write( _T("/Chat/BroadcastEverywhere"), value);
 }

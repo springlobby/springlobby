@@ -21,12 +21,12 @@ class Customizations {
 
         bool Init( const wxString& modname );
 
-        wxString GetModname();
-        wxString GetHelpUrl();
-        wxIcon GetAppIcon();
-        wxBitmap GetBackground();
-        wxSize GetBackgroundSize();
-        const OptionsWrapper& GetCustomizations();
+        const wxString& GetModname() const;
+        const wxString& GetHelpUrl() const;
+        const wxIcon& GetAppIcon() const;
+        const wxBitmap& GetBackground() const;
+        wxSize GetBackgroundSize() const;
+        const OptionsWrapper& GetCustomizations() const;
 
     friend class GlobalObjectHolder<Customizations, LineInfo<Customizations> >;
 };
