@@ -279,7 +279,7 @@ find_tail_sequences(int fd, const char* bytes, size_t bytes_length, size_t count
 
 void ChatLog::FillLastLineArray()
 {
-    int fd ( open(GetCurrentLogfilePath().fn_str(), O_RDONLY) );
+    int fd ( open(static_cast<const char*>(GetCurrentLogfilePath().fn_str()), O_RDONLY) );
     if ( fd < 0 )
     {
 	wxLogError(_T("%s: failed to open log file."), __PRETTY_FUNCTION__);
