@@ -247,16 +247,18 @@ find_tail_sequences(int fd, const char* bytes, size_t bytes_length, size_t count
 			    source = buf + i + bytes_length;
 			}
 
-			out.Insert(wxString(L'\0', 0), 0);
-			wxLogMessage(_T("ChatLog::find_tail_sequences: fetching write buffer for %lu bytes"), sizeof(wxChar) * (line_length + 1));
+			if (  strncmp(source, "##", 2) != 0 ) {
+			    out.Insert(wxString(L'\0', 0), 0);
+			    wxLogMessage(_T("ChatLog::find_tail_sequences: fetching write buffer for %lu bytes"), sizeof(wxChar) * (line_length + 1));
 
-			wxConvUTF8.MB2WC(out[0].GetWriteBuf(sizeof(wxChar) * (line_length + 1)), source, line_length);
-			out[0].UngetWriteBuf(line_length);
+			    wxConvUTF8.MB2WC(out[0].GetWriteBuf(sizeof(wxChar) * (line_length + 1)), source, line_length);
+			    out[0].UngetWriteBuf(line_length);
+
+			    ++count_added;
+			}
 
 			if ( last_found_pos >= read_position + (off_t) bytes_read )
 			    delete[] source;
-
-			++count_added;
 
 			if ( count_added >= count )
 			    i = -1; /* short-circuit the `for' loop. */
@@ -277,7 +279,6 @@ find_tail_sequences(int fd, const char* bytes, size_t bytes_length, size_t count
 
 void ChatLog::FillLastLineArray()
 {
-
     int fd ( open(GetCurrentLogfilePath().fn_str(), O_RDONLY) );
     if ( fd < 0 )
     {
