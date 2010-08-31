@@ -427,9 +427,8 @@ void BattleListTab::OnHost( wxCommandEvent& /*unused*/ )
 		bo.rankneeded = sett().GetLastRankLimit();
 
 		bo.maxplayers = sett().GetLastHostPlayerNum();
-
-		bo.isproxy = sett().GetLastHostRelayedMode();
-		if ( bo.isproxy ) bo.nattype = NAT_None;
+		bo.userelayhost = sett().GetLastHostRelayedMode();
+		if ( bo.userelayhost ) bo.nattype = NAT_None;
 		bo.relayhost = sett().GetLastRelayedHost();
 		serverSelector().GetServer().HostBattle( bo, sett().GetLastHostPassword() );
 	}
