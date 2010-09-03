@@ -7,27 +7,27 @@ KeynameConverter::KeyMap		KeynameConverter::m_keybinder2spring;
 
 void KeynameConverter::initialize()
 {
-	KeynameConverter::addMapping( "backspace", "BACK" );
-	KeynameConverter::addMapping( "esc", "ESCAPE" );
-	KeynameConverter::addMapping( "enter", "RETURN" );
+	KeynameConverter::addMapping( wxT("backspace"), wxT("BACK") );
+	KeynameConverter::addMapping( wxT("esc"), wxT("ESCAPE") );
+	KeynameConverter::addMapping( wxT("enter"), wxT("RETURN") );
 
-	KeynameConverter::addMapping( "numpad*", "* (numpad)" );
-	KeynameConverter::addMapping( "numpad+", "+ (numpad)" );
-	KeynameConverter::addMapping( "numpad-", "- (numpad)" );
-	KeynameConverter::addMapping( "numpad.", ". (numpad)" );
-	KeynameConverter::addMapping( "numpad/", "/ (numpad)" );
-	KeynameConverter::addMapping( "numpad0", "0 (numpad)" );
-	KeynameConverter::addMapping( "numpad1", "1 (numpad)" );
-	KeynameConverter::addMapping( "numpad2", "2 (numpad)" );
-	KeynameConverter::addMapping( "numpad3", "3 (numpad)" );
-	KeynameConverter::addMapping( "numpad4", "4 (numpad)" );
-	KeynameConverter::addMapping( "numpad5", "5 (numpad)" );
-	KeynameConverter::addMapping( "numpad6", "6 (numpad)" );
-	KeynameConverter::addMapping( "numpad7", "7 (numpad)" );
-	KeynameConverter::addMapping( "numpad8", "8 (numpad)" );
-	KeynameConverter::addMapping( "numpad9", "9 (numpad)" );
-	KeynameConverter::addMapping( "numpad=", "= (numpad)" );
-	KeynameConverter::addMapping( "numpad_enter", "ENTER (numpad)" );
+	KeynameConverter::addMapping( wxT("numpad*"), wxT("* (numpad)") );
+	KeynameConverter::addMapping( wxT("numpad+"), wxT("+ (numpad)") );
+	KeynameConverter::addMapping( wxT("numpad-"), wxT("- (numpad)") );
+	KeynameConverter::addMapping( wxT("numpad."), wxT(". (numpad)") );
+	KeynameConverter::addMapping( wxT("numpad/"), wxT("/ (numpad)") );
+	KeynameConverter::addMapping( wxT("numpad0"), wxT("0 (numpad)") );
+	KeynameConverter::addMapping( wxT("numpad1"), wxT("1 (numpad)") );
+	KeynameConverter::addMapping( wxT("numpad2"), wxT("2 (numpad)") );
+	KeynameConverter::addMapping( wxT("numpad3"), wxT("3 (numpad)") );
+	KeynameConverter::addMapping( wxT("numpad4"), wxT("4 (numpad)") );
+	KeynameConverter::addMapping( wxT("numpad5"), wxT("5 (numpad)") );
+	KeynameConverter::addMapping( wxT("numpad6"), wxT("6 (numpad)") );
+	KeynameConverter::addMapping( wxT("numpad7"), wxT("7 (numpad)") );
+	KeynameConverter::addMapping( wxT("numpad8"), wxT("8 (numpad)") );
+	KeynameConverter::addMapping( wxT("numpad9"), wxT("9 (numpad)") );
+	KeynameConverter::addMapping( wxT("numpad="), wxT("= (numpad)") );
+	KeynameConverter::addMapping( wxT("numpad_enter"), wxT("ENTER (numpad)") );
 }
 
 void KeynameConverter::addMapping( const wxString& springKey, const wxString& keybinderKey )
@@ -39,26 +39,26 @@ void KeynameConverter::addMapping( const wxString& springKey, const wxString& ke
 wxString KeynameConverter::discardModifier( const wxString& keystring )
 {
 	wxString result;
-	if ( keystring.EndsWith("+") )	//handle stuff like numpad+ or ctrl++
+	if ( keystring.EndsWith(wxT("+")) )	//handle stuff like numpad+ or ctrl++
 	{
 		wxString tmp = keystring;
-		result = tmp.RemoveLast().AfterLast('+') + '+';
+		result = tmp.RemoveLast().AfterLast(wxT('+') + wxT('+'));
 	}
-	else if ( keystring.StartsWith("+") )	//handle stuff like "+ (numpad)"
+	else if ( keystring.StartsWith(wxT("+")) )	//handle stuff like "+ (numpad)"
 	{
 		result = keystring;
 	}
 	else 
 	{
-		size_t lastAdd = keystring.find_last_of('+');
-		if ( ( lastAdd != keystring.npos ) && ( keystring.GetChar(lastAdd - 1) == '+' ) )
+		size_t lastAdd = keystring.find_last_of(wxT('+'));
+		if ( ( lastAdd != keystring.npos ) && ( keystring.GetChar(lastAdd - 1) == wxT('+') ) )
 		{
 			assert( (lastAdd > 0) && "character '+' found in unexcepted location!" );
 			result = keystring.substr( lastAdd );
 		}
 		else
 		{
-			result = keystring.AfterLast('+');
+			result = keystring.AfterLast(wxT('+'));
 		}
 	}
 	return result;
@@ -123,7 +123,7 @@ wxString KeynameConverter::spring2wxKeybinder( const wxString& keystring, bool r
 	{
 		kbKey = pCurKeyMap->find( key )->second;
 	}
-	else if ( key.StartsWith("0x") && key.size() == 4 )
+	else if ( key.StartsWith( wxT("0x") ) && key.size() == 4 )
 	{
 		//raw key code - e.g. 0xa4
 		const wxString tmp = key.substr( 2, 2 );

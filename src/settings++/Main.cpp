@@ -137,7 +137,9 @@ bool Springsettings::OnCmdLineParsed(wxCmdLineParser& parser)
   #if wxUSE_CMDLINE_PARSER
     if ( !parser.Parse(true) )
     {
+#if wxUSE_STD_IOSTREAM
         m_log_console = parser.Found(_T("console-logging"));
+#endif
         m_log_window_show = parser.Found(_T("gui-logging"));
         m_crash_handle_disable = parser.Found(_T("no-crash-handler"));
 

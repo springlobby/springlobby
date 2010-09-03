@@ -33,7 +33,7 @@ hotkey_parser::hotkey_parser(const wxString& uikeys_filename) : filename( uikeys
 	wxString line;
 	for ( line = uiFile.GetFirstLine(); !uiFile.Eof(); line = uiFile.GetNextLine() )
 	{
-		if ( line.Trim().StartsWith( "//" ) )
+		if ( line.Trim().StartsWith( wxT("//") ) )
 		{
 			continue;
 		}
@@ -57,7 +57,7 @@ bool hotkey_parser::processLine( const wxString& line )
 
 	if ( tokLine.size() == 1 )
 	{ //unbindall?
-		if ( tokLine[0] == "unbindall" )
+		if ( tokLine[0] == wxT("unbindall") )
 		{
 			bindsK2C.clear();
 			return true;
@@ -70,7 +70,7 @@ bool hotkey_parser::processLine( const wxString& line )
 		const wxString& cmd = tokLine[0];
 		const wxString& key = tokLine[1];
 
-		if ( cmd == "fakemeta" )
+		if ( cmd == wxT("fakemeta") )
 		{
 			this->bindsK2C[key].insert( cmd );
 			return true;
@@ -84,16 +84,16 @@ bool hotkey_parser::processLine( const wxString& line )
 	wxString action; 
 	for( unsigned i=2; i < tokLine.size(); ++i )
 	{
-		action.append( tokLine[i] + " " );
+		action.append( tokLine[i] + wxT(" ") );
 	}
 	action.Trim();
 
-	if ( cmd == "bind" )
+	if ( cmd == wxT("bind") )
 	{
 		this->bindsK2C[key].insert( action );
 		return true;
 	}
-	else if ( cmd == "unbind" )
+	else if ( cmd == wxT("unbind") )
 	{
 		if ( this->bindsK2C.find( key ) == this->bindsK2C.end() )
 		{
@@ -116,7 +116,7 @@ bool hotkey_parser::processLine( const wxString& line )
 	}
 	else
 	{
-		wxLogWarning( _( "skipping uikeys.txt line (unknown token '" ) + cmd + "'): " + line );
+		wxLogWarning( _( "skipping uikeys.txt line (unknown token '" ) + cmd + wxT("'): ") + line );
 		return false;
 	}
 
@@ -134,7 +134,8 @@ void hotkey_parser::dumpIncludeSourceCode( const wxString& filename )
 
 	if ( !f.is_open() )
 	{
-		throw std::runtime_error( std::string("Could not open file for writing: ") + filename.ToAscii() );
+		const wxString msg = _("Could not open file for writing: ") + filename;
+		throw std::runtime_error( msg.mb_str(wxConvUTF8) );
 	}
 
 	for( key_binding::const_iterator iter = bindsC2K.begin(); iter != bindsC2K.end(); ++iter )
@@ -154,7 +155,7 @@ void hotkey_parser::dumpIncludeSourceCode( const wxString& filename )
 
 std::vector<wxString> hotkey_parser::tokenize_uikeys_line( const wxString& line )
 {
-	wxStringTokenizer tkz( line, " \t" );
+	wxStringTokenizer tkz( line, wxT(" \t") );
 
 	std::vector<wxString> data;
 	while ( tkz.HasMoreTokens() )
@@ -208,34 +209,36 @@ bool hotkey_parser::isKeyInProfile( const key_binding& kbBinding, const wxString
 
 void hotkey_parser::writeBindingsToFile( const key_binding& springbindings )
 {
-	const wxString newTmpFilename = this->filename + _T(".tmp");
+	const wxString newTmpFilename = this->filename + wxT(".tmp");
 
 	//open new file for writing
 	std::ofstream newFile;
-	newFile.open( newTmpFilename.To8BitData() );
+	newFile.open( newTmpFilename.c_str(wxConvUTF8) );
 	if ( !newFile.is_open() )
 	{
-		throw std::runtime_error( std::string("Error opening file for writing: ") + newTmpFilename.ToAscii() );
+		const wxString msg = _("Error opening file for writing: ") + newTmpFilename;
+		throw std::runtime_error( msg.mb_str(wxConvUTF8) );
 	}
 
 	//open old file for reading
 	std::ifstream oldFile;
-	oldFile.open( this->filename.To8BitData() );
+	oldFile.open( this->filename.c_str() );
 	if ( !oldFile.is_open() )
 	{
-		throw std::runtime_error( std::string("Error opening file for writing: ") + newTmpFilename.ToAscii() );
+		const wxString msg = _("Error opening file for reading: ") + this->filename;
+		throw std::runtime_error( std::string( msg.mb_str(wxConvUTF8) ) );
 	}
 
 	//now read the old uikeys.txt line after line and copy all comments to the new file
 	std::string line;
 	while ( !oldFile.eof() )
 	{
-		std::getline (oldFile,line);
+		std::getline (oldFile, line);
 		wxString wxLine = line;
 		wxLine.Trim();
 		if ( wxLine.StartsWith(wxT("//")) )
 		{
-			newFile << line << "\n";
+			newFile << line << wxT('\n');
 		}
 	}
 
@@ -246,7 +249,7 @@ void hotkey_parser::writeBindingsToFile( const key_binding& springbindings )
 		{
 			if ( !hotkey_panel::isBindingInProfile( springbindings, iter->first, (*iiter) ) )
 			{
-				newFile << wxT("unbind\t\t") << (*iiter) << wxT("\t") << iter->first << "\n";
+				newFile << wxT("unbind\t\t") << (*iiter) << wxT("\t") << iter->first << wxT("\n");
 			}
 		}
 	}
@@ -257,7 +260,7 @@ void hotkey_parser::writeBindingsToFile( const key_binding& springbindings )
 		{
 			if ( !hotkey_panel::isDefaultBinding( iter->first, (*iiter) ) )
 			{
-				newFile << wxT("bind\t\t") << KeynameConverter::spring2wxKeybinder( (*iiter), true ) << wxT("\t") << iter->first << "\n";
+				newFile << wxT("bind\t\t") << KeynameConverter::spring2wxKeybinder( (*iiter), true ) << wxT("\t") << iter->first << wxT("\n");
 			}
 		}
 	}
@@ -268,29 +271,32 @@ void hotkey_parser::writeBindingsToFile( const key_binding& springbindings )
 	//delete old backup
 	const wxString prevFilenameBak = wxT("uikeys.txt.bak");
 	{
-		int rc = _unlink( prevFilenameBak.c_str() );
+		int rc = _unlink( prevFilenameBak.mbc_str() );
 		if ( rc != 0 )
 		{
-			throw std::runtime_error( std::string("Error delete backup file uikeys.txt.bak: ") + strerror( errno ) );
+			const wxString msg = _("Error deleting backup file uikeys.txt.bak: ") + wxString( strerror( errno ) );
+			throw std::runtime_error( msg.mb_str() );
 		}
 	}
 	
 	//backup our current uikeys.txt
 	{
-		int rc = rename( this->filename.To8BitData(), prevFilenameBak.To8BitData() );
+		int rc = rename( this->filename.c_str(), prevFilenameBak.c_str() );
 		if ( rc != 0 )
 		{
-			throw std::runtime_error( std::string("Error rename uikeys.txt to uikeys.txt.bak: ") + strerror( errno ) );
+			const wxString msg = _("Error renaming uikeys.txt to uikeys.txt.bak: ") + wxString( strerror( errno ) );
+			throw std::runtime_error( msg.mb_str() );
 		}
 	}
 
 	//rename our new tmp file to uikeys.txt. restore backup if failed
 	{
-		int rc = rename( newTmpFilename.c_str(), this->filename.To8BitData() );
+		int rc = rename( newTmpFilename.c_str(), this->filename.c_str() );
 		if ( rc != 0 )
 		{
 			int rc = rename( prevFilenameBak.To8BitData(), this->filename.To8BitData() );
-			throw std::runtime_error( std::string("Error renaming uikeys.txt.tmp to uikeys.txt: ") + strerror( errno ) );
+			const wxString msg = _("Error renaming uikeys.txt.tmp to uikeys.txt: ") + wxString( strerror( errno ) );
+			throw std::runtime_error( msg.mb_str() );
 		}
 	}
 }
