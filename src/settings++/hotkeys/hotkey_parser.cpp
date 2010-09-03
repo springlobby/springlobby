@@ -213,7 +213,7 @@ void hotkey_parser::writeBindingsToFile( const key_binding& springbindings )
 
 	//open new file for writing
 	std::ofstream newFile;
-	newFile.open( newTmpFilename.c_str(wxConvUTF8) );
+	newFile.open( newTmpFilename.c_str() );
 	if ( !newFile.is_open() )
 	{
 		const wxString msg = _("Error opening file for writing: ") + newTmpFilename;
