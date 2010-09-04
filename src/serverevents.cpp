@@ -637,7 +637,8 @@ void ServerEvents::OnChannelAction( const wxString& channel, const wxString& who
     wxLogDebugFunc( _T("") );
     try
     {
-        m_serv.GetChannel( channel ).DidAction( m_serv.GetUser( who ), action );
+		if ( ( m_serv.GetMe().GetNick() ==  who ) || !useractions().DoActionOnUser( UserActions::ActIgnoreChat, who ) )
+			m_serv.GetChannel( channel ).DidAction( m_serv.GetUser( who ), action );
     }
     catch (std::runtime_error &except)
     {
