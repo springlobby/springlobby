@@ -3,6 +3,15 @@
 #include <iostream>
 
 #include <wx/log.h>
+#include <wx/string.h>
+#include <wx/button.h>
+#include <wx/gdicmn.h>
+#include <wx/font.h>
+#include <wx/colour.h>
+#include <wx/settings.h>
+#include <wx/sizer.h>
+#include <wx/statbox.h>
+#include <wx/panel.h>
 
 #include "../../utils/customdialogs.h"
 #include "hotkey_parser.h"
@@ -13,58 +22,41 @@
 #include "SpringDefaultProfile.h"
 
 hotkey_panel::hotkey_panel(wxWindow *parent, wxWindowID id , const wxString &title , const wxPoint& pos , const wxSize& size, long style)
-: wxScrolledWindow(parent, id, pos, size, style|wxTAB_TRAVERSAL|wxHSCROLL,title),
-m_keyConfigPanel( this, -1, wxDefaultPosition, wxDefaultSize, 1|8|16|524288 ),
-m_uikeys_manager(sett().GetCurrentUsedUikeys() )
+													: wxScrolledWindow(parent, id, pos, size, style|wxTAB_TRAVERSAL|wxHSCROLL,title),
+													m_keyConfigPanel( this, -1, wxDefaultPosition, wxDefaultSize, (wxKEYBINDER_DEFAULT_STYLE & ~wxKEYBINDER_SHOW_APPLYBUTTON) ),
+													m_uikeys_manager(sett().GetCurrentUsedUikeys() )
 {
-	wxFlexGridSizer* fgSizer1;
-	fgSizer1 = new wxFlexGridSizer( 2, 2, 0, 0 ); 
-	fgSizer1->SetFlexibleDirection( wxBOTH );
-	fgSizer1->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-
 	KeynameConverter::initialize();
-
-	/*	wxStaticText* pStatCtrl = new wxStaticText( this, wxID_ANY, iter->first, wxDefaultPosition, wxDefaultSize, 0 );
-	staticControls.push_back( pStatCtrl );
-	pStatCtrl->Wrap( -1 );
-	fgSizer1->Add( pStatCtrl, 0, wxALL, 5 );
-
-	wxTextCtrl* pTxtCtrl = new wxTextCtrl( this, wxID_ANY, (*iter->second.begin()), wxDefaultPosition, wxDefaultSize, 0 );
-	textControls.push_back( pTxtCtrl );
-	fgSizer1->Add( pTxtCtrl, 0, wxALL, 5 );*/
-
-	//	m_button2 = new wxButton( this, wxID_ANY, wxT("Save hotkeys"), wxDefaultPosition, wxDefaultSize, 0 );
-	//	fgSizer1->Add( m_button2, 0, wxALL, 5 );
-
-	//wxCmd::AddCmdType( spring_command::type_id, hotkey_panel::cmdCreate );
-	//wxCmd* pCmd = wxCmd::CreateNew( spring_command::type_id, wxID_ANY );
-
-
-	//m_KeyProfiles->Add(pPrimary);
-
-
 
 	UpdateControls();
 
+	wxFlexGridSizer* fgSizer1;
+	fgSizer1 = new wxFlexGridSizer( 1, 1, 0, 0 ); 
+	fgSizer1->SetFlexibleDirection( wxBOTH );
+	fgSizer1->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	wxSizer * parentSizer = new wxBoxSizer(wxHORIZONTAL);
+	wxSizer * childLSizer = new wxBoxSizer(wxVERTICAL);
+
+	wxStaticBoxSizer* sbSizer1;
+	sbSizer1 = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Hotkey Configuration") ), wxVERTICAL );
+	sbSizer1->Add( &this->m_keyConfigPanel );
+
+	childLSizer->Add(0, 5, 0);
+	childLSizer->Add(sbSizer1,0,wxEXPAND|wxALL,5);
+
+	parentSizer->Add(10, 0, 0);
+	parentSizer->Add(childLSizer,0,wxEXPAND|wxTOP,5);
+
+	fgSizer1->Add( parentSizer, 1, wxEXPAND, 5 );
+
 	this->SetSizer( fgSizer1 );
-	this->SetScrollbars( 10, 10, 62, 62 );
 	this->Layout();
 }
 
 
 hotkey_panel::~hotkey_panel(void)
 {
-	for( std::list<wxTextCtrl*>::const_iterator iter = textControls.begin(); iter != textControls.end(); ++iter )
-	{
-		delete (*iter);
-	}
-	textControls.clear();
-
-	for( std::list<wxStaticText*>::const_iterator iter = staticControls.begin(); iter != staticControls.end(); ++iter )
-	{
-		delete (*iter);
-	}
-	staticControls.clear();
 }
 
 bool hotkey_panel::isBindingInProfile( const key_binding& springprofile, const wxString& command, const wxString& springkey )
@@ -82,34 +74,13 @@ bool hotkey_panel::isBindingInProfile( const key_binding& springprofile, const w
 	}
 
 	return true;
-	/*
-	const wxCmdArray* pCmdArr = profile.GetArray();
-	for( int j=0; j < pCmdArr->GetCount(); ++j )
-	{
-	const wxCmd& cmd = *pCmdArr->Item(j);
-
-	if ( cmd != command )
-	{
-	continue;
-	}
-
-	wxArrayString keys = cmd.GetShortcutsList();
-	for( size_t k=0; k < keys.GetCount(); ++k )
-	{
-	if ( kbKey == keys.Item(k) ) //KeynameConverter::compareSpring2wxKeybinder( springkey, keys.Item(k) ) )
-	{
-	return true;
-	}
-	}
-	}
-	return false;*/
 }
 
 key_binding hotkey_panel::getBindingsFromProfile( const wxKeyProfile& profile )
 {
 	key_binding binding;
 	const wxCmdArray* pCmdArr = profile.GetArray();
-	for( int j=0; j < pCmdArr->GetCount(); ++j )
+	for( size_t j=0; j < pCmdArr->GetCount(); ++j )
 	{
 		const wxCmd& cmd = *pCmdArr->Item(j);
 		wxArrayString keys = cmd.GetShortcutsList();
@@ -126,21 +97,6 @@ bool hotkey_panel::isDefaultBinding( const wxString& command, const wxString& sp
 	const key_binding& defBindings = SpringDefaultProfile::getAllBindingsC2K();
 
 	return hotkey_panel::isBindingInProfile( defBindings, command, springKey );
-	/*	key_binding::const_iterator pos = defBindings.find( command );
-	if ( pos == defBindings.end() )
-	{
-	return false;
-	}
-
-	//const wxString springKey = KeynameConverter::spring2wxKeybinder( keybinderkey, true );
-
-	//check now if this default key binding has been deleted from this profile
-	if ( pos->second.find( springKey ) != pos->second.end() )
-	{
-	return true;
-	}
-
-	return false;*/
 }
 
 /*
@@ -153,7 +109,7 @@ void hotkey_panel::SaveSettings()
 		sett().DeleteHotkeyProfiles();
 
 		wxKeyProfileArray profileArr = m_keyConfigPanel.GetProfiles();
-		for( int i=0; i < profileArr.GetCount(); ++i )
+		for( size_t i=0; i < profileArr.GetCount(); ++i )
 		{
 			const wxKeyProfile& profile = *profileArr.Item(i);
 			if ( profile.IsNotEditable() )
@@ -164,7 +120,7 @@ void hotkey_panel::SaveSettings()
 
 			//add bindings
 			const wxCmdArray* pCmdArr = profile.GetArray();
-			for( int j=0; j < pCmdArr->GetCount(); ++j )
+			for( size_t j=0; j < pCmdArr->GetCount(); ++j )
 			{
 				const wxCmd& cmd = *pCmdArr->Item(j);
 				wxArrayString keys = cmd.GetShortcutsList();
@@ -303,7 +259,7 @@ wxString hotkey_panel::getNextFreeProfileName()
 		bool found = false;
 		curProfTryName = profNameTempl;
 		curProfTryName << k;
-		for( int i=0; i < profileArr.GetCount(); ++i )
+		for( size_t i=0; i < profileArr.GetCount(); ++i )
 		{
 			const wxKeyProfile& profile = *profileArr.Item(i);
 			if ( profile.GetName() == curProfTryName )
@@ -328,7 +284,7 @@ void hotkey_panel::selectProfileFromUikeys()
 
 	static int noProfileFound = -1;
 	int foundIdx = noProfileFound;
-	for( int i=0; i < profileArr.GetCount(); ++i )
+	for( size_t i=0; i < profileArr.GetCount(); ++i )
 	{
 		const wxKeyProfile& profile = *profileArr.Item(i);
 		const key_binding proBinds = hotkey_panel::getBindingsFromProfile( profile );

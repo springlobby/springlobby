@@ -42,7 +42,7 @@ wxString KeynameConverter::discardModifier( const wxString& keystring )
 	if ( keystring.EndsWith(wxT("+")) )	//handle stuff like numpad+ or ctrl++
 	{
 		wxString tmp = keystring;
-		result = tmp.RemoveLast().AfterLast(wxT('+') + wxT('+'));
+		result = tmp.RemoveLast().AfterLast(wxT('+')) + wxT('+');
 	}
 	else if ( keystring.StartsWith(wxT("+")) )	//handle stuff like "+ (numpad)"
 	{
