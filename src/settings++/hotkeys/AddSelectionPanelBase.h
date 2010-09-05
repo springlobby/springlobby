@@ -5,8 +5,8 @@
 // PLEASE DO "NOT" EDIT THIS FILE!
 ///////////////////////////////////////////////////////////////////////////
 
-#ifndef __AddSelectionPanel__
-#define __AddSelectionPanel__
+#ifndef __AddSelectionPanelBase__
+#define __AddSelectionPanelBase__
 
 #include <wx/string.h>
 #include <wx/radiobut.h>
@@ -114,4 +114,4 @@ class AddSelectionCmdDlg : public wxDialog
 	
 };
 
-#endif //__AddSelectionPanel__
+#endif //__AddSelectionPanelBase__
