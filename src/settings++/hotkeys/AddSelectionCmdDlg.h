@@ -26,10 +26,17 @@ public:
 protected:
 	wxString getSourceString() const;
 	wxString getConditionsAndSelectString() const;
-
-	virtual void OnButtonAddClick( wxCommandEvent& event );
-
 	wxString validateInputFields();
+
+	virtual void OnRadioBtnSrcMapClick( wxCommandEvent& event );
+	virtual void OnRadioBtnSrcViewClick( wxCommandEvent& event );
+	virtual void OnRadioBtnSrcSelClick( wxCommandEvent& event );
+	virtual void OnRadioBtnSrcDistClick( wxCommandEvent& event );
+	virtual void OnRadioBtnSelAllClick( wxCommandEvent& event );
+	virtual void OnRadioBtnSelCountClick( wxCommandEvent& event );
+	virtual void OnRadioBtnSelOneClick( wxCommandEvent& event );
+	virtual void OnRadioBtnSelPercClick( wxCommandEvent& event );
+	virtual void OnButtonAddClick( wxCommandEvent& event );
 };
 
 #endif //__AddSelectionPanelBase__

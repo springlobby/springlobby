@@ -169,7 +169,7 @@
                                                 <event name="OnMouseEvents"></event>
                                                 <event name="OnMouseWheel"></event>
                                                 <event name="OnPaint"></event>
-                                                <event name="OnRadioButton"></event>
+                                                <event name="OnRadioButton">OnRadioBtnSrcMapClick</event>
                                                 <event name="OnRightDClick"></event>
                                                 <event name="OnRightDown"></event>
                                                 <event name="OnRightUp"></event>
@@ -221,7 +221,7 @@
                                                 <event name="OnMouseEvents"></event>
                                                 <event name="OnMouseWheel"></event>
                                                 <event name="OnPaint"></event>
-                                                <event name="OnRadioButton"></event>
+                                                <event name="OnRadioButton">OnRadioBtnSrcViewClick</event>
                                                 <event name="OnRightDClick"></event>
                                                 <event name="OnRightDown"></event>
                                                 <event name="OnRightUp"></event>
@@ -273,7 +273,7 @@
                                                 <event name="OnMouseEvents"></event>
                                                 <event name="OnMouseWheel"></event>
                                                 <event name="OnPaint"></event>
-                                                <event name="OnRadioButton"></event>
+                                                <event name="OnRadioButton">OnRadioBtnSrcSelClick</event>
                                                 <event name="OnRightDClick"></event>
                                                 <event name="OnRightDown"></event>
                                                 <event name="OnRightUp"></event>
@@ -334,7 +334,7 @@
                                                         <event name="OnMouseEvents"></event>
                                                         <event name="OnMouseWheel"></event>
                                                         <event name="OnPaint"></event>
-                                                        <event name="OnRadioButton"></event>
+                                                        <event name="OnRadioButton">OnRadioBtnSrcDistClick</event>
                                                         <event name="OnRightDClick"></event>
                                                         <event name="OnRightDown"></event>
                                                         <event name="OnRightUp"></event>
@@ -350,7 +350,7 @@
                                                     <object class="wxTextCtrl" expanded="1">
                                                         <property name="bg"></property>
                                                         <property name="context_help"></property>
-                                                        <property name="enabled">1</property>
+                                                        <property name="enabled">0</property>
                                                         <property name="fg"></property>
                                                         <property name="font"></property>
                                                         <property name="hidden">0</property>
@@ -475,7 +475,7 @@
                                                 <event name="OnMouseEvents"></event>
                                                 <event name="OnMouseWheel"></event>
                                                 <event name="OnPaint"></event>
-                                                <event name="OnRadioButton"></event>
+                                                <event name="OnRadioButton">OnRadioBtnSelAllClick</event>
                                                 <event name="OnRightDClick"></event>
                                                 <event name="OnRightDown"></event>
                                                 <event name="OnRightUp"></event>
@@ -536,7 +536,7 @@
                                                         <event name="OnMouseEvents"></event>
                                                         <event name="OnMouseWheel"></event>
                                                         <event name="OnPaint"></event>
-                                                        <event name="OnRadioButton"></event>
+                                                        <event name="OnRadioButton">OnRadioBtnSelCountClick</event>
                                                         <event name="OnRightDClick"></event>
                                                         <event name="OnRightDown"></event>
                                                         <event name="OnRightUp"></event>
@@ -552,7 +552,7 @@
                                                     <object class="wxTextCtrl" expanded="1">
                                                         <property name="bg"></property>
                                                         <property name="context_help"></property>
-                                                        <property name="enabled">1</property>
+                                                        <property name="enabled">0</property>
                                                         <property name="fg"></property>
                                                         <property name="font"></property>
                                                         <property name="hidden">0</property>
@@ -645,7 +645,7 @@
                                                 <event name="OnMouseEvents"></event>
                                                 <event name="OnMouseWheel"></event>
                                                 <event name="OnPaint"></event>
-                                                <event name="OnRadioButton"></event>
+                                                <event name="OnRadioButton">OnRadioBtnSelOneClick</event>
                                                 <event name="OnRightDClick"></event>
                                                 <event name="OnRightDown"></event>
                                                 <event name="OnRightUp"></event>
@@ -706,7 +706,7 @@
                                                         <event name="OnMouseEvents"></event>
                                                         <event name="OnMouseWheel"></event>
                                                         <event name="OnPaint"></event>
-                                                        <event name="OnRadioButton"></event>
+                                                        <event name="OnRadioButton">OnRadioBtnSelPercClick</event>
                                                         <event name="OnRightDClick"></event>
                                                         <event name="OnRightDown"></event>
                                                         <event name="OnRightUp"></event>
@@ -722,7 +722,7 @@
                                                     <object class="wxTextCtrl" expanded="1">
                                                         <property name="bg"></property>
                                                         <property name="context_help"></property>
-                                                        <property name="enabled">1</property>
+                                                        <property name="enabled">0</property>
                                                         <property name="fg"></property>
                                                         <property name="font"></property>
                                                         <property name="hidden">0</property>

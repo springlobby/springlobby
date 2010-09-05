@@ -105,6 +105,14 @@ class AddSelectionCmdDlgBase : public wxDialog
 		wxButton* m_buttonCancel;
 		
 		// Virtual event handlers, overide them in your derived class
+		virtual void OnRadioBtnSrcMapClick( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnRadioBtnSrcViewClick( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnRadioBtnSrcSelClick( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnRadioBtnSrcDistClick( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnRadioBtnSelAllClick( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnRadioBtnSelCountClick( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnRadioBtnSelOneClick( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnRadioBtnSelPercClick( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnButtonAddClick( wxCommandEvent& event ){ event.Skip(); }
 		
 	

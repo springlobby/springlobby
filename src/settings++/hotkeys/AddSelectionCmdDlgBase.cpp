@@ -48,6 +48,8 @@ AddSelectionCmdDlgBase::AddSelectionCmdDlgBase( wxWindow* parent, wxWindowID id,
 	bSizer3->Add( m_radioBtnSrcMouse, 0, wxALIGN_CENTER|wxALL, 5 );
 	
 	m_textCtrlSrcMouseDist = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 40,-1 ), 0 );
+	m_textCtrlSrcMouseDist->Enable( false );
+	
 	bSizer3->Add( m_textCtrlSrcMouseDist, 0, wxALL, 5 );
 	
 	fgSizer51->Add( bSizer3, 1, wxEXPAND, 5 );
@@ -75,6 +77,8 @@ AddSelectionCmdDlgBase::AddSelectionCmdDlgBase( wxWindow* parent, wxWindowID id,
 	bSizer1->Add( m_radioBtnSelCount, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
 	m_textCtrlSelCount = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 30,-1 ), 0 );
+	m_textCtrlSelCount->Enable( false );
+	
 	bSizer1->Add( m_textCtrlSelCount, 0, wxALL, 5 );
 	
 	fgSizer3->Add( bSizer1, 1, wxEXPAND, 5 );
@@ -89,6 +93,8 @@ AddSelectionCmdDlgBase::AddSelectionCmdDlgBase( wxWindow* parent, wxWindowID id,
 	bSizer2->Add( m_radioBtnSelPerc, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
 	m_textCtrlSelPerc = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 30,-1 ), 0 );
+	m_textCtrlSelPerc->Enable( false );
+	
 	bSizer2->Add( m_textCtrlSelPerc, 0, wxALL, 5 );
 	
 	fgSizer3->Add( bSizer2, 1, wxEXPAND, 5 );
@@ -346,11 +352,27 @@ AddSelectionCmdDlgBase::AddSelectionCmdDlgBase( wxWindow* parent, wxWindowID id,
 	fgSizer5->Fit( this );
 	
 	// Connect Events
+	m_radioBtnSrcMap->Connect( wxEVT_COMMAND_RADIOBUTTON_SELECTED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnRadioBtnSrcMapClick ), NULL, this );
+	m_radioBtnSrcView->Connect( wxEVT_COMMAND_RADIOBUTTON_SELECTED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnRadioBtnSrcViewClick ), NULL, this );
+	m_radioBtnSrcSel->Connect( wxEVT_COMMAND_RADIOBUTTON_SELECTED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnRadioBtnSrcSelClick ), NULL, this );
+	m_radioBtnSrcMouse->Connect( wxEVT_COMMAND_RADIOBUTTON_SELECTED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnRadioBtnSrcDistClick ), NULL, this );
+	m_radioBtnSelAll->Connect( wxEVT_COMMAND_RADIOBUTTON_SELECTED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnRadioBtnSelAllClick ), NULL, this );
+	m_radioBtnSelCount->Connect( wxEVT_COMMAND_RADIOBUTTON_SELECTED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnRadioBtnSelCountClick ), NULL, this );
+	m_radioBtnSelOne->Connect( wxEVT_COMMAND_RADIOBUTTON_SELECTED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnRadioBtnSelOneClick ), NULL, this );
+	m_radioBtnSelPerc->Connect( wxEVT_COMMAND_RADIOBUTTON_SELECTED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnRadioBtnSelPercClick ), NULL, this );
 	m_buttonOk->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnButtonAddClick ), NULL, this );
 }
 
 AddSelectionCmdDlgBase::~AddSelectionCmdDlgBase()
 {
 	// Disconnect Events
+	m_radioBtnSrcMap->Disconnect( wxEVT_COMMAND_RADIOBUTTON_SELECTED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnRadioBtnSrcMapClick ), NULL, this );
+	m_radioBtnSrcView->Disconnect( wxEVT_COMMAND_RADIOBUTTON_SELECTED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnRadioBtnSrcViewClick ), NULL, this );
+	m_radioBtnSrcSel->Disconnect( wxEVT_COMMAND_RADIOBUTTON_SELECTED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnRadioBtnSrcSelClick ), NULL, this );
+	m_radioBtnSrcMouse->Disconnect( wxEVT_COMMAND_RADIOBUTTON_SELECTED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnRadioBtnSrcDistClick ), NULL, this );
+	m_radioBtnSelAll->Disconnect( wxEVT_COMMAND_RADIOBUTTON_SELECTED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnRadioBtnSelAllClick ), NULL, this );
+	m_radioBtnSelCount->Disconnect( wxEVT_COMMAND_RADIOBUTTON_SELECTED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnRadioBtnSelCountClick ), NULL, this );
+	m_radioBtnSelOne->Disconnect( wxEVT_COMMAND_RADIOBUTTON_SELECTED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnRadioBtnSelOneClick ), NULL, this );
+	m_radioBtnSelPerc->Disconnect( wxEVT_COMMAND_RADIOBUTTON_SELECTED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnRadioBtnSelPercClick ), NULL, this );
 	m_buttonOk->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnButtonAddClick ), NULL, this );
 }

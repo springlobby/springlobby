@@ -190,3 +190,47 @@ void AddSelectionCmdDlg::OnButtonAddClick( wxCommandEvent& event )
 		customMessageBox( SS_MAIN_ICON, valResult, _("Invalid input"), wxOK | wxICON_HAND  );
 	}
 }
+
+void AddSelectionCmdDlg::OnRadioBtnSrcMapClick( wxCommandEvent& event )
+{
+	this->m_textCtrlSrcMouseDist->Enable( false );
+}
+
+void AddSelectionCmdDlg::OnRadioBtnSrcViewClick( wxCommandEvent& event )
+{
+	this->m_textCtrlSrcMouseDist->Enable( false );
+}
+
+void AddSelectionCmdDlg::OnRadioBtnSrcSelClick( wxCommandEvent& event )
+{
+	this->m_textCtrlSrcMouseDist->Enable( false );
+}
+
+void AddSelectionCmdDlg::OnRadioBtnSrcDistClick( wxCommandEvent& event )
+{
+	this->m_textCtrlSrcMouseDist->Enable( true );
+}
+
+void AddSelectionCmdDlg::OnRadioBtnSelAllClick( wxCommandEvent& event )
+{
+	this->m_textCtrlSelCount->Enable( false );
+	this->m_textCtrlSelPerc->Enable( false );
+}
+
+void AddSelectionCmdDlg::OnRadioBtnSelCountClick( wxCommandEvent& event )
+{
+	this->m_textCtrlSelCount->Enable( true );
+	this->m_textCtrlSelPerc->Enable( false );
+}
+
+void AddSelectionCmdDlg::OnRadioBtnSelOneClick( wxCommandEvent& event )
+{
+	this->m_textCtrlSelCount->Enable( false );
+	this->m_textCtrlSelPerc->Enable( false );
+}
+
+void AddSelectionCmdDlg::OnRadioBtnSelPercClick( wxCommandEvent& event )
+{
+	this->m_textCtrlSelCount->Enable( false );
+	this->m_textCtrlSelPerc->Enable( true );
+}
