@@ -3,4 +3,4 @@
 -order of binds/unbinds for multiple keys
 -colorize commands that have changed hotkeys compared to default
 
--wxString AddSelectionCmdDlg::validateInputFields()
+-save custom commands to springsettings.conf to keep them even when not used in any profile

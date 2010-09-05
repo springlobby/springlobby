@@ -55,6 +55,7 @@ private:
 	hotkey_parser		m_uikeys_manager;
 
 	void ButtonAddSelectionCommandClicked( wxCommandEvent& event );
+	void ButtonAddCustomCommandClicked( wxCommandEvent& event );
 };
 
 #endif

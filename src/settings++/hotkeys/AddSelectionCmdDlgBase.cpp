@@ -47,12 +47,21 @@ AddSelectionCmdDlgBase::AddSelectionCmdDlgBase( wxWindow* parent, wxWindowID id,
 	m_radioBtnSrcMouse = new wxRadioButton( this, wxID_ANY, wxT("Max. distance from mouse"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer3->Add( m_radioBtnSrcMouse, 0, wxALIGN_CENTER|wxALL, 5 );
 	
-	m_textCtrlSrcMouseDist = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 40,-1 ), 0 );
+	m_textCtrlSrcMouseDist = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 40,-1 ), wxTE_RIGHT );
 	m_textCtrlSrcMouseDist->Enable( false );
 	
 	bSizer3->Add( m_textCtrlSrcMouseDist, 0, wxALL, 5 );
 	
 	fgSizer51->Add( bSizer3, 1, wxEXPAND, 5 );
+	
+	
+	fgSizer51->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	m_checkBoxSrcDistCyl = new wxCheckBox( this, wxID_ANY, wxT("Use Distance cylinder"), wxDefaultPosition, wxDefaultSize, 0 );
+	
+	m_checkBoxSrcDistCyl->Enable( false );
+	
+	fgSizer51->Add( m_checkBoxSrcDistCyl, 0, wxALL, 5 );
 	
 	sbSizer8->Add( fgSizer51, 1, wxEXPAND, 5 );
 	
@@ -76,7 +85,7 @@ AddSelectionCmdDlgBase::AddSelectionCmdDlgBase( wxWindow* parent, wxWindowID id,
 	m_radioBtnSelCount = new wxRadioButton( this, wxID_ANY, wxT("Max. count"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer1->Add( m_radioBtnSelCount, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
-	m_textCtrlSelCount = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 30,-1 ), 0 );
+	m_textCtrlSelCount = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 30,-1 ), wxTE_RIGHT );
 	m_textCtrlSelCount->Enable( false );
 	
 	bSizer1->Add( m_textCtrlSelCount, 0, wxALL, 5 );
@@ -92,10 +101,14 @@ AddSelectionCmdDlgBase::AddSelectionCmdDlgBase( wxWindow* parent, wxWindowID id,
 	m_radioBtnSelPerc = new wxRadioButton( this, wxID_ANY, wxT("Percentage"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer2->Add( m_radioBtnSelPerc, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
-	m_textCtrlSelPerc = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 30,-1 ), 0 );
+	m_textCtrlSelPerc = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 30,-1 ), wxTE_RIGHT );
 	m_textCtrlSelPerc->Enable( false );
 	
 	bSizer2->Add( m_textCtrlSelPerc, 0, wxALL, 5 );
+	
+	m_staticText20 = new wxStaticText( this, wxID_ANY, wxT("%"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText20->Wrap( -1 );
+	bSizer2->Add( m_staticText20, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
 	fgSizer3->Add( bSizer2, 1, wxEXPAND, 5 );
 	
@@ -127,7 +140,7 @@ AddSelectionCmdDlgBase::AddSelectionCmdDlgBase( wxWindow* parent, wxWindowID id,
 	fgSizer6->Add( m_staticText11, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5 );
 	
 	
-	fgSizer6->Add( 205, 0, 1, wxEXPAND, 5 );
+	fgSizer6->Add( 255, 0, 1, wxEXPAND, 5 );
 	
 	m_staticText12 = new wxStaticText( this, wxID_ANY, wxT("Include"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText12->Wrap( -1 );
@@ -182,13 +195,13 @@ AddSelectionCmdDlgBase::AddSelectionCmdDlgBase( wxWindow* parent, wxWindowID id,
 	m_staticText17->Wrap( -1 );
 	fgSizer6->Add( m_staticText17, 0, wxALL, 5 );
 	
-	m_checkBoxTypeInc = new wxCheckBox( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	m_checkBoxTypeSelInc = new wxCheckBox( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	
-	fgSizer6->Add( m_checkBoxTypeInc, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
+	fgSizer6->Add( m_checkBoxTypeSelInc, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
 	
-	m_checkBoxTypeEx = new wxCheckBox( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	m_checkBoxTypeSelEx = new wxCheckBox( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	
-	fgSizer6->Add( m_checkBoxTypeEx, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	fgSizer6->Add( m_checkBoxTypeSelEx, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
 	m_staticText18 = new wxStaticText( this, wxID_ANY, wxT("Type in selection"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText18->Wrap( -1 );
@@ -209,20 +222,20 @@ AddSelectionCmdDlgBase::AddSelectionCmdDlgBase( wxWindow* parent, wxWindowID id,
 	m_staticText19->Wrap( -1 );
 	fgSizer6->Add( m_staticText19, 0, wxALL, 5 );
 	
-	m_checkBoxRelHealthInc = new wxCheckBox( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	m_checkBoxWaitingInc = new wxCheckBox( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	
-	fgSizer6->Add( m_checkBoxRelHealthInc, 0, wxALIGN_CENTER|wxALL, 5 );
+	fgSizer6->Add( m_checkBoxWaitingInc, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5 );
 	
-	m_checkBoxRelHealthEx = new wxCheckBox( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	m_checkBoxWaitingEx = new wxCheckBox( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	
-	fgSizer6->Add( m_checkBoxRelHealthEx, 0, wxALIGN_CENTER|wxALL, 5 );
+	fgSizer6->Add( m_checkBoxWaitingEx, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5 );
 	
-	m_staticText32 = new wxStaticText( this, wxID_ANY, wxT("Relative health"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText32->Wrap( -1 );
-	fgSizer6->Add( m_staticText32, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	m_staticText231 = new wxStaticText( this, wxID_ANY, wxT("Waiting"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText231->Wrap( -1 );
+	fgSizer6->Add( m_staticText231, 0, wxALL, 5 );
 	
-	m_textCtrlRelHealth = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer6->Add( m_textCtrlRelHealth, 0, wxALL, 5 );
+	
+	fgSizer6->Add( 0, 0, 1, wxEXPAND, 5 );
 	
 	m_checkBoxWeaponsInc = new wxCheckBox( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	
@@ -248,7 +261,9 @@ AddSelectionCmdDlgBase::AddSelectionCmdDlgBase( wxWindow* parent, wxWindowID id,
 	m_staticText22->Wrap( -1 );
 	fgSizer6->Add( m_staticText22, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
-	m_textCtrlWeapRange = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	m_textCtrlWeapRange = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 60,-1 ), 0 );
+	m_textCtrlWeapRange->Enable( false );
+	
 	fgSizer6->Add( m_textCtrlWeapRange, 0, wxALL, 5 );
 	
 	m_checkBoxIdleInc = new wxCheckBox( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
@@ -275,8 +290,10 @@ AddSelectionCmdDlgBase::AddSelectionCmdDlgBase( wxWindow* parent, wxWindowID id,
 	m_staticText24->Wrap( -1 );
 	fgSizer6->Add( m_staticText24, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
-	m_textCtrl51 = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer6->Add( m_textCtrl51, 0, wxALL, 5 );
+	m_textCtrlAbsHealth = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 60,-1 ), 0 );
+	m_textCtrlAbsHealth->Enable( false );
+	
+	fgSizer6->Add( m_textCtrlAbsHealth, 0, wxALL, 5 );
 	
 	m_checkBoxRadarInc = new wxCheckBox( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	
@@ -302,7 +319,9 @@ AddSelectionCmdDlgBase::AddSelectionCmdDlgBase( wxWindow* parent, wxWindowID id,
 	m_staticText26->Wrap( -1 );
 	fgSizer6->Add( m_staticText26, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
-	m_textCtrlName = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	m_textCtrlName = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 60,-1 ), 0 );
+	m_textCtrlName->Enable( false );
+	
 	fgSizer6->Add( m_textCtrlName, 0, wxALL, 5 );
 	
 	m_checkBoxTransInc = new wxCheckBox( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
@@ -329,8 +348,39 @@ AddSelectionCmdDlgBase::AddSelectionCmdDlgBase( wxWindow* parent, wxWindowID id,
 	m_staticText29->Wrap( -1 );
 	fgSizer6->Add( m_staticText29, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
-	m_textCtrlCategory = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	m_textCtrlCategory = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 60,-1 ), 0 );
+	m_textCtrlCategory->Enable( false );
+	
 	fgSizer6->Add( m_textCtrlCategory, 0, wxALL, 5 );
+	
+	m_checkBoxHotkeyInc = new wxCheckBox( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	
+	fgSizer6->Add( m_checkBoxHotkeyInc, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5 );
+	
+	m_checkBoxHotkeyEx = new wxCheckBox( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	
+	fgSizer6->Add( m_checkBoxHotkeyEx, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5 );
+	
+	m_staticText221 = new wxStaticText( this, wxID_ANY, wxT("In hotkey group"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText221->Wrap( -1 );
+	fgSizer6->Add( m_staticText221, 0, wxALL, 5 );
+	
+	m_checkBoxRelHealthInc = new wxCheckBox( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	
+	fgSizer6->Add( m_checkBoxRelHealthInc, 0, wxALIGN_CENTER|wxALL, 5 );
+	
+	m_checkBoxRelHealthEx = new wxCheckBox( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	
+	fgSizer6->Add( m_checkBoxRelHealthEx, 0, wxALIGN_CENTER|wxALL, 5 );
+	
+	m_staticText32 = new wxStaticText( this, wxID_ANY, wxT("Relative health"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText32->Wrap( -1 );
+	fgSizer6->Add( m_staticText32, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	m_textCtrlRelHealth = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 60,-1 ), 0 );
+	m_textCtrlRelHealth->Enable( false );
+	
+	fgSizer6->Add( m_textCtrlRelHealth, 0, wxALL, 5 );
 	
 	sbSizer9->Add( fgSizer6, 1, wxEXPAND, 5 );
 	
@@ -360,6 +410,38 @@ AddSelectionCmdDlgBase::AddSelectionCmdDlgBase( wxWindow* parent, wxWindowID id,
 	m_radioBtnSelCount->Connect( wxEVT_COMMAND_RADIOBUTTON_SELECTED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnRadioBtnSelCountClick ), NULL, this );
 	m_radioBtnSelOne->Connect( wxEVT_COMMAND_RADIOBUTTON_SELECTED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnRadioBtnSelOneClick ), NULL, this );
 	m_radioBtnSelPerc->Connect( wxEVT_COMMAND_RADIOBUTTON_SELECTED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnRadioBtnSelPercClick ), NULL, this );
+	m_checkBoxBuilderInc->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondBuilderIncClick ), NULL, this );
+	m_checkBoxBuilderEx->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondBuilderExClick ), NULL, this );
+	m_checkBoxBuildingInc->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondBuildingIncClick ), NULL, this );
+	m_checkBoxBuildingEx->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondBuildingExClick ), NULL, this );
+	m_checkBoxComInc->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondComIncClick ), NULL, this );
+	m_checkBoxComEx->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondComExClick ), NULL, this );
+	m_checkBoxTypeSelInc->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondTypeSelIncClick ), NULL, this );
+	m_checkBoxTypeSelEx->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondTypeSelExClick ), NULL, this );
+	m_checkBoxAirInc->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondAirIncClick ), NULL, this );
+	m_checkBoxAirEx->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondAirExClick ), NULL, this );
+	m_checkBoxWaitingInc->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondWaitingIncClick ), NULL, this );
+	m_checkBoxWaitingEx->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondWaitingExClick ), NULL, this );
+	m_checkBoxWeaponsInc->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondWeaponsIncClick ), NULL, this );
+	m_checkBoxWeaponsEx->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondWeaponsExClick ), NULL, this );
+	m_checkBoxWeapRangeInc->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondWeapRangeIncClick ), NULL, this );
+	m_checkBoxWeapRangeEx->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondWeapRangeExClick ), NULL, this );
+	m_checkBoxIdleInc->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondIdleIncClick ), NULL, this );
+	m_checkBoxIdleEx->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondIdleExClick ), NULL, this );
+	m_checkBoxAbsHealthInc->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondAbsHealthIncClick ), NULL, this );
+	m_checkBoxAbsHealthEx->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondAbsHealthExClick ), NULL, this );
+	m_checkBoxRadarInc->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondRadarIncClick ), NULL, this );
+	m_checkBoxRadarEx->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondRadarExClick ), NULL, this );
+	m_checkBoxNameInc->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondNameIncClick ), NULL, this );
+	m_checkBoxNameEx->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondNameExClick ), NULL, this );
+	m_checkBoxTransInc->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondTransIncClick ), NULL, this );
+	m_checkBoxTransEx->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondTransExClick ), NULL, this );
+	m_checkBoxCategoryInc->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondCategoryIncClick ), NULL, this );
+	m_checkBoxCategoryEx->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondCategoryExClick ), NULL, this );
+	m_checkBoxHotkeyInc->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondHotkeyIncClick ), NULL, this );
+	m_checkBoxHotkeyEx->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondHotkeyExClick ), NULL, this );
+	m_checkBoxRelHealthInc->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondRelHealthIncClick ), NULL, this );
+	m_checkBoxRelHealthEx->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondRelHealthExClick ), NULL, this );
 	m_buttonOk->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnButtonAddClick ), NULL, this );
 }
 
@@ -374,5 +456,37 @@ AddSelectionCmdDlgBase::~AddSelectionCmdDlgBase()
 	m_radioBtnSelCount->Disconnect( wxEVT_COMMAND_RADIOBUTTON_SELECTED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnRadioBtnSelCountClick ), NULL, this );
 	m_radioBtnSelOne->Disconnect( wxEVT_COMMAND_RADIOBUTTON_SELECTED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnRadioBtnSelOneClick ), NULL, this );
 	m_radioBtnSelPerc->Disconnect( wxEVT_COMMAND_RADIOBUTTON_SELECTED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnRadioBtnSelPercClick ), NULL, this );
+	m_checkBoxBuilderInc->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondBuilderIncClick ), NULL, this );
+	m_checkBoxBuilderEx->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondBuilderExClick ), NULL, this );
+	m_checkBoxBuildingInc->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondBuildingIncClick ), NULL, this );
+	m_checkBoxBuildingEx->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondBuildingExClick ), NULL, this );
+	m_checkBoxComInc->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondComIncClick ), NULL, this );
+	m_checkBoxComEx->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondComExClick ), NULL, this );
+	m_checkBoxTypeSelInc->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondTypeSelIncClick ), NULL, this );
+	m_checkBoxTypeSelEx->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondTypeSelExClick ), NULL, this );
+	m_checkBoxAirInc->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondAirIncClick ), NULL, this );
+	m_checkBoxAirEx->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondAirExClick ), NULL, this );
+	m_checkBoxWaitingInc->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondWaitingIncClick ), NULL, this );
+	m_checkBoxWaitingEx->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondWaitingExClick ), NULL, this );
+	m_checkBoxWeaponsInc->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondWeaponsIncClick ), NULL, this );
+	m_checkBoxWeaponsEx->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondWeaponsExClick ), NULL, this );
+	m_checkBoxWeapRangeInc->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondWeapRangeIncClick ), NULL, this );
+	m_checkBoxWeapRangeEx->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondWeapRangeExClick ), NULL, this );
+	m_checkBoxIdleInc->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondIdleIncClick ), NULL, this );
+	m_checkBoxIdleEx->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondIdleExClick ), NULL, this );
+	m_checkBoxAbsHealthInc->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondAbsHealthIncClick ), NULL, this );
+	m_checkBoxAbsHealthEx->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondAbsHealthExClick ), NULL, this );
+	m_checkBoxRadarInc->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondRadarIncClick ), NULL, this );
+	m_checkBoxRadarEx->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondRadarExClick ), NULL, this );
+	m_checkBoxNameInc->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondNameIncClick ), NULL, this );
+	m_checkBoxNameEx->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondNameExClick ), NULL, this );
+	m_checkBoxTransInc->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondTransIncClick ), NULL, this );
+	m_checkBoxTransEx->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondTransExClick ), NULL, this );
+	m_checkBoxCategoryInc->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondCategoryIncClick ), NULL, this );
+	m_checkBoxCategoryEx->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondCategoryExClick ), NULL, this );
+	m_checkBoxHotkeyInc->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondHotkeyIncClick ), NULL, this );
+	m_checkBoxHotkeyEx->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondHotkeyExClick ), NULL, this );
+	m_checkBoxRelHealthInc->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondRelHealthIncClick ), NULL, this );
+	m_checkBoxRelHealthEx->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnCheckBoxCondRelHealthExClick ), NULL, this );
 	m_buttonOk->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnButtonAddClick ), NULL, this );
 }

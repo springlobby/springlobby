@@ -1,6 +1,8 @@
 #include "commandlist.h"
 
 CommandList::CommandMap CommandList::m_commands;
+CommandList::CommandMap CommandList::m_customCommands;
+unsigned CommandList::m_nextCmdId = 1;
 
 void CommandList::InitializeCommandList()
 {

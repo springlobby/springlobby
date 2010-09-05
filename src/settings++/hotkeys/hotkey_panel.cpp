@@ -26,7 +26,7 @@ hotkey_panel::hotkey_panel(wxWindow *parent, wxWindowID id , const wxString &tit
 													: wxScrolledWindow(parent, id, pos, size, style|wxTAB_TRAVERSAL|wxHSCROLL,title),
 													m_keyConfigPanel( this, -1, wxDefaultPosition, wxDefaultSize, (wxKEYBINDER_DEFAULT_STYLE & ~wxKEYBINDER_SHOW_APPLYBUTTON), wxT("HotkeyPanel"), 
 																		wxT("Selection"), wxCommandEventHandler(hotkey_panel::ButtonAddSelectionCommandClicked),
-																		wxT("Custom"), wxCommandEventHandler(hotkey_panel::ButtonAddSelectionCommandClicked)),
+																		wxT("Custom"), wxCommandEventHandler(hotkey_panel::ButtonAddCustomCommandClicked)),
 													m_uikeys_manager(sett().GetCurrentUsedUikeys() )
 {
 	KeynameConverter::initialize();
@@ -36,13 +36,6 @@ hotkey_panel::hotkey_panel(wxWindow *parent, wxWindowID id , const wxString &tit
 	//group box
 	wxStaticBoxSizer* sbSizer1 = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Hotkey Configuration") ), wxVERTICAL );
 	sbSizer1->Add( &m_keyConfigPanel );
-
-	//wxButton *button = new wxButton( &m_keyConfigPanel, wxID_ANY, wxT("Selection"), wxPoint(20, 20) );
-//	m_keyConfigPanel.SetCustomButton1( button );
-	//wxButton *button2 = new wxButton( &m_keyConfigPanel, wxID_ANY, wxT("Custom"), wxPoint(20, 20) );
-//	button->Connect(wxEVT_COMMAND_BUTTON_CLICKED,  wxCommandEventHandler(hotkey_panel::ButtonAddClicked));
-	//sbSizer1->Add( button );
-
 
 	//borders
 	wxSizer * parentSizer = new wxBoxSizer(wxHORIZONTAL);
@@ -78,8 +71,16 @@ void hotkey_panel::ButtonAddSelectionCommandClicked( wxCommandEvent& event )
 	
 	if ( dlg.ShowModal() == wxID_OK )
 	{
-		wxString cmd = dlg.getCommandString();
+		wxString cmd = wxT("select ") + dlg.getCommandString();
+		CommandList::addCustomCommand( cmd );
+
+		this->UpdateControls();
 	}
+}
+
+void hotkey_panel::ButtonAddCustomCommandClicked( wxCommandEvent& event )
+{
+
 }
 
 bool hotkey_panel::isBindingInProfile( const key_binding& springprofile, const wxString& command, const wxString& springkey )

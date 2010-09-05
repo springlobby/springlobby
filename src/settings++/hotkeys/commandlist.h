@@ -26,11 +26,18 @@ public:
 
 	typedef std::map<wxString, CommandList::Command>		CommandMap;
 
-	static const CommandList::CommandMap& getCommands()
+	static CommandList::CommandMap getCommands()
 	{
 		CommandList::InitializeCommandList();
 
-		return m_commands;
+		CommandList::CommandMap merged = m_commands;
+
+		for ( CommandList::CommandMap::const_iterator iter = CommandList::m_customCommands.begin(); iter != CommandList::m_customCommands.end(); ++iter )
+		{
+			merged[ iter->first ] = iter->second;
+		}
+
+		return merged;
 	}
 
 	static const CommandList::Command& getCommandByName(const wxString& command)
@@ -39,12 +46,43 @@ public:
 
 		if ( m_commands.find( command ) == m_commands.end() )
 		{
-			//add the command
-			CommandList::addCommand( wxT("Custom"), command, wxT("Custom command") );
-			//throw std::runtime_error( std::string("Unknown command: ") + command.ToAscii());
+			if ( m_customCommands.find( command ) == m_customCommands.end() )
+			{
+				//add the command
+				CommandList::addCustomCommand( command );				
+			}
+
+			return m_customCommands[command];
 		}
 
 		return m_commands[command];
+	}
+
+	static void addCustomCommand(const wxString& command)
+	{
+		wxString category = wxT("Custom");
+		wxString descr = wxT("Custom command");
+
+		if ( command.StartsWith( wxT("select ") ) )
+		{
+			category = wxT("Selection");
+			descr = wxT("User-defined selection command");
+		}
+
+		CommandList::addCustomCommand( category, command, descr );
+	}
+
+	static void addCustomCommand(const wxString& category, const wxString& command, const wxString& description )
+	{
+		//put new command to command list
+		CommandList::m_customCommands[command] = Command();
+		
+		//fill it
+		Command& cmd = CommandList::m_customCommands[command];
+		cmd.m_category = category;
+		cmd.m_command = command;
+		cmd.m_description = description;
+		cmd.m_id = CommandList::m_nextCmdId++;
 	}
 
 private:
@@ -55,16 +93,17 @@ private:
 		//put new command to command list
 		CommandList::m_commands[command] = Command();
 		
-		static unsigned nextId = 1;
 		//fill it
 		Command& cmd = CommandList::m_commands[command];
 		cmd.m_category = category;
 		cmd.m_command = command;
 		cmd.m_description = description;
-		cmd.m_id = nextId++;
+		cmd.m_id = CommandList::m_nextCmdId++;
 	}
 
+	static unsigned												m_nextCmdId;
 	static CommandMap											m_commands;
+	static CommandMap											m_customCommands;
 };
 
 
