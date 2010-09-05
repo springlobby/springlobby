@@ -50,16 +50,14 @@ private:
 	static key_binding getBindingsFromProfile( const wxKeyProfile& profile );
 	wxKeyProfile buildNewProfile( const wxString& name, const wxString& description, bool readOnly );
 	void putKeybindingsToProfile( wxKeyProfile& profile, const key_binding& bindings );
-	
-	typedef std::list<wxTextCtrl*>			EditControlList;
-	typedef std::list<wxStaticText*>		StaticControlList;
 
-	EditControlList		textControls;
-	StaticControlList	staticControls;
-
-	wxButton*			m_button2;
 	wxKeyConfigPanel	m_keyConfigPanel;
 	hotkey_parser		m_uikeys_manager;
+
+	// Virtual event handlers, overide them in your derived class
+	void ButtonAddClicked( wxCommandEvent& event ){ 
+		event.Skip(); 
+	}
 };
 
 #endif

@@ -23,24 +23,29 @@
 
 hotkey_panel::hotkey_panel(wxWindow *parent, wxWindowID id , const wxString &title , const wxPoint& pos , const wxSize& size, long style)
 													: wxScrolledWindow(parent, id, pos, size, style|wxTAB_TRAVERSAL|wxHSCROLL,title),
-													m_keyConfigPanel( this, -1, wxDefaultPosition, wxDefaultSize, (wxKEYBINDER_DEFAULT_STYLE & ~wxKEYBINDER_SHOW_APPLYBUTTON) ),
+													m_keyConfigPanel( this, -1, wxDefaultPosition, wxDefaultSize, (wxKEYBINDER_DEFAULT_STYLE & ~wxKEYBINDER_SHOW_APPLYBUTTON), wxT("HotkeyPanel"), 
+																		wxT("Selection"), wxCommandEventHandler(hotkey_panel::ButtonAddClicked),
+																		wxT("Custom"), wxCommandEventHandler(hotkey_panel::ButtonAddClicked)),
 													m_uikeys_manager(sett().GetCurrentUsedUikeys() )
 {
 	KeynameConverter::initialize();
 
 	UpdateControls();
 
-	wxFlexGridSizer* fgSizer1;
-	fgSizer1 = new wxFlexGridSizer( 1, 1, 0, 0 ); 
-	fgSizer1->SetFlexibleDirection( wxBOTH );
-	fgSizer1->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
+	//group box
+	wxStaticBoxSizer* sbSizer1 = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Hotkey Configuration") ), wxVERTICAL );
+	sbSizer1->Add( &m_keyConfigPanel );
+
+	//wxButton *button = new wxButton( &m_keyConfigPanel, wxID_ANY, wxT("Selection"), wxPoint(20, 20) );
+//	m_keyConfigPanel.SetCustomButton1( button );
+	//wxButton *button2 = new wxButton( &m_keyConfigPanel, wxID_ANY, wxT("Custom"), wxPoint(20, 20) );
+//	button->Connect(wxEVT_COMMAND_BUTTON_CLICKED,  wxCommandEventHandler(hotkey_panel::ButtonAddClicked));
+	//sbSizer1->Add( button );
+
+
+	//borders
 	wxSizer * parentSizer = new wxBoxSizer(wxHORIZONTAL);
 	wxSizer * childLSizer = new wxBoxSizer(wxVERTICAL);
-
-	wxStaticBoxSizer* sbSizer1;
-	sbSizer1 = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Hotkey Configuration") ), wxVERTICAL );
-	sbSizer1->Add( &this->m_keyConfigPanel );
 
 	childLSizer->Add(0, 5, 0);
 	childLSizer->Add(sbSizer1,0,wxEXPAND|wxALL,5);
@@ -48,9 +53,16 @@ hotkey_panel::hotkey_panel(wxWindow *parent, wxWindowID id , const wxString &tit
 	parentSizer->Add(10, 0, 0);
 	parentSizer->Add(childLSizer,0,wxEXPAND|wxTOP,5);
 
+	
+	//content
+	wxFlexGridSizer* fgSizer1;
+	fgSizer1 = new wxFlexGridSizer( 1, 1, 0, 0 ); 
+	fgSizer1->SetFlexibleDirection( wxBOTH );
+	fgSizer1->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	fgSizer1->Add( parentSizer, 1, wxEXPAND, 5 );
 
 	this->SetSizer( fgSizer1 );
+	
 	this->Layout();
 }
 
