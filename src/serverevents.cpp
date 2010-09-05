@@ -341,7 +341,7 @@ void ServerEvents::OnClientBattleStatus( int battleid, const wxString& nick, Use
         Battle& battle = m_serv.GetBattle( battleid );
         User& user = battle.GetUser( nick );
 
-        if ( battle.IsFounderMe() ) AutoCheckCommandSpam( battle, user );
+		//if ( battle.IsFounderMe() ) AutoCheckCommandSpam( battle, user );
 
         status.color_index = user.BattleStatus().color_index;
         battle.OnUserBattleStatusUpdated( user, status );
