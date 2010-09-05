@@ -20,7 +20,7 @@
         <property name="use_microsoft_bom">0</property>
         <object class="Dialog" expanded="1">
             <property name="bg"></property>
-            <property name="center"></property>
+            <property name="center">wxBOTH</property>
             <property name="context_help"></property>
             <property name="enabled">1</property>
             <property name="extra_style"></property>
@@ -33,7 +33,7 @@
             <property name="name">AddSelectionCmdDlgBase</property>
             <property name="pos"></property>
             <property name="size"></property>
-            <property name="style">wxDEFAULT_DIALOG_STYLE</property>
+            <property name="style">wxCAPTION</property>
             <property name="subclass"></property>
             <property name="title">Add Selection Command</property>
             <property name="tooltip"></property>
@@ -970,7 +970,7 @@
                                 <property name="non_flexible_grow_mode">wxFLEX_GROWMODE_SPECIFIED</property>
                                 <property name="permission">none</property>
                                 <property name="rows">2</property>
-                                <property name="vgap">12</property>
+                                <property name="vgap">7</property>
                                 <object class="sizeritem" expanded="1">
                                     <property name="border">5</property>
                                     <property name="flag">wxALIGN_CENTER_HORIZONTAL|wxALL</property>
@@ -4003,6 +4003,16 @@
                         <property name="name">bSizer24</property>
                         <property name="orient">wxHORIZONTAL</property>
                         <property name="permission">none</property>
+                        <object class="sizeritem" expanded="1">
+                            <property name="border">5</property>
+                            <property name="flag">wxEXPAND</property>
+                            <property name="proportion">1</property>
+                            <object class="spacer" expanded="1">
+                                <property name="height">0</property>
+                                <property name="permission">protected</property>
+                                <property name="width">0</property>
+                            </object>
+                        </object>
                         <object class="sizeritem" expanded="1">
                             <property name="border">5</property>
                             <property name="flag">wxALL</property>

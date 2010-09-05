@@ -51,7 +51,7 @@ private:
 	wxKeyProfile buildNewProfile( const wxString& name, const wxString& description, bool readOnly );
 	void putKeybindingsToProfile( wxKeyProfile& profile, const key_binding& bindings );
 
-	wxKeyConfigPanel	m_keyConfigPanel;
+	wxKeyConfigPanel*	m_pKeyConfigPanel;
 	hotkey_parser		m_uikeys_manager;
 
 	void ButtonAddSelectionCommandClicked( wxCommandEvent& event );

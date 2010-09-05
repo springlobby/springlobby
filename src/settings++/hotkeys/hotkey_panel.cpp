@@ -12,6 +12,7 @@
 #include <wx/sizer.h>
 #include <wx/statbox.h>
 #include <wx/panel.h>
+#include <wx/textdlg.h>
 
 #include "../../utils/customdialogs.h"
 #include "hotkey_parser.h"
@@ -24,18 +25,18 @@
 
 hotkey_panel::hotkey_panel(wxWindow *parent, wxWindowID id , const wxString &title , const wxPoint& pos , const wxSize& size, long style)
 													: wxScrolledWindow(parent, id, pos, size, style|wxTAB_TRAVERSAL|wxHSCROLL,title),
-													m_keyConfigPanel( this, -1, wxDefaultPosition, wxDefaultSize, (wxKEYBINDER_DEFAULT_STYLE & ~wxKEYBINDER_SHOW_APPLYBUTTON), wxT("HotkeyPanel"), 
-																		wxT("Selection"), wxCommandEventHandler(hotkey_panel::ButtonAddSelectionCommandClicked),
-																		wxT("Custom"), wxCommandEventHandler(hotkey_panel::ButtonAddCustomCommandClicked)),
 													m_uikeys_manager(sett().GetCurrentUsedUikeys() )
 {
+	m_pKeyConfigPanel = new wxKeyConfigPanel( this, -1, wxDefaultPosition, wxDefaultSize, (wxKEYBINDER_DEFAULT_STYLE & ~wxKEYBINDER_SHOW_APPLYBUTTON), wxT("HotkeyPanel"), 
+																		wxT("Selection"), wxCommandEventHandler(hotkey_panel::ButtonAddSelectionCommandClicked),
+																		wxT("Custom"), wxCommandEventHandler(hotkey_panel::ButtonAddCustomCommandClicked));
 	KeynameConverter::initialize();
 
 	UpdateControls();
 
 	//group box
 	wxStaticBoxSizer* sbSizer1 = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Hotkey Configuration") ), wxVERTICAL );
-	sbSizer1->Add( &m_keyConfigPanel );
+	sbSizer1->Add( m_pKeyConfigPanel );
 
 	//borders
 	wxSizer * parentSizer = new wxBoxSizer(wxHORIZONTAL);
@@ -75,12 +76,23 @@ void hotkey_panel::ButtonAddSelectionCommandClicked( wxCommandEvent& event )
 		CommandList::addCustomCommand( cmd );
 
 		this->UpdateControls();
+
+		this->m_pKeyConfigPanel->SelectCommand( cmd );
 	}
 }
 
 void hotkey_panel::ButtonAddCustomCommandClicked( wxCommandEvent& event )
 {
+	wxString str = wxGetTextFromUser( _("Enter new command:"), _("Add Custom Command") );
 
+	if ( str.size() > 0 )
+	{
+		CommandList::addCustomCommand( str );
+
+		this->UpdateControls();
+
+		this->m_pKeyConfigPanel->SelectCommand( str );
+	}
 }
 
 bool hotkey_panel::isBindingInProfile( const key_binding& springprofile, const wxString& command, const wxString& springkey )
@@ -132,7 +144,7 @@ void hotkey_panel::SaveSettings()
 	{
 		sett().DeleteHotkeyProfiles();
 
-		wxKeyProfileArray profileArr = m_keyConfigPanel.GetProfiles();
+		wxKeyProfileArray profileArr = m_pKeyConfigPanel->GetProfiles();
 		for( size_t i=0; i < profileArr.GetCount(); ++i )
 		{
 			const wxKeyProfile& profile = *profileArr.Item(i);
@@ -178,12 +190,12 @@ void hotkey_panel::SaveSettings()
 		sett().SaveSettings();
 
 		//Write bindings to file
-		const wxKeyProfile& selProfile = *this->m_keyConfigPanel.GetSelProfile();
+		const wxKeyProfile& selProfile = *this->m_pKeyConfigPanel->GetSelProfile();
 		key_binding bindings = hotkey_panel::getBindingsFromProfile( selProfile );
 
 		this->m_uikeys_manager.writeBindingsToFile( bindings );
 
-		this->m_keyConfigPanel.ResetProfileBeenModifiedOrSelected();
+		this->m_pKeyConfigPanel->ResetProfileBeenModifiedOrSelected();
 	}
 	catch( const std::exception& ex )
 	{
@@ -240,43 +252,11 @@ unsigned hotkey_panel::getShortcutCountFromBinding( const key_binding& bindings 
 	return count;
 }
 
-/*
-bool hotkey_panel::compareBindings( const key_binding& springBindings, const key_binding& kbBindings )
-{
-//first, compare total keycount, that will do for most
-if ( hotkey_panel::getShortcutCountFromBinding( springBindings ) !=
-hotkey_panel::getShortcutCountFromBinding( kbBindings ) )
-{
-return false;
-}
-
-for ( key_binding::const_iterator iter = kbBindings.begin(); iter != kbBindings.end(); ++iter )
-{
-key_binding::const_iterator cmdIter = springBindings.find( iter->first );
-if ( cmdIter == springBindings.end() )
-{
-//command not found in this profile
-return false;
-}
-
-for( key_set::const_iterator iiter = iter->second.begin(); iiter != iter->second.end(); ++iiter )
-{
-if ( cmdIter->second.find( KeynameConverter::spring2wxKeybinder( *iiter, true ) ) == cmdIter->second.end() )
-{
-return false;
-}
-}
-}
-
-return true;
-}
-*/
-
 wxString hotkey_panel::getNextFreeProfileName()
 {
 	const wxString profNameTempl = wxT("UserProfile ");
 	wxString curProfTryName;
-	const wxKeyProfileArray profileArr = m_keyConfigPanel.GetProfiles();
+	const wxKeyProfileArray profileArr = this->m_pKeyConfigPanel->GetProfiles();
 
 	for( unsigned k=1; k < 99999u; ++k )
 	{
@@ -304,7 +284,7 @@ void hotkey_panel::selectProfileFromUikeys()
 {
 	const key_binding& curBinding = this->m_uikeys_manager.getBindingsC2K();
 
-	const wxKeyProfileArray profileArr = m_keyConfigPanel.GetProfiles();
+	const wxKeyProfileArray profileArr = this->m_pKeyConfigPanel->GetProfiles();
 
 	static int noProfileFound = -1;
 	int foundIdx = noProfileFound;
@@ -325,16 +305,16 @@ void hotkey_panel::selectProfileFromUikeys()
 		const wxString profName = this->getNextFreeProfileName();
 		wxKeyProfile profile = buildNewProfile( profName, wxT("User hotkey profile"), false );
 		this->putKeybindingsToProfile( profile, curBinding );	
-		m_keyConfigPanel.AddProfile( profile, true );
+		this->m_pKeyConfigPanel->AddProfile( profile, true );
 
 
 		customMessageBox(SS_MAIN_ICON, _("Your current hotkey configuration does not match any known profile.\n A new profile with the name '" + profName + _("' has been created.")), 
 			_("New hotkey profile found"), wxOK );
 
-		foundIdx = m_keyConfigPanel.GetProfiles().GetCount() - 1;
+		foundIdx = this->m_pKeyConfigPanel->GetProfiles().GetCount() - 1;
 	}
 
-	m_keyConfigPanel.SetSelProfile( foundIdx );
+	this->m_pKeyConfigPanel->SetSelProfile( foundIdx );
 }
 
 key_binding_collection hotkey_panel::getProfilesFromSettings( )
@@ -384,13 +364,13 @@ void hotkey_panel::UpdateControls(int /*unused*/)
 	this->updateTreeView();
 
 	//Fetch the profiles
-	m_keyConfigPanel.RemoveAllProfiles();
+	this->m_pKeyConfigPanel->RemoveAllProfiles();
 
 	//put default profile
 	wxKeyProfile defProf = this->buildNewProfile( wxT("Spring default"), wxT("Spring's default keyprofile"),true);
 	const key_binding defBinds = SpringDefaultProfile::getAllBindingsC2K();
 	this->putKeybindingsToProfile( defProf, defBinds );		
-	m_keyConfigPanel.AddProfile( defProf );
+	this->m_pKeyConfigPanel->AddProfile( defProf );
 
 	//put user profiles from springsettings configuration
 	{
@@ -412,13 +392,13 @@ void hotkey_panel::UpdateControls(int /*unused*/)
 				}
 			}
 
-			m_keyConfigPanel.AddProfile( profile );
+			this->m_pKeyConfigPanel->AddProfile( profile );
 
-			getBindingsFromProfile( *m_keyConfigPanel.GetProfile(1) );
+			getBindingsFromProfile( *this->m_pKeyConfigPanel->GetProfile(1) );
 		}
 	}
 
-	this->m_keyConfigPanel.ResetProfileBeenModifiedOrSelected();
+	this->m_pKeyConfigPanel->ResetProfileBeenModifiedOrSelected();
 
 	selectProfileFromUikeys();
 }
@@ -462,15 +442,15 @@ void hotkey_panel::updateTreeView()
 		}
 	}
 
-	m_keyConfigPanel.ImportRawList( ctrlMap, wxT("Commands") ); 
+	this->m_pKeyConfigPanel->ImportRawList( ctrlMap, wxT("Commands") ); 
 }
 
 bool hotkey_panel::HasProfileBeenModifiedOrSelected() const
 {
-	return this->m_keyConfigPanel.HasProfileBeenModifiedOrSelected();
+	return this->m_pKeyConfigPanel->HasProfileBeenModifiedOrSelected();
 }
 
 void hotkey_panel::ResetProfileBeenModifiedOrSelected()
 {
-	this->m_keyConfigPanel.ResetProfileBeenModifiedOrSelected();
+	this->m_pKeyConfigPanel->ResetProfileBeenModifiedOrSelected();
 }

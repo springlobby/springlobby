@@ -111,6 +111,7 @@ class AddSelectionCmdDlgBase : public wxDialog
 		wxCheckBox* m_checkBoxRelHealthEx;
 		wxStaticText* m_staticText32;
 		wxTextCtrl* m_textCtrlRelHealth;
+		
 		wxButton* m_buttonOk;
 		wxButton* m_buttonCancel;
 		
@@ -159,7 +160,7 @@ class AddSelectionCmdDlgBase : public wxDialog
 		
 	
 	public:
-		AddSelectionCmdDlgBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Add Selection Command"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE );
+		AddSelectionCmdDlgBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Add Selection Command"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxCAPTION );
 		~AddSelectionCmdDlgBase();
 	
 };

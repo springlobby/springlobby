@@ -127,7 +127,7 @@ AddSelectionCmdDlgBase::AddSelectionCmdDlgBase( wxWindow* parent, wxWindowID id,
 	sbSizer9 = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Conditions") ), wxVERTICAL );
 	
 	wxFlexGridSizer* fgSizer6;
-	fgSizer6 = new wxFlexGridSizer( 2, 7, 12, 0 );
+	fgSizer6 = new wxFlexGridSizer( 2, 7, 7, 0 );
 	fgSizer6->SetFlexibleDirection( wxBOTH );
 	fgSizer6->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
@@ -389,6 +389,9 @@ AddSelectionCmdDlgBase::AddSelectionCmdDlgBase( wxWindow* parent, wxWindowID id,
 	wxBoxSizer* bSizer24;
 	bSizer24 = new wxBoxSizer( wxHORIZONTAL );
 	
+	
+	bSizer24->Add( 0, 0, 1, wxEXPAND, 5 );
+	
 	m_buttonOk = new wxButton( this, wxID_ANY, wxT("Add"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer24->Add( m_buttonOk, 0, wxALL, 5 );
 	
@@ -400,6 +403,8 @@ AddSelectionCmdDlgBase::AddSelectionCmdDlgBase( wxWindow* parent, wxWindowID id,
 	this->SetSizer( fgSizer5 );
 	this->Layout();
 	fgSizer5->Fit( this );
+	
+	this->Centre( wxBOTH );
 	
 	// Connect Events
 	m_radioBtnSrcMap->Connect( wxEVT_COMMAND_RADIOBUTTON_SELECTED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnRadioBtnSrcMapClick ), NULL, this );
