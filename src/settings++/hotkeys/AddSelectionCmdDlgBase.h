@@ -5,8 +5,8 @@
 // PLEASE DO "NOT" EDIT THIS FILE!
 ///////////////////////////////////////////////////////////////////////////
 
-#ifndef __AddSelectionPanelBase__
-#define __AddSelectionPanelBase__
+#ifndef __AddSelectionCmdDlgBase__
+#define __AddSelectionCmdDlgBase__
 
 #include <wx/string.h>
 #include <wx/radiobut.h>
@@ -26,25 +26,25 @@
 
 
 ///////////////////////////////////////////////////////////////////////////////
-/// Class AddSelectionCmdDlg
+/// Class AddSelectionCmdDlgBase
 ///////////////////////////////////////////////////////////////////////////////
-class AddSelectionCmdDlg : public wxDialog 
+class AddSelectionCmdDlgBase : public wxDialog 
 {
 	private:
 	
 	protected:
-		wxRadioButton* m_radioBtn14;
-		wxRadioButton* m_radioBtn15;
-		wxRadioButton* m_radioBtn16;
-		wxRadioButton* m_radioBtn18;
-		wxTextCtrl* m_textCtrl5;
-		wxRadioButton* m_radioBtn8;
-		wxRadioButton* m_radioBtn12;
-		wxTextCtrl* m_textCtrl3;
-		wxRadioButton* m_radioBtn11;
-		wxRadioButton* m_radioBtn13;
-		wxTextCtrl* m_textCtrl4;
-		wxCheckBox* m_checkBox2;
+		wxRadioButton* m_radioBtnSrcMap;
+		wxRadioButton* m_radioBtnSrcView;
+		wxRadioButton* m_radioBtnSrcSel;
+		wxRadioButton* m_radioBtnSrcMouse;
+		wxTextCtrl* m_textCtrlSrcMouseDist;
+		wxRadioButton* m_radioBtnSelAll;
+		wxRadioButton* m_radioBtnSelCount;
+		wxTextCtrl* m_textCtrlSelCount;
+		wxRadioButton* m_radioBtnSelOne;
+		wxRadioButton* m_radioBtnSelPerc;
+		wxTextCtrl* m_textCtrlSelPerc;
+		wxCheckBox* m_checkBoxClearPrevSel;
 		wxStaticText* m_staticText9;
 		wxStaticText* m_staticText11;
 		
@@ -105,13 +105,13 @@ class AddSelectionCmdDlg : public wxDialog
 		wxButton* m_buttonCancel;
 		
 		// Virtual event handlers, overide them in your derived class
-		virtual void ButtonAddClicked( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnButtonAddClick( wxCommandEvent& event ){ event.Skip(); }
 		
 	
 	public:
-		AddSelectionCmdDlg( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Add Selection Command"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE );
-		~AddSelectionCmdDlg();
+		AddSelectionCmdDlgBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Add Selection Command"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE );
+		~AddSelectionCmdDlgBase();
 	
 };
 
-#endif //__AddSelectionPanelBase__
+#endif //__AddSelectionCmdDlgBase__

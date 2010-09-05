@@ -7,7 +7,7 @@
         <property name="disconnect_events">1</property>
         <property name="encoding">UTF-8</property>
         <property name="event_generation">connect</property>
-        <property name="file">AddSelectionPanel</property>
+        <property name="file">AddSelectionCmdDlgBase</property>
         <property name="first_id">1000</property>
         <property name="help_provider">none</property>
         <property name="internationalize">0</property>
@@ -30,7 +30,7 @@
             <property name="id">wxID_ANY</property>
             <property name="maximum_size"></property>
             <property name="minimum_size"></property>
-            <property name="name">AddSelectionCmdDlg</property>
+            <property name="name">AddSelectionCmdDlgBase</property>
             <property name="pos"></property>
             <property name="size"></property>
             <property name="style">wxDEFAULT_DIALOG_STYLE</property>
@@ -141,11 +141,11 @@
                                                 <property name="label">Complete map</property>
                                                 <property name="maximum_size"></property>
                                                 <property name="minimum_size"></property>
-                                                <property name="name">m_radioBtn14</property>
+                                                <property name="name">m_radioBtnSrcMap</property>
                                                 <property name="permission">protected</property>
                                                 <property name="pos"></property>
                                                 <property name="size"></property>
-                                                <property name="style"></property>
+                                                <property name="style">wxRB_GROUP</property>
                                                 <property name="subclass"></property>
                                                 <property name="tooltip"></property>
                                                 <property name="value">1</property>
@@ -193,7 +193,7 @@
                                                 <property name="label">All in view</property>
                                                 <property name="maximum_size"></property>
                                                 <property name="minimum_size"></property>
-                                                <property name="name">m_radioBtn15</property>
+                                                <property name="name">m_radioBtnSrcView</property>
                                                 <property name="permission">protected</property>
                                                 <property name="pos"></property>
                                                 <property name="size"></property>
@@ -242,10 +242,10 @@
                                                 <property name="font"></property>
                                                 <property name="hidden">0</property>
                                                 <property name="id">wxID_ANY</property>
-                                                <property name="label">Current selection</property>
+                                                <property name="label">Previous selection</property>
                                                 <property name="maximum_size"></property>
                                                 <property name="minimum_size"></property>
-                                                <property name="name">m_radioBtn16</property>
+                                                <property name="name">m_radioBtnSrcSel</property>
                                                 <property name="permission">protected</property>
                                                 <property name="pos"></property>
                                                 <property name="size"></property>
@@ -306,7 +306,7 @@
                                                         <property name="label">Max. distance from mouse</property>
                                                         <property name="maximum_size"></property>
                                                         <property name="minimum_size"></property>
-                                                        <property name="name">m_radioBtn18</property>
+                                                        <property name="name">m_radioBtnSrcMouse</property>
                                                         <property name="permission">protected</property>
                                                         <property name="pos"></property>
                                                         <property name="size"></property>
@@ -358,7 +358,7 @@
                                                         <property name="maximum_size"></property>
                                                         <property name="maxlength">0</property>
                                                         <property name="minimum_size"></property>
-                                                        <property name="name">m_textCtrl5</property>
+                                                        <property name="name">m_textCtrlSrcMouseDist</property>
                                                         <property name="permission">protected</property>
                                                         <property name="pos"></property>
                                                         <property name="size">40,-1</property>
@@ -447,11 +447,11 @@
                                                 <property name="label">All</property>
                                                 <property name="maximum_size"></property>
                                                 <property name="minimum_size"></property>
-                                                <property name="name">m_radioBtn8</property>
+                                                <property name="name">m_radioBtnSelAll</property>
                                                 <property name="permission">protected</property>
                                                 <property name="pos"></property>
                                                 <property name="size"></property>
-                                                <property name="style"></property>
+                                                <property name="style">wxRB_GROUP</property>
                                                 <property name="subclass"></property>
                                                 <property name="tooltip"></property>
                                                 <property name="value">1</property>
@@ -508,7 +508,7 @@
                                                         <property name="label">Max. count</property>
                                                         <property name="maximum_size"></property>
                                                         <property name="minimum_size"></property>
-                                                        <property name="name">m_radioBtn12</property>
+                                                        <property name="name">m_radioBtnSelCount</property>
                                                         <property name="permission">protected</property>
                                                         <property name="pos"></property>
                                                         <property name="size"></property>
@@ -560,7 +560,7 @@
                                                         <property name="maximum_size"></property>
                                                         <property name="maxlength">0</property>
                                                         <property name="minimum_size"></property>
-                                                        <property name="name">m_textCtrl3</property>
+                                                        <property name="name">m_textCtrlSelCount</property>
                                                         <property name="permission">protected</property>
                                                         <property name="pos"></property>
                                                         <property name="size">30,-1</property>
@@ -614,10 +614,10 @@
                                                 <property name="font"></property>
                                                 <property name="hidden">0</property>
                                                 <property name="id">wxID_ANY</property>
-                                                <property name="label">Percentage</property>
+                                                <property name="label">One (go to)</property>
                                                 <property name="maximum_size"></property>
                                                 <property name="minimum_size"></property>
-                                                <property name="name">m_radioBtn11</property>
+                                                <property name="name">m_radioBtnSelOne</property>
                                                 <property name="permission">protected</property>
                                                 <property name="pos"></property>
                                                 <property name="size"></property>
@@ -678,7 +678,7 @@
                                                         <property name="label">Percentage</property>
                                                         <property name="maximum_size"></property>
                                                         <property name="minimum_size"></property>
-                                                        <property name="name">m_radioBtn13</property>
+                                                        <property name="name">m_radioBtnSelPerc</property>
                                                         <property name="permission">protected</property>
                                                         <property name="pos"></property>
                                                         <property name="size"></property>
@@ -730,7 +730,7 @@
                                                         <property name="maximum_size"></property>
                                                         <property name="maxlength">0</property>
                                                         <property name="minimum_size"></property>
-                                                        <property name="name">m_textCtrl4</property>
+                                                        <property name="name">m_textCtrlSelPerc</property>
                                                         <property name="permission">protected</property>
                                                         <property name="pos"></property>
                                                         <property name="size">30,-1</property>
@@ -788,7 +788,7 @@
                                                 <property name="label">Clear previous selection</property>
                                                 <property name="maximum_size"></property>
                                                 <property name="minimum_size"></property>
-                                                <property name="name">m_checkBox2</property>
+                                                <property name="name">m_checkBoxClearPrevSel</property>
                                                 <property name="permission">protected</property>
                                                 <property name="pos"></property>
                                                 <property name="size">-1,-1</property>
@@ -3596,7 +3596,7 @@
                                 <property name="window_extra_style"></property>
                                 <property name="window_name"></property>
                                 <property name="window_style"></property>
-                                <event name="OnButtonClick">ButtonAddClicked</event>
+                                <event name="OnButtonClick">OnButtonAddClick</event>
                                 <event name="OnChar"></event>
                                 <event name="OnEnterWindow"></event>
                                 <event name="OnEraseBackground"></event>
@@ -3634,7 +3634,7 @@
                                 <property name="fg"></property>
                                 <property name="font"></property>
                                 <property name="hidden">0</property>
-                                <property name="id">wxID_ANY</property>
+                                <property name="id">wxID_CANCEL</property>
                                 <property name="label">Cancel</property>
                                 <property name="maximum_size"></property>
                                 <property name="minimum_size"></property>

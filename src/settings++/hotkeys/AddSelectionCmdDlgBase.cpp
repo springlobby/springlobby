@@ -5,11 +5,11 @@
 // PLEASE DO "NOT" EDIT THIS FILE!
 ///////////////////////////////////////////////////////////////////////////
 
-#include "AddSelectionPanelBase.h"
+#include "AddSelectionCmdDlgBase.h"
 
 ///////////////////////////////////////////////////////////////////////////
 
-AddSelectionCmdDlg::AddSelectionCmdDlg( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
+AddSelectionCmdDlgBase::AddSelectionCmdDlgBase( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
 {
 	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
 	
@@ -31,24 +31,24 @@ AddSelectionCmdDlg::AddSelectionCmdDlg( wxWindow* parent, wxWindowID id, const w
 	fgSizer51->SetFlexibleDirection( wxBOTH );
 	fgSizer51->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
-	m_radioBtn14 = new wxRadioButton( this, wxID_ANY, wxT("Complete map"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_radioBtn14->SetValue( true ); 
-	fgSizer51->Add( m_radioBtn14, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	m_radioBtnSrcMap = new wxRadioButton( this, wxID_ANY, wxT("Complete map"), wxDefaultPosition, wxDefaultSize, wxRB_GROUP );
+	m_radioBtnSrcMap->SetValue( true ); 
+	fgSizer51->Add( m_radioBtnSrcMap, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	m_radioBtn15 = new wxRadioButton( this, wxID_ANY, wxT("All in view"), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer51->Add( m_radioBtn15, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	m_radioBtnSrcView = new wxRadioButton( this, wxID_ANY, wxT("All in view"), wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer51->Add( m_radioBtnSrcView, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	m_radioBtn16 = new wxRadioButton( this, wxID_ANY, wxT("Current selection"), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer51->Add( m_radioBtn16, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	m_radioBtnSrcSel = new wxRadioButton( this, wxID_ANY, wxT("Previous selection"), wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer51->Add( m_radioBtnSrcSel, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
 	wxBoxSizer* bSizer3;
 	bSizer3 = new wxBoxSizer( wxHORIZONTAL );
 	
-	m_radioBtn18 = new wxRadioButton( this, wxID_ANY, wxT("Max. distance from mouse"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer3->Add( m_radioBtn18, 0, wxALIGN_CENTER|wxALL, 5 );
+	m_radioBtnSrcMouse = new wxRadioButton( this, wxID_ANY, wxT("Max. distance from mouse"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer3->Add( m_radioBtnSrcMouse, 0, wxALIGN_CENTER|wxALL, 5 );
 	
-	m_textCtrl5 = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 40,-1 ), 0 );
-	bSizer3->Add( m_textCtrl5, 0, wxALL, 5 );
+	m_textCtrlSrcMouseDist = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 40,-1 ), 0 );
+	bSizer3->Add( m_textCtrlSrcMouseDist, 0, wxALL, 5 );
 	
 	fgSizer51->Add( bSizer3, 1, wxEXPAND, 5 );
 	
@@ -64,39 +64,39 @@ AddSelectionCmdDlg::AddSelectionCmdDlg( wxWindow* parent, wxWindowID id, const w
 	fgSizer3->SetFlexibleDirection( wxBOTH );
 	fgSizer3->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
-	m_radioBtn8 = new wxRadioButton( this, wxID_ANY, wxT("All"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_radioBtn8->SetValue( true ); 
-	fgSizer3->Add( m_radioBtn8, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	m_radioBtnSelAll = new wxRadioButton( this, wxID_ANY, wxT("All"), wxDefaultPosition, wxDefaultSize, wxRB_GROUP );
+	m_radioBtnSelAll->SetValue( true ); 
+	fgSizer3->Add( m_radioBtnSelAll, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
 	wxBoxSizer* bSizer1;
 	bSizer1 = new wxBoxSizer( wxHORIZONTAL );
 	
-	m_radioBtn12 = new wxRadioButton( this, wxID_ANY, wxT("Max. count"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer1->Add( m_radioBtn12, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	m_radioBtnSelCount = new wxRadioButton( this, wxID_ANY, wxT("Max. count"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer1->Add( m_radioBtnSelCount, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
-	m_textCtrl3 = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 30,-1 ), 0 );
-	bSizer1->Add( m_textCtrl3, 0, wxALL, 5 );
+	m_textCtrlSelCount = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 30,-1 ), 0 );
+	bSizer1->Add( m_textCtrlSelCount, 0, wxALL, 5 );
 	
 	fgSizer3->Add( bSizer1, 1, wxEXPAND, 5 );
 	
-	m_radioBtn11 = new wxRadioButton( this, wxID_ANY, wxT("Percentage"), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer3->Add( m_radioBtn11, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	m_radioBtnSelOne = new wxRadioButton( this, wxID_ANY, wxT("One (go to)"), wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer3->Add( m_radioBtnSelOne, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
 	wxBoxSizer* bSizer2;
 	bSizer2 = new wxBoxSizer( wxHORIZONTAL );
 	
-	m_radioBtn13 = new wxRadioButton( this, wxID_ANY, wxT("Percentage"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer2->Add( m_radioBtn13, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	m_radioBtnSelPerc = new wxRadioButton( this, wxID_ANY, wxT("Percentage"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer2->Add( m_radioBtnSelPerc, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
-	m_textCtrl4 = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 30,-1 ), 0 );
-	bSizer2->Add( m_textCtrl4, 0, wxALL, 5 );
+	m_textCtrlSelPerc = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 30,-1 ), 0 );
+	bSizer2->Add( m_textCtrlSelPerc, 0, wxALL, 5 );
 	
 	fgSizer3->Add( bSizer2, 1, wxEXPAND, 5 );
 	
-	m_checkBox2 = new wxCheckBox( this, wxID_ANY, wxT("Clear previous selection"), wxDefaultPosition, wxSize( -1,-1 ), 0 );
-	m_checkBox2->SetValue(true);
+	m_checkBoxClearPrevSel = new wxCheckBox( this, wxID_ANY, wxT("Clear previous selection"), wxDefaultPosition, wxSize( -1,-1 ), 0 );
+	m_checkBoxClearPrevSel->SetValue(true);
 	
-	fgSizer3->Add( m_checkBox2, 0, wxALL, 5 );
+	fgSizer3->Add( m_checkBoxClearPrevSel, 0, wxALL, 5 );
 	
 	sbSizer7->Add( fgSizer3, 1, wxEXPAND, 5 );
 	
@@ -336,7 +336,7 @@ AddSelectionCmdDlg::AddSelectionCmdDlg( wxWindow* parent, wxWindowID id, const w
 	m_buttonOk = new wxButton( this, wxID_ANY, wxT("Add"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer24->Add( m_buttonOk, 0, wxALL, 5 );
 	
-	m_buttonCancel = new wxButton( this, wxID_ANY, wxT("Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_buttonCancel = new wxButton( this, wxID_CANCEL, wxT("Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer24->Add( m_buttonCancel, 0, wxALL, 5 );
 	
 	fgSizer5->Add( bSizer24, 1, wxALL|wxEXPAND, 5 );
@@ -346,11 +346,11 @@ AddSelectionCmdDlg::AddSelectionCmdDlg( wxWindow* parent, wxWindowID id, const w
 	fgSizer5->Fit( this );
 	
 	// Connect Events
-	m_buttonOk->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( AddSelectionCmdDlg::ButtonAddClicked ), NULL, this );
+	m_buttonOk->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnButtonAddClick ), NULL, this );
 }
 
-AddSelectionCmdDlg::~AddSelectionCmdDlg()
+AddSelectionCmdDlgBase::~AddSelectionCmdDlgBase()
 {
 	// Disconnect Events
-	m_buttonOk->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( AddSelectionCmdDlg::ButtonAddClicked ), NULL, this );
+	m_buttonOk->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( AddSelectionCmdDlgBase::OnButtonAddClick ), NULL, this );
 }

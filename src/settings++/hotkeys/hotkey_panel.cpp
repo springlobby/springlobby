@@ -20,12 +20,13 @@
 #include "../../settings.h"
 #include "KeynameConverter.h"
 #include "SpringDefaultProfile.h"
+#include "AddSelectionCmdDlg.h"
 
 hotkey_panel::hotkey_panel(wxWindow *parent, wxWindowID id , const wxString &title , const wxPoint& pos , const wxSize& size, long style)
 													: wxScrolledWindow(parent, id, pos, size, style|wxTAB_TRAVERSAL|wxHSCROLL,title),
 													m_keyConfigPanel( this, -1, wxDefaultPosition, wxDefaultSize, (wxKEYBINDER_DEFAULT_STYLE & ~wxKEYBINDER_SHOW_APPLYBUTTON), wxT("HotkeyPanel"), 
-																		wxT("Selection"), wxCommandEventHandler(hotkey_panel::ButtonAddClicked),
-																		wxT("Custom"), wxCommandEventHandler(hotkey_panel::ButtonAddClicked)),
+																		wxT("Selection"), wxCommandEventHandler(hotkey_panel::ButtonAddSelectionCommandClicked),
+																		wxT("Custom"), wxCommandEventHandler(hotkey_panel::ButtonAddSelectionCommandClicked)),
 													m_uikeys_manager(sett().GetCurrentUsedUikeys() )
 {
 	KeynameConverter::initialize();
@@ -69,6 +70,16 @@ hotkey_panel::hotkey_panel(wxWindow *parent, wxWindowID id , const wxString &tit
 
 hotkey_panel::~hotkey_panel(void)
 {
+}
+
+void hotkey_panel::ButtonAddSelectionCommandClicked( wxCommandEvent& event )
+{
+	AddSelectionCmdDlg dlg( this );
+	
+	if ( dlg.ShowModal() == wxID_OK )
+	{
+		wxString cmd = dlg.getCommandString();
+	}
 }
 
 bool hotkey_panel::isBindingInProfile( const key_binding& springprofile, const wxString& command, const wxString& springkey )
@@ -175,7 +186,7 @@ void hotkey_panel::SaveSettings()
 	}
 	catch( const std::exception& ex )
 	{
-		customMessageBox(SS_MAIN_ICON, _("Hotkey SaveSettings error"), _("Hotkey SaveSettings error"), wxOK );
+		customMessageBox(SS_MAIN_ICON, _("Hotkey SaveSettings error"), _("Hotkey SaveSettings error"), wxOK | wxICON_HAND );
 	}
 }
 
@@ -213,7 +224,7 @@ void hotkey_panel::putKeybindingsToProfile( wxKeyProfile& profile, const key_bin
 		{
 			wxString msg = _( "Warning: Error reading uikeys.txt!" ); // + wxString(ex.what()); 
 			wxLogWarning( msg );
-			customMessageBox(SS_MAIN_ICON, msg, _("Hotkey warning"), wxOK );
+			customMessageBox(SS_MAIN_ICON, msg, _("Hotkey warning"), wxOK | wxICON_WARNING );
 		}
 	}
 }

@@ -54,10 +54,7 @@ private:
 	wxKeyConfigPanel	m_keyConfigPanel;
 	hotkey_parser		m_uikeys_manager;
 
-	// Virtual event handlers, overide them in your derived class
-	void ButtonAddClicked( wxCommandEvent& event ){ 
-		event.Skip(); 
-	}
+	void ButtonAddSelectionCommandClicked( wxCommandEvent& event );
 };
 
 #endif
