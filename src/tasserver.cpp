@@ -689,7 +689,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
                               haspass, rank, hash, map, title, mod );
         if ( nick == m_relay_host_bot )
         {
-           GetBattle( id ).SetIsProxy( true );
+		   GetBattle( id ).SetProxy( m_relay_host_bot );
            JoinBattle( id, sett().GetLastHostPassword() ); // autojoin relayed host battles
         }
     }
@@ -1468,7 +1468,7 @@ void TASServer::HostBattle( BattleOptions bo, const wxString& password )
     cmd += bo.modname;
 
     m_delayed_open_command = _T("");
-    if ( !bo.isproxy )
+	if ( !bo.userelayhost )
     {
        SendCmd( _T("OPENBATTLE"), cmd );
     }
@@ -1476,7 +1476,7 @@ void TASServer::HostBattle( BattleOptions bo, const wxString& password )
     {
        if ( bo.relayhost.IsEmpty() )
        {
-					 wxArrayString relaylist = GetRelayHostList();
+			wxArrayString relaylist = GetRelayHostList();
            unsigned int numbots = relaylist.GetCount();
            if ( numbots > 0 )
            {
@@ -2235,11 +2235,6 @@ void TASServer::UpdateBot( int battleid, User& bot, UserBattleStatus& status )
 
 void TASServer::SendScriptToProxy( const wxString& script )
 {
-  try
-  {
-	  if ( GetUser(m_relay_host_bot).Status().in_game ) return; // don't send the script if the bot is ingame alredy
-  }
-  catch(...) {}
   RelayCmd( _T("CLEANSCRIPT") );
   wxStringTokenizer tkzr( script, _T("\n") );
   while ( tkzr.HasMoreTokens() )
