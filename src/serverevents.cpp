@@ -695,7 +695,10 @@ void ServerEvents::OnSaidBattle( int battleid, const wxString& nick, const wxStr
     try
     {
         Battle& battle = m_serv.GetBattle( battleid );
-        ui().OnSaidBattle( battle, nick, msg );
+		if ( ( m_serv.GetMe().GetNick() ==  nick ) || !useractions().DoActionOnUser( UserActions::ActIgnoreChat, nick ) )
+		{
+			ui().OnSaidBattle( battle, nick, msg );
+		}
         battle.GetAutoHost().OnSaidBattle( nick, msg );
     }
     catch (assert_exception) {}
