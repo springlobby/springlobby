@@ -191,8 +191,8 @@ bool OptionsWrapper::keyExists(wxString key ) const
 
 bool OptionsWrapper::keyExists(wxString key, GameOption modmapFlag, bool showError, OptionType& optType) const
 {
-	wxString duplicateKeyError = _T("Please contact the mod's author and tell him\n"
-										"to use unique keys in his ModOptions.lua");
+	wxString duplicateKeyError = _T("Please contact the mod's author and tell him\n\
+										to use unique keys in his ModOptions.lua");
 	bool exists = false;
 	optType = opt_undefined;
     GameOptionsMap::const_iterator optIt = m_opts.find((int)modmapFlag);

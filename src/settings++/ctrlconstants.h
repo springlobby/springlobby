@@ -212,9 +212,9 @@ typedef category_sizes_map::value_type category_sizes_map_type;
 
 const Control UI_ZOOM[] = {
 	{_("Scrollwheel speed"),           _T("ScrollWheelSpeed"),      ID_WINDOWP_UI_MW_SPD,	_T("25"),
-			{_("Higher values mean faster zoom with mouse wheel.\n"
-				"Negative values will invert zoom direction.\n"
-				"Results may vary depending on camera mode!")}	}
+			{_("Higher values mean faster zoom with mouse wheel.\n\
+				Negative values will invert zoom direction.\n\
+				Results may vary depending on camera mode!")}	}
 
 };
 
@@ -222,18 +222,18 @@ const category_sizes_map_type UI_ZOOM_entry ( _T("UI_ZOOM"), sizeof(UI_ZOOM) / C
 
 //TODO is max_texture stages obsolte?
 const Control RO_SLI[] = {
-	{_("Shadow-map size"),              _T("ShadowMapSize"),       ID_RO_SLI_0,	_T("2048"), {_("higher value = better looking shadows\n"
-																								"possible values: 1024, 2048, 4096, 8192")}	},
+	{_("Shadow-map size"),              _T("ShadowMapSize"),       ID_RO_SLI_0,	_T("2048"), {_("higher value = better looking shadows\n\
+																								possible values: 1024, 2048, 4096, 8192")}	},
 	{_("Tree view-distance"),           _T("TreeRadius"),          ID_RO_SLI_1,	_T("1000"), {_("sets the maximum distance at which trees will still be rendered")}	},
 	{_("Terrain detail"),               _T("GroundDetail"),        ID_RO_SLI_2,	_T("80"), {_("higher value = more terrain details")}	},
 	{_("Unit LOD distance"),                  _T("UnitLodDist"),         ID_RO_SLI_3,	_T("300"), {_("higher value = units will remain detailed even when zooming out")}	},
 	{_("Grass detail"),                 _T("GrassDetail"),         ID_RO_SLI_4,	_T("3"), {_("higher value = more detailed grass")}	},
 	{_("Ground decals"),                _T("GroundDecals"),        ID_RO_SLI_5,	_T("0"), {_("settings higher than 1 might have unwelcome side-effects / be very resource hungry")}	},
-	{_("Unit icon distance"),           _T("UnitIconDist"),        ID_RO_SLI_6,	_T("350"), {_("determines at which range units are still fully rendered\n"
-																								"higher value = greater range = more units rendered at the same time")}	},
+	{_("Unit icon distance"),           _T("UnitIconDist"),        ID_RO_SLI_6,	_T("350"), {_("determines at which range units are still fully rendered\n\
+																								higher value = greater range = more units rendered at the same time")}	},
 	{_("Max simultaneous particles"),     _T("MaxParticles"),        ID_RO_SLI_7,	_T("4000")	, {_("limits how many particles are displayed at the same time")}},
 	{_("Max nano simultaneous particles"),     _T("MaxNanoParticles"),        ID_RO_SLI_8,	_T("10000")	, {_("limits how many particles are displayed at the same time")}}
-	//{_("Max texture stages (SM3)"), _T("SM3MaxTextureStages"), ID_RO_SLI_8,	"6"	, {_("Decrease this if you are having bad perfomance on maps in sm3 format,\n"
+	//{_("Max texture stages (SM3)"), _T("SM3MaxTextureStages"), ID_RO_SLI_8,	"6"	, {_("Decrease this if you are having bad perfomance on maps in sm3 format,\n\
 	// not needed atm																				"increase if sm3 maps look ugly.")}}
 };
 
@@ -268,8 +268,8 @@ const Control VO_SLI_EXT[] = {
 const category_sizes_map_type VO_SLI_EXT_entry ( _T("VO_SLI_EXT"), sizeof(VO_SLI_EXT) / Control_size );
 
 const Control AO_SLI[] = {
-	{_("Maximum simultaneous sounds"), _T("MaxSounds"),            ID_AO_SLI_0,	_T("32") , {_("maximum different sounds played at the same time\n"
-																								"Set this to zero to disable sound completely.")}},
+	{_("Maximum simultaneous sounds"), _T("MaxSounds"),            ID_AO_SLI_0,	_T("32") , {_("maximum different sounds played at the same time\n\
+																								Set this to zero to disable sound completely.")}},
 	{_("Master sound volume"),   _T("snd_volmaster"),                ID_AO_SLI_1,	_T("60"), {_("master sound volume")}},
 	{_("General sound volume"),   _T("snd_general"),                ID_AO_SLI_2,	_T("100"), {_("general volume relative to master volume")}},
 	{_("Unit reply volume"),     _T("snd_volunitreply"),       ID_AO_SLI_3,	_T("100") , {_("reply volume relative to master volume")}},
@@ -282,13 +282,13 @@ const category_sizes_map_type AO_SLI_entry ( _T("AO_SLI"), sizeof(AO_SLI) / Cont
 
 const Control QA_CBOX[] = {
     {_("Shadows (slow)"),                                  _T("Shadows"),             ID_WINDOWP_QA_CBOX_0,	_T("0"), {_("enable shadows?")}},
-	{_("3D trees"),                 _T("3DTrees"),             ID_WINDOWP_QA_CBOX_1,	_T("1"), {_("want better looking trees?\n"
-														"needs Geforce 2/Radeon 8500/Intel 830 or later class graphic card")}},
-	{_("High-resolution clouds"), _T("AdvSky"),              ID_WINDOWP_QA_CBOX_2,	_T("0"), {_("want better looking sky?\n"
-														"needs Geforce 5/Radeon 9500/Intel 915 or later class graphic card")}},
+	{_("3D trees"),                 _T("3DTrees"),             ID_WINDOWP_QA_CBOX_1,	_T("1"), {_("want better looking trees?\n\
+														needs Geforce 2/Radeon 8500/Intel 830 or later class graphic card")}},
+	{_("High-resolution clouds"), _T("AdvSky"),              ID_WINDOWP_QA_CBOX_2,	_T("0"), {_("want better looking sky?\n\
+														needs Geforce 5/Radeon 9500/Intel 915 or later class graphic card")}},
 	{_("Dynamic clouds (slow)"),                           _T("DynamicSky"),          ID_WINDOWP_QA_CBOX_3,	_T("0"), {_("want moving clouds in the sky?")}},
-	{_("Reflective units"),       _T("AdvUnitShading"),      ID_WINDOWP_QA_CBOX_4,	_T("0"), {_("shiny units?\n"
-														"needs Geforce 5/Radeon 9500/Intel 915 or later class graphic card")}},
+	{_("Reflective units"),       _T("AdvUnitShading"),      ID_WINDOWP_QA_CBOX_4,	_T("0"), {_("shiny units?\n\
+														needs Geforce 5/Radeon 9500/Intel 915 or later class graphic card")}},
 	{_("Never use shaders when rendering SM3 maps"),       _T("SM3ForceFallbackTex"), ID_WINDOWP_QA_CBOX_5,	_T("0"), {_("problems with sm3 maps? enable this")}},
 	{_("Enable LuaShaders support"),                       _T("LuaShaders"),          ID_WINDOWP_QA_CBOX_6,	_T("1"), {_("makes for some cool effects")}},
 	{_("Use Pixelbuffer objects"),                       _T("UsePBO"),          ID_WINDOWP_QA_CBOX_7,	_T("0"), {_("If supported, it speeds up the dynamic loading of terrain textures -> smoother camera movement")}},
@@ -322,8 +322,8 @@ const Control UI_CBOX[] = {
 										{_("requires \"Enable LuaWidgets\" to be set.\nWill be displayed in the bottom right corner")}},
 //TODO is there even a reason that it should be disabled?
 	{_("Fix rendering on alt-tab"),                        _T("FixAltTab"),           ID_WINDOWP_UI_CBOX_14,	_T("1"), {_("Do not change if not needed")}},
-	{_("Disallow helper AI's"),                            _T("NoHelperAIs"),         ID_WINDOWP_UI_CBOX_15,	_T("0"), {_("Disables Economy AI, etc.\n"
-																														"If enabled might screw with LuaUi.")}},
+	{_("Disallow helper AI's"),                            _T("NoHelperAIs"),         ID_WINDOWP_UI_CBOX_15,	_T("0"), {_("Disables Economy AI, etc.\n\
+																														If enabled might screw with LuaUi.")}},
 	{_("Enable scroll on window edge"),					_T("WindowedEdgeMove"),	ID_WINDOWP_UI_CBOX_16,	_T("1"), {_("Scroll the screen when mouse reaches the screen's edge.")}},
 	{_("Invert Mouse"),									_T("InvertMouse"),			ID_WINDOWP_UI_CBOX_17,	_T("0"), {_("Inverts the Mouse Y-axis in FPS mode")}},
 	{_("Use Hardware Cursor"),									_T("HardwareCursor"),			ID_WINDOWP_UI_CBOX_18,	_T("0"), {_("Use native OS mouse cursor (hardware accelerated)")}},
@@ -344,16 +344,16 @@ const Control MO_SLI[] = {
 const category_sizes_map_type MO_SLI_entry ( _T("MO_SLI"), sizeof(MO_SLI) / Control_size );
 
 const Control MO_SLI_EXT[] = {
-	{_(""), _T("OverheadEnabled"), -1,	_T("1"), {_("Make this the default view when startins Spring.\n"
-													"Can be changed ingame.")}},
-	{_(""), _T("RotOverheadEnabled"), -1,	_T("1"), {_("Make this the default view when startins Spring.\n"
-													"Can be changed ingame.")}},
-	{_(""), _T("TWEnabled"), -1,		_T("1"), {_("Make this the default view when startins Spring.\n"
-												"Can be changed ingame.")}},
-	{_(""), _T("FPSEnabled"), -1,		_T("1"), {_("Make this the default view when startins Spring.\n"
-												"Can be changed ingame.")}},
-	{_(""), _T("CamFreeEnabled"), -1,	_T("1"), {_("Make this the default view when startins Spring.\n"
-												"Can be changed ingame.")}},
+	{_(""), _T("OverheadEnabled"), -1,	_T("1"), {_("Make this the default view when startins Spring.\n\
+													Can be changed ingame.")}},
+	{_(""), _T("RotOverheadEnabled"), -1,	_T("1"), {_("Make this the default view when startins Spring.\n\
+													Can be changed ingame.")}},
+	{_(""), _T("TWEnabled"), -1,		_T("1"), {_("Make this the default view when startins Spring.\n\
+												Can be changed ingame.")}},
+	{_(""), _T("FPSEnabled"), -1,		_T("1"), {_("Make this the default view when startins Spring.\n\
+												Can be changed ingame.")}},
+	{_(""), _T("CamFreeEnabled"), -1,	_T("1"), {_("Make this the default view when startins Spring.\n\
+												Can be changed ingame.")}},
 };
 
 const category_sizes_map_type MO_SLI_EXT_entry ( _T("MO_SLI_EXT"), sizeof(MO_SLI_EXT) / Control_size );
@@ -371,9 +371,9 @@ const Control DO_CBOX[] = {
 const category_sizes_map_type DO_CBOX_entry ( _T("DO_CBOX"), sizeof(DO_CBOX) / Control_size );
 
 const Control WR_COMBOX[] = {
-		{_("Basic"),                  _T("ReflectiveWater"), ID_WINDOWP_WR_COMBOX,	_T("1"), {_("Depending on the power of your graphics card,\n"
-																								"selecting higher quality than basic can have a\n"
-																								"major impact on Spring's performance.\n")}}
+		{_("Basic"),                  _T("ReflectiveWater"), ID_WINDOWP_WR_COMBOX,	_T("1"), {_("Depending on the power of your graphics card,\n\
+																								selecting higher quality than basic can have a\n\
+																								major impact on Spring's performance.\n")}}
 	/*{_("reflective",              "ReflectiveWater", ID_WINDOWP_WR_COMBOX_1,	"1"},
 	{_("reflective + refractive", "ReflectiveWater", ID_WINDOWP_WR_COMBOX_2,	"1"},
 	{_("dynamic",                 "ReflectiveWater", ID_WINDOWP_WR_COMBOX_3,	"1"}*/
