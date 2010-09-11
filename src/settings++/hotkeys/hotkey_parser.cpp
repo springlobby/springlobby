@@ -12,6 +12,8 @@
 #include "KeynameConverter.h"
 #include "SpringDefaultProfile.h"
 #include "hotkey_panel.h"
+#include "HotkeyException.h"
+
 
 hotkey_parser::hotkey_parser(const wxString& uikeys_filename) : filename( uikeys_filename )
 {
@@ -134,8 +136,7 @@ void hotkey_parser::dumpIncludeSourceCode( const wxString& filename )
 
 	if ( !f.is_open() )
 	{
-		const wxString msg = _("Could not open file for writing: ") + filename;
-		throw std::runtime_error( msg.mb_str(wxConvUTF8) );
+		throw HotkeyException( _("Could not open file for writing: ") + filename );
 	}
 
 	for( key_binding::const_iterator iter = bindsC2K.begin(); iter != bindsC2K.end(); ++iter )
@@ -187,60 +188,35 @@ void hotkey_parser::updateBindsC2K()
 		}
 	}
 }
-/*
-bool hotkey_parser::isKeyInProfile( const key_binding& kbBinding, const wxString& command, const wxString& kbBeystring )
-{
-	key_binding::const_iterator cmdIter = kbBinding.find( command );
-	if ( cmdIter == kbBinding.end() )
-	{
-		return false;
-	}
-
-	for( key_set::const_iterator iter = cmdIter->second.begin(); iter != cmdIter->second.end(); ++iter )
-	{
-		if ( KeynameConverter::compareSpring2wxKeybinder( kbBeystring, (*iter) ) )
-		{
-			return true;
-		}
-	}
-
-	return false;
-}*/
 
 void hotkey_parser::writeBindingsToFile( const key_binding& springbindings )
 {
 	const wxString newTmpFilename = this->filename + wxT(".tmp");
+	wxTextFile newFile( newTmpFilename );
 
 	//open new file for writing
-	std::ofstream newFile;
-	newFile.open( newTmpFilename.c_str() );
-	if ( !newFile.is_open() )
+	if ( ( !newFile.Exists() && !newFile.Create() ) || ( newFile.Exists() && !newFile.Open() ) )
 	{
-		const wxString msg = _("Error opening file for writing: ") + newTmpFilename;
-		throw std::runtime_error( msg.mb_str(wxConvUTF8) );
-	}
-
-	//open old file for reading
-	std::ifstream oldFile;
-	oldFile.open( this->filename.c_str() );
-	if ( !oldFile.is_open() )
-	{
-		const wxString msg = _("Error opening file for reading: ") + this->filename;
-		throw std::runtime_error( std::string( msg.mb_str(wxConvUTF8) ) );
+		throw HotkeyException( _("Error opening file for writing: ") + newTmpFilename );
 	}
 
 	//now read the old uikeys.txt line after line and copy all comments to the new file
-	std::string line;
-	while ( !oldFile.eof() )
+	wxTextFile oldFile( this->filename );
+	if ( !oldFile.Open() )
 	{
-		std::getline (oldFile, line);
-		wxString wxLine = line;
-		wxLine.Trim();
-		if ( wxLine.StartsWith(wxT("//")) )
+		throw HotkeyException( _("Error opening file for writing: ") + newTmpFilename );
+	}
+
+	for( size_t i = 0; i < oldFile.GetLineCount(); ++i )
+	{
+		wxString line = oldFile.GetLine( i );
+		line.Trim();
+		if ( line.StartsWith(wxT("//")) )
 		{
-			newFile << line << wxT('\n');
+			newFile.AddLine( line );
 		}
 	}
+	oldFile.Close();
 
 	const key_binding defBinds = SpringDefaultProfile::getAllBindingsC2K();
 	for( key_binding::const_iterator iter = defBinds.begin(); iter != defBinds.end(); ++iter )
@@ -249,7 +225,7 @@ void hotkey_parser::writeBindingsToFile( const key_binding& springbindings )
 		{
 			if ( !hotkey_panel::isBindingInProfile( springbindings, iter->first, (*iiter) ) )
 			{
-				newFile << wxT("unbind\t\t") << (*iiter) << wxT("\t") << iter->first << wxT("\n");
+				newFile.AddLine( wxT("unbind\t\t") + (*iiter) + wxT("\t") + iter->first );
 			}
 		}
 	}
@@ -260,43 +236,34 @@ void hotkey_parser::writeBindingsToFile( const key_binding& springbindings )
 		{
 			if ( !hotkey_panel::isDefaultBinding( iter->first, (*iiter) ) )
 			{
-				newFile << wxT("bind\t\t") << KeynameConverter::spring2wxKeybinder( (*iiter), true ) << wxT("\t") << iter->first << wxT("\n");
+				newFile.AddLine( wxT("bind\t\t") + KeynameConverter::spring2wxKeybinder( (*iiter), true ) + wxT("\t") + iter->first );
 			}
 		}
 	}
+	newFile.Write();
 
-	oldFile.close();
-	newFile.close();
+	const wxString prevFilenameBak = this->filename + wxT(".bak");
 
-	//delete old backup
-	const wxString prevFilenameBak = wxT("uikeys.txt.bak");
-	{
-		int rc = _unlink( prevFilenameBak.mbc_str() );
-		if ( rc != 0 )
-		{
-			const wxString msg = _("Error deleting backup file uikeys.txt.bak: ") + wxString( strerror( errno ) );
-			throw std::runtime_error( msg.mb_str() );
-		}
-	}
-	
 	//backup our current uikeys.txt
 	{
-		int rc = rename( this->filename.c_str(), prevFilenameBak.c_str() );
-		if ( rc != 0 )
+		if ( wxRenameFile( this->filename, prevFilenameBak ) == false )
 		{
-			const wxString msg = _("Error renaming uikeys.txt to uikeys.txt.bak: ") + wxString( strerror( errno ) );
-			throw std::runtime_error( msg.mb_str() );
+			throw HotkeyException( _("Error renaming uikeys.txt to uikeys.txt.bak: ") + wxString( strerror( errno ), wxConvUTF8 ) );
 		}
 	}
 
 	//rename our new tmp file to uikeys.txt. restore backup if failed
 	{
-		int rc = rename( newTmpFilename.c_str(), this->filename.c_str() );
-		if ( rc != 0 )
+		if ( wxRenameFile( newTmpFilename, this->filename ) == false )
 		{
-			int rc = rename( prevFilenameBak.To8BitData(), this->filename.To8BitData() );
-			const wxString msg = _("Error renaming uikeys.txt.tmp to uikeys.txt: ") + wxString( strerror( errno ) );
-			throw std::runtime_error( msg.mb_str() );
+			wxString msg = _("Error renaming uikeys.txt.tmp to uikeys.txt: ") + wxString( strerror( errno ), wxConvUTF8 );
+			
+			//restore backup
+			if ( wxRenameFile( prevFilenameBak, this->filename ) == false )
+			{
+				msg += _(" Restoring backup failed also: ") + wxString( strerror( errno ), wxConvUTF8 );
+			}
+			throw HotkeyException( msg );
 		}
 	}
 }

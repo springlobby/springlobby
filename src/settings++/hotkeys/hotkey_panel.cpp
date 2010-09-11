@@ -22,6 +22,7 @@
 #include "KeynameConverter.h"
 #include "SpringDefaultProfile.h"
 #include "AddSelectionCmdDlg.h"
+#include "HotkeyException.h"
 
 hotkey_panel::hotkey_panel(wxWindow *parent, wxWindowID id , const wxString &title , const wxPoint& pos , const wxSize& size, long style)
 													: wxScrolledWindow(parent, id, pos, size, style|wxTAB_TRAVERSAL|wxHSCROLL,title),
@@ -29,7 +30,8 @@ hotkey_panel::hotkey_panel(wxWindow *parent, wxWindowID id , const wxString &tit
 {
 	m_pKeyConfigPanel = new wxKeyConfigPanel( this, -1, wxDefaultPosition, wxDefaultSize, (wxKEYBINDER_DEFAULT_STYLE & ~wxKEYBINDER_SHOW_APPLYBUTTON), wxT("HotkeyPanel"), 
 																		wxT("Selection"), wxCommandEventHandler(hotkey_panel::ButtonAddSelectionCommandClicked),
-																		wxT("Custom"), wxCommandEventHandler(hotkey_panel::ButtonAddCustomCommandClicked));
+																		wxT("Custom"), wxCommandEventHandler(hotkey_panel::ButtonAddCustomCommandClicked),
+																		wxT("Add Command:") );
 	KeynameConverter::initialize();
 
 	UpdateControls();
@@ -197,9 +199,9 @@ void hotkey_panel::SaveSettings()
 
 		this->m_pKeyConfigPanel->ResetProfileBeenModifiedOrSelected();
 	}
-	catch( const std::exception& ex )
+	catch( const HotkeyException& ex )
 	{
-		customMessageBox(SS_MAIN_ICON, _("Hotkey SaveSettings error"), _("Hotkey SaveSettings error"), wxOK | wxICON_HAND );
+		customMessageBox(SS_MAIN_ICON, ex.getMessage(), _("Hotkey SaveSettings error"), wxOK | wxICON_HAND );
 	}
 }
 
@@ -349,8 +351,7 @@ key_binding_collection hotkey_panel::getProfilesFromSettings( )
 				}
 				else
 				{
-					const wxString msg = wxT("Unknown key action: ") + key;
-					throw std::runtime_error( msg.mb_str(wxConvUTF8) );
+					throw HotkeyException( wxT("Unknown key action: ") + key );
 				}
 			}
 		}

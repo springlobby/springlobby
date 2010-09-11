@@ -3,9 +3,10 @@
 -order of binds/unbinds for multiple keys
 -colorize commands that have changed hotkeys compared to default
 
--save custom commands to springsettings.conf to keep them even when not used in any profile (?)
 -unicode
 -buildfiles
 -unbindaction / unbindkeyset?
 -new/delete memmanagment?
--place add command buttons
+-enlarge hotkey panel in height
+
+-save custom commands to springsettings.conf to keep them even when not used in any profile (?)
