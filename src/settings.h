@@ -416,6 +416,7 @@ class Settings
     bool GetSearchSpringOnlyInSLPath();
 
     /// convenience wrappers to get current used version paths
+	wxString GetCurrentUsedUikeys();
     wxString GetCurrentUsedDataDir();
     wxString GetCurrentUsedUnitSync();
     wxString GetCurrentUsedSpringBinary();
@@ -430,6 +431,7 @@ class Settings
 
     wxString AutoFindSpringBin();
     wxString AutoFindUnitSync();
+	wxString AutoFindUikeys();
 
     //!@brief returns config file path spring should use, returns empty for default
     wxString GetForcedSpringConfigFilePath();
@@ -752,6 +754,20 @@ class Settings
     void SetLastRelayedHost(wxString relhost);
 
     /**@}*/
+  /* ============================================================== */
+	/** @name Hotkeys
+    * @{
+    */
+
+	void SetHotkey( const wxString& profileName, const wxString& command, const wxString& key, bool unbind = false );
+	wxString GetHotkey( const wxString& profileName, const wxString& command, const wxString& index );
+	wxArrayString GetHotkeyProfiles();
+	wxArrayString GetHotkeyProfileCommands( const wxString& profileName );
+	wxArrayString GetHotkeyProfileCommandKeys( const wxString& profileName, const wxString& command );
+	void DeleteHotkeyProfiles();
+	wxString GetUikeys( const wxString& index );
+
+    /**@}*/
 
 	//!you are absolutely forbidden to use this
 	template < class T >
@@ -782,6 +798,7 @@ class Settings
 
     Settings( const Settings& );
 
+	wxPathList GetConfigFileSearchPathes();
 };
 
 Settings& sett();

@@ -19,7 +19,7 @@
 #include <malloc.h>
 
 
-#define HAVE_BFD	1
+//#define HAVE_BFD	1
 
 
 // Declare the static variables
