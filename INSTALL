@@ -1,0 +1,9 @@
+- Installation Instructions
+
+  cmake .
+  make
+  make install
+
+You can change build settings like install prefix using 'ccmake .'
+  
+  

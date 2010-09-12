@@ -1,0 +1,27 @@
+<?xml version="1.0" ?>
+<layman>
+  <overlay
+      contact = "FIXME_our_contact_address"
+      type = "svn"
+      src  = "http://svn.springlobby.info/trunk/gentoo/overlay"
+      name = "springlobby">
+    <link>
+      http://springlobby.info
+    </link>
+    <description>
+      spring, springlobby, maps, mods, lua scripts
+    </description>
+  </overlay>
+  <overlay
+      contact = "FIXME_our_contact_address"
+      type = "svn"
+      src = "http://svn.springlobby.info/trunk/gentoo/spring-overlay"
+      name = "spring-unofficial">
+    <link>
+      http://springrts.com
+    </link>
+    <description>
+      Please use the springlobby overlay instead, for any spring content.
+    </description>
+  </overlay>
+</layman>

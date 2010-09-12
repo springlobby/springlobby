@@ -1,0 +1,205 @@
+#----------------------------------------------------------------------------------------------------
+# Source listing
+#----------------------------------------------------------------------------------------------------
+
+# We define the include paths here, our minimal source dir is one
+
+INCLUDE_DIRECTORIES(${springlobby_SOURCE_DIR} ${Settings_SOURCE_DIR} )
+
+SET(springlobbySrc
+	src/utils/activitynotice.cpp
+	src/chatpanelmenu.cpp
+	src/customizations.cpp
+	src/gui/gradientpanel.cpp
+	src/gui/wxgradientbutton.cpp
+	src/gui/skirmish_dialog.cpp
+	src/gui/wxbackgroundimage.cpp
+	src/gui/simplefront.cpp
+	src/gui/statusbar.cpp
+	src/aui/slbook.cpp
+	src/utils/math.cpp
+	src/utils/misc.cpp
+	src/gui/pastedialog.cpp
+	src/utils/tasutil.cpp
+	src/utils/networkevents.cpp
+	src/utils/md5.c
+	src/updater/updater.cpp
+	src/Helper/TextCompletionDatabase.cpp
+	src/Helper/imageviewer.cpp
+	src/Helper/slhtmlwindow.cpp
+	src/channel/channelchooser.cpp
+	src/channel/channelchooserdialog.cpp
+	src/Helper/wxtextctrlhist.cpp
+	src/Helper/colorbutton.cpp
+	src/filelister/filelistctrl.cpp
+	src/filelister/filelistdialog.cpp
+	src/filelister/filelistfilter.cpp
+	src/aui/auimanager.cpp
+	src/aui/artprovider.cpp
+	src/autobalancedialog.cpp
+	src/autohost.cpp
+	src/channel/autojoinchanneldialog.cpp
+	src/addbotdialog.cpp
+	src/agreementdialog.cpp
+	src/base64.cpp
+	src/battle.cpp
+	src/battlelist.cpp
+	src/battlelistctrl.cpp
+	src/battlelistfilter.cpp
+	src/battlelisttab.cpp
+	src/battlemaptab.cpp
+	src/battleoptionstab.cpp
+	src/battleroomlistctrl.cpp
+	src/battleroomtab.cpp
+	src/crc.cpp
+	src/channel/channel.cpp
+	src/channel/channellist.cpp
+	src/channel/channellistctrl.cpp
+	src/chatlog.cpp
+	src/chatoptionstab.cpp
+	src/chatpanel.cpp
+	src/connectwindow.cpp
+	src/countrycodes.cpp
+	src/customlistctrl.cpp
+	src/flagimages.cpp
+	src/groupoptionspanel.cpp
+	src/hostbattledialog.cpp
+	src/ibattle.cpp
+	src/iconimagelist.cpp
+	src/lobbyoptionstab.cpp
+	src/mainchattab.cpp
+	src/mainjoinbattletab.cpp
+	src/mainoptionstab.cpp
+	src/mainsingleplayertab.cpp
+	src/maintorrenttab.cpp
+	src/mainwindow.cpp
+	src/mapctrl.cpp
+	src/mapgridctrl.cpp
+	src/mapselectdialog.cpp
+	src/mmoptionwindows.cpp
+	src/nicklistctrl.cpp
+	src/offlinebattle.cpp
+	src/playback/replaylist.cpp
+	src/playback/savegamelist.cpp
+	src/alsound.cpp
+	src/selectusersdialog.cpp
+	src/server.cpp
+	src/serverevents.cpp
+	src/singleplayerbattle.cpp
+	src/singleplayertab.cpp
+	src/socket.cpp
+	src/spring.cpp
+	src/springlobbyapp.cpp
+	src/springoptionstab.cpp
+	src/springprocess.cpp
+	src/tasserver.cpp
+	src/tdfcontainer.cpp
+	src/torrentlistctrl.cpp
+	src/torrentoptionspanel.cpp
+	src/torrentwrapper.cpp
+	src/ui.cpp
+	src/user.cpp
+	src/useractions.cpp
+	src/userlist.cpp
+	src/userlistctrl.cpp
+	src/utils/downloader.cpp
+	src/utils/plasmaresourceinfo.cpp
+	src/utils/battleevents.cpp
+	src/widgets/downloadlistctrl.cpp
+	src/widgets/downloaddialog.cpp
+	src/widgets/downloadpanel.cpp
+	src/widgets/infopanel.cpp
+	src/widgets/widget.cpp
+	src/Helper/wxTranslationHelper.cpp
+	src/Helper/tasclientimport.cpp
+	src/simpleinterface/simpleserverevents.cpp
+	src/simpleinterface/customizedframe.cpp
+	src/simpleinterface/simplempframe.cpp
+	src/simpleinterface/simplebattlelistctrl.cpp
+	src/toasterbox/ToasterBox.cpp
+	src/toasterbox/ToasterBoxWindow.cpp
+	src/toasterbox/ToasterBoxWindowList.cpp
+	src/gui/notificationmanager.cpp
+	src/pingthread.cpp
+	src/iserverevents.cpp
+)
+
+SET(SettingsSrc
+	src/settings++/frame.cpp
+	src/settings++/helpmenufunctions.cpp
+	src/settings++/panel_pathoption.cpp
+	src/settings++/se_utils.cpp
+	src/settings++/tab_abstract.cpp
+	src/settings++/tab_audio.cpp
+	src/settings++/tab_quality_video.cpp
+	src/settings++/tab_render_detail.cpp
+	src/settings++/tab_simple.cpp
+	src/settings++/tab_ui.cpp
+)
+
+SET( curlSRC
+	src/curl/base.cpp
+	src/curl/http.cpp
+	src/curl/ftp.cpp
+	src/curl/curlthread.cpp
+)
+
+SET(StandAloneSettings
+	src/settings++/Main.cpp
+)
+
+SET(SLSharedWithSettings
+	src/uiutils.cpp
+	src/updater/versionchecker.cpp
+	src/updater/updatehelper.cpp
+	src/utils/controls.cpp
+	src/utils/conversion.cpp
+	src/utils/customdialogs.cpp
+	src/utils/debug.cpp
+	src/utils/globalevents.cpp
+	src/utils/platform.cpp
+	src/utils/sltipwin.cpp
+	src/utils/uievents.cpp
+	src/crashreport.cpp
+	src/globalsmanager.cpp
+	src/mmoptionmodel.cpp
+	src/mmoptionswrapper.cpp
+	src/settings.cpp
+	src/springunitsynclib.cpp
+	src/springunitsync.cpp
+	src/thread.cpp
+	src/gui/windowattributespickle.cpp
+	src/gui/spinctl/generic/spinctlg.cpp
+)
+
+SET( updaterSrc
+	src/updater/updatermainwindow.cpp
+	src/updater/updater.cpp
+	src/updater/updaterapp.cpp
+	src/utils/activitynotice.cpp
+	src/utils/misc.cpp
+)
+
+FILE( GLOB header "src/*.h" )
+FILE( GLOB header2 "src/*/*.h" )
+
+#grep -lR cpp\"$ src/* | sed -e "s/\.h/\.cpp/g"
+SET( templatesources
+	src/battleroommmoptionstab.cpp
+	src/customvirtlistctrl.cpp
+	src/httpdownloader.cpp
+	src/playback/playbackfilter.cpp
+	src/playback/playbacklist.cpp
+	src/playback/playbacklistctrl.cpp
+	src/playback/playbackthread.cpp
+	src/playback/playbacktab.cpp
+	src/utils/stringserializer.cpp
+)
+LIST( APPEND header ${header2} ${templatesources} )
+set_source_files_properties(  ${header} PROPERTIES HEADER_FILE_ONLY 1 )
+
+IF( WIN32 )
+	LIST( APPEND SLSharedWithSettings src/stacktrace.c )
+ELSE( WIN32 )
+	LIST( APPEND SLSharedWithSettings src/stacktrace.cpp )
+ENDIF( WIN32 )
