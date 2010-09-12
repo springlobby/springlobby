@@ -61,7 +61,8 @@ BEGIN_EVENT_TABLE(wxBinderEvtHandler, wxEvtHandler)
 
     // I don't think this is needed because wxEVT_HOTKEY are generated
     // only in some special cases...
-    EVT_HOTKEY(wxID_ANY, wxBinderEvtHandler::OnChar)
+	//FIXME: maybe re-enable this?
+	//EVT_HOTKEY(wxID_ANY, wxBinderEvtHandler::OnChar)
 #endif
 #endif
 
