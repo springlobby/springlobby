@@ -71,7 +71,7 @@ class wxKeyBinder;
 //! \note This class implements a lot of static utilities which
 //!       are used by the following classes.
 //!
-class WXDLLIMPEXP_KEYBINDER wxKeyBind
+class wxKeyBind
 {
 protected:
 
@@ -221,7 +221,7 @@ public:     // static utilities
 //! Besides, the command has three other properties: a description string,
 //! a name string and an ID which should be unique for each wxKeyBinder.
 //!
-class WXDLLIMPEXP_KEYBINDER wxCmd
+class wxCmd
 {
     // wxKeyBinder must be allowed to call #Exec()
     friend class wxKeyBinder;
@@ -464,7 +464,7 @@ protected:
 //! However, we cannot use the WX_DECLARE_OBJARRAY macro
 //! because wxCmd is an abstract class and thus we need
 //! to keep simple pointers stored, not the objects themselves.
-class WXDLLIMPEXP_KEYBINDER wxCmdArray
+class wxCmdArray
 {
     wxArrayPtrVoid m_arr;
 
@@ -502,7 +502,7 @@ public:
 //! In these cases wxBinderEvtHandler just returns and wxWidgets will call
 //! the next handler in the chain (which is usually the wxWindow which was
 //! attached to this wxBinderEvtHandler).
-class WXDLLIMPEXP_KEYBINDER wxBinderEvtHandler : public wxEvtHandler
+class wxBinderEvtHandler : public wxEvtHandler
 {
     //! The wxKeyBinder called by wxBinderEvtHandler when receving a wxKeyEvent.
     wxKeyBinder *m_pBinder;
@@ -574,7 +574,7 @@ private:
 //! filtered for the hotkeys...
 //! wxBinderApp should avoid all calls to wxKeyBinderAttach filtering
 //! the events using the wxApp::FilterEvent() function.
-class WXDLLIMPEXP_KEYBINDER wxBinderApp : public wxApp
+class wxBinderApp : public wxApp
 {
     wxKeyBinder *m_pGlobalBinder;
     wxEvtHandler *m_pGlobalHdl;
@@ -631,7 +631,7 @@ WX_DECLARE_HASH_SET(wxCmd*, wxPointerHash, wxPointerEqual, CmdSet);
 //!                 wxADD_KEYBINDER_SUPPORT macro inside the declaration
 //!                 of that window.
 //!
-class WXDLLIMPEXP_KEYBINDER wxKeyBinder : public wxObject
+class wxKeyBinder : public wxObject
 {
 protected:
 
@@ -877,7 +877,7 @@ private:
 //! these are useful when you want to support more than one wxKeyBinder in
 //! your application to give to the user the possibility to choose among
 //! different keymapping schemes...
-class WXDLLIMPEXP_KEYBINDER wxKeyProfile : public wxKeyBinder
+class wxKeyProfile : public wxKeyBinder
 {
 protected:
 
@@ -964,7 +964,7 @@ private:
 //! However, please note that this variable is *not* updated in any way by
 //! wxKeyProfileArray itself: this is still owner's task which can use the
 //! #SetSelProfile and #GetSelProfile functions to access this variable.
-class WXDLLIMPEXP_KEYBINDER wxKeyProfileArray
+class wxKeyProfileArray
 {
     //! The array of pointers to the wxKeyProfiles.
     //! Since this array hold pointers, instances of classes derived
@@ -1084,7 +1084,7 @@ public:
 //!          the wxKeyMonitorTextCtrl displays exactly the string
 //!          "Ctrl+Shift+A"
 //!
-class WXDLLIMPEXP_KEYBINDER wxKeyMonitorTextCtrl : public wxTextCtrl
+class wxKeyMonitorTextCtrl : public wxTextCtrl
 {
 public:
     wxKeyMonitorTextCtrl(
@@ -1230,7 +1230,7 @@ private:
 //!    have added/removed profiles) using #GetProfiles(). The last selected
 //!    profile can be obtained using #GetSelProfile().
 //!
-class WXDLLIMPEXP_KEYBINDER wxKeyConfigPanel : public wxPanel
+class wxKeyConfigPanel : public wxPanel
 {
 public:
 
