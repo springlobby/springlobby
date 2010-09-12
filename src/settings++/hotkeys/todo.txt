@@ -6,7 +6,6 @@
 -buildfiles
 -new/delete memmanagment?
 -unify spelling
--make SPRINGSETTINGS define in keybinder cmake default
 
 -save profiles to springsettings.conf even when same as spring default (?)
 -save custom commands to springsettings.conf to keep them even when not used in any profile (?)
