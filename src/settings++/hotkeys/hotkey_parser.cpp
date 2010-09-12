@@ -246,7 +246,9 @@ void hotkey_parser::writeBindingsToFile( const key_binding& springbindings )
 
 	const wxString prevFilenameBak = this->filename + wxT(".bak");
 
+#ifndef __WXMSW__
 	int errno = 0;
+#endif
 
 	//backup our current uikeys.txt
 	{
