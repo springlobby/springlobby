@@ -75,11 +75,7 @@ void hotkey_panel::ButtonAddSelectionCommandClicked( wxCommandEvent& event )
 	if ( dlg.ShowModal() == wxID_OK )
 	{
 		wxString cmd = wxT("select ") + dlg.getCommandString();
-		CommandList::addCustomCommand( cmd );
-
-		this->UpdateControls();
-
-		this->m_pKeyConfigPanel->SelectCommand( cmd );
+		this->OnAddCommand( cmd );
 	}
 }
 
@@ -89,12 +85,27 @@ void hotkey_panel::ButtonAddCustomCommandClicked( wxCommandEvent& event )
 
 	if ( str.size() > 0 )
 	{
-		CommandList::addCustomCommand( str );
-
-		this->UpdateControls();
-
-		this->m_pKeyConfigPanel->SelectCommand( str );
+		this->OnAddCommand( str );
 	}
+}
+
+void hotkey_panel::OnAddCommand( const wxString& cmd )
+{
+	try
+	{
+		CommandList::addCustomCommand( cmd );
+
+		//refresh view
+		this->updateTreeView();	
+		this->addCommandToAllPanelProfiles( CommandList::getCommandByName( cmd ) );
+	}
+	catch( const HotkeyException& ex )
+	{
+		customMessageBox(SS_MAIN_ICON, ex.getMessage(), _("Add Command Error"), wxOK | wxICON_HAND );
+	}
+
+	//auto-select new command (even try after exception)
+	this->m_pKeyConfigPanel->SelectCommand( cmd );
 }
 
 bool hotkey_panel::isBindingInProfile( const key_binding& springprofile, const wxString& command, const wxString& springkey )
@@ -221,25 +232,35 @@ wxKeyProfile hotkey_panel::buildNewProfile( const wxString& name, const wxString
 	return profile;
 }
 
+void hotkey_panel::addCommandToAllPanelProfiles( const CommandList::Command& cmd )
+{
+	//backup current selected profile id
+	int curProfId = this->m_pKeyConfigPanel->GetSelProfileIdx();
+
+	wxKeyProfileArray profileArr = this->m_pKeyConfigPanel->GetProfiles();
+	this->m_pKeyConfigPanel->RemoveAllProfiles();
+	for( size_t i=0; i < profileArr.GetCount(); ++i )
+	{
+		wxKeyProfile& profile = *profileArr.Item(i);
+		spring_command* pCmd = new spring_command( cmd.m_command, cmd.m_description, cmd.m_id );
+		profile.AddCmd( pCmd );
+		this->m_pKeyConfigPanel->AddProfile( profile );
+	}
+
+	//selected the previously selected profile
+	this->m_pKeyConfigPanel->SetSelProfile( curProfId );
+}
+
 void hotkey_panel::putKeybindingsToProfile( wxKeyProfile& profile, const key_binding& bindings )
 {
 	for( key_binding::const_iterator iter = bindings.begin(); iter != bindings.end(); ++iter )
 	{
-		try
-		{
-			wxCmd& cmd = *(profile.GetCmd( CommandList::getCommandByName(iter->first).m_id ));
+		wxCmd& cmd = *(profile.GetCmd( CommandList::getCommandByName(iter->first).m_id ));
 
-			const key_set& keys = iter->second;
-			for( key_set::const_iterator iiter = keys.begin(); iiter != keys.end(); iiter++ )
-			{
-				cmd.AddShortcut( KeynameConverter::spring2wxKeybinder( (*iiter) ) );
-			}
-		}
-		catch( const std::exception& ex )
+		const key_set& keys = iter->second;
+		for( key_set::const_iterator iiter = keys.begin(); iiter != keys.end(); iiter++ )
 		{
-			wxString msg = _( "Warning: Error reading uikeys.txt!" ); // + wxString(ex.what()); 
-			wxLogWarning( msg );
-			customMessageBox(SS_MAIN_ICON, msg, _("Hotkey warning"), wxOK | wxICON_WARNING );
+			cmd.AddShortcut( KeynameConverter::spring2wxKeybinder( (*iiter) ) );
 		}
 	}
 }

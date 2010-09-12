@@ -22,6 +22,7 @@
 
 #include "hotkey_parser.h"
 #include "HotkeyTypes.h"
+#include "commandlist.h"
 
 
 class hotkey_panel : public wxScrolledWindow
@@ -50,12 +51,14 @@ private:
 	static key_binding getBindingsFromProfile( const wxKeyProfile& profile );
 	wxKeyProfile buildNewProfile( const wxString& name, const wxString& description, bool readOnly );
 	void putKeybindingsToProfile( wxKeyProfile& profile, const key_binding& bindings );
+	void addCommandToAllPanelProfiles( const CommandList::Command& cmd );
 
 	wxKeyConfigPanel*	m_pKeyConfigPanel;
 	hotkey_parser		m_uikeys_manager;
 
 	void ButtonAddSelectionCommandClicked( wxCommandEvent& event );
 	void ButtonAddCustomCommandClicked( wxCommandEvent& event );
+	void OnAddCommand( const wxString& cmd );
 };
 
 #endif

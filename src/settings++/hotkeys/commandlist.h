@@ -6,6 +6,9 @@
 #include <vector>
 
 #include <wx/string.h>
+#include <wx/button.h>
+
+#include "HotkeyException.h"
 
 
 class CommandList
@@ -74,6 +77,11 @@ public:
 
 	static void addCustomCommand(const wxString& category, const wxString& command, const wxString& description )
 	{
+		if ( CommandList::m_customCommands.find( command ) != CommandList::m_customCommands.end() )
+		{
+			throw HotkeyException( _("Command already exists! Not added!") );
+		}
+
 		//put new command to command list
 		CommandList::m_customCommands[command] = Command();
 		

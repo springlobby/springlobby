@@ -3,10 +3,10 @@
 -order of binds/unbinds for multiple keys
 -colorize commands that have changed hotkeys compared to default
 
--unicode
 -buildfiles
--unbindaction / unbindkeyset?
 -new/delete memmanagment?
--enlarge hotkey panel in height
+-unify spelling
+-make SPRINGSETTINGS define in keybinder cmake default
 
+-save profiles to springsettings.conf even when same as spring default (?)
 -save custom commands to springsettings.conf to keep them even when not used in any profile (?)

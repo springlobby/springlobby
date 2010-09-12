@@ -6,7 +6,7 @@
 #include <wx/string.h>
 
 
-class HotkeyException : public std::exception
+class HotkeyException : private std::exception
 {
 public:
 	HotkeyException( const wxString& message );
