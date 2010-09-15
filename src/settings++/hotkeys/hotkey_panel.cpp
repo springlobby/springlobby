@@ -372,7 +372,7 @@ key_binding_collection hotkey_panel::getProfilesFromSettings( )
 				}
 				else
 				{
-					throw HotkeyException( wxT("Unknown key action: ") + key );
+					throw HotkeyException( _("Unknown key action: ") + key );
 				}
 			}
 		}
