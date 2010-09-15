@@ -2,7 +2,6 @@
 #define __TAB_HOTKEY_TYPES_h__
 
 #include <map>
-#include <vector>
 #include <set>
 
 #include <wx/string.h>

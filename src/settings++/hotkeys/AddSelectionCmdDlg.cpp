@@ -264,7 +264,7 @@ wxString AddSelectionCmdDlg::getConditionsAndSelectString() const
 	}
 
 	//Source filter
-	if ( this->m_radioBtnSrcMap->GetValue() )
+	if ( this->m_radioBtnSelAll->GetValue() )
 	{
 		str += wxT("_SelectAll");
 	}
