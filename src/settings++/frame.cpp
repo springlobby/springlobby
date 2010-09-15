@@ -31,7 +31,7 @@
 #include "tab_quality_video.h"
 #include "tab_abstract.h"
 #include "tab_audio.h"
-#include "hotkey_panel.h"
+#include "hotkeys/hotkey_panel.h"
 #include "tab_ui.h"
 #include "tab_simple.h"
 #include "ctrlconstants.h"
@@ -48,11 +48,11 @@ const wxString detailTabCap = _("Render detail");
 const wxString uiTabCap= _("UI options");
 const wxString audioTabCap = _("Audio");
 const wxString hotkeyTabCap = _("Hotkeys");
-const wxString expertModeWarning = _("Changes made on Quality/Detail tab in expert mode"
-									"\n will be lost if you change simple options again.\n"
-									"Also these changes WILL NOT be reflected by the \n"
-									"selected choices on the Combined options tab.\n"
-									"(this message can be disabled in the \"File\" menu)");
+const wxString expertModeWarning = _("Changes made on Quality/Detail tab in expert mode\
+									\n will be lost if you change simple options again.\n\
+									Also these changes WILL NOT be reflected by the \n\
+									selected choices on the Combined options tab.\n\
+									(this message can be disabled in the \"File\" menu)");
 
 BEGIN_EVENT_TABLE(settings_frame,wxFrame)
 	EVT_CLOSE(settings_frame::OnClose)
@@ -132,7 +132,7 @@ void settings_frame::handleExternExit()
 {
 	if ( !alreadyCalled){
 		alreadyCalled = true;
-		if (abstract_panel::settingsChanged)
+		if (settingsChangedAbstract())
 		{
 			int choice = customMessageBox(SS_MAIN_ICON,_("Save Spring settings before exiting?"), _("Confirmation needed"), wxYES|wxNO |wxICON_QUESTION);
 			if ( choice == wxYES)
@@ -148,7 +148,7 @@ void settings_frame::handleExternExit()
 }
 
 void settings_frame::handleExit() {
-    if (abstract_panel::settingsChanged)
+    if (settingsChangedAbstract())
     {
     	int action = customMessageBox(SS_MAIN_ICON,_("Save Spring settings before exiting?"), _("Confirmation needed"),wxYES_NO|wxCANCEL|wxICON_QUESTION );
         switch (action) {
@@ -372,4 +372,14 @@ bool settings_frame::saveSettingsAbstract()
 	hotkeyTab->SaveSettings();
 
 	return abstract_panel::saveSettings();
+}
+
+bool settings_frame::settingsChangedAbstract()
+{
+	bool rc = false;
+
+	rc |= hotkeyTab->HasProfileBeenModifiedOrSelected();
+	rc |= abstract_panel::settingsChanged;
+
+	return rc;
 }

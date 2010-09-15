@@ -601,6 +601,16 @@ void Ui::OnConnected( Server& server, const wxString& server_name, const wxStrin
 
     if ( server.uidata.panel ) server.uidata.panel->StatusMessage( _T("Connected to ") + server_name + _T(".") );
 		mw().GetBattleListTab().OnConnected();
+	if (m_con_win)
+		{
+			delete m_con_win;
+			m_con_win = 0;
+		}
+	if (m_reconnect_dialog)
+	{
+		delete m_reconnect_dialog;
+		m_reconnect_dialog = 0;
+	}
 }
 
 
@@ -1368,9 +1378,6 @@ void Ui::FirstRunWelcome()
 
 void Ui::CheckForUpdates()
 {
-	wxString t = _T("SpringLobby test\njfrepojeivnpenver\nwvpreivienrio\npwoewnpfwpnef\njcwoejfwp");
-	Paste2Pastebin( t );
-	return;
     wxString latestVersion = GetLatestVersion();
 
     if (latestVersion == _T("-1"))

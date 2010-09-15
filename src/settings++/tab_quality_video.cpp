@@ -162,8 +162,8 @@ void tab_quality_video::updateControls(int what_to_update)
 
 void tab_quality_video::initQualitySizer(wxFlexGridSizer* sizer)
 {
-	sizer->Add(new wxStaticText(this, -1, _("If an option needs special hardware to work\n"
-												"it will be mentioned in the tooltip.")), 1, wxTOP|wxEXPAND , 10);
+	sizer->Add(new wxStaticText(this, -1, _("If an option needs special hardware to work\n\
+												it will be mentioned in the tooltip.")), 1, wxTOP|wxEXPAND , 10);
 
 	// i < 8 with High resolution LOS textures
 	// i < 7 without
