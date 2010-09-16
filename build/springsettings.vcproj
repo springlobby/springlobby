@@ -156,7 +156,7 @@
 				Optimization="2"
 				InlineFunctionExpansion="2"
 				AdditionalIncludeDirectories="E:\Users\devkid\Projects\Other\springlobby;E:\Users\devkid\Projects\Other\springlobby\build;&quot;D:\Programme\Develop\wxWidgets-2.8.11\include&quot;;&quot;D:\Programme\Develop\wxWidgets-2.8.11\lib\vc_dll\mswu&quot;;&quot;D:\Programme\Develop\wxWidgets-2.8.11\include\msvc&quot;;&quot;E:\Users\devkid\Projects\Other\springlobby\src\settings++\hotkeys&quot;;E:\Users\devkid\Projects\Other\keybinder\include"
-				PreprocessorDefinitions="WIN32,_WINDOWS,NDEBUG,_RC_MSVC,WXUSINGDLL,__WXMSW__,_WIN32_WINNT=0x0501,HAVE_CONFIG_H,WXUSINGDLL,DISABLE_SOUND,NO_TORRENT_SYSTEM,&quot;LOCALE_INSTALL_DIR=\&quot;C:/Program Files (x86)/springlobby/share/locale\&quot;&quot;,CMAKE_INTDIR=\&quot;Release\&quot;"
+				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;_RC_MSVC;WXUSINGDLL;__WXMSW__;_WIN32_WINNT=0x0501;DISABLE_SOUND;NO_TORRENT_SYSTEM;&quot;LOCALE_INSTALL_DIR=\&quot;C:/Program Files (x86)/springlobby/share/locale\&quot;&quot;;CMAKE_INTDIR=\&quot;Release\&quot;"
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
@@ -770,10 +770,6 @@
 				</File>
 				<File
 					RelativePath="..\src\settings++\hotkeys\hotkey_parser.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\settings++\hotkeys\HotkeyException.cpp"
 					>
 				</File>
 				<File
