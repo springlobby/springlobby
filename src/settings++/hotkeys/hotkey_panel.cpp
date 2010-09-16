@@ -109,7 +109,7 @@ void hotkey_panel::OnAddCommand( const wxString& cmd )
 	this->m_pKeyConfigPanel->SelectCommand( cmd );
 }
 
-bool hotkey_panel::isBindingInProfile( const key_binding& springprofile, const wxString& command, const wxString& springkey )
+bool hotkey_panel::isBindingInProfile( const key_binding_k2c& springprofile, const wxString& command, const wxString& springkey )
 {
 	key_binding::const_iterator citer = springprofile.find( command );
 	if ( citer == springprofile.end() )
@@ -126,7 +126,7 @@ bool hotkey_panel::isBindingInProfile( const key_binding& springprofile, const w
 	return true;
 }
 
-key_binding hotkey_panel::getBindingsFromProfile( const wxKeyProfile& profile )
+key_binding_k2c hotkey_panel::getBindingsFromProfile( const wxKeyProfile& profile )
 {
 	key_binding binding;
 	const wxCmdArray* pCmdArr = profile.GetArray();
@@ -266,7 +266,7 @@ void hotkey_panel::putKeybindingsToProfile( wxKeyProfile& profile, const key_bin
 	}
 }
 
-unsigned hotkey_panel::getShortcutCountFromBinding( const key_binding& bindings )
+unsigned hotkey_panel::getShortcutCountFromBinding( const key_binding_k2c& bindings )
 {
 	unsigned count = 0;
 	for ( key_binding::const_iterator iter = bindings.begin(); iter != bindings.end(); ++iter )

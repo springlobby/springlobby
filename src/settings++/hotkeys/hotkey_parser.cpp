@@ -246,15 +246,11 @@ void hotkey_parser::writeBindingsToFile( const key_binding& springbindings )
 
 	const wxString prevFilenameBak = this->filename + wxT(".bak");
 
-#ifndef __WXMSW__
-	int errno = 0;
-#endif
-
 	//backup our current uikeys.txt
 	{
 		if ( wxRenameFile( this->filename, prevFilenameBak ) == false )
 		{
-			throw HotkeyException( _("Error renaming uikeys.txt to uikeys.txt.bak: ") + TowxString(errno) );
+			throw HotkeyException( _("Error renaming uikeys.txt to uikeys.txt.bak") );
 		}
 	}
 
@@ -262,12 +258,12 @@ void hotkey_parser::writeBindingsToFile( const key_binding& springbindings )
 	{
 		if ( wxRenameFile( newTmpFilename, this->filename ) == false )
 		{
-			wxString msg = _("Error renaming uikeys.txt.tmp to uikeys.txt: ") + TowxString(errno);
+			wxString msg = _("Error renaming uikeys.txt.tmp to uikeys.txt.");
 			
 			//restore backup
 			if ( wxRenameFile( prevFilenameBak, this->filename ) == false )
 			{
-				msg += _(" Restoring backup failed also: ") + TowxString(errno);
+				msg += _(" Restoring backup failed also.");
 			}
 			throw HotkeyException( msg );
 		}

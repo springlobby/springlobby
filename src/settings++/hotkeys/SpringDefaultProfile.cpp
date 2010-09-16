@@ -1,8 +1,8 @@
 #include "SpringDefaultProfile.h"
 #include "KeynameConverter.h"
 
-key_binding		SpringDefaultProfile::m_mappingC2K;
-key_binding		SpringDefaultProfile::m_mappingK2C;
+key_binding_c2k		SpringDefaultProfile::m_mappingC2K;
+key_binding_k2c		SpringDefaultProfile::m_mappingK2C;
 
 void SpringDefaultProfile::initialize()
 {
@@ -173,18 +173,18 @@ void SpringDefaultProfile::initialize()
 void SpringDefaultProfile::addBinding( const wxString& command, const wxString& key )
 {
 	const wxString normKey = KeynameConverter::normalizeSpringKey( key );
-	SpringDefaultProfile::m_mappingK2C[normKey].insert( command );
-	SpringDefaultProfile::m_mappingC2K[command].insert( normKey );
+	SpringDefaultProfile::m_mappingK2C[ spring_key( normKey ) ].insert( command );
+	SpringDefaultProfile::m_mappingC2K[ command ].insert( spring_key( normKey ) );
 }
 
-const key_binding& SpringDefaultProfile::getAllBindingsK2C()
+const key_binding_k2c& SpringDefaultProfile::getAllBindingsK2C()
 {
 	SpringDefaultProfile::initialize();
 
 	return SpringDefaultProfile::m_mappingK2C;
 }
 
-const key_binding& SpringDefaultProfile::getAllBindingsC2K()
+const key_binding_c2k& SpringDefaultProfile::getAllBindingsC2K()
 {
 	SpringDefaultProfile::initialize();
 

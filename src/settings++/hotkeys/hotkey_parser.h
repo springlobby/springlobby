@@ -15,10 +15,10 @@ public:
 	hotkey_parser( const wxString& filename );
 	~hotkey_parser();
 
-	const key_binding& getBindingsC2K() const;
-	const key_binding& getBindingsK2C() const;
+	const key_binding_c2k& getBindingsC2K() const;
+	const key_binding_k2c& getBindingsK2C() const;
 	
-	void writeBindingsToFile( const key_binding& springbindings );
+	void writeBindingsToFile( const key_binding_c2k& springbindings );
 
 	void dumpIncludeSourceCode( const wxString& filename );
 
@@ -29,8 +29,8 @@ private:
 
 	void updateBindsC2K();
 
-	key_binding		bindsK2C;
-	key_binding		bindsC2K;
+	key_binding_k2c		bindsK2C;
+	key_binding_c2k		bindsC2K;
 
 	wxString		filename;
 };
