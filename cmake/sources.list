@@ -179,6 +179,7 @@ SET(SLSharedWithSettings
 	src/thread.cpp
 	src/gui/windowattributespickle.cpp
 	src/gui/spinctl/generic/spinctlg.cpp
+	src/Helper/slconfig.cpp
 )
 
 SET( updaterSrc
