@@ -11,8 +11,8 @@ Statusbar::Statusbar( wxWindow* parent )
 	int w[3] = {-1,-1,120};
 	SetFieldsCount( 3, w );
 	PushStatusText( wxString::Format( _T("%s %s"),
-									  GetAppName(),
-									  GetSpringLobbyVersion() ),
+									  GetAppName().c_str(),
+									  GetSpringLobbyVersion().c_str() ),
 					1 );
 }
 

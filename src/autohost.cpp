@@ -269,7 +269,7 @@ void AutoHost::OnUserAdded( User& user )
 	// do nothing if autohost functionality is disabled
 	if ( !m_enabled )
 		return;
-	m_battle.DoAction( wxString::Format( _T( "Hi %s, this battle is in %s autohost mode. For help say !help" ), user.GetNick(), GetAppName() ) );
+	m_battle.DoAction( wxString::Format( _T( "Hi %s, this battle is in %s autohost mode. For help say !help" ), user.GetNick().c_str(), GetAppName().c_str() ) );
 }
 
 

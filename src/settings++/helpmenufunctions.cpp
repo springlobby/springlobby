@@ -4,7 +4,7 @@
 #include "../images/springsettings.xpm"
 
 #include "../utils/customdialogs.h"
-#include "../utils/platform.h
+#include "../utils/platform.h"
 #include "../updater/updatehelper.h"
 #include <wx/intl.h>
 #include "se_utils.h"

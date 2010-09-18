@@ -59,6 +59,7 @@ CustomMessageBox::CustomMessageBox(wxIcon* icon ,wxWindow *parent, const wxStrin
 
     // 1) icon
 
+	//! \todo use bitmap from customisation
     wxBitmap bitmap;
     switch ( style & wxICON_MASK )
     {

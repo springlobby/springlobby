@@ -158,7 +158,7 @@ bool wxTranslationHelper::AskUserForLanguage( wxArrayString& names,
 			m_SearchPath.GetData() );
 		m_Locale->AddCatalog( GetAppName( true ) );
 		wxLogInfo( _("wxTranslationHelper: Catalog Name = \"%s\""),
-			GetAppName( true ) );
+			GetAppName( true ).c_str() );
 		return true;
 	}
 	return false;

@@ -61,7 +61,7 @@ wxLogWindow* InitializeLoggingTargets( wxFrame* parent, bool console, const wxSt
     if ( showgui && verbosity != 0 )
     {
         ///gui window logging
-        loggerwin = new wxLogWindow( (wxWindow*) parent, _T("SpringLobby error console"), showgui );
+		loggerwin = new wxLogWindow( (wxWindow*) parent, IdentityString( _("%s error console") ), showgui );
         logChain = new wxLogChain( loggerwin );
     }
 
@@ -382,5 +382,5 @@ wxString GetAppName( const bool lowerCase )
 
 wxString IdentityString(const wxString format, bool lowerCase )
 {
-	return wxString::Format( format, GetAppName( lowerCase ) );
+	return wxString::Format( format, GetAppName( lowerCase ).c_str() );
 }

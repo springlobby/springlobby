@@ -24,6 +24,7 @@
 #include "utils/debug.h"
 #include "utils/controls.h"
 #include "utils/conversion.h"
+#include "utils/platform.h"
 
 #ifndef NO_TORRENT_SYSTEM
 #include "torrentoptionspanel.h"

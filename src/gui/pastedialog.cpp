@@ -45,6 +45,7 @@ END_EVENT_TABLE()
 PasteDialog::PasteDialog( wxWindow *parent, const wxString& message )
 	: wxDialog(parent,-1,_( "Flood warning" ),wxDefaultPosition,wxDefaultSize,wxFRAME_FLOAT_ON_PARENT|wxDEFAULT_DIALOG_STYLE)
 {
+	//! \todo use image from customizations
 	SetIcon( wxIcon(springlobby_xpm) );
 
 //******** copied from wxsource/generic/msgdlgg.cpp with small modifications***********************************************************
