@@ -1041,7 +1041,7 @@ bool wxKeyProfileArray::Save(wxConfigBase *cfg, const wxString &key, bool bClean
     bool b = TRUE;
 
     cfg->SetPath(key);
-    if (!cfg->Write(basekey + wxT("nSelProfile"), static_cast<int>(m_nSelected) ))
+    if (!cfg->Write(basekey + wxT("nSelProfile"), m_nSelected ))
         return FALSE;
 
     for (size_t i=0; i<GetCount(); i++)
@@ -1098,7 +1098,7 @@ bool wxKeyProfileArray::Load(wxConfigBase *p, const wxString &key)
 
     // before starting...
     p->SetPath(key);
-    if (!p->Read(wxT("nSelProfile"), ( reinterpret_cast<int*>(&m_nSelected) ) ))
+    if (!p->Read(wxT("nSelProfile"), ( &m_nSelected ) ))
         return FALSE;
 
     cont = p->GetFirstGroup(str, idx);

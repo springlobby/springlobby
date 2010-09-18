@@ -972,7 +972,7 @@ class wxKeyProfileArray
     wxArrayPtrVoid m_arr;
 
     //! The index of the currently selected profile.
-    size_t m_nSelected;
+    int m_nSelected;
 
 public:
     wxKeyProfileArray() { m_nSelected=-1; }
@@ -986,16 +986,16 @@ public:
     //! wxArray functions... @{
 
     size_t GetCount() const            { return m_arr.GetCount(); }
-    size_t GetSelProfileIdx() const    { return m_nSelected; }
+    int GetSelProfileIdx() const    { return m_nSelected; }
     wxKeyProfile *Item(size_t n)       { return (wxKeyProfile*)m_arr.Item(n); }
-    wxKeyProfile *GetSelProfile()   { wxASSERT(m_nSelected >= 0 && m_nSelected < GetCount()); return Item(m_nSelected); }
+    wxKeyProfile *GetSelProfile()   { wxASSERT(m_nSelected >= 0 && m_nSelected < static_cast<int>(GetCount())); return Item(m_nSelected); }
     void Add(wxKeyProfile *p)       { m_arr.Add(p); }
     void Clear()                    { m_arr.Clear(); }
     void Remove(wxKeyProfile *p)    { m_arr.Remove(p); }
-    void SetSelProfile(size_t n)    { wxASSERT(n < GetCount()); m_nSelected = n; }
+    void SetSelProfile(unsigned n)  { wxASSERT(n < GetCount()); m_nSelected = n; }
     bool IsEmpty() const            { return m_arr.IsEmpty(); }
 
-    const wxKeyProfile *Item(size_t n) const           { return (wxKeyProfile*)m_arr.Item(n); }
+    const wxKeyProfile *Item(unsigned n) const           { return (wxKeyProfile*)m_arr.Item(n); }
     const wxKeyProfile *GetSelProfile() const       { return Item(m_nSelected); }
     void RemoveAt(size_t i, size_t count = 1)       { m_arr.RemoveAt(i, count); }
     void Insert(wxKeyProfile *p, int n)             { m_arr.Insert(p, n); }
