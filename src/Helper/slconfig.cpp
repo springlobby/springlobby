@@ -4,6 +4,7 @@
 #include <wx/wfstream.h>
 
 #include "../utils/platform.h"
+#include "../utils/conversion.h"
 
 slConfig::slConfig ( const wxString& appName,
 					 const wxString& vendorName,
@@ -32,7 +33,7 @@ void slConfig::SetupGlobalconfig()
 		wxString global_config_path = wxString::Format( _T("%s.global.conf"),
 													   GetExecutableFolder().c_str(),
 													   wxFileName::GetPathSeparator(),
-													   GetAppName( true ).c_str()
+													   ::GetAppName( true ).c_str()
 													   );
 	#else
 		wxString global_config_path = IdentityString( _T("/etc/default/%s.conf") );
