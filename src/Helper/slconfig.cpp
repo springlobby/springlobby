@@ -1,6 +1,7 @@
 #include "slconfig.h"
 
 #include <wx/filename.h>
+#include <wx/wfstream.h>
 
 #include "../utils/platform.h"
 
@@ -18,7 +19,7 @@ slConfig::slConfig ( const wxString& appName,
 
 #if wxUSE_STREAMS
 slConfig::slConfig( wxInputStream& in, const wxMBConv& conv )
-	: slConfigBaseType( in ),
+	: slConfigBaseType( in, conv ),
 	m_global_config( 0 )
 {
 	SetupGlobalconfig();
@@ -27,7 +28,24 @@ slConfig::slConfig( wxInputStream& in, const wxMBConv& conv )
 
 void slConfig::SetupGlobalconfig()
 {
-	wxString defaultconfigpath = GetExecutableFolder() + wxFileName::GetPathSeparator() + _T("springlobby.global.conf");
+	#ifdef __WXMSW__
+		wxString global_config_path = wxString::Format( _T("%s.global.conf"),
+													   GetExecutableFolder().c_str(),
+													   wxFileName::GetPathSeparator(),
+													   GetAppName( true ).c_str()
+													   );
+	#else
+		wxString global_config_path = IdentityString( _T("/etc/default/%s.conf") );
+	#endif //__WXMSW__
+
+	if (  wxFileName::FileExists( global_config_path ) )
+	{
+		wxFileInputStream instream( global_config_path );
+		if ( instream.IsOk() )
+		{
+			m_global_config = new wxFileConfig ( instream );
+		}
+	}
 }
 
 #ifdef __WXMSW__
@@ -45,7 +63,7 @@ wxString slConfig::Read(const wxString& key, const wxString& defaultVal ) const
 	else if ( m_global_config && m_global_config->Read( key, &ret ) )
 		return ret;
 	else
-		defaultVal;
+		return defaultVal;
 }
 
 long slConfig::Read(const wxString& key, long defaultVal) const
@@ -56,7 +74,7 @@ long slConfig::Read(const wxString& key, long defaultVal) const
 	else if ( m_global_config && m_global_config->Read( key, &ret ) )
 		return ret;
 	else
-		defaultVal;
+		return defaultVal;
 }
 
 bool slConfig::Read(const wxString& key, wxString* str) const
