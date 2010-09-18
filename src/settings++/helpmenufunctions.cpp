@@ -33,6 +33,7 @@ void showAbout()
 void showCredits()
 {
 	CreditsDialog dlg(CustomMessageBoxBase::getSettingspointer(),_T("Credits"),SS_MAIN_ICON);
+	dlg.AddCredit(_("Very Bad Soldier"),_T("wrote the excellent hotkey editor"));
 	dlg.AddCredit(_("Kloot"),_T("wrote Settings++ from which SpringSettings originated"));
 	dlg.AddCredit(_("The SpringLobby team"),_("thanks for inviting me in, code to re-use, infrastructure and help in general"));
 	dlg.AddCredit(_("everyone reporting bugs/suggestions"),_T(""));
