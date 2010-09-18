@@ -6,11 +6,10 @@
 #include "settings.h"
 
 #ifdef __WXMSW__
-#include <wx/fileconf.h>
-#include <wx/msw/registry.h>
-#else
-#include <wx/config.h>
+	#include <wx/msw/registry.h>
 #endif
+#include "Helper/slconfig.h"
+
 #include <wx/filename.h>
 #include <wx/filefn.h>
 #include <wx/intl.h>
@@ -53,16 +52,6 @@ Settings& sett()
     static LineInfo<Settings> m( AT );
 	static GlobalObjectHolder<Settings, LineInfo<Settings> > m_sett( m );
 	return m_sett;
-}
-
-SL_WinConf::SL_WinConf( wxFileInputStream& in ):
-		wxFileConfig( in )
-{
-}
-
-bool SL_WinConf::DoWriteLong( const wxString& key, long lValue )
-{
-	return wxFileConfig::DoWriteString( key, TowxString<long>( lValue ) );
 }
 
 Settings::Settings()
@@ -110,16 +99,12 @@ Settings::Settings()
 			exit( -1 );
 		}
 	}
-#ifdef __WXMSW__
-	m_config = new SL_WinConf( instream );
-#else
-	m_config = new wxFileConfig( instream );
-#endif
+	m_config = new slConfig( instream );
 #else
 	//removed temporarily because it's suspected to cause a bug with userdir creation
 // m_config = new wxConfig( _T("SpringLobby"), wxEmptyString, _T(".springlobby/springlobby.conf"), _T("springlobby.global.conf"), wxCONFIG_USE_LOCAL_FILE | wxCONFIG_USE_GLOBAL_FILE  );
 	wxString path = m_user_defined_config ? m_user_defined_config_path : _T( ".springlobby/springlobby.conf" );
-	m_config = new wxConfig( _T( "SpringLobby" ), wxEmptyString, path, _T( "springlobby.global.conf" ) );
+	m_config = new slConfig( _T( "SpringLobby" ), wxEmptyString, path, _T( "springlobby.global.conf" ) );
 	SetPortableMode ( false );
 #endif
 	m_config->SetRecordDefaults( true );
@@ -147,58 +132,6 @@ void Settings::SaveSettings()
 	m_config->Save( outstream );
 #endif
 }
-
-
-#ifdef __WXMSW__
-void Settings::SetDefaultConfigs( SL_WinConf& conf )
-#else
-void Settings::SetDefaultConfigs( wxConfig& conf )
-#endif
-{
-	wxString str;
-	long dummy;
-	wxString previousgroup;
-
-	// now all groups...
-	bool groupcontinue = conf.GetFirstGroup( str, dummy );
-	while ( groupcontinue )
-	{
-		// climb all tree branches until you hit the most further
-		groupcontinue = conf.GetFirstGroup( str, dummy );
-		if ( groupcontinue && ( previousgroup != str ) )
-		{
-			conf.SetPath( str );
-			previousgroup = str;
-		}
-		else
-		{
-			// enum all entries and add to the config
-			wxString currentpath = conf.GetPath();
-			bool exist = conf.GetFirstEntry( str, dummy );
-			while ( exist )
-			{
-				if ( !m_config->Exists( currentpath + _T( "/" ) + str ) ) // in theory "main" config should be blank at this point, but better be paranoyd and don't overwrite existing keys...
-				{
-					m_config->Write( currentpath + _T( "/" ) + str, conf.Read( str, _T( "" ) ) ); // append to main config
-				}
-
-				exist = conf.GetNextEntry( str, dummy );
-			}
-
-			if ( !currentpath.IsEmpty() )
-			{
-				wxString todelete = currentpath.AfterLast( _T( '/' ) );
-				currentpath = currentpath.BeforeLast( _T( '/' ) );
-				conf.SetPath( currentpath ); // go to the parent folder
-				conf.DeleteGroup( todelete ); // remove last analyzed group so it doesn't get iterated again
-				groupcontinue = true;
-			}
-			previousgroup = _T( "" );
-		}
-	}
-	m_config->Flush();
-}
-
 
 wxArrayString Settings::GetGroupList( const wxString& base_key )
 {
@@ -2258,14 +2191,14 @@ void Settings::SetMapSelectorFilterRadio( const unsigned int val )
 //////////////////////////////////////////////////////////////////////////////
 
 
-int Settings::getMode()
+long Settings::getMode()
 {
-	int mode;
+	long mode;
 	m_config->Read( _T( "/SpringSettings/mode" ), &mode, SET_MODE_SIMPLE );
 	return mode;
 }
 
-void Settings::setMode( int mode )
+void Settings::setMode( long mode )
 {
 	m_config->Write( _T( "/SpringSettings/mode" ), mode );
 }

@@ -18,8 +18,8 @@ const unsigned int DEFSETT_MW_TOP = 50;
 const unsigned int DEFSETT_MW_LEFT = 50;
 const unsigned int DEFSETT_SPRING_PORT = 8452;
 
-const int SET_MODE_EXPERT = 5000;
-const int SET_MODE_SIMPLE = 5001;
+const long SET_MODE_EXPERT = 5000;
+const long SET_MODE_SIMPLE = 5001;
 const unsigned int DEFSETT_SW_WIDTH = 770;
 const unsigned int DEFSETT_SW_HEIGHT = 580;
 const unsigned int DEFSETT_SW_TOP = 50;
@@ -33,8 +33,6 @@ const unsigned int SPRING_MAX_ALLIES = 16;
  */
 const bool DEFSETT_WEB_BROWSER_USE_DEFAULT = true;
 
-#include <wx/config.h>
-#include <wx/fileconf.h>
 #include "useractions.h"
 #include "Helper/sortutil.h"
 
@@ -52,6 +50,8 @@ class wxColourData;
 class wxSize;
 class wxPoint;
 class wxPathList;
+//class slConfig;
+#include "Helper/slconfig.h"
 
 typedef std::map<unsigned int,unsigned int> ColumnMap;
 
@@ -72,20 +72,6 @@ public:
 	static const size_t top_left		= 3;
 };
 
-class SL_WinConf : public wxFileConfig
-{
-    public:
-			SL_WinConf ( const wxString& appName, const wxString& vendorName, const wxString& strLocal, const wxString& strGlobal, long style, const wxMBConv& /*conv*/):
-			wxFileConfig( appName, vendorName, strLocal, strGlobal, style)
-			{
-			}
-
-			SL_WinConf( wxFileInputStream& in );
-    protected:
-			bool DoWriteLong(const wxString& key, long lValue);
-};
-
-
 //! @brief Class used to store and restore application settings.
 class Settings
 {
@@ -99,13 +85,6 @@ class Settings
     //! used for passing config file at command line
     static bool m_user_defined_config;
     static wxString m_user_defined_config_path;
-
-    /// used to import default configs from a file in windows
-    #ifdef __WXMSW__
-        void SetDefaultConfigs( SL_WinConf& conf );
-    #else
-        void SetDefaultConfigs( wxConfig& conf );
-    #endif
 
     /// list all entries subkeys of a parent group
     wxArrayString GetGroupList( const wxString& base_key );
@@ -705,8 +684,8 @@ class Settings
     /** @name SpringSettings
      * @{
      */
-    int getMode();
-    void setMode( int );
+	long getMode();
+	void setMode( long );
     bool getDisableWarning();
     void setDisableWarning( bool );
     wxString getSimpleRes();
@@ -769,7 +748,7 @@ class Settings
 
     /**@}*/
 
-	//!you are absolutely forbidden to use this
+	//! you are absolutely forbidden to use this
 	template < class T >
 	T Get( wxString setting, const T def )
 	{
@@ -783,13 +762,7 @@ class Settings
   protected:
     bool IsSpringBin( const wxString& path );
 
-    #ifdef __WXMSW__
-    SL_WinConf* m_config; //!< wxConfig object to store and restore  all settings in.
-    #elif defined(__WXMAC__)
-    wxFileConfig* m_config; //!< wxConfig object to store and restore  all settings in.
-    #else
-    wxConfigBase* m_config; //!< wxConfig object to store and restore  all settings in.
-    #endif
+	slConfig* m_config; //!< wxConfig object to store and restore  all settings in.
 
     wxString m_chosen_path;
     bool m_portable_mode;

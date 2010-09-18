@@ -361,25 +361,6 @@ bool SpringLobbyApp::OnCmdLineParsed(wxCmdLineParser& parser)
 
 void SpringLobbyApp::CacheAndSettingsSetup()
 {
-    if( sett().IsFirstRun() )
-    {
-        wxString defaultconfigpath = GetExecutableFolder() + wxFileName::GetPathSeparator() + _T("springlobby.global.conf");
-        if (  wxFileName::FileExists( defaultconfigpath ) )
-        {
-            wxFileInputStream instream( defaultconfigpath );
-
-            if ( instream.IsOk() )
-            {
-                #ifdef __WXMSW__
-                SL_WinConf defaultconf( instream );
-                #else
-                wxConfig defaultconf( instream );
-                #endif
-                sett().SetDefaultConfigs( defaultconf );
-            }
-        }
-    }
-
     SetSettingsStandAlone( false );
 
     if ( sett().IsFirstRun() && !wxDirExists( wxStandardPaths::Get().GetUserDataDir() ) )
