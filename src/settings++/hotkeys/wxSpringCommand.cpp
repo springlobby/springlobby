@@ -1,28 +1,28 @@
-#include "spring_command.h"
+#include "wxSpringCommand.h"
 
-unsigned short spring_command::type_id = 0x2345u;
+unsigned short wxSpringCommand::type_id = 0x2345u;
 
-spring_command::spring_command( const wxString& name, const wxString& descr, int id ) : 
+wxSpringCommand::wxSpringCommand( const wxString& name, const wxString& descr, int id ) : 
 						wxCmd( id /*wxID_INVALID*/, name, descr )
 {
 }
 
-spring_command::~spring_command(void)
+wxSpringCommand::~wxSpringCommand(void)
 {
 }
 
-wxCmd* spring_command::Clone() const
+wxCmd* wxSpringCommand::Clone() const
 {
-	wxCmd* pNewCmd = new spring_command( this->GetName(), this->GetDescription(), this->GetId() );
+	wxCmd* pNewCmd = new wxSpringCommand( this->GetName(), this->GetDescription(), this->GetId() );
 	pNewCmd->DeepCopy(this);
 	return pNewCmd;
 }
 
-int	spring_command::GetType() const
+int	wxSpringCommand::GetType() const
 {
 	return this->type_id;
 }
 
-void spring_command::Exec(wxObject *obj, wxEvtHandler *client)
+void wxSpringCommand::Exec(wxObject*, wxEvtHandler*)
 {
 }
