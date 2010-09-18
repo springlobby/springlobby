@@ -490,7 +490,8 @@ void SpringLobbyApp::CacheAndSettingsSetup()
 					{
 						wxString localecode = m_translationhelper->GetLocale()->GetCanonicalName();
 						if ( localecode.Find(_T("_")) != -1 ) localecode = localecode.BeforeFirst(_T('_'));
-						sett().AddChannelJoin( localecode, _T("") );
+						if ( localecode == _T("en") ) // we'll skip en for now, maybe in the future we'll reactivate it
+							sett().AddChannelJoin( localecode, _T("") );
 					}
 				}
 			}

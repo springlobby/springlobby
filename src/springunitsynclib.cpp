@@ -50,7 +50,20 @@ void SpringUnitSyncLib::Load( const wxString& path, const wxString& ForceConfigF
 {
   LOCK_UNITSYNC;
 
+#ifdef __WXMSW__
+  //Dirty Hack to make the first character upper char
+  //unitsync failed to initialize for me given a path like
+  //"d:\Games\Spring\unitsync.dll"
+  //but worked for "D:\Games\Spring\unitsync.dll"
+  wxString g = path;
+  if ( g.find( wxT( ":\\" ) ) == 1 )
+  {
+	  g.SetChar( 0, wxToupper( g.at(0) ) );
+  }
+  _Load( g );
+#else
   _Load( path );
+#endif
 
   if ( !ForceConfigFilePath.IsEmpty() )
   {

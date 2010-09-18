@@ -802,6 +802,13 @@ wxPathList Settings::GetAdditionalSearchPaths( wxPathList& pl )
 
 	pl.Add( wxGetOSDirectory() );
 
+#ifdef __WXMSW__
+	pl.Add( sp.GetDocumentsDir() + sep + wxT("My Games") + sep + wxT("Spring") );
+	//maybe add more here like:
+	//Appdata + \Spring
+	//Mydocs + \Spring
+#endif
+
 	for ( size_t i = 0; i < pl.GetCount(); i++ )
 	{
 		wxString path = pl[i];
@@ -829,7 +836,7 @@ wxString Settings::AutoFindSpringBin()
 }
 
 
-wxString Settings::AutoFindUnitSync()
+wxPathList Settings::GetConfigFileSearchPathes()
 {
 	wxPathList pl;
 
@@ -852,10 +859,22 @@ wxString Settings::AutoFindUnitSync()
 
 	pl = GetAdditionalSearchPaths( pl );
 
+	return pl;
+}
+
+wxString Settings::AutoFindUnitSync()
+{
+	wxPathList pl = GetConfigFileSearchPathes();;
 	wxString retpath = pl.FindValidPath( _T( "unitsync" ) + GetLibExtension() );
 	if ( retpath.IsEmpty() )
 		retpath = pl.FindValidPath( _T( "libunitsync" ) + GetLibExtension() );
 	return retpath;
+}
+
+wxString Settings::AutoFindUikeys()
+{
+	wxPathList pl = GetConfigFileSearchPathes();;
+	return pl.FindValidPath( _T( "uikeys.txt" ) );
 }
 
 
@@ -964,6 +983,15 @@ wxString Settings::GetCurrentUsedUnitSync()
 	else if ( GetSearchSpringOnlyInSLPath() ) return GetExecutableFolder() + wxFileName::GetPathSeparator() + _T( "unitsync" ) + GetLibExtension();
 #endif
 	else return GetUnitSync( GetCurrentUsedSpringIndex() );
+}
+
+wxString Settings::GetCurrentUsedUikeys()
+{
+	if ( IsPortableMode() ) return GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T( "uikeys.txt" );
+#ifdef __WXMSW__
+	else if ( GetSearchSpringOnlyInSLPath() ) return GetExecutableFolder() + wxFileName::GetPathSeparator() + _T( "uikeys.txt" );
+#endif
+	else return GetUikeys( GetCurrentUsedSpringIndex() );
 }
 
 wxString Settings::GetCurrentUsedSpringConfigFilePath()
@@ -2548,6 +2576,7 @@ void Settings::SetDoResetPerspectives( bool do_it )
 	m_config->Write(_T( "/reset_perspectives" ) , (long)do_it );
 }
 
+
 bool Settings::GetBroadcastEverywhere()
 {
 	return m_config->Read( _T("/Chat/BroadcastEverywhere") ,true);
@@ -2557,3 +2586,48 @@ void Settings::SetBroadcastEverywhere(bool value)
 {
 	m_config->Write( _T("/Chat/BroadcastEverywhere"), value);
 }
+
+//Hotkeys stuff (for springsettings)
+void Settings::SetHotkey( const wxString& profileName, const wxString& command, const wxString& key, bool unbind )
+{
+	wxString bindStr = wxT("bind");
+	if ( unbind )
+	{
+		bindStr = wxT("unbind");
+	}
+
+	m_config->Write(_T( "/HotkeyProfiles/") + profileName + _T("/") + command + _T("/") + key, bindStr );
+}
+
+wxString Settings::GetHotkey( const wxString& profileName, const wxString& command, const wxString& key )
+{
+	return m_config->Read( _T( "/HotkeyProfiles/") + profileName + _T("/") + command + _T("/") + key, _T("") );
+}
+
+wxArrayString Settings::GetHotkeyProfiles()
+{
+	return GetGroupList( _T( "/HotkeyProfiles/" ) );
+}
+
+wxArrayString Settings::GetHotkeyProfileCommands( const wxString& profileName )
+{
+	return GetGroupList( _T( "/HotkeyProfiles/" ) + profileName + _T("/") );
+}
+
+wxArrayString Settings::GetHotkeyProfileCommandKeys( const wxString& profileName, const wxString& command )
+{
+	return GetEntryList( _T( "/HotkeyProfiles/" ) + profileName + _T("/") + command + _T("/") );
+}
+
+void Settings::DeleteHotkeyProfiles()
+{
+	m_config->DeleteGroup( _T( "/HotkeyProfiles/" ) );
+}
+
+
+wxString Settings::GetUikeys( const wxString& index )
+{
+	return m_config->Read( _T( "/Spring/Paths/" ) + index + _T( "/Uikeys" ), AutoFindUikeys() );
+}
+
+//END OF Hotkeys stuff (for springsettings)
