@@ -397,12 +397,12 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const 
 void ChatPanel::OutputLine( const ChatLine& line )
 {
   int pos = m_chatlog_text->GetScrollPos(wxVERTICAL);
-  int size = m_chatlog_text->GetSize().GetHeight();
   int end = m_chatlog_text->GetScrollRange(wxVERTICAL);
   int thumb = m_chatlog_text->GetScrollThumb(wxVERTICAL);
 #ifndef __WXMSW__
   float original_pos = (float)(pos+thumb) / (float)end;
 #else
+  int size = m_chatlog_text->GetSize().GetHeight();
   float original_pos = (float)(pos+size) / (float)end; // wxmsw is retarded and reports thumb size as 0 always
 #endif
   if ( original_pos < 0.0f ) original_pos = 0.0f;

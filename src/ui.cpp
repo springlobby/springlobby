@@ -942,7 +942,7 @@ void Ui::OnMotd( Server& server, const wxString& message )
     if ( server.uidata.panel != 0 ) server.uidata.panel->Motd( message );
 }
 
-void Ui::OnServerBroadcast( Server& server, const wxString& message )
+void Ui::OnServerBroadcast( Server& /*server*/, const wxString& message )
 {
 	if ( m_main_win == 0 ) return;
 	mw().GetChatTab().BroadcastMessage( message );
