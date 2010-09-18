@@ -1,5 +1,6 @@
 #include "statusbar.h"
 #include "../updater/updatehelper.h"
+#include "../utils/platform.h"
 
 Statusbar::Statusbar( wxWindow* parent )
 	:wxStatusBar( parent, wxNewId() ),
@@ -9,7 +10,10 @@ Statusbar::Statusbar( wxWindow* parent )
 {
 	int w[3] = {-1,-1,120};
 	SetFieldsCount( 3, w );
-	PushStatusText( _T("SpringLobby ") + GetSpringLobbyVersion(), 1 );
+	PushStatusText( wxString::Format( _T("%s %s"),
+									  GetAppName(),
+									  GetSpringLobbyVersion() ),
+					1 );
 }
 
 void Statusbar::OnAddMessage( UiEvents::StatusData data )

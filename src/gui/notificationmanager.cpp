@@ -29,6 +29,7 @@ NotificationManager::NotificationManager()
     m_toasterbox->SetPopupBackgroundColor(0,0,0);
     m_toasterbox->SetPopupTextColor(255,255,255);
 //    m_toasterbox->SetPopupScrollSpeed(pScrollSpeed);
+	//! \todo user image from customizations
 	wxBitmap nmp ( charArr2wxBitmap( springlobby_64_png, sizeof(springlobby_64_png) ) );
 //    wxBitmap icon (  ) );
     m_toasterbox->SetPopupBitmap( nmp );

@@ -72,6 +72,7 @@
 
 #include "settings++/frame.h"
 #include "utils/customdialogs.h"
+#include "utils/platform.h"
 
 #include "updater/updatehelper.h"
 #include "channel/autojoinchanneldialog.h"
@@ -128,6 +129,7 @@ MainWindow::MainWindow( )
 	m_has_focus(true)
 {
 	assert( !wxGetApp().IsSimple() );
+	//! \todo use customised icon
 	SetIcon( wxIcon(springlobby_xpm) );
 
 	GetAui().manager = new AuiManagerContainer::ManagerType( this );
@@ -529,9 +531,9 @@ void MainWindow::OnMenuChat( wxCommandEvent& /*unused*/ )
 void MainWindow::OnMenuAbout( wxCommandEvent& /*unused*/ )
 {
     wxAboutDialogInfo info;
-	info.SetName(_T("SpringLobby"));
+	info.SetName( GetAppName() );
 	info.SetVersion (GetSpringLobbyVersion());
-	info.SetDescription(_("SpringLobby is a cross-plattform lobby client for the RTS Spring engine"));
+	info.SetDescription( IdentityString( _("%s is a cross-plattform lobby client for the Spring RTS engine") ) );
 	//info.SetCopyright(_T("");
 	info.SetLicence(_T("GPL"));
 	info.AddDeveloper(_T("BrainDamage"));
@@ -545,6 +547,8 @@ void MainWindow::OnMenuAbout( wxCommandEvent& /*unused*/ )
 	info.AddTranslator(_T("lejocelyn (french)"));
 	info.AddTranslator(_T("Suprano (german)"));
     info.AddTranslator(_T("tc- (swedish)"));
+	info.AddTranslator(_("The numerous contributors from launchpad.net"));
+	//! \todo customisations
 	info.SetIcon(wxIcon(springlobby_xpm));
 	wxAboutBox(info);
 }
@@ -638,8 +642,10 @@ void MainWindow::OnMenuAutojoinChannels( wxCommandEvent& /*unused*/ )
 void MainWindow::OnMenuSelectLocale( wxCommandEvent& /*unused*/ )
 {
     if ( wxGetApp().SelectLanguage() ) {
-        customMessageBoxNoModal( SL_MAIN_ICON, _("You need to restart SpringLobby for the language change to take effect."),
-                                    _("Restart required"), wxICON_EXCLAMATION | wxOK );
+		customMessageBoxNoModal( SL_MAIN_ICON,
+								 IdentityString( _("You need to restart %s for the language change to take effect.") ),
+								 _("Restart required"),
+								 wxICON_EXCLAMATION | wxOK );
     }
 }
 
@@ -694,7 +700,7 @@ void MainWindow::OnMenuResetLayout( wxCommandEvent& /*event*/ )
 {
 	sett().SetDoResetPerspectives( true );
 	sett().SaveSettings();
-	customMessageBoxNoModal( SL_MAIN_ICON, _("Please restart SpringLobby now"), wxEmptyString );
+	customMessageBoxNoModal( SL_MAIN_ICON, IdentityString( _("Please restart %s now") ), wxEmptyString );
 }
 
 const MainWindow::TabNames& MainWindow::GetTabNames()

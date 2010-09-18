@@ -9,6 +9,7 @@
 #include <wx/textfile.h>
 #include <wx/filename.h>
 #include <wx/dir.h>
+#include <wx/app.h>
 
 #ifdef __WXMSW__
  #include <wx/msw/registry.h>
@@ -369,4 +370,17 @@ CwdGuard::CwdGuard( const wxString& new_cwd )
 CwdGuard::~CwdGuard()
 {
     wxSetWorkingDirectory( m_old_cwd );
+}
+
+wxString GetAppName( const bool lowerCase )
+{
+	wxString name = wxTheApp->GetAppName();
+	if ( lowerCase )
+		name.MakeLower();
+	return name;
+}
+
+wxString IdentityString(const wxString format, bool lowerCase )
+{
+	return wxString::Format( format, GetAppName( lowerCase ) );
 }

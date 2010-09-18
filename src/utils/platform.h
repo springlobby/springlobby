@@ -46,6 +46,8 @@ class CwdGuard {
 bool IsPreVistaWindows();
 #endif
 
+//! simply return wxApp::GetAppName with letter lowercased on demand
+wxString GetAppName( const bool lowerCase = false );
 
 #endif // SPRINGLOBBY_HEADERGUARD_PLATFORM_H
 

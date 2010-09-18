@@ -4,6 +4,7 @@
 #include "../images/springsettings.xpm"
 
 #include "../utils/customdialogs.h"
+#include "../utils/platform.h
 #include "../updater/updatehelper.h"
 #include <wx/intl.h>
 #include "se_utils.h"
@@ -21,7 +22,7 @@ void showAbout()
 	}
 	else
 	{
-		info.SetName(_T("SpringLobby"));
+		info.SetName( GetAppName() );
 		info.SetVersion(GetSpringLobbyVersion());
 	}
     info.SetDescription(_("SpringSettings is a graphical frontend to the Settings of the Spring engine"));

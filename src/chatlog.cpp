@@ -18,6 +18,7 @@
 #include "ui.h"
 
 #include "utils/customdialogs.h"
+#include "utils/platform.h"
 
 bool ChatLog::m_parent_dir_exists = true;
 
@@ -95,13 +96,22 @@ bool ChatLog::CreateFolder( const wxString& server )
 {
 	if ( !( wxDirExists( _GetPath() ) || wxMkdir( _GetPath(), 0777 ) ) ) {
 		wxLogWarning( _T( "can't create logging folder: %s" ), _GetPath().c_str() );
-		customMessageBox( SL_MAIN_ICON, _( "Couldn't create folder. \nBe sure that there isn't a write protection.\n" ) + _GetPath() + _( "Log function is disabled until restart SpringLobby." ), _( "Log Warning" ) );
+		customMessageBox( SL_MAIN_ICON,
+						  wxString::Format( _( "Couldn't create folder. \nBe sure that there isn't a write protection.\nLog function is disabled until restart %s." ),
+											_GetPath().c_str(),
+											GetAppName().c_str() ),
+						  _( "Log Warning" ) );
 		m_parent_dir_exists = false;
 		return false;
 	}
 	if ( !( wxDirExists( _GetPath() + wxFileName::GetPathSeparator() + server ) || wxMkdir( _GetPath() + wxFileName::GetPathSeparator() + server, 0777 ) ) ) {
-		wxLogWarning( _T( "can't create logging folder: %s" ), wxString( _GetPath() + wxFileName::GetPathSeparator() + server ).c_str() );
-		customMessageBox( SL_MAIN_ICON, _( "Couldn't create folder. \nBe sure that there isn't a write protection.\n" ) + _GetPath() + wxFileName::GetPathSeparator() + server + _( "Log function is disabled until restart SpringLobby." ), _T( "Log Warning" ) );
+		wxString fn = _GetPath() + wxFileName::GetPathSeparator() + server;
+		wxLogWarning( _T( "can't create logging folder: %s" ), fn.c_str() );
+		customMessageBox( SL_MAIN_ICON,
+						  wxString::Format( _( "Couldn't create folder. \nBe sure that it is not write protected:\n%s\nLog function is disabled until restart %s." ),
+											fn.c_str(),
+											GetAppName().c_str() ),
+						  _T( "Log Warning" ) );
 		m_parent_dir_exists = false;
 		return false;
 	}

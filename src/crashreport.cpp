@@ -17,6 +17,7 @@
 #include <wx/sstream.h>
 
 #include "utils/curlhelper.h"
+#include "utils/platform.h"
 #include "updater/updatehelper.h"
 #include "utils/conversion.h"
 #include "settings.h"
@@ -134,6 +135,7 @@ SpringDebugReport::SpringDebugReport()
 	info << wxGetOsDescription() << ( wxIsPlatform64Bit() ? _T(" 64bit\n") : _T(" 32bit\n") );
 	AddText( _T("platform.txt"), info, _T("Platform") );
 	AddText( _T("client.txt"), _T( "SpringLobby " ) + GetSpringLobbyVersion(), _T("Client") );
+	AddText( _T("appname.txt"), GetAppName() );
 }
 
 #if wxUSE_STACKWALKER
