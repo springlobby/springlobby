@@ -120,7 +120,7 @@ END_EVENT_TABLE()
 MainWindow::TabNames MainWindow::m_tab_names;
 
 MainWindow::MainWindow( )
-	: wxFrame( (wxFrame*)0, -1, _("SpringLobby"), wxPoint(50, 50) ),
+	: wxFrame( (wxFrame*)0, -1, GetAppName(), wxPoint(50, 50) ),
 	WindowAttributesPickle( _T("MAINWINDOW"), this, wxSize(450, 340) ),
 	m_opts_dialog(NULL),
     m_autojoin_dialog(NULL),

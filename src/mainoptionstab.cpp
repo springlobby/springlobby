@@ -161,7 +161,7 @@ void MainOptionsTab::SavePerspective( const wxString& perspective_name )
 }
 
 OptionsDialog::OptionsDialog( wxWindow* parent )
-	: wxDialog( parent, -1, IdentityString(_("% Preferences")), wxDefaultPosition, wxSize( 700,430 ), wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX ),
+	: wxDialog( parent, -1, IdentityString(_("%s Preferences") ), wxDefaultPosition, wxSize( 700,430 ), wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX ),
 	WindowAttributesPickle( _T("preferences"), this, wxSize( 700,430 ) )
 {
 	m_options = new MainOptionsTab( this );
