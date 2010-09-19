@@ -60,7 +60,6 @@
 #include "user.h"
 #include "mapselectdialog.h"
 
-#include "images/springlobby.xpm"
 #include "images/chat_icon.png.h"
 #include "images/join_icon.png.h"
 #include "images/single_player_icon.png.h"
@@ -78,6 +77,7 @@
 #include "channel/autojoinchanneldialog.h"
 #include "channel/channelchooserdialog.h"
 #include "Helper/imageviewer.h"
+#include "customizations.h"
 
 #if defined(__WXMSW__)
     #include <wx/msw/winundef.h>
@@ -130,7 +130,7 @@ MainWindow::MainWindow( )
 {
 	assert( !wxGetApp().IsSimple() );
 	//! \todo use customised icon
-	SetIcon( wxIcon(springlobby_xpm) );
+	SetIcon( SLcustomizations().GetAppIcon() );
 
 	GetAui().manager = new AuiManagerContainer::ManagerType( this );
 
@@ -549,7 +549,7 @@ void MainWindow::OnMenuAbout( wxCommandEvent& /*unused*/ )
     info.AddTranslator(_T("tc- (swedish)"));
 	info.AddTranslator(_("The numerous contributors from launchpad.net"));
 	//! \todo customisations
-	info.SetIcon(wxIcon(springlobby_xpm));
+	info.SetIcon( SLcustomizations().GetAppIcon() );
 	wxAboutBox(info);
 }
 

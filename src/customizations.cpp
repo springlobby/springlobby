@@ -2,6 +2,7 @@
 
 #include "customizations.h"
 #include "springunitsynclib.h"
+#include "images/springlobby.xpm"
 
 #include <wx/image.h>
 
@@ -73,6 +74,7 @@ bool Customizations::Init(const wxString& modname)
 
         m_help_url = m_customs.getSingleValue( _T("help_url") );
     }
+	m_active =  ret;
     return ret;
 }
 
@@ -81,8 +83,15 @@ bool Customizations::Init(const wxString& modname)
   * @todo: document this function
   */
  Customizations::Customizations()
+	 : m_app_ico(springlobby_xpm),
+	 m_active( false )
 {
 
+}
+
+bool Customizations::Active() const
+{
+	return m_active;
 }
 
 /** @brief SLcustomizations
