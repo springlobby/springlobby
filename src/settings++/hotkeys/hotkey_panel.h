@@ -34,12 +34,12 @@ public:
 	void SaveSettings();
 	void UpdateControls(int=0/*unused*/);
 
-	static bool isDefaultBinding( const wxString& command, const wxString& springKey );
+	//static bool isDefaultBinding( const wxString& command, const wxString& springKey );
 
 	bool HasProfileBeenModifiedOrSelected() const;
 	void ResetProfileBeenModifiedOrSelected();
-	static unsigned getShortcutCountFromBinding( const key_binding_k2c& bindings );
-	static bool isBindingInProfile( const key_binding_k2c& springprofile, const wxString& command, const wxString& springkey );
+	static unsigned getShortcutCountFromBinding( const key_binding& bindings );
+	//static bool isBindingInProfile( const key_binding& springprofile, const wxString& command, const wxString& springkey );
 
 private:
 	void selectProfileFromUikeys();

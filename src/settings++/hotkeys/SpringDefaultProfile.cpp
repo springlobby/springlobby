@@ -1,25 +1,24 @@
 #include "SpringDefaultProfile.h"
 #include "KeynameConverter.h"
 
-key_binding_c2k		SpringDefaultProfile::m_mappingC2K;
-key_binding_k2c		SpringDefaultProfile::m_mappingK2C;
+key_binding		SpringDefaultProfile::m_bindings;
 
 void SpringDefaultProfile::initialize()
 {
-	if ( SpringDefaultProfile::m_mappingK2C.size() > 0 )
+	if ( SpringDefaultProfile::m_bindings.getC2K().size() > 0 )
 	{
 		//is already initialized
 		return;
 	}
 
-	SpringDefaultProfile::addBinding( _T("LastMsgPos"), _T("Any+f3") );
+/*	SpringDefaultProfile::addBinding( _T("LastMsgPos"), _T("Any+f3") );
 	SpringDefaultProfile::addBinding( _T("NoSound"), _T("Any+f6") );
 	SpringDefaultProfile::addBinding( _T("ShowMetalMap"), _T("Any+f4") );
-	SpringDefaultProfile::addBinding( _T("ShowPathMap"), _T("Any+f2") );
+	SpringDefaultProfile::addBinding( _T("ShowPathMap"), _T("Any+f2") );*/
 	SpringDefaultProfile::addBinding( _T("aiselect"), _T("Ctrl+q") );
 	SpringDefaultProfile::addBinding( _T("areaattack"), _T("Alt+Shift+a") );
 	SpringDefaultProfile::addBinding( _T("areaattack"), _T("Alt+a") );
-	SpringDefaultProfile::addBinding( _T("attack"), _T("Shift+a") );
+/*	SpringDefaultProfile::addBinding( _T("attack"), _T("Shift+a") );
 	SpringDefaultProfile::addBinding( _T("attack"), _T("a") );
 	SpringDefaultProfile::addBinding( _T("buildfacing dec"), _T("Shift+]") );
 	SpringDefaultProfile::addBinding( _T("buildfacing dec"), _T("]") );
@@ -167,26 +166,17 @@ void SpringDefaultProfile::initialize()
 	SpringDefaultProfile::addBinding( _T("viewta"), _T("Ctrl+f2") );
 	SpringDefaultProfile::addBinding( _T("viewtw"), _T("Ctrl+f3") );
 	SpringDefaultProfile::addBinding( _T("wait"), _T("w") );
-	SpringDefaultProfile::addBinding( _T("wait queued"), _T("Shift+w") );
+	SpringDefaultProfile::addBinding( _T("wait queued"), _T("Shift+w") );*/
 }
 
 void SpringDefaultProfile::addBinding( const wxString& command, const wxString& key )
 {
-	const wxString normKey = KeynameConverter::normalizeSpringKey( key );
-	SpringDefaultProfile::m_mappingK2C[ spring_key( normKey ) ].insert( command );
-	SpringDefaultProfile::m_mappingC2K[ command ].insert( spring_key( normKey ) );
+	SpringDefaultProfile::m_bindings.bind( command, key );
 }
 
-const key_binding_k2c& SpringDefaultProfile::getAllBindingsK2C()
+const key_binding& SpringDefaultProfile::getBindings()
 {
 	SpringDefaultProfile::initialize();
 
-	return SpringDefaultProfile::m_mappingK2C;
-}
-
-const key_binding_c2k& SpringDefaultProfile::getAllBindingsC2K()
-{
-	SpringDefaultProfile::initialize();
-
-	return SpringDefaultProfile::m_mappingC2K;
+	return SpringDefaultProfile::m_bindings;
 }

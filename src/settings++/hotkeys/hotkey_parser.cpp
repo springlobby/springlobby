@@ -17,16 +17,16 @@
 #include "../../utils/conversion.h"
 
 
-hotkey_parser::hotkey_parser(const wxString& uikeys_filename) : filename( uikeys_filename )
+hotkey_parser::hotkey_parser(const wxString& uikeys_filename) : m_filename( uikeys_filename )
 {
 	//we will read the uikeys.txt now to get the key profile
 	//1. Fill the profile with spring's default bindings
 	KeynameConverter::initialize();
 
-	this->bindsK2C = SpringDefaultProfile::getAllBindingsK2C();
+	this->m_bindings = SpringDefaultProfile::getBindings();
 
 	//2. now read uikeys.txt and modify the default profile
-	wxTextFile uiFile( this->filename );
+	wxTextFile uiFile( this->m_filename );
 
 	if ( !uiFile.Open() )
 	{
@@ -49,9 +49,6 @@ hotkey_parser::hotkey_parser(const wxString& uikeys_filename) : filename( uikeys
 
 		this->processLine( line );
 	}
-
-	//update the reverse map
-	this->updateBindsC2K();
 }
 
 bool hotkey_parser::processLine( const wxString& line )
@@ -63,7 +60,7 @@ bool hotkey_parser::processLine( const wxString& line )
 	{ //unbindall?
 		if ( tokLine[0] == wxT("unbindall") )
 		{
-			bindsK2C.clear();
+			this->m_bindings.clear();
 			return true;
 		}
 		wxLogWarning( wxT( "skipping uikeys.txt line: " ) + line );
@@ -76,7 +73,7 @@ bool hotkey_parser::processLine( const wxString& line )
 
 		if ( cmd == wxT("fakemeta") )
 		{
-			this->bindsK2C[key].insert( cmd );
+			this->m_bindings.bind( cmd, key );
 			return true;
 		}
 	}
@@ -94,18 +91,20 @@ bool hotkey_parser::processLine( const wxString& line )
 
 	if ( cmd == wxT("bind") )
 	{
-		this->bindsK2C[key].insert( action );
+		this->m_bindings.bind( action, key );
 		return true;
 	}
 	else if ( cmd == wxT("unbind") )
 	{
-		if ( this->bindsK2C.find( key ) == this->bindsK2C.end() )
+		this->m_bindings.unbind( action, key );
+		/*
+		if ( this->m_bindings.getK2C().find( key ) == this->m_bindings.getK2C().end() )
 		{
 			//nothing to unbind
 			return true;
 		}
 
-		if ( this->bindsK2C[key].find( action ) == this->bindsK2C[key].end() )
+		if ( this->m_bindings.getK2C()[key].find( action ) == this->m_bindings.getK2C()[key].end() )
 		{
 			//nothing to unbind
 			return true;
@@ -116,7 +115,7 @@ bool hotkey_parser::processLine( const wxString& line )
 		{
 			//delete empty keys
 			this->bindsK2C.erase( key );
-		}
+		}*/
 	}
 	else
 	{
@@ -131,6 +130,7 @@ hotkey_parser::~hotkey_parser(void)
 {
 }
 
+/*
 void hotkey_parser::dumpIncludeSourceCode( const wxString& filename )
 {
 	std::ofstream f;
@@ -154,7 +154,7 @@ void hotkey_parser::dumpIncludeSourceCode( const wxString& filename )
 			f << '\n';
 		}
 	}
-}
+}*/
 
 std::vector<wxString> hotkey_parser::tokenize_uikeys_line( const wxString& line )
 {
@@ -168,32 +168,14 @@ std::vector<wxString> hotkey_parser::tokenize_uikeys_line( const wxString& line 
 	return data;
 }
 
-const key_binding& hotkey_parser::getBindingsK2C() const
+const key_binding& hotkey_parser::getBindings() const
 {
-	return this->bindsK2C;
-}
-
-const key_binding& hotkey_parser::getBindingsC2K() const
-{
-	return this->bindsC2K;
-}
-
-void hotkey_parser::updateBindsC2K()
-{
-	this->bindsC2K.clear();
-
-	for( key_binding::const_iterator iter = this->bindsK2C.begin(); iter != this->bindsK2C.end(); ++iter )
-	{
-		for( key_set::const_iterator iter2 = iter->second.begin(); iter2 != iter->second.end(); ++iter2 )
-		{
-			this->bindsC2K[*iter2].insert( iter->first );
-		}
-	}
+	return this->m_bindings;
 }
 
 void hotkey_parser::writeBindingsToFile( const key_binding& springbindings )
 {
-	const wxString newTmpFilename = this->filename + wxT(".tmp");
+	const wxString newTmpFilename = this->m_filename + wxT(".tmp");
 	wxTextFile newFile( newTmpFilename );
 
 	//open new file for writing
@@ -203,7 +185,7 @@ void hotkey_parser::writeBindingsToFile( const key_binding& springbindings )
 	}
 
 	//now read the old uikeys.txt line after line and copy all comments to the new file
-	wxTextFile oldFile( this->filename );
+	wxTextFile oldFile( this->m_filename );
 	if ( !oldFile.Open() )
 	{
 		throw HotkeyException( _("Error opening file for writing: ") + newTmpFilename );
@@ -220,35 +202,36 @@ void hotkey_parser::writeBindingsToFile( const key_binding& springbindings )
 	}
 	oldFile.Close();
 
-	const key_binding defBinds = SpringDefaultProfile::getAllBindingsC2K();
-	for( key_binding::const_iterator iter = defBinds.begin(); iter != defBinds.end(); ++iter )
+	//check all default bindings if they still exist in current profile
+	//do unbind if not
+	const key_binding::key_binding_k2c unbinds = (SpringDefaultProfile::getBindings() - springbindings).getK2C();
+	for( key_binding::key_binding_k2c::const_iterator iter = unbinds.begin(); iter != unbinds.end(); ++iter )
 	{
-		for( key_set::const_iterator iiter = iter->second.begin(); iiter != iter->second.end(); ++iiter )
+		const command_set::command_list& cmdList = iter->second.getCommands();
+		for( command_set::command_list::const_iterator iiter = cmdList.begin(); iiter != cmdList.end(); ++iiter )
 		{
-			if ( !hotkey_panel::isBindingInProfile( springbindings, iter->first, (*iiter) ) )
-			{
-				newFile.AddLine( wxT("unbind\t\t") + (*iiter) + wxT("\t") + iter->first );
-			}
+			newFile.AddLine( wxT("unbind\t\t") + iter->first + wxT("\t") + iiter->command );
 		}
 	}
 
-	for( key_binding::const_iterator iter = springbindings.begin(); iter != springbindings.end(); ++iter )
+	//add binds, should be ordered by orderIdx
+	const key_binding::key_binding_k2c dobinds = (springbindings - SpringDefaultProfile::getBindings()).getK2C();
+	for( key_binding::key_binding_k2c::const_iterator iter = dobinds.begin(); iter != dobinds.end(); ++iter )
 	{
-		for( key_set::const_iterator iiter = iter->second.begin(); iiter != iter->second.end(); ++iiter )
+		const command_set::command_list& cmdList = iter->second.getCommands();
+		for( command_set::command_list::const_iterator iiter = cmdList.begin(); iiter != cmdList.end(); ++iiter )
 		{
-			if ( !hotkey_panel::isDefaultBinding( iter->first, (*iiter) ) )
-			{
-				newFile.AddLine( wxT("bind\t\t") + KeynameConverter::spring2wxKeybinder( (*iiter), true ) + wxT("\t") + iter->first );
-			}
+//			newFile.AddLine( wxT("bind\t\t") + KeynameConverter::spring2wxKeybinder( (*iiter), true ) + wxT("\t") + iter->first );
+			newFile.AddLine( wxT("bind\t\t") + iter->first + wxT("\t") + iiter->command );
 		}
 	}
 	newFile.Write();
 
-	const wxString prevFilenameBak = this->filename + wxT(".bak");
+	const wxString prevFilenameBak = this->m_filename + wxT(".bak");
 
 	//backup our current uikeys.txt
 	{
-		if ( wxRenameFile( this->filename, prevFilenameBak ) == false )
+		if ( wxRenameFile( this->m_filename, prevFilenameBak ) == false )
 		{
 			throw HotkeyException( _("Error renaming uikeys.txt to uikeys.txt.bak") );
 		}
@@ -256,12 +239,12 @@ void hotkey_parser::writeBindingsToFile( const key_binding& springbindings )
 
 	//rename our new tmp file to uikeys.txt. restore backup if failed
 	{
-		if ( wxRenameFile( newTmpFilename, this->filename ) == false )
+		if ( wxRenameFile( newTmpFilename, this->m_filename ) == false )
 		{
 			wxString msg = _("Error renaming uikeys.txt.tmp to uikeys.txt.");
 			
 			//restore backup
-			if ( wxRenameFile( prevFilenameBak, this->filename ) == false )
+			if ( wxRenameFile( prevFilenameBak, this->m_filename ) == false )
 			{
 				msg += _(" Restoring backup failed also.");
 			}

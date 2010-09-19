@@ -15,12 +15,11 @@ public:
 	hotkey_parser( const wxString& filename );
 	~hotkey_parser();
 
-	const key_binding_c2k& getBindingsC2K() const;
-	const key_binding_k2c& getBindingsK2C() const;
+	const key_binding& getBindings() const;
 	
-	void writeBindingsToFile( const key_binding_c2k& springbindings );
+	void writeBindingsToFile( const key_binding& springbindings );
 
-	void dumpIncludeSourceCode( const wxString& filename );
+	//void dumpIncludeSourceCode( const wxString& filename );
 
 private:
 	//static bool isKeyInProfile( const key_binding& binding, const wxString& command, const wxString& keystring );
@@ -29,10 +28,9 @@ private:
 
 	void updateBindsC2K();
 
-	key_binding_k2c		bindsK2C;
-	key_binding_c2k		bindsC2K;
-
-	wxString		filename;
+	key_binding			m_bindings;
+	
+	wxString			m_filename;
 };
 
 #endif

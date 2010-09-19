@@ -55,8 +55,8 @@
 				AdditionalOptions=" /Zm1000"
 				Optimization="0"
 				InlineFunctionExpansion="0"
-				AdditionalIncludeDirectories="E:\Users\devkid\Projects\Other\springlobby;E:\Users\devkid\Projects\Other\springlobby\build;&quot;D:\Programme\Develop\wxWidgets-2.8.11\include&quot;;&quot;D:\Programme\Develop\wxWidgets-2.8.11\lib\vc_dll\msw&quot;;&quot;D:\Programme\Develop\wxWidgets-2.8.11\include\msvc&quot;;&quot;E:\Users\devkid\Projects\Other\springlobby\src\settings++\hotkeys&quot;;E:\Users\devkid\Projects\Other\keybinder\include"
-				PreprocessorDefinitions="wxUSE_UNICODE=1;WIN32;_WINDOWS;_DEBUG;__WXDEBUG__;_RC_MSVC;WXUSINGDLL;__WXMSW__;_WIN32_WINNT=0x0501;HAVE_CONFIG_H;DISABLE_SOUND;NO_TORRENT_SYSTEM;&quot;LOCALE_INSTALL_DIR=\&quot;C:/Program Files (x86)/springlobby/share/locale\&quot;&quot;;CMAKE_INTDIR=\&quot;Debug\&quot;"
+				AdditionalIncludeDirectories="E:\Users\devkid\Projects\Other\springlobby;&quot;D:\Programme\Develop\wxWidgets-2.8.11\include&quot;;&quot;D:\Programme\Develop\wxWidgets-2.8.11\lib\vc_dll\msw&quot;;&quot;D:\Programme\Develop\wxWidgets-2.8.11\include\msvc&quot;;&quot;E:\Users\devkid\Projects\Other\springlobby\src\settings++\hotkeys&quot;"
+				PreprocessorDefinitions="wxUSE_UNICODE=1;WIN32;_WINDOWS;_DEBUG;__WXDEBUG__;_RC_MSVC;WXUSINGDLL;__WXMSW__;_WIN32_WINNT=0x0501;DISABLE_SOUND;NO_TORRENT_SYSTEM;&quot;LOCALE_INSTALL_DIR=\&quot;C:/Program Files (x86)/springlobby/share/locale\&quot;&quot;;CMAKE_INTDIR=\&quot;Debug\&quot;"
 				ExceptionHandling="1"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -64,7 +64,7 @@
 				AssemblerListingLocation="Debug"
 				ObjectFile="$(IntDir)\"
 				ProgramDataBaseFileName="E:\Users\devkid\Projects\Other\springlobby\build\Debug/springsettings.pdb"
-				WarningLevel="3"
+				WarningLevel="4"
 				DebugInformationFormat="3"
 				CompileAs="2"
 			/>
@@ -155,7 +155,7 @@
 				AdditionalOptions=" /Zm1000"
 				Optimization="2"
 				InlineFunctionExpansion="2"
-				AdditionalIncludeDirectories="E:\Users\devkid\Projects\Other\springlobby;E:\Users\devkid\Projects\Other\springlobby\build;&quot;D:\Programme\Develop\wxWidgets-2.8.11\include&quot;;&quot;D:\Programme\Develop\wxWidgets-2.8.11\lib\vc_dll\mswu&quot;;&quot;D:\Programme\Develop\wxWidgets-2.8.11\include\msvc&quot;;&quot;E:\Users\devkid\Projects\Other\springlobby\src\settings++\hotkeys&quot;;E:\Users\devkid\Projects\Other\keybinder\include"
+				AdditionalIncludeDirectories="E:\Users\devkid\Projects\Other\springlobby;E:\Users\devkid\Projects\Other\springlobby\build;&quot;D:\Programme\Develop\wxWidgets-2.8.11\include&quot;;&quot;D:\Programme\Develop\wxWidgets-2.8.11\lib\vc_dll\mswu&quot;;&quot;D:\Programme\Develop\wxWidgets-2.8.11\include\msvc&quot;;&quot;E:\Users\devkid\Projects\Other\springlobby\src\settings++\hotkeys&quot;"
 				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;_RC_MSVC;WXUSINGDLL;__WXMSW__;_WIN32_WINNT=0x0501;DISABLE_SOUND;NO_TORRENT_SYSTEM;&quot;LOCALE_INSTALL_DIR=\&quot;C:/Program Files (x86)/springlobby/share/locale\&quot;&quot;;CMAKE_INTDIR=\&quot;Release\&quot;"
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
@@ -181,7 +181,7 @@
 				Name="VCLinkerTool"
 				LinkLibraryDependencies="false"
 				AdditionalOptions=" /STACK:10000000 /machine:X86"
-				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib D:\Programme\Develop\wxWidgets-2.8.11\lib\vc_dll\wxbase28u.lib D:\Programme\Develop\wxWidgets-2.8.11\lib\vc_dll\wxmsw28u_core.lib D:\Programme\Develop\wxWidgets-2.8.11\lib\vc_dll\wxbase28u_net.lib D:\Programme\Develop\wxWidgets-2.8.11\lib\vc_dll\wxmsw28u_adv.lib D:\Programme\Develop\wxWidgets-2.8.11\lib\vc_dll\wxmsw28u_aui.lib D:\Programme\Develop\wxWidgets-2.8.11\lib\vc_dll\wxmsw28u_html.lib D:\Programme\Develop\wxWidgets-2.8.11\lib\vc_dll\wxbase28u_xml.lib D:\Programme\Develop\wxWidgets-2.8.11\lib\vc_dll\wxmsw28u_qa.lib D:\Programme\Develop\wxWidgets-2.8.11\lib\vc_dll\wxpng.lib D:\Programme\Develop\wxWidgets-2.8.11\lib\vc_dll\wxtiff.lib D:\Programme\Develop\wxWidgets-2.8.11\lib\vc_dll\wxjpeg.lib D:\Programme\Develop\wxWidgets-2.8.11\lib\vc_dll\wxzlib.lib D:\Programme\Develop\wxWidgets-2.8.11\lib\vc_dll\wxregexu.lib D:\Programme\Develop\wxWidgets-2.8.11\lib\vc_dll\wxexpat.lib E:\Users\devkid\Projects\Other\keybinder\lib\vc_dll\wxcode_msw28u_keybinder.lib winmm.lib comctl32.lib rpcrt4.lib wsock32.lib $(NOINHERIT)"
+				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib D:\Programme\Develop\wxWidgets-2.8.11\lib\vc_dll\wxbase28u.lib D:\Programme\Develop\wxWidgets-2.8.11\lib\vc_dll\wxmsw28u_core.lib D:\Programme\Develop\wxWidgets-2.8.11\lib\vc_dll\wxbase28u_net.lib D:\Programme\Develop\wxWidgets-2.8.11\lib\vc_dll\wxmsw28u_adv.lib D:\Programme\Develop\wxWidgets-2.8.11\lib\vc_dll\wxmsw28u_aui.lib D:\Programme\Develop\wxWidgets-2.8.11\lib\vc_dll\wxmsw28u_html.lib D:\Programme\Develop\wxWidgets-2.8.11\lib\vc_dll\wxbase28u_xml.lib D:\Programme\Develop\wxWidgets-2.8.11\lib\vc_dll\wxmsw28u_qa.lib D:\Programme\Develop\wxWidgets-2.8.11\lib\vc_dll\wxpng.lib D:\Programme\Develop\wxWidgets-2.8.11\lib\vc_dll\wxtiff.lib D:\Programme\Develop\wxWidgets-2.8.11\lib\vc_dll\wxjpeg.lib D:\Programme\Develop\wxWidgets-2.8.11\lib\vc_dll\wxzlib.lib D:\Programme\Develop\wxWidgets-2.8.11\lib\vc_dll\wxregexu.lib D:\Programme\Develop\wxWidgets-2.8.11\lib\vc_dll\wxexpat.lib winmm.lib comctl32.lib rpcrt4.lib wsock32.lib $(NOINHERIT)"
 				OutputFile="E:\Users\devkid\Projects\Other\springlobby\build\Release\springsettings.exe"
 				Version="0.0"
 				LinkIncremental="1"
@@ -777,6 +777,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\settings++\hotkeys\HotkeyTypes.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\settings++\hotkeys\HotkeyTypes.h"
 					>
 				</File>
@@ -789,14 +793,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\src\settings++\hotkeys\spring_command.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\settings++\hotkeys\spring_command.h"
-					>
-				</File>
-				<File
 					RelativePath="..\src\settings++\hotkeys\SpringDefaultProfile.cpp"
 					>
 				</File>
@@ -806,6 +802,34 @@
 				</File>
 				<File
 					RelativePath="..\src\settings++\hotkeys\todo.txt"
+					>
+				</File>
+				<File
+					RelativePath="..\src\settings++\hotkeys\wxSpringCommand.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\settings++\hotkeys\wxSpringCommand.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="wxkeybinder"
+				>
+				<File
+					RelativePath="D:\Users\devkid\Projekte\Other\springlobby\src\wxkeybinder\keybinder.cpp"
+					>
+				</File>
+				<File
+					RelativePath="D:\Users\devkid\Projekte\Other\springlobby\src\wxkeybinder\keybinder.h"
+					>
+				</File>
+				<File
+					RelativePath="D:\Users\devkid\Projekte\Other\springlobby\src\wxkeybinder\keybinderdef.h"
+					>
+				</File>
+				<File
+					RelativePath="D:\Users\devkid\Projekte\Other\springlobby\src\wxkeybinder\menuutils.h"
 					>
 				</File>
 			</Filter>

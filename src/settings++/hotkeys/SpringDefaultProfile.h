@@ -9,20 +9,18 @@
 #include "hotkey_parser.h"
 
 
-class SpringDefaultProfile
+class SpringDefaultProfile : public key_binding
 {
 public:
 	static void initialize();
-	static const key_binding_k2c& getAllBindingsK2C();
-	static const key_binding_c2k& getAllBindingsC2K();
-
+	static const key_binding& getBindings();
+	
 private:
 	SpringDefaultProfile();
 
 	static void addBinding( const wxString& key, const wxString& command );
 
-	static key_binding_k2c			m_mappingK2C;
-	static key_binding_c2k			m_mappingC2K;
+	static key_binding			m_bindings;
 };
 
 #endif
