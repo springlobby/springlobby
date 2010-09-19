@@ -9,7 +9,6 @@ INCLUDE_DIRECTORIES(${springlobby_SOURCE_DIR} ${Settings_SOURCE_DIR} )
 SET(springlobbySrc
 	src/utils/activitynotice.cpp
 	src/chatpanelmenu.cpp
-	src/customizations.cpp
 	src/gui/gradientpanel.cpp
 	src/gui/wxgradientbutton.cpp
 	src/gui/skirmish_dialog.cpp
@@ -158,6 +157,7 @@ SET(StandAloneSettings
 )
 
 SET(SLSharedWithSettings
+	src/customizations.cpp
 	src/uiutils.cpp
 	src/updater/versionchecker.cpp
 	src/updater/updatehelper.cpp
@@ -188,6 +188,7 @@ SET( updaterSrc
 	src/updater/updaterapp.cpp
 	src/utils/activitynotice.cpp
 	src/utils/misc.cpp
+	src/customizations.cpp
 )
 
 FILE( GLOB header "src/*.h" )
