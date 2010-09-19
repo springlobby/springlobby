@@ -57,8 +57,8 @@ Settings& sett()
 Settings::Settings()
 {
 #if defined(__WXMSW__) || defined(__WXMAC__)
-	wxString userfilepath = wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator() + _T( "springlobby.conf" );
-	wxString localfilepath =  GetExecutableFolder() + wxFileName::GetPathSeparator() + _T( "springlobby.conf" );
+	wxString userfilepath = IdentityString( wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator() + _T( "%s.conf" ), true );
+	wxString localfilepath =  IdentityString( GetExecutableFolder() + wxFileName::GetPathSeparator() + _T( "%s.conf" ), true );
 
 	if ( !wxFileName::FileExists( localfilepath ) || !wxFileName::IsFileWritable( localfilepath ) )
 	{
@@ -101,10 +101,9 @@ Settings::Settings()
 	}
 	m_config = new slConfig( instream );
 #else
-	//removed temporarily because it's suspected to cause a bug with userdir creation
-// m_config = new wxConfig( _T("SpringLobby"), wxEmptyString, _T(".springlobby/springlobby.conf"), _T("springlobby.global.conf"), wxCONFIG_USE_LOCAL_FILE | wxCONFIG_USE_GLOBAL_FILE  );
-	wxString path = m_user_defined_config ? m_user_defined_config_path : _T( ".springlobby/springlobby.conf" );
-	m_config = new slConfig( _T( "SpringLobby" ), wxEmptyString, path, _T( "springlobby.global.conf" ) );
+	wxString localpath = wxString::Format( _T( ".%s/%s.conf" ), GetAppName( true ).c_str(), GetAppName( true ).c_str() );
+	wxString path = m_user_defined_config ? m_user_defined_config_path : localpath;
+	m_config = new slConfig( GetAppName(), wxEmptyString, path );
 	SetPortableMode ( false );
 #endif
 	m_config->SetRecordDefaults( true );
