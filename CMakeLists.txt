@@ -28,11 +28,13 @@ SET( CMAKE_FIND_LIBRARY_SUFFIXES ".so" ".lib" ".a" )
 #----------------------------------------------------------------------------------------------------
 # Load needed Modules
 #----------------------------------------------------------------------------------------------------
-EXECUTE_PROCESS(COMMAND ${springlobby_SOURCE_DIR}/tools/get-revision.sh
-        OUTPUT_VARIABLE SPRINGLOBBY_GIT_REV
-        ERROR_VARIABLE GIT_ERROR
-        OUTPUT_STRIP_TRAILING_WHITESPACE
-		)
+if(NOT DEFINED SPRINGLOBBY_REV)
+  EXECUTE_PROCESS(COMMAND ${springlobby_SOURCE_DIR}/tools/get-revision.sh
+    OUTPUT_VARIABLE SPRINGLOBBY_REV
+    ERROR_VARIABLE GIT_ERROR
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+endif(NOT DEFINED SPRINGLOBBY_REV)
 
 INCLUDE(cmake/package_config.cmake)
 INCLUDE(cmake/sources.list)
@@ -67,7 +69,7 @@ SET( ENABLE_DEBUG_REPORT
 	"Enable automatic uploading of crash information (requires libcurl)" )
 
 SET( SPRINGLOBBY_REV
-	${SPRINGLOBBY_GIT_REV} CACHE STRING
+	"${SPRINGLOBBY_REV}" CACHE STRING
 	"The revision string used in packages etc." )
 SET( LOCALE_INSTALL_DIR
 	${CMAKE_INSTALL_PREFIX}/share/locale CACHE STRING
