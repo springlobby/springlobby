@@ -81,6 +81,8 @@ protected:
     //! One of the wxWidgets key code which defines the key shortcut.
     int m_nKeyCode;
 
+	size_t m_nOrderIndex;
+
 	static wxString discardModifier( const wxString& keystring )
 	{
 		wxString result;
@@ -113,24 +115,28 @@ public:
 
     wxKeyBind() {
         m_nKeyCode = m_nFlags = -1;
+		m_nOrderIndex = 1;
     }
 
-    wxKeyBind(int flags, int keycode) {
-        Set(flags, keycode);
+    wxKeyBind(int flags, int keycode, size_t orderIndex = 0) {
+        Set(flags, keycode, orderIndex);
     }
 
     wxKeyBind(const wxKeyBind &tocopy) {
         DeepCopy(tocopy);
     }
 
-    wxKeyBind(const wxString &key) {
-        m_nFlags = StringToKeyModifier(key);
-		m_nKeyCode = StringToKeyCode( wxKeyBind::discardModifier( key ) );//.AfterLast('+')).AfterLast('-'));
+    wxKeyBind(const wxString &key, size_t orderIndex = 0) {
+		Set( StringToKeyModifier(key),
+			StringToKeyCode( wxKeyBind::discardModifier( key ) ),//.AfterLast('+')).AfterLast('-'));,
+			orderIndex
+			);
     }
 
     virtual void DeepCopy(const wxKeyBind &p) {
         m_nFlags = p.m_nFlags;
         m_nKeyCode = p.m_nKeyCode;
+		m_nOrderIndex = p.m_nOrderIndex;
     }
 
     virtual ~wxKeyBind() {}
@@ -140,9 +146,10 @@ public:
 public:
 
     //! Sets the key binding keycode and flags.
-    void Set(int flags, int keycode) {
+    void Set(int flags, int keycode, size_t orderIndex) {
         m_nFlags = flags;
         m_nKeyCode = keycode;
+		m_nOrderIndex = orderIndex;
     }
 
     //! Sets the key binding keycode and flags.
@@ -150,8 +157,7 @@ public:
     //!       of a pointer allowing such syntaxes:
     //!                mybind->Set(wxKeyBind("CTRL+ENTER"));
     void Set(const wxKeyBind &key) {
-        m_nFlags = key.m_nFlags;
-        m_nKeyCode = key.m_nKeyCode;
+		Set( key.m_nFlags, key.m_nKeyCode, key.m_nOrderIndex);
     }
 
     //! Returns TRUE if the given key event matches this key binding.
@@ -159,7 +165,7 @@ public:
 
     //! Returns TRUE if the given wxKeyBind object is equivalent to this.
     bool Match(const wxKeyBind &key) const {
-        if (m_nFlags == key.m_nFlags && m_nKeyCode == key.m_nKeyCode)
+		if (m_nFlags == key.m_nFlags && m_nKeyCode == key.m_nKeyCode)
             return TRUE;
         return FALSE;
     }
@@ -168,6 +174,13 @@ public:
 
     // Getters
     // ------------------
+	size_t GetOrderIndex() const {
+		return m_nOrderIndex;
+	}
+
+	void SetOrderIndex(size_t orderIndex) {
+		m_nOrderIndex = orderIndex;
+	}
 
     int GetKeyCode() const {
         return m_nKeyCode;
@@ -323,19 +336,19 @@ public:
     }
 
     //! Builds and adds a key binding to this command.
-    void AddShortcut(int flags, int keycode) {
+    void AddShortcut(int flags, int keycode, size_t orderIndex) {
         if (m_nShortcuts >= wxCMD_MAX_SHORTCUTS) return;
-        wxKeyBind key(flags, keycode);
+        wxKeyBind key(flags, keycode, orderIndex);
         AddShortcut(key);
         // update is called by the previous call
     }
 
     //! Builds and adds a key binding to this command using the
     //! given key description.
-    void AddShortcut(const wxString &key) {
+    void AddShortcut(const wxString &key, size_t orderIndex) {
         if (m_nShortcuts >= wxCMD_MAX_SHORTCUTS) return;
         if (key.IsEmpty()) return;
-        m_keyShortcut[m_nShortcuts++] = wxKeyBind(key);
+        m_keyShortcut[m_nShortcuts++] = wxKeyBind(key, orderIndex);
         Update();
     }
 
@@ -411,6 +424,16 @@ public:
 
     wxKeyBind *GetShortcut(int n)                { return &m_keyShortcut[n]; }
     const wxKeyBind *GetShortcut(int n) const    { return &m_keyShortcut[n]; }
+	const wxKeyBind *GetShortcut(const wxString& keystring) const { 
+		for(int i=0; i < m_nShortcuts; ++i)
+		{
+			if ( m_keyShortcut[i].GetStr() == keystring )
+			{
+				return &m_keyShortcut[i];
+			}
+		}
+		return NULL; 
+	}
 
     wxAcceleratorEntry GetAccelerator(int n) const {
         return GetShortcut(n)->GetAccelerator(m_nId);
@@ -567,48 +590,6 @@ private:
 
 #endif
 
-
-//! A special wxApp. Doesn't work yet on wxGTK.
-//! This should be another way to use wxKeyBinder: the usual way is to
-//! call wxKeyBinder::Attach to define the windows whose events will be
-//! filtered for the hotkeys...
-//! wxBinderApp should avoid all calls to wxKeyBinderAttach filtering
-//! the events using the wxApp::FilterEvent() function.
-class wxBinderApp : public wxApp
-{
-    wxKeyBinder *m_pGlobalBinder;
-    wxEvtHandler *m_pGlobalHdl;
-
-public:
-    wxBinderApp() { m_pGlobalHdl = NULL; m_pGlobalBinder = NULL; }
-    virtual ~wxBinderApp() {}
-
-
-    //! The core of wxBinderApp.
-    int FilterEvent(wxEvent &ev);
-
-    //! Returns TRUE if \c child is a child window (maybe nested into
-    //! other windows) of the given \c parent.
-    static bool IsChildOf(wxWindow *parent, wxWindow *child);
-
-    //! Returns the first top level parent of the given window
-    //! or NULL if the given window has no top level parents.
-    static wxWindow *GetTopLevelParent(wxWindow *wnd);
-
-
-public:     // accessors
-
-    void SetGlobalBinder(wxKeyBinder *p)
-        { m_pGlobalBinder = p; }
-    void SetGlobalHandler(wxEvtHandler *p)
-        { m_pGlobalHdl = p; }
-
-    wxKeyBinder *GetGlobalBinder() const
-        { return m_pGlobalBinder; }
-    wxEvtHandler *GetGlobalHandler() const
-        { return m_pGlobalHdl ; }
-};
-
 //added by vbs
 WX_DECLARE_HASH_SET(int, wxIntegerHash, wxIntegerEqual, IdSet);
 WX_DECLARE_HASH_SET(wxCmd*, wxPointerHash, wxPointerEqual, CmdSet);
@@ -760,10 +741,6 @@ public:     // miscellaneous
     //! Returns the wxBinderEvtHandler for the given window.
     wxBinderEvtHandler *FindHandlerFor(wxWindow *p) const;
 
-    //! Imports the wxMenuCmd created importing them from
-    //! the given menu bar.
-    void ImportMenuBarCmd(wxMenuBar *p);
-
     //! Saves the array of keybindings into the given wxConfig object.
     //! All the keybindings will be saved into subkeys of the given key.
     //! \param bCleanOld If TRUE, this function will erase the given key
@@ -782,20 +759,32 @@ public:     // miscellaneous
         m_arrCmd.Add(p);
     }
 
-    void AddShortcut(int id, const wxString &key) {
+    void AddShortcut(int id, const wxString &key, size_t orderIndex) {
         wxCmd *p = GetCmd(id);
-        if (p) p->AddShortcut(key);
+		if (p) {
+			p->AddShortcut(key, orderIndex);
+		}
     }
 
     void AddShortcut(int id, const wxKeyBind &key) {
         wxCmd *p = GetCmd(id);
-        if (p) p->AddShortcut(key);
+        if (p) {
+			p->AddShortcut(key);
+		}
     }
-
-
 
     // Getters
     // -------------------
+	size_t GetHighestOrderIndex(const wxString& keystring) const {
+		size_t res = 0;
+		CmdSet cmds = GetCmdBindsTo(keystring);
+		for( CmdSet::const_iterator iter = cmds.begin(); iter != cmds.end(); ++iter )
+		{
+			res = std::max( res, (*iter)->GetShortcut(keystring)->GetOrderIndex() );
+		}
+
+		return res;
+	}
 
     int GetCmdCount() const {
         return m_arrCmd.GetCount();
@@ -1275,8 +1264,8 @@ public:     // import commands (to call BEFORE ShowModal):
     //! If the root of the tree control doesn't exist (because none
     //! of the ImportXXXX functions have been called yet), this
     //! function creates it with the "rootname" label.
-    virtual void ImportMenuBarCmd(wxMenuBar *menuitems,
-                                const wxString &rootname = wxT("Menu bar"));
+   // virtual void ImportMenuBarCmd(wxMenuBar *menuitems,
+   //                             const wxString &rootname = wxT("Menu bar"));
 
     //! Adds to the tree of user-editable commands, the raw list of
     //! the commmands contained in the n-th key profile.

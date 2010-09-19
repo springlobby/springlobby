@@ -664,7 +664,7 @@ void wxBinderEvtHandler::OnChar(wxKeyEvent &p)
 
 
 
-
+/*
 // ----------------------------------------------------------------------------
 // wxBinderApp
 // ----------------------------------------------------------------------------
@@ -729,7 +729,7 @@ bool wxBinderApp::IsChildOf(wxWindow *parent, wxWindow *child)
 
     return FALSE;
 }
-
+*/
 
 
 
@@ -824,13 +824,6 @@ void wxKeyBinder::DetachAll()
     m_arrHandlers.Clear();
 }
 
-void wxKeyBinder::ImportMenuBarCmd(wxMenuBar *p)
-{
-    wxMenuShortcutWalker wlkr;
-
-    // it's very easy performing this task using a wxMenuShortcutWalker  :-)
-    wlkr.ImportMenuBarCmd(p, &m_arrCmd);
-}
 
 void wxKeyBinder::OnChar(wxKeyEvent &event, wxEvtHandler *next)
 {
@@ -1434,7 +1427,7 @@ void wxKeyConfigPanel::ImportRawList(const ControlMap& itemMap, const wxString &
     m_pCommandsTree->Expand(m_pCommandsTree->GetRootItem());
 }
 
-
+/*
 void wxKeyConfigPanel::ImportMenuBarCmd(wxMenuBar *p, const wxString &rootname)
 {
     // do some std things...
@@ -1463,7 +1456,7 @@ void wxKeyConfigPanel::ImportMenuBarCmd(wxMenuBar *p, const wxString &rootname)
         OnCategorySelected(fake);
     }
 }
-
+*/
 void wxKeyConfigPanel::ImportKeyProfileCmd(const wxKeyProfile &toimport,
                                            const wxString &rootname)
 {
@@ -2142,7 +2135,8 @@ void wxKeyConfigPanel::OnAssignKey(wxCommandEvent &)
     // actually add the new shortcut key
     // (if there are already the max. number of shortcuts for
     // this command, the shortcut won't be added).
-    sel->AddShortcut(m_pKeyField->GetValue());
+	const wxString& keystr = m_pKeyField->GetValue();
+	sel->AddShortcut(keystr, 1 + this->GetSelProfile()->GetHighestOrderIndex(keystr));
 
     // now the user has modified the currently selected profile...
     m_bProfileHasBeenModified = TRUE;
