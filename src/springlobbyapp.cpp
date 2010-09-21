@@ -84,9 +84,9 @@ SpringLobbyApp::SpringLobbyApp()
 	m_log_file( false ),
     m_log_window_show( false ),
     m_crash_handle_disable( false ),
-    m_start_simple_interface( false )
+	m_start_simple_interface( false ),
+	m_appname( _T("SpringLobby") )
 {
-    SetAppName( _T("springlobby") );
 }
 
 SpringLobbyApp::~SpringLobbyApp()
@@ -113,6 +113,7 @@ bool SpringLobbyApp::OnInit()
     //this triggers the Cli Parser amongst other stuff
     if (!wxApp::OnInit())
         return false;
+	SetAppName( m_appname );
 
     if (!m_crash_handle_disable) {
     #if wxUSE_ON_FATAL_EXCEPTION
@@ -191,11 +192,12 @@ bool SpringLobbyApp::OnInit()
                 sp->Show();
                 return true;
             }
+			ui().mw().SetIcon( SLcustomizations().GetAppIcon() );
         }
         else {
-            customMessageBox( 0, _("Couldn't load customizations for ") + m_customizer_modname + _("\nPlease check that that is the correct name, passed in qoutation"), _("Fatal error"), wxOK );
+			customMessageBox( 3, _("Couldn't load customizations for ") + m_customizer_modname + _("\nPlease check that that is the correct name, passed in qoutation"), _("Fatal error"), wxOK );
 //            wxLogError( _("Couldn't load customizations for ") + m_customizer_modname + _("\nPlease check that that is the correct name, passed in qoutation"), _("Fatal error") );
-            exit( OnExit() );//for some twisted reason returning false here does not termiante the app
+			exit( OnExit() );//for some twisted reason returning false here does not terminate the app
         }
     }
 
@@ -304,7 +306,8 @@ void SpringLobbyApp::OnInitCmdLine(wxCmdLineParser& parser)
         { wxCMD_LINE_SWITCH, STR("gl"), STR("gui-logging"),  _("enables application log window"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
         { wxCMD_LINE_OPTION, STR("f"), STR("config-file"),  _("override default choice for config-file"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL | wxCMD_LINE_NEEDS_SEPARATOR },
         { wxCMD_LINE_OPTION, STR("l"), STR("log-verbosity"),  _("overrides default logging verbosity, can be:\n                                0: no log\n                                1: critical errors\n                                2: errors\n                                3: warnings (default)\n                                4: messages\n                                5: function trace"), wxCMD_LINE_VAL_NUMBER, wxCMD_LINE_PARAM_OPTIONAL },
-        { wxCMD_LINE_OPTION, STR("c"), STR("customize"),  _("Load lobby customizations from game archive. Expects the shortname."), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
+		{ wxCMD_LINE_OPTION, STR("c"), STR("customize"),  _("Load lobby customizations from game archive. Expects the long name."), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
+		{ wxCMD_LINE_OPTION, STR("n"), STR("name"),  _("overrides default application name"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
         { wxCMD_LINE_SWITCH, STR("s"), STR("simple"),  _("Start with the simple interface."), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
         { wxCMD_LINE_NONE }//while this throws warnings, it is mandatory according to http://docs.wxwidgets.org/stable/wx_wxcmdlineparser.html
     };
@@ -344,6 +347,9 @@ bool SpringLobbyApp::OnCmdLineParsed(wxCmdLineParser& parser)
             m_log_verbosity = m_log_window_show ? 3 : 5;
         if ( !parser.Found(_T("customize"), &m_customizer_modname ) )
             m_customizer_modname = _T("");
+		if ( !parser.Found(_T("name"), &m_appname ) )
+			m_appname = _T("SpringLobby");
+
 
         if ( parser.Found(_T("help")) )
             return false; // not a syntax error, but program should stop if user asked for command line usage
@@ -361,25 +367,6 @@ bool SpringLobbyApp::OnCmdLineParsed(wxCmdLineParser& parser)
 
 void SpringLobbyApp::CacheAndSettingsSetup()
 {
-    if( sett().IsFirstRun() )
-    {
-        wxString defaultconfigpath = GetExecutableFolder() + wxFileName::GetPathSeparator() + _T("springlobby.global.conf");
-        if (  wxFileName::FileExists( defaultconfigpath ) )
-        {
-            wxFileInputStream instream( defaultconfigpath );
-
-            if ( instream.IsOk() )
-            {
-                #ifdef __WXMSW__
-                SL_WinConf defaultconf( instream );
-                #else
-                wxConfig defaultconf( instream );
-                #endif
-                sett().SetDefaultConfigs( defaultconf );
-            }
-        }
-    }
-
     SetSettingsStandAlone( false );
 
     if ( sett().IsFirstRun() && !wxDirExists( wxStandardPaths::Get().GetUserDataDir() ) )

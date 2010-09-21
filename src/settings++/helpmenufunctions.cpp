@@ -4,6 +4,7 @@
 #include "../images/springsettings.xpm"
 
 #include "../utils/customdialogs.h"
+#include "../utils/platform.h"
 #include "../updater/updatehelper.h"
 #include <wx/intl.h>
 #include "se_utils.h"
@@ -21,7 +22,7 @@ void showAbout()
 	}
 	else
 	{
-		info.SetName(_T("SpringLobby"));
+		info.SetName( GetAppName() );
 		info.SetVersion(GetSpringLobbyVersion());
 	}
     info.SetDescription(_("SpringSettings is a graphical frontend to the Settings of the Spring engine"));
@@ -33,6 +34,7 @@ void showAbout()
 void showCredits()
 {
 	CreditsDialog dlg(CustomMessageBoxBase::getSettingspointer(),_T("Credits"),SS_MAIN_ICON);
+	dlg.AddCredit(_("Very Bad Soldier"),_T("wrote the excellent hotkey editor"));
 	dlg.AddCredit(_("Kloot"),_T("wrote Settings++ from which SpringSettings originated"));
 	dlg.AddCredit(_("The SpringLobby team"),_("thanks for inviting me in, code to re-use, infrastructure and help in general"));
 	dlg.AddCredit(_("everyone reporting bugs/suggestions"),_T(""));

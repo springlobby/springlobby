@@ -18,6 +18,7 @@
 #include "ui.h"
 
 #include "utils/customdialogs.h"
+#include "utils/platform.h"
 
 
 ChatLog::ChatLog( const wxString& server, const wxString& room ):

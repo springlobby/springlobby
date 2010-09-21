@@ -24,6 +24,7 @@
 #include "../defines.h"
 #include "../settings.h"
 #include "uievents.h"
+#include "../customizations.h"
 
 #ifdef HAVE_WX29
     //in < 29 this is defined in wxDialogBase, which seems to have disappeared
@@ -47,7 +48,8 @@ CustomMessageBox::CustomMessageBox(wxIcon* icon ,wxWindow *parent, const wxStrin
         long style, const wxPoint& pos )
 			: wxDialog(parent,-1,caption,pos,wxDefaultSize,style|wxFRAME_FLOAT_ON_PARENT|wxDEFAULT_DIALOG_STYLE)
 {
-	SetIcon(*icon);
+	if( icon )
+		SetIcon(*icon);
 
 //******** copied from wxsource/generic/msgdlgg.cpp with small modifications***********************************************************
 
@@ -59,6 +61,7 @@ CustomMessageBox::CustomMessageBox(wxIcon* icon ,wxWindow *parent, const wxStrin
 
     // 1) icon
 
+	//! \todo use bitmap from customisation
     wxBitmap bitmap;
     switch ( style & wxICON_MASK )
     {
@@ -152,123 +155,83 @@ void CustomMessageBoxBase::setLobbypointer(wxWindow* arg)
 	return m_settingsWindow;
 }
 
+ void getIcon( int whichIcon, wxIcon* icon, wxWindow* parent )
+ {
+	 switch (whichIcon)
+	 {
+		 case SL_MAIN_ICON:
+			 icon = new wxIcon( SLcustomizations().GetAppIcon() );
+			 parent = CustomMessageBoxBase::getLobbypointer();
+			 break;
+		 case SS_MAIN_ICON:
+			 icon = new wxIcon(springsettings_xpm);
+			 parent = CustomMessageBoxBase::getSettingspointer();
+			 break;
+		 default:
+			 icon = new wxIcon(wxNullIcon);
+			 parent = 0;
+			 break;
+
+	 }
+	 assert( icon );
+ }
+
 int customMessageBox( int whichIcon , const wxString& message,const wxString& caption,
 		long style , int x, int y )
 {
-		wxWindow* parent;
-		wxIcon* icon;
-		switch (whichIcon)
-		{
-			case SL_MAIN_ICON:
-				icon = new wxIcon(springlobby_xpm);
-				parent = CustomMessageBoxBase::getLobbypointer();
-				break;
-			case SS_MAIN_ICON:
-				icon = new wxIcon(springsettings_xpm);
-				parent = CustomMessageBoxBase::getSettingspointer();
-				break;
-			default:
-				icon = new wxIcon(wxNullIcon);
-				parent = 0;
-				break;
-
-		}
-		CustomMessageBox dlg(icon,parent,message,caption,style,wxPoint(x,y));
-		int re = dlg.ShowModal();
-		switch (re)
-		{
-			case wxID_OK: return wxOK;
-			case wxID_CANCEL: return wxCANCEL;
-			case wxID_YES: return wxYES;
-			case wxID_NO: return wxNO;
-			default: return -1;
-		}
+	wxWindow* parent = 0;
+	wxIcon* icon = 0;
+	getIcon( whichIcon, icon, parent );
+	CustomMessageBox dlg(icon,parent,message,caption,style,wxPoint(x,y));
+	int re = dlg.ShowModal();
+	switch (re)
+	{
+		case wxID_OK: return wxOK;
+		case wxID_CANCEL: return wxCANCEL;
+		case wxID_YES: return wxYES;
+		case wxID_NO: return wxNO;
+		default: return -1;
+	}
 }
 
 int timedMessageBox(int whichIcon , const wxString& message,
         const wxString& caption, unsigned int delay, // miliseconds
         long style ,  const int x , const int y )
 {
-		wxWindow* parent;
-		wxIcon* icon;
-		switch (whichIcon)
-		{
-			case SL_MAIN_ICON:
-				icon = new wxIcon(springlobby_xpm);
-				parent = CustomMessageBoxBase::getLobbypointer();
-				break;
-			case SS_MAIN_ICON:
-				icon = new wxIcon(springsettings_xpm);
-				parent = CustomMessageBoxBase::getSettingspointer();
-				break;
-			default:
-				icon = new wxIcon(wxNullIcon);
-				parent = 0;
-				break;
-
-		}
-		TimedMessageBox dlg(icon,parent,message,caption,delay,style,wxPoint(x,y));
-		int re = dlg.ShowModal();
-		switch (re)
-		{
-			case wxID_OK: return wxOK;
-			case wxID_CANCEL: return wxCANCEL;
-			case wxID_YES: return wxYES;
-			case wxID_NO: return wxNO;
-		}
-		return -1;
+	wxWindow* parent = 0;
+	wxIcon* icon = 0;
+	getIcon( whichIcon, icon, parent );
+	TimedMessageBox dlg(icon,parent,message,caption,delay,style,wxPoint(x,y));
+	int re = dlg.ShowModal();
+	switch (re)
+	{
+		case wxID_OK: return wxOK;
+		case wxID_CANCEL: return wxCANCEL;
+		case wxID_YES: return wxYES;
+		case wxID_NO: return wxNO;
+	}
+	return -1;
 }
 
 void timedMessageBoxNoModal(int whichIcon , const wxString& message,
         const wxString& caption, unsigned int delay, // miliseconds
         long style ,  const int x , const int y )
 {
-		wxWindow* parent;
-		wxIcon* icon;
-		switch (whichIcon)
-		{
-			case SL_MAIN_ICON:
-				icon = new wxIcon(springlobby_xpm);
-				parent = CustomMessageBoxBase::getLobbypointer();
-				break;
-			case SS_MAIN_ICON:
-				icon = new wxIcon(springsettings_xpm);
-				parent = CustomMessageBoxBase::getSettingspointer();
-				break;
-			default:
-				icon = new wxIcon(wxNullIcon);
-				parent = 0;
-				break;
-
-		}
-		s_timedMessageBox = new TimedMessageBox(icon,parent,message,caption,delay,style,wxPoint(x,y));
-		s_timedMessageBox->Show( true );
+	wxWindow* parent = 0;
+	wxIcon* icon = 0;
+	getIcon( whichIcon, icon, parent );
+	s_timedMessageBox = new TimedMessageBox(icon,parent,message,caption,delay,style,wxPoint(x,y));
+	s_timedMessageBox->Show( true );
 }
 
 void customMessageBoxNoModal( int whichIcon , const wxString& message,const wxString& caption,
 		long style , int x, int y )
 {
-		wxWindow* parent;
-		wxIcon* icon;
-		switch (whichIcon)
-		{
-			case SL_MAIN_ICON:
-				icon = new wxIcon(springlobby_xpm);
-				parent = CustomMessageBoxBase::getLobbypointer();
-				break;
-			case SS_MAIN_ICON:
-				icon = new wxIcon(springsettings_xpm);
-				parent = CustomMessageBoxBase::getSettingspointer();
-				break;
-			default:
-				icon = new wxIcon(wxNullIcon);
-				parent = 0;
-				break;
-
-		}
-		s_nonmodbox = new CustomMessageBox (icon,parent,message,caption,style,wxPoint(x,y));
-
-		s_nonmodbox->Show(true);
+	wxWindow* parent = 0;
+	wxIcon* icon = 0;
+	getIcon( whichIcon, icon, parent );
+	s_nonmodbox = new CustomMessageBox (icon,parent,message,caption,style,wxPoint(x,y));
+	s_nonmodbox->Show(true);
 }
 
 template <class T>
@@ -299,20 +262,9 @@ CreditsDialog::CreditsDialog(wxWindow* parent,wxString title,int whichIcon) : wx
 
     container->Add(wxDialog::CreateButtonSizer(wxOK));
 	SetSizer(container);
-	wxIcon* icon;
-	switch (whichIcon)
-	{
-		case SL_MAIN_ICON:
-			icon = new wxIcon(springlobby_xpm);
-			break;
-		case SS_MAIN_ICON:
-			icon = new wxIcon(springsettings_xpm);
-			break;
-		default:
-			icon = new wxIcon(wxNullIcon);
-			break;
-
-	}
+	wxIcon* icon = 0;
+	wxWindow* dummy = 0;
+	getIcon( whichIcon, icon, dummy );
 	SetIcon(*icon);
 }
 
@@ -386,33 +338,18 @@ void ActNotifBox::AppendMessage( const wxString& message )
 void serverMessageBox( int whichIcon , const wxString& message,const wxString& caption,
 		long style , int x, int y )
 {
-		wxWindow* parent;
-		wxIcon* icon;
-		switch (whichIcon)
-		{
-			case SL_MAIN_ICON:
-				icon = new wxIcon(springlobby_xpm);
-				parent = CustomMessageBoxBase::getLobbypointer();
-				break;
-			case SS_MAIN_ICON:
-				icon = new wxIcon(springsettings_xpm);
-				parent = CustomMessageBoxBase::getSettingspointer();
-				break;
-			default:
-				icon = new wxIcon(wxNullIcon);
-				parent = 0;
-				break;
-
-		}
-		if ( s_serverMsgBox != 0 && s_serverMsgBox->IsShown() )
-		{
-		    s_serverMsgBox->AppendMessage(message);
-		}
-		else
-		{
-            s_serverMsgBox = new ServerMessageBox (icon,parent,message,caption,style,wxPoint(x,y));
-            s_serverMsgBox->Show(true);
-		}
+	wxWindow* parent = 0;
+	wxIcon* icon = 0;
+	getIcon( whichIcon, icon, parent );
+	if ( s_serverMsgBox != 0 && s_serverMsgBox->IsShown() )
+	{
+		s_serverMsgBox->AppendMessage(message);
+	}
+	else
+	{
+		s_serverMsgBox = new ServerMessageBox (icon,parent,message,caption,style,wxPoint(x,y));
+		s_serverMsgBox->Show(true);
+	}
 }
 
 void actNotifBox( int whichIcon , const wxString& message,const wxString& caption,
@@ -424,24 +361,9 @@ void actNotifBox( int whichIcon , const wxString& message,const wxString& captio
 	}
 	else
 	{
-		wxWindow* parent;
-		wxIcon* icon;
-		switch (whichIcon)
-		{
-			case SL_MAIN_ICON:
-				icon = new wxIcon(springlobby_xpm);
-				parent = CustomMessageBoxBase::getLobbypointer();
-				break;
-			case SS_MAIN_ICON:
-				icon = new wxIcon(springsettings_xpm);
-				parent = CustomMessageBoxBase::getSettingspointer();
-				break;
-			default:
-				icon = new wxIcon(wxNullIcon);
-				parent = 0;
-				break;
-
-		}
+		wxWindow* parent = 0;
+		wxIcon* icon = 0;
+		getIcon( whichIcon, icon, parent );
 		if ( s_actNotifBox != 0 && s_actNotifBox->IsShown() )
 		{
 		    s_actNotifBox->AppendMessage(message);
@@ -485,7 +407,7 @@ void mutelistWindow( const wxString& message, const wxString& caption,
         long style, const int x, const int y )
 {
         wxWindow* parent = CustomMessageBoxBase::getLobbypointer();
-		wxIcon* icon = new wxIcon(springlobby_xpm);
+		wxIcon* icon = new wxIcon( SLcustomizations().GetAppIcon() );
 
 		if ( s_mutelistWindow != 0 && s_mutelistWindow->IsShown() )
 		{
@@ -643,14 +565,14 @@ AutocloseMessageBox::AutocloseMessageBox( wxWindow *parent, const wxString& mess
 										  const wxString& caption ,
 										  unsigned int delay,
 										  long style, const wxPoint& pos )
-	: TimedMessageBox( new wxIcon(springlobby_xpm), parent, message, caption, delay, style, pos )
+	: TimedMessageBox( new wxIcon( SLcustomizations().GetAppIcon() ), parent, message, caption, delay, style, pos )
 {
 	wxWindowID delay_timerID = wxNewId();
 	m_delay_timer.SetOwner( this, delay_timerID );
 	Connect( delay_timerID, wxEVT_TIMER, wxTimerEventHandler( AutocloseMessageBox::OnUnlock) );
 }
 
-void AutocloseMessageBox::OnUnlock( wxTimerEvent& evt )
+void AutocloseMessageBox::OnUnlock( wxTimerEvent& /*evt*/ )
 {
 	EndModal(0);
 }

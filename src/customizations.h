@@ -16,10 +16,12 @@ class Customizations {
         wxIcon m_app_ico;
         wxBitmap m_background;
         wxString m_help_url;
+		bool m_active;
     public:
         ~Customizations() {}
 
         bool Init( const wxString& modname );
+		bool Active() const;
 
         const wxString& GetModname() const;
         const wxString& GetHelpUrl() const;

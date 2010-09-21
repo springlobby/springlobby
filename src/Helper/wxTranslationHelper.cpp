@@ -9,6 +9,7 @@
 #include <wx/intl.h>
 #include "../settings.h"
 #include "../utils/customdialogs.h"
+#include "../utils/platform.h"
 
 wxTranslationHelper::wxTranslationHelper( wxApp & app,
 										 const wxString & search_path )
@@ -155,9 +156,9 @@ bool wxTranslationHelper::AskUserForLanguage( wxArrayString& names,
 		m_Locale->AddCatalogLookupPathPrefix( m_SearchPath );
 		wxLogInfo( _("wxTranslationHelper: Path Prefix = \"%s\""),
 			m_SearchPath.GetData() );
-		m_Locale->AddCatalog( _T("springlobby") );
+		m_Locale->AddCatalog( GetAppName( true ) );
 		wxLogInfo( _("wxTranslationHelper: Catalog Name = \"%s\""),
-			_T("springlobby") );
+			GetAppName( true ).c_str() );
 		return true;
 	}
 	return false;
