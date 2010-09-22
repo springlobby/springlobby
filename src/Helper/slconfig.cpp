@@ -30,9 +30,10 @@ slConfig::slConfig( wxInputStream& in, const wxMBConv& conv )
 void slConfig::SetupGlobalconfig()
 {
 	#ifdef __WXMSW__
+		wxString p (wxFileName::GetPathSeparator());
 		wxString global_config_path = wxString::Format( _T("%s%s%s.global.conf"),
 													   GetExecutableFolder().c_str(),
-													   wxFileName::GetPathSeparator(),
+													   p.c_str(),
 													   ::GetAppName( true ).c_str()
 													   );
 	#else
