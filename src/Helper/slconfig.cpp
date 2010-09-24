@@ -69,11 +69,11 @@ wxString slConfig::Read(const wxString& key, const wxString& defaultVal ) const
 		//basically this means we're treating the global value as a default to our self
 		//and write it according to policy
 		if ( IsRecordingDefaults() )
-			slConfigBaseType::Write( key, ret );
+			((slConfigBaseType*)this)->Write( key, ret );
 		return ret;
 	}
 	if ( IsRecordingDefaults() )
-		slConfigBaseType::Write( key, defaultVal );
+		((slConfigBaseType*)this)->Write( key, defaultVal );
 	return defaultVal;
 }
 
@@ -85,11 +85,11 @@ long slConfig::Read(const wxString& key, long defaultVal) const
 	else if ( m_global_config && m_global_config->Read( key, &ret ) )
 	{
 		if ( IsRecordingDefaults() )
-			slConfigBaseType::Write( key, ret );
+			((slConfigBaseType*)this)->Write( key, ret );
 		return ret;
 	}
 	if ( IsRecordingDefaults() )
-		slConfigBaseType::Write( key, defaultVal );
+		((slConfigBaseType*)this)->Write( key, defaultVal );
 	return defaultVal;
 }
 
@@ -103,7 +103,7 @@ bool slConfig::Read(const wxString& key, wxString* str) const
 	else if ( m_global_config && m_global_config->Read( key, str ) )
 	{
 		if ( str && IsRecordingDefaults() )
-			slConfigBaseType::Write( key, *str );
+			((slConfigBaseType*)this)->Write( key, *str );
 		return true;
 	}
 	return false;
@@ -119,7 +119,7 @@ bool slConfig::Read(const wxString& key, wxString* str, const wxString& defaultV
 
 	//at this point the last call will have modified *str with defaultVal
 	if ( IsRecordingDefaults() )
-		slConfigBaseType::Write( key, defaultVal );
+		((slConfigBaseType*)this)->Write( key, defaultVal );
 	return false;
 }
 
@@ -130,7 +130,7 @@ bool slConfig::Read(const wxString& key, long* l) const
 	else if ( m_global_config && m_global_config->Read( key, l ) )
 	{
 		if ( l && IsRecordingDefaults() )
-			slConfigBaseType::Write( key, *l );
+			((slConfigBaseType*)this)->Write( key, *l );
 		return true;
 	}
 	return false;
@@ -143,7 +143,7 @@ bool slConfig::Read(const wxString& key, long* l, long defaultVal) const
 	else if ( m_global_config && m_global_config->Read( key, l, defaultVal ) )
 		return true;
 	if ( IsRecordingDefaults() )
-		slConfigBaseType::Write( key, defaultVal );
+		((slConfigBaseType*)this)->Write( key, defaultVal );
 	return false;
 }
 
@@ -163,7 +163,7 @@ bool slConfig::Read(const wxString& key, double* d, double defaultVal) const
 	else if ( m_global_config && m_global_config->Read( key, d, defaultVal ) )
 		return true;
 	if ( IsRecordingDefaults() )
-		slConfigBaseType::Write( key, defaultVal );
+		((slConfigBaseType*)this)->Write( key, defaultVal );
 	return false;
 }
 
@@ -180,9 +180,9 @@ bool slConfig::Read(const wxString& key, bool* b, bool defaultVal) const
 {
 	if ( slConfigBaseType::Read( key, b, defaultVal ) )
 		return true;
-	else if ( m_global_config && m_global_config->Read( key, d, defaultVal ) )
+	else if ( m_global_config && m_global_config->Read( key, b, defaultVal ) )
 		return true;
 	if ( IsRecordingDefaults() )
-		slConfigBaseType::Write( key, defaultVal );
+		((slConfigBaseType*)this)->Write( key, defaultVal );
 	return false;
 }
