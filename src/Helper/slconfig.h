@@ -38,6 +38,9 @@ class slConfig : public slConfigBaseType
 		bool Read(const wxString& key, bool* b) const;
 		bool Read(const wxString& key, bool* d, bool defaultVal) const;
 
+		//! this could be a seriously bad idea if it's used internally to determine if default is used or some such
+//		bool Exists( const wxString& strName) const;
+
 	protected:
 		#ifdef __WXMSW__
 			//! on windows writing longs is broken so we redirect this to string
