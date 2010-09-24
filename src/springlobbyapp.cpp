@@ -112,7 +112,7 @@ bool SpringLobbyApp::OnInit()
 {
     //this triggers the Cli Parser amongst other stuff
     if (!wxApp::OnInit())
-        return false;
+		return false;
 	SetAppName( m_appname );
 
     if (!m_crash_handle_disable) {
@@ -182,24 +182,24 @@ bool SpringLobbyApp::OnInit()
 	#endif
 
 
-    CacheAndSettingsSetup();
+	CacheAndSettingsSetup();
 
-    if ( !m_customizer_modname.IsEmpty() ) {
-        if ( SLcustomizations().Init( m_customizer_modname ) ) {
-            if ( m_start_simple_interface ) {
-                SimpleFront* sp = new SimpleFront( 0 );
-                SetTopWindow( sp );
-                sp->Show();
-                return true;
-            }
+	if ( !m_customizer_modname.IsEmpty() ) {
+		if ( SLcustomizations().Init( m_customizer_modname ) ) {
+			if ( m_start_simple_interface ) {
+				SimpleFront* sp = new SimpleFront( 0 );
+				SetTopWindow( sp );
+				sp->Show();
+				return true;
+			}
 			ui().mw().SetIcon( SLcustomizations().GetAppIcon() );
-        }
-        else {
+		}
+		else {
 			customMessageBox( 3, _("Couldn't load customizations for ") + m_customizer_modname + _("\nPlease check that that is the correct name, passed in qoutation"), _("Fatal error"), wxOK );
 //            wxLogError( _("Couldn't load customizations for ") + m_customizer_modname + _("\nPlease check that that is the correct name, passed in qoutation"), _("Fatal error") );
 			exit( OnExit() );//for some twisted reason returning false here does not terminate the app
-        }
-    }
+		}
+	}
 
 	notificationManager(); //needs to be initialized too
     ui().ShowMainWindow();
