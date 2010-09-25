@@ -121,7 +121,7 @@ MainWindow::TabNames MainWindow::m_tab_names;
 
 MainWindow::MainWindow( )
 	: wxFrame( (wxFrame*)0, -1, GetAppName(), wxPoint(50, 50) ),
-	WindowAttributesPickle( _T("MAINWINDOW"), this, wxSize(450, 340) ),
+	WindowAttributesPickle( _T("MAINWINDOW"), this, wxSize(720, 576) ),
 	m_opts_dialog(NULL),
     m_autojoin_dialog(NULL),
     m_channel_chooser(NULL),
