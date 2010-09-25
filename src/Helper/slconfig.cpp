@@ -186,3 +186,61 @@ bool slConfig::Read(const wxString& key, bool* b, bool defaultVal) const
 		((slConfigBaseType*)this)->Write( key, defaultVal );
 	return false;
 }
+
+bool slConfig::HasSection( const wxString& strName) const
+{
+	return Exists( strName ) || ( m_global_config && m_global_config->Exists( strName ) );
+}
+
+void slConfig::SetPath(const wxString& strPath)
+{
+	slConfigBaseType::SetPath(strPath);
+	if ( m_global_config )
+		m_global_config->SetPath(strPath);
+}
+
+bool slConfig::GetFirstEntry(wxString& str, long& index) const
+{
+	//the common case, no need to query the global conf
+	if ( slConfigBaseType::GetFirstEntry( str, index) )
+		return true;
+	long index_global;
+	if ( !m_global_config && m_global_config->GetFirstEntry( str, index_global) )
+		return false;
+	m_enumerationId_forwards[index] = index_global;
+	return true;
+}
+
+bool slConfig::GetNextEntry(wxString& str, long& index) const
+{
+	ForwardsType::iterator forward_it =
+			m_enumerationId_forwards.find( index );
+	if ( forward_it != m_enumerationId_forwards.end() )
+	{
+		bool ret = m_global_config && m_global_config->GetNextEntry( str, forward_it->second );
+		if ( !ret )
+			m_enumerationId_forwards.erase( forward_it );
+		return ret;
+	}
+	return slConfigBaseType::GetNextEntry( str, index );
+}
+
+size_t slConfig::GetNumberOfGroups(bool bRecursive ) const
+{
+	size_t this_count = slConfigBaseType::GetNumberOfGroups( bRecursive  );
+	if ( this_count != 0 )
+		return this_count;
+	if ( m_global_config )
+		return m_global_config->GetNumberOfGroups( bRecursive  );
+	return 0;
+}
+
+size_t slConfig::GetNumberOfEntries(bool bRecursive ) const
+{
+	size_t this_count = slConfigBaseType::GetNumberOfEntries( bRecursive  );
+	if ( this_count != 0 )
+		return this_count;
+	if ( m_global_config )
+		return m_global_config->GetNumberOfEntries( bRecursive  );
+	return 0;
+}

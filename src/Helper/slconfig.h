@@ -2,6 +2,7 @@
 #define SLCONFIG_H
 
 #include <wx/fileconf.h>
+#include <map>
 
 class wxFileInputStream;
 
@@ -41,6 +42,14 @@ class slConfig : public slConfigBaseType
 		//! this could be a seriously bad idea if it's used internally to determine if default is used or some such
 //		bool Exists( const wxString& strName) const;
 
+		bool HasSection( const wxString& strName) const;
+		void SetPath(const wxString& strPath);
+		bool GetFirstEntry(wxString& str, long& index) const;
+		bool GetNextEntry(wxString& str, long& index) const;
+		size_t GetNumberOfGroups(bool bRecursive = false) const;
+		size_t GetNumberOfEntries(bool bRecursive = false) const;
+
+
 	protected:
 		#ifdef __WXMSW__
 			//! on windows writing longs is broken so we redirect this to string
@@ -50,6 +59,10 @@ class slConfig : public slConfigBaseType
 		void SetupGlobalconfig();
 
 		wxFileConfig* m_global_config;
+
+		typedef std::map<long,long>
+			ForwardsType;
+		mutable ForwardsType m_enumerationId_forwards;
 };
 
 #endif // SLCONFIG_H
