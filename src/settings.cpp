@@ -343,7 +343,7 @@ unsigned int Settings::GetModCachingThreadProgress()
 
 bool Settings::ShouldAddDefaultServerSettings()
 {
-	return !m_config->Exists( _T( "/Server" ) );
+	return !m_config->HasSection( _T( "/Server" ) );
 }
 
 //! @brief Restores default settings
@@ -605,7 +605,7 @@ void Settings::ConvertOldChannelSettings()
 
 bool Settings::ShouldAddDefaultChannelSettings()
 {
-	return !m_config->Exists( _T( "/Channels" ) );
+	return !m_config->HasSection( _T( "/Channels" ) );
 }
 
 /************* SPRINGLOBBY WINDOW POS/SIZE   ******************/
