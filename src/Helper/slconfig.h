@@ -43,11 +43,33 @@ class slConfig : public slConfigBaseType
 //		bool Exists( const wxString& strName) const;
 
 		bool HasSection( const wxString& strName) const;
+
 		void SetPath(const wxString& strPath);
 		bool GetFirstEntry(wxString& str, long& index) const;
 		bool GetNextEntry(wxString& str, long& index) const;
+		bool GetFirstGroup(wxString& str, long& index) const;
+		bool GetNextGroup(wxString& str, long& index) const;
 		size_t GetNumberOfGroups(bool bRecursive = false) const;
 		size_t GetNumberOfEntries(bool bRecursive = false) const;
+
+		class PathGuard {
+				slConfig& m_config;
+				const wxString m_old_path;
+			public:
+				PathGuard( slConfig& config, wxString new_path )
+					:m_config( config ),
+					m_old_path( m_config.GetPath() )
+				{
+					m_config.SetPath( new_path );
+				}
+
+				~PathGuard()
+				{
+					m_config.SetPath( m_old_path );
+				}
+		};
+
+		PathGuard getPathGuard( const wxString& new_path );
 
 
 	protected:
@@ -62,7 +84,8 @@ class slConfig : public slConfigBaseType
 
 		typedef std::map<long,long>
 			ForwardsType;
-		mutable ForwardsType m_enumerationId_forwards;
+		mutable ForwardsType m_enumerationId_forwards_entries;
+		mutable ForwardsType m_enumerationId_forwards_groups;
 };
 
 #endif // SLCONFIG_H

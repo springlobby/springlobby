@@ -69,11 +69,11 @@ wxString slConfig::Read(const wxString& key, const wxString& defaultVal ) const
 		//basically this means we're treating the global value as a default to our self
 		//and write it according to policy
 		if ( IsRecordingDefaults() )
-			((slConfigBaseType*)this)->Write( key, ret );
+			((slConfig*)this)->Write( key, ret );
 		return ret;
 	}
 	if ( IsRecordingDefaults() )
-		((slConfigBaseType*)this)->Write( key, defaultVal );
+		((slConfig*)this)->Write( key, defaultVal );
 	return defaultVal;
 }
 
@@ -85,11 +85,11 @@ long slConfig::Read(const wxString& key, long defaultVal) const
 	else if ( m_global_config && m_global_config->Read( key, &ret ) )
 	{
 		if ( IsRecordingDefaults() )
-			((slConfigBaseType*)this)->Write( key, ret );
+			((slConfig*)this)->Write( key, ret );
 		return ret;
 	}
 	if ( IsRecordingDefaults() )
-		((slConfigBaseType*)this)->Write( key, defaultVal );
+		((slConfig*)this)->Write( key, defaultVal );
 	return defaultVal;
 }
 
@@ -103,7 +103,7 @@ bool slConfig::Read(const wxString& key, wxString* str) const
 	else if ( m_global_config && m_global_config->Read( key, str ) )
 	{
 		if ( str && IsRecordingDefaults() )
-			((slConfigBaseType*)this)->Write( key, *str );
+			((slConfig*)this)->Write( key, *str );
 		return true;
 	}
 	return false;
@@ -119,7 +119,7 @@ bool slConfig::Read(const wxString& key, wxString* str, const wxString& defaultV
 
 	//at this point the last call will have modified *str with defaultVal
 	if ( IsRecordingDefaults() )
-		((slConfigBaseType*)this)->Write( key, defaultVal );
+		((slConfig*)this)->Write( key, defaultVal );
 	return false;
 }
 
@@ -130,7 +130,7 @@ bool slConfig::Read(const wxString& key, long* l) const
 	else if ( m_global_config && m_global_config->Read( key, l ) )
 	{
 		if ( l && IsRecordingDefaults() )
-			((slConfigBaseType*)this)->Write( key, *l );
+			((slConfig*)this)->Write( key, *l );
 		return true;
 	}
 	return false;
@@ -143,7 +143,7 @@ bool slConfig::Read(const wxString& key, long* l, long defaultVal) const
 	else if ( m_global_config && m_global_config->Read( key, l, defaultVal ) )
 		return true;
 	if ( IsRecordingDefaults() )
-		((slConfigBaseType*)this)->Write( key, defaultVal );
+		((slConfig*)this)->Write( key, defaultVal );
 	return false;
 }
 
@@ -163,7 +163,7 @@ bool slConfig::Read(const wxString& key, double* d, double defaultVal) const
 	else if ( m_global_config && m_global_config->Read( key, d, defaultVal ) )
 		return true;
 	if ( IsRecordingDefaults() )
-		((slConfigBaseType*)this)->Write( key, defaultVal );
+		((slConfig*)this)->Write( key, defaultVal );
 	return false;
 }
 
@@ -183,7 +183,7 @@ bool slConfig::Read(const wxString& key, bool* b, bool defaultVal) const
 	else if ( m_global_config && m_global_config->Read( key, b, defaultVal ) )
 		return true;
 	if ( IsRecordingDefaults() )
-		((slConfigBaseType*)this)->Write( key, defaultVal );
+		((slConfig*)this)->Write( key, defaultVal );
 	return false;
 }
 
@@ -207,24 +207,61 @@ bool slConfig::GetFirstEntry(wxString& str, long& index) const
 	long index_global;
 	if ( !m_global_config && m_global_config->GetFirstEntry( str, index_global) )
 		return false;
-	m_enumerationId_forwards[index] = index_global;
+	//the local has no entry, but the global does
+	//setup an entry in the forwards map, so we can redirect subsequent call to GetNextEntry to the global
+	m_enumerationId_forwards_entries[index] = index_global;
 	return true;
 }
 
 bool slConfig::GetNextEntry(wxString& str, long& index) const
 {
 	ForwardsType::iterator forward_it =
-			m_enumerationId_forwards.find( index );
-	if ( forward_it != m_enumerationId_forwards.end() )
+			m_enumerationId_forwards_entries.find( index );
+	//an entry in the forwards map must take precendence over local
+	if ( forward_it != m_enumerationId_forwards_entries.end() )
 	{
 		bool ret = m_global_config && m_global_config->GetNextEntry( str, forward_it->second );
 		if ( !ret )
-			m_enumerationId_forwards.erase( forward_it );
+			//returning false here will (in proper usage) stop the outside loop from calling GetNextEntry again
+			//so this is the time to remove the forward
+			m_enumerationId_forwards_entries.erase( forward_it );
 		return ret;
 	}
 	return slConfigBaseType::GetNextEntry( str, index );
 }
 
+bool slConfig::GetFirstGroup(wxString& str, long& index) const
+{
+	//the common case, no need to query the global conf
+	if ( slConfigBaseType::GetFirstGroup( str, index) )
+		return true;
+	long index_global;
+	if ( !m_global_config && m_global_config->GetFirstGroup( str, index_global) )
+		return false;
+	//the local has no entry, but the global does
+	//setup an entry in the forwards map, so we can redirect subsequent call to GetNextEntry to the global
+	m_enumerationId_forwards_groups[index] = index_global;
+	return true;
+}
+
+bool slConfig::GetNextGroup(wxString& str, long& index) const
+{
+	ForwardsType::iterator forward_it =
+			m_enumerationId_forwards_groups.find( index );
+	//an entry in the forwards map must take precendence over local
+	if ( forward_it != m_enumerationId_forwards_groups.end() )
+	{
+		bool ret = m_global_config && m_global_config->GetNextGroup( str, forward_it->second );
+		if ( !ret )
+			//returning false here will (in proper usage) stop the outside loop from calling GetNextEntry again
+			//so this is the time to remove the forward
+			m_enumerationId_forwards_groups.erase( forward_it );
+		return ret;
+	}
+	return slConfigBaseType::GetNextGroup( str, index );
+}
+
+//! only return gobal number if local is zero
 size_t slConfig::GetNumberOfGroups(bool bRecursive ) const
 {
 	size_t this_count = slConfigBaseType::GetNumberOfGroups( bRecursive  );
@@ -235,6 +272,7 @@ size_t slConfig::GetNumberOfGroups(bool bRecursive ) const
 	return 0;
 }
 
+//! only return gobal number if local is zero
 size_t slConfig::GetNumberOfEntries(bool bRecursive ) const
 {
 	size_t this_count = slConfigBaseType::GetNumberOfEntries( bRecursive  );
@@ -243,4 +281,9 @@ size_t slConfig::GetNumberOfEntries(bool bRecursive ) const
 	if ( m_global_config )
 		return m_global_config->GetNumberOfEntries( bRecursive  );
 	return 0;
+}
+
+slConfig::PathGuard slConfig::getPathGuard( const wxString& new_path )
+{
+	return PathGuard( *this, new_path );
 }
