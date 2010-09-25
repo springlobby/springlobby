@@ -375,7 +375,8 @@ void settings_frame::OnClose(wxCloseEvent& /*unused*/)
 
 bool settings_frame::saveSettingsAbstract()
 {
-	hotkeyTab->SaveSettings();
+	if ( hotkeyTab )
+		hotkeyTab->SaveSettings();
 
 	return abstract_panel::saveSettings();
 }
