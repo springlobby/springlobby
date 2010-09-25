@@ -64,6 +64,12 @@ END_EVENT_TABLE()
 settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& pa_size)
 	: wxFrame(parent, id, title, position, pa_size),
 	WindowAttributesPickle( _T("SETTINGSFRAME"), this, wxSize( DEFSETT_SW_WIDTH, DEFSETT_SW_HEIGHT ) ),
+	simpleTab(0),
+	uiTab(0),
+	audioTab(0),
+	detailTab(0),
+	qualityTab(0),
+	hotkeyTab(0),
 	m_has_focus(true)
 {
 	alreadyCalled = false;
@@ -378,7 +384,7 @@ bool settings_frame::settingsChangedAbstract()
 {
 	bool rc = false;
 
-	rc |= hotkeyTab->HasProfileBeenModifiedOrSelected();
+	rc |= ( hotkeyTab && hotkeyTab->HasProfileBeenModifiedOrSelected() );
 	rc |= abstract_panel::settingsChanged;
 
 	return rc;
