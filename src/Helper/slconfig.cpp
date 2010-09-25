@@ -282,8 +282,3 @@ size_t slConfig::GetNumberOfEntries(bool bRecursive ) const
 		return m_global_config->GetNumberOfEntries( bRecursive  );
 	return 0;
 }
-
-slConfig::PathGuard slConfig::getPathGuard( const wxString& new_path )
-{
-	return PathGuard( *this, new_path );
-}

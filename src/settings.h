@@ -35,6 +35,7 @@ const bool DEFSETT_WEB_BROWSER_USE_DEFAULT = true;
 
 #include "useractions.h"
 #include "Helper/sortutil.h"
+#include "Helper/slconfig.h"
 
 class wxWindow;
 class wxConfigBase;
@@ -50,8 +51,6 @@ class wxColourData;
 class wxSize;
 class wxPoint;
 class wxPathList;
-//class slConfig;
-#include "Helper/slconfig.h"
 
 typedef std::map<unsigned int,unsigned int> ColumnMap;
 

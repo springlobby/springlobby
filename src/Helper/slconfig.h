@@ -53,24 +53,24 @@ class slConfig : public slConfigBaseType
 		size_t GetNumberOfEntries(bool bRecursive = false) const;
 
 		class PathGuard {
-				slConfig& m_config;
+				slConfig* m_config;
 				const wxString m_old_path;
+				DECLARE_NO_COPY_CLASS(PathGuard)
 			public:
-				PathGuard( slConfig& config, wxString new_path )
+				PathGuard( slConfig* config, const wxString& new_path )
 					:m_config( config ),
-					m_old_path( m_config.GetPath() )
+					m_old_path( m_config ? m_config->GetPath() : _T("") )
 				{
-					m_config.SetPath( new_path );
+					if ( m_config )
+						m_config->SetPath( new_path );
 				}
 
 				~PathGuard()
 				{
-					m_config.SetPath( m_old_path );
+					if ( m_config )
+						m_config->SetPath( m_old_path );
 				}
 		};
-
-		PathGuard getPathGuard( const wxString& new_path );
-
 
 	protected:
 		#ifdef __WXMSW__

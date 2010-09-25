@@ -134,8 +134,7 @@ void Settings::SaveSettings()
 
 wxArrayString Settings::GetGroupList( const wxString& base_key )
 {
-	wxString old_path = m_config->GetPath();
-	m_config->SetPath( base_key );
+	slConfig::PathGuard pathGuard ( m_config, base_key );
 	wxString groupname;
 	long dummy;
 	wxArrayString ret;
@@ -145,14 +144,12 @@ wxArrayString Settings::GetGroupList( const wxString& base_key )
 		ret.Add( groupname );
 		groupexist = m_config->GetNextGroup( groupname, dummy );
 	}
-	m_config->SetPath( old_path );
 	return ret;
 }
 
 wxArrayString Settings::GetEntryList( const wxString& base_key )
 {
-	wxString old_path = m_config->GetPath();
-	m_config->SetPath( base_key );
+	slConfig::PathGuard pathGuard ( m_config, base_key );
 	wxString entryname;
 	long dummy;
 	wxArrayString ret;
@@ -162,17 +159,13 @@ wxArrayString Settings::GetEntryList( const wxString& base_key )
 		ret.Add( entryname );
 		entryexist = m_config->GetNextEntry( entryname, dummy );
 	}
-	m_config->SetPath( old_path );
 	return ret;
 }
 
 unsigned int Settings::GetGroupCount( const wxString& base_key )
 {
-	wxString currentpath = m_config->GetPath();
-	m_config->SetPath( base_key );
-	unsigned int count = m_config->GetNumberOfGroups( false );
-	m_config->SetPath( currentpath );
-	return count;
+	slConfig::PathGuard pathGuard ( m_config, base_key );
+	return m_config->GetNumberOfGroups( false );
 }
 
 bool Settings::IsPortableMode() const
@@ -583,8 +576,8 @@ std::vector<ChannelJoinInfo> Settings::GetChannelsJoin()
 	for ( int i = 0; i < num; i++ )
 	{
 		ChannelJoinInfo info;
-		info.name = m_config->Read( wxString::Format( _T( "/Channels/AutoJoin/Channel%d/Name" ), i ), _T( "" ) );
-		info.password = m_config->Read( wxString::Format( _T( "/Channels/AutoJoin/Channel%d/Password" ), i ), _T( "" ) );
+		info.name = m_config->Read( wxString::Format( _T( "/Channels/AutoJoin/Channel%d/Name" ), i ) );
+		info.password = m_config->Read( wxString::Format( _T( "/Channels/AutoJoin/Channel%d/Password" ), i ) );
 		ret.push_back( info );
 	}
 	return ret;
@@ -1145,8 +1138,7 @@ std::map<wxString, wxString> Settings::GetHostingPreset( const wxString& name, i
 	std::map<wxString, wxString> ret;
 	wxArrayString list = GetEntryList( path_base );
 
-	wxString old_path = m_config->GetPath();
-	m_config->SetPath( path_base );
+	slConfig::PathGuard pathGuard ( m_config, path_base );
 
 	int count = list.GetCount();
 	for ( int i = 0; i < count; i ++ )
@@ -1155,9 +1147,6 @@ std::map<wxString, wxString> Settings::GetHostingPreset( const wxString& name, i
 		wxString val = m_config->Read( keyname );
 		ret[keyname] = val;
 	}
-
-	m_config->SetPath( old_path );
-
 	return ret;
 }
 
@@ -1810,8 +1799,7 @@ void Settings::SetTorrentListToResume( const std::vector<wxString>& list )
 std::vector<wxString> Settings::GetTorrentListToResume()
 {
 	std::vector<wxString> list;
-	wxString old_path = m_config->GetPath();
-	m_config->SetPath( _T( "/Torrent/ResumeList" ) );
+	slConfig::PathGuard pathGuard ( m_config, _T( "/Torrent/ResumeList" ) );
 	unsigned int TorrentCount = m_config->GetNumberOfEntries( false );
 	for ( unsigned int i = 0; i < TorrentCount; i++ )
 	{
@@ -1819,8 +1807,6 @@ std::vector<wxString> Settings::GetTorrentListToResume()
 		if ( m_config->Read( _T( "/Torrent/ResumeList/" ) + TowxString( i ), &ToAdd ) )
 			list.push_back( ToAdd );
 	}
-
-	m_config->SetPath( old_path );
 	return list;
 }
 
@@ -1910,15 +1896,13 @@ void Settings::SetPeopleList( const wxArrayString& friends, const wxString& grou
 wxArrayString Settings::GetPeopleList( const wxString& group  ) const
 {
 	wxArrayString list;
-	wxString old_path = m_config->GetPath();
-	m_config->SetPath( _T( "/Groups/" ) + group + _T( "/Members/" ) );
+	slConfig::PathGuard pathGuard ( m_config, _T( "/Groups/" ) + group + _T( "/Members/" ) );
 	unsigned int friendsCount  = m_config->GetNumberOfEntries( false );
 	for ( unsigned int i = 0; i < friendsCount ; i++ )
 	{
 		wxString ToAdd;
 		if ( m_config->Read( _T( "/Groups/" ) + group + _T( "/Members/" ) +  TowxString( i ), &ToAdd ) ) list.Add( ToAdd );
 	}
-	m_config->SetPath( old_path );
 	return list;
 }
 
@@ -2270,8 +2254,7 @@ long Settings::GetLanguageID ( )
 SortOrder Settings::GetSortOrder( const wxString& list_name )
 {
 	SortOrder order;
-	wxString old_path = m_config->GetPath();
-	m_config->SetPath( _T( "/UI/SortOrder/" ) + list_name + _T( "/" ) );
+	slConfig::PathGuard pathGuard ( m_config, _T( "/UI/SortOrder/" ) + list_name + _T( "/" ) );
 	unsigned int entries  = m_config->GetNumberOfGroups( false ); //do not recurse
 	for ( unsigned int i = 0; i < entries ; i++ )
 	{
@@ -2280,7 +2263,6 @@ SortOrder Settings::GetSortOrder( const wxString& list_name )
 		it.col = m_config->Read( TowxString( i ) + _T( "/col" ), i );
 		order[i] = it;
 	}
-	m_config->SetPath( old_path );
 	return order;
 }
 
