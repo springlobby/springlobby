@@ -572,12 +572,16 @@ int Settings::GetChannelJoinIndex( const wxString& name )
 std::vector<ChannelJoinInfo> Settings::GetChannelsJoin()
 {
 	std::vector<ChannelJoinInfo> ret;
-	int num = GetNumChannelsJoin();
-	for ( int i = 0; i < num; i++ )
+//	int num = GetNumChannelsJoin();
+	wxArrayString channels = GetGroupList( _T("/Channels/AutoJoin/") );
+	slConfig::PathGuard pathguard( m_config, _T("/Channels/AutoJoin/") );
+	for ( size_t i = 0; i < channels.Count(); ++i )
 	{
+		if( !channels[i].StartsWith( _T("Channel") ) )
+			continue;
 		ChannelJoinInfo info;
-		info.name = m_config->Read( wxString::Format( _T( "/Channels/AutoJoin/Channel%d/Name" ), i ) );
-		info.password = m_config->Read( wxString::Format( _T( "/Channels/AutoJoin/Channel%d/Password" ), i ) );
+		info.name = m_config->Read( channels[i] + _T("/Name" ) );
+		info.password = m_config->Read( channels[i] + _T("/Password" ) );
 		ret.push_back( info );
 	}
 	return ret;
@@ -1800,11 +1804,11 @@ std::vector<wxString> Settings::GetTorrentListToResume()
 {
 	std::vector<wxString> list;
 	slConfig::PathGuard pathGuard ( m_config, _T( "/Torrent/ResumeList" ) );
-	unsigned int TorrentCount = m_config->GetNumberOfEntries( false );
-	for ( unsigned int i = 0; i < TorrentCount; i++ )
+	wxArrayString entries = GetEntryList( _T( "/Torrent/ResumeList" ) );
+	for ( size_t i = 0; i < entries.Count(); ++i )
 	{
 		wxString ToAdd;
-		if ( m_config->Read( _T( "/Torrent/ResumeList/" ) + TowxString( i ), &ToAdd ) )
+		if ( m_config->Read( entries[i], &ToAdd ) )
 			list.push_back( ToAdd );
 	}
 	return list;

@@ -49,8 +49,8 @@ class slConfig : public slConfigBaseType
 		bool GetNextEntry(wxString& str, long& index) const;
 		bool GetFirstGroup(wxString& str, long& index) const;
 		bool GetNextGroup(wxString& str, long& index) const;
-		size_t GetNumberOfGroups(bool bRecursive = false) const;
-		size_t GetNumberOfEntries(bool bRecursive = false) const;
+//		size_t GetNumberOfGroups(bool bRecursive = false) const;
+//		size_t GetNumberOfEntries(bool bRecursive = false) const;
 
 		class PathGuard {
 				slConfig* m_config;

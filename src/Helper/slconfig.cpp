@@ -29,6 +29,7 @@ slConfig::slConfig( wxInputStream& in, const wxMBConv& conv )
 
 void slConfig::SetupGlobalconfig()
 {
+	SetRecordDefaults( true );
 	#ifdef __WXMSW__
 		wxString p (wxFileName::GetPathSeparator());
 		wxString global_config_path = wxString::Format( _T("%s%s%s.global.conf"),
@@ -205,7 +206,7 @@ bool slConfig::GetFirstEntry(wxString& str, long& index) const
 	if ( slConfigBaseType::GetFirstEntry( str, index) )
 		return true;
 	long index_global;
-	if ( !m_global_config && m_global_config->GetFirstEntry( str, index_global) )
+	if ( !( m_global_config && m_global_config->GetFirstEntry( str, index_global) ) )
 		return false;
 	//the local has no entry, but the global does
 	//setup an entry in the forwards map, so we can redirect subsequent call to GetNextEntry to the global
@@ -236,7 +237,7 @@ bool slConfig::GetFirstGroup(wxString& str, long& index) const
 	if ( slConfigBaseType::GetFirstGroup( str, index) )
 		return true;
 	long index_global;
-	if ( !m_global_config && m_global_config->GetFirstGroup( str, index_global) )
+	if ( !( m_global_config && m_global_config->GetFirstGroup( str, index_global) ) )
 		return false;
 	//the local has no entry, but the global does
 	//setup an entry in the forwards map, so we can redirect subsequent call to GetNextEntry to the global
@@ -262,23 +263,25 @@ bool slConfig::GetNextGroup(wxString& str, long& index) const
 }
 
 //! only return gobal number if local is zero
-size_t slConfig::GetNumberOfGroups(bool bRecursive ) const
-{
-	size_t this_count = slConfigBaseType::GetNumberOfGroups( bRecursive  );
-	if ( this_count != 0 )
-		return this_count;
-	if ( m_global_config )
-		return m_global_config->GetNumberOfGroups( bRecursive  );
-	return 0;
-}
+//size_t slConfig::GetNumberOfGroups(bool bRecursive ) const
+//{
+//	return slConfigBaseType::GetNumberOfGroups( bRecursive  );
+////	size_t this_count =
 
-//! only return gobal number if local is zero
-size_t slConfig::GetNumberOfEntries(bool bRecursive ) const
-{
-	size_t this_count = slConfigBaseType::GetNumberOfEntries( bRecursive  );
-	if ( this_count != 0 )
-		return this_count;
-	if ( m_global_config )
-		return m_global_config->GetNumberOfEntries( bRecursive  );
-	return 0;
-}
+//	if ( this_count != 0 )
+//		return this_count;
+//	if ( m_global_config )
+//		return m_global_config->GetNumberOfGroups( bRecursive  );
+//	return 0;
+//}
+
+////! only return gobal number if local is zero
+//size_t slConfig::GetNumberOfEntries(bool bRecursive ) const
+//{
+//	size_t this_count = slConfigBaseType::GetNumberOfEntries( bRecursive  );
+//	if ( this_count != 0 )
+//		return this_count;
+//	if ( m_global_config )
+//		return m_global_config->GetNumberOfEntries( bRecursive  );
+//	return 0;
+//}
