@@ -306,11 +306,6 @@ void BattleListTab::SetFilterActiv( bool activ )
 	m_battle_list->MarkDirtySort();
 }
 
-void DoHost(wxWindow* parent)
-{
-
-}
-
 void BattleListTab::OnHost( wxCommandEvent& /*unused*/ )
 {
 	if ( !ui().IsConnected() )

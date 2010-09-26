@@ -5,6 +5,9 @@
 #include "images/springlobby.xpm"
 
 #include <wx/image.h>
+#include <wx/msgdlg.h>
+
+const wxString Customizations::IntroKey = wxString ( _T("intro_file") );
 
 /** @brief GetBackground
   *
@@ -92,6 +95,24 @@ bool Customizations::Init(const wxString& modname)
 bool Customizations::Active() const
 {
 	return m_active;
+}
+
+bool Customizations::KeyExists( const wxString& key ) const
+{
+	OptionType dummy;
+	return m_customs.keyExists( key, OptionsWrapper::ModCustomizations, false, dummy );
+}
+
+bool Customizations::Provides( const wxString& key ) const
+{
+	return m_active && KeyExists( key );
+}
+
+wxString Customizations::GetIntroText() const
+{
+	if ( !m_active )
+		return wxEmptyString;
+	return usync().GetTextfileAsString( m_modname, m_customs.getSingleValue( IntroKey ) );
 }
 
 /** @brief SLcustomizations
