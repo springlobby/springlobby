@@ -30,6 +30,8 @@
 #include "wx/config.h"
 #include "wx/tokenzr.h"
 
+#include "CommandOrderDlg.h"
+
 
 // class definition for wxKeyProfile
 IMPLEMENT_CLASS(wxKeyProfile, wxKeyBinder)
@@ -107,7 +109,8 @@ BEGIN_EVENT_TABLE(wxKeyConfigPanel, wxPanel)
     EVT_BUTTON(wxKEYBINDER_REMOVEALL_KEY_ID, wxKeyConfigPanel::OnRemoveAllKey)
     EVT_BUTTON(wxKEYBINDER_ADD_PROFILEBTN_ID, wxKeyConfigPanel::OnAddProfile)
     EVT_BUTTON(wxKEYBINDER_REMOVE_PROFILEBTN_ID, wxKeyConfigPanel::OnRemoveProfile)
-
+	EVT_LISTBOX_DCLICK(wxKEYBINDER_BINDINGS_BOX_ID, wxKeyConfigPanel::OnBindingDblClick)
+    
     // during idle cycles, wxKeyConfigPanel checks if the wxKeyMonitorTextCtrl
     // associated must be cleared...
 
@@ -1243,7 +1246,7 @@ void wxKeyConfigPanel::BuildCtrls()
     m_pRemoveBtn = new wxButton(this, wxKEYBINDER_REMOVE_KEY_ID, wxT("&Remove"));
     m_pRemoveAllBtn = new wxButton(this, wxKEYBINDER_REMOVEALL_KEY_ID, wxT("Remove all"));
 
-    m_pCurrCmdField = new wxStaticText(this, -1, wxT(""), wxDefaultPosition,
+    m_pCurrCmdField = new wxStaticText( this, -1, wxT(""), wxDefaultPosition,
         wxSize(-1, 20), wxSIMPLE_BORDER | wxST_NO_AUTORESIZE | wxALIGN_CENTRE);
 
     // we won't make it white because it must be clear to the user that this
@@ -2002,6 +2005,33 @@ void wxKeyConfigPanel::OnBindingSelected(wxCommandEvent &)
     // the remove button should be enabled if the
     // element just selected is valid...
     UpdateButtons();
+}
+
+void wxKeyConfigPanel::OnBindingDblClick(wxCommandEvent &)
+{
+    wxKBLogDebug(wxT("wxKeyConfigPanel::OnBindingDblClick"));
+
+	const int selIdx = m_pBindings->GetSelection();
+	if ( selIdx == wxNOT_FOUND )
+	{
+		return;
+	}
+
+	CmdSet cmds = m_kBinder.GetCmdBindsTo(m_pBindings->GetStringSelection());
+
+	assert( cmds.size() > 0 );
+
+	CommandOrderDlg dlg( m_pBindings->GetStringSelection(), cmds, this );
+	if ( dlg.ShowModal() == wxID_OK )
+	{
+		// now the user has modified the currently selected profile...
+		m_bProfileHasBeenModified = TRUE;
+		m_bProfileModifiedOrChanged = TRUE;
+
+#ifdef wxKEYBINDER_AUTO_SAVE
+		ApplyChanges();
+#endif
+	}
 }
 
 void wxKeyConfigPanel::OnCategorySelected(wxCommandEvent &ev)

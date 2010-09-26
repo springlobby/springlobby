@@ -14,7 +14,7 @@ struct spring_command
 
 	bool operator<( const spring_command& other ) const
 	{
-		return this->orderIdx < other.orderIdx;
+		return ( this->orderIdx < other.orderIdx ) || (  this->orderIdx == other.orderIdx && this->command < other.command );
 	}
 
 	bool operator==( const spring_command& other ) const

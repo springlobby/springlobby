@@ -38,7 +38,7 @@ void key_binding::unbind( const wxString& cmd, const wxString& keyString )
 		return;
 	}
 
-	this->m_k2c[ keyString ].erase( keyString );
+	this->m_k2c[ keyString ].erase( cmd );
 	this->m_c2k[cmd].erase( keyString );
 }
 
@@ -74,7 +74,7 @@ const key_binding key_binding::operator-(const key_binding& other) const
 	{
 		if ( otherKeys.find( iter->first ) == otherKeys.end() )
 		{
-			//command does not exist in other, so we can keep all
+			//key does not exist in other, so we can keep all
 			resBind.bind( iter->second, iter->first );
 			continue;
 

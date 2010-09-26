@@ -29,39 +29,46 @@ hotkey_panel::hotkey_panel(wxWindow *parent, wxWindowID id , const wxString &tit
 													: wxScrolledWindow(parent, id, pos, size, style|wxTAB_TRAVERSAL|wxHSCROLL,title),
 													m_uikeys_manager(sett().GetCurrentUsedUikeys() )
 {
-	m_pKeyConfigPanel = new wxKeyConfigPanel( this, -1, wxDefaultPosition, wxDefaultSize, (wxKEYBINDER_DEFAULT_STYLE & ~wxKEYBINDER_SHOW_APPLYBUTTON), wxT("HotkeyPanel"), 
-																		wxT("Selection"), wxCommandEventHandler(hotkey_panel::ButtonAddSelectionCommandClicked),
-																		wxT("Custom"), wxCommandEventHandler(hotkey_panel::ButtonAddCustomCommandClicked),
-																		wxT("Add Command:") );
-	KeynameConverter::initialize();
+	try
+	{
+		m_pKeyConfigPanel = new wxKeyConfigPanel( this, -1, wxDefaultPosition, wxDefaultSize, (wxKEYBINDER_DEFAULT_STYLE & ~wxKEYBINDER_SHOW_APPLYBUTTON), wxT("HotkeyPanel"), 
+																			wxT("Selection"), wxCommandEventHandler(hotkey_panel::ButtonAddSelectionCommandClicked),
+																			wxT("Custom"), wxCommandEventHandler(hotkey_panel::ButtonAddCustomCommandClicked),
+																			wxT("Add Command:") );
+		KeynameConverter::initialize();
 
-	UpdateControls();
+		UpdateControls();
 
-	//group box
-	wxStaticBoxSizer* sbSizer1 = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Hotkey Configuration") ), wxVERTICAL );
-	sbSizer1->Add( m_pKeyConfigPanel );
+		//group box
+		wxStaticBoxSizer* sbSizer1 = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Hotkey Configuration") ), wxVERTICAL );
+		sbSizer1->Add( m_pKeyConfigPanel );
 
-	//borders
-	wxSizer * parentSizer = new wxBoxSizer(wxHORIZONTAL);
-	wxSizer * childLSizer = new wxBoxSizer(wxVERTICAL);
+		//borders
+		wxSizer * parentSizer = new wxBoxSizer(wxHORIZONTAL);
+		wxSizer * childLSizer = new wxBoxSizer(wxVERTICAL);
 
-	childLSizer->Add(0, 5, 0);
-	childLSizer->Add(sbSizer1,0,wxEXPAND|wxALL,5);
+		childLSizer->Add(0, 5, 0);
+		childLSizer->Add(sbSizer1,0,wxEXPAND|wxALL,5);
 
-	parentSizer->Add(10, 0, 0);
-	parentSizer->Add(childLSizer,0,wxEXPAND|wxTOP,5);
+		parentSizer->Add(10, 0, 0);
+		parentSizer->Add(childLSizer,0,wxEXPAND|wxTOP,5);
 
-	
-	//content
-	wxFlexGridSizer* fgSizer1;
-	fgSizer1 = new wxFlexGridSizer( 1, 1, 0, 0 ); 
-	fgSizer1->SetFlexibleDirection( wxBOTH );
-	fgSizer1->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	fgSizer1->Add( parentSizer, 1, wxEXPAND, 5 );
+		
+		//content
+		wxFlexGridSizer* fgSizer1;
+		fgSizer1 = new wxFlexGridSizer( 1, 1, 0, 0 ); 
+		fgSizer1->SetFlexibleDirection( wxBOTH );
+		fgSizer1->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+		fgSizer1->Add( parentSizer, 1, wxEXPAND, 5 );
 
-	this->SetSizer( fgSizer1 );
-	
-	this->Layout();
+		this->SetSizer( fgSizer1 );
+		
+		this->Layout();
+	}
+	catch( const HotkeyException& ex )
+	{
+		customMessageBox(SS_MAIN_ICON, TowxString(ex.what()), _("Hotkey Error"), wxOK | wxICON_HAND );
+	}
 }
 
 
@@ -182,7 +189,7 @@ void hotkey_panel::SaveSettings()
 					for( command_set::command_list::const_iterator iiter = cmds.begin(); iiter != cmds.end(); ++iiter )
 					{
 						//only write non-default bindings to settings
-						sett().SetHotkey( profile.GetName(), iiter->command, iter->first, false );
+						sett().SetHotkey( profile.GetName(), iiter->command, iter->first, iiter->orderIdx );
 					}
 				}
 			}
@@ -198,7 +205,7 @@ void hotkey_panel::SaveSettings()
 					const command_set::command_list& cmds = iter->second.getCommands();
 					for( command_set::command_list::const_iterator iiter = cmds.begin(); iiter != cmds.end(); ++iiter )
 					{
-						sett().SetHotkey( profile.GetName(), iiter->command, iter->first, true );
+						sett().SetHotkey( profile.GetName(), iiter->command, iter->first, -1 );
 					}
 				}
 			}
@@ -376,19 +383,21 @@ key_binding_collection hotkey_panel::getProfilesFromSettings( )
 			wxArrayString keys = sett().GetHotkeyProfileCommandKeys( profName, cmd );
 			for( size_t j=0; j < keys.GetCount(); ++j )
 			{
-				const wxString& key = sett().GetHotkey( profName, cmd, keys.Item(j) );
-				const wxString& springKey = KeynameConverter::spring2wxKeybinder( keys.Item(j), true );
-				if ( key == wxT("bind") )
+				const wxString& orderIdxStr = sett().GetHotkey( profName, cmd, keys.Item(j) );
+				long orderIdx = 0;
+				if ( orderIdxStr.ToLong( &orderIdx ) == false )
 				{
-					coll[profName].bind( cmd, springKey );
+					throw HotkeyException( _("Error parsing springsettings hotkey profile. Invalid order index: ") + orderIdxStr );
 				}
-				else if ( key == wxT("unbind") )
+
+				const wxString& springKey = KeynameConverter::spring2wxKeybinder( keys.Item(j), true );
+				if ( orderIdx == -1 )
 				{
 					coll[profName].unbind( cmd, springKey );
 				}
 				else
 				{
-					throw HotkeyException( _("Unknown key action: ") + key );
+					coll[profName].bind( cmd, springKey, orderIdx );
 				}
 			}
 		}
@@ -423,16 +432,16 @@ void hotkey_panel::UpdateControls(int /*unused*/)
 			const key_binding::key_binding_k2c& cmds = piter->second.getK2C();
 			for( key_binding::key_binding_k2c::const_iterator iter = cmds.begin(); iter != cmds.end(); ++iter )
 			{
-				wxCmd* const pCmd = profile.GetCmd( CommandList::getCommandByName(iter->first).m_id );
-				
-				if ( pCmd == NULL )
-				{
-					throw HotkeyException(_("Command not found while building tree view!"));
-				}
-
 				const command_set::command_list& cmds = iter->second.getCommands();
 				for( command_set::command_list::const_iterator iiter = cmds.begin(); iiter != cmds.end(); ++iiter )
 				{
+					wxCmd* const pCmd = profile.GetCmd( CommandList::getCommandByName(iiter->command).m_id );
+				
+					if ( pCmd == NULL )
+					{
+						throw HotkeyException(_("Command not found while building tree view!"));
+					}
+
 			//		wxCmd* pCmd = profile.GetCmd( CommandList::getCommandByName( iiter->command ).m_id );
 					pCmd->AddShortcut( KeynameConverter::spring2wxKeybinder( iter->first ), iiter->orderIdx );
 				}

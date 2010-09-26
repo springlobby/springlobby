@@ -4135,10 +4135,10 @@
             <property name="minimum_size"></property>
             <property name="name">CommandOrderDlgBase</property>
             <property name="pos"></property>
-            <property name="size">370,244</property>
+            <property name="size">-1,-1</property>
             <property name="style">wxCAPTION</property>
             <property name="subclass"></property>
-            <property name="title">Change order</property>
+            <property name="title">Change Order</property>
             <property name="tooltip"></property>
             <property name="window_extra_style"></property>
             <property name="window_name"></property>
@@ -4152,7 +4152,7 @@
             <event name="OnHibernate"></event>
             <event name="OnIconize"></event>
             <event name="OnIdle"></event>
-            <event name="OnInitDialog"></event>
+            <event name="OnInitDialog">OnInitDialog</event>
             <event name="OnKeyDown"></event>
             <event name="OnKeyUp"></event>
             <event name="OnKillFocus"></event>
@@ -4264,7 +4264,7 @@
                         <property name="name">m_listBoxCommands</property>
                         <property name="permission">protected</property>
                         <property name="pos"></property>
-                        <property name="size">265,150</property>
+                        <property name="size">200,150</property>
                         <property name="style"></property>
                         <property name="subclass"></property>
                         <property name="tooltip"></property>
@@ -4477,7 +4477,7 @@
                         <property name="fg"></property>
                         <property name="font"></property>
                         <property name="hidden">0</property>
-                        <property name="id">wxID_ANY</property>
+                        <property name="id">wxID_CANCEL</property>
                         <property name="label">Cancel</property>
                         <property name="maximum_size"></property>
                         <property name="minimum_size"></property>
@@ -4491,7 +4491,7 @@
                         <property name="window_extra_style"></property>
                         <property name="window_name"></property>
                         <property name="window_style"></property>
-                        <event name="OnButtonClick">OnButtonCancelClick</event>
+                        <event name="OnButtonClick"></event>
                         <event name="OnChar"></event>
                         <event name="OnEnterWindow"></event>
                         <event name="OnEraseBackground"></event>

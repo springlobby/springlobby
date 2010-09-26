@@ -2587,15 +2587,10 @@ void Settings::SetBroadcastEverywhere(bool value)
 }
 
 //Hotkeys stuff (for springsettings)
-void Settings::SetHotkey( const wxString& profileName, const wxString& command, const wxString& key, bool unbind )
+// oderidx == -1 means unbind
+void Settings::SetHotkey( const wxString& profileName, const wxString& command, const wxString& key, int orderIdx )
 {
-	wxString bindStr = wxT("bind");
-	if ( unbind )
-	{
-		bindStr = wxT("unbind");
-	}
-
-	m_config->Write(_T( "/HotkeyProfiles/") + profileName + _T("/") + command + _T("/") + key, bindStr );
+	m_config->Write(_T( "/HotkeyProfiles/") + profileName + _T("/") + command + _T("/") + key, wxString::Format(wxT("%i"),orderIdx) );
 }
 
 wxString Settings::GetHotkey( const wxString& profileName, const wxString& command, const wxString& key )

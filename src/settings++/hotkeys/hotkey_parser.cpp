@@ -97,25 +97,6 @@ bool hotkey_parser::processLine( const wxString& line )
 	else if ( cmd == wxT("unbind") )
 	{
 		this->m_bindings.unbind( action, key );
-		/*
-		if ( this->m_bindings.getK2C().find( key ) == this->m_bindings.getK2C().end() )
-		{
-			//nothing to unbind
-			return true;
-		}
-
-		if ( this->m_bindings.getK2C()[key].find( action ) == this->m_bindings.getK2C()[key].end() )
-		{
-			//nothing to unbind
-			return true;
-		} 
-
-		this->bindsK2C[key].erase( action );
-		if ( this->bindsK2C[key].size() == 0 )
-		{
-			//delete empty keys
-			this->bindsK2C.erase( key );
-		}*/
 	}
 	else
 	{
@@ -129,33 +110,6 @@ bool hotkey_parser::processLine( const wxString& line )
 hotkey_parser::~hotkey_parser(void)
 {
 }
-
-/*
-void hotkey_parser::dumpIncludeSourceCode( const wxString& filename )
-{
-	std::ofstream f;
-	f.open( C_STRING(filename) );
-
-	if ( !f.is_open() )
-	{
-		throw HotkeyException( _("Could not open file for writing: ") + filename );
-	}
-
-	for( key_binding::const_iterator iter = bindsC2K.begin(); iter != bindsC2K.end(); ++iter )
-	{
-		const key_set& keys = iter->second;
-		for( key_set::const_iterator iiter = keys.begin(); iiter != keys.end(); iiter++ )
-		{
-			f << "SpringDefaultProfile::addBinding( _T(\"";
-			f << iter->first;
-			f << "\"), _T(\"";
-			f << (*iiter);
-			f << "\") );";
-			f << '\n';
-		}
-	}
-}*/
-
 std::vector<wxString> hotkey_parser::tokenize_uikeys_line( const wxString& line )
 {
 	wxStringTokenizer tkz( line, wxT(" \t") );
@@ -221,7 +175,6 @@ void hotkey_parser::writeBindingsToFile( const key_binding& springbindings )
 		const command_set::command_list& cmdList = iter->second.getCommands();
 		for( command_set::command_list::const_iterator iiter = cmdList.begin(); iiter != cmdList.end(); ++iiter )
 		{
-//			newFile.AddLine( wxT("bind\t\t") + KeynameConverter::spring2wxKeybinder( (*iiter), true ) + wxT("\t") + iter->first );
 			newFile.AddLine( wxT("bind\t\t") + iter->first + wxT("\t") + iiter->command );
 		}
 	}
