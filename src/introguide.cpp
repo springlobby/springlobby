@@ -31,8 +31,9 @@ EVT_CHECKBOX            ( GRAPHIC_TROUB, IntroGuide::OnGraphicTroubles  )
 EVT_CHECKBOX            ( HELP_LINKS, IntroGuide::OnWikiLinks           )
 #endif
 END_EVENT_TABLE()
-IntroGuide::IntroGuide():
-wxFrame( (wxFrame*)&ui().mw(), -1, _("Newbies guide"), wxPoint(50, 50), wxSize(800,600) )
+
+IntroGuide::IntroGuide()
+	: wxFrame( (wxFrame*)&ui().mw(), -1, _("Newbies guide"), wxPoint(50, 50), wxSize(800,600) )
 {
 	SpringOverview << _("Spring is just an engine, alone it won't do much, mods are games that run on the engine.\n");
 	SpringOverview << _("You will need to install at least a map and a mod in order to play.\n\n");
@@ -91,30 +92,23 @@ wxFrame( (wxFrame*)&ui().mw(), -1, _("Newbies guide"), wxPoint(50, 50), wxSize(8
 
 	wxBoxSizer* MainSizer = new wxBoxSizer(wxVERTICAL);
 	wxFlexGridSizer* ButtonSizer = new wxFlexGridSizer(3,2,2,2);
-	wxBoxSizer* TextSizer = new wxBoxSizer(wxVERTICAL);
-	wxBoxSizer* HeaderSizer = new wxBoxSizer(wxVERTICAL);
+	wxBoxSizer* TextSizer = new wxBoxSizer(wxHORIZONTAL);
+	wxBoxSizer* HeaderSizer = new wxBoxSizer(wxHORIZONTAL);
 
 	wxStaticText* Heading = new wxStaticText( this, -1, _("Introduction to Spring and Frequently Asked Questions\nIt's HIGHLY recommended you read this through completely.\nClick on a button to view the topic."), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE );
 	Heading->SetForegroundColour(wxColour(20,0,200));
 	wxFont tempfont = Heading->GetFont();
 	tempfont.SetPointSize(14);
 	Heading->SetFont(tempfont);
-	HeaderSizer->Add(Heading,1,wxEXPAND|wxRIGHT);
-#if wxUSE_TOGGLEBTN
-	SpringDescription = new wxToggleButton( this, SPRING_DESC, _( "Spring overview" ) );
-	InstallingContent = new wxToggleButton( this, INSTALL_DESC, _( "Installing content" ) );
-	SingleDescription = new wxToggleButton( this, SINGLE_DESC, _( "Singleplayer mode" ) );
-	MultiDescription = new wxToggleButton( this, MULTI_DESC, _( "Multiplayer mode" ) );
-	GraphicTroubles = new wxToggleButton( this, GRAPHIC_TROUB, _( "Graphic and performance problems" ) );
-	WikiLinks = new wxToggleButton( this, HELP_LINKS, _( "Useful links" ) );
-#else
-	SpringDescription = new wxCheckBox( this, SPRING_DESC, _( "Spring overview" ) );
-	InstallingContent = new wxCheckBox( this, INSTALL_DESC, _( "Installing content" ) );
-	SingleDescription = new wxCheckBox( this, SINGLE_DESC, _( "Singleplayer mode" ) );
-	MultiDescription = new wxCheckBox( this, MULTI_DESC, _( "Multiplayer mode" ) );
-	GraphicTroubles = new wxCheckBox( this, GRAPHIC_TROUB, _( "Graphic and performance problems" ) );
-	WikiLinks = new wxCheckBox( this, HELP_LINKS, _( "Useful links" ) );
-#endif
+	HeaderSizer->Add(Heading,1,wxALIGN_CENTER_HORIZONTAL | wxEXPAND );
+
+	SpringDescription = new ButtonType( this, SPRING_DESC, _( "Spring overview" ) );
+	InstallingContent = new ButtonType( this, INSTALL_DESC, _( "Installing content" ) );
+	SingleDescription = new ButtonType( this, SINGLE_DESC, _( "Singleplayer mode" ) );
+	MultiDescription = new ButtonType( this, MULTI_DESC, _( "Multiplayer mode" ) );
+	GraphicTroubles = new ButtonType( this, GRAPHIC_TROUB, _( "Graphic and performance problems" ) );
+	WikiLinks = new ButtonType( this, HELP_LINKS, _( "Useful links" ) );
+
 	ButtonSizer->Add(SpringDescription,0,wxEXPAND|wxRIGHT);
 	ButtonSizer->Add(InstallingContent,0,wxEXPAND|wxRIGHT);
 	ButtonSizer->Add(SingleDescription,0,wxEXPAND|wxRIGHT);
@@ -123,11 +117,11 @@ wxFrame( (wxFrame*)&ui().mw(), -1, _("Newbies guide"), wxPoint(50, 50), wxSize(8
 	ButtonSizer->Add(WikiLinks,0,wxEXPAND|wxRIGHT);
 
 	m_text_stuff = new wxTextCtrl( this, TEXT_DISPLAY, _T( "" ), wxDefaultPosition, wxSize(-1,-1), wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_AUTO_URL );
-	TextSizer->Add(m_text_stuff,1,wxEXPAND|wxTOP,2);
+	TextSizer->Add(m_text_stuff,4,wxALIGN_CENTER| wxEXPAND|wxTOP,2);
 
-	MainSizer->Add(HeaderSizer);
-	MainSizer->Add(ButtonSizer);
-	MainSizer->Add(TextSizer, 4, wxEXPAND | wxALL, 2);
+	MainSizer->Add(HeaderSizer, 0, wxALIGN_CENTRE|  wxALL, 5 );
+	MainSizer->Add(ButtonSizer, 0, wxALIGN_CENTRE|  wxALL, 5 );
+	MainSizer->Add(TextSizer,	4, wxALIGN_CENTRE|  wxEXPAND| wxALL, 5 );
 
 	SpringDescription->SetValue(true); // default activate spring help text
 	m_text_stuff->SetValue(SpringOverview);

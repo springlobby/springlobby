@@ -24,6 +24,9 @@ class HostBattleDialog : public wxDialog, public WindowAttributesPickle
 
 		void ReloadModList();
 
+		//! this shows an instance and handles everything wrt data feeding and input handling
+		static void Run( wxWindow* parent );
+
 
 	protected:
 

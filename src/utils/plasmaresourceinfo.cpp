@@ -54,6 +54,7 @@ void PlasmaResourceInfo::FromString( const wxString& str )
 		m_dependencies.Add( vec[i] );
 }
 
-PlasmaResourceInfo::PlasmaResourceInfo()
+PlasmaResourceInfo::PlasmaResourceInfo() :
+	m_size_KB(0), m_type(unknown)
 {
 }

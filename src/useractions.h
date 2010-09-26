@@ -58,8 +58,8 @@ public:
     void DeleteGroup(const wxString& name );
     void RemoveUser(const wxString& name );
     void ChangeAction( const wxString& group, const ActionType action, bool add = true );
-    ActionType GetGroupAction( const wxString& group );
-    wxString GetGroupOfUser( const wxString& user ) ;
+    ActionType GetGroupAction( const wxString& group ) const;
+    wxString GetGroupOfUser( const wxString& user ) const;
     void SetGroupColor( const wxString& group, const wxColour& color );
     wxColour GetGroupColor( const wxString& group );
     bool IsKnown( const wxString& name, bool outputWarning = false ) const;

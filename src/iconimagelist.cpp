@@ -276,7 +276,7 @@ int IconImageList::GetRankLimitIcon( int rank,  bool showlowest )
 	{
 		rank = -rank -1 + m_minimum_rank_requirement_border;
 	}
-	if ( rank > m_rank_requirements.size() ) return ICON_RANK_UNKNOWN;
+	if ( rank > int(m_rank_requirements.size()) ) return ICON_RANK_UNKNOWN;
 
 	return m_rank_requirements[rank];
 }

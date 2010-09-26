@@ -9,7 +9,7 @@ class WindowAttributesPickle
 {
 public:
 	WindowAttributesPickle( const wxString& name, wxTopLevelWindow* window, const wxSize& default_size );
-	~WindowAttributesPickle();
+	virtual ~WindowAttributesPickle();
 protected:
 	void SaveAttributes();
 	void LoadAttributes();

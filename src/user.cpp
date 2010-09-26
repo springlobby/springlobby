@@ -19,7 +19,8 @@ User::User( Server& serv )
     m_battle(0),
     m_flagicon_idx( icons().GetFlagIcon( _T("") ) ),
     m_rankicon_idx( icons().GetRankIcon( 0 ) ),
-    m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) )
+    m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) ),
+    m_sideicon_idx( icons().ICON_NONE )
 {}
 
 User::User( const wxString& nick, Server& serv )
@@ -28,7 +29,8 @@ User::User( const wxString& nick, Server& serv )
     m_battle(0),
     m_flagicon_idx( icons().GetFlagIcon( _T("") ) ),
     m_rankicon_idx( icons().GetRankIcon( 0 ) ),
-    m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) )
+    m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) ),
+    m_sideicon_idx( icons().ICON_NONE )
 {}
 
 User::User( const wxString& nick, const wxString& country, const int& cpu, Server& serv)
@@ -37,7 +39,8 @@ User::User( const wxString& nick, const wxString& country, const int& cpu, Serve
     m_battle(0),
     m_flagicon_idx( icons().GetFlagIcon( country ) ),
     m_rankicon_idx( icons().GetRankIcon( 0 ) ),
-    m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) )
+    m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) ),
+    m_sideicon_idx( icons().ICON_NONE )
 {}
 
 User::User( const wxString& nick )
@@ -46,7 +49,8 @@ User::User( const wxString& nick )
     m_battle(0),
     m_flagicon_idx( icons().GetFlagIcon( _T("") ) ),
     m_rankicon_idx( icons().GetRankIcon( 0 ) ),
-    m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) )
+    m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) ),
+    m_sideicon_idx( icons().ICON_NONE )
 {}
 
 User::User( const wxString& nick, const wxString& country, const int& cpu )
@@ -55,7 +59,8 @@ User::User( const wxString& nick, const wxString& country, const int& cpu )
     m_battle(0),
     m_flagicon_idx( icons().GetFlagIcon( country ) ),
     m_rankicon_idx( icons().GetRankIcon( 0 ) ),
-    m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) )
+    m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) ),
+    m_sideicon_idx( icons().ICON_NONE )
 {}
 
 User::User()
@@ -64,7 +69,8 @@ User::User()
     m_battle(0),
     m_flagicon_idx( icons().GetFlagIcon( _T("") ) ),
     m_rankicon_idx( icons().GetRankIcon( 0 ) ),
-    m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) )
+    m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) ),
+    m_sideicon_idx( icons().ICON_NONE )
 {}
 
 User::~User(){

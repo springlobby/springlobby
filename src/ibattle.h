@@ -20,28 +20,34 @@ class wxTimer;
 
 struct BattleStartRect
 {
-    BattleStartRect()
+    BattleStartRect() :
+        toadd(false),
+        todelete(false),
+        toresize(false),
+        exist(false),
+        ally(-1),
+        top(-1),
+        left(-1),
+        right(-1),
+        bottom(-1)
     {
-        toadd = false;
-        todelete = false;
-        exist = false;
-        toresize = false;
     }
+
     bool toadd;
     bool todelete;
     bool toresize;
     bool exist;
-
-    bool IsOk()
-    {
-        return exist && !todelete;
-    }
 
     int ally;
     int top;
     int left;
     int right;
     int bottom;
+
+    bool IsOk() const
+    {
+        return exist && !todelete;
+    }
 };
 
 

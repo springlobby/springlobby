@@ -67,8 +67,17 @@ protected:
 
     struct colInfo {
         colInfo(int n, wxString l, wxString t, bool c, int s):
-            col_num(n),label(l),tip(t),can_resize(c),size(s) {}
-        colInfo(){}
+            col_num(n),
+			label(l),
+            tip(t),
+            can_resize(c),
+            size(s)
+		{}
+        colInfo():
+            col_num(0),
+            can_resize(false),
+            size(0)
+		{}
 
         int col_num;
         wxString label;
@@ -336,8 +345,8 @@ protected:
     //! the Comparator object passed to the SLInsertionSort function
     ItemComparator<DataType> m_comparator;
 
-    bool RemoveItem( const DataImp item );
-    bool AddItem( const DataImp item );
+    bool RemoveItem( const DataImp& item );
+    bool AddItem( const DataImp& item );
 
     long m_periodic_sort_timer_id;
     wxTimer m_periodic_sort_timer;

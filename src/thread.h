@@ -38,7 +38,7 @@ class WorkItem
   public:
 
     /** @brief Construct a new WorkItem */
-    WorkItem() : m_priority(0), m_toBeDeleted(true) {}
+    WorkItem() : m_priority(0), m_toBeDeleted(true), m_queue(NULL) {}
 
     /** @brief Destructor */
     virtual ~WorkItem() {}

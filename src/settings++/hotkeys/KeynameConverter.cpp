@@ -131,7 +131,7 @@ wxString KeynameConverter::spring2wxKeybinder( const wxString& keystring, bool r
 		str << std::hex << tmp.ToAscii();
 		unsigned int c = 0x00;
 		str >> c;
-		kbKey += c;
+		kbKey << c;
 	}
 	else
 	{

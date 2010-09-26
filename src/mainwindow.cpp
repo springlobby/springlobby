@@ -60,7 +60,6 @@
 #include "user.h"
 #include "mapselectdialog.h"
 
-#include "images/springlobby.xpm"
 #include "images/chat_icon.png.h"
 #include "images/join_icon.png.h"
 #include "images/single_player_icon.png.h"
@@ -72,11 +71,13 @@
 
 #include "settings++/frame.h"
 #include "utils/customdialogs.h"
+#include "utils/platform.h"
 
 #include "updater/updatehelper.h"
 #include "channel/autojoinchanneldialog.h"
 #include "channel/channelchooserdialog.h"
 #include "Helper/imageviewer.h"
+#include "customizations.h"
 
 #if defined(__WXMSW__)
     #include <wx/msw/winundef.h>
@@ -119,8 +120,8 @@ END_EVENT_TABLE()
 MainWindow::TabNames MainWindow::m_tab_names;
 
 MainWindow::MainWindow( )
-	: wxFrame( (wxFrame*)0, -1, _("SpringLobby"), wxPoint(50, 50) ),
-	WindowAttributesPickle( _T("MAINWINDOW"), this, wxSize(450, 340) ),
+	: wxFrame( (wxFrame*)0, -1, GetAppName(), wxPoint(50, 50) ),
+	WindowAttributesPickle( _T("MAINWINDOW"), this, wxSize(720, 576) ),
 	m_opts_dialog(NULL),
     m_autojoin_dialog(NULL),
     m_channel_chooser(NULL),
@@ -128,7 +129,8 @@ MainWindow::MainWindow( )
 	m_has_focus(true)
 {
 	assert( !wxGetApp().IsSimple() );
-	SetIcon( wxIcon(springlobby_xpm) );
+	//! \todo use customised icon
+	SetIcon( SLcustomizations().GetAppIcon() );
 
 	GetAui().manager = new AuiManagerContainer::ManagerType( this );
 
@@ -315,11 +317,8 @@ void MainWindow::OnClose( wxCloseEvent& /*unused*/ )
 		forceSettingsFrameClose();
 		freeStaticBox();
 
-		if ( m_autojoin_dialog )
-		{
-			delete m_autojoin_dialog;
-			m_autojoin_dialog = 0;
-		}
+		delete m_autojoin_dialog;
+		m_autojoin_dialog = 0;
 
 		sett().SaveSettings();
 		if ( m_log_win ) {
@@ -532,9 +531,9 @@ void MainWindow::OnMenuChat( wxCommandEvent& /*unused*/ )
 void MainWindow::OnMenuAbout( wxCommandEvent& /*unused*/ )
 {
     wxAboutDialogInfo info;
-	info.SetName(_T("SpringLobby"));
+	info.SetName( GetAppName() );
 	info.SetVersion (GetSpringLobbyVersion());
-	info.SetDescription(_("SpringLobby is a cross-plattform lobby client for the RTS Spring engine"));
+	info.SetDescription( IdentityString( _("%s is a cross-plattform lobby client for the Spring RTS engine") ) );
 	//info.SetCopyright(_T("");
 	info.SetLicence(_T("GPL"));
 	info.AddDeveloper(_T("BrainDamage"));
@@ -548,7 +547,9 @@ void MainWindow::OnMenuAbout( wxCommandEvent& /*unused*/ )
 	info.AddTranslator(_T("lejocelyn (french)"));
 	info.AddTranslator(_T("Suprano (german)"));
     info.AddTranslator(_T("tc- (swedish)"));
-	info.SetIcon(wxIcon(springlobby_xpm));
+	info.AddTranslator(_("The numerous contributors from launchpad.net"));
+	//! \todo customisations
+	info.SetIcon( SLcustomizations().GetAppIcon() );
 	wxAboutBox(info);
 }
 
@@ -641,8 +642,10 @@ void MainWindow::OnMenuAutojoinChannels( wxCommandEvent& /*unused*/ )
 void MainWindow::OnMenuSelectLocale( wxCommandEvent& /*unused*/ )
 {
     if ( wxGetApp().SelectLanguage() ) {
-        customMessageBoxNoModal( SL_MAIN_ICON, _("You need to restart SpringLobby for the language change to take effect."),
-                                    _("Restart required"), wxICON_EXCLAMATION | wxOK );
+		customMessageBoxNoModal( SL_MAIN_ICON,
+								 IdentityString( _("You need to restart %s for the language change to take effect.") ),
+								 _("Restart required"),
+								 wxICON_EXCLAMATION | wxOK );
     }
 }
 
@@ -697,7 +700,7 @@ void MainWindow::OnMenuResetLayout( wxCommandEvent& /*event*/ )
 {
 	sett().SetDoResetPerspectives( true );
 	sett().SaveSettings();
-	customMessageBoxNoModal( SL_MAIN_ICON, _("Please restart SpringLobby now"), wxEmptyString );
+	customMessageBoxNoModal( SL_MAIN_ICON, IdentityString( _("Please restart %s now") ), wxEmptyString );
 }
 
 const MainWindow::TabNames& MainWindow::GetTabNames()

@@ -1771,7 +1771,7 @@ void wxKeyConfigPanel::UpdateButtons()
 		}
     }
 
-	const wxStringBase::size_type maxSize = 20;
+	const wxString::size_type maxSize = 20;
 	if ( str.length() > maxSize )
 	{
 		m_pCurrCmdField->SetToolTip(str);

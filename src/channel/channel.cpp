@@ -17,7 +17,8 @@
 Channel::Channel( Server& serv )
     : m_serv(serv),
     m_do_ban_regex(false),
-    m_do_unban_regex(false)
+    m_do_unban_regex(false),
+	m_userdata(NULL)
 {}
 
 Channel::~Channel() {
@@ -169,6 +170,7 @@ bool Channel::ExecuteSayCommand( const wxString& in )
     uidata.panel = 0;
     return true;
   } else if ( param == _T("/sayver") ) {
+	  //!this instance is not replaced with GetAppname for sake of help/debug online
     DoAction( _T("is using SpringLobby v") + GetSpringLobbyVersion() );
     return true;
   } else if(subcmd==_T("/userban")){

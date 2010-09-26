@@ -1697,7 +1697,16 @@ void wxListHeaderWindow::Init()
     m_dirty = false;
 }
 
-wxListHeaderWindow::wxListHeaderWindow()
+wxListHeaderWindow::wxListHeaderWindow() :
+	m_owner(NULL),
+	m_currentCursor(NULL),
+	m_resizeCursor(NULL),
+	m_isDragging(false),
+    m_column(-1),
+    m_currentX(0),
+    m_minX(0),
+    m_dirty(false)
+
 {
     Init();
 
@@ -2277,7 +2286,8 @@ void wxListMainWindow::Init()
     m_freezeCount = 0;
 }
 
-wxListMainWindow::wxListMainWindow()
+wxListMainWindow::wxListMainWindow() :
+	m_highlightColour(NULL)
 {
     Init();
 
