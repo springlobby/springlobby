@@ -760,9 +760,9 @@ class Settings
     */
 
 	void SetHotkey( const wxString& profileName, const wxString& command, const wxString& key, int orderIdx );
-	wxString GetHotkey( const wxString& profileName, const wxString& command, const wxString& index );
+	wxString GetHotkey( const wxString& profileName, const wxString& orderIdx, const wxString& key );
 	wxArrayString GetHotkeyProfiles();
-	wxArrayString GetHotkeyProfileCommands( const wxString& profileName );
+	wxArrayString GetHotkeyProfileKeys( const wxString& profileName );
 	wxArrayString GetHotkeyProfileCommandKeys( const wxString& profileName, const wxString& command );
 	void DeleteHotkeyProfiles();
 	wxString GetUikeys( const wxString& index );
