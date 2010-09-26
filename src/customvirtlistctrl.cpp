@@ -558,7 +558,7 @@ void CustomVirtListCtrl<T,L>::ReverseOrder()
 }
 
 template < class T, class L >
-bool CustomVirtListCtrl<T,L>::AddItem( const T item )
+bool CustomVirtListCtrl<T,L>::AddItem( const T& item )
 {
     if ( GetIndexFromData( item ) != -1 )
         return false;
@@ -572,7 +572,7 @@ bool CustomVirtListCtrl<T,L>::AddItem( const T item )
 }
 
 template < class T, class L >
-bool CustomVirtListCtrl<T,L>::RemoveItem( const T item )
+bool CustomVirtListCtrl<T,L>::RemoveItem( const T& item )
 {
     int index = GetIndexFromData( item );
 

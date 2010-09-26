@@ -20,7 +20,14 @@
 
 const int invalid_id = -1;
 
-Widget::Widget()
+Widget::Widget():
+    w_id(-1),
+    n_id(-1),
+    num_downloads(-1),
+    num_images(0),
+    rev_major(-1),
+    rev_minor(-1),
+    is_installed(false)
 {
     //ctor
 }
@@ -30,12 +37,12 @@ Widget::~Widget()
     //dtor
 }
 
-bool Widget::IsInstalled()
+bool Widget::IsInstalled() const
 {
     return false;
 }
 
-wxArrayString Widget::GetImageFilenames()
+wxArrayString Widget::GetImageFilenames() const
 {
     wxArrayString ret;
     ExtendedInfo::Images::const_iterator it = extendedinfo.images.begin();

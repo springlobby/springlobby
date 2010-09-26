@@ -232,9 +232,9 @@ PlaybackListFilter<PlaybackTabType>::PlaybackListFilter( wxWindow* parent, wxWin
 	this->Layout();
 	m_filter_sizer->Fit( this );
 
-    if (m_filter_map_expression != NULL) { delete m_filter_map_expression; }
+    delete m_filter_map_expression;
     m_filter_map_expression = new wxRegEx(m_filter_map_edit->GetValue(),wxRE_ICASE);
-    if (m_filter_mod_expression != NULL) { delete m_filter_mod_expression; }
+    delete m_filter_mod_expression;
     m_filter_mod_expression = new wxRegEx(m_filter_mod_edit->GetValue(),wxRE_ICASE);
 
     wxCommandEvent dummy;
@@ -344,7 +344,7 @@ template <class PlaybackTabType>
 void PlaybackListFilter<PlaybackTabType>::OnChangeMap ( wxCommandEvent& event )
 {
   if ( m_filter_map_edit == NULL ) return;
-  if (m_filter_map_expression != NULL) { delete m_filter_map_expression; }
+  delete m_filter_map_expression;
   m_filter_map_expression = new wxRegEx(m_filter_map_edit->GetValue(),wxRE_ICASE);
   OnChange(event);
 }
@@ -353,7 +353,7 @@ template <class PlaybackTabType>
 void PlaybackListFilter<PlaybackTabType>::OnChangeMod ( wxCommandEvent& event )
 {
   if ( m_filter_mod_edit == NULL ) return;
-  if (m_filter_mod_expression != NULL) { delete m_filter_mod_expression; }
+  delete m_filter_mod_expression;
   m_filter_mod_expression = new wxRegEx(m_filter_mod_edit->GetValue(),wxRE_ICASE);
   OnChange(event);
 }

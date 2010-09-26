@@ -59,7 +59,7 @@ int WidgetDownloadListctrl::CompareOneCrit( DataType u1, DataType u2, int col, i
     }
 }
 
-void WidgetDownloadListctrl::AddWidget( const Widget widget )
+void WidgetDownloadListctrl::AddWidget( const Widget& widget )
 {
     if ( AddItem( widget ) )
         return;

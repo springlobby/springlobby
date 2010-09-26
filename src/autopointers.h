@@ -12,7 +12,7 @@ public:
     ;
     virtual ~Lockable() {}
     ;
-    bool Locked() {
+    bool Locked() const {
         return lock_count>0;
     }
     void Lock() {

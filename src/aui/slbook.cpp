@@ -85,6 +85,7 @@ bool SLChatNotebook::AddPage(ChatPanel* page, const wxString& caption, bool sele
   */
  SLChatNotebook::SLChatNotebook(wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style)
     : ParentType( parent, _T("chatnotebook"), id, pos,  size, sett().GetShowXallTabs() ? style | wxAUI_NB_CLOSE_ON_ALL_TABS : style )
+    ,m_ch_menu(0)
     ,m_cur_page(0)
 {
 

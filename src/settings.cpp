@@ -6,11 +6,10 @@
 #include "settings.h"
 
 #ifdef __WXMSW__
-#include <wx/fileconf.h>
-#include <wx/msw/registry.h>
-#else
-#include <wx/config.h>
+	#include <wx/msw/registry.h>
 #endif
+#include "Helper/slconfig.h"
+
 #include <wx/filename.h>
 #include <wx/filefn.h>
 #include <wx/intl.h>
@@ -55,21 +54,11 @@ Settings& sett()
 	return m_sett;
 }
 
-SL_WinConf::SL_WinConf( wxFileInputStream& in ):
-		wxFileConfig( in )
-{
-}
-
-bool SL_WinConf::DoWriteLong( const wxString& key, long lValue )
-{
-	return wxFileConfig::DoWriteString( key, TowxString<long>( lValue ) );
-}
-
 Settings::Settings()
 {
 #if defined(__WXMSW__) || defined(__WXMAC__)
-	wxString userfilepath = wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator() + _T( "springlobby.conf" );
-	wxString localfilepath =  GetExecutableFolder() + wxFileName::GetPathSeparator() + _T( "springlobby.conf" );
+	wxString userfilepath = IdentityString( wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator() + _T( "%s.conf" ), true );
+	wxString localfilepath =  IdentityString( GetExecutableFolder() + wxFileName::GetPathSeparator() + _T( "%s.conf" ), true );
 
 	if ( !wxFileName::FileExists( localfilepath ) || !wxFileName::IsFileWritable( localfilepath ) )
 	{
@@ -110,16 +99,11 @@ Settings::Settings()
 			exit( -1 );
 		}
 	}
-#ifdef __WXMSW__
-	m_config = new SL_WinConf( instream );
+	m_config = new slConfig( instream );
 #else
-	m_config = new wxFileConfig( instream );
-#endif
-#else
-	//removed temporarily because it's suspected to cause a bug with userdir creation
-// m_config = new wxConfig( _T("SpringLobby"), wxEmptyString, _T(".springlobby/springlobby.conf"), _T("springlobby.global.conf"), wxCONFIG_USE_LOCAL_FILE | wxCONFIG_USE_GLOBAL_FILE  );
-	wxString path = m_user_defined_config ? m_user_defined_config_path : _T( ".springlobby/springlobby.conf" );
-	m_config = new wxConfig( _T( "SpringLobby" ), wxEmptyString, path, _T( "springlobby.global.conf" ) );
+	wxString localpath = wxString::Format( _T( ".%s/%s.conf" ), GetAppName( true ).c_str(), GetAppName( true ).c_str() );
+	wxString path = m_user_defined_config ? m_user_defined_config_path : localpath;
+	m_config = new slConfig( GetAppName(), wxEmptyString, path );
 	SetPortableMode ( false );
 #endif
 	m_config->SetRecordDefaults( true );
@@ -148,62 +132,9 @@ void Settings::SaveSettings()
 #endif
 }
 
-
-#ifdef __WXMSW__
-void Settings::SetDefaultConfigs( SL_WinConf& conf )
-#else
-void Settings::SetDefaultConfigs( wxConfig& conf )
-#endif
-{
-	wxString str;
-	long dummy;
-	wxString previousgroup;
-
-	// now all groups...
-	bool groupcontinue = conf.GetFirstGroup( str, dummy );
-	while ( groupcontinue )
-	{
-		// climb all tree branches until you hit the most further
-		groupcontinue = conf.GetFirstGroup( str, dummy );
-		if ( groupcontinue && ( previousgroup != str ) )
-		{
-			conf.SetPath( str );
-			previousgroup = str;
-		}
-		else
-		{
-			// enum all entries and add to the config
-			wxString currentpath = conf.GetPath();
-			bool exist = conf.GetFirstEntry( str, dummy );
-			while ( exist )
-			{
-				if ( !m_config->Exists( currentpath + _T( "/" ) + str ) ) // in theory "main" config should be blank at this point, but better be paranoyd and don't overwrite existing keys...
-				{
-					m_config->Write( currentpath + _T( "/" ) + str, conf.Read( str, _T( "" ) ) ); // append to main config
-				}
-
-				exist = conf.GetNextEntry( str, dummy );
-			}
-
-			if ( !currentpath.IsEmpty() )
-			{
-				wxString todelete = currentpath.AfterLast( _T( '/' ) );
-				currentpath = currentpath.BeforeLast( _T( '/' ) );
-				conf.SetPath( currentpath ); // go to the parent folder
-				conf.DeleteGroup( todelete ); // remove last analyzed group so it doesn't get iterated again
-				groupcontinue = true;
-			}
-			previousgroup = _T( "" );
-		}
-	}
-	m_config->Flush();
-}
-
-
 wxArrayString Settings::GetGroupList( const wxString& base_key )
 {
-	wxString old_path = m_config->GetPath();
-	m_config->SetPath( base_key );
+	slConfig::PathGuard pathGuard ( m_config, base_key );
 	wxString groupname;
 	long dummy;
 	wxArrayString ret;
@@ -213,14 +144,12 @@ wxArrayString Settings::GetGroupList( const wxString& base_key )
 		ret.Add( groupname );
 		groupexist = m_config->GetNextGroup( groupname, dummy );
 	}
-	m_config->SetPath( old_path );
 	return ret;
 }
 
 wxArrayString Settings::GetEntryList( const wxString& base_key )
 {
-	wxString old_path = m_config->GetPath();
-	m_config->SetPath( base_key );
+	slConfig::PathGuard pathGuard ( m_config, base_key );
 	wxString entryname;
 	long dummy;
 	wxArrayString ret;
@@ -230,20 +159,16 @@ wxArrayString Settings::GetEntryList( const wxString& base_key )
 		ret.Add( entryname );
 		entryexist = m_config->GetNextEntry( entryname, dummy );
 	}
-	m_config->SetPath( old_path );
 	return ret;
 }
 
 unsigned int Settings::GetGroupCount( const wxString& base_key )
 {
-	wxString currentpath = m_config->GetPath();
-	m_config->SetPath( base_key );
-	unsigned int count = m_config->GetNumberOfGroups( false );
-	m_config->SetPath( currentpath );
-	return count;
+	slConfig::PathGuard pathGuard ( m_config, base_key );
+	return m_config->GetNumberOfGroups( false );
 }
 
-bool Settings::IsPortableMode()
+bool Settings::IsPortableMode() const
 {
 	return m_portable_mode;
 }
@@ -266,7 +191,7 @@ void Settings::SetSettingsVersion()
 }
 
 
-unsigned int  Settings::GetSettingsVersion()
+unsigned int Settings::GetSettingsVersion()
 {
 	return m_config->Read( _T( "/General/SettingsVersion" ), 0l );
 }
@@ -411,7 +336,7 @@ unsigned int Settings::GetModCachingThreadProgress()
 
 bool Settings::ShouldAddDefaultServerSettings()
 {
-	return !m_config->Exists( _T( "/Server" ) );
+	return !m_config->HasSection( _T( "/Server" ) );
 }
 
 //! @brief Restores default settings
@@ -647,12 +572,16 @@ int Settings::GetChannelJoinIndex( const wxString& name )
 std::vector<ChannelJoinInfo> Settings::GetChannelsJoin()
 {
 	std::vector<ChannelJoinInfo> ret;
-	int num = GetNumChannelsJoin();
-	for ( int i = 0; i < num; i++ )
+//	int num = GetNumChannelsJoin();
+	wxArrayString channels = GetGroupList( _T("/Channels/AutoJoin/") );
+	slConfig::PathGuard pathguard( m_config, _T("/Channels/AutoJoin/") );
+	for ( size_t i = 0; i < channels.Count(); ++i )
 	{
+		if( !channels[i].StartsWith( _T("Channel") ) )
+			continue;
 		ChannelJoinInfo info;
-		info.name = m_config->Read( wxString::Format( _T( "/Channels/AutoJoin/Channel%d/Name" ), i ), _T( "" ) );
-		info.password = m_config->Read( wxString::Format( _T( "/Channels/AutoJoin/Channel%d/Password" ), i ), _T( "" ) );
+		info.name = m_config->Read( channels[i] + _T("/Name" ) );
+		info.password = m_config->Read( channels[i] + _T("/Password" ) );
 		ret.push_back( info );
 	}
 	return ret;
@@ -673,7 +602,7 @@ void Settings::ConvertOldChannelSettings()
 
 bool Settings::ShouldAddDefaultChannelSettings()
 {
-	return !m_config->Exists( _T( "/Channels" ) );
+	return !m_config->HasSection( _T( "/Channels" ) );
 }
 
 /************* SPRINGLOBBY WINDOW POS/SIZE   ******************/
@@ -892,7 +821,7 @@ void Settings::ConvertOldSpringDirsOptions()
 	m_config->DeleteEntry( _T( "/Spring/exec_loc" ) );
 }
 
-std::map<wxString, wxString> Settings::GetSpringVersionList()
+std::map<wxString, wxString> Settings::GetSpringVersionList() const
 {
 	return m_spring_versions;
 }
@@ -1213,8 +1142,7 @@ std::map<wxString, wxString> Settings::GetHostingPreset( const wxString& name, i
 	std::map<wxString, wxString> ret;
 	wxArrayString list = GetEntryList( path_base );
 
-	wxString old_path = m_config->GetPath();
-	m_config->SetPath( path_base );
+	slConfig::PathGuard pathGuard ( m_config, path_base );
 
 	int count = list.GetCount();
 	for ( int i = 0; i < count; i ++ )
@@ -1223,9 +1151,6 @@ std::map<wxString, wxString> Settings::GetHostingPreset( const wxString& name, i
 		wxString val = m_config->Read( keyname );
 		ret[keyname] = val;
 	}
-
-	m_config->SetPath( old_path );
-
 	return ret;
 }
 
@@ -1878,17 +1803,14 @@ void Settings::SetTorrentListToResume( const std::vector<wxString>& list )
 std::vector<wxString> Settings::GetTorrentListToResume()
 {
 	std::vector<wxString> list;
-	wxString old_path = m_config->GetPath();
-	m_config->SetPath( _T( "/Torrent/ResumeList" ) );
-	unsigned int TorrentCount = m_config->GetNumberOfEntries( false );
-	for ( unsigned int i = 0; i < TorrentCount; i++ )
+	slConfig::PathGuard pathGuard ( m_config, _T( "/Torrent/ResumeList" ) );
+	wxArrayString entries = GetEntryList( _T( "/Torrent/ResumeList" ) );
+	for ( size_t i = 0; i < entries.Count(); ++i )
 	{
 		wxString ToAdd;
-		if ( m_config->Read( _T( "/Torrent/ResumeList/" ) + TowxString( i ), &ToAdd ) )
+		if ( m_config->Read( entries[i], &ToAdd ) )
 			list.push_back( ToAdd );
 	}
-
-	m_config->SetPath( old_path );
 	return list;
 }
 
@@ -1978,15 +1900,13 @@ void Settings::SetPeopleList( const wxArrayString& friends, const wxString& grou
 wxArrayString Settings::GetPeopleList( const wxString& group  ) const
 {
 	wxArrayString list;
-	wxString old_path = m_config->GetPath();
-	m_config->SetPath( _T( "/Groups/" ) + group + _T( "/Members/" ) );
+	slConfig::PathGuard pathGuard ( m_config, _T( "/Groups/" ) + group + _T( "/Members/" ) );
 	unsigned int friendsCount  = m_config->GetNumberOfEntries( false );
 	for ( unsigned int i = 0; i < friendsCount ; i++ )
 	{
 		wxString ToAdd;
 		if ( m_config->Read( _T( "/Groups/" ) + group + _T( "/Members/" ) +  TowxString( i ), &ToAdd ) ) list.Add( ToAdd );
 	}
-	m_config->SetPath( old_path );
 	return list;
 }
 
@@ -2258,14 +2178,14 @@ void Settings::SetMapSelectorFilterRadio( const unsigned int val )
 //////////////////////////////////////////////////////////////////////////////
 
 
-int Settings::getMode()
+long Settings::getMode()
 {
-	int mode;
+	long mode;
 	m_config->Read( _T( "/SpringSettings/mode" ), &mode, SET_MODE_SIMPLE );
 	return mode;
 }
 
-void Settings::setMode( int mode )
+void Settings::setMode( long mode )
 {
 	m_config->Write( _T( "/SpringSettings/mode" ), mode );
 }
@@ -2338,8 +2258,7 @@ long Settings::GetLanguageID ( )
 SortOrder Settings::GetSortOrder( const wxString& list_name )
 {
 	SortOrder order;
-	wxString old_path = m_config->GetPath();
-	m_config->SetPath( _T( "/UI/SortOrder/" ) + list_name + _T( "/" ) );
+	slConfig::PathGuard pathGuard ( m_config, _T( "/UI/SortOrder/" ) + list_name + _T( "/" ) );
 	unsigned int entries  = m_config->GetNumberOfGroups( false ); //do not recurse
 	for ( unsigned int i = 0; i < entries ; i++ )
 	{
@@ -2348,7 +2267,6 @@ SortOrder Settings::GetSortOrder( const wxString& list_name )
 		it.col = m_config->Read( TowxString( i ) + _T( "/col" ), i );
 		order[i] = it;
 	}
-	m_config->SetPath( old_path );
 	return order;
 }
 

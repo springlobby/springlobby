@@ -19,7 +19,7 @@ class AutoHost
     AutoHost( Battle& battle );
 
     void SetEnabled( const bool enabled );
-    bool GetEnabled();
+    bool GetEnabled() const;
 
     void OnSaidBattle( const wxString& nick, const wxString& msg );
     void OnUserAdded( User& user );
