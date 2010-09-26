@@ -53,7 +53,6 @@ void CommandOrderDlg::updateOrderMap()
 			}
 		}
 	}
-
 }
 
 void CommandOrderDlg::saveOrderMapToProfile()

@@ -31,6 +31,13 @@ class command_set
 public:
 	command_set() : m_highestOrderIdx(0) {}
 
+	void clear()
+	{
+		m_cmds.clear();
+		m_rawList.clear();
+		m_highestOrderIdx = 0;
+	}
+
 	void insert ( const wxString& command )
 	{
 		insert( command, ++m_highestOrderIdx );
@@ -48,15 +55,6 @@ public:
 		m_rawList.insert( command );
 
 		m_highestOrderIdx = std::max( m_highestOrderIdx, orderIdx );
-	/*	//update order map
-		if ( m_orderMap.find( command ) != m_orderMap.end() )
-		{
-			m_orderMap[command] = std::max( m_orderMap[command], orderIdx );
-		}
-		else
-		{
-			m_orderMap[command] = orderIdx;
-		}*/
 	}
 
 	void erase( const wxString& command )
@@ -67,25 +65,23 @@ public:
 			return;
 		}
 
-		if ( m_cmds.find( command )->orderIdx == m_highestOrderIdx )
-		{
-			//we are going to delete the command with the highest index, so descrease it
-			--m_highestOrderIdx;
-		}
+		//copy the content
+		const command_list oldList = m_cmds;
+		this->clear();
 
-		m_cmds.erase( command );
-		m_rawList.erase( command );
-	}
-/*
-	size_t getOrderIndex( const wxString command )
-	{
-		if ( m_orderMap.find( command ) != m_orderMap.end() )
+		//reinsert all but one to keep order index consistency
+		for( command_list::const_iterator iter = oldList.begin(); iter != oldList.end(); ++iter )
 		{
-			return m_orderMap[ command ];
+			if ( iter->command == command )
+			{
+				//skip this
+				continue;
+			}
+
+			insert( iter->command );
 		}
-		return 0;
 	}
-*/
+
 	size_t getHighestOrderIndex()
 	{
 		return m_highestOrderIdx;

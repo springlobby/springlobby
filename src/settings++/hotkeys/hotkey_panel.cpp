@@ -178,6 +178,23 @@ void hotkey_panel::SaveSettings()
 			const key_binding profileBinds = hotkey_panel::getBindingsFromProfile( profile );
 			const key_binding defaultBinds = SpringDefaultProfile::getBindings();
 
+			//check if any bindings from the default bindings have been unbind. and save that info to the settings
+			{
+				const key_binding removedBinds = defaultBinds - profileBinds;
+				
+				const key_binding::key_binding_k2c& delCmds = removedBinds.getK2C();
+				int orderIdx = -1;
+				for( key_binding::key_binding_k2c::const_iterator iter = delCmds.begin(); iter != delCmds.end(); ++iter )
+				{
+					//check now if this default key binding has been deleted from this profile
+					const command_set::command_list& cmds = iter->second.getCommands();
+					for( command_set::command_list::const_iterator iiter = cmds.begin(); iiter != cmds.end(); ++iiter )
+					{
+						sett().SetHotkey( profile.GetName(), iiter->command, iter->first, orderIdx-- );
+					}
+				}
+			}
+
 			//add bindings
 			{
 				const key_binding addedBinds = profileBinds - defaultBinds;
@@ -186,26 +203,11 @@ void hotkey_panel::SaveSettings()
 				for( key_binding::key_binding_k2c::const_iterator iter = addCmds.begin(); iter != addCmds.end(); ++ iter )
 				{
 					const command_set::command_list& cmds = iter->second.getCommands();
+					unsigned orderIdx = 1;
 					for( command_set::command_list::const_iterator iiter = cmds.begin(); iiter != cmds.end(); ++iiter )
 					{
 						//only write non-default bindings to settings
-						sett().SetHotkey( profile.GetName(), iiter->command, iter->first, iiter->orderIdx );
-					}
-				}
-			}
-
-			//check if any bindings from the default bindings have been unbind. and save that info to the settings
-			{
-				const key_binding removedBinds = defaultBinds - profileBinds;
-				
-				const key_binding::key_binding_k2c& delCmds = removedBinds.getK2C();
-				for( key_binding::key_binding_k2c::const_iterator iter = delCmds.begin(); iter != delCmds.end(); ++iter )
-				{
-					//check now if this default key binding has been deleted from this profile
-					const command_set::command_list& cmds = iter->second.getCommands();
-					for( command_set::command_list::const_iterator iiter = cmds.begin(); iiter != cmds.end(); ++iiter )
-					{
-						sett().SetHotkey( profile.GetName(), iiter->command, iter->first, -1 );
+						sett().SetHotkey( profile.GetName(), iiter->command, iter->first, orderIdx++ );
 					}
 				}
 			}
@@ -376,28 +378,28 @@ key_binding_collection hotkey_panel::getProfilesFromSettings( )
 		coll[profName] = SpringDefaultProfile::getBindings();
 
 		//add keybindings
-		wxArrayString commands = sett().GetHotkeyProfileCommands( profName );
-		for( size_t k=0; k < commands.GetCount(); ++k )
+		wxArrayString keys = sett().GetHotkeyProfileKeys( profName );
+		for( size_t k=0; k < keys.GetCount(); ++k )
 		{
-			wxString cmd = commands.Item(k);
-			wxArrayString keys = sett().GetHotkeyProfileCommandKeys( profName, cmd );
-			for( size_t j=0; j < keys.GetCount(); ++j )
+			wxString key = keys.Item(k);
+			wxArrayString orderIdxs = sett().GetHotkeyProfileCommandKeys( profName, key );
+			for( size_t j=0; j < orderIdxs.GetCount(); ++j )
 			{
-				const wxString& orderIdxStr = sett().GetHotkey( profName, cmd, keys.Item(j) );
+				const wxString& cmd = sett().GetHotkey( profName, orderIdxs.Item(j), key );
 				long orderIdx = 0;
-				if ( orderIdxStr.ToLong( &orderIdx ) == false )
+				if ( orderIdxs.Item(j).ToLong( &orderIdx ) == false )
 				{
-					throw HotkeyException( _("Error parsing springsettings hotkey profile. Invalid order index: ") + orderIdxStr );
+					throw HotkeyException( _("Error parsing springsettings hotkey profile. Invalid order index: ") + orderIdxs.Item(j) );
 				}
 
-				const wxString& springKey = KeynameConverter::spring2wxKeybinder( keys.Item(j), true );
-				if ( orderIdx == -1 )
+				const wxString& springKey = KeynameConverter::spring2wxKeybinder( key, true );
+				if ( orderIdx < 0 )
 				{
 					coll[profName].unbind( cmd, springKey );
 				}
 				else
 				{
-					coll[profName].bind( cmd, springKey, orderIdx );
+					coll[profName].bind( cmd, springKey );
 				}
 			}
 		}
