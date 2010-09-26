@@ -1111,7 +1111,8 @@ wxString ChatPanel::FindUrl( const long pos ) const
         end++;
 
     wxString ret = m_chatlog_text->GetRange( start, end );
-    if ( ret.StartsWith( _T("http://") ) )
+	//! \todo there's prolly some smarter way to capture a more flexible range of url types
+	if ( ret.StartsWith( _T("http://") ) ||  ret.StartsWith( _T("https://") ) || ret.StartsWith( _T("ftp://") ))
         return ret;
     else
         return _T("");
