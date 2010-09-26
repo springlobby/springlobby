@@ -17,7 +17,7 @@ fi
 
 cd rpm/home:accAgon/SpringLobby
 osc up
-echo "<service name=\"set_version\"><param name=\"basename\">springlobby</param><param name=\"version\">" > _service
+echo "<services><service name=\"set_version\"><param name=\"basename\">springlobby</param><param name=\"version\">" > _service
 echo $version >> _service
 echo "</param><param name=\"file\">springlobby.spec</param></service><service name=\"tar_scm\"><param name=\"url\">git://springlobby.info/git/buildbot/springlobby.git</param><param name=\"filename\">springlobby.tar</param><param name=\"revision\">master</param><param name=\"scm\">git</param><param name=\"version\">" >> _service
 echo $version >> _service
