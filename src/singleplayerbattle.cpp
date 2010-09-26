@@ -27,6 +27,11 @@ SinglePlayerBattle::~SinglePlayerBattle()
 
 }
 
+void SinglePlayerBattle::OnUnitsyncReloaded( GlobalEvents::GlobalEventData data )
+{
+	IBattle::OnUnitsyncReloaded( data );
+	m_me.SetNick( usync().GetDefaultNick() );
+}
 
 void SinglePlayerBattle::SendHostInfo( HostInfo update )
 {
