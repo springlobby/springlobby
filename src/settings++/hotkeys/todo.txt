@@ -10,3 +10,14 @@
 
 -save profile to springsettings.conf even when same as spring default (?)
 -save custom commands to springsettings.conf to keep them even when not used in any profile
+
+
+
+[18:56:53] <_koshi_> ich hab beim umschalten auf expert mode uebrigens gestern immer zwei boxen mit 'profile created' bekommen
+[18:57:11] <_koshi_> das koennte heissen, das der schon gemerged ist
+[18:57:16] <_koshi_> ansonsten wuesste ich nicht
+[18:57:26] <_koshi_> ist das git gui aus dem msys installer?
+[18:57:46] <[x]very_bad_soldier> kapier ich nich, 2mal profile created? einmal beim start und einmal beim umschalten auf expert?
+[18:57:47] <[x]very_bad_soldier> ja
+[18:58:07] <_koshi_> ne, beide hineteinander beim switch auf expert
+[18:58:26] <[x]very_bad_soldier> hm, interessant. muss ich mir angucken, danke für den tip
