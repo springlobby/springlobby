@@ -52,10 +52,10 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions=" /Zm1000"
+				AdditionalOptions=" /Zm1000 /MP"
 				Optimization="0"
 				InlineFunctionExpansion="0"
-				AdditionalIncludeDirectories="E:\Users\devkid\Projects\Other\springlobby;&quot;D:\Programme\Develop\wxWidgets-2.8.11\include&quot;;&quot;D:\Programme\Develop\wxWidgets-2.8.11\lib\vc_dll\msw&quot;;&quot;D:\Programme\Develop\wxWidgets-2.8.11\include\msvc&quot;;&quot;E:\Users\devkid\Projects\Other\springlobby\src\settings++\hotkeys&quot;"
+				AdditionalIncludeDirectories="E:\Users\devkid\Projects\Other\springlobby;&quot;D:\Programme\Develop\wxWidgets-2.8.11\include&quot;;&quot;D:\Programme\Develop\wxWidgets-2.8.11\lib\vc_dll\msw&quot;;&quot;D:\Programme\Develop\wxWidgets-2.8.11\include\msvc&quot;;&quot;E:\Users\devkid\Projects\Other\springlobby\src\settings++\hotkeys&quot;;E:\Users\devkid\Projects\Other\springlobby\src\wxkeybinder"
 				PreprocessorDefinitions="wxUSE_UNICODE=1;WIN32;_WINDOWS;_DEBUG;__WXDEBUG__;_RC_MSVC;WXUSINGDLL;__WXMSW__;_WIN32_WINNT=0x0501;DISABLE_SOUND;NO_TORRENT_SYSTEM;&quot;LOCALE_INSTALL_DIR=\&quot;C:/Program Files (x86)/springlobby/share/locale\&quot;&quot;;CMAKE_INTDIR=\&quot;Debug\&quot;"
 				ExceptionHandling="1"
 				BasicRuntimeChecks="3"
@@ -741,19 +741,19 @@
 					>
 				</File>
 				<File
-					RelativePath="..\src\settings++\hotkeys\AddSelectionCmdDlgBase.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\settings++\hotkeys\AddSelectionCmdDlgBase.h"
-					>
-				</File>
-				<File
 					RelativePath="..\src\settings++\hotkeys\commandlist.cpp"
 					>
 				</File>
 				<File
 					RelativePath="..\src\settings++\hotkeys\commandlist.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\settings++\hotkeys\CommandOrderDlg.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\settings++\hotkeys\CommandOrderDlg.h"
 					>
 				</File>
 				<File
@@ -774,6 +774,14 @@
 				</File>
 				<File
 					RelativePath="..\src\settings++\hotkeys\HotkeyException.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\settings++\hotkeys\HotkeyForms.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\settings++\hotkeys\HotkeyForms.h"
 					>
 				</File>
 				<File
@@ -822,10 +830,6 @@
 				</File>
 				<File
 					RelativePath="D:\Users\devkid\Projekte\Other\springlobby\src\wxkeybinder\keybinder.h"
-					>
-				</File>
-				<File
-					RelativePath="D:\Users\devkid\Projekte\Other\springlobby\src\wxkeybinder\keybinderdef.h"
 					>
 				</File>
 				<File
