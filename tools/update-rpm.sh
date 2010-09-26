@@ -19,7 +19,7 @@ fi
 cd rpm/home:accAgon/SpringLobby
 osc up
 find . -name springlobby-0.0.1.\*.tar.bz2 -exec osc rm {} \;
-sed -i 's/^\(%define app_version\) .*/\1 '${version}'/' springlobby_tarball.spec
+sed -i 's/^\(%define app_version\) .*/\1 '${version}'/' springlobby.spec
 cp /usr/local/www/springlobby.info/tarballs/${tarball} .
 osc add ${tarball}
 osc ci -m "autobuild ${version}"
