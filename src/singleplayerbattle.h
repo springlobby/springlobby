@@ -34,8 +34,6 @@ class SinglePlayerBattle: public IBattle
 
     void StartSpring();
 
-	virtual void OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ );
-
   protected:
     void RemoveUnfittingBots();
 
