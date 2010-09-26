@@ -192,6 +192,8 @@ class SpringUnitSync : public IUnitSync
     /// get heightmap rescaled to given width x height
     wxImage GetHeightmap( const wxString& mapname, int width, int height );
 
+	wxString GetTextfileAsString( const wxString& modname, const wxString& file_path );
+
 	bool ReloadUnitSyncLib(  );
 	void ReloadUnitSyncLib( GlobalEvents::GlobalEventData /*data*/ ) { ReloadUnitSyncLib(); }
 
