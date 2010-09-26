@@ -512,7 +512,7 @@ CommandOrderDlgBase::CommandOrderDlgBase( wxWindow* parent, wxWindowID id, const
 	
 	fgSizer7->Add( 0, 0, 1, wxEXPAND, 5 );
 	
-	m_listBoxCommands = new wxListBox( this, wxID_ANY, wxDefaultPosition, wxSize( 265,150 ), 0, NULL, 0 ); 
+	m_listBoxCommands = new wxListBox( this, wxID_ANY, wxDefaultPosition, wxSize( 200,150 ), 0, NULL, 0 ); 
 	fgSizer7->Add( m_listBoxCommands, 0, wxALL, 5 );
 	
 	wxBoxSizer* bSizer5;
@@ -529,24 +529,25 @@ CommandOrderDlgBase::CommandOrderDlgBase( wxWindow* parent, wxWindowID id, const
 	m_buttonOk = new wxButton( this, wxID_ANY, wxT("OK"), wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer7->Add( m_buttonOk, 0, wxALIGN_RIGHT|wxALL, 5 );
 	
-	m_buttonCancel = new wxButton( this, wxID_ANY, wxT("Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_buttonCancel = new wxButton( this, wxID_CANCEL, wxT("Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer7->Add( m_buttonCancel, 0, wxALL, 5 );
 	
 	this->SetSizer( fgSizer7 );
 	this->Layout();
+	fgSizer7->Fit( this );
 	
 	// Connect Events
+	this->Connect( wxEVT_INIT_DIALOG, wxInitDialogEventHandler( CommandOrderDlgBase::OnInitDialog ) );
 	m_buttonUp->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CommandOrderDlgBase::OnButtonUpClick ), NULL, this );
 	m_buttonDown->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CommandOrderDlgBase::OnButtonDownClick ), NULL, this );
 	m_buttonOk->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CommandOrderDlgBase::OnButtonOkClick ), NULL, this );
-	m_buttonCancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CommandOrderDlgBase::OnButtonCancelClick ), NULL, this );
 }
 
 CommandOrderDlgBase::~CommandOrderDlgBase()
 {
 	// Disconnect Events
+	this->Disconnect( wxEVT_INIT_DIALOG, wxInitDialogEventHandler( CommandOrderDlgBase::OnInitDialog ) );
 	m_buttonUp->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CommandOrderDlgBase::OnButtonUpClick ), NULL, this );
 	m_buttonDown->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CommandOrderDlgBase::OnButtonDownClick ), NULL, this );
 	m_buttonOk->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CommandOrderDlgBase::OnButtonOkClick ), NULL, this );
-	m_buttonCancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CommandOrderDlgBase::OnButtonCancelClick ), NULL, this );
 }

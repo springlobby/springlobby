@@ -14,7 +14,6 @@
 #define __KEYBINDER_G__
 
 // required includes
-#include "keybinderdef.h"
 #include "wx/panel.h"
 #include "wx/dialog.h"
 #include "wx/listbox.h"
@@ -827,6 +826,7 @@ public:     // miscellaneous
 		{
 			cmds.insert( m_arrCmd.Item((*iter)) );
 		}
+
         return cmds;
     }
 
@@ -1124,7 +1124,6 @@ private:
 #define wxKEYBINDER_ADD_PROFILEBTN_ID       wxKEYBINDER_BASEID+9
 #define wxKEYBINDER_REMOVE_PROFILEBTN_ID    wxKEYBINDER_BASEID+10
 
-
 #define wxKEYBINDER_SELECTED_POSTFIX        wxT(" (selected)")
 
 
@@ -1368,6 +1367,7 @@ protected:      // event handlers
     void OnListCommandSelected(wxCommandEvent &event);
 
     void OnBindingSelected(wxCommandEvent &event);
+	void OnBindingDblClick(wxCommandEvent &);
     void OnProfileSelected(wxCommandEvent &event);
     void OnCategorySelected(wxCommandEvent &event);
 

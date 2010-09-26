@@ -1,13 +1,13 @@
 #ifndef __AddSelectionPanelDlg__
 #define __AddSelectionPanelDlg__
 
-#include "AddSelectionCmdDlgBase.h"
+#include "HotkeyForms.h"
 
 
 class AddSelectionCmdDlg : public AddSelectionCmdDlgBase 
 {
 public:
-	AddSelectionCmdDlg( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Add Selection Command"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE );
+	AddSelectionCmdDlg( wxWindow* parent );
 	
 	wxString getCommandString() const;
 

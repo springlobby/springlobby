@@ -183,14 +183,14 @@ class CommandOrderDlgBase : public wxDialog
 		wxButton* m_buttonCancel;
 		
 		// Virtual event handlers, overide them in your derived class
+		virtual void OnInitDialog( wxInitDialogEvent& event ){ event.Skip(); }
 		virtual void OnButtonUpClick( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnButtonDownClick( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnButtonOkClick( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnButtonCancelClick( wxCommandEvent& event ){ event.Skip(); }
 		
 	
 	public:
-		CommandOrderDlgBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Change order"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 370,244 ), long style = wxCAPTION );
+		CommandOrderDlgBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Change Order"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxCAPTION );
 		~CommandOrderDlgBase();
 	
 };
