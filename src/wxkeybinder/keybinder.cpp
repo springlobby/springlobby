@@ -110,7 +110,8 @@ BEGIN_EVENT_TABLE(wxKeyConfigPanel, wxPanel)
     EVT_BUTTON(wxKEYBINDER_ADD_PROFILEBTN_ID, wxKeyConfigPanel::OnAddProfile)
     EVT_BUTTON(wxKEYBINDER_REMOVE_PROFILEBTN_ID, wxKeyConfigPanel::OnRemoveProfile)
 	EVT_LISTBOX_DCLICK(wxKEYBINDER_BINDINGS_BOX_ID, wxKeyConfigPanel::OnBindingDblClick)
-    
+    EVT_CHECKBOX(wxKEYBINDER_ANY_MODIFIER_ID, wxKeyConfigPanel::OnAnyModifier)
+	
     // during idle cycles, wxKeyConfigPanel checks if the wxKeyMonitorTextCtrl
     // associated must be cleared...
 
@@ -431,6 +432,8 @@ wxString wxKeyBind::KeyModifierToString(int keyModifier)
 {
     wxString result;
 
+    if (keyModifier & wxACCEL_ANY)
+        result += wxT("Any+");
     if (keyModifier & wxACCEL_CTRL)
         result += wxT("Ctrl+");
     if (keyModifier & wxACCEL_ALT)
@@ -457,6 +460,9 @@ int wxKeyBind::StringToKeyModifier(const wxString &keyModifier)
 
     if (str.Contains(wxT("SHIFT+")))
         mod |= wxACCEL_SHIFT;
+
+	if (str.Contains(wxT("ANY+")))
+        mod |= wxACCEL_ANY;
 
     return mod;
 }
@@ -1246,6 +1252,8 @@ void wxKeyConfigPanel::BuildCtrls()
     m_pRemoveBtn = new wxButton(this, wxKEYBINDER_REMOVE_KEY_ID, wxT("&Remove"));
     m_pRemoveAllBtn = new wxButton(this, wxKEYBINDER_REMOVEALL_KEY_ID, wxT("Remove all"));
 
+	m_pAnyModCbx = new wxCheckBox(this, wxKEYBINDER_ANY_MODIFIER_ID, wxT("\"Any\" modifier") );
+
     m_pCurrCmdField = new wxStaticText( this, -1, wxT(""), wxDefaultPosition,
         wxSize(-1, 20), wxSIMPLE_BORDER | wxST_NO_AUTORESIZE | wxALIGN_CENTRE);
 
@@ -1334,6 +1342,10 @@ wxSizer *wxKeyConfigPanel::BuildColumn2()
     wxBoxSizer *column2 = new wxBoxSizer(wxVERTICAL);
     column2->Add(new wxStaticText(this, -1, wxT("Current shortcuts:")), 0, wxGROW | wxALL, 5);
     column2->Add(m_pBindings, 2, wxGROW | wxRIGHT | wxLEFT, 5);
+
+	wxBoxSizer *extraMods = new wxBoxSizer(wxHORIZONTAL);
+    extraMods->Add(m_pAnyModCbx, 1, wxGROW | wxALL, 5);
+	column2->Add(extraMods, 0, wxGROW);
 
     wxBoxSizer *removebtns = new wxBoxSizer(wxHORIZONTAL);
     removebtns->Add(m_pRemoveBtn, 1, wxGROW | wxALL, 5);
@@ -1590,6 +1602,19 @@ void wxKeyConfigPanel::SelectCommand( const wxString& cmd )
 	}
 }
 
+void wxKeyConfigPanel::SelectKeyString( const wxString& keyStr )
+{
+	for ( unsigned i = 0; i < this->m_pBindings->GetCount(); ++i )
+	{
+		if ( this->m_pBindings->GetString( i ) == keyStr )
+		{
+			this->m_pBindings->Select( i );
+			this->UpdateButtons();
+			return;
+		}
+	}
+}
+
 void wxKeyConfigPanel::SetSelProfile(int n)
 {
     wxASSERT(m_pKeyProfiles && n >= 0 &&
@@ -1741,6 +1766,31 @@ void wxKeyConfigPanel::UpdateButtons()
     // is the remove button to be enabled ?
     m_pRemoveBtn->Enable(m_pBindings->GetSelection() >= 0);
     m_pRemoveAllBtn->Enable(m_pBindings->GetCount() > 0);
+	m_pAnyModCbx->Enable(m_pBindings->GetSelection() >= 0);
+
+	const wxString& curSelKey = m_pBindings->GetStringSelection();
+	if ( curSelKey.size() > 0 )
+	{
+		bool state = false;
+		if ( curSelKey.StartsWith(wxT("Any+")) )
+		{
+			state = true;
+		}
+		this->m_pAnyModCbx->SetValue(state);
+	}	
+
+	const int selIdx = m_pBindings->GetSelection();
+	if ( selIdx == wxNOT_FOUND )
+	{
+		return;
+	}
+
+	CmdSet cmds = m_kBinder.GetCmdBindsTo(m_pBindings->GetStringSelection());
+
+	assert( cmds.size() > 0 );
+
+	CommandOrderDlg dlg( m_pBindings->GetStringSelection(), cmds, this );
+	
 
     // is the assign button to be enabled ?
     bool b = IsSelectedValidCmd() && m_pKeyField->IsValidKeyComb();
@@ -2137,6 +2187,48 @@ void wxKeyConfigPanel::OnProfileSelected(wxCommandEvent &e)
         wxCommandEvent ev;
         OnListCommandSelected(ev);
     }
+}
+
+void wxKeyConfigPanel::OnAnyModifier(wxCommandEvent &)
+{
+	if ( GetSelProfile()->IsNotEditable() )
+	{
+        wxMessageBox(wxT("This profile cannot be changed."),
+                    wxT("Warning"));
+		return;
+	}
+
+	wxString shortcut = m_pBindings->GetStringSelection();
+
+    wxCmd *sel = GetSelCmd();
+	wxKeyBind& kb = *sel->GetShortcut(shortcut);
+
+	wxString newKeyStr = kb.GetStr();
+	if ( m_pAnyModCbx->IsChecked() )
+	{
+		newKeyStr = wxT("Any+") + newKeyStr;
+	}
+	else
+	{
+		newKeyStr = newKeyStr.After(wxT('+'));
+	}
+
+	kb.Set( newKeyStr, kb.GetOrderIndex() );
+
+    // now the user has modified the currently selected profile...
+    m_bProfileHasBeenModified = TRUE;
+	m_bProfileModifiedOrChanged = TRUE;
+
+    // and update the list of the key bindings
+    FillInBindings();
+    m_pKeyField->Clear();
+
+	//select previously selected key
+	this->SelectKeyString( newKeyStr ); 
+
+#ifdef wxKEYBINDER_AUTO_SAVE
+	ApplyChanges();
+#endif
 }
 
 void wxKeyConfigPanel::OnAssignKey(wxCommandEvent &)

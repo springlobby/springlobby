@@ -64,29 +64,6 @@ wxString KeynameConverter::discardModifier( const wxString& keystring )
 	return result;
 }
 
-bool KeynameConverter::compareSpring2wxKeybinder( const wxString& springkey, const wxString& kbKey )
-{
-	KeynameConverter::ModifierList springMods = stringToKeyModifier( springkey );
-	KeynameConverter::ModifierList kbMods = stringToKeyModifier( kbKey );
-
-	//delete if existing
-	springMods.erase( ANY );
-
-	if ( springMods != kbMods )
-	{
-		return false;
-	}
-
-	const wxString k1 = KeynameConverter::spring2wxKeybinder( KeynameConverter::discardModifier( springkey ) );
-	const wxString k2 = KeynameConverter::discardModifier( kbKey );
-	if ( k1 != k2 )
-	{
-		return false;
-	}
-
-	return true;
-}
-
 wxString KeynameConverter::normalizeSpringKey( const wxString& springKey )
 {
 	//get modifiers
@@ -100,7 +77,7 @@ wxString KeynameConverter::normalizeSpringKey( const wxString& springKey )
 		key = wxT("esc");
 	}
 
-	return KeynameConverter::modifier2String( modifiers, true ) + key;
+	return KeynameConverter::modifier2String( modifiers ) + key;
 }
 
 wxString KeynameConverter::spring2wxKeybinder( const wxString& keystring, bool reverse )
@@ -145,14 +122,19 @@ wxString KeynameConverter::spring2wxKeybinder( const wxString& keystring, bool r
 		}
 	}
 
-	return KeynameConverter::modifier2String( modifiers, reverse ) + kbKey;
+	return KeynameConverter::modifier2String( modifiers ) + kbKey;
 }
 
-wxString KeynameConverter::modifier2String( const KeynameConverter::ModifierList& mod, bool addAny )
+wxString KeynameConverter::modifier2String( const KeynameConverter::ModifierList& mod )
 {
 	wxString modString;
 
 	bool modFound = false;
+	if ( mod.find( ANY ) != mod.end() )
+	{
+		modString += wxT("Any+");
+		modFound = true;
+	}
 	if ( mod.find( CTRL ) != mod.end() )
 	{
 		modString += wxT("Ctrl+");
@@ -167,11 +149,6 @@ wxString KeynameConverter::modifier2String( const KeynameConverter::ModifierList
 	{
 		modString += wxT("Alt+");
 		modFound = true;
-	}
-
-	if ( !modFound && addAny )
-	{
-		modString = wxT("Any+") + modString;
 	}
 
 	return modString;

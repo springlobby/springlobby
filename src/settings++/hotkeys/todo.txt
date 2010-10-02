@@ -4,6 +4,9 @@
 -colorize commands that have changed hotkeys compared to default
 -commandline options to switch profiles
 -keysym
+-make keystring match regarding any-modifier (when searching for duplicate keys -> GetCmdsBindTo() )
+-listbox changes selection when any-checkbox is clicked
+-title of order window
 
 -buildfiles
 -unify spelling
