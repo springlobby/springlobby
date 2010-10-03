@@ -38,7 +38,7 @@ void slConfig::SetupGlobalconfig()
 													   ::GetAppName( true ).c_str()
 													   );
 	#else
-		wxString global_config_path = IdentityString( _T("/etc/default/%s.conf") );
+		wxString global_config_path = IdentityString( _T("/etc/default/%s.conf"), true );
 	#endif //__WXMSW__
 
 	if (  wxFileName::FileExists( global_config_path ) )
