@@ -57,7 +57,7 @@ Settings& sett()
 Settings::Settings()
 {
 #if defined(__WXMSW__) || defined(__WXMAC__)
-	wxString userfilepath = IdentityString( wxStandardPaths::Get().GetUserDataDir() + wxFileName::GetPathSeparator() + _T( "%s.conf" ), true );
+	wxString userfilepath = IdentityString( GetConfigfileDir() + wxFileName::GetPathSeparator() + _T( "%s.conf" ), true );
 	wxString localfilepath =  IdentityString( GetExecutableFolder() + wxFileName::GetPathSeparator() + _T( "%s.conf" ), true );
 
 	if ( !wxFileName::FileExists( localfilepath ) || !wxFileName::IsFileWritable( localfilepath ) )
@@ -101,7 +101,7 @@ Settings::Settings()
 	}
 	m_config = new slConfig( instream );
 #else
-	wxString localpath = wxString::Format( _T( ".%s/%s.conf" ), GetAppName( true ).c_str(), GetAppName( true ).c_str() );
+	wxString localpath = wxString::Format( _T( "%s/%s.conf" ), GetConfigfileDir().c_str(), GetAppName( true ).c_str() );
 	wxString path = m_user_defined_config ? m_user_defined_config_path : localpath;
 	m_config = new slConfig( GetAppName(), wxEmptyString, path );
 	SetPortableMode ( false );

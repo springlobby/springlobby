@@ -150,8 +150,8 @@ bool SpringLobbyApp::OnInit()
     m_translationhelper = new wxTranslationHelper( *( (wxApp*)this ), path );
     m_translationhelper->Load();
 
-    if ( !wxDirExists( wxStandardPaths::Get().GetUserDataDir() ) )
-        wxMkdir( wxStandardPaths::Get().GetUserDataDir() );
+	if ( !wxDirExists( GetConfigfileDir() ) )
+		wxMkdir( GetConfigfileDir() );
 
 #ifdef __WXMSW__
 	sett().SetSearchSpringOnlyInSLPath( sett().GetSearchSpringOnlyInSLPath() );
@@ -369,9 +369,10 @@ void SpringLobbyApp::CacheAndSettingsSetup()
 {
     SetSettingsStandAlone( false );
 
-    if ( sett().IsFirstRun() && !wxDirExists( wxStandardPaths::Get().GetUserDataDir() ) )
+	const wxString userConfigDir = GetConfigfileDir();
+	if ( sett().IsFirstRun() && !wxDirExists( userConfigDir ) )
     {
-        wxMkdir( wxStandardPaths::Get().GetUserDataDir() );
+		wxMkdir( userConfigDir );
     }
     if ( (sett().GetCacheVersion() < CACHE_VERSION) && !sett().IsFirstRun() )
     {
