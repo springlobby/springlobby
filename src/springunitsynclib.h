@@ -501,11 +501,6 @@ class SpringUnitSyncLib : public SL::NonCopyable
     wxString m_current_mod;
 
     /**
-     * Loads a function pointer from unitsync.
-     */
-    void* _GetLibFuncPtr( const wxString& name );
-
-    /**
      * Loads the unitsync library from path.
      * @note this function is not threadsafe if called from code not locked.
      * @see Load()
