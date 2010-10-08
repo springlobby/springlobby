@@ -11,7 +11,7 @@ class Ui;
 class ChatPanelMenu;
 class UserMenu;
 
-class NickListCtrl : public CustomVirtListCtrl< const User* ,NickListCtrl >, public SL::NonCopyable
+class NickListCtrl : public CustomVirtListCtrl< const User* ,NickListCtrl >
 {
   protected:
     typedef SL_GENERIC::UserMenu<ChatPanelMenu> UserMenu;

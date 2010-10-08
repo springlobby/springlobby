@@ -46,7 +46,7 @@ BEGIN_EVENT_TABLE( Spring, wxEvtHandler )
 
     EVT_COMMAND ( PROC_SPRING, wxEVT_SPRING_EXIT, Spring::OnTerminated )
 
-END_EVENT_TABLE();
+END_EVENT_TABLE()
 
 #define FIRST_UDP_SOURCEPORT 8300
 

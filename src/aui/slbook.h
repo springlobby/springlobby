@@ -59,7 +59,7 @@ class SLChatNotebook : public SLNotebook, public SL::NonCopyable {
         ChatPanelMenu* m_ch_menu;
         ChatPanel* m_cur_page;
 
-        DECLARE_EVENT_TABLE();
+		DECLARE_EVENT_TABLE()
 };
 
 //! Utility function that handles surrounding Layout updates in addition to loading a notebook perspective

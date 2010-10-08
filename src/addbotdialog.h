@@ -77,7 +77,7 @@ class AddBotDialog : public wxDialog, public WindowAttributesPickle
       ADDBOT_ADD = wxID_HIGHEST,
       ADDBOT_CANCEL,
       ADDBOT_AI,
-      ADDBOT_OPTIONLIST,
+	  ADDBOT_OPTIONLIST
     };
 
     DECLARE_EVENT_TABLE()

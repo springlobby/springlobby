@@ -32,7 +32,7 @@ class MapGridCtrl : public wxPanel
 			SortKey_Wind,        // minWind + maxWind
 			SortKey_Area,        // width * height
 			SortKey_AspectRatio, // max(width/height, height/width)
-			SortKey_PosCount,
+			SortKey_PosCount
 		};
 
 		MapGridCtrl( wxWindow* parent, wxSize size = wxDefaultSize, wxWindowID id = -1 );
@@ -188,7 +188,7 @@ class MapGridCtrl : public wxPanel
 		/// this is displayed for maps whose minimap has not yet been loaded
 		wxBitmap m_img_minimap_loading;
 
-		DECLARE_EVENT_TABLE();
+		DECLARE_EVENT_TABLE()
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_MAPGRIDCTRL_H

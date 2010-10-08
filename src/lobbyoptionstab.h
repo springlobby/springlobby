@@ -78,7 +78,7 @@ class LobbyOptionsTab : public wxScrolledWindow
     };
 
 
-        DECLARE_EVENT_TABLE();
+		DECLARE_EVENT_TABLE()
 };
 
 #endif // LOBBYOPTIONSTAB_H

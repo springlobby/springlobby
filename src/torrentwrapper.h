@@ -35,7 +35,7 @@ enum FileStatus
 	queued		= 1, /// file is not on disk and queued for download
 	leeching	= 2, /// file is being downloaded
 	paused		= 3, /// file currently not downloading but has valid handle
-	complete	= 4, /// file is on disk / dl completed
+	complete	= 4  /// file is on disk / dl completed
 };
 }
 
